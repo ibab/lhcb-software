@@ -4,8 +4,11 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2012-02-18 - Chris Jones
+ - Add some additional types to the dictionary, needed by RecEvent.
+
 ! 2012-02-09 - Wouter Hulsbergen
-- Added StateParameters::zMidTT.
+ - Added StateParameters::zMidTT.
 
 !========================= TrackEvent v5r14 2012-01-31 =======================
 ! 2011-12-19 - Wouter Hulsbergen
@@ -19,7 +22,8 @@
 
 !========================= TrackEvent v5r13 2011-11-07 =========================
 ! 2011-10-18 - J. Helder Lopes
- - Renamed and documented the additional info associated to Muon tracks in Track.xml
+ - Renamed and documented the additional info associated to Muon tracks in 
+   Track.xml
 
 ! 2011-10-07 - Marco Cattaneo
  - Fix trivial icc warning
@@ -35,8 +39,8 @@
 !========================= TrackEvent v5r10 2011-01-31 =========================
 ! 2011-01-28 - Victor Coco 
  - residual, errResidual and state becomes virtual in Node class ( for further 
- implementation in FitNode ). 
-   in Track.cpp, modification of the closestState function.
+   implementation in FitNode ). 
+ - in Track.cpp, modification of the closestState function.
 
 ! 2011-01-27 - Stephanie Hansmann-Menzemer
  - Add track history PatFastVelo

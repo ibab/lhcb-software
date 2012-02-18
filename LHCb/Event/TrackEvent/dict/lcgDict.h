@@ -9,11 +9,15 @@
 
 // end include files
 
-namespace {
-  struct _Instantiations {
+namespace 
+{
+  struct _Instantiations 
+  {
     // begin instantiations
-    std::vector<const LHCb::Track*> _i1;
-    std::vector<LHCb::Track*>       _i2;
+    std::vector<const LHCb::Track*>       _i1;
+    std::vector<LHCb::Track*>             _i2;
+    std::pair<const LHCb::Track*,float>   _i3;
+    std::vector<std::pair<const LHCb::Track*,float> > _i4;
     // end instantiations
   };
 }
