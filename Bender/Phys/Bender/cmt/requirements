@@ -47,8 +47,6 @@ alias check_trg    "trg_check"
 alias dump_dst     "dst_dump" 
 alias dst_content  "dst_dump" 
 
-alias pyroot       "ipython $(BENDERROOT)/python/Bender/PyRoot.py" 
-
 
 # =============================================================================
 # The END
