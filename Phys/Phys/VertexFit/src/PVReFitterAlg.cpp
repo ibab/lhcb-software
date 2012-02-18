@@ -1,8 +1,8 @@
 // $Id: PVReFitterAlg.cpp,v 1.20 2010-08-12 11:59:21 jpalac Exp $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 //#include "GaudiKernel/ObjectVector.h"
 // LHCb
 #include <Event/RecVertex.h>
@@ -17,7 +17,6 @@
 // local
 #include "PVReFitterAlg.h"
 
-
 //-----------------------------------------------------------------------------
 // Implementation file for class : PVReFitterAlg
 //
@@ -30,26 +29,25 @@ DECLARE_ALGORITHM_FACTORY( PVReFitterAlg )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-PVReFitterAlg::PVReFitterAlg( const std::string& name,
-                              ISvcLocator* pSvcLocator)
-  : 
-  GaudiAlgorithm ( name , pSvcLocator ),
-  m_pvOfflineTool(0),
-  m_pvReFitter(0),
-  m_onOfflineTool(0),
-  m_pvOfflinetoolType("PVOfflineTool"),
-  m_pvReFitterType("AdaptivePVReFitter"),
-  m_useIPVOfflineTool(false),
-  m_useIPVReFitter(true),
-  m_particleInputLocation(""),
-  m_particleInputLocations(),
-  m_PVInputLocation(""),
-  m_particle2VertexRelationsOutputLocation(""),
-  m_vertexOutputLocation(""),
-  m_outputLocation("")
+  PVReFitterAlg::PVReFitterAlg( const std::string& name,
+                                ISvcLocator* pSvcLocator)
+    :
+    GaudiAlgorithm ( name , pSvcLocator ),
+    m_pvOfflineTool(0),
+    m_pvReFitter(0),
+    m_onOfflineTool(0),
+    m_pvOfflinetoolType("PVOfflineTool"),
+    m_pvReFitterType("AdaptivePVReFitter"),
+    m_useIPVOfflineTool(false),
+    m_useIPVReFitter(true),
+    m_particleInputLocation(""),
+    m_particleInputLocations(),
+    m_PVInputLocation(""),
+    m_particle2VertexRelationsOutputLocation(""),
+    m_vertexOutputLocation(""),
+    m_outputLocation("")
 
 {
-
   declareProperty("IPVOfflineTool", m_pvOfflinetoolType);
   declareProperty("IPVReFitter",    m_pvReFitterType);
   declareProperty("UseIPVOfflineTool", m_useIPVOfflineTool);
@@ -57,132 +55,142 @@ PVReFitterAlg::PVReFitterAlg( const std::string& name,
   declareProperty("ParticleInputLocation",  m_particleInputLocation);
   declareProperty("ParticleInputLocations",  m_particleInputLocations);
   declareProperty("PrimaryVertexInputLocation",  m_PVInputLocation);
-  
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
-PVReFitterAlg::~PVReFitterAlg() {} 
+PVReFitterAlg::~PVReFitterAlg() {}
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode PVReFitterAlg::initialize() {
-
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
-
-  if ( sc.isFailure() ) return sc;  // error printed already by DVAlgorithm
+StatusCode PVReFitterAlg::initialize()
+{
+  const StatusCode sc = GaudiAlgorithm::initialize();
+  if ( sc.isFailure() ) return sc;
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
-  if ( !m_particleInputLocations.empty() && m_particleInputLocation != "" ) {
+  if ( !m_particleInputLocations.empty() &&
+       !m_particleInputLocation.empty()  )
+  {
     return Error("You have set both ParticleInputLocation AND ParticleInputLocations properties");
   }
 
-  if (m_particleInputLocations.empty()) {
-
-    if (m_particleInputLocation == "" ) {
+  if ( m_particleInputLocations.empty() )
+  {
+    if ( m_particleInputLocation.empty() )
+    {
       return Error("You have to set either ParticleInputLocation OR ParticleInputLocations properties");
-    } else {
-      Warning("ParticleInputLocation is deprecated. Please use ParticleInputLocations list.",
-              StatusCode::SUCCESS);
     }
-    
+    else
+    {
+      Warning("ParticleInputLocation is deprecated. Please use ParticleInputLocations list.",
+              StatusCode::SUCCESS).ignore();
+    }
     m_particleInputLocations.push_back(m_particleInputLocation);
   }
 
-  if (m_useIPVOfflineTool) {    
+  if (m_useIPVOfflineTool)
+  {
     m_pvOfflineTool = tool<IPVOfflineTool> (m_pvOfflinetoolType, this);
-    if (0==m_pvOfflineTool) return StatusCode::FAILURE;
+    if (!m_pvOfflineTool) return StatusCode::FAILURE;
   }
 
-  if (m_useIPVReFitter) {
+  if (m_useIPVReFitter)
+  {
     m_pvReFitter = tool<IPVReFitter>(m_pvReFitterType, this);
-    if (0==m_pvReFitter) return StatusCode::FAILURE;
+    if (!m_pvReFitter) return StatusCode::FAILURE;
   }
 
-  if (!m_useIPVOfflineTool && ! m_useIPVReFitter) {
+  if ( !m_useIPVOfflineTool && !m_useIPVReFitter )
+  {
     return Error("At least one of UseIPVOfflineTool and UseIPVReFitter must be true!", StatusCode::FAILURE);
   }
 
   m_onOfflineTool = tool<IOnOffline>("OnOfflineTool", this);
 
-  if (0==m_onOfflineTool) {
+  if (!m_onOfflineTool)
+  {
     return Error("Could not get OnOfflineTool");
   }
-  
-  if (m_PVInputLocation=="") {
+
+  if (m_PVInputLocation.empty())
+  {
     m_PVInputLocation=m_onOfflineTool->primaryVertexLocation();
   }
 
   return sc;
-  
 }
 
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode PVReFitterAlg::execute() {
-  
+StatusCode PVReFitterAlg::execute()
+{
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-  if (!exist<LHCb::RecVertex::Range>(m_PVInputLocation) ) {
+  if (!exist<LHCb::RecVertex::Range>(m_PVInputLocation) )
+  {
     return Warning("No LHCb::RecVertex::Range found at " +
                    m_PVInputLocation,
                    StatusCode::SUCCESS, 0);
   }
 
-  const LHCb::RecVertex::Range vertices = 
+  const LHCb::RecVertex::Range vertices =
     get<LHCb::RecVertex::Range>(m_PVInputLocation);
 
-  if (vertices.empty()) {
+  if (vertices.empty())
+  {
     return Warning("No LHCb::RecVertices in LHCb::Particle::Range "+
                    m_PVInputLocation,
-                   StatusCode::SUCCESS, 
+                   StatusCode::SUCCESS,
                    0);
   }
 
-  std::vector<std::string>::const_iterator iLoc = m_particleInputLocations.begin();
-  std::vector<std::string>::const_iterator locEnd = m_particleInputLocations.end();
-
-  for ( ; iLoc != locEnd; ++iLoc ) {
+  for ( std::vector<std::string>::const_iterator iLoc = m_particleInputLocations.begin();
+        iLoc != m_particleInputLocations.end(); ++iLoc )
+  {
     executeForLocation(*iLoc, vertices);
   }
-  
 
   setFilterPassed(true);
 
-
   return StatusCode::SUCCESS;
 }
+
 //=============================================================================
+
 void PVReFitterAlg::executeForLocation(const std::string& particleLocation,
                                        const LHCb::RecVertex::Range& vertices) const
 {
 
-  if (!exist<LHCb::Particle::Range>(particleLocation) ) {
-    Warning("No LHCb::Particle::Range found at " + 
+  if (!exist<LHCb::Particle::Range>(particleLocation) )
+  {
+    Warning("No LHCb::Particle::Range found at " +
             particleLocation,
-            StatusCode::SUCCESS, 
+            StatusCode::SUCCESS,
             0).ignore();
     return;
   }
 
-  const LHCb::Particle::Range particles = 
+  const LHCb::Particle::Range particles =
     get<LHCb::Particle::Range>(particleLocation);
 
-  if (particles.empty()) {
+  if (particles.empty())
+  {
     Warning("No LHCb::Particles in LHCb::Particle::Range " +
             particleLocation,
-            StatusCode::SUCCESS, 
+            StatusCode::SUCCESS,
             0).ignore();
     return;
   }
 
   std::string outputLocation = particleLocation;
-  
+
   DaVinci::StringUtils::removeEnding(outputLocation, "/Particles");
-  
+
   DaVinci::StringUtils::expandLocation(outputLocation,
                                        m_onOfflineTool->trunkOnTES());
 
@@ -190,76 +198,79 @@ void PVReFitterAlg::executeForLocation(const std::string& particleLocation,
   const std::string vertexOutputLocation = outputLocation + "/"+instanceName+"_PVs";
   const std::string particle2VertexRelationsOutputLocation = outputLocation + "/"+instanceName+"_P2PV";
 
-  LHCb::RecVertex::Container* vertexContainer = 
-    new  LHCb::RecVertex::Container();
+  LHCb::RecVertex::Container* vertexContainer =
+    new LHCb::RecVertex::Container();
 
-  if (msgLevel(MSG::VERBOSE)) {
-    verbose() << "Storing re-fitted vertices in " 
+  if (msgLevel(MSG::VERBOSE))
+  {
+    verbose() << "Storing re-fitted vertices in "
               << vertexOutputLocation << endmsg;
-
   }
-  
-  put(vertexContainer, vertexOutputLocation);  
+
+  put(vertexContainer, vertexOutputLocation);
 
   Particle2Vertex::Table* newTable = new Particle2Vertex::Table();
 
-  if (msgLevel(MSG::VERBOSE)) {  
+  if (msgLevel(MSG::VERBOSE))
+  {
     verbose() << "Storing Particle->Refitted Vtx relations table in "
               << particle2VertexRelationsOutputLocation << endmsg;
   }
-  
+
   put( newTable, particle2VertexRelationsOutputLocation);
 
-  if (msgLevel(MSG::VERBOSE)) {
+  if (msgLevel(MSG::VERBOSE))
+  {
     verbose() << "Loop over " << particles.size() << " particles" << endmsg;
   }
-  
-  LHCb::Particle::Range::const_iterator itP = particles.begin();
-  LHCb::Particle::Range::const_iterator itPEnd = particles.end();
 
-  for ( ; itP != itPEnd; ++itP) {
-    
-    LHCb::RecVertex::Range::const_iterator itPV = vertices.begin();
-    LHCb::RecVertex::Range::const_iterator itPVEnd = vertices.end();
+  for ( LHCb::Particle::Range::const_iterator itP = particles.begin();
+        itP != particles.end(); ++itP )
+  {
 
-    for ( ; itPV != itPVEnd; ++itPV) {
+    for ( LHCb::RecVertex::Range::const_iterator itPV = vertices.begin();
+          itPV != vertices.end(); ++itPV )
+    {
 
-      if (msgLevel(MSG::VERBOSE)) {
-        verbose() << "Re-fitting vertex for particle\n" 
+      if (msgLevel(MSG::VERBOSE))
+      {
+        verbose() << "Re-fitting vertex for particle\n"
                   << *(*itP) << endmsg;
       }
-      
+
       LHCb::RecVertex* refittedVertex = refitVertex(*itPV, *itP);
 
-      if (0!=refittedVertex) {
-
-        if (msgLevel(MSG::VERBOSE)) {
+      if (refittedVertex)
+      {
+        if (msgLevel(MSG::VERBOSE))
+        {
           verbose() << "Storing vertex with key " << refittedVertex->key()
-                    << " into container slot with key " << (*itPV)->key() 
+                    << " into container slot with key " << (*itPV)->key()
                     << endmsg;
           verbose() << "Re-fitted vertex " << *(*itPV) << "\n as\n"
                     << *refittedVertex << endmsg;
         }
-        
         vertexContainer->insert(refittedVertex);
         newTable->relate(*itP, refittedVertex);
-
       }
 
     }
   }
 
-  if (msgLevel(MSG::VERBOSE)) {
+  if (msgLevel(MSG::VERBOSE))
+  {
     // check output.
     if (exist<LHCb::RecVertex::Container>(vertexOutputLocation) )
-    {  
-      const LHCb::RecVertex::Container* _vertices = 
+    {
+      const LHCb::RecVertex::Container* _vertices =
         get<LHCb::RecVertex::Container>(vertexOutputLocation);
-      verbose() << "CHECK: stored " 
+      verbose() << "CHECK: stored "
                 << _vertices->size()
-                << " re-fitted vertices in " 
+                << " re-fitted vertices in "
                 << m_vertexOutputLocation << endmsg;
-    } else {
+    }
+    else
+    {
       Error("No re-fitted vertices at "+
             m_vertexOutputLocation,
             StatusCode::SUCCESS,
@@ -268,84 +279,88 @@ void PVReFitterAlg::executeForLocation(const std::string& particleLocation,
 
 
     if (exist<Particle2Vertex::Table>(particle2VertexRelationsOutputLocation) )
-    {  
-      verbose() << "CHECK: table is at " 
+    {
+      verbose() << "CHECK: table is at "
                 << particle2VertexRelationsOutputLocation << endmsg;
-    } else {
+    }
+    else 
+    {
       Error("No LHCb::Particle->LHCb::RecVertex table found at "+
             m_particle2VertexRelationsOutputLocation,
             StatusCode::SUCCESS,
             0).ignore();
     }
   }
-  
+
 }
+
 //=============================================================================
+
 LHCb::RecVertex* PVReFitterAlg::refitVertex(const LHCb::RecVertex* v,
                                             const LHCb::Particle* p  ) const
 {
 
-  if (0==v || 0==p) return 0;
+  if ( !v || !p ) return NULL;
 
-  LHCb::RecVertex* reFittedVertex(0);
+  LHCb::RecVertex* reFittedVertex(NULL);
 
   StatusCode sc(StatusCode::SUCCESS);
 
-  if (m_useIPVOfflineTool) {
+  if ( m_useIPVOfflineTool ) 
+  {
     LHCb::Track::ConstVector tracks;
-    getTracks(p, tracks);
-    if ( ! tracks.empty() ) {
+    getTracks( p, tracks );
+    if ( !tracks.empty() ) 
+    {
       reFittedVertex = new LHCb::RecVertex();
-      sc = m_pvOfflineTool->reDoSinglePV(v->position(), 
-                                         tracks, 
-                                         *reFittedVertex );
-    } else {
+      sc = m_pvOfflineTool->reDoSinglePV( v->position(),
+                                          tracks,
+                                          *reFittedVertex );
+    }
+    else
+    {
       reFittedVertex = new LHCb::RecVertex(*v);
     }
-  } else {
+  } 
+  else
+  {
     reFittedVertex = new LHCb::RecVertex(*v);
-    sc = m_pvReFitter->remove(p, reFittedVertex);
+    sc = m_pvReFitter->remove( p, reFittedVertex );
   }
-  
-  if ( sc == StatusCode::SUCCESS && 0!= reFittedVertex )  {
+
+  if ( sc.isSuccess() && reFittedVertex )
+  {
     return reFittedVertex;
-  } else {
-    delete reFittedVertex;
-    return 0;
   }
-  
-  
+  else
+  {
+    delete reFittedVertex;
+    return NULL;
+  }
+
 }
+
 //=============================================================================
+
 void PVReFitterAlg::getTracks(const LHCb::Particle* p,
                               LHCb::Track::ConstVector& tracks) const
 {
-  const LHCb::ProtoParticle*   proto  = p->proto() ;
-
-  if( proto ) {
-
+  const LHCb::ProtoParticle * proto = p->proto() ;
+  if ( proto )
+  {
     const LHCb::Track* track = proto->track();
-    if(track) tracks.push_back(track);
-
-  } else {
- 
+    if ( track ) tracks.push_back(track);
+  } 
+  else 
+  {
     const SmartRefVector< LHCb::Particle >& Prods = p->daughters();
-    SmartRefVector< LHCb::Particle >::const_iterator iProd;
-
-    for (iProd=Prods.begin(); iProd !=Prods.end(); ++iProd){
+    for ( SmartRefVector< LHCb::Particle >::const_iterator iProd = Prods.begin(); 
+          iProd != Prods.end(); ++iProd )
+    {
       const LHCb::Particle* daughter = *iProd;
-      getTracks(daughter, tracks);      
+      getTracks(daughter, tracks);
     }
   }
-  
 }
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode PVReFitterAlg::finalize() {
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
-}
 //=============================================================================
