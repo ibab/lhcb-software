@@ -215,7 +215,7 @@ StatusCode AdaptivePVReFitter::fitPV(LHCb::RecVertex* PV,
       if( sc.isFailure ()) 
       {
         if ( msgLevel(MSG::DEBUG) )
-        debug() << "failed to propagate tarck state in addTr!" << endreq;
+          debug() << "failed to propagate tarck state in addTr!" << endreq;
         return sc;
       }
 
