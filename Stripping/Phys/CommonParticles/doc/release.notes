@@ -8,6 +8,12 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2012-02-19 - Vanya Belyaev
+
+ - StdLooseResolvedEta.py:
+
+    add "wide" eta->gamma gamma 
+
 !========================= CommonParticles v8r6 2012-02-10 =========================
 ! 2012-02-03 - Jibo He
  - Added StdTightPhi, using StdTightKaons.

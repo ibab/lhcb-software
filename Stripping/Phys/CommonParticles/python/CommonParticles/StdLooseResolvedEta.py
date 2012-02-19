@@ -18,31 +18,45 @@ __all__ = (
     'locations'
     )
 # =============================================================================
-from Gaudi.Configuration import *
-from Configurables       import ResolvedPi0Maker, PhotonMaker
-
+from CommonParticles.Utils     import *
 from GaudiKernel.SystemOfUnits import MeV
 
-from CommonParticles.Utils import *
+# ===========================================================
+## create the algorithm, eta in wiode mass-window  
+from Configurables       import ResolvedPi0Maker, PhotonMaker
+wide =  ResolvedPi0Maker (
+    'StdLooseEta2gg'            ,
+    DecayDescriptor = 'Eta'     ,
+    MassWindow      = 105 * MeV ,
+    Particle        = 'eta'     )
 
+wide.addTool(PhotonMaker)
+wide.PhotonMaker.PtCut  = 200 * MeV
+## finally: define the symbol 
+StdLooseEtaWide     = wide 
+## configure Data-On-Demand service 
+locations = updateDoD ( wide )
 
-## create the algorithm 
-algorithm =  ResolvedPi0Maker ( 'StdLooseResolvedEta'         ,
-                                DecayDescriptor = 'Eta',
-                                MassWindow = 50.* MeV,
-                                Particle = 'eta')
-algorithm.addTool(PhotonMaker)
-algorithm.PhotonMaker.PtCut = 200.*MeV
+# ============================================================================
+## filter the ``standard''-mass window 
+from Configurables       import FilterDesktop 
+fltr       =  FilterDesktop (
+    'StdLooseResolvedEta'                   ,
+    Code   = "ADMASS('eta') < 50 * MeV "    ,
+    Inputs = [
+    'Phys/%s/Particles'  % wide.name() 
+    ]
+    )
 
 ## configure Data-On-Demand service 
-locations = updateDoD ( algorithm )
+locations.update ( updateDoD ( fltr ) ) 
 
 ## finally: define the symbol 
-StdLooseResolvedEta = algorithm 
+StdLooseResolvedEta = fltr
 
 ## ============================================================================
 if '__main__' == __name__ :
-
+    
     print __doc__
     print __author__
     print __version__
