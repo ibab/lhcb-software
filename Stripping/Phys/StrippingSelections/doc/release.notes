@@ -6,6 +6,21 @@
 
 ! 2012-02-19 - Vanya Belyaev
 
+ - StrippingCharmAssociative:
+
+    add few "parasitic" lines
+
+	  These lines do *NOT* increase the rate, 
+    they just keep the candidates, allowing the studies to 
+    be performed on microDST.
+
+   ## Parasitic:
+   #    - dimuon + ( dimuon + gamma ) [ mimic   Chi_(c,b) + dimuon  ] 
+   #    -       2x ( dimuon + gamma ) [ mimic 2xChi_(c,b)           ] 
+   #
+
+! 2012-02-19 - Vanya Belyaev
+
  - StrippingPromptCharm:
 
     add few "parasitic" lines  

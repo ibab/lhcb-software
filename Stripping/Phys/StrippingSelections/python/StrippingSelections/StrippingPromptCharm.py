@@ -42,7 +42,9 @@
 #   stream.appendLines ( promptCharm.lines() )
 #
 # @endcode 
-# 
+#
+# @todo Increment PT-threshold for D0,D+,D_s+, Lambda_c+
+#
 #                   $Revision$
 # Last modification $Date$
 #                by $Author$
@@ -1141,8 +1143,8 @@ class StrippingPromptCharmConf(LineBuilder) :
             ##
             DaughtersCuts = {
             #                    J/psi                              Upsilon(1S) 
-            "J/psi(1S)" : " ( M < 3.21 * GeV ) | in_range ( 9.3 * GeV , M , 9.6 * GeV ) " ,  
-            "gamma"     : " PT > 490 * MeV " 
+            "J/psi(1S)" : " ( M  < 3.21 * GeV ) | in_range ( 9.3 * GeV , M , 9.6 * GeV ) " ,  
+            "gamma"     : " ( PT > 500  * MeV ) & ( CL > 0.05 ) " 
             },
             ## require chi_(c,b) 
             CombinationCut = """

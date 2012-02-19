@@ -7,7 +7,12 @@
 #  The attempt for stripping of associative ``onium'' production
 #
 #    - dimuon + dimuon 
-#    - dimuon + high-pt gamma 
+#    - dimuon + high-pt gamma
+#
+#   Parasitic:
+#
+#    - dimuon + ( dimuon + gamma ) [ mimic   Chi_(b,c) + dimuon  ] 
+#    -       2x ( dimuon + gamma ) [ mimic 2xChi_(b,c)           ] 
 #
 #  The performance with Reco09-Stripping13_SDSTs.py
 #  +-----------------------------------------+----------------+
@@ -37,6 +42,8 @@ The attempt for coherent stripping of various ``charm''? associative production
 
     - dimuon + dimuon 
     - dimuon + high-pt gamma 
+    - dimuon + ( dimuon + gamma ) [ mimic   Chi_(b,c) + dimuon  ] 
+    -       2x ( dimuon + gamma ) [ mimic 2xChi_(b,c)           ] 
 
   The performance with Reco09-Stripping13_SDSTs.py
   +-----------------------------------------+----------------+
@@ -66,6 +73,7 @@ __all__ = (
     )
 # =============================================================================
 from Gaudi.Configuration import *
+from GaudiKernel.SystemOfUnits             import GeV, MeV, mm
 
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 #
@@ -79,10 +87,14 @@ from StandardParticles      import ( StdAllLooseMuons   , ## PROMPT muons!
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 
+# =============================================================================
+## logging 
+# =============================================================================
 import logging
-log = logging.getLogger( 'StrippingCharmAssociative' )
-
-
+logger = logging.getLogger(__name__)
+if not logger.handlers :
+    logging.basicConfig()
+logger.setLevel(logging.INFO)
 # =============================================================================
 ## Define the default configuration 
 _default_configuration_ = {
@@ -105,7 +117,6 @@ _default_configuration_ = {
     #
     ## shortcut for the c*tau
     "from GaudiKernel.PhysicalConstants import c_light" , 
-    "ctau   = BPVLTIME ( 9 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<9
     #
     ## dimuons:
     "psi             = ADAMASS ( 'J/psi(1S)'  ) < 125 * MeV"         ,
@@ -123,7 +134,9 @@ _default_configuration_ = {
     #
     ## pescales 
     'DiMuonAndGammaPrescale' : 1.0 ,
-    'DoubleDiMuonPrescale'   : 1.0
+    'DoubleDiMuonPrescale'   : 1.0 ,
+    'ChiAndDiMuonPrescale'   : 1.0 ,
+    'DiChiPrescale'          : 1.0
     # =========================================================================
     }
 # =============================================================================
@@ -166,7 +179,7 @@ class StrippingCharmAssociativeConf(LineBuilder) :
         if not name : name = 'CharmAssociative'
         # check the names 
         if 'CharmAssociative' != name :
-            log.warning ( 'The non-default name is specified "%s"' % name  ) 
+            logger.warning ( 'The non-default name is specified "%s"' % name  ) 
             
         from copy import deepcopy
         _config = deepcopy ( _default_configuration_ )
@@ -194,7 +207,7 @@ class StrippingCharmAssociativeConf(LineBuilder) :
             
             val = _config[key]
             if val != _default_configuration_ [ key ] : 
-                log.warning ('StrippingPromptCharm: new configuration: %-16s : %s ' % ( key , _config[key] ) )
+                logger.warning ('new configuration: %-16s : %s ' % ( key , _config[key] ) )
 
         self._name         = name
 
@@ -205,6 +218,8 @@ class StrippingCharmAssociativeConf(LineBuilder) :
         
         self.DiMuonAndGammaPrescale = _config.pop ( 'DiMuonAndGammaPrescale' , _default_configuration_ [ 'DiMuonAndGammaPrescale' ] )
         self.DoubleDiMuonPrescale   = _config.pop ( 'DoubleDiMuonPrescale'   , _default_configuration_ [ 'DoubleDiMuonPrescale'   ] )
+        self.ChiAndDiMuonPrescale   = _config.pop ( 'ChiAndDiMuonPrescale'   , _default_configuration_ [ 'ChiAndDiMuonPrescale'   ] )
+        self.DiChiPrescale          = _config.pop ( 'DiChiPrescale'          , _default_configuration_ [ 'DiChiPrescale'          ] )
         
         self._Preambulo    = _config.pop ( 'Preambulo'       , _default_configuration_ [ 'Preambulo'       ] )
         self._monitor      = _config.pop ( 'Monitor'         , _default_configuration_ [ 'Monitor'         ] )
@@ -214,7 +229,8 @@ class StrippingCharmAssociativeConf(LineBuilder) :
 
         for line in self._lines_associative_onia () :
             self.registerLine(line)
-
+            logger.info ( "Register line: %s" %  line.name () ) 
+                        
 
     ## get the common preambulo: 
     def preambulo    ( self ) : return self._Preambulo
@@ -244,7 +260,11 @@ class StrippingCharmAssociativeConf(LineBuilder) :
             Preambulo       = self.preambulo() ,
             #
             ## combination cut 
-            CombinationCut  = " psi | psi_prime | ( AM > 4.9 * GeV ) " ,
+            CombinationCut  = """
+            psi            |
+            psi_prime      |
+            ( 8 * GeV < AM )
+            """ , 
             #
             ##      mother cut 
             MotherCut       = " chi2vx < 20 " 
@@ -311,28 +331,123 @@ class StrippingCharmAssociativeConf(LineBuilder) :
         sel = self._selection ( 'DoubleDiMuon_Selection' )
         if sel : return sel 
         
-        _Filter = CombineParticles (
-            DecayDescriptors = [
-            "chi_b2(1P)  -> J/psi(1S) J/psi(1S)" ,
-            ] ,
+        _alg = CombineParticles (
+            #
+            DecayDescriptor  = "chi_b2(1P)  -> J/psi(1S) J/psi(1S)" ,
             CombinationCut   = " AALL " ,
-            MotherCut        = "  ALL " 
+            MotherCut        = "  ALL "
+            #
             )
         
         sel = Selection  (
             "SelDoubleDiMuonFor" + self._name  ,
-            Algorithm = _Filter ,
-            RequiredSelections = [
-            self.DiMuon      () 
-            ]
+            Algorithm          =   _alg ,
+            RequiredSelections = [ self.DiMuon ()  ]
             )
         
         return self._add_selection ( 'DoubleDiMuon_Selection' , sel )    
- 
+    
+    ## get chi_(c,b) & dimuon 
+    def ChiAndDiMuon ( self ) : 
+        """
+        Construct Chi_(c,b) + dumuon line 
+        """
+        sel = self._selection ( 'ChiAndDiMuon_Selection' )
+        if sel : return sel 
+        
+        _alg = CombineParticles (
+            ##
+            DecayDescriptor =  "chi_b2(1P)  -> J/psi(1S) J/psi(1S) gamma " ,
+            ##
+            DaughtersCuts = {
+            'gamma'     : '( PT > 500 * MeV ) & ( CL > 0.05 )'
+            } ,
+            ## mimic chi_(c,b):
+            CombinationCut   = """
+            ( AM13 - AM1 < 1.05 * GeV ) |
+            ( AM23 - AM2 < 1.05 * GeV ) 
+            """ ,
+            MotherCut        = "  ALL " 
+            )
+        
+        _sel = Selection  (
+            "SelPreChiAndDiMuonFor" + self._name  ,
+            Algorithm          = _alg ,
+            RequiredSelections = [ self.DoubleDiMuon () , ##fake! 
+                                   self.DiMuon       () ,
+                                   StdLooseAllPhotons   ] 
+            )
+        
+        ## apply pi0-veto-tagger ! 
+        from GaudiConfUtils.ConfigurableGenerators import Pi0Veto__Tagger 
+        _tag = Pi0Veto__Tagger (
+            MassWindow     = 25 * MeV  ,
+            MassChi2       = -1        ,
+            ExtraInfoIndex = 25011     ## unique ! 
+            )
+        
+        ## the final selection 
+        sel = Selection  (
+            "SelChiAndDiMuonFor" + self._name  ,
+            Algorithm          =   _tag  ,
+            RequiredSelections = [ _sel ]
+            )
+        
+        return self._add_selection ( 'ChiAndDiMuon_Selection' , sel )    
+
+
+     ## get 2xXhi_(c,b) & dimuon 
+    def DiChi ( self ) : 
+        """
+        Construct 2xChi_(c,b) line 
+        """
+        sel = self._selection ( 'DiChi_Selection' )
+        if sel : return sel 
+        
+        _alg = CombineParticles (
+            ##
+            DecayDescriptor =  "chi_b2(1P)  -> J/psi(1S) J/psi(1S) gamma gamma" ,
+            ##
+            DaughtersCuts = {
+            'gamma' : '( PT > 500 * MeV ) & ( CL > 0.05 )'
+            } ,
+            ## mimic 2xchi_(c,b):
+            CombinationCut   = """
+            ( ( AM13 - AM1 < 1.05 * GeV ) & ( AM24 - AM2 < 1.05 * GeV ) ) | 
+            ( ( AM14 - AM1 < 1.05 * GeV ) & ( AM23 - AM2 < 1.05 * GeV ) ) 
+            """ ,
+            MotherCut        = "  ALL " 
+            )
+        
+        _sel = Selection  (
+            "SelPreDiChiFor"     + self._name  ,
+            Algorithm          = _alg ,
+            RequiredSelections = [ self.ChiAndDiMuon () , ##fake! 
+                                   self.DiMuon       () ,
+                                   StdLooseAllPhotons   ] 
+            )
+        
+        ## apply pi0-veto-tagger ! 
+        from GaudiConfUtils.ConfigurableGenerators import Pi0Veto__Tagger 
+        _tag = Pi0Veto__Tagger (
+            MassWindow     = 25 * MeV  ,
+            MassChi2       = -1        ,
+            ExtraInfoIndex = 25012     ## unique ! 
+            )
+        
+        sel = Selection  (
+            "SelDiChiFor"     + self._name  ,
+            Algorithm          =   _tag ,
+            RequiredSelections = [ _sel ]
+            )
+        
+        return self._add_selection ( 'DiChi_Selection' , sel )    
+
+
     ## get all dicharm lines 
     def _lines_associative_onia ( self ) :
         
-        sel = self._selection ( 'DiCharmLines' )
+        sel = self._selection ( 'OniaAndXLines' )
         if sel : return sel 
         
         sel = [
@@ -349,6 +464,20 @@ class StrippingCharmAssociativeConf(LineBuilder) :
             prescale = self.DoubleDiMuonPrescale  , ## ATTENTION! Prescale here !!              
             checkPV  = self._checkPV         ,
             algos    = [ self.DoubleDiMuon () ]            
+            ) ,
+            ##
+            StrippingLine (
+            "ChiAndDiMuonFor" + self._name   ,
+            prescale = self.ChiAndDiMuonPrescale  , ## ATTENTION! Prescale here !!              
+            checkPV  = self._checkPV         ,
+            algos    = [ self.ChiAndDiMuon () ]            
+            ) ,
+            ## 
+            StrippingLine (
+            "DiChiFor" + self._name          ,
+            prescale = self.DiChiPrescale    , ## ATTENTION! Prescale here !!              
+            checkPV  = self._checkPV         ,
+            algos    = [ self.DiChi       () ]            
             ) 
             ]
         #
