@@ -4,6 +4,25 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-02-19 - Vanya Belyaev
+
+ - StrippingPromptCharm:
+
+    add few "parasitic" lines  
+
+    These lines do *NOT* increase the rate, 
+    they just keep the candidates, allowing the studies to 
+    be performed on microDST.
+
+    ## excited charm baryons for Biagio Saitta: 
+    #
+    #    - Sigma_c(0,++) -> Lambda_c+ pi        ( 2455 & 2520 )
+    #    - Lambda_c+*    -> Lambda_c+ pi+ pi-   ( 2595, 2625 & 2880 )
+    
+    ## pickup also Chi_(c,b):
+    #    - Charm + ( Dimuon + gamma ) ( get for free chi_(c,b) )
+
+
 ! 2012-02-15 - Chris Jones
  - Fix possible XML catalogue problems due to attempts to write to read-only
    filesystems.
