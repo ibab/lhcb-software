@@ -63,8 +63,8 @@ AdaptivePVReFitter::~AdaptivePVReFitter() {}
 //=============================================================================
 StatusCode AdaptivePVReFitter::initialize()
 {
-  StatusCode sc = GaudiTool::initialize();
-  if (!sc) return sc;
+  const StatusCode sc = GaudiTool::initialize();
+  if ( sc.isFailure() ) return sc;
 
   m_fullExtrapolator = tool<ITrackExtrapolator>( m_fullExtrapolatorName );
   m_veloExtrapolator = tool<ITrackExtrapolator>( m_veloExtrapolatorName );
@@ -94,11 +94,10 @@ StatusCode AdaptivePVReFitter::reFit(LHCb::VertexBase* PV) const
         pvtracks.end() != trIt; ++trIt )
   {
     const LHCb::Track* track = *trIt;
-    if (!track) continue;
-    fittracks.push_back( PVFitTrack(track) );
+    if ( track ) fittracks.push_back( PVFitTrack(track) );
   }
 
-  return fitPV(primvtx, fittracks);
+  return fitPV(primvtx,fittracks);
 }
 
 //=============================================================================
@@ -195,6 +194,7 @@ StatusCode AdaptivePVReFitter::fitPV(LHCb::RecVertex* PV,
     Cn(1,1) = 0.;
     Cn(2,2) = 0.;
 
+    if ( msgLevel(MSG::DEBUG) ) debug() << "Loop 1" << endmsg;
     iFitTr = iFitTrBegin;
     for ( ; iFitTr != iFitTrEnd ; ++iFitTr )
     {
@@ -203,7 +203,8 @@ StatusCode AdaptivePVReFitter::fitPV(LHCb::RecVertex* PV,
 
       const double wk = aFitTrack.getWeight();
       if ( msgLevel(MSG::VERBOSE) )
-        verbose() << "weight " << wk << endreq;
+        verbose() << " Track " << aFitTrack.getTrack()->key() 
+                  << " weight " << wk << endreq;
 
       const LHCb::State& statetr = tr->firstState();
       LHCb::State& newstate = aFitTrack.getState();
@@ -232,8 +233,8 @@ StatusCode AdaptivePVReFitter::fitPV(LHCb::RecVertex* PV,
                                         newstate.tx(),
                                         newstate.ty() );
 
-      ROOT::Math::SVector<double, 2> qk0 = aFitTrack.getFittedSlopes();
-      if(Iter==0) 
+      ROOT::Math::SVector<double,2> qk0 = aFitTrack.getFittedSlopes();
+      if ( 0 == Iter ) 
       {
         qk0[0] = pk[2];
         qk0[1] = pk[3];
@@ -294,21 +295,25 @@ StatusCode AdaptivePVReFitter::fitPV(LHCb::RecVertex* PV,
     }
     PV->setCovMatrix(Cn);
 
+    if ( msgLevel(MSG::DEBUG) ) debug() << "Loop 2" << endmsg;
     iFitTr = iFitTrBegin;
     for ( ; iFitTr != iFitTrEnd; ++iFitTr )
     {
       PVFitTrack& aFitTrack = *iFitTr;
 
       const double wk = aFitTrack.getWeight();
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << " Track " << aFitTrack.getTrack()->key() 
+                  << " weight " << wk << endreq;
 
-      const LHCb::State& statetr =   aFitTrack.getState();
+      const LHCb::State& statetr = aFitTrack.getState();
 
       ROOT::Math::SVector<double, 4> pk(statetr.x(),
                                         statetr.y(),
                                         statetr.tx(),
                                         statetr.ty() );
 
-      ROOT::Math::SVector<double, 2> qk0 = aFitTrack.getFittedSlopes();
+      ROOT::Math::SVector<double,2> qk0 = aFitTrack.getFittedSlopes();
       if ( 0 == Iter )
       {
         qk0[0] = pk[2];
@@ -363,12 +368,16 @@ StatusCode AdaptivePVReFitter::fitPV(LHCb::RecVertex* PV,
 
     PV->setPosition(Gaudi::XYZPoint(Xn[0], Xn[1], Xn[2]));
 
+    if ( msgLevel(MSG::DEBUG) ) debug() << "Loop 3" << endmsg;
     iFitTr = iFitTrBegin;
     for( ; iFitTr != iFitTrEnd ; ++iFitTr )
     {
       PVFitTrack& aFitTrack = *iFitTr;
 
       const double wk = aFitTrack.getWeight();
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << " Track " << aFitTrack.getTrack()->key() 
+                  << " weight " << wk << endreq;
 
       const LHCb::State& statetr = aFitTrack.getState();
 
@@ -377,7 +386,7 @@ StatusCode AdaptivePVReFitter::fitPV(LHCb::RecVertex* PV,
                                         statetr.tx(),
                                         statetr.ty() );
 
-      ROOT::Math::SVector<double, 2> qk0 = aFitTrack.getFittedSlopes();
+      ROOT::Math::SVector<double,2> qk0 = aFitTrack.getFittedSlopes();
       if ( 0 == Iter )
       {
         qk0[0] = pk[2];
@@ -447,14 +456,16 @@ StatusCode AdaptivePVReFitter::fitPV(LHCb::RecVertex* PV,
         return StatusCode::FAILURE;
       }
 
-      double distSq =  ROOT::Math::Dot(Delta4, Gk*Delta4);
-      // debug() <<"change of chi2 " << distSq << endreq;
+      const double distSq =  ROOT::Math::Dot(Delta4, Gk*Delta4);
       chi2Fit+= wk*distSq;
 
-      if(m_reweightTracks)
+      if ( m_reweightTracks )
       {
         const double wknew = getNewWeight(distSq, Iter);
         aFitTrack.setWeight(wknew);
+        if ( msgLevel(MSG::VERBOSE) )
+          verbose() << " Track " << aFitTrack.getTrack()->key() 
+                    << " new weight " << wknew << endreq;
       }
     }
     if ( msgLevel(MSG::DEBUG) )
@@ -468,6 +479,7 @@ StatusCode AdaptivePVReFitter::fitPV(LHCb::RecVertex* PV,
     {
       chi2Previous=chi2Fit;
     }
+
     ++Iter;
   }
 
@@ -519,7 +531,5 @@ double AdaptivePVReFitter::getNewWeight( const double x,
 
   const double T = ( i<tsize ? m_temperatures[i] : m_temperatures[tsize-1] );
 
-  const double w = 1.0/(1.0+std::exp((x-m_criticalPoint)/2./T));
-
-  return w;
+  return 1.0/(1.0+std::exp((x-m_criticalPoint)/2./T));
 }

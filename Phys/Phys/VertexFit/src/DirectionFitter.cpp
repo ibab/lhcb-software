@@ -39,7 +39,6 @@ DirectionFitter::DirectionFitter( const std::string& type,
   declareProperty( "applyBMassConstraint", m_applyBMassConstraint = false);
   declareProperty( "maxIter", m_maxIter = 10);
   declareProperty( "MaxDeltaChi2", m_maxDeltaChi2 = 0.001);
-
 }
 
 //=============================================================================
@@ -50,9 +49,10 @@ DirectionFitter::~DirectionFitter() {}
 //=============================================================================
 // Initialize
 //=============================================================================
-StatusCode DirectionFitter::initialize(){
-  StatusCode sc = GaudiTool::initialize();
-  if (!sc) return sc;
+StatusCode DirectionFitter::initialize()
+{
+  const StatusCode sc = GaudiTool::initialize();
+  if ( sc.isFailure() ) return sc;
 
   m_ppSvc = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc");
  
@@ -74,7 +74,7 @@ StatusCode DirectionFitter::fit( const LHCb::VertexBase& PV, LHCb::Particle& B )
   Gaudi::XYZPoint BPosition= B.referencePoint();
   Gaudi::LorentzVector BLmom= B.momentum();
 
-  double BMeasuredMass = sqrt(BLmom.T()*BLmom.T()-BLmom.X()*BLmom.X()-BLmom.Y()*BLmom.Y()-BLmom.Z()*BLmom.Z());
+  double BMeasuredMass = std::sqrt(BLmom.T()*BLmom.T()-BLmom.X()*BLmom.X()-BLmom.Y()*BLmom.Y()-BLmom.Z()*BLmom.Z());
 
   Gaudi::SymMatrix7x7 CovB = B.covMatrix(); 
 
@@ -120,9 +120,12 @@ StatusCode DirectionFitter::fit( const LHCb::VertexBase& PV, LHCb::Particle& B )
   double chi2PreviousFit=9999.;
   double chi2Fit=999.;
 
-  while(!converged && iter< m_maxIter)  {
-    iter++;
-    verbose() << ":-) Iteration   " << iter << endreq;
+  while(!converged && iter< m_maxIter) 
+  {
+    ++iter;
+
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << ":-) Iteration   " << iter << endreq;
 
     //f(0)=(xb-xpv)*pzb-(zb-zpv)*pxb
     //f(1)=(yb-ypv)*pzb-(zb-zpv)*pyb
@@ -159,25 +162,27 @@ StatusCode DirectionFitter::fit( const LHCb::VertexBase& PV, LHCb::Particle& B )
     ROOT::Math::SVector<double, 2> d = f - D*vfit;
 
     Gaudi::SymMatrix2x2 VD=ROOT::Math::Similarity<double,2,10>(D, Cx);
-    if(!VD.Invert()) {
-      debug() << "could not invert matrix VD in fit! " <<endreq;
+    if(!VD.Invert())
+    {
+      if ( msgLevel(MSG::DEBUG) )
+        debug() << "could not invert matrix VD in fit! " <<endreq;
       return StatusCode::FAILURE;
     }
 
     ROOT::Math::SVector<double, 2> alpha=D*X+d;
-                                                                                                                               
+
     ROOT::Math::SVector<double, 2> lambda=VD*alpha;
-                                                                                                                               
+
     ROOT::Math::SMatrix<double, 10,2> DT = ROOT::Math::Transpose(D);
-                                                                                                                               
+
     vfit=X-Cx*DT*lambda;
 
     SymMatrix10x10 delataC1=ROOT::Math::Similarity<double,10,2>(DT, VD);
-                                                                                                                               
+
     SymMatrix10x10 delataC2=ROOT::Math::Similarity<double,10,10>(Cx, delataC1);
-                                                                                                                               
+
     cfit=Cx -delataC2;
-                                                                                                                               
+
     chi2Fit=ROOT::Math::Dot(alpha,lambda);
     //chi2Fit+= 2*ROOT::Math::Dot(lambda,f);
 
@@ -190,7 +195,8 @@ StatusCode DirectionFitter::fit( const LHCb::VertexBase& PV, LHCb::Particle& B )
 
   if(!converged)  return StatusCode::FAILURE;
 
-  if(m_applyBMassConstraint) {
+  if(m_applyBMassConstraint) 
+  {
     //int Bpid = B.particleID().pid();
     //ParticleProperty*  partProp = m_ppSvc->findByStdHepID(Bpid  );
     const LHCb::ParticleProperty*  partProp = m_ppSvc->find(B.particleID());
@@ -200,8 +206,10 @@ StatusCode DirectionFitter::fit( const LHCb::VertexBase& PV, LHCb::Particle& B )
     DD(0,9)=1.;
     dd[0]=-nominalBMass;
     Gaudi::SymMatrix1x1 Cd = ROOT::Math::Similarity<double, 1, 10>(DD,cfit);
-    if ( !Cd.Invert() ) {
-      debug() << "could not invert matrix Cd in fit" << endmsg;
+    if ( !Cd.Invert() ) 
+    {
+      if ( msgLevel(MSG::DEBUG) )
+        debug() << "could not invert matrix Cd in fit" << endmsg;
       return StatusCode::FAILURE;
     }
     vfit-= cfit*ROOT::Math::Transpose(DD)*Cd*(DD*vfit+dd);
@@ -209,13 +217,13 @@ StatusCode DirectionFitter::fit( const LHCb::VertexBase& PV, LHCb::Particle& B )
     SymMatrix10x10 deltacfit2=ROOT::Math::Similarity<double,10,10>(cfit,deltacfit1);
     cfit -= deltacfit2;
 
-    for(int i=0;i<=9;i++) cfit(9,i)=0.0;
+    for(int i=0;i<=9;++i) cfit(9,i)=0.0;
 
   }
 
   Gaudi::XYZPoint refPoint(vfit[3], vfit[4], vfit[5]);
 
-  double Eb = sqrt(vfit[6]*vfit[6]+vfit[7]*vfit[7]+vfit[8]*vfit[8]+vfit[9]*vfit[9]);
+  double Eb = std::sqrt(vfit[6]*vfit[6]+vfit[7]*vfit[7]+vfit[8]*vfit[8]+vfit[9]*vfit[9]);
   Gaudi::LorentzVector lmom(vfit[6], vfit[7], vfit[8], Eb);
 
   Gaudi::SymMatrix7x7 Cm7 = cfit.Sub<Gaudi::SymMatrix7x7>(3,3);
@@ -234,7 +242,7 @@ StatusCode DirectionFitter::fit( const LHCb::VertexBase& PV, LHCb::Particle& B )
   double measuredMass= vfit[9];
   double measuredMassErr=cfit(9,9);
 
-  if(measuredMassErr>0) measuredMassErr=sqrt(measuredMassErr);
+  if(measuredMassErr>0) measuredMassErr = std::sqrt(measuredMassErr);
 
   B.setReferencePoint(refPoint);
   B.setPosCovMatrix(posCov);

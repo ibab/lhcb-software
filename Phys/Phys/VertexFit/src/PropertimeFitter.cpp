@@ -1,8 +1,8 @@
 // $Id: PropertimeFitter.cpp,v 1.8 2008-03-27 11:04:18 pkoppenb Exp $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/PhysicalConstants.h"
 
 #include "Event/Vertex.h"
@@ -23,16 +23,12 @@ using namespace Gaudi::Units;
 // 2006-06-07 : Yuehong Xie
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-
-DECLARE_TOOL_FACTORY( PropertimeFitter )
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 PropertimeFitter::PropertimeFitter( const std::string& type,
-                                  const std::string& name,
-                                  const IInterface* parent )
+                                    const std::string& name,
+                                    const IInterface* parent )
   : GaudiTool ( type, name , parent )
 {
   declareInterface<ILifetimeFitter>(this);
@@ -40,7 +36,6 @@ PropertimeFitter::PropertimeFitter( const std::string& type,
   declareProperty( "applyBMassConstraint", m_applyBMassConstraint = false);
   declareProperty( "maxIter", m_maxIter = 10);
   declareProperty( "MaxDeltaChi2", m_maxDeltaChi2 = 0.001);
-
 }
 
 //=============================================================================
@@ -51,9 +46,10 @@ PropertimeFitter::~PropertimeFitter() {}
 //=============================================================================
 // Initialize
 //=============================================================================
-StatusCode PropertimeFitter::initialize(){
-  StatusCode sc = GaudiTool::initialize();
-  if (!sc) return sc;
+StatusCode PropertimeFitter::initialize()
+{
+  const StatusCode sc = GaudiTool::initialize();
+  if ( sc.isFailure() ) return sc;
 
   m_ppSvc = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc");
 
@@ -66,9 +62,11 @@ StatusCode PropertimeFitter::initialize(){
 //         LHCb::Particle itself
 // output: resulting propertime and error, chisq.
 //=============================================================================
-StatusCode PropertimeFitter::fit( const LHCb::VertexBase& PV, const LHCb::Particle& B,
-                                  double& propertime, double& error,
-                                  double& chisq) const 
+StatusCode PropertimeFitter::fit( const LHCb::VertexBase& PV,
+                                  const LHCb::Particle& B,
+                                  double& propertime, 
+                                  double& error,
+                                  double& chisq) const
 {
 
   Gaudi::XYZPoint PVposition = PV.position();
@@ -77,9 +75,9 @@ StatusCode PropertimeFitter::fit( const LHCb::VertexBase& PV, const LHCb::Partic
   Gaudi::XYZPoint BPosition= B.referencePoint();
   Gaudi::LorentzVector BLmom= B.momentum();
 
-  double BMeasuredMass = sqrt(BLmom.T()*BLmom.T()-BLmom.X()*BLmom.X()-BLmom.Y()*BLmom.Y()-BLmom.Z()*BLmom.Z());
+  double BMeasuredMass = std::sqrt(BLmom.T()*BLmom.T()-BLmom.X()*BLmom.X()-BLmom.Y()*BLmom.Y()-BLmom.Z()*BLmom.Z());
 
-  Gaudi::SymMatrix7x7 CovB = B.covMatrix(); 
+  Gaudi::SymMatrix7x7 CovB = B.covMatrix();
 
   Gaudi::Matrix7x7 Te2m = ROOT::Math::SMatrixIdentity();
   Te2m(6,3) = -BLmom.X()/BMeasuredMass;
@@ -103,7 +101,7 @@ StatusCode PropertimeFitter::fit( const LHCb::VertexBase& PV, const LHCb::Partic
 
   SymMatrix10x10 Cx;
 
-  for(int l1=0;l1<=2; l1++) 
+  for(int l1=0;l1<=2; l1++)
     for(int l2=0;l2<=l1; l2++) Cx(l1,l2) = CovPV(l1,l2);
 
   for(int l1=0;l1<=6; l1++)
@@ -111,8 +109,8 @@ StatusCode PropertimeFitter::fit( const LHCb::VertexBase& PV, const LHCb::Partic
 
   for(int l1=3;l1<=9; l1++)
     for(int l2=0;l2<=2; l2++) Cx(l1,l2) = 0.0;
-  
-  // xpv, ypv, zpv, xb, yb, zb, pxb, pyb, pzb, mb 
+
+  // xpv, ypv, zpv, xb, yb, zb, pxb, pyb, pzb, mb
   ROOT::Math::SVector<double, 10> vfit=X;
 
   SymMatrix10x10 cfit = Cx;
@@ -123,13 +121,16 @@ StatusCode PropertimeFitter::fit( const LHCb::VertexBase& PV, const LHCb::Partic
   double chi2PreviousFit=9999.;
   double chi2Fit=999.;
 
-  while(!converged && iter< m_maxIter)  {
-    iter++;
-    verbose() << ":-) Iteration   " << iter << endreq;
+  while(!converged && iter< m_maxIter) 
+  {
+    ++iter;
+
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << ":-) Iteration   " << iter << endreq;
 
     //f(0)=(xb-xpv)*pzb-(zb-zpv)*pxb
     //f(1)=(yb-ypv)*pzb-(zb-zpv)*pyb
-    
+
     ROOT::Math::SVector<double, 2> f;
     f(0)= (vfit[3]-vfit[0])*vfit[8] - (vfit[5]-vfit[2])*vfit[6];
     f(1)= (vfit[4]-vfit[1])*vfit[8] - (vfit[5]-vfit[2])*vfit[7];
@@ -162,25 +163,27 @@ StatusCode PropertimeFitter::fit( const LHCb::VertexBase& PV, const LHCb::Partic
     ROOT::Math::SVector<double, 2> d = f - D*vfit;
 
     Gaudi::SymMatrix2x2 VD=ROOT::Math::Similarity<double,2,10>(D, Cx);
-    if(!VD.Invert()) {
-      debug() << "could not invert matrix VD in fit! " <<endreq;
+    if(!VD.Invert())
+    {
+      if ( msgLevel(MSG::DEBUG) )
+        debug() << "could not invert matrix VD in fit! " <<endreq;
       return StatusCode::FAILURE;
     }
 
     ROOT::Math::SVector<double, 2> alpha=D*X+d;
-                                                                                                                               
+
     ROOT::Math::SVector<double, 2> lambda=VD*alpha;
-                                                                                                                               
+
     ROOT::Math::SMatrix<double, 10,2> DT = ROOT::Math::Transpose(D);
-                                                                                                                               
+
     vfit=X-Cx*DT*lambda;
 
     SymMatrix10x10 delataC1=ROOT::Math::Similarity<double,10,2>(DT, VD);
-                                                                                                                               
+
     SymMatrix10x10 delataC2=ROOT::Math::Similarity<double,10,10>(Cx, delataC1);
-                                                                                                                               
+
     cfit=Cx -delataC2;
-                                                                                                                               
+
     chi2Fit=ROOT::Math::Dot(alpha,lambda);
     //chi2Fit+= 2*ROOT::Math::Dot(lambda,f);
 
@@ -188,7 +191,7 @@ StatusCode PropertimeFitter::fit( const LHCb::VertexBase& PV, const LHCb::Partic
       converged=true;
     } else {
       chi2PreviousFit=chi2Fit;
-    } 
+    }
   }  // end chi2 minimization iteration
 
   if(!converged)  return StatusCode::FAILURE;
@@ -203,8 +206,10 @@ StatusCode PropertimeFitter::fit( const LHCb::VertexBase& PV, const LHCb::Partic
     DD(0,9)=1.;
     dd[0]=-nominalBMass;
     Gaudi::SymMatrix1x1 Cd = ROOT::Math::Similarity<double, 1, 10>(DD,cfit);
-    if ( !Cd.Invert() ) {
-      debug() << "could not invert matrix Cd in fit" << endmsg;
+    if ( !Cd.Invert() )
+    {
+      if ( msgLevel(MSG::DEBUG) )
+        debug() << "could not invert matrix Cd in fit" << endmsg;
       return StatusCode::FAILURE;
     }
     vfit-= cfit*ROOT::Math::Transpose(DD)*Cd*(DD*vfit+dd);
@@ -217,12 +222,12 @@ StatusCode PropertimeFitter::fit( const LHCb::VertexBase& PV, const LHCb::Partic
   }
 
   //propertime = (xb-xpv)*mb/pxb ;
-  propertime =  (vfit[3]-vfit[0])*vfit[9]/vfit[6];  
+  propertime =  (vfit[3]-vfit[0])*vfit[9]/vfit[6];
 
   ROOT::Math::SMatrix<double, 1, 10> JA;
   JA(0,0) = -vfit[9]/vfit[6];
   JA(0,1) = 0.0;
-  JA(0,2) = 0.0; 
+  JA(0,2) = 0.0;
   JA(0,3) = vfit[9]/vfit[6];
   JA(0,4) = 0.0;
   JA(0,5) = 0.0;
@@ -233,13 +238,19 @@ StatusCode PropertimeFitter::fit( const LHCb::VertexBase& PV, const LHCb::Partic
 
   Gaudi::SymMatrix1x1 CovTau = ROOT::Math::Similarity<double,1,10>(JA, cfit);
 
-  error = sqrt(CovTau(0,0));
+  error = std::sqrt(CovTau(0,0));
 
   // convert c*tau to tau
-  propertime /=  c_light;   
+  propertime /=  c_light;
   error /= c_light;
 
   chisq =  chi2Fit;
 
   return StatusCode::SUCCESS ;
 }
+
+//-----------------------------------------------------------------------------
+// Declaration of the Tool Factory
+//-----------------------------------------------------------------------------
+DECLARE_TOOL_FACTORY( PropertimeFitter )
+//-----------------------------------------------------------------------------

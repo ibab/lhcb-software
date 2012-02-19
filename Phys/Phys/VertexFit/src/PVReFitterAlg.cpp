@@ -31,22 +31,20 @@ DECLARE_ALGORITHM_FACTORY( PVReFitterAlg )
 //=============================================================================
   PVReFitterAlg::PVReFitterAlg( const std::string& name,
                                 ISvcLocator* pSvcLocator)
-    :
-    GaudiAlgorithm ( name , pSvcLocator ),
-    m_pvOfflineTool(0),
-    m_pvReFitter(0),
-    m_onOfflineTool(0),
-    m_pvOfflinetoolType("PVOfflineTool"),
-    m_pvReFitterType("AdaptivePVReFitter"),
-    m_useIPVOfflineTool(false),
-    m_useIPVReFitter(true),
-    m_particleInputLocation(""),
-    m_particleInputLocations(),
-    m_PVInputLocation(""),
-    m_particle2VertexRelationsOutputLocation(""),
-    m_vertexOutputLocation(""),
-    m_outputLocation("")
-
+    : GaudiAlgorithm ( name , pSvcLocator ),
+      m_pvOfflineTool(0),
+      m_pvReFitter(0),
+      m_onOfflineTool(0),
+      m_pvOfflinetoolType("PVOfflineTool"),
+      m_pvReFitterType("AdaptivePVReFitter"),
+      m_useIPVOfflineTool(false),
+      m_useIPVReFitter(true),
+      m_particleInputLocation(""),
+      m_particleInputLocations(),
+      m_PVInputLocation(""),
+      m_particle2VertexRelationsOutputLocation(""),
+      m_vertexOutputLocation(""),
+      m_outputLocation("")
 {
   declareProperty("IPVOfflineTool", m_pvOfflinetoolType);
   declareProperty("IPVReFitter",    m_pvReFitterType);
@@ -283,7 +281,7 @@ void PVReFitterAlg::executeForLocation(const std::string& particleLocation,
       verbose() << "CHECK: table is at "
                 << particle2VertexRelationsOutputLocation << endmsg;
     }
-    else 
+    else
     {
       Error("No LHCb::Particle->LHCb::RecVertex table found at "+
             m_particle2VertexRelationsOutputLocation,
@@ -306,11 +304,11 @@ LHCb::RecVertex* PVReFitterAlg::refitVertex(const LHCb::RecVertex* v,
 
   StatusCode sc(StatusCode::SUCCESS);
 
-  if ( m_useIPVOfflineTool ) 
+  if ( m_useIPVOfflineTool )
   {
     LHCb::Track::ConstVector tracks;
     getTracks( p, tracks );
-    if ( !tracks.empty() ) 
+    if ( !tracks.empty() )
     {
       reFittedVertex = new LHCb::RecVertex();
       sc = m_pvOfflineTool->reDoSinglePV( v->position(),
@@ -321,7 +319,7 @@ LHCb::RecVertex* PVReFitterAlg::refitVertex(const LHCb::RecVertex* v,
     {
       reFittedVertex = new LHCb::RecVertex(*v);
     }
-  } 
+  }
   else
   {
     reFittedVertex = new LHCb::RecVertex(*v);
@@ -350,11 +348,11 @@ void PVReFitterAlg::getTracks(const LHCb::Particle* p,
   {
     const LHCb::Track* track = proto->track();
     if ( track ) tracks.push_back(track);
-  } 
-  else 
+  }
+  else
   {
     const SmartRefVector< LHCb::Particle >& Prods = p->daughters();
-    for ( SmartRefVector< LHCb::Particle >::const_iterator iProd = Prods.begin(); 
+    for ( SmartRefVector< LHCb::Particle >::const_iterator iProd = Prods.begin();
           iProd != Prods.end(); ++iProd )
     {
       const LHCb::Particle* daughter = *iProd;

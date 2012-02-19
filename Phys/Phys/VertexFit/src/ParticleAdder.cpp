@@ -3,7 +3,6 @@
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
-
 #include "Event/Vertex.h"
 #include "Event/Particle.h"
 
@@ -19,10 +18,6 @@ using namespace Gaudi::Units;
 //
 // 2006-11-30 : Yasmine Amhis & Olivier Deschamps
 //-----------------------------------------------------------------------------
-
-// Declaration of the Tool Factory
-
-DECLARE_TOOL_FACTORY(ParticleAdder)
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -96,21 +91,22 @@ StatusCode ParticleAdder::fit
   return fit(parts, V , tPart );
 }
 //=============================================================================
-StatusCode ParticleAdder::reFit( LHCb::Particle& particle ) const {
+StatusCode ParticleAdder::reFit( LHCb::Particle& particle ) const
+{
   LHCb::Vertex* vertex = particle.endVertex() ;
   return fit( particle.daughtersVector(), *vertex , particle ) ;
 }
 //=============================================================================
 StatusCode ParticleAdder::add(const LHCb::Particle*,
-                              LHCb::Vertex& ) const {
-  Error("add is to be implemented for ParticleAdder");
-  return StatusCode::FAILURE;
+                              LHCb::Vertex& ) const
+{
+  return Error("add is to be implemented for ParticleAdder");
 }
 //=============================================================================
 StatusCode ParticleAdder::remove(const LHCb::Particle*,
-                                 LHCb::Vertex& ) const {
-  Error("remove is to be implemented for ParticleAdder");
-  return StatusCode::FAILURE;
+                                 LHCb::Vertex& ) const
+{
+  return Error("remove is to be implemented for ParticleAdder");
 }
 //=============================================================================
 StatusCode ParticleAdder::combine
@@ -121,3 +117,9 @@ StatusCode ParticleAdder::combine
   return fit ( daughter , vertex , mother ) ;
 }
 //=============================================================================
+
+//-----------------------------------------------------------------------------
+// Declaration of the Tool Factory
+//-----------------------------------------------------------------------------
+DECLARE_TOOL_FACTORY(ParticleAdder)
+//-----------------------------------------------------------------------------
