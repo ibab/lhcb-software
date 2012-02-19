@@ -71,7 +71,7 @@ bool LHCb::RecVertex::setTrackWeight( const LHCb::Track* track,
   {
     // Does the track vector have this track in it ?
     const SmartRef<LHCb::Track> tkRef(track);
-    SmartRefVector<LHCb::Track>::iterator iTk =
+    SmartRefVector<LHCb::Track>::const_iterator iTk =
       std::find( m_tracks.begin(), m_tracks.end(), tkRef );
     if ( iTk != m_tracks.end() )
     {
