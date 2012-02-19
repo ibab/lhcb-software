@@ -10,7 +10,7 @@
     
     <class
 	author = "Juan Palacios"
-	desc = "Base class from which all vertices are derived"
+	desc = "Reconstructed Vertices"
 	name = "RecVertex"
 	stdVectorTypeDef="TRUE"
 	keyedContTypeDef = "TRUE"
@@ -74,13 +74,13 @@
         argList="int key"
 	explicit = "TRUE"
         desc="create a vertex with a selected key"
-        initList = "VertexBase( key ), m_technique(RecVertex::Unknown)"
+        initList = "VertexBase(key),m_technique(RecVertex::Unknown)"
 	/>
 
       <constructor
         argList="const Gaudi::XYZPoint&amp; point"
         desc="Constructor from a point"
-	initList="VertexBase(point), m_technique(RecVertex::Unknown)"
+	initList="VertexBase(point),m_technique(RecVertex::Unknown)"
 	/>
 
       <method
@@ -186,6 +186,22 @@
         const = "FALSE"
         argList="const TrackWithWeightVector&amp; tracksAndWeights"
 	desc  = "Set the tracks with their associated weights" >
+      </method>
+
+      <method 
+	name  = "setTrackWeight" 
+	type  = "bool"
+        const = "FALSE"
+        argList="const LHCb::Track* track, const float weight"
+	desc  = "Set the weight for the given Track. Returns true if weight is successfuly set, flase if the track is not part of this vertex" >
+      </method>
+
+      <method 
+	name  = "trackWeight" 
+	type  = "float"
+        const = "TRUE"
+        argList="const LHCb::Track* track"
+	desc  = "Returns the weight for the given Track. If track is not part of the Vertex, will return -1." >
       </method>
 
     </class>

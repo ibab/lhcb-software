@@ -5,5 +5,4 @@
   <class name = "std::vector<std::pair<int,float> >"     />
   <class name = "LHCb::RecVertex::TrackWithWeight"       />
   <class name = "LHCb::RecVertex::TrackWithWeightVector" />
-  <enum  name = "LHCb::RecVertex::RecVertexType" />
 </lcgdict>

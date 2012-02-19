@@ -1,7 +1,8 @@
 // $Id: $
-// Include files
 
-// local
+#include <algorithm>
+#include <assert.h>
+
 #include "Event/RecVertex.h"
 
 //-----------------------------------------------------------------------------
@@ -10,28 +11,24 @@
 // 2012-02-17 : Chris Jones
 //-----------------------------------------------------------------------------
 
-void LHCb::RecVertex::removeFromTracks(const LHCb::Track * track)
+void LHCb::RecVertex::removeFromTracks(const LHCb::Track* track)
 {
+  assert( m_tracks.size() == m_weights.size() );
   if ( !m_tracks.empty() )
   {
-    SmartRefVector<LHCb::Track> newTracks;
-    newTracks.reserve(m_tracks.size()-1);
-    std::vector<float>          newWeights;
-    newWeights.reserve(m_tracks.size()-1);
-    std::vector<float>::const_iterator iW = m_weights.begin();
-    for ( SmartRefVector<LHCb::Track>::const_iterator iTk = m_tracks.begin();
-          iTk != m_tracks.end() && iW != m_weights.end();
-          ++iTk, ++iW )
+    // Does the track vector have this track in it ?
+    const SmartRef<LHCb::Track> tkRef(track);
+    SmartRefVector<LHCb::Track>::iterator iTk =
+      std::find( m_tracks.begin(), m_tracks.end(), tkRef );
+    if ( iTk != m_tracks.end() )
     {
-      const LHCb::Track * tk = *iTk;
-      if ( tk != track )
-      {
-        newTracks.push_back(tk);
-        newWeights.push_back(*iW);
-      }
+      // Get the index
+      const unsigned int index = (unsigned int) ( iTk - m_tracks.begin() );
+      // remove the track
+      m_tracks.erase( iTk );
+      // remove the weight
+      m_weights.erase( m_weights.begin() + index );
     }
-    m_tracks  = newTracks;
-    m_weights = newWeights;
   }
 }
 
@@ -51,8 +48,8 @@ LHCb::RecVertex::tracksWithWeights() const
   return twV;
 }
 
-void 
-LHCb::RecVertex::setTracksWithWeights(const TrackWithWeightVector& tracksAndWeights)
+void
+LHCb::RecVertex::setTracksWithWeights( const TrackWithWeightVector& tracksAndWeights )
 {
   // Clear the current vectors
   clearTracks();
@@ -63,4 +60,49 @@ LHCb::RecVertex::setTracksWithWeights(const TrackWithWeightVector& tracksAndWeig
   {
     addToTracks( iTW->first, iTW->second );
   }
+}
+
+bool LHCb::RecVertex::setTrackWeight( const LHCb::Track* track,
+                                      const float weight )
+{
+  assert( m_tracks.size() == m_weights.size() );
+  bool OK = false;
+  if ( !m_tracks.empty() )
+  {
+    // Does the track vector have this track in it ?
+    const SmartRef<LHCb::Track> tkRef(track);
+    SmartRefVector<LHCb::Track>::iterator iTk =
+      std::find( m_tracks.begin(), m_tracks.end(), tkRef );
+    if ( iTk != m_tracks.end() )
+    {
+      // Get the index from the iterator
+      const unsigned int index = (unsigned int) ( iTk - m_tracks.begin() );
+      // Set the weight
+      m_weights[index] = weight;
+      // Set the return status to true
+      OK = true;
+    }
+  }
+  return OK;
+}
+
+float LHCb::RecVertex::trackWeight(const LHCb::Track* track) const
+{
+  assert( m_tracks.size() == m_weights.size() );
+  float weight = -1.0;
+  if ( !m_tracks.empty() )
+  {
+    // Try and find the track
+    const SmartRef<LHCb::Track> tkRef(track);
+    SmartRefVector<LHCb::Track>::const_iterator iTk =
+      std::find( m_tracks.begin(), m_tracks.end(), tkRef );
+    if ( iTk != m_tracks.end() )
+    {
+      // Get the index from the iterator
+      const unsigned int index = (unsigned int) ( iTk - m_tracks.begin() );
+      // Get the weight
+      weight = m_weights[index];
+    }
+  }
+  return weight;
 }
