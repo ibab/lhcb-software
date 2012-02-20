@@ -4,6 +4,10 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2012-02-20 - Anton Poluektov 
+ - Add IConeVariables.h, interface for a tool to calculate isolation 
+   variables as in TupleToolTrackIsolation. 
+
 !========================= DaVinciInterfaces v2r12 2012-02-03 =========================
 
 ! 2012-01-18 - Giampiero Mancinelli
