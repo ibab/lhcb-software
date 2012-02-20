@@ -1,9 +1,9 @@
-#ifndef PARTICLEISOLATION_H 
-#define PARTICLEISOLATION_H 1
+#ifndef ADDEXTRAINFO_H 
+#define ADDEXTRAINFO_H 1
 
 #include "Kernel/DVAlgorithm.h"
 
-/** @class ParticleIsolation ParticleIsolation.h 
+/** @class AddExtraInfo AddExtraInfo.h 
  *
  *  Algorithm to add Particle isolation variables 
  *  calculated by ConeVariables tool to particle extra info
@@ -12,23 +12,23 @@
  *  @date   19/02/2012
  */
 
-class ParticleIsolation : public DVAlgorithm {
+class AddExtraInfo : public DVAlgorithm {
 
 public: 
   /// Standard constructor
-  ParticleIsolation( const std::string& name, ISvcLocator* pSvcLocator );
-  virtual ~ParticleIsolation( ); ///< Destructor
+  AddExtraInfo( const std::string& name, ISvcLocator* pSvcLocator );
+  virtual ~AddExtraInfo( ); ///< Destructor
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private: 
    
-  std::string m_coneVariablesToolName;
-
-  IConeVariables* m_coneVar;
+  std::vector<std::string> m_toolNames;
+  
+  std::list<IExtraInfoTool*> m_tools;
 
 };
 
 //=======================================================================//
-#endif // PARTICLEISOLATION_H
+#endif // AddExtraInfo_H

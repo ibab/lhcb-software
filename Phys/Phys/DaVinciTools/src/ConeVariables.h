@@ -4,7 +4,7 @@
 // Include files
 // from DaVinci, this is a specialized GaudiAlgorithm
 //#include "Kernel/DVAlgorithm.h"
-#include "Kernel/IConeVariables.h" 
+#include "Kernel/IExtraInfoTool.h" 
 #include "GaudiAlg/GaudiTool.h"
 
 /** @class ConeVariables ConeVariables.h
@@ -15,24 +15,24 @@
  *    (i.e. that belong to the decay you are looking for), 
  *    build the variables with the remaining tracks.
  * 
- * - head_cmult : Number of tracks inside cone.
- * - head_cp : Summed p inside cone
- * - head_cpt : Summed pt inside cone
- * - head_cpx : Summed px inside cone
- * - head_cpy : Summed py inside cone
- * - head_cpz : Summed pz inside cone
+ * - m_mult : Number of tracks inside cone.
+ * - m_cp  : Summed p inside cone
+ * - m_cpt : Summed pt inside cone
+ * - m_cpx : Summed px inside cone
+ * - m_cpy : Summed py inside cone
+ * - m_cpz : Summed pz inside cone
  *
  * If Verbose, or other flags are set:
  *
  * Asymmetry variables
- * - head_pasy : (head_P - head_cp)/(head_P + head_cp)
- * - head_ptasy : (head_PT - head_cpt)/(head_PT + head_cpt)
- * - head_pxasy : (head_Px - head_cpx)/(head_Px + head_cpx)
- * - head_pyasy : (head_Py - head_cpy)/(head_Py + head_cpy)
- * - head_pzasy : (head_Pz - head_cpz)/(head_Pz + head_cpz)
+ * - m_pasy  : (m_P  - m_cp) /(m_P  + m_cp)
+ * - m_ptasy : (m_PT - m_cpt)/(m_PT + m_cpt)
+ * - m_pxasy : (m_Px - m_cpx)/(m_Px + m_cpx)
+ * - m_pyasy : (m_Py - m_cpy)/(m_Py + m_cpy)
+ * - m_pzasy : (m_Pz - m_cpz)/(m_Pz + m_cpz)
  * Delta angle variables
- * - head_DeltaEta : Difference in eta between summed tracks and head
- * - head_DeltaPhi : Difference in phi between summed tracks and head
+ * - m_DeltaEta : Difference in eta between summed tracks and head
+ * - m_DeltaPhi : Difference in phi between summed tracks and head
  *
  *
  * Options:
@@ -47,7 +47,7 @@
  *  
  */
 
-class ConeVariables : public GaudiTool, virtual public IConeVariables {
+class ConeVariables : public GaudiTool, virtual public IExtraInfoTool {
 public: 
   /// Standard constructor
   ConeVariables( const std::string& type, 
@@ -55,11 +55,14 @@ public:
               const IInterface* parent );
 
   /// Loop over differnt conesizes and fill the variables into the tuple
-  virtual StatusCode getConeInfo( const LHCb::Particle*
-                           , const LHCb::Particle*
-                           , LHCb::ConeInfo& );
+  virtual StatusCode calculateExtraInfo( const LHCb::Particle*
+                                       , const LHCb::Particle*);  
+                                       
+  virtual int getFirstIndex(void);
   
+  virtual int getNumberOfParameters(void);
   
+  virtual void getInfo(int index, double & value, std::string & name);
 
   virtual ~ConeVariables( ); ///< Destructor
 
@@ -71,6 +74,20 @@ private:
 
   double m_coneAngle;
   int m_trackType;
+  
+  int m_mult;
+  double m_px;
+  double m_py;
+  double m_pz;
+  double m_pt;
+  double m_p;
+  double m_ptasy;
+  double m_pxasy;
+  double m_pyasy;
+  double m_pzasy;
+  double m_pasy;
+  double m_deltaEta;
+  double m_deltaPhi;
 
   std::vector<const LHCb::Particle*> m_decayParticles;
 
@@ -84,6 +101,4 @@ private:
   bool isTrackInDecay(const LHCb::Track* track);
 };
 
-
-
-#endif // TUPLETOOLTRACKISOLATION_H
+#endif // CONEVARIABLES_H

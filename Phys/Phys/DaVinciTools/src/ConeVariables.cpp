@@ -23,7 +23,7 @@ ConeVariables::ConeVariables( const std::string& type,
                               const std::string& name,
                               const IInterface* parent) : GaudiTool ( type, name , parent )
 {
-  declareInterface<IConeVariables>(this);
+  declareInterface<IExtraInfoTool>(this);
   declareProperty( "ConeAngle", m_coneAngle = 1.0,
                    "Set the deltaR of the cone (default = 1.0), in radians");
   declareProperty( "TrackType", m_trackType = 3,
@@ -49,8 +49,7 @@ StatusCode ConeVariables::initialize()
 //=============================================================================
 // Fill Cone Info structure
 //=============================================================================
-StatusCode ConeVariables::getConeInfo( const LHCb::Particle *top, const LHCb::Particle *   part,
-                                       LHCb::ConeInfo & info ) 
+StatusCode ConeVariables::calculateExtraInfo( const LHCb::Particle *top, const LHCb::Particle *   part ) 
 {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Fill" << endmsg;
@@ -110,24 +109,24 @@ StatusCode ConeVariables::getConeInfo( const LHCb::Particle *top, const LHCb::Pa
       if(deltaPhi > M_PI) deltaPhi  = 2*M_PI-deltaPhi;
 
       // -- Fill the tuple with the variables
-      info.px = conePx;
-      info.py = conePy;
-      info.pz = conePz;
-      info.pt = conePt;
-      info.p = coneP;
-      info.mult = myPair.second;
+      m_px = conePx;
+      m_py = conePy;
+      m_pz = conePz;
+      m_pt = conePt;
+      m_p = coneP;
+      m_mult = myPair.second;
 
       // -- Fill the difference in Eta and Phi between the summed momentum of all tracks in the cone and the
       // -- track of the particle in question
-      info.deltaEta = deltaEta;
-      info.deltaPhi = deltaPhi;
+      m_deltaEta = deltaEta;
+      m_deltaPhi = deltaPhi;
 
       // -- Fill the asymmetry information
-      info.pxasy = (part->momentum().Px() - conePx)/(part->momentum().Px() + conePx);
-      info.pyasy = (part->momentum().Py() - conePy)/(part->momentum().Py() + conePy);
-      info.pzasy = (part->momentum().Pz() - conePz)/(part->momentum().Pz() + conePz);
-      info.pasy = (part->p() - coneP)/(part->p() + coneP);
-      info.ptasy = (part->pt() - conePt)/(part->pt() + conePt);
+      m_pxasy = (part->momentum().Px() - conePx)/(part->momentum().Px() + conePx);
+      m_pyasy = (part->momentum().Py() - conePy)/(part->momentum().Py() + conePy);
+      m_pzasy = (part->momentum().Pz() - conePz)/(part->momentum().Pz() + conePz);
+      m_pasy  = (part->p() - coneP)/(part->p() + coneP);
+      m_ptasy = (part->pt() - conePt)/(part->pt() + conePt);
 
   }
   else
@@ -255,3 +254,32 @@ bool ConeVariables::isTrackInDecay(const LHCb::Track* track){
 }
 
 
+int ConeVariables::getFirstIndex(void) {
+  return LHCb::Particle::FirstIsolationInfoIndex;
+}
+
+int ConeVariables::getNumberOfParameters(void) {
+  return 14; // This tool returns 13 parameters
+}
+
+void ConeVariables::getInfo(int index, double & value, std::string & name) {
+
+  switch(index) {
+    case LHCb::Particle::FirstIsolationInfoIndex    : value = m_coneAngle; name = "angle"; return;
+    case LHCb::Particle::FirstIsolationInfoIndex+1  : value = (double)m_mult; name = "mult"; return;
+    case LHCb::Particle::FirstIsolationInfoIndex+2  : value = m_px; name = "px"; return;
+    case LHCb::Particle::FirstIsolationInfoIndex+3  : value = m_py; name = "py"; return;
+    case LHCb::Particle::FirstIsolationInfoIndex+4  : value = m_pz; name = "pz"; return;
+    case LHCb::Particle::FirstIsolationInfoIndex+5  : value = m_p;  name = "p" ; return;
+    case LHCb::Particle::FirstIsolationInfoIndex+6  : value = m_pt; name = "pt"; return;
+    case LHCb::Particle::FirstIsolationInfoIndex+7  : value = m_pxasy; name = "pxasy"; return;
+    case LHCb::Particle::FirstIsolationInfoIndex+8  : value = m_pyasy; name = "pyasy"; return;
+    case LHCb::Particle::FirstIsolationInfoIndex+9  : value = m_pzasy; name = "pzasy"; return;
+    case LHCb::Particle::FirstIsolationInfoIndex+10 : value = m_pasy;  name = "pasy"; return;
+    case LHCb::Particle::FirstIsolationInfoIndex+11 : value = m_ptasy; name = "ptasy"; return;
+    case LHCb::Particle::FirstIsolationInfoIndex+12 : value = m_deltaEta; name = "deltaEta"; return;
+    case LHCb::Particle::FirstIsolationInfoIndex+13 : value = m_deltaPhi; name = "deltaPhi"; return;
+    default: return;
+  }
+
+}
