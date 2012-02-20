@@ -51,7 +51,7 @@ __date__    = "2011-06-07"
 __all__= (
     'decision'     , ## collect trigger decisions
     'trgDecs'      , ## print trigger statistics 
-    'tistos'       , ## fill N-tuple with TisTos information
+    'tisTos'       , ## fill N-tuple with TisTos information
     )
 # ==============================================================================
 from   LoKiCore.basic  import cpp
