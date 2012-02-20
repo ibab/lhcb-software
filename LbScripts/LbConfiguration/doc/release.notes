@@ -1,5 +1,6 @@
-2012-01-12  Ben Couturier <Ben.Couturier@cern.ch>
+2012-02-20  Ben Couturier <Ben.Couturier@cern.ch>
 
+        * cmt/requirements: release of version v6r7
 	* python/LbConfiguration/LbLogin.py: Added aliases to switch from AFS to CVMFS with CMTSITE CERN
 
 2012-02-14 Ben Couturier <Ben.Couturier@cern.ch>
