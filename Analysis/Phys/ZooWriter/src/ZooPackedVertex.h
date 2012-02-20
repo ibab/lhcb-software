@@ -37,7 +37,8 @@ class ZooPackedVertex : public TObject
 	/// return vertex position
 	const Vector pos() const { return m_pos; }
 	/// return vertex position
-	operator const ROOT::Math::XYZPoint() const { return m_pos; }
+	operator const ROOT::Math::XYZPoint() const
+	{ return ROOT::Math::XYZPoint(m_pos[0], m_pos[1], m_pos[2]); }
 	/// return vertex covariance
 	const Matrix cov() const { return m_pos; }
 	/// return "raw" packed position with error

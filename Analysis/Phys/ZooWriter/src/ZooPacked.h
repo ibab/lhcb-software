@@ -8,6 +8,7 @@
 #define ZOOPACKED_H
 
 #include <cmath>
+#include <cassert>
 #include <algorithm>
 
 #include <TObject.h>
@@ -16,6 +17,8 @@
 #include <Math/Point3D.h>
 #include <Math/SVector.h>
 #include <Math/SMatrix.h>
+
+#include "ZooLikely.h"
 
 #ifndef __CINT__
 #include <boost/static_assert.hpp>
@@ -268,7 +271,7 @@ class ZooPackedStorageWithError : public TObject
 	    UnpackedT v[nDim];
 	    _get(vect, v);
 	    for (unsigned i = 0; i < nDim; ++i) {
-		if (BaseVector::UnitsT::invert[i]) {
+		if (UNLIKELY(BaseVector::UnitsT::invert[i])) {
 		    // if we need to invert the vector, we need to transform
 		    // the error as well
 		    const UnpackedT inv = UnpackedT(1) / v[i];
@@ -279,7 +282,7 @@ class ZooPackedStorageWithError : public TObject
 		for (unsigned j = 0; j < i; ++j) {
 		    // protect against 0. / 0.
 		    double tmp = 0.;
-		    if (0. != std::abs(cov(i, i)) && 0. != std::abs(cov(j, j)))
+		    if (LIKELY(0. != std::abs(cov(i, i)) && 0. != std::abs(cov(j, j))))
 			tmp = cov(i, j) /
 			    (std::sqrt(cov(i, i)) * std::sqrt(cov(j, j)));
 		    else if (0. != std::abs(cov(i, j)))
@@ -291,7 +294,7 @@ class ZooPackedStorageWithError : public TObject
 		for (unsigned j = 0; j < i; ++j) {
 		    // protect against 0. / 0.
 		    double tmp = 0.;
-		    if (0. != std::abs(cov(i, i)) && 0. != std::abs(cov(j, j)))
+		    if (LIKELY(0. != std::abs(cov(i, i)) && 0. != std::abs(cov(j, j))))
 			tmp = cov(i, j) /
 			    (std::sqrt(cov(i, i)) * std::sqrt(cov(j, j)));
 		    else if (0. != std::abs(cov(i, j)))
@@ -342,8 +345,30 @@ public:
 	    _set(vect, cov);
 	    return *this;
 	}
+	/** @brief allow element wise read only access to vector
+	 *
+	 * note that is is faster to convert to SVector if you need the whole
+	 * vector */
+	UnpackedT operator[](unsigned idx) const { return m_vect[idx]; }
+	/** @brief allow element wise read only access to covariance matrix
+	 *
+	 * note that is is faster to convert to SMatrix if you need the whole
+	 * matrix */
+	UnpackedT operator()(unsigned i, unsigned j) const
+	{
+	    assert(LIKELY(i < nDim)); assert(LIKELY(j < nDim));
+	    const double di = BaseVector::UnitsT::invert[i] ?
+		((UnpackedT(1) / m_errs[i]) * (m_vect[i] * m_vect[i])) :
+		m_errs[i];
+	    if (i == j) return di * di;
+	    const double dj = BaseVector::UnitsT::invert[j] ?
+		((UnpackedT(1) / m_errs[j]) * (m_vect[j] * m_vect[j])) :
+		m_errs[j];
+	    if (j > i) std::swap(i, j);
+	    return m_correl[(i*(i-1))/2 + j] * di * dj;
+	}
 
-	ClassDef(ZooPackedStorageWithError, 1);
+	ClassDef(ZooPackedStorageWithError, 2);
 };
 
 // convenience typedefs (use for standalone objects to which there might be

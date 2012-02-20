@@ -16,6 +16,7 @@
 #include <iostream>
 #include <cstdio>
 
+#include "ZooLikely.h"
 #include "ZooKeyValueBlock.h"
 #include "ZooStringToUIDTable.h"
 
@@ -343,8 +344,8 @@ class ZooStringValueBlock::const_iterator {
 	/// comparison of iterators
 	bool operator<(const const_iterator& other) const
 	{
-	    if (m_parent < other.m_parent) return true;
-	    if (other.m_parent < m_parent) return false;
+	    if (UNLIKELY(m_parent < other.m_parent)) return true;
+	    if (UNLIKELY(other.m_parent < m_parent)) return false;
 	    return m_it < other.m_it;
 	}
 	/// comparison of iterators

@@ -4,6 +4,25 @@
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
 
+! 2012-02-19 - Manuel Tobias Schiller
+ - fix a problem with multiple inheritance in the per-job object section of
+   ZooObjectManager
+ - replace the option tree with a per-job object: a TMap string->string which
+   gives all the properties of the ZooWriter instance plus a few extras
+   (less brittle than the old solution, and no danger of forgetting newly
+   added properties)
+ - update examples/ZooOptionsReader.cpp to use the new per-job option object
+ - change examples/ZooPy.py to guess the shared library location more
+   accurately
+ - tweak options in ZooWriter/ZooTuplePlayer to allow for faster tuple writing
+   (and potentially reading because we seek less with the larger basket size)
+ - add ZooLikely.h to help the compiler with hints on likely/unlikely branches
+ - add a few hints on likely/unlikely branches in the code
+ - add the ability to directly (read only) access elements of the ZooPacked
+   classes (both vectors with operator[](i) and matrices with operator()(i,j))
+ - use direct element access to steamline position and momentum methods of
+   ZooPackedParticle
+
 ! 2012-02-08 - Manuel Tobias Schiller
  - fix bug in CPU feature detection to set compile flags
 

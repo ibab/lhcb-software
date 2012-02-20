@@ -70,7 +70,7 @@ namespace ZooPackedUnits {
 	    typename Unit<U, P, N>::unpacked u)
     {
 	// encode NaNs specially
-	if (std::isnan(u))
+	if (UNLIKELY(std::isnan(u)))
 	    return std::numeric_limits<packed>::min();
 	// proper rounding (round to even: what you would expect,
 	// except for 0.5, where we round either up or down depending on
@@ -82,9 +82,9 @@ namespace ZooPackedUnits {
 	if (u - fu > 0.5) u += unpacked(1);
 	else if (u - fu == 0.5 && packed(fu) & 1) u += unpacked(1);
 	// saturate
-	if (unpacked(std::numeric_limits<packed>::max()) < u)
+	if (UNLIKELY(unpacked(std::numeric_limits<packed>::max()) < u))
 	    return std::numeric_limits<packed>::max();
-	if (-unpacked(std::numeric_limits<packed>::max()) > u)
+	if (UNLIKELY(-unpacked(std::numeric_limits<packed>::max()) > u))
 	    return -std::numeric_limits<packed>::max();
 	return packed(std::floor(u));
     }
@@ -94,7 +94,7 @@ namespace ZooPackedUnits {
 	    typename Unit<U, P, N>::packed p)
     {
 	// map the NaN code to a quiet NaN
-	if (std::numeric_limits<packed>::min() == p)
+	if (UNLIKELY(std::numeric_limits<packed>::min() == p))
 	    return std::numeric_limits<unpacked>::quiet_NaN();
 	return unpacked(p);
     }
@@ -103,7 +103,7 @@ namespace ZooPackedUnits {
     typename Unit<U, P, N>::packed Unit<U, P, N>::pack(
 	    typename Unit<U, P, N>::unpacked u, unsigned idx)
     {
-	if (invert[idx])
+	if (UNLIKELY(invert[idx]))
 	    return doPack(unpacked(1) / (unit[idx] * u));
 	else
 	    return doPack(u / unit[idx]);
@@ -113,7 +113,7 @@ namespace ZooPackedUnits {
     typename Unit<U, P, N>::unpacked Unit<U, P, N>::unpack(
 	    typename Unit<U, P, N>::packed p, unsigned idx)
     {
-	if (invert[idx])
+	if (UNLIKELY(invert[idx]))
 	    return unpacked(1) / (unit[idx] * doUnpack(p));
 	else
 	    return doUnpack(p) * unit[idx];
@@ -163,7 +163,7 @@ template<typename U, unsigned N>
 const typename ZooPackedStorage<U, N>::UnpackedT
 	ZooPackedStorage<U, N>::operator[](unsigned idx) const
 {
-    assert(idx < nDim);
+    assert(LIKELY(idx < nDim));
     return U::unpack(m_arr[idx], idx);
 }
 
@@ -171,7 +171,7 @@ template<typename U, unsigned N>
 const ZooPackedStorage<U, N>& ZooPackedStorage<U, N>::set(
 	unsigned idx, typename ZooPackedStorage<U, N>::UnpackedT val)
 {
-    assert(idx < nDim);
+    assert(LIKELY(idx < nDim));
     m_arr[idx] = U::pack(val, idx);
     return *this;
 }
@@ -193,7 +193,7 @@ ZooPackedStorageWithError<BaseUnit, OffDiagUnit, N>::operator
 {
     Matrix retVal;
     for (unsigned i = 0; i < nDim; ++i) {
-	if (BaseVector::UnitsT::invert[i]) {
+	if (UNLIKELY(BaseVector::UnitsT::invert[i])) {
 	    // if we need to invert the vector, we need to transform
 	    // the error as well
 	    const UnpackedT inv = m_vect[i];

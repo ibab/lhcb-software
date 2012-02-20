@@ -23,7 +23,7 @@ bool ZooKeyValueBlock::exists(unsigned key) const
 float ZooKeyValueBlock::value(unsigned key) const
 {
     KeyVector::const_iterator it = std::find(m_idx.begin(), m_idx.end(), key);
-    if (it != m_idx.end()) return m_val[unsigned(it - m_idx.begin())];
+    if (LIKELY(it != m_idx.end())) return m_val[unsigned(it - m_idx.begin())];
     return std::numeric_limits<float>::quiet_NaN();
 }
 
@@ -39,7 +39,7 @@ ZooKeyValueBlock::ZooKeyValueBlock(KeyValueVector& extrainfo)
 		&KeyValuePair::first, _2));
     for (std::size_t i = 0; i < extrainfo.size(); ++i) {
 	// skip duplicate keys
-	if (i && extrainfo[i - 1].first == extrainfo[i].first)
+	if (UNLIKELY(i && extrainfo[i - 1].first == extrainfo[i].first))
 	    continue;
 	m_idx.push_back(extrainfo[i].first);
 	m_val.push_back(extrainfo[i].second);
@@ -81,7 +81,8 @@ float ZooKeyValueBlock::erase(unsigned key)
 {
     KeyVector::iterator it = std::find(m_idx.begin(),
 	    m_idx.end(), key);
-    if (m_idx.end() == it) return std::numeric_limits<float>::quiet_NaN();
+    if (UNLIKELY(m_idx.end() == it))
+	return std::numeric_limits<float>::quiet_NaN();
     ValueVector::iterator jt = m_val.begin() + unsigned(it - m_idx.begin());
     float retVal = *jt;
     m_idx.erase(it);
@@ -94,7 +95,7 @@ bool ZooKeyValueBlock::modify(unsigned key, float val)
     // find index of key in array
     KeyVector::iterator it =
 	std::find(m_idx.begin(), m_idx.end(), key);
-    if (it != m_idx.end()) {
+    if (LIKELY(it != m_idx.end())) {
 	// modify corresponding value
 	ValueVector::iterator jt =
 	    m_val.begin() + unsigned(it - m_idx.begin());

@@ -21,6 +21,7 @@
 #include <TRefArray.h>
 #include <TTree.h>
 
+#include "ZooLikely.h"
 
 /** @namespace ZooObjectID
  * this namespace serves as central repository of object ids and helps
@@ -146,7 +147,7 @@ class ZooObjClonesArray : public TObject
 	/// get access to the object at index idx
 	TObject* operator[](UInt_t idx) const
 	{
-	    if (idx >= m_sz) m_sz = idx + 1;
+	    if (UNLIKELY(idx >= m_sz)) m_sz = idx + 1;
 	    return m_clones[idx];
 	}
 	/// operator[] to be used to put an object into the clones array
@@ -160,7 +161,7 @@ class ZooObjClonesArray : public TObject
 	 */
 	TObject*& operator[](UInt_t idx)
 	{
-	    if (idx >= m_sz) m_sz = idx + 1;
+	    if (UNLIKELY(idx >= m_sz)) m_sz = idx + 1;
 	    return *(&m_clones[idx]);
 	}
 
@@ -209,7 +210,7 @@ class ZooObjectManager
 	    // force info blocks to inherit from TObject
 	    typedef boost::is_base_and_derived<TObject, I> fromTObject;
 	    BOOST_STATIC_ASSERT(fromTObject::value);
-	    assert(0 != other);
+	    assert(LIKELY(0 != other));
 	    // get references to number of info blocks of type I and array
 	    // containing them
 	    ZooObjClonesArray& arr = *reinterpret_cast<ZooObjClonesArray*>(
@@ -245,7 +246,7 @@ class ZooObjectManager
 	    const VoidPointerMap& map =
 		m_mapping[ZooObjectID::ID<I>::id];
 	    VoidPointerMap::const_iterator it = map.find(lhcbobj);
-	    if (map.end() == it) return 0;
+	    if (UNLIKELY(map.end() == it)) return 0;
 	    return reinterpret_cast<I*>(it->second);
 	}
 	/// get or create a mapping for a given LHCb object
@@ -280,7 +281,7 @@ class ZooObjectManager
 	{
 	    // disallow registration of new objects if first event has begun
 	    if (m_nevts) return 0;
-	    return zooPerJobObject(str, reinterpret_cast<TObject*>(new T(obj)));
+	    return zooPerJobObject(str, dynamic_cast<TObject*>(new T(obj)));
 	}
 
 	/** @brief lookup per-job object associated with a string

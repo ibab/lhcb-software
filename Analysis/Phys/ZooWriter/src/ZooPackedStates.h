@@ -6,6 +6,7 @@
 #include <TObject.h>
 #include <TClonesArray.h>
 
+#include "ZooLikely.h"
 #include "ZooPacked.h"
 #include "ZooPackedState.h"
 
@@ -28,13 +29,13 @@ public:
     void push_back(const ZooPackedState& state)
     {
 	// make sure we do not overflow m_array
-	assert(size() < capacity());
+	assert(LIKELY(size() < capacity()));
 	new(m_array[size()]) ZooPackedState(state);
     }
     /// get a state
     const ZooPackedState& operator[](unsigned idx) const
     {
-	assert(idx < size());
+	assert(LIKELY(idx < size()));
 	return *reinterpret_cast<const ZooPackedState*>(m_array[idx]);
     }
 

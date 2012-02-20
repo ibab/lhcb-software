@@ -42,11 +42,12 @@ class ZooTuplePlayer:
 	self.nacceptcand = 0
 	self.nacceptevt = 0
 	self.nbytes = 0
-	# activate the read-ahead cache of the tree (64 M)
-	self.tree.SetCacheSize(64 << 20)
-	self.tree.AddBranchToCache('*')
-	# limit amount of in-core memory used by tree (128 M)
-	self.tree.SetMaxVirtualSize(128 << 20)
+	# maximum read-ahead cache size (128 M)
+	self.cache = 128 << 20
+	# maximum virtual memory (256 M)
+	self.maxvirt = 256 << 20
+	# default basket size: 512 k
+	self.basketsize = 1 << 19
 	# set default compression level and algorithm
 	if ROOT.gROOT.GetVersion() >= '5.30':
 	    # from version 5.30 onwards, we have LZMA compression available;
@@ -54,13 +55,11 @@ class ZooTuplePlayer:
 	    # fortunately, the fast setting of LZMA is comparable in speed to
 	    # what was available in old ROOT versions at the best setting, but
 	    # results in smaller files
-	    self.compressionLevel = 1
+	    self.compressionLevel = 3
 	    self.compressionAlg = ROOT.kLZMA
 	else:
-	    self.compressionLevel = 9
+	    self.compressionLevel = 8
 	    self.compressionAlg = ROOT.kZLIB
-	# default basket size
-	self.basketsize = 1 << 16
 
     def _runOverZoo(self, collection, cuts, maxevts, startevt,
 	    candaction = None, evtaction = None,
@@ -72,8 +71,13 @@ class ZooTuplePlayer:
 	collection may be None, in which case it runs over ZooMCPs instead of
 	taking the specified collection of ZooPs
 	"""
-	# prepare needed branches
 	tree = self.tree
+	# activate the read-ahead cache of the tree
+	tree.SetCacheSize(self.cache)
+	tree.AddBranchToCache('*', True)
+	# limit amount of in-core memory used by tree
+	tree.SetMaxVirtualSize(self.maxvirt)
+	# prepare needed branches
 	zooev = ROOT.ZooEv()
 	tree.SetBranchAddress("Event", ROOT.AddressOf(zooev))
 	if None != collection:
@@ -117,7 +121,6 @@ class ZooTuplePlayer:
 	# loop over events
 	for i in xrange(startevt, nevents):
 	    # read next event
-	    tree.LoadTree(i)
 	    read = tree.GetEntry(i)
 	    if read <= 0:
 		print '_runOverZoo: trouble reading entry %d from tree, aborting!' % i
@@ -455,13 +458,18 @@ class ZooTuplePlayer:
 	strippedperjobtree = perjobtree.CloneTree(0)
 	strippedperjobtree.SetDirectory(outfile)
 	strippedperjobtree.SetBasketSize('*', self.basketsize)
-	strippedperjobtree.SetAutoSave(1 << 24)
+	strippedperjobtree.SetAutoSave(self.cache)
+	# activate the read-ahead cache of the tree
+	perjobtree.SetCacheSize(self.cache)
+	perjobtree.AddBranchToCache('*', True)
+	# limit amount of in-core memory used by tree
+	perjobtree.SetMaxVirtualSize(self.maxvirt)
+	strippedperjobtree.SetMaxVirtualSize(self.maxvirt)
 	# pre-copy the per job tree (we need all of it since it'll become
 	# too hard to figure out how this goes together with the main Zoo tree
 	# otherwise - fortunately, the per-job tree is small)
 	nentriesperjob = perjobtree.GetEntries()
 	for i in xrange(0, nentriesperjob):
-	    perjobtree.LoadTree(i)
 	    perjobtree.GetEntry(i)
 	    strippedperjobtree.Fill()
 	    if 0 == i & 0xf:
@@ -501,9 +509,16 @@ class ZooTuplePlayer:
 	strippedtree = self.tree.CloneTree(0)
 	strippedtree.SetDirectory(outfile)
 	strippedtree.SetBasketSize('*', self.basketsize)
-	strippedtree.SetAutoSave(1 << 24)
+	strippedtree.SetAutoSave(self.cache)
+	strippedtree.SetMaxVirtualSize(self.maxvirt)
 	# copy the per-job tree
 	strippedperjobtree = self._copyPerJobTree(outfile, perjobtree)
+	print '_stripZoo: optimizing per-job tree'
+	strippedperjobtree.OptimizeBaskets(self.basketsize)
+	# don't need the original per-job tree any longer
+	del perjobtree
+	print '_stripZoo: writing per-job tree to destination file %s' % outfilename
+	strippedperjobtree.Write()
 	print '_stripZoo: looping over events to copy accepted events:'
 	# we need a little helper function for the per-event tree(s)
 	# use runOverZooP to do the actual work
@@ -519,7 +534,6 @@ class ZooTuplePlayer:
 	if None == retVal:
 	    print '_stripZoo: reading/writing events failed for some reason!'
 	    print '_stripZoo: attempting to save what we have so far.'
-	    strippedperjobtree.Write()
 	    strippedtree.Write()
 	    print '_stripZoo: attempting to close destination file %s' % outfilename
 	    outfile.Close()
@@ -529,8 +543,7 @@ class ZooTuplePlayer:
 	    # Optimize baskets before writing
 	    if self.nacceptevt < 4096:
 		strippedtree.OptimizeBaskets(self.basketsize)
-	print '_stripZoo: writing trees to destination file %s' % outfilename
-	strippedperjobtree.Write()
+	print '_stripZoo: writing tree to destination file %s' % outfilename
 	strippedtree.Write()
 	strippedperjobtree.Print()
 	strippedtree.Print()

@@ -16,6 +16,7 @@
 
 #include <memory>
 #include <algorithm>
+#include <iostream>
 #include <boost/foreach.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/assign/list_of.hpp>
@@ -104,78 +105,8 @@ ZooWriter::ZooWriterContext::ZooWriterContext(const std::string& filename,
 {
     using namespace boost::lambda;
     // open ROOT file
-    m_f = new TFile(filename.c_str(), "recreate", "", 9);
+    m_f = new TFile(filename.c_str(), "recreate", "", 8);
     m_f->cd();
-    {
-        TTree *opttree = new TTree("Options","Zoo Options tree");
-	opttree->SetDirectory(m_f);
-	
-	static std::vector<std::string> o_sel_collections = base->m_sel_collections;
-	static std::vector<std::string> o_sel_names = base->m_sel_names;
-	static std::vector<std::string> o_L0Name = base->m_L0Name;
-	static std::vector<std::string> o_Hlt1Name = base->m_Hlt1Name;
-	static std::vector<std::string> o_Hlt2Name = base->m_Hlt2Name;
-	static std::vector<std::string> o_treefit_names = base->m_treefit_names;
-	static std::vector<std::string> o_linkToList = base->m_linkToList;
-	static std::vector<std::string> o_linkFromList = base->m_linkFromList;
-	static std::vector<std::string> o_lokinames = base->m_lokinames;
-
-	opttree->Branch( "InputCollections",     &o_sel_collections);
-	opttree->Branch( "DecayName" ,           &o_sel_names);
-	opttree->Branch( "WriteMC",              &base->m_writeMC);
-	opttree->Branch( "WriteMCtrees",         &base->m_writeMCtrees);
-	opttree->Branch( "MCList",               &base->m_MCList);
-	opttree->Branch( "WriteDLL",             &base->m_writeDLL);
-	opttree->Branch( "IntelligentPV",        &base->m_intelligentPV);
-	opttree->Branch( "SecondIpSig",          &base->m_secondIpSig);
-	opttree->Branch( "OnlyTreefitter",       &base->m_onlyTreefitter);
-	opttree->Branch( "MinTracksPV",          &base->m_minTracksPV);
-    
-	opttree->Branch( "TaggingList",          &base->m_taggingList);
-	opttree->Branch( "BackgroundList",       &base->m_backgroundList);
-	opttree->Branch( "TriggerList",          &base->m_triggerList);
-	
-	opttree->Branch( "L0SelectionName" ,     &o_L0Name);
-	opttree->Branch( "HLT1SelectionName" ,   &o_Hlt1Name);
-	opttree->Branch( "HLT2SelectionName" ,   &o_Hlt2Name);
-
-	opttree->Branch( "Filename"   ,          &base->m_filename);
-	opttree->Branch( "Tree"       ,          &base->m_treename);
-
-	opttree->Branch( "CovarianceList",       &base->m_covarianceList);
-
-	opttree->Branch( "TreefitName",     &o_treefit_names);
-	opttree->Branch( "TreefitMassConstraints", &base->m_treefit_constraints);
-
-	opttree->Branch( "PVReFitterName",       &base->m_PVReFitterName);
-	opttree->Branch( "LinkToList",           &o_linkToList);
-	opttree->Branch( "LinkFromList",         &o_linkFromList);
-	opttree->Branch( "WriteHitPattern",      &base->m_writeHitPattern);
-	opttree->Branch( "WriteExpectedHitPattern",  &base->m_writeExpectedHitPattern);
-	opttree->Branch( "WriteCollectedHitPattern", &base->m_writeCollectedHitPattern);
-	opttree->Branch( "ExtraInfoList",	     &base->m_extraInfoList);
-	opttree->Branch( "WriteTrackInfo",       &base->m_writeTrackInfo);
-	opttree->Branch( "PackedStatesList",     &base->m_packedStatesList);
-	opttree->Branch( "PackedStatesExtrapolate", &base->m_packedStatesExtrapolate);
-	opttree->Branch( "PackedStatesZList",     &base->m_packedStatesZList);
-	opttree->Branch( "PackedStateAtPocaToZAxis", &base->m_packedStateAtPocaToZAxis);
-	opttree->Branch( "MakeEmergencyPV",      &base->m_makeEmergencyPV);
-	opttree->Branch( "WriteOccupancies",     &base->m_writeOccupancies);
-	opttree->Branch( "WriteLHCbIDs",         &base->m_writeLHCbIDs);
-	opttree->Branch( "WriteMCGenEventInfo",  &base->m_writeMCGenEventInfo);
-	opttree->Branch( "MCAcceptanceEtaRegion", &base->m_mcAcceptanceEtaRegion);
-	opttree->Branch( "MCAcceptanceMinP",     &base->m_mcAcceptanceMinP);
-	opttree->Branch( "MCAcceptanceCharged",  &base->m_mcAcceptanceCharged);
-	opttree->Branch( "MCAcceptanceNeutral",  &base->m_mcAcceptanceNeutral);
-	opttree->Branch( "MCAcceptanceMinCtau",  &base->m_mcAcceptanceMinCtau);
-
-	opttree->Branch( "LoKiFunctors",         &o_lokinames);
-
-	opttree->Fill();
-	opttree->Write();
-	opttree->Delete();
-    }
-    
     {
 	boost::shared_ptr<TTree> t(
 		new TTree(treename.c_str(),"Zoo particles tree"),
@@ -203,7 +134,7 @@ ZooWriter::ZooWriterContext::ZooWriterContext(const std::string& filename,
 	m_pev.swap(ev);
     }
     ///\todo Check what Paul has done here
-    m_T->Branch("Event",m_pev->Class()->GetName(), (void**)&(m_pev), 1 << 16, 99);
+    m_T->Branch("Event",m_pev->Class()->GetName(), (void**)&(m_pev), 1 << 19, 99);
     m_sel.reserve(sel_collections.size());
     vector<string>::const_iterator j = sel_collections.begin();
     for (vector<string>::const_iterator i = sel_names.begin();
@@ -217,14 +148,14 @@ ZooWriter::ZooWriterContext::ZooWriterContext(const std::string& filename,
     } 
     for (vector<KnownSelection>::iterator i = m_sel.begin();
 	    i != m_sel.end(); ++i) {
-	m_T->Branch(i->name.c_str(),i->pref->Class()->GetName(),(void**)&(i->pref), 1 << 16, 99);
+	m_T->Branch(i->name.c_str(),i->pref->Class()->GetName(),(void**)&(i->pref), 1 << 19, 99);
     }
     // finish setting up the event tree
     m_T->BranchRef();
-    // set the basket size for all branches to 64 kbytes
-    m_T->SetBasketSize("*", 1 << 16);
-    // force flushing of buffers every 2^24 bytes (i.e. every 16 MB)
-    m_T->SetAutoSave(1 << 24);
+    // set the basket size for all branches to 512 kbytes
+    m_T->SetBasketSize("*", 1 << 19);
+    // force flushing of buffers every 128 MB
+    m_T->SetAutoSave(128 << 20);
     // branch ref for per-job tree as well
     m_TperJob->BranchRef();
     // a pool for Track objects
@@ -288,10 +219,10 @@ void ZooWriter::ZooWriterContext::beginEvent()
 	    m_TperJob->Branch(it->first.c_str(), it->second, 1 << 16, 99);
 	}
 	// fill the per-job object tree
-	m_TperJob->SetBasketSize("*", 1 << 16);
-	m_TperJob->SetAutoSave(1 << 24);
+	m_TperJob->SetBasketSize("*", 1 << 19);
+	m_TperJob->SetAutoSave(128 << 20);
 	m_TperJob->Fill();
-	m_TperJob->OptimizeBaskets();
+	m_TperJob->OptimizeBaskets(1 << 19);
     } else {
 	if (m_perJobMapSz != objman()->perJobObjMapSize())
 	    throw ZooWriterContextException(
@@ -328,7 +259,7 @@ void ZooWriter::ZooWriterContext::endEvent()
     TProcessID::SetObjectCount(m_objectCount);
     // optimize buffer sizes after first 250 events
     ++m_evts_ended;
-    if (250 == m_evts_ended) m_T->OptimizeBaskets();
+    if (4096 == m_evts_ended) m_T->OptimizeBaskets(1 << 19);
     // make sure we stil are looking at the most recent per-job objects
     m_TperJob->GetEntry(0); 
 }
@@ -520,6 +451,40 @@ StatusCode ZooWriter::initialize  ()
       m_lokifuns.push_back(std::make_pair(hash, functor));
     }
     release(factory);
+    // write Option string to per-job tree
+    {
+	typedef std::vector<Property*> Properties;
+	const Properties& properties = this->getProperties();
+	// hash map to contain string -> string lookup table
+	// use standard ROOT objects here, nothing fancy, since we want to be
+	// sure we can read this beast even if the Zoo data format changes
+	// (that's also the reason we convert everything to strings)
+	objman()->zooPerJobObject("ZooOptions",
+		dynamic_cast<TObject*>(new TMap(8 + properties.size())));
+	TMap* options = dynamic_cast<TMap*>(
+		objman()->zooPerJobObject("ZooOptions"));
+	// table owns its elements
+	options->SetOwnerKeyValue(kTRUE, kTRUE);
+	// put in Zoo/DaVinci version, ZooWriter instance name
+	options->Add(new TObjString("Zoo version"),
+		new TObjString("$Id$"));
+	options->Add(new TObjString("Zoo instance name"),
+		new TObjString(name().c_str()));
+	// we need some preprocessor magic to make DV_VER into a string
+#define _STR(x) #x // stringify argument
+#define STR(x) _STR(x) // expand x and stringify
+	options->Add(new TObjString("DaVinci version"),
+		new TObjString(STR(DV_VER)));
+#undef STR
+#undef _STR
+	// dump all properties probably more than we'll ever need, but we
+	// won't have to think of updating the list of stuff to dump - we add
+	// a new property to the ZooWriter, and it's added automatically
+	BOOST_FOREACH(const Property* property, properties) {
+	    options->Add(new TObjString(property->name().c_str()),
+		    new TObjString(property->toString().c_str()));
+	}
+    }
 
     return StatusCode::SUCCESS;
 }

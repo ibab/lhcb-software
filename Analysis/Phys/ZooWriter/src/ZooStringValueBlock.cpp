@@ -29,7 +29,7 @@ const ZooStringToUIDTable& ZooStringValueBlock::uidtbl() const
 {
     const ZooStringToUIDTable* uidtbl =
 	static_cast<const ZooStringToUIDTable*>(m_uidtbl.GetObject());
-    if (!uidtbl) {
+    if (UNLIKELY(!uidtbl)) {
 	throw ZooStringValueBlockException(
 		"String to UID mapping table not available!");
     }
@@ -40,7 +40,7 @@ ZooStringValueBlock::rw_proxy ZooStringValueBlock::operator[](UInt_t uid)
 {
     // this might potentially lead to an insert, so check against
     // ZooStringToUIDTable...
-    if (!uidtbl().find(uid)) {
+    if (UNLIKELY(!uidtbl().find(uid))) {
 	throw ZooStringValueBlockException(
 		"Trying to access unknown UID!");
     }
@@ -49,7 +49,7 @@ ZooStringValueBlock::rw_proxy ZooStringValueBlock::operator[](UInt_t uid)
 
 float ZooStringValueBlock::erase(UInt_t uid)
 {
-    if (!uidtbl().find(uid)) {
+    if (UNLIKELY(!uidtbl().find(uid))) {
 	throw ZooStringValueBlockException(
 		"Trying to erase unknown UID!");
     }
@@ -59,14 +59,14 @@ float ZooStringValueBlock::erase(UInt_t uid)
 bool ZooStringValueBlock::find(const std::string& str) const
 {
     const UInt_t uid = uidtbl()[str];
-    if (!uid) return false;
+    if (UNLIKELY(!uid)) return false;
     return ZooKeyValueBlock::find(uid);
 }
 
 float ZooStringValueBlock::value(const std::string& str) const
 {
     const UInt_t uid = uidtbl()[str];
-    if (!uid) return std::numeric_limits<float>::quiet_NaN();
+    if (UNLIKELY(!uid)) return std::numeric_limits<float>::quiet_NaN();
     return ZooKeyValueBlock::operator[](uid);
 }
 
@@ -76,7 +76,7 @@ ZooStringValueBlock::rw_proxy ZooStringValueBlock::operator[](
     // this might potentially lead to an insert, so check against
     // ZooStringToUIDTable...
     const UInt_t uid = uidtbl()[str];
-    if (!uid) {
+    if (UNLIKELY(!uid)) {
 	throw ZooStringValueBlockException(
 		"Trying to access unknown string!");
     }
@@ -86,7 +86,7 @@ ZooStringValueBlock::rw_proxy ZooStringValueBlock::operator[](
 float ZooStringValueBlock::erase(const std::string& str)
 {
     const UInt_t uid = uidtbl()[str];
-    if (!uid) {
+    if (UNLIKELY(!uid)) {
 	throw ZooStringValueBlockException(
 		"Trying to erase unknown string!");
     }
@@ -95,7 +95,7 @@ float ZooStringValueBlock::erase(const std::string& str)
 
 float ZooStringValueBlock::insert(UInt_t uid, float value)
 {
-    if (!uidtbl().find(uid)) {
+    if (UNLIKELY(!uidtbl().find(uid))) {
 	throw ZooStringValueBlockException(
 		"Trying to insert unknown UID!");
     }
@@ -105,7 +105,7 @@ float ZooStringValueBlock::insert(UInt_t uid, float value)
 float ZooStringValueBlock::insert(const std::string& str, float value)
 {
     const UInt_t uid = uidtbl()[str];
-    if (!uid) {
+    if (UNLIKELY(!uid)) {
 	throw ZooStringValueBlockException(
 		"Trying to insert unknown string!");
     }
@@ -114,7 +114,7 @@ float ZooStringValueBlock::insert(const std::string& str, float value)
 
 bool ZooStringValueBlock::modify(UInt_t uid, float value)
 {
-    if (!uidtbl().find(uid)) {
+    if (UNLIKELY(!uidtbl().find(uid))) {
 	throw ZooStringValueBlockException(
 		"Trying to modify unknown UID!");
     }
@@ -124,7 +124,7 @@ bool ZooStringValueBlock::modify(UInt_t uid, float value)
 bool ZooStringValueBlock::modify(const std::string& str, float value)
 {
     const UInt_t uid = uidtbl()[str];
-    if (!uid) {
+    if (UNLIKELY(!uid)) {
 	throw ZooStringValueBlockException(
 		"Trying to modify unknown string!");
     }

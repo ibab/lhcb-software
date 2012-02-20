@@ -19,6 +19,8 @@
 
 #include <TObject.h>
 
+#include "ZooLikely.h"
+
 /**
  * @class ZooStringToUIDTable
  * @brief maps a string to a 32 bit UID (unique identifier)
@@ -354,8 +356,8 @@ class ZooStringToUIDTable::const_iterator {
         /// comparison of iterators
         bool operator<(const const_iterator& other) const
         {
-            if (m_parent < other.m_parent) return true;
-            if (other.m_parent < m_parent) return false;
+            if (UNLIKELY(m_parent < other.m_parent)) return true;
+            if (UNLIKELY(other.m_parent < m_parent)) return false;
             return m_idx < other.m_idx;
         }
         /// comparison of iterators

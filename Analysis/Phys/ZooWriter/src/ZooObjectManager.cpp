@@ -59,7 +59,7 @@ TObject* ZooObjectManager::zooPerJobObject(const std::string& str, TObject* obj)
     if (m_nevts) return 0;
     // do our work
     TObject*& tmpobj = m_perJobMap[str];
-    std::swap(tmpobj, obj);
+    std::swap(obj, tmpobj);
     return obj;
 }
 

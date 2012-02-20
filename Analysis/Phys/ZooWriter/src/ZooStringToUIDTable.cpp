@@ -29,7 +29,7 @@ UInt_t ZooStringToUIDTable::hash(const std::string& str)
     }
     unsigned length = str.size();
     // null strings hash to 0
-    if (!length) return 0;
+    if (UNLIKELY(!length)) return 0;
     // hash length as well
     do {
 	hash ^= (length & 0xffu);
@@ -37,7 +37,7 @@ UInt_t ZooStringToUIDTable::hash(const std::string& str)
 	length >>= 8;
     } while (length);
     // hash 0 is invalid, map to 1
-    if (!hash) return 1;
+    if (UNLIKELY(!hash)) return 1;
     return hash;
 }
 
@@ -48,7 +48,7 @@ bool ZooStringToUIDTable::find(UInt_t uid) const
 
 UInt_t ZooStringToUIDTable::insert(const std::string& str, UInt_t hash)
 {
-    if (!hash) ++hash;
+    if (UNLIKELY(!hash)) ++hash;
     std::vector<UInt_t>::iterator it =
 	std::lower_bound(m_uids.begin(), m_uids.end(), hash);
     std::vector<std::string>::iterator jt =
@@ -65,7 +65,7 @@ UInt_t ZooStringToUIDTable::insert(const std::string& str, UInt_t hash)
 		    (m_uids.end() != it && 1 != *it - lastuid)) {
 		// found a free uid slot
 		hash = lastuid + 1;
-		if (!hash) {
+		if (UNLIKELY(!hash)) {
 		    // overflow in hash value, have to contrinue at the
 		    // beginning of the array
 		    ++hash;
@@ -90,7 +90,7 @@ const std::string& ZooStringToUIDTable::operator[](UInt_t uid) const
     std::vector<UInt_t>::const_iterator it =
 	std::lower_bound(m_uids.begin(), m_uids.end(), uid);
     // if we found the UID, return the corresponding string
-    if (it != m_uids.end() && *it == uid)
+    if (LIKELY(it != m_uids.end() && *it == uid))
 	return *(m_strs.begin() + (it - m_uids.begin()));
     // non-existant UIDs map to the empty string
     return s_empty;

@@ -46,12 +46,16 @@ if not ZooPyInitialised:
 	    re.sub('^\\./', os.getcwd() + '/', os.environ['ZOOWRITERROOT'])
     os.environ['ZOOWRITERROOT'] = \
 	    re.sub('^\\.$', os.getcwd(), os.environ['ZOOWRITERROOT'])
+    # figure out if we do not need to prepend '/Zoo'
+    ldpath = os.environ['ZOOWRITERROOT']
+    if not os.path.exists(ldpath + '/libZooROOT.so'):
+	ldpath = '%s/Zoo' % ldpath
+    # set LD_LIBRARY_PATH
     if not 'LD_LIBRARY_PATH' in os.environ or \
 	    '' == os.environ['LD_LIBRARY_PATH']:
-        os.environ['LD_LIBRARY_PATH'] = os.environ['ZOOWRITERROOT'] + '/Zoo'
+        os.environ['LD_LIBRARY_PATH'] = ldpath
     else:
-        os.environ['LD_LIBRARY_PATH'] = \
-            os.environ['ZOOWRITERROOT'] + '/Zoo:' + \
+	os.environ['LD_LIBRARY_PATH'] = ldpath + ':' + \
             os.environ['LD_LIBRARY_PATH']
     # ok, use root-config to get ROOT library path and set up python search
     # paths accordingly (on most installations, python does not know about

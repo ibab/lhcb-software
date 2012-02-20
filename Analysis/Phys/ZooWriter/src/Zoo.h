@@ -36,6 +36,7 @@
 #define BOOST_STATIC_ASSERT(x)
 #endif
 
+#include "ZooLikely.h"
 #include "ZooObjectManager.h"
 #include "ZooPacked.h"
 #include "ZooPackedState.h"
@@ -514,28 +515,28 @@ class ZooTrigger : public TObject
 
 	// these can get at an individual decision bit
 	bool L0Dec(unsigned idx) const
-	{ assert(idx < 64); return (m_L0Dec >> idx) & 1; }
+	{ assert(LIKELY(idx < 64)); return (m_L0Dec >> idx) & 1; }
 	bool L0TIS(unsigned idx) const
-	{ assert(idx < 64); return (m_L0TIS >> idx) & 1; }
+	{ assert(LIKELY(idx < 64)); return (m_L0TIS >> idx) & 1; }
 	bool L0TOS(unsigned idx) const
-	{ assert(idx < 64); return (m_L0TOS >> idx) & 1; }
+	{ assert(LIKELY(idx < 64)); return (m_L0TOS >> idx) & 1; }
 	bool HLT1Dec(unsigned idx) const
-	{ assert(idx < 64); return (m_HLT1Dec >> idx) & 1; }
+	{ assert(LIKELY(idx < 64)); return (m_HLT1Dec >> idx) & 1; }
 	bool HLT1TIS(unsigned idx) const
-	{ assert(idx < 64); return (m_HLT1TIS >> idx) & 1; }
+	{ assert(LIKELY(idx < 64)); return (m_HLT1TIS >> idx) & 1; }
 	bool HLT1TOS(unsigned idx) const
-	{ assert(idx < 64); return (m_HLT1TOS >> idx) & 1; }
+	{ assert(LIKELY(idx < 64)); return (m_HLT1TOS >> idx) & 1; }
 	bool HLT2Dec(unsigned idx) const
-	{ assert(idx < 64); return (m_HLT2Dec >> idx) & 1; }
+	{ assert(LIKELY(idx < 64)); return (m_HLT2Dec >> idx) & 1; }
 	bool HLT2TIS(unsigned idx) const
-	{ assert(idx < 64); return (m_HLT2TIS >> idx) & 1; }
+	{ assert(LIKELY(idx < 64)); return (m_HLT2TIS >> idx) & 1; }
 	bool HLT2TOS(unsigned idx) const
-	{ assert(idx < 64); return (m_HLT2TOS >> idx) & 1; }
+	{ assert(LIKELY(idx < 64)); return (m_HLT2TOS >> idx) & 1; }
 
 	// consistently set L0 decision, TIS and TOS
 	void SetBitsL0(unsigned idx, bool L0Dec, bool L0TIS, bool L0TOS)
 	{
-	    assert(idx < 64);
+	    assert(LIKELY(idx < 64));
 	    if (L0Dec) m_L0Dec |= 1ULL << idx;
 	    if (L0TIS) m_L0TIS |= 1ULL << idx;
 	    if (L0TOS) m_L0TOS |= 1ULL << idx;
@@ -543,7 +544,7 @@ class ZooTrigger : public TObject
 	// consistently set HLT1 decision, TIS and TOS
 	void SetBitsHLT1(unsigned idx, bool HLT1Dec, bool HLT1TIS, bool HLT1TOS)
 	{
-	    assert(idx < 64);
+	    assert(LIKELY(idx < 64));
 	    if (HLT1Dec) m_HLT1Dec |= 1ULL << idx;
 	    if (HLT1TIS) m_HLT1TIS |= 1ULL << idx;
 	    if (HLT1TOS) m_HLT1TOS |= 1ULL << idx;
@@ -551,7 +552,7 @@ class ZooTrigger : public TObject
 	// consistently set HLT2 decision, TIS and TOS
 	void SetBitsHLT2(unsigned idx, bool HLT2Dec, bool HLT2TIS, bool HLT2TOS)
 	{
-	    assert(idx < 64);
+	    assert(LIKELY(idx < 64));
 	    if (HLT2Dec) m_HLT2Dec |= 1ULL << idx;
 	    if (HLT2TIS) m_HLT2TIS |= 1ULL << idx;
 	    if (HLT2TOS) m_HLT2TOS |= 1ULL << idx;
@@ -599,63 +600,63 @@ class ZooTrigger : public TObject
 	/// get specified trigger decision word
 	UInt_t getTriggerDecWord(unsigned int i) const
 	{ 
-	    assert(i < TriggerDecisions::NTriggerDecisionWords); 
+	    assert(LIKELY(i < TriggerDecisions::NTriggerDecisionWords)); 
 	    return m_dec[i]; 
 	}
 
 	/// get specified trigger TIS word
 	UInt_t getTriggerTISWord(unsigned int i) const
 	{ 
-	    assert(i < TriggerDecisions::NTriggerDecisionWords); 
+	    assert(LIKELY(i < TriggerDecisions::NTriggerDecisionWords)); 
 	    return m_tis[i]; 
 	}
 
 	/// get specified trigger TOS word
 	UInt_t getTriggerTOSWord(unsigned int i) const
 	{ 
-	    assert(i < TriggerDecisions::NTriggerDecisionWords); 
+	    assert(LIKELY(i < TriggerDecisions::NTriggerDecisionWords)); 
 	    return m_tos[i]; 
 	}
 
 	/// get specified trigger TPS word (trigger partially signal)
 	UInt_t getTriggerTPSWord(unsigned int i) const
 	{ 
-	    assert(i < TriggerDecisions::NTriggerDecisionWords); 
+	    assert(LIKELY(i < TriggerDecisions::NTriggerDecisionWords)); 
 	    return m_tps[i]; 
 	}
 
 	/// get specified trigger TUS word (trigger used signal : TOS | TPS)
 	UInt_t getTriggerTUSWord(unsigned int i) const
 	{ 
-	    assert(i < TriggerDecisions::NTriggerDecisionWords); 
+	    assert(LIKELY(i < TriggerDecisions::NTriggerDecisionWords)); 
 	    return m_tos[i] | m_tps[i]; 
 	}
 
 	/// set specified trigger decision word
 	void setTriggerDecWord(unsigned int i, UInt_t val)
 	{ 
-	    assert(i < TriggerDecisions::NTriggerDecisionWords); 
+	    assert(LIKELY(i < TriggerDecisions::NTriggerDecisionWords)); 
 	    m_dec[i] = val;
 	}
 
 	/// set specified trigger TIS word
 	void setTriggerTISWord(unsigned int i, UInt_t val)
 	{ 
-	    assert(i < TriggerDecisions::NTriggerDecisionWords); 
+	    assert(LIKELY(i < TriggerDecisions::NTriggerDecisionWords)); 
 	    m_tis[i] = val;
 	}
 
 	/// set specified trigger TOS word
 	void setTriggerTOSWord(unsigned int i, UInt_t val)
 	{ 
-	    assert(i < TriggerDecisions::NTriggerDecisionWords); 
+	    assert(LIKELY(i < TriggerDecisions::NTriggerDecisionWords)); 
 	    m_tos[i] = val;
 	}
 
 	/// set specified trigger TPS word (trigger partially signal)
 	void setTriggerTPSWord(unsigned int i, UInt_t val)
 	{ 
-	    assert(i < TriggerDecisions::NTriggerDecisionWords); 
+	    assert(LIKELY(i < TriggerDecisions::NTriggerDecisionWords)); 
 	    m_tps[i] = val;
 	}
 
@@ -736,7 +737,7 @@ class ZooLinks : public TObject
 	/// return fraction at given index (weight)
 	float Frac(unsigned i) const
 	{
-	    return (-128 == m_fracs[i]) ?
+	    return UNLIKELY(-128 == m_fracs[i]) ?
 		std::numeric_limits<float>::quiet_NaN() :
 		(float(m_fracs[i]) / 127.f);
 	}
@@ -745,7 +746,7 @@ class ZooLinks : public TObject
 	{
 	    m_links.push_back(p);
 	    f *= 127.f;
-	    if (std::isnan(f) || std::isinf(f) || std::abs(f) > 127.f)
+	    if (UNLIKELY(std::isnan(f) || std::isinf(f) || std::abs(f) > 127.f))
 		m_fracs.push_back(-128);
 	    else
 		m_fracs.push_back(Char_t(f));
@@ -1151,8 +1152,8 @@ class ZooEv : public TObject
 
 	UInt_t getTriggerWord(unsigned int i) const
 	{ 
-		assert(i < TriggerDecisions::NTriggerDecisionWords); 
-		return m_triggerDecisions[i]; 
+	    assert(LIKELY(i < TriggerDecisions::NTriggerDecisionWords)); 
+	    return m_triggerDecisions[i]; 
 	}
 
 	unsigned NP() const { return GetP().size(); } 
@@ -1321,7 +1322,7 @@ class ZooP : public TObject
     typedef boost::is_base_and_derived<TObject, I> fromTObject;
     BOOST_STATIC_ASSERT(fromTObject::value);
     I* info = reinterpret_cast<I*>(m_info[ZooObjectID::ID<I>::id]);
-    if (0 == info) {
+    if (LIKELY(0 == info)) {
       info = f.zooObj<I>();
       m_info.AddAt(info, ZooObjectID::ID<I>::id);
     } else 
@@ -1343,9 +1344,9 @@ class ZooP : public TObject
     BOOST_STATIC_ASSERT(ZooObjectID::maxid - ZooObjectID::ID<I>::id > 0);
     typedef boost::is_base_and_derived<TObject, I> fromTObject;
     BOOST_STATIC_ASSERT(fromTObject::value);
-    assert(0 != other);
+    assert(LIKELY(0 != other));
     I* info = reinterpret_cast<I*>(m_info[ZooObjectID::ID<I>::id]);
-    if (0 == info) {
+    if (LIKELY(0 == info)) {
       info = f.zooObj<I>(other);
       m_info.AddAt(info, ZooObjectID::ID<I>::id);
     } else 
@@ -1408,7 +1409,7 @@ class ZooP : public TObject
   int    isolation()          const { return Dc()->isolation(); };
   
   XYZPoint decayVertex() const {
-    return Dc()?m_particle.pos():
+    return LIKELY(Dc())?m_particle.pos():
       XYZPoint(std::numeric_limits<double>::quiet_NaN(),
 	       std::numeric_limits<double>::quiet_NaN(),
 	       std::numeric_limits<double>::quiet_NaN());
@@ -1416,7 +1417,7 @@ class ZooP : public TObject
 	
   ZooPackedVertex decayVertexPacked() const {
     const ZooDecay* dc = Dc();
-    return dc ? ZooPackedVertex(m_particle.pos(),
+    return LIKELY(dc) ? ZooPackedVertex(m_particle.pos(),
 				m_particle.cov().Sub<ZooPackedVertex::Matrix>(0,0),
 				dc->chi2(), dc->nDoF()):ZooPackedVertex();
   }

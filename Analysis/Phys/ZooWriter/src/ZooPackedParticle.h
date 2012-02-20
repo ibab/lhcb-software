@@ -30,14 +30,14 @@ class ZooPackedParticle : public TObject
 	/// return position
 	const ROOT::Math::XYZPoint pos() const
 	{
-	    Vector tmp = m_particle;
-	    return ROOT::Math::XYZPoint(tmp[0], tmp[1], tmp[2]);
+	    return ROOT::Math::XYZPoint(
+		    m_particle[0], m_particle[1], m_particle[2]);
 	}
 	/// return momentum
 	const ROOT::Math::PxPyPzEVector momentum() const
 	{
-	    Vector tmp = m_particle;
-	    return ROOT::Math::PxPyPzEVector(tmp[3], tmp[4], tmp[5], tmp[6]);
+	    return ROOT::Math::PxPyPzEVector(m_particle[3],
+		    m_particle[4], m_particle[5], m_particle[6]);
 	}
 	/// return covariance matrix for vector (position, momentum)
 	const Matrix cov() const { return m_particle; }
