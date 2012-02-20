@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2012-02-20 - Gloria Corti
+ - GaussVis.py: new options for visualization in python, to replace '.opts'
+
 !========================= Gauss v41r2 2012-02-12 ============================
 ! 2012-01-05 - Marc-Olivier Bettler
  - Update scripts/GaussStat.py to be working with MC11a, specifically:
