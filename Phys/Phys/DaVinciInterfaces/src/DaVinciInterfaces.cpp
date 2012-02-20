@@ -20,7 +20,7 @@
 #include "Kernel/IPrintDecay.h"
 #include "Kernel/ICheckSelResults.h"
 #include "Kernel/ITrackIsolation.h"
-#include "Kernel/IConeVariables.h"
+#include "Kernel/IExtraInfoTool.h"
 #include "Kernel/IDVAlgorithm.h"
 #include "Kernel/IParticleFilter.h"
 #include "Kernel/IDecayTreeFit.h"
@@ -48,7 +48,7 @@ IPrintDecay              :: ~IPrintDecay              () {}
 ICheckSelResults         :: ~ICheckSelResults         () {}
 IDecodeSimpleDecayString :: ~IDecodeSimpleDecayString () {}
 ITrackIsolation          :: ~ITrackIsolation          () {}
-IConeVariables           :: ~IConeVariables           () {}
+IExtraInfoTool           :: ~IExtraInfoTool           () {}
 IDVAlgorithm             :: ~IDVAlgorithm             () {}
 IParticleFilter          :: ~IParticleFilter          () {}
 IDecayTreeFit            :: ~IDecayTreeFit            () {}

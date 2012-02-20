@@ -5,8 +5,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2012-02-20 - Anton Poluektov 
- - Add IConeVariables.h, interface for a tool to calculate isolation 
-   variables as in TupleToolTrackIsolation. 
+ - Add IExtraInfoTool.h, interface for a tool to calculate 
+   particle extraInfo, such as isolation variables. 
 
 !========================= DaVinciInterfaces v2r12 2012-02-03 =========================
 

@@ -19,7 +19,7 @@
 #include "Kernel/IChangePIDTool.h"
 #include "Kernel/ICheckOverlap.h"
 #include "Kernel/ICheckSelResults.h"
-#include "Kernel/IConeVariables.h"
+#include "Kernel/IExtraInfoTool.h"
 #include "Kernel/IDecayFinder.h"
 #include "Kernel/IDirectionFit.h"
 #include "Kernel/IDecodeSimpleDecayString.h"
