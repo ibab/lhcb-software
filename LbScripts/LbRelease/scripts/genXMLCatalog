@@ -22,7 +22,7 @@ except:
     # Setup DIRAC and call back the same script...
     command = ' '.join(sys.argv)
     #print command
-    sys.exit( os.system(". SetupProject.sh Dirac &>/dev/null; "+ command))
+    sys.exit( os.system(". SetupProject.sh LHCbDirac &>/dev/null; "+ command))
     
 opts, args = getopt.getopt( sys.argv[1:], \
                             "ho:n:s:f:p:d:vig", \

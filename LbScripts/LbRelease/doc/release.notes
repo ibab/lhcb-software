@@ -1,6 +1,7 @@
-2012-02-14 Ben Couturier <Ben.Couturier@cern.ch> 
+2012-02-14 Ben Couturier <Ben.Couturier@cern.ch>
 
-        * cmt/requirements: release of version v4r7
+	* cmt/requirements: release of version v4r7
+	* scripts/genXMLCatalog: Call SetupProject LHCbDirac instead of Dirac
 
 2012-02-06  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
