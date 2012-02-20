@@ -6,7 +6,6 @@
 // from Event
 #include "Event/Track.h"
 #include "Event/State.h"
-#include "Event/WeightsVector.h"
 #include "Event/RecVertex.h"
 // Local
 #include "PatPVOffline.h"
@@ -22,8 +21,6 @@ PatPVOffline::PatPVOffline(const std::string& name,
 {
   declareProperty("OutputVertices",m_outputVertices =
                   LHCb::RecVertexLocation::Primary);
-  declareProperty("OutputWeights",m_outputWeights =
-                  LHCb::WeightsVectorLocation::Default);
 }
 
 //=============================================================================

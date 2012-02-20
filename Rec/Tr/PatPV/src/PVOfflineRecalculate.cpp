@@ -3,7 +3,7 @@
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
-#include "Event/WeightsVector.h"
+//#include "Event/WeightsVector.h"
 
 // local
 #include "PVOfflineRecalculate.h"
@@ -90,44 +90,17 @@ void PVOfflineRecalculate::RecalculateVertex(const LHCb::RecVertex* pvin,
   // Copy input vtx to output vtx. In case of failure original PV is returned
   vtx = *pvin;
 
-  // PV and Weights are in separate containers. Retrive info and check consistency.
-  LHCb::RecVertices*    recoVertices     = get<LHCb::RecVertices>(LHCb::RecVertexLocation::Primary);
-  LHCb::WeightsVectors* weightsContainer = get<LHCb::WeightsVectors>(LHCb::WeightsVectorLocation::Default);
-
-  if ( weightsContainer->size() != recoVertices->size() ) {
-    // Sizes of PV and Weight containers differ
-    m_counter_count[1] += 1;    
-    return;
-  }
-  std::vector<LHCb::RecVertex*>::const_iterator itpv;  
-  itpv = std::find(recoVertices->begin(), recoVertices->end(), pvin);
-  if ( itpv == recoVertices->end() ) {
-    // Specified input vtx not in PV container 
-    m_counter_count[2] += 1;    
-    return;
-  }
-  // get weights vector for input vertex
-  int ipv = itpv - recoVertices->begin();
-  const std::vector<std::pair<int,float> >& the_weights = (*weightsContainer)(ipv)->weights();
-
-  int ntr2 = (*itpv)->nDoF()+3;
-  int nw2 = 2*the_weights.size();
-  
-  if ( ntr2 != nw2 ) {
-    // # tracks in PV does not match # weights
-    m_counter_count[3] += 1;    
-    return;
-  }
-
   // Collect tracks to remove together with their weights. If no weight found track is skipped.
   std::vector<const LHCb::Track*> trin;
   std::vector<double> wgin;
-  for (std::vector<const LHCb::Track*>::const_iterator itr = tracks2remove.begin(); itr != tracks2remove.end(); itr++) {
-    for ( unsigned int iw = 0; iw < the_weights.size() ; iw++ ) {
-      if ( (*itr)->key() == the_weights[iw].first ) {
-        trin.push_back(*itr);
-        wgin.push_back(the_weights[iw].second);
-      }      
+  for (std::vector<const LHCb::Track*>::const_iterator itr = tracks2remove.begin(); 
+       itr != tracks2remove.end(); ++itr)
+  {
+    const std::pair<bool,float> W = pvin->trackWeight(*itr);
+    if ( W.first )
+    {
+      trin.push_back(*itr);
+      wgin.push_back( W.second );
     }
   }
   if ( trin.size() < 1 ) {
@@ -137,8 +110,7 @@ void PVOfflineRecalculate::RecalculateVertex(const LHCb::RecVertex* pvin,
   }
 
   // remove track
-  Gaudi::SymMatrix3x3 hess;
-  hess = pvin->covMatrix();
+  Gaudi::SymMatrix3x3 hess = pvin->covMatrix();
   hess = hess * 0.5;
   int fail;  
   hess.Inverse(fail);
@@ -220,7 +192,7 @@ void PVOfflineRecalculate::RecalculateVertex(const LHCb::RecVertex* pvin,
     
     // Update tracks. Default is not to update since tracks may not be available (uDST)
     vtx.clearTracks();
-    SmartRefVector< LHCb::Track >  vtx_tracks = pvin->tracks();
+    const SmartRefVector<LHCb::Track>& vtx_tracks = pvin->tracks();
     for (unsigned int it = 0; it < vtx_tracks.size(); it++ ) {
       const LHCb::Track* ptr =  vtx_tracks[it];
       if ( std::find(removed_tracks.begin(), removed_tracks.end(), ptr) == removed_tracks.end() ) {

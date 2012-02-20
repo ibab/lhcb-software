@@ -7,8 +7,12 @@
 // Interfaces
 #include "TrackInterfaces/IPVOfflineTool.h"
 
-//class IPVOfflineTool;
-
+/** @class PatPVOffline PatPVOffline.h
+ *   
+ *
+ *  @author Mariusz Witek
+ *  @date   2010-10-05
+ */
 class PatPVOffline : public GaudiAlgorithm {
 public:
   // Standard constructor
@@ -19,9 +23,7 @@ public:
   virtual StatusCode execute();       // Algorithm execution
 private:
   std::string m_outputVertices;
-  std::string m_outputWeights;
   // Tools
   IPVOfflineTool* m_pvsfit;    // PV fitting tool
-
 };
 #endif // PATPVOFFLINE_H
