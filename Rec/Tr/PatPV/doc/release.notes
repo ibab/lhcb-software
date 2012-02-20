@@ -4,10 +4,17 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+! 2012-02-20 - Chris Jones
+ - Update PatPVOffline to no longer create a seperate 'WeightsVector', but 
+   instead to store the track weights directly in the RecVertex class, which 
+   now supports this.
+
 !========================= PatPV v3r21 2012-01-31 =========================
 ! 2011-11-23 - Mariusz Witek
-- introduce beamspot constraint into PVSeedTool to make PatPV3D faster which gives
-  - a factor between 2 or 3 in exe time when switching from 3D PVSeed3DTool to PVSeedTool
+ - introduce beamspot constraint into PVSeedTool to make PatPV3D faster which
+   gives :-
+  - a factor between 2 or 3 in exe time when switching from 3D PVSeed3DTool 
+    to PVSeedTool
   - lower false PV rate and lower PV->SV mistakes
   - same performance for other parameters like resolution and PV efficiency
 
