@@ -193,15 +193,15 @@
 	type  = "bool"
         const = "FALSE"
         argList="const LHCb::Track* track, const float weight"
-	desc  = "Set the weight for the given Track. Returns true if weight is successfuly set, flase if the track is not part of this vertex" >
+	desc  = "Set the weight for the given Track. Returns true if weight is successfuly set, false if the track is not part of this vertex" >
       </method>
 
       <method 
 	name  = "trackWeight" 
-	type  = "float"
+	type  = "std::pair&lt;bool,float&gt;"
         const = "TRUE"
         argList="const LHCb::Track* track"
-	desc  = "Returns the weight for the given Track. If track is not part of the Vertex, will return -1." >
+	desc  = "Returns a pair containing a bool, indicating if the track was part of this vertex or not, and its associated weight (0 if track not included)" >
       </method>
 
     </class>

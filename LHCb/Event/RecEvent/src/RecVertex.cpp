@@ -86,10 +86,10 @@ bool LHCb::RecVertex::setTrackWeight( const LHCb::Track* track,
   return OK;
 }
 
-float LHCb::RecVertex::trackWeight(const LHCb::Track* track) const
+std::pair<bool,float> LHCb::RecVertex::trackWeight( const LHCb::Track* track ) const
 {
   assert( m_tracks.size() == m_weights.size() );
-  float weight = -1.0;
+  std::pair<bool,float> weight(false,0.0);
   if ( !m_tracks.empty() )
   {
     // Try and find the track
@@ -101,7 +101,8 @@ float LHCb::RecVertex::trackWeight(const LHCb::Track* track) const
       // Get the index from the iterator
       const unsigned int index = (unsigned int) ( iTk - m_tracks.begin() );
       // Get the weight
-      weight = m_weights[index];
+      weight.second = m_weights[index];
+      weight.first  = true;
     }
   }
   return weight;

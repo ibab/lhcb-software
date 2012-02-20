@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+! 2012-02-20 - Chris Jones
+ - Update RecVertex with new methods to get and set the track weights, for 
+   each track seperately.
+
 ! 2012-02-17 - Chris Jones
  - Update RecVertex class to natively store the weights associated with each
    track. The weights are optional, to preserve backwards compatibility. If
