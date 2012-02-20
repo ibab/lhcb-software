@@ -78,6 +78,8 @@
         <enumval name="JetActiveAreaE"                          desc="E-component  of Jet active area four-momentum"   />
         <enumval name="JetPtPerUnitArea"                        desc="Underlying event activity per unit of Active Area" />
         <enumval name="LastJetIndex"  value="FirstJetIndex+199" desc="The last  index allocated for jet-related studies"   />
+        <enumval name="FirstIsolationInfoIndex" value="9400"    desc="First index for isolation information" />
+        <enumval name="LastIsolationInfoIndex" value="FirstIsolationInfoIndex+14"    desc="Last index for isolation information" />
 
         <enumval name="LastGlobal"    value="10000"             desc="The last 'global' index, other values are specific for user analysis" />
       </enum>
