@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2012-02-20 - Jaap Panman
+ - introduce warning when IgnoreDQFlags set
+ - slightly more informative warning message for missing FSR data
+
+! 2012-02-20 - Jaap Panman
  - introduce option IgnoreDQFlags
 
 ! 2012-02-15 - Jaap Panman

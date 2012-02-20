@@ -123,6 +123,12 @@ StatusCode LumiIntegrateFSR::initialize() {
            << " name: " << m_muKeyName << " KeyIntValue: " <<  m_MuKey
            << endmsg;
   }
+
+  // warn if m_ignoreDQFlags is set
+  if ( m_ignoreDQFlags ) {
+    warning() << "Disable DQFlags checking" << endmsg;
+  }
+
   // get the detectorDataSvc
   m_dds = detSvc();
   if (m_dds == NULL) {
@@ -275,7 +281,7 @@ StatusCode LumiIntegrateFSR::add_file() {
             fkey_ts++;
           } else {
             warning() << "missing run number at keycount: " << fkey << " " << fkey_ts 
-                      << " skip db update for this FSR" << endmsg;
+                      << " skip db update for this FSR (" << primaryFileRecordAddress << ")" << endmsg;
           }
 
           // integrate only if DQ-accepted - flag is updated in trigger_event 
