@@ -4,6 +4,9 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2012-02-20 - Jaap Panman
+ - introduce option IgnoreDQFlags
+
 ! 2012-02-15 - Jaap Panman
  - introduce logic in LumiIntegrateFSR to skip integration based on DQflags  
  - update unittests

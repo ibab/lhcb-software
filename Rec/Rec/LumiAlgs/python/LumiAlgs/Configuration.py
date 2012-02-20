@@ -43,7 +43,8 @@ class LumiAlgsConf(LHCbConfigurableUser):
        ,"UseLumiLow"    : False      # flag to use the LumiLow event for counting
        ,"OutputLevel"   : INFO
        ,"Simulation"    : False      # flag to indicate simulated data
-       }
+       ,"IgnoreDQFlags" : False      # flag to ignore data quality
+        }
 
     _propertyDocDct = {
         "Context"       : """ The context within which to run """
@@ -57,6 +58,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
        ,"UseLumiLow"    : "flag to use the LumiLow event for counting [False]"
        ,"OutputLevel"   : "printed output"
        ,"Simulation"    : "flag to indicate simulated data [False]"
+       ,"IgnoreDQFlags" : "flag to ignore DataQuality flags [False]"
        }
     
     ## Helper functions

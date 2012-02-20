@@ -51,6 +51,7 @@ LumiIntegrateFSR::LumiIntegrateFSR( const std::string& name,
   declareProperty( "SubtractBXTypes"    , m_subtractBXTypes ) ;
   declareProperty( "IntegratorToolName" , m_ToolName          = "LumiIntegrator" );
   declareProperty( "AcceptTool"         , m_acceptToolName    = "DQAcceptTool" );  
+  declareProperty( "IgnoreDQFlags"      , m_ignoreDQFlags     = false);
   declareProperty( "AccumulateMu"       , m_accumulateMu      = false);
   declareProperty( "MuKeyName"          , m_muKeyName         = "PoissonRZVelo" );
   
@@ -278,7 +279,7 @@ StatusCode LumiIntegrateFSR::add_file() {
           }
 
           // integrate only if DQ-accepted - flag is updated in trigger_event 
-          if ( m_DQaccepted ) {
+          if ( m_DQaccepted || m_ignoreDQFlags ) {
         	  // initialize integral with the primary BX
         	  LHCb::LumiIntegral* result = new LHCb::LumiIntegral();
         	  add_fsr(result, primaryFileRecordAddress, 0, fkey);

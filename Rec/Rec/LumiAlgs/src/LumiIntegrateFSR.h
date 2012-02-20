@@ -74,6 +74,7 @@ protected:
   bool m_accumulateMu;                          ///< flag to accumulate mu information
   std::string m_muKeyName;                      ///< name of key for mu calculation
   int m_MuKey;                                  ///< int value of key for mu calculation
+  bool m_ignoreDQFlags;                         ///< flag to ignore data quality  
 
 private:
   // database calibration factors

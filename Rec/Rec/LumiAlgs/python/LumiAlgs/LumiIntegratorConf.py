@@ -21,6 +21,8 @@ class LumiIntegratorConf(LHCbConfigurableUser):
     , "LumiSequencer" : None       # The sequencer to add the Lumi Accounting to - essential input
     , "TupleFile"     : ""         # Name of output Tuple file
     , "UseOnline"     : True       # flag to use online partition
+    , "IgnoreDQFlags" : False      # flag to ignore DQflags
+
     }   
 
 
@@ -39,7 +41,9 @@ class LumiIntegratorConf(LHCbConfigurableUser):
                              PrimaryBXType = 'BeamCrossing',
                              AddBXTypes = ['NoBeam'],
                              SubtractBXTypes = ['Beam1','Beam2'],
-                             IntegratorToolName = 'IntegrateBeamCrossing')
+                             IntegratorToolName = 'IntegrateBeamCrossing',
+                             IgnoreDQFlags = self.getProp("IgnoreDQFlags"),
+                             )
     ToolSvc().addTool(GetLumiParameters, "lumiDatabaseTool") # This is a public tool
     ToolSvc().lumiDatabaseTool.UseOnline = self.getProp('UseOnline') 
     seqMembers.append( lifsr )
