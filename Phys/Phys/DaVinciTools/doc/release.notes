@@ -3,6 +3,12 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2012-02-20 - Anton Poluektov 
+ - Add ConeVariables.h,cpp - tool to calculate cone isolation variables as in 
+   TupleToolTrackIsolation
+ - Add ParticleIsolation.h,cpp - DVAlgorithm to store cone variables into 
+   Particle extraInfo. 
+
 ! 2012-02-08 - Marco Cattaneo
  - Add missing dependency for QMTest, following GaudiConf reorganisation
 
