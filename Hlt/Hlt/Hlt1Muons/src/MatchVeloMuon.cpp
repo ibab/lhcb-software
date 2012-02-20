@@ -141,6 +141,7 @@ StatusCode MatchVeloMuon::tracksFromTrack( const LHCb::Track &seed,
                       boost::bind( &Candidate::chi2DoF, _2 )));
       if ( best != goodCandidates.end() ) {
          LHCb::Track* out = seed.clone();
+         out->addToAncestors(seed);
          const Candidate* c = *best;
          out->addInfo( 35, c->slope() - c->tx() );
          LHCb::State* state = out->stateAt( LHCb::State::EndVelo );
