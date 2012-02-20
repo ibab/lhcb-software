@@ -556,6 +556,17 @@ class LbLoginScript(SourceScript):
             ev["Gaudi_release_area"] = ev["GAUDISOFT"]
             ev["LHCb_release_area"] = ev["LHCBRELEASES"]
             log.debug("LHCBPROJECTPATH is set to %s" % ev["LHCBPROJECTPATH"])
+        # Hack to allow for switching version of LbScripts between AFS and cvmfs
+        if opts.cmtsite == "CERN" :
+            afsLbLoginDir = "/afs/cern.ch/lhcb/software/releases/LBSCRIPTS/prod/InstallArea/scripts"
+            cvmfsLbLoginDir = "/cvmfs/lhcb.cern.ch/lib/lhcb/LBSCRIPTS/prod/InstallArea/scripts"
+            if self.targetShell() == "csh" :
+                al["afsLbLogin"] = "source %s/LbLogin.csh" % afsLbLoginDir
+                al["cvmfsLbLogin"] = "source %s/LbLogin.csh" % cvmfsLbLoginDir
+            elif self.targetShell() == "sh" :
+                al["afsLbLogin"] = ". %s/LbLogin.sh" % afsLbLoginDir
+                al["cvmfsLbLogin"] = ". %s/LbLogin.sh" % cvmfsLbLoginDir
+
 #-----------------------------------------------------------------------------------
 
     def setHomeDir(self):
