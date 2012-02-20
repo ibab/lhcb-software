@@ -14,6 +14,8 @@ Purpose: LHCb reconstruction program
     not available in CondDB (LumiAlgs)
   . Update FilterFillingScheme for 2012 (LumiAlgs)
   . Changes in PatForward X search window parameterisation (PatAlgorithms) 
+  . Add to RecVertex the weights associated to each track, remove weights
+    vector from (s)DST (RecEvent, GaudiConf)
 
 - Changest to tests
   . brunel.brunel-mc11a-xdst now takes input file from svcClass=lhcbdisk
