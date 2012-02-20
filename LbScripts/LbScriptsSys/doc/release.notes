@@ -1,3 +1,74 @@
+2012-02-20 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v6r7
+
+	LbConfiguration:
+	* python/LbConfiguration/Package.py: Added new package TMVAWeights
+	* python/LbConfiguration/SetupProject.py: removed the reference to GaudiPoolDb (deprecated)
+	Added the --profile option to print some statistics on the execution time.
+	* python/LbConfiguration/Repository.py
+	add support for switching after checkout
+	requires a short-url for the repositories
+	* python/LbConfiguration/LbLogin.py: added the variable LHCB_CONF_DIR to store the LHCB
+	runtime configuration:
+	- on AFS: $LHCBTAR/conf
+	- LOCAL: $LHCBHOME/conf
+	This directory will store either the original version of the files (AFS) or the local cached
+	copy updated automatically with install_project.py
+
+	LbLegacy:
+	* python/LbLegacy/install_project.py: Fixed option --dev-install
+	* python/LbLegacy/install_project.py: fully implemented the download of the configuration files. Checking
+	for update based on the md5 sum still to be done.
+	* python/LbLegacy/install_project.py: added skeleton for the LHCb configuration update.
+	* python/LbLegacy/install_project.py: simplified the management of the local subdirectories. Now
+	uses a global dictionary.
+
+	LbRelease:
+	* LbRelease/python/LbRelease/rcs.py: added branch creation for Subversion
+	* LbRelease/scripts/branch_package: new script to branch packages
+	* python/LbRelease/rcs.py
+	add callback command in the case a directory already exists
+	this will check the protocol if switching is enabled
+	* python/LbRelease/GetPack.py
+	implement the callback command for switching fix a bug where only the cmt directory was ever switched!
+	* python/LbRelease/GetPack.py
+	allow setting of the username with the usual gymnastics
+	need to check svn switching and svn updating to a given version work
+	* python/LbRelease/GetPack.py
+	add support for switching after checkout
+	at the moment False, still needs support for username setting
+	* python/LbRelease/SvnTools/Package.py: use anonymous repository by default
+	* python/LbRelease/SvnTools/Project.py: use anonymous repository by default
+	* python/LbRelease/Info.py: use CMTPROJECTPATH when looking for project bases,
+	striped release notes, ignore unknown projects
+	* LbRelease/python/LbRelease/CMT/Version.py: fixed CMT2LHCb for projects without version
+	* LbRelease/scripts/getReleaseInfo: fixed error when CMTUSERCONTEXT is not set
+	* python/LbRelease/CMT/LbProject.py: added releaseDate method
+	* python/LbRelease/Info.py: added the extraction of the various html informations
+	* LbRelease/python/LbRelease/CMT/LbPackage.py: added the releaseNotes method.
+	* LbRelease/python/LbRelease/CMT/LbProject.py: idem
+	* LbRelease/python/LbRelease/Info.py: added the release notes information to the output
+	* LbRelease/python/LbRelease/ReleaseNotes.py: implemented extract function for a given release version
+	* python/LbRelease/Info.py: New file. for the release informations extraction
+	* python/LbRelease/ReleaseNotes.py: New file. for the release notes management
+	* scripts/getReleaseInfo: New file. script to extract release informations
+	* python/LbRelease/CMT/LbPackage.py: implemented version and name methods. Added releaseNotes method
+	* python/LbRelease/CMT/LbProject.py: idem
+	* python/LbRelease/CMT/Version.py: fixed the version translation LHCb <-> CMT
+
+	LbUtils:
+	* python/LbUtils/Script.py: added profiling to Script ancestor. All classes inheriting can now be profiled
+	by calling the --profile option. The result is logged after the script is run.
+	    --prof-maxlines=n increases/decreases the length of the output.
+	    --prof-sortby=x where x in ["stdname", "calls", "time", "cumulative"] changes the order
+	    --prof-dump=filename dumps the statistics to a file instead of logging a summary
+	* python/LbUtils/CMT/Package.py: added the releaseDate method.
+	* LbUtils/python/LbUtils/CMT/Project.py: added the containerPackage method that returns an instance of the
+	Package class. The original container method only returns the name of the container.
+	* python/LbUtils/CMT/Project.py: made an indirection in order to be able to
+	override the version and name methods in subclasses.
+
 2012-02-06  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* cmt/requirements: release of version v6r6p4
