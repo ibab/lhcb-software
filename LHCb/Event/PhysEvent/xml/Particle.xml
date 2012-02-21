@@ -103,7 +103,14 @@
       <constructor
         argList="const LHCb::ParticleID&amp; pid, const int key"
         desc="Constructor from ParticleID and key"
-        initList = "KeyedObject&lt;int&gt;( key ), m_particleID(pid), m_measuredMass(-1.0), m_measuredMassErr(0.0), m_momentum(0.0, 0.0, 0.0, -1*Gaudi::Units::GeV), m_referencePoint(0.0, 0.0, -1*Gaudi::Units::km), m_momCovMatrix(), m_posCovMatrix(), m_posMomCovMatrix(), m_extraInfo()"
+        initList = "KeyedObject&lt;int&gt;(key), m_particleID(pid), m_measuredMass(-1.0), m_measuredMassErr(0.0), m_momentum(0.0, 0.0, 0.0, -1*Gaudi::Units::GeV), m_referencePoint(0.0, 0.0, -1*Gaudi::Units::km), m_momCovMatrix(), m_posCovMatrix(), m_posMomCovMatrix(), m_extraInfo()"
+        />
+
+      <constructor
+        explicit = "TRUE"
+        argList="const int key"
+        desc="Constructor a key"
+        initList = "KeyedObject&lt;int&gt;(key), m_particleID(), m_measuredMass(-1.0), m_measuredMassErr(0.0), m_momentum(0.0, 0.0, 0.0, -1*Gaudi::Units::GeV), m_referencePoint(0.0, 0.0, -1*Gaudi::Units::km), m_momCovMatrix(), m_posCovMatrix(), m_posMomCovMatrix(), m_extraInfo()"
         />
 
       <method

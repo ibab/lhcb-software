@@ -2,6 +2,10 @@
 ! Responsible : P. Koppenburg, J.P. Palacios
 !----------------------------------------------------------------------------
 
+! 2012-02-21 - Chris Jones
+ - Add a Particle constructor from a key only
+
+
 ! 2012-02-20 - Anton Poluektov 
  - add enums related to isolation information to Particle extraInfo. 
 
