@@ -153,6 +153,7 @@
         type    = 'double'
         name    = 'chi2'
         const   = 'TRUE'
+        virtual   = 'TRUE'
         desc    = 'Retrieve the local chi^2 '>
       </method>
 
