@@ -4,17 +4,17 @@ MuIDCalib = {
     'STREAMS'     : [ 'PID' ],
     'CONFIG'      : {
     'PromptPrescale'           : 0.0,
-    'DetachedPrescale'         : 1.0,
+    'DetachedPrescale'         : 0.0,
     'DetachedNoMIPPrescale'    : 1.0,
-    'DetachedNoMIPHiPPrescale' : 1.0,
+    'DetachedNoMIPHiPPrescale' : 0.0,
     'DetachedNoMIPKPrescale'   : 1.0,
     'FromLambdacPrescale'      : 1.0,
-    'KFromLambdacPrescale'     : 1.0,
-    'PiFromLambdacPrescale'    : 1.0,
-    'PFromLambdacPrescale'     : 1.0,
-    'KISMUONFromLambdacPrescale' : 1.0,
-    'PiISMUONFromLambdacPrescale': 1.0,
-    'PISMUONFromLambdacPrescale' : 1.0 
+    'KFromLambdacPrescale'     : 0.0,
+    'PiFromLambdacPrescale'    : 0.0,
+    'PFromLambdacPrescale'     : 0.0,
+    'KISMUONFromLambdacPrescale' : 0.0,
+    'PiISMUONFromLambdacPrescale': 0.0,
+    'PISMUONFromLambdacPrescale' : 0.0 
     }
     }
 
