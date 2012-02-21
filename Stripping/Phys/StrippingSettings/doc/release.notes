@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-02-21 - Andrew Powell
+ - Incorporated RICH & MUON PID lines in LineConfigDictionaries_Calib.py for the 
+   PID stream. No attempt to incorporate any lines for the Calibration stream.
+
 ! 2012-02-21 - Will Barter
  - Included list of EWWG lines in PreStripping18 (LineConfigDictionaries_EWWG.py)
 
