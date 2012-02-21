@@ -36,7 +36,7 @@
 -->
       <enum
         name    = 'Type'
-        value   = 'Unknown,VeloR,VeloPhi,VeloLiteR,VeloLitePhi,TT,IT,OT,Muon, TTLite, ITLite,VeloPixLite,Calo'
+        value   = 'Unknown,VeloR,VeloPhi,VeloLiteR,VeloLitePhi,TT,IT,OT,Muon, TTLite, ITLite,VeloPixLite,Calo,Origin'
         desc    = 'enumerator for the type of Measurement'
         access  = 'PUBLIC'
         strTypConv = 'TRUE' 
@@ -47,8 +47,9 @@
 	argList  = "LHCb::Measurement other" 
         initList = "m_mtype(other.m_mtype),m_z(other.m_z),m_measure(other.m_measure),m_errMeasure(other.m_errMeasure),m_lhcbID(other.m_lhcbID),m_detectorElement(other.m_detectorElement)" >
         <code>
-          m_trajectory.reset( (other.m_trajectory)->clone().release());
-        </code>
+	  if( other.m_trajectory.get() )
+            m_trajectory.reset( (other.m_trajectory)->clone().release());
+	</code>
       </constructor>
 
       <constructor 

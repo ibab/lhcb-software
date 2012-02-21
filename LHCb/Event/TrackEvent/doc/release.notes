@@ -4,6 +4,11 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2012-02-21 - Wouter Hulsbergen
+ - Made Node::chi2 virtual
+ - Added measurement type Origin
+ - Fixed bug in Measurement copy constructor
+
 ! 2012-02-18 - Chris Jones
  - Add some additional types to the dictionary, needed by RecEvent.
 
