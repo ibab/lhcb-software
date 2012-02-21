@@ -4,6 +4,10 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+! 2012-02-21 - Chris Jones
+ - Update the way some references to Particles and Vertices are stored, to
+   use 64 bit intergers, to avoid packing problems.
+
 ! 2012-02-17 - Chris Jones
  - Update the RecVertex packed class to support the new RecVertex class 
    with track weights

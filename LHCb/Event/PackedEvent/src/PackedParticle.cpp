@@ -93,9 +93,9 @@ void ParticlePacker::pack( const Data & part,
     // end vertex
     if ( part.endVertex() )
     {
-      ppart.vertex = m_pack.reference( &pparts,
-                                       part.endVertex()->parent(),
-                                       part.endVertex()->key() );
+      ppart.vertex = m_pack.reference64( &pparts,
+                                         part.endVertex()->parent(),
+                                         part.endVertex()->key() );
     }
 
     // protoparticle
@@ -114,9 +114,9 @@ void ParticlePacker::pack( const Data & part,
       const LHCb::Particle * P = *iD1;
       if ( P )
       {
-        pparts.daughters().push_back( m_pack.reference( &pparts,
-                                                        P->parent(),
-                                                        P->key() ) );
+        pparts.daughters().push_back( m_pack.reference64( &pparts,
+                                                          P->parent(),
+                                                          P->key() ) );
       }
     }
     ppart.lastDaughter = pparts.daughters().size();
@@ -233,11 +233,12 @@ void ParticlePacker::unpack( const PackedData       & ppart,
       part.addInfo( pInfo.first, m_pack.fltPacked(pInfo.second) );
     }
 
+
     // end vertex
     if ( -1 != ppart.vertex )
     {
       int hintID(0), key(0);
-      m_pack.hintAndKey( ppart.vertex, &pparts, &parts, hintID, key );
+      m_pack.hintAndKey64( ppart.vertex, &pparts, &parts, hintID, key );
       SmartRef<LHCb::Vertex> ref(&parts,hintID,key);
       part.setEndVertex( ref );
     }
@@ -252,12 +253,11 @@ void ParticlePacker::unpack( const PackedData       & ppart,
     }
 
     // daughters
-
-    for ( unsigned short int iiD = ppart.firstDaughter; iiD < ppart.lastDaughter; ++iiD )
+    for ( unsigned int iiD = ppart.firstDaughter; iiD < ppart.lastDaughter; ++iiD )
     {
       const int & iD1 = pparts.daughters()[iiD];
       int hintID(0), key(0);
-      m_pack.hintAndKey( iD1, &pparts, &parts, hintID, key );
+      m_pack.hintAndKey64( iD1, &pparts, &parts, hintID, key );
       SmartRef<LHCb::Particle> ref(&parts,hintID,key);
       part.addToDaughters( ref );
     }

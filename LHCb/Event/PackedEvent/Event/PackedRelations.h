@@ -9,12 +9,15 @@
 namespace LHCb {
 
 
-  class PackedRelation {
+  class PackedRelation 
+  {
   public:
-    PackedRelation() {}
-    ~PackedRelation() {}
 
-    int container;
+    PackedRelation() : container(0), start(0), end(0) {}
+
+    ~PackedRelation() {}
+    
+    long long container;
     int start;
     int end;
   };
@@ -29,12 +32,16 @@ namespace LHCb {
   static const CLID CLID_PackedRelations = 1560;
 
   /// Namespace for locations in TDS
-  namespace PackedRelationsLocation {
+  namespace PackedRelationsLocation 
+  {
     static const std::string& InStream = "/pPhys/Relations";
   }
 
-  class PackedRelations : public DataObject {
+  class PackedRelations : public DataObject 
+  {
+  
   public:
+  
     /// Standard constructor
     PackedRelations( ) {};
 
@@ -47,15 +54,15 @@ namespace LHCb {
     virtual const CLID& clID() const { return PackedRelations::classID(); }
     
     std::vector<PackedRelation>& relations() { return m_relations; }
-    std::vector<int>& sources() { return m_source; }
-    std::vector<int>& dests() { return m_dest; }
-
-  protected:
+    std::vector<long long>& sources() { return m_source; }
+    std::vector<long long>& dests()   { return m_dest; }
 
   private:
+
     std::vector<PackedRelation> m_relations;
-    std::vector<int> m_source;
-    std::vector<int> m_dest;
+    std::vector<long long> m_source;
+    std::vector<long long> m_dest;
+  
   };
 }
 #endif // EVENT_PACKEDRELATIONS_H

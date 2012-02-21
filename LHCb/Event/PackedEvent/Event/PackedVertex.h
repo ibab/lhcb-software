@@ -39,16 +39,16 @@ namespace LHCb
     {}
     
     /// Key and possibly container index.
-    int key; 
+    long long key; 
 
     /// packed technique
     int technique;
 
     /// first outgoing particle
-    unsigned short int firstOutgoingPart;
+    unsigned int firstOutgoingPart;
 
     /// last outgoing particle
-    unsigned short int lastOutgoingPart;
+    unsigned int lastOutgoingPart;
 
   };
 
@@ -79,7 +79,7 @@ namespace LHCb
     typedef std::vector<LHCb::PackedVertex> Vector;
 
     /// Outgoing Particles
-    typedef std::vector<int> OutgoingParticles;
+    typedef std::vector<long long> OutgoingParticles;
 
   public:
 

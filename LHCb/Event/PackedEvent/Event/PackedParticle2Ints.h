@@ -1,42 +1,51 @@
 // $Id: $
-#ifndef EVENT_PACKEDPARTICLE2INTS_H 
+#ifndef EVENT_PACKEDPARTICLE2INTS_H
 #define EVENT_PACKEDPARTICLE2INTS_H 1
 
 // Include files
-namespace LHCb {
-  class PackedParticle2Int {
+namespace LHCb
+{
+
+  class PackedParticle2Int
+  {
   public:
-    PackedParticle2Int() {}
+
+    PackedParticle2Int() : key(0), container(0), start(0), end(0) {}
+
     ~PackedParticle2Int() {}
 
-    int key;
-    int container;
+    long long key;
+    long long container;
     int start;
     int end;
   };
-    
-/** @class PackedParticle2Ints PackedParticle2Ints.h Event/PackedParticle2Ints.h
- *  
- *
- *  @author Olivier Callot
- *  @date   2012-01-30
- */
+
+  /** @class PackedParticle2Ints PackedParticle2Ints.h Event/PackedParticle2Ints.h
+   *
+   *
+   *  @author Olivier Callot
+   *  @date   2012-01-30
+   */
 
   static const CLID CLID_PackedParticle2Ints = 1591;
-  
+
   /// Namespace for locations in TES
-  namespace PackedParticle2IntsLocation {
+  namespace PackedParticle2IntsLocation
+  {
     static const std::string& InStream = "/pPhys/Particle2Int";
   }
-  
-  class PackedParticle2Ints : public DataObject {
-  public: 
+
+  class PackedParticle2Ints : public DataObject
+  {
+
+  public:
+
     /// Standard constructor
-    PackedParticle2Ints( ){}; 
+    PackedParticle2Ints( ){};
 
     virtual ~PackedParticle2Ints( ){}; ///< Destructor
 
-   /// Class ID
+    /// Class ID
     static const CLID& classID() { return CLID_PackedParticle2Ints; }
     /// Class ID
     virtual const CLID& clID() const { return PackedParticle2Ints::classID(); }
@@ -45,11 +54,11 @@ namespace LHCb {
 
     std::vector<int>& ints() { return m_ints; }
 
-   protected:
-    
   private:
+
     std::vector<PackedParticle2Int> m_relations;
     std::vector<int> m_ints;
+
   };
 }
 

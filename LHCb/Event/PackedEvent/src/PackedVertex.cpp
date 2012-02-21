@@ -28,9 +28,9 @@ void VertexPacker::pack( const Data & vert,
       const LHCb::Particle * P = *iP;
       if ( P )
       {
-        pverts.outgoingParticles().push_back( m_pack.reference( &pverts,
-                                                                P->parent(),
-                                                                P->key() ) );
+        pverts.outgoingParticles().push_back( m_pack.reference64( &pverts,
+                                                                  P->parent(),
+                                                                  P->key() ) );
       }
     }
     pvert.lastOutgoingPart = pverts.outgoingParticles().size();
@@ -78,11 +78,11 @@ void VertexPacker::unpack( const PackedData       & pvert,
     vert.setTechnique( static_cast<Vertex::CreationMethod>(pvert.technique) );
 
     // outgoing particles
-    for ( unsigned short int iiP = pvert.firstOutgoingPart; iiP < pvert.lastOutgoingPart; ++iiP )
+    for ( unsigned int iiP = pvert.firstOutgoingPart; iiP < pvert.lastOutgoingPart; ++iiP )
     {
       const int & iP = pverts.outgoingParticles()[iiP];
       int hintID(0), key(0);
-      m_pack.hintAndKey( iP, &pverts, &verts, hintID, key );
+      m_pack.hintAndKey64( iP, &pverts, &verts, hintID, key );
       SmartRef<LHCb::Particle> ref(&verts,hintID,key);
       vert.addToOutgoingParticles( ref );
     }
