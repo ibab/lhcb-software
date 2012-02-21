@@ -56,6 +56,9 @@ StatusCode UnpackParticlesAndVertices::execute()
   int nbPart = 0;
   int prevLink = -1;
 
+  //=================================================================
+  //== Process the Particles
+  //=================================================================
   LHCb::Particles* parts = NULL;
   static const LHCb::ParticlePacker pPacker;
   if ( exist<LHCb::PackedParticles>(m_inputStream+LHCb::PackedParticleLocation::InStream) )
@@ -66,8 +69,8 @@ StatusCode UnpackParticlesAndVertices::execute()
           pparts->data().end() != itP; ++itP )
     {
       const LHCb::PackedParticle& ppart = *itP;
-      const int key    = ppart.key & 0x0000FFFF;
-      const int linkID = ppart.key >> 16;
+      int key(0),linkID(0);
+      m_pack.indexAndKey64( ppart.key, linkID, key );
       if ( linkID != prevLink ) 
       {
         prevLink = linkID;
@@ -86,8 +89,8 @@ StatusCode UnpackParticlesAndVertices::execute()
       }
 
       // Make new object and insert into the output container
-      LHCb::Particle* part = new LHCb::Particle();
-      parts->insert( part, key );
+      LHCb::Particle* part = new LHCb::Particle( key );
+      parts->add( part );
       ++nbPart;
 
       // Unpack the physics info
@@ -112,8 +115,8 @@ StatusCode UnpackParticlesAndVertices::execute()
           pverts->data().end() != itV; ++itV )
     {
       const LHCb::PackedVertex& pvert = *itV;
-      const int key    = pvert.key & 0x0000FFFF;
-      const int linkID = pvert.key >> 16;
+      int key(0),linkID(0);
+      m_pack.indexAndKey64( pvert.key, linkID, key );
       if ( linkID != prevLink ) 
       {
         prevLink = linkID;
@@ -123,8 +126,8 @@ StatusCode UnpackParticlesAndVertices::execute()
         ++nbVertContainer;
       }
       //== Construct with verticle ID and key.
-      LHCb::Vertex* vert = new LHCb::Vertex();
-      verts->insert( vert, key );
+      LHCb::Vertex* vert = new LHCb::Vertex( key );
+      verts->add( vert );
       ++nbVert;
 
       // unpack the physics info
@@ -148,8 +151,8 @@ StatusCode UnpackParticlesAndVertices::execute()
           pRecVerts->vertices().end() != itV; ++itV ) 
     {
       const LHCb::PackedRecVertex& pRecVert = *itV;
-      int key    = pRecVert.key & 0x0000FFFF;
-      int linkID = pRecVert.key >> 16;
+      int key(0), linkID(0);
+      m_pack.indexAndKeyLong( pRecVert.key, linkID, key );
       if ( linkID != prevLink ) 
       {
         prevLink = linkID;
@@ -183,28 +186,30 @@ StatusCode UnpackParticlesAndVertices::execute()
           prels->relations().end() != itR; ++itR )
     {
       const LHCb::PackedRelation& prel = *itR;
-      int indx = prel.container >> 16;
+      int indx = prel.container >> 32;
       const std::string & containerName = prels->linkMgr()->link( indx )->path() + m_postFix;
       rels = new RELATION();
       put( rels, containerName );
-      nbRelContainer++;
+      ++nbRelContainer;
       LHCb::Particles* srcContainer = NULL;
       int prevSrcLink = -1;
       DataObject* dstContainer = NULL;
       int prevDstLink = -1;
       for ( int kk = prel.start;  prel.end > kk; ++kk ) 
       {
-        int srcLink = prels->sources()[kk] >> 16;
-        int srcKey  = prels->sources()[kk] & 0xFFFF;
-        if ( srcLink != prevSrcLink ) {
+        int srcLink(0), srcKey(0);
+        m_pack.indexAndKey64( prels->sources()[kk], srcLink, srcKey );
+        if ( srcLink != prevSrcLink )
+        {
           prevSrcLink = srcLink;
           const std::string & srcName = prels->linkMgr()->link( srcLink )->path();
           srcContainer = get<LHCb::Particles>( srcName );
         }
         LHCb::Particle* from = srcContainer->object( srcKey );
-        int dstLink = prels->dests()[kk] >> 16;
-        int dstKey  = prels->dests()[kk] & 0xFFFF;
-        if ( dstLink != prevDstLink ) {
+        int dstLink(0), dstKey(0);
+        m_pack.indexAndKey64( prels->dests()[kk], dstLink, dstKey );
+        if ( dstLink != prevDstLink ) 
+        {
           prevDstLink = dstLink;
           const std::string & dstName = prels->linkMgr()->link( dstLink )->path();
           dstContainer = get<DataObject>( dstName );
@@ -238,7 +243,7 @@ StatusCode UnpackParticlesAndVertices::execute()
           pPartIds->relations().end() != itL; ++itL )
     {
       const LHCb::PackedParticle2Int& pPartId = *itL;
-      const int linkID = pPartId.key >> 16;
+      const int linkID = pPartId.key >> 32;
       if ( linkID != prevLink ) 
       {
         prevLink = linkID;
@@ -248,8 +253,8 @@ StatusCode UnpackParticlesAndVertices::execute()
         ++nbPartIdContainer;
       }
       ++nbPartId;
-      const int partLink = pPartId.container >> 16;
-      const int partKey  = pPartId.container & 0xFFFF;
+      int partLink(0), partKey(0);
+      m_pack.indexAndKey64( pPartId.container, partLink, partKey );
       if ( partLink != prevPartLink ) 
       {
         prevPartLink = partLink;
@@ -267,12 +272,14 @@ StatusCode UnpackParticlesAndVertices::execute()
   }
 
   if ( msgLevel(MSG::DEBUG) )
+  {
     debug() << "== Retrieved " << nbPart << " Particles in " << nbContainer << " containers, "
             << nbVert << " vertices in " << nbVertContainer << " containers, "
             << nbRecVert << " RecVerticess in " << nbRecVertContainer << " containers,"
             << nbRel << " relations in " << nbRelContainer << " containers, "
             << nbPartId << " Part-LHCbID in " << nbPartIdContainer << " containers, "
             <<endmsg;
+  }
 
   return StatusCode::SUCCESS;
 }

@@ -28,6 +28,7 @@ ParticlesAndVerticesMapper::ParticlesAndVerticesMapper(const std::string& type,
 {
   declareProperty( "UnpackerType",
                    m_unpackerType = "UnpackParticlesAndVertices" );
+  declareProperty( "UnpackerOutputLevel", m_unpackersOutputLevel = -1 );
 }
 
 // ============================================================================
@@ -88,6 +89,13 @@ ParticlesAndVerticesMapper::algorithmForPath( const std::string & path )
     // Add the configuration of algorithm instance to the JobOptionsSvc
     m_jos->addPropertyToCatalogue( algName,
                                    StringProperty("InputStream",streamRoot(path)) );
+    if ( m_unpackersOutputLevel > 0 )
+    {
+      std::stringstream lvl; 
+      lvl << m_unpackersOutputLevel;
+      m_jos->addPropertyToCatalogue( algName, 
+                                     StringProperty("OutputLevel",lvl.str()));
+    }
 
     // Return the algorithm type/name.
     LOG_VERBOSE << " -> Use algorithm type '" << m_unpackerType << "'"
@@ -128,6 +136,8 @@ void ParticlesAndVerticesMapper::updateNodeTypeMap( const std::string & path )
     m_streamsDone[streamR] = true;
     LOG_VERBOSE << "ParticlesAndVerticesMapper::updateNodeTypeMap '" << path << "'" << endmsg;
 
+    int key(0),linkID(0);
+
     // Load the packed Particles
     if ( exist<LHCb::PackedParticles>(streamR+LHCb::PackedParticleLocation::InStream) )
     {
@@ -136,7 +146,7 @@ void ParticlesAndVerticesMapper::updateNodeTypeMap( const std::string & path )
       for ( std::vector<LHCb::PackedParticle>::iterator itP = pparts->data().begin();
             pparts->data().end() != itP; ++itP )
       {
-        const int linkID = (*itP).key >> 16;
+        m_pack.indexAndKey64( (*itP).key, linkID, key );
         addPath( pparts->linkMgr()->link(linkID)->path() );
       }
     }
@@ -149,7 +159,7 @@ void ParticlesAndVerticesMapper::updateNodeTypeMap( const std::string & path )
       for ( std::vector<LHCb::PackedVertex>::iterator itV = pverts->data().begin();
             pverts->data().end() != itV; ++itV )
       {
-        const int linkID = (*itV).key >> 16;
+        m_pack.indexAndKey64( (*itV).key, linkID, key );
         addPath( pverts->linkMgr()->link(linkID)->path() );
       }
     }
@@ -162,7 +172,7 @@ void ParticlesAndVerticesMapper::updateNodeTypeMap( const std::string & path )
       for ( std::vector<LHCb::PackedRecVertex>::iterator itV = pRecVerts->vertices().begin();
             pRecVerts->vertices().end() != itV; ++itV )
       {
-        const int linkID = (*itV).key >> 16;
+        m_pack.indexAndKeyLong( (*itV).key, linkID, key );
         addPath( pRecVerts->linkMgr()->link(linkID)->path() );
       }
     }
@@ -175,7 +185,7 @@ void ParticlesAndVerticesMapper::updateNodeTypeMap( const std::string & path )
       for ( std::vector<LHCb::PackedRelation>::iterator itR = prels->relations().begin();
             prels->relations().end() != itR; ++itR )
       {
-        const int linkID = (*itR).container >> 16;
+        m_pack.indexAndKey64( (*itR).container, linkID, key );
         addPath( prels->linkMgr()->link(linkID)->path() );
       }
     }
@@ -188,7 +198,7 @@ void ParticlesAndVerticesMapper::updateNodeTypeMap( const std::string & path )
       for ( std::vector<LHCb::PackedParticle2Int>::iterator itL = pPartIds->relations().begin();
             pPartIds->relations().end() != itL; ++itL )
       {
-        const int linkID = (*itL).key >> 16;
+        m_pack.indexAndKey64( (*itL).key, linkID, key );
         addPath( pPartIds->linkMgr()->link(linkID)->path() );
       }
     }
@@ -203,7 +213,7 @@ void ParticlesAndVerticesMapper::addPath( const std::string & path )
 {
   // Make sure paths start with /Event/
   const std::string npath = fixPath(path);
-
+ 
   // if not already there, add.
   if ( m_nodeTypeMap.find(npath) == m_nodeTypeMap.end() )
   {
@@ -225,7 +235,6 @@ void ParticlesAndVerticesMapper::addPath( const std::string & path )
       }
       slash = tmp.find_last_of("/");
     }
-
   }
 
 }

@@ -19,6 +19,8 @@
 #include "Event/PackedRelations.h"
 #include "Event/PackedParticle2Ints.h"
 
+#include "Kernel/StandardPacker.h"
+
 class IJobOptionsSvc;
 
 /** @class ParticlesAndVerticesMapper ParticlesAndVerticesMapper.h
@@ -123,6 +125,11 @@ private:
 
   /// Unpacker class type
   std::string m_unpackerType;
+
+  /// Outputlevel for unpackers created
+  int m_unpackersOutputLevel;
+
+  StandardPacker m_pack; ///< Standard Packer
 
 };
 

@@ -46,7 +46,8 @@ private:
   std::string m_inputStream; ///< Input stream root
 
   std::string m_postFix;
-  StandardPacker m_pack;
+
+  StandardPacker m_pack; ///< Standard Packer
 
 };
 

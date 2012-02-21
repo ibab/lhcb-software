@@ -292,7 +292,7 @@ void PackParticlesAndVertices::packAParticleContainer ( const LHCb::Particles* p
     LHCb::PackedParticle& ppart = pparts.data().back();
 
     // reference to original container and key
-    ppart.key = m_pack.referenceLong( &pparts, part.parent(), part.key() );
+    ppart.key = m_pack.reference64( &pparts, part.parent(), part.key() );
 
     // pack the physics info 
     pPacker.pack( part, ppart, pparts );
@@ -319,7 +319,7 @@ void PackParticlesAndVertices::packAVertexContainer ( const LHCb::Vertices* vert
     LHCb::PackedVertex& pvert = pverts.data().back();
     
     // reference to original container and key
-    pvert.key = m_pack.referenceLong( &pverts, vert.parent(), vert.key() );
+    pvert.key = m_pack.reference64( &pverts, vert.parent(), vert.key() );
 
     // fill remaining physics info
     vPacker.pack( vert, pvert, pverts );
@@ -329,7 +329,7 @@ void PackParticlesAndVertices::packAVertexContainer ( const LHCb::Vertices* vert
 }
 
 //=========================================================================
-//  Pack a container of relations in the PackedVertices object
+//  Pack a container of relations in the Pack object
 //=========================================================================
 void PackParticlesAndVertices::packARelationContainer ( const RELATION* rels, 
                                                         LHCb::PackedRelations& prels )
@@ -338,15 +338,13 @@ void PackParticlesAndVertices::packARelationContainer ( const RELATION* rels,
   prels.relations().push_back( LHCb::PackedRelation() );
   LHCb::PackedRelation& prel = prels.relations().back();
   // reference to original container and key
-  prel.container = m_pack.referenceLong( &prels, rels, 0 );
+  prel.container = m_pack.reference64( &prels, rels, 0 );
   prel.start     = prels.sources().size();
   RELATION::Range all = rels->relations();
   for ( RELATION::Range::iterator itR = all.begin(); all.end() != itR; ++itR )
   {
-    const int src = m_pack.referenceLong( &prels, (*itR).from()->parent(), (*itR).from()->key() );
-    prels.sources().push_back( src );
-    const int dst = m_pack.referenceLong( &prels, (*itR).to()->parent(), (*itR).to()->key() );
-    prels.dests().push_back( dst );
+    prels.sources().push_back( m_pack.reference64( &prels, (*itR).from()->parent(), (*itR).from()->key() ) );
+    prels.dests().push_back  ( m_pack.reference64( &prels, (*itR).to()->parent(),   (*itR).to()->key()   ) );
   }
   prel.end = prels.sources().size();
   if ( !m_deleteInput ) rels->registry()->setAddress( 0 );
@@ -392,12 +390,12 @@ PackParticlesAndVertices::packAParticleLHCbIDContainer ( const DaVinci::Map::Par
   {
     // Make a new packed data object and save
     pPartIds.relations().push_back( LHCb::PackedParticle2Int() );
-    LHCb::PackedParticle2Int& pPartId = pPartIds.relations().back();
-    pPartId.key = m_pack.referenceLong( &pPartIds, partIds, kk );
+    LHCb::PackedParticle2Int & pPartId = pPartIds.relations().back();
+    pPartId.key = m_pack.reference64( &pPartIds, partIds, kk );
     const LHCb::Particle* part = partIds->key_at(kk);
     const std::vector<LHCb::LHCbID> & ids = partIds->value_at(kk);
     // reference to original container and key
-    pPartId.container = m_pack.referenceLong( &pPartIds, part->parent(), part->key() );
+    pPartId.container = m_pack.reference64( &pPartIds, part->parent(), part->key() );
     pPartId.start     = pPartIds.ints().size();
     for ( std::vector<LHCb::LHCbID>::const_iterator itId = ids.begin(); 
           ids.end() != itId; ++itId ) 

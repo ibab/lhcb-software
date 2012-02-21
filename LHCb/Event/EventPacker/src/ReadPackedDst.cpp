@@ -263,7 +263,7 @@ StatusCode ReadPackedDst::execute() {
       processLinks( parts, version );
       getFromBlob<LHCb::PackedParticle> ( parts->data(), blobs );
       getFromBlob<std::pair<int,int> >  ( parts->extra(), blobs );
-      getFromBlob<int>                  ( parts->daughters(), blobs );
+      getFromBlob<long long>            ( parts->daughters(), blobs );
 
     } else if ( LHCb::CLID_PackedVertices        == classID ) {
 
@@ -271,7 +271,7 @@ StatusCode ReadPackedDst::execute() {
       put( verts, name + m_postfix );
       processLinks( verts, version );
       getFromBlob<LHCb::PackedVertex> ( verts->data(), blobs );
-      getFromBlob<int>                ( verts->outgoingParticles(), blobs );
+      getFromBlob<long long>          ( verts->outgoingParticles(), blobs );
 
     } else if ( LHCb::CLID_PackedWeightsVector   == classID ) {
       
