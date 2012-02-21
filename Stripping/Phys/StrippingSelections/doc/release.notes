@@ -5,6 +5,11 @@
 ! -----------------------------------------------------------------------------
 
 ! 2012-02-21 - Vanya Belyaev
+ - PsiXforBandQ.py
+
+   The coherent stripping for B -> psi(') + n(K,pi) for B&Q 
+
+! 2012-02-21 - Vanya Belyaev
 
  - PsiX0.py    
  

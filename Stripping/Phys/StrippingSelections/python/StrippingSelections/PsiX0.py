@@ -16,7 +16,7 @@
 # @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 # @date   2012-02-19
 #
-# Attention: the ``wid'' versions of pi0->2gg  and eta->gg a used
+# Attention: the ``wide'' versions of pi0->2gg  and eta->gg a used
 #           to cure the potential problems with bad ECAL calibration
 #
 #                   $Revision: 135537 $
