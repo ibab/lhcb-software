@@ -126,8 +126,8 @@ StatusCode UnpackParticlesAndVertices::execute()
         ++nbVertContainer;
       }
       //== Construct with verticle ID and key.
-      LHCb::Vertex* vert = new LHCb::Vertex( key );
-      verts->add( vert );
+      LHCb::Vertex* vert = new LHCb::Vertex();
+      verts->insert( vert, key );
       ++nbVert;
 
       // unpack the physics info
