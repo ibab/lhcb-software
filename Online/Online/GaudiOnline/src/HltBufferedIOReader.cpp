@@ -249,7 +249,7 @@ size_t HltBufferedIOReader::scanFiles() {
   }
   const char* err = RTL::errorString();
   error("Failed to open directory:"+string(err ? err : "????????"));
-  return -1;
+  return 0;
 }
 
 int HltBufferedIOReader::openFile() {
@@ -311,7 +311,10 @@ StatusCode HltBufferedIOReader::run()   {
     }
     m_evtCount = 0;
 
-    scanFiles();
+    if ( scanFiles() == 0 ) {
+      info("Exit event loop. No more files to process.");
+      break;
+    }
     // loop over the events
     while ( m_receiveEvts )   {
       if ( 0 == file_handle )  {
