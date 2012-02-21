@@ -23,6 +23,21 @@
 ! -----------------------------------------------------------------------------
 </PRE>
 
+<A NAME=v19r1>2012-02-21 Bender v19r1 based on the DaVinci v30r0</A>
+
+<PRE>		
+The version is similar  to v19r0 with few bug-fixes.
+
+<li>	
+Add TisTosMC module: import TisTos functions for MC 
+</li>	
+
+<li>
+move pyroot script to AnalysisPython
+</li>
+
+</PRE>
+
 <A NAME=v19r0>2012-02-15 Bender v19r0 based on the DaVinci v30r0</A>
 
 <PRE>		
