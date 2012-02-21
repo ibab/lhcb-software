@@ -90,8 +90,8 @@ public:
    *  @arg  parent : Pointer to the parent container of the SmartRef, method ->parent()
    *  @arg  key    : returned by the method .linkID() of the SmartRef
    */
-  int reference( DataObject* out, 
-                 const DataObject* parent, 
+  int reference( DataObject* out,
+                 const DataObject* parent,
                  const int key ) const
   {
     LinkManager::Link* myLink = out->linkMgr()->link( parent );
@@ -108,8 +108,8 @@ public:
     return key + myLinkID;
   }
 
-  int reference( DataObject* out, 
-                 const std::string& targetName, 
+  int reference( DataObject* out,
+                 const std::string& targetName,
                  const int key ) const
   {
     LinkManager::Link* myLink = out->linkMgr()->link( targetName );
@@ -119,15 +119,22 @@ public:
     }
     int myLinkID = myLink->ID() << 28;
     return key + myLinkID;
-  }  
+  }
+
+  void indexAndKey( const int data,
+                    int& indx, int& key ) const
+  {
+    indx = data >> 28;
+    key  = data & 0x0FFFFFFF;
+  }
 
   void hintAndKey( const int data,
                    const DataObject* source,
                    DataObject* target,
                    int& hint, int& key ) const
   {
-    const int indx = data >> 28;
-    key = data & 0x0FFFFFFF;
+    int indx(0);
+    indexAndKey(data,indx,key);
     hint = target->linkMgr()->addLink( source->linkMgr()->link( indx )->path(), 0 );
   }
 
@@ -136,24 +143,69 @@ public:
    *  @arg  parent : Pointer to the parent container of the SmartRef, method ->parent()
    *  @arg  key    : returned by the method .linkID() of the SmartRef
    */
-  int referenceLong( DataObject* out, const DataObject* parent, const int key ) const {
+  int referenceLong( DataObject* out,
+                     const DataObject* parent,
+                     const int key ) const 
+  {
     LinkManager::Link* myLink = out->linkMgr()->link( parent );
     if ( NULL == myLink ) {
       out->linkMgr()->addLink( parent->registry()->identifier(), parent );
     }
-    if ( key != (key & 0x0000FFFF ) ) {
+    if ( key != (key & 0x0000FFFF) )
+    {
       std::cout << "************ Key over 16 bits in StandardPacker::referenceLong ************" << std::endl;
     }
     int myLinkID = out->linkMgr()->link( parent )->ID() << 16;
     return key + myLinkID;
   }
 
+  void indexAndKeyLong( const int data,
+                        int& indx, int& key ) const
+  {
+    indx = data >> 16;
+    key  = data & 0x0000FFFF;
+  }
+
   void hintAndKeyLong( const int data,
                        const DataObject* source,
                        DataObject* target,
-                       int& hint, int& key ) const {
-    const int indx = data >> 16;
-    key = data & 0x0000FFFF;
+                       int& hint, int& key ) const
+  {
+    int indx(0);
+    indexAndKeyLong(data,indx,key);
+    hint = target->linkMgr()->addLink( source->linkMgr()->link( indx )->path(), 0 );
+  }
+
+  /** returns a long long for a Smart Ref, with small key and large links.
+   *  @arg  out    : Output data object, to store the links
+   *  @arg  parent : Pointer to the parent container of the SmartRef, method ->parent()
+   *  @arg  key    : returned by the method .linkID() of the SmartRef
+   */
+  long long reference64( DataObject* out, const DataObject* parent, const int key ) const 
+  {
+    LinkManager::Link* myLink = out->linkMgr()->link( parent );
+    if ( NULL == myLink )
+    {
+      out->linkMgr()->addLink( parent->registry()->identifier(), parent );
+    }
+    const long long myLinkID = out->linkMgr()->link( parent )->ID() << 32;
+    return (long long)key + myLinkID;
+  }
+
+  void indexAndKey64( const long long data,
+                      int& indx, int& key ) const
+  {
+    indx = data >> 32;
+    key  = data & 0x00000000FFFFFFFF;
+  }
+
+  void hintAndKey64( const long long data,
+                     const DataObject* source,
+                     DataObject* target,
+                     int& hint, int& key ) const 
+  {
+    int indx(0);
+    indexAndKey64(data,indx,key);
     hint = target->linkMgr()->addLink( source->linkMgr()->link( indx )->path(), 0 );
   }
 
