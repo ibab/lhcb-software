@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-02-21 - Will Barter
+ - Included list of EWWG lines in PreStripping18 (LineConfigDictionaries_EWWG.py)
+
 !========================= StrippingSettings v2r9 2012-02-14 ===================
 ! 2012-02-14 - Jibo He
  - Stripping17b/LineConfigDictionaries_Charm.py
