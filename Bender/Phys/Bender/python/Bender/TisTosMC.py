@@ -23,9 +23,9 @@
 # @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 # @date   2011-06-21
 #
-#                   $Revision: 135108 $
-# Last modification $Date: 2012-02-10 15:31:51 +0100 (Fri, 10 Feb 2012) $
-#                by $Author: ibelyaev $
+#                   $Revision$
+# Last modification $Date$
+#                by $Author$
 # =============================================================================
 """
 Decorate the algorithm with helper methods for TisTosTob'ing 
@@ -44,7 +44,7 @@ with the smear campain of Dr.O.Callot et al.:
 
 """
 # =============================================================================
-__version__ = "$Revision: 135108 $"
+__version__ = "$Revision$"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@cern.ch"
 __date__    = "2011-06-07"
 # =============================================================================
