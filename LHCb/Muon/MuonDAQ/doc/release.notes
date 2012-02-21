@@ -4,6 +4,10 @@
 ! Purpose     : Muon System Raw Buffer coding and decoding algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-02-21 - Helder Lopes
+ - Change MuonRec to look for muon raw event in a list of locations and pass it to 
+   MuonRawBuffer, to make it compatible with PID microdsts
+
 !========================= MuonDAQ v4r12 2011-11-07 =========================
 ! 2011-09-15 - Alessia Satta
  - Add protection for duplicated hits ( due to data corruption). The changes are in MuonRec

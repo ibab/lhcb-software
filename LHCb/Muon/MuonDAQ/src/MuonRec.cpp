@@ -29,6 +29,9 @@ MuonRec::MuonRec( const std::string& name,
   if(context()=="TAE")  m_forceResetDAQ=true;
   m_Exccounter=0;
   
+  m_rawEventLocs.push_back( LHCb::RawEventLocation::Default );
+  m_rawEventLocs.push_back( "/Event/Muon/RawEvent" );
+  declareProperty( "RawEventLocations", m_rawEventLocs );
 
 }
 
@@ -95,7 +98,38 @@ StatusCode MuonRec::execute() {
   std::vector<std::pair<LHCb::MuonTileID,unsigned int > > decoding;
 
 
-  StatusCode sc=	m_muonBuffer->getTileAndTDC(decoding);
+  //StatusCode sc=	m_muonBuffer->getTileAndTDC(decoding);
+  LHCb::RawEvent* raw = 0;
+  for(std::vector<std::string>::iterator iLoc=m_rawEventLocs.begin();
+     iLoc!=m_rawEventLocs.end();++iLoc){
+    if ( exist<LHCb::RawEvent>(*iLoc,false) )  { // First try without RootInTES
+      raw = get<LHCb::RawEvent>(*iLoc,false);
+      if((raw->banks(RawBank::Muon)).size()!=0){
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "MuonRawEvent found at location " 
+             << *iLoc << endmsg;
+	break;
+      }
+      else { 
+        raw=0; // get may return raw!=0 even with no muonbank
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "No Muon banks found at location " 
+             << this->rootInTES() << "/" << *iLoc << endmsg;
+      }
+    }   
+    if ( raw==0 && exist<LHCb::RawEvent>(*iLoc) )  { // Then try with RootInTES
+      raw = get<LHCb::RawEvent>(*iLoc);
+      if((raw->banks(RawBank::Muon)).size()!=0){
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "MuonRawEvent found at location " << *iLoc << endmsg;
+	break;
+      } else {
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "No Muon banks found at location " 
+             << this->rootInTES() << "/" << *iLoc << endmsg;
+	raw=0;
+      }
+    }
+  }
+  if(0==raw)Exception("MuonRawEvent not found");
+  
+  StatusCode sc=m_muonBuffer->getTileAndTDC(raw,decoding,"");
   if(sc.isFailure()){
     error()<<" error in decoding the muon raw data "<<endmsg;
     return sc;
