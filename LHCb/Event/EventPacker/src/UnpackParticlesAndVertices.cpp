@@ -89,8 +89,8 @@ StatusCode UnpackParticlesAndVertices::execute()
       }
 
       // Make new object and insert into the output container
-      LHCb::Particle* part = new LHCb::Particle( key );
-      parts->add( part );
+      LHCb::Particle* part = new LHCb::Particle();
+      parts->insert( part, key );
       ++nbPart;
 
       // Unpack the physics info
