@@ -14,6 +14,7 @@ __author__  = "Patrick Koppenburg"
 __version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
 # =============================================================================
 __all__ = (
+    'StdLooseEta2gg'      ,  
     'StdLooseResolvedEta' ,
     'locations'
     )
@@ -22,7 +23,7 @@ from CommonParticles.Utils     import *
 from GaudiKernel.SystemOfUnits import MeV
 
 # ===========================================================
-## create the algorithm, eta in wiode mass-window  
+## create the algorithm, eta in wide mass-window  
 from Configurables       import ResolvedPi0Maker, PhotonMaker
 wide =  ResolvedPi0Maker (
     'StdLooseEta2gg'            ,
@@ -32,10 +33,11 @@ wide =  ResolvedPi0Maker (
 
 wide.addTool(PhotonMaker)
 wide.PhotonMaker.PtCut  = 200 * MeV
-## finally: define the symbol 
-StdLooseEtaWide     = wide 
+
 ## configure Data-On-Demand service 
 locations = updateDoD ( wide )
+## finally: define the symbol 
+StdLooseEta2gg          = wide 
 
 # ============================================================================
 ## filter the ``standard''-mass window 
@@ -48,11 +50,10 @@ fltr       =  FilterDesktop (
     ]
     )
 
-## configure Data-On-Demand service 
-locations.update ( updateDoD ( fltr ) ) 
-
 ## finally: define the symbol 
 StdLooseResolvedEta = fltr
+## configure Data-On-Demand service 
+locations.update ( updateDoD ( fltr ) ) 
 
 ## ============================================================================
 if '__main__' == __name__ :

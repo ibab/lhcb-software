@@ -8,11 +8,17 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2012-02-21 - Vanya Belyaev
+
+ - StdLooseResolvedPi0.py:
+
+       add "wide" pi0->gamma gamma 
+
 ! 2012-02-19 - Vanya Belyaev
 
  - StdLooseResolvedEta.py:
 
-    add "wide" eta->gamma gamma 
+       add "wide" eta->gamma gamma 
 
 !========================= CommonParticles v8r6 2012-02-10 =========================
 ! 2012-02-03 - Jibo He
