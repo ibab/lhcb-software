@@ -4,6 +4,20 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-02-21 - Vanya Belyaev
+
+ - PsiX0.py    
+ 
+   #  The attempt for coherent stripping for B -> psi(') X0 modes,
+   #  where  X0 :  eta   -> gamma gamma ,
+   #               eta   -> pi+ pi- pi0 ,
+   #               eta'  -> rho0 gamma 
+   #               eta'  -> pi+ pi- ( eta -> gamma gamma )
+   #               omega -> pi+ pi- pi0
+   #
+   # The cuts correspond to B->J/psiX0 selection by Dasha Savrina LHCb-ANA-2011-096
+
+
 ! 2012-02-19 - Vanya Belyaev
 
  - StrippingCharmAssociative:
