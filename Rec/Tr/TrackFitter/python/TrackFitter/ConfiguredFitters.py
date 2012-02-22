@@ -141,20 +141,18 @@ def ConfiguredHltFitter( Name ):
                                     FieldOff=None,
                                     SimplifiedGeometry = True,
                                     LiteClusters = True)
-
     fitter.NodeFitter.BiDirectionalFit    = True
     fitter.NumberFitIterations = 1
     fitter.MaxNumberOutliers = 2
     fitter.UpdateTransport = False
     fitter.AddDefaultReferenceNodes = True   
     fitter.UpdateReferenceInOutlierIterations = False   
-
     ## Force to use drift time
     from Configurables import TrajOTProjector, TrackProjectorSelector
     otprojector = TrajOTProjector('OTFastFitProjector')
     otprojector.PrefitStrategy = 0
-    fitter.Projector.OT = otprojector
-    
+    fitter.Projector.OT = otprojector    
+    fitter.MeasProvider.IgnoreMuon = True
     return fitter
 
 
