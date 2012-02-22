@@ -8,8 +8,8 @@
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : ConeVariables
-// Converted from TupleToolTrackIsolation by A. Poluektov 
-// 
+// Converted from TupleToolTrackIsolation by A. Poluektov
+//
 // 2009-05-06 : Michel De Cian
 //-----------------------------------------------------------------------------
 
@@ -36,20 +36,9 @@ ConeVariables::ConeVariables( const std::string& type,
 ConeVariables::~ConeVariables() {}
 
 //=============================================================================
-// Initialization
-//=============================================================================
-StatusCode ConeVariables::initialize()
-{
-  StatusCode sc = GaudiTool::initialize();
-  if ( sc.isFailure() ) return sc;
-
-  return sc;
-}
-
-//=============================================================================
 // Fill Cone Info structure
 //=============================================================================
-StatusCode ConeVariables::calculateExtraInfo( const LHCb::Particle *top, const LHCb::Particle *   part ) 
+StatusCode ConeVariables::calculateExtraInfo( const LHCb::Particle *top, const LHCb::Particle *   part )
 {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Fill" << endmsg;
@@ -80,53 +69,53 @@ StatusCode ConeVariables::calculateExtraInfo( const LHCb::Particle *top, const L
   if( part )
   {
 
-      if ( msgLevel(MSG::VERBOSE) ) verbose() << "Filling variables with conesize " << m_coneAngle << endmsg;
+    if ( msgLevel(MSG::VERBOSE) ) verbose() << "Filling variables with conesize " << m_coneAngle << endmsg;
 
-      // -- Retrieve momentum information of tracks in the cone
-      std::pair<std::vector<double>, int> myPair = ConeP(part, tracks, m_coneAngle);
-      const std::vector<double> & myVector = myPair.first;
+    // -- Retrieve momentum information of tracks in the cone
+    std::pair<std::vector<double>, int> myPair = ConeP(part, tracks, m_coneAngle);
+    const std::vector<double> & myVector = myPair.first;
 
-      double conePx = myVector[0];
-      double conePy = myVector[1];
-      double conePz = myVector[2];
+    double conePx = myVector[0];
+    double conePy = myVector[1];
+    double conePz = myVector[2];
 
-      double conePx2 = conePx*conePx;
-      double conePy2 = conePy*conePy;
+    double conePx2 = conePx*conePx;
+    double conePy2 = conePy*conePy;
 
-      double coneP = std::sqrt( conePx2 + conePy2 + conePz*conePz );
-      double conePt = std::sqrt( conePx2 + conePy2 );
+    double coneP = std::sqrt( conePx2 + conePy2 + conePz*conePz );
+    double conePt = std::sqrt( conePx2 + conePy2 );
 
-      // -- Create a vector with the summed momentum of all tracks in the cone
-      Gaudi::XYZVector momentumInCone;
-      momentumInCone.SetX(conePx);
-      momentumInCone.SetY(conePy);
-      momentumInCone.SetZ(conePz);
+    // -- Create a vector with the summed momentum of all tracks in the cone
+    Gaudi::XYZVector momentumInCone;
+    momentumInCone.SetX(conePx);
+    momentumInCone.SetY(conePy);
+    momentumInCone.SetZ(conePz);
 
-      // -- Calculate the difference in Eta and Phi between the summed momentum of all tracks in the cone and the
-      // -- track of the particle in question
-      double deltaEta = part->momentum().Eta() - momentumInCone.Eta();
-      double deltaPhi = fabs(part->momentum().Phi() - momentumInCone.Phi());
-      if(deltaPhi > M_PI) deltaPhi  = 2*M_PI-deltaPhi;
+    // -- Calculate the difference in Eta and Phi between the summed momentum of all tracks in the cone and the
+    // -- track of the particle in question
+    double deltaEta = part->momentum().Eta() - momentumInCone.Eta();
+    double deltaPhi = fabs(part->momentum().Phi() - momentumInCone.Phi());
+    if(deltaPhi > M_PI) deltaPhi  = 2*M_PI-deltaPhi;
 
-      // -- Fill the tuple with the variables
-      m_px = conePx;
-      m_py = conePy;
-      m_pz = conePz;
-      m_pt = conePt;
-      m_p = coneP;
-      m_mult = myPair.second;
+    // -- Fill the tuple with the variables
+    m_px = conePx;
+    m_py = conePy;
+    m_pz = conePz;
+    m_pt = conePt;
+    m_p = coneP;
+    m_mult = myPair.second;
 
-      // -- Fill the difference in Eta and Phi between the summed momentum of all tracks in the cone and the
-      // -- track of the particle in question
-      m_deltaEta = deltaEta;
-      m_deltaPhi = deltaPhi;
+    // -- Fill the difference in Eta and Phi between the summed momentum of all tracks in the cone and the
+    // -- track of the particle in question
+    m_deltaEta = deltaEta;
+    m_deltaPhi = deltaPhi;
 
-      // -- Fill the asymmetry information
-      m_pxasy = (part->momentum().Px() - conePx)/(part->momentum().Px() + conePx);
-      m_pyasy = (part->momentum().Py() - conePy)/(part->momentum().Py() + conePy);
-      m_pzasy = (part->momentum().Pz() - conePz)/(part->momentum().Pz() + conePz);
-      m_pasy  = (part->p() - coneP)/(part->p() + coneP);
-      m_ptasy = (part->pt() - conePt)/(part->pt() + conePt);
+    // -- Fill the asymmetry information
+    m_pxasy = (part->momentum().Px() - conePx)/(part->momentum().Px() + conePx);
+    m_pyasy = (part->momentum().Py() - conePy)/(part->momentum().Py() + conePy);
+    m_pzasy = (part->momentum().Pz() - conePz)/(part->momentum().Pz() + conePz);
+    m_pasy  = (part->p() - coneP)/(part->p() + coneP);
+    m_ptasy = (part->pt() - conePt)/(part->pt() + conePt);
 
   }
   else
@@ -168,8 +157,8 @@ void ConeVariables::saveDecayParticles( const LHCb::Particle *top)
 //=============================================================================
 std::pair< std::vector<double>, int>
 ConeVariables::ConeP(const LHCb::Particle *part,
-                               const LHCb::Tracks* tracks,
-                               const double rcut)
+                     const LHCb::Tracks* tracks,
+                     const double rcut)
 {
 
   // -- Get the (4-) momentum of the particle in question
@@ -265,21 +254,21 @@ int ConeVariables::getNumberOfParameters(void) {
 void ConeVariables::getInfo(int index, double & value, std::string & name) {
 
   switch(index) {
-    case LHCb::Particle::FirstIsolationInfoIndex    : value = m_coneAngle; name = "angle"; return;
-    case LHCb::Particle::FirstIsolationInfoIndex+1  : value = (double)m_mult; name = "mult"; return;
-    case LHCb::Particle::FirstIsolationInfoIndex+2  : value = m_px; name = "px"; return;
-    case LHCb::Particle::FirstIsolationInfoIndex+3  : value = m_py; name = "py"; return;
-    case LHCb::Particle::FirstIsolationInfoIndex+4  : value = m_pz; name = "pz"; return;
-    case LHCb::Particle::FirstIsolationInfoIndex+5  : value = m_p;  name = "p" ; return;
-    case LHCb::Particle::FirstIsolationInfoIndex+6  : value = m_pt; name = "pt"; return;
-    case LHCb::Particle::FirstIsolationInfoIndex+7  : value = m_pxasy; name = "pxasy"; return;
-    case LHCb::Particle::FirstIsolationInfoIndex+8  : value = m_pyasy; name = "pyasy"; return;
-    case LHCb::Particle::FirstIsolationInfoIndex+9  : value = m_pzasy; name = "pzasy"; return;
-    case LHCb::Particle::FirstIsolationInfoIndex+10 : value = m_pasy;  name = "pasy"; return;
-    case LHCb::Particle::FirstIsolationInfoIndex+11 : value = m_ptasy; name = "ptasy"; return;
-    case LHCb::Particle::FirstIsolationInfoIndex+12 : value = m_deltaEta; name = "deltaEta"; return;
-    case LHCb::Particle::FirstIsolationInfoIndex+13 : value = m_deltaPhi; name = "deltaPhi"; return;
-    default: return;
+  case LHCb::Particle::FirstIsolationInfoIndex    : value = m_coneAngle; name = "angle"; return;
+  case LHCb::Particle::FirstIsolationInfoIndex+1  : value = (double)m_mult; name = "mult"; return;
+  case LHCb::Particle::FirstIsolationInfoIndex+2  : value = m_px; name = "px"; return;
+  case LHCb::Particle::FirstIsolationInfoIndex+3  : value = m_py; name = "py"; return;
+  case LHCb::Particle::FirstIsolationInfoIndex+4  : value = m_pz; name = "pz"; return;
+  case LHCb::Particle::FirstIsolationInfoIndex+5  : value = m_p;  name = "p" ; return;
+  case LHCb::Particle::FirstIsolationInfoIndex+6  : value = m_pt; name = "pt"; return;
+  case LHCb::Particle::FirstIsolationInfoIndex+7  : value = m_pxasy; name = "pxasy"; return;
+  case LHCb::Particle::FirstIsolationInfoIndex+8  : value = m_pyasy; name = "pyasy"; return;
+  case LHCb::Particle::FirstIsolationInfoIndex+9  : value = m_pzasy; name = "pzasy"; return;
+  case LHCb::Particle::FirstIsolationInfoIndex+10 : value = m_pasy;  name = "pasy"; return;
+  case LHCb::Particle::FirstIsolationInfoIndex+11 : value = m_ptasy; name = "ptasy"; return;
+  case LHCb::Particle::FirstIsolationInfoIndex+12 : value = m_deltaEta; name = "deltaEta"; return;
+  case LHCb::Particle::FirstIsolationInfoIndex+13 : value = m_deltaPhi; name = "deltaPhi"; return;
+  default: return;
   }
 
 }

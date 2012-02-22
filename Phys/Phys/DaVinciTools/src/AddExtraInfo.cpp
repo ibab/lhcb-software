@@ -27,7 +27,10 @@ AddExtraInfo::AddExtraInfo(const std::string& name,
 }
 
 //=======================================================================
-StatusCode AddExtraInfo::initialize() { 
+StatusCode AddExtraInfo::initialize()
+{ 
+  const StatusCode sc = DVAlgorithm::initialize();
+  if ( sc.isFailure() ) return sc;
 
   m_tools.clear();
 
@@ -43,8 +46,7 @@ StatusCode AddExtraInfo::initialize() {
     }
   }
 
-  return DVAlgorithm::initialize() ; 
-
+  return sc;
 }
 
 AddExtraInfo::~AddExtraInfo() {}
@@ -114,12 +116,6 @@ StatusCode AddExtraInfo::execute() {
   }
 
   return StatusCode::SUCCESS;
-}
-
-
-//=========================================================================
-StatusCode AddExtraInfo::finalize() { 
-  return DVAlgorithm::finalize(); 
 }
 
 //==========================================================================

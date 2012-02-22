@@ -4,17 +4,17 @@
 // Include files
 // from DaVinci, this is a specialized GaudiAlgorithm
 //#include "Kernel/DVAlgorithm.h"
-#include "Kernel/IExtraInfoTool.h" 
+#include "Kernel/IExtraInfoTool.h"
 #include "GaudiAlg/GaudiTool.h"
 
 /** @class ConeVariables ConeVariables.h
- *  
- * \brief Calculate track isolation. 
- *    Open up a cone around head, exclude all tracks 
- *    that are in the decay descriptor 
- *    (i.e. that belong to the decay you are looking for), 
+ *
+ * \brief Calculate track isolation.
+ *    Open up a cone around head, exclude all tracks
+ *    that are in the decay descriptor
+ *    (i.e. that belong to the decay you are looking for),
  *    build the variables with the remaining tracks.
- * 
+ *
  * - m_mult : Number of tracks inside cone.
  * - m_cp  : Summed p inside cone
  * - m_cpt : Summed pt inside cone
@@ -39,34 +39,32 @@
  *
  * - ConeAngle: Set the maximum deltaR of the cone (default = 1.0), in radians
  * - TrackType: Set the type of tracks which are considered inside the cone (default = 3)
- * 
+ *
  *  Converted from TupleTool by A. Poluektov 19/02/2012
- * 
+ *
  *  @author Michel De Cian
  *  @date   2009-08-04
- *  
+ *
  */
 
 class ConeVariables : public GaudiTool, virtual public IExtraInfoTool {
-public: 
+public:
   /// Standard constructor
-  ConeVariables( const std::string& type, 
-              const std::string& name,
-              const IInterface* parent );
+  ConeVariables( const std::string& type,
+                 const std::string& name,
+                 const IInterface* parent );
 
   /// Loop over differnt conesizes and fill the variables into the tuple
   virtual StatusCode calculateExtraInfo( const LHCb::Particle*
-                                       , const LHCb::Particle*);  
-                                       
+                                         , const LHCb::Particle*);
+
   virtual int getFirstIndex(void);
-  
+
   virtual int getNumberOfParameters(void);
-  
+
   virtual void getInfo(int index, double & value, std::string & name);
 
   virtual ~ConeVariables( ); ///< Destructor
-
-  virtual StatusCode initialize();    ///< Algorithm initialization
 
 protected:
 
@@ -74,7 +72,7 @@ private:
 
   double m_coneAngle;
   int m_trackType;
-  
+
   int m_mult;
   double m_px;
   double m_py;

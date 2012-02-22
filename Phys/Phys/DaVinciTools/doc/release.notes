@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2012-02-22 - Chris Jones
+ - Make sure AddExtraInfo initialising its base class before doing anything
+
 ! 2012-02-22 - Anton Poluektov 
  - Small modification of AddExtraInfo.cpp
 
