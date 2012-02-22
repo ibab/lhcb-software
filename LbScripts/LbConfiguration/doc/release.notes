@@ -1,7 +1,8 @@
 2012-02-22  Ben Couturier <Ben.Couturier@cern.ch>
 
-        * cmt/requirements: release of version v6r7p1
-        * python/LbConfiguration/Package.py: Added new package ProdConf in project DBASE 
+	* cmt/requirements: release of version v6r7p1
+	* python/LbConfiguration/Package.py: Added new package ProdConf in project DBASE 
+	* python/LbConfiguration/LbLogin.py: Added alias to invoke development LbLogin when in CMTSITE CERN
 
 2012-02-20  Ben Couturier <Ben.Couturier@cern.ch>
 

@@ -559,12 +559,15 @@ class LbLoginScript(SourceScript):
         # Hack to allow for switching version of LbScripts between AFS and cvmfs
         if opts.cmtsite == "CERN" :
             afsLbLoginDir = "/afs/cern.ch/lhcb/software/releases/LBSCRIPTS/prod/InstallArea/scripts"
+            afsDevLbLoginDir = "/afs/cern.ch/lhcb/software/releases/LBSCRIPTS/dev/InstallArea/scripts"
             cvmfsLbLoginDir = "/cvmfs/lhcb.cern.ch/lib/lhcb/LBSCRIPTS/prod/InstallArea/scripts"
             if self.targetShell() == "csh" :
                 al["afsLbLogin"] = "source %s/LbLogin.csh" % afsLbLoginDir
+                al["afsDevLbLogin"] = "source %s/LbLogin.csh" % afsDevLbLoginDir
                 al["cvmfsLbLogin"] = "source %s/LbLogin.csh" % cvmfsLbLoginDir
             elif self.targetShell() == "sh" :
                 al["afsLbLogin"] = ". %s/LbLogin.sh" % afsLbLoginDir
+                al["afsDevLbLogin"] = ". %s/LbLogin.sh" % afsDevLbLoginDir
                 al["cvmfsLbLogin"] = ". %s/LbLogin.sh" % cvmfsLbLoginDir
 
 #-----------------------------------------------------------------------------------
