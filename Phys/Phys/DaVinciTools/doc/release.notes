@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2012-02-22 - Anton Poluektov 
+ - Small modification of AddExtraInfo.cpp
+
 ! 2012-02-20 - Anton Poluektov 
  - Add ConeVariables.h,cpp - tool to calculate cone isolation variables as in 
    TupleToolTrackIsolation

@@ -31,6 +31,18 @@ StatusCode AddExtraInfo::initialize() {
 
   m_tools.clear();
 
+  std::vector<std::string>::iterator iTool;
+  for (iTool = m_toolNames.begin(); iTool != m_toolNames.end(); iTool++) {
+    IExtraInfoTool* t = tool<IExtraInfoTool>(*iTool,this);
+      
+    if (t) {
+      m_tools.push_back(t);
+    } else {
+      error() << "Tuple not found, name = " << (*iTool) << endreq;
+      return StatusCode::FAILURE;
+    }
+  }
+
   return DVAlgorithm::initialize() ; 
 
 }
@@ -43,21 +55,6 @@ AddExtraInfo::~AddExtraInfo() {}
 StatusCode AddExtraInfo::execute() {
 
   setFilterPassed( true ); // Filter always passes
-
-  // Retrieve tools the first time they needed
-  if (m_tools.size() == 0) {
-    std::vector<std::string>::iterator iTool;
-    for (iTool = m_toolNames.begin(); iTool != m_toolNames.end(); iTool++) {
-      IExtraInfoTool* t = tool<IExtraInfoTool>(*iTool,this);
-      
-      if (t) {
-        m_tools.push_back(t);
-      } else {
-        error() << "Tuple not found, name = " << (*iTool) << endreq;
-        return StatusCode::FAILURE;
-      }
-    }
-  }
 
   // Loop over input locations 
   std::vector<std::string>::const_iterator iLoc = inputLocations().begin();
