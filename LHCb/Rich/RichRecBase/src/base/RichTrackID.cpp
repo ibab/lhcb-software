@@ -4,9 +4,6 @@
  *
  *  Implementation file for class : RichTrackID
  *
- *  CVS Log :-
- *  $Id: RichTrackID.cpp,v 1.24 2009-04-17 13:19:26 jonrob Exp $
- *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-23
  */
