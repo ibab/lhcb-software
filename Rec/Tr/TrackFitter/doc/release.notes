@@ -3,6 +3,10 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+! 2012-02-22 - Wouter Hulsbergen
+ - increased minimum number of hits left in outlier removal
+
+! 2012-02-02 - Wouter Hulsbergen
  - small improvement in MasterFitter::outlierRemoved to call smoothing less often (only affects HLT)
  - fix in TrackKalmanFilter to make profiling easier
 

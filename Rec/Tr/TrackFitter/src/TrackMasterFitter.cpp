@@ -105,10 +105,10 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   declareProperty( "MomentumForScattering", m_scatteringP = -1 );
   declareProperty( "MinMomentumForScattering", m_minMomentumForScattering = 100.*Gaudi::Units::MeV );
   declareProperty( "MaxMomentumForScattering", m_maxMomentumForScattering = 500.*Gaudi::Units::GeV );
-  declareProperty( "MinNumVeloRHitsForOutlierRemoval",   m_minNumVeloRHits   = 2 ) ;
-  declareProperty( "MinNumVeloPhiHitsForOutlierRemoval", m_minNumVeloPhiHits = 2 ) ;
-  declareProperty( "MinNumTTHitsForOutlierRemoval",      m_minNumTTHits      = 2 ) ;
-  declareProperty( "MinNumTHitsForOutlierRemoval",       m_minNumTHits       = 4 ) ;
+  declareProperty( "MinNumVeloRHitsForOutlierRemoval",   m_minNumVeloRHits   = 3 ) ;
+  declareProperty( "MinNumVeloPhiHitsForOutlierRemoval", m_minNumVeloPhiHits = 3 ) ;
+  declareProperty( "MinNumTTHitsForOutlierRemoval",      m_minNumTTHits      = 3 ) ;
+  declareProperty( "MinNumTHitsForOutlierRemoval",       m_minNumTHits       = 6 ) ;
   declareProperty( "MinNumMuonHitsForOutlierRemoval",    m_minNumMuonHits    = 4 ) ;
   declareProperty( "MaxDeltaChiSqConverged",             m_maxDeltaChi2Converged = 0.01 ) ;
   declareProperty( "UseClassicalSmoother",       m_useClassicalSmoother = false ) ;
