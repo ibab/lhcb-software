@@ -172,7 +172,7 @@ void ParticlesAndVerticesMapper::updateNodeTypeMap( const std::string & path )
       for ( std::vector<LHCb::PackedRecVertex>::iterator itV = pRecVerts->vertices().begin();
             pRecVerts->vertices().end() != itV; ++itV )
       {
-        m_pack.indexAndKeyLong( (*itV).key, linkID, key );
+        const int linkID = (*itV).container;
         addPath( pRecVerts->linkMgr()->link(linkID)->path() );
       }
     }

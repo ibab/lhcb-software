@@ -368,7 +368,8 @@ void PackParticlesAndVertices::packARecVertexContainer( const LHCb::RecVertices*
     LHCb::PackedRecVertex& pRVert = pRVerts.vertices().back();
 
     // reference to original container and key
-    pRVert.key = m_pack.referenceLong( &pRVerts, rVert.parent(), rVert.key() );
+    pRVert.key       = rVert.key();
+    pRVert.container = (int)m_pack.linkID( &pRVerts, rVert.parent() );
 
     // Physics info
     rvPacker.pack( rVert, pRVert, *rVerts, pRVerts );

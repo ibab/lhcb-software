@@ -90,4 +90,5 @@ private:
   unsigned int m_clIdPart2Vert;
   unsigned int m_clIdPart2Ints;
 };
+
 #endif // PACKPARTICLESANDVERTICES_H

@@ -80,13 +80,13 @@ namespace LHCb
     int pmCov30,pmCov31,pmCov32;
 
     // Extra info
-    unsigned short int firstExtra, lastExtra;
+    unsigned int firstExtra, lastExtra;
 
     // End Vertex
     long long vertex;  
 
     // ProtoParticle
-    int proto;
+    long long proto;
 
     // daughters
     unsigned int firstDaughter, lastDaughter;  

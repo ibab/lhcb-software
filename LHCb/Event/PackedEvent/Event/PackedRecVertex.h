@@ -35,7 +35,8 @@ namespace LHCb
       cov00(0), cov11(0), cov22(0),
       cov10(0), cov20(0), cov21(0),
       firstTrack(0), lastTrack(0),
-      firstInfo(0), lastInfo(0)
+      firstInfo(0), lastInfo(0),
+      container(0)
     {}
 
     /// Copy constructor
@@ -46,7 +47,8 @@ namespace LHCb
       cov00( c.cov00 ), cov11( c.cov11 ), cov22( c.cov22 ),
       cov10( c.cov10 ), cov20( c.cov20 ), cov21( c.cov21 ),
       firstTrack( c.firstTrack ), lastTrack( c.lastTrack ),
-      firstInfo( c.firstInfo ), lastInfo( c.lastInfo )
+      firstInfo( c.firstInfo ), lastInfo( c.lastInfo ),
+      container( c.container )
     {}
 
     int key;
@@ -62,9 +64,9 @@ namespace LHCb
     short int cov10;
     short int cov20;
     short int cov21;
-
     unsigned short int firstTrack,  lastTrack;
     unsigned short int firstInfo,   lastInfo;
+    int container;
 
   };
 

@@ -10,7 +10,7 @@ using namespace LHCb;
 
 void RecVertexPacker::pack( const Data & vert,
                             PackedData & pvert,
-                            const DataVector & /* verts */, 
+                            const DataVector & /* verts */,
                             PackedDataVector & pverts ) const
 {
   pvert.technique  = vert.technique();
@@ -40,9 +40,6 @@ void RecVertexPacker::pack( const Data & vert,
   {
     pverts.addRef( m_pack.reference( &pverts, (*itT)->parent(), (*itT)->key() ) );
     pverts.addWeight( m_pack.fraction(*iW) );
-//     std::cout << " -> " << (*itT)->parent()->registry()->identifier() 
-//               << " " << (*itT)->key() << " " << *iW
-//               << std::endl;
   }
   pvert.lastTrack = pverts.refs().size();
 
@@ -112,7 +109,7 @@ void RecVertexPacker::unpack( const PackedData       & pvert,
     m_pack.hintAndKey( trk, &pverts, &verts, hintID, tKey );
     SmartRef<LHCb::Track> ref( &verts, hintID, tKey );
     // If available, get the weight
-    const float weight = (float)( (int)pverts.version()>1 ? 
+    const float weight = (float)( (int)pverts.version()>1 ?
                                   m_pack.fraction(pverts.weights()[kk]) : 1.0 );
     // save with weight
     vert.addToTracks( ref, weight );

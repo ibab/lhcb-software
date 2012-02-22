@@ -101,9 +101,9 @@ void ParticlePacker::pack( const Data & part,
     // protoparticle
     if ( part.proto() )
     {
-      ppart.proto = m_pack.reference( &pparts,
-                                      part.proto()->parent(),
-                                      part.proto()->key() );
+      ppart.proto = m_pack.reference64( &pparts,
+                                        part.proto()->parent(),
+                                        part.proto()->key() );
     }
 
     // daughters
@@ -227,12 +227,11 @@ void ParticlePacker::unpack( const PackedData       & ppart,
     pmCov(3,2) = m_pack.fltPacked( ppart.pmCov32 );
 
     // extra info
-    for ( int iE = ppart.firstExtra; iE < ppart.lastExtra; ++iE )
+    for ( unsigned int iE = ppart.firstExtra; iE < ppart.lastExtra; ++iE )
     {
       const PackedDataVector::PackedExtraInfo& pInfo = pparts.extra()[iE];
       part.addInfo( pInfo.first, m_pack.fltPacked(pInfo.second) );
     }
-
 
     // end vertex
     if ( -1 != ppart.vertex )
@@ -247,7 +246,7 @@ void ParticlePacker::unpack( const PackedData       & ppart,
     if ( -1 != ppart.proto )
     {
       int hintID(0), key(0);
-      m_pack.hintAndKey( ppart.proto, &pparts, &parts, hintID, key );
+      m_pack.hintAndKey64( ppart.proto, &pparts, &parts, hintID, key );
       SmartRef<LHCb::ProtoParticle> ref(&parts,hintID,key);
       part.setProto( ref );
     }
@@ -255,9 +254,9 @@ void ParticlePacker::unpack( const PackedData       & ppart,
     // daughters
     for ( unsigned int iiD = ppart.firstDaughter; iiD < ppart.lastDaughter; ++iiD )
     {
-      const int & iD1 = pparts.daughters()[iiD];
       int hintID(0), key(0);
-      m_pack.hintAndKey64( iD1, &pparts, &parts, hintID, key );
+      m_pack.hintAndKey64( pparts.daughters()[iiD], 
+                           &pparts, &parts, hintID, key );
       SmartRef<LHCb::Particle> ref(&parts,hintID,key);
       part.addToDaughters( ref );
     }

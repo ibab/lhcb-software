@@ -151,12 +151,12 @@ StatusCode UnpackParticlesAndVertices::execute()
           pRecVerts->vertices().end() != itV; ++itV ) 
     {
       const LHCb::PackedRecVertex& pRecVert = *itV;
-      int key(0), linkID(0);
-      m_pack.indexAndKeyLong( pRecVert.key, linkID, key );
+      const int key    = pRecVert.key;
+      const int linkID = pRecVert.container;
       if ( linkID != prevLink ) 
       {
         prevLink = linkID;
-        const std::string & containerName = pRecVerts->linkMgr()->link( linkID )->path() + m_postFix;
+        const std::string & containerName = pRecVerts->linkMgr()->link(linkID)->path() + m_postFix;
         recVerts = new LHCb::RecVertices();
         put( recVerts, containerName );
         ++nbRecVertContainer;
