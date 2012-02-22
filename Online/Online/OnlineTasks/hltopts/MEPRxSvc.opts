@@ -33,7 +33,7 @@ Runable.createODINMEP     = false;       // do not create a fake ODIN MEP (only 
 Runable.resetCountersOnRunChange = true; // reset all counters and histograms when a run-change is seen
 Runable.nameLiveBuf       = "Events";
 Runable.nameOverflowBuf   = "Overflow";
-Runable.overflow          = true;        //  use overflow 
+Runable.overflow          = @OnlineEnv.DeferHLT;        //  use overflow 
 #include "$HLTOPTS/EBSetup.opts"
 HistogramPersistencySvc.OutputLevel  = 5;
 MonitorSvc.CounterUpdateInterval     = 5;
