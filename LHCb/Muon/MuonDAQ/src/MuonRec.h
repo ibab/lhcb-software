@@ -64,6 +64,6 @@ private:
   IMuonRawBuffer* m_muonBuffer;  
   bool m_forceResetDAQ;
   int  m_Exccounter;  
-  std::vector<std::string> m_rawEventLocs; // List of raw event locations
+  std::string m_rawEventLoc; // Specific raw event location set by options
 };
 #endif // MUONREC_MUONREC_H
