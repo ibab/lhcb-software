@@ -80,8 +80,8 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
                       LooseForward,
                       ValidateWithTT,
                       MatchVeloMuon,
-                      FitTrack ,
-                      IsMuon ]
+                      IsMuon ,
+                      FitTrack ]
         return Preambulo
 
     def do_timing( self, unit ):
@@ -198,6 +198,9 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         ( TrP  > %(P)s  * MeV ) )
         >>  tee  ( monitor( TC_SIZE > 0, '# pass P/PT', LoKi.Monitoring.ContextSvc ) )
         >>  tee  ( monitor( TC_SIZE    , 'nP' , LoKi.Monitoring.ContextSvc ) )
+        >>  IsMuon
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass IsMuon', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nIsMuon' , LoKi.Monitoring.ContextSvc ) )
         >>  FitTrack
         >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackFit', LoKi.Monitoring.ContextSvc ) )
         >>  tee  ( monitor( TC_SIZE    , 'nFit' , LoKi.Monitoring.ContextSvc ) )
@@ -205,9 +208,6 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         ( Tr_HLTMIPCHI2 ( 'PV3D' ) > %(IPChi2)s ) )
         >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackChi2/IPChi2', LoKi.Monitoring.ContextSvc ) )
         >>  tee  ( monitor( TC_SIZE    , 'nChi2' , LoKi.Monitoring.ContextSvc ) )
-        >>  IsMuon
-        >>  tee  ( monitor( TC_SIZE > 0, '# pass IsMuon', LoKi.Monitoring.ContextSvc ) )
-        >>  tee  ( monitor( TC_SIZE    , 'nIsMuon' , LoKi.Monitoring.ContextSvc ) )
         >>  SINK( 'Hlt1%(name)sDecision' )
         >>  ~TC_EMPTY
         """ % props
