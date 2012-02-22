@@ -149,10 +149,12 @@ namespace LHCb
 	   it != fitnodes.end(); ++it ) {
 	if( (*it)->type() == LHCb::Node::HitOnTrack ) {
 	  switch( (*it)->measurement().type() ) {
+	  case Measurement::VeloPixLite:
 	  case Measurement::VeloR:
 	  case Measurement::VeloPhi:
 	  case Measurement::VeloLiteR:
 	  case Measurement::VeloLitePhi:
+	  case Measurement::Origin:
 	    if( firstVelo==fitnodes.end()) firstVelo = it ;
 	    lastVelo = it ;
 	    break;
@@ -173,7 +175,6 @@ namespace LHCb
 	    break;
 	  case Measurement::Unknown:
 	  case Measurement::Calo:
-	  case Measurement::VeloPixLite:
 	    break ;
 	  }
 	}
