@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2012-02-23 - Sascha Stahl
+ - PatForwardTool: Bug fix in PatForward in part which uses momentum estimate.	
+
 ! 2012-02-14 - Sascha Stahl
  - PatDownstream: make sure we copy all three states in T to help the fast fit
    in HLT

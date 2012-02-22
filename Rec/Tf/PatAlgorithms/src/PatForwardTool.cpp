@@ -68,8 +68,8 @@ PatForwardTool::PatForwardTool( const std::string& type,
                    boost::assign::list_of(1255 * Gaudi::Units::MeV)(175 * Gaudi::Units::MeV));
 
   declareProperty( "UseMomentumEstimate", m_useMomentumEstimate = false );
-  declareProperty( "MomentumEstimateError"    , m_momentumEstimateError    =  0.2 );
-  declareProperty( "MinRange"              , m_minRange              =   30. * Gaudi::Units::mm  );
+  declareProperty( "MomentumEstimateError"    , m_momentumEstimateError    =  0.5 );
+  declareProperty( "MinRange"              , m_minRange              =   300. * Gaudi::Units::mm  );
 
   declareProperty("StateErrorX2",  m_stateErrorX2  =   4.0);
   declareProperty("StateErrorY2",  m_stateErrorY2  = 400.);
@@ -516,7 +516,7 @@ void PatForwardTool::fillXList ( PatFwdTrackCandidate& track,
                                  double kick, double maxRangeRef, double zMagnet ) {
   double xExtrapRef = track.xStraight( m_fwdTool->zReference() );
   // == propagate kick if momentum estimate given
-  if (kick > 0.0) xExtrapRef += kick ; 
+  if (std::abs(kick) > 1e-5) xExtrapRef += kick ; 
   const double xMin = xExtrapRef - maxRangeRef;
   const double xMax = xExtrapRef + maxRangeRef;
 
@@ -533,7 +533,7 @@ void PatForwardTool::fillXList ( PatFwdTrackCandidate& track,
         
         double xExtrapStation  = track.xStraight( regionB->z() );
         // == propagate kick if momentum estimate given
-        if (kick > 0.0) xExtrapStation += kick *( regionB->z() - zMagnet ) / ( m_fwdTool->zReference() - zMagnet );
+        if (std::abs(kick) > 1e-5) xExtrapStation += kick *( regionB->z() - zMagnet ) / ( m_fwdTool->zReference() - zMagnet );
         const double deltaX = maxRangeRef * ( regionB->z() - zMagnet ) / ( m_fwdTool->zReference() - zMagnet );
         double xHitMin = xExtrapStation - deltaX;
         xHitMin        = xHitMin - fabs( yRegion * regionB->sinT() ) - 20.;
@@ -843,7 +843,7 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
 
   double kick = 0.0;
   if (m_useMomentumEstimate && 0 != track.qOverP() && !m_withoutBField) {
-    const double q = track.track()->charge();
+    const double q = track.qOverP() > 0 ? 1. : -1.;
     const double magscalefactor = m_fwdTool->magscalefactor() ;
     double kick = q*magscalefactor*(-1)*m_magnetKickParams[0] / ( fabs(1./track.qOverP()) -  m_magnetKickParams[1] ) ;
     kick *= ( m_fwdTool->zReference() - zMagnet);
