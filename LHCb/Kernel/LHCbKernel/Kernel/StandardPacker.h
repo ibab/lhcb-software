@@ -6,13 +6,16 @@
 #include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/IRegistry.h"
 
+//---------------------------------------------------------------------------
 /** @class StandardPacker StandardPacker.h Kernel/StandardPacker.h
+ *
  *  This is a simple class to convert to int/short with standard factors
  *  various quantities.
  *
  *  @author Olivier Callot
  *  @date   2005-03-15
  */
+//---------------------------------------------------------------------------
 
 namespace Packer
 {
@@ -30,10 +33,14 @@ class StandardPacker
 
 public:
 
-  /// Standard constructor
-  StandardPacker( ) {};
+  //---------------------------------------------------------------------------
 
-  ~StandardPacker( ) {}; ///< Destructor
+  /// Standard constructor
+  StandardPacker( ) {}
+
+  ~StandardPacker( ) {} ///< Destructor
+
+  //---------------------------------------------------------------------------
 
   /** returns an int for a double energy */
   int energy( const double e ) const
@@ -85,6 +92,36 @@ public:
     return convert.i;
   }
 
+  //---------------------------------------------------------------------------
+
+  /// Returns the 'LinkID' 
+  long linkID( DataObject* out,
+               const DataObject* parent ) const
+  {
+    LinkManager::Link* myLink = out->linkMgr()->link( parent );
+    if ( NULL == myLink )
+    {
+      out->linkMgr()->addLink( parent->registry()->identifier(),
+                               parent );
+    }
+    return out->linkMgr()->link(parent)->ID();
+  }
+
+  /// Returns the 'LinkID'
+  long linkID( DataObject* out,
+               const std::string& targetName ) const
+  {
+    LinkManager::Link* myLink = out->linkMgr()->link( targetName );
+    if ( NULL == myLink )
+    {
+      out->linkMgr()->addLink( targetName, 0 );
+      myLink = out->linkMgr()->link( targetName );
+    }
+    return myLink->ID();
+  }
+
+  //---------------------------------------------------------------------------
+
   /** returns an int for a Smart Ref.
    *  @arg  out : Output data object, to store the links
    *  @arg  parent : Pointer to the parent container of the SmartRef, method ->parent()
@@ -94,120 +131,89 @@ public:
                  const DataObject* parent,
                  const int key ) const
   {
-    LinkManager::Link* myLink = out->linkMgr()->link( parent );
-    if ( NULL == myLink )
+    if ( key != (key & 0x0FFFFFFF) )
     {
-      out->linkMgr()->addLink( parent->registry()->identifier(),
-                               parent );
+      std::cout << "************************* Key over 28 bits in StandardPacker ***********************" 
+                << std::endl;
     }
-    if ( key != (key & 0x0FFFFFFF ) )
-    {
-      std::cout << "************************* Key over 28 bits in StandardPacker ***********************" << std::endl;
-    }
-    int myLinkID = out->linkMgr()->link( parent )->ID() << 28;
+    const int myLinkID = (int)linkID(out,parent) << 28;
     return key + myLinkID;
   }
 
+  /** returns an int for a Smart Ref.
+   *  @arg  out : Output data object, to store the links
+   *  @arg  targetName : Name of the target
+   *  @arg  key    : returned by the method .linkID() of the SmartRef
+   */
   int reference( DataObject* out,
                  const std::string& targetName,
                  const int key ) const
   {
-    LinkManager::Link* myLink = out->linkMgr()->link( targetName );
-    if ( NULL == myLink ) {
-      out->linkMgr()->addLink( targetName, 0 );
-      myLink = out->linkMgr()->link( targetName );
-    }
-    int myLinkID = myLink->ID() << 28;
+    const int ID = (int)linkID(out,targetName);
+    const int myLinkID = (ID << 28);
     return key + myLinkID;
   }
 
+  /// Extracts the key and index from a packed data word
   void indexAndKey( const int data,
-                    int& indx, int& key ) const
+                    int& indx,
+                    int& key ) const
   {
     indx = data >> 28;
     key  = data & 0x0FFFFFFF;
   }
 
+  /// Extracts the key and hint from a packed data word
   void hintAndKey( const int data,
                    const DataObject* source,
                    DataObject* target,
-                   int& hint, int& key ) const
+                   int& hint,
+                   int& key ) const
   {
     int indx(0);
     indexAndKey(data,indx,key);
-    hint = target->linkMgr()->addLink( source->linkMgr()->link( indx )->path(), 0 );
+    hint = target->linkMgr()->addLink( source->linkMgr()->link(indx)->path(), 0 );
   }
 
-  /** returns an int for a Smart Ref, with small key and large links.
-   *  @arg  out : Output data object, to store the links
-   *  @arg  parent : Pointer to the parent container of the SmartRef, method ->parent()
-   *  @arg  key    : returned by the method .linkID() of the SmartRef
-   */
-  int referenceLong( DataObject* out,
-                     const DataObject* parent,
-                     const int key ) const 
-  {
-    LinkManager::Link* myLink = out->linkMgr()->link( parent );
-    if ( NULL == myLink ) {
-      out->linkMgr()->addLink( parent->registry()->identifier(), parent );
-    }
-    if ( key != (key & 0x0000FFFF) )
-    {
-      std::cout << "************ Key over 16 bits in StandardPacker::referenceLong ************" << std::endl;
-    }
-    int myLinkID = out->linkMgr()->link( parent )->ID() << 16;
-    return key + myLinkID;
-  }
-
-  void indexAndKeyLong( const int data,
-                        int& indx, int& key ) const
-  {
-    indx = data >> 16;
-    key  = data & 0x0000FFFF;
-  }
-
-  void hintAndKeyLong( const int data,
-                       const DataObject* source,
-                       DataObject* target,
-                       int& hint, int& key ) const
-  {
-    int indx(0);
-    indexAndKeyLong(data,indx,key);
-    hint = target->linkMgr()->addLink( source->linkMgr()->link( indx )->path(), 0 );
-  }
+  //---------------------------------------------------------------------------
 
   /** returns a long long for a Smart Ref, with small key and large links.
    *  @arg  out    : Output data object, to store the links
    *  @arg  parent : Pointer to the parent container of the SmartRef, method ->parent()
    *  @arg  key    : returned by the method .linkID() of the SmartRef
    */
-  long long reference64( DataObject* out, const DataObject* parent, const int key ) const 
+  long long reference64( DataObject* out,
+                         const DataObject* parent,
+                         const int key ) const
   {
-    LinkManager::Link* myLink = out->linkMgr()->link( parent );
-    if ( NULL == myLink )
-    {
-      out->linkMgr()->addLink( parent->registry()->identifier(), parent );
-    }
-    const long long myLinkID = out->linkMgr()->link( parent )->ID() << 32;
+    const long long ID = (long long)linkID(out,parent);
+    const long long myLinkID = (ID << 32);
     return (long long)key + myLinkID;
   }
 
+  /// Extracts the key and index from a packed 64-bit data word
   void indexAndKey64( const long long data,
-                      int& indx, int& key ) const
+                      int& indx,
+                      int& key ) const
   {
     indx = data >> 32;
-    key  = data & 0x00000000FFFFFFFF;
+    const long long mask = 0x00000000FFFFFFFF;
+    key  = data & mask;
   }
 
+  /// Extracts the key and hint from a packed 64-bit data word
   void hintAndKey64( const long long data,
                      const DataObject* source,
                      DataObject* target,
-                     int& hint, int& key ) const 
+                     int& hint,
+                     int& key ) const
   {
     int indx(0);
     indexAndKey64(data,indx,key);
-    hint = target->linkMgr()->addLink( source->linkMgr()->link( indx )->path(), 0 );
+    hint = target->linkMgr()->addLink( source->linkMgr()->link(indx)->path(), 0 );
   }
+
+  //---------------------------------------------------------------------------
 
   /** returns the energy as double from the int value */
   double energy( const int k )         const { return double(k) / Packer::ENERGY_SCALE; }
@@ -238,6 +244,8 @@ public:
     return double(convert.f);
   }
 
+  //---------------------------------------------------------------------------
+
 protected:
 
   /// Pack a double to an int
@@ -257,6 +265,8 @@ protected:
              0     < val ? (short int) ( val + 0.5 ) : // proper rounding
              (short int) ( val - 0.5 )               );
   }
+
+  //---------------------------------------------------------------------------
 
 };
 

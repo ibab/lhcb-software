@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2012-02-22 - Chris Jones
+ - Fix the 64-bit reference packing on 32 bit builds.
+
 ! 2012-02-21 - Chris Jones
  - Add a new set of 64-bit reference packing methods to the StandardPacker
 
