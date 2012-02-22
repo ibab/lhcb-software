@@ -562,8 +562,8 @@ class PsiX_BQ_Conf(LineBuilder) :
             "SelPsiKPiFor"     + self.name()     ,
             Algorithm          =   alg           ,
             RequiredSelections = [ self.psi   () , 
-                                   self.pions () ,
-                                   self.kaons () ]
+                                   self.kaons () ,
+                                   self.pions () ]
             )
         
         return self._add_selection( 'PsiKPi_Selection' , sel ) 
@@ -634,7 +634,7 @@ class PsiX_BQ_Conf(LineBuilder) :
             )
         
         sel  = Selection (
-            "SelPsi3PiFor"      + self.name()     ,
+            "SelPsi3PiFor"     + self.name()     ,
             Algorithm          =   alg           ,
             RequiredSelections = [ self.psi   () , 
                                    self.pions () ] 
@@ -709,10 +709,10 @@ class PsiX_BQ_Conf(LineBuilder) :
             )
         
         sel  = Selection (
-            "SelPsi3KPiFor"      + self.name()    ,
+            "SelPsi3KPiFor"    + self.name()     ,
             Algorithm          =   alg           ,
             RequiredSelections = [ self.psi   () , 
-                                   self.pions () ,
+                                   self.kaons () ,
                                    self.pions () ] 
             )
         
@@ -780,10 +780,10 @@ class PsiX_BQ_Conf(LineBuilder) :
             )
         
         sel  = Selection (
-            "SelPsi4KFor"       + self.name()     ,
+            "SelPsi4KFor"      + self.name()     ,
             Algorithm          =   alg           ,
             RequiredSelections = [ self.psi   () , 
-                                   self.pions () ] 
+                                   self.kaons () ] 
             )
         
         return self._add_selection( 'Psi4K_Selection' , sel ) 
@@ -911,8 +911,7 @@ class PsiX_BQ_Conf(LineBuilder) :
             Algorithm          =   alg           ,
             RequiredSelections = [ self.psi   () ,
                                    self.kaons () ,
-                                   self.pions () ,
-                                   self.kaons () ]
+                                   self.pions () ]
             
             )
         
@@ -997,6 +996,7 @@ class PsiX_BQ_Conf(LineBuilder) :
             "SelPsi6KPiFor"    + self.name()     ,
             Algorithm          =   alg           ,
             RequiredSelections = [ self.psi   () , 
+                                   self.kaons () ,
                                    self.pions () ] 
             )
         
