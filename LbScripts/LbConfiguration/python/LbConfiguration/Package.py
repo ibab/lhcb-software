@@ -41,7 +41,8 @@ package_names = ['XmlDDDB',
                  'CPConfig',
                  'RDConfig',
                  'CharmConfig',
-		 'TMVAWeights']
+		 'TMVAWeights',
+                 'ProdConf']
 
 class PackageConfException(Exception):
     pass
@@ -275,6 +276,8 @@ Geant4Files.disableDereferenceTar()#IGNORE:E0602
 MIBData.setProject("PARAM")#IGNORE:E0602
 
 TMVAWeights.setProject("PARAM")#IGNORE:E0602
+
+ProdConf.setProject("DBASE")#IGNORE:E0602
 
 L0TCK.setHat("TCK")#IGNORE:E0602
 L0TCK.setProject("DBASE")#IGNORE:E0602

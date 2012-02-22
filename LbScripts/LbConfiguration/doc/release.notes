@@ -1,11 +1,16 @@
+2012-02-22  Ben Couturier <Ben.Couturier@cern.ch>
+
+        * cmt/requirements: release of version v6r7p1
+        * python/LbConfiguration/Package.py: Added new package ProdConf in project DBASE 
+
 2012-02-20  Ben Couturier <Ben.Couturier@cern.ch>
 
-        * cmt/requirements: release of version v6r7
+	* cmt/requirements: release of version v6r7
 	* python/LbConfiguration/LbLogin.py: Added aliases to switch from AFS to CVMFS with CMTSITE CERN
 
 2012-02-14 Ben Couturier <Ben.Couturier@cern.ch>
 
-        * python/LbConfiguration/Package.py: Added new package TMVAWeights 
+        * python/LbConfiguration/Package.py: Added new package TMVAWeights
 
 2012-01-12  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
