@@ -76,7 +76,6 @@ namespace LHCb {
     // FitNode default constructor
     m_filterStatus[Forward] = m_filterStatus[Backward] = Uninitialized ;
     m_hasInfoUpstream[Forward] = m_hasInfoUpstream[Backward] = Unknown ;
-    m_deltaChi2[Forward] = m_deltaChi2[Backward] = 0 ;
   }
   
   /// Constructor from a z position
@@ -91,7 +90,6 @@ namespace LHCb {
   {
     m_filterStatus[Forward] = m_filterStatus[Backward] = Uninitialized ;
     m_hasInfoUpstream[Forward] = m_hasInfoUpstream[Backward] = Unknown ;
-    m_deltaChi2[Forward] = m_deltaChi2[Backward] = 0 ;
     m_predictedState[Forward].setLocation(location) ;
     m_predictedState[Backward].setLocation(location) ;
   }
@@ -108,7 +106,6 @@ namespace LHCb {
   {
     m_filterStatus[Forward] = m_filterStatus[Backward] = Uninitialized ;
     m_hasInfoUpstream[Forward] = m_hasInfoUpstream[Backward] = Unknown ;
-    m_deltaChi2[Forward] = m_deltaChi2[Backward] = 0 ;
   }
   
   
@@ -186,18 +183,28 @@ namespace LHCb {
   //=========================================================================
   bool FitNode::hasInfoUpstream(int direction) const
   {
-    if( m_hasInfoUpstream[direction] == Unknown ) {
+    if( m_hasInfoUpstream[direction] == LHCb::FitNode::Unknown ) {
       bool rc=false ;
       const FitNode* prev = prevNode( direction ) ;
       if( prev ) {
 	if( prev->type()==HitOnTrack ) rc = true ;
 	else rc = prev->hasInfoUpstream(direction) ;
       }
-      unConst().m_hasInfoUpstream[direction] = rc ? True : False ;
+      unConst().m_hasInfoUpstream[direction] = rc ? LHCb::FitNode::True : LHCb::FitNode::False ;
     }
-    return m_hasInfoUpstream[direction] == True ;
+    return (m_hasInfoUpstream[direction] == LHCb::FitNode::True) ;
   } 
   
+  void FitNode::resetHasInfoUpstream(int direction)
+  {
+    m_hasInfoUpstream[direction] = False ;
+    if( this->type()!=HitOnTrack ) {
+      FitNode* next = const_cast<FitNode*>(nextNode(direction)) ;
+      if(next) next->resetHasInfoUpstream(direction) ;
+    }
+  }
+
+
   //=========================================================================
   // Turn this node into an outlier
   //=========================================================================
@@ -213,6 +220,9 @@ namespace LHCb {
       resetFilterStatus( Predicted ) ;
       // make sure the KalmanFitResult knows something has changed
       if(m_parent) m_parent->resetCache() ;
+      // now make sure others do not rely on this one anymore
+      if( !hasInfoUpstream(Forward) ) resetHasInfoUpstream(Forward) ; 
+      if( !hasInfoUpstream(Backward) ) resetHasInfoUpstream(Backward) ;
     }
   }
 
@@ -328,7 +338,7 @@ namespace LHCb {
     
     const LHCb::FitNode* pn = prevNode(direction) ;
     m_totalChi2[direction] = pn ? pn->totalChi2(direction) : LHCb::ChiSquare(0,-m_parent->nTrackParameters()) ;
-    m_deltaChi2[direction] = 0 ;
+    m_deltaChi2[direction] = LHCb::ChiSquare() ;
     
     // apply the filter if needed
     if( type() == HitOnTrack ) {
@@ -384,9 +394,10 @@ namespace LHCb {
 #endif  
     
       // set the chisquare contribution
-      m_deltaChi2[direction] = res*res / errorRes2 ;
-      m_totalChi2[direction] += LHCb::ChiSquare(m_deltaChi2[direction],1)  ;
+      m_deltaChi2[direction] = LHCb::ChiSquare(res*res / errorRes2,1) ;
     }
+    
+    m_totalChi2[direction] += m_deltaChi2[direction]  ;
     m_filterStatus[direction] = Filtered ;
     
     if ( !(m_filteredState[direction].covariance()(0,0)>0 && 

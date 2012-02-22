@@ -164,10 +164,10 @@ namespace LHCb
     State unbiasedState() const ;
     
     /// retrieve chisq contribution in upstream filter
-    double deltaChi2Forward() const { filteredStateForward(); return m_deltaChi2[Forward] ; }
+    const LHCb::ChiSquare& deltaChi2Forward() const { filteredStateForward(); return m_deltaChi2[Forward] ; }
 
     /// retrieve chisq contribution in downstream filter
-    double deltaChi2Backward() const { filteredStateBackward(); return m_deltaChi2[Backward] ; }
+    const LHCb::ChiSquare& deltaChi2Backward() const { filteredStateBackward(); return m_deltaChi2[Backward] ; }
 
     /// retrieve the total chi2 of the filter including this node
     const LHCb::ChiSquare& totalChi2(int direction) const { filteredState(direction) ; return m_totalChi2[direction%2] ; }
@@ -312,11 +312,16 @@ namespace LHCb
     /// update node residual using a smoothed state
     void updateResidual(const LHCb::State& state) ;
     
-    ///
+    /// unconst this node
     FitNode& unConst() const { return const_cast<FitNode&>(*this) ; }
     
+    /// helper function that caches whether this node has active nodes upstream
     bool hasInfoUpstream( int direction ) const ;
 
+    /// reset the cache for the previous function
+    void resetHasInfoUpstream( int direction ) ;
+
+    /// reset the filter status
     void resetFilterStatus( int direction, FilterStatus s = Initialized) ;
 
   private:
@@ -332,7 +337,7 @@ namespace LHCb
     State                 m_predictedState[2];     ///< predicted state of forward/backward filter
     State                 m_filteredState[2];      ///< filtered state of forward filter
     LHCb::State           m_classicalSmoothedState ;
-    double                m_deltaChi2[2];          ///< chisq contribution in forward filter
+    LHCb::ChiSquare       m_deltaChi2[2];          ///< chisq contribution in forward filter
     LHCb::ChiSquare       m_totalChi2[2];          ///< total chi2 after this filterstep 
     Gaudi::TrackMatrix    m_smootherGainMatrix ;   ///< smoother gain matrix (smoothedfit only)
     Gaudi::XYZVector      m_pocaVector ;           ///< unit vector perpendicular to state and measurement
