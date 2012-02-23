@@ -69,6 +69,8 @@ namespace Gaudi {
     std::string                 m_recordName;
     /// Property: Enable TTree IOperfStats if not empty; otherwise perf stat file name
     std::string                 m_ioPerfStats;
+    /// Property: Compression-algorithm:compression-level
+    std::string                 m_compression;
     /// Set with bad files/tables
     std::set<std::string>       m_badFiles;
 

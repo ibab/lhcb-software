@@ -72,6 +72,7 @@ RootCnvSvc::RootCnvSvc(CSTR nam, ISvcLocator* svc)
   declareProperty("LoadSection",      m_setup->loadSection  = "Event");
   declareProperty("CacheBranches",    m_setup->cacheBranches);
   declareProperty("VetoBranches",     m_setup->vetoBranches);
+  declareProperty("GlobalCompression",m_compression); // empty: do nothing
 }
 
 // Standard destructor
@@ -97,6 +98,22 @@ StatusCode RootCnvSvc::initialize()  {
   if ( !status.isSuccess() )
     return error("Failed to initialize ConversionSvc base class.");
   m_log = new MsgStream(msgSvc(),name());
+  if ( !m_compression.empty() ) {
+    int res = 0;
+    size_t idx = m_compression.find(':');
+    if ( idx != string::npos ) {
+      string alg = m_compression.substr(0,idx);
+      int level  = 1;
+      res = ::sscanf(m_compression.c_str()+idx+1,"%d",&level);
+      if ( res == 1 ) {
+	log() << MSG::INFO << "Setting global ROOT compression to:" << m_compression << endmsg;
+	RootConnectionSetup::setCompression(alg,level);
+      }
+    }
+    if ( res != 1 ) {
+      return error("Unable to interprete ROOT compression encoding:"+m_compression);
+    }
+  }
   if( !(status=service("IODataManager", m_ioMgr)).isSuccess() )
     return error("Unable to localize interface from service:IODataManager");
   if( !(status=service("IncidentSvc", m_incidentSvc)).isSuccess() )

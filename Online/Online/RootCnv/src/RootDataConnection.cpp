@@ -12,6 +12,7 @@
 #include "RootUtils.h"
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/LinkManager.h"
+#include "GaudiKernel/strcasecmp.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/MsgStream.h"
@@ -22,7 +23,11 @@
 #include "TLeaf.h"
 #include "TClass.h"
 #include "TBranch.h"
+#include "Compression.h"
 #include "TTreePerfStats.h"
+
+// C/C++ include files
+#include <stdexcept>
 
 using namespace Gaudi;
 using namespace std;
@@ -36,6 +41,7 @@ static string s_local = "<localDB>";
 #endif
 #include "RootTool.h"
 
+static int s_compressionLevel = 1;
 
 static bool match_wild(const char *str, const char *pat)    {
   //
@@ -76,17 +82,37 @@ starCheck:
   goto loopStart;
 }
 
-// Standard constructor
+/// Standard constructor
 RootConnectionSetup::RootConnectionSetup() : refCount(1), m_msgSvc(0)
 {
 }
 
-// Standard destructor      
+/// Standard destructor      
 RootConnectionSetup::~RootConnectionSetup() {
   deletePtr(m_msgSvc);
 }
 
-// Increase reference count
+/// Set the global compression level
+void RootConnectionSetup::setCompression(const std::string& algorithm, int level) {
+  s_compressionLevel = level;
+  if ( level > 0 ) {
+    ROOT::ECompressionAlgorithm alg = ROOT::kUseGlobalSetting;
+    if ( strcasecmp(algorithm.c_str(),"ZLIB") == 0 ) 
+      alg = ROOT::kZLIB;
+    else if ( strcasecmp(algorithm.c_str(),"LZMA") == 0 ) 
+      alg = ROOT::kLZMA;
+    else
+      throw runtime_error("ERROR: request to set unknown ROOT compression algorithm:"+algorithm);
+    s_compressionLevel = ROOT::CompressionSettings(alg,level);
+  }
+}
+
+/// Global compression level
+int RootConnectionSetup::compression() {
+  return s_compressionLevel;
+}
+
+/// Increase reference count
 void RootConnectionSetup::addRef() {
   ++refCount;
 }
@@ -225,11 +251,12 @@ StatusCode RootDataConnection::connectRead()  {
 
 // Open data stream in write mode
 StatusCode RootDataConnection::connectWrite(IoType typ)  {
+  int compress = RootConnectionSetup::compression();
   msgSvc() << MSG::DEBUG;
   switch(typ)  {
   case CREATE:
     resetAge();
-    m_file = TFile::Open(m_pfn.c_str(),"CREATE","Root event data");
+    m_file = TFile::Open(m_pfn.c_str(),"CREATE","Root event data",compress);
     m_refs = new TTree("Refs","Root reference data");
     msgSvc() << "Opened file " << m_pfn << " in mode CREATE. [" << m_fid << "]" << endmsg;
     m_params.push_back(make_pair("PFN",m_pfn));
@@ -240,7 +267,7 @@ StatusCode RootDataConnection::connectWrite(IoType typ)  {
     break;
   case RECREATE:
     resetAge();
-    m_file = TFile::Open(m_pfn.c_str(),"RECREATE","Root event data");
+    m_file = TFile::Open(m_pfn.c_str(),"RECREATE","Root event data",compress);
     msgSvc() << "Opened file " << m_pfn << " in mode RECREATE. [" << m_fid << "]" << endmsg;
     m_refs = new TTree("Refs","Root reference data");
     m_params.push_back(make_pair("PFN",m_pfn));
@@ -251,7 +278,7 @@ StatusCode RootDataConnection::connectWrite(IoType typ)  {
     break;
   case UPDATE:
     resetAge();
-    m_file = TFile::Open(m_pfn.c_str(),"UPDATE","Root event data");
+    m_file = TFile::Open(m_pfn.c_str(),"UPDATE","Root event data",compress);
     msgSvc() << "Opened file " << m_pfn << " in mode UPDATE. [" << m_fid << "]" << endmsg;
     if ( m_file && !m_file->IsZombie() )  {
       if ( makeTool() ) return m_tool->readRefs();

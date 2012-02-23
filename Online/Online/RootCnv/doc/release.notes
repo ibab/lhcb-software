@@ -4,6 +4,10 @@
 ! Purpose     : Root based persistency
 !-----------------------------------------------------------------------------
 
+!========================= RootCnv v1r13 2012-02-23 ========================
+! 2012-02-23 - Markus Frank
+ - Add option to RootCnvSvc to change compression factor.
+
 !========================= RootCnv v1r12 2012-01-24 ========================
 ! 2012-01-20 - Markus Frank
  - Fix gcc46 compile warning in merge.C 
