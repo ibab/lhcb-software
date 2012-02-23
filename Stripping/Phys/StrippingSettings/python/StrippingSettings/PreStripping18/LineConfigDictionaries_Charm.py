@@ -179,7 +179,7 @@ D2hh = {
            'Hlt2TOSPiPi': { 'Hlt2CharmHadD02HH_D02PiPiDecision%TOS' : 0, 'Hlt2CharmHadD02HH_D02PiPiWideMassDecision%TOS' : 0, 'Hlt2CharmHadD02PiPiDecision%TOS' : 0, 'Hlt2CharmHadD02PiPiWideMassDecision%TOS' : 0 }
     } ,
     'WGs' : [ 'Charm' ],
-    'STREAMS' : [ 'Charm' ]
+    'STREAMS' : [ 'CharmToBeSwum' ]
     }
 
 ## Control version of above line.
@@ -795,7 +795,7 @@ DstarD2KShh = {
     ,'PPDDPostscale'        :    1.0
     },
     'WGs' : ['Charm'],
-    'STREAMS' : [ 'Charm' ]
+    'STREAMS' : [ 'CharmToBeSwum' ]
     }
 
 

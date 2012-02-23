@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2012-02-23 - Mat Charles
+ - Move relevant lines to CharmToBeSwum stream in PreStripping18
+
+! 2012-02-23 - Mat Charles
  - Overhaul of PreStripping18/LineConfigDictionaries_Charm.py
    Previous version was based on s17b only. This version
    attempts to merge s17 and s17b. Needs further checking.
