@@ -4,6 +4,13 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-02-23 - Vanya Belyaev
+
+ - PsiXforBandQ.py
+   	add the stppingline for B-> J/psi K*+ -> ( K- pi0 ) for gamma/pi0
+   efficiency studies, see LHCb_INT-2012-001   
+
+
 ! 2012-02-23 - Stefano Perazzini
  - Inserted the $STRIPPINGSELECTIONSROOT/tests/TestCharmlessLines.py to test the stripping lines of
    the Charmless WG.

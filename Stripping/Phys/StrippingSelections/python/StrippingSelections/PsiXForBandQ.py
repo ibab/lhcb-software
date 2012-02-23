@@ -4,7 +4,7 @@
 # =============================================================================
 ## @file
 # 
-#  The coherent stripping for B -> psi(') + X for B&Q 
+#  The coherent (miroDST) stripping for B -> psi(') + X for B&Q 
 #
 #   @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #   @date   2012-02-19
@@ -14,7 +14,7 @@
 #                by $Author: ibelyaev $
 # =============================================================================
 """
-The coherent stripping for B -> psi(') + X for B&Q 
+The coherent (microDST) stripping for B -> psi(') + X for B&Q
 
 """
 # =============================================================================
@@ -31,6 +31,7 @@ from StrippingConf.StrippingLine           import StrippingLine
 from StrippingUtils.Utils                  import LineBuilder
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
 from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+from GaudiConfUtils.ConfigurableGenerators import Pi0Veto__Tagger2g 
 from PhysSelPython.Wrappers                import Selection
 # =============================================================================
 # Standard Particles 
@@ -38,9 +39,7 @@ from PhysSelPython.Wrappers                import Selection
 from StandardParticles      import ( StdLoosePions       ,
                                      StdLooseKaons       ,
                                      StdLooseMuons       , 
-                                     StdAllLoosePions    , ## for prompt 
-                                     StdAllLooseKaons    , ## for prompt
-                                     StdAllLooseMuons    ) ## for prompt 
+                                     StdLoosePi02gg      ) ## for gamma-eff
 # =============================================================================
 ## logging
 # =============================================================================
@@ -58,16 +57,17 @@ _default_configuration_ = {
     #
     ## c*tau cut for B-hadrons 
     #
-    'CTAU'      : 100  * micrometer , 
-    'CTAU_BC'   :  50  * micrometer , 
+    'CTAU'      : 100 * micrometer , 
+    'CTAU_BC'   :  50 * micrometer , 
+    'CTAU_Kst'  : 150 * micrometer , 
     #
     ## muon selection for  psi(') -> mu+ mu-
     #
     'MuonCut'   : """
     ISMUON &
-    ( PT  > 550 * MeV   ) &
-    ( PIDmu - PIDpi > 0 ) &
-    ( CLONEDIST     > 0 )     
+    ( PT            >  550 * MeV ) &
+    ( PIDmu - PIDpi >    0       ) &
+    ( CLONEDIST     > 5000       )     
     """ , 
     #
     ## tight (K,pi) for 5(K,pi), 6(K.pi)-decays
@@ -84,6 +84,9 @@ _default_configuration_ = {
     "from GaudiKernel.PhysicalConstants import c_light"        , 
     ## use the embedded cut for chi2(LifetimeFit)<16
     "ctau      = BPVLTIME ( 25 ) * c_light "                   ,
+    "ctau_16   = BPVLTIME ( 16 ) * c_light "                   ,
+    "ctau_9    = BPVLTIME (  9 ) * c_light "                   ,
+    "APT23     = LoKi.AParticles.TransverseMomentum ( 2 , 3 )" ,
     ## Combination mass-cut for neutral beauty particles 
     "mb0_acut  = in_range ( 5.100 * GeV , AM , 5.550 * GeV ) " ,
     "mbc_acut  = in_range ( 5.100 * GeV , AM , 6.550 * GeV ) " ,
@@ -115,7 +118,7 @@ _default_configuration_ = {
     'B2Psi6PiPrescale'  : 1.0 ,
     'B2Psi6KPiPrescale' : 1.0 ,
     # =========================================================================
-    'PsiPromptPrescale' : 1.0 ,
+    'B2PsiKstPrescale'  : 1.0 
     # =========================================================================
     }
 ## ============================================================================
@@ -327,6 +330,15 @@ class PsiX_BQ_Conf(LineBuilder) :
             algos           = [ self.psi_5Kpi ()       ] ) ,
             ##
             # =================================================================
+            # Helper line to study gamma/pi0 reconstruction efficiency
+            # =================================================================
+            StrippingLine (
+            "B2PsiKstFor"   + self.name()               ,
+            prescale        = self['B2PsiKstPrescale' ] , 
+            checkPV         = self['CheckPV']           ,
+            algos           = [ self.psi_Kst ()       ] ) ,
+            ##
+            # =================================================================
             ]
             ## 
         return self._add_selection ( 'PsiX_Lines' , sel ) 
@@ -342,9 +354,6 @@ class PsiX_BQ_Conf(LineBuilder) :
             self.muons        () ,
             self.pions        () ,
             self.kaons        () ,
-            self.muons_all    () ,
-            self.pions_all    () ,
-            self.kaons_all    () ,
             ## composite
             self.psi          () ,
             self.psi_prompt   () ,
@@ -368,6 +377,8 @@ class PsiX_BQ_Conf(LineBuilder) :
             ##
             self.psi_6pi      () ,
             self.psi_6Kpi     () ,
+            ##
+            self.psi_Kst      () ,
             ]
         
         return self._add_selection ( 'Selections' , sel )
@@ -378,12 +389,9 @@ class PsiX_BQ_Conf(LineBuilder) :
     def kaons     ( self ) : return StdLooseKaons 
     ## muons 
     def muons     ( self ) : return StdLooseMuons 
-    ## pions :
-    def pions_all ( self ) : return StdAllLoosePions 
-    ## kaons :
-    def kaons_all ( self ) : return StdAllLooseKaons 
-    ## muons 
-    def muons_all ( self ) : return StdAllLooseMuons 
+    
+    ## pi0s :
+    def pi0s      ( self ) : return StdLoosePi02gg 
 
     ## psi(') -> mu+ mu-
     def psi ( self ) :
@@ -495,6 +503,71 @@ class PsiX_BQ_Conf(LineBuilder) :
             )
         
         return self._add_selection( 'PsiK_Selection' , sel ) 
+
+    # B -> psi(') ( K* -> Kpi0)
+    def psi_Kst ( self ) :
+        """
+        This is just a control line to study
+        the reconstruction efficiency for pi0 and gamma
+        see LHCb-INT-2012-001 
+        
+        """
+        sel = self._selection ( 'PsiK*+_Selection')
+        if sel : return sel
+        
+        alg  = CombineParticles (
+            ##
+            DecayDescriptors = [
+            "[B+ -> J/psi(1S) K+ pi0 ]cc" ,
+            ] ,
+            ##
+            DaughtersCuts = {
+            'J/psi(1S)' : " M < 3.3 * GeV "       ,    ## keep only J/psi
+            ## 'pi0'       : """
+            ## ( abs ( LV01 ) < 0.9 ) &
+            ## ( MINTREE ( 'gamma' == ID , PT ) > 250 * MeV ) 
+            ## """ , 
+            } , 
+            ##
+            Preambulo = self['Preambulo'] ,
+            ##
+            CombinationCut = """
+            in_range ( 4.95 * GeV , AM   , 5.75 * GeV ) &
+            in_range ( 750  * MeV , AM23 , 1050 * MeV ) &
+            ( APT23 > 1.5 * GeV ) 
+            """ ,
+            ## 
+            MotherCut = """
+            in_range ( 5.0 * GeV , M , 5.7 * GeV ) & 
+            ( chi2vx    < 16 ) &
+            ( ctau_9    > %s ) 
+            """ % self['CTAU_Kst'] , 
+            ## 
+            ParticleCombiners = {'' : "LoKi::VertexFitter" }
+            )
+        #
+        sel_ = Selection (
+            "SelPrePsiK*+For"  + self.name ()    ,
+            Algorithm          =   alg           ,
+            RequiredSelections = [ self.psi   () , 
+                                   self.kaons () ,
+                                   self.pi0s  () ] 
+            )
+        
+        tag = Pi0Veto__Tagger2g (
+            MassWindow     = 25 * MeV  ,
+            MassChi2       = -1        ,
+            ExtraInfoIndex = 25020     ## unique ! 
+            )
+        
+        sel  = Selection (
+            "SelPsiK*+For"     + self.name ()   ,
+            Algorithm          =   tag           ,
+            RequiredSelections = [ sel_          ]  
+            )
+        
+        return self._add_selection( 'PsiK*+_Selection' , sel ) 
+    
     
     # B -> psi(') pipi
     def psi_2pi ( self ) :
