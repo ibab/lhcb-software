@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-02-23 - Thomas Blake
+ - Added B2XTua to RD lines for Stripping 18
+
 ! 2012-02-23 - Will Barter
  - Moved EW lines over to QEE (new WG)
 
