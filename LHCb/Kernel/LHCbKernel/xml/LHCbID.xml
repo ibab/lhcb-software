@@ -16,13 +16,14 @@
        <import name="Kernel/CaloCellID"/>
        <import name="Kernel/MuonTileID"/>
        <import name="Kernel/VeloPixChannelID"/>
+       <import name="Kernel/FTChannelID"/>
 
        &StlVector;
 
        <enum
           desc   = "types of sub-detector channel ID"
           name   = "channelIDype"
-          value  = "Velo=1, TT, IT, OT, Rich, Calo, Muon, VeloPix"
+          value  = "Velo=1, TT, IT, OT, Rich, Calo, Muon, VeloPix, FT"
           access = 'PUBLIC'
        />
 
@@ -347,6 +348,34 @@ return LHCb::RichSmartID(id);
          </code>
        </method>
 
+       <constructor
+         desc     = "Constructor from FTChannelID" >
+        <arg const="TRUE" name="chanID" type="FTChannelID" />
+        <code>
+m_lhcbID = (FT &lt;&lt; detectorTypeBits) + chanID;
+        </code>
+       </constructor>
+
+       <method
+         type  = "bool"
+         name  = "isFT"
+         const = 'TRUE'
+         desc  = "return true if this is a Fibre Tracker identifier">
+         <code>
+return (FT == detectorType());
+         </code>
+       </method>
+
+       <method
+         type  = "LHCb::FTChannelID"
+         name  = "ftID"
+         const = 'TRUE'
+         desc="return the FTChannelID">
+	 <code>
+return (isFT() ? LHCb::FTChannelID(m_lhcbID &amp; IDMask) : LHCb::FTChannelID(0xF0000000 ));
+         </code>
+       </method>
+
        <method
          type  = "bool"
          name  = "checkDetectorType"
@@ -371,6 +400,7 @@ if (isOT()) return otID().channelID();
 if (isRich()) return richID().key();
 if (isCalo()) return m_lhcbID &amp; IDMask;
 if (isMuon()) return m_lhcbID &amp; IDMask;
+if (isFT()) return ftID().channelID();
 return 0;
         </code>
       </method>

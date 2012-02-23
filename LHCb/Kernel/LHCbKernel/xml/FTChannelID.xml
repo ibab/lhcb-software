@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--- $Id: -->
+<!--- Author  : Olivier Callot -->
+<!--- Created : 2012-02-23 -->
+
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+
+<gdd>
+  <package name    = "LHCbKernel">
+    <class name    = "FTChannelID"
+	   author  = "Olivier Callot"
+	   desc    = "Channel ID fo rthe Fibre Tracker (LHCb Upgrade)"
+	   virtual = "FALSE" >
+
+	   &StlVector;
+
+      <constructor argList = "unsigned int layer, unsigned int quarter, unsigned int sipmId, unsigned int sipmCell" 
+                   desc    = "Explicit constructor from the geometrical location">
+        <code>    
+          m_channelID = (layer    &lt;&lt; layerBits  ) + 
+                        (quarter  &lt;&lt; quarterBits) + 
+                        (sipmId   &lt;&lt; sipmIdBits ) + 
+                        (sipmCell &lt;&lt; sipmCellBits  );
+        </code>
+      </constructor>
+
+
+      <constructor argList  = "unsigned int id" 
+                   initList = "m_channelID(id)"
+                   desc     = "Constructor from int">
+        <code></code>
+      </constructor>
+
+      <method type  = "" 
+              name  = "operator unsigned int" 
+              const = "TRUE" 
+              desc  = "Operator overload, to cast channel ID to unsigned int. Used by linkers where the key (channel id) is an int"> 
+        <code> return m_channelID; </code>
+      </method>
+
+     <attribute  type = "bitfield" 
+                  name = "channelID" 
+                  desc = "FT Channel ID">
+        <bitfield name    = "sipmCell" 
+                  length  = "7" 
+                  desc    = "Channel in the 128 channel SiPM"
+                  setMeth = "FALSE"/>
+
+        <bitfield name    = "sipmId" 
+                  length  = "7" 
+                  desc    = "ID of the SiPM in the quarter layer" 
+                  setMeth = "FALSE"/>
+        <bitfield name    = "quarter" 
+                  length  = "2" 
+                  desc    = "Quarter id (top = 2-3, bottom = 0-1 in inreasing x)" 
+                  setMeth = "FALSE"/>
+        <bitfield name    = "layer" 
+                  length  = "4" 
+                  desc    = "Layer id" 
+                  setMeth = "FALSE"/>
+      </attribute>
+
+      <method 
+          name    = "fillStream" 
+          desc    = "Print this FTChannelID in a human readable way"
+          type    = "std::ostream&amp;" 
+          virtual = "FALSE" 
+          const   = "TRUE">
+          <arg 
+            type = "std::ostream" 
+            name = "s"/>
+        <code>
+return s 
+&lt;&lt; "{ FTChannelID : "
+&lt;&lt; " sipmCell =" &lt;&lt; sipmCell()
+&lt;&lt; " sipmId ="   &lt;&lt; sipmId()
+&lt;&lt; " quarter="   &lt;&lt; quarter()
+&lt;&lt; " layer="     &lt;&lt; layer()
+&lt;&lt; " }";
+        </code>
+      </method>
+
+    </class>
+
+  </package>
+
+</gdd>

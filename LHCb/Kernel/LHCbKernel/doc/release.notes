@@ -4,6 +4,11 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2012-02-23 - Olivier Callot
+ - Create an FTChannelID for the Fibre Tracker of the upgrade. 
+   This is a stripped down version of OTChannelID. 
+   Added it to LHCbID with all usual metjods to get, set and test.
+
 ! 2012-02-22 - Chris Jones
  - Fix the 64-bit reference packing on 32 bit builds.
 

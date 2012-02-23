@@ -15,5 +15,6 @@ std::ostream& LHCb::LHCbID::fillStream(std::ostream& s) const
   if (isRich()) { s << richID(); }
   if (isCalo()) { s << caloID(); }
   if (isMuon()) { s << muonID(); }
+  if (isFT())   { s << ftID();   }
   return s << " }";
 }
