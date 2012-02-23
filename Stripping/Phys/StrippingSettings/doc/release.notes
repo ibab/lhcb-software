@@ -4,6 +4,11 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-02-23 - Mat Charles
+ - Overhaul of PreStripping18/LineConfigDictionaries_Charm.py
+   Previous version was based on s17b only. This version
+   attempts to merge s17 and s17b. Needs further checking.
+
 ! 2012-02-23 - Thomas Blake
  - Added B2XTua to RD lines for Stripping 18
 
