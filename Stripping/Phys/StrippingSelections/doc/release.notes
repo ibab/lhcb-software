@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-02-23 - Stefano Perazzini
+ - Inserted the $STRIPPINGSELECTIONSROOT/tests/TestCharmlessLines.py to test the stripping lines of
+   the Charmless WG.
+
+
 ! 2012-02-21 - Vanya Belyaev
  - PsiXforBandQ.py
 
