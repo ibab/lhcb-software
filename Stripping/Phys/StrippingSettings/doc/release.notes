@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-02-23 - Greig Cowan
+ - Added Jpsi2ee and Chic lines to B2CC configuration.
+ - Replaced beta_s references with B2CC.
+
 ! 2012-02-23 - Stefano Perazzini
  - Updated the StrippingSettings/PreStripping18/LineConfigDictionaries_Charmless.py including lines
    migrated from BetaS WG.
