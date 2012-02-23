@@ -95,7 +95,7 @@ StatusCode TrackMonitor::execute()
     m_multiplicityMap[type] += 1;
     fillHistograms(*track,type);
     plot(track->type(),2, "track type" ,-0.5, 10.5, 11);
-    plot(track->history(),"history" ,"track history",-0.5, 20.5, 21);
+    plot(track->history(),"history" ,"track history",-0.5, 23.5, 24);
   }
 
   // fill counters....
@@ -139,7 +139,7 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
   plot(track.phi(),type+"/8", "phi",-M_PI,M_PI,50) ;
   plot(track.nDoF(),type+"/ndof","ndof",-0.5,50.5,51);
   plot(track.flag(),type+"/flag","flag",-0.5,255.5,256) ;
-  plot(track.history(),type+"/history","history",-0.5,20.5,21) ;
+  plot(track.history(),type+"/history","history",-0.5,23.5,24) ;
   plot(track.fitStatus(),type+"/fitstatus","fit status",-0.5,5.5,6) ;
   plot(track.nMeasurements(),type+"/100","#nMeas",  -0.5, 60., 61);
 
