@@ -1,10 +1,11 @@
 package GaudiRootCnvTests
 author  Markus Frank
-version v1r5
+version v1r6
 
 branches  cmt tests
 
 use GaudiPolicy v*
+use RootCnv     v* Online
 
 apply_pattern QMTest
 
