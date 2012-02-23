@@ -15,7 +15,8 @@ Purpose: LHCb reconstruction program
   . Update FilterFillingScheme for 2012 (LumiAlgs)
   . Changes in PatForward X search window parameterisation (PatAlgorithms) 
   . Add to RecVertex the weights associated to each track, remove weights
-    vector from (s)DST (RecEvent, GaudiConf)
+    vector from (s)DST (RecEvent, PackedEvent, GaudiConf, PatPV)
+  . Increased minimum number of hits left in outlier removal (TrackFitter)
 
 - Changest to tests
   . brunel.brunel-mc11a-xdst now takes input file from svcClass=lhcbdisk
