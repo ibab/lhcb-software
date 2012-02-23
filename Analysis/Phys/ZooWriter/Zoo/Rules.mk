@@ -30,6 +30,9 @@
 # v0.7 2012-02-08 Manuel Schiller <manuel.schiller@nikhef.nl>
 # 	fix bug in cpu feature detection and how they get translated
 # 	to optimization flags
+# v0.8 2012-02-23 Manuel Schiller <manuel.schiller@nikhef.nl
+# 	more work towards compiler independence, recognise some
+# 	Fortran compilers and set up (hopefully) reasonable defaults
 #######################################################################
 
 #######################################################################
@@ -124,7 +127,8 @@ CC ?= $(shell $(ROOTCONFIG) --cc)
 CXX ?= $(shell $(ROOTCONFIG) --cxx)
 LD ?= $(shell $(ROOTCONFIG) --ld)
 CPP ?= $(CC) -E
-ROOTCONFIG_HASF77 := $(strip $(shell $(ROOTCONFIG) --help|tr ' ' '\n'|grep -- '--f77'))
+ROOTCONFIG_HASF77 := \
+    $(strip $(shell $(ROOTCONFIG) --help | tr ' ' '\n' | grep -- '--f77'))
 ifneq ($(ROOTCONFIG_HASF77),)
 ifneq ($(FC),/usr/bin/f77)
 # if FC points to /usr/bin/f77 (which is usually f2c in disguise), we
@@ -147,7 +151,6 @@ LD ?= ld
 CPP ?= cpp
 FC ?= f77
 
-
 # assemble ROOT libraries
 ROOTLIBDIR ?= $(shell $(ROOTCONFIG) --libdir)
 # default set of ROOT libraries
@@ -156,8 +159,8 @@ ROOTLIBS ?= $(shell $(ROOTCONFIG) --libs)
 ROOTINCLUDES ?= -I$(shell $(ROOTCONFIG) --incdir)
 ROOTCFLAGS ?= $(shell $(ROOTCONFIG) --auxcflags)
 # some versions of ROOT have libGenVector, others libMathCore
-LIBGENVECTOR ?= $(shell $(TEST) -e $(ROOTLIBDIR)/libGenVector.so && $(ECHO) \
-		-lGenVector || $(ECHO) -lMathCore)
+LIBGENVECTOR ?= $(shell $(TEST) -e $(ROOTLIBDIR)/libGenVector.so && \
+		$(ECHO) '-lGenVector' || $(ECHO) '-lMathCore')
 
 #######################################################################
 # freeze toolchain variables
@@ -200,7 +203,7 @@ UNAME := $(UNAME)
 HEAD := $(HEAD)
 TAIL := $(TAIL)
 GREP := $(GREP)
-TUNEFLAG := $(TUNEFLAG)
+TUNEFLAGS := $(TUNEFLAGS)
 ROOTLIBDIR := $(ROOTLIBDIR)
 ROOTLIBS := $(ROOTLIBS)
 ROOTINCLUDES := $(ROOTINCLUDES)
@@ -208,42 +211,7 @@ ROOTCFLAGS := $(ROOTCFLAGS)
 LIBGENVECTOR := $(LIBGENVECTOR)
 
 #######################################################################
-# compiler flags
-#
-# try to provide reasonable defaults for most HEP users
-#######################################################################
-# build default skeletal set of compiler flags
-CFLAGS ?= $(PIPEFLAG) $(STDOPTFLAGS) $(TUNEFLAG) $(WARNFLAGS) \
-	  $(STDDEBUGFLAGS) $(CSTD)
-CXXFLAGS ?= $(PIPEFLAG) $(STDOPTFLAGS) $(TUNEFLAG) $(WARNFLAGS) \
-	    $(STDDEBUGFLAGS) $(CXXSTD) $(ROOTCFLAGS)
-FFLAGS ?= $(PIPEFLAG) $(STDOPTFLAGS) $(TUNEFLAG) $(WARNFLAGS) \
-	  $(STDDEBUGFLAGS) $(FSTD)
-
-ifndef LDFLAGS
-LDFLAGS += -rdynamic
-endif
-# flags to link and produce shared libs
-SHFLAGS ?= -shared
-# flags needed to produce dependency files
-CPPDEPFLAGS ?= -MM
-# produce nicer warning messages
-WARNFLAGS ?= -Wall -fmessage-length=78
-# produce position independent code
-PICFLAGS ?= -fPIC
-# standard optimization level, no debugging code
-STDOPTFLAGS ?= -O3 # -DBOOST_DISABLE_ASSERTS -DNDEBUG
-# standard debugging flags: write symbol information
-STDDEBUGFLAGS ?= -g
-# use pipes instead of temp files
-PIPEFLAG ?= -pipe
-# set language standard(s) - should encourage users to write clean code
-CSTD ?= -std=c9x
-CXXSTD ?= -std=gnu++98
-FSTD ?= -std=legacy
-
-#######################################################################
-# OS/compiler specific flags
+# detect OS/compiler flavour
 #
 # the idea is that you can override values here which do not work
 # if you use some special OS/compiler (and not Linux/gcc/g++)
@@ -252,8 +220,9 @@ FSTD ?= -std=legacy
 ifndef UNAME_SYS
 UNAME_SYS := $(shell $(UNAME) -s)
 endif
-# guess CC CXX implementation
+# guess CC CXX FC implementation
 ifndef CC_FLAVOUR
+# use preprocessor for C/C++
 FLAVOURDET1:='__GNUC__ __clang__ __OPENCC__ __PATHCC__ __INTEL_COMPILER __SUNPRO_C'
 FLAVOURDET2:='/^[^\#]/ { if ("__SUNPRO_C" != $$6) { print "SunPro"; } else { \
     if ("__INTEL_COMPILER" != $$5) { print "Intel"; } else { \
@@ -263,6 +232,14 @@ FLAVOURDET2:='/^[^\#]/ { if ("__SUNPRO_C" != $$6) { print "SunPro"; } else { \
     if ("__GNUC__" != $$1) { print "GNU"; } else print "Unknown" } } } } } }'
 CC_FLAVOUR:=$(shell $(ECHO) $(FLAVOURDET1) | $(CC) -E - | $(AWK) $(FLAVOURDET2))
 CXX_FLAVOUR:=$(shell $(ECHO) $(FLAVOURDET1) | $(CXX) -E - | $(AWK) $(FLAVOURDET2))
+# Fortran detection relies on flags
+FC_FLAVOUR:=$(shell $(FC) --version 2>&1 | $(SED) -e 's/ /\n/g' | \
+	   $(GREP) -E '(GNU|Intel|Open64|PathScale)' | $(HEAD) -1)
+ifeq ($(FC_FLAVOUR),)
+# unsure so far, check for SunPro, else Unknown
+FC_FLAVOUR:=$(shell $(FC) -V 2>&1 | $(GREP) -q 'Sun' && $(ECHO) 'SunPro' || \
+    $(ECHO) 'Unknown')
+endif
 endif
 # on Linux, we know how to optimize at link time, and we have a nice
 # and well-behaved /bin/echo
@@ -273,66 +250,151 @@ ECHOMSG := $(ECHO) -e
 ifeq ($(filter $(TMPLINKOPT),$(LDFLAGS)),)
 LDFLAGS += $(TMPLINKOPT)
 endif
-# get whatever floating point speedups are available on the CPU
-ifneq ($(CC_FLAVOUR),SunPro)
-ifneq ($(CC_FLAVOUR),Unknown)
-ifneq ($(CC_FLAVOUR),Open64)
-ifneq ($(CC_FLAVOUR),PathScale)
-ifneq ($(CXX_FLAVOUR),SunPro)
-ifneq ($(CXX_FLAVOUR),Unknown)
-ifneq ($(CXX_FLAVOUR),Open64)
-ifneq ($(CXX_FLAVOUR),PathScale)
-ifneq ($(CC_FLAVOUR),Intel)
-ifneq ($(CXX_FLAVOUR),Intel)
-# tune for native processor, but generate generic code (works different in
-# different versions of gcc/g++)
-TUNEFLAG += $(shell $(CXX) --version 2>&1 | $(AWK) '// { for (i = 1; \
-	    i <= NF; ++i) if ($$i ~ /[0-9]*\.[0-9]*\.[0-9]*$$/) { \
-	    if ($$i < "4.") tunefl = "-mtune=opteron"; else tunefl = \
-	    "-mtune=native"; }; } END { print tunefl; }')
-TUNEFLAG += $(shell $(GREP) 'flags' /proc/cpuinfo | $(HEAD) -1 | \
-	    $(SED) -e 's/ mmx / -mmmx /g' -e 's/ sse/ -msse/g' \
-	           -e 's/ ssse/ -mssse/g' -e 's/ avx/ -mavx/g' \
-		   -e 's/4_1/4.1/g' -e 's/4_2/4.2/g' -e 's/ /\n/g' | \
-	    $(GREP) -- '-m')
-TUNEFLAG += -ffast-math
-CSTD += -pedantic
-FSTD += -pedantic
-endif
-endif
-WARNFLAGS += -Wextra
-endif
-endif
-endif
-endif
-endif
-endif
-endif
-endif
-ifeq ($(CC_FLAVOUR),PathScale)
-ifeq ($(CXX_FLAVOUR),PathScale)
-TUNEFLAG += -OPT:Ofast -OPT:ro=3 −fno−math−errno −ffast−math
-endif
-endif
-ifeq ($(CC_FLAVOUR),Open64)
-ifeq ($(CXX_FLAVOUR),Open64)
-TUNEFLAG += -OPT:Ofast -OPT:ro=3 −fno−math−errno −ffast−math
-endif
-endif
-endif
-ifeq ($(CC_FLAVOUR),SunPro)
-PIPEFLAG=
-WARNFLAGS=
-endif
-ifeq ($(CXX_FLAVOUR),SunPro)
-PIPEFLAG=
-WARNFLAGS=
 endif
 # echo on Darwin/MacOS X works a bit differently
 ifeq ($(UNAME_SYS),Darwin)
 ECHO := echo
 ECHOMSG := $(ECHO)
 endif
+
+#######################################################################
+# set up roughly equivalent options for different compiler flavours
+#######################################################################
+# how to use pipes between compiler stages (if possible)
+PIPEFLAG.Unknown ?=
+PIPEFLAG.SunPro ?=
+PIPEFLAG.Open64 ?= -pipe
+PIPEFLAG.PathScale ?= -pipe
+PIPEFLAG.Intel ?= -pipe
+PIPEFLAG.Clang ?= -pipe
+PIPEFLAG.GNU ?= -pipe
+# turn on warnings
+WARNFLAGS.GNU ?= -Wall -Wextra -fmessage-length=78
+WARNFLAGS.Clang ?= -Wall -Wextra -fmessage-length=78
+WARNFLAGS.Intel ?= -Wall -Wextra -fmessage-length=78
+WARNFLAGS.Open64 ?= -Wall -Wextra -fmessage-length=78
+WARNFLAGS.PathScale ?= -Wall
+WARNFLAGS.SunPro ?= +w +w2
+WARNFLAGS.Unknown ?=
+# standard optimization flags
+STDOPTFLAGS.GNU ?= -O3 # -DBOOST_DISABLE_ASSERTS -DNDEBUG
+STDOPTFLAGS.Clang ?= -O3 # -DBOOST_DISABLE_ASSERTS -DNDEBUG
+STDOPTFLAGS.Intel ?= -O3 # -DBOOST_DISABLE_ASSERTS -DNDEBUG
+STDOPTFLAGS.Open64 ?= -O3 # -DBOOST_DISABLE_ASSERTS -DNDEBUG
+STDOPTFLAGS.PathScale ?= -O3 # -DBOOST_DISABLE_ASSERTS -DNDEBUG
+STDOPTFLAGS.SunPro ?= -O5 # -DBOOST_DISABLE_ASSERTS -DNDEBUG
+STDOPTFLAGS.Unknown ?= -O2 # -DBOOST_DISABLE_ASSERTS -DNDEBUG
+# stanard debugging flags
+STDDEBUGFLAGS.Unknown ?= -g
+STDDEBUGFLAGS.GNU ?= -g
+STDDEBUGFLAGS.Clang ?= -g
+STDDEBUGFLAGS.Open64 ?= -g
+STDDEBUGFLAGS.PathScale ?= -g
+STDDEBUGFLAGS.Intel ?= -g
+STDDEBUGFLAGS.SunPro ?= -g0
+# set language standard(s) - should encourage users to write clean code
+# C language standard
+CSTD.Unknown ?=
+CSTD.GNU ?= -std=c9x -pedantic
+CSTD.Clang ?= -std=c9x -pedantic
+CSTD.Open64 ?= -std=c9x -pedantic
+CSTD.PathScale ?= -std=c9x -pedantic
+CSTD.Intel ?= -std=c9x
+CSTD.SunPro ?= -xc99
+# C++ language standard
+CXXSTD.Unknown ?=
+CXXSTD.GNU ?= -std=gnu++98
+CXXSTD.Clang ?= -std=gnu++98
+CXXSTD.Intel ?= -std=gnu++98
+CXXSTD.Open64 ?= -std=gnu++98
+CXXSTD.PathScale ?= -std=gnu++98
+CXXSTD.SunPro ?= -compat=g
+# Fortran language standard - default to Fortran 77 where possible
+FSTD.Unknown ?=
+FSTD.GNU ?= -std=legacy
+FSTD.Open64 ?= -ff77
+FSTD.PathScale ?=
+FSTD.Intel ?=
+FSTD.SunPro ?=
+# flags to generate position independent code
+PICFLAGS.Unknown ?=
+PICFLAGS.GNU ?= -fPIC
+PICFLAGS.Intel ?= -fPIC
+PICFLAGS.Clang ?= -fPIC
+PICFLAGS.PathScale ?= -fPIC
+PICFLAGS.Open64 ?= -fPIC
+PICFLAGS.SunPro ?= -KPIC
+# tuning flags - default is to tune for current machine and get the
+# maximal amount of floating point performance, even if that means
+# we do ugly things such as not setting errno
+TUNEFLAGS.Unknown ?=
+TUNEFLAGS.GNU ?= -ffast-math -fno-math-errno \
+    $(shell $(CXX) --version 2>&1 | $(AWK) '// { for (i = 1; \
+    i <= NF; ++i) if ($$i ~ /[0-9]*\.[0-9]*\.[0-9]*$$/) { \
+    if ($$i < "4.") tunefl = "-mtune=opteron"; else tunefl = \
+    "-mtune=native"; }; } END { print tunefl; }') \
+    $(shell $(GREP) 'flags' /proc/cpuinfo | $(HEAD) -1 | \
+    $(SED) -e 's/ mmx / -mmmx /g' -e 's/ sse/ -msse/g' \
+    -e 's/ ssse/ -mssse/g' -e 's/ avx/ -mavx/g' \
+    -e 's/4_1/4.1/g' -e 's/4_2/4.2/g' -e 's/ /\n/g' | \
+    $(GREP) -- '-m')
+# accept only last floating point feature (assume it's best)
+TUNEFLAGS.Intel ?= \
+    $(shell $(GREP) 'flags' /proc/cpuinfo | $(HEAD) -1 | \
+    $(SED) -e 's/ mmx / -mmmx /g' -e 's/ sse/ -msse/g' \
+    -e 's/ ssse/ -mssse/g' -e 's/ avx/ -mavx/g' \
+    -e 's/4_1/4.1/g' -e 's/4_2/4.2/g' -e 's/ /\n/g' | \
+    $(GREP) -- '-m' | $(TAIL) -1)
+TUNEFLAGS.Clang ?= -march=native -mtune=native -ffast-math \
+    -fno-math-errno \
+    $(shell $(GREP) 'flags' /proc/cpuinfo | $(HEAD) -1 | \
+    $(SED) -e 's/ mmx / -mmmx /g' -e 's/ sse/ -msse/g' \
+    -e 's/ ssse/ -mssse/g' -e 's/ avx/ -mavx/g' \
+    -e 's/4_1/4.1/g' -e 's/4_2/4.2/g' -e 's/ /\n/g' | \
+    $(GREP) -- '-m')
+# Open64's CPU feature detection does not work for sse4/avx
+TUNEFLAGS.Open64 ?= -march=auto -OPT:Ofast -OPT:ro=3 \
+    −fno−math−errno −ffast−math \
+    $(shell $(GREP) 'flags' /proc/cpuinfo | $(HEAD) -1 | \
+    $(SED) -e 's/ mmx / -mmmx /g' -e 's/ sse/ -msse/g' \
+    -e 's/ ssse/ -mssse/g' -e 's/ avx/ -mavx/g' \
+    -e 's/4_1/4.1/g' -e 's/4_2/4.2/g' -e 's/ /\n/g' | \
+    $(GREP) -- '-m' | $(GREP) -E -v '(sse4|avx)')
+# accept only last floating point feature (assume it's best)
+TUNEFLAGS.PathScale ?= -march=auto -OPT:Ofast -OPT:ro=3 \
+    −fno−math−errno −ffast−math \
+    $(shell $(GREP) 'flags' /proc/cpuinfo | $(HEAD) -1 | \
+    $(SED) -e 's/ mmx / -mmmx /g' -e 's/ sse/ -msse/g' \
+    -e 's/ ssse/ -mssse/g' -e 's/ avx/ -mavx/g' \
+    -e 's/ /\n/g' | $(GREP) -- '-m' | $(TAIL) -1)
+TUNEFLAGS.SunPro ?= -xtarget=native -xarch=native -xbuiltin -fsimple=2
+
+#######################################################################
+# compiler flags
+#
+# try to provide reasonable defaults for most HEP users
+# use the compiler flavour to switch between alternatives
+#######################################################################
+# build default skeletal set of compiler flags
+CFLAGS ?= $(PIPEFLAG.$(CC_FLAVOUR)) $(STDOPTFLAGS.$(CC_FLAVOUR)) \
+	  $(TUNEFLAGS.$(CC_FLAVOUR)) $(WARNFLAGS.$(CC_FLAVOUR)) \
+	  $(STDDEBUGFLAGS.$(CC_FLAVOUR)) $(CSTD.$(CC_FLAVOUR))
+CXXFLAGS ?= $(PIPEFLAG.$(CXX_FLAVOUR)) $(STDOPTFLAGS.$(CXX_FLAVOUR)) \
+	    $(TUNEFLAGS.$(CXX_FLAVOUR)) $(WARNFLAGS.$(CXX_FLAVOUR)) \
+	    $(STDDEBUGFLAGS.$(CXX_FLAVOUR)) $(CXXSTD.$(CXX_FLAVOUR)) \
+	    $(ROOTCFLAGS)
+FFLAGS ?= $(PIPEFLAG.$(FC_FLAVOUR)) $(STDOPTFLAGS.$(FC_FLAVOUR)) \
+	  $(TUNEFLAGS.$(FC_FLAVOUR)) $(WARNFLAGS.$(FC_FLAVOUR)) \
+	  $(STDDEBUGFLAGS.$(FC_FLAVOUR)) $(FSTD.$(FC_FLAVOUR))
+
+# this helps for stack traces from within the application
+ifndef LDFLAGS
+LDFLAGS += -rdynamic
+endif
+# flags to link and produce shared libs
+SHFLAGS ?= -shared
+# flags needed to produce dependency files
+CPPDEPFLAGS ?= -MM
 
 #######################################################################
 # colorful make messages
@@ -360,15 +422,33 @@ export CPP CC CXX FC LD AR RANLIB
 # compiler/linker flags
 export CFLAGS CXXFLAGS FFLAGS CPPFLAGS \
     LDFLAGS SHFLAGS LDLIBS LOADLIBES \
-    CPPDEPFLAGS WARNFLAGS PICFLAGS STDOPTFLAGS STDDEBUGFLAGS PIPEFLAG \
-    CSTD CXXSTD FSTD
+    CPPDEPFLAGS
+export PIPEFLAG.Unknown PIPEFLAG.GNU PIPEFLAG.Clang PIPEFLAG.Open64 \
+    PIPEFLAG.PathScale PIPEFLAG.Intel PIPEFLAG.SunPro
+export WARNFLAGS.Unknown WARNFLAGS.GNU WARNFLAGS.Clang WARNFLAGS.Open64 \
+    WARNFLAGS.PathScale WARNFLAGS.Intel WARNFLAGS.SunPro
+export STDOPTFLAGS.Unknown STDOPTFLAGS.GNU STDOPTFLAGS.Clang \
+    STDOPTFLAGS.Open64 STDOPTFLAGS.PathScale STDOPTFLAGS.Intel \
+    STDOPTFLAGS.SunPro
+export STDDEBUGFLAGS.Unknown STDDEBUGFLAGS.GNU STDDEBUGFLAGS.Clang \
+    STDDEBUGFLAGS.Open64 STDDEBUGFLAGS.PathScale STDDEBUGFLAGS.Intel \
+    STDDEBUGFLAGS.SunPro
+export CSTD.Unknown CSTD.GNU CSTD.Clang CSTD.Open64 CSTD.PathScale \
+    CSTD.Intel CSTD.SunPro
+export CXXSTD.Unknown CXXSTD.GNU CXXSTD.Clang CXXSTD.Open64 CXXSTD.PathScale \
+    CXXSTD.Intel CXXSTD.SunPro
+export FSTD.Unknown FSTD.GNU FSTD.Open64 FSTD.PathScale FSTD.Intel CSTD.SunPro
+export PICFLAGS.Unknown PICFLAGS.GNU PICFLAGS.Clang PICFLAGS.Open64 \
+    PICFLAGS.PathScale PICFLAGS.Intel PICFLAGS.SunPro
+export TUNEFLAGS.Unknown TUNEFLAGS.GNU TUNEFLAGS.Clang TUNEFLAGS.Open64 \
+    TUNEFLAGS.PathScale TUNEFLAGS.Intel TUNEFLAGS.SunPro
 # ROOT libs, compiler flags etc
 export ROOTCONFIG ROOTLIBS ROOTLIBDIR ROOTINCLUDES ROOTCFLAGS LIBGENVECTOR
 # *nix like tools for text processing, copying/moving files etc.
 export AWK SED CPP CP MV MKDIR RMDIR TEST ECHO TRUE FALSE TOUCH UNAME \
     HEAD TAIL GREP
 # communicate make(1) related options to subprocesses
-export MAKEFLAGS COLORMAKE UNAME_SYS CC_FLAVOUR CXX_FLAVOUR
+export MAKEFLAGS COLORMAKE UNAME_SYS CC_FLAVOUR CXX_FLAVOUR FC_FLAVOUR
 
 #######################################################################
 # collect source files in current directory
@@ -531,9 +611,9 @@ $(ccsrc.cxx:%.cxx=%.o) $(ccsrc.cxx:%.cxx=%.os): CPPFLAGS += $(ROOTINCLUDES)
 $(ccsrc.c++:%.c++=%.o) $(ccsrc.c++:%.c++=%.os): CPPFLAGS += $(ROOTINCLUDES)
 
 # patch pattern rules for position independent code (shared libraries)
-%.os: CFLAGS += $(PICFLAGS)
-%.os: CXXFLAGS += $(PICFLAGS)
-%.os: FFLAGS += $(PICFLAGS)
+%.os: CFLAGS += $(PICFLAGS.$(CC_FLAVOUR)
+%.os: CXXFLAGS += $(PICFLAGS.$(CXX_FLAVOUR))
+%.os: FFLAGS += $(PICFLAGS.$(FC_FLAVOUR))
 
 # building archives
 ARMSG = "\\x1b[33m[AR]\\x1b[m\\t\\t$@\($^\)"

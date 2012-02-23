@@ -219,10 +219,10 @@ void ZooWriter::ZooWriterContext::beginEvent()
 	    m_TperJob->Branch(it->first.c_str(), it->second, 1 << 16, 99);
 	}
 	// fill the per-job object tree
-	m_TperJob->SetBasketSize("*", 1 << 19);
+	m_TperJob->SetBasketSize("*", 1 << 16);
 	m_TperJob->SetAutoSave(128 << 20);
 	m_TperJob->Fill();
-	m_TperJob->OptimizeBaskets(1 << 19);
+	m_TperJob->OptimizeBaskets(1 << 16);
     } else {
 	if (m_perJobMapSz != objman()->perJobObjMapSize())
 	    throw ZooWriterContextException(

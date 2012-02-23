@@ -4,6 +4,14 @@
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
 
+! 2012-02-23 - Manuel Tobias Schiller
+ - when writing Zoo tuples, the per-job tree is better off with a 64k Basket
+   size, for the per-event tree, I forgot to change to the larger basket size
+   in one place, so that's fixed, too
+ - Rules.mk: more work towards supporting many compilers - better way to
+   switch between default flags for different compilers, easier to add new
+   ones
+
 ! 2012-02-19 - Manuel Tobias Schiller
  - fix a problem with multiple inheritance in the per-job object section of
    ZooObjectManager

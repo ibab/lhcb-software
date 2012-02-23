@@ -29,7 +29,7 @@ ZooObjectManager::ZooObjectManager(TTree& tree, TTree& perjobtree,
     // add TClonesArrays for each type of Zoo object
     Initializer<ZooObjectID::maxid> dummy(*m_objects);
 
-    tree.Branch(m_objects, 1 << 16, 99, "ZooObjBank");
+    tree.Branch(m_objects, 1 << 19, 99, "ZooObjBank");
 }
 
 ZooObjectManager::~ZooObjectManager()
