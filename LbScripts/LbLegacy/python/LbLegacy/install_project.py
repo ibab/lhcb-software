@@ -418,9 +418,15 @@ def callUpdateCommand(project, version):
         log.setLevel(log_level)
     projcmds = _update_commands.get((project,version), None)
     if projcmds :
-        for c in projcmds :
-            log.info("Executing Update for %s %s: \"%s\" in %s" % (project, version, c[0], c[1]))
-            rc = systemCall("%s" % c[0], workdir=c[1], env=_post_install_env)
+        cmdargs = []
+        if debug_flag:
+            cmdargs.append("--debug")
+        if overwrite_mode:
+            cmdargs.append("--overwrite")
+        for cmd, wd in projcmds:
+            cmd = " ".join([cmd] + cmdargs)
+            log.info("Executing Update for %s %s: \"%s\" in %s" % (project, version, cmd, wd))
+            rc = systemCall(cmd, workdir=wd, env=_post_install_env)
             if rc != 0 :
                 log.error("Update command for %s %s returned %d" % rc)
     else :
