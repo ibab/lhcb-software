@@ -23,6 +23,7 @@ class DaVinci(LHCbConfigurableUser) :
         , "Simulation"         : False           # set to True to use SimCond. Forwarded to PhysConf
         , "DDDBtag"            : ""              # Tag for DDDB. Default as set in DDDBConf for DataType
         , "CondDBtag"          : ""              # Tag for CondDB. Default as set in DDDBConf for DataType
+        , "DQFLAGStag"         : ""              # Tag for DQFLAGS. Default as set in DDDBConf for DataType
         # Persistency
         , "Persistency"        : None            # ROOT or POOL, steers the setup of services
         # Input
@@ -55,6 +56,7 @@ class DaVinci(LHCbConfigurableUser) :
         , "Simulation"         : """ set to True to use SimCond. Forwarded to PhysConf """
         , "DDDBtag"            : """ Tag for DDDB. Default as set in DDDBConf for DataType """
         , "CondDBtag"          : """ Tag for CondDB. Default as set in DDDBConf for DataType """
+        , "DQFLAGStag"         : """ Tag for DQFLAGS. Default as set in DDDBConf for DataType """
         , "Input"              : """ Input data. Can also be passed as a second option file. """
         , "InputType"          : """ 'DST' or 'DIGI' or 'ETC' or 'RDST' or 'DST' or 'MDST' or 'SDST'. Nothing means the input type is compatible with being a DST.  """
         , 'EnableUnpack' : """Explicitly enable/disable unpacking for input data (if specified) """
@@ -136,7 +138,8 @@ class DaVinci(LHCbConfigurableUser) :
         Define DB and so on
         """
         # Delegate handling to LHCbApp configurable
-        self.setOtherProps(LHCbApp(),["DataType","CondDBtag","DDDBtag","Simulation","IgnoreDQFlags"])
+        self.setOtherProps(LHCbApp(),["DataType","CondDBtag","DDDBtag",
+                                      "DQFLAGStag","Simulation","IgnoreDQFlags"])
         self.setOtherProps(PhysConf(),["DataType","Simulation","InputType"])
         self.setOtherProps(AnalysisConf(),["DataType","Simulation"])
     
