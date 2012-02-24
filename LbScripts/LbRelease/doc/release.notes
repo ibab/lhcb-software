@@ -1,3 +1,8 @@
+2012-02-24 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v4r7p2
+	* python/LbRelease/SvnTools/Project.py: Added project LbScripts to the list 
+
 2012-02-14 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v4r7

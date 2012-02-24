@@ -29,7 +29,10 @@ def translateProject(project,version):
         project="DaVinci"
     elif project=="lhcb":
         project="LHCb"
-    else:
+    elif project=="lbscripts":
+        # This is a temporary fix, we need to integrate with the list of projects from LbConfiguration
+        project="LbScripts"
+     else:
         project=project[0].upper()+project[1:]
     if '_' in version and project.upper() == version.split('_')[0].upper():
         version=version.split('_')[-1]
