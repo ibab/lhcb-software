@@ -74,26 +74,17 @@ DVAlgorithm::DVAlgorithm
   , m_writeP2PV             ( true  )
   , m_forceP2PVBuild        ( true  )
   , m_ignoreP2PVFromInputLocations (false)
-  , m_PVLocation            ("")
+  , m_PVLocation            ( ""    )
   , m_noPVs                 ( false )
 {
-
-  //  m_outputLocation = this->name();
-
   declareProperty( "Output",
                    m_particleOutputLocation,
                    "Output Location of Particles" );
-
-  m_inputLocations_.clear() ;
-  declareProperty( "InputLocations", 
-                   m_inputLocations_, 
-                   "OBSOLETE - Input Locations forwarded of Particles" );
 
   m_inputLocations.clear() ;
   declareProperty( "Inputs",
                    m_inputLocations,
                    "Input Locations forwarded of Particles" );
-
 
   m_p2PVInputLocations.clear() ;
   declareProperty( "P2PVInputLocations",
@@ -236,49 +227,31 @@ StatusCode DVAlgorithm::initialize ()
 
   // initialize the base
   StatusCode sc = GaudiTupleAlg::initialize();
-  if ( sc.isFailure() ) { return sc; }                          // RETURN
-  if (msgLevel(MSG::DEBUG)) debug() << "GaudiTupleAlg is initialized" <<endmsg ;
+  if ( sc.isFailure() ) { return sc; } 
 
   if ( !registerContext() || !contextSvc() )
   {
-    const std::string mgs = "Registration for Algorithm Context Service is disabled." ;
-    Warning( mgs +  "Some tools/utilities could have the problems." );
+    Warning( "Registration for Algorithm Context Service is disabled. Some tools/utilities could have problems." ).ignore();
   }
 
   // Load tools very
   sc = loadTools() ;
-  if ( sc.isFailure() ) { return Error("Unable to load tools", sc ) ; }
+  if ( sc.isFailure() ) { return Error("Unable to load tools",sc); }
 
   if (msgLevel(MSG::DEBUG))
   {
-    if ( m_decayDescriptor == "" )
+    if ( m_decayDescriptor.empty() )
     { debug() << "Decay Descriptor string not specified"   << endmsg; }
     else
     { debug() << "Decay Descriptor: " << m_decayDescriptor << endmsg; }
   }
 
-  if (m_PVLocation.empty())
+  if ( m_PVLocation.empty() )
   {
     m_PVLocation = onOffline()->primaryVertexLocation();
   }
 
-  m_noPVs = ( m_PVLocation.empty() || m_PVLocation=="None" );
-
-  // backwards compat hack
-  if ( !m_inputLocations_.empty() ) 
-  {
-    warning() << "=============================== PAY ATTENTION ===================================" << endmsg;
-    warning() << "Job Option 'InputLocations' is DEPRECIATED. Please change to use 'Inputs' instead" << endmsg;
-    warning() << "The depreciated option will be removed at some point, so change NOW to prevent"    << endmsg;
-    warning() << "your job from failing in the future ..."                                           << endmsg;
-    warning() << "=================================================================================" << endmsg;
-    if (!m_inputLocations.empty())  
-    {
-      return Error("Both Inputs and InputLocations are set. Choose Inputs!");
-    }
-    m_inputLocations = m_inputLocations_;
-    m_inputLocations_.clear();
-  }
+  m_noPVs = ( m_PVLocation.empty() || m_PVLocation == "None" );
 
   initializeLocations();
 
@@ -442,7 +415,7 @@ StatusCode DVAlgorithm::sysExecute ()
     Warning ( "SetFilterPassed not called for this event!" ).ignore() ;
   }
 
-  /// count number of "effective filters"
+  // count number of "effective filters"
   counter("#accept") += filterPassed() ;
 
   if ( filterPassed() )
@@ -460,9 +433,8 @@ StatusCode DVAlgorithm::sysExecute ()
   return sc ;
 }
 // ============================================================================
-void DVAlgorithm::setFilterPassed  (  bool    state  )
+void DVAlgorithm::setFilterPassed( bool state )
 {
-  ///
   this->Algorithm::setFilterPassed(state);
   m_setFilterCalled = true;
 }
@@ -607,7 +579,6 @@ StatusCode DVAlgorithm::loadParticles()
 // ============================================================================
 const LHCb::Particle* DVAlgorithm::markTree(const LHCb::Particle* particle)
 {
-
   Assert ( NULL != particle ,
            "mark: Attempt to mark invalid particle for saving" );
 
@@ -623,7 +594,7 @@ const LHCb::Particle* DVAlgorithm::markTree(const LHCb::Particle* particle)
 
   if (bestPV) relate(newp, bestPV);
 
-  return newp ;
+  return newp;
 }
 //=============================================================================
 const LHCb::Particle* DVAlgorithm::cloneAndMarkTree(const LHCb::Particle* particle)
@@ -640,7 +611,7 @@ const LHCb::RecVertex* DVAlgorithm::mark( const LHCb::RecVertex* keptV )const
   }
 
   // Input vertex is given check if it already exist in the TES
-  if( DaVinci::Utils::inTES( keptV ) )
+  if( DaVinci::Utils::inTES(keptV) )
   {
     if (msgLevel(MSG::VERBOSE)) verbose() << " Vertex is in TES" << endmsg;
     return keptV;
@@ -659,12 +630,12 @@ const LHCb::RecVertex* DVAlgorithm::mark( const LHCb::RecVertex* keptV )const
 StatusCode DVAlgorithm::saveP2PVRelations() const 
 {
 
-  if (!saveP2PV())
+  if ( !saveP2PV() )
   {
     return Info("Not saving P2PV", StatusCode::SUCCESS, 0);
   }
 
-  if ( primaryVertices().empty())
+  if ( primaryVertices().empty() )
   {
     if ( msgLevel ( MSG::DEBUG ) )
     {
@@ -673,9 +644,9 @@ StatusCode DVAlgorithm::saveP2PVRelations() const
     return StatusCode::SUCCESS;
   }
 
-  if (m_forceP2PVBuild) buildP2PVMap();
+  if ( m_forceP2PVBuild ) buildP2PVMap();
 
-  if (m_p2PVMap.empty() )
+  if ( m_p2PVMap.empty() )
   {
     if ( msgLevel ( MSG::DEBUG ) )
     {
@@ -684,16 +655,15 @@ StatusCode DVAlgorithm::saveP2PVRelations() const
     return StatusCode::SUCCESS;
   }
 
-
   LHCb::RecVertex::ConstVector verticesToSave;
-  verticesToSave.reserve(m_p2PVMap.size());
+  verticesToSave.reserve( m_p2PVMap.size() );
 
   Particle2Vertex::Table* table = new Particle2Vertex::Table(m_p2PVMap.size());
 
   put( table, tableOutputLocation() );
 
   for ( P2PVMap::const_iterator iRelation = m_p2PVMap.begin();
-        iRelation != m_p2PVMap.end() ; ++iRelation)
+        iRelation != m_p2PVMap.end(); ++iRelation )
   {
     const LHCb::Particle* particle = (*iRelation).first;
     if (DaVinci::Utils::inTES(particle))
@@ -716,14 +686,9 @@ StatusCode DVAlgorithm::saveP2PVRelations() const
     }
   }
 
-  // now save re-fitted vertices
-  if ( msgLevel(MSG::VERBOSE) ) 
-    verbose() << "Passing " << verticesToSave.size()
-              << " to saveReFittedPVs" << endmsg;
-
   saveRefittedPVs(verticesToSave);
 
-  if (msgLevel(MSG::DEBUG))
+  if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "Saved table to "
             << m_outputLocation+"/Particle2VertexRelations"
@@ -739,7 +704,7 @@ void DVAlgorithm::buildP2PVMap() const
   if (m_parts.empty()) return;
 
   LHCb::Particle::ConstVector particles;
-  LHCb::Vertex::ConstVector vertices;
+  LHCb::Vertex::ConstVector   vertices;
 
   for ( LHCb::Particle::ConstVector::const_iterator iPart = m_parts.begin();
         iPart != m_parts.end(); ++iPart )
@@ -957,7 +922,7 @@ DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p) const
         Error("PV re-fit failed", StatusCode::FAILURE, 1 ).ignore() ;
       }
     }
-    if (reFittedPVs.empty())
+    if ( reFittedPVs.empty() )
     {
 
       Warning( "Failed to create refitted PV list for event with " +
@@ -1007,7 +972,7 @@ const LHCb::VertexBase* DVAlgorithm::getRelatedPV(const LHCb::Particle* part) co
     return NULL;
   }
 
-  if (!hasStoredRelatedPV(part) )
+  if ( !hasStoredRelatedPV(part) )
   {
     if (msgLevel(MSG::VERBOSE))
     {
@@ -1017,10 +982,11 @@ const LHCb::VertexBase* DVAlgorithm::getRelatedPV(const LHCb::Particle* part) co
     const LHCb::VertexBase* pv = calculateRelatedPV(part);
     if (pv)
     {
-      if (msgLevel(MSG::VERBOSE)) {
+      if (msgLevel(MSG::VERBOSE))
+      {
         verbose() << "Found related vertex. Relating it" << endmsg;
       }
-      relate(part, pv);
+      relate( part, pv );
       return pv;
     }
     else

@@ -3,6 +3,8 @@
 #ifndef DAVINCIKERNEL_DVALGORITHM_H
 #define DAVINCIKERNEL_DVALGORITHM_H 1
 // ============================================================================
+#include <map>
+// ============================================================================
 // from Gaudi
 // ============================================================================
 #include "GaudiAlg/GaudiTupleAlg.h"
@@ -172,8 +174,7 @@ public: // IDVAlgorithm
    *  @return pointer to aquired tool 
    */
   const IDistanceCalculator* 
-  distanceCalculator 
-  ( const std::string& name = "" ) const 
+  distanceCalculator ( const std::string& name = "" ) const 
   {
     return getTool<IDistanceCalculator>
       ( name , 
@@ -312,7 +313,7 @@ public:
   // ==========================================================================
 
   /// Overridden from Gaudi Algo to produce a warning if not called by user
-  virtual void setFilterPassed (bool state);  
+  virtual void setFilterPassed( bool state );  
 
   /// Overridden from Gaudi Algorithm
   virtual StatusCode sysExecute ();  
@@ -350,12 +351,12 @@ public:
   inline const IRelatedPVFinder* relatedPVFinder() const
   {
     return ( m_pvRelator ? m_pvRelator :
-             getTool<IRelatedPVFinder>(onOffline()->relatedPVFinderType(), 
-                                       m_pvRelator, this ) );
+             getTool<IRelatedPVFinder>( onOffline()->relatedPVFinderType(), 
+                                        m_pvRelator, this ) );
   }
 
   /**
-   * Cahced access to defauld IPVReFitter tool.
+   * Cached access to defauld IPVReFitter tool.
    *
    * @author Juan Palacios palacios@physik.uzh.ch
    **/
@@ -526,11 +527,8 @@ protected:
                   TYPE*& t,
                   const IInterface* ptr=NULL ) const 
   {
-    if ( !t ) 
-    {  // the tool is already located properly?
-      t = tool<TYPE>( name, ptr )  ;// else get it
-    }
-    return t ;
+    if ( !t ) { t = tool<TYPE>( name, ptr ); }
+    return t;
   } 
 
   /**
@@ -556,9 +554,8 @@ protected:
   }
 
   /// the actual tyep for mapping "tool nickname -> the actual type/name"
-  typedef std::map<std::string,std::string> ToolMap     ;
-  // typedef SimpleProperty<ToolMap>           ToolMapProp ;
-  
+  typedef std::map<std::string,std::string> ToolMap;
+ 
   /** helper method to locate the tool by nickname 
    *
    *  @attention it is for internal usage ONLY, 
@@ -756,7 +753,8 @@ protected:
   /// nothing is there. Does not invoke any calculations.
   inline const LHCb::VertexBase* getStoredBestPV(const LHCb::Particle* particle) const 
   {
-    return ( hasStoredRelatedPV(particle) ) ? m_p2PVMap[particle] : NULL ;  
+    P2PVMap::const_iterator iPV = m_p2PVMap.find(particle);
+    return ( iPV != m_p2PVMap.end() ? iPV->second : NULL );
   }
   
   /// Inline access to local input Particle storage.
@@ -893,7 +891,8 @@ private:
 
   mutable LHCb::RecVertex::ConstVector m_refittedPVs;  ///< Local Container of re-fitted primary vertices
 
-  typedef GaudiUtils::HashMap<const LHCb::Particle*, const LHCb::VertexBase*> P2PVMap;
+  /// Type for mapping between Particles and PVs
+  typedef std::map<const LHCb::Particle*, const LHCb::VertexBase*> P2PVMap;
 
   mutable P2PVMap m_p2PVMap; ///< Local store of Particle->PV relations.
 
@@ -1021,7 +1020,6 @@ private:
   bool m_preloadTools;
   /// InputLocations
   std::vector<std::string> m_inputLocations ;
-  std::vector<std::string> m_inputLocations_ ;
   /// User-defined Particle->PV relations locations
   std::vector<std::string> m_p2PVInputLocations ;
   /// TES location of input PVs.
