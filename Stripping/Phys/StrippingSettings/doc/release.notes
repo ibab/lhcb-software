@@ -4,6 +4,16 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-02-24 - Jibo He
+ - PreStripping18/LineConfigDictionaries_Calib.py
+   Added other lines from Stripping17
+ - PreStripping18/LineConfigDictionaries_QEE.py
+   Commented out Z02TauTauProng, already in RD
+ - PreStripping18/LineConfigDictionaries_BHQ.py
+   Merged Stripping17 and Stripping17
+   Added several new exclusive lines
+ - dbase generated 
+
 ! 2012-02-23 - Anton Poluektov 
  - Modify PreStripping18/LineConfigDictionaries_B2OC.py
  - Fix bug in PreStripping18/LineConfigDictionaries_Calib.py (missing units)

@@ -101,29 +101,29 @@ Z02TauTau = {
     }
 
 
-#Z02TauTauProng
-Z02TauTauProng = {
-    'BUILDERTYPE'  : 'Z02TauTauProngConf',
-    'CONFIG'       : {
-    'Z2TauTau_Prong_LinePrescale'  : 1.0,
-    'Z2TauTau_Prong_LinePostscale' : 1.0,
-    ###
-    'TAU_MASS_LOW'                 : '400.0',    # MeV/c²
-    'TAU_MASS_HIGH'                : '1777.0',   # MeV/c²
-    ###
-    'Z_MASS_LOW'                   : '10000.0',  # MeV/c²
-    #'Z_MASS_HIGH'                 : not set
-    'VCHI2_Z_MAX'                  : '100',       # dl
-    ###
-    'PT_HAD_MIN'                   : '2000',     # MeV/c
-    'TRACKCHI2_HAD_MAX'            : '5',        # dl
-    ###
-    'PT_TAU_MIN'                   : '2000',     # MeV/c
-    'VCHI2_TAU_MAX'                : '20'       # dl
-    },
-    'WGs' : [ 'RD' ],
-    'STREAMS' : [ 'EW' ]
-    }
+## #Z02TauTauProng
+## Z02TauTauProng = {
+##     'BUILDERTYPE'  : 'Z02TauTauProngConf',
+##     'CONFIG'       : {
+##     'Z2TauTau_Prong_LinePrescale'  : 1.0,
+##     'Z2TauTau_Prong_LinePostscale' : 1.0,
+##     ###
+##     'TAU_MASS_LOW'                 : '400.0',    # MeV/c²
+##     'TAU_MASS_HIGH'                : '1777.0',   # MeV/c²
+##     ###
+##     'Z_MASS_LOW'                   : '10000.0',  # MeV/c²
+##     #'Z_MASS_HIGH'                 : not set
+##     'VCHI2_Z_MAX'                  : '100',       # dl
+##     ###
+##     'PT_HAD_MIN'                   : '2000',     # MeV/c
+##     'TRACKCHI2_HAD_MAX'            : '5',        # dl
+##     ###
+##     'PT_TAU_MIN'                   : '2000',     # MeV/c
+##     'VCHI2_TAU_MAX'                : '20'       # dl
+##     },
+##     'WGs' : [ 'RD' ],
+##     'STREAMS' : [ 'EW' ]
+##     }
 
 
 
