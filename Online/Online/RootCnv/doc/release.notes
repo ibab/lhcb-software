@@ -8,7 +8,7 @@
 ! 2012-02-23 - Markus Frank
  - Add option to RootCnvSvc to change compression factor in the following form:
    "<compression-algorithm>:<compression-level>"
-   Currently supported algorithms are: LZMA and GZIP with levels 1-9
+   Currently supported algorithms are: LZMA and ZLIB with levels 1-9
    Example:
    RootCnvSvc.GlobalCompression     = "LZMA:6";  // First algorithm, then level
    The default is "LZMA:6", to disable any compression set:
