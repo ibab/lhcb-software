@@ -15,9 +15,10 @@
    RootCnvSvc.GlobalCompression     = "0";
 
    Please note:
-   Since setting indovidual options for all different conversion services (Event, FSR,...)
-   this is a GLOBAL option. You set it once and it will be valid for any subsequent
-   call to TFile::Open in ANY RootDataConnection objects.
+   Since setting individual options for all different conversion services 
+   (Event, FSR,...) is a major pain and in general only leads to confusion,
+   this is a GLOBAL option. You set it once and it will be valid for any 
+   subsequent call to TFile::Open in ANY RootDataConnection objects.
 
 
 !========================= RootCnv v1r12 2012-01-24 ========================
