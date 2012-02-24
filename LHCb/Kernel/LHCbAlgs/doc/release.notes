@@ -4,6 +4,14 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2012-02-24 - Marco Cattaneo
+ - Change default DataType in LHCbApp() to 2012 (was 2009)
+ - Add slot "IgnoreDQFlags" to LHCbApp(). If False, events with bad DQ are 
+   skipped. Default is True
+ - Adapt lhcbalgs.dqfilter.service.basic to use LHCbApp with IgnoreDQFlags=False
+ - Clone above test as lhcbalgs.dqfilter.service.disabled to test LHCbApp with
+   IgnoreDQFlags=True
+
 ! 2012-02-13 - Chris Jones
  - Protect EmptyEventNodeCleaner from a completely missing root node
 

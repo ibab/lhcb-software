@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: Configuration.py,v 1.25 2009-09-18 13:59:36 rlambert Exp $"
+__version__ = "$Id: $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from os import environ
@@ -12,18 +12,19 @@ from Configurables import ( XMLSummary )
 
 class LHCbApp(LHCbConfigurableUser):
     __slots__ = {
-        "EvtMax"      : -1
-       ,"SkipEvents"  : 0
-       ,"DataType"    : "2009"
-       ,"DDDBtag"     : ""
-       ,"CondDBtag"   : ""
-       ,"DQFLAGStag"  : ""
-       ,"Simulation"  : False
-       ,"Monitors"    : []
-       ,"OutputLevel" : INFO
-       ,"TimeStamp"   : False
-       ,"XMLSummary"  : None
-       ,"Persistency"  : None
+        "EvtMax"        : -1
+       ,"SkipEvents"    : 0
+       ,"DataType"      : "2012"
+       ,"DDDBtag"       : ""
+       ,"CondDBtag"     : ""
+       ,"DQFLAGStag"    : ""
+       ,"Simulation"    : False
+       ,"Monitors"      : []
+       ,"OutputLevel"   : INFO
+       ,"TimeStamp"     : False
+       ,"XMLSummary"    : None
+       ,"Persistency"   : None
+       ,"IgnoreDQFlags" : True
         }
 
     _propertyDocDct = {
@@ -39,6 +40,7 @@ class LHCbApp(LHCbConfigurableUser):
        ,'TimeStamp'   : """ Flag to add a time stamp to messages (default False) """
        ,'XMLSummary'  : """ Add an XML summary file, default None """
        ,'Persistency'  : """ Overwrite the default persistency with something else. """
+       ,'IgnoreDQFlags': """ If False, process only events with good DQ. Default is True (process all events)"""
        }
     
     __used_configurables__ = [ DDDBConf, XMLSummary ]
@@ -71,6 +73,11 @@ class LHCbApp(LHCbConfigurableUser):
         
         # Delegate handling to ApplicationMgr configurable
         self.setOtherProps(ApplicationMgr(),["EvtMax"])
+
+        ignoreDQ = self.getProp("IgnoreDQFlags")
+        if not ignoreDQ:
+            from Configurables import DQFilterSvc
+            ApplicationMgr().ExtSvc.append(DQFilterSvc())
     
     def evtMax(self):
         if hasattr(ApplicationMgr(),"EvtMax") and not hasattr(self,"EvtMax"):

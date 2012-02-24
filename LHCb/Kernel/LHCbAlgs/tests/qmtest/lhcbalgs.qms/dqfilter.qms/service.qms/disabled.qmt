@@ -35,7 +35,6 @@ app.TopAlg = [ GaudiSequencer(Members = [#testCond,
 app.EvtSel = "NONE"
 from Configurables import LHCbApp
 theApp = LHCbApp()
-theApp.IgnoreDQFlags = False
 theApp.EvtMax = 10
 
 #MessageSvc(OutputLevel = 1)
@@ -43,14 +42,14 @@ theApp.EvtMax = 10
 <argument name="validator"><text>
 
 expected = {
-            "Updating Data Quality flags": 4,
-            "good event": 3,
-            "bad event": 7,
+            "Updating Data Quality flags": 0,
+            "good event": 0,
+            "bad event": 0,
             "Ignoring flag: OtherDet": 0,
             "Ignoring flag: MyDet": 0,
            }
 
-exp_eff = (10, 3)
+exp_eff = (10, 10)
 
 ########
 
