@@ -1,3 +1,18 @@
+2012-02-24 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v6r7p2
+
+	LbConfiguration:
+	* scripts/generateLogin: Change default CMTCONFIG for cache generation (was using slc4_ia32_gcc34...)
+	* scripts/generateLogin: Reset CMTEXTRATAGS before cache generation to allow building with mkproject 
+
+	LbLegacy:
+	* python/LbLegacy/install_project.py: propagate the --debug and --overwrite options to
+	the update hooks (Update.py).
+
+	LbRelease:
+	* python/LbRelease/SvnTools/Project.py: Added project LbScripts to the list 
+
 2012-02-22 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v6r7p1
