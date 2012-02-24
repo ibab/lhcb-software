@@ -46,7 +46,7 @@ class DaVinci(LHCbConfigurableUser) :
         , "Lumi"               : False           # Run Lumi accounting (should normally be True for user jobs)
         , "EventPreFilters"    : []
         , "VerboseMessages"    : False           # Turn on some verbose printout
-        , "ProductionMode"     : False           # Sets up options needed in production (stripping)
+        , "ProductionType"     : "None"          # Sets up options needed in various production modes
        }
 
     _propertyDocDct = {  
@@ -73,7 +73,7 @@ class DaVinci(LHCbConfigurableUser) :
         , "Lumi"               : """ Run event count and Lumi accounting (should normally be True) """
         , "EventPreFilters"    : """Set of event filtering algorithms to be run before DaVinci initializaton sequence. Only events passing these filters will be processed."""
         , "VerboseMessages"    : """ Enable additional verbose printouts """
-        , 'ProductionMode'     : """ Enables special settings for running in production (i.e. stripping) """
+        , "ProductionType"     : """ Enables special settings for running in production (e.g. stripping) """
         }
 
     __used_configurables__ = [
@@ -85,7 +85,8 @@ class DaVinci(LHCbConfigurableUser) :
         LumiIntegratorConf,
         LHCbApp           ]
 
-    __known_datatypes__ = [ "MC09", "2008", "2009", "2010", "2011" ]
+    __known_datatypes__  = [ "MC09", "2008", "2009", "2010", "2011" ]
+    __known_prod_types__ = [ "None", "Stripping" ] 
 
     ## Known monitoring sequences run by default
     KnownMonitors        = []
@@ -101,12 +102,14 @@ class DaVinci(LHCbConfigurableUser) :
         Checks options. Changes a few if needed.
         """
         # Production mode ?
-        if self.getProp( "ProductionMode" ) :
+        prodType = self.getProp("ProductionType")
+        if prodType not in self.__known_prod_types__ :
+            raise TypeError( "Invalid ProductionType '%s'" %prodType )
+        if "Stripping" == prodType :
             # Need to unpack Brunel information, but disable stripping unpacking
             self.setProp("EnableUnpack",["Reconstruction"])
             # Process all events, good or bad
             self.setProp("IgnoreDQFlags",True)
-        
         dataType = self.getProp("DataType")
         if (not dataType):
             raise TypeError( "You must set DataType" )

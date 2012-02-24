@@ -13,8 +13,9 @@
    handle data DQ flags. Default is False, which means only data with good
    DQ will be processed.
  - Add the option "DQFLAGStag" for the DQ flags tag.
- - Add a "ProductionMode" setting, that enables whatever options are needed
-   in production (i.e. the stripping).
+ - Add a "ProductionType" setting, that enables whatever options are needed
+   in a given production (e.g. Stripping). Default is "None", no special 
+   options.
 
 ! 2012-02-15 - Chris Jones
  - Update the EnableUnpack property of the DaVinci configurable to accept a
