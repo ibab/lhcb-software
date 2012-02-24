@@ -28,12 +28,14 @@ class DaVinci(LHCbConfigurableUser) :
         # Input
         , "Input"              : []              # Input data. Can also be passed as a second option file.
         , "InputType"          : "DST"           # or "DIGI" or "ETC" or "RDST" or "DST or "MDST" of "SDST". Nothing means the input type is compatible with being a DST. 
-        , 'EnableUnpack' : None                  # Explicitly enable/disable unpacking for input data (if specified) 
+        , 'EnableUnpack'       : None            # Explicitly enable/disable unpacking for input data (if specified) 
         # Output
         , "HistogramFile"      : ""              # Name of output Histogram file (set to "" to get no output) 
         , "TupleFile"          : ""              # Name of output Tuple file
         , "ETCFile"            : ""              # Name of output ETC file
         , "WriteFSR"           : True            # Flags whether to write out an FSR
+        # DQ
+        , "IgnoreDQFlags"      : False           # If False (default), process only events with good DQ.
         # Monitoring
         , "MoniSequence"       : []              # Add your monitors here
         # DaVinci Options
@@ -60,12 +62,14 @@ class DaVinci(LHCbConfigurableUser) :
         , "TupleFile"          : """ Write name of output Tuple file """
         , "ETCFile"            : """ Write name of output ETC file."""
         , 'WriteFSR'           : """ Flags whether to write out an FSR """
+        , 'IgnoreDQFlags'      : """ If False, process only events with good DQ. Default is False """
         , "Persistency"        : """ ROOT or POOL, steers the setup of services """
         , "MainOptions"        : """ Main option file to execute """
         , "UserAlgorithms"     : """ User algorithms to run. """
         , "RedoMCLinks"        : """ On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association. """
         , "Lumi"               : """ Run event count and Lumi accounting (should normally be True) """
         , "EventPreFilters"    : """Set of event filtering algorithms to be run before DaVinci initializaton sequence. Only events passing these filters will be processed."""
+        , "VerboseMessages"    : """ Enable additional verbose printouts """
         }
 
     __used_configurables__ = [
@@ -132,7 +136,7 @@ class DaVinci(LHCbConfigurableUser) :
         Define DB and so on
         """
         # Delegate handling to LHCbApp configurable
-        self.setOtherProps(LHCbApp(),["DataType","CondDBtag","DDDBtag","Simulation"])
+        self.setOtherProps(LHCbApp(),["DataType","CondDBtag","DDDBtag","Simulation","IgnoreDQFlags"])
         self.setOtherProps(PhysConf(),["DataType","Simulation","InputType"])
         self.setOtherProps(AnalysisConf(),["DataType","Simulation"])
     
@@ -207,7 +211,7 @@ class DaVinci(LHCbConfigurableUser) :
 	    if tupleFile == '' :
 	      	log.warning('TupleFile has not been set. No Lumi ntuple will be produced.')
 	    # add integrator for normalization
-	    self.setOtherProps(LumiIntegratorConf(),["InputType","TupleFile"])
+	    self.setOtherProps(LumiIntegratorConf(),["InputType","TupleFile","IgnoreDQFlags"])
 	    lumiInt = GaudiSequencer("IntegratorSeq")
 	    LumiIntegratorConf().LumiSequencer = lumiInt
 	    seq += [ lumiInt ]
