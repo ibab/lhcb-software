@@ -131,14 +131,18 @@
  */
 class DVAlgorithm : public extends1<GaudiTupleAlg,IDVAlgorithm>
 { 
+
 public:
+
   // ==========================================================================
   /// Standard constructor
   DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator );
   /// destructor 
   virtual ~DVAlgorithm( ){ }                                      // Destructor
   // ==========================================================================
+
 public: // IDVAlgorithm
+
   // ==========================================================================
   /** Handle to the concrete implementation, or to the parent if
    *  implementation does not derive from GaudiAlgorithm 
@@ -368,14 +372,6 @@ public:
                                    m_pvReFitters     , this ) ); 
   }
 
-  /**
-   * Inline access to best PV for a given particle.
-   *
-   **/
-  inline const LHCb::VertexBase* i_bestVertex(const LHCb::Particle* p) const 
-  {
-    return useP2PV() ? getRelatedPV(p) : calculateRelatedPV(p);
-  }
   /**
    * Inline access to best PV for a given particle.
    * Backwards compatibility signature.
@@ -770,6 +766,15 @@ protected:
   }
 
 private:
+
+  /**
+   * Inline access to best PV for a given particle.
+   *
+   **/
+  inline const LHCb::VertexBase* i_bestVertex(const LHCb::Particle* p) const 
+  {
+    return ( useP2PV() ? getRelatedPV(p) : calculateRelatedPV(p) );
+  }
   
   /// Initialise relative Inputs to account for RootInTES
   /// Initialise Particle->PV relations input locations.

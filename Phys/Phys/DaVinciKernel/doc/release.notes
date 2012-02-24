@@ -8,6 +8,7 @@
  - Use std::map instead GaudiUtils::HashMap for internal mapping between 
    Particles and PVs in DVAlgorithm
  - Remove the long depreciated option InputLocations in DVAlgorithm
+ - Make i_bestVertex private
 
 !========================= DaVinciKernel v10r4 2012-02-03 =========================
 
