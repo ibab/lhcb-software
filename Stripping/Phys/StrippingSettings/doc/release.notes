@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-02-23 - Anton Poluektov 
+ - Modify PreStripping18/LineConfigDictionaries_B2OC.py
+ - Fix bug in PreStripping18/LineConfigDictionaries_Calib.py (missing units)
+
 ! 2012-02-23 - Mat Charles
  - Move relevant lines to CharmToBeSwum stream in PreStripping18
 

@@ -1,3 +1,5 @@
+from GaudiKernel.SystemOfUnits import *
+
 MuIDCalib = {
     'BUILDERTYPE' : 'MuIDCalibConf',
     'WGs'         : [ 'ALL' ],
