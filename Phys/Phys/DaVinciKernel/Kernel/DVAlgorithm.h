@@ -897,7 +897,8 @@ private:
   mutable LHCb::RecVertex::ConstVector m_refittedPVs;  ///< Local Container of re-fitted primary vertices
 
   /// Type for mapping between Particles and PVs
-  typedef std::map<const LHCb::Particle*, const LHCb::VertexBase*> P2PVMap;
+  typedef GaudiUtils::HashMap<const LHCb::Particle*, const LHCb::VertexBase*> P2PVMap;
+  //typedef std::map<const LHCb::Particle*, const LHCb::VertexBase*> P2PVMap;
 
   mutable P2PVMap m_p2PVMap; ///< Local store of Particle->PV relations.
 

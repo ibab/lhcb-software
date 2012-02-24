@@ -5,8 +5,6 @@
 !============================================================================
 
 ! 2012-02-24 - Chris Jones
- - Use std::map instead GaudiUtils::HashMap for internal mapping between 
-   Particles and PVs in DVAlgorithm
  - Remove the long depreciated option InputLocations in DVAlgorithm
  - Make i_bestVertex private
 
