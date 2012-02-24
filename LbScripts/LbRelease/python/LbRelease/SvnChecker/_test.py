@@ -155,6 +155,14 @@ class Test(unittest.TestCase):
                                       {'/Dest/trunk/Package': 'dir'}),
                                       True),
                     ]
+#Transaction:
+#M /
+#A /Phys/branches/Phys/Swimming (from /Erasmus/branches/Phys/Swimming:130538)
+#D /Erasmus/branches/Phys/Swimming
+#D /Erasmus/tags/Phys/Swimming
+#A /Phys/tags/Phys/Swimming (from /Erasmus/tags/Phys/Swimming:130538)
+#A /Phys/trunk/Phys/Swimming (from /Erasmus/trunk/Phys/Swimming:130538)
+#D /Erasmus/trunk/Phys/Swimming
 
     def assertCheckTxn(self, txn, checker, result):
         check = checker(txn)
