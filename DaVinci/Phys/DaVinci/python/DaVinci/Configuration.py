@@ -45,7 +45,8 @@ class DaVinci(LHCbConfigurableUser) :
         , "RedoMCLinks"        : False           # On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association.
         , "Lumi"               : False           # Run Lumi accounting (should normally be True for user jobs)
         , "EventPreFilters"    : []
-        , "VerboseMessages"    : False
+        , "VerboseMessages"    : False           # Turn on some verbose printout
+        , "ProductionMode"     : False           # Sets up options needed in production (stripping)
        }
 
     _propertyDocDct = {  
@@ -59,7 +60,7 @@ class DaVinci(LHCbConfigurableUser) :
         , "DQFLAGStag"         : """ Tag for DQFLAGS. Default as set in DDDBConf for DataType """
         , "Input"              : """ Input data. Can also be passed as a second option file. """
         , "InputType"          : """ 'DST' or 'DIGI' or 'ETC' or 'RDST' or 'DST' or 'MDST' or 'SDST'. Nothing means the input type is compatible with being a DST.  """
-        , 'EnableUnpack' : """Explicitly enable/disable unpacking for input data (if specified) """
+        , 'EnableUnpack'       : """Explicitly enable/disable unpacking for input data (if specified) """
         , "HistogramFile"      : """ Write name of output Histogram file """
         , "TupleFile"          : """ Write name of output Tuple file """
         , "ETCFile"            : """ Write name of output ETC file."""
@@ -72,6 +73,7 @@ class DaVinci(LHCbConfigurableUser) :
         , "Lumi"               : """ Run event count and Lumi accounting (should normally be True) """
         , "EventPreFilters"    : """Set of event filtering algorithms to be run before DaVinci initializaton sequence. Only events passing these filters will be processed."""
         , "VerboseMessages"    : """ Enable additional verbose printouts """
+        , 'ProductionMode'     : """ Enables special settings for running in production (i.e. stripping) """
         }
 
     __used_configurables__ = [
@@ -98,6 +100,13 @@ class DaVinci(LHCbConfigurableUser) :
         """
         Checks options. Changes a few if needed.
         """
+        # Production mode ?
+        if self.getProp( "ProductionMode" ) :
+            # Need to unpack Brunel information, but disable stripping unpacking
+            self.setProp("EnableUnpack",["Reconstruction"])
+            # Process all events, good or bad
+            self.setProp("IgnoreDQFlags",True)
+        
         dataType = self.getProp("DataType")
         if (not dataType):
             raise TypeError( "You must set DataType" )
