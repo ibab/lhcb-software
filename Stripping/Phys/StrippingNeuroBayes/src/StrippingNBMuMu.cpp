@@ -16,8 +16,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( StrippingNBMuMu );
-
+DECLARE_ALGORITHM_FACTORY( StrippingNBMuMu )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -328,7 +327,7 @@ StatusCode  StrippingNBMuMu::getInputVar(const LHCb::Particle& particle) {
   if (exist<LHCb::RecVertex::Container>(m_pvLocation)) {
     PV = get<LHCb::RecVertex::Container>(m_pvLocation);
     if (PV != NULL && PV->size() >0) {
-      const LHCb::VertexBase *relatedPV = this->i_bestVertex(&particle);
+      const LHCb::VertexBase *relatedPV = this->bestVertex(&particle);
       Gaudi::XYZVector        A         = particle.momentum().Vect();
       Gaudi::XYZVector        B         = particle.endVertex()->position() - relatedPV->position();  
       jPsiDira  = A.Dot( B ) / std::sqrt( A.Mag2()*B.Mag2() );
