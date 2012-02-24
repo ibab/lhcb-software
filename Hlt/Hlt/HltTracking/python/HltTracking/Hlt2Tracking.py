@@ -49,6 +49,10 @@ from Hlt2Lines.Hlt2CharmHadD02HHLines     import Hlt2CharmHadD02HHLinesConf
 from Hlt2Lines.Hlt2CharmHadTwoBodyForMultiBody     import Hlt2CharmHadTwoBodyForMultiBodyConf
 from Hlt2Lines.Hlt2CharmHadD2HHHLines     import Hlt2CharmHadD2HHHLinesConf
 from Hlt2Lines.Hlt2CharmHadD02HHHHLines   import Hlt2CharmHadD02HHHHLinesConf
+from Hlt2Lines.Hlt2CharmHadDstD4HLines  import Hlt2CharmHadDstD4HLinesConf
+from Hlt2Lines.Hlt2CharmHadDstD4HNoH1Lines   import Hlt2CharmHadDstD4HNoH1LinesConf
+from Hlt2Lines.Hlt2CharmHadD4HLines   import Hlt2CharmHadD4HLinesConf
+from Hlt2Lines.Hlt2CharmHadTwoBodyForD4H   import Hlt2CharmHadTwoBodyForD4HConf
 from Hlt2Lines.Hlt2CharmSemilepD02HMuNuLines     import Hlt2CharmSemilepD02HMuNuLinesConf
 from Hlt2Lines.Hlt2CharmSemilepTwoMuonForMuMuHad import Hlt2CharmSemilepTwoMuonForMuMuHadConf
 from Hlt2Lines.Hlt2CharmSemilepD02HHMuMuLines   import Hlt2CharmSemilepD02HHMuMuLinesConf
@@ -104,6 +108,10 @@ class Hlt2Tracking(LHCbConfigurableUser):
                              , Hlt2CharmHadD02HHKsLinesConf
                              , Hlt2CharmHadD02HHHHLinesConf
                              , Hlt2CharmHadTwoBodyForMultiBodyConf
+                             , Hlt2CharmHadDstD4HLinesConf
+                             , Hlt2CharmHadDstD4HNoH1LinesConf
+                             , Hlt2CharmHadD4HLinesConf
+                             , Hlt2CharmHadTwoBodyForD4HConf
                              , Hlt2CharmSemilepD02HMuNuLinesConf
                              , Hlt2CharmSemilepD02HHMuMuLinesConf
                              , Hlt2CharmSemilepD2HMuMuLinesConf

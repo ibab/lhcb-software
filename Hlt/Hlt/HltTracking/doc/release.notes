@@ -5,6 +5,15 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+
+! 2012-02-24 - Benoit VIAUD
+ - New Lines for D->hhhh, D->hmumu and D->hhmumu modes
+
+    Added Hlt2CharmHadD4HLines.py
+    Added Hlt2CharmHadDstD4HLines.py
+    Added Hlt2CharmHadDstD4HNoH1Lines.py
+    Added Hlt2CharmHadTwoBodyForD4H.py
+
 ! 2012-02-15 - Mariusz Witek
  - turn on beam spot info for PatPV3D in HltPVs.py. It makes PatPV3D 2x faster.
 
