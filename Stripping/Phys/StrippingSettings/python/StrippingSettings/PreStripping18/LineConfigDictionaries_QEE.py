@@ -383,6 +383,28 @@ HighPtJets = {
     'STREAMS' : [ 'EW' ]
     }
 
+InclbJets = {
+    'BUILDERTYPE'  : 'InclbJetsLinesConf',
+    'CONFIG'       : {
+    'NrPVsCut'         : 1
+    ,  'NrSeedsCut'       : 2
+    ,  'TrkChi2Cut'       : 3.0
+    ,  'PrtMomCut'        : 2.0
+    ,  'PrtPtCut'         : 0.8
+    ,  'PrtIPSCut'        : 3.5
+    ,  'DZSVPVCut'        : 1.0
+    ,  'SumMomSVCut'      : 3.0
+    ,  'VtxChi2Cut'       : 23.0
+    ,  'scale'            : 0.1 
+    },
+    'WGs' : [ 'QEE' ],
+    'STREAMS' : [ 'EW' ]
+    }
+
+
+
+
+
 A1MuMu = {
     'BUILDERTYPE'  : 'A1MuMuConf',
     'CONFIG'       : {
