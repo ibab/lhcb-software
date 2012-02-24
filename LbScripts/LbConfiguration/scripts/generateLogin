@@ -361,6 +361,9 @@ def generateLoginCache(mysiteroot, shell="csh", version="", targetlocation=None,
 
 #    os.environ["CMTEXTRATAGS"] = "NO_PYTHON_LIBPATH"
 
+    # Resetting CMTEXTRATAGS otherwise the cmt check fails when generating the cache
+    # This was causing mkproject to fail with LbScripts
+    os.environ["CMTEXTRATAGS"]=""
     os.environ["CMTCONFIG"] = "x86_64-slc5-gcc43-opt"
     llsargs = []
     llsargs.append("--silent")
@@ -385,7 +388,7 @@ def generateLoginCache(mysiteroot, shell="csh", version="", targetlocation=None,
         setupprojargs.append("--runtime-project")
         setupprojargs.append("LCGCMT")
         setupprojargs.append("Python")
-    genProjectSetup(cachefilename, "LbScripts", version, cmtconfig="slc4_ia32_gcc34",
+    genProjectSetup(cachefilename, "LbScripts", version, os.environ["CMTCONFIG"],
                     shell=shell, setup_project_extra_args=setupprojargs,
                     strip_path=True)
     log.setLevel(log_level)

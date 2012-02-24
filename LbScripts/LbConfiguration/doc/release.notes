@@ -1,3 +1,8 @@
+2012-02-24  Ben Couturier <Ben.Couturier@cern.ch>
+
+	* scripts/generateLogin: Change default CMTCONFIG for cache generation (was using slc4_ia32_gcc34...)
+	* scripts/generateLogin: Reset CMTEXTRATAGS before cache generation to allow building with mkproject 
+
 2012-02-22  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v6r7p1
