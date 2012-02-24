@@ -97,7 +97,14 @@ class LineBuilder(object) :
         
     def lines(self) :
         return tuple(self._lines)
-
+    
+    def keys         ( self       ) : return self.configKeys() 
+    def has_key      ( self , key ) :
+        return item in self.configKeys() and self._config.has_key ( key ) 
+    def __getitem__  ( self , key ) : return self.configurationParameter ( key)
+    def __contains__ ( self , key ) : return self.has_key ( item ) 
+    
+    
 class MasterLineBuilder(LineBuilder):
     """
     Configure more than one line builder from the same class at once
