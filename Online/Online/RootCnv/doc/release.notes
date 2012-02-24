@@ -14,6 +14,12 @@
    The default is "LZMA:6", to disable any compression set:
    RootCnvSvc.GlobalCompression     = "0";
 
+   Please note:
+   Since setting indovidual options for all different conversion services (Event, FSR,...)
+   this is a GLOBAL option. You set it once and it will be valid for any subsequent
+   call to TFile::Open in ANY RootDataConnection objects.
+
+
 !========================= RootCnv v1r12 2012-01-24 ========================
 ! 2012-01-20 - Markus Frank
  - Fix gcc46 compile warning in merge.C 
