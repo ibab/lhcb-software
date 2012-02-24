@@ -83,6 +83,10 @@ import StrippingD0ForBXX
 import StrippingJpsippForD0MuMu
 import StrippingCharmAssociative
 import StrippingHeavyBaryons
+import StrippingPsiX0
+import StrippingPsiXForBandQ
+import StrippingX2psiPiPi
+import StrippingX2psiGamma
 
 import StrippingZ02MuMu
 import StrippingZ02ee
