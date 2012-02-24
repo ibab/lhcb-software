@@ -24,7 +24,7 @@ Z02MuMu = {
     'mucut' : 15.    
     },
     'WGs' : [ 'QEE' ],
-    'STREAMS' : [ 'EW' ]
+    'STREAMS' : {'EW':['StrippingZ02MuMuLine','StrippingZ02MuMuNoPIDsLine'], 'Leptonic':['StrippingZ02MuMuLooseLine']} 
     }
 
 
@@ -45,7 +45,7 @@ WMu = {
     ,  'trkpchi2' : 0.001
     },
     'WGs' : [ 'QEE' ],
-    'STREAMS' : [ 'EW' ]
+    'STREAMS' : {'EW':['StrippingWMuLine','StrippingWMuSingleTrackNoBias'], 'Leptonic':['StrippingWMuLine_NoPIDsps','StrippingWMuLine_loose','StrippingWMuLine_looseps','StrippingWMuLowPTLine']}  
     }
 
 #DY2MuMu
@@ -81,7 +81,7 @@ DY2MuMu = {
     ,  'mupidreq' : -3.
     },
     'WGs' : [ 'QEE' ],
-    'STREAMS' : [ 'EW' ]
+    'STREAMS' : {'EW':['StrippingDY2MuMuLine1_Hlt','StrippingDY2MuMuLine1_ps','StrippingDY2MuMuLine2','StrippingDY2MuMuLine2_Hlt','StrippingDY2MuMuLine3','StrippingDY2MuMuLine4'], 'Leptonic':['StrippingDY2MuMuLine1_Hlta','StrippingDY2MuMuLine2_Hlta']}  
     }
 
 #Z02TauTau
@@ -161,7 +161,7 @@ We = {
     ,  'trkghostprob' : 0.6
     },
     'WGs' : [ 'QEE' ],
-    'STREAMS' : [ 'EW' ]
+    'STREAMS' : {'EW':['StrippingWeLine'], 'Leptonic':['StrippingWeLine_ps']} 
     }
 
 #DY2ee
@@ -260,7 +260,7 @@ SingleTrackTIS = {
     , 'HighPtCut' : 15.
     },
     'WGs' : [ 'QEE' ],
-    'STREAMS' : [ 'EW' ]
+    'STREAMS' : {'EW':['StrippingSingleTrackTISHighPt'], 'Leptonic':['StrippingSingleTrackTISLowPt']} 
     }
 
 #DisplVertices
