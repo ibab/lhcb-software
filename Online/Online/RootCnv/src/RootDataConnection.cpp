@@ -41,7 +41,7 @@ static string s_local = "<localDB>";
 #endif
 #include "RootTool.h"
 
-static int s_compressionLevel = 1;
+static int s_compressionLevel = ROOT::CompressionSettings(ROOT::kLZMA,6);
 
 static bool match_wild(const char *str, const char *pat)    {
   //
@@ -93,18 +93,30 @@ RootConnectionSetup::~RootConnectionSetup() {
 }
 
 /// Set the global compression level
-void RootConnectionSetup::setCompression(const std::string& algorithm, int level) {
-  s_compressionLevel = level;
-  if ( level > 0 ) {
-    ROOT::ECompressionAlgorithm alg = ROOT::kUseGlobalSetting;
-    if ( strcasecmp(algorithm.c_str(),"ZLIB") == 0 ) 
-      alg = ROOT::kZLIB;
-    else if ( strcasecmp(algorithm.c_str(),"LZMA") == 0 ) 
-      alg = ROOT::kLZMA;
+long RootConnectionSetup::setCompression(const std::string& compression) {
+  int res = 0, level = ROOT::CompressionSettings(ROOT::kLZMA,6);
+  size_t idx = compression.find(':');
+  if ( idx != string::npos ) {
+    string alg = compression.substr(0,idx);
+    ROOT::ECompressionAlgorithm alg_code = ROOT::kUseGlobalSetting;
+    if ( strcasecmp(alg.c_str(),"ZLIB") == 0 ) 
+      alg_code = ROOT::kZLIB;
+    else if ( strcasecmp(alg.c_str(),"LZMA") == 0 ) 
+      alg_code = ROOT::kLZMA;
     else
-      throw runtime_error("ERROR: request to set unknown ROOT compression algorithm:"+algorithm);
-    s_compressionLevel = ROOT::CompressionSettings(alg,level);
+      throw runtime_error("ERROR: request to set unknown ROOT compression algorithm:"+alg);
+    res = ::sscanf(compression.c_str()+idx+1,"%d",&level);
+    if ( res == 1 ) {
+      s_compressionLevel = ROOT::CompressionSettings(alg_code,level);
+      return StatusCode::SUCCESS;
+    }
+    throw runtime_error("ERROR: request to set unknown ROOT compression level:"+compression.substr(idx+1));
   }
+  else if ( 1==::sscanf(compression.c_str(),"%d",&level) ) {
+    s_compressionLevel = level;
+    return StatusCode::SUCCESS;
+  }
+  throw runtime_error("ERROR: request to set unknown ROOT compression mechanism:"+compression);
 }
 
 /// Global compression level

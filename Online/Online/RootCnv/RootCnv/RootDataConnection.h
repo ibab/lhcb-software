@@ -74,7 +74,7 @@ namespace Gaudi  {
     void release();
 
     /// Set the global compression level
-    static void setCompression(const std::string& algorithm, int level);
+    static long setCompression(const std::string& compression);
     /// Access to global compression level
     static int compression();
 

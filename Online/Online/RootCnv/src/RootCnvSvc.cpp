@@ -99,18 +99,8 @@ StatusCode RootCnvSvc::initialize()  {
     return error("Failed to initialize ConversionSvc base class.");
   m_log = new MsgStream(msgSvc(),name());
   if ( !m_compression.empty() ) {
-    int res = 0;
-    size_t idx = m_compression.find(':');
-    if ( idx != string::npos ) {
-      string alg = m_compression.substr(0,idx);
-      int level  = 1;
-      res = ::sscanf(m_compression.c_str()+idx+1,"%d",&level);
-      if ( res == 1 ) {
-	log() << MSG::INFO << "Setting global ROOT compression to:" << m_compression << endmsg;
-	RootConnectionSetup::setCompression(alg,level);
-      }
-    }
-    if ( res != 1 ) {
+    log() << MSG::INFO << "Setting global ROOT compression to:" << m_compression << endmsg;
+    if ( !(status=RootConnectionSetup::setCompression(m_compression)).isSuccess() ) {
       return error("Unable to interprete ROOT compression encoding:"+m_compression);
     }
   }
