@@ -5,6 +5,10 @@
 ! -----------------------------------------------------------------------------
 
 ! 2012-02-24 - Anton Poluektov 
+ - Fix Stripping17b/LineConfigDictionaries_B2OC.py and update dbase. 
+   Added '*KsPi*' lines and LT unbiased line. 
+
+! 2012-02-24 - Anton Poluektov 
  - Add lines to PreStripping18/LineConfigDictionaries_B2OC.py
  - Update dbase
 
