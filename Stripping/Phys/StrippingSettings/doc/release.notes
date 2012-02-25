@@ -4,6 +4,16 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-02-25 - Jibo He
+ - Included Minibias
+ - PreStripping18/LineConfigDictionaries_B2CC.py
+   Reverted the line names prefix "B2CC" to "Betas", i.e., no changes
+ - PreStripping18/LineConfigDictionaries_BHQ.py
+   Included B2psiXForBHQ
+ - PreStripping18/LineConfigDictionaries_EWWG.py
+   Removed.
+ - dbase updated 
+
 ! 2012-02-24 - Anton Poluektov 
  - Fix Stripping17b/LineConfigDictionaries_B2OC.py and update dbase. 
    Added '*KsPi*' lines and LT unbiased line. 

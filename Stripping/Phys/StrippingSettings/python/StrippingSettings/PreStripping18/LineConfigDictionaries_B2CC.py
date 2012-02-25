@@ -1,4 +1,4 @@
-B2CC = {         
+BetaS = {         
     'WGs'               : ['B2CC'],
     'BUILDERTYPE'       : 'B2JpsiXforBeta_sConf',
     'CONFIG'    : {
@@ -17,7 +17,7 @@ B2CC = {
     }
 
 # Neus
-B2CCPsi2S = {
+BetaSPsi2S = {
     'WGs'               : ['B2CC'],
     'BUILDERTYPE'   : 'B2Psi2SXConf',
     'CONFIG'    : {'PionsTRCHI2DOF': 5,
@@ -67,7 +67,7 @@ B2CCPsi2S = {
     }
 
 # Neus
-B2CCPsi2SMuMu = {
+BetaSPsi2SMuMu = {
     'WGs'           : ['B2CC'],
     'BUILDERTYPE'   : 'Bs2Psi2SPhiMuMuConf',
     'CONFIG'        : {'muPID':0.,
@@ -127,7 +127,7 @@ B2CCPsi2SMuMu = {
     }
 
 # Bs2Jpsi(ee)Phi (Jibo and Artur)
-B2CCBs2JpsieePhi = {
+BetaSBs2JpsieePhi = {
     'WGs'		: ['B2CC'],
     'BUILDERTYPE' 	: 'Bs2JpsieePhiConf',
     'CONFIG' 	: {
@@ -266,7 +266,7 @@ B2JpsiKshh = {
 }
 
 # Bs2EtacPhi/Bs2ChicPhi (Katarzyna)
-B2CCBs2EtacPhi = {
+BetaSBs2EtacPhi = {
     'WGs'	:	['B2CC'],
     'BUILDERTYPE'	:	'Bs2EtacPhiConf',
     'CONFIG'	:	{
@@ -305,7 +305,7 @@ B2CCBs2EtacPhi = {
     'STREAMS'  : [ 'Bhadron' ]
     }
 
-B2CCBs2ChicPhi_Chic2KKPiPi = {
+BetaSBs2ChicPhi_Chic2KKPiPi = {
     'WGs'	:	['B2CC'],
     'BUILDERTYPE'	:	'Bs2ChicPhi_Chic2KKPiPiConf',
     'CONFIG'	:	{
@@ -344,7 +344,7 @@ B2CCBs2ChicPhi_Chic2KKPiPi = {
     'STREAMS' : [ 'Bhadron' ] 
     }
 
-B2CCBs2ChicPhi_Chic2PiPiPiPi = {
+BetaSBs2ChicPhi_Chic2PiPiPiPi = {
     'WGs'	:	['B2CC'],
     'BUILDERTYPE'	:	'Bs2ChicPhi_Chic2PiPiPiPiConf',
     'CONFIG'	: {

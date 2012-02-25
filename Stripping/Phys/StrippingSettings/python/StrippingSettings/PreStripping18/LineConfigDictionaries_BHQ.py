@@ -410,82 +410,79 @@ X2psiGamma = {
     'WGs'    : [ 'BHQ' ]
   }
 
-## B2psiXForBHQ = {
-##     'BUILDERTYPE' : 'PsiX_BQ_Conf',
-##     'CONFIG' : {
-##     ## PV-requiremens
-##     #
-##     'CheckPV'   : True ,
-##     #
-##     ## c*tau cut for B-hadrons 
-##     #
-##     'CTAU'      : 100 * micrometer , 
-##     'CTAU_BC'   :  50 * micrometer , 
-##     'CTAU_Kst'  : 150 * micrometer , 
-##     #
-##     ## muon selection for  psi(') -> mu+ mu-
-##     #
-##     'MuonCut'   : """
-##     ISMUON &
-##     ( PT            >  550 * MeV ) &
-##     ( PIDmu - PIDpi >    0       ) &
-##     ( CLONEDIST     > 5000       )     
-##     """ , 
-##     #
-##     ## tight (K,pi) for 5(K,pi), 6(K.pi)-decays
-##     #
-##     'TightPi' : ' ( P > 3.2 * GeV ) & HASRICH & ( PIDpi - PIDK  > 0 ) ' , 
-##     'TightK'  : ' ( P > 3.2 * GeV ) & HASRICH & ( PIDK  - PIDpi > 0 ) ' ,
-##     #
-##     ## useful shortcuts:
-##     #
-##     'Preambulo' : [
-##     ## shortcut for chi2 of vertex fit 
-##     'chi2vx = VFASPF(VCHI2) '                                  , 
-##     ## shortcut for the c*tau
-##     "from GaudiKernel.PhysicalConstants import c_light"        , 
-##     ## use the embedded cut for chi2(LifetimeFit)<16
-##     "ctau      = BPVLTIME ( 25 ) * c_light "                   ,
-##     "ctau_16   = BPVLTIME ( 16 ) * c_light "                   ,
-##     "ctau_9    = BPVLTIME (  9 ) * c_light "                   ,
-##     "APT23     = LoKi.AParticles.TransverseMomentum ( 2 , 3 )" ,
-##     ## Combination mass-cut for neutral beauty particles 
-##     "mb0_acut  = in_range ( 5.100 * GeV , AM , 5.550 * GeV ) " ,
-##     "mbc_acut  = in_range ( 5.100 * GeV , AM , 6.550 * GeV ) " ,
-##     ## mass-cut for beauty particles 
-##     "mb0_cut   = in_range ( 5.150 * GeV ,  M , 5.500 * GeV ) " ,
-##     "mbc_cut   = in_range ( 5.150 * GeV ,  M , 6.500 * GeV ) " ,
-##     ] ,
-##     # =========================================================================
-##     ## Prescales 
-##     # =========================================================================
-##     'B2PsiPiPrescale'   : 1.0 ,
-##     'B2PsiKPrescale'    : 1.0 ,
-##     #
-##     'B2Psi2PiPrescale'  : 1.0 ,
-##     'B2PsiKPiPrescale'  : 1.0 ,
-##     'B2Psi2KPrescale'   : 1.0 ,
-##     #
-##     'B2Psi3KPrescale'   : 1.0 ,
-##     'B2Psi3PiPrescale'  : 1.0 ,
-##     'B2Psi3KPiPrescale' : 1.0 ,
-##     #
-##     'B2Psi4PiPrescale'  : 1.0 ,
-##     'B2Psi4KPiPrescale' : 1.0 ,
-##     'B2Psi4KPrescale'   : 1.0 ,
-##     #
-##     'B2Psi5PiPrescale'  : 1.0 ,
-##     'B2Psi5KPiPrescale' : 1.0 ,
-##     #
-##     'B2Psi6PiPrescale'  : 1.0 ,
-##     'B2Psi6KPiPrescale' : 1.0 ,
-##     # =========================================================================
-##     'B2PsiKstPrescale'  : 1.0 
-##     # =========================================================================    
-##     },
-##     'STREAMS' : [ 'Leptonic' ] ,
-##     'WGs'    : [ 'BHQ' ]
-##     }
+B2psiXForBHQ = {
+    'BUILDERTYPE' : 'PsiX_BQ_Conf',
+    'CONFIG' : {
+    ## PV-requiremens
+    #
+    'CheckPV'   : True ,
+    #
+    ## c*tau cut for B-hadrons 
+    #
+    'CTAU'      : 100 * micrometer , 
+    'CTAU_BC'   :  50 * micrometer , 
+    'CTAU_Kst'  : 150 * micrometer , 
+    #
+    ## muon selection for  psi(') -> mu+ mu-
+    #
+    'MuonCut'   : """
+    ISMUON &
+    ( PT            >  550 * MeV ) &
+    ( PIDmu - PIDpi >    0       ) &
+    ( CLONEDIST     > 5000       )     
+    """ , 
+    #
+    ## tight (K,pi) for 5(K,pi), 6(K.pi)-decays
+    #
+    'TightPi' : ' ( P > 3.2 * GeV ) & HASRICH & ( PIDpi - PIDK  > 0 ) ' , 
+    'TightK'  : ' ( P > 3.2 * GeV ) & HASRICH & ( PIDK  - PIDpi > 0 ) ' ,
+    #
+    ## useful shortcuts:
+    #
+    'Preambulo' : [
+    ## shortcut for chi2 of vertex fit 
+    'chi2vx = VFASPF(VCHI2) '                                  , 
+    ## shortcut for the c*tau
+    "from GaudiKernel.PhysicalConstants import c_light"        , 
+    ## use the embedded cut for chi2(LifetimeFit)<16
+    "ctau      = BPVLTIME ( 25 ) * c_light "                   ,
+    "ctau_16   = BPVLTIME ( 16 ) * c_light "                   ,
+    "ctau_9    = BPVLTIME (  9 ) * c_light "                   ,
+    "APT23     = LoKi.AParticles.TransverseMomentum ( 2 , 3 )" ,
+    ## Combination mass-cut for neutral beauty particles 
+    "mb0_acut  = in_range ( 5.100 * GeV , AM , 5.550 * GeV ) " ,
+    "mbc_acut  = in_range ( 5.100 * GeV , AM , 6.550 * GeV ) " ,
+    ## mass-cut for beauty particles 
+    "mb0_cut   = in_range ( 5.150 * GeV ,  M , 5.500 * GeV ) " ,
+    "mbc_cut   = in_range ( 5.150 * GeV ,  M , 6.500 * GeV ) " ,
+    ] ,
+    #     ## Prescales 
+    #     'B2PsiPiPrescale'   : 1.0 ,
+    'B2PsiKPrescale'    : 1.0 ,
+    #
+    'B2Psi2PiPrescale'  : 1.0 ,
+    'B2PsiKPiPrescale'  : 1.0 ,
+    'B2Psi2KPrescale'   : 1.0 ,
+    #
+    'B2Psi3KPrescale'   : 1.0 ,
+    'B2Psi3PiPrescale'  : 1.0 ,
+    'B2Psi3KPiPrescale' : 1.0 ,
+    #
+    'B2Psi4PiPrescale'  : 1.0 ,
+    'B2Psi4KPiPrescale' : 1.0 ,
+    'B2Psi4KPrescale'   : 1.0 ,
+    #
+    'B2Psi5PiPrescale'  : 1.0 ,
+    'B2Psi5KPiPrescale' : 1.0 ,
+    #
+    'B2Psi6PiPrescale'  : 1.0 ,
+    'B2Psi6KPiPrescale' : 1.0 ,
+    #     'B2PsiKstPrescale'  : 1.0 
+    # =========================================================================    
+    },
+    'STREAMS' : [ 'Leptonic' ] ,
+    'WGs'    : [ 'BHQ' ]
+    }
 
 B2psiX0ForBHQ = {
     'BUILDERTYPE' : 'PsiX0Conf',
