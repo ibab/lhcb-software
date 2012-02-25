@@ -2,6 +2,9 @@
 ! Responsible : P. Koppenburg, J.P. Palacios
 !----------------------------------------------------------------------------
 
+! 2012-02-24 - Anton Poluektov 
+ - add enums for EW isolation, up to 4 cone sizes
+
 ! 2012-02-20 - Anton Poluektov 
  - add enums related to isolation information to Particle extraInfo. 
 
