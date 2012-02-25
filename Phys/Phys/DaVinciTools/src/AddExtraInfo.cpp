@@ -67,14 +67,14 @@ StatusCode AddExtraInfo::execute() {
   
     if(!exist<LHCb::Particle::Range>(location) ) {
       debug()<<("No selection found in "+ location)<<endreq;
-      return StatusCode::SUCCESS;
+      continue;
     }
    
     const Particle::Range parts = get<Particle::Range>( location );
     if( parts.empty() ) {
       Warning("No particles found at "+ location, 
               StatusCode::SUCCESS,10).ignore();
-      return StatusCode::SUCCESS;
+      continue;
     }
 
     if (msgLevel(MSG::VERBOSE)) verbose() << " Found "<< parts.size() << " particles" <<endreq;

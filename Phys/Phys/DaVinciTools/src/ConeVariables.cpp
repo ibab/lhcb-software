@@ -244,7 +244,7 @@ bool ConeVariables::isTrackInDecay(const LHCb::Track* track){
 
 
 int ConeVariables::getFirstIndex(void) {
-  return LHCb::Particle::FirstIsolationInfoIndex;
+  return LHCb::Particle::Cone1Index;
 }
 
 int ConeVariables::getNumberOfParameters(void) {
@@ -253,22 +253,22 @@ int ConeVariables::getNumberOfParameters(void) {
 
 void ConeVariables::getInfo(int index, double & value, std::string & name) {
 
-  switch(index) {
-  case LHCb::Particle::FirstIsolationInfoIndex    : value = m_coneAngle; name = "angle"; return;
-  case LHCb::Particle::FirstIsolationInfoIndex+1  : value = (double)m_mult; name = "mult"; return;
-  case LHCb::Particle::FirstIsolationInfoIndex+2  : value = m_px; name = "px"; return;
-  case LHCb::Particle::FirstIsolationInfoIndex+3  : value = m_py; name = "py"; return;
-  case LHCb::Particle::FirstIsolationInfoIndex+4  : value = m_pz; name = "pz"; return;
-  case LHCb::Particle::FirstIsolationInfoIndex+5  : value = m_p;  name = "p" ; return;
-  case LHCb::Particle::FirstIsolationInfoIndex+6  : value = m_pt; name = "pt"; return;
-  case LHCb::Particle::FirstIsolationInfoIndex+7  : value = m_pxasy; name = "pxasy"; return;
-  case LHCb::Particle::FirstIsolationInfoIndex+8  : value = m_pyasy; name = "pyasy"; return;
-  case LHCb::Particle::FirstIsolationInfoIndex+9  : value = m_pzasy; name = "pzasy"; return;
-  case LHCb::Particle::FirstIsolationInfoIndex+10 : value = m_pasy;  name = "pasy"; return;
-  case LHCb::Particle::FirstIsolationInfoIndex+11 : value = m_ptasy; name = "ptasy"; return;
-  case LHCb::Particle::FirstIsolationInfoIndex+12 : value = m_deltaEta; name = "deltaEta"; return;
-  case LHCb::Particle::FirstIsolationInfoIndex+13 : value = m_deltaPhi; name = "deltaPhi"; return;
-  default: return;
+  switch( index - getFirstIndex() ) {
+    case 0  : value = m_coneAngle; name = "angle"; return;
+    case 1  : value = (double)m_mult; name = "mult"; return;
+    case 2  : value = m_px; name = "px"; return;
+    case 3  : value = m_py; name = "py"; return;
+    case 4  : value = m_pz; name = "pz"; return;
+    case 5  : value = m_p;  name = "p" ; return;
+    case 6  : value = m_pt; name = "pt"; return;
+    case 7  : value = m_pxasy; name = "pxasy"; return;
+    case 8  : value = m_pyasy; name = "pyasy"; return;
+    case 9  : value = m_pzasy; name = "pzasy"; return;
+    case 10 : value = m_pasy;  name = "pasy"; return;
+    case 11 : value = m_ptasy; name = "ptasy"; return;
+    case 12 : value = m_deltaEta; name = "deltaEta"; return;
+    case 13 : value = m_deltaPhi; name = "deltaPhi"; return;
+    default: return;
   }
 
 }
