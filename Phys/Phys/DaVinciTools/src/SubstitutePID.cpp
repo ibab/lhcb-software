@@ -2,6 +2,9 @@
 // ============================================================================
 // Include files
 // ============================================================================
+#include "GaudiKernel/IIncidentListener.h"
+#include "GaudiKernel/IIncidentSvc.h"
+// ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/select.h"
@@ -64,7 +67,7 @@
  *  Last modification $Date$
  *                by  $Author$
  */
-class SubstitutePID : public FitDecayTrees
+class SubstitutePID : public extends1<FitDecayTrees,IIncidentListener> 
 {
   // ==========================================================================
   /// friend factory for instantiation 
@@ -74,6 +77,13 @@ public:
   // ==========================================================================
   /// finalize  the algorithm 
   virtual StatusCode finalize   () ; 
+  virtual void handle ( const Incident &inc) {}
+  StatusCode initialize() {
+    StatusCode sc = FitDecayTrees::initialize () ;
+    if ( sc.isFailure() ) { return sc ; }
+    incSvc()->addListener(this,IncidentType::BeginEvent);
+    return StatusCode::SUCCESS;
+  }
   // ==========================================================================
 protected:
   // ==========================================================================
@@ -95,6 +105,11 @@ protected:
   /// virtual & protected destructor 
   virtual ~SubstitutePID () ;                  // virtual & protected destructor  
   // ==========================================================================
+  IIncidentSvc* incSvc() const {
+    if ( 0 != m_incSvc ) { return m_incSvc ; }
+    m_incSvc = svc<IIncidentSvc> ( "IncidentSvc" , true );
+    return m_incSvc ;
+  }
 public:
   // ==========================================================================
   /** the major method for filter input particles 
@@ -125,6 +140,9 @@ private:
   // ==========================================================================
   /// Substitute Tool
   ISubstitutePID* m_substitute  ; // tool
+  unsigned long m_maxParticles;
+  std::string m_stopIncidentType; 
+  mutable IIncidentSvc* m_incSvc; ///< the incident service 
 } ;
 // ============================================================================
 /* standard constructor 
@@ -142,17 +160,21 @@ private:
 SubstitutePID::SubstitutePID                   //        standard constructor 
 ( const std::string& name ,                    // the algorithm instance name 
   ISvcLocator*       pSvc )                   //  pointer to Service Locator
-  : FitDecayTrees ( name , pSvc )
+  : base_class ( name , pSvc )
 // mapping : { 'decay-component' : "new-pid" } (property)
   , m_map  ()
-  ,  m_substitute(0)
-{
+  ,  m_substitute(0),
+    m_maxParticles(-1), m_stopIncidentType(), m_incSvc(0)
+  {
   FilterDesktop* _this = this ;
   declareProperty 
     ( "Substitutions" , 
       m_map           , 
       "PID-substitutions :  { ' decay-component' : 'new-pid' }" )
     -> declareUpdateHandler ( &FilterDesktop::updateHandler1 , _this ) ;
+  declareProperty("MaxParticles", m_maxParticles, 
+		  "max allowed particles to store");
+  declareProperty("StopIncidentType", m_stopIncidentType, "incident type");
   //
 }
 // ============================================================================
@@ -218,6 +240,13 @@ StatusCode SubstitutePID::filter
   for ( LHCb::Particle::ConstVector::const_iterator ip = 
           substituted.begin() ; substituted.end() != ip ; ++ip ) 
  {
+   if(m_maxParticles > 0 && i_markedParticles().size() > m_maxParticles){
+     Warning("Maximum number of allowed particles reached",
+	     StatusCode::SUCCESS);
+     if(!m_stopIncidentType.empty())
+       incSvc()->fireIncident(Incident(name(),m_stopIncidentType));
+     break;
+   }
     const LHCb::Particle* p = *ip ;
     if ( 0 == p ) { continue ; }
     //
