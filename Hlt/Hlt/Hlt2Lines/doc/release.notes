@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2012-02-25 - Jibo He
+ - Added Hlt2DiPhiTis for prompt Charmonium->Phi Phi, require Hlt1 TIS. 
+
 ! 2012-02-24 - Benoit VIAUD
  - New Lines for D->hhhh, D->hmumu and D->hhmumu modes
 
