@@ -58,5 +58,6 @@
 #include "Kernel/ISetInputParticles.h"
 #include "Kernel/IJets2Jets.h"
 #include "Kernel/IDecayTreeFit.h"
+#include "Kernel/IStandardParticleProvider.h"
 
 #endif // DICT_DAVINCIINTERFACESDICT_H

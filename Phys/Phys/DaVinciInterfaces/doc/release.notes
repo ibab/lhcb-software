@@ -4,6 +4,10 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2012-02-26 - Chris Jones
+ - Add a new tool interface IStandardParticleProvider that returns a pointer 
+   to the 'standard' Particle for a given ProtoParticle and PID hypothesis
+
 ! 2012-02-20 - Anton Poluektov 
  - Add IExtraInfoTool.h, interface for a tool to calculate 
    particle extraInfo, such as isolation variables. 
