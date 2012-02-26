@@ -643,6 +643,7 @@ def limitCombinatorics( configurable,
                         incidentName = 'ExceedsCombinatoricsLimit' ) :
     val = False
     from Configurables import CombineParticles, StrippingAlg
+    from Configurables import SubPIDMMFilter, SubstitutePID
     if hasattr( configurable, 'Members' ) :
         for i in getattr( configurable, 'Members' ) : 
             # order is important to avoid shortcircuit from skipping call to limitCombinatorics!
@@ -667,3 +668,12 @@ def limitCombinatorics( configurable,
     	    return True
 	else :
 	    return False
+    elif type(configurable) == SubPIDMMFilter or \
+             type(configurable) == SubstitutePID:
+	if MaxCandidates != None: 
+    	    configurable.MaxParticles        = MaxCandidates
+    	    configurable.StopIncidentType    = incidentName
+    	    return True
+	else :
+	    return False
+        
