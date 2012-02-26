@@ -26,7 +26,7 @@ public:
   // Fitting 
   StatusCode fitVertex(const Gaudi::XYZPoint seedPoint, 
                        std::vector<const LHCb::Track*>& tracks,
-                       LHCb::RecVertex& vtx, std::vector<double>& weights,
+                       LHCb::RecVertex& vtx, 
                        std::vector<const LHCb::Track*>& tracks2remove);
 private:
   int    m_minTr;         // Minimum number of tracks to make a vertex
@@ -94,8 +94,5 @@ private:
   //problem on windows for some reason
   //static const double myzero=1E-12;
   const double m_myZero; //myzero=1E-12;
-  std::vector<double> m_weights;
-  //work around by just initialising it in constructor...
-  //Annoying, though!
 };
 #endif // LSADAPTPVFITTER_H

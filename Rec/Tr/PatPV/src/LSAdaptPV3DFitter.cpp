@@ -78,12 +78,10 @@ LSAdaptPV3DFitter::~LSAdaptPV3DFitter() {}
 //=============================================================================
 StatusCode LSAdaptPV3DFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
                                         std::vector<const LHCb::Track*>& rTracks,
-                                        LHCb::RecVertex& vtx, std::vector<double>& weights,
+                                        LHCb::RecVertex& vtx, 
                                         std::vector<const LHCb::Track*>& tracks2remove)
 {
   if(msgLevel(MSG::DEBUG)) debug() << "================Test==================" << endmsg;
-  // to get rid of unused parameter compilation warning
-  if(msgLevel(MSG::DEBUG)) debug() << weights.size() << endmsg; 
 
   tracks2remove.clear();
   
@@ -228,7 +226,7 @@ StatusCode LSAdaptPV3DFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
   vtx.clearTracks();
   for(PVTracks::iterator iFitTr = m_pvTracks.begin(); iFitTr != m_pvTracks.end(); iFitTr++) {
     if( iFitTr->weight > m_minTrackWeight) {
-      vtx.addToTracks( iFitTr->refTrack);
+      vtx.addToTracks( iFitTr->refTrack, (float) iFitTr->weight );
     }
   }
   vtx.setTechnique(LHCb::RecVertex::Primary);
@@ -296,8 +294,8 @@ double LSAdaptPV3DFitter::err2d0(const LHCb::Track* track, const Gaudi::XYZPoint
 
   // fast parametrization of track parameters
 
-  double x     = track->firstState().x();
-  double y     = track->firstState().y();
+  //  double x     = track->firstState().x();
+  //  double y     = track->firstState().y();
   double z     = track->firstState().z();
   double tx    = track->firstState().tx();
   double ty    = track->firstState().ty();
@@ -305,9 +303,9 @@ double LSAdaptPV3DFitter::err2d0(const LHCb::Track* track, const Gaudi::XYZPoint
   double ex2 = track->firstState().errX2();
   double ey2 = track->firstState().errY2();
 
-  double fcos2 = 1.;
   double tr2   = tx*tx+ty*ty;
-  fcos2 = 1./(1.+tr2);
+  double fcos2 = 1./(1.+tr2);
+  double fsin2 = tr2/(1.+tr2);
   double err2 = (ex2+ey2)*fcos2;
 
   bool backward = track->checkFlag( LHCb::Track::Backward);
@@ -328,33 +326,11 @@ double LSAdaptPV3DFitter::err2d0(const LHCb::Track* track, const Gaudi::XYZPoint
   double l_scat2 = 0.;
   if( m_AddMultipleScattering ) {
     if ( m_CalculateMultipleScattering) {
-      // mutliple scattering from RF foil at r = 10 mm
-      double r_ms = 10.;
-      double a = tx*tx+ty*ty;     
-      double b = 2.*(x*tx+y*ty);
-      double c = x*x+y*y-r_ms*r_ms;
-      double delta2 = b*b-4.*a*c;
-      if ( (delta2 > 0.) && (a != 0.) ) {
-        double z_ms;
-        double delta = std::sqrt(delta2);
-        double z1 = (-b - delta)/(2.*a);
-        double z2 = (-b + delta)/(2.*a);
-        // a>0 => z1 < z2
-        if (backward) { 
-          z_ms = z1;
-        } else {
-          z_ms = z2;
-        }
-        double dz = (z_seed-z_ms);
-        double dx = tx*dz;
-        double dy = ty*dz;
-        l_scat2 = dx*dx+dy*dy+dz*dz;
+        // mutliple scattering from RF foil at r = 10 mm
+        double r_ms = 10.;
+        l_scat2 = r_ms*r_ms/fsin2;
         corr2 = m_scatCons*m_scatCons*l_scat2;
         err2 += corr2;
-      } else {
-        // add standard MS contribution;
-        err2 += 0.05*0.05;
-      }
     }
     else {
       err2 += 0.05*0.05;

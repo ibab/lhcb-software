@@ -54,21 +54,10 @@ StatusCode PatPVOffline::execute() {
   put(v2tes,m_outputVertices);
 
   std::vector<LHCb::RecVertex> rvts;
-  std::vector<std::vector<double> > weightsvec;
-  StatusCode scfit = m_pvsfit->reconstructMultiPVWithWeights(rvts, weightsvec);
+  StatusCode scfit = m_pvsfit->reconstructMultiPV(rvts);
   if (scfit != StatusCode::SUCCESS) {
     return StatusCode::SUCCESS;
   }
-  // check consistency
-  if (rvts.size() != weightsvec.size() ) {
-    return StatusCode::FAILURE;
-  }
-  for(unsigned int iv = 0; iv < rvts.size(); ++iv) {
-    if ( (rvts[iv]).tracks().size() != weightsvec[iv].size() ) {
-      return StatusCode::FAILURE;
-    }
-  }
-  // end check consistency
 
   for(unsigned int iv = 0; iv < rvts.size(); ++iv)
   {
@@ -76,26 +65,6 @@ StatusCode PatPVOffline::execute() {
     *vertex = rvts[iv];
     vertex->setTechnique(LHCb::RecVertex::Primary);
     v2tes->insert(vertex);
-  }
-
-  LHCb::RecVertices* recoVertices = get<LHCb::RecVertices>( m_outputVertices );
-  for ( unsigned int iv = 0; iv < recoVertices->size(); ++iv )
-  {
-    const SmartRefVector<LHCb::Track>& vtx_tracks = (*recoVertices)(iv)->tracks();
-    const std::vector<double>& weights = weightsvec[iv];
-  
-    for ( unsigned int it = 0; it < vtx_tracks.size(); ++it )
-    {      
-      if(msgLevel(MSG::DEBUG)) {
-        debug() << " the weights " << vtx_tracks[it]->key() << " " << weights[it] << endmsg;
-      }
-
-      // CRJ : Save the weight directly in the vertex class
-      if ( !(*recoVertices)(iv)->setTrackWeight(vtx_tracks[it],(float)weights[it]) )
-      {
-        Warning( "Track not part of PV track list !" ).ignore();
-      }
-    }
   }
 
   // ---> Debug

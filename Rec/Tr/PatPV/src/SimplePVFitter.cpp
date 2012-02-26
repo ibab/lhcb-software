@@ -83,12 +83,9 @@ SimplePVFitter::~SimplePVFitter() {}
 //=============================================================================
 StatusCode SimplePVFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
                                      std::vector<const LHCb::Track*>& rTracks, 
-                                     LHCb::RecVertex& vtx, std::vector<double>& weights, 
+                                     LHCb::RecVertex& vtx, 
                                      std::vector<const LHCb::Track*>& tracks2remove)
 {
-
-  // to get rid of unused parameter compilation warning
-  if(msgLevel(MSG::DEBUG)) debug() << weights.size() << endmsg;
 
   StatusCode sc = StatusCode::SUCCESS;
   m_pvTracks.clear();
@@ -505,7 +502,7 @@ StatusCode SimplePVFitter::outVertex(LHCb::RecVertex& vtx,
   for (PVTrackPtrs::iterator itrack = pvTracks.begin(); 
                              itrack != pvTracks.end(); itrack++) {
     if((*itrack)->weight > m_acceptTrack) {
-      vtx.addToTracks((*itrack)->refTrack);
+      vtx.addToTracks((*itrack)->refTrack, (float) (*itrack)->weight );
     }
 
     if(msgLevel(MSG::DEBUG)) {

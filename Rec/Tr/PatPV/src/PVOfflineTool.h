@@ -15,6 +15,7 @@
 // Track info
 #include "Event/Track.h"
 #include "Event/RecVertex.h"
+#include "GaudiAlg/ISequencerTimerTool.h"
 
 class PVOfflineTool : public GaudiTool, virtual public IPVOfflineTool {
 public:
@@ -43,14 +44,7 @@ public:
   StatusCode reconstructMultiPVFromTracks(std::vector<const LHCb::Track*>& tracks2use,
 					  std::vector<LHCb::RecVertex>& outvtxVec);
 
-  StatusCode reconstructMultiPVWithWeightsFromTracks(std::vector<const LHCb::Track*>& tracks2use,
-                                          std::vector<LHCb::RecVertex>& outvtxVec,
-                                          std::vector< std::vector<double> >& weightsvec); 
-
   StatusCode reconstructMultiPV(std::vector<LHCb::RecVertex>& outvtxVec); 
-
-  StatusCode reconstructMultiPVWithWeights(std::vector<LHCb::RecVertex>& outvtxVec, 
-                                std::vector< std::vector<double> >& weightsvec); 
 
   StatusCode reconstructSinglePV(const Gaudi::XYZPoint xyzseed,
 			         LHCb::RecVertex& outvtx);
@@ -59,8 +53,6 @@ public:
                                     const std::vector<const LHCb::Track*>& tracks2remove,
                                     LHCb::RecVertex& vtx);
   
-  
-
 
 private:
 
@@ -113,5 +105,12 @@ private:
   double zCloseBeam(const LHCb::Track* track);
   bool separatedVertex( LHCb::RecVertex& rvtx, std::vector<LHCb::RecVertex>& outvtxvec);
   StatusCode UpdateBeamSpot();
+
+  // timing 
+  bool  m_doTiming;
+  ISequencerTimerTool* m_timerTool;
+  int   m_timeTotal;
+  int   m_timeSeeding;
+  int   m_timeFitting;
 };
 #endif // PVOFFLINETOOL_H

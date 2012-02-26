@@ -91,14 +91,12 @@ LSAdaptPVFitter::~LSAdaptPVFitter() {}
 //=============================================================================
 StatusCode LSAdaptPVFitter::fitVertex(const Gaudi::XYZPoint seedPoint, 
                                       std::vector<const LHCb::Track*>& rTracks, 
-                                      LHCb::RecVertex& vtx, std::vector<double>& weights,
+                                      LHCb::RecVertex& vtx, 
                                       std::vector<const LHCb::Track*>& tracks2remove)
 {
   if(msgLevel(MSG::VERBOSE)) {
     verbose() << "fitVertex method" << endmsg;
   }
-
-  weights.clear();
 
   m_pvTracks.clear();
   PVVertex pvVertex;
@@ -144,7 +142,6 @@ StatusCode LSAdaptPVFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
   
   vtx = pvVertex.primVtx;
   vtx.setTechnique(LHCb::RecVertex::Primary);
-  weights = m_weights;
   return scvfit;
 }
 
@@ -550,12 +547,10 @@ StatusCode LSAdaptPVFitter::outVertex(LHCb::RecVertex& vtx,
   vtx.setCovMatrix(hess);
   // Set tracks
   vtx.clearTracks();
-  m_weights.clear();
   for (PVTrackPtrs::iterator itrack = pvTracks.begin(); 
                              itrack != pvTracks.end(); itrack++) {
     if((*itrack)->weight > m_minTrackWeight) {
-      vtx.addToTracks((*itrack)->refTrack);
-      m_weights.push_back((*itrack)->weight);
+      vtx.addToTracks( (*itrack)->refTrack, (float) (*itrack)->weight );
     }
   }
   setChi2(vtx,pvTracks);
