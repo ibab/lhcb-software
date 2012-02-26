@@ -4,6 +4,9 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2012-02-26 - Mike Williams
+- Updated StrippingLine so that candidate limits now apply to SubPIDMMFilter and SubstitutePID
+
 !========================== StrippingConf v4r3 2012-02-10 ====================
 ! 2012-02-08 - Marco Cattaneo
  - Remove import of GaudiConf from QMtest
