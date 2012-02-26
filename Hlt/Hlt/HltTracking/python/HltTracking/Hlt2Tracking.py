@@ -71,6 +71,7 @@ from Hlt2Lines.Hlt2CommissioningLines     import Hlt2CommissioningLinesConf
 from Hlt2Lines.Hlt2ExpressLines           import Hlt2ExpressLinesConf
 from Hlt2Lines.Hlt2diphotonDiMuonLines    import Hlt2diphotonDiMuonLinesConf
 from Hlt2Lines.Hlt2InclusiveDiProtonLines import Hlt2InclusiveDiProtonLinesConf
+from Hlt2Lines.Hlt2InclusiveDiPhiLines    import Hlt2InclusiveDiPhiLinesConf
 from Hlt2Lines.Hlt2Dst2D2XXLines          import Hlt2Dst2D2XXLinesConf
 from Hlt2Lines.Hlt2InclusiveDiElectronLines import Hlt2InclusiveDiElectronLinesConf
 from Hlt2Lines.Hlt2InclusiveElectronLines   import Hlt2InclusiveElectronLinesConf
@@ -137,6 +138,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
                              , Hlt2ExpressLinesConf
                              , Hlt2diphotonDiMuonLinesConf
                              , Hlt2InclusiveDiProtonLinesConf
+                             , Hlt2InclusiveDiPhiLinesConf  
                              , Hlt2Dst2D2XXLinesConf
                              , Hlt2InclusiveDiElectronLinesConf
                              , Hlt2InclusiveElectronLinesConf

@@ -5,6 +5,8 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2012-02-26 - Jibo He
+ - Added Hlt2DiPhiTis to Hlt2Tracking.py
 
 ! 2012-02-24 - Benoit VIAUD
  - New Lines for D->hhhh, D->hmumu and D->hhmumu modes
