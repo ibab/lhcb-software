@@ -41,7 +41,7 @@ config = { # Cuts made on all charged input particles in all lines
                      },
            # Cuts made on all K shorts
            "KS0" : { 'PT_MIN'        : '250*MeV',
-                     'MIPCHI2DV_MIN' : 4,
+                     'BPVVDCHI2_MIN' : 36,
                      'MM_MIN'        : '467.*MeV',
                      'MM_MAX'        : '527.*MeV' },
            # Cuts made on all pi0's

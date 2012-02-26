@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-02-25 Albert Puig
+ - Replaced KS0 IP chi2 cut for a FD chi2 cut to avoid killing KS's.
+
 ! 2012-02-24 - Jibo He
  - Added Prefix "Stripping" for PsiX0.py and PsiXforBandQ.py
  - Added X2psiPiPi, X2psiGamma lines for Prompt Charmonium, X. 
