@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2012-02-16 Mariusz Witek
+ - Remove WithWeights methods as a consequence of removal WeightsVector from PatPV
+
 !========================= TrackInterfaces v4r19 2011-02-22 =========================
 ! 2011-02-16 David Hutchcroft
  - Remove ICountVeloTracks from dictionary

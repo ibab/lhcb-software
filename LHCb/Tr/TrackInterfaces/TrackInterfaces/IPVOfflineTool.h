@@ -50,18 +50,8 @@ class IPVOfflineTool : virtual public IAlgTool {
 			          std::vector<const LHCb::Track*>& tracks2use,
 			          std::vector<LHCb::RecVertex>& outvtxVec)=0;
   
-  /// Reconstructs all PVs with tracks specified in a vector. Return weights.
-  virtual StatusCode reconstructMultiPVWithWeightsFromTracks(
-			          std::vector<const LHCb::Track*>& tracks2use,
-			          std::vector<LHCb::RecVertex>& outvtxVec,
-                std::vector< std::vector<double> >& weightsvec)=0;
-
   /// Reconstructs all PVs with tracks from default location.
   virtual StatusCode reconstructMultiPV(std::vector<LHCb::RecVertex>& outvtxVec)=0; 
-
-  /// Reconstructs all PVs with tracks from default location. Return weights.
-  virtual StatusCode reconstructMultiPVWithWeights(std::vector<LHCb::RecVertex>& outvtxVec,
-                                        std::vector< std::vector<double> >& weightsvec)=0; 
 
   /// Reconstructs single PV for a given seed with tracks from default location.
   virtual StatusCode reconstructSinglePV(const Gaudi::XYZPoint xyzseed,
