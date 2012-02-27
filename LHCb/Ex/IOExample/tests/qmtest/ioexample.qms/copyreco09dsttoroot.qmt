@@ -5,7 +5,8 @@
   <argument name="reference"><text>../refs/Reco09dst.ref</text></argument>
   <argument name="validator"><text>
 from GaudiConf.QMTest.LHCbExclusions import preprocessor as LHCbPreprocessor
-preprocessor = LHCbPreprocessor
+preprocessor = LHCbPreprocessor + \
+  RegexpReplacer(when = "1.71822e-05", orig = r'1.71822e-05', repl = r'1.71821e-05')
 validateWithReference(preproc = preprocessor)
 </text></argument>
 </extension>
