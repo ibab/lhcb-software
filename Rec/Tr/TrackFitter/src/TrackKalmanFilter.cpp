@@ -120,14 +120,13 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track ) const
     }
   }
   
-  LHCb::ChiSquare chisq = nodes.front()->totalChi2(LHCb::FitNode::Backward) ;
+  LHCb::ChiSquare chisq = nodes.back()->totalChi2(LHCb::FitNode::Forward) ;
   int ndof = chisq.nDoF() - (npar - kalfit->nTrackParameters() ) ;
   if( m_forceBiDirectionalFit ) {
     // FIXME: why don't we take the maximum, like in KalmanFitResult?
-    LHCb::ChiSquare chisqbw = nodes.back()->totalChi2(LHCb::FitNode::Forward) ;
+    LHCb::ChiSquare chisqbw =  nodes.front()->totalChi2(LHCb::FitNode::Backward) ;
     if( chisqbw.chi2() < chisq.chi2() ) chisq = chisqbw ;
   }
   track.setChi2AndDoF( chisq.chi2(), ndof );
-  
   return sc ;
 }
