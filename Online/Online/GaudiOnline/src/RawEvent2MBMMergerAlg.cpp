@@ -54,6 +54,8 @@ namespace LHCb  {
     unsigned int  m_timeoutBits;
     /// Property: Force writing the event on timeout incident
     int           m_forceEvent;
+    /// Property: Forced output trigger mask; if empty will not be applied
+    vector<int>   m_triggerMask;
     /// Monitoring quantity: Counter of number of bytes sent
     int           m_bytesDeclared;
     /// Monitoring quantity: Counter for number of events with errors (Timeout, ...)
@@ -135,6 +137,7 @@ RawEvent2MBMMergerAlg::RawEvent2MBMMergerAlg(const string& nam, ISvcLocator* pSv
   declareProperty("ForceEvent",     m_forceEvent=0);
   declareProperty("FIDLocation",    m_fidLocation="/Event");
   declareProperty("Silent",         m_silent);
+  declareProperty("TriggerMask",    m_triggerMask);
 }
 
 /// IInterface implementation: Query interface
@@ -427,6 +430,27 @@ StatusCode RawEvent2MBMMergerAlg::writeEvent(unsigned int routingBits) {
     const unsigned int* hmask = h.first->subHeader().H1->triggerMask();
     const unsigned int* tmask = h.second ? h.second->begin<unsigned int>() : hmask;
     unsigned int m[] = { tmask[0], tmask[1], tmask[2], routingBits != NO_ROUTING ? routingBits : hmask[3]};
+    if ( m_triggerMask.size() == 1 )  {
+      m[2] = m_triggerMask[0];
+    }
+    else if ( m_triggerMask.size() == 2 )  {
+      m[2] = m_triggerMask[0];
+      m[1] = m_triggerMask[1];
+    }
+    else if ( m_triggerMask.size() == 3 )  {
+      m[2] = m_triggerMask[2];
+      m[1] = m_triggerMask[1];
+      m[0] = m_triggerMask[0];
+    }
+    else if ( m_triggerMask.size() == 4 )  {
+      m[3] = m_triggerMask[3];
+      m[2] = m_triggerMask[2];
+      m[1] = m_triggerMask[1];
+      m[0] = m_triggerMask[0];
+    }
+    else if ( m_triggerMask.size() > 0 )  {
+      return error("Unknown trigger masdk configuration. Cannot process event");
+    }
     h.first->subHeader().H1->setTriggerMask(m);
   }
   switch(m_inputType)   {
