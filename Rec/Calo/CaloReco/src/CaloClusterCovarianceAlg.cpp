@@ -80,13 +80,13 @@ CaloClusterCovarianceAlg::CaloClusterCovarianceAlg
   // set default data as a function of detector
   m_detData= LHCb::CaloAlgUtils::DeCaloLocation( name ) ;
   m_inputData = LHCb::CaloAlgUtils::CaloClusterLocation( name , context() );
-};
+}
 // ===========================================================================
 
 // ============================================================================
 /// Destructor
 // ============================================================================
-CaloClusterCovarianceAlg::~CaloClusterCovarianceAlg() {}; 
+CaloClusterCovarianceAlg::~CaloClusterCovarianceAlg() {}
 // ===========================================================================
 
 // ===========================================================================
@@ -126,7 +126,7 @@ StatusCode CaloClusterCovarianceAlg::initialize()
     m_outputData == m_inputData ?  false : true ;
 
   return StatusCode::SUCCESS;
-};
+}
 // ===========================================================================
 
 // ===========================================================================
@@ -141,7 +141,7 @@ StatusCode CaloClusterCovarianceAlg::finalize()
 {
   // finalize the base class 
   return GaudiAlgorithm::finalize();
-};
+}
 // ===========================================================================
 
 // ===========================================================================
@@ -210,6 +210,4 @@ StatusCode CaloClusterCovarianceAlg::execute()
   
   counter ( "#Clusters from '" + m_inputData  + "'") += clusters->size() ;
   return StatusCode::SUCCESS ;
-};
-
-
+}

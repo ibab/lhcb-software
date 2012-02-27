@@ -1,6 +1,3 @@
-// $Id: CaloClusterCorrect3x3Position.cpp,v 1.13 2010-03-08 01:19:39 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // Include files
 // STD & STL 
@@ -40,7 +37,7 @@
  */
 // ============================================================================
 
-DECLARE_ALGORITHM_FACTORY( CaloClusterCorrect3x3Position );
+DECLARE_ALGORITHM_FACTORY( CaloClusterCorrect3x3Position )
 
 // ============================================================================
 /** Standard constructor
@@ -63,13 +60,13 @@ CaloClusterCorrect3x3Position::CaloClusterCorrect3x3Position
   m_detData= LHCb::CaloAlgUtils::DeCaloLocation( name ) ;
   m_inputData = LHCb::CaloAlgUtils::CaloClusterLocation( name , context() );
 
-};
+}
 
 // ============================================================================
 /** destructor
  */
 // ============================================================================
-CaloClusterCorrect3x3Position::~CaloClusterCorrect3x3Position() {};
+CaloClusterCorrect3x3Position::~CaloClusterCorrect3x3Position() {}
 
 
 // ============================================================================
@@ -85,7 +82,7 @@ StatusCode CaloClusterCorrect3x3Position::initialize()
   { return Error("Could not initialize the base class!",sc);}
   return StatusCode::SUCCESS;
 
-};
+}
 
 
 // ============================================================================
@@ -97,7 +94,7 @@ StatusCode CaloClusterCorrect3x3Position::finalize()
 {  
   /// finalize the base class 
   return GaudiAlgorithm::finalize();
-};
+}
 
 // ============================================================================
 /** helper function to calculate number of digits 
@@ -125,7 +122,7 @@ long CaloClusterCorrect3x3Position::numberOfDigits
   }
   ///
   return num ;
-};
+}
 
 // ============================================================================
 /** standard algorithm execution 
@@ -201,7 +198,7 @@ StatusCode CaloClusterCorrect3x3Position::execute()
       cluster->setPosition( pos );
     }
   return StatusCode::SUCCESS;
-};
+}
 
 // ============================================================================
 // The End 

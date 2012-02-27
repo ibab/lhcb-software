@@ -1,4 +1,3 @@
-// $Id: ClusterCovarianceMatrixTool.cpp,v 1.7 2009-06-22 13:06:32 cattanem Exp $
 // ============================================================================
 // Include files
 // GaudiKernel
@@ -22,7 +21,7 @@
  */
 // ============================================================================
 
-DECLARE_TOOL_FACTORY( ClusterCovarianceMatrixTool );
+DECLARE_TOOL_FACTORY( ClusterCovarianceMatrixTool )
 
 // ============================================================================
 /** Standard constructor
@@ -42,6 +41,7 @@ ClusterCovarianceMatrixTool::ClusterCovarianceMatrixTool
     , m_noiseIn   ( "", 0    ) 
     , m_noiseCo   ( "", 0    )
     , m_detData   ( DeCalorimeterLocation::Ecal )
+    , m_det(0)
 {
   // interface!
   declareInterface<ICaloClusterTool> (this);
@@ -79,14 +79,11 @@ ClusterCovarianceMatrixTool::ClusterCovarianceMatrixTool
   declareProperty( "NoiseIncoherent"  , m_noiseIn );
   declareProperty( "NoiseCoherent"    , m_noiseCo );
   declareProperty( "Detector"        , m_detData  );
-};
+}
 // ============================================================================
-/** destructor, virtual and protected 
- */
+/// destructor, virtual and protected 
 // ============================================================================
-ClusterCovarianceMatrixTool::~ClusterCovarianceMatrixTool()
-{
-};
+ClusterCovarianceMatrixTool::~ClusterCovarianceMatrixTool() {}
 
 // ============================================================================
 /** standard initialization method 
@@ -116,7 +113,7 @@ StatusCode ClusterCovarianceMatrixTool::initialize ()
               << " \t 'NoiseCoherent'    = '" << m_noiseCo << "'"  << endmsg 
               << " \t Estimator is          " << m_estimator       << endmsg ;
   return StatusCode::SUCCESS ;
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -127,7 +124,7 @@ StatusCode ClusterCovarianceMatrixTool::initialize ()
 StatusCode ClusterCovarianceMatrixTool::finalize   ()
 {  
   return GaudiTool::finalize ();
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -146,7 +143,7 @@ ClusterCovarianceMatrixTool::operator() ( LHCb::CaloCluster* cluster ) const
     { return Error( "DeCalorimeter* points to NULL!") ; }
   /// apply the estimator 
   return m_estimator( cluster );
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -157,11 +154,9 @@ ClusterCovarianceMatrixTool::operator() ( LHCb::CaloCluster* cluster ) const
 // ============================================================================
 StatusCode 
 ClusterCovarianceMatrixTool::process ( LHCb::CaloCluster* cluster ) const 
-{ return (*this)( cluster ); };
+{ return (*this)( cluster ); }
 // ============================================================================
 
 // ============================================================================
 // The End 
 // ============================================================================
-
-

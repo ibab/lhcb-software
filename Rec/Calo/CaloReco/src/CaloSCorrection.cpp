@@ -23,10 +23,9 @@ DECLARE_TOOL_FACTORY( CaloSCorrection )
  *  @param parent  tool parent 
  */
 // ============================================================================
-CaloSCorrection::CaloSCorrection 
-( const std::string& type   , 
-  const std::string& name   ,
-  const IInterface*  parent ) 
+CaloSCorrection::CaloSCorrection( const std::string& type   , 
+                                  const std::string& name   ,
+                                  const IInterface*  parent ) 
   : CaloCorrectionBase( type , name , parent ){
 
 
@@ -41,14 +40,14 @@ CaloSCorrection::CaloSCorrection
     m_conditionName = "Conditions/Reco/Calo/PhotonSCorrection"; 
   }
 
-  declareInterface<ICaloHypoTool> ( this ) ;}
-;
+  declareInterface<ICaloHypoTool> ( this ) ;
+}
 // ============================================================================
 
 // ============================================================================
 /// destructor
 // ============================================================================
-CaloSCorrection::~CaloSCorrection () {} ;
+CaloSCorrection::~CaloSCorrection () {}
 // ============================================================================
 
 StatusCode CaloSCorrection::finalize   () 
@@ -56,7 +55,7 @@ StatusCode CaloSCorrection::finalize   ()
   m_hypos.clear();
   /// finalize the base class 
   return CaloCorrectionBase::finalize () ;
-};
+}
 // ============================================================================
 
 StatusCode CaloSCorrection::initialize (){
@@ -65,12 +64,12 @@ StatusCode CaloSCorrection::initialize (){
   if( sc.isFailure() ) 
     { return Error ( "Unable initialize the base class CaloCorrectionBase!" , sc ) ; }  
   return StatusCode::SUCCESS ;
-};
+}
 // ============================================================================
 
 StatusCode CaloSCorrection::operator() ( LHCb::CaloHypo* hypo  ) const{ 
 return process( hypo ); 
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -185,7 +184,7 @@ StatusCode CaloSCorrection::process    ( LHCb::CaloHypo* hypo  ) const{
 
   return StatusCode::SUCCESS ;
 
-};
+}
 // ============================================================================
 
 

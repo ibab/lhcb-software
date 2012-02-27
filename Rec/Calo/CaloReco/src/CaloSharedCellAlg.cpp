@@ -67,12 +67,12 @@ CaloSharedCellAlg::CaloSharedCellAlg( const std::string& name,
   m_detData= LHCb::CaloAlgUtils::DeCaloLocation( name ) ;
   m_inputData = LHCb::CaloAlgUtils::CaloClusterLocation( name , context() );
 
-};
+}
 
 // ============================================================================
 // Destructor
 // ============================================================================
-CaloSharedCellAlg::~CaloSharedCellAlg() {};
+CaloSharedCellAlg::~CaloSharedCellAlg() {}
 
 // ============================================================================
 // Initialisation. Check parameters
@@ -92,7 +92,7 @@ StatusCode CaloSharedCellAlg::initialize()
     m_outputData == m_inputData ? false : true ;
   ///
   return StatusCode::SUCCESS;
-};
+}
 
 // ============================================================================
 // Main execution
@@ -193,7 +193,7 @@ StatusCode CaloSharedCellAlg::execute()
   ///
   return StatusCode::SUCCESS;
   ///  
-};
+}
 
 StatusCode CaloSharedCellAlg::finalize() {
 

@@ -104,7 +104,7 @@ DECLARE_ALGORITHM_FACTORY( CaloMergedPi0Alg )
 // ============================================================================
 // destructor
 // ============================================================================
-CaloMergedPi0Alg::~CaloMergedPi0Alg() {};
+CaloMergedPi0Alg::~CaloMergedPi0Alg() {}
 
 
 // ============================================================================
@@ -147,7 +147,7 @@ StatusCode CaloMergedPi0Alg::initialize()
   m_lCor = tool<CaloCorrectionBase>("CaloCorrectionBase","Pi0LCorrection",this);
   sc=m_lCor->setConditionParams("Conditions/Reco/Calo/SplitPhotonLCorrection",true);
   return sc;
-};
+}
 
 // ============================================================================
 /** standard algorithm finalization
@@ -160,7 +160,7 @@ StatusCode CaloMergedPi0Alg::finalize()
   m_pi0tools.clear() ;
   /// finalize the base class
   return GaudiAlgorithm::finalize();
-};
+}
 
 // ============================================================================
 /** helper function to calculate number of digits
@@ -307,7 +307,7 @@ double CaloMergedPi0Alg::BarXY(const int axis,
   //counter("deltaX") += deltaX;
   //counter("deltaY") += deltaY;
   return (1==axis) ?  deltaX : deltaY ;
-};
+}
 
 // ============================================================================
 /** standard algorithm execution
@@ -324,8 +324,12 @@ StatusCode CaloMergedPi0Alg::execute()
   typedef LHCb::CaloClusters              Clusters;
   typedef Clusters::iterator        Iterator;
 
-
-
+  /// load cluster data
+  Clusters* clusters = ( exist<Clusters>(m_inputData) ) ? get<Clusters>( m_inputData ) : NULL ;
+  if( NULL == clusters ){
+    return Warning("No cluster input container", StatusCode::SUCCESS);
+  }
+  
   // -------- create ouput containers
 
   // split clusters (check it does not exist first)
@@ -351,15 +355,6 @@ StatusCode CaloMergedPi0Alg::execute()
     put( phots , m_nameOfSplitPhotons);
   }
 
-  /// load cluster data
-  Clusters* clusters = ( exist<Clusters>(m_inputData) ) ? get<Clusters>( m_inputData ) : NULL ;
-
-  if( NULL == clusters ){
-    Warning("No cluster input container").ignore();
-    return StatusCode::SUCCESS;
-  }
-  
-    
 
   // count all clusters
   // modified by V.B. 2004-10-27

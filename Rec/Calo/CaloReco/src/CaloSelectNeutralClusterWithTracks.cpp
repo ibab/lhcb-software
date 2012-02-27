@@ -1,6 +1,3 @@
-// $Id: CaloSelectNeutralClusterWithTracks.cpp,v 1.5 2010-05-20 09:47:06 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -22,7 +19,7 @@
  */
 // ============================================================================
 
-DECLARE_TOOL_FACTORY( CaloSelectNeutralClusterWithTracks );
+DECLARE_TOOL_FACTORY( CaloSelectNeutralClusterWithTracks )
 
 // ============================================================================
 /** Standard constructor
@@ -50,13 +47,13 @@ CaloSelectNeutralClusterWithTracks::CaloSelectNeutralClusterWithTracks
   declareProperty ("Table"      , m_tableLocation ) ;
   declareProperty ("MinChi2"    , m_chi2cut       ) ;
   m_tableLocation = LHCb::CaloAlgUtils::CaloIdLocation( "ClusterMatch", context() );
-};
+}
 // ============================================================================
 
 // ============================================================================
 /// destructor (virtual and protected)
 // ============================================================================
-CaloSelectNeutralClusterWithTracks::~CaloSelectNeutralClusterWithTracks() {};
+CaloSelectNeutralClusterWithTracks::~CaloSelectNeutralClusterWithTracks() {}
 // ============================================================================
 
 // ============================================================================
@@ -82,7 +79,7 @@ CaloSelectNeutralClusterWithTracks::initialize ()
   iSvc -> addListener ( this , IncidentType::BeginEvent   , 10 ) ;
   
   return StatusCode::SUCCESS ;
-}; 
+}
 // ============================================================================
 
 // ============================================================================
@@ -91,7 +88,7 @@ CaloSelectNeutralClusterWithTracks::initialize ()
  */
 // ============================================================================
 void CaloSelectNeutralClusterWithTracks::handle ( const Incident& /* inc */ ) 
-{ m_table = 0 ; };
+{ m_table = 0 ; }
 // ============================================================================
 
 // ============================================================================
@@ -108,7 +105,7 @@ void CaloSelectNeutralClusterWithTracks::handle ( const Incident& /* inc */ )
 // ============================================================================
 bool CaloSelectNeutralClusterWithTracks::select     
 ( const LHCb::CaloCluster* cluster ) const 
-{ return (*this) ( cluster ); };
+{ return (*this) ( cluster ); }
 // ============================================================================
 
 // ============================================================================
@@ -140,5 +137,4 @@ bool CaloSelectNeutralClusterWithTracks::operator()
   counter("selected clusters") += (int) sel;
 
   return  sel;
-};
-
+}

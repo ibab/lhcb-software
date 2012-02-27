@@ -4,6 +4,12 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+! 2012-02-27 - Marco Cattaneo
+ - CaloMergedPi0Alg: Fix potential memory leak, probably never fired
+   (Coverity defect 17572)
+ - Fix UNINIT_CTOR defects
+ - Fix trivial icc remarks  
+
 !========================= CaloReco v5r13 2011-11-26 =========================
 ! 2011-11-25 - Olivier Deschamps
   - CaloMergedPi0Rec : fix abusive 'return 0'

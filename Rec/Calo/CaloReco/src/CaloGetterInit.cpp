@@ -1,4 +1,3 @@
-// $Id: CaloGetterInit.cpp,v 1.1 2009-04-17 11:44:53 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -14,7 +13,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( CaloGetterInit );
+DECLARE_ALGORITHM_FACTORY( CaloGetterInit )
 
 
 //=============================================================================
@@ -22,7 +21,9 @@ DECLARE_ALGORITHM_FACTORY( CaloGetterInit );
 //=============================================================================
 CaloGetterInit::CaloGetterInit( const std::string& name,
                         ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator ){
+  : GaudiAlgorithm ( name , pSvcLocator )
+  , m_getter(0)
+{
   declareProperty("ToolName" , m_name = "CaloGetter");
 }
 //=============================================================================

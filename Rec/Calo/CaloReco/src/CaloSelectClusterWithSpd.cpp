@@ -1,4 +1,3 @@
-// $Id: CaloSelectClusterWithSpd.cpp,v 1.2 2010-05-20 09:47:06 odescham Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -18,7 +17,8 @@ CaloSelectClusterWithSpd::CaloSelectClusterWithSpd
 ( const std::string& type   , 
   const std::string& name   ,
   const IInterface*  parent )
-  : GaudiTool ( type , name , parent ) 
+  : GaudiTool ( type , name , parent )
+  , m_toSpd(0)
 {
   //
   declareInterface<ICaloClusterSelector> ( this ) ;

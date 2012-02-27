@@ -46,14 +46,14 @@ CaloDigitsFilterAlg::CaloDigitsFilterAlg
   declareProperty       ( "Clusters"    ,  m_clusters     ) ;
   declareProperty       ( "Statuses"    ,  m_statuses     ) ;  
   declareProperty       ( "InputData"   ,  m_inputData    ) ;  
-};
+}
 // ============================================================================
 
 // ============================================================================
 /** destructor
  */
 // ============================================================================
-CaloDigitsFilterAlg::~CaloDigitsFilterAlg() {};
+CaloDigitsFilterAlg::~CaloDigitsFilterAlg() {}
 
 
 // ============================================================================
@@ -70,7 +70,7 @@ StatusCode CaloDigitsFilterAlg::finalize()
   m_hypos.clear();
   /// finalize the base class 
   return GaudiAlgorithm::finalize();
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -188,6 +188,6 @@ StatusCode CaloDigitsFilterAlg::execute()
              << all        << endmsg ;
   
   return StatusCode::SUCCESS ;
-};
+}
 // ============================================================================
 

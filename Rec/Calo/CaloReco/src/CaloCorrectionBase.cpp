@@ -30,7 +30,10 @@ CaloCorrectionBase::CaloCorrectionBase( const std::string& type   ,
   , m_spd        (DeCalorimeterLocation::Spd  )
   , m_prs        (DeCalorimeterLocation::Prs  )
   , m_detData    (DeCalorimeterLocation::Ecal )
+  , m_det(0)
   , m_origin     (Gaudi::XYZPoint())
+  , m_pileup(0)
+  , m_caloElectron(0)
   , m_useCondDB( true )
   , m_cond    ( NULL )
 {

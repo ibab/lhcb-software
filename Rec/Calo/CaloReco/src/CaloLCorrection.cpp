@@ -43,17 +43,19 @@ CaloLCorrection::CaloLCorrection
 
   /// interafces 
   declareInterface<ICaloHypoTool> ( this ) ;  
-};
+}
 
 // ============================================================================
 /// destructor
 // ============================================================================
-CaloLCorrection::~CaloLCorrection () {} ;
+CaloLCorrection::~CaloLCorrection () {}
+
+// ============================================================================
 StatusCode CaloLCorrection::finalize   () 
 {
   m_hypos.clear();
   return CaloCorrectionBase::finalize () ;
-};
+}
 // ============================================================================
 StatusCode CaloLCorrection::initialize () 
 {
@@ -61,12 +63,12 @@ StatusCode CaloLCorrection::initialize ()
   StatusCode sc = CaloCorrectionBase::initialize();
   if( sc.isFailure() ){ return Error ( "Unable initialize the base class CaloCorrectionBase !" , sc ) ; }  
   return StatusCode::SUCCESS ;
-};
+}
 
 // ============================================================================
 StatusCode CaloLCorrection::operator() ( LHCb::CaloHypo* hypo  ) const{ 
   return process( hypo ); 
-};
+}
 
 // ============================================================================
 StatusCode CaloLCorrection::process    ( LHCb::CaloHypo* hypo  ) const{
@@ -189,7 +191,5 @@ StatusCode CaloLCorrection::process    ( LHCb::CaloHypo* hypo  ) const{
   
   return StatusCode::SUCCESS ;
 
-};
+}
 // ============================================================================
-
-

@@ -1,4 +1,3 @@
-// $Id: CaloSinglePhotonAlg.cpp,v 1.18 2010-03-08 01:19:40 odescham Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -31,7 +30,7 @@
  *  @date 31/03/2002 
  */
 // ============================================================================
-DECLARE_ALGORITHM_FACTORY( CaloSinglePhotonAlg );
+DECLARE_ALGORITHM_FACTORY( CaloSinglePhotonAlg )
 // ============================================================================
 /*  Standard constructor
  *  @param name algorithm name 
@@ -57,7 +56,8 @@ CaloSinglePhotonAlg::CaloSinglePhotonAlg
   , m_hypotools2            () 
   , m_inputData    ( LHCb::CaloClusterLocation::Ecal   ) 
   , m_outputData   ( LHCb::CaloHypoLocation::Photons   ) 
-  , m_detData      ( DeCalorimeterLocation:: Ecal      ) 
+  , m_detData      ( DeCalorimeterLocation:: Ecal      )
+  , m_det(0)
 {
   m_selectorsTypeNames.push_back 
     ( "CaloSelectCluster/PhotonCluster"                   ) ;

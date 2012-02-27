@@ -4,7 +4,7 @@
 #include "Event/CaloCluster.h"
 #include "CaloSelectCluster.h"
 
-DECLARE_TOOL_FACTORY( CaloSelectCluster );
+DECLARE_TOOL_FACTORY( CaloSelectCluster )
 
 // ============================================================================
 CaloSelectCluster::CaloSelectCluster
@@ -19,20 +19,20 @@ CaloSelectCluster::CaloSelectCluster
   declareProperty ("MinEnergy"        , m_cut  = 0. ) ;
   declareProperty ("MinEt"            , m_etCut  = 0. ) ;
   declareProperty ("MaxDigits"        , m_mult = 9999 ) ;
-};
+}
 // ============================================================================
 
 // ============================================================================
 /// destructor (virtual and protected)
 // ============================================================================
-CaloSelectCluster::~CaloSelectCluster() {};
+CaloSelectCluster::~CaloSelectCluster() {}
 
 StatusCode CaloSelectCluster::initialize (){  
   // initialize the base class 
   StatusCode sc = GaudiTool::initialize () ;
 
   return sc;
-}; 
+}
 
 // ============================================================================
 /** @brief "select"  method 
@@ -43,7 +43,7 @@ StatusCode CaloSelectCluster::initialize (){
 // ============================================================================
 bool CaloSelectCluster::select( const LHCb::CaloCluster* cluster ) const{ 
 return (*this) ( cluster ); 
-};
+}
 // ============================================================================
 bool CaloSelectCluster::operator()( const LHCb::CaloCluster* cluster   ) const{
   // check the cluster 
@@ -58,4 +58,4 @@ bool CaloSelectCluster::operator()( const LHCb::CaloCluster* cluster   ) const{
   bool sel =  (e>m_cut) && (m<m_mult) && (et>m_etCut);
   counter("selected clusters") += (int) sel;
   return sel ;
-};
+}

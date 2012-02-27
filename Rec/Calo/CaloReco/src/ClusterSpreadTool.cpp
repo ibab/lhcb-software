@@ -1,6 +1,3 @@
-// $Id: ClusterSpreadTool.cpp,v 1.8 2010-03-08 01:19:40 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // Include files
 // ============================================================================
@@ -24,7 +21,7 @@
  *  @date 23/11/2001
  */
 // ============================================================================
-DECLARE_TOOL_FACTORY( ClusterSpreadTool );
+DECLARE_TOOL_FACTORY( ClusterSpreadTool )
 // ============================================================================
 /*  Standard constructor
  *  @param type tool type (useless)
@@ -39,6 +36,7 @@ ClusterSpreadTool::ClusterSpreadTool
   : GaudiTool    ( type , name , parent )
   , m_estimator (      )
   , m_detData   ( DeCalorimeterLocation::Ecal )
+  , m_det(0)
 {
   declareProperty( "Detector"        , m_detData  );
   /// declare available interafces 

@@ -1,6 +1,3 @@
-// $Id: SubClusterSelector3x3.cpp,v 1.6 2010-03-08 01:19:40 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // Include files
 // from Gaudi
@@ -23,7 +20,7 @@
  */
 // ============================================================================
 
-DECLARE_TOOL_FACTORY( SubClusterSelector3x3 );
+DECLARE_TOOL_FACTORY( SubClusterSelector3x3 )
 
 // ============================================================================
 /** Standard Tool Constructor
@@ -38,13 +35,13 @@ SubClusterSelector3x3::SubClusterSelector3x3( const std::string& type,
                                               const IInterface* parent )
   : SubClusterSelectorBase ( type, name , parent ) 
   , m_matrix ()
-{};
+{}
 
 // ============================================================================
 /** destructor 
  */
 // ============================================================================
-SubClusterSelector3x3::~SubClusterSelector3x3() {};
+SubClusterSelector3x3::~SubClusterSelector3x3() {}
 
 // ============================================================================
 /** standard initiliazation 
@@ -63,7 +60,7 @@ StatusCode SubClusterSelector3x3::initialize()
     { return Error("DeCalorimeter* ponts to NULL!"); }
   ///
   return StatusCode::SUCCESS ;
-};
+}
 
 // ============================================================================
 /** The main processing method  
@@ -84,7 +81,7 @@ StatusCode SubClusterSelector3x3::tag ( LHCb::CaloCluster* cluster ) const
     { return Error( "Error from 'tagTheSubCluster()'" , sc ); }
   //
   return StatusCode::SUCCESS ;  
-};
+}
 
 // ============================================================================
 /** The main processing method (untag) 
@@ -104,7 +101,7 @@ StatusCode SubClusterSelector3x3::untag ( LHCb::CaloCluster* cluster ) const
     { return Error( "Error from 'untagTheSubCluster()'" , sc ); }
   //
   return StatusCode::SUCCESS ;  
-};
+}
 
 // ============================================================================
 // The End 

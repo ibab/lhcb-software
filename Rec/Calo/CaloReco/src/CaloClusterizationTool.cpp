@@ -114,7 +114,7 @@ CaloClusterizationTool::appliRulesTagger
     cell->setEdge();
     break;
   }
-};
+}
 
 // ============================================================================
 inline StatusCode CaloClusterizationTool::setEXYCluster( LHCb::CaloCluster* cluster, const DeCalorimeter* detector ){

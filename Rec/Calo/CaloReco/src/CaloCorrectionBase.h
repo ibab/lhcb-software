@@ -43,7 +43,7 @@ namespace CaloCorrectionUtils{
   private:
     int m_calo ;
   };
-};
+}
 
 namespace CaloCorrection {
   enum  Function{

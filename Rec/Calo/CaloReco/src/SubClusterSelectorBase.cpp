@@ -1,25 +1,5 @@
-// $Id: SubClusterSelectorBase.cpp,v 1.6 2010-03-08 01:19:40 odescham Exp $
+// ============================================================================
 // Include files 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.5  2008/06/30 15:36:33  odescham
-// prepare for HLT processing
-//
-// Revision 1.4  2006/05/30 09:42:06  odescham
-// first release of the CaloReco migration
-//
-// Revision 1.3  2005/11/07 12:12:44  odescham
-// v3r0 : adapt to the new Track Event Model
-//
-// Revision 1.2  2004/02/17 12:08:11  ibelyaev
-//  update for new CaloKernel and CaloInterfaces
-//
-// Revision 1.1.1.1  2002/11/13 20:46:43  ibelyaev
-// new package 
-//
-// Revision 1.6  2002/04/23 10:49:03  ibelyaev
 // ============================================================================
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -55,6 +35,7 @@ SubClusterSelectorBase::SubClusterSelectorBase( const std::string& type,
   : GaudiTool  ( type, name , parent ) 
   , m_modify  ( false               )
   , m_detData   ( DeCalorimeterLocation::Ecal )
+  , m_det(0)
 {
   /// declare the available interfaces
   declareInterface<ICaloClusterTool>   ( this )    ;
@@ -62,13 +43,13 @@ SubClusterSelectorBase::SubClusterSelectorBase( const std::string& type,
   /// 
   declareProperty ( "ModifyFractions" , m_modify ) ;
   declareProperty( "Detector"         , m_detData  );
-};
+}
 // ============================================================================
 
 // ============================================================================
 /// destructor
 // ============================================================================
-SubClusterSelectorBase::~SubClusterSelectorBase() {};
+SubClusterSelectorBase::~SubClusterSelectorBase() {}
 // ============================================================================
 
 // ============================================================================
@@ -95,7 +76,7 @@ StatusCode SubClusterSelectorBase::initialize ()
   m_det = getDet<DeCalorimeter>( m_detData ) ;
   // 
   return StatusCode::SUCCESS;
-};
+}
 // ============================================================================
 
 // ============================================================================

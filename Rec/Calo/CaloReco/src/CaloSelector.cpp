@@ -1,4 +1,3 @@
-// $Id: CaloSelector.cpp,v 1.9 2009-08-05 17:38:30 ibelyaev Exp $
 // ============================================================================
 // Include files
 // from Gaudi
@@ -18,7 +17,7 @@
  */
 // ============================================================================
 
-DECLARE_TOOL_FACTORY( CaloSelector );
+DECLARE_TOOL_FACTORY( CaloSelector )
 
 // ============================================================================
 /** Standard constructor
@@ -42,14 +41,12 @@ CaloSelector::CaloSelector( const std::string&  type   ,
   declareProperty( "LikelihoodType" , m_lhType ) ;
   declareProperty( "LikelihoodName" , m_lhType ) ;
   declareProperty( "LikelihoodCut"  , m_cut    ) ;
-};
+}
 
 // ============================================================================
 /// destructor (virtual and protected)
 // ============================================================================
-CaloSelector::~CaloSelector()
-{
-};
+CaloSelector::~CaloSelector() {}
 
 // ============================================================================
 /** standard initialization of the tool 
@@ -72,7 +69,7 @@ StatusCode CaloSelector::initialize()
   if( 0 == m_likelihood ) { return StatusCode::FAILURE ; }
   //
   return StatusCode::SUCCESS ;
-};
+}
 
 // ============================================================================
 /** standard finalization  of the tool 
@@ -86,7 +83,7 @@ StatusCode CaloSelector::finalize()
 {
   ///finalize the base class 
   return GaudiTool::finalize() ;
-};
+}
 
 // ============================================================================
 /** "select"/"preselect" method (functor interface)
@@ -99,7 +96,7 @@ bool CaloSelector::operator() ( const LHCb::CaloCluster* cluster ) const
 {
   if( 0 == cluster ) {  return false ; }
   return  m_cut <= (*m_likelihood) (cluster) ;
-};
+}
 
 // ============================================================================
 /** "select"/"preselect" method 
