@@ -34,10 +34,7 @@ TrackKalmanFilter::TrackKalmanFilter( const std::string& type,
   GaudiTool( type, name, parent)
 {
   declareInterface<ITrackKalmanFilter>( this );
-
-  declareProperty( "BiDirectionalFit" , m_biDirectionalFit  = true   );
-  declareProperty( "Smooth", m_smooth = true ) ;
-  declareProperty( "ForceBiDirectional" , m_forceBidirectional  = true   );
+  declareProperty( "ForceBiDirectionalFit" , m_forceBiDirectionalFit  = true   );
   declareProperty( "ForceSmooth" , m_forceSmooth  = false   );
   declareProperty( "DoF", m_DoF = 5u);
 }
@@ -85,7 +82,7 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track ) const
     (*inode)->predictedState(LHCb::FitNode::Forward) ;
     (*inode)->filteredState(LHCb::FitNode::Forward) ;
   }
-  if(m_forceBidirectional){
+  if(m_forceBiDirectionalFit){
     for( LHCb::KalmanFitResult::FitNodeRange::reverse_iterator inode = nodes.rbegin() ;
 	 inode != nodes.rend(); ++inode) {
       (*inode)->predictedState(LHCb::FitNode::Backward) ;
@@ -123,11 +120,14 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track ) const
     }
   }
   
-  LHCb::ChiSquare chisqfw = nodes.front()->totalChi2(LHCb::FitNode::Backward) ;
-  LHCb::ChiSquare chisqbw = nodes.back()->totalChi2(LHCb::FitNode::Forward) ;
-  int ndof = chisqfw.nDoF() - (npar - kalfit->nTrackParameters() ) ;
-  // FIXME: why don't we take the maximum, like in KalmanFitResult?
-  track.setChi2AndDoF( std::min(chisqfw.chi2(),chisqbw.chi2()), ndof );
+  LHCb::ChiSquare chisq = nodes.front()->totalChi2(LHCb::FitNode::Backward) ;
+  int ndof = chisq.nDoF() - (npar - kalfit->nTrackParameters() ) ;
+  if( m_forceBiDirectionalFit ) {
+    // FIXME: why don't we take the maximum, like in KalmanFitResult?
+    LHCb::ChiSquare chisqbw = nodes.back()->totalChi2(LHCb::FitNode::Forward) ;
+    if( chisqbw.chi2() < chisq.chi2() ) chisq = chisqbw ;
+  }
+  track.setChi2AndDoF( chisq.chi2(), ndof );
   
   return sc ;
 }
