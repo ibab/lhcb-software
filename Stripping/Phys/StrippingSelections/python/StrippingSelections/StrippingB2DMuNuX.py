@@ -27,6 +27,7 @@ __all__ = ('B2DMuNuXAllLinesConf',
 
 confdict = {
     "PrescalD0Mu"    : 0.5    # for D0->KPi line
+    ,"PrescalDsPi_fakes"  : 0.5    # for Bs->(Ds->PhiPi)Pi for Fakes line
     ,"MINIPCHI2"     : 9.0    # adimensiional
     ,"TRCHI2"        : 4.0    # adimensiional
     ,"TRCHI2Loose"   : 5.0    # adimensiional    
@@ -40,7 +41,6 @@ confdict = {
     ,"DsFDCHI2"      : 100.0  # adimensiional
     ,"DsMassWin"     : 80.0   # MeV
     ,"DsAMassWin"    : 100.0  # MeV
-    ,"DsIPMin"       : 0.0498 #mm
     ,"DsIP"          : 7.4    #mm
     ,"DsVCHI2DOF"    : 6.0    # adimensiional
     ,"PIDmu"         : -0.0   # adimensiional
@@ -88,7 +88,8 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
     """
 
     __configuration_keys__ = (
-        "PrescalD0Mu" 
+        "PrescalD0Mu"
+        ,"PrescalDsPi_fakes" 
         ,"MINIPCHI2"     
         ,"TRCHI2"     
         ,"TRCHI2Loose"   
@@ -102,7 +103,6 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         ,"DsFDCHI2"      
         ,"DsMassWin"     
         ,"DsAMassWin"    
-        ,"DsIPMin"  
         ,"DsIP"          
         ,"DsVCHI2DOF"    
         ,"PIDmu"         
@@ -653,7 +653,7 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         self.b2DsMuXPhiPiLine = StrippingLine('b2DsMuXPhiPi' + name + 'Line', prescale = 1, selection = self.selb2DsMuXPhiPi)
         self.b2DsPi_PhiPi_fakesLine = StrippingLine('b2DsPi_PhiPi_fakes' + name + 'Line'
                                                     , HLT     = "HLT_PASS_RE('Hlt2IncPhi.*Decision')"
-                                                    , prescale = 1.0
+                                                    , prescale = config['PrescalDsPi_fakes']
                                                     , selection = self.selb2DsPi_PhiPi_fakes
                                                     )
 
@@ -1070,7 +1070,7 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         _combinationCut = "(DAMASS('D_s+') < %(DsAMassWin)s *MeV) & (DAMASS('D+')> -%(DsAMassWin)s *MeV) & (ACHILD(PT,1)+ACHILD(PT,2) > 800.*MeV) & (ACHILD(MIPCHI2DV(PRIMARY),1)+ACHILD(MIPCHI2DV(PRIMARY),2)> %(MINIPCHI2Loose)s) " % self.__confdict__
         _motherCut = "(SUMTREE( PT,  ISBASIC )>800.*MeV) &(DMASS('D_s+') < %(DsMassWin)s *MeV) & (DMASS('D+') > -%(DsMassWin)s *MeV)"\
                      "& (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
-                     "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s) & (BPVIP()> %(DsIPMin)s *mm)"  % self.__confdict__
+                     "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s)"  % self.__confdict__
         _ds2phipi_forfakes = CombineParticles( DecayDescriptors = _decayDescriptors,
                                                CombinationCut = _combinationCut,
                                                MotherCut = _motherCut)                             
