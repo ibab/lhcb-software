@@ -156,7 +156,7 @@ def ConfiguredHltFitter( Name ):
     return fitter
 
 
-def ConfiguredFastFitter( Name, FieldOff = None, LiteClusters = True,
+def ConfiguredForwardFitter( Name, FieldOff = None, LiteClusters = True,
                           ForceUseDriftTime = True ):
     fitter = ConfiguredMasterFitter(Name,
                                     FieldOff=FieldOff,
@@ -165,28 +165,33 @@ def ConfiguredFastFitter( Name, FieldOff = None, LiteClusters = True,
     fitter.NumberFitIterations = 1
     fitter.MaxNumberOutliers = 0
     fitter.AddDefaultReferenceNodes = False
-    fitter.NodeFitter.BiDirectionalFit = False
+    fitter.NodeFitter.ForceBiDirectionalFit = False
+    fitter.FillExtraInfo = False
     fitter.UpdateReferenceInOutlierIterations = False
     if ForceUseDriftTime:
         from Configurables import TrajOTProjector, TrackProjectorSelector
         otprojector = TrajOTProjector('OTFastFitProjector')
         otprojector.PrefitStrategy = 0
         fitter.Projector.OT = otprojector
-        
-    # at some point, need to switch to analytic evaluation
-    # TrackHerabExtrapolator().extrapolatorID = 4
     return fitter
 
-def ConfiguredFastEventFitter( Name, TracksInContainer,
+def ConfiguredForwardEventFitter( Name, TracksInContainer,
                                ForceUseDriftTime = True ):
     eventfitter = TrackEventFitter(Name)
     eventfitter.TracksInContainer = TracksInContainer
     fittername = Name + ".Fitter"
-    eventfitter.addTool( ConfiguredFastFitter( Name = fittername, ForceUseDriftTime = ForceUseDriftTime ), name = "Fitter")
+    eventfitter.addTool( ConfiguredForwardFitter( Name = fittername, ForceUseDriftTime = ForceUseDriftTime ), name = "Fitter")
     return eventfitter
 
-def ConfiguredFastVeloOnlyEventFitter( Name, TracksInContainer ):
-    eventfitter = ConfiguredFastFitter( Name, TracksInContainer,FieldOff=True )
+def ConfiguredHltEventFitter( Name, TracksInContainer ):
+    eventfitter = TrackEventFitter(Name)
+    eventfitter.TracksInContainer = TracksInContainer
+    fittername = Name + ".Fitter"
+    eventfitter.addTool( ConfiguredHltFitter( Name = fittername ), name = "Fitter")
+    return eventfitter
+
+def ConfiguredVeloOnlyEventFitter( Name, TracksInContainer ):
+    eventfitter = ConfiguredFitter( Name, TracksInContainer,FieldOff=True )
     eventfitter.Fitter.MeasProvider.IgnoreIT = True
     eventfitter.Fitter.MeasProvider.IgnoreOT = True
     eventfitter.Fitter.MeasProvider.IgnoreTT = True
@@ -195,12 +200,24 @@ def ConfiguredFastVeloOnlyEventFitter( Name, TracksInContainer ):
 
 def ConfiguredStraightLineFitter( Name, TracksInContainer,
                                   NoDriftTimes = None ):
-    eventfitter = ConfiguredEventFitter(Name,TracksInContainer,
-                                        FieldOff=True,
-                                        NoDriftTimes=NoDriftTimes,
-                                        StateAtBeamLine=False,
-                                        ApplyMaterialCorrections=False)
-    eventfitter.Fitter.AddDefaultReferenceNodes = False
+    fitter = ConfiguredFitter(Name,TracksInContainer,
+                                   FieldOff=True,
+                                   NoDriftTimes=NoDriftTimes,
+                                   StateAtBeamLine=False,
+                                   ApplyMaterialCorrections=False)
+    fitter.Fitter.AddDefaultReferenceNodes = False
+    return eventfitter
+
+def ConfiguredForwardStraightLineFitter( Name ):
+    fitter =  ConfiguredForwardFitter( Name, FieldOff=True )
+    fitter.ApplyMaterialCorrections = False
+    return fitter
+
+def ConfiguredForwardStraightLineEventFitter( Name, TracksInContainer ):
+    eventfitter = TrackEventFitter(Name)
+    eventfitter.TracksInContainer = TracksInContainer
+    fittername = Name + ".Fitter"
+    eventfitter.addTool( ConfiguredForwardStraightLineFitter( Name = fittername ), name = "Fitter")
     return eventfitter
 
 def ConfiguredCosmicsEventFitter( Name, TracksInContainer,
