@@ -56,11 +56,6 @@ from Hlt2Lines.Hlt2CharmSemilepD02HMuNuLines     import Hlt2CharmSemilepD02HMuNu
 from Hlt2Lines.Hlt2CharmSemilepTwoMuonForMuMuHad import Hlt2CharmSemilepTwoMuonForMuMuHadConf
 from Hlt2Lines.Hlt2CharmSemilepD02HHMuMuLines   import Hlt2CharmSemilepD02HHMuMuLinesConf
 from Hlt2Lines.Hlt2CharmSemilepD2HMuMuLines   import Hlt2CharmSemilepD2HMuMuLinesConf
-from Hlt2Lines.Hlt2CharmSemilepTwoHadForMuMuHH import Hlt2CharmSemilepTwoHadForMuMuHHConf
-from Hlt2Lines.Hlt2CharmSemilep2Had1MuForHHMuMu import Hlt2CharmSemilep2Had1MuForHHMuMuConf
-from Hlt2Lines.Hlt2CharmSemilepD02HHMuMu2SoftMuonsLines import Hlt2CharmSemilepD02HHMuMu2SoftMuonsLinesConf
-from Hlt2Lines.Hlt2CharmSemilepD02HHMuMuHardHadronsAndMuonsLines import Hlt2CharmSemilepD02HHMuMuHardHadronsAndMuonsLinesConf
-from Hlt2Lines.Hlt2CharmSemilepD02HHMuMuHardHadronsSoftMuonsLines import Hlt2CharmSemilepD02HHMuMuHardHadronsSoftMuonsLinesConf
 from Hlt2Lines.Hlt2CharmRareDecayLines    import Hlt2CharmRareDecayLinesConf
 from Hlt2Lines.Hlt2CharmHadD2KS0HLines    import Hlt2CharmHadD2KS0HLinesConf
 from Hlt2Lines.Hlt2CharmHadD02HHKsLines   import Hlt2CharmHadD02HHKsLinesConf  
@@ -114,12 +109,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
                              , Hlt2CharmSemilepD02HMuNuLinesConf
                              , Hlt2CharmSemilepD02HHMuMuLinesConf
                              , Hlt2CharmSemilepD2HMuMuLinesConf
-                             , Hlt2CharmSemilepD02HHMuMuHardHadronsSoftMuonsLinesConf
-                             , Hlt2CharmSemilepD02HHMuMu2SoftMuonsLinesConf
-                             , Hlt2CharmSemilepD02HHMuMuHardHadronsAndMuonsLinesConf 
                              , Hlt2CharmSemilepTwoMuonForMuMuHadConf
-                             , Hlt2CharmSemilepTwoHadForMuMuHHConf
-                             , Hlt2CharmSemilep2Had1MuForHHMuMuConf
                              , Hlt2CharmRareDecayLinesConf
                              , Hlt2InclusiveDiMuonLinesConf
                              , Hlt2InclusiveMuonLinesConf
