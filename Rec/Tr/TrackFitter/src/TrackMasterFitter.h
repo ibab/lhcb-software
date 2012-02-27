@@ -121,6 +121,7 @@ private:
   int m_numOutlierIter;             ///< max number of outliers to be removed
   bool m_useSeedStateErrors;        ///< use errors of the seed state
   bool m_useClassicalSmoother  ;      ///< Use classical smoother
+  bool m_fillExtraInfo ;            ///< Fill the extra info
   
   double m_errorX ;                 ///< Seed error on x
   double m_errorY ;                 ///< Seed error on y

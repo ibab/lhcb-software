@@ -112,6 +112,7 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   declareProperty( "MinNumMuonHitsForOutlierRemoval",    m_minNumMuonHits    = 4 ) ;
   declareProperty( "MaxDeltaChiSqConverged",             m_maxDeltaChi2Converged = 0.01 ) ;
   declareProperty( "UseClassicalSmoother",       m_useClassicalSmoother = false ) ;
+  declareProperty( "FillExtraInfo", m_fillExtraInfo = true ) ;
 }
 
 //=========================================================================
@@ -325,7 +326,7 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
     debug() << "first state = " << track.firstState() << endmsg;
   
   // fill extra info
-  fillExtraInfo( track ) ;
+  if( m_fillExtraInfo ) fillExtraInfo( track ) ;
   
   // declare the track successful if there are no errors
   if( kalfitresult->inError() ) {
@@ -361,16 +362,19 @@ StatusCode TrackMasterFitter::determineStates( Track& track ) const
        inode != nodes.rend() && !lastMeasurementNode; ++inode ) 
     if( (*inode)->hasMeasurement() ) lastMeasurementNode = *inode ;
   bool upstream = nodes.front()->z() > nodes.back()->z() ;
-  if ( ( upstream && !track.checkFlag(Track::Backward ) ) ||
-       ( !upstream && track.checkFlag(Track::Backward ))) 
-    std::swap( lastMeasurementNode, firstMeasurementNode ) ;
-
-  State firststate = firstMeasurementNode->state() ;
-  firststate.setLocation( State::FirstMeasurement );
-  track.addToStates( firststate ) ;
-
+  bool reversed =  
+    ( upstream && !track.checkFlag(Track::Backward ) ) ||
+    ( !upstream && track.checkFlag(Track::Backward )) ;
+  
+  // This state is not filtered for a forward only fit.
+  if( m_addDefaultRefNodes ) {
+    State firststate = firstMeasurementNode->state() ;
+    firststate.setLocation( reversed ? State::LastMeasurement : State::FirstMeasurement );
+    track.addToStates( firststate ) ;
+  }
+  // This state is always filtered
   State laststate = lastMeasurementNode->state() ;
-  laststate.setLocation( State::LastMeasurement );
+  laststate.setLocation( reversed ? State::FirstMeasurement : State::LastMeasurement );
   track.addToStates( laststate ) ;
 
   // Add the states at the reference positions
