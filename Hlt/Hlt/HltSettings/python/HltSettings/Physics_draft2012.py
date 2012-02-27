@@ -44,8 +44,8 @@ class Physics_draft2012( object ):
         return '0x0037'
 
     def HltType(self) :
-        self.verifyType( Physics_Sept2011 ) 
-        return          'Physics_Sept2011'
+        self.verifyType( Physics_draft2012 ) 
+        return          'Physics_draft2012'
     
     def Thresholds(self) :
         """
