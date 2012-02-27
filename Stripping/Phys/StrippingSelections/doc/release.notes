@@ -4,6 +4,14 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-02-27 - Vanya Belyaev
+
+ - PromptCharm:
+
+    default cut for D0,D+,Ds,Lc:   pT(C)  > 3 * GeV 
+    for D*+:                       pT(D0) > 2 * GeV 
+
+
 ! 2012-02-27 - Jibo He
  - python/StrippingSelections/StrippingX2psiPiPi.py
    Fixed the bug of using StdNoPIDsPions, swtiched to StdAllNoPIDsPions; added KK modes. 

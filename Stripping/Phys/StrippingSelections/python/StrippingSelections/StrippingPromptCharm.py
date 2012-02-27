@@ -93,7 +93,6 @@ __version__ = '$Revision$'
 # =============================================================================
 __all__ = (
     'StrippingPromptCharmConf',
-    'default_config'
     )
 # =============================================================================
 
@@ -128,19 +127,29 @@ logger.setLevel(logging.INFO)
 ## Define the default configuration 
 _default_configuration_ = {
     #
+    #
+    ## PT-cuts 
+    #
+    'pT(D0)'           :  3.0 * GeV ,    ## pt-cut for  prompt   D0
+    'pT(D0) for D*+'   :  2.0 * GeV ,    ## pt-cut for  D0 from  D*+ 
+    'pT(D+)'           :  3.0 * GeV ,    ## pt-cut for  prompt   D+
+    'pT(Ds+)'          :  3.0 * GeV ,    ## pt-cut for  prompt   Ds+
+    'pT(Ds+) for Bc+'  :  1.0 * GeV ,    ## pt-cut for  Ds+ from Bc+
+    'pT(Lc+)'          :  3.0 * GeV ,    ## pt-cut for  prompt   Lc+
+    #
     # Selection of basic particles 
     #
-    'TrackCuts'       : ' ( TRCHI2DOF < 5 ) & ( PT > 250 * MeV ) '          , 
-    'BasicCuts'       : ' & ( 9 < MIPCHI2DV()   ) '                         , 
-    'KaonCuts'        : ' & ( 2 < PIDK  - PIDpi ) '                         , 
-    'PionCuts'        : ' & ( 2 < PIDpi - PIDK  ) '                         , 
-    'ProtonCuts'      : ' & ( 2 < PIDp  - PIDpi ) & ( 2 < PIDp - PIDK ) '   , 
-    'SlowPionCuts'    : ' TRCHI2DOF < 5   '                                 ,
-    'MuonCuts'        : ' ISMUON & ( PT > 650 * MeV ) & ( TRCHI2DOF < 5 ) ' , 
+    'TrackCuts'       : ' ( TRCHI2DOF < 5 ) & ( PT > 250 * MeV ) & in_range  ( 2 , ETA , 5 ) ' , 
+    'BasicCuts'       : ' & ( 9 < MIPCHI2DV() ) ' , 
+    'KaonCuts'        : ' & ( 2 < PIDK  - PIDpi ) '                           , 
+    'PionCuts'        : ' & ( 2 < PIDpi - PIDK  ) '                           , 
+    'ProtonCuts'      : ' & ( 2 < PIDp  - PIDpi ) & ( 2 < PIDp - PIDK ) '     , 
+    'SlowPionCuts'    : ' TRCHI2DOF < 5 '                                     ,
+    'MuonCuts'        : ' ISMUON & ( PT > 650 * MeV ) & ( TRCHI2DOF < 5 ) '   , 
     #
     # Global Event cuts 
     #
-    'PrimaryVertices' : True , 
+    'CheckPV'         : True , 
     #
     # Technicalities:
     #
@@ -152,11 +161,11 @@ _default_configuration_ = {
     # number of kaons in final state (as CombinationCuts)
     "ak2    = 2 == ANUM( 'K+' == ABSID ) "       ,
     # shortcut for chi2 of vertex fit 
-    'chi2vx = VFASPF(VCHI2) '                    , 
+    'chi2vx = VFASPF(VCHI2) '                    ,
     # shortcut for the c*tau
     "from GaudiKernel.PhysicalConstants import c_light" , 
     "ctau   = BPVLTIME ( 9 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<9
-    # dimons:
+    # dimuons:
     "psi           =   ADAMASS ('J/psi(1S)') < 150 * MeV"  ,
     "psi_prime     =   ADAMASS (  'psi(2S)') < 150 * MeV"  ,
     ] ,
@@ -164,16 +173,16 @@ _default_configuration_ = {
     'Monitor'     : False ,
     ## pescales 
     'D0Prescale'             : 1.0 ,
-    'DstarPrescale'          : 1.0 ,
+    'D*Prescale'             : 1.0 ,
     'DsPrescale'             : 1.0 ,
-    'DplusPrescale'          : 1.0 ,
-    'LamCPrescale'           : 1.0 ,
-    'LamCstarPrescale'       : 1.0 ,
-    'SigCPrescale'           : 1.0 ,
+    'D+Prescale'             : 1.0 ,
+    'LambdaCPrescale'        : 1.0 ,
+    'LambdaC*Prescale'       : 1.0 ,
+    'SigmaCPrescale'         : 1.0 ,
     'DiCharmPrescale'        : 1.0 , 
-    'DiMuonAndCharmPrescale' : 1.0 , 
-    'ChiAndCharmPrescale'    : 1.0 , 
-    'DsPsiPrescale'          : 1.0 ,
+    'DiMu&CharmPrescale'     : 1.0 , 
+    'Chi&CharmPrescale'      : 1.0 , 
+    'Ds&PsiPrescale'         : 1.0 ,
     }
 
 ## ============================================================================
@@ -244,61 +253,12 @@ class StrippingPromptCharmConf(LineBuilder) :
             
             val = _config[key]
             if val != _default_configuration_ [ key ] : 
-                logger.warning ('StrippingPromptCharm: new configuration: %-16s : %s ' % ( key , _config[key] ) )
+                logger.warning ('new configuration: %-16s : %s ' % ( key , _config[key] ) )
 
-        self._name         = name
-
-        self._trackcuts    =                   _config.pop ( 'TrackCuts'    , _default_configuration_ [ 'TrackCuts'    ] )
-        self._basiccuts    = self._trackcuts + _config.pop ( 'BasicCuts'    , _default_configuration_ [ 'BasicCuts'    ] )
-        self._kaoncuts     = self._basiccuts + _config.pop ( 'KaonCuts'     , _default_configuration_ [ 'KaonCuts'     ] )    
-        self._pioncuts     = self._basiccuts + _config.pop ( 'PionCuts'     , _default_configuration_ [ 'PionCuts'     ] )
-        self._protoncuts   = self._basiccuts + _config.pop ( 'ProtonCuts'   , _default_configuration_ [ 'ProtonCuts'   ] )
-        self._slowpioncuts =                   _config.pop ( 'SlowPionCuts' , _default_configuration_ [ 'SlowPionCuts' ] )
-        self._muoncuts     =                   _config.pop ( 'MuonCuts'     , _default_configuration_ [ 'MuonCuts'   ] )
-        
-        self._checkPV      = _config.pop ( 'PrimaryVertices' , _default_configuration_ [ 'PrimaryVertices' ] )
-
-        self.D0Prescale             = _config.pop ( 'D0Prescale'             , _default_configuration_ [ 'D0Prescale'             ] ) 
-        self.DstarPrescale          = _config.pop ( 'DstarPrescale'          , _default_configuration_ [ 'DstarPrescale'          ] )  
-        self.DsPrescale             = _config.pop ( 'DsPrescale'             , _default_configuration_ [ 'DsPrescale'             ] ) 
-        self.DplusPrescale          = _config.pop ( 'DplusPrescale'          , _default_configuration_ [ 'DplusPrescale'          ] ) 
-        self.LamCPrescale           = _config.pop ( 'LamCPrescale'           , _default_configuration_ [ 'LamCPrescale'           ] ) 
-        self.LamCstarPrescale       = _config.pop ( 'LamCstarPrescale'       , _default_configuration_ [ 'LamCstarPrescale'       ] ) 
-        self.SigCPrescale           = _config.pop ( 'SigCPrescale'           , _default_configuration_ [ 'SigCPrescale'           ] ) 
-        self.DiCharmPrescale        = _config.pop ( 'DiCharmPrescale'        , _default_configuration_ [ 'DiCharmPrescale'        ] ) 
-        self.DiMuonAndCharmPrescale = _config.pop ( 'DiMuonAndCharmPrescale' , _default_configuration_ [ 'DiMuonAndCharmPrescale' ] )
-        self.ChiAndCharmPrescale    = _config.pop ( 'ChiAndCharmPrescale'    , _default_configuration_ [ 'ChiAndCharmPrescale'    ] )
-        self.DsPsiPrescale          = _config.pop ( 'DsPsiPrescale'          , _default_configuration_ [ 'DsPsiPrescale'          ] )
-
-            
-        self._Preambulo    = _config.pop ( 'Preambulo'       , _default_configuration_ [ 'Preambulo'       ] )
-        self._monitor      = _config.pop ( 'Monitor'         , _default_configuration_ [ 'Monitor'         ] )
-        
-        if _config :
-            raise KeyError ( 'Invalid keys are specified for configuration: %s ' % _config.keys() )
-        
-        if 1.0 != self.D0Prescale             :
-            logger.warning ( 'D0              prescale is %s' % self.D0Prescale      )
-        if 1.0 != self.DstarPrescale          :
-            logger.warning ( 'D*+             prescale is %s' % self.DstarPrescale   )
-        if 1.0 != self.DplusPrescale          :
-            logger.warning ( 'D+              prescale is %s' % self.DplusPrescale   )
-        if 1.0 != self.DsPrescale             :
-            logger.warning ( 'D_s+            prescale is %s' % self.DsPrescale      )
-        if 1.0 != self.LamCPrescale           :
-            logger.warning ( 'Lambda_c+       prescale is %s' % self.LamCPrescale    )
-        if 1.0 != self.SigCPrescale           :
-            logger.warning ( 'Sigma_c+        prescale is %s' % self.SigCPrescale    )
-        if 1.0 != self.LamCstarPrescale       :
-            logger.warning ( 'Lambda_c*+      prescale is %s' % self.LamCstarPrescale)
-        if 1.0 != self.DiCharmPrescale        :
-            logger.warning ( '2xCharm         prescale is %s' % self.DiCharmPrescale )
-        if 1.0 != self.DiMuonAndCharmPrescale :
-            logger.warning ( 'DiMuon&Charm    prescale is %s' % self.DiMuonAndCharmPrescale )
-        if 1.0 != self.ChiAndCharmPrescale    :
-            logger.warning ( 'Chi_(c,b)&Charm prescale is %s' % self.ChiAndCharmPrescale    )
-        if 1.0 != self.DsPsiPrescale          :
-            logger.warning ( 'D_s+&psi        prescale is %s' % self.DsPsiPrescale    )
+        ## cehck for prescales 
+        for keys in self.keys() :
+            if 0 > key.find('Prescale') and 0 > key.find('prescale') :  continue
+            if 1 != self[key] : logger.warning ( '%s is %s' % ( key , self[key] ) ) 
             
         for line in self._lines_charm() :
             self.registerLine(line)
@@ -364,80 +324,80 @@ class StrippingPromptCharmConf(LineBuilder) :
         sel = [
             ##
             StrippingLine (
-            "D02HHFor" + self._name ,
-            prescale = self.D0Prescale    , ## ATTENTION! Prescale here !!
-            checkPV  = self._checkPV      ,
-            algos    = [ self.D02HH() ]
+            "D02HHFor" + self.name() ,
+            prescale = self['D0Prescale'  ]  , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'     ]  ,
+            algos    =     [ self.D02HH() ]
             ) ,
             ## 
             StrippingLine (
-            "DstarFor" + self._name ,
-            prescale = self.DstarPrescale , ## ATTENTION! Prescale here !!
-            checkPV  = self._checkPV      ,
-            algos    = [ self.Dstar() ]
+            "DstarFor" + self.name() ,
+            prescale = self['D*Prescale'  ] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'     ] ,
+            algos    =     [ self.Dstar() ]
             ) ,
             ##
             StrippingLine (
-            "DsFor" + self._name ,
-            prescale = self.DsPrescale    , ## ATTENTION! Prescale here !!
-            checkPV  = self._checkPV      ,
-            algos    = [ self.Ds()    ]
+            "DsFor" + self.name() ,
+            prescale = self['DsPrescale']    , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'   ]    ,
+            algos    =     [ self.Ds()  ]
             ) ,
             ##
             StrippingLine (
-            "DFor" + self._name ,
-            prescale = self.DplusPrescale , ## ATTENTION! Prescale here !!
-            checkPV  = self._checkPV      ,
-            algos    = [ self.Dplus () ]
+            "DFor" + self.name() ,
+            prescale = self['D+Prescale' ] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'    ] ,
+            algos    =     [ self.Dplus () ]
             ) ,
             ##
             StrippingLine (
-            "LambdaCFor" + self._name ,
-            prescale = self.LamCPrescale  , ## ATTENTION! Prescale here !!
-            checkPV  = self._checkPV      ,
-            algos    = [ self.LamC () ]
+            "LambdaCFor" + self.name() ,
+            prescale = self['LambdaCPrescale'] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'        ] ,
+            algos    =     [ self.LamC () ]
             ) ,
             ## Sigma_c 
             StrippingLine (
-            "SigmaCFor" + self._name ,
-            prescale = self.SigCPrescale  , ## ATTENTION! Prescale here !!
-            checkPV  = self._checkPV      ,
-            algos    = [ self.SigC () ]
+            "SigmaCFor" + self.name() ,
+            prescale = self['SigmaCPrescale'] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'       ] ,
+            algos    =     [ self.SigC ()   ]
             ) ,
             ## Lambda_c* 
             StrippingLine (
-            "LambdaCstarFor" + self._name ,
-            prescale = self.LamCstarPrescale  , ## ATTENTION! Prescale here !!
-            checkPV  = self._checkPV      ,
-            algos    = [ self.LamCstar () ]
+            "LambdaCstarFor" + self.name() ,
+            prescale = self['LambdaC*Prescale'] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'         ] ,
+            algos    =     [ self.LamCstar () ]
             ) ,
             ##
             StrippingLine (
-            "DiCharmFor" + self._name ,
-            prescale = self.DiCharmPrescale  , ## ATTENTION! Prescale here !!              
-            checkPV  = self._checkPV         ,
+            "DiCharmFor" + self.name() ,
+            prescale = self['DiCharmPrescale'] , ## ATTENTION! Prescale here !!              
+            checkPV  = self['CheckPV'        ] ,
             algos    = [ self.DiCharm () ]            
             ) ,
             ## 
             StrippingLine (
-            "DiMuonAndCharmFor" + self._name ,
-            prescale = self.DiMuonAndCharmPrescale  , ## ATTENTION! Prescale here !!              
-            checkPV  = self._checkPV         ,
-            algos    = [ self.DiMuonAndCharm () ]            
+            "DiMuonAndCharmFor" + self.name()     ,
+            prescale = self['DiMu&CharmPrescale'] , ## ATTENTION! Prescale here !!              
+            checkPV  = self['CheckPV'           ] ,
+            algos    =     [ self.DiMuonAndCharm () ]            
             ) ,
             ##
             StrippingLine (
-            "ChiAndCharmFor" + self._name ,
-            prescale = self.ChiAndCharmPrescale  , ## ATTENTION! Prescale here !!              
-            checkPV  = self._checkPV         ,
-            algos    = [ self.ChiAndCharm () ]            
+            "ChiAndCharmFor" + self.name() ,
+            prescale = self['Chi&CharmPrescale']  , ## ATTENTION! Prescale here !!              
+            checkPV  = self['CheckPV'          ] ,
+            algos    =     [ self.ChiAndCharm () ]            
             ) ,
             ## 
             StrippingLine (
-            "DsPsiFor" + self._name ,
-            prescale = self.DsPsiPrescale  , ## ATTENTION! Prescale here !!              
-            checkPV  = self._checkPV         ,
-            algos    = [ self.DsPsi () ]            
+            "DsPsiFor" + self.name() ,
+            prescale   = self['Ds&PsiPrescale' ] , ## ATTENTION! Prescale here !!              
+            checkPV    = self['CheckPV'        ] ,
+            algos      =     [ self.DsPsi () ]            
             ) ,
             ## 
             ]
@@ -451,15 +411,15 @@ class StrippingPromptCharmConf(LineBuilder) :
         get Charm stripping lines
         """
         return self._lines_charm () 
-            
-    def trackCuts    ( self ) : return self._trackcuts 
-    def basicCuts    ( self ) : return self._basiccuts
-    def kaonCuts     ( self ) : return self._kaoncuts 
-    def pionCuts     ( self ) : return self._pioncuts 
-    def protonCuts   ( self ) : return self._protoncuts 
-    def slowPionCuts ( self ) : return self._slowpioncuts 
-    def muonCuts     ( self ) : return self._muoncuts 
-
+    
+    def trackCuts    ( self ) : return                    self [ 'TrackCuts'    ] 
+    def basicCuts    ( self ) : return self.trackCuts() + self [ 'BasicCuts'    ] 
+    def kaonCuts     ( self ) : return self.basicCuts() + self [ 'KaonCuts'     ] 
+    def pionCuts     ( self ) : return self.basicCuts() + self [ 'PionCuts'     ] 
+    def protonCuts   ( self ) : return self.basicCuts() + self [ 'ProtonCuts'   ] 
+    def slowPionCuts ( self ) : return                    self [ 'SlowPionCuts' ]
+    def muonCuts     ( self ) : return                    self [ 'MuonCuts'     ]
+    
     ## get the selection of kaons 
     def kaons ( self ) :
         """
@@ -468,7 +428,9 @@ class StrippingPromptCharmConf(LineBuilder) :
         sel = self._selection ( 'KaonSelection')
         if sel : return sel
         
-        _KaonFilter = FilterDesktop ( Code = " ( 'K+'  == ABSID ) & ( %s ) " % self.kaonCuts() )
+        _KaonFilter = FilterDesktop ( Code = """
+        ( 'K+'  == ABSID ) & ( %s )
+        """ % self.kaonCuts() )
         #
         sel = Selection (
             'SelKaonsFor'      + self.name() ,
@@ -486,7 +448,10 @@ class StrippingPromptCharmConf(LineBuilder) :
         sel = self._selection ( 'PionSelection')
         if sel : return sel
         
-        _PionFilter = FilterDesktop ( Code = " ( 'pi+' == ABSID ) & ( %s ) " % self.pionCuts() )
+        _PionFilter = FilterDesktop (
+            Code = """
+            ( 'pi+' == ABSID ) & ( %s )
+            """ % self.pionCuts() )
         #
         sel = Selection (
             'SelPionsFor'      + self.name() ,
@@ -505,10 +470,13 @@ class StrippingPromptCharmConf(LineBuilder) :
         sel = self._selection ( 'ProtonSelection')
         if sel : return sel
         
-        _ProtonFilter = FilterDesktop ( Code = " ( 'p+'  == ABSID ) & ( %s ) " % self.protonCuts() )
+        _ProtonFilter = FilterDesktop (
+            Code = """
+            ( 'p+'  == ABSID ) & ( %s )
+            """ % self.protonCuts() )
         
         sel = Selection (
-            'SelProtonsFor' + self._name ,
+            'SelProtonsFor' + self.name() ,
             Algorithm          = _ProtonFilter ,
             RequiredSelections = [ StdLooseProtons ]
             )
@@ -525,14 +493,14 @@ class StrippingPromptCharmConf(LineBuilder) :
         
         #
         sel = MergedSelection (
-            'SelBasicMesonsFor' + self._name , 
+            'SelBasicMesonsFor' + self.name() , 
             RequiredSelections = [ self.pions() , self.kaons() ]
             )
         #
         return self._add_selection ( 'MesonSelection' , sel )
     
     ## get the common preambulo: 
-    def preambulo ( self ) : return self._Preambulo
+    def preambulo ( self ) : return self['Preambulo']
     
     ## get the preselection of D0->hh
     def preD02HH ( self ) :
@@ -555,22 +523,25 @@ class StrippingPromptCharmConf(LineBuilder) :
             ## combination cut : wide mass-cut & PT-cut 
             CombinationCut = """
             ( ADAMASS('D0') < 85 * MeV ) &
-            ( APT > 1750 * MeV         )
-            """ , 
+            ( APT >  %s  )
+            """ %  ( 0.95 * min ( self['pT(D0)'        ] , 
+                                  self['pT(D0) for D*+'] ) ) ,
+            #
             ## mother cut
             MotherCut      = """ 
             ( chi2vx < 9 )              &
-            ( PT     > 2.0 * GeV      ) & 
+            ( PT     > %s             ) & 
             ( ADMASS('D0') < 75 * MeV ) &
             ( abs ( LV01 ) < 0.9      ) &
-            ( ctau > 100 * micrometer )
-            """
+            ( ctau > 100 * micrometer )  
+            """ %           min ( self['pT(D0)'        ] , 
+                                  self['pT(D0) for D*+'] ) 
             )
         #
         ## make (pre)selection
         sel = Selection (
             ##
-            'PreSelD02HHFor' + self._name ,
+            'PreSelD02HHFor'   + self.name()     ,
             ##
             Algorithm          = _D0PreCombine   ,
             ##
@@ -588,12 +559,12 @@ class StrippingPromptCharmConf(LineBuilder) :
         """
         sel = self._selection ( 'D02HHForPromptCharm_Selection' ) 
         if sel : return sel
-
+        
         ##
-        _D0Filter = FilterDesktop (
+        _fltr = FilterDesktop (
             ##
-            Monitor      = self._monitor  ,
-            HistoProduce = self._monitor  ,
+            Monitor      = self['Monitor']  ,
+            HistoProduce = self['Monitor']  ,
             ##
             Preambulo = self.preambulo() + [
             "hKpi = Gaudi.Histo1DDef ( 'mass K pi' , 1800 , 1920 , 60 )" ,
@@ -601,11 +572,11 @@ class StrippingPromptCharmConf(LineBuilder) :
             ] ,
             ##
             Code      = """
-            ( PT             > 2.0 * GeV  ) & 
+            ( PT             > %s         ) & 
             ( ADMASS( 'D0' ) < 75  * MeV  ) &
             ( kk | kpi )                    &
-            ( ctau > 100 * micrometer )
-            """ ,
+            ( ctau > 100 * micrometer )      
+            """ %  self['pT(D0)'] ,
             ##
             PostMonitor  = """
             process ( switch ( kpi , monitor ( M , hKpi , 'mass Kpi' ) , monitor ( M , hKK  , 'mass KK'  ) ) ) >> ~EMPTY 
@@ -614,8 +585,8 @@ class StrippingPromptCharmConf(LineBuilder) :
         
         ## make selection 
         sel = Selection (
-            'SelD02HHFor' + self._name ,
-            Algorithm          = _D0Filter          ,
+            'SelD02HHFor'      + self. name()      ,
+            Algorithm          = _fltr             ,
             RequiredSelections = [ self.preD02HH() ]
             )
         
@@ -633,10 +604,10 @@ class StrippingPromptCharmConf(LineBuilder) :
         sel = self._selection ( 'DstarForPromptCharm_Selection' )
         if sel : return sel 
         
-        _DstarCombine = CombineParticles(
+        cmb = CombineParticles(
             ##
-            Monitor      = self._monitor  ,
-            HistoProduce = self._monitor  ,
+            Monitor      = self['Monitor'] ,
+            HistoProduce = self['Monitor'] ,
             ##
             DecayDescriptors = [
             " [D*(2010)+ -> D0 pi+]cc" ,
@@ -649,7 +620,10 @@ class StrippingPromptCharmConf(LineBuilder) :
             ##
             DaughtersCuts = {
             'pi+' :  self.slowPionCuts() ,
-            'D0'  : " switch ( pipi , in_range ( -50 * MeV , DMASS('D0') , 75 * MeV ) , ALL ) "
+            'D0'  : """
+            ( PT > %s ) & 
+            switch ( pipi , in_range ( -50 * MeV , DMASS('D0') , 75 * MeV ) , ALL )
+            """ % self['pT(D0) for D*+'] 
             } ,
             ##
             CombinationCut = """
@@ -666,13 +640,13 @@ class StrippingPromptCharmConf(LineBuilder) :
             process ( monitor ( M - M1 , hdm1 , 'Delta Mass' ) )  >> ~EMPTY 
             """
             )
-
+        
         ## convert it to selection
         sel = Selection  (
             ##
-            "SelDstarFor" + self._name ,
+            "SelDstarFor"      + self.name() ,
             ## 
-            Algorithm          = _DstarCombine ,
+            Algorithm          = cmb         ,
             ##
             ## ATTENITON: we need slow prompt pions!
             RequiredSelections = [ self.preD02HH() ,
@@ -692,10 +666,11 @@ class StrippingPromptCharmConf(LineBuilder) :
         sel = self._selection ( 'PreDsForPromptCharm_Selection' )
         if sel : return sel 
         
-        _DsCombine = CombineParticles(
+        cmb = CombineParticles(
             ## 
-            Monitor      = self._monitor  ,
-            HistoProduce = self._monitor  ,
+            Monitor      = self['Monitor'] ,
+            HistoProduce = self['Monitor'] ,
+            ##
             ##
             DecayDescriptors = [
             " [D_s+ -> K-  K+  pi+ ]cc" , ## through phi !!!
@@ -712,17 +687,19 @@ class StrippingPromptCharmConf(LineBuilder) :
             ] ,
             ##                                 phi                         
             CombinationCut = """
-            aphi                 &
-            ( APT > 950 * MeV ) & 
+            aphi          &
+            ( APT > %s  ) & 
             ( admD | admDs  ) 
-            """ ,
-            ##
-            # ATTENTION: there is neither c*tau nor pointing cuts here!
+            """  % ( 0.95 * min ( self['pT(Ds+)'        ] ,
+                                  self['pT(Ds+) for Bc+'] ) ) ,
+            #
+            ## ATTENTION: there is neither c*tau nor pointing cuts here!
             MotherCut      = """
-            ( chi2vx  < 25            ) &
-            ( PT      > 1.0 * GeV     ) & 
-            ( dmD | dmDs              ) 
-            """ , 
+            ( chi2vx  < 25  ) &
+            ( PT      > %s  ) & 
+            ( dmD | dmDs    ) 
+            """  % min ( self['pT(Ds+)'        ] ,
+                         self['pT(Ds+) for Bc+'] ) ,
             ##
             MotherMonitor  = """
             process ( monitor ( M , hKKpi , 'mass KKpi' )  ) >> ~EMPTY 
@@ -731,8 +708,8 @@ class StrippingPromptCharmConf(LineBuilder) :
         
         ## convert it to selection
         sel = Selection (
-            "SelPreDsFor" + self._name ,
-            Algorithm          = _DsCombine ,
+            "SelPreDsFor"      + self.name()     ,
+            Algorithm          = cmb             ,
             RequiredSelections = [ self.mesons() ]
             )
         
@@ -746,17 +723,17 @@ class StrippingPromptCharmConf(LineBuilder) :
         sel = self._selection ( 'DsForPromptCharm_Selection' )
         if sel : return sel 
         
-        _DsFilter = FilterDesktop ( 
+        fltr = FilterDesktop ( 
             Code = """
-            ( PT   > 2.0 * GeV        ) & 
+            ( PT   > %s               ) & 
             ( ctau > 100 * micrometer )  
-            """ 
+            """  % self['pT(Ds+)'] 
             )
         
         ## convert it to selection
         sel = Selection (
-            "SelDsFor" + self._name ,
-            Algorithm          =    _DsFilter ,
+            "SelDsFor"         + self.name()     ,
+            Algorithm          = fltr            ,
             RequiredSelections = [ self.preDs()  ]
             )
         
@@ -771,10 +748,10 @@ class StrippingPromptCharmConf(LineBuilder) :
         sel = self._selection ( 'DForPromptCharm_Selection' )
         if sel : return sel 
         
-        _DCombine = CombineParticles(
+        cmb = CombineParticles(
             ## 
-            Monitor      = self._monitor  ,
-            HistoProduce = self._monitor  ,
+            Monitor      = self['Monitor'] ,
+            HistoProduce = self['Monitor'] ,
             ##
             DecayDescriptors = [
             " [D+ -> K-  pi+  pi+ ]cc" , 
@@ -786,14 +763,16 @@ class StrippingPromptCharmConf(LineBuilder) :
             ##                                 
             CombinationCut = """
             ( ADAMASS('D+') < 65 * MeV ) &
-            ( APT > 1.75 * GeV )
-            """ , 
+            ( APT > %s )
+            """ % ( 0.95 * self['pT(D+)' ] ) , 
+            ## 
             MotherCut      = """
-            ( chi2vx  < 25                   ) &
-            ( PT      > 2.0 * GeV            ) & 
-            ( ADMASS  ('D+'  )  <   50 * MeV ) & 
-            ( ctau    > 100 * micrometer )
-            """ , 
+            ( chi2vx  < 25                 ) &
+            ( PT      > %s                 ) & 
+            ( ADMASS  ('D+'  )  < 50 * MeV ) & 
+            ( ctau    > 100 * micrometer   )  
+            """ % self['pT(D+)' ] ,
+            ##
             MotherMonitor  = """
             process ( monitor ( M , hKpipi , 'mass K pi pi' ) )  >> ~EMPTY 
             """
@@ -801,8 +780,8 @@ class StrippingPromptCharmConf(LineBuilder) :
         
         # convert it to selection
         sel = Selection (
-            "SelDFor" + self._name ,
-            Algorithm          = _DCombine ,
+            "SelDFor"          + self.name()     ,
+            Algorithm          = cmb             ,
             RequiredSelections = [ self.mesons() ]
             )
         
@@ -817,10 +796,10 @@ class StrippingPromptCharmConf(LineBuilder) :
         sel = self._selection ( 'LambdaCForPromptCharm_Selection' )
         if sel : return sel 
         
-        _LambdaC_Combine = CombineParticles(
+        cmb = CombineParticles(
             ## 
-            Monitor      = self._monitor  ,
-            HistoProduce = self._monitor  ,
+            Monitor      = self['Monitor'] ,
+            HistoProduce = self['Monitor'] ,
             ##
             DecayDescriptors = [
             " [ Lambda_c+ -> p+  K-  pi+ ]cc" ,
@@ -832,15 +811,15 @@ class StrippingPromptCharmConf(LineBuilder) :
             ##
             CombinationCut = """
             ( ADAMASS('Lambda_c+') < 65 * MeV ) &
-            ( APT > 1.75 * MeV ) 
-            """ ,
+            ( APT > %s ) 
+            """ % ( 0.95 * self['pT(Lc+)' ] ) , 
             ##
             MotherCut      = """
             ( chi2vx  < 25 )                   &
-            ( PT      > 2.0 * GeV            ) & 
+            ( PT      > %s                   ) & 
             ( ADMASS('Lambda_c+') < 50 * MeV ) &
-            ( ctau    > 100 * micrometer )
-            """ ,
+            ( ctau    > 100 * micrometer     )
+            """ %  self['pT(Lc+)' ] , 
             ##
             MotherMonitor  = """
             process ( monitor ( M , hpKpi , 'mass p K pi ' ) ) >> ~EMPTY 
@@ -849,8 +828,8 @@ class StrippingPromptCharmConf(LineBuilder) :
         
         # convert it to selection
         sel = Selection (
-            "SelLambdaCFor" + self._name ,
-            Algorithm          = _LambdaC_Combine ,
+            "SelLambdaCFor"    + self.name()       ,
+            Algorithm          = cmb               ,
             RequiredSelections = [ self.mesons  () ,
                                    self.protons () ]  
             )
@@ -866,10 +845,10 @@ class StrippingPromptCharmConf(LineBuilder) :
         sel = self._selection ( 'SigmaCForPromptCharm_Selection' )
         if sel : return sel 
         
-        _SigmaC_Combine = CombineParticles(
+        cmb = CombineParticles(
             ## 
-            Monitor      = self._monitor  ,
-            HistoProduce = self._monitor  ,
+            Monitor      = self['Monitor'] ,
+            HistoProduce = self['Monitor'] ,
             ##
             DecayDescriptors = [
             " [ Sigma_c0  -> Lambda_c+ pi- ]cc" ,
@@ -885,11 +864,11 @@ class StrippingPromptCharmConf(LineBuilder) :
             ] , 
             ##
             CombinationCut = """
-            ( AM - AM1 < 400 * MeV ) & ( APT > 2.85 * MeV ) 
+            ( AM - AM1 < 400 * MeV ) 
             """ ,
             ##
             MotherCut      = """
-            ( chi2vx  < 16 ) &  ( PT > 3.0 * GeV )  
+            ( chi2vx  < 16 ) 
             """ ,
             ##
             MotherMonitor  = """
@@ -899,9 +878,9 @@ class StrippingPromptCharmConf(LineBuilder) :
         
         # convert it to selection
         sel = Selection (
-            "SelSigmaCFor" + self._name ,
-            Algorithm          = _SigmaC_Combine ,
-            RequiredSelections = [ self.LamC    () ,
+            "SelSigmaCFor"     +   self.name()       ,
+            Algorithm          =   cmb               ,
+            RequiredSelections = [ self.LamC    ()   ,
                                    StdAllNoPIDsPions ] ## slow prompt pion!
             )
         
@@ -916,10 +895,10 @@ class StrippingPromptCharmConf(LineBuilder) :
         sel = self._selection ( 'LambdaCstarForPromptCharm_Selection' )
         if sel : return sel 
         
-        _LambdaCstar_Combine = CombineParticles(
+        cmb = CombineParticles(
             ## 
-            Monitor      = self._monitor  ,
-            HistoProduce = self._monitor  ,
+            Monitor      = self['Monitor'] ,
+            HistoProduce = self['Monitor'] ,
             ##
             DecayDescriptors = [
             " [ Lambda_c(2625)+ -> Lambda_c+ pi+ pi-]cc"
@@ -933,13 +912,11 @@ class StrippingPromptCharmConf(LineBuilder) :
             "hDmLamC = Gaudi.Histo1DDef ( 'dm(Lambda_c)' , 200 , 700 , 200 )" 
             ] , 
             ##
-            CombinationCut = """
-            ( APT > 2.85 * MeV ) & ( AM - AM1 < 650 * MeV) 
+            CombinationCut = """ 
+            AM - AM1 < 650 * MeV
             """ ,
-            ## ( ( AM - AM1 < 400 * MeV ) | in_range( 550 * MeV , AM - AM1 , 650 * MeV ) ) 
-            ##
             MotherCut      = """
-            ( chi2vx  < 25 ) &  ( PT > 3.0 * GeV )  
+            ( chi2vx  < 25 )   
             """ ,
             ##
             MotherMonitor  = """
@@ -949,10 +926,10 @@ class StrippingPromptCharmConf(LineBuilder) :
         
         # convert it to selection
         sel = Selection (
-            "SelLambdaCstarFor" + self._name ,
-            Algorithm          = _LambdaCstar_Combine ,
-            RequiredSelections = [ self.LamC    () ,
-                                   StdAllNoPIDsPions ] ## slow prompt pion!
+            "SelLambdaCstarFor" + self.name()         ,
+            Algorithm           =   cmb               ,
+            RequiredSelections  = [ self.LamC    ()   ,
+                                    StdAllNoPIDsPions ] ## slow prompt pion!
             )
         
         return self._add_selection( 'SigmaCstarForPromptCharm_Selection' ,  sel )
@@ -968,7 +945,7 @@ class StrippingPromptCharmConf(LineBuilder) :
         
         sel =  MergedSelection (
             ##
-            'PromptCharmFor' + self._name , 
+            'PromptCharmFor' + self.name ()      , 
             RequiredSelections = [ self.D02HH () ,
                                    self.Dstar () ,
                                    self.Ds    () ,
@@ -987,7 +964,7 @@ class StrippingPromptCharmConf(LineBuilder) :
         if sel : return sel
         
         ## prepare Di-charm
-        _Combine = CombineParticles (
+        cmb = CombineParticles (
             ## the decays to be reconstructed 
             DecayDescriptors = [
             #
@@ -1044,9 +1021,9 @@ class StrippingPromptCharmConf(LineBuilder) :
         
         sel = Selection (
             ##
-            'SelDiCharmFor' + self._name ,
+            'SelDiCharmFor'    + self.name() ,
             ##
-            Algorithm          = _Combine   ,
+            Algorithm          = cmb    ,
             ##
             RequiredSelections = [ self.PromptCharm () ]
             )
@@ -1062,7 +1039,7 @@ class StrippingPromptCharmConf(LineBuilder) :
         if sel : return sel 
         
         ## prepare Di-muons
-        _Combine = CombineParticles (
+        cmb = CombineParticles (
             ## the decays to be reconstructed 
             DecayDescriptor = 'J/psi(1S) -> mu+ mu-' ,
             DaughtersCuts   = {
@@ -1078,9 +1055,9 @@ class StrippingPromptCharmConf(LineBuilder) :
         ##
         sel = Selection (
             ##
-            'SelDiMuonFor' + self._name ,
+            'SelDiMuonFor'     + self.name() ,
             ##
-            Algorithm          = _Combine   ,
+            Algorithm          = cmb         ,
             #
             ## ATTENTION: use 'AllLooseMuons' - we need prompt Onia!
             RequiredSelections = [ StdAllLooseMuons ]
@@ -1098,7 +1075,7 @@ class StrippingPromptCharmConf(LineBuilder) :
         sel = self._selection ( 'DiMuonAndCharm_Selection' )
         if sel : return sel 
         
-        _Filter = CombineParticles (
+        cmb = CombineParticles (
             DecayDescriptors = [
             "[ Upsilon(1S) -> J/psi(1S) D0        ]cc" ,
             "[ Upsilon(1S) -> J/psi(1S) D*(2010)+ ]cc" ,
@@ -1111,16 +1088,14 @@ class StrippingPromptCharmConf(LineBuilder) :
             )
         
         sel = Selection  (
-            "SelDiMuonAndCharmFor" + self._name  ,
-            Algorithm = _Filter ,
-            RequiredSelections = [
-            self.DiMuon      () ,
-            self.PromptCharm ()
-            ]
+            "SelDiMuonAndCharmFor" +   self.name()         ,
+            Algorithm              =   cmb                 ,
+            RequiredSelections     = [ self.DiMuon      () ,
+                                       self.PromptCharm () ]
             )
         
         return self._add_selection( 'DiMuonAndCharm_Selection' , sel ) 
-
+    
     ## get the dimuons & charn 
     def ChiAndCharm ( self ) :
         """
@@ -1131,7 +1106,7 @@ class StrippingPromptCharmConf(LineBuilder) :
         sel = self._selection ( 'ChiAndCharm_Selection' )
         if sel : return sel 
         
-        _alg = CombineParticles (
+        cmb = CombineParticles (
             ##
             DecayDescriptors = [
             "[ Upsilon(1S) -> J/psi(1S) D0        gamma ]cc" ,
@@ -1154,30 +1129,30 @@ class StrippingPromptCharmConf(LineBuilder) :
             MotherCut      = "  ALL " 
             )
         ##
-        _sel = Selection (
-            "ChiAndCharmPre",
-            Algorithm          =   _alg ,
-            RequiredSelections = [ self.DiMuonAndCharm () , ## fake one!
-                                   self.DiMuon         () ,
-                                   self.PromptCharm    () ,
-                                   StdLooseAllPhotons     ] 
+        sel_ = Selection (
+            "ChiAndCharmPreFor" +   self.name()            , 
+            Algorithm           =   cmb                    ,
+            RequiredSelections  = [ self.DiMuonAndCharm () , ## fake one!
+                                    self.DiMuon         () ,
+                                    self.PromptCharm    () ,
+                                    StdLooseAllPhotons     ] 
             )
         ## apply pi0-veto-tagger ! 
         from GaudiConfUtils.ConfigurableGenerators import Pi0Veto__Tagger 
-        _tag = Pi0Veto__Tagger (
+        tag = Pi0Veto__Tagger (
             MassWindow     = 25 * MeV  ,
             MassChi2       = -1        ,
             ExtraInfoIndex = 25010     ## unique ! 
             )
         ## the final selection 
         sel = Selection  (
-            "SelChiAndCharmFor" + self._name  ,
-            Algorithm          =   _tag  ,
-            RequiredSelections = [ _sel ]
+            "SelChiAndCharmFor" +   self.name()  ,
+            Algorithm           =   tag          ,
+            RequiredSelections  = [ sel_         ]
             )
         
         return self._add_selection( 'ChiAndCharm_Selection' , sel ) 
-
+    
     ## get DsPsi 
     def DsPsi( self ) :
         """
@@ -1186,12 +1161,13 @@ class StrippingPromptCharmConf(LineBuilder) :
         sel = self._selection ( 'DsPsi_Selection' )
         if sel : return sel 
         
-        _DsPsiCombine = CombineParticles (
+        cmb = CombineParticles (
             ## 
             DecayDescriptor = "[ B_c+ -> J/psi(1S) D_s+ ]cc" ,
             ##
             DaughtersCuts  = {
             "J/psi(1S)" : "M < 4.0 * GeV " ,
+            "D_s+"      : "PT > %s " % self['pT(Ds+) for Bc+'],
             } ,
             ## 
             CombinationCut = """
@@ -1201,34 +1177,18 @@ class StrippingPromptCharmConf(LineBuilder) :
             MotherCut      = """
             ( chi2vx < 16 ) 
             """
-            ## MotherCut      = """
-            ## ( chi2vx < 16 ) &
-            ## ( ctau   > 0  ) 
-            ## """
             )
         
         sel = Selection  (
-            "SelDsPsiFor" + self._name  ,
-            Algorithm = _DsPsiCombine ,
-            RequiredSelections = [
-            self.DiMuon  () ,
-            self.preDs   () 
-            ]
+            "SelDsPsiFor"      +   self.name()     ,
+            Algorithm          =   cmb             ,
+            RequiredSelections = [ self.DiMuon  () ,
+                                   self.preDs   () ]
             )
         
         return self._add_selection( 'DsPsi_Selection' , sel ) 
     
-        
     
-default_config = {
-    'D0Prescale'             : 1.00 ,
-    'DstarPrescale'          : 1.00 ,
-    'DsPrescale'             : 1.00 ,
-    'DplusPrescale'          : 1.00 ,
-    'LamCPrescale'           : 1.00 ,
-    'DiCharmPrescale'        : 1.00 ,
-    'DiMuonAndCharmPrescale' : 1.00 ,
-    }
 
 # =============================================================================
 if '__main__' == __name__ :
@@ -1238,7 +1198,7 @@ if '__main__' == __name__ :
     print ' Author :  %s' % __author__
     print ' Date   :  %s' % __date__
     print ' The output locations for default configuration: '
-    _conf = StrippingPromptCharmConf ( 'PromptCharm' , config = default_config  ) 
+    _conf = StrippingPromptCharmConf ( 'PromptCharm' , config = {}  ) 
     for l in _conf.lines() :
         print ' \t ', l.outputLocation  () , l 
     print 80*'*'
