@@ -19,16 +19,14 @@ config_default =  {
     'MuonPIDmu'        :    -5.  , 
     'MuonTRCHI2DOF'    :     5.  ,
     'JpsiPT'           :     3.  , # GeV
-    'JpsiMinMass'      :     3.04, # GeV
-    'JpsiMaxMass'      :     3.14, # GeV
-    'PsiMinMass'       :     3.635,# GeV
-    'PsiMaxMass'       :     3.735,# GeV
+    'JpsiMassCuts'     :  "((in_range(3.04*GeV,MM,3.14*GeV)) | (in_range(3.635*GeV,MM,3.735*GeV)))",
     'JpsiVCHI2PDOF'    :    20.  ,
     'PionCuts'         :  "(PT>0.5*GeV) & (TRCHI2DOF<5)" ,
-    'CombMinMass'      :     3.4 , # GeV, before Vtx fit
+    'KaonCuts'         :  "(PT>0.5*GeV) & (TRCHI2DOF<5)" ,
+    'CombMinMass'      :     3.5 , # GeV, before Vtx fit
     'CombMaxMass'      :     5.1 , # GeV, before Vtx fit
     'XVCHI2PDOF'       :    16.  ,
-    'MinMass'          :     3.5 , # GeV, after Vtx fit
+    'MinMass'          :     3.6 , # GeV, after Vtx fit
     'MaxMass'          :     5.0 , # GeV, after Vtx fit
     'SSPrescale'       :     0.2 
     }
@@ -47,12 +45,10 @@ class X2psiPiPiConf(LineBuilder):
         'MuonPIDmu',
         'MuonTRCHI2DOF',
         'JpsiPT',
-        'JpsiMinMass',
-        'JpsiMaxMass',
-        'PsiMinMass',
-        'PsiMaxMass',      
+        'JpsiMassCuts',
         'JpsiVCHI2PDOF',
         'PionCuts',
+        'KaonCuts',
         'CombMinMass',
         'CombMaxMass',
         'XVCHI2PDOF',
@@ -74,9 +70,7 @@ class X2psiPiPiConf(LineBuilder):
         """
         self.JpsiForX = self.createSubSel( OutputList = "JpsiFor" + self.name,
                                            InputList =  DataOnDemand( Location = 'Phys/StdLooseDiMuon/Particles' ), 
-                                           Cuts = "(VFASPF(VCHI2PDOF)<%(JpsiVCHI2PDOF)s)"\
-                                           " & ((in_range( %(JpsiMinMass)s *GeV, MM, %(JpsiMaxMass)s*GeV))"\
-                                           "  | (in_range( %(PsiMinMass)s *GeV, MM, %(PsiMaxMass)s*GeV)))"\
+                                           Cuts = config['JpsiMassCuts'] + " & " + "(VFASPF(VCHI2PDOF)<%(JpsiVCHI2PDOF)s)"\
                                            " & (PT > %(JpsiPT)s *GeV)"\
                                            " & (MINTREE('mu+'==ABSID,PT) > %(MuonPT)s *GeV)"\
                                            " & (MINTREE('mu+'==ABSID,P) > %(MuonP)s *GeV)"\
@@ -87,13 +81,24 @@ class X2psiPiPiConf(LineBuilder):
         Pion 
         """
         self.PionForX = self.createSubSel( OutputList = "PionForX" + self.name,
-                                           InputList =  DataOnDemand( Location = 'Phys/StdNoPIDsPions/Particles' ), 
-                                           Cuts = config['PionCuts'] 
+                                            InputList =  DataOnDemand( Location = 'Phys/StdAllNoPIDsPions/Particles' ), 
+                                            Cuts = config['PionCuts'] 
+                                            )
+
+        """
+        Kaon
+        """
+        self.KaonForX = self.createSubSel( OutputList = "KaonForX" + self.name,
+                                           InputList =  DataOnDemand( Location = 'Phys/StdAllLooseKaons/Particles' ), 
+                                           Cuts = config['KaonCuts'] 
                                            )
-        
-        
+
+                
         self.makeX2psiPiPi()
         self.makeX2psiPiPiSS()
+        self.makeX2psiKK()
+        self.makeX2psiKKSS()
+        
 
     def createSubSel( self, OutputList, InputList, Cuts ) :
         '''create a selection using a FilterDesktop'''
@@ -129,7 +134,7 @@ class X2psiPiPiConf(LineBuilder):
                                                 PostVertexCuts = "(in_range( %(MinMass)s *GeV, MM, %(MaxMass)s *GeV))"\
                                                 " & (VFASPF(VCHI2PDOF)<%(XVCHI2PDOF)s )" %self.config )
         
-        X2psiPiPiLine = StrippingLine( self.name + "Line",
+        X2psiPiPiLine = StrippingLine( self.name + "PiPiLine",
                                         algos = [ X2psiPiPi ] )
         
         self.registerLine(X2psiPiPiLine)
@@ -144,10 +149,39 @@ class X2psiPiPiConf(LineBuilder):
                                                   PostVertexCuts = "(in_range( %(MinMass)s *GeV, MM, %(MaxMass)s *GeV))"\
                                                   " & (VFASPF(VCHI2PDOF)<%(XVCHI2PDOF)s )" %self.config )
         
-        X2psiPiPiSSLine = StrippingLine( self.name + "SSLine",
+        X2psiPiPiSSLine = StrippingLine( self.name + "PiPiSSLine",
                                           algos = [ X2psiPiPiSS ],
                                           prescale = self.config["SSPrescale"] )
         
         self.registerLine(X2psiPiPiSSLine)
 
 
+    def makeX2psiKK(self):
+        X2psiKK = self.createCombinationSel( OutputList = "X2psiKK" + self.name,
+                                             DecayDescriptor = " psi(2S) -> J/psi(1S) K+ K-", 
+                                             DaughterLists = [ self.JpsiForX,
+                                                               self.KaonForX ], 
+                                             PreVertexCuts = "(in_range( %(CombMinMass)s *GeV, AM, %(CombMaxMass)s *GeV))" % self.config,
+                                             PostVertexCuts = "(in_range( %(MinMass)s *GeV, MM, %(MaxMass)s *GeV))"\
+                                             " & (VFASPF(VCHI2PDOF)<%(XVCHI2PDOF)s )" %self.config )
+        
+        X2psiKKLine = StrippingLine( self.name + "KKLine",
+                                        algos = [ X2psiKK ] )
+        
+        self.registerLine(X2psiKKLine)
+
+
+    def makeX2psiKKSS(self):
+        X2psiKKSS = self.createCombinationSel( OutputList = "X2psiKKSS" + self.name,
+                                               DecayDescriptor = "[ psi(2S) -> J/psi(1S) K+ K+ ]cc", 
+                                               DaughterLists = [ self.JpsiForX,
+                                                                 self.KaonForX ], 
+                                               PreVertexCuts = "(in_range( %(CombMinMass)s *GeV, AM, %(CombMaxMass)s *GeV))" % self.config,
+                                               PostVertexCuts = "(in_range( %(MinMass)s *GeV, MM, %(MaxMass)s *GeV))"\
+                                               " & (VFASPF(VCHI2PDOF)<%(XVCHI2PDOF)s )" %self.config )
+        
+        X2psiKKSSLine = StrippingLine( self.name + "KKSSLine",
+                                       algos = [ X2psiKKSS ],
+                                       prescale = self.config["SSPrescale"] )
+        
+        self.registerLine(X2psiKKSSLine)

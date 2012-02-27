@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-02-27 - Jibo He
+ - python/StrippingSelections/StrippingX2psiPiPi.py
+   Fixed the bug of using StdNoPIDsPions, swtiched to StdAllNoPIDsPions; added KK modes. 
+ - python/StrippingSelections/StrippingBeauty2XGamma.py
+   Included Psi(2S) as well, enlarged mass window to include more modes.
+
 ! 2012-02-25 Albert Puig
  - Replaced KS0 IP chi2 cut for a FD chi2 cut to avoid killing KS's.
 

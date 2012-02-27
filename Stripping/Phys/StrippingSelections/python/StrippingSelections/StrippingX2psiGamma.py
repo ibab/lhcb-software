@@ -18,11 +18,11 @@ config_default =  {
     'MuonPIDmu'        :    -5.  , 
     'MuonTRCHI2DOF'    :     5.  ,
     'JpsiPT'           :     3.  , # GeV
-    'JpsiMassCuts'     :  "(in_range(3.04*GeV,MM,3.14*GeV))",
+    'JpsiMassCuts'     :  "((in_range(3.04*GeV,MM,3.14*GeV)) | (in_range(3.635*GeV,MM,3.735*GeV)))",
     'JpsiVCHI2PDOF'    :    20.  ,
     'GammaCuts'        :  "(PT>0.6*GeV) & (P>5*GeV) & (CL>0.5)" ,
     'CombMinMass'      :     3.0 , # GeV, no Vtx fit
-    'CombMaxMass'      :     4.0   # GeV, no Vtx fit
+    'CombMaxMass'      :     5.0   # GeV, no Vtx fit
     }
 
 from Gaudi.Configuration import *
