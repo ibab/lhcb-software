@@ -6,6 +6,14 @@
 
 
 ! 2012-02-27 - Benoit VIAUD
+ - A few obsolete lines removed 
+     Hlt2CharmSemilep2Had1MuForHHMuMu.py
+     Hlt2CharmSemilepD02HHMuMu2SoftMuonsLines.py
+     Hlt2CharmSemilepD02HHMuMuHardHadronsAndMuonsLines.py
+     Hlt2CharmSemilepD02HHMuMuHardHadronsSoftMuonsLines.py
+     Hlt2CharmSemilepTwoHadForMuMuHH.py
+
+! 2012-02-27 - Benoit VIAUD
  - More conventional names for the D->hhhh lines
 
     Hlt2CharmHadD4HLines.py  --> Hlt2CharmHadD02HHHHLines
