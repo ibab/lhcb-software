@@ -4,16 +4,16 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+! 2012-02-27 - V. Gligorov
+ - Update shared Ks (for S. Gregson and M. Sokoloff)
+
 !========================= Hlt2SharedParticles v6r4 2012-01-25 =========================
-!========================== Hlt2SharedParticles 2012-01-23 ===================
 ! 2012-01-23 Sam Gregson
  - Updated Hlt2 Shared Ks cuts 
 
-!========================== Hlt2SharedParticles 2012-01-15 ===================
 ! 2012-01-15 Sam Gregson
  - Updated Shared KsLLTF - small syntax error
 
-!========================== Hlt2SharedParticles 2012-01-05 ===================
 ! 2012-01-05 Sam Gregson
  - Updated Shared Ks
 1) Delete "GoodPion" variant of KsLL
