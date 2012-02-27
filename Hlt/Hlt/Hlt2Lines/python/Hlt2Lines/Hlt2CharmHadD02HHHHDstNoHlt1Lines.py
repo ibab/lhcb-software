@@ -41,18 +41,18 @@ class Hlt2CharmHadD02HHHHDstNoHlt1LinesConf(HltLinesConfigurableUser) :
                   , 'TrkChi2_2BodyFor4Body'       : 3.0      # unitless
                   ## GEC
                   , 'GEC_Filter_NTRACK'        : False       # do or do not
-                  , 'GEC_NTRACK_MAX'           : 120        # max number of tracks
+                  , 'GEC_NTRACK_MAX'           : 180        # max number of tracks
                   , 'TisTosParticleTaggerSpecs': { "Hlt1Track.*Decision%TOS":0 }
                   , 'name_prefix'              : 'CharmHadD02HHHHDstNoHlt1'
                   # prescales
                   , 'Prescale'                  : {
-                          'Hlt2CharmHadD02HHHHDstNoHlt1_4piWideMassDecision' : 0.1
-                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_K3piWideMassDecision' : 0.1
-                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_KKpipiWideMassDecision' : 0.1
-                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_2K2piWideMassDecision' : 0.1
-                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_3KpiWideMassDecision' : 0.1
-                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_Ch2Decision'         : 0.1
-                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_Ch2WideMassDecision' : 0.1
+                          'Hlt2CharmHadD02HHHHDstNoHlt1_4piWideMass' : 0.1
+                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_K3piWideMass' : 0.1
+                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_KKpipiWideMass' : 0.1
+                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_2K2piWideMass' : 0.1
+                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_3KpiWideMass' : 0.1
+                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_Ch2'         : 0.1
+                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_Ch2WideMass' : 0.1
                         }
                   , 'HltANNSvcID'  : {
                           'Hlt2CharmHadD02HHHHDstNoHlt12BodyDecision'    : 62061

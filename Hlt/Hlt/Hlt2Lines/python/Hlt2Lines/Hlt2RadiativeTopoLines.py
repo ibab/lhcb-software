@@ -42,7 +42,7 @@ class Hlt2RadiativeTopoConf(HltLinesConfigurableUser):
                'B_CORRM_MIN'        : 4000   , # MeV
                # GEC
                'GEC_USE'            : True   ,
-               'GEC_NTRACK_MAX'     : 120    , # max number of tracks
+               'GEC_NTRACK_MAX'     : 180    , # max number of tracks
                # L0
                'L0Filter'      : "|".join( [ "L0_CHANNEL('%s')" % channel for channel in ['Photon','Electron'] ] ),
                # HLT1

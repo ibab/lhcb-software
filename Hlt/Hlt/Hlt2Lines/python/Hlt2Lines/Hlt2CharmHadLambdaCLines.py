@@ -17,7 +17,7 @@ class Hlt2CharmHadLambdaCLinesConf(HltLinesConfigurableUser) :
                    ,'LCProtonP'             : 10000  
                    ## GEC
                    , 'GEC_Filter_NTRACK'        : True       # do or do not
-                   , 'GEC_NTRACK_MAX'           : 120        # max number of tracks
+                   , 'GEC_NTRACK_MAX'           : 180        # max number of tracks
                    , 'TisTosParticleTaggerSpecs': { "Hlt1Track.*Decision%TOS":0 }   
                    , 'Prescale'         : { } 
                    , 'Postscale'        : { }

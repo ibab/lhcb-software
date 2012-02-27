@@ -77,8 +77,8 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
                   , 'HltANNSvcID'  : {
                        'Hlt2CharmHadD2KS0H_D2KS0PiDecision'  : 50913
                        ,'Hlt2CharmHadD2KS0H_D2KS0KDecision'  : 50914
-                       ,'Hlt2CharmHadD2KS0DDH_D2KS0PiDecision' : 50915  
-                       ,'Hlt2CharmHadD2KS0DDH_D2KS0KDecision'  : 50916
+                       ,'Hlt2CharmHadD2KS0H_D2KS0DDPiDecision' : 50915  
+                       ,'Hlt2CharmHadD2KS0H_D2KS0DDKDecision'  : 50916
                        
                         }
                 }

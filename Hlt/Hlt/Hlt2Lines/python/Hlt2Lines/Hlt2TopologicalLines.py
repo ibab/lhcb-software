@@ -59,7 +59,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         'RAD_TOS'           : True,
         # global event cuts
         'USE_GEC'           : False,
-        'GEC_MAX'           : 350,
+        'GEC_MAX'           : 500,
         # simple cuts
         'SIMPLE_2BODY_CUTS' : [],
         'SIMPLE_3BODY_CUTS' : [],

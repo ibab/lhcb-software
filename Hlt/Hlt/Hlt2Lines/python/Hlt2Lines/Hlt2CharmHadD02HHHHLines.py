@@ -40,18 +40,23 @@ class Hlt2CharmHadD02HHHHLinesConf(HltLinesConfigurableUser) :
                   , 'TrkChi2_2BodyFor4Body'       : 5.0      # unitless
                   ## GEC
                   , 'GEC_Filter_NTRACK'        : False       # do or do not
-                  , 'GEC_NTRACK_MAX'           : 120        # max number of tracks
+                  , 'GEC_NTRACK_MAX'           : 180        # max number of tracks
                   , 'TisTosParticleTaggerSpecs': { "Hlt1Track.*Decision%TOS":0 }
                   , 'name_prefix'              : 'CharmHadD02HHHH'
                   # prescales
                   , 'Prescale'                  : {
-                          'Hlt2CharmHadD02HHHH_4piWideMassDecision' : 0.1
-                        , 'Hlt2CharmHadD02HHHH_K3piWideMassDecision' : 0.1
-                        , 'Hlt2CharmHadD02HHHH_KKpipiWideMassDecision' : 0.1
-                        , 'Hlt2CharmHadD02HHHH_2K2piWideMassDecision' : 0.1
-                        , 'Hlt2CharmHadD02HHHH_3KpiWideMassDecision' : 0.1
-                        , 'Hlt2CharmHadD02HHHH_Ch2Decision'         : 0.1
-                        , 'Hlt2CharmHadD02HHHH_Ch2WideMassDecision' : 0.1
+                          'Hlt2CharmHadD02HHHH_4piWideMass' : 0.05
+                        , 'Hlt2CharmHadD02HHHH_K3piWideMass' : 0.05
+                        , 'Hlt2CharmHadD02HHHH_KKpipiWideMass' : 0.05
+                        , 'Hlt2CharmHadD02HHHH_2K2piWideMass' : 0.05
+                        , 'Hlt2CharmHadD02HHHH_3KpiWideMass' : 0.05
+                        , 'Hlt2CharmHadD02HHHH_Ch2'         : 0.0
+                        , 'Hlt2CharmHadD02HHHH_Ch2WideMass' : 0.1
+                        , 'Hlt2CharmHadD02HHHH_4pi' : 0.1
+                        , 'Hlt2CharmHadD02HHHH_K3pi' : 0.1
+                        , 'Hlt2CharmHadD02HHHH_KKpipi' : 0.1
+                        , 'Hlt2CharmHadD02HHHH_2K2pi' : 0.1 
+                        , 'Hlt2CharmHadD02HHHH_3Kpi' : 0.1
                         }
                   , 'HltANNSvcID'  : {
                           'Hlt2CharmHadD02HHHH2BodyDecision'    : 62048

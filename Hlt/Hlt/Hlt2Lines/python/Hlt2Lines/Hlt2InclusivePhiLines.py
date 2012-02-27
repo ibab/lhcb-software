@@ -29,7 +29,7 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                   ,'KaonRichPID'        : 0        # dimensionless
                   # GEC
                   ,'GEC_Filter_NTRACK'  : True       # do or do not
-                  ,'GEC_NTRACK_MAX'     : 120        # max number of tracks
+                  ,'GEC_NTRACK_MAX'     : 180        # max number of tracks
                   # TOS
                   ,'TisTosParticleTaggerSpecs': { "Hlt1Track.*Decision%TOS":0 }
                   # Pre-/Post-scales

@@ -48,7 +48,7 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
                 , 'Inc_D0_BPVCORRM_MAX'      : 3200.0 * MeV
                 ## GEC
                 , 'GEC_Filter_NTRACK'        : True       # do or do not
-                , 'GEC_NTRACK_MAX'           : 120        # max number of tracks
+                , 'GEC_NTRACK_MAX'           : 180        # max number of tracks
                 , 'TisTosParticleTaggerSpecs': { "Hlt1Track.*Decision%TOS":0 }
                 , 'name_prefix'              : 'CharmHadD02HH'
                 , 'Prescale'         : { }

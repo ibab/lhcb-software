@@ -34,7 +34,7 @@ class Hlt2CharmSemilepD2HMuMuLinesConf(HltLinesConfigurableUser) :
                     , 'Lambda_c_WideMass_M_MAX'              : 2300.0 * MeV
                     ## GEC
                     , 'GEC_Filter_NTRACK'        : False       # do or do not
-                    , 'GEC_NTRACK_MAX'           : 110        # max number of tracks
+                    , 'GEC_NTRACK_MAX'           : 180        # max number of tracks
                   , 'HltANNSvcID'  : {
                           'Hlt2CharmSemilep2MuonForD2HMuMuDecision' : 61023
                         ## For new lines
