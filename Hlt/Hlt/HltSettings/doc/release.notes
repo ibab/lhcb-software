@@ -4,6 +4,12 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-02-27 - V. Gligorov
+ - First commit of "draft2012" settings in preparation for 2012 running.
+ - Mostly these copy from the last relevant 2011 files.
+ - The most significant changes are to CharmHadronLines, to reflect the
+   new charm hadron lines in HLT2. Names of lines to run have been updated.
+
 !========================== HltSettings v5r15 2011-08-29 =====================
 ! 2011-08-27 - Roel Aaij
  - Include CharmHadronLines_Sept2011 in HadronLines_Sept11
