@@ -9,18 +9,19 @@ from HltTrackNames import Hlt2LongTracksName, HltUniDirectionalKalmanFitSuffix
 #
 # Define all the instances of Hlt2Tracking
 #
-# FIRST THE UNFITTED TRACKS, SHOULD NOT BE USED BY SELECTIONS
-# EVENTUALLY THIS SHOULD JUST BE REMOVED
-#
-# With bidirectional track fitting, no seeding
+# With seeding and track fitting
+# note : In 2011, this ran only the forward tracking, hence the name. 
+#        For 2012, it has been modified to do the seeding and clone killing,
+#        but the name has been kept to simplify all the lines which depend on it. 
 #
 def Hlt2BiKalmanFittedForwardTracking() :
         return Hlt2Tracking("Hlt2BiKalmanFittedForwardTracking",        
                                                                                  Prefix                 = Hlt2TracksPrefix,
                                                                                  FastFitType            = HltBiDirectionalKalmanFitSuffix,
-                                                                                 Hlt2Tracks             = Hlt2ForwardTracksName,
+                                                                                 Hlt2Tracks             = Hlt2LongTracksName,
                                                                                  DoFastFit              = True,
-                                                                                 DoSeeding              = False
+                                                                                 DoSeeding              = True,
+                                                                                 DoCloneKilling         = True
                                                                         )
 #
 # With seeding and track fitting

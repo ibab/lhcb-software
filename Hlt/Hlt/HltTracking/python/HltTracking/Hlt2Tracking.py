@@ -1199,8 +1199,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
         recoForward.PatForwardTool.MaxChi2Track = CommonForwardTrackingOptions["MaxChi2Track"]
         recoForward.PatForwardTool.MinHits = CommonForwardTrackingOptions["MinHits"]
         recoForward.PatForwardTool.MinOTHits = CommonForwardTrackingOptions["MinOTHits"]
-        recoForward.PatForwardTool.MinMomentum = 5000
-        recoForward.PatForwardTool.MinPt = 500
+        recoForward.PatForwardTool.MinMomentum = 3000
+        recoForward.PatForwardTool.MinPt = 300
      
         if self.getProp("EarlyDataTracking") :
             from HltTracking.HltReco import CommonForwardTrackingOptions_EarlyData 
@@ -1251,13 +1251,13 @@ class Hlt2Tracking(LHCbConfigurableUser):
         from HltTracking.HltReco import CommonForwardTrackingOptions
         recoForwardSecondLoop.addTool(PatForwardTool, name='PatForwardTool')
         recoForwardSecondLoop.PatForwardTool.AddTTClusterName = "PatAddTTCoord"
-        recoForwardSecondLoop.PatForwardTool.SecondLoop = True
-        recoForwardSecondLoop.PatForwardTool.MaxChi2 = CommonForwardTrackingOptions["MaxChi2"]
-        recoForwardSecondLoop.PatForwardTool.MaxChi2Track = CommonForwardTrackingOptions["MaxChi2Track"]
-        recoForwardSecondLoop.PatForwardTool.MinHits = CommonForwardTrackingOptions["MinHits"]
-        recoForwardSecondLoop.PatForwardTool.MinOTHits = CommonForwardTrackingOptions["MinOTHits"]
-        recoForwardSecondLoop.PatForwardTool.MinMomentum = 3000
-        recoForwardSecondLoop.PatForwardTool.MinPt = 300
+        recoForwardSecondLoop.PatForwardTool.SecondLoop     = True
+        recoForwardSecondLoop.PatForwardTool.MaxChi2        = CommonForwardTrackingOptions["MaxChi2"]
+        recoForwardSecondLoop.PatForwardTool.MaxChi2Track   = CommonForwardTrackingOptions["MaxChi2Track"]
+        recoForwardSecondLoop.PatForwardTool.MinHits        = CommonForwardTrackingOptions["MinHits"]
+        recoForwardSecondLoop.PatForwardTool.MinOTHits      = CommonForwardTrackingOptions["MinOTHits"]
+        recoForwardSecondLoop.PatForwardTool.MinMomentum    = 1000
+        recoForwardSecondLoop.PatForwardTool.MinPt          = 150
 
         # Build the bindMembers       
         # Explicitly require the regular forward tracking here 
@@ -1296,8 +1296,9 @@ class Hlt2Tracking(LHCbConfigurableUser):
 
         recoSeeding.PatSeedingTool.UseForward        = True
         recoSeeding.PatSeedingTool.ForwardCloneMergeSeg = True
+        recoSeeding.PatSeedingTool.NDblOTHitsInXSearch = 2
         recoSeeding.PatSeedingTool.InputTracksName    = fwdtracks.outputSelection()
-        recoSeeding.PatSeedingTool.MinMomentum = 2500 
+        recoSeeding.PatSeedingTool.MinMomentum = 3000 
         from HltTracking.HltReco import MaxOTHits
         recoSeeding.PatSeedingTool.MaxOTHits = MaxOTHits
  
@@ -1365,24 +1366,24 @@ class Hlt2Tracking(LHCbConfigurableUser):
     
         ### Downstream tracking
         PatDownstream            = PatDownstream(self.getProp("Prefix")+'PatDownstream')
-        PatDownstream.InputLocation    = self.__hlt2SeedTracking().outputSelection()
-        PatDownstream.OutputLocation    = downstreamTrackOutputLocation
+        PatDownstream.InputLocation  = self.__hlt2SeedTracking().outputSelection()
+        PatDownstream.OutputLocation = downstreamTrackOutputLocation
         #PatDownstream.UseForward    = True
         #PatDownstream.SeedFilter    = True
-        PatDownstream.RemoveUsed    = True
-        PatDownstream.RemoveAll        = True
+        PatDownstream.RemoveUsed     = True
+        PatDownstream.RemoveAll      = True
   
         if self.getProp("EarlyDataTracking") :
             # Do something special in case of early data
             from HltTracking.HltReco import CommonDownstreamTrackingOptions_EarlyData 
-            PatDownstream.xPredTol2 = CommonDownstreamTrackingOptions_EarlyData["xPredTol2"]
-            PatDownstream.TolMatch = CommonDownstreamTrackingOptions_EarlyData["TolMatch"]
-            PatDownstream.TolUV = CommonDownstreamTrackingOptions_EarlyData["TolUV"]
+            PatDownstream.xPredTol2     = CommonDownstreamTrackingOptions_EarlyData["xPredTol2"]
+            PatDownstream.TolMatch      = CommonDownstreamTrackingOptions_EarlyData["TolMatch"]
+            PatDownstream.TolUV         = CommonDownstreamTrackingOptions_EarlyData["TolUV"]
             PatDownstream.maxWindowSize = CommonDownstreamTrackingOptions_EarlyData["maxWindowSize"]
-            PatDownstream.MaxChisq  = CommonDownstreamTrackingOptions_EarlyData["MaxChisq"]
-            PatDownstream.MaxDistance = CommonDownstreamTrackingOptions_EarlyData["MaxDistance"]
-            PatDownstream.deltaP = CommonDownstreamTrackingOptions_EarlyData["deltaP"]
-            PatDownstream.errorZMagnet = CommonDownstreamTrackingOptions_EarlyData["errorZMagnet"]
+            PatDownstream.MaxChisq      = CommonDownstreamTrackingOptions_EarlyData["MaxChisq"]
+            PatDownstream.MaxDistance   = CommonDownstreamTrackingOptions_EarlyData["MaxDistance"]
+            PatDownstream.deltaP        = CommonDownstreamTrackingOptions_EarlyData["deltaP"]
+            PatDownstream.errorZMagnet  = CommonDownstreamTrackingOptions_EarlyData["errorZMagnet"]
  
         # Build the bindMembers        
         bm_name         = self.getProp("Prefix")+"DownstreamTracking" 
