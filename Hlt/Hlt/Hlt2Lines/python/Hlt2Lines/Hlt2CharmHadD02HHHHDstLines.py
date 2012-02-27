@@ -7,7 +7,7 @@ from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 
 from GaudiKernel.SystemOfUnits import MeV, GeV, mm
 
-class Hlt2CharmHadDstD4HLinesConf(HltLinesConfigurableUser) :
+class Hlt2CharmHadD02HHHHDstLinesConf(HltLinesConfigurableUser) :
     __slots__ = {
                  ## 4Body
                     'TrkPt_4Body'                 : 300.0 * MeV
@@ -42,31 +42,31 @@ class Hlt2CharmHadDstD4HLinesConf(HltLinesConfigurableUser) :
                   , 'GEC_Filter_NTRACK'        : False       # do or do not
                   , 'GEC_NTRACK_MAX'           : 120        # max number of tracks
                   , 'TisTosParticleTaggerSpecs': { "Hlt1Track.*Decision%TOS":0 }
-                  , 'name_prefix'              : 'CharmHadDstD4H'
+                  , 'name_prefix'              : 'CharmHadD02HHHHDst'
                   # prescales
                   , 'Prescale'                  : {
-                          'Hlt2CharmHadDstD4H_4piWideMassDecision' : 0.1
-                        , 'Hlt2CharmHadDstD4H_K3piWideMassDecision' : 0.1
-                        , 'Hlt2CharmHadDstD4H_KKpipiWideMassDecision' : 0.1
-                        , 'Hlt2CharmHadDstD4H_2K2piWideMassDecision' : 0.1
-                        , 'Hlt2CharmHadDstD4H_3KpiWideMassDecision' : 0.1
-                        , 'Hlt2CharmHadDstD4H_Ch2Decision'         : 0.1
-                        , 'Hlt2CharmHadDstD4H_Ch2WideMassDecision' : 0.1
+                          'Hlt2CharmHadD02HHHHDst_4piWideMassDecision' : 0.1
+                        , 'Hlt2CharmHadD02HHHHDst_K3piWideMassDecision' : 0.1
+                        , 'Hlt2CharmHadD02HHHHDst_KKpipiWideMassDecision' : 0.1
+                        , 'Hlt2CharmHadD02HHHHDst_2K2piWideMassDecision' : 0.1
+                        , 'Hlt2CharmHadD02HHHHDst_3KpiWideMassDecision' : 0.1
+                        , 'Hlt2CharmHadD02HHHHDst_Ch2Decision'         : 0.1
+                        , 'Hlt2CharmHadD02HHHHDst_Ch2WideMassDecision' : 0.1
                         }
                   , 'HltANNSvcID'  : {
-                          'Hlt2CharmHadDstD4H2BodyDecision'    : 62007
-                        , 'Hlt2CharmHadDstD4H_4piDecision'         : 62008
-                        , 'Hlt2CharmHadDstD4H_4piWideMassDecision' : 62009
-                        , 'Hlt2CharmHadDstD4H_K3piDecision'         : 62010
-                        , 'Hlt2CharmHadDstD4H_K3piWideMassDecision' : 62011
-                        , 'Hlt2CharmHadDstD4H_KKpipiDecision'         : 62012
-                        , 'Hlt2CharmHadDstD4H_KKpipiWideMassDecision' : 62013
-                        , 'Hlt2CharmHadDstD4H_2K2piDecision'         : 62014
-                        , 'Hlt2CharmHadDstD4H_2K2piWideMassDecision' : 62015
-                        , 'Hlt2CharmHadDstD4H_3KpiDecision'         : 62016
-                        , 'Hlt2CharmHadDstD4H_3KpiWideMassDecision' : 62017
-                        , 'Hlt2CharmHadDstD4H_Ch2Decision'         : 62018
-                        , 'Hlt2CharmHadDstD4H_Ch2WideMassDecision' : 62019
+                          'Hlt2CharmHadD02HHHHDst2BodyDecision'    : 62007
+                        , 'Hlt2CharmHadD02HHHHDst_4piDecision'         : 62008
+                        , 'Hlt2CharmHadD02HHHHDst_4piWideMassDecision' : 62009
+                        , 'Hlt2CharmHadD02HHHHDst_K3piDecision'         : 62010
+                        , 'Hlt2CharmHadD02HHHHDst_K3piWideMassDecision' : 62011
+                        , 'Hlt2CharmHadD02HHHHDst_KKpipiDecision'         : 62012
+                        , 'Hlt2CharmHadD02HHHHDst_KKpipiWideMassDecision' : 62013
+                        , 'Hlt2CharmHadD02HHHHDst_2K2piDecision'         : 62014
+                        , 'Hlt2CharmHadD02HHHHDst_2K2piWideMassDecision' : 62015
+                        , 'Hlt2CharmHadD02HHHHDst_3KpiDecision'         : 62016
+                        , 'Hlt2CharmHadD02HHHHDst_3KpiWideMassDecision' : 62017
+                        , 'Hlt2CharmHadD02HHHHDst_Ch2Decision'         : 62018
+                        , 'Hlt2CharmHadD02HHHHDst_Ch2WideMassDecision' : 62019
                         }
                 }
 
@@ -247,8 +247,8 @@ class Hlt2CharmHadDstD4HLinesConf(HltLinesConfigurableUser) :
         kaonsF = self.__InPartFilter(kaonName, [ BiKalmanFittedKaons] )
 
          
-        from Hlt2CharmHadTwoBodyForD4H import Hlt2CharmHadTwoBodyForD4HConf
-        Hlt2Charm2BodyFor4Body =  Hlt2CharmHadTwoBodyForD4HConf().twoBodySequence()
+        from Hlt2CharmHadTwoBodyForD02HHHH import Hlt2CharmHadTwoBodyForD02HHHHConf
+        Hlt2Charm2BodyFor4Body =  Hlt2CharmHadTwoBodyForD02HHHHConf().twoBodySequence()
 
         
         #

@@ -7,15 +7,17 @@ from Gaudi.Configuration import *
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 from GaudiKernel.SystemOfUnits import MeV, GeV, mm
 
-from Hlt2Lines.Hlt2CharmHadDstD4HNoH1Lines import Hlt2CharmHadDstD4HNoH1LinesConf
-from Hlt2Lines.Hlt2CharmHadDstD4HLines  import Hlt2CharmHadDstD4HLinesConf
-from Hlt2Lines.Hlt2CharmHadD4HLines     import Hlt2CharmHadD4HLinesConf
+from Hlt2Lines.Hlt2CharmHadD02HHHHDstLines import Hlt2CharmHadD02HHHHDstLinesConf 
+from Hlt2Lines.Hlt2CharmHadD02HHHHDstNoHlt1Lines  import Hlt2CharmHadD02HHHHDstNoHlt1LinesConf 
+from Hlt2Lines.Hlt2CharmHadD02HHHHLines  import Hlt2CharmHadD02HHHHLinesConf 
+
+
 
 
 ## Must inherit from HltLinesConfigurableUser for slots to be updated by
 ## HltSettings, even though this configurable does not directly define a
 ## line.
-class Hlt2CharmHadTwoBodyForD4HConf(HltLinesConfigurableUser) : # {
+class Hlt2CharmHadTwoBodyForD02HHHHConf(HltLinesConfigurableUser) : # {
     """
     Defines a configurable to create a 2-body reconstruction that is used
     as a first stage for the D -> 4H.
@@ -25,7 +27,7 @@ class Hlt2CharmHadTwoBodyForD4HConf(HltLinesConfigurableUser) : # {
     """
 
     ## Must be configured before every configurable that uses it.
-    __used_configurables__ = [Hlt2CharmHadDstD4HNoH1LinesConf, Hlt2CharmHadDstD4HLinesConf, Hlt2CharmHadD4HLinesConf]
+    __used_configurables__ = [Hlt2CharmHadD02HHHHDstLinesConf,Hlt2CharmHadD02HHHHDstNoHlt1LinesConf,Hlt2CharmHadD02HHHHLinesConf]
 
     __slots__ = {
                     'Trk_PT_MIN'                :  300.0 * MeV
@@ -37,7 +39,7 @@ class Hlt2CharmHadTwoBodyForD4HConf(HltLinesConfigurableUser) : # {
                   , 'Pair_BPVVD_MIN'            :    0.0 * mm
                   , 'Pair_SumAPT_MIN'           :    0.0 * MeV
                   , 'Pair_BPVCORRM_MAX'         : 3500.0 * MeV
-                  , 'name_prefix'              : 'CharmHadTwoBodyForD4H'
+                  , 'name_prefix'              : 'CharmHadTwoBodyForD02HHHH'
                   ##
                   , '__hlt2TwoBodySeq__'       : None
                 }

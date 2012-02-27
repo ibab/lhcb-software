@@ -7,7 +7,7 @@ from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 
 from GaudiKernel.SystemOfUnits import MeV, GeV, mm
 
-class Hlt2CharmHadD4HLinesConf(HltLinesConfigurableUser) :
+class Hlt2CharmHadD02HHHHDstNoHlt1LinesConf(HltLinesConfigurableUser) :
     __slots__ = {
                  ## 4Body
                     'TrkPt_4Body'                 : 300.0 * MeV
@@ -17,7 +17,7 @@ class Hlt2CharmHadD4HLinesConf(HltLinesConfigurableUser) :
                   , 'PairMinDoca_4Body'           : 0.10 * mm
                   , 'PairMaxDoca_4Body'           : 0.25 * mm
                   , 'VtxPVDispChi2_4Body'         : 36.0     # unitless
-                  , 'BPVVDR_4Body'                : 0.0     # rho(PV-SV) mm                    
+                  , 'BPVVDR_4Body'                : 0.0     # rho(PV-SV) mm
                   , 'VtxChi2_4Body'               : 15.0     # unitless
                   , 'DIPChi2_4Body'               : 50.0     # unitless
                   , 'BPVDIRA_4Body'               : 0.9999   # unitless
@@ -31,42 +31,43 @@ class Hlt2CharmHadD4HLinesConf(HltLinesConfigurableUser) :
                   , 'TrkPt_SlowPion'              : 300.0 * MeV 
                   , 'TrkP_SlowPion'               : 3000.0 * MeV
                   , 'TrkChi2_SlowPion'            : 100.0
+                  , 'IPChi2_SlowPion'             : 100.0     # unitless
                   , 'PairMaxDoca_Dstar'           : 100.0 * mm
                   , 'DeltaM_MIN'                  : 0.0 * MeV
                   , 'DeltaM_MAX'                  : 170.0 * MeV
                   , 'DeltaM_MINwide'              : 0.0 * MeV
                   , 'DeltaM_MAXwide'              : 170.0 * MeV
                   ## 2-body Input for 4Body
-                  , 'TrkChi2_2BodyFor4Body'       : 5.0      # unitless
+                  , 'TrkChi2_2BodyFor4Body'       : 3.0      # unitless
                   ## GEC
                   , 'GEC_Filter_NTRACK'        : False       # do or do not
                   , 'GEC_NTRACK_MAX'           : 120        # max number of tracks
                   , 'TisTosParticleTaggerSpecs': { "Hlt1Track.*Decision%TOS":0 }
-                  , 'name_prefix'              : 'CharmHadD4H'
+                  , 'name_prefix'              : 'CharmHadD02HHHHDstNoHlt1'
                   # prescales
                   , 'Prescale'                  : {
-                          'Hlt2CharmHadD4H_4piWideMassDecision' : 0.1
-                        , 'Hlt2CharmHadD4H_K3piWideMassDecision' : 0.1
-                        , 'Hlt2CharmHadD4H_KKpipiWideMassDecision' : 0.1
-                        , 'Hlt2CharmHadD4H_2K2piWideMassDecision' : 0.1
-                        , 'Hlt2CharmHadD4H_3KpiWideMassDecision' : 0.1
-                        , 'Hlt2CharmHadD4H_Ch2Decision'         : 0.1
-                        , 'Hlt2CharmHadD4H_Ch2WideMassDecision' : 0.1
+                          'Hlt2CharmHadD02HHHHDstNoHlt1_4piWideMassDecision' : 0.1
+                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_K3piWideMassDecision' : 0.1
+                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_KKpipiWideMassDecision' : 0.1
+                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_2K2piWideMassDecision' : 0.1
+                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_3KpiWideMassDecision' : 0.1
+                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_Ch2Decision'         : 0.1
+                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_Ch2WideMassDecision' : 0.1
                         }
                   , 'HltANNSvcID'  : {
-                          'Hlt2CharmHadD4H2BodyDecision'    : 62048
-                        , 'Hlt2CharmHadD4H_4piDecision'         : 62049
-                        , 'Hlt2CharmHadD4H_4piWideMassDecision' : 62050
-                        , 'Hlt2CharmHadD4H_K3piDecision'         : 62051
-                        , 'Hlt2CharmHadD4H_K3piWideMassDecision' : 62052
-                        , 'Hlt2CharmHadD4H_KKpipiDecision'         : 62053
-                        , 'Hlt2CharmHadD4H_KKpipiWideMassDecision' : 62054
-                        , 'Hlt2CharmHadD4H_2K2piDecision'         : 62055
-                        , 'Hlt2CharmHadD4H_2K2piWideMassDecision' : 62056
-                        , 'Hlt2CharmHadD4H_3KpiDecision'         : 62057
-                        , 'Hlt2CharmHadD4H_3KpiWideMassDecision' : 62058
-                        , 'Hlt2CharmHadD4H_Ch2Decision'         : 62059
-                        , 'Hlt2CharmHadD4H_Ch2WideMassDecision' : 62060
+                          'Hlt2CharmHadD02HHHHDstNoHlt12BodyDecision'    : 62061
+                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_4piDecision'         : 62062
+                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_4piWideMassDecision' : 62063
+                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_K3piDecision'         : 62064
+                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_K3piWideMassDecision' : 62065
+                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_KKpipiDecision'         : 62066
+                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_KKpipiWideMassDecision' : 62067
+                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_2K2piDecision'         : 62068
+                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_2K2piWideMassDecision' : 62069
+                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_3KpiDecision'         : 62070
+                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_3KpiWideMassDecision' : 62071
+                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_Ch2Decision'         : 62072
+                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_Ch2WideMassDecision' : 62073
                         }
                 }
 
@@ -144,6 +145,7 @@ class Hlt2CharmHadD4HLinesConf(HltLinesConfigurableUser) :
                    "& (AMINDOCA('LoKi::TrgDistanceCalculator') < %(PairMinDoca_4Body)s)" \
                    "& (AMAXDOCA('LoKi::TrgDistanceCalculator') < %(PairMaxDoca_4Body)s)" \
                    "& (AALLSAMEBPV)" % self.getProps()
+
         mothercuts = masscut + \
                      "& (VFASPF(VCHI2PDOF) < %(VtxChi2_4Body)s) " \
                      "& (BPVCORRM < %(MCOR_MAX_4Body)s)" \
@@ -199,7 +201,7 @@ class Hlt2CharmHadD4HLinesConf(HltLinesConfigurableUser) :
         from Configurables import FilterDesktop, CombineParticles
         from HltTracking.HltPVs import PV3D
         
-        incuts = "(TRCHI2DOF< %(TrkChi2_SlowPion)s )" \
+        incuts = "(TRCHI2DOF< %(TrkChi2_SlowPion)s )&(MIPCHI2DV(PRIMARY)< %(IPChi2_SlowPion)s)" \
                  "& (PT> %(TrkPt_SlowPion)s )" \
                  "& (P> %(TrkP_SlowPion)s )" % self.getProps()
         
@@ -247,8 +249,9 @@ class Hlt2CharmHadD4HLinesConf(HltLinesConfigurableUser) :
         pionsF = self.__InPartFilter(pionName, [ BiKalmanFittedPions] )
         kaonsF = self.__InPartFilter(kaonName, [ BiKalmanFittedKaons] )
 
-        from Hlt2CharmHadTwoBodyForD4H import Hlt2CharmHadTwoBodyForD4HConf
-        Hlt2Charm2BodyFor4Body =  Hlt2CharmHadTwoBodyForD4HConf().twoBodySequence()
+         
+        from Hlt2CharmHadTwoBodyForD02HHHH import Hlt2CharmHadTwoBodyForD02HHHHConf
+        Hlt2Charm2BodyFor4Body =  Hlt2CharmHadTwoBodyForD02HHHHConf().twoBodySequence()
 
         
         #
@@ -273,6 +276,11 @@ class Hlt2CharmHadD4HLinesConf(HltLinesConfigurableUser) :
                             % (self.getProp('DeltaM_MAXwide'), self.getProp('DeltaM_MINwide'))
 
 
+        #Prepare the slow pion to make D* later
+        pionsForDstar = self.__SlowPionFilter( name = self.getProp('name_prefix')+'SlowPion'
+                                               , inputContainers = [  BiKalmanFittedPions ]
+                                             )
+
 
         # D0->pi+pi-pi+pi- ###################################################################################
 
@@ -284,11 +292,21 @@ class Hlt2CharmHadD4HLinesConf(HltLinesConfigurableUser) :
                                                   , decayDesc = [ "D0 -> K*(892)0 pi+ pi-"]
                                                 )   
         #
-        Charm4BodyCombineToS4pi = self.__filterHlt1TOS( modeName4pi, Charm4BodyCombine4pi )
-        #
-        Hlt2Charm4Body4pi = self.__4BodyFilter ( name = modeName4pi+'MassWin', inputSeq = [Charm4BodyCombineToS4pi], extracode = sigMassCut )
+        Charm4BodyMassWin4pi = self.__4BodyFilter ( name = modeName4pi+'MassWin', inputSeq = [Charm4BodyCombine4pi], extracode = sigMassCut )
         
-        Hlt2Charm4BodyWideMass4pi = self.__4BodyFilter (name = wideMassName4pi+'Win', inputSeq = [Charm4BodyCombineToS4pi], extracode = wideMassCut )        
+        Charm4BodyWideMassWin4pi = self.__4BodyFilter (name = wideMassName4pi+'Win', inputSeq = [Charm4BodyCombine4pi], extracode = wideMassCut )        
+        #                   
+        Hlt2Charm4Body4pi = self.__DstarCombine( name = modeName4pi
+                                              , inputSeq = [ Charm4BodyMassWin4pi , pionsForDstar ]
+                                              , decayDesc = [ "D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-" ]
+                                              , masscut = DeltaMSigMassCut
+                                            )
+        
+        Hlt2Charm4BodyWideMass4pi = self.__DstarCombine( name = wideMassName4pi
+                                                      , inputSeq = [ Charm4BodyWideMassWin4pi , pionsForDstar ]
+                                                      , decayDesc = [ "D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-" ]
+                                                      , masscut = DeltaMWideMassCut
+                                                    )
 
 
         ############################################################################################################
@@ -304,11 +322,21 @@ class Hlt2CharmHadD4HLinesConf(HltLinesConfigurableUser) :
                                                 )
         
         #
-        Charm4BodyCombineToSKm3pi = self.__filterHlt1TOS( modeNameKm3pi, Charm4BodyCombineKm3pi )
-        #
-        Hlt2Charm4BodyKm3pi = self.__4BodyFilter ( name = modeNameKm3pi+'MassWin', inputSeq = [Charm4BodyCombineToSKm3pi], extracode = sigMassCut )
+        Charm4BodyMassWinKm3pi = self.__4BodyFilter ( name = modeNameKm3pi+'MassWin', inputSeq = [Charm4BodyCombineKm3pi], extracode = sigMassCut )
         
-        Hlt2Charm4BodyWideMassKm3pi = self.__4BodyFilter (name = wideMassNameKm3pi+'Win', inputSeq = [Charm4BodyCombineToSKm3pi], extracode = wideMassCut )        
+        Charm4BodyWideMassWinKm3pi = self.__4BodyFilter (name = wideMassNameKm3pi+'Win', inputSeq = [Charm4BodyCombineKm3pi], extracode = wideMassCut )        
+        #                   
+        Hlt2Charm4BodyKm3pi = self.__DstarCombine( name = modeNameKm3pi
+                                              , inputSeq = [ Charm4BodyMassWinKm3pi , pionsForDstar ]
+                                              , decayDesc = [ "D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-" ]
+                                              , masscut = DeltaMSigMassCut
+                                            )
+        
+        Hlt2Charm4BodyWideMassKm3pi = self.__DstarCombine( name = wideMassNameKm3pi
+                                                      , inputSeq = [ Charm4BodyWideMassWinKm3pi , pionsForDstar ]
+                                                      , decayDesc = [ "D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-" ]
+                                                      , masscut = DeltaMWideMassCut
+                                                    )
 
 
         ############################################################################################################
@@ -324,11 +352,21 @@ class Hlt2CharmHadD4HLinesConf(HltLinesConfigurableUser) :
                                                   , decayDesc = [ "D0 -> K*(892)0 K+ K-"]
                                                 )   
         #
-        Charm4BodyCombineToSKKpipi = self.__filterHlt1TOS( modeNameKKpipi, Charm4BodyCombineKKpipi )
-        #
-        Hlt2Charm4BodyKKpipi = self.__4BodyFilter ( name = modeNameKKpipi+'MassWin', inputSeq = [Charm4BodyCombineToSKKpipi], extracode = sigMassCut )
+        Charm4BodyMassWinKKpipi = self.__4BodyFilter ( name = modeNameKKpipi+'MassWin', inputSeq = [Charm4BodyCombineKKpipi], extracode = sigMassCut )
         
-        Hlt2Charm4BodyWideMassKKpipi = self.__4BodyFilter (name = wideMassNameKKpipi+'Win', inputSeq = [Charm4BodyCombineToSKKpipi], extracode = wideMassCut )        
+        Charm4BodyWideMassWinKKpipi = self.__4BodyFilter (name = wideMassNameKKpipi+'Win', inputSeq = [Charm4BodyCombineKKpipi], extracode = wideMassCut )        
+        #                   
+        Hlt2Charm4BodyKKpipi = self.__DstarCombine( name = modeNameKKpipi
+                                              , inputSeq = [ Charm4BodyMassWinKKpipi , pionsForDstar ]
+                                              , decayDesc = [ "D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-" ]
+                                              , masscut = DeltaMSigMassCut
+                                            )
+        
+        Hlt2Charm4BodyWideMassKKpipi = self.__DstarCombine( name = wideMassNameKKpipi
+                                                      , inputSeq = [ Charm4BodyWideMassWinKKpipi , pionsForDstar ]
+                                                      , decayDesc = [ "D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-" ]
+                                                      , masscut = DeltaMWideMassCut
+                                                    )
 
 
         ############################################################################################################
@@ -344,11 +382,22 @@ class Hlt2CharmHadD4HLinesConf(HltLinesConfigurableUser) :
                                                   , decayDesc = [ "D0 -> K*(892)+ pi- pi-","D0 -> K*(892)- pi+ pi+"]
                                                 )   
         #
-        Charm4BodyCombineToS2Kp2Pm = self.__filterHlt1TOS( modeName2Kp2Pm, Charm4BodyCombine2Kp2Pm )
-        #
-        Hlt2Charm4Body2Kp2Pm = self.__4BodyFilter ( name = modeName2Kp2Pm+'MassWin', inputSeq = [Charm4BodyCombineToS2Kp2Pm], extracode = sigMassCut )
+        Charm4BodyMassWin2Kp2Pm = self.__4BodyFilter ( name = modeName2Kp2Pm+'MassWin', inputSeq = [Charm4BodyCombine2Kp2Pm], extracode = sigMassCut )
         
-        Hlt2Charm4BodyWideMass2Kp2Pm = self.__4BodyFilter (name = wideMassName2Kp2Pm+'Win', inputSeq = [Charm4BodyCombineToS2Kp2Pm], extracode = wideMassCut )        
+        Charm4BodyWideMassWin2Kp2Pm = self.__4BodyFilter (name = wideMassName2Kp2Pm+'Win', inputSeq = [Charm4BodyCombine2Kp2Pm], extracode = wideMassCut )        
+        #                   
+        Hlt2Charm4Body2Kp2Pm = self.__DstarCombine( name = modeName2Kp2Pm
+                                              , inputSeq = [ Charm4BodyMassWin2Kp2Pm , pionsForDstar ]
+                                              , decayDesc = [ "D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-" ]
+                                              , masscut = DeltaMSigMassCut
+                                            )
+        
+        Hlt2Charm4BodyWideMass2Kp2Pm = self.__DstarCombine( name = wideMassName2Kp2Pm
+                                                      , inputSeq = [ Charm4BodyWideMassWin2Kp2Pm , pionsForDstar ]
+                                                      , decayDesc = [ "D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-" ]
+                                                      , masscut = DeltaMWideMassCut
+                                                    )
+
 
         ############################################################################################################
 
@@ -362,14 +411,25 @@ class Hlt2CharmHadD4HLinesConf(HltLinesConfigurableUser) :
                                                   , decayDesc = [ "D0 -> K*(892)+ pi- K-","D0 -> K*(892)- pi+ K+"]
                                                 )   
         #
-        Charm4BodyCombineToS3KPm = self.__filterHlt1TOS( modeName3KPm, Charm4BodyCombine3KPm )
-        #
-        Hlt2Charm4Body3KPm = self.__4BodyFilter ( name = modeName3KPm+'MassWin', inputSeq = [Charm4BodyCombineToS3KPm], extracode = sigMassCut )
+        Charm4BodyMassWin3KPm = self.__4BodyFilter ( name = modeName3KPm+'MassWin', inputSeq = [Charm4BodyCombine3KPm], extracode = sigMassCut )
         
-        Hlt2Charm4BodyWideMass3KPm = self.__4BodyFilter (name = wideMassName3KPm+'Win', inputSeq = [Charm4BodyCombineToS3KPm], extracode = wideMassCut )        
+        Charm4BodyWideMassWin3KPm = self.__4BodyFilter (name = wideMassName3KPm+'Win', inputSeq = [Charm4BodyCombine3KPm], extracode = wideMassCut )        
+        #                   
+        Hlt2Charm4Body3KPm = self.__DstarCombine( name = modeName3KPm
+                                              , inputSeq = [ Charm4BodyMassWin3KPm , pionsForDstar ]
+                                              , decayDesc = [ "D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-" ]
+                                              , masscut = DeltaMSigMassCut
+                                            )
+        
+        Hlt2Charm4BodyWideMass3KPm = self.__DstarCombine( name = wideMassName3KPm
+                                                      , inputSeq = [ Charm4BodyWideMassWin3KPm , pionsForDstar ]
+                                                      , decayDesc = [ "D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-" ]
+                                                      , masscut = DeltaMWideMassCut
+                                                    )
 
 
         ############################################################################################################
+
 
         # D -> K+pi+pi+pi- / K-pi-pi-pi+ ###############################################################################
 
@@ -379,14 +439,24 @@ class Hlt2CharmHadD4HLinesConf(HltLinesConfigurableUser) :
         Charm4BodyCombineCh2 = self.__4BodyCombine ( name = modeNameCh2
                                                   , inputSeq = [ Hlt2Charm2BodyFor4Body, kaonsF, pionsF ]
                                                   , decayDesc = [ "D0 -> K*(892)0 pi- K-","D0 -> K*(892)0 pi+ K+"]
-                                                )   
+                                                )
         #
-        Charm4BodyCombineToSCh2 = self.__filterHlt1TOS( modeNameCh2, Charm4BodyCombineCh2 )
-        #
-        Hlt2Charm4BodyCh2 = self.__4BodyFilter ( name = modeNameCh2+'MassWin', inputSeq = [Charm4BodyCombineToSCh2], extracode = sigMassCut )
+        Charm4BodyMassWinCh2 = self.__4BodyFilter ( name = modeNameCh2+'MassWin', inputSeq = [Charm4BodyCombineCh2], extracode = sigMassCut )
         
-        Hlt2Charm4BodyWideMassCh2 = self.__4BodyFilter (name = wideMassNameCh2+'Win', inputSeq = [Charm4BodyCombineToSCh2], extracode = wideMassCut )
+        Charm4BodyWideMassWinCh2 = self.__4BodyFilter (name = wideMassNameCh2+'Win', inputSeq = [Charm4BodyCombineCh2], extracode = wideMassCut )        
+        #                   
+        Hlt2Charm4BodyCh2 = self.__DstarCombine( name = modeNameCh2
+                                              , inputSeq = [ Charm4BodyMassWinCh2 , pionsForDstar ]
+                                              , decayDesc = [ "D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-" ]
+                                              , masscut = DeltaMSigMassCut
+                                            )
         
+        Hlt2Charm4BodyWideMassCh2 = self.__DstarCombine( name = wideMassNameCh2
+                                                      , inputSeq = [ Charm4BodyWideMassWinCh2 , pionsForDstar ]
+                                                      , decayDesc = [ "D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-" ]
+                                                      , masscut = DeltaMWideMassCut
+                                                    )
+
 
         ############################################################################################################
 
@@ -513,7 +583,6 @@ class Hlt2CharmHadD4HLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
 
         ############################################################################################################
-
 
         # D -> K+pi+pi+pi- / K-pi-pi-pi+   ##############################################################################
         line = Hlt2Line(modeNameCh2, prescale = self.prescale
