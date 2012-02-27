@@ -4,6 +4,15 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+
+! 2012-02-27 - Benoit VIAUD
+ - More conventional names for the D->hhhh lines
+
+    Hlt2CharmHadD4HLines.py  --> Hlt2CharmHadD02HHHHLines
+    Hlt2CharmHadDstD4HLines.py  --> Hlt2CharmHadD02HHHHDstLines
+    Hlt2CharmHadDstD4HNoH1Lines.py --> Hlt2CharmHadD02HHHHDstNoHlt1Lines
+    Hlt2CharmHadTwoBodyForD4H.py --> Hlt2CharmHadTwoBodyForD02HHHH
+
 ! 2012-02-26 - Jibo He
  - Added Hlt2DiPhiTis to Hlt2.py 
 
