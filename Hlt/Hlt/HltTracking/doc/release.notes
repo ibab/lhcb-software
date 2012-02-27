@@ -5,6 +5,12 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2012-02-27 - V. Gligorov
+ - Changes for 2012 running. Set default P/PT cuts in the forward
+   tracking to 3000/300. Set the default P cut in the seeding and
+   turn it on by default. Turn on the clone kiling between the forward
+   and match tracking. Set the number of double hits required in
+   the seeding to 2.   
 
 ! 2012-02-27 - Benoit VIAUD
  - A few obsolete lines removed 
