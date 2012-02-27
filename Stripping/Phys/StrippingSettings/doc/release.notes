@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-02-27 - Jibo He
+ - PreStripping18/LineConfigDictionaries_BHQ.py
+   Corrected some WG names from PSWG to BHQ   
+
 ! 2012-02-25 - Jibo He
  - Included Minibias
  - PreStripping18/LineConfigDictionaries_B2CC.py

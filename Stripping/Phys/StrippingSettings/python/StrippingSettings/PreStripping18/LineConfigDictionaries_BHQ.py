@@ -364,10 +364,10 @@ MicroDSTDiMuon = {
         'Psi2MuMuDetached_DLS'                             :     5.
         }, 
     'STREAMS' : [ 'Leptonic' ] ,
-    'WGs'    : [ 'PSWG' ]
+    'WGs'    : [ 'BHQ' ]
     }
 
-X2psiPiPi = {
+X2psi = {
     'BUILDERTYPE' : 'X2psiPiPiConf',
     'CONFIG' : {
     'MuonPT'           :     0.9 , # GeV
@@ -375,16 +375,14 @@ X2psiPiPi = {
     'MuonPIDmu'        :    -5.  , 
     'MuonTRCHI2DOF'    :     5.  ,
     'JpsiPT'           :     3.  , # GeV
-    'JpsiMinMass'      :     3.04, # GeV
-    'JpsiMaxMass'      :     3.14, # GeV
-    'PsiMinMass'       :     3.635,# GeV
-    'PsiMaxMass'       :     3.735,# GeV
+    'JpsiMassCuts'     :  "((in_range(3.04*GeV,MM,3.14*GeV)) | (in_range(3.635*GeV,MM,3.735*GeV)))",
     'JpsiVCHI2PDOF'    :    20.  ,
     'PionCuts'         :  "(PT>0.5*GeV) & (TRCHI2DOF<5)" ,
-    'CombMinMass'      :     3.4 , # GeV, before Vtx fit
+    'KaonCuts'         :  "(PT>0.5*GeV) & (TRCHI2DOF<5)" ,
+    'CombMinMass'      :     3.5 , # GeV, before Vtx fit
     'CombMaxMass'      :     5.1 , # GeV, before Vtx fit
     'XVCHI2PDOF'       :    16.  ,
-    'MinMass'          :     3.5 , # GeV, after Vtx fit
+    'MinMass'          :     3.6 , # GeV, after Vtx fit
     'MaxMass'          :     5.0 , # GeV, after Vtx fit
     'SSPrescale'       :     0.2 
     },
@@ -400,11 +398,11 @@ X2psiGamma = {
     'MuonPIDmu'        :    -5.  , 
     'MuonTRCHI2DOF'    :     5.  ,
     'JpsiPT'           :     3.  , # GeV
-    'JpsiMassCuts'     :  "(in_range(3.04*GeV,MM,3.14*GeV))",
+    'JpsiMassCuts'     :  "((in_range(3.04*GeV,MM,3.14*GeV)) | (in_range(3.635*GeV,MM,3.735*GeV)))",
     'JpsiVCHI2PDOF'    :    20.  ,
     'GammaCuts'        :  "(PT>0.6*GeV) & (P>5*GeV) & (CL>0.5)" ,
     'CombMinMass'      :     3.0 , # GeV, no Vtx fit
-    'CombMaxMass'      :     4.0   # GeV, no Vtx fit
+    'CombMaxMass'      :     5.0   # GeV, no Vtx fit
     },
     'STREAMS' : [ 'Leptonic' ] ,
     'WGs'    : [ 'BHQ' ]
@@ -1024,7 +1022,7 @@ Ccbar2Baryons = {
     'MinMass'          :  2800.    # MeV, after Vtx fit
     },
     'STREAMS' : [ 'CharmCompleteEvent' ],
-    'WGs'    : ['PSWG']
+    'WGs'    : ['BHQ']
     }
 
 CharmAssociative = {
@@ -1065,5 +1063,5 @@ CharmAssociative = {
     'DoubleDiMuonPrescale'   : 1.0
     },
     'STREAMS' : [ 'Leptonic' ] ,
-    'WGs'     : [ 'PSWG'    ]
+    'WGs'     : [ 'BHQ'    ]
     }
