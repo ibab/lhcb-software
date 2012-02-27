@@ -8,6 +8,8 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2012-02-27 - Sam Gregson
+ - Updated Hlt2CharmHadD2KS0HLines for KS0DDs as well as KS0LLs
 
 ! 2012-02-27 - Benoit VIAUD
  - One line forgotten in Hlt2CharmSemilepD2HMuMuLines.py
