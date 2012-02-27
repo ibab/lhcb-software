@@ -125,6 +125,9 @@
   <class pattern   = "LoKi::Particles::*"   />
   <class pattern   = "LoKi::Vertices::*"    />
   <class pattern   = "LoKi::Legacy::*"      />
+  
+  <class pattern   = "LoKi::ExtraInfo::GetSmartInfo<*Particle*>"   />
+  <class pattern   = "LoKi::ExtraInfo::GetSmartInfo<*VertexBase*>"  />
     
   <exclusion>
     

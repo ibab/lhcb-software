@@ -651,7 +651,11 @@ RV_P       = LoKi.Vertices.RecVertexMomentum ()
 ## @see LoKi::Cuts::RV_PT
 RV_PT      = LoKi.Vertices.RecVertexPt       ()
 
-
+# ==============================================================================
+# Smart info
+# ==============================================================================
+SINFO   = LoKi.Particles.SmartInfo
+VSINFO  = LoKi.Vertices.SmartInfo
 
 # =============================================================================
 # Aliases from Vava GLIGOROV

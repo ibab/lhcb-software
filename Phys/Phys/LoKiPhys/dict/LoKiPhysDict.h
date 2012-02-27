@@ -38,6 +38,7 @@
 #include "LoKi/Particles37.h"
 #include "LoKi/Particles38.h"
 #include "LoKi/Particles39.h"
+#include "LoKi/Particles40.h"
 // ============================================================================
 #include "LoKi/BeamLineFunctions.h"
 // ============================================================================
