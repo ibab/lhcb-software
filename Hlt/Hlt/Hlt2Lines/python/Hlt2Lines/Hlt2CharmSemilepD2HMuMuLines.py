@@ -43,6 +43,7 @@ class Hlt2CharmSemilepD2HMuMuLinesConf(HltLinesConfigurableUser) :
                         , 'Hlt2CharmSemilep3bodyD2PiMuMuSSDecision'         : 61040
                         , 'Hlt2CharmSemilep3bodyD2KMuMuSSDecision'         : 61043
                         , 'Hlt2CharmSemilep3bodyLambdac2PMuMuDecision'       : 60066
+                        , 'Hlt2CharmSemilep3bodyLambdac2PMuMuSSDecision'       : 60067
                       }
                 }
 
@@ -256,6 +257,11 @@ class Hlt2CharmSemilepD2HMuMuLinesConf(HltLinesConfigurableUser) :
                                                                  ]                                                 
                                                   )
 
+        CharmPMuMuSSCombine = self.__PMuMuCombine ( name = 'CharmSemilep3bodyLambdac2PMuMuSS'
+                                                    , inputSeq = [Hlt2Charm2MuonForHmumu , Protons ] 
+                                                    , decayDesc = ["Lambda_c+ -> phi(1020) p~-" , "Lambda_c~- ->  rho(770)0 p+ "
+                                                                 ]                                                 
+                                                    )
         
         ###################################################################################
 
@@ -274,7 +280,7 @@ class Hlt2CharmSemilepD2HMuMuLinesConf(HltLinesConfigurableUser) :
         
         
         Hlt2CharmPMuMu = self.__PMuMuFilter ( name = 'CharmSemilep3bodyLambdac2PMuMu', inputSeq = [CharmPMuMuCombine], extracode = Lambda_c_sigMassCut )
-
+        Hlt2CharmPMuMuSS = self.__PMuMuFilter ( name = 'CharmSemilep3bodyLambdac2PMuMuSS', inputSeq = [CharmPMuMuSSCombine], extracode = Lambda_c_sigMassCut )
       
         ###########################################################################
         # Define the Hlt2 Lines
@@ -338,6 +344,16 @@ class Hlt2CharmSemilepD2HMuMuLinesConf(HltLinesConfigurableUser) :
                         , postscale = self.postscale
                         )
         decName = "Hlt2CharmSemilep3bodyLambdac2PMuMuDecision"
+        annSvcID = self._scale(decName,'HltANNSvcID')
+        HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
+
+        ## Lambda_c SS ##
+            
+        line = Hlt2Line('CharmSemilep3bodyLambdac2PMuMuSS', prescale = self.prescale
+                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk, Hlt2Charm2MuonForHmumu, Protons, Hlt2CharmPMuMuSS]  
+                        , postscale = self.postscale
+                        )
+        decName = "Hlt2CharmSemilep3bodyLambdac2PMuMuSSDecision"
         annSvcID = self._scale(decName,'HltANNSvcID')
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
 

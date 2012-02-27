@@ -8,6 +8,16 @@
 !
 !-----------------------------------------------------------------------------
 
+
+! 2012-02-27 - Benoit VIAUD
+ - One line forgotten in Hlt2CharmSemilepD2HMuMuLines.py
+ - A few obsolete lines removed 
+     Hlt2CharmSemilep2Had1MuForHHMuMu.py
+     Hlt2CharmSemilepD02HHMuMu2SoftMuonsLines.py
+     Hlt2CharmSemilepD02HHMuMuHardHadronsAndMuonsLines.py
+     Hlt2CharmSemilepD02HHMuMuHardHadronsSoftMuonsLines.py
+     Hlt2CharmSemilepTwoHadForMuMuHH.py
+
 ! 2012-02-27 - Benoit VIAUD
  - More conventional names for the D->hhhh lines
 
