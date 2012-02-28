@@ -2,7 +2,7 @@
 # Maintainer : T. Blake, R. Lambert
 
 package           StrippingArchive
-version           v1r6
+version           v1r7
 
 # Structure, i.e. directories to process.
 #============================================================================
