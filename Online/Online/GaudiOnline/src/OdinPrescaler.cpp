@@ -13,6 +13,7 @@
 #include "MDF/OnlineRunInfo.h"
 #include "Event/RawEvent.h"
 #include "Event/RawBank.h"
+#include "RTL/rtl.h"
 
 // C/C++ include files
 #include <cstdlib>
@@ -41,7 +42,8 @@ namespace LHCb {
     OdinPrescaler(const std::string& nam, ISvcLocator* svc) 
       : Algorithm(nam,svc)
     {
-      ::srand((unsigned int)::time(0));
+      unsigned int seed = InterfaceID::hash32((RTL::processName()+"@"+RTL::nodeName()).c_str());
+      ::srand(seed);
       declareProperty("AcceptRate", m_rate=1.0,
 		      "Fraction of the events allowed to pass the filter");
       declareProperty("TriggerType", m_trgType=0, 
@@ -66,7 +68,8 @@ namespace LHCb {
     virtual StatusCode execute() {
       MsgStream log(msgSvc(),name());
       DataObject* pDO = 0;
-      double frac = double(rand()) / double(RAND_MAX);
+      double frac = double(rand());
+      frac /= double(RAND_MAX);
       log << MSG::DEBUG << "Trg type:" << m_trgType << " Fraction:" << frac
 	  << " Rate:" << m_rate << endmsg;
       if ( m_trgType == 0 ) {
