@@ -17,6 +17,10 @@
 // ============================================================================
 #include "Kernel/ISubstitutePID.h"
 // ============================================================================
+// DaVinciKernel
+// ============================================================================
+#include "Kernel/TreeCloners.h"
+// ============================================================================
 // local
 // ============================================================================
 #include "FitDecayTrees.h"
@@ -105,11 +109,13 @@ protected:
   /// virtual & protected destructor 
   virtual ~SubstitutePID () ;                  // virtual & protected destructor  
   // ==========================================================================
-  IIncidentSvc* incSvc() const {
+  IIncidentSvc* incSvc() const 
+  {
     if ( 0 != m_incSvc ) { return m_incSvc ; }
     m_incSvc = svc<IIncidentSvc> ( "IncidentSvc" , true );
     return m_incSvc ;
   }
+  // ==========================================================================
 public:
   // ==========================================================================
   /** the major method for filter input particles 
@@ -234,45 +240,52 @@ StatusCode SubstitutePID::filter
   if (filtered.empty()) return StatusCode::SUCCESS ;
   LHCb::Particle::ConstVector substituted ;
   substituted.reserve ( input.size() ) ; 
-
+  
+  // ==========================================================================
+  /**  @attention: "substituted" constains CLONED TREES 
+   *   @fixme:     one need to protect this usage and change 
+   *               the tool interface to avoid the misuse!!
+   *  @see SubstitutePIDTool::substitute 
+   */   
   m_substitute->substitute(filtered, substituted);
+  //
   // refit if needed, store in TES
   for ( LHCb::Particle::ConstVector::const_iterator ip = 
           substituted.begin() ; substituted.end() != ip ; ++ip ) 
- {
-   if(m_maxParticles > 0 && i_markedParticles().size() > m_maxParticles){
-     Warning("Maximum number of allowed particles reached",
-	     StatusCode::SUCCESS);
-     if(!m_stopIncidentType.empty())
-       incSvc()->fireIncident(Incident(name(),m_stopIncidentType));
-     break;
-   }
-    const LHCb::Particle* p = *ip ;
-    if ( 0 == p ) { continue ; }
+  {
     //
-    // clone the whole decay tree 
-    LHCb::DecayTree tree ( *p ) ;
+    if ( m_maxParticles > 0 &&
+         i_markedParticles().size() > m_maxParticles)
+    {
+      Warning ( "Maximum number of allowed particles reached",
+                StatusCode::SUCCESS);
+      if(!m_stopIncidentType.empty())
+      { incSvc()->fireIncident( Incident ( name () , m_stopIncidentType ) ) ; }
+      
+      break;
+    }
+    //
+    const LHCb::Particle* tree = *ip ;
+    if ( 0 == tree ) { continue ; }
     //
     // refit the tree ?
     if ( 0 < chi2cut()  ) 
     {
-      LHCb::DecayTree nTree = reFitted ( tree.head() ) ;
-      if ( !nTree ) { continue ; }
+      // refit the original 
+      LHCb::DecayTree nTree = reFitted ( tree ) ;
+      // delete the "original" at any circumstances
+      DaVinci::deleteTree ( const_cast<LHCb::Particle*> ( tree ) ) ; // DELETE
       //
-      // mark & store new decay tree 
-      markNewTree       ( nTree.head()     ) ; // mark & store new decay tree 
+      if ( !nTree ) { continue ; }            // CONTINUE, fit failure.. 
       //
-      output.push_back  ( nTree.release () ) ;
-    }
-    else
-    {
-      // mark & store new decay tree 
-      markNewTree       ( tree.head()     ) ; // mark & store new decay tree 
+      tree = nTree.release() ;                // get the refitted tree 
       //
-      output.push_back  ( tree.release () ) ;
     }
     //
-
+    // mark & store new decay tree 
+    markNewTree       ( tree ) ; // mark & store new decay tree 
+    output.push_back  ( tree ) ;
+    // 
   }
   //
   return StatusCode::SUCCESS ;

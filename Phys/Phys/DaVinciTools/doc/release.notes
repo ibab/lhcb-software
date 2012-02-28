@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2012-02-28 - Anton Poluektov for Vanya Belyaev
+  - Modify SubstitutePID to fix the memory leak
+
 ! 2012-02-26 - Mike Williams
 - Added particle limits to SubPIDMMFilter and SubstitutePID
 
