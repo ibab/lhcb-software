@@ -4,6 +4,7 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+!========================= PackedEvent v4r7 2012-02-28 =========================
 ! 2012-02-21 - Chris Jones
  - Update the way some references to Particles and Vertices are stored, to
    use 64 bit integers, to avoid packing problems.
