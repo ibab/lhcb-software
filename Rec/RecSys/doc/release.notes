@@ -5,6 +5,116 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+</PRE><H1><A NAME=v13r1>2012-02-29 RecSys v13r1</A></H1><PRE>
+This version uses Gaudi v23r1 and LHCb v34r1
+
+- Candidate release for HLT in 2012.
+  Development release for Stripping 18 test
+
+- Packages updated: Calo/CaloReco v5r14, Muon/MuonTrackMonitor v2r6,
+    Rec/LumiAlgs v7r4, Rich/RichRecQC v2r57, Tf/FastVelo v1r7,
+    Tf/PatAlgorithms v4r18, Tf/TrackSys v7r1, Tr/TrackFitEvent v5r14,
+    Tr/TrackFitter v4r4, Tr/TrackMonitors v1r37, Tr/TrackTools v4r12,
+    Tr/PatPV v3r22
+
+- In Calo/CaloReco v5r14
+  . CaloMergedPi0Alg: Fix potential memory leak, probably never fired
+    (Coverity defect 17572)
+  . Fix UNINIT_CTOR defects
+  . Fix trivial icc remarks
+
+- In Muon/MuonTrackMonitor v2r6
+  . remove line that sets "NodeFitter.BiDirectionalFit" in configuration
+
+- In Rec/LumiAlgs v7r4
+  . Slightly more informative warning message for missing FSR data
+  . Introduce option IgnoreDQFlags, gived warning when set
+  . Introduce logic in LumiIntegrateFSR to skip integration based on DQflags
+  . Update unit tests
+  . Make explicit that FilterFillingScheme is not used before 2011
+  . Add protection for data beyond 2012, requiring explicit update
+  . Initialize 2012 behaviour with safest possible condition
+  . Fix bug with minor effect (1E-4) in LumiIntegrateFSR
+  . Add missing dependencies for tests, following reorganisation of GaudiConf
+  . Remove imports from GaudiConf
+
+- In Rich/RichRecQC v2r57
+  . Added sequence control in RichHPDFlashMoni
+
+- In Tf/FastVelo v1r7
+  . Improve for large IP tracks:
+    o Allow change of zone in RZ tracks, but at least 3 in the same zone
+      Remove the test that all R hits should be in the same zone later...
+    o Count the total cluster size. If average > 1.9, allow tracks with
+      higher quality factor (+1.0) (i.e. when two tracks overlap in RZ)
+    o Reduce the deltaPhi tolerance for backward tracks (speed)
+  . Use the new 'wasDecoded' flag of the Velo sensor to count missed sensors.
+  . Reserve space in vectors. (Feed back from Sasha Mazuroz's talk on 6/2/2012)
+  . Copy vectors using the insert method.-> -4% time.
+
+- In Tf/PatAlgorithms v4r18
+  . PatDownstream: make sure we copy all three states in T to help the fast fit
+    in HLT
+  . PatForwardTool: 
+    o Changed parametrisation of first search window in x.
+      Required to add property "MagnetKickParams" to PatForwardTool.
+    o Bug fix in PatForward in part which uses momentum estimate.
+  . PatForwardTool, PatFwdTool:
+    o Fixed part which uses momentum estimate. This part of the code was not used
+      anywhere or if it was used it could not work.
+    o Removed property "RangeErrorFraction" and changed default value of
+      "MinRange". To make sure that the user knows that a momentum estimate is
+      used, added property "UseMomentumEstimate" which is false by default.
+  . Change calls to std::sort where hits were sorted by a potentially unstable
+    sorting criterium to use std::stable_sort; the reason is that there is a
+    possibility that we end up with more than one hit at the same z (e.g. two
+    hits in same layer), so the result of the sort will depend on the
+    implementation of std::sort - using std::stable_sort instead avoids that
+    (these changes have to be applied in addition to those in Tf/TfKernel to
+    fix differences observed between gcc 4.3 and gcc 4.6)
+  . PatFwdTrackCandidate: avoid some memory allocations in handling the vector
+    of PatFwdHits
+  . FastForwardTool, PatAddTTCoord: replace std::vector by boost::array to avoid
+    memory allocations
+  . PatDownTrack: avoid needless copying of parameter vectors, preallocate
+    space for hit container
+  . work on const correctness (where possible)
+
+- In Tf/TrackSys v7r1
+  . Fix a bug in python/TrackSys/PatChecking.py which causes the
+    TrackEffChecker not to be run on Velo tracks if FastVelo is used
+  . Remove unnecessary import from RecoTracking.py
+
+- In Tr/TrackFitEvent v5r14
+  . Adapt KalmanFitResult and FitNode to change in Measurement
+  . Improve speed of FitNode::computeFilteredState
+
+- In Tr/TrackFitter v4r4
+  . Changes to revive functionality of 'forward only' fit
+  . Increased minimum number of hits left in outlier removal
+  . Small improvement in MasterFitter::outlierRemoved to call smoothing less
+    often (only affects HLT)
+  . Fix in TrackKalmanFilter to make profiling easier
+
+- In Tr/TrackMonitors v1r37
+  . Extend range of histogram for 'Track:history' flag such that we can actually
+    see FastVelo
+
+- In Tr/TrackTools v4r12
+  . Several changes to TrackStateInitTool to get better track initialization
+  . Use Warning(...) instead of warning() << for messages in MuonTTTrack, so
+    they eventually get suppressed, and move some info() to debug()
+    (for stripping).
+
+- In Tr/PatPV v3r22
+  . Remove usage of WeigthsVector from PatPV
+  . Make LSAdaptPV3DFitter faster (for HLT)
+  . Update PatPVOffline to no longer create a separate 'WeightsVector', but
+    instead to store the track weights directly in the RecVertex class, which
+    now supports this.
+  . Update PVOfflineRecalculate to take the track weights direct from the PV
+    itself, instead of trying to load the now obsolete weights vector.
+
 </PRE><H1><A NAME=v13r0>2012-02-01 RecSys v13r0</A></H1><PRE>
 This version uses Gaudi v23r0 and LHCb v34r0
 
