@@ -1,5 +1,5 @@
 package           IOExample
-version           v4r4
+version           v4r5
 
 branches doc cmt tests python
 include_path none
