@@ -28,11 +28,11 @@ macro_append SwimmingEventDict_cppflags "" \
              WIN32      " /wd4373"
 
 macro_append cppflags "" \
-                debug " -DGOD_NOALLOC " \
+           target-dbg " -DGOD_NOALLOC " \
                 WIN32 " -DGOD_NOALLOC "
 macro_append gccxmlopts "" \
-                debug " -DGOD_NOALLOC " \
-                WIN32 " -DGOD_NOALLOC "
+             target-dbg " -DGOD_NOALLOC " \
+                  WIN32 " -DGOD_NOALLOC "
 private
 # Patch for gccxml bug with assert statement on Windows
 
