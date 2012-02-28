@@ -13,11 +13,11 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiCore v11r7 2012-02-28 =========================
 ! 2012-02-14 - Vanya Belyaev
  - small fix 
 
 ! 2012-02-13 - Vanya Belyaev
-
  - improve treatment of vector-like argument 
 
 !========================= LoKiCore v11r6 2012-01-31 =========================
