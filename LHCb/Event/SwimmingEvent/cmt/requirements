@@ -3,7 +3,7 @@
 # Maintainer : Roel Aaij, Vava Gligorov
 #============================================================================
 package           SwimmingEvent
-version           v1r1
+version           v1r2
 
 # Structure, i.e. directories to process. 
 #============================================================================
