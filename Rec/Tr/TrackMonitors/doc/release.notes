@@ -4,8 +4,10 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+!========================= TrackMonitors v1r37 2012-02-28 =========================
 ! 2012-02-23 - Wouter Hulsbergen
- - extend range of histogram for 'Track:history' flag such that we can actually see FastVelo
+ - extend range of histogram for 'Track:history' flag such that we can actually
+   see FastVelo
 
 !========================= TrackMonitors v1r36 2012-01-31 =========================
 ! 2012-01-27 - Patrick Koppenburg
