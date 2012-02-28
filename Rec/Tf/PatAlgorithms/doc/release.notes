@@ -4,6 +4,7 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================= PatAlgorithms v4r18 2012-02-28 =========================
 ! 2012-02-23 - Sascha Stahl
  - PatForwardTool: Bug fix in PatForward in part which uses momentum estimate.	
 
