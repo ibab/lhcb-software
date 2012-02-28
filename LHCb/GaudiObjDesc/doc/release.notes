@@ -1,9 +1,11 @@
+!--------------------------------------------------------------------------------
 ! Package:         GaudiObjDesc
 ! Description:     This package contains a set of tools used to generate code
 !                  from the XML description of the data object classes.
 ! Package manager: Stefan Roiser
-!-----------------------------------------------------------------------------
+!--------------------------------------------------------------------------------
 
+!========================= GaudiObjDesc v11r13 2012-02-28 =======================
 ! 2012-02-28 - Marco Cattaneo
  - Fix requirements to set -DGOD_NOALLOC when tag 'target-dbg' is set, previuosly
    used tag 'debug' that no longer exists
