@@ -408,7 +408,7 @@ X2psiGamma = {
     'WGs'    : [ 'BHQ' ]
   }
 
-B2psiXForBHQ = {
+B2psiX = {
     'BUILDERTYPE' : 'PsiX_BQ_Conf',
     'CONFIG' : {
     ## PV-requiremens
@@ -482,7 +482,7 @@ B2psiXForBHQ = {
     'WGs'    : [ 'BHQ' ]
     }
 
-B2psiX0ForBHQ = {
+B2psiX0 = {
     'BUILDERTYPE' : 'PsiX0Conf',
     'CONFIG' : {
         ## PV-requiremens
@@ -970,6 +970,31 @@ Ccbar2Ppbar = {
     'WGs'    : [ 'BHQ' ]
 }
 
+Ccbar2PpbarExclusive = {
+    'BUILDERTYPE'       : 'Ccbar2PpbarConf',
+    'CONFIG'    : {
+        'LinePrescale'     :     1.  ,
+        'LinePostscale'    :     1.  ,
+        
+        'SpdMult'          :    20.  , # dimensionless, Spd Multiplicy cut 
+        'ProtonPT'         :   550.  , # MeV
+        'ProtonP'          :    -2.  , # MeV
+        'ProtonTRCHI2DOF'  :     5.  ,
+        'ProtonPIDppi'     :    20.  , # CombDLL(p-pi)
+        'ProtonPIDpK'      :    15.  , # CombDLL(p-K)
+        'ProtonIPCHI2Cut'  :    ""   ,
+        'CombMaxMass'      :  1.0e+6 , # MeV, before Vtx fit
+        'CombMinMass'      :     0.  , # MeV, before Vtx fit
+        'MaxMass'          :  1.0e+6 , # MeV, after Vtx fit
+        'MinMass'          :     0.  , # MeV, after Vtx fit
+        'VtxCHI2'          :     9.  , # dimensionless
+        'CCCut'            :  ""     
+        },
+    'STREAMS' : [ 'Charm' ] ,
+    'WGs'    : [ 'BHQ' ]
+    }
+
+
 Ccbar2PpbarDetached = {
     'BUILDERTYPE'       : 'Ccbar2PpbarConf',
     'CONFIG'    : {
@@ -1021,7 +1046,7 @@ Ccbar2Baryons = {
     'MaxMass'          :  4000.  , # MeV, after Vtx fit
     'MinMass'          :  2800.    # MeV, after Vtx fit
     },
-    'STREAMS' : [ 'CharmCompleteEvent' ],
+    'STREAMS' : [ 'Charm' ],
     'WGs'    : ['BHQ']
     }
 

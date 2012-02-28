@@ -4,6 +4,11 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-02-28 - Jibo He
+ - PreStripping18/LineConfigDictionaries_BHQ.py
+   Moved more lines to MicroDST
+   Removed WG lines from new added lines. 
+
 ! 2012-02-27 - Jibo He
  - PreStripping18/LineConfigDictionaries_BHQ.py
    Corrected some WG names from PSWG to BHQ   
