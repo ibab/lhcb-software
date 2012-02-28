@@ -4,6 +4,7 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+!========================= PatPV v3r22 2012-02-28 =========================
 ! 2012-02-26 - Mariusz Witek
  - Remove usage of WeigthsVector from PatPV
  - Make LSAdaptPV3DFitter faster (for HLT)
