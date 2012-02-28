@@ -5,6 +5,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2012-02-28
+ - add cut on track IP wrt beam line to speed up PV finding (HltPVs.py)
+
 ! 2012-02-27 - V. Gligorov
  - Changes for 2012 running. Set default P/PT cuts in the forward
    tracking to 3000/300. Set the default P cut in the seeding and

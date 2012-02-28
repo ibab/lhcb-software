@@ -63,6 +63,7 @@ def PV3D():
     recoPV3D.PVOfflineTool.PVFitterName = "LSAdaptPV3DFitter"
     recoPV3D.PVOfflineTool.addTool(LSAdaptPV3DFitter, "LSAdaptPV3DFitter")
     recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.TrackErrorScaleFactor = 2.
+    recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.maxIP2PV = 0.3
     #recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.zVtxShift = 0.0
     recoPV3D.OutputVerticesName = proto3DVertices
     recoPV3D.PVOfflineTool.InputTracks = [ MinimalVelo.outputSelection() ]
