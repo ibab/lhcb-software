@@ -4,6 +4,7 @@
 ! Purpose     : Holds code for writing an XML-based summary in Gaudi
 !-----------------------------------------------------------------------------
 
+!========================= XMLSummaryKernel v1r5 2012-02-28 =========================
 ! 2012-02-14 - Marco Cattaneo
  - Use xrootd instead of rfio to read test file
  - Add missing QMTest run time dependency on DDDB
