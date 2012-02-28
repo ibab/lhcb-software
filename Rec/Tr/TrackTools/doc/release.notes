@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2012-02-28 - Wouter Hulsbergen
+ - update of ITTrackSelector for alignment
+
 !========================= TrackTools v4r12 2012-02-28 =========================
 ! 2012-02-16 - Wouter Hulsbergen
  - bugfix in TrackStateInitTool for magnet off data
