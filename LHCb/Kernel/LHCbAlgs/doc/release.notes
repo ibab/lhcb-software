@@ -4,6 +4,7 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!========================= LHCbAlgs v2r48 2012-02-28 =========================
 ! 2012-02-24 - Marco Cattaneo
  - Change default DataType in LHCbApp() to 2012 (was 2009)
  - Add slot "IgnoreDQFlags" to LHCbApp(). If False, events with bad DQ are 
