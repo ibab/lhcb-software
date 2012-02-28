@@ -216,6 +216,20 @@ namespace LHCb
   // ==========================================================================
 } //                                                      end of namespace LHCb
 // ============================================================================
+#include "GaudiKernel/HashMap.h"
+namespace GaudiUtils 
+{
+  // Hash functions for maps
+  template <> struct Hash<LHCb::ParticleID>
+  { inline size_t operator() ( const LHCb::ParticleID& s ) const { return (size_t)s.pid(); } };
+  template <> struct Hash<const LHCb::ParticleID>
+  { inline size_t operator() ( const LHCb::ParticleID& s ) const { return (size_t)s.pid(); } };
+  template <> struct Hash<LHCb::ParticleID&>
+  { inline size_t operator() ( const LHCb::ParticleID& s ) const { return (size_t)s.pid(); } };
+  template <> struct Hash<const LHCb::ParticleID&>
+  { inline size_t operator() ( const LHCb::ParticleID& s ) const { return (size_t)s.pid(); } };
+}
+// ============================================================================
 #endif ///LHCbKernel_ParticleID_H
 // ============================================================================
 // The END 

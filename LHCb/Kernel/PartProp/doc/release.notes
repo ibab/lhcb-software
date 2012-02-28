@@ -4,6 +4,9 @@
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
 
+! 2012-02-28 - Chris Jones
+ - Add some hash functions for ParticleID
+
 !========================= PartProp v1r12 2011-12-14 =========================
 ! 2011-11-11 - A Martens
  - Fix bug in enumeration of PDG ID digits, spin of particles was wrongly
