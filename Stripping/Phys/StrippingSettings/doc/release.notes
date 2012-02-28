@@ -4,6 +4,8 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingSettings v2r10 2012-02-28 ===================
+
 ! 2012-02-28 - Jibo He
  - PreStripping18/LineConfigDictionaries_Charm.py
    Updated conf dict for PromptCharm
