@@ -4,6 +4,11 @@
 ! Purpose     : High level Muon Monitoring after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2012-02-28 - Wouter Hulsbergen
+
+- remove line that sets "NodeFitter.BiDirectionalFit" in
+  configuration. (long obsolete)
+
 !========================= MuonTrackMonitor v2r5 2012-01-31 =========================
 ! 2012-01-19 - Giacomo GRAZIANI
  - move 2d histograms to expert mode

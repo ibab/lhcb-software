@@ -30,7 +30,6 @@ class MuonTrackMonitorConf(LHCbConfigurableUser):
         muonTrackFit.Fitter.MeasProvider.IgnoreMuon = False 
         muonTrackFit.Fitter.MeasProvider.MuonProvider.clusterize    = True #=======
         #muonTrackFit.Fitter.MeasProvider.MuonProvider.OutputLevel    = DEBUG #=======
-        muonTrackFit.Fitter.NodeFitter.BiDirectionalFit = False
         muonTrackFit.Fitter.ErrorX  = 1000
         muonTrackFit.Fitter.ErrorY  = 1000
         muonTrackFit.Fitter.ErrorTx = 0.7
