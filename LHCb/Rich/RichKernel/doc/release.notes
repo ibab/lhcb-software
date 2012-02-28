@@ -1,8 +1,12 @@
-!-----------------------------------------------------------------------
+!-------------------------------------------------------------------------------
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
-!-----------------------------------------------------------------------
+!-------------------------------------------------------------------------------
+
+! 2012-02-28 - Marco Cattaneo
+ - Fix requirements to set -DRICHDEBUG when tag 'target-dbg' is set, previuosly
+   used tag 'debug' that no longer exists
 
 !========================= RichKernel v7r48 2012-01-31 =========================
 ! 2012-01-26 - Chris Jones

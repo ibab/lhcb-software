@@ -42,7 +42,7 @@ macro_append RichKernelDict_cppflags "" \
                           target-icc " -wd177 -wd873"
 
 # Debug flag
-macro_append cppflags "" Linux&debug " -DRICHDEBUG "
+macro_append cppflags "" Linux&target-dbg " -DRICHDEBUG "
 
 private
 # RichKernel Configurable uses the generated configurables 
