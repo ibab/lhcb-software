@@ -1,8 +1,12 @@
-!--------------------------------------------------------------------------
+!--------------------------------------------------------------------------------
 ! Package Kernel/LHCbKernel
 ! Package manager: M.Cattaneo
 ! Purpose: LHCb specific Kernel classes
-!--------------------------------------------------------------------------
+!--------------------------------------------------------------------------------
+
+! 2012-02-28 - Marco Cattaneo
+ - Fix requirements to set -DGOD_NOALLOC when tag 'target-dbg' is set, previuosly
+   used tag 'debug' that no longer exists
 
 ! 2012-02-27 - Marco Cattaneo
  - Fix an icc compilation warning in previous commit
