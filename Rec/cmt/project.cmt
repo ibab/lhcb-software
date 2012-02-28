@@ -1,6 +1,6 @@
 project REC
 
-use LHCB	LHCB_v34r0
+use LHCB	LHCB_v34r1
 
 build_strategy with_installarea
 setup_strategy root
