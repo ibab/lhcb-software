@@ -4,6 +4,7 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+!========================= FastVelo v1r7 2012-02-28 =========================
 ! 2012-02-17 - Olivier Callot
  - Improve for lareg IP tracks:
    o Allow change of zone in RZ tracks, but at least 3 in the same zone
