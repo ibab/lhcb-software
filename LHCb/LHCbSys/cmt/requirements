@@ -59,7 +59,7 @@ use PackedEvent           v4r7    Event   # Marco Cattaneo, Olivier Callot
 use PhysEvent             v11r15  Event   # Patrick Koppenburg
 use RecEvent              v2r40   Event   # Marco Cattaneo and sub-det experts
 use RecreatePIDTools      v1r4    Event   # Chris Jones
-use SwimmingEvent         v1r1    Event   # Roel Aaij, Vava Gligorov
+use SwimmingEvent         v1r2    Event   # Roel Aaij, Vava Gligorov
 use TrackEvent            v5r15   Event   # Wouter Hulsbergen
 use VeloEvent             v16r10  Event   # Tomasz Szumlak, Chris Parkes
 
