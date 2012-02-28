@@ -6,6 +6,19 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v12r1>2012-02-29 LbcomSys v12r1</A></H1><PRE>
+This version uses Gaudi v23r1 and LHCb v34r1
+
+- Release for Stripping18 test, candidate release for 2012 HLT
+
+- Packages updated: L0/L0DU v10r18
+
+- In L0DU v10r18
+  . New tool for a fast decoding of L0DU for Hlt1:
+    o Call the Hlt1 tool in L0DUFromRawAlg if option Hlt1 set.
+    o Option 'CompareTools" to be used with Hlt1 to compare the results of the
+      two decoding algorithms.
+
 </PRE><H1><A NAME=v12r0>2012-02-01 LbcomSys v12r0</A></H1><PRE>
 This version uses Gaudi v23r0 and LHCb v34r0
 
