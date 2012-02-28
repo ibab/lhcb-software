@@ -247,7 +247,7 @@ def makeB2PiMuMuOS(name, pionSel, muonSel, BMassWin, BVCHI2DOF, BIPCHI2, BDIRA, 
     _Combine.ReFitPVs = True
     return Selection(name,
                      Algorithm = _Combine,
-                     RequiredSelections = [ pionSel, muonSel ] )
+                     RequiredSelections = [ muonSel, pionSel ] )
 
 #####################################################
 def makeB2PiMuMuSS(name, pionSel, muonSel, BMassWin, BVCHI2DOF, BIPCHI2, BDIRA, DimuonMass):
@@ -268,7 +268,7 @@ def makeB2PiMuMuSS(name, pionSel, muonSel, BMassWin, BVCHI2DOF, BIPCHI2, BDIRA, 
     _Combine.ReFitPVs = True
     return Selection(name,
                      Algorithm = _Combine,
-                     RequiredSelections = [ pionSel, muonSel ] )
+                     RequiredSelections = [ muonSel, pionSel ] )
 
 #####################################################
 def makeB2KMuMuOS(name, kaonSel, muonSel, BMassWin, BVCHI2DOF, BIPCHI2, BDIRA, DimuonMass):
@@ -289,7 +289,7 @@ def makeB2KMuMuOS(name, kaonSel, muonSel, BMassWin, BVCHI2DOF, BIPCHI2, BDIRA, D
     _Combine.ReFitPVs = True
     return Selection(name,
                      Algorithm = _Combine,
-                     RequiredSelections = [ kaonSel, muonSel ] )
+                     RequiredSelections = [ muonSel, kaonSel ] )
 
 #####################################################
 def makeB2KMuMuSS(name, kaonSel, muonSel, BMassWin, BVCHI2DOF, BIPCHI2, BDIRA, DimuonMass):
@@ -310,7 +310,7 @@ def makeB2KMuMuSS(name, kaonSel, muonSel, BMassWin, BVCHI2DOF, BIPCHI2, BDIRA, D
     _Combine.ReFitPVs = True
     return Selection(name,
                      Algorithm = _Combine,
-                     RequiredSelections = [ kaonSel, muonSel ] )
+                     RequiredSelections = [ muonSel, kaonSel ] )
                     
 #####################################################
 def makeKaons(name, KaonP, KaonPT, KaonMINIPCHI2):
