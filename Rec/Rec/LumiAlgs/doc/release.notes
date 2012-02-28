@@ -4,6 +4,7 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+!========================= LumiAlgs v7r4 2012-02-28 =========================
 ! 2012-02-20 - Jaap Panman
  - introduce warning when IgnoreDQFlags set
  - slightly more informative warning message for missing FSR data
