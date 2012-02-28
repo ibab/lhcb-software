@@ -1,11 +1,10 @@
-# $Id: requirements,v 1.34 2010-03-19 22:25:04 cattanem Exp $
 # =============================================================================
 # Created    : 25/11/2001
 # Maintainer : Vanya Belyaev Ivan.Belyaev@itep.ru 
 # =============================================================================
 
 package           CaloKernel
-version           v6r2
+version           v6r2p1
 
 # =============== structure ===================================================
 branches          src cmt doc CaloKernel python 
