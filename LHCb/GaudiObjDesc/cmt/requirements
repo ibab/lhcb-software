@@ -28,8 +28,8 @@ use GaudiPolicy v*
 
 # Always switch off GaudiObjDesc custom allocators with debug or WIN32
 macro_append cppflags "" \
-                debug " -DGOD_NOALLOC " \
+           target-dbg " -DGOD_NOALLOC " \
                 WIN32 " -DGOD_NOALLOC "
 macro_append gccxmlopts "" \
-                debug " -DGOD_NOALLOC " \
+           target-dbg " -DGOD_NOALLOC " \
                 WIN32 " -DGOD_NOALLOC "
