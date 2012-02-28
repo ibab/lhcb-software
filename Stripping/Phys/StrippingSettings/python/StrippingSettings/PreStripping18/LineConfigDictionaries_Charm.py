@@ -69,17 +69,28 @@ D02MuMu = {
 PromptCharm = {
     'BUILDERTYPE' : 'StrippingPromptCharmConf', 
     'CONFIG'      : {
-    'TrackCuts'       : ' ( TRCHI2DOF < 5 ) & ( PT > 250 * MeV ) '          , 
-    'BasicCuts'       : ' & ( 9 < MIPCHI2DV()   ) '                         , 
-    'KaonCuts'        : ' & ( 2 < PIDK  - PIDpi ) '                         , 
-    'PionCuts'        : ' & ( 2 < PIDpi - PIDK  ) '                         , 
-    'ProtonCuts'      : ' & ( 2 < PIDp  - PIDpi ) & ( 2 < PIDp - PIDK ) '   , 
-    'SlowPionCuts'    : ' TRCHI2DOF < 5   '                                 ,
-    'MuonCuts'        : ' ISMUON & ( PT > 650 * MeV ) & ( TRCHI2DOF < 5 ) ' , 
+    ## PT-cuts 
+    #
+    'pT(D0)'           :  3.0 * GeV ,    ## pt-cut for  prompt   D0
+    'pT(D0) for D*+'   :  2.0 * GeV ,    ## pt-cut for  D0 from  D*+ 
+    'pT(D+)'           :  3.0 * GeV ,    ## pt-cut for  prompt   D+
+    'pT(Ds+)'          :  3.0 * GeV ,    ## pt-cut for  prompt   Ds+
+    'pT(Ds+) for Bc+'  :  1.0 * GeV ,    ## pt-cut for  Ds+ from Bc+
+    'pT(Lc+)'          :  3.0 * GeV ,    ## pt-cut for  prompt   Lc+
+    #
+    # Selection of basic particles 
+    #
+    'TrackCuts'       : ' ( TRCHI2DOF < 5 ) & ( PT > 250 * MeV ) & in_range  ( 2 , ETA , 5 ) ' , 
+    'BasicCuts'       : ' & ( 9 < MIPCHI2DV() ) ' , 
+    'KaonCuts'        : ' & ( 2 < PIDK  - PIDpi ) '                           , 
+    'PionCuts'        : ' & ( 2 < PIDpi - PIDK  ) '                           , 
+    'ProtonCuts'      : ' & ( 2 < PIDp  - PIDpi ) & ( 2 < PIDp - PIDK ) '     , 
+    'SlowPionCuts'    : ' TRCHI2DOF < 5 '                                     ,
+    'MuonCuts'        : ' ISMUON & ( PT > 650 * MeV ) & ( TRCHI2DOF < 5 ) '   , 
     #
     # Global Event cuts 
     #
-    'PrimaryVertices' : True , 
+    'CheckPV'         : True , 
     #
     # Technicalities:
     #
@@ -91,24 +102,28 @@ PromptCharm = {
     # number of kaons in final state (as CombinationCuts)
     "ak2    = 2 == ANUM( 'K+' == ABSID ) "       ,
     # shortcut for chi2 of vertex fit 
-    'chi2vx = VFASPF(VCHI2) '                    , 
+    'chi2vx = VFASPF(VCHI2) '                    ,
     # shortcut for the c*tau
     "from GaudiKernel.PhysicalConstants import c_light" , 
     "ctau   = BPVLTIME ( 9 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<9
-    # dimons:
+    # dimuons:
     "psi           =   ADAMASS ('J/psi(1S)') < 150 * MeV"  ,
     "psi_prime     =   ADAMASS (  'psi(2S)') < 150 * MeV"  ,
     ] ,
     ## monitoring ?
     'Monitor'     : False ,
     ## pescales 
-    'D0Prescale'             : 0.33 ,
-    'DstarPrescale'          : 1.0 ,
+    'D0Prescale'             : 1.0 ,
+    'D*Prescale'             : 1.0 ,
     'DsPrescale'             : 1.0 ,
-    'DplusPrescale'          : 0.33 ,
-    'LamCPrescale'           : 1.0 ,
+    'D+Prescale'             : 1.0 ,
+    'LambdaCPrescale'        : 1.0 ,
+    'LambdaC*Prescale'       : 1.0 ,
+    'SigmaCPrescale'         : 1.0 ,
     'DiCharmPrescale'        : 1.0 , 
-    'DiMuonAndCharmPrescale' : 1.0
+    'DiMu&CharmPrescale'     : 1.0 , 
+    'Chi&CharmPrescale'      : 1.0 , 
+    'Ds&PsiPrescale'         : 1.0 
     },
     'WGs' : [ 'Charm' ],
     'STREAMS' : [ 'Charm' ]

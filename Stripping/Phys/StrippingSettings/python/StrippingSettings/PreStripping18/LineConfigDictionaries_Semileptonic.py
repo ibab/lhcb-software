@@ -2,7 +2,8 @@ B2DMuNuX = {
     'BUILDERTYPE' : 'B2DMuNuXAllLinesConf',
     'CONFIG' :  {
     "PrescalD0Mu"    : 0.5
-    ,"MINIPCHI2"      : 9.0   # adimensiional     
+    ,"PrescalDsPi_fakes"  : 0.5    # for Bs->(Ds->PhiPi)Pi for Fakes line
+    ,"MINIPCHI2"      : 9.0   # adimensiional    
     ,"TRCHI2"        : 4.0    # adimensiional
     ,"TRCHI2Loose"   : 5.0    # adimensiional
     ,"KaonPIDK"      : 4.0    # adimensiional
@@ -14,13 +15,12 @@ B2DMuNuX = {
     ,"DsDIRA"        : 0.99   # adimensiional
     ,"DsFDCHI2"      : 100.0  # adimensiional
     ,"DsMassWin"     : 80.0   # MeV
-    ,"DsAMassWin"    : 100.0  # MeV       
-    ,"DsIPMin"       : 0.0498 #mm           
+    ,"DsAMassWin"    : 100.0  # MeV      
     ,"DsIP"          : 7.4    #mm
     ,"DsVCHI2DOF"    : 6.0    # adimensiional
     ,"PIDmu"         : -0.0   # adimensiional
     ,"BDIRA"         : 0.999  #adimensiional
-    ,"BVCHI2DOF"     : 6.0    # adimensiional  
+    ,"BVCHI2DOF"     : 6.0    # adimensiional 
     ,"DZ"            : -9999    #mm
     ,"DDocaChi2Max"  : 20     #adimensiional
     ,"MINIPCHI2Loose" : 4.0   #adimensiional
@@ -48,14 +48,14 @@ B2DMuNuX = {
     ,'LambdaDDCutFDChi2'  : 100  ## unitless
     ,'LambdaCutDIRA'      : 0.99 ## unitless
     ,'LambdaDaugTrackChi2': 4    ## unitless
-    ,'LambdaVertexChi2'   : 6    ## max chi2/ndf for Lambda0 vertex    
+    ,'LambdaVertexChi2'   : 6    ## max chi2/ndf for Lambda0 vertex   
     ,"Pi0PtMin"     : 1200         # Minimum Pt of pi0 (MeV)
     ,"Pi0PMin"      : 3000         # Minimum P of pi0 (MeV)
     ,"PhotonCL"     : 0.25         # Confidence level for Pi0 photons
     ,"D02HHPi0AMassWin" : 160  # MeV (mass window for combination)
     ,"D02HHPi0MassWin"  : 150  # MeV (mass window after vertex fit)
     ,"D02HHPi0DocaCut"  : 6    # mm
-    ,"D02HHPi0PtCut"    : 2000 # MeV     
+    ,"D02HHPi0PtCut"    : 2000 # MeV    
     },
     'STREAMS' : ['Semileptonic'] ,
     'WGs'    : ['Semileptonic']

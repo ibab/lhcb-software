@@ -5,6 +5,19 @@
 ! -----------------------------------------------------------------------------
 
 ! 2012-02-28 - Jibo He
+ - PreStripping18/LineConfigDictionaries_Charm.py
+   Updated conf dict for PromptCharm
+ - PreStripping18/LineConfigDictionaries_Semileptonic.py
+   Updated conf dict for B2DMuNuX
+ - Stripping17b/LineConfigDictionaries_Semileptonic.py
+   Updated conf dict for B2DMuNuX
+ - PreStripping18/LineConfigDictionaries_RD.py
+   Updated conf dict for Beauty2XGamma
+ - Stripping17b/LineConfigDictionaries_RD.py
+   Updated conf dict for Beauty2XGamma
+ - dbase for both Stripping17b and PreStripping18 updated
+
+! 2012-02-28 - Jibo He
  - PreStripping18/LineConfigDictionaries_BHQ.py
    Moved more lines to MicroDST
    Removed WG lines from new added lines. 
