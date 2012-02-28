@@ -5,6 +5,162 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v34r1>2012-02-29 LHCbSys v34r1</A></H1><PRE>
+This version uses Gaudi v23r1 and LCG_62a
+Development version for 2012 data taking
+
+- Packages modified: Calo/CaloKernel v6r2p1, Det/DDDB v1r51, 
+    Event/EventPacker v2r12, Event/PackedEvent v4r7, Event/PhysEvent v11r15,
+    Event/RecEvent v2r40, Event/SwimmingEvent v1r2, Event/TrackEvent v5r15,
+    Ex/IOExample v4r5, GaudiConf v15r7, GaudiObjDesc v11r13,
+    Kernel/LHCbAlgs v2r48, Kernel/LHCbKernel v13r9, Kernel/XMLSummaryKernel v1r5,
+    Muon/MuonDAQ v4r13, Phys/LoKiCore v11r7, Phys/LoKiGen v10r6,
+    Phys/LoKiHlt v3r8, Rich/RichKernel v7r49, Tf/TfKernel v2r22,
+    Tools/FileStager v1r7, Tr/TrackInterfaces v4r20, Tr/TrackKernel v1r9
+
+- In DDDB v1r51
+  . Change SQLDDDB dependency to v7r*, to pick up by default the new
+    distribution mechanism
+
+- In EventPacker v2r12
+  . Add a new mapping tool to support the many to one Particle and Vertex packer
+  . Protect PackParticlesAndVertices against completely missing streams
+
+- In EventPacker v2r12, PackedEvent v4r7
+  . Update the way some references to Particles and Vertices are stored, to
+    use 64 bit integers, to avoid packing problems.
+  . Update the RecVertex packed class and packing and unpacking algorithms
+    to support the new RecVertex class with track weights.
+  . Reorganise things a bit w.r.t. the Particle and Vertex packing, to avoid
+    some code duplication
+ 
+- In PhysEvent v11r15
+  . Add enums related to isolation information to Particle extraInfo.
+
+- In RecEvent v2r40
+  . Update RecVertex with new methods to get and set the track weights, for
+    each track separately.
+  . Update RecVertex class to natively store the weights associated with each
+    track. The weights are optional, to preserve backwards compatibility. If
+    a weight is not given 1.0 is implicitly used.
+  . Add some additional types to the LCG dictionary.
+
+- In SwimmingEvent v1r1
+  . Add dictionaries for to allow interaction with map<string, double>
+    from python
+
+- In TrackEvent v5r15
+  . Made Node::chi2 virtual
+  . Added measurement type Origin
+  . Fixed bug in Measurement copy constructor
+  . Add some additional types to the dictionary, needed by RecEvent.
+  . Added StateParameters::zMidTT.
+
+- In IOExample v4r5
+  . Fix reference comparisons also for icc (tiny numerical differences wrt gcc)
+  . ioexample.copymc10dsttoroot now takes input file from svcClass=lhcbdisk,
+    was default.
+  . Follow change to DstConf().EnableUnpack option
+  . Follow DataOnDemand decoding changes in DstConf. In IOTest, force ToolSvc
+    initialisation before DataOnDemandSvc
+
+- In GaudiConf v15r7
+  . Update DstConf to no longer include the PV weights vector in DSTs.
+    Weights are now included directly in the RecVertex class.
+  . Extend the EnableUnpack option in DstConf, to take a list of unpacking types.
+    Allowed values are [ "Reconstruction", "Stripping" ]. Allows for each to be
+    turned on and off independantly.
+  . Add unpacking options for striping (m)DST information
+  . Removed LHCbApp configurable, to avoid circular dependency with XmlSummary.
+    Moved to Kernel/LHCbAlgs. Move to LHCbAlgs also the tests fsr-only-file-root
+    and fsr-small-files-root, that use LHCbApp(). Cleaned up dependencies
+    accordingly
+
+- In LHCbAlgs v2r48
+  . Change default DataType in LHCbApp() to 2012 (was 2009)
+  . Add slot "IgnoreDQFlags" to LHCbApp(). If False, events with bad DQ are
+    skipped. Default is True
+  . Adapt lhcbalgs.dqfilter.service.basic to use LHCbApp with IgnoreDQFlags=False
+  . Clone above test as lhcbalgs.dqfilter.service.disabled to test LHCbApp with
+    IgnoreDQFlags=True
+  . Protect EmptyEventNodeCleaner from a completely missing root node
+  . Added a new tool (DQAcceptTool) implementing IAccept to wrap the calls to
+    IDQFilter and IDQScanner in one simple function.
+    The new tool can work both by run and by event.
+  . Modified the algorithm DQFilter to use DQAcceptTool and removed DQFilterByRun
+    because the difference between the two algorithms is not wrapped in the tool.
+  . Factored out the Python code for the validation of DQFilter tests.
+  . Added a simple service using DQAcceptTool to filter events on the BeginEvent
+    incident (DQFilterSvc).
+  . Added LHCbApp configurable, moved from GaudiConf. Moved also from GaudiConf
+    the tests fsr-only-file-root and fsr-small-files-root. Adjusted dependencies
+    accordingly
+  . Protect DataObjectVersionFilter from printing an exception message when
+    the input data does not exist.
+
+- In LHCbKernel v13r9
+  . Create an FTChannelID for the Fibre Tracker of the upgrade.
+    Added it to LHCbID with all usual methods to get, set and test.
+  . Add a new set of 64-bit reference packing methods to the StandardPacker
+  . Minor clean up in IAccept.
+
+- In XMLSummaryKernel v1r5
+  . Use xrootd instead of rfio to read test file
+  . Add missing QMTest run time dependency on DDDB
+
+- In MuonDAQ v4r13
+  . Change MuonRec to look for muon raw event in a location set by options
+    and pass it to MuonRawBuffer, to allow reading of muon raw info in PID mdsts.
+
+- In LoKiCore v11r7
+  . Improve treatment of vector-like argument
+
+- In LoKiGen v10r6
+  . Add GVRHO functor
+
+- In LoKiHlt v3r8
+  . Explicitly create dictionaries for LoKi::Odin classes, instead of using a
+    class pattern, to avoid creating a duplicate dictionary
+  . ODIN_EVNTNUMBER fix
+
+- In TfKernel v2r22
+  . Fix an issue with std::sort not being stable: different compiler (versions)
+    are therefore allowed to produce different "sorted" sequences of hits which
+    can cause variations in results of client code. the following measures were
+    taken to fix that
+    o change the increasingBy... functors in TfKernel/RecoFuncs.h so that they
+      order by LHCbID as a fallback (i.e. increasingByZ will sort hits at the
+      same z by their LHCbID (increasing)); the old behaviour is still
+      available through a template parameter which defaults to the new behaviour
+   o add corresponding decreasingBy... functors which have the same behaviour
+     as their increasingBy... counterparts; they also sort (by default) by
+     increasing LHCbID as a fallback
+
+- In FileStager v1r7
+  . Move two descriptor mangling functions into a separate library
+  . Move source files around.
+  . Add hash_particle.exe which outputs the temporary filename used for a given
+    PFN or LFN.
+
+- In TrackInterfaces v4r20
+  . Remove WithWeights methods as a consequence of removal WeightsVector
+    from PatPV
+
+- In TrackKernel v1r9
+  . add functionality to vertex a track with an existing vertex to
+    TrackStateVertex
+
+- In SwimmingEvent v1r2, GaudiObjDesc v11r13, LHCbKernel v13r9
+  . Fix requirements to set -DGOD_NOALLOC when tag 'target-dbg' is set,
+    previuosly used tag 'debug' that no longer exists
+
+- In RichKernel v7r49
+  . Fix requirements to set -DRICHDEBUG when tag 'target-dbg' is set,
+    previuosly used tag 'debug' that no longer exists
+
+- In CaloKernel v6r2p1
+  . Fix trivial icc remarks
+
 </PRE><H1><A NAME=v34r0>2012-01-31 LHCbSys v34r0</A></H1><PRE>
 This version uses Gaudi v23r0 and LCG_62a
 Development version for 2012 data taking
