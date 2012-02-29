@@ -56,8 +56,8 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                   
                   ,'SingleTFElectron_L0Req'   :  "L0_CHANNEL('Electron')"
                   ,'SingleTFElectron_Hlt1Req' :  "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')"   
-                  ,'SingleTFElectron_PT'      :  3000.    # MeV
-                  ,'SingleTFElectron_IP'      :     0.2   # mm
+                  ,'SingleTFElectron_PT'      :  10000.    # MeV
+                  ,'SingleTFElectron_IP'      :     0.05   # mm
                   ,'SingleTFElectron_PIDe'    :     4.  
                   ,'SingleTFElectron_IPCHI2'  :    -1.
                   ,'SingleTFElectron_TrCHI2'  :     5.
@@ -75,7 +75,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                   ,'SingleTFHighPtElectron_EcalMin':     0.1    
                   ,'SingleTFHighPtElectron_HcalMax':     0.05
                   ,'SingleTFHighPtElectron_TkChi2' :    20.
-                  ,'SingleTFVHighPtElectron_PT':     20000.    # MeV
+                  ,'SingleTFVHighPtElectron_PT':     15000.    # MeV
 
                   
                   ,'TFElectronPlusTrack_L0Req'        :  "L0_CHANNEL('Electron')"
@@ -138,7 +138,9 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
         from Configurables import FilterDesktop
         from Hlt2SharedParticles.BasicParticles import Electrons, NoCutsPions
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedElectrons
-
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedElectronsFromL0
+        from HltLine.HltDecodeRaw import DecodeL0CALO
+        electronAlgos = [ DecodeL0CALO, BiKalmanFittedElectronsFromL0 ]
         #some string definitions... 
 
 
@@ -401,6 +403,10 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
         from Configurables import FilterDesktop
 
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedElectrons
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedElectronsFromL0
+        from HltLine.HltDecodeRaw import DecodeL0CALO
+        electronAlgos = [ DecodeL0CALO, BiKalmanFittedElectronsFromL0 ]
+                
         from HltTracking.HltPVs import PV3D
         
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2SingleTFElectronDecision" :
@@ -430,11 +436,13 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
         FilterSingleTFElectron = Hlt2Member( FilterDesktop # type
                                              , "FilterSingleTFElectron" 
                                              , Code ="(PT > %(SingleTFElectron_PT)s *MeV)" \
-                                             " & (PIDe > %(SingleTFElectron_PIDe)s )" \
+                                             " & (PPINFO(LHCb.ProtoParticle.CaloPrsE,0)>%(SingleTFHighPtElectron_PrsMin)s) "\
+                                             " & (PPINFO(LHCb.ProtoParticle.CaloEcalE,0)/P>%(SingleTFHighPtElectron_EcalMin)s) "\
+                                             " & (PPINFO(LHCb.ProtoParticle.CaloHcalE,99999)/P<%(SingleTFHighPtElectron_HcalMax)s)"\
                                              " & (MIPDV(PRIMARY) > %(SingleTFElectron_IP)s *mm)" \
                                              " & (MIPCHI2DV(PRIMARY) > %(SingleTFElectron_IPCHI2)s )"\
                                              " & (TRCHI2DOF < %(SingleTFElectron_TrCHI2)s )"  %self.getProps() 
-                                             , Inputs = [ BiKalmanFittedElectrons ]
+                                             , Inputs = [ BiKalmanFittedElectronsFromL0 ]
                                              )
 
         SingleTFElectronLine = Hlt2Line("SingleTFElectron"
@@ -442,7 +450,8 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                                         , L0DU = L0Req
                                         , HLT = Hlt1Req
                                         , algos = [ PV3D()
-                                                    , BiKalmanFittedElectrons
+                                                    , DecodeL0CALO
+                                                    , BiKalmanFittedElectronsFromL0
                                                     , FilterSingleTFElectron ]
                                         , postscale = self.postscale
                                         )
@@ -454,17 +463,18 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
         FilterSingleTFLowPtElectron = Hlt2Member( FilterDesktop # type
                                                   , "FilterSingleTFLowPtElectron" 
                                                   , Code ="(PT > %(SingleTFLowPtElectron_PT)s *MeV)" \
-                                                  " & (PIDe > %(SingleTFLowPtElectron_PIDe)s )" \
+                                                  " & (PPINFO(LHCb.ProtoParticle.CaloPrsE,0)>%(SingleTFHighPtElectron_PrsMin)s) "\
+                                                  " & (PPINFO(LHCb.ProtoParticle.CaloEcalE,0)/P>%(SingleTFHighPtElectron_EcalMin)s) "\
+                                                  " & (PPINFO(LHCb.ProtoParticle.CaloHcalE,99999)/P<%(SingleTFHighPtElectron_HcalMax)s)"\
                                                   " & (TRCHI2DOF < %(SingleTFLowPtElectron_TrCHI2)s )"  %self.getProps()
-                                             , Inputs = [ BiKalmanFittedElectrons ]
+                                             , Inputs = [ BiKalmanFittedElectronsFromL0 ]
                                              )
 
         SingleTFLowPtElectronLine = Hlt2Line("SingleElectronTFLowPt"
                                              , prescale = self.prescale
                                              , L0DU = L0Req
                                              , HLT = Hlt1Req
-                                             , algos = [ BiKalmanFittedElectrons
-                                                         , FilterSingleTFLowPtElectron ]
+                                             , algos = electronAlgos + [ FilterSingleTFLowPtElectron ]
                                              , postscale = self.postscale
                                              )
         
@@ -479,15 +489,14 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                                                    " & (PPINFO(LHCb.ProtoParticle.CaloEcalE,0)/P>%(SingleTFHighPtElectron_EcalMin)s) "\
                                                    " & (PPINFO(LHCb.ProtoParticle.CaloHcalE,99999)/P<%(SingleTFHighPtElectron_HcalMax)s)"\
                                                    " & (TRCHI2DOF < %(SingleTFHighPtElectron_TkChi2)s )" %self.getProps() 
-                                                   , Inputs = [ BiKalmanFittedElectrons ]
+                                                   , Inputs = [ BiKalmanFittedElectronsFromL0 ]
                                                    )
 
         SingleTFHighPtElectronLine = Hlt2Line("SingleElectronTFHighPt"
                                               , prescale = self.prescale
                                               , L0DU = L0Req
                                               , HLT = Hlt1Req
-                                              , algos = [ BiKalmanFittedElectrons
-                                                          , FilterSingleTFHighPtElectron ]
+                                              , algos = electronAlgos + [ FilterSingleTFHighPtElectron ]
                                               , postscale = self.postscale
                                               )
         
@@ -498,15 +507,14 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                                                     " & (PPINFO(LHCb.ProtoParticle.CaloEcalE,0)/P>%(SingleTFHighPtElectron_EcalMin)s) "\
                                                     " & (PPINFO(LHCb.ProtoParticle.CaloHcalE,99999)/P<%(SingleTFHighPtElectron_HcalMax)s)"\
                                                     " & (TRCHI2DOF < %(SingleTFHighPtElectron_TkChi2)s )" %self.getProps() 
-                                                    , Inputs = [ BiKalmanFittedElectrons ]
+                                                    , Inputs = [ BiKalmanFittedElectronsFromL0 ]
                                                     )
 
         SingleTFVHighPtElectronLine = Hlt2Line("SingleTFVHighPtElectron"
                                                , prescale = self.prescale
                                                , L0DU = L0Req
                                                , HLT = Hlt1Req
-                                               , algos = [ BiKalmanFittedElectrons
-                                                           , FilterSingleTFVHighPtElectron ]
+                                               , algos = electronAlgos + [ FilterSingleTFVHighPtElectron ]
                                                , postscale = self.postscale
                                                )
         

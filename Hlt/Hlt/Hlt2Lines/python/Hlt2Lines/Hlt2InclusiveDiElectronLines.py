@@ -369,6 +369,9 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
         from Configurables import FilterDesktop, CombineParticles        
         from Hlt2SharedParticles.BasicParticles import Electrons
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedElectrons
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedElectronsFromL0
+        from HltLine.HltDecodeRaw import DecodeL0CALO
+        electronAlgos = [ DecodeL0CALO, BiKalmanFittedElectronsFromL0 ]
         
         #some string definitions... 
 
@@ -395,7 +398,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
        
         line1 = Hlt2Line('DYee1'
                         , prescale = self.prescale 
-                        , algos = [ BiKalmanFittedElectrons, combineDY1 ]
+                        , algos = electronAlgos + [ combineDY1 ]
                         , postscale = self.postscale
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DYee1Decision":   50291 } )
@@ -418,7 +421,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
        
         line2 = Hlt2Line('DYee2'
                         , prescale = self.prescale 
-                        , algos = [ BiKalmanFittedElectrons, combineDY2 ]
+                        , algos = electronAlgos + [ combineDY2 ]
                         , postscale = self.postscale
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DYee2Decision":   50292 } )
@@ -441,7 +444,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
        
         line3 = Hlt2Line('DYee3'
                         , prescale = self.prescale 
-                        , algos = [ BiKalmanFittedElectrons, combineDY3 ]
+                        , algos = electronAlgos + [ combineDY3 ]
                         , postscale = self.postscale
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DYee3Decision":   50293 } )
@@ -463,7 +466,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
        
         line4 = Hlt2Line('Zee'
                         , prescale = self.prescale 
-                        , algos = [ BiKalmanFittedElectrons, combineZ ]
+                        , algos = electronAlgos + [ combineZ ]
                         , postscale = self.postscale
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2ZeeDecision":   50295 } )
@@ -762,8 +765,8 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
         from Configurables import HltANNSvc
         from Configurables import FilterDesktop
         from Hlt2SharedParticles.TrackFittedDiElectron import TrackFittedDiElectron
-
-
+        from Hlt2SharedParticles.TrackFittedDiElectron import TrackFittedDiElectronFromL0
+        from HltLine.HltDecodeRaw import DecodeL0CALO
         """
         #------------------------
         # L0 & Hlt1 Requirements
@@ -791,7 +794,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                          " & (MM > %(DiElectron_MinMass)s *MeV)"\
                                          " & (VFASPF(VCHI2PDOF) < %(DiElectron_VtxCHI2)s)"\
                                          " & (PT > %(DiElectron_PT)s *MeV)" %self.getProps() 
-                                         , Inputs = [ TrackFittedDiElectron ]
+                                         , Inputs = [ TrackFittedDiElectronFromL0 ]
                                          , InputPrimaryVertices = "None"
                                          , UseP2PVRelations = False
                                          )
@@ -805,7 +808,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                   , prescale = self.prescale
                                   , L0DU = L0Req
                                   , HLT  = Hlt1Req
-                                  , algos = [ TrackFittedDiElectron, FilterTFDiElectron ]
+                                  , algos =  [ TrackFittedDiElectron, FilterTFDiElectron ]
                                   , postscale = self.postscale
                                   )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiElectronDecision" :
@@ -826,7 +829,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                                  " & (MM > %(DiElectronHighMass_MinMass)s *MeV)"\
                                                  " & (VFASPF(VCHI2PDOF) < %(DiElectronHighMass_VtxCHI2)s)"\
                                                  " & (PT > %(DiElectronHighMass_PT)s *MeV)" %self.getProps() 
-                                                 , Inputs = [ TrackFittedDiElectron ]
+                                                 , Inputs = [ TrackFittedDiElectronFromL0 ]
                                                  , InputPrimaryVertices = "None"
                                                  , UseP2PVRelations = False
                                                  )
@@ -841,7 +844,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                                   " & (MM > %(DiElectronVHighMass_MinMass)s *MeV)"\
                                                   " & (VFASPF(VCHI2PDOF) < %(DiElectronHighMass_VtxCHI2)s)"\
                                                   " & (PT > %(DiElectronHighMass_PT)s *MeV)" %self.getProps() 
-                                                  , Inputs = [ TrackFittedDiElectron ]
+                                                  , Inputs = [ TrackFittedDiElectronFromL0 ]
                                                   , InputPrimaryVertices = "None"
                                                   , UseP2PVRelations = False
                                                   )
@@ -854,7 +857,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                           , prescale = self.prescale
                                           , L0DU = L0Req
                                           , HLT  = Hlt1Req
-                                          , algos = [ TrackFittedDiElectron, FilterTFDiElectronHighMass ]
+                                          , algos = [  DecodeL0CALO, TrackFittedDiElectronFromL0, FilterTFDiElectronHighMass ]
                                           , postscale = self.postscale
                                           )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiElectronHighMassDecision" :
@@ -864,7 +867,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                             , prescale = self.prescale
                                             , L0DU = L0Req
                                             , HLT  = Hlt1Req
-                                            , algos = [ TrackFittedDiElectron, FilterTFDiElectronVHighMass ]
+                                            , algos = [  DecodeL0CALO, TrackFittedDiElectronFromL0, FilterTFDiElectronVHighMass ]
                                             , postscale = self.postscale
                                             )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiElectronVHighMassDecision" :
@@ -959,24 +962,30 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiElectronPsiDecision" :
                                               self.getProp('HltANNSvcID')['DiElectronPsi'] } ) 
         
-
         #--------------------------------------------
         # B, Upsilon -> e+ e-
         #--------------------------------------------
-        DiElectronLine.clone("DiElectronB"
+
+        FilterTFDiElectronB = Hlt2Member( FilterDesktop # type
+                                          , "FilterTFDiElectronB" 
+                                          , Code ="(MINTREE('e+'==ABSID,PT) > %(DiElectronB_ElecPT)s *MeV)"\
+                                          " & (MAXTREE('e+'==ABSID,TRCHI2DOF) < %(DiElectronB_ElecTkChi2)s)"\
+                                          " & (MINTREE('e+'==ABSID,PPINFO(LHCb.ProtoParticle.CaloPrsE,0))>%(DiElectronHighMass_PrsMin)s)"\
+                                          " & (MINTREE('e+'==ABSID,PPINFO(LHCb.ProtoParticle.CaloEcalE,0)/P)>%(DiElectronHighMass_EcalMin)s)"\
+                                          " & (MAXTREE('e+'==ABSID,PPINFO(LHCb.ProtoParticle.CaloHcalE,99999)/P)<%(DiElectronHighMass_HcalMax)s)"\
+                                          " & (in_range( %(DiElectronB_MinMass)s *MeV, MM, %(DiElectronB_MaxMass)s *MeV))"\
+                                          " & (VFASPF(VCHI2PDOF) < %(DiElectronB_VtxCHI2)s)"\
+                                          " & (PT > %(DiElectronB_PT)s *MeV)" %self.getProps()  
+                                          , Inputs = [ TrackFittedDiElectronFromL0 ]
+                                          , InputPrimaryVertices = "None"
+                                          , UseP2PVRelations = False
+                                          )
+        
+        DiElectronBLine = Hlt2Line("DiElectronB"
                              , prescale = self.prescale
                              , L0DU = L0Req
                              , HLT  = Hlt1Req        
-                             , algos = [ TrackFittedDiElectron, FilterTFDiElectron ]
-                             , FilterTFDiElectron =
-                             {"Code" : "(MINTREE('e+'==ABSID,PT) > %(DiElectronB_ElecPT)s *MeV)"\
-                              " & (MINTREE('e+'==ABSID,TRCHI2DOF) < %(DiElectronB_ElecTkChi2)s)"\
-                              " & (MINTREE('e+'==ABSID,PIDe) > %(DiElectronB_ElecPIDe)s)"\
-                              " & (in_range( %(DiElectronB_MinMass)s *MeV, MM, %(DiElectronB_MaxMass)s *MeV))"\
-                              " & (VFASPF(VCHI2PDOF) < %(DiElectronB_VtxCHI2)s)"\
-                              " & (PT > %(DiElectronB_PT)s *MeV)" %self.getProps() 
-                              }
-                             , postscale = self.postscale
+                             , algos = [ DecodeL0CALO, TrackFittedDiElectronFromL0, FilterTFDiElectronB ]
                              )
         
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiElectronBDecision" :

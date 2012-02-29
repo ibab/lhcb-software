@@ -29,9 +29,12 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt2Line, Hlt2Member
         from Configurables import HltANNSvc
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedMuons
-        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedElectrons, BiKalmanFittedKaons, BiKalmanFittedPions
-        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPhotons    
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedElectronsFromL0, BiKalmanFittedKaons, BiKalmanFittedPions
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPhotonsFromL0Low
+        from HltLine.HltDecodeRaw import DecodeL0CALO
         from Hlt2SharedParticles.Pi0 import AllPi0s,MergedPi0s,ResolvedPi0s
+        from Hlt2SharedParticles.Pi0 import AllPi0sFromL0,MergedPi0sFromL0,ResolvedPi0sFromL0
+        from HltLine.HltDecodeRaw import DecodeL0CALO
         from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
         from Configurables import CombineParticles, FilterDesktop
         from Configurables import LoKi__VoidFilter as VoidFilter
@@ -80,7 +83,7 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
                             , MotherCut = "ALL"  
                             , InputPrimaryVertices = "None"
                             , UseP2PVRelations = False
-                            , Inputs = [ BiKalmanFittedElectrons ]
+                            , Inputs = [ BiKalmanFittedElectronsFromL0 ]
                             )
 
 
@@ -91,11 +94,11 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
                             , MotherCut = "ALL"  
                             , InputPrimaryVertices = "None"
                             , UseP2PVRelations = False
-                            , Inputs  = [ BiKalmanFittedPhotons ]
+                            , Inputs  = [ BiKalmanFittedPhotonsFromL0Low ]
                             )
 
         FilterPhFilter = Hlt2Member(FilterDesktop, "FilterPhFilter", Code = "PT>250*MeV", 
-                                    Inputs  = [MergedPi0s,ResolvedPi0s])
+                                    Inputs  = [MergedPi0sFromL0,ResolvedPi0sFromL0])
 
         FilterH = Hlt2Member(CombineParticles
                             , "FilterH"
@@ -146,7 +149,7 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
                        , prescale = self.prescale
                        , HLT =  "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')"    
                        , L0DU = "L0_CHANNEL('Photon,lowMult')|L0_CHANNEL('DiEM,lowMult')"
-                       , algos = [ BiKalmanFittedPhotons,AllPi0s,FilterPhFilter ]  
+                       , algos = [ DecodeL0CALO,BiKalmanFittedPhotonsFromL0Low,AllPi0sFromL0,FilterPhFilter ]  
                        , postscale = self.postscale
                        )
         
@@ -154,7 +157,7 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
                        , prescale = self.prescale
                        , HLT =  "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')"    
                        , L0DU = "L0_CHANNEL('Electron,lowMult')|L0_CHANNEL('DiEM,lowMult')"
-                       , algos = [ velotracks,  ElBackTrackFilter, FilterNumVeloTracksEl, BiKalmanFittedElectrons,FilterEl]   
+                       , algos = [ velotracks,  ElBackTrackFilter, FilterNumVeloTracksEl, DecodeL0CALO, BiKalmanFittedElectronsFromL0,FilterEl]   
                        , postscale = self.postscale
                        )
         
@@ -162,7 +165,7 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
                        , prescale = self.prescale
                        , HLT =  "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')"    
                        , L0DU = "L0_CHANNEL('Electron,lowMult')|L0_CHANNEL('DiEM,lowMult')"
-                       , algos = [ BiKalmanFittedElectrons,FilterEl]   
+                       , algos = [ DecodeL0CALO,BiKalmanFittedElectronsFromL0,FilterEl]   
                        , postscale = self.postscale
                        )
         

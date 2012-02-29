@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2012-02-29 - Will Barter
+ - Updated Hlt2InclusiveElectronLines.py, Hlt2InclusiveDiElectronLines.py, and Hlt2diphotonDiMuonLines.py so the electroweak lines use the new CALO reconstruction.
+
 ! 2012-Feb-29 - Patrick Spradlin
  - Clean up Hlt2CharmHadD2HHHLines.py
    . Standardization of slot names.
