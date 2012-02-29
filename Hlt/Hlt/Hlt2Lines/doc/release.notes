@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2012-02-29 - Jibo He
+ - Removed Tis requirements in Hlt2DiPhiTis to speed up 
+
 ! 2012-02-27 - V. Gligorov
  - Change GEC cuts in all hlt2 lines from 120 to a minimum of 180, to reflect
    the fact that the lower P/PT cuts used will lead to more tracks being made

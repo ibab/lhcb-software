@@ -283,7 +283,7 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
         ProtonsForDiProton = bindMembers( "ProtonsForDiProton", [ BiKalmanFittedProtons,
                                                                   FilterProtonsForDiProton
                                                                   ] )
-        
+        """
         TaggerHlt1TISProtonsForDiProton = Hlt2Member( TisTosParticleTagger
                                                       , 'TaggerHlt1TISProtonsForDiProton'
                                                       , TisTosSpecs = { self.getProp("DiProton_Hlt1TIS") : 0 }
@@ -292,7 +292,7 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
 
         Hlt1TISProtonsForDiProton = bindMembers("Hlt1TISProtonsForDiProton", [ ProtonsForDiProton,
                                                                                TaggerHlt1TISProtonsForDiProton ])
-                                                
+        """                                        
         
         TFCombine = Hlt2Member( CombineParticles
                                 , "TFCombine"
@@ -300,7 +300,7 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
                                 , DaughtersCuts = { "p+" : TFProtonCut }
                                 , CombinationCut = TFCombCut
                                 , MotherCut = TFMomCut
-                                , Inputs = [ Hlt1TISProtonsForDiProton ]
+                                , Inputs = [ ProtonsForDiProton ]
                                 , InputPrimaryVertices = "None"
                                 , UseP2PVRelations = False
                                 )
@@ -349,7 +349,7 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
         line = Hlt2Line('DiProtonTis'
                         , prescale = self.prescale
                         , L0DU = "(L0_DATA('Spd(Mult)') < %(TIS_SpdMult)s )" % self.getProps()
-                        , algos = [ Hlt1TISProtonsForDiProton
+                        , algos = [ ProtonsForDiProton
                                     , TFCombine
                                     , Hlt1TISRichProtonsForDiProton
                                     , TFRichCombine
@@ -363,7 +363,7 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
         line = Hlt2Line('DiProtonTisTF'
                         , prescale = self.prescale
                         , L0DU = "(L0_DATA('Spd(Mult)') < %(TIS_SpdMult)s )" % self.getProps()
-                        , algos = [ Hlt1TISProtonsForDiProton
+                        , algos = [ ProtonsForDiProton
                                     , TFCombine
                                     ]
                         , postscale = self.postscale

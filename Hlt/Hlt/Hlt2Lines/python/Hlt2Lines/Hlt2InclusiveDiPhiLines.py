@@ -21,8 +21,8 @@ class Hlt2InclusiveDiPhiLinesConf(HltLinesConfigurableUser):
                   ,'Postscale'         : {    'Hlt2DiPhiTis'                   : 1.  
                                               }
                   
-                  , 'TIS_SpdMult'      :   600.                              # w/o dedicated Hlt1 line                 
-                  , 'DiPhi_Hlt1TIS'    :  "Hlt1.*Decision%TIS"                  # w/o dedicated Hlt1 line, only on Hlt1 TIS
+                  , 'TIS_SpdMult'      :   600.                     # w/o dedicated Hlt1 line                 
+                  , 'DiPhi_Hlt1TIS'    :  "Hlt1.*Decision%TIS"      # w/o dedicated Hlt1 line, only on Hlt1 TIS
                   # Track Fitte
                   , 'KaonPT'           :   500.   # MeV
                   , 'KaonTrkChi2'      :     4.
@@ -65,7 +65,6 @@ class Hlt2InclusiveDiPhiLinesConf(HltLinesConfigurableUser):
         PhiMomCut = "(VFASPF(VCHI2PDOF)< %(PhiVtxCHI2)s)" \
                     " & (ADMASS('phi(1020)')<%(PhiMassW)s*MeV)" \
                     " & (PT> %(PhiPT)s *MeV)" % self.getProps()
-
         
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedKaons        
         
@@ -129,7 +128,8 @@ class Hlt2InclusiveDiPhiLinesConf(HltLinesConfigurableUser):
         RichKaonsForDiPhi = bindMembers( "RichKaonsForDiPhi", [ BiKalmanFittedRichKaons,
                                                                 FilterRichKaonsForDiPhi
                                                                 ] )
-        
+
+        """
         TaggerHlt1TISRichKaonsForDiPhi = Hlt2Member( TisTosParticleTagger
                                                      , 'TaggerHlt1TISRichKaonsForDiPhi'
                                                      , ProjectTracksToCalo = False
@@ -142,17 +142,15 @@ class Hlt2InclusiveDiPhiLinesConf(HltLinesConfigurableUser):
         
         Hlt1TISRichKaonsForDiPhi = bindMembers("Hlt1TISRichKaonsForDiPhi", [ RichKaonsForDiPhi,
                                                                              TaggerHlt1TISRichKaonsForDiPhi ])
-        
-
-        
-
+        """
+                                                     
         RichPhiCombine = Hlt2Member( CombineParticles
                                      , "RichPhiCombine"
                                      , DecayDescriptor = "phi(1020) -> K+ K-"
                                      , DaughtersCuts = { "K+" : KaonCut+" & "+RichKaonPID }
                                      , CombinationCut = PhiCombCut
                                      , MotherCut = PhiMomCut
-                                     , Inputs = [ Hlt1TISRichKaonsForDiPhi ]
+                                     , Inputs = [ RichKaonsForDiPhi ]
                                      , InputPrimaryVertices = "None"
                                      , UseP2PVRelations = False
                                      )
@@ -179,7 +177,8 @@ class Hlt2InclusiveDiPhiLinesConf(HltLinesConfigurableUser):
                                     KaonsForDiPhi
                                     , PhiCombine
                                     , Combine
-                                    , Hlt1TISRichKaonsForDiPhi
+                                    #, Hlt1TISRichKaonsForDiPhi
+                                    , RichKaonsForDiPhi 
                                     , RichPhiCombine
                                     , RichCombine
                                     ]
