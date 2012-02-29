@@ -8,6 +8,12 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2012-Feb-29 - Patrick Spradlin
+ - Modified Hlt2CharmHadLambdaCLines.py
+   . Added lines for additional phh decay modes.
+   . Changed some selection variables.
+   . Implemented prescaled WideMass lines for each decay mode.
+
 ! 2012-02-29 - Jibo He
  - Removed Tis requirements in Hlt2DiPhiTis to speed up 
 
