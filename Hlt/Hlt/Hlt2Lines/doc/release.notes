@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================= Hlt2Lines v8r10 2012-02-29 =========================
+ - Evh Tagged for release
+
 ! 2012-02-29 - Will Barter
  - Updated Hlt2InclusiveElectronLines.py, Hlt2InclusiveDiElectronLines.py, and Hlt2diphotonDiMuonLines.py so the electroweak lines use the new CALO reconstruction.
 
