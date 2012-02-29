@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================= HltSettings v5r16 2012-02-29 =========================
+ - EvH tagged for release
+
 ! 2012-Feb-29 - Patrick Spradlin
  - Modified CharmHadronLines_draft2012.py to include new lines from
    Hlt2CharmHadLambdaCLines.
