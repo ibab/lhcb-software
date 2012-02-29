@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-02-29 - Anton Poluektov 
+  * Remove unnecessary import of ConfiguredFastFitter from StrippingTrackEffVeloMuon.py
+
 ! 2012-02-29  -Wenbin Qian
 
 Change pionsel, muonsel sequence into muonsel, pionsel in B2XMuMuSS lines
