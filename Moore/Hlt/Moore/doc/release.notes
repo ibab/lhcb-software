@@ -2,6 +2,7 @@ Package     : Hlt/Moore
 Package Coordinator : Eric van Herwijnen
 Purpose     : LHCb HLT application
 
+!========================= Moore v13r1 2012-02-29 =========================
 ! 2012-02-29 - Eric van Herwijnen
  - Changes for reading MEPs. Improve L0DU decoding in Configuration.py.
 
