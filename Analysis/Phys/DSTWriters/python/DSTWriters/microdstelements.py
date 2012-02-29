@@ -272,6 +272,7 @@ class ReFitAndClonePVs(MicroDSTElement) :
         cloner.InputLocations = self.dataLocations(sel, bestPV.name()+'_P2PV')
         self.setOutputPrefix(cloner)
 
+        # Return
         return [refitPVs, bestPV, cloner]
         
 class CloneL0DUReport(MicroDSTElement) :
@@ -420,7 +421,7 @@ class PackRecObjects(MicroDSTElement) :
 
         algs = [ ]
 
-        # NOTE : The order is important here. 
+        # NOTE : The order is important here.
 
         # ProtoParticles
         from Configurables import PackProtoParticle

@@ -4,6 +4,11 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2012-02-29 - Chris Jones
+ - Use new Veto option in InputCopyStream to not copy to full DSTs the Muon
+   RawEvent objects. Only needed by PID mDST, and in the full DSTs only by
+   accident...
+
 ! 2012-02-17 - Chris Jones
  - Do not clone PV weights vector for uDSTs.
 

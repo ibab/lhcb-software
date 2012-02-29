@@ -37,5 +37,7 @@ def stripDSTStreamConf( pack = True,
         eItems += [ '/Event/Strip/pPhys/DecReports#1' ]
     else :
         eItems += [ '/Event/Strip/Phys/DecReports#1' ]
+    vItems = [ "/Event/Muon/RawEvent" ]
     return OutputStreamConf( streamType = InputCopyStream,
-                             extraItems = eItems )
+                             extraItems = eItems,
+                             vetoItems  = vItems )
