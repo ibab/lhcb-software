@@ -9,6 +9,17 @@
 !-----------------------------------------------------------------------------
 
 ! 2012-Feb-29 - Patrick Spradlin
+ - Clean up Hlt2CharmHadD2HHHLines.py
+   . Standardization of slot names.
+   . Modified so that units are not hard-coded in cut strings.  The units of
+     thresholds should be specified with the appropriate Gaudi::Units in
+     Settings when slot values are assigned.
+   . Removed obsolete method __InPartFilterLowIP
+   . Removed __InPartFilter3Body method and replaced it with DaughterCuts
+     in the __3BodyCombine method.  This eliminates two unnecessary algorithms
+     from the sequence.
+
+! 2012-Feb-29 - Patrick Spradlin
  - Modified Hlt2CharmHadLambdaCLines.py
    . Added lines for additional phh decay modes.
    . Changed some selection variables.

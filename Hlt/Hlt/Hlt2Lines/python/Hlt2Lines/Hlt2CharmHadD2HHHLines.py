@@ -1,24 +1,23 @@
 from Gaudi.Configuration import *
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
+from GaudiKernel.SystemOfUnits import MeV, GeV, mm
 
 class Hlt2CharmHadD2HHHLinesConf(HltLinesConfigurableUser) :
     __slots__ = {
                  ## 3Body
-                    'TrkPt_3Body'                 : 1000.0    # in MeV
-                  , 'TrkP_3Body'                  : 10000.0   # in MeV
-                  , 'TrkPVIPChi2_3Body'           : 5.0      # unitless
-			, 'Daughter2IPChi2'             : 10.0     # unitless Added by Feng ZHANG
-                  , 'TrkChi2_3Body'               : 3.0      # unitless
-                  , 'PairMinDoca_3Body'           : 0.08     # in mm
-                  , 'VtxPVDispChi2_3Body'         : 150.0    # unitless
-                  , 'VtxChi2_3Body'               : 20.0     # unitless
-                  , 'DIPChi2_3Body'               : 15.0     # unitless
-                  , 'DSumPt_3Body'                : 2500.0   # sum pT   
-			, 'DOCAChi2'                    : 50.0     # Maximum Chi2 Between two daughters BY Feng ZHANG
-                  #, 'MCOR_MAX_3Body'              : 3500.    # MeV
-                  , 'TrkChi2_2BodyFor3Body'       : 3.0      # unitless
-                  , 'GEC_Filter_NTRACK'           : True     # do or do not
-                  , 'GEC_NTRACK_MAX'              : 180      # max number of tracks
+                    'Trk_PT_MIN'                :  200 * MeV
+                  , 'Trk_P_MIN'                 : 2000 * MeV
+                  , 'Trk_MIPCHI2DV_MIN'         :    5.0      # unitless
+                  #, 'Daughter2IPChi2'           :   10.0     # unitless Added by Feng ZHANG
+                  , 'Trk_TRCHI2DOF_MAX'         :    3.0      # unitless
+                  , 'Pair_AMINDOCA_MAX'         :    0.08 * mm
+                  , 'D_BPVVDCHI2_MIN'           :  150.0    # unitless
+                  , 'D_VCHI2PDOF_MAX'           :   20.0     # unitless
+                  , 'D_BPVIPCHI2_MAX'           :   15.0     # unitless
+                  , 'D_ASUMPT_MIN'              : 2500.0 * MeV
+                  #, 'DOCAChi2'                  :   50.0     # Maximum Chi2 Between two daughters BY Feng ZHANG
+                  , 'GEC_Filter_NTRACK'         : True     # do or do not
+                  , 'GEC_NTRACK_MAX'            : 180      # max number of tracks
                   , 'TisTosParticleTaggerSpecs': { "Hlt1Track.*Decision%TOS":0 }
                   , 'name_prefix'              : 'CharmHadD2HHH'
                   # prescales
@@ -26,8 +25,7 @@ class Hlt2CharmHadD2HHHLinesConf(HltLinesConfigurableUser) :
                         'Hlt2CharmHadD2HHHWideMass'    : 0.1
                         }
                   , 'HltANNSvcID'  : {
-                          'Hlt2CharmHadD2HHH2BodyDecision'    : 50910
-                        , 'Hlt2CharmHadD2HHHDecision'         : 50911
+                          'Hlt2CharmHadD2HHHDecision'         : 50911
                         , 'Hlt2CharmHadD2HHHWideMassDecision' : 50912
                         }
                 }
@@ -64,67 +62,33 @@ class Hlt2CharmHadD2HHHLinesConf(HltLinesConfigurableUser) :
         return Hlt2CharmKillTooManyInTrk
 
 
-    def __InPartFilterLowIP(self, name, inputContainers) : 
-        from HltLine.HltLine import Hlt2Member, bindMembers
-        from Configurables import FilterDesktop, CombineParticles
-        from HltTracking.HltPVs import PV3D
-
-        incuts = """ (TRCHI2DOF< %(TrkChi2_2BodyFor3Body)s )
-                    & (MIPCHI2DV(PRIMARY)> %(TrkPVIPChi2_3Body)s )""" % self.getProps()
-
-        filter = Hlt2Member( FilterDesktop
-                            , 'Filter'
-                            , Inputs = inputContainers
-                            , Code = incuts
-                           )
-
-        ## Require the PV3D reconstruction before our cut on IP.
-        filterSeq = bindMembers( name, [ PV3D()] + inputContainers + [filter ] )
-
-        return filterSeq
-
-
-    def __InPartFilter3Body(self, name, inputContainers) :  
-        from HltLine.HltLine import Hlt2Member, bindMembers
-        from Configurables import FilterDesktop, CombineParticles
-        from HltTracking.HltPVs import PV3D
-
-        incuts = "(PT> %(TrkPt_3Body)s *MeV)" \
-		     "& (TRCHI2DOF< %(TrkChi2_3Body)s )" \
-                 "& (P> %(TrkP_3Body)s *MeV)" \
-                 "& (MIPCHI2DV(PRIMARY)> %(TrkPVIPChi2_3Body)s )" % self.getProps()
-
-
-        filter = Hlt2Member( FilterDesktop
-                            , 'Filter'
-                            , Inputs = inputContainers
-                            , Code = incuts
-                           )
-
-        ## Require the PV3D reconstruction before our cut on IP.
-        filterSeq = bindMembers( name, [ PV3D()] + inputContainers + [filter ] )
-
-        return filterSeq
-
     def __3BodyCombine(self, name, inputSeq, decayDesc) :
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import FilterDesktop, CombineParticles
         from HltTracking.HltPVs import PV3D
 
+        _daughters_cut = "(PT> %(Trk_PT_MIN)s )" \
+                         "& (TRCHI2DOF< %(Trk_TRCHI2DOF_MAX)s )" \
+                         "& (P> %(Trk_P_MIN)s )" \
+                         "& (MIPCHI2DV(PRIMARY)> %(Trk_MIPCHI2DV_MIN)s )" % self.getProps()
+
         combcuts = "(AM<2100*MeV)" \
-                   "& ((APT1+APT2+APT3) > %(DSumPt_3Body)s) " \
-                   "& (AMINDOCA('LoKi::TrgDistanceCalculator') < %(PairMinDoca_3Body)s)" \
+                   "& ((APT1+APT2+APT3) > %(D_ASUMPT_MIN)s) " \
+                   "& (AMINDOCA('LoKi::TrgDistanceCalculator') < %(Pair_AMINDOCA_MAX)s)" \
                    "& (AALLSAMEBPV)" % self.getProps()
-        mothercuts = "(VFASPF(VCHI2PDOF) < %(VtxChi2_3Body)s)" \
-                     "& (BPVVDCHI2> %(VtxPVDispChi2_3Body)s )" \
-                     "& (BPVIPCHI2() < %(DIPChi2_3Body)s)" % self.getProps()
+        mothercuts = "(VFASPF(VCHI2PDOF) < %(D_VCHI2PDOF_MAX)s)" \
+                     "& (BPVVDCHI2> %(D_BPVVDCHI2_MIN)s )" \
+                     "& (BPVIPCHI2() < %(D_BPVIPCHI2_MAX)s)" % self.getProps()
+
         combineCharm3Body = Hlt2Member( CombineParticles
                           , "Combine_Stage2"
                           , DecayDescriptors = decayDesc
                           , Inputs = inputSeq 
+                          , DaughtersCuts = { 'pi+' : _daughters_cut, 'K+' : _daughters_cut }
                           , CombinationCut = combcuts
                           , MotherCut = mothercuts
                           )
+
         return bindMembers(name, [PV3D()] + inputSeq + [combineCharm3Body])
 
     def __3BodyFilter(self, name, inputSeq, extracode = None) :
@@ -171,28 +135,9 @@ class Hlt2CharmHadD2HHHLinesConf(HltLinesConfigurableUser) :
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPions,BiKalmanFittedSecondLoopPions, BiKalmanFittedKaons, BiKalmanFittedSecondLoopKaons
         from HltTracking.HltPVs import PV3D
         
-        # Filter pions and kaons with LowIP Cut
-        pionLowIPName = self.getProp('name_prefix') + 'PionsLowIP'
-        kaonLowIPName = self.getProp('name_prefix') + 'KaonsLowIP'
-        pionsLowIP = self.__InPartFilterLowIP(pionLowIPName, [ BiKalmanFittedPions] )
-        kaonsLowIP = self.__InPartFilterLowIP(kaonLowIPName, [ BiKalmanFittedKaons] )
-
-
-        #from Hlt2CharmHadTwoBodyForMultiBody import Hlt2CharmHadTwoBodyForMultiBodyConf
- 
-        #Hlt2Charm2BodyFor3Body =  Hlt2CharmHadTwoBodyForMultiBodyConf().twoBodySequence()
-                          
-        #Second Stage - picks up a low pt track too
-
-        # Filter low PT pions and kaons 
-        pionSLName = self.getProp('name_prefix') + 'Pions2ndLoop'
-        kaonSLName = self.getProp('name_prefix') + 'Kaons2ndLoop'
-        pionsFor3Body = self.__InPartFilter3Body(pionSLName, [ BiKalmanFittedPions] )
-        kaonsFor3Body = self.__InPartFilter3Body(kaonSLName, [ BiKalmanFittedKaons] )
- 
         # Make 3Body 
         Charm3BodyCombine = self.__3BodyCombine (  name = self.getProp('name_prefix')
-                                                  , inputSeq = [  pionsFor3Body, kaonsFor3Body]
+                                                  , inputSeq = [ BiKalmanFittedPions, BiKalmanFittedKaons ]
                                                   , decayDesc = ["[D+ -> pi+ pi+ K-]cc", "[D+ -> pi+ K+ K-]cc", "[D+ -> K+ K+ K-]cc", "[D+ -> K+ K+ pi-]cc" , "[D+ -> pi+ pi+ pi-]cc", "[D+ -> pi+ pi- K+]cc"]
 
                                                  )   
@@ -210,19 +155,10 @@ class Hlt2CharmHadD2HHHLinesConf(HltLinesConfigurableUser) :
         ###########################################################################
         # Define the Hlt2 Lines
         #
-        # Note: for the 2-loop approach you just need to explicitly add the second loop pions inbetween the two stages above 
         ##########################################################################
-        #twoBodyName = self.getProp('name_prefix') + '2Body'
-        #line = Hlt2Line(twoBodyName, prescale = self.prescale
-        #                , algos = [ PV3D(), self.__seqGEC(), Hlt2Charm2BodyFor3Body]
-        #                , postscale = self.postscale
-        #                )
-        #decName = 'Hlt2' + twoBodyName + 'Decision'
-        #annSvcID = self._scale(decName,'HltANNSvcID')
-        #HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
 
         line = Hlt2Line(modeName, prescale = self.prescale
-                        , algos = [ PV3D(), self.__seqGEC(), pionsFor3Body, kaonsFor3Body, Hlt2Charm3Body]
+                        , algos = [ PV3D(), self.__seqGEC(), BiKalmanFittedPions, BiKalmanFittedKaons, Hlt2Charm3Body]
                         , postscale = self.postscale
                         )
         decName = 'Hlt2' + modeName + 'Decision'
@@ -230,7 +166,7 @@ class Hlt2CharmHadD2HHHLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
 
         line = Hlt2Line(wideMassName , prescale = self.prescale
-                        , algos = [ PV3D(), self.__seqGEC(), pionsFor3Body, kaonsFor3Body, Hlt2Charm3BodyWideMass]
+                        , algos = [ PV3D(), self.__seqGEC(), BiKalmanFittedPions, BiKalmanFittedKaons, Hlt2Charm3BodyWideMass]
                         , postscale = self.postscale
                         )
         decName = 'Hlt2' + wideMassName + 'Decision'
