@@ -2,6 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : Eric van Herwijnen
 Purpose     : LHCb HLT application
 
+! 2012-02-29 - Eric van Herwijnen
+ - Changes for reading MEPs. Improve L0DU decoding in Configuration.py.
+
 ! 2012-02-09 - Victor Coco
  - Remove obselete call to ParticlePropertySvc remaining in Configuration.py
 
