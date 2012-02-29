@@ -5,6 +5,8 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+!========================= Swimming v2r5 2012-02-29 =========================
+
 ! 2012-02-17 - Roel Aaij
  - Fix tiny bug in event counting when running a set number of events; one too
    many was always processed.
