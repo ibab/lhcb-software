@@ -3,6 +3,9 @@
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !-----------------------------------------------------------------------------
 
+! 2012-02-29 - Julien Cogan
+ - Fix bug in L0MuonOutput.cpp : typo in loop over PU when 
+
 !========================= L0Muon v9r8 2011-12-14 =========================
 ! 2011-12-09 - Marco Cattaneo
  - Add explicit Boost_linkopts for compatibility with Gaudi v23

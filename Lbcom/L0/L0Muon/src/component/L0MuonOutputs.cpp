@@ -1173,7 +1173,7 @@ void L0MuonOutputs::errors(MsgStream & msg) const{
       
       bool error=false;
       if (m_procCand[i]->inError(ib)) error=true;
-      for (int ipu=0; ib<4; ++ipu){
+      for (int ipu=0; ipu<4; ++ipu){
         if (m_procCand[i]->inError(ib,ipu)) error=true;
         break;
       }
