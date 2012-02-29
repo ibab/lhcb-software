@@ -3,6 +3,9 @@ Package     : MooreSys
 Package Coordinator : E. van Herwijnen
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v13r1>2012-02-29 Moore v13r1</A></H1><PRE>
+based on HLT_v14r1 and Gaudi v23r1 stack.
+
 </PRE><H1><A NAME=v13r0>2012-02-06 Moore v13r0</A></H1><PRE>
 based on HLT_v14r0 and Gaudi v23r0 stack.
 
