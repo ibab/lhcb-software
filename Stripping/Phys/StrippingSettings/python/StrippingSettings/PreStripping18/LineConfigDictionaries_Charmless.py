@@ -27,7 +27,7 @@ Hb2Charged2Body = {
            'MassHigh'                 : 5800,
            'PIDKBs2KK_NoIPCutOnB'     : 0.
            },
-    'STREAMS'     : [ 'Bhadron' ]
+    'STREAMS'     : [ 'BhadronCompleteEvent' ]
     }
 
 ##
@@ -142,7 +142,7 @@ B2HHPi0 = {
                        ,'ResolvedLinePrescale' : 1.        # unitless
                        ,'ResolvedLinePostscale': 1.        # unitless
                       },
-      'STREAMS'     : [ 'Bhadron' ]
+      'STREAMS'     : [ 'BhadronCompleteEvent' ]
     }
 
 ##
@@ -180,7 +180,7 @@ B2KShh = {
                   'Prescale'                : 1.0,
                   'Postscale'               : 1.0
                  },
-    'STREAMS' : [ 'Bhadron' ]
+    'STREAMS' : [ 'BhadronCompleteEvent' ]
     }
 
 # B2KPhiPhi from BetaS (M.Chrzaszcz)
@@ -257,7 +257,7 @@ BetaSBs2PhiKst = {
          ,     "BVCHI2"                : 15.0  # adimensional
          ,     "BDOCA"                 : 0.3   # mm
         },
-        'STREAMS' : [ 'Bhadron' ]
+        'STREAMS' : [ 'BhadronCompleteEvent' ]
         }
 
 # Bs2KstKst from BetaS (Paula Alvarez)
@@ -279,7 +279,7 @@ BetaSBs2KstKst = {
          ,      "BDOCA"                 : 0.3   # mm
          ,      "BIPCHI2"               : 25    # adimensional
          },
-    'STREAMS' : [ 'Bhadron' ]
+    'STREAMS' : [ 'BhadronCompleteEvent' ]
     }
 
 # Bs2K0stK0st from BetaS (Paula Alvarez)
@@ -304,7 +304,7 @@ BetaSBs2K0stK0st = {
           ,  "BFDistanceCHI2"         : 81.           # adimensional
           ,  "SumPT"                  : 5000          # MeV 
          },
-    'STREAMS' : [ 'Bhadron' ]
+    'STREAMS' : [ 'BhadronCompleteEvent' ]
     }
 
 # Bs2Q2Body4pi from BetaS (Sean Benson)
@@ -321,7 +321,7 @@ BetaSBs2Q2Body4pi = {
                  'Q2BBVtxChi2DOF'  : 9.,
                  'Q2BIPCHI2' : 25
                  },
-    'STREAMS' : [ 'Bhadron' ]
+    'STREAMS' : [ 'BhadronCompleteEvent' ]
     }
 
 # Bs2Ph2PhiPhi from BetaS (Sebastian Schleich)
@@ -339,6 +339,6 @@ BetaSBs2PhiPhi  = {
                 , 'BsMassWindow'        : 300      # MeV/cc
                 , 'WidePrescale'        : 0.05     # adimensional
                   },
-    'STREAMS' : [ 'Bhadron' ]
+    'STREAMS' : [ 'BhadronCompleteEvent' ]
     } 
 
