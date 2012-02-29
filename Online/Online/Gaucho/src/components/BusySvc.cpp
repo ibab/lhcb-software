@@ -93,7 +93,7 @@ void BusySvc::getBogus(double &bogus)
     stat = fgets(line, sizeof(line), g);
     if (stat == 0)
       break;
-    if (strstr(line, "processor") != 0)
+    if (strstr(line, "processor\t") != 0)
     {
       strcpy(modelnameline, line);
       dyn_string *l = Strsplit(line, ":");
@@ -102,14 +102,14 @@ void BusySvc::getBogus(double &bogus)
         break;
       continue;
     }
-    else if (strstr(line, "bogomips") != 0)
+    else if (strstr(line, "bogomips\t") != 0)
     {
       strcpy(bogoline, line);
       dyn_string *l = Strsplit(line, ":");
       sscanf(l->at(1).c_str(), "%f", &bogo);
       continue;
     }
-    else if (strstr(line, "model  ") != 0)
+    else if (strstr(line, "model\t") != 0)
     {
       strcpy(modelnameline, line);
       dyn_string *l = Strsplit(line, ":");
