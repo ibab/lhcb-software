@@ -5,6 +5,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+!========================= HltTracking v9r11 2012-02-29 =========================
+ - EvH tagged for release
+
 ! 2012-02-28
  - add cut on track IP wrt beam line to speed up PV finding (HltPVs.py)
 
