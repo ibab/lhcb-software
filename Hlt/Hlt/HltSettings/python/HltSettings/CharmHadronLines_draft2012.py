@@ -66,8 +66,17 @@ class CharmHadronLines :
                   , 'Hlt2CharmHadD2KS0H_D2KS0K'
                   , 'Hlt2CharmHadD2KS0H_D2KS0DDPi'
                   , 'Hlt2CharmHadD2KS0H_D2KS0DDK'  
-                  #LambdaC line
-                  , 'Hlt2CharmHadLambdaC2KPPi'  
+
+                  ### from Hlt2CharmHadLambdaCLines
+                  , 'Hlt2CharmHadLambdaC2KPPi'
+                  , 'Hlt2CharmHadLambdaC2KPK'
+                  , 'Hlt2CharmHadLambdaC2PiPPi'
+                  , 'Hlt2CharmHadLambdaC2PiPK'
+                  , 'Hlt2CharmHadLambdaC2KPPiWideMass'
+                  , 'Hlt2CharmHadLambdaC2KPKWideMass'
+                  , 'Hlt2CharmHadLambdaC2PiPPiWideMass'
+                  , 'Hlt2CharmHadLambdaC2PiPKWideMass'
+
                   #Minimum bias line
                   , 'Hlt2CharmHadMinBiasLambdaC2KPPi'   
                   , 'Hlt2CharmHadMinBiasD02KPi'

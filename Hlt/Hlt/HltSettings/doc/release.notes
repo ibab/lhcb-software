@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-Feb-29 - Patrick Spradlin
+ - Modified CharmHadronLines_draft2012.py to include new lines from
+   Hlt2CharmHadLambdaCLines.
+
 ! 2012-02-27 - V. Gligorov
  - First commit of "draft2012" settings in preparation for 2012 running.
  - Mostly these copy from the last relevant 2011 files.
