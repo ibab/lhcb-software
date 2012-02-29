@@ -233,7 +233,7 @@ BetaSQ2B = {
                  'Q2BBMaxCorrM'    : 6000.,
                  'Q2BBVtxChi2DOF'  : 9.
                  },
-    'STREAMS' : [ 'Bhadron' ]
+    'STREAMS' : [ 'BhadronCompleteEvent' ]
     }
 
 # Bs2PhiKst from BetaS (Cibran Santamarina)

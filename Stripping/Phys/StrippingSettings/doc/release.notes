@@ -6,6 +6,10 @@
 
 !========================= StrippingSettings v2r10 2012-02-28 ===================
 
+! 2012-02-29 - Stefano Perazzini
+ - PreStripping18/LineConfigDictionaries_Charmless.py
+   Updated conf dict for Charmless WG for PreStripping18
+
 ! 2012-02-28 - Jibo He
  - PreStripping18/LineConfigDictionaries_Charm.py
    Updated conf dict for PromptCharm
