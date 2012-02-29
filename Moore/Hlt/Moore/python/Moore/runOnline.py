@@ -25,6 +25,8 @@ def start(NbOfSlaves) :
     Moore().EnableRunChangeHandler = ( OnlineEnv.HLTType not in ['PA','PassThrough' ] )
     Moore().PartitionName = OnlineEnv.PartitionName
     Moore().InitialTCK = OnlineEnv.InitialTCK
+    Moore().REQ1 = "EvType=1;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0"
+
 
     ## TODO: is this still needed???
     if OnlineEnv.PartitionName == 'FEST' : Moore().EnableRunChangeHandler = False
