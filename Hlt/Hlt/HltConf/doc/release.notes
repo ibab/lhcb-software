@@ -4,6 +4,8 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+!========================= HltConf v9r13 2012-02-29 =========================
+ - EvH tagged for release
 
 ! 2012-02-27 - Benoit VIAUD
  - A few obsolete lines removed 
