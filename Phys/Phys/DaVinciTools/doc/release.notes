@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2012-02-29 - Anton Poluektov 
+ - Update ConeVariables and ConeVariablesForEW to be able to store up to 4 cones
+
 ! 2012-02-29 - Chris Jones
  - Small updates to SubstitutePID and SubPIDMMFilter
   + Inheritance from IncidentListener was not required in the last update, so

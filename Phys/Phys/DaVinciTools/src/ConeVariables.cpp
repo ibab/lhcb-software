@@ -24,6 +24,8 @@ ConeVariables::ConeVariables( const std::string& type,
                               const IInterface* parent) : GaudiTool ( type, name , parent )
 {
   declareInterface<IExtraInfoTool>(this);
+  declareProperty( "ConeNumber", m_coneNumber = 1,
+                   "Number of cone variables record (1-4)");
   declareProperty( "ConeAngle", m_coneAngle = 1.0,
                    "Set the deltaR of the cone (default = 1.0), in radians");
   declareProperty( "TrackType", m_trackType = 3,
@@ -244,7 +246,13 @@ bool ConeVariables::isTrackInDecay(const LHCb::Track* track){
 
 
 int ConeVariables::getFirstIndex(void) {
-  return LHCb::Particle::Cone1Index;
+  switch(m_coneNumber) {
+    case 1: return LHCb::Particle::Cone1Index;
+    case 2: return LHCb::Particle::Cone2Index;
+    case 3: return LHCb::Particle::Cone3Index;
+    case 4: return LHCb::Particle::Cone4Index;
+    default: return LHCb::Particle::Cone1Index;
+  }
 }
 
 int ConeVariables::getNumberOfParameters(void) {

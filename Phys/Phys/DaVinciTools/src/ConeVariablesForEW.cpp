@@ -34,6 +34,9 @@ ConeVariablesForEW::ConeVariablesForEW( const std::string &type,
 
   declareInterface<IExtraInfoTool>( this );
 
+  declareProperty( "ConeNumber", m_coneNumber = 1,
+                   "Number of cone variables record (1-4)");
+
   declareProperty( "ConeAngle", m_coneAngle = 0.,
                    "Set the deltaR of the cone around the seed" );
 
@@ -674,7 +677,13 @@ bool ConeVariablesForEW::isTrackInDecay( const LHCb::Track *track ) {
 }
 
 int ConeVariablesForEW::getFirstIndex(void) {
-  return LHCb::Particle::EWCone1Index;
+  switch(m_coneNumber) {
+    case 1: return LHCb::Particle::EWCone1Index;
+    case 2: return LHCb::Particle::EWCone2Index;
+    case 3: return LHCb::Particle::EWCone3Index;
+    case 4: return LHCb::Particle::EWCone4Index;
+    default: return LHCb::Particle::EWCone1Index;
+  }
 }
 
 int ConeVariablesForEW::getNumberOfParameters(void) {

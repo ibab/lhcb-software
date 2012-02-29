@@ -43,6 +43,7 @@ protected:
 private:
 
   double m_coneAngle;
+  int m_coneNumber;
 
   int m_mult;
   double m_px;
