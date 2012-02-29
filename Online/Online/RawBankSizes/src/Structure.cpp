@@ -98,7 +98,7 @@ namespace Gaudi
     public:
       BeatGrammar() : BeatGrammar::base_type(para)
       {
-          para = qi::lit('(')
+          para = qi::lit('[')
             >> qi::int_[op(qi::_val, qi::_1, tag_bin())]
             >> ','
             >> qi::float_[op(qi::_val, qi::_1, tag_min())]
@@ -110,7 +110,7 @@ namespace Gaudi
             >> qi::int_[op(qi::_val, qi::_1, tag_smax())]
              >> ','
             >> det   [op(qi::_val, qi::_1)]
-            >> ')' ;
+            >> ']' ;
         }
         qi::rule<Iterator, HParam::HistParams(), Skipper> para;
         StringGrammar<Iterator, Skipper> det;

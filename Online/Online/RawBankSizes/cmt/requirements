@@ -1,11 +1,12 @@
 package RawBankSizes
-version v2r12
+version v2r13
 branches cmt doc src
 use GaudiKernel v*
 use AIDA v* LCG_Interfaces
 use GaudiAlg v*
 use DAQEvent v* Event
 use MDF    v* DAQ
+use OnlineHistDB v* Online
 #
 # Only for testing:
 #use GaudiSvc v*
@@ -16,10 +17,13 @@ use MDF    v* DAQ
 include_dirs "$(RAWBANKSIZESROOT)/RawBankSizes"
 #SRC = "$(RAWBANKSIZESROOT)/src"
 
-library RawBankSizes RawBankSizes.cpp Structure.cpp 
+library RawBankSizes RawBankSizes.cpp Structure.cpp
 apply_pattern component_library library=RawBankSizes
 
 private
+
+application MakePages MakePages.cpp
+macro_append target_MakePagess
 
 application MakeOptions MakeOptions.cpp
 macro_append target_MakeOptions
