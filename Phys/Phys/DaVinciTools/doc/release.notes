@@ -3,11 +3,17 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2012-02-29 - Chris Jones
+ - Small updates to SubstitutePID and SubPIDMMFilter
+  + Inheritance from IncidentListener was not required in the last update, so
+    has been removed.
+  + Fix a small compilation warning.
+
 ! 2012-02-28 - Anton Poluektov for Vanya Belyaev
-  - Modify SubstitutePID to fix the memory leak
+ - Modify SubstitutePID to fix the memory leak
 
 ! 2012-02-26 - Mike Williams
-- Added particle limits to SubPIDMMFilter and SubstitutePID
+ - Added particle limits to SubPIDMMFilter and SubstitutePID
 
 ! 2012-02-26 - Chris Jones
  - Add a new tool StandardParticleProvider that returns a pointer to the

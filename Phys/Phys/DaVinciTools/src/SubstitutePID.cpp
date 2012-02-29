@@ -2,7 +2,6 @@
 // ============================================================================
 // Include files
 // ============================================================================
-#include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IIncidentSvc.h"
 // ============================================================================
 // LoKi
@@ -26,30 +25,30 @@
 #include "FitDecayTrees.h"
 // ============================================================================
 /** @class SubstitutePID
- *  Simple algorithm to substitute PID for certain decay components 
+ *  Simple algorithm to substitute PID for certain decay components
  *
- *  @code 
- * 
- *  from Configurables import SubstitutePID 
- * 
- *  alg = SubstitutePID ( 
- *        'MakeUpsilon'  , 
+ *  @code
+ *
+ *  from Configurables import SubstitutePID
+ *
+ *  alg = SubstitutePID (
+ *        'MakeUpsilon'  ,
  *        Code = " DECTREE('Jpsi(1S) -> mu+ mu-') & ( M > 9 * GeV ) " ,
  *        Substitute = {
  *            'J/psi(1S) -> mu+ mu-' : "Upsilon(1S)"
  *         }
  *        )
- *  
- *  @endcode 
- *  
+ *
+ *  @endcode
+ *
  *  - The algorithm does not use properly automatic CC!
- *  - Since the decay structure can change DURING the substitution 
- *    proecdure, one needs to be rather careful 
+ *  - Since the decay structure can change DURING the substitution
+ *    proecdure, one needs to be rather careful
  *
- *  @code 
+ *  @code
  *
- *  alg = SubstitutePID ( 
- *        'MakeDsK'  , 
+ *  alg = SubstitutePID (
+ *        'MakeDsK'  ,
  *        Code = " DECTREE('[Beauty -> D+ X-]CC') & ( PT > 3 * GeV ) " ,
  *        Substitute = {
  *            ' Beauty -> ^( Charm & X+ ) X- '    : 'D_s+'  ,
@@ -57,41 +56,29 @@
  *            ' Beauty ->  Charm ^pi-'            : 'K-'    ,
  *            ' Beauty ->  Charm ^pi+'            : 'K+'    ,
  *            ' B0     ->  Charm  X-'             : 'B_s0'  ,
- *            ' Beauty ->  Charm  X+'             : 'B_s~0'  
+ *            ' Beauty ->  Charm  X+'             : 'B_s~0'
  *         }
  *        )
- *  
- *  @endcode 
- *  
+ *
+ *  @endcode
+ *
  *
  *  @author Vanya BELYAEV   Ivan.Belyaev@cern.ch
  *  @date 2011-05-22
- * 
+ *
  *                    $Revision$
  *  Last modification $Date$
  *                by  $Author$
  */
-class SubstitutePID : public extends1<FitDecayTrees,IIncidentListener> 
+class SubstitutePID : public FitDecayTrees
 {
   // ==========================================================================
-  /// friend factory for instantiation 
+  /// friend factory for instantiation
   friend class AlgFactory<SubstitutePID> ;
-  // ==========================================================================
-public:
-  // ==========================================================================
-  /// finalize  the algorithm 
-  virtual StatusCode finalize   () ; 
-  virtual void handle ( const Incident &inc) {}
-  StatusCode initialize() {
-    StatusCode sc = FitDecayTrees::initialize () ;
-    if ( sc.isFailure() ) { return sc ; }
-    incSvc()->addListener(this,IncidentType::BeginEvent);
-    return StatusCode::SUCCESS;
-  }
   // ==========================================================================
 protected:
   // ==========================================================================
-  /** standard constructor 
+  /** standard constructor
    *  @see DVAlgorithm
    *  @see GaudiTupleAlg
    *  @see GaudiHistoAlg
@@ -99,32 +86,31 @@ protected:
    *  @see Algorithm
    *  @see AlgFactory
    *  @see IAlgFactory
-   *  @param name the algorithm instance name 
-   *  @param pSvc pointer to Service Locator 
+   *  @param name the algorithm instance name
+   *  @param pSvc pointer to Service Locator
    */
-  SubstitutePID                                  //        standard constructor 
-  ( const std::string& name ,                    // the algorithm instance name 
+  SubstitutePID                                  //        standard constructor
+  ( const std::string& name ,                    // the algorithm instance name
     ISvcLocator*       pSvc ) ;                  //  pointer to Service Locator
   // ==========================================================================
-  /// virtual & protected destructor 
-  virtual ~SubstitutePID () ;                  // virtual & protected destructor  
+  /// virtual & protected destructor
+  virtual ~SubstitutePID () ;                  // virtual & protected destructor
   // ==========================================================================
-  IIncidentSvc* incSvc() const 
+  IIncidentSvc* incSvc() const
   {
-    if ( 0 != m_incSvc ) { return m_incSvc ; }
-    m_incSvc = svc<IIncidentSvc> ( "IncidentSvc" , true );
+    if ( !m_incSvc ) { m_incSvc = svc<IIncidentSvc>("IncidentSvc",true); }
     return m_incSvc ;
   }
   // ==========================================================================
 public:
   // ==========================================================================
-  /** the major method for filter input particles 
+  /** the major method for filter input particles
    *  @param input    (INPUT) the input  container of particles
    *  @param filtered (OUPUT) the output container of particles
-   *  @return Status code 
+   *  @return Status code
    */
-  virtual StatusCode filter 
-  ( const LHCb::Particle::ConstVector& input    , 
+  virtual StatusCode filter
+  ( const LHCb::Particle::ConstVector& input    ,
     LHCb::Particle::ConstVector&       filtered ) ;
   // ==========================================================================
   /// decode the code
@@ -132,11 +118,11 @@ public:
   // ==========================================================================
 private:
   // ==========================================================================
-  /// the default constructor is disabled 
+  /// the default constructor is disabled
   SubstitutePID () ;                      // the default consructor is disabled
-  /// copy constructor is disabled 
-  SubstitutePID ( const SubstitutePID& ) ;      // copy constructor is disabled 
-  /// assignement operator is disabled 
+  /// copy constructor is disabled
+  SubstitutePID ( const SubstitutePID& ) ;      // copy constructor is disabled
+  /// assignement operator is disabled
   SubstitutePID& operator=( const SubstitutePID& ) ;          // no assignement
   // ==========================================================================
 private:
@@ -147,11 +133,11 @@ private:
   /// Substitute Tool
   ISubstitutePID* m_substitute  ; // tool
   unsigned long m_maxParticles;
-  std::string m_stopIncidentType; 
-  mutable IIncidentSvc* m_incSvc; ///< the incident service 
+  std::string m_stopIncidentType;
+  mutable IIncidentSvc* m_incSvc; ///< the incident service
 } ;
 // ============================================================================
-/* standard constructor 
+/* standard constructor
  *  @see DVAlgorithm
  *  @see GaudiTupleAlg
  *  @see GaudiHistoAlg
@@ -159,45 +145,38 @@ private:
  *  @see Algorithm
  *  @see AlgFactory
  *  @see IAlgFactory
- *  @param name the algorithm instance name 
- *  @param pSvc pointer to Service Locator 
+ *  @param name the algorithm instance name
+ *  @param pSvc pointer to Service Locator
  */
 // =============================================================================
-SubstitutePID::SubstitutePID                   //        standard constructor 
-( const std::string& name ,                    // the algorithm instance name 
+SubstitutePID::SubstitutePID                   //        standard constructor
+( const std::string& name ,                    // the algorithm instance name
   ISvcLocator*       pSvc )                   //  pointer to Service Locator
-  : base_class ( name , pSvc )
-// mapping : { 'decay-component' : "new-pid" } (property)
+  : FitDecayTrees ( name , pSvc )
   , m_map  ()
-  ,  m_substitute(0),
-    m_maxParticles(-1), m_stopIncidentType(), m_incSvc(0)
-  {
+  , m_substitute(0)
+  , m_maxParticles(-1) 
+  , m_stopIncidentType() 
+  , m_incSvc(0)
+{
   FilterDesktop* _this = this ;
-  declareProperty 
-    ( "Substitutions" , 
-      m_map           , 
+  declareProperty
+    ( "Substitutions" ,
+      m_map           ,
       "PID-substitutions :  { ' decay-component' : 'new-pid' }" )
     -> declareUpdateHandler ( &FilterDesktop::updateHandler1 , _this ) ;
-  declareProperty("MaxParticles", m_maxParticles, 
-		  "max allowed particles to store");
+  declareProperty("MaxParticles", m_maxParticles,
+                  "max allowed particles to store");
   declareProperty("StopIncidentType", m_stopIncidentType, "incident type");
-  //
 }
 // ============================================================================
-// virtual & protected destructor 
+// virtual & protected destructor
 // ============================================================================
-SubstitutePID::~SubstitutePID () {}        // virtual & protected destructor  
-// ============================================================================
-// finalize  the algorithm 
-// ============================================================================
-StatusCode SubstitutePID::finalize   () 
-{
-  return FitDecayTrees::finalize () ;
-}
+SubstitutePID::~SubstitutePID () {}        // virtual & protected destructor
 // ============================================================================
 // decode the code --- overrides FilterDesktop method
 // ============================================================================
-StatusCode SubstitutePID::decodeCode () 
+StatusCode SubstitutePID::decodeCode ()
 {
   //
   // 1. decode "Code"
@@ -205,9 +184,10 @@ StatusCode SubstitutePID::decodeCode ()
   StatusCode sc = FilterDesktop::decodeCode() ;
   if ( sc.isFailure() ) { return sc ; }
   //
-  // 2. decode "substitutions" 
+  // 2. decode "substitutions"
   //
-  if ( 0== m_substitute){
+  if ( !m_substitute ) 
+  {
     m_substitute = tool<ISubstitutePID>("SubstitutePIDTool",this);
   }
   if (msgLevel(MSG::DEBUG)) debug() << "Calling decodeCode with " << m_map << endmsg ;
@@ -217,51 +197,50 @@ StatusCode SubstitutePID::decodeCode ()
   return StatusCode::SUCCESS ;
 }
 // ============================================================================
-/*  the major method to filter input particles 
+/*  the major method to filter input particles
  *  @param input    (INPUT) the input  container of particles
  *  @param filtered (OUPUT) the output container of particles
- *  @return Status code 
+ *  @return Status code
  */
 // ============================================================================
-StatusCode SubstitutePID::filter 
-( const LHCb::Particle::ConstVector& input  , 
+StatusCode SubstitutePID::filter
+( const LHCb::Particle::ConstVector& input  ,
   LHCb::Particle::ConstVector&       output )
 {
   //
   LHCb::Particle::ConstVector filtered ;
   filtered.reserve ( input.size() ) ;
   //
-  // filter particles 
+  // filter particles
   //
-  LoKi::select ( input.begin () , 
-                 input.end   () , 
+  LoKi::select ( input.begin () ,
+                 input.end   () ,
                  std::back_inserter ( filtered ) , predicate() ) ;
   //
   if (filtered.empty()) return StatusCode::SUCCESS ;
   LHCb::Particle::ConstVector substituted ;
-  substituted.reserve ( input.size() ) ; 
-  
+  substituted.reserve ( input.size() ) ;
+
   // ==========================================================================
-  /**  @attention: "substituted" constains CLONED TREES 
-   *   @fixme:     one need to protect this usage and change 
+  /**  @attention: "substituted" constains CLONED TREES
+   *   @fixme:     one need to protect this usage and change
    *               the tool interface to avoid the misuse!!
-   *  @see SubstitutePIDTool::substitute 
-   */   
+   *  @see SubstitutePIDTool::substitute
+   */
   m_substitute->substitute(filtered, substituted);
   //
   // refit if needed, store in TES
-  for ( LHCb::Particle::ConstVector::const_iterator ip = 
-          substituted.begin() ; substituted.end() != ip ; ++ip ) 
+  for ( LHCb::Particle::ConstVector::const_iterator ip =
+          substituted.begin() ; substituted.end() != ip ; ++ip )
   {
     //
     if ( m_maxParticles > 0 &&
-         i_markedParticles().size() > m_maxParticles)
+         i_markedParticles().size() > m_maxParticles )
     {
       Warning ( "Maximum number of allowed particles reached",
                 StatusCode::SUCCESS);
       if(!m_stopIncidentType.empty())
-      { incSvc()->fireIncident( Incident ( name () , m_stopIncidentType ) ) ; }
-      
+      { incSvc()->fireIncident( Incident ( name(), m_stopIncidentType ) ); }
       break;
     }
     //
@@ -269,30 +248,30 @@ StatusCode SubstitutePID::filter
     if ( 0 == tree ) { continue ; }
     //
     // refit the tree ?
-    if ( 0 < chi2cut()  ) 
+    if ( 0 < chi2cut()  )
     {
-      // refit the original 
+      // refit the original
       LHCb::DecayTree nTree = reFitted ( tree ) ;
       // delete the "original" at any circumstances
       DaVinci::deleteTree ( const_cast<LHCb::Particle*> ( tree ) ) ; // DELETE
       //
-      if ( !nTree ) { continue ; }            // CONTINUE, fit failure.. 
+      if ( !nTree ) { continue ; }            // CONTINUE, fit failure..
       //
-      tree = nTree.release() ;                // get the refitted tree 
+      tree = nTree.release() ;                // get the refitted tree
       //
     }
     //
-    // mark & store new decay tree 
-    markNewTree       ( tree ) ; // mark & store new decay tree 
+    // mark & store new decay tree
+    markNewTree       ( tree ) ; // mark & store new decay tree
     output.push_back  ( tree ) ;
-    // 
+    //
   }
   //
   return StatusCode::SUCCESS ;
 }
 // ============================================================================
-/// the factory 
-DECLARE_ALGORITHM_FACTORY(SubstitutePID) 
+/// the factory
+DECLARE_ALGORITHM_FACTORY(SubstitutePID)
 // ============================================================================
-// The END 
+// The END
 // ============================================================================
