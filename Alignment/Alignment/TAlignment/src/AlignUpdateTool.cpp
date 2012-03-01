@@ -348,20 +348,17 @@ namespace Al
     // is not the same as the actual one. It is no longer a reason to
     // abort since we allow using derivatives computed with a
     // different geometry.
-    if( m_elementProvider->initTime() != constequations.initTime() ) {
+    StatusCode sc = StatusCode::SUCCESS ;
+    Al::Equations equations = constequations ;
+    if( m_elementProvider->initTime() != equations.initTime() ) {
       warning() << "Time of geometry does not match time of equations: "
-		<< m_elementProvider->initTime().ns() << " " << constequations.initTime().ns() << endmsg ;
+		<< m_elementProvider->initTime().ns() << " " << equations.initTime().ns()
+		<< ". Will reinitalize alignment frame." << endmsg ;
+      sc = m_elementProvider->initAlignmentFrame( equations.initTime() ) ;
+      if( !sc.isSuccess() ) return sc ;
     }
     
-    // It is possible that the set we process does _not_ correspond to
-    // the version of the geometry here. This is the safest way to
-    // make sure it does:
-    Al::Equations equations ;
-    m_elementProvider->initEquations( equations ) ;
-    equations.add( constequations ) ;
-
     typedef Gaudi::Matrix1x6 Derivatives;
-    StatusCode sc = StatusCode::SUCCESS ;
     if ( equations.nElem() == 0 ) {
       warning() << "==> No elements to align." << endmsg ;
       return sc ;
