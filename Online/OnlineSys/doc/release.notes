@@ -6,6 +6,19 @@
 !-----------------------------------------------------------------------------
 </PRE>
 
+<H1><A NAME=v4r60>2012-03-01 OnlineSys v4r60</A></H1>
+<PRE>
+   Based in Gaudi v23r1, 
+   Updated packages are:
+     GaudiObjDesc        v11r13
+     Gaucho              v7r21    Online
+     GaudiOnline         v2r58    Online
+     GaudiRootCnvTests   v1r6     Online
+     RawBankSizes        v2r13    Online
+     RootCnv             v1r13    Online
+     ROMon               v1r35    Online
+</PRE>
+
 <H1><A NAME=v4r59>2012-02-06 OnlineSys v4r59</A></H1>
 <PRE>
    Based in Gaudi v23r0, 
