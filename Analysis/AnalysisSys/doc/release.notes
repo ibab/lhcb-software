@@ -3,6 +3,30 @@ Package     : AnalysisSys
 Package Coordinator : Chris Jones
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v8r1>2012-03-01 Analysis v8r1 </A></H1><PRE>
+
+Based on Phys v14r1
+
+Updated Packages : MicroDSTBase, MicroDSTTools, AnalysisPython,
+                   DSTWriters, KaliCalo
+
+In MicroDSTTools :
+ . Add two new vertex cloners, that explicitly clear the TrackSmartRef vector.
+   Needed for uDSTs, where these SmartRefs would refer back to the parent sDST.
+
+In DSTWriters :
+ . Use new Veto option in InputCopyStream to not copy to full DSTs the Muon
+   RawEvent objects. Only needed by PID mDST, and in the full DSTs only by
+   accident...
+ . Do not clone PV weights vector for uDSTs.
+ . Update the PV related uDST elements to not keep the Track SmartRefVector
+ . Add an option to stripDSTStreamConf() to allow a full DST stream to opt
+   out of including the full DAQ/RawEvent. Default is to included it.
+ . Make the packing of stripping (m)DSTs the default.
+ . Make the default configuraition of MicroDSTWriter the same as used in the
+   stripping.
+ . Support packing of either stream dependant or independant DecReports.
+
 ! 2012-02-13 - Marco Cattaneo
  - Removed TMVASelections...
 

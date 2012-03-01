@@ -1,19 +1,19 @@
 package AnalysisSys
-version v8r0
+version v8r1
 
 branches doc cmt
 
 ####################################################################
 
 use  AnalysisConf               v2r2     Phys   # Patrick Koppenburg, Juan Palacios
-use  DSTWriters                 v4r3     Phys   # Juan Palacios
+use  DSTWriters                 v4r4     Phys   # Juan Palacios
 use  DSTWriterTests             v2r4p1   Phys   # Juan Palacios
 
 use  FlavourTagging             v12r8    Phys   # Marc Grabalosa
 
 use  DaVinciMonitors            v1r17    Phys   # Patrick Koppenburg
 use  RichPIDQC                  v1r7     Rich   # Chris Jones
-use  KaliCalo                   v4r12    Phys   # Vanya Belyaev
+use  KaliCalo                   v4r12p1  Phys   # Vanya Belyaev
 
 ####################################################################
 
@@ -38,14 +38,14 @@ use  HltSelChecker              v12r1p1  Hlt    # Patrick Koppenburg
 
 ####################################################################
 
-use  AnalysisPython             v2r8     Phys
+use  AnalysisPython             v2r9     Phys
 use  PyAna                      v1r3     Analysis
 
 ####################################################################
 
-use  MicroDSTBase        	v3r1p2   MicroDST # Juan Palacios
+use  MicroDSTBase        	v3r1p3   MicroDST # Juan Palacios
 use  MicroDSTInterfaces  	v1r7     MicroDST # Juan Palacios
-use  MicroDSTTools      	v2r4     MicroDST # Juan Palacios
+use  MicroDSTTools      	v2r5     MicroDST # Juan Palacios
 use  MicroDSTAlgorithm   	v5r6     MicroDST # Juan Palacios
 use  MicroDSTConf               v2r10p1  MicroDST # Juan Palacios
 
