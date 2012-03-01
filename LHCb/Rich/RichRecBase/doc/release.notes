@@ -4,6 +4,9 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2012-03-01 - Wouter Hulsbergen
+ - Added support for HLTImportedTrack in RichTrackID
+
 !========================= RichRecBase v4r10 2011-12-14 =========================
 ! 2011-12-02 - Chris Jones
  - Update Rich::Rec::PhotonKey with a better packing method.
