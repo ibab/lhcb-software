@@ -174,7 +174,7 @@ endif
 
 # send a mail
 echo " ${rel_dir}/$PACKAGE/$VERSION is ${action}d and ${rel_dir}/${package}Env/${version} is removed" > /tmp/$$
-if (${group} == "z5" ) mail -s "${rel_dir}/$PACKAGE/$VERSION $action" joel.closier@cern.ch,marco.cattaneo@cern.ch,hubert.degaudenzi@cern.ch < /tmp/$$
+if (${group} == "z5" ) mail -s "${rel_dir}/$PACKAGE/$VERSION $action" lhcb-svn-librarians@cern.ch < /tmp/$$
 rm -f /tmp/$$
 rm -f /tmp/${VERSION}.tar.gz
 
