@@ -4,7 +4,12 @@
 ! Purpose     : Filters for ProtoParticles
 !-----------------------------------------------------------------------------
 
-!========================= ProtoParticleFilter v1r7 2012-02-03 =========================
+!===================== ProtoParticleFilter v1r7p1 2012-02-03 ===============
+
+! 2012-03-01 - Chris Jones
+ - Small clean up
+
+!===================== ProtoParticleFilter v1r7 2012-02-03 =================
 
 ! 2012-01-24 - Chris Jones
  - Implement the 'RICHORCALO' detector requirement
