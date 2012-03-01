@@ -4,6 +4,8 @@
 ! Purpose     : Helpers for safely building stripping components.
 !-----------------------------------------------------------------------------
 
+! ===================== StrippingUtils v1r6 2012-03-01 =======================
+
 ! 2012-02-24 - Vanya Belyaev
 
  - LineBulider: add few tiny decoarations
