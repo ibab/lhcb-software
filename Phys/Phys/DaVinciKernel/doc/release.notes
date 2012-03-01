@@ -4,6 +4,8 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!========================= DaVinciKernel v10r5 2012-03-01 =========================
+
 ! 2012-02-24 - Chris Jones
  - Remove the long depreciated option InputLocations in DVAlgorithm
  - Make i_bestVertex private
