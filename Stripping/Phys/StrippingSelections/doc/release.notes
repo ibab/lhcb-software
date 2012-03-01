@@ -5,6 +5,10 @@
 ! -----------------------------------------------------------------------------
 
 !========================= StrippingSelections v3r11 2012-03-01 =========================
+! 2012-03-01 - Jibo He
+ - StrippingDiMuonNew
+   . Require lifetime unbiased (Di-)Muon TOS for prompt J/psi, psi(2S) lines 
+   . Introduced IPS(mu)>2 for detached J/psi, psi(2S) lines 
 
 ! 2012-02-29 - Anton Poluektov 
   * Remove unnecessary import of ConfiguredFastFitter from StrippingTrackEffVeloMuon.py
