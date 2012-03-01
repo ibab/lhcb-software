@@ -4,6 +4,8 @@
 ! Responsible : Yuehong Xie
 !===========================================================================
 
+!========================= VertexFit v6r8 2012-03-01 =========================
+
 ! 2012-02-18 - Chris Jones
  - Various minor clean ups and speed ups in AdaptivePVReFitter and 
    PVReFitterAlg
