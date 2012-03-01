@@ -10,6 +10,7 @@
 #include <set>
 #include "string.h"
 #include "OnlineHistDB/OnlineHistDB.h"
+#include <cstdio>
 
 typedef std::map<std::string,std::vector<OnlineHistogram*> > bankmap;
 int main()
