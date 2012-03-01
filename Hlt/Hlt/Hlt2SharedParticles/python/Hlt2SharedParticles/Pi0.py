@@ -11,6 +11,7 @@ Hlt2BiKalmanFittedForwardTracking = Hlt2BiKalmanFittedForwardTracking()
 # Neutral protoparticles
 #
 neutralProtos = Hlt2BiKalmanFittedForwardTracking.hlt2NeutralProtos()
+neutralProtosFromL0 = Hlt2BiKalmanFittedForwardTracking.hlt2Pi0FromL0()
 ##########################################################################
 # Make the pi0
 #
@@ -35,6 +36,30 @@ Hlt2MergedPi0s.MassWindow 	= 60.* MeV
 #
 SeqHlt2Pi0 = GaudiSequencer('SeqHlt2Pi0 ',  ModeOR=True, ShortCircuit=False,
                             Members = [ Hlt2MergedPi0s, Hlt2ResolvedPi0s])
+##########################################################################
+# Make the pi0
+#
+Hlt2ResolvedPi0sFromL0 			= ResolvedPi0Maker("Hlt2ResolvedPi0sFromL0")
+Hlt2ResolvedPi0sFromL0.Input      = neutralProtosFromL0.outputSelection() 
+Hlt2ResolvedPi0sFromL0.DecayDescriptor 	= "Pi0"
+Hlt2ResolvedPi0sFromL0.Output 	= 'Hlt2/Hlt2ResolvedPi0sFromL0/Particles'
+Hlt2ResolvedPi0sFromL0.addTool(PhotonMaker)
+Hlt2ResolvedPi0sFromL0.PhotonMaker.Input 	= neutralProtosFromL0.outputSelection() 
+Hlt2ResolvedPi0sFromL0.MassWindow 		= 30.* MeV
+Hlt2ResolvedPi0sFromL0.PhotonMaker.PtCut 	= 200.*MeV
+##########################################################################
+# Make the pi0
+#
+Hlt2MergedPi0sFromL0 			= MergedPi0Maker("Hlt2MergedPi0sFromL0")
+Hlt2MergedPi0sFromL0.Output        = 'Hlt2/Hlt2MergedPi0sFromL0/Particles'
+Hlt2MergedPi0sFromL0.DecayDescriptor 	= "Pi0" 
+Hlt2MergedPi0sFromL0.Input		= neutralProtosFromL0.outputSelection()
+Hlt2MergedPi0sFromL0.MassWindow 	= 60.* MeV
+##########################################################################
+# Make both
+#
+SeqHlt2Pi0FromL0 = GaudiSequencer('SeqHlt2Pi0FromL0 ',  ModeOR=True, ShortCircuit=False,
+                            Members = [ Hlt2MergedPi0sFromL0, Hlt2ResolvedPi0sFromL0])
 #
 # define exported symbols -- these are for available
 # for use in Hlt2 by adding:
@@ -42,8 +67,11 @@ SeqHlt2Pi0 = GaudiSequencer('SeqHlt2Pi0 ',  ModeOR=True, ShortCircuit=False,
 # from Hlt2SharedParticles.BasicParticles import Hlt2MergedPi0s
 #
 
-__all__ = ( 'MergedPi0s', 'ResolvedPi0s', 'AllPi0s' )
+__all__ = ( 'MergedPi0s', 'ResolvedPi0s', 'AllPi0s', 'MergedPi0sFromL0', 'ResolvedPi0sFromL0', 'AllPi0sFromL0' )
 
 MergedPi0s    = bindMembers( None, [ neutralProtos, Hlt2MergedPi0s ] )
 ResolvedPi0s  = bindMembers( None, [ neutralProtos, Hlt2ResolvedPi0s ] )
 AllPi0s       = bindMembers( None, [ SeqHlt2Pi0 ] ).setOutputSelection( [ Hlt2MergedPi0s.name(), Hlt2ResolvedPi0s.name() ] )
+MergedPi0sFromL0    = bindMembers( None, [ neutralProtosFromL0, Hlt2MergedPi0sFromL0 ] )
+ResolvedPi0sFromL0  = bindMembers( None, [ neutralProtosFromL0, Hlt2ResolvedPi0sFromL0 ] )
+AllPi0sFromL0       = bindMembers( None, [ SeqHlt2Pi0FromL0 ] ).setOutputSelection( [ Hlt2MergedPi0sFromL0.name(), Hlt2ResolvedPi0sFromL0.name() ] )
