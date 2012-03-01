@@ -4,6 +4,11 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-03-01 - Jibo He
+ - PreStripping18/LineConfigDictionaries_BHQ.py
+   . Included changes proposed.
+ - Updated dbase of PreStripping18 and copied it to StrippingDev
+
 ! 2012-03-01 - Anton Poluektov 
   - Update Semileptonic dictionary in StrippingDev to fix nightlies. 
 
