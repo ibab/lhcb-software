@@ -45,7 +45,7 @@ for i in range(opts.firstiter,opts.numiter) :
         os.system( ' cp -f ' + a + ' .' )
 
     # run the job
-    thiscommand = '$ESCHEROPTS/gaudipar.py' + theseoptions + '>& logfile.txt'
+    thiscommand = 'gaudipar.py' + theseoptions + '>& logfile.txt'
     print 'command: ', thiscommand
     os.system( thiscommand )
     os.system( 'gzip logfile.txt' )
