@@ -5,14 +5,14 @@ branches cmt doc
 
 use Hlt1Lines           v6r14   Hlt   # Gerhard Raven, Vava Gligorov, Johannes Albrecht, Roel Aaij
 use Hlt1Muons           v1r5    Hlt   # Roel Aaij
-use Hlt2Lines           v8r10    Hlt   # Vava Gligorov, Johannes Albrecht, Gerhard Raven
+use Hlt2Lines           v8r10   Hlt   # Vava Gligorov, Johannes Albrecht, Gerhard Raven
 use Hlt2SharedParticles v6r5    Hlt   # Patrick Koppenburg, Gerhard Raven
 use HltBase             v12r3   Hlt   # Gerhard Raven
 use HltBeamGasAlley     v3r0    Hlt   # Plamen Hopchev
 use HltCommon           v8r4    Hlt   # Gerhard Raven
 use HltConf             v9r13   Hlt   # Vanya Belyaev, Gerhard Raven
 use HltCosmics          v1r0p2  Hlt   # Stephan Nies
-use HltDisplVertices    v3r4    Hlt   # Neil Gauvin, Victor Coco
+use HltDisplVertices    v3r5    Hlt   # Neil Gauvin, Victor Coco
 use HltGlobalMonitor    v3r9    Hlt   # Bruno de Paula
 use HltL0Conf           v3r0p1  Hlt   # Johannes Albrecht
 use HltLine             v5r1p7  Hlt   # Vanya Belyaev, Gerhard Raven
