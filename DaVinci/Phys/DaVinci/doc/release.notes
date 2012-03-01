@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2012-03-01 - Chris Jones
+ - If Simulation=True, force IgnoreDQFlags=True, to work around an issue in
+   LHCbApp. To be removed in a future release, when fixed in LHCb.
+
 ! 2012-02-24 - Chris Jones
  - Add the option "IgnoreDQFlags", which controls whether how DaVinci should 
    handle data DQ flags. Default is False, which means only data with good
