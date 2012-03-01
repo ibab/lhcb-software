@@ -28,7 +28,7 @@ from HltTrackNames import HltMuonIDSuffix, HltRICHIDSuffix, HltCALOIDSuffix, Hlt
 from HltTrackNames import HltNoPIDSuffix, HltCaloProtosSuffix, HltMuonProtosSuffix, HltRichProtosSuffix
 from HltTrackNames import HltUnfittedTracksSuffix, HltUniDirectionalKalmanFitSuffix
 from HltTrackNames import HltGlobalTrackLocation                
-from HltTrackNames import Hlt2ChargedProtoParticleSuffix, Hlt2NeutralProtoParticleSuffix  
+from HltTrackNames import Hlt2ChargedProtoParticleSuffix, Hlt2NeutralProtoParticleSuffix
 from HltTrackNames import HltRichDefaultHypos, HltRichDefaultRadiators
 from HltTrackNames import Hlt2TrackingRecognizedFitTypesForRichID 
 from HltTrackNames import HltRichDefaultTrackCuts
@@ -48,24 +48,24 @@ from Hlt2Lines.Hlt2B2LLXLines             import Hlt2B2LLXLinesConf
 from Hlt2Lines.Hlt2CharmHadD02HHLines     import Hlt2CharmHadD02HHLinesConf
 from Hlt2Lines.Hlt2CharmHadTwoBodyForMultiBody     import Hlt2CharmHadTwoBodyForMultiBodyConf
 from Hlt2Lines.Hlt2CharmHadD2HHHLines     import Hlt2CharmHadD2HHHLinesConf
-from Hlt2Lines.Hlt2CharmHadTwoBodyForD02HHHH  import Hlt2CharmHadTwoBodyForD02HHHHConf
-from Hlt2Lines.Hlt2CharmHadD02HHHHLines  import Hlt2CharmHadD02HHHHLinesConf
-from Hlt2Lines.Hlt2CharmHadD02HHHHDstLines  import Hlt2CharmHadD02HHHHDstLinesConf
-from Hlt2Lines.Hlt2CharmHadD02HHHHDstNoHlt1Lines import Hlt2CharmHadD02HHHHDstNoHlt1LinesConf
+from Hlt2Lines.Hlt2CharmHadD02HHHHLines   import Hlt2CharmHadD02HHHHLinesConf
 from Hlt2Lines.Hlt2CharmSemilepD02HMuNuLines     import Hlt2CharmSemilepD02HMuNuLinesConf
 from Hlt2Lines.Hlt2CharmSemilepTwoMuonForMuMuHad import Hlt2CharmSemilepTwoMuonForMuMuHadConf
 from Hlt2Lines.Hlt2CharmSemilepD02HHMuMuLines   import Hlt2CharmSemilepD02HHMuMuLinesConf
 from Hlt2Lines.Hlt2CharmSemilepD2HMuMuLines   import Hlt2CharmSemilepD2HMuMuLinesConf
+from Hlt2Lines.Hlt2CharmSemilepTwoHadForMuMuHH import Hlt2CharmSemilepTwoHadForMuMuHHConf
+from Hlt2Lines.Hlt2CharmSemilep2Had1MuForHHMuMu import Hlt2CharmSemilep2Had1MuForHHMuMuConf
+from Hlt2Lines.Hlt2CharmSemilepD02HHMuMu2SoftMuonsLines import Hlt2CharmSemilepD02HHMuMu2SoftMuonsLinesConf
+from Hlt2Lines.Hlt2CharmSemilepD02HHMuMuHardHadronsAndMuonsLines import Hlt2CharmSemilepD02HHMuMuHardHadronsAndMuonsLinesConf
+from Hlt2Lines.Hlt2CharmSemilepD02HHMuMuHardHadronsSoftMuonsLines import Hlt2CharmSemilepD02HHMuMuHardHadronsSoftMuonsLinesConf
 from Hlt2Lines.Hlt2CharmRareDecayLines    import Hlt2CharmRareDecayLinesConf
 from Hlt2Lines.Hlt2CharmHadD2KS0HLines    import Hlt2CharmHadD2KS0HLinesConf
 from Hlt2Lines.Hlt2CharmHadD02HHKsLines   import Hlt2CharmHadD02HHKsLinesConf  
 from Hlt2Lines.Hlt2DisplVerticesLines     import Hlt2DisplVerticesLinesConf
-from Hlt2Lines.Hlt2HighPtJetsLines        import Hlt2HighPtJetsLinesConf
 from Hlt2Lines.Hlt2CommissioningLines     import Hlt2CommissioningLinesConf
 from Hlt2Lines.Hlt2ExpressLines           import Hlt2ExpressLinesConf
 from Hlt2Lines.Hlt2diphotonDiMuonLines    import Hlt2diphotonDiMuonLinesConf
 from Hlt2Lines.Hlt2InclusiveDiProtonLines import Hlt2InclusiveDiProtonLinesConf
-from Hlt2Lines.Hlt2InclusiveDiPhiLines    import Hlt2InclusiveDiPhiLinesConf
 from Hlt2Lines.Hlt2Dst2D2XXLines          import Hlt2Dst2D2XXLinesConf
 from Hlt2Lines.Hlt2InclusiveDiElectronLines import Hlt2InclusiveDiElectronLinesConf
 from Hlt2Lines.Hlt2InclusiveElectronLines   import Hlt2InclusiveElectronLinesConf
@@ -101,15 +101,17 @@ class Hlt2Tracking(LHCbConfigurableUser):
                              , Hlt2CharmHadD2HHHLinesConf
                              , Hlt2CharmHadD2KS0HLinesConf 
                              , Hlt2CharmHadD02HHKsLinesConf
-                             , Hlt2CharmHadTwoBodyForMultiBodyConf
-                             , Hlt2CharmHadTwoBodyForD02HHHHConf
                              , Hlt2CharmHadD02HHHHLinesConf
-                             , Hlt2CharmHadD02HHHHDstLinesConf
-                             , Hlt2CharmHadD02HHHHDstNoHlt1LinesConf  
+                             , Hlt2CharmHadTwoBodyForMultiBodyConf
                              , Hlt2CharmSemilepD02HMuNuLinesConf
                              , Hlt2CharmSemilepD02HHMuMuLinesConf
                              , Hlt2CharmSemilepD2HMuMuLinesConf
+                             , Hlt2CharmSemilepD02HHMuMuHardHadronsSoftMuonsLinesConf
+                             , Hlt2CharmSemilepD02HHMuMu2SoftMuonsLinesConf
+                             , Hlt2CharmSemilepD02HHMuMuHardHadronsAndMuonsLinesConf 
                              , Hlt2CharmSemilepTwoMuonForMuMuHadConf
+                             , Hlt2CharmSemilepTwoHadForMuMuHHConf
+                             , Hlt2CharmSemilep2Had1MuForHHMuMuConf
                              , Hlt2CharmRareDecayLinesConf
                              , Hlt2InclusiveDiMuonLinesConf
                              , Hlt2InclusiveMuonLinesConf
@@ -121,12 +123,10 @@ class Hlt2Tracking(LHCbConfigurableUser):
                              , Hlt2B2HHLTUnbiasedLinesConf
                              , Hlt2B2LLXLinesConf                         
                              , Hlt2DisplVerticesLinesConf
-                             , Hlt2HighPtJetsLinesConf
                              , Hlt2CommissioningLinesConf
                              , Hlt2ExpressLinesConf
                              , Hlt2diphotonDiMuonLinesConf
                              , Hlt2InclusiveDiProtonLinesConf
-                             , Hlt2InclusiveDiPhiLinesConf  
                              , Hlt2Dst2D2XXLinesConf
                              , Hlt2InclusiveDiElectronLinesConf
                              , Hlt2InclusiveElectronLinesConf
@@ -880,9 +880,21 @@ class Hlt2Tracking(LHCbConfigurableUser):
         """
         Photons coming from L0
         """
-
+        # Configure CaloElectron
         caloElectronsFromL0 = self.__getNewCALOSeq('electron')
-        return caloElectronsFromL0
+        from Configurables import ChargedProtoCombineDLLsAlg
+        combine_name                    = self.__pidAlgosAndToolsPrefix()+"LowEtChargedCaloProtoPCombDLLs"
+        combine                         = ChargedProtoCombineDLLsAlg(combine_name)
+        combine.ProtoParticleLocation   = caloElectronsFromL0.outputSelection()
+        
+        from HltLine.HltLine import bindMembers
+        # Build the bindMembers 
+        bm_name         = self.__pidAlgosAndToolsPrefix()+"LowEtChargedCaloProtosSeq"
+        bm_members      = [caloElectronsFromL0, combine]
+        bm_output       = caloElectronsFromL0.outputSelection()
+
+        return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
+
     #########################################################################################
     #
     # MuonID
@@ -1191,29 +1203,24 @@ class Hlt2Tracking(LHCbConfigurableUser):
         #recoForward.addTool(ConfiguredPR( "Forward" ))
 
         #        PatForwardTool( MinMomentum = 1000., MinPt = 1000., AddTTClusterName = "" )
-        from HltTracking.HltReco import CommonForwardTrackingOptions
+
         recoForward.addTool(PatForwardTool, name='PatForwardTool')
         recoForward.PatForwardTool.AddTTClusterName = "PatAddTTCoord"
         recoForward.PatForwardTool.SecondLoop = False
-        recoForward.PatForwardTool.MaxChi2 = CommonForwardTrackingOptions["MaxChi2"]
-        recoForward.PatForwardTool.MaxChi2Track = CommonForwardTrackingOptions["MaxChi2Track"]
-        recoForward.PatForwardTool.MinHits = CommonForwardTrackingOptions["MinHits"]
-        recoForward.PatForwardTool.MinOTHits = CommonForwardTrackingOptions["MinOTHits"]
         recoForward.PatForwardTool.MinMomentum = 3000
         recoForward.PatForwardTool.MinPt = 300
      
         if self.getProp("EarlyDataTracking") :
-            from HltTracking.HltReco import CommonForwardTrackingOptions_EarlyData 
             # configure pattern reco with early data flags
             # first forward algorithm
-            recoForward.PatForwardTool.MinXPlanes = CommonForwardTrackingOptions_EarlyData["MinXPlanes"]
-            recoForward.PatForwardTool.MinPlanes = CommonForwardTrackingOptions_EarlyData["MinPlanes"]
-            recoForward.PatForwardTool.MaxSpreadX = CommonForwardTrackingOptions_EarlyData["MaxSpreadX"]
-            recoForward.PatForwardTool.MaxSpreadY = CommonForwardTrackingOptions_EarlyData["MaxSpreadY"]
-            recoForward.PatForwardTool.MaxChi2 = CommonForwardTrackingOptions_EarlyData["MaxChi2"]
-            recoForward.PatForwardTool.MaxChi2Track = CommonForwardTrackingOptions_EarlyData["MaxChi2Track"]
-            recoForward.PatForwardTool.MinHits = CommonForwardTrackingOptions_EarlyData["MinHits"]
-            recoForward.PatForwardTool.MinOTHits = CommonForwardTrackingOptions_EarlyData["MinOTHits"]
+            recoForward.PatForwardTool.MinXPlanes = 4
+            recoForward.PatForwardTool.MinPlanes = 8
+            recoForward.PatForwardTool.MaxSpreadX = 1.5
+            recoForward.PatForwardTool.MaxSpreadY = 3.0
+            recoForward.PatForwardTool.MaxChi2 = 40
+            recoForward.PatForwardTool.MaxChi2Track = 40
+            recoForward.PatForwardTool.MinHits = 12
+            recoForward.PatForwardTool.MinOTHits = 14
 
         # Build the bindMembers        
         bm_name         = self.getProp("Prefix")+"ForwardTracking"
@@ -1248,16 +1255,11 @@ class Hlt2Tracking(LHCbConfigurableUser):
         if self.getProp('Hlt2ForwardMaxVelo') > 0 :
             recoForwardSecondLoop.MaxNVelo = self.getProp('Hlt2ForwardMaxVelo')
 
-        from HltTracking.HltReco import CommonForwardTrackingOptions
         recoForwardSecondLoop.addTool(PatForwardTool, name='PatForwardTool')
         recoForwardSecondLoop.PatForwardTool.AddTTClusterName = "PatAddTTCoord"
-        recoForwardSecondLoop.PatForwardTool.SecondLoop     = True
-        recoForwardSecondLoop.PatForwardTool.MaxChi2        = CommonForwardTrackingOptions["MaxChi2"]
-        recoForwardSecondLoop.PatForwardTool.MaxChi2Track   = CommonForwardTrackingOptions["MaxChi2Track"]
-        recoForwardSecondLoop.PatForwardTool.MinHits        = CommonForwardTrackingOptions["MinHits"]
-        recoForwardSecondLoop.PatForwardTool.MinOTHits      = CommonForwardTrackingOptions["MinOTHits"]
-        recoForwardSecondLoop.PatForwardTool.MinMomentum    = 1000
-        recoForwardSecondLoop.PatForwardTool.MinPt          = 150
+        recoForwardSecondLoop.PatForwardTool.SecondLoop = True
+        recoForwardSecondLoop.PatForwardTool.MinMomentum = 3000
+        recoForwardSecondLoop.PatForwardTool.MinPt = 300
 
         # Build the bindMembers       
         # Explicitly require the regular forward tracking here 
@@ -1296,24 +1298,22 @@ class Hlt2Tracking(LHCbConfigurableUser):
 
         recoSeeding.PatSeedingTool.UseForward        = True
         recoSeeding.PatSeedingTool.ForwardCloneMergeSeg = True
-        recoSeeding.PatSeedingTool.NDblOTHitsInXSearch = 2
         recoSeeding.PatSeedingTool.InputTracksName    = fwdtracks.outputSelection()
-        recoSeeding.PatSeedingTool.MinMomentum = 3000 
+        recoSeeding.PatSeedingTool.MinMomentum = 2500 
         from HltTracking.HltReco import MaxOTHits
         recoSeeding.PatSeedingTool.MaxOTHits = MaxOTHits
  
         if self.getProp("EarlyDataTracking") :
             # Do something special in case of early data
-            from HltTracking.HltReco import CommonSeedingTrackingOptions_EarlyData
-            recoSeeding.PatSeedingTool.OTNHitsLowThresh = CommonSeedingTrackingOptions_EarlyData["OTNHitsLowThresh"]
-            recoSeeding.PatSeedingTool.MinTotalPlanes = CommonSeedingTrackingOptions_EarlyData["MinTotalPlanes"]
-            recoSeeding.PatSeedingTool.MaxMisses = CommonSeedingTrackingOptions_EarlyData["MaxMisses"]
-            recoSeeding.PatSeedingTool.MaxTrackChi2LowMult = CommonSeedingTrackingOptions_EarlyData["MaxTrackChi2LowMult"]
-            recoSeeding.PatSeedingTool.MaxFinalTrackChi2 = CommonSeedingTrackingOptions_EarlyData["MaxFinalTrackChi2"]
-            recoSeeding.PatSeedingTool.MaxFinalChi2 = CommonSeedingTrackingOptions_EarlyData["MaxFinalChi2"]
-            recoSeeding.PatSeedingTool.MaxTrackChi2 = CommonSeedingTrackingOptions_EarlyData["MaxTrackChi2"]
-            recoSeeding.PatSeedingTool.MaxChi2HitIT = CommonSeedingTrackingOptions_EarlyData["MaxChi2HitIT"]
-            recoSeeding.PatSeedingTool.MaxChi2HitOT = CommonSeedingTrackingOptions_EarlyData["MaxChi2HitOT"]
+            recoSeeding.PatSeedingTool.OTNHitsLowThresh=12
+            recoSeeding.PatSeedingTool.MinTotalPlanes = 7
+            recoSeeding.PatSeedingTool.MaxMisses = 2
+            recoSeeding.PatSeedingTool.MaxTrackChi2LowMult=10
+            recoSeeding.PatSeedingTool.MaxFinalTrackChi2=20
+            recoSeeding.PatSeedingTool.MaxFinalChi2=30
+            recoSeeding.PatSeedingTool.MaxTrackChi2=40
+            recoSeeding.PatSeedingTool.MaxChi2HitIT=10
+            recoSeeding.PatSeedingTool.MaxChi2HitOT=30
          
         # Build the bindMembers        
         bm_name         = self.getProp("Prefix")+"SeedTracking" 
@@ -1366,24 +1366,24 @@ class Hlt2Tracking(LHCbConfigurableUser):
     
         ### Downstream tracking
         PatDownstream            = PatDownstream(self.getProp("Prefix")+'PatDownstream')
-        PatDownstream.InputLocation  = self.__hlt2SeedTracking().outputSelection()
-        PatDownstream.OutputLocation = downstreamTrackOutputLocation
+        PatDownstream.InputLocation    = self.__hlt2SeedTracking().outputSelection()
+        PatDownstream.OutputLocation    = downstreamTrackOutputLocation
         #PatDownstream.UseForward    = True
         #PatDownstream.SeedFilter    = True
-        PatDownstream.RemoveUsed     = True
-        PatDownstream.RemoveAll      = True
+        PatDownstream.RemoveUsed    = True
+        PatDownstream.RemoveAll        = True
   
         if self.getProp("EarlyDataTracking") :
             # Do something special in case of early data
-            from HltTracking.HltReco import CommonDownstreamTrackingOptions_EarlyData 
-            PatDownstream.xPredTol2     = CommonDownstreamTrackingOptions_EarlyData["xPredTol2"]
-            PatDownstream.TolMatch      = CommonDownstreamTrackingOptions_EarlyData["TolMatch"]
-            PatDownstream.TolUV         = CommonDownstreamTrackingOptions_EarlyData["TolUV"]
-            PatDownstream.maxWindowSize = CommonDownstreamTrackingOptions_EarlyData["maxWindowSize"]
-            PatDownstream.MaxChisq      = CommonDownstreamTrackingOptions_EarlyData["MaxChisq"]
-            PatDownstream.MaxDistance   = CommonDownstreamTrackingOptions_EarlyData["MaxDistance"]
-            PatDownstream.deltaP        = CommonDownstreamTrackingOptions_EarlyData["deltaP"]
-            PatDownstream.errorZMagnet  = CommonDownstreamTrackingOptions_EarlyData["errorZMagnet"]
+            PatDownstream.xPredTol2 = 20.0
+            PatDownstream.TolMatch = 1.5
+            PatDownstream.TolUV = 2.0
+            PatDownstream.maxWindowSize = 10.0
+            PatDownstream.MaxChisq  = 20.0
+            PatDownstream.MaxDistance = 0.3
+            PatDownstream.deltaP = 2.0
+            PatDownstream.errorZMagnet = 30.0
+
  
         # Build the bindMembers        
         bm_name         = self.getProp("Prefix")+"DownstreamTracking" 
@@ -1409,22 +1409,36 @@ class Hlt2Tracking(LHCbConfigurableUser):
     def __getNewCALOSeq(self, mode):
         from HltLine.HltLine    import bindMembers      
         # Load tracks
-        tracks = self.__hlt2StagedFastFit()
+        tracks        = self.__hlt2StagedFastFit()
+
+        #neutralProtosLowEtOutputLocation = self.__protosLocation(Hlt2LowEtNeutralProtoParticleSuffix)
+        #neutralProtosHighEtOutputLocation = self.__protosLocation(Hlt2HighEtNeutralProtoParticleSuffix)
+ 
+        #outputCALOPID            = self.__caloIDLocation()
+        caloName = "HLT2CaloLines" + self.__shortTrackLocation()
         # Create configurable
         from Configurables import CaloLines
-        seq = CaloLines('HLT2CaloLines').sequence(tracks=[tracks.outputSelection()])
-        bm_name    = self.__pidAlgosAndToolsPrefix()
-        bm_members = [tracks, seq]
+        caloLines = CaloLines(caloName)
+        bm_name    = self.__pidAlgosAndToolsPrefix() + self.__shortTrackLocation()
+        bm_members = [tracks]
         bm_output = ''
         if mode.lower() == 'photon':
             bm_name  += 'PhotonsFromL0'
-            bm_output = '/Event/HLT2CaloLinesHighPhoton/ProtoP/Neutrals'
+            bm_output = '/Event/'+caloName+'HighPhoton/ProtoP/Neutrals'
         elif mode.lower() == 'electron':
+            from Configurables import ChargedProtoParticleMaker
             bm_name  += 'ElectronsFromL0'
-            bm_output = '/Event/HLT2CaloLinesLowElectron/ProtoP/Neutrals'
+            bm_output = '/Event/'+caloName+'LowElectron/ProtoP/Charged'
+            chargedName = self.__pidAlgosAndToolsPrefix()+bm_output.replace("/","")+'ChargedProtoPAlg'
+            charged     = ChargedProtoParticleMaker(chargedName)
+            charged.Inputs = [tracks.outputSelection()]
+            charged.Output = bm_output
+            bm_members += [charged]
         elif mode.lower() == 'pi0':
             bm_name  += 'Pi0FromL0'
-            bm_output = '/Event/HLT2CaloLinesLowPhoton/ProtoP/Neutrals'
+            bm_output = '/Event/'+caloName+'LowPhoton/ProtoP/Neutrals'
+        seq = caloLines.sequence(tracks=[tracks.outputSelection()])
+        bm_members += [seq]
         return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
     #########################################################################################
     #
