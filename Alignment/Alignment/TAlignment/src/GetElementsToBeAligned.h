@@ -62,6 +62,12 @@ public:
   // Find the list of elements corresponding to a path (which can ba rehulare expression)
   StatusCode findElements(const std::string& path, 
                           std::vector<const AlignmentElement*>& alignelements) const ; 
+
+  // initialize the alignment frames now. if time=0, it will use the
+  // current time. it will issue a warning, return failure and not do
+  // anything if m_initTime != 0
+  StatusCode initAlignmentFrame( Gaudi::Time now=0 ) ;
+
   // return the time with which the geometry was initialized
   Gaudi::Time initTime() const { return m_initTime ; } 
   // initialize an Al::Equations object

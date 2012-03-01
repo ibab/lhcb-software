@@ -48,7 +48,8 @@ GetElementsToBeAligned::GetElementsToBeAligned( const std::string& type,
   : GaudiTool ( type, name , parent ),
     m_useLocalFrame(true),
     m_elemsToBeAligned(),
-    m_elementMap()
+    m_elementMap(),
+    m_initTime(0)
 {
   declareInterface<IGetElementsToBeAligned>(this);
   declareProperty("Elements"     , m_elemsToBeAligned);
@@ -65,15 +66,9 @@ StatusCode GetElementsToBeAligned::initialize() {
   if ( m_elemsToBeAligned.empty() ) return Error( "Please specify which elements to align!", StatusCode::FAILURE );
 
   info() << "Use local frame = " << m_useLocalFrame << endreq ;
-
-  /// Get the svc that holds condition=data constants
-  IDetDataSvc* detDataSvc(0) ;
-  sc = service("DetectorDataSvc",detDataSvc, true);
-  if ( sc.isFailure() ) {
-    error() << "Could not retrieve DetectorDataSvc" << endmsg ;
-    return sc;
-  }
-  m_initTime = detDataSvc->eventTime() ;
+  
+  // delay initialization till the first event
+  m_initTime = 0 ;
 
   /// Get pointer to detector svc
   IDataProviderSvc* detectorSvc = 0;
@@ -252,9 +247,6 @@ StatusCode GetElementsToBeAligned::initialize() {
   /// Print list of detector elements that are going to be aligned
   
   info() << "   Going to align " << m_elements.size() << " detector elements:" << endmsg;
-  for( Elements::const_iterator i = m_elements.begin() ; i != m_elements.end(); ++i) 
-    info() <<  "        " << (**i) << endmsg;    
-
   info() << "   Number of elements in map: " << m_elementMap.size() << endmsg ;
   
   info() << "==============================================================" << endmsg;
@@ -395,3 +387,44 @@ void GetElementsToBeAligned::initEquations( Al::Equations& equations ) const
     equations.element( (*ielem)->index() ).m_alphaIsSet = true ;
   }
 }
+
+StatusCode GetElementsToBeAligned::initAlignmentFrame( Gaudi::Time now )
+{
+  StatusCode sc = StatusCode::SUCCESS ;
+  if( m_initTime != 0 ) {
+    error() << "Severe ERROR: alignment frame already initialized: "
+	    << m_initTime << " " << now << endreq ;
+    sc = Warning("Severe ERROR: alignment frame already initialized", StatusCode::FAILURE) ;
+  } else {
+    IDetDataSvc* detDataSvc(0) ;
+    sc = service("DetectorDataSvc",detDataSvc, true);
+    if ( sc.isFailure() ) {
+      error() << "Could not retrieve DetectorDataSvc" << endmsg ;
+      return sc;
+    }
+    if( now == 0 ) {
+      now = detDataSvc->eventTime() ;
+    } else {
+      detDataSvc->setEventTime( now ) ;
+    }
+    m_initTime = now ;
+    std::stringstream message ;
+    message << std::left << std::setw(80u) << std::setfill('*') << std::endl 
+	    << "Initializing alignment frames with time: " << m_initTime.ns()
+	    << " --> " 
+	    << m_initTime.format(true,"%F %r") << std::endl ;
+    // update all elements with this time
+    for (Elements::iterator ielem = m_elements.begin(); 
+	 ielem != m_elements.end(); ++ielem) 
+      (const_cast<AlignmentElement*>(*ielem))->initAlignmentFrame();
+    
+    // now print the positions, just for debugging  
+    for( Elements::const_iterator i = m_elements.begin() ; i != m_elements.end(); ++i) 
+      message << **i  ;
+    
+    message << std::left << std::setw(80u) << std::setfill('*') << "" ;
+    info() << message.str() << endreq ;
+  }
+  return sc ;
+}
+

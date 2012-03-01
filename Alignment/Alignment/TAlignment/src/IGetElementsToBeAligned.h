@@ -70,5 +70,8 @@ class IGetElementsToBeAligned : virtual public IAlgTool {
   
   // initialize an Al::Equations object with the current par set
   virtual void initEquations( Al::Equations& ) const = 0 ;
+
+  // initialize an Al::Equations object with the current par set
+  virtual StatusCode initAlignmentFrame( Gaudi::Time now=0 ) = 0 ;
 };
 #endif // IGETELEMENTSTOBEALIGNED_H
