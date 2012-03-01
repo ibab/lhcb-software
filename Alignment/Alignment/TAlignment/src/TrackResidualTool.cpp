@@ -6,7 +6,7 @@
 #include "ITrackResidualTool.h"
 #include "IGetElementsToBeAligned.h"
 #include "TrackInterfaces/ITrackKalmanFilter.h"
-#include "Event/TrackFitResult.h"
+#include "Event/KalmanFitResult.h"
 #include "Event/FitNode.h"
 
 namespace Al
@@ -209,6 +209,10 @@ namespace Al
     // this is not stricktly necessary, but let's do it anyway
     LHCb::KalmanFitResult* fr = 
       const_cast<LHCb::KalmanFitResult*>(static_cast<const LHCb::KalmanFitResult*>(track.fitResult())) ;
+    if( !fr ) {
+      error() << "Track was not fitted. Type = " << track.type() << ". Returning 0." << endreq ;
+      return 0 ;
+    }
     fr->setBiDirectionnalSmoother(false) ;
     
     // ingredients
