@@ -3,6 +3,8 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+!========================= DaVinciTools v22r13 2012-03-01 =========================
+
 ! 2012-02-29 - Anton Poluektov 
  - Update ConeVariables and ConeVariablesForEW to be able to store up to 4 cones
 
@@ -13,7 +15,7 @@
   + Fix a small compilation warning.
 
 ! 2012-02-28 - Anton Poluektov for Vanya Belyaev
- - Modify SubstitutePID to fix the memory leak
+ - Modify SubstitutePID to fix the stripping17b memory leak
 
 ! 2012-02-26 - Mike Williams
  - Added particle limits to SubPIDMMFilter and SubstitutePID
