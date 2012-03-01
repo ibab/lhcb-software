@@ -198,12 +198,12 @@ FarmLineDisplay::FarmLineDisplay(int argc, char** argv)
   else {
     ::sprintf(txt," %-10s %-8s %-6s %-6s %-6s   %35s%44s%47s",
 	      "","Last","No.of","No.of","Num.of","",
-	      "<<---------- Summ Counters --------->>",
-	      "<<--------- Minimum Counters -------->>");
+	      "<<------------ Summ Counters ----------->>",
+	      "<<----------- Minimum Counters ---------->>");
     ::scrc_put_chars(m_display,txt,BG_BLUE|FG_WHITE|BOLD,CLUSTERLINE_FIRSTPOS-2,1,1);
     ::sprintf(txt," %-10s %-8s %-6s %-6s %-6s   %-32s  %9s%5s%11s%6s%9s%5s  %9s%5s%10s%7s%9s%5s",
 	      "Subfarm","Update","Nodes", "Buffer","Client","Subfarm status",
-	      "MEP","Sl","EVENT","Sl","SEND","Sl","MEP","Sl","EVENT","Sl","SEND","Sl");
+	      "Overflow","Sl","Events","Sl","Send","Sl","Overflow","Sl","Events","Sl","Send","Sl");
     ::scrc_put_chars(m_display,txt,BG_BLUE|FG_WHITE|BOLD,CLUSTERLINE_FIRSTPOS-1,1,1);
   }
 

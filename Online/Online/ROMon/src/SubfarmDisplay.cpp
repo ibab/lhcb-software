@@ -22,6 +22,7 @@
 #include "RTL/strdef.h"
 #define MBM_IMPLEMENTATION
 #include "ROMon/ROMon.h"
+#include "ROMon/Constants.h"
 #include "ROMon/SubfarmDisplay.h"
 #include "dic.hxx"
 
@@ -33,13 +34,6 @@ typedef Nodeset::Nodes               Nodes;
 typedef Node::Buffers                Buffers;
 typedef MBMBuffer::Clients           Clients;
 typedef Node::Tasks                  Tasks;
-#define BUILDER_TASK 'M'
-#define SENDER_TASK  'D'
-#define MOORE_TASK   'G'
-#define MEP_BUFFER   'M'
-#define RES_BUFFER   'R'
-#define EVT_BUFFER   'E'
-#define SND_BUFFER   'S'
 
 static void getBuffInfo(const MBMBuffer::Control& c, int info[3], int tot[3]) {
   tot[0] += (info[0] = c.tot_produced);
@@ -78,19 +72,19 @@ SubfarmDisplay::SubfarmDisplay(int argc, char** argv)   {
 
 void SubfarmDisplay::init(int argc, char** argv)   {
   RTL::CLI cli(argc,argv,help);
-  int hdr_height, nodes_height, moores_height;
-  cli.getopt("headerheight",  1, hdr_height    =   5);
-  cli.getopt("nodesheight",   1, nodes_height  =  31);
-  cli.getopt("mooresheight",  1, moores_height =  18);
+  int hdr_height, nodes_height, moores_height, pr_width, eb_width;
+  cli.getopt("headerheight",  1, hdr_height    =    5);
+  cli.getopt("nodesheight",   1, nodes_height  =   31);
+  cli.getopt("mooresheight",  1, moores_height =   18);
   cli.getopt("delay",         1, m_delay       = 1000);
   cli.getopt("servicename",   1, m_svcName     = "/hlte07/ROpublish");
 
   setup_window();
   int width    = m_area.width;
-  int eb_width = width/2-10;
-  int pr_width = width/3-1;
   int posx     = m_position.x-2;
   int posy     = m_position.y-2;
+  eb_width = width/2-10;
+  pr_width = width/3-1;
   m_moores     = 0;
   m_builders   = 0;
   m_holders    = 0;
@@ -102,7 +96,7 @@ void SubfarmDisplay::init(int argc, char** argv)   {
     bottom     = m_moores->bottom();
   }
   m_builders   = createSubDisplay(Position(posx,bottom),         Area(eb_width,posy+m_area.height-bottom),"Event builders");
-  m_holders    = createSubDisplay(Position(posx+eb_width,bottom),Area(pr_width,posy+m_area.height-bottom),"Event Producers");
+  m_holders    = createSubDisplay(Position(posx+eb_width,bottom),Area(pr_width,posy+m_area.height-bottom),"Event overflow");
   m_senders    = createSubDisplay(Position(posx+eb_width+pr_width,bottom),Area(width-eb_width-pr_width,posy+m_area.height-bottom),"Event Senders");
   end_update();
 }
@@ -123,13 +117,15 @@ void SubfarmDisplay::showNodes(const Nodeset& ns)  {
   MonitorDisplay* disp = m_nodes;
   const char* p;
   const char* fmt = " %-12s%5d %12d%6d%7d %12d%11d%6d%7d %12d%6d%7d %12d";
-  int mep_tot[3] = {0,0,0}, evt_tot[3] = {0,0,0}, res_tot[3] = {0,0,0}, accept_tot=0, cons_tot=0, ntsk_tot=0;
+  int mep_tot[3] = {0,0,0}, evt_tot[3] = {0,0,0}, res_tot[3] = {0,0,0}, ovl_tot[3] = {0,0,0};
+  int accept_tot=0, cons_tot=0, ntsk_tot=0;
 
-  disp->draw_line_reverse("           - MBM -     ------- MEP ---------     ----------- EVENT --------------     ----- RESULT/SEND ---    -- Since last Stop --");
+  disp->draw_line_reverse("           - MBM -     ----- Overflow ------     ----------- Events -------------     -------- Send -------    -- Since last Stop --");
   disp->draw_line_bold(   " Node      Clients     Produced Slots  Space     Produced   Consumed Slots  Space     Produced Slots  Space    Sent to Storage");
 
   for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
-    int mep_info[3] = {0,0,0}, evt_info[3] = {0,0,0}, res_info[3] = {0,0,0}, out=0, consumed=0, ntsk=0;
+    int mep_info[3] = {0,0,0}, evt_info[3] = {0,0,0}, res_info[3] = {0,0,0}, ovl_info[3] = {0,0,0};
+    int out=0, consumed=0, ntsk=0;
     const Buffers& buffs = *(*n).buffers();
     for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
       char b = (*ib).name[0];
@@ -139,6 +135,7 @@ void SubfarmDisplay::showNodes(const Nodeset& ns)  {
       case SND_BUFFER: getBuffInfo((*ib).ctrl, res_info, res_tot); break;
       case MEP_BUFFER: getBuffInfo((*ib).ctrl, mep_info, mep_tot); break;
       case EVT_BUFFER: getBuffInfo((*ib).ctrl, evt_info, evt_tot); break;
+      case OVL_BUFFER: getBuffInfo((*ib).ctrl, ovl_info, ovl_tot); break;
       default:                                                     break;
       }
       for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
@@ -166,14 +163,16 @@ void SubfarmDisplay::showNodes(const Nodeset& ns)  {
       }
     }
     ntsk_tot += ntsk;
-    disp->draw_line_normal(fmt, (*n).name, ntsk, mep_info[0], mep_info[1], mep_info[2],
-                           evt_info[0], consumed, evt_info[1], evt_info[2],
-                           res_info[0], res_info[1], res_info[2], out);
+    const int *cnt = mep_info[0]==0 ? ovl_info : mep_info;
+    disp->draw_line_normal(fmt, (*n).name, ntsk, cnt[0], cnt[1], cnt[2],
+			   evt_info[0], consumed, evt_info[1], evt_info[2],
+			   res_info[0], res_info[1], res_info[2], out);
   }
   disp->draw_line_normal("");
-  disp->draw_line_bold(fmt, "Total:", ntsk_tot, mep_tot[0], mep_tot[1], mep_tot[2],
-                       evt_tot[0], cons_tot, evt_tot[1], evt_tot[2],
-                       res_tot[0], res_tot[1], res_tot[2], accept_tot);
+  const int *cnt = mep_tot[0]==0 ? ovl_tot : mep_tot;
+  disp->draw_line_bold(fmt, "Total:", ntsk_tot, cnt[0], cnt[1], cnt[2],
+		       evt_tot[0], cons_tot, evt_tot[1], evt_tot[2],
+		       res_tot[0], res_tot[1], res_tot[2], accept_tot);
 }
 
 /// Show the event builder information
@@ -184,11 +183,9 @@ void SubfarmDisplay::showTasks(const Nodeset& ns) {
   int nTsk = 0;
   int eb_width = m_area.width/3;
 
-  //m_builders->draw_line_reverse (" EVENTBUILDER   Produced [%] MEP       ");
-  m_builders->draw_line_reverse (" EVENTBUILDER 1/Prod MEP    2/Prod MEP    3/Prod MEP       ");
-  //m_holders->draw_line_reverse(" HOLDER          Free                  ");
-  m_holders->draw_line_reverse  (" PRODUCER        Seen   Produced MEP EVT");
-  m_senders->draw_line_reverse  (" SENDER           Sent Pend RES         ");
+  m_builders->draw_line_reverse (" EVENTBUILDER 1/Prod Events 2/Prod Events 3/Prod Events    ");
+  m_senders->draw_line_reverse  (" SENDER           Sent Pend Send        ");
+  m_holders->draw_line_reverse  (" OVERFLOW        Seen   Produced Overflow"); // Was: PRODUCERS
 
   if ( m_moores ) {
     ::memset(txt,' ',sizeof(txt));
@@ -210,15 +207,13 @@ void SubfarmDisplay::showTasks(const Nodeset& ns) {
       char b = (*ib).name[0];
       for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
         Clients::const_reference cl = (*ic);
-        if(strncmp(cl.name,"MEPRx",5)==0 && b == MEP_BUFFER ) {
+        if(strncmp(cl.name,"MEPRx",5)==0 && (b == MEP_BUFFER||b == EVT_BUFFER) ) {
           string nn = (*n).name;
           nn += '_';
           nn += cl.name+5;
           builders[cl.name+5].in = c.tot_produced;
           builders[cl.name+5].out = cl.events;
           builders[cl.name+5].st_out = cl.state;
-          //float perc = c.tot_produced>0 ? 100*float(cl.events)/float(c.tot_produced) : 0;
-          //m_builders->draw_line_normal(" %-12s %12d %3.0f %3s",nn.c_str(),cl.events,perc,sstat[size_t(cl.state)]);
           continue;
         }
         const char* p = strchr(cl.name,'_');
@@ -235,30 +230,31 @@ void SubfarmDisplay::showTasks(const Nodeset& ns) {
             }
             break;
           case 'E':
-            if ( b==MEP_BUFFER && strncmp(p,"EvtHolder",9)==0) {
+	  case OVLWR_TASK:
+            if ( m_holders && b==MEP_BUFFER && strncmp(p,"EvtHolder",9)==0) {
               // m_holders->draw_line_normal( " %-10s %9d        ",nam.c_str(),cl.events);
             }
-            else if ( b==MEP_BUFFER && strncmp(p,"EvtProd",7)==0) {
-              prod_name = nam;
-              prod.in += cl.events;
-              prod.st_in = cl.state;
+            else if ( b==OVL_BUFFER ) {
+              prod_name    = nam;
+              prod.in     += cl.events;
+              prod.st_in   = cl.state;
             }
             else if ( b==EVT_BUFFER && strncmp(p,"EvtProd",7)==0) {
-              prod_name = nam;
-              prod.out += cl.events;
-              prod.st_out = cl.state;
+              prod_name    = nam;
+              prod.out    += cl.events;
+              prod.st_out  = cl.state;
             }
             break;
           case MOORE_TASK:
             if ( m_moores ) {
               //  Normal  and        TAE event processing
               if ( b==EVT_BUFFER || b==MEP_BUFFER )  {
-                moores[nam].in += cl.events;
-                moores[nam].st_in = cl.state;
+                moores[nam].in     += cl.events;
+                moores[nam].st_in   = cl.state;
               }
               else if ( b==RES_BUFFER || b==SND_BUFFER ) {
-                moores[nam].out += cl.events;
-                moores[nam].st_out = cl.state;
+                moores[nam].out    += cl.events;
+                moores[nam].st_out  = cl.state;
               }
             }
             break;

@@ -143,8 +143,10 @@ void TorrentSubfarmDisplay::showNodes(const SubfarmTorrentStatus& sf)   {
     const char* file = 0;
     const char* msg  = 0;
     const SessionStatus& s = *i;
+    string nam = s.name;
+    if ( strncmp(s.name,"store",5) == 0 ) nam = s.name+5;
     ::snprintf(text1,sizeof(text1),"%-10s%4d%8d%8d%8d%8.0f%10.0f%8.0f%9.0f ",
-	       s.name,s.num_peers,s.blocks_written,s.blocks_read,s.blocks_read_hit,
+	       nam.c_str(),s.num_peers,s.blocks_written,s.blocks_read,s.blocks_read_hit,
 	       float(s.total_upload)/1024.f, float(s.total_download)/1024.0f,
 	       float(s.upload_rate)/1024.f,float(s.download_rate)/1024.f);
     ::sprintf(text2,"No torrent information availible for this node.");

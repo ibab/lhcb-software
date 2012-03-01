@@ -45,6 +45,7 @@ namespace ROMon {
     BUILDER_TASK =                'M',
     SENDER_TASK  =                'D',
     MOORE_TASK   =                'G',
+    OVLWR_TASK   =                'O',
 
     REC_RECEIVER_TASK =           'R',
     REC_SENDER_TASK =             'S',
@@ -56,6 +57,7 @@ namespace ROMon {
     SND_BUFFER =                  'S',
     INPUT_BUFFER =                'I',
     OUTPUT_BUFFER =               'O',
+    OVL_BUFFER =                  'O',
 
     TASK_FSM_STATE_DEAD =         'D',
     TASK_FSM_STATE_NOT_READY =    'N',

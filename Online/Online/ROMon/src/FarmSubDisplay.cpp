@@ -13,9 +13,11 @@ namespace ROMon {
     int               m_evtBuilt;
     int               m_evtMoore;
     int               m_evtSent;
+    int               m_evtOvl;
     int               m_totBuilt;
     int               m_totMoore;
     int               m_totSent;
+    int               m_totOvl;
     int               m_numUpdate;
     int               m_height;
     bool              m_hasProblems;
@@ -85,9 +87,10 @@ FarmSubDisplay::FarmSubDisplay(InternalDisplay* parent, const string& title, int
 : InternalDisplay(parent, title)
 {
   m_numUpdate = 0;
-  m_evtSent  = m_totSent = 0;
-  m_evtMoore = m_totMoore = 0;
-  m_evtBuilt = m_totBuilt = 0;
+  m_evtOvl    = m_totOvl = 0;
+  m_evtSent   = m_totSent = 0;
+  m_evtMoore  = m_totMoore = 0;
+  m_evtBuilt  = m_totBuilt = 0;
   m_lastUpdate = time(0);
   m_height = height;
   ::scrc_create_display(&m_display,height,48,NORMAL,ON,m_title.c_str());
@@ -108,7 +111,7 @@ void FarmSubDisplay::init(bool bad) {
   int col = bad ? INVERSE|RED : NORMAL;
   char txt[128];
   ::sprintf(txt,"%-4s%9s%5s%11s%6s%9s%4s",
-            "","MEP","Sl","EVENT","Sl","SEND","Sl");
+            "","Overflow","Sl","Events","Sl","Send","Sl");
   ::scrc_put_chars(m_display,txt,col|INVERSE,1,1,1);
   //::scrc_put_chars(m_display,txt,col|BOLD,1,1,1);
   ::scrc_put_chars(m_display," ",col,2,1,1);
@@ -189,6 +192,7 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
   float fspace[4]    = {FLT_max,FLT_max,FLT_max,FLT_max};
   float fslots[4]    = {FLT_max,FLT_max,FLT_max,FLT_max};
   float fsl, fsp;
+  int evt_ovl        = INT_max;
   int evt_sent       = INT_max;
   int evt_moore      = INT_max;
   int evt_built      = INT_max;
@@ -201,6 +205,7 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
   for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
     const Buffers& buffs = *(*n).buffers();
     numNodes++;
+    int node_evt_ovl = 0;
     int node_evt_mep = 0;
     int node_evt_sent = INT_max;
     int node_evt_moore = INT_max;
@@ -212,8 +217,9 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
       switch(b) {
       case MEP_BUFFER:        idx = 0; break;
       case EVT_BUFFER:        idx = 1; break;
-      case RES_BUFFER:        idx = 2; break;
-      case SND_BUFFER:        idx = 3; break;
+      case RES_BUFFER:
+      case SND_BUFFER:        idx = 2; break;
+      case OVL_BUFFER:        idx = 3; break;
       default:                continue;
       }
       inuse = true;
@@ -237,19 +243,27 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
         const char* p = _procNam((*ic).name);
         switch(*p) {
         case BUILDER_TASK:
-          if( b == MEP_BUFFER ) {
+          //  MEP schema         DeferHLT schema
+          if( b == MEP_BUFFER || b == EVT_BUFFER ) {
             node_evt_mep += (*ic).events;
           }
           break;
         case SENDER_TASK:
+	  //  Orig.MEP schema    MEP or DeferHLT schema
           if( b == RES_BUFFER || b == SND_BUFFER )  {
             node_evt_sent = min(node_evt_sent,(*ic).events);
           }
           break;
         case MOORE_TASK:
           //  Normal  and        TAE event processing
+	  //  MEP or DeferHLT    Orig.MEP schmema
           if( b == EVT_BUFFER || b == MEP_BUFFER )  {
             node_evt_moore = min(node_evt_moore,(*ic).events);
+          }
+          break;
+        case OVLWR_TASK:
+          if( b == OVL_BUFFER )  {
+            node_evt_ovl = min(node_evt_ovl,(*ic).events);
           }
           break;
         default:
@@ -257,6 +271,7 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
         }
       }
     }
+    evt_ovl   = min(evt_ovl,node_evt_ovl);
     evt_moore = min(evt_moore,node_evt_moore);
     evt_built = min(evt_built,node_evt_mep);
     evt_sent  = min(evt_sent,node_evt_sent);
@@ -274,33 +289,23 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
     m_lastUpdate = t1;
   }
   m_hasProblems = true;
-  // If Result buffer is not in use
-  if ( buf_clients[3] != 0 && buf_clients[2] == 0 )  {
-    buf_clients[2] = buf_clients[3];
-    fspace[2]      = fspace[3];
-    fslots[2]      = fslots[3];
-    min_space[2]   = min_space[3];
-    min_slots[2]   = min_slots[3];
-    min_prod[2]    = min_prod[3];
-    evt_prod[2]    = evt_prod[3];
-    free_space[2]  = free_space[3];
-    free_slots[2]  = free_slots[3];
-  }
 
-  bool slots_min = fslots[0] < SLOTS_MIN || fslots[1] < SLOTS_MIN || fslots[2] < SLOTS_MIN;
-  bool space_min = fspace[0] < SPACE_MIN || fspace[1] < SPACE_MIN || fspace[2] < SPACE_MIN;
+  bool slots_min = fslots[0] < SLOTS_MIN || fslots[1] < SLOTS_MIN || 
+    fslots[2] < SLOTS_MIN || fslots[3] < SLOTS_MIN;
+  bool space_min = fspace[0] < SPACE_MIN || fspace[1] < SPACE_MIN || 
+    fspace[2] < SPACE_MIN || fspace[3] < SPACE_MIN;
 
-  if ( evt_prod[0] != 0 )
+  if ( evt_prod[0] || evt_prod[1] )
     ::sprintf(txt,"%9d%5d%11d%6d%9d%5d",
-              evt_prod[0],free_slots[0],
+              evt_prod[3],free_slots[3],
               evt_prod[1],free_slots[1],
               evt_prod[2],free_slots[2]);
   else
     ::sprintf(txt,"%9s%5s%10s%7s%9s%5s","--","--","--","--","--","--");
   ::scrc_put_chars(m_display,txt,NORMAL,2,5,1);
-  if ( min_prod[0] != INT_max )
+  if ( min_prod[0] != INT_max || min_prod[1] != INT_max )
     ::sprintf(txt,"%9d%5d%11d%6d%9d%5d",
-              min_prod[0],min_slots[0],
+              min_prod[3],min_slots[3],
               min_prod[1],min_slots[1],
               min_prod[2],min_slots[2]);
   else
@@ -351,6 +356,7 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
     if ( fslots[0] < SLOTS_MIN ) ::strcat(txt,"MEP ");
     if ( fslots[1] < SLOTS_MIN ) ::strcat(txt,"EVENT ");
     if ( fslots[2] < SLOTS_MIN ) ::strcat(txt,"RES/SEND ");
+    if ( fslots[3] < SLOTS_MIN ) ::strcat(txt,"OVL ");
     ::sprintf(text,"[%d nodes]",nbad);
     ::strcat(txt,text);
     // We have 11 slow nodes in a farm: if these are full, this is no error
@@ -363,6 +369,7 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
     if ( fspace[0] < SPACE_MIN ) ::strcat(txt,"MEP ");
     if ( fspace[1] < SPACE_MIN ) ::strcat(txt,"EVENT ");
     if ( fspace[2] < SPACE_MIN ) ::strcat(txt,"RES/SEND ");
+    if ( fspace[3] < SPACE_MIN ) ::strcat(txt,"OVL ");
     ::sprintf(text,"[%d nodes]",nbad);
     ::strcat(txt,text);
     // We have 11 slow nodes in a farm: if these are full, this is no error
@@ -380,9 +387,11 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
   m_evtBuilt  = evt_built;
   m_evtMoore  = evt_moore;
   m_evtSent   = evt_sent;
+  m_evtOvl    = evt_ovl;
   m_totBuilt  = evt_prod[0];
   m_totMoore  = evt_prod[1];
   m_totSent   = evt_prod[2];
+  m_totOvl    = evt_prod[3];
 
   IocSensor::instance().send(m_parent,CMD_CHECK,this);
 }
