@@ -399,7 +399,6 @@ std::ostream& AlignmentElement::fillStream(std::ostream& lhs) const {
   std::vector<double> aft(3,0.0), afr(3,0.0);
   DetDesc::getZYXTransformParameters(alignmentFrame(),aft,afr);//, it->pivot());
 
-  lhs << std::endl;
   lhs << std::left << std::setw(80u) << std::setfill('*') << "" << std::endl;
   lhs << "* Alignable: " << name() << "\n" 
       << "* Element  : " << description() << std::endl
@@ -426,8 +425,6 @@ std::ostream& AlignmentElement::fillStream(std::ostream& lhs) const {
       lhs << (*idau)->index() << " " ;
     lhs << std::endl;
   }
-  lhs << std::left << std::setw(80u) << std::setfill('*') << "" << std::endl;
-
   return lhs;
 }
 
