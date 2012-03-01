@@ -2,7 +2,7 @@
 
 # first parse all options
 from optparse import OptionParser
-parser = OptionParser(usage = "%prog [options] <derivative_file> <opts_file> <more_opt_files> ")
+parser = OptionParser(usage = "%prog [options] <derivative_files> <opts_file.py>")
 parser.add_option("-d", "--aligndb", action = 'append', dest="aligndb",help="path to file with alignment database layer")
 (opts, args) = parser.parse_args()
 
@@ -10,10 +10,22 @@ parser.add_option("-d", "--aligndb", action = 'append', dest="aligndb",help="pat
 # having a list with files and python commands, with an if statements that
 # decides to do importOptions or exec)
 
-derivativefile = args.pop(0)
-print 'derivativefile: ', derivativefile
-print 'optionfiles: ', args
-options = [ "importOptions(%r)" % f for f in args ]
+import os
+optionfiles = []
+derivativefiles = []
+for f in args:
+   if not os.path.exists( f ):
+      print "cannot find input file '", f, "'"
+      exit()
+   else:
+      if f.find(".py")>0:
+         optionfiles.append(f)
+      else:
+         derivativefiles.append( f )
+
+print 'derivativefiles: ', derivativefiles
+print 'optionfiles: ', optionfiles
+options = [ "importOptions(%r)" % f for f in optionfiles ]
 
 # "execute" the configuration script generated (if any)
 from Gaudi.Configuration import logging
@@ -28,7 +40,7 @@ if options:
 # let the algorithm update in finalize and set the input file
 from Configurables import TAlignment, AlignAlgorithm
 TAlignment().UpdateInFinalize = True
-AlignAlgorithm('Alignment').InputDataFiles = [ derivativefile ]
+AlignAlgorithm('Alignment').InputDataFiles = derivativefiles
 AlignAlgorithm('Alignment').OutputDataFile = ''
 
 # set the database layer
