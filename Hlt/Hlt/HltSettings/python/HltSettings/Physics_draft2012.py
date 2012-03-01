@@ -108,7 +108,7 @@ class Physics_draft2012( object ):
                                                , 'DiMuonLowMass_P'          : 6000
                                                , 'DiMuonLowMass_PT'         :  500
                                                , 'DiMuonLowMass_TrChi2'     :    4
-                                               , 'DiMuonLowMass_M'          : 1000
+                                               , 'DiMuonLowMass_M'          :    0
                                                , 'DiMuonLowMass_IPChi2'     :    3
                                                , 'DiMuonLowMass_GEC'        : 'Loose'
                                                , 'DiMuonHighMass_VxDOCA'    :  0.2
@@ -157,8 +157,8 @@ class Physics_draft2012( object ):
                                                                       } } 
                        }
 
-        from Muons_July2011 import Muons_July2011
-        __update_conf__(thresholds,  Muons_July2011().Thresholds() )
+        from Muons_draft2012 import Muons_draft2012
+        __update_conf__(thresholds,  Muons_draft2012().Thresholds() )
 
         from Electrons_July2011 import Electrons_July2011
         __update_conf__(thresholds,  Electrons_July2011().Thresholds() )
@@ -191,8 +191,8 @@ class Physics_draft2012( object ):
         from Express_Hlt2_Aug11 import Express_Hlt2_Aug11
         hlt2.extend( Express_Hlt2_Aug11().ActiveHlt2Lines() )
 
-        from Muons_July2011 import Muons_July2011
-        hlt2.extend( Muons_July2011().ActiveHlt2Lines() )
+        from Muons_draft2012 import Muons_draft2012
+        hlt2.extend( Muons_draft2012().ActiveHlt2Lines() )
 
         from Electrons_July2011 import Electrons_July2011
         hlt2.extend( Electrons_July2011().ActiveHlt2Lines() )

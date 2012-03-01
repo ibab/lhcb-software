@@ -4,6 +4,11 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-03-01 - Johannes Albrecht
+ - added Muons_draft2012 as copy of Muons_July2011
+   * prescales of HLT2 single muon and dimuon jpsi removed
+   * mass cuts of HLT1 and 2 low mass lines removed
+
 !========================= HltSettings v5r16 2012-02-29 =========================
  - EvH tagged for release
 
