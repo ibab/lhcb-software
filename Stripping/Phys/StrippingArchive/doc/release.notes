@@ -4,6 +4,11 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingArchive v1r8 2012-03-01 =========================
+
+! 2012-03-01 - Anton Poluektov 
+  - Create PreStripping18 archive
+
 ! 2012-03-01 - Anton Poluektov 
   - Modify __init__ to survive if it cannot load old stripping 
     due to DaVinci incompatibility
