@@ -4,6 +4,7 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
+!========================= HltDisplVertices v3r5 2012-03-01 =========================
 ! 2012-03-01 - Victor Coco
  - fix warning for x86_64-slc5-gcc46-opt in Hlt2SelDV.cpp (remove unused variables)
 
