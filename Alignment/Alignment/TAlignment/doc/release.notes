@@ -3,6 +3,10 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 
+! 2012-03-01 - Wouter Hulsbergen
+- add functionality to delay initialization of alignment frame till first event
+- add missing include in TrackResidualTool
+
 !========================= TAlignment v5r6 2011-12-01 =========================
 ! 2011-09-20 - Maurizio Martinelli
 - included motherwidth in MassConstraint structure (VertexResidualTool)
