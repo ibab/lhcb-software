@@ -7,5 +7,4 @@ export DEBUGGING=true
 
 export TELL1BOARDS=/group/online/dataflow/options/${PARTNAME}/${PARTNAME}_Tell1Boards.opts
 
-#${CLASS1_TASK} -opt=${HLTOPTS}/MEPRxSvc_Calib.opts
 exec -a ${UTGID} ${gaudi_exe} -tasktype=LHCb::Class2Task -main=/group/online/dataflow/templates/options/Main.opts -opt=${HLTOPTS}/MEPRxSvc_Calib.opts

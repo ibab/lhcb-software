@@ -31,8 +31,6 @@ CheckpointSvc.PrintLevel             = 3;
 CheckpointSvc.OutputLevel            = 2;
 
 EventSelector.REQ1                   = "EvType=1;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0";
-EventSelector.REQ2                   = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0";
-EventSelector.REQ3                   = "EvType=3;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0";
 
 //ApplicationMgr.TopAlg                = { "StoreExplorerAlg" };
 //StoreExplorerAlg.Load                = 1;
@@ -43,9 +41,10 @@ ApplicationMgr.TopAlg                = { "Sequencer/SendSequence" };
 SendSequence.Members                 = { "LHCb::DelaySleepAlg/Delay",
 					 "LHCb::OdinPrescaler/Prescaler", 
 					 "LHCb::RawEvent2MBMMergerAlg/Merger"};
-// Delay time in millisecs
+
+// Delay time in millisecs and in musecs
 Delay.DelayTime                      = @OnlineEnv.passThroughDelay;
-Delay.MicroDelayTime                 = 0;    // Delay time in musecs
+Delay.MicroDelayTime                 = 0;
 
 Prescaler.AcceptRate                 = @OnlineEnv.AcceptRate;
 Prescaler.OutputLevel                = @OnlineEnv.OutputLevel;
@@ -57,3 +56,4 @@ Merger.InputDataType                 = 1;
 Merger.BankLocation                  = "/Event/DAQ/RawEvent";
 Merger.RoutingBits                   = 1;
 Merger.Silent                        = False;
+Merger.TriggerMask                   = {0,4,0};

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd /group/rich/sw/cmtuser/Panoptes_v2r13/Rich/Panoptes/cmt
+cd /group/rich/sw/cmtuser/Panoptes_v4r0/Rich/Panoptes/cmt
 . ./setup.vars_x86_64-slc5-gcc43-opt
 
 #

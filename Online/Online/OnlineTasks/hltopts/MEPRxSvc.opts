@@ -18,7 +18,7 @@ MEPManager.PartitionID               = @OnlineEnv.PartitionID;
 MEPManager.Buffers                   = { "Events" };
 
 Runable.OutputLevel       = 1;
-Runable.MEPBuffers        = 1;           // concurrently built events
+Runable.MEPBuffers        = 3;           // concurrently built events
 Runable.InitialMEPReqs    = 3;           // how many MEPs to send initially 
 Runable.maxMsForGetSpace  = 100;         // milliseconds to wait to get buffer memory from BM
 Runable.partitionID       = @OnlineEnv.PartitionID;
@@ -33,7 +33,7 @@ Runable.createODINMEP     = false;       // do not create a fake ODIN MEP (only 
 Runable.resetCountersOnRunChange = true; // reset all counters and histograms when a run-change is seen
 Runable.nameLiveBuf       = "Events";
 Runable.nameOverflowBuf   = "Overflow";
-Runable.overflow          = @OnlineEnv.DeferHLT;        //  use overflow 
+Runable.overflow          = @OnlineEnv.DeferHLT; 
 #include "$HLTOPTS/EBSetup.opts"
 HistogramPersistencySvc.OutputLevel  = 5;
 MonitorSvc.CounterUpdateInterval     = 5;
