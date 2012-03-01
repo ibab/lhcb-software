@@ -134,7 +134,7 @@ StatusCode AlignAlgorithm::initialize() {
   sc = m_vertextrackselector.retrieve() ;
   if ( sc.isFailure() ) return sc;
 
-  /// Get range  detector elements
+    /// Get range  detector elements
   const Elements& elements = m_align->elements();
   
   if (printDebug()) {
@@ -151,24 +151,15 @@ StatusCode AlignAlgorithm::initialize() {
     }
   }
   
-  LHCb::AlignSummaryData* m_summaryData = new LHCb::AlignSummaryData(elements.size(),m_align->initTime()) ;
+  /// create the summary data and register in the TES
+  LHCb::AlignSummaryData* m_summaryData = new LHCb::AlignSummaryData(0) ;
   IDataProviderSvc* datasvc = svc<IDataProviderSvc>(m_alignSummaryDataSvc,true) ;
   sc = datasvc->registerObject(m_alignSummaryLocation,m_summaryData) ;
   if( !sc.isSuccess() ) {
     error() << "cannot register object. statuscode = "
             << sc << endreq ;
   }
-
   m_equations = &(m_summaryData->equations()) ;
-  m_align->initEquations( *m_equations ) ;
-  for(std::vector<std::string>::const_iterator ifile = m_inputDataFileNames.begin() ; 
-      ifile != m_inputDataFileNames.end(); ++ifile) {
-    Al::Equations tmp(0) ;
-    tmp.readFromFile( (*ifile).c_str() ) ;
-    m_equations->add( tmp ) ; 
-    warning() << "Adding derivatives from input file: " << *ifile << " " << tmp.numHits() << " "
-	      << tmp.totalChiSquare() << " " << m_equations->totalChiSquare() << endreq ;
-  }
 
   /// Get projector selector tool
   m_projSelector = tool<ITrackProjectorSelector>(m_projSelectorName, "Projector", this);
@@ -209,6 +200,17 @@ StatusCode AlignAlgorithm::execute() {
 
   // Reset histograms if required
   if(m_resetHistos) resetHistos() ;
+
+  // Make sure that the alignment frames are properly initialized on the first event
+  if( m_equations->initTime() != m_align->initTime() ) {
+    error() << "Mismatch in init time: " << m_equations->initTime() << " " << m_align->initTime() << ". Aborting."
+	    << endreq ;
+    return StatusCode::FAILURE ;
+  }
+  if( m_align->initTime() == 0 ) {
+    m_align->initAlignmentFrame() ;
+    m_align->initEquations( *m_equations ) ;
+  }
 
   // Get tracks. Copy them into a vector, because that's what we need for dealing with vertices.
   LHCb::Track::Range tracks = get<LHCb::Track::Range>(m_tracksLocation);
@@ -523,13 +525,25 @@ void AlignAlgorithm::update()
   if(m_equations) {
     info() << "Total number of tracks: " << m_nTracks << endreq ;
     info() << "Number of covariance calculation failures: " << m_covFailure << endreq ;
+    if( !m_inputDataFileNames.empty() ) {
+      for(std::vector<std::string>::const_iterator ifile = m_inputDataFileNames.begin() ; 
+	  ifile != m_inputDataFileNames.end(); ++ifile) {
+	Al::Equations tmp(0) ;
+	tmp.readFromFile( (*ifile).c_str() ) ;
+	m_equations->add( tmp ) ; 
+	warning() << "Adding derivatives from input file: " << *ifile << " " << tmp.numHits() << " "
+		  << tmp.totalChiSquare() << " " << m_equations->totalChiSquare() << endreq ;
+      }
+      if(m_align->initTime() == 0 )
+	m_align->initAlignmentFrame( m_equations->initTime() ) ;
+    }
     update(*m_equations) ;
   }
 }
 
 void AlignAlgorithm::update(const Al::Equations& equations)
 {
-  if(!m_outputDataFileName.empty()) 
+  if(!m_outputDataFileName.empty())
     m_equations->writeToFile( m_outputDataFileName.c_str() ) ;
   m_updatetool->process(equations,m_iteration,m_nIterations).ignore() ;
 }
