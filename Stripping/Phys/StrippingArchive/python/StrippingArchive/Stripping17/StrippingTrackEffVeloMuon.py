@@ -35,7 +35,7 @@ from TrackFitter.ConfiguredFitters import ConfiguredFit
 from Configurables import TrackEventCloneKiller,VeloMuonBuilder
 from Configurables import TrackEventFitter, TrackMasterFitter
 from Configurables import TrackKalmanFilter, TrackMasterExtrapolator
-from TrackFitter.ConfiguredFitters import ConfiguredFastFitter
+#from TrackFitter.ConfiguredFitters import ConfiguredFastFitter
 #from Configurables import TrackCloneFinder
 from Configurables import DecodeVeloRawBuffer
 

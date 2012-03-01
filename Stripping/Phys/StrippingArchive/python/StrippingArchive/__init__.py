@@ -6,17 +6,20 @@ All line builders available via function lineBuilders(stripping) in StrippingArc
 __author__ = 'Rob Lambert'
 __all__ = ['strippingArchive', 'strippingDescription']
 
-#import known strippings
-import Stripping13
-import Stripping14
-import Stripping15
-import Stripping16
-import Stripping17
-import Stripping17b 
+# List of known strippings
+_known_strippings = [
+  "Stripping13", 
+  "Stripping14", 
+  "Stripping15", 
+  "Stripping16", 
+  "Stripping17", 
+  "Stripping17b", 
+  "PreStripping18"
+]
 
 #give a dictionary of strippings which use the same line builders
 _duplicate_strippings={ "Stripping13b"        : "Stripping13",
-                        "Stripping13Calib"        : "Stripping13",
+                        "Stripping13Calib"    : "Stripping13",
                         "Stripping1Point4Tev" : "Stripping13" }
 
 
@@ -29,17 +32,29 @@ _stripping_help={"Stripping13"  : "2011 data taking, processing during the first
                  "Stripping15" : "2011 data processing for data in 2011 taken after the June technical stop",
                  "Stripping16" : "2011 data processing for data in 2011 taken after the July technical stop, many CPU improvements",
                  "Stripping17" : "2011 data reprocessing for all data in 2011, reprocessed at the end of 2011, many bandwidth improvements",
-                 "Stripping17b": "2011 data restripping for all data in 2011, DiMuon and Semileptonic streams replace Stripping17, the rest is incremental"
+                 "Stripping17b": "2011 data restripping for all data in 2011, DiMuon and Semileptonic streams replace Stripping17, the rest is incremental", 
+                 "PreStripping18": "Test of stripping selections for 2012 data taking, using a part of 2011 sample. "
                  }
+
+_strippingKeys = []
+
+#import known strippings
+for x in _known_strippings : 
+    module_name = __name__ + "." + x
+    print "Trying to import module " + module_name
+    try : 
+        __import__(module_name)
+    except : 
+	print module_name, " cannot be loaded with this version of DaVinci"
+    else : 
+	_strippingKeys.append(x)
+
 
 #compile dictionary of all known strippings
 from sys import modules as _modules
 _this = _modules[__name__]
 
 _strippings={}
-
-_strippingKeys = filter ( lambda x : x[:9]=='Stripping',
-                          locals().keys())
 
 for _k in _strippingKeys:
     _strippings[_k] = getattr(_this, _k)
@@ -48,9 +63,10 @@ for _k in _strippingKeys:
 for _k in _duplicate_strippings:
     if _k in _strippingKeys:
         raise KeyError, _k+' already defined as a StippingArchive. check _duplicate_strippings'
-    if _duplicate_strippings[_k] not in _strippingKeys:
+    if _duplicate_strippings[_k] not in _known_strippings:
         raise KeyError, _duplicate_strippings[_k]+' is not defined as a StippingArchive. check _duplicate_strippings'
-    _strippings[_k]=_strippings[_duplicate_strippings[_k]]
+    if _duplicate_strippings[_k] in _strippingKeys : 
+        _strippings[_k]=_strippings[_duplicate_strippings[_k]]
 
 #check the descriptions
 for _k in _strippings:
@@ -64,20 +80,16 @@ def strippingArchive(stripping=None):
     strippingArchive(stripping): return the line builder module for that stripping'''
     if stripping is None:
         return dict(_strippings)
-    if stripping not in _strippings:
-        if type(stripping) is not str:
-            raise TypeError, "Strippings must be strings, like Stripping15 for example"
-        #case insensitive for s
-        if stripping[0]=='s':
-            stripping='S'+stripping[1:]
-            if stripping in _strippings:
-                return _strippings[stripping]
-        elif stripping[0]=='S':
-            stripping='s'+stripping[1:]
-            if stripping in _strippings:
-                return _strippings[stripping]
-        raise KeyError, stripping + ' is not known, call strippingArchive() with no arguement to get the full dictionary'
-    return _strippings[stripping]
+        
+    if type(stripping) is not str:
+        raise TypeError, "Strippings must be strings, like Stripping15 for example"
+
+    for key in _strippings.keys() : 
+	if key.lower() == stripping.lower() : 
+	    return _strippings[key]
+
+    raise KeyError, stripping + ' is not known, call strippingArchive() with no arguement to get the full dictionary'
+    
 
 def strippingDescription(stripping=None):
     '''Return the description of the stripping pass
@@ -85,17 +97,12 @@ def strippingDescription(stripping=None):
     strippingDescription(stripping): return the description for that stripping'''
     if stripping is None:
         return dict(_stripping_help)
-    if stripping not in _strippings:
-        if type(stripping) is not str:
-            raise TypeError, "Strippings must be strings, like Stripping15 for example"
-        #case insensitive for s
-        if stripping[0]=='s':
-            stripping='S'+stripping[1:]
-            if stripping in _strippings:
-                return _stripping_help[stripping]
-        elif stripping[0]=='S':
-            stripping='s'+stripping[1:]
-            if stripping in _strippings:
-                return _stripping_help[stripping]
-        raise KeyError, stripping + ' is not known, call strippingDescription() with no arguement to get the full dictionary'
-    return _stripping_help[stripping]
+
+    if type(stripping) is not str:
+        raise TypeError, "Strippings must be strings, like Stripping15 for example"
+
+    for key in _strippings.keys() : 
+	if key.lower() == stripping.lower() : 
+	    return _stripping_help[key]
+
+    raise KeyError, stripping + ' is not known, call strippingDescription() with no arguement to get the full dictionary'

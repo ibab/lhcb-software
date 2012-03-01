@@ -4,6 +4,15 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-03-01 - Anton Poluektov 
+  - Modify __init__ to survive if it cannot load old stripping 
+    due to DaVinci incompatibility
+  - Allow use of stripping names not starting with "Stripping"
+    (like "PreStripping18")
+  - Trivial modification to Stripping17 and Stripping17b archives
+    (remove innecessary import) to allow running them with 
+    DaVinci above v30r0
+
 !========================= StrippingArchive v1r7 2012-02-28 =========================
 
 ! 2012-02-29 - Jibo He, Anton Poluektov 
