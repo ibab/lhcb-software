@@ -146,17 +146,19 @@ int DiagSolvTool::SolvDiag(AlSymMat& m_bigmatrix, AlVec& m_bigvector) {
     std::vector<double> sortedev(N) ;
     for(size_t ipar = 0; ipar<N; ++ipar) sortedev[ipar] = w[ipar] ;
     std::sort(sortedev.begin(),sortedev.end(),SortByAbs<double>()) ;
-    for(size_t ipar = 0; ipar<m_numberOfPrintedEigenvalues && ipar<N; ++ipar) 
-      logmessage << sortedev[ipar]*scale << (( ipar<N-1) ? "," : "]") ;
-    logmessage << std::endl ;
+    size_t maxpar = std::min(N,m_numberOfPrintedEigenvalues) ;
+    for(size_t ipar = 0; ipar<maxpar; ++ipar) 
+      logmessage << sortedev[ipar]*scale << (( ipar<maxpar-1) ? ", " : " ]") ;
 
     // find the smallest eigenvalue and dump the corresponding eigenvector
-    size_t imin(0) ;
-    for(size_t ipar = 1; ipar<N; ++ipar) 
-      if( std::abs(w[ipar]) < std::abs(w[imin]) ) imin = ipar ;
-    logmessage << "Eigenvector for smallest eigenvalue: [ " ;
-    for(size_t ipar = 0; ipar<N; ++ipar) logmessage << z[imin][ipar] << (( ipar<N-1) ? "," : "]") ;
-    
+    if( N<=m_numberOfPrintedEigenvalues ) {
+      logmessage << std::endl ;
+      size_t imin(0) ;
+      for(size_t ipar = 1; ipar<N; ++ipar) 
+	if( std::abs(w[ipar]) < std::abs(w[imin]) ) imin = ipar ;
+      logmessage << "Eigenvector for smallest eigenvalue: [ " ;
+      for(size_t ipar = 0; ipar<N; ++ipar) logmessage << z[imin][ipar] << (( ipar<N-1) ? ", " : " ]") ;
+    }
     info() << logmessage.str() << endmsg ;
   }
   
