@@ -5,6 +5,8 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiPhys v10r7 2012-03-01 =========================
+
 ! 2012-02-27 - Vanya Belyaev
  - Add SINFO and VSINFO : "smart info" functors
 
