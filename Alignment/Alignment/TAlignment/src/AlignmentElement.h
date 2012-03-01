@@ -231,18 +231,20 @@ public:
   // basically the nominal transform but then including delta's of
   // mothers.
   static Gaudi::Transform3D toGlobalMatrixMinusDelta( const DetectorElement& element) ;
+
+  // Initialize the alignment frame from the geometry. Should happen
+  // at the beginning of a job and after each alignment update.
+  void initAlignmentFrame();
   
 public:
   static std::string stripElementName(const std::string& name) ;
-
+  
 private:
   
   typedef std::vector<const DetectorElement*>::const_iterator ElemIter;
 
   void validDetectorElement(const DetectorElement* element) const;
 
-  void initAlignmentFrame();
-  
   double average(double n) const { return n/double(m_elements.size()); };
 
   static void addToElementsInTree( const IDetectorElement* const element, ElementContainer& elements ) ;
