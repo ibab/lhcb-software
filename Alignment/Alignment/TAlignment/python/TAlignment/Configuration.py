@@ -56,6 +56,7 @@ class TAlignment( LHCbConfigurableUser ):
         , "LogFile"                      : "alignlog.txt"              # log file for kalman type alignment
         , "Incident"                     : ""                          # name of handle to be executed on incident by incident server
         , "UpdateInFinalize"             : True
+        , "OutputDataFile"               : ""
         , "DatasetName"                  : "Unknown"
         }
 
@@ -206,6 +207,7 @@ class TAlignment( LHCbConfigurableUser ):
             alignAlg.Chi2Outlier                  = self.getProp( "Chi2Outlier" )
             alignAlg.HistoPrint                   = False
             alignAlg.UpdateInFinalize             = self.getProp( "UpdateInFinalize" )
+            alignAlg.OutputDataFile               = self.getProp( "OutputDataFile" )
             
             #print alignAlg
             # and also the update tool is in the toolsvc
