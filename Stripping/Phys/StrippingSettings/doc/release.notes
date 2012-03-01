@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-03-01 - Anton Poluektov 
+  - Update Semileptonic dictionary in StrippingDev to fix nightlies. 
+
 !========================= StrippingSettings v2r10 2012-02-28 ===================
 
 ! 2012-02-29 - Stefano Perazzini
