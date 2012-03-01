@@ -175,11 +175,11 @@ StatusCode Hlt2SelDV::initialize() {
     const IGeometryInfo* halflgeominfo = lefthalv->geometry();
     const IGeometryInfo* halfrgeominfo = righthalv->geometry();
     Gaudi::XYZPoint localorigin(0,0,0);
-    Gaudi::XYZPoint leftcenter = lefthalv->geometry()->toGlobal(localorigin);
-    Gaudi::XYZPoint rightcenter = righthalv->geometry()->toGlobal(localorigin);
-    if( msgLevel( MSG::DEBUG ) )
-      debug() <<"Velo global right half center "
-	      << rightcenter <<", left half center "<< lefthalv << endmsg;
+    //    Gaudi::XYZPoint leftcenter = lefthalv->geometry()->toGlobal(localorigin);
+    //Gaudi::XYZPoint rightcenter = righthalv->geometry()->toGlobal(localorigin);
+    //if( msgLevel( MSG::DEBUG ) )
+      //debug() <<"Velo global right half center "
+	    //  << rightcenter <<", left half center "<< lefthalv << endmsg;
     //matrix to transform to local velo frame
     m_toVeloRFrame = halfrgeominfo->toLocalMatrix() ;
     //m_toGlobalFrame = halfgeominfo->toGlobalMatrix();
@@ -217,10 +217,10 @@ StatusCode Hlt2SelDV::execute() {
 
   vector<int>  nboftracks;
   vector<double> chindof, px, py, pz, e, x, y, z, errx, erry, errz, sumpts,  indets,masses,minvd,rs,massCorrs,massCorrsIP,thetas;
-  int nPV(0);
-  int nPVSel(0);
+  //int nPV(0);
+  //int nPVSel(0);
   const RecVertex::Range PVs = this->primaryVertices();
-  nPV =PVs.size();
+  //nPV =PVs.size();
   //double tmp = 1000;
   std::vector<const RecVertex*> SelectedPVs; 
   for ( RecVertex::Range::const_iterator i = PVs.begin(); 
@@ -234,7 +234,7 @@ StatusCode Hlt2SelDV::execute() {
     if( !HasBackAndForwardTracks( pv ) ) continue;
     SelectedPVs.push_back(pv);
   }
-  nPVSel =SelectedPVs.size();
+  //nPVSel =SelectedPVs.size();
  
   if( msgLevel( MSG::DEBUG ) )
     debug()<<"--------Reconstructed Displ. Vertices --------------"<< endmsg;
@@ -304,7 +304,7 @@ StatusCode Hlt2SelDV::execute() {
       if ((p->endVertex()->position().z()-(*ipv)->position().z())<0.)continue;
       // Get BestIP...
       Gaudi::XYZPoint vertex = (*ipv)->position();
-      Gaudi::XYZPoint point = pos;
+      //Gaudi::XYZPoint point = pos;
       Gaudi::XYZVector direction (mom.Px(),mom.Py(),mom.Pz()); 
       Gaudi::XYZVector d = direction.unit();
       Gaudi::XYZVector ipV = d.Cross((pos-vertex).Cross(d));
@@ -631,11 +631,11 @@ void Hlt2SelDV::InitialiseGeoInfo(){
   const IGeometryInfo* halflgeominfo = lefthalv->geometry();
   const IGeometryInfo* halfrgeominfo = righthalv->geometry();
   Gaudi::XYZPoint localorigin(0,0,0);
-  Gaudi::XYZPoint leftcenter = lefthalv->geometry()->toGlobal(localorigin);
-  Gaudi::XYZPoint rightcenter = righthalv->geometry()->toGlobal(localorigin);
+  //Gaudi::XYZPoint leftcenter = lefthalv->geometry()->toGlobal(localorigin);
+  //Gaudi::XYZPoint rightcenter = righthalv->geometry()->toGlobal(localorigin);
   if( msgLevel( MSG::DEBUG ) )
-    debug() <<"Velo global right half center "
-	    << rightcenter <<", left half center "<< lefthalv << endmsg;
+    //debug() <<"Velo global right half center "
+	  //  << rightcenter <<", left half center "<< lefthalv << endmsg;
   //matrix to transform to local velo frame
   m_toVeloRFrame = halfrgeominfo->toLocalMatrix() ;
   //m_toGlobalFrame = halfgeominfo->toGlobalMatrix();
