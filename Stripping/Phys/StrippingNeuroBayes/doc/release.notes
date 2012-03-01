@@ -4,6 +4,7 @@ i!-----------------------------------------------------------------------------
 ! Purpose     : Stripping algorithms based on the NeuroBayes neural network
 !-----------------------------------------------------------------------------
 
+!======================= StrippingNeuroBayes v1r5 2012-03-01 =================
 ! 2012-02-24 - Chris Jones
  - use bestVertex not i_bestVertex
 
