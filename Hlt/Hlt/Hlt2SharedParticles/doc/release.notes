@@ -4,6 +4,7 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+!========================= Hlt2SharedParticles v6r6 2012-03-01 =========================
 ! 2012-03-1 - Albert Puig
  - Added Pi0 and Electrons with new calo reco.
 
