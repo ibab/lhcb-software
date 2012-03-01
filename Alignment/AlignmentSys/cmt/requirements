@@ -20,6 +20,7 @@ use TAlignment		v5r6	Alignment # Jan Amoraal, Johan Blouw, Marc Deissenroth, Flo
 use VeloAlignment	v4r10	Alignment # Marco Gersabeck
 use MisAligner		v1r5	Alignment # Johan Blouw, Manuel Schiller
 use Escher		v4r12	Alignment # Johan Blouw
+use CommonParticles     v8r6    Phys
 
 #=======================================================
 # LHCb Calibration packages
