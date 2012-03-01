@@ -6,7 +6,7 @@ __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
 from LHCbKernel.Configuration import *
-from GaudiConf.Configuration import *
+from Gaudi.Configuration import *
 from Configurables import HltConf
 from Configurables import GaudiSequencer
 from Configurables import LHCbApp, L0Conf, L0DUFromRawAlg
@@ -551,7 +551,7 @@ class Moore(LHCbConfigurableUser):
         #       Online vs. EvtMax, SkipEvents, DataType, ...
         #       Online requires UseTCK
 	# L0 decoding to look in a single place
-	L0Conf().RawEventLocations = ['DAQ/RawEvent'] 
+	#L0Conf().RawEventLocations = ['DAQ/RawEvent'] 
 	
 	L0DUFromRawAlg("L0DUFromRaw").Hlt1 = True
 	
