@@ -20,6 +20,8 @@ Purpose: LHCb reconstruction program
 
 - Changest to tests
   . brunel.brunel-mc11a-xdst now takes input file from svcClass=lhcbdisk
+  . Add a specific reference file brunel2011magdown.ref.dbg, to track changes
+    in untested StatusCodes
 
 </PRE><H1><A NAME=v43r0>2012-02-03 Brunel v42r0</A></H1><PRE>
 This version uses projects LCG 62a, Gaudi v23r0, LHCb v34r0, Lbcom v12r0,
