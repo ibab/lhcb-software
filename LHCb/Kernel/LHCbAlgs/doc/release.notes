@@ -4,6 +4,9 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2012-03-01 - Marco Cattaneo
+ - In LHCbApp, do not check DQ flags in case of Simulation 
+
 !========================= LHCbAlgs v2r48 2012-02-28 =========================
 ! 2012-02-24 - Marco Cattaneo
  - Change default DataType in LHCbApp() to 2012 (was 2009)

@@ -74,10 +74,12 @@ class LHCbApp(LHCbConfigurableUser):
         # Delegate handling to ApplicationMgr configurable
         self.setOtherProps(ApplicationMgr(),["EvtMax"])
 
-        ignoreDQ = self.getProp("IgnoreDQFlags")
-        if not ignoreDQ:
-            from Configurables import DQFilterSvc
-            ApplicationMgr().ExtSvc.append(DQFilterSvc())
+        isSim = self.getProp("Simulation")
+        if not isSim:
+            ignoreDQ = self.getProp("IgnoreDQFlags")
+            if not ignoreDQ:
+                from Configurables import DQFilterSvc
+                ApplicationMgr().ExtSvc.append(DQFilterSvc())
     
     def evtMax(self):
         if hasattr(ApplicationMgr(),"EvtMax") and not hasattr(self,"EvtMax"):
