@@ -11,6 +11,8 @@
 #include "Gaucho/IGauchoMonitorSvc.h"
 #include "AIDA/IHistogram.h"
 #include "Gaucho/MonCounter.h"
+#include "Trending/ITrendingTool.h"
+#include "Trending/ISimpleTrendWriter.h"
 
 DECLARE_SERVICE_FACTORY(MEPSvc)
 static std::string DetNames[] = {"TDet","VeloA","VeloC","TT","IT","OTA","OTC","RICH1","RICH2","ECal","HCal",
@@ -141,6 +143,27 @@ void MEPSvc::fillsums()//const std::string &cnam,MonMap *mmap)
     }
   }
 }
+StatusCode MEPSvc::initialize()
+{
+  StatusCode sc = PubSvc::initialize();
+  if (sc.isSuccess() && m_enableTrending && m_trender == 0)
+  {
+    SmartIF<IToolSvc> tools;
+    sc = serviceLocator()->service("ToolSvc", tools.pRef());
+    if ( !sc.isSuccess() ) {
+      ::lib_rtl_output(LIB_RTL_FATAL,"DIM(OvrSvc): Failed to access ToolsSvc.\n");
+      return sc;
+    }
+    sc = tools->retrieveTool("SimpleTrendWriter","OvrPubWriter",m_trender,this);
+    if (sc.isSuccess() && m_trender != 0)
+    {
+      std::string nnam("MEPRx_Trends");
+      m_trender->setPartitionAndName(this->m_PartitionName,nnam);
+      m_trender->setMaxTimeNoWrite(600);
+    }
+  }
+  return sc;
+}
 
 StatusCode MEPSvc::start()
 {
@@ -181,6 +204,22 @@ void MEPSvc::analyze(void *, int ,MonMap* mmap)
 //      printf("%s Total Data Rate %f\n",m_PartitionName.c_str(),m_DataRate);
     }
   }
+  if (m_enableTrending)
+  {
+    m_trender->startEvent();
+    m_trender->addEntry("TotalDataRate", (double)m_DataRate/1.0e09);
+    DetMap_T<double>::iterator ii;// = m_DetMap_rate.find(m_PartitionName/*"LHCb"*/);
+    for (ii=m_DetMap_rate.begin();ii!=m_DetMap_rate.end();ii++)
+    {
+      DetData_T<double>::iterator jj = ii->second.find("TLostMEP");
+      if (jj!=ii->second.end())
+      {
+        double d = (double)jj->second;
+        m_trender->addEntry(ii->first, d);
+      }
+    }
+    m_trender->saveEvent();
+  }
 }
 
 void MEPSvc::dump()
@@ -193,6 +232,8 @@ void MEPSvc::dump()
 MEPSvc::MEPSvc(const std::string& name, ISvcLocator* sl) : PubSvc(name,sl)
 {
   declareProperty("Tell1List",       m_tell1List);
+  declareProperty("TrendingOn",  m_enableTrending = true);
+  m_trender = 0;
 
 //  m_started     = false;
 //  m_SaveTimer   = 0;
