@@ -45,7 +45,7 @@ use OnlineTasks         v1r44    Online
 
 use Presenter           v3r2     Online
 use PyDIM               v2r11    Online
-use RawBankSizes        v2r13    Online
+use RawBankSizes        v2r14    Online
 use RootCnv             v1r13    Online
 use ROMon               v1r35    Online
 use ROLogger            v0r24    Online
