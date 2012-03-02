@@ -91,6 +91,7 @@ template <typename T> static void resetCounters(T& cnt,size_t len) {
 }
 using std::string;
 using std::hex;
+using std::dec;
 
 namespace LHCb  {
   struct MEPBuf : public MBM::Producer {
@@ -329,7 +330,7 @@ int MEPRx::analyzeMEP(MEPHdr *mep, uint &nfrag){
   m_parent->addIncompleteEvent();
   for (i = 0; i < m_nSrc; ++i) nmiss += (m_seen[i] ? 0 : 1); 
   if (nmiss <= m_nSrc/2) {
-    m_log << MSG::ERROR << "Run # " << m_runNumber << " - Incomplete Event #" << m_l0ID 
+    m_log << MSG::ERROR << std::dec << "Run # " << m_runNumber << " - Incomplete Event #" << m_l0ID 
     << "  No packet from: ";
     for (int i = 0; i < m_nSrc; ++i) 
       if (!m_seen[i]) { 
@@ -337,7 +338,7 @@ int MEPRx::analyzeMEP(MEPHdr *mep, uint &nfrag){
         m_parent->m_misPkt[i]++;
       }
   } else  {
-    m_log << MSG::ERROR << "Run # " << m_runNumber << " - Incomplete Event #" << m_l0ID 
+    m_log << MSG::ERROR << std::dec << "Run # " << m_runNumber << " - Incomplete Event #" << m_l0ID 
     << "  Only packets from: ";
     for (int i = 0; i < m_nSrc; ++i) 
       if (m_seen[i]) { 
