@@ -94,11 +94,11 @@ void HltRecChecker::checkTracks(const Hlt::TrackSelection& tracks) {
   
   fill( histo1D(std::string("Track Bs")), nbs, 1.);
   
-  bool tos = false;
-  bool tis = false;
+  //bool tos = false;
+  //bool tis = false;
   
-  if (nbs >0) tos = true;
-  if (tracks.size() > nbs) tis = true;
+  //if (nbs >0) tos = true;
+  //if (tracks.size() > nbs) tis = true;
 
   // int tostis = MCHlt::tostis(tos,tis);
   // fill( histo1D(Track TISTOS),tostis,1.);

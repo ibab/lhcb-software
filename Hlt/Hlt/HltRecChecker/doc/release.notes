@@ -3,6 +3,10 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Check reconstruction algorithms for HLT 
 !-----------------------------------------------------------------------------
+
+! 2012-03-02 - E. v. Herwijnen
+ - Remove unused variables tis&tos in HltRecChecker.cpp
+
 !========================== HltRecChecker v1r13 2010-08-26 ===================
 ! 2010-08-17 - G.Raven
  - remove now obsolete const_cast
