@@ -5,34 +5,14 @@
 package 	MisAligner
 version           v1r5
 
-
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
 branches 	src cmt doc options
 include_path	none
 
-#-- CMT and GaudiPolicy
-use GaudiPolicy v*
-
-
-
-#-- External libraries now taken from LCG, version defined by GaudiEnv
-use   GSL             v*     LCG_Interfaces
-use RELAX 		v* LCG_Interfaces          -no_auto_imports
-use Python             v*    LCG_Interfaces -no_auto_imports
-use HepMC              v*    LCG_Interfaces -no_auto_imports
-
 # From GAUDI project
-use GaudiSvc           v*                   -no_auto_imports
-use GaudiKernel        v*
-use GaudiPoolDb        v*                   -no_auto_imports
-use GaudiPython        v*                   -no_auto_imports
 use GaudiAlg		v*			-no_auto_imports
-
-# Databases
-use DDDB               v*   Det            -no_auto_imports
-use FieldMap           v*                 -no_auto_imports
 
 #-- LHCb libraries (from LHCB_v21r11)
 use   STDet           v*     Det
@@ -40,23 +20,15 @@ use   OTDet           v*     Det
 use   VeloDet         v*     Det
 use   MuonDet         v*     Det
 
-
-# From the Alignment project
-use AlignTrTools	v*	Alignment	-no_auto_imports
-
-#============================================================================
-# for the application
-#============================================================================
-apply_pattern application_path
 #============================================================================
 # Component library building rule
 #============================================================================
 library         MisAlignAlg      ../src/*.cpp -import=AIDA
+
 #============================================================================
 # define component library link options
 #============================================================================
 apply_pattern    component_library      library=MisAlignAlg
-
 
 # ========================= set macros ============================
 macro Misaligner_linkopts	"$(application_linkopts)"
@@ -66,7 +38,3 @@ set Misaligner ${MISALIGNERROOT}/options
 
 # ========================= Install configurable ============================
 apply_pattern install_python_modules
-
-# ==========  Export application name and version to gaudirun.py ============
-apply_pattern GaudiApp
-
