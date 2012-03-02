@@ -1,3 +1,21 @@
 #!/bin/bash
-diff -r --brief ONLINE_${1} ONLINE_${2} | grep -v ".svn" | grep -v "setup." | grep -v "cleanup." | grep -v ".history" | grep -v "x86_64-slc5-gcc43" | grep -v ".pyc" | grep -v ".ph" | grep -v ".d differ"
-
+PID=$$;
+#
+#
+cat >/tmp/match_${PID}.txt<<EOF
+.svn
+setup.
+cleanup.
+.history
+x86_64-slc5-gcc
+x86_64-slc5-gcc
+.pyc
+.ph
+.pp
+.d differ
+.stamp.differ
+.make.differ
+EOF
+#
+#
+diff -r --brief ONLINE_${1} ONLINE_${2} | grep -v -f /tmp/match_${PID}.txt 
