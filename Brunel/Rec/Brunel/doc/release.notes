@@ -3,7 +3,7 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v43r1>2012-03-02 Brunel v42r1</A></H1><PRE>
+</PRE><H1><A NAME=v42r1>2012-03-02 Brunel v42r1</A></H1><PRE>
 This version uses projects LCG 62a, Gaudi v23r1, LHCb v34r1, Lbcom v12r1,
  Rec v13r1 and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
 
@@ -29,7 +29,7 @@ Development version to pick up LHCb v34r1 stack
   . Add a specific reference file brunel2011magdown.ref.dbg, to track changes
     in untested StatusCodes
 
-</PRE><H1><A NAME=v43r0>2012-02-03 Brunel v42r0</A></H1><PRE>
+</PRE><H1><A NAME=v42r0>2012-02-03 Brunel v42r0</A></H1><PRE>
 This version uses projects LCG 62a, Gaudi v23r0, LHCb v34r0, Lbcom v12r0,
  Rec v13r0 and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
 
