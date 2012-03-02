@@ -3,9 +3,45 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-! 2012-03-02 - Marco Cattaneo
- - Add a separate reference for the QMTest in debug mode, to track changes in
-   the unchecked StatusCodes
+</PRE><H1><A NAME=v42r1>2012-03-02 Brunel v42r1</A></H1><PRE>
+This version uses projects LCG 62a, Gaudi v23r1, LHCb v34r1, Lbcom v12r1,
+ Rec v13r1 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+Development version to pick up LHCb v34r1 software stack
+
+- Changes to persistency
+  . Change default Root compression algorithm to LZMA, with compression level 6.
+    Reduces SDST size by a few per cent, probably more for MC DST (RootCnv v1r13)
+  . Vertex weights now included directly in RecVertex and PackedVertex classes,
+    WeightsVector removed from (S)DST. Needs LHCb v34r1 (DaVinci v30r1) to read.
+    (RecEvent v2r40, PackedEvent v4r7, EventPacker v2r12, GaudiConf v15r7)
+
+- Configuration changes
+  . Force use of new SQLDDDB v7r* distribution scheme (DDDB v1r51)
+  . Update FilterFillingScheme for 2012 (LumiAlgs v7r4)
+  . Do not apply FilterFillingScheme in data prior to 2011 since information
+    not available in CondDB (LumiAlgs v7r4)
+  . Add support for skipping events with bad DQ. By default, all events are 
+    processed (LHCbAlgs v2r48)
+
+- New tuning
+  . Pattern recognition improvements for large IP tracks (FastVelo v4r18)
+  . Changes in PatForward X search window parameterisation (PatAlgorithms v4r18)
+  . Speed improvements (FastVelo v4r18, PatAlgorithms v4r18, TrackFitEvent v5r14)
+  . Increased minimum number of hits left in outlier removal (TrackFitter v4r4)
+  . Improvements in track fit initialization (TrackTools v4r12)
+
+- Bug fixes
+  . Fix gcc4.3/4.6 differences (TfKernel v2r22, PatAlgorithms v4r18)
+  . Run TrackEffChecker also for FastVelo tracks (TrackSys)
+  . Fix switching off of Boost memory allocators in event model classes in debug
+    builds, that was broken several LCGCMT releases ago
+    (GaudiObjDesc v11r13, LHCbKernel v13r9)
+
+- Changes to tests
+  . brunel.brunel-mc11a-xdst now takes input file from svcClass=lhcbdisk
+  . Add a specific reference files to brunelsys and brunel. brunel2011magdown
+    tests in dbg mode, to track changes in untested StatusCodes
 
 </PRE><H1><A NAME=v43r0>2012-02-03 Brunel v42r0</A></H1><PRE>
 This version uses projects LCG 62a, Gaudi v23r0, LHCb v34r0, Lbcom v12r0,
