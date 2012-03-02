@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-03-02 - Maurizio Martinelli
+ - defined ranges for Z0 and D0 daughters plots in TrackParticleMonitor
+
 !========================= TrackMonitors v1r37 2012-02-28 =========================
 ! 2012-02-23 - Wouter Hulsbergen
  - extend range of histogram for 'Track:history' flag such that we can actually
