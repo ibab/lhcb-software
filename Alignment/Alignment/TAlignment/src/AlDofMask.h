@@ -1,7 +1,7 @@
 #ifndef TALIGNMENT_ALDOFMASK_H
 #define TALIGNMENT_ALDOFMASK_H
 
-#include <boost/array.hpp>
+//#include <boost/array.hpp>
 #include <vector>
 #include <algorithm>
 
@@ -18,13 +18,17 @@ public:
   // number of active (unmasked) parameters
   size_t nActive() const { return m_activetoallmap.size() ; }
   // transform from an 'active' parameter to an 'all' parameter
-  int parIndex(size_t iactivepar) const { assert(iactivepar<m_activetoallmap.size()) ; return m_activetoallmap[iactivepar] ; }
+  int parIndex(size_t iactivepar) const { 
+    return iactivepar<m_activetoallmap.size() ? m_activetoallmap[iactivepar] : -1 ; }
   // transform from an 'all' parameter to an 'active' parameter
-  int activeParIndex(size_t ipar) const { assert(ipar<m_mask.size()); return m_alltoactivemap[ipar] ; }
+  int activeParIndex(size_t ipar) const { 
+    return ipar<m_mask.size() ? m_alltoactivemap[ipar] : -1 ; }
   // 
-  bool isActive(size_t ipar) const { assert(ipar<m_mask.size()) ; return m_mask[ipar] ; }
+  bool isActive(size_t ipar) const { 
+    return ipar<m_mask.size() ? m_mask[ipar] : false ; }
   //
-  void setActive(size_t ipar, bool b) { if( b != isActive(ipar) ) { m_mask[ipar] = b ; fillIndexMaps() ; } }
+  void setActive(size_t ipar, bool b) { 
+    if( b != isActive(ipar) ) { m_mask[ipar] = b ; fillIndexMaps() ; } }
   //
   typedef MaskType::const_iterator const_iterator ;
   const_iterator begin() const { return m_mask.begin() ; }
