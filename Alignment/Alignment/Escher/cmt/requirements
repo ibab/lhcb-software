@@ -22,7 +22,6 @@ apply_tag NEEDS_PYCOOL
 # and to give a cmt broadcast dependency for user checked out component packages
 
 use Gaudi              v*                   -no_auto_imports
-use GaudiPoolDb        v*                   -no_auto_imports
 
 # For multi-core processing:
 use   pytools     v*  LCG_Interfaces
@@ -43,6 +42,9 @@ use LbcomSys            v*       -no_auto_imports
 #-- Rec packages (from REC_v3r13)
 use RecSys		v*         -no_auto_imports
 
+#-- Phys packages
+use DaVinciKernel       v*     Phys
+use CommonParticles     v*     Phys
 #-- Alignment packages
 use AlignmentInterfaces	v*    Alignment -no_auto_imports
 use AlignmentTools      v*    Alignment -no_auto_imports
@@ -58,6 +60,9 @@ set ESCHEROPTS ${ESCHERROOT}/options
 
 # ========================= Install configurable ============================
 apply_pattern install_python_modules
+
+# ========================= Install scripts ============================
+apply_pattern install_scripts
 
 # ==========  Export application name and version to gaudirun.py ============
 apply_pattern GaudiApp
