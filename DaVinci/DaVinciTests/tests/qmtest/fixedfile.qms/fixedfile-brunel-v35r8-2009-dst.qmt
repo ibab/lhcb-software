@@ -5,7 +5,7 @@
   <argument name="args"><set>
     <text>$DAVINCITESTSROOT/tests/options/SimpleMuSelection.py</text>
     <text>--option</text>
-    <text>from DaVinci.Configuration import *; from Configurables import LHCbApp; LHCbApp().DDDBtag="head-20091112"; LHCbApp().CondDBtag="sim-20091112-vc-md100"; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/testFiles/Brunel-v35r8-30000000-100ev-20091112-vc-md100.dst' TYP='POOL_ROOTTREE' OPT='READ'"]; DaVinci().InputType="DST"; DaVinci().DataType="MC09";</text>
+    <text>from DaVinci.Configuration import *; from Configurables import LHCbApp; LHCbApp().DDDBtag="head-20091112"; LHCbApp().CondDBtag="sim-20091112-vc-md100"; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/testFiles/Brunel-v35r8-30000000-100ev-20091112-vc-md100.dst' TYP='POOL_ROOTTREE' OPT='READ'"]; DaVinci().InputType="DST"; DaVinci().DataType="MC09"; DaVinci().Simulation=True;</text>
   </set></argument>
   <argument name="validator"><text>
 findReferenceBlock("""

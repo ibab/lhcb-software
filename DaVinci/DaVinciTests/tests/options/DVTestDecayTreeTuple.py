@@ -18,7 +18,7 @@ MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 from StrippingConf.Configuration import StrippingConf
 from StrippingConf.StrippingStream import StrippingStream
 from StrippingArchive.Utils import lineBuilder
-lineBuilder = lineBuilder('Stripping13', 'BetaS')
+lineBuilder = lineBuilder('Stripping17', 'BetaS')
 line = lineBuilder.lineFromName('StrippingBetaSBd2JpsiKsUnbiasedLine')
 stream = StrippingStream("B2JpsiXTest", Lines = [line])
 sc = StrippingConf()
@@ -82,7 +82,7 @@ from Configurables import DaVinci
 DaVinci().EvtMax = 100
 DaVinci().SkipEvents = 0
 DaVinci().DataType = "2010" 
-DaVinci().Simulation   = True
+DaVinci().Simulation = True
 #DaVinci().CondDBtag = 'MC09-20100827-vc-md100'
 DaVinci().TupleFile = "DecayTreeTuple.root"  # Ntuple
 DaVinci().MoniSequence = [ tuple, evtTuple, mcTuple ] # , pmc ] 

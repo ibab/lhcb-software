@@ -7,7 +7,7 @@ from Configurables import DaVinci
 from StrippingConf.Configuration import StrippingConf
 from StrippingArchive.Utils import buildStreams
 
-allStreams = buildStreams('Stripping13')
+allStreams = buildStreams('Stripping17')
 
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
@@ -47,5 +47,3 @@ dstWriter = SelDSTWriter( "MyDSTWriter",
 DaVinci().EvtMax = 10                        # Number of events
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ dstWriter.sequence() ] )
-
-

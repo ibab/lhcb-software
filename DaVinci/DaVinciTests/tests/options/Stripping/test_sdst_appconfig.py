@@ -1,14 +1,6 @@
 from Gaudi.Configuration import *
-#importOptions('$APPCONFIGOPTS/DaVinci/StrippingLinesPrescales-1003.py')
-#importOptions('$APPCONFIGOPTS/DaVinci/DVStrippingDST-RealData.py')
-#importOptions('$APPCONFIGOPTS/DaVinci/DataType-2010.py')
-#importOptions('$APPCONFIGOPTS/DaVinci/InputType-SDST.py')
-
-#importOptions('$APPCONFIGOPTS/DaVinci/DV-Stripping14-Stripping.py')
-
-#Contents of Stripping14! Remove once StrippingArchive is used there
 """
-Options for building Stripping14
+Options for building Stripping
 """
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
@@ -18,7 +10,7 @@ MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 from StrippingConf.Configuration import StrippingConf, StrippingStream
 from StrippingArchive.Utils import buildStreams, cloneLinesFromStream, cloneStream
 
-streams = buildStreams('Stripping14')
+streams = buildStreams('Stripping17')
 
 #
 # Now do some cloning to deal with the charm full/microDST streams

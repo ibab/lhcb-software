@@ -10,7 +10,7 @@ from Configurables import DaVinci
 from StrippingConf.Configuration import StrippingConf
 
 from StrippingArchive.Utils import buildStream
-stream = buildStream('Stripping13', 'Dimuon')
+stream = buildStream('Stripping17', 'Dimuon')
 sc = StrippingConf()
 sc.appendStream( stream )
 
@@ -18,6 +18,7 @@ DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().EvtMax = -1
 DaVinci().PrintFreq  = 1
 DaVinci().DataType = "MC09"
+DaVinci().Simulation = True
 
 DaVinci().Input   = [
     "COLLECTION='TagCreator/EventTuple' DATAFILE='etc.root' TYP='POOL_ROOT' SEL='(StrippingBs2JpsiPhiLine==1)'" ]

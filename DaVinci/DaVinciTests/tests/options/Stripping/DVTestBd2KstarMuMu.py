@@ -47,7 +47,7 @@ from StrippingConf.Configuration import StrippingConf
 from StrippingConf.StrippingStream import StrippingStream
 
 from StrippingArchive.Utils import lineBuilder
-lineBuilder = lineBuilder('Stripping13', 'Bd2KstarMuMu')
+lineBuilder = lineBuilder('Stripping17', 'Bd2KstarMuMu')
 stream = StrippingStream("BKstarMuMuTest", Lines = lineBuilder.lines())
 sc = StrippingConf()
 sc.appendStream( stream )
