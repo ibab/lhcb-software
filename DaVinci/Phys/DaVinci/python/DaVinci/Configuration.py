@@ -102,7 +102,8 @@ class DaVinci(LHCbConfigurableUser) :
         Checks options. Changes a few if needed.
         """
         # Temp hack for DV v30r1 (fix need in LHCbApp, but missed the release)
-        if self.getProp("Simulation") : self.setProp("IgnoreDQFlags",True)
+        if self.getProp("Simulation") or self.getProp("DataType") == "MC09":
+            self.setProp("IgnoreDQFlags",True)
         # Production mode ?
         prodType = self.getProp("ProductionType")
         if prodType not in self.__known_prod_types__ :
