@@ -4,6 +4,9 @@ Package Coordinator : Wouter Hulsbergen
 Responsibles : J. Amoraal, J. Blouw, A. Hicheur, L. Nicolas
 Purpose: LHCb Alignment Tools
 
+! 2012-03-04 - Wouter Hulsbergen
+ - solve complication warning in TAConfig
+
 !========================= AlignTrTools v4r10 2011-12-01 =========================
 
 ! 2011-12-02 - Rob lambert

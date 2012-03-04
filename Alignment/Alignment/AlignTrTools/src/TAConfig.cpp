@@ -1236,7 +1236,7 @@ void TAConfig::CreateMap( int & r,  IDetectorElement* id ) {
     id->geometry()->toGlobalMatrixNominal().GetDecomposition( rotation, position);  
   //info() << " my rotation  = " << rotation << endreq;
   std::vector<double> rotationParams(9,0); 
-  rotation.GetComponents(rotationParams.begin(),rotationParams.end());
+  rotation.GetComponents(rotationParams.begin());
   m_stereoAngle.push_back(rotationParams.at(3));
   id->geometry()->toGlobalMatrix().GetDecomposition( R, T );
   double myz = T.z();
