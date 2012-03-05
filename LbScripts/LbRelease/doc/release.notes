@@ -1,7 +1,11 @@
+2012-03-02  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* LbRelease/scripts/branch_package: the file was not committed
+
 2012-02-24 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v4r7p1
-	* python/LbRelease/SvnTools/Project.py: Added project LbScripts to the list 
+	* python/LbRelease/SvnTools/Project.py: Added project LbScripts to the list
 
 2012-02-14 Ben Couturier <Ben.Couturier@cern.ch>
 

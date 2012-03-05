@@ -1,0 +1,111 @@
+#!/usr/bin/env python
+import os, sys, re
+
+from LbUtils.Script import Script
+from LbRelease import rcs
+from LbConfiguration.Repository import getRepositories
+
+class BranchPackage(Script):
+    def __init__(self):
+        Script.__init__(self, usage = "%prog [options] (package|project) branch",
+                              description = "script to easily tag a package or a project "
+                                            "in the LHCb Subversion repository")
+        self._repos = None
+
+        self.module = None
+        self.version = None
+        self.modtype = "package"
+
+    def defineOpts(self):
+        """ User options """
+        self.parser.add_option("-x", "--exclude", action = "append",
+                               metavar = "REPOSITORY",
+                               help = "exclude a default repository %s" % getRepositories().keys())
+        self.parser.add_option("--user-svn", action = "append",
+                               metavar = "URL",
+                               help = "add a custom subversion repository to the known ones")
+        self.parser.add_option("-F", "--force", action = "store_true",
+                               help = "ignore malformed version strings when tagging")
+        self.parser.add_option("-P", "--project", action = "store_true",
+                               help = "tag a project instead of a package")
+        #self.parser.add_option("--dry-run", action = "store_true",
+        #                       help = "show the command that would be run, but not call it")
+        self.parser.add_option("-B", "--from-branch", action = "store",
+                               help = "branch to be used as a starting point for the branch")
+        self.parser.add_option("-T", "--from-tag", action = "store",
+                               help = "tag to be used as a starting point for the branch")
+        self.parser.set_defaults(exclude = [],
+                                 user_svn = [],
+                                 user_cvs = [],
+                                 force = False)
+
+    def repos(self):
+        """
+        Find the repository that contains the requested module.
+        """
+        if self._repos is None:
+            # Add user-defined repositories to the known ones
+            reps = getRepositories(self.options.user_svn, self.options.user_cvs, protocol="ssh")
+            # get the first element from a list or from a generator
+            self._repos = iter((self.options.project)
+                                and rcs.getProjectRepo(self.module, reps, self.options.exclude)
+                                or rcs.getPackageRepo(self.module, reps, self.options.exclude)
+                              ).next()
+        return self._repos
+
+    def isValidVersion(self):
+        """
+        Tell if the specified version name conforms to the standards.
+        """
+        from LbConfiguration.Version import _txt_version_style
+        import re
+        return bool(re.match(_txt_version_style + 'b$', self.version))
+
+    def main(self):
+        """
+        Main function of the script.
+        """
+        try:
+            # the module name is always mandatory
+            self.module = self.args[0]
+            # the branch name is always mandatory
+            self.version, = self.args[1:] # in this way we ensure no extra arguments
+        except:
+            # an exception in the code above means that the argument count is wrong
+            self.parser.error("Wrong number of arguments. Use -h for more information.")
+
+        if self.options.project:
+            self.modtype = "project"
+
+
+        # Check the format of the version/tag (if it was specified)
+        if self.version and not self.isValidVersion():
+            if not self.options.force:
+                self.log.error("Branch name '%s' is not standard. You may want to use --force.", self.version)
+                return 1
+            else:
+                self.log.warning("Ignoring malformed branch '%s'", self.version)
+
+        # Locate the module in the repositories
+        repos = self.repos()
+        if not repos:
+            self.log.error("Cannot find the %s '%s', check the name.", self.modtype, self.module)
+            return 1
+
+        # Enable the support of branches
+        repos.useBranches = True
+
+        # Check if the tag is already present
+        if repos.hasVersion(self.module, self.version, self.options.project):
+            self.log.error("The %s '%s' has got already the branch '%s'. Remove it first.",
+                           self.modtype, self.module, self.version)
+            return 1
+
+        retcode = repos.branch(self.module, self.version, self.options.project, self.options.from_tag, self.options.from_branch)
+        if retcode:
+            self.log.error("Branching of the %s failed (return code %d)", self.modtype, retcode)
+        return retcode
+
+
+if __name__ == '__main__':
+    BranchPackage().run()
