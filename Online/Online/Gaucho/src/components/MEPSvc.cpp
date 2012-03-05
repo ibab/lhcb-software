@@ -154,7 +154,7 @@ StatusCode MEPSvc::initialize()
       ::lib_rtl_output(LIB_RTL_FATAL,"DIM(OvrSvc): Failed to access ToolsSvc.\n");
       return sc;
     }
-    sc = tools->retrieveTool("SimpleTrendWriter","OvrPubWriter",m_trender,this);
+    sc = tools->retrieveTool("SimpleTrendWriter","MEPSvc",m_trender,this);
     if (sc.isSuccess() && m_trender != 0)
     {
       std::string nnam("MEPRx_Trends");
