@@ -48,12 +48,18 @@ Delay.MicroDelayTime                 = 0;
 
 Prescaler.AcceptRate                 = @OnlineEnv.AcceptRate;
 Prescaler.OutputLevel                = @OnlineEnv.OutputLevel;
+				        // Only apply downscaling to 
+					// Random: 	3
+					// Periodic: 	4
+					// NZS:		5
+Prescaler.DownscaleTriggerTypes      = {3,4,5};
 
 Merger.Buffer                        = "Send";
 Merger.Compress                      = 0;
 Merger.DataType                      = 3;
 Merger.InputDataType                 = 1;
-Merger.BankLocation                  = "/Event/DAQ/RawEvent";
+// The banklocation is EXACTLY this. No /Event in front - otherwise TAE does not work!
+Merger.BankLocation                  = "DAQ/RawEvent";
 Merger.RoutingBits                   = 1;
 Merger.Silent                        = False;
 Merger.TriggerMask                   = {0,4,0};
