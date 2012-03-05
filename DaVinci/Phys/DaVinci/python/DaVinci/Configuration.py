@@ -182,21 +182,18 @@ class DaVinci(LHCbConfigurableUser) :
         return di
 
     def _init(self):
-        from Configurables import (PhysConf,
-                                   AnalysisConf)
+        from Configurables import (PhysConf,AnalysisConf)
         
-        # Phys
         inputType = self.getProp( "InputType" ).upper()
 
         initSeqs = []
 
-        if inputType != 'MDST' :
-            if (( inputType != "MDF" ) & (inputType != "DIGI")) :
-                physinit = PhysConf().initSequence()         # PhysConf initSequence
-                # Analysis
-                AnalysisConf().RedoMCLinks = self.getProp("RedoMCLinks") 
-                analysisinit = AnalysisConf().initSequence()
-                initSeqs = [physinit,analysisinit]
+        if inputType != 'MDST' & inputType != "MDF" & inputType != "DIGI" ) :
+            physinit = PhysConf().initSequence() # PhysConf initSequence
+            # Analysis
+            AnalysisConf().RedoMCLinks = self.getProp("RedoMCLinks") 
+            analysisinit = AnalysisConf().initSequence()
+            initSeqs = [physinit,analysisinit]
         if inputType == 'RDST' :
             log.info('Setting HltDecReportsDecoder().InputRawEventLocation to "pRec/RawEvent"')
             from Configurables import HltDecReportsDecoder, ANNDispatchSvc
@@ -313,8 +310,7 @@ class DaVinci(LHCbConfigurableUser) :
                 persistency=self.getProp("Persistency")
             
             inputType = self.getProp( "InputType" ).upper()
-            if inputType == "MDF":
-                persistency="MDF"
+            if inputType == "MDF" : persistency = "MDF"
             #support connection strings and lists of files
             input=IOHelper(persistency,persistency).convertConnectionStrings(input,"I")
             #clear selector to maintain the same behaviour
@@ -345,10 +341,11 @@ class DaVinci(LHCbConfigurableUser) :
             unPack = self.getProp('EnableUnpack')
             DstConf  ( EnableUnpack = unPack )
             PhysConf ( EnableUnpack = unPack )
-        elif inputType != "MDST" and inputType != "MDF":
+        elif inputType != "MDF":
             defaultUnpacking = ["Reconstruction","Stripping"]
             DstConf  ( EnableUnpack = defaultUnpacking )
             PhysConf ( EnableUnpack = defaultUnpacking )
+        if inputType != "MDST" :
             if self.getProp("Simulation") :
                 DstConf().setProp("SimType","Full")
         return inputType
