@@ -4,6 +4,10 @@
 ! Purpose     : Package for the tracking event model classes
 !-------------------------------------------------------------------------------
 
+! 2012-03-05 - Marco Cattaneo
+ - Add dictionaries for std::vector<const LHCb::Node*> and
+   Gaudi::Range_<std::vector<const LHCb::Node*> >
+
 !========================= TrackEvent v5r15 2012-02-28 =========================
 ! 2012-02-21 - Wouter Hulsbergen
  - Made Node::chi2 virtual

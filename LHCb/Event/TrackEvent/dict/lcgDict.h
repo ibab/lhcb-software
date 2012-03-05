@@ -1,4 +1,3 @@
-// $Id: lcgDict.h,v 1.2 2008-02-20 14:13:18 ibelyaev Exp $
 #ifndef TRACKEVENT_LCGDICT_H 
 #define TRACKEVENT_LCGDICT_H 1
 
@@ -18,6 +17,8 @@ namespace
     std::vector<LHCb::Track*>             _i2;
     std::pair<const LHCb::Track*,float>   _i3;
     std::vector<std::pair<const LHCb::Track*,float> > _i4;
+    std::vector<const LHCb::Node*>        _i5;
+    Gaudi::Range_<std::vector<const LHCb::Node*> >    _i6;
     // end instantiations
   };
 }
