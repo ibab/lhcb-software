@@ -213,10 +213,13 @@ StatusCode AlignAlgorithm::execute() {
   }
 
   // Get tracks. Copy them into a vector, because that's what we need for dealing with vertices.
-  LHCb::Track::Range tracks = get<LHCb::Track::Range>(m_tracksLocation);
-  if (printVerbose()) verbose() << "Number of tracks in container " + m_tracksLocation + ": " << tracks.size() << endmsg;
+  LHCb::Track::Range tracks;
+  if( !m_tracksLocation.empty() ) {
+    tracks = get<LHCb::Track::Range>(m_tracksLocation);
+    if (printVerbose()) verbose() << "Number of tracks in container " + m_tracksLocation + ": " << tracks.size() << endmsg;
+  }
   m_nTracks += tracks.size() ;
-
+  
   // First just copy the tracks
   std::vector<const LHCb::Track*> selectedtracks ;
   for(  LHCb::Track::Range::const_iterator iTrack = tracks.begin() ; iTrack != tracks.end() ; ++iTrack)
