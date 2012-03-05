@@ -17,6 +17,7 @@
 
 // C/C++ include files
 #include <cstdlib>
+#include <vector>
 #include <ctime>
 
 /*
@@ -46,8 +47,10 @@ namespace LHCb {
       ::srand(seed);
       declareProperty("AcceptRate", m_rate=1.0,
 		      "Fraction of the events allowed to pass the filter");
-      declareProperty("TriggerType", m_trgType=0, 
-		      "Required ODIN trigger type; if 0 -> ignored");
+      declareProperty("DownscaleTriggerTypes", m_downScale, 
+		      "Downscaled ODIN trigger types");
+      declareProperty("PassthroughTriggerTypes", m_passThrough, 
+		      "Downscaled ODIN trigger types");
       declareProperty("BankLocation",m_bankLocation=RawEventLocation::Default);
     }
 
@@ -66,18 +69,13 @@ namespace LHCb {
 
     /// Algorithm overload: Event execution routine
     virtual StatusCode execute() {
+      std::vector<int>::const_iterator vi;
       MsgStream log(msgSvc(),name());
       DataObject* pDO = 0;
       double frac = double(rand());
+
       frac /= double(RAND_MAX);
-      log << MSG::DEBUG << "Trg type:" << m_trgType << " Fraction:" << frac
-	  << " Rate:" << m_rate << endmsg;
-      if ( m_trgType == 0 ) {
-	if ( frac > m_rate ) {
-	  setFilterPassed(false);
-	}
-	return StatusCode::SUCCESS;
-      }
+      log << MSG::DEBUG << "Fraction:" << frac << " Rate:" << m_rate << endmsg;
       StatusCode sc = eventSvc()->retrieveObject(m_bankLocation,pDO);
       if ( sc.isSuccess() ) {
 	typedef std::vector<RawBank*> _V;
@@ -91,11 +89,23 @@ namespace LHCb {
 	  int readoutType = info->readoutType;
 	  int eventType   = info->EventType;
 #endif
-	  if ( (triggerType&m_trgType) != 0 ) {
-	    if ( frac > m_rate ) {
-	      setFilterPassed( false );
-	      return StatusCode::SUCCESS;
-	    }
+	  if ( (vi=std::find(m_passThrough.begin(),m_passThrough.end(),triggerType)) != 
+	       m_passThrough.end() )  {
+	    setFilterPassed(true);
+	    return StatusCode::SUCCESS;
+	  }
+	  else if ( (vi=std::find(m_downScale.begin(),m_downScale.end(),triggerType)) != 
+	       m_downScale.end() )  {
+	    setFilterPassed(m_rate<frac);
+	    return StatusCode::SUCCESS;
+	  }
+	  else if ( m_downScale.empty() && m_passThrough.empty() ) {
+	    setFilterPassed(m_rate<frac);
+	    return StatusCode::SUCCESS;
+	  }
+	  else {
+	    setFilterPassed(true);
+	    return StatusCode::SUCCESS;
 	  }
 	}
       }
@@ -105,11 +115,13 @@ namespace LHCb {
 
   private:
     /// Raw bank location
-    std::string m_bankLocation;
+    std::string      m_bankLocation;
     /// Percentage of events that should be passed
-    double m_rate;
+    double           m_rate;
     /// Odin event type to be filtered
-    int m_trgType;
+    std::vector<int> m_downScale;
+    /// Odin event type for forced pass-through
+    std::vector<int> m_passThrough;
   };
 }
 
