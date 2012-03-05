@@ -8,6 +8,8 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2012-03-05 - V. Gligorov
+ - Rename D02HHHHDstNoHlt1 lines to prevent ANNSvc mixup. 
 
 ! 2012-03-05 - Benoit VIAUD
  - Removed the second loop pions from Hlt2CharmSemilepD02HMuNuLines.py
