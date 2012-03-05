@@ -4,6 +4,50 @@
 ! Purpose     : Reconstruct the PV in a fast way
 !-----------------------------------------------------------------------------
 
+! 2012-03-05 - Marco Cattaneo
+ - Remove unused variable in TrackForPV.h, fixes UNINIT_CTOR Coverity warning
+
+!========================= FastPV v1r0 2011-12-15 ============================
+! 2011-11-28 - Marco Cattaneo
+ - Fix a gcc46 warning (variable set but never used)
+
+! 2011-11-25 - Olivier Callot
+ - Cleanup of no longer ised feature: Backward track counting
+ - Add 90 micron MS error in quadrature.
+ - Ready for use by HLT1: SetFilterPassed(false) if no PV
+
+! 2011-11-23 - Olivier Callot
+ - Iterate, first with a large number of tracks (30% of total), then as usual.
+ - Work with unused tracks in each iteration
+ - Do the final serach without grouping constraints
+ - Remove the request for backward tracks...
+
+! 2011-11-22 - Olivier Callot
+ - Try a vertex with unused tracks if no vertex found (low mult. events)
+
+! 2011-11-22 - Olivier Callot
+ - Fix properly the backward request!
+ - New algorithm FastPVMonitor to monitor the vertices.
+
+! 2011-11-22 - Olivier Callot
+ - Request backward tracks only if the numbe rof tracks is between 
+   MinTrackInPV and twice that.
+
+! 2011-11-21 - Olivier Callot
+ - Change the tuning after fixing the checker. No longer cleanup of 
+   tracks on two vertices. Larger tolerances.
+
+! 2011-11-18 - Olivier Callot
+ - New package, with one algorithm, FastPVFinder.
+   It searches the PV from the Velo tracks, in a fast and efficient way
+   It requires a proper knowledge of teh beam position, obtained from the 
+   Velo position. 
+!-----------------------------------------------------------------------------
+! Package     : Tf/FastPV
+! Responsible : Olivier Callot
+! Purpose     : Reconstruct the PV in a fast way
+!-----------------------------------------------------------------------------
+
 !========================= FastPV v1r0 2011-12-15 ============================
 ! 2011-11-28 - Marco Cattaneo
  - Fix a gcc46 warning (variable set but never used)

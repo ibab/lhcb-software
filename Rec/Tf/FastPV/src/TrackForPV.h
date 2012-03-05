@@ -1,4 +1,3 @@
-// $Id: $
 #ifndef TRACKFORPV_H 
 #define TRACKFORPV_H 1
 
@@ -53,7 +52,6 @@ private:
   Gaudi::XYZVector m_dir;
   double m_wx;
   double m_wy;
-  double m_weight;
   double m_zAtBeam;
   double m_rAtBeam;
   bool   m_used;
