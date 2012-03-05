@@ -3,6 +3,27 @@ Package             : DaVinciSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v30r1>2012-03-05 DaVinci v30r1</A></H1><PRE>
+
+New development release, containing fully support for the new fully packed 
+stripping (u)DSTs.
+
+In Phys/DaVinci :-
+ - If Simulation=True or DataType="MC09", force IgnoreDQFlags=True, to work 
+   around an issue in LHCbApp. To be removed in a future release, when fixed 
+   in LHCb.
+ - Add the option "IgnoreDQFlags", which controls whether how DaVinci should 
+   handle data DQ flags. Default is False, which means only data with good
+   DQ will be processed.
+ - Add the option "DQFLAGStag" for the DQ flags tag.
+ - Add a "ProductionType" setting, that enables whatever options are needed
+   in a given production (e.g. Stripping). Default is "None", no special 
+   options.
+ - Update the EnableUnpack property of the DaVinci configurable to accept a
+   list of options, instead of just True or False. valid options are
+   "Reconstruction" and/or "Stripping", to enable the unpacking of the 
+   related data objects.
+
 </PRE><H1><A NAME=v30r0>2012-02-15 DaVinci v30r0</A></H1><PRE>
 
 New release, based on Gaudi v23r0. For stripping 17b. 
