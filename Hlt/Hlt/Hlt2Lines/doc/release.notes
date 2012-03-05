@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+
+! 2012-03-05 - Benoit VIAUD
+ - Removed the second loop pions from Hlt2CharmSemilepD02HMuNuLines.py
+
 !========================= Hlt2Lines v8r10 2012-02-29 =========================
  - Evh Tagged for release
 

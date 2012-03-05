@@ -302,8 +302,7 @@ class Hlt2CharmSemilepD02HMuNuLinesConf(HltLinesConfigurableUser) :
         ### ###############################################################
         from Hlt2SharedParticles.TrackFittedBasicParticles import (BiKalmanFittedKaons,
 	                                                           BiKalmanFittedPions,
-		                                                   BiKalmanFittedMuons,
-								   BiKalmanFittedSecondLoopPions)
+		                                                   BiKalmanFittedMuons)
         muonName = self.getProp('name_prefix') + 'Muons'
 	kaonName = self.getProp('name_prefix') + 'Kaons'
 	pionName = self.getProp('name_prefix') + 'Pions'
@@ -346,7 +345,7 @@ class Hlt2CharmSemilepD02HMuNuLinesConf(HltLinesConfigurableUser) :
 
 	# added for the slow pion filter
         pionsForDstar = self.__SlowPionFilter( name = self.getProp('name_prefix')+'SlowPion'
-                                               , inputContainers = [ BiKalmanFittedSecondLoopPions, BiKalmanFittedPions ]
+                                               , inputContainers = [ BiKalmanFittedPions ]
                                              )
 
         DeltaMSigMassCut = "(M-MAXTREE('D0'==ABSID,M)<%s )" \
