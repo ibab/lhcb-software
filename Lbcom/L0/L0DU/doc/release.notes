@@ -3,6 +3,10 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+
+! 2012-02-15 - Olivier Deschamps
+  - fix coverity problem
+
 !========================= L0DU v10r18 2012-02-28 =========================
 ! 2012-02-15 - Olivier Callot
  - New tool for a fast decoding of L0DU for Hlt1

@@ -167,9 +167,12 @@ StatusCode L0DUFromRawAlg::finalize() {
 //  Compare the report produced by two versions of the tool
 //=========================================================================
 void L0DUFromRawAlg::compareReports ( ) {
-  m_fromRaw2->decodeBank();
-
-  LHCb::L0DUReport rep  = m_fromRaw->report();
+  if( !m_fromRaw2->decodeBank()){
+    Warning("RawBank decoding failed - no report comparaison").ignore();
+    return;
+  } 
+  
+  LHCb::L0DUReport rep  = m_fromRaw->report(); 
   LHCb::L0DUReport rep2 = m_fromRaw2->report();
   
   if ( rep.decisionValue() != rep2.decisionValue() ) {
