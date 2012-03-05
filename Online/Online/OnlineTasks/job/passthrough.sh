@@ -8,8 +8,19 @@ export ONLINETASKS=/group/online/dataflow/templates;
 export INFOOPTIONS=/group/online/dataflow/options/${PARTNAME}/${PARTNAME}_Info.opts;
 export NBOFSLAVES=$4;
 export LD_PRELOAD=/sw/lib/lhcb/ONLINE/ONLINE_${ONLINE_VERSION}/InstallArea/${CMTCONFIG}/lib/libCheckpointing.so;
+export PYTHONPATH=/group/online/dataflow/options/${PARTNAME}/HLT:$PYTHONPATH;
+TAE_OPT=`python <</EOF
+import OnlineEnvBase as O
+if O.TAE>0: print '_TAE'
+/EOF`
+#
+##echo "[Error] running options PassThrough${TAE_OPT}.opts"
+#
 exec -a ${UTGID} ${GAUDIONLINEROOT}/${CMTCONFIG}/GaudiCheckpoint.exe \
     ${GAUDIONLINEROOT}/${CMTCONFIG}/libGaudiOnline.so OnlineTask \
     -msgsvc=LHCb::FmcMessageSvc -tasktype=LHCb::Class1Task \
     -main=/group/online/dataflow/templates/options/Main.opts \
-    -opts=${ONLINETASKSROOT}/hltopts/PassThrough.opts
+    -opts=${ONLINETASKSROOT}/hltopts/PassThrough${TAE_OPT}.opts
+#
+#
+#
