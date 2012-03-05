@@ -1,6 +1,11 @@
+2012-03-05  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbUtils/CMT/Project.py: optimization
+	* python/LbUtils/CMT/Package.py: optimization
+
 2012-02-14  Ben Couturier  <ben.couturier@cern.ch>
 
-       * cmt/requirements: release of version v3r7
+	* cmt/requirements: release of version v3r7
 
 2012-01-18  Ben Couturier  <ben.couturier@cern.ch>
 

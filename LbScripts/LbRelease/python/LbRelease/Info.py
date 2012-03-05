@@ -5,7 +5,7 @@ Created on Dec 6, 2011
 '''
 
 
-from LbRelease.CMT import LbCMTWhich
+from LbRelease.CMT import LbCMTWhich, LbProject
 from LbConfiguration.Version import getVersionsFromDir
 from LbConfiguration.Project import getProject, ProjectConfException
 
@@ -60,7 +60,18 @@ def getReleaseInfo(project, version=None, with_html=True):
               "notes"        : ""
               }
 
-    p = LbCMTWhich(project=project, version=version)
+    if version:
+        # speed up project lookup if the version is specified
+        if not "CMTPROJECTPATH" in os.environ:
+            os.environ["CMTPROJECTPATH"] = os.environ.get("LHCBPROJECTPATH", "")
+        searchpath = os.environ.get("CMTPROJECTPATH").split(os.pathsep)
+        pv = os.path.join(project.upper(), "%s_%s" % (project.upper(), version))
+        for d in searchpath:
+            if os.path.exists(os.path.join(d, pv, "cmt", "project.cmt")):
+                p = LbProject(os.path.join(d, pv))
+                break
+    else:
+        p = LbCMTWhich(project=project, version=version)
 
     if p :
         output["version"] = p.version()

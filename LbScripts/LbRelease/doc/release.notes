@@ -1,6 +1,11 @@
+2012-03-05  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/Info.py: Quicker project lookup (if version is specified)
+	* python/LbRelease/ReleaseNotes.py: fixed to undestand a Gaudi release notes too
+
 2012-03-02  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
-	* LbRelease/scripts/branch_package: the file was not committed
+	* scripts/branch_package: the file was not committed
 
 2012-02-24 Ben Couturier <Ben.Couturier@cern.ch>
 

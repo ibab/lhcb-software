@@ -30,11 +30,18 @@ def extract(file_path, version):
         pass
 
     if not note:
-        _txt_style = r"^\s*?!=+?.+?%s.+?=+?$(.+?)(?=^\s*?!=+?)" % version
-        ct_style = re.compile(_txt_style,flags=re.DOTALL|re.MULTILINE|re.IGNORECASE)
-        m = ct_style.search(release_notes)
-        if m :
-            note = m.group(1)
-
+        begin = re.compile(r'^!?=+.*%s' % version)
+        end = re.compile(r'^!?=+')
+        note = []
+        collect = False
+        for l in release_notes.splitlines():
+            if collect:
+                if not end.match(l):
+                    note.append(l)
+                else:
+                    break
+            elif begin.match(l):
+                collect = True
+        note = '\n'.join(note)
 
     return note

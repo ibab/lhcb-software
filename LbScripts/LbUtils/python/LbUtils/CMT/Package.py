@@ -89,7 +89,19 @@ class Package(object):
                     log.warning("return code of 'cmt show project' in %s is %s", wdir, retcode)
 
         return self._parentprojectpath
+
     def version(self):
+        """Extract version from requirements file."""
+        if self._version is None:
+            exp = re.compile(r'\s*version\s+(\S+)\s*$')
+            for l in open(os.path.join(self.fullLocation(), "cmt", "requirements")):
+                m = exp.match(l.strip())
+                if m:
+                    self._version = m.group(1)
+                    break
+        return self._version
+
+    def versionCMT(self):
         """ Get the version of the package given by "cmt show version" """
         log = logging.getLogger()
         if self._version is None:
@@ -414,24 +426,7 @@ class Package(object):
         return self._release_date
 
 def hasRequirementsFile(dirpath):
-    hasfile = False
-    log = logging.getLogger()
-    try:
-        subfiles = os.listdir(dirpath)
-        for f in subfiles:
-            if f == "cmt" and os.path.isdir(os.path.join(dirpath,f)) :
-                try :
-                    ssubf = os.listdir(os.path.join(dirpath,f))
-                    for i in ssubf:
-                        if i == "requirements" :
-                            hasfile = True
-                            return hasfile
-                except OSError, msg :
-                    log.warning("Cannot open path %s" % msg)
-    except OSError, msg :
-        log.warning("Cannot open path %s" % msg)
-    return hasfile
-
+    return os.path.exists(os.path.join(dirpath, "cmt", "requirements"))
 
 def isPackage(path):
     ispak = False

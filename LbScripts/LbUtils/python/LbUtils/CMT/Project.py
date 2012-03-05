@@ -433,25 +433,7 @@ class Project(object):
         return summary
 
 def hasProjectFile(dirpath):
-    hasfile = False
-    log = logging.getLogger()
-    try:
-        subfiles = os.listdir(dirpath)
-        for f in subfiles:
-            if f == "cmt" and os.path.isdir(os.path.join(dirpath, f)):
-                try :
-                    ssubf = os.listdir(os.path.join(dirpath, f))
-                    for i in ssubf:
-                        if i == "project.cmt" :
-                            hasfile = True
-                            return hasfile
-                except OSError, msg :
-                    log.debug("Cannot open path %s" % msg)
-    except OSError, msg :
-        log.debug("Cannot open path %s" % msg)
-    return hasfile
-
-
+    return os.path.exists(os.path.join(dirpath, "cmt", "project.cmt"))
 
 def isProject(path):
     isproj = False
