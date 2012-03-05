@@ -1,4 +1,3 @@
-// $Id: PatRZTrack.cpp,v 1.8 2009-07-20 11:35:32 dhcroft Exp $
 // Include files 
 
 // local
@@ -29,7 +28,8 @@ namespace Tf {
     m_minSensor( 100 ),
     m_maxSensor( 0 ),
     m_pos0(-999.),
-    m_slope(-999.)  
+    m_slope(-999.),  
+    m_slopeErr(999.)  
   {
     m_coord.reserve( 20 );
   }

@@ -1,7 +1,4 @@
-// $Id: NewSpaceTrack.cpp,v 1.2 2009-08-26 11:44:21 ocallot Exp $
 // Include files 
-
-
 
 // local
 #include "NewSpaceTrack.h"
@@ -96,10 +93,13 @@ bool NewSpaceTrack::removeWorstMultiple( double maxChi2, unsigned int minExpecte
       prevSensor = mySensor;
     }
     if ( 0 > highest ) break;
-    removeCluster( worst );
-    if ( debug ) std::cout << "Remove cluster Sensor " << worst->sensorNumber() 
-                           << " strip " << worst->hit()->strip() 
-                           << " highest Chi2 " << highest << std::endl;
+    if ( 0 != worst ) {
+      removeCluster( worst );
+      if ( debug  )
+        std::cout << "Remove cluster Sensor " << worst->sensorNumber() 
+                  << " strip " << worst->hit()->strip() 
+                  << " highest Chi2 " << highest << std::endl;
+    }
   }
 
   //== Now filter the rest, i.e. sensors with a single hit

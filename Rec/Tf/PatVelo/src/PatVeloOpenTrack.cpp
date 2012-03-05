@@ -1,4 +1,3 @@
-// $Id: PatVeloOpenTrack.cpp,v 1.2 2007-11-22 16:42:00 dhcroft Exp $
 // Include files
 #include "GaudiKernel/PhysicalConstants.h"
 
@@ -19,11 +18,16 @@ PatVeloOpenTrack::PatVeloOpenTrack(  ) {
   m_tx = 0.;
   m_y0 = 0.;
   m_ty = 0.;
+  m_chi2 = 0.;
   m_backward = false;
   m_firstZ = 0.;
   m_lastZ  = 0.;
   m_valid  = true;
   m_half   = 0;
+  m_errX2 = 0.;
+  m_errY2 = 0.;
+  m_errTx2 = 0.;
+  m_errTy2 = 0.;
 }
 
 //=========================================================================
@@ -70,10 +74,15 @@ PatVeloOpenTrack::PatVeloOpenTrack ( Tf::PatVeloRHit*   cR0,   Tf::PatVeloRHit* 
     phi2 = phi2 + dPhi2 + (dPhi0 - dPhi2) * (zR2-zPhi2)/(zPhi0 - zPhi2);
     if ( 1.e-4 > fabs( dPhi0 ) && 1.e-4 > fabs( dPhi2 ) ) break;
   }
+  m_chi2 = 0.;
   m_backward = false;
   m_firstZ = 0.;
   m_lastZ  = 0.;
   m_valid  = true;
+  m_errX2 = 0.;
+  m_errY2 = 0.;
+  m_errTx2 = 0.;
+  m_errTy2 = 0.;
 }
 //=============================================================================
 // Destructor

@@ -1,4 +1,3 @@
-// $Id: PatVeloTrackTool.cpp,v 1.13 2010/02/18 14:12:07 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -18,8 +17,7 @@
 
 namespace Tf {
   // Declaration of the Tool Factory
-  DECLARE_TOOL_FACTORY( PatVeloTrackTool );
-
+  DECLARE_TOOL_FACTORY( PatVeloTrackTool )
 
   //=============================================================================
   // Standard constructor, initializes variables
