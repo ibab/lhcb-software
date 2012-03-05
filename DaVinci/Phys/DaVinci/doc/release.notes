@@ -8,6 +8,8 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================= DaVinci v30r1 2012-03-05 =========================
+
 ! 2012-03-01 - Chris Jones
  - If Simulation=True or DataType="MC09", force IgnoreDQFlags=True, to work 
    around an issue in LHCbApp. To be removed in a future release, when fixed 
