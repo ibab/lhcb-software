@@ -44,7 +44,7 @@ private:
 } ;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TrackParticleMonitor );
+DECLARE_ALGORITHM_FACTORY( TrackParticleMonitor )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -52,6 +52,7 @@ DECLARE_ALGORITHM_FACTORY( TrackParticleMonitor );
 TrackParticleMonitor::TrackParticleMonitor( const std::string& name,
 					ISvcLocator* pSvcLocator)
   : GaudiHistoAlg( name , pSvcLocator ), 
+    m_magfieldsvc(0),
     m_stateprovider("TrackStateProvider"),
     m_minMass(0*Gaudi::Units::GeV),
     m_maxMass(120.0*Gaudi::Units::GeV)
@@ -108,7 +109,7 @@ StatusCode TrackParticleMonitor::execute()
   setHistoTopDir("Track/") ;
 
   LHCb::Particle::Range particles  = get<LHCb::Particle::Range>(m_inputLocation) ;
-  //debug() << "particles: " << particles.size() << endreq ;
+  //debug() << "particles: " << particles.size() << endmsg ;
   
   double trackPMax(20*m_maxMass), trackPtMax(3*m_maxMass), 
     vtxX(2.), vtxY(2.), vtxZ(200.),
@@ -173,7 +174,7 @@ StatusCode TrackParticleMonitor::execute()
     double ppos = p3A.R() ;
     double pneg = p3B.R() ;
     double pdif = ppos - pneg ;
-    double costheta = pdif / (ppos + pneg) ;
+    //    double costheta = pdif / (ppos + pneg) ;
     double asym = pdif / (ppos + pneg) ;
     
     Gaudi::XYZVector norm = p3A.Cross( p3B ).Unit() ;
