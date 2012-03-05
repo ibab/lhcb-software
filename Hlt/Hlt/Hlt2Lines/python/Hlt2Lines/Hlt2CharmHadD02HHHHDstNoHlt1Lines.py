@@ -43,31 +43,31 @@ class Hlt2CharmHadD02HHHHDstNoHlt1LinesConf(HltLinesConfigurableUser) :
                   , 'GEC_Filter_NTRACK'        : False       # do or do not
                   , 'GEC_NTRACK_MAX'           : 180        # max number of tracks
                   , 'TisTosParticleTaggerSpecs': { "Hlt1Track.*Decision%TOS":0 }
-                  , 'name_prefix'              : 'CharmHadD02HHHHDstNoHlt1'
+                  , 'name_prefix'              : 'CharmHadD02HHHHDstNoHltOne'
                   # prescales
                   , 'Prescale'                  : {
-                          'Hlt2CharmHadD02HHHHDstNoHlt1_4piWideMass' : 0.1
-                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_K3piWideMass' : 0.1
-                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_KKpipiWideMass' : 0.1
-                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_2K2piWideMass' : 0.1
-                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_3KpiWideMass' : 0.1
-                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_Ch2'         : 0.1
-                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_Ch2WideMass' : 0.1
+                          'Hlt2CharmHadD02HHHHDstNoHltOne_4piWideMass' : 0.1
+                        , 'Hlt2CharmHadD02HHHHDstNoHltOne_K3piWideMass' : 0.1
+                        , 'Hlt2CharmHadD02HHHHDstNoHltOne_KKpipiWideMass' : 0.1
+                        , 'Hlt2CharmHadD02HHHHDstNoHltOne_2K2piWideMass' : 0.1
+                        , 'Hlt2CharmHadD02HHHHDstNoHltOne_3KpiWideMass' : 0.1
+                        , 'Hlt2CharmHadD02HHHHDstNoHltOne_Ch2'         : 0.1
+                        , 'Hlt2CharmHadD02HHHHDstNoHltOne_Ch2WideMass' : 0.1
                         }
                   , 'HltANNSvcID'  : {
-                          'Hlt2CharmHadD02HHHHDstNoHlt12BodyDecision'    : 62061
-                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_4piDecision'         : 62062
-                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_4piWideMassDecision' : 62063
-                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_K3piDecision'         : 62064
-                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_K3piWideMassDecision' : 62065
-                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_KKpipiDecision'         : 62066
-                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_KKpipiWideMassDecision' : 62067
-                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_2K2piDecision'         : 62068
-                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_2K2piWideMassDecision' : 62069
-                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_3KpiDecision'         : 62070
-                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_3KpiWideMassDecision' : 62071
-                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_Ch2Decision'         : 62072
-                        , 'Hlt2CharmHadD02HHHHDstNoHlt1_Ch2WideMassDecision' : 62073
+                          'Hlt2CharmHadD02HHHHDstNoHltOne2BodyDecision'    : 59020
+                        , 'Hlt2CharmHadD02HHHHDstNoHltOne_4piDecision'         : 59021
+                        , 'Hlt2CharmHadD02HHHHDstNoHltOne_4piWideMassDecision' : 59022
+                        , 'Hlt2CharmHadD02HHHHDstNoHltOne_K3piDecision'         : 59023
+                        , 'Hlt2CharmHadD02HHHHDstNoHltOne_K3piWideMassDecision' : 59024
+                        , 'Hlt2CharmHadD02HHHHDstNoHltOne_KKpipiDecision'         : 59025
+                        , 'Hlt2CharmHadD02HHHHDstNoHltOne_KKpipiWideMassDecision' : 59026
+                        , 'Hlt2CharmHadD02HHHHDstNoHltOne_2K2piDecision'         : 59027
+                        , 'Hlt2CharmHadD02HHHHDstNoHltOne_2K2piWideMassDecision' : 59028
+                        , 'Hlt2CharmHadD02HHHHDstNoHltOne_3KpiDecision'         : 59029
+                        , 'Hlt2CharmHadD02HHHHDstNoHltOne_3KpiWideMassDecision' : 59030
+                        , 'Hlt2CharmHadD02HHHHDstNoHltOne_Ch2Decision'         : 59031
+                        , 'Hlt2CharmHadD02HHHHDstNoHltOne_Ch2WideMassDecision' : 59032
                         }
                 }
 
