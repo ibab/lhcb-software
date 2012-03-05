@@ -55,7 +55,19 @@ class CharmHadronLines :
                   'Hlt2CharmHadD02HHHHDst_3Kpi',
                   'Hlt2CharmHadD02HHHHDst_3KpiWideMass',
                   'Hlt2CharmHadD02HHHHDst_Ch2',
-                  'Hlt2CharmHadD02HHHHDst_Ch2WideMass'
+                  'Hlt2CharmHadD02HHHHDst_Ch2WideMass',
+                  'Hlt2CharmHadD02HHHHDstNoHltOne_4pi',
+                  'Hlt2CharmHadD02HHHHDstNoHltOne_4piWideMass',
+                  'Hlt2CharmHadD02HHHHDstNoHltOne_K3pi',
+                  'Hlt2CharmHadD02HHHHDstNoHltOne_K3piWideMass',
+                  'Hlt2CharmHadD02HHHHDstNoHltOne_KKpipi',
+                  'Hlt2CharmHadD02HHHHDstNoHltOne_KKpipiWideMass',
+                  'Hlt2CharmHadD02HHHHDstNoHltOne_2K2pi',
+                  'Hlt2CharmHadD02HHHHDstNoHltOne_2K2piWideMass',
+                  'Hlt2CharmHadD02HHHHDstNoHltOne_3Kpi',
+                  'Hlt2CharmHadD02HHHHDstNoHltOne_3KpiWideMass',
+                  'Hlt2CharmHadD02HHHHDstNoHltOne_Ch2',
+                  'Hlt2CharmHadD02HHHHDstNoHltOne_Ch2WideMass'
 
                   ### from Hlt2CharmHadD02HHKsLines
                   , 'Hlt2CharmHadD02HHKsLL'
