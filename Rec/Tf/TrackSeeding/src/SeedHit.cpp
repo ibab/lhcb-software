@@ -29,11 +29,11 @@ double SeedHit::OTResolution = 0.5;
 double SeedHit::ITResolution = 0.1;
 
 
-SeedHit::SeedHit() {
+SeedHit::SeedHit() : m_ITRef(0), m_OTRef(0) {
     m_isIT = m_isOT = false;
 }
        
-SeedHit::SeedHit(LHCb::STLiteCluster* itclus, DeSTDetector* itdet) {
+SeedHit::SeedHit(LHCb::STLiteCluster* itclus, DeSTDetector* itdet) : m_ITRef(0), m_OTRef(0) {
    m_isOT = false;
    m_isIT = false;
    if (!itclus) return;
@@ -140,7 +140,7 @@ SeedHit::SeedHit(LHCb::STLiteCluster* itclus, DeSTDetector* itdet) {
 }
 
 
-SeedHit::SeedHit(LHCb::OTTime* ott, DeOTDetector* otdet) {
+SeedHit::SeedHit(LHCb::OTTime* ott, DeOTDetector* otdet) : m_ITRef(0), m_OTRef(0) {
    m_isIT = m_isOT = false;
    if (!otdet) return;
    LHCb::OTChannelID chan = ott->channel();
