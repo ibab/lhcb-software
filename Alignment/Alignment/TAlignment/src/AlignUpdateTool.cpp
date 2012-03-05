@@ -390,7 +390,7 @@ namespace Al
       //<< "Total number of tracks: " << m_nTracks << std::endl
       //<< "Number of covariance calculation failures: " << m_covFailure << std::endl
 	       << "Used " << equations.numVertices() << " vertices for alignment" << std::endl
-	       << "Used " << equations.numDiMuons() << " J/Psis for alignment" << std::endl
+	       << "Used " << equations.numDiMuons() << " particles for alignment" << std::endl
 	       << "Used " << equations.numTracks() << " tracks for alignment" << std::endl
 	       << "Total chisquare/dofs:    " << equations.totalChiSquare() << " / " << equations.totalNumDofs() << std::endl
 	       << "Average track chisquare: " << equations.totalTrackChiSquare() / equations.numTracks() << std::endl
