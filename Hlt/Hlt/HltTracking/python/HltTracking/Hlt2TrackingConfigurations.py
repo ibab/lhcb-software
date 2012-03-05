@@ -44,7 +44,8 @@ def Hlt2BiKalmanFittedDownstreamTracking() :
                                                                                  FastFitType            = HltBiDirectionalKalmanFitSuffix,
                                                                                  Hlt2Tracks             = Hlt2DownstreamTracksName,
                                                                                  DoFastFit              = True,
-                                                                                 DoSeeding              = True
+                                                                                 DoSeeding              = True,
+                                                                                 DoCloneKilling         = True   
                                                                         )
 #
 # With track fitting and RICH PID for 3 hypotheses (kaon-proton-pion), but no seeding
@@ -53,10 +54,10 @@ def Hlt2BiKalmanFittedRichForProtonsForwardTracking() :
      return Hlt2Tracking("Hlt2BiKalmanFittedRichForProtonsForwardTracking", 
                          Prefix                 = Hlt2TracksPrefix,
                          FastFitType            = HltBiDirectionalKalmanFitSuffix,
-                         Hlt2Tracks             = Hlt2ForwardTracksName,
+                         Hlt2Tracks             = Hlt2LongTracksName,
                          DoFastFit              = True,
-                         DoSeeding              = False,
-                         DoCloneKilling         = False,
+                         DoSeeding              = True,
+                         DoCloneKilling         = True,
                          RichHypos              = ["pion","proton","kaon"],
                          RichTrackCuts          = {"Forward":{ "Chi2Cut" : [0,16], "PCut" : [2,100], "PtCut" : [1.9,100], "Likelihood" : [-999999,999999] }  }
                          )
@@ -68,10 +69,10 @@ def Hlt2BiKalmanFittedRichForLowPTProtonsForwardTracking() :
      return Hlt2Tracking("Hlt2BiKalmanFittedRichForLowPTProtonsForwardTracking", 
                          Prefix                 = Hlt2TracksPrefix,
                          FastFitType            = HltBiDirectionalKalmanFitSuffix,
-                         Hlt2Tracks             = Hlt2ForwardTracksName,
+                         Hlt2Tracks             = Hlt2LongTracksName,
                          DoFastFit              = True,
-                         DoSeeding              = False,
-                         DoCloneKilling         = False,
+                         DoSeeding              = True,
+                         DoCloneKilling         = True,
                          RichHypos              = ["pion","proton"],
                          RichTrackCuts          = {"Forward":{ "Chi2Cut" : [0,16], "PCut" : [2,100], "PtCut" : [0.5,100], "Likelihood" : [-999999,999999] }  }
                          )
