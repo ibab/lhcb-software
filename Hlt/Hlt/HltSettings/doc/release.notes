@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-03-05 - V. Gligorov 
+ - Rename D02HHHHDstNoHlt1 lines to prevent ANNSvc mixup.
+
 !========================= HltSettings v5r17 2012-03-01 =========================
 ! 2012-03-01 - Johannes Albrecht
  - added Muons_draft2012 as copy of Muons_July2011
