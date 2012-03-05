@@ -109,6 +109,7 @@ StatusCode TrackParticleMonitor::execute()
   setHistoTopDir("Track/") ;
 
   LHCb::Particle::Range particles  = get<LHCb::Particle::Range>(m_inputLocation) ;
+  plot(particles.size(),"multiplicity","multiplicity",-0.5,10.5,11) ;
   //debug() << "particles: " << particles.size() << endmsg ;
   
   double trackPMax(20*m_maxMass), trackPtMax(3*m_maxMass), 
