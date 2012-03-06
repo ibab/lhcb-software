@@ -1,3 +1,10 @@
+2012-03-06 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v6r7p3
+
+	LbLegacy	
+	* python/LbLegacy/install_project.py: remove call to updateConf
+
 2012-02-24 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v6r7p2
