@@ -96,11 +96,11 @@ namespace LHCb {
 	  }
 	  else if ( (vi=std::find(m_downScale.begin(),m_downScale.end(),triggerType)) != 
 	       m_downScale.end() )  {
-	    setFilterPassed(m_rate<frac);
+	    setFilterPassed(m_rate>=frac);
 	    return StatusCode::SUCCESS;
 	  }
 	  else if ( m_downScale.empty() && m_passThrough.empty() ) {
-	    setFilterPassed(m_rate<frac);
+	    setFilterPassed(m_rate>=frac);
 	    return StatusCode::SUCCESS;
 	  }
 	  else {

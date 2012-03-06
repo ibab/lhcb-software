@@ -180,7 +180,8 @@ MEPRx::MEPRx(const string &nam, MEPRxSvc *parent)
   m_refCount(parent->mepRefcount()), 
   m_spaceSize(parent->spaceSize()),
   m_nSrc(parent->numberOfSources()), 
-  m_log(parent->msgSvc(), nam)
+  m_log(parent->msgSvc(), nam),
+  m_ovflBuf(0)
 {
   m_liveBuf = new MEPBuf(parent->m_nameLiveBuf, nam, parent->partitionID());
   if (parent->m_overflow) m_ovflBuf = new MEPBuf(parent->m_nameOverflowBuf, nam, parent->partitionID());
@@ -231,8 +232,10 @@ int MEPRx::spaceRearm(int) {
       return sc;
     }
     if (sc == MBM_NO_ROOM) {
+      // Assign variable first. Otherwise Cancel on stop
+      // goes to the wrong buffer ....
+      m_buf = m_ovflBuf; 
       sc = m_ovflBuf->getSpace(m_spaceSize);
-      m_buf = m_ovflBuf;
       m_parent->m_overflowActive = true;
       return sc;
     }
@@ -240,7 +243,7 @@ int MEPRx::spaceRearm(int) {
     return sc;
   }  
   m_buf = m_liveBuf;
-return m_buf->getSpace(m_spaceSize);
+  return m_buf->getSpace(m_spaceSize);
 }
 
 void MEPRx::updateNoshow() {
