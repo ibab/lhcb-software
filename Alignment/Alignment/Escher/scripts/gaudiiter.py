@@ -4,9 +4,10 @@
 from optparse import OptionParser
 parser = OptionParser(usage = "%prog [options] <opts_file> ...")
 parser.add_option("-n","--numiter",type="int", dest="numiter",help="number of iterations", default=1)
-parser.add_option("-e","--numevents",type="int", dest="numevents",help="number of events", default=100000)
+parser.add_option("-e","--numevents",type="int", dest="numevents",help="number of events", default=-1)
 parser.add_option("-d", "--aligndb", action = 'append', dest="aligndb",help="path to file with LHCBCOND database layer")
 parser.add_option("--dddb", action = 'append', dest="dddb",help="path to file with DDDB database layer")
+parser.add_option("--skipprintsequence", action="store_true",help="skip printing the sequence")
 (opts, args) = parser.parse_args()
 
 # Prepare the "configuration script" to parse (like this it is easier than
@@ -66,6 +67,38 @@ if opts.dddb:
 ## Instantiate application manager
 from GaudiPython.Bindings import AppMgr
 appMgr = AppMgr()
+
+if not opts.skipprintsequence:
+   def printAlgo( algName, appMgr, prefix = ' ') :
+      HEADER = '\033[95m'
+      OKBLUE = '\033[94m'
+      OKGREEN = '\033[32m'
+      WARNING = '\033[93m'
+      FAIL = '\033[91m'
+      ENDC = '\033[0m'
+      alg = appMgr.algorithm( algName.split( "/" )[ -1 ] )
+      prop = alg.properties()
+      # if the algorithm is not enabled, print a '#'
+      if prop.has_key( "Enable" ) and not prop[ "Enable" ].value():
+         print FAIL + prefix + algName + ' (disabled)' + ENDC
+      else:
+         #print prefix + algName
+         if prop.has_key( "Members" ) :
+            print OKBLUE + prefix + algName + ENDC
+            subs = prop[ "Members" ].value()
+            for i in subs : printAlgo( i.strip( '"' ), appMgr, prefix + "     " )
+         elif prop.has_key( "DetectorList" ) :
+            print OKBLUE + prefix + algName + ENDC
+            subs = prop[ "DetectorList" ].value()
+            for i in subs : printAlgo( algName.split( "/" )[ -1 ] + i.strip( '"' ) + "Seq", appMgr, prefix + "     ")
+         else:
+            print OKGREEN + prefix + algName + ENDC
+
+   mp = appMgr.properties()
+   print "\n ****************************** Algorithm Sequence **************************** \n"
+   for i in mp["TopAlg"].value(): printAlgo( i, appMgr )
+   print "\n ****************************************************************************** \n"
+
 evtSel = appMgr.evtSel()
 evtSel.OutputLevel = 1
 mainSeq = appMgr.algorithm( "EscherSequencer" )
