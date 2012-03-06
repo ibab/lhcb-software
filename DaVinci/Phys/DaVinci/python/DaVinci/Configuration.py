@@ -125,7 +125,7 @@ class DaVinci(LHCbConfigurableUser) :
             if not self.getProp("Simulation"):
                 log.warning("Setting Simulation = True for "+dataType)
                 self.setProp("Simulation",True)
-        if ( self.getProp("Simulation") & ( inputType != "MDF" ) & (inputType != "DIGI") & (inputType != "MDST") ):
+        if ( self.getProp("Simulation") & (inputType != "MDF") & (inputType != "DIGI") & (inputType != "MDST") ):
             redo = self.getProp("RedoMCLinks")
             if (inputType == "RDST")  and (redo) :
                 log.warning("Re-doing MC links not possible for RDST")
@@ -188,7 +188,7 @@ class DaVinci(LHCbConfigurableUser) :
 
         initSeqs = []
 
-        if inputType != 'MDST' & inputType != "MDF" & inputType != "DIGI" ) :
+        if ( inputType != 'MDST' & inputType != "MDF" & inputType != "DIGI" ) :
             physinit = PhysConf().initSequence() # PhysConf initSequence
             # Analysis
             AnalysisConf().RedoMCLinks = self.getProp("RedoMCLinks") 
