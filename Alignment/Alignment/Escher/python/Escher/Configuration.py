@@ -35,8 +35,8 @@ class Escher(LHCbConfigurableUser):
     __slots__ = {
          "EvtMax"		: -1       # Maximum number of events to process
        , "SkipEvents"		: 0        # events to skip
-       , "PrintFreq"		: 300      # The frequency at which to print event numbers
-       , "DataType"   		: "2008"   # Data type, can be ['DC06','2008']
+       , "PrintFreq"		: 100      # The frequency at which to print event numbers
+       , "DataType"   		: "2011"   # Data type, can be ['DC06','2008']
        , "WithMC"		: False    # set to True to use MC truth
        , "Simulation"		: False    # set to True to use SimCond
        , "InputType"		: "DST"    # or "DIGI" or "ETC" or "RDST" or "DST"
@@ -44,10 +44,6 @@ class Escher(LHCbConfigurableUser):
        , "Persistency"          : None     # POOL or ROOT foraward to LHCbApp
        , "PackType"		: "TES"    # Flag whether or not to use packed containers
        , "NoWarnings"		: False    # suppress all messages with MSG::WARNING or below 
-       , "Detectors" 		: ["VELO", "TT", "IT", "OT", "MUON", "Tr", "Vertex"] # detectors to be aligned
-       , "AlignmentLevel" 	: "layers" # level of alignment, stations, layers, quarters, modules, sensors...
-       , "Constraints"          : []       # list of constraints
-       , "DoF"                  : [0, 0, 0, 0, 0, 0]       # list of degrees of freedom to align
        , "DatasetName"		: ""       # string used to build file names
        , "DDDBtag"		: ""       # Tag for DDDB. Default as set in DDDBConf for DataType
        , "CondDBtag"		: ""       # Tag for CondDB. Default as set in DDDBConf for DataType
@@ -55,9 +51,8 @@ class Escher(LHCbConfigurableUser):
        , "MainSequence"		: []       # The default main sequence, see self.DefaultSequence
        , "InitSequence"		: ["Reproc", "Escher", "Calo"] # default init sequence
        , "AlignSequence"	: []
-       , "Kalman" 		: False    # run the kalman filter type alignment
+       , "Kalman" 		: True    # run the kalman filter type alignment
        , "Millepede"		: False    # run the Millepede type alignment
-       , "skipBigCluster"       : False    # used for cosmic alignment, removes OT cluster > 2 hits
        , "OutputLevel" 		: 3        # 
        , "Incident"     	:  ""      # for Millepede style alignment, there are two incident handles: GlobalMPedeFit and Converged
                                            # for Kalman style alignment, there is a handle: UpdateConstants.
@@ -67,9 +62,9 @@ class Escher(LHCbConfigurableUser):
        , "SpecialData"    	: [] # Various special data processing options. See KnownSpecialData for all options
        , "Context"		: "Offline" # The context within which to run
        , "WriteFSR"             : True #write FSRs to DSTs
+       , "UseFileStager"        : False
+       , "ExpertTracking"       : [ "simplifiedGeometry"]
         }
-
-
 
     def defineGeometry(self):
         # DIGI is always simulation, as is usage of MC truth!
@@ -117,7 +112,7 @@ class Escher(LHCbConfigurableUser):
             if (self.evtMax() > 0): histosName += '-' + str(self.evtMax()) + 'ev'
             histosName += '-histos.root'
             HistogramPersistencySvc().OutputFile = histosName
-        
+
     def configureSequences(self):
         escherSeq = GaudiSequencer("EscherSequencer")
         #escherSeq.Context = self.getProp("Context")
@@ -136,28 +131,24 @@ class Escher(LHCbConfigurableUser):
                            PrintFreq = self.getProp("PrintFreq"))
         GaudiSequencer("InitEscherSeq").Members += [ recInit ]
         alignSeq = GaudiSequencer("AlignSequence")
+
+        # in Escher we'll always use the DOD
+        ApplicationMgr().ExtSvc += [ "DataOnDemandSvc" ]
+
         # if the patter reco is not run, we need the DataOnDemand svc
         # so that e.g. the track container(s) is unpacked:
         if not GaudiSequencer("RecoTrSeq").getProp("Enable"):
-	    ApplicationMgr().ExtSvc += [ "DataOnDemandSvc" ]
 	    DstConf( EnableUnpack = True )
             
+        TrackSys().ExpertTracking = self.getProp("ExpertTracking")
+   
+        ta = TAlignment()
+        ta.Sequencer = alignSeq
         if  self.getProp("Millepede") :
-            self.setProp("Kalman", False )
             log.info("Using Millepede type alignment!")
             self.setProp("Incident", "GlobalMPedeFit")
-	    ta = TAlignment()
             ta.Method = "Millepede"
             ta.Sequencer = GaudiSequencer("MpedeAlignSeq")
-            alignSeq.Members.append( ta.Sequencer )
-            
-        if self.getProp("Kalman") :
-	    log.info("Using Kalman style alignment!")
-            self.setProp("Incident", "UpdateConstants")
-            ta = TAlignment()
-            ta.Method = "Kalman"
-            ta.Sequencer = GaudiSequencer("KalmanAlignSeq")
-            alignSeq.Members.append( ta.Sequencer )
         
     def configurePersistency(self):
         if hasattr(self,"Persistency"):
@@ -202,7 +193,17 @@ class Escher(LHCbConfigurableUser):
         from Configurables import EventClockSvc
         EventClockSvc().EventTimeDecoder = "OdinTimeDecoder";
 
-
+        if self.getProp("UseFileStager") :
+            import os, getpass
+            from FileStager.Configuration import configureFileStager
+            from Configurables import FileStagerSvc
+            configureFileStager(keep = True)
+            targetdir = '/tmp/' + getpass.getuser() + '/stagedfiles'
+            if os.path.isdir( '/pool/spool/' ) :
+                targetdir = '/pool/spool/' + getpass.getuser() + '/stagedfiles'
+                if not os.path.isdir( targetdir ):
+                    os.makedirs( targetdir )
+            FileStagerSvc().Tempdir=targetdir
 
     def configureOutput(self, dstType):
         """
