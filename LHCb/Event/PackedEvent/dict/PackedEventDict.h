@@ -25,5 +25,5 @@
 #include "Event/PackedDecReport.h"
 #include "Event/PackedRelations.h"
 #include "Event/PackedParticle2Ints.h"
-
+#include "Event/PackedCluster.h"
 #endif // DICT_PACKEDEVENTDICT_H
