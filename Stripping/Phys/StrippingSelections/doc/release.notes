@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-03-06 - Patrick Koppenburg
+ - Fix bug #92254: NoBias line to only take NoBias events.
+  -config_params = { "NoBiasLine_RE"       : "(HLT_PASS_RE('Hlt1.*NoBias.*Decision'))",
+  +config_params = { "NoBiasLine_RE"       : "(HLT_PASS_RE('Hlt1NoBias.*Decision'))",
+
+
 !========================= StrippingSelections v3r11 2012-03-01 =========================
 ! 2012-03-01 - Jibo He
  - StrippingDiMuonNew

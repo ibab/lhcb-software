@@ -8,7 +8,7 @@ Stripping selections or Minimum Bias physics.
 
 # Begin StrippingMinBias.py
 
-config_params = { "NoBiasLine_RE"       : "(HLT_PASS_RE('Hlt1.*NoBias.*Decision'))",
+config_params = { "NoBiasLine_RE"       : "(HLT_PASS_RE('Hlt1NoBias.*Decision'))",
                   "NoBiasLine_Rate" : 1,
                   "NoBiasLine_Limiter" : "Hlt1MBNoBiasODINFilter",
                   "L0AnyLine_RE"        : "(HLT_PASS_RE('Hlt1L0Any.*Decision'))",
