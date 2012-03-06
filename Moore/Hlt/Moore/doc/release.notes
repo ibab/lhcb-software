@@ -2,6 +2,11 @@ Package     : Hlt/Moore
 Package Coordinator : Eric van Herwijnen
 Purpose     : LHCb HLT application
 
+!========================= Moore v13r1p1 2012-03-06 =========================
+! 2012-03-06 - Eric van Herwijnen
+ - Replace import GaudiConf.Configuration by Gaudi.Configuration
+   in Configuration.py.
+
 !========================= Moore v13r1 2012-02-29 =========================
 ! 2012-02-29 - Eric van Herwijnen
  - Changes for reading MEPs. Improve L0DU decoding in Configuration.py.

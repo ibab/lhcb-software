@@ -9,7 +9,7 @@ from LHCbKernel.Configuration import *
 from Gaudi.Configuration import *
 from Configurables import HltConf
 from Configurables import GaudiSequencer
-from Configurables import LHCbApp, L0Conf, L0DUFromRawAlg
+from Configurables import LHCbApp, L0Conf
 
 import GaudiKernel.ProcessJobOptions
 from  ctypes import c_uint
@@ -138,8 +138,8 @@ class Moore(LHCbConfigurableUser):
                     self._configureOnlineCheckpointing()
             
             TAE = OnlineEnv.TAE != 0
-            input   = 'Events'
-            output  = 'Send'
+            input   = 'EVENT' if not TAE else 'MEP'
+            output  = 'SEND'
             mepMgr = OnlineEnv.mepManager(OnlineEnv.PartitionID,OnlineEnv.PartitionName,[input,output],False)
             mepMgr.ConnectWhen = 'start'
             app.Runable = OnlineEnv.evtRunable(mepMgr)
@@ -149,7 +149,6 @@ class Moore(LHCbConfigurableUser):
             eventSelector = OnlineEnv.mbmSelector(input=input, TAE=TAE)
             app.ExtSvc.append(eventSelector)
             OnlineEnv.evtDataSvc()
-	    if self.getProp('REQ1') : eventSelector.REQ1 = self.getProp('REQ1')
             
             # define the send sequence
             writer =  GaudiSequencer('SendSequence')
@@ -434,7 +433,7 @@ class Moore(LHCbConfigurableUser):
         appendPostConfigAction( genConfigAction )
 
     def _l0(self) :
-        from Configurables import L0DUFromRawTool
+        from Configurables import L0DUFromRawAlg, L0DUFromRawTool
         #L0DUFromRawAlg('L0DUFromRaw').ProcessorDataOnTES = False
         l0du   = L0DUFromRawAlg("L0DUFromRaw")
         #l0du.WriteProcData       = False
@@ -497,6 +496,7 @@ class Moore(LHCbConfigurableUser):
         VFSSvc().FileAccessTools = ['FileReadTool', 'CondDBEntityResolver/CondDBEntityResolver'];
         from Configurables import LHCb__ParticlePropertySvc
         LHCb__ParticlePropertySvc().ParticlePropertiesFile = 'conddb:///param/ParticleTable.txt';
+        ParticlePropertySvc().ParticlePropertiesFile = "conddb:///param/ParticleTable.txt";
         if (self.getProp('L0')) :
             if (self.getProp('RunOnline')) : raise RuntimeError('NEVER try to rerun L0 online! -- aborting ')
             from Hlt1Lines.HltL0Candidates import decodeL0Channels
@@ -550,11 +550,6 @@ class Moore(LHCbConfigurableUser):
         #       Online vs. DB tags...
         #       Online vs. EvtMax, SkipEvents, DataType, ...
         #       Online requires UseTCK
-	# L0 decoding to look in a single place
-	#L0Conf().RawEventLocations = ['DAQ/RawEvent'] 
-	
-	L0DUFromRawAlg("L0DUFromRaw").Hlt1 = True
-	
         if not self.getProp("RunOnline") : self._l0()
         if self.getProp("RunOnline") : 
             import OnlineEnv 
@@ -590,11 +585,6 @@ class Moore(LHCbConfigurableUser):
         # Get the event time (for CondDb) from ODIN 
         from Configurables import EventClockSvc
         EventClockSvc().EventTimeDecoder = 'OdinTimeDecoder'
-	
-		
-	# fix to 2012 bug
-	EventClockSvc().InitialTime = 1322701200000000000  # 31/12/2011 1.00 am
-
         # make sure we don't pick up small variations of the read current
         # Need a defined HistogramPersistency to read some calibration inputs!!!
         ApplicationMgr().HistogramPersistency = 'ROOT'
