@@ -6,6 +6,7 @@ Purpose: LHCb reconstruction program
 - Changes to references to reflect changes since Brunel v42r1
   . Minor change in ChargedProtoParticleTupleAlg
     (GlobalReco, not yet in tag collector)
+  . protect some unprotected debug messages (PatVeloTT)
 
 </PRE><H1><A NAME=v42r1>2012-03-02 Brunel v42r1</A></H1><PRE>
 This version uses projects LCG 62a, Gaudi v23r1, LHCb v34r1, Lbcom v12r1,
