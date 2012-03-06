@@ -4,6 +4,17 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2012-03-06 - Olivier Callot
+ - New algorithmc PackCluster and UnpackCluster. Thefirst one process a container
+   of track and store in a PackedCluster container the Velo + ST clusters. Input
+   and output names controlled as usual by InputName and OutputName.
+   UnpackCluster generate the Velo and  ST cluster containers from the PackedCluster
+   object given as InputName. If the option Extension is set, the clusters are
+   created in containers with name postfixed by this extension, and the new clusters
+   are compared to the old ones.
+
+  *** The original VeloClusters and STClusters containers are cleared if they exist ***
+
 !========================= EventPacker v2r12 2012-02-28 =========================
 ! 2012-02-21 - Chris Jones
  - Update the way some references to Particles and Vertices are stored, to
