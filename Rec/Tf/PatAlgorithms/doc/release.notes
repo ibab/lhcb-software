@@ -3,6 +3,10 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2012-02-23 - Sascha Stahl
+ - PatForwardTool: Bug fix in PatForward in part which uses momentum estimate.
+	                 Variable was shadowed, resulting in wrong behaviour of 
+	                 the algorithm.
 
 !========================= PatAlgorithms v4r18 2012-02-28 =========================
 ! 2012-02-23 - Sascha Stahl

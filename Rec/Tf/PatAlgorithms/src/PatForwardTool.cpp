@@ -845,7 +845,7 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
   if (m_useMomentumEstimate && 0 != track.qOverP() && !m_withoutBField) {
     const double q = track.qOverP() > 0 ? 1. : -1.;
     const double magscalefactor = m_fwdTool->magscalefactor() ;
-    double kick = q*magscalefactor*(-1)*m_magnetKickParams[0] / ( fabs(1./track.qOverP()) -  m_magnetKickParams[1] ) ;
+    kick = q*magscalefactor*(-1)*m_magnetKickParams[0] / ( fabs(1./track.qOverP()) -  m_magnetKickParams[1] ) ;
     kick *= ( m_fwdTool->zReference() - zMagnet);
     maxRange = m_minRange + m_momentumEstimateError*fabs(kick);
   
