@@ -98,6 +98,9 @@ def filterPID(name,input,config,level=1):
 def makeB2X(name,decay,inputs,config,useIP=True,resVert=True):
     '''Makes all B -> X selections.'''
     from copy import deepcopy
+    config = deepcopy(config)
+    if name.find('B02') >= 0 or name.find('NoIP') >= 0:
+        config['AM_MAX'] = '6000*MeV'
     comboCuts = LoKiCuts(['SUMPT','AM'],config).code()
     flightCuts = ['BPVLTIME']
     if useIP: flightCuts += ['BPVIPCHI2','BPVDIRA']

@@ -111,25 +111,25 @@ config = {
                    'K'  : {'PIDK_MIN' : -5}}
     },
     "Prescales" : { # Prescales for individual lines
-    'RUN_BY_DEFAULT' : False, # False = lines off by default
-    'RUN_RE'         : ['.*KS.*','.*Lb2LcD.*','.*DoubleTopo.*'],  
+    'RUN_BY_DEFAULT' : True, # False = lines off by default
+    'RUN_RE'         : [],#['.*KS.*','.*Lb2LcD.*','.*DoubleTopo.*'],  
     # Defaults are defined in, eg, Beauty2Charm_B2DXBuilder.py.  Put the full
     # line name here to override. E.g. 'B2D0HD2HHBeauty2CharmTOSLine':0.5.
-    'B02D0PiPiD2HHBeauty2CharmLine'      : 1.0,
+    #'B02D0PiPiD2HHBeauty2CharmLine'      : 1.0,
     'B02DHHWSD2HHBeauty2CharmLine'       : 0.1,
-    'B2DPiPiD2HHHCFPIDBeauty2CharmLine'  : 1.0,
-    'B2DHHOSD2HHHCFPIDBeauty2CharmLine'  : 1.0,
-    'B02DPiNoIPDs2HHHPIDBeauty2CharmLine': 1.0,
-    'Lb2XicPiXic2PKPiBeauty2CharmLine' 	 : 1.0,
-    'Lb2XicKXic2PKPiBeauty2CharmLine' 	 : 1.0,
+    #'B2DPiPiD2HHHCFPIDBeauty2CharmLine'  : 1.0,
+    #'B2DHHOSD2HHHCFPIDBeauty2CharmLine'  : 1.0,
+    #'#B02DPiNoIPDs2HHHPIDBeauty2CharmLine': 1.0,
+    #'Lb2XicPiXic2PKPiBeauty2CharmLine' 	 : 1.0,
+    #'Lb2XicKXic2PKPiBeauty2CharmLine' 	 : 1.0,
     'Lb2XicPiWSXic2PKPiBeauty2CharmLine' : 0.1,
     'Lb2XicKWSXic2PKPiBeauty2CharmLine'  : 0.1,
-    'X2LcLcBeauty2CharmLine'    : 1.0,
+    #'X2LcLcBeauty2CharmLine'    : 1.0,
     'X2LcLcWSBeauty2CharmLine'  : 0.1,
-    'B02DKLTUBBeauty2CharmLine' : 0.04,
-    'B02D0D0Beauty2CharmLine'   : 1.0,
-    'B02DDWSBeauty2CharmLine'   : 1.0,
-    'B2D0DD02K3PiBeauty2CharmLine' : 1.0
+    'B02DKLTUBD2HHHBeauty2CharmLine' : 0.04,
+    #'B02D0D0Beauty2CharmLine'   : 1.0,
+    #'B02DDWSBeauty2CharmLine'   : 1.0,
+    #'B2D0DD02K3PiBeauty2CharmLine' : 1.0
     },
     'GECNTrkMax'   : 500
     }
