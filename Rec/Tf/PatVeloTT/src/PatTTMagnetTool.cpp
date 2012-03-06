@@ -48,7 +48,7 @@ StatusCode PatTTMagnetTool::initialize ( ) {
 
   StatusCode sc = GaudiTool::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-  debug() << "==> Initialize" << endmsg;
+  if (msgLevel( MSG::DEBUG )) debug() << "==> Initialize" << endmsg;
 
   // set parameters for no field run
   m_bdlIntegral_NoB = 0.1;
@@ -347,8 +347,7 @@ void PatTTMagnetTool::prepareDeflectionTables() {
 //=========================================================================
 //  Destructor
 //=========================================================================
-PatTTMagnetTool::~PatTTMagnetTool() {  
-};
+PatTTMagnetTool::~PatTTMagnetTool() {}
 
 //****************************************************************************
 double PatTTMagnetTool::bdlIntegral(double ySlopeVelo, double zOrigin, double zVelo) {

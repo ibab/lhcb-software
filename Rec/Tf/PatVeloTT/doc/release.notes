@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-03-06 - Marco Cattaneo
+ - Protect some unprotected DEBUG messages
+ - Fix some trivial icc remarks
+
 !========================= PatVeloTT v3r17 2012-01-31 =========================
 ! 2012-01-10 - Marco Cattaneo
  - Fix handling of CondDB updates in PatTTMagnetTool: Z layer positions were

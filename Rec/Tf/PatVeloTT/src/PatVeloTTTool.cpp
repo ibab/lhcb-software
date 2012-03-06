@@ -64,10 +64,9 @@ StatusCode PatVeloTTTool::initialize ( ) {
   StatusCode sc = GaudiTool::initialize();
   if ( !sc ) return sc;
 
-  debug() << "==> Initialize" << endmsg;
-
   m_debug = msgLevel( MSG::DEBUG );
   m_verbose = msgLevel( MSG::VERBOSE );
+  if( m_debug ) debug() << "==> Initialize" << endmsg;
 
   m_PatTTMagnetTool = tool<PatTTMagnetTool>( "PatTTMagnetTool","PatTTMagnetTool");
 
@@ -78,22 +77,24 @@ StatusCode PatVeloTTTool::initialize ( ) {
   double zMidField = m_PatTTMagnetTool->zMidField();
   double distToMomentum = m_PatTTMagnetTool->averageDist2mom();
 
-  debug()       << " MaxXSize           = " << m_maxXSize         << " mm"  << endmsg;
-  debug()       << " MaxYSize           = " << m_maxYSize         << " mm"  << endmsg;
-  debug()       << " MaxXSlope          = " << m_maxXSlope                  << endmsg;
-  debug()       << " MaxYSlope          = " << m_maxYSlope                  << endmsg;
-  debug()       << " centralHoleSize    = " << m_centralHoleSize  << " mm"  << endmsg;
-  debug()       << " minMomentum        = " << m_minMomentum      << " MeV" << endmsg;
-  debug()       << " maxPseudoChi2      = " << m_maxPseudoChi2    << "   "  << endmsg;
-  debug()       << " distToMomentum     = " << distToMomentum               << endmsg;
-  debug()       << " zMidField          = " << zMidField          << " mm"  << endmsg;
-  debug()       << " xTolerance         = " << m_xTol             << " mm"  << endmsg;
-  debug()       << " xTolSlope          = " << m_xTolSlope        << " mm"  << endmsg;
-  debug()       << " yTolerance         = " << m_yTol             << " mm"  << endmsg;
-  debug()       << " YTolSlope          = " << m_yTolSlope                  << endmsg;
-  debug()       << " DxGroupTol         = " << m_dxGroupTol       << " mm " << endmsg;
-  debug()       << " DxGroupFactor      = " << m_dxGroupFactor    << "    " << endmsg;
-  debug()       << " zMidTT             = " << m_zMidTT           << " mm"  << endmsg;
+  if( m_debug ){
+    debug() << " MaxXSize           = " << m_maxXSize         << " mm"  << endmsg;
+    debug() << " MaxYSize           = " << m_maxYSize         << " mm"  << endmsg;
+    debug() << " MaxXSlope          = " << m_maxXSlope                  << endmsg;
+    debug() << " MaxYSlope          = " << m_maxYSlope                  << endmsg;
+    debug() << " centralHoleSize    = " << m_centralHoleSize  << " mm"  << endmsg;
+    debug() << " minMomentum        = " << m_minMomentum      << " MeV" << endmsg;
+    debug() << " maxPseudoChi2      = " << m_maxPseudoChi2    << "   "  << endmsg;
+    debug() << " distToMomentum     = " << distToMomentum               << endmsg;
+    debug() << " zMidField          = " << zMidField          << " mm"  << endmsg;
+    debug() << " xTolerance         = " << m_xTol             << " mm"  << endmsg;
+    debug() << " xTolSlope          = " << m_xTolSlope        << " mm"  << endmsg;
+    debug() << " yTolerance         = " << m_yTol             << " mm"  << endmsg;
+    debug() << " YTolSlope          = " << m_yTolSlope                  << endmsg;
+    debug() << " DxGroupTol         = " << m_dxGroupTol       << " mm " << endmsg;
+    debug() << " DxGroupFactor      = " << m_dxGroupFactor    << "    " << endmsg;
+    debug() << " zMidTT             = " << m_zMidTT           << " mm"  << endmsg;
+  }
 
   std::vector<double> nfact;
   for (double dydz = -0.3; dydz < 0.3; dydz+=0.02) {
@@ -101,8 +102,9 @@ StatusCode PatVeloTTTool::initialize ( ) {
     m_PatTTMagnetTool->dxNormFactorsTT(dydz, nfact);
     double dist2mom = m_PatTTMagnetTool->dist2mom(dydz);
 
-    debug() << format(" val dist2mom %10.4e # %7.2f %7.2f  ratios: %7.3f %7.3f %7.3f %7.3f",
-                      dist2mom, dxdz, dydz, nfact[0],nfact[1],nfact[2],nfact[3]) << endmsg;
+    if( m_debug )
+      debug() << format(" val dist2mom %10.4e # %7.2f %7.2f  ratios: %7.3f %7.3f %7.3f %7.3f",
+                        dist2mom, dxdz, dydz, nfact[0],nfact[1],nfact[2],nfact[3]) << endmsg;
   }
 
 
@@ -132,8 +134,6 @@ void PatVeloTTTool::recoVeloTT(LHCb::Track & velotrack, std::vector<LHCb::Track*
 // Get all the VeloTT track candidates
 //=========================================================================
 void PatVeloTTTool::getCandidates( LHCb::Track& veloTrack, std::vector<PatVTTTrack>& vttTracks){
-
-
 
   if(m_debug) debug() << "Entering getCandidates" << endmsg;
 
@@ -263,7 +263,6 @@ void PatVeloTTTool::getCandidates( LHCb::Track& veloTrack, std::vector<PatVTTTra
 
   // Try with 3 or 4 clusters in at least 3 different layers
   cand.bestLists(m_dxGroupTol, m_dxGroupFactor, theSolutions, debug());
-
   if(m_debug){
     debug() << "This Velo track has " << theSolutions.size()
             << " possible solution(s) with 3 or 4 layers fired before clean-up" << endmsg;
@@ -301,7 +300,7 @@ void PatVeloTTTool::getCandidates( LHCb::Track& veloTrack, std::vector<PatVTTTra
 
   if(m_debug) debug() << "Leaving getCandidates" << endmsg;
 
-};
+}
 
 
 //=========================================================================
