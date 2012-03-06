@@ -12,6 +12,7 @@ from DetCond.Configuration import *
 from TrackSys.Configuration import TrackSys
 from Configurables import ( LHCbConfigurableUser, LHCbApp, GaudiSequencer, AlignTrTools )
 from SurveyConstraints import SurveyConstraints
+from TrackSelections import GoodLongTracks
 
 class TAlignment( LHCbConfigurableUser ):
     INFO=3
@@ -23,21 +24,19 @@ class TAlignment( LHCbConfigurableUser ):
 
     __slots__ = {
           "Sequencer" : GaudiSequencer("TAlignmentSequencer")          # the sequencer to add algorithms to
-        , "Method"                       : 'Millepede'                 # Millepede or Kalman type alignment
-        , "TrackLocation"                : "TrackLocation::Default"    # track container to be used for alignment
-        , "Detectors"                    : []                          # list of detectors to align
+        , "TrackSelections"              : [ GoodLongTracks() ]        # input track selections for alignment
+        , "ParticleSelections"           : []                          # input particles for alignment
         , "ElementsToAlign"              : []                          # Elements to align
         , "UseLocalFrame"                : True                        # Use local frame?
         , "NumIterations"                : 1                           # Number of iterations
+        , "TrackLocation"                : ""                          # track container to be used for alignment
         , "VertexLocation"               : ""                          # Location of input vertex list
         , "DimuonLocation"               : ""                          # Location of input vertex list
         , "ParticleLocation"             : ""                          # Location of input vertex list
         , "UseCorrelations"              : True                        # Correlations
-        , "ApplyMS"                      : True                        # Multiple Scattering
         , "Constraints"                  : []                          # Specifies 'exact' (lagrange) constraints  
-        , "DoF"                          : []                          # list of constraints
         , "UseWeightedAverageConstraint" : False                       # Weighted average constraint
-        , "MinNumberOfHits"              : 100                         # Min number of hits per element
+        , "MinNumberOfHits"              : 10                          # Min number of hits per element
         , "Chi2Outlier"                  : 10000                       # Chi2 cut for outliers
         , "UsePreconditioning"           : True                        # Pre-conditioning
         , "SolvTool"                     : "DiagSolvTool"              # Solver to use
@@ -51,7 +50,6 @@ class TAlignment( LHCbConfigurableUser ):
         , "MuonTopLevelElement"          : "/dd/Structure/LHCb/DownstreamRegion/Muon"
         , "EcalTopLevelElement"          : "/dd/Structure/LHCb/DownstreamRegion/Ecal"
         , "Precision"                    : 16                          # Set precision for conditions
-        , "skipBigCluster"               : True                        # if cluster found with >= 2 hits, whole track is rejected
         , "OutputLevel"                  : INFO                        # Output level
         , "LogFile"                      : "alignlog.txt"              # log file for kalman type alignment
         , "Incident"                     : ""                          # name of handle to be executed on incident by incident server
@@ -63,37 +61,14 @@ class TAlignment( LHCbConfigurableUser ):
     def __apply_configuration__(self):
         print "******* calling ", self.name()
         mainseq = self.getProp("Sequencer")
-        mainseq.MeasureTime = True
         mainseq.getProperties()
         if  mainseq.name() == "" :
-            mainseq = GaudiSequencer("Align")
+            mainseq = GaudiSequencer("AlignSeq")
+        mainseq.MeasureTime = True
             
-        if self.getProp("Method") == 'Millepede' and "OT" in self.getProp("WriteCondSubDetList"):
-	    print "******* setting up Milledede style alignment ******"
-	    self.setProp("Incident", 'GlobalMPedeFit')
-	    self.GAlignSeq()
-
-                    
-	if self.getProp("Method") == 'Kalman' :
-            print "****** setting up Kalman type alignment!"
-            self.setProp("Incident", 'UpdateConstants')
-            self.sequencers()
-
-    def GAlignSeq( self ):
-	from Configurables import (TStation)
-	from TAlignment import GAlignConf
-	alseq = self.getProp("Sequencer")
-	alseq.MeasureTime = True
-	alseq.Members.append( TStation() )
-	print "Adding ", TStation().name(), " to sequence ", alseq.name()
-	GAlignConf.GAlignConf().Sequencer = self.getProp("Sequencer")
-	GAlignConf.GAlignConf().InputContainer = self.getProp("TrackLocation")
-	GAlignConf.GAlignConf().Constraints = self.getProp("Constraints")
-	GAlignConf.GAlignConf().CondFilePrefix = self.getProp("CondFilePrefix")
-	GAlignConf.GAlignConf().OutputLevel = self.getProp("OutputLevel")
-	ga = GAlignConf.GAlignConf()
-
-	ga.configure()
+        print "****** setting up Kalman type alignment!"
+        self.setProp("Incident", 'UpdateConstants')
+        self.sequencers()
 
     def getProp( self, name ) :
         if hasattr (self, name) :
@@ -101,41 +76,59 @@ class TAlignment( LHCbConfigurableUser ):
         else:
             return self.getDefaultProperties()[name]
 
-    def fitSeq( self, outputLevel = INFO ) :
-        if not allConfigurables.get( "AlignTrackFitSeq" ) :
-            if outputLevel == VERBOSE: print "VERBOSE: Fit Sequencer not defined! Defining!"
-
-            fitSequencer = GaudiSequencer( "AlignTrackFitSeq" )
-            fitSequencer.MeasureTime = True
-
-            return fitSequencer
-        else :
-            if outputLevel == VERBOSE: print "VERBOSE: Fit Sequencer already defined!" 
-            return allConfigurables.get( "AlignTrackFitSeq" )
-
-
+    # set up the sequence that create the track selections
     def filterSeq( self, outputLevel = INFO ) :
         if not allConfigurables.get( "TrackFilterSeq" ) :
             if outputLevel == VERBOSE: print "VERBOSE: Filter Sequencer not defined! Defining!"
 
             filterSequencer = GaudiSequencer( "TrackFilterSeq" )
             filterSequencer.MeasureTime = True
+            trackselections = self.getProp("TrackSelections")
+            if len(trackselections)>0:
+                # add the algorithms for the track selections to the sequence.
+                # also merge the tracks lists into one list
+                from Configurables import TrackListMerger
+                trackmerger = TrackListMerger( "AlignTrackMerger",
+                                               outputLocation = "Rec/Track/AlignTracks")
+                self.setProp("TrackLocation",trackmerger.outputLocation)
+                for i in trackselections :
+                    if( i.algorithm() ):
+                        filterSequencer.Members.append( i.algorithm() )
+                    trackmerger.inputLocations.append( i.location() )
+                filterSequencer.Members.append( trackmerger )
+
+            # add all particle selections
+            if len(self.getProp("ParticleSelections"))>0:
+                from Configurables import FilterDesktop
+                particlemerger = FilterDesktop( "AlignParticles", Code="ALL" )
+                particlemerger.Code = "ALL"
+                particlemerger.CloneFilteredParticles = False
+                for i in self.getProp("ParticleSelections"):
+                    if( i.algorithm ) :
+                        filterSequencer.Members.append( i.algorithm )
+                    particlemerger.Inputs.append( i.location )
+                filterSequencer.Members.append(particlemerger)
+                self.setProp("ParticleLocation",'/Event/Phys/AlignParticles/Particles')
 
             return filterSequencer
         else :
             if outputLevel == VERBOSE: print "VERBOSE: Filter Sequencer already defined!" 
             return allConfigurables.get( "TrackFilterSeq" )
 
+    # set up the monitoring sequence
     def monitorSeq( self ) :
         from Configurables import (TrackMonitor,TrackVertexMonitor,TrackVeloOverlapMonitor,TrackITOverlapMonitor)
         monitorSeq = GaudiSequencer("AlignMonitorSeq")
-        monitorSeq.Members += [TrackMonitor(),
-                               TrackMonitor("AlignTrackMonitor",
-                                            TracksInContainer =self.getProp("TrackLocation")),
-                               TrackVeloOverlapMonitor("AlignVeloOverlapMonitor",
-                                                       TrackLocation =self.getProp("TrackLocation")),
-                               TrackITOverlapMonitor("AlignITOverlapMonitor",
-                                                     TrackLocation =self.getProp("TrackLocation"))]
+        for i in self.getProp("TrackSelections"):
+            if isinstance(i,str): i = TrackSelection(i)
+            name = i.name()
+            location = i.location()
+            monitorSeq.Members += [TrackMonitor(name + "TrackMonitor",
+                                                TracksInContainer = location),
+                                   TrackVeloOverlapMonitor(name + "VeloOverlapMonitor",
+                                                           TrackLocation =location),
+                                   TrackITOverlapMonitor(name + "ITOverlapMonitor",
+                                                         TrackLocation =location)]
         if self.getProp("VertexLocation") != "":
              monitorSeq.Members.append(TrackVertexMonitor("AlignVertexMonitor",
                                                           PVContainer = self.getProp("VertexLocation")))
@@ -236,7 +229,6 @@ class TAlignment( LHCbConfigurableUser ):
             DiagSolvTool().EigenValueThreshold    = self.getProp( "EigenValueThreshold" )
                         
             alignSequencer.Members.append(alignAlg)
-
                              
             return alignSequencer
         else :
@@ -248,11 +240,10 @@ class TAlignment( LHCbConfigurableUser ):
         ## The main sequence
         mainSeq = self.getProp("Sequencer")
         mainSeq.MeasureTime = True
-        #ApplicationMgr().TopAlg.append( mainSeq )        
-
+        #ApplicationMgr().TopAlg.append( mainSeq )
+        
         # Different sequencers depending on whether we use pat or not
         mainSeq.Members.append( self.filterSeq(    self.getProp( "OutputLevel" ) ) )
-        mainSeq.Members.append( self.fitSeq(       self.getProp( "OutputLevel" ) ) )
         mainSeq.Members.append( self.monitorSeq() )
         mainSeq.Members.append( self.alignmentSeq( self.getProp( "OutputLevel" ) ) )
         if self.getProp( "NumIterations" ) > 1 :
