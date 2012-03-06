@@ -13,7 +13,8 @@ public:
   /** Constructors */
   AlDofMask() {}
   AlDofMask(size_t size, bool isactive = true) ;
-  template<class Container> AlDofMask(const Container& mask) ;
+  AlDofMask(const MaskType& mask) ;
+  //template<class Container> AlDofMask(const Container& mask) ;
   
   // number of active (unmasked) parameters
   size_t nActive() const { return m_activetoallmap.size() ; }
@@ -53,12 +54,10 @@ inline AlDofMask::AlDofMask(size_t size, bool active)
   fillIndexMaps() ;
 }
 
-template <class Container> 
-AlDofMask::AlDofMask(const Container& mask)
-  : m_mask(mask.size(),true)
+inline AlDofMask::AlDofMask(const MaskType& mask) 
+  : m_mask(mask)
 {
-  for(size_t i=0; i<m_mask.size(); ++i) m_mask[i] = mask[i] ;
-  fillIndexMaps() ;
+  fillIndexMaps() ; 
 }
 
 inline void AlDofMask::fillIndexMaps() 
