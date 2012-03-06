@@ -3,15 +3,18 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 
-! 2012-03-01 - Wouter Hulsbergen
+! 2012-03-06 - Wouter Hulsbergen
 - add functionality to delay initialization of alignment frame till first event
 - add missing include in TrackResidualTool
+- AlignAlgorithm now also works with just Particle list as input
+- cleaned up TAlignment configurable. Added more python to make configuration easier.
+- fixed compilation problem on gcc 4.6
 
 !========================= TAlignment v5r6 2011-12-01 =========================
 ! 2011-09-20 - Maurizio Martinelli
 - included motherwidth in MassConstraint structure (VertexResidualTool)
 
-! 2011-09-05 - Woiuter Hulsbergen
+! 2011-09-05 - Wouter Hulsbergen
 - allow for adding dofs to existing alignables in configuration
 - moved tools/algos not directly related to TAlignment alorithm into AlignTrTools
 - fix AlignAlgorithm such that it can now use particle
