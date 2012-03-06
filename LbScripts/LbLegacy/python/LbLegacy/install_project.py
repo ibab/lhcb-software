@@ -21,10 +21,10 @@ import socket
 from urllib import urlretrieve, urlopen, urlcleanup
 from tempfile import mkdtemp
 
-script_version = '120224'
+script_version = '120306'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
-lbscripts_version = "v6r7p2"
+lbscripts_version = "v6r7p3"
 compat_version = None
 line_size = 120
 #-----------------------------------------------------------------------------------
@@ -2177,8 +2177,8 @@ def runInstall(pname, pversion, binary=None):
     getBootScripts()
 
 # update main lhcb project configuration
-
-    updateConf()
+# This has to be removed as many grid jobs do not have write permissions
+    #updateConf()
 
 # if list_flag is set: give the list of available versions for this project
     if list_flag :
