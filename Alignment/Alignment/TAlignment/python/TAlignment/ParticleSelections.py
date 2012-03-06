@@ -9,6 +9,30 @@ class ParticleSelection:
         ,"algorithm" : None
         }
 
+
+##################################################################
+# Creates a selection object from a location in the TES ona dst,
+# making sure to refit the particles. It would make sense to add some
+# cuts here as well.
+##################################################################
+def configuredParticleListFromDST( ParticleLocation ) :
+    # create a sequence to refit and monitor
+    name = ParticleLocation
+    name.replace("Event","")
+    name.replace("/Phys","")
+    name.replace("/Particle","")
+    name.replace("/","_")
+    fitter = TrackParticleRefitter( name + "Refitter", 
+                                    Fitter = TrackMasterFitter,
+                                    InputLocation = ParticleLocation )
+    configuredMasterFitter( fitter.Fitter, SimplifiedMaterial = True )
+    seq = GaudiSequencer(name + "Seq")
+    seq.append( fitter )
+    sel = ParticleSelection()
+    sel.algorithm = seq
+    sel.location = ParticleLocation
+    return sel
+
 ##################################################################
 # Helper function to create a sequence to fit the tracks and run the hitadder
 ##################################################################
@@ -50,8 +74,9 @@ def defaultHLTD0Selection():
     from Configurables import HltDecReportsDecoder, HltSelReportsDecoder, HltCompositionMonitor, AddToProcStatus
     from Configurables import GaudiSequencer
 
-    from Configurables import RecSysConf
+    from Configurables import RecSysConf, RecMoniConf
     RecSysConf().RecoSequence = ["Hlt","Decoding","AlignTr","Vertex","RICH" ]
+    RecMoniConf().MoniSequence = ["Tr","OT"]
 
     hltfilterSeq = GaudiSequencer( "RecoHltSeq" )
     # identifies events that are not of type Hlt1ErrorEvent or Hlt2ErrorEvent
@@ -85,7 +110,7 @@ def defaultHLTD0Selection():
                                       OutputLocation = 'Rec/Track/Best' )
     # now make sure that there are at least 2 tracks left
     trackseq.Members.append( LokiFilter ( 'BestTrackFilter' ,
-                                          Code = "0 < CONTAINS ( 'Rec/Track/Best' )" ) )
+                                          Code = "1 < CONTAINS ( 'Rec/Track/Best' )" ) )
  
 
     # Tweak a little bit RICH
@@ -168,8 +193,9 @@ def defaultHLTJPsiSelection():
     from Configurables import HltDecReportsDecoder, HltSelReportsDecoder, HltCompositionMonitor, AddToProcStatus
     from Configurables import GaudiSequencer
 
-    from Configurables import RecSysConf
+    from Configurables import RecSysConf, RecMoniConf
     RecSysConf().RecoSequence = ["Hlt","Decoding","AlignTr","Vertex","MUON" ]
+    RecMoniConf().MoniSequence = ["Tr","OT"]
 
     # fix problem in rich config
     #from Configurables import RichTrackCreatorConfig
@@ -206,7 +232,7 @@ def defaultHLTJPsiSelection():
                                       OutputLocation = 'Rec/Track/Best' )
     # now make sure that there are at least 2 tracks left
     trackseq.Members.append( LokiFilter ( 'BestTrackFilter' ,
-                                          Code = "0 < CONTAINS ( 'Rec/Track/Best' )" ) )
+                                          Code = "1 < CONTAINS ( 'Rec/Track/Best' )" ) )
                              
     # Now create the J/psi candidates
     from Configurables import CombineParticles, FilterDesktop
