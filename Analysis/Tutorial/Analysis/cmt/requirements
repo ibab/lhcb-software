@@ -17,18 +17,18 @@ branches          cmt doc src options solutions python
 # Used packages.
 # ============================================================================
 use DaVinciKernel       v*  Phys
-use DaVinciMCKernel     v* Phys
+use DaVinciMCKernel     v*  Phys
 
 include_path      none
 # ============================================================================
 # Component library building rule
 # ============================================================================
-library     Analysis     ../src/*.cpp
+library     AnalysisTutorial   ../src/*.cpp
 
 # ============================================================================
 # define component library link options
 # ============================================================================
-apply_pattern component_library library=Analysis
+apply_pattern component_library library=AnalysisTutorial
 #============================================================================
 apply_pattern install_python_modules
 #============================================================================

@@ -9,6 +9,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2012-03-06 - Chris Jones
+ - Call the library AnalysisTutorial instead of just Analysis
+
 !========================= Analysis v10r2p1 2011-12-15 =========================
 
 ! 2011-12-02 - Patrick Koppenburg
