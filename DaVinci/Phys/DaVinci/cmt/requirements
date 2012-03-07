@@ -1,10 +1,10 @@
 # Created    : 07/02/2002
-# Maintainer : J. Palacios
+# Maintainer : Chris Jones
 #
 
 #============================================================================
 package           DaVinci
-version           v30r1
+version           v30r1p1
 
 # Structure, i.e. directories to process. 
 #============================================================================
