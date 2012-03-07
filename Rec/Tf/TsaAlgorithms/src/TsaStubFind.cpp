@@ -150,7 +150,7 @@ StatusCode StubFind::execute(std::vector<SeedHit*> hits[],
         }
       }
     }
-    std::sort(stubs[stn].begin(), stubs[stn].end(), SeedFunctor::increasingSX<const SeedStub*>() );  //  Add stub candidate to vector
+    std::stable_sort(stubs[stn].begin(), stubs[stn].end(), SeedFunctor::increasingSX<const SeedStub*>() );  //  Add stub candidate to vector
   } // sort
 
   return StatusCode::SUCCESS;

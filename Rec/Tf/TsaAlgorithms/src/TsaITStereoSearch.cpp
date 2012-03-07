@@ -183,7 +183,7 @@ void ITStereoSearch::loadData(std::vector<SeedHit*> hits[6]) const
 	  //          debug() << " -> Found " << nHits << " hits" << endreq;
         }
       }
-      std::sort( hits[lay].begin(), hits[lay].end(), SeedFunctor::increasingX<const SeedHit*>() );
+      std::stable_sort( hits[lay].begin(), hits[lay].end(), SeedFunctor::increasingX<const SeedHit*>() );
     } // layer
   }
 }

@@ -152,8 +152,7 @@ StatusCode ITGenericTracking::execute()
   }
 
   // sort
-  std::sort(x2Hits.begin(), x2Hits.end(), bind(&Tf::STHit::xMid,_1) < bind(&Tf::STHit::xMid,_2)); // sort by x
-  //std::sort(x13Hits.begin(), x13Hits.end(), bind(&Tf::STHit::xMid,_1) < bind(&Tf::STHit::xMid,_2)); // sort by x
+  std::stable_sort(x2Hits.begin(), x2Hits.end(), bind(&Tf::STHit::xMid,_1) < bind(&Tf::STHit::xMid,_2)); // sort by x
  
 
   // get the stereo hits 
@@ -198,7 +197,7 @@ StatusCode ITGenericTracking::execute()
       const unsigned int nUniqueX = countSectors(selectedX); 
       if (nUniqueX < m_minXHits) continue;
 
-      std::sort(selectedX.begin(), selectedX.end(), STDataFunctor::Less_by_Channel<Tf::STHit*>());
+      std::stable_sort(selectedX.begin(), selectedX.end(), STDataFunctor::Less_by_Channel<Tf::STHit*>());
 
       std::vector<std::vector<Tf::STHit*> > xcan; xcan.reserve(8); 
       splitCandidates(selectedX,xcan);
@@ -240,7 +239,7 @@ StatusCode ITGenericTracking::execute()
           collectIDs(selectedX2, ids);
           collectIDs(selectedY2, ids);
 
-          std::sort(ids.begin(), ids.end(), bind(&LHCb::LHCbID::lhcbID,_1) < bind(&LHCb::LHCbID::lhcbID,_2));
+          std::stable_sort(ids.begin(), ids.end(), bind(&LHCb::LHCbID::lhcbID,_1) < bind(&LHCb::LHCbID::lhcbID,_2));
           if (fullDetail()) plot(ids.size(), "nhits", -0.5, 20.5, 21);
           const unsigned int nUnique = countSectors(selectedX2) + countSectors(selectedY2);
           if (nUnique < m_minHits) continue;
@@ -383,7 +382,7 @@ void ITGenericTracking::selectY(const std::vector<yInfo>& hits, CandidateHits& c
 	}		    			    
       } //iter3
 
-      std::sort(nLayers.begin(), nLayers.end());
+      std::stable_sort(nLayers.begin(), nLayers.end());
       nLayers.erase(std::unique(nLayers.begin(), nLayers.end()), nLayers.end());
 
       const unsigned int nWindow = nLayers.size();
@@ -403,7 +402,7 @@ void ITGenericTracking::selectY(const std::vector<yInfo>& hits, CandidateHits& c
 
         if (m_selectBestY == false ){ 
 	  std::vector <std::vector<yInfo> > uniqueCan; uniqueCan.reserve(16);
-          std::sort(selected.begin(), selected.end(), Less_by_Channel());
+          std::stable_sort(selected.begin(), selected.end(), Less_by_Channel());
           splitCandidates(selected, uniqueCan);
           BOOST_FOREACH( std::vector<yInfo> hits, uniqueCan ){
             if (newStereoCandidate( hits ,canhits ) == true){
@@ -571,7 +570,7 @@ unsigned int ITGenericTracking::countSectors(const std::vector<Tf::STHit*>& xhit
   BOOST_FOREACH(Tf::STHit* hit, xhits){
     nLayers.push_back(hit->channelID().uniqueSector());
   }
-  std::sort(nLayers.begin(), nLayers.end());
+  std::stable_sort(nLayers.begin(), nLayers.end());
   nLayers.erase(std::unique(nLayers.begin(), nLayers.end()), nLayers.end());
   return nLayers.size();
 }
@@ -581,7 +580,7 @@ unsigned int ITGenericTracking::countSectors(const std::vector<yInfo>& xhits) co
   BOOST_FOREACH(yInfo hit, xhits){
     nLayers.push_back(hit.first->channelID().uniqueSector());
   }
-  std::sort(nLayers.begin(), nLayers.end());
+  std::stable_sort(nLayers.begin(), nLayers.end());
   nLayers.erase(std::unique(nLayers.begin(), nLayers.end()), nLayers.end());
   return nLayers.size();
 }

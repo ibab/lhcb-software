@@ -225,7 +225,7 @@ void OTStereoSearch::loadData(std::vector<SeedHit*> hits[6]) const
         }
       }
 
-      std::sort( hits[lay].begin(), hits[lay].end(), SeedFunctor::increasingX<const SeedHit*>() );
+      std::stable_sort( hits[lay].begin(), hits[lay].end(), SeedFunctor::increasingX<const SeedHit*>() );
     } // layer
   } // station
 

@@ -4,6 +4,10 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2012-03-07 - Marco Cattaneo
+ - Use std:stable_sort instead of std::sort everywhere, fixes differences 
+   between gcc43 and gcc46
+
 !========================= TsaAlgorithms v3r25p1 2011-12-15 =================
 ! 2011-11-22 - Marco Cattaneo
  - Fix gcc46 variable set but not used warnings 

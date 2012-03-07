@@ -61,7 +61,7 @@ StatusCode StubLinker::initialize(){
 
 StatusCode StubLinker::execute(std::vector<SeedStub*> stubs[], std::vector<SeedTrack*>& seeds) {
 
-  for (unsigned int i = 0; i < 3; ++i) std::sort(stubs[i].begin(), stubs[i].end(), SeedFunctor::increasingSX<const SeedStub*>() );  //  Add stub candidate to vector
+  for (unsigned int i = 0; i < 3; ++i) std::stable_sort(stubs[i].begin(), stubs[i].end(), SeedFunctor::increasingSX<const SeedStub*>() );  //  Add stub candidate to vector
 
   //  Loop over first station for linking
   for ( int stn = 0; stn < 2; ++stn ) {

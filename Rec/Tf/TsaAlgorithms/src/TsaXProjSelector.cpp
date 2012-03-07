@@ -40,7 +40,7 @@ StatusCode XProjSelector::execute(std::vector<SeedTrack*>& seeds, std::vector<Se
   //-------------------------------------------------------------------------
 
   // Sort seeds according to their likelihood
-  std::sort(seeds.begin(),seeds.end(), SeedFunctor::LessByXChi2<const SeedTrack*>());
+  std::stable_sort(seeds.begin(),seeds.end(), SeedFunctor::LessByXChi2<const SeedTrack*>());
   std::stable_sort( seeds.begin(), seeds.end(), SeedFunctor::increasingByXHits<const SeedTrack*>() );
 
   std::vector<SeedTrack*>::iterator iter = seeds.begin() ;
