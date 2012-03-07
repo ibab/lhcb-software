@@ -5,7 +5,7 @@ Responsibles : J. Amoraal, J. Blouw, A. Hicheur, L. Nicolas
 Purpose: LHCb Alignment Tools
 
 ! 2012-03-07 - Wouter Hulsbergen
- - solve complication warnings in TAConfig and TrackMuonMatching
+ - solve compilation warnings in TAConfig and TrackMuonMatching
 
 !========================= AlignTrTools v4r10 2011-12-01 =========================
 
