@@ -21,13 +21,8 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         'MU_TRCHI2DOF_MAX'  : 4.0,    # unitless
         'E_TRCHI2DOF_MAX'   : 5.0,    # unitless
         'HAD_TRCHI2DOF_MAX' : 3.0,    # unitless
-        # V0 cuts
-        'V0DT_MIPCHI2DV_MIN': 16.0,    # unitless
-        'KS_MASS_WINDOW'    : 30.0,   # MeV
-        'KS_BPVVDCHI2_MIN'  : 1000.0,  # unitless 
+        # V0's
         'USE_KS'            : True,
-        'L_MASS_WINDOW'     : 20.0,   # MeV
-        'L_BPVVDCHI2_MIN'   : 1000.0,  # unitless 
         'USE_LAMBDA'        : True,
         # upfront combo cuts
         'AMAXDOCA_MAX'      : 0.2,    # mm        
@@ -59,7 +54,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         'RAD_TOS'           : True,
         # global event cuts
         'USE_GEC'           : False,
-        'GEC_MAX'           : 500,
+        'GEC_MAX'           : 350,
         # simple cuts
         'SIMPLE_2BODY_CUTS' : [],
         'SIMPLE_3BODY_CUTS' : [],
@@ -187,7 +182,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         '''Filters n-body combos for n-body line'''
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import FilterDesktop
-        pid = "('K+'==ABSID)"
+        pid = "(('K+'==ABSID)|('KS0'==ID))"
         minPtSum = 3000        
         if n > 2: minPtSum = 4000
         cuts = '(SUMTREE(PT,%s,0.0) > %d*MeV)' % (pid,minPtSum)
@@ -207,7 +202,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         file='Hlt2Topo%dBody_BDTParams_%s.txt'%(n,props['BDT_%dBODY_PARAMS'%n])
         bdttool = Tool(type=BBDT,name='TrgBBDT',
                        Threshold=props['BDT_%dBODY_MIN'%n],ParamFile=file,
-                       ANNSvcKey=6300+n,PIDs=['K+'])
+                       ANNSvcKey=6300+n,PIDs=['K+','KS0'])
         cuts = "FILTER('BBDecTreeTool/TrgBBDT')" 
         filter = Hlt2Member(FilterDesktop, 'FilterBDT', Inputs=input,
                             Code=cuts,tools=[bdttool]) 
@@ -223,7 +218,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         file='Hlt2Topo%dBody_BDTParams_%s.txt'%(n,props['BDT_%dBODY_PARAMS'%n])
         bdttool = Tool(type=BBDT,name='TrgBBDT',
                        Threshold=props['BDT_%dBODYMU_MIN'%n],ParamFile=file,
-                       ANNSvcKey=6300+n,PIDs=['K+'])
+                       ANNSvcKey=6300+n,PIDs=['K+','KS0'])
         cuts = "INTREE(HASPROTO & HASMUON & ISMUON)"
         cuts += "& FILTER('BBDecTreeTool/TrgBBDT') "
         filter = Hlt2Member(FilterDesktop, 'FilterMuonBDT',
@@ -240,7 +235,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         file='Hlt2Topo%dBody_BDTParams_%s.txt'%(n,props['BDT_%dBODY_PARAMS'%n])
         bdttool = Tool(type=BBDT,name='TrgBBDT',
                        Threshold=props['BDT_%dBODYE_MIN'%n],ParamFile=file,
-                       ANNSvcKey=6300+n,PIDs=['K+'])
+                       ANNSvcKey=6300+n,PIDs=['K+','KS0'])
         cuts = "INTREE(HASPROTO & (PIDe > %s))" % props['PIDE_MIN']
         cuts += "& FILTER('BBDecTreeTool/TrgBBDT') "
         filter = Hlt2Member(FilterDesktop, 'FilterElectronBDT',
@@ -256,7 +251,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         props = self.getProps()
         ver = props['BDT_%dBODY_PARAMS'%n]
         file='Hlt2Topo%dBody_BDTParams_%s.txt' % (n,ver)
-        pids = ['K+']
+        pids = ['K+','KS0']
         if n == 3: pids.append('gamma')
         thresh = 1.0
         if n == 2: thresh = props['BDT_RAD2_MIN']
@@ -310,8 +305,9 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         props = self.getProps()
         comboCuts = 'AM > 0'
         if useComboCuts:
-            comboCuts = '(AM < 7000*MeV) & (AALLSAMEBPV)' 
-            comboCuts += " & (AMAXDOCA('LoKi::DistanceCalculator') < %s)" \
+            comboCuts = "(AM < 7000*MeV) & ((ANUM(ID=='KS0')>0) | "
+            comboCuts += '((AALLSAMEBPV |(AMINCHILD(MIPCHI2DV(PRIMARY)) > 16))'
+            comboCuts += " & (AMAXDOCA('LoKi::DistanceCalculator') < %s)))" \
                          % props["AMAXDOCA_MAX"]
         momCuts = "(BPVDIRA > 0) & (BPVVDCHI2 > %s)" % props['BPVVDCHI2_MIN']
         combo = Hlt2Member(CombineParticles, 'Combine',DecayDescriptors=decay,
@@ -319,47 +315,36 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                            MotherCut=momCuts)
         return bindMembers(name, input+[combo])
 
-    def __combineV0(self,input,tag,m):
-        '''Make K-shorts amd Lambdas for topo (filtered later).'''
-        from Hlt2SharedParticles.GoodParticles import GoodPions
-        from HltLine.HltLine import Hlt2Member, bindMembers
-        from Configurables import CombineParticles
-        decay = ["K+ -> pi+ pi-"]
-        if tag is 'L': decay = ["[K+ -> p+ pi-]cc"] 
-        dm = float(self.getProps()[tag+'_MASS_WINDOW'])
-        comboCuts = 'in_range(%.3f*MeV,AM,%.3f*MeV)'% (m-1.5*dm,m+1.5*dm)
-        momCuts = 'in_range(%.3f*MeV,M,%.3f*MeV) & (VFASPF(VCHI2)<%s)' \
-                  % (m-dm,m+dm,self.getProps()['V2BODYCHI2_MAX'])
-        
-        createV0 = Hlt2Member(CombineParticles, tag+"LL",
-                              DecayDescriptors=decay, 
-                              CombinationCut=comboCuts,MotherCut = momCuts,
-                              Inputs=input)
-        return bindMembers("TopoCreateV0LL"+tag, input+[createV0])
-
-    def __makeInput(self,kaons,kshorts,lambdas,tag):
+    def __makeInput(self,kaons,useKS,useL):
         '''Puts Ks, KSs and Lambdas into one container w/ same ID.'''
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import GaudiSequencer, FilterDesktop
+        from Hlt2SharedParticles.Ks import KsLLTF, KsDD
         inputK = GaudiSequencer("InputK",Members=kaons.members())
-        inputKS = GaudiSequencer("InputKS", Members=kshorts.members())
-        inputs = [inputK,inputKS]
-        finputs = [kaons,kshorts]
-        if lambdas:
-            inputL = GaudiSequencer("InputL", Members=lambdas.members())
-            inputs.append(inputL)
-            finputs.append(lambdas)
-        inputAll = GaudiSequencer("InputALL",Members=inputs,ModeOR=True,
+        inputs = [inputK]
+        finputs = [kaons]
+        if useKS:
+            ksll = GaudiSequencer("InputKsLL", Members=KsLLTF.members())
+            inputs.append(ksll)
+            finputs.append(KsLLTF)
+            ksdd = GaudiSequencer("InputKsDD", Members=KsDD.members())
+            inputs.append(ksdd)
+            finputs.append(KsDD)
+        inputAll = GaudiSequencer("InputALLSeq",Members=inputs,ModeOR=True,
                                   ShortCircuit=False)
         filter = Hlt2Member(FilterDesktop,'FilterAllInput',Inputs=finputs,
                             Code='ALL')
-        return bindMembers("InputALL"+tag, [inputAll, filter])
+        return bindMembers("InputALL", [inputAll, filter])
 
     def __allNBody(self,n,input,tag):
         '''All n-body combos.'''
-        decay = [["K*(892)0 -> K+ K+","K*(892)0 -> K+ K-","K*(892)0 -> K- K-"],
-                 ["D*(2010)+ -> K*(892)0 K+", "D*(2010)+ -> K*(892)0 K-"],
+        decay = [["K*(892)0 -> K+ K+","K*(892)0 -> K+ K-","K*(892)0 -> K- K-",
+                  "K*(892)0 -> K+ KS0","K*(892)0 -> K- KS0"],
+                 ["D*(2010)+ -> K*(892)0 K+", "D*(2010)+ -> K*(892)0 K-",
+                  "D*(2010)+ -> K*(892)0 KS0", "D*(2010)+ -> K*(892)0 KS0"],
                  ["B0 -> D*(2010)+ K-","B0 -> D*(2010)+ K+"]]
+                  #"B0 -> D*(2010)+ KS0","B0 -> D*(2010)+ KS0"]
+                 #]
         return self.__combine('Topo%dBodyComb%s'%(n,tag),input,decay[n-2])
 
     def __TOSFilter(self, name, input):
@@ -403,17 +388,10 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                                      [BiKalmanFittedKaonsWithMuonID])
         input = inputK
         inpute = inputKe
-        if self.getProps()['USE_KS']:
-            pi4v0 = self.__inPartFilter('TopoInputPions4V0',[GoodPions],True)
-            goodKS = self.__combineV0([pi4v0],'KS',497.648)
-            inputKS = self.__inPartV0Filter('KS',[goodKS])
-            inputL = None
-            if self.getProps()['USE_LAMBDA']:
-                p4v0 = self.__inPartFilter('TopoInputProts4V0',[Protons],True)
-                goodL = self.__combineV0([pi4v0,p4v0],'L',1115.683)
-                inputL = self.__inPartV0Filter('L',[goodL])
-            input = self.__makeInput(inputK,inputKS,inputL,'All')
-            
+        if self.getProps()['USE_KS'] or self.getProps()['USE_LAMBDA']:
+            input = self.__makeInput(inputK,self.getProps()['USE_KS'],
+                                     self.getProps()['USE_LAMBDA'])
+        
         # make 2-body line
         all2 = self.__allNBody(2,[input],'All')
         topo2_all = self.__filterNforN(2,[all2],'All')
