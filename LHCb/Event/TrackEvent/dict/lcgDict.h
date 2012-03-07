@@ -1,4 +1,4 @@
-#ifndef TRACKEVENT_LCGDICT_H 
+CBRE#ifndef TRACKEVENT_LCGDICT_H 
 #define TRACKEVENT_LCGDICT_H 1
 
 // Additional classes to be added to automatically generated lcgdict
@@ -19,6 +19,7 @@ namespace
     std::vector<std::pair<const LHCb::Track*,float> > _i4;
     std::vector<const LHCb::Node*>        _i5;
     Gaudi::Range_<std::vector<const LHCb::Node*> >    _i6;
+    std::vector<const LHCb::Measurement*> _i7;
     // end instantiations
   };
 }

@@ -4,4 +4,5 @@
   <class name = "std::vector<std::pair<const LHCb::Track*,float> >" />
   <class name = "std::vector<const LHCb::Node*>" />
   <class name = "Gaudi::Range_<std::vector<const LHCb::Node*> >" />
+  <class name = "std::vector<const LHCb::Measurement*>" />
 </lcgdict>
