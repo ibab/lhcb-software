@@ -64,7 +64,6 @@ StatusCode Centipede::MakeGlobalFit( std::vector<double> &para, std::vector<doub
 
   int i, j,nvar;
   int nfixed; //no of fixed parameters
-  int itelim = 0;
 
   //int nstillgood;
 
@@ -74,9 +73,7 @@ StatusCode Centipede::MakeGlobalFit( std::vector<double> &para, std::vector<doub
 
   //  double trackpars[2*mlocal];
 
-  int ntotal_start, ntotal;
-
-  ntotal = Millepede::GetTrackNumber();  
+  int ntotal = Millepede::GetTrackNumber();  
   if(true){//DEBUGGLOBAL){
     info() <<"*******************************************************"<<endreq
            <<"**** preparing global fit                     *********"<<endreq
@@ -84,14 +81,7 @@ StatusCode Centipede::MakeGlobalFit( std::vector<double> &para, std::vector<doub
            <<"****                                          *********"<<endreq
            <<"****...using " << ntotal << " tracks          *********"<<endreq
            <<"*******************************************************"<<endreq;
-  
- 
-    ntotal_start = Millepede::GetTrackNumber();
-
   }
-  
-
-  if (itert <= 1) itelim = 1;    // Max number of iterations
   
   for (i=0; i<nagb; i++) {
     diag[i] = cgmat[i][i];
@@ -461,7 +451,6 @@ StatusCode Centipede::EquLoc( std::vector<double> &gb,
                               const double &rmeas, 
                               double sigma ) {	
 
-  std::vector<double>::const_iterator itGB = gb.begin();
   double dergb[gb.size()];
   double derlc[lc.size()];
   VectortoArray(gb, &dergb[0]);
