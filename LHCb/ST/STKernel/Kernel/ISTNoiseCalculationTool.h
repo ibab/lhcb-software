@@ -78,27 +78,19 @@ namespace ST {
     /// Return an iterator corresponding to the number of events containing data in the last PP for a given TELL1 source ID
     virtual std::vector<unsigned int>::const_iterator cmsNEventsPPEnd( const unsigned int TELL1SourceID ) const = 0;
 
-    /** Return an iterator corresponding to the number of events used in the noise calculations
-        for the first channel of a given TELL1 source ID 
-        - 1st is number of events used in RAW noise calculation after outlier removal
-        - 2nd is number of events used in CMS noise calculation after outlier removal
-    **/
-    virtual std::vector<std::pair<unsigned int, unsigned int> >::const_iterator nEventsBegin( const unsigned int TELL1SourceID ) 
-      const = 0;
-
-    /** Return an iterator corresponding to the number of events used in the noise calculations
-        for the last channel of a given TELL1 source ID 
-        - 1st is number of events used in RAW noise calculation after outlier removal
-        - 2nd is number of events used in CMS noise calculation after outlier removal
-    **/
-    virtual std::vector<std::pair<unsigned int, unsigned int> >::const_iterator nEventsEnd( const unsigned int TELL1SourceID ) 
-      const = 0;
-
     /// Return an iterator corresponding to the status of the first channel for a given TELL1 source ID
     virtual std::vector<bool>::const_iterator stripStatusBegin( const unsigned int TELL1SourceID ) const = 0;
 
     /// Return an iterator corresponding to the status of the last channel for a given TELL1 source ID
     virtual std::vector<bool>::const_iterator stripStatusEnd( const unsigned int TELL1SourceID ) const = 0;
+
+    /** Return an iterator corresponding to the number of events used in the calculation of RAW+CMS noise after outlier removal
+        for the first channel of a given TELL1 source ID **/
+    virtual std::vector<unsigned int>::const_iterator nEventsBegin( const unsigned int TELL1SourceID ) const = 0;
+
+    /** Return an iterator corresponding to the number of events used in the calculation of RAW+CMS noise after outlier removal
+        for the last channel of a given TELL1 source ID **/
+    virtual std::vector<unsigned int>::const_iterator nEventsEnd( const unsigned int TELL1SourceID ) const = 0;
 
     /// Return the period of the an exponential moving average. (Set to -1 to have a cumulative average.)
     virtual int followPeriod() const = 0;
