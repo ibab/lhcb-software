@@ -115,7 +115,7 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
                               , 'Hlt2SingleLonglivedHighFD' : 1.
                               , 'Hlt2SingleLonglivedHighMass' : 1.
                               , 'Hlt2DoubleLonglived' : 1.
-                              , 'Hlt2SinglePSLonglived' : 0.0001
+                              , 'Hlt2SinglePSLonglived' : 1.
                               , 'Hlt2DoublePSLonglived' : 0.01
                               , 'Hlt2SinglePSLonglivedHighMass' : 1.
                               , 'Hlt2SinglePSLonglivedHighFD' : 1.
@@ -137,8 +137,12 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         from Configurables import GaudiSequencer, HltANNSvc
         from Configurables import PatPV3D, PVOfflineTool, PVSeed3DTool, LSAdaptPV3DFitter
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPions
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedDownPions
         from HltTracking.HltPVs import PV3D
         from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
+        from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedDownstreamTracking
+
+        Hlt2BiKalmanFittedDownstreamTracking = Hlt2BiKalmanFittedDownstreamTracking()
         Hlt2BiKalmanFittedForwardTracking = Hlt2BiKalmanFittedForwardTracking()
         
         #######################################################################
@@ -146,6 +150,7 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         DVSeq = []
         hlt2VeloTracking = Hlt2BiKalmanFittedForwardTracking.hlt2VeloTracking()
         DVSeq.extend( [ PV3D(), hlt2VeloTracking ] )
+
         
         ######################################################################
         # Run PatPV3D : reconstruction of displaced vertices
@@ -171,7 +176,6 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         #######################################################################
         #Run Get the candidates
         from Configurables import Hlt2PreSelDV
-
         Hlt2RV2P = Hlt2PreSelDV("Hlt2RV2P")
         DVSeq.append( Hlt2RV2P )
         Hlt2RV2P.Inputs = [BiKalmanFittedPions.outputSelection()]
@@ -383,68 +387,14 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         ##
         #######################################################################
 
-        ## Decoding of the ST
-        from HltLine.HltDecodeRaw     import DecodeTT, DecodeIT
-        from HltLine.HltLine        import bindMembers
-        decode_members =  bindMembers("DVDecodeSTSeq", DecodeTT.members() + DecodeIT.members())
-
-        ## Seeding
-        fwdtracks = Hlt2BiKalmanFittedForwardTracking.hlt2ForwardTracking()
-        seedTrackOutputLocation    = 'Hlt2/Track/DVSeeding'
-    
-        from Configurables    import PatSeeding,PatSeedingTool
-        recoSeeding = PatSeeding('DVSeeding', OutputTracksName = seedTrackOutputLocation)
-        from HltTracking.HltReco import MaxOTHits
-        recoSeeding.addTool(PatSeedingTool, name="PatSeedingTool")
-        recoSeeding.PatSeedingTool.MaxOTHits = MaxOTHits
-        recoSeeding.PatSeedingTool.UseForward        = True
-        recoSeeding.PatSeedingTool.UseForwardTracks  = False
-        recoSeeding.PatSeedingTool.ForwardCloneMergeSeg = True
-        recoSeeding.PatSeedingTool.MinMomentum = 2000.
-        recoSeeding.PatSeedingTool.InputTracksName    = fwdtracks.outputSelection()   
-        seedbm_name         = "DVSeedTracking" 
-        seedbm_members      = decode_members.members() + [recoSeeding]
-        seedbm_output       = seedTrackOutputLocation
-        seedbm = bindMembers(seedbm_name, seedbm_members).setOutputSelection(seedbm_output) 
-
-        ## Downstream tracking
-        from Configurables    import PatDownstream
-        PatDownstream            = PatDownstream('DVPatDownstream')
-        PatDownstream.InputLocation    = 'Hlt2/Track/DVSeeding'
-        PatDownstream.OutputLocation    = 'Hlt2/Track/DVSeedTT'
-        PatDownstream.RemoveUsed    = True
-        PatDownstream.RemoveAll        = True
-        downbm_name         = "DVDownstreamTracking"
-        downbm_members      = seedbm.members() + [PatDownstream]
-        downbm_output       = 'Hlt2/Track/DVSeedTT'
-
-        downbm = bindMembers(downbm_name, downbm_members).setOutputSelection(downbm_output)
-  
-        ### Downstream fitting
-        from Configurables import TrackEventFitter, TrackMasterFitter
-        downstreamFit_name      = 'DownStagedFastFit'
-        downstreamFit           = TrackEventFitter(downstreamFit_name)
-        downstreamFit.TracksInContainer    = 'Hlt2/Track/DVSeedTT'
-        downstreamFit.TracksOutContainer    =   'Hlt2/Track/BiKalmanFitted/DVDownstream'
-        downstreamFit.addTool(TrackMasterFitter, name = 'Fitter')
-        from TrackFitter.ConfiguredFitters import ConfiguredFastFitter
-        fitter = ConfiguredFastFitter( getattr(downstreamFit,'Fitter'))
-        fitter.NodeFitter.BiDirectionalFit    = True
-        fitter.NodeFitter.Smooth        = True
-        fitter.AddDefaultReferenceNodes = True 
-        fitter.NumberFitIterations = 3
-        fitter.MaxNumberOutliers = 2 
-        fitter.UpdateTransport = True
-        fitbm_name         = "DVDownstreamFastFitSeq"
-        fitbm_members      = downbm.members()+[downstreamFit]
-        fitbm_output       = 'Hlt2/Track/BiKalmanFitted/DVDownstream'
-        fitbm = bindMembers(fitbm_name, fitbm_members).setOutputSelection(fitbm_output)
+        
+        hlt2DownstreamTracking = Hlt2BiKalmanFittedDownstreamTracking.hlt2DownstreamTracking()
 
         ## Downstream Vertexing
         from Configurables import LSAdaptPVFitter
         Hlt2PatPV3DDown = PatPV3D("Hlt2DisplVerticesV3DDown")
         Hlt2PatPV3DDown.addTool(PVOfflineTool)
-        Hlt2PatPV3DDown.PVOfflineTool.InputTracks = [ 'Hlt2/Track/BiKalmanFitted/DVDownstream']
+        Hlt2PatPV3DDown.PVOfflineTool.InputTracks = [ hlt2DownstreamTracking.outputSelection() ]
         Hlt2PatPV3DDown.OutputVerticesName = "Hlt2/Hlt2DownVertices/Vertices"
         Hlt2PatPV3DDown.PVOfflineTool.addTool( LSAdaptPVFitter())
         Hlt2PatPV3DDown.PVOfflineTool.PVFitterName = "LSAdaptPVFitter"
@@ -461,31 +411,7 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2PatPV3DDown.PVOfflineTool.LSAdaptPVFitter.acceptTrack = 0.00000001
         Hlt2PatPV3DDown.PVOfflineTool.LSAdaptPVFitter.trackMaxChi2 = 9 
         Hlt2PatPV3DDown.PVOfflineTool.LSAdaptPVFitter.trackMaxChi2Remove = 64
-        
-        ## Create downstream protoparticle
-        from Configurables import NoPIDsParticleMaker,ChargedProtoParticleMaker
-        from HltLine.HltLine import bindMembers
-        chargedDOWNProtosOutputLocation = "Hlt2/ProtoP/Fitted/DVDownstream/Charged"
-        charged_name = 'Hlt2ProtoPFittedDownstreamChargedProtoPAlg'
-        charged         = ChargedProtoParticleMaker(charged_name)
-        charged.Inputs  = ['Hlt2/Track/BiKalmanFitted/DVDownstream']
-        charged.Output  = chargedDOWNProtosOutputLocation
-        protobm_name         = "Hlt2ProtoPFittedDownstreamChargedProtosSeq" 
-        protobm_members      = fitbm.members()+[ charged ]
-        protobm_output       = chargedDOWNProtosOutputLocation
-        ChargedProtoNoPIDsMAKER = bindMembers(protobm_name, protobm_members).setOutputSelection(protobm_output)
-        BiKalmanFittedChargedDownstreamProtoMaker  = ChargedProtoNoPIDsMAKER
-        
 
-        Hlt2BiKalmanFittedDownstreamPions = NoPIDsParticleMaker("Hlt2BiKalmanFittedDownstreamPions"
-                                                                , Particle 			=  "pion"
-                                                                , Input 			=  BiKalmanFittedChargedDownstreamProtoMaker.outputSelection()
-                                                                , Output                   = 'Hlt2/Hlt2BiKalmanFittedDownstreamPionsDV/Particles'
-                                                                , WriteP2PVRelations 		=  False
-                                                                )
-        
-        BiKalmanFittedDownstreamPions  = bindMembers( None, [ BiKalmanFittedChargedDownstreamProtoMaker   , Hlt2BiKalmanFittedDownstreamPions   ] )
-        
         ## Associated Velo candidate selection
         from Configurables import Hlt2SelDV
         Hlt2SingleDownVelo = Hlt2SelDV("Hlt2SingleDownVelo")
@@ -504,7 +430,7 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         ## Downstream candidate preselection
         from Configurables import Hlt2PreSelDV
         Hlt2RV2PDown = Hlt2PreSelDV("Hlt2RV2PDown")
-        Hlt2RV2PDown.Inputs = [BiKalmanFittedDownstreamPions.outputSelection()]
+        Hlt2RV2PDown.Inputs = [BiKalmanFittedDownPions.outputSelection()]
         Hlt2RV2PDown.Output = 'Hlt2/Hlt2RV2PDown/Particles'
         Hlt2RV2PDown.RecVerticesLocation = [Hlt2PatPV3DDown.OutputVerticesName] 
         Hlt2RV2PDown.RCutMethod = self.getProp('RCutMethod')
@@ -531,7 +457,7 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
 
         line = Hlt2Line( 'DisplVerticesSingleDown'
                         , prescale = self.prescale
-                        , algos = DVSeq + [Hlt2SingleDownVelo,fitbm ,Hlt2PatPV3DDown ,BiKalmanFittedDownstreamPions,Hlt2RV2PDown,Hlt2SingleDown ]
+                        , algos = DVSeq + [ Hlt2SingleDownVelo,hlt2DownstreamTracking,Hlt2PatPV3DDown ,BiKalmanFittedDownPions,Hlt2RV2PDown,Hlt2SingleDown ]
                         , postscale = 1.
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DisplVerticesSingleDownDecision" : 50285 } )

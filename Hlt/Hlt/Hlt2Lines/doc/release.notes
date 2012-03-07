@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2012-03-07 - Victor Coco
+ - Update the Hlt2DisplVertices.py lines with the new tracking configurations
+
 ! 2012-03-05 - V. Gligorov
  - Rename D02HHHHDstNoHlt1 lines to prevent ANNSvc mixup. 
 
