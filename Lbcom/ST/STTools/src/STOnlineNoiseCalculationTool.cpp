@@ -112,18 +112,18 @@ StatusCode ST::STOnlineNoiseCalculationTool::calculateNoise() {
     m_tell1WithNZS.push_back(tellID);
 
     // Local vectors for given TELL1
+    std::vector<unsigned int>* nEvents = &m_nEvents[tellID];
+
     std::vector<double>* rawPedestal = &m_rawPedestalMap[tellID];
     std::vector<double>* rawMean = &m_rawMeanMap[tellID];
     std::vector<double>* rawMeanSq = &m_rawMeanSqMap[tellID];
     std::vector<double>* rawNoise = &m_rawNoiseMap[tellID];
-    std::vector<unsigned int>* nEventsPP = &m_rawNEventsPP[tellID];
+    std::vector<unsigned int>* rawNEventsPP = &m_rawNEventsPP[tellID];
 
     std::vector<double>* cmsMean = &m_cmsMeanMap[tellID];
     std::vector<double>* cmsMeanSq = &m_cmsMeanSqMap[tellID];
     std::vector<double>* cmsNoise = &m_cmsNoiseMap[tellID];
     std::vector<unsigned int>* cmsNEventsPP = &m_cmsNEventsPP[tellID];
-
-    std::vector<std::pair<unsigned int, unsigned int> >* nEvents = &m_nEvents[tellID];
 
     // Local copy of pedestal and thresholds used on the TELL1
     //    std::vector<std::pair<double, int> >* pedestals = &m_pedestalMaps[tellID][0];
@@ -136,7 +136,7 @@ StatusCode ST::STOnlineNoiseCalculationTool::calculateNoise() {
       unsigned int pp = *iPP;
       
       // Count the number of events per PP
-      (*nEventsPP)[pp]++;
+      (*rawNEventsPP)[pp]++;
       (*cmsNEventsPP)[pp]++;
       if(m_countRoundRobin) this->countRoundRobin(tellID, pp);
 
@@ -162,21 +162,18 @@ StatusCode ST::STOnlineNoiseCalculationTool::calculateNoise() {
             // Calculate the pedestal and the pedestal squared
             // Cumulative average up to m_followingPeriod; after that exponential moving average
             if( updateRaw && updateCMS ) { // only update the noise if both criteria are fulfilled
-              int nEvt;
-              // raw noise
-              (*nEvents)[strip].first += 1;
-              nEvt = (*nEvents)[strip].first;
-              if( m_followingPeriod > 0 && nEvt > m_followingPeriod ) 
+              (*nEvents)[strip] += 1;
+              int nEvt = (*nEvents)[strip];
+              if( m_followingPeriod > 0 && nEvt > m_followingPeriod ) {
                 nEvt = m_followingPeriod;
+                (*nEvents)[strip] = m_followingPeriod;
+              }
+              // raw noise
               (*rawMean)[strip] = ((*rawMean)[strip]*(nEvt-1) + rawValue ) / nEvt;
               (*rawPedestal)[strip] = (*rawMean)[strip];
               (*rawMeanSq)[strip] = ((*rawMeanSq)[strip]*(nEvt-1) + gsl_pow_2(rawValue) ) / nEvt;
               (*rawNoise)[strip] = sqrt( (*rawMeanSq)[strip] - gsl_pow_2((*rawMean)[strip]) );
               // cms noise
-              (*nEvents)[strip].second += 1;
-              nEvt = (*nEvents)[strip].second;
-              if( m_followingPeriod > 0 && nEvt > m_followingPeriod ) 
-                nEvt = m_followingPeriod;
               (*cmsMean)[strip] = ((*cmsMean)[strip]*(nEvt-1) + lcmsValue ) / nEvt;
               (*cmsMeanSq)[strip] = ((*cmsMeanSq)[strip]*(nEvt-1) + gsl_pow_2(lcmsValue) ) / nEvt;
               (*cmsNoise)[strip] = sqrt( (*cmsMeanSq)[strip] - gsl_pow_2((*cmsMean)[strip]) );

@@ -113,21 +113,13 @@ namespace ST {
     /// Return an iterator corresponding to the number of events containing data in the last PP for a given TELL1 source ID
     virtual std::vector<unsigned int>::const_iterator cmsNEventsPPEnd( const unsigned int TELL1SourceID ) const;
 
-    /** Return an iterator corresponding to the number of events used in the noise calculations
-        for the first channel of a given TELL1 source ID 
-        - 1st is number of events used in RAW noise calculation after outlier removal
-        - 2nd is number of events used in CMS noise calculation after outlier removal
-    **/
-    virtual std::vector<std::pair<unsigned int, unsigned int> >::const_iterator nEventsBegin( const unsigned int TELL1SourceID ) 
-      const;
+    /** Return an iterator corresponding to the number of events used in the calculation of RAW+CMS noise after outlier removal
+        for the first channel of a given TELL1 source ID **/
+    virtual std::vector<unsigned int>::const_iterator nEventsBegin( const unsigned int TELL1SourceID ) const;
 
-    /** Return an iterator corresponding to the number of events used in the noise calculations
-        for the last channel of a given TELL1 source ID 
-        - 1st is number of events used in RAW noise calculation after outlier removal
-        - 2nd is number of events used in CMS noise calculation after outlier removal
-    **/
-    virtual std::vector<std::pair<unsigned int, unsigned int> >::const_iterator nEventsEnd( const unsigned int TELL1SourceID ) 
-      const;
+    /** Return an iterator corresponding to the number of events used in the calculation of RAW+CMS noise after outlier removal
+        for the last channel of a given TELL1 source ID **/
+    virtual std::vector<unsigned int>::const_iterator nEventsEnd( const unsigned int TELL1SourceID ) const;
 
     /// Return an iterator corresponding to the status of the first channel for a given TELL1 source ID
     virtual std::vector<bool>::const_iterator stripStatusBegin( const unsigned int TELL1SourceID ) const;
@@ -185,16 +177,14 @@ namespace ST {
     std::map<unsigned int, std::vector<unsigned int> > m_rawNEventsPP;///< Number of events in RAW noise calculation
     std::map<unsigned int, std::vector<unsigned int> > m_cmsNEventsPP;///< Number of events in CMS noise calculation
 
-    /// Cache the status of each strip
+    /// Cache the status of each strip (1==OK, 0!=OK)
     typedef std::map<unsigned int, std::vector<bool> > StatusMap;
     StatusMap m_statusMap;
 
     // Use number of events per strip in noise calculations
     bool m_evtsPerStrip;
-    /** Internal map of number of events per tell1 channel the calculation of the RAW (first) 
-        and CMS (second) noise. **/
-    typedef std::map<unsigned int, std::vector<std::pair<unsigned int, unsigned int> > > EventCountMap;
-    EventCountMap m_nEvents;
+    typedef std::map<unsigned int, std::vector<unsigned int> > EventCountMap;
+    EventCountMap m_nEvents;///< Number of events/strip used in raw+cms noise calculation after outlier removal
 
     // jobOptions:
 

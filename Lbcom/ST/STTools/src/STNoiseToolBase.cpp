@@ -143,6 +143,7 @@ StatusCode ST::STNoiseToolBase::initialize() {
 void ST::STNoiseToolBase::resetNoiseCounters( const unsigned int TELL1SourceID ){
 
   debug() << "Resetting noise counters for " << TELL1SourceID << endmsg;
+  m_nEvents[TELL1SourceID].resize(3072, 0);
   m_rawPedestalMap[TELL1SourceID].resize(3072, 0.0);
   m_rawMeanMap[TELL1SourceID].resize(3072, 0.0);
   m_rawMeanSqMap[TELL1SourceID].resize(3072, 0.0);
@@ -153,8 +154,6 @@ void ST::STNoiseToolBase::resetNoiseCounters( const unsigned int TELL1SourceID )
   m_cmsMeanSqMap[TELL1SourceID].resize(3072, 0.0);
   m_cmsNoiseMap[TELL1SourceID].resize(3072, 0.0);
   m_cmsNEventsPP[TELL1SourceID].resize(4,0);
-    
-  m_nEvents[TELL1SourceID].resize(3072, std::make_pair(0,0));
 
 }
 //=============================================================================
@@ -442,6 +441,24 @@ std::vector<unsigned int>::const_iterator ST::STNoiseToolBase::cmsNEventsPPEnd
   return m_cmsNEventsPP.find(TELL1SourceID)->second.end();
 }
 
+/** Return an iterator corresponding to the number of events used in the calculation of RAW+CMS noise after outlier removal
+    for the first channel of a given TELL1 source ID **/
+std::vector<unsigned int>::const_iterator ST::STNoiseToolBase::nEventsBegin( const unsigned int TELL1SourceID ) const {
+  if(m_nEvents.find(TELL1SourceID) == m_nEvents.end()) {
+    error() << "This should never happen! Did you pass TELLID rather than source ID? " << TELL1SourceID << endmsg;
+  }
+  return m_nEvents.find(TELL1SourceID)->second.begin();
+};
+
+/** Return an iterator corresponding to the number of events used in the calculation of RAW+CMS noise after outlier removal
+    for the last channel of a given TELL1 source ID **/
+std::vector<unsigned int>::const_iterator ST::STNoiseToolBase::nEventsEnd( const unsigned int TELL1SourceID ) const {
+  if(m_nEvents.find(TELL1SourceID) == m_nEvents.end()) {
+    error() << "This should never happen! Did you pass TELLID rather than source ID? " << TELL1SourceID << endmsg;
+  }
+  return m_nEvents.find(TELL1SourceID)->second.end();
+};
+
 /// Return an iterator corresponding to the source ID of the first TELL1 in the event containing an NZS bank
 std::vector<unsigned int>::const_iterator ST::STNoiseToolBase::tell1WithNZSBegin( ) const {
   return m_tell1WithNZS.begin();
@@ -450,32 +467,6 @@ std::vector<unsigned int>::const_iterator ST::STNoiseToolBase::tell1WithNZSBegin
 /// Return an iterator corresponding to the source ID of the last TELL1 in the event containing an NZS bank
 std::vector<unsigned int>::const_iterator ST::STNoiseToolBase::tell1WithNZSEnd( ) const {
   return m_tell1WithNZS.end();
-}
-
-/** Return an iterator corresponding to the number of events used in the noise calculations
-    for the first channel of a given TELL1 source ID 
-    - 1st is number of events used in RAW noise calculation after outlier removal
-    - 2nd is number of events used in CMS noise calculation after outlier removal
-**/
-std::vector<std::pair<unsigned int, unsigned int> >::const_iterator ST::STNoiseToolBase::nEventsBegin
-( const unsigned int TELL1SourceID ) const {
-  if(m_nEvents.find(TELL1SourceID) == m_nEvents.end()) {
-    error() << "This should never happen! Did you pass TELLID rather than source ID? " << TELL1SourceID << endmsg;
-  }
-  return m_nEvents.find(TELL1SourceID)->second.begin();
-}
-
-/** Return an iterator corresponding to the number of events used in the noise calculations
-    for the last channel of a given TELL1 source ID 
-    - 1st is number of events used in RAW noise calculation after outlier removal
-    - 2nd is number of events used in CMS noise calculation after outlier removal
-**/
-std::vector<std::pair<unsigned int, unsigned int> >::const_iterator ST::STNoiseToolBase::nEventsEnd
-( const unsigned int TELL1SourceID ) const {
-  if(m_nEvents.find(TELL1SourceID) == m_nEvents.end()) {
-    error() << "This should never happen! Did you pass TELLID rather than source ID? " << TELL1SourceID << endmsg;
-  }
-  return m_nEvents.find(TELL1SourceID)->second.end();
 }
 
 /// Return an iterator corresponding to the status of the first channel for a given TELL1 source ID

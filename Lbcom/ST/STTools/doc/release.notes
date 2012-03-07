@@ -3,6 +3,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2012-03-07 - Mark Tobin
+ - Implement new methods in noise calculation tools
+
 !========================= STTools v4r10 2011-12-14 =========================
 ! 2011-11-23 - Mark Tobin
  - Fix gcc 4.6 compiler warnings
