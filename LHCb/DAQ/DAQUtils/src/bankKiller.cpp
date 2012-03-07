@@ -1,5 +1,3 @@
-// $Id: bankKiller.cpp,v 1.8 2010/01/11 17:01:42 cattanem Exp $
-
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 // local
@@ -13,26 +11,27 @@
  */
 // ============================================================================
 
-DECLARE_ALGORITHM_FACTORY( bankKiller );
+DECLARE_ALGORITHM_FACTORY( bankKiller )
 
 //=============================================================================
 // Standard creator, initializes variables
 //=============================================================================
 bankKiller::bankKiller( const std::string& name, ISvcLocator* pSvcLocator)
   : GaudiAlgorithm       ( name , pSvcLocator            )
-    ,m_bankTypes()
+  , m_bankTypes()
+  , m_rawEvt(0)
 {
 
   declareProperty("BankTypes"     , m_bankTypes, "List of bank names"    ) ;
   declareProperty("DefaultIsKill" , m_defaultIsKill = false, 
                   "Main behaviour switch. If false (default), kill only given banks. If true, kill all BUT given banks." ) ;
 
-};
+}
 
 //=============================================================================
 // Standard destructor
 //=============================================================================
-bankKiller::~bankKiller() {};
+bankKiller::~bankKiller() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -60,7 +59,7 @@ StatusCode bankKiller::initialize() {
   }
   
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -100,7 +99,7 @@ StatusCode bankKiller::execute() {
     }
   }
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 
@@ -135,4 +134,4 @@ void  bankKiller::killBankType( LHCb::RawBank::BankType bankType,
                                     << "' have been removed  - " 
                                     << " banks size is now : " << ( m_rawEvt->banks( bankType ) ).size() << endmsg;
   
-};
+}

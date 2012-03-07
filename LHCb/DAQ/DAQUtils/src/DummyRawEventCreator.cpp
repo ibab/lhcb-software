@@ -1,4 +1,3 @@
-// $Id: DummyRawEventCreator.cpp,v 1.2 2009/02/03 18:31:02 marcocle Exp $
 // Include files
 
 // from Gaudi
@@ -38,7 +37,7 @@ DummyRawEventCreator::DummyRawEventCreator( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-DummyRawEventCreator::~DummyRawEventCreator() {};
+DummyRawEventCreator::~DummyRawEventCreator() {}
 
 StatusCode DummyRawEventCreator::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();

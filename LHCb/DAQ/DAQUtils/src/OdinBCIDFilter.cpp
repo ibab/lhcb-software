@@ -1,4 +1,3 @@
-
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 // from LHCb
@@ -13,8 +12,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( OdinBCIDFilter );
-
+DECLARE_ALGORITHM_FACTORY( OdinBCIDFilter )
 
 //=============================================================================
 // Standard constructor, initializes variables

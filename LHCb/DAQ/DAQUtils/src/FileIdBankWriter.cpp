@@ -1,4 +1,3 @@
-// $Id: FileIdBankWriter.cpp,v 1.1 2009/10/09 15:52:34 panmanj Exp $
 // Include files 
 
 // from Gaudi
@@ -20,8 +19,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( FileIdBankWriter );
-
+DECLARE_ALGORITHM_FACTORY( FileIdBankWriter )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -29,6 +27,7 @@ DECLARE_ALGORITHM_FACTORY( FileIdBankWriter );
 FileIdBankWriter::FileIdBankWriter( const std::string& name,
                                 ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
+  , m_count_files(0)
 {
   declareProperty( "RawEventLocation"  ,  m_rawEventLocation = LHCb::RawEventLocation::Default );
  
@@ -53,7 +52,6 @@ StatusCode FileIdBankWriter::initialize() {
 
   // for output
   m_bank.reserve(10);
-  m_bankType  = LHCb::RawBank::FileID; 
 
   return StatusCode::SUCCESS;
 }
@@ -91,7 +89,7 @@ StatusCode FileIdBankWriter::execute() {
     m_bank = m_fileId.fileIDstr2int(event_fname);
   }
   // add now to the raw data: set source, type, version 
-  event->addBank( 0, m_bankType, 0, m_bank );   
+  event->addBank( 0, LHCb::RawBank::FileID, 0, m_bank );   
 
   return StatusCode::SUCCESS;
 }

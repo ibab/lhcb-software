@@ -1,4 +1,3 @@
-// $Id: FileIdBankWriter.h,v 1.1 2009/10/09 15:52:34 panmanj Exp $
 #ifndef FILEIDBANKWRITER_H 
 #define FILEIDBANKWRITER_H 1
 
@@ -32,7 +31,6 @@ protected:
   int         m_count_files;          // number of files read
 
   std::vector<unsigned int> m_bank;
-  LHCb::RawBank::BankType m_bankType;  
 
   LHCb::FileId m_fileId;
 

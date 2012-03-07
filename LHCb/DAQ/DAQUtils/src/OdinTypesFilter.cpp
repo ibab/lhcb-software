@@ -1,4 +1,3 @@
-// $Id: OdinTypesFilter.cpp,v 1.7 2009/04/14 12:12:35 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -15,8 +14,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( OdinTypesFilter );
-
+DECLARE_ALGORITHM_FACTORY( OdinTypesFilter )
 
 //=============================================================================
 // Standard constructor, initializes variables

@@ -4,6 +4,11 @@
 ! Purpose     : Various utilities for manipulating RawEvent
 !-----------------------------------------------------------------------------
 
+! 2012-03-07 - Marco Cattaneo
+ - Fix unprotected debug() messages in RawEventSelectiveCopy
+ - Fix UNINIT_CTOR defects 22916 and 16143
+ - Fix trivial icc remarks
+
 !========================= DAQUtils v1r5 2011-07-25 =========================
 ! 2011-07-20 - Marco Cattaneo
  - In daqutils.basictest:

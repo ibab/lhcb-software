@@ -1,4 +1,3 @@
-// $Id: RawEventDump.cpp,v 1.2 2006/12/14 13:48:18 ranjard Exp $
 // Include files 
 
 // from Gaudi
@@ -32,7 +31,7 @@ RawEventDump::RawEventDump( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-RawEventDump::~RawEventDump() {}; 
+RawEventDump::~RawEventDump() {}
 
 //=============================================================================
 // Main execution

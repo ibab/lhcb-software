@@ -1,4 +1,3 @@
-// $Id: ByteStreamTests.cpp,v 1.1 2008/07/21 14:50:55 cattanem Exp $
 // Include files 
 #include <iostream>
 
@@ -34,7 +33,7 @@ ByteStreamTests::ByteStreamTests( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-ByteStreamTests::~ByteStreamTests() {}; 
+ByteStreamTests::~ByteStreamTests() {}
 
 //=============================================================================
 // Initialization

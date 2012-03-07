@@ -1,4 +1,3 @@
-// $Id: RawBankReadoutStatusFilter.cpp,v 1.5 2009/04/14 12:12:35 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -14,8 +13,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( RawBankReadoutStatusFilter );
-
+DECLARE_ALGORITHM_FACTORY( RawBankReadoutStatusFilter )
 
 //=============================================================================
 // Standard constructor, initializes variables

@@ -1,4 +1,3 @@
-// $Id: RawEventSelectiveCopy.cpp,v 1.1 2009/06/22 15:12:04 tskwarni Exp $
 // Include files
 
 // from Gaudi
@@ -36,7 +35,7 @@ RawEventSelectiveCopy::RawEventSelectiveCopy( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-RawEventSelectiveCopy::~RawEventSelectiveCopy() {};
+RawEventSelectiveCopy::~RawEventSelectiveCopy() {}
 
 StatusCode RawEventSelectiveCopy::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
@@ -55,7 +54,8 @@ StatusCode RawEventSelectiveCopy::initialize() {
       for(int i = 0 ; i != (int) RawBank::LastType; i++){
         m_bankTypes.push_back( (RawBank::BankType) i );
       }
-      verbose() << " All RawBank types will be copied from input to output RawEvent " << endmsg;      
+        if ( msgLevel(MSG::VERBOSE) )
+          verbose() << " All RawBank types will be copied from input to output RawEvent " << endmsg;      
       return sc;      
     }
   }
@@ -91,7 +91,7 @@ StatusCode RawEventSelectiveCopy::initialize() {
 //=============================================================================
 StatusCode RawEventSelectiveCopy::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   // get input RawEvent
   if( !exist<RawEvent>(m_inputLocation.value()) ){    

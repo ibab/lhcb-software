@@ -1,4 +1,3 @@
-// $Id: ODINTimeFilter.cpp,v 1.1 2009/10/16 14:16:26 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -14,8 +13,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( ODINTimeFilter );
-
+DECLARE_ALGORITHM_FACTORY( ODINTimeFilter )
 
 //=============================================================================
 // Standard constructor, initializes variables
