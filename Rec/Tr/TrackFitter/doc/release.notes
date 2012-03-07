@@ -3,6 +3,10 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+! 2012-03-07 - Victor Coco
+ - propagate the FroceBiDirectionalFit option to all case in ConfiguredFitter.py
+   (instead of BiDirectionalFit)
+
 !========================= TrackFitter v4r4 2012-02-28 =========================
 ! 2012-02-27 - Wouter Hulsbergen
  - changes to revive functionality of 'forward only' fit

@@ -75,7 +75,7 @@ def ConfiguredMasterFitter( Name,
 
     # change the smoother
     if KalmanSmoother:
-        fitter.NodeFitter.BiDirectionalFit = False
+        fitter.NodeFitter.ForceBiDirectionalFit = False
 
     if FastOutlierIteration:
         fitter.UpdateReferenceInOutlierIterations = False
@@ -141,7 +141,7 @@ def ConfiguredHltFitter( Name ):
                                     FieldOff=None,
                                     SimplifiedGeometry = True,
                                     LiteClusters = True)
-    fitter.NodeFitter.BiDirectionalFit    = True
+    fitter.NodeFitter.ForceBiDirectionalFit    = True
     fitter.NumberFitIterations = 1
     fitter.MaxNumberOutliers = 2
     fitter.UpdateTransport = False
