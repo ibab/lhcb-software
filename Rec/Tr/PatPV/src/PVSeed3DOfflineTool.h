@@ -1,4 +1,3 @@
-// $Id: PVSeed3DOfflineTool.h,v 1.1 2010-03-04 09:43:33 pmorawsk Exp $
 #ifndef PATPV_PVSEED3DOFFLINETOOL_H
 #define PATPV_PVSEED3DOFFLINETOOL_H 1
 
@@ -50,9 +49,9 @@ public:
 bool  statecomp( const seedState &first, const seedState &second ) {
     return first.dclose > second.dclose;
     //    return first->distance < second->distance;
-};
+}
 
-};
+}
 
 using namespace SimplePVSpace;
 using namespace ROOT::Math;

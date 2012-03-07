@@ -1,4 +1,3 @@
-// $Id: PatPVOffline.cpp,v 1.3 2007-12-04 11:13:06 witekma Exp $
 // Include files:
 // from Gaudi
 #include "GaudiKernel/SystemOfUnits.h"
@@ -10,7 +9,7 @@
 // Local
 #include "PatPVOffline.h"
 
-DECLARE_ALGORITHM_FACTORY(PatPVOffline);
+DECLARE_ALGORITHM_FACTORY(PatPVOffline)
 
 //=============================================================================
 // Standard constructor, initializes variables

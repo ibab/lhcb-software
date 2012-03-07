@@ -1,9 +1,7 @@
-// $Id: $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
-//#include "Event/WeightsVector.h"
 
 // local
 #include "PVOfflineRecalculate.h"
@@ -15,7 +13,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( PVOfflineRecalculate );
+DECLARE_TOOL_FACTORY( PVOfflineRecalculate )
  
 
 //=============================================================================
@@ -291,16 +289,16 @@ bool PVOfflineRecalculate::remove_track(const LHCb::RecVertex* pvin,
 
 void PVOfflineRecalculate::print_stats() 
 {
-  info() << "Statistics for PV recalculation (in case of any failure original PV is returned)" << endreq;
-  info() << "=================================================================================" << endreq;
+  info() << "Statistics for PV recalculation (in case of any failure original PV is returned)" << endmsg;
+  info() << "=================================================================================" << endmsg;
 
   if (  m_counter_count.size() < m_counter_name.size() ) return;
 
   for ( unsigned int i = 0; i < m_counter_count.size(); i++ ) {
     printRat(m_counter_name[i], m_counter_count[i], m_counter_count[0]);
   }
-  info() << "--------------------------------------------------------------------------------" << endreq;
-  info() << endreq;  
+  info() << "--------------------------------------------------------------------------------" << endmsg;
+  info() << endmsg;  
 }
 
 void PVOfflineRecalculate::printRat(std::string& mes, int a, int b) {
@@ -316,6 +314,6 @@ void PVOfflineRecalculate::printRat(std::string& mes, int a, int b) {
   }
   pmes+= " : ";
 
-  info() << pmes << format(" %8.5f ( %7d / %8d )", rat,a,b) << endreq; 
+  info() << pmes << format(" %8.5f ( %7d / %8d )", rat,a,b) << endmsg; 
 
 }

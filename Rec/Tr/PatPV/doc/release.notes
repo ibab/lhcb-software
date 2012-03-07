@@ -4,6 +4,11 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+! 2012-03-07 - Marco Cattaneo
+ - Fix unprotected debug() and verbose()
+ - Fix trivial icc remarks
+ - Replace endreq by endmsg
+
 !========================= PatPV v3r22 2012-02-28 =========================
 ! 2012-02-26 - Mariusz Witek
  - Remove usage of WeigthsVector from PatPV

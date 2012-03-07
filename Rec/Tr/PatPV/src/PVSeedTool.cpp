@@ -1,4 +1,3 @@
-// $Id: PVSeedTool.cpp,v 1.4 2010-01-20 13:46:49 rlambert Exp $
 // Include files 
 
 // STL
@@ -27,7 +26,7 @@ bool  paircomp( pair_to_merge *first, pair_to_merge *second ) {
 // 2005-11-19 : Mariusz Witek
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( PVSeedTool );
+DECLARE_TOOL_FACTORY( PVSeedTool )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -82,8 +81,7 @@ PVSeedTool::PVSeedTool( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-PVSeedTool::~PVSeedTool() {}; 
-
+PVSeedTool::~PVSeedTool() {}
 
 //=============================================================================
 // getSeeds

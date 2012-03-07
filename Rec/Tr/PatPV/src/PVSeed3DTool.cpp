@@ -1,4 +1,3 @@
-// $Id: PVSeed3DTool.cpp,v 1.4 2010-01-20 13:46:49 rlambert Exp $
 // Include files 
 
 // from Gaudi
@@ -14,7 +13,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( PVSeed3DTool );
+DECLARE_TOOL_FACTORY( PVSeed3DTool )
 
 
 class seedPoint 
@@ -143,7 +142,7 @@ void PVSeed3DTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks,
 
       // debug
       if(msgLevel(MSG::DEBUG))  {
-        debug() << " close nodes (pairs of tracks wrt one track): " << endreq;
+        debug() << " close nodes (pairs of tracks wrt one track): " << endmsg;
         std::vector<closeNode>::iterator itd;
         for ( itd = close_nodes.begin(); itd != close_nodes.end(); itd++ ) { 
           debug() << format(" xyz %7.3f %7.3f %7.3f distance %7.3f ",

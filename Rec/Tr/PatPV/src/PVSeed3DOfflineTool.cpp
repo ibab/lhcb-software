@@ -1,4 +1,3 @@
-// $Id: PVSeed3DOfflineTool.cpp,v 1.3 2010-03-11 21:23:39 witekma Exp $
 // Include files
 
 // STL
@@ -18,7 +17,7 @@
 // 2005-11-19 : Mariusz Witek
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( PVSeed3DOfflineTool );
+DECLARE_TOOL_FACTORY( PVSeed3DOfflineTool )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -37,7 +36,7 @@ PVSeed3DOfflineTool::PVSeed3DOfflineTool( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-PVSeed3DOfflineTool::~PVSeed3DOfflineTool() {};
+PVSeed3DOfflineTool::~PVSeed3DOfflineTool() {}
 
 StatusCode PVSeed3DOfflineTool::initialize() {
   // Full track extrapolator
@@ -120,7 +119,7 @@ void PVSeed3DOfflineTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks,
   std::sort(seed_states.begin(), seed_states.end(), statecomp);
 
   if(msgLevel(MSG::DEBUG))  {
-    debug() << " close nodes (pairs of tracks wrt one track): " << endreq;
+    debug() << " close nodes (pairs of tracks wrt one track): " << endmsg;
   }
 
   for(its1 = seed_states.begin(); its1 != seed_states.end(); its1++) {
@@ -131,7 +130,7 @@ void PVSeed3DOfflineTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks,
     std::vector<closeNode> close_nodes;
 
     if(msgLevel(MSG::DEBUG)) {
-      debug() << " close nodes - next track, nclose: " << its1->nclose << endreq;
+      debug() << " close nodes - next track, nclose: " << its1->nclose << endmsg;
     }
 
     for(its2 = seed_states.begin(); its2 != seed_states.end(); its2++) {

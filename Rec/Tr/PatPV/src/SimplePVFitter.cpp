@@ -1,4 +1,3 @@
-// $Id: SimplePVFitter.cpp,v 1.2 2010-01-20 13:46:49 rlambert Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
@@ -10,7 +9,7 @@
 // Local
 #include "SimplePVFitter.h"
 
-DECLARE_TOOL_FACTORY(SimplePVFitter);
+DECLARE_TOOL_FACTORY(SimplePVFitter)
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -87,14 +86,13 @@ StatusCode SimplePVFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
                                      std::vector<const LHCb::Track*>& tracks2remove)
 {
 
-  StatusCode sc = StatusCode::SUCCESS;
   m_pvTracks.clear();
   PVVertex pvVertex;
   std::vector<const LHCb::Track*>::iterator itr;
   for(itr = rTracks.begin(); itr != rTracks.end(); itr++) {    
     const LHCb::Track* track = *itr;
     //    if ( !(track->hasVelo()) ) continue;
-    sc = addTrackForPV(track, m_pvTracks, seedPoint.z());
+    StatusCode sc = addTrackForPV(track, m_pvTracks, seedPoint.z());
     if(!sc.isSuccess()) continue;
   }
   initVertex(m_pvTracks,pvVertex,seedPoint);
@@ -113,7 +111,7 @@ StatusCode SimplePVFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
 
   // Check the number of tracks for PV candidate
   if((int)pvVertex.pvTracks.size() < m_minTr) {
-    if(msgLevel(MSG::DEBUG)) {
+    if(msgLevel(MSG::VERBOSE)) {
       verbose() << "Too few tracks to fit PV" << endmsg;
     }
     vtx = pvVertex.primVtx;
@@ -122,8 +120,9 @@ StatusCode SimplePVFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
   }
 
   StatusCode scvfit = fit(pvVertex.primVtx,pvVertex.pvTracks,tracks2remove);
-  if (!scvfit.isSuccess() ) {
-    debug() << "PV fit failed" << endmsg;  
+  if( !scvfit.isSuccess() ) {
+    if(msgLevel(MSG::DEBUG))
+      debug() << "PV fit failed" << endmsg;  
   }
   
   vtx = pvVertex.primVtx;
@@ -137,7 +136,7 @@ StatusCode SimplePVFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
 StatusCode SimplePVFitter::fit(LHCb::RecVertex& vtx, 
                                std::vector<PVTrack*>& pvTracks, std::vector<const LHCb::Track*>& tracks2remove) 
 {
-  if(msgLevel(MSG::DEBUG)) {
+  if(msgLevel(MSG::VERBOSE)) {
     verbose() << "Least square adaptive PV fit" << endmsg;
   }
   // Reset hessian and d0 vector
@@ -170,7 +169,7 @@ StatusCode SimplePVFitter::fit(LHCb::RecVertex& vtx,
        if (pvTrack->weight > 0.) ntr++;
     }
     if (ntr < 3 ) { 
-      debug() << "# tracks too low. ntr = " << ntr << endmsg;
+      if(msgLevel(MSG::DEBUG)) debug() << "# tracks too low. ntr = " << ntr << endmsg;
       break;
     }
 
@@ -194,8 +193,9 @@ StatusCode SimplePVFitter::fit(LHCb::RecVertex& vtx,
   }
 
   if (nbIter >= m_Iterations) {
-    debug() << " Reached max # iterations without convergence " 
-              << nbIter << endreq;
+    if(msgLevel(MSG::DEBUG))
+      debug() << " Reached max # iterations without convergence " 
+              << nbIter << endmsg;
   }
 
   setChi2(vtx,pvTracks);
@@ -211,7 +211,7 @@ StatusCode SimplePVFitter::fit(LHCb::RecVertex& vtx,
     }
   }
   if(outTracks < m_minTr) {
-    if(msgLevel(MSG::DEBUG)) {
+    if(msgLevel(MSG::VERBOSE)) {
       verbose() << "Too few tracks after PV fit" << endmsg;
     }
     return StatusCode::FAILURE;
@@ -382,7 +382,7 @@ StatusCode SimplePVFitter::trackExtrapolate(PVTrack* pvTrack,
   StatusCode sc = m_linExtrapolator->propagate(stateToMove,vtx.position().z() 
                                            + pvTrack->vd0.z());
   if(!sc.isSuccess()) {
-    if(msgLevel(MSG::DEBUG)) {
+    if(msgLevel(MSG::VERBOSE)) {
       verbose() << "Error propagating the track state" << endmsg;
     }
     return StatusCode::FAILURE;
@@ -461,14 +461,15 @@ StatusCode SimplePVFitter::outVertex(LHCb::RecVertex& vtx,
                                       Gaudi::SymMatrix3x3& hess,
                                       ROOT::Math::SVector<double,3>& d0vec)
 {
-  if(msgLevel(MSG::DEBUG)) {
+  if(msgLevel(MSG::VERBOSE)) {
     verbose() << "Computing new vertex position" << endmsg;
   }
   // Solve the linear equations to get a vertex
   int fail;
   hess.Inverse(fail);
   if (0 != fail) {
-    debug() << "Error inverting hessian matrix" << endmsg;
+    if(msgLevel(MSG::DEBUG))
+      debug() << "Error inverting hessian matrix" << endmsg;
     return StatusCode::FAILURE;
   } else {
     hess.Invert();
@@ -509,7 +510,7 @@ StatusCode SimplePVFitter::outVertex(LHCb::RecVertex& vtx,
       PVTrack* pvtr = (*itrack);
       debug() << format("x,y,z: %9.3f %9.3f %9.3f  d0,errd0: %9.4f %9.4f  chi2,w: %9.3f %9.5f hasVelo %d ",
                       pvtr->stateG.x(), pvtr->stateG.y(), pvtr->stateG.z(), 
-                        pvtr->d0, sqrt(pvtr->err2d0), pvtr->chi2, pvtr->weight, pvtr->refTrack->hasVelo()) << endreq;
+                        pvtr->d0, sqrt(pvtr->err2d0), pvtr->chi2, pvtr->weight, pvtr->refTrack->hasVelo()) << endmsg;
       
     }
 
@@ -532,7 +533,7 @@ void SimplePVFitter::setChi2(LHCb::RecVertex& vtx,
       nDoF += 2;
     }
   }
-  if( msgLevel(MSG::DEBUG) ) {
+  if( msgLevel(MSG::VERBOSE) ) {
     verbose() << "Compute chi2 of this vertex: " << chi2 
               << " for " << nDoF << " DoF ( " 
               << chi2 / nDoF << " / DoF)"

@@ -1,4 +1,3 @@
-// $Id: PVOfflineTool.cpp,v 1.8 2010-02-09 10:44:20 witekma Exp $
 // Include files:
 // from Gaudi
 #include "GaudiKernel/SystemOfUnits.h"
@@ -12,7 +11,7 @@
 // Local
 #include "PVOfflineTool.h"
 
-DECLARE_TOOL_FACTORY(PVOfflineTool);
+DECLARE_TOOL_FACTORY(PVOfflineTool)
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -468,7 +467,7 @@ void PVOfflineTool::removeTracksUsedByVertex(std::vector<const LHCb::Track*>& tr
 
   std::vector<const LHCb::Track*> tracks2remove;
   //  std::vector<LHCb::Track*>::iterator it;
-  LHCb::Tracks::const_iterator it;
+  //  LHCb::Tracks::const_iterator it;
   SmartRefVector< LHCb::Track >  vtx_tracks = rvtx.tracks();
   for (unsigned int it = 0; it < vtx_tracks.size(); it++ ) {
     const LHCb::Track* ptr =  vtx_tracks[it];

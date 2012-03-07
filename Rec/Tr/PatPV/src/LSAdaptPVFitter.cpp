@@ -1,4 +1,3 @@
-// $Id: LSAdaptPVFitter.cpp,v 1.13 2010-03-04 09:43:33 pmorawsk Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
@@ -10,7 +9,7 @@
 // Local
 #include "LSAdaptPVFitter.h"
 
-DECLARE_TOOL_FACTORY(LSAdaptPVFitter);
+DECLARE_TOOL_FACTORY(LSAdaptPVFitter)
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -73,7 +72,7 @@ StatusCode LSAdaptPVFitter::initialize()
   // do not allow less than 3 tracks in a vertex
   if  ( m_minTr < 3 ) {
     m_minTr = 3;  
-    warning() << "MinTracks parameter set to 3" << endreq;
+    warning() << "MinTracks parameter set to 3" << endmsg;
   }
 
   m_trackChi = std::sqrt(m_trackMaxChi2);
@@ -153,7 +152,7 @@ StatusCode LSAdaptPVFitter::fit(LHCb::RecVertex& vtx,
 {
   tracks2remove.clear();
   
-  if(msgLevel(MSG::DEBUG)) {
+  if(msgLevel(MSG::VERBOSE)) {
     verbose() << "Least square adaptive PV fit" << endmsg;
   }
   // Reset hessian and d0 vector
@@ -190,7 +189,7 @@ StatusCode LSAdaptPVFitter::fit(LHCb::RecVertex& vtx,
        if (pvTrack->weight > 0.) ntr++;
     }
     if (ntr < 3 ) { 
-      debug() << "# tracks too low. ntr = " << ntr << endmsg;
+      if(msgLevel(MSG::DEBUG)) debug() << "# tracks too low. ntr = " << ntr << endmsg;
       break;
     }
 
@@ -229,7 +228,7 @@ StatusCode LSAdaptPVFitter::fit(LHCb::RecVertex& vtx,
 
   if (nbIter >= m_maxIterations) {
     if( msgLevel(MSG::DEBUG) ) {  
-      debug() << " Reached max # iterations without convergence " << nbIter << endreq;
+      debug() << " Reached max # iterations without convergence " << nbIter << endmsg;
     }
 
     // check if delta chi2/ndof acceptable to confirm convergence anyway
@@ -262,7 +261,7 @@ StatusCode LSAdaptPVFitter::fit(LHCb::RecVertex& vtx,
         int hasmom = fabs( lbtrack->firstState().qOverP() )>0. ;
       
         debug() <<  format("track significance dump: %3d %3d %3d %3d %7.2f", 
-                   back, velo, longtr, hasmom, std::sqrt((*itrack)->chi2) ) << endreq;
+                   back, velo, longtr, hasmom, std::sqrt((*itrack)->chi2) ) << endmsg;
       } 
     }
     
@@ -279,7 +278,7 @@ StatusCode LSAdaptPVFitter::fit(LHCb::RecVertex& vtx,
   }
 
   if(outTracks < m_minTr) {
-    if(msgLevel(MSG::DEBUG)) {
+    if(msgLevel(MSG::VERBOSE)) {
       verbose() << "Too few tracks after PV fit" << endmsg;
     }
     return StatusCode::FAILURE;
@@ -413,7 +412,7 @@ StatusCode LSAdaptPVFitter::trackExtrapolate(PVTrack* pvTrack,
   StatusCode sc = m_linExtrapolator->propagate(stateToMove,vtx.position().z() 
                                            + pvTrack->vd0.z());
   if(!sc.isSuccess()) {
-    if(msgLevel(MSG::DEBUG)) {
+    if(msgLevel(MSG::VERBOSE)) {
       verbose() << "Error propagating the track state" << endmsg;
     }
     return StatusCode::FAILURE;
@@ -504,14 +503,14 @@ StatusCode LSAdaptPVFitter::outVertex(LHCb::RecVertex& vtx,
                                       Gaudi::SymMatrix3x3& hess,
                                       ROOT::Math::SVector<double,3>& d0vec)
 {
-  if(msgLevel(MSG::DEBUG)) {
+  if(msgLevel(MSG::VERBOSE)) {
     verbose() << "Computing new vertex position" << endmsg;
   }
   // Solve the linear equations to get a vertex
   int fail;
   hess.Inverse(fail);
   if (0 != fail) {
-    debug() << "Error inverting hessian matrix" << endmsg;
+    if(msgLevel(MSG::DEBUG)) debug() << "Error inverting hessian matrix" << endmsg;
     return StatusCode::FAILURE;
   } else {
     hess.Invert();
@@ -573,7 +572,7 @@ void LSAdaptPVFitter::setChi2(LHCb::RecVertex& vtx,
       nDoF += 2;
     }
   }
-  if( msgLevel(MSG::DEBUG) ) {
+  if(msgLevel(MSG::VERBOSE)) {
     verbose() << "Compute chi2 of this vertex: " << chi2 
               << " for " << nDoF << " DoF ( " 
               << chi2 / nDoF << " / DoF)"
@@ -588,14 +587,16 @@ void LSAdaptPVFitter::setChi2(LHCb::RecVertex& vtx,
 //=============================================================================
 void LSAdaptPVFitter::printTracks(PVTrackPtrs& pvTracks)
 {
-  verbose() << endreq << " dump tracks for this vertex" << endmsg;
+  if(msgLevel(MSG::VERBOSE)) {
+    verbose() << " dump tracks for this vertex" << endmsg;
   
-  for(PVTrackPtrs::iterator iFitTrPtr = pvTracks.begin(); iFitTrPtr != pvTracks.end(); iFitTrPtr++) {
-    int invx = 0;
-    PVTrack* iFitTr = *iFitTrPtr;
-    if( iFitTr->weight > m_minTrackWeight) invx = 1;
+    for(PVTrackPtrs::iterator iFitTrPtr = pvTracks.begin(); iFitTrPtr != pvTracks.end(); iFitTrPtr++) {
+      int invx = 0;
+      PVTrack* iFitTr = *iFitTrPtr;
+      if( iFitTr->weight > m_minTrackWeight) invx = 1;
       verbose() << format( "chi2 d0 w zc %7.2f %7.2f %7.2f %7.2f %3d",
-                 iFitTr->chi2, iFitTr->d0, iFitTr->weight, iFitTr->refTrack->firstState().z(),invx) << endmsg;
+                           iFitTr->chi2, iFitTr->d0, iFitTr->weight, iFitTr->refTrack->firstState().z(),invx) << endmsg;
+    }
   }
 }
 

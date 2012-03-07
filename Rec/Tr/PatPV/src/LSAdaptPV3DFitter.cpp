@@ -1,4 +1,3 @@
-// $Id: LSAdaptPV3DFitter.cpp,v 1.8 2010-01-27 09:52:17 rlambert Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -9,7 +8,7 @@
 // Local
 #include "LSAdaptPV3DFitter.h"
 
-DECLARE_TOOL_FACTORY(LSAdaptPV3DFitter);
+DECLARE_TOOL_FACTORY(LSAdaptPV3DFitter)
 
 //=============================================================================
 // Standard constructor, initializes variables

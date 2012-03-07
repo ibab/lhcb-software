@@ -17,7 +17,7 @@
 // 2005-11-19 : Mariusz Witek
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( SimplePVSeedTool );
+DECLARE_TOOL_FACTORY( SimplePVSeedTool )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -32,8 +32,7 @@ SimplePVSeedTool::SimplePVSeedTool( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-SimplePVSeedTool::~SimplePVSeedTool() {}; 
-
+SimplePVSeedTool::~SimplePVSeedTool() {}
 
 //=============================================================================
 // getSeeds
