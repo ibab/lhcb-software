@@ -1,4 +1,3 @@
-// $Id: PatVTTTrack.h,v 1.8 2010-03-13 16:29:36 witekma Exp $
 #ifndef PATVTTTRACK_H
 #define PATVTTTRACK_H 1
 
@@ -174,9 +173,8 @@
     // Select the best list of sorted hits...
     //=========================================================================
     void bestLists(double tol, double tol_factor,
-                   std::vector<PatTTHits> & hitsSolutions, MsgStream& msg){
-
-      bool isDebug = (msg.level() == MSG::DEBUG);
+                   std::vector<PatTTHits> & hitsSolutions, 
+                   IMessageSvc* msgSvc, std::string source, bool isDebug ){
 
       // The vector of local hits for bestLists
       std::vector<std::vector<LocalHitIterators> > LocalHitsLists;
@@ -305,7 +303,8 @@
             nLayersFired = m_LUT[maskPlanes];
 
             if(isDebug){
-              msg << "Found a solution with nLayersFired: " << nLayersFired
+              MsgStream msg = MsgStream( msgSvc, source );
+              msg << MSG::DEBUG << "Found a solution with nLayersFired: " << nLayersFired
                   << " with first hit dist: "
                   << format(" %6.2f(%1d) ", itStoreB->distance(), itStoreB->hit()->planeCode())
                   << " , last hit dist: "
@@ -334,16 +333,13 @@
       } // itB
 
       if(isDebug){
-        msg << "Number of solutions: " << LocalHitsLists.size() << endmsg;
+        MsgStream msg = MsgStream( msgSvc, source );
+        msg << MSG::DEBUG << "Number of solutions: " << LocalHitsLists.size() << endmsg;
       }
 
       // Now create the different PatTTHit combinations and add them to the vector of solutions
       std::vector<std::vector<LocalHitIterators> >::iterator iLocalHitsLists;
       for(iLocalHitsLists = LocalHitsLists.begin(); iLocalHitsLists != LocalHitsLists.end(); ++iLocalHitsLists){
-
-        if(isDebug){
-          msg << "  with hits: ";
-        }
 
         // The compatible clusters made from these LocalHits
         PatTTHits hitsCandidate;
@@ -351,15 +347,15 @@
 
         std::vector<LocalHitIterators>::iterator iSub;
         for(iSub = (*iLocalHitsLists).begin(); iSub != (*iLocalHitsLists).end(); ++iSub){
-
-          if(isDebug){
-            msg << format(" %6.2f(%1d) ", (*iSub)->distance(), (*iSub)->hit()->planeCode());
-          }
-
           hitsCandidate.push_back((*iSub)->hit());
         }
 
         if(isDebug){
+          MsgStream msg = MsgStream( msgSvc, source );
+          msg << MSG::DEBUG << "  with hits: ";
+          for(iSub = (*iLocalHitsLists).begin(); iSub != (*iLocalHitsLists).end(); ++iSub){
+            msg << format(" %6.2f(%1d) ", (*iSub)->distance(), (*iSub)->hit()->planeCode());
+          }
           msg << endmsg;
         }
 

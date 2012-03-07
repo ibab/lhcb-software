@@ -262,7 +262,7 @@ void PatVeloTTTool::getCandidates( LHCb::Track& veloTrack, std::vector<PatVTTTra
   theSolutions.reserve(10); // reserve in case of many solutions for this Velo track
 
   // Try with 3 or 4 clusters in at least 3 different layers
-  cand.bestLists(m_dxGroupTol, m_dxGroupFactor, theSolutions, debug());
+  cand.bestLists(m_dxGroupTol, m_dxGroupFactor, theSolutions, msgSvc(), name(), m_debug);
   if(m_debug){
     debug() << "This Velo track has " << theSolutions.size()
             << " possible solution(s) with 3 or 4 layers fired before clean-up" << endmsg;

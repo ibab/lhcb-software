@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-03-07 - Marco Cattaneo
+ - Change PatVTTTrack so that debug stream created only when needed
+
 ! 2012-03-06 - Marco Cattaneo
  - Protect some unprotected DEBUG messages
  - Fix some trivial icc remarks
