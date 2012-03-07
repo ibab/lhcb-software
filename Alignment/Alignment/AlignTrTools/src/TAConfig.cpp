@@ -923,8 +923,8 @@ StatusCode TAConfig::ConfigOT( std::vector<Gaudi::Transform3D> &OTmap , DeOTDete
             ROOT::Math::Transform3D transM( ROOT::Math::XYZVector(0, 0, 0)) ;
             ROOT::Math::Transform3D rotM( ROOT::Math::RotationX(0)*ROOT::Math::RotationY(0)*
                                           ROOT::Math::RotationZ(0)) ;
-            ROOT::Math::Transform3D myglobal = transM * rotM;
-            Gaudi::Transform3D locglobal = DetDesc::localDeltaMatrix( m_OTModules[l]->geometry(), myglobal);
+            //ROOT::Math::Transform3D myglobal = transM * rotM;
+            //Gaudi::Transform3D locglobal = DetDesc::localDeltaMatrix( m_OTModules[l]->geometry(), myglobal);
             std::vector<double> locrot(3,0.), locshift(3,0.);
             // for some reason, the call below also causes the magneticfield svc to update...
             //m_OTModules[l]->geometry()->ownToOffNominalParams(locshift,locrot);
@@ -2393,7 +2393,7 @@ StatusCode TAConfig::PrintParameters( std::vector<double> &ali_par , int /*itera
   
   
   
-  std::vector<double>::iterator i       = ali_par.begin();
+  //std::vector<double>::iterator i       = ali_par.begin();
   std::map<std::string,int>::iterator t = m_C_pos.begin();
   
   // loop over the detector elements we wanted to align.

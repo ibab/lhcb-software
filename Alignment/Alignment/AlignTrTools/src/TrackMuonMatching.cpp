@@ -101,10 +101,8 @@ StatusCode TrackMuonMatching::execute() {
   }
   
   const Tracks*       mTracks = NULL;
-  bool flagMUON=false;  
   if(exist<LHCb::Tracks>( m_mTracksLocation )){
     mTracks = get<Tracks>( m_mTracksLocation );
-    if(mTracks->size()!=0) flagMUON = true;
   }
   if(!mTracks ) {
     Warning("the Muon track  container is empty / no matching or ntuple filling is possible", StatusCode::FAILURE, 5 ).ignore();   
