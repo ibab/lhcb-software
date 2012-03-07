@@ -3,7 +3,7 @@ version v30r1
 
 branches doc cmt
 
-use  DaVinci             v30r1  Phys
+use  DaVinci             v30r1p1  Phys
 use  DaVinciTests        v2r13
 
 # Declare this as a container package
