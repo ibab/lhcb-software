@@ -25,6 +25,7 @@ namespace ST {
 }
 
 class TH2D;
+class TProfile;
 
 class STNZSMonitor : public ST::HistoAlgBase {
 
@@ -78,16 +79,16 @@ private:
   bool m_rawNoise;///< Fill histograms with the RAW noise
 
   /// Map of noise histograms booked in initialize
-  std::map<int, AIDA::IProfile1D*> m_noiseHistos;
+  std::map<int, TProfile*> m_noiseHistos;
 
   /// Map of pedestal histograms booked in initialize
-  std::map<int, AIDA::IProfile1D*> m_pedestalHistos;
+  std::map<int, TProfile*> m_pedestalHistos;
 
   TH2D* m_2d_NoisePerLinkVsTell1;///< 2d map of noise vs link
-  AIDA::IProfile1D* m_1dp_AvNoisePerTell1;///< Average noise in each tell1
+  TProfile* m_1dp_AvNoisePerTell1;///< Average noise in each tell1
 
   TH2D* m_2d_PedestalPerLinkVsTell1;///< 2d map of pedestal vs link
-  AIDA::IProfile1D* m_1dp_AvPedestalPerTell1;///< Average pedestal in each tell1
+  TProfile* m_1dp_AvPedestalPerTell1;///< Average pedestal in each tell1
 
   /// 2d map used for normalisation of noise, pedestal plots as 2d profile histograms are not supported by online monitoring
   TH2D* m_2d_NormalisationPerLinkVsTell1;
