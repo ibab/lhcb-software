@@ -15,8 +15,6 @@
 #include "GaudiKernel/AlgFactory.h"
 
 #include "GaudiKernel/SystemOfUnits.h"
-#include "Event/ODIN.h"
-
 #include "TStation.h"
 
 
@@ -91,22 +89,9 @@ StatusCode TStation::execute() {
     error() << "Container " << m_inputcontainer << " does not exist!" << endreq;
     return StatusCode::FAILURE;
   }
-  int run = -1;
-  int ev = -1;
-  LHCb::ODIN* odin(0);
-  if( exist<ODIN>( LHCb::ODINLocation::Default ) ){
-    odin = get<ODIN>( LHCb::ODINLocation::Default );
-    run = odin->runNumber();
-    ev = odin->eventNumber();
-  } else {
-    Error("Can't get LHCb::ODINLocation::Default (" +
-          LHCb::ODINLocation::Default + ")" );
-  }
 
   LHCb::Tracks* inCont = get<LHCb::Tracks>(m_inputcontainer);
   int num_tracks = 0;
-//  if ( inCont->size() > 0 )
-//    info() << "Found " << inCont->size() << " tracks in event : " << run << " " << ev << endreq;
   for ( LHCb::Tracks::iterator iterT = inCont->begin();
  	iterT != inCont->end(); iterT++) {
     LHCb::Track* aTrack = *iterT;
