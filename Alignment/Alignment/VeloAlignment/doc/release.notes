@@ -2,6 +2,9 @@
 ! Responsible : Silvia Borghi, Marco Gersabeck
 !=============================================================================
 
+! 07/03/2012 - Wouter Hulsbergen
+ - resolve compilation warnings on gcc 4.6
+
 !========================= VeloAlignment v4r10 2010-10-08 =========================
 
 ! 08/09/2010 - Silvia Borghi  

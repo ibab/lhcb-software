@@ -111,7 +111,7 @@ StatusCode TrackStore::TransformTrack(LHCb::Track* ftrack, VeloTrack& atrack, do
   int hits[42];
   double r[42];
   double r_e[42];
-  double r_s[84];
+  //double r_s[84];
   //x_s and y_s should be cancel
   double x_s[84];
   double y_s[84];
@@ -127,12 +127,12 @@ StatusCode TrackStore::TransformTrack(LHCb::Track* ftrack, VeloTrack& atrack, do
     r_e[j]          = 0.0;
     phi[j]          = 0.0;
     phi_e[j]        = 0.0;
-    r_s[2*j]        = 0.0;
+    //r_s[2*j]        = 0.0;
     phi_s[2*j]      = 0.0;
     x_s[2*j]        = 0.0;
     y_s[2*j]        = 0.0;
     z_s[2*j]        = 0.0;
-    r_s[2*j+1]      = 0.0;
+    //r_s[2*j+1]      = 0.0;
     phi_s[2*j+1]    = 0.0;
     x_s[2*j+1]      = 0.0;
     y_s[2*j+1]      = 0.0;
@@ -254,7 +254,7 @@ StatusCode TrackStore::TransformTrack(LHCb::Track* ftrack, VeloTrack& atrack, do
             * toolInfo.fractionalError *1.4;;
           verbose() << "r_e "  << endmsg;
           phi_s[2*station]    = phistate;
-          r_s[2*station]      = rstate;
+          //r_s[2*station]      = rstate;
           x_s[2*station]      = xstate;
           y_s[2*station]      = ystate;
           z_s[2*station]      = zstate;
@@ -275,7 +275,7 @@ StatusCode TrackStore::TransformTrack(LHCb::Track* ftrack, VeloTrack& atrack, do
           phi_e[station]      =  phiDet -> phiPitch( rstate )
             * toolInfo.fractionalError *1.4;
           phi_s[2*station+1]    = phistate;
-          r_s[2*station+1]      = rstate;
+          //r_s[2*station+1]      = rstate;
           x_s[2*station+1]      = xstate;
           y_s[2*station+1]      = ystate;
           z_s[2*station+1]      = zstate;

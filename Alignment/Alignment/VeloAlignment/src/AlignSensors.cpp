@@ -451,10 +451,10 @@ StatusCode AlignSensors::makeStraightLinePlots( LHCb::Track* track ) {
 
   int station;
   int hits[42];
-  int nStrips[84];
+  //int nStrips[84];
   double r[42];
   double r_e[42];
-  double r_s[84];
+  //double r_s[84];
   double phi[42];
   double phi_e[42];
   double phi_s[84];
@@ -463,7 +463,7 @@ StatusCode AlignSensors::makeStraightLinePlots( LHCb::Track* track ) {
   double z_meas[42];
   double x_err[42];
   double y_err[42];
-  double z_err[42];
+  //double z_err[42];
   int    active[42];  // array to point to active modules
   int    last_active = -1; // counter to point at index of last active module
 
@@ -471,14 +471,14 @@ StatusCode AlignSensors::makeStraightLinePlots( LHCb::Track* track ) {
   for (int j=0; j<42; j++)
   {
     hits[j]         = 0;
-    nStrips[2*j]    = 0;
-    nStrips[2*j+1]  = 0; 
+    //nStrips[2*j]    = 0;
+    //nStrips[2*j+1]  = 0; 
     r[j]            = 0.0;
     phi[j]          = 0.0;
     phi[j]          = 0.0;
-    r_s[2*j]        = 0.0;
+    //r_s[2*j]        = 0.0;
     phi_s[2*j]      = 0.0;
-    r_s[2*j+1]      = 0.0;
+    //r_s[2*j+1]      = 0.0;
     r_e[2*j]        = 0.0;
     phi_s[2*j+1]    = 0.0;
     phi_e[2*j]      = 0.0;
@@ -487,7 +487,7 @@ StatusCode AlignSensors::makeStraightLinePlots( LHCb::Track* track ) {
     z_meas[j]       = 0.0;
     x_err[j]       = 0.0;
     y_err[j]       = 0.0;
-    z_err[j]       = 0.0;
+    //z_err[j]       = 0.0;
     active[j]      = -1;
   }
 
@@ -524,8 +524,8 @@ StatusCode AlignSensors::makeStraightLinePlots( LHCb::Track* track ) {
         r[station]          = rDet->rOfStrip( cl_str ) + interStripFr * ( rDet->rPitch( cl_str ) );	  
         r_e[station]        =  rDet -> rPitch(  cl_str  ) * toolInfo.fractionalError ;
         phi_s[2*station]    = phistate;
-        r_s[2*station]      = rstate;
-        nStrips[2*station]  = cluster->size();
+        //r_s[2*station]      = rstate;
+        //nStrips[2*station]  = cluster->size();
       } 
       else if (vcID.type() == LHCb::VeloChannelID::PhiType) {
         const DeVeloPhiType *phiDet = m_veloDet->phiSensor( vcID.sensor() );
@@ -535,8 +535,8 @@ StatusCode AlignSensors::makeStraightLinePlots( LHCb::Track* track ) {
         phi[station]          = phiDet->phiOfStrip(cl_str,interStripFr,rstate);	  
         phi_e[station+1]      =  phiDet -> phiPitch( rstate ) * toolInfo.fractionalError;
         phi_s[2*station+1]    = phistate;
-        r_s[2*station+1]      = rstate;
-        nStrips[2*station+1]  = cluster->size();
+        //r_s[2*station+1]      = rstate;
+        //nStrips[2*station+1]  = cluster->size();
       }
     } // finished computation of corrected cluster position
 
@@ -604,7 +604,7 @@ StatusCode AlignSensors::makeStraightLinePlots( LHCb::Track* track ) {
     z_meas[n_stat] = pointGlobal.z();
     x_err[n_stat]  = sqrt(pow(x*error_r,2)+pow(y*error_p,2))/r[n_stat];
     y_err[n_stat]  = sqrt(pow(y*error_r,2)+pow(x*error_p,2))/r[n_stat];
-    z_err[n_stat]  = 11;
+    //z_err[n_stat]  = 11;
     active[++last_active] = n_stat;
                     
     verbose() << "" << endmsg;

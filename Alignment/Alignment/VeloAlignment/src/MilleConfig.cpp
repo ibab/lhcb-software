@@ -185,7 +185,7 @@ void MilleConfig::InitBox(IMillepede *my_millepede,
   double Const_Z[6*m_nglo];
   double Const_SX[6*m_nglo];
   double Const_SY[6*m_nglo];
-  double Const_SZ[6*m_nglo];
+  //double Const_SZ[6*m_nglo];
 
   for (int i = 0; i< 6*m_nglo; ++i)
   {
@@ -194,7 +194,7 @@ void MilleConfig::InitBox(IMillepede *my_millepede,
     Const_Z[i] = 0.0;
     Const_SX[i] = 0.0;
     Const_SY[i] = 0.0;
-    Const_SZ[i] = 0.0;
+    //Const_SZ[i] = 0.0;
   }
 
   Const_X[0]    = 1.;
@@ -783,7 +783,7 @@ StatusCode MilleConfig::correcTrack(VeloTrack& mistrack,
   double z_moy_L =0;
 
   double x_cor, y_cor, z_cor;
-  double x_o, y_o, z_o;
+  double x_o, y_o; //, z_o;
 
   int n_left  = left_constants.size()/6;
   int n_right = right_constants.size()/6;
@@ -818,7 +818,7 @@ StatusCode MilleConfig::correcTrack(VeloTrack& mistrack,
     z_cor = ((mistrack.Coords()[k]).first).z();
     x_o = x_cor;
     y_o = y_cor;
-    z_o = z_cor;
+    //z_o = z_cor;
 
     int iStation = int(((mistrack.Coords()[k]).second).z());
     int side     = mistrack.nType();
@@ -869,17 +869,17 @@ StatusCode MilleConfig::correcTrack(VeloTrack& mistrack,
     Gaudi::XYZPoint trackcoord(0.,0.,0.);
     Gaudi::XYZPoint trackerrors(0.,0.,0.);
 
-    double r   = sqrt(x_cor*x_cor+y_cor*y_cor);
+    //double r   = sqrt(x_cor*x_cor+y_cor*y_cor);
 
     // Errors are calculated as (pitch/sqrt(12)) for the moment (SV 08/07/05)
     
     //double error_r = (40+(101.6-40.0)*(r-8.19)/(41.95-8.19))/3464.;
-    double error_p = 0.;
+    //double error_p = 0.;
 
-    if (r <= 17.2) 
-      error_p = (35.5+(78.3-35.5)*(r-8.19)/(17.2-8.19))/3464.;
-    if (r > 17.2)  
-      error_p = (39.3+(96.6-39.3)*(r-17.2)/(41.95-17.2))/3464.;
+    //if (r <= 17.2) 
+    //  error_p = (35.5+(78.3-35.5)*(r-8.19)/(17.2-8.19))/3464.;
+    //if (r > 17.2)  
+    //  error_p = (39.3+(96.6-39.3)*(r-17.2)/(41.95-17.2))/3464.;
     //Silvia
     double error_x =((mistrack.Coords()[k]).second).x();
     double error_y =((mistrack.Coords()[k]).second).y();
@@ -919,7 +919,7 @@ StatusCode MilleConfig::correcTrack(VeloTrack& mistrack,
     z_cor = ((first_track.Coords()[k]).first).z();
     x_o = x_cor;
     y_o = y_cor;
-    z_o = z_cor;
+    //z_o = z_cor;
 
     int iStation = int(((first_track.Coords()[k]).second).z());
     int side     = first_track.nType();
@@ -968,17 +968,17 @@ StatusCode MilleConfig::correcTrack(VeloTrack& mistrack,
     Gaudi::XYZPoint trackcoord(0.,0.,0.);
     Gaudi::XYZPoint trackerrors(0.,0.,0.);
 
-    double r   = sqrt(x_cor*x_cor+y_cor*y_cor);
+    //double r   = sqrt(x_cor*x_cor+y_cor*y_cor);
 
     // Errors are calculated as (pitch/sqrt(12)) for the moment (SV 08/07/05)
     
     //double error_r = (40+(101.6-40.0)*(r-8.19)/(41.95-8.19))/3464.;
-    double error_p = 0.;
+    //double error_p = 0.;
 
-    if (r <= 17.2) 
-      error_p = (35.5+(78.3-35.5)*(r-8.19)/(17.2-8.19))/3464.;
-    if (r > 17.2)  
-      error_p = (39.3+(96.6-39.3)*(r-17.2)/(41.95-17.2))/3464.;
+    //if (r <= 17.2) 
+    //  error_p = (35.5+(78.3-35.5)*(r-8.19)/(17.2-8.19))/3464.;
+    //if (r > 17.2)  
+    //  error_p = (39.3+(96.6-39.3)*(r-17.2)/(41.95-17.2))/3464.;
     
     //Silvia
     double error_x =((mistrack.Coords()[k]).second).x();
