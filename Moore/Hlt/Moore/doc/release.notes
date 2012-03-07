@@ -2,6 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : Eric van Herwijnen
 Purpose     : LHCb HLT application
 
+!========================= Moore v13r1p2 2012-03-07 =========================
+! 2012-03-07 - Eric van Herwijnen
+
 !========================= Moore v13r1p1 2012-03-06 =========================
 ! 2012-03-06 - Eric van Herwijnen
  - Replace import GaudiConf.Configuration by Gaudi.Configuration
