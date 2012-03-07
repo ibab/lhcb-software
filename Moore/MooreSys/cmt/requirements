@@ -6,12 +6,13 @@ branches doc cmt
 # Don't forget the applications
 #=======================================================
 
-use  Moore              v13r1p1   Hlt
-use  IndependenceTests  v1r2      Hlt
+use  Moore               v13r1p1   Hlt
+use  IndependenceTests   v1r2      Hlt
 
-use  Hlt2Lines		v8r11	  Hlt
-use  PatAlgorithms      v4r19     Tf
-use  TrackFitter        v4r5      Tr
+use  Hlt2Lines		 v8r11	   Hlt
+use  PatAlgorithms       v4r19     Tf
+use  TrackFitter         v4r5      Tr
+use  Hlt2SharedParticles v6r6      Hlt
 
 # Patches
 
