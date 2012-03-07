@@ -188,7 +188,7 @@ class DaVinci(LHCbConfigurableUser) :
 
         initSeqs = []
 
-        if ( inputType != 'MDST' & inputType != "MDF" & inputType != "DIGI" ) :
+        if ( (inputType != 'MDST' ) & (inputType != "MDF") & (inputType != "DIGI" )) :
             physinit = PhysConf().initSequence() # PhysConf initSequence
             # Analysis
             AnalysisConf().RedoMCLinks = self.getProp("RedoMCLinks") 
