@@ -220,7 +220,7 @@ def ConfigureMoore():
         tag_db = os.path.expandvars(config.getProp('TagDatabase'))
         if not os.path.exists(tag_db):
             raise OSError, "Tag database file %s does not exist" % config.getProp('TagDatabase')
-        tag_db = shelve.open(tag_db)
+        tag_db = shelve.open(tag_db, 'r')
         info = tag_db['info']
         tags = info[run]
         Moore().DDDBtag = tags['DDDBtag']
