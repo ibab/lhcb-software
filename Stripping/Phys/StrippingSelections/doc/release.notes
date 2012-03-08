@@ -6,6 +6,7 @@
 
 ! 2012-03-08 - Will Barter
  - include updates to StrippingZ02TauTau.py to reduce rate. (Updates from S. Farry. 
+ - comment out two lines in StrippingDY2ee.py as these lines are not to be run in 2012.
 
 ! 2012-03-06 - Patrick Koppenburg
  - Fix bug #92254: NoBias line to only take NoBias events.

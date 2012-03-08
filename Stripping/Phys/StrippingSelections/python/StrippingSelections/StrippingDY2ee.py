@@ -82,29 +82,29 @@ class DY2eeConf(LineBuilder) :
         _DY4MassCut = '(MM>%(DY4MinMass)s*GeV)&(MM<%(DY4MaxMass)s*GeV)'%config
 
 
-        self.selDY2ee_1 = makeDY2ee_tight(self._myname+'DY2ee_1', 
-                                     _DY1MassCut,
-                                     _ecuta)
+        #self.selDY2ee_1 = makeDY2ee_tight(self._myname+'DY2ee_1', 
+        #                             _DY1MassCut,
+        #                             _ecuta)
      
-        self.DY2ee_line1 = StrippingLine(self._myname+"Line1",
-                                            prescale = config['DY2eeLine1Prescale'],
-                                            postscale = config['DY2eeLinePostscale'],
-                                            selection = self.selDY2ee_1
-                                            )
-        self.registerLine(self.DY2ee_line1)
+        #self.DY2ee_line1 = StrippingLine(self._myname+"Line1",
+        #                                    prescale = config['DY2eeLine1Prescale'],
+        #                                    postscale = config['DY2eeLinePostscale'],
+        #                                    selection = self.selDY2ee_1
+        #                                    )
+        #self.registerLine(self.DY2ee_line1)
 
 
 
-        self.selDY2ee_2 = makeDY2ee_tight(self._myname+'DY2ee_2', 
-                                     _DY2MassCut,
-                                     _ecutb)
+        #self.selDY2ee_2 = makeDY2ee_tight(self._myname+'DY2ee_2', 
+        #                             _DY2MassCut,
+        #                             _ecutb)
      
-        self.DY2ee_line2 = StrippingLine(self._myname+"Line2",
-                                            prescale = config['DY2eeLine2Prescale'],
-                                            postscale = config['DY2eeLinePostscale'],
-                                            selection = self.selDY2ee_2
-                                            )
-        self.registerLine(self.DY2ee_line2)
+        #self.DY2ee_line2 = StrippingLine(self._myname+"Line2",
+        #                                    prescale = config['DY2eeLine2Prescale'],
+        #                                    postscale = config['DY2eeLinePostscale'],
+        #                                    selection = self.selDY2ee_2
+        #                                    )
+        #self.registerLine(self.DY2ee_line2)
 
 
 
