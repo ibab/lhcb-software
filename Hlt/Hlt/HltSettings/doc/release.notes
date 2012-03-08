@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-03-08 - Will Barter
+ - Change prescale on LowMultPhoton in Physics_draft2012.py to reflect effect of new calo reconstruction. (With permission of Johannes.) 
+
 !========================= HltSettings v5r18 2012-03-08 =========================
 ! 2012-03-05 - V. Gligorov 
  - Rename D02HHHHDstNoHlt1 lines to prevent ANNSvc mixup.

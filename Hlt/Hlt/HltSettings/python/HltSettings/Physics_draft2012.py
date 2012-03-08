@@ -153,7 +153,7 @@ class Physics_draft2012( object ):
                                                , 'MaxNoBiasRate' : 11.
                                                }
                        , Hlt2diphotonDiMuonLinesConf : { 'Prescale' : { 'Hlt2LowMultHadron'     :  1.0 # for 0x0035, this is already done in L0
-                                                                      , 'Hlt2LowMultPhoton'     : 0.001
+                                                                      , 'Hlt2LowMultPhoton'     : 0.01
                                                                       } } 
                        }
 
