@@ -7,6 +7,11 @@
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+
+!========================= Hlt2Lines 2012-03-08 =========================
+! 2012-03-08 - Sam Gregson 
+ - Created Lambda_c->Lambda0h lines. Simply copied D(s)->KS0h lines and changed mass windows
+
 !========================= Hlt2Lines v8r12 2012-03-07 =========================
 ! 2012-03-07 - Mike Williams 
  - Added DD KS to the topo
