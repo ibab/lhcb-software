@@ -32,7 +32,7 @@ public:
   double dclose;
   int used;
 
-  seedState():lbstate(),nclose(0),used(0) {};
+  seedState():lbstate(),nclose(0),dclose(0.),used(0) {};
 };
 
 class closeNode

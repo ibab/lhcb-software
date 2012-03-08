@@ -154,7 +154,7 @@ void PVSeedTool::findClusters(std::vector<vtxCluster>& vclus,
 
   std::vector<vtxCluster*>::iterator ivc,ivc1,ivc2,ivc2up;
 
-  std::sort(pvclus.begin(),pvclus.end(),vtxcomp);
+  std::stable_sort(pvclus.begin(),pvclus.end(),vtxcomp);
   //  print_clusters(pvclus);
 
   bool more_merging = true;
@@ -199,7 +199,7 @@ void PVSeedTool::findClusters(std::vector<vtxCluster>& vclus,
     }
     else {
       // sort if number of pairs reasonable. Sorting increases efficency.
-      if(m_pvecp2m.size()<100) std::sort(m_pvecp2m.begin(), m_pvecp2m.end(), paircomp);
+      if(m_pvecp2m.size()<100) std::stable_sort(m_pvecp2m.begin(), m_pvecp2m.end(), paircomp);
       std::vector<pair_to_merge*>::iterator itp2m;
       
       // merge pairs 
@@ -251,7 +251,7 @@ void PVSeedTool::findClusters(std::vector<vtxCluster>& vclus,
   // Sort according to multiplicity
 
   if(pvclus.size()>1) {
-    std::sort(pvclus.begin(),pvclus.end(),multcomp);
+    std::stable_sort(pvclus.begin(),pvclus.end(),multcomp);
   }
   
   // Select good clusters.

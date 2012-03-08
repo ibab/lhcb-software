@@ -17,6 +17,7 @@ DECLARE_ALGORITHM_FACTORY(PatPVOffline)
 PatPVOffline::PatPVOffline(const std::string& name,
                            ISvcLocator* pSvcLocator)
   : GaudiAlgorithm(name,pSvcLocator)
+  , m_pvsfit(0)
 {
   declareProperty("OutputVertices",m_outputVertices =
                   LHCb::RecVertexLocation::Primary);

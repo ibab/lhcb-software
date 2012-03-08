@@ -172,7 +172,7 @@ void PVSeed3DTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks,
     
   }
 
-  std::sort(seed_points.begin(), seed_points.end(), seedcomp);
+  std::stable_sort(seed_points.begin(), seed_points.end(), seedcomp);
   for ( unsigned int i=0; i<seed_points.size(); i++) {
     seeds.push_back(seed_points[i].position);
 

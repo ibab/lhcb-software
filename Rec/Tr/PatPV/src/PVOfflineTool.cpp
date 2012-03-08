@@ -23,8 +23,10 @@ PVOfflineTool::PVOfflineTool(const std::string& type,
     m_requireVelo(false),
     m_saveSeedsAsPV(false),
     m_outputVertices(""),
+    m_inputVertices(0),
     m_pvfit(0),
     m_pvSeedTool(0),
+    m_pvRecalc(0),
     m_inputTracks(0),
     m_pvFitterName(""),
     m_pvSeedingName(""),
@@ -34,7 +36,8 @@ PVOfflineTool::PVOfflineTool(const std::string& type,
     m_beamSpotRCut(0.3),
     m_beamSpotX(0.),
     m_beamSpotY(0.),
-    m_beamSpotCond("")
+    m_beamSpotCond(""),
+    m_timerTool(0)
 {
   declareInterface<IPVOfflineTool>(this);
   declareProperty("RequireVelo"      , m_requireVelo   = true);

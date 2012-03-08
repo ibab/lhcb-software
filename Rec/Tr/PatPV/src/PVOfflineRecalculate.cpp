@@ -22,8 +22,9 @@ DECLARE_TOOL_FACTORY( PVOfflineRecalculate )
 PVOfflineRecalculate::PVOfflineRecalculate( const std::string& type,
                                             const std::string& name,
                                             const IInterface* parent )
-  : GaudiTool ( type, name , parent ),
-    m_updatePVTracks(false)
+  : GaudiTool ( type, name , parent )
+  , m_linExtrapolator(0)
+  , m_fullExtrapolator(0)
 {
   declareInterface<PVOfflineRecalculate>(this);
   declareProperty("UpdatePVTracks"      , m_updatePVTracks   = false); 

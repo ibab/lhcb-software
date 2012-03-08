@@ -26,6 +26,7 @@ PVSeed3DOfflineTool::PVSeed3DOfflineTool( const std::string& type,
                     const std::string& name,
                     const IInterface* parent )
   : GaudiTool ( type, name , parent )
+  , m_fullExtrapolator(0)
 {
   declareInterface<IPVSeeding>(this);
   declareProperty("TrackPairMaxDistance", m_TrackPairMaxDistance = 5. * Gaudi::Units::mm );
@@ -116,7 +117,7 @@ void PVSeed3DOfflineTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks,
      }
   }
 
-  std::sort(seed_states.begin(), seed_states.end(), statecomp);
+  std::stable_sort(seed_states.begin(), seed_states.end(), statecomp);
 
   if(msgLevel(MSG::DEBUG))  {
     debug() << " close nodes (pairs of tracks wrt one track): " << endmsg;

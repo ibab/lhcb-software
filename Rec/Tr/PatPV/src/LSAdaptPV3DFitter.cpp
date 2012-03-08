@@ -24,6 +24,7 @@ LSAdaptPV3DFitter::LSAdaptPV3DFitter(const std::string& type,
     m_minTrackWeight(0.),
     m_TrackErrorScaleFactor(0.),
     m_x0MS(0.),
+    m_trackChi(3.),
     m_scatCons(0.),
     m_myZero(1E-12),
     m_pvTracks(0)

@@ -4,6 +4,10 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+! 2012-03-08 - Marco Cattaneo
+ - Replace std::sort by std::stable_sort to fix diffs between gcc43 and gcc46
+ - Fic UNINIT_CTOR Coverity defects
+
 ! 2012-03-07 - Marco Cattaneo
  - Fix unprotected debug() and verbose()
  - Fix trivial icc remarks
