@@ -53,17 +53,17 @@ class Z02MuMuConf(LineBuilder) :
                                           )
         self.registerLine(self.Z02MuMu_line)
        
-        self.selZ02MuMuloose = makeZ02MuMuloose(self._myname+'Z02MuMuLoose', 
-                                     _Z0MinMass,
-                                     _mucut)
+        #self.selZ02MuMuloose = makeZ02MuMuloose(self._myname+'Z02MuMuLoose', 
+        #                             _Z0MinMass,
+        #                             _mucut)
      
-        self.Z02MuMu_lineloose = StrippingLine(self._myname+"LooseLine",
-                                               prescale = config['Z02MuMuLinePrescale'],
-                                               postscale = config['Z02MuMuLinePostscale'],
-                                               checkPV = False,
-                                               selection = self.selZ02MuMuloose
-                                               )
-        self.registerLine(self.Z02MuMu_lineloose)
+        #self.Z02MuMu_lineloose = StrippingLine(self._myname+"LooseLine",
+        #                                       prescale = config['Z02MuMuLinePrescale'],
+        #                                       postscale = config['Z02MuMuLinePostscale'],
+        #                                       checkPV = False,
+        #                                       selection = self.selZ02MuMuloose
+        #                                       )
+        #self.registerLine(self.Z02MuMu_lineloose)
 
 
         self.selZ02MuMuNoPIDs = makeZ02MuMuNoPIDs(self._myname+'Z02MuMuNoPIDs', 
