@@ -6,7 +6,8 @@
 
 ! 2012-03-08 - Will Barter
  - include updates to StrippingZ02TauTau.py to reduce rate. (Updates from S. Farry. 
- - comment out two lines in StrippingDY2ee.py as these lines are not to be run in 2012.
+ - update and comment out two lines in StrippingDY2ee.py as these lines are not to be run in 2012.
+ - update StrippingZ02ee.py
  - include updates from S.Bifani to StrippingSingleTrackTIS.py and StrippingWMu.py t reduce rate.
 
 ! 2012-03-06 - Patrick Koppenburg
