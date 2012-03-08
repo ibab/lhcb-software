@@ -420,8 +420,8 @@ Ext.app.Preferences.Appearance = Ext.extend(Ext.app.Panel, {
         id: 	this.owner.id
       },
       fields:    ['id', 'name', 'pathtothumbnail', 'pathtofile'],
-      root: 	'images',
-      url: 	'http://cern.ch/frankm/Online/Desktop/config/themes.json'
+      root: 	'Images',
+      url: 	'http://lbcomet.cern.ch/Online/Desktop/config/themes.json'
     });
 
     this.store.on('load', function(store, records){
@@ -627,11 +627,12 @@ Ext.app.Preferences.Background = Ext.extend(Ext.app.Panel,  {
       },
       fields: ['id', 'name', 'pathtothumbnail', 'pathtofile'],
       id: 	'id',
-      root: 	'images',
-      url: 	'http://cern.ch/frankm/Online/Desktop/config/wallpapers.1280x1024.json'
+      root: 	'Images',
+      url: 	'http://lbcomet.cern.ch/Online/Desktop/config/wallpapers.1280x1024.json'
     });
   
     this.store.on('load', function(store, records){
+      //alert('records:'+records);
       if(records){
         defaults.setTitle('Default Wallpapers (' + records.length + ')');      
         var id = this.app.styles.wallpaper.id;
@@ -661,6 +662,7 @@ Ext.app.Preferences.Background = Ext.extend(Ext.app.Panel,  {
       store: 		this.store,
       tpl: 		tpl,
       prepareData: 	function(data){
+	//alert(data);
         data.shortName = Ext.util.Format.ellipsis(data.name, 17);
         return data;
       }

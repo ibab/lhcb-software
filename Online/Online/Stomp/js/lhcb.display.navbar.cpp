@@ -187,7 +187,10 @@ var navbar_general = function(navBar) {
   navBar.addURL('Show Operations status',lhcb.constants.urls.lhcb.operstatus);
   lhcb.constants.urls.lhcb.bcm.src += '&charts=1';
   navBar.addURL('Show BCM status',lhcb.constants.urls.lhcb.bcm);
+  navBar.addURL('Show LHCb PVSS Alarms',lhcb.constants.urls.lhcb.alarmScreen);
+  /*
   navBar.addURL('Show Magnet status',lhcb.constants.urls.lhcb.magnet);
+  */
   navBar.addURL('LHC status around LHCb',lhcb.constants.urls.lhcb.lhc_status);
   navBar.addURL('LHCb electronic logbook',lhcb.constants.urls.lhcb.elog);
   /*
@@ -211,8 +214,10 @@ var navbar_subdetectors = function(navBar) {
   navBar.addURL('Lumi/DAQ page',lhcb.constants.urls.lhcb.subdetectors.daq_lumi);
   navBar.addURL('Trigger/DAQ page',lhcb.constants.urls.lhcb.subdetectors.daq_trigger);
   navBar.addURL('Big Brother/DAQ page',lhcb.constants.urls.lhcb.subdetectors.daq_bigbrother);
+  navBar.addURL('Event Display/DAQ page',lhcb.constants.urls.lhcb.subdetectors.daq_evdisp);
   navBar.addURL('TRG/L0 status page',lhcb.constants.urls.lhcb.subdetectors.trg_l0status);
   navBar.addURL('Show VELO page',lhcb.constants.urls.lhcb.subdetectors.velo);
+  navBar.addURL('Show VELO Motion page',lhcb.constants.urls.lhcb.subdetectors.velo.motion);
   navBar.addURL('Show ST page',lhcb.constants.urls.lhcb.subdetectors.st);
   navBar.addURL('Show OT page',lhcb.constants.urls.lhcb.subdetectors.ot);
   navBar.addURL('Show RICH page',lhcb.constants.urls.lhcb.subdetectors.rich);
@@ -256,7 +261,7 @@ var navbar_body = function()  {
 		  lhcb.constants.images.beams_department.src,120,32);
   navBar.addURL('CERN home page',lhcb.constants.urls.cern);
   
-  navBar.haveSmallIcons = (icns && icns == 'small');
+  navBar.haveSmallIcons = !(icns && icns == 'large');
   navBar.build();
   HTML_HEAD.body = document.getElementsByTagName('body')[0];
   HTML_HEAD.body.appendChild(navBar);

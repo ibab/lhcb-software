@@ -231,9 +231,9 @@ function _loadWidgets() {
       tb.appendChild(tr);
       tr = document.createElement('tr');
     }
-    tab.lumiDEL     = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiIntDel_GP','Text-Right','%9.3f');
-    tab.lumiREC     = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiIntRec_GP','Text-Right','%9.3f');
-    tab.lumiNOW     = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiInst_GP','Text-Right','%9.3f');
+    tab.lumiDEL     = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiIntDel_GP','Text-Right','%9.2f');
+    tab.lumiREC     = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiIntRec_GP','Text-Right','%9.2f');
+    tab.lumiNOW     = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiInst_GP','Text-Right','%9.2f');
     tab.neventsRec  = StyledItem('lbWeb.LHCb_RunInfo.HLTFarm.hltNTriggers','Text-Right',null);
     tab.neventsIn   = StyledItem('lbWeb.LHCb_RunInfo.TFC.nTriggers','Text-Right',null);
     tab.lumiYearDel = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiIntDel_annual_3500','Text-Right',"%9.2f");
@@ -329,13 +329,13 @@ function _loadWidgets() {
     tab.style.cursor = 'pointer';
 
     tab.fillNo = -1;
-    tab.lumiCalo   = StyledItem('', 'Text-Right','%7.3f &mu;b<sup>-1</sup>/s');
-    tab.lumiBLSA   = StyledItem('', 'Text-Right','%7.3f &mu;b<sup>-1</sup>/s');
-    tab.lumiBLSC   = StyledItem('', 'Text-Right','%7.3f &mu;b<sup>-1</sup>/s');
+    tab.lumiCalo   = StyledItem('', 'Text-Right','%7.1f &mu;b<sup>-1</sup>/s');
+    tab.lumiBLSA   = StyledItem('', 'Text-Right','%7.1f &mu;b<sup>-1</sup>/s');
+    tab.lumiBLSC   = StyledItem('', 'Text-Right','%7.1f &mu;b<sup>-1</sup>/s');
     tab.lumiBRAN4L8= StyledItem('', 'Text-Right','%7.3e');
     tab.lumiBRAN4R8= StyledItem('', 'Text-Right','%7.3e');
     //tab.lumiIdeal  = StyledItem('', 'Text-Right','%7.3f');
-    tab.lumiGP     = StyledItem('', 'Text-Right','%7.3f &mu;b<sup>-1</sup>/s');
+    tab.lumiGP     = StyledItem('', 'Text-Right','%7.1f &mu;b<sup>-1</sup>/s');
     tab.physRateEx = StyledItem('lbWeb.LHCB_STATS.PhysEx',   'Text-Right','%7.0f Hz(Exc)');
     tab.physRateIn = StyledItem('lbWeb.LHCB_STATS.PhysIn',   'Text-Right','%7.0f Hz(Inc)');
     tab.minbRateEx = StyledItem('lbWeb.LHCB_STATS.MBiasEx',  'Text-Right','%7.0f Hz(Exc)');
@@ -347,7 +347,7 @@ function _loadWidgets() {
     tab.RandEx     = StyledItem('lbWeb.LHCB_STATS.RandEx',   'Text-Right','%7.0f Hz(Exc)');
     tab.RandIn     = StyledItem('lbWeb.LHCB_STATS.RandIn',   'Text-Right','%7.0f Hz(Inc)');
 
-    tab.lumiRate   = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.TriggerRates.TrgRateLumi_GP','Text-Right','%7.0f Hz');
+    tab.lumiRate   = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.TriggerRates.TrgRate_calo_bb','Text-Right','%7.0f Hz');
     tab.lumi       = StyledItem('lbWeb.LHCbPerformance.CurrentLuminosities',null,null);
     tab.lumi.parent = tab;
     tab.lumi.display = function(data) {

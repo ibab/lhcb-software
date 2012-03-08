@@ -140,36 +140,36 @@ var MagnetStatus = function(msg)   {
     tr = document.createElement('tr');
     tr.appendChild(Cell('Sensor 0',null,'MonitorDataHeader'));
     tr.appendChild(this.magnetField0);
-    tr.appendChild(this.magnetFieldX0);
     tr.appendChild(this.magnetFieldY0);
     tr.appendChild(this.magnetFieldZ0);
+    tr.appendChild(this.magnetFieldX0);
     tr.appendChild(this.magnetTemp0);
     tb.appendChild(tr);
 
     tr = document.createElement('tr');
     tr.appendChild(Cell('Sensor 1',null,'MonitorDataHeader'));
     tr.appendChild(this.magnetField1);
-    tr.appendChild(this.magnetFieldX1);
     tr.appendChild(this.magnetFieldY1);
     tr.appendChild(this.magnetFieldZ1);
+    tr.appendChild(this.magnetFieldX1);
     tr.appendChild(this.magnetTemp1);
     tb.appendChild(tr);
 
     tr = document.createElement('tr');
     tr.appendChild(Cell('Sensor 2',null,'MonitorDataHeader'));
     tr.appendChild(this.magnetField2);
-    tr.appendChild(this.magnetFieldX2);
     tr.appendChild(this.magnetFieldY2);
     tr.appendChild(this.magnetFieldZ2);
+    tr.appendChild(this.magnetFieldX2);
     tr.appendChild(this.magnetTemp2);
     tb.appendChild(tr);
 
     tr = document.createElement('tr');
     tr.appendChild(Cell('Sensor 3',null,'MonitorDataHeader'));
     tr.appendChild(this.magnetField3);
-    tr.appendChild(this.magnetFieldX3);
     tr.appendChild(this.magnetFieldY3);
     tr.appendChild(this.magnetFieldZ3);
+    tr.appendChild(this.magnetFieldX3);
     tr.appendChild(this.magnetTemp3);
     tb.appendChild(tr);
     

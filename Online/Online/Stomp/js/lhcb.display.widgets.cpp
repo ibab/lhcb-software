@@ -468,7 +468,7 @@ if ( !lhcb.widgets ) {
     tab.bcmBeamPermit1 = StyledItem('lbWeb.BCM_Interface.BeamPermit.getStatus', 'Text-Right', null);
     tab.bcmBeamPermit2 = StyledItem('lbWeb.BCM_Interface.InjPermit1.getStatus', 'Text-Right', null);
     tab.bcmBeamPermit3 = StyledItem('lbWeb.BCM_Interface.InjPermit2.getStatus', 'Text-Right', null);
-    tab.interActionRate= StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.TriggerRates.TrgRateLumi_GP','Text-Right','%7.0f Hz');
+    tab.interActionRate= StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.TriggerRates.TrgRate_calo_bb','Text-Right','%7.0f Hz');
 
     tab.l0Rate         = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.triggerRate',    'Text-Right','%6.0f');
     tab.l0RateRun      = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.runTriggerRate', 'Text-Right','%6.0f');
@@ -860,7 +860,7 @@ if ( !lhcb.widgets ) {
     tab.hltRateRun     = StyledItem('lbWeb.'+sys+'_RunInfo.HLTFarm.runHltRate',  'Text-Right','%8.2f Hz');
     tab.deadTime       = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.deadTime',        'Text-Right','%8.2f %%');
     tab.deadTimeRun    = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.runDeadTime',     'Text-Right','%8.2f %%');
-    tab.interActionRate= StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.TriggerRates.TrgRateLumi_GP', 'Text-Right', '%7.1f Hz');
+    tab.interActionRate= StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.TriggerRates.TrgRate_calo_bb', 'Text-Right', '%7.1f Hz');
     tab.instantLumi    = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiInst_GP', 'Text-Right', '%7.2f Hz/&mu;b');
     tab.physRateEx = StyledItem('lbWeb.LHCB_STATS.PhysEx',   'Text-Right','%7.0f Hz');
     tab.physRateIn = StyledItem('lbWeb.LHCB_STATS.PhysIn',   'Text-Right','%7.0f Hz');
@@ -1843,9 +1843,12 @@ if ( !lhcb.widgets ) {
       tb.onclick = options.onclick; 
     }
     tab.veloState   = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Specific.VELO.Position', null, null);
-    tab.veloOpening = StyledItem('lbWeb.veloMove_Xle.Comm.ResolPos',null,'%7.2f mm');
-    tab.veloCenter  = StyledItem('lbWeb.veloMove_Xri.Comm.ResolPos',null,'%7.2f mm');
-    tab.veloY       = StyledItem('lbWeb.veloMove_Yy.Comm.ResolPos',null,'%7.2f mm');
+    //tab.veloOpening = StyledItem('lbWeb.veloMove_Xle.Comm.ResolPos',null,'%7.2f mm');
+    tab.veloOpening = StyledItem('lbWeb.veloMove_Xle.Potm.Av',null,'%7.2f mm');
+    //tab.veloCenter  = StyledItem('lbWeb.veloMove_Xri.Comm.ResolPos',null,'%7.2f mm');
+    tab.veloCenter  = StyledItem('lbWeb.veloMove_Xri.Potm.Av',null,'%7.2f mm');
+    //tab.veloY       = StyledItem('lbWeb.veloMove_Yy.Comm.ResolPos',null,'%7.2f mm');
+    tab.veloY       = StyledItem('lbWeb.veloMove_Yy.Potm.Av',null,'%7.2f mm');
     tr = document.createElement('tr');
     tr.appendChild(tab.veloState);
     tr.appendChild(tab.veloOpening);

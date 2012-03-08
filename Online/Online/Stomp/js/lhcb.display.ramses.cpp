@@ -104,18 +104,46 @@ var RamsesStatus = function(msg)   {
     div.style.width = '970px';
     div.style.overflow = 'auto';
     this.chart.appendChild(div);
-    div.innerHTML = '<IMG SRC="'+_fileBase+'/Images/LHCb/Ramses_LHCb_2.jpg" width="940"></IMG>';
+    div.innerHTML = '<IMG SRC="'+_fileBase+'/Images/LHCb/Ramses_cavern.bmp" width="940"></IMG>';
+    //div.innerHTML = '<IMG SRC="'+_fileBase+'/Images/LHCb/Ramses_cavern_sensors.bmp" width="940"></IMG>';
     // Now draw the canvas with the measurement point on it....
     this.jg = new jsGraphics('Ramses');
-    this.jg.drawString(this.installSensor('PAXL8501'),200+offset_x,10+offset_y);
-    this.jg.drawString(this.installSensor('PAXL8521'),450+offset_x,10+offset_y);
-    this.jg.drawString(this.installSensor('PAXL8512'),200+offset_x,500+offset_y);
-    this.jg.drawString(this.installSensor('PMIL8501'),450+offset_x,100+offset_y);
-    this.jg.drawString(this.installSensor('PMIL8513'),600+offset_x,10+offset_y);
-    this.jg.drawString(this.installSensor('PMIL8511'),450+offset_x,500+offset_y);
-    this.jg.drawString(this.installSensor('PMIL8512'),700+offset_x,30+offset_y);
-    this.jg.drawString(this.installSensor('PMIL8531'),580+offset_x,500+offset_y);
-    this.jg.drawString(this.installSensor('Legend'),  850+offset_x,550+offset_y);
+
+    this.jg.setStroke(3);
+    this.jg.setColor('blue');
+    this.jg.drawLine( 90+offset_x,120+offset_y,160+offset_x,250+offset_y); // PAXL6501
+    this.jg.drawLine(200+offset_x,180+offset_y,230+offset_x,285+offset_y); // PAXL8521
+    this.jg.drawLine(270+offset_x,120+offset_y,300+offset_x,295+offset_y); // PAXL8502_CabOnly
+    this.jg.drawLine(440+offset_x,120+offset_y,440+offset_x,250+offset_y); // PMIL8513
+    this.jg.drawLine(350+offset_x,180+offset_y,430+offset_x,295+offset_y); // PMIL8514
+    this.jg.setColor('green');
+    this.jg.drawLine(550+offset_x,120+offset_y,520+offset_x,200+offset_y); // PMIL8611
+    this.jg.setColor('blue');
+    this.jg.drawLine(650+offset_x,120+offset_y,520+offset_x,330+offset_y); // PMIL8531
+    this.jg.drawLine(760+offset_x,250+offset_y,590+offset_x,350+offset_y); // PMIL8512
+    this.jg.drawLine(760+offset_x,480+offset_y,690+offset_x,340+offset_y); // PATL8511
+    this.jg.drawLine(580+offset_x,600+offset_y,520+offset_x,530+offset_y); // PMIL8411
+    this.jg.drawLine(400+offset_x,600+offset_y,510+offset_x,470+offset_y); // PMIL8515
+    this.jg.drawLine(400+offset_x,480+offset_y,430+offset_x,420+offset_y); // PMIL8511
+    this.jg.drawLine(400+offset_x,350+offset_y,480+offset_x,370+offset_y); // PMIL8501
+    this.jg.drawLine(200+offset_x,480+offset_y,230+offset_x,400+offset_y); // PAXL8512
+
+    this.jg.setStroke(1);
+    this.jg.drawString(this.installSensor('PAXL8501'), 60+offset_x,70+offset_y);
+    this.jg.drawString(this.installSensor('PAXL8502_CabOnly'),200+offset_x,70+offset_y);
+    this.jg.drawString(this.installSensor('PAXL8521'),170+offset_x,150+offset_y);
+    this.jg.drawString(this.installSensor('PAXL8512'),150+offset_x,470+offset_y);
+    this.jg.drawString(this.installSensor('PATL8511'),750+offset_x,470+offset_y);
+    this.jg.drawString(this.installSensor('PMIL8411'),550+offset_x,570+offset_y);
+    this.jg.drawString(this.installSensor('PMIL8501'),350+offset_x,320+offset_y);
+    this.jg.drawString(this.installSensor('PMIL8511'),350+offset_x,470+offset_y);
+    this.jg.drawString(this.installSensor('PMIL8512'),750+offset_x,230+offset_y);
+    this.jg.drawString(this.installSensor('PMIL8513'),420+offset_x,70+offset_y);
+    this.jg.drawString(this.installSensor('PMIL8514'),320+offset_x,150+offset_y);
+    this.jg.drawString(this.installSensor('PMIL8515'),350+offset_x,570+offset_y);
+    this.jg.drawString(this.installSensor('PMIL8531'),630+offset_x,70+offset_y);
+    this.jg.drawString(this.installSensor('PMIL8611'),520+offset_x,70+offset_y);
+    this.jg.drawString(this.installSensor('Legend'),  800+offset_x,600+offset_y);
 
     // Environment values
     this.jg.drawString('<TABLE border="solid" id="Env_tab"><TR><TD colspan="2" class="Sensor">Environment</TD></TR><TR id="VMG982"><TD class="Sensor">VMG982</TD></TR></TABLE>',10+offset_x,10+offset_y);
@@ -129,13 +157,19 @@ var RamsesStatus = function(msg)   {
     this.items.push(s);
 
     this.bindSensor('PAXL8501',this.sensor_conversion);
+    this.bindSensor('PAXL8502_CabOnly',this.sensor_conversion);
     this.bindSensor('PAXL8512',this.sensor_conversion);
     this.bindSensor('PAXL8521',this.sensor_conversion);
+    this.bindSensor('PATL8511',this.sensor_conversion);
+    this.bindSensor('PMIL8411',null);
     this.bindSensor('PMIL8501',null);
     this.bindSensor('PMIL8511',null);
     this.bindSensor('PMIL8512',null);
     this.bindSensor('PMIL8513',null);
+    this.bindSensor('PMIL8514',null);
+    this.bindSensor('PMIL8515',null);
     this.bindSensor('PMIL8531',null);
+    this.bindSensor('PMIL8611',null);
 
     // Add Legend
     document.getElementById('Legend_curr').appendChild(Cell('Current Rate',null,'Dose'));

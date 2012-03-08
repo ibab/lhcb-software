@@ -64,7 +64,8 @@ if ( !_lhcb().constants ) {
       ramses:           this.mkStaticImage('LHCb/Ramses_icon.png'),
       beams:            this.mkImage('Beams','jpg'),
       beams_department: this.mkImage('BeamsDep','jpg'),
-      cern:             this.mkAbsImage('http://lhc.web.cern.ch/lhc/images/logoCERN.GIF')
+      cern:             this.mkAbsImage('http://lhc.web.cern.ch/lhc/images/logoCERN.GIF'),
+      alarmScreen:	this.mkImage('AlarmScreen', 'png')
     };
     this.images.dirac.iconSize = { 
       small: { width: 16, height: 16},
@@ -139,6 +140,15 @@ if ( !_lhcb().constants ) {
 	    iconCls:'Collimators32',
 	    size:   {width:  950,	height: 700}
 	  },
+	  daq_evdisp: {
+	    src:    this.lhcb_display_url('evdisp'),
+	    img:    this.images.lookprod,
+	    title:  'DAQ/Event Display',
+	    nick:   'lhcb-evdisp-win',
+	    cls:    'Collimators16',
+	    iconCls:'Collimators32',
+	    size:   {width:  950,	height: 700}
+	  },
 	  trg_l0status: {
 	    src:    this.lhcb_display_url('trgstatus'),
 	    img:    this.images.lookprod,
@@ -151,11 +161,20 @@ if ( !_lhcb().constants ) {
 	  velo: {
 	    src:    this.lhcb_display_url('velo'),
 	    img:    this.images.lookprod,
-	    title:  'VELO',
+	    title:  'VELO/LV/HV',
 	    nick:   'lhcb-velo-win',
 	    cls:    'Collimators16',
 	    iconCls:'Collimators32',
-	    size:   {width:  950,	height: 700}
+	    size:   {width:  950,	height: 700},
+	    motion: {
+	      src:    this.lhcb_display_url('velo_move'),
+	      img:    this.images.lookprod,
+	      title:  'VELO/Motion',
+	      nick:   'lhcb-velo-motion-win',
+	      cls:    'Collimators16',
+	      iconCls:'Collimators32',
+	      size:   {width:  950,	height: 700}
+	    }
 	  },
 	  st: {
 	    src:    this.lhcb_display_url('st'),
@@ -407,6 +426,15 @@ if ( !_lhcb().constants ) {
 	  cls:    'bogus',
 	  iconCls:'bogus',
 	  size:   {width:  1100,	height: 800}
+        },
+	alarmScreen: {
+	  src:    this.lhcb_display_url('alarms'),
+	  img:    this.images.alarmScreen,
+	  title:  'LHCb PVSS Alarms',
+	  nick:   'lhcb-pvss-alarms',
+	  cls:    'PvssAlarms16',
+	  iconCls:'PvssAlarms32',
+	  size:   {width:  770,	height: 820}
 	}
       }
     };

@@ -48,6 +48,7 @@ var jg_ok, jg_ie, jg_fast, jg_dom, jg_moz;
 function _chkDHTM(wnd, x, i)
 // Under XUL, owner of 'document' must be specified explicitly
 {
+	//alert(wnd+'\n'+wnd.document);
 	x = wnd.document.body || null;
 	jg_ie = x && typeof x.insertAdjacentHTML != "undefined" && wnd.document.createElement;
 	jg_dom = (x && !jg_ie &&

@@ -17,12 +17,15 @@ var LOG_VERBOSE     = 4;
  */
 var OutputLogger = function(parent, len, level, style)  {
   this.className    = style;
-  this.lines        = new Array();
+  this.lines        = null;
+  if ( len>0 ) {
+    this.lines = new Array();
+    this.lines.length = 0;
+  }
   this.parent       = parent;
   this.length       = len;
   this.level        = level;
   this.curr         = 0;
-  this.lines.length = 0;
   this.table        = document.createElement('table');
   this.body         = document.createElement('tbody');
   this.messages     = document.createElement('tr');
@@ -52,20 +55,22 @@ var OutputLogger = function(parent, len, level, style)  {
 
 
   this.showMessages = function() {
-    if ( this.output != null && this.lines.length > 0 ) {
-      var message = '';
-      for(var i=this.curr+1; i<this.lines.length; ++i)
-        message += '&rarr; ' + this.lines[i] + '<br></br>';
-      for(var i=0; i<=this.curr; ++i)
-        message += '&rarr; ' + this.lines[i] + '<br></br>';
-      this.output.innerHTML = message;
-      this.output.scrollTop = this.output.scrollHeight
+    if ( this.lines ) {
+      if ( this.output != null && this.lines.length > 0 ) {
+	var message = '';
+	for(var i=this.curr+1; i<this.lines.length; ++i)
+          message += '&rarr; ' + this.lines[i] + '<br></br>';
+	for(var i=0; i<=this.curr; ++i)
+          message += '&rarr; ' + this.lines[i] + '<br></br>';
+        this.output.innerHTML = message;
+        this.output.scrollTop = this.output.scrollHeight;
+      }
     }
     return this;
   };
 
   this.print = function(level, msg) {
-    if ( level <= this.level && this.length>0 ) {
+    if ( this.lines != null && level <= this.level && this.length>0 ) {
      if ( this.lines.length < this.length ) {
 	this.lines.length = this.lines.length+1;
       }
@@ -128,10 +133,12 @@ var OutputLogger = function(parent, len, level, style)  {
   };
 
   this.clear = function() {
-    this.curr         = 0;
-    this.lines.length = 0;
-    this.output.innerHTML = '';
-    this.output.scrollTop = this.output.scrollHeight
+    if ( this.lines ) {
+      this.curr         = 0;
+      this.lines.length = 0;
+      this.output.innerHTML = '';
+      this.output.scrollTop = this.output.scrollHeight;
+    }
   };
 
   this.format = function(expr) {
@@ -293,22 +300,15 @@ var DataProvider = function(logger)  {
 
   var clid = '';
   try {
-    var hostname, address, b, l, s = ''+document.location, d = new Date();
+    var b, l, s = ''+document.location, d = new Date();
     s = s.replace(/type=/g,'');
     if ( (b=s.lastIndexOf('/')+1) < 1 ) b = 0;
     if ( (l=s.indexOf('&'))       < 0 ) l = s.length;
-    clid = s.substring(b,l)+'--'+d.getFullYear()+'.'+d.getMonth()+'.'+d.getDate()+'--'+
+    clid = s.substring(b,l)+'  '+d.getFullYear()+'.'+d.getMonth()+'.'+d.getDate()+'--'+
                                  d.getHours()+':'+ d.getMinutes()+':'+d.getSeconds()+'.'+
                                  d.getMilliseconds()+'--'+Math.floor(Math.random()*100);
     clid = clid.replace(/\?/g,'-');
-
-    var sock = new java.net.Socket();
-    sock.bind(new java.net.InetSocketAddress('0.0.0.0',0));
-    sock.connect(new java.net.InetSocketAddress(document.domain,(!document.location.port)?80:document.location.port));
-    hostname = sock.getLocalAddress().getHostName();
-    address  = sock.getLocalAddress().getHostAddress(); 
-    sock.close();
-    clid = address+'--'+clid;
+    clid = get_ip_address()+'  '+get_ip_name()+'  '+clid;
   }
   catch (e) {
   }
@@ -318,7 +318,7 @@ var DataProvider = function(logger)  {
     _dataProvider.logger.info('Starting reconnect timer');
     if ( !_dataProvider.isConnected && this._dataProvider.needConnection ) {
       _dataProvider.reconnect();
-      setTimeout(_dataProvider.reconnectHandler,5000);
+      setTimeout(_dataProvider.reconnectHandler,10000);
     }
   };
 
@@ -350,7 +350,7 @@ var DataProvider = function(logger)  {
 
     if ( _dataProvider.needConnection ) {
       _dataProvider.logger.info('Starting reconnection timer');
-      setTimeout(_dataProvider.reconnectHandler,5000);
+      setTimeout(_dataProvider.reconnectHandler,10000);
     }
   };
 
@@ -372,15 +372,22 @@ var DataProvider = function(logger)  {
   /// Data dispatch callback once stomp receieves data
   stomp.onmessageframe = function(frame) {
     //alert('stomp.onmessageframe:'+frame.body);
-    var v = frame.body.split('#');
+    var i, d, o, len, v = frame.body.split('#');
     if ( v.length >= 2 ) {
-      var itm = v[1];
+      var itm  = v[1];
       var data = v.slice(2);
-      //_dataProvider.logger.info('DataProvider: Update data item['+itm+'] = '+data);
       if ( data != 'DEAD' ) {
-	var o = _dataProvider.items[itm];
-	var len = o.length;
-	for(var i=0; i<len; ++i) {
+	o = _dataProvider.items[itm];
+	len = o.length;
+	if ( !o.prev_data ) {
+	  o.prev_data = data;
+	}
+	else if ( o.prev_data+'' == data+'' ) {
+	  _dataProvider.logger.info('Ignore: [' +frame.body.length+' bytes] '+itm+'='+o.prev_data);
+	  return;
+	}
+	o.prev_data = data;
+	for(i=0; i<len; ++i) {
 	  if ( o[i] ) {
 	    o[i].set(data);
 	  }
@@ -388,9 +395,9 @@ var DataProvider = function(logger)  {
 	    alert('Debug: Dead element: '+itm+'['+i+'] out of '+len);
 	  }
 	}
-	var d = new String(data);
+	d = new String(data);
 	if (d.length > 10) d = d.substr(0,10);
-	_dataProvider.logger.info("Update: [" +frame.body.length+' bytes] '+ itm+'='+d);
+	_dataProvider.logger.info("Update: [" +frame.body.length+' bytes] '+itm+'='+d+' prev:'+o.prev_data);
       }
       return;
     }
@@ -552,6 +559,12 @@ var DataProvider = function(logger)  {
   };
 
   //this.start();
+  /// Since long running documents have memory leaks, we reload the page
+  /// regularly to avoid them.
+  this.reloadHandler = function() {
+    window.location.reload();
+  };
+  setTimeout(_dataProvider.reloadHandler,3600000);
   return this;
 };
 

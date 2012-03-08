@@ -224,42 +224,21 @@ var TriggerStatus = function(msg)   {
       name_col.style.width = '40%';
 
       tr.nTriggers = document.createElement('td');
-      //tr.avgRate   = document.createElement('td');
       tr.instRate  = document.createElement('td');
       tr.nTriggers.style.textAlign = 'right';
-      //tr.avgRate.style.textAlign = 'right';
       tr.instRate.style.textAlign = 'right';
-      //tr.avgRate.innerHTML = '--';
       tr.instRate.innerHTML = '--';
 
       tr.nTriggers.style.width = '30%';
       tr.instRate.style.width = '30%';
 
       tr.appendChild(tr.nTriggers);
-      //tr.appendChild(tr.avgRate);
       tr.appendChild(tr.instRate);
       return tr;
     };
     tab.trg_rows = new Array();
-    tab.trg_rows.push(tab.addRow('HCAL'));
-    tab.trg_rows.push(tab.addRow('SPD'));
-    tab.trg_rows.push(tab.addRow('CALO'));
-    tab.trg_rows.push(tab.addRow('MUON,mbias'));
-    tab.trg_rows.push(tab.addRow('PU'));
-    tab.trg_rows.push(tab.addRow('SPD40'));
-    tab.trg_rows.push(tab.addRow('PU20'));
-    tab.trg_rows.push(tab.addRow('Electron'));
-    tab.trg_rows.push(tab.addRow('Photon'));
-    tab.trg_rows.push(tab.addRow('Hadron'));
-    tab.trg_rows.push(tab.addRow('Muon'));
-    tab.trg_rows.push(tab.addRow('DiMuon'));
-    tab.trg_rows.push(tab.addRow('Muon,lowMult'));
-    tab.trg_rows.push(tab.addRow('DiMuon,lowMult'));
-    tab.trg_rows.push(tab.addRow('LocalPi0'));
-    tab.trg_rows.push(tab.addRow('GlobalPi0'));
-    tab.trg_rows.push(tab.addRow('B1gas'));
-    tab.trg_rows.push(tab.addRow('B2gas'));
-    for(var i=0; i<tab.trg_rows.length; ++i) {
+    for(var i=0; i<32; ++i) {
+      tab.trg_rows.push(tab.addRow('Channel '+(i+1)));
       tb.appendChild(tab.trg_rows[i]);
     }
     tab.appendChild(tb);
@@ -498,11 +477,11 @@ var TriggerStatus = function(msg)   {
     this.trg         = lhcb.widgets.TriggerSetup(opts);
 
     this.left.addItem(this.trg);
-    this.left.addSpacer('50px');
+    //this.left.addSpacer('50px');
     this.left.addItem(this.odin);
+    this.left.addItem(this.hlt);
 
     this.right.addItem(this.l0du);
-    this.right.addItem(this.hlt);
     //this.right.addSpacer('50px');
   };
   return table;

@@ -1,0 +1,65 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <meta http-equiv="PRAGMA" content="NO-CACHE">
+    <meta http-equiv="CACHE-CONTROL" content="NO-CACHE">
+    <meta http-equiv="EXPIRES" content="-1">
+
+    <title>LHCb Online Web Desktop</title>
+    <base href="http://lbcomet.cern.ch/Online/"></base>
+    <link rel="stylesheet" type="text/css" href="ExtJs/resources/css/ext-all.css"></link>
+    <link rel="stylesheet" type="text/css" href="Style/Desktop.css"></link>
+    <link rel="stylesheet" type="text/css" href="Style/Desktop-Preferences.css"></link>
+
+    <script type="text/javascript">
+        var _debugLoading = false;
+        var lhcb = null;
+        var _lhcb = function() {
+          if ( lhcb == null ) lhcb = new Object();
+          return lhcb;
+        }
+    </script>
+    <script type="text/javascript" src="ExtJs/adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="ExtJs/ext-all-debug.js"></script>
+
+    <script type="text/javascript" src="ExtJs/examples/shared/examples.js"></script>
+    <script type="text/javascript">
+      Ext.BLANK_IMAGE_URL = 'ExtJs/resources/images/default/s.gif';
+    </script>
+    <!-- DESKTOP -->
+
+    <script type="text/javascript" src="Desktop/Module.js"></script>
+    <script type="text/javascript" src="Desktop/StartMenu.js"></script>
+    <script type="text/javascript" src="Desktop/Shortcut.cpp"></script>
+    <script type="text/javascript" src="Desktop/TaskBar.js"></script>
+    <script type="text/javascript" src="Desktop/Desktop.js"></script>
+    <script type="text/javascript" src="Desktop/App.js"></script>
+    <script type="text/javascript" src="Desktop/Notification.js"></script>
+    <script type="text/javascript" src="Desktop/Preferences.js"></script>
+    <script type="text/javascript" src="Desktop/About.js"></script>
+    <script type="text/javascript" src="lhcb.display.constants.cpp"></script>
+    <script type="text/javascript" src="lhcb.display.desktop.cpp"></script>
+    <script type="text/javascript" src="lhcb.display.lbdesk.cpp"></script>
+
+</head>
+<body scroll="no">
+  <div id="x-desktop"><dl id="x-shortcuts"></dl></div>
+  <div id="ux-taskbar">
+    <div id="ux-taskbar-start"></div>
+
+<!-- <div id="ux-taskbuttons-panel"></div>  -->
+
+      <div id="ux-taskbar-panel-wrap">
+        <div id="ux-quickstart-panel"></div>
+        <div id="ux-taskbuttons-panel"></div>
+        <div id="ux-systemtray-panel"></div>
+      </div>
+
+    <div class="x-clear"></div>
+  </div>
+</body>
+<script type="text/javascript">
+    defineLogo(constants.images.lhcb_online.src,constants.urls.lhcb.online_home_page.src);
+    defineShortcuts();
+</script>
+</html>

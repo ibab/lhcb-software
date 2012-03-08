@@ -67,43 +67,43 @@ images: [
 	},
 	{id:			101, 
 	 name:			'Collaboration', 
-	 pathtothumbnail:	'wallpapers/thumbnails/0901183-Icon.jpg', 
-	 pathtofile:		'wallpapers/0901183-A4-at-144-dpi.jpg'
+	 pathtothumbnail:	'/Online/wallpapers/thumbnails/0901183-Icon.jpg', 
+	 pathtofile:		'/Online/wallpapers/0901183-A4-at-144-dpi.jpg'
 	},
 	{id:			102, 
 	 name:			'Detector-1', 
-	 pathtothumbnail:	'wallpapers/thumbnails/0808017_01-Icon.jpg', 
-	 pathtofile:		'../wallpapers/0808017_01-A4-at-144-dpi.jpg'
+	 pathtothumbnail:	'/Online/wallpapers/thumbnails/0808017_01-Icon.jpg', 
+	 pathtofile:		'/Online/wallpapers/0808017_01-A4-at-144-dpi.jpg'
 	},
 	{id:			103, 
 	 name:			'Detector-2', 
-	 pathtothumbnail:	'wallpapers/thumbnails/icon-gene-2008-001_01.gif', 
-	 pathtofile:		'../wallpapers/gene-2008-001_01.jpg'
+	 pathtothumbnail:	'/Online/wallpapers/thumbnails/icon-gene-2008-001_01.gif', 
+	 pathtofile:		'/Online/wallpapers/gene-2008-001_01.jpg'
 	},
 	{id:			104, 
 	 name:			'Event-1', 
-	 pathtothumbnail:	'wallpapers/thumbnails/icon-gene-2008-003.gif', 
-	 pathtofile:		'wallpapers/gene-2008-003.jpg'
+	 pathtothumbnail:	'/Online/wallpapers/thumbnails/icon-gene-2008-003.gif', 
+	 pathtofile:		'/Online/wallpapers/gene-2008-003.jpg'
 	},
 	{id:			105, 
 	 name:			'Event-2', 
-	 pathtothumbnail:	'wallpapers/thumbnails/icon-gene-2008-004.gif', 
-	 pathtofile:		'../wallpapers/gene-2008-004.jpg'
+	 pathtothumbnail:	'/Online/wallpapers/thumbnails/icon-gene-2008-004.gif', 
+	 pathtofile:		'/Online/wallpapers/gene-2008-004.jpg'
 	},
 	{id:			106, 
 	 name:			'Magnet', 
-	 pathtothumbnail:	'wallpapers/thumbnails/icon-gene-2008-005.gif', 
-	 pathtofile:		'wallpapers/gene-2008-005.1280x1024.jpg'
+	 pathtothumbnail:	'/Online/wallpapers/thumbnails/icon-gene-2008-005.gif', 
+	 pathtofile:		'/Online/wallpapers/gene-2008-005.1280x1024.jpg'
 	},
 	{id:			107, 
 	 name:			'Schematics', 
-	 pathtothumbnail:	'wallpapers/thumbnails/icon-gene-2008-002.gif', 
-	 pathtofile:		'../wallpapers/gene-2008-002.jpg'
+	 pathtothumbnail:	'/Online/wallpapers/thumbnails/icon-gene-2008-002.gif', 
+	 pathtofile:		'/Online/wallpapers/gene-2008-002.jpg'
 	},
 	{id:			108, 
 	 name:			'Beampipe', 
-	 pathtothumbnail:	'wallpapers/thumbnails/0706032_01-Icon.jpg', 
-	 pathtofile:		'../wallpapers/0706032_01-A4-at-144-dpi.jpg'
+	 pathtothumbnail:	'/Online/wallpapers/thumbnails/0706032_01-Icon.jpg', 
+	 pathtofile:		'/Online/wallpapers/0706032_01-A4-at-144-dpi.jpg'
 	}
    ]
 }

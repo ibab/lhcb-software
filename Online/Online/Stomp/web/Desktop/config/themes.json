@@ -2,48 +2,48 @@
 images: [
 	{id:			2, 
 	 name:			'Vista Black', 
-	 pathtothumbnail:	'ExtJs/resources/themes/xtheme-vistablack/xtheme-vistablack.png', 
-	 pathtofile:		'ExtJs/resources/themes/xtheme-vistablack/css/xtheme-vistablack.css'
+	 pathtothumbnail:	'/ExtJs/resources/themes/xtheme-vistablack/xtheme-vistablack.png', 
+	 pathtofile:		'/ExtJs/resources/themes/xtheme-vistablack/css/xtheme-vistablack.css'
 	},
 	{id:			3, 
 	 name:			'Vista Blue', 
-	 pathtothumbnail:	'ExtJs/resources/themes/xtheme-vistablue/xtheme-vistablue.png', 
-	 pathtofile:		'ExtJs/resources/themes/xtheme-vistablue/css/xtheme-vistablue.css'
+	 pathtothumbnail:	'/ExtJs/resources/themes/xtheme-vistablue/xtheme-vistablue.png', 
+	 pathtofile:		'/ExtJs/resources/themes/xtheme-vistablue/css/xtheme-vistablue.css'
 	},
 	{id:			4, 
 	 name:			'Vista Glass', 
-	 pathtothumbnail:	'ExtJs/resources/themes/xtheme-vistaglass/xtheme-vistaglass.png', 
-	 pathtofile:		'ExtJs/resources/themes/xtheme-vistaglass/css/xtheme-vistaglass.css'
+	 pathtothumbnail:	'/ExtJs/resources/themes/xtheme-vistaglass/xtheme-vistaglass.png', 
+	 pathtofile:		'/ExtJs/resources/themes/xtheme-vistaglass/css/xtheme-vistaglass.css'
 	},
 	{id:			5, 
 	 name:			'Olive', 
-	 pathtothumbnail:	'ExtJs/resources/images/olive/theme.gif', 
-	 pathtofile:		'ExtJs/resources/css/xtheme-olive.css'
+	 pathtothumbnail:	'/ExtJs/resources/images/olive/theme.gif', 
+	 pathtofile:		'/ExtJs/resources/css/xtheme-olive.css'
 	},
 	{id:			6, 
 	 name:			'Access', 
-	 pathtothumbnail:	'ExtJs/resources/images/access/theme.gif', 
-	 pathtofile:		'ExtJs/resources/css/xtheme-access.css'
+	 pathtothumbnail:	'/ExtJs/resources/images/access/theme.gif', 
+	 pathtofile:		'/ExtJs/resources/css/xtheme-access.css'
 	},
 	{id:			7, 
 	 name:			'Dark Gray', 
-	 pathtothumbnail:	'ExtJs/resources/images/darkgray/theme.gif', 
-	 pathtofile:		'ExtJs/resources/css/xtheme-darkgray.css'
+	 pathtothumbnail:	'/ExtJs/resources/images/darkgray/theme.gif', 
+	 pathtofile:		'/ExtJs/resources/css/xtheme-darkgray.css'
 	},
 	{id:			8, 
 	 name:			'Black', 
-	 pathtothumbnail:	'ExtJs/resources/images/black/theme.gif', 
-	 pathtofile:		'ExtJs/resources/css/xtheme-black.css'
+	 pathtothumbnail:	'/ExtJs/resources/images/black/theme.gif', 
+	 pathtofile:		'/ExtJs/resources/css/xtheme-black.css'
 	},
 	{id:			9, 
 	 name:			'Gray', 
-	 pathtothumbnail:	'ExtJs/resources/images/gray/theme.gif', 
-	 pathtofile:		'ExtJs/resources/css/xtheme-gray.css'
+	 pathtothumbnail:	'/ExtJs/resources/images/gray/theme.gif', 
+	 pathtofile:		'/ExtJs/resources/css/xtheme-gray.css'
 	},
 	{id:			10, 
 	 name:			'Purple', 
-	 pathtothumbnail:	'ExtJs/resources/images/purple/theme.gif', 
-	 pathtofile:		'ExtJs/resources/css/xtheme-purple.css'
+	 pathtothumbnail:	'/ExtJs/resources/images/purple/theme.gif', 
+	 pathtofile:		'/ExtJs/resources/css/xtheme-purple.css'
 	}
   ]
 }

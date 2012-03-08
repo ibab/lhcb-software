@@ -1,138 +1,153 @@
 _loadScript('lhcb.display.items.cpp');
 _loadScript('lhcb.display.widgets.cpp');
-_loadScript('wz_jsgraphics.js');
 _loadFile('lhcb.display.general','css');
+_loadScript('wz_jsgraphics.js');
 
-var CENTER_X = 520;
-var CENTER_Y = 220;
-var SECTOR_WIDTH = 200;
+var isIE = _isInternetExplorer();
+
+var CENTER_X = isIE ? 500 : 625;
+var CENTER_Y = isIE ? 260 : 440;
+var SECTOR_WIDTH    = 170;
+var PLOT_HEIGHT     = 600;
+var SECTOR_OVERLAP  = 20;
+var PLOT_OFFSET     = isIE ? 20 : 140;
+var VELO_POSITION   = null;
+var MOVE_MAX_Y = 20;
+var MOVE_MAX_X = 20;
 
 var VeloDetector = function(msg) {
+
   var div = document.createElement('div');
   div.id = 'Velo';
   div.style.backgroundColor = '#FFFFFF';
   div.style.borderWidth = 1;
   div.style.borderStyle = 'solid';
-  div.style.width = '1050px';
-  div.style.height = '500px';
-  div.style.overflow = 'auto';
+  div.style.width  = isIE ? '100%' : 1180;
+  div.style.height = PLOT_HEIGHT+20;
+  div.style.top    = 0;
+  div.style.overflow = 'hidden';
 
   div.jg = null;
   div.beam = {x: 0, y:0 };
 
   div.setBeamPosition = function(x, y) {
 
-    var pos_x = CENTER_X+x;
-    var pos_y = CENTER_Y+y;
+    var pos_x = CENTER_X+10*x, b_x=10*x;
+    var pos_y = CENTER_Y+10*y, b_y=10*x;
+    var pl_h  = CENTER_Y+(isIE ? 330 : 300);
 
-    if ( this.jg ) this.jg.clear();//div.removeChild(this.jg.cnv);
-    else this.jg = new jsGraphics('Velo', div);
+    if ( this.jg ) this.jg.clear();
+    else this.jg = new jsGraphics('Velo', window);
 
     this.beam.x = x;
     this.beam.y = y;
 
     this.jg.setColor('lightgrey');
-    this.jg.fillRect(pos_x-50,  pos_y-50, 100, 100);
+    this.jg.fillEllipse(pos_x-MOVE_MAX_Y,  pos_y-MOVE_MAX_Y, 2*MOVE_MAX_Y-1, 2*MOVE_MAX_Y-1);
     this.jg.setColor('#00FF00');
-    this.jg.drawEllipse(pos_x-48,pos_y-48, 95,  95);
+    this.jg.drawEllipse(pos_x-MOVE_MAX_X,  pos_y-MOVE_MAX_Y, 2*MOVE_MAX_X-1, 2*MOVE_MAX_Y-1);
     this.jg.setColor('black');
-    this.jg.drawRect(pos_x-50,  pos_y-50, 100, 100);
-    if ( this.left.position < -15 ) {
-      this.jg.setColor('grey');
-      this.jg.fillRect(pos_x-160, pos_y-50, 110, 100);
+    this.jg.drawRect(pos_x-MOVE_MAX_X,  pos_y-MOVE_MAX_Y, 2*MOVE_MAX_X, 2*MOVE_MAX_Y);
+    if ( this.left.position > 15 ) {
+      this.jg.setColor('#999999');
+      this.jg.fillRect(pos_x-160, pos_y-MOVE_MAX_Y, 160-MOVE_MAX_X, 2*MOVE_MAX_Y);
       this.jg.setColor('black');
       this.jg.setStroke(1);
-      this.jg.drawRect(pos_x-160, pos_y-50, 110, 100);
-      this.jg.drawLine(pos_x-160, pos_y+50, pos_x-160, 450);
-      this.jg.drawString('-16 mm',pos_x-180,460);
+      this.jg.drawRect(pos_x-160, pos_y-MOVE_MAX_Y, 160-MOVE_MAX_Y, 2*MOVE_MAX_Y);
+      this.jg.drawLine(pos_x-160, pos_y+MOVE_MAX_Y, pos_x-160, pl_h);
+      this.jg.drawString('16 mm',pos_x-200,pl_h);
     }
-    if ( this.left.position < -5.1 ) {
+    if ( this.left.position > 5.1 ) {
       this.jg.setColor('black');
       this.jg.setStroke(1);
-      this.jg.drawLine(pos_x-50, pos_y+50, pos_x-50, 450);
-      this.jg.drawString('-5 mm',pos_x-70,460);
+      this.jg.drawLine(pos_x-MOVE_MAX_X, pos_y+MOVE_MAX_Y, pos_x-MOVE_MAX_X, pl_h);
+      this.jg.drawString('2 mm',pos_x-MOVE_MAX_X-40,pl_h);
     }
-    if ( this.right.position > 15 ) {
-      this.jg.setColor('grey');
-      this.jg.fillRect(pos_x+50,  pos_y-50, 110, 100);
+    if ( this.right.position < -15 ) {
+      this.jg.setColor('#999999');
+      this.jg.fillRect(pos_x+MOVE_MAX_X,  pos_y-MOVE_MAX_Y, 160-MOVE_MAX_X, 2*MOVE_MAX_Y);
       this.jg.setColor('black');
       this.jg.setStroke(1);
-      this.jg.drawRect(pos_x+50,  pos_y-50, 110, 100);
-      this.jg.drawLine(pos_x+160, pos_y+50, pos_x +160, 450);
-      this.jg.drawString('+16 mm',pos_x+140,460);
+      this.jg.drawRect(pos_x+MOVE_MAX_X,  pos_y-MOVE_MAX_Y, 160-MOVE_MAX_X, 2*MOVE_MAX_Y);
+      this.jg.drawLine(pos_x+160, pos_y+MOVE_MAX_Y, pos_x +160, pl_h);
+      this.jg.drawString('-16 mm',pos_x+160,pl_h);
     }
-    if ( this.right.position > 5.1 ) {
+    if ( this.right.position < -5.1 ) {
       this.jg.setColor('black');
       this.jg.setStroke(1);
-      this.jg.drawLine(pos_x+50, pos_y+50, pos_x +50, 450);
-      this.jg.drawString('+5 mm',pos_x+30, 460);
+      this.jg.drawLine(pos_x+MOVE_MAX_X, pos_y+MOVE_MAX_Y, pos_x+MOVE_MAX_Y, pl_h);
+      this.jg.drawString('-2 mm',pos_x+MOVE_MAX_X+10, pl_h);
     }
-    if ( this.right.position > 24 ) {
-      this.jg.drawString(sprintf('Y=%7.2f mm',y),pos_x+170,pos_y-25,'left');
-    }
-    else {
-      this.jg.drawString(sprintf('Y=%7.2f mm',y),pos_x+440,pos_y-25,'left');
-    }
-    this.jg.drawRect(pos_x-50,  pos_y-50, 100, 100);
+    this.jg.drawRect(pos_x-MOVE_MAX_X,  pos_y-MOVE_MAX_Y, 2*MOVE_MAX_X, 2*MOVE_MAX_Y);
 
     this.jg.setStroke(1);
     this.jg.setColor('blue');
-    this.jg.drawLine(pos_x + x, 0, pos_x + x, 450);
-    this.jg.drawLine(30, pos_y + y, 1010, pos_y + y);
+    this.jg.drawLine(pos_x + b_x, PLOT_OFFSET, pos_x + b_x, pl_h);
+    this.jg.drawLine(30, pos_y + b_y, 1010, pos_y + b_y);
 
     // Nominal position
     this.jg.setColor('green');
-    if ( this.left.position < -23 ) {
-      this.jg.drawLine(30, CENTER_Y+48, CENTER_X-160, CENTER_Y+48);
-      this.jg.drawLine(30, CENTER_Y-48, CENTER_X-160, CENTER_Y-48);
-      this.jg.drawString('+4.8 mm', CENTER_X-220, CENTER_Y-65);
-      this.jg.drawString('-4.8 mm', CENTER_X-220, CENTER_Y+30);
+    if ( this.left.position > 23 ) {
+      this.jg.drawLine(MOVE_MAX_X, CENTER_Y+MOVE_MAX_Y, CENTER_X-160, CENTER_Y+MOVE_MAX_Y);
+      this.jg.drawLine(MOVE_MAX_X, CENTER_Y-MOVE_MAX_Y, CENTER_X-160, CENTER_Y-MOVE_MAX_Y);
+      this.jg.drawString(sprintf('+%2.1f mm',MOVE_MAX_Y/10), CENTER_X-220, CENTER_Y-MOVE_MAX_Y-25);
+      this.jg.drawString(sprintf('-%2.1f mm',MOVE_MAX_Y/10), CENTER_X-220, CENTER_Y+MOVE_MAX_Y+10);
     }
     else {
-      this.jg.drawLine(30, CENTER_Y+48, CENTER_X-50, CENTER_Y+48);
-      this.jg.drawLine(30, CENTER_Y-48, CENTER_X-50, CENTER_Y-48);
-      this.jg.drawString('-4.8 mm', 30, CENTER_Y+30);
-      this.jg.drawString('+4.8 mm', 30, CENTER_Y-65);
+      this.jg.drawLine(30, CENTER_Y+MOVE_MAX_Y, CENTER_X-MOVE_MAX_X, CENTER_Y+MOVE_MAX_Y);
+      this.jg.drawLine(30, CENTER_Y-MOVE_MAX_Y, CENTER_X-MOVE_MAX_X, CENTER_Y-MOVE_MAX_Y);
+      this.jg.drawString(sprintf('-%2.1f mm',MOVE_MAX_Y/10), 30, CENTER_Y+MOVE_MAX_Y+10);
+      this.jg.drawString(sprintf('+%2.1f mm',MOVE_MAX_Y/10), 30, CENTER_Y-MOVE_MAX_Y-25);
     }
+    this.jg.setColor('#00FF00');
+    this.jg.drawString(sprintf('<font size="+1"><B>Y=%7.2f mm</B></font>',y),15,pos_y-65,'left');
 
     this.jg.setColor('red');
-    this.jg.fillOval(pos_x + x - 4,pos_y + y - 5,10,10);
+    this.jg.fillOval(pos_x + b_x - 4,pos_y + b_y - 5,10,10);
   };
 
   div.canvas = document.createElement('div');
   div.canvas.style.position = 'absolute';
   div.canvas.style.left     = 0;
-  div.canvas.style.top      = 35; // 48 For bib velo pics
-  //div.canvas.style.width    = '100%';
-  div.canvas.style.height   = 500;
+  div.canvas.style.top      = 0;
+  div.canvas.style.width    = div.style.width;
+  div.canvas.style.height   = PLOT_HEIGHT+PLOT_OFFSET;
+  div.canvas.style.overflow = 'hidden';
+
+  div.left2 = document.createElement('img');
+  div.left2.id             = 'Image_Velo_Right_Small';
+  div.left2.style.position = 'absolute';
+  div.left2.style.left     = SECTOR_WIDTH;
+  div.left2.style.top      = CENTER_Y-295;
+  div.left2.style.width    = 2*SECTOR_WIDTH;
+  div.left2.style.height   = 600;
+  div.left2.src            = 'Images/VeloLeft.png';
+  div.canvas.appendChild(div.left2);
 
   div.left = document.createElement('img');
-  div.left.id             = 'Image_Velo_Left';
+  div.left.id             = 'Image_Velo_Left_Small';
   div.left.canvas         = div;
   div.left.style.position = 'absolute';
-  div.left.style.left     = 0;
-  div.left.style.top      = 0;
+  div.left.style.left     = 2*SECTOR_WIDTH;
+  div.left.style.top      = CENTER_Y-125;
   div.left.style.width    = SECTOR_WIDTH;
-  div.left.style.height   = 350;
-  div.left.src            = 'Images/VeloLeftSmall.jpg';
-  //div.left.src            = 'Images/VL.jpg';
+  div.left.style.height   = 250;
+  div.left.src            = 'Images/VeloLeftSmall.png';
   div.left.position       = -28;
-  /*
-  div.left.onmouseover = function() {
-    var img = document.getElementById('Image_Velo_Left');
-    img.position += 3;
-    this.setPosition(img.position);
-  };
-  */
+  div.canvas.appendChild(div.left);
+
   div.left._set = function(left)  {
-    var x = 10*left + CENTER_X - SECTOR_WIDTH;
+    if ( VELO_POSITION ) left=VELO_POSITION;
+    var c = this.canvas;
+    var x = -10*left + CENTER_X + SECTOR_OVERLAP - 10*c.beam.x;
     this.position = left;
-    this.style.left = x;
-    this.canvas.jg.setStroke(1);
-    this.canvas.jg.setColor('red');
-    this.canvas.jg.drawLine(x+SECTOR_WIDTH, CENTER_Y+50, x+SECTOR_WIDTH, 450);
-    this.canvas.jg.setColor('black');
-    this.canvas.jg.drawStringRect(sprintf('XA=%7.2f mm',left),x+SECTOR_WIDTH-120, 440, 110,"right"); 
+    this.style.left = x - SECTOR_WIDTH;
+    c.left2.style.left = x - 2*SECTOR_WIDTH;
+    c.jg.setStroke(2);
+    c.jg.setColor('#FF4444');
+    c.jg.drawLine(x-SECTOR_OVERLAP-1, CENTER_Y+65, x-SECTOR_OVERLAP-1, CENTER_Y+310);
+    c.jg.drawStringRect(sprintf('<font size="+1"><B>X<sub>A</sub>=%7.2f mm</B></font>',left),
+			x-230,CENTER_Y+80, 200,"right"); 
   };
   div.left.setPosition = function(left)  {
     var c = this.canvas;
@@ -142,50 +157,65 @@ var VeloDetector = function(msg) {
     c.jg.paint();
   };
 
+  div.right2 = document.createElement('img');
+  div.right2.id             = 'Image_Velo_Right';
+  div.right2.style.position = 'absolute';
+  div.right2.style.left     = CENTER_X;
+  div.right2.style.top      = CENTER_Y-295;
+  div.right2.style.width    = 2*SECTOR_WIDTH;
+  div.right2.style.height   = 600;
+  div.right2.src            = 'Images/VeloRight.png';
+  div.canvas.appendChild(div.right2);
+
   div.right = document.createElement('img');
-  div.right.id             = 'Image_Velo_Right';
+  div.right.id             = 'Image_Velo_Right_Small';
   div.right.canvas         = div;
   div.right.style.position = 'absolute';
-  div.right.style.left     = 650;
-  div.right.style.top      = 0;
+  div.right.style.left     = CENTER_X;
+  div.right.style.top      = CENTER_Y-125;
   div.right.style.width    = SECTOR_WIDTH;
-  div.right.style.height   = 350;
-  div.right.src            = 'Images/VeloRightSmall.jpg';
-  //div.right.src            = 'Images/VR.jpg';
+  div.right.style.height   = 250;
+  div.right.src            = 'Images/VeloRightSmall.png';
   div.right.position       = 28;
-  /*
-  div.right.onmouseover = function() {
-    this.position -= 1;
-    this.setPosition(this.position);
-  };
-  */
+  div.canvas.appendChild(div.right);
+
   div.right._set = function(right)  {
-    var x = CENTER_X + 10*right;
-    this.style.left = x;
-    this.position = right;
-    this.canvas.jg.setStroke(1);
-    this.canvas.jg.setColor('red');
-    this.canvas.jg.drawLine(x, CENTER_Y+50, x, 450);
-    this.canvas.jg.setColor('black');
-    this.canvas.jg.drawStringRect(sprintf('XC=%7.2f mm',right),x+10, 440, 110,"left"); 
+    if ( VELO_POSITION ) right=VELO_POSITION;
+    var c = this.canvas;
+    var x = -10*right + CENTER_X - SECTOR_OVERLAP - 10*c.beam.x;
+    this.position       = right;
+    this.style.left     = x;
+    c.right2.style.left = x;
+    c.jg.setStroke(2);
+    c.jg.setColor('#FFFF00');
+    c.jg.drawLine(x+SECTOR_OVERLAP+1, CENTER_Y+65, x+SECTOR_OVERLAP+1, CENTER_Y+310);
+    c.jg.drawStringRect(sprintf('<font size="+1"><B>X<sub>C</sub>=%7.2f mm</B></font>',right),x+30,
+			CENTER_Y+80,200,"left"); 
   };
-  div.right.setPosition = function(pos)  {
+  div.right.setPosition = function(right)  {
     var c = this.canvas;
     c.setBeamPosition(c.beam.x,c.beam.y);
     c.left._set(c.left.position);
-    this._set(pos);
+    this._set(right);
     this.canvas.jg.paint();
   };
 
-  
-  div.canvas.appendChild(div.left);
-  div.canvas.appendChild(div.right);
+  /*
+  div.left.onmouseover = function() {
+    this.position += 3;
+    this.setPosition(this.position);
+  };
+  div.right.onmouseover = function() {
+    this.position -= 3;
+    this.setPosition(this.position);
+  };
+  */
   div.appendChild(div.canvas);
   return div;
 };
 
 var VeloMotion = function(msg)   {
-  var table           = document.createElement('table');
+  var table       = document.createElement('table');
   table.body      = document.createElement('tbody');
   table.items     = new Array();
   table.messages  = msg;
@@ -204,18 +234,19 @@ var VeloMotion = function(msg)   {
   table.body.className = 'MonitorPage';
   table.body.cellpadding = 0;
   table.body.cellspacing = 0;
-  table.header = table.add();
-  table.data   = table.add();
-  table.chart  = table.add();
+  table.header  = table.add();
+  table.data    = table.add();
   table.display = table.add();
   table.logDisplay = table.add();
   table.appendChild(table.body);
 
   table.velo_left = function(data) {
+    //data = 15.49;
     this.motion.left.setPosition(data);
     return data;
   };
   table.velo_right = function(data) {
+    //data = -15.49;
     this.motion.right.setPosition(data);
     return data;
   };
@@ -232,7 +263,6 @@ var VeloMotion = function(msg)   {
       var itm = this.items[i];
       this.provider.subscribe(itm.name,itm);
     }
-    //this.veloMove.subscribe(this.provider);
     this.veloPosition.subscribe(this.provider);
   };
 
@@ -261,9 +291,6 @@ var VeloMotion = function(msg)   {
     this.veloPosition = lhcb.widgets.velo.positionSummary(opts);
     this.data.appendChild(this.veloPosition);
 
-    //this.veloMove = lhcb.widgets.velo.moveSummary(opts);
-    //this.data.appendChild(this.veloMove);
-
     tab = document.createElement('table');
     tb  = document.createElement('tbody');
     tab.width = tb.width = '100%';
@@ -274,14 +301,14 @@ var VeloMotion = function(msg)   {
     this.motion = VeloDetector(msg);
     this.display.appendChild(this.motion);
     this.motion.setBeamPosition(0,0);
-    this.motion.left.setPosition(-29.0);
-    this.motion.right.setPosition(29.0);
-    this.veloPosition.veloOpening.motion = this.motion; 
-    this.veloPosition.veloOpening.conversion = this.velo_right;    
-    this.veloPosition.veloCenter.motion = this.motion; 
-    this.veloPosition.veloCenter.conversion = this.velo_left;
-    this.veloPosition.veloY.motion = this.motion; 
-    this.veloPosition.veloY.conversion = this.velo_height;
+    this.motion.left.setPosition(29.0);
+    this.motion.right.setPosition(-29.0);
+    this.veloPosition.veloOpening.motion     = this.motion; 
+    this.veloPosition.veloOpening.conversion = this.velo_left;
+    this.veloPosition.veloCenter.motion      = this.motion;
+    this.veloPosition.veloCenter.conversion  = this.velo_right;
+    this.veloPosition.veloY.motion           = this.motion; 
+    this.veloPosition.veloY.conversion       = this.velo_height;
 
     td.appendChild(this.motion);
     tr.appendChild(td);
