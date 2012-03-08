@@ -16,6 +16,7 @@
 namespace {
   struct OTHit
   {
+    OTHit() : node(0),meas(0),projectedX(0),active(true) {}
     LHCb::OTChannelID otid ;
     const LHCb::Node* node ;
     const LHCb::OTMeasurement* meas ;
@@ -59,7 +60,8 @@ DECLARE_TOOL_FACTORY(TrackOTLRSignTool) ;
 TrackOTLRSignTool::TrackOTLRSignTool(const std::string& type,
 				     const std::string& name,
 				     const IInterface* parent):
-  GaudiTool(type, name, parent)
+  GaudiTool(type, name, parent),
+  m_otdet(0)
 {
   // constructor
   declareInterface<ITrackManipulator>(this);

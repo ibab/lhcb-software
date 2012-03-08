@@ -4,6 +4,8 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+ - resolve coverity issues in TrackOTLRSignTool
+
 !========================= TrackProjectors v2r30 2012-01-31 =========================
 ! 2012-01-25 - Wouter Hulsbergen
  - add TrackOTLRSignTool which compute LR signs by looking at hit patterns
