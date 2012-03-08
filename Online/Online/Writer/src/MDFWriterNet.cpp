@@ -690,7 +690,7 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
   if(m_currentRunNumber < runNumber) {
       if(nbLate != 0)
           *m_log << MSG::WARNING << WHERE << nbLate << " events were lost, for run number <= " << m_currentRunNumber << endmsg;
-      nbLate=0;
+      nbLate = 0;
 
       m_currentRunNumber = runNumber;
       m_discardCurrentRun = false;
@@ -700,7 +700,7 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
   if(m_currFile == NULL || runNumber != m_currFile->getRunNumber()) {
     m_currFile = m_openFiles.getFile(runNumber);
     // Do not accept event from previous runs if no file is open anymore 
-    if(!m_currFile && (runNumber < m_currentRunNumber || (runNumber == m_currentRunNumber && m_discardCurrentRun) ) ) {
+    if(!m_currFile && ((runNumber == m_currentRunNumber && m_discardCurrentRun) ) ) {
       ++nbLate;
       if (pthread_mutex_unlock(&m_SyncFileList)) {
         *m_log << MSG::ERROR << WHERE << " Unlocking mutex" << endmsg;
