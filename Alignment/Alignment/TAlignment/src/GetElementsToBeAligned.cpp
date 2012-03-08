@@ -63,7 +63,9 @@ StatusCode GetElementsToBeAligned::initialize() {
   StatusCode sc =  GaudiTool::initialize();
   if (sc.isFailure()) return Error("Failed to initialize tool!", sc);
 
-  if ( m_elemsToBeAligned.empty() ) return Error( "Please specify which elements to align!", StatusCode::FAILURE );
+  if ( m_elemsToBeAligned.empty() ) {
+    warning() << "You haven't specified any elements to align!" << endmsg ;
+  }
 
   info() << "Use local frame = " << m_useLocalFrame << endreq ;
   
