@@ -4,6 +4,7 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================= HltSettings v5r18 2012-03-08 =========================
 ! 2012-03-05 - V. Gligorov 
  - Rename D02HHHHDstNoHlt1 lines to prevent ANNSvc mixup.
 
