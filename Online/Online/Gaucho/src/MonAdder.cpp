@@ -95,7 +95,7 @@ void MonAdder::Configure()
     if (cdns->at(0) != sdns->at(0))
     {
       m_DimDns = new DimServerDns(cdnsname.c_str());
-      printf("Created new DimServerDns with node name %s\n",cdnsname.c_str());
+//      printf("Created new DimServerDns with node name %s\n",cdnsname.c_str());
       m_DimDns->autoStartOn();
       DimServer::start(m_DimDns, (char*)((RTL::processName()+"//").c_str()));
     }
