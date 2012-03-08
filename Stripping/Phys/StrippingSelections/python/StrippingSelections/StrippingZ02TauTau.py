@@ -11,16 +11,19 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticle
 from PhysSelPython.Wrappers import Selection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdAllNoPIDsPions, StdAllLooseMuons, StdAllLooseElectrons
+from StandardParticles import StdAllNoPIDsPions, StdAllLooseMuons, StdAllNoPIDsElectrons
 
 confdict_Z02TauTau={
     'Z02TauTauLinePrescale'    : 1.0 
     ,  'Z02TauTauLinePostscale'   : 1.0
-    ,  'Z0MinMass' : 14.
-    ,  'mucut' : 10.
-    ,  'picut' : 5.
-    ,  'mutrpchi2' : 0.001
-    ,  'pitrpchi2' : 0.001
+    ,  'Z0MinMass' : 20.
+    ,  'muptcut' : 15.
+    ,  'eptcut'  : 15.
+    ,  'piptcut' : 5.
+    ,  'trpchi2' : 0.001
+    ,  'HCalMax' : 0.05
+    ,  'ECalMin' : 0.1
+    ,  'PrsCalMin' : 50.
     }
 
 default_name = "Z02TauTau"
@@ -28,12 +31,15 @@ default_name = "Z02TauTau"
 class Z02TauTauConf(LineBuilder) :
 
     __configuration_keys__ = ('Z0MinMass',
-                              'mucut',
-                              'picut',
+                              'muptcut',
+                              'piptcut',
+                              'eptcut',
                               'Z02TauTauLinePrescale',
                               'Z02TauTauLinePostscale',
-                              'mutrpchi2',
-                              'pitrpchi2'
+                              'trpchi2',
+                              'HCalMax',
+                              'ECalMin',
+                              'PrsCalMin'
                               )
     
     def __init__(self, name, config) :
@@ -42,40 +48,69 @@ class Z02TauTauConf(LineBuilder) :
         self._myname = name
         
         #Define the cuts
-        _mucut= '(PT>%(mucut)s*GeV)&(TRPCHI2>%(mutrpchi2)s)'%config
-        _picut= '(PT>%(picut)s*GeV)&(TRPCHI2>%(pitrpchi2)s)'%config
+        _mucut= '(PT>%(muptcut)s*GeV)&(TRPCHI2>%(trpchi2)s)'%config
+        _picut= '(PT>%(piptcut)s*GeV)&(TRPCHI2>%(trpchi2)s)'%config
+        _ecut= '((PT>%(eptcut)s*GeV)&(TRPCHI2>%(trpchi2)s)&(PPINFO(LHCb.ProtoParticle.CaloPrsE,0)>%(PrsCalMin)s)&(PPINFO(LHCb.ProtoParticle.CaloEcalE,0)>P*%(ECalMin)s)&(PPINFO(LHCb.ProtoParticle.CaloHcalE,99999)<P*%(HCalMax)s))'%config
         
         _Z0MinMass = '(MM>%(Z0MinMass)s*GeV)'%config
 
 
-        self.selZ02TauTau = makeZ02TauTau(self._myname+'Z02TauTau', 
+        self.selZ02TauTauMuX = makeZ02TauTauMuX(self._myname+'MuX', 
                                           _Z0MinMass,
                                           _mucut,
                                           _picut     
                                           )
         
-        self.Z02TauTau_line = StrippingLine(self._myname+"Line",
+        self.Z02TauTauMuX_line = StrippingLine(self._myname+"_MuXLine",
                                             prescale = config['Z02TauTauLinePrescale'],
                                             postscale = config['Z02TauTauLinePostscale'],
                                             checkPV = True,
-                                            selection = self.selZ02TauTau
+                                            selection = self.selZ02TauTauMuX
                                             )
-        self.registerLine(self.Z02TauTau_line)
+        self.registerLine(self.Z02TauTauMuX_line)
         
-        self.selZ02TauTau_ss = makeZ02TauTau_ss(self._myname+'Z02TauTau_ss',
+        self.selZ02TauTauMuX_ss = makeZ02TauTauMuX_ss(self._myname+'MuX_ss',
                                                 _Z0MinMass,
                                                 _mucut,
                                                 _picut
                                                 )
-        self.Z02TauTau_liness = StrippingLine(self._myname+"SameSignLine",
+        self.Z02TauTauMuX_liness = StrippingLine(self._myname+"_MuXLineSS",
                                               prescale=config['Z02TauTauLinePrescale'],
                                               postscale=config['Z02TauTauLinePostscale'],
-                                              checkPV=True,
-                                              selection=self.selZ02TauTau_ss
+                                              checkPV = True,
+                                              selection=self.selZ02TauTauMuX_ss
                                               )
-        self.registerLine(self.Z02TauTau_liness)
+        self.registerLine(self.Z02TauTauMuX_liness)
+
+
+        self.selZ02TauTauEX = makeZ02TauTauEX(self._myname+'EX', 
+                                          _Z0MinMass,
+                                          _ecut,
+                                          _picut     
+                                          )
         
-def makeZ02TauTau(name, _Z0MinMass, _mucut, _picut) :
+        self.Z02TauTauEX_line = StrippingLine(self._myname+"_EXLine",
+                                            prescale = config['Z02TauTauLinePrescale'],
+                                            postscale = config['Z02TauTauLinePostscale'],
+                                            checkPV = True,
+                                            selection = self.selZ02TauTauEX
+                                            )
+        self.registerLine(self.Z02TauTauEX_line)
+        
+        self.selZ02TauTauEX_ss = makeZ02TauTauEX_ss(self._myname+'EX_ss',
+                                                _Z0MinMass,
+                                                _ecut,
+                                                _picut
+                                                )
+        self.Z02TauTauEX_liness = StrippingLine(self._myname+"_EXLineSS",
+                                              prescale=config['Z02TauTauLinePrescale'],
+                                              postscale=config['Z02TauTauLinePostscale'],
+                                              checkPV = True,
+                                              selection=self.selZ02TauTauEX_ss
+                                              )
+        self.registerLine(self.Z02TauTauEX_liness)
+        
+def makeZ02TauTauMuX(name, _Z0MinMass, _mucut, _picut) :
     _Z0 = CombineParticles(DecayDescriptor = '[Z0 -> mu+ pi-]cc',
                            DaughtersCuts = { 'mu+' : _mucut , 
                                              'mu-' : _mucut ,
@@ -84,13 +119,15 @@ def makeZ02TauTau(name, _Z0MinMass, _mucut, _picut) :
                            MotherCut = _Z0MinMass,
                            WriteP2PVRelations = False
                            )
+    _Z0Conf = _Z0.configurable("Combine_"+name+"_Z")
+    _Z0Conf.ParticleCombiners.update({'':'MomentumCombiner'})
     _stdallloosemuons = StdAllLooseMuons
     _stdallnopidspions = StdAllNoPIDsPions
     return Selection ( name,
                        Algorithm = _Z0,
                        RequiredSelections = [_stdallloosemuons, _stdallnopidspions])
 
-def makeZ02TauTau_ss(name, _Z0MinMass, _mucut, _picut) :
+def makeZ02TauTauMuX_ss(name, _Z0MinMass, _mucut, _picut) :
     _Z0 = CombineParticles(DecayDescriptor = '[Z0 -> mu+ pi+]cc',
                            DaughtersCuts = { 'mu+' : _mucut ,
                                              'mu-' : _mucut ,
@@ -99,8 +136,45 @@ def makeZ02TauTau_ss(name, _Z0MinMass, _mucut, _picut) :
                            MotherCut = _Z0MinMass,
                            WriteP2PVRelations = False
                            )
+    _Z0Conf = _Z0.configurable("Combine_"+name+"_Z")
+    _Z0Conf.ParticleCombiners.update({'':'MomentumCombiner'})
     _stdallloosemuons = StdAllLooseMuons
     _stdallnopidspions = StdAllNoPIDsPions
     return Selection ( name,
                        Algorithm = _Z0,
                        RequiredSelections = [_stdallloosemuons, _stdallnopidspions])
+        
+def makeZ02TauTauEX(name, _Z0MinMass, _ecut, _picut) :
+    _Z0 = CombineParticles(DecayDescriptor = '[Z0 -> e+ pi-]cc',
+                           DaughtersCuts = { 'e+' : _ecut , 
+                                             'e-' : _ecut ,
+                                             'pi+' : _picut ,
+                                             'pi-' : _picut },
+                           MotherCut = _Z0MinMass,
+                           WriteP2PVRelations = False
+                           )
+    _Z0Conf = _Z0.configurable("Combine_"+name+"_Z")
+    _Z0Conf.ParticleCombiners.update({'':'MomentumCombiner'})
+    _stdallnopidselectrons  = StdAllNoPIDsElectrons
+    _stdallnopidspions      = StdAllNoPIDsPions
+    return Selection ( name,
+                       Algorithm = _Z0,
+                       RequiredSelections = [_stdallnopidselectrons, _stdallnopidspions])
+
+def makeZ02TauTauEX_ss(name, _Z0MinMass, _ecut, _picut) :
+    _Z0 = CombineParticles(DecayDescriptor = '[Z0 -> e+ pi+]cc',
+                           DaughtersCuts = { 'e+' : _ecut ,
+                                             'e-' : _ecut ,
+                                             'pi+' : _picut ,
+                                             'pi-' : _picut },
+                           MotherCut = _Z0MinMass,
+                           WriteP2PVRelations = False
+                           )
+    _Z0Conf = _Z0.configurable("Combine_"+name+"_Z")
+    _Z0Conf.ParticleCombiners.update({'':'MomentumCombiner'})
+    _stdallnopidselectrons = StdAllNoPIDsElectrons
+    _stdallnopidspions     = StdAllNoPIDsPions
+    return Selection ( name,
+                       Algorithm = _Z0,
+                       RequiredSelections = [_stdallnopidselectrons, _stdallnopidspions])
+

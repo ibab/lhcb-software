@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-03-08 - Will Barter
+ - include updates to StrippingZ02TauTau.py to reduce rate. (Updates from S. Farry. 
+
 ! 2012-03-06 - Patrick Koppenburg
  - Fix bug #92254: NoBias line to only take NoBias events.
   -config_params = { "NoBiasLine_RE"       : "(HLT_PASS_RE('Hlt1.*NoBias.*Decision'))",
