@@ -4,6 +4,10 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+! 2012-03-09 - V. Gligorov
+ - Update shared Ks and Lambdas, tighten a couple of cuts like the track chi2, and
+   make the lambda cuts the same as the Ks cuts
+
 !========================= Hlt2SharedParticles v6r6 2012-03-01 =========================
 ! 2012-03-1 - Albert Puig
  - Added Pi0 and Electrons with new calo reco.
