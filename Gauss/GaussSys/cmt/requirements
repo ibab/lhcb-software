@@ -27,6 +27,7 @@ use LbPythia            v10r3   Gen
 # Generators packages: extensions to Pythia6
 #use LbAlpGen             v1r0    Gen   # OFF for the moment
 use BcVegPy              v3r0    Gen
+use GenXicc              v1r0    Gen
 use LbBcVegPy            v4r2    Gen
 use LbHidValley          v3r0    Gen
 use LbOniaPairs          v1r0    Gen
