@@ -13,7 +13,7 @@ use  Hlt2Lines		 v8r12	   Hlt
 use  PatAlgorithms       v4r19     Tf
 use  TrackFitter         v4r5      Tr
 use  Hlt2SharedParticles v6r6      Hlt
-use  HltSettings         v5r19     Hlt
+use  HltSettings         v5r18     Hlt
 
 # Patches
 
