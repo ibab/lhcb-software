@@ -37,7 +37,5 @@ DaVinci().Simulation   = True                  # It's MC
 DaVinci().UserAlgorithms = [ tutorialseq ]
 ########################################################################
 #
-# To run in shell :
-# gaudirun.py solutions/DaVinci1/DVTutorial_1.py $DAVINCIROOT/options/DaVinciTestData.py
 #
 ########################################################################

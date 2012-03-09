@@ -101,7 +101,7 @@ StatusCode TutorialAlgorithm::makeJpsi(const LHCb::Particle::Range& muons){
                          bind(&LHCb::Particle::charge,_1)>0,
                          MuPlus);
   } else {
-    warning() << "Filtered no muons" << endmsg ;
+    Warning("Filtered no muons",StatusCode::SUCCESS,1); 
     return StatusCode::SUCCESS ;
   }
 
