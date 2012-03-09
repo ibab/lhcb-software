@@ -1,0 +1,13 @@
+!-----------------------------------------------------------------------------
+! Package     : GenXiccData
+! Responsible : Feng Zhang
+! Purpose     : Provides the grade data required by GenXicc
+!-----------------------------------------------------------------------------
+
+!======================== BcVegPyData v1r0 2012-03-09 ========================
+! 2012-03-09 - Patrick Robbe
+ - Tagged as v1r0 
+
+! 2012-03-09 - Feng Zhang
+ - New package: Grade data for the GenXicc generator  
+!=============================================================================
