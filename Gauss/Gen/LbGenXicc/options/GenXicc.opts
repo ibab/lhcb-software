@@ -1,0 +1,24 @@
+
+/** @file 
+ * 
+ *  Options to be (re-)set when running with GenXicc for production of 
+ *  Xicc Baryons
+ *
+ *  @author F. Zhang 
+ *  @date 2011-04-10
+ *
+ */
+
+Generation.Special.GenXiccProduction.GenXiccCommands += {
+  "mixevnt imix 0" ,
+  "mixevnt imixtype 1" ,
+  "counter ixiccstate 1",
+  "vegasinf nitmx 20",
+  "vegasinf number 1000000",
+  "loggrade ivegasopen 0",
+  "loggrade igrade 1",
+  "upcom ecm 7000.0"
+ } ;
+
+Generation.PileUpTool = "FixedLuminosityForRareProcess";
+

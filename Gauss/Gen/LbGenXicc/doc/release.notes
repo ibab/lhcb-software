@@ -1,0 +1,198 @@
+! Package     : Gen/LbGenXicc
+! Responsible : F. Zhang
+
+!========================= LbGenXicc v1r0 2012-03-09 =========================
+! 2012-03-09 - F. Zhang
+  - First import of the package
+
+### $-----$-----$-----$-----$-----$-----$-----$-----$-----$-----$-----$
+### Introduction: New Package 'LbGenXicc'
+### To interface with LHCb software easily, LbGenXicc was established  
+###
+### 1) This directory contains all of the interfaces to transfer the 
+###   input parameters to those COMMON BLOCKs in the source files in  
+###   GenXicc which is somehow a copy of the generator GENXICC2.0 )  
+###
+### 2) The GENXICC2.0 is a generator program for the hardronic prod-
+###   uction of the Double-Heavy-Baryons
+###
+### 3) The generator is written in a PYTHIA-compatible format based  
+###   on FORTRAN77/90 
+###
+### 4) Thank you for the Authors of the generator: C. H. Chang, J. X. 
+###   -Wang and X. G. Wu
+###
+### 5) More detailed informations ablout the generator could be found
+###   in:
+###   --- C. H. Chang, J. X. Wang and X. G. Wu, Comp. Phys. Comm. 177 
+###       (2007) 467-478  
+###   --- C. H. Chang, J. X. Wang and X. G. Wu, Comp. Phys. Comm. 181
+###       (2010) 1144-1149
+###
+###
+###                                           By F. Zhang 2011-04-01
+###
+### $-----$-----$-----$-----$-----$-----$-----$-----$-----$-----$-----$
+ 
+!   
+C   The Struture of the directory:
+C   NAME                           CONTENT
+C   "cmt"                           requirements
+C   "doc"                           README
+C   "genConf"                       ---
+C   "LbGenXicc"                     Include files (Declearing the CLASS)[For COMMON BLOCK]
+                                   {Confine.h  Funtrans.h  Loggrade.h  Mtypeofxi.h  
+                                    Subopen.h  Usertran.h  Vegasbin.h  Vegcross.h
+                                    Counter.h  GenXicc.h   Mixevnt.h   Outpdf.h     
+                                    Upcom.h    Valmatrix.h  Vegasinf.h  Wbstate.h}  
+C   "slc_amd64_gcc34"               ---
+C   "src"---                        "Source files" 
+           |
+           |----->"component"       Components (The Main Components here)
+           |                       {GenXiccProduction.cpp  LbGenXicc_dll.cpp   
+ 	   |                        XiDaughtersInLHCb.cpp  GenXiccProduction.h    
+           |                        LbGenXicc_load.cpp  XiDaughtersInLHCb.h}
+           |   
+           |----->"Lib"             programs with ".cpp" and ".F"
+                                   {Confine.cpp   GenXicc.cpp   Mtypeofxi.cpp  Upcom.cpp
+                                    Vegasbin.cpp  Wbstate.cpp   Counter.cpp    Loggrade.cpp  
+                                    Outpdf.cpp    Usertran.cpp  Vegasinf.cpp   Funtrans.cpp  
+                                    Mixevnt.cpp   Subopen.cpp   Valmatrix.cpp  Vegcross.cpp}      
+                                   
+                                   {gconfine.F    gloggrade.F   goutpdf.F       gusertran.F   
+                                    gvegasinf.F   gcounter.F    gmixevnt.F      gsubopen.F  
+                                    gvalmatrix.F  gvegcross.F   gfuntrans.F     gmtypeofxi.F  
+                                    gupcom.F      gvegasbin.F   gwbstate.F} 
+!   ===================================================================
+
+!   ===================== Interperation of Parameters =================
+!   By F. Zhang 
+!   12-APR-2011
+!   ===================================================================
+
+#  //set the default setting of GenXicc here
+#  //THE INTERPERATIONS OF THESE VARIABLES CAN BE FOUND IN "COMP. PHYS. COMMUNI. 177(2007)467-478"
+  m_defaultGenXiccSettings.clear();
+#  //COMMON BLOCK /MIXEVNT/IMIX,IMIXTYPE 
+  m_defaultGenXiccSettings.push_back( "mixevnt imix 0");
+  m_defaultGenXiccSettings.push_back( "mixevnt imixtype 1");
+#  //COMMON BLOCK /COUNTER/IXICCSTATE,NEV
+  m_defaultGenXiccSettings.push_back( "counter ixiccstate 1");  //Xi state
+
+   TABLE 1 "mgenxi=1" "imix" "imixtype" and "ixiccstate"
+  |------------|-----------------------------------------|  
+  |            | mgenxi  =  1 For Xi_cc (See TABLE 2)    |
+  |            |-----------------------------------------|  
+  |            | imix = 0          |          1          |
+  |------------|-------------------|---------------------|  
+  |ixiccstate=1|g-g (cc)(3S1)3_bar |---|                 |
+  |------------|-------------------|   =MIX=> imixtype=1 | 
+  |           2|g-g (cc)(1S0)6     |---|                 |
+  |------------|-------------------|---------------------|  
+  |           3|g-c (cc)(3S1)3_bar |---|                 |
+  |------------|-------------------|   =MIX=> imixtype=2 |
+  |           4|g-c (cc)(1S0)6     |---|                 |
+  |------------|-------------------|---------------------|  
+  |           5|c-c (cc)(3S1)3_bar |---|                 |
+  |------------|-------------------|   =MIX=> imixtype=3 |
+  |           6|c-c (cc)(1S0)6     |---|                 |
+  |------------|-------------------|---------------------|  
+   
+
+#  //COMMON BLOCK /UPCOM/ECM,PMXICC,PMB,PMC,FXICC,PMOMUP(5,8)
+#  //                    COLMAT(6,64),BUNDAMP(4),PMOMZERO(5,8)
+#  //                    DOUBLE COMPLEX COLMAT,BUNDAMP
+  m_defaultGenXiccSettings.push_back( "upcom pmb 5.10");       //mass of b quark
+  m_defaultGenXiccSettings.push_back( "upcom pmc 1.75");   //mass of c quark 
+  m_defaultGenXiccSettings.push_back( "upcom pmxicc 3.50");  
+#  //                    mass of Xi, note that pmxicc=pmb+pmc exactly
+  m_defaultGenXiccSettings.push_back( "upcom ecm 7000.0");   //E.C.M. of LHC
+#  //COMMON BLOCK /CONFINE/PTCUT,ETACUT,PSETACUT
+  m_defaultGenXiccSettings.push_back( "confine ptcut 0.0");
+  m_defaultGenXiccSettings.push_back( "confine etacut 1000000000.0");
+   Some cuts in Physics
+
+#  //COMMON BLOCK /FUNTRANS/NPDFU
+  m_defaultGenXiccSettings.push_back( "funtrans npdfu 2");
+
+#  //COMMON BLOCK /LOGGRADE/IVENTDIS,IGENERATE,IVEGASOPEN,IGRADE
+  m_defaultGenXiccSettings.push_back( "loggrade ievntdis 0"); //SWITCH ON/OFF TO GET THE EVNT NUM.
+  m_defaultGenXiccSettings.push_back( "loggrade igenerate 0"); 
+#  //                    whether generating full events used when idwtup=1
+  m_defaultGenXiccSettings.push_back( "loggrade ivegasopen 0");
+  m_defaultGenXiccSettings.push_back( "loggrade igrade 1");
+
+#  //COMMON BLOCK /SUBOPEN/SUBFACTOR,SUBENERGY,ISUBONLY
+  m_defaultGenXiccSettings.push_back( "subopen subenergy 100.0");//GENERALLY USELESS
+  m_defaultGenXiccSettings.push_back( "subopen isubonly 0");
+   To generate information only of the g-g mechanism with isubonly = 1 and subenergy
+   sets the energy of the g-g subprocess
+ 
+#  //COMMON BLOCK /USERTRAN/IDPP
+  m_defaultGenXiccSettings.push_back( "usertran idpp 3"); //=IDWTUP
+   idpp = IDWTUP
+
+#  //COMMON BLOCK /VEGASINF/NUMBER,NITMX
+  m_defaultGenXiccSettings.push_back( "vegasinf number 1000000");
+  m_defaultGenXiccSettings.push_back( "vegasinf nitmx 20");
+   Generally, these TWO parameters together with NVBIN shouldn't be touched if you don't 
+   understand thier TRUE meaning!!!
+
+#  //COMMON BLOCK /VEGCROSS/VEGSEC,VEGERR,IVEGGRADE
+  m_defaultGenXiccSettings.push_back( "vegcross iveggrade 0"); 
+   Whether to improve the existed grade generated b the previous VEGAS running in the case
+   ivegasopen = 1. iveggrade = 0 means not to use (DEFAULT)
+
+#  //COMMON BLOCK /OUTPDF/IOUTPDF,IPDFNUM
+  m_defaultGenXiccSettings.push_back( "outpdf ioutpdf 1");  
+#  //                     ioutpdf = 0  <==>  inner PDFs (proton parton-dis func.) used in PYTHIA
+#  //                                       (CTEQ3M, CTEQ5L, CTEQ5M)
+#  //                             mstp(51)=  2       7       8
+#  //                     ioutpdf = 1  <==>  outer PDFs used
+#  //                                       (CTEQ6HQ,GRV98L, MRST2001L)                  
+#  //                             ipdfnum =  100     200     300          
+  m_defaultGenXiccSettings.push_back( "outpdf ipdfnum 300");  
+ 
+#  //COMMON BLOCK /VEGASBIN/NVBIN
+  m_defaultGenXiccSettings.push_back( "vegasbin nvbin 300");   
+   Togather with COMMON BLOCK VEGASINF
+
+#  //COMMON BLOCK /VALMATRIX/CMFACTOR
+  m_defaultGenXiccSettings.push_back( "valmatrix cmfactor 1.0");
+   A general default value CMFACTOR=1.0
+
+#  //COMMON BLOCK /MTYPROFXI/MEGENXI
+  m_defaultGenXiccSettings.push_back( "mtypeofxi mgenxi 1");
+#  //COMMON BLOCK /WBSTATE/RATIOU,RATIOD,RATIOS,NBOUND
+  m_defaultGenXiccSettings.push_back( "wbstate nbound 1");
+
+  TABLE 2 For "mgenxi" .vs. "nbound"
+  |--------|----------------|---------------|--------------|
+  |     \  |                |      	    |              |
+  |      \ | mgenxi = 1     |       2       |     3        | 
+  |       \|    "cc"        |     "bc"      |    "bb"      |
+  |--------|----------------|---------------|--------------|
+  |        |                |		    |              |
+  |nbound=1|   Xi_cc^++(u)  |	Xi_bc^+(u)  |   Xi_bb^0(u) |
+  |   "u"  |                |		    |              |
+  |--------|----------------|---------------|--------------|
+  |        |                |		    |              |
+  |nbound=2|   Xi_cc^+(d)   | 	Xi_bc^0(d)  |   Xi_bb^-(d) |
+  |   "d"  |                | 		    |              | 
+  |--------|----------------|---------------|--------------|
+  |        |                |               |              |
+  |nbound=3| Omega_cc^+(s)  | Omega_bc^0(s) | Omega_bb^-(s)|
+  |   "s"  |                |               |              |
+  |--------|----------------|---------------|--------------|
+  
+
+
+
+
+
+
+
+
+
+
+

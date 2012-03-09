@@ -1,0 +1,35 @@
+#============================================================================
+package       LbGenXicc
+version       v1r0
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches      LbGenXicc doc cmt src
+
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#============================================================================
+use           GenXicc         v*          Gen
+use           LbPythia        v*          Gen
+
+#============================================================================
+# include files shared between linker and component library
+#============================================================================
+include_dirs  $(LBGENXICCROOT)
+
+#============================================================================
+# Linker and Component library building rule
+#============================================================================
+library       LbGenXiccLib       Lib/*.cpp Lib/*.F
+library       LbGenXicc          component/*.cpp
+
+#============================================================================
+# define component and linker library options (the order is essential!)
+#============================================================================
+apply_pattern component_library library=LbGenXicc 
+apply_pattern linker_library    library=LbGenXiccLib 
+apply_pattern library_stamps    library=LbGenXiccLib 
+
+
+ 
