@@ -18,12 +18,10 @@
 #include "G4LambdabZero.h"
 #include "G4AntiXibZero.h"
 #include "G4XibZero.h"
-#include "G4XibMinus.h"
-#include "G4XibPlus.h"
-#include "G4OmegabMinus.h"
-#include "G4OmegabPlus.h"
 #include "G4AntiXiccStarMinus.h"
 #include "G4XiccStarPlus.h"
+#include "G4AntiXiccMinus.h"
+#include "G4XiccPlus.h"
 #include "G4Neutralino.h"
 #include "G4Neutralino2.h"
 #include "G4CharginoMinus.h"
@@ -62,17 +60,14 @@ void GiGaPhysUnknownParticles::ConstructParticle()
 {
   G4BcMesonMinus::BcMesonMinusDefinition() ;
   G4BcMesonPlus::BcMesonPlusDefinition() ;  
-  G4XibMinus::XibMinusDefinition() ;
-  G4XibPlus::XibPlusDefinition() ;  
-  G4OmegabMinus::OmegabMinusDefinition() ;
-  G4OmegabPlus::OmegabPlusDefinition() ;  
   G4AntiLambdabZero::AntiLambdabZeroDefinition();
   G4LambdabZero::LambdabZeroDefinition();
   G4AntiXibZero::AntiXibZeroDefinition();
-
   G4XibZero::XibZeroDefinition();
   G4AntiXiccStarMinus::AntiXiccStarMinusDefinition();
   G4XiccStarPlus::XiccStarPlusDefinition();
+  G4AntiXiccMinus::AntiXiccMinusDefinition();
+  G4XiccPlus::XiccPlusDefinition();
   G4Neutralino::NeutralinoDefinition();
   G4HiddenValley::HiddenValleyDefinition(); 
   G4Neutralino2::Neutralino2Definition();
