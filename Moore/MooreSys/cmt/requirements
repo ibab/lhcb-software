@@ -1,12 +1,12 @@
 package MooreSys
-version v13r1p2
+version v13r1p3
 branches doc cmt
 
 #=======================================================
 # Don't forget the applications
 #=======================================================
 
-use  Moore               v13r1p2   Hlt
+use  Moore               v13r1p3   Hlt
 use  IndependenceTests   v1r2      Hlt
 
 use  Hlt2Lines		 v8r12	   Hlt

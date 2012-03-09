@@ -3,6 +3,9 @@ Package     : MooreSys
 Package Coordinator : E. van Herwijnen
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v13r1p3>2012-03-09 Moore v13r1p3</A></H1><PRE>
+Fixed mainly online bugs in Hlt/Moore/python/Moore.
+
 </PRE><H1><A NAME=v13r1p2>2012-03-07 Moore v13r1p2</A></H1><PRE>
 PatForward, TrackFitter, Hlt2SharedParticles and Hlt2DisplVertices 
 bugfixes. Add DD KS to the topo.
