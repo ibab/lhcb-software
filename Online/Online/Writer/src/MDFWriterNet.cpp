@@ -225,6 +225,7 @@ StatusCode MDFWriterNet::initialize(void)
   gettimeofday(&m_prevMsgQueue, NULL);
 
   m_currFile = NULL;
+  m_closedRuns.clear();
   m_srvConnection = new Connection(m_serverAddr, m_serverPort,
 				   m_sndRcvSizes, m_log, this, m_maxQueueSizeBytes);
   m_rpcObj = new RPCComm(m_runDBURL.c_str());
@@ -700,8 +701,9 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
   if(m_currFile == NULL || runNumber != m_currFile->getRunNumber()) {
     m_currFile = m_openFiles.getFile(runNumber);
     // Do not accept event from previous runs if no file is open anymore 
-    if(!m_currFile && ((runNumber == m_currentRunNumber && m_discardCurrentRun) ) ) {
-      ++nbLate;
+    if(!m_currFile && ((runNumber == m_currentRunNumber && m_discardCurrentRun) || (m_closedRuns.find(runNumber) != m_closedRuns.end()))) {
+      if (!(++nbLate % 10000)) *m_log << MSG::WARNING << " Discarded " << nbLate << " events belonging to closed runs" << endmsg;
+      
       if (pthread_mutex_unlock(&m_SyncFileList)) {
         *m_log << MSG::ERROR << WHERE << " Unlocking mutex" << endmsg;
         return StatusCode::FAILURE;
@@ -736,6 +738,7 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
               *m_log << MSG::ERROR
                      << " Exception: "
                      << e.what() << endmsg;
+	      m_closedRuns.insert(runNumber);
               m_discardCurrentRun = true;
               if (pthread_mutex_unlock(&m_SyncFileList)) {
                 *m_log << MSG::ERROR << WHERE << " Unlocking mutex" << endmsg;

@@ -13,7 +13,7 @@
 #include "chunk_headers.h"
 
 #include <map>
-
+#include <set>
 #include <unistd.h>
 #include <limits.h>
 #include <stdlib.h>
@@ -118,6 +118,8 @@ namespace LHCb {
     void init(const std::string& fname,  unsigned int runNumber, bool enableMD5);
 
   public:
+
+
     /// get the monitor values
     inline Monitor* getMonitor() { return m_mon; } 
 
@@ -469,6 +471,10 @@ namespace LHCb {
     /// Returns a File object for the specified run number
 
   public:
+
+    /// the runs declared close by the RunDB
+    std::set<unsigned int> m_closedRuns;
+    	
     /// Destructor.
     virtual ~MDFWriterNet();
 
