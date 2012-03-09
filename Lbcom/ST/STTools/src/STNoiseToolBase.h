@@ -31,6 +31,8 @@
  *  - \b ThresholdsFromDB: read the hit tresholds for outlier removal from the 
  *    conditions data base.
  *  - \b MaskBadChannels: set all pedestals, noise etc to 0 if channel is know to be bad
+ *  - \b BadChannelsFromDB: read the masked channels from the STCOND database (otherwise 
+ *    they are taken from the detector element).
  *  - \b CondPath: The pedestals and hit thresholds are not in the standard LHCBCOND 
  *    so they must be read from an additional DB slice.  The location in the database
  *    can be specified via CondPath
@@ -220,6 +222,7 @@ namespace ST {
     std::string m_condPath; ///< Set the condition path in the database
     
     bool m_maskBad;///< Turn on/off masking of bad channels
+    bool m_readPedestalMask;///< Read masked strips from the conditions database slice
 
     /** data values for up to 8 pedestal values 
         - tellID to access map
@@ -251,9 +254,6 @@ namespace ST {
 
     /// Reset noise counters for a given tell1 during initialise or after change in TELL1 conditions
     void resetNoiseCounters(const unsigned int TELL1SourceID);
-
-    /// Cache the status of each strip
-    virtual StatusCode cacheStripStatus();
 
     bool m_debug;///< True if message service is set for DEBUG or VERBOSE
     bool m_verbose;///< True if message service is set for VERBOSE

@@ -3,8 +3,13 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2012-03-09 - Mark Tobin
+ - Fix memory leak in initialisation.
+ - Fix uninitialised values.
+ - Read pedestal masks from the conditions database.
+
 ! 2012-03-07 - Mark Tobin
- - Implement new methods in noise calculation tools
+ - Implement new methods in noise calculation tools.
 
 !========================= STTools v4r10 2011-12-14 =========================
 ! 2011-11-23 - Mark Tobin
