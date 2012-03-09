@@ -24,6 +24,7 @@ DECLARE_ALGORITHM_FACTORY(ODINBadTimeTest)
 // ============================================================================
 ODINBadTimeTest::ODINBadTimeTest(const std::string& name, ISvcLocator* pSvcLocator)
   : GaudiAlgorithm(name, pSvcLocator)
+  , m_evtTimeTool(0)
 {
 }
 

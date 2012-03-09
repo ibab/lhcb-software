@@ -1,4 +1,3 @@
-// $Id: $
 // Include files
 
 // local
@@ -11,8 +10,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( EmptyEventNodeCleaner );
-
+DECLARE_ALGORITHM_FACTORY( EmptyEventNodeCleaner )
 
 //=============================================================================
 // Standard constructor, initializes variables

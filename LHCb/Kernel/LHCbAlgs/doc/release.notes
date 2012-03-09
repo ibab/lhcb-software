@@ -4,6 +4,11 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2012-03-09 - Marco Cattaneo
+ - Fix logic bug in IncidentFilter.cpp, Coverity defect #30939
+ - Fix UNINIT_CTOR
+ - Fix trivial icc remarks
+
 ! 2012-03-01 - Marco Cattaneo
  - In LHCbApp, do not check DQ flags in case of Simulation 
 

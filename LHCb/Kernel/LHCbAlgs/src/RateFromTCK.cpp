@@ -1,4 +1,3 @@
-// $Id: $
 // Include files 
 
 // from Gaudi
@@ -14,7 +13,8 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( RateFromTCK );
+DECLARE_TOOL_FACTORY( RateFromTCK )
+
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================

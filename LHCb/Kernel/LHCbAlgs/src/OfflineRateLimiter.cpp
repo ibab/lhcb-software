@@ -1,4 +1,3 @@
-// $Id: $
 // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -11,8 +10,7 @@
 // 2011-08-05 : Patrick Koppenburg
 //-----------------------------------------------------------------------------
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( OfflineRateLimiter );
-
+DECLARE_ALGORITHM_FACTORY( OfflineRateLimiter )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -88,8 +86,6 @@ StatusCode OfflineRateLimiter::execute() {
   setFilterPassed(acc);
   *m_counter += acc;
   if (msgLevel(MSG::DEBUG)) debug() << (acc?"Accepted":"Rejected") << endmsg ;
-  return StatusCode::SUCCESS;
-
   return StatusCode::SUCCESS;
 }
 

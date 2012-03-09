@@ -1,4 +1,3 @@
-// $Id: $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -23,10 +22,6 @@
  * 
  *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
  *  @date 2011-12-16
- *  
- *                    $Revision$
- *  Last modification $Date$
- *                 by $Author$
  */
 // ============================================================================
 namespace Gaudi
@@ -282,7 +277,7 @@ void Gaudi::IncidentFilter::handle ( const Incident& inc )
   if ( m_incidents.end() != std::find ( m_incidents.begin () , 
                                         m_incidents.end   () , 
                                         inc.type          () ) ) 
-  { m_decision = ~m_veto ; }
+  { m_decision = !m_veto ; }
   //    
 }
 // ============================================================================
