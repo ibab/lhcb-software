@@ -5,6 +5,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2012-03-09 - V. Gligorov
+ - Add Lc->LambdaH lines.
+
 ! 2012-03-05 - V. Gligorov
  - Fix the proton ID configurations to use both forward and match tracking.
 
