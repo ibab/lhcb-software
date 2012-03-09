@@ -201,15 +201,10 @@ FarmDisplay::FarmDisplay(int argc, char** argv)
   ::wtc_remove(WT_FACILITY_SCR);
   ::wtc_subscribe(WT_FACILITY_SCR, key_rearm, key_action, m_pasteboard);
   MouseSensor::instance().start(pasteboard());
-  if ( xml ) {
+  if ( xml )
     m_listener = auto_ptr<PartitionListener>(new PartitionListener(this,m_name,m_match,xml));
-  }
-  else if ( all ) {
-    m_svc = ::dic_info_service((char*)"DIS_DNS/SERVER_LIST",MONITORED,0,0,0,dnsDataHandler,(long)this,0,0);
-  }
-  else {
+  else
     m_listener = auto_ptr<PartitionListener>(new PartitionListener(this,m_name,m_match));
-  }
 }
 
 /// Standard destructor
@@ -238,14 +233,6 @@ FarmDisplay::~FarmDisplay()  {
   m_pasteboard = 0;
   ::scrc_resetANSI();
   ::printf("Farm display deleted and resources freed......\n");
-}
-
-/// DIM command service callback
-void FarmDisplay::dnsDataHandler(void* tag, void* address, int* size) {
-  if ( address && tag && *size > 0 ) {
-    FarmDisplay* disp = *(FarmDisplay**)tag;
-    disp->update(address);
-  }
 }
 
 /// Get the name of the currently selected cluster
@@ -345,56 +332,11 @@ string FarmDisplay::currentDisplayName()  const {
   return d ? d->name() : string("");
 }
 
-/// DIM command service callback
-void FarmDisplay::update(const void* address) {
-  char *msg = (char*)address;
-  string svc, node;
-  size_t idx, idq;
-  switch(msg[0]) {
-  case '+':
-    getServiceNode(++msg,svc,node);
-    idx = svc.find("/ROpublish");
-    idq = svc.find("/hlt");
-    if ( idq == string::npos ) idq = svc.find("/mona");
-    if ( idq == string::npos ) idq = svc.find("/store");
-    if ( idx != string::npos && idq == 0 ) {
-      string f = svc.substr(1,idx-1);
-      if ( ::strcase_match_wild(f.c_str(),m_match.c_str()) ) {
-        IocSensor::instance().send(this,CMD_ADD,new string(f));
-      }
-    }
-    break;
-  case '-':
-    break;
-  case '!':
-    //getServiceNode(++msg,svc,node);
-    //log() << "Service " << msg << " in ERROR." << endl;
-    break;
-  default:
-    if ( *(int*)msg != *(int*)"DEAD" )  {
-      char *at, *p = msg, *last = msg;
-      auto_ptr<Farms> farms(new Farms);
-      while ( last != 0 && (at=strchr(p,'@')) != 0 )  {
-        last = strchr(at,'|');
-        if ( last ) *last = 0;
-        getServiceNode(p,svc,node);
-        idx = svc.find("/ROpublish");
-        idq = svc.find("/hlt");
-        if ( idq == string::npos ) idq = svc.find("/mona");
-        if ( idq == string::npos ) idq = svc.find("/store");
-        if ( idx != string::npos && idq == 0 ) {
-          string f = svc.substr(1,idx-1);
-          if ( ::strcase_match_wild(f.c_str(),m_match.c_str()) ) {
-            farms->push_back(f);
-          }
-        }
-        p = last+1;
-      }
-      if ( !farms->empty() )
-        IocSensor::instance().send(this,CMD_CONNECT,farms.release());
-    }
-    break;
-  }
+/// Get farm <partition>/<display name> from cursor position
+std::string FarmDisplay::currentCluster()  const {
+  InternalDisplay* d = currentDisplay();
+  if ( d ) return m_name +"/" + d->name();
+  return "";
 }
 
 /// Handle keyboard interrupts
@@ -578,18 +520,28 @@ void FarmDisplay::handle(const Event& ev) {
       }
       TimeSensor::instance().add(this,1,m_subfarmDisplay);
       break;
-    case CMD_ADD:
-      if ( (i=find(m_farms.begin(),m_farms.end(),*ev.iocPtr<string>())) == m_farms.end() ) {
-        m_farms.push_back(*ev.iocPtr<string>());
-        connect(m_farms);
+    case CMD_ADD: {
+      StringV farms;
+      for(k=m_farmDisplays.begin(); k != m_farmDisplays.end(); ++k) {
+	if ( (*k).second->name() == *ev.iocPtr<string>() ) {
+	  delete ev.iocPtr<string>();
+	  return;
+	}
+	farms.push_back((*k).first);
       }
+      farms.push_back(*ev.iocPtr<string>());
+      connect(m_name,farms);
       delete ev.iocPtr<string>();
       return;
-    case CMD_CONNECT:
-      m_farms = *ev.iocPtr<StringV>();
-      connect(m_farms);
-      delete ev.iocPtr<StringV>();
+    }
+    case CMD_CONNECT: {
+      StringV farms;
+      farms.clear();
+      farms.assign(ev.iocPtr<StringV>()->begin()+1,ev.iocPtr<StringV>()->end());
+      connect(*ev.iocPtr<StringV>()->begin(),farms);
+      delete ev.iocPtr<vector<string> >();
       return;
+    }
     case CMD_CHECK: {
       DisplayUpdate update(this,true);
       for(k=m_farmDisplays.begin(); k != m_farmDisplays.end(); ++k)
@@ -606,7 +558,7 @@ void FarmDisplay::handle(const Event& ev) {
   }
 }
 
-void FarmDisplay::connect(const vector<string>& farms) {
+void FarmDisplay::connect(const std::string& section, const vector<string>& farms) {
   SubDisplays::iterator k;
   SubDisplays copy;
   char txt[128];

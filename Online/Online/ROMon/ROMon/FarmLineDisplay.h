@@ -32,21 +32,21 @@ namespace ROMon {
    */
   class FarmLineDisplay : public FarmDisplayBase  {
   protected:
-    typedef std::map<std::string, ClusterLine*> SubDisplays;
-    typedef std::vector<std::string> Farms;
-    SubDisplays                      m_farmDisplays;
-    std::auto_ptr<PartitionListener> m_listener;
+    typedef PartitionListener        Listener;
+    typedef std::vector<Listener*>   Listeners;
+    typedef std::map<std::string,ClusterLine*> SubDisplays;
+
+    SubDisplays                      m_lines;
+    Listeners                        m_listeners;
     std::auto_ptr<InternalDisplay>   m_summaryDisplay;
     std::string                      m_partition;
     std::string                      m_match;
     
-    /// vector with all farm displays
-    Farms                            m_farms;
     int                              m_height;
     int                              m_width;
     int                              m_dense;
 
-    ClusterLine* m_currentLine;
+    ClusterLine*                     m_currentLine;
 
     /// Keyboard rearm action
     static int key_rearm (unsigned int fac, void* param);
@@ -72,14 +72,14 @@ public:
     /// Handle keyboard interrupts
     int handleKeyboard(int key);
 
+    /// Get farm <partition>/<display name> from cursor position
+    virtual std::string currentCluster()  const;
+
     /// Get farm display from cursor position
     ClusterLine* currentDisplay()  const;
 
     /// Get farm display name from cursor position
     virtual std::string currentDisplayName()  const;
-
-    /// Accessor to sub-displays of main panel
-    SubDisplays& subDisplays() {  return m_farmDisplays; }
 
     /// Accessor to current subfarm display
     ClusterDisplay* subfarmDisplay() const {  return m_subfarmDisplay; }
@@ -91,22 +91,20 @@ public:
     virtual void set_cursor(InternalDisplay* d) 
     { this->InternalDisplay::set_cursor(d); }
 
+    /// Connect to data sources
+    void connect(const std::string& section, const std::vector<std::string>& farms);
+
     /// Interactor overload: Display callback handler
     virtual void handle(const Event& ev);
     /// Connect to data resources
     virtual void connect()  {  InternalDisplay::connect(); }
-    /// Connect to data sources
-    void connect(const std::vector<std::string>& farms);
     /// DIM command service callback
-    virtual void update(const void* data);
+    virtual void update(const void* /* data */)        { }
     /// Update display content
     virtual void update(const void* data, size_t len)  { this->InternalDisplay::update(data,len); }
 
     /// Show the run processing summary window
     int showDeferredSummaryWindow();
-
-    /// DIM command service callback
-    static void dnsDataHandler(void* tag, void* address, int* size);
   };
 }      // End namespace ROMon
 #endif /* ROMON_FARMLINEDISPLAY_H */

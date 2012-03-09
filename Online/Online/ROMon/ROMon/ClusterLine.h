@@ -37,6 +37,7 @@ namespace ROMon {
   class ClusterLine  {
   protected:
     std::string        m_name;
+    std::string        m_partition;
     int                m_svc;
     size_t             m_position;
     FarmLineDisplay*   m_parent;
@@ -50,21 +51,27 @@ namespace ROMon {
 
   public:
     /// Initializing constructor
-    ClusterLine(FarmLineDisplay* p, int pos, const std::string& n);
+    ClusterLine(FarmLineDisplay* par, const std::string& p, const std::string& n);
     /// Default destructor
     virtual ~ClusterLine();
     /// Connect to data service
     void connect(const std::string& name);
     /// Name of the clusterline (=subfarm name)
     const std::string& name() const           { return m_name;      }
+    /// Name of the clusterline (=subfarm name)
+    const std::string& partition() const      { return m_partition; }
     /// Access to the cluster data
     template <class T> const T* data() const  { return (T*)m_data;  }
     /// The line position within the parent
     size_t position() const                   { return m_position;  }
+    /// Update position on reconfiguring the display
+    void setPosition(size_t pos)              { m_position = pos;   }
     /// Check for data time stamp(s)
     void check(time_t now);
     /// Hightlight cursor if current
     void set_cursor();
+    /// Display function drawing on pasteboard the initial display
+    virtual void initialDisplay();
     /// Display function drawing on pasteboard of current display
     virtual void display();
     /// DIM command service callback
@@ -72,13 +79,13 @@ namespace ROMon {
   };
 
   typedef ClusterLine* (*ClusterLineCreator_t)(FarmLineDisplay* parent, 
-					       int pos, 
+					       const std::string& partition, 
 					       const std::string& title);
 
   /// Factory method: create a cluster line according to a given type
   ClusterLine* createClusterLine(const std::string& type, 
 				 FarmLineDisplay* parent, 
-				 int pos, 
+				 const std::string& partition,
 				 const std::string& title);
 
   /// Registry function
@@ -86,8 +93,8 @@ namespace ROMon {
 
   template<class T> class ClusterLineFactory  {
   public:
-    static ClusterLine* create(FarmLineDisplay* parent, int pos, const std::string& title)
-      { return new T(parent,pos,title);                  }
+    static ClusterLine* create(FarmLineDisplay* parent, const std::string& partition, const std::string& title)
+      { return new T(parent,partition,title);            }
     ClusterLineFactory(const char* name) 
       { _registerCreator(name,create);                   }
   };

@@ -41,13 +41,13 @@ namespace {
 /// Factory method: create a cluster line according to a given type
 ClusterLine* ROMon::createClusterLine(const std::string& type, 
 				      FarmLineDisplay* parent, 
-				      int pos, 
+				      const std::string& partition, 
 				      const std::string& title) 
 {
   map<string,ClusterLineCreator_t>::const_iterator i=creators().find(type);
   if ( i != creators().end() )  {
     ClusterLineCreator_t func = (*i).second;
-    return (*func)(parent,pos,title);
+    return (*func)(parent,partition,title);
   }
   return 0;
 }
@@ -58,8 +58,8 @@ void ROMon::_registerCreator(const char* name,ClusterLineCreator_t func) {
 }
 
 /// Standard constructor
-ClusterLine::ClusterLine(FarmLineDisplay* p, int pos, const std::string& n)
-  : m_name(n), m_svc(0), m_position(pos), m_parent(p), m_data(0), m_ptr(0)
+ClusterLine::ClusterLine(FarmLineDisplay* p, const std::string& partition, const std::string& nam)
+  : m_name(nam), m_partition(partition), m_svc(0), m_position(0), m_parent(p), m_data(0), m_ptr(0)
 {
 }
 
@@ -84,6 +84,10 @@ void ClusterLine::connect(const std::string& nam) {
   string svc = InternalDisplay::svcPrefix()+nam;
   if ( m_svc ) ::dic_release_service(m_svc);
   m_svc = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,dataHandler,(long)this,0,0);
+}
+
+/// Display function drawing on pasteboard the initial display
+void ClusterLine::initialDisplay() {
 }
 
 void ClusterLine::display() {
@@ -148,5 +152,9 @@ void ClusterLine::dataHandler(void* tag, void* address, int* size) {
     l->m_ptr = ptr;
     l->m_data = ((char*)l->m_ptr + sizeof(int));
     l->display();
+  }
+  else if ( tag ) {
+    ClusterLine* l = *(ClusterLine**)tag;
+    l->initialDisplay();
   }
 }

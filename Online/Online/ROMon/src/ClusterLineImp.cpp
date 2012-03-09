@@ -51,7 +51,7 @@ namespace ROMon {
     time_t            m_lastUpdate;
   public:
     /// Initializing constructor
-    FarmClusterLine(FarmLineDisplay* p, int pos, const std::string& n);
+    FarmClusterLine(FarmLineDisplay* p, const std::string& partition, const std::string& n);
     /// Default destructor
     virtual ~FarmClusterLine() {}
     /// Display function drawing on pasteboard of current display
@@ -83,7 +83,7 @@ namespace ROMon {
     static void excludedHandler(void* tag, void* address, int* size);
   public:
     /// Initializing constructor
-    HltDeferLine(FarmLineDisplay* p, int pos, const std::string& n);
+    HltDeferLine(FarmLineDisplay* p, const std::string& partition, const std::string& n);
     /// Default destructor
     virtual ~HltDeferLine();
     /// Display function drawing on pasteboard of current display
@@ -106,15 +106,13 @@ namespace ROMon {
     bool              m_hasProblems;
     /// Flag to indicate if the cluster is in use
     bool              m_inUse;
-    /// Partition name
-    std::string       m_partition;
     /// Name of the relay node withing storage cluster
     std::string       m_relayNode;
     /// Timestamp with last update
     time_t            m_lastUpdate;
   public:
     /// Initializing constructor
-    MonitoringClusterLine(FarmLineDisplay* p, int pos, const std::string& n);
+    MonitoringClusterLine(FarmLineDisplay* p, const std::string& partition, const std::string& n);
     /// Default destructor
     virtual ~MonitoringClusterLine() {}
     /// Display function drawing on pasteboard of current display
@@ -135,13 +133,11 @@ namespace ROMon {
     bool              m_hasProblems;
     /// Flag to indicate if the cluster is in use
     bool              m_inUse;
-    /// Partition name
-    std::string       m_partition;
     /// Timestamp with last update
     time_t            m_lastUpdate;
   public:
     /// Initializing constructor
-    StorageClusterLine(FarmLineDisplay* p, int pos, const std::string& n);
+    StorageClusterLine(FarmLineDisplay* p, const std::string& partition, const std::string& n);
     /// Default destructor
     virtual ~StorageClusterLine() {}
     /// Display function drawing on pasteboard of current display
@@ -178,7 +174,7 @@ namespace ROMon {
 
   public:
     /// Initializing constructor
-    CtrlFarmClusterLine(FarmLineDisplay* p, int pos, const std::string& n);
+    CtrlFarmClusterLine(FarmLineDisplay* p, const std::string& partition, const std::string& n);
     /// Default destructor
     virtual ~CtrlFarmClusterLine();
     /// Display function drawing on pasteboard of current display
@@ -235,8 +231,8 @@ namespace {
 }
 
 /// Standard constructor
-CtrlFarmClusterLine::CtrlFarmClusterLine(FarmLineDisplay* p, int pos, const std::string& n)
-  : ClusterLine(p,pos,n), m_exclID(0)
+CtrlFarmClusterLine::CtrlFarmClusterLine(FarmLineDisplay* p, const string& partition, const std::string& n)
+  : ClusterLine(p,partition,n), m_exclID(0)
 {
   m_lastUpdate = time(0);
   m_hasProblems = false;
@@ -398,12 +394,11 @@ void CtrlFarmClusterLine::excludedHandler(void* tag, void* address, int* size) {
 }
 
 /// Standard constructor
-StorageClusterLine::StorageClusterLine(FarmLineDisplay* p, int pos, const std::string& n)
-: ClusterLine(p,pos,n)
+StorageClusterLine::StorageClusterLine(FarmLineDisplay* p, const string& partition, const std::string& n)
+: ClusterLine(p,partition,n)
 {
   m_lastUpdate = time(0);
   m_hasProblems = false;
-  m_partition = p->name();
   connect(strlower(m_name)+"/ROpublish");
 }
 
@@ -519,13 +514,12 @@ void StorageClusterLine::display() {
 
 
 /// Standard constructor
-MonitoringClusterLine::MonitoringClusterLine(FarmLineDisplay* p, int pos, const std::string& n)
-: ClusterLine(p,pos,n)
+MonitoringClusterLine::MonitoringClusterLine(FarmLineDisplay* p, const string& partition, const std::string& n)
+: ClusterLine(p,partition,n)
 {
   m_numUpdate = 0;
   m_evtRelay  = m_totRelay = 0;
   m_evtWorker = m_totWorker = 0;
-  m_partition = p->name();
   m_relayNode = m_name+"01";
   m_lastUpdate = time(0);
   m_hasProblems = false;
@@ -667,8 +661,8 @@ void MonitoringClusterLine::display() {
 }
 
 
-FarmClusterLine::FarmClusterLine(FarmLineDisplay* p, int pos, const std::string& n)
-: ClusterLine(p,pos,n)
+FarmClusterLine::FarmClusterLine(FarmLineDisplay* p, const string& partition, const std::string& n)
+: ClusterLine(p,partition,n)
 {
   m_numUpdate  = 0;
   m_evtOvl     = m_totOvl = 0;
@@ -860,7 +854,6 @@ void FarmClusterLine::display() {
   m_totMoore  = evt_prod[1];
   m_totSent   = evt_prod[2];
   m_totOvl    = evt_prod[3];
-
   err = err + "                                                                 ";
   ::scrc_put_chars(dis,err.substr(0,35).c_str(),col,pos,42+CLUSTERLINE_START,0);
   if ( evt_prod[0] || evt_prod[1] )
@@ -871,21 +864,25 @@ void FarmClusterLine::display() {
   else
     ::sprintf(txt,"%9s%5s%10s%7s%9s%5s","--","--","--","--","--","--");
   ::scrc_put_chars(dis,txt,NORMAL,pos,77+CLUSTERLINE_START,0);
-  if ( min_prod[0] != INT_max || min_prod[1] != INT_max )
+  if ( min_prod[0] != INT_max || min_prod[1] != INT_max ) {
+    if ( min_prod[3]  == INT_max ) min_prod[3] = 0;  // if not existing....
+    if ( min_slots[3] == INT_max ) min_slots[3] = 0; // if not existing....
     ::sprintf(txt,"%9d%5d%11d%6d%9d%5d",
               min_prod[3],min_slots[3],
               min_prod[1],min_slots[1],
               min_prod[2],min_slots[2]);
-  else
+  }
+  else {
     ::sprintf(txt,"%9s%5s%10s%7s%9s%5s","--","--","--","--","--","--");
+  }
   ::scrc_put_chars(dis,txt,NORMAL,pos,77+47+CLUSTERLINE_START,0);
   end_update();
 }
 
 #include "ROMon/CPUMon.h"
 
-HltDeferLine::HltDeferLine(FarmLineDisplay* p, int pos, const std::string& n)
-: ClusterLine(p,pos,n)
+HltDeferLine::HltDeferLine(FarmLineDisplay* p, const string& partition, const std::string& n)
+: ClusterLine(p,partition,n)
 {
   m_numUpdate   = 0;
   m_numFiles    = 0;

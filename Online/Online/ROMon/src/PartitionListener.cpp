@@ -1,5 +1,6 @@
 #include "ROMon/PartitionListener.h"
 #include "ROMon/Constants.h"
+#include "ROMonDefs.h"
 #include "CPP/IocSensor.h"
 #include "RTL/readdir.h"
 #include "RTL/strdef.h"
@@ -16,22 +17,27 @@ using namespace ROMon;
 typedef vector<string> StringV;
 
 /// Standard constructor with object setup through parameters
-PartitionListener::PartitionListener(Interactor* parent, const string& nam, const std::string& match)
-  : m_parent(parent), m_name(nam), m_match(match)
+PartitionListener::PartitionListener(Interactor* par, const string& nam, const std::string& match)
+  : m_parent(par), m_name(nam), m_match(match), m_subFarmDP(0), m_partIdDP(0), m_runStateDP(0)
 {
   for(size_t j=0; j<m_match.length(); ++j)
     m_match[j] = char(::tolower(m_match[j]));
-  string name = "RunInfo/" + m_name + "/HLTsubFarms";
-  m_subFarmDP = ::dic_info_service((char*)name.c_str(),MONITORED,0,0,0,subFarmHandler,(long)this,0,0);
-  name = "RunInfo/" + m_name + "/RunStatus";
-  m_runStateDP = ::dic_info_service((char*)name.c_str(),MONITORED,0,0,0,runStateHandler,(long)this,0,0);
-  name = "RunInfo/" + m_name + "/partId";
-  m_partIdDP = ::dic_info_service((char*)name.c_str(),MONITORED,0,0,0,partIdHandler,(long)this,0,0);
+  if ( m_name == "ALL") {
+    m_subFarmDP = ::dic_info_service((char*)"DIS_DNS/SERVER_LIST",MONITORED,0,0,0,dnsDataHandler,(long)this,0,0);
+  }
+  else {
+    string name = "RunInfo/" + m_name + "/HLTsubFarms";
+    m_subFarmDP = ::dic_info_service((char*)name.c_str(),MONITORED,0,0,0,subFarmHandler,(long)this,0,0);
+    name = "RunInfo/" + m_name + "/RunStatus";
+    m_runStateDP = ::dic_info_service((char*)name.c_str(),MONITORED,0,0,0,runStateHandler,(long)this,0,0);
+    name = "RunInfo/" + m_name + "/partId";
+    m_partIdDP = ::dic_info_service((char*)name.c_str(),MONITORED,0,0,0,partIdHandler,(long)this,0,0);
+  }
 }
 
 /// Standard constructor with object setup through parameters
-PartitionListener::PartitionListener(Interactor* parent, const string& nam, const string& match, bool)
-  : m_parent(parent), m_name(nam), m_match(match), m_subFarmDP(0), m_partIdDP(0), m_runStateDP(0)
+PartitionListener::PartitionListener(Interactor* par, const string& nam, const string& match, bool)
+  : m_parent(par), m_name(nam), m_match(match), m_subFarmDP(0), m_partIdDP(0), m_runStateDP(0)
 {
   const char* c = ::getenv("ROMONDATA");
   string sf_nam, dir_name = c ? c : "../xml";
@@ -59,7 +65,7 @@ PartitionListener::PartitionListener(Interactor* parent, const string& nam, cons
         }
       }
     }
-    IocSensor::instance().send(m_parent,CMD_CONNECT,f.release());
+    IocSensor::instance().send(parent(),CMD_CONNECT,f.release());
     return;
   }
   cout << "Error reading XML directory:" << dir_name << endl;
@@ -74,10 +80,67 @@ PartitionListener::~PartitionListener() {
 }
 
 /// DIM command service callback
+void PartitionListener::dnsDataHandler(void* tag, void* address, int* size) {
+  if ( address && tag && *size > 0 ) {
+    PartitionListener* listener = *(PartitionListener**)tag;
+    char *msg = (char*)address;
+    string svc, node;
+    size_t idx, idq;
+    switch(msg[0]) {
+    case '+':
+      getServiceNode(++msg,svc,node);
+      idx = svc.find("/ROpublish");
+      idq = svc.find("/hlt");
+      if ( idq == string::npos ) idq = svc.find("/mona");
+      if ( idq == string::npos ) idq = svc.find("/store");
+      if ( idx != string::npos && idq == 0 ) {
+	string f = svc.substr(1,idx-1);
+	if ( ::strcase_match_wild(f.c_str(),listener->m_match.c_str()) ) {
+	  IocSensor::instance().send(listener->parent(),CMD_ADD,new string(f));
+	}
+      }
+      break;
+    case '-':
+      break;
+    case '!':
+      //getServiceNode(++msg,svc,node);
+      //log() << "Service " << msg << " in ERROR." << endl;
+      break;
+    default:
+      if ( *(int*)msg != *(int*)"DEAD" )  {
+	char *at, *p = msg, *last = msg;
+	auto_ptr<vector<string> > farms(new vector<string>());
+	farms->push_back(listener->name());
+	while ( last != 0 && (at=strchr(p,'@')) != 0 )  {
+	  last = strchr(at,'|');
+	  if ( last ) *last = 0;
+	  getServiceNode(p,svc,node);
+	  idx = svc.find("/ROpublish");
+	  idq = svc.find("/hlt");
+	  if ( idq == string::npos ) idq = svc.find("/mona");
+	  if ( idq == string::npos ) idq = svc.find("/store");
+	  if ( idx != string::npos && idq == 0 ) {
+	    string f = svc.substr(1,idx-1);
+	    if ( ::strcase_match_wild(f.c_str(),listener->m_match.c_str()) ) {
+	      farms->push_back(f);
+	    }
+	  }
+	  p = last+1;
+	}
+	if ( !farms->empty() )
+	  IocSensor::instance().send(listener->parent(),CMD_CONNECT,farms.release());
+      }
+      break;
+    }
+  }
+}
+
+/// DIM command service callback
 void PartitionListener::subFarmHandler(void* tag, void* address, int* size) {
   string svc;
   auto_ptr<StringV > f(new StringV());
   PartitionListener* h = *(PartitionListener**)tag;
+  f->push_back(h->name());
   for(const char* data = (char*)address, *end=data+*size;data<end;data += strlen(data)+1) {
     string s = data;
     for(size_t j=0; j<s.length(); ++j)
@@ -88,13 +151,16 @@ void PartitionListener::subFarmHandler(void* tag, void* address, int* size) {
     else if ( ::strcase_match_wild(s.c_str(),h->m_match.c_str()) ) 
       f->push_back(s);
   }
-  if ( h->m_name == "FEST" || h->m_name == "LHCb" )   {
+  if ( h->name() == "LHCb" )   {
     f->push_back("cald07");
-    f->push_back("mona08");
     f->push_back("mona09");
-    f->push_back("storectl01");
   }
-  IocSensor::instance().send(h->m_parent,CMD_CONNECT,f.release());
+  else if ( h->name() == "FEST" )   {
+    f->push_back("mona09");
+  }
+  f->push_back("mona08");
+  f->push_back("storectl01");
+  IocSensor::instance().send(h->parent(),CMD_CONNECT,f.release());
 }
 
 /// DIM command service callback
@@ -102,7 +168,7 @@ void PartitionListener::runStateHandler(void* tag, void* address, int* size) {
   if ( address && tag && size && *size>0 ) {
     PartitionListener* h = *(PartitionListener**)tag;
     int state = *(int*)address;
-    IocSensor::instance().send(h->m_parent,CMD_RUNSTATE,state);
+    IocSensor::instance().send(h->parent(),CMD_RUNSTATE,state);
   }
 }
 
@@ -111,6 +177,6 @@ void PartitionListener::partIdHandler(void* tag, void* address, int* size) {
   if ( address && tag && size && *size>0 ) {
     PartitionListener* h = *(PartitionListener**)tag;
     int pid = *(int*)address;
-    IocSensor::instance().send(h->m_parent,CMD_PARTITIONID,pid);
+    IocSensor::instance().send(h->parent(),CMD_PARTITIONID,pid);
   }
 }

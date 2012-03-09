@@ -183,6 +183,8 @@ namespace ROMon {
     /// Standard destructor
     virtual ~FarmDisplayBase();
 
+    /// Get farm <partition>/<display name> from cursor position
+    virtual std::string currentCluster()  const = 0;
     /// Get farm display name from cursor position
     virtual std::string currentDisplayName()  const = 0;
     /// Get the name of the currently selected cluster

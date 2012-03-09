@@ -108,8 +108,6 @@ namespace ROMon {
     std::auto_ptr<PartitionListener> m_listener;
     std::string                      m_partition;
     std::string                      m_match;
-    /// vector with all farm displays
-    Farms                            m_farms;
     int                              m_height;
     int                              m_width;
     int                              m_dense;
@@ -127,6 +125,9 @@ public:
 
     /// Standard destructor
     virtual ~FarmDisplay();
+
+    /// Get farm <partition>/<display name> from cursor position
+    virtual std::string currentCluster()  const;
 
     /// Get farm display name from cursor position
     virtual std::string currentDisplayName()  const;
@@ -159,9 +160,9 @@ public:
     /// Connect to data resources
     virtual void connect()  {  InternalDisplay::connect(); }
     /// Connect to data sources
-    void connect(const std::vector<std::string>& farms);
+    void connect(const std::string& section, const std::vector<std::string>& farms);
     /// DIM command service callback
-    virtual void update(const void* data);
+    virtual void update(const void* /* data */ )       {                                          }
     /// Update display content
     virtual void update(const void* data, size_t len)  { this->InternalDisplay::update(data,len); }
 

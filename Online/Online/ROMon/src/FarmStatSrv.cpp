@@ -293,6 +293,7 @@ void FarmStatSrv::updateDns(const void* address) {
     if ( *(int*)msg != *(int*)"DEAD" )  {
       char *at, *p = msg, *last = msg;
       auto_ptr<Farms> farms(new Farms);
+      farms->push_back("");
       while ( last != 0 && (at=strchr(p,'@')) != 0 )  {
         last = strchr(at,'|');
         if ( last ) *last = 0;
@@ -341,8 +342,11 @@ void FarmStatSrv::handle(const Event& ev) {
       return;
     }
     case CMD_CONNECT: {
-      m_farms = *auto_ptr<StringV>(ev.iocPtr<StringV>()).get();
+      m_farms.clear();
+      m_farms.assign(ev.iocPtr<StringV>()->begin()+1,ev.iocPtr<StringV>()->end());
+      //m_farms = *ev.iocPtr<vector<string> >();
       connect(m_farms);
+      delete ev.iocPtr<vector<string> >();
       return;
     }
     case CMD_CHECK: {

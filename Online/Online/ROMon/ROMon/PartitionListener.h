@@ -49,12 +49,19 @@ namespace ROMon {
     PartitionListener(Interactor* parent,const std::string& name,const std::string& match, bool files_only);
     /// Standard destructor
     virtual ~PartitionListener();
+    /// Accessor: object name
+    const std::string& name() const   { return m_name; }
+    /// Accessor: object name
+    Interactor*        parent() const { return m_parent; }    
+
     /// DIM command service callback to retrieve HLT subfarms
     static void subFarmHandler(void* tag, void* address, int* size);
     /// DIM command service callback to retrieve run state
     static void runStateHandler(void* tag, void* address, int* size);
     /// DIM command service callback to retrieve partition ID
     static void partIdHandler(void* tag, void* address, int* size);
+    /// DIM command service callback: Handle DNS server list
+    static void dnsDataHandler(void* tag, void* address, int* size);
   };
 }      // End namespace ROMon
 #endif /* ROMON_PARTITIONLISTENER_H */

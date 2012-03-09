@@ -67,7 +67,8 @@ FarmLineDisplay::FarmLineDisplay(int argc, char** argv)
   : FarmDisplayBase(), m_currentLine(0)
 {
   char txt[128];
-  string anchor, prefix;
+  vector<string> listeners;
+  string anchor, prefix, tmp;
   RTL::CLI cli(argc,argv,help);
   bool all = 0 != cli.getopt("all",2);
   bool xml = 0 != cli.getopt("xml",2);
@@ -100,8 +101,16 @@ FarmLineDisplay::FarmLineDisplay(int argc, char** argv)
   }
   if ( cli.getopt("debug",5) != 0 ) {
     ::printf("\n\ngdb --pid %d\n\n",::lib_rtl_pid());
-    ::lib_rtl_sleep(10000);
+    ::lib_rtl_sleep(15000);
   }
+
+  tmp = m_name;
+  for(size_t idx = tmp.find('+'); idx != string::npos; idx = tmp.find('+')) {
+    listeners.push_back(string(tmp.substr(0,idx)));
+    tmp = string(tmp.substr(++idx));
+  }
+  listeners.push_back(tmp);
+  m_name = *listeners.begin();
 
   if ( !prefix.empty() ) InternalDisplay::setSvcPrefix(prefix);
   if ( m_reverse       ) InternalDisplay::setCreateFlags(INVERSE);
@@ -216,13 +225,11 @@ FarmLineDisplay::FarmLineDisplay(int argc, char** argv)
   MouseSensor::instance().start(pasteboard());
   MouseSensor::instance().add(this,m_display);
   if ( xml ) {
-    m_listener = auto_ptr<PartitionListener>(new PartitionListener(this,m_name,m_match,xml));
-  }
-  else if ( all ) {
-    m_svc = ::dic_info_service((char*)"DIS_DNS/SERVER_LIST",MONITORED,0,0,0,dnsDataHandler,(long)this,0,0);
+    m_listeners.push_back(new PartitionListener(this,m_name,m_match,xml));
   }
   else {
-    m_listener = auto_ptr<PartitionListener>(new PartitionListener(this,m_name,m_match));
+    for(vector<string>::const_iterator il=listeners.begin();il!=listeners.end(); ++il)
+      m_listeners.push_back(new PartitionListener(this,*il,m_match));
   }
 }
 
@@ -231,7 +238,9 @@ FarmLineDisplay::~FarmLineDisplay()  {
   MouseSensor::instance().stop();
   ::wtc_remove(WT_FACILITY_SCR);
   disconnect();
-  m_listener = auto_ptr<PartitionListener>(0);
+  for(Listeners::iterator il=m_listeners.begin(); il!=m_listeners.end();++il)
+    delete (*il);
+  m_listeners.clear();
   ::scrc_begin_pasteboard_update(m_pasteboard);
   m_ctrlDisplay = auto_ptr<CtrlNodeDisplay>(0);
   m_mbmDisplay = auto_ptr<BufferDisplay>(0);
@@ -246,21 +255,13 @@ FarmLineDisplay::~FarmLineDisplay()  {
     delete m_subfarmDisplay;
     m_subfarmDisplay = 0;
   }
-  subDisplays().clear();
+  m_lines.clear();
   close();
   ::scrc_end_pasteboard_update (m_pasteboard);
   ::scrc_delete_pasteboard(m_pasteboard);
   m_pasteboard = 0;
   ::scrc_resetANSI();
   ::printf("Farm display deleted and resources freed......\n");
-}
-
-/// DIM command service callback
-void FarmLineDisplay::dnsDataHandler(void* tag, void* address, int* size) {
-  if ( address && tag && *size > 0 ) {
-    FarmLineDisplay* disp = *(FarmLineDisplay**)tag;
-    disp->update(address);
-  }
 }
 
 /// Get the name of the currently selected cluster
@@ -341,9 +342,7 @@ void FarmLineDisplay::set_cursor() {
   }
   else {
     m_currentLine = 0;
-    //for(SubDisplays::iterator k=m_farmDisplays.begin(); k != m_farmDisplays.end(); ++k)
-    //  (*k).second->set_cursor();
-    for(SubDisplays::iterator k=m_farmDisplays.begin(); k != m_farmDisplays.end(); ++k) {
+    for(SubDisplays::iterator k=m_lines.begin(); k != m_lines.end(); ++k) {
       ClusterLine* curr = (*k).second;
       if ( curr->position() == m_posCursor+CLUSTERLINE_FIRSTPOS ) m_currentLine = curr;
       curr->set_cursor();
@@ -356,62 +355,17 @@ ClusterLine* FarmLineDisplay::currentDisplay()  const {
   return m_currentLine;
 }
 
+/// Get farm <partition>/<display name> from cursor position
+std::string FarmLineDisplay::currentCluster()  const {
+  ClusterLine* d = currentDisplay();
+  if ( d ) return d->partition() +"/" + d->name();
+  return "";
+}
+
 /// Get farm display name from cursor position
 string FarmLineDisplay::currentDisplayName()  const {
   ClusterLine* d = currentDisplay();
   return d ? d->name() : string("");
-}
-
-/// DIM command service callback
-void FarmLineDisplay::update(const void* address) {
-  char *msg = (char*)address;
-  string svc, node;
-  size_t idx, idq;
-  switch(msg[0]) {
-  case '+':
-    getServiceNode(++msg,svc,node);
-    idx = svc.find("/ROpublish");
-    idq = svc.find("/hlt");
-    if ( idq == string::npos ) idq = svc.find("/mona");
-    if ( idq == string::npos ) idq = svc.find("/store");
-    if ( idx != string::npos && idq == 0 ) {
-      string f = svc.substr(1,idx-1);
-      if ( ::strcase_match_wild(f.c_str(),m_match.c_str()) ) {
-        IocSensor::instance().send(this,CMD_ADD,new string(f));
-      }
-    }
-    break;
-  case '-':
-    break;
-  case '!':
-    //getServiceNode(++msg,svc,node);
-    //log() << "Service " << msg << " in ERROR." << endl;
-    break;
-  default:
-    if ( *(int*)msg != *(int*)"DEAD" )  {
-      char *at, *p = msg, *last = msg;
-      auto_ptr<Farms> farms(new Farms);
-      while ( last != 0 && (at=strchr(p,'@')) != 0 )  {
-        last = strchr(at,'|');
-        if ( last ) *last = 0;
-        getServiceNode(p,svc,node);
-        idx = svc.find("/ROpublish");
-        idq = svc.find("/hlt");
-	if ( idq == string::npos ) idq = svc.find("/mona");
-	if ( idq == string::npos ) idq = svc.find("/store");
-        if ( idx != string::npos && idq == 0 ) {
-          string f = svc.substr(1,idx-1);
-          if ( ::strcase_match_wild(f.c_str(),m_match.c_str()) ) {
-            farms->push_back(f);
-          }
-        }
-        p = last+1;
-      }
-      if ( !farms->empty() )
-        IocSensor::instance().send(this,CMD_CONNECT,farms.release());
-    }
-    break;
-  }
 }
 
 /// Show the run processing summary window
@@ -443,7 +397,7 @@ int FarmLineDisplay::handleKeyboard(int key)    {
   try {
     switch (key)    {
     case MOVE_UP:
-      if ( int(m_posCursor) < 0 || m_posCursor>=subDisplays().size() )  
+      if ( int(m_posCursor) < 0 || m_posCursor>=m_lines.size() )  
 	m_posCursor = 0;
       if ( int(m_subPosCursor) < 0 || m_subPosCursor>=selectedClusterSize() )  
         m_subPosCursor = 0;
@@ -453,11 +407,11 @@ int FarmLineDisplay::handleKeyboard(int key)    {
         --m_subPosCursor;
       break;
     case MOVE_DOWN:
-      if ( int(m_posCursor) < 0 || m_posCursor>=subDisplays().size() )  
+      if ( int(m_posCursor) < 0 || m_posCursor>=m_lines.size() )  
 	m_posCursor = 0;
       if ( int(m_subPosCursor) < 0 || m_subPosCursor>=selectedClusterSize() )  
         m_subPosCursor = 0;
-      if( 0 == m_nodeSelector && m_posCursor < subDisplays().size()-1 )
+      if( 0 == m_nodeSelector && m_posCursor < m_lines.size()-1 )
         ++m_posCursor;
       else if( m_nodeSelector && selectedClusterSize() > m_subPosCursor )
         ++m_subPosCursor;
@@ -478,10 +432,10 @@ int FarmLineDisplay::handleKeyboard(int key)    {
 
 /// Interactor overload: Display callback handler
 void FarmLineDisplay::handle(const Event& ev) {
+  typedef vector<string> StringV;
   int cnt = 0;
   time_t now = time(0);
   ClusterLine* d = 0;
-  Farms::iterator i;
   SubDisplays::iterator k;
   const MouseEvent* m = 0;
 
@@ -519,7 +473,7 @@ void FarmLineDisplay::handle(const Event& ev) {
     }
     switch(ev.type) {
     case CMD_SHOW:
-      for(k=m_farmDisplays.begin(); k != m_farmDisplays.end(); ++k, ++cnt) {
+      for(k=m_lines.begin(); k != m_lines.end(); ++k, ++cnt) {
         if ( (d=(*k).second) == ev.data )  {
           m_posCursor = cnt;
           IocSensor::instance().send(this,CMD_SHOWSUBFARM,this);
@@ -528,7 +482,7 @@ void FarmLineDisplay::handle(const Event& ev) {
       }
       break;
     case CMD_POSCURSOR:
-      for(k=m_farmDisplays.begin(); k != m_farmDisplays.end(); ++k, ++cnt) {
+      for(k=m_lines.begin(); k != m_lines.end(); ++k, ++cnt) {
         if ( (d=(*k).second) == ev.data )  {
           m_posCursor = cnt;
           set_cursor();
@@ -538,7 +492,7 @@ void FarmLineDisplay::handle(const Event& ev) {
       break;
     case CMD_SHOWDEFERREDRUNS:
       if ( m_summaryDisplay.get() )   {
-        IocSensor::instance().send(m_summaryDisplay.get(),CMD_UPDATE,&m_farmDisplays);
+        IocSensor::instance().send(m_summaryDisplay.get(),CMD_UPDATE,&m_lines);
       }
       break;
     case CMD_UPDATE:
@@ -555,7 +509,7 @@ void FarmLineDisplay::handle(const Event& ev) {
         IocSensor::instance().send(m_torrentDisplay.get(),ROMonDisplay::CMD_UPDATEDISPLAY,this);
       }
       if ( m_summaryDisplay.get() )   {
-        IocSensor::instance().send(m_summaryDisplay.get(),CMD_UPDATE,&m_farmDisplays);
+        IocSensor::instance().send(m_summaryDisplay.get(),CMD_UPDATE,&m_lines);
       }
       if ( m_mbmDisplay.get() )  {
         const void* data = m_subfarmDisplay->data().pointer;
@@ -574,21 +528,31 @@ void FarmLineDisplay::handle(const Event& ev) {
       }
       TimeSensor::instance().add(this,1,m_subfarmDisplay);
       break;
-    case CMD_ADD:
-      if ( (i=find(m_farms.begin(),m_farms.end(),*ev.iocPtr<string>())) == m_farms.end() )  {
-        m_farms.push_back(*ev.iocPtr<string>());
-        connect(m_farms);
+    case CMD_ADD: {
+      StringV farms;
+      for(k=m_lines.begin(); k != m_lines.end(); ++k) {
+	if ( (*k).second->name() == *ev.iocPtr<string>() ) {
+	  delete ev.iocPtr<string>();
+	  return;
+	}
+	farms.push_back((*k).first);
       }
+      farms.push_back(*ev.iocPtr<string>());
+      connect(m_name,farms);
       delete ev.iocPtr<string>();
       return;
-    case CMD_CONNECT:
-      m_farms = *ev.iocPtr<vector<string> >();
-      connect(m_farms);
+    }
+    case CMD_CONNECT: {
+      StringV farms;
+      farms.clear();
+      farms.assign(ev.iocPtr<StringV>()->begin()+1,ev.iocPtr<StringV>()->end());
+      connect(*ev.iocPtr<StringV>()->begin(),farms);
       delete ev.iocPtr<vector<string> >();
       return;
+    }
     case CMD_CHECK: {
       DisplayUpdate update(this,true);
-      for(k=m_farmDisplays.begin(); k != m_farmDisplays.end(); ++k)
+      for(k=m_lines.begin(); k != m_lines.end(); ++k)
         if ( (d=(*k).second) != ev.data ) d->check(now);
       if ( m_sysDisplay.get() ) m_sysDisplay->update();
       break;
@@ -602,54 +566,84 @@ void FarmLineDisplay::handle(const Event& ev) {
   }
 }
 
-void FarmLineDisplay::connect(const vector<string>& vfarms) {
+void FarmLineDisplay::connect(const string& section, const vector<string>& vfarms) {
   typedef set<string> FarmSet;
+  char txt[256], text[256];
   SubDisplays::iterator k;
   SubDisplays copy;
-  char txt[256];
+  FarmSet farms;
+  string nam;
+
   DisplayUpdate update(this,false);
+  for(vector<string>::const_iterator v=vfarms.begin(); v != vfarms.end(); ++v) farms.insert(*v);
 
-  set<string> farms;
-  if ( m_mode == TORRENT_MODE ) {
-    //farms.insert("plus10");
-  }
-  for (Farms::const_iterator v=vfarms.begin(); v != vfarms.end(); ++v) farms.insert(*v);
-
-  ::sprintf(txt,"Total number of subfarms:%d    ",int(farms.size()));
-  ::scrc_put_chars(m_display,txt,NORMAL|BOLD,2,3,0);
   m_currentLine = 0;
 
-  int pos = CLUSTERLINE_FIRSTPOS-1;
-  DimReverseLock lock;  // unlock DIM here, since connect/disconnect calls DIM
-  for (FarmSet::const_iterator i=farms.begin(); i != farms.end(); ++i) {
-    k = m_farmDisplays.find(*i);
-    ++pos;
-    if ( k == m_farmDisplays.end() ) {
-      if ( m_mode == RECO_MODE )
-	copy.insert(make_pair(*i,createClusterLine("RecFarm",this,pos,*i)));
-      else if ( m_mode == CTRL_MODE )
-	copy.insert(make_pair(*i,createClusterLine("CtrlFarm",this,pos,*i)));
-      else if ( m_mode == HLTDEFER_MODE )
-	copy.insert(make_pair(*i,createClusterLine("HLT",this,pos,*i)));
-      else if ( m_mode == TORRENT_MODE )
-	copy.insert(make_pair(*i,createClusterLine("TorrentFarm",this,pos,*i)));
-      else if ( ::strncasecmp((*i).c_str(),"mona0",5)==0 )
-	copy.insert(make_pair(*i,createClusterLine("Monitoring",this,pos,*i)));
-      else if ( ::strncasecmp((*i).c_str(),"storectl",8)==0 )
-	copy.insert(make_pair(*i,createClusterLine("Storage",this,pos,*i)));
-      else
-	copy.insert(make_pair(*i,createClusterLine("Farm",this,pos,*i)));
-    }
-    else {
+  //DimReverseLock lock;  // unlock DIM here, since connect/disconnect calls DIM
+  nam = section+"/";
+  for (k=m_lines.begin(); k != m_lines.end(); ++k) {
+    if ( (*k).first.find(nam) == string::npos ) {
       copy.insert(*k);
-      m_farmDisplays.erase(k);
+      (*k).second = 0;
+    }
+  }
+  for (FarmSet::const_iterator i=farms.begin(); i != farms.end(); ++i) {
+    nam = section + "/" + *i;
+    k = m_lines.find(nam);
+    if ( k == m_lines.end() ) {
+      if ( m_mode == RECO_MODE )
+	copy.insert(make_pair(nam,createClusterLine("RecFarm",this,section,*i)));
+      else if ( m_mode == CTRL_MODE )
+	copy.insert(make_pair(nam,createClusterLine("CtrlFarm",this,section,*i)));
+      else if ( m_mode == HLTDEFER_MODE )
+	copy.insert(make_pair(nam,createClusterLine("HLT",this,section,*i)));
+      else if ( m_mode == TORRENT_MODE )
+	copy.insert(make_pair(nam,createClusterLine("TorrentFarm",this,section,*i)));
+      else if ( ::strncasecmp((*i).c_str(),"mona0",5)==0 )
+	copy.insert(make_pair(nam,createClusterLine("Monitoring",this,section,*i)));
+      else if ( ::strncasecmp((*i).c_str(),"storectl",8)==0 )
+	copy.insert(make_pair(nam,createClusterLine("Storage",this,section,*i)));
+      else
+	copy.insert(make_pair(nam,createClusterLine("Farm",this,section,*i)));
+    }
+    else  {
+      copy.insert(*k);
+      (*k).second = 0;
       continue;
     }
-    if ( !m_currentLine ) m_currentLine = copy[*i];
+    if ( !m_currentLine ) m_currentLine = copy[nam];
   }
-  for (k=m_farmDisplays.begin(); k != m_farmDisplays.end(); ++k)
-    delete (*k).second;
-  m_farmDisplays = copy;
+  for (k=m_lines.begin(); k != m_lines.end(); ++k)
+    if ( (*k).second ) delete (*k).second;
+
+  m_lines = copy;
+  int num_partition = 0;
+  for (k=m_lines.begin(), nam=""; k != m_lines.end(); ++k) {
+    if ( nam != (*k).second->partition() )   {
+      ++num_partition;
+      nam = (*k).second->partition();
+    }
+  }
+
+  // Re-adjust positions
+  int pos = CLUSTERLINE_FIRSTPOS-1;
+  for (k=m_lines.begin(), nam=""; k != m_lines.end(); ++k) {
+    ClusterLine* l = (*k).second;
+    if ( num_partition>1 && nam != l->partition() ) {
+      nam = l->partition();
+      ::memset(text,'-',sizeof(text));
+      text[sizeof(text)-1] = 0;
+      ::sprintf(txt,"  Partition:   %s  ",nam.c_str());
+      ::strncpy(text+41,txt,::strlen(txt)-1);
+      ::scrc_put_chars(m_display,text,BOLD|INVERSE,++pos,1,1);
+    }
+    (*k).second->setPosition(++pos);
+  }
+  ::sprintf(txt,"Total number of subfarms:%d    ",int(m_lines.size()));
+  ::scrc_put_chars(m_display,txt,NORMAL|BOLD,2,3,0);
+  while(pos<100)
+    ::scrc_put_chars(m_display,"",NORMAL,++pos,1,1); // Clear old lines    
+
 }
 
 static size_t do_output(void*,int,const char* fmt, va_list args) {

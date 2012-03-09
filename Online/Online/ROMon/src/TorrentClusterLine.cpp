@@ -38,20 +38,19 @@ namespace BitTorrent  {
     StrSet              m_excluded;
     /// Service ID for excluded nodes
     int                 m_exclID;
-    int               m_numUpdate;
-    bool              m_hasProblems;
-    bool              m_inUse;
     /// Timestamp with last update
-    time_t            m_lastUpdate;
+    time_t              m_lastUpdate;
     /// DIM command service callback
     static void excludedHandler(void* tag, void* address, int* size);
   public:
     /// Initializing constructor
-    TorrentClusterLine(ROMon::FarmLineDisplay* p, int pos, const std::string& n);
+    TorrentClusterLine(ROMon::FarmLineDisplay* p, const std::string& partition, const std::string& n);
     /// Default destructor
     virtual ~TorrentClusterLine();
     /// Interactor overload: Display callback handler
     void handle(const Event& ev);
+    /// Display function drawing on pasteboard the initial display
+    virtual void initialDisplay();
     /// Display function drawing on pasteboard of current display
     void display();
   };
@@ -92,24 +91,15 @@ namespace {
   ClusterLineFactory<TorrentClusterLine>       s_farmLineFactory("TorrentFarm");
 }
 
-TorrentClusterLine::TorrentClusterLine(FarmLineDisplay* p, int pos, const std::string& n)
-: ClusterLine(p,pos,n)
+TorrentClusterLine::TorrentClusterLine(FarmLineDisplay* p, const string& partition, const std::string& n)
+: ClusterLine(p,partition,n)
 {
   string info = "/"+strupper(m_name)+"/TorrentInfo";
-  m_numUpdate = 0;
   m_lastUpdate = time(0);
-  m_hasProblems = false;
-  //connect(info);
+
   m_svc        = ::dic_info_service((char*)info.c_str(),MONITORED,0,0,0,dataHandler,(long)this,0,0);
   string svc   = "HLT/ExcludedNodes/"+strupper(m_name);
   m_exclID     = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,excludedHandler,(long)this,0,0);
-  Display* dis = m_parent->display();
-  begin_update();
-  ::scrc_put_chars(dis," --------------------------------------------------------------------",BOLD,pos,12,0);
-  ::scrc_put_chars(dis,("---- No torrent information availible:"+info+
-			" ------------------------------------------------------------------------").c_str(),
-		   RED|BOLD,pos,85+CLUSTERLINE_START,1);
-  end_update();
 }
 
 /// Default destructor
@@ -149,6 +139,18 @@ void TorrentClusterLine::handle(const Event& ev) {
   default:
     break;
   }
+}
+
+/// Display function drawing on pasteboard the initial display
+void TorrentClusterLine::initialDisplay() {
+  string info = "/"+strupper(m_name)+"/TorrentInfo";
+  Display* dis = m_parent->display();
+  begin_update();
+  ::scrc_put_chars(dis," --------------------------------------------------------------------",BOLD,position(),12,0);
+  ::scrc_put_chars(dis,("---- No torrent information availible:"+info+
+			" ------------------------------------------------------------------------").c_str(),
+		   RED|BOLD,position(),85+CLUSTERLINE_START,1);
+  end_update();
 }
 
 void TorrentClusterLine::display() {

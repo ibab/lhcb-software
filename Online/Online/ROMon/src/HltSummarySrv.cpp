@@ -273,7 +273,7 @@ void HltSummarySrv::handle(const Event& ev) {
       return;
     case CMD_CONNECT: {
       auto_ptr<StringV> farms((StringV*)ev.data);
-      for_each(farms->begin(),farms->end(),ClusterAdder(this));
+      for_each(farms->begin()+1,farms->end(),ClusterAdder(this));
       ::dis_start_serving((char*)m_name.c_str());
       return;
     }

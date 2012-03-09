@@ -87,6 +87,7 @@ FarmDisplayBase::FarmDisplayBase()
     m_subDisplayHeight(3), m_anchorX(10), m_anchorY(5), m_mode(HLT_MODE), 
     m_posCursor(0), m_subPosCursor(0), m_reverse(false)
 {
+  ::dim_init();
 }
 
 FarmDisplayBase::~FarmDisplayBase()
@@ -149,9 +150,10 @@ int FarmDisplayBase::showHelpWindow() {
 
 /// Show subfarm display
 int FarmDisplayBase::showSubfarm()    {
-  //ClusterLine* d = 0;
   string dnam = currentDisplayName();
-  //RTL::Lock lock(screenLock());//,true);  
+  string part_name = currentCluster();
+
+  part_name = part_name.empty() ? m_name : part_name.substr(0,part_name.find("/"));
   if ( m_subfarmDisplay ) {
     DisplayUpdate update(this,true);
     m_nodeSelector = swapMouseSelector(this,m_subfarmDisplay,0);
@@ -174,9 +176,8 @@ int FarmDisplayBase::showSubfarm()    {
     m_subPosCursor   = 0;
   }
   else if ( !dnam.empty() ) {
-    //string dnam = d->name();
     string svc = "-servicename="+svcPrefix()+dnam+"/ROpublish";
-    string part= "-partition="+m_name;
+    string part= "-partition="+part_name;
     if ( m_mode == CTRL_MODE ) {
       string node = "-node="+strupper(dnam);
       svc = "-servicename="+svcPrefix()+strupper(dnam)+"/TaskSupervisor/Status";
@@ -194,16 +195,16 @@ int FarmDisplayBase::showSubfarm()    {
       const char* argv[] = {"", svc.c_str(), "-delay=300" };
       m_subfarmDisplay = createHltSubfarmDisplay(SUBFARM_WIDTH+20,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
     }
-    else if ( strncasecmp(dnam.c_str(),"storectl01",10)==0 && m_name != "ALL" ) {
+    else if ( strncasecmp(dnam.c_str(),"storectl01",10)==0 && part_name != "ALL" ) {
       const char* argv[] = {"", svc.c_str(), part.c_str(), "-delay=300"};
       m_subfarmDisplay = createStorageDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,4,(char**)argv);
     }
-    else if ( strncasecmp(dnam.c_str(),"mona08",6)==0 && m_name != "ALL" ) {
+    else if ( strncasecmp(dnam.c_str(),"mona08",6)==0 && part_name != "ALL" ) {
       string relay = "-namerelay="+dnam+"01";
       const char* argv[] = {"", svc.c_str(), part.c_str(), "-delay=300", "-relayheight=12", "-nodeheight=12", relay.c_str()};
       m_subfarmDisplay = createMonitoringDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,7,(char**)argv);
     }
-    else if ( strncasecmp(dnam.c_str(),"mona09",6)==0 && m_name != "ALL" ) {
+    else if ( strncasecmp(dnam.c_str(),"mona09",6)==0 && part_name != "ALL" ) {
       string relay = "-namerelay="+dnam+"01";
       const char* argv[] = {"", svc.c_str(), part.c_str(), "-delay=300", "-relayheight=12", "-nodeheight=12", relay.c_str()};
       m_subfarmDisplay = createMonitoringDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,7,(char**)argv);
