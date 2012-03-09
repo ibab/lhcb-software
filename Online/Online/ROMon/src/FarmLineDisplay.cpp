@@ -578,8 +578,6 @@ void FarmLineDisplay::connect(const string& section, const vector<string>& vfarm
   for(vector<string>::const_iterator v=vfarms.begin(); v != vfarms.end(); ++v) farms.insert(*v);
 
   m_currentLine = 0;
-
-  //DimReverseLock lock;  // unlock DIM here, since connect/disconnect calls DIM
   nam = section+"/";
   for (k=m_lines.begin(); k != m_lines.end(); ++k) {
     if ( (*k).first.find(nam) == string::npos ) {

@@ -47,7 +47,6 @@ typedef Node::Tasks                  Tasks;
 typedef vector<string>               StringV;
 
 // Max. 15 seconds without update allowed
-#define UPDATE_TIME_MAX 15
 #define SUBFARMDISPLAY_OFFSET 8
 
 static FarmDisplay* s_fd = 0;
