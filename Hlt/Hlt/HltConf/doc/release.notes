@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2012-03-09 - V. Gligorov
+ - Add Hlt2 Lc->LambdaH lines to Hlt2.py
+
 !========================= HltConf v9r13 2012-02-29 =========================
  - EvH tagged for release
 
