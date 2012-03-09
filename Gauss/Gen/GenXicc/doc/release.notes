@@ -1,0 +1,57 @@
+! Package     : Gen/GenXicc
+! Responsible : F. Zhang
+
+! 2012-03-09 - F. Zhang
+ - New package:
+### $-----$-----$-----$-----$-----$-----$-----$-----$-----$-----$-----$
+### Introduction: New Package 'GenXicc'
+### To interface with LHCb software easily, GenXicc was established:  
+###
+### 1) This directory contains all of the source files of GENXICC2.0 
+###
+### 2) The GENXICC2.0 is a generator program for the hardronic prod-
+###   uction of the Double-Heavy-Baryons
+###
+### 3) The generator is written in a PYTHIA-compatible format based  
+###   on FORTRAN77/90 
+###
+### 4) Thank you for the Authors of the generator: C. H. Chang, J. X. 
+###   -Wang and X. G. Wu
+###
+### 5) More detailed informations ablout the generator could be found
+###   in:
+###   --- C. H. Chang, J. X. Wang and X. G. Wu, Comp. Phys. Comm. 177 
+###       (2007) 467-478  
+###   --- C. H. Chang, J. X. Wang and X. G. Wu, Comp. Phys. Comm. 181
+###       (2010) 1144-1149
+###
+###
+###                                           By F. Zhang 2011-04-01
+###
+### $-----$-----$-----$-----$-----$-----$-----$-----$-----$-----$-----$
+ 
+!   
+C   The Struture of the directory:
+C   NAME                           CONTENT
+C   "cmt"                           requirements
+C   "CVS"                           ---
+C   "doc"                           README
+C   "include"                       ---
+C   "slc_amd64_gcc34"               ---
+C   "src"                           all of source files 
+                                   {                               parameter.F
+                                    ccamp1.F      gcamp1.F         phase_point.F  
+				            s_foursets.F                   uplogo.F
+				            ccamp2.F      gcamp2.F         py6409.F       
+				            s_free.F                       upopenfile.F
+                                    charmsub.F    mixfun.F         s_bound.F      
+                                    s_samp.F      uperror.F        vegas.F
+                                    colorflow.F   outerpdf.F       s_common.F     
+                                    totfun.F      upevnt.F         vegaslogo.F
+                                    evntinit.F    phase_gen.F      sepfun.F       
+                                    upclosegradefile.F  upinit.F}
+!   ===================================================================
+
+
+       
+
