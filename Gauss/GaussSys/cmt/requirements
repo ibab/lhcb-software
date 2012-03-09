@@ -29,6 +29,7 @@ use LbPythia            v10r3   Gen
 use BcVegPy              v3r0    Gen
 use GenXicc              v1r0    Gen
 use LbBcVegPy            v4r2    Gen
+use LbGenXicc            v1r0    Gen
 use LbHidValley          v3r0    Gen
 use LbOniaPairs          v1r0    Gen
 
