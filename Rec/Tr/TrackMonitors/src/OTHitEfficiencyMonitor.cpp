@@ -19,6 +19,13 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/foreach.hpp>
 
+/*
+  Author: Wouter Hulsbergen (wouterh@nikhef.nl)
+  Modified by Francesco Dettori (Francesco.Dettori@cern.ch) 
+
+*/
+
+
 namespace {
 
   struct LayerEfficiencyHistograms
@@ -39,10 +46,12 @@ namespace {
         m_2DHotEfficiency = alg.bookProfile2D( Layername + "2DHotEfficiency", "2DHotEfficiency",
                                                -3157.0, 3157.0, 74, -2800,2800,100);
         
-      //m_2DHitOccupancy = alg.book2D( Layername + "2DHitOccupancy", "2D Hit Occupancy",-3157.0, 3157.0, 74, -2800,2800,100); 
+        //m_2DHitOccupancy = alg.book2D( Layername + "2DHitOccupancy", "2D Hit Occupancy",
+        //-3157.0, 3157.0, 74, -2800,2800,100); 
         m_2DExpOccupancy = alg.book2D( Layername + "2DExpOccupancy", "2D Exp Occupancy", 
                                        -3157.0, 3157.0, 74, -2800,2800,100);
-        //m_2DHotOccupancy = alg.book2D( Layername + "2DHotOccupancy", "2D Hot Occupancy", -3157.0, 3157.0, 74, -2800,2800,100);
+        //m_2DHotOccupancy = alg.book2D( Layername + "2DHotOccupancy", "2D Hot Occupancy", 
+        // -3157.0, 3157.0, 74, -2800,2800,100);
         
       } else {
         m_2DHitEfficiency = 0;
@@ -68,15 +77,19 @@ namespace {
       std::string modulename = std::string("Module") + boost::lexical_cast<std::string>( moduleID ) + "/" ;
       if(!isOnline){
         m_effvsdist     = alg.bookProfile1D( modulename + "effvsdist", 
-                                        "hit efficiency versus distance", -7.5, 7.5, 200) ;
+                                             "hit efficiency versus distance", -7.5, 7.5, 200) ;
         m_effvsmonocoord = alg.bookProfile1D( modulename + "effvsmonocoord", 
-                                              "hit efficiency versus coordinate in mono layer plane", -3, 3, 200) ;
+                                              "hit efficiency versus coordinate in mono layer plane", 
+                                              -3, 3, 200) ;
         m_effvsyfrac    = alg.bookProfile1D( modulename + "effvsy", 
-                                             "hit efficiency versus y-coordinate in mono layer plane", -0.1, 1.1, 120) ;
+                                             "hit efficiency versus y-coordinate in mono layer plane", 
+                                             -0.1, 1.1, 120) ;
         m_receffvsmonocoord = alg.bookProfile1D( modulename + "hoteffvsmonocoord", 
-                                                 "hot efficiency versus coordinate in mono layer plane", -3, 3, 200) ;
+                                                 "hot efficiency versus coordinate in mono layer plane", 
+                                                 -3, 3, 200) ;
         m_receffvsyfrac    = alg.bookProfile1D( modulename + "hoteffvsy", 
-                                                "hot efficiency versus y-coordinate in mono layer plane", -0.1, 1.1, 120) ;
+                                                "hot efficiency versus y-coordinate in mono layer plane",
+                                                -0.1, 1.1, 120) ;
         
         m_clustersize = alg.book2D( modulename + "clustersize", 
                                     "clustersize versus slope", -1,1,20,-0.5,10.5,11) ;
@@ -108,7 +121,7 @@ class OTHitEfficiencyMonitor : public GaudiHistoAlg
 {
 public:
 
-   /** Standard construtor */
+  /** Standard construtor */
   OTHitEfficiencyMonitor( const std::string& name, ISvcLocator* pSvcLocator );
 
   /** Destructor */
@@ -141,9 +154,10 @@ private:
   }
 
   void fillEfficiency(const LHCb::Track& track, const DeOTModule& module,
-		      double strawpos[2], double yFrac[2], const LHCb::State& refstate ) ;
+                      double strawpos[2], double yFrac[2], const LHCb::State& refstate ) ;
   void fillEfficiency(const LHCb::Track& track, const DeOTModule& module, const LHCb::State& state) ;
-  void fillEfficiency(const LHCb::Track& track, const DeOTModule& module,const LHCb::FitNode* nodeA,const LHCb::FitNode* nodeB) ;
+  void fillEfficiency(const LHCb::Track& track, const DeOTModule& module,
+                      const LHCb::FitNode* nodeA,const LHCb::FitNode* nodeB) ;
   void fillEfficiency(const LHCb::Track& track) ;
   void plotHist1D(AIDA::IHistogram1D* hist, double value, double weight);
   void plotHist2D(AIDA::IHistogram2D* hist, double x, double y, double weight);
@@ -159,9 +173,11 @@ private:
   double m_maxChi2PerDoF ;
   double m_maxDistError ;
   bool m_isOnline;
-  
+  size_t m_maxTracksPerEvent;
   // event data. we'll keep it such that we don't have to move it around.
   ModuleHitMap m_moduleHitMap[NumUniqueModule] ;
+  
+  size_t m_nTrackOTHits; // number of OT hits in a given track, useful to keep in mind
 
   // booked histograms
   AIDA::IProfile1D* m_efficiencyPerModulePr ;
@@ -173,25 +189,25 @@ private:
 } ;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( OTHitEfficiencyMonitor )
+DECLARE_ALGORITHM_FACTORY( OTHitEfficiencyMonitor );
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 OTHitEfficiencyMonitor::OTHitEfficiencyMonitor( const std::string& name,
-						ISvcLocator* pSvcLocator)
+                                                ISvcLocator* pSvcLocator)
   : GaudiHistoAlg( name , pSvcLocator ),
     m_decoder("OTRawBankDecoder"),
     m_interpolator("TrackInterpolator"),
-    m_linearextrapolator("TrackLinearExtrapolator"),
-    m_otdet(0), m_efficiencyPerModulePr(0), m_efficiencyPerOtisPr(0)
+    m_linearextrapolator("TrackLinearExtrapolator")
 {
   declareProperty( "TrackLocation", m_trackLocation = LHCb::TrackLocation::Default  );
-  declareProperty( "MinOTHits",m_minOTHitsPerTrack = 15   ) ;
-  declareProperty( "MaxChi2PerDoF",m_maxChi2PerDoF = 2   ) ;
+  declareProperty( "MinOTHits",m_minOTHitsPerTrack = 21 ) ;
+  declareProperty( "MaxChi2PerDoF",m_maxChi2PerDoF = 2  ) ;
   declareProperty( "MaxDistError", m_maxDistError = 0.2 ) ;
   declareProperty( "RawBankDecoder",m_decoder ) ;
   declareProperty( "Online", m_isOnline = false);
+  declareProperty( "MaxTracks", m_maxTracksPerEvent = 1E6 /* ALL */);
   
 }
 
@@ -221,7 +237,7 @@ StatusCode OTHitEfficiencyMonitor::initialize()
   // book all histograms
   setHistoTopDir("OT/") ;
   m_efficiencyPerModulePr = bookProfile1D( "efficiencyVsModule","efficiency per module",
-					   -0.5,NumUniqueModule-0.5,NumUniqueModule) ;
+                                           -0.5,NumUniqueModule-0.5,NumUniqueModule) ;
   if(!m_isOnline)
     m_efficiencyPerOtisPr = bookProfile1D( "efficiencyVsOtis","efficiency per otis",
                                            -0.5,NumUniqueOtis-0.5,NumUniqueOtis) ;
@@ -236,7 +252,10 @@ StatusCode OTHitEfficiencyMonitor::initialize()
   for(int i=0; i<12; ++i)
     m_layerHistograms.push_back( new LayerEfficiencyHistograms(*this, i, m_isOnline) );
   
-   
+  m_nTrackOTHits = 0;
+  
+
+  debug() << " Minimum number of OT Hits per track " <<  m_minOTHitsPerTrack << endmsg;
   return sc;
 }
 
@@ -277,7 +296,8 @@ void OTHitEfficiencyMonitor::plotProf1D(AIDA::IProfile1D* hist, double x, double
   if(hist)
     fill(hist, x, y, weight);
 } 
-void OTHitEfficiencyMonitor::plotProf2D(AIDA::IProfile2D* hist, double x, double y, double z, double weight)
+void OTHitEfficiencyMonitor::plotProf2D(AIDA::IProfile2D* hist, double x, 
+                                        double y, double z, double weight)
 { 
   if(hist)
     fill(hist, x, y, z, weight);
@@ -301,33 +321,35 @@ StatusCode OTHitEfficiencyMonitor::execute()
   if( sc ) {
     // fill all the hits in the hit map
     for( LHCb::OTLiteTimeContainer::const_iterator ihit = ottimes.begin() ;
-	 ihit != ottimes.end(); ++ihit) 
+         ihit != ottimes.end(); ++ihit) 
       m_moduleHitMap[ uniqueModule( ihit->channel() ) ].hashit[  ihit->channel().straw()-1 ] = ihit->channel() ;
     
     // now loop over the tracks
     LHCb::Track::Range tracks = get<LHCb::Track::Range>(m_trackLocation) ;
-    BOOST_FOREACH(const LHCb::Track* track, tracks) {
-      if( track->fitStatus() == LHCb::Track::Fitted && track->nDoF()>1 &&
-	  track->chi2PerDoF() < m_maxChi2PerDoF ) {
-	// count the number
-	size_t sumn(0) ;
-	LHCb::Track::ConstNodeRange nodes = track->nodes() ;
-	for( LHCb::Track::ConstNodeRange::const_iterator inode = nodes.begin() ;
-	     inode != nodes.end(); ++inode ) 
-	  if( (*inode)->type() == LHCb::Node::HitOnTrack
-	      && (*inode)->measurement().type() == LHCb::Measurement::OT ) ++sumn ;
-	if( sumn >= m_minOTHitsPerTrack ) 
-	  fillEfficiency(*track) ;
+    if(tracks.size()<m_maxTracksPerEvent)
+      BOOST_FOREACH(const LHCb::Track* track, tracks) {
+        if( track->fitStatus() == LHCb::Track::Fitted && track->nDoF()>1 &&
+            track->chi2PerDoF() < m_maxChi2PerDoF ) {
+          // count the number
+          //size_t sumn(0) ;
+          m_nTrackOTHits = 0;
+          LHCb::Track::ConstNodeRange nodes = track->nodes() ;
+          for( LHCb::Track::ConstNodeRange::const_iterator inode = nodes.begin() ;
+               inode != nodes.end(); ++inode ) 
+            if( (*inode)->type() == LHCb::Node::HitOnTrack
+                && (*inode)->measurement().type() == LHCb::Measurement::OT ) ++m_nTrackOTHits ;
+          if( m_nTrackOTHits >= m_minOTHitsPerTrack ) 
+            fillEfficiency(*track) ;
+        }
       }
-    }
   }
   return sc ;
 }
 
 void OTHitEfficiencyMonitor::fillEfficiency( const LHCb::Track& track,
-					     const DeOTModule& module,
-					     double strawpos[2], double yfrac[2],
-					     const LHCb::State& refstate)
+                                             const DeOTModule& module,
+                                             double strawpos[2], double yfrac[2],
+                                             const LHCb::State& refstate)
 {
   // make a temporary structure that tells which hits are in this
   // module. if this takes time, then we should do it once per event
@@ -350,38 +372,53 @@ void OTHitEfficiencyMonitor::fillEfficiency( const LHCb::Track& track,
   for(size_t imono = 0; imono<2 ; ++imono ) {
     // find the hits in a +- 3 straw window
     int monooffset = imono * nstraws/2 - 1 ;
-    int minstraw = std::max(int(strawpos[imono]) - 2,1) ;
-    int maxstraw = std::min(int(strawpos[imono]) + 3,int(nstraws/2)) ;
+    
+    int lower_straw_dist = 2;
+    int upper_straw_dist = 3;
 
+    int minstraw = std::max(int(strawpos[imono]) - lower_straw_dist,1) ;
+    int maxstraw = std::min(int(strawpos[imono]) + upper_straw_dist,int(nstraws/2)) ;
+    
+    // State precision (put here not to bias only layers not already on track) 
+    if( std::sqrt( refstate.covariance()(0,0) ) > m_maxDistError ) return;
+    
     for( int istraw = minstraw; istraw<=maxstraw; ++istraw) {
       LHCb::OTChannelID channel = m_moduleHitMap[ uniquemodule ].hashit[ istraw + monooffset ] ;
       bool foundhit = channel != 0 ;
       bool foundhot = foundhit && track.isOnTrack( LHCb::LHCbID( channel ) ) ;
       double monocoord = strawpos[imono] - istraw ;
       double dstraw    = monocoord*pitch*cosalpha  ;
+      
+      // Efficiency unbiasing procedure 
+      // Ask one more hit if a hit is found to be independent from the original request
+      if(foundhit){
+        if( m_nTrackOTHits < m_minOTHitsPerTrack + 1 ) continue;
+      }
+      
+      //
       plotProf1D(modulehist->m_effvsdist, dstraw,foundhit, 1.0) ;
       plotProf1D(modulehist->m_effvsmonocoord, monocoord,foundhit, 1.0) ;
       plotProf1D(modulehist->m_receffvsmonocoord, monocoord,foundhot, 1.0) ;
       if( std::abs(dstraw) < 1.25 ) {
-      plotProf1D(modulehist->m_effvsyfrac, yfrac[imono],foundhit, 1.0) ;
-      plotProf1D(modulehist->m_receffvsyfrac, yfrac[imono],foundhot, 1.0) ;
-      plotProf1D(m_efficiencyPerModulePr, uniquemodule, foundhit, 1.0 ) ;	
-      plotProf1D(m_efficiencyPerOtisPr, uniquemodule*4 + (istraw+monooffset-1)/32, foundhit, 1.0 ) ;
-
-      //Filling the 2D expected occupancy, hiteff and hoteff
-      plotHist2D(layerhist->m_2DExpOccupancy, refstate.x(),refstate.y(), 1.0);
-      plotProf2D(layerhist->m_2DHitEfficiency, refstate.x(),refstate.y(),foundhit, 1.0);
-      plotProf2D(layerhist->m_2DHotEfficiency, refstate.x(),refstate.y(),foundhot, 1.0);
-
-      //Filling a 2D histo with the multiplicity of the hits
-      //if (foundhit){
-      //layerhist->m_2DHitOccupancy->fill(refstate.x(),refstate.y());
-      //}
-
-      //if(foundhot){
-      //layerhist->m_2DHotOccupancy->fill(refstate.x(),refstate.y());    
-      //}
-      
+        plotProf1D(modulehist->m_effvsyfrac, yfrac[imono],foundhit, 1.0) ;
+        plotProf1D(modulehist->m_receffvsyfrac, yfrac[imono],foundhot, 1.0) ;
+        plotProf1D(m_efficiencyPerModulePr, uniquemodule, foundhit, 1.0 ) ;	
+        plotProf1D(m_efficiencyPerOtisPr, uniquemodule*4 + (istraw+monooffset-1)/32, foundhit, 1.0 ) ;
+	
+        //Filling the 2D expected occupancy, hiteff and hoteff
+        plotHist2D(layerhist->m_2DExpOccupancy, refstate.x(),refstate.y(), 1.0);
+        plotProf2D(layerhist->m_2DHitEfficiency, refstate.x(),refstate.y(),foundhit, 1.0);
+        plotProf2D(layerhist->m_2DHotEfficiency, refstate.x(),refstate.y(),foundhot, 1.0);
+	
+        //Filling a 2D histo with the multiplicity of the hits
+        //if (foundhit){
+        //layerhist->m_2DHitOccupancy->fill(refstate.x(),refstate.y());
+        //}
+	
+        //if(foundhot){
+        //layerhist->m_2DHotOccupancy->fill(refstate.x(),refstate.y());    
+        //}
+	
       }
     }
     // monitor 'cluster size'. cluster size is zero if there is no hit in 'closest straw'.
@@ -390,11 +427,11 @@ void OTHitEfficiencyMonitor::fillEfficiency( const LHCb::Track& track,
       StaticArray<LHCb::OTChannelID,128> clusterhits ;
       LHCb::OTChannelID tmp ;
       for( int istraw = closeststraw; 
-	   istraw<=int(nstraws/2) && (tmp = m_moduleHitMap[ uniquemodule ].hashit[ istraw + monooffset ]) ;
-	   ++istraw) clusterhits.push_back( tmp ) ;
+           istraw<=int(nstraws/2) && (tmp = m_moduleHitMap[ uniquemodule ].hashit[ istraw + monooffset ]) ;
+           ++istraw) clusterhits.push_back( tmp ) ;
       for( int istraw = closeststraw-1; 
-	   istraw>=1 && (tmp = m_moduleHitMap[ uniquemodule ].hashit[ istraw + monooffset ]) ;
-	   --istraw) clusterhits.push_back( tmp ) ;
+           istraw>=1 && (tmp = m_moduleHitMap[ uniquemodule ].hashit[ istraw + monooffset ]) ;
+           --istraw) clusterhits.push_back( tmp ) ;
       plotHist2D(modulehist->m_clustersize, localTx, clusterhits.size(), 1.0 ) ;
       if( clusterhits.size() ==2 ) 
         plotHist1D(modulehist->m_deltatdc, double(clusterhits[1].tdcTime()) - double(clusterhits[0].tdcTime()), 1.0 ) ;
@@ -403,23 +440,23 @@ void OTHitEfficiencyMonitor::fillEfficiency( const LHCb::Track& track,
 }
 
 void OTHitEfficiencyMonitor::fillEfficiency(const LHCb::Track& track,
-					    const DeOTModule& module,
-					    const LHCb::State& state )
+                                            const DeOTModule& module,
+                                            const LHCb::State& state )
 {
   double strawpos[2], yfrac[2] ;
   for(size_t imono = 0 ; imono<2; ++imono) 
     module.monoLayerIntersection( imono,
-				  state.position(),
-				  state.tx(),
-				  state.ty(),
-				  strawpos[imono], yfrac[imono] ) ;
+                                  state.position(),
+                                  state.tx(),
+                                  state.ty(),
+                                  strawpos[imono], yfrac[imono] ) ;
   fillEfficiency(track,module,strawpos,yfrac,state) ;
 }
 
 void OTHitEfficiencyMonitor::fillEfficiency(const LHCb::Track& track,
-					 const DeOTModule& module,
-					 const LHCb::FitNode* nodeMonoA,
-					 const LHCb::FitNode* nodeMonoB)
+                                            const DeOTModule& module,
+                                            const LHCb::FitNode* nodeMonoA,
+                                            const LHCb::FitNode* nodeMonoB)
 {
   double strawpos[2], yfrac[2] ;
   const LHCb::State* refstate(0) ;
@@ -431,10 +468,10 @@ void OTHitEfficiencyMonitor::fillEfficiency(const LHCb::Track& track,
   states[1] = nodeMonoB ? nodeMonoB->unbiasedState() : nodeMonoA->state() ;
   for(size_t imono = 0 ; imono<2; ++imono) 
     module.monoLayerIntersection( imono,
-				  states[imono].position(),
-				  states[imono].tx(),
-				  states[imono].ty(),
-				  strawpos[imono], yfrac[imono] ) ;
+                                  states[imono].position(),
+                                  states[imono].tx(),
+                                  states[imono].ty(),
+                                  strawpos[imono], yfrac[imono] ) ;
   refstate = &(states[1]) ;
 #else
   // but there is a second method that is much faster. it is just slightly harder toget things right:
@@ -477,24 +514,25 @@ void OTHitEfficiencyMonitor::fillEfficiency(const LHCb::Track& track)
   
   LHCb::Track::ConstNodeRange nodes = track.nodes() ;
   for( LHCb::Track::ConstNodeRange::const_iterator inode = nodes.begin() ;
-       inode != nodes.end(); ++inode ) 
+       inode != nodes.end(); ++inode ){
     if( (*inode)->type() == LHCb::Node::HitOnTrack &&
-	(*inode)->measurement().type() == LHCb::Measurement::OT ) { 
+        (*inode)->measurement().type() == LHCb::Measurement::OT ) { 
       const LHCb::OTMeasurement* meas =
-	static_cast<const LHCb::OTMeasurement*>(&(*inode)->measurement()) ;
+        static_cast<const LHCb::OTMeasurement*>(&(*inode)->measurement()) ;
       const DeOTModule* module = &(meas->module()) ;
       
       // only take the closest node in a mono-layer. we can anyway only unbias 1.
       int mono = (meas->channel().straw()-1) / (module->nChannels()/2) ;
+      // Get address of needed node on layer from modules to layers map 
       const LHCb::Node*& nodeInModule = mono == 0 ? 
-	modulesOnTrack[ module ].first :  modulesOnTrack[ module ].second ;
+        modulesOnTrack[ module ].first :  modulesOnTrack[ module ].second ;
       if( nodeInModule == 0 ||
-	  std::abs(nodeInModule->residual()) >
-	  std::abs((*inode)->residual()) ) nodeInModule = *inode ;
+          std::abs(nodeInModule->residual()) >
+          std::abs((*inode)->residual()) ) nodeInModule = *inode ;
       
       //modulesOnTrack[ module ].push_back( *inode ) ;
     }
-
+  }
   // process the efficiency for these module. make sure to unbias the
   // state when necessary. keep track of the layers that we have seen,
   // such that we can skip them below
@@ -502,17 +540,18 @@ void OTHitEfficiencyMonitor::fillEfficiency(const LHCb::Track& track)
   for( ModulesOnTrack::const_iterator imod = modulesOnTrack.begin() ; 
        imod != modulesOnTrack.end(); ++imod ) {
     layersOnTrack.insert( m_otdet->findLayer( imod->first->elementID() ) ) ;
-
+    
     const LHCb::FitNode* nodeMonoA = static_cast<const LHCb::FitNode*>( imod->second.first ) ;
     const LHCb::FitNode* nodeMonoB = static_cast<const LHCb::FitNode*>( imod->second.second ) ;
     fillEfficiency(track, *(imod->first), nodeMonoA, nodeMonoB ) ;
   }
   
+  /*This should be moved to initialize and be common to all events... */
   // cache the z-positions of the layers
   static std::vector<double> layerzpos ;
   if( layerzpos.empty() ) {
     for( DeOTDetector::Layers::const_iterator ilay = m_otdet->layers().begin() ;
-	 ilay !=  m_otdet->layers().end(); ++ilay ) 
+         ilay !=  m_otdet->layers().end(); ++ilay ) 
       layerzpos.push_back((*ilay)->geometry()->toGlobal(Gaudi::XYZPoint(0.0, 0.0, 0.0)).z()) ;
   }
   
@@ -524,29 +563,32 @@ void OTHitEfficiencyMonitor::fillEfficiency(const LHCb::Track& track)
        ilay !=  m_otdet->layers().end(); ++ilay, ++layindex ) 
     if( layersOnTrack.find( *ilay ) == layersOnTrack.end() ) {
       // propagate to the z-coordinate of this layer
-      m_interpolator->interpolate( track, layerzpos[layindex] , state ).ignore();
+      StatusCode sc  = m_interpolator->interpolate( track, layerzpos[layindex] , state );//.ignore();
       
       // only consider if state has reasonably small error. we should
       // still fine-tune this a little bit, make a propor projecion
       // etc. the best is to cut only when you have unbiased the
       // state. cutting to tight will introduce a significant bias in
       // the efficiency measurement.
-      if( std::sqrt( state.covariance()(0,0) ) < m_maxDistError ) {
+      if( std::sqrt( state.covariance()(0,0) ) < m_maxDistError && sc.isSuccess()) {
 	
-	// to get a slightly more precise answer, intersect with the plane
-	double tolerance = 0.1 ;
-	m_linearextrapolator->propagate( state, (*ilay)->plane(), tolerance).ignore() ;
+        // to get a slightly more precise answer, intersect with the plane
+        double tolerance = 0.1 ;
+        StatusCode sc_two = m_linearextrapolator->propagate( state, (*ilay)->plane(), tolerance);//.ignore() ;
 	
-	// get a single module. this goes wrong if there are large misalignments!
-	const DeOTModule* module = m_otdet->findModule(state.position());
-	
-	if(module ) {
-	  // fill the efficiency
-	  fillEfficiency(track, *module, state ) ;	  
-			  
-	  // keep track of what we have seen
-	  modulesNotOnTrack.push_back( std::make_pair( module, state ) ) ;
-	}
+        // get a single module. this goes wrong if there are large misalignments!
+        const DeOTModule* module = m_otdet->findModule(state.position());
+        if(sc_two.isSuccess()){
+          if(module ) {
+            // fill the efficiency
+            fillEfficiency(track, *module, state ) ;	  
+	    
+            // keep track of what we have seen
+            modulesNotOnTrack.push_back( std::make_pair( module, state ) ) ;
+          }
+        }else{
+          warning() << " Track interpolation or propagation failed " << endreq;
+        }
       }
     }
 
