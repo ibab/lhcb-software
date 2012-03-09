@@ -28,6 +28,9 @@ C*    Read ALPGEN partonic event
 C*    Use Onia Pairs production
       INTEGER ONIAPAIRSPROCESS
       PARAMETER(ONIAPAIRSPROCESS=6)
+C*    Use GenXicc
+      INTEGER GENXICCPROCESS
+      PARAMETER(GENXICCPROCESS=7)
 C----------------------------------------------------------------------
 C The END 
 C----------------------------------------------------------------------
