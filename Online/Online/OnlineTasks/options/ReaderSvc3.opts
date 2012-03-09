@@ -1,0 +1,27 @@
+// 
+// SliceReaderSvc.opts
+// $Id: ReaderSvc1.opts,v 1.2 2009/04/07 16:30:33 garnierj Exp $
+//#include "$ONLINETASKSROOT/options/OnlineEnvironment.opts"
+#include "/group/online/dataflow/options/FEST/Injector_Info.opts"
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+ApplicationMgr.Dlls                  = { "MDF", "GaudiOnline", "Gaucho"};
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable               = "LHCb::SLICEReaderSvc/Reader3";
+ApplicationMgr.SvcOptMapping =  { "LHCb::OnlineRunable/EmptyEventLoop" , "LHCb::SLICEReaderSvc/Reader3" };
+ApplicationMgr.ExtSvc                = { "IncidentSvc"  };
+ApplicationMgr.ExtSvc		     += { "MonitorSvc" };
+
+
+ApplicationMgr.OutputLevel = 5;
+Reader3.OutputLevel = 3;
+Reader3.IgnoreLumi=true;
+MessageSvc.OutputLevel= 3;
+Reader3.InputFiles= @OnlineEnv.Reader3_Files;
+Reader3.Loop= @OnlineEnv.Injector_LoopFiles;
+Reader3.BufferName= @OnlineEnv.Reader3_Name;
+Reader3.PartitionID= @OnlineEnv.PartitionID;
+Reader3.Requirements         = {
+"EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
+};
+

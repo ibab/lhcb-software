@@ -29,7 +29,7 @@ Injector.OdinIPAddr = @OnlineEnv.Injector_ODIN_REQ_Name;     //tfcodinxx-d1
 //XXX Change sightly the injector source to use the options and optimize some stuff and names mapping and convention
 Injector.PartitionID=@OnlineEnv.PartitionID;
 
-Injector.InitialCredits=10;
+Injector.InitialCredits=15;
 
 /// Not useful params
 Injector.TimeOut = 1000;  //milliseconds
