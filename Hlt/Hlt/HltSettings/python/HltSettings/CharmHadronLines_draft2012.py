@@ -72,6 +72,10 @@ class CharmHadronLines :
                   ### from Hlt2CharmHadD02HHKsLines
                   , 'Hlt2CharmHadD02HHKsLL'
                   , 'Hlt2CharmHadD02HHKsDD'
+                  , 'Hlt2LambdaC_LambdaC2Lambda0LLPi'
+                  , 'Hlt2LambdaC_LambdaC2Lambda0DDPi'
+                  , 'Hlt2LambdaC_LambdaC2Lambda0LLK'
+                  , 'Hlt2LambdaC_LambdaC2Lambda0DDK'  
 
                   ### from Hlt2CharmHadD2KS0HLines
                   , 'Hlt2CharmHadD2KS0H_D2KS0Pi'

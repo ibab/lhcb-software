@@ -96,7 +96,7 @@ class TopoLines :
             'RAD_TOS'           : True,
             # global event cuts
             'USE_GEC'           : False,
-            'GEC_MAX'           : 350,
+            'GEC_MAX'           : 500,
             # "simple" cuts            
             'SIMPLE_2BODY_CUTS' : simple_cuts2,
             'SIMPLE_3BODY_CUTS' : simple_cuts3,
