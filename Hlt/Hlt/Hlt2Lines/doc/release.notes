@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2012-03-09 - V. Gligorov
+ - Fixed Lambda_c->Lambda0h lines, and renamed their file to follow the general
+   naming convention for charm hlt2 lines.
+
 !========================= Hlt2Lines 2012-03-08 =========================
 ! 2012-03-08 - Sam Gregson 
  - Created Lambda_c->Lambda0h lines. Simply copied D(s)->KS0h lines and changed mass windows
