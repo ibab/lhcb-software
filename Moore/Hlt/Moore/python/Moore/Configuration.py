@@ -561,7 +561,7 @@ class Moore(LHCbConfigurableUser):
         #       Online requires UseTCK
 	# L0 decoding to look in a single place  
         # L0Conf().RawEventLocations = ['DAQ/RawEvent']        
-        L0DUFromRawAlg("L0DUFromRaw").Hlt1 = True 
+        #L0DUFromRawAlg("L0DUFromRaw").Hlt1 = True 
 	
         if not self.getProp("RunOnline") : self._l0()
         if self.getProp("RunOnline") : 
