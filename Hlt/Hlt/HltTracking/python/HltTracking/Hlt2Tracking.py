@@ -35,6 +35,7 @@ from HltTrackNames import HltRichDefaultTrackCuts
 
 from Configurables import CaloProcessor, RichRecSysConf
 
+from Hlt2Lines.Hlt2CharmHadLambdaC2LambdaHLines import Hlt2CharmHadLambdaCLambdaHLinesConf 
 from Hlt2Lines.Hlt2B2DXLines              import Hlt2B2DXLinesConf
 from Hlt2Lines.Hlt2B2JpsiXLines           import Hlt2B2JpsiXLinesConf
 from Hlt2Lines.Hlt2B2PhiXLines            import Hlt2B2PhiXLinesConf
@@ -137,6 +138,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
                              , Hlt2CharmSemilepD02HMuNuLinesConf
                              , Hlt2RadiativeTopoConf
                              , Hlt2CharmHadLambdaCLinesConf
+                             , Hlt2CharmHadLambdaCLambdaHLinesConf
                              , Hlt2CharmHadMinBiasLinesConf
                              ]
     __slots__ = { "DataType"                        : '2010' # datatype  2009, MC09, DC06...
