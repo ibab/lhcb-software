@@ -1,0 +1,21 @@
+// SliceReaderSvc.opts
+//#include "$ONLINETASKSROOT/options/OnlineEnvironment.opts"
+#include "/group/online/dataflow/options/FEST/Injector_Info.opts"
+ApplicationMgr.HistogramPersistency="NONE";
+ApplicationMgr.EvtSel="NONE";
+ApplicationMgr.Dlls={"MDF", "GaudiOnline", "Gaucho"};
+ApplicationMgr.EventLoop="LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable="LHCb::SLICEReaderSvc/Reader8";
+ApplicationMgr.SvcOptMapping={"LHCb::OnlineRunable/EmptyEventLoop" , "LHCb::SLICEReaderSvc/Reader8"};
+ApplicationMgr.ExtSvc={"IncidentSvc"};
+ApplicationMgr.ExtSvc+={"MonitorSvc"};
+ApplicationMgr.OutputLevel=5;
+MessageSvc.OutputLevel=3;
+
+Reader8.OutputLevel=3;
+Reader8.IgnoreLumi=true;
+Reader8.InputFiles=@OnlineEnv.Reader8_Files;
+Reader8.Loop=@OnlineEnv.Injector_LoopFiles;
+Reader8.BufferName=@OnlineEnv.Reader8_Name;
+Reader8.PartitionID=@OnlineEnv.PartitionID;
+Reader8.Requirements={"EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"};

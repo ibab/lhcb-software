@@ -1,37 +1,37 @@
 #include "$GAUDIONLINEROOT/options/OnlineEnvironment.opts"
 
-ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.HistogramPersistency="NONE";
 
 //#include "/group/online/dataflow/options/LHCb/Injector_Info.opt
 
 #pragma print on
-//ApplicationMgr.SvcOptMapping += {"Gaudi::MultiFileCatalog/FileCatalog", "Gaudi::IODataManager/IODataManager"};
+//ApplicationMgr.SvcOptMapping+={"Gaudi::MultiFileCatalog/FileCatalog", "Gaudi::IODataManager/IODataManager"};
 
-ApplicationMgr.Dlls                 += { "MDF", "GaudiOnline", "Gaucho", "GaudiAud", "GaudiAlg"};
+ApplicationMgr.Dlls+={"MDF", "GaudiOnline", "Gaucho", "GaudiAud", "GaudiAlg"};
 
-//ApplicationMgr.SvcOptMapping        += { "LHCb::OnlineEvtSelector/EventSelector" };
-ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
-EventDataSvc.RootCLID                = 1;
-EventDataSvc.EnableFaultHandler      = true;
-MEPManager.PartitionBuffers          = true;
+//ApplicationMgr.SvcOptMapping+={"LHCb::OnlineEvtSelector/EventSelector"};
+ApplicationMgr.Runable="LHCb::EventRunable/Runable";
+EventDataSvc.RootCLID=1;
+EventDataSvc.EnableFaultHandler=true;
+MEPManager.PartitionBuffers=true;
 
-StoreExplorerAlg.Load                = true;
-EventDataSvc.RootCLID                = 1;
-EventDataSvc.EnableFaultHandler      = true ;
+StoreExplorerAlg.Load=true;
+EventDataSvc.RootCLID=1;
+EventDataSvc.EnableFaultHandler=true ;
 
 
-ApplicationMgr.ExtSvc               += { "IncidentSvc" };
-ApplicationMgr.ExtSvc               += { "MonitorSvc" };
+ApplicationMgr.ExtSvc+={"IncidentSvc"};
+ApplicationMgr.ExtSvc+={"MonitorSvc"};
 
-MessageSvc.OutputLevel      = 2;
+MessageSvc.OutputLevel=2;
 
-MEPManager.PartitionID               = 65535;
-EventDataSvc.RootCLID                = 1;
-EventDataSvc.EnableFaultHandler      = true ;
-EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc/RawDataCnvSvc" };
-ApplicationMgr.SvcOptMapping += {"LHCb::RawDataCnvSvc/RawDataCnvSvc" };
+MEPManager.PartitionID=65535;
+EventDataSvc.RootCLID=1;
+EventDataSvc.EnableFaultHandler=true ;
+EventPersistencySvc.CnvServices={"LHCb::RawDataCnvSvc/RawDataCnvSvc"};
+ApplicationMgr.SvcOptMapping+={"LHCb::RawDataCnvSvc/RawDataCnvSvc"};
 
-EventSelector.Input                  = {
+EventSelector.Input={
 
 ///cvfs
 //      "DATA='PFN:root:file:///daqarea/lhcb/data/2008/RAW/LHCb/BEAM/34117/034117_0000085559.raw' IgnoreChecksum='YES' SVC='LHCb::MDFSelector'"
@@ -43,19 +43,19 @@ EventSelector.Input                  = {
 };  //Choose file
 
 
-ApplicationMgr.TopAlg                = {"StoreExplorerAlg"/*, "LHCb::MEPInjector"*//*, "LHCb::EventReader"*/}; 
-AuditorSvc.Auditors = {"ChronoAuditor"};
+ApplicationMgr.TopAlg={"StoreExplorerAlg"/*, "LHCb::MEPInjector"*//*, "LHCb::EventReader"*/}; 
+AuditorSvc.Auditors={"ChronoAuditor"};
 
 // L0 Trigger of the injector
-ApplicationMgr.TopAlg += { "GaudiSequencer/L0FilteredInjectionSeq" };
-L0FilteredInjectionSeq.Members += { "FastL0DUFilter", "LHCb::MEPInjector"};
-L0FilteredInjectionSeq.OutputLevel = 5;
-FastL0DUFilter.OutputLevel = 5;
-L0FilteredInjectionSeq.IgnoreFilterPassed = true;
+ApplicationMgr.TopAlg+={"GaudiSequencer/L0FilteredInjectionSeq"};
+L0FilteredInjectionSeq.Members+={"FastL0DUFilter", "LHCb::MEPInjector"};
+L0FilteredInjectionSeq.OutputLevel=5;
+FastL0DUFilter.OutputLevel=5;
+L0FilteredInjectionSeq.IgnoreFilterPassed=true;
 
 
-ChronoStatSvc.PrintEllapsedTime = true;
-ChronoStatSvc.PrintSystemTime = true;
+ChronoStatSvc.PrintEllapsedTime=true;
+ChronoStatSvc.PrintSystemTime=true;
 
 //LHCb::EventReader.AuditExecute=true;
 
@@ -63,21 +63,21 @@ LHCb::MEPInjector.AuditExecute=true;
 StoreExplorerAlg.AuditExecute=true;
 
 
-LHCb::MEPInjector.OutputLevel = 5;
+LHCb::MEPInjector.OutputLevel=5;
 
-MessageSvc.OutputLevel = 5;
-EventSelector.PrintFreq =10000; //just display every 2000 events ~2kHz
-EventDataSvc.OutputLevel = 5;
+MessageSvc.OutputLevel=5;
+EventSelector.PrintFreq=10000; //just display every 2000 events ~2kHz
+EventDataSvc.OutputLevel=5;
 
-IODataManager.UseGFAL = true; // what's this ?
+IODataManager.UseGFAL=true; // what's this ?
 
 
 ///////////////////////////////////////////////////////////////////////////////
 //                               My options                                  //
 ///////////////////////////////////////////////////////////////////////////////
 
-//LHCb::MEPInjector.Tell1Boards = @OnlineEnv.Tell1Boards;
-LHCb::MEPInjector.Tell1Boards = {
+//LHCb::MEPInjector.Tell1Boards=@OnlineEnv.Tell1Boards;
+LHCb::MEPInjector.Tell1Boards={
     "192.169.16.23", "ottellc23-d1", "OT"
    ,"192.169.12.4",  "ottella04-d1", "OT"
    ,"192.169.4.3", "tmutellq34-d1", "TMU"
@@ -86,29 +86,29 @@ LHCb::MEPInjector.Tell1Boards = {
 };
 
 
-LHCb::MEPInjector.EventBuffer = 300000;
+LHCb::MEPInjector.EventBuffer=300000;
 
-LHCb::MEPInjector.HLTIPAddrTo = "192.168.19.252"; //Still used in Automode
+LHCb::MEPInjector.HLTIPAddrTo="192.168.19.252"; //Still used in Automode
 
-//LHCb::MEPInjector.OdinEthInterface =2; // 192.168.221.2, be a HLT farm to Odin
-//LHCb::MEPInjector.HLTEthInterface = 1; // 192.169.19.2,  be an Odin to HLT farm  
+//LHCb::MEPInjector.OdinEthInterface=2; // 192.168.221.2, be a HLT farm to Odin
+//LHCb::MEPInjector.HLTEthInterface=1; // 192.169.19.2,  be an Odin to HLT farm  
 
-//LHCb::MEPInjector.OdinIPAddr = "192.169.5.6";
-LHCb::MEPInjector.OdinIPAddr = "tfcodin06-d1";
+//LHCb::MEPInjector.OdinIPAddr="192.169.5.6";
+LHCb::MEPInjector.OdinIPAddr="tfcodin06-d1";
 
-//LHCb::MEPInjector.OdinTxIPAddr = "192.168.221.2";
-//LHCb::MEPInjector.HLTRxIPAddr = "192.169.19.2";
-LHCb::MEPInjector.OdinIf = "inj01-d2";
-LHCb::MEPInjector.HLTIf = "inj01-d1";
+//LHCb::MEPInjector.OdinTxIPAddr="192.168.221.2";
+//LHCb::MEPInjector.HLTRxIPAddr="192.169.19.2";
+LHCb::MEPInjector.OdinIf="inj01-d2";
+LHCb::MEPInjector.HLTIf="inj01-d1";
 
 /// Not useful params
-LHCb::MEPInjector.OdinRxTO = -1;
+LHCb::MEPInjector.OdinRxTO=-1;
 
-LHCb::MEPInjector.AutoMode = true; // Are we running in Auto Mode or in Odin Mode
+LHCb::MEPInjector.AutoMode=true; // Are we running in Auto Mode or in Odin Mode
 
 /// These params are used only in automode, in Odin mode, Odin provides these data 
-LHCb::MEPInjector.PackingFactor = 10;
-LHCb::MEPInjector.L0ID = 1; // The first event ID in Auto mode
-LHCb::MEPInjector.PartitionID = 65535; //Partition ID set to all
+LHCb::MEPInjector.PackingFactor=10;
+LHCb::MEPInjector.L0ID=1; // The first event ID in Auto mode
+LHCb::MEPInjector.PartitionID=65535; //Partition ID set to all
 
  

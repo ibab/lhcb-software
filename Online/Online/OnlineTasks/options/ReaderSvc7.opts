@@ -1,27 +1,21 @@
-// 
 // SliceReaderSvc.opts
-// $Id: ReaderSvc1.opts,v 1.2 2009/04/07 16:30:33 garnierj Exp $
 //#include "$ONLINETASKSROOT/options/OnlineEnvironment.opts"
 #include "/group/online/dataflow/options/FEST/Injector_Info.opts"
-ApplicationMgr.HistogramPersistency  = "NONE";
-ApplicationMgr.EvtSel                = "NONE";
-ApplicationMgr.Dlls                  = { "MDF", "GaudiOnline", "Gaucho"};
-ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
-ApplicationMgr.Runable               = "LHCb::SLICEReaderSvc/Reader7";
-ApplicationMgr.SvcOptMapping =  { "LHCb::OnlineRunable/EmptyEventLoop" , "LHCb::SLICEReaderSvc/Reader7" };
-ApplicationMgr.ExtSvc                = { "IncidentSvc"  };
-ApplicationMgr.ExtSvc		     += { "MonitorSvc" };
+ApplicationMgr.HistogramPersistency="NONE";
+ApplicationMgr.EvtSel="NONE";
+ApplicationMgr.Dlls={"MDF", "GaudiOnline", "Gaucho"};
+ApplicationMgr.EventLoop="LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable="LHCb::SLICEReaderSvc/Reader7";
+ApplicationMgr.SvcOptMapping={"LHCb::OnlineRunable/EmptyEventLoop" , "LHCb::SLICEReaderSvc/Reader7"};
+ApplicationMgr.ExtSvc={"IncidentSvc"};
+ApplicationMgr.ExtSvc+={"MonitorSvc"};
+ApplicationMgr.OutputLevel=5;
+MessageSvc.OutputLevel=3;
 
-
-ApplicationMgr.OutputLevel = 5;
-Reader7.OutputLevel = 3;
+Reader7.OutputLevel=3;
 Reader7.IgnoreLumi=true;
-MessageSvc.OutputLevel= 3;
-Reader7.InputFiles= @OnlineEnv.Reader7_Files;
-Reader7.Loop= @OnlineEnv.Injector_LoopFiles;
-Reader7.BufferName= @OnlineEnv.Reader7_Name;
-Reader7.PartitionID= @OnlineEnv.PartitionID;
-Reader7.Requirements         = {
-"EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
-};
-
+Reader7.InputFiles=@OnlineEnv.Reader7_Files;
+Reader7.Loop=@OnlineEnv.Injector_LoopFiles;
+Reader7.BufferName=@OnlineEnv.Reader7_Name;
+Reader7.PartitionID=@OnlineEnv.PartitionID;
+Reader7.Requirements={"EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"};

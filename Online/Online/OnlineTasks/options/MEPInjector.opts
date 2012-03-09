@@ -1,57 +1,43 @@
-// 
-// SliceReaderSvc.opts
-// $Id: MEPInjector.opts,v 1.14 2009-09-16 06:40:28 garnierj Exp $
+// MEPInjector.opts
 //#include "$ONLINETASKSROOT/options/OnlineEnvironment.opts"
 #include "/group/online/dataflow/options/FEST/Injector_Info.opts"
-ApplicationMgr.HistogramPersistency  = "NONE";
-ApplicationMgr.EvtSel                = "NONE";
-ApplicationMgr.Dlls                  = { "MDF", "GaudiOnline", "Gaucho"};
-ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
-ApplicationMgr.Runable               = "LHCb::MEPInjector/Injector";
-ApplicationMgr.SvcOptMapping =  { "LHCb::OnlineRunable/EmptyEventLoop" , "LHCb::MEPInjector/Injector" };
-ApplicationMgr.ExtSvc                = { "IncidentSvc"  };
-ApplicationMgr.ExtSvc		     += { "MonitorSvc" };
-ApplicationMgr.OutputLevel = 5;
-Injector.OutputLevel = 5;
-MessageSvc.OutputLevel= 5;
+ApplicationMgr.HistogramPersistency="NONE";
+ApplicationMgr.EvtSel="NONE";
+ApplicationMgr.Dlls={"MDF", "GaudiOnline", "Gaucho"};
+ApplicationMgr.EventLoop="LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable="LHCb::MEPInjector/Injector";
+ApplicationMgr.SvcOptMapping={"LHCb::OnlineRunable/EmptyEventLoop", "LHCb::MEPInjector/Injector"};
+ApplicationMgr.ExtSvc={"IncidentSvc"};
+ApplicationMgr.ExtSvc+={"MonitorSvc"};
+ApplicationMgr.OutputLevel=5;
+Injector.OutputLevel=5;
+MessageSvc.OutputLevel=5;
 
 ///////////////////////////////////////////////////////////////////////////////
 //                               My options                                  //
 ///////////////////////////////////////////////////////////////////////////////
-Injector.HLTNodes = @OnlineEnv.Injector_Nodes;
-Injector.Tell1Boards =@OnlineEnv.Tell1Boards;
-Injector.OdinIf = @OnlineEnv.Injector_odinIF_Name;  //inj01-d2
-Injector.HLTIf = @OnlineEnv.Injector_farmIF_Name;   //inj01-d1
-Injector.OdinIPAddr = @OnlineEnv.Injector_ODIN_REQ_Name;     //tfcodinxx-d1
+Injector.HLTNodes=@OnlineEnv.Injector_Nodes;
+Injector.Tell1Boards=@OnlineEnv.Tell1Boards;
+Injector.OdinIf=@OnlineEnv.Injector_odinIF_Name;  //inj01-d2
+Injector.HLTIf=@OnlineEnv.Injector_farmIF_Name;   //inj01-d1
+Injector.OdinIPAddr=@OnlineEnv.Injector_ODIN_REQ_Name;     //tfcodinxx-d1
 //OnlineEnv.Injector_ODIN_REQ_IP not used because computed from the first one
 //OnlineEnv.Injector_odinIF_IP not used for same reason
 //OnlineEnv.Injector_farmIF_IP not used for same reason
 //XXX Change sightly the injector source to use the options and optimize some stuff and names mapping and convention
 Injector.PartitionID=@OnlineEnv.PartitionID;
+Injector.BufferNames=@OnlineEnv.Injector_Readers;
 
 Injector.InitialCredits=15;
 
 /// Not useful params
-Injector.TimeOut = 1000;  //milliseconds
+Injector.TimeOut=1000;  //milliseconds
 
-Injector.AutoMode = false;
-Injector.HLTIPAddrTo = "192.168.197.129"; //Still used in Automode
+Injector.AutoMode=false;
+Injector.HLTIPAddrTo="192.168.197.129"; //Still used in Automode
 
-Injector.ARPME = false;
-
-Injector.BufferNames = @OnlineEnv.Injector_Readers;
-
+Injector.ARPME=false;
 Injector.TFCMask=4294967295;
 Injector.TapeMask=0;
-
-Injector.BufferOptions = {
- "-s=200000", 
- "-e=100",
- "-u=20",
- "-b=15", 
- "-f"
-};
-
-Injector.Requirements         = {
-"EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
-};
+Injector.BufferOptions={"-s=200000", "-e=100", "-u=20", "-b=15", "-f"};
+Injector.Requirements={"EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"};
