@@ -1,43 +1,39 @@
-# --> Including file '/afs/cern.ch/user/r/rlambert/cmtuser/Alignment_HEAD/Alignment/Escher/tests/options/testEscher-defaults.py'
-# <-- End of file '/afs/cern.ch/user/r/rlambert/cmtuser/Alignment_HEAD/Alignment/Escher/tests/options/testEscher-defaults.py'
+# --> Including file '/afs/cern.ch/user/w/wouter/lhcb/Alignment_HEAD/Alignment/Escher/tests/options/testEscher-defaults.py'
+# <-- End of file '/afs/cern.ch/user/w/wouter/lhcb/Alignment_HEAD/Alignment/Escher/tests/options/testEscher-defaults.py'
 # skipping configuration of SurveyConstraints
 # applying configuration of Escher
 # Initializing sequences!
 # Defining options!
 # Setting up alignment sequence
-# --> Including file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v33r1/GaudiConf/options/RootHist.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb-head/Thu/LHCB/LHCB_HEAD/GaudiConf/options/RootHist.opts'
 # ApplicationMgr.HistogramPersistency = "ROOT";
-# <-- End of file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v33r1/GaudiConf/options/RootHist.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb-head/Thu/LHCB/LHCB_HEAD/GaudiConf/options/RootHist.opts'
 # /***** User Escher/Escher **************************************************************************
-# |-AlignmentLevel = 'layers'
 # |-Persistency    = None
 # |-SkipEvents     = 0
 # |-DatasetName    = ''
 # |-PackType       = 'TES'
-# |-Kalman         = False
+# |-Kalman         = True
 # |-DDDBtag        = ''
 # |-WithMC         = False
-# |-MainSequence   = [<CountingPrescaler/EscherPrescaler at 0x15d542e0>, 'ProcessPhase/Init', 'ProcessPhase/Reco', 'ProcessPhase/Moni', <GaudiSequencer/AlignSequence at 0x15d13490>]
+# |-MainSequence   = [<CountingPrescaler/EscherPrescaler at 0x896be90>, 'ProcessPhase/Init', 'ProcessPhase/Reco', 'ProcessPhase/Moni', <GaudiSequencer/AlignSequence at 0x8834440>]
 # |                (default: [])
 # |-OutputType     = 'NONE'
+# |-UseFileStager  = False
 # |-Incident       = ''
 # |-MoniSequence   = ['VELO', 'Tr', 'OT', 'ST']  (default: ['VELO', 'Tr', 'OT', 'ST'])
 # |-UseOracle      = False
-# |-skipBigCluster = False
 # |-AlignSequence  = []  (default: [])
-# |-Detectors      = ['VELO', 'TT', 'IT', 'OT', 'MUON', 'Tr', 'Vertex']
-# |                (default: ['VELO', 'TT', 'IT', 'OT', 'MUON', 'Tr', 'Vertex'])
-# |-PrintFreq      = 300
+# |-ExpertTracking = ['simplifiedGeometry']  (default: ['simplifiedGeometry'])
+# |-PrintFreq      = 100
 # |-OutputLevel    = 3
 # |-EvtMax         = 10  (default: -1)
-# |-Simulation     = False
+# |-CondDBtag      = ''
 # |-Context        = 'Offline'
 # |-RecoSequence   = []  (default: [])
-# |-CondDBtag      = ''
-# |-Constraints    = []  (default: [])
+# |-Simulation     = False
 # |-InitSequence   = ['Reproc', 'Escher', 'Calo']  (default: ['Reproc', 'Escher', 'Calo'])
-# |-DataType       = '2008'
-# |-DoF            = [0, 0, 0, 0, 0, 0]  (default: [0, 0, 0, 0, 0, 0])
+# |-DataType       = '2011'
 # |-InputType      = 'DST'
 # |-NoWarnings     = False
 # |-WriteFSR       = True
@@ -45,21 +41,22 @@
 # |-Millepede      = False
 # \----- (End of User Escher/Escher) -----------------------------------------------------------------
 # /***** User LHCbApp/LHCbApp ************************************************************************
-# |-Persistency = None
-# |-DDDBtag     = ''
-# |-DataType    = '2008'
-# |-TimeStamp   = False
-# |-SkipEvents  = 0
-# |-OutputLevel = 3
-# |-EvtMax      = 10  (default: -1)
-# |-CondDBtag   = ''
-# |-DQFLAGStag  = ''
-# |-XMLSummary  = None
-# |-Simulation  = False
-# |-Monitors    = []  (default: [])
+# |-Persistency   = None
+# |-DataType      = '2011'
+# |-DDDBtag       = ''
+# |-SkipEvents    = 0
+# |-XMLSummary    = None
+# |-OutputLevel   = 3
+# |-EvtMax        = 10  (default: -1)
+# |-CondDBtag     = ''
+# |-DQFLAGStag    = ''
+# |-Monitors      = []  (default: [])
+# |-TimeStamp     = False
+# |-Simulation    = False
+# |-IgnoreDQFlags = True
 # \----- (End of User LHCbApp/LHCbApp) ---------------------------------------------------------------
 # /***** User RecSysConf/RecSysConf ******************************************************************
-# |-DataType     = '2008'
+# |-DataType     = '2011'
 # |-Histograms   = 'OfflineFull'
 # |-OutputLevel  = 3
 # |-OutputType   = 'NONE'
@@ -71,7 +68,7 @@
 # /***** User TrackSys/TrackSys **********************************************************************
 # |-FilterBeforeFit          = True
 # |-GlobalCuts               = {}  (default: {})
-# |-ExpertTracking           = []  (default: [])
+# |-ExpertTracking           = ['simplifiedGeometry']  (default: [])
 # |-ExpertHistos             = False
 # |-TrackExtraInfoAlgorithms = []  (default: [])
 # |-DataType                 = '2011'
@@ -83,7 +80,7 @@
 # |-TrackPatRecAlgorithms    = []  (default: [])
 # \----- (End of User TrackSys/TrackSys) -------------------------------------------------------------
 # /***** User RecMoniConf/RecMoniConf ****************************************************************
-# |-DataType     = '2008'
+# |-DataType     = '2011'
 # |-Histograms   = 'OfflineFull'
 # |-OutputLevel  = 3
 # |-Simulation   = False
@@ -93,38 +90,38 @@
 # \----- (End of User RecMoniConf/RecMoniConf) -------------------------------------------------------
 # /***** User TAlignment/TAlignment ******************************************************************
 # |-DatasetName                  = ''
+# |-OutputDataFile               = ''
 # |-EcalTopLevelElement          = '/dd/Structure/LHCb/DownstreamRegion/Ecal'
 # |-ParticleLocation             = ''
-# |-MuonTopLevelElement          = '/dd/Structure/LHCb/DownstreamRegion/Muon'
-# |-Method                       = 'Millepede'
-# |-SolvTool                     = 'DiagSolvTool'
 # |-LogFile                      = 'alignlog.txt'
-# |-MinNumberOfHits              = 100
+# |-ParticleSelections           = []  (default: [])
+# |-TrackSelections              = [<TAlignment.TrackSelections.GoodLongTracks instance at 0x8884680>]
+# |                              (default: [<TAlignment.TrackSelections.GoodLongTracks instance at 0x8884680>])
+# |-SolvTool                     = 'DiagSolvTool'
+# |-MinNumberOfHits              = 10
 # |-Precision                    = 16
-# |-DimuonLocation               = ''
+# |-MuonTopLevelElement          = '/dd/Structure/LHCb/DownstreamRegion/Muon'
 # |-Incident                     = ''
 # |-ITTopLevelElement            = '/dd/Structure/LHCb/AfterMagnetRegion/T/IT'
 # |-VertexLocation               = ''
-# |-skipBigCluster               = True
 # |-EigenValueThreshold          = -1
 # |-WriteCondSubDetList          = []  (default: [])
 # |-UpdateInFinalize             = True
 # |-UseLocalFrame                = True
-# |-Detectors                    = []  (default: [])
+# |-OutputLevel                  = 3
 # |-CondFilePrefix               = 'xml/'
+# |-DimuonLocation               = ''
 # |-Chi2Outlier                  = 10000
 # |-VeloTopLevelElement          = '/dd/Structure/LHCb/BeforeMagnetRegion/Velo'
 # |-Constraints                  = []  (default: [])
 # |-NumIterations                = 1
 # |-UseWeightedAverageConstraint = False
-# |-OutputLevel                  = 3
 # |-TTTopLevelElement            = '/dd/Structure/LHCb/BeforeMagnetRegion/TT'
-# |-DoF                          = []  (default: [])
-# |-TrackLocation                = 'TrackLocation::Default'
+# |-TrackLocation                = ''
 # |-ElementsToAlign              = []  (default: [])
 # |-UseCorrelations              = True
-# |-Sequencer                    = <GaudiSequencer/TAlignmentSequencer at 0x15bc2070>
-# |-ApplyMS                      = True
+# |-Sequencer                    = <GaudiSequencer/AlignSequence at 0x8834440>
+# |                              (default: <GaudiSequencer/TAlignmentSequencer at 0x7edbb50>)
 # |-OTTopLevelElement            = '/dd/Structure/LHCb/AfterMagnetRegion/T/OT'
 # |-UsePreconditioning           = True
 # \----- (End of User TAlignment/TAlignment) ---------------------------------------------------------
@@ -141,20 +138,23 @@
 # |-PackSequencer       = None
 # |-SpilloverPaths      = ['Prev', 'PrevPrev', 'Next', 'NextNext']
 # |                     (default: ['Prev', 'PrevPrev', 'Next', 'NextNext'])
-# |-EnableUnpack        = False
+# |-EnableUnpack        = []  (default: [])
 # |-AlwaysCreate        = False
 # \----- (End of User DstConf/DstConf) ---------------------------------------------------------------
-# ConfiguredMuonIDs: Loaded configuration info M_2008_def
+# ConfiguredMuonIDs: Loaded configuration info M_2011_def
 ******* calling  TAlignment
+****** setting up Kalman type alignment!
+**** setting the main kalman aligment sequence!
+inGoodLongTracks.configureSelector
+inGoodLongTracks.configureSelector
 # No Writer defined for DIGI
-# WARNING: Using default tag head-20101003 for partition DDDB
-# WARNING: Using default tag head-20101010 for partition LHCBCOND
-# WARNING: Using default tag sim-20090212 for partition SIMCOND
+# WARNING: Using default tag head-20111102 for partition DDDB
+# WARNING: Using default tag head-20111111 for partition LHCBCOND
 # WARNING: Using default tag tt-20110126 for partition DQFLAGS
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Escher version v4r11
-                                          running on lxplus404.cern.ch on Wed Nov 30 14:07:56 2011
+                                                   Welcome to Escher version v4r12
+                                          running on lxbsq1344.cern.ch on Fri Mar  9 15:18:43 2012
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
@@ -162,7 +162,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   1.64 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.96 times the speed of a 2.8 GHz Xeon.
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
 EscherSequencer      INFO Member list: CountingPrescaler/EscherPrescaler, ProcessPhase/Init, ProcessPhase/Reco, ProcessPhase/Moni, GaudiSequencer/AlignSequence
@@ -175,8 +175,8 @@ EscherInit        SUCCESS Requested to process 10 events
 EscherInit        SUCCESS ==================================================================
 RootHistSvc          INFO Writing ROOT histograms to: -10ev-histos.root
 HistogramPersis...   INFO Added successfully Conversion service:RootHistSvc
-HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r5/data/PhotonPdf.root as CaloNeutralPIDs
-HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r5/data/CaloPIDs_DC09_v1.root as CaloPIDs
+HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r6/data/PhotonPdf.root as CaloNeutralPIDs
+HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r6/data/CaloPIDs_DC09_v1.root as CaloPIDs
 InitCaloSeq          INFO Member list: , with context 'Offline'
 Reco                 INFO Member list: GaudiSequencer/RecoDecodingSeq, GaudiSequencer/RecoVELOSeq, GaudiSequencer/RecoTTSeq, GaudiSequencer/RecoITSeq, GaudiSequencer/RecoOTSeq, GaudiSequencer/RecoTrSeq, GaudiSequencer/RecoVertexSeq, GaudiSequencer/RecoRICHSeq, GaudiSequencer/RecoCALOSeq, GaudiSequencer/RecoMUONSeq, GaudiSequencer/RecoPROTOSeq, GaudiSequencer/RecoSUMMARYSeq
 RecoDecodingSeq      INFO Member list: DecodeVeloRawBuffer/DecodeVeloClusters, RawBankToSTClusterAlg/CreateTTClusters, RawBankToSTLiteClusterAlg/CreateTTLiteClusters, RawBankToSTClusterAlg/CreateITClusters, RawBankToSTLiteClusterAlg/CreateITLiteClusters
@@ -184,11 +184,12 @@ DecodeVeloClusters   INFO Cancel processing of events with more than 6000 Velo c
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
 DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
-DDDB                 INFO Using TAG "head-20101003"
+DDDB                 INFO Using TAG "head-20111102"
 LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/LHCBCOND.db/LHCBCOND"
-LHCBCOND             INFO Using TAG "head-20101010"
+LHCBCOND             INFO Using TAG "head-20111111"
 ONLINE_2011          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2011.db/ONLINE"
 ONLINE_2011          INFO Using TAG ""
+DeVeloRType       WARNING VELO R sensor M2 routing lines not in conditions DB cond: Routing-R-X-Strip0000 and Routing-R-Y-Strip0000
 RecoVELOSeq          INFO Member list: FastVeloTracking
 RecoTTSeq            INFO Member list:
 RecoITSeq            INFO Member list:
@@ -197,11 +198,11 @@ RecoTrSeq            INFO Member list: ProcessPhase/Track
 Track                INFO Member list: GaudiSequencer/TrackForwardPatSeq, GaudiSequencer/TrackSeedPatSeq, GaudiSequencer/TrackMatchPatSeq, GaudiSequencer/TrackDownstreamPatSeq, GaudiSequencer/TrackVeloTTPatSeq, GaudiSequencer/TrackFitSeq, GaudiSequencer/TrackVeloFitSeq, GaudiSequencer/TrackAddExtraInfoSeq, GaudiSequencer/TrackEraseExtraInformationSeq
 TrackForwardPatSeq   INFO Member list: PatForward
 ToolSvc.OTRawBa...   INFO  countsPerBX = 64 numberOfBX  = 3 timePerBX = 25 ForceBankVersion = 255 require window [-8,56]
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/c1_onemap_down.cdf
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/c2_onemap_down.cdf
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/c3_onemap_down.cdf
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/c4_onemap_down.cdf
-MagneticFieldSvc     INFO Map scaled by factor 5.92981e-07 with polarity internally used: -1 signed relative current: -5.92981e-07
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/field101.c1.up.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/field101.c2.up.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/field101.c3.up.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/field101.c4.up.cdf
+MagneticFieldSvc     INFO Map scaled by factor 1 with polarity internally used: 1 signed relative current: 1
 TrackSeedPatSeq      INFO Member list: PatSeeding
 TrackMatchPatSeq     INFO Member list: PatMatch
 TrackDownstream...   INFO Member list: PatDownstream
@@ -221,14 +222,11 @@ PatDownstream        INFO ========================================
 PatDownstream        INFO zMagnetParams 5376.8 -3895.12 309.877 85527.9
 PatDownstream        INFO momentumParams 1148.65 961.786 5326.81
 TrackVeloTTPatSeq    INFO Member list: PatVeloTT
-MagneticFieldSvc     INFO Map scaled by factor 5.92981e-07 with polarity internally used: -1 signed relative current: -5.92981e-07
 ToolSvc.PatTTMa...   INFO Start generation of VeloTT Bdl LUTs
 ToolSvc.PatTTMa...   INFO Generation of VeloTT Bdl LUTs finished
 ToolSvc.PatTTMa...   INFO Start generation of VeloTT deflection LUTs
 ToolSvc.PatTTMa...   INFO Generation of VeloTT deflection LUTs finished
-ToolSvc.PatTTMa...   INFO  No B field detected.
-ToolSvc.VeloClu...   INFO  --> Error para condition not found!
-ToolSvc.VeloClu...   INFO  --> The tool Will use the default values!
+ToolSvc.VeloClu...   INFO  --> Tool configured using the Cond DB
 ToolSvc.STOffli...   INFO APE set to 0.197
 ToolSvc.STOffli...   INFO Error Vec 0.257 0.245 0.277 0.208
 ToolSvc.ITClust...   INFO APE set to 0.0758
@@ -359,8 +357,11 @@ RichOfflineGPID...   INFO Maximum track changes per event iteration = 5
 RecoCALOSeq          INFO Member list: GaudiSequencer/CaloRecoSeq, GaudiSequencer/CaloPIDsSeq
 CaloRecoSeq          INFO Member list: GaudiSequencer/CaloDigits, GaudiSequencer/ClusterReco, GaudiSequencer/PhotonReco, GaudiSequencer/MergedPi0Reco, GaudiSequencer/ElectronReco
 CaloDigits           INFO Member list: CaloDigitsFromRaw/SpdFromRaw, CaloDigitsFromRaw/PrsFromRaw, CaloZSupAlg/EcalZSup, CaloZSupAlg/HcalZSup, with context 'Offline'
-EcalDet              INFO Found 5 channel(s) with null gain
+EcalDet.Quality      INFO Found  12 problematic readout channel(s)
+EcalDet.Quality      INFO Found  3 channel(s) with 'LED monitoring problem'
 EcalZSup             INFO Calorimeter has 6016 cells. Zsup method 2D Threshold 20
+HcalDet.Quality      INFO Found  3 problematic readout channel(s)
+HcalDet.Quality      INFO Found  1 channel(s) with 'LED monitoring problem'
 HcalZSup             INFO Calorimeter has 1488 cells. Zsup method 1D Threshold 4
 ClusterReco          INFO Member list: GaudiSequencer/CaloDigits, CaloDigitFilterAlg/CaloDigitFilter, CellularAutomatonAlg/EcalClust, CaloSharedCellAlg/EcalShare, CaloClusterCovarianceAlg/EcalCovar, with context 'Offline'
 EcalCovar.EcalC...   INFO  Has initialized with parameters:
@@ -430,7 +431,8 @@ RecoMUONSeq          INFO Member list: MuonRec, GaudiSequencer/MuonIDSeq
 MuonIDSeq            INFO Member list: MuonIDAlg
 MuonIDAlg            INFO ==> Initialise: Input tracks in: Rec/Track/Best
 MuonIDAlg            INFO                 Output MuonPID in: Rec/Muon/MuonPID
-MuonIDAlg            INFO  dllFlag=1 -----> DLL  new (binned-integrated method)
+MuonIDAlg            INFO Initialise: OverrideDB=false but dllFlag in options file (=4) not equal dllFlag in database (=1). Using dllFlag from options file
+MuonIDAlg            INFO  dllFlag=4 -----> DLL with muLL tuned on 2010 data (hyperbolic tangent mapping) and previous nonMuLL (Landau fittings 2009)
 RecoPROTOSeq         INFO Member list: GaudiSequencer/ChargedProtoParticles, GaudiSequencer/NeutralProtoParticles, with context 'Offline'
 ChargedProtoPar...   INFO Member list: ChargedProtoParticleMaker/ChargedProtoPMaker, ChargedProtoParticleAddEcalInfo/ChargedProtoPAddEcal, ChargedProtoParticleAddBremInfo/ChargedProtoPAddBrem, ChargedProtoParticleAddHcalInfo/ChargedProtoPAddHcal, ChargedProtoParticleAddPrsInfo/ChargedProtoPAddPrs, ChargedProtoParticleAddSpdInfo/ChargedProtoPAddSpd, ChargedProtoParticleAddVeloInfo/ChargedProtoPAddVeloDEDX, ChargedProtoParticleAddRichInfo/ChargedProtoPAddRich, ChargedProtoParticleAddMuonInfo/ChargedProtoPAddMuon, ChargedProtoCombineDLLsAlg/ChargedProtoPCombDLLs, GaudiSequencer/ANNGPIDSeq, with context 'Offline'
 ChargedProtoPAd...   INFO VELO dE/dx charge parameters : normalisation = 35.6 ratio = 0.6
@@ -446,302 +448,954 @@ MoniVELOSeq          INFO Member list: Velo::VeloClusterMonitor/VeloClusterMonit
 MoniTrSeq            INFO Member list: TrackMonitor, TrackDiMuonMonitor, TrackVertexMonitor, TrackV0Monitor, TrackFitMatchMonitor, TrackAlignMonitor, TrackITOverlapMonitor, TrackVeloOverlapMonitor, TTTrackMonitor, ITTrackMonitor, TrackPV2HalfAlignMonitor, TrackCaloMatchMonitor/TrackEcalMatchMonitor, TrackCaloMatchMonitor/TrackSpdMatchMonitor, TrackCaloMatchMonitor/TrackPrsMatchMonitor, TrackMuonMatchMonitor
 MoniOTSeq            INFO Member list: OTTimeMonitor, OTTrackMonitor, OTHitEfficiencyMonitor
 MoniSTSeq            INFO Member list: ST::STClusterMonitor/TTClusterMonitor, ST::STClusterMonitor/ITClusterMonitor
-AlignSequence        INFO Member list:
-ApplicationMgr       INFO Application Manager Initialized successfully
-ApplicationMgr       INFO Application Manager Started successfully
-EventSelector        INFO End of event input reached.
-EventLoopMgr         INFO No more events in event selection
-ApplicationMgr       INFO Application Manager Stopped successfully
-EscherInit        SUCCESS ==================================================================
-EscherInit        SUCCESS 0 events processed
-EscherInit        SUCCESS ==================================================================
-EscherInit        WARNING Should have processed 10 events
-EscherInit        WARNING ==================================================================
-CreateTTClusters     INFO Successfully processed 0 %
-CreateTTClusters  SUCCESS Number of counters : 2
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# valid banks"                                 |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
- | "skipped Banks"                                 |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
-CreateTTLiteClu...   INFO Successfully processed 0 %
-CreateTTLiteClu...SUCCESS Number of counters : 2
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# valid banks"                                 |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
- | "skipped Banks"                                 |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
-CreateITClusters     INFO Successfully processed 0 %
-CreateITClusters  SUCCESS Number of counters : 2
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# valid banks"                                 |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
- | "skipped Banks"                                 |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
-CreateITLiteClu...   INFO Successfully processed 0 %
-CreateITLiteClu...SUCCESS Number of counters : 2
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# valid banks"                                 |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
- | "skipped Banks"                                 |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
-FitBest              INFO   Fitting performance   :     0.00 %
-FitBest           SUCCESS Number of counters : 1
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "nTracks"                                       |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
-FitVelo              INFO   Fitting performance   :     0.00 %
-FitVelo           SUCCESS Number of counters : 1
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "nTracks"                                       |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
-EcalClust            INFO Built <0> cellular automaton clusters/event  with <0> iterations (min,max)=(999999,0) on average
-MuonIDAlg            INFO ==> Total number of tracks with IsMuonLoose=1 failing likelihood (p<0): 0
-MuonIDAlg         SUCCESS Number of counters : 3
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "nIsMuon"                                       |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
- | "nIsMuonLoose"                                  |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
- | "nIsMuonTight"                                  |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
-VeloClusterMonitorSUCCESS Booked 15 Histogram(s) : 1D=12 2D=3
-VeloTrackMonitor  SUCCESS Booked 36 Histogram(s) : 1D=27 1DProf=9
-VeloIPResolutio...SUCCESS Booked 21 Histogram(s) : 1D=21
-TrackVertexMonitorSUCCESS Booked 29 Histogram(s) : 1D=15 1DProf=14
-TrackFitMatchMo...SUCCESS Booked 10 Histogram(s) : 1D=5 1DProf=5
-TrackAlignMonitor    INFO Number of elements in jacobian map: 0
-TrackAlignMonitor SUCCESS Booked 27 Histogram(s) : 1D=18 1DProf=9
-TrackITOverlapM...SUCCESS Booked 2 Histogram(s) : 1D=2
-TrackEcalMatchM...SUCCESS Booked 32 Histogram(s) : 1D=24 1DProf=8
-TrackSpdMatchMo...SUCCESS Booked 32 Histogram(s) : 1D=24 1DProf=8
-TrackPrsMatchMo...SUCCESS Booked 32 Histogram(s) : 1D=24 1DProf=8
-TrackMuonMatchM...SUCCESS Booked 16 Histogram(s) : 1D=16
-OTTimeMonitor     SUCCESS Booked 9 Histogram(s) : 1D=8 1DProf=1
-OTTrackMonitor    SUCCESS Booked 67 Histogram(s) : 1D=47 2D=7 1DProf=13
-OTHitEfficiency...SUCCESS Booked 101 Histogram(s) : 1D=9 2D=21 1DProf=47 2DProf=24
-TTClusterMonitor  SUCCESS Booked 17 Histogram(s) : 1D=12 2D=4 1DProf=1
-ITClusterMonitor  SUCCESS Booked 13 Histogram(s) : 1D=8 2D=4 1DProf=1
-EventLoopMgr         INFO Histograms converted successfully according to request.
-TransportSvc      SUCCESS  GEOMETRY ERRORS: 'Skip'     map has the size 0
-
-TransportSvc      SUCCESS  GEOMETRY ERRORS: 'Recover'  map has the size 0
-
-TransportSvc      SUCCESS  GEOMETRY ERRORS: 'Codes'    map has the size 0
-
-TransportSvc         INFO Reset the static pointer to DetDesc::IGeometyrErrorSvc
-ToolSvc              INFO Removing all tools created by ToolSvc
-SingleElectronR...   INFO  Applied corrections configured via options for  SingleElectronRec.LCorrection
-SingleElectronR...   INFO  Applied corrections configured via options for  SingleElectronRec.SCorrection
-SingleElectronR...   INFO  Applied corrections configured via condDB  ('Conditions/Reco/Calo/ElectronECorrection') for SingleElectronRec.ECorrection
-MergedPi0Rec.Pi...   INFO  Applied corrections configured via options for  MergedPi0Rec.Pi0LCorrection
-MergedPi0Rec.Pi...   INFO  Applied corrections configured via options for  MergedPi0Rec.Pi0SCorrection
-MergedPi0Rec.Sh...   INFO  Applied corrections configured via options for  MergedPi0Rec.ShowerProfile
-MergedPi0Rec.LC...   INFO  Applied corrections configured via options for  MergedPi0Rec.LCorrection
-MergedPi0Rec.SC...   INFO  Applied corrections configured via options for  MergedPi0Rec.SCorrection
-MergedPi0Rec.EC...   INFO  Applied corrections configured via condDB  ('Conditions/Reco/Calo/SplitPhotonECorrection') for MergedPi0Rec.ECorrection
-SinglePhotonRec...   INFO  Applied corrections configured via options for  SinglePhotonRec.LCorrection
-SinglePhotonRec...   INFO  Applied corrections configured via options for  SinglePhotonRec.SCorrection
-SinglePhotonRec...   INFO  Applied corrections configured via condDB  ('Conditions/Reco/Calo/PhotonECorrection') for SinglePhotonRec.ECorrection
-ToolSvc.FastVel...   INFO Maximum number of Velo hits 0
-ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
-ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
-TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   1.64 times the speed of a 2.8 GHz Xeon.
-TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
-TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO  EscherSequencer              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO   EscherPrescaler             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO   Init                        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    InitReprocSeq              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     EventNodeKiller           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    InitEscherSeq              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     EscherInit                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    InitCaloSeq                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO   Reco                        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    RecoDecodingSeq            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     DecodeVeloClusters        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     CreateTTClusters          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     CreateTTLiteClusters      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     CreateITClusters          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     CreateITLiteClusters      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    RecoVELOSeq                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     FastVeloTracking          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    RecoTTSeq                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    RecoITSeq                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    RecoOTSeq                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    RecoTrSeq                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     Track                     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      TrackForwardPatSeq       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       PatForward              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      TrackSeedPatSeq          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       PatSeeding              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      TrackMatchPatSeq         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       PatMatch                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      TrackDownstreamPatSeq    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       PatDownstream           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      TrackVeloTTPatSeq        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       PatVeloTT               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      TrackFitSeq              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       TrackEventCloneKiller   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       InitBestFit             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       FitBest                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       CopyBest                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      TrackVeloFitSeq          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       TrackPrepareVelo        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       FitVelo                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       CopyVelo                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      TrackAddExtraInfoSeq     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       TrackClonesSeq          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        FindTrackClones        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        FlagTrackClones        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       TrackAddLikelihood      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       TrackAddNNGhostId       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      TrackEraseExtraInformatio|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       TrackEraseExtraInfo     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    RecoVertexSeq              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     PatPVOffline              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     TrackV0Finder             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    RecoRICHSeq                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     RichRecInitOfflineSeq     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      CheckProcOfflineStatus   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      RichOfflinePixelsSeq     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       DecodeRawRichOffline    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       CreateOfflinePixels     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      RichOfflineTracksSeq     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       CreateOfflineTracks     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      RichOfflinePhotonsSeq    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       CreateOfflinePhotons    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     RichOfflineENNRingFinderSe|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      OfflineENNFinderR1GasTop |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      OfflineENNFinderR1GasBott|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      OfflineENNFinderR2GasLeft|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      OfflineENNFinderR2GasRigh|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      OfflineENNRingsSegAssoc  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      OfflineBestENNRings      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      OfflineIsolatedENNRings  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     RichOfflinePIDSeq         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      RichOfflineGPIDSeq       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       RichOfflineGPIDInitSeq  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        RichOfflineGPIDInit    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        RichOfflineGPIDDigSel  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        RichOfflineGPIDTrSel   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       RichOfflineGPIDLLSeq    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        RichOfflineBckEstIt0   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        RichOfflineGPIDLLIt0   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        RichOfflineBckEstIt1   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        RichOfflineGPIDLLIt1   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       RichOfflineGPIDFin      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      MergeOfflineRichPIDs     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    RecoCALOSeq                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     CaloRecoSeq               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      CaloDigits               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       SpdFromRaw              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       PrsFromRaw              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       EcalZSup                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       HcalZSup                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      ClusterReco              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       CaloDigitFilter         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       EcalClust               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       EcalShare               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       EcalCovar               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      PhotonReco               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       CaloTrackMatch          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        InECAL                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        ClusterMatch           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       SinglePhotonRec         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      MergedPi0Reco            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       MergedPi0Rec            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      ElectronReco             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       SingleElectronRec       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     CaloPIDsSeq               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      CaloPIDs                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       ChargedPIDs             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        InCaloAcceptance       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO         InSPD                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO         InPRS                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO         InHCAL                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO         InBREM                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        CaloMatch              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO         ElectronMatch         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO         BremMatch             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        CaloEnergy             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO         SpdE                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO         PrsE                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO         EcalE                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO         HcalE                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        CaloChi2               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO         EcalChi22ID           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO         BremChi22ID           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO         ClusChi22ID           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        CaloDLLe               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO         PrsPIDe               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO         EcalPIDe              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO         BremPIDe              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO         HcalPIDe              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        CaloDLLmu              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO         EcalPIDmu             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO         HcalPIDmu             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       NeutralPIDs             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        PhotonID               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        MergedID               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        PhotonFromMergedID     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    RecoMUONSeq                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     MuonRec                   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     MuonIDSeq                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      MuonIDAlg                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    RecoPROTOSeq               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     ChargedProtoParticles     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      ChargedProtoPMaker       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      ChargedProtoPAddEcal     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      ChargedProtoPAddBrem     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      ChargedProtoPAddHcal     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      ChargedProtoPAddPrs      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      ChargedProtoPAddSpd      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      ChargedProtoPAddVeloDEDX |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      ChargedProtoPAddRich     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      ChargedProtoPAddMuon     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      ChargedProtoPCombDLLs    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      ANNGPIDSeq               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       ANNGPIDLongElectron     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       ANNGPIDLongMuon         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       ANNGPIDLongPion         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       ANNGPIDLongKaon         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       ANNGPIDLongProton       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       ANNGPIDLongGhost        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       ANNGPIDDownstreamElectro|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       ANNGPIDDownstreamMuon   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       ANNGPIDDownstreamPion   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       ANNGPIDDownstreamKaon   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       ANNGPIDDownstreamProton |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       ANNGPIDDownstreamGhost  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       ANNGPIDUpstreamElectron |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       ANNGPIDUpstreamMuon     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       ANNGPIDUpstreamPion     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       ANNGPIDUpstreamKaon     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       ANNGPIDUpstreamProton   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       ANNGPIDUpstreamGhost    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     NeutralProtoParticles     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      NeutralProtoPMaker       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    RecoSUMMARYSeq             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     RecSummary                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO   Moni                        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    MoniVELOSeq                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     VeloClusterMonitor        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     VeloTrackMonitor          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     VeloIPResolutionMonitor   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    MoniTrSeq                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     TrackMonitor              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     TrackDiMuonMonitor        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     TrackVertexMonitor        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     TrackV0Monitor            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     TrackFitMatchMonitor      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     TrackAlignMonitor         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     TrackITOverlapMonitor     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     TrackVeloOverlapMonitor   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     TTTrackMonitor            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     ITTrackMonitor            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     TrackPV2HalfAlignMonitor  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     TrackEcalMatchMonitor     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     TrackSpdMatchMonitor      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     TrackPrsMatchMonitor      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     TrackMuonMatchMonitor     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    MoniOTSeq                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     OTTimeMonitor             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     OTTrackMonitor            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     OTHitEfficiencyMonitor    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    MoniSTSeq                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     TTClusterMonitor          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     ITClusterMonitor          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO   AlignSequence               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-ApplicationMgr       INFO Application Manager Finalized successfully
+AlignSequence        INFO Member list: GaudiSequencer/TrackFilterSeq, GaudiSequencer/AlignMonitorSeq, GaudiSequencer/AlignmentAlgSeq
+TrackFilterSeq       INFO Member list: TrackListRefiner/GoodLongTracksSelectorAlg, TrackListMerger/AlignTrackMerger
+AlignMonitorSeq      INFO Member list: TrackMonitor/GoodLongTracksTrackMonitor, TrackVeloOverlapMonitor/GoodLongTracksVeloOverlapMonitor, TrackITOverlapMonitor/GoodLongTracksITOverlapMonitor
+AlignmentAlgSeq      INFO Member list: AlignAlgorithm/Alignment
+ToolSvc.GetElem...  ERROR GetElementsToBeAligned:: Please specify which elements to align! StatusCode=FAILURE
+ToolSvc             ERROR Error initializing tool 'ToolSvc.GetElementsToBeAligned'
+Alignment           FATAL AlignAlgorithm:: Exception throw: tool():: Could not retrieve Tool 'GetElementsToBeAligned' StatusCode=FAILURE
+Alignment           FATAL  Exception with tag= is caught
+Alignment           ERROR 	Alignment:: tool():: Could not retrieve Tool 'GetElementsToBeAligned'	 StatusCode=FAILURE
+ChronoStatSvc        INFO  Number of skipped events for MemStat-1
+AlignmentAlgSeq     ERROR GaudiSequencer:: Can not initialize Alignment StatusCode=FAILURE
+AlignSequence       ERROR GaudiSequencer:: Can not initialize AlignmentAlgSeq StatusCode=FAILURE
+EscherSequencer     ERROR GaudiSequencer:: Can not initialize AlignSequence StatusCode=FAILURE
+EventLoopMgr        ERROR Unable to initialize Algorithm: EscherSequencer
+ServiceManager      ERROR Unable to initialize Service: EventLoopMgr
 ApplicationMgr       INFO Application Manager Terminated successfully
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloClusterizationTool/EcalClust.CaloClusterizationTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloCorrectionBase/MergedPi0Rec.Pi0LCorrection' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloCorrectionBase/MergedPi0Rec.Pi0SCorrection' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloCorrectionBase/MergedPi0Rec.ShowerProfile' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloDataProvider/ToolSvc.EcalDataProvider' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloDataProvider/ToolSvc.HcalDataProvider' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloDataProvider/ToolSvc.PrsDataProvider' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloDataProvider/ToolSvc.SpdDataProvider' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloDigitFilterTool/ToolSvc.FilterTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloECorrection/MergedPi0Rec.ECorrection' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloECorrection/SingleElectronRec.ECorrection' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloECorrection/SinglePhotonRec.ECorrection' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloElectron/ChargedProtoPAddBrem.CaloHypoEstimator.CaloElectron' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloElectron/ChargedProtoPAddEcal.CaloElectron' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloElectron/ChargedProtoPAddEcal.CaloHypoEstimator.CaloElectron' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloElectron/ChargedProtoPAddHcal.CaloHypoEstimator.CaloElectron' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloElectron/ChargedProtoPAddPrs.CaloHypoEstimator.CaloElectron' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloElectron/ChargedProtoPAddSpd.CaloHypoEstimator.CaloElectron' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloElectron/MergedID.CaloHypoEstimator.CaloElectron' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloElectron/MergedPi0Rec.ECorrection.CaloElectron' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloElectron/MergedPi0Rec.LCorrection.CaloElectron' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloElectron/MergedPi0Rec.Pi0LCorrection.CaloElectron' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloElectron/MergedPi0Rec.Pi0SCorrection.CaloElectron' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloElectron/MergedPi0Rec.SCorrection.CaloElectron' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloElectron/MergedPi0Rec.ShowerProfile.CaloElectron' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloElectron/NeutralProtoPMaker.CaloHypoEstimator.CaloElectron' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloElectron/PhotonFromMergedID.CaloHypoEstimator.CaloElectron' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloElectron/PhotonID.CaloHypoEstimator.CaloElectron' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloElectron/SingleElectronRec.ECorrection.CaloElectron' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloElectron/SingleElectronRec.LCorrection.CaloElectron' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloElectron/SingleElectronRec.SCorrection.CaloElectron' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloElectron/SinglePhotonRec.ECorrection.CaloElectron' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloElectron/SinglePhotonRec.LCorrection.CaloElectron' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloElectron/SinglePhotonRec.SCorrection.CaloElectron' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloEnergyFromRaw/EcalZSup.EcalZSupTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloEnergyFromRaw/HcalZSup.HcalZSupTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloEnergyFromRaw/PrsFromRaw.PrsFromRawTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloExtraDigits/MergedPi0Rec.SpdPrsExtraM' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloExtraDigits/MergedPi0Rec.SpdPrsExtraS' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloExtraDigits/SingleElectronRec.SpdPrsExtraE' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloExtraDigits/SinglePhotonRec.SpdPrsExtraG' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloGetterTool/ChargedProtoPAddBrem.CaloHypoEstimator.CaloHypo2Calo.CaloGetter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloGetterTool/ChargedProtoPAddEcal.CaloHypoEstimator.CaloHypo2Calo.CaloGetter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloGetterTool/ChargedProtoPAddHcal.CaloHypoEstimator.CaloHypo2Calo.CaloGetter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloGetterTool/ChargedProtoPAddPrs.CaloHypoEstimator.CaloHypo2Calo.CaloGetter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloGetterTool/ChargedProtoPAddSpd.CaloHypoEstimator.CaloHypo2Calo.CaloGetter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloGetterTool/MergedID.CaloHypoEstimator.CaloHypo2Calo.CaloGetter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloGetterTool/MergedPi0Rec.SpdPrsExtraM.CaloHypo2Prs.CaloGetter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloGetterTool/MergedPi0Rec.SpdPrsExtraM.CaloHypo2Spd.CaloGetter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloGetterTool/MergedPi0Rec.SpdPrsExtraS.CaloHypo2Prs.CaloGetter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloGetterTool/MergedPi0Rec.SpdPrsExtraS.CaloHypo2Spd.CaloGetter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloGetterTool/NeutralProtoPMaker.CaloHypoEstimator.CaloHypo2Calo.CaloGetter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloGetterTool/PhotonFromMergedID.CaloHypoEstimator.CaloHypo2Calo.CaloGetter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloGetterTool/PhotonID.CaloHypoEstimator.CaloHypo2Calo.CaloGetter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloGetterTool/SingleElectronRec.ChargedClusterWithSpd.CaloHypo2Spd.CaloGetter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloGetterTool/SingleElectronRec.SpdPrsExtraE.CaloHypo2Prs.CaloGetter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloGetterTool/SingleElectronRec.SpdPrsExtraE.CaloHypo2Spd.CaloGetter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloGetterTool/SinglePhotonRec.SpdPrsExtraG.CaloHypo2Prs.CaloGetter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloGetterTool/SinglePhotonRec.SpdPrsExtraG.CaloHypo2Spd.CaloGetter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloGetterTool/ToolSvc.CaloHypo2Prs.CaloGetter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloHypo2Calo/ChargedProtoPAddBrem.CaloHypoEstimator.CaloHypo2Calo' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloHypo2Calo/ChargedProtoPAddEcal.CaloHypoEstimator.CaloHypo2Calo' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloHypo2Calo/ChargedProtoPAddHcal.CaloHypoEstimator.CaloHypo2Calo' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloHypo2Calo/ChargedProtoPAddPrs.CaloHypoEstimator.CaloHypo2Calo' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloHypo2Calo/ChargedProtoPAddSpd.CaloHypoEstimator.CaloHypo2Calo' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloHypo2Calo/MergedID.CaloHypoEstimator.CaloHypo2Calo' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloHypo2Calo/MergedPi0Rec.SpdPrsExtraM.CaloHypo2Prs' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloHypo2Calo/MergedPi0Rec.SpdPrsExtraM.CaloHypo2Spd' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloHypo2Calo/MergedPi0Rec.SpdPrsExtraS.CaloHypo2Prs' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloHypo2Calo/MergedPi0Rec.SpdPrsExtraS.CaloHypo2Spd' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloHypo2Calo/NeutralProtoPMaker.CaloHypoEstimator.CaloHypo2Calo' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloHypo2Calo/PhotonFromMergedID.CaloHypoEstimator.CaloHypo2Calo' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloHypo2Calo/PhotonID.CaloHypoEstimator.CaloHypo2Calo' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloHypo2Calo/SingleElectronRec.ChargedClusterWithSpd.CaloHypo2Spd' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloHypo2Calo/SingleElectronRec.SpdPrsExtraE.CaloHypo2Prs' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloHypo2Calo/SingleElectronRec.SpdPrsExtraE.CaloHypo2Spd' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloHypo2Calo/SinglePhotonRec.SpdPrsExtraG.CaloHypo2Prs' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloHypo2Calo/SinglePhotonRec.SpdPrsExtraG.CaloHypo2Spd' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloHypo2Calo/ToolSvc.CaloHypo2Prs' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloHypoEstimator/ChargedProtoPAddBrem.CaloHypoEstimator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloHypoEstimator/ChargedProtoPAddEcal.CaloHypoEstimator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloHypoEstimator/ChargedProtoPAddHcal.CaloHypoEstimator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloHypoEstimator/ChargedProtoPAddPrs.CaloHypoEstimator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloHypoEstimator/ChargedProtoPAddSpd.CaloHypoEstimator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloHypoEstimator/MergedID.CaloHypoEstimator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloHypoEstimator/NeutralProtoPMaker.CaloHypoEstimator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloHypoEstimator/PhotonFromMergedID.CaloHypoEstimator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloHypoEstimator/PhotonID.CaloHypoEstimator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloLCorrection/MergedPi0Rec.LCorrection' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloLCorrection/SingleElectronRec.LCorrection' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloLCorrection/SinglePhotonRec.LCorrection' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloSCorrection/MergedPi0Rec.SCorrection' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloSCorrection/SingleElectronRec.SCorrection' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloSCorrection/SinglePhotonRec.SCorrection' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloSelectChargedClusterWithSpd/SingleElectronRec.ChargedClusterWithSpd' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloSelectCluster/SingleElectronRec.ElectronCluster' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloSelectCluster/SinglePhotonRec.PhotonCluster' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloSelectClusterWithPrs/SingleElectronRec.ClusterWithPrs' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloSelectNeutralClusterWithTracks/SingleElectronRec.ChargedCluster.NotNeutralCluster' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloSelectNeutralClusterWithTracks/SinglePhotonRec.NeutralCluster' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloSelectorNOT/SingleElectronRec.ChargedCluster' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CaloTriggerBitsFromRaw/SpdFromRaw.SpdFromRawTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'ClusterCovarianceMatrixTool/EcalCovar.EcalCovarTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'ClusterSpreadTool/EcalCovar.EcalSpreadTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'CountVeloTracks/ToolSvc.CountVeloTracks' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'DelegatingTrackSelector/ChargedProtoPMaker.TrackSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'DetailedMaterialLocator/GoodLongTracksTrackMonitor.TrackMasterExtrapolator.MaterialLocator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'DetailedMaterialLocator/ITTrackMonitor.TrackMasterExtrapolator.MaterialLocator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'DetailedMaterialLocator/InitBestFit.TrackStateInitTool.Extrapolator.MaterialLocator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'DetailedMaterialLocator/PatPVOffline.PVOfflineTool.LSAdaptPVFitter.TrackMasterExtrapolator.MaterialLocator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'DetailedMaterialLocator/PatPVOffline.PVOfflineTool.PVOfflineRecalculate.TrackMasterExtrapolator.MaterialLocator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'DetailedMaterialLocator/TTTrackMonitor.TrackMasterExtrapolator.MaterialLocator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'DetailedMaterialLocator/TrackEcalMatchMonitor.TrackMasterExtrapolator.MaterialLocator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'DetailedMaterialLocator/TrackMonitor.TrackMasterExtrapolator.MaterialLocator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'DetailedMaterialLocator/TrackPV2HalfAlignMonitor.PVOfflineTool.LSAdaptPVFitter.TrackMasterExtrapolator.MaterialLocator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'DetailedMaterialLocator/TrackPV2HalfAlignMonitor.PVOfflineTool.PVOfflineRecalculate.TrackMasterExtrapolator.MaterialLocator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'DetailedMaterialLocator/TrackPrsMatchMonitor.TrackMasterExtrapolator.MaterialLocator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'DetailedMaterialLocator/TrackSpdMatchMonitor.TrackMasterExtrapolator.MaterialLocator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'DetailedMaterialLocator/TrackV0Finder.TrackInterpolator.TrackMasterExtrapolator.MaterialLocator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'DetailedMaterialLocator/VeloIPResolutionMonitor.Extrapolator.MaterialLocator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'EcalEnergyForTrack/EcalE.EcalE' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'FastMomentumEstimate/ToolSvc.FastMomentumEstimate' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'FastVeloFitLHCbIDs/InitBestFit.TrackStateInitTool.FastVeloFitLHCbIDs' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'FastVeloHitManager/ToolSvc.FastVeloHitManager' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'GammaPi0SeparationTool/ChargedProtoPAddBrem.CaloHypoEstimator.GammaPi0SeparationTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'GammaPi0SeparationTool/ChargedProtoPAddEcal.CaloHypoEstimator.GammaPi0SeparationTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'GammaPi0SeparationTool/ChargedProtoPAddHcal.CaloHypoEstimator.GammaPi0SeparationTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'GammaPi0SeparationTool/ChargedProtoPAddPrs.CaloHypoEstimator.GammaPi0SeparationTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'GammaPi0SeparationTool/ChargedProtoPAddSpd.CaloHypoEstimator.GammaPi0SeparationTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'GammaPi0SeparationTool/MergedID.CaloHypoEstimator.GammaPi0SeparationTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'GammaPi0SeparationTool/NeutralProtoPMaker.CaloHypoEstimator.GammaPi0SeparationTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'GammaPi0SeparationTool/PhotonFromMergedID.CaloHypoEstimator.GammaPi0SeparationTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'GammaPi0SeparationTool/PhotonID.CaloHypoEstimator.GammaPi0SeparationTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'GetElementsToBeAligned/ToolSvc.GetElementsToBeAligned' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'HcalEnergyForTrack/HcalE.HcalE' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'ITHitExpectation/ToolSvc.ITHitExpectation' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'ITReadoutTool/ToolSvc.ITReadoutTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'InBremAcceptance/InBREM.InBrem' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'InEcalAcceptance/InECAL.InEcal' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'InHcalAcceptance/InHCAL.InHcal' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'InPrsAcceptance/InPRS.InPrs' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'InSpdAcceptance/InSPD.InSpd' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LSAdaptPVFitter/PatPVOffline.PVOfflineTool.LSAdaptPVFitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LSAdaptPVFitter/TrackPV2HalfAlignMonitor.PVOfflineTool.LSAdaptPVFitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'MeasurementProvider/FitBest.Fitter.MeasurementProvider' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'MeasurementProvider/FitVelo.Fitter.MeasurementProvider' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'MeasurementProvider/PatVeloTT.Fitter.MeasurementProvider' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'MeasurementProviderT<MeasurementProviderTypes::IT>/FitBest.Fitter.MeasurementProvider.ITMeasurementProvider' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'MeasurementProviderT<MeasurementProviderTypes::IT>/FitVelo.Fitter.MeasurementProvider.ITMeasurementProvider' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'MeasurementProviderT<MeasurementProviderTypes::IT>/PatVeloTT.Fitter.MeasurementProvider.ITMeasurementProvider' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'MeasurementProviderT<MeasurementProviderTypes::TT>/FitBest.Fitter.MeasurementProvider.TTMeasurementProvider' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'MeasurementProviderT<MeasurementProviderTypes::TT>/FitVelo.Fitter.MeasurementProvider.TTMeasurementProvider' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'MeasurementProviderT<MeasurementProviderTypes::TT>/PatVeloTT.Fitter.MeasurementProvider.TTMeasurementProvider' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'MeasurementProviderT<MeasurementProviderTypes::VeloPhi>/FitBest.Fitter.MeasurementProvider.VeloPhiMeasurementProvider' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'MeasurementProviderT<MeasurementProviderTypes::VeloPhi>/FitVelo.Fitter.MeasurementProvider.VeloPhiMeasurementProvider' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'MeasurementProviderT<MeasurementProviderTypes::VeloPhi>/PatVeloTT.Fitter.MeasurementProvider.VeloPhiMeasurementProvider' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'MeasurementProviderT<MeasurementProviderTypes::VeloR>/FitBest.Fitter.MeasurementProvider.VeloRMeasurementProvider' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'MeasurementProviderT<MeasurementProviderTypes::VeloR>/FitVelo.Fitter.MeasurementProvider.VeloRMeasurementProvider' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'MeasurementProviderT<MeasurementProviderTypes::VeloR>/PatVeloTT.Fitter.MeasurementProvider.VeloRMeasurementProvider' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'MemoryTool/EscherInit.BrunelMemory' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'MuonMeasurementProvider/FitBest.Fitter.MeasurementProvider.MuonMeasurementProvider' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'MuonMeasurementProvider/FitVelo.Fitter.MeasurementProvider.MuonMeasurementProvider' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'MuonMeasurementProvider/PatVeloTT.Fitter.MeasurementProvider.MuonMeasurementProvider' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'MuonRawBuffer/ToolSvc.MuonRawBuffer' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'ODINDecodeTool/EventClockSvc.OdinTimeDecoder.ODINDecodeTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'OTChannelMapTool/ToolSvc.OTChannelMapTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'OTHitExpectation/ToolSvc.OTHitExpectation' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'OTMeasurementProvider/FitBest.Fitter.MeasurementProvider.OTMeasurementProvider' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'OTMeasurementProvider/FitVelo.Fitter.MeasurementProvider.OTMeasurementProvider' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'OTMeasurementProvider/PatVeloTT.Fitter.MeasurementProvider.OTMeasurementProvider' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'OTRawBankDecoder/ToolSvc.OTRawBankDecoder' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'OTReadOutWindow/ToolSvc.OTReadOutWindow' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'OdinTimeDecoder/EventClockSvc.OdinTimeDecoder' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'PVOfflineRecalculate/PatPVOffline.PVOfflineTool.PVOfflineRecalculate' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'PVOfflineRecalculate/TrackPV2HalfAlignMonitor.PVOfflineTool.PVOfflineRecalculate' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'PVOfflineTool/PatPVOffline.PVOfflineTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'PVOfflineTool/TrackPV2HalfAlignMonitor.PVOfflineTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'PVSeed3DTool/PatPVOffline.PVOfflineTool.PVSeed3DTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'PVSeed3DTool/TrackPV2HalfAlignMonitor.PVOfflineTool.PVSeed3DTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'PatAddTTCoord/PatForward.PatForwardTool.PatAddTTCoord' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'PatAddTTCoord/ToolSvc.PatAddTTCoord' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'PatForwardTool/PatForward.PatForwardTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'PatFwdTool/PatForward.PatForwardTool.PatFwdTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'PatMatchTool/PatMatch.PatMatchTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'PatSeedFit/ToolSvc.PatSeedFit' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'PatSeedTool/ToolSvc.PatSeedFit.PatSeedTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'PatSeedTool/ToolSvc.PatSeedTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'PatSeedingTool/PatSeeding.PatSeedingTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'PatTStationHitManager/ToolSvc.PatTStationHitManager' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'PatTTMagnetTool/ToolSvc.PatTTMagnetTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'PatTTStationHitManager/ToolSvc.PatTTStationHitManager' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'PatTableForFunction/ToolSvc.PatTTMagnetTool.table1' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'PatTableForFunction/ToolSvc.PatTTMagnetTool.table2' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'PatTableForFunction/ToolSvc.PatTTMagnetTool.table3' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'PatTableForFunction/ToolSvc.PatTTMagnetTool.table4' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'PatVeloTTFit/ToolSvc.PatVeloTTFit' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'PatVeloTTTool/ToolSvc.PatVeloTTTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'PitchResTool/ToolSvc.PitchResTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'PrsEnergyForTrack/PrsE.PrsE' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::DAQ::HPDPixelClusteringTool/ToolSvc.Offline_RichPixelCreator.PixelClusteringRich1' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::DAQ::HPDPixelClusteringTool/ToolSvc.Offline_RichPixelCreator.PixelClusteringRich2' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::DAQ::HighOccHPDSuppressionTool/ToolSvc.Offline_RichPixelCreator.PixelSuppressRich1' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::DAQ::HighOccHPDSuppressionTool/ToolSvc.Offline_RichPixelCreator.PixelSuppressRich2' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::DAQ::RawBufferToSmartIDsTool/ToolSvc.RichSmartIDDecoder' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::DAQ::RawDataFormatTool/ToolSvc.RichSmartIDDecoder.RawDecoder' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::DetParameters/ToolSvc.Offline_RichDetParameters' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::MirrorSegFinder/ToolSvc.Offline_RichMirrorSegFinder' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::ParticleProperties/ToolSvc.Offline_RichParticleProperties' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::RadiatorTool/ToolSvc.Offline_RichRadiatorTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::RayTracing/ToolSvc.Offline_RichRayTracing' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::Rec::BackgroundEstiAvHPD/RichOfflineBckEstIt0.PixelBackgroundTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::Rec::BackgroundEstiAvHPD/RichOfflineBckEstIt1.PixelBackgroundTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::Rec::CKthetaBandsPhotonPredictor/ToolSvc.Offline_RichPhotonCreator.Predictor' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::Rec::CherenkovAngle/ToolSvc.Offline_RichCherenkovAngle' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::Rec::DetailedTrSegMakerFromRecoTracks/ToolSvc.Offline_RichTrackCreator.TrSegMaker' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::Rec::ExpectedTrackSignal/ToolSvc.Offline_RichExpectedTrackSignal' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::Rec::ForwardTrackSelector/RichOfflineGPIDTrSel.TrackSelector.Forward' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::Rec::ForwardTrackSelector/ToolSvc.Offline_RichTrackCreator.TrackSelector.Forward' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::Rec::FunctionalCKResForRecoTracks/ToolSvc.Offline_RichCherenkovResolution' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::Rec::GeomEffCKMassRing/ToolSvc.Offline_RichGeomEff' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::Rec::GeomTool/ToolSvc.Offline_RichRecGeometry' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::Rec::GlobalPID::LikelihoodTool/RichOfflineGPIDLLIt0.GPIDLikelihoodTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::Rec::GlobalPID::LikelihoodTool/RichOfflineGPIDLLIt1.GPIDLikelihoodTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::Rec::GlobalPID::TrackCreator/ToolSvc.Offline_GPIDTrackCreator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::Rec::KsTrackSelector/RichOfflineGPIDTrSel.TrackSelector.KsTrack' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::Rec::KsTrackSelector/ToolSvc.Offline_RichTrackCreator.TrackSelector.KsTrack' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::Rec::MassHypothesisRingCreator/ToolSvc.Offline_RichMassHypoRings' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::Rec::MatchTrackSelector/RichOfflineGPIDTrSel.TrackSelector.Match' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::Rec::MatchTrackSelector/ToolSvc.Offline_RichTrackCreator.TrackSelector.Match' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::Rec::PhotonCreator/ToolSvc.Offline_RichPhotonCreator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::Rec::PhotonEmissionPoint/ToolSvc.Offline_RichPhotonEmissionPoint' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::Rec::PhotonRecoUsingQuarticSoln/ToolSvc.Offline_RichPhotonCreator.PhotonParams' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::Rec::PhotonSignalGaussProb/ToolSvc.Offline_RichPhotonSignal' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::Rec::PixelCreatorFromRawBuffer/ToolSvc.Offline_RichPixelCreator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::Rec::RayTraceCherenkovCone/ToolSvc.Offline_RichRayTraceCKCone' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::Rec::SeedTrackSelector/RichOfflineGPIDTrSel.TrackSelector.Seed' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::Rec::SeedTrackSelector/ToolSvc.Offline_RichTrackCreator.TrackSelector.Seed' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::Rec::SegmentCreator/ToolSvc.Offline_RichSegmentCreator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::Rec::SellmeirFunc/ToolSvc.Offline_RichSellmeirFunc' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::Rec::StatusCreator/ToolSvc.Offline_RichStatusCreator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::Rec::TabulatedGasQuartzWindowAbs/ToolSvc.Offline_RichGasQuartzWindow' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::Rec::TabulatedRayleighScatter/ToolSvc.Offline_RichRayleighScatter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::Rec::TabulatedSignalDetectionEff/ToolSvc.Offline_RichSignalDetectionEff' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::Rec::TrackCreatorFromRecoTracks/ToolSvc.Offline_RichTrackCreator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::Rec::TrackEffectiveRefractiveIndex/ToolSvc.Offline_RichTrackEffectiveRefIndex' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::Rec::TrackSelector/RichOfflineGPIDTrSel.TrackSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::Rec::TrackSelector/ToolSvc.Offline_RichTrackCreator.TrackSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::Rec::VeloTTTrackSelector/RichOfflineGPIDTrSel.TrackSelector.VeloTT' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::Rec::VeloTTTrackSelector/ToolSvc.Offline_RichTrackCreator.TrackSelector.VeloTT' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::SmartIDTool/ToolSvc.Offline_RichSmartIDTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::SmartIDTool/ToolSvc.RichSmartIDTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::TabulatedRefractiveIndex/ToolSvc.Offline_RichRefractiveIndex' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::ToolRegistry/ToolSvc.Offline_RichToolRegistry' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Rich::ToolRegistry/ToolSvc.RichToolRegistry' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'STOfflinePosition/ToolSvc.ITClusterPosition' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'STOfflinePosition/ToolSvc.STOfflinePosition' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'SequencerTimerTool/TimingAuditor.TIMER' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'SequencerTimerTool/ToolSvc.SequencerTimerTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'SimplifiedMaterialLocator/FitBest.Fitter.SimplifiedMaterialLocator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'SimplifiedMaterialLocator/FitBest.Fitter.TrackMasterExtrapolator.MaterialLocator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'SimplifiedMaterialLocator/FitVelo.Fitter.SimplifiedMaterialLocator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'SimplifiedMaterialLocator/FitVelo.Fitter.TrackMasterExtrapolator.MaterialLocator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'SimplifiedMaterialLocator/PatVeloTT.Fitter.SimplifiedMaterialLocator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'SimplifiedMaterialLocator/PatVeloTT.Fitter.TrackMasterExtrapolator.MaterialLocator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'SimplifiedMaterialLocator/ToolSvc.TrackInterpolator.Extrapolator.MaterialLocator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'SimplifiedMaterialLocator/ToolSvc.TrackMasterExtrapolator.MaterialLocator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'SpdEnergyForTrack/SpdE.SpdE' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/FitBest.Fitter.SimplifiedMaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/FitBest.Fitter.TrackMasterExtrapolator.MaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/FitVelo.Fitter.SimplifiedMaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/FitVelo.Fitter.TrackMasterExtrapolator.MaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/GoodLongTracksTrackMonitor.TrackMasterExtrapolator.MaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/ITTrackMonitor.TrackMasterExtrapolator.MaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/InitBestFit.TrackStateInitTool.Extrapolator.MaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/PatPVOffline.PVOfflineTool.LSAdaptPVFitter.TrackMasterExtrapolator.MaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/PatPVOffline.PVOfflineTool.PVOfflineRecalculate.TrackMasterExtrapolator.MaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/PatVeloTT.Fitter.SimplifiedMaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/PatVeloTT.Fitter.TrackMasterExtrapolator.MaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/TTTrackMonitor.TrackMasterExtrapolator.MaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/ToolSvc.TrackInterpolator.Extrapolator.MaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/ToolSvc.TrackMasterExtrapolator.MaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/TrackEcalMatchMonitor.TrackMasterExtrapolator.MaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/TrackMonitor.TrackMasterExtrapolator.MaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/TrackPV2HalfAlignMonitor.PVOfflineTool.LSAdaptPVFitter.TrackMasterExtrapolator.MaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/TrackPV2HalfAlignMonitor.PVOfflineTool.PVOfflineRecalculate.TrackMasterExtrapolator.MaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/TrackPrsMatchMonitor.TrackMasterExtrapolator.MaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/TrackSpdMatchMonitor.TrackMasterExtrapolator.MaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/TrackV0Finder.TrackInterpolator.TrackMasterExtrapolator.MaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/VeloIPResolutionMonitor.Extrapolator.MaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'StateElectronEnergyCorrectionTool/ToolSvc.StateElectronEnergyCorrectionTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'StateThickMSCorrectionTool/ToolSvc.StateThickMSCorrectionTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'SubClusterSelector3x3/EcalCovar.SubClusterSelector3x3' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TTHitExpectation/ToolSvc.TTHitExpectation' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TTReadoutTool/ToolSvc.TTReadoutTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Tf::OTHitCreator/ToolSvc.OTHitCreator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Tf::STHitCreator<Tf::IT>/ToolSvc.ITHitCreator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Tf::STHitCreator<Tf::TT>/ToolSvc.TTHitCreator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Tf::Tsa::ITExpectedHits/ToolSvc.Tf::Tsa::ITExpectedHits' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Tf::Tsa::OTExpectedHits/ToolSvc.Tf::Tsa::OTExpectedHits' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackCloneFinder/TrackEventCloneKiller.TrackCloneFinder' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackDistanceExtraSelector/FitBest.Fitter.TrackMasterExtrapolator.TrackDistanceExtraSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackDistanceExtraSelector/FitVelo.Fitter.TrackMasterExtrapolator.TrackDistanceExtraSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackDistanceExtraSelector/GoodLongTracksTrackMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackDistanceExtraSelector/ITTrackMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackDistanceExtraSelector/InitBestFit.TrackStateInitTool.Extrapolator.TrackDistanceExtraSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackDistanceExtraSelector/PatPVOffline.PVOfflineTool.LSAdaptPVFitter.TrackMasterExtrapolator.TrackDistanceExtraSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackDistanceExtraSelector/PatPVOffline.PVOfflineTool.PVOfflineRecalculate.TrackMasterExtrapolator.TrackDistanceExtraSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackDistanceExtraSelector/TTTrackMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackDistanceExtraSelector/ToolSvc.TrackInterpolator.Extrapolator.TrackDistanceExtraSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackDistanceExtraSelector/ToolSvc.TrackMasterExtrapolator.TrackDistanceExtraSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackDistanceExtraSelector/TrackEcalMatchMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackDistanceExtraSelector/TrackMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackDistanceExtraSelector/TrackPV2HalfAlignMonitor.PVOfflineTool.LSAdaptPVFitter.TrackMasterExtrapolator.TrackDistanceExtraSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackDistanceExtraSelector/TrackPV2HalfAlignMonitor.PVOfflineTool.PVOfflineRecalculate.TrackMasterExtrapolator.TrackDistanceExtraSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackDistanceExtraSelector/TrackPrsMatchMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackDistanceExtraSelector/TrackSpdMatchMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackDistanceExtraSelector/TrackV0Finder.TrackInterpolator.TrackMasterExtrapolator.TrackDistanceExtraSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackDistanceExtraSelector/VeloIPResolutionMonitor.Extrapolator.TrackDistanceExtraSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackHerabExtrapolator/ToolSvc.TrackHerabExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackInterpolator/ToolSvc.TrackInterpolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackInterpolator/TrackV0Finder.TrackInterpolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackKalmanFilter/FitBest.Fitter.TrackKalmanFilter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackKalmanFilter/FitVelo.Fitter.TrackKalmanFilter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackKalmanFilter/PatVeloTT.Fitter.TrackKalmanFilter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackLikelihood/TrackAddLikelihood.PatDownstream_likTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackLikelihood/TrackAddLikelihood.PatFastVelo_likTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackLikelihood/TrackAddLikelihood.PatForward_likTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackLikelihood/TrackAddLikelihood.PatMatch_likTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackLikelihood/TrackAddLikelihood.PatSeeding_likTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackLikelihood/TrackAddLikelihood.PatVeloGeneral_likTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackLikelihood/TrackAddLikelihood.PatVeloTT_likTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackLikelihood/TrackAddLikelihood.PatVelo_likTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackLikelihood/TrackAddLikelihood.TrackMatching_likTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackLikelihood/TrackAddLikelihood.TsaTrack_likTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackLinearExtrapolator/FitBest.Fitter.TrackLinearExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackLinearExtrapolator/FitVelo.Fitter.TrackLinearExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackLinearExtrapolator/PatPVOffline.PVOfflineTool.LSAdaptPVFitter.TrackLinearExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackLinearExtrapolator/PatPVOffline.PVOfflineTool.PVOfflineRecalculate.TrackLinearExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackLinearExtrapolator/PatVeloTT.Fitter.TrackLinearExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackLinearExtrapolator/ToolSvc.TrackLinearExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackLinearExtrapolator/TrackMuonMatchMonitor.Extrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackLinearExtrapolator/TrackPV2HalfAlignMonitor.PVOfflineTool.LSAdaptPVFitter.TrackLinearExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackLinearExtrapolator/TrackPV2HalfAlignMonitor.PVOfflineTool.PVOfflineRecalculate.TrackLinearExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackMasterExtrapolator/FitBest.Fitter.TrackMasterExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackMasterExtrapolator/FitVelo.Fitter.TrackMasterExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackMasterExtrapolator/GoodLongTracksTrackMonitor.TrackMasterExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackMasterExtrapolator/ITTrackMonitor.TrackMasterExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackMasterExtrapolator/InitBestFit.TrackStateInitTool.Extrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackMasterExtrapolator/PatPVOffline.PVOfflineTool.LSAdaptPVFitter.TrackMasterExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackMasterExtrapolator/PatPVOffline.PVOfflineTool.PVOfflineRecalculate.TrackMasterExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackMasterExtrapolator/PatVeloTT.Fitter.TrackMasterExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackMasterExtrapolator/TTTrackMonitor.TrackMasterExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackMasterExtrapolator/ToolSvc.TrackInterpolator.Extrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackMasterExtrapolator/ToolSvc.TrackMasterExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackMasterExtrapolator/TrackEcalMatchMonitor.TrackMasterExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackMasterExtrapolator/TrackMonitor.TrackMasterExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackMasterExtrapolator/TrackPV2HalfAlignMonitor.PVOfflineTool.LSAdaptPVFitter.TrackMasterExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackMasterExtrapolator/TrackPV2HalfAlignMonitor.PVOfflineTool.PVOfflineRecalculate.TrackMasterExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackMasterExtrapolator/TrackPrsMatchMonitor.TrackMasterExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackMasterExtrapolator/TrackSpdMatchMonitor.TrackMasterExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackMasterExtrapolator/TrackV0Finder.TrackInterpolator.TrackMasterExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackMasterExtrapolator/VeloIPResolutionMonitor.Extrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackMasterFitter/FitBest.Fitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackMasterFitter/FitVelo.Fitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackMasterFitter/PatVeloTT.Fitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackNNGhostId/TrackAddNNGhostId.TrackNNGhostId' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackParabolicExtrapolator/FitBest.Fitter.TrackMasterExtrapolator.TrackDistanceExtraSelector.ShortDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackParabolicExtrapolator/FitVelo.Fitter.TrackMasterExtrapolator.TrackDistanceExtraSelector.ShortDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackParabolicExtrapolator/GoodLongTracksTrackMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector.ShortDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackParabolicExtrapolator/ITTrackMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector.ShortDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackParabolicExtrapolator/InitBestFit.TrackStateInitTool.Extrapolator.TrackDistanceExtraSelector.ShortDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackParabolicExtrapolator/PatPVOffline.PVOfflineTool.LSAdaptPVFitter.TrackMasterExtrapolator.TrackDistanceExtraSelector.ShortDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackParabolicExtrapolator/PatPVOffline.PVOfflineTool.PVOfflineRecalculate.TrackMasterExtrapolator.TrackDistanceExtraSelector.ShortDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackParabolicExtrapolator/PatVeloTT.Fitter.TrackMasterExtrapolator.TrackSimpleExtraSelector.TrackParabolicExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackParabolicExtrapolator/TTTrackMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector.ShortDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackParabolicExtrapolator/ToolSvc.TrackInterpolator.Extrapolator.TrackDistanceExtraSelector.ShortDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackParabolicExtrapolator/ToolSvc.TrackMasterExtrapolator.TrackDistanceExtraSelector.ShortDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackParabolicExtrapolator/ToolSvc.TrackParabolicExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackParabolicExtrapolator/TrackEcalMatchMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector.ShortDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackParabolicExtrapolator/TrackMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector.ShortDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackParabolicExtrapolator/TrackPV2HalfAlignMonitor.PVOfflineTool.LSAdaptPVFitter.TrackMasterExtrapolator.TrackDistanceExtraSelector.ShortDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackParabolicExtrapolator/TrackPV2HalfAlignMonitor.PVOfflineTool.PVOfflineRecalculate.TrackMasterExtrapolator.TrackDistanceExtraSelector.ShortDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackParabolicExtrapolator/TrackPrsMatchMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector.ShortDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackParabolicExtrapolator/TrackSpdMatchMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector.ShortDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackParabolicExtrapolator/TrackV0Finder.TrackInterpolator.TrackMasterExtrapolator.TrackDistanceExtraSelector.ShortDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackParabolicExtrapolator/VeloIPResolutionMonitor.Extrapolator.TrackDistanceExtraSelector.ShortDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackProjector/ToolSvc.TrackProjector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackProjectorSelector/FitBest.Fitter.TrackProjectorSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackProjectorSelector/FitVelo.Fitter.TrackProjectorSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackProjectorSelector/PatVeloTT.Fitter.TrackProjectorSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/ChargedProtoPAddBrem.CaloHypoEstimator.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/ChargedProtoPAddEcal.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/ChargedProtoPAddEcal.CaloHypoEstimator.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/ChargedProtoPAddHcal.CaloHypoEstimator.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/ChargedProtoPAddPrs.CaloHypoEstimator.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/ChargedProtoPAddSpd.CaloHypoEstimator.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/FitBest.Fitter.TrackMasterExtrapolator.TrackDistanceExtraSelector.LongDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/FitVelo.Fitter.TrackMasterExtrapolator.TrackDistanceExtraSelector.LongDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/GoodLongTracksTrackMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector.LongDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/ITTrackMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector.LongDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/InitBestFit.TrackStateInitTool.Extrapolator.TrackDistanceExtraSelector.LongDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/MergedID.CaloHypoEstimator.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/MergedPi0Rec.ECorrection.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/MergedPi0Rec.LCorrection.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/MergedPi0Rec.Pi0LCorrection.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/MergedPi0Rec.Pi0SCorrection.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/MergedPi0Rec.SCorrection.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/MergedPi0Rec.ShowerProfile.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/NeutralProtoPMaker.CaloHypoEstimator.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/PatPVOffline.PVOfflineTool.LSAdaptPVFitter.TrackMasterExtrapolator.TrackDistanceExtraSelector.LongDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/PatPVOffline.PVOfflineTool.PVOfflineRecalculate.TrackMasterExtrapolator.TrackDistanceExtraSelector.LongDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/PhotonFromMergedID.CaloHypoEstimator.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/PhotonID.CaloHypoEstimator.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/SingleElectronRec.ECorrection.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/SingleElectronRec.LCorrection.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/SingleElectronRec.SCorrection.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/SinglePhotonRec.ECorrection.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/SinglePhotonRec.LCorrection.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/SinglePhotonRec.SCorrection.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/TTTrackMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector.LongDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/ToolSvc.TrackInterpolator.Extrapolator.TrackDistanceExtraSelector.LongDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/ToolSvc.TrackMasterExtrapolator.TrackDistanceExtraSelector.LongDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/ToolSvc.TrackRungeKuttaExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/TrackEcalMatchMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector.LongDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/TrackMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector.LongDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/TrackPV2HalfAlignMonitor.PVOfflineTool.LSAdaptPVFitter.TrackMasterExtrapolator.TrackDistanceExtraSelector.LongDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/TrackPV2HalfAlignMonitor.PVOfflineTool.PVOfflineRecalculate.TrackMasterExtrapolator.TrackDistanceExtraSelector.LongDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/TrackPrsMatchMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector.LongDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/TrackSpdMatchMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector.LongDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/TrackV0Finder.TrackInterpolator.TrackMasterExtrapolator.TrackDistanceExtraSelector.LongDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackRungeKuttaExtrapolator/VeloIPResolutionMonitor.Extrapolator.TrackDistanceExtraSelector.LongDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackSelector/ANNGPIDDownstreamElectron.TrackSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackSelector/ANNGPIDDownstreamGhost.TrackSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackSelector/ANNGPIDDownstreamKaon.TrackSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackSelector/ANNGPIDDownstreamMuon.TrackSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackSelector/ANNGPIDDownstreamPion.TrackSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackSelector/ANNGPIDDownstreamProton.TrackSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackSelector/ANNGPIDLongElectron.TrackSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackSelector/ANNGPIDLongGhost.TrackSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackSelector/ANNGPIDLongKaon.TrackSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackSelector/ANNGPIDLongMuon.TrackSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackSelector/ANNGPIDLongPion.TrackSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackSelector/ANNGPIDLongProton.TrackSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackSelector/ANNGPIDUpstreamElectron.TrackSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackSelector/ANNGPIDUpstreamGhost.TrackSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackSelector/ANNGPIDUpstreamKaon.TrackSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackSelector/ANNGPIDUpstreamMuon.TrackSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackSelector/ANNGPIDUpstreamPion.TrackSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackSelector/ANNGPIDUpstreamProton.TrackSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackSelector/GoodLongTracksSelectorAlg.TrackSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackSimpleExtraSelector/PatVeloTT.Fitter.TrackMasterExtrapolator.TrackSimpleExtraSelector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackStateInitTool/InitBestFit.TrackStateInitTool' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackVelodEdxCharge/ChargedProtoPAddVeloDEDX.VeloCharge' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrackVertexer/ToolSvc.TrackVertexer' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrajOTProjector/ToolSvc.TrajOTProjector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrajPoca/ToolSvc.TrajPoca' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrajProjector<Muon>/ToolSvc.TrajMuonProjector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrajProjector<ST>/ToolSvc.TrajITLiteProjector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrajProjector<ST>/ToolSvc.TrajITProjector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrajProjector<ST>/ToolSvc.TrajTTLiteProjector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrajProjector<ST>/ToolSvc.TrajTTProjector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrajProjector<Velo>/ToolSvc.TrajVeloLitePhiProjector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrajProjector<Velo>/ToolSvc.TrajVeloLiteRProjector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrajProjector<Velo>/ToolSvc.TrajVeloPhiProjector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrajProjector<Velo>/ToolSvc.TrajVeloRProjector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'TrajProjector<VeloPix>/ToolSvc.TrajVeloPixLiteProjector' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'VeloClusterPosition/ToolSvc.VeloClusterPosition' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'VeloExpectation/ToolSvc.VeloExpectation' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloClusterizationTool/EcalClust.CaloClusterizationTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloCorrectionBase/MergedPi0Rec.Pi0LCorrection' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloCorrectionBase/MergedPi0Rec.Pi0SCorrection' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloCorrectionBase/MergedPi0Rec.ShowerProfile' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloDataProvider/ToolSvc.EcalDataProvider' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloDataProvider/ToolSvc.HcalDataProvider' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloDataProvider/ToolSvc.PrsDataProvider' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloDataProvider/ToolSvc.SpdDataProvider' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloDigitFilterTool/ToolSvc.FilterTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloECorrection/MergedPi0Rec.ECorrection' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloECorrection/SingleElectronRec.ECorrection' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloECorrection/SinglePhotonRec.ECorrection' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloElectron/ChargedProtoPAddBrem.CaloHypoEstimator.CaloElectron' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloElectron/ChargedProtoPAddEcal.CaloElectron' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloElectron/ChargedProtoPAddEcal.CaloHypoEstimator.CaloElectron' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloElectron/ChargedProtoPAddHcal.CaloHypoEstimator.CaloElectron' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloElectron/ChargedProtoPAddPrs.CaloHypoEstimator.CaloElectron' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloElectron/ChargedProtoPAddSpd.CaloHypoEstimator.CaloElectron' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloElectron/MergedID.CaloHypoEstimator.CaloElectron' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloElectron/MergedPi0Rec.ECorrection.CaloElectron' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloElectron/MergedPi0Rec.LCorrection.CaloElectron' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloElectron/MergedPi0Rec.Pi0LCorrection.CaloElectron' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloElectron/MergedPi0Rec.Pi0SCorrection.CaloElectron' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloElectron/MergedPi0Rec.SCorrection.CaloElectron' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloElectron/MergedPi0Rec.ShowerProfile.CaloElectron' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloElectron/NeutralProtoPMaker.CaloHypoEstimator.CaloElectron' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloElectron/PhotonFromMergedID.CaloHypoEstimator.CaloElectron' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloElectron/PhotonID.CaloHypoEstimator.CaloElectron' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloElectron/SingleElectronRec.ECorrection.CaloElectron' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloElectron/SingleElectronRec.LCorrection.CaloElectron' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloElectron/SingleElectronRec.SCorrection.CaloElectron' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloElectron/SinglePhotonRec.ECorrection.CaloElectron' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloElectron/SinglePhotonRec.LCorrection.CaloElectron' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloElectron/SinglePhotonRec.SCorrection.CaloElectron' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloEnergyFromRaw/EcalZSup.EcalZSupTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloEnergyFromRaw/HcalZSup.HcalZSupTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloEnergyFromRaw/PrsFromRaw.PrsFromRawTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloExtraDigits/MergedPi0Rec.SpdPrsExtraM' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloExtraDigits/MergedPi0Rec.SpdPrsExtraS' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloExtraDigits/SingleElectronRec.SpdPrsExtraE' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloExtraDigits/SinglePhotonRec.SpdPrsExtraG' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloGetterTool/ChargedProtoPAddBrem.CaloHypoEstimator.CaloHypo2Calo.CaloGetter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloGetterTool/ChargedProtoPAddEcal.CaloHypoEstimator.CaloHypo2Calo.CaloGetter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloGetterTool/ChargedProtoPAddHcal.CaloHypoEstimator.CaloHypo2Calo.CaloGetter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloGetterTool/ChargedProtoPAddPrs.CaloHypoEstimator.CaloHypo2Calo.CaloGetter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloGetterTool/ChargedProtoPAddSpd.CaloHypoEstimator.CaloHypo2Calo.CaloGetter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloGetterTool/MergedID.CaloHypoEstimator.CaloHypo2Calo.CaloGetter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloGetterTool/MergedPi0Rec.SpdPrsExtraM.CaloHypo2Prs.CaloGetter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloGetterTool/MergedPi0Rec.SpdPrsExtraM.CaloHypo2Spd.CaloGetter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloGetterTool/MergedPi0Rec.SpdPrsExtraS.CaloHypo2Prs.CaloGetter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloGetterTool/MergedPi0Rec.SpdPrsExtraS.CaloHypo2Spd.CaloGetter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloGetterTool/NeutralProtoPMaker.CaloHypoEstimator.CaloHypo2Calo.CaloGetter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloGetterTool/PhotonFromMergedID.CaloHypoEstimator.CaloHypo2Calo.CaloGetter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloGetterTool/PhotonID.CaloHypoEstimator.CaloHypo2Calo.CaloGetter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloGetterTool/SingleElectronRec.ChargedClusterWithSpd.CaloHypo2Spd.CaloGetter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloGetterTool/SingleElectronRec.SpdPrsExtraE.CaloHypo2Prs.CaloGetter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloGetterTool/SingleElectronRec.SpdPrsExtraE.CaloHypo2Spd.CaloGetter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloGetterTool/SinglePhotonRec.SpdPrsExtraG.CaloHypo2Prs.CaloGetter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloGetterTool/SinglePhotonRec.SpdPrsExtraG.CaloHypo2Spd.CaloGetter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloGetterTool/ToolSvc.CaloHypo2Prs.CaloGetter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloHypo2Calo/ChargedProtoPAddBrem.CaloHypoEstimator.CaloHypo2Calo' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloHypo2Calo/ChargedProtoPAddEcal.CaloHypoEstimator.CaloHypo2Calo' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloHypo2Calo/ChargedProtoPAddHcal.CaloHypoEstimator.CaloHypo2Calo' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloHypo2Calo/ChargedProtoPAddPrs.CaloHypoEstimator.CaloHypo2Calo' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloHypo2Calo/ChargedProtoPAddSpd.CaloHypoEstimator.CaloHypo2Calo' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloHypo2Calo/MergedID.CaloHypoEstimator.CaloHypo2Calo' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloHypo2Calo/MergedPi0Rec.SpdPrsExtraM.CaloHypo2Prs' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloHypo2Calo/MergedPi0Rec.SpdPrsExtraM.CaloHypo2Spd' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloHypo2Calo/MergedPi0Rec.SpdPrsExtraS.CaloHypo2Prs' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloHypo2Calo/MergedPi0Rec.SpdPrsExtraS.CaloHypo2Spd' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloHypo2Calo/NeutralProtoPMaker.CaloHypoEstimator.CaloHypo2Calo' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloHypo2Calo/PhotonFromMergedID.CaloHypoEstimator.CaloHypo2Calo' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloHypo2Calo/PhotonID.CaloHypoEstimator.CaloHypo2Calo' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloHypo2Calo/SingleElectronRec.ChargedClusterWithSpd.CaloHypo2Spd' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloHypo2Calo/SingleElectronRec.SpdPrsExtraE.CaloHypo2Prs' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloHypo2Calo/SingleElectronRec.SpdPrsExtraE.CaloHypo2Spd' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloHypo2Calo/SinglePhotonRec.SpdPrsExtraG.CaloHypo2Prs' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloHypo2Calo/SinglePhotonRec.SpdPrsExtraG.CaloHypo2Spd' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloHypo2Calo/ToolSvc.CaloHypo2Prs' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloHypoEstimator/ChargedProtoPAddBrem.CaloHypoEstimator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloHypoEstimator/ChargedProtoPAddEcal.CaloHypoEstimator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloHypoEstimator/ChargedProtoPAddHcal.CaloHypoEstimator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloHypoEstimator/ChargedProtoPAddPrs.CaloHypoEstimator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloHypoEstimator/ChargedProtoPAddSpd.CaloHypoEstimator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloHypoEstimator/MergedID.CaloHypoEstimator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloHypoEstimator/NeutralProtoPMaker.CaloHypoEstimator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloHypoEstimator/PhotonFromMergedID.CaloHypoEstimator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloHypoEstimator/PhotonID.CaloHypoEstimator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloLCorrection/MergedPi0Rec.LCorrection' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloLCorrection/SingleElectronRec.LCorrection' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloLCorrection/SinglePhotonRec.LCorrection' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloSCorrection/MergedPi0Rec.SCorrection' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloSCorrection/SingleElectronRec.SCorrection' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloSCorrection/SinglePhotonRec.SCorrection' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloSelectChargedClusterWithSpd/SingleElectronRec.ChargedClusterWithSpd' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloSelectCluster/SingleElectronRec.ElectronCluster' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloSelectCluster/SinglePhotonRec.PhotonCluster' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloSelectClusterWithPrs/SingleElectronRec.ClusterWithPrs' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloSelectNeutralClusterWithTracks/SingleElectronRec.ChargedCluster.NotNeutralCluster' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloSelectNeutralClusterWithTracks/SinglePhotonRec.NeutralCluster' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloSelectorNOT/SingleElectronRec.ChargedCluster' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CaloTriggerBitsFromRaw/SpdFromRaw.SpdFromRawTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'ClusterCovarianceMatrixTool/EcalCovar.EcalCovarTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'ClusterSpreadTool/EcalCovar.EcalSpreadTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'CountVeloTracks/ToolSvc.CountVeloTracks' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'DelegatingTrackSelector/ChargedProtoPMaker.TrackSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'DetailedMaterialLocator/GoodLongTracksTrackMonitor.TrackMasterExtrapolator.MaterialLocator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'DetailedMaterialLocator/ITTrackMonitor.TrackMasterExtrapolator.MaterialLocator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'DetailedMaterialLocator/InitBestFit.TrackStateInitTool.Extrapolator.MaterialLocator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'DetailedMaterialLocator/PatPVOffline.PVOfflineTool.LSAdaptPVFitter.TrackMasterExtrapolator.MaterialLocator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'DetailedMaterialLocator/PatPVOffline.PVOfflineTool.PVOfflineRecalculate.TrackMasterExtrapolator.MaterialLocator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'DetailedMaterialLocator/TTTrackMonitor.TrackMasterExtrapolator.MaterialLocator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'DetailedMaterialLocator/TrackEcalMatchMonitor.TrackMasterExtrapolator.MaterialLocator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'DetailedMaterialLocator/TrackMonitor.TrackMasterExtrapolator.MaterialLocator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'DetailedMaterialLocator/TrackPV2HalfAlignMonitor.PVOfflineTool.LSAdaptPVFitter.TrackMasterExtrapolator.MaterialLocator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'DetailedMaterialLocator/TrackPV2HalfAlignMonitor.PVOfflineTool.PVOfflineRecalculate.TrackMasterExtrapolator.MaterialLocator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'DetailedMaterialLocator/TrackPrsMatchMonitor.TrackMasterExtrapolator.MaterialLocator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'DetailedMaterialLocator/TrackSpdMatchMonitor.TrackMasterExtrapolator.MaterialLocator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'DetailedMaterialLocator/TrackV0Finder.TrackInterpolator.TrackMasterExtrapolator.MaterialLocator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'DetailedMaterialLocator/VeloIPResolutionMonitor.Extrapolator.MaterialLocator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'EcalEnergyForTrack/EcalE.EcalE' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'FastMomentumEstimate/ToolSvc.FastMomentumEstimate' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'FastVeloFitLHCbIDs/InitBestFit.TrackStateInitTool.FastVeloFitLHCbIDs' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'FastVeloHitManager/ToolSvc.FastVeloHitManager' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'GammaPi0SeparationTool/ChargedProtoPAddBrem.CaloHypoEstimator.GammaPi0SeparationTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'GammaPi0SeparationTool/ChargedProtoPAddEcal.CaloHypoEstimator.GammaPi0SeparationTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'GammaPi0SeparationTool/ChargedProtoPAddHcal.CaloHypoEstimator.GammaPi0SeparationTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'GammaPi0SeparationTool/ChargedProtoPAddPrs.CaloHypoEstimator.GammaPi0SeparationTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'GammaPi0SeparationTool/ChargedProtoPAddSpd.CaloHypoEstimator.GammaPi0SeparationTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'GammaPi0SeparationTool/MergedID.CaloHypoEstimator.GammaPi0SeparationTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'GammaPi0SeparationTool/NeutralProtoPMaker.CaloHypoEstimator.GammaPi0SeparationTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'GammaPi0SeparationTool/PhotonFromMergedID.CaloHypoEstimator.GammaPi0SeparationTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'GammaPi0SeparationTool/PhotonID.CaloHypoEstimator.GammaPi0SeparationTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'HcalEnergyForTrack/HcalE.HcalE' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'ITHitExpectation/ToolSvc.ITHitExpectation' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'ITReadoutTool/ToolSvc.ITReadoutTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'InBremAcceptance/InBREM.InBrem' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'InEcalAcceptance/InECAL.InEcal' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'InHcalAcceptance/InHCAL.InHcal' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'InPrsAcceptance/InPRS.InPrs' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'InSpdAcceptance/InSPD.InSpd' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LSAdaptPVFitter/PatPVOffline.PVOfflineTool.LSAdaptPVFitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LSAdaptPVFitter/TrackPV2HalfAlignMonitor.PVOfflineTool.LSAdaptPVFitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'MeasurementProvider/FitBest.Fitter.MeasurementProvider' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'MeasurementProvider/FitVelo.Fitter.MeasurementProvider' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'MeasurementProvider/PatVeloTT.Fitter.MeasurementProvider' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'MeasurementProviderT<MeasurementProviderTypes::IT>/FitBest.Fitter.MeasurementProvider.ITMeasurementProvider' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'MeasurementProviderT<MeasurementProviderTypes::IT>/FitVelo.Fitter.MeasurementProvider.ITMeasurementProvider' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'MeasurementProviderT<MeasurementProviderTypes::IT>/PatVeloTT.Fitter.MeasurementProvider.ITMeasurementProvider' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'MeasurementProviderT<MeasurementProviderTypes::TT>/FitBest.Fitter.MeasurementProvider.TTMeasurementProvider' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'MeasurementProviderT<MeasurementProviderTypes::TT>/FitVelo.Fitter.MeasurementProvider.TTMeasurementProvider' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'MeasurementProviderT<MeasurementProviderTypes::TT>/PatVeloTT.Fitter.MeasurementProvider.TTMeasurementProvider' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'MeasurementProviderT<MeasurementProviderTypes::VeloPhi>/FitBest.Fitter.MeasurementProvider.VeloPhiMeasurementProvider' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'MeasurementProviderT<MeasurementProviderTypes::VeloPhi>/FitVelo.Fitter.MeasurementProvider.VeloPhiMeasurementProvider' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'MeasurementProviderT<MeasurementProviderTypes::VeloPhi>/PatVeloTT.Fitter.MeasurementProvider.VeloPhiMeasurementProvider' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'MeasurementProviderT<MeasurementProviderTypes::VeloR>/FitBest.Fitter.MeasurementProvider.VeloRMeasurementProvider' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'MeasurementProviderT<MeasurementProviderTypes::VeloR>/FitVelo.Fitter.MeasurementProvider.VeloRMeasurementProvider' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'MeasurementProviderT<MeasurementProviderTypes::VeloR>/PatVeloTT.Fitter.MeasurementProvider.VeloRMeasurementProvider' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'MemoryTool/EscherInit.BrunelMemory' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'MuonMeasurementProvider/FitBest.Fitter.MeasurementProvider.MuonMeasurementProvider' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'MuonMeasurementProvider/FitVelo.Fitter.MeasurementProvider.MuonMeasurementProvider' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'MuonMeasurementProvider/PatVeloTT.Fitter.MeasurementProvider.MuonMeasurementProvider' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'MuonRawBuffer/ToolSvc.MuonRawBuffer' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'ODINDecodeTool/EventClockSvc.OdinTimeDecoder.ODINDecodeTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'OTChannelMapTool/ToolSvc.OTChannelMapTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'OTHitExpectation/ToolSvc.OTHitExpectation' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'OTMeasurementProvider/FitBest.Fitter.MeasurementProvider.OTMeasurementProvider' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'OTMeasurementProvider/FitVelo.Fitter.MeasurementProvider.OTMeasurementProvider' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'OTMeasurementProvider/PatVeloTT.Fitter.MeasurementProvider.OTMeasurementProvider' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'OTRawBankDecoder/ToolSvc.OTRawBankDecoder' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'OTReadOutWindow/ToolSvc.OTReadOutWindow' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'OdinTimeDecoder/EventClockSvc.OdinTimeDecoder' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'PVOfflineRecalculate/PatPVOffline.PVOfflineTool.PVOfflineRecalculate' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'PVOfflineRecalculate/TrackPV2HalfAlignMonitor.PVOfflineTool.PVOfflineRecalculate' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'PVOfflineTool/PatPVOffline.PVOfflineTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'PVOfflineTool/TrackPV2HalfAlignMonitor.PVOfflineTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'PVSeed3DTool/PatPVOffline.PVOfflineTool.PVSeed3DTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'PVSeed3DTool/TrackPV2HalfAlignMonitor.PVOfflineTool.PVSeed3DTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'PatAddTTCoord/PatForward.PatForwardTool.PatAddTTCoord' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'PatAddTTCoord/ToolSvc.PatAddTTCoord' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'PatForwardTool/PatForward.PatForwardTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'PatFwdTool/PatForward.PatForwardTool.PatFwdTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'PatMatchTool/PatMatch.PatMatchTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'PatSeedFit/ToolSvc.PatSeedFit' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'PatSeedTool/ToolSvc.PatSeedFit.PatSeedTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'PatSeedTool/ToolSvc.PatSeedTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'PatSeedingTool/PatSeeding.PatSeedingTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'PatTStationHitManager/ToolSvc.PatTStationHitManager' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'PatTTMagnetTool/ToolSvc.PatTTMagnetTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'PatTTStationHitManager/ToolSvc.PatTTStationHitManager' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'PatTableForFunction/ToolSvc.PatTTMagnetTool.table1' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'PatTableForFunction/ToolSvc.PatTTMagnetTool.table2' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'PatTableForFunction/ToolSvc.PatTTMagnetTool.table3' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'PatTableForFunction/ToolSvc.PatTTMagnetTool.table4' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'PatVeloTTFit/ToolSvc.PatVeloTTFit' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'PatVeloTTTool/ToolSvc.PatVeloTTTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'PitchResTool/ToolSvc.PitchResTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'PrsEnergyForTrack/PrsE.PrsE' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::DAQ::HPDPixelClusteringTool/ToolSvc.Offline_RichPixelCreator.PixelClusteringRich1' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::DAQ::HPDPixelClusteringTool/ToolSvc.Offline_RichPixelCreator.PixelClusteringRich2' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::DAQ::HighOccHPDSuppressionTool/ToolSvc.Offline_RichPixelCreator.PixelSuppressRich1' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::DAQ::HighOccHPDSuppressionTool/ToolSvc.Offline_RichPixelCreator.PixelSuppressRich2' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::DAQ::RawBufferToSmartIDsTool/ToolSvc.RichSmartIDDecoder' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::DAQ::RawDataFormatTool/ToolSvc.RichSmartIDDecoder.RawDecoder' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::DetParameters/ToolSvc.Offline_RichDetParameters' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::MirrorSegFinder/ToolSvc.Offline_RichMirrorSegFinder' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::ParticleProperties/ToolSvc.Offline_RichParticleProperties' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::RadiatorTool/ToolSvc.Offline_RichRadiatorTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::RayTracing/ToolSvc.Offline_RichRayTracing' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::Rec::BackgroundEstiAvHPD/RichOfflineBckEstIt0.PixelBackgroundTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::Rec::BackgroundEstiAvHPD/RichOfflineBckEstIt1.PixelBackgroundTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::Rec::CKthetaBandsPhotonPredictor/ToolSvc.Offline_RichPhotonCreator.Predictor' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::Rec::CherenkovAngle/ToolSvc.Offline_RichCherenkovAngle' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::Rec::DetailedTrSegMakerFromRecoTracks/ToolSvc.Offline_RichTrackCreator.TrSegMaker' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::Rec::ExpectedTrackSignal/ToolSvc.Offline_RichExpectedTrackSignal' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::Rec::ForwardTrackSelector/RichOfflineGPIDTrSel.TrackSelector.Forward' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::Rec::ForwardTrackSelector/ToolSvc.Offline_RichTrackCreator.TrackSelector.Forward' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::Rec::FunctionalCKResForRecoTracks/ToolSvc.Offline_RichCherenkovResolution' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::Rec::GeomEffCKMassRing/ToolSvc.Offline_RichGeomEff' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::Rec::GeomTool/ToolSvc.Offline_RichRecGeometry' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::Rec::GlobalPID::LikelihoodTool/RichOfflineGPIDLLIt0.GPIDLikelihoodTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::Rec::GlobalPID::LikelihoodTool/RichOfflineGPIDLLIt1.GPIDLikelihoodTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::Rec::GlobalPID::TrackCreator/ToolSvc.Offline_GPIDTrackCreator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::Rec::KsTrackSelector/RichOfflineGPIDTrSel.TrackSelector.KsTrack' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::Rec::KsTrackSelector/ToolSvc.Offline_RichTrackCreator.TrackSelector.KsTrack' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::Rec::MassHypothesisRingCreator/ToolSvc.Offline_RichMassHypoRings' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::Rec::MatchTrackSelector/RichOfflineGPIDTrSel.TrackSelector.Match' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::Rec::MatchTrackSelector/ToolSvc.Offline_RichTrackCreator.TrackSelector.Match' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::Rec::PhotonCreator/ToolSvc.Offline_RichPhotonCreator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::Rec::PhotonEmissionPoint/ToolSvc.Offline_RichPhotonEmissionPoint' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::Rec::PhotonRecoUsingQuarticSoln/ToolSvc.Offline_RichPhotonCreator.PhotonParams' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::Rec::PhotonSignalGaussProb/ToolSvc.Offline_RichPhotonSignal' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::Rec::PixelCreatorFromRawBuffer/ToolSvc.Offline_RichPixelCreator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::Rec::RayTraceCherenkovCone/ToolSvc.Offline_RichRayTraceCKCone' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::Rec::SeedTrackSelector/RichOfflineGPIDTrSel.TrackSelector.Seed' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::Rec::SeedTrackSelector/ToolSvc.Offline_RichTrackCreator.TrackSelector.Seed' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::Rec::SegmentCreator/ToolSvc.Offline_RichSegmentCreator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::Rec::SellmeirFunc/ToolSvc.Offline_RichSellmeirFunc' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::Rec::StatusCreator/ToolSvc.Offline_RichStatusCreator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::Rec::TabulatedGasQuartzWindowAbs/ToolSvc.Offline_RichGasQuartzWindow' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::Rec::TabulatedRayleighScatter/ToolSvc.Offline_RichRayleighScatter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::Rec::TabulatedSignalDetectionEff/ToolSvc.Offline_RichSignalDetectionEff' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::Rec::TrackCreatorFromRecoTracks/ToolSvc.Offline_RichTrackCreator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::Rec::TrackEffectiveRefractiveIndex/ToolSvc.Offline_RichTrackEffectiveRefIndex' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::Rec::TrackSelector/RichOfflineGPIDTrSel.TrackSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::Rec::TrackSelector/ToolSvc.Offline_RichTrackCreator.TrackSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::Rec::VeloTTTrackSelector/RichOfflineGPIDTrSel.TrackSelector.VeloTT' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::Rec::VeloTTTrackSelector/ToolSvc.Offline_RichTrackCreator.TrackSelector.VeloTT' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::SmartIDTool/ToolSvc.Offline_RichSmartIDTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::SmartIDTool/ToolSvc.RichSmartIDTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::TabulatedRefractiveIndex/ToolSvc.Offline_RichRefractiveIndex' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::ToolRegistry/ToolSvc.Offline_RichToolRegistry' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Rich::ToolRegistry/ToolSvc.RichToolRegistry' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'STOfflinePosition/ToolSvc.ITClusterPosition' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'STOfflinePosition/ToolSvc.STOfflinePosition' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'SequencerTimerTool/TimingAuditor.TIMER' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'SequencerTimerTool/ToolSvc.SequencerTimerTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'SimplifiedMaterialLocator/FitBest.Fitter.SimplifiedMaterialLocator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'SimplifiedMaterialLocator/FitBest.Fitter.TrackMasterExtrapolator.MaterialLocator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'SimplifiedMaterialLocator/FitVelo.Fitter.SimplifiedMaterialLocator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'SimplifiedMaterialLocator/FitVelo.Fitter.TrackMasterExtrapolator.MaterialLocator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'SimplifiedMaterialLocator/PatVeloTT.Fitter.SimplifiedMaterialLocator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'SimplifiedMaterialLocator/PatVeloTT.Fitter.TrackMasterExtrapolator.MaterialLocator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'SimplifiedMaterialLocator/ToolSvc.TrackInterpolator.Extrapolator.MaterialLocator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'SimplifiedMaterialLocator/ToolSvc.TrackMasterExtrapolator.MaterialLocator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'SpdEnergyForTrack/SpdE.SpdE' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/FitBest.Fitter.SimplifiedMaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/FitBest.Fitter.TrackMasterExtrapolator.MaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/FitVelo.Fitter.SimplifiedMaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/FitVelo.Fitter.TrackMasterExtrapolator.MaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/GoodLongTracksTrackMonitor.TrackMasterExtrapolator.MaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/ITTrackMonitor.TrackMasterExtrapolator.MaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/InitBestFit.TrackStateInitTool.Extrapolator.MaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/PatPVOffline.PVOfflineTool.LSAdaptPVFitter.TrackMasterExtrapolator.MaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/PatPVOffline.PVOfflineTool.PVOfflineRecalculate.TrackMasterExtrapolator.MaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/PatVeloTT.Fitter.SimplifiedMaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/PatVeloTT.Fitter.TrackMasterExtrapolator.MaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/TTTrackMonitor.TrackMasterExtrapolator.MaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/ToolSvc.TrackInterpolator.Extrapolator.MaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/ToolSvc.TrackMasterExtrapolator.MaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/TrackEcalMatchMonitor.TrackMasterExtrapolator.MaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/TrackMonitor.TrackMasterExtrapolator.MaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/TrackPV2HalfAlignMonitor.PVOfflineTool.LSAdaptPVFitter.TrackMasterExtrapolator.MaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/TrackPV2HalfAlignMonitor.PVOfflineTool.PVOfflineRecalculate.TrackMasterExtrapolator.MaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/TrackPrsMatchMonitor.TrackMasterExtrapolator.MaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/TrackSpdMatchMonitor.TrackMasterExtrapolator.MaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/TrackV0Finder.TrackInterpolator.TrackMasterExtrapolator.MaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'StateDetailedBetheBlochEnergyCorrectionTool/VeloIPResolutionMonitor.Extrapolator.MaterialLocator.GeneralDedxTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'StateElectronEnergyCorrectionTool/ToolSvc.StateElectronEnergyCorrectionTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'StateThickMSCorrectionTool/ToolSvc.StateThickMSCorrectionTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'SubClusterSelector3x3/EcalCovar.SubClusterSelector3x3' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TTHitExpectation/ToolSvc.TTHitExpectation' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TTReadoutTool/ToolSvc.TTReadoutTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Tf::OTHitCreator/ToolSvc.OTHitCreator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Tf::STHitCreator<Tf::IT>/ToolSvc.ITHitCreator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Tf::STHitCreator<Tf::TT>/ToolSvc.TTHitCreator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Tf::Tsa::ITExpectedHits/ToolSvc.Tf::Tsa::ITExpectedHits' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'Tf::Tsa::OTExpectedHits/ToolSvc.Tf::Tsa::OTExpectedHits' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackCloneFinder/TrackEventCloneKiller.TrackCloneFinder' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackDistanceExtraSelector/FitBest.Fitter.TrackMasterExtrapolator.TrackDistanceExtraSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackDistanceExtraSelector/FitVelo.Fitter.TrackMasterExtrapolator.TrackDistanceExtraSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackDistanceExtraSelector/GoodLongTracksTrackMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackDistanceExtraSelector/ITTrackMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackDistanceExtraSelector/InitBestFit.TrackStateInitTool.Extrapolator.TrackDistanceExtraSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackDistanceExtraSelector/PatPVOffline.PVOfflineTool.LSAdaptPVFitter.TrackMasterExtrapolator.TrackDistanceExtraSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackDistanceExtraSelector/PatPVOffline.PVOfflineTool.PVOfflineRecalculate.TrackMasterExtrapolator.TrackDistanceExtraSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackDistanceExtraSelector/TTTrackMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackDistanceExtraSelector/ToolSvc.TrackInterpolator.Extrapolator.TrackDistanceExtraSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackDistanceExtraSelector/ToolSvc.TrackMasterExtrapolator.TrackDistanceExtraSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackDistanceExtraSelector/TrackEcalMatchMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackDistanceExtraSelector/TrackMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackDistanceExtraSelector/TrackPV2HalfAlignMonitor.PVOfflineTool.LSAdaptPVFitter.TrackMasterExtrapolator.TrackDistanceExtraSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackDistanceExtraSelector/TrackPV2HalfAlignMonitor.PVOfflineTool.PVOfflineRecalculate.TrackMasterExtrapolator.TrackDistanceExtraSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackDistanceExtraSelector/TrackPrsMatchMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackDistanceExtraSelector/TrackSpdMatchMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackDistanceExtraSelector/TrackV0Finder.TrackInterpolator.TrackMasterExtrapolator.TrackDistanceExtraSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackDistanceExtraSelector/VeloIPResolutionMonitor.Extrapolator.TrackDistanceExtraSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackHerabExtrapolator/ToolSvc.TrackHerabExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackInterpolator/ToolSvc.TrackInterpolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackInterpolator/TrackV0Finder.TrackInterpolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackKalmanFilter/FitBest.Fitter.TrackKalmanFilter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackKalmanFilter/FitVelo.Fitter.TrackKalmanFilter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackKalmanFilter/PatVeloTT.Fitter.TrackKalmanFilter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackLikelihood/TrackAddLikelihood.PatDownstream_likTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackLikelihood/TrackAddLikelihood.PatFastVelo_likTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackLikelihood/TrackAddLikelihood.PatForward_likTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackLikelihood/TrackAddLikelihood.PatMatch_likTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackLikelihood/TrackAddLikelihood.PatSeeding_likTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackLikelihood/TrackAddLikelihood.PatVeloGeneral_likTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackLikelihood/TrackAddLikelihood.PatVeloTT_likTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackLikelihood/TrackAddLikelihood.PatVelo_likTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackLikelihood/TrackAddLikelihood.TrackMatching_likTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackLikelihood/TrackAddLikelihood.TsaTrack_likTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackLinearExtrapolator/FitBest.Fitter.TrackLinearExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackLinearExtrapolator/FitVelo.Fitter.TrackLinearExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackLinearExtrapolator/PatPVOffline.PVOfflineTool.LSAdaptPVFitter.TrackLinearExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackLinearExtrapolator/PatPVOffline.PVOfflineTool.PVOfflineRecalculate.TrackLinearExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackLinearExtrapolator/PatVeloTT.Fitter.TrackLinearExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackLinearExtrapolator/ToolSvc.TrackLinearExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackLinearExtrapolator/TrackMuonMatchMonitor.Extrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackLinearExtrapolator/TrackPV2HalfAlignMonitor.PVOfflineTool.LSAdaptPVFitter.TrackLinearExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackLinearExtrapolator/TrackPV2HalfAlignMonitor.PVOfflineTool.PVOfflineRecalculate.TrackLinearExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackMasterExtrapolator/FitBest.Fitter.TrackMasterExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackMasterExtrapolator/FitVelo.Fitter.TrackMasterExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackMasterExtrapolator/GoodLongTracksTrackMonitor.TrackMasterExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackMasterExtrapolator/ITTrackMonitor.TrackMasterExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackMasterExtrapolator/InitBestFit.TrackStateInitTool.Extrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackMasterExtrapolator/PatPVOffline.PVOfflineTool.LSAdaptPVFitter.TrackMasterExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackMasterExtrapolator/PatPVOffline.PVOfflineTool.PVOfflineRecalculate.TrackMasterExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackMasterExtrapolator/PatVeloTT.Fitter.TrackMasterExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackMasterExtrapolator/TTTrackMonitor.TrackMasterExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackMasterExtrapolator/ToolSvc.TrackInterpolator.Extrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackMasterExtrapolator/ToolSvc.TrackMasterExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackMasterExtrapolator/TrackEcalMatchMonitor.TrackMasterExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackMasterExtrapolator/TrackMonitor.TrackMasterExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackMasterExtrapolator/TrackPV2HalfAlignMonitor.PVOfflineTool.LSAdaptPVFitter.TrackMasterExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackMasterExtrapolator/TrackPV2HalfAlignMonitor.PVOfflineTool.PVOfflineRecalculate.TrackMasterExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackMasterExtrapolator/TrackPrsMatchMonitor.TrackMasterExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackMasterExtrapolator/TrackSpdMatchMonitor.TrackMasterExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackMasterExtrapolator/TrackV0Finder.TrackInterpolator.TrackMasterExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackMasterExtrapolator/VeloIPResolutionMonitor.Extrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackMasterFitter/FitBest.Fitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackMasterFitter/FitVelo.Fitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackMasterFitter/PatVeloTT.Fitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackNNGhostId/TrackAddNNGhostId.TrackNNGhostId' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackParabolicExtrapolator/FitBest.Fitter.TrackMasterExtrapolator.TrackDistanceExtraSelector.ShortDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackParabolicExtrapolator/FitVelo.Fitter.TrackMasterExtrapolator.TrackDistanceExtraSelector.ShortDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackParabolicExtrapolator/GoodLongTracksTrackMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector.ShortDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackParabolicExtrapolator/ITTrackMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector.ShortDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackParabolicExtrapolator/InitBestFit.TrackStateInitTool.Extrapolator.TrackDistanceExtraSelector.ShortDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackParabolicExtrapolator/PatPVOffline.PVOfflineTool.LSAdaptPVFitter.TrackMasterExtrapolator.TrackDistanceExtraSelector.ShortDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackParabolicExtrapolator/PatPVOffline.PVOfflineTool.PVOfflineRecalculate.TrackMasterExtrapolator.TrackDistanceExtraSelector.ShortDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackParabolicExtrapolator/PatVeloTT.Fitter.TrackMasterExtrapolator.TrackSimpleExtraSelector.TrackParabolicExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackParabolicExtrapolator/TTTrackMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector.ShortDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackParabolicExtrapolator/ToolSvc.TrackInterpolator.Extrapolator.TrackDistanceExtraSelector.ShortDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackParabolicExtrapolator/ToolSvc.TrackMasterExtrapolator.TrackDistanceExtraSelector.ShortDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackParabolicExtrapolator/ToolSvc.TrackParabolicExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackParabolicExtrapolator/TrackEcalMatchMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector.ShortDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackParabolicExtrapolator/TrackMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector.ShortDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackParabolicExtrapolator/TrackPV2HalfAlignMonitor.PVOfflineTool.LSAdaptPVFitter.TrackMasterExtrapolator.TrackDistanceExtraSelector.ShortDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackParabolicExtrapolator/TrackPV2HalfAlignMonitor.PVOfflineTool.PVOfflineRecalculate.TrackMasterExtrapolator.TrackDistanceExtraSelector.ShortDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackParabolicExtrapolator/TrackPrsMatchMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector.ShortDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackParabolicExtrapolator/TrackSpdMatchMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector.ShortDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackParabolicExtrapolator/TrackV0Finder.TrackInterpolator.TrackMasterExtrapolator.TrackDistanceExtraSelector.ShortDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackParabolicExtrapolator/VeloIPResolutionMonitor.Extrapolator.TrackDistanceExtraSelector.ShortDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackProjector/ToolSvc.TrackProjector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackProjectorSelector/FitBest.Fitter.TrackProjectorSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackProjectorSelector/FitVelo.Fitter.TrackProjectorSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackProjectorSelector/PatVeloTT.Fitter.TrackProjectorSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/ChargedProtoPAddBrem.CaloHypoEstimator.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/ChargedProtoPAddEcal.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/ChargedProtoPAddEcal.CaloHypoEstimator.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/ChargedProtoPAddHcal.CaloHypoEstimator.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/ChargedProtoPAddPrs.CaloHypoEstimator.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/ChargedProtoPAddSpd.CaloHypoEstimator.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/FitBest.Fitter.TrackMasterExtrapolator.TrackDistanceExtraSelector.LongDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/FitVelo.Fitter.TrackMasterExtrapolator.TrackDistanceExtraSelector.LongDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/GoodLongTracksTrackMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector.LongDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/ITTrackMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector.LongDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/InitBestFit.TrackStateInitTool.Extrapolator.TrackDistanceExtraSelector.LongDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/MergedID.CaloHypoEstimator.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/MergedPi0Rec.ECorrection.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/MergedPi0Rec.LCorrection.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/MergedPi0Rec.Pi0LCorrection.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/MergedPi0Rec.Pi0SCorrection.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/MergedPi0Rec.SCorrection.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/MergedPi0Rec.ShowerProfile.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/NeutralProtoPMaker.CaloHypoEstimator.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/PatPVOffline.PVOfflineTool.LSAdaptPVFitter.TrackMasterExtrapolator.TrackDistanceExtraSelector.LongDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/PatPVOffline.PVOfflineTool.PVOfflineRecalculate.TrackMasterExtrapolator.TrackDistanceExtraSelector.LongDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/PhotonFromMergedID.CaloHypoEstimator.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/PhotonID.CaloHypoEstimator.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/SingleElectronRec.ECorrection.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/SingleElectronRec.LCorrection.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/SingleElectronRec.SCorrection.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/SinglePhotonRec.ECorrection.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/SinglePhotonRec.LCorrection.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/SinglePhotonRec.SCorrection.CaloElectron.Extrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/TTTrackMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector.LongDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/ToolSvc.TrackInterpolator.Extrapolator.TrackDistanceExtraSelector.LongDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/ToolSvc.TrackMasterExtrapolator.TrackDistanceExtraSelector.LongDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/ToolSvc.TrackRungeKuttaExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/TrackEcalMatchMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector.LongDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/TrackMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector.LongDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/TrackPV2HalfAlignMonitor.PVOfflineTool.LSAdaptPVFitter.TrackMasterExtrapolator.TrackDistanceExtraSelector.LongDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/TrackPV2HalfAlignMonitor.PVOfflineTool.PVOfflineRecalculate.TrackMasterExtrapolator.TrackDistanceExtraSelector.LongDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/TrackPrsMatchMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector.LongDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/TrackSpdMatchMonitor.TrackMasterExtrapolator.TrackDistanceExtraSelector.LongDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/TrackV0Finder.TrackInterpolator.TrackMasterExtrapolator.TrackDistanceExtraSelector.LongDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackRungeKuttaExtrapolator/VeloIPResolutionMonitor.Extrapolator.TrackDistanceExtraSelector.LongDistanceExtrapolator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackSelector/ANNGPIDDownstreamElectron.TrackSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackSelector/ANNGPIDDownstreamGhost.TrackSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackSelector/ANNGPIDDownstreamKaon.TrackSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackSelector/ANNGPIDDownstreamMuon.TrackSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackSelector/ANNGPIDDownstreamPion.TrackSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackSelector/ANNGPIDDownstreamProton.TrackSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackSelector/ANNGPIDLongElectron.TrackSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackSelector/ANNGPIDLongGhost.TrackSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackSelector/ANNGPIDLongKaon.TrackSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackSelector/ANNGPIDLongMuon.TrackSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackSelector/ANNGPIDLongPion.TrackSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackSelector/ANNGPIDLongProton.TrackSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackSelector/ANNGPIDUpstreamElectron.TrackSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackSelector/ANNGPIDUpstreamGhost.TrackSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackSelector/ANNGPIDUpstreamKaon.TrackSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackSelector/ANNGPIDUpstreamMuon.TrackSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackSelector/ANNGPIDUpstreamPion.TrackSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackSelector/ANNGPIDUpstreamProton.TrackSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackSelector/GoodLongTracksSelectorAlg.TrackSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackSimpleExtraSelector/PatVeloTT.Fitter.TrackMasterExtrapolator.TrackSimpleExtraSelector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackStateInitTool/InitBestFit.TrackStateInitTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackVelodEdxCharge/ChargedProtoPAddVeloDEDX.VeloCharge' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrackVertexer/ToolSvc.TrackVertexer' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrajOTProjector/ToolSvc.TrajOTProjector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrajPoca/ToolSvc.TrajPoca' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrajProjector<Muon>/ToolSvc.TrajMuonProjector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrajProjector<ST>/ToolSvc.TrajITLiteProjector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrajProjector<ST>/ToolSvc.TrajITProjector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrajProjector<ST>/ToolSvc.TrajTTLiteProjector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrajProjector<ST>/ToolSvc.TrajTTProjector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrajProjector<Velo>/ToolSvc.TrajVeloLitePhiProjector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrajProjector<Velo>/ToolSvc.TrajVeloLiteRProjector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrajProjector<Velo>/ToolSvc.TrajVeloPhiProjector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrajProjector<Velo>/ToolSvc.TrajVeloRProjector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'TrajProjector<VeloPix>/ToolSvc.TrajVeloPixLiteProjector' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'VeloClusterPosition/ToolSvc.VeloClusterPosition' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'VeloExpectation/ToolSvc.VeloExpectation' Counts = 1
