@@ -56,6 +56,7 @@ from Hlt2Lines.Hlt2RadiativeTopoLines import Hlt2RadiativeTopoConf
 from Hlt2Lines.Hlt2CharmHadLambdaCLines import Hlt2CharmHadLambdaCLinesConf
 from Hlt2Lines.Hlt2CharmHadMinBiasLines import Hlt2CharmHadMinBiasLinesConf
 from Hlt2Lines.Hlt2HighPtJetsLines     import Hlt2HighPtJetsLinesConf
+from Hlt2Lines.Hlt2CharmHadLambdaC2LambdaHLines import Hlt2CharmHadLambdaCLambdaHLinesConf
 #
 # The tracking configurations
 #
@@ -118,6 +119,7 @@ class Hlt2Conf(LHCbConfigurableUser):
                              , Hlt2MuNTrackLinesConf
                              , Hlt2RadiativeTopoConf
                              , Hlt2CharmHadLambdaCLinesConf
+                             , Hlt2CharmHadLambdaCLambdaHLinesConf
                              , Hlt2CharmHadMinBiasLinesConf
                              , Hlt2HighPtJetsLinesConf
                              ]

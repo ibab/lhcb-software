@@ -375,7 +375,6 @@ class HltConf(LHCbConfigurableUser):
         if overlap :
             raise RuntimeError, ' # Hlt1 and Hlt2 have overlapping ID values: %s -- this will cause problems when decoding the raw bank' % overlap 
 
-
         if False :
             from HltLine.HltLine     import hlt1Lines
             for i in hlt1Lines() :
