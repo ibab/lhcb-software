@@ -9,7 +9,7 @@ from LHCbKernel.Configuration import *
 from Gaudi.Configuration import *
 from Configurables import HltConf
 from Configurables import GaudiSequencer
-from Configurables import LHCbApp, L0Conf
+from Configurables import LHCbApp, L0Conf, L0DUFromRawAlg
 
 import GaudiKernel.ProcessJobOptions
 from  ctypes import c_uint
@@ -21,6 +21,14 @@ from  ctypes import c_uint
 def _tck(x) :
     if type(x) == str and x[0:2] == '0x' : return '0x%08x'%int(x,16)
     return '0x%08x'%int(x)
+    
+from Gaudi.Configuration import appendPostConfigAction
+
+def fixDQ():
+    from Configurables import CondDBDispatcherSvc
+    c = CondDBDispatcherSvc("MainCondDBReader")
+    del c.Alternatives['/Conditions/DQ']
+#appendPostConfigAction(fixDQ)
 
 class Moore(LHCbConfigurableUser):
     ## Possible used Configurables
@@ -138,8 +146,8 @@ class Moore(LHCbConfigurableUser):
                     self._configureOnlineCheckpointing()
             
             TAE = OnlineEnv.TAE != 0
-            input   = 'EVENT' if not TAE else 'MEP'
-            output  = 'SEND'
+            input   = 'Events' 
+            output  = 'Send'
             mepMgr = OnlineEnv.mepManager(OnlineEnv.PartitionID,OnlineEnv.PartitionName,[input,output],False)
             mepMgr.ConnectWhen = 'start'
             app.Runable = OnlineEnv.evtRunable(mepMgr)
@@ -149,6 +157,7 @@ class Moore(LHCbConfigurableUser):
             eventSelector = OnlineEnv.mbmSelector(input=input, TAE=TAE)
             app.ExtSvc.append(eventSelector)
             OnlineEnv.evtDataSvc()
+	    if self.getProp('REQ1') : eventSelector.REQ1 = self.getProp('REQ1')
             
             # define the send sequence
             writer =  GaudiSequencer('SendSequence')
@@ -219,6 +228,7 @@ class Moore(LHCbConfigurableUser):
         msg.fifoPath = os.environ['LOGFIFO']
         import OnlineEnv 
         msg.OutputLevel = OnlineEnv.OutputLevel
+        #msg.OutputLevel = '2'
         msg.doPrintAlways = False
     
     def _configureDBSnapshot(self):
@@ -259,7 +269,7 @@ class Moore(LHCbConfigurableUser):
         conddb.IgnoreHeartBeat = self.getProp('IgnoreDBHeartBeat') 
 
         if self.getProp('EnableRunChangeHandler') : 
-            online_xml = '%s/%s/online_%%d.xml' % (baseloc, self.getProp('PartitionName') )
+            online_xml = '%s/%s/online_%%d.xml' % (baseloc, self.getProp('PartitionName')[0:4] )
             from Configurables import RunChangeHandlerSvc
             rch = RunChangeHandlerSvc()
             rch.Conditions = { "Conditions/Online/LHCb/Magnet/Set"        : online_xml
@@ -433,7 +443,7 @@ class Moore(LHCbConfigurableUser):
         appendPostConfigAction( genConfigAction )
 
     def _l0(self) :
-        from Configurables import L0DUFromRawAlg, L0DUFromRawTool
+        from Configurables import L0DUFromRawTool
         #L0DUFromRawAlg('L0DUFromRaw').ProcessorDataOnTES = False
         l0du   = L0DUFromRawAlg("L0DUFromRaw")
         #l0du.WriteProcData       = False
@@ -496,7 +506,6 @@ class Moore(LHCbConfigurableUser):
         VFSSvc().FileAccessTools = ['FileReadTool', 'CondDBEntityResolver/CondDBEntityResolver'];
         from Configurables import LHCb__ParticlePropertySvc
         LHCb__ParticlePropertySvc().ParticlePropertiesFile = 'conddb:///param/ParticleTable.txt';
-        ParticlePropertySvc().ParticlePropertiesFile = "conddb:///param/ParticleTable.txt";
         if (self.getProp('L0')) :
             if (self.getProp('RunOnline')) : raise RuntimeError('NEVER try to rerun L0 online! -- aborting ')
             from Hlt1Lines.HltL0Candidates import decodeL0Channels
@@ -550,13 +559,17 @@ class Moore(LHCbConfigurableUser):
         #       Online vs. DB tags...
         #       Online vs. EvtMax, SkipEvents, DataType, ...
         #       Online requires UseTCK
+	# L0 decoding to look in a single place  
+        # L0Conf().RawEventLocations = ['DAQ/RawEvent']        
+        L0DUFromRawAlg("L0DUFromRaw").Hlt1 = True 
+	
         if not self.getProp("RunOnline") : self._l0()
         if self.getProp("RunOnline") : 
             import OnlineEnv 
             self.setProp('EnableTimer',False)
             self.setProp('UseTCK',True)
             self.setProp('Simulation',False)
-            self.setProp('DataType','2010' )
+            self.setProp('DataType','2012' )
             ### TODO: see if 'OnlineEnv' has InitialTCK attibute. If so, set it
             ## in case of LHCb or FEST, _REQUIRE_ it exists...
             if hasattr(OnlineEnv,'InitialTCK') :
@@ -570,7 +583,8 @@ class Moore(LHCbConfigurableUser):
 
         from Configurables import MooreInitSvc
         ApplicationMgr().ExtSvc.append( MooreInitSvc() )
-
+        #from Configurables import LbAppInit
+	#ApplicationMgr().TopAlg.append(LbAppInit(PreloadGeometry=True))
         ApplicationMgr().TopAlg.append( GaudiSequencer('Hlt') )
 
 
@@ -585,6 +599,9 @@ class Moore(LHCbConfigurableUser):
         # Get the event time (for CondDb) from ODIN 
         from Configurables import EventClockSvc
         EventClockSvc().EventTimeDecoder = 'OdinTimeDecoder'
+	import time
+	EventClockSvc().InitialTime = int(time.time()*1e9)  #now
+
         # make sure we don't pick up small variations of the read current
         # Need a defined HistogramPersistency to read some calibration inputs!!!
         ApplicationMgr().HistogramPersistency = 'ROOT'

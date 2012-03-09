@@ -6,6 +6,13 @@ from GaudiKernel.ProcessJobOptions import PrintOff, InstallRootLoggingHandler
 import logging
 PrintOff(999)
 InstallRootLoggingHandler(level = logging.CRITICAL)
+#import sys
+# never search for anything from current directory...
+#if sys.path[0]=='' : sys.path.pop(0)
+from GaudiKernel.ProcessJobOptions import PrintOff, InstallRootLoggingHandler
+import logging
+PrintOff(999)
+InstallRootLoggingHandler(level = logging.CRITICAL)
 
 
 def start(NbOfSlaves) :

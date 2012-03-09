@@ -2,6 +2,12 @@ Package     : Hlt/Moore
 Package Coordinator : Eric van Herwijnen
 Purpose     : LHCb HLT application
 
+
+! 2012-03-09 - Eric van Herwijnen
+ - All changes from v13r1 were lost. I put them back in.
+ - Set DataType to 2012
+ - Changes for forking & checkpointing  
+
 !========================= Moore v13r1p2 2012-03-07 =========================
 ! 2012-03-07 - Eric van Herwijnen
 
