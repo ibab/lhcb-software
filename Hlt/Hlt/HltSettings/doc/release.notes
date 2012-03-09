@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-03-09 - E. van Herwijnen
+ - Add Physics_L038_draft2012.py 
+
 ! 2012-03-09 - V. Gligorov
  - Add Lc->LambdaH lines, and relax GEC cut in topo 
 
