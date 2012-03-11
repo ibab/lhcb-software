@@ -174,9 +174,11 @@ class Z02TauTauProngConf(LineBuilder) :
                                            MotherCut                 = _Zcut
                                            #Preambulo                = "",#_preambulo
                                            )
+        _CombineZConf   = _CombineZ.configurable("Combine_"+name+"_Z")
+        _CombineZConf.ParticleCombiners.update({'':'MomentumCombiner'}) 
         
         return Selection(   name+"_TauTau",
-                         Algorithm            = _CombineZ,
+                         Algorithm            = _CombineZConf,
                          RequiredSelections   = [ tauSel ]
                          )
     
@@ -196,9 +198,11 @@ class Z02TauTauProngConf(LineBuilder) :
                                            WriteP2PVRelations        = False
                                            #Preambulo                = "",#_preambulo
                                            )
+        _CombineZConf   = _CombineZ.configurable("Combine_"+name+"_Z")
+        _CombineZConf.ParticleCombiners.update({'':'MomentumCombiner'}) 
         
         return Selection(   name+"_TauTau",
-                         Algorithm            = _CombineZ,
+                         Algorithm            = _CombineZConf,
                          RequiredSelections   = [ tauSel ]
                          )
     
