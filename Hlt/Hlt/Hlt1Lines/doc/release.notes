@@ -5,6 +5,10 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2012-11-03 Vladik Balagura
+- Changed CaloEt: CaloEt+SPDMult now give L0CAL0 trigger which is used for
+  online lumi
+
 !========================= Hlt1Lines v6r14 2012-02-29 =========================
  - Eric van Herwijnen, tagged for release.
 
