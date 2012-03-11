@@ -69,7 +69,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                                         , 'RZVeloBW' : [LumiCountHltTracks, True    , 'VeloBW'                 ,   5,  200]
                                         , 'SPDMult'  : [LumiFromL0DU      , True    , 'Spd(Mult)'              ,   6,  500]
                                         , 'PUMult'   : [LumiFromL0DU      , True    , 'PUHits(Mult)'           ,   3,  200]
-                                        , 'CaloEt'   : [LumiFromL0DU      , True    , 'Sum(Et)'                , 500, 6000]
+                                        , 'CaloEt'   : [LumiFromL0DU      , True    , 'Hadron(Et)'             , 500, 6000]
                                         }
                 , 'OutputLevel'            : WARNING
                 }
@@ -159,7 +159,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         histoThresholds = []
         histoMaxBins = []
         for key, definition in counters.iteritems():
-            # example 'CaloEt' : [LumiFromL0DU , True , 'Sum(Et)' , 500, 6000],
+            # example 'CaloEt' : [LumiFromL0DU , True , 'Hadron(Et)' , 500, 6000],
             (op, flag, inputDef, threshold, bins) = definition
             if flag:
                 createdCounters.extend( 
