@@ -4,11 +4,19 @@
 ##################################################################
 
 class ParticleSelection:
-    __slots__ = {
-        "location" : "" # particle location in the TES
-        ,"algorithm" : None
-        }
+    #__slots__ = {
+    #    "_name" : ""
+    #    ,"_location" : "" # particle location in the TES
+    #    ,"_algorithm" : None
+    #    }
+    def __init__( self, Name, Location, Algorithm = None ) :
+        self._name = Name
+        self._location = Location
+        self._algorithm = Algorithm
 
+    def algorithm(self) : return self._algorithm
+    def location(self) : return self._location
+    def name(self) : return self._name
 
 ##################################################################
 # Creates a selection object from a location in the TES ona dst,
@@ -33,35 +41,34 @@ def configuredParticleListFromDST( ParticleLocation ) :
     sel.location = ParticleLocation
     return sel
 
-##################################################################
-# Helper function to create a sequence to fit the tracks and run the hitadder
-##################################################################
-def configuredFitAndHitAdderSequence( Sequence, InputLocation, OutputLocation):
-    from TrackFitter.ConfiguredFitters import ConfiguredEventFitter
-    from Configurables import (TrackHitAdder, TrackContainerCopy, 
-                               TrackSelector, GaudiSequencer)
-    # create the sequence
-    if isinstance(Sequence,GaudiSequencer) :
-        seq = Sequence
-    else:
-        seq = GaudiSequencer(Sequence)
-    # I am lazy: use the DOD to get the decoded clusters
-    #importOption( "$STDOPTS/DecodeRawEvent.py" )
-    # now setup the fitters
-    seq.Members += [ 
-        ConfiguredEventFitter('FitBeforeHitAdder',TracksInContainer = InputLocation),
-        TrackHitAdder( TrackLocation = InputLocation ),
-        ConfiguredEventFitter('FitAfterHitAdder',TracksInContainer = InputLocation)]
-    tracksel =  TrackContainerCopy('CopyAndSelect',
-                                   inputLocation = InputLocation,
-                                   outputLocation = OutputLocation,
-                                   Selector = TrackSelector())
-    # also apply a modest selection
-    tracksel.Selector.MaxChi2Cut = 5
-    tracksel.Selector.MaxChi2PerDoFMatch = 5
-    tracksel.Selector.MaxChi2PerDoFVelo = 5
-    tracksel.Selector.MaxChi2PerDoFDownstream = 5
-    seq.Members.append( tracksel )
+
+def protoParticlesFromHLTSelSequence( Name, HltDecision,
+                                      ApplyRichID = False,
+                                      ApplyMuonID = False):
+    # create a sequence that
+    # * revives tracks from an HLT sequence
+    # * fits them
+    # * runs rich or muon ID on demand
+    # tracks will be stored at location 'Rec/Track/' + Name
+    # protoparticles will be stored at location ????
+    trackListName =  'Rec/Track/' + Name
+    from Configurables import GaudiSequencer
+    seq = GaudiSequencer(Name + "Seq")
+    # revive only particles used for trigger
+    from Configurables import HltTrackConverter
+    hltTrackConv = HltTrackConverter(Name + "HltTrackConv")
+    hltTrackConv.ReadHltLinesFrom1stEvent = HltDecision
+    hltTrackConv.TrackDestignation = 'Rec/Track/' + Name + 'All'
+    seq.Members += [ HltSelReportsDecoder(), hltTrackConv ]
+    # now fit those tracks and apply a selection
+    from TAlignment.Utils import configuredFitAndHitAdderSequence
+    fitseq = configuredFitAndHitAdderSequence( Name + 'Fit',
+                                               trackListName + 'All',
+                                               trackListName )
+    seq.Members += [ fitseq ]
+    # next step, prepare the RICH sequence, if we need it.
+    #if ApplyRichID:
+    return seq
 
 ##################################################################
 # Create a selection based on HLT D0->Kpi
@@ -71,49 +78,38 @@ def defaultHLTD0Selection():
     #-- A HLT report decoder is needed
     from Configurables import LoKi__HDRFilter as HDRFilter
     from Configurables import LoKi__VoidFilter as LokiFilter 
-    from Configurables import HltDecReportsDecoder, HltSelReportsDecoder, HltCompositionMonitor, AddToProcStatus
+    from Configurables import HltSelReportsDecoder
     from Configurables import GaudiSequencer
 
     from Configurables import RecSysConf, RecMoniConf
     RecSysConf().RecoSequence = ["Hlt","Decoding","AlignTr","Vertex","RICH" ]
     RecMoniConf().MoniSequence = ["Tr","OT"]
 
-    hltfilterSeq = GaudiSequencer( "RecoHltSeq" )
-    # identifies events that are not of type Hlt1ErrorEvent or Hlt2ErrorEvent
-    # taken from Rec/Brunel/python/Brunel/Configuration.py
-    filterCode = "HLT_PASS_RE('Hlt1(?!ErrorEvent).*Decision') & HLT_PASS_RE('Hlt2(?!ErrorEvent).*Decision')"  # from Gerhard
-    hltErrorFilter = HDRFilter('HltErrorFilter', Code = filterCode )   # the filter
-    hltfilterSeq.Members += [HltDecReportsDecoder(),             # decode DecReports
-                             HltCompositionMonitor(),
-                             hltErrorFilter  ]                   # apply filter
-
-    #-- Physics Filter
-    from Configurables import LoKi__HDRFilter as HDRFilter 
-    hltfilter = HDRFilter ( 'HLTFilter' ,
-                           #Code = "HLT_PASS_RE( 'Hlt2CharmHadD02HH_D02KPiDecision' )"
-                            Code = "HLT_PASS_RE( 'Hlt2ExpressDStar2D0PiDecision' )"# | HLT_PASS_RE( 'Hlt2ExpressBeamHalo' )"
-                            )
-    hltfilter.Preambulo += [ "from LoKiCore.functions import *" ]
-    hltfilterSeq.Members += [ hltfilter ]
-
+    # if the Escher hlt filter is not set, set it here
+    from Configurables import Escher
+    if not hasattr(Escher(),"HltFilterCode") or not Escher().HltFilterCode :
+        #Code = "HLT_PASS_RE( 'Hlt2CharmHadD02HH_D02KPiDecision' )"
+        Escher().HltFilterCode = "HLT_PASS_RE( 'Hlt2ExpressDStar2D0PiDecision' )"# | HLT_PASS_RE( 'Hlt2ExpressBeamHalo' )"
+    
     # revive only particles used for trigger
+    trackseq = GaudiSequencer("RecoAlignTrSeq")
     from Configurables import HltTrackConverter
     hltTrackConv = HltTrackConverter("HltTrackConv")
-    hltTrackConv.ReadHltLinesFrom1stEvent = 'Hlt2ExpressDStar2D0PiDecision'
+    hltTrackConv.HltLinesToUse = ['Hlt2ExpressDStar2D0PiDecision']
     hltTrackConv.TrackDestignation = 'Rec/Track/AllBest'
-    hltfilterSeq.Members += [ HltSelReportsDecoder(), hltTrackConv ]#, trkContCopy]
+    trackseq.Members += [ HltSelReportsDecoder(), hltTrackConv ]#, trkContCopy]
 
     # create a sequence that fits the tracks and does the hit-adding
-    trackseq = GaudiSequencer("RecoAlignTrSeq")
-    configuredFitAndHitAdderSequence( Sequence = trackseq, 
-                                      InputLocation = hltTrackConv.TrackDestignation,
-                                      OutputLocation = 'Rec/Track/Best' )
+    from TAlignment.Utils import configuredFitAndHitAdderSequence
+    fitseq =  configuredFitAndHitAdderSequence( Name = 'HltD0', 
+                                                InputLocation = hltTrackConv.TrackDestignation,
+                                                OutputLocation = 'Rec/Track/Best' )
+    trackseq.Members.append( fitseq )
     # now make sure that there are at least 2 tracks left
     trackseq.Members.append( LokiFilter ( 'BestTrackFilter' ,
                                           Code = "1 < CONTAINS ( 'Rec/Track/Best' )" ) )
- 
-
-    # Tweak a little bit RICH
+    
+     # Tweak a little bit RICH
     from Configurables import Escher,RichRecSysConf,RecSysConf
     richSeqName         = Escher()._instanceName(RichRecSysConf)
     richSeq             = GaudiSequencer(richSeqName+"Seq")
@@ -176,11 +172,11 @@ def defaultHLTD0Selection():
                              InputLocation = '/Event/Phys/AlignD02KPi/Particles',
                              MinMass = 1810, MaxMass = 1930)
         ]
-
-    d0selection = ParticleSelection()
-    d0selection.algorithm = recoD0Seq
-    d0selection.location  = '/Event/Phys/AlignD02KPi/Particles'
-    return d0selection
+    
+    sel = ParticleSelection( Name = 'D02KPi',
+                             Location = '/Event/Phys/AlignD02KPi/Particles',
+                             Algorithm = recoD0Seq )
+    return sel
 
 ##################################################################
 # Create a selection based on HLT J/psi->mumu
@@ -190,46 +186,37 @@ def defaultHLTJPsiSelection():
     #-- A HLT report decoder is needed
     from Configurables import LoKi__HDRFilter as HDRFilter
     from Configurables import LoKi__VoidFilter as LokiFilter 
-    from Configurables import HltDecReportsDecoder, HltSelReportsDecoder, HltCompositionMonitor, AddToProcStatus
+    from Configurables import HltSelReportsDecoder
     from Configurables import GaudiSequencer
 
     from Configurables import RecSysConf, RecMoniConf
     RecSysConf().RecoSequence = ["Hlt","Decoding","AlignTr","Vertex","MUON" ]
     RecMoniConf().MoniSequence = ["Tr","OT"]
 
-    # fix problem in rich config
-    #from Configurables import RichTrackCreatorConfig
-    #RichTrackCreatorConfig().InputTracksLocation = "/Rec/Track/Best"
+    # if the Escher hlt filter is not set, set it here
+    from Configurables import Escher
+    if not hasattr(Escher(),"HltFilterCode") or not Escher().HltFilterCode :
+        #Code = "HLT_PASS_RE( 'Hlt2DiMuonJPsi.*Decision' )"
+        Escher().HltFilterCode = "HLT_PASS_RE( 'Hlt2.*JPsi.*Decision' )"
 
-    hltfilterSeq = GaudiSequencer( "RecoHltSeq" )
-# identifies events that are not of type Hlt1ErrorEvent or Hlt2ErrorEvent -- taken from Rec/Brunel/python/Brunel/Configuration.py
-    filterCode = "HLT_PASS_RE('Hlt1(?!ErrorEvent).*Decision') & HLT_PASS_RE('Hlt2(?!ErrorEvent).*Decision')"  # from Gerhard
-    hltErrorFilter = HDRFilter('HltErrorFilter', Code = filterCode )   # the filter
-    hltfilterSeq.Members += [HltDecReportsDecoder(),             # decode DecReports
-                             HltCompositionMonitor(),
-                             hltErrorFilter  ]                   # apply filter
-
-    #-- Physics Filter
-    from Configurables import LoKi__HDRFilter as HDRFilter 
-    hltfilter = HDRFilter ( 'HLTFilter' ,
-                            #Code = "HLT_PASS_RE( 'Hlt2DiMuonJPsi.*Decision' )"
-                            Code = "HLT_PASS_RE( 'Hlt2ExpressJPsi.*Decision' )"
-                            )
-    hltfilter.Preambulo += [ "from LoKiCore.functions import *" ]
-    hltfilterSeq.Members += [ hltfilter ]
-
-    # revive only particles used for trigger
+    # revive only particles used for trigger 
+    trackseq = GaudiSequencer("RecoAlignTrSeq")
     from Configurables import HltTrackConverter
     hltTrackConv = HltTrackConverter("HltTrackConv")
-    hltTrackConv.ReadHltLinesFrom1stEvent = 'Hlt2ExpressJPsiMuMuDecision'
+    #hltTrackConv.ReadHltLinesFrom1stEvent = True
+    hltTrackConv.HltLinesToUse = ['Hlt2ExpressJPsiDecision',
+                                  'Hlt2DiMuonDetachedJPsiDecision',
+                                  'Hlt2DiMuonJPsiDecision',
+                                  'Hlt2DiMuonJPsiHighPTDecision']
     hltTrackConv.TrackDestignation = 'Rec/Track/AllBest'
-    hltfilterSeq.Members += [ HltSelReportsDecoder(), hltTrackConv ]#, trkContCopy]
+    trackseq.Members += [ HltSelReportsDecoder(), hltTrackConv ]#, trkContCopy]
 
     # create a sequence that fits the tracks and does the hit-adding
-    trackseq = GaudiSequencer("RecoAlignTrSeq")
-    configuredFitAndHitAdderSequence( Sequence = trackseq, 
-                                      InputLocation = hltTrackConv.TrackDestignation,
-                                      OutputLocation = 'Rec/Track/Best' )
+    from TAlignment.Utils import configuredFitAndHitAdderSequence
+    trackseq.Members.append(configuredFitAndHitAdderSequence(  Name = 'HltJpsi',
+                                                               InputLocation = hltTrackConv.TrackDestignation,
+                                                               OutputLocation = 'Rec/Track/Best' ))
+    
     # now make sure that there are at least 2 tracks left
     trackseq.Members.append( LokiFilter ( 'BestTrackFilter' ,
                                           Code = "1 < CONTAINS ( 'Rec/Track/Best' )" ) )
@@ -241,7 +228,7 @@ def defaultHLTJPsiSelection():
     
     ## tighten the mass window for candidates used in alignment
     AlignJpsi2MuMu = FilterDesktop("AlignJpsi2MuMu",
-                                   Inputs = ["Phys/StdLooseJpsi2MuMu"], 
+                                   Inputs = ["Phys/StdLooseJpsi2MuMu"],
                                    Code = "(ADMASS('J/psi(1S)') < 25.*MeV) & (VFASPF(VCHI2) < 9.)")
     
     from Configurables import ChargedProtoParticleMaker, ChargedProtoParticleAddMuonInfo, ChargedProtoCombineDLLsAlg
@@ -253,13 +240,17 @@ def defaultHLTJPsiSelection():
         ChargedProtoCombineDLLsAlg('ChargedProtoPCombDLLs'),
         StdAllLooseMuons,  # we could also get this from the DoD
         StdLooseJpsi2MuMu, # we could also get this from the DoD
-        TrackParticleMonitor('JpsiParticleMonitor', 
+        AlignJpsi2MuMu,
+        TrackParticleMonitor('StdLooseJpsi2MuMuMonitor', 
                              InputLocation = '/Event/Phys/StdLooseJpsi2MuMu/Particles',
                              MinMass = 3000, MaxMass = 3190),
-        AlignJpsi2MuMu]
-    
-    selection = ParticleSelection()
-    selection.algorithm = recoJpsiSeq
-    selection.location  = '/Event/Phys/AlignJpsi2MuMu/Particles'
-    return selection
+        TrackParticleMonitor('AlignJpsi2MuMuMonitor', 
+                             InputLocation = '/Event/Phys/AlignJpsi2MuMu/Particles',
+                             MinMass = 3000, MaxMass = 3190),
+        ]
+
+    sel = ParticleSelection( Name = 'Jpsi2MuMu',
+                             Location = '/Event/Phys/AlignJpsi2MuMu/Particles',
+                             Algorithm = recoJpsiSeq )
+    return sel
 
