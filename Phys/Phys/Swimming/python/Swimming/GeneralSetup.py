@@ -5,7 +5,7 @@ from Configurables import DataOnDemandSvc,CondDB
 from Configurables import DstConf, CaloDstUnPackConf
 from Configurables import Gaudi__IODataManager as IODataManager
 CaloDstUnPackConf ( Enable = True )
-DstConf           ( EnableUnpack = True )
+DstConf           ( EnableUnpack = ["Reconstruction","Stripping"] ) 
 IODataManager().UseGFAL=False
 importOptions("$STDOPTS/DecodeRawEvent.py")
 appConf = ApplicationMgr()

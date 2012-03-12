@@ -172,7 +172,7 @@ class Swimming(LHCbConfigurableUser) :
                                  'Persistency'])
 
         CaloDstUnPackConf ( Enable = True )
-        DstConf           ( EnableUnpack = True )
+        DstConf           ( EnableUnpack = ["Reconstruction","Stripping"] ) 
 
         importOptions("$STDOPTS/DecodeRawEvent.py")
         appConf = ApplicationMgr()
