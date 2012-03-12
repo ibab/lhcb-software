@@ -255,7 +255,7 @@ StatusCode OTHitEfficiencyMonitor::initialize()
   m_nTrackOTHits = 0;
   
 
-  debug() << " Minimum number of OT Hits per track " <<  m_minOTHitsPerTrack << endmsg;
+  if(msgLevel(MSG::DEBUG)) debug() << " Minimum number of OT Hits per track " <<  m_minOTHitsPerTrack << endmsg;
   return sc;
 }
 
@@ -326,7 +326,7 @@ StatusCode OTHitEfficiencyMonitor::execute()
     
     // now loop over the tracks
     LHCb::Track::Range tracks = get<LHCb::Track::Range>(m_trackLocation) ;
-    if(tracks.size()<m_maxTracksPerEvent)
+    if(tracks.size()<m_maxTracksPerEvent){
       BOOST_FOREACH(const LHCb::Track* track, tracks) {
         if( track->fitStatus() == LHCb::Track::Fitted && track->nDoF()>1 &&
             track->chi2PerDoF() < m_maxChi2PerDoF ) {
@@ -342,6 +342,8 @@ StatusCode OTHitEfficiencyMonitor::execute()
             fillEfficiency(*track) ;
         }
       }
+    }
+    
   }
   return sc ;
 }
@@ -563,14 +565,14 @@ void OTHitEfficiencyMonitor::fillEfficiency(const LHCb::Track& track)
        ilay !=  m_otdet->layers().end(); ++ilay, ++layindex ) 
     if( layersOnTrack.find( *ilay ) == layersOnTrack.end() ) {
       // propagate to the z-coordinate of this layer
-      StatusCode sc  = m_interpolator->interpolate( track, layerzpos[layindex] , state );//.ignore();
+      StatusCode sc  = m_interpolator->interpolate( track, layerzpos[layindex] , state );
       
       // only consider if state has reasonably small error. we should
       // still fine-tune this a little bit, make a propor projecion
       // etc. the best is to cut only when you have unbiased the
       // state. cutting to tight will introduce a significant bias in
       // the efficiency measurement.
-      if( std::sqrt( state.covariance()(0,0) ) < m_maxDistError && sc.isSuccess()) {
+      if(sc.isSuccess() && std::sqrt( state.covariance()(0,0) ) < m_maxDistError) {
 	
         // to get a slightly more precise answer, intersect with the plane
         double tolerance = 0.1 ;
@@ -582,12 +584,13 @@ void OTHitEfficiencyMonitor::fillEfficiency(const LHCb::Track& track)
           if(module ) {
             // fill the efficiency
             fillEfficiency(track, *module, state ) ;	  
-	    
+            
             // keep track of what we have seen
             modulesNotOnTrack.push_back( std::make_pair( module, state ) ) ;
           }
         }else{
-          warning() << " Track interpolation or propagation failed " << endreq;
+          Warning(" Track interpolation or propagation failed ").ignore();
+          
         }
       }
     }
