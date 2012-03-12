@@ -76,7 +76,7 @@ Velo::VeloOccupancyMonitor::VeloOccupancyMonitor(const std::string& name,
     declareProperty("HighOccCut", m_highOccCut = 5.0); // percent
     declareProperty("LowOccCut", m_lowOccCut = 0.0); // percent
     declareProperty("VeloClusterLocation", m_clusterCont = LHCb::VeloClusterLocation::Default);
-    declareProperty("OccupancyResetFrequency", m_occupancyResetFreq = 10240);
+    declareProperty("OccupancyResetFrequency", m_occupancyResetFreq = 0);
     declareProperty("UseOdin", m_useOdin = true);
     declareProperty("WriteDeadToXML", m_writeDeadToXML = false);
 }
