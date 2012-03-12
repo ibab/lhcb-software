@@ -4,6 +4,10 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2012-03-12 - P. Hopchev
+ - Added the two new Hlt1Lines (Hlt1BeamGasCrossingForcedRecoFullZDecision and 
+   Hlt1BeamGasHighRhoVerticesDecision) in HltInit.py
+
 ! 2012-03-09 - V. Gligorov
  - Add Hlt2 Lc->LambdaH lines to Hlt2.py
 

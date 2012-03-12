@@ -54,6 +54,8 @@ HltANNSvc().Hlt1SelectionID = {
     "Hlt1BeamGasCrossingEnhancedBeam2Decision": 55,
     "Hlt1BeamGasCrossingParasiticDecision"  :   56,
     "Hlt1BeamGasCrossingForcedRecoDecision" :   57,
+    "Hlt1BeamGasCrossingForcedRecoFullZDecision": 58,
+    "Hlt1BeamGasHighRhoVerticesDecision"    :   59,
     # VE Hlt1Velo.*Decision
     #"Hlt1VeloClosingDecision"               :   60,
     "Hlt1VeloASideDecision"                 :   61,
