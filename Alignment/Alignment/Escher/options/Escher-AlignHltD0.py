@@ -11,7 +11,6 @@ from Configurables import Escher
 theApp = Escher()
 theApp.DataType   = "2011"
 theApp.InputType  = "MDF"
-#theApp.UseFileStager = True
 theApp.PrintFreq = 1000
 theApp.EvtMax = -1
 theApp.DatasetName = 'AlignHltD0'
@@ -20,7 +19,8 @@ theApp.DatasetName = 'AlignHltD0'
 from Configurables import TAlignment
 from TAlignment.ParticleSelections import defaultHLTD0Selection
 TAlignment().ParticleSelections = [ defaultHLTD0Selection() ]
-TAlignment().TrackSelections = []
+from TAlignment.TrackSelections import NoPIDTracksFromHlt
+TAlignment().TrackSelections = [ NoPIDTracksFromHlt() ]
 
 # specify what we actually align for
 from TAlignment.AlignmentScenarios import *
