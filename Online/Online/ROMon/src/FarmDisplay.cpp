@@ -65,15 +65,6 @@ namespace ROMon {
   InternalDisplay* createCtrlFarmSubDisplay(InternalDisplay* parent, const string& title, int height);
   InternalDisplay* createMonitoringSubDisplay(InternalDisplay* parent, const string& title, int height);
   InternalDisplay* createStorageSubDisplay(InternalDisplay* parent, const string& title, int height);
-  InternalDisplay* createBootDisplay(InternalDisplay* parent, const string& title);
-  InternalDisplay* createBenchmarkDisplay(InternalDisplay* parent,int mode, const string& title);
-  InternalDisplay* createFarmStatsDisplay(InternalDisplay* parent, const string& title);
-
-  ClusterDisplay*  createSubfarmDisplay(int width, int height, int posx, int posy, int argc, char** argv);
-  ClusterDisplay*  createRecSubfarmDisplay(int width, int height, int posx, int posy, int argc, char** argv);
-  ClusterDisplay*  createCtrlSubfarmDisplay(int width, int height, int posx, int posy, int argc, char** argv);
-  ClusterDisplay*  createStorageDisplay(int width, int height, int posx, int posy, int argc, char** argv);
-  ClusterDisplay*  createMonitoringDisplay(int width, int height, int posx, int posy, int argc, char** argv);
 }
 
 

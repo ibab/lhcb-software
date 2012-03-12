@@ -90,15 +90,15 @@ namespace {
   void makeNodeStatLine(char* txt, const char* nnam, const NodeStats& ns)   {
     size_t len = ::sprintf(txt,"%-10s ",nnam);
     NodeStats::const_iterator k;
-    if ( (k=ns.find("MEP")) != ns.end() )   {
+    if ( (k=ns.find("Events")) != ns.end() )   {
       len += append(txt+len, (*k).second, "MEPRx");
-    }	  
-    if ( (k=ns.find("EVENT")) != ns.end() )   {
-      len += append(txt+len, (*k).second, "EvtProd");
       len += append(txt+len, (*k).second, "GauchoJob");
-    }
-    if ( (k=ns.find("SEND")) != ns.end() )   {
+    }	  
+    if ( (k=ns.find("Send")) != ns.end() )   {
       len += append(txt+len, (*k).second, "DiskWR");
+    }	  
+    if ( (k=ns.find("Overflow")) != ns.end() )   {
+      len += append(txt+len, (*k).second, "OvflowWR");
     }	  
   }
 }
@@ -187,7 +187,7 @@ void BenchmarkDisplay::updateStats(const Nodeset& ns) {
 	if ( ::str_ncasecmp(cnam,nnam,nnam_len)==0 )  {
 	  cnam += nnam_len+1;
 	}
-	if ( ::strstr(cnam,"GauchoJob") && ::strstr(bnam,"SEND") )  {
+	if ( ::strstr(cnam,"GauchoJob") && ::strstr(bnam,"Send") )  {
 	  continue;
 	}
 	if ( ::strstr(cnam,"EvtHolder") )  {
@@ -243,7 +243,7 @@ int BenchmarkDisplay::updateNode(const Nodeset& ns) {
 
     ::sprintf(txt,"%-32s%25s%25s%25s",
 	      //           0123456789012345678901   0123456789012345678901   01234567890123456789012
-	      "Task name","----- MEP Buffer -----","---- EVENT Buffer ----"," - SEND/RESULT Buffer -");
+	      "Task name","---- Events Buffer ---","----- Send Buffer ----"," -- Overflow Buffer ---");
     ::scrc_put_chars(m_display,txt,MAGENTA,++line,3,1);
     ::sprintf(txt,"%-32s  %10s %5s %6s  %10s %5s %6s  %10s %5s %6s ",
 	      "[UTGID]","[Events]","[ms]","[ms]","[Events]","[ms]","[ms]","[Events]","[ms]","[ms]");
@@ -285,10 +285,9 @@ int BenchmarkDisplay::updateNode(const Nodeset& ns) {
 	    const string& bnam = (*k).first;
 	    const ClientStat& cs = (*k).second;
 	    p = txt + 32;
-	    if      ( bnam == "MEP"    ) ;
-	    else if ( bnam == "EVENT"  ) p += 25;
-	    else if ( bnam == "SEND"   ) p += 25+25;
-	    else if ( bnam == "RESULT" ) p += 25+25;
+	    if      ( bnam == "Events"   ) ;
+	    else if ( bnam == "Send"     ) p += 25;
+	    else if ( bnam == "Overflow" ) p += 25+25;
 	    len = ::sprintf(txt,"%s",cnam);
 	    txt[len]=' ';
 	    len = append(p, &cs);
@@ -302,7 +301,7 @@ int BenchmarkDisplay::updateNode(const Nodeset& ns) {
 	::scrc_put_chars(m_display,"",BOLD|BLUE,++line,3,1);
 	::sprintf(txt,"%-32s%25s%25s%25s",
 		  //           0123456789012345678901   0123456789012345678901   01234567890123456789012
-		  "Task name","----- MEP Buffer -----","---- EVENT Buffer ----"," - SEND/RESULT Buffer -");
+		  "Task name","---- Events Buffer ---","----- Send Buffer ----"," -- Overflow Buffer ---");
 	::scrc_put_chars(m_display,txt,MAGENTA,++line,3,1);
 	::sprintf(txt,"%-32s  %10s %5s %6s  %10s %5s %6s  %10s %5s %6s ",
 		  "[UTGID]","[Events]","[ms]","[ms]","[Events]","[ms]","[ms]","[Events]","[ms]","[ms]");
@@ -317,10 +316,9 @@ int BenchmarkDisplay::updateNode(const Nodeset& ns) {
 	    const string& bnam = (*k).first;
 	    const ClientStat& cs = (*k).second;
 	    p = txt + 32;
-	    if      ( bnam == "MEP"    ) ;
-	    else if ( bnam == "EVENT"  ) p += 25;
-	    else if ( bnam == "SEND"   ) p += 25+25;
-	    else if ( bnam == "RESULT" ) p += 25+25;
+	    if      ( bnam == "Events"   ) ;
+	    else if ( bnam == "Send"     ) p += 25;
+	    else if ( bnam == "Overflow" ) p += 25+25;
 	    len = ::sprintf(txt,"%s",cnam);
 	    txt[len]=' ';
 	    len = append(p, &cs);
@@ -357,10 +355,10 @@ int BenchmarkDisplay::updateSubfarm(const Nodeset& ns) {
     ::scrc_put_chars(m_display,"",NORMAL,++line,3,1);
 
     size_t len = ::sprintf(txt,"%-11s","Buffer/Task");
-    len += ::sprintf(txt+len," %23s "," ---- MEP/MEPRx -----");
-    len += ::sprintf(txt+len," %23s ","-- EVENT/EvtProd ---");
-    len += ::sprintf(txt+len," %23s "," - EVENT/GauchoJob -");
-    len += ::sprintf(txt+len," %23s "," --- SEND/DiskWR ---");
+    len += ::sprintf(txt+len," %23s "," --- Events/MEPRx ---");
+    len += ::sprintf(txt+len," %23s "," - Events/GauchoJob -");
+    len += ::sprintf(txt+len," %23s "," ---- Send/DiskWR ---");
+    len += ::sprintf(txt+len," %23s "," ---- OverflowWR ----");
     ::scrc_put_chars(m_display,txt,MAGENTA,++line,3,1);
     len = ::sprintf(txt,"%-10s ","");
     len += ::sprintf(txt+len,"   %8s %5s %6s ","Events","Mean","Sigma");
@@ -431,10 +429,10 @@ int BenchmarkDisplay::updateFarm(const Nodeset& ns) {
   ::scrc_put_chars(m_display,"",NORMAL,++line,3,1);
 
   size_t len = ::sprintf(txt,"%-11s","");
-  len += ::sprintf(txt+len," %23s ","---- MEP/MEPRx -----");
-  len += ::sprintf(txt+len," %23s ","-- EVENT/EvtProd ---");
-  len += ::sprintf(txt+len," %23s ","-- EVENT/GauchoJob -");
-  len += ::sprintf(txt+len," %23s ","---- SEND/DiskWR ---");
+  len += ::sprintf(txt+len," %23s "," -- Events/MEPRx ----");
+  len += ::sprintf(txt+len," %23s "," - Events/GauchoJob -");
+  len += ::sprintf(txt+len," %23s "," ---- Send/DiskWR ---");
+  len += ::sprintf(txt+len," %23s "," ---- OverflowWR ----");
   ::scrc_put_chars(m_display,txt,MAGENTA,++line,3,1);
   len = ::sprintf(txt,"%-10s ","Subfarm");
   len += ::sprintf(txt+len," %10s %5s %6s ","Events","Mean","Sigma");

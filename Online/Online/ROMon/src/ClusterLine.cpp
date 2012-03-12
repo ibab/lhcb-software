@@ -152,6 +152,11 @@ void ClusterLine::dataHandler(void* tag, void* address, int* size) {
     l->m_ptr = ptr;
     l->m_data = ((char*)l->m_ptr + sizeof(int));
     l->display();
+    if ( l->m_parent )   {
+      ptr = new char[*size+sizeof(int)];
+      ::memcpy(ptr,l->m_ptr,*size+sizeof(int));
+      IocSensor::instance().send(l->m_parent,CMD_NOTIFY,ptr);
+    }
   }
   else if ( tag ) {
     ClusterLine* l = *(ClusterLine**)tag;
