@@ -398,8 +398,10 @@ StatusCode GetElementsToBeAligned::initAlignmentFrame( Gaudi::Time now )
 	    << m_initTime << " " << now << endreq ;
     sc = Warning("Severe ERROR: alignment frame already initialized", StatusCode::FAILURE) ;
   } else {
+    std::stringstream message ;
+    message << std::left << std::setw(80u) << std::setfill('*') << std::endl ;
     IDetDataSvc* detDataSvc(0) ;
-    sc = service("DetectorDataSvc",detDataSvc, true);
+    sc = service("DetectorDataSvc",detDataSvc, false);
     if ( sc.isFailure() ) {
       error() << "Could not retrieve DetectorDataSvc" << endmsg ;
       return sc;
@@ -407,12 +409,19 @@ StatusCode GetElementsToBeAligned::initAlignmentFrame( Gaudi::Time now )
     if( now == 0 ) {
       now = detDataSvc->eventTime() ;
     } else {
+      message << "Updating detector data svc and update manager svc with time: " << m_initTime.ns() << std::endl ;
+      IUpdateManagerSvc* updateMgrSvc(0) ;
+      sc = service("UpdateManagerSvc",updateMgrSvc, false);
+      if ( sc.isFailure() ) {
+	error() << "Could not retrieve UpdateManagerSvc" << endmsg ;
+	return sc;
+      }
       detDataSvc->setEventTime( now ) ;
+      updateMgrSvc->newEvent() ;
     }
+
     m_initTime = now ;
-    std::stringstream message ;
-    message << std::left << std::setw(80u) << std::setfill('*') << std::endl 
-	    << "Initializing alignment frames with time: " << m_initTime.ns()
+    message << "Initializing alignment frames with time: " << m_initTime.ns()
 	    << " --> " 
 	    << m_initTime.format(true,"%F %r") << std::endl ;
     // update all elements with this time
