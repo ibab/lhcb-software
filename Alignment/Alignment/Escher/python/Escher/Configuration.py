@@ -23,8 +23,10 @@ class Escher(LHCbConfigurableUser):
 
     __used_configurables__ = [ TrackSys, RecSysConf, RecMoniConf, LHCbApp, DstConf, TAlignment ]
     ## Default main sequences for real and simulated data
-    DefaultSequence = [ CountingPrescaler("EscherPrescaler")
-                        , "ProcessPhase/Init"
+    DefaultSequence = [ #CountingPrescaler("EscherPrescaler")
+                        #, 
+                        "ProcessPhase/Init"
+                        , GaudiSequencer("HltFilterSeq")
 			, "ProcessPhase/Reco"
 			, "ProcessPhase/Moni"
                         , GaudiSequencer("AlignSequence") 
@@ -64,6 +66,7 @@ class Escher(LHCbConfigurableUser):
        , "WriteFSR"             : True #write FSRs to DSTs
        , "UseFileStager"        : False
        , "ExpertTracking"       : [ "simplifiedGeometry"]
+       , "HltFilterCode"        : None # Loki filter on Hlt decision
         }
 
     def defineGeometry(self):
@@ -122,18 +125,34 @@ class Escher(LHCbConfigurableUser):
             self.MainSequence = self.DefaultSequence
         mainSeq = self.MainSequence
         escherSeq.Members += mainSeq
-        
         ProcessPhase("Init").DetectorList += self.getProp("InitSequence")
         ProcessPhase("Init").Context = self.getProp("Context")
+
         from Configurables import RecInit, TrackSys
         log.info("Setting up alignment sequence")
         recInit = RecInit( name = "EscherInit",
                            PrintFreq = self.getProp("PrintFreq"))
         GaudiSequencer("InitEscherSeq").Members += [ recInit ]
-        alignSeq = GaudiSequencer("AlignSequence")
+
+        # set up the HltFilterSeq
+        from Configurables import HltDecReportsDecoder, HltCompositionMonitor
+        from Configurables import LoKi__HDRFilter as HDRFilter 
+        hltFilterSeq = GaudiSequencer( "HltFilterSeq" )
+        # identifies events that are not of type Hlt1ErrorEvent or Hlt2ErrorEvent
+        hltErrCode = "HLT_PASS_RE('Hlt1(?!ErrorEvent).*Decision') & HLT_PASS_RE('Hlt2(?!ErrorEvent).*Decision')"
+        hltErrorFilter = HDRFilter('HltErrorFilter', Code = hltErrCode )   # the filter
+        hltFilterSeq.Members = [ HltDecReportsDecoder(),  HltCompositionMonitor(), hltErrorFilter ]
+        # add more hlt filters, if requested
+        if self.getProp("HltFilterCode") and len(self.getProp("HltFilterCode"))>0:
+            hltfilter = HDRFilter ( 'HLTFilter',
+                                    Code = self.getProp("HltFilterCode"))
+            hltfilter.Preambulo += [ "from LoKiCore.functions import *" ]
+            hltFilterSeq.Members += [ hltfilter ]
 
         # in Escher we'll always use the DOD
         ApplicationMgr().ExtSvc += [ "DataOnDemandSvc" ]
+
+        alignSeq = GaudiSequencer("AlignSequence")
 
         # if the patter reco is not run, we need the DataOnDemand svc
         # so that e.g. the track container(s) is unpacked:
