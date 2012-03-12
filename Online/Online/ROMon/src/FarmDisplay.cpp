@@ -557,7 +557,7 @@ void FarmDisplay::handle(const Event& ev) {
   }
 }
 
-void FarmDisplay::connect(const std::string& section, const vector<string>& farms) {
+void FarmDisplay::connect(const std::string& /* section */, const vector<string>& farms) {
   SubDisplays::iterator k;
   SubDisplays copy;
   char txt[128];
