@@ -17,8 +17,8 @@ __all__ = ( 'LambdaLLTrackFitted', 'LambdaDDTrackFitted' )
 # Standard Lambda: Fitted Long Tracks
 Hlt2SharedLambdaLLTrackFitted = Hlt2Member( CombineParticles, "LambdaLLTrackFitted"
                                             , DecayDescriptor = "[Lambda0 -> p+ pi-]cc" 
-                                            , DaughtersCuts = { "pi+" : "(TRCHI2DOF<4)",
-                                                                "p+"  : "(TRCHI2DOF<4)"} 
+                                            , DaughtersCuts = { "pi+" : "(TRCHI2DOF<4)& (MIPCHI2DV(PRIMARY)>36)",
+                                                                "p+"  : "(TRCHI2DOF<4)& (MIPCHI2DV(PRIMARY)>36)"} 
                                             , CombinationCut = "(ADAMASS('Lambda0')<50*MeV)"
                                             , MotherCut = "(ADMASS('Lambda0')<20*MeV) & (VFASPF(VCHI2PDOF)<30) & (BPVLTIME() > 2.0*ps) "
                                             , Inputs = [ BiKalmanFittedPions, BiKalmanFittedProtons ]
@@ -31,7 +31,7 @@ Hlt2SharedLambdaDDTrackFitted = Hlt2Member( CombineParticles, "LambdaDDTrackFitt
                                             , DaughtersCuts = { "pi+" : "(TRCHI2DOF<4)& (P>3000*MeV)  & (MIPCHI2DV(PRIMARY)>9)",
                                                                 "p+"  : "(TRCHI2DOF<4)& (P>3000*MeV)  & (MIPCHI2DV(PRIMARY)>9)"} 
                                             , CombinationCut = "(ADAMASS('Lambda0')<80*MeV)"
-                                            , MotherCut = "(ADMASS('Lambda0')<64*MeV)& (VFASPF(VCHI2PDOF)<30)& (BPVVDZ > 400)"
+                                            , MotherCut = "(ADMASS('Lambda0')<64*MeV)& (VFASPF(VCHI2PDOF)<30)& (BPVVDZ > 400.0*mm)"
                                             , Inputs = [ BiKalmanFittedDownPions, BiKalmanFittedDownProtons ]
                                             )
 
