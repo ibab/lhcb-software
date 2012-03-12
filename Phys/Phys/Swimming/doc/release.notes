@@ -5,6 +5,9 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+! 2012-03-12 - V. Gligorov
+ - Change the setting of "EnableUnpack" to be compliant with the new software stack.
+
 ! 2012-03-08 - Roel Aaij
  - Open shelve database read only.
 
