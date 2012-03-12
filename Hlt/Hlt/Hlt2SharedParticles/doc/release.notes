@@ -4,6 +4,9 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+! 2012-03-12 - V. Gligorov
+ - Update shared Ks and Lambdas again, add a couple more cuts.
+
 ! 2012-03-09 - V. Gligorov
  - Update shared Ks and Lambdas, tighten a couple of cuts like the track chi2, and
    make the lambda cuts the same as the Ks cuts
