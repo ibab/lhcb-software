@@ -5,7 +5,7 @@ from optparse import OptionParser
 parser = OptionParser(usage = "%prog [options] <opts_file> ...")
 parser.add_option("-n","--numiter",type="int", dest="numiter",help="number of iterations", default=3)
 parser.add_option("-f","--firstiter",type="int", dest="firstiter",help="first iterations", default=0)
-parser.add_option("-e","--numevents",type="int", dest="numevents",help="number of events", default=1000)
+parser.add_option("-e","--numevents",type="int", dest="numevents",help="number of events", default=-1)
 parser.add_option("-p","--numprocesses",type="int", dest="numprocs",help="number of processes", default=8)
 parser.add_option("-d","--aligndb", action = 'append', dest="aligndb",help="path to file with LHCBCOND database layer")
 parser.add_option("--dddb", action = 'append', dest="dddb",help="path to file with DDDB database layer")
@@ -46,7 +46,7 @@ for i in range(opts.firstiter,opts.numiter) :
 
     # run the job
     thiscommand = 'gaudipar.py' + theseoptions + '>& logfile.txt'
-    print 'command: ', thiscommand
+    print 'command: %s\n' % thiscommand
     os.system( thiscommand )
     os.system( 'gzip logfile.txt' )
     # keep only the last version of the derivatives. they take too much space.
