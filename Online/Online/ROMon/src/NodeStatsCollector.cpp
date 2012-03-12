@@ -39,7 +39,7 @@ static void check_dbg(RTL::CLI& cli) {
 NodeStatsCollector::NodeStatsCollector(int argc, char** argv)
   : m_sys(0), m_print(0), m_verbose(false),
     m_mbmDelay(500), m_mbmSvc(0), m_mbmSize(100), m_mbmBuffer(0),
-    m_statDelay(4000), m_statSvc(0), m_statSize(100), m_statBuffer(0),
+    m_statDelay(4000), m_statSvc(0), m_statSize(300), m_statBuffer(0),
     m_hltSvc(0), m_hltSize(10), m_hltBuffer(0),
     m_mbm(0), m_fsm()
 {
@@ -206,7 +206,7 @@ int NodeStatsCollector::monitorHLT() {
 	else ++((*i).second);
 	++count;
       }
-      else if( ::strcmp(entry->d_name,".") || ::strcmp(entry->d_name,"..") ) {
+      else if( !(0==::strcmp(entry->d_name,".") || 0==::strcmp(entry->d_name,"..")) ) {
 	log() << "Strange file name for HLT deferred processing:" << entry->d_name << endl;
       }
     }

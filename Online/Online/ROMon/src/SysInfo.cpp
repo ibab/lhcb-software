@@ -33,8 +33,8 @@ extern "C" {
 
 using namespace std;
 using namespace ROMon;
-#define CPUINFO_SIZE  4*1024
-#define PROCINFO_SIZE 100*1024
+#define CPUINFO_SIZE  6*1024
+#define PROCINFO_SIZE 300*1024
 
 /// Default constructor
 SysInfo::SysInfo(NodeStats* buff, size_t len, int nbuffs)
