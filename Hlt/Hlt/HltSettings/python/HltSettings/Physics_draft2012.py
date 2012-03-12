@@ -137,10 +137,12 @@ class Physics_draft2012( object ):
                                                                               , 'Hlt1BeamGasNoBeamBeam2'           : 'RATE(0.5)'
                                                                               , 'Hlt1BeamGasBeam1'                 : 'RATE(2)'
                                                                               , 'Hlt1BeamGasBeam2'                 : 'RATE(2)'
-                                                                              , 'Hlt1BeamGasCrossingEnhancedBeam1' : 'RATE(2)'
-                                                                              , 'Hlt1BeamGasCrossingEnhancedBeam2' : 'RATE(2)'
+                                                                              , 'Hlt1BeamGasCrossingEnhancedBeam1' : 'RATE(0)'
+                                                                              , 'Hlt1BeamGasCrossingEnhancedBeam2' : 'RATE(0)'
                                                                               , 'Hlt1BeamGasCrossingForcedReco'    : 'RATE(0.5)'
-                                                                              , 'Hlt1BeamGasCrossingParasitic'     : 'RATE(0.5)'
+                                                                              , 'Hlt1BeamGasCrossingForcedRecoFullZ':'RATE(0.5)'
+                                                                              , 'Hlt1BeamGasCrossingParasitic'     : 'RATE(1)'
+                                                                              , 'Hlt1BeamGasHighRhoVertices'       : 'RATE(4)'
                                                                               }
                                                 }
                        , Hlt1CommissioningLinesConf : { 'Postscale' : { 'Hlt1ErrorEvent'   : 'RATE(0.01)' } }
@@ -215,7 +217,8 @@ class Physics_draft2012( object ):
         lines =  [ 'Hlt1BeamGasNoBeamBeam1', 'Hlt1BeamGasNoBeamBeam2'
                  , 'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2'
                  , 'Hlt1BeamGasCrossingEnhancedBeam1', 'Hlt1BeamGasCrossingEnhancedBeam2'
-                 , 'Hlt1BeamGasCrossingForcedReco', 'Hlt1BeamGasCrossingParasitic'
+                 , 'Hlt1BeamGasCrossingForcedReco', 'Hlt1BeamGasCrossingForcedRecoFullZ'
+                 , 'Hlt1BeamGasCrossingParasitic', 'Hlt1BeamGasHighRhoVertices'
                  , 'Hlt1NoPVPassThrough'
                  , 'Hlt1CharmCalibrationNoBias'
                  , 'Hlt1TrackMuon', 'Hlt1TrackAllL0', 'Hlt1TrackPhoton'

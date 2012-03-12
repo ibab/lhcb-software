@@ -4,6 +4,18 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-03-12 - P. Hopchev
+ - Added the two new beam-gas Hlt1Lines (Hlt1BeamGasCrossingForcedRecoFullZ and
+   Hlt1BeamGasHighRhoVertices) in Physics_draft2012.py
+ - Modified (slightly) the Postscale rate limits of the beam-gas lines in Physics_draft2012.py
+ - Created VanDerMeerScan_BeamGasConf_Mar12.py
+ - Created three VDM configurations, based on VanDerMeerScan_Mar11.py:
+	VanDerMeerScan_Mar12_BeamGasOff.py,
+	VanDerMeerScan_Mar12_BeamGasPrescaleLumiReg.py, and
+	VanDerMeerScan_Mar12_BeamGasOn.py
+   They should allow three fast-run-changaeble TCKs to be made (the difference is only the
+   prescale of the beam-gas lines)
+
 !========================= HltSettings v5r19 2012-03-09 =========================
 ! 2012-03-09 - E. van Herwijnen
  - Add Physics_L038_draft2012.py 
