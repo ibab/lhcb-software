@@ -26,10 +26,11 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
     __slots__ = {
 
                 ### Set the tracking alg and hit manager
-                  'TrackingConf'             : 'FastVeloFull' # 'FastVeloFull', 'FastVeloHLT1Only', 'PatVelo'
+                  'TrackingConf'             : 'FastVelo' # can be 'FastVelo' or 'PatVelo'
                 , 'FastVeloBGHitManagerName' : 'FastVeloBeamGasHitManager'
 
                 ### Track Container Names
+                , 'RZTrackContName': 'Hlt/Track/BeamGasRZ'
                 , 'TrackContName'  : 'Hlt/Track/BeamGasAll'
                 , 'VertexContName' : 'Hlt/Vertex/BeamGasAll'
 
@@ -39,34 +40,45 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
                                     , 'bbenhanced'  : ['BeamGasCrossing','Enhanced']
                                     , 'bbforced'    : ['BeamGasCrossing','ForcedReco']
                                     , 'bbparasitic' : ['BeamGasCrossing','Parasitic']
+                                    , 'highrho'     : ['BeamGas', 'HighRhoVertices']
                                     }
 
+                ### ODIN rate limits for the high-rho lines
+                , 'ODINLimitHighRho' : { 'HighRhoBB'    : 'SCALE(0.)'  #e.g. 'SCALE(0.1)' or 'RATE(50000.0)'
+                                       , 'HighRhoNonBB' : 'SCALE(1.0)'
+                                       }
+
                 ### L0DU requirements
-                , 'L0Channel' : { 'NoBeamBeam1'   : 'B1gas'
-                                , 'NoBeamBeam2'   : 'B2gas'
-                                , 'Beam1'         : 'B1gas'
-                                , 'Beam2'         : 'B2gas'
-                                , 'EnhancedBeam1' : 'B1gas'
-                                , 'EnhancedBeam2' : 'B2gas'
-                                }
-                , 'L0FilterBB' : "|".join( [ "(L0_DATA('Spd(Mult)') > 5)" , "(L0_DATA('PUHits(Mult)') > 5)" ] )
+                , 'L0Filter' : { 'NoBeamBeam1'   : "L0_CHANNEL('B1gas')"
+                               , 'NoBeamBeam2'   : "L0_CHANNEL('B2gas')"
+                               , 'Beam1'         : "L0_CHANNEL('B1gas')"
+                               , 'Beam2'         : "L0_CHANNEL('B2gas')"
+                               , 'EnhancedBeam1' : "L0_CHANNEL('B1gas')"
+                               , 'EnhancedBeam2' : "L0_CHANNEL('B2gas')"
+                               , 'BB'            : "|".join( [ "(L0_DATA('Spd(Mult)') > 5)" , "(L0_DATA('PUHits(Mult)') > 5)" ] )
+                               }
 
                 ### Rate Limits of events passing the L0DU requirements
-                , 'L0RateLimit' : { 'NoBeamBeam1'   : 1.e4 #'SCALE(0.1)' #!!! what to put here?
-                                  , 'NoBeamBeam2'   : 1.e4 #'SCALE(0.1)' #!!! what to put here?
-                                  , 'Beam1'         : 5.e3
-                                  , 'Beam2'         : 5.e3
-                                  , 'EnhancedBeam1' : 5.e3
-                                  , 'EnhancedBeam2' : 5.e3
-                                  , 'ForcedReco'    : 1.e3
-                                  #, 'Parasitic'    : 1.e6
+                , 'L0RateLimit' : { 'NoBeamBeam1'    : 1.e4 #'SCALE(0.1)'
+                                  , 'NoBeamBeam2'    : 1.e4 #'SCALE(0.1)'
+                                  , 'Beam1'          : 5.e3
+                                  , 'Beam2'          : 5.e3
+                                  , 'EnhancedBeam1'  : 5.e3
+                                  , 'EnhancedBeam2'  : 5.e3
+                                  , 'ForcedReco'     : 1.e3
+                                  , 'ForcedRecoFullZ': 1.e3
+                                  , 'Parasitic'      : 5.e4
                                   }
 
-                ### z-ranges for Tracking and Vertexing  
-                , 'Beam1VtxRangeLow'        : -1200.
+                ### z-ranges for Tracking
+                , 'TrackingZMin'            : -2000.
+                , 'TrackingZMax'            :  2000.
+
+                ### z-ranges for Vertexing
+                , 'Beam1VtxRangeLow'        : -2000.
                 , 'Beam1VtxRangeUp'         :   400.
                 , 'Beam2VtxRangeLow'        :     0.
-                , 'Beam2VtxRangeUp'         :  1200.
+                , 'Beam2VtxRangeUp'         :  2000.
                 , 'BGVtxExclRangeMin'       :  -300.      # These 2 options take effect
                 , 'BGVtxExclRangeMax'       :   300.      # only for the bb Lines
 
@@ -74,33 +86,37 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
 
                 ### PV3D vertex cuts  
                 , 'VertexMinNTracks'        :    '9'
+                , 'HighRhoVerticesMinNTracks':   '9'
                 , 'VertexMaxChi2PerDoF'     : '9999.'
-                , 'VertexCutRho'            : '(VX_BEAMSPOTRHO( 6*mm ) < 4*mm)'
-                , 'PrescaleHighRho'         : 'RATE(0.5)' #e.g. 'SCALE(0.1)' / 'RATE(0.5)'  ### --> select only part of the events with high-rho vertices
-                  
+                , 'VertexCutSmallRho'       : '(VX_BEAMSPOTRHO( 6*mm ) < 4*mm)'
+                , 'VertexCutHighRho'        : '(VX_BEAMSPOTRHO( 6*mm ) > 4*mm)'
+
                 ### Global Event Cuts
-                , 'UseGEC'                  : 'Tight' # False / 'Loose' / 'Tight' (if not False: use the ones defined in Hlt1GECs.py)
+                , 'UseGEC'                  : 'Loose' # 'None' / 'Loose' / 'Tight' (defined in Hlt1GECs.py)
 
-                ### Input Prescales  
-                , 'Prescale'                : { 'Hlt1BeamGasNoBeamBeam1'           : 1.
-                                              , 'Hlt1BeamGasNoBeamBeam2'           : 1.
-                                              , 'Hlt1BeamGasBeam1'                 : 1.
-                                              , 'Hlt1BeamGasBeam2'                 : 1.
-                                              , 'Hlt1BeamGasCrossingEnhancedBeam1' : 1.
-                                              , 'Hlt1BeamGasCrossingEnhancedBeam2' : 1.
-                                              , 'Hlt1BeamGasCrossingForcedReco'    : 1.
-                                              , 'Hlt1BeamGasCrossingParasitic'     : 1.
+                ### Input Prescales
+                , 'Prescale'                : { 'Hlt1BeamGasNoBeamBeam1'             : 1.
+                                              , 'Hlt1BeamGasNoBeamBeam2'             : 1.
+                                              , 'Hlt1BeamGasBeam1'                   : 1.
+                                              , 'Hlt1BeamGasBeam2'                   : 1.
+                                              , 'Hlt1BeamGasCrossingEnhancedBeam1'   : 1.
+                                              , 'Hlt1BeamGasCrossingEnhancedBeam2'   : 1.
+                                              , 'Hlt1BeamGasCrossingForcedReco'      : 1.
+                                              , 'Hlt1BeamGasCrossingForcedRecoFullZ' : 1.
+                                              , 'Hlt1BeamGasCrossingParasitic'       : 1.
+                                              , 'Hlt1BeamGasHighRhoVertices'         : 1.
                                               }
-
                 ### Output Postscales  
-                , 'Postscale'               : { 'Hlt1BeamGasNoBeamBeam1'           : 'RATE(5)'
-                                              , 'Hlt1BeamGasNoBeamBeam2'           : 'RATE(5)'
-                                              , 'Hlt1BeamGasBeam1'                 : 'RATE(20)'
-                                              , 'Hlt1BeamGasBeam2'                 : 'RATE(20)'
-                                              , 'Hlt1BeamGasCrossingEnhancedBeam1' : 'RATE(20)'
-                                              , 'Hlt1BeamGasCrossingEnhancedBeam2' : 'RATE(20)'
-                                              , 'Hlt1BeamGasCrossingForcedReco'    : 'RATE(5)'
-                                              , 'Hlt1BeamGasCrossingParasitic'     : 'RATE(5)'
+                , 'Postscale'               : { 'Hlt1BeamGasNoBeamBeam1'             : 'RATE(5)'
+                                              , 'Hlt1BeamGasNoBeamBeam2'             : 'RATE(5)'
+                                              , 'Hlt1BeamGasBeam1'                   : 'RATE(20)'
+                                              , 'Hlt1BeamGasBeam2'                   : 'RATE(20)'
+                                              , 'Hlt1BeamGasCrossingEnhancedBeam1'   : 'RATE(20)'
+                                              , 'Hlt1BeamGasCrossingEnhancedBeam2'   : 'RATE(20)'
+                                              , 'Hlt1BeamGasCrossingForcedReco'      : 'RATE(5)'
+                                              , 'Hlt1BeamGasCrossingForcedRecoFullZ' : 'RATE(5)'
+                                              , 'Hlt1BeamGasCrossingParasitic'       : 'RATE(5)'
+                                              , 'Hlt1BeamGasHighRhoVertices'         : 'RATE(5)'
                                               }
                 } 
 
@@ -112,34 +128,36 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
             from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
             return [ Hlt1GECUnit( gec=reqGEC ) ]
         else:
-            if reqGEC: print "\nError : Unknown Value of property 'UseGEC'. No GEC will be set ...\n"
+            if reqGEC != 'None': print "\nError : Unknown Value of property 'UseGEC'. No GEC will be set ...\n"
             return []
 
-    def GetTrackingAlg(self, OutTracksName):
-        ''' creates common FastVelo instance '''
-        from Configurables import FastVeloTracking
-        algTr = FastVeloTracking('FastVeloBeamGasFullTracking', OutputTracksName = OutTracksName, HitManagerName = self.getProp("FastVeloBGHitManagerName") )
-        if 'HLT1Only' in self.getProp("TrackingConf"): algTr.HLT1Only = True
-        algTr.ZVertexMin = self.getProp("Beam1VtxRangeLow")
-        algTr.ZVertexMax = self.getProp("Beam2VtxRangeUp")
-        return algTr 
-
-    def GetPatVeloTrackingAlg(self, OutTracksName):
-        #### Velo Tracking
-        from Configurables import Tf__PatVeloGeneric, Tf__PatVeloRTracking
-        from Configurables import Tf__PatVeloSpaceTracking, Tf__PatVeloSpaceTool
-        patVeloR = Tf__PatVeloRTracking('PatVeloBeamGas_RTracking')
-        patVeloR.OutputTracksName = "Hlt/Track/MyRZVelo"
-        patVeloR.ZVertexMin = self.getProp("Beam1VtxRangeLow")
-        patVeloR.ZVertexMax = self.getProp("Beam2VtxRangeUp")
-
-        patVeloSpace = Tf__PatVeloSpaceTracking('PatVeloBeamGas_SpaceTracking')
-        patVeloSpace.InputTracksName  = patVeloR.OutputTracksName
-        patVeloSpace.OutputTracksName = OutTracksName
-        patVeloSpace.addTool(Tf__PatVeloSpaceTool(), name="PatVeloSpaceTool")
-        patVeloSpace.PatVeloSpaceTool.MarkClustersUsed=True
-
-        return patVeloR, patVeloSpace 
+    def GetVeloTrackingAlg(self, TrackingAlgType, OutTracksName):
+        ''' Creates common Velo tracking instance. TrackingAlgType can be FastVelo or PatVelo (R+Space+General). '''
+        trackingAlgs = []
+        if TrackingAlgType == 'FastVelo':
+            from Configurables import FastVeloTracking
+            algTr = FastVeloTracking('FastVeloBeamGasFullTracking', OutputTracksName = OutTracksName, HitManagerName = self.getProp("FastVeloBGHitManagerName") )
+            algTr.ZVertexMin = self.getProp("TrackingZMin")
+            algTr.ZVertexMax = self.getProp("TrackingZMax")
+            trackingAlgs.append(algTr)
+        elif TrackingAlgType == 'PatVelo':
+            from Configurables import Tf__PatVeloRTracking, Tf__PatVeloSpaceTracking, Tf__PatVeloSpaceTool, Tf__PatVeloGeneralTracking
+            patVeloR = Tf__PatVeloRTracking('PatVeloBeamGas_RTracking')
+            patVeloR.OutputTracksName = self.getProp('RZTrackContName')
+            patVeloR.ZVertexMin = self.getProp("TrackingZMin")
+            patVeloR.ZVertexMax = self.getProp("TrackingZMax")
+            patVeloSpace = Tf__PatVeloSpaceTracking('PatVeloBeamGas_SpaceTracking')
+            patVeloSpace.InputTracksName  = patVeloR.OutputTracksName
+            patVeloSpace.OutputTracksName = OutTracksName
+            patVeloSpace.addTool(Tf__PatVeloSpaceTool(), name="PatVeloSpaceTool")
+            patVeloSpace.PatVeloSpaceTool.MarkClustersUsed=True
+            patVeloGeneral = Tf__PatVeloGeneralTracking('PatVeloBeamGas_GeneralTracking')
+            patVeloGeneral.OutputTracksLocation = OutTracksName
+            patVeloGeneral.PointErrorMin = 2
+            trackingAlgs.extend( [patVeloR, patVeloSpace, patVeloGeneral] )
+        else:
+            print "FATAL ERROR : unknown TrackingAlgType!!!"
+        return trackingAlgs
 
     def HelperBeamsZRange(self, whichBeam):
         ''' Function returning the z-range limits to be
@@ -169,13 +187,21 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         return protoVtxAlgo
 
     def GetPV3DAlg(self, InpTracksName, OutVerticesName):
-        from Configurables import PatPV3D, PVOfflineTool,PVSeed3DTool,LSAdaptPV3DFitter
+        from Configurables import PatPV3D, PVOfflineTool, PVSeed3DTool, LSAdaptPV3DFitter
         myPV3D = PatPV3D('PV3DHltBeamGas' + OutVerticesName[-3:])
         myPV3D.addTool(PVOfflineTool,'PVOfflineTool')
+        ## seed tool
         myPV3D.PVOfflineTool.PVSeedingName = 'PVSeed3DTool'
-        myPV3D.PVOfflineTool.addTool(LSAdaptPV3DFitter, 'LSAdaptPV3DFitter')
+        myPV3D.PVOfflineTool.addTool( PVSeed3DTool, name = 'PVSeed3DTool')
+        myPV3D.PVOfflineTool.PVSeed3DTool.TrackPairMaxDistance = 2. # dflt 0.3
+        myPV3D.PVOfflineTool.PVSeed3DTool.zMaxSpread = 10. # dflt 3.
+        myPV3D.PVOfflineTool.PVSeed3DTool.MinCloseTracks = 1 # dflt 4
+        ## fitter tool
         myPV3D.PVOfflineTool.PVFitterName = 'LSAdaptPV3DFitter'
-        myPV3D.PVOfflineTool.LSAdaptPV3DFitter.TrackErrorScaleFactor = 2. #!!! what is this doing
+        myPV3D.PVOfflineTool.addTool(LSAdaptPV3DFitter, 'LSAdaptPV3DFitter')
+        myPV3D.PVOfflineTool.LSAdaptPV3DFitter.maxIP2PV = 4. # dflt 2.
+        myPV3D.PVOfflineTool.LSAdaptPV3DFitter.TrackErrorScaleFactor = 2. #dflt 1.
+        ##
         myPV3D.PVOfflineTool.InputTracks = [InpTracksName]
         myPV3D.OutputVerticesName = OutVerticesName
         return myPV3D
@@ -194,28 +220,23 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         vtxCut_zPos           = "in_range(%s*mm, VZ, %s*mm)" %(zMin, zMax)
         vtxCut_maxChi2PerDoF  = "(VCHI2PDOF < %s)"% self.getProp("VertexMaxChi2PerDoF") if self.getProp("VertexMaxChi2PerDoF") < 998 else ""
         vtxCut_minNTracks     = "(NTRACKS > %s)"  % self.getProp("VertexMinNTracks") if self.getProp("VertexMinNTracks") > 0 else ""
-        vtxCut_excludeLumiReg = "~in_range(%s*mm, VZ, %s*mm)" %(self.getProp("BGVtxExclRangeMin"), self.getProp("BGVtxExclRangeMax"))
+        vtxCut_smallRho = self.getProp('VertexCutSmallRho')
+        listVertexCuts = [ vtxCut_zPos, vtxCut_maxChi2PerDoF, vtxCut_minNTracks, vtxCut_smallRho ]
 
-        listOneObjectCuts = [ vtxCut_zPos, vtxCut_maxChi2PerDoF, vtxCut_minNTracks ]
         #in case of a bb line add the cut that vetoes the Lumi Region
-        if "Cross" in lineName: listOneObjectCuts.append(vtxCut_excludeLumiReg)
+        vtxCut_excludeLumiReg = "~in_range(%s*mm, VZ, %s*mm)" %(self.getProp("BGVtxExclRangeMin"), self.getProp("BGVtxExclRangeMax"))
+        if "Cross" in lineName:
+            if "FullZ" not in lineName: listVertexCuts.append(vtxCut_excludeLumiReg)
 
-        ### Cut on the vertices transverse positions. Implement as "Stream cut"
-        ### (needed to scale down the number of events and not the number of vertices)
-        ### for the NoBeamBeam1(2) and EnhancedBeam1(2) reject ALL high-rho vertices
-        ### for the Beam1(2), Forced & Parasitic lines accept small fraction of high-rho vertices
-        vtxCut_smallRho = self.getProp('VertexCutRho')
-        if 'NoBeam' in lineName or 'Enhanced' in lineName:
-            listOneObjectCuts += [ vtxCut_smallRho ]
-            vtxCut_transvPos = "~VEMPTY"
-        else:    
-            vtxCut_transvPos = "switch( has%s, ~VEMPTY, scale(~VEMPTY, %s) )" %(vtxCut_smallRho, self.getProp('PrescaleHighRho'))
+        ### The special case for the high-rho vertices Line
+        if "HighRho" in lineName:
+            vtxCut_minNTracks = "(NTRACKS > %s)"  % self.getProp("HighRhoVerticesMinNTracks") if self.getProp("HighRhoVerticesMinNTracks") > 0 else ""
+            vtxCut_highRho    = self.getProp('VertexCutHighRho')
+            listVertexCuts = [ vtxCut_zPos, vtxCut_maxChi2PerDoF, vtxCut_minNTracks, vtxCut_highRho ]
 
-        ### The LoKi filter
-        ### First : the part with the one-object cuts (embed in the VSOURCE statement)
-        ### Second : the stream part
-        codeLoKiFilter = "VSOURCE('%s', %s) >> %s" %(InpVerticesName, " & ".join([ i for i in listOneObjectCuts if i ]), vtxCut_transvPos)
-
+        ### The LoKi vertex filtering code
+        codeLoKiFilter = "VSOURCE('%s', %s) >> ~VEMPTY" %(InpVerticesName, " & ".join([ c for c in listVertexCuts if c ]))
+        
         ### The last algorithm should have name of line, plus 'Decision'
         from Configurables import LoKi__VoidFilter
         return LoKi__VoidFilter( 'Hlt1%sDecision' % lineName
@@ -223,32 +244,39 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
                                , Code = codeLoKiFilter
                                )
 
+
     ############################################################################
     ### Function creating the ee, be, lonely and forced lines
     ############################################################################
     def __create_nonParasitic_line__(self, whichLine, whichBeam) :
         ''' Function to create the Lines for 'ee'(2), 'be'(1), 'eb'(1), 
-            'lonely bb'(2) and 'forced bb'(1) crossings. Algorithms:
+            'lonely bb'(2) and 'forced bb'(2) crossings. Algorithms:
             1) FastVeloTracking with enlarged z-window (the same algorithm for all lines)
-            3) PV3D (the same algorithm for all lines)
-            4) Loki-Filter the produced vertices (Algo name should be <name of line> + Decision)
-            In Algos 2) and 4) need to exclude lumi region for the 'lonely bb' and 'forced bb' cases
+            2) PV3D (the same algorithm for all lines)
+            3) Loki-Filter the produced vertices (Algo name should be <name of line> + Decision)
+            In Algos 2) and 3) need to exclude lumi region for the 'lonely bb' and 'forced bb' cases
         '''
 
         nameParts = self.getProp("LineNameParts")[whichLine]
         nameKey   = nameParts[1]+whichBeam
         lineName  = nameParts[0]+nameKey
-
+            
         ### Get the L0 Rate Limit
         L0RateLimit = self.getProp('L0RateLimit')[nameKey] if (nameKey in self.getProp('L0RateLimit').keys()) else None
 
         ### Create the L0DU and ODIN filters
-        if 'ForcedReco' == nameParts[1]:
-            l0du = self.getProp('L0FilterBB')
+        if 'ForcedReco' in nameParts[1]:
+            l0du = self.getProp('L0Filter')['BB']
             odin = '(ODIN_BXTYP == LHCb.ODIN.BeamCrossing)'
+        elif 'HighRho' in nameParts[1]:
+            l0du = self.getProp('L0Filter')['BB']
+            reqBB    = '(ODIN_BXTYP == LHCb.ODIN.BeamCrossing)'
+            reqNonBB = '((ODIN_BXTYP == LHCb.ODIN.Beam1) | (ODIN_BXTYP == LHCb.ODIN.Beam2))'
+            rateLimBB    = self.getProp('ODINLimitHighRho')['HighRhoBB']
+            rateLimNonBB = self.getProp('ODINLimitHighRho')['HighRhoNonBB']
+            odin = '(scale(%s, %s) | scale(%s, %s))' %(reqBB, rateLimBB, reqNonBB, rateLimNonBB)
         else:
-            channel = self.getProp('L0Channel')[nameKey] if (nameKey in self.getProp('L0Channel').keys()) else None
-            l0du = "L0_CHANNEL('%s')" % channel
+            l0du = self.getProp('L0Filter')[nameKey] if (nameKey in self.getProp('L0Filter').keys()) else None
             if 'NoBeam' == nameParts[1]:
                 odin = '(ODIN_BXTYP == LHCb.ODIN.NoBeam)'
             elif '' == nameParts[1]:
@@ -258,13 +286,11 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
             else:
                 print "\n\nFATAL ERROR - Can't set ODIN Filter\n\n"
 
-        ### Get the tracking algo(s) - Fast or Pat
-        if   'FastVelo' in self.getProp("TrackingConf"): algTracking = [ self.GetTrackingAlg(self.getProp("TrackContName")) ]
-        elif 'PatVelo'  in self.getProp("TrackingConf"): algTracking = list(self.GetPatVeloTrackingAlg(self.getProp("TrackContName")))
-        else: print "\n\nERROR : Unknown Setting For 'TrackingConf'\n\n"
+        ### Get the tracking algo(s)
+        algTracking = self.GetVeloTrackingAlg(self.getProp("TrackingConf"), self.getProp("TrackContName"))
         
         ### Get the PV3D algo
-        algPV3D = self.GetPV3DAlg( algTracking[-1].OutputTracksName, self.getProp("VertexContName") )
+        algPV3D = self.GetPV3DAlg( self.getProp("TrackContName"), self.getProp("VertexContName") )
 
         ### Get the vertex filtering algo
         ### This is the last algorithm - should have name of the line, plus 'Decision'
@@ -275,7 +301,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         print "nameParts = ", nameParts
         print "nameKey = ", nameKey
         print "lineName = ", lineName
-        print "L0 channel = ", channel if ('ForcedReco' != nameParts[1]) else l0du
+        print "L0 requirement = ", l0du
         print "L0RateLim = ", L0RateLimit
         print "ODIN = ", odin
         print "@"*100, "\n"
@@ -319,7 +345,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         L0RateLimit = self.getProp('L0RateLimit')[nameKey] if (nameKey in self.getProp('L0RateLimit').keys()) else None
 
         ### Create the L0DU and ODIN filters
-        l0du = self.getProp('L0FilterBB')
+        l0du = self.getProp('L0Filter')['BB']
         odin = "(ODIN_BXTYP == LHCb.ODIN.BeamCrossing)"
 
         ### Algorithm to check for existing Velo tracks
@@ -330,16 +356,14 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         ### ProtoVertexing algorithm
         algProtoVertex = self.GetProtoVertexingAlg( lineName, MinimalVelo.outputSelection() )
 
-        ### Get the tracking algo(s) - Fast or Pat
-        if   'FastVelo' in self.getProp("TrackingConf"): algTracking = [ self.GetTrackingAlg(self.getProp("TrackContName")) ]
-        elif 'PatVelo'  in self.getProp("TrackingConf"): algTracking = list(self.GetPatVeloTrackingAlg(self.getProp("TrackContName")))
-        else: print "\n\nERROR : Unknown Setting For 'TrackingConf'\n\n"
+        ### Get the tracking algo(s)
+        algTracking = self.GetVeloTrackingAlg(self.getProp("TrackingConf"), self.getProp("TrackContName"))
 
         ### Get the PV3D algo
-        algPV3D = self.GetPV3DAlg( algTracking[-1].OutputTracksName, self.getProp("VertexContName") )
+        algPV3D = self.GetPV3DAlg( self.getProp("TrackContName"), self.getProp("VertexContName") )
 
         ### Get the vertex filtering algo
-        ### (The last algorithm should have name of line, plus 'Decision')
+        ### This is the last algorithm - should have name of the line, plus 'Decision'
         algVertexFilter = self.GetVertexFilterAlg( lineName, algPV3D.OutputVerticesName )
 
         ''' DEBUG
@@ -347,7 +371,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         print "nameParts = ", nameParts
         print "nameKey = ", nameKey
         print "lineName = ", lineName
-        print "L0 channel = ", l0du
+        print "L0 requirement = ", l0du
         print "L0RateLim = ", L0RateLimit
         print "ODIN = ", odin
         print "%"*100, "\n"
@@ -359,6 +383,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         ### Finally, create the Hlt1Line
         from HltLine.HltLine import Hlt1Line as Line
         from HltLine.HltDecodeRaw import DecodeVELO
+
         TheLine = Line( lineName
                       , priority = 200 
                       , prescale = self.prescale
@@ -370,7 +395,6 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
  
         return TheLine
 
-        
     ############################################################################
     ### Create the BeamGas Hlt Lines
     ############################################################################
@@ -382,4 +406,6 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         self.__create_nonParasitic_line__('bbenhanced', 'Beam1') #line name = 'Hlt1BeamGasCrossingEnhancedBeam1'
         self.__create_nonParasitic_line__('bbenhanced', 'Beam2')
         self.__create_nonParasitic_line__('bbforced', '') #line name = 'Hlt1BeamGasCrossingForcedReco'
+        self.__create_nonParasitic_line__('bbforced', 'FullZ') #line name = 'Hlt1BeamGasCrossingForcedRecoFullZ'
+        self.__create_nonParasitic_line__('highrho', '') #line name = Hlt1BeamGasHighRhoVertices
         self.__create_parasitic_line__() #line name = 'Hlt1BeamGasCrossingParasitic'

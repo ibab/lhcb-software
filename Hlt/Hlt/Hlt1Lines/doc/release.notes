@@ -5,6 +5,16 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2012-03-12 P. Hopchev
+ - Several changes in Hlt1BeamGasLines.py:
+   * Make the selection for high-rho vertices a separate Hlt1Line (Hlt1BeamGasHighRhoVertices)
+     The line name ensures that it will fall into the existing BeamGas routing bit definition.
+     Added job-option settable prescales for bb and b1e+b2e crossings. 
+   * Create Hlt1BeamGasCrossingForcedRecoFullZ (mainly needed for VDM scans)
+   * Parasitic line: set the L0 rate limit to 1.e5 Hz
+   * Create job-options for the tracking z-window and enlarge the default z-vertex range to 2 m
+   * Use looser vertex seeding and fitting
+
 ! 2012-11-03 Vladik Balagura
 - Changed CaloEt: CaloEt+SPDMult now give L0CAL0 trigger which is used for
   online lumi
