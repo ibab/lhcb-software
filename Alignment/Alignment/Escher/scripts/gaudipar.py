@@ -3,13 +3,14 @@
 # first parse all options
 from optparse import OptionParser
 parser = OptionParser(usage = "%prog [options] <opts_file> ...")
-parser.add_option("-e","--numevents",type="int", dest="numevents",help="number of events", default=1000)
+parser.add_option("-e","--numevents",type="int", dest="numevents",help="number of events", default=-1)
 parser.add_option("-p","--numprocesses",type="int", dest="numprocs",help="number of processes", default=8)
 parser.add_option("-d", "--aligndb", action = 'append', dest="aligndb",help="path to file with LHCBCOND database layer")
 parser.add_option("--dddb", action = 'append', dest="dddb",help="path to file with DDDB database layer")
 parser.add_option("-i", "--iter",type="int", dest="iter",help="number of iteration (used for loggin)", default=0)
 parser.add_option("-r", "--roothistofile",dest="histofile",help="name of histogram file",default = "histograms.root")
 parser.add_option("-c", "--derivativefile",dest="derivativefile",help="name of derivative file",default = "")
+parser.add_option("--stagefiles",action = 'store', help="stage files locally")
 (opts, args) = parser.parse_args()
 
 # Prepare the "configuration script" to parse (like this it is easier than
@@ -33,6 +34,11 @@ if options:
 from Configurables import TAlignment
 TAlignment().UpdateInFinalize = False
 
+# add the special prescaler at the beginning of the Escher sequence
+from Configurables import GaudiSequencer, CountingPrescaler
+prescalername = "EscherPrescaler"
+GaudiSequencer("EscherSequencer").Members.insert(0,CountingPrescaler(prescalername) )
+
 # set the database layer
 if opts.aligndb:
    counter = 1
@@ -55,10 +61,19 @@ if opts.dddb:
    print 'added databases: ', opts.dddb
    
 # turn off the printfreq
-from Configurables import EventSelector
-EventSelector().PrintFreq = -1
+#from Configurables import EventSelector
+#EventSelector().PrintFreq = -1
 
-#from Gaudi.Configuration import *
+#######################################################################
+# when using gaudipar we cannot use the filestager because it will
+# not realize that it is reading the same file multiple
+# times. instead, we'll copy the files to the local disk in advance.
+####################################################################### 
+from Configurables import Escher
+if opts.stagefiles or (hasattr(Escher(),'UseFileStager') and Escher().UseFileStager):
+   if hasattr(Escher(),'UseFileStager'): Escher().UseFileStager = False
+   from Escher.Utils import stagelocally
+   stagelocally()
 
 ############################################################################
 from GaudiMP.GMPBase import aida2root, aidatypes
@@ -118,14 +133,17 @@ class AlignmentTask(Task):
      from GaudiPython.Bindings import gbl
      self.output = { 'derivatives' : gbl.LHCb.AlignSummaryData(),
                      'histograms' : HistStore() }
-     
+     #print 'INFO: initializeLocal'
+
   def initializeRemote(self):
-     print 'initializeRemote'
-     #appConf = AppMgr()
-     
+     print 'INFO: initializeRemote'
+       
   def process(self, eventoffset):
      from GaudiPython.Bindings import AppMgr
      appMgr = AppMgr()
+     if eventoffset==0:
+        from Escher.Utils import printsequence
+        printsequence(appMgr)
      # ugly: change the algorithm after initialization. otherwise it doesn't work for 'reused' applications.
      #numeventsPerProc  = opts.numevents / opts.numprocs + 1
      #numeventsThisProc = numeventsPerProc
@@ -134,8 +152,8 @@ class AlignmentTask(Task):
      #appMgr.evtSel().FirstEvent = eventoffset * numeventsPerProc
      #appMgr.evtSel().reinitialize()
      #appMgr.run(numeventsThisProc)
-     appMgr.algorithm('EscherPrescaler').Offset = eventoffset
-     appMgr.algorithm('EscherPrescaler').Interval = opts.numprocs
+     appMgr.algorithm(prescalername).Offset = eventoffset
+     appMgr.algorithm(prescalername).Interval = opts.numprocs
      appMgr.run(opts.numevents)
      
      #evt = appMgr.evtsvc()
@@ -150,12 +168,13 @@ class AlignmentTask(Task):
      self.output['histograms'].collect( histsvc )
                 
   def finalize(self):
+     print "INFO: finalize"
      # dump the histograms to a file
      self.output['histograms'].dump(opts.histofile)
      
      numAlignEvents = self.output['derivatives'].equations().numEvents()
+     print 'INFO: number of events in derivatives: ', self.output['derivatives'].equations().numEvents()
      if numAlignEvents>0 :
-        print 'number of events in derivatives: ', self.output['derivatives'].equations().numEvents()
         # write the derivative file
         if len(opts.derivativefile)>0 :
            self.output['derivatives'].equations().writeToFile(derivativefile)
