@@ -68,36 +68,10 @@ if opts.dddb:
 from GaudiPython.Bindings import AppMgr
 appMgr = AppMgr()
 
+## print the sequence
 if not opts.skipprintsequence:
-   def printAlgo( algName, appMgr, prefix = ' ') :
-      HEADER = '\033[95m'
-      OKBLUE = '\033[94m'
-      OKGREEN = '\033[32m'
-      WARNING = '\033[93m'
-      FAIL = '\033[91m'
-      ENDC = '\033[0m'
-      alg = appMgr.algorithm( algName.split( "/" )[ -1 ] )
-      prop = alg.properties()
-      # if the algorithm is not enabled, print a '#'
-      if prop.has_key( "Enable" ) and not prop[ "Enable" ].value():
-         print FAIL + prefix + algName + ' (disabled)' + ENDC
-      else:
-         #print prefix + algName
-         if prop.has_key( "Members" ) :
-            print OKBLUE + prefix + algName + ENDC
-            subs = prop[ "Members" ].value()
-            for i in subs : printAlgo( i.strip( '"' ), appMgr, prefix + "     " )
-         elif prop.has_key( "DetectorList" ) :
-            print OKBLUE + prefix + algName + ENDC
-            subs = prop[ "DetectorList" ].value()
-            for i in subs : printAlgo( algName.split( "/" )[ -1 ] + i.strip( '"' ) + "Seq", appMgr, prefix + "     ")
-         else:
-            print OKGREEN + prefix + algName + ENDC
-
-   mp = appMgr.properties()
-   print "\n ****************************** Algorithm Sequence **************************** \n"
-   for i in mp["TopAlg"].value(): printAlgo( i, appMgr )
-   print "\n ****************************************************************************** \n"
+   from Escher.Utils import printsequence
+   printsequence(appMgr)
 
 evtSel = appMgr.evtSel()
 evtSel.OutputLevel = 1
