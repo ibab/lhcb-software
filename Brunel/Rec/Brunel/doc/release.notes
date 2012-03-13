@@ -8,7 +8,8 @@ Purpose: LHCb reconstruction program
     (GlobalReco, not yet in tag collector)
   . Protect some unprotected debug messages (PatVeloTT, PatPV, DAQUtils)
   . Fixes to sorting in TsaSeeding to get identical results with gcc43 and gcc46
-    Affects only DataType prior to 2011 (TsaAlgorithms) 
+    Affects only DataType prior to 2011 (TsaAlgorithms)
+  . Improved protections in OTHitEfficiencyMonitor (TrackMonitors)
 
 </PRE><H1><A NAME=v42r1>2012-03-02 Brunel v42r1</A></H1><PRE>
 This version uses projects LCG 62a, Gaudi v23r1, LHCb v34r1, Lbcom v12r1,
