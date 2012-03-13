@@ -45,7 +45,6 @@ class GoodLongTracks( TrackRefiner ):
         TrackRefiner.__init__(self, Name = Name, InputLocation = InputLocation,
                                    Fitted = Fitted)
     def configureSelector( self, a ):
-        print 'inGoodLongTracks.configureSelector'
         from Configurables import TrackSelector
         a.Selector = TrackSelector()
         a.Selector.MinPCut  =   5000
