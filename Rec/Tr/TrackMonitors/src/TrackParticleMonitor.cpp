@@ -2,9 +2,6 @@
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "GaudiKernel/ToolHandle.h"
-#include "Event/TwoProngVertex.h"
-#include "Event/FitNode.h"
-#include "Event/TrackFitResult.h"
 #include "Event/ChiSquare.h"
 #include "Kernel/IParticlePropertySvc.h"
 #include "Kernel/ParticleProperty.h"
@@ -39,6 +36,7 @@ private:
   std::string m_inputLocation; // Input Tracks container location
   ILHCbMagnetSvc* m_magfieldsvc ;
   ToolHandle<ITrackStateProvider> m_stateprovider ;
+  const LHCb::IParticlePropertySvc* m_propertysvc ;
   double m_minMass ;
   double m_maxMass ;
 } ;
@@ -50,12 +48,13 @@ DECLARE_ALGORITHM_FACTORY( TrackParticleMonitor )
 // Standard constructor, initializes variables
 //=============================================================================
 TrackParticleMonitor::TrackParticleMonitor( const std::string& name,
-					ISvcLocator* pSvcLocator)
-  : GaudiHistoAlg( name , pSvcLocator ), 
-    m_magfieldsvc(0),
-    m_stateprovider("TrackStateProvider"),
-    m_minMass(0*Gaudi::Units::GeV),
-    m_maxMass(120.0*Gaudi::Units::GeV)
+					    ISvcLocator* pSvcLocator)
+: GaudiHistoAlg( name , pSvcLocator ), 
+  m_magfieldsvc(0),
+  m_stateprovider("TrackStateProvider"),
+  m_propertysvc(0),
+  m_minMass(0*Gaudi::Units::GeV),
+  m_maxMass(120.0*Gaudi::Units::GeV)
 {
   declareProperty( "InputLocation", m_inputLocation = "" ) ;
   declareProperty( "MinMass", m_minMass ) ;
@@ -75,8 +74,7 @@ StatusCode TrackParticleMonitor::initialize()
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   
   m_magfieldsvc = svc<ILHCbMagnetSvc>( "MagneticFieldSvc", true );
-  // LHCb::IParticlePropertySvc* propertysvc = 
-  //     svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc",true) ;
+  m_propertysvc = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc",true) ;
   m_stateprovider.retrieve().ignore() ;
   return sc ;
 }
@@ -146,7 +144,14 @@ StatusCode TrackParticleMonitor::execute()
       m_stateprovider->stateFromTrajectory(*state,*track,z).ignore() ;
       states.push_back(state) ;
     }
-        
+    
+    double pdgmass(0),pdgwidth(0) ;
+    const LHCb::ParticleProperty* prop = m_propertysvc->find( particle->particleID() ) ;
+    if( prop ) {
+      pdgmass  = prop->mass()/Gaudi::Units::GeV ;
+      pdgwidth = prop->width()/Gaudi::Units::GeV ;
+    }
+
     LHCb::TrackStateVertex vertex( states ) ;
     vertex.fit() ;
     double chi2 = vertex.chi2() ;
@@ -156,7 +161,11 @@ StatusCode TrackParticleMonitor::execute()
     plot( vertex.position().x(), "vtxx", "vertex x", -vtxX,vtxX) ;
     plot( vertex.position().y(), "vtxy", "vertex y", -vtxY,vtxY) ;
     plot( vertex.position().z(), "vtxz", "vertex z", -vtxZ,vtxZ) ;
-    
+    const Gaudi::SymMatrix3x3& poscov = vertex.covMatrix() ;
+    plot( std::sqrt(poscov(0,0)), "vtxxerr", "vertex x error",0.,0.2,50) ;
+    plot( std::sqrt(poscov(1,1)), "vtxyerr", "vertex y error",0.,0.2,50) ;
+    plot( std::sqrt(poscov(2,2)), "vtxzerr", "vertex z error",0.,2.5,50) ;
+
     // assume that there is at least two tracks
     LHCb::State stateA = vertex.state(0) ;
     LHCb::State stateB = vertex.state(1) ;
@@ -167,13 +176,15 @@ StatusCode TrackParticleMonitor::execute()
     
     Gaudi::XYZVector p3A = stateA.momentum()/Gaudi::Units::GeV ;
     Gaudi::XYZVector p3B = stateB.momentum()/Gaudi::Units::GeV ;
-    
+
     Gaudi::LorentzVector p4 = vertex.p4(masshypos)/Gaudi::Units::GeV ;
     double mass = p4.M() ;
+    double merr = vertex.massErr(masshypos)/Gaudi::Units::GeV ;
     double mom  = p4.P() ;
 
     double ppos = p3A.R() ;
     double pneg = p3B.R() ;
+    plot( acos( p3A.Dot(p3B)/(ppos*pneg) ),"openingangle","opening angle",0,0.3) ;
     double pdif = ppos - pneg ;
     //    double costheta = pdif / (ppos + pneg) ;
     double asym = pdif / (ppos + pneg) ;
@@ -186,6 +197,7 @@ StatusCode TrackParticleMonitor::execute()
     const double mmax = m_maxMass/Gaudi::Units::GeV ;
     
     plot( mass, "mass", "mass", mmin, mmax) ;
+    plot( (mass-pdgmass)/std::sqrt(merr*merr+pdgwidth*pdgwidth), "masspull","mass pull",-5,5) ;
     plot( mom, "momentum", "momentum [GeV]", 0, momMax/Gaudi::Units::GeV ) ;
     plot( asym,"momentum asymmetry",-1,1,20) ;
     plot( pdif, "momdif", "p_{pos} - p_{neg}",-momMax/Gaudi::Units::GeV/2, momMax/Gaudi::Units::GeV/2) ;
@@ -194,14 +206,14 @@ StatusCode TrackParticleMonitor::execute()
     
     plot2D( phimatt, mass, "massVersusPhiMattH2", "mass versus Matt's phi", 0,M_PI,mmin,mmax,20,50) ;
     plot2D( phiangle, mass, "massVersusPhiH2", "mass versus phi", -M_PI,M_PI,mmin,mmax,12,50) ;
-    plot2D( pdif, mass, "massVersusMomDifH2", "mass versus p_{A} - p_{B}",-momMax/2,momMax/2,mmin,mmax,20,50) ;
+    plot2D( pdif, mass, "massVersusMomDifH2", "mass versus p_{A} - p_{B}",-momMax/Gaudi::Units::GeV/2,momMax/Gaudi::Units::GeV/2,mmin,mmax,20,50) ;
     plot2D( asym, mass, "massVersusMomAsymH2", "mass versus momentum asymmetry", -1,1,mmin,mmax,20,50) ;
     plot2D( mom, mass, "massVersusMomH2", "mass versus momentum",0,momMax,mmin,mmax,20,50) ;
     profile1D( phimatt, mass, "massVersusPhiMatt", "mass versus Matt's phi", 0,M_PI,20) ;
     profile1D( phiangle, mass, "massVersusPhi", "dimuon mass versus phi",-M_PI,M_PI,12) ;
-    profile1D( pdif, mass, "massVersusMomDif", "mass versus p_{A} - p_{B}",-momMax/2,momMax/2,20) ;
+    profile1D( pdif, mass, "massVersusMomDif", "mass versus p_{A} - p_{B}",-momMax/Gaudi::Units::GeV/2,momMax/Gaudi::Units::GeV/2,20) ;
     profile1D( asym, mass, "massVersusMomAsym", "mass versus momentum asymmetry", -1,1,20) ;
-    profile1D( mom, mass, "massVersusMom", "mass versus momentum",0,momMax,20) ;
+    profile1D( mom, mass, "massVersusMom", "mass versus momentum",0,momMax/Gaudi::Units::GeV,20) ;
     profile1D( p4.y() / p4.z(), mass, "massVersusTy", "mass versus ty",-0.2,0.2,40) ;
 
     if( p3A.y()<0 && p3B.y()<0) 
