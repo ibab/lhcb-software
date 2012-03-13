@@ -158,7 +158,7 @@ StatusCode FastMomentumEstimate::calculate( const LHCb::State* veloState, const 
     sigmaQOverP = 1.0/Gaudi::Units::MeV;
   }
   else {
-    qOverP = (txV-txT)/( coef * Gaudi::Units::GeV * proj*(-1)*scaleFactor);
+    qOverP = (txV-txT)/( coef * Gaudi::Units::GeV * proj*scaleFactor);
     sigmaQOverP = m_veloPlusTResolution * std::fabs(qOverP);
   }
   
