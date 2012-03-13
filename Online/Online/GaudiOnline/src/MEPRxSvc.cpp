@@ -636,7 +636,7 @@ MEPRxSvc::MEPRxSvc(const std::string& nam, ISvcLocator* svc)
   declareProperty("RxIPAddr",         m_rxIPAddr = "0.0.0.0");
   declareProperty("InitialMEPReqs",   m_initialMEPReq = 1);
   declareProperty("MEPsPerMEPReq",    m_MEPsPerMEPReq = 1);
-  declareProperty("MEPRecvTimeout",   m_MEPRecvTimeout = 10);   // s (!)  
+  declareProperty("MEPRecvTimeout",   m_MEPRecvTimeout = 100);   // ms (!)  
   declareProperty("maxEventAge",      m_maxEventAge = 1000000); // us
   declareProperty("nCrh",             m_nCrh = 10);
   declareProperty("createDAQErrorMEP", m_createDAQErrorMEP = false);
@@ -855,7 +855,7 @@ StatusCode MEPRxSvc::run() {
       // we had a timeout - all events go up by the select timeoutvalue (which is in seconds!)
       //for (RXIT w = m_workDsc.begin(); w != m_workDsc.end(); ++w) 
       //  (*w)->m_age += 1000000 * m_MEPRecvTimeout;
-      m_tLastRx += 1000000 * m_MEPRecvTimeout;
+      m_tLastRx += 1000 * m_MEPRecvTimeout;
       checkTimeOut();
       if (--ncrh == 0) {
         log << MSG::DEBUG << "crhhh..." << m_freeDsc.size() << 
@@ -1089,6 +1089,8 @@ StatusCode MEPRxSvc::checkProperties() {
   // create hash-map for finding addresses
   for (int i = 0; i < m_nSrc; ++i) 
     m_srcAddr[MEPRxSys::cinet_addr(m_srcDottedAddr[i])] = i;
+  if (m_maxEventAge != 0) 
+	if (m_maxEventAge < 1000 * m_MEPRecvTimeout) m_MEPRecvTimeout = m_maxEventAge / 1000;
   return StatusCode::SUCCESS;
 }
 

@@ -515,12 +515,12 @@ int rx_poll(int sockFd, int mSec)
 }
 
 
-int rx_select(int sockfd, int sec)
+int rx_select(int sockfd, int millisec)
 {
   fd_set rfds;
   FD_ZERO(&rfds);
   FD_SET(sockfd, &rfds);
-  struct timeval timeout = {sec, 0}; /* seconds */
+  struct timeval timeout = {millisec / 1000, millisec % 1000}; 
   int maxfd = sockfd + 1;
   int n;
   
