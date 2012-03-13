@@ -595,7 +595,7 @@ void MEPRQCommand::commandHandler(void) {
   MsgStream log(m_msgSvc,getName());
   int numMEPs = getInt();
   log << MSG::INFO << "Received command, sending " << numMEPs 
-      << " MEP requests....";
+      << " MEP requests.";
   if(m_mepRxObj->sendMEPReq(numMEPs).isSuccess())
     log << MSG::INFO << "OK." << endmsg;
   else
@@ -653,7 +653,6 @@ MEPRxSvc::MEPRxSvc(const std::string& nam, ISvcLocator* svc)
   m_mepRQCommand = new MEPRQCommand(this, msgSvc(), RTL::processName());
   m_clearMonCommand = new ClearMonCommand(this, msgSvc(), RTL::processName());
   m_upMonCommand = new UpMonCommand(this, msgSvc(), RTL::processName());
-  m_overflowStatSvc = new OverflowStatSvc(this, msgSvc(), RTL::processName());
   m_setOverflowCmd = new SetOverflowCmd(this, msgSvc(), RTL::processName());
   m_runNumber = 0; // when this becomes a problem I have hopefully something more interesting to do...
   m_tLastAdded = 0; // us
@@ -666,7 +665,6 @@ MEPRxSvc::~MEPRxSvc(){
   delete m_mepRQCommand;
   delete m_clearMonCommand;
   delete m_upMonCommand;
-  delete m_overflowStatSvc;
   delete m_setOverflowCmd;
 }
 
@@ -770,7 +768,7 @@ void MEPRxSvc::freeRx() {
   }
 }
 
-void MEPRxSvc::forceEvent(RXIT &dsc, ForceReason reason) {
+void MEPRxSvc::forceEvent(RXIT dsc, ForceReason reason) {
   MsgStream log(msgSvc(), "MEPRx"); // message stream is NOT thread-safe
   switch (reason) {
   case TIME_OUT: 
@@ -848,8 +846,8 @@ StatusCode MEPRxSvc::run() {
         if ( upda ) {
           upda->update(0).ignore();
         }
-        for(RXIT w=m_workDsc.begin(); w != m_workDsc.end(); ++w) {
-          forceEvent(w, END_OF_RUN);
+        while (!(m_workDsc.empty())) {
+          forceEvent(m_workDsc.begin(), END_OF_RUN);
         }
         log << MSG::DEBUG << "Exiting from receive loop" << endmsg;
         return StatusCode::SUCCESS;
@@ -1305,6 +1303,7 @@ StatusCode MEPRxSvc::initialize()  {
     info(std::string("Cannot write to ") + m_overflowPath + std::string(" - disabling overflow"));
     m_overflow = false;
   }
+  m_overflowStatSvc = NULL; //new OverflowStatSvc(this, msgSvc(), RTL::processName());
   m_ebState = READY;
   return StatusCode::SUCCESS;
 }
@@ -1325,6 +1324,8 @@ StatusCode MEPRxSvc::finalize()  {
   }
   if (m_histSvc) m_histSvc->release();
   m_ebState = NOT_READY;
+  if (m_overflowStatSvc) 
+  	delete m_overflowStatSvc;
   return Service::finalize();
 }
 #if 0

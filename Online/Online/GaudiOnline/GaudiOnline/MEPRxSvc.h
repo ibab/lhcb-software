@@ -204,7 +204,7 @@ namespace LHCb {
       StatusCode setupMEPReq(const std::string& odinName);
       StatusCode sendMEPReq(int);
       void freeRx(void);
-      void forceEvent(RXIT &, enum ForceReason reason);
+      void forceEvent(RXIT, enum ForceReason reason);
       int getSrcID(u_int32_t);
       StatusCode checkProperties();
       StatusCode error(const std::string& msg);
