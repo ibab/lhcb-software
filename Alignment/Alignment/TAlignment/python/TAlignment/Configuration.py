@@ -26,6 +26,7 @@ class TAlignment( LHCbConfigurableUser ):
           "Sequencer" : GaudiSequencer("TAlignmentSequencer")          # the sequencer to add algorithms to
         , "TrackSelections"              : [ GoodLongTracks() ]        # input track selections for alignment
         , "ParticleSelections"           : []                          # input particles for alignment
+        , "PVSelection"                  : None                        # primary vertices for alignment
         , "ElementsToAlign"              : []                          # Elements to align
         , "UseLocalFrame"                : True                        # Use local frame?
         , "NumIterations"                : 1                           # Number of iterations
@@ -85,6 +86,8 @@ class TAlignment( LHCbConfigurableUser ):
             inputSequencer.MeasureTime = True
             trackselections = self.getProp("TrackSelections")
             if len(trackselections)>0:
+                trackInputSeq = GaudiSequencer( "AlignTrackSelSeq" )
+                inputSequencer.Members.append(trackInputSeq)
                 # add the algorithms for the track selections to the sequence.
                 # also merge the tracks lists into one list
                 from Configurables import TrackListMerger
@@ -93,22 +96,29 @@ class TAlignment( LHCbConfigurableUser ):
                 self.setProp("TrackLocation",trackmerger.outputLocation)
                 for i in trackselections :
                     alg = i.algorithm()
-                    if alg: inputSequencer.Members.append( alg )
+                    if alg: trackInputSeq.Members.append( alg )
                     trackmerger.inputLocations.append( i.location() )
-                inputSequencer.Members.append( trackmerger )
+                trackInputSeq.Members.append( trackmerger )
 
             # add all particle selections
             if len(self.getProp("ParticleSelections"))>0:
+                particleInputSeq = GaudiSequencer( "AlignParticleSelSeq" )
+                inputSequencer.Members.append(particleInputSeq)
                 from Configurables import FilterDesktop
                 particlemerger = FilterDesktop( "AlignParticles", Code="ALL" )
                 particlemerger.Code = "ALL"
                 particlemerger.CloneFilteredParticles = False
                 for i in self.getProp("ParticleSelections"):
                     alg = i.algorithm() 
-                    if alg: inputSequencer.Members.append( alg )
+                    if alg: particleInputSeq.Members.append( alg )
                     particlemerger.Inputs.append( i.location() )
-                inputSequencer.Members.append(particlemerger)
+                particleInputSeq.Members.append(particlemerger)
                 self.setProp("ParticleLocation",'/Event/Phys/AlignParticles/Particles')
+
+            # add the PV selection
+            if hasattr(self,"PVSelection"):
+                inputSequencer.Members.append( self.getProp("PVSelection").algorithm())
+                self.setProp("VertexLocation",self.getProp("PVSelection").location())
 
             return inputSequencer
         else :
