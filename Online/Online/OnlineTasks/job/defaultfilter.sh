@@ -6,8 +6,7 @@
 # $3: Partitionname
 # $4: Runtype
 export PYTHONPATH=/group/online/dataflow/options/${3}/HLT:${PYTHONPATH}
-RunType=`python -c "import OnlineEnvBase;print OnlineEnvBase.HLTType;"`
-if test "${RunType}" = "PassThrough";
+if test -n "`grep HLTType /group/online/dataflow/options/${3}/HLT/OnlineEnvBase.py|grep PassThrough`";
     then
     . ./passthrough.sh
 fi;
