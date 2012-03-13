@@ -67,32 +67,13 @@ class ITBoxOverlapTracks( TrackRefiner ):
         from Configurables import ITTrackSelector
         a.Selector = ITTrackSelector()
         a.Selector.RequireOverlap = True
-        a.Selector.MinPCut =  10000
-        a.Selector.MinPtCut = 500
+        a.Selector.MinPCut =  5000
         a.Selector.TrackTypes = ["Long"]
         if self._fitted:
             a.Selector.MaxChi2Cut = 5
             a.Selector.MaxChi2PerDoFMatch = 5
             a.Selector.MaxChi2PerDoFVelo = 5
             a.Selector.MaxChi2PerDoFDownstream = 5
-
-# selection for box overlap tracks in IT
-class ITBoxOverlapTracksNoFit( TrackRefiner ):
-    def __init__( self, Name = "ITBoxOverlapTracks", InputLocation = "Rec/Track/Best", Fitted = True ) :
-        TrackRefiner.__init__(self, Name, InputLocation, Fitted)
-    def configureSelector( self, a ):
-        from Configurables import ITTrackSelector
-        a.Selector = ITTrackSelector()
-        a.Selector.TrackTypes = ["Long"]
-        a.Selector.RequireOverlap = True
-        a.Selector.MinPCut =  10000
-        a.Selector.MinPtCut = 500
-        if self._fitted:
-            a.Selector.MaxChi2Cut = 5
-            a.Selector.MaxChi2PerDoFMatch = 5
-            a.Selector.MaxChi2PerDoFVelo = 5
-            a.Selector.MaxChi2PerDoFDownstream = 5
-
 
 # selection for module overlap tracks in IT
 class ITModuleOverlapTracks( TrackRefiner ):
@@ -150,9 +131,9 @@ class VeloOverlapTracks( TrackRefiner ):
         a.Selector.MinNVeloRHits = 4
         a.Selector.MinNVeloPhiHits = 4
         a.Selector.MaxNVeloHoles = 0
-        a.Selector.TrackTypes = ["Long"]
+        a.Selector.TrackTypes = ["Long","Velo"]
         if self._fitted:
-            a.Selector.MaxChi2PerDoFVelo = 10
+            a.Selector.MaxChi2PerDoFVelo = 5
             a.Selector.MaxChi2Cut = 5
 
 
@@ -187,23 +168,36 @@ class FavouriteTrackCocktail(TrackSelection):
         seq.Members.append( merger )
         return seq 
 
-# a complete sequence to get the tracks from the HLT event. put them
-# in a different location than usual.  it seems that the Hlt2Global
-# decision is the most useful, because it has TT hits on the
-# tracks. adding Hlt1Global does rather little. if you do, make sure
-# to put it after Hlt2Global, since the clone rejection takes the
-# first track.
+# This configures a complete sequence to get the tracks from the HLT
+# event. It puts them in a different location than usual.
 class NoPIDTracksFromHlt(TrackSelection):
-    def __init__( self ) :
+    def __init__( self, RerunVeloTracking = False ) :
         TrackSelection.__init__(self, 'NoPIDTracksFromHlt')
+        self._runVelo = RerunVeloTracking
 
     def algorithm( self ):
         from Configurables import GaudiSequencer, HltTrackConverter, TrackContainerCopy
         from TAlignment.Utils import configuredFitAndHitAdderSequence
         seq = GaudiSequencer(self.name() + "Seq")
+
+        # configure algorithm to revive HLT tracks. it seems that the
+        # Hlt2Global decision is the most useful, because it has TT
+        # hits on the tracks. adding Hlt1Global does rather
+        # little. (if you do, make sure to put it after Hlt2Global,
+        # since the clone rejection takes the first track.)
         hltTrackConvAll = HltTrackConverter("HltTrackConvAll",TrackDestignation = 'Rec/Track/NoPIDBest',
                                             HltLinesToUse = ['Hlt2Global'])
-        seq.Members.append( hltTrackConvAll ) 
+        seq.Members += [ hltTrackConvAll ]
+        # configure algorithm to run Velo standalone reconstruction
+        if self._runVelo:
+            # run FastVeloTracks and copy all tracks to NoPIDBest. We
+            # need to deal with clones at some point.
+            from Configurables import FastVeloTracking
+            seq.Members += [FastVeloTracking(),
+                            TrackContainerCopy('CopyVeloTracks',
+                                               inputLocation = 'Rec/Track/Velo',
+                                               outputLocation = 'Rec/Track/NoPIDBest')]
+            
         tracksel = FavouriteTrackCocktail(Name ='NoPIDForAlignment',
                                           InputLocation = 'Rec/Track/NoPIDBest',
                                           Fitted = False)
