@@ -75,25 +75,20 @@ def protoParticlesFromHLTSelSequence( Name, HltDecision,
 ##################################################################
 def defaultHLTD0Selection():
 
-    #-- A HLT report decoder is needed
-    from Configurables import LoKi__HDRFilter as HDRFilter
-    from Configurables import LoKi__VoidFilter as LokiFilter 
-    from Configurables import HltSelReportsDecoder
-    from Configurables import GaudiSequencer
-
-    from Configurables import RecSysConf, RecMoniConf
-    RecSysConf().RecoSequence = ["Hlt","Decoding","AlignTr","Vertex","RICH" ]
-    RecMoniConf().MoniSequence = ["Tr","OT"]
+    # this still needs to be worked out
+    from Configurables import Escher
+    Escher().RecoSequence = ["Hlt","Decoding","AlignTr","Vertex","RICH" ]
+    Escher().MoniSequence = ["Tr","OT"]
 
     # if the Escher hlt filter is not set, set it here
-    from Configurables import Escher
     if not hasattr(Escher(),"HltFilterCode") or not Escher().HltFilterCode :
         #Code = "HLT_PASS_RE( 'Hlt2CharmHadD02HH_D02KPiDecision' )"
         Escher().HltFilterCode = "HLT_PASS_RE( 'Hlt2ExpressDStar2D0PiDecision' )"# | HLT_PASS_RE( 'Hlt2ExpressBeamHalo' )"
     
     # revive only particles used for trigger
+    from Configurables import GaudiSequencer
     trackseq = GaudiSequencer("RecoAlignTrSeq")
-    from Configurables import HltTrackConverter
+    from Configurables import HltTrackConverter, HltSelReportsDecoder
     hltTrackConv = HltTrackConverter("HltTrackConv")
     hltTrackConv.HltLinesToUse = ['Hlt2ExpressDStar2D0PiDecision']
     hltTrackConv.TrackDestignation = 'Rec/Track/AllBest'
@@ -106,6 +101,7 @@ def defaultHLTD0Selection():
                                                 OutputLocation = 'Rec/Track/Best' )
     trackseq.Members.append( fitseq )
     # now make sure that there are at least 2 tracks left
+    from Configurables import LoKi__VoidFilter as LokiFilter 
     trackseq.Members.append( LokiFilter ( 'BestTrackFilter' ,
                                           Code = "1 < CONTAINS ( 'Rec/Track/Best' )" ) )
     
@@ -183,25 +179,20 @@ def defaultHLTD0Selection():
 ##################################################################
 def defaultHLTJPsiSelection():
 
-    #-- A HLT report decoder is needed
-    from Configurables import LoKi__HDRFilter as HDRFilter
-    from Configurables import LoKi__VoidFilter as LokiFilter 
-    from Configurables import HltSelReportsDecoder
-    from Configurables import GaudiSequencer
-
-    from Configurables import RecSysConf, RecMoniConf
-    RecSysConf().RecoSequence = ["Hlt","Decoding","AlignTr","Vertex","MUON" ]
-    RecMoniConf().MoniSequence = ["Tr","OT"]
+    # this still needs to be worked out
+    from Configurables import Escher
+    Escher().RecoSequence = ["Hlt","Decoding","AlignTr","Vertex","MUON" ]
+    Escher().MoniSequence = ["Tr","OT"]
 
     # if the Escher hlt filter is not set, set it here
-    from Configurables import Escher
     if not hasattr(Escher(),"HltFilterCode") or not Escher().HltFilterCode :
         #Code = "HLT_PASS_RE( 'Hlt2DiMuonJPsi.*Decision' )"
         Escher().HltFilterCode = "HLT_PASS_RE( 'Hlt2.*JPsi.*Decision' )"
 
     # revive only particles used for trigger 
+    from Configurables import GaudiSequencer
     trackseq = GaudiSequencer("RecoAlignTrSeq")
-    from Configurables import HltTrackConverter
+    from Configurables import HltTrackConverter, HltSelReportsDecoder
     hltTrackConv = HltTrackConverter("HltTrackConv")
     #hltTrackConv.ReadHltLinesFrom1stEvent = True
     hltTrackConv.HltLinesToUse = ['Hlt2ExpressJPsiDecision',
@@ -218,6 +209,7 @@ def defaultHLTJPsiSelection():
                                                                OutputLocation = 'Rec/Track/Best' ))
     
     # now make sure that there are at least 2 tracks left
+    from Configurables import LoKi__VoidFilter as LokiFilter 
     trackseq.Members.append( LokiFilter ( 'BestTrackFilter' ,
                                           Code = "1 < CONTAINS ( 'Rec/Track/Best' )" ) )
                              
