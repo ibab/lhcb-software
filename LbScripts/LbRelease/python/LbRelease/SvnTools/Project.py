@@ -32,7 +32,7 @@ def translateProject(project,version):
     elif project=="lbscripts":
         # This is a temporary fix, we need to integrate with the list of projects from LbConfiguration
         project="LbScripts"
-     else:
+    else:
         project=project[0].upper()+project[1:]
     if '_' in version and project.upper() == version.split('_')[0].upper():
         version=version.split('_')[-1]
