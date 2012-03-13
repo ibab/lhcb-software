@@ -21,12 +21,12 @@ use Camera              v1r23    Online
 use Checkpointing       v0r7     Online
 use CondDBServer        v1r4     Online
 use DailyReport         v1r2     Online
-use DIM                 v19r28   Online
+use DIM                 v19r30   Online
 ####use ExampleGaucho       v3r4     Online
 use FarmMonitor         v2r9     Online
-use Gaucho              v7r21    Online
+use Gaucho              v7r22    Online
 use GaudiCheckpointing  v0r9     Online
-use GaudiOnline         v2r58    Online
+use GaudiOnline         v2r59    Online
 use GaudiRootCnvTests   v1r6     Online
 use GaudiSerialize      v0r10    Online
 use GaudiUPI            v1r14    Online
@@ -47,7 +47,7 @@ use Presenter           v3r2     Online
 use PyDIM               v2r11    Online
 use RawBankSizes        v2r14    Online
 use RootCnv             v1r13    Online
-use ROMon               v1r35    Online
+use ROMon               v1r36    Online
 use ROLogger            v0r24    Online
 ##macro Stomp_use "" CERN "Stomp v1r2 Online"
 ##use $(Stomp_use)
@@ -56,7 +56,7 @@ use Trending            v2r1     Online
 use UPI                 v1r21    Online
 use UPIR                v1r4     Online
 #Obsolete: use Viewer            v1r5     Online
-use Writer              v1r38    Online
+use Writer              v1r39    Online
 
 # Declare this as a container package
 apply_pattern container_package
