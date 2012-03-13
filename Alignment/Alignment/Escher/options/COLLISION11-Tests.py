@@ -11,6 +11,7 @@ FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml" ]
 
 #-- Use latest 2011 database tags for real data
 Escher().DataType = "2011"
+Escher().InputType  = "MDF"
 
 # Events from run 87968 from fill 1647, on 24th March 2011
 EventSelector().Input = [
