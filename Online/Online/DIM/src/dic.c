@@ -28,7 +28,7 @@
 #define TMP_DISABLE_AST     if (ast_enable != SS$_WASSET) sys$setast(0);
 #endif
 
-#define BAD_CONN_TIMEOUT 10
+#define BAD_CONN_TIMEOUT 2
 
 
 typedef struct bad_conn {
@@ -1313,7 +1313,7 @@ static int handle_dns_info( DNS_DIC_PACKET *packet )
 	DIC_SERVICE *servp;
 	char *node_name, *task_name;
 	char node_info[MAX_NODE_NAME+4];
-	int i, port, protocol, format, ret, pid;
+	int i, port, protocol, format, pid;
 	register DIC_CONNECTION *dic_connp ;
 	DIC_DNS_PACKET dic_dns_packet;
 	register DIC_DNS_PACKET *dic_dns_p = &dic_dns_packet;
@@ -1488,7 +1488,7 @@ static int handle_dns_info( DNS_DIC_PACKET *packet )
 			strncpy( bad_connp->conn.node_name, node_name, MAX_NODE_NAME); 
 			strncpy( bad_connp->conn.task_name, task_name, MAX_TASK_NAME);
 			bad_connp->conn.port = port;
-			tmout = BAD_CONN_TIMEOUT * bad_connp->n_retries;
+			tmout = BAD_CONN_TIMEOUT * (bad_connp->n_retries - 1);
 			if(tmout > 120)
 				tmout = 120;
 			dtq_start_timer(tmout, retry_bad_connection, (long)bad_connp);
@@ -1529,7 +1529,7 @@ static int handle_dns_info( DNS_DIC_PACKET *packet )
 	servp->format = format;
 	servp->conn_id = conn_id;
 
-	ret = send_service_command( servp );
+	send_service_command( servp );
 /*
 	if( ret == 1)
 	{
@@ -2250,9 +2250,34 @@ int dic_get_server_pid(int *pid)
 
 void dic_stop()
 {
+	int dic_find_server_conns();
+
 	dtq_delete(Dic_timer_q);
 	dic_close_dns();
-	dim_stop();
+	if(!dic_find_server_conns())
+		dim_stop();
+}
+
+int dic_find_server_conns()
+{
+	int i;
+	int n = 0;
+
+	for( i = 0; i< Curr_N_Conns; i++ )
+	{
+		if(Net_conns[i].channel != 0)
+		{
+			if(Dna_conns[i].read_ast == recv_rout)
+			{
+				dna_close(i);
+			}
+			else
+			{
+				n++;
+			}
+		}
+	}
+	return(n);
 }
 
 #ifdef VMS

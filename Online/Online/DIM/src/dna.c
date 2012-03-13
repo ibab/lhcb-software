@@ -937,4 +937,3 @@ static void save_node_task(int conn_id, DNA_NET *buffer)
 		rel_pend_conn(id, 1);
 	}
 }
-

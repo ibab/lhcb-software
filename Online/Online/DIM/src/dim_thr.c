@@ -181,9 +181,10 @@ void dim_init()
 
 void dim_stop()
 {
+	void dim_tcpip_stop(), dim_dtq_stop();
+/*
 	int i;
 	int n = 0;
-	void dim_tcpip_stop(), dim_dtq_stop();
 
 	for( i = 0; i< Curr_N_Conns; i++ )
 	{
@@ -192,6 +193,7 @@ void dim_stop()
 	}
 	if(n)
 		return;
+*/
 	if(IO_thread)
 		pthread_cancel(IO_thread);
 	if(ALRM_thread)
@@ -665,6 +667,7 @@ void dim_init_threads()
 
 void dim_stop_threads()
 {
+/*
 	int i;
 	int n = 0;
 
@@ -675,6 +678,7 @@ void dim_stop_threads()
 	}
 	if(n)
 		return;
+*/
 	if(hIO_thread)
 		TerminateThread(hIO_thread, 0);
 	if(hALRM_thread)

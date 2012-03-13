@@ -84,9 +84,11 @@ int dim_dtq_init(int thr_flag)
 {
 struct sigaction sig_info;
 sigset_t set;
-int pid, ret = 0;
+int ret = 0;
 
+/*
 	pid = getpid();
+*/
 	if( !sigvec_done) 
 	{
 	    Inside_ast = 0;
@@ -795,12 +797,11 @@ void dtq_start_timer(int time, void (*user_routine)(), long tag)
 
 int dtq_stop_timer(long tag)
 {
-	TIMR_ENT *entry, *queue_head, *prevp;
+	TIMR_ENT *entry, *queue_head;
 	int time_left = -1;
 
 	queue_head = timer_queues[SPECIAL_QUEUE].queue_head;
 	entry = queue_head;
-	prevp = entry;
 	while( (entry = (TIMR_ENT *)dll_get_next((DLL *)queue_head,(DLL *)entry)) )
 	{
 		if( entry->tag == tag ) 

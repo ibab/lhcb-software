@@ -311,11 +311,11 @@ DimServerDns::DimServerDns(const char *node, int port, char *name)
 
 void DimServerDns::init(const char *node, int port)
 {
-	if(!itsNode)
-	{
+//	if(!itsNode)
+//	{
 		itsNode = new char[strlen(node)+1];
 		strcpy(itsNode,node);
-	}
+//	}
 	itsPort = port;
 	autoStart = 1;
 	itsName = 0;
@@ -364,7 +364,7 @@ DimServerDns::~DimServerDns()
 //		if(itsName)
 //			delete[] itsName;
 	}
-	if(itsNode)
+//	if(itsNode)
 		delete[] itsNode;
 }
 

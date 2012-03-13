@@ -1387,7 +1387,6 @@ int execute_service( int req_id )
 	register REQUEST *reqp;
 	register SERVICE *servp;
 	char str[80], def[MAX_NAME];
-	register char *ptr;
 	int conn_id, last_conn_id;
 	int *pkt_buffer, header_size, aux;
 #ifdef WIN32
@@ -1418,14 +1417,12 @@ printf("Updating %s for %s@%s (req_id = %d)\n",
 
 	last_conn_id = Curr_conn_id;
 	Curr_conn_id = conn_id;
-	ptr = servp->def;
 	if(servp->type == COMMAND)
 	{
 		sprintf(str,"This is a COMMAND Service");
 		buffp = (int *)str;
 		size = 26;
 		sprintf(def,"c:26");
-		ptr = def;
 	}
 	else if( servp->user_routine != 0 ) 
 	{
@@ -1548,7 +1545,6 @@ printf("Updating %s for %s@%s (req_id = %d)\n",
 void remove_service( int req_id )
 {
 	register REQUEST *reqp;
-	register SERVICE *servp;
 	static DIS_PACKET *dis_packet;
 	static int packet_size = 0;
 	int service_id;
@@ -1556,7 +1552,6 @@ void remove_service( int req_id )
 	reqp = (REQUEST *)id_get_ptr(req_id, SRC_DIS);
 	if(!reqp)
 		return;
-	servp = reqp->service_ptr;
 	if( !packet_size ) {
 		dis_packet = (DIS_PACKET *)malloc(DIS_HEADER);
 		packet_size = DIS_HEADER;
@@ -2176,16 +2171,29 @@ dim_print_date_time();
 	dnsp->dis_n_services--;
 	n_services = dnsp->dis_n_services;
 
-	ENABLE_AST
 	if(dnsp->serving)
 	{
 		if(n_services == 5)
 		{
+			if(Dis_conn_id)
+			{
+				dna_close(Dis_conn_id);
+				Dis_conn_id = 0;
+			}
+			ENABLE_AST
 /*
 			dis_stop_serving();
 */
 			do_dis_stop_serving_dns(dnsp);
 		}
+		else
+		{
+			ENABLE_AST
+		}
+	}
+	else
+	{
+		ENABLE_AST
 	}
 	return(found);
 }
@@ -2315,6 +2323,7 @@ void dis_stop_serving()
 {
 register SERVICE *servp, *prevp;
 void dim_stop_threads(void);
+int dis_find_client_conns();
 int hash_index;
 
 /*
@@ -2369,7 +2378,30 @@ int hash_index;
 /*
 	if(Serving != -1)
 */
-	dim_stop_threads();
+	if(!dis_find_client_conns())
+		dim_stop_threads();
+}
+
+int dis_find_client_conns()
+{
+	int i;
+	int n = 0;
+
+	for( i = 0; i< Curr_N_Conns; i++ )
+	{
+		if(Net_conns[i].channel != 0)
+		{
+			if(Dna_conns[i].read_ast == dis_insert_request)
+			{
+				dna_close(i);
+			}
+			else
+			{
+				n++;
+			}
+		}
+	}
+	return(n);
 }
 
 /* find service by name */
