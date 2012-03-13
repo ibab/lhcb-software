@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-03-13 Mika Vesterinen
+ - new module StrippingCharmFromBSemi containing lines that were previously in
+ - StrippingB2DMuNuX (SL stream) but are now moving to charm micro DST.
+
 ! 2012-03-08 - Will Barter
  - include updates to StrippingZ02TauTau.py to reduce rate. (Updates from S. Farry. 
  - update and comment out two lines in StrippingDY2ee.py as these lines are not to be run in 2012.
