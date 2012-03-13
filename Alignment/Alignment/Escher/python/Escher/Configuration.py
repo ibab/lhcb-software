@@ -51,7 +51,7 @@ class Escher(LHCbConfigurableUser):
        , "CondDBtag"		: ""       # Tag for CondDB. Default as set in DDDBConf for DataType
        , "UseOracle"		: False    # if False, use SQLDDDB instead
        , "MainSequence"		: []       # The default main sequence, see self.DefaultSequence
-       , "InitSequence"		: ["Reproc", "Escher", "Calo"] # default init sequence
+       , "InitSequence"		: ["Escher"] # default init sequence
        , "AlignSequence"	: []
        , "Kalman" 		: True    # run the kalman filter type alignment
        , "Millepede"		: False    # run the Millepede type alignment
@@ -59,7 +59,7 @@ class Escher(LHCbConfigurableUser):
        , "Incident"     	:  ""      # for Millepede style alignment, there are two incident handles: GlobalMPedeFit and Converged
                                            # for Kalman style alignment, there is a handle: UpdateConstants.
         # Following are options forwarded to RecSys
-       , "RecoSequence"   	: [] # The Sub-detector reconstruction sequencing. See RecSys for default
+       , "RecoSequence"   	: ["Decoding","VELO","Tr","Vertex"] # The Sub-detector reconstruction sequencing. See RecSys for default
        , "MoniSequence"         : ["VELO","Tr", "OT","ST"]
        , "SpecialData"    	: [] # Various special data processing options. See KnownSpecialData for all options
        , "Context"		: "Offline" # The context within which to run
@@ -143,7 +143,7 @@ class Escher(LHCbConfigurableUser):
         hltErrorFilter = HDRFilter('HltErrorFilter', Code = hltErrCode )   # the filter
         hltFilterSeq.Members = [ HltDecReportsDecoder(),  HltCompositionMonitor(), hltErrorFilter ]
         # add more hlt filters, if requested
-        if self.getProp("HltFilterCode") and len(self.getProp("HltFilterCode"))>0:
+        if hasattr(self,"HltFilterCode") and len(self.getProp("HltFilterCode"))>0:
             hltfilter = HDRFilter ( 'HLTFilter',
                                     Code = self.getProp("HltFilterCode"))
             hltfilter.Preambulo += [ "from LoKiCore.functions import *" ]
@@ -319,8 +319,9 @@ class Escher(LHCbConfigurableUser):
         self.setOtherProps(RecSysConf(),["SpecialData","Context",
                                          "OutputType","DataType"])
 
-        if self.isPropertySet("RecoSequence") :
-            self.setOtherProp(RecSysConf(),"RecoSequence")
+        #if self.isPropertySet("RecoSequence") :
+        #self.setOtherProp(RecSysConf(),["RecoSequence"])
+        RecSysConf().RecoSequence = self.getProp("RecoSequence")
 
         # there is a bug in setOtherProps, so we cannot use it to set the MoniSequence.
         self.setOtherProps(RecMoniConf(),["Context","DataType"])
