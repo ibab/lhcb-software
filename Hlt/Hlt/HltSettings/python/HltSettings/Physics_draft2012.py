@@ -65,7 +65,7 @@ class Physics_draft2012( object ):
                                                , 'AllL0_P'       : 10000
                                                , 'AllL0_IP'      :     0.100
                                                , 'AllL0_IPChi2'  :    16
-                                               , 'AllL0_TrChi2'  :     2.5
+                                               , 'AllL0_TrChi2'  :     2.25
                                                , 'AllL0_GEC'     : 'Loose'
                                                , 'AllL0_Velo_NHits' : 9 
                                                , 'AllL0_Velo_Qcut' : 3  
@@ -74,7 +74,7 @@ class Physics_draft2012( object ):
                                                , 'Muon_P'        :  8000 
                                                , 'Muon_IP'       :     0.100
                                                , 'Muon_IPChi2'   :    16
-                                               , 'Muon_TrChi2'   :     2.5  
+                                               , 'Muon_TrChi2'   :     5.0  
                                                , 'Muon_GEC'      : 'Loose'
                                                , 'Muon_ValidateTT' : False
                                                , 'Photon_PT'     :  1200
@@ -97,17 +97,17 @@ class Physics_draft2012( object ):
                                                }
                      , Hlt1MuonLinesConf :     { 'SingleMuonHighPT_P'        : 8000
                                                , 'SingleMuonHighPT_PT'      : 4800
-                                               , 'SingleMuonHighPT_TrChi2'  :    4
+                                               , 'SingleMuonHighPT_TrChi2'  :    5
                                                , 'SingleMuonHighPT_GEC'     : 'Loose'
                                                , 'SingleMuonNoIP_P'         : 6000
                                                , 'SingleMuonNoIP_PT'        : 1300
-                                               , 'SingleMuonNoIP_TrChi2'    :    4
+                                               , 'SingleMuonNoIP_TrChi2'    :    5
                                                , 'SingleMuonNoIP_GEC'       : 'Loose'
                                                , 'DiMuonLowMass_VxDOCA'     :  0.2
                                                , 'DiMuonLowMass_VxChi2'     :   25
                                                , 'DiMuonLowMass_P'          : 6000
                                                , 'DiMuonLowMass_PT'         :  500
-                                               , 'DiMuonLowMass_TrChi2'     :    4
+                                               , 'DiMuonLowMass_TrChi2'     :    5
                                                , 'DiMuonLowMass_M'          :    0
                                                , 'DiMuonLowMass_IPChi2'     :    3
                                                , 'DiMuonLowMass_GEC'        : 'Loose'
@@ -115,12 +115,12 @@ class Physics_draft2012( object ):
                                                , 'DiMuonHighMass_VxChi2'    :   25
                                                , 'DiMuonHighMass_P'         : 6000
                                                , 'DiMuonHighMass_PT'        :  500
-                                               , 'DiMuonHighMass_TrChi2'    :    4
+                                               , 'DiMuonHighMass_TrChi2'    :    5
                                                , 'DiMuonHighMass_M'         : 2700
                                                , 'DiMuonHighMass_GEC'       : 'Loose'
                                                , 'MultiMuonNoIP_P'          : 6000
                                                , 'MultiMuonNoIP_PT'         :  500
-                                               , 'MultiMuonNoIP_TrChi2'     :    4
+                                               , 'MultiMuonNoIP_TrChi2'     :    5
                                                , 'MultiMuonNoIP_GT'         :  2.5
                                                , 'MultiMuonNoIP_GEC'        : 'Loose'
                                                , 'Prescale'                 : { 'Hlt1SingleMuonNoIP' : 0.01,

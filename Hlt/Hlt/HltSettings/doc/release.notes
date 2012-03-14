@@ -3,6 +3,9 @@
 ! Responsible : Patrick Koppenburg, Gerhard Raven
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
+! 2012-03-14 - Sascha Stahl
+ - Physics_draft2012: Changed Tr chi2 cuts in Hlt1 to TrackAllL0 (2.25), TrackMuon (5),
+	Single/DiMuon (5)
 
 ! 2012-03-12 - P. Hopchev
  - Added the two new beam-gas Hlt1Lines (Hlt1BeamGasCrossingForcedRecoFullZ and
