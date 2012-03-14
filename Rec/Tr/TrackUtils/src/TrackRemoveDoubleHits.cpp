@@ -23,9 +23,13 @@ DECLARE_ALGORITHM_FACTORY ( TrackRemoveDoubleHits )
 // Constructor
 //===========================================================================
 TrackRemoveDoubleHits::TrackRemoveDoubleHits ( const std::string& name,
-					       ISvcLocator* pSvcLocator ):
-  GaudiAlgorithm ( name, pSvcLocator ) {
-  
+                                               ISvcLocator* pSvcLocator )
+  : GaudiAlgorithm ( name, pSvcLocator )
+  , m_nTTHits(0)
+  , m_nITHits(0)
+  , m_nOTHits(0)
+
+{  
   // Location of the tracks container
   this -> declareProperty ( "TracksLocation", m_tracksPath = "Rec/Track/Best" );
 
@@ -96,9 +100,6 @@ StatusCode TrackRemoveDoubleHits::initialize ( ) {
 
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
     debug() << "TrackRemoveDoubleHits initialized successfully" << endmsg;    
-    m_nTTHits = 0;
-    m_nITHits = 0;
-    m_nOTHits = 0;
   }
 
   return StatusCode::SUCCESS;
@@ -301,9 +302,9 @@ StatusCode TrackRemoveDoubleHits::finalize ( ) {
   if ( msgLevel( MSG::DEBUG ) ) {
     debug() << "==> Finalize" << endmsg;
     
-    debug() << "Total number of TT hits seen = " << m_nTTHits << endmsg
-	    << "Total number of IT hits seen = " << m_nITHits << endmsg
-	    << "Total number of OT hits seen = " << m_nOTHits << endmsg;
+    debug() << "Total number of TT hits seen = " << m_nTTHits << std::endl
+            << "Total number of IT hits seen = " << m_nITHits << std::endl
+            << "Total number of OT hits seen = " << m_nOTHits << endmsg;
   }
 
   return GaudiAlgorithm::finalize ( );

@@ -20,8 +20,9 @@ using namespace Gaudi;
 DECLARE_ALGORITHM_FACTORY( TrackPrepareVelo )
 
 TrackPrepareVelo::TrackPrepareVelo(const std::string& name,
-                       ISvcLocator* pSvcLocator):
-  GaudiAlgorithm(name, pSvcLocator)
+                                   ISvcLocator* pSvcLocator)
+  : GaudiAlgorithm(name, pSvcLocator)
+  , m_ignoreBest(false)
 {
   // constructor
   declareProperty( "inputLocation", m_inputLocation = TrackLocation::Velo);

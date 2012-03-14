@@ -5,9 +5,10 @@ using namespace LHCb;
 DECLARE_ALGORITHM_FACTORY( TrackBuildCloneTable )
 
 TrackBuildCloneTable::TrackBuildCloneTable(const std::string& name,
-                                           ISvcLocator* pSvcLocator):
-  GaudiAlgorithm ( name, pSvcLocator ),
-  m_zStates      ( 1, 0.0 )
+                                           ISvcLocator* pSvcLocator)
+  : GaudiAlgorithm ( name, pSvcLocator )
+  , m_zStates      ( 1, 0.0 )
+  , m_extrapolator(0)
 {
   declareProperty("inputLocation", m_inputLocation = TrackLocation::Default);
   declareProperty("outputLocation", m_outputLocation = TrackLocation::Default+"Clones");

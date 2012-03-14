@@ -84,7 +84,8 @@ StatusCode TrackCloneCleaner::execute()
     // skips if already tagged as a rejected clone
     if ( iterW->clone )
     {
-      verbose() << " -> Already flagged as a clone. Skipping" << endmsg;
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << " -> Already flagged as a clone. Skipping" << endmsg;
       continue;
     }
 

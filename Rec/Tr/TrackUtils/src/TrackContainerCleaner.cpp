@@ -17,8 +17,9 @@ using namespace LHCb;
 DECLARE_ALGORITHM_FACTORY( TrackContainerCleaner )
 
 TrackContainerCleaner::TrackContainerCleaner(const std::string& name,
-                       ISvcLocator* pSvcLocator):
-  GaudiAlgorithm(name, pSvcLocator)
+                                             ISvcLocator* pSvcLocator)
+  : GaudiAlgorithm(name, pSvcLocator)
+  , m_selector(0)
 {
   // constructor
  this->declareProperty("selectorName", m_selectorName = "TrackSelector");

@@ -21,6 +21,7 @@ DECLARE_ALGORITHM_FACTORY( TrackFromDST )
 TrackFromDST::TrackFromDST( const std::string& name,
                             ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
+  , m_debugLevel(false)
 {
   declareProperty( "TracksInContainer", 
                    m_tracksInContainer = LHCb::TrackLocation::Default );

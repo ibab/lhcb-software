@@ -4,6 +4,10 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-03-14 - Marco Cattaneo
+ - Fix an unprotected verbose() message
+ - Fix UNINIT_CTOR defects
+
 !========================= TrackUtils v1r44 2012-01-31 =========================
 ! 2012-01-27 - Chris Jones
  - Update the default list of track states to keep in TrackToDST

@@ -33,8 +33,9 @@ DECLARE_ALGORITHM_FACTORY( TrackEventCloneKiller )
 //=============================================================================
 TrackEventCloneKiller::TrackEventCloneKiller( const std::string& name,
                                               ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator ),
-    m_cloneFinder("TrackCloneFinder",this)
+  : GaudiAlgorithm ( name , pSvcLocator )
+  , m_cloneFinder("TrackCloneFinder",this)
+  , m_debugLevel(false)
 {
   // default list of input containers
   m_tracksInContainers.push_back( LHCb::TrackLocation::Forward    );

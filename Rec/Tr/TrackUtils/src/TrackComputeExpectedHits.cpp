@@ -18,8 +18,12 @@ using namespace LHCb;
 DECLARE_ALGORITHM_FACTORY( TrackComputeExpectedHits )
 
 TrackComputeExpectedHits::TrackComputeExpectedHits(const std::string& name,
-						   ISvcLocator* pSvcLocator):
-    GaudiAlgorithm(name, pSvcLocator)
+                                                   ISvcLocator* pSvcLocator)
+  : GaudiAlgorithm(name, pSvcLocator)
+  , m_veloExpectation(0)
+  , m_ttExpectation(0)
+  , m_itExpectation(0)
+  , m_otExpectation(0)
 {
     
     declareProperty("inputLocation", m_inputLocation = TrackLocation::Default);

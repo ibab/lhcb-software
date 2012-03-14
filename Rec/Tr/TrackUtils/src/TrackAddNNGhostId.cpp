@@ -26,6 +26,7 @@ DECLARE_ALGORITHM_FACTORY( TrackAddNNGhostId )
 TrackAddNNGhostId::TrackAddNNGhostId( const std::string& name,
                                       ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
+  , m_ghostTool(0)
 {
   declareProperty("inputLocation", m_inputLocation = TrackLocation::Default);
   declareProperty("GhostIdTool", m_ghostToolName = "TrackNNGhostId");
