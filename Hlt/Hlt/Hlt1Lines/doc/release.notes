@@ -4,6 +4,9 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
+! 2012-03-14 Sascha Stahl
+ - Hlt1MuonLines: Defined variables as float where reasonable, so that configuration
+	 files can set non integer values.
 
 ! 2012-03-12 P. Hopchev
  - Several changes in Hlt1BeamGasLines.py:

@@ -7,38 +7,38 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
     __slots__ = { 
         #  Muon Lines
         'DoTiming'                  : False
-        ,'SingleMuonHighPT_P'       : 8000
-        ,'SingleMuonHighPT_PT'      : 4800
-        ,'SingleMuonHighPT_TrChi2'  :    4
+        ,'SingleMuonHighPT_P'       : 8000.
+        ,'SingleMuonHighPT_PT'      : 4800.
+        ,'SingleMuonHighPT_TrChi2'  :    4.
         ,'SingleMuonHighPT_TrNTHits'   : 0 #OFF
         ,'SingleMuonHighPT_Velo_NHits' : 0 #OFF
         ,'SingleMuonHighPT_Velo_Qcut'  : 999 #OFF
         ,'SingleMuonHighPT_GEC'     : 'Loose'
-        ,'SingleMuonNoIP_P'         : 6000
-        ,'SingleMuonNoIP_PT'        : 1300
-        ,'SingleMuonNoIP_TrChi2'    :    4
+        ,'SingleMuonNoIP_P'         : 6000.
+        ,'SingleMuonNoIP_PT'        : 1300.
+        ,'SingleMuonNoIP_TrChi2'    :    4.
         ,'SingleMuonNoIP_TrNTHits'   : 16
         ,'SingleMuonNoIP_Velo_NHits' : 9
         ,'SingleMuonNoIP_Velo_Qcut'  : 3
         ,'SingleMuonNoIP_GEC'       : 'Loose'
         ,'DiMuonLowMass_VxDOCA'     :  0.2
-        ,'DiMuonLowMass_VxChi2'     :   25
-        ,'DiMuonLowMass_P'          : 6000
-        ,'DiMuonLowMass_PT'         :  500
-        ,'DiMuonLowMass_TrChi2'     :    4
-        ,'DiMuonLowMass_M'          : 1000
-        ,'DiMuonLowMass_IPChi2'     :    9
+        ,'DiMuonLowMass_VxChi2'     :   25.
+        ,'DiMuonLowMass_P'          : 6000.
+        ,'DiMuonLowMass_PT'         :  500.
+        ,'DiMuonLowMass_TrChi2'     :    4.
+        ,'DiMuonLowMass_M'          : 1000.
+        ,'DiMuonLowMass_IPChi2'     :    9.
         ,'DiMuonLowMass_GEC'        : 'Loose'
         ,'DiMuonHighMass_VxDOCA'    :  0.2
-        ,'DiMuonHighMass_VxChi2'    :   25
-        ,'DiMuonHighMass_P'         : 6000
-        ,'DiMuonHighMass_PT'        :  500
-        ,'DiMuonHighMass_TrChi2'    :    4
-        ,'DiMuonHighMass_M'         : 2900
+        ,'DiMuonHighMass_VxChi2'    :   25.
+        ,'DiMuonHighMass_P'         : 6000.
+        ,'DiMuonHighMass_PT'        :  500.
+        ,'DiMuonHighMass_TrChi2'    :    4.
+        ,'DiMuonHighMass_M'         : 2900.
         ,'DiMuonHighMass_GEC'       : 'Loose'
-        ,'MultiMuonNoIP_P'          : 6000
-        ,'MultiMuonNoIP_PT'         :  500
-        ,'MultiMuonNoIP_TrChi2'     :    4
+        ,'MultiMuonNoIP_P'          : 6000.
+        ,'MultiMuonNoIP_PT'         :  500.
+        ,'MultiMuonNoIP_TrChi2'     :    4.
         ,'MultiMuonNoIP_GT'         :  2.5
         ,'MultiMuonNoIP_GEC'        : 'Loose'
         ,'L0Channels'               : { 'SingleMuonHighPT' : ( 'Muon', ),
