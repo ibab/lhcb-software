@@ -3,6 +3,10 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+! 2012-03-14 - Wouter Hulsbergen
+ - add EndVelo state to velo-only fits
+ - make sure debug mode doesn't trigger smoothing
+
 !========================= TrackFitter v4r5 2012-03-07 =========================
 ! 2012-03-07 - Victor Coco
  - propagate the FroceBiDirectionalFit option to all case in ConfiguredFitter.py

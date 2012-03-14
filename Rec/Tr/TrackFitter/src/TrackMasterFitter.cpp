@@ -273,8 +273,8 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
     if ( sc.isFailure() ) return failure( "unable to fit the track" );
     
     if ( m_debugLevel ) debug() << "chi2 =  " << track.chi2() 
-                                << " ref state = (" << nodes.back()->state().stateVector() 
-                                << ") at z= " << nodes.back()->state().z() << endmsg;
+                                << " ref state = (" << nodes.back()->refVector() 
+                                << ") at z= " << nodes.back()->z() << endmsg;
     double dchi2 = prevchi2 - track.chi2() ;
     // require at least 3 iterations, because of the OT prefit.
     converged = !prevwasprefit && iter>1 && std::abs(dchi2) < m_maxDeltaChi2Converged * track.nDoF();
@@ -310,8 +310,8 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
     } 
     
     if ( m_debugLevel ) debug() << "chi2 =  " << track.chi2() 
-                                << " ref state = (" << nodes.back()->state().stateVector() 
-                                << ") at z= " << nodes.back()->state().z() << endmsg;
+                                << " ref state = (" << nodes.back()->refVector() 
+                                << ") at z= " << nodes.back()->z() << endmsg;
     ++iter;  
   }
   
@@ -623,7 +623,7 @@ StatusCode TrackMasterFitter::makeNodes( Track& track, LHCb::ParticleID pid ) co
 
   // Add reference nodes depending on track type
   if( m_addDefaultRefNodes ) {
-    if(track.hasVelo() && ( track.hasT() ||track.hasTT()) )
+    if(track.hasVelo() )
       nodes.push_back( new FitNode( StateParameters::ZEndVelo, State::EndVelo )) ;
     if(track.hasTT() ) {
       nodes.push_back( new FitNode( StateParameters::ZBegRich1, State::BegRich1 )) ;   
