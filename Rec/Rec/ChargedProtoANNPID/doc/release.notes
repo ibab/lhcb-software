@@ -4,10 +4,15 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-03-14 - Chris Jones
+ - Remove the redirection of stderr to /dev/null for the NeuroBayes call,
+   to test the new 11.11 version of the library.
+
 !========================= ChargedProtoANNPID v1r6 2012-01-31 ================
+
 ! 2012-01-20 - Chris Jones
  - The annoying sporadic stderr messages from NeuroBayes seem to have returned.
-   So, until understood squash them entirely by redirecting stderr and stdout
+   So, until understood squash them entirely by redirecting stderr
    to /dev/null *just* for the m_expert->nb_expert(m_inArray) call. 
    Ugly, brutal, but works.
 
