@@ -36,6 +36,7 @@
 #include "LoKi/UpgradeVertices.h"
 #include "LoKi/Hlt1Wrappers.h"
 #include "LoKi/Hlt1Functions.h"
+#include "LoKi/TrackCutAsRecVertexCut.h"
 #include "LoKi/CacheFuncs.h"
 // ============================================================================
 #include "LoKi/Dicts.h"
@@ -226,6 +227,12 @@ namespace LoKi
       ( const Pipe& fun ,
         const LoKi::Functor<const LHCb::VertexBase*,bool>&  fun2 )
       { return fun >> LoKi::Candidates::SlotFilter(fun2) ;  }       
+      // __rshift__
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+      __rshift__
+      ( const Pipe& fun ,
+        const LoKi::Functor<const LHCb::RecVertex*,bool>&  fun2 )
+      { return fun >> LoKi::Candidates::SlotFilter(fun2) ;  }
       // __rshift__
       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
       __rshift__
@@ -484,6 +491,12 @@ namespace LoKi
       __rshift__ 
       ( const Source&                                          fun , 
         const LoKi::Functor<const LHCb::VertexBase*,bool>&     cut )
+      { return fun >> LoKi::Candidates::SlotFilter ( cut ) ; }
+      // __rshift__
+      static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
+      __rshift__
+      ( const Source&                                          fun ,
+        const LoKi::Functor<const LHCb::RecVertex*,bool>&     cut )
       { return fun >> LoKi::Candidates::SlotFilter ( cut ) ; }
       // __rshift__ for MultiTracks
       static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >

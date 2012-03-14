@@ -117,6 +117,8 @@
   <class name = "LoKi::RecVertices::MaxDOCA"     />
   <class name = "LoKi::RecVertices::MaxDOCAChi2" />
   <class name = "LoKi::RecVertices::DOCACut"     />
+  <class name = "LoKi::RecVertices::Hlt_TrackCutAsRecVertexCut_Any" />
+  <class name = "LoKi::RecVertices::Hlt_TrackCutAsRecVertexCut_All" />
   
   
   <exclusion>

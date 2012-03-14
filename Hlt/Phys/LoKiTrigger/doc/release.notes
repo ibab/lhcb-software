@@ -5,6 +5,11 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2012-03-14 - Pieter David
+ - Add adapters from a RecVertex cut to a track cut, with the option to pass
+   the candidate if one of the tracks passes the track cut (complementary to
+   UpgradeVertices), for Hlt1 displaced vertex line
+
 ! 2012-03-12 - Pieter David
  - Add UpgradeVertices (cfr. Upgrade, UpgradeTrack etc.), required to
    forward-upgrade or fit tracks after making vertices out of them

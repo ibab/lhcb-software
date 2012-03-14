@@ -285,6 +285,10 @@ RV_MAXDOCA       = LoKi.RecVertices.MaxDOCA
 RV_MAXDOCACHI2   = LoKi.RecVertices.MaxDOCAChi2
 ## @see LoKi::Cuts::RV_DOCACUT
 RV_DOCACUT       = LoKi.RecVertices.DOCACut
+## @see LoKi::Cuts::HLT_TCASRVC_ANY
+HLT_TCASRVC_ANY      = LoKi.RecVertices.Hlt_TrackCutAsRecVertexCut_Any
+## @see LoKi::Cuts::HLT_TCASRVC_ALL
+HLT_TCASRVC_ALL      = LoKi.RecVertices.Hlt_TrackCutAsRecVertexCut_All
 
 
 ##
