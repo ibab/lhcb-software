@@ -4,7 +4,7 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
-!========================= PackedEvent v4r7 2012-03-14 =========================
+!========================= PackedEvent v4r8 2012-03-14 =========================
 ! 2012-03-14 - Olivier Callot
  - Fix teh PackedVertex class: most of the information was not stored!
   https://savannah.cern.ch/bugs/?92524 
