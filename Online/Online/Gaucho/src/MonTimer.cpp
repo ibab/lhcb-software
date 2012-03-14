@@ -5,7 +5,7 @@ MonTimer::MonTimer(MonSubSys *HSys, int period) : GenTimer((void*)HSys,period*10
 {
   m_Hsys = HSys;
   m_dueTime = 0;
-  m_dontdimlock = true;
+  m_dontdimlock = false;
   this->m_lock.m_name = m_Hsys->m_name+"_MonTimerLock";
 }
 
