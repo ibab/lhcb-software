@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+
+! 2012-03-14 - Patrick Koppenburg
+	- TupleToolGeometry: dothinbgs in slightly different order
+
 !========================= DecayTreeTuple v3r20 2012-02-09 =========================
 
 ! 2012-02-09 - Patrick Koppenburg
