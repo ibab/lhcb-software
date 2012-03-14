@@ -1089,8 +1089,9 @@ StatusCode MEPRxSvc::checkProperties() {
   // create hash-map for finding addresses
   for (int i = 0; i < m_nSrc; ++i) 
     m_srcAddr[MEPRxSys::cinet_addr(m_srcDottedAddr[i])] = i;
-  if (m_maxEventAge != 0) 
-	if (m_maxEventAge < 1000 * m_MEPRecvTimeout) m_MEPRecvTimeout = m_maxEventAge / 1000;
+  if (m_maxEventAge != 0) {
+    if (m_maxEventAge < 1000 * m_MEPRecvTimeout) m_MEPRecvTimeout = m_maxEventAge / 1000;
+  }
   return StatusCode::SUCCESS;
 }
 

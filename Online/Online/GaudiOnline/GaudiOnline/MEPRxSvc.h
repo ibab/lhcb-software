@@ -92,7 +92,7 @@ namespace LHCb {
       bool                        m_createODINMEP; // fake ODIN MEP for timepix testbeam only!
       bool                        m_resetCounterOnRunChange;
       bool                        m_alwaysSendMEPReq; // send a MEP request for every event (complete or not)
-      bool			                  m_overflow;
+      bool                        m_overflow;
       bool                        m_overflowActive;
       int                         m_MEPBuffers; 
       int                         m_maxMsForGetSpace;
@@ -105,8 +105,8 @@ namespace LHCb {
       int                         m_MEPBufSize;     
       int                         m_ethInterface;
       int                         m_initialMEPReq;	/* Number of initial MEPReqs to send.*/
-      int                         m_MEPsPerMEPReq; /* Number of MEPs requested per MEPReq.*/
-      int                         m_MEPRecvTimeout; /* Select timeout for waiting for a MEP.*/
+      int                         m_MEPsPerMEPReq;      /* Number of MEPs requested per MEPReq.*/
+      unsigned int                m_MEPRecvTimeout;     /* Select timeout for waiting for a MEP.*/
       std::string                 m_nameLiveBuf;
       std::string                 m_nameOverflowBuf;
       u_int32_t                   m_partitionID;
