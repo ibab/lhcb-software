@@ -175,7 +175,7 @@ namespace LoKi
       /// the default constructrio is disabled 
       UpgradeTool () ;
       // ======================================================================
-    private:
+    protected:
       // ======================================================================
       /** upgrade one track. 
        *  - If the seed  has "right" type, just copy it it output

@@ -205,6 +205,8 @@ TC_UPGRADE_ALL  = LoKi.Hlt1.Upgrade
 TC_UPGRADE_TR   = LoKi.Hlt1.UpgradeTracks
 ## @see LoKi::Cuts::TC_UPGRADE_MT
 TC_UPGRADE_MT   = LoKi.Hlt1.UpgradeMultiTracks
+## @see LoKi::Cuts::TC_UPGRADE_VX
+TC_UPGRADE_VX   = LoKi.Hlt1.UpgradeVertices
 
 # =============================================================================
 ## Filter:

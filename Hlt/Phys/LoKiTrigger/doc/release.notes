@@ -5,6 +5,10 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2012-03-12 - Pieter David
+ - Add UpgradeVertices (cfr. Upgrade, UpgradeTrack etc.), required to
+   forward-upgrade or fit tracks after making vertices out of them
+
 !========================= LoKiTrigger v12r5 2012-02-06 =========================
 ! 2011-11-21 - Vanya Belyaev
  - add few new streamer features: first_N and reverse 
