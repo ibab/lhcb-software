@@ -15,7 +15,7 @@ void VertexPacker::pack( const Data & vert,
                          PackedData & pvert,
                          PackedDataVector & pverts ) const
 {
-  if ( 0 == pverts.packingVersion() )
+  if ( 1 == pverts.packingVersion() )
   {
     // technique
     pvert.technique = static_cast<int>(vert.technique());
@@ -96,7 +96,7 @@ void VertexPacker::unpack( const PackedData       & pvert,
                            const PackedDataVector & pverts,
                            DataVector             & verts ) const
 {
-  if ( 0 == pverts.packingVersion() )
+  if ( 1 == pverts.packingVersion() )
   {
     // technique
     vert.setTechnique( static_cast<Vertex::CreationMethod>(pvert.technique) );

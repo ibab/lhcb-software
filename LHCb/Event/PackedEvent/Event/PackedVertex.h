@@ -100,7 +100,7 @@ namespace LHCb
   public:
 
     /// Standard constructor
-    PackedVertices( ) : m_packingVersion(0) { }
+    PackedVertices( ) : m_packingVersion(1) { }
 
     /// Destructor
     virtual ~PackedVertices( ) { }
