@@ -88,6 +88,7 @@ static int DIM_IO_path[2] = {-1,-1};
 static int DIM_IO_Done = 0;
 static int DIM_IO_valid = 1;
 
+static int Listen_backlog = SOMAXCONN;
 static int Keepalive_timeout_set = 0;
 static int Write_timeout = WRITE_TMOUT;
 static int Write_timeout_set = 0;
@@ -96,6 +97,16 @@ static int Read_buffer_size = TCP_RCV_BUF_SIZE;
 
 int Tcpip_max_io_data_write = TCP_SND_BUF_SIZE - 16;
 int Tcpip_max_io_data_read = TCP_RCV_BUF_SIZE - 16;
+
+void dim_set_listen_backlog(int size)
+{
+	Listen_backlog = size;
+}
+
+int dim_get_listen_backlog()
+{
+	return(Listen_backlog);
+}
 
 void dim_set_keepalive_timeout(int secs)
 {
@@ -1137,7 +1148,7 @@ printf("Trying port %d, ret = %d\n", *port, ret);
 		}
 	}
 
-	if( (ret = listen(path, SOMAXCONN)) == -1 )
+	if( (ret = listen(path, Listen_backlog)) == -1 )
 	{
 		closesock(path);
 		return(0);

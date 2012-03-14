@@ -203,6 +203,8 @@ _DIM_PROTOE( void dis_set_debug_on,		() );
 _DIM_PROTOE( void dis_set_debug_off,	() );
 _DIM_PROTOE( void dim_set_keepalive_timeout,		(int secs) );
 _DIM_PROTOE( int dim_get_keepalive_timeout,		() );
+_DIM_PROTOE( void dim_set_listen_backlog,		(int size) );
+_DIM_PROTOE( int dim_get_listen_backlog,		() );
 
 #ifdef WIN32
 #define getpid _getpid

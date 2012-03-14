@@ -1437,6 +1437,7 @@ int main(int argc, char **argv)
 		}
 	}
 	dim_set_write_timeout(10);
+	dim_set_listen_backlog(1024);
 	dim_init();
 	conn_arr_create( SRC_DNS );
 	service_init();
