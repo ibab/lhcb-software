@@ -31,6 +31,7 @@ import StrippingB0q2DplusMuX
 import StrippingBd2DstarTauNu
 import StrippingB2XuMuNu
 import StrippingB2DMuNuX
+import StrippingCharmFromBSemi
 import StrippingInclPhi
 import StrippingV0ForPID
 

@@ -4,6 +4,13 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-03-14 Mika Vesterinen
+ - Changes to StrippingB2DMuNuX.py:
+ - remove many charm lines that have now moved to StrippingCharmFromBSemi
+ - Re-implement DeltaZ cut for all lines except D0->hh
+ - pion PIDK cut tightened from 10 to 4 for D0->hh lines
+ - also added StrippingCharmFromBSemi to __init__.py
+
 ! 2012-03-13 Mika Vesterinen
  - new module StrippingCharmFromBSemi containing lines that were previously in
  - StrippingB2DMuNuX (SL stream) but are now moving to charm micro DST.
