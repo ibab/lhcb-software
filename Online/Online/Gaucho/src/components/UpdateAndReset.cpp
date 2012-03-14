@@ -253,7 +253,9 @@ StatusCode UpdateAndReset::execute()
     {
        //calling finalize - don't need to reset, they probably don't exist anymore
        m_eorNumber=m_runNumber;
+       m_pGauchoMonitorSvc->UnLock();
        manageTESHistos(false, true, true, true);
+       m_pGauchoMonitorSvc->Lock();
     }
     m_triggerConfigurationKey = tck;
     m_pGauchoMonitorSvc->resetHistos( this  );
