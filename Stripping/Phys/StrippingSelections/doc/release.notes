@@ -4,6 +4,13 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-03-14 - Sean Benson
+ - StrippingBs2KKhh.py
+ - Line added to search for phi + hh modes.
+ - StrippingBsFourKHigh.py
+ - Line added to search for Bs->4K with high mass resonances.
+
+
 ! 2012-03-14 - Markward Britsch for Florin Maciuc
  - StrippingBs2KSKS.py
    Added this line, selects Bs->KsKs in LLLL track combinations
