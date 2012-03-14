@@ -359,11 +359,13 @@ def generateLoginCache(mysiteroot, shell="csh", version="", targetlocation=None,
     if not os.path.exists(pardir) :
         os.makedirs(pardir)
 
-#    os.environ["CMTEXTRATAGS"] = "NO_PYTHON_LIBPATH"
+    # Setting CMTEXTRATAGS to avoid avoid having the python shared library
+    # in the LD_LIBRARY_PATH. 
+    # BEWARE: Option NO_PYZIP should NOT be passed in CMTEXTRATAGS,
+    # as it causes a warning to be generated that is considered as an error by
+    # SetupProject. This caused errors when calling mkproject on LbScripts...  
+    os.environ["CMTEXTRATAGS"] = "NO_PYTHON_LIBPATH"
 
-    # Resetting CMTEXTRATAGS otherwise the cmt check fails when generating the cache
-    # This was causing mkproject to fail with LbScripts
-    os.environ["CMTEXTRATAGS"]=""
     os.environ["CMTCONFIG"] = "x86_64-slc5-gcc43-opt"
     llsargs = []
     llsargs.append("--silent")
