@@ -4,6 +4,9 @@
 ! Responsible : J.P. Palacios
 !=============================================================================
 
+! 2012-03-14 - P. Koppenburg
+	- New DVAlgorithm DumpParticle that printsout what's in the Inputs[] container
+
 !========================= DaVinciMCTools v10r2 2011-12-15 =========================
 
 ! 2011-12-14 - Chris Jones
