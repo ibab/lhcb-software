@@ -205,13 +205,13 @@ FarmLineDisplay::FarmLineDisplay(int argc, char** argv)
     ::scrc_put_chars(m_display,txt,BG_BLUE|FG_WHITE|BOLD,CLUSTERLINE_FIRSTPOS-1,1,1);
   }
   else {
-    ::sprintf(txt," %-10s %-8s %-6s %-6s %-6s   %35s%44s%47s",
-	      "","Last","No.of","No.of","Num.of","",
-	      "<<------------ Summ Counters ----------->>",
-	      "<<----------- Minimum Counters ---------->>");
+    ::sprintf(txt," %-10s %-8s %-6s %-6s %-6s  %35s%47s%47s",
+	      "","Last","No.of","No.of","Num.of","<<------------------------------>>",
+	      "<<------------- Summ Counters ------------->>",
+	      "<<------------ Minimum Counters ----------->>");
     ::scrc_put_chars(m_display,txt,BG_BLUE|FG_WHITE|BOLD,CLUSTERLINE_FIRSTPOS-2,1,1);
-    ::sprintf(txt," %-10s %-8s %-6s %-6s %-6s   %-32s  %9s%5s%11s%6s%9s%5s  %9s%5s%10s%7s%9s%5s",
-	      "Subfarm","Update","Nodes", "Buffer","Client","Subfarm status",
+    ::sprintf(txt," %-10s %-8s %-6s %-6s %-6s  %-33s  %10s%5s%10s%7s%10s%5s %9s%5s%11s%6s%10s%5s",
+	      "Subfarm","Update","Nodes", "Buffer","Client","          Subfarm status         ",
 	      "Overflow","Sl","Events","Sl","Send","Sl","Overflow","Sl","Events","Sl","Send","Sl");
     ::scrc_put_chars(m_display,txt,BG_BLUE|FG_WHITE|BOLD,CLUSTERLINE_FIRSTPOS-1,1,1);
   }
@@ -631,9 +631,9 @@ void FarmLineDisplay::connect(const string& section, const vector<string>& vfarm
       nam = l->partition();
       ::memset(text,'-',sizeof(text));
       text[sizeof(text)-1] = 0;
-      ::sprintf(txt,"  Partition:   %s  ",nam.c_str());
-      ::strncpy(text+41,txt,::strlen(txt)-1);
-      ::scrc_put_chars(m_display,text,BOLD|INVERSE,++pos,1,1);
+      ::sprintf(txt,"  Partition:   %s ",nam.c_str());
+      ::strncpy(text+42,txt,::strlen(txt));
+      ::scrc_put_chars(m_display,text,BLUE|BOLD,++pos,1,1);
     }
     (*k).second->setPosition(++pos);
   }

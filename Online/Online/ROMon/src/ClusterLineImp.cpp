@@ -456,18 +456,18 @@ void StorageClusterLine::display() {
   }
 
   if ( tot_prod[0] != 0 )
-    ::sprintf(txt,"Evt:%9d Cl:%4d Sl:%5d%17s",tot_prod[0],num_cl[0],num_sl[0],"");
+    ::sprintf(txt,"Evt:%10d Cl:%4d Sl:%4d%17s",tot_prod[0],num_cl[0],num_sl[0],"");
   else
-    ::sprintf(txt,"%13s%8s%9s%64s","--","--","--","");
+    ::sprintf(txt,"%14s%8s%9s%64s","--","--","--","");
   ::scrc_put_chars(dis," Receive:",BOLD,pos,77+CLUSTERLINE_START,0);
   ::scrc_put_chars(dis,txt,NORMAL,pos,77+9+CLUSTERLINE_START,0);
 
   if ( tot_prod[1] != 0 )
-    ::sprintf(txt,"Evt:%9d Cl:%4d Sl:%5d%17s",tot_prod[1],num_cl[1],num_sl[1],"");
+    ::sprintf(txt,"Evt:%10d Cl:%4d Sl:%4d%17s",tot_prod[1],num_cl[1],num_sl[1],"");
   else
-    ::sprintf(txt,"%13s%8s%9s%64s","--","--","--","");
-  ::scrc_put_chars(dis,"  Stream:",BOLD,pos,77+37+CLUSTERLINE_START,0);
-  ::scrc_put_chars(dis,txt,NORMAL,pos,77+46+CLUSTERLINE_START,0);
+    ::sprintf(txt,"%14s%8s%9s%64s","--","--","--","");
+  ::scrc_put_chars(dis,"  Stream:",BOLD,pos,77+40+CLUSTERLINE_START,0);
+  ::scrc_put_chars(dis,txt,NORMAL,pos,77+49+CLUSTERLINE_START,0);
 
   m_hasProblems = true;
   if ( now-m_lastUpdate > UPDATE_TIME_MAX ) {
@@ -592,21 +592,21 @@ void MonitoringClusterLine::display() {
   m_hasProblems = true;
 
   if ( tot_prod[0] != 0 )
-    ::sprintf(txt,"Evt:%9d Cl:%4d Sl:%5d%64s",tot_prod[0],num_cl[0],num_sl[0],"");
+    ::sprintf(txt,"Evt:%10d Cl:%4d Sl:%4d%64s",tot_prod[0],num_cl[0],num_sl[0],"");
   else
-    ::sprintf(txt,"%13s%8s%9s%64s","--","--","--","");
+    ::sprintf(txt,"%14s%8s%9s%64s","--","--","--","");
   ::scrc_put_chars(dis,"   Relay:",BOLD,pos,77+CLUSTERLINE_START,0);
   ::scrc_put_chars(dis,txt,NORMAL,pos,77+9+CLUSTERLINE_START,0);
 
   if ( tot_prod[1] != 0 && tot_prod[2] != 0 )
-    ::sprintf(txt,"Evt:%9d Cl:%4d Sl:%5d Evt:%9d Cl:%4d Sl:%4d%64s",
+    ::sprintf(txt,"Evt:%10d Cl:%4d Sl:%4d Evt:%10d Cl:%4d Sl:%4d%64s",
 	      tot_prod[1],num_cl[1],num_sl[1],tot_prod[2],num_cl[2],num_sl[2],"");
   else if ( tot_prod[1] != 0 )
-    ::sprintf(txt,"Evt:%9d Cl:%4d Sl:%5d  %-62s",tot_prod[1],num_cl[1],num_sl[1],"No Output streams");
+    ::sprintf(txt,"Evt:%10d Cl:%4d Sl:%4d  %-62s",tot_prod[1],num_cl[1],num_sl[1],"No Output streams");
   else
-    ::sprintf(txt,"%13s%8s%9s%64s","--","--","--","");
-  ::scrc_put_chars(dis,"  Worker:",BOLD,pos,77+37+CLUSTERLINE_START,0);
-  ::scrc_put_chars(dis,txt,NORMAL,pos,77+46+CLUSTERLINE_START,0);
+    ::sprintf(txt,"%14s%8s%9s%64s","--","--","--","");
+  ::scrc_put_chars(dis,"  Worker:",BOLD,pos,77+40+CLUSTERLINE_START,0);
+  ::scrc_put_chars(dis,txt,NORMAL,pos,77+49+CLUSTERLINE_START,0);
   
   int col = NORMAL;
   if ( now-m_lastUpdate > UPDATE_TIME_MAX ) {
@@ -857,23 +857,23 @@ void FarmClusterLine::display() {
   err = err + "                                                                 ";
   ::scrc_put_chars(dis,err.substr(0,35).c_str(),col,pos,42+CLUSTERLINE_START,0);
   if ( evt_prod[0] || evt_prod[1] )
-    ::sprintf(txt,"%9d%5d%11d%6d%9d%5d",
+    ::sprintf(txt,"%10d%5d%11d%6d%10d%5d",
               evt_prod[3],free_slots[3],
               evt_prod[1],free_slots[1],
               evt_prod[2],free_slots[2]);
   else
-    ::sprintf(txt,"%9s%5s%10s%7s%9s%5s","--","--","--","--","--","--");
+    ::sprintf(txt,"%10s%5s%10s%7s%10s%5s","--","--","--","--","--","--");
   ::scrc_put_chars(dis,txt,NORMAL,pos,77+CLUSTERLINE_START,0);
   if ( min_prod[0] != INT_max || min_prod[1] != INT_max ) {
     if ( min_prod[3]  == INT_max ) min_prod[3] = 0;  // if not existing....
     if ( min_slots[3] == INT_max ) min_slots[3] = 0; // if not existing....
-    ::sprintf(txt,"%9d%5d%11d%6d%9d%5d",
+    ::sprintf(txt,"%10d%5d%11d%6d%10d%5d",
               min_prod[3],min_slots[3],
               min_prod[1],min_slots[1],
               min_prod[2],min_slots[2]);
   }
   else {
-    ::sprintf(txt,"%9s%5s%10s%7s%9s%5s","--","--","--","--","--","--");
+    ::sprintf(txt,"%10s%5s%10s%7s%10s%5s","--","--","--","--","--","--");
   }
   ::scrc_put_chars(dis,txt,NORMAL,pos,77+47+CLUSTERLINE_START,0);
   end_update();
