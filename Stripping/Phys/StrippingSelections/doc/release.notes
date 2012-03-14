@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-03-14 Ricardo Vazquez Gomez
+ - Align the StrippingBeauty2XGamma.py with the offline selection to get 1/6 of retention.
+ - Added B2OmegaGamma lines, with Omega->HH and Omega->HHH 
+
 ! 2012-03-14 Mika Vesterinen
  - Changes to StrippingB2DMuNuX.py:
  - remove many charm lines that have now moved to StrippingCharmFromBSemi

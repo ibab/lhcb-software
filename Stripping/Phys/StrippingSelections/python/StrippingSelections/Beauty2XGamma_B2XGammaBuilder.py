@@ -22,26 +22,26 @@ class B2XGammaBuilder(object):
         self.gamma = gamma if isinstance(gamma, list) else [gamma]
         self.lines = []        
         # B -> V gamma
-        self._makeB2VGamma('B2VGamma')
+        self._makeB2VGamma('_B2VG_')
         # B -> V P gamma
-        self._makeB2VPGamma('B2VPGamma')
+        self._makeB2VPGamma('_B2VPG_')
         # B -> VV gamma
-        self._makeB2VVGamma('B2VVGamma')
+        self._makeB2VVGamma('_B2VVG_')
 
     def _makeB2VGamma(self, name):
         """Makes B -> V gamma"""
         decays = { 'B2KstarGamma'    : ['[B0 -> K*(892)0 gamma]cc'],
                    'B2PhiGamma'      : ['[B_s0 -> phi(1020) gamma]cc'],
                    'B2RhoGamma'      : ['[B_s0 -> rho(770)0 gamma]cc'],
-                   # 'B2OmegaGammaHH'  : [],
-                   # 'B2OmegaGammaHHH' : [],
+                   'B2OmegaGammaHH'  : ['[B0 -> omega(782) gamma]cc'],
+                   'B2OmegaGammaHHH' : ['[B0 -> omega(782) gamma]cc'],
                   }
         inputs = { 'B2KstarGamma'    : self.gamma + self.hh.kstar0,
                    'B2PhiGamma'      : self.gamma + self.hh.phi,
                    'B2RhoGamma'      : self.gamma + self.hh.rho0,
-                   # 'B2OmegaGammaHH'  : ,
-                   # 'B2OmegaGammaHHH' :
-                  }
+                   'B2OmegaGammaHH'  : self.gamma + self.hh.omega,
+                   'B2OmegaGammaHHH' : self.gamma + self.hhh.omega,
+                   }
         b2vgamma = makeB2XSels(decays, name, inputs, self.config)
         self.lines.append(ProtoLine(b2vgamma, 1.0))
 
@@ -58,12 +58,12 @@ class B2XGammaBuilder(object):
         # Neutral
         decays = { 'B2KstarKSLLGamma'          : ['[B0 -> K*(892)0 KS0 gamma]cc'],
                    'B2KstarKSDDGamma'          : ['[B0 -> K*(892)0 KS0 gamma]cc'],
-                   'B2KstarPi0GammaResolved' : ['[B0 -> K*(892)0 pi0 gamma]cc'],
-                   'B2KstarPi0GammaMerged'   : ['[B0 -> K*(892)0 pi0 gamma]cc'],
-                   'B2PhiKSGammaLL'          : ['[B_s0 -> phi(1020) KS0 gamma]cc'],
-                   'B2PhiKSGammaDD'          : ['[B_s0 -> phi(1020) KS0 gamma]cc'],
-                   'B2PhiPi0GammaResolved'   : ['[B_s0 -> phi(1020) pi0 gamma]cc'],
-                   'B2PhiPi0GammaMerged'     : ['[B_s0 -> phi(1020) pi0 gamma]cc'],
+                   'B2KstarPi0GammaResolved'   : ['[B0 -> K*(892)0 pi0 gamma]cc'],
+                   'B2KstarPi0GammaMerged'     : ['[B0 -> K*(892)0 pi0 gamma]cc'],
+                   'B2PhiKSGammaLL'            : ['[B_s0 -> phi(1020) KS0 gamma]cc'],
+                   'B2PhiKSGammaDD'            : ['[B_s0 -> phi(1020) KS0 gamma]cc'],
+                   'B2PhiPi0GammaResolved'     : ['[B_s0 -> phi(1020) pi0 gamma]cc'],
+                   'B2PhiPi0GammaMerged'       : ['[B_s0 -> phi(1020) pi0 gamma]cc'],
                  }
         inputs = { 'B2KstarKSLLGamma'        : self.gamma + self.hh.kstar0 + self.ks['LL'],
                    'B2KstarKSDDGamma'        : self.gamma + self.hh.kstar0 + self.ks['DD'],

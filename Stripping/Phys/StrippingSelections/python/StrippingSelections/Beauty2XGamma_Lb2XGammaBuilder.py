@@ -11,7 +11,7 @@ class Lb2XGammaBuilder(object):
         self.hh = hh
         self.config = deepcopy(config)
         self.config['AM_MIN'] = '4500*MeV'
-        self.config['AM_MAX'] = '6500*MeV'
+        self.config['AM_MAX'] = '6700*MeV'
         self.lines = []
         # Lambda_b -> Lambda(pH) Gamma
         self._makeLb2PHGamma()

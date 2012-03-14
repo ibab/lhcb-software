@@ -85,22 +85,24 @@ def makeTISTOSFilter(name):
     specs = {'Hlt2Topo(2|3|4)Body.*Decision%TOS':0,
              'Hlt2Topo(2|3|4)Body.*Decision%TIS':0,
              'Hlt2IncPhi.*Decision%TOS':0,
-             'Hlt2IncPhi.*Decision%TIS':0}
+             'Hlt2IncPhi.*Decision%TIS':0,
+             'Hlt2RadiativeTopo.*Decision%TOS':0,    ## Cut based raditive topological 
+             'Hlt2RadiativeTopo.*Decision%TIS':0,    ## Cut based raditive topological
+             'Hlt2TopoRad.*Decision%TOS':0,          ## BBDT based radiative topological
+             'Hlt2TopoRad.*Decision%TIS':0}          ## BBDT based radiative topological
     from Configurables import TisTosParticleTagger
     tisTosFilter = TisTosParticleTagger(name+'TISTOSFilter')
     tisTosFilter.TisTosSpecs = specs
-    tisTosFilter.ProjectTracksToCalo = False
-    tisTosFilter.CaloClustForCharged = False
-    tisTosFilter.CaloClustForNeutral = False
-    tisTosFilter.TOSFrac = {4:0.0, 5:0.0}
+    #tisTosFilter.ProjectTracksToCalo = False
+    #tisTosFilter.CaloClustForCharged = False
+    #tisTosFilter.CaloClustForNeutral = False
+    #tisTosFilter.TOSFrac = {4:0.0, 5:0.0}
     return tisTosFilter
 
 def tisTosSelection(sel):
     '''Filters Selection sel to be TOS OR TIS.'''
     tisTosFilter = makeTISTOSFilter(sel.name())
-    return Selection(sel.name()+'TISTOS',
-                     Algorithm=tisTosFilter,
-                     RequiredSelections=[sel])
+    return Selection(sel.name()+'TISTOS', Algorithm=tisTosFilter, RequiredSelections=[sel])
 
 def filterPID(name,input,config,level=1):
     cuts = ["(NINGENERATION(('p+'==ABSID) & (PIDp < %s),%d) == 0)" \
@@ -112,7 +114,7 @@ def filterPID(name,input,config,level=1):
     return filterSelection(name,LoKiCuts.combine(cuts),input)
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
-def makeB2X(name, decay, inputs, config, useIP=True, resVert=True):
+def makeB2X(name, decay, inputs, config, useIP=True, resVert=False, usePi0=False):
     '''Makes all B -> X selections.'''
     from copy import deepcopy
     comboCuts = LoKiCuts(['SUMPT','AM'],config).code()
@@ -129,7 +131,11 @@ def makeB2X(name, decay, inputs, config, useIP=True, resVert=True):
     b2x = CombineParticles(DecayDescriptors=decay,
                            CombinationCut=comboCuts,
                            MotherCut=momCuts)
-    if not resVert:
+    if usePi0:
+        #b2x = b2x.configurable(name+'Beauty2XGammaCombiner')
+        #b2x.ParticleCombiners.update({'':'MomentumCombiner'})
+        b2x.ParticleCombiners = { '' : 'LoKi::VertexFitter' }
+    if resVert:
         b2x = b2x.configurable(name+'Beauty2XGammaVertexFitter')
         b2x.addTool(OfflineVertexFitter)
         b2x.VertexFitters.update( { "" : "OfflineVertexFitter"} )
@@ -155,23 +161,37 @@ def makeLambda2X(name, decay, inputs, config):
     return Selection(name, Algorithm=b2x, RequiredSelections=inputs)
 
 
-def makeB2XSels(decays, xtag, inputs, config, useIP=True, resVert=True):
+def makeB2XSels(decays, xtag, inputs, config, useIP=True, resVert=True, usePi0=False):
     '''Returns a list of the Hb->X selections.'''
     sels = []
     for tag, decay in decays.iteritems():
-        sname = tag + xtag + 'Beauty2XGamma'
-        if xtag == 'Lb2PHGamma':
+        #sname = tag + xtag + 'Beauty2XGamma'
+        sname = tag + xtag
+        ## we only want the std vertexing when there are no neutrals in the resonances 
+        if tag == 'Lb2PHGamma': 
             sel = makeLambda2X(sname, decay, inputs[tag], config)
+            #sel = tisTosSelection(sel)
+            #sel = filterSelection(sname + '_B2CBBDT',
+            #sel = filterSelection(sname, 
+            #                  "FILTER('BBDecTreeTool/B2CBBDT')",
+            #                  [sel])
+            #from Configurables import BBDecTreeTool as BBDT
+            #bbdt = BBDT(sel.name()+'.B2CBBDT')
+            #bbdt.Threshold = config['BBDT_MIN']
+            #bbdt.ParamFile = 'Beauty2Charm_BDTParams_v1r0.txt'
+        elif tag == 'B2OmegaGammaHHH': 
+            sel = makeB2X(sname, decay, inputs[tag], config, useIP, usePi0)
         else:
-            sel = makeB2X(sname, decay, inputs[tag], config, useIP, resVert) 
+            sel = makeB2X(sname, decay, inputs[tag], config, useIP) 
         #sel = tisTosSelection(sel)
-        sel = filterSelection(sname + 'B2CBBDT',
-                              "FILTER('BBDecTreeTool/B2CBBDT')",
-                              [sel])
-        from Configurables import BBDecTreeTool as BBDT
-        bbdt = BBDT(sel.name()+'.B2CBBDT')
-        bbdt.Threshold = config['B2CBBDT_MIN']
-        bbdt.ParamFile = 'Beauty2Charm_BDTParams_v1r0.txt'
+        #sel = filterSelection(sname + 'B2CBBDT',
+        #                      "FILTER('BBDecTreeTool/B2CBBDT')",
+        #                      [sel])
+        #from Configurables import BBDecTreeTool as BBDT
+        #bbdt = BBDT(sel.name()+'.B2CBBDT')
+        #bbdt.Threshold = config['BBDT_MIN']
+        #bbdt.ParamFile = 'Beauty2Charm_BDTParams_v1r0.txt'
+        
         sels.append(sel)
     return sels
 

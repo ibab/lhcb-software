@@ -39,11 +39,11 @@ class HHBuilder(object):
     '''Produces all HH quasi-particles for the Beauty2xGamma module.'''
 
     def __init__(self,pions,kaons,protons,ks,pi0,config,config_pid):
-        #print config
+        print config
         self.pions = filterInputs("HHPions",[pions],config['DAUGHTERS'])
         self.kaons = filterInputs("HHKaons",[kaons],config['DAUGHTERS'])
-        self.protons = filterInputs("HHProtons",[protons],config['DAUGHTERS'])
-        self.lambdaPions = filterInputs("HHLambdaPions",[self.pions],config['LAMBDADAUGHTERS'])
+        self.protons = filterInputs("HHProtons",[protons],config['pLAMBDADAUGHTERS'])
+        self.lambdaPions = filterInputs("HHLambdaPions",[self.pions],config['piLAMBDADAUGHTERS'])
         self.ks = ks
         self.pi0 = pi0
         self.config = config
@@ -57,6 +57,7 @@ class HHBuilder(object):
         self.ph = self._makePH()
         self.phi = self._makePhi(self.kk)
         self.rho0 = self._makeRho0(self.pipi)
+        self.omega = self._makeOmega()
         # WS selections (ie doubly-charged ones)
         self.hh_ws = self._makeHHWS()
         # PID filtered selections
@@ -69,13 +70,13 @@ class HHBuilder(object):
     def _makeX2HH(self,name,decays,amass,config,inputs):
         ''' Makes all X -> HH selections with charged tracks only.'''
         comboCuts = [LoKiCuts(['ASUMPT'],config).code(),amass,hasTopoChild()]
-        comboCuts.append(LoKiCuts(['AMAXDOCA'],config).code())
+        #comboCuts.append(LoKiCuts(['AMAXDOCA'],config).code())
         comboCuts = LoKiCuts.combine(comboCuts)
-        momCuts = LoKiCuts(['VCHI2DOF','BPVVDCHI2','BPVDIRA'],config).code()
+        #momCuts = LoKiCuts(['VCHI2DOF','BPVVDCHI2','BPVDIRA'],config).code()
+        momCuts = LoKiCuts(['VCHI2DOF','BPVVDCHI2'],config).code() 
         cp = CombineParticles(CombinationCut=comboCuts,MotherCut=momCuts,
                               DecayDescriptors=decays)
-        return Selection(name+'Beauty2XGamma',Algorithm=cp,
-                         RequiredSelections=inputs)
+        return Selection(name+'Beauty2XGamma',Algorithm=cp,RequiredSelections=inputs)
 
     def _makeXPLUS2HH(self,name,decays,amass,config,inputs,pi0=False):
         ''' Makes all X+ -> HH selections involving neutrals.'''
@@ -97,6 +98,22 @@ class HHBuilder(object):
         '''Makes X -> pi+pi-'''
         return [self._makeX2HH('X2PiPi',['rho(770)0 -> pi+ pi-'],
                               '(AM < 5.2*GeV)',self.config,[self.pions])]
+
+    def _makeOmega(self):
+        ''' Makes Omega -> pi+ pi- '''
+        #massWindow = "(AM < %s)" % (self.config['MASS_WINDOW']['OMEGA'])
+        presel = self._makeX2HH('Omega2PiPi',['omega(782) -> pi+ pi-'],'(AM < 1500*MeV)',self.config,[self.pions])
+        mass = self._massWindow('OMEGA','omega(782)').replace('ADAMASS','ADMASS')
+        return [filterSelection('Omega2PiPi',mass,[presel])]
+        #return [self._makeX2HH('Omega2PiPi',['omega(782) -> pi+ pi-'],'(750*MeV < AM < 815*MeV)',self.config,[self.pions])]
+
+#    def _makeOmega(self,pipi):
+#        ''' Makes Omega -> pi+ pi- '''
+#        sel = self.pipi
+#        decays = [['pi+','pi-']]
+#        filter = SubPIDMMFilter('X2PiPiSubPIDBeauty2XGamma',Code='ALL',MinMM=750,MaxMM=815,PIDs=decays)
+#        presel = Selection('X2PiPiSubPIDSelBeauty2XGamma',Algorithm=filter,RequiredSelections=sel)
+#        return [filterSelection('Omega2PiPi',filter,[presel])]
 
     def _makePiPiWSSels(self):
         '''Makes X -> pi+pi+ + c.c.'''
@@ -197,7 +214,7 @@ class HHBuilder(object):
     def _makePhi(self,kk):
         mass = self._massWindow('PHI','phi(1020)').replace('ADAMASS','ADMASS')
         return [filterSelection('PHI',mass,kk)]
-
+    
     def _makePH(self):
         '''Makes X -> p+ h- + c.c.'''
         sel = self._makeX2HH('X2PPi',['Lambda0 -> pi+ pi-'],
@@ -208,8 +225,8 @@ class HHBuilder(object):
                                 MinMM=1000,MaxMM=2500,PIDs=decays)
         presel = Selection('X2PHSubPIDSelBeauty2XGamma',Algorithm=filter,
                            RequiredSelections=[sel])
-        filter="INTREE((ABSID=='p+') & (P > %s) & (PT > 1200)) & (( (M < 1130*MeV) & INTREE((ABSID=='pi+')) & (PT > 1500) ) | ((M < 1565*MeV) & INTREE((ABSID=='K+') & (PT > 800)) & (PT > 2000) ) | ( (M<2500*MeV) & INTREE((ABSID=='K+') & (PT > 1000)) & (PT > 2250) )) & (P > 10000) " \
-              % self.config['pP_MIN']
+        filter="INTREE((ABSID=='p+') & (P > %s) & (PT > %s) & (PIDp > %s)) & (( (M < 1130*MeV) & INTREE((ABSID=='pi+')) & (PT > 1500) ) | ((M < 1565*MeV) & INTREE((ABSID=='K+') & (PT > 800) & (PIDK > %s)) & (PT > 2000) ) | ( (M<2500*MeV) & INTREE((ABSID=='K+') & (PT > 1000) & (PIDK > %s)) & (PT > 2250) )) & (P > 10000) " \
+              % (self.config['pLAMBDADAUGHTERS']['P_MIN'], self.config['pLAMBDADAUGHTERS']['PT_MIN'], self.config['pLAMBDADAUGHTERS']['PIDp_MIN'], self.config['kLAMBDADAUGHTERS']['PIDK_MIN'], self.config['kLAMBDADAUGHTERS']['PIDK_MIN'])
         return [filterSelection('X2PH',filter,[presel])]
         
-#\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
+#\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\l#
