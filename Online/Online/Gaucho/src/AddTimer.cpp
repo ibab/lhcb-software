@@ -5,7 +5,7 @@ AddTimer::AddTimer(MonAdder *tis, int period, int typ) : GenTimer((void*)tis,per
 {
   m_owner = tis;
   m_dueTime = 0;
-  this->m_dontdimlock = true;
+  this->m_dontdimlock = false;
   this->m_lock.m_name = m_owner->m_name+"_AddTimerLock";
 }
 
