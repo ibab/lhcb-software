@@ -788,6 +788,7 @@ DPCTAUSIGNIFICANCE = LoKi.Particles.DaughterParticleCTauSignificance
 # =============================================================================
 BEAMSPOT       = LoKi.Vertices.BeamSpot
 VX_BEAMSPOTRHO = LoKi.Vertices.BeamSpotRho
+Tr_FASTDOCATOBEAMLINE = LoKi.Tracks.FastDOCAToBeamLine
 
 
 # =============================================================================

@@ -124,6 +124,7 @@
     
   <class pattern   = "LoKi::Particles::*"   />
   <class pattern   = "LoKi::Vertices::*"    />
+  <class pattern   = "LoKi::Tracks::FastDOCAToBeamLine"      />
   <class pattern   = "LoKi::Legacy::*"      />
   
   <class pattern   = "LoKi::ExtraInfo::GetSmartInfo<*Particle*>"   />
@@ -195,6 +196,9 @@
     </class>
     
     <class pattern="LoKi::Vertices::*">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::Tracks::FastDOCAToBeamLine">
       <method name="=" />
     </class>
     <class pattern="LoKi::Legacy::*">

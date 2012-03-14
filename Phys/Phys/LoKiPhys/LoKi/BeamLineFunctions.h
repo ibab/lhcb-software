@@ -10,6 +10,7 @@
 // Event
 // ============================================================================
 #include "Event/VertexBase.h"
+#include "Event/Track.h"
 #include "GaudiKernel/SmartRef.h"
 #include "GaudiKernel/SmartRef.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
@@ -79,7 +80,7 @@ namespace LoKi
     public:
       // ======================================================================
       /// update the condition
-      StatusCode     updateCondition ();
+      virtual  StatusCode  updateCondition ();
       // ======================================================================
     public:
       // ====================================================================== 
@@ -164,6 +165,48 @@ namespace LoKi
     // ========================================================================
   } //                                          end of namespace LoKi::Vertices 
   // ==========================================================================
+  namespace Tracks
+  {
+    // ========================================================================
+    /**
+     *  @class FastDOCAToBeamLine
+     *  use TTrDOCA and BEAMSPOT to evaluate the closest distance of a track to
+     *  the beam line, similar to BEAMSPOTRHO
+     *  @author Pieter David pieter.david@cern.ch
+     *  @date 2012-02-24
+     */
+    class GAUDI_API FastDOCAToBeamLine
+      : LoKi::Vertices::BeamSpot
+      , public LoKi::BasicFunctors<const LHCb::Track*>::Function
+    {
+    public:
+      // =====================================================================
+      /// Constructor from resolver bound
+      FastDOCAToBeamLine ( const double       bound    ) ;
+      /// Constructor from resolved bound and condition name
+      FastDOCAToBeamLine ( const double       bound    ,
+                           const std::string& condname ) ;
+      /// MANDATORY: virtual destructor
+      virtual ~FastDOCAToBeamLine() {}
+      /// update the condition
+      StatusCode     updateCondition ();
+      /// Copy constructor
+      FastDOCAToBeamLine( const FastDOCAToBeamLine& other ) ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  FastDOCAToBeamLine* clone() const
+      { return new FastDOCAToBeamLine( *this ) ; }
+      /// MANDATORY: the only one essential method
+      virtual result_type operator() ( argument v ) const ;
+      /// OPTIONAL: nice printout
+      virtual std::ostream& fillStream( std::ostream& s ) const
+      { return s << "Tr_FASTDOCATOBEAMLINE"; }
+    private:
+      /// beamline tracks
+      LHCb::Track m_beamLine;
+    } ;
+    // ========================================================================
+  } //                                            end of namespace LoKi::Tracks
+  // ==========================================================================
   namespace Cuts 
   {
     // ========================================================================
@@ -184,6 +227,21 @@ namespace LoKi
      *  @date 2011-03-11
      */ 
     typedef LoKi::Vertices::BeamSpot                                 BEAMSPOT ;
+    // ========================================================================
+    /** @typedef  Tr_FASTDOCATOBEAMLINE
+     *  Fast DOCA to beam line using TTrDOCA and BEAMSPOT, similar to the
+     *  BEAMSPOTRHO cut
+     *  @see LoKi::Cuts::TTrDOCA
+     *  @see HltUtils::closestDistanceMod
+     *  @see LoKi::Tracks::DistanceOfClosestApproach
+     *  @see LoKi::Vertices::BeamSpot
+     *  @see LoKi::Cuts::BEAMSPOT
+     *  @see LoKi::Vertices::BeamSpotRho
+     *  @see LoKi::Cuts::BEAMSPOTRHO
+     *  @author Pieter David pieter.david@cern.ch
+     *  @date 2012-02-24
+     */
+    typedef LoKi::Tracks::FastDOCAToBeamLine            Tr_FASTDOCATOBEAMLINE ;
     // ========================================================================
   } //                                              end of namespace LoKi::Cuts 
   // ==========================================================================

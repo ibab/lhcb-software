@@ -15,6 +15,7 @@ use               LoKiCore          v* Phys
 use               LoKiNumbers       v* Phys
 use               LoKiUtils         v* Phys 
 use               DaVinciInterfaces v* Phys 
+use               KalmanFilter      v* Phys
 	
 # =============== own includes ===============================================
 apply_pattern install_more_includes  more=LoKi
