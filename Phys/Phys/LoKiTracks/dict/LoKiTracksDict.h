@@ -9,6 +9,7 @@
 // ============================================================================
 #include "LoKi/Dicts.h"
 #include "LoKi/TrackIDs.h"
+#include "LoKi/VeloHitPatternFunctions.h"
 #include "LoKi/Tracks.h"
 #include "LoKi/TrSources.h"
 #include "LoKi/TrackTypes.h"

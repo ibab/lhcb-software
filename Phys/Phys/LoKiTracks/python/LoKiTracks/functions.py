@@ -191,6 +191,17 @@ TrNTHITS        = LoKi.Tracks.NTHits      ()
 ## @see LoKi::Cuts::TrTNORMIDC  (for Vava) 
 TrTNORMIDC      = LoKi.Tracks.NTHits      ()
 
+## @see LoKi::Cuts::TrNCONSECVELOSPACEPOINTS
+TrNCONSECVELOSPACEPOINTS = LoKi.Tracks.MaxNumConsecutiveVeloSpacePoints ()
+## @see LoKi::Tracks::NumVeloSpacePoints
+TrNVELOSPACEPOINTS       = LoKi.Tracks.NumVeloSpacePoints               ()
+## @see LoKi::Tracks::NumVeloACOverlapHits
+TrNVELOOVERLAPS          = LoKi.Tracks.NumVeloACOverlapHits             ()
+## @see LoKi::Tracks::NumVeloACOverlapHitsR
+TrNVELOOVERLAPSR         = LoKi.Tracks.NumVeloACOverlapHitsR            ()
+## @see LoKi::Tracks::NumVeloACOverlapHitsPhi
+TrNVELOOVERLAPSPHI       = LoKi.Tracks.NumVeloACOverlapHitsPhi          ()
+
 # =============================================================================
 
 

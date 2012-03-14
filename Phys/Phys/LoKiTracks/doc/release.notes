@@ -5,6 +5,18 @@
 ! Purpose     : track-related functors for LoKi-framework 
 ! -----------------------------------------------------------------------------
 
+! 2012-03-12 - Pieter David
+ - Add functors related to the Velo hit pattern:
+    TrNVELOSPACEPOINTS
+    TrNCONSECVELOSPACEPOINTS
+    evaluating the number of (consecutive) R and Phi hits in the same station,
+    for the Hlt1 displaced vertex line
+    TrNVELOOVERLAPS
+    TrNVELOOVERLAPSR
+    TrNVELOOVERLAPSPHI
+    evaluating the number of A/C overlap hits, resp. after an OR of R and Phi,
+    R only and Phi only, for the Hlt2 beam halo express stream line
+
 !========================= LoKiTracks v2r4 2012-02-03 =========================
 
 ! 2012-01-29 - Vanya Belyaev
