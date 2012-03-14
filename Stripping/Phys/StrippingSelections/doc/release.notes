@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-03-14 - Markward Britsch for Florin Maciuc
+ - StrippingBs2KSKS.py
+   Added this line, selects Bs->KsKs in LLLL track combinations
+
 ! 2012-03-14 - Jibo He for Indrek 
  - StrippingB2MuMuMuMuLines.py
    Added D->4mu line  
