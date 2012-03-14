@@ -3,6 +3,9 @@ Package             : DaVinciSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v30r1p1>2012-03-14 DaVinci v30r1p2</A></H1><PRE>
+Patch for https://savannah.cern.ch/bugs/?92524
+
 </PRE><H1><A NAME=v30r1p1>2012-03-07 DaVinci v30r1p1</A></H1><PRE>
 
 New development release, containing fully support for the new fully packed 
