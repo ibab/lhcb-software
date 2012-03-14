@@ -889,7 +889,8 @@ int tcpip_open_client( int conn_id, char *node, char *task, int port )
 #endif
 	int path, val, ret_code, ret;
 	int a,b,c,d;
-	unsigned char ipaddr[4];
+	unsigned char ipaddr_buff[4];
+	unsigned char *ipaddr = ipaddr_buff;
 	int host_number = 0;
 
     dim_tcpip_init(0);
@@ -1011,9 +1012,9 @@ int tcpip_open_client( int conn_id, char *node, char *task, int port )
 	sockname.sin_family = PF_INET;
 #ifndef VxWorks
     if(host_number)
-		sockname.sin_addr = *((struct in_addr *) ipaddr);
+                sockname.sin_addr = *(struct in_addr *) ipaddr;
     else
-		sockname.sin_addr = *((struct in_addr *) host->h_addr);
+		sockname.sin_addr = *(struct in_addr *) host->h_addr;
 #else
     if(host_number)
 		sockname.sin_addr = *((struct in_addr *) ipaddr);
