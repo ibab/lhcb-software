@@ -34,6 +34,10 @@ namespace LHCb
     PackedVertex()
       : key(0),
         technique(0),
+        chi2(0), nDoF(0),
+        x(0), y(0), z(0),
+        cov00(0), cov11(0), cov22(0),
+        cov10(0), cov20(0), cov21(0),
         firstOutgoingPart(0), 
         lastOutgoingPart(0)
     {}
@@ -43,12 +47,24 @@ namespace LHCb
 
     /// packed technique
     int technique;
+    int chi2;
+    int nDoF;
+    int x;
+    int y;
+    int z;
+    int cov00;
+    int cov11;
+    int cov22;
+    short int cov10;
+    short int cov20;
+    short int cov21;
 
     /// first outgoing particle
     unsigned int firstOutgoingPart;
 
     /// last outgoing particle
     unsigned int lastOutgoingPart;
+    unsigned int firstInfo,   lastInfo;
 
   };
 
@@ -115,6 +131,11 @@ namespace LHCb
     /// Access the packing version
     char packingVersion() const { return m_packingVersion; }
 
+    /// add an extra info
+    void addExtra( int a, int b ) { std::pair<int,int> tmp( a, b ); m_extra.push_back( tmp ); }
+    std::vector<std::pair<int,int> >& extras()             { return m_extra; }
+    const std::vector<std::pair<int,int> >& extras() const { return m_extra; }
+
   private:
 
     /// Data packing version (not used as yet, but for any future schema evolution)
@@ -125,6 +146,9 @@ namespace LHCb
 
     /// Outgoing Particles
     OutgoingParticles m_parts;
+
+    /// Extra info
+    std::vector<std::pair<int,int> > m_extra;
 
   };
 

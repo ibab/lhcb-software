@@ -4,8 +4,11 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+! 2012-03-14 - Olivier Callot
+ - Fix teh PackedVertex class: most of the information was not stored! 
+
 ! 2012-03-06 - Olivier Callot
- - New class PackedCluster to store the VElo and ST clusters on track
+ - New class PackedCluster to store the Velo and ST clusters on track
 
 !========================= PackedEvent v4r7 2012-02-28 =========================
 ! 2012-02-21 - Chris Jones

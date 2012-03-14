@@ -19,6 +19,22 @@ void VertexPacker::pack( const Data & vert,
   {
     // technique
     pvert.technique = static_cast<int>(vert.technique());
+    pvert.chi2       = m_pack.fltPacked( vert.chi2() );
+    pvert.nDoF       = vert.nDoF();
+    pvert.x          = m_pack.position( vert.position().x() );
+    pvert.y          = m_pack.position( vert.position().y() );
+    pvert.z          = m_pack.position( vert.position().z() );
+    
+    // convariance Matrix
+    const double err0 = std::sqrt( vert.covMatrix()(0,0) );
+    const double err1 = std::sqrt( vert.covMatrix()(1,1) );
+    const double err2 = std::sqrt( vert.covMatrix()(2,2) );
+    pvert.cov00 = m_pack.position( err0 );
+    pvert.cov11 = m_pack.position( err1 );
+    pvert.cov22 = m_pack.position( err2 );
+    pvert.cov10 = m_pack.fraction( vert.covMatrix()(1,0)/err1/err0 );
+    pvert.cov20 = m_pack.fraction( vert.covMatrix()(2,0)/err2/err0 );
+    pvert.cov21 = m_pack.fraction( vert.covMatrix()(2,1)/err2/err1 );
 
     // outgoing particles
     pvert.firstOutgoingPart = pverts.outgoingParticles().size();
@@ -35,6 +51,14 @@ void VertexPacker::pack( const Data & vert,
     }
     pvert.lastOutgoingPart = pverts.outgoingParticles().size();
 
+    //== Handles the ExtraInfo
+    pvert.firstInfo = pverts.extras().size();
+    for ( GaudiUtils::VectorMap<int,double>::iterator itE = vert.extraInfo().begin();
+          vert.extraInfo().end() != itE; ++itE )
+    {
+      pverts.addExtra( (*itE).first, m_pack.fltPacked( (*itE).second ) );
+    }
+    pvert.lastInfo = pverts.extras().size(); 
   }
   else
   {
@@ -76,6 +100,22 @@ void VertexPacker::unpack( const PackedData       & pvert,
   {
     // technique
     vert.setTechnique( static_cast<Vertex::CreationMethod>(pvert.technique) );
+    vert.setChi2AndDoF( m_pack.fltPacked( pvert.chi2), pvert.nDoF );
+    vert.setPosition( Gaudi::XYZPoint( m_pack.position( pvert.x ),
+                                       m_pack.position( pvert.y ),
+                                       m_pack.position( pvert.z ) ) );
+    
+    // convariance Matrix
+    const double err0 = m_pack.position( pvert.cov00 );
+    const double err1 = m_pack.position( pvert.cov11 );
+    const double err2 = m_pack.position( pvert.cov22 );
+    Gaudi::SymMatrix3x3 & cov = *(const_cast<Gaudi::SymMatrix3x3*>(&vert.covMatrix()));
+    cov(0,0) = err0 * err0;
+    cov(1,0) = err1 * err0 * m_pack.fraction( pvert.cov10 );
+    cov(1,1) = err1 * err1;
+    cov(2,0) = err2 * err0 * m_pack.fraction( pvert.cov20 );
+    cov(2,1) = err2 * err1 * m_pack.fraction( pvert.cov21 );
+    cov(2,2) = err2 * err2;
 
     // outgoing particles
     for ( unsigned int iiP = pvert.firstOutgoingPart; iiP < pvert.lastOutgoingPart; ++iiP )
@@ -85,6 +125,12 @@ void VertexPacker::unpack( const PackedData       & pvert,
       m_pack.hintAndKey64( iP, &pverts, &verts, hintID, key );
       SmartRef<LHCb::Particle> ref(&verts,hintID,key);
       vert.addToOutgoingParticles( ref );
+    }
+    //== Handles the ExtraInfo
+    for ( unsigned short int kEx = pvert.firstInfo; pvert.lastInfo > kEx; ++kEx )
+    {
+      const std::pair<int,int>& info = *(pverts.extras().begin()+kEx);
+      vert.addInfo( info.first, m_pack.fltPacked( info.second ) );
     }
   }
   else
