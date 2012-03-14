@@ -28,6 +28,7 @@ public:
 protected:
 
 private:
+  StatusCode dump(const LHCb::Particle*);
 
 };
 #endif // DUMPPARTICLE_H
