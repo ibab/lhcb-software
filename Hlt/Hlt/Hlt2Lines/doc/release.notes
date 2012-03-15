@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2012-03-15 - Will Barter
+ - Fix problem with electron lines using old calo inputs.
+
 ! 2012-03-09 - V. Gligorov
  - Fixed Lambda_c->Lambda0h lines, and renamed their file to follow the general
    naming convention for charm hlt2 lines.

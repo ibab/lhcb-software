@@ -393,7 +393,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                  , MotherCut = "(VFASPF(VCHI2PDOF)<"+str(self.getProp('DiElectronVertexChi2'))+")"
                                  , CombinationCut = "(AM>"+str(self.getProp('DY1MinMass'))+"*MeV)"\
                                                  " & (abs(ACHILD(PHI,1)-ACHILD(PHI,2))>"+str(self.getProp('DiElectronDphiMin'))+")"
-                                 , Inputs  = [ BiKalmanFittedElectrons ]
+                                 , Inputs  = [ BiKalmanFittedElectronsFromL0 ]
                                  )
        
         line1 = Hlt2Line('DYee1'
@@ -416,7 +416,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                  , MotherCut = "(VFASPF(VCHI2PDOF)<"+str(self.getProp('DiElectronVertexChi2'))+")"
                                  , CombinationCut = "(AM>"+str(self.getProp('DY2MinMass'))+"*MeV)"\
                                                  " & (abs(ACHILD(PHI,1)-ACHILD(PHI,2))>"+str(self.getProp('DiElectronDphiMin'))+")"
-                                 , Inputs  = [ BiKalmanFittedElectrons ]
+                                 , Inputs  = [ BiKalmanFittedElectronsFromL0 ]
                                  )
        
         line2 = Hlt2Line('DYee2'
@@ -439,7 +439,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                  , MotherCut = "(VFASPF(VCHI2PDOF)<"+str(self.getProp('DiElectronVertexChi2'))+")"
                                  , CombinationCut = "(AM>"+str(self.getProp('DY3MinMass'))+"*MeV)"\
                                                  " & (abs(ACHILD(PHI,1)-ACHILD(PHI,2))>"+str(self.getProp('DiElectronDphiMin'))+")"
-                                 , Inputs  = [ BiKalmanFittedElectrons ]
+                                 , Inputs  = [ BiKalmanFittedElectronsFromL0 ]
                                  )
        
         line3 = Hlt2Line('DYee3'
@@ -461,7 +461,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                , MotherCut = "(VFASPF(VCHI2PDOF)<"+str(self.getProp('DiElectronVertexChi2'))+")"
                                , CombinationCut = "(AM>"+str(self.getProp('ZeeMinMass'))+"*MeV) & "\
                                                   "(abs(ACHILD(PHI,1)-ACHILD(PHI,2))>"+str(self.getProp('DiElectronDphiMin'))+")"
-                               , Inputs  = [ BiKalmanFittedElectrons ]
+                               , Inputs  = [ BiKalmanFittedElectronsFromL0 ]
                                )
        
         line4 = Hlt2Line('Zee'
@@ -808,7 +808,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                   , prescale = self.prescale
                                   , L0DU = L0Req
                                   , HLT  = Hlt1Req
-                                  , algos =  [ TrackFittedDiElectron, FilterTFDiElectron ]
+                                  , algos =  [ DecodeL0CALO, TrackFittedDiElectronFromL0, FilterTFDiElectron ]
                                   , postscale = self.postscale
                                   )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiElectronDecision" :
@@ -881,7 +881,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                              , prescale = self.prescale
                              , L0DU = L0Req
                              , HLT  = Hlt1Req
-                             , algos = [ TrackFittedDiElectron, FilterTFDiElectron ]
+                             , algos = [ DecodeL0CALO, TrackFittedDiElectronFromL0, FilterTFDiElectron ]
                              , FilterTFDiElectron =
                              {"Code" : "(MINTREE('e+'==ABSID,PT) > %(DiElectronLowMass_ElecPT)s *MeV)"\
                               " & (MINTREE('e+'==ABSID,TRCHI2DOF) < %(DiElectronLowMass_ElecTkChi2)s)"\
@@ -903,7 +903,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                              , prescale = self.prescale
                              , L0DU = L0Req
                              , HLT  = Hlt1Req
-                             , algos = [ TrackFittedDiElectron, FilterTFDiElectron ]
+                             , algos = [ DecodeL0CALO, TrackFittedDiElectronFromL0, FilterTFDiElectron ]
                              , FilterTFDiElectron =
                              {"Code" : "(MINTREE('e+'==ABSID,PT) > %(DiElectronLowPID_ElecPT)s *MeV)"\
                               " & (MINTREE('e+'==ABSID,TRCHI2DOF) < %(DiElectronLowPID_ElecTkChi2)s)"\
@@ -925,7 +925,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                              , prescale = self.prescale
                              , L0DU = L0Req
                              , HLT  = Hlt1Req
-                             , algos = [ TrackFittedDiElectron, FilterTFDiElectron ]
+                             , algos = [ DecodeL0CALO, TrackFittedDiElectronFromL0, FilterTFDiElectron ]
                              , FilterTFDiElectron =
                              {"Code" : "(MINTREE('e+'==ABSID,PT) > %(DiElectronJpsi_ElecPT)s *MeV)"\
                               " & (MINTREE('e+'==ABSID,TRCHI2DOF) < %(DiElectronJpsi_ElecTkChi2)s)"\
@@ -947,7 +947,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                              , prescale = self.prescale
                              , L0DU = L0Req
                              , HLT  = Hlt1Req                                       
-                             , algos = [ TrackFittedDiElectron, FilterTFDiElectron ]
+                             , algos = [ DecodeL0CALO,TrackFittedDiElectronFromL0, FilterTFDiElectron ]
                              , FilterTFDiElectron =
                              {"Code" : "(MINTREE('e+'==ABSID,PT) > %(DiElectronPsi_ElecPT)s *MeV)"\
                               " & (MINTREE('e+'==ABSID,TRCHI2DOF) < %(DiElectronPsi_ElecTkChi2)s)"\
