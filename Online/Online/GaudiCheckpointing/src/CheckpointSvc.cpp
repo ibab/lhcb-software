@@ -169,7 +169,7 @@ namespace LHCb  {
 #include "GaudiKernel/IIncidentSvc.h" 
 #include "GaudiKernel/MsgStream.h" 
 #include "GaudiOnline/ITaskFSM.h"
-#include "CPP/CheckpointRestoreWrapper.h"
+#include "Checkpointing/Chkpt.h"
 #include "RTL/rtl.h"
 
 #include <cerrno>
@@ -208,8 +208,6 @@ using namespace std;
 #include "GaudiKernel/DeclareFactoryEntries.h"
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,CheckpointSvc)
 
-typedef CheckpointRestoreWrapper CHKPT;
-#define CHKPT_get CheckpointRestoreWrapper__instance
 #define MARKER "=============================================="
 
 namespace  {
@@ -323,8 +321,7 @@ StatusCode CheckpointSvc::initialize() {
       m_numInstances = ::atol(::getenv("NBOFSLAVES"));
     }
     if ( !m_checkPoint.empty() || m_numInstances != 0 ) {
-      CHKPT* chkpt =  CHKPT_get();
-      chkpt->setPrint(m_printLvl);
+      Checkpointing::set_print_level(m_printLvl);
     }
     sc = serviceLocator()->service("IncidentSvc",m_incidentSvc,true);
     if( !sc.isSuccess() ) {
@@ -488,14 +485,12 @@ int CheckpointSvc::finishCheckpoint() {
 
 /// Perform all action necessary to properly startup the process after restore from the checkpoint file
 int CheckpointSvc::finishRestore() {
-  CHKPT* chkpt =  CHKPT_get();
-  chkpt->resume();
-
+  Checkpointing::resume_process();
   // %%HACK%% Sleep 3 secs to let threads pass immediate actions before we modify the
   // environment.
-  ::lib_rtl_sleep(3000);
+  ::lib_rtl_sleep(2000);
 
-  chkpt->updateEnv();
+  Checkpointing::update_environment();
   RTL::RTL_reset();
   StatusCode sc = parseRestartOptions();
   if ( !sc.isSuccess() ) {
@@ -514,8 +509,6 @@ int CheckpointSvc::finishRestore() {
   }
   MsgStream log(msgSvc(),name());
   log << MSG::INFO << "Updated process environment and restart options." << endmsg;
-  //log << "Stop threads after restart from checkpoint. " << endmsg;
-  // Not necessary anymore: chkpt->stop();
   return StatusCode::SUCCESS;
 }
 
@@ -536,10 +529,9 @@ int CheckpointSvc::parseRestartOptions()    {
       if ( sc.isSuccess() ) {
      	sc = setProperties();
 	if ( sc.isSuccess() ) {
-	  CHKPT* chkpt =  CHKPT_get();
 	  RTL::RTL_reset();
 	  string utgid = buildChildUTGID(0);
-	  chkpt->setUTGID(utgid.c_str());
+	  Checkpointing::set_utgid(utgid.c_str());
 	  const char* dns = ::getenv("DIM_DNS_NODE");
 	  MsgStream log(msgSvc(),name());
 	  log << MSG::INFO << "Processed RESTARTOPTS:" << env 
@@ -569,8 +561,8 @@ int CheckpointSvc::saveCheckpoint() {
     }
     int fd = ::open(m_checkPoint.c_str(),O_CREAT|O_TRUNC|O_WRONLY,S_IRWXU|S_IRWXG|S_IRWXO);
     if ( fd > 0 ) {
-      CHKPT* chkpt =  CHKPT_get();
-      int ret = chkpt->checkpoint(fd);
+      int ret = Checkpointing::write_checkpoint(fd);
+      write(3,"[Error] Restore complete.....\n",31);
       ::close(fd);
       if ( ret == 1 )   {
 	//!!!!!!! No printing here! other threads may lock output!!!!!!!
@@ -598,29 +590,27 @@ int CheckpointSvc::saveCheckpoint() {
 /// Checkpoint main process instance. Stops dim
 int CheckpointSvc::stopMainInstance() {
   MsgStream log(msgSvc(),name());
-  CHKPT* chkpt =  CHKPT_get();
   // First get rid of DIM
   m_fsm->disconnectDIM();
   ::lib_rtl_sleep(100);
   if ( m_files ) ::free(m_files);
   m_files = 0;
   // Now stop child threads
-  chkpt->stop();
-  chkpt->getFileDescriptors(&m_files);
+  Checkpointing::stop_process();
+  Checkpointing::get_file_descriptors(&m_files);
   if ( m_dumpFD ) {
-    chkpt->dumpFileDescriptors(m_files);
+    Checkpointing::dump_file_descriptors(m_files);
   }
   return 1;
 }
 
 /// Resume main process instance from checkpoint. Restarts dim
 int CheckpointSvc::resumeMainInstance(bool with_resume_chil_threads) {
-  CHKPT* chkpt =  CHKPT_get();
   string proc  = RTL::processName();
   const char* dns = 0;
   // Let the paret resume its work
   if ( with_resume_chil_threads )   {
-    chkpt->resume();
+    Checkpointing::resume_process();
     ::lib_rtl_sleep(200);
   }
   dns = ::getenv("DIM_DNS_NODE");
@@ -652,16 +642,15 @@ int CheckpointSvc::resumeMainInstance(bool with_resume_chil_threads) {
 int CheckpointSvc::forkChild(int which) {
   string proc  = RTL::processName();
   string utgid = buildChildUTGID(which);
-  CHKPT* chkpt = CHKPT_get();
 
-  chkpt->setUTGID(utgid.c_str());
-  pid_t pid = chkpt->forkInstance();
+  Checkpointing::set_utgid(utgid.c_str());
+  pid_t pid = Checkpointing::fork_process();
   if ( pid == 0 ) {             // Child
     m_masterProcess = false;    // Flag child locally
     m_numInstances = 0;
     m_useCores = false;
     if ( m_forceUTGID>0 ) {
-      chkpt->forceUTGID(utgid.c_str());
+      Checkpointing::force_utgid(utgid.c_str());
     }
     if ( m_childWait>0 ) {
       bool r = true;
@@ -679,7 +668,7 @@ int CheckpointSvc::forkChild(int which) {
   else if ( pid>0 ) {
     m_masterProcess = true;
     m_children[which] = pid;
-    chkpt->setUTGID(proc.c_str());
+    Checkpointing::set_utgid(proc.c_str());
   }
   else if (pid < 0)    {        // failed to fork
     char text[256];
@@ -692,7 +681,6 @@ int CheckpointSvc::forkChild(int which) {
 
 /// Execute child process
 int CheckpointSvc::execChild() {
-  CHKPT* chkpt =  CHKPT_get();
   for(int j=0; j<3; ++j) {
     if (dup2(j,j) < 0) {
       char text[256];
@@ -701,7 +689,7 @@ int CheckpointSvc::execChild() {
     }
   }
   /// Restore file descriptors for child process
-  chkpt->setFileDescriptors(m_files);
+  Checkpointing::set_file_descriptors(m_files);
   /// If requested assign seperate process group to child
   if ( m_childSessions ) {
     pid_t sid = ::setsid();
@@ -715,7 +703,7 @@ int CheckpointSvc::execChild() {
   /// Need to reset RTL to get proper processnames etc. afterwards
   RTL::RTL_reset();
   /// Now it should be save to restart the children
-  chkpt->startChild();
+  Checkpointing::start_child();
   /// Configure DIM startup
   const char* dns = ::getenv("DIM_DNS_NODE");
   string proc = RTL::processName();
@@ -804,9 +792,14 @@ void CheckpointSvc::handle(const Incident& inc) {
 	    << RTL::processName() << endmsg;
 	throw GaudiException("Failed to save checkpoint:"+m_checkPoint, name(), StatusCode::FAILURE);
       }
-      CHKPT* chkpt =  CHKPT_get();
-      int typ = chkpt->restartType();
+    ::fprintf(stdout,"%s%s\n",MARKER,MARKER);
+    ::fprintf(stdout,"=  File restore successful....restarting\n");
+    ::fprintf(stdout,"%s%s\n",MARKER,MARKER);
+    ::fflush(stdout);
+
+      int typ = Checkpointing::restart_type();
       bool restore =  typ == 1;
+      write(3,"[Error] Restore complete..2...\n",32);
       sc = ( restore ) ? finishRestore() : finishCheckpoint();
       if ( !sc.isSuccess() ) {
 	throw GaudiException("Failed to continue from checkpoint.", name(), StatusCode::FAILURE);

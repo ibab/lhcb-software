@@ -9,8 +9,8 @@ branches          cmt doc src
 use GaudiKernel   v*
 use DIM           v* Online
 use OnlineBase    v* Online
+use Checkpointing v* Online
 use GaudiOnline   v* Online -no_auto_imports
-
 apply_pattern install_python_modules
 
 # ==================== component libraries ==================================
@@ -20,3 +20,7 @@ apply_pattern generate_rootmap       library=GaudiCheckpointing
 apply_pattern generate_configurables library=GaudiCheckpointing
 macro cppoptimized_s ' -g -O0 ' WIN32 ''
 macro coptimized_s   ' -g -O0 ' WIN32 ''
+
+private
+#macro_remove componentshr_linkopts "-Wl,--no-undefined"
+#macro_remove libraryshr_linkopts "-Wl,--no-undefined"
