@@ -4,6 +4,9 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2012-03-15 - Olivier Callot
+ - Technical changes in Elog.cpp to please the new 4.6 compiler.
+
 !=============================== 2012-01-10 v3r2 =============================
 ! 2011-12-08 - Marco Clemencic
  - Enabled backward compatibility with Gaudi v22r5.
