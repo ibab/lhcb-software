@@ -8,9 +8,9 @@ Exported symbols (use python help!):
    - B2KShhConf
 """
 
-__author__ = ['Thomas Latham','David Dossett','Jussara Miranda']
-__date__ = '26/08/2011'
-__version__ = 'Stripping17'
+__author__ = ['Thomas Latham','David Dossett','Jussara Miranda','Rafael Coutinho']
+__date__ = '15/03/2012'
+__version__ = 'Stripping18'
 __all__ = 'B2KShhConf'
 
 from Gaudi.Configuration import *
@@ -21,6 +21,7 @@ from StrippingUtils.Utils import LineBuilder
 
 from StandardParticles import StdLoosePions as Pions
 from StandardParticles import StdLooseKaons as Kaons
+from StandardParticles import StdLooseProtons as Protons
 
 default_config = {'Trk_Chi2'                : 4.0,
                   'KS_DD_MassWindow'        : 30.0,
@@ -119,9 +120,10 @@ class B2KShhConf(LineBuilder) :
 
         self.pions = Pions
         self.kaons = Kaons
+        self.protons = Protons
 
         self.hadrons = MergedSelection("HadronsFor" + name,
-                                       RequiredSelections = [ self.pions, self.kaons ] )
+                                       RequiredSelections = [ self.pions, self.kaons, self.protons ] )
         
 
         self.makeKS2DD( 'KSfor'+dd_name, config )
@@ -211,8 +213,9 @@ class B2KShhConf(LineBuilder) :
         _B = CombineParticles()
         _B.DecayDescriptors = [ "B0 -> pi+ pi- KS0", \
                                 "B0 -> K+ pi- KS0", "B0 -> pi+ K- KS0", \
-                                "B0 -> K+ K- KS0" ]
-        _B.DaughtersCuts = { "K+" : "TRCHI2DOF<%s"% config['Trk_Chi2'], "pi+" : "TRCHI2DOF<%s"% config['Trk_Chi2'] }
+                                "B0 -> K+ K- KS0", \
+                                "B0 -> p+ p~- KS0" ]
+        _B.DaughtersCuts = { "K+" : "TRCHI2DOF<%s"% config['Trk_Chi2'], "pi+" : "TRCHI2DOF<%s"% config['Trk_Chi2'], "p+" : "TRCHI2DOF<%s"% config['Trk_Chi2'] }
         _B.CombinationCut = _combCuts
         _B.MotherCut = _motherCuts
 
@@ -248,8 +251,9 @@ class B2KShhConf(LineBuilder) :
         _B = CombineParticles()
         _B.DecayDescriptors = [ "B0 -> pi+ pi- KS0", \
                                 "B0 -> K+ pi- KS0", "B0 -> pi+ K- KS0", \
-                                "B0 -> K+ K- KS0" ]
-        _B.DaughtersCuts = { "K+" : "TRCHI2DOF<%s"% config['Trk_Chi2'], "pi+" : "TRCHI2DOF<%s"% config['Trk_Chi2'] }
+                                "B0 -> K+ K- KS0", \
+                                "B0 -> p+ p~- KS0"]
+        _B.DaughtersCuts = { "K+" : "TRCHI2DOF<%s"% config['Trk_Chi2'], "pi+" : "TRCHI2DOF<%s"% config['Trk_Chi2'], "p+" : "TRCHI2DOF<%s"% config['Trk_Chi2'] }
         _B.CombinationCut = _combCuts
         _B.MotherCut = _motherCuts
 

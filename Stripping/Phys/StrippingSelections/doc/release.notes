@@ -4,6 +4,13 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-03-15 - Rafael Coutinho
+ - StrippingB2KShh.py
+   Added B0 -> p+ pbar- KS mode to decay descriptor.
+ - StrippingLb2V0hh.py
+   Added new lines for Lb -> KS p+ h- modes (and potentially other related
+   modes, such as Lb -> L h+ h-,  in the future).
+
 ! 2012-03-14 - Sean Benson
  - StrippingBs2KKhh.py
  - Line added to search for phi + hh modes.

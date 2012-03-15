@@ -48,6 +48,12 @@ from StrippingSettings.PreStripping18.LineConfigDictionaries_Charmless import B2
 confB2KShh = B2KShhConf("B2KShh",B2KShh['CONFIG'])
 stream.appendLines(confB2KShh.lines())
 
+# Added section for new Lb2V0hhConf line - commented out for now
+#from StrippingSelections.StrippingLb2V0hh import Lb2V0hhConf
+#from StrippingSettings.PreStripping18.LineConfigDictionaries_Charmless import Lb2V0hh
+#confLb2V0hh = Lb2V0hhConf("Lb2V0hh",Lb2V0hh['CONFIG'])
+#stream.appendLines(confLb2V0hh.lines())
+
 from StrippingSelections.StrippingB2Kphiphi import B2KPhiPhiConf
 from StrippingSettings.PreStripping18.LineConfigDictionaries_Charmless import B2KPhiPhi
 confB2Kphiphi = B2KPhiPhiConf("B2KPhiPhi",B2KPhiPhi['CONFIG'])
