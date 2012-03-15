@@ -1429,17 +1429,23 @@ class Hlt2Tracking(LHCbConfigurableUser):
         #neutralProtosHighEtOutputLocation = self.__protosLocation(Hlt2HighEtNeutralProtoParticleSuffix)
  
         #outputCALOPID            = self.__caloIDLocation()
-        caloName = "HLT2CaloLines" + self.__shortTrackLocation()
+        caloName = "HLT2CaloLines"+ mode.capitalize() + self.__shortTrackLocation()
         # Create configurable
         from Configurables import CaloLines
         caloLines = CaloLines(caloName)
-        bm_name    = self.__pidAlgosAndToolsPrefix() + self.__shortTrackLocation()
+        bm_name    = self.__pidAlgosAndToolsPrefix() + mode.capitalize() + self.__shortTrackLocation()
         bm_members = [tracks]
         bm_output = ''
         if mode.lower() == 'photon':
+            caloLines.HighPhoton = True
+            caloLines.LowPhoton = False
+            caloLines.LowElectron = False
             bm_name  += 'PhotonsFromL0'
             bm_output = '/Event/'+caloName+'HighPhoton/ProtoP/Neutrals'
         elif mode.lower() == 'electron':
+            caloLines.HighPhoton = False
+            caloLines.LowPhoton = False
+            caloLines.LowElectron = True
             from Configurables import ChargedProtoParticleMaker
             bm_name  += 'ElectronsFromL0'
             bm_output = '/Event/'+caloName+'LowElectron/ProtoP/Charged'
@@ -1449,6 +1455,9 @@ class Hlt2Tracking(LHCbConfigurableUser):
             charged.Output = bm_output
             bm_members += [charged]
         elif mode.lower() == 'pi0':
+            caloLines.HighPhoton = False
+            caloLines.LowPhoton = True
+            caloLines.LowElectron = False
             bm_name  += 'Pi0FromL0'
             bm_output = '/Event/'+caloName+'LowPhoton/ProtoP/Neutrals'
         seq = caloLines.sequence(tracks=[tracks.outputSelection()])

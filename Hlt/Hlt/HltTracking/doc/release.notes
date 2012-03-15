@@ -5,6 +5,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+- 2012-03-16 - Albert Puig
+ - Fixed warnings in calo reconstruction due to missing ProtoP.
+
 ! 2012-03-15 - Pieter David
  - Add vertex upgrade version of the track upgrade strings (used as streamer 
    preambulo) for displaced vertex line
