@@ -27,7 +27,7 @@ public:
   virtual StatusCode finalize();
   virtual void handle(const Incident&);
   IMonitorSvc        *m_pMonitorSvc;
-  IHistogramSvc      *m_phistsvc;
+//  IHistogramSvc      *m_phistsvc;
   AIDA::IHistogram1D *m_arrhist;
   AdderSys  *m_AdderSys;
   MonAdder  *m_adder;

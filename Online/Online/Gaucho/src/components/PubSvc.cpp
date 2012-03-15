@@ -52,7 +52,7 @@ PubSvc::PubSvc(const std::string& name, ISvcLocator* sl) : Service(name,sl),m_in
   m_SaveTimer   = 0;
   m_errh        = 0;
   m_pMonitorSvc = 0;
-  m_phistsvc    = 0;
+//  m_phistsvc    = 0;
   m_arrhist     = 0;
 
 }
@@ -226,7 +226,7 @@ StatusCode PubSvc::finalize()
     m_incidentSvc->removeListener(this);
   }
   releasePtr(m_incidentSvc);
-  releasePtr(m_phistsvc);
+//  releasePtr(m_phistsvc);
   releasePtr(m_pMonitorSvc);
   //printf("PubSvc: Locking DIM\n");
 //  DimLock l;

@@ -55,6 +55,24 @@ StatusCode BusyPub::initialize()
   return sc;
 }
 
+StatusCode BusyPub::finalize()
+{
+  StatusCode sc;
+  if (m_trender != 0)
+  {
+    m_trender->close();
+    SmartIF<IToolSvc> tools;
+    sc = serviceLocator()->service("ToolSvc", tools.pRef());
+    if ( !sc.isSuccess() ) {
+      ::lib_rtl_output(LIB_RTL_FATAL,"DIM(RateSvc): Failed to access ToolsSvc.\n");
+      return sc;
+    }
+    sc = tools->releaseTool(m_trender);
+    m_trender = 0;
+  }
+  return StatusCode::SUCCESS;
+}
+
 void BusyPub::analyze(void *, int ,MonMap* mmap)
 {
   MonMap::iterator i,j;
@@ -85,11 +103,12 @@ void BusyPub::analyze(void *, int ,MonMap* mmap)
   }
 }
 
-BusyPub::BusyPub(const std::string& name, ISvcLocator* sl) 
+BusyPub::BusyPub(const std::string& name, ISvcLocator* sl)
  : PubSvc(name,sl)
 {
   declareProperty("TrendingOn",  m_enableTrending);
   m_FarmLoad = 0;
+  m_trender = 0;
 }
 
 BusyPub::~BusyPub()
