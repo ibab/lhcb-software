@@ -66,11 +66,26 @@ StatusCode DumpParticle::execute() {
 //=============================================================================
 StatusCode DumpParticle::dump(const LHCb::Particle* p) {
 
-  info() << "Particle " << (p)->key() << " in "<< (p)->parent()->registry()->identifier() 
+  if (0==p) {
+    fatal() << "NULL incoming particle" << endmsg;
+    return StatusCode::FAILURE ;
+  }  
+  info() << "############## Particle " << (p)->key() << " in "<< (p)->parent()->registry()->identifier() 
          << " :\n " << *(p) << endmsg ;
   const LHCb::Vertex* v = (p)->endVertex();
-  if (0!=v) info() << "endVertex " << v->key() << " in "<< v->parent()->registry()->identifier() 
+  if (0!=v) {
+    info() << "endVertex " << v->key() << " in "<< v->parent()->registry()->identifier() 
                    << " :\n " << *v << endmsg ;
+    const SmartRefVector< LHCb::Particle > dauts = v->outgoingParticles();
+    info() << "This vertex has " << dauts.size() << " outgoing Particles" << endmsg ;
+    for (SmartRefVector< LHCb::Particle >::const_iterator d = dauts.begin() ; d!=dauts.end() ; ++d){
+      if (0==(*d)) {
+        fatal() << "The particle going out of this vertex is " << *d << endmsg ;
+        return StatusCode::FAILURE ;
+      } 
+      else info() << " --> Particle " << (*d)->key() << " in "<< (*d)->parent()->registry()->identifier() << endmsg ;
+    }
+  }
   const LHCb::ProtoParticle* pp = (p)->proto() ;
   if (0!=pp) {
     info() << "proto " << pp->key() << " in "<< pp->parent()->registry()->identifier()
@@ -82,8 +97,13 @@ StatusCode DumpParticle::dump(const LHCb::Particle* p) {
   const SmartRefVector< LHCb::Particle > dauts = p->daughters();
   info() << "This particle has " << dauts.size() << " daughters" << endmsg ;
   for (SmartRefVector< LHCb::Particle >::const_iterator d = dauts.begin() ; d!=dauts.end() ; ++d){
+    if (0==(*d)) {
+      fatal() << "The daughter is " << *d << endmsg ;
+      return StatusCode::FAILURE ;
+    } 
     if (!dump(*d)) return StatusCode::FAILURE ;
   }
+  info() << "################ End of dump" << endmsg ;
 
   return StatusCode::SUCCESS ;
   
