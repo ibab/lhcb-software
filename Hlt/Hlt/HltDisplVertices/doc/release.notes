@@ -1,8 +1,15 @@
-!-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
 ! Package     : Hlt/HltDisplVertices
 ! Responsible : Neal Gauvin (Gueissaz)
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
+
+! 2012-03-15 - Victor Coco
+ - simplify the Hlt2PreSel and Hlt2Sel algorithms + introduction the MatterVeto tool + 
+   the velo track filtering.
+   Add cut on fraction of energy carried by a single particle.
+   Add cut on fraction of track having first hit upstream the vertex.
+
 
 !========================= HltDisplVertices v3r5 2012-03-01 =========================
 ! 2012-03-01 - Victor Coco

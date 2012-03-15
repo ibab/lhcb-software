@@ -7,7 +7,7 @@ version           v3r5
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src 
+branches         Kernel cmt doc src 
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
@@ -15,12 +15,15 @@ branches          cmt doc src
 # Used packages. 
 #============================================================================
 
-use DaVinciKernel   v*    Phys
-use DetDesc v* Det
+use DaVinciKernel       v* Phys
+use DetDesc             v* Det
 use CaloDet             v* Det
 use LoKiHlt             v* Phys
+use LoKi                v* Phys
 use VeloDet             v* Det
-use LoKiTrigger        v* Phys
+use LoKiTrigger         v* Phys
+use LoKiPhys            v* Phys
+
 include_path      none
 #============================================================================
 # Component library building rule
@@ -30,3 +33,6 @@ library          HltDisplVertices    ../src/*.cpp
 # define component library link options
 #============================================================================
 apply_pattern    component_library library=HltDisplVertices
+
+
+apply_pattern install_more_includes more =Kernel
