@@ -38,10 +38,17 @@ from Gaudi.Configuration import *
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 import GaudiKernel.SystemOfUnits as units
 
+from HltLine.HltLine import bindMembers
+
 class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
     
     __slots__ = {
-
+            "FilterVelo" : False ,
+            "VeloIP" : 0.05 ,
+            "UseVeloTracks": True,
+            "FracE1Track": 1000.,
+            "FracTrackBefV": 1000.,
+            "MaxChi2Long": 1000.,
             "MinNbTracks"  : { 'Hlt2RV2P' : 4
                                , 'Hlt2SingleLonglived' : 5
                                , 'Hlt2SingleDown' : 4
@@ -54,7 +61,6 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
                                , 'Hlt2SinglePSLonglivedHighFD' : 5
                                , 'Hlt2SinglePSLonglivedMV' : 4
                                }
-            ,  "RCutMethod"   : "FromBeamSpot"
             ,  "RMin"         : {   'Hlt2RV2P' : 0.4
                                     , 'Hlt2SingleLonglived' : 2.5
                                     , 'Hlt2SingleDown' : 2.0
@@ -94,7 +100,7 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
                                  , 'Hlt2SinglePSLonglivedHighFD' : 3000.
                                  , 'Hlt2SinglePSLonglivedMV' :3000.
                                  } 
-            ,  "RemVtxFromDet" : { 'Hlt2RV2P' : 0
+            ,  "ComputeMatterVeto" : { 'Hlt2RV2P' : True
                                  , 'Hlt2SingleLonglived' : 5
                                  , 'Hlt2SingleLonglivedHighFD' : 5
                                  , 'Hlt2SingleLonglivedHighMass' : 5
@@ -106,7 +112,7 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
                                  , 'Hlt2SinglePSLonglivedHighFD' : 5
                                  , 'Hlt2SinglePSLonglivedMV' : 5
                                    }
-            ,  "AllOutDet"  : {  'Hlt2DoubleLonglived' : False
+            ,  "AllOutDet"  : {  'Hlt2DoubleLonglived' : True
                                  ,'Hlt2DoublePSLonglived' : False
                                  }
             , "PostScale" : { 'Hlt2RV2P' : 1.
@@ -115,7 +121,7 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
                               , 'Hlt2SingleLonglivedHighFD' : 1.
                               , 'Hlt2SingleLonglivedHighMass' : 1.
                               , 'Hlt2DoubleLonglived' : 1.
-                              , 'Hlt2SinglePSLonglived' : 1.
+                              , 'Hlt2SinglePSLonglived' : 0.0001
                               , 'Hlt2DoublePSLonglived' : 0.01
                               , 'Hlt2SinglePSLonglivedHighMass' : 1.
                               , 'Hlt2SinglePSLonglivedHighFD' : 1.
@@ -130,12 +136,16 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
     ## Hlt2SinglePSLonglivedHighMass
     ## Hlt2SinglePSLonglivedHighFD
     ## Hlt2SinglePSLonglivedMV
+
+    
+
     
     def __apply_configuration__(self) :
 
         from HltLine.HltLine import Hlt2Line
         from Configurables import GaudiSequencer, HltANNSvc
         from Configurables import PatPV3D, PVOfflineTool, PVSeed3DTool, LSAdaptPV3DFitter
+        
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPions
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedDownPions
         from HltTracking.HltPVs import PV3D
@@ -144,20 +154,37 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
 
         Hlt2BiKalmanFittedDownstreamTracking = Hlt2BiKalmanFittedDownstreamTracking()
         Hlt2BiKalmanFittedForwardTracking = Hlt2BiKalmanFittedForwardTracking()
+        PV3D = PV3D()
+        
+        print 'PV3DSelection',PV3D.outputSelection()
+
+        from HltLine.HltLine import bindMembers
         
         #######################################################################
         # Get the primary vertices and run the Hlt2 Velo Tracking
-        DVSeq = []
         hlt2VeloTracking = Hlt2BiKalmanFittedForwardTracking.hlt2VeloTracking()
-        DVSeq.extend( [ PV3D(), hlt2VeloTracking ] )
-
+        from Configurables import VeloWithIP
+        vwithIP = VeloWithIP('VeloWithIP')
+        vwithIP.Inputs = [hlt2VeloTracking.outputSelection()]
+        vwithIP.Output = 'Hlt2/Hlt2DVTrack/VeloWithIP'
+        vwithIP.PVLocation = 'Hlt/Vertex/PV3D'
+        if self.getProp("VeloIP")>0.:
+            vwithIP.MinIP = self.getProp("VeloIP")
+            vwithIP.DiscardFromPV = False
+        else :
+            vwithIP.DiscardFromPV = True
+        
+        from Configurables import LoKi__VoidFilter
+        FilterNumDisplVeloTracks = LoKi__VoidFilter('Hlt2FilterNumDisplVeloTracks', Code="CONTAINS('Hlt2/Hlt2DVTrack/VeloWithIP')>3")
         
         ######################################################################
         # Run PatPV3D : reconstruction of displaced vertices
         Hlt2PatPV3D = PatPV3D("Hlt2DisplVertices3D")
-        DVSeq.append( Hlt2PatPV3D )
         Hlt2PatPV3D.addTool(PVOfflineTool)
-        Hlt2PatPV3D.PVOfflineTool.InputTracks = [ hlt2VeloTracking.outputSelection() ]
+        if self.getProp('FilterVelo'):
+            Hlt2PatPV3D.PVOfflineTool.InputTracks = [ vwithIP.Output ]
+        else:
+            Hlt2PatPV3D.PVOfflineTool.InputTracks = [ hlt2VeloTracking.outputSelection()  ]
         Hlt2PatPV3D.PVOfflineTool.PVFitterName = "LSAdaptPV3DFitter"
         Hlt2PatPV3D.PVOfflineTool.PVSeedingName = "PVSeed3DTool"
         Hlt2PatPV3D.PVOfflineTool.addTool(PVSeed3DTool)
@@ -168,25 +195,32 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2PatPV3D.PVOfflineTool.LSAdaptPV3DFitter.maxIP2PV = 2*units.mm
         Hlt2PatPV3D.PVOfflineTool.LSAdaptPV3DFitter.MinTracks = 4
         Hlt2PatPV3D.OutputVerticesName = "Hlt2/Hlt2VeloVertices/Vertices"
-
+        
+        veloV = None
+        if self.getProp('FilterVelo'):
+            veloV = bindMembers('VeloVForDV',  [ hlt2VeloTracking,vwithIP,FilterNumDisplVeloTracks,Hlt2PatPV3D ]).setOutputSelection( Hlt2PatPV3D.OutputVerticesName )
+        else :
+            veloV = bindMembers('VeloVForDV',  [ hlt2VeloTracking,Hlt2PatPV3D ]).setOutputSelection( Hlt2PatPV3D.OutputVerticesName )
         #######################################################################
         #Get the pions
-        DVSeq.append( BiKalmanFittedPions )
         
         #######################################################################
         #Run Get the candidates
         from Configurables import Hlt2PreSelDV
         Hlt2RV2P = Hlt2PreSelDV("Hlt2RV2P")
-        DVSeq.append( Hlt2RV2P )
         Hlt2RV2P.Inputs = [BiKalmanFittedPions.outputSelection()]
         Hlt2RV2P.Output = 'Hlt2/Hlt2RV2P/Particles'
         Hlt2RV2P.RecVerticesLocation = [Hlt2PatPV3D.OutputVerticesName] 
-        Hlt2RV2P.RCutMethod = self.getProp('RCutMethod')
         Hlt2RV2P.RMin = self.getProp('RMin')['Hlt2RV2P']
         Hlt2RV2P.PreyMinMass = self.getProp('MinMass')['Hlt2RV2P']
-        Hlt2RV2P.RemVtxFromDet = self.getProp('RemVtxFromDet')['Hlt2RV2P']
+        Hlt2RV2P.ComputeMatterVeto = self.getProp('ComputeMatterVeto')['Hlt2RV2P']
         Hlt2RV2P.UseMap = True
-
+        Hlt2RV2P.UseVeloTracks = self.getProp("UseVeloTracks")
+        Hlt2RV2P.FractionEFrom1Track = self.getProp("FracE1Track")
+        Hlt2RV2P.FractionTrackUpstreamV  = self.getProp("FracTrackBefV")
+        Hlt2RV2P.MaxChi2Long  = self.getProp("MaxChi2Long")
+        
+        veloCand = bindMembers('VeloV2PForDV', [  veloV, BiKalmanFittedPions,BiKalmanFittedDownPions ,Hlt2RV2P ]).setOutputSelection( Hlt2RV2P.Output  )
 
         #######################################################################
         ## Single LLP Selection
@@ -201,12 +235,11 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2SingleLonglivedHighMass.PreyMinSumpt = self.getProp('MinSumpt')['Hlt2SingleLonglivedHighMass']
         Hlt2SingleLonglivedHighMass.NbTracks = self.getProp('MinNbTracks')['Hlt2SingleLonglivedHighMass']
         #Hlt2SingleLonglivedHighMass.PreyMinAngle = self.getProp('MinAngle')['Hlt2SingleLonglivedHighMass']
-        Hlt2SingleLonglivedHighMass.RemVtxFromDet = self.getProp('RemVtxFromDet')['Hlt2SingleLonglivedHighMass']
-        Hlt2SingleLonglivedHighMass.SaveOnTES = False
-                      
+        Hlt2SingleLonglivedHighMass.RemVtxFromDet = self.getProp('ComputeMatterVeto')['Hlt2SingleLonglivedHighMass']
+
         line = Hlt2Line( 'DisplVerticesHighMassSingle'
                         , prescale = self.prescale
-                        , algos = DVSeq + [ Hlt2SingleLonglivedHighMass ]
+                        , algos = veloCand.members() + [ Hlt2SingleLonglivedHighMass ]
                         , postscale = self.getProp('PostScale')['Hlt2SingleLonglivedHighMass']
                         )
                                                
@@ -226,12 +259,11 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2DoubleLonglived.PreyMinSumpt = self.getProp('MinSumpt')['Hlt2DoubleLonglived']
         Hlt2DoubleLonglived.NbTracks = self.getProp('MinNbTracks')['Hlt2DoubleLonglived']
         #Hlt2DoubleLonglived.PreyMinAngle = self.getProp('MinAngle')['Hlt2DoubleLonglived']
-        Hlt2DoubleLonglived.SaveOnTES = False
-        Hlt2DoubleLonglived.RemVtxFromDet = self.getProp('RemVtxFromDet')['Hlt2DoubleLonglived']
+        Hlt2DoubleLonglived.RemVtxFromDet = self.getProp('ComputeMatterVeto')['Hlt2DoubleLonglived']
 
         line = Hlt2Line('DisplVerticesDouble'
                         , prescale = self.prescale
-                        , algos = DVSeq + [ Hlt2DoubleLonglived ]
+                        , algos = veloCand.members() + [ Hlt2DoubleLonglived ]
                         , postscale = self.getProp('PostScale')['Hlt2DoubleLonglived']
                         )
         
@@ -252,12 +284,11 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         #Hlt2SingleLonglivedHighFD.PreyMinAngle = self.getProp('MinAngle')['Hlt2SingleLonglivedHighFD']
         Hlt2SingleLonglivedHighFD.PreyMinSumpt = self.getProp('MinSumpt')['Hlt2SingleLonglivedHighFD']
         Hlt2SingleLonglivedHighFD.NbTracks = self.getProp('MinNbTracks')['Hlt2SingleLonglivedHighFD']
-        Hlt2SingleLonglivedHighFD.RemVtxFromDet = self.getProp('RemVtxFromDet')['Hlt2SingleLonglivedHighFD']
-        Hlt2SingleLonglivedHighFD.SaveOnTES = False
+        Hlt2SingleLonglivedHighFD.RemVtxFromDet = self.getProp('ComputeMatterVeto')['Hlt2SingleLonglivedHighFD']
 
         line = Hlt2Line( 'DisplVerticesHighFDSingle'
                         , prescale = self.prescale
-                        , algos = DVSeq + [ Hlt2SingleLonglivedHighFD ]
+                        , algos = veloCand.members() + [ Hlt2SingleLonglivedHighFD ]
                         , postscale = self.getProp('PostScale')['Hlt2SingleLonglivedHighFD']
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DisplVerticesHighFDSingleDecision" : 50284 } )
@@ -273,12 +304,11 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2SingleLonglived.PreyMinMass = self.getProp('MinMass')['Hlt2SingleLonglived']
         Hlt2SingleLonglived.PreyMinSumpt = self.getProp('MinSumpt')['Hlt2SingleLonglived']
         Hlt2SingleLonglived.NbTracks = self.getProp('MinNbTracks')['Hlt2SingleLonglived']
-        Hlt2SingleLonglived.RemVtxFromDet = self.getProp('RemVtxFromDet')['Hlt2SingleLonglived']
-        Hlt2SingleLonglived.SaveOnTES = False
+        Hlt2SingleLonglived.RemVtxFromDet = self.getProp('ComputeMatterVeto')['Hlt2SingleLonglived']
 
         line = Hlt2Line( 'DisplVerticesSingle'
                         , prescale = self.prescale
-                        , algos = DVSeq + [ Hlt2SingleLonglived ]
+                        , algos = veloCand.members() + [ Hlt2SingleLonglived ]
                         , postscale = self.getProp('PostScale')['Hlt2SingleLonglived']
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DisplVerticesSingleDecision" : 50290 } )
@@ -295,12 +325,11 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2SinglePSLonglived.PreyMinMass = self.getProp('MinMass')['Hlt2SinglePSLonglived']
         Hlt2SinglePSLonglived.PreyMinSumpt = self.getProp('MinSumpt')['Hlt2SinglePSLonglived']
         Hlt2SinglePSLonglived.NbTracks = self.getProp('MinNbTracks')['Hlt2SinglePSLonglived']
-        Hlt2SinglePSLonglived.RemVtxFromDet = self.getProp('RemVtxFromDet')['Hlt2SinglePSLonglived']
-        Hlt2SinglePSLonglived.SaveOnTES = False
+        Hlt2SinglePSLonglived.RemVtxFromDet = self.getProp('ComputeMatterVeto')['Hlt2SinglePSLonglived']
 
         line = Hlt2Line( 'DisplVerticesSinglePostScaled'
                         , prescale = self.prescale
-                        , algos = DVSeq + [ Hlt2SinglePSLonglived ]
+                        , algos = veloCand.members() + [ Hlt2SinglePSLonglived ]
                         , postscale = self.getProp('PostScale')['Hlt2SinglePSLonglived']
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DisplVerticesSinglePostScaledDecision" : 50283 } )
@@ -313,12 +342,11 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2DoublePSLonglived.RMin = self.getProp('RMin')['Hlt2DoublePSLonglived']
         Hlt2DoublePSLonglived.PreyMinMass = self.getProp('MinMass')['Hlt2DoublePSLonglived']
         Hlt2DoublePSLonglived.NbTracks = self.getProp('MinNbTracks')['Hlt2DoublePSLonglived']
-        Hlt2DoublePSLonglived.RemVtxFromDet = self.getProp('RemVtxFromDet')['Hlt2DoublePSLonglived']
-        Hlt2DoublePSLonglived.SaveOnTES = False
+        Hlt2DoublePSLonglived.RemVtxFromDet = self.getProp('ComputeMatterVeto')['Hlt2DoublePSLonglived']
                       
         line = Hlt2Line( 'DisplVerticesDoublePostScaled'
                         , prescale = self.prescale
-                        , algos = DVSeq + [ Hlt2DoublePSLonglived ]
+                        , algos = veloCand.members() + [ Hlt2DoublePSLonglived ]
                         , postscale = self.getProp('PostScale')['Hlt2DoublePSLonglived']
                         )                                               
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DisplVerticesDoublePostScaledDecision" : 50286 } )
@@ -331,12 +359,11 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2SinglePSLonglivedHighMass.RMin = self.getProp('RMin')['Hlt2SinglePSLonglivedHighMass']
         Hlt2SinglePSLonglivedHighMass.PreyMinMass = self.getProp('MinMass')['Hlt2SinglePSLonglivedHighMass']
         Hlt2SinglePSLonglivedHighMass.NbTracks = self.getProp('MinNbTracks')['Hlt2SinglePSLonglivedHighMass']
-        Hlt2SinglePSLonglivedHighMass.RemVtxFromDet = self.getProp('RemVtxFromDet')['Hlt2SinglePSLonglivedHighMass']
-        Hlt2SinglePSLonglivedHighMass.SaveOnTES = False
-                      
+        Hlt2SinglePSLonglivedHighMass.RemVtxFromDet = self.getProp('ComputeMatterVeto')['Hlt2SinglePSLonglivedHighMass']
+        
         line = Hlt2Line( 'DisplVerticesSingleHighMassPostScaled'
                         , prescale = self.prescale
-                        , algos = DVSeq + [ Hlt2SinglePSLonglivedHighMass ]
+                        , algos = veloCand.members() + [ Hlt2SinglePSLonglivedHighMass ]
                         , postscale = self.getProp('PostScale')['Hlt2SinglePSLonglivedHighMass']
                         )
                                                
@@ -350,12 +377,11 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2SinglePSLonglivedHighFD.RMin = self.getProp('RMin')['Hlt2SinglePSLonglivedHighFD']
         Hlt2SinglePSLonglivedHighFD.PreyMinMass = self.getProp('MinMass')['Hlt2SinglePSLonglivedHighFD']
         Hlt2SinglePSLonglivedHighFD.NbTracks = self.getProp('MinNbTracks')['Hlt2SinglePSLonglivedHighFD']
-        Hlt2SinglePSLonglivedHighFD.RemVtxFromDet = self.getProp('RemVtxFromDet')['Hlt2SinglePSLonglivedHighFD']
-        Hlt2SinglePSLonglivedHighFD.SaveOnTES = False
+        Hlt2SinglePSLonglivedHighFD.RemVtxFromDet = self.getProp('ComputeMatterVeto')['Hlt2SinglePSLonglivedHighFD']
                       
         line = Hlt2Line( 'DisplVerticesSingleHighFDPostScaled'
                         , prescale = self.prescale
-                        , algos = DVSeq + [ Hlt2SinglePSLonglivedHighFD ]
+                        , algos = veloCand.members() + [ Hlt2SinglePSLonglivedHighFD ]
                         , postscale = self.getProp('PostScale')['Hlt2SinglePSLonglivedHighFD']
                         )
                                                
@@ -369,12 +395,11 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2SinglePSLonglivedMV.RMin = self.getProp('RMin')['Hlt2SinglePSLonglivedMV']
         Hlt2SinglePSLonglivedMV.PreyMinMass = self.getProp('MinMass')['Hlt2SinglePSLonglivedMV']
         Hlt2SinglePSLonglivedMV.NbTracks = self.getProp('MinNbTracks')['Hlt2SinglePSLonglivedMV']
-        Hlt2SinglePSLonglivedMV.RemVtxFromDet = self.getProp('RemVtxFromDet')['Hlt2SinglePSLonglivedMV']
-        Hlt2SinglePSLonglivedMV.SaveOnTES = False
+        Hlt2SinglePSLonglivedMV.RemVtxFromDet = self.getProp('ComputeMatterVeto')['Hlt2SinglePSLonglivedMV']
                       
         line = Hlt2Line( 'DisplVerticesSingleMVPostScaled'
                         , prescale = self.prescale
-                        , algos = DVSeq + [ Hlt2SinglePSLonglivedMV ]
+                        , algos = veloCand.members() + [ Hlt2SinglePSLonglivedMV ]
                         , postscale = self.getProp('PostScale')['Hlt2SinglePSLonglivedMV']
                         )
                                                
@@ -387,9 +412,8 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         ##
         #######################################################################
 
-        
         hlt2DownstreamTracking = Hlt2BiKalmanFittedDownstreamTracking.hlt2DownstreamTracking()
-
+        
         ## Downstream Vertexing
         from Configurables import LSAdaptPVFitter
         Hlt2PatPV3DDown = PatPV3D("Hlt2DisplVerticesV3DDown")
@@ -411,7 +435,7 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2PatPV3DDown.PVOfflineTool.LSAdaptPVFitter.acceptTrack = 0.00000001
         Hlt2PatPV3DDown.PVOfflineTool.LSAdaptPVFitter.trackMaxChi2 = 9 
         Hlt2PatPV3DDown.PVOfflineTool.LSAdaptPVFitter.trackMaxChi2Remove = 64
-
+        
         ## Associated Velo candidate selection
         from Configurables import Hlt2SelDV
         Hlt2SingleDownVelo = Hlt2SelDV("Hlt2SingleDownVelo")
@@ -424,7 +448,6 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2SingleDownVelo.PreyMinSumpt = self.getProp('MinSumpt')['Hlt2RV2P']
         Hlt2SingleDownVelo.NbTracks = 5
         Hlt2SingleDownVelo.RemVtxFromDet = 5
-        Hlt2SingleDownVelo.SaveOnTES = False
 
         
         ## Downstream candidate preselection
@@ -433,10 +456,9 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2RV2PDown.Inputs = [BiKalmanFittedDownPions.outputSelection()]
         Hlt2RV2PDown.Output = 'Hlt2/Hlt2RV2PDown/Particles'
         Hlt2RV2PDown.RecVerticesLocation = [Hlt2PatPV3DDown.OutputVerticesName] 
-        Hlt2RV2PDown.RCutMethod = self.getProp('RCutMethod')
         Hlt2RV2PDown.RMin = self.getProp('RMin')['Hlt2SingleDown']
         Hlt2RV2PDown.PreyMinMass = self.getProp('MinMass')['Hlt2SingleDown']
-        Hlt2RV2PDown.RemVtxFromDet = self.getProp('RemVtxFromDet')['Hlt2SingleDown'] 
+        Hlt2RV2PDown.ComputeMatterVeto = False
         Hlt2RV2PDown.UseMap = False
         Hlt2RV2PDown.KeepLowestZ = True
         Hlt2RV2PDown.NbTracks = self.getProp('MinNbTracks')['Hlt2SingleDown']
@@ -453,11 +475,10 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2SingleDown.PreyMinSumpt = self.getProp('MinSumpt')['Hlt2SingleDown']
         Hlt2SingleDown.MinZ = 200*units.mm
         Hlt2SingleDown.NbTracks = self.getProp('MinNbTracks')['Hlt2SingleDown']
-        Hlt2SingleDown.SaveOnTES = False
 
         line = Hlt2Line( 'DisplVerticesSingleDown'
                         , prescale = self.prescale
-                        , algos = DVSeq + [ Hlt2SingleDownVelo,hlt2DownstreamTracking,Hlt2PatPV3DDown ,BiKalmanFittedDownPions,Hlt2RV2PDown,Hlt2SingleDown ]
+                        , algos = veloCand.members()+ [ Hlt2SingleDownVelo,hlt2DownstreamTracking ,Hlt2PatPV3DDown ,BiKalmanFittedDownPions,Hlt2RV2PDown,Hlt2SingleDown ]
                         , postscale = 1.
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DisplVerticesSingleDownDecision" : 50285 } )

@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2012-03-15 - Victor Coco
+ - update the Hlt2DisplVertices line to the new algorithm
+
 ! 2012-03-15 - Will Barter
  - Fix problem with electron lines using old calo inputs.
 
