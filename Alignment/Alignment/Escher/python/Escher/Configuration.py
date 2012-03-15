@@ -220,8 +220,8 @@ class Escher(LHCbConfigurableUser):
             targetdir = '/tmp/' + getpass.getuser() + '/stagedfiles'
             if os.path.isdir( '/pool/spool/' ) :
                 targetdir = '/pool/spool/' + getpass.getuser() + '/stagedfiles'
-                if not os.path.isdir( targetdir ):
-                    os.makedirs( targetdir )
+            if not os.path.isdir( targetdir ):
+                os.makedirs( targetdir )
             FileStagerSvc().Tempdir=targetdir
 
     def configureOutput(self, dstType):
