@@ -30,6 +30,7 @@ from Hlt1Lines.Hlt1MuonLines       import Hlt1MuonLinesConf
 from Hlt1Lines.Hlt1ProtonLines     import Hlt1ProtonLinesConf
 from Hlt1Lines.Hlt1ElectronLines   import Hlt1ElectronLinesConf
 from Hlt1Lines.Hlt1HighPtJetsSinglePVLines   import Hlt1HighPtJetsSinglePVLinesConf
+from Hlt1Lines.Hlt1DisplVertexLines import Hlt1DisplVertexLinesConf
 
 class Hlt1Conf(LHCbConfigurableUser):
    __used_configurables__ = [ Hlt1CommissioningLinesConf
@@ -43,6 +44,7 @@ class Hlt1Conf(LHCbConfigurableUser):
                             , Hlt1ProtonLinesConf  
                             , Hlt1ElectronLinesConf
                             , Hlt1HighPtJetsSinglePVLinesConf                
+                            , Hlt1DisplVertexLinesConf
                             ]
 
    __slots__ = { "ThresholdSettings"            : {} # dictionary decoded in HltThresholdSettings

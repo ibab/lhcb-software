@@ -233,6 +233,7 @@ class HltConf(LHCbConfigurableUser):
                       , 56 : "HLT_PASS_RE('Hlt1TrackAllL0.*Decision')"
                       , 57 : "HLT_PASS_RE('Hlt1TrackMuon.*Decision')"
                       , 58 : "HLT_PASS_RE('Hlt1TrackPhoton.*Decision')"
+                      , 59 : "HLT_PASS_RE('Hlt1.*DisplVertex.*Decision')"
                       # 64--96: Hlt2
                       , 64 : "HLT_PASS('Hlt2Global')"
                       , 65 : "HLT_PASS('Hlt2DebugEventDecision')"

@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2012-03-15 - Pieter David
+ - Added Hlt1 displaced vertex line
+
 ! 2012-03-12 - P. Hopchev
  - Added the two new Hlt1Lines (Hlt1BeamGasCrossingForcedRecoFullZDecision and 
    Hlt1BeamGasHighRhoVerticesDecision) in HltInit.py
