@@ -60,7 +60,7 @@ StatusCode BusyPub::finalize()
   StatusCode sc;
   if (m_trender != 0)
   {
-    m_trender->close();
+//    m_trender->close();
     SmartIF<IToolSvc> tools;
     sc = serviceLocator()->service("ToolSvc", tools.pRef());
     if ( !sc.isSuccess() ) {
