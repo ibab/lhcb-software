@@ -78,7 +78,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v42r1
-                                          running on lxbuild163.cern.ch on Tue Mar  6 15:49:19 2012
+                                          running on lxbuild163.cern.ch on Thu Mar 15 18:34:52 2012
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -87,7 +87,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   1.58 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.61 times the speed of a 2.8 GHz Xeon.
 ChronoStatSvc        INFO  Number of skipped events for MemStat-1
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
@@ -674,7 +674,7 @@ ToolSvc.FastVel...   INFO Maximum number of Velo hits 0
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   1.58 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.61 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -1150,7 +1150,6 @@ Listing sources of Unprotected and Unseen messages
  LumiFilterBeam2                                        |   DEBUG |        3
  LumiFilterBeamCrossing                                 |   DEBUG |        3
  LumiFilterNoBeam                                       |   DEBUG |        3
- MergedID                                               |   DEBUG |        1
  MergedPi0Mon                                           |   DEBUG |        1
  MuonIDAlg                                              |   DEBUG |        1
  MuonTrackFitter                                        |   DEBUG |        2
@@ -1161,8 +1160,6 @@ Listing sources of Unprotected and Unseen messages
  OfflineENNFinderR2GasLeft                              |   DEBUG |        1
  OfflineENNFinderR2GasRight                             |   DEBUG |        1
  PatSeeding                                             |   DEBUG |        1
- PhotonFromMergedID                                     |   DEBUG |        1
- PhotonID                                               |   DEBUG |        1
  PhotonMatchMon                                         |   DEBUG |        1
  PhotonMon                                              |   DEBUG |        1
  ProtoElectronMon                                       |   DEBUG |        1
