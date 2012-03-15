@@ -43,7 +43,7 @@ MonAdder::MonAdder()
   m_timer = 0;
   m_disableOutput = false;
   m_histo = 0;
-//  m_DimDns = 0;
+  m_DimDns = 0;
   m_Dimcmd = 0;
 }
 
