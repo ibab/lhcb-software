@@ -4,6 +4,9 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+! 2012-03-15 - Albert Puig
+ - Added DiElectronFromL0 with new calo reconstruction.
+
 ! 2012-03-12 - V. Gligorov
  - Update shared Ks and Lambdas again, add a couple more cuts.
 

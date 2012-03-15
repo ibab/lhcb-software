@@ -8,9 +8,10 @@
 ##
 #OBSOLETE: REDIRECT TO TRACK FITTED ELECTRONS FOR NOW
 #SHOULD BE REMOVED ENTIRELY
-from Hlt2SharedParticles.TrackFittedDiElectron import TrackFittedDiElectron
-__all__ = ('DiElectron')
+from Hlt2SharedParticles.TrackFittedDiElectron import TrackFittedDiElectron, TrackFittedDiElectronFromL0
+__all__ = ('DiElectron', 'DiElectronFromL0')
 DiElectron = TrackFittedDiElectron
+DiElectronFromL0 = TrackFittedDiElectronFromL0
 '''
 from Gaudi.Configuration import *
 from Configurables import CombineParticles
