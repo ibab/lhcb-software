@@ -13,6 +13,7 @@ Purpose: LHCb reconstruction program
   . Improved protections in OTHitEfficiencyMonitor (TrackMonitors)
   . Fix sign of qOverP in FastMomentumEstimate, fixes TT efficiency of Match
     tracks (TrackTools)
+  . Add EndVelo state to velo only fits (TrackFitter)
 
 </PRE><H1><A NAME=v42r1>2012-03-02 Brunel v42r1</A></H1><PRE>
 This version uses projects LCG 62a, Gaudi v23r1, LHCb v34r1, Lbcom v12r1,
