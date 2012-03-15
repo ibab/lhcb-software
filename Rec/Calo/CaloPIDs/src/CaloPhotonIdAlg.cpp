@@ -1,4 +1,3 @@
-// $Id: $
 // Include files 
 
 #include <math.h>
@@ -18,7 +17,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( CaloPhotonIdAlg);
+DECLARE_ALGORITHM_FACTORY( CaloPhotonIdAlg)
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -360,7 +359,6 @@ double CaloPhotonIdAlg::evalLikelihood(double energy, double et, double eSeed,
 
   return estimator;
 }
-;
 
 // ============================================================================
 StatusCode CaloPhotonIdAlg::initializeWithCondDB() {
@@ -449,7 +447,7 @@ TH2D* CaloPhotonIdAlg::locateHistoOnDisk(std::string histoname) { // locate the 
 
 // ============================================================================
 StatusCode CaloPhotonIdAlg::i_updateDLL() {
-  debug() << "i_updateDLL() called" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "i_updateDLL() called" << endmsg;
   if (!m_cond)
     return StatusCode::FAILURE;
 

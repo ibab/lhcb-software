@@ -4,6 +4,10 @@
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
 
+! 2012-03-15 - Marco Cattaneo
+ - Fix unprotected debug() MsgStreams
+ - Fix trivial icc remarks
+
 !========================= CaloPIDs v5r11 2011-12-15 =========================
 ! 2011-12-09 - Olivier Deschamps 
   - CaloPIDs/PIDs.py : fix external cluster setup

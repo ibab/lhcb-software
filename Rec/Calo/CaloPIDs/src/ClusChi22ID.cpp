@@ -1,26 +1,3 @@
-// $Id: ClusChi22ID.cpp,v 1.8 2009-09-10 10:47:05 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.7  2009/08/21 16:49:45  odescham
-// implement generic context-dependent TES I/O
-//
-// Revision 1.6  2008/06/30 15:37:34  odescham
-// prepare for HLT processing
-//
-// Revision 1.5  2007/08/24 21:25:18  odescham
-// fix uncheck. StatusCodes
-//
-// Revision 1.4  2006/06/22 15:40:40  ibelyaev
-//  fix incinsistencied for 'Brem'-algorithms
-//
-// Revision 1.2  2006/06/20 18:17:48  odescham
-// minor update to please ChargedProtoPAlg
-//
-// Revision 1.1  2006/06/18 18:35:28  ibelyaev
-//  the firstcommmit for DC06 branch
-// 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -74,7 +51,7 @@ private:
 // ============================================================================
 //// declare algorithm factory
 // ============================================================================
-DECLARE_ALGORITHM_FACTORY ( ClusChi22ID ) ;
+DECLARE_ALGORITHM_FACTORY ( ClusChi22ID )
 // ============================================================================
 StatusCode ClusChi22ID::execute() 
 {
@@ -91,7 +68,7 @@ StatusCode ClusChi22ID::execute()
   put ( output , m_output ) ;
   // perform the actual jobs 
   return doTheJob( input->inverse() , output ) ;
-} ;
+}
 // =============================================================================
 
 

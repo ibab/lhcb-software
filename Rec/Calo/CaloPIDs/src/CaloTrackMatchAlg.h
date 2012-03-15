@@ -1,4 +1,3 @@
-// $Id: CaloTrackMatchAlg.h,v 1.9 2009-09-30 10:29:14 odescham Exp $
 // ============================================================================
 #ifndef CALOTRACKMATCHALG_H 
 #define CALOTRACKMATCHALG_H 1
@@ -80,7 +79,8 @@ protected:
   double m_threshold ;
   // the matcher tool iteself 
   mutable ICaloTrackMatch* m_match ; ///< the tool itself 
-} ;
+};
+
 // ============================================================================
 /// get the tool for matching 
 // ============================================================================
@@ -90,7 +90,7 @@ CaloTrackMatchAlg::match() const
   if ( 0 == m_match ) 
   { m_match = tool<ICaloTrackMatch>( m_toolName , this ) ; }
   return m_match ;
-} ;
+}
 // ============================================================================
 namespace 
 {
@@ -117,8 +117,8 @@ namespace
     const double             weight  )
   {
     table->i_push( track , hypo , (float) weight ) ;  // NB: i_push here
-  } ;
-} ;
+  }
+}
 // ============================================================================
 template <class TYPE, class TABLE> 
 inline StatusCode CaloTrackMatchAlg::doTheJob ( TABLE* table ) const 
@@ -143,11 +143,11 @@ inline StatusCode CaloTrackMatchAlg::doTheJob ( TABLE* table ) const
   for ( Inputs::const_iterator i = m_tracks.begin() ; m_tracks.end() != i ; ++i ){
 
     if( !exist<Tracks>(*i) ){
-      debug() << " Container " << *i << " has not been found " << endmsg;
+      if(msgLevel(MSG::DEBUG)) debug() << " Container " << *i << " has not been found " << endmsg;
       continue;
     }    
     const Tracks* c = get<Tracks> ( *i) ;
-    debug() << " Found " << c->size() << "tracks in " << *i << endmsg;
+    if(msgLevel(MSG::DEBUG)) debug() << " Found " << c->size() << "tracks in " << *i << endmsg;
     if ( 0 == c ) { continue ; }
     // loop over all tracks in container 
     for ( Tracks::const_iterator it = c->begin() ; c->end() != it ; ++it ){
@@ -165,7 +165,7 @@ inline StatusCode CaloTrackMatchAlg::doTheJob ( TABLE* table ) const
   } // end of loop over tarck containers
   
   const size_t nTracks = tracks.size() ;
-  if ( 0 == nTracks ) { debug() << "No good tracks have been selected" << endmsg; }
+  if ( 0 == nTracks ) { if(msgLevel(MSG::DEBUG)) debug() << "No good tracks have been selected" << endmsg; }
   
   // get the matching tool 
   ICaloTrackMatch* matcher = match() ;
@@ -175,7 +175,7 @@ inline StatusCode CaloTrackMatchAlg::doTheJob ( TABLE* table ) const
   // loop over cluster containers 
   for ( Inputs::const_iterator ic = m_calos.begin() ; m_calos.end() != ic ; ++ic){
     if( !exist<Calos>(*ic) ){
-      debug() << " Container " << *ic << " has not been found " << endmsg;
+      if(msgLevel(MSG::DEBUG)) debug() << " Container " << *ic << " has not been found " << endmsg;
       continue;
     }
     const Calos* c = get<Calos> ( *ic ) ;
@@ -194,7 +194,7 @@ inline StatusCode CaloTrackMatchAlg::doTheJob ( TABLE* table ) const
         double chi2 = 0 ;
         StatusCode sc = matcher->match ( position ( calo ) , track , chi2 ) ;
         if ( sc.isFailure() ){ 
-          debug() << "Failure from Tool::match, skip" << endmsg ;
+          if(msgLevel(MSG::DEBUG)) debug() << "Failure from Tool::match, skip" << endmsg ;
           counter("# ailure from Tool::match") += 1;
           continue ;                                            // CONTINUE 
         }
@@ -222,7 +222,7 @@ inline StatusCode CaloTrackMatchAlg::doTheJob ( TABLE* table ) const
   }
   //
   return StatusCode::SUCCESS ;
-} ;
+}
 // ============================================================================
 #define INHERITS(T1,T2) \
      (Relations::IsConvertible<const T1*,const T2*>::value && \

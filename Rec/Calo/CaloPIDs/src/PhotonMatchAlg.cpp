@@ -1,26 +1,3 @@
-// $Id: PhotonMatchAlg.cpp,v 1.7 2010-03-08 01:31:34 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.6  2009/08/21 16:49:45  odescham
-// implement generic context-dependent TES I/O
-//
-// Revision 1.5  2009/08/05 17:35:34  ibelyaev
-//  add CaloPIDs configurables
-//
-// Revision 1.4  2008/06/30 15:37:34  odescham
-// prepare for HLT processing
-//
-// Revision 1.3  2007/08/24 21:25:19  odescham
-// fix uncheck. StatusCodes
-//
-// Revision 1.2  2006/06/20 18:17:49  odescham
-// minor update to please ChargedProtoPAlg
-//
-// Revision 1.1  2006/06/18 18:35:29  ibelyaev
-//  the firstcommmit for DC06 branch
-//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -94,7 +71,7 @@ private:
 // ============================================================================
 /// Declaration of the Algorithm Factory
 // ============================================================================
-DECLARE_ALGORITHM_FACTORY( PhotonMatchAlg );
+DECLARE_ALGORITHM_FACTORY( PhotonMatchAlg )
 // ============================================================================
 // Standard execution of the algorithm
 // ============================================================================

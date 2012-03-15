@@ -1,4 +1,3 @@
-// $Id: InBremAcceptance.cpp,v 1.8 2009-08-05 17:35:33 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -63,7 +62,7 @@ private:
 // ============================================================================
 // Declaration of the Tool Factory
 // ============================================================================
-DECLARE_TOOL_FACTORY( InBremAcceptance ) ;
+DECLARE_TOOL_FACTORY( InBremAcceptance )
 // ============================================================================
 // check the expected bremstrahlung photon is in acceptance of Ecal 
 // ============================================================================
@@ -90,7 +89,7 @@ bool InBremAcceptance::inAcceptance ( const LHCb::Track* track) const
     if ( state->z() > 4.0 * Gaudi::Units::meter ) 
     {
       Error ( "No appropriate states are found, see 'debug'").ignore() ; 
-      print ( debug() , track ) ;
+      if (msgLevel(MSG::DEBUG)) print ( debug() , track ) ;
       return false ; 
     }
   }

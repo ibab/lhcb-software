@@ -1,4 +1,3 @@
-// $Id: CaloChi22ID.h,v 1.5 2009-08-21 16:49:45 odescham Exp $
 // ============================================================================
 #ifndef CALOPIDS_CALOCHI22ID_H 
 #define CALOPIDS_CALOCHI22ID_H 1
@@ -82,6 +81,7 @@ protected:
   // the "large" value 
   float       m_large   ; ///< large value 
 };
+
 // ============================================================================
 /// perfromthe actual job for container of tracks 
 // ============================================================================
@@ -104,7 +104,7 @@ inline StatusCode CaloChi22ID::doTheJob
     output -> i_push ( track , chi2 ) ;                      // NB!: i_push
   }
   return StatusCode::SUCCESS ;
-} ;
+}
 // ============================================================================
 /// perfrom the actual job for all containers 
 // ============================================================================
@@ -127,7 +127,7 @@ inline StatusCode CaloChi22ID::doTheJob
   output->i_sort() ;                                     // NB: i_push 
   //
   return StatusCode::SUCCESS ;
-} ;
+}
 // ============================================================================
 #endif // CALOCHI22ID_H
 // ============================================================================

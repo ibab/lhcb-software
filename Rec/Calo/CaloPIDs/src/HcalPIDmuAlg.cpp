@@ -1,23 +1,3 @@
-// $Id: HcalPIDmuAlg.cpp,v 1.6 2010-03-12 21:51:41 dgolubko Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.5  2009/08/21 16:49:45  odescham
-// implement generic context-dependent TES I/O
-//
-// Revision 1.4  2008/06/30 15:37:34  odescham
-// prepare for HLT processing
-//
-// Revision 1.3  2007/08/24 21:25:18  odescham
-// fix uncheck. StatusCodes
-//
-// Revision 1.2  2006/11/06 11:05:25  vegorych
-//  New PID tuning for DC06
-//
-// Revision 1.1  2006/06/18 18:35:28  ibelyaev
-//  the firstcommmit for DC06 branch
-// 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -79,7 +59,7 @@ private:
 // ============================================================================
 /// Declaration of the Algorithm Factory
 // ============================================================================
-DECLARE_ALGORITHM_FACTORY( HcalPIDmuAlg );
+DECLARE_ALGORITHM_FACTORY( HcalPIDmuAlg )
 // ============================================================================
 
 // ============================================================================

@@ -1,4 +1,3 @@
-// $Id: CaloID2DLL.h,v 1.7 2010-03-12 21:51:40 dgolubko Exp $
 // ============================================================================
 #ifndef CALOPIDS_CALOID2DLL_H 
 #define CALOPIDS_CALOID2DLL_H 1
@@ -179,7 +178,7 @@ inline double CaloID2DLL::dLL
   const int    ii = const_cast<TH2D *>(histo)->FindBin(_x, _y) ;
   return histo->GetBinContent( ii ) ;
 
-} ;
+}
 // ============================================================================
 #endif // CALOID2DLL_H
 // ============================================================================

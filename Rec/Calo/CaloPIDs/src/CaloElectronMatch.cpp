@@ -1,23 +1,3 @@
-// $Id: CaloElectronMatch.cpp,v 1.6 2010-03-08 01:31:33 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.5  2008/05/13 12:25:51  odescham
-// restore _setProperty()
-//
-// Revision 1.4  2008/01/24 10:22:42  vegorych
-// _setProperty was removed, AddNeigbours warning was solved
-//
-// Revision 1.3  2007/08/24 21:25:18  odescham
-// fix uncheck. StatusCodes
-//
-// Revision 1.2  2006/08/03 08:45:59  jonrob
-// Add missing data initialisations
-//
-// Revision 1.1  2006/06/18 18:35:27  ibelyaev
-//  the firstcommmit for DC06 branch
-//  
 // ============================================================================
 // Include files
 // ============================================================================
@@ -132,7 +112,7 @@ private:
   const LHCb::Track*        m_tBad       ;
 } ;
 // ============================================================================
-DECLARE_TOOL_FACTORY(CaloElectronMatch) ;
+DECLARE_TOOL_FACTORY(CaloElectronMatch)
 // ============================================================================
 /// the main matching method
 // ============================================================================
@@ -209,7 +189,7 @@ StatusCode CaloElectronMatch::match
   chi2 = CaloTrackMatch::chi2 ( m_caloMatch , m_trackMatch ) ;
   
   return StatusCode::SUCCESS ;
-} ;
+}
 // ============================================================================
 
 // ============================================================================

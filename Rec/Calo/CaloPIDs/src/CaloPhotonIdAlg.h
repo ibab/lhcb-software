@@ -1,4 +1,3 @@
-// $Id: $
 #ifndef CALOPHOTONIDALG_H 
 #define CALOPHOTONIDALG_H 1
 
@@ -318,6 +317,5 @@ inline double CaloPhotonIdAlg::dLL(const double energy, const double eprs,
   
   return tmp;
 }
-;
 
 #endif // CALOPHOTONIDALG_H

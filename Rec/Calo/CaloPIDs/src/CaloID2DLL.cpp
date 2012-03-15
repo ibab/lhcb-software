@@ -1,44 +1,3 @@
-// $Id: CaloID2DLL.cpp,v 1.13 2010-06-04 00:16:01 rlambert Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , verison $Revision: 1.13 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.12  2010/05/20 09:19:36  odescham
-// reduce verbosity
-//
-// Revision 1.11  2010/03/12 21:51:40  dgolubko
-// CaloID2DLL: enable CondDB by default, add protection against missing Conditions
-//
-// Revision 1.10  2010/03/08 01:31:33  odescham
-// add neutral PID + configurable update
-//
-// Revision 1.9  2010/02/08 17:36:16  dgolubko
-// add reading of the DLLs from CondDB
-//
-// Revision 1.8  2009/09/10 10:47:05  odescham
-// add protection + reduce verbosity
-//
-// Revision 1.7  2008/10/20 09:22:36  odescham
-// fix unitialized member
-//
-// Revision 1.6  2008/06/30 15:37:34  odescham
-// prepare for HLT processing
-//
-// Revision 1.5  2007/08/24 21:25:18  odescham
-// fix uncheck. StatusCodes
-//
-// Revision 1.4  2006/11/27 15:48:09  vegorych
-// warning VERY PRELIMINARY was removed
-//
-// Revision 1.3  2006/11/06 11:05:24  vegorych
-//  New PID tuning for DC06
-//
-// Revision 1.2  2006/06/22 15:40:39  ibelyaev
-//  fix incinsistencied for 'Brem'-algorithms
-//
-// Revision 1.1  2006/06/18 18:35:27  ibelyaev
-//  the firstcommmit for DC06 branch
-// 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -71,7 +30,7 @@
 // ============================================================================
 /// Declaration of the Algorithm Factory
 // ============================================================================
-DECLARE_ALGORITHM_FACTORY( CaloID2DLL );
+DECLARE_ALGORITHM_FACTORY( CaloID2DLL )
 // ============================================================================
 /// standard proected constructor 
 // ============================================================================
@@ -152,7 +111,7 @@ CaloID2DLL::CaloID2DLL
                  ( LHCb::Track::Long       ,
                    LHCb::Track::Ttrack     ,
                    LHCb::Track::Downstream ) ) ;
-} ;
+}
 
 // ============================================================================
 /// Algorithm initialization
@@ -171,7 +130,7 @@ StatusCode CaloID2DLL::initialize()
   sc = m_useCondDB ? initializeWithCondDB() : initializeWithoutCondDB();
 
   return sc;
-} ;
+}
 // ============================================================================
 StatusCode CaloID2DLL::initializeWithCondDB()  
 {
@@ -272,7 +231,7 @@ StatusCode CaloID2DLL::execute()
   counter (m_input + "=>" + m_output ) += table->i_relations().size() ;
 
   return StatusCode::SUCCESS;
-} ;
+}
 // ============================================================================
 StatusCode CaloID2DLL::i_updateDLL()
 {

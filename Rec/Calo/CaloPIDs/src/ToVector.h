@@ -1,14 +1,3 @@
-// $Id: ToVector.h,v 1.3 2008-06-30 15:37:34 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2006/06/19 11:10:19  cattanem
-// Fix typo
-//
-// Revision 1.1  2006/06/18 18:35:30  ibelyaev
-//  the firstcommmit for DC06 branch
-// 
 // ============================================================================
 #ifndef CALOPIDS_TOVECTOR_H 
 #define CALOPIDS_TOVECTOR_H 1
@@ -33,13 +22,13 @@ namespace Gaudi
     inline  std::vector<TYPE> 
     toVector 
     ()
-    { return std::vector<TYPE>() ; } ;
+    { return std::vector<TYPE>() ; }
     // ========================================================================
     template <class TYPE>
     inline  std::vector<TYPE> 
     toVector 
     ( const TYPE& o0 ) 
-    { return std::vector<TYPE>( 1 , o0 ) ; } ;
+    { return std::vector<TYPE>( 1 , o0 ) ; }
     // ========================================================================
     template <class TYPE>
     inline  std::vector<TYPE> 
@@ -51,7 +40,7 @@ namespace Gaudi
       _vct[0] = o0 ;
       _vct[1] = o1 ;
       return _vct ;
-    } ;
+    }
     // ========================================================================
     template <class TYPE>
     inline  std::vector<TYPE> 
@@ -65,7 +54,7 @@ namespace Gaudi
       _vct[1] = o1 ;
       _vct[2] = o2 ;
       return _vct ;
-    } ;
+    }
     // ========================================================================
     template <class TYPE>
     inline  std::vector<TYPE> 
@@ -81,7 +70,7 @@ namespace Gaudi
       _vct[2] = o2 ;
       _vct[3] = o3 ;
       return _vct ;
-    } ;
+    }
     // ========================================================================
     template <class TYPE>
     inline  std::vector<TYPE> 
@@ -99,7 +88,7 @@ namespace Gaudi
       _vct[3] = o3 ;
       _vct[4] = o4 ;
       return _vct ;
-    } ;
+    }
     // ========================================================================
     template <class TYPE>
     inline  std::vector<TYPE> 
@@ -119,7 +108,7 @@ namespace Gaudi
       _vct[4] = o4 ;
       _vct[5] = o5 ;
       return _vct ;
-    } ;
+    }
     // ========================================================================
     template <class TYPE>
     inline  std::vector<TYPE> 
@@ -141,7 +130,7 @@ namespace Gaudi
       _vct[5] = o5 ;
       _vct[6] = o6 ;
       return _vct ;
-    } ;
+    }
     // ========================================================================
     template <class TYPE>
     inline  std::vector<TYPE> 
@@ -165,7 +154,7 @@ namespace Gaudi
       _vct[6] = o6 ;
       _vct[7] = o7 ;
       return _vct ;
-    } ;
+    }
     // ========================================================================
     
     // ========================================================================

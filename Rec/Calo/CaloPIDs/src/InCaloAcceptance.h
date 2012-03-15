@@ -1,4 +1,3 @@
-// $Id: InCaloAcceptance.h,v 1.2 2007-03-02 15:22:08 cattanem Exp $
 // ============================================================================
 #ifndef CALOPIDS_INCALOACCEPTANCE_H 
 #define CALOPIDS_INCALOACCEPTANCE_H 1
@@ -90,7 +89,7 @@ inline bool InCaloAcceptance::ok ( const Gaudi::XYZPoint& point ) const
   { if ( area != inei->area() )      { return true  ; } }  // RETURN 
   // finally 
   return false;
-} ;
+}
 // ===========================================================================
 
 // ============================================================================

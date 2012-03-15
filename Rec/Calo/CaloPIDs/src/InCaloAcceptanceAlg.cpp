@@ -1,4 +1,3 @@
-// $Id: InCaloAcceptanceAlg.cpp,v 1.9 2010-03-08 01:31:34 odescham Exp $
 // ============================================================================
 // Boost 
 // ============================================================================
@@ -20,7 +19,7 @@
 // ============================================================================
 /// Declaration of the Algorithm Factory
 // ============================================================================
-DECLARE_ALGORITHM_FACTORY( InCaloAcceptanceAlg );
+DECLARE_ALGORITHM_FACTORY( InCaloAcceptanceAlg )
 // ============================================================================
 /// Standard protected constructor
 // ============================================================================
@@ -95,7 +94,7 @@ StatusCode InCaloAcceptanceAlg::execute()
     }
   } 
   
-  if ( 0 == nTracks ) { debug() <<  "No good tracks have been selected" << endmsg ; }
+  if ( 0 == nTracks ) { if (msgLevel(MSG::DEBUG)) debug() <<  "No good tracks have been selected" << endmsg ; }
   // MANDATORY: i_sort after i_push
   table -> i_sort () ;
   

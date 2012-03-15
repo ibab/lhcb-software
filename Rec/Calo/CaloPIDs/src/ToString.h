@@ -1,6 +1,3 @@
-// $Id: ToString.h,v 1.3 2008-06-30 15:37:34 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 // ============================================================================
 #ifndef CALOPIDS_TOSTRING_H 
 #define CALOPIDS_TOSTRING_H 1
@@ -18,7 +15,7 @@ namespace Gaudi
   namespace Utils 
   {
     inline std::string toString ( const std::string& o ) 
-    { return "\"" + o + "\"" ; } ;
+    { return "\"" + o + "\"" ; }
   } // end of namespace Utils 
 } // end of namespace Gaudi 
 // ============================================================================

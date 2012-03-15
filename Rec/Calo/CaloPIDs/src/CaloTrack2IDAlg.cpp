@@ -1,4 +1,3 @@
-// $Id: CaloTrack2IDAlg.cpp,v 1.7 2010-03-08 01:31:34 odescham Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -60,7 +59,7 @@ CaloTrack2IDAlg::CaloTrack2IDAlg
    // context-dependent default track container 
   m_inputs.clear();
   m_inputs = LHCb::CaloAlgUtils::TrackLocations( context() ) ;
-} ;
+}
 // ============================================================================
 /// standard algorithm initilization
 // ============================================================================
@@ -76,7 +75,7 @@ StatusCode CaloTrack2IDAlg::initialize ()
   if ( m_filter.empty() ) { Warning ( "empty 'Filter'-value" ).ignore() ; }
   //
   return StatusCode::SUCCESS ;
-} ;
+}
 // ============================================================================
 #define INHERITS(T1,T2) \
      (Relations::IsConvertible<const T1*,const T2*>::value && \
@@ -149,4 +148,4 @@ StatusCode CaloTrack2IDAlg::execute ()
   
   counter (Gaudi::Utils::toString( m_inputs )+" ==> "+ m_output ) += table->i_relations().size();
   return StatusCode::SUCCESS ;
-} ;
+}
