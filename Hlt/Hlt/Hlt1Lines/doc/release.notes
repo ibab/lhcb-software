@@ -4,6 +4,10 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
+
+! 2012-03-15 - Pieter David
+ - Add Hlt1 displaced vertex line configuration
+
 ! 2012-03-14 Sascha Stahl
  - Hlt1MuonLines: Defined variables as float where reasonable, so that configuration
 	 files can set non integer values.
