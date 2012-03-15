@@ -168,8 +168,8 @@ class Physics_draft2012( object ):
         from Hadrons_draft2012 import Hadrons_draft2012
         __update_conf__(thresholds,  Hadrons_draft2012().Thresholds() )
 
-        from DV_draft2011 import DV_draft2011
-        __update_conf__(thresholds,  DV_draft2011().Thresholds() )
+        from DV_draft2012 import DV_draft2012
+        __update_conf__(thresholds,  DV_draft2012().Thresholds() )
 
         from CharmLeptonic_draft2012 import CharmLeptonic_draft2012
         __update_conf__(thresholds, CharmLeptonic_draft2012().Thresholds() )
@@ -202,8 +202,8 @@ class Physics_draft2012( object ):
         from Hadrons_draft2012 import Hadrons_draft2012
         hlt2.extend( Hadrons_draft2012().ActiveHlt2Lines() )
        
-        from DV_draft2011 import DV_draft2011 
-        hlt2.extend( DV_draft2011().ActiveHlt2Lines() )
+        from DV_draft2012 import DV_draft2012 
+        hlt2.extend( DV_draft2012().ActiveHlt2Lines() )
 
         from CharmLeptonic_draft2012 import CharmLeptonic_draft2012
         hlt2.extend( CharmLeptonic_draft2012().ActiveHlt2Lines() )
