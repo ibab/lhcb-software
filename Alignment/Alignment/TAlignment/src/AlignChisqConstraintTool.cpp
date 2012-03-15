@@ -65,7 +65,7 @@ namespace Al
     std::vector< std::string > m_xmlUncertainties ;
     typedef std::map<std::string, XmlSurveyData> XmlData ;
     XmlData m_xmldata ;
-    typedef std::map<std::string, ConfiguredSurveyData> ConstraintData ;
+    typedef std::vector<ConfiguredSurveyData> ConstraintData ;
     ConstraintData m_configuredSurvey ;
     typedef std::pair<std::string, Gaudi::Vector6> NamedXmlUncertainty ;
     std::vector<NamedXmlUncertainty> m_xmlUncertaintyMap ;
@@ -293,7 +293,8 @@ namespace Al
       sc = StatusCode::FAILURE ;
     } else {
       std::string name = removechars(tokens[0]," ") ;
-      ConfiguredSurveyData& entry = m_configuredSurvey[name] ;
+      m_configuredSurvey.push_back( ConfiguredSurveyData() ) ;
+      ConfiguredSurveyData& entry = m_configuredSurvey.back() ;
       entry.name = name ;
 
       // first see if definition is of the old type
@@ -372,14 +373,15 @@ namespace Al
 
       AlParameters newsurvey ;
 
-      // did we add information for this alignable explicitely?
-      bool found=false ;
+      // did we add information for this alignable explicitely? note
+      // that we take the last one that matches.
+      bool found = false ;
       for( ConstraintData::const_iterator it = m_configuredSurvey.begin() ;
-	   it != m_configuredSurvey.end() && !found; ++it ) 
+	   it != m_configuredSurvey.end() ; ++it )
 	// match the name of the alignable, or, if there is only one element, match the name of the condition
-	if( element.name() == it->first || 
-	    match(element.name(),it->first ) ) {
-	  const ConfiguredSurveyData& survey = it->second ;
+	if( element.name() == it->name || 
+	    match(element.name(),it->name ) ) {
+	  const ConfiguredSurveyData& survey = *it ;
 	  AlParameters::TransformParameters parameters = survey.par ;
 	  AlParameters::TransformCovariance covmatrix ;
 	  for(int i=0; i<6; ++i) covmatrix(i,i) = survey.err[i] * survey.err[i] ;
