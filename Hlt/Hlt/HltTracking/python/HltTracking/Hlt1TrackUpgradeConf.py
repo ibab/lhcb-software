@@ -19,6 +19,7 @@ __all__ = ( 'MatchVeloL0Muon',
             'TightForward',
             'LooseForward',
             'FitTrack',
+            'VeloOnlyFitTrack',
             'MatchVeloMuon',
             'VeloCandidates' )
             
@@ -65,6 +66,20 @@ def ConfiguredMatchVeloMuon( parent, name = None, minP = _minP ) :
                      , YWindow = CommonMatchVeloMuonOptions["YWindow"]
                      ## Set this according to PatForward
                      , MinMomentum = minP ).createConfigurable( parent )
+
+def ConfiguredFastVeloOnlyFit( parent = None, name = None ) :
+    if name == None: name = HltTrackFit.__name__ + "VeloOnly"
+    if parent :
+        parent.addTool( HltTrackFit, name )
+        parent = getattr( parent, name )
+    else:
+        parent = HltTrackFit( name )
+    from Configurables import TrackMasterFitter
+    parent.addTool( TrackMasterFitter, name = "VeloOnlyFitter" )
+    from TrackFitter.ConfiguredFitters import ConfiguredForwardStraightLineFitter
+    fitter = ConfiguredForwardStraightLineFitter( getattr(parent, "VeloOnlyFitter") )
+    parent.FitterName = fitter.getFullName()
+    fitter.AddDefaultReferenceNodes = True
 
 # =============================================================================
 ## Symbols for streamer users
@@ -113,6 +128,13 @@ LooseForward  = "LooseForward  = ( execute(decodeIT) * TC_UPGRADE_TR ( '', HltTr
 ConfiguredFastKalman( parent = None, name = to_name( Conf.FitTrack ) )
 ## String for users
 FitTrack      = "FitTrack      = TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.FitTrack )"
+
+# =============================================================================
+## Hlt Velo-only trackfit upgrade configuration
+# =============================================================================
+ConfiguredFastVeloOnlyFit( parent = None, name = to_name( Conf.VeloOnlyFitTrack) )
+## String for users
+VeloOnlyFitTrack = "VeloOnlyFitTrack = TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.VeloOnlyFitTrack )"
 
 # =============================================================================
 ## Match Velo to Muon hits

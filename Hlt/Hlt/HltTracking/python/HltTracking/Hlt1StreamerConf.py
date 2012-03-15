@@ -45,6 +45,7 @@ __all__ = (
     'TightForward'        , ## the 'track-upgrade'-configuration for Forward
     'LooseForward'        , ## the 'track-upgrade'-configuration for Forward
     'FitTrack'       , ## the 'track-upgrade'-configuration for FitTrack
+    'VeloOnlyFitTrack',## the 'track-upgrade'-configuration for a Velo-only (straight line) track fit
     'MatchVeloMuon'  , ## the 'track-upgrade'-configuration for MatchVeloMuon
     'IsMuon'  , ## the 'track-upgrade'-configuration for IsMuon
     ## match 
@@ -103,6 +104,16 @@ FitTrack = LoKi.Hlt1.UpgradeConf (
     True                         ,                     ##  "TransferExtraInfo"
     True                         )                     ##          "OrderByPt"
 # =============================================================================
+VeloOnlyFitTrack = LoKi.Hlt1.UpgradeConf (
+    "HltTrackFit/VeloOnlyFit"    ,                     ##               "Tool"
+    "Hlt1/Track/VeloOnlyFitTrack",                     ##          "TESOutput"
+    LHCb.Track.Velo              ,                     ##          "TrackType"
+    True                         ,                     ##              "Owner"
+    True                         ,                     ##        "TransferIDs"
+    True                         ,                     ##   "TransferAncestor"
+    True                         ,                     ##  "TransferExtraInfo"
+    True                         )                     ##          "OrderByPt"
+# =============================================================================
 MatchVeloMuon=LoKi.Hlt1.UpgradeConf(
     "MatchVeloMuon"              ,                     ##               "Tool" 
     "Hlt1/Track/VeloMuon"        ,                     ##          "TESOutput"
@@ -127,6 +138,7 @@ _trUpgrader = {}
 _trUpgrader[ 'TightForward' ] = TightForward
 _trUpgrader[ 'LooseForward' ] = LooseForward
 _trUpgrader[ 'FitTrack'     ] = FitTrack
+_trUpgrader[ 'VeloOnlyFitTrack'] = VeloOnlyFitTrack
 _trUpgrader[ 'MatchVeloMuon' ] = MatchVeloMuon
 _trUpgrader[ 'IsMuon' ] = IsMuon
 

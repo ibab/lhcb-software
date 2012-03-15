@@ -5,6 +5,11 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2012-03-15 - Pieter David
+ - Add vertex upgrade version of the track upgrade strings (used as streamer 
+   preambulo) for displaced vertex line
+ - add configuration for a forward straight-line velo-only track fit
+
 ! 2012-03-09 - V. Gligorov
  - Add Lc->LambdaH lines.
 
