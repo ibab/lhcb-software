@@ -8,6 +8,7 @@
 #include "Checkpointing/ThreadsLock.h"
 #include "Checkpointing/FileMap.h"
 #include "Checkpointing/Process.h"
+#include "Checkpointing/Chkpt.h"
 #include "Checkpointing.h"
 
 #include <cstdio>
@@ -17,19 +18,34 @@
 #include <ucontext.h>
 #include <sys/types.h>
 #include <linux/futex.h>
+#include <linux/personality.h>
 #include <unistd.h>
 
 using namespace Checkpointing;
 
-extern "C" CheckpointRestoreWrapper* libProcessRestore_main_instance() {
-  static CheckpointRestoreWrapper* p = 0;
+extern "C" MainThread* libProcessRestore_main_instance() {
+  static MainThread* p = 0;
   if ( !p ) {
+    mtcp_sys_personality(ADDR_NO_RANDOMIZE|mtcp_sys_personality(0xFFFFFFFFUL));
     MainThread& m = MainThread::accessInstance();
     m.initialize();
     p = &m;
   }
   return p;
 }
+
+extern "C" MainThread* libProcessRestore_main_instance_init(int argc, char** argv, char** environment) {
+  static MainThread* p = 0;
+  if ( !p ) {
+    mtcp_sys_personality(ADDR_NO_RANDOMIZE|mtcp_sys_personality(0xFFFFFFFFUL));
+    MainThread& m = MainThread::accessInstance();
+    m.initialize();
+    m.init_instance(argc,argv,environment);
+    p = &m;
+  }
+  return p;
+}
+
 
 /// The function pointer of libC's original clone call
 static MainThread::clone_t s_cloneFunc;
@@ -41,14 +57,6 @@ void MainThread::init_instance(int argc, char** argv, char** environment) {
   stack.argv = argv;
   stack.environment = environment;
   chkpt_sys.init_stack(&stack);
-}
-
-int MainThread::setUTGID(const char* new_utgid) {
-  return chkpt_sys.setUTGID(new_utgid);
-}
-
-int MainThread::forceUTGID(const char* new_utgid) {
-  return chkpt_sys.forceUTGID(new_utgid);
 }
 
 MainThread::MainThread()  {
@@ -65,16 +73,13 @@ WEAK(MainThread&) MainThread::accessInstance() {
   return s_main;
 }
 
-WEAK(int) MainThread::currentThreadID() {
-  return Thread::current()->tid();
-}
-
 WEAK(MainThread::clone_t) MainThread::cloneFunction() {
   return s_cloneFunc;
 }
 
 WEAK(void) MainThread::initialize() {
   static bool inited = false;
+  chkpt_sys.savedSP = 0;
   if ( !inited ) {
     chkpt_sys.motherofall->initialize(inited=true);
   }
@@ -90,13 +95,35 @@ WEAK(void) MainThread::initialize() {
   chkpt_sys.motherofall->state().init(ST_CKPNTHREAD);
 }
 
-WEAK(int) MainThread::startChild() {
+
+WEAK(void) MainThread::finishRestore() {
+  // Fill in the new mother process id
+  chkpt_sys.motherPID    = mtcp_sys_getpid();
+  chkpt_sys.restart_type = SysInfo::RESTART_CHECKPOINT;
+  mtcp_output(MTCP_INFO,"sys_restore_finish: motherPID:%d motherofall:%p; mtcp works; libc should work as well.\n",
+	      chkpt_sys.motherPID,chkpt_sys.motherofall);
+
+  // Now move to the temporary stack for restoring all process properties at the time of the checkpoint.
+  // Call another routine because our internal stack is whacked and we can't have local vars
+  // Thread::restart() will have a big stack
+  __asm__ volatile (CLEAN_FOR_64_BIT(mov %0,%%esp)
+		: : "g" (chkpt_sys.motherofall->m_savctx.SAVEDSP - 128 ) : "memory");  // -128 for red zone
+
+  chkpt_sys.motherofall->restart(1);
+  mtcp_output(MTCP_INFO,"finishRestore: ALL Child threads are now started:%d\n",chkpt_sys.motherPID);
+}
+
+int Checkpointing::current_thread_id() {
+  return Thread::current()->tid();
+}
+
+int Checkpointing::start_child() {
   chkpt_sys.motherofall->restart(0);
   mtcp_output(MTCP_INFO,"startChild: ALL Child threads are now started:%d\n",chkpt_sys.motherPID);
   return 1;
 }
 
-WEAK(int) MainThread::forkInstance() {
+int Checkpointing::fork_process() {
   pid_t pID = mtcp_sys_fork();
   if (pID == 0)     {           // child
     chkpt_sys.motherPID    = mtcp_sys_getpid();
@@ -113,18 +140,31 @@ WEAK(int) MainThread::forkInstance() {
   return pID;
 }
 
-int MainThread::stop()   {
+int Checkpointing::stop_process()   {
   int needrescan;
-  Thread* thread;
+  //int* ptr;
+  Thread* thread, *thread_que;
   static struct timespec const enabletimeout = { 10, 0 };
 
   chkpt_sys.motherofall->saveSignals();
   chkpt_sys.motherofall->saveTLS();
 
-  if (getcontext (&chkpt_sys.motherofall->m_savctx) < 0)   {
+  if ( ::getcontext (&chkpt_sys.motherofall->m_savctx) < 0 )   {
     mtcp_output(MTCP_FATAL,"stopThreads: failed to retrieve context of motherofall.\n");
     mtcp_abort();
   }
+  chkpt_sys.savedSP = chkpt_sys.motherofall->m_savctx.SAVEDSP;
+#if 0
+  mtcp_output(MTCP_WARNING,"stopThreads: return address[start] %p\n",__builtin_return_address (0));
+  mtcp_output(MTCP_WARNING,"stopThreads: Saved stack pointer   %p\n",(void*)chkpt_sys.motherofall->m_savctx.SAVEDSP);
+  mtcp_output(MTCP_WARNING,"stopThreads: Saved base  pointer   %p\n",(void*)chkpt_sys.motherofall->m_savctx.SAVEDBP);
+  ptr = (int*)chkpt_sys.savedSP;
+  for(size_t i=0; i<32; ++i)   {
+    mtcp_output(MTCP_WARNING,"Stack: %p -> %X  %X %X %X\n",ptr,ptr[0],ptr[1],ptr[2],ptr[3]);
+    ptr += 4;
+  }
+  ::fflush(stdout);
+#endif
   while (1) {
     sigpending (&chkpt_sys.motherofall->m_sigpending);
     Thread::setupSignals();
@@ -228,25 +268,32 @@ again:
         }
       }
     }
+    mtcp_output(MTCP_INFO,"stopThreads: return address[1] %p\n",__builtin_return_address (0));
     ThreadsLock::release();
 
     // If need to rescan (ie, some thread possibly not in ST_SUSPENDED STATE), check them all again
     if (needrescan) goto rescan;
     RMB; // matched by WMB in stopthisthread
+    mtcp_output(MTCP_INFO,"stopThreads: return address[2] %p\n",__builtin_return_address (0));
     mtcp_output(MTCP_INFO,"stopThreads: everything suspended\n");
 
     // If no threads, we're all done
-    if ( 0 == Thread::threads() ) {
+    thread_que = Thread::threads();
+    mtcp_output(MTCP_INFO,"stopThreads: thread que OK\n");
+    if ( 0 == thread_que ) {
       mtcp_output(MTCP_WARNING,"stopThreads: exiting (no threads)\n");
       return 0;
     }
+    
     Thread::saveSysInfo();
     mtcp_output(MTCP_INFO,"stopThreads: finished --pid %d\n",mtcp_sys_getpid());
-    return 1;
+    ::sleep(20);
+    mtcp_output(MTCP_INFO,"stopThreads: return address[0] after sleep %p\n",__builtin_return_address (0));
+    return 0xBABE;
   }
 }
 
-WEAK(int) MainThread::resume()   {
+int Checkpointing::resume_process()   {
   // Resume all threads. We do not want to execute this on a restore from file,
   // Since the threads were already started!
   mtcp_output(MTCP_INFO,"resume: resuming main thread\n");
@@ -271,24 +318,20 @@ WEAK(int) MainThread::resume()   {
   return 1;
 }
 
-WEAK(void) MainThread::finishRestore() {
-  // Fill in the new mother process id
-  chkpt_sys.motherPID    = mtcp_sys_getpid();
-  chkpt_sys.restart_type = SysInfo::RESTART_CHECKPOINT;
-  mtcp_output(MTCP_INFO,"sys_restore_finish: motherPID:%d motherofall:%p; mtcp works; libc should work as well.\n",
-	      chkpt_sys.motherPID,chkpt_sys.motherofall);
-
-  // Now move to the temporary stack for restoring all process properties at the time of the checkpoint.
-  // Call another routine because our internal stack is whacked and we can't have local vars
-  // Thread::restart() will have a big stack
-  __asm__ volatile (CLEAN_FOR_64_BIT(mov %0,%%esp)
-		: : "g" (chkpt_sys.motherofall->m_savctx.SAVEDSP - 128 ) : "memory");  // -128 for red zone
-
-  chkpt_sys.motherofall->restart(1);
-  mtcp_output(MTCP_INFO,"finishRestore: ALL Child threads are now started:%d\n",chkpt_sys.motherPID);
+int Checkpointing::init_checkpoints() {
+  MainThread* p = libProcessRestore_main_instance();
+  return p ? 1 : 0;
 }
 
-WEAK(void) MainThread::showSigActions() {
+int Checkpointing::set_utgid(const char* new_utgid) {
+  return chkpt_sys.setUTGID(new_utgid);
+}
+
+int Checkpointing::force_utgid(const char* new_utgid) {
+  return chkpt_sys.forceUTGID(new_utgid);
+}
+
+void Checkpointing::show_sig_actions() {
   struct sigaction a;
   for (int i=1; i<NSIG; ++i ) {
     void** mask = (void**)&a.sa_mask;
@@ -302,7 +345,7 @@ WEAK(void) MainThread::showSigActions() {
   }
 }
 
-WEAK(int) MainThread::checkpoint(int fd) {
+int Checkpointing::write_checkpoint(int fd) {
   if ( fd > 0 ) {
     Process p(Process::PROCESS_WRITE);
     chkpt_sys.setCheckpointFile(fd);
@@ -316,11 +359,11 @@ WEAK(int) MainThread::checkpoint(int fd) {
 }
 
 /// Give access to the restart type after a call to "checkpoint". 0==checkpointing, 1=restart from checkpoint
-WEAK(int) MainThread::restartType() const {
+int Checkpointing::restart_type()  {
   return chkpt_sys.restart_type;
 }
 
-WEAK(int) MainThread::getFileDescriptors(void** ptr) {
+int Checkpointing::get_file_descriptors(void** ptr) {
   FileMap m;
   long bytes = m.memoryCount();
   void* mem = ::malloc(bytes);
@@ -335,7 +378,7 @@ WEAK(int) MainThread::getFileDescriptors(void** ptr) {
   return 0;
 }
 
-WEAK(int) MainThread::dumpFileDescriptors(void* ptr) {
+int Checkpointing::dump_file_descriptors(void* ptr) {
   if ( ptr ) {
     FileMap m;
     int lvl = mtcp_get_debug_level();
@@ -349,7 +392,7 @@ WEAK(int) MainThread::dumpFileDescriptors(void* ptr) {
   return 0;
 }
 
-WEAK(int) MainThread::setFileDescriptors(void* ptr) {
+int Checkpointing::set_file_descriptors(void* ptr) {
   if ( ptr ) {
     FileMap m;
     FileReadHandler rd(ptr, true);
@@ -362,12 +405,12 @@ WEAK(int) MainThread::setFileDescriptors(void* ptr) {
 }
 
 /// After a restart allow to set environment etc. from stdin.
-int MainThread::updateEnv() {
+int Checkpointing::update_environment() {
   return chkpt_sys.setEnvironment();
 }
 
 /// Set the printout level for the checkpoint/restore mechanism
-WEAK(int) MainThread::setPrint(int new_level) {
+int Checkpointing::set_print_level(int new_level) {
   int lvl = mtcp_get_debug_level();
   mtcp_set_debug_level(new_level);
   return lvl;

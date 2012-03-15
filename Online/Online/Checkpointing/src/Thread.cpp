@@ -339,7 +339,7 @@ WEAK(void) Thread::saveSysInfo() {
   saved_termios_exists = (isatty(STDIN_FILENO)
 			  && tcgetattr(STDIN_FILENO,&saved_termios) >= 0);
 #endif
-  mtcp_output(MTCP_DEBUG,"saveSysInfo: saved_break=%p\n",chkpt_sys.saved_break);
+  mtcp_output(MTCP_INFO,"saveSysInfo: saved_break=%p\n",chkpt_sys.saved_break);
 }
 
 /// Thread has exited - unlink it from lists and free struct
@@ -522,7 +522,7 @@ WEAK(int) Thread::stop()  {
     }
 
     ///JA: new code ported from v54b
-    rc = getcontext (&m_savctx);
+    rc = ::getcontext (&m_savctx);
     if (rc < 0) {
       mtcp_output(MTCP_FATAL,"stop: getcontext rc %d errno %d\n", rc, errno);
     }
@@ -590,6 +590,8 @@ WEAK(void) Thread::waitForRestore()    {
       restoreinprog.wait(rip);
     }
   }
+  mtcp_output(MTCP_INFO,"waitForRestore[%s] thread restore finished.\n",
+	      this==chkpt_sys.motherofall ? "MOTHER" : "CHILD");
 }
 
 ///  Save state necessary for TLS restore
@@ -803,7 +805,9 @@ WEAK(int) Thread::restart(int force_context)     {
   mtcp_output(MTCP_INFO,"restart[%s]: setcontext: pid:%d tid: %d, orgTID:%d Restore:%d\n",
 	      thr_typ, chkpt_sys.motherPID, m_tid, m_originalTID, restoreinprog.value());
   if ( this != chkpt_sys.motherofall || force_context != 0 )  {
-    setcontext(&m_savctx); // Shouldn't return if everything works fine.
+    mtcp_output(MTCP_INFO,"restart[%s]: setting context. Should not return.\n",thr_typ);
+    ::setcontext(&m_savctx); // Shouldn't return if everything works fine.
+    mtcp_output(MTCP_ERROR,"restart[%s]: FATAL: returned from setcontext.\n",thr_typ);
   }
   mtcp_output(MTCP_INFO,"restart: All done: this:%p tid: %d, orgTID:%d\n",
 	      this,m_tid,m_originalTID);

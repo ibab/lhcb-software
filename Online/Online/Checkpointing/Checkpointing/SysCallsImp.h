@@ -114,20 +114,17 @@ STATIC(void) mtcp_output(int lvl,char const *format, ...)  {
       rwrite ("] ",2);
     }
     switch(lvl) {
-    case MTCP_DEBUG:   rwrite(" DEBUG   ",10); break;
+    case MTCP_DEBUG:   rwrite(" DEBUG   ",9); break;
     case MTCP_INFO:    rwrite(" INFO    ",9); break;
-    case MTCP_WARNING: rwrite(" WARNING ",10); break;
-    case MTCP_ERROR:   rwrite(" ERROR   ",10); break;
-    case MTCP_FATAL:   rwrite(" FATAL   ",10); break;
-    default:           rwrite(" ALWAYS  ",10); break;
+    case MTCP_WARNING: rwrite(" WARNING ",9); break;
+    case MTCP_ERROR:   rwrite(" ERROR   ",9); break;
+    case MTCP_FATAL:   rwrite(" FATAL   ",9); break;
+    default:           rwrite(" ALWAYS  ",9); break;
     }
-    //rwrite (",",1);
-    //mtcp_print_int_dec(lvl);
-    //rwrite ("]> ",3);
   }
 
   // Scan along until we find a % 
-  for(p = format; (q = helper::chrfind(p, '%')) != 0; p = ++ q) {
+  for(p = format; (q = helper::chrfind(p,'%')) != 0; p = ++ q) {
     /* Print all before the % as is */
     if (q > p) rwrite (p, q - p);
     /* Process based on character following the % */

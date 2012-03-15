@@ -2,65 +2,9 @@
 #define MAINTHREAD_H
 
 #include "Checkpointing/Namespace.h"
-//#include "OnlineBase/CPP/CheckpointRestoreWrapper.h"
-
-/* @class CheckpointRestoreWrapper CheckpointRestoreWrapper.h CPP/CheckpointRestoreWrapper.h
- *
- * Basic interface to interface to checkpoint / restore mechanisms for fast program startup.
- *
- * NOTE:
- * This header structure is explicitly copied to the checkpoint/restart package(s)
- * To decouple them entirely from the application
- *
- * !!!! DO NOT EVEN THINK ABOUT CHANGING IT WITHOUT KNOWNING WHAT YOU DO !!!!
- *
- * @author  M.Frank
- * @version 1.0
- */
-class CheckpointRestoreWrapper  {
- protected:
-  /// Standard constructor
-  CheckpointRestoreWrapper() {}
-  /// Standard destructor
-  virtual ~CheckpointRestoreWrapper() {}
- public:
-  /// Initialization callback with startup arguments
-  virtual void init_instance(int argc, char** argv, char** environ) = 0;
-  /// Setup process UTGID if availible
-  virtual int setUTGID(const char* new_utgid)  = 0;
-  /// Force process UTGID/argv[0] if availible
-  virtual int forceUTGID(const char* new_utgid)  = 0;
-  /// Set the printout level for the checkpoint/restore mechanism
-  virtual int setPrint(int new_level) = 0;
-  /// Give access to the restart type after a call to "checkpoint". 0==checkpointing, 1=restart from checkpoint
-  virtual int restartType() const = 0;
-  /// Stop all threads to allow producing a consistent checkpoint
-  virtual int stop()            = 0;
-  //virtual void     stop() = 0;
-  /// Resume all threads after the checkpoint was produced
-  virtual int resume()          = 0;
-  /// Fork child instance
-  virtual int forkInstance()    = 0;
-  /// Child fork: Re-establish child to running state
-  virtual int startChild()      = 0;
-  /// After a restart allow to set environment etc. from stdin.
-  virtual int updateEnv() = 0;
-  
-  /// Create a checkpoint file by writing to file descriptor fd
-  virtual int checkpoint(int fd)= 0;
-
-  /// Save file descriptor information to opaque memory block (allocated inside!)
-  virtual int getFileDescriptors(void** ptr) = 0;
-  /// Restore file descriptors from opaque memory block
-  virtual int setFileDescriptors(void* ptr) = 0;
-  /// For debugging: Dump file descriptors to stdout
-  virtual int dumpFileDescriptors(void* ptr) = 0;
-};
-
 
 // Forward declarations
 struct user_desc;
-
 
 /*
  * Checkpointing namespace declaration
@@ -75,7 +19,7 @@ namespace CHECKPOINTING_NAMESPACE {
    * @author  M.Frank
    * @version 1.0
    */
-  class MainThread : public CheckpointRestoreWrapper {
+  class MainThread  {
     /// Standard constructor
     MainThread();
   public:
@@ -91,44 +35,8 @@ namespace CHECKPOINTING_NAMESPACE {
     static MainThread& accessInstance();
 
     /// Initialization callback with startup arguments
-    virtual void init_instance(int argc, char** argv, char** environ);
-    /// Setup process UTGID if availible
-    virtual int setUTGID(const char* new_utgid);
-    /// Force process UTGID/argv[0] if availible
-    virtual int forceUTGID(const char* new_utgid);
-    /// Set the printout level for the checkpoint/restore mechanism
-    virtual int     setPrint(int new_level);
-    /// Give access to the restart type after a call to "checkpoint". 0==checkpointing, 1=restart from checkpoint
-    virtual int restartType() const;
-
-    /// Stop all threads to allow producing a consistent checkpoint
-    virtual int     stop();
-    //virtual void     stop();
-    /// Resume all threads after the checkpoint was produced
-    virtual int     resume();
-    /// After a restart allow to set environment etc. from stdin.
-    virtual int updateEnv();
-
-    virtual void    initialize();
-
-    /// Fork child instance
-    virtual int     forkInstance();
-    /// Child fork: Re-establish child to running state
-    virtual int     startChild();
-
-    /// Create a checkpoint file by writing to file descriptor fd
-    virtual int     checkpoint(int fd);
-
-    /// Save file descriptor information to opaque memory block (allocated inside!)
-    virtual int     getFileDescriptors(void** ptr);
-    /// Restore file descriptors from opaque memory block
-    virtual int     setFileDescriptors(void* ptr);
-    /// For debugging: Dump file descriptors to stdout
-    virtual int     dumpFileDescriptors(void* ptr);
-
-    virtual void    showSigActions();
-
-    static int      currentThreadID();
+    void init_instance(int argc, char** argv, char** environ);
+    void    initialize();
     static void     finishRestore();
     static clone_t  cloneFunction();
   };

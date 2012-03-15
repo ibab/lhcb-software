@@ -31,6 +31,7 @@ DefineMarker(SYS_END_MARKER,      "psys");
 
 
 #define STACKSIZE 4096      // size of temporary stack (in quadwords)
+//#define STACKSIZE 1024      // size of temporary stack (in quadwords)
 /* temp stack used internally by restore so we don't go outside the
  *   libmtcp.so address range for anything;
  * including "+ 1" since will set %esp/%rsp to tempstack+STACKSIZE
@@ -370,7 +371,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_fread(Process* p, int
 	    mtcp_output(MTCP_INFO,"fd:%d, Read %ld bytes of process memory.\n",fd,rc);
 	    if ( (rc=checkpointing_process_fread_trailer(p,fd)) ) {
 	      mtcp_output(MTCP_INFO,"fd:%d, Read %ld bytes of process trailer.\n",fd,rc);
-	      checkpointing_sys_restore_finish();
+	      //checkpointing_sys_restore_finish();
 	      return 1;
 	    }
 	  }
@@ -544,6 +545,13 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_area_map(const Area& a,int fd
   if ( data_len > 0 )   {
     if ( copy_data ) {
       (fd_in > 0) ? m_fread(fd_in,addr,size) : m_memcpy(addr,in,size),in+=size;
+      if ( *(int*)a.name == *(int*)"[stack]" ) {
+	int * ptr = (int*)chkpt_sys.savedSP;
+	for(size_t i=0; i<32; ++i)   {
+	  mtcp_output(MTCP_INFO,"Stack: %p -> %X  %X %X %X\n",ptr,ptr[0],ptr[1],ptr[2],ptr[3]);
+	  ptr += 4;
+	}
+      }
     }
     else if ( fd_in > 0 ) {
       m_fskip(fd_in,size);
@@ -587,6 +595,8 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_print(const SysInfo& s) 
   mtcp_output(MTCP_INFO,"checkpoint: Stack lim soft:%p hard:  %p\n",s.stackLimitCurr,s.stackLimitHard);
 
   // The finishRestore function pointer:
+  mtcp_output(MTCP_INFO,"checkpoint: Stack   start: %p finish:%p\n",
+	      mtcp_internal_tempstack,mtcp_internal_tempstack+STACKSIZE+1);
   mtcp_output(MTCP_INFO,"checkpoint: Restore start: %p finish:%p\n",s.startRestore,s.finishRestore);
   mtcp_output(MTCP_INFO,"checkpoint: Mother of all: %p \n",s.motherofall);
   mtcp_output(MTCP_INFO,"checkpoint: Restore flags: %X \n",s.restart_flags);
@@ -631,8 +641,10 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_restore_start(Stack* sta
 STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_restore_process() {
   const char* nam = chkpt_sys.checkpointFile;
   Process p(Process::PROCESS_RESTORE);
+  mtcp_output(MTCP_INFO,"Start to restore files and memory areas from %s.\n",nam);
   if ( checkpointing_process_fread(&p,chkpt_sys.checkpointFD) ) {
     mtcp_output(MTCP_INFO,"Finished to restore files and memory areas from %s.\n",nam);
+    checkpointing_sys_restore_finish();
   }
   mtcp_output(MTCP_FATAL,"Failed to read process information from file %s.\n",nam);
 }
@@ -640,7 +652,6 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_restore_process() {
 /// Final restart routine. Execution starts once we are back on the stack of the restored process.
 STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_restore_finish() {
   mtcp_output(MTCP_INFO,"sys_restore_finish: restore complete, resuming. Jump to:%p\n",chkpt_sys.finishRestore);
-
   // Jump to finishrestore in original program's libmtcp.so image
   (*(chkpt_sys.finishRestore))();
 }

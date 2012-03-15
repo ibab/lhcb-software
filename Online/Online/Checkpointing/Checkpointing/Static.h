@@ -88,6 +88,8 @@ namespace CHECKPOINTING_NAMESPACE    {
     /// Length of argv[0] string
     int             utgidLen;
 
+    long            savedSP;
+
     /// The name/path of the checkpointing code image
     char            checkpointImage[1024];
     /// The name/path of the checkpoint file

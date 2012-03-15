@@ -13,6 +13,7 @@
 #include <cstdio>
 #include <fcntl.h>
 #include <sys/mman.h>
+#include <linux/personality.h>
 
 using namespace Checkpointing;
 
@@ -121,6 +122,7 @@ static int usage() {
 
 /// Print data content
 int main(int argc, char** argv) {
+  mtcp_sys_personality(ADDR_NO_RANDOMIZE|mtcp_sys_personality(0xFFFFFFFFUL));
   SysInfo::start_restore_t func = 0;
   if ( argc > 1 ) {
     int prt = MTCP_WARNING, opts=0;

@@ -13,6 +13,7 @@
   #define TLSSEGREG fs
   // Retrieve saved stack pointer saved by getcontext ()
   #define SAVEDSP uc_mcontext.gregs[REG_RSP]
+  #define SAVEDBP uc_mcontext.gregs[REG_RBP]
 #endif
 
 #define ST_RUNDISABLED 0     // thread is running normally but with checkpointing disabled

@@ -16,6 +16,10 @@ macro Checkpointing_package_cpp_build_flags ' -Wextra ' WIN32 '' \
 macro_append Checkpointing_package_cpp_build_flags ' -ansi -Wreturn-type -Wunused ' WIN32 ''
 
 # ==================== component libraries ==================================
+public
+library Checkpointing 	../aux/Image.cpp
+apply_pattern linker_library library=Checkpointing
+
 application  restore           ../aux/main.cpp
 macro_append restore_cppflags  ' $(Checkpointing_package_cpp_build_flags) '
 
@@ -23,9 +27,6 @@ private
 macro cmt_installarea_linkopts ''
 macro cppdebugflags            ' -g -O0 ' WIN32 ''
 macro cpplinkflags             ' -static ' WIN32 ''
-
-public
-library Checkpointing 	../aux/Image.cpp
 
 macro_append lib_Checkpointing_cppflags ' -fPIC $(Checkpointing_package_cpp_build_flags) '
 macro_append Checkpointing_shlibflags   ' -Wl,--no-undefined -pthread -ldl '

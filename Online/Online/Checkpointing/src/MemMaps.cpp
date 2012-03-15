@@ -77,6 +77,7 @@ AreaInfoHandler::AreaInfoHandler() {
 }
 
 int AreaInfoHandler::handle(int, const Area& a)  {
+  //if ( m_prev && a.name[0] != 0 ) m_prev = false;
   if ( a.name[0]=='[' ) {
     if ( *(int*)a.name == *(int*)"[stack]" ) {
       stack[0] = a.low;
@@ -90,11 +91,6 @@ int AreaInfoHandler::handle(int, const Area& a)  {
       vsyscall[0] = a.low;
       vsyscall[1] = a.high;
     }
-  }
-  else if ( m_prev ) {
-    m_prev = false;
-    if ( imageAddr[0] > a.low )  imageAddr[0] = a.low;
-    if ( imageAddr[1] < a.high ) imageAddr[1] = a.high;
   }
   else if ( a.name[0] == '/' ) {
     if ( strstr(a.name,chkpt_sys.checkpointFile) ) {
@@ -114,6 +110,11 @@ int AreaInfoHandler::handle(int, const Area& a)  {
       if ( imageAddr[1] < a.high ) imageAddr[1] = a.high;
     }
   }
+  else if ( m_prev ) {
+    m_prev = false;
+    if ( imageAddr[0] > a.low )  imageAddr[0] = a.low;
+    if ( imageAddr[1] < a.high ) imageAddr[1] = a.high;
+  }
   if ( a.high > highAddr ) highAddr = a.high;
   return updateCounts(a);
 }
@@ -130,6 +131,10 @@ int AreaWriteHandler::handle(int, const Area& a)    {
     checkpointing_area_print(&a,MTCP_INFO,"*** WARNING: SKIP IMAGE area:");
     return 0;
   }  
+  else if ( a.low >= chkpt_sys.addrStart && a.high <= chkpt_sys.addrEnd ) {
+    checkpointing_area_print(&a,MTCP_INFO,"*** WARNING: SKIP IMAGE area:");
+    return 0;
+  }  
   else if( *(int*)a.name == *(int*)"[vdso]" && chkpt_sys.vsyscallStart == 0 ) {
     checkpointing_area_print(&a,MTCP_INFO,"*** WARNING: SKIP [vdso] area:");
     return 0;
@@ -139,6 +144,10 @@ int AreaWriteHandler::handle(int, const Area& a)    {
     return 0;
   }
   else if ( m_strcmp(a.name,"/usr/lib/locale/locale-archive") == 0 ) {
+    checkpointing_area_print(&a,MTCP_INFO,"*** WARNING: LOCALE ARCHIVE:");
+    return 0;
+  }
+  else if ( m_strcmp(a.name,"/usr/lib64/gconv/gconv-modules.cache") == 0 ) {
     checkpointing_area_print(&a,MTCP_INFO,"*** WARNING: LOCALE ARCHIVE:");
     return 0;
   }

@@ -1,7 +1,7 @@
 #include "Checkpointing/MMap.h"
 #include "Checkpointing/Static.h"
 #include "Checkpointing/Process.h"
-#include "Checkpointing/MainThread.h"
+#include "Checkpointing/Chkpt.h"
 #include "Checkpointing.h"
 
 #include <cerrno>
@@ -36,16 +36,16 @@ static void* main_thread(void * /* arg */)  {
 static long make_checkPoint() {
   // We assume, that at this stage
   const char* file_name = "proc.dat";
-  MainThread& m=MainThread::accessInstance();
+  init_checkpoints();
   MMap f;
   if ( f.create(file_name) ) {
-    m.stop();
-    int ret = m.checkpoint(f.fd());
-    int typ =  m.restartType();
+    stop_process();
+    int ret = write_checkpoint(f.fd());
+    int typ = restart_type();
     if ( typ == 1 )   {
       ::fprintf(stdout,"\n...stop threads after restore from file:%s\n",file_name);
       ::sleep(3);
-      m.stop();
+      stop_process();
       ::fprintf(stdout,"... checkpoint successfully restored ...\n");
       return 1;
     }
@@ -57,11 +57,11 @@ static long make_checkPoint() {
 }
 
 int test_thread_checkpoint() {
-  MainThread& m=MainThread::accessInstance();
   static pthread_t main_pid;
   int rc;
 
-  m.initialize();
+  init_checkpoints();
+
   if ((rc=::pthread_create (&main_pid, NULL, main_thread, (void*)5)) < 0) {
     mtcp_output(MTCP_FATAL,"Error CREATE main thread: %s rc=%d\n",::strerror(errno),rc);
   }
@@ -73,7 +73,7 @@ int test_thread_checkpoint() {
     if ( count == 2 ) {
       rc = make_checkPoint();
       ::fprintf(stdout,"...restoring main thread. rc=%d...\n",rc);
-      m.resume();
+      resume_process();
     }
     if ( count == 4 ) {
       if ( (rc=::pthread_cancel(main_pid)) < 0 ) {     
