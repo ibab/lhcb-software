@@ -18,9 +18,11 @@ library  GaudiCheckpointing  *.cpp
 apply_pattern linker_library         library=GaudiCheckpointing
 apply_pattern generate_rootmap       library=GaudiCheckpointing
 apply_pattern generate_configurables library=GaudiCheckpointing
+macro_append  GaudiCheckpointing_shlibflags ' -lCheckpointing ' WIN32 ''
 macro cppoptimized_s ' -g -O0 ' WIN32 ''
 macro coptimized_s   ' -g -O0 ' WIN32 ''
 
-private
-#macro_remove componentshr_linkopts "-Wl,--no-undefined"
-#macro_remove libraryshr_linkopts "-Wl,--no-undefined"
+# This we cannot build neither on Windows nor on 32 bit platforms!
+apply_pattern disable_package_on platform=target-winxp
+apply_pattern disable_package_on platform=target-i686
+apply_pattern disable_package_on platform=target-ia32
