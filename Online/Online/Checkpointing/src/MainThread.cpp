@@ -37,11 +37,8 @@ extern "C" MainThread* libProcessRestore_main_instance() {
 extern "C" MainThread* libProcessRestore_main_instance_init(int argc, char** argv, char** environment) {
   static MainThread* p = 0;
   if ( !p ) {
-    mtcp_sys_personality(ADDR_NO_RANDOMIZE|mtcp_sys_personality(0xFFFFFFFFUL));
-    MainThread& m = MainThread::accessInstance();
-    m.initialize();
-    m.init_instance(argc,argv,environment);
-    p = &m;
+    p = libProcessRestore_main_instance();
+    p->init_instance(argc,argv,environment);
   }
   return p;
 }
@@ -320,6 +317,12 @@ int Checkpointing::resume_process()   {
 
 int Checkpointing::init_checkpoints() {
   MainThread* p = libProcessRestore_main_instance();
+  p->initialize();
+  return p ? 1 : 0;
+}
+
+int Checkpointing::initialize_parent(int argc, char** argv, char** environment) {
+  MainThread* p = libProcessRestore_main_instance_init(argc,argv,environment);
   return p ? 1 : 0;
 }
 

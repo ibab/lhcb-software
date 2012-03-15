@@ -18,10 +18,11 @@ macro_append Checkpointing_package_cpp_build_flags ' -ansi -Wreturn-type -Wunuse
 # ==================== component libraries ==================================
 public
 library Checkpointing 	../aux/Image.cpp
-apply_pattern linker_library library=Checkpointing
+#apply_pattern linker_library library=Checkpointing
 
 application  restore           ../aux/main.cpp
 macro_append restore_cppflags  ' $(Checkpointing_package_cpp_build_flags) '
+macro_remove restore_use_linkopts '$(Checkpointing_linkopts)'
 
 private 
 macro cmt_installarea_linkopts ''

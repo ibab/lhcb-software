@@ -36,7 +36,6 @@ static void* main_thread(void * /* arg */)  {
 static long make_checkPoint() {
   // We assume, that at this stage
   const char* file_name = "proc.dat";
-  init_checkpoints();
   MMap f;
   if ( f.create(file_name) ) {
     stop_process();
@@ -59,8 +58,6 @@ static long make_checkPoint() {
 int test_thread_checkpoint() {
   static pthread_t main_pid;
   int rc;
-
-  init_checkpoints();
 
   if ((rc=::pthread_create (&main_pid, NULL, main_thread, (void*)5)) < 0) {
     mtcp_output(MTCP_FATAL,"Error CREATE main thread: %s rc=%d\n",::strerror(errno),rc);
@@ -131,6 +128,7 @@ extern "C" int chkpt_tests(int argc, char** argv) {
   ::fprintf(stdout,"Checkpointing_test: print level:%d flag:%d tst function:%s [%c%c%c%c]\n",
 	    prt,flag,q,p[0],p[1],p[2],p[3]);
   mtcp_set_debug_level(prt);
+  init_checkpoints();
   if      ( opt == *(int*)"m_write"   ) test_MemMaps_write();
   else if ( opt == *(int*)"m_read"    ) test_MemMaps_read();
   else if ( opt == *(int*)"m_share"   ) test_MemMaps_sharable();
