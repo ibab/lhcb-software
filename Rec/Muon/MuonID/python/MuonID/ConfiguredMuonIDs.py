@@ -29,7 +29,7 @@ class ConfiguredMuonIDs():
     if self.debug: print "# SPECIAL DATA=",self.specialData
     
     ## from datatype and version look for module with data. Store extra modules in case desired does not exist
-    mod=[data+"_"+version,data+"_def","2009_def"]
+    mod=[data+"_"+version,data+"_def","2011_def"]
     mod = map(lambda x: "Muon_"+x,mod)
 
     if self.debug: print "# \tmods -> ",mod

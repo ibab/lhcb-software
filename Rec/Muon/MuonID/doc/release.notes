@@ -3,6 +3,9 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+! 2012-03-11 - J. Helder Lopes
+ - Make 2011 the default data type in ConfiguredMuonIDs.py. This will be applied for 2012 data type.
+
 !========================= MuonID v9r3 2011-12-15 =========================
 ! 2011-11-22 - M.Cattaneo
  - Remove an unused variable from ImuIDTool interface, fixes gcc46 warning
