@@ -8,6 +8,12 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2012-03-15 - V. Gligorov
+ - A few things
+  . Remove second loop tracks from min bias Lc lines
+  . Commit new D->KsHH lines for M. Sokoloff
+  . Commit D->KS0KS0 lines
+
 ! 2012-03-15 - Victor Coco
  - update the Hlt2DisplVertices line to the new algorithm
 
