@@ -133,8 +133,8 @@ class DDDBConf(ConfigurableUser):
         Default configuration for 2012 data (and MonteCarlo for DDDB)
         """
         # Set the tags
-        self.__set_tag__(["DDDB"], "head-20111102")
-        self.__set_tag__(["LHCBCOND"], "head-20111111")
+        self.__set_tag__(["DDDB"], "head-20120316")
+        self.__set_tag__(["LHCBCOND"], "head-20120316")
         self.__set_tag__(["DQFLAGS"], "tt-20110126")
         if not self.getProp("Simulation"):
             # set initialization time to a safe default
