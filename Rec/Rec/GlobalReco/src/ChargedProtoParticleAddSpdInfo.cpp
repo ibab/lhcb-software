@@ -66,8 +66,8 @@ StatusCode ChargedProtoParticleAddSpdInfo::execute()
   // ProtoParticle container
   if ( !exist<LHCb::ProtoParticles>(m_protoPath) )
   {
-    return Warning( "No existing ProtoParticle container at " +  m_protoPath + " thus do nothing.",
-                    StatusCode::SUCCESS );
+    debug()<< "No existing ProtoParticle container at " <<  m_protoPath<<" thus do nothing."<<endmsg;
+    return StatusCode::SUCCESS;  
   }
   LHCb::ProtoParticles * protos = get<LHCb::ProtoParticles>(m_protoPath);
 
