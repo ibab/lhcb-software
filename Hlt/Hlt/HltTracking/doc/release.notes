@@ -5,6 +5,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2012-03-15 - V. Gligorov
+ - Remove obsolete tracking config
+
 - 2012-03-16 - Albert Puig
  - Fixed warnings in calo reconstruction due to missing ProtoP.
 
