@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2012-03-15 - V. Gligorov
+ - Remove obsolete tracking config
+
 ! 2012-03-15 - Pieter David
  - Added Hlt1 displaced vertex line
 
