@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2012-03-16 - Albert Puig
+ - New version of cut-based radiative topo lines.
+
 ! 2012-03-15 - V. Gligorov
  - A few things
   . Remove second loop tracks from min bias Lc lines
