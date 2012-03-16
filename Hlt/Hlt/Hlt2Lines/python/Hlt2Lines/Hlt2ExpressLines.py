@@ -29,18 +29,22 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                                , 'Hlt2ExpressDs2PhiPi'    : 1.
                                , 'Hlt2ExpressBeamHalo'    : 1.
                                , 'Hlt2ExpressDStar2D0Pi'  : 1.
+                               , 'Hlt2ExpressD02KPi'      : 1.
                                , 'Hlt2ExpressHLT1Physics' : 1.
                                  }
                , 'Postscale' : { 'Hlt2ExpressJPsi'        : 'RATE(5)'
-                               , 'Hlt2ExpressJPsiTagProbe': 'RATE(5)'
+                               , 'Hlt2ExpressJPsiTagProbe': 'RATE(1)'
                                , 'Hlt2ExpressLambda'      : 'RATE(1)'
                                , 'Hlt2ExpressKS'          : 'RATE(1)'
                                , 'Hlt2ExpressDs2PhiPi'    : 'RATE(1)'
-                               , 'Hlt2ExpressBeamHalo'    : 'RATE(1)'
-                               , 'Hlt2ExpressDStar2D0Pi'  : 'RATE(1)'
+                               , 'Hlt2ExpressBeamHalo'    : 'RATE(2)'
+                               , 'Hlt2ExpressDStar2D0Pi'  : 'RATE(5)'
+                               , 'Hlt2ExpressD02KPi'      : 'RATE(5)'
                                , 'Hlt2ExpressHLT1Physics' : 'RATE(1)'
                                  }
-                 , 'ExJPsiMassWindow'        :  120   # MeV
+                 , 'ExJPsiMassWindow'        :   80   # MeV
+                 , 'ExJPsiTrkChi2'           :    5
+                 , 'ExJPsiVChi2'             :   10
                  , 'ExJPsiPt'                : 1000   # MeV
                  , 'ExJPsiMuPt'              :  500   # MeV
                  , 'ExJPsiTPMassWindow'      :  200   # MeV
@@ -101,18 +105,20 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                  , 'ExHaloOverlaps'          :  False
                  , 'ExHaloBigCell'           :  False
                  , 'ExHaloMinOverlap'        :  3
+                 , 'ExTrVeloOverlapsR'       :  25
+                 , 'ExTrVeloOverlapsPhi'     :  25
                  , 'ExD0MassWinWide'         :  100   # MeV
                  , 'ExD0MassWin'             :   50   # MeV
                  , 'ExD0VCHI2'               :   10 
                  , 'ExD0Pt'                  : 1000   # MeV
                  , 'ExD0BPVDIRA'             : 0.9999
-                 , 'ExD0BPVVDCHI2'           :   12
-                 , 'ExD0KP'                  : 2000   # MeV
-                 , 'ExD0KPt'                 :  400   # MeV
-                 , 'ExD0KIPChi2'             :    6
-                 , 'ExD0PiP'                 : 2000   # MeV
-                 , 'ExD0PiPt'                :  400   # MeV
-                 , 'ExD0PiIPChi2'            :    6
+                 , 'ExD0BPVVDCHI2'           :   10
+                 , 'ExD0KP'                  : 3000   # MeV
+                 , 'ExD0KPt'                 :  600   # MeV
+                 , 'ExD0KIPChi2'             :    5
+                 , 'ExD0PiP'                 : 3000   # MeV
+                 , 'ExD0PiPt'                :  600   # MeV
+                 , 'ExD0PiIPChi2'            :    5
                  , 'ExDStarMassWinWide'      :  100   # MeV
                  , 'ExDStarMassWin'          :   50   # MeV
                  , 'ExDStarPt'               : 2200   # MeV
@@ -120,6 +126,22 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                  , 'ExDStarMassDiff'         :155.5   # MeV
                  , 'ExDStarPiPt'             : 110    # MeV
                  , 'ExDStarPiIPChi2'         :   2
+                 , 'ExD0PromptTrP'           : 5000   # MeV
+                 , 'ExD0PromptTrPt'          :  800   # MeV
+                 , 'ExD0PromptTrIPChi2'      :  2.0
+                 , 'ExD0PromptTrCHI2DOFMAX'  :  3.0
+                 , 'ExD0PromptMassWinWide'   :  100   # MeV
+                 , 'ExD0PromptD0MassWin'     :   50   # MeV
+                 , 'ExD0PromptTrkMaxAPTMIN'  : 1500   # MeV
+                 , 'ExD0PromptD0PTMIN'       : 2000   # MeV
+                 , 'ExD0PromptPairAMINDOCAMAX': 0.10 * mm
+                 , 'ExD0PromptD0VCHI2PDOF'   :   10
+                 , 'ExD0PromptD0BPVDIRA'     : 0.99985
+                 , 'ExD0PromptD0BPVVDCHI2'   :   25
+                 #
+                 ,'HltANNSvcID'              : {
+                                              'ExpressD02KPi'           :  50098                                      
+                                              }
                  }  
    
    
@@ -143,6 +165,8 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                              , "Filter"
                              , Code = " (ADMASS('J/psi(1S)')<%(ExJPsiMassWindow)s*MeV)"\
                              " & (PT>%(ExJPsiPt)s*MeV)"\
+                             " & (VFASPF(VCHI2PDOF)<%(ExJPsiVChi2)s)"\
+                             " & (MINTREE('mu-'==ABSID,TRCHI2DOF)<%(ExJPsiTrkChi2)s)"\
                              " & (MINTREE('mu-'==ABSID,PT)>%(ExJPsiMuPt)s*MeV) " %  self.getProps() 
                              , Inputs  = [ TrackFittedDiMuon ]
                              , InputPrimaryVertices = "None"
@@ -330,11 +354,32 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       selection of beam halo tracks
       '''
       from Configurables import Tf__PatVeloAlignTrackFilter as PatVeloAlignTrackFilter
+      from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
+      
+      from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedMuons
       from HltLine.HltDecodeRaw import DecodeVELO
+      
+      Hlt2BiKalmanFittedForwardTracking = Hlt2BiKalmanFittedForwardTracking()
+      hlt2VeloTracking = Hlt2BiKalmanFittedForwardTracking.hlt2VeloTracking()
 
       Hlt2Line('ExpressBeamHalo'
                ,prescale = self.prescale
                , algos = [ DecodeVELO
+                           # , hlt2VeloTracking
+                           # , Hlt2Member ( FilterDesktop
+                           # , 'ExHaloOverlapFilter'
+                           # , Preambulo = [   'from LoKiPhys.decorators import *'
+                           #                 , 'from LoKiProtoParticles.decorators import *'
+                           #                 , 'from LoKiArrayFunctors.decorators import *'
+                           #                 , 'from LoKiCore.functions import *'
+                           #                 , 'from LoKiCore.math import *' 
+                           #                 , 'from LoKiTracks.functions import *' 
+                           #                 , 'from LoKiTracks.decorators import *' 
+                           #                 ]
+                           #                 , Inputs    = [ hlt2VeloTracking ]
+                           #                 , Code      = " (TrNVELOOVERLAPSR>%(ExTrVeloOverlapsR)s)" \
+                           #                               " | (TrNVELOOVERLAPSPHI>%(ExTrVeloOverlapsPhi)s)"%  self.getProps()
+                           #               )
                            , PatVeloAlignTrackFilter('Hlt2ExpressBeamHaloDecision'
                                                      , MinTot = self.getProp('ExHaloMinTot')  
                                                      , MaxTot = self.getProp('ExHaloMaxTot')  
@@ -346,7 +391,8 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                                                      , Overlaps = self.getProp('ExHaloOverlaps') 
                                                      , BigCell = self.getProp('ExHaloBigCell') 
                                                      , MinOverlap = self.getProp('ExHaloMinOverlap')
-                                                     ) 
+                                                     )
+                           
                            ]
                , postscale = self.postscale
                )
@@ -404,7 +450,55 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                       , algos = [ PV3D(), BiKalmanFittedPions, BiKalmanFittedKaons,
                                   D02KPiCombine, DStarCombine ]
                       , postscale = self.postscale
-                      ) 
+                      )
+
+      #--------------------------------------------      
+      '''
+      D0->KPi
+
+      Take D0->KPi trigger line from Charm and apply a postscale
+
+      '''
+      
+      D02KPiPromptCombine = Hlt2Member( CombineParticles
+                                     , "PromptD0Combine"
+                                     , DecayDescriptor = "[ D0 -> K- pi+ ]cc"
+                                     , Inputs = [BiKalmanFittedKaons, BiKalmanFittedPions]
+                                     , CombinationCut =  "(ADAMASS('D0')<%(ExD0PromptMassWinWide)s*MeV)" \
+                                       " & ((APT1 > %(ExD0PromptTrkMaxAPTMIN)s) " \
+                                       "| (APT2 > %(ExD0PromptTrkMaxAPTMIN)s))" \
+                                       "& (APT > %(ExD0PromptD0PTMIN)s)" \
+                                       "& (AMINDOCA('LoKi::TrgDistanceCalculator') " \
+                                       "< %(ExD0PromptPairAMINDOCAMAX)s )" %  self.getProps()
+                                     , MotherCut = "(ADMASS('D0') < %(ExD0PromptD0MassWin)s*MeV)"\
+                                     " & (VFASPF(VCHI2PDOF) < %(ExD0PromptD0VCHI2PDOF)s)"\
+                                     " & (BPVDIRA > %(ExD0PromptD0BPVDIRA)s)"\
+                                     " & (BPVVDCHI2 > %(ExD0PromptD0BPVVDCHI2)s)"%  self.getProps()
+                                     , DaughtersCuts = { "K-"  :  "(P>%(ExD0PromptTrP)s*MeV)"\
+                                                         "& (TRCHI2DOF< %(ExD0PromptTrCHI2DOFMAX)s)"\
+                                                      " & (PT>%(ExD0PromptTrPt)s*MeV)"\
+                                                      " & (MIPCHI2DV(PRIMARY)>%(ExD0PromptTrIPChi2)s) "%  self.getProps(),
+                                                      "pi+"  :   "(P>%(ExD0PromptTrP)s*MeV)"\
+                                                         "& (TRCHI2DOF< %(ExD0PromptTrCHI2DOFMAX)s)"\
+                                                      " & (PT>%(ExD0PromptTrPt)s*MeV)"\
+                                                      " & (MIPCHI2DV(PRIMARY)>%(ExD0PromptTrIPChi2)s) "%  self.getProps()
+                                                      }
+                                    , MotherMonitor  =  Hlt2Monitor("M", "M(K#pi)",1865,self.getProp("ExD0PromptD0MassWin"))
+                                    )
+
+      line = Hlt2Line('ExpressD02KPi'
+                      , prescale = self.prescale 
+                      , algos = [ PV3D(), BiKalmanFittedPions, BiKalmanFittedKaons,
+                                  D02KPiPromptCombine ]
+                      , postscale = self.postscale
+                      )
+      # line = Hlt2Line('ExpressD02KPi'
+      #                 , prescale = self.prescale
+      #                 , HLT= "HLT_PASS_SUBSTR('Hlt2CharmHadD02HH_D02KPi')"
+      #                 , priority = 255
+      #                 , VoidFilter = ''
+      #                 , postscale = self.postscale
+      #                )
       
       #--------------------------------------------                      
       '''
@@ -429,4 +523,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                                           , 'Hlt2ExpressDStar2D0PiDecision'   : 50096
                                           , 'Hlt2ExpressHLT1PhysicsDecision'  : 50097
                                           } )
+      
+      HltANNSvc().Hlt2SelectionID.update( { "Hlt2ExpressD02KPiDecision" :
+                                              self.getProp('HltANNSvcID')['ExpressD02KPi'] } ) 
 
