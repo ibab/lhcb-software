@@ -60,9 +60,9 @@ class TopoLines :
             'ALL_PT_MIN'        : 500.0,  # MeV
             'ALL_P_MIN'         : 5000.0, # MeV
             'ALL_MIPCHI2DV_MIN' : 4.0,    # unitless
-            'MU_TRCHI2DOF_MAX'  : 2.3,    # unitless
-            'E_TRCHI2DOF_MAX'   : 3.0,    # unitless
-            'HAD_TRCHI2DOF_MAX' : 2.0,    # unitless
+            'MU_TRCHI2DOF_MAX'  : 3.0,    # unitless
+            'E_TRCHI2DOF_MAX'   : 4.0,    # unitless
+            'HAD_TRCHI2DOF_MAX' : 3.0,    # unitless
             # V0's
             'USE_KS'            : True,
             'USE_LAMBDA'        : True,
