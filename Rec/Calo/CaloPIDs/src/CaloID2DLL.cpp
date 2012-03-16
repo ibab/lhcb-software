@@ -178,12 +178,12 @@ StatusCode CaloID2DLL::initializeWithoutCondDB()
     m_histo_ut = Gaudi::Utils::Aida2ROOT::aida2root( aida );
   }
 
-
-  debug() <<"\nLong:        '"<<m_title_lt_ths<<"' -> "<<(void *)m_histo_lt
-          <<"\nDownstream:  '"<<m_title_dt_ths<<"' -> "<<(void *)m_histo_dt
-          <<"\nTTuricensis: '"<<m_title_tt_ths<<"' -> "<<(void *)m_histo_tt
-          <<"\nUpstream:    '"<<m_title_ut_ths<<"' -> "<<(void *)m_histo_ut
-          <<"\nVelo:        '"<<m_title_vt_ths<<"' -> "<<(void *)m_histo_vt << endmsg;
+  if( msgLevel(MSG::DEBUG) )
+    debug() <<"\nLong:        '"<<m_title_lt_ths<<"' -> "<<(void *)m_histo_lt
+            <<"\nDownstream:  '"<<m_title_dt_ths<<"' -> "<<(void *)m_histo_dt
+            <<"\nTTuricensis: '"<<m_title_tt_ths<<"' -> "<<(void *)m_histo_tt
+            <<"\nUpstream:    '"<<m_title_ut_ths<<"' -> "<<(void *)m_histo_ut
+            <<"\nVelo:        '"<<m_title_vt_ths<<"' -> "<<(void *)m_histo_vt << endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -235,7 +235,7 @@ StatusCode CaloID2DLL::execute()
 // ============================================================================
 StatusCode CaloID2DLL::i_updateDLL()
 {
-  debug() << "i_updateDLL() called" << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "i_updateDLL() called" << endmsg;
   if ( !m_cond ) return StatusCode::FAILURE;
 
   try {
@@ -269,11 +269,12 @@ StatusCode CaloID2DLL::i_updateDLL()
     return StatusCode::FAILURE;
   }
 
-  debug() <<"\nLong:        '"<<m_title_lt<<"' -> "<<(void *)m_histo_lt
-          <<"\nDownstream:  '"<<m_title_dt<<"' -> "<<(void *)m_histo_dt
-          <<"\nTTuricensis: '"<<m_title_tt<<"' -> "<<(void *)m_histo_tt
-          <<"\nUpstream:    '"<<m_title_ut<<"' -> "<<(void *)m_histo_ut
-          <<"\nVelo:        '"<<m_title_vt<<"' -> "<<(void *)m_histo_vt << endmsg;
+  if( msgLevel(MSG::DEBUG) )
+    debug() <<"\nLong:        '"<<m_title_lt<<"' -> "<<(void *)m_histo_lt
+            <<"\nDownstream:  '"<<m_title_dt<<"' -> "<<(void *)m_histo_dt
+            <<"\nTTuricensis: '"<<m_title_tt<<"' -> "<<(void *)m_histo_tt
+            <<"\nUpstream:    '"<<m_title_ut<<"' -> "<<(void *)m_histo_ut
+            <<"\nVelo:        '"<<m_title_vt<<"' -> "<<(void *)m_histo_vt << endmsg;
 
   return StatusCode::SUCCESS;
 }

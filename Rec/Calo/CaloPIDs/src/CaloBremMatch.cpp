@@ -179,7 +179,7 @@ StatusCode CaloBremMatch::match
       // allowed z ?
       if ( state->z() > 4.0 * Gaudi::Units::meter ) 
       {
-        print ( debug() , trObj ) ;
+        if(msgLevel(MSG::DEBUG)) print ( debug() , trObj ) ;
         m_tBad = trObj ;
         return Error ( "No appropriate states are found, see 'debug'") ; 
       }
