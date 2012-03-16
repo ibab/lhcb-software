@@ -202,6 +202,9 @@ namespace LHCb
     /// get the filter status (only useful for debugging)
     FilterStatus filterStatus( int direction ) const { return m_filterStatus[direction] ; }
 
+    /// return whether or not this node has active nodes upstream
+    bool hasInfoUpstream( int direction ) const ;
+
     /// Deactivate this node (outlier)
     void deactivateMeasurement(bool deactivate = true) ;
     
@@ -315,9 +318,6 @@ namespace LHCb
     /// unconst this node
     FitNode& unConst() const { return const_cast<FitNode&>(*this) ; }
     
-    /// helper function that caches whether this node has active nodes upstream
-    bool hasInfoUpstream( int direction ) const ;
-
     /// reset the cache for the previous function
     void resetHasInfoUpstream( int direction ) ;
 

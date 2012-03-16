@@ -466,6 +466,8 @@ namespace LHCb {
       m_parent->setErrorFlag(2,KalmanFitResult::Smooth ,KalmanFitResult::AlgError ) ;
     }
     updateResidual(state) ;
+    // bug fix: we cannot set backward to state 'Smoothed', unless we have passed its filter step!
+    filteredState(Backward) ;
     m_filterStatus[Backward] = Smoothed ;
   }
   
