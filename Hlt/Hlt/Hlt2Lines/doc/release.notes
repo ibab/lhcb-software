@@ -6,8 +6,9 @@
 ! WARNING : When adding, removing or changing names of lines,
 !           ALWAYS also edit Hlt/HltSettings
 !
-!-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 
+!========================= Hlt2Lines v8r13 2012-03-16 =========================
 ! 2012-03-16 - Eric van Herwijnen
  - Hlt2ExpressLines.py
   . remove HLT="HLT_PASS_RE('Hlt1.*Decision')" from ExpressLambda and ExpressKs
