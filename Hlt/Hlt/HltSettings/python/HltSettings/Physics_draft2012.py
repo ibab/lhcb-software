@@ -190,8 +190,8 @@ class Physics_draft2012( object ):
                 'Hlt2LowMultElectron_nofilter'
                 ]
 
-        from Express_Hlt2_Aug11 import Express_Hlt2_Aug11
-        hlt2.extend( Express_Hlt2_Aug11().ActiveHlt2Lines() )
+        from Express_Hlt2_draft2012 import Express_Hlt2_draft2012
+        hlt2.extend( Express_Hlt2_draft2012().ActiveHlt2Lines() )
 
         from Muons_draft2012 import Muons_draft2012
         hlt2.extend( Muons_draft2012().ActiveHlt2Lines() )
