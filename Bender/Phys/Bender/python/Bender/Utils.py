@@ -77,9 +77,9 @@ __all__     = (
     'seekVoidDecision'  ,
     'seekAlgDecision'   ,
     'seekHltDecision'   ,
-    'seekStripDecision' 
+    'seekStripDecision' ,
+    ##
     )
-# =============================================================================
 
 ## ============================================================================
 ## post action 

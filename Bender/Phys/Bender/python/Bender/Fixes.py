@@ -49,10 +49,14 @@ __date__    = "2004-07-11"
 __version__ = '$Revision$'
 __all__     = ()
 # =============================================================================
-
-import Bender.Fixes_Gaudi
-import Bender.Fixes_LoKi
-
+## logging
+# =============================================================================
+from Bender.Logger import getLogger 
+logger = getLogger(__name__)
+# =============================================================================
+logger.info ( '*** Fix some "features"' ) 
+# =============================================================================
+#
 # =============================================================================
 ## "at-exit action 
 def _bender_at_exit_ () :
@@ -61,23 +65,29 @@ def _bender_at_exit_ () :
     At-Exit action
     
     """
-    print '*'*120
-    print 'Bender.Fixes:  custom "atexit" handler is being invoked'
-    print '*'*120
+    logger.info ( '*'*120 ) 
+    logger.info ( 'custom "atexit" handler is being invoked' ) 
+    logger.info ( '*'*120 ) 
     
     from GaudiPython.Bindings import _gaudi 
     if _gaudi :
-        print 'Bender.Fixes:  AppMgr.exit() is being invoked'
+        logger.info( 'AppMgr.exit() is being invoked' ) 
         _gaudi.exit()
 
-    print '*'*120
-    print 'Bender.Fixes:  custom "atexit" handler has been invoked'
-    print '*'*120
+    logger.info ( '*'*120 ) 
+    logger.info ( 'custom "atexit" handler has been invoked' ) 
+    logger.info ( '*'*120 ) 
 
 
 import atexit
 atexit.register( _bender_at_exit_ )
-print 'Bender.Fixes: - add custom "atexit" handler'
+logger.info( 'add custom "atexit" handler' ) 
+
+# =============================================================================
+## Other fixes:
+# =============================================================================
+import Bender.Fixes_Gaudi
+import Bender.Fixes_LoKi
 
 # =============================================================================
 if __name__ == '__main__' :

@@ -49,15 +49,19 @@ __date__    = "2011-10-21"
 __version__ = '$Revision$'
 __all__     = ()
 # =============================================================================
-## some straneglines... Reflex feature ?
-from   GaudiPython.Bindings import gbl as cpp
+## some strange lines... Reflex feature ?
+from PyCintex import gbl as cpp 
+# =============================================================================
+## logging
+# =============================================================================
+from Bender.Logger import getLogger 
+logger = getLogger( __name__ )
+# =============================================================================
+logger.info ( '*** Fix some Gaudi features' ) 
+# =============================================================================
+
+
 import GaudiPython.Bindings
-              
-print '*'*120
-print 'Bender.Fixes: - Fix some Gaudi features'
-print '*'*120
-
-
 _EvtSel = GaudiPython.Bindings.iEventSelector
 
 if not hasattr ( _EvtSel , '_openNew_') :
@@ -120,19 +124,19 @@ if not hasattr ( _EvtSel , '_openNew_') :
             
         state_s = self._isvc.FSMState ()
         if cpp.Gaudi.StateMachine.INITIALIZED != state_s :
-            print 'Invalid State of EventSelector ' , state_s 
-
+            logger.error( 'Invalid State of EventSelector %s ' % state_s )
+            
         sc =   self._isvc.sysReinitialize ()
         return self._isvc.sysStart        ()
 
 
     _EvtSel._openNew_ = _openNew_
     _EvtSel.open      = _openNew_
-    print 'Bender.Fixes: - decorate iEventSelector to deal with RAW/MDF & CASTOR -files'
+    logger.info  ( 'decorate iEventSelector to deal with RAW/MDF & CASTOR -files' ) 
 
 ## Decorate iDataSvc with proper dir/ls methods '
 import AnalysisPython.Dir 
-print 'Bender.Fixes: - decorate iDataSvc with proper "dir/ls" methods '
+logger.info ( 'decorate iDataSvc with proper "dir/ls" methods ')
 
 ## decorate the algorhtms with the proper dumpHistos methods
 import GaudiPython.Bindings 
@@ -140,7 +144,7 @@ _iAlgorithm = GaudiPython.Bindings.iAlgorithm          ##    Algorithm interface
 _iAlgTool   = GaudiPython.Bindings.iAlgTool            ##         Tool interface
 for _t in ( _iAlgorithm , _iAlgTool ) :
     if not hasattr ( _t , 'dumpHistos' ) :
-        print 'Bender.Fixes: - decorate iAlgoritm/iAlgTool with "dumpHistos" method'
+        logger.info ( 'decorate iAlgoritm/iAlgTool with "dumpHistos" method') 
         ## dump all histogram from the given component 
         def _dumpHistos ( cmp , *args ) :
             """
@@ -158,11 +162,11 @@ for _t in ( _iAlgorithm , _iAlgTool ) :
         _t.dumpHistos = _dumpHistos 
 
 if not hasattr ( _iAlgorithm , 'isEnabled' ) :
-    print 'Bender.Fixes: - decorate iAlgoritm with "isEnabled" method'
+    logger.info ( 'decorate iAlgoritm with "isEnabled" method')
     _iAlgorithm.isEnabled = lambda self : self.__call_interface_method__("_ialg","isEnabled")
 
 if not hasattr ( _iAlgorithm , 'setEnabled' ) :
-    print 'Bender.Fixes: - decorate iAlgoritm with "setEnabled" method'
+    logger.info( 'decorate iAlgoritm with "setEnabled" method' )
     ## enable/disbale 
     def __set_Enabled_ ( self , value ) :
         self.Enable = True if value else False
@@ -178,7 +182,7 @@ def _iadd_new_ (s,v) :
     return _iadd_old_(s,v)
 _SE.__iadd__ = _iadd_new_
 _SE.__str__  = _SE.toString 
-print 'Bender.Fixes: - decorate StatEntity operator += '
+logger.info ( 'decorate StatEntity operator += ')
 
 
 _AppMgr = GaudiPython.Bindings.AppMgr
@@ -220,7 +224,7 @@ if not hasattr ( _AppMgr , '_new_topAlg_' ) :
 
     _AppMgr._new_topAlg_ = __top_Algs_
     _AppMgr.topAlgs      = __top_Algs_
-    print 'Bender.Fixes: - decorate AppMgr.topAlgs() '
+    logger.info ( 'decorate AppMgr.topAlgs() ' )
 
 ##
 if not hasattr ( _AppMgr , '_new_allAlg_' ) :
@@ -241,7 +245,7 @@ if not hasattr ( _AppMgr , '_new_allAlg_' ) :
 
     _AppMgr._new_allAlg_ = __all_Algs_
     _AppMgr.allAlgs      = __all_Algs_
-    print 'Bender.Fixes: - decorate AppMgr.allAlgs() '
+    logger.info ( 'decorate AppMgr.allAlgs() ' ) 
 
 ##
 if not hasattr ( _AppMgr , '_disable_Tops_' ) :
@@ -264,7 +268,7 @@ if not hasattr ( _AppMgr , '_disable_Tops_' ) :
 
     _AppMgr._disable_Tops_   = __disable_Top_ 
     _AppMgr.disableTopAlgs   = __disable_Top_ 
-    print 'Bender.Fixes: - decorate AppMgr.disableTopAlgs() '
+    logger.info ( 'decorate AppMgr.disableTopAlgs() ' ) 
 
 ## 
 if not hasattr ( _AppMgr , '_disable_All_' ) :
@@ -285,7 +289,7 @@ if not hasattr ( _AppMgr , '_disable_All_' ) :
 
     _AppMgr._disable_All_   = __disable_All_ 
     _AppMgr.disableAllAlgs  = __disable_All_ 
-    print 'Bender.Fixes: - decorate AppMgr.disableAllAlgs() '
+    logger.info ( 'decorate AppMgr.disableAllAlgs() ' ) 
 
 
 ## decorate Incident Service 
@@ -333,7 +337,7 @@ if not hasattr ( _AppMgr , 'incSvc' ) :
         return iIncSvc(name, svc)
     
     _AppMgr. incSvc = _incSvc_
-    print 'Bender.Fixes: - decorate AppMgr.incSvc() '
+    logger.info( 'decorate AppMgr.incSvc() ' ) 
 
 ## decorate Context Service 
 if not hasattr ( _AppMgr , 'cntxSvc' ) : 
@@ -408,10 +412,10 @@ if not hasattr ( _AppMgr , 'cntxSvc' ) :
     
     _AppMgr.   cntxSvc = _cntxSvc_
     _AppMgr. contexSvc = _cntxSvc_
-    print 'Bender.Fixes: - decorate AppMgr.cntxSvc() '
+    logger.info ( 'decorate AppMgr.cntxSvc() ' ) 
 
 
-## decorate Event Colleciton service
+## decorate Event Collection service
 if not hasattr ( _AppMgr , 'evtColSvc' ) :
     
     iNTupleSvc = GaudiPython.Bindings.iNTupleSvc 
@@ -428,8 +432,27 @@ if not hasattr ( _AppMgr , 'evtColSvc' ) :
 
     _AppMgr. evtcolSvc = _evtcolsvc_
     _AppMgr. evtColSvc = _evtcolsvc_
-    print 'Bender.Fixes: - decorate AppMgr.evtColSvc() '
+    logger.info ( 'decorate AppMgr.evtColSvc() ' ) 
+
+# =============================================================================
+## get the links from data object  
+def _links_ ( self ) :
+    """
+    Get the links from DataObject :
+
+    >>> obj = ...
+    >>> links = obj.links()
     
+    """
+    lnks = set() 
+    lm = self.linkMgr()
+    if not lm : return lnks
+    nl = lm.size() 
+    for l in range(0,nl) :
+        lnks.add ( lm.link(l).path() )
+    return lnks
+
+cpp.DataObject.links = _links_
 # =============================================================================
 if __name__ == '__main__' :
     print '*'*120

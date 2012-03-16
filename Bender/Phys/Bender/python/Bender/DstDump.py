@@ -99,6 +99,15 @@ if '__main__' == __name__ :
         type    = 'str'              , 
         default = 'dst_summary.txt'    
         )
+
+    parser.add_option (
+        '-f'                         ,
+        '--follow'                   ,
+        dest    = 'FollowLinks'      ,
+        help    = "Flag to follow links (useful for packed DST)" ,
+        action  = "store_true"       ,
+        default = False    
+        )
     
     options , arguments = parser.parse_args() 
     
@@ -152,6 +161,7 @@ if '__main__' == __name__ :
     nObjects   = {}
 
     iEvent = 0
+
     while iEvent != options.nEvents :
         #
         sc = run(1)
@@ -165,22 +175,45 @@ if '__main__' == __name__ :
                                forceload = True              )
         if not nodes :
             print "warning: no nodes are selected for Root:'%s'" % options.RootInTES
-            
+
+        nodes = set( nodes ) 
+        links = set()
+        
         for loc in nodes :
             data = evtSvc[loc]
             if not data :
                 addEntry ( nSelEvents , loc , 0 )
                 addEntry ( nObjects   , loc , 0 )
             else :
-                addEntry ( nSelEvents , loc , 1 )
+                #
+                lnks = data.links()
+                for l in lnks : links.add ( l )
+                #
                 if   hasattr ( data , 'size'   ) : addEntry ( nObjects , loc , data.size()  )
                 elif hasattr ( data , '__len__') : addEntry ( nObjects , loc , len ( data ) )
                 else                             : addEntry ( nObjects , loc , 1            )
 
-
+        ## follow the links?
+        if options.FollowLinks: 
+            links = links - nodes 
+            for loc in links:
+                data = evtSvc[loc]
+                loc = loc[:7] + '*' + loc[7:] 
+                if not data :
+                    addEntry ( nSelEvents , loc , 0 )
+                    addEntry ( nObjects   , loc , 0 )
+                else :
+                    #
+                    lnks = data.links()
+                    for l in lnks : links.add ( l )
+                    #
+                    if   hasattr ( data , 'size'   ) : addEntry ( nObjects , loc , data.size()  )
+                    elif hasattr ( data , '__len__') : addEntry ( nObjects , loc , len ( data ) )
+                    else                             : addEntry ( nObjects , loc , 1            )
+            
     keys = nObjects.keys()
     keys.sort()
-    
+
     length  = 25
     for key in keys : length = max ( length , len  ( key ) ) 
     length += 2-7
@@ -233,7 +266,6 @@ if '__main__' == __name__ :
     # print _printMessage
     print '\n\n\n'
 
-    
  
 # =============================================================================
 # The END 

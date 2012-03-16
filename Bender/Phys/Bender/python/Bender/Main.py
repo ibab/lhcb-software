@@ -50,6 +50,11 @@ __author__  = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 __date__    = "2004-07-11"
 __version__ = '$Revision$' 
 # =============================================================================
+## logging
+# =============================================================================
+from Bender.Logger import getLogger 
+logger = getLogger( __name__ )
+# =============================================================================
 
 import os 
 
@@ -66,15 +71,13 @@ try:
     if os.path.exists( startup ) :
         execfile( startup )
     else :
-        import Bender.Startup
-        
+        import Bender.Startup        
 except:
     pass
 
-from GaudiPython.Bindings import gbl as cpp 
-cpp.Gaudi.createApplicationMgr
-
-
+from PyCintex import gbl as cpp 
+            
+# =============================================================================
 
 ## massive imports of everything 
 from LoKiCore.decorators          import *
@@ -105,7 +108,7 @@ LHCb   = cpp.LHCb
 ## @var Gaudi  : define namespace Gaudi
 Gaudi  = cpp.Gaudi
 
-_SC=cpp.StatusCode
+_SC     = cpp.StatusCode
 SUCCESS = _SC(_SC.SUCCESS,True)
 FAILURE = _SC(_SC.FAILURE,True)
 
