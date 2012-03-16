@@ -4,6 +4,15 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-03-16 - F. Archilli
+- StrippingBs2MuMuLines.py:
+	Modified selection in Bs2MuMuLinesNoMuIDLine in
+	order to reduce the rate to an acceptable level.
+	Mass range has been tightened from +-600MeV to +-500MeV
+	around the Bs0 mass. Fiducial cuts have been included.
+	Cut on diphoton background has been hardened (Bpt>350MeV).
+	Muon acceptance is also required at this level.
+
 ! 2012-03-16 - L. Anderlini
 - Xibc -> J/psi X lines added
   . inclusive line for Xibc -> J/psi Lc

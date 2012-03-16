@@ -210,15 +210,21 @@ def makeDefault(name) :
     Bs2MuMuNoMuID.VertexFitters.update( { "" : "OfflineVertexFitter"} )
     Bs2MuMuNoMuID.OfflineVertexFitter.useResonanceVertex = False
     Bs2MuMuNoMuID.ReFitPVs = True
-    Bs2MuMuNoMuID.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 4 )" }
-    Bs2MuMuNoMuID.CombinationCut = "(ADAMASS('B_s0')<600*MeV)"\
+    Bs2MuMuNoMuID.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 4 )"\
+                                    " & (0.5<PPINFO(LHCb.ProtoParticle.InAccMuon,-1))"\
+                                    " & (PT < 40*GeV)"\
+                                    " & (P < 500*GeV)"}
+    
+    Bs2MuMuNoMuID.CombinationCut = "(ADAMASS('B_s0')<500*MeV)"\
                                    "& (AMAXDOCA('')<0.3*mm)"
 
     Bs2MuMuNoMuID.MotherCut = "(VFASPF(VCHI2/VDOF)<9) "\
-                              "& (ADMASS('B_s0') < 600*MeV )"\
+                              "& (ADMASS('B_s0') < 500*MeV )"\
                               "& (BPVDIRA > 0) "\
                               "& (BPVVDCHI2> 225)"\
-                              "& (BPVIPCHI2()< 25) "
+                              "& (BPVIPCHI2()< 25) "\
+                              "& (BPVLTIME()<13.248*ps)"\
+                              "& (PT > 350*MeV)"
                              
     _stdNoPIDsMuons = DataOnDemand(Location = "Phys/StdNoPIDsMuons/Particles")
 
