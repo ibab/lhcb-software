@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-03-16 - Albert Puig
+ - Changed names of RadiativeTopo lines in Hadrons_draft2012
+
 ! 2012-03-15 - V. Gligorov
  - Loose track chi2 cuts in topo_draft2012, and add D->Ks0Ks0 to charm lines
 

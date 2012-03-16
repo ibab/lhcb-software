@@ -38,8 +38,8 @@ class Hadrons_draft2012 :
             'Hlt2Bd2KstGamma',
             'Hlt2Bd2KstGammaWideBMass',
             'Hlt2Bd2KstGammaWideKMass',
-            'Hlt2RadiativeTopoTrackTOS',
-            'Hlt2RadiativeTopoPhotonL0',
+            'Hlt2RadiativeTopoTrack',
+            'Hlt2RadiativeTopoPhoton',
             # HHPi0
             'Hlt2B2HHPi0_Merged',
             # B2HH
