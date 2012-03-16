@@ -14,8 +14,6 @@
 
 // local
 #include "TrackEventFitter.h"
-#include "Event/TrackFitResult.h"
-#include "Event/Node.h"
 
 using namespace LHCb;
 
@@ -151,17 +149,6 @@ StatusCode TrackEventFitter::execute() {
 	}
 	counter(prefix + "flipCharge") += bool( qopBefore * track.firstState().qOverP() <0) ;
 	counter(prefix + "numOutliers") += track.nMeasurementsRemoved() ;
-	if( qopBefore * track.firstState().qOverP() <0 && 
-	    track.type()==LHCb::Track::Downstream) {
-	  info() << "We are flipping sign in track fit. Before/after: "
-		 << qopBefore << " " << track.firstState().qOverP() << endreq ;
-	  // dump all states inside TT
-	  for(LHCb::TrackFitResult::NodeContainer::const_iterator 
-		it = track.fitResult()->nodes().begin() ;
-	      it != track.fitResult()->nodes().end() ; ++it)
-	    if( (*it)->z()>2000 && (*it)->z()<3000)
-	      std::cout << " TT node: " << (*it)->z() << " " << (*it)->state().stateVector() << std::endl ;
-	}
       }
       else {
 	track.setFlag( Track::Invalid, true );
