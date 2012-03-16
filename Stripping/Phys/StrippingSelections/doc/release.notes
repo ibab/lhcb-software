@@ -4,6 +4,14 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-03-16 - Konstantinos A. Petridis
+  - StrippingB2MuMuX.py
+   Modified selections to all lines to bring
+   rates to acceptable levels for Stripping 18.
+   Removed corrected mass line as it has not been used so far.
+   Consider adding it back in at a later stage.
+
+
 ! 2012-03-16 - Will Barter
  - Updated:
 	 StrippingZ02TauTau.py
