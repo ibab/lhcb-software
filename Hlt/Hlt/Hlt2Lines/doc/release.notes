@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2012-03-16 - Jibo He
+ - Hlt2InclusiveDiPhiLines.py
+  . Removed duplicated cuts, correct line name   
+
 ! 2012-03-16 - Albert Puig
  - New version of cut-based radiative topo lines.
 

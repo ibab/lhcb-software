@@ -3,7 +3,7 @@
 #  Hlt2 Charmonium -> Phi Phi
 #  @ author Serezha.Barsuk@cern.ch
 #  @ author Jibo.He@cern.ch
-#  @ date 2010-03-19
+#  @ date 2012-03-01
 #
 ###
 
@@ -15,46 +15,45 @@ class Hlt2InclusiveDiPhiLinesConf(HltLinesConfigurableUser):
     
     """
     
-    __slots__ = { 'Prescale'           : {    'Hlt2DiPhiTis'                   : 1.  
+    __slots__ = { 'Prescale'           : {    'Hlt2DiPhi'                   : 1.  
                                               }
                   
-                  ,'Postscale'         : {    'Hlt2DiPhiTis'                   : 1.  
+                  ,'Postscale'         : {    'Hlt2DiPhi'                   : 1.  
                                               }
                   
-                  , 'TIS_SpdMult'      :   600.                     # w/o dedicated Hlt1 line                 
-                  , 'DiPhi_Hlt1TIS'    :  "Hlt1.*Decision%TIS"      # w/o dedicated Hlt1 line, only on Hlt1 TIS
-                  # Track Fitte
+                  , 'SpdMult'          :   600.                     # w/o dedicated Hlt1 line                 
+                  # Track Fitted
                   , 'KaonPT'           :   500.   # MeV
                   , 'KaonTrkChi2'      :     4.
-                  , 'KaonPIDK'         :     5. 
+                  , 'KaonPIDK'         :     0. 
                   , 'PhiComMassW'      :    30.   # MeV, bfore Vtx fit
-                  , 'PhiComPT'         :   500.   # MeV
+                  , 'PhiComPT'         :   400.   # MeV
                   , 'PhiMassW'         :    20.   # MeV
                   , 'PhiPT'            :   500.   # MeV
                   , 'PhiVtxCHI2'       :     9.
                   , 'CombLowerMass'    :  2750.   # MeV, before Vtx fit
-                  , 'CombUpperMass'    :  4100.   # MeV, before Vtx fit
-                  , 'CombPT'           :     0.   # MeV, before Vtx fit
+                  , 'CombUpperMass'    :  4850.   # MeV, before Vtx fit
+                  , 'CombPT'           :   900.   # MeV, before Vtx fit
                   , 'LowerMass'        :  2800.   # MeV, after Vtx fit
-                  , 'UpperMass'        :  4000.   # MeV, after Vtx fit
-                  , 'CCbarPT'          :  2000.   # MeV, after Vtx fit 
+                  , 'UpperMass'        :  4800.   # MeV, after Vtx fit
+                  , 'CCbarPT'          :  1000.   # MeV, after Vtx fit 
                   , 'VtxCHI2'          :     9.   
                   
-                  , 'HltANNSvcID'      : {  'DiPhiTis'                   : 52000
+                  , 'HltANNSvcID'      : {  'DiPhi'                   : 52000
                                             }
                   }
     
     def __apply_configuration__(self):
-        self.__makeHlt2DiPhiReqHlt1TISLines() 
+        self.__makeHlt2DiPhiLines() 
 
         
-    def __makeHlt2DiPhiReqHlt1TISLines(self):        
+    def __makeHlt2DiPhiLines(self):        
         from HltLine.HltLine import Hlt2Line
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import HltANNSvc
         from Configurables import FilterDesktop, CombineParticles, TisTosParticleTagger
         
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiPhiTisDecision" : self.getProp('HltANNSvcID')['DiPhiTis'] } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiPhiDecision" : self.getProp('HltANNSvcID')['DiPhi'] } )
 
             
         #------------------------------------
@@ -68,25 +67,13 @@ class Hlt2InclusiveDiPhiLinesConf(HltLinesConfigurableUser):
         
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedKaons        
         
-        # Fitler Kaons before requring Hlt1 TIS
-        FilterKaonsForDiPhi = Hlt2Member( FilterDesktop
-                                          , 'FilterKaonsForDiPhi'
-                                          , Inputs  = [ BiKalmanFittedKaons ]
-                                          , Code    = KaonCut )
-        
-        KaonsForDiPhi = bindMembers( "KaonsForDiPhi", [ BiKalmanFittedKaons,
-                                                        FilterKaonsForDiPhi
-                                                        ] )
-        
-        
         PhiCombine = Hlt2Member( CombineParticles
                                  , "PhiCombine"
                                  , DecayDescriptor = "phi(1020) -> K+ K-"
                                  , DaughtersCuts = { "K+" : KaonCut }
                                  , CombinationCut = PhiCombCut
                                  , MotherCut = PhiMomCut
-                                 #, Inputs = [ Hlt1TISKaonsForDiPhi ]
-                                 , Inputs = [ KaonsForDiPhi ]
+                                 , Inputs = [ BiKalmanFittedKaons ]
                                  , InputPrimaryVertices = "None"
                                  , UseP2PVRelations = False
                                  )
@@ -119,38 +106,13 @@ class Hlt2InclusiveDiPhiLinesConf(HltLinesConfigurableUser):
         
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedRichKaons
         
-        # Fitler RichKaons before requring Hlt1 TIS
-        FilterRichKaonsForDiPhi = Hlt2Member( FilterDesktop
-                                              , 'FilterRichKaonsForDiPhi'
-                                              , Inputs  = [ BiKalmanFittedRichKaons ]
-                                              , Code    = KaonCut+" & "+RichKaonPID  )
-        
-        RichKaonsForDiPhi = bindMembers( "RichKaonsForDiPhi", [ BiKalmanFittedRichKaons,
-                                                                FilterRichKaonsForDiPhi
-                                                                ] )
-
-        """
-        TaggerHlt1TISRichKaonsForDiPhi = Hlt2Member( TisTosParticleTagger
-                                                     , 'TaggerHlt1TISRichKaonsForDiPhi'
-                                                     , ProjectTracksToCalo = False
-                                                     , CaloClustForCharged = False
-                                                     , CaloClustForNeutral = False
-                                                     , TOSFrac = {4:0.0,5:0.0 }
-                                                     , TisTosSpecs = { self.getProp("DiPhi_Hlt1TIS") : 0 }
-                                                     , Inputs = [ RichKaonsForDiPhi ]
-                                                     )
-        
-        Hlt1TISRichKaonsForDiPhi = bindMembers("Hlt1TISRichKaonsForDiPhi", [ RichKaonsForDiPhi,
-                                                                             TaggerHlt1TISRichKaonsForDiPhi ])
-        """
-                                                     
         RichPhiCombine = Hlt2Member( CombineParticles
                                      , "RichPhiCombine"
                                      , DecayDescriptor = "phi(1020) -> K+ K-"
                                      , DaughtersCuts = { "K+" : KaonCut+" & "+RichKaonPID }
                                      , CombinationCut = PhiCombCut
                                      , MotherCut = PhiMomCut
-                                     , Inputs = [ RichKaonsForDiPhi ]
+                                     , Inputs = [ BiKalmanFittedRichKaons ]
                                      , InputPrimaryVertices = "None"
                                      , UseP2PVRelations = False
                                      )
@@ -170,15 +132,13 @@ class Hlt2InclusiveDiPhiLinesConf(HltLinesConfigurableUser):
         #------------------------------------
         # Inclusive DiPhi complete
         #------------------------------------
-        line = Hlt2Line('DiPhiTis'
+        line = Hlt2Line('DiPhi'
                         , prescale = self.prescale
-                        , L0DU = "(L0_DATA('Spd(Mult)') < %(TIS_SpdMult)s )" % self.getProps()
-                        , algos = [ #Hlt1TISKaonsForDiPhi
-                                    KaonsForDiPhi
+                        , L0DU = "(L0_DATA('Spd(Mult)') < %(SpdMult)s )" % self.getProps()
+                        , algos = [ BiKalmanFittedKaons
                                     , PhiCombine
                                     , Combine
-                                    #, Hlt1TISRichKaonsForDiPhi
-                                    , RichKaonsForDiPhi 
+                                    , BiKalmanFittedRichKaons
                                     , RichPhiCombine
                                     , RichCombine
                                     ]
