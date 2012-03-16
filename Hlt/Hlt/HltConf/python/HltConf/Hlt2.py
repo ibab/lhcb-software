@@ -47,7 +47,7 @@ from Hlt2Lines.Hlt2Dst2D2XXLines          import Hlt2Dst2D2XXLinesConf
 from Hlt2Lines.Hlt2InclusiveDiElectronLines import Hlt2InclusiveDiElectronLinesConf
 from Hlt2Lines.Hlt2InclusiveElectronLines   import Hlt2InclusiveElectronLinesConf
 from Hlt2Lines.Hlt2B2KstareeLines           import Hlt2B2KstareeLinesConf
-from Hlt2Lines.Hlt2SecondLoopExampleLine   import Hlt2SecondLoopExampleLinesConf
+#from Hlt2Lines.Hlt2SecondLoopExampleLine   import Hlt2SecondLoopExampleLinesConf
 from Hlt2Lines.Hlt2B2HHLTUnbiasedLines import Hlt2B2HHLTUnbiasedLinesConf
 from Hlt2Lines.Hlt2B2HHPi0Lines import Hlt2B2HHPi0LinesConf
 from Hlt2Lines.Hlt2B2KsHHLines import Hlt2B2KsHHLinesConf
@@ -57,6 +57,7 @@ from Hlt2Lines.Hlt2CharmHadLambdaCLines import Hlt2CharmHadLambdaCLinesConf
 from Hlt2Lines.Hlt2CharmHadMinBiasLines import Hlt2CharmHadMinBiasLinesConf
 from Hlt2Lines.Hlt2HighPtJetsLines     import Hlt2HighPtJetsLinesConf
 from Hlt2Lines.Hlt2CharmHadLambdaC2LambdaHLines import Hlt2CharmHadLambdaCLambdaHLinesConf
+from Hlt2Lines.Hlt2CharmHadD2KS0KS0Lines import Hlt2CharmHadD2KS0KS0LinesConf
 #
 # The tracking configurations
 #
@@ -77,7 +78,7 @@ class Hlt2Conf(LHCbConfigurableUser):
                              , (Hlt2Tracking, "Hlt2BiKalmanFittedRichForLowPTProtonsForwardTracking")
                              , (Hlt2Tracking, "Hlt2BiKalmanFittedDownstreamTracking") 
                              , (Hlt2Tracking, "Hlt2BiKalmanFittedForwardTracking")
-                             , (Hlt2Tracking, "Hlt2BiKalmanFittedLongTracking")
+                             #, (Hlt2Tracking, "Hlt2BiKalmanFittedLongTracking")
                              , Hlt2TopologicalLinesConf
                              , Hlt2B2DXLinesConf 
                              , Hlt2CharmHadD02HHLinesConf
@@ -115,13 +116,14 @@ class Hlt2Conf(LHCbConfigurableUser):
                              , Hlt2InclusiveDiElectronLinesConf
                              , Hlt2InclusiveElectronLinesConf
                              , Hlt2B2KstareeLinesConf  
-                             , Hlt2SecondLoopExampleLinesConf
+                             #, Hlt2SecondLoopExampleLinesConf
                              , Hlt2MuNTrackLinesConf
                              , Hlt2RadiativeTopoConf
                              , Hlt2CharmHadLambdaCLinesConf
                              , Hlt2CharmHadLambdaCLambdaHLinesConf
                              , Hlt2CharmHadMinBiasLinesConf
                              , Hlt2HighPtJetsLinesConf
+                             , Hlt2CharmHadD2KS0KS0LinesConf
                              ]
 
     __slots__ = { "DataType"                   : '2010'    # datatype is one of 2009, MC09, DC06...
@@ -175,7 +177,7 @@ class Hlt2Conf(LHCbConfigurableUser):
 
         definedTrackings = [ Hlt2BiKalmanFittedDownstreamTracking()
                            , Hlt2BiKalmanFittedForwardTracking()
-                           , Hlt2BiKalmanFittedLongTracking() 
+                           #, Hlt2BiKalmanFittedLongTracking() 
                            , Hlt2BiKalmanFittedRichForProtonsForwardTracking()
                            , Hlt2BiKalmanFittedRichForLowPTProtonsForwardTracking() ]
 
