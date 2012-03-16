@@ -8,6 +8,11 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2012-03-16 - Eric van Herwijnen
+ - Hlt2ExpressLines.py
+  . remove HLT="HLT_PASS_RE('Hlt1.*Decision')" from ExpressLambda and ExpressKs
+    to avoid taking lumi only events  
+
 ! 2012-03-16 - Jibo He
  - Hlt2InclusiveDiPhiLines.py
   . Removed duplicated cuts, correct line name   

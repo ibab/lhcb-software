@@ -263,7 +263,6 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       
       line = Hlt2Line('ExpressLambda'
                       , prescale = self.prescale
-                      , HLT = "HLT_PASS_RE('Hlt1.*Decision')"
                       , algos = [ PV3D(), BiKalmanFittedPions, BiKalmanFittedProtons, LambdaCombine ]
                       , postscale = self.postscale
                       )
@@ -294,7 +293,6 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       
       line = Hlt2Line('ExpressKS'
                       , prescale = self.prescale
-                      , HLT = "HLT_PASS_RE('Hlt1.*Decision')"
                       , algos = [ PV3D(), BiKalmanFittedPions, KsCombine]
                       , postscale = self.postscale
                       )
