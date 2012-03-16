@@ -120,7 +120,7 @@ void VertexPacker::unpack( const PackedData       & pvert,
     // outgoing particles
     for ( unsigned int iiP = pvert.firstOutgoingPart; iiP < pvert.lastOutgoingPart; ++iiP )
     {
-      const int & iP = pverts.outgoingParticles()[iiP];
+      const long long & iP = pverts.outgoingParticles()[iiP];
       int hintID(0), key(0);
       m_pack.hintAndKey64( iP, &pverts, &verts, hintID, key );
       SmartRef<LHCb::Particle> ref(&verts,hintID,key);

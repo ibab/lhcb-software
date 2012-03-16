@@ -4,9 +4,12 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+! 2012-03-16 - Olivier Callot
+ - Fix the unpacking of Vertices: the reference is a long long,.
+
 !========================= PackedEvent v4r8 2012-03-14 =========================
 ! 2012-03-14 - Olivier Callot
- - Fix teh PackedVertex class: most of the information was not stored!
+ - Fix the PackedVertex class: most of the information was not stored!
   https://savannah.cern.ch/bugs/?92524 
 
 ! 2012-03-06 - Olivier Callot
