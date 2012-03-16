@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-03-16 - S. Blusk
+- Update to Beauty2Charm
+  Commented out second occurrence of a module in Beauty2Charm_B2DX
+  Added lines (B,Bs,Lb)-->(D,D0,D*,Lc)KKpi lines
+
 ! 2012-03-16 - Konstantinos A. Petridis
   - StrippingB2MuMuX.py
    Modified selections to all lines to bring

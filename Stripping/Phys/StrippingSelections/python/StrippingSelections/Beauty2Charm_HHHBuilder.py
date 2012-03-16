@@ -19,6 +19,7 @@ class HHHBuilder(object):
                                     config['pDAUGHTERS'])
         self.config = config
         self.pipipi = [self._makePiPiPi()]
+        self.kkpi = [self._makeKKPi()]
         self.kpipi = [self._makeKPiPi()]
         self.ppbarpi = [self._makeppbarPi()]
         self.ppbark = [self._makeppbarK()]
@@ -42,6 +43,12 @@ class HHHBuilder(object):
         massWindow = "(AM < %s)" % (self.config['MASS_WINDOW']['A1'])
         return self._makeX2HHH('X2PiPiPi',['[a_1(1260)+ -> pi+ pi- pi+]cc'],
                               massWindow,self.config,[self.pions])
+
+    def _makeKKPi(self):
+        '''Makes X -> K+K-pi+'''
+        massWindow = "(AM < %s)" % (self.config['MASS_WINDOW']['A1'])
+        return self._makeX2HHH('X2KKPi',['[a_1(1260)+ -> K+ K- pi+]cc'],
+                              massWindow,self.config,[self.pions,self.kaons])
 
     def _makeKPiPi(self):
         '''Makes X -> K+pi-pi+ + c.c.'''

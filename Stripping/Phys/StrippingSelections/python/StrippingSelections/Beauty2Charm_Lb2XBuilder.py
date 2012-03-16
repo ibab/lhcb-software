@@ -138,25 +138,30 @@ class Lb2XBuilder(object):
         '''Make RS and WS Lb -> Lc HHH (H=pi,K) + cc.'''
         pipipi = self.hhh.pipipi
         kpipi = self.hhh.kpipi
+        kkpi = self.hhh.kkpi
         ppbarpi = self.hhh.ppbarpi
         ppbark = self.hhh.ppbark
         decays = {'Lb2LcPiPiPi'  : ["[Lambda_b0 -> Lambda_c+ a_1(1260)-]cc"],
                   'Lb2LcKPiPi'   : ["[Lambda_b0 -> Lambda_c+ K_1(1270)-]cc"],
                   'Lb2LcppbarPi' : ["[Lambda_b0 -> Lambda_c+ a_1(1260)-]cc"],
-                  'Lb2LcppbarK'  : ["[Lambda_b0 -> Lambda_c+ a_1(1260)-]cc"]}
+                  'Lb2LcppbarK'  : ["[Lambda_b0 -> Lambda_c+ a_1(1260)-]cc"],
+                  'Lb2LcKKPi'    : ["[Lambda_b0 -> Lambda_c+ a_1(1260)-]cc"]}
         inputs = {'Lb2LcPiPiPi'  : self.lc_pid+pipipi,
                   'Lb2LcKPiPi'   : self.lc_pid+kpipi,
                   'Lb2LcppbarPi' : self.lc_pid+ppbarpi,
-                  'Lb2LcppbarK'  : self.lc_pid+ppbark}
+                  'Lb2LcppbarK'  : self.lc_pid+ppbark,
+                  'Lb2LcKKPi'    : self.lc_pid+kkpi}
         rs = makeB2XSels(decays,'Lc2PKPi',inputs,self.config)
         decays = {'Lb2LcPiPiPiWS'  : ["[Lambda_b0 -> Lambda_c+ a_1(1260)+]cc"],
                   'Lb2LcKPiPiWS'   : ["[Lambda_b0 -> Lambda_c+ K_1(1270)+]cc"],
                   'Lb2LcppbarPiWS' : ["[Lambda_b0 -> Lambda_c+ a_1(1260)+]cc"],
-                  'Lb2LcppbarKWS'  : ["[Lambda_b0 -> Lambda_c+ a_1(1260)+]cc"]}
+                  'Lb2LcppbarKWS'  : ["[Lambda_b0 -> Lambda_c+ a_1(1260)+]cc"],
+                  'Lb2LcKKPiWS'    : ["[Lambda_b0 -> Lambda_c+ a_1(1260)+]cc"]}
         inputs = {'Lb2LcPiPiPiWS'  : self.lc_pid+pipipi,
                   'Lb2LcKPiPiWS'   : self.lc_pid+kpipi,
                   'Lb2LcppbarPiWS' : self.lc_pid+ppbarpi,
-                  'Lb2LcppbarKWS'  : self.lc_pid+ppbark}
+                  'Lb2LcppbarKWS'  : self.lc_pid+ppbark,
+                  'Lb2LcKKPiWS'    : self.lc_pid+kkpi}
         ws = makeB2XSels(decays,'Lc2PKPi',inputs,self.config)
         self.lines.append(ProtoLine(rs,1.0))
         self.lines.append(ProtoLine(ws,0.1))
