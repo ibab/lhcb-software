@@ -15,6 +15,10 @@ Purpose: LHCb reconstruction program
     tracks (TrackTools)
   . Add EndVelo state to velo only fits (TrackFitter)
 
+- Changes to tests
+  . add a test for 2012 data type (brunel2012magdown), for the time being using
+    2011 data as input. 
+
 </PRE><H1><A NAME=v42r1>2012-03-02 Brunel v42r1</A></H1><PRE>
 This version uses projects LCG 62a, Gaudi v23r1, LHCb v34r1, Lbcom v12r1,
  Rec v13r1 and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
