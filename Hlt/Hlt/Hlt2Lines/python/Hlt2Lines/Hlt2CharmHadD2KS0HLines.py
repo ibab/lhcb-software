@@ -10,48 +10,50 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
    # define some values so that they are not hard-coded
     __slots__ = {
                   ## KS0 daughter pion cuts - KS0LL
-                    'KS0DaugTrackChi2' : 5.0
+                    'KS0DaugTrackChi2' : 4.0
                   , 'KS0DaugMIPChi2'   : 36.0
 
                   ## KS0 daughter pion cuts - KS0DD
-                  , 'KS0DDDaugTrackChi2' : 5.0
+                  , 'KS0DDDaugTrackChi2' : 4.0
                   , 'KS0DDDaugMIPChi2'   : 36.0
                                         
                   ## KS0 mother cuts - KS0LL
-                  , 'KS0VertexChi2'    : 20.0
-                  , 'KS0PT'            : 500 * MeV
-                  , 'KS0MIPChi2'       : 4
-                  , 'ZDiff'       : 10 * mm
+                  , 'KS0VertexChi2'    : 10.0
+                  , 'KS0PT'            : 0.0 * MeV
+                  , 'KS0MIPChi2'       : 0
+                  , 'ZDiff'       : 0 * mm
+                  , 'KS0BPVVDCHI2'       : 300.0  # new added
 
                   ## KS0 mother cuts - KS0DD
-                  , 'KS0DDVertexChi2'    : 20.0
-                  , 'KS0DDPT'            : 500 * MeV
+                  , 'KS0DDVertexChi2'    : 10.0
+                  , 'KS0DDPT'            : 1000 * MeV
                   , 'KS0DDMIPChi2'       : 0
-                  , 'DDZDiff'       : 10 * mm  
+                  , 'DDZDiff'       : 0 * mm  
+                  , 'KS0DDBPVVDCHI2'       : 200.0  # new added
 
                   ## Bachelor pion cuts - KS0LL
-                  , 'BachPionP'         : 2500.0 * MeV
-                  , 'BachPionPT'        : 250.0 * MeV
-                  , 'BachPionTrackChi2' : 5.0
-                  , 'BachPionMIPChi2'   : 4.0
+                  , 'BachPionP'         : 2000.0 * MeV
+                  , 'BachPionPT'        : 200.0 * MeV
+                  , 'BachPionTrackChi2' : 4.0
+                  , 'BachPionMIPChi2'   : 15.0
 
                   ## Bachelor pion cuts - KS0DD
-                  , 'BachPionPDD'         : 2500.0 * MeV
-                  , 'BachPionPTDD'        : 250.0 * MeV
-                  , 'BachPionTrackChi2DD' : 5.0
-                  , 'BachPionMIPChi2DD'   : 4.0
+                  , 'BachPionPDD'         : 2000.0 * MeV
+                  , 'BachPionPTDD'        : 200.0 * MeV
+                  , 'BachPionTrackChi2DD' : 4.0
+                  , 'BachPionMIPChi2DD'   : 15.0
 
                   ## Bachelor kaon cuts - KS0LL
-                  , 'BachKaonP'         : 2500.0 * MeV
-                  , 'BachKaonPT'        : 250. * MeV
-                  , 'BachKaonTrackChi2' : 5.0
-                  , 'BachKaonMIPChi2'   : 4.0
+                  , 'BachKaonP'         : 2000.0 * MeV
+                  , 'BachKaonPT'        : 200. * MeV
+                  , 'BachKaonTrackChi2' : 4.0
+                  , 'BachKaonMIPChi2'   : 15.0
 
                   ## Bachelor kaon cuts - KS0DD
-                  , 'BachKaonPDD'         : 2500.0 * MeV
-                  , 'BachKaonPTDD'        : 250. * MeV
-                  , 'BachKaonTrackChi2DD' : 5.0
-                  , 'BachKaonMIPChi2DD'   : 4.0
+                  , 'BachKaonPDD'         : 2000.0 * MeV
+                  , 'BachKaonPTDD'        : 200. * MeV
+                  , 'BachKaonTrackChi2DD' : 4.0
+                  , 'BachKaonMIPChi2DD'   : 15.0
 
                   ## D meson cuts
                   ## Combo cuts
@@ -60,9 +62,9 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
                   ## Mother cuts
                   , 'DMesonMotherLowMass'    : 1770.0 * MeV
                   , 'DMesonMotherHighMass'   : 2070.0 * MeV
-                  , 'DMesonMotherVertexChi2' : 15.0
-                  , 'DMesonMotherMIPChi2'    : 25.0
-                  , 'DMesonMotherPT'         : 800.0 * MeV
+                  , 'DMesonMotherVertexChi2' : 10.0
+                  , 'DMesonMotherMIPChi2'    : 15.0
+                  , 'DMesonMotherPT'         : 0.0 * MeV
                  
                   , 'TisTosParticleTaggerSpecs': { "Hlt1Track.*Decision%TOS":0 }
                   , 'name_prefix'              : 'CharmHadD2KS0H'
@@ -95,10 +97,12 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
         incuts = "CHILDCUT((TRCHI2DOF < %(KS0DaugTrackChi2)s),1)" \
                  "& CHILDCUT((TRCHI2DOF < %(KS0DaugTrackChi2)s),2)" \
                  "& (VFASPF(VCHI2PDOF) < %(KS0VertexChi2)s)" \
-                 "& (PT > %(KS0PT)s)" \
+                 "& (BPVVDCHI2 > %(KS0BPVVDCHI2)s)" \
                  "& CHILDCUT((MIPCHI2DV(PRIMARY) > %(KS0DaugMIPChi2)s),1)" \
-                 "& CHILDCUT((MIPCHI2DV(PRIMARY) > %(KS0DaugMIPChi2)s),2)" \
-                 "& (MIPCHI2DV(PRIMARY) > %(KS0MIPChi2)s)" % self.getProps()
+                 "& CHILDCUT((MIPCHI2DV(PRIMARY) > %(KS0DaugMIPChi2)s),2)" % self.getProps()
+               
+#"& (PT > %(KS0PT)s)" \
+#"& (MIPCHI2DV(PRIMARY) > %(KS0MIPChi2)s)" % self.getProps()
 
 
         # Define the HLT2 member with it's necessary inputs
@@ -128,10 +132,12 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
         incuts = "CHILDCUT((TRCHI2DOF < %(KS0DDDaugTrackChi2)s),1)" \
                  "& CHILDCUT((TRCHI2DOF < %(KS0DDDaugTrackChi2)s),2)" \
                  "& (VFASPF(VCHI2PDOF) < %(KS0DDVertexChi2)s)" \
+                 "& (BPVVDCHI2 > %(KS0DDBPVVDCHI2)s)" \
                  "& (PT > %(KS0DDPT)s)" \
                  "& CHILDCUT((MIPCHI2DV(PRIMARY) > %(KS0DDDaugMIPChi2)s),1)" \
-                 "& CHILDCUT((MIPCHI2DV(PRIMARY) > %(KS0DDDaugMIPChi2)s),2)" \
-                 "& (MIPCHI2DV(PRIMARY) > %(KS0DDMIPChi2)s)" % self.getProps()
+                 "& CHILDCUT((MIPCHI2DV(PRIMARY) > %(KS0DDDaugMIPChi2)s),2)" % self.getProps()
+
+                 #"& (MIPCHI2DV(PRIMARY) > %(KS0DDMIPChi2)s)" % self.getProps()
 
 
         # Define the HLT2 member with it's necessary inputs
@@ -270,9 +276,10 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
 
         mothercuts = "in_range(%(DMesonMotherLowMass)s, MM, %(DMesonMotherHighMass)s)" \
                      "& (VFASPF(VCHI2PDOF) < %(DMesonMotherVertexChi2)s)" \
-                     "& (PT > %(DMesonMotherPT)s)" \
-                     "& (MIPCHI2DV(PRIMARY) < %(DMesonMotherMIPChi2)s)" \
-                     "& ((CHILD( VFASPF(VZ) , 'KS0' == ID ) - VFASPF(VZ)) > %(ZDiff)s)" % self.getProps()
+                     "& (MIPCHI2DV(PRIMARY) < %(DMesonMotherMIPChi2)s)" % self.getProps()
+                     
+ #"& (PT > %(DMesonMotherPT)s)" \
+ #"& ((CHILD( VFASPF(VZ) , 'KS0' == ID ) - VFASPF(VZ)) > %(ZDiff)s)" % self.getProps(
 
         # Daughter cuts defined in bachelor pion/kaon filter      
         
@@ -303,9 +310,10 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
 
         mothercuts = "in_range(%(DMesonMotherLowMass)s, MM, %(DMesonMotherHighMass)s)" \
                      "& (VFASPF(VCHI2PDOF) < %(DMesonMotherVertexChi2)s)" \
-                     "& (PT > %(DMesonMotherPT)s)" \
-                     "& (MIPCHI2DV(PRIMARY) < %(DMesonMotherMIPChi2)s)" \
-                     "& ((CHILD( VFASPF(VZ) , 'KS0' == ID ) - VFASPF(VZ)) > %(ZDiff)s)" % self.getProps()
+                     "& (MIPCHI2DV(PRIMARY) < %(DMesonMotherMIPChi2)s)" % self.getProps()
+
+#"& (PT > %(DMesonMotherPT)s)" \
+#"& ((CHILD( VFASPF(VZ) , 'KS0' == ID ) - VFASPF(VZ)) > %(ZDiff)s)" % self.getProps()
 
         # Daughter cuts defined in bachelor pion/kaon filter      
         
