@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-03-15 - V. Gligorov
+ - Loose track chi2 cuts in topo_draft2012, and add D->Ks0Ks0 to charm lines
+
 ! 2012-03-15 - Victor Coco
  - Added DV_draft2012 for displVertices thresholds
    Physics_draft2012 updated accordingly (basically replace DV_draft2011 
