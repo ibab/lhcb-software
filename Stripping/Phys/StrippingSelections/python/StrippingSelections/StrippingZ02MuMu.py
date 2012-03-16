@@ -1,118 +1,93 @@
-#Stripping Lines for Z->MuMu
-#Electroweak Group (Convenor: Tara Shears)
-#Adaptation of lines (to use line builders) originally written by James Keaveney by Will Barter
-
-# Lines needed:
-# Z02MuMu. stdloosemuons
-# Z02MuMu. stdveryloosemuons
-# Z02MuMu. stdnopids muons. 
+# Stripping Lines for Z->MuMu and studies of Mu efficiencies
+# Electroweak Group (Conveners: S.Bifani, J.Anderson; Stripping contact: W.Barter)
+#
+# S.Bifani
+#
+# Z02MuMu signal:     StdAllLooseMuons,  pT>15GeV & MM>40GeV
+# Z02MuMu efficiency: StdAllNoPIDsMuons, pT>15GeV & MM>40GeV
 
 from Gaudi.Configuration import *
-from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
+from GaudiConfUtils.ConfigurableGenerators import CombineParticles
 from PhysSelPython.Wrappers import Selection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdVeryLooseMuons, StdAllNoPIDsMuons, StdAllLooseMuons
+from StandardParticles import StdAllLooseMuons, StdAllNoPIDsMuons
 
-confdict_Z02MuMu={
-    'Z02MuMuLinePrescale'    : 1.0 
-    ,  'Z02MuMuLinePostscale'   : 1.0
-    ,  'Z0MinMass' : 40.
-    ,  'mucut' : 15.                                   
- }
+confdict_Z02MuMu = { 'Z02MuMu_Prescale'  : 1.0,
+                     'Z02MuMu_Postscale' : 1.0,
+                     'pT'    : 15.,
+                     'MMmin' : 40.
+                     }
 
-default_name = "Z02MuMu"
+default_name = 'Z02MuMu'
 
-class Z02MuMuConf(LineBuilder) :
+class Z02MuMuConf( LineBuilder ) :
 
-    __configuration_keys__ = ('Z0MinMass',
-                              'mucut',
-                              'Z02MuMuLinePrescale',
-                              'Z02MuMuLinePostscale'                           
-                              )
-    
-    def __init__(self, name, config) :
-        LineBuilder.__init__(self, name, config)
+    __configuration_keys__ = ( 'Z02MuMu_Prescale',
+                               'Z02MuMu_Postscale',
+                               'pT',
+                               'MMmin'
+                               )
+
+    def __init__( self, name, config ) :
+
+        LineBuilder.__init__( self, name, config )
 
         self._myname = name
-        
-        #Define the cuts
-        _mucut= '(PT>%(mucut)s*GeV)'%config
-        _Z0MinMass = '(MM>%(Z0MinMass)s*GeV)'%config
 
 
-        self.selZ02MuMu = makeZ02MuMu(self._myname+'Z02MuMu', 
-                                     _Z0MinMass,
-                                     _mucut)
-     
-        self.Z02MuMu_line = StrippingLine(self._myname+"Line",
-                                          prescale = config['Z02MuMuLinePrescale'],
-                                          postscale = config['Z02MuMuLinePostscale'],
-                                          checkPV = False,
-                                          selection = self.selZ02MuMu
-                                          )
-        self.registerLine(self.Z02MuMu_line)
-       
-        #self.selZ02MuMuloose = makeZ02MuMuloose(self._myname+'Z02MuMuLoose', 
-        #                             _Z0MinMass,
-        #                             _mucut)
-     
-        #self.Z02MuMu_lineloose = StrippingLine(self._myname+"LooseLine",
-        #                                       prescale = config['Z02MuMuLinePrescale'],
-        #                                       postscale = config['Z02MuMuLinePostscale'],
-        #                                       checkPV = False,
-        #                                       selection = self.selZ02MuMuloose
-        #                                       )
-        #self.registerLine(self.Z02MuMu_lineloose)
+        # Define the cuts
+
+        _pT    = '(PT>%(pT)s*GeV)'%config
+        _MMmin = '(MM>%(MMmin)s*GeV)'%config
 
 
-        self.selZ02MuMuNoPIDs = makeZ02MuMuNoPIDs(self._myname+'Z02MuMuNoPIDs', 
-                                     _Z0MinMass,
-                                     _mucut)
-     
-        self.Z02MuMu_lineNoPIDs = StrippingLine(self._myname+"NoPIDsLine",
-                                                prescale = config['Z02MuMuLinePrescale'],
-                                                postscale = config['Z02MuMuLinePostscale'],
-                                                checkPV = False,
-                                                selection = self.selZ02MuMuNoPIDs
+        # Z02MuMu signal
+
+        self.sel_Z02MuMu = makeCombination( self._myname + 'Z02MuMu',
+                                            StdAllLooseMuons,
+                                            _pT,
+                                            _MMmin
                                             )
-        self.registerLine(self.Z02MuMu_lineNoPIDs)
+
+        self.line_Z02MuMu = StrippingLine( self._myname + 'Line',
+                                           prescale  = config[ 'Z02MuMu_Prescale' ],
+                                           postscale = config[ 'Z02MuMu_Postscale' ],
+                                           checkPV   = False,
+                                           selection = self.sel_Z02MuMu
+                                           )
+
+        self.registerLine( self.line_Z02MuMu )
 
 
-def makeZ02MuMu(name, _Z0MinMass, _mucut) :
-    _Z0 = CombineParticles(DecayDescriptor = 'Z0 -> mu+ mu-',
-                           DaughtersCuts = { 'mu+' : _mucut , 
-                                             'mu-' : _mucut },
-                           MotherCut = _Z0MinMass,
-                           WriteP2PVRelations = False
-                           )
-    _stdallloosemuons = StdAllLooseMuons
+        # Z02MuMu efficiency
+
+        self.sel_Z02MuMuNoPIDs = makeCombination( self._myname + 'Z02MuMuNoPIDs',
+                                                  StdAllNoPIDsMuons,
+                                                  _pT,
+                                                  _MMmin
+                                                  )
+
+        self.line_Z02MuMuNoPIDs = StrippingLine( self._myname + 'NoPIDsLine',
+                                                 prescale  = config[ 'Z02MuMu_Prescale' ],
+                                                 postscale = config[ 'Z02MuMu_Postscale' ],
+                                                 checkPV   = False,
+                                                 selection = self.sel_Z02MuMuNoPIDs
+                                                 )
+
+        self.registerLine( self.line_Z02MuMuNoPIDs )
+
+
+def makeCombination( name, _input, _daughters, _mother ) :
+
+    _combination = CombineParticles( DecayDescriptor    = 'Z0 -> mu+ mu-',
+                                     DaughtersCuts      = { 'mu+' : _daughters, 
+                                                            'mu-' : _daughters },
+                                     MotherCut          = _mother,
+                                     WriteP2PVRelations = False
+                                     )
+
     return Selection ( name,
-                       Algorithm = _Z0,
-                       RequiredSelections = [_stdallloosemuons])
-
-
-def makeZ02MuMuloose(name, _Z0MinMass, _mucut) :
-    _Z0loose = CombineParticles(DecayDescriptor = 'Z0 -> mu+ mu-',
-                           DaughtersCuts = { 'mu+' : _mucut , 
-                                             'mu-' : _mucut },
-                           MotherCut = _Z0MinMass,
-                           WriteP2PVRelations = False
-                           )
-    _stdveryloosemuons = StdVeryLooseMuons
-    return Selection ( name,
-                       Algorithm = _Z0loose,
-                       RequiredSelections = [_stdveryloosemuons])
-
-
-def makeZ02MuMuNoPIDs(name, _Z0MinMass, _mucut) :
-    _Z0NoPIDs = CombineParticles(DecayDescriptor = 'Z0 -> mu+ mu-',
-                           DaughtersCuts = { 'mu+' : _mucut , 
-                                             'mu-' : _mucut },
-                           MotherCut = _Z0MinMass,
-                           WriteP2PVRelations = False
-                           )
-    _AllNoPIDsMuons = StdAllNoPIDsMuons
-    return Selection ( name,
-                       Algorithm = _Z0NoPIDs,
-                       RequiredSelections = [_AllNoPIDsMuons])
+                       Algorithm          = _combination,
+                       RequiredSelections = [ _input ]
+                       )

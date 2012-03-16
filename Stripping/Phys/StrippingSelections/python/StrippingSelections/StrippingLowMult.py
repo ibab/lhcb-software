@@ -37,7 +37,7 @@ class LowMultConf(LineBuilder) :
 
         #MUON
 
-        ExclusiveMuonGEC = {'Code' : "(recSummaryTrack( LHCb.RecSummary.nBackTracks, TrBACKWARD)<1)",
+        ExclusiveMuonGEC = {'Code' : "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) > 0) & (recSummaryTrack( LHCb.RecSummary.nBackTracks, TrBACKWARD)<1) & (recSummary(LHCb.RecSummary.nTracks , 'Rec/Track/Best') <  6)",
                             'Preambulo' : ["from LoKiTracks.decorators import *"]}
        
         self.LowMultMuon_line = StrippingLine(self._myname+"MuonLine",
@@ -58,12 +58,15 @@ class LowMultConf(LineBuilder) :
                                                 )
         
         self.registerLine(self.LowMultMuon_lineps)
+        
+        ExclusiveDiMuonGEC = {'Code' : "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) > 0) & (recSummaryTrack( LHCb.RecSummary.nBackTracks, TrBACKWARD)<1)",
+                            'Preambulo' : ["from LoKiTracks.decorators import *"]}
 
         self.LowMultPP2PPMuMu_line = StrippingLine(self._myname+"PP2PPMuMuLine",
                                                    prescale = config['LowMultPrescale'],
                                                    postscale = config['LowMultPostscale'],
                                                    checkPV = False,
-                                                   FILTER = ExclusiveMuonGEC,
+                                                   FILTER = ExclusiveDiMuonGEC,
                                                    HLT = "HLT_PASS('Hlt2diPhotonDiMuonDecision')"
                                                    )
         

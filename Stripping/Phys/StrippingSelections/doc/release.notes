@@ -4,6 +4,24 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-03-16 - Will Barter
+ - Updated:
+	 StrippingZ02TauTau.py
+   StrippingZ02MuMu.py
+   StrippingZ02ee.py
+   StrippingWMu.py
+   StrippingWe.py
+   StrippingSingleTrackTIS.py
+   StrippingMuMuSS.py
+   StrippingLowMult.py
+   StrippingDY2MuMu.py
+   StrippingDY2ee.py
+   StrippingDiPhotonDiMuon.py
+
+	 to reduce rate and remove unused lines. (Updates from Simone Bifani included.)
+	
+
+
 ! 2012-03-15 - Rafael Coutinho
  - StrippingB2KShh.py
    Added B0 -> p+ pbar- KS mode to decay descriptor.

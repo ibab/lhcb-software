@@ -1,9 +1,8 @@
 # Stripping Lines for W->MuNu and studies of their background
-# Electroweak Group (Convenor: S.Bifani, J.Anderson)
+# Electroweak Group (Conveners: S.Bifani, J.Anderson; Stripping contact: W.Barter)
 #
-# Adaptation of lines originally written by J.Keaveney and W.Barter
+# S.Bifani
 #
-# (2012-02-28) S.Bifani
 # WMu signal:     StdAllLooseMuons,  pT>20GeV
 # WMu control:    StdAllLooseMuons,  pT>15GeV                    (10% PRESCALE)
 # WMu background: StdAllNoPIDsMuons, pT>5GeV  & Hlt1MBNoBias Dec (RATE LIMITED)
@@ -44,13 +43,13 @@ class WMuConf( LineBuilder ) :
 
         # Define the cuts
 
-        _pT     = "(PT>%(pT)s*GeV)"%config
+        _pT     = '(PT>%(pT)s*GeV)'%config
         #_pT     = "(PT>%(pT)s*GeV) & (HASTRACK & TRCUT(0<TrIDC('isTT')))"%config
-        _pTlow  = "(PT>%(pTlow)s*GeV)"%config
-        _pTvlow = "(PT>%(pTvlow)s*GeV)"%config
+        _pTlow  = '(PT>%(pTlow)s*GeV)'%config
+        _pTvlow = '(PT>%(pTvlow)s*GeV)'%config
 
 
-        # WMu signal: StdAllLooseMuons, pT>20GeV
+        # WMu signal
 
         self.sel_WMu = makeFilter( self._myname + 'WMu',
                                    StdAllLooseMuons,
@@ -68,7 +67,7 @@ class WMuConf( LineBuilder ) :
         self.registerLine( self.line_WMu )
 
 
-        # WMu control: StdAllLooseMuons, pT>15GeV (10% PRESCALE)
+        # WMu control
 
         self.sel_WMuLow = makeFilter( self._myname + 'WMuLow',
                                       StdAllLooseMuons,
@@ -86,7 +85,7 @@ class WMuConf( LineBuilder ) :
         self.registerLine( self.line_WMuLow )
 
 
-        # WMu background: StdAllNoPIDsMuons, pT>5GeV & Hlt1MBNoBias Dec (RATE LIMITED)
+        # WMu background
 
         self.sel_SingleTrackNoBias = makeFilter( self._myname + 'SingleTrackNoBias',
                                                  StdAllNoPIDsMuons,

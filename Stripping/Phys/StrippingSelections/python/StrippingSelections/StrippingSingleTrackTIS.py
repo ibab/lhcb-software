@@ -1,11 +1,10 @@
 # Stripping Lines for study of background to Electroweak processes
-# Electroweak Group (Convenor: S.Bifani, J.Anderson)
+# Electroweak Group (Conveners: S.Bifani, J.Anderson; Stripping contact: W.Barter)
 #
-# Line designed by S.Bifani and W.Barter
+# S.Bifani
 #
-# (2012-02-28) S.Bifani
-# StdAllNoPIDsMuons, pT>20GeV & TTHits & Hlt1xHlt2 TIS (10% PRESCALE)
-# StdAllNoPIDsMuons, pT>15GeV & TTHits & Hlt1xHlt2 TIS ( 1% PRESCALE)
+# SingleTrackTIS:    StdAllNoPIDsMuons, pT>20GeV & TTHits & Hlt1xHlt2 TIS (10% PRESCALE)
+# SingleTrackTISLow: StdAllNoPIDsMuons, pT>15GeV & TTHits & Hlt1xHlt2 TIS ( 1% PRESCALE)
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
@@ -41,11 +40,11 @@ class SingleTrackTISConf( LineBuilder ) :
 
         # Define the cuts
 
-        _cut    = "(PT>%(pT)s*GeV) & (HASTRACK & TRCUT(0<TrIDC('isTT')))"%config
+        _cut    = "(PT>%(pT)s*GeV)    & (HASTRACK & TRCUT(0<TrIDC('isTT')))"%config
         _cutlow = "(PT>%(pTlow)s*GeV) & (HASTRACK & TRCUT(0<TrIDC('isTT')))"%config
         
 
-        # StdAllNoPIDsMuons, pT>20GeV & TTHits & Hlt1xHlt2 TIS
+        # SingleTrackTIS
 
         self.sel_NoPIDs = makeFilter( self._myname + 'NoPIDs',
                                       StdAllNoPIDsMuons,
@@ -73,7 +72,7 @@ class SingleTrackTISConf( LineBuilder ) :
 	self.registerLine( self.line_SingleTrackTIS )
 
 
-        # StdAllNoPIDsMuons, pT>15GeV & TTHits & Hlt1xHlt2 TIS PRESCALED
+        # SingleTrackTIS
 
         self.sel_NoPIDsLow = makeFilter( self._myname + 'NoPIDsLow',
                                          StdAllNoPIDsMuons,
