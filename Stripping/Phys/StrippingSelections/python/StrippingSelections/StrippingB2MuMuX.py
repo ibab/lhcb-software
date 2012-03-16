@@ -65,32 +65,34 @@ config = {
         'ASUMPT_MIN'    : '2000*MeV',
         'VCHI2DOF_MAX'  : 8,
         'BPVVDCHI2_MIN' : 225,
-        'BPVIPCHI2_MAX' : 25,
+        'BPVIPCHI2_MAX' : 17,
         'BPVDIRA_MIN'   : 0.4,
-        'CORRM_MIN'     : '4600*MeV',
-        'CORRM_MAX'     : '6000*MeV',
-        'PTMU'          : '700*MeV'
+        'CORRM_MIN'     : '4800*MeV',
+        'CORRM_MAX'     : '6500*MeV',
+        'PTMU'          : '900*MeV'
         },
     'Photons': {
-        'PT_MIN' : '1300*MeV'
+        'PT_MIN' : '1600*MeV',
+        'CL_MIN' : '0.25'
         },    
     "V0s": { # Cuts for rho, K*, phi
         'MASS_MIN'      : {'KST':'700*MeV','RHO':'600*MeV','PHI':'900*MeV'},
         'MASS_MAX'      : {'KST':'1100*MeV','RHO':'1000*MeV','PHI':'1100*MeV'},
-        'DAUGHTERS'     : {'PT_MIN':'100*MeV','P_MIN':'2000*MeV',
+        'DAUGHTERS'     : {'PT_MIN':'150*MeV','P_MIN':'2000*MeV',
                            'MIPCHI2DV_MIN' : 4, 'TRCHI2DOF_MAX' : 4},
         'AMAXDOCA_MAX'  : '0.5*mm',
         'VCHI2DOF_MAX'  : 16,
-        'BPVVDCHI2_MIN' : 16, 
+        'BPVIPCHI2_MAX' : 16,
+        'BPVVDCHI2_MIN' : 25, 
         'BPVDIRA_MIN'   : 0,
         'ASUMPT_MIN'    : '1000*MeV'
         },    
     "B2X3BODY" : { 
-        'SUMPT_MIN'     : '4800*MeV',
+        'SUMPT_MIN'     : '5000*MeV',
         'VCHI2DOF_MAX'  : 10,
-        'BPVIPCHI2_MAX' : 25,
+        'BPVIPCHI2_MAX' : 20,
         'BPVVDCHI2_MIN' : 25,
-        'BPVDIRA_MIN'   : 0.4, #0.0
+        'BPVDIRA_MIN'   : 0.9, #0.0
         'MASS_MIN'      : {'B':'4300*MeV'},
         'MASS_MAX'      : {'B':'6400*MeV'},
         },
@@ -99,25 +101,25 @@ config = {
         'VCHI2DOF_MAX'  : 10,
         'BPVIPCHI2_MAX' : 25,
         'BPVVDCHI2_MIN' : 25,
-        'BPVDIRA_MIN'   : 0.4, #0.0
+        'BPVDIRA_MIN'   : 0.9, #0.0
         'MASS_MIN'      : {'J':'2600*MeV'},
         'MASS_MAX'      : {'J':'3600*MeV'},
         },
     "B2X3BODYHIGHM" : { 
-        'SUMPT_MIN'     : '4800*MeV',
+        'SUMPT_MIN'     : '5000*MeV',
         'VCHI2DOF_MAX'  : 10,
-        'BPVDIRA_MIN'   : 0.0,
+        'BPVDIRA_MIN'   : 0.9,
         'MASS_MIN'      : {'Y':'9000*MeV'},
         'MASS_MAX'      : {'Y':'10000*MeV'},
         },
     "B2X4BODY" : { 
         'SUMPT_MIN'     : '5000*MeV',
-        'VCHI2DOF_MAX'  : 10,
-        'BPVIPCHI2_MAX' : 25,
-        'BPVVDCHI2_MIN' : 25,
+        'VCHI2DOF_MAX'  : 6,
+        'BPVIPCHI2_MAX' : 16,
+        'BPVVDCHI2_MIN' : 50,
         'BPVDIRA_MIN'   : 0.0,
-        'MASS_MIN'      : {'B':'4300*MeV'},
-        'MASS_MAX'      : {'B':'6300*MeV'}
+        'MASS_MIN'      : {'B':'4600*MeV'},
+        'MASS_MAX'      : {'B':'6000*MeV'}
         },
     "Prescales" : {
         'OS'            : 1.0,
@@ -162,6 +164,7 @@ def diMuonBuilder(muons,config,decay,tag,oneLooseMuInDimu):
 
 def filterPhotons(photons,config):
     code = LoKiCuts(['PT'],config).code()
+    code += ' & (CL>%s)' % config['CL_MIN']
     return Selection('B2MuMuXPhotonFilter',
                      Algorithm=FilterDesktop(Code=code),
                      RequiredSelections=[photons])
@@ -312,7 +315,7 @@ class B2MuMuXConf(LineBuilder):
 
         # photons
         photons = filterPhotons(StdLooseAllPhotons,config['Photons'])
-
+    
         # v0s for rho0,Kst,phi
         rhos = makeV0s('Rho2PiPi',[StdAllNoPIDsPions],'rho(770)0 -> pi+ pi-',config['V0s'])
         ksts = makeV0s('Kst2KPi' ,[StdAllNoPIDsPions,StdAllNoPIDsKaons],'[K*(892)0 -> K+ pi-]cc',config['V0s'])
@@ -345,17 +348,17 @@ class B2MuMuXConf(LineBuilder):
         
         # B to V0 MuMu
         #rho
-        b2rhomumu = makeB2X('B2RhoMuMu',['B0 -> KS0 rho(770)0' ],
+        b2rhomumu = makeB2X('B2RhoMuMu_B2MuMuX',['B0 -> KS0 rho(770)0' ],
                             [dimuons_fly_loose,rhos],
                             config['B2X4BODY'])
         self._makeLine(b2rhomumu,config)
         #kst
-        b2kstmumu = makeB2X('B2KstMuMu',['[B0 -> KS0 K*(892)0]cc' ],
+        b2kstmumu = makeB2X('B2KstMuMu_B2MuMuX',['[B0 -> KS0 K*(892)0]cc' ],
                             [dimuons_fly_loose,ksts],
                             config['B2X4BODY'])
         self._makeLine(b2kstmumu,config)
         #phi
-        b2phimumu = makeB2X('B2PhiMuMu',['B0 -> KS0 phi(1020)' ],
+        b2phimumu = makeB2X('B2PhiMuMu_B2MuMuX',['B0 -> KS0 phi(1020)' ],
                             [dimuons_fly_loose,phis],
                             config['B2X4BODY'])
         self._makeLine(b2phimumu,config)
@@ -368,17 +371,17 @@ class B2MuMuXConf(LineBuilder):
                              config['B2X3BODY'],False)
         self._makeLine(b2mumug_ss,config)
         #rho ss
-        b2rhomumu_ss = makeB2X('B2RhoMuMu_ss',['B0 -> KS0 rho(770)0' ],
+        b2rhomumu_ss = makeB2X('B2RhoMuMu_B2MuMuX_ss',['B0 -> KS0 rho(770)0' ],
                                [dimuons_fly_loose_ss,rhos],
                                config['B2X4BODY'])
         self._makeLine(b2rhomumu_ss,config)
         # kst ss
-        b2kstmumu_ss = makeB2X('B2KstMuMu_ss',['[B0 -> KS0 K*(892)0]cc' ],
+        b2kstmumu_ss = makeB2X('B2KstMuMu_B2MuMuX_ss',['[B0 -> KS0 K*(892)0]cc' ],
                             [dimuons_fly_loose_ss,ksts],
                            config['B2X4BODY'])
         self._makeLine(b2kstmumu_ss,config)
         # phi ss
-        b2phimumu_ss = makeB2X('B2PhiMuMu_ss',['B0 -> KS0 phi(1020)' ],
+        b2phimumu_ss = makeB2X('B2PhiMuMu_B2MuMuX_ss',['B0 -> KS0 phi(1020)' ],
                             [dimuons_fly_loose_ss,phis],
                            config['B2X4BODY'])
         self._makeLine(b2phimumu_ss,config)
@@ -387,7 +390,8 @@ class B2MuMuXConf(LineBuilder):
         # B to Mu Mu Gamma
         b2mumug_mcor = makeB2MuMuGammaCORRM('B2MuMuGamma',dimuons_nofly_loose_corrm,
                                             config['DiMuonsCorrM'])
-        self._makeLine(b2mumug_mcor,config)
+        # Mar 2012: Removed for stripping 18
+        # self._makeLine(b2mumug_mcor,config)
     
 
         
@@ -409,7 +413,7 @@ class B2MuMuXConf(LineBuilder):
               "| HLT_PASS_RE('Hlt2.*Muon.*Decision')"\
               "| HLT_PASS_RE('Hlt2.*Gamma.*Decision')"\
               "| HLT_PASS_RE('Hlt2.*Photon.*Decision')"
-
+        
         if ("B2RhoMuMu" in name) | ("B2KstMuMu" in name) | ("B2PhiMuMu" in name) :
             hlt = "HLT_PASS_RE('Hlt2.*Topo.*Decision')"\
                   "| HLT_PASS_RE('Hlt2IncPhi.*Decision')"
