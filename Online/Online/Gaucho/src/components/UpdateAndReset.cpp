@@ -248,7 +248,9 @@ StatusCode UpdateAndReset::execute()
   if (runno > m_runNumber)
   {
 //    printf("+_+_+_+_+_+_+_+_+_+_+_++_+_+_ Different Run!!! \n");
+    m_pGauchoMonitorSvc->UnLock();
     m_pGauchoMonitorSvc->updateSvc("this",m_runNumber,this);
+    m_pGauchoMonitorSvc->Lock();
     if ( 1 == m_saveHistograms )
     {
        //calling finalize - don't need to reset, they probably don't exist anymore
