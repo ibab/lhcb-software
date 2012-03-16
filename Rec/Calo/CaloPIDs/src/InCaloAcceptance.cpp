@@ -46,6 +46,7 @@ InCaloAcceptance::InCaloAcceptance
   const IInterface* parent )
   : Calo::CaloTrackTool ( type, name , parent )
   , m_fiducial( true )
+  , m_loc()
 {
   declareInterface<IInAcceptance>(this);  
   //

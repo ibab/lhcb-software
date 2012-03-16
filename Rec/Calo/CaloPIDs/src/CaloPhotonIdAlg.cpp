@@ -31,6 +31,8 @@ CaloPhotonIdAlg::CaloPhotonIdAlg(const std::string& name,
       m_isRunnable( true ),
       m_useCondDB(),
       m_conditionName(),
+      m_cond(0),
+      m_estimator(0),
       m_histo_path("CaloNeutralPIDs/PhotonID/"),
 
       m_title_Sig_EPrs_10("Signal_Prs_noSpdHit_10"),

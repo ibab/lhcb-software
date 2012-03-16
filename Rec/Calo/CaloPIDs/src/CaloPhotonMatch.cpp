@@ -101,6 +101,7 @@ protected:
     , m_showerMax  ()
     , m_cBad ( 0 ) 
     , m_tBad ( 0 )
+    , m_showerMaxLocation  ()
   {
     declareInterface<ICaloTrackMatch> ( this ) ;
     _setProperty ( "Calorimeter"  , DeCalorimeterLocation::Ecal  ) ;
