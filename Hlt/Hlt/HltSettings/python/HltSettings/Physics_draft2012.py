@@ -57,6 +57,7 @@ class Physics_draft2012( object ):
         from Hlt1Lines.Hlt1L0Lines             import Hlt1L0LinesConf
         from Hlt1Lines.Hlt1MBLines             import Hlt1MBLinesConf
         from Hlt1Lines.Hlt1CommissioningLines  import Hlt1CommissioningLinesConf
+        from Hlt1Lines.Hlt1DisplVertexLines    import Hlt1DisplVertexLinesConf
         from Hlt2Lines.Hlt2CommissioningLines  import Hlt2CommissioningLinesConf
         from Hlt1Lines.Hlt1BeamGasLines        import Hlt1BeamGasLinesConf
         from Hlt2Lines.Hlt2diphotonDiMuonLines import Hlt2diphotonDiMuonLinesConf
@@ -145,6 +146,18 @@ class Physics_draft2012( object ):
                                                                               , 'Hlt1BeamGasHighRhoVertices'       : 'RATE(4)'
                                                                               }
                                                 }
+                       , Hlt1DisplVertexLinesConf: { "VertexDisplVertex_DOCABL"    : "2.0*mm"
+                                                   , "VertexDisplVertex_VELO_NSP"  : "3"
+                                                   , "VertexDisplVertex_VELO_NCSP" : "2"
+                                                   , "VertexDisplVertex_VELOTrChi2": "2.5"
+                                                   , "VertexDisplVertex_VX_DOCA"   : "0.3*mm"
+                                                   , "VertexDisplVertex_VX_CHI2"   : "1000000000.0"
+                                                   , "VertexDisplVertex_VX_RHO"    : "12.0*mm"
+                                                   , "VertexDisplVertex_Tr_P"      : "10.0*GeV"
+                                                   , "VertexDisplVertex_Tr_PT"     : "1.7*GeV"
+                                                   , "VertexDisplVertex_Tr_CHI2"   : "2.5"
+                                                   , "VertexDisplVertex_GEC"       : "Loose"
+                                                   }
                        , Hlt1CommissioningLinesConf : { 'Postscale' : { 'Hlt1ErrorEvent'   : 'RATE(0.01)' } }
                        , Hlt2CommissioningLinesConf : { 'Postscale' : { 'Hlt2ErrorEvent'   : 'RATE(0.01)' } }
                        # micro bias lines switched off for high mu physics running              
@@ -223,6 +236,7 @@ class Physics_draft2012( object ):
                  , 'Hlt1CharmCalibrationNoBias'
                  , 'Hlt1TrackMuon', 'Hlt1TrackAllL0', 'Hlt1TrackPhoton'
                  , 'Hlt1TrackForwardPassThrough','Hlt1TrackForwardPassThroughLoose'
+                 , 'Hlt1VertexDisplVertex'
                  , 'Hlt1SingleMuonNoIP', 'Hlt1SingleMuonHighPT'
                  , 'Hlt1SingleElectronNoIP'
                  , 'Hlt1DiMuonLowMass', 'Hlt1DiMuonHighMass'
