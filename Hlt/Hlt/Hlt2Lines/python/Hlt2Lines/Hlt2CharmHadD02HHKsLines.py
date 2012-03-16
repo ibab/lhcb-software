@@ -31,7 +31,7 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
                 , 'KshhTFKsLLTrkChi2UL'     : 2.5       # unitless;  changed to 10 from 20 111219 mds  to 2.5 120121
                 , 'KshhTFKsLLCombSymMassWin': 20.0 * MeV # changed from 50. * MeV 111219 mds - may be used
                                                          # for a different purpose now?
-                , 'KshhTFKsLLMothSymMassWin': 15.0 * MeV  #  mds, add some sidebands, 120122, up from 11.4 * MeV
+                , 'KshhTFKsLLMothSymMassWin': 30.0 * MeV  #  mds, increased to 30 MeV from 15 120315
                 , 'KshhTFKsLLVtxChi2UL'     : 20.0       # unitless change from 30 to 20 120116
                 , 'KshhTFKsLLVtxPVDispZLL'  : -1000.0 * mm
                 , 'KshhTFKsLLVtxPVDispZUL'  : 650.0 * mm
@@ -50,8 +50,8 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
                 , 'KshhTFDVtxChi2UL'        : 20.0       # unitless
                 , 'KshhTFDPtLL'             : 2000.0 * MeV    # -- 14 Jan: Mat changed from 500 to 2000
                 , 'KshhTFDDiraLL'           : 0.999        # unitless -- 14 Jan: Mat changed from 0.999 to 0.0; and back to 0.999 120115 mds
-                , 'KshhTFDwKsLLSymMassWin'  : 65.0 * MeV  # changed from 100 MeV to 65 MeV 120116 mds
-                , 'KshhTFDwKsDDSymMassWin'  : 70.0 * MeV  # changed from 120 MeV to 70 MeV 120116 mds
+                , 'KshhTFDwKsLLSymMassWin'  : 100.0 * MeV  # restored to 100 MeV 120315 mds
+                , 'KshhTFDwKsDDSymMassWin'  : 120.0 * MeV  # restored to 120 MeV 120315 mds
                 , 'ComRobUseGEC'            : True       # do or do not 
                 , 'ComRobGEC'               : 120        # max number of tracks
                 , 'HLT1FILTER'               : ''
@@ -216,15 +216,15 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
             combcuts = combcuts + extracuts['CombinationCut']
 
         # Construct a cut string for the vertexed combination.
-## mds 20120216                     "& (ADMASS('D0') < 70*MeV)"\
-## mds 20120216 make the mass window asymmetric for Kshort,pi,pi to account 
-## mds 20120216 for Kshort,K,K (and Kshort,Kpi)
+##  restored 120313 mds restore
+##  symmetric window +- 70 MeV around 1865 for all mass hypotheses
+##  rather than using an asymmetric window for the KsPiPi hypothesis only
         parentcuts = "(VFASPF(VCHI2PDOF)< %(KshhTFDVtxChi2UL)s )" \
                      "& (PT> %(KshhTFDPtLL)s)" \
                      "& (BPVLTIME() > 0.2*ps)" \
                      "& (BPVIPCHI2() < 20)"\
                      "& (MM < 1935.0 * MeV)"\
-                     "& (MM > 1665.0 * MeV)"\
+                     "& (MM > 1795.0 * MeV)"\
                      "& (BPVDIRA > %(KshhTFDDiraLL)s )" % self.getProps()
 
         if extracuts and extracuts.has_key('MotherCut') :
@@ -291,8 +291,10 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
 
         ## Input particles for 2-body HH part of KsHH
         ###################################################################
-        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPions
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPions, BiKalmanFittedKaons
         inPionsName = self.getProp('name_prefix') + 'InputPions'
+        inKaonsName = self.getProp('name_prefix') + 'InputKaons'
+        lclKshhTFInputKaons = self.__KshhTFHHInPartFilter(inKaonsName, [ BiKalmanFittedKaons] )
         lclKshhTFInputPions = self.__KshhTFHHInPartFilter(inPionsName, [ BiKalmanFittedPions] )
 
 
@@ -320,15 +322,15 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
         from Configurables import CombineParticles
         combineKshhTF2Body = Hlt2Member( CombineParticles
                                        , 'Combine'
-                                       , DecayDescriptors = [ "K*(892)0 -> pi+ pi-" ]
-                                       , Inputs = [ lclKshhTFInputPions ]
+                                       , DecayDescriptors = [ "K*(892)0 -> pi+ pi-", "K*(892)0 -> K+ K-", "K*(892)0 -> K+ pi-", "K*(892)0 -> pi+ K-" ]
+                                       , Inputs = [ lclKshhTFInputKaons, lclKshhTFInputPions ]
                                        , CombinationCut = KshhHHcombcuts
                                        , MotherCut = KshhHHparentcuts
                                      )
 
         from HltTracking.HltPVs import PV3D
         twoBodyName = self.getProp('name_prefix') + '2Body'
-        charmKshhTF2Body = bindMembers( twoBodyName,  [PV3D(), lclKshhTFInputPions, combineKshhTF2Body ] )
+        charmKshhTF2Body = bindMembers( twoBodyName,  [PV3D(),lclKshhTFInputKaons,  lclKshhTFInputPions, combineKshhTF2Body ] )
 
         ## Special for down-down: Require that the two-body combination pass more cuts:
         strTighterCuts = """( (CHILDCUT((TRCHI2DOF < %(KshhTFHHTightTrkChi2UL)s ),1)) 
@@ -349,15 +351,10 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
         ksLLName = self.getProp('name_prefix') + 'LL'
         ksDDName = self.getProp('name_prefix') + 'DD'
 
-        print "mds:  ksLLName and ksDDName  =  ", ksLLName, "  ", ksDDName
-
 
         ########
         # KsLL  
         #######
-## mds        KSLL_FilterCuts= """(ADMASS('KS0')<%(KshhTFKsLLCombSymMassWin)s) 
-## mds               & (CHILDCUT((PT>500 * MeV),1))    
-## mds               & (CHILDCUT((PT>500 * MeV),2))
         KSLL_FilterCuts= """(ADMASS('KS0')<%(KshhTFKsLLMothSymMassWin)s) 
                & (BPVVDCHI2 > %(KshhTFKsLLVtxPVDispChi2LL)s) 
                & (BPVLTIME() > 2.0*ps)
@@ -374,14 +371,10 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
                                , Inputs = [KsLLTF]
                       )
         charmKshhTFKsLL = bindMembers( "charmKshhTFKsLL", [ PV3D(), KsLLTF, KSLLforD02HHKs ] )
-        print "mds:   charmKshhTFKsLL = ",  charmKshhTFKsLL
 
         ########
         # KsDD  
         #######
-## mds               & (CHILDCUT((PT>300 * MeV),1))    
-## mds               & (CHILDCUT((PT>300 * MeV),2))
-## mds                       & (BPVVDCHI2 > %(KshhTFKsDDVtxPVDispChi2LL)s)  ## not appropriate for DD
         KSDD_FilterCuts= """(ADMASS('KS0')<%(KshhTFKsDDCombSymMassWin)s) 
                      & (BPVVDZ > 400)
                      & (CHILDCUT((MIPCHI2DV(PRIMARY) > 9. ),1))
@@ -396,39 +389,33 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
                                , Inputs = [KsDD]
                       )
         charmKshhTFKsDD = bindMembers( "D02HHKsKsDD", [ PV3D(), KsDD, KsDDforD02HHKs ] )
-        print "mds:   charmKshhTFKsDD = ",  charmKshhTFKsDD
 
-##  code modified to use an asymmetric window for th KsPiPi hypothesis to accept
-##  KsKK, KsKPi, KsPiK, an KsKK candidates. Numerical values here correspond to
-##  (1865 +- 100) MeV for th KsPiPi hypothesis and another 130 MeV down to
-##  include the KsKK lower limit.  The corresponding MotherCut values are
-##  (1865 +- 70) MeV for KsPiPi and another 130 MeV  lower to accept KsKK.
+##  use +-100 MeV symmetric window around 1865 MeV  120312 mds
+##  corresponding MotherCut values are
+##  (1865 +- 70) MeV.
 
-## mds 20120216                                        , extracuts = { 'CombinationCut' : "(ADAMASS('D0')< %(KshhTFDwKsLLSymMassWin)s)" % self.getProps() } 
         combineKshhTFD2HHKsLL = self.__KshhTFDCombine(ksLLName
                                         , [charmKshhTFKsLL, charmKshhTF2Body]
-                                        , extracuts = { 'CombinationCut' : "(AM < 1965.0*MeV) & (AM > 1635.0*MeV)" }
+                                        , extracuts = { 'CombinationCut' : "(AM < 1965.0*MeV) & (AM > 1765.0*MeV)" }
                                         )
 
         ksLLTOSName = ksLLName
         combineKshhTFD2HHKsLLToS = self.__filterRequiringTOS(ksLLTOSName, combineKshhTFD2HHKsLL )
 
-##  code modified to use an asymmetric window for th KsPiPi hypothesis to accept
+##  use a symmetric window for th KsPiPi hypothesis to accept
 ##  KsKK, KsKPi, KsPiK, an KsKK candidates. Numerical values here correspond to
-##  (1865 +- 120) MeV for th KsPiPi hypothesis and another 130 MeV down to
-##  include the KsKK lower limit.  The corresponding MotherCut values are
-##  (1865 +- 70) MeV for KsPiPi and another 130 MeV  lower to accept KsKK.
+##  (1865 +- 120) MeV.
+##  The corresponding MotherCut values are
+##  (1865 +- 70) MeV.
 
-## mds 20120216                                        , extracuts = { 'CombinationCut' : "(ADAMASS('D0')< %(KshhTFDwKsDDSymMassWin)s)" % self.getProps() } 
         combineKshhTFD2HHKsDD = self.__KshhTFDCombine(ksDDName
                                         , [charmKshhTF2BodyTighterReqTOS, charmKshhTFKsDD]
-                                        , extracuts = { 'CombinationCut' : "(AM < 1985.0*MeV) & (AM > 1615.0*MeV)" }
+                                        , extracuts = { 'CombinationCut' : "(AM < 1985.0*MeV) & (AM > 1745.0*MeV)" }
                                         )
 
 
         ## Make the lines
         ###################################################################
-        print "mds: about to __makeLine, ksLLName and ksDDName  =  ", ksLLName,  "  ", ksDDName
         self.__makeLine(ksLLName, algos = [ combineKshhTFD2HHKsLLToS ])
         self.__makeLine(ksDDName, algos = [ combineKshhTFD2HHKsDD ])
 

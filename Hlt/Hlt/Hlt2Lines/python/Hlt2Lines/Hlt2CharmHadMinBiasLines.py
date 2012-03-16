@@ -37,7 +37,6 @@ class Hlt2CharmHadMinBiasLinesConf(HltLinesConfigurableUser) :
         from Configurables import HltANNSvc
         from Configurables import CombineParticles
         from Configurables import FilterDesktop
-        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedSecondLoopPions,BiKalmanFittedSecondLoopKaons,BiKalmanFittedSecondLoopProtons
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPions,BiKalmanFittedKaons,BiKalmanFittedProtons
 
         from Hlt2SharedParticles.Lambda import LambdaLLTrackFitted
@@ -58,10 +57,7 @@ class Hlt2CharmHadMinBiasLinesConf(HltLinesConfigurableUser) :
                                , MotherCut = _mother_cut_lc
                                , Inputs = [ BiKalmanFittedPions.outputSelection(),
                                             BiKalmanFittedKaons.outputSelection(),
-                                            BiKalmanFittedProtons.outputSelection(),
-                                            BiKalmanFittedSecondLoopPions.outputSelection(), 
-                                            BiKalmanFittedSecondLoopKaons.outputSelection(),
-                                            BiKalmanFittedSecondLoopProtons.outputSelection() ])
+                                            BiKalmanFittedProtons.outputSelection()])
 
         # First the lambda C
         _daughters_cut_d0 = "( TRCHI2DOF < %(D0ChildTrChi2)s ) & ( PT > %(D0ChildPT)s *MeV )" % self.getProps()
@@ -121,9 +117,9 @@ class Hlt2CharmHadMinBiasLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('CharmHadMinBiasLambdaC2KPPi'
                         , HLT = "HLT_PASS_RE('Hlt1CharmCalibrationNoBiasDecision')" 
                         , prescale = self.prescale
-                        , algos = [ PV3D(), BiKalmanFittedPions, BiKalmanFittedSecondLoopPions, 
-                                            BiKalmanFittedKaons, BiKalmanFittedSecondLoopKaons, 
-                                            BiKalmanFittedProtons, BiKalmanFittedSecondLoopProtons, 
+                        , algos = [ PV3D(), BiKalmanFittedPions,  
+                                            BiKalmanFittedKaons,  
+                                            BiKalmanFittedProtons,  
                                             Hlt2CharmHadLambdaC2KPPi]
                         , postscale = self.postscale
                         )
