@@ -104,7 +104,16 @@ if '__main__' == __name__ :
         '-f'                         ,
         '--follow'                   ,
         dest    = 'FollowLinks'      ,
-        help    = "Flag to follow links (useful for packed DST)" ,
+        help    = "Flag to follow links, useful for packed (u)DST" ,
+        action  = "store_true"       ,
+        default = False    
+        )
+    
+    parser.add_option (
+        '-d'                         ,
+        '--dod'                   ,
+        dest    = 'DataOnDemand'      ,
+        help    = "Dump the known DOD-locations (fragile)" ,
         action  = "store_true"       ,
         default = False    
         )
@@ -118,24 +127,38 @@ if '__main__' == __name__ :
         print __doc__
 
     
-    ## Files must be specfied are mandatory!
+    ## The input files must be specified!
     if not arguments : parser.error ( 'No input files are specified' ) 
     
     options.Quiet = True 
     configure ( options , arguments ) 
 
-    from Configurables import MessageSvc, DataOnDemandSvc
+    from Configurables import MessageSvc, DataOnDemandSvc, ToolSvc 
     from Configurables import Gaudi__RootCnvSvc    as RootCnvSvc 
     from Configurables import Gaudi__IODataManager as IODataManager
+    from Configurables import LHCb__RawDataCnvSvc  as RawDataCnvSvc 
+    
     
     msg = MessageSvc()
     msg.OutputLevel = 5
     
-    RootCnvSvc        ( "RootCnvSvc"    , OutputLevel = 6 )
-    DataOnDemandSvc   ( Dump = False    , OutputLevel = 6 )
-    IODataManager     ( 'IODataManager' , OutputLevel = 6 , AgeLimit = 1 , UseGFAL = False ) 
+    ToolSvc           (                                  OutputLevel = 6 )
+    RootCnvSvc        ( "RootCnvSvc"                   , OutputLevel = 6 )
+    RawDataCnvSvc     (                                  OutputLevel = 6 )
     
-    msg.setFatal += ['RootCnvSvc' , 'DataOnDemandSvc' , 'IOManagerSvc']
+    IODataManager     ( 'IODataManager'                , OutputLevel = 6 ,
+                        AgeLimit = 1 , UseGFAL = False )
+    
+    if options.DataOnDemand :
+        DataOnDemandSvc   ( Dump = True  )
+    else :
+        DataOnDemandSvc   ( Dump = False , OutputLevel = 6 )
+        msg.setFatal += [ 'DataOnDemandSvc' ] 
+        
+    msg.setFatal += ['RootCnvSvc'          ,
+                     'IOManagerSvc'        ,
+                     'RootHistSvc'         ,
+                     'LHCb::RawDataCnvSvc' ]
     
     if options.Simulation : from Bender.MainMC   import *
     else                  : from Bender.Main     import *
@@ -157,6 +180,8 @@ if '__main__' == __name__ :
         dct[key] += float(val)
             
 
+    dodSvc = gaudi.service('DataOnDemandSvc')
+    
     nSelEvents = {}
     nObjects   = {}
 
@@ -176,14 +201,18 @@ if '__main__' == __name__ :
         if not nodes :
             print "warning: no nodes are selected for Root:'%s'" % options.RootInTES
 
-        nodes = set( nodes ) 
-        links = set()
-        
+        nodes = set ( nodes ) 
+        links = set ()
+        dods  = set ()
+
+        ## explore the regular nodes 
         for loc in nodes :
             data = evtSvc[loc]
+            loc = loc[:7] + ' ' + loc[7:] 
             if not data :
                 addEntry ( nSelEvents , loc , 0 )
                 addEntry ( nObjects   , loc , 0 )
+            elif type( data ) == cpp.DataObject  : continue 
             else :
                 #
                 lnks = data.links()
@@ -202,15 +231,47 @@ if '__main__' == __name__ :
                 if not data :
                     addEntry ( nSelEvents , loc , 0 )
                     addEntry ( nObjects   , loc , 0 )
+                elif type( data ) == cpp.DataObject : continue 
                 else :
-                    #
-                    lnks = data.links()
-                    for l in lnks : links.add ( l )
                     #
                     if   hasattr ( data , 'size'   ) : addEntry ( nObjects , loc , data.size()  )
                     elif hasattr ( data , '__len__') : addEntry ( nObjects , loc , len ( data ) )
                     else                             : addEntry ( nObjects , loc , 1            )
+                    
+        ## explore locations known for DOD            
+        if options.DataOnDemand :
+            for k in dodSvc.AlgMap .keys () : dods.add ( k ) 
+            for k in dodSvc.NodeMap.keys () :
+                obj = dodSvc.NodeMap[k]
+                if 'DataObject' == obj : continue 
+                dods.add ( k )
             
+            dods = dods - nodes 
+            dods = dods - links
+            
+            for loc in dods :
+
+                if options.RootInTES :
+                    if 0 != loc.find ( options.RootInTES ) : continue 
+                
+                if not options.Simulation :
+                    if 0 <= loc.find ( 'MC'   ) : continue
+                    if 0 <= loc.find ( 'Prev' ) : continue
+                    if 0 <= loc.find ( 'Next' ) : continue
+                    
+                data = evtSvc[loc]
+                loc = loc[:7] + '+' + loc[7:] 
+                if not data :
+                    addEntry ( nSelEvents , loc , 0 )
+                    addEntry ( nObjects   , loc , 0 )
+                elif type( data ) == cpp.DataObject : continue 
+                else :
+                    #
+                    if   hasattr ( data , 'size'   ) : addEntry ( nObjects , loc , data.size()  )
+                    elif hasattr ( data , '__len__') : addEntry ( nObjects , loc , len ( data ) )
+                    else                             : addEntry ( nObjects , loc , 1            )
+
+                
     keys = nObjects.keys()
     keys.sort()
 
