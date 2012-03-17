@@ -4,6 +4,7 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================= HltSettings v5r20 2012-03-17 =========================
 ! 2012-03-16 - Eric van Herwijnen (for Pieter David)
  - add the Hlt1VertexDisplVertex line with default settings
 
