@@ -1,18 +1,18 @@
 package HltSys
-version           v14r1
+version           v14r2
 
 branches cmt doc
 
-use Hlt1Lines           v6r14   Hlt   # Gerhard Raven, Vava Gligorov, Johannes Albrecht, Roel Aaij
+use Hlt1Lines           v6r15   Hlt   # Gerhard Raven, Vava Gligorov, Johannes Albrecht, Roel Aaij
 use Hlt1Muons           v1r5    Hlt   # Roel Aaij
-use Hlt2Lines           v8r10   Hlt   # Vava Gligorov, Johannes Albrecht, Gerhard Raven
-use Hlt2SharedParticles v6r5    Hlt   # Patrick Koppenburg, Gerhard Raven
+use Hlt2Lines           v8r14   Hlt   # Vava Gligorov, Johannes Albrecht, Gerhard Raven
+use Hlt2SharedParticles v6r7    Hlt   # Patrick Koppenburg, Gerhard Raven
 use HltBase             v12r3   Hlt   # Gerhard Raven
 use HltBeamGasAlley     v3r0    Hlt   # Plamen Hopchev
 use HltCommon           v8r4    Hlt   # Gerhard Raven
-use HltConf             v9r13   Hlt   # Vanya Belyaev, Gerhard Raven
+use HltConf             v9r14   Hlt   # Vanya Belyaev, Gerhard Raven
 use HltCosmics          v1r0p2  Hlt   # Stephan Nies
-use HltDisplVertices    v3r5    Hlt   # Neil Gauvin, Victor Coco
+use HltDisplVertices    v3r6    Hlt   # Neil Gauvin, Victor Coco
 use HltGlobalMonitor    v3r9    Hlt   # Bruno de Paula
 use HltL0Conf           v3r0p1  Hlt   # Johannes Albrecht
 use HltLine             v5r1p7  Hlt   # Vanya Belyaev, Gerhard Raven
@@ -21,12 +21,18 @@ use HltMonitor          v1r1    Hlt   # Roel Aaij
 use HltRawData          v2r11   Hlt   # Tomasz Skwarnicki
 use HltRecChecker       v1r13   Hlt   # Jose Angel Hernando-Morata
 use HltSelChecker       v12r1p1 Hlt   # Patrick Koppenburg
-use HltSettings         v5r17   Hlt   # Parick Koppenburg, Gerhard Raven
+use HltSettings         v5r20   Hlt   # Parick Koppenburg, Gerhard Raven
 use HltTisTosTobbing    v1r1    Hlt   # Tomasz Skwarnicki
 use HltTracking         v9r12   Hlt   # Johannes Albrecht, Vava Gligorov
 use TCKUtils            v1r10   Hlt   # Gerhard Raven
-use LoKiTrigger         v12r5   Phys  # Vanya Belyaev
+use LoKiTrigger         v12r6   Phys  # Vanya Belyaev
 use HighPtJets          v1r6    Phys  # Marcin Kucharczyk
+
+use LoKiPhys            v10r8   Phys  
+use LoKiTrack           v2r5    Phys  
+use PatAlgorithms       v4r20   Tf
+use TrackFitter         v4r6    Tr
+use TrackFitEvent       v5r15   Tr
 
 # Declare this as a container package
 apply_pattern container_package

@@ -5,6 +5,9 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger
 
+</PRE><H1><A NAME=v14r2>2012-03-17 HltSys v14r2</A></H1><PRE>
+New version using Gaudi v23r1. Contains tracking improvements.
+
 </PRE><H1><A NAME=v14r1>2012-02-29 HltSys v14r1</A></H1><PRE>
 New version using Gaudi v23r1. Contains new tracking & charm for 2012.
 
