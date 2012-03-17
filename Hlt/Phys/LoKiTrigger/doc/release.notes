@@ -5,6 +5,7 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiTrigger v12r6 2012-03-17 =========================
 ! 2012-03-14 - Pieter David
  - Add adapters from a RecVertex cut to a track cut, with the option to pass
    the candidate if one of the tracks passes the track cut (complementary to
