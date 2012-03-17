@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-03-17 - S. Gregson
+- Re-optimised cuts in D(s)->KS0H lines for 2012 running
+ 
 ! 2012-03-16 - F. Archilli
 - StrippingBs2MuMuLines.py:
 	Modified selection in Bs2MuMuLinesNoMuIDLine in
