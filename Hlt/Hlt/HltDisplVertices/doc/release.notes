@@ -4,6 +4,7 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
+!========================= HltDisplVertices v3r6 2012-03-17 =========================
 ! 2012-03-15 - Victor Coco
  - simplify the Hlt2PreSel and Hlt2Sel algorithms + introduction the MatterVeto tool + 
    the velo track filtering.
