@@ -3,6 +3,9 @@ Package     : MooreSys
 Package Coordinator : E. van Herwijnen
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v13r2>2012-03-17 Moore v13r2</A></H1><PRE>
+Uses Hlt v14r2.
+
 </PRE><H1><A NAME=v13r1p3>2012-03-09 Moore v13r1p3</A></H1><PRE>
 Fixed mainly online bugs in Hlt/Moore/python/Moore.
 
