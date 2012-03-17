@@ -3,7 +3,7 @@ version           v14r2
 
 branches cmt doc
 
-use Hlt1Lines           v6r15   Hlt   # Gerhard Raven, Vava Gligorov, Johannes Albrecht, Roel Aaij
+use Hlt1Lines           v6r6    Hlt   # Gerhard Raven, Vava Gligorov, Johannes Albrecht, Roel Aaij
 use Hlt1Muons           v1r5    Hlt   # Roel Aaij
 use Hlt2Lines           v8r14   Hlt   # Vava Gligorov, Johannes Albrecht, Gerhard Raven
 use Hlt2SharedParticles v6r7    Hlt   # Patrick Koppenburg, Gerhard Raven
