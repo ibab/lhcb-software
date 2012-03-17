@@ -3,6 +3,7 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+!========================= TrackFitter v4r6 2012-03-17 =========================
 ! 2012-03-15 - Wouter Hulsbergen
  - add EndVelo state to (forward) velo-only fits
  - make sure debug mode doesn't trigger smoothing
