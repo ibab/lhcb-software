@@ -104,7 +104,7 @@ if '__main__' == __name__ :
         '-f'                         ,
         '--follow'                   ,
         dest    = 'FollowLinks'      ,
-        help    = "Flag to follow links, useful for packed (u)DST" ,
+        help    = "Flag to follow links, useful for packed (u)DST (*)" ,
         action  = "store_true"       ,
         default = False    
         )
@@ -113,7 +113,7 @@ if '__main__' == __name__ :
         '-d'                         ,
         '--dod'                   ,
         dest    = 'DataOnDemand'      ,
-        help    = "Dump the known DOD-locations (fragile)" ,
+        help    = "Dump the known DOD-locations (fragile), (+)" ,
         action  = "store_true"       ,
         default = False    
         )
@@ -205,7 +205,9 @@ if '__main__' == __name__ :
         links = set ()
         dods  = set ()
 
-        ## explore the regular nodes 
+        #
+        ## explore the regular nodes
+        #
         for loc in nodes :
             data = evtSvc[loc]
             loc = loc[:7] + ' ' + loc[7:] 
@@ -221,11 +223,17 @@ if '__main__' == __name__ :
                 if   hasattr ( data , 'size'   ) : addEntry ( nObjects , loc , data.size()  )
                 elif hasattr ( data , '__len__') : addEntry ( nObjects , loc , len ( data ) )
                 else                             : addEntry ( nObjects , loc , 1            )
-
-        ## follow the links?
+                
+        #
+        ## follow the links? Useful for packed (u)DST
+        #
         if options.FollowLinks: 
             links = links - nodes 
             for loc in links:
+
+                if options.RootInTES :
+                    if 0 != loc.find ( options.RootInTES ) : continue 
+                
                 data = evtSvc[loc]
                 loc = loc[:7] + '*' + loc[7:] 
                 if not data :
@@ -238,8 +246,11 @@ if '__main__' == __name__ :
                     elif hasattr ( data , '__len__') : addEntry ( nObjects , loc , len ( data ) )
                     else                             : addEntry ( nObjects , loc , 1            )
                     
-        ## explore locations known for DOD            
+        #
+        ## explore locations known for DOD
+        #
         if options.DataOnDemand :
+            
             for k in dodSvc.AlgMap .keys () : dods.add ( k ) 
             for k in dodSvc.NodeMap.keys () :
                 obj = dodSvc.NodeMap[k]
