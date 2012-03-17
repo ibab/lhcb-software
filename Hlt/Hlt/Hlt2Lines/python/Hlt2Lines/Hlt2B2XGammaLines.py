@@ -14,30 +14,31 @@ from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
     __slots__ = { # Common cuts    
                     'TrChi2'       : 5.       # dimensionless
+                   ,'TrPT'         : 500      # MeV
                    ,'photonPT'     : 2600     # MeV
                    ,'BDirAngleMoni': 0.140 #0.99     # Dimentionless
                   # Bs2PhiGamma    
-                   ,'TrIPchi2Phi'  : 10       # Dimensionless
+                   ,'TrIPchi2Phi'  : 20       # Dimensionless
                    ,'PhiVCHI2'     : 25       # dimensionless
                    ,'PhiMassWinL'  : 40       # MeV
                    ,'PhiMassWinT'  : 20       # MeV
-                   ,'BsPVIPchi2'   : 25       # Dimensionless
+                   ,'BsPVIPchi2'   : 12       # Dimensionless
                    ,'BsMassWin'    : 1000     # MeV
                    ,'BsDirAngle'   : 0.063  #0.998    # Dimensionless
                   # Bd2KstGamma    
-                   ,'TrIPchi2Kst'  : 10       # Dimensionless
+                   ,'TrIPchi2Kst'  : 20       # Dimensionless
                    ,'KstVCHI2'     : 16       # dimensionless
                    ,'KstMassWinL'  : 125      # MeV
                    ,'KstMassWinT'  : 100      # MeV 80
                    ,'KstMassWinSB' : 200      # MeV 120
-                   ,'B0PVIPchi2'   : 25       # Dimensionless
+                   ,'B0PVIPchi2'   : 12       # Dimensionless
                    ,'B0MassWin'    : 1000     # MeV
                    ,'BMassWinSB'   : 2000     # MeV
                    ,'B0DirAngle'   : 0.045  #0.999    # Dimensionless
+                   ,'B_PT'         : 2000     # MeV
                   # Photons
                    ,'UseL0Photons' : True
                   # HLT filter
-                   #,'HLT1FILTER'   : "HLT_PASS_RE('Hlt1.*Photon.*Decision')"
                    ,'HLT1FILTER'   : "HLT_PASS_RE('Hlt1(?!ODIN)(?!L0)(?!Lumi)(?!Tell1)(?!MB)(?!Velo)(?!BeamGas)(?!Incident).*Decision')" 
                    ,'L0FILTER'     : "|".join( [ "L0_CHANNEL('%s')" % channel for channel in ['Photon','Electron'] ] ) 
                   # Pre- and postscale
@@ -94,7 +95,8 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
         Hlt2Phi4PhiGamma = Hlt2Member( CombineParticles
                                        , "CombinePhi"
                                        , DecayDescriptors = [ "phi(1020) -> K+ K-" ]
-                                       , DaughtersCuts = { "K+": "(TRCHI2DOF<%(TrChi2)s) & (MIPCHI2DV(PRIMARY)>%(TrIPchi2Phi)s)" % self.getProps() }
+                                       , DaughtersCuts = { "K+": "(TRCHI2DOF<%(TrChi2)s) & (MIPCHI2DV(PRIMARY)>%(TrIPchi2Phi)s) & (PT>%(TrPT)s*MeV)" % self.getProps(),
+                                                           "K-": "(TRCHI2DOF<%(TrChi2)s) & (MIPCHI2DV(PRIMARY)>%(TrIPchi2Phi)s) & (PT>%(TrPT)s*MeV)" % self.getProps()  }
                                        , CombinationCut = "(ADAMASS('phi(1020)')<%(PhiMassWinL)s*MeV)" % self.getProps()
                                        , MotherCut = "(VFASPF(VCHI2)<%(PhiVCHI2)s) & (ADMASS('phi(1020)')<%(PhiMassWinT)s*MeV)" % self.getProps()
                                        , Inputs = [ BiKalmanFittedKaons ]
@@ -103,8 +105,8 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
         Hlt2Kst4KstGamma = Hlt2Member( CombineParticles
                                        , "CombineKstar"
                                        , DecayDescriptors =["[K*(892)0 -> K+ pi-]cc"] 
-                                       , DaughtersCuts  = { "K+" : "(TRCHI2DOF<%(TrChi2)s) & (MIPCHI2DV(PRIMARY)>%(TrIPchi2Kst)s)" % self.getProps(),
-                                                            "pi-": "(TRCHI2DOF<%(TrChi2)s) & (MIPCHI2DV(PRIMARY)>%(TrIPchi2Kst)s)" % self.getProps() }
+                                       , DaughtersCuts  = { "K+" : "(TRCHI2DOF<%(TrChi2)s) & (MIPCHI2DV(PRIMARY)>%(TrIPchi2Kst)s) & (PT>%(TrPT)s*MeV)" % self.getProps(),
+                                                            "pi-": "(TRCHI2DOF<%(TrChi2)s) & (MIPCHI2DV(PRIMARY)>%(TrIPchi2Kst)s) & (PT>%(TrPT)s*MeV)" % self.getProps() }
                                        , CombinationCut =  "(ADAMASS('K*(892)0')<%(KstMassWinL)s*MeV)" % self.getProps()
                                        , MotherCut      =  "(VFASPF(VCHI2)<%(KstVCHI2)s) & (ADMASS('K*(892)0')<%(KstMassWinT)s*MeV)" % self.getProps()
                                        , Inputs  = [ BiKalmanFittedKaons, BiKalmanFittedPions ]
@@ -118,7 +120,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
                                       , DecayDescriptors = ["B_s0 -> gamma phi(1020)"]
                                       , DaughtersCuts = { "gamma": "(PT>%(photonPT)s*MeV)" % self.getProps() }
                                       , CombinationCut = "(ADAMASS('B_s0')<1.5*%(BsMassWin)s*MeV)" % self.getProps()
-                                      , MotherCut = "((BPVDIRA > cos(%(BsDirAngle)s)) & (BPVIPCHI2()< %(BsPVIPchi2)s) & (ADMASS('B_s0')<%(BsMassWin)s*MeV))" % self.getProps()
+                                      , MotherCut = "((BPVDIRA > cos(%(BsDirAngle)s)) & (BPVIPCHI2()< %(BsPVIPchi2)s) & (ADMASS('B_s0')<%(BsMassWin)s*MeV) & (PT > %(B_PT)s*MeV))" % self.getProps()
                                       , Preambulo = ["from math import cos"]
                                       , Inputs  = [ Photons,  Hlt2Phi4PhiGamma ] #  
                                       )
@@ -131,7 +133,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
                                       , DecayDescriptors = ["[B0 -> K*(892)0  gamma]cc"]
                                       , DaughtersCuts = { "gamma": "(PT>%(photonPT)s*MeV)" % self.getProps() }
                                       , CombinationCut =  "(ADAMASS('B0')<1.5*%(B0MassWin)s*MeV)" % self.getProps()
-                                      , MotherCut = "((BPVDIRA > cos(%(B0DirAngle)s)) & (BPVIPCHI2()<%(B0PVIPchi2)s) & (ADMASS('B0')<%(B0MassWin)s*MeV))" % self.getProps()
+                                      , MotherCut = "((BPVDIRA > cos(%(B0DirAngle)s)) & (BPVIPCHI2()<%(B0PVIPchi2)s) & (ADMASS('B0')<%(B0MassWin)s*MeV) & (PT > %(B_PT)s*MeV))" % self.getProps()
                                       , Preambulo = ["from math import cos"]
                                       , Inputs  = [ Photons, Hlt2Kst4KstGamma ]# 
                                      )
@@ -168,7 +170,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
                    , prescale = self.prescale
                    # , algos = [ PV3D(), BiKalmanFittedKaons, Hlt2Phi4PhiGamma, Photons, Hlt2BstoPhiGamma ]
                    , CombineBs = { "CombinationCut" : "(ADAMASS('B_s0')<1.5*%(BMassWinSB)s*MeV)" % self.getProps(),
-                                   "MotherCut"      : "((BPVDIRA > cos(%(BsDirAngle)s)) & (BPVIPCHI2()< %(BsPVIPchi2)s) & (ADMASS('B_s0')<%(BMassWinSB)s*MeV))" % self.getProps()}
+                                   "MotherCut"      : "((BPVDIRA > cos(%(BsDirAngle)s)) & (BPVIPCHI2()< %(BsPVIPchi2)s) & (ADMASS('B_s0')<%(BMassWinSB)s*MeV) & (PT > %(B_PT)s*MeV))" % self.getProps()}
                    , postscale = self.postscale
                    )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bs2PhiGammaWideBMassDecision": self.getProp('HltANNSvcID')['Bs2PhiGammaWideBMass'] } )
@@ -177,7 +179,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
         line.clone('Bs2PhiGammaLooseDira'
                    , prescale = self.prescale
                    # , algos = [ PV3D(), BiKalmanFittedKaons, Hlt2Phi4PhiGamma, Photons, Hlt2BstoPhiGamma ]
-                   , CombineBs = {"MotherCut": "( (BPVDIRA > cos(%(BDirAngleMoni)s)) & (BPVIPCHI2()<%(BsPVIPchi2)s)) & (ADMASS('B_s0')<%(BsMassWin)s*MeV))" % self.getProps() }
+                   , CombineBs = {"MotherCut": "( (BPVDIRA > cos(%(BDirAngleMoni)s)) & (BPVIPCHI2()<%(BsPVIPchi2)s) & (ADMASS('B_s0')<%(BsMassWin)s*MeV) & (PT > %(B_PT)s*MeV))" % self.getProps() }
                    , postscale = self.postscale
                    )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bs2PhiGammaLooseDiraDecision" : self.getProp('HltANNSvcID')['Bs2PhiGammaLooseDira'] } )
@@ -213,7 +215,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
                    , prescale = self.prescale
                    # , algos = [ PV3D(), BiKalmanFittedKaons, BiKalmanFittedPions, Hlt2Kst4KstGamma, Photons, Hlt2BdtoKstGamma ]
                    , CombineB0 = { "CombinationCut": "(ADAMASS('B0')<1.5*%(BMassWinSB)s*MeV)" %self.getProps(),
-                                   "MotherCut"     : "((BPVDIRA > cos(%(B0DirAngle)s)) & (BPVIPCHI2()<%(B0PVIPchi2)s) & (ADMASS('B0')<%(BMassWinSB)s*MeV))" % self.getProps()}
+                                   "MotherCut"     : "((BPVDIRA > cos(%(B0DirAngle)s)) & (BPVIPCHI2()<%(B0PVIPchi2)s) & (ADMASS('B0')<%(BMassWinSB)s*MeV) & (PT > %(B_PT)s*MeV))" % self.getProps()}
                    , postscale = self.postscale
                    )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bd2KstGammaWideBMassDecision" :  self.getProp('HltANNSvcID')['Bd2KstGammaWideBMass'] } )
@@ -221,7 +223,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
         line.clone('Bd2KstGammaLooseDira'
                    , prescale = self.prescale
                    # , algos = [ PV3D(), BiKalmanFittedKaons, BiKalmanFittedPions, Hlt2Kst4KstGamma, Photons, Hlt2BdtoKstGamma ]
-                   , CombineB0 = { "MotherCut": "( (BPVDIRA > cos(%(BDirAngleMoni)s)) & (BPVIPCHI2()<%(B0PVIPchi2)s)) & (ADMASS('B0')<%(B0MassWin)s*MeV))" %self.getProps() }
+                   , CombineB0 = { "MotherCut": "( (BPVDIRA > cos(%(BDirAngleMoni)s)) & (BPVIPCHI2()<%(B0PVIPchi2)s) & (ADMASS('B0')<%(B0MassWin)s*MeV) & (PT > %(B_PT)s*MeV))" %self.getProps() }
                    , postscale = self.postscale
                    )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bd2KstGammaLooseDiraDecision" :  self.getProp('HltANNSvcID')['Bd2KstGammaLooseDira'] } )
