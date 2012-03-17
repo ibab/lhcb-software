@@ -4,6 +4,7 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================= TrackFitEvent v5r15 2012-03-17 =========================
 ! 2012-03-16 - Wouter Hulsbergen 
 - bug fix in filter logic: backward state could be in state 'smoothed'
   without having gone through 'filtered'. a real fix requires
