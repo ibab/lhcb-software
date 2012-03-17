@@ -29,7 +29,7 @@ use LoKiTrigger         v12r6   Phys  # Vanya Belyaev
 use HighPtJets          v1r6    Phys  # Marcin Kucharczyk
 
 use LoKiPhys            v10r8   Phys  
-use LoKiTrack           v2r5    Phys  
+use LoKiTracks          v2r5    Phys  
 use PatAlgorithms       v4r20   Tf
 use TrackFitter         v4r6    Tr
 use TrackFitEvent       v5r15   Tr
