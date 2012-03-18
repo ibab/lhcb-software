@@ -7,6 +7,9 @@
 /*
  *  Implementation file for class : Velo::VeloTrackMonitor
  *
+ *  @author Zhou Xing
+ *  @date   2012-02-03
+ *  Low ADC Monitoring histogram added
  *  @author Sadia Khalil
  *  @date   2008-09-15
  *  @email: skhalil@phy.syr.edu
@@ -22,6 +25,16 @@
 #include "VeloDet/DeVeloSensor.h"
 #include "VeloDet/DeVelo.h"
 #include "Event/FitNode.h"
+#include "Event/TrackFitResult.h"
+#include "Event/VeloPhiMeasurement.h"
+#include "Event/VeloRMeasurement.h"
+#include "Event/STMeasurement.h"
+#include "Event/OTMeasurement.h"
+#include "Event/STLiteMeasurement.h"
+#include "Event/VeloLitePhiMeasurement.h"
+#include "Event/VeloLiteRMeasurement.h"
+#include "Event/Particle.h"
+
 
 // AIDA
 #include "AIDA/IProfile1D.h"
@@ -33,6 +46,7 @@
 // Event
 #include "Event/VeloCluster.h"
 #include "Event/TrackTypes.h"
+#include <iostream>
 
 using namespace Gaudi::Units;
 using namespace boost::lambda;
@@ -172,6 +186,12 @@ StatusCode Velo::VeloTrackMonitor::initialize() {
   m_mod_mismatch = book1D("ModuleMismatch","Tracks with one used sensor from a module vs Module number" ,-0.5, 110.5, 111);
   m_nrclus = book1D( "# R clusters", "Number of r clusters per event", 0., 2000, 400 );
   m_nrphiclus = book1D( "# R+Phi clusters", "Number of r and #phi clusters per event", 0., 2000, 400 );
+  m_Rate_DistToM2 = bookProfile1D("Rate_DistToM2","Rate vs DistToM2[um]",0,50,50);
+  m_Rate_DistToOutStrip = bookProfile1D("Rate_DistToOutStrip","Rate vs DistToOutStrip[um]",0,50,50);
+  
+  
+
+
   if ( m_hitmapHistos ) {
     m_xy_hitmap = book2D("XY_HitMap", "X(mm) vs Y(mm) hitmap", -75, 75, 100, -45, 45, 100);
     m_zx_hitmap = book2D("ZX_HitMap", "Z(mm) vs X(mm) hitmap", -200, 800, 500, -75, 75, 100);
@@ -303,6 +323,64 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( )
       if (m_debugLevel) debug() <<"Track has no VELO hits, continuing with next track."<< endmsg;
       continue;
     }
+
+
+    //start to save the low adc monitoring histogram    
+    const LHCb::TrackFitResult *fitResult = track->fitResult();
+    if(!fitResult) return Warning("No fitResult on this track",StatusCode::FAILURE);
+    const std::vector<LHCb::Node*> nodes = fitResult->nodes();
+    if(!exist<LHCb::VeloClusters>(LHCb::VeloClusterLocation::Default))
+      return Warning("No VELO clusters in default location",StatusCode::FAILURE);
+    LHCb::VeloClusters *clusters =
+      get<LHCb::VeloClusters>(LHCb::VeloClusterLocation::Default);
+    //Loop over all nodes on this track    
+    for( std::vector<LHCb::Node*>::const_iterator iNode = nodes.begin();
+         iNode != nodes.end(); ++iNode ){
+      if(LHCb::Node::HitOnTrack!=(*iNode)->type()) continue; 
+      if(!(*iNode)->hasMeasurement()) continue; 
+      const LHCb::Measurement *meas = &((*iNode)->measurement());
+      const LHCb::VeloRMeasurement *rMeas= dynamic_cast<const LHCb::VeloRMeasurement*>(meas);
+      if( ! rMeas ) continue; 
+      const LHCb::FitNode * rNode = dynamic_cast<const LHCb::FitNode*>(*iNode);
+      if(!rNode){
+        return Warning("None fit node found", StatusCode::FAILURE);
+      }
+      
+      Gaudi::XYZPoint localPoint = rMeas->sensor().globalToLocal(rNode->position());
+      LHCb::VeloChannelID clusID = rMeas->lhcbID().veloID();// Outter strip        
+      const LHCb::VeloCluster *outerClus = rMeas->cluster();
+      int outerSize= outerClus->size();
+      if(outerSize!=1) continue;// Select only one strip outter cluster
+      
+      double ADCInner(-99.);      
+      double innerSize(-1.);
+      double distToStrip(-1.);
+      double distToM2(-1.);
+      
+      LHCb::VeloChannelID innerID;
+      LHCb::VeloCluster *innerClus;
+      
+      //load the map for M2 routing line
+      StatusCode sc =
+        rMeas->sensor().distToM2Line(rNode->position(),innerID,distToM2,distToStrip);
+      if(!sc)continue;
+      
+      innerClus = clusters->object(innerID);// Inner cluster
+      if(innerClus){
+        ADCInner = innerClus->totalCharge();
+        innerSize = (double)innerClus->size(); 
+        if(innerSize!=1) continue;// Select only one strip inner cluster
+      }
+      else {
+        continue;
+      }
+      
+      // fill the monitoring histograms
+      m_Rate_DistToM2->fill(distToM2*1000., ADCInner<24); // in um
+      m_Rate_DistToOutStrip->fill(distToStrip*1000. , ADCInner<24);// in um
+      
+    }// End of loop over all nodes on this track
+    
     
     //General track properties
     if ( m_debugLevel ) {

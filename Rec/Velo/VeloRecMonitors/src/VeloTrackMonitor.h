@@ -33,6 +33,9 @@
 /** @class VeloTrackMonitor VeloTrackMonitor.h
  *  
  *
+ *  @author Zhou Xing
+ *  @date   2012-02-03
+ *  Low ADC Monitoring histogram added
  *  @author Sadia Khalil
  *  @date   2008-09-15
  *  Based on original version by
@@ -112,6 +115,8 @@ namespace Velo
     AIDA::IHistogram1D* m_nrphiclus;
     AIDA::IHistogram2D* m_xy_hitmap;
     AIDA::IHistogram2D* m_zx_hitmap;
+    AIDA::IProfile1D* m_Rate_DistToM2;
+    AIDA::IProfile1D* m_Rate_DistToOutStrip;
     
     // Job options
     unsigned long m_event;
