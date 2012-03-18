@@ -47,7 +47,7 @@ from StrippingUtils.Utils import LineBuilder, checkConfig
 
 ##   # KS0 mother cuts
 ##       ,'KS0MassWindow' : 35   
-##       ,'KS0MIPChi2'     : 0
+##       ,'KS0MIPChi2'     : 2
 ##       ,'KS0MIPChi2DD'     : 0
 ##       ,'KS0VertexChi2'  : 10
 ##       ,'KS0PT' : 1000
@@ -83,7 +83,7 @@ from StrippingUtils.Utils import LineBuilder, checkConfig
 ##       ,'DMesonMotherMIPChi2'  : 15  
 ##       ,'DMesonMotherPT' : 1000
 ##       ,'KS0ZDiff' : 10
-##       ,'DMesonFlightDistChi2' : 5
+##       ,'DMesonFlightDistChi2' : 10
  
 ##   # Prescales
 ##       ,'PionLinePrescale' : 1
@@ -456,7 +456,7 @@ def makeKS02PiPi(name,
         # Define the cuts to be used
       #  _code = " (PT > %(KS0PT)s*MeV) & (VFASPF(VCHI2PDOF) < %(KS0VertexChi2)s) & CHILDCUT((TRCHI2DOF < %(KS0DaugTrackChi2)s),1) & CHILDCUT((TRCHI2DOF < %(KS0DaugTrackChi2)s),2) & CHILDCUT((MIPCHI2DV(PRIMARY) > %(KS0DaugMIPChi2)s),1) & CHILDCUT((MIPCHI2DV(PRIMARY) > %(KS0DaugMIPChi2)s),2) & (MIPCHI2DV(PRIMARY) > %(KS0MIPChi2)s)" % locals()
 
-        _code = "(VFASPF(VCHI2PDOF) < %(KS0VertexChi2)s) & CHILDCUT((TRCHI2DOF < %(KS0DaugTrackChi2)s),1) & CHILDCUT((TRCHI2DOF < %(KS0DaugTrackChi2)s),2) & CHILDCUT((MIPCHI2DV(PRIMARY) > %(KS0DaugMIPChi2)s),1) & CHILDCUT((MIPCHI2DV(PRIMARY) > %(KS0DaugMIPChi2)s),2) & (BPVVDCHI2> %(KS0BPVVDCHI2)s)" % locals()
+        _code = "(PT > %(KS0PT)s*MeV) & (VFASPF(VCHI2PDOF) < %(KS0VertexChi2)s) & CHILDCUT((TRCHI2DOF < %(KS0DaugTrackChi2)s),1) & CHILDCUT((TRCHI2DOF < %(KS0DaugTrackChi2)s),2) & CHILDCUT((MIPCHI2DV(PRIMARY) > %(KS0DaugMIPChi2)s),1) & CHILDCUT((MIPCHI2DV(PRIMARY) > %(KS0DaugMIPChi2)s),2) & (BPVVDCHI2> %(KS0BPVVDCHI2)s) & (MIPCHI2DV(PRIMARY) > %(KS0MIPChi2)s)" % locals()
 
 
 ##         # Vanya suggestion
@@ -573,14 +573,14 @@ def makeD2KS0Pi(name,
 
         #_combCuts = "(APT > %(DMesonAPT)s) & (ACUTDOCACHI2(%(DMesonADOCAChi2)s,'')) & in_range(%(DMesonComboLowMass)s, AM, %(DMesonComboHighMass)s)" % locals()
 
-        _combCuts = "(ACUTDOCACHI2(%(DMesonADOCAChi2)s,'')) & in_range(%(DMesonComboLowMass)s, AM, %(DMesonComboHighMass)s)" % locals()
+        _combCuts = "(APT > %(DMesonAPT)s) & (ACUTDOCACHI2(%(DMesonADOCAChi2)s,'')) & in_range(%(DMesonComboLowMass)s, AM, %(DMesonComboHighMass)s)" % locals()
 
 
  #(AMAXDOCA('LoKi::DistanceCalculator') < %(DMesonComboDOCA)s * mm
 
 #        _motherCuts = "(PT > %(DMesonMotherPT)s*MeV) & (VFASPF(VCHI2PDOF) < %(DMesonMotherVertexChi2)s) & in_range(%(DMesonMotherLowMass)s, MM, %(DMesonMotherHighMass)s) & ((CHILD( VFASPF(VZ) , 'KS0' == ID ) - VFASPF(VZ)) > %(KS0ZDiff)s)  & (MIPCHI2DV(PRIMARY) < %(DMesonMotherMIPChi2)s) & (BPVVDCHI2 > %(DMesonFlightDistChi2)s)" % locals()
 
-        _motherCuts = "(VFASPF(VCHI2PDOF) < %(DMesonMotherVertexChi2)s) & in_range(%(DMesonMotherLowMass)s, MM, %(DMesonMotherHighMass)s) & (MIPCHI2DV(PRIMARY) < %(DMesonMotherMIPChi2)s) & (BPVVDCHI2 > %(DMesonFlightDistChi2)s)" % locals()
+        _motherCuts = "(PT > %(DMesonMotherPT)s*MeV) & (VFASPF(VCHI2PDOF) < %(DMesonMotherVertexChi2)s) & in_range(%(DMesonMotherLowMass)s, MM, %(DMesonMotherHighMass)s) & (MIPCHI2DV(PRIMARY) < %(DMesonMotherMIPChi2)s) & (BPVVDCHI2 > %(DMesonFlightDistChi2)s)" % locals()
     
         # Define the combine particles
         _Dmeson = CombineParticles( DecayDescriptor = "[D+ -> KS0 pi+]cc", CombinationCut = _combCuts, MotherCut = _motherCuts)
@@ -621,13 +621,13 @@ def makeD2KS0PiDD(name,
         # Define the combination and mother cuts
 
 #        _combCuts = "(APT > %(DMesonAPT)s) & (ACUTDOCACHI2(%(DMesonADOCAChi2)s,'')) & in_range(%(DMesonComboLowMass)s, AM, %(DMesonComboHighMass)s)" % locals()
-        _combCuts = "(ACUTDOCACHI2(%(DMesonADOCAChi2)s,'')) & in_range(%(DMesonComboLowMass)s, AM, %(DMesonComboHighMass)s)" % locals()
+        _combCuts = "(APT > %(DMesonAPT)s) & (ACUTDOCACHI2(%(DMesonADOCAChi2)s,'')) & in_range(%(DMesonComboLowMass)s, AM, %(DMesonComboHighMass)s)" % locals()
 
  #(AMAXDOCA('LoKi::DistanceCalculator') < %(DMesonComboDOCA)s * mm
 
 #        _motherCuts = "(PT > %(DMesonMotherPT)s*MeV) & (VFASPF(VCHI2PDOF) < %(DMesonMotherVertexChi2)s) & in_range(%(DMesonMotherLowMass)s, MM, %(DMesonMotherHighMass)s) & ((CHILD( VFASPF(VZ) , 'KS0' == ID ) - VFASPF(VZ)) > %(KS0ZDiff)s)  & (MIPCHI2DV(PRIMARY) < %(DMesonMotherMIPChi2)s) & (BPVVDCHI2 > %(DMesonFlightDistChi2)s)" % locals()
 
-        _motherCuts = "(VFASPF(VCHI2PDOF) < %(DMesonMotherVertexChi2)s) & in_range(%(DMesonMotherLowMass)s, MM, %(DMesonMotherHighMass)s) & (MIPCHI2DV(PRIMARY) < %(DMesonMotherMIPChi2)s)" % locals()
+        _motherCuts = "(PT > %(DMesonMotherPT)s*MeV) & (VFASPF(VCHI2PDOF) < %(DMesonMotherVertexChi2)s) & in_range(%(DMesonMotherLowMass)s, MM, %(DMesonMotherHighMass)s) & (MIPCHI2DV(PRIMARY) < %(DMesonMotherMIPChi2)s)" % locals()
 
         # Define the combine particles
         _Dmeson = CombineParticles( DecayDescriptor = "[D+ -> KS0 pi+]cc", CombinationCut = _combCuts, MotherCut = _motherCuts)
@@ -670,7 +670,7 @@ def makeD2KS0K(name,
 
         # Define the combination, mother and daughter cuts
 #        _combCuts = "(APT > %(DMesonAPT)s) & (ACUTDOCACHI2(%(DMesonADOCAChi2)s,'')) & in_range(%(DMesonComboLowMass)s, AM, %(DMesonComboHighMass)s)" % locals()
-        _combCuts = "(ACUTDOCACHI2(%(DMesonADOCAChi2)s,'')) & in_range(%(DMesonComboLowMass)s, AM, %(DMesonComboHighMass)s)" % locals()
+        _combCuts = "(APT > %(DMesonAPT)s) & (ACUTDOCACHI2(%(DMesonADOCAChi2)s,'')) & in_range(%(DMesonComboLowMass)s, AM, %(DMesonComboHighMass)s)" % locals()
 
 
 # &(AMAXDOCA('LoKi::DistanceCalculator') < %(DMesonComboDOCA)s * mm
@@ -678,7 +678,7 @@ def makeD2KS0K(name,
 
 #        _motherCuts = "(PT > %(DMesonMotherPT)s*MeV) & (VFASPF(VCHI2/VDOF) < %(DMesonMotherVertexChi2)s) & in_range(%(DMesonMotherLowMass)s, MM, %(DMesonMotherHighMass)s) & ((CHILD( VFASPF(VZ) , 'KS0' == ID ) - VFASPF(VZ)) > %(KS0ZDiff)s)  & (MIPCHI2DV(PRIMARY) < %(DMesonMotherMIPChi2)s) & (BPVVDCHI2 > %(DMesonFlightDistChi2)s)" % locals()
 
-        _motherCuts = "(VFASPF(VCHI2/VDOF) < %(DMesonMotherVertexChi2)s) & in_range(%(DMesonMotherLowMass)s, MM, %(DMesonMotherHighMass)s) & (MIPCHI2DV(PRIMARY) < %(DMesonMotherMIPChi2)s) & (BPVVDCHI2 > %(DMesonFlightDistChi2)s)" % locals()
+        _motherCuts = "(PT > %(DMesonMotherPT)s*MeV) & (VFASPF(VCHI2/VDOF) < %(DMesonMotherVertexChi2)s) & in_range(%(DMesonMotherLowMass)s, MM, %(DMesonMotherHighMass)s) & (MIPCHI2DV(PRIMARY) < %(DMesonMotherMIPChi2)s) & (BPVVDCHI2 > %(DMesonFlightDistChi2)s)" % locals()
 
     
         # Define the combine particles
@@ -721,14 +721,14 @@ def makeD2KS0KDD(name,
 
         # Define the combination, mother and daughter cuts
 #        _combCuts = "(APT > %(DMesonAPT)s) & (ACUTDOCACHI2(%(DMesonADOCAChi2)s,'')) & in_range(%(DMesonComboLowMass)s, AM, %(DMesonComboHighMass)s)" % locals()
-        _combCuts = "(ACUTDOCACHI2(%(DMesonADOCAChi2)s,'')) & in_range(%(DMesonComboLowMass)s, AM, %(DMesonComboHighMass)s)" % locals()
+        _combCuts = "(APT > %(DMesonAPT)s) & (ACUTDOCACHI2(%(DMesonADOCAChi2)s,'')) & in_range(%(DMesonComboLowMass)s, AM, %(DMesonComboHighMass)s)" % locals()
 
 # &(AMAXDOCA('LoKi::DistanceCalculator') < %(DMesonComboDOCA)s * mm
 
 
         #_motherCuts = "(PT > %(DMesonMotherPT)s*MeV) & (VFASPF(VCHI2/VDOF) < %(DMesonMotherVertexChi2)s) & in_range(%(DMesonMotherLowMass)s, MM, %(DMesonMotherHighMass)s) & ((CHILD( VFASPF(VZ) , 'KS0' == ID ) - VFASPF(VZ)) > %(KS0ZDiff)s)  & (MIPCHI2DV(PRIMARY) < %(DMesonMotherMIPChi2)s) & (BPVVDCHI2 > %(DMesonFlightDistChi2)s)" % locals()
 
-        _motherCuts = "(VFASPF(VCHI2/VDOF) < %(DMesonMotherVertexChi2)s) & in_range(%(DMesonMotherLowMass)s, MM, %(DMesonMotherHighMass)s) & (MIPCHI2DV(PRIMARY) < %(DMesonMotherMIPChi2)s)" % locals()
+        _motherCuts = "(PT > %(DMesonMotherPT)s*MeV) & (VFASPF(VCHI2/VDOF) < %(DMesonMotherVertexChi2)s) & in_range(%(DMesonMotherLowMass)s, MM, %(DMesonMotherHighMass)s) & (MIPCHI2DV(PRIMARY) < %(DMesonMotherMIPChi2)s)" % locals()
     
         # Define the combine particles
         _Dmeson = CombineParticles( DecayDescriptor = "[D+ -> KS0 K+]cc", CombinationCut = _combCuts, MotherCut = _motherCuts)
