@@ -88,6 +88,9 @@ def SwimmingEventLoop(gaudi, nEvents):
         hlt1triggers = Swimming().getProp('Hlt1Triggers')
         hlt2triggers = Swimming().getProp('Hlt2Triggers')
         triggers     = [hlt1triggers,hlt2triggers]
+        # Disable the FSR writer if FSR writing is enabled.
+        if Swimming().getProp('WriteFSR'):
+            gaudi.algorithm('FSRInputCopyStreamWriter').Enable = False
 
     #The tis tos tool
     tistostool      = gaudi.toolsvc().create('TriggerTisTos'    ,interface='ITriggerTisTos')
@@ -113,6 +116,10 @@ def SwimmingEventLoop(gaudi, nEvents):
                             Swimming().getProp('OffSelModuleName'), offCands, offlinePVs
                           )
     gaudi.__dict__['globs'] = myGlobs
+
+    def __next__():
+        # Emit special end event Incident.
+        incidentSvc.fireIncident(GaudiPython.gbl.Incident("SwimmingLoop", "SwimmingEndEvent"))
 
     # Import the utilities
     from Swimming.SwimmingUtils import (getBinfo, runSwimmingStep,
@@ -186,6 +193,7 @@ def SwimmingEventLoop(gaudi, nEvents):
                odin.triggerConfigurationKey() != int(Swimming().getProp('TCK'), 16):
             print "WARNING, TCK 0x%08x does not match configured TCK %s, skipping event." \
                   % (odin.triggerConfigurationKey(), Swimming().getProp('TCK'))
+            __next__()
             continue
         
         #Safety checks
@@ -195,12 +203,14 @@ def SwimmingEventLoop(gaudi, nEvents):
                 print "Problem while processing event number",startingEvent+eventNumber
                 print "No container of offline candidates found!"
                 print "Skipping the event but this is bad, check what you are doing!!"   
+            __next__()
             continue
         if mycands.size() == 0 : 
             if DEBUGMODE :
                 print "Problem while processing event number",startingEvent+eventNumber
                 print "Container of offline candidates empty!" 
                 print "Skipping the event but this is bad, check what you are doing!!"
+            __next__()
             continue
         if skipIfNoMuDSTCand :
             skipEvent = False
@@ -219,6 +229,7 @@ def SwimmingEventLoop(gaudi, nEvents):
                         print "Skipping the event"
                     skipEvent = True
             if skipEvent :
+                __next__()
                 continue
         if DEBUGMODE :
             print "Passed the safety checks OK"
@@ -229,6 +240,7 @@ def SwimmingEventLoop(gaudi, nEvents):
         if not mycand:
             print "Somehow there is no candidate!!! This should never happen."
             print "Skipping this event."
+            __next__()
             continue
 
         if DEBUGMODE :
@@ -288,6 +300,7 @@ def SwimmingEventLoop(gaudi, nEvents):
         # ones which we save don't count as they are just there to
         # demarcate the limits of our search, so we don't use them
         if roughTurningPoints == [] :
+            __next__()
             continue
         if DEBUGMODE :
             print "****************************"
@@ -378,6 +391,9 @@ def SwimmingEventLoop(gaudi, nEvents):
 
         # Write the Output
         myGlobs.gaudi.algorithm(writerName).execute()
+        if not swimStripping and Swimming().getProp('WriteFSR'):
+            gaudi.algorithm('FSRInputCopyStreamWriter').execute()
+        __next__()
 
     # Print the number of events processed
     print Swimming().getProp('EventPrint') % eventNumber

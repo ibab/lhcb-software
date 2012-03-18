@@ -25,6 +25,7 @@ class Swimming(LHCbConfigurableUser) :
         , "TagDatabase"        : "$CHARMCONFIGROOT/db/tag_database.db" # Python shelve database to be used to obtain CondDB tag, DDDB tag and TCK from the run number.
         # Persistency
         , "Persistency"        : None            # ROOT or POOL, steers the setup of services
+        , "XMLSummary"         : 'summary.xml'   # Filename for the XMLSummary disabled if empty.
         # Input
         , "Input"              : []              # Input data. Can also be passed as a second option file.
         , "InputType"          : "DST"           # or "DIGI" or "ETC" or "RDST" or "DST or "MDST" of "SDST". Nothing means the input type is compatible with being a DST. 
@@ -86,6 +87,7 @@ class Swimming(LHCbConfigurableUser) :
         , "Input"              : """ Input data. Can also be passed as a second option file. """
         , "InputType"          : """ 'DST' or 'DIGI' or 'ETC' or 'RDST' or 'DST' or 'MDST' or 'SDST'. Nothing means the input type is compatible with being a DST.  """
         , "Persistency"        : """ ROOT or POOL, steers the setup of services """
+        , "XMLSummary"         : """ Filename for the XMLSummary disabled if empty. """
         , "Input"              : """ Input data. Can also be passed as a second option file."""
         , "InputType"          : """ or 'DIGI' or 'ETC' or 'RDST' or 'DST' or 'MDST' of 'SDST'. Nothing means the input type is compatible with being a DST. """
         , "OutputFile"         : """ Name of output file"""
@@ -170,7 +172,12 @@ class Swimming(LHCbConfigurableUser) :
         app = LHCbApp()
         self.setOtherProps(app, ['EvtMax', 'SkipEvents', 'Simulation', 'DataType',
                                  'Persistency'])
-
+        # Configure XMLSummarySvc
+        if self.getProp('XMLSummary'):
+            app.XMLSummary = self.getProp('XMLSummary')
+            from Configurables import XMLSummarySvc
+            XMLSummarySvc('CounterSummarySvc').EndEventIncident = 'SwimmingEndEvent'
+            
         CaloDstUnPackConf ( Enable = True )
         DstConf           ( EnableUnpack = ["Reconstruction","Stripping"] ) 
 
@@ -193,6 +200,7 @@ class Swimming(LHCbConfigurableUser) :
         from Configurables import TriggerTisTos
         ToolSvc().addTool(TriggerTisTos,'TriggerTisTos')
         ToolSvc().TriggerTisTos.TOSFracMuon = 0.
+
 
 def ConfigureMoore():
     config = Swimming()

@@ -5,6 +5,10 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+! 2012-03-18 - Roel Aaij
+ - Fix XML summary writing.
+ - Disable FSRInputCopyStreamWriter when swimming the trigger
+
 ! 2012-03-12 - V. Gligorov
  - Change the setting of "EnableUnpack" to be compliant with the new software stack.
 
