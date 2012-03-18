@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2012-03-18 - Jibo He
+ - Hlt2InclusiveDiPhiLines.py
+  . Tightened the cuts of DiPhi line to speed up, rate should be even less than 2 Hz. 
+
 !========================= Hlt2Lines v8r14 2012-03-17 =========================
 ! 2012-03-17 - Albert Puig
  - New version of the exclusive radiative lines with lower rate.

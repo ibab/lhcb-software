@@ -23,20 +23,21 @@ class Hlt2InclusiveDiPhiLinesConf(HltLinesConfigurableUser):
                   
                   , 'SpdMult'          :   600.                     # w/o dedicated Hlt1 line                 
                   # Track Fitted
-                  , 'KaonPT'           :   500.   # MeV
+                  , 'KaonPT'           :   650.   # MeV
+                  , 'KaonP'            :  3000.   # MeV
                   , 'KaonTrkChi2'      :     4.
                   , 'KaonPIDK'         :     0. 
                   , 'PhiComMassW'      :    30.   # MeV, bfore Vtx fit
-                  , 'PhiComPT'         :   400.   # MeV
+                  , 'PhiComPT'         :   750.   # MeV
                   , 'PhiMassW'         :    20.   # MeV
-                  , 'PhiPT'            :   500.   # MeV
+                  , 'PhiPT'            :   800.   # MeV
                   , 'PhiVtxCHI2'       :     9.
                   , 'CombLowerMass'    :  2750.   # MeV, before Vtx fit
                   , 'CombUpperMass'    :  4850.   # MeV, before Vtx fit
-                  , 'CombPT'           :   900.   # MeV, before Vtx fit
+                  , 'CombPT'           :  1900.   # MeV, before Vtx fit
                   , 'LowerMass'        :  2800.   # MeV, after Vtx fit
                   , 'UpperMass'        :  4800.   # MeV, after Vtx fit
-                  , 'CCbarPT'          :  1000.   # MeV, after Vtx fit 
+                  , 'CCbarPT'          :  2000.   # MeV, after Vtx fit 
                   , 'VtxCHI2'          :     9.   
                   
                   , 'HltANNSvcID'      : {  'DiPhi'                   : 52000
@@ -59,7 +60,7 @@ class Hlt2InclusiveDiPhiLinesConf(HltLinesConfigurableUser):
         #------------------------------------
         # Phi without PID
         #------------------------------------
-        KaonCut = "(PT> %(KaonPT)s *MeV) & (TRCHI2DOF < %(KaonTrkChi2)s)" % self.getProps()
+        KaonCut = "(PT> %(KaonPT)s *MeV) & (P> %(KaonP)s *MeV) & (TRCHI2DOF < %(KaonTrkChi2)s)" % self.getProps()
         PhiCombCut = "(ADAMASS('phi(1020)')<%(PhiComMassW)s*MeV) & (APT> %(PhiComPT)s *MeV)" % self.getProps()
         PhiMomCut = "(VFASPF(VCHI2PDOF)< %(PhiVtxCHI2)s)" \
                     " & (ADMASS('phi(1020)')<%(PhiMassW)s*MeV)" \
