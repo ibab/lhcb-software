@@ -6,6 +6,10 @@
 
 ! 2012-03-19 - Mat Charles
  - Stripping18/LineConfigDictionaries_Charm.py
+   . Patch to DstarD2KShh to allow for small tail below threshold in delta mass.
+
+! 2012-03-19 - Mat Charles
+ - Stripping18/LineConfigDictionaries_Charm.py
    . Updated D2KS0H with new settings from Sam Gregson
    . Updated CharmedAndCharmedStrangeSpectroscopy from Diego Milanes
 

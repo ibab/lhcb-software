@@ -789,7 +789,7 @@ DstarD2KShh = {
     ,'wideDMassCut_KPDD'    :  120.0      ## in MeV
     ,'wideDMassCut_PPDD'    :  140.0      ## in MeV
     ,'preFitDstarMassCut'   :  200.0      ## in MeV; make sure it's well above the largest D mass window
-    ,'wideDMCutLower'       :    0.0      ## in MeV
+    ,'wideDMCutLower'       :   -2.0      ## in MeV: allow negative tail made by CombineParticles
     ,'wideDMCutUpper'       :   15.0      ## in MeV
     ,'DstarCutPT_KK'        : 2200.0      ## in MeV
     ,'DstarCutPT_KP'        : 2200.0      ## in MeV
