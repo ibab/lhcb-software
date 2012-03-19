@@ -3,6 +3,7 @@
 
 // boost
 #include <boost/foreach.hpp>
+#include <boost/algorithm/string/replace.hpp>
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -73,7 +74,9 @@ StatusCode TupleToolSwimmingInfo::fill( const Particle*
       const tPoints& turns = report->turningPoints(m_swimRepsStage);
       BOOST_FOREACH(const LHCb::TurningPoint& tp, turns) {
         BOOST_FOREACH(const std::string& name, tp.decisions()) {
-          line_decisions.insert(make_pair(name, std::vector<double>()));
+          std::string branch_name(name);
+          boost::algorithm::replace_all(branch_name, "/", "_");
+          line_decisions.insert(make_pair(branch_name, std::vector<double>()));
         }
       }
       // Loop over turning points to fill vectors
