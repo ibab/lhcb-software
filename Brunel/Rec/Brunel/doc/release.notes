@@ -14,6 +14,7 @@ Purpose: LHCb reconstruction program
   . Fix sign of qOverP in FastMomentumEstimate, fixes TT efficiency of Match
     tracks (TrackTools)
   . Add EndVelo state to velo only fits (TrackFitter)
+  . Add new profile plot to monitor routing line coupling (VeloRecMonitors)
 
 - Changes to tests
   . add a test for 2012 data type (brunel2012magdown), for the time being using
