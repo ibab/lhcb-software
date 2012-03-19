@@ -4,11 +4,17 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
-!========================= VeloRecMonitors v2r17 2012-01-31 =========================
 ! 2012-03-17 - Zhou Xing
  - Added new plot for "Low ADC Cluster" monitoring to "VeloTrackMonitor"
    coupling effect of M2 routing line
- 
+
+! 2012-03-12 - Manuel Tobias Schiller
+ - changed default for occupancy monitoring to not periodically reset
+   occupancy histograms - this is needed to make the offline monitoring of
+   dead/noisy channels more reliable; online plots will be done by setting
+   this property in the online jobs to the old default
+
+!========================= VeloRecMonitors v2r17 2012-01-31 =========================
 ! 2012-01-27 - Marius Bjoernstad
  - Added new plot for "high multiplicity, # clusters", with logic to get 
    cluster multiplicity from raw event
