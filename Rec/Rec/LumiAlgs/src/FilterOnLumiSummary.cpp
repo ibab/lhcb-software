@@ -44,24 +44,25 @@ FilterOnLumiSummary::~FilterOnLumiSummary() {}
 StatusCode FilterOnLumiSummary::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
-
-  debug() << "CounterName:       " << m_CounterName         << " "
-	  << "ValueName:         " << m_ValueName           << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) {
+    debug() << "==> Initialize" << endmsg;
+    debug() << "CounterName:       " << m_CounterName         << " "
+            << "ValueName:         " << m_ValueName           << endmsg;
+  }
 
   // ------------------------------------------
   m_Counter = LHCb::LumiCounters::counterKeyToType(m_CounterName);
   if ( m_Counter == LHCb::LumiCounters::Unknown ) {
     warning() << "LumiCounter not found with name: " << m_CounterName <<  endmsg;
   } else {
-    debug() << "ExtraInfo key value: " << m_Counter << endmsg;
+    if ( msgLevel(MSG::DEBUG) ) debug() << "ExtraInfo key value: " << m_Counter << endmsg;
   }
   // ------------------------------------------
   m_Value = LHCb::LumiMethods::methodKeyToType(m_ValueName);
   if ( m_Value == LHCb::LumiMethods::Unknown ) {
     warning() << "LumiMethod not found with name: " << m_ValueName <<  endmsg;
   } else {
-    debug() << "ExtraInfo method key value: " << m_Value << endmsg;
+    if ( msgLevel(MSG::DEBUG) ) debug() << "ExtraInfo method key value: " << m_Value << endmsg;
   }
   // ------------------------------------------
 

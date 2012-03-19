@@ -4,6 +4,10 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2012-03-19 - Marco Cattaneo
+ - Fix unprotected DEBUG and VERBOSE messages
+ - Fix some UNINIT_CTOR defects
+
 !========================= LumiAlgs v7r4 2012-02-28 =========================
 ! 2012-02-20 - Jaap Panman
  - introduce warning when IgnoreDQFlags set

@@ -133,7 +133,7 @@ StatusCode LumiMergeFSR::merge() {
   // prepare TDS for FSR
   for ( unsigned int ibx = 0 ; ibx < m_BXTypes.size() ; ++ibx ){  
     std::string bx = m_BXTypes[ibx];
-    debug() << "BXType " << bx << endmsg;
+    if ( msgLevel(MSG::DEBUG) ) debug() << "BXType " << bx << endmsg;
     LHCb::LumiFSRs* fsrs = new LHCb::LumiFSRs(); // keyed container for FSRs
     fsrs->reserve(100);
     m_lumiFSRsVec.push_back(fsrs);               // vector of keyed containers
@@ -183,7 +183,7 @@ StatusCode LumiMergeFSR::merge() {
       // get all FSR objects
       for ( unsigned int ibx = 0; ibx < m_BXTypes.size() ; ++ibx ){  
         std::string bx = m_BXTypes[ibx];
-        debug() << "BXType " << bx << endmsg;
+        if ( msgLevel(MSG::DEBUG) ) debug() << "BXType " << bx << endmsg;
         LHCb::LumiFSRs* fsrs = m_lumiFSRsVec[ibx]; 
         unsigned long n_lumiFSR = 0;
         // construct the right name of the containers
@@ -282,7 +282,7 @@ StatusCode LumiMergeFSR::merge() {
   if ( msgLevel(MSG::DEBUG) ) 
   {
     LHCb::EventCountFSR* readFSR = get<LHCb::EventCountFSR>(m_fileRecordSvc, LHCb::EventCountFSRLocation::Default);
-    if ( msgLevel(MSG::DEBUG) )debug() << "READ FSR: " << *readFSR << endmsg; 
+    debug() << "READ FSR: " << *readFSR << endmsg; 
   }
 
   // clean up eventCountFSRs, except the top level

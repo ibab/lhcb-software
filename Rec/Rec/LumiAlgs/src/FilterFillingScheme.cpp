@@ -29,7 +29,10 @@ DECLARE_ALGORITHM_FACTORY( FilterFillingScheme )
 //=============================================================================
 FilterFillingScheme::FilterFillingScheme( const std::string& name,
                                           ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator ), m_bxid(0)
+  : GaudiAlgorithm ( name , pSvcLocator )
+  , m_bxid(0)
+  , m_condMagnet(0)
+  , m_condFilling(0)
 {
   declareProperty( "Beam"             ,  m_beam = "0" );
   declareProperty( "MagnetState"      ,  m_MagnetState = "NONE" );
@@ -112,13 +115,13 @@ StatusCode FilterFillingScheme::finalize() {
 //=============================================================================
 StatusCode FilterFillingScheme::registerDB() {
   // register the DB conditions for the update maganer
-  debug() << "==> Register DB" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Register DB" << endmsg;
 
   // register filling scheme data
   std::string lhcFS = "Conditions/Online/LHCb/LHCFillingScheme";
   if (this->existDet<Condition>(lhcFS)) {
     registerCondition(lhcFS, m_condFilling, &FilterFillingScheme::i_cacheFillingData);
-    debug() << lhcFS << endmsg;
+    if ( msgLevel(MSG::DEBUG) ) debug() << lhcFS << endmsg;
   }
   else {
     warning() << lhcFS << " not found, fall back to sampling data" << endmsg;
@@ -128,7 +131,7 @@ StatusCode FilterFillingScheme::registerDB() {
   std::string magnet = "Conditions/Online/LHCb/Magnet/Measured";
   if (this->existDet<Condition>(magnet)) {
     registerCondition(magnet, m_condMagnet, &FilterFillingScheme::i_cacheMagnetData);
-    debug() << magnet << endmsg;
+    if ( msgLevel(MSG::DEBUG) ) debug() << magnet << endmsg;
   }
   else {
     warning() << magnet << " not found, fall back to sampling data" << endmsg;
@@ -142,7 +145,7 @@ StatusCode FilterFillingScheme::registerDB() {
 //=========================================================================
 StatusCode FilterFillingScheme::i_cacheFillingData() {
   //  data from /Conditions/Online/LHCb/LHCFillingScheme
-  debug() << "callback Filling:" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "callback Filling:" << endmsg;
 
   m_B1FillingScheme = (std::string) m_condFilling->param<std::string>("B1FillingScheme");
   m_B2FillingScheme = (std::string) m_condFilling->param<std::string>("B2FillingScheme");
@@ -157,7 +160,7 @@ StatusCode FilterFillingScheme::i_cacheFillingData() {
 StatusCode FilterFillingScheme::i_cacheMagnetData() {
   //  data from /Conditions/Online/LHCb/Magnet/Measured
 
-  debug() << "callback Magnet:" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "callback Magnet:" << endmsg;
  
   if(m_condMagnet->exists("State")) {
     m_parMagnetState = (std::string) m_condMagnet->param<std::string>("State");
@@ -179,8 +182,8 @@ bool FilterFillingScheme::processDB() {
   // magnet
   if ( msgLevel(MSG::DEBUG) ) debug() << "MagnetState :     " << m_parMagnetState << " " << endmsg;
   // filling scheme
-  if ( msgLevel(MSG::DEBUG) ) verbose() << "B1FillingScheme : " << m_B1FillingScheme << " " << endmsg;
-  if ( msgLevel(MSG::DEBUG) ) verbose() << "BeFillingScheme : " << m_B1FillingScheme << " " << endmsg;
+  if ( msgLevel(MSG::VERBOSE) ) verbose() << "B1FillingScheme : " << m_B1FillingScheme << " " << endmsg;
+  if ( msgLevel(MSG::VERBOSE) ) verbose() << "BeFillingScheme : " << m_B1FillingScheme << " " << endmsg;
 
   // for some options do not look at the data
   if ( m_beam == "0" || m_MagnetState == "None" ) {

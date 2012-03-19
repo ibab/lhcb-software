@@ -29,11 +29,13 @@ GetLumiParameters::GetLumiParameters( const std::string& type,
                                       const IInterface* parent )
   : GaudiTool ( type, name , parent ),
     m_condRelative(0),
+    m_condRelativeLog(0),
     m_condAbsolute(0),
     m_condCoefficients(0),
     m_condCoefficientsLog(0),
     m_condSampling(0),       
     m_condTrigger(0),
+    m_condFilling(0),
     m_tckReader(0)
 {
   declareInterface<IGetLumiParameters>(this);

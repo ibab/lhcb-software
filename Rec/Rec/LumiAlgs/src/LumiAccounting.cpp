@@ -203,7 +203,7 @@ StatusCode LumiAccounting::finalize() {
       // sum up the information
       sumFSR += *(*fsr);
       // print the individual FSR
-      verbose() << "FSR: " << *(*fsr) << endmsg; 
+      if ( msgLevel(MSG::VERBOSE) ) verbose() << "FSR: " << *(*fsr) << endmsg; 
     }
     // print the integral
     info() << "INTEGRAL: " << sumFSR << endmsg; 
@@ -244,7 +244,7 @@ StatusCode LumiAccounting::finalize() {
 //=============================================================================
 StatusCode LumiAccounting::registerDB() {
   // register the DB conditions for the update maganer
-  debug() << "==> Register DB" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Register DB" << endmsg;
 
   // register thresholds
   if (this->existDet<Condition>("Conditions/Lumi/LHCb/ThresholdCalibration")) {
@@ -264,7 +264,7 @@ StatusCode LumiAccounting::registerDB() {
 //=========================================================================
 StatusCode LumiAccounting::i_cacheThresholdData() {
 
-  debug() << "callback ThresholdCalibration:" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "callback ThresholdCalibration:" << endmsg;
   std::vector<double> cal = m_condThresholds->paramVect<double>("Thresholds");
   if ( cal.size() == m_calibThresholds.size() ) {
     m_calibThresholds = cal;

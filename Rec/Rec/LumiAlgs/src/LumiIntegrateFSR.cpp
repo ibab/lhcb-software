@@ -317,7 +317,7 @@ StatusCode LumiIntegrateFSR::add_file() {
             // apply calibration
             if (msgLevel(MSG::DEBUG)) debug() << "Result for this file (before calibration): " << *result << endmsg;
             result->scale(one_vector(m_calibRelative, m_calibRelativeLog, LHCb::LumiMethods::PoissonOffset));
-            verbose() << "Result for this file (after calibration): " << *result << endmsg;
+            if ( msgLevel(MSG::VERBOSE) ) verbose() << "Result for this file (after calibration): " << *result << endmsg;
             // simple summing per counter
             if ( m_integratorTool->integrate( *result ) == StatusCode::FAILURE ) {
               m_statusScale = 0;        // invalid luminosity
