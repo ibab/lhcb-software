@@ -126,6 +126,10 @@ private:
   std::string m_xmlfile;
   ///name of the schema to use. Set by property xsdfile.
   std::string m_xsdfile;
+  ///type of incident to regard as begin event
+  std::string m_beginIncident;
+  ///type of incident to regard as end event
+  std::string m_endIncident;
 
   PyObject * m_summary; ///the pointer to the python object
   StatEntity m_handled; ///simple counter of #handled events

@@ -4,6 +4,11 @@
 ! Purpose     : Holds code for writing an XML-based summary in Gaudi
 !-----------------------------------------------------------------------------
 
+! 2012-03-19 - Roel Aaij
+ - Make the type of incident used for begin and end event configurable with a default
+   to the standard types.
+ - Remove UNLIKELY macros.
+
 !========================= XMLSummaryKernel v1r5 2012-02-28 =========================
 ! 2012-02-14 - Marco Cattaneo
  - Use xrootd instead of rfio to read test file
