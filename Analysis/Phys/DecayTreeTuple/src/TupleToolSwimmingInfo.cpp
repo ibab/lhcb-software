@@ -74,9 +74,7 @@ StatusCode TupleToolSwimmingInfo::fill( const Particle*
       const tPoints& turns = report->turningPoints(m_swimRepsStage);
       BOOST_FOREACH(const LHCb::TurningPoint& tp, turns) {
         BOOST_FOREACH(const std::string& name, tp.decisions()) {
-          std::string branch_name(name);
-          boost::algorithm::replace_all(branch_name, "/", "_");
-          line_decisions.insert(make_pair(branch_name, std::vector<double>()));
+          line_decisions.insert(make_pair(name, std::vector<double>()));
         }
       }
       // Loop over turning points to fill vectors
@@ -101,7 +99,9 @@ StatusCode TupleToolSwimmingInfo::fill( const Particle*
       test &= tuple->farray( prefix+"_"+m_swimRepsStage+"_TP_TAU", tau ,prefix+"_"+m_swimRepsStage+"_nTP",maxTurns );
       test &= tuple->farray( prefix+"_"+m_swimRepsStage+"_TP_IP" , ip  ,prefix+"_"+m_swimRepsStage+"_nTP",maxTurns );
       BOOST_FOREACH(const MapType::value_type& entry, line_decisions) {
-        test &= tuple->farray(prefix + "_TP_DEC_" + entry.first, entry.second,
+        std::string branch = entry.first;
+        boost::algorithm::replace_all(branch, "/", "_");
+        test &= tuple->farray(prefix + "_TP_DEC_" + branch, entry.second,
                               prefix + "_nTP", maxTurns);
       }
     } else if (m_swimRepsStage == "Trigger") { //The each track part is only for the trigger
