@@ -82,14 +82,14 @@ class Physics_draft2012( object ):
                                                , 'Photon_P'      :  6000
                                                , 'Photon_IP'     :     0.100
                                                , 'Photon_IPChi2' :    16
-                                               , 'Photon_TrChi2' :     2.5
+                                               , 'Photon_TrChi2' :     2.25
                                                , 'Photon_L0Channels' : 'PhotonHi,ElectronHi' 
                                                , 'Photon_GEC'        : 'Loose'
                                                , 'Photon_ValidateTT' : False
                                                }
                      , Hlt1ElectronLinesConf : { 'SingleElectronNoIP_P'          : 20000
                                                , 'SingleElectronNoIP_PT'         : 10000
-                                               , 'SingleElectronNoIP_TrChi2'     :     4
+                                               , 'SingleElectronNoIP_TrChi2'     :     5
                                                , 'SingleElectronNoIP_TrNTHits'   :     0 #OFF
                                                , 'SingleElectronNoIP_Velo_NHits' :     0 #OFF
                                                , 'SingleElectronNoIP_Velo_Qcut'  :   999 #OFF

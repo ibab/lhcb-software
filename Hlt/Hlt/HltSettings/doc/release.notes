@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-03-14 - Sascha Stahl
+ - Physics_draft2012: Changed Tr chi2 cuts in Hlt1 TrackPhoton to 2.25 , 
+  SingleElectron to 5 
+
 ! 2012-03-19 - V. Gligorov
  - Add DiPhi line to Hadrons_draft2012 for Jibo. 
 
