@@ -346,7 +346,7 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( )
         return Warning("None fit node found", StatusCode::FAILURE);
       }
       
-      Gaudi::XYZPoint localPoint = rMeas->sensor().globalToLocal(rNode->position());
+      
       LHCb::VeloChannelID clusID = rMeas->lhcbID().veloID();// Outter strip        
       const LHCb::VeloCluster *outerClus = rMeas->cluster();
       int outerSize= outerClus->size();
