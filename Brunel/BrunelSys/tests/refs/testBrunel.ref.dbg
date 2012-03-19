@@ -78,7 +78,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v42r1
-                                          running on lxbuild163.cern.ch on Thu Mar 15 18:34:52 2012
+                                          running on lxbuild163.cern.ch on Mon Mar 19 16:56:12 2012
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -87,7 +87,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   1.61 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.47 times the speed of a 2.8 GHz Xeon.
 ChronoStatSvc        INFO  Number of skipped events for MemStat-1
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
@@ -624,7 +624,7 @@ MuonTrackFitter   SUCCESS Number of counters : 1
  | "nTracks"                                       |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
 MuonTrackAligMo...SUCCESS Booked 62 Histogram(s) : 1D=42 1DProf=20
 VeloClusterMonitorSUCCESS Booked 14 Histogram(s) : 1D=11 2D=3
-VeloTrackMonitor  SUCCESS Booked 112 Histogram(s) : 1D=19 1DProf=93
+VeloTrackMonitor  SUCCESS Booked 114 Histogram(s) : 1D=19 1DProf=95
 VeloIPResolutio...SUCCESS Booked 21 Histogram(s) : 1D=21
 TrackVertexMonitorSUCCESS Booked 29 Histogram(s) : 1D=15 1DProf=14
 TrackFitMatchMo...SUCCESS Booked 10 Histogram(s) : 1D=5 1DProf=5
@@ -674,7 +674,7 @@ ToolSvc.FastVel...   INFO Maximum number of Velo hits 0
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   1.61 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.47 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -1080,7 +1080,7 @@ Listing sources of Unprotected and Unseen messages
  BremChi22ID                                            |   DEBUG |        5
  BremMatch                                              |   DEBUG |        6
  BremMatchMon                                           |   DEBUG |        1
- BremPIDe                                               |   DEBUG |       20
+ BremPIDe                                               |   DEBUG |       18
  BrunelBankKiller                                       | WARNING |        1
  CaloEMuPIDMonHard                                      |   DEBUG |        1
  CaloEMuPIDMonSoft                                      |   DEBUG |        1
@@ -1101,8 +1101,8 @@ Listing sources of Unprotected and Unseen messages
  EcalE                                                  |   DEBUG |        6
  EcalE.EcalE                                            |   DEBUG |        1
  EcalEFlowMon                                           |   DEBUG |        2
- EcalPIDe                                               |   DEBUG |       20
- EcalPIDmu                                              |   DEBUG |       20
+ EcalPIDe                                               |   DEBUG |       18
+ EcalPIDmu                                              |   DEBUG |       18
  ElectronMatch                                          |   DEBUG |        7
  ElectronMatchMon                                       |   DEBUG |        1
  ElectronMon                                            |   DEBUG |        1
@@ -1121,8 +1121,8 @@ Listing sources of Unprotected and Unseen messages
  HcalDigitMon                                           |   DEBUG |        1
  HcalE                                                  |   DEBUG |        6
  HcalE.HcalE                                            |   DEBUG |        1
- HcalPIDe                                               |   DEBUG |       20
- HcalPIDmu                                              |   DEBUG |       20
+ HcalPIDe                                               |   DEBUG |       18
+ HcalPIDmu                                              |   DEBUG |       18
  HltErrorFilter                                         |   DEBUG |        1
  InBREM                                                 |   DEBUG |        4
  InBREM.InBrem                                          |   DEBUG |        4
@@ -1166,7 +1166,7 @@ Listing sources of Unprotected and Unseen messages
  PrsDigitMon                                            |   DEBUG |        1
  PrsE                                                   |   DEBUG |        6
  PrsE.PrsE                                              |   DEBUG |        4
- PrsPIDe                                                |   DEBUG |       20
+ PrsPIDe                                                |   DEBUG |       18
  ResolvedPi0Mon                                         |   DEBUG |        1
  RiCKResLong                                            |   DEBUG |        1
  RiCKResLong.RichStereoFitter                           |   DEBUG |        1
