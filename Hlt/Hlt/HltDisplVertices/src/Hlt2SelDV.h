@@ -65,10 +65,14 @@ private:
   double m_MinY;              ///< Min Y position     
   double m_MaxY;              ///< Max Y position     
   double m_MinZ;              ///< Min Z position     
-  double m_MaxZ;              ///< Max Z position   
+  double m_MaxZ;              ///< Max Z position     
+  double m_fracE;              ///< Fraction of Energy carried by highest E track
+  double m_fracT;              ///< Fraction of track with first hit 5sigma before vertex
   bool m_allOutDet;           ///< Should all candidates be out of materVeto? 
   double m_PreyMinHighMass ;  ///< Minimum reconstructed mass of highest mass candidate  
   int m_RemVtxFromDet ;    
+  bool m_useVelo;
+  
 
 
 

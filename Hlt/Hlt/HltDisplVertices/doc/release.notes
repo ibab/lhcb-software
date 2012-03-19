@@ -1,8 +1,12 @@
 -----------------------------------------------------------------------------
 ! Package     : Hlt/HltDisplVertices
-! Responsible : Neal Gauvin (Gueissaz)
+! Responsible : Victor Coco
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
+
+! 2012-03-19 - Victor Coco
+ - modify Hlt2Sel to have the fraction of energy cut at this level 
+   (but computed in Hlt2PreSel) + sum pt without velo.
 
 !========================= HltDisplVertices v3r6 2012-03-17 =========================
 ! 2012-03-15 - Victor Coco

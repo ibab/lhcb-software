@@ -62,10 +62,10 @@ Hlt2PreSelDV::Hlt2PreSelDV( const std::string& name,
   //declareProperty("GatherParticles", m_GatherParticles = true );
   declareProperty("PVnbtrks", m_PVnbtrks = 10 ); //corr. to 'tight' PV reco
   declareProperty("UseVeloTracks",   m_useVeloTrack = false );
-  declareProperty("FractionEFrom1Track",   m_fractE = 1000. );
-  declareProperty("FractionTrackUpstreamV",   m_fractTrUpVertex = 1000. );
-  declareProperty("MaxChi2Long", m_chi2Long = 1000. );
-
+  declareProperty("FractionEFrom1Track",   m_fractE = 0.85 );
+  declareProperty("FractionTrackUpstreamV",   m_fractTrUpVertex = 0.49 );
+  declareProperty("MaxChi2Long", m_chi2Long = 5. );
+  declareProperty("MaxChi2Down", m_chi2Down = 10. );
 }
 //=============================================================================
 // Destructor
@@ -167,16 +167,14 @@ StatusCode Hlt2PreSelDV::initialize() {
 
     double r  = beamSpotCut( rv ); //R to beam line
 
-    // This can be modified if we apply directly the R cut....
+    if ( r < m_RMin || r > m_RMax ||  size < m_nTracks  ) continue;
+
 
     //Do not change the PV into a particle ! (if any !)
     //if( !m_KeepLowestZ ){
     //  if( i == RV.begin() ) continue;
       //Do not keep if before the upPV
     if( rv->position().z() < UpPV->position().z() ) continue;
-      //}
-
-    /// Check if this one is still needed...
 
     //PVs have no backward tracks
     if( HasBackwardTracks(rv) ){ 
@@ -184,17 +182,8 @@ StatusCode Hlt2PreSelDV::initialize() {
         debug() <<"RV has a backward track --> disguarded !"<< endmsg;
       continue;
     }
-
-    //Cuts !!
-    if( size < m_nTracks || r < m_RMin || r > m_RMax ){
-      if( msgLevel(MSG::DEBUG) )
-        debug() <<"RV did not passed the cuts  --> disguarded !"<< endmsg;
-      continue;
-    }
     if( !RecVertex2Particle( rv, Parts, r , *veloTrProtoP ) ) continue;
     
-    //Turn it into a Particle !
-    // Do the detector material calculation only in the end ( which is equivalent to begining of next step)
   }
   
   return StatusCode::SUCCESS;
@@ -368,6 +357,8 @@ bool Hlt2PreSelDV::RecVertex2Particle( const RecVertex* rv,
       if( (*iVtx)->key() == tk->key() ){ 
         if( (*iVtx)->key() != endkey ) ++iVtx; 
         // make sure it is a new pointer so that when the mother is saved on TES we only have new pointers.
+        if( (*j)->proto()->track()->type()!= LHCb::Track::Velo && (*j)->proto()->track()->chi2PerDoF () > m_chi2Down )continue;
+
         tmpVtx.addToOutgoingParticles ( (*j ) );
         tmpPart.addToDaughters( (*j ) );
         mom += (*j )->momentum();
@@ -403,6 +394,7 @@ bool Hlt2PreSelDV::RecVertex2Particle( const RecVertex* rv,
   tmpPart.setPosMomCovMatrix( PosMomCovMatrix );
   tmpPart.setEndVertex( tmpVtx.clone() );
   tmpPart.setReferencePoint( point );
+
   tmpPart.addInfo(55,fracHitBeforeVertex);
   tmpPart.addInfo(56,maxE/tmpPart.momentum().e());
   //Remove if found to be in detector material

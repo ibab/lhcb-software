@@ -11,6 +11,9 @@
 #include "DetDesc/IDetectorElement.h"
 
 
+#include "Event/TrackUnitsConverters.h"
+#include "LHCbMath/MatrixUtils.h"
+
 #include "VeloDet/DeVelo.h"
 #include "Kernel/IMatterVeto.h"   
 #include "Kernel/IJetMaker.h"   
@@ -54,6 +57,7 @@ private:
   bool HasBackAndForwardTracks( const LHCb::RecVertex* );
   
 
+  double kullbeckLieblerDist(const LHCb::State& c1, const LHCb::State& c2) const;
   //Geometric tools
   double GetSumPt( const LHCb::Particle * );
   std::string m_Prey ;        ///< LHCb Name of the neutralino LSP
@@ -84,6 +88,7 @@ private:
   double m_fractE;
   double m_fractTrUpVertex;
   double m_chi2Long;
+  double m_chi2Down;
 
   ///To sort the reconstructed vertices according to the z position
   class CondRVz{

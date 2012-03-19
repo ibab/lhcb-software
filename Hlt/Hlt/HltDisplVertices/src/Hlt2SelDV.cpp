@@ -65,7 +65,10 @@ Hlt2SelDV::Hlt2SelDV( const std::string& name,
   declareProperty("SigmaR", m_SigmaR = 1000. );
   declareProperty("MinZ", m_MinZ = -10.*m );
   declareProperty("MaxZ", m_MaxZ = 100*m );
+  declareProperty("FractionEFrom1Track",   m_fracE = 0.85 );
+  declareProperty("FractionTrackUpstreamV",   m_fracT = 0.49 );
   declareProperty("PVnbtrks", m_PVnbtrks = 5 ); //corr. to 'tight' PV reco
+  declareProperty("UseVelo", m_useVelo = true );
   //declareProperty("PhaseSpacePS", m_phaseSpacePS = false ); //phase space prescaler
 
 
@@ -145,6 +148,8 @@ StatusCode Hlt2SelDV::execute() {
     double mass = p->measuredMass();
     int nbtrks = p->endVertex()->outgoingParticles().size();
     double chi = p->endVertex()->chi2PerDoF();
+    double fracT = p->info(55,-1000.) ; 
+    double fracE = p->info(56,-1000.) ; 
     const Gaudi::XYZPoint & pos = p->endVertex()->position();
     double rho = p->info(52,-1000.);
     bool indet = false;
@@ -162,7 +167,8 @@ StatusCode Hlt2SelDV::execute() {
         nbtrks < m_nTracks || rho <  m_RMin || rho > m_RMax || 
         sumpt < m_SumPt || chi > m_MaxChi2OvNDoF || 
         pos.z() < m_MinZ || pos.z() > m_MaxZ ||
-        errr > m_SigmaR || sqrt(err(2,2)) > m_SigmaZ || ( mass > m_PreyMaxMass && sumpt > m_PreyMaxSumPt) ){ 
+        errr > m_SigmaR || sqrt(err(2,2)) > m_SigmaZ || ( mass > m_PreyMaxMass && sumpt > m_PreyMaxSumPt)
+        || fracT>m_fracT || fracE > m_fracE ){ 
       if( msgLevel( MSG::DEBUG ) )
         debug()<<"Particle do not pass the cuts"<< endmsg; 
       continue; 
@@ -258,6 +264,7 @@ double Hlt2SelDV::GetSumPt( const Particle * p ){
   SmartRefVector<Particle>::const_iterator iend = p->daughters().end();
   for( SmartRefVector<Particle>::const_iterator i = 
 	 p->daughters().begin(); i != iend; ++i ){
+    if(!m_useVelo &&  std::abs(i->target()->pt()-400.)<1e-8 )continue;
     sumpt += i->target()->pt();
   }
   return sumpt;
