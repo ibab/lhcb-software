@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-03-19 - Patrick Koppenburg
+ - Reduce range of PV chi2 plot
+
 ! 2012-03-13 - Wouter Hulsbergen
  - added mass pull histogram to TrackParticleMonitor
 

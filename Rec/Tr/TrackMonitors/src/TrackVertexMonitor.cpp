@@ -154,9 +154,11 @@ StatusCode TrackVertexMonitor::initialize()
  
   m_fastTrackXIP = book1D("fast track IP X","fast track IP X",-m_ipmax,m_ipmax) ;
   m_fastTrackYIP = book1D("fast track IP Y","fast track IP Y",-m_ipmax,m_ipmax) ;
-  m_fastTrackXIPVsPhi = bookProfile1D("fast track IP X vs phi","fast track IP X vs phi",-Gaudi::Units::pi,Gaudi::Units::pi,m_nprbins) ;
+  m_fastTrackXIPVsPhi = bookProfile1D("fast track IP X vs phi","fast track IP X vs phi",
+                                      -Gaudi::Units::pi,Gaudi::Units::pi,m_nprbins) ;
   m_fastTrackXIPVsEta = bookProfile1D("fast track IP X vs eta","fast track IP X vs eta",2.0,5.0,m_nprbins) ;
-  m_fastTrackYIPVsPhi = bookProfile1D("fast track IP Y vs phi","fast track IP Y vs phi",-Gaudi::Units::pi,Gaudi::Units::pi,m_nprbins) ;
+  m_fastTrackYIPVsPhi = bookProfile1D("fast track IP Y vs phi","fast track IP Y vs phi",
+                                      -Gaudi::Units::pi,Gaudi::Units::pi,m_nprbins) ;
   m_fastTrackYIPVsEta = bookProfile1D("fast track IP Y vs eta","fast track IP Y vs eta",2.0,5.0,m_nprbins) ;
 
   // impact parameter and vertex chisquare of the two highest Pt tracks
@@ -274,7 +276,7 @@ StatusCode TrackVertexMonitor::execute()
     // number of backward tracks per primary vertex
     plot( backwardtracks.size(), "NumBackTracksPerPV",-0.5,99.5,50) ;
     // chisquare
-    plot( pv->chi2() / pv->nDoF(), "PV chisquare per dof",0,10) ;
+    plot( pv->chi2() / pv->nDoF(), "PV chisquare per dof",0.,3.,150) ;
     // position with crap hack for vertices at exactly 0
     if(std::abs(pv->position().x()) > 0.00001 && std::abs(pv->position().y()) > 0.00001 ){  
             //info() << "pvx " << pv->position().x() << endmsg;
