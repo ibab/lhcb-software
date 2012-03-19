@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-03-19 - V. Gligorov
+ - Add DiPhi line to Hadrons_draft2012 for Jibo. 
+
 !========================= HltSettings v5r20 2012-03-17 =========================
 ! 2012-03-16 - Eric van Herwijnen (for Pieter David)
  - add the Hlt1VertexDisplVertex line with default settings
