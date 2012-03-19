@@ -49,8 +49,10 @@ class Hadrons_draft2012 :
             # DiProtons
             'Hlt2DiProton',
             #'Hlt2DiProtonTF',   
-            'Hlt2DiProtonLowMult'#,
+            'Hlt2DiProtonLowMult',#,
             #'Hlt2DiProtonLowMultTF'
+            #DiPhi
+            'Hlt2DiPhi'
             ]
 
         # For inclusive phi extend using Albert's new setting
