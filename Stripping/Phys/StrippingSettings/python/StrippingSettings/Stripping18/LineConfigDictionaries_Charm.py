@@ -271,22 +271,24 @@ D2KS0H = {
     'BUILDERTYPE' : 'D2KS0HConf' ,
     'CONFIG'      : {
     'KS0DaugP'                  : 2000  # Cut in common particles
-    ,'KS0DaugPT'                :  250
+    ,'KS0DaugPT'                :  200
     ,'KS0DaugTrackChi2'         :    4  
-    ,'KS0DaugMIPChi2'           :   50
+    ,'KS0DaugMIPChi2'           :   40
     ,'KS0DaugPIDK'              :   10
     ,'KS0MassWindow'            :   35  # Done by stdLoose KS0s
-    ,'KS0MIPChi2'               :    8
-    ,'KS0MIPChi2DD'             :    1
+    ,'KS0MIPChi2'               :    2  # Per Sam's mail of March 18
+    ,'KS0MIPChi2DD'             :    0
     ,'KS0VertexChi2'            :   10  
-    ,'KS0PT'                    :  700
-    ,'BachPionP'                : 5000               
-    ,'BachPionPT'               :  500     
+    ,'KS0PT'                    : 1000
+    ,'KS0BPVVDCHI2'             :  300
+    ,'KS0BPVVDCHI2DD'           :  200
+    ,'BachPionP'                : 2000               
+    ,'BachPionPT'               :  200     
     ,'BachPionTrackChi2'        :    3
     ,'BachPionMIPChi2'          :   15
     ,'BachPionPIDK'             :    0
-    ,'BachKaonP'                : 5000                 
-    ,'BachKaonPT'               :  500     
+    ,'BachKaonP'                : 2000                 
+    ,'BachKaonPT'               :  200     
     ,'BachKaonTrackChi2'        :    3
     ,'BachKaonMIPChi2'          :   15
     ,'BachKaonPIDK'             :    0
@@ -301,7 +303,7 @@ D2KS0H = {
     ,'DMesonMotherMIPChi2'      :   15  
     ,'DMesonMotherPT'           : 1000
     ,'KS0ZDiff'                 :   10
-    ,'DMesonFlightDistChi2'     :   30 
+    ,'DMesonFlightDistChi2'     :    5 
     ,'PionLinePrescale'         :    1 
     ,'KaonLinePrescale'         :    1 
     ,'PionLinePrescaleDD'       :    1
@@ -321,12 +323,12 @@ D2KS0H = {
 CharmedAndCharmedStrangeSpectroscopy = {
     'BUILDERTYPE' : 'CharmedAndCharmedStrangeSpectroscopyConf' ,
     'CONFIG'      : {
-    'DpKs_prescale'           : 1,
+    'DpKs_prescale'           : 0,
     'DstarpKs_prescale'       : 1,
-    'D0K_prescale'            : 1,
-    'DpPim_prescale'          : 1,
-    'D0Pip_prescale'          : 1,
-    'DstarpPim_prescale'      : 1,
+    'D0K_prescale'            : 0,
+    'DpPim_prescale'          : 0,
+    'D0Pip_prescale'          : 0,
+    'DstarpPim_prescale'      : 0,
     'DzP_prescale'            : 1,
     'DpP_prescale'            : 1,
     'DsKs_prescale'           : 1,
