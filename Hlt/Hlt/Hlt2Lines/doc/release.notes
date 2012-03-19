@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2012-03-19 - Victor Coco
+ - Hlt2DisplVertices.py, update the options to the latests changes in Hlt/HltDisplVertices
+
 ! 2012-03-18 - Jibo He
  - Hlt2InclusiveDiPhiLines.py
   . Tightened the cuts of DiPhi line to speed up, rate should be even less than 2 Hz. 

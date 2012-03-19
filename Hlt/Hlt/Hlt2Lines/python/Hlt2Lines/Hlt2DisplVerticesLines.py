@@ -43,91 +43,98 @@ from HltLine.HltLine import bindMembers
 class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
     
     __slots__ = {
-            "FilterVelo" : False ,
-            "VeloIP" : 0.05 ,
-            "UseVeloTracks": True,
-            "FracE1Track": 1000.,
-            "FracTrackBefV": 1000.,
-            "MaxChi2Long": 1000.,
-            "MinNbTracks"  : { 'Hlt2RV2P' : 4
-                               , 'Hlt2SingleLonglived' : 5
-                               , 'Hlt2SingleDown' : 4
-                               , 'Hlt2SingleLonglivedHighFD' :  5
-                               , 'Hlt2SingleLonglivedHighMass' : 6
-                               , 'Hlt2DoubleLonglived' : 4
-                               , 'Hlt2SinglePSLonglived' : 4
-                               , 'Hlt2DoublePSLonglived' : 4
-                               , 'Hlt2SinglePSLonglivedHighMass' : 4
-                               , 'Hlt2SinglePSLonglivedHighFD' : 5
-                               , 'Hlt2SinglePSLonglivedMV' : 4
-                               }
-            ,  "RMin"         : {   'Hlt2RV2P' : 0.4
-                                    , 'Hlt2SingleLonglived' : 2.5
-                                    , 'Hlt2SingleDown' : 2.0
-                                    , 'Hlt2SingleLonglivedHighFD' : 4.0
-                                    , 'Hlt2SingleLonglivedHighMass' : 0.4
-                                    , 'Hlt2DoubleLonglived' : 0.4 
-                                    , 'Hlt2SinglePSLonglived' : 0.4
-                                    , 'Hlt2DoublePSLonglived' : 0.4
-                                    , 'Hlt2SinglePSLonglivedHighMass' : 0.4
-                                    , 'Hlt2SinglePSLonglivedHighFD' : 2.0
-                                    , 'Hlt2SinglePSLonglivedMV' : 0.4  
-                                  }
-            ,  "MinMass"      : {   'Hlt2RV2P' : 3000.
-                                    , 'Hlt2SingleLonglived' : 7000
-                                    , 'Hlt2SingleDown' : 3000
-                                    , 'Hlt2SingleLonglivedHighFD' : 4500.
-                                    , 'Hlt2SingleLonglivedHighMass' : 10000.
-                                    , 'Hlt2DoubleLonglived' : 3000.
-                                    , 'Hlt2SinglePSLonglived' : 3000.
-                                    , 'Hlt2DoublePSLonglived' : 3000.
-                                    , 'Hlt2SinglePSLonglivedHighMass' : 10000.
-                                    , 'Hlt2SinglePSLonglivedHighFD' : 4500.
-                                    , 'Hlt2SinglePSLonglivedMV' :3000.
-                                  }
-            ,  "HighestMass"  : {   'Hlt2DoubleLonglived' : 4500.
-                                    ,'Hlt2DoublePSLonglived' : 3000.
-                                    }
-            ,  "MinSumpt"     :{ 'Hlt2RV2P' : 3000.
-                                 , 'Hlt2SingleLonglived' : 3000.
-                                 , 'Hlt2SingleDown' : 3000.
-                                 , 'Hlt2SingleLonglivedHighFD' : 3000.
-                                 , 'Hlt2SingleLonglivedHighMass' : 3000
-                                 , 'Hlt2DoubleLonglived' : 3000.
-                                 , 'Hlt2SinglePSLonglived' : 3000.
-                                 , 'Hlt2DoublePSLonglived' : 3000.
-                                 , 'Hlt2SinglePSLonglivedHighMass' : 3000.
-                                 , 'Hlt2SinglePSLonglivedHighFD' : 3000.
-                                 , 'Hlt2SinglePSLonglivedMV' :3000.
-                                 } 
-            ,  "ComputeMatterVeto" : { 'Hlt2RV2P' : True
-                                 , 'Hlt2SingleLonglived' : 5
-                                 , 'Hlt2SingleLonglivedHighFD' : 5
-                                 , 'Hlt2SingleLonglivedHighMass' : 5
-                                 , 'Hlt2DoubleLonglived' : 5
-                                 , 'Hlt2SingleDown' : 0
-                                 , 'Hlt2SinglePSLonglived' : 0
-                                 , 'Hlt2DoublePSLonglived' : 0
-                                 , 'Hlt2SinglePSLonglivedHighMass' : 5
-                                 , 'Hlt2SinglePSLonglivedHighFD' : 5
-                                 , 'Hlt2SinglePSLonglivedMV' : 5
+        "FilterVelo" : True ,
+        "VeloIP" : -0.05 ,
+        "UseVeloTracks": False,
+        "FracE1Track": 0.85,
+        "FracTrackBefV": 0.49,
+        "MaxChi2Long": 5.,
+        "MaxChi2Down": 10.,
+        "MinNbTracks"  : { 'Hlt2RV2P' : 4
+                           , 'Hlt2SingleLonglived' : 4
+                           , 'Hlt2SingleDown' : 4
+                           , 'Hlt2PreSelSingleDown' : 5
+                           , 'Hlt2SingleLonglivedHighFD' :  5
+                           , 'Hlt2SingleLonglivedHighMass' : 6
+                           , 'Hlt2DoubleLonglived' : 4
+                           , 'Hlt2SinglePSLonglived' : 4
+                           , 'Hlt2DoublePSLonglived' : 4
+                           , 'Hlt2SinglePSLonglivedHighMass' : 5
+                           , 'Hlt2SinglePSLonglivedHighFD' : 5
+                           , 'Hlt2SinglePSLonglivedMV' : 4
+                           }
+        ,  "RMin"         : {   'Hlt2RV2P' : 0.4
+                                , 'Hlt2SingleLonglived' : 2.0
+                                , 'Hlt2SingleDown' : 2.0 ##2.5 dans '3'
+                                , 'Hlt2PreSelSingleDown' : 0.4
+                                , 'Hlt2SingleLonglivedHighFD' : 4.
+                                , 'Hlt2SingleLonglivedHighMass' : 0.7
+                                , 'Hlt2DoubleLonglived' : 0.4 
+                                , 'Hlt2SinglePSLonglived' : 0.4
+                                , 'Hlt2DoublePSLonglived' : 0.4
+                                , 'Hlt2SinglePSLonglivedHighMass' : 0.65
+                                , 'Hlt2SinglePSLonglivedHighFD' : 2.5
+                                , 'Hlt2SinglePSLonglivedMV' : 0.4  
+                                }
+        ,  "MinMass"      : {   'Hlt2RV2P' : 2800.
+                                , 'Hlt2SingleLonglived' : 4000.
+                                , 'Hlt2SingleDown' : 3000
+                                , 'Hlt2PreSelSingleDown' : 4500.
+                                , 'Hlt2SingleLonglivedHighFD' : 3000.
+                                , 'Hlt2SingleLonglivedHighMass' : 8700.
+                                , 'Hlt2DoubleLonglived' : 2800.
+                                , 'Hlt2SinglePSLonglived' : 2800.
+                                , 'Hlt2DoublePSLonglived' : 2800.
+                                , 'Hlt2SinglePSLonglivedHighMass' : 8700.
+                                , 'Hlt2SinglePSLonglivedHighFD' : 3000.
+                                , 'Hlt2SinglePSLonglivedMV' :3000.
+                                
+                                }
+        ,  "HighestMass"  : {   'Hlt2DoubleLonglived' : 3300.
+                                ,'Hlt2DoublePSLonglived' : 2800.
+                                }
+        ,  "MinSumpt"     :{ 'Hlt2RV2P' : 0.
+                             , 'Hlt2SingleLonglived' : 2600.
+                             , 'Hlt2SingleDown' : 2600.
+                             , 'Hlt2PreSelSingleDown' : 2600.
+                             , 'Hlt2SingleLonglivedHighFD' : 2600.
+                             , 'Hlt2SingleLonglivedHighMass' : 2600
+                             , 'Hlt2DoubleLonglived' : 2600.
+                             , 'Hlt2SinglePSLonglived' : 0.
+                             , 'Hlt2DoublePSLonglived' : 2600.
+                             , 'Hlt2SinglePSLonglivedHighMass' : 2600.
+                             , 'Hlt2SinglePSLonglivedHighFD' : 2600.
+                             , 'Hlt2SinglePSLonglivedMV' :0.
+                             }
+        
+        ,  "ComputeMatterVeto" : { 'Hlt2RV2P' : True
+                                   , 'Hlt2SingleLonglived' : 5
+                                   , 'Hlt2SingleLonglivedHighFD' : 5
+                                   , 'Hlt2SingleLonglivedHighMass' : 5
+                                   , 'Hlt2DoubleLonglived' : 5
+                                   , 'Hlt2SingleDown' : 0
+                                   , 'Hlt2SinglePSLonglived' : 0
+                                   , 'Hlt2DoublePSLonglived' : 0
+                                   , 'Hlt2SinglePSLonglivedHighMass' : 5
+                                   , 'Hlt2SinglePSLonglivedHighFD' : 5
+                                   , 'Hlt2SinglePSLonglivedMV' : 5
                                    }
-            ,  "AllOutDet"  : {  'Hlt2DoubleLonglived' : True
-                                 ,'Hlt2DoublePSLonglived' : False
-                                 }
-            , "PostScale" : { 'Hlt2RV2P' : 1.
-                              , 'Hlt2SingleLonglived' : 1.
-                              , 'Hlt2SingleDown' : 1.
-                              , 'Hlt2SingleLonglivedHighFD' : 1.
-                              , 'Hlt2SingleLonglivedHighMass' : 1.
-                              , 'Hlt2DoubleLonglived' : 1.
-                              , 'Hlt2SinglePSLonglived' : 0.0001
-                              , 'Hlt2DoublePSLonglived' : 0.01
-                              , 'Hlt2SinglePSLonglivedHighMass' : 1.
-                              , 'Hlt2SinglePSLonglivedHighFD' : 1.
-                              , 'Hlt2SinglePSLonglivedMV' : 0.0006
-                              }                    
-            }
+        ,  "AllOutDet"  : {  'Hlt2DoubleLonglived' : False
+                             ,'Hlt2DoublePSLonglived' : False
+                             }
+        , "PostScale" : { 'Hlt2RV2P' : 1.
+                          , 'Hlt2SingleLonglived' : 1.
+                          , 'Hlt2SingleDown' : 1.
+                          , 'Hlt2SingleLonglivedHighFD' : 1.
+                          , 'Hlt2SingleLonglivedHighMass' : 1.
+                          , 'Hlt2DoubleLonglived' : 1.
+                          , 'Hlt2SinglePSLonglived' : 0.0005
+                          , 'Hlt2DoublePSLonglived' : 0.01
+                          , 'Hlt2SinglePSLonglivedHighMass' : 1.
+                          , 'Hlt2SinglePSLonglivedHighFD' : 1.
+                          , 'Hlt2SinglePSLonglivedMV' : 0.0005
+                          }  
+        }                 
     
     ##
     ## Tighter solution is prescaling the PS lines:
@@ -216,8 +223,8 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2RV2P.ComputeMatterVeto = self.getProp('ComputeMatterVeto')['Hlt2RV2P']
         Hlt2RV2P.UseMap = True
         Hlt2RV2P.UseVeloTracks = self.getProp("UseVeloTracks")
-        Hlt2RV2P.FractionEFrom1Track = self.getProp("FracE1Track")
-        Hlt2RV2P.FractionTrackUpstreamV  = self.getProp("FracTrackBefV")
+        Hlt2RV2P.FractionEFrom1Track = 1000.
+        Hlt2RV2P.FractionTrackUpstreamV  = 1000.
         Hlt2RV2P.MaxChi2Long  = self.getProp("MaxChi2Long")
         
         veloCand = bindMembers('VeloV2PForDV', [  veloV, BiKalmanFittedPions,BiKalmanFittedDownPions ,Hlt2RV2P ]).setOutputSelection( Hlt2RV2P.Output  )
@@ -236,6 +243,9 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2SingleLonglivedHighMass.NbTracks = self.getProp('MinNbTracks')['Hlt2SingleLonglivedHighMass']
         #Hlt2SingleLonglivedHighMass.PreyMinAngle = self.getProp('MinAngle')['Hlt2SingleLonglivedHighMass']
         Hlt2SingleLonglivedHighMass.RemVtxFromDet = self.getProp('ComputeMatterVeto')['Hlt2SingleLonglivedHighMass']
+        Hlt2SingleLonglivedHighMass.UseVelo = self.getProp('UseVeloTracks')
+        Hlt2SingleLonglivedHighMass.FractionEFrom1Track = self.getProp("FracE1Track")
+        Hlt2SingleLonglivedHighMass.FractionTrackUpstreamV  = self.getProp("FracTrackBefV")
 
         line = Hlt2Line( 'DisplVerticesHighMassSingle'
                         , prescale = self.prescale
@@ -244,7 +254,8 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
                         )
                                                
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DisplVerticesHighMassSingleDecision" : 50281 } )
-        
+
+
         #######################################################################
         #Run Hlt2LonglivedParts : double LLP selection
         from Configurables import Hlt2SelDV
@@ -260,6 +271,9 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2DoubleLonglived.NbTracks = self.getProp('MinNbTracks')['Hlt2DoubleLonglived']
         #Hlt2DoubleLonglived.PreyMinAngle = self.getProp('MinAngle')['Hlt2DoubleLonglived']
         Hlt2DoubleLonglived.RemVtxFromDet = self.getProp('ComputeMatterVeto')['Hlt2DoubleLonglived']
+        Hlt2DoubleLonglived.UseVelo = self.getProp('UseVeloTracks')
+        Hlt2DoubleLonglived.FractionEFrom1Track = self.getProp("FracE1Track")
+        Hlt2DoubleLonglived.FractionTrackUpstreamV  = self.getProp("FracTrackBefV")
 
         line = Hlt2Line('DisplVerticesDouble'
                         , prescale = self.prescale
@@ -285,7 +299,9 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2SingleLonglivedHighFD.PreyMinSumpt = self.getProp('MinSumpt')['Hlt2SingleLonglivedHighFD']
         Hlt2SingleLonglivedHighFD.NbTracks = self.getProp('MinNbTracks')['Hlt2SingleLonglivedHighFD']
         Hlt2SingleLonglivedHighFD.RemVtxFromDet = self.getProp('ComputeMatterVeto')['Hlt2SingleLonglivedHighFD']
-
+        Hlt2SingleLonglivedHighFD.UseVelo = self.getProp('UseVeloTracks')
+        Hlt2SingleLonglivedHighFD.FractionEFrom1Track = self.getProp("FracE1Track")
+        Hlt2SingleLonglivedHighFD.FractionTrackUpstreamV  = self.getProp("FracTrackBefV")
         line = Hlt2Line( 'DisplVerticesHighFDSingle'
                         , prescale = self.prescale
                         , algos = veloCand.members() + [ Hlt2SingleLonglivedHighFD ]
@@ -305,7 +321,9 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2SingleLonglived.PreyMinSumpt = self.getProp('MinSumpt')['Hlt2SingleLonglived']
         Hlt2SingleLonglived.NbTracks = self.getProp('MinNbTracks')['Hlt2SingleLonglived']
         Hlt2SingleLonglived.RemVtxFromDet = self.getProp('ComputeMatterVeto')['Hlt2SingleLonglived']
-
+        Hlt2SingleLonglived.UseVelo = self.getProp('UseVeloTracks')
+        Hlt2SingleLonglived.FractionEFrom1Track = self.getProp("FracE1Track")
+        Hlt2SingleLonglived.FractionTrackUpstreamV  = self.getProp("FracTrackBefV")
         line = Hlt2Line( 'DisplVerticesSingle'
                         , prescale = self.prescale
                         , algos = veloCand.members() + [ Hlt2SingleLonglived ]
@@ -326,7 +344,9 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2SinglePSLonglived.PreyMinSumpt = self.getProp('MinSumpt')['Hlt2SinglePSLonglived']
         Hlt2SinglePSLonglived.NbTracks = self.getProp('MinNbTracks')['Hlt2SinglePSLonglived']
         Hlt2SinglePSLonglived.RemVtxFromDet = self.getProp('ComputeMatterVeto')['Hlt2SinglePSLonglived']
-
+        Hlt2SinglePSLonglived.UseVelo = self.getProp('UseVeloTracks')
+        Hlt2SinglePSLonglived.FractionEFrom1Track = 1000.
+        Hlt2SinglePSLonglived.FractionTrackUpstreamV  = 1000.
         line = Hlt2Line( 'DisplVerticesSinglePostScaled'
                         , prescale = self.prescale
                         , algos = veloCand.members() + [ Hlt2SinglePSLonglived ]
@@ -343,7 +363,9 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2DoublePSLonglived.PreyMinMass = self.getProp('MinMass')['Hlt2DoublePSLonglived']
         Hlt2DoublePSLonglived.NbTracks = self.getProp('MinNbTracks')['Hlt2DoublePSLonglived']
         Hlt2DoublePSLonglived.RemVtxFromDet = self.getProp('ComputeMatterVeto')['Hlt2DoublePSLonglived']
-                      
+        Hlt2DoublePSLonglived.UseVelo = self.getProp('UseVeloTracks')  
+        Hlt2DoublePSLonglived.FractionEFrom1Track = 1000.
+        Hlt2DoublePSLonglived.FractionTrackUpstreamV  = 1000.          
         line = Hlt2Line( 'DisplVerticesDoublePostScaled'
                         , prescale = self.prescale
                         , algos = veloCand.members() + [ Hlt2DoublePSLonglived ]
@@ -360,7 +382,9 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2SinglePSLonglivedHighMass.PreyMinMass = self.getProp('MinMass')['Hlt2SinglePSLonglivedHighMass']
         Hlt2SinglePSLonglivedHighMass.NbTracks = self.getProp('MinNbTracks')['Hlt2SinglePSLonglivedHighMass']
         Hlt2SinglePSLonglivedHighMass.RemVtxFromDet = self.getProp('ComputeMatterVeto')['Hlt2SinglePSLonglivedHighMass']
-        
+        Hlt2SinglePSLonglivedHighMass.UseVelo = self.getProp('UseVeloTracks')
+        Hlt2SinglePSLonglivedHighMass.FractionEFrom1Track = self.getProp("FracE1Track")
+        Hlt2SinglePSLonglivedHighMass.FractionTrackUpstreamV  = self.getProp("FracTrackBefV")
         line = Hlt2Line( 'DisplVerticesSingleHighMassPostScaled'
                         , prescale = self.prescale
                         , algos = veloCand.members() + [ Hlt2SinglePSLonglivedHighMass ]
@@ -378,7 +402,9 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2SinglePSLonglivedHighFD.PreyMinMass = self.getProp('MinMass')['Hlt2SinglePSLonglivedHighFD']
         Hlt2SinglePSLonglivedHighFD.NbTracks = self.getProp('MinNbTracks')['Hlt2SinglePSLonglivedHighFD']
         Hlt2SinglePSLonglivedHighFD.RemVtxFromDet = self.getProp('ComputeMatterVeto')['Hlt2SinglePSLonglivedHighFD']
-                      
+        Hlt2SinglePSLonglivedHighFD.UseVelo = self.getProp('UseVeloTracks')  
+        Hlt2SinglePSLonglivedHighFD.FractionEFrom1Track = self.getProp("FracE1Track")
+        Hlt2SinglePSLonglivedHighFD.FractionTrackUpstreamV  = self.getProp("FracTrackBefV")           
         line = Hlt2Line( 'DisplVerticesSingleHighFDPostScaled'
                         , prescale = self.prescale
                         , algos = veloCand.members() + [ Hlt2SinglePSLonglivedHighFD ]
@@ -396,7 +422,9 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2SinglePSLonglivedMV.PreyMinMass = self.getProp('MinMass')['Hlt2SinglePSLonglivedMV']
         Hlt2SinglePSLonglivedMV.NbTracks = self.getProp('MinNbTracks')['Hlt2SinglePSLonglivedMV']
         Hlt2SinglePSLonglivedMV.RemVtxFromDet = self.getProp('ComputeMatterVeto')['Hlt2SinglePSLonglivedMV']
-                      
+        Hlt2SinglePSLonglivedMV.UseVelo = self.getProp('UseVeloTracks')   
+        Hlt2SinglePSLonglivedMV.FractionEFrom1Track = 1000.
+        Hlt2SinglePSLonglivedMV.FractionTrackUpstreamV  = 1000.       
         line = Hlt2Line( 'DisplVerticesSingleMVPostScaled'
                         , prescale = self.prescale
                         , algos = veloCand.members() + [ Hlt2SinglePSLonglivedMV ]
@@ -443,10 +471,10 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2SingleDownVelo.Output = 'Hlt2/Hlt2SingleDownVelo/Particles'
         Hlt2SingleDownVelo.MinNBCands = 1
         Hlt2SingleDownVelo.MinNBCandsExclusive = True
-        Hlt2SingleDownVelo.RMin = self.getProp('RMin')['Hlt2RV2P']
-        Hlt2SingleDownVelo.PreyMinMass = self.getProp('MinMass')['Hlt2RV2P']
-        Hlt2SingleDownVelo.PreyMinSumpt = self.getProp('MinSumpt')['Hlt2RV2P']
-        Hlt2SingleDownVelo.NbTracks = 5
+        Hlt2SingleDownVelo.RMin = self.getProp('RMin')['Hlt2PreSelSingleDown']
+        Hlt2SingleDownVelo.PreyMinMass = self.getProp('MinMass')['Hlt2PreSelSingleDown']
+        Hlt2SingleDownVelo.PreyMinSumpt = self.getProp('MinSumpt')['Hlt2PreSelSingleDown']
+        Hlt2SingleDownVelo.NbTracks = self.getProp('MinNbTracks')['Hlt2PreSelSingleDown']
         Hlt2SingleDownVelo.RemVtxFromDet = 5
 
         
@@ -462,7 +490,7 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2RV2PDown.UseMap = False
         Hlt2RV2PDown.KeepLowestZ = True
         Hlt2RV2PDown.NbTracks = self.getProp('MinNbTracks')['Hlt2SingleDown']
-
+        Hlt2RV2PDown.MaxChi2Down =  self.getProp("MaxChi2Down")
 
         ## Downstream candidate selection
         from Configurables import Hlt2SelDV
@@ -475,6 +503,8 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2SingleDown.PreyMinSumpt = self.getProp('MinSumpt')['Hlt2SingleDown']
         Hlt2SingleDown.MinZ = 200*units.mm
         Hlt2SingleDown.NbTracks = self.getProp('MinNbTracks')['Hlt2SingleDown']
+        Hlt2SingleDown.FractionEFrom1Track = 1000.
+        Hlt2SingleDown.FractionTrackUpstreamV  = 1000.
 
         line = Hlt2Line( 'DisplVerticesSingleDown'
                         , prescale = self.prescale
