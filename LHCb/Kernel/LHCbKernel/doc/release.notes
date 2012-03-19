@@ -4,6 +4,12 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2012-03-19 - Olivier Callot
+ - New header Kernel/DetectorSegment to handle the representation of a detector 
+   segment, a line described as x = a + b * y and z = c + d * y. Useful for storing
+   detector parameters for the upgrade.
+   All parameters in float to minimize memory access.
+
 !========================= LHCbKernel v13r9 2012-02-28 =========================
 ! 2012-02-28 - Marco Cattaneo
  - Fix requirements to set -DGOD_NOALLOC when tag 'target-dbg' is set, previuosly
