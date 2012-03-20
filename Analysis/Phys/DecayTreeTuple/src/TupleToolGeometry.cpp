@@ -100,32 +100,36 @@ StatusCode TupleToolGeometry::fill( const Particle* mother
       return sc;
     }
   }
-  
   //=========================================================================
   //fill end vertex info
   //=========================================================================
-  if (msgLevel(MSG::VERBOSE) && P->endVertex()) { // https://savannah.cern.ch/bugs/?92524
-    verbose() << "Before cast : " << P->endVertex() << endmsg ;
-    verbose() << "Container " << P->endVertex()->parent()->registry()->identifier() 
-              << " key " << P->endVertex()->key() << endmsg ;
+  if( P->isBasicParticle() ){
+    if (msgLevel(MSG::VERBOSE)) verbose() << "No need to look for endVertex of " << prefix << endmsg ;
+  } else {    
+    //=========================================================================
+    if (msgLevel(MSG::VERBOSE) && P->endVertex()) { // https://savannah.cern.ch/bugs/?92524
+      verbose() << "Before cast : " << P->endVertex() << endmsg ;
+      verbose() << "Container " << P->endVertex()->parent()->registry()->identifier() 
+                << " key " << P->endVertex()->key() << endmsg ;
+    }
+    
+    const VertexBase* evtx = P->endVertex();
+    if( 0==evtx ){    
+      Warning("No endVertex",1,StatusCode::FAILURE);
+      return Error("Can't retrieve the end vertex for " + prefix );
+    }
+    if (msgLevel(MSG::VERBOSE)) { // https://savannah.cern.ch/bugs/?92524
+      verbose() << "End Vertex : " << *evtx << endmsg ;
+      verbose() << "Container " << evtx->parent()->registry()->identifier() << " key " << evtx->key() << endmsg ;
+    }
+    // end vertex
+    sc = fillVertex(evtx,prefix+"_ENDVERTEX",tuple);
+    if (!sc) {
+      Warning("Could not fill Endvertex "+prefix,1,StatusCode::FAILURE);        
+      return sc;
+    }
   }
-
-  const VertexBase* evtx = P->endVertex();
-  if( 0==evtx ){    
-    Warning("No endVertex",1,StatusCode::FAILURE);
-    return Error("Can't retrieve the end vertex for " + prefix );
-  }
-  if (msgLevel(MSG::VERBOSE)) { // https://savannah.cern.ch/bugs/?92524
-    verbose() << "End Vertex : " << *evtx << endmsg ;
-    verbose() << "Container " << evtx->parent()->registry()->identifier() << " key " << evtx->key() << endmsg ;
-  }
-  // end vertex
-  sc = fillVertex(evtx,prefix+"_ENDVERTEX",tuple);
-  if (!sc) {
-    Warning("Could not fill Endvertex "+prefix,1,StatusCode::FAILURE);        
-    return sc;
-  }
-
+  
   const VertexBase* aPV = NULL;
 
   //=========================================================================
@@ -186,10 +190,6 @@ StatusCode TupleToolGeometry::fill( const Particle* mother
     if (!sc) return sc;
   }
   //=========================================================================
-  // nothing more for basic particles
-  if( P->isBasicParticle() ) return sc ;
-  //=========================================================================
-
 
   return sc ;
 

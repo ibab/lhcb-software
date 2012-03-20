@@ -4,11 +4,16 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2012-03-20 - Patrick Koppenburg
+ - TupleToolGeometry: Fix misleading message 
+   ERROR TupleToolGeometry:: Can't retrieve the end vertex for piminus StatusCode=FAILURE
+   Introduced on 2012-03-14
+
 ! 2012-03-19 - Roel Aaij
  - TupleToolSwimmingInfo: replace "/" with "_" in decision branch names.
 
 ! 2012-03-14 - Patrick Koppenburg
-	- TupleToolGeometry: dothinbgs in slightly different order
+	- TupleToolGeometry: do things in slightly different order
 
 !========================= DecayTreeTuple v3r20 2012-02-09 =========================
 
