@@ -228,6 +228,11 @@ void initializeStufferTools(std::vector< ITUPLETOOL* >& pTools){
   // base instantiation:
   std::vector<std::string>::const_iterator it = m_toolList.begin();
   for( ; m_toolList.end()!=it ; ++it ){
+    if (msgLevel(MSG::VERBOSE)) verbose() << (*it) << " " << (*it).find("TupleToolDecay",0)  << endmsg ;
+    if (0==(*it).find("TupleToolDecay",0)){ // ignore TupleToolDecay
+      if (msgLevel(MSG::DEBUG)) debug() << "Ignoring " << (*it) << endmsg ;
+      continue;
+    }     
     IAlgTool* tt = tool<IAlgTool>( *it, this );
     if( !tt )
     {
