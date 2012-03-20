@@ -47,7 +47,7 @@ class HltConf(LHCbConfigurableUser):
                                                                 # (only matters if EnablelumiEventWriting = True)
                 , "AdditionalHlt1Lines"            : []         # must be configured
                 , "AdditionalHlt2Lines"            : []         # must be configured
-                , "ExpressStreamRateLimit"         : 5         # Hz
+                , "ExpressStreamRateLimit"         : 50         # Hz
                 , "NanoBanks"                      : ['ODIN','HltLumiSummary','HltRoutingBits','DAQ']
                   }
 
