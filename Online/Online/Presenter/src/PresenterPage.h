@@ -152,5 +152,6 @@ private:
   std::string m_lastName;
   std::string m_lastTimePoint;
   std::string m_lastDuration;
+  std::string m_partition;
 };
 #endif // PRESENTERPAGE_H

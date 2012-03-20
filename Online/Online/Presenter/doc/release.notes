@@ -4,6 +4,9 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2012-03-20 - Olivier Callot
+ - Print the run number if partion = LHCB and ONLINE.
+
 ! 2012-03-15 - Olivier Callot
  - Technical changes in Elog.cpp to please the new 4.6 compiler.
 

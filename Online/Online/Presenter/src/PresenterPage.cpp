@@ -86,6 +86,7 @@ void PresenterPage::clear ( ) {
 //  Add a simple histo to the page
 //=========================================================================
 void PresenterPage::addSimpleHisto ( std::string dimName, OnlineHistogram* onlH, OnlineHistDB* histDB, std::string partition ) {
+  m_partition = partition;
   std::vector<OnlineHistogram*> anaHistos;
   anaHistos.reserve( 100 ); // avoid relocation
   std::cout << "addSimpleHisto: name " << dimName << std::endl;
@@ -172,6 +173,7 @@ void PresenterPage::addSimpleHisto ( std::string dimName, OnlineHistogram* onlH,
 //  Prepare the histogram descriptions for access
 //=========================================================================
 void PresenterPage::prepareAccess( OnlineHistDB* histDB, std::string& partition  ) {
+  m_partition = partition;
   std::cout << "** Preparing access for " << m_onlineHistosOnPage.size() << " online histos on page" << std::endl;
   std::vector<OnlineHistogram*> anaHistos;
   anaHistos.reserve( 100 ); // avoid relocation
@@ -347,6 +349,7 @@ void PresenterPage::processAnalysisHistos ( std::vector<OnlineHistogram*>& anaHi
 //  Load from the monitoring service
 //=========================================================================
 void PresenterPage::loadFromDIM( std::string& partition, bool update, std::string& message ) {
+  m_partition = partition;
   message = "";
   if ( m_tasks.size() == 0 ) return;
   
@@ -1213,6 +1216,13 @@ void PresenterPage::updateBanner ( std::string source ) {
     std::string today( buf );
     if ( "" == source ) {
       source = today + " Online";
+      if ( "LHCb" == m_partition ) {  //== Current run number ONLY for LHCb
+        int def = -1;
+        char runChar[12]     = "";
+        DimCurrentInfo getRun( "LHCbStatus/RunNumber", def );
+        sprintf( runChar, "%d", getRun.getInt() );
+        source = source + " Run " + std::string( runChar );
+      }
     } else {
       source = source.substr(0,source.size()-1) + " " + today;
     }
