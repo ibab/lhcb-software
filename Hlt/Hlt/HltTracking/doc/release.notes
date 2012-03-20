@@ -4,6 +4,9 @@
 ! Responsible : Vladimir Gligorov / Johannes Albrecht
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+! 2012-03-20 - S. Stahl
+ - Set p cut of Forward tracking to 1 GeV in Hlt1TrackUpgradeConf.py 
+   and Hlt2Tracking.py.
 
 !========================= HltTracking v9r13 2012-03-18 =========================
 ! 2012-03-15 - V. Gligorov
