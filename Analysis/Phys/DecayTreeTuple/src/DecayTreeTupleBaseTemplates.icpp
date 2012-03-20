@@ -33,8 +33,8 @@ StatusCode fillTuple( Tuples::Tuple& tuple
     if( fillParticles( tuple, row ) )
     {
       tuple->column( "nCandidate", nCandidates ).ignore();
-      tuple->column( "totCandidates", heads.size()).ignore();
-      tuple->column( "EventInSequence", counter("Event").nEntries()).ignore();
+      tuple->column( "totCandidates", (unsigned long long)heads.size()).ignore();
+      tuple->column( "EventInSequence", (unsigned long long)counter("Event").nEntries()).ignore();
       ++nCandidates;
     }
     else 
