@@ -62,6 +62,9 @@
 #include "LoKi/PhysTypes.h"
 #include "LoKi/IHybridFactory.h"
 
+#if DV_VER >= 293
+#include "Event/RecSummary.h"
+#endif
 //#include "DecayTreeFitter/VtxFitParams.h"
 
 using namespace Gaudi::Units;
@@ -1078,7 +1081,34 @@ void ZooWriter::writeEvent()
     }
 #endif
     // write track & MC PV multiplicity
-    LHCb::Tracks *alltracks = get<LHCb::Tracks>(LHCb::TrackLocation::Default);
+    #if DV_VER >= 293
+    /// lookup of Rec/Track/Best on MDST causes error (even with exist
+    /// statement). Go for the RecSummary first.
+    if (exist<LHCb::RecSummary>(LHCb::RecSummaryLocation::Default,false)) {
+      // we seem to read an mdst ... the info should be in the rec-header-something
+      LHCb::RecSummary* recsum = get<LHCb::RecSummary>(LHCb::RecSummaryLocation::Default,false);
+      zooev()->m_trackmult = recsum->info(LHCb::RecSummary::nTracks,-999);
+
+      //// the recsummary uses a different definition than we did so far
+      //// in the rec summary the number of tracks with velo segment is stored
+      //zooev()->m_nTracksVelo = recsum->info(LHCb::RecSummary::nVeloTracks,-999);
+
+      zooev()->m_nTracksVelo = recsum->info(LHCb::RecSummary::nVeloTracks,-999)
+                              -recsum->info(LHCb::RecSummary::nUpstreamTracks,999)
+                              -recsum->info(LHCb::RecSummary::nLongTracks,999);
+
+      zooev()->m_nTracksLong = recsum->info(LHCb::RecSummary::nLongTracks,-999);
+      zooev()->m_nTracksUpstream = recsum->info(LHCb::RecSummary::nUpstreamTracks,-999);
+      zooev()->m_nTracksDownstream = recsum->info(LHCb::RecSummary::nDownstreamTracks,-999);
+      zooev()->m_nTracksT = recsum->info(LHCb::RecSummary::nTTracks,-999);
+      zooev()->m_nTracksVeloBackward = recsum->info(LHCb::RecSummary::nBackTracks,-999);
+    } else if (exist<LHCb::Tracks>(LHCb::TrackLocation::Default)) {
+    #else
+      if (exist<LHCb::Tracks>(LHCb::TrackLocation::Default)) {
+    #endif
+      LHCb::Tracks* alltracks;
+      alltracks = get<LHCb::Tracks>(LHCb::TrackLocation::Default);
+    
     zooev()->m_trackmult = alltracks->size();
     BOOST_FOREACH(const LHCb::Track* ptr, *alltracks) {
 	switch (ptr->type()) {
@@ -1104,6 +1134,8 @@ void ZooWriter::writeEvent()
 		break;
 	}
     }
+    }
+    
 
     if (m_writeMC) {
 	zooev()->m_nbMCPVs = m_visPrimVertTool->countVertices();
@@ -1579,9 +1611,9 @@ void ZooWriter::writeTrackExtraInfo(ZooTrackInfo* ztri, const LHCb::Particle* p)
 
 void ZooWriter::writeEventTriggerInfo(boost::shared_ptr<ZooEv> event) const
 {
-    if (exist<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default)) {
+    if (exist<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default,false)) {
 	LHCb::L0DUReport* L0report =
-	    get<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default);
+	    get<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default,false);
 	event->m_L0Dec = (int) L0report->decision(); 	
 
 	// loop over the trigger decisions which are interesting for us
@@ -1599,10 +1631,10 @@ void ZooWriter::writeEventTriggerInfo(boost::shared_ptr<ZooEv> event) const
     }
 
 
-    if (exist<LHCb::HltDecReports>(LHCb::HltDecReportsLocation::Default)) {
+    if (exist<LHCb::HltDecReports>(LHCb::HltDecReportsLocation::Default,false)) {
 	// get HLT decision reports
 	const LHCb::HltDecReports* HLTdecReports =
-	    get<LHCb::HltDecReports>(LHCb::HltDecReportsLocation::Default);
+	    get<LHCb::HltDecReports>(LHCb::HltDecReportsLocation::Default,false);
 	// loop over the trigger decisions which are interesting for us
 	// and set the corresponding bits...
 	const TriggerDecisions::AllTriggerDecisions::DecisionList& declist =

@@ -4,6 +4,15 @@
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
 
+! 2012-03-20 - Paul Seyfert
+ - if available use RecSummary instead of loop over best track container to
+   determine verious track multiplicities in the event (also compatible to
+   MDST).
+ - disable usage of RootInTES where inappropriate (doesn't change default
+   behaviour assuming that no user ever used the RootInTES option)
+ - note: this does not yet make the ZooWriter fully MDST compatible. This is
+   only a part which doesn't change the behaviour on standard DST.
+
 ! 2012-02-23 - Manuel Tobias Schiller
  - when writing Zoo tuples, the per-job tree is better off with a 64k Basket
    size, for the per-event tree, I forgot to change to the larger basket size
