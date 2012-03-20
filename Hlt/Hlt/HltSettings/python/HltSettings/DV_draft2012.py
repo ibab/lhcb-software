@@ -89,7 +89,7 @@ class DV_draft2012 :
                                     , 'Hlt2SinglePSLonglived' : 2800.
                                     , 'Hlt2DoublePSLonglived' : 2800.
                                     , 'Hlt2SinglePSLonglivedHighMass' : 8700.
-                                    , 'Hlt2SinglePSLonglivedHighFD' : 3000.
+                                    , 'Hlt2SinglePSLonglivedHighFD' : 2800.
                                     , 'Hlt2SinglePSLonglivedMV' :3000.
 
                                   }
