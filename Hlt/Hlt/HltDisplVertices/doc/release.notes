@@ -4,7 +4,7 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
-! 2012-03-19 - Victor Coco
+!========================= HltDisplVertices v3r7 2012-03-20 =========================! 2012-03-19 - Victor Coco
  - modify Hlt2Sel to have the fraction of energy cut at this level 
    (but computed in Hlt2PreSel) + sum pt without velo.
 
@@ -203,3 +203,4 @@
 	tracks participating to the vertex and the reconstructed Hlt2Pions.
 	When no Hlt2Pions found, default pions with 0.4 GeV pt are created.
 	Vertices that are found to be close to the detector material could be possibly eliminated.
+
