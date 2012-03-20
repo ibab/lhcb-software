@@ -48,11 +48,13 @@ print "This time range requires",int(nSteps),"steps"
 
 # have to convert time from s to ns since the epoch
 ApplicationMgr().EvtMax = int(nSteps)
+ApplicationMgr().OutputLevel = DEBUG
 EventClockSvc().EventTimeDecoder = 'FakeEventTime'
 EventClockSvc().InitialTime = int(StartTime)*1000000000
 from Configurables import FakeEventTime
 EventClockSvc().addTool( FakeEventTime )
-EventClockSvc().FakeEventTime.StartTime = int(StartTime)*1000000000 + int(TimeStep)*1000000000
+# required to add step otherwise 2nd event has the same time in the EventClockSvc as the initial time
+EventClockSvc().FakeEventTime.StartTime = int(StartTime)*1000000000 + int(TimeStep)*1000000000 
 EventClockSvc().FakeEventTime.TimeStep = int(TimeStep)*1000000000
 EventClockSvc().OutputLevel = 2
 
@@ -61,11 +63,13 @@ ttFraction = ST__STActiveFraction("TTActiveFraction")
 ttFraction.DetType="TT"
 ttFraction.StartTime = int(StartTime)*1000000000
 ttFraction.TimeStep = int(TimeStep)*1000000000
+ttFraction.Steps = int(nSteps)
 MainSeq.Members.append( ttFraction )
 itFraction = ST__STActiveFraction("ITActiveFraction")
 itFraction.DetType="IT"
 itFraction.StartTime = int(StartTime)*1000000000
 itFraction.TimeStep = int(TimeStep)*1000000000
+itFraction.Steps = int(nSteps)
 MainSeq.Members.append( itFraction )
 
 ApplicationMgr().HistogramPersistency = 'ROOT'

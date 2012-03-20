@@ -3,6 +3,11 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2012-03-20 Mark Tobin
+ - Fix histogram names in active fraction algorithm as they appear 
+   invisible in the root file with /s.
+ - Bug fix in generation of steps in active trend script.
+
 !========================= STCheckers v3r3p1 2012-01-31 =======================
 ! 2011-12-21 - Marco Cattaneo
  - Add a missing include following cleanup of STDet headers

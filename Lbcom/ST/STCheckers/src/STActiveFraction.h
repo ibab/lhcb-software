@@ -14,6 +14,8 @@
  *  conditions database as a function of time.  This makes use of the
  *  FakeEventTime tool in the EventClockSvc.  The start and step time
  *  used in the tool are required inputs for this algorithm.
+ *  The input options require a start time and step size given in 
+ *  ns since the epoch and the total number of steps required
  *
  *  An example python scripts is available in options.
  *  Usage: gaudirun.py $STCHECKERSROOT/options/runSTActiveTrend.py
@@ -37,10 +39,12 @@ namespace ST {
     
   private:
     unsigned int m_event;
+    unsigned int m_nSteps;
     long long m_startTime;
     long long m_timeStep;
     std::vector<double> m_time;
     std::vector<double> m_active;
+
   };
 }
 #endif // STACTIVEFRACTION_H

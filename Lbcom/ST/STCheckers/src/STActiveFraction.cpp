@@ -13,6 +13,7 @@
 
 #include "TH2D.h"
 #include "TGraph.h"
+#include "AIDA/IHistogram1D.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : STActiveFraction
@@ -33,9 +34,10 @@ ST::STActiveFraction::STActiveFraction( const std::string& name,
   : ST::HistoAlgBase(name, pSvcLocator),
     m_event(0) 
 {
-  // This is the start time and time steps for every event in ns since the epoch
+  // This is the start time, step size and number of steps
   declareProperty("StartTime", m_startTime=0);
   declareProperty("TimeStep",  m_timeStep=0);
+  declareProperty("Steps",  m_nSteps=0);
 }
 //=============================================================================
 // Destructor
@@ -109,13 +111,12 @@ StatusCode ST::STActiveFraction::execute() {
 StatusCode ST::STActiveFraction::finalize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-  std::string hRoot=detType()+"/"+name()+"/";
-  TH2D* h = new TH2D((hRoot+"Frame").c_str(),"",100,m_time[0],m_time.back(),10, 95., 100.);
+  TH2D* h = new TH2D(("Frame"+detType()).c_str(),"",100,m_time[0],m_time.back(),10, 95., 100.);
   h->GetXaxis()->SetTimeDisplay(1);
   h->GetXaxis()->SetTimeOffset(-m_time[0]);
   h->GetYaxis()->SetTitle("Fraction active (%)");
   TGraph* g = new TGraph(m_time.size(), &m_time[0], &m_active[0]);
-  g->SetName((hRoot+"FractionVsTime").c_str());
+  g->SetName(("FractionVsTime"+detType()).c_str());
   g->Write();
   return ST::HistoAlgBase::finalize();  // must be called after all other actions
 }
