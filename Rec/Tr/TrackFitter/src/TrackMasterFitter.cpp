@@ -817,11 +817,12 @@ StatusCode TrackMasterFitter::updateTransport(LHCb::Track& track) const
 	std::stringstream msg ;
 	msg << "Unable to propagate reference vector for track type: " << track.type() ;
 	Warning(msg.str(),StatusCode::SUCCESS).ignore() ;
-        debug() << "unable to propagate reference vector from z=" << refvector->z() 
-		<< " to " << z 
-		<< "; track type = " << track.type()
-		<< ": vec = " << refvector->parameters() << endmsg ;
-        sc = thissc ;
+  if( m_debugLevel )
+    debug() << "unable to propagate reference vector from z=" << refvector->z() 
+            << " to " << z 
+            << "; track type = " << track.type()
+            << ": vec = " << refvector->parameters() << endmsg ;
+  sc = thissc ;
       }
       
       // correct for energy loss
@@ -941,9 +942,10 @@ StatusCode TrackMasterFitter::initializeRefStates(LHCb::Track& track,
           StatusCode thissc = extrap->propagate( statevec, jt->first, 0, pid ) ;
 	  if( !thissc.isSuccess() ) {
 	    Warning("initializeRefStates() fails in propagating state",StatusCode::FAILURE).ignore() ;
-            debug() << "Problem propagating state: " << statevec << " to z= " << jt->first << endmsg ;
-            sc = thissc ;
-          } else {
+      if( m_debugLevel )
+        debug() << "Problem propagating state: " << statevec << " to z= " << jt->first << endmsg ;
+      sc = thissc ;
+    } else {
 	    LHCb::State* newstate = new LHCb::State( statevec ) ;
 	    jt->second = newstate ;
 	    newstates.push_back( newstate ) ;

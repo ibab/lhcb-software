@@ -30,8 +30,9 @@ DECLARE_TOOL_FACTORY( TrackKalmanFilter )
 //=========================================================================
 TrackKalmanFilter::TrackKalmanFilter( const std::string& type,
                                       const std::string& name,
-                                      const IInterface* parent) :
-  GaudiTool( type, name, parent)
+                                      const IInterface* parent)
+  : GaudiTool( type, name, parent)
+  , m_debugLevel(false)
 {
   declareInterface<ITrackKalmanFilter>( this );
   declareProperty( "ForceBiDirectionalFit" , m_forceBiDirectionalFit  = true   );

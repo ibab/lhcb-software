@@ -3,6 +3,10 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+! 2012-03-20 - Marco Cattaneo
+ - Fix unprotected debugs
+ - Fix UNINIT_CTOR
+
 !========================= TrackFitter v4r6 2012-03-17 =========================
 ! 2012-03-15 - Wouter Hulsbergen
  - add EndVelo state to (forward) velo-only fits

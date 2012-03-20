@@ -54,7 +54,7 @@ StatusCode TrackEventFitter::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  if ( msgLevel( MSG::DEBUG ) ) debug() << "==> Initialize" << endmsg;
 
   m_tracksFitter.retrieve().ignore() ;
   // = tool<ITrackFitter>( m_fitterName, "Fitter", this );
@@ -76,7 +76,7 @@ StatusCode TrackEventFitter::initialize() {
 //=============================================================================
 StatusCode TrackEventFitter::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if ( msgLevel( MSG::DEBUG ) ) debug() << "==> Execute" << endmsg;
 
   // Retrieve the Tracks container
   // -----------------------------
@@ -102,20 +102,21 @@ StatusCode TrackEventFitter::execute() {
       debug() << "#### Fitting Track # " << track.key() << " ####" << endmsg
               << "  # of states before fit:" << track.nStates() << endmsg ;
       if(  track.nStates()>0 ) {
-	if( msgLevel( MSG::VERBOSE ) ) {
-	  verbose() << "  States are: " << endreq;
-	  const std::vector<State*>& allstates = track.states();
-	  for ( unsigned int it = 0; it < allstates.size(); it++ ) {
-	    verbose() << "  - z = " << allstates[it]->z() << endreq
-		      << "  - stateVector = "
-		      << allstates[it]->stateVector() << endreq
-		      << "  - covariance = " << endreq
-		      << allstates[it]->covariance() << endreq;
-	  }
-	} else {
-	  debug() << "  First state vector = " << track.firstState().stateVector() 
-		  << " at z = " << track.firstState().z() << endmsg ;
-	}
+        if( msgLevel( MSG::VERBOSE ) ) {
+          verbose() << "  States are: " << endmsg;
+          const std::vector<State*>& allstates = track.states();
+          for ( unsigned int it = 0; it < allstates.size(); it++ ) {
+            verbose() << "  - z = " << allstates[it]->z() << endmsg
+                      << "  - stateVector = "
+                      << allstates[it]->stateVector() << endmsg
+                      << "  - covariance = " << endmsg
+                      << allstates[it]->covariance() << endmsg;
+          }
+        } else {
+          if ( msgLevel( MSG::DEBUG ) ) 
+            debug() << "  First state vector = " << track.firstState().stateVector() 
+                    << " at z = " << track.firstState().z() << endmsg ;
+        }
       }
     }
     
@@ -188,7 +189,7 @@ StatusCode TrackEventFitter::execute() {
 //=============================================================================
 StatusCode TrackEventFitter::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if ( msgLevel( MSG::DEBUG ) ) debug() << "==> Finalize" << endmsg;
 
   float perf = 0.;
   double nTracks = counter("nTracks").flag();
