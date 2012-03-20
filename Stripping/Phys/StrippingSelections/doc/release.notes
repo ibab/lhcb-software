@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-03-20 - S. Gregson
+- Tightened D(s)->KS0H line cuts to reduce rate (Charm WG constraints)
+
 ! 2012-03-17 - S. Gregson
 - Tightened D(s)->KS0H line cuts to reduce rate (Charm WG constraints)
 
