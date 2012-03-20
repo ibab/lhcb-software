@@ -18,7 +18,7 @@ def __update_conf__( current, extra ) :
                 cur[k] = v
             print 'result: %s' % cur[k]
 
-class Physics_draft2012( object ):
+class Physics_L038_draft2012( object ):
     """
     Settings draft for 2012 running.
     
@@ -44,8 +44,8 @@ class Physics_draft2012( object ):
         return '0x0038'
 
     def HltType(self) :
-        self.verifyType( Physics_draft2012 ) 
-        return          'Physics_draft2012'
+        self.verifyType( Physics_L038_draft2012 ) 
+        return          'Physics_L038_draft2012'
     
     def Thresholds(self) :
         """
@@ -57,6 +57,7 @@ class Physics_draft2012( object ):
         from Hlt1Lines.Hlt1L0Lines             import Hlt1L0LinesConf
         from Hlt1Lines.Hlt1MBLines             import Hlt1MBLinesConf
         from Hlt1Lines.Hlt1CommissioningLines  import Hlt1CommissioningLinesConf
+        from Hlt1Lines.Hlt1DisplVertexLines    import Hlt1DisplVertexLinesConf
         from Hlt2Lines.Hlt2CommissioningLines  import Hlt2CommissioningLinesConf
         from Hlt1Lines.Hlt1BeamGasLines        import Hlt1BeamGasLinesConf
         from Hlt2Lines.Hlt2diphotonDiMuonLines import Hlt2diphotonDiMuonLinesConf
@@ -65,7 +66,7 @@ class Physics_draft2012( object ):
                                                , 'AllL0_P'       : 10000
                                                , 'AllL0_IP'      :     0.100
                                                , 'AllL0_IPChi2'  :    16
-                                               , 'AllL0_TrChi2'  :     2.5
+                                               , 'AllL0_TrChi2'  :     2.25
                                                , 'AllL0_GEC'     : 'Loose'
                                                , 'AllL0_Velo_NHits' : 9 
                                                , 'AllL0_Velo_Qcut' : 3  
@@ -74,21 +75,21 @@ class Physics_draft2012( object ):
                                                , 'Muon_P'        :  8000 
                                                , 'Muon_IP'       :     0.100
                                                , 'Muon_IPChi2'   :    16
-                                               , 'Muon_TrChi2'   :     2.5  
+                                               , 'Muon_TrChi2'   :     5.0  
                                                , 'Muon_GEC'      : 'Loose'
                                                , 'Muon_ValidateTT' : False
                                                , 'Photon_PT'     :  1200
                                                , 'Photon_P'      :  6000
                                                , 'Photon_IP'     :     0.100
                                                , 'Photon_IPChi2' :    16
-                                               , 'Photon_TrChi2' :     2.5
+                                               , 'Photon_TrChi2' :     2.25
                                                , 'Photon_L0Channels' : 'PhotonHi,ElectronHi' 
                                                , 'Photon_GEC'        : 'Loose'
                                                , 'Photon_ValidateTT' : False
                                                }
                      , Hlt1ElectronLinesConf : { 'SingleElectronNoIP_P'          : 20000
                                                , 'SingleElectronNoIP_PT'         : 10000
-                                               , 'SingleElectronNoIP_TrChi2'     :     4
+                                               , 'SingleElectronNoIP_TrChi2'     :     5
                                                , 'SingleElectronNoIP_TrNTHits'   :     0 #OFF
                                                , 'SingleElectronNoIP_Velo_NHits' :     0 #OFF
                                                , 'SingleElectronNoIP_Velo_Qcut'  :   999 #OFF
@@ -97,17 +98,17 @@ class Physics_draft2012( object ):
                                                }
                      , Hlt1MuonLinesConf :     { 'SingleMuonHighPT_P'        : 8000
                                                , 'SingleMuonHighPT_PT'      : 4800
-                                               , 'SingleMuonHighPT_TrChi2'  :    4
+                                               , 'SingleMuonHighPT_TrChi2'  :    5
                                                , 'SingleMuonHighPT_GEC'     : 'Loose'
                                                , 'SingleMuonNoIP_P'         : 6000
                                                , 'SingleMuonNoIP_PT'        : 1300
-                                               , 'SingleMuonNoIP_TrChi2'    :    4
+                                               , 'SingleMuonNoIP_TrChi2'    :    5
                                                , 'SingleMuonNoIP_GEC'       : 'Loose'
                                                , 'DiMuonLowMass_VxDOCA'     :  0.2
                                                , 'DiMuonLowMass_VxChi2'     :   25
                                                , 'DiMuonLowMass_P'          : 6000
                                                , 'DiMuonLowMass_PT'         :  500
-                                               , 'DiMuonLowMass_TrChi2'     :    4
+                                               , 'DiMuonLowMass_TrChi2'     :    5
                                                , 'DiMuonLowMass_M'          :    0
                                                , 'DiMuonLowMass_IPChi2'     :    3
                                                , 'DiMuonLowMass_GEC'        : 'Loose'
@@ -115,12 +116,12 @@ class Physics_draft2012( object ):
                                                , 'DiMuonHighMass_VxChi2'    :   25
                                                , 'DiMuonHighMass_P'         : 6000
                                                , 'DiMuonHighMass_PT'        :  500
-                                               , 'DiMuonHighMass_TrChi2'    :    4
+                                               , 'DiMuonHighMass_TrChi2'    :    5
                                                , 'DiMuonHighMass_M'         : 2700
                                                , 'DiMuonHighMass_GEC'       : 'Loose'
                                                , 'MultiMuonNoIP_P'          : 6000
                                                , 'MultiMuonNoIP_PT'         :  500
-                                               , 'MultiMuonNoIP_TrChi2'     :    4
+                                               , 'MultiMuonNoIP_TrChi2'     :    5
                                                , 'MultiMuonNoIP_GT'         :  2.5
                                                , 'MultiMuonNoIP_GEC'        : 'Loose'
                                                , 'Prescale'                 : { 'Hlt1SingleMuonNoIP' : 0.01,
@@ -137,12 +138,26 @@ class Physics_draft2012( object ):
                                                                               , 'Hlt1BeamGasNoBeamBeam2'           : 'RATE(0.5)'
                                                                               , 'Hlt1BeamGasBeam1'                 : 'RATE(2)'
                                                                               , 'Hlt1BeamGasBeam2'                 : 'RATE(2)'
-                                                                              , 'Hlt1BeamGasCrossingEnhancedBeam1' : 'RATE(2)'
-                                                                              , 'Hlt1BeamGasCrossingEnhancedBeam2' : 'RATE(2)'
+                                                                              , 'Hlt1BeamGasCrossingEnhancedBeam1' : 'RATE(0)'
+                                                                              , 'Hlt1BeamGasCrossingEnhancedBeam2' : 'RATE(0)'
                                                                               , 'Hlt1BeamGasCrossingForcedReco'    : 'RATE(0.5)'
-                                                                              , 'Hlt1BeamGasCrossingParasitic'     : 'RATE(0.5)'
+                                                                              , 'Hlt1BeamGasCrossingForcedRecoFullZ':'RATE(0.5)'
+                                                                              , 'Hlt1BeamGasCrossingParasitic'     : 'RATE(1)'
+                                                                              , 'Hlt1BeamGasHighRhoVertices'       : 'RATE(4)'
                                                                               }
                                                 }
+                       , Hlt1DisplVertexLinesConf: { "VertexDisplVertex_DOCABL"    : "2.0*mm"
+                                                   , "VertexDisplVertex_VELO_NSP"  : "3"
+                                                   , "VertexDisplVertex_VELO_NCSP" : "2"
+                                                   , "VertexDisplVertex_VELOTrChi2": "2.5"
+                                                   , "VertexDisplVertex_VX_DOCA"   : "0.3*mm"
+                                                   , "VertexDisplVertex_VX_CHI2"   : "1000000000.0"
+                                                   , "VertexDisplVertex_VX_RHO"    : "12.0*mm"
+                                                   , "VertexDisplVertex_Tr_P"      : "10.0*GeV"
+                                                   , "VertexDisplVertex_Tr_PT"     : "1.7*GeV"
+                                                   , "VertexDisplVertex_Tr_CHI2"   : "2.5"
+                                                   , "VertexDisplVertex_GEC"       : "Loose"
+                                                   }
                        , Hlt1CommissioningLinesConf : { 'Postscale' : { 'Hlt1ErrorEvent'   : 'RATE(0.01)' } }
                        , Hlt2CommissioningLinesConf : { 'Postscale' : { 'Hlt2ErrorEvent'   : 'RATE(0.01)' } }
                        # micro bias lines switched off for high mu physics running              
@@ -166,8 +181,8 @@ class Physics_draft2012( object ):
         from Hadrons_draft2012 import Hadrons_draft2012
         __update_conf__(thresholds,  Hadrons_draft2012().Thresholds() )
 
-        from DV_draft2011 import DV_draft2011
-        __update_conf__(thresholds,  DV_draft2011().Thresholds() )
+        from DV_draft2012 import DV_draft2012
+        __update_conf__(thresholds,  DV_draft2012().Thresholds() )
 
         from CharmLeptonic_draft2012 import CharmLeptonic_draft2012
         __update_conf__(thresholds, CharmLeptonic_draft2012().Thresholds() )
@@ -188,8 +203,8 @@ class Physics_draft2012( object ):
                 'Hlt2LowMultElectron_nofilter'
                 ]
 
-        from Express_Hlt2_Aug11 import Express_Hlt2_Aug11
-        hlt2.extend( Express_Hlt2_Aug11().ActiveHlt2Lines() )
+        from Express_Hlt2_draft2012 import Express_Hlt2_draft2012
+        hlt2.extend( Express_Hlt2_draft2012().ActiveHlt2Lines() )
 
         from Muons_draft2012 import Muons_draft2012
         hlt2.extend( Muons_draft2012().ActiveHlt2Lines() )
@@ -200,8 +215,8 @@ class Physics_draft2012( object ):
         from Hadrons_draft2012 import Hadrons_draft2012
         hlt2.extend( Hadrons_draft2012().ActiveHlt2Lines() )
        
-        from DV_draft2011 import DV_draft2011 
-        hlt2.extend( DV_draft2011().ActiveHlt2Lines() )
+        from DV_draft2012 import DV_draft2012 
+        hlt2.extend( DV_draft2012().ActiveHlt2Lines() )
 
         from CharmLeptonic_draft2012 import CharmLeptonic_draft2012
         hlt2.extend( CharmLeptonic_draft2012().ActiveHlt2Lines() )
@@ -215,11 +230,13 @@ class Physics_draft2012( object ):
         lines =  [ 'Hlt1BeamGasNoBeamBeam1', 'Hlt1BeamGasNoBeamBeam2'
                  , 'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2'
                  , 'Hlt1BeamGasCrossingEnhancedBeam1', 'Hlt1BeamGasCrossingEnhancedBeam2'
-                 , 'Hlt1BeamGasCrossingForcedReco', 'Hlt1BeamGasCrossingParasitic'
+                 , 'Hlt1BeamGasCrossingForcedReco', 'Hlt1BeamGasCrossingForcedRecoFullZ'
+                 , 'Hlt1BeamGasCrossingParasitic', 'Hlt1BeamGasHighRhoVertices'
                  , 'Hlt1NoPVPassThrough'
                  , 'Hlt1CharmCalibrationNoBias'
                  , 'Hlt1TrackMuon', 'Hlt1TrackAllL0', 'Hlt1TrackPhoton'
                  , 'Hlt1TrackForwardPassThrough','Hlt1TrackForwardPassThroughLoose'
+                 , 'Hlt1VertexDisplVertex'
                  , 'Hlt1SingleMuonNoIP', 'Hlt1SingleMuonHighPT'
                  , 'Hlt1SingleElectronNoIP'
                  , 'Hlt1DiMuonLowMass', 'Hlt1DiMuonHighMass'
