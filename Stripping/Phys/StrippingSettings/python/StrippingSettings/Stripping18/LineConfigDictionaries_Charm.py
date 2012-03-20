@@ -276,7 +276,7 @@ D2KS0H = {
     ,'KS0DaugMIPChi2'           :   40
     ,'KS0DaugPIDK'              :   10
     ,'KS0MassWindow'            :   35  # Done by stdLoose KS0s
-    ,'KS0MIPChi2'               :    2  # Per Sam's mail of March 18
+    ,'KS0MIPChi2'               :    7  # Updated by Sam - 20/03/12
     ,'KS0MIPChi2DD'             :    0
     ,'KS0VertexChi2'            :   10  
     ,'KS0PT'                    : 1000

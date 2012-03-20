@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-03-20 - Sam Gregson
+   . Updated D2KS0H (Stripping18/LineConfigDictionaries_Charm.py) with new KS0LL MINIPCHI2 cut
+  
 ! 2012-03-19 - Mat Charles
  - Stripping18/LineConfigDictionaries_Charm.py
    . Patch to DstarD2KShh to allow for small tail below threshold in delta mass.
