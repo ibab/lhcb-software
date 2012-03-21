@@ -248,7 +248,7 @@ StatusCode TupleToolTrigger::fillRoutingBits( Tuples::Tuple& tuple )
     }
     catch ( const GaudiException & )
     {
-      Warning( "Cannot access the HLT Routing Bits. No information from these available",
+      Warning( "Cannot access the HLT Routing Bits. No information from these is available",
                StatusCode::SUCCESS, 1 ).ignore();
     }
 
