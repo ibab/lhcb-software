@@ -340,35 +340,34 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_init_stack(SysInfo* sys,
 	      ee,arg0,arg0,sys->utgid,sys->utgid ? sys->utgid : "Unknown");
 }
 
+
 /// Setup process UTGID/argv[0] if availible
 STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_sys_set_utgid(SysInfo* sys, const char* new_utgid) {
   int len = m_strlen(new_utgid)+1;
-  int max_len = sys->restore_arg0 - sys->arg0 - sizeof(long) - 1; // long=argc
+  int max_len = sys->restore_arg0 - sys->arg0 - 1;
+#if 0
   if ( sys->restore_arg0 < sys->arg0 ) {
-    mtcp_output(MTCP_ERROR,"Failed to set argv[0] to utgid:%s orig arg0:%p > new arg0:%p len=%d max_len:%d\n",
-		new_utgid, sys->arg0, sys->restore_arg0, len, max_len);
+    mtcp_output(MTCP_ERROR,"Failed to set argv[0] to utgid:%s orig arg0:%p > new arg0:%p len=%d\n",
+		new_utgid, sys->arg0, sys->restore_arg0, len);
   }
-  else if ( sys->restore_arg0 ) {
+#endif
+  if ( sys->restore_arg0 ) {
     if ( len < sys->restore_arglen ) {
-      // We do not want to corrupt the original sargv stack!
-      // Hence we can only use the memory above....
-      if ( len <= max_len ) {
-	char* p = (char*)sys->restore_arg0;
-	m_memcpy(p,new_utgid,len);
-	mtcp_output(MTCP_INFO,"New UTGID: %p %s - %s\n",sys->restore_arg0,sys->restore_arg0,new_utgid);
-	m_memset(p+len,0,max_len -= len);
-	if ( sys->utgid && sys->utgidLen>len ) {
-	  m_memcpy(sys->utgid,new_utgid,len);
-	}
-	else {
-	  mtcp_output(MTCP_ERROR,"Failed to update utgid stack environment: len(%d)>allowed(%d)\n",
-		      len,sys->utgidLen);
-	}
-	return ::setenv("UTGID",new_utgid,1);
+      char* p = (char*)sys->restore_arg0;
+      m_memcpy(p,new_utgid,len);
+      mtcp_output(MTCP_INFO,"New UTGID: %p %s - %s\n",sys->restore_arg0,sys->restore_arg0,new_utgid);
+      m_memset(p+len,0,max_len - len);
+      if ( sys->utgid && sys->utgidLen>len ) {
+	m_memcpy(sys->utgid,new_utgid,len);
       }
+      else {
+	mtcp_output(MTCP_ERROR,"Failed to update utgid stack environment: len(%d)>allowed(%d)\n",
+		    len,sys->utgidLen);
+      }
+      return ::setenv("UTGID",new_utgid,1);
     }
-    mtcp_output(MTCP_ERROR,"Failed to set argv[0] to utgid:%s orig arg0:%p new arg0:%p len=%d max_len:%d\n",
-		new_utgid, sys->arg0, sys->restore_arg0, len, max_len);
+    mtcp_output(MTCP_ERROR,"Failed to set argv[0] to utgid:%s orig arg0:%p new arg0:%p len=%d\n",
+		new_utgid, sys->arg0, sys->restore_arg0, len);
   }
   return ::setenv("UTGID",new_utgid,1);
 }
