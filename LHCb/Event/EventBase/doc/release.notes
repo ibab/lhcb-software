@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Event model
 !---------------------------------------------------------------------------
 
+! 2012-03-21 - Marco Cattaneo
+ - Change type of ProcessHeader::m_randomSeeds to std:vector<long long>
+   (was std::vector<long>) to avoid 32-64 bit portability issues in ROOT.
+
 !========================== EventBase v2r5p1 2009-06-05 ====================
 ! 2009-06-05 - Marco Cattaneo
  - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows 

@@ -26,7 +26,7 @@
        <attribute
         desc="random number seeds for this step"
         name="randomSeeds"
-        type="std::vector &lt; long int &gt;"
+        type="std::vector &lt; long long &gt;"
        />
        <attribute
         desc="Application or Program Name (e.g. Gauss, Boole or Pythia)"
