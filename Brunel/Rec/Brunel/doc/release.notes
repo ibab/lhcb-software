@@ -7,7 +7,7 @@ Purpose: LHCb reconstruction program
   . Minor change in ChargedProtoParticleTupleAlg
     (GlobalReco, not yet in tag collector)
   . Protect some unprotected debug and verbose messages
-    (PatVeloTT, PatPV, DAQUtils, TrackUtils, CaloPIDs, TrackFitter)
+    (PatVeloTT, PatPV, DAQUtils, TrackUtils, CaloPIDs, TrackFitter, MuonID)
   . Fixes to sorting in TsaSeeding to get identical results with gcc43 and gcc46
     Affects only DataType prior to 2011 (TsaAlgorithms)
   . Improved protections in OTHitEfficiencyMonitor (TrackMonitors)
