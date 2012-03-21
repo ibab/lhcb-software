@@ -3,6 +3,10 @@
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
 
+! 2012-03-21 - Chris Jones
+ - Update ReadRoutingBits to pass a const RawEvent, and to pass relevantBits 
+   by reference not value.
+
 !========================= HltInterfaces v4r5 2012-02-01 =========================
 ! 2012-02-01 - Eric van Herwijnen (with help from Gerhard!)
   - Fix to PropertyConfig to remove embedded newlines from properties 

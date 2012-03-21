@@ -15,14 +15,15 @@
  *  @author Patrick Koppenburg
  *  @date   2009-11-06
  */
-namespace Hlt {
+namespace Hlt 
+{
   /// get routing bits as bitset
-  boost::dynamic_bitset<unsigned int> readRoutingBits(LHCb::RawEvent* rawEvent);
+  boost::dynamic_bitset<unsigned int> readRoutingBits(const LHCb::RawEvent* rawEvent);
   /// get list of bits that fired among a list of relevant bits
-  std::vector<unsigned int> firedRoutingBits(LHCb::RawEvent* rawEvent, 
-                                             const std::vector<unsigned int> relevantBits);
+  std::vector<unsigned int> firedRoutingBits(const LHCb::RawEvent* rawEvent, 
+                                             const std::vector<unsigned int>& relevantBits);
   /// get list of bits that fired among a range of relevant bits (default: 0 to 95)
-  std::vector<unsigned int> firedRoutingBits(LHCb::RawEvent* rawEvent, 
+  std::vector<unsigned int> firedRoutingBits(const LHCb::RawEvent* rawEvent, 
                                              const unsigned int relevantMin=0, 
                                              const unsigned int relevantMax=95);
 }
