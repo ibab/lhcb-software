@@ -4,6 +4,19 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-03-21 - John Back
+ - Added EvtD0gammaDalitz model from Jordi Tico.
+   Added K_1+/- vector modes for EvtbTosllBallFF::getVectorFF. 
+   Added check for null pointers when printing debug info when checking the 
+   spin density matrix rho in EvtDecayAmp.
+
+! 2012-02-10 - John Back
+ - Change EvtTauolaEngine to use the "lab" frame (first mother) for all 
+   4-momentum calculations, since there were problems for 4-momentum 
+   conservation at the HepMC vertex when the mother of the given
+   tau particle was not at rest. 
+   Reinstate PYTHIA8DATA variable in cmt/requirements.
+
 ! 2011-11-18 - John Back
  - Reinstated the Pythia6 code, now called EvtPythia6, that is needed for the 
    EvtGenDecay.cpp class within Gen/Generators. Also reinstated the old fortran 
