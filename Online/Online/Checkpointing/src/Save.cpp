@@ -5,7 +5,6 @@
 #include "Checkpointing/Thread.h"
 #include "Checkpointing.h"
 #include "Restore.h"
-#include "Save.h"
 #include <fcntl.h>
 #include <unistd.h>
 #include <cstdio>

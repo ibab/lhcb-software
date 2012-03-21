@@ -5,7 +5,6 @@
 #include "Checkpointing/SysCalls.h"
 #include "Checkpointing.h"
 #include "Restore.h"
-#include "Save.h"
 
 #include <cstdio>
 #include <unistd.h>
@@ -22,9 +21,13 @@ typedef SysInfo::mem_address_t mem_address_t;
 DefineMarker(SYS_BEGIN_MARKER,    "PSYS");
 DefineMarker(SYS_END_MARKER,      "psys");
 
-SysInfo::SysInfo() {
-  checkpointing_sys_initialize(this);
-}
+//#define STACKSIZE 4096      // size of temporary stack (in quadwords)
+#define STACKSIZE 1024      // size of temporary stack (in quadwords)
+/* temp stack used internally by restore so we don't go outside the
+ *   libmtcp.so address range for anything;
+ * including "+ 1" since will set %esp/%rsp to tempstack+STACKSIZE
+ */
+STATIC(long long int) mtcp_internal_tempstack[STACKSIZE + 1];
 
 /// Initialize SysInfo structure
 STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_initialize(SysInfo* sys) {
@@ -63,6 +66,40 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_initialize(SysInfo* sys)
   sys->restore_argc       = 0;
   sys->restore_arg0       = 0;
   sys->restore_arglen     = 0;
+}
+
+/// Main restart routine in checkpointing image
+STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_restore_start(Stack* stack,int print_level,int flags) {
+  /* If we just replace extendedStack by (tempstack+STACKSIZE) in "asm"
+   * below, the optimizer generates non-PIC code if it's not -O0 - Gene
+   */
+  long long* extendedStack = mtcp_internal_tempstack + STACKSIZE;
+  mtcp_set_debug_level(print_level);
+  mtcp_output(MTCP_INFO,"restore: Assume that checkpoint file is already opened with fd:%d\n",chkpt_sys.checkpointFD);
+  if ( mtcp_sys_lseek(chkpt_sys.checkpointFD,0,SEEK_SET) < 0 ) {// Position checkpoint file to start
+    mtcp_output(MTCP_FATAL,"restore: Failed [%d] to seek back to beginning of the checkpoint file\n",mtcp_sys_errno);
+  }
+  chkpt_sys.restart_flags = flags;
+  checkpointing_sys_init_restore_stack(&chkpt_sys,stack->argc,stack->argv,stack->environment);
+  checkpointing_sys_print(&chkpt_sys);
+
+  // Now we move the process to the temporary stack allocated in this image
+  // in order to execute the process restore. After this, we move back
+  // to the regular stack pointer.
+  __asm__ volatile (CLEAN_FOR_64_BIT(mov %0,%%esp\n\t)
+                /* This next assembly language confuses gdb,
+		   but seems to work fine anyway */
+                CLEAN_FOR_64_BIT(xor %%ebp,%%ebp\n\t)
+                : : "g" (extendedStack) : "memory");
+#if 0  /* Same as above.... */
+  __asm__ volatile (CLEAN_FOR_64_BIT(mov %0,%%esp\n\t)
+                : : "g" (extendedStack) : "memory");
+  //__asm__("mov $0,%rbp");
+  __asm__ volatile ("xor %rbp,%rbp");
+#endif
+  // Stack is wacked. Need to call a new routinne, which should never return.
+  checkpointing_sys_restore_process();
+  __asm__ volatile ("hlt");
 }
 
 /// Set the file descriptor for the checkpointing file
@@ -356,6 +393,11 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_sys_force_utgid(SysInfo* sys,
     return checkpointing_sys_set_utgid(sys,new_utgid);
   }
   return 1;
+}
+
+
+SysInfo::SysInfo() {
+  checkpointing_sys_initialize(this);
 }
 
 int test_set_environment(int flag) {

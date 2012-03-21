@@ -1,3 +1,4 @@
+#include "Checkpointing/Static.h"
 #include "Checkpointing/MemMaps.h"
 #include "Checkpointing/MMap.h"
 #include "Checkpointing.h"

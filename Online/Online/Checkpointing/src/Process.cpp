@@ -1,7 +1,6 @@
 #include "Checkpointing/Static.h"
 #include "Checkpointing/Process.h"
 #include "Restore.h"
-#include "Save.h"
 
 using namespace Checkpointing;
 
