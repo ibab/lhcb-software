@@ -210,8 +210,11 @@ void EvtbTosllBallFF::getVectorFF(EvtId parent, EvtId daught,
       daught == EvtPDL::getId(std::string("K*+")) ||
       daught == EvtPDL::getId(std::string("K*-")) ||
       daught == EvtPDL::getId(std::string("K*0")) ||
-      daught == EvtPDL::getId(std::string("anti-K*0"))
-     ) 
+      daught == EvtPDL::getId(std::string("anti-K*0")) ||
+      daught == EvtPDL::getId(std::string("K_1+")) ||
+      daught == EvtPDL::getId(std::string("K_1-"))
+
+     )
  {
   if (model == 1) {
         //this is Ali-Ball '01

@@ -138,6 +138,7 @@
 
 #include "EvtGenModels/EvtDMix.hh"
 #include "EvtGenModels/EvtD0mixDalitz.hh"
+#include "EvtGenModels/EvtD0gammaDalitz.hh"
 
 #include "EvtGenModels/EvtBcToNPi.hh"
 #include "EvtGenModels/EvtBcPsiNPi.hh"
@@ -260,6 +261,7 @@ EvtModelReg::EvtModelReg(const std::list<EvtDecayBase*>* extraModels)
     modelist.registerModel(new EvtMultibody);
     modelist.registerModel(new EvtDMix);
     modelist.registerModel(new EvtD0mixDalitz);
+    modelist.registerModel(new EvtD0gammaDalitz);
 
     modelist.registerModel(new EvtbTosllAli);
     modelist.registerModel(new EvtBaryonPCR);

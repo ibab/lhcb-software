@@ -413,7 +413,7 @@ EvtSpinDensity EvtAmp::contract(int k,const EvtAmp& amp2){
 }
 
 
-EvtAmp EvtAmp::contract(int, const EvtAmp&,const EvtAmp&) {
+EvtAmp EvtAmp::contract(int , const EvtAmp& ,const EvtAmp& ){
   
   //Do we need this method?
   EvtAmp tmp;
@@ -426,6 +426,7 @@ EvtAmp EvtAmp::contract(int, const EvtAmp&,const EvtAmp&) {
 void EvtAmp::dump(){
 
   int i,list[10];
+  for (i = 0; i < 10; i++) {list[i] = 0;}
 
   report(DEBUG,"EvtGen") << "Number of daugthers:"<<_ndaug<<endl;
   report(DEBUG,"EvtGen") << "Number of states of the parent:"<<_pstates<<endl;
@@ -452,6 +453,8 @@ void EvtAmp::dump(){
   }
 
   int allloop[10];
+  for (i = 0; i < 10; i++) {allloop[i] = 0;}
+
   allloop[0]=1;
   for (i=0;i<_nontrivial;i++) {
     if (i==0){

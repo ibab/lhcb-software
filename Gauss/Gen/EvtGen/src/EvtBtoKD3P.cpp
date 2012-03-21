@@ -201,7 +201,8 @@ void EvtBtoKD3P::decay(EvtParticle *p){
   vertex (amp/comp);
   
   // Make the daughters of theD:
-  theD->generateMassTree();
+  bool massTreeOK = theD->generateMassTree();
+  if (massTreeOK == false) {return;}
 
   // Now generate the p4's of the daughters of theD:
   std::vector<EvtVector4R> v = model2->initDaughters(x);  

@@ -67,10 +67,10 @@ void EvtDecayAmp::makeDecay(EvtParticle* p, bool recursive){
     if (prob!=prob) {
 
       report(DEBUG,"EvtGen") << "Forward density matrix:"<<endl;
-      report(ERROR,"EvtGen") << p->getSpinDensityForward();
+      report(DEBUG,"EvtGen") << p->getSpinDensityForward();
 
       report(DEBUG,"EvtGen") << "Decay density matrix:"<<endl;
-      report(ERROR,"EvtGen") << rho;
+      report(DEBUG,"EvtGen") << rho;
 
       report(DEBUG,"EvtGen") << "prob:"<<prob<<endl;
       
@@ -179,17 +179,34 @@ void EvtDecayAmp::makeDecay(EvtParticle* p, bool recursive){
 	  report(ERROR,"EvtGen")<<"forward rho failed Check:"<<
 	    EvtPDL::name(p->getId()).c_str()<<" "<<p->getChannel()<<" "<<i<<endl;
 	  
-	  report(ERROR,"EvtGen")<<"Parent:"<<EvtPDL::name(p->getParent()->getId()).c_str()<<endl;
-	  report(ERROR,"EvtGen")<<"GrandParent:"<<EvtPDL::name(p->getParent()->getParent()->getId()).c_str()<<endl;
-	  report(ERROR,"EvtGen")<<"GrandGrandParent:"<<EvtPDL::name(p->getParent()->getParent()->getParent()->getId()).c_str()<<endl;
-	  
-	  report(ERROR,"EvtGen") << rho;
+	  p->printTree();
+
+	  for (size_t idaug = 0; idaug < p->getNDaug(); idaug++) {
+	    EvtParticle* daughter = p->getDaug(idaug);
+	    if (daughter != 0) {daughter->printTree();}
+	  }
+
+	  EvtParticle* pParent = p->getParent();
+	  if (pParent != 0) {
+	    report(ERROR,"EvtGen")<<"Parent:"<<EvtPDL::name(pParent->getId()).c_str()<<endl;
+
+	    EvtParticle* grandParent = pParent->getParent();
+
+	    if (grandParent != 0) {
+	      report(ERROR,"EvtGen")<<"GrandParent:"<<EvtPDL::name(grandParent->getId()).c_str()<<endl;
+	    }
+	  }
+
+	  report(ERROR,"EvtGen") << " EvtSpinDensity rho: " << rho;
 	  
 	  _amp2.dump();
+
 	  for(size_t ii=0;ii<i+1;ii++){
-	    report(ERROR,"EvtGen") << rho_list[ii];
+	    report(ERROR,"EvtGen") << "rho_list[" << ii << "] = " << rho_list[ii];
 	  }
+
 	  report(ERROR,"EvtGen") << "-------Done with error-------"<<endl;  
+
 	}
       
 	p->getDaug(i)->setSpinDensityForward(rho);
