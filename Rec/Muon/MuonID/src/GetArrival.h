@@ -1,4 +1,3 @@
-// $Id: GetArrival.h,v 1.2 2009-07-07 22:02:41 polye Exp $
 #ifndef GETARRIVAL_H 
 #define GETARRIVAL_H 1
 
@@ -62,7 +61,6 @@ protected:
   std::vector<double> m_beta;
   std::vector<double> m_probs;
   std::vector<double> m_moms;
-  int m_npoints;
   double m_eff;
   int m_minhits;
   

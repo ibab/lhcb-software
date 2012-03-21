@@ -99,7 +99,6 @@ protected:
 
   LHCb::State* m_mySeedState;
 
-  double m_minmom;
   double m_2hits;
   double m_3hits;
   double m_chi2cut;

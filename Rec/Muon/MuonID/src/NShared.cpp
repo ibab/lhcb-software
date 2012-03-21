@@ -197,7 +197,8 @@ void NShared::fillNShared()
       int nshared=-1;
       StatusCode sc = getNShared((**iTrack),nshared);
       if (sc.isFailure()){
-        debug()<<"Error getting Nshared for track "<<(**iTrack)<<endmsg;
+        if (msgLevel(MSG::DEBUG) ) 
+          debug()<<"Error getting Nshared for track "<<(**iTrack)<<endmsg;
       }
       else{
         LHCb::MuonPID* pMuid = mupidFromTrack(*(*iTrack));

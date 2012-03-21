@@ -26,6 +26,8 @@ DECLARE_ALGORITHM_FACTORY( MakeMuonMeasurements )
 MakeMuonMeasurements::MakeMuonMeasurements( const std::string& name,
                                             ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
+  , m_measProvider(0)
+  , m_mudet(0)  
 {
   // Use or not uncrossed logical channels in the non-pad detector areas
   declareProperty("UseUncrossed",m_use_uncrossed=true);

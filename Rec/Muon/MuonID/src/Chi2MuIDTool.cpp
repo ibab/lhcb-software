@@ -24,6 +24,10 @@ Chi2MuIDTool::Chi2MuIDTool( const std::string& type,
                     const std::string& name,
                     const IInterface* parent )
   : GaudiTool ( type, name , parent )
+  , m_nsigmasUsed(0.)
+  , m_NStation(0)
+  , m_arrivalCuts(false)
+  , m_applyIsMuon(false)
 {
   declareInterface<ImuIDTool>(this);
   
@@ -280,8 +284,8 @@ StatusCode Chi2MuIDTool::muonQuality(LHCb::Track& muTrack, double& Quality)
   if (msgLevel(MSG::DEBUG) ) {
     debug()<<"BACK in muonQuality"<<endmsg;
     debug()<<"sc2"<<sc2.getCode()<<endmsg;
+    debug()<<"sc2.isFailure()"<<sc2.isFailure()<<endmsg;
   }
-  debug()<<"sc2.isFailure()"<<sc2.isFailure()<<endmsg;
   
   if (sc2.isFailure())
   {

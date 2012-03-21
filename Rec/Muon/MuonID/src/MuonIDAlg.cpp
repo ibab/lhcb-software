@@ -130,6 +130,7 @@ double land(Double_t *x, Double_t *par);
 MuonIDAlg::MuonIDAlg( const std::string& name,
                       ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
+    m_mudet ( NULL ),
     m_myMuIDTool ( NULL ),
     m_DistMuIDTool ( NULL ),
     m_NSharedTool ( NULL ),
@@ -339,7 +340,7 @@ MuonIDAlg::MuonIDAlg( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-MuonIDAlg::~MuonIDAlg() {};
+MuonIDAlg::~MuonIDAlg() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -724,8 +725,11 @@ StatusCode MuonIDAlg::initialize() {
 
         // number of steps
         m_nMax = nMax_bin->param<int>("nMax_bin");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> nMax_bin:" << m_nMax << endmsg;
-        debug()  << endmsg;
+        if (msgLevel(MSG::DEBUG) ) {
+          debug()  << "==> nMax_bin:" << m_nMax << endmsg;
+          debug()  << endmsg;
+        }
+        
         }
         else {  
           warning()  << "Initialise: Parameters for dllFlag==4 NonMuonProb not found in Conditions database."
@@ -1878,8 +1882,7 @@ StatusCode MuonIDAlg::calcMuonLL(LHCb::MuonPID * muonid){
 
     double x,dx,y,dy,z,dz;
     LHCb::MuonTileID tile=(*iCoord)->key();
-    StatusCode sc =
-      m_mudet->Tile2XYZ(tile,x,dx,y,dy,z,dz);
+    sc = m_mudet->Tile2XYZ(tile,x,dx,y,dy,z,dz);
     if (sc.isFailure()){
       Warning(" Failed to get x,y,z of tile ",StatusCode::SUCCESS,0).ignore();
       if (msgLevel(MSG::DEBUG) ) debug()<< "Failed to get x,y,z of tile " << tile << endmsg;
@@ -1942,7 +1945,7 @@ StatusCode MuonIDAlg::calcSharedHits( LHCb::MuonPID* muonid, LHCb::MuonPIDs * pM
     if ( compareHits( muonid, *iMuon ) ){
 
       // get dist for this muonID
-      StatusCode sc = calcDist(*iMuon);
+      sc = calcDist(*iMuon);
       if( sc.isFailure() ) {
         Warning(" calcDist 2 failure",StatusCode::SUCCESS,0).ignore();
         continue;
@@ -2018,8 +2021,7 @@ StatusCode MuonIDAlg::calcDist( LHCb::MuonPID* muonid ){
   for( iCoord = mcoord.begin() ; iCoord != mcoord.end() ; iCoord++ ){
     double x,dx,y,dy,z,dz;
     LHCb::MuonTileID tile=(*iCoord)->key();
-    StatusCode sc =
-      m_mudet->Tile2XYZ(tile,x,dx,y,dy,z,dz);
+    sc = m_mudet->Tile2XYZ(tile,x,dx,y,dy,z,dz);
     if(sc.isFailure()){
       Warning(" Failed to get x,y,z of tile ",sc).ignore();
       if (msgLevel(MSG::DEBUG) ) debug()<< "Failed to get x,y,z of tile " << tile << endmsg;

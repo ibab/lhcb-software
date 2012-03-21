@@ -110,9 +110,9 @@ StatusCode GetArrival::initialize() {
     
     
     //number of points per each station
-    m_npoints = m_moms.size();
-    if (msgLevel(MSG::DEBUG) ) debug() << " npoints: " << m_npoints << endmsg;
-    if ((m_probs.size()%m_npoints)!=0){
+    unsigned int npoints = m_moms.size();
+    if (msgLevel(MSG::DEBUG) ) debug() << " npoints: " << npoints << endmsg;
+    if ((m_probs.size()%npoints)!=0){
       m_init.setCode(402);
       return sc;
       // return Error( "INPUT VALUES WRONG SIZE PER STATION", m_init);
@@ -124,16 +124,16 @@ StatusCode GetArrival::initialize() {
       m_vprobs.push_back(std::vector<double>());
       
       if (i==0) {
-        std::vector<double> partial_st0(m_npoints);
+        std::vector<double> partial_st0(npoints);
         m_functprobs.push_back(Uniformer(m_moms,partial_st0));
         continue;
       }
       
       if (msgLevel(MSG::DEBUG) ) debug()<<"ST="<<i<<endmsg;
       
-      for (int j=0;j<m_npoints;j++){
-        //int g_ind=i*m_npoints+j;
-        int g_ind=(i-1)*m_npoints+j;
+      for (int j=0;j<npoints;j++){
+        //int g_ind=i*npoints+j;
+        int g_ind=(i-1)*npoints+j;
         m_vprobs[i].push_back(m_probs[g_ind]);
       }
       
