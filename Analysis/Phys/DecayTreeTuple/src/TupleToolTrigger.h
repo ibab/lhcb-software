@@ -2,10 +2,13 @@
 #ifndef JBOREL_TUPLETOOLTRIGGER_H
 #define JBOREL_TUPLETOOLTRIGGER_H 1
 
-// Include files
-// from Gaudi
+#include <vector>
+
 #include "TupleToolTriggerBase.h"
 #include "Kernel/IEventTupleTool.h"            // Interface
+
+// boost
+#include "boost/assign/list_of.hpp"
 
 /** @class TupleToolTrigger TupleToolTrigger.h jborel/TupleToolTrigger.h
  *
@@ -17,43 +20,46 @@
  * - StrippingGlobal : Global Stripping decision
  *
  * If verbose is true the tool needs somehow to find a list of triggers to fill.
- * In this case it uses the base class TupleToolTriggerBase to sort everything out. 
+ * In this case it uses the base class TupleToolTriggerBase to sort everything out.
  *
  * If \b VerboseL0 = true
  * L0Decision_xxx : LHCb::L0DUReport->channelDecisionByName(xxx)
- *  
+ *
  * If \b VerboseHlt1 = true
  * Hlt1_xxx_Decision : filled ... [ -1, 0, 1 ] = [not run, decision false, decision true]
- * 
+ *
  * If \b VerboseHlt2 = true
  * Hlt2_xxx_Decision : filled ... [ -1, 0, 1 ] = [not run, decision false, decision true]
- * 
+ *
  * If \b VerboseStripping = true
  * Stripping_xxx_Decision : filled ... [ -1, 0, 1 ] = [not run, decision false, decision true]
- * 
+ *
  * Verbose flag is a shortcut to turn all verbosity on.
- *  
- * 
+ *
+ *
  *  @author Jeremie Borel
  *  @date   2007-11-07
  */
-class TupleToolTrigger : public TupleToolTriggerBase, virtual public IEventTupleTool {
+class TupleToolTrigger : public TupleToolTriggerBase,
+                         virtual public IEventTupleTool
+{
+
 public:
+
   /// Standard constructor
   TupleToolTrigger( const std::string& type,
-		      const std::string& name,
-		      const IInterface* parent);
+                    const std::string& name,
+                    const IInterface* parent);
 
   virtual ~TupleToolTrigger( ){}; ///< Destructor
 
-  StatusCode initialize() ;
-  
+  StatusCode initialize();
+
   //implimented in the baseclass
   StatusCode fill( Tuples::Tuple& tuple )
   {
-    return TupleToolTriggerBase::fill( tuple);
-    
-  };
+    return TupleToolTriggerBase::fill(tuple);
+  }
 
 private:
 
@@ -62,15 +68,16 @@ private:
   ///fill verbose information for the HLT
   StatusCode fillHlt( Tuples::Tuple&, const std::string &);
   StatusCode fillRoutingBits( Tuples::Tuple& );
-  
+
   StatusCode fillBasic(Tuples::Tuple& tuple );
-  
+
   StatusCode fillVerbose(Tuples::Tuple& tuple );
-  
-  //bool m_fillHlt;     ///< fill Hlt, now in the base class
-  //bool m_fillL0;      ///< fill L0, now in the base class
-  //bool  m_allSteps ; ///< Fill also intermediate steps
+
   std::vector<unsigned int> m_routingBits ; ///< Routing bits to fill
-  
+
+  // RawEvent Locations to search
+  std::vector<std::string> m_rawEventLocs;
+
 };
+
 #endif // JBOREL_TUPLETOOLTRIGGER_H

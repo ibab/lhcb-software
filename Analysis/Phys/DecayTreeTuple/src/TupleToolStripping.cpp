@@ -45,35 +45,46 @@ TupleToolStripping::~TupleToolStripping() {}
 StatusCode TupleToolStripping::fill( Tuples::Tuple& tuple )
 {
 
-  if (exist<LHCb::HltDecReports>(m_location))
+  const LHCb::HltDecReports* dr = NULL;
+  if ( exist<LHCb::HltDecReports>(m_location,false) )
   {
-    LHCb::HltDecReports* dr = get<LHCb::HltDecReports>(m_location);
+    dr = get<LHCb::HltDecReports>(m_location,false);
+  }
+  else if ( exist<LHCb::HltDecReports>(m_location) )
+  {
+    dr = get<LHCb::HltDecReports>(m_location);
+  }
+
+  if ( dr )
+  {
     if(msgLevel(MSG::DEBUG)) debug() << "There are " << dr->size() << " DecReports at " << m_location << endmsg ;
     const std::vector<std::string> & names = dr->decisionNames() ;
     if(msgLevel(MSG::VERBOSE)) verbose() << "NAMES: " << names << endmsg ;
     unsigned int i = 0 ;
     for ( std::vector<std::string>::const_iterator s = names.begin() ;
-          s != names.end() ; ++s)
+          s != names.end() ; ++s )
     {
       if(msgLevel(MSG::VERBOSE)) verbose() << "Trying " << i << " " << *s << endmsg ;
       if ( dr->hasDecisionName(*s) )
       {
         const LHCb::HltDecReport* report = dr->decReport(*s);
-        if ( 0==report ) Exception("Cannot find report "+*s);
+        if ( !report ) Exception("Cannot find report "+*s);
         if(msgLevel(MSG::VERBOSE)) verbose() << *s << " says " << report->decision() << endmsg ;
         if ( !tuple->column( *s, report->decision() ) ) return StatusCode::FAILURE;
-      } else {
+      }
+      else
+      {
         Exception("Don't have report name "+*s);
       }
       ++i;
     }
-  } else {
-    Warning("No DecReports at "+m_location, StatusCode::SUCCESS, 1);
-    return StatusCode::SUCCESS ;
+  }
+  else
+  {
+    return Warning( "No DecReports at "+m_location, StatusCode::SUCCESS, 1);
   }
 
-  return StatusCode::SUCCESS ;
-
+  return StatusCode::SUCCESS;
 }
 
 //=============================================================================

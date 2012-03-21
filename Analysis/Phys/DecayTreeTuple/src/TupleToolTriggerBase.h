@@ -1,12 +1,10 @@
 #ifndef TUPLETOOLTRIGGERBASE_H 
 #define TUPLETOOLTRIGGERBASE_H 1
 
-// Include files
 // from Gaudi
 #include "TupleToolBase.h"
 #include "Kernel/IParticleTupleTool.h"            // Interface
-//#include "Kernel/ITriggerTisTos.h" //
-//#include "Kernel/IParticleDescendants.h"
+
 /** @class TupleToolTriggerBase TupleToolTriggerBase.h
  *
  *  The baseclass for all tupletools interacting with the trigger
@@ -38,12 +36,12 @@
  *  @date   2010-01-25
  */
 
-class TupleToolTriggerBase : public TupleToolBase, 
-                             virtual public IParticleTupleTool 
+class TupleToolTriggerBase : public TupleToolBase,
+                             virtual public IParticleTupleTool
 {
 
 public:
- 
+
   /// Standard constructor
   TupleToolTriggerBase( const std::string& type,
                         const std::string& name,

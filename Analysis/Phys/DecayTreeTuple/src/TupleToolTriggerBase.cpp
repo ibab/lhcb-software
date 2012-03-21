@@ -28,15 +28,15 @@ using namespace LHCb;
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-  TupleToolTriggerBase::TupleToolTriggerBase( const std::string& type,
-                                              const std::string& name,
-                                              const IInterface* parent )
-    : TupleToolBase ( type, name , parent ),
-      m_l0(0),
-      m_hlt1(0),
-      m_hlt2(0),
-      m_stripping(0),
-      m_triggerList(0)
+TupleToolTriggerBase::TupleToolTriggerBase( const std::string& type,
+                                            const std::string& name,
+                                            const IInterface* parent )
+  : TupleToolBase ( type, name , parent ),
+    m_l0(0),
+    m_hlt1(0),
+    m_hlt2(0),
+    m_stripping(0),
+    m_triggerList(0)
 {
   //declareInterface<IParticleTupleTool>(this);
 
