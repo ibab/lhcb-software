@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-03-21 - Victor Coco
+ - StrippingDisplVertices.py: tighten the cuts --> 25% retention gain
+
 ! 2012-03-20 - S. Gregson
 - Tightened D(s)->KS0H line cuts to reduce rate (Charm WG constraints)
 

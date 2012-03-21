@@ -65,20 +65,20 @@ confdict = {
        'MinBias': 0.4*mm ,
        'SingleDown': 3.0*mm ,
        'Double': 0.4*mm ,
-       'SingleHighMass': 0.4*mm , 
+       'SingleHighMass': 0.6*mm , 
        'SingleHighFD': 4.*mm,
-       'SingleMedium': 2.5*mm
+       'SingleMedium': 2.7*mm
     },
     'MinMass':{
        'PreselVelo': 3.*GeV , 
        'SinglePS': 3.*GeV ,  
        'JPsiHLT': 3.*GeV , 
        'MinBias': 3.*GeV , 
-       'SingleDown': 4.*GeV,
+       'SingleDown': 4.5*GeV,
        'Double': 3.5*GeV , 
-       'SingleHighMass':  9.7*GeV,
-       'SingleHighFD': 6.5*GeV,
-       'SingleMedium': 8.5*GeV
+       'SingleHighMass':  10.*GeV,
+       'SingleHighFD': 6.7*GeV,
+       'SingleMedium': 8.7*GeV
     },
     'MinMass2':{
        'Double': 4.*GeV 
@@ -106,7 +106,7 @@ confdict = {
        'SingleMedium': 5
     },
     'MinZ':{   
-       'SingleDown': 100.*mm  ,
+       'SingleDown': 150.*mm  ,
     },
     'MaterialVeto':{
        'PreselVelo': 5,
@@ -114,7 +114,7 @@ confdict = {
        'JPsiHLT': 0 ,
        'MinBias': 0 ,
        'SingleDown': 0 ,
-       'Double': -5 ,
+       'Double': 5 ,
        'SingleHighMass':5,
        'SingleHighFD':5,
        'SingleMedium': 5
