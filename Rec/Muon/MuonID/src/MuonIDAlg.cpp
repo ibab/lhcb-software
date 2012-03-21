@@ -308,7 +308,7 @@ MuonIDAlg::MuonIDAlg( const std::string& name,
 
 
   // tanh(dist2) histograms contents
-  // # For the moment, non-muons dist per momentum bin come form the same dist per region
+  // # For the moment, non-muons dist per momentum bin come from the same dist per region
   declareProperty( "tanhCumulHistoNonMuonR1_1", m_tanhCumulHistoNonMuonR1_1);
   declareProperty( "tanhCumulHistoNonMuonR1_2", m_tanhCumulHistoNonMuonR1_2);
   declareProperty( "tanhCumulHistoNonMuonR1_3", m_tanhCumulHistoNonMuonR1_3);
@@ -2432,8 +2432,7 @@ int MuonIDAlg::GetPbin(double p, int region){
   }
   if (msgLevel(MSG::VERBOSE) ) verbose() << "GetPbin: region+1 " << region+1 << " p " <<  p << " pBins vector address: " 
                                      << pBins << endmsg;
-  if(0 == pBins)
-    Warning("GetPbin: No match to a pBins vector. Null pBins pointer",StatusCode::SUCCESS).ignore();
+  if(0 == pBins) throw GaudiException("GetPbin: No match to a pBins vector. Null pBins pointer", "",StatusCode::FAILURE);
   for(unsigned int iBin=0; iBin<pBins->size();++iBin){
     if (msgLevel(MSG::VERBOSE) ) verbose() << "GetPbin:\tiBin " <<  iBin << " pBins[iBin] " << (*pBins)[iBin] << endmsg;
     if(p < (*pBins)[iBin]) return iBin;

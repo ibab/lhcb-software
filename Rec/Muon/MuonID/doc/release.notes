@@ -3,6 +3,9 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+! 2012-03-21 - J. Helder Lopes
+ - Fix bug in method GetPbin. Throw an exception if pBins pointer is null.
+
 ! 2012-03-21 - Marco Cattaneo
  - Fix unprotected debug()
  - Fix UNINIT_CTOR defects
