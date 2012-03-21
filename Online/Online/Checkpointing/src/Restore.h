@@ -57,8 +57,14 @@ namespace CHECKPOINTING_NAMESPACE  {
   struct Stack;
   typedef void (*checkpointing_string_handler_t)(void* param, const char* s);
 
+  /// Initialize SysInfo structure
+  STATIC(void) checkpointing_sys_initialize(SysInfo* sys);
   /// Print data content of SysInfo structure
-  STATIC(void) checkpointing_sys_print(const SysInfo& s);
+  STATIC(void) checkpointing_sys_print(const SysInfo* s);
+  /// Aquire system information (for writing/initialization)
+  STATIC(void) checkpointing_sys_aquire(SysInfo* s);
+  /// Get program context
+  //STATIC(int) checkpointing_sys_get_context();
   /// Main restart routine in checkpointing image
   STATIC(void) checkpointing_sys_restore_start(Stack* stack,int print_level,int optional_flags);
   /// Secondary restore routine. Execution starts once we jumped to the local stack.
@@ -67,12 +73,51 @@ namespace CHECKPOINTING_NAMESPACE  {
   STATIC(void) checkpointing_sys_restore_finish();
   /// Handle input file to set environment etc.
   STATIC(void) checkpointing_sys_process_file(int fd, void* par, checkpointing_string_handler_t handler);
-  /// Initialize basic variables from stack
-  STATIC(void) checkpointing_sys_init_stack(SysInfo* sys, Stack* s);
+  /// Initialize basic variables from stack when writing checkpoint
+  STATIC(void) checkpointing_sys_init_stack(SysInfo* sys, int argc, char** argv, char** envp);
+  /// Initialize basic variables from stack when restoring from checkpoint
+  STATIC(void) checkpointing_sys_init_restore_stack(SysInfo* sys, int argc, char** argv, char** envp);
   /// Setup process UTGID if availible
   STATIC(int) checkpointing_sys_set_utgid(SysInfo* sys, const char* new_utgid);
   /// Force process UTGID/argv[0] if availible
   STATIC(int) checkpointing_sys_force_utgid(SysInfo* sys, const char* new_utgid);
+  /// After successful restore update the process environment from file.
+  STATIC(int) checkpointing_sys_set_environment(SysInfo* sys);
+  /// Set the file descriptor for the checkpointing file
+  STATIC(int) checkpointing_sys_set_checkpoint_file(SysInfo* sys, int fd);
+
+  /// Print content to stack saved in context
+  STATIC(void) checkpointing_print_stack(const char* comment);
+
+  struct Thread;
+  /**  Thread execution wrapper
+   *
+   *   Simply call the object function.
+   */
+  STATIC(int)  checkpointing_thread_main(void *threadv);
+  /** Entry point to restart thread after a fork.
+   */
+  STATIC(int)  checkpointing_thread_restart_main(void* arg);
+  STATIC(void) checkpointing_thread_restore_tls(Thread* thr);
+  STATIC(void) checkpointing_thread_restore_signals(Thread* thr);
+  STATIC(void) checkpointing_thread_restore_sigactions();
+  STATIC(int)  checkpointing_thread_restart(Thread* thr, int force_context);
+  STATIC(Thread*) checkpointing_thread_queue();
+  ///  Save signal handlers and block signal delivery
+  STATIC(void) checkpointing_thread_save_signals(Thread* thr);
+  /// Setup the signal handling to stop/restart threads
+  STATIC(void) checkpointing_thread_setup_signals();
+  /// Thread has exited - unlink it from lists and free struct
+  STATIC(int) checkpointing_thread_cleanup(Thread* thr);
+
+  STATIC(void) checkpointing_threads_unlock();
+  STATIC(void) checkpointing_threads_lock();
+
+  // Final last restore call
+  STATIC(void) checkpointing_finish_restore();
+
+  /// Save the system info of the process
+  STATIC(void) checkpointing_thread_save_sys_info();
 
   // CHECKPOINTING_NAMESPACE::
 }

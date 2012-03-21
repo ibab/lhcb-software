@@ -25,7 +25,7 @@ WEAK(int) FileDesc::setup(int fdnum) {
   _pad    = 0;
   // Read the symbolic link so we get the filename that's open on the fd
   ::sprintf(procfdname, "/proc/self/fd/%d",fdnum);
-  name_len = (int)::readlink(procfdname,name,sizeof(name)-1);
+  name_len = (int)mtcp_sys_readlink(procfdname,name,sizeof(name)-1);
   if (name_len < 0) {
     mtcp_output(MTCP_ERROR,"FileHandler: error reading %s: %s\n",procfdname,strerror(errno));
     return 0;
@@ -36,14 +36,14 @@ WEAK(int) FileDesc::setup(int fdnum) {
     name[name_len] = 0;
 
     // Read about the link itself so we know read/write open flags
-    rc = lstat (procfdname, &f_link);
+    rc = mtcp_sys_lstat (procfdname, &f_link);
     if (rc < 0) {
       mtcp_output(MTCP_ERROR,"FileHandler: error stat %s [%d] -> %s: %s\n",
 		  procfdname, fd, name, strerror(-rc));
       return 0;
     }
     // Read about the actual file open on the fd
-    rc = fstat(fd, &statbuf);
+    rc = mtcp_sys_fstat(fd, &statbuf);
     // This does not take into account regulare open files, which are written!
     if (rc < 0) {
       mtcp_output(MTCP_WARNING,"FileHandler: error stat %s [%d] -> %s: %s\n",
@@ -64,7 +64,7 @@ WEAK(int) FileDesc::setup(int fdnum) {
     if ( fd == chkpt_sys.checkpointFD ) {
       m_strcpy(chkpt_sys.checkpointFile,name);
     }
-    print(MTCP_DEBUG);
+    checkpoint_file_print(MTCP_DEBUG,this);
     return 1;
   }
   return 0;

@@ -13,7 +13,7 @@ int test_Process_write() {
   // We assume, that at this stage
   const char* file_name = "process_test.dat";
   MMap m;
-  Process p(Process::PROCESS_WRITE);
+  Process p;
 
   int fd1=::open("/home/frankm/.bashrc",O_RDONLY);
   int fd2=::open("/home/frankm/.bashrc",O_RDONLY|O_APPEND);
@@ -55,7 +55,7 @@ int test_Process_restore() {
   const char* file_name = "process_test.dat";
   MMap m;
   if ( m.open(file_name) ) {
-    Process p(Process::PROCESS_RESTORE);
+    Process p;
     void* mem = m.address();
     if ( p.read(mem) ) {
       m.close();

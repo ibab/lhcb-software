@@ -3,6 +3,7 @@
 #include "Checkpointing/Static.h"
 #include "Checkpointing.h"
 #include "Restore.h"
+#include "Save.h"
 
 #include <cstdio>
 #include <cerrno>
@@ -120,13 +121,14 @@ int AreaInfoHandler::handle(int, const Area& a)  {
 }
 
 AreaWriteHandler::AreaWriteHandler(int fd) 
-  : m_fd(fd), m_bytes(0) 
+ : m_fd(fd)
 {
   f_handle = default_handle<AreaWriteHandler>;
 }
 
 int AreaWriteHandler::handle(int, const Area& a)    {
   // Skip if the memory region is where we actually write!
+  long rc;
   if ( a.high == chkpt_sys.addrEnd ) {
     checkpointing_area_print(&a,MTCP_INFO,"*** WARNING: SKIP IMAGE area:");
     return 0;
@@ -151,8 +153,7 @@ int AreaWriteHandler::handle(int, const Area& a)    {
     checkpointing_area_print(&a,MTCP_INFO,"*** WARNING: LOCALE ARCHIVE:");
     return 0;
   }
-
-  long rc = a.write(m_fd);
+  rc = a.write(m_fd);
   if ( rc > 0 )  {
     updateCounts(a);
     m_bytes += rc;
@@ -208,55 +209,7 @@ int MemMaps::numLines()  const {
 
 /// Collect in process information about the memory mappings
 int MemMaps::scan(AreaHandler& handler) {
-  int fd = mtcp_sys_open("/proc/self/maps",O_RDONLY,0);
-  if ( fd>0 ) {
-    int count = 0;
-    char text[256+PATH_MAX] = "  ", *p=text, *low, *high, *prot, *inode, *dev, *off, *fn;
-    const char *file;
-    for(int n=1; n>0 && (p-text)<int(sizeof(text)); ++p)   {
-      n = mtcp_sys_read(fd,p,1);
-      if ( n == 1 && *p != '\n' ) continue;
-      *p = 0;
-      if ( n == 1 ) {
-	low  = text;
-	high = m_chrfind(low,'-');
-	*high++  = 0;
-	prot     = m_chrfind(high,' ');
-	*prot++  = 0;
-	off      = m_chrfind(prot,' ');
-	*off++   = 0;
-	dev      = m_chrfind(off,' ');
-	*dev++   = 0;
-	inode    = m_chrfind(dev,' ');
-	*inode++ = 0;
-	fn       = m_chrfind(inode,' ');
-	*fn++    = 0;
-	file     = m_chrfind(fn,'/');
-	if ( !file ) file = m_chrfind(fn,'[');
-	if ( !file ) file = "";
-	Area a;
-	::sscanf(low,"%lx",&a.low);
-	::sscanf(high,"%lx",&a.high);
-	::sscanf(off,"%lx",&a.offset);
-	a.size = a.high - a.low;
-	*(int*)a.prot = *(int*)prot;
-	if ( !file[0] ) {
-	  unsigned long brk = (unsigned long)mtcp_sys_brk(0);
-	  if ( brk >= a.low && brk <= a.high ) file = "[heap]";
-	}
-	a.name_len = m_strcpy(a.name,file);
-	long sc = (*handler.f_handle)(&handler,count,a);
-	if ( sc > 0 ) count++;
-      }
-      if ( n == 0 ) break;
-      p = text;
-      *p = ' ';
-    }
-    text[sizeof(text)-1]=0;
-    close(fd);
-    return 1;
-  }
-  return 0;
+  return checkpointing_memory_scan(&handler);
 }
 
 /// Dump descriptor information about the memory mappings
@@ -268,24 +221,7 @@ void MemMaps::dump() {
 
 /// Write descriptor information and data from the memory mappings to file
 long MemMaps::write(int fd) {
-  if ( fd > 0 ) {
-    int bytes   = writeMarker(fd,MEMMAP_BEGIN_MARKER);
-    long offset = ::lseek(fd,0,SEEK_CUR);
-    bytes += writeInt(fd,0);
-    AreaWriteHandler h(fd);
-    if ( 1 == scan(h) ) {
-      bytes += h.bytesWritten();
-      bytes += writeMarker(fd,MEMMAP_END_MARKER);
-      long off = ::lseek(fd,0,SEEK_CUR);
-      ::lseek(fd,offset,SEEK_SET);
-      writeInt(fd,h.count()); // Update counter
-      ::lseek(fd,off,SEEK_SET);
-      return bytes;
-    }
-    mtcp_output(MTCP_ERROR,"Failed to scan memory sections!\n");
-    return -1;
-  }
-  return -1;
+  return checkpointing_memory_write(fd);
 }
 
 /// Read descriptor information and data from the memory mappings from file

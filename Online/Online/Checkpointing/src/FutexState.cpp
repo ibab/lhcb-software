@@ -5,7 +5,7 @@
 #include <cstring>
 #include <cerrno>
 
-static const MtcpState futex_init_state = MTCP_STATE_INITIALIZER;
+static const int volatile futex_init_state = MTCP_STATE_INITIALIZER;
 
 using namespace Checkpointing;
 
@@ -40,27 +40,26 @@ static inline int mtcp_futex(int *uaddr, int op, int val, const struct timespec 
   return rc;
 }
 
-FutexState::FutexState() : m_state(futex_init_state) {
+FutexState::FutexState() : value(futex_init_state) {
 }
 
-FutexState::FutexState(int val) :  m_state(futex_init_state) {
-  init(val);
+FutexState::FutexState(int val) :  value(val) {
 }
 
 WEAK(int) FutexState::set(int newval,int oldval) {
-  return atomic_setif_int(&(m_state.value), newval, oldval); 
+  return atomic_setif_int(&(value), newval, oldval); 
 }
 
 WEAK(void) FutexState::wait(int val, struct timespec const *timeout) {
   int rc;
   // (int *) cast needed since state->value is "int volatile"  - Gene
-  while ((rc=mtcp_futex((int*)&m_state.value, FUTEX_WAIT, val, timeout)) < 0)   {
+  while ((rc=mtcp_futex((int*)&value, FUTEX_WAIT, val, timeout)) < 0)   {
     rc = -rc;
     if ((rc == ETIMEDOUT) || (rc == EWOULDBLOCK)) break;
     if (rc != EINTR) {
       mtcp_output(MTCP_FATAL,"FutexState::wait: futex error %d: %s "
 		  "FutexState::wait: (%p[%d], WAIT, %d, %p, NULL, 0)\n", rc, ::strerror(rc),
-		  &m_state.value, m_state.value, val, timeout);
+		  &value, value, val, timeout);
     }
   }
 }
@@ -68,13 +67,13 @@ WEAK(void) FutexState::wait(int val, struct timespec const *timeout) {
 WEAK(void) FutexState::wake(int val)    {
   int rc;
   // (int *) cast needed since state->value is "int volatile"  - Gene
-  while ((rc=mtcp_futex((int*)&m_state.value, FUTEX_WAKE, val, 0)) < 0)   {
+  while ((rc=mtcp_futex((int*)&value, FUTEX_WAKE, val, 0)) < 0)   {
     rc = -rc;
     if ((rc == ETIMEDOUT) || (rc == EWOULDBLOCK)) break;
     if (rc != EINTR) {
       mtcp_output(MTCP_FATAL,"FutexState::wake: futex error %d: %s: "
 		  "FutexState::wait: (%p[%d], WAKE, %d, 0, 0, 0)\n", rc, ::strerror(rc),
-		  &m_state.value, m_state.value, val);
+		  &value, value, val);
     }
   }
 }

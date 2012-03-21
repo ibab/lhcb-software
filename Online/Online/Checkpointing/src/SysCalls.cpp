@@ -13,6 +13,7 @@
 # define UINT_T     uint64_t
 
 #define RESET_THREAD_SYSINFO 1
+#undef  RESET_THREAD_SYSINFO
 // Some reports say it was 0x18 in past.  Should we also check that?
 #define DEFAULT_SYSINFO_OFFSET "0x10"
 
@@ -82,10 +83,11 @@ int mtcp_have_thread_sysinfo_offset() {
 #else
   static int result = 0;
 #endif
-  result = 0;
+  //result = 0;
   if (result == -1) {
-    void * sysinfo;
-    __asm__ volatile (CLEAN_FOR_64_BIT(mov %%gs:) DEFAULT_SYSINFO_OFFSET ", %0\n\t" : "=r" (sysinfo));
+    volatile void* sysinfo = 0;
+    __asm__ volatile (CLEAN_FOR_64_BIT(mov %%gs:) DEFAULT_SYSINFO_OFFSET ", %0\n\t" 
+		      : "=r" (sysinfo));
     result = (sysinfo == get_at_sysinfo());
   }
   return result;

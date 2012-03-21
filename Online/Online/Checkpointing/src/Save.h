@@ -16,6 +16,21 @@ namespace CHECKPOINTING_NAMESPACE  {
   /// Write descriptor and possibly data to memory block
   STATIC(int) checkpoint_file_write(const FileDesc* d, void* address);
 
+  /// Write header information to checkpoint file
+  STATIC(int) checkpointing_process_write_header(int fd);
+  /// Write trailer information to checkpoint file
+  STATIC(int) checkpointing_process_write_trailer(int fd);
+  /// Write full process information to checkpoint file
+  STATIC(int) checkpointing_process_fwrite(int fd);
+
+  /// Write the file descriptor information to checkpoint file
+  STATIC(int) checkpointing_files_write(int fd);
+
+  /// Collect in process information about the memory mappings
+  STATIC(int) checkpointing_memory_scan(AreaHandler* handler);
+  /// Write the memory areas to checkpoint file
+  STATIC(int) checkpointing_memory_write(int fd);
+
   // CHECKPOINTING_NAMESPACE::
 }
 #endif  // CHECKPOINTING_SAVE_H

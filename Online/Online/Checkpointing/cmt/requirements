@@ -32,7 +32,7 @@ macro cpplinkflags             ' -static ' WIN32 ''
 macro_append lib_Checkpointing_cppflags ' -fPIC $(Checkpointing_package_cpp_build_flags) '
 macro_append Checkpointing_shlibflags   ' -Wl,--no-undefined -pthread -ldl '
 
-library Chkpt  		*.cpp
+#library Chkpt  		*.cpp
 macro_append lib_Chkpt_cppflags         ' -fPIC $(Checkpointing_package_cpp_build_flags) '
 macro_append Chkpt_shlibflags           ' -Wl,--no-undefined -ldl -pthread -shared '
 

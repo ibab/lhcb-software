@@ -136,10 +136,9 @@ namespace CHECKPOINTING_NAMESPACE {
   class AreaWriteHandler : public AreaBaseHandler {
   protected:
     int m_fd;
-    int m_bytes;
   public:
     AreaWriteHandler(int fd);
-    int handle(int which, const Area& a);
+    int  handle(int which, const Area& a);
     long bytesWritten() const { return m_bytes; }
   };
 

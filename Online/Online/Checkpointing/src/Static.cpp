@@ -17,108 +17,135 @@ namespace CHECKPOINTING_NAMESPACE {
   SysInfo chkpt_sys;
 }
 
+typedef SysInfo::mem_address_t mem_address_t;
 #define PAGE_SIZE 4096
+DefineMarker(SYS_BEGIN_MARKER,    "PSYS");
+DefineMarker(SYS_END_MARKER,      "psys");
 
 SysInfo::SysInfo() {
-  struct rlimit lim;
-
-  ::getrlimit(RLIMIT_NOFILE, &lim);
-  startRestore       = checkpointing_sys_restore_start;
-  finishRestore      = 0;
-
-  stackLimitCurr     = 0;
-  stackLimitHard     = 0;
-  saved_break        = 0;
-  addrSize           = 0;
-  addrStart          = 0;
-  addrEnd            = 0;
-  chkptStart         = 0;
-  chkptSize          = 0;
-  vsyscallStart      = 0;
-  vsyscallEnd        = 0;
-  sysInfo            = 0;
-  pageSize           = ::sysconf(_SC_PAGESIZE);
-  checkpointFD       = lim.rlim_max-1;
-  checkpointFile[0]  = 0;
-  checkpointImage[0] = 0;
-  motherofall        = 0;
-  motherPID          = 0;
-  chkptPID           = 0;
-  restart_type       = 0;
-  restart_flags      = 0;
-  arg0               = 0;
-  arg0Len            = 0;
-  utgid              = 0;
-  utgidLen           = 0;
+  checkpointing_sys_initialize(this);
 }
 
-void SysInfo::setCheckpointFile(int fd) {
+/// Initialize SysInfo structure
+STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_initialize(SysInfo* sys) {
+  struct rlimit lim;
+  ::getrlimit(RLIMIT_NOFILE, &lim);
+  sys->startRestore       = checkpointing_sys_restore_start;
+  sys->finishRestore      = 0;
+
+  sys->stackLimitCurr     = 0;
+  sys->stackLimitHard     = 0;
+  sys->saved_break        = 0;
+  sys->addrSize           = 0;
+  sys->addrStart          = 0;
+  sys->addrEnd            = 0;
+  sys->chkptStart         = 0;
+  sys->chkptSize          = 0;
+  sys->vsyscallStart      = 0;
+  sys->vsyscallEnd        = 0;
+  sys->sysInfo            = 0;
+  sys->pageSize           = ::sysconf(_SC_PAGESIZE);
+  sys->checkpointFD       = lim.rlim_max-1;
+  sys->checkpointFile[0]  = 0;
+  sys->checkpointImage[0] = 0;
+  sys->motherofall        = 0;
+  sys->motherPID          = 0;
+  sys->chkptPID           = 0;
+  sys->restart_type       = 0;
+  sys->restart_flags      = 0;
+  sys->utgid              = 0;
+  sys->utgidLen           = 0;
+  sys->argv               = 0;
+  sys->argc               = 0;
+  sys->envp               = 0;
+  sys->arg0               = 0;
+  sys->arg0String[0]      = 0;
+  sys->restore_argc       = 0;
+  sys->restore_arg0       = 0;
+  sys->restore_arglen     = 0;
+}
+
+/// Set the file descriptor for the checkpointing file
+STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_sys_set_checkpoint_file(SysInfo* sys, int fd) {
   char text[64], nam[PATH_MAX];
   ::sprintf(text,"/proc/self/fd/%d",fd);
-  int name_len = (int)::readlink(text,nam,sizeof(nam)-1);
+  int name_len = (int)mtcp_sys_readlink(text,nam,sizeof(nam)-1);
   nam[name_len] = 0;
-  m_memcpy(checkpointFile,nam,sizeof(checkpointFile));
-  checkpointFD = fd;
+  m_memcpy(sys->checkpointFile,nam,sizeof(sys->checkpointFile));
+  sys->checkpointFD = fd;
+  return 1;
 }
 
-void SysInfo::aquire() {
+STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_aquire(SysInfo* sys) {
   struct rlimit lim;
 
   // Get Stack limit
   ::getrlimit(RLIMIT_STACK, &lim);
-  stackLimitCurr = lim.rlim_cur;
-  stackLimitHard = lim.rlim_max;
+  sys->stackLimitCurr = lim.rlim_cur;
+  sys->stackLimitHard = lim.rlim_max;
 
   // Check heap
-  void* next_break = mtcp_sys_brk(saved_break);
+  void* next_break = mtcp_sys_brk(sys->saved_break);
   if ( next_break == (void*)-1 ) {
-    mtcp_output(MTCP_FATAL,"restore: sbrk(%p): errno: %d (bad heap)\n",saved_break,mtcp_sys_errno);
+    mtcp_output(MTCP_FATAL,"restore: sbrk(%p): errno: %d (bad heap)\n",sys->saved_break,mtcp_sys_errno);
   }
-  if ( 0 == addrSize || 0 == chkptSize || !checkpointImage[0] ) {
+  if ( 0 == sys->addrSize || 0 == sys->chkptSize || !sys->checkpointImage[0] ) {
     AreaInfoHandler hdlr;
     MemMaps mm;
     if ( 1 == mm.scan(hdlr) ) {
-      unsigned long sz = hdlr.imageAddr[1]-hdlr.imageAddr[0];
+      mem_address_t sz = hdlr.imageAddr[1]-hdlr.imageAddr[0];
       //sz = ((sz+PAGE_SIZE-1) & (-PAGE_SIZE)); // icc does not like this...
       sz = ((sz+PAGE_SIZE-1)/PAGE_SIZE)*PAGE_SIZE;
-      m_memcpy(checkpointImage,hdlr.image,sizeof(checkpointImage));
-      chkptStart    = hdlr.checkpointAddr[0];
-      chkptSize     = hdlr.checkpointAddr[1]-hdlr.checkpointAddr[0];
-      addrSize      = sz;//high-low;
-      addrStart     = hdlr.imageAddr[0];
-      addrEnd       = hdlr.imageAddr[0]+addrSize;
-      vsyscallStart = hdlr.vsyscall[0];
-      vsyscallEnd   = hdlr.vsyscall[1];
+      m_memcpy(sys->checkpointImage,hdlr.image,sizeof(sys->checkpointImage));
+      sys->chkptStart    = hdlr.checkpointAddr[0];
+      sys->chkptSize     = hdlr.checkpointAddr[1]-hdlr.checkpointAddr[0];
+      sys->addrSize      = sz;//high-low;
+      sys->addrStart     = hdlr.imageAddr[0];
+      sys->addrEnd       = hdlr.imageAddr[0]+sys->addrSize;
+      sys->vsyscallStart = hdlr.vsyscall[0];
+      sys->vsyscallEnd   = hdlr.vsyscall[1];
       return;
     }
     mtcp_output(MTCP_FATAL,"restore: Failed to access checkpointing image.\n");
   }
 }
 
-/// Print data content
-void SysInfo::print() {
-  checkpointing_sys_print(*this);
-}
+/// Print data content of SysInfo structure
+STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_print(const SysInfo* s) {
+  void* curr_break = mtcp_sys_brk(0);
+  // Checkpoint image
+  mtcp_output(MTCP_INFO,"checkpoint: SysInfo:       %p -> %p Size:%d\n",&s,s->sysInfo,int(sizeof(SysInfo)));
+  mtcp_output(MTCP_INFO,"checkpoint: Checkpoint[%d]:%s \n",s->checkpointFD,s->checkpointFile);
+  mtcp_output(MTCP_INFO,"checkpoint: dto.   begin:  %p end    %p [%X bytes]\n",
+	      s->chkptStart,s->chkptStart+s->chkptSize,s->chkptSize);
 
-long SysInfo::write(int fd) {
-  return checkpointing_sys_fwrite(fd, this);
-}
+  // Restore image
+  mtcp_output(MTCP_INFO,"checkpoint: Page   size:   %d [%X]\n",s->pageSize,s->pageSize);
+  mtcp_output(MTCP_INFO,"checkpoint: Image  name:  '%s'\n",s->checkpointImage);
+  mtcp_output(MTCP_INFO,"checkpoint: Image  begin:  %p end    %p [%X bytes]\n",
+	      s->addrStart,s->addrEnd,s->addrSize);
 
-/// Initialize basic variables from stack
-void SysInfo::init_stack(Stack* s) {
-  checkpointing_sys_init_stack(this,s);
-}
+  // Heap & Stack
+  mtcp_output(MTCP_INFO,"checkpoint: Heap   curr:   %p saved  %p\n",curr_break,s->saved_break);
+  mtcp_output(MTCP_INFO,"checkpoint: Stack lim soft:%p hard:  %p\n",s->stackLimitCurr,s->stackLimitHard);
+  mtcp_output(MTCP_INFO,"checkpoint: tmpstack start:%p finish:%p\n",
+	      mtcp_internal_tempstack,mtcp_internal_tempstack+STACKSIZE+1);
+  mtcp_output(MTCP_INFO,"checkpoint: argc          :%d          \n",s->argc);
 
-/// Setup process UTGID/argv[0] if availible
-int SysInfo::setUTGID(const char* new_utgid) {
-  return checkpointing_sys_set_utgid(this, new_utgid);
+  // The finishRestore function pointer:
+  mtcp_output(MTCP_INFO,"checkpoint: Restore start: %p finish:%p\n",s->startRestore,s->finishRestore);
+  mtcp_output(MTCP_INFO,"checkpoint: Mother of all: %p \n",s->motherofall);
+  mtcp_output(MTCP_INFO,"checkpoint: Restore flags: %X \n",s->restart_flags);
 }
-
-/// Setup process UTGID/argv[0] if availible
-int SysInfo::forceUTGID(const char* new_utgid) {
-  return checkpointing_sys_force_utgid(this, new_utgid);
+#if 0
+/// Get program context
+STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_sys_get_context()  {
+  if ( ::getcontext (&chkpt_sys.motherofall->m_savctx) < 0 )   {
+    mtcp_output(MTCP_FATAL,"checkpointing_sys_get_context: failed to retrieve context of motherofall.\n");
+  }
+  return 1;
 }
-
+#endif
 static void handle_set_env_string(void* /* par */, const char* s) {
   char* q = (char*)m_chrfind(s,'=');
   if ( q ) {
@@ -135,8 +162,8 @@ static void handle_set_env_string(void* /* par */, const char* s) {
 }
 
 /// After successful restore update the process environment from file.
-long SysInfo::setEnvironment() {
-  if ( MTCP_STDIN_ENV == (restart_flags&MTCP_STDIN_ENV) ) {
+STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_sys_set_environment(SysInfo* sys) {
+  if ( MTCP_STDIN_ENV == (sys->restart_flags&MTCP_STDIN_ENV) ) {
     mtcp_output(MTCP_INFO,"Update process environment from stdin....\n");
     checkpointing_sys_process_file(STDIN_FILENO,0,handle_set_env_string);
     return 1;
@@ -147,6 +174,188 @@ long SysInfo::setEnvironment() {
 
 static void handle_env_strings_print(void* /* par */, const char* s) {
   mtcp_output(MTCP_INFO,"%s\n",s);
+}
+
+STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_sys_fwrite(int fd, const SysInfo* s) {
+  long off, offset, bytes = writeMarker(fd,SYS_BEGIN_MARKER);
+  int  len, count_arg, count_env;
+  bytes += writeInt(fd,sizeof(SysInfo));
+  bytes += m_writemem(fd,s,sizeof(SysInfo));
+  if ( s->argv || s->envp ) {
+    char** e;
+    len = 0;
+    offset = mtcp_sys_lseek(fd,0,SEEK_CUR);
+    writeInt(fd,0);  // placeholder....
+    // Write array lengths
+    for(e=s->argv, count_arg=0; e && *e; ++e) ++count_arg;
+    len += writeInt(fd,count_arg);
+    for(e=s->envp, count_env=0; e && *e; ++e) ++count_env;
+    len += writeInt(fd,count_env);
+    // Write array data
+    for(e=s->argv; e && *e; ++e)
+      len += m_writemem(fd,*e,m_strlen(*e)+1);
+    for(e=s->envp; e && *e; ++e)
+      len += m_writemem(fd,*e,m_strlen(*e)+1);
+    bytes += len;
+    off = mtcp_sys_lseek(fd,0,SEEK_CUR);
+    mtcp_sys_lseek(fd,offset,SEEK_SET);
+    writeInt(fd,len);
+    mtcp_sys_lseek(fd,off,SEEK_SET);
+    mtcp_output(MTCP_INFO,"checkpoint: Wrote %d bytes of stack at address %p.\n",len,s->argv[0]);
+  }
+  else {
+    mtcp_output(MTCP_INFO,"checkpoint: No stack saving requested!\n");
+    bytes += writeInt(fd,0);
+  }
+  offset = mtcp_sys_lseek(fd,0,SEEK_CUR);
+  bytes += writeInt(fd,0);
+  AreaChkptWriteHandler hdlr(fd);
+  if ( 1 != checkpointing_memory_scan(&hdlr) ) {
+    mtcp_output(MTCP_FATAL,"checkpoint: Failed to write checkpointing image.\n");
+  }
+  len = hdlr.bytesWritten();
+  off = mtcp_sys_lseek(fd,0,SEEK_CUR);
+  mtcp_sys_lseek(fd,offset,SEEK_SET);
+  writeInt(fd,len);
+  mtcp_sys_lseek(fd,off,SEEK_SET);
+  bytes += writeMarker(fd,SYS_END_MARKER);
+  mtcp_output(MTCP_INFO,"checkpoint: Wrote %d [%d] bytes of restore image.\n",len,s->addrSize);
+  return bytes;
+}
+
+/// Read system information from checkpoint file
+STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_skip_sys(Process*,const void* addr)  {
+  int siz;
+  const_Pointer in = (const_Pointer)addr;
+  in += checkMarker(in,SYS_BEGIN_MARKER);
+  in += getInt(in,&siz);
+  in += siz;              // skip SysInfo
+  in += getInt(in,&siz);  
+  in += siz;              // skip stack
+  in += getInt(in,&siz);  
+  in += siz;              // skip image
+  in += checkMarker(in,SYS_END_MARKER);
+  return addr_diff(in,addr);
+}
+
+/// Read system information from checkpoint file
+STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_fskip_sys(Process*,int fd)  {
+  int siz, in = 0;
+  in += readMarker(fd,SYS_BEGIN_MARKER);
+  in += readInt(fd,&siz);
+  in += m_fskip(fd,siz);  // skip SysInfo
+  in += readInt(fd,&siz);
+  in += m_fskip(fd,siz);  // skip stack
+  in += readInt(fd,&siz);
+  in += m_fskip(fd,siz);  // skip image
+  in += readMarker(fd,SYS_END_MARKER);
+  return in;
+}
+
+/// Initialize basic variables from stack when restoring from checkpoint
+STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_init_restore_stack(SysInfo* sys, int argc, char** argv, char** envp) {
+  char** ee = envp;
+  sys->restore_argc   = argc;
+  sys->restore_arg0   = mem_address_t(argv[0]);
+  sys->restore_arglen = mem_address_t(argv[argc-1])+m_strlen(argv[argc-1])-sys->restore_arg0;
+  if ( ee ) {
+#if 0
+    for(char* ep=*ee; *ep && *ee; ep=*(++ee)) {
+      if ( ep ) {
+	if ( 0 == m_strncmp(ep,"UTGID=",6) ) {
+	  sys->restore_utgid = (char*)ep + 6;
+	  sys->restore_utgidLen = m_strlen(sys->utgid);
+	  break;
+	}
+	else if ( *(short*)ep == *(short*)"_=" ) break;
+      }
+    }
+#endif
+  }
+  //mtcp_output(MTCP_DEBUG,"Environ:%p argv[0]:%p %s UTGID:%p %s\n",
+  //	      ee,argv[0],argv[0],sys->utgid,sys->utgid ? sys->utgid : "Unknown");
+}
+
+/// Initialize basic variables from stack
+STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_init_stack(SysInfo* sys, int argc, char** argv, char** envp)  {
+  char** ee = envp;
+  const char* arg0 = argv[0];
+  sys->utgid    = 0;
+  sys->utgidLen = 0;
+  sys->argv     = argv;
+  sys->argc     = argc;
+  sys->envp     = envp;
+  sys->arg0     = mem_address_t(argv[0]);
+  m_memcpy(sys->arg0String,argv[0],m_strlen(argv[0])+1);
+  if ( ee ) {
+    for(char* ep=*ee; *ep && *ee; ep=*(++ee)) {
+      if ( ep ) {
+	if ( 0 == m_strncmp(ep,"UTGID=",6) ) {
+	  sys->utgid = (char*)ep + 6;
+	  sys->utgidLen = m_strlen(sys->utgid);
+	  break;
+	}
+	else if ( *(short*)ep == *(short*)"_=" ) break;
+      }
+    }
+  }
+  mtcp_output(MTCP_DEBUG,"Environ:%p argv[0]:%p %s UTGID:%p %s\n",
+	      ee,arg0,arg0,sys->utgid,sys->utgid ? sys->utgid : "Unknown");
+}
+
+/// Setup process UTGID/argv[0] if availible
+STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_sys_set_utgid(SysInfo* sys, const char* new_utgid) {
+  int len = m_strlen(new_utgid)+1;
+  int max_len = sys->restore_arg0 - sys->arg0 - sizeof(long) - 1; // long=argc
+  if ( sys->restore_arg0 < sys->arg0 ) {
+    mtcp_output(MTCP_ERROR,"Failed to set argv[0] to utgid:%s orig arg0:%p > new arg0:%p len=%d max_len:%d\n",
+		new_utgid, sys->arg0, sys->restore_arg0, len, max_len);
+  }
+  else if ( sys->restore_arg0 ) {
+    if ( len < sys->restore_arglen ) {
+      // We do not want to corrupt the original sargv stack!
+      // Hence we can only use the memory above....
+      if ( len <= max_len ) {
+	char* p = (char*)sys->restore_arg0;
+	m_memcpy(p,new_utgid,len);
+	mtcp_output(MTCP_INFO,"New UTGID: %p %s - %s\n",sys->restore_arg0,sys->restore_arg0,new_utgid);
+	m_memset(p+len,0,max_len -= len);
+	if ( sys->utgid && sys->utgidLen>len ) {
+	  m_memcpy(sys->utgid,new_utgid,len);
+	}
+	else {
+	  mtcp_output(MTCP_ERROR,"Failed to update utgid stack environment: len(%d)>allowed(%d)\n",
+		      len,sys->utgidLen);
+	}
+	return ::setenv("UTGID",new_utgid,1);
+      }
+    }
+    mtcp_output(MTCP_ERROR,"Failed to set argv[0] to utgid:%s orig arg0:%p new arg0:%p len=%d max_len:%d\n",
+		new_utgid, sys->arg0, sys->restore_arg0, len, max_len);
+  }
+  return ::setenv("UTGID",new_utgid,1);
+}
+
+/// Force process UTGID if availible
+STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_sys_force_utgid(SysInfo* sys, const char* new_utgid) {
+  int len = m_strlen(new_utgid);
+  if ( 0 == new_utgid ) {
+    mtcp_output(MTCP_FATAL,"New UTGID pointer NULL.\n");
+  }
+  else if ( sys->utgid == 0 ) {
+    mtcp_output(MTCP_WARNING,"UTGID pointer NULL adding UTGID=%s to local environment.\n", new_utgid);
+  }
+  else if ( sys->utgidLen != len ) {
+    mtcp_output(MTCP_FATAL,"New UTGID %s too long to replace old value from process stack with length [%d].\n",
+		new_utgid,sys->utgidLen);
+  }
+  if ( sys->utgid ) {
+    m_memcpy(sys->utgid,new_utgid,len);
+  }
+  if ( new_utgid ) {
+    return checkpointing_sys_set_utgid(sys,new_utgid);
+  }
+  return 1;
 }
 
 int test_set_environment(int flag) {

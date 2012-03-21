@@ -3,6 +3,7 @@
 #include "Checkpointing/Process.h"
 #include "Checkpointing/Chkpt.h"
 #include "Checkpointing.h"
+#include "Restore.h"
 
 #include <cerrno>
 #include <cstdio>
@@ -38,13 +39,13 @@ static long make_checkPoint() {
   const char* file_name = "proc.dat";
   MMap f;
   if ( f.create(file_name) ) {
-    stop_process();
-    int ret = write_checkpoint(f.fd());
-    int typ = restart_type();
+    checkpointing_stop_process();
+    int ret = checkpointing_write_checkpoint(f.fd());
+    int typ = checkpointing_restart_type();
     if ( typ == 1 )   {
       ::fprintf(stdout,"\n...stop threads after restore from file:%s\n",file_name);
       ::sleep(3);
-      stop_process();
+      checkpointing_stop_process();
       ::fprintf(stdout,"... checkpoint successfully restored ...\n");
       return 1;
     }
@@ -70,7 +71,7 @@ int test_thread_checkpoint() {
     if ( count == 2 ) {
       rc = make_checkPoint();
       ::fprintf(stdout,"...restoring main thread. rc=%d...\n",rc);
-      resume_process();
+      checkpointing_resume_process();
     }
     if ( count == 4 ) {
       if ( (rc=::pthread_cancel(main_pid)) < 0 ) {     
@@ -98,7 +99,7 @@ int test_thread_checkpoint() {
 
 int test_set_sys_environment() {
   chkpt_sys.restart_flags = MTCP_STDIN_ENV;
-  return chkpt_sys.setEnvironment();
+  return checkpointing_sys_set_environment(&chkpt_sys);
 }
 
 int test_FileMap_scan();
@@ -128,7 +129,7 @@ extern "C" int chkpt_tests(int argc, char** argv) {
   ::fprintf(stdout,"Checkpointing_test: print level:%d flag:%d tst function:%s [%c%c%c%c]\n",
 	    prt,flag,q,p[0],p[1],p[2],p[3]);
   mtcp_set_debug_level(prt);
-  init_checkpoints();
+  checkpointing_initialize_parent(argc,argv,0);
   if      ( opt == *(int*)"m_write"   ) test_MemMaps_write();
   else if ( opt == *(int*)"m_read"    ) test_MemMaps_read();
   else if ( opt == *(int*)"m_share"   ) test_MemMaps_sharable();

@@ -53,14 +53,14 @@ static void fork_apps()    {
   int tid = (int)pthread_self();
 
   mtcp_output(MTCP_INFO,"Thread %d: All threads are started now.....\n",tid);
-  init_checkpoints();
-  stop_process();
+  checkpointing_init_checkpoints();
+  checkpointing_stop_process();
 
   mtcp_output(MTCP_INFO,"All threads are checkpointed :-))) .....\n");
   mtcp_output(MTCP_INFO,"\n\n\nWait for forking ..... now: Hit ENTER to continue!\n\n");
   fscanf(stdin,"%c",&text[0]);
   mtcp_output(MTCP_INFO,"\n\n\n......Now forking ..... now\n\n");
-  pid_t pID = fork_process();
+  pid_t pID = checkpointing_fork_process();
   if ( pID == 0 ) {
     pthread_t mm;
     void* val;
@@ -84,7 +84,7 @@ static void fork_apps()    {
     sprintf(text,"gdb --pid %d",pID);
     printf("\nParent:\n%s\n\n",text);
     mtcp_output(MTCP_INFO,"Parent process resuming work.....\n");
-    resume_process();
+    checkpointing_resume_process();
   }
   else if (pID < 0)    {        // failed to fork
     mtcp_output(MTCP_INFO,"Failed to fork. %s\n",strerror(errno));
@@ -97,9 +97,9 @@ extern "C" int fork_test(int /* argc */ , char**  /* argv */) {
   mtcp_set_debug_level(1);
   mtcp_output(MTCP_INFO,"\n\n\nChecking threads.... \n\n\n");
 
-  init_checkpoints();
+  checkpointing_init_checkpoints();
 
-  int tid = current_thread_id();
+  int tid = checkpointing_current_thread_id();
   ++threads_starting;
   if (pthread_create (&main_pid, NULL, main_thread, (void*)5) < 0) {
     mtcp_output(MTCP_FATAL,"init: error creating main thread: %s\n", strerror (errno));

@@ -1,6 +1,7 @@
 #ifndef CHECKPOINTING_STATIC_H
 #define CHECKPOINTING_STATIC_H
 #include "Checkpointing/Namespace.h"
+#include "ucontext.h"
 
 #define _ALIGN(x) x __attribute__((__packed__))
 
@@ -34,6 +35,7 @@ namespace CHECKPOINTING_NAMESPACE    {
       RESTART_CHECKPOINT = 1
     };
 
+    typedef unsigned long mem_address_t;
     typedef void  (*start_restore_t)(Stack* stack,int print_level,int optional_flags);
     typedef void  (*end_restore_t)();
 
@@ -42,19 +44,19 @@ namespace CHECKPOINTING_NAMESPACE    {
     /// Hard OS dependent stack limit
     unsigned long   stackLimitHard;
     /// The start address of the checkpointing image
-    unsigned long   addrStart;
+    mem_address_t   addrStart;
     /// The end address of the checkpointing image
-    unsigned long   addrEnd;
+    mem_address_t   addrEnd;
     /// The size of the checkpointing image
     unsigned long   addrSize;
     /// The start address of the checkpointing image
-    unsigned long   chkptStart;
+    mem_address_t   chkptStart;
     /// The size of the checkpointing image
-    unsigned long   chkptSize;
+    mem_address_t   chkptSize;
     /// The low address of the vsyscall area
-    unsigned long   vsyscallStart;
+    mem_address_t   vsyscallStart;
     /// The high address of the vsyscall area
-    unsigned long   vsyscallEnd;
+    mem_address_t   vsyscallEnd;
     /// The saved end-pointer of the process heap
     void*           saved_break;
 
@@ -62,6 +64,17 @@ namespace CHECKPOINTING_NAMESPACE    {
     start_restore_t startRestore;
     /// The function pointer to finalize the restore of the process
     end_restore_t   finishRestore;
+
+    /// Process stack info: pointer
+    mem_address_t   arg0;
+    char**          argv;
+    char**          envp;
+    int             argc;
+
+    mem_address_t   restore_arg0;
+    int             restore_arglen;
+    int             restore_argc;
+
 
     /// Pointer to the process dependent system information (opaque)
     void*           sysInfo;
@@ -80,41 +93,21 @@ namespace CHECKPOINTING_NAMESPACE    {
     /// Optional flags to steer restore
     int             restart_flags;
     /// Process stack info: argv[0]
-    char*           arg0;
-    /// Length of argv[0] string
-    int             arg0Len;
-    /// Process stack info: argv[0]
     char*           utgid;
     /// Length of argv[0] string
     int             utgidLen;
-
-    long            savedSP;
+    /// Pointer to mother's register context
+    ucontext_t*     savedContext;
 
     /// The name/path of the checkpointing code image
     char            checkpointImage[1024];
     /// The name/path of the checkpoint file
     char            checkpointFile[1024];
+    char            arg0String[1024];
 
 #ifndef CHECKPOINTING_SYSINFO_STRUCT_ONLY
     /// Standard constructor
     SysInfo();
-    /// Set the file descriptor for the checkpointing file
-    void setCheckpointFile(int fd);
-    /// Aquire system information (for writing/initialization)
-    void aquire();
-    /// Write static system information to file
-    long write(int fd);
-    /// Initialize basic variables from stack
-    void init_stack(Stack* s);
-    /// Setup process UTGID if availible
-    int setUTGID(const char* new_utgid);
-    /// Force process UTGID/argv[0] if availible
-    int forceUTGID(const char* new_utgid);
-
-    /// After successful restore update the process environment from file.
-    long setEnvironment();
-    /// Print data content
-    void print();
 #endif
   };
 }

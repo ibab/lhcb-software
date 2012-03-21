@@ -6,6 +6,7 @@
 #include "Checkpointing/Static.h"
 #include "Checkpointing/SysCalls.h"
 #include "Checkpointing.h"
+#include "Restore.h"
 #include "linux/futex.h"
 #include <cstring>
 #include <cstdio>
@@ -71,17 +72,23 @@ static void stopthisthread(int /* signum */)  {
  *
  *   Simply call the object function.
  */
-WEAK(int) Thread::staticMain(void *threadv)  {
+STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_thread_main(void *threadv)  {
   Thread *const thread = (Thread*)threadv;
   return thread->Main();
 }
 
 /** Entry point to restart thread after a fork.
  */
-WEAK(int) Thread::restartMain(void* arg) {
+STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_thread_restart_main(void* arg) {
   Thread::RestartArgs* a = (Thread::RestartArgs*)arg;
   mtcp_output(MTCP_DEBUG,"restartMain: thread: %p.\n",a->self);
-  return a->self->restart(0);
+  return checkpointing_thread_restart(a->self,0);
+}
+
+/** Access to the overall thread queue
+ */
+STATIC(Thread*) CHECKPOINTING_NAMESPACE::checkpointing_thread_queue() {
+  return s_threads;
 }
 
 typedef void (*sigaction_func_t) (int, siginfo_t *, void *);
@@ -244,7 +251,7 @@ extern "C" int __clone(int (*fn) (void *arg), void *child_stack, int flags, void
     t->m_pParentTID = parent_tidptr;
     t->m_pGivenTID  = child_tidptr;
     t->m_parent     = Thread::current();
-    t->state().init(ST_RUNDISABLED);
+    t->state.value  = ST_RUNDISABLED;
 
     // We need the CLEARTID feature so we can detect when the thread has exited
     // So if the caller doesn't want it, we enable it
@@ -255,7 +262,7 @@ extern "C" int __clone(int (*fn) (void *arg), void *child_stack, int flags, void
     t->m_pActualTID = child_tidptr;
     // Alter call parameters, forcing CLEARTID and make it call the wrapper routine
     flags |= CLONE_CHILD_SETTID | CLONE_CHILD_CLEARTID;
-    fn  = Thread::staticMain;
+    fn  = checkpointing_thread_main;
     arg = t;
   }
 
@@ -280,12 +287,7 @@ Thread::Thread() {
 
 /// Standard Destructor
 Thread::~Thread() {
-  m_state.destroy();
-}
-
-/// Access to the overall thread queue
-WEAK(Thread*) Thread::threads() {
-  return s_threads;
+  state.destroy();
 }
 
 /// Link thread struct to the lists and finish filling the thread structure.
@@ -311,7 +313,7 @@ WEAK(void) Thread::initialize(bool /* mother */)  {
     }
   }
   // Set up signal handler so we can interrupt the thread for checkpointing 
-  setupSignals();
+  checkpointing_thread_setup_signals();
 }
 
 ///  Get current thread struct pointer
@@ -320,7 +322,7 @@ Thread *Thread::current()   {
   ThreadsLock lock;
   for(Thread* thread = s_threads; thread != 0; thread = thread->next) {
     if (thread->m_tid == tid) {
-      ThreadsLock::release ();
+      checkpointing_threads_unlock ();
       return thread;
     }
   }
@@ -329,7 +331,7 @@ Thread *Thread::current()   {
 }
 
 /// Save the system info of the process
-WEAK(void) Thread::saveSysInfo() {
+STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_thread_save_sys_info() {
   chkpt_sys.saved_break = (void*) mtcp_sys_brk(0);  // kernel returns mm->brk when passed zero
   // Do this once, same for all threads.  But restore for each thread.
   if (mtcp_have_thread_sysinfo_offset())
@@ -342,49 +344,54 @@ WEAK(void) Thread::saveSysInfo() {
   mtcp_output(MTCP_INFO,"saveSysInfo: saved_break=%p\n",chkpt_sys.saved_break);
 }
 
-/// Thread has exited - unlink it from lists and free struct
-WEAK(int) Thread::cleanup()   {
+/** Thread has exited - unlink it from lists and free struct
+ *
+ *	thread removed from 'threads' list and motherofall tree
+ *	thread pointer no longer valid
+ *	checkpointer woken if waiting for this thread
+ */
+STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_thread_cleanup(Thread* thr)   {
   Thread **lthread, *xthread;
   ThreadsLock lock;
-  mtcp_output(MTCP_DEBUG,"cleanup: %p->tid:%d\n",this,m_tid);
+  mtcp_output(MTCP_DEBUG,"cleanup: %p->tid:%d\n",thr,thr->m_tid);
 
   // Remove thread block from 'threads' list
-  if ((*(this->prev) = this->next) != 0) {
-    this->next->prev = this->prev;
+  if ((*(thr->prev) = thr->next) != 0) {
+    thr->next->prev = thr->prev;
   }
   // Remove thread block from parent's list of children
-  Thread* parent = m_parent;
+  Thread* parent = thr->m_parent;
   if (parent) {
-    for(lthread = &parent->m_children; (xthread = *lthread) != this; lthread = &xthread->m_siblings) {}
+    for(lthread = &parent->m_children; (xthread = *lthread) != thr; lthread = &xthread->m_siblings) {}
     *lthread = xthread->m_siblings;
 
     // If this thread has children, give them to its parent
-    while((xthread = m_children) != 0) {
-      m_children   = xthread->m_siblings;
+    while((xthread = thr->m_children) != 0) {
+      thr->m_children   = xthread->m_siblings;
       xthread->m_siblings = parent->m_children;
       parent->m_children  = xthread;
     }
   }
   else {
-    while((xthread = m_children) != 0) {
-      m_children   = xthread->m_siblings;
+    while((xthread = thr->m_children) != 0) {
+      thr->m_children   = xthread->m_siblings;
       xthread->m_siblings = chkpt_sys.motherofall;
       chkpt_sys.motherofall = xthread;
     }
   }
   // If checkpointer is waiting for us, wake it to see this thread no longer in list
-  m_state.wake();
-  delete this;
+  thr->state.wake();
+  delete thr;
   return 1;
 }
 
 ///  Call this when it's OK to checkpoint
 WEAK(int) Thread::instrument()     {
  again:
-  switch ( m_state.value() ) {    
+  switch ( state.value ) {    
   case ST_RUNDISABLED:
     // Thread was running normally with checkpointing disabled.  Enable checkpointing then just return.
-    if (!m_state.set(ST_RUNENABLED, ST_RUNDISABLED)) goto again;
+    if (!state.set(ST_RUNENABLED, ST_RUNDISABLED)) goto again;
     return (0);
 
   case ST_RUNENABLED:
@@ -395,7 +402,7 @@ WEAK(int) Thread::instrument()     {
     // Thread was running with checkpointing disabled, but the checkpointhread wants to 
     // write a checkpoint.  So mark the thread as having checkpointing enabled, then just 
     // 'manually' call the signal handler as if the signal to suspend were just sent.
-    if (!m_state.set(ST_SIGENABLED, ST_SIGDISABLED)) goto again;
+    if (!state.set(ST_SIGENABLED, ST_SIGDISABLED)) goto again;
     this->stop();
     return (0);
 
@@ -461,7 +468,7 @@ WEAK(int) Thread::Main()  {
   // Otherwise, checkpointer might wait forever for us to re-enable
   this->wait();
   // Do whatever to unlink and free thread block
-  this->cleanup();
+  checkpointing_thread_cleanup(this);
   // Return the user's status as the exit code
   return rc;
 }
@@ -469,18 +476,18 @@ WEAK(int) Thread::Main()  {
 /// Likewise, disable checkpointing
 WEAK(int) Thread::wait()   {
  again:
-  switch ( m_state.value() ) {
+  switch ( state.value ) {
   case ST_RUNDISABLED:
   case ST_SIGDISABLED:
     return (0);
   case ST_RUNENABLED:
-    if (!m_state.set(ST_RUNDISABLED, ST_RUNENABLED)) goto again;
+    if (!state.set(ST_RUNDISABLED, ST_RUNENABLED)) goto again;
     return (1);
   case ST_SIGENABLED:
     this->stop();
     goto again;
   default:
-    mtcp_output(MTCP_FATAL,"Fatal inconsistency in Thread::wait. tid:%d State:%d\n",m_tid,m_state.value());
+    mtcp_output(MTCP_FATAL,"Fatal inconsistency in Thread::wait. tid:%d State:%d\n",m_tid,state.value);
     return (0); /* NOTREACHED : stop compiler warning */
   }
 }
@@ -490,17 +497,17 @@ WEAK(int) Thread::stop()  {
   int rc;
 
   mtcp_output(MTCP_DEBUG,"stop: tid %d returns to %p\n", mtcp_sys_kernel_gettid (), __builtin_return_address (0));
-  setupSignals();  // re-establish in case of another STOPSIGNAL so we don't abort by default
+  checkpointing_thread_setup_signals();  // re-establish in case of another STOPSIGNAL so we don't abort by default
 
   // If this is checkpoint thread - exit immidiately
-  if( m_state.value() == ST_CKPNTHREAD ){
+  if( state.value == ST_CKPNTHREAD ){
     return 1;
   }
   
-  if (m_state.set(ST_SUSPINPROG, ST_SIGENABLED)) {  // make sure we don't get called twice for same thread
+  if (state.set(ST_SUSPINPROG, ST_SIGENABLED)) {  // make sure we don't get called twice for same thread
     static int is_first_checkpoint = 1;
     ::sigpending (&m_sigpending); // save pending signals
-    this->saveSignals();                                           // save signal state (and block signal delivery)
+    checkpointing_thread_save_signals(this);                       // save signal state (and block signal delivery)
     this->saveTLS();                                               // save thread local storage state
     // Grow stack only on first ckpt.  Kernel agrees this is main stack and
     // will mmap it.  On second ckpt and later, we would segfault if we tried
@@ -527,33 +534,33 @@ WEAK(int) Thread::stop()  {
       mtcp_output(MTCP_FATAL,"stop: getcontext rc %d errno %d\n", rc, errno);
     }
     mtcp_output(MTCP_DEBUG,"stop: context: %p\n",m_savctx.SAVEDSP);
-    if ( restoreinprog.value() == 0 )  {
+    if ( restoreinprog.value == 0 )  {
       // We are the original process and all context is saved. restoreinprog is 0 ; wait for ckpt thread to write ckpt, and resume.
 
       WMB; // matched by RMB in checkpointhread
 
       // Next comes the first time we use the old stack.
       // Tell the checkpoint thread that we're all saved away
-      if (!m_state.set(ST_SUSPENDED, ST_SUSPINPROG))  {              // tell checkpointhread all our context is saved
+      if (!state.set(ST_SUSPENDED, ST_SUSPINPROG))  {              // tell checkpointhread all our context is saved
 	mtcp_output(MTCP_FATAL,"Fatal inconsistency in Thread::stop. tid:%d State:%d SUSPENDED:%d SUSPINPROG:%d\n",
-		    m_tid,m_state.value(), ST_SUSPENDED, ST_SUSPINPROG);
+		    m_tid,state.value, ST_SUSPENDED, ST_SUSPINPROG);
       }
-      m_state.wake();
+      state.wake();
       // Then we wait for the checkpoint thread to write the checkpoint file then wake us up
       mtcp_output(MTCP_DEBUG,"stop: thread %d suspending\n",m_tid);
-      while ( m_state.value() == ST_SUSPENDED) {
-        m_state.wait(ST_SUSPENDED);
+      while ( state.value == ST_SUSPENDED) {
+        state.wait(ST_SUSPENDED);
       }
     }
     else {
       // Else restoreinprog >= 1;  This stuff executes to do a restart
-      mtcp_output(MTCP_DEBUG,"stop(restoreinprog:%d): Change state:%d to Running[%d] Suspended[%d]\n",
-		  restoreinprog.value(),m_state.value(),ST_RUNENABLED,ST_SUSPENDED);
-      if ( !m_state.set(ST_RUNENABLED, ST_SUSPENDED) )  {
+      mtcp_output(MTCP_DEBUG,"stop(restoreinprog:%d): Change state from %d to Running[%d]/Suspended[%d]\n",
+		  restoreinprog.value,state.value,ST_RUNENABLED,ST_SUSPENDED);
+      if ( !state.set(ST_RUNENABLED, ST_SUSPENDED) )  {
 	mtcp_output(MTCP_ERROR,"ERROR: Thread::stop: checkpoint was written when thread in SUSPENDED state\n");
       }
       waitForRestore();
-      mtcp_output(MTCP_DEBUG,"stop: thread %d restored. State:%d\n", m_tid,m_state.value());
+      mtcp_output(MTCP_DEBUG,"stop: thread %d restored. State:%d\n", m_tid,state.value);
     }
   }
   mtcp_output(MTCP_DEBUG,"stop: m_tid %d return to address %p\n",
@@ -565,7 +572,7 @@ WEAK(int) Thread::stop()  {
 WEAK(void) Thread::waitForRestore()    {
   int rip, pid;
   do  {
-    rip = restoreinprog.value();     // dec number of threads cloned but not completed longjmp'ing
+    rip = restoreinprog.value;     // dec number of threads cloned but not completed longjmp'ing
   } while (!restoreinprog.set(rip-1, rip));
   if (--rip == 0) {
     /* raise the signals which were pending for the entire process at the time
@@ -581,12 +588,12 @@ WEAK(void) Thread::waitForRestore()    {
       }
     }
     restoreinprog.wake(999999999);  // if this was last of all, wake everyone up
-    ThreadsLock::release();                           // ... and release the thread list
+    checkpointing_threads_unlock(); // ... and release the thread list
     mtcp_output(MTCP_INFO,"waitForRestore[%s] restoreinprog:%d State:%d Complete -> Continue.\n",
-		this==chkpt_sys.motherofall ? "MOTHER" : "CHILD", restoreinprog.value(), m_state.value());
+		this==chkpt_sys.motherofall ? "MOTHER" : "CHILD", restoreinprog.value, state.value);
   }
   else {
-    while ((rip = restoreinprog.value()) > 0) {       // otherwise, wait for last of all to wake this one up
+    while ((rip = restoreinprog.value) > 0) {       // otherwise, wait for last of all to wake this one up
       restoreinprog.wait(rip);
     }
   }
@@ -620,7 +627,7 @@ WEAK(char*) Thread::tlsBase()   {
 }
 
 /// Setup the signal handling to stop/restart threads
-WEAK(void) Thread::setupSignals()   {
+STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_thread_setup_signals()  {
   void (*oldhandler) (int signum);
   oldhandler = _real_signal(STOPSIGNAL, &stopthisthread);
   if (oldhandler == SIG_ERR) {
@@ -636,19 +643,19 @@ WEAK(void) Thread::setupSignals()   {
 }
 
 ///  Save signal handlers and block signal delivery
-WEAK(void) Thread::saveSignals()  {
+STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_thread_save_signals(Thread* thr)  {
   sigset_t blockall;
-  mtcp_output(MTCP_DEBUG,"saveSignals: pid:%d tid:%d\n",mtcp_sys_getpid(),m_tid);
+  mtcp_output(MTCP_DEBUG,"saveSignals: pid:%d tid:%d\n",mtcp_sys_getpid(),thr->m_tid);
   // Block signal delivery first so signal handlers can't change state of signal handlers on us
   sigfillset(&blockall);
   sigdelset(&blockall,STOPSIGNAL);
 
-  if (_real_sigprocmask(SIG_SETMASK,&blockall,&m_sigblockmask) < 0) {
-    mtcp_output(MTCP_FATAL,"Failed to set signal mask in thread. tid:%d\n",m_tid);
+  if (_real_sigprocmask(SIG_SETMASK,&blockall,&thr->m_sigblockmask) < 0) {
+    mtcp_output(MTCP_FATAL,"Failed to set signal mask in thread. tid:%d\n",thr->m_tid);
   }
   // Now save all the signal handlers
   for (int i=1; i<NSIG; ++i) {
-    struct sigaction* a = &m_sigactions[i];
+    struct sigaction* a = &thr->m_sigactions[i];
     if (mtcp_sys_sigaction(i,0,a) < 0) {
       if (errno == EINVAL)  {
 	::memset(a,0,sizeof(struct sigaction));
@@ -663,11 +670,51 @@ WEAK(void) Thread::saveSignals()  {
       s_thrSetxid = a->sa_sigaction;      
     }
   }
-  mtcp_output(MTCP_INFO,"saveSignals: Thread %p: %d saved signal actions ...\n",this,m_tid);
+  mtcp_output(MTCP_INFO,"saveSignals: Thread %p: %d saved signal actions ...\n",thr,thr->m_tid);
 }  
 
-/// Restore all the signal handlers with different settings
-WEAK(void) Thread::restoreSigActions() {
+/**  Restore the GDT entries that are part of a thread's state
+ *
+ *  The kernel provides set_thread_area system call for a thread to alter a particular range of GDT entries, and it switches
+ *  those entries on a per-thread basis.  So from our perspective, this is per-thread state that is saved outside user
+ *  addressable memory that must be manually saved.
+ */
+STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_thread_restore_tls(Thread* thr) {
+  pid_t motherpid = chkpt_sys.motherPID;
+  const char* thr_typ = thr == chkpt_sys.motherofall ? "MOTHER" : "CHILD";
+  unsigned long* base = (unsigned long*)&thr->m_tls[0].base_addr;
+  pid_t *ppid = (pid_t*)(*base + TLS_PID_OFFSET);
+
+  // The assumption that this points to the pid was checked by that tls_pid crap near the beginning
+  *ppid = motherpid;
+
+  // Restore all three areas
+  int rc = mtcp_sys_set_thread_area_base(base);
+  if (rc < 0) {
+    mtcp_output(MTCP_FATAL,"restoreTLS[%s]: error %d restoring TLS entry[%d]\n",
+		thr_typ,mtcp_sys_errno,thr->m_tls[0].entry_number);
+  }
+  thr->m_tid = mtcp_sys_kernel_gettid();
+  mtcp_output(MTCP_INFO,"restoreTLS[%s]: motherpid:%d Thread tid=%d restoring TLS entry[%d]\n",
+	      thr_typ,motherpid,thr->m_tid,thr->m_tls[0].entry_number);
+}
+STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_thread_restore_signals(Thread* thr) {
+  mtcp_output(MTCP_DEBUG,"restoreSignals: pid:%d tid:%d Restoreinprog:%d\n",mtcp_sys_getpid(),thr->m_tid,restoreinprog.value);
+  if (_real_sigprocmask(SIG_SETMASK, &thr->m_sigblockmask, 0) >= 0) {
+    // Raise the signals which were pending for only this thread at the time of checkpoint.
+    for (int i = 1; i<NSIG; ++i ) {
+      if (sigismember(&thr->m_sigpending, i)  == 1  && 
+	  sigismember(&thr->m_sigblockmask, i) == 1 &&
+	  sigismember(&sigpending_global, i) == 0) {
+	raise(i);
+      }
+    }
+    return;
+  }
+  mtcp_output(MTCP_FATAL,"Failed to restore signals. pid:%d tid:%d\n",mtcp_sys_getpid(),thr->m_tid);
+}
+
+STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_thread_restore_sigactions() {
   for (int i=1; i<NSIG; ++i ) {
     struct sigaction act, *a = &chkpt_sys.motherofall->m_sigactions[i];
     if (mtcp_sys_sigaction(i,0,&act) < 0) {
@@ -700,16 +747,16 @@ WEAK(void) Thread::restoreSigActions() {
 }
 
 /// Restart thread and all depending children after checkpointing and on restart.
-WEAK(int) Thread::restart(int force_context)     {
+STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_thread_restart(Thread* thr, int force_context)     {
   int rip;
   int tid = mtcp_sys_kernel_gettid();
-  const char* thr_typ = this==chkpt_sys.motherofall ? "MOTHER" : "CHILD";
+  const char* thr_typ = thr==chkpt_sys.motherofall ? "MOTHER" : "CHILD";
   mtcp_output(MTCP_DEBUG,"restart[%s] Pid:%d thread:%p tid:%d motherOfAll:%p ctxt:%p\n",
-	      thr_typ,this,tid,chkpt_sys.motherofall,chkpt_sys.motherPID,m_savctx.SAVEDSP);
-  restoreTLS();
-  setupSignals();
+	      thr_typ,thr,tid,chkpt_sys.motherofall,chkpt_sys.motherPID,thr->m_savctx.SAVEDSP);
+  checkpointing_thread_restore_tls(thr);
+  checkpointing_thread_setup_signals();
 
-  if (this == chkpt_sys.motherofall) {
+  if (thr == chkpt_sys.motherofall) {
     // Compute the set of signals which was pending for all the threads at the
     // time of checkpoint. This is a heuristic to compute the set of signals
     // which were pending for the entire process at the time of checkpoint.
@@ -729,23 +776,23 @@ WEAK(int) Thread::restart(int force_context)     {
 #endif
   }
 
-  restoreSignals();
+  checkpointing_thread_restore_signals(thr);
 
   int cnt = 0;
   Thread* child = 0;
 
   // First loop over all children and increase the restore count. Restore is finished once this counter is 0
-  for (child = m_children; child != 0; child = child->m_siblings)     {
+  for (child = thr->m_children; child != 0; child = child->m_siblings)     {
     // Increment number of threads created but haven't completed their longjmp
     do   {
-      rip = restoreinprog.value();
+      rip = restoreinprog.value;
       ++s_restoring;
     } while (!restoreinprog.set(rip+1,rip));
   }
   mtcp_output(MTCP_INFO,"restart[%s] pid:%d thread:%p tid:%d restoreinprog:%d Start CLONE...\n",
-	      thr_typ,chkpt_sys.motherPID,this,tid,restoreinprog.value());
+	      thr_typ,chkpt_sys.motherPID,thr,tid,restoreinprog.value);
   // No create the children
-  for (child = m_children; child != 0; child = child->m_siblings)     {
+  for (child = thr->m_children; child != 0; child = child->m_siblings)     {
     // Create the thread so it can finish restoring itself.
     errno = -1;
 
@@ -766,15 +813,15 @@ WEAK(int) Thread::restart(int force_context)     {
     void* p = (void*)(child->m_savctx.SAVEDSP - 128);
     mtcp_output(MTCP_DEBUG,"*: CLONE:%d %p %p --> %p  Ctxt:%p State:%d CLONE_SIGHAND:%s\n",
 		child->m_originalTID, child->m_pParentTID, child->m_pActualTID, CLONE_CALL, p,
-		child->state().value(),cloneFlags & CLONE_SIGHAND ? "YES" : "NO");
+		child->state.value,cloneFlags & CLONE_SIGHAND ? "YES" : "NO");
 
     if (dmtcp_info_pid_virtualization_enabled == 1) {
-      tid = syscall(SYS_clone, Thread::restartMain,
+      tid = syscall(SYS_clone, checkpointing_thread_restart_main,
 		    (void *)(child->m_savctx.SAVEDSP - 128),  // -128 for red zone
 		    cloneFlags,
 		    &child->m_restartArgs, child->m_pParentTID, 0, child->m_pActualTID);
     } else {
-      tid = (*CLONE_CALL)(Thread::restartMain,
+      tid = (*CLONE_CALL)(checkpointing_thread_restart_main,
 			  p,  // -128 for red zone
 			  cloneFlags,
 			  &child->m_restartArgs, child->m_pParentTID, 0, child->m_pActualTID);
@@ -785,8 +832,8 @@ WEAK(int) Thread::restart(int force_context)     {
 		  errno, child->m_cloneFlags, child->m_savctx.SAVEDSP);
     }
     mtcp_output(MTCP_INFO,"\t--> [%d:%d] CHILD thread Cloned:%d MotherOfAll:%p State:%d Restart:Progress:%d Type:%d\n",
-		cnt,chkpt_sys.motherPID,m_tid,chkpt_sys.motherofall,child->state().value(),
-		restoreinprog.value(),chkpt_sys.restart_type);
+		cnt,chkpt_sys.motherPID,thr->m_tid,chkpt_sys.motherofall,child->state.value,
+		restoreinprog.value,chkpt_sys.restart_type);
     ++cnt;
   }
 
@@ -795,40 +842,23 @@ WEAK(int) Thread::restart(int force_context)     {
   if (mtcp_have_thread_sysinfo_offset()) {
     mtcp_set_thread_sysinfo(chkpt_sys.sysInfo);
   }
-  if ( this == chkpt_sys.motherofall )  {
+  if ( thr == chkpt_sys.motherofall )  {
     // Restore signal actions
-    restoreSigActions();
+    checkpointing_thread_restore_sigactions();
     // Wait for restore to finish...
-    while(restoreinprog.value()>0)
+    while(restoreinprog.value>0)
       usleep(10000);
   }
   mtcp_output(MTCP_INFO,"restart[%s]: setcontext: pid:%d tid: %d, orgTID:%d Restore:%d\n",
-	      thr_typ, chkpt_sys.motherPID, m_tid, m_originalTID, restoreinprog.value());
-  if ( this != chkpt_sys.motherofall || force_context != 0 )  {
+	      thr_typ, chkpt_sys.motherPID, thr->m_tid, thr->m_originalTID, restoreinprog.value);
+  if ( thr != chkpt_sys.motherofall || force_context != 0 )  {
     mtcp_output(MTCP_INFO,"restart[%s]: setting context. Should not return.\n",thr_typ);
-    ::setcontext(&m_savctx); // Shouldn't return if everything works fine.
+    ::setcontext(&thr->m_savctx); // Shouldn't return if everything works fine.
     mtcp_output(MTCP_ERROR,"restart[%s]: FATAL: returned from setcontext.\n",thr_typ);
   }
   mtcp_output(MTCP_INFO,"restart: All done: this:%p tid: %d, orgTID:%d\n",
-	      this,m_tid,m_originalTID);
+	      thr,thr->m_tid,thr->m_originalTID);
   return 0;
-}
-
-/// Save signal handlers and block signal delivery
-WEAK(void) Thread::restoreSignals()  {
-  mtcp_output(MTCP_DEBUG,"restoreSignals: pid:%d tid:%d Restoreinprog:%d\n",mtcp_sys_getpid(),m_tid,restoreinprog.value());
-  if (_real_sigprocmask(SIG_SETMASK, &m_sigblockmask, 0) >= 0) {
-    // Raise the signals which were pending for only this thread at the time of checkpoint.
-    for (int i = 1; i<NSIG; ++i ) {
-      if (sigismember(&m_sigpending, i)  == 1  && 
-	  sigismember(&m_sigblockmask, i) == 1 &&
-	  sigismember(&sigpending_global, i) == 0) {
-	raise(i);
-      }
-    }
-    return;
-  }
-  mtcp_output(MTCP_FATAL,"Failed to restore signals. pid:%d tid:%d\n",mtcp_sys_getpid(),m_tid);
 }
 
 /// set_tid_address wrapper routine: save the new address of the tidptr that will get cleared when the thread exits
@@ -840,23 +870,3 @@ WEAK(long) Thread::set_tid_address ()   {
   return rc;                       // now we tell kernel to change it for the current thread
 }
 
-///  Restore the GDT entries that are part of a thread's state
-WEAK(void) Thread::restoreTLS()  {
-  pid_t motherpid = chkpt_sys.motherPID;
-  const char* thr_typ = this == chkpt_sys.motherofall ? "MOTHER" : "CHILD";
-  unsigned long* base = (unsigned long*)&m_tls[0].base_addr;
-  pid_t *ppid = (pid_t*)(*base + TLS_PID_OFFSET);
-
-  // The assumption that this points to the pid was checked by that tls_pid crap near the beginning
-  *ppid = motherpid;
-
-  // Restore all three areas
-  int rc = mtcp_sys_set_thread_area_base(base);
-  if (rc < 0) {
-    mtcp_output(MTCP_FATAL,"restoreTLS[%s]: error %d restoring TLS entry[%d]\n",
-		thr_typ,mtcp_sys_errno,m_tls[0].entry_number);
-  }
-  m_tid = mtcp_sys_kernel_gettid();
-  mtcp_output(MTCP_INFO,"restoreTLS[%s]: motherpid:%d Thread tid=%d restoring TLS entry[%d]\n",
-	      thr_typ,motherpid,m_tid,m_tls[0].entry_number);
-}

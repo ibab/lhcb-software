@@ -43,7 +43,7 @@ namespace CHECKPOINTING_NAMESPACE {
 
     tid_t      m_tid;                   /// this thread's id as returned by mtcp_sys_kernel_gettid ()
     tid_t      m_originalTID;           /// this is the the thread's "original" tid
-    FutexState m_state;                 /// Thread state during the checkpoint
+    FutexState state;                   /// Thread state during the checkpoint
 
     Thread    *m_parent;                /// parent thread (or NULL if top-level thread)
     Thread    *m_children;              /// one of this thread's child threads
@@ -90,53 +90,19 @@ namespace CHECKPOINTING_NAMESPACE {
      */
     void initialize(bool mother_of_all=false);
 
-    /** Setup the signal handling to stop/restart threads.
-     */
-    static void setupSignals();
-
-    /** Save the system info of the process
-     */
-    static void saveSysInfo();
-
-    /** Access to the overall thread queue
-     */
-    static Thread* threads();
-
     /**  Get current thread struct pointer
      *  It is keyed by the calling thread's gettid value
      *  Maybe improve someday by using TLS
      */
     static Thread* current();
 
-    /** Thread execution wrapper
-     *
-     *   Simply call the object function.
-     */
-    static int staticMain(void *thread_ptr);
-
-    /** Entry point to restart thread after a fork.
-     */
-    static int restartMain(void* arg);
-
     /** Stop all threads in order to allow for a consistent checkpoint.
      */
     int stop();
 
-    /** Restart thread and all depending children after checkpointing and on restart.
-     */
-    int  restart(int force_context);
-
     /** On restore wait until all threads are ready.
      */
     void waitForRestore();
-
-    /** Thread has exited - unlink it from lists and free struct
-     *
-     *	thread removed from 'threads' list and motherofall tree
-     *	thread pointer no longer valid
-     *	checkpointer woken if waiting for this thread
-     */
-    int cleanup();
 
     /**  Call this when it's OK to checkpoint. Called by main tread start routine 
      */
@@ -145,10 +111,6 @@ namespace CHECKPOINTING_NAMESPACE {
     /** Likewise, disable checkpointing
      */
     int wait();
-
-    /** Accessor to the thread state.
-     */
-    FutexState& state() {  return m_state; }
 
     /** Accessor to the thread identifier
      */
@@ -167,26 +129,6 @@ namespace CHECKPOINTING_NAMESPACE {
      *  We save the new address of the tidptr that will get cleared when the thread exits
      */
     long set_tid_address();
-
-    /**  Restore the GDT entries that are part of a thread's state
-     *
-     *  The kernel provides set_thread_area system call for a thread to alter a particular range of GDT entries, and it switches
-     *  those entries on a per-thread basis.  So from our perspective, this is per-thread state that is saved outside user
-     *  addressable memory that must be manually saved.
-     */
-    void restoreTLS();
-
-    /**  Save signal handlers and block signal delivery
-     */
-    void saveSignals();
-
-    /**  Save signal handlers and block signal delivery
-     */
-    void restoreSignals();
-
-    /** Restore all the signal handlers with different settings
-     */
-    void restoreSigActions();
 
     /** Main thread execution function
      *

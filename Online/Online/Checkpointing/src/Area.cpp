@@ -10,6 +10,7 @@
 #include <cstdio>
 #include <unistd.h>
 #include <sys/mman.h>
+#include <ucontext.h>
 
 using namespace Checkpointing;
 
@@ -74,9 +75,9 @@ int Area::write(int fd, bool write_nulls)    const {
   else if ( m_strcmp(name,chkpt_sys.checkpointFile)  == 0 ) return 0;
   else if ( m_strcmp(name,chkpt_sys.checkpointImage) == 0 ) return 0;
   else {
-    int flg = mapFlags();
+    int    bytes = 0;
+    int    flg = mapFlags();
     size_t len = sizeof(Area)-sizeof(name)+name_len+1;
-    int bytes = 0;
 
     bytes += writeMarker(fd,MEMAREA_BEGIN_MARKER);
     bytes += m_writemem(fd,this,len);
@@ -105,7 +106,29 @@ int Area::write(int fd, bool write_nulls)    const {
 	print(MTCP_DEBUG,"NULL  memory area:");
       }
       else {
-	bytes += m_writemem(fd,(void*)low,size);
+	long* ptr, *start, *sp;
+	if ( m_strcmp(name,"[stack]") == 0 ) {
+	  sp = (long*)low;
+	  start = ptr = (long*)malloc(((size/sizeof(long))+2)*sizeof(long));
+	}
+	if ( m_strcmp(name,"[stack]") == 0 ) {
+#if 0
+#endif
+	  for(;sp<(long*)high;++ptr,++sp) *ptr = *sp;
+	  bytes += m_writemem(fd,start,size);
+	  ::free(start);
+	  if ( ::getcontext (chkpt_sys.savedContext) < 0 )   {
+	    mtcp_output(MTCP_FATAL,"checkpointing_sys_get_context: failed to retrieve context of motherofall.\n");
+	  }
+	  if ( chkpt_sys.restart_type == SysInfo::RESTART_CHECKPOINT ) {
+	    return 1;
+	  }
+	  //bytes += m_writemem(fd,(void*)low,size);
+	}
+	else 
+	{
+	  bytes += m_writemem(fd,(void*)low,size);
+	}
 	print(MTCP_DEBUG,"Wrote memory area:");
       }
     }

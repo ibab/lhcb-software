@@ -3,6 +3,7 @@
 #include "Checkpointing/FileMap.h"
 #include "Checkpointing/MemMaps.h"
 #include "Checkpointing/Process.h"
+#include "Checkpointing/Thread.h"
 #include "Checkpointing.h"
 #include "Restore.h"
 
@@ -26,17 +27,26 @@ DefineMarker(MEMAREA_BEGIN_MARKER,"AREA");
 DefineMarker(MEMAREA_END_MARKER,  "area");
 DefineMarker(MEMMAP_BEGIN_MARKER, "MMAP");
 DefineMarker(MEMMAP_END_MARKER,   "mmap");
-DefineMarker(SYS_BEGIN_MARKER,    "PSYS");
-DefineMarker(SYS_END_MARKER,      "psys");
 
 
-#define STACKSIZE 4096      // size of temporary stack (in quadwords)
-//#define STACKSIZE 1024      // size of temporary stack (in quadwords)
+//#define STACKSIZE 4096      // size of temporary stack (in quadwords)
+#define STACKSIZE 1024      // size of temporary stack (in quadwords)
 /* temp stack used internally by restore so we don't go outside the
  *   libmtcp.so address range for anything;
  * including "+ 1" since will set %esp/%rsp to tempstack+STACKSIZE
  */
 STATIC(long long int) mtcp_internal_tempstack[STACKSIZE + 1];
+
+/// Print content to stack saved in context
+STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_print_stack(const char* comment) {
+  int* ptr = (int*)chkpt_sys.savedContext->SAVEDSP;
+  mtcp_output(MTCP_ERROR,"Saved stack pointer   %p\n",(void*)chkpt_sys.savedContext->SAVEDSP);
+  mtcp_output(MTCP_ERROR,"Saved base  pointer   %p\n",(void*)chkpt_sys.savedContext->SAVEDBP);
+  for(size_t i=0; i<32; ++i)   {
+    mtcp_output(MTCP_ERROR,"Stack(%s): %p -> %X  %X %X %X\n",comment,ptr,ptr[0],ptr[1],ptr[2],ptr[3]);
+    ptr += 4;
+  }
+}
 
 /// Print file descriptor information
 STATIC(void) CHECKPOINTING_NAMESPACE::checkpoint_file_print(int lvl, const FileDesc* d) {
@@ -197,19 +207,6 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_fread_trailer(Process
   return sz;
 }
 
-/// Read system information from checkpoint file
-STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_skip_sys(Process*,const void* addr)  {
-  int siz;
-  const_Pointer in = (const_Pointer)addr;
-  in += checkMarker(in,SYS_BEGIN_MARKER);
-  in += getInt(in,&siz);
-  in += siz;
-  in += getInt(in,&siz);
-  in += siz;
-  in += checkMarker(in,SYS_END_MARKER);
-  return addr_diff(in,addr);
-}
-
 /// Read full file descriptor information from memory
 STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_read_files(Process*,const void* addr)  {
   const_Pointer in = (const_Pointer)addr;
@@ -290,18 +287,6 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_read(Process* p, cons
     }
   }
   return 0;
-}
-
-/// Read system information from checkpoint file
-STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_fskip_sys(Process*,int fd)  {
-  int siz, in = 0;
-  in += readMarker(fd,SYS_BEGIN_MARKER);
-  in += readInt(fd,&siz);
-  in += m_fskip(fd,siz);
-  in += readInt(fd,&siz);
-  in += m_fskip(fd,siz);
-  in += readMarker(fd,SYS_END_MARKER);
-  return in;
 }
 
 /// Read full file descriptor information from file
@@ -545,13 +530,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_area_map(const Area& a,int fd
   if ( data_len > 0 )   {
     if ( copy_data ) {
       (fd_in > 0) ? m_fread(fd_in,addr,size) : m_memcpy(addr,in,size),in+=size;
-      if ( *(int*)a.name == *(int*)"[stack]" ) {
-	int * ptr = (int*)chkpt_sys.savedSP;
-	for(size_t i=0; i<32; ++i)   {
-	  mtcp_output(MTCP_INFO,"Stack: %p -> %X  %X %X %X\n",ptr,ptr[0],ptr[1],ptr[2],ptr[3]);
-	  ptr += 4;
-	}
-      }
+      if ( fd < 0 ) checkpointing_print_stack("from_file"); // ie. never!
     }
     else if ( fd_in > 0 ) {
       m_fskip(fd_in,size);
@@ -571,35 +550,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_area_map(const Area& a,int fd
   if( *(int*)nam == *(int*)"[heap]" && brk != nam + size) {
     //mtcp_output(MTCP_WARNING,"WARNING: break (%p) not equal to end of heap (%p)\n",brk,nam+size);
   }
-
   return data_len;
-}
-
-/// Print data content of SysInfo structure
-STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_print(const SysInfo& s) {
-  void* curr_break = mtcp_sys_brk(0);
-  // Checkpoint image
-  mtcp_output(MTCP_INFO,"checkpoint: SysInfo:       %p -> %p Size:%d\n",&s,s.sysInfo,int(sizeof(SysInfo)));
-  mtcp_output(MTCP_INFO,"checkpoint: Checkpoint[%d]:%s \n",s.checkpointFD,s.checkpointFile);
-  mtcp_output(MTCP_INFO,"checkpoint: dto.   begin:  %p end    %p [%X bytes]\n",
-	      s.chkptStart,s.chkptStart+s.chkptSize,s.chkptSize);
-
-  // Restore image
-  mtcp_output(MTCP_INFO,"checkpoint: Page   size:   %d [%X]\n",s.pageSize,s.pageSize);
-  mtcp_output(MTCP_INFO,"checkpoint: Image  name:  '%s'\n",s.checkpointImage);
-  mtcp_output(MTCP_INFO,"checkpoint: Image  begin:  %p end    %p [%X bytes]\n",
-	      s.addrStart,s.addrEnd,s.addrSize);
-
-  // Heap & Stack
-  mtcp_output(MTCP_INFO,"checkpoint: Heap   curr:   %p saved  %p\n",curr_break,s.saved_break);
-  mtcp_output(MTCP_INFO,"checkpoint: Stack lim soft:%p hard:  %p\n",s.stackLimitCurr,s.stackLimitHard);
-
-  // The finishRestore function pointer:
-  mtcp_output(MTCP_INFO,"checkpoint: Stack   start: %p finish:%p\n",
-	      mtcp_internal_tempstack,mtcp_internal_tempstack+STACKSIZE+1);
-  mtcp_output(MTCP_INFO,"checkpoint: Restore start: %p finish:%p\n",s.startRestore,s.finishRestore);
-  mtcp_output(MTCP_INFO,"checkpoint: Mother of all: %p \n",s.motherofall);
-  mtcp_output(MTCP_INFO,"checkpoint: Restore flags: %X \n",s.restart_flags);
 }
 
 /// Main restart routine in checkpointing image
@@ -610,13 +561,12 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_restore_start(Stack* sta
   long long* extendedStack = mtcp_internal_tempstack + STACKSIZE;
   mtcp_set_debug_level(print_level);
   mtcp_output(MTCP_INFO,"restore: Assume that checkpoint file is already opened with fd:%d\n",chkpt_sys.checkpointFD);
-  int rc = mtcp_sys_lseek(chkpt_sys.checkpointFD,0,SEEK_SET);  // Position checkpoint file to start
-  if ( rc < 0 ) {
+  if ( mtcp_sys_lseek(chkpt_sys.checkpointFD,0,SEEK_SET) < 0 ) {// Position checkpoint file to start
     mtcp_output(MTCP_FATAL,"restore: Failed [%d] to seek back to beginning of the checkpoint file\n",mtcp_sys_errno);
   }
   chkpt_sys.restart_flags = flags;
-  checkpointing_sys_init_stack(&chkpt_sys,stack);
-  checkpointing_sys_print(chkpt_sys);
+  checkpointing_sys_init_restore_stack(&chkpt_sys,stack->argc,stack->argv,stack->environment);
+  checkpointing_sys_print(&chkpt_sys);
 
   // Now we move the process to the temporary stack allocated in this image
   // in order to execute the process restore. After this, we move back
@@ -639,14 +589,12 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_restore_start(Stack* sta
 
 /// Secondary restore routine. Execution starts once we jumped to the local stack.
 STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_restore_process() {
-  const char* nam = chkpt_sys.checkpointFile;
-  Process p(Process::PROCESS_RESTORE);
-  mtcp_output(MTCP_INFO,"Start to restore files and memory areas from %s.\n",nam);
-  if ( checkpointing_process_fread(&p,chkpt_sys.checkpointFD) ) {
-    mtcp_output(MTCP_INFO,"Finished to restore files and memory areas from %s.\n",nam);
+  mtcp_output(MTCP_INFO,"Start to restore files and memory areas from %s.\n",chkpt_sys.checkpointFile);
+  if ( checkpointing_process_fread(0,chkpt_sys.checkpointFD) ) {
+    mtcp_output(MTCP_INFO,"Finished to restore files and memory areas from %s.\n",chkpt_sys.checkpointFile);
     checkpointing_sys_restore_finish();
   }
-  mtcp_output(MTCP_FATAL,"Failed to read process information from file %s.\n",nam);
+  mtcp_output(MTCP_FATAL,"Failed to read process information from file %s.\n",chkpt_sys.checkpointFile);
 }
 
 /// Final restart routine. Execution starts once we are back on the stack of the restored process.
@@ -704,58 +652,3 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_process_file(int fd, voi
   while(rc==1);
 }
 
-/// Initialize basic variables from stack
-STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_init_stack(SysInfo* sys, Stack* s) {
-  char** ee = s->environment;
-  sys->utgid    = 0;
-  sys->utgidLen = 0;
-  sys->arg0     = s->argv[0];
-  sys->arg0Len  = m_strlen(sys->arg0);
-  for(char* ep=*ee; *ep && *ee; ep=*(++ee)) {
-    if ( ep ) {
-      if ( 0 == m_strncmp(ep,"UTGID=",6) ) {
-	sys->utgid = (char*)ep + 6;
-	sys->utgidLen = m_strlen(sys->utgid);
-	break;
-      }
-      else if ( *(short*)ep == *(short*)"_=" ) break;
-    }
-  }
-  mtcp_output(MTCP_DEBUG,"Environ:%p argv[0]:%p %s UTGID:%p %s\n",
-	      ee,sys->arg0,sys->arg0,sys->utgid,sys->utgid ? sys->utgid : "Unknown");
-}
-
-/// Setup process UTGID/argv[0] if availible
-STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_sys_set_utgid(SysInfo* /* sys */, const char* new_utgid) {
-  return ::setenv("UTGID",new_utgid,1);
-}
-
-/// Force process UTGID if availible
-STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_sys_force_utgid(SysInfo* sys, const char* new_utgid) {
-  int len = m_strlen(new_utgid);
-  if ( 0 == new_utgid ) {
-    mtcp_output(MTCP_FATAL,"New UTGID pointer NULL.\n");
-  }
-  else if ( sys->utgid == 0 ) {
-    mtcp_output(MTCP_WARNING,"UTGID pointer NULL adding UTGID=%s to local environment.\n", new_utgid);
-  }
-  else if ( sys->utgidLen != len ) {
-    mtcp_output(MTCP_FATAL,"New UTGID %s too long to replace old value from process stack with length [%d].\n",
-		new_utgid,sys->utgidLen);
-  }
-  else if ( !sys->arg0 || sys->arg0Len != len ) {
-    mtcp_output(MTCP_FATAL,"New UTGID %s too long to replace argv[0] from process stack with length [%d].\n",
-		new_utgid,sys->arg0Len);
-    mtcp_abort();
-  }
-  if ( sys->arg0 ) {
-    //m_memcpy(sys->arg0,new_utgid,len);
-  }
-  if ( sys->utgid ) {
-    m_memcpy(sys->utgid,new_utgid,len);
-  }
-  if ( new_utgid ) {
-  //return ::setenv("UTGID",new_utgid,1);
-  }
-  return 1;
-}

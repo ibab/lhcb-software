@@ -68,6 +68,7 @@
 #define mtcp_sys_kernel_gettid(args...)    mtcp_inline_syscall(gettid,0)
 #define mtcp_sys_kernel_tkill(args...)     mtcp_inline_syscall(tkill,2,args)
 #define mtcp_sys_personality(args...)      mtcp_inline_syscall(personality,1,args)
+#define mtcp_sys_readlink(args...)         mtcp_inline_syscall(readlink, 3, args)
 
 int mtcp_have_thread_sysinfo_offset();
 void *mtcp_get_thread_sysinfo(void);

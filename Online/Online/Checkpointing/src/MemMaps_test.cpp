@@ -1,7 +1,7 @@
 #include "Checkpointing/MemMaps.h"
-#include "Checkpointing/Static.h"
 #include "Checkpointing/MMap.h"
 #include "Checkpointing.h"
+#include "Restore.h"
 #include <cerrno>
 #include <cstring>
 
@@ -41,8 +41,7 @@ int test_MemMaps_read() {
 }
 
 int test_MemMaps_sharable() {
-  SysInfo& sys = chkpt_sys;
-  sys.aquire();
-  sys.print();
+  checkpointing_sys_aquire(&chkpt_sys);
+  checkpointing_sys_print(&chkpt_sys);
   return 1;
 }

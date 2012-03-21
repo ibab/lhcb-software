@@ -18,31 +18,28 @@ namespace CHECKPOINTING_NAMESPACE {
    * @version 1.0
    */
   struct Process {
-  public:
-    int          m_flag;
+    public:
     enum Flags {
       PROCESS_READ,
       PROCESS_WRITE,
       PROCESS_RESTORE
     };
-  public:
-
+    public:
+    
     /// Standard constructor
-    Process(int f=PROCESS_READ) : m_flag(f) {}
-    /// Access execution flag
-    int flag() const { return m_flag; }
+    Process() {};
     /// Write full process information to checkpoint file
-    int write(int fd)  const;
+    static int write(int fd);
     /// Write header information to checkpoint file
-    int writeHeader(int fd)  const;
+    static int writeHeader(int fd);
     /// Write trailer information to checkpoint file
-    int writeTrailer(int fd)  const;
+    static int writeTrailer(int fd);
     /// Write system information to checkpoint file
-    int writeSysInfo(int fd)  const;
+    static int writeSysInfo(int fd);
     /// Write the file descriptor information to checkpoint file
-    int writeFiles(int fd)  const;
+    static int writeFiles(int fd);
     /// Write the memory areas to checkpoint file
-    int writeMemory(int fd)  const;
+    static int writeMemory(int fd);
     
     /// Read full process information from checkpoint file
     int read(const void* addr);

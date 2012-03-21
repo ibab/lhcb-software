@@ -11,12 +11,15 @@
 #include <cerrno>
 #include <cstring>
 #include <cstdio>
+#include <cstdlib>
+#include <climits>
+#include <alloca.h>
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <linux/personality.h>
 
 using namespace Checkpointing;
-
+static void* mtcp_global_stack_end = 0;
 static int checkMarker(int fd, Marker should) {
   Marker got;
   mtcp_sys_read(fd,&got,sizeof(got));
@@ -29,7 +32,16 @@ static int checkMarker(int fd, Marker should) {
   return 1;
 }
 
-static void load(const char* file_name, int advise, SysInfo::start_restore_t* func) {
+void mtcp_executable(char* cmd_file) {
+  // Copy command line to libmtcp.so, so that we can re-exec if randomized vdso
+  //   steps on us.  This won't be needed when we use the linker to map areas.
+  cmd_file[0] = 0;
+  int cmd_len = mtcp_sys_readlink("/proc/self/exe", cmd_file, PATH_MAX);
+  if (cmd_len == -1) mtcp_output(MTCP_FATAL,"Couldn't find /proc/self/exe.\n");
+  cmd_file[cmd_len] = 0;
+}
+
+static void load(int org_argc, char** org_argv, const char* file_name, int advise, bool restart, SysInfo::start_restore_t* func) {
   typedef void* pvoid;
   const Marker PROCESS_BEGIN_MARKER = *(Marker*)"PROC";
   const Marker SYS_BEGIN_MARKER     = *(Marker*)"PSYS";
@@ -52,24 +64,82 @@ static void load(const char* file_name, int advise, SysInfo::start_restore_t* fu
   mtcp_sys_read(fd,&siz,sizeof(siz));
   mtcp_output(MTCP_DEBUG,"SysInfo has a size of %d bytes\n",siz);
   mtcp_sys_read(fd,&sys,sizeof(SysInfo));
+  mtcp_sys_read(fd,&siz,sizeof(siz));
+  mtcp_output(MTCP_DEBUG,"SysInfo has %d bytes of stack information. argc=%d argv=%p arg0:%p\n",siz,sys.argc,sys.argv,sys.arg0);
+  mtcp_output(MTCP_DEBUG,"SysInfo arg0:%s\n",sys.arg0String);
+#define MBYTE 1024*1024
+  if ( siz > 0 ) {
+    int i, num_arg, num_env, count;
+    char buffer[MBYTE];  // must be from stack! Don't use malloc
+    char cmdLine[PATH_MAX+1], *ptr = buffer;
+    char *argv[128], *envp[1024], **e;
+    mtcp_sys_read(fd,&num_arg,sizeof(num_arg));
+    mtcp_sys_read(fd,&num_env,sizeof(num_env));
 
+    if ( siz > MBYTE ) {
+      mtcp_output(MTCP_ERROR,"SysInfo stack buffer of %d bytes too small to hold %d bytes of stack.\n",MBYTE,siz);
+      mtcp_output(MTCP_ERROR,"You need to increase the buffer. file:%s line:%d\n",__FILE__,__LINE__);
+      mtcp_sys_exit(0);
+    }
+    mtcp_sys_read(fd,buffer,siz-2*sizeof(int));    
+    if ( restart ) {
+      int l1=0, l2=0;
+      mtcp_executable(cmdLine);
+      for(i=0; i<num_arg;++i) {
+	mtcp_output(MTCP_DEBUG,"SysInfo-arg[%d] = %s\n",i,ptr);
+	ptr += ::strlen(ptr)+1;
+	l1+= ::strlen(ptr)+1;
+      }
+      for(i=0; i<num_env;++i) {
+	mtcp_output(MTCP_DEBUG,"SysInfo-env[%d] = %s\n",i,ptr);
+	envp[i] = ptr;
+	ptr += ::strlen(ptr)+1;
+      }
+      envp[num_env] = 0;
+      for(i=0; i<org_argc;++i) {
+	mtcp_output(MTCP_DEBUG,"SysInfo-restart-arg[%d] = %s\n",i,org_argv[i]);
+	argv[i] = org_argv[i];
+	l2 += ::strlen(argv[i])+1;
+      }
+      argv[org_argc] = (char*)"-runnow";
+      l2 += ::strlen(argv[org_argc])+1;
+      argv[org_argc+1] = 0;
+      for(e=environ, count=0;e&&*e; ++e)count++;
+      mtcp_output(MTCP_INFO,"SysInfo-arg-len  %d \n",long(org_argv[0])-sys.arg0);
+      mtcp_output(MTCP_INFO,"SysInfo-arg-len  %d  checkpointed:%d\n",l2,l1);
+      mtcp_output(MTCP_INFO,"SysInfo-#argc:   %d  checkpointed:%d   #env:    %d  checkpointed:%d\n",
+		  org_argc+1,sys.argc,count,num_env);
+      mtcp_output(MTCP_INFO,"SysInfo-argv[0]: %p  checkpointed:%p\n",org_argv[0],sys.arg0);
+      mtcp_output(MTCP_INFO,"SysInfo-cmdline = %s\n",cmdLine);
+      mtcp_output(MTCP_INFO,"SysInfo-cmdline = %s\n",sys.arg0String);
+      mtcp_output(MTCP_INFO,"SysInfo: execve restart process.....\n");
+      mtcp_sys_close(fd);
+      execve(cmdLine,argv,envp);
+    }
+  }
+  else {
+    mtcp_output(MTCP_DEBUG,"checkpoint: SysInfo: No stack environment and args present.\n");
+  }
   mtcp_output(MTCP_DEBUG,"checkpoint: SysInfo:       %p \n",sys.sysInfo);
   mtcp_output(MTCP_DEBUG,"checkpoint: Page   size:   %d [%X]\n",int(sys.pageSize),int(sys.pageSize));
   mtcp_output(MTCP_DEBUG,"checkpoint: Image  name:  '%s'\n",sys.checkpointImage);
   mtcp_output(MTCP_DEBUG,"checkpoint: Image  begin:  %p end    %p [%X bytes]\n",
-		 pvoid(sys.addrStart),pvoid(sys.addrEnd),int(sys.addrSize));
+	      pvoid(sys.addrStart),pvoid(sys.addrEnd),int(sys.addrSize));
   mtcp_output(MTCP_DEBUG,"checkpoint: Heap   saved:  %p\n",pvoid(sys.saved_break));
   mtcp_output(MTCP_DEBUG,"checkpoint: Stack lim soft:%p hard:  %p\n",
-		 pvoid(sys.stackLimitCurr),pvoid(sys.stackLimitHard));
+	      pvoid(sys.stackLimitCurr),pvoid(sys.stackLimitHard));
   // The finishRestore function pointer:
   mtcp_output(MTCP_DEBUG,"checkpoint: Restore start: %p finish:%p\n",
-		 sys.startRestore,sys.finishRestore);
-  
+	      sys.startRestore,sys.finishRestore);
+
+  mtcp_output(MTCP_INFO,"SysInfo-argc:    %d  checkpointed:%d\n",org_argc,sys.argc);
+  mtcp_output(MTCP_INFO,"SysInfo-argv[0]: %p  checkpointed:%p\n",org_argv[0],sys.arg0);
+
   void* data = (void*)mtcp_sys_mmap((void*)sys.addrStart,sys.addrSize,PROT_READ|PROT_WRITE|PROT_EXEC,MAP_ANONYMOUS|MAP_FIXED|MAP_PRIVATE,-1,0);
   if (data == MAP_FAILED) {
     if (errno != EBUSY) {
       mtcp_output(MTCP_FATAL,"restore: error creating %d byte restore region at %p: %s\n",
-		     int(sys.addrSize),pvoid(sys.addrStart),::strerror(errno));
+		  int(sys.addrSize),pvoid(sys.addrStart),::strerror(errno));
     } 
     else {
       mtcp_sys_close(fd);
@@ -82,6 +152,7 @@ static void load(const char* file_name, int advise, SysInfo::start_restore_t* fu
   }
   mtcp_output(MTCP_INFO,"restore: mapped %d byte restore image region at %p - %p in execution mode.\n",
 		 int(sys.addrSize),data,pvoid(sys.addrStart+sys.addrSize));
+
   mtcp_sys_read(fd,&siz,sizeof(siz));
   mtcp_sys_read(fd,data,sys.addrSize);
   checkMarker(fd,SYS_END_MARKER);
@@ -109,6 +180,32 @@ static void load(const char* file_name, int advise, SysInfo::start_restore_t* fu
   *func = sys.startRestore;
 }
 
+extern "C" int __libc_start_main (int (*main) (int, char **, char **),
+				  int argc, char **argv,
+				  void (* /*init */) (void), void (* /*fini */) (void),
+				  void (* /* rtld_fini */) (void), void * stack_end)
+{
+  char **envp = argv + argc + 1;
+  mtcp_global_stack_end = stack_end;
+  int result = main (argc, argv, envp);
+  mtcp_sys_exit(result);
+  return result;
+}
+
+
+extern "C" void
+__libc_csu_init (int /* argc */, char ** /* argv */, char ** /*envp */)
+{
+  while(1);
+}
+
+/* This function should not be used anymore.  We run the executable's
+   destructor now just like any other.  We cannot remove the function,
+   though.  */
+extern "C" void __libc_csu_fini (void)
+{
+}
+
 static int usage() {
   mtcp_output(MTCP_ERROR,"Usage: restore -p(rint) <print-level> -i(nput) <file-name> \n"
 	      "       print-level = 1...5  : DEBUG,INFO,WARNING,ERROR,FATAL.         \n"
@@ -121,13 +218,15 @@ static int usage() {
 }
 
 /// Print data content
-int main(int argc, char** argv) {
+extern "C" char**environ;
+int main(int argc, char** argv, char** envp) {
   mtcp_sys_personality(ADDR_NO_RANDOMIZE|mtcp_sys_personality(0xFFFFFFFFUL));
   SysInfo::start_restore_t func = 0;
+  environ = envp;
   if ( argc > 1 ) {
     int prt = MTCP_WARNING, opts=0;
     {
-      int advise=0;
+      int advise=0, norestart=1;
       const char* file_name = 0;
       for(int i=1; i<argc; ++i) {
 	if      ( argc>i && argv[i][1] == 'i' ) file_name = argv[++i];
@@ -135,11 +234,13 @@ int main(int argc, char** argv) {
 	else if ( argc>i && argv[i][1] == 'n' ) prt  |= MTCP_PRINT_NO_PID;
 	else if ( argc>i && argv[i][1] == 'e' ) opts |= MTCP_STDIN_ENV;
 	else if ( argc>i && argv[i][1] == 'a' ) advise = 1;
+	else if ( argc>i && argv[i][1] == 'r' ) norestart = 0;
+	else if ( argc>i && argv[i][1] == 'd' ) ::sleep(10);
       }
       if ( 0 == file_name ) return usage();
-      mtcp_set_debug_level(MTCP_ERROR /* prt */);
+      mtcp_set_debug_level(prt /* MTCP_ERROR prt */);
       mtcp_output(MTCP_INFO,"restore: print level:%d input:%s\n",prt,file_name);
-      load(file_name,advise,&func);
+      load(argc, argv, file_name, advise, norestart==1, &func);
     }
     Stack stack;
     stack.argv = argv;
