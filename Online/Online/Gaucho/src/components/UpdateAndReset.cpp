@@ -297,9 +297,9 @@ StatusCode UpdateAndReset::stop() {
   {
     m_pGauchoMonitorSvc->StopUpdate();
 //    printf("======================UpdateAndReset Updating EOR service \n");
-    this->m_pGauchoMonitorSvc->Lock();
+//    this->m_pGauchoMonitorSvc->Lock();
     this->m_pGauchoMonitorSvc->updateSvc( "this" , m_runNumber,this  );
-    this->m_pGauchoMonitorSvc->UnLock();
+//    this->m_pGauchoMonitorSvc->UnLock();
 //    printf("======================UpdateAndReset Updating EOR DONE...... \n");
     m_pGauchoMonitorSvc->release();
     m_pGauchoMonitorSvc = 0;
