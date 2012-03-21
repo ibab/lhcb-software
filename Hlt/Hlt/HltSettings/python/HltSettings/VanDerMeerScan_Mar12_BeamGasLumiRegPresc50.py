@@ -1,4 +1,4 @@
-class VanDerMeerScan_Mar12_BeamGasPrescaleLumiReg:
+class VanDerMeerScan_Mar12_BeamGasLumiRegPresc50:
     """
     Threshold settings for VDM scans with all beam-gas lines active
     and ForcedRecoFullZ downscaled. Intended to be used when the beams are
@@ -30,8 +30,8 @@ class VanDerMeerScan_Mar12_BeamGasPrescaleLumiReg:
         return '0x1710'
 
     def HltType(self) :
-        self.verifyType( VanDerMeerScan_Mar12_BeamGasPrescaleLumiReg )
-        return          'VanDerMeerScan_Mar12_BeamGasPrescaleLumiReg'
+        self.verifyType( VanDerMeerScan_Mar12_BeamGasLumiRegPresc50 )
+        return          'VanDerMeerScan_Mar12_BeamGasLumiRegPresc50'
     
     def ActiveHlt1Lines(self) :
         """ Returns a list of active Hlt1 Lines """
@@ -67,8 +67,8 @@ class VanDerMeerScan_Mar12_BeamGasPrescaleLumiReg:
                                           , 'L0Channels' : [ 'PU', 'CALO' ]
                                           }
                      , Hlt1LumiLinesConf : { 'MaxRate'    : 40000000 #take all
-                                           , 'Prescale'   : { 'Hlt1Lumi' :  1. }
-                                           , 'Postscale'  : { 'Hlt1Lumi' :  1. }
+                                           , 'Prescale'   : { 'Hlt1Lumi' :  0.5 }
+                                           , 'Postscale'  : { 'Hlt1Lumi' :  1.  }
                                            }
                      , Hlt1MBLinesConf : { 'Postscale'  : { 'Hlt1MBMicroBias.*RateLimited' : 'RATE(100)' } 
                                          , 'MicroBiasOdin': 'scale( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger, RATE(2000,LoKi.Scalers.RandomPhasePeriodicLimiter) )' 
@@ -76,7 +76,7 @@ class VanDerMeerScan_Mar12_BeamGasPrescaleLumiReg:
                      }
         ### Extend the config dictionary with the beam-gas VDM settings
         from VanDerMeerScan_BeamGasConf_Mar12 import VanDerMeerScan_BeamGasConf_Mar12
-        bgThres = VanDerMeerScan_BeamGasConf_Mar12().Thresholds('PrescaleLumiReg')
+        bgThres = VanDerMeerScan_BeamGasConf_Mar12().Thresholds('LumiRegPresc50')
 
         thresholds.update(bgThres)
 

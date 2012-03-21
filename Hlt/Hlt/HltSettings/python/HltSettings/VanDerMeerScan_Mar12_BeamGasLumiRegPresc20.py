@@ -1,8 +1,8 @@
-
-class VanDerMeerScan_Mar12_BeamGasOn:
+class VanDerMeerScan_Mar12_BeamGasLumiRegPresc20:
     """
-    Threshold settings for VDM scans with all beam-gas lines active.
-    Intended to be used when the beams are at a fixed position and do not collide.
+    Threshold settings for VDM scans with all beam-gas lines active
+    and ForcedRecoFullZ downscaled. Intended to be used when the beams are
+    at a fixed position and do collide.
 
     @author V. Balagura, J. Albrecht
     @date 2011-02-25
@@ -30,8 +30,8 @@ class VanDerMeerScan_Mar12_BeamGasOn:
         return '0x1710'
 
     def HltType(self) :
-        self.verifyType( VanDerMeerScan_Mar12_BeamGasOn )
-        return          'VanDerMeerScan_Mar12_BeamGasOn'
+        self.verifyType( VanDerMeerScan_Mar12_BeamGasLumiRegPresc20 )
+        return          'VanDerMeerScan_Mar12_BeamGasLumiRegPresc20'
     
     def ActiveHlt1Lines(self) :
         """ Returns a list of active Hlt1 Lines """
@@ -76,7 +76,7 @@ class VanDerMeerScan_Mar12_BeamGasOn:
                      }
         ### Extend the config dictionary with the beam-gas VDM settings
         from VanDerMeerScan_BeamGasConf_Mar12 import VanDerMeerScan_BeamGasConf_Mar12
-        bgThres = VanDerMeerScan_BeamGasConf_Mar12().Thresholds('BeamGasOn')
+        bgThres = VanDerMeerScan_BeamGasConf_Mar12().Thresholds('LumiRegPresc20')
 
         thresholds.update(bgThres)
 

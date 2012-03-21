@@ -60,11 +60,13 @@ class VanDerMeerScan_BeamGasConf_Mar12:
             The rate limits are taken from already defined dictionaries. The argument 'version'
             can have values '', 'BeamGasOff' and 'PrescaleLumiReg'. '''
 
-        if version == '':
+        if version   == 'BeamGasOn':
             presc = 1.; prescFullZ = 1.
         elif version == 'BeamGasOff':
             presc = 0.; prescFullZ = 0.
-        elif version == 'PrescaleLumiReg':
+        elif version == 'LumiRegPresc20':
+            presc = 1.; prescFullZ = 1./20.
+        elif version == 'LumiRegPresc50':
             presc = 1.; prescFullZ = 1./50.
         else:
             print "\nERROR!!! Wrong 'version' argument passed to function 'Thresholds' in the beam-gas lines HltSettings. Setting prescales to 1.\n"
@@ -99,7 +101,7 @@ class VanDerMeerScan_BeamGasConf_Mar12:
                 , 'UseGEC' : 'None'
 
                 ### Minimum number of tracks for the produced vertices (#tr/vtx > X)
-                , 'VertexMinNTracks' : '4'
+                , 'VertexMinNTracks' : '6'
 
                 ### Input Prescales   
                 , 'Prescale'     : { 'Hlt1BeamGasNoBeamBeam1'             : presc

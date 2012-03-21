@@ -4,6 +4,12 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-03-21 - P. Hopchev
+ - Modified the VDM configurations:
+   * Increased the minimum required #tracks per vertex (in VanDerMeerScan_BeamGasConf_Mar12.py) 	
+   * Added one more Settings file for VDM. Now we ask for 4 VDM TCKs (VanDerMeerScan_Mar12_*)
+   * Set the Hlt1Lumi prescale to 0.5 for the configs to be used when the beams are not scanned
+
 !========================= HltSettings v5r21 2012-03-20 =========================
 ! 2012-03-20 - Victor Coco
  - DV_draft2012: update the cuts to meet retention requirements (2)
