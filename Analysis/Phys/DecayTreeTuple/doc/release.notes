@@ -5,7 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2012-03-21 - Chris Jones
- - Some fixes for running on uDSTs, in TupleToolTrigger and TupleToolStripping
+ - Some fixes for running on uDSTs, in TupleToolTrigger and TupleToolStripping.
+ - If HltRoutingBits are missing, catch the exception that is thrown in 
+   TupleToolTrigger, so the processing does not terminate.
 
 ! 2012-03-20 - Patrick Koppenburg
  - Fix warning about unsigned long

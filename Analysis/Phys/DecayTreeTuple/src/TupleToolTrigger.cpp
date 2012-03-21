@@ -228,18 +228,30 @@ StatusCode TupleToolTrigger::fillRoutingBits( Tuples::Tuple& tuple )
   {
     if      ( exist<LHCb::RawEvent>(*iLoc,true)  ) { rawEvent = get<LHCb::RawEvent>(*iLoc,true);  }
     else if ( exist<LHCb::RawEvent>(*iLoc,false) ) { rawEvent = get<LHCb::RawEvent>(*iLoc,false); }
-    if ( rawEvent ) break;
+    if ( rawEvent )
+    {
+      break;
+    }
   }
 
   if ( rawEvent )
   {
-    std::vector<unsigned int> yes = Hlt::firedRoutingBits(rawEvent,m_routingBits);
-    if (msgLevel(MSG::DEBUG)) debug() << yes << endmsg ;
-    if (!tuple->farray(prefix+"RoutingBits", yes, prefix+"MaxRoutingBits" , m_routingBits.size() ))
+    try
     {
-      return Warning("Failure to fill routing bits");
+      std::vector<unsigned int> yes = Hlt::firedRoutingBits(rawEvent,m_routingBits);
+      if (msgLevel(MSG::DEBUG)) debug() << yes << endmsg ;
+      if (!tuple->farray(prefix+"RoutingBits", yes, prefix+"MaxRoutingBits" , m_routingBits.size() ))
+      {
+        return Warning("Failure to fill routing bits");
+      }
+      if (msgLevel(MSG::DEBUG)) debug() << "RoutingBits OK " << endmsg ;
     }
-    if (msgLevel(MSG::DEBUG)) debug() << "RoutingBits OK " << endmsg ;
+    catch ( const GaudiException & )
+    {
+      Warning( "Cannot access the HLT Routing Bits. No information from these available",
+               StatusCode::SUCCESS, 1 ).ignore();
+    }
+
   }
 
   return StatusCode::SUCCESS;
