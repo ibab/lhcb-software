@@ -321,7 +321,7 @@ StatusCode CheckpointSvc::initialize() {
       m_numInstances = ::atol(::getenv("NBOFSLAVES"));
     }
     if ( !m_checkPoint.empty() || m_numInstances != 0 ) {
-      Checkpointing::set_print_level(m_printLvl);
+      checkpointing_set_print_level(m_printLvl);
     }
     sc = serviceLocator()->service("IncidentSvc",m_incidentSvc,true);
     if( !sc.isSuccess() ) {
@@ -471,11 +471,12 @@ void CheckpointSvc::releaseChildren() {
 int CheckpointSvc::finishCheckpoint() {
   if ( m_exit ) {
     const char* txt = "\n=                   Checkpoint finished. Process now exiting.\n";
-    ::write(STDOUT_FILENO,MARKER,strlen(MARKER));
-    ::write(STDOUT_FILENO,MARKER,strlen(MARKER));
+    size_t len = strlen(MARKER);
+    ::write(STDOUT_FILENO,MARKER,len);
+    ::write(STDOUT_FILENO,MARKER,len);
     ::write(STDOUT_FILENO,txt,strlen(txt));
-    ::write(STDOUT_FILENO,MARKER,strlen(MARKER));
-    ::write(STDOUT_FILENO,MARKER,strlen(MARKER));
+    ::write(STDOUT_FILENO,MARKER,len);
+    ::write(STDOUT_FILENO,MARKER,len);
     ::write(STDOUT_FILENO,"\n",2);
     if ( m_exit > 1 ) ::_exit(EXIT_SUCCESS);
     ::exit(EXIT_SUCCESS);
@@ -485,12 +486,11 @@ int CheckpointSvc::finishCheckpoint() {
 
 /// Perform all action necessary to properly startup the process after restore from the checkpoint file
 int CheckpointSvc::finishRestore() {
-  Checkpointing::resume_process();
   // %%HACK%% Sleep 3 secs to let threads pass immediate actions before we modify the
   // environment.
   ::lib_rtl_sleep(2000);
 
-  Checkpointing::update_environment();
+  checkpointing_update_environment();
   RTL::RTL_reset();
   StatusCode sc = parseRestartOptions();
   if ( !sc.isSuccess() ) {
@@ -505,6 +505,7 @@ int CheckpointSvc::finishRestore() {
     ::fprintf(stdout,"=  The process will now exit.\n");
     ::fprintf(stdout,"%s%s\n",MARKER,MARKER);
     ::fflush(stdout);
+    ::lib_rtl_sleep(20000);
     ::_exit(EXIT_SUCCESS);
   }
   MsgStream log(msgSvc(),name());
@@ -531,7 +532,7 @@ int CheckpointSvc::parseRestartOptions()    {
 	if ( sc.isSuccess() ) {
 	  RTL::RTL_reset();
 	  string utgid = buildChildUTGID(0);
-	  Checkpointing::set_utgid(utgid.c_str());
+	  checkpointing_set_utgid(utgid.c_str());
 	  const char* dns = ::getenv("DIM_DNS_NODE");
 	  MsgStream log(msgSvc(),name());
 	  log << MSG::INFO << "Processed RESTARTOPTS:" << env 
@@ -561,7 +562,7 @@ int CheckpointSvc::saveCheckpoint() {
     }
     int fd = ::open(m_checkPoint.c_str(),O_CREAT|O_TRUNC|O_WRONLY,S_IRWXU|S_IRWXG|S_IRWXO);
     if ( fd > 0 ) {
-      int ret = Checkpointing::write_checkpoint(fd);
+      int ret = checkpointing_write_checkpoint(fd);
       write(3,"[Error] Restore complete.....\n",31);
       ::close(fd);
       if ( ret == 1 )   {
@@ -596,21 +597,21 @@ int CheckpointSvc::stopMainInstance() {
   if ( m_files ) ::free(m_files);
   m_files = 0;
   // Now stop child threads
-  Checkpointing::stop_process();
-  Checkpointing::get_file_descriptors(&m_files);
+  checkpointing_stop_process();
+  checkpointing_get_file_descriptors(&m_files);
   if ( m_dumpFD ) {
-    Checkpointing::dump_file_descriptors(m_files);
+    checkpointing_dump_file_descriptors(m_files);
   }
   return 1;
 }
 
 /// Resume main process instance from checkpoint. Restarts dim
-int CheckpointSvc::resumeMainInstance(bool with_resume_chil_threads) {
+int CheckpointSvc::resumeMainInstance(bool with_resume_child_threads) {
   string proc  = RTL::processName();
   const char* dns = 0;
   // Let the paret resume its work
-  if ( with_resume_chil_threads )   {
-    Checkpointing::resume_process();
+  if ( with_resume_child_threads )   {
+    checkpointing_resume_process();
     ::lib_rtl_sleep(200);
   }
   dns = ::getenv("DIM_DNS_NODE");
@@ -643,14 +644,14 @@ int CheckpointSvc::forkChild(int which) {
   string proc  = RTL::processName();
   string utgid = buildChildUTGID(which);
 
-  Checkpointing::set_utgid(utgid.c_str());
-  pid_t pid = Checkpointing::fork_process();
+  checkpointing_set_utgid(utgid.c_str());
+  pid_t pid = checkpointing_fork_process();
   if ( pid == 0 ) {             // Child
     m_masterProcess = false;    // Flag child locally
     m_numInstances = 0;
     m_useCores = false;
     if ( m_forceUTGID>0 ) {
-      Checkpointing::force_utgid(utgid.c_str());
+      checkpointing_force_utgid(utgid.c_str());
     }
     if ( m_childWait>0 ) {
       bool r = true;
@@ -668,7 +669,7 @@ int CheckpointSvc::forkChild(int which) {
   else if ( pid>0 ) {
     m_masterProcess = true;
     m_children[which] = pid;
-    Checkpointing::set_utgid(proc.c_str());
+    checkpointing_set_utgid(proc.c_str());
   }
   else if (pid < 0)    {        // failed to fork
     char text[256];
@@ -689,7 +690,7 @@ int CheckpointSvc::execChild() {
     }
   }
   /// Restore file descriptors for child process
-  Checkpointing::set_file_descriptors(m_files);
+  checkpointing_set_file_descriptors(m_files);
   /// If requested assign seperate process group to child
   if ( m_childSessions ) {
     pid_t sid = ::setsid();
@@ -703,7 +704,7 @@ int CheckpointSvc::execChild() {
   /// Need to reset RTL to get proper processnames etc. afterwards
   RTL::RTL_reset();
   /// Now it should be save to restart the children
-  Checkpointing::start_child();
+  checkpointing_start_child();
   /// Configure DIM startup
   const char* dns = ::getenv("DIM_DNS_NODE");
   string proc = RTL::processName();
@@ -792,14 +793,8 @@ void CheckpointSvc::handle(const Incident& inc) {
 	    << RTL::processName() << endmsg;
 	throw GaudiException("Failed to save checkpoint:"+m_checkPoint, name(), StatusCode::FAILURE);
       }
-    ::fprintf(stdout,"%s%s\n",MARKER,MARKER);
-    ::fprintf(stdout,"=  File restore successful....restarting\n");
-    ::fprintf(stdout,"%s%s\n",MARKER,MARKER);
-    ::fflush(stdout);
-
-      int typ = Checkpointing::restart_type();
+      int typ = checkpointing_restart_type();
       bool restore =  typ == 1;
-      write(3,"[Error] Restore complete..2...\n",32);
       sc = ( restore ) ? finishRestore() : finishCheckpoint();
       if ( !sc.isSuccess() ) {
 	throw GaudiException("Failed to continue from checkpoint.", name(), StatusCode::FAILURE);
