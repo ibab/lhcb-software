@@ -107,7 +107,7 @@ StatusCode LbAppInit::initialize() {
 //=============================================================================
 StatusCode LbAppInit::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if(msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
   ++m_eventCounter;
 
   return StatusCode::SUCCESS;
@@ -185,7 +185,7 @@ StatusCode LbAppInit::initRndm( std::vector<long int>& seeds )
     while( 0 < --shots ) { sum += gauss() * sum ; }
   }
 
-  debug() << "using seeds " << seeds << endmsg;
+  if(msgLevel(MSG::DEBUG)) debug() << "using seeds " << seeds << endmsg;
 
   return StatusCode::SUCCESS;
 }
