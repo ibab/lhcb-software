@@ -3,6 +3,10 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2012-03-22 - Chris Jones
+ - Remove the line in DstConf setting the packing version for RichPIDs. The
+   correct value is set by default in the class itself.
+
 !========================= GaudiConf v15r7 2012-02-28 =========================
 ! 2012-02-17 - Chris Jones
  - Update DstConf to no longer include the PV weights vector in DSTs. 
