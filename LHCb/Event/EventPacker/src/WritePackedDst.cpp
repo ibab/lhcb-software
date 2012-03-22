@@ -161,9 +161,9 @@ StatusCode WritePackedDst::execute()
 
       LHCb::PackedProtoParticles* in = get<LHCb::PackedProtoParticles>( *itC );
       PackedBank bank( in );
-      storeInBlob( bank, &(*in->begin())      , (in->end() - in->begin()) , sizeof( LHCb::PackedProtoParticle) );
-      storeInBlob( bank, &(*in->beginRefs())  , in->sizeRef()             , sizeof( int ) );
-      storeInBlob( bank, &(*in->beginExtra()) , in->sizeExtra()           , sizeof( std::pair<int,int> ) );
+      storeInBlob( bank, &(*in->protos().begin()) , in->protos().size()    , sizeof( LHCb::PackedProtoParticle) );
+      storeInBlob( bank, &(*in->refs().begin())   , in->refs().size()      , sizeof( int ) );
+      storeInBlob( bank, &(*in->extras().begin()) , in->extras().size()    , sizeof( std::pair<int,int> ) );
       m_dst->addBank( m_bankNb++, LHCb::RawBank::DstBank, in->version(), bank.data() );
 
     } else if ( LHCb::CLID_PackedRecVertices     == myClID ) {

@@ -4,6 +4,11 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2012-03-22 - Chris Jones
+ - Take the default packing version from the packed data, instead of assuming 0.
+ - Improve the debug and verbose messages from the ProtoParticle packer 
+   and unpacker
+
 ! 2012-03-22 - Marco Cattaneo
  - Adapt WritePackedDst, ReadPackedDst to removal of ProcessHeader::m_randomSeeds
    Writer now writes a zero to mimic the length of the seeds vector, reader does
@@ -19,7 +24,6 @@
    object given as InputName. If the option Extension is set, the clusters are
    created in containers with name postfixed by this extension, and the new clusters
    are compared to the old ones.
-
   *** The original VeloClusters and STClusters containers are cleared if they exist ***
 
 !========================= EventPacker v2r12 2012-02-28 =========================

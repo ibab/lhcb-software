@@ -1,8 +1,8 @@
 // $Id: PackProtoParticle.cpp,v 1.7 2009-11-10 10:25:07 jonrob Exp $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 #include "Event/ProtoParticle.h"
 #include "Event/PackedProtoParticle.h"
 #include "Kernel/StandardPacker.h"
@@ -22,25 +22,27 @@ DECLARE_ALGORITHM_FACTORY( PackProtoParticle )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-PackProtoParticle::PackProtoParticle( const std::string& name,
-                                      ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  PackProtoParticle::PackProtoParticle( const std::string& name,
+                                        ISvcLocator* pSvcLocator)
+    : GaudiAlgorithm ( name , pSvcLocator )
 {
   declareProperty( "InputName"  , m_inputName  = LHCb::ProtoParticleLocation::Charged );
-  declareProperty( "OutputName" , m_outputName = LHCb::PackedProtoParticleLocation::Charged ); 
+  declareProperty( "OutputName" , m_outputName = LHCb::PackedProtoParticleLocation::Charged );
   declareProperty( "AlwaysCreateOutput",         m_alwaysOutput = false     );
   declareProperty( "DeleteInput",                m_deleteInput  = false     );
+  //setProperty( "OutputLevel", 1 );
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
-PackProtoParticle::~PackProtoParticle() {} 
+PackProtoParticle::~PackProtoParticle() {}
 
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode PackProtoParticle::execute() {
-
+StatusCode PackProtoParticle::execute() 
+{
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   // If input does not exist, and we aren't making the output regardless, just return
@@ -56,47 +58,78 @@ StatusCode PackProtoParticle::execute() {
   out->setVersion( 1 );
 
   StandardPacker pack;
-  
+
   for ( LHCb::ProtoParticles::const_iterator itP = parts->begin(); parts->end() != itP; ++itP )
   {
-
     out->protos().push_back( LHCb::PackedProtoParticle() );
     LHCb::PackedProtoParticle & newPart = out->protos().back();
-    LHCb::ProtoParticle* part = *itP;
-    
-    newPart.key      = part->key();
-    if ( 0 != part->track() ) {
+    const LHCb::ProtoParticle * part = *itP;
+    if ( !part ) continue;
+
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << "Packing ProtoParticle " << part->key() << endmsg;
+
+    newPart.key = part->key();
+    if ( 0 != part->track() ) 
+    {
       newPart.track = pack.reference( out, part->track()->parent(), part->track()->key() );
-    } else {
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << " -> Track " << part->track() << " " 
+                  << part->track()->parent()->registry()->identifier() << " "
+                  << newPart.track 
+                  << endmsg;
+    }
+    else
+    {
       newPart.track = -1;
     }
-
-    if ( 0 != part->richPID() ) {
+    
+    if ( 0 != part->richPID() ) 
+    {
       newPart.richPID = pack.reference( out, part->richPID()->parent(), part->richPID()->key() );
-    } else {
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << " -> RichPID " << part->richPID() << " " 
+                  << part->richPID()->parent()->registry()->identifier() << " "
+                  << newPart.richPID 
+                  << endmsg;
+    }
+    else
+    {
       newPart.richPID = -1;
     }
-
-    if ( 0 != part->muonPID() ) {
+    
+    if ( 0 != part->muonPID() ) 
+    {
       newPart.muonPID = pack.reference( out, part->muonPID()->parent(), part->muonPID()->key() );
-    } else {
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << " -> MuonPID " << part->muonPID() << " " 
+                  << part->muonPID()->parent()->registry()->identifier() << " "
+                  << newPart.muonPID
+                  << endmsg;
+    }
+    else
+    {
       newPart.muonPID = -1;
     }
-    
+
     //== Store the CaloHypos
     newPart.firstHypo = out->refs().size();
     for ( SmartRefVector<LHCb::CaloHypo>::const_iterator itO = part->calo().begin();
           part->calo().end() != itO; ++itO )
     {
-      int myRef = pack.reference( out, (*itO)->parent(), (*itO)->key() );
-      out->refs().push_back( myRef );
+      out->refs().push_back( pack.reference( out, (*itO)->parent(), (*itO)->key() ) );
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << " -> CaloHypo " << *itO << " " 
+                  << (*itO)->parent()->registry()->identifier() << " "
+                  << out->refs().back()
+                  << endmsg;
     }
     newPart.lastHypo = out->refs().size();
 
     //== Handles the ExtraInfo
     newPart.firstExtra = out->extras().size();
     for ( GaudiUtils::VectorMap<int,double>::iterator itE = part->extraInfo().begin();
-          part->extraInfo().end() != itE; ++itE ) 
+          part->extraInfo().end() != itE; ++itE )
     {
       out->extras().push_back( std::pair<int,int>((*itE).first, pack.fltPacked((*itE).second)) );
     }
@@ -105,18 +138,18 @@ StatusCode PackProtoParticle::execute() {
   }
 
   if ( msgLevel(MSG::DEBUG) )
-    debug() << "Created " << out->protos().size() << " PackedProtoParticles at '" 
+    debug() << "Created " << out->protos().size() << " PackedProtoParticles at '"
             << m_outputName << "'" << endmsg;
 
   // If requested, remove the input data from the TES and delete
   if ( m_deleteInput )
   {
     evtSvc()->unregisterObject( parts );
-    delete parts; 
+    delete parts;
     parts = NULL;
   }
   else
-  { 
+  {
     // Clear the registry address of the unpacked container, to prevent reloading
     parts->registry()->setAddress( 0 );
   }
