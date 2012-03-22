@@ -4,6 +4,11 @@
 ! Responsible : G.Corti
 ! -----------------------------------------------------------------------------
 
+! 2012-03-22 - Marco Cattaneo
+ - GenInit.cpp, SimInit.cpp: do not add the random seeds to the Gen/MCHeader,
+   following removal of ProcessHeader::m_randomSeeds
+ - Replace endreq by endmsg
+
 !======================== GaussAlgs v4r2 2011-11-24 ===========================
 ! 2011-11-24 - Gloria Corti
  - GenInit.cpp: add printout of a few calculated quantities from the beam

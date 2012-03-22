@@ -1,4 +1,3 @@
-// $Id: SimInit.cpp,v 1.8 2009-03-26 21:32:40 robbep Exp $
 // Include files 
 
 // from Gaudi
@@ -23,7 +22,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( SimInit );
+DECLARE_ALGORITHM_FACTORY( SimInit )
 
 
 //=============================================================================
@@ -98,7 +97,6 @@ StatusCode SimInit::execute() {
   header->setRunNumber( evt->runNumber() );
   header->setEvtNumber( evt->evtNumber() );
   header->setEvtTime( m_detDataSvc->eventTime().ns() );
-  header->setRandomSeeds( seeds );
   header->setCondDBTags( this->condDBTags() );
   put( header, m_mcHeader );
 

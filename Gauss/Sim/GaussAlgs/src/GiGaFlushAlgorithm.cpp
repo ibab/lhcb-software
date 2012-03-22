@@ -1,4 +1,3 @@
-// $Id: GiGaFlushAlgorithm.cpp,v 1.7 2007-11-21 20:52:17 gcorti Exp $
 // Include files
 
 // from Gaudi
@@ -80,10 +79,10 @@ StatusCode GiGaFlushAlgorithm::execute()
   
   if ( msgLevel( MSG::DEBUG ) ) 
   { 
-    debug() << " Dump G4 event object " << endreq ;
+    debug() << " Dump G4 event object " << endmsg ;
     if( info().isActive() ) 
     { GiGaUtil::DumpG4Event ( info().stream() , event  ) ; }
-    info() << endreq ;
+    info() << endmsg ;
   };
 
   return StatusCode::SUCCESS;

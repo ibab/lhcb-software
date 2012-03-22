@@ -1,4 +1,3 @@
-// $Id: GenInit.cpp,v 1.6 2009-03-26 21:32:40 robbep Exp $
 // Include files 
 #include <cmath>
 
@@ -22,7 +21,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( GenInit );
+DECLARE_ALGORITHM_FACTORY( GenInit )
 
 
 //=============================================================================
@@ -147,7 +146,6 @@ StatusCode GenInit::execute() {
   header->setApplicationVersion( this->appVersion() );
   header->setRunNumber( m_runNumber );
   header->setEvtNumber( eventNumber );
-  header->setRandomSeeds( seeds );
   put( header, m_mcHeader );    
 
   // Check if BeamParameters already exists (main event only!!), in which case link from header

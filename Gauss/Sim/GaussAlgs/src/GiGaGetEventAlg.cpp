@@ -1,4 +1,3 @@
-// $Id: GiGaGetEventAlg.cpp,v 1.5 2009-01-26 12:02:48 jonrob Exp $ 
 // Include files 
 
 // from Gaudi
@@ -52,7 +51,7 @@ StatusCode GiGaGetEventAlg::execute()
     info() << "Number of extracted MCParticles '"
            << m_particles << "' \t"
            << particles -> size() 
-           << endreq ;
+           << endmsg ;
     Stat stat( chronoSvc(), "#MCParticles", particles->size() );
   }
   
@@ -62,7 +61,7 @@ StatusCode GiGaGetEventAlg::execute()
     info() << "Number of extracted MCVertices  '"
            << m_vertices << "'  \t" 
            << vertices -> size() 
-           << endreq ;
+           << endmsg ;
     Stat stat( chronoSvc(), "#MCVertices", vertices->size() );
   }
   
