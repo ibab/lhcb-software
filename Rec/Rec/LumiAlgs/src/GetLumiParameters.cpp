@@ -62,7 +62,6 @@ StatusCode GetLumiParameters::initialize(){
   m_calibScale = 0;
   m_calibScaleError = 0;
   for ( int key = 0; key <= LHCb::LumiCounters::Random; key++ ) {
-    std::string counterName = LHCb::LumiCounters::counterKeyToString( key );
     m_calibRelative.push_back(0);
     m_calibCoefficients.push_back(0);
     m_calibRelativeLog.push_back(0);

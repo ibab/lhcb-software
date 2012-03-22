@@ -3,6 +3,8 @@
 ! Responsible : Jaap Panman
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
+! 2012-03-22 - Jaap Panman
+ - Fix warnings due to unused code
 
 ! 2012-03-19 - Marco Cattaneo
  - Fix unprotected DEBUG and VERBOSE messages
