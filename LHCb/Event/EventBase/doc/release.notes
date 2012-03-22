@@ -1,12 +1,12 @@
-! $Id: release.notes,v 1.19 2009-06-05 05:36:34 cattanem Exp $
+!---------------------------------------------------------------------------
 ! Package     : Event/EventBase
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model
 !---------------------------------------------------------------------------
 
-! 2012-03-21 - Marco Cattaneo
- - Change type of ProcessHeader::m_randomSeeds to std:vector<long long>
-   (was std::vector<long>) to avoid 32-64 bit portability issues in ROOT.
+! 2012-03-22 - Marco Cattaneo
+ - Remove ProcessHeader::m_randomSeeds since they are not used anywhere and
+   causes portability problems with persistency of vector<long>
 
 !========================== EventBase v2r5p1 2009-06-05 ====================
 ! 2009-06-05 - Marco Cattaneo

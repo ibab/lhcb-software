@@ -24,11 +24,6 @@
        <location name = "Rec"  place = "Rec/Header" />
        <import name="Kernel/CondDBNameTagPair.h" />
        <attribute
-        desc="random number seeds for this step"
-        name="randomSeeds"
-        type="std::vector &lt; long long &gt;"
-       />
-       <attribute
         desc="Application or Program Name (e.g. Gauss, Boole or Pythia)"
         name="applicationName"
         type="std::string"
@@ -53,7 +48,7 @@
        />
        <constructor 
 	 desc     = "Copy constructor. Creates a new ProcessHeader with the same information." 
-	 initList = "DataObject(), m_randomSeeds(head.randomSeeds()), m_applicationName(head.applicationName()), m_applicationVersion(head.applicationVersion()), m_runNumber(head.runNumber()), m_condDBTags(head.condDBTags())">
+	 initList = "DataObject(), m_applicationName(head.applicationName()), m_applicationVersion(head.applicationVersion()), m_runNumber(head.runNumber()), m_condDBTags(head.condDBTags())">
          <arg const="TRUE" name="head" type="LHCb::ProcessHeader"/>
          <code/>
        </constructor>
