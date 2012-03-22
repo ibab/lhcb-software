@@ -4,6 +4,7 @@
 ! Purpose     : Holds code for writing an XML-based summary in Gaudi
 !-----------------------------------------------------------------------------
 
+!========================= XMLSummaryKernel v1r6 2012-03-22 =========================
 ! 2012-03-19 - Roel Aaij
  - Make the type of incident used for begin and end event configurable with a default
    to the standard types.
