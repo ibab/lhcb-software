@@ -43,6 +43,7 @@ namespace LHCb  {
     typedef std::map<int,int> Children;
     typedef void*             Files;
 
+    std::vector<std::string>  m_restoreOptionClients;
     /// Property: Name of the checkpoint file to be created
     std::string               m_checkPoint;
     /// Property: Partition name used to build the child instance name
@@ -167,6 +168,8 @@ namespace LHCb  {
 
 #include "GaudiKernel/IJobOptionsSvc.h" 
 #include "GaudiKernel/IIncidentSvc.h" 
+#include "GaudiKernel/IAlgManager.h" 
+#include "GaudiKernel/IAlgorithm.h" 
 #include "GaudiKernel/MsgStream.h" 
 #include "GaudiOnline/ITaskFSM.h"
 #include "Checkpointing/Chkpt.h"
@@ -274,21 +277,22 @@ CheckpointSvc::CheckpointSvc(const string& nam,ISvcLocator* pSvc)
 {
   m_masterProcess = true;
   m_restartChildren = false;
-  declareProperty("NumberOfInstances",  m_numInstances  = 0);
-  declareProperty("UseCores",           m_useCores      = false);
-  declareProperty("ChildSessions",      m_childSessions = false);
-  declareProperty("DumpFiles",          m_dumpFD        = false);
-  declareProperty("Checkpoint",         m_checkPoint    = "");
-  declareProperty("PrintLevel",         m_printLvl      = MSG::WARNING);
-  declareProperty("Partition",          m_partition     = "");
-  declareProperty("TaskType",           m_taskType      = "Gaudi");
-  declareProperty("UtgidPattern",       m_utgid         = "%N_%T_%02d");
-  declareProperty("ExitAfterCheckpoint",m_exit          = 1);
-  declareProperty("KillChildren",       m_killChildren  = false);
-  declareProperty("FirstChild",         m_firstChild    = 0);
-  declareProperty("ChildWait",          m_childWait     = 0);
-  declareProperty("ChildSleep",         m_childSleep    = 250);
-  declareProperty("ForceUtgid",         m_forceUTGID    = 0);
+  declareProperty("NumberOfInstances",   m_numInstances  = 0);
+  declareProperty("UseCores",            m_useCores      = false);
+  declareProperty("ChildSessions",       m_childSessions = false);
+  declareProperty("DumpFiles",           m_dumpFD        = false);
+  declareProperty("Checkpoint",          m_checkPoint    = "");
+  declareProperty("PrintLevel",          m_printLvl      = MSG::WARNING);
+  declareProperty("Partition",           m_partition     = "");
+  declareProperty("TaskType",            m_taskType      = "Gaudi");
+  declareProperty("UtgidPattern",        m_utgid         = "%N_%T_%02d");
+  declareProperty("ExitAfterCheckpoint", m_exit          = 1);
+  declareProperty("KillChildren",        m_killChildren  = false);
+  declareProperty("FirstChild",          m_firstChild    = 0);
+  declareProperty("ChildWait",           m_childWait     = 0);
+  declareProperty("ChildSleep",          m_childSleep    = 250);
+  declareProperty("ForceUtgid",          m_forceUTGID    = 0);
+  declareProperty("RestoreOptionClients",m_restoreOptionClients);
 }
 
 /// IInterface implementation : queryInterface
@@ -535,6 +539,24 @@ int CheckpointSvc::parseRestartOptions()    {
 	  checkpointing_set_utgid(utgid.c_str());
 	  const char* dns = ::getenv("DIM_DNS_NODE");
 	  MsgStream log(msgSvc(),name());
+	  SmartIF<IAlgManager> algMgr(serviceLocator());
+	  for(vector<string>::const_iterator i=m_restoreOptionClients.begin(); i!=m_restoreOptionClients.end();++i) {
+	    const string& nam = *i;
+	    IAlgorithm* alg = 0;
+	    IProperty* prop = 0;
+	    sc = StatusCode::FAILURE;
+	    if ( (sc=algMgr->getAlgorithm(nam,alg)).isSuccess() ) {
+	      prp = alg;
+	      sc = jos->setMyProperties(alg->name(), prp);
+	    }
+	    else if ( (sc=serviceLocator()->service(nam,prop)).isSuccess() )  {
+	      sc = jos->setMyProperties(nam, prop);
+	    }
+	    if ( !sc.isSuccess() )  {
+	      log << MSG::FATAL << "Failed to update properties of:" << nam << endmsg;
+	      return sc;
+	    }
+	  }
 	  log << MSG::INFO << "Processed RESTARTOPTS:" << env 
 	      << " Process:" << RTL::processName() 
 	      << " Node:" << RTL::nodeNameShort() 
