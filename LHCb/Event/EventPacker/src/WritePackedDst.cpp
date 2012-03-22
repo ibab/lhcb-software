@@ -1,4 +1,3 @@
-// $Id: WritePackedDst.cpp,v 1.7 2010-05-18 09:03:21 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -204,10 +203,7 @@ StatusCode WritePackedDst::execute()
       PackedBank bank( in );
       unsigned int evHigh = ((in->evtNumber() ) >> 32) && 0xFFFFFFFF;
       unsigned int evLow  = ( in->evtNumber() && 0xFFFFFFFF );
-      bank.addEntry( evHigh, evLow, in->randomSeeds().size() );
-      for ( unsigned int kk=0 ; in->randomSeeds().size() > kk; ++kk ) {
-        bank.storeInt( in->randomSeeds()[kk] );
-      }
+      bank.addEntry( evHigh, evLow, 0 ); // 0 is size of random seeds vector, for backward compatibility
       bank.storeString( in->applicationName() );
       bank.storeString( in->applicationVersion() );
       bank.storeInt( in->runNumber() );

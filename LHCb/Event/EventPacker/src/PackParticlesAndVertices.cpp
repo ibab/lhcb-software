@@ -1,4 +1,3 @@
-// $Id: $
 // Include files
 
 // local
@@ -26,6 +25,13 @@ DECLARE_ALGORITHM_FACTORY( PackParticlesAndVertices )
   declareProperty( "DeleteInput",        m_deleteInput   = false     );
   declareProperty( "ListRemaining",      m_listRemaining = false     );
   declareProperty( "VetoedContainers",   m_vetoedConts  );
+
+  m_clIdParticles   = 0x60000 + LHCb::CLID_Particle;
+  m_clIdVertices    = 0x60000 + LHCb::CLID_Vertex;
+  m_clIdRecVertices = 0x60000 + LHCb::CLID_RecVertex;
+  m_clIdPart2Vert   = 0xEA9168DC;   // One of Vanya's relation, Particle to Vertex
+  m_clIdPart2Ints   = 880; // Defined in the .cpp of this class!!!!
+
 }
 
 //=============================================================================
@@ -42,13 +48,6 @@ StatusCode PackParticlesAndVertices::initialize( )
   if ( sc.isFailure() ) return sc;  
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
-
-  m_clIdParticles   = 0x60000 + LHCb::CLID_Particle;
-  m_clIdVertices    = 0x60000 + LHCb::CLID_Vertex;
-  m_clIdRecVertices = 0x60000 + LHCb::CLID_RecVertex;
-  m_clIdPart2Vert   = 0xEA9168DC;   // One of Vanya's relation, Particle to Vertex
-  m_clIdPart2Ints   = 880; // Defined in the .cpp of this class!!!!
-
   return sc;
 }
 

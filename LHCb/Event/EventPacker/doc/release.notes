@@ -5,7 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2012-03-22 - Marco Cattaneo
- - Follow change in type of ProcessHeader::m_randomSeeds
+ - Adapt WritePackedDst, ReadPackedDst to removal of ProcessHeader::m_randomSeeds
+   Writer now writes a zero to mimic the length of the seeds vector, reader does
+   a number of dummy reads equal to the size of the seeds vector
+ - Fix UNINIT_CTOR
 
 !========================= EventPacker v2r13 2012-03-14 =========================
 ! 2012-03-06 - Olivier Callot
