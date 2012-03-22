@@ -1,4 +1,3 @@
-// $Id: BooleInit.cpp,v 1.33 2010-05-05 09:33:07 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -26,7 +25,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( BooleInit );
+DECLARE_ALGORITHM_FACTORY( BooleInit )
 
 
 //=============================================================================
@@ -63,7 +62,7 @@ BooleInit::BooleInit( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-BooleInit::~BooleInit() {}; 
+BooleInit::~BooleInit() {}
 
 //=============================================================================
 // Initialization
@@ -72,7 +71,7 @@ StatusCode BooleInit::initialize() {
   StatusCode sc = LbAppInit::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by LbAppInit
 
-  debug() << "==> Initialize" << endmsg;
+  if(msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
 
   // Private tool to plot the memory usage
   if ( "" == rootInTES() )
@@ -96,7 +95,7 @@ StatusCode BooleInit::initialize() {
   
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -106,7 +105,7 @@ StatusCode BooleInit::execute() {
   StatusCode sc = LbAppInit::execute(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by LbAppInit
 
-  debug() << "==> Execute" << endmsg;
+  if(msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
 
   // Plot the memory usage
   if ( "" == rootInTES() ) m_memoryTool->execute();
@@ -130,7 +129,6 @@ StatusCode BooleInit::execute() {
     header->setApplicationName( this->appName() );
     header->setApplicationVersion( this->appVersion() );
     header->setRunNumber( evt->runNumber() );
-    header->setRandomSeeds( seeds );
     header->setCondDBTags( this->condDBTags() );
     put( header, LHCb::ProcessHeaderLocation::Digi );
   }
@@ -161,8 +159,7 @@ StatusCode BooleInit::execute() {
   m_odinTool->execute();
 
   return StatusCode::SUCCESS;
-};
-
+}
 
 //=============================================================================
 // modify ODIN bank
@@ -196,17 +193,20 @@ void BooleInit::modifyOdin(LHCb::ODIN* odin) {
   int interaction = 0;
   
   for (std::vector< LHCb::GenCollision* >::iterator process = Collisions->begin(); process != Collisions->end(); process++){      
-    if(msgLevel(MSG::DEBUG))
-      debug() << "Collision type: " << (*process)->processType() << endmsg;
-    int type= (*process)->processType();
-    if (numCollisions==1) {
-      if (type==91 && msgLevel(MSG::DEBUG)) {
-        debug()<< "Single Proton Elastic collision!"<<endmsg;
+    int type = (*process)->processType();
+
+    if(msgLevel(MSG::DEBUG)) {
+      debug() << "Collision type: " << type << endmsg;
+      if (numCollisions==1) {
+        if (type==91) {
+          debug()<< "Single Proton Elastic collision!"<<endmsg;
+        }
+        else if (type==92 || type ==93) {
+          debug()<< "Single Diffractive collision!"<<endmsg; 
+        }
       }
-      else if ((type==92 || type ==93) && msgLevel(MSG::DEBUG)) {
-        debug()<< "Single Diffractive collision!"<<endmsg; 
-      };
-    };
+    }
+
     if (type==91) {
     }
     else if (type==92 || type ==93) {
@@ -271,6 +271,4 @@ void BooleInit::modifyOdin(LHCb::ODIN* odin) {
   odin->setBunchCurrent( BunchCurrent );
   
 }
-
 //=============================================================================
-

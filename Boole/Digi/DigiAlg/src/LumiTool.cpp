@@ -1,5 +1,3 @@
-// $Id: LumiTool.cpp,v 1.7 2010-04-26 15:30:37 cattanem Exp $ 
-
 // Include files
 #include "LumiTool.h"
 #include "GaudiKernel/ToolFactory.h"
@@ -24,7 +22,7 @@
 //--------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( LumiTool );
+DECLARE_TOOL_FACTORY( LumiTool )
 
 // Standard Constructor
 LumiTool::LumiTool( const std::string& type, 
@@ -71,7 +69,8 @@ StatusCode LumiTool::numInteractions( int& nEvents ) {
                                            * Gaudi::Units::s / 1.e32;
 
   if( 0. < currentLumi ) {
-    debug() << " Luminosity of main event: " << currentLumi << endmsg;
+    if(msgLevel(MSG::DEBUG)) 
+      debug() << " Luminosity of main event: " << currentLumi << endmsg;
   } 
   else { 
     err() << " Bad lumi in main event: " << currentLumi << endmsg;
@@ -94,8 +93,9 @@ StatusCode LumiTool::numInteractions( int& nEvents ) {
     else {
       nEvents = (int)(fltNEvents);
     }
-    debug() << " averageInter, fltNEvents, nEvents "
-        << averageInter  << " " << fltNEvents   << " " << nEvents << endmsg;
+    if(msgLevel(MSG::DEBUG)) debug() << " averageInter, fltNEvents, nEvents "
+                                     << averageInter  << " " << fltNEvents << " "
+                                     << nEvents << endmsg;
   }
   else {
     return Error( "Failed to get Poisson random number" );

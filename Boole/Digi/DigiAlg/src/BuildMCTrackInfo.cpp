@@ -1,4 +1,3 @@
-// $Id: BuildMCTrackInfo.cpp,v 1.10 2009-04-06 09:53:58 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -31,21 +30,24 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( BuildMCTrackInfo );
+DECLARE_ALGORITHM_FACTORY( BuildMCTrackInfo )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 BuildMCTrackInfo::BuildMCTrackInfo( const std::string& name,
-                                            ISvcLocator* pSvcLocator)
+                                    ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
+  , m_velo(0)
+  , m_ttDet(0)
+  , m_itDet(0)
+  , m_otDet(0)
 {
-
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-BuildMCTrackInfo::~BuildMCTrackInfo() {}; 
+BuildMCTrackInfo::~BuildMCTrackInfo() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -54,21 +56,21 @@ StatusCode BuildMCTrackInfo::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  if(msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
 
-  m_velo = getDet<DeVelo>( DeVeloLocation::Default );
-
-  m_ttDet = getDet<DeSTDetector>(DeSTDetLocation::TT );
-  debug() << "Number of TT layers " << m_ttDet->layers().size() << endmsg;
-  
+  m_velo  = getDet<DeVelo>( DeVeloLocation::Default );
+  m_ttDet = getDet<DeSTDetector>(DeSTDetLocation::TT );  
   m_itDet = getDet<DeSTDetector>(DeSTDetLocation::IT );
-  debug() << "Number of IT layers " << m_itDet->layers().size() << endmsg;
-
   m_otDet = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
-  debug() << "Number of OT layers " << m_otDet->layers().size() << endmsg;
 
+  if(msgLevel(MSG::DEBUG)) {
+    debug() << "Number of TT layers " << m_ttDet->layers().size() << endmsg;
+    debug() << "Number of IT layers " << m_itDet->layers().size() << endmsg;
+    debug() << "Number of OT layers " << m_otDet->layers().size() << endmsg;
+  }
+  
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -245,14 +247,14 @@ StatusCode BuildMCTrackInfo::execute() {
   }
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize
 //=============================================================================
 StatusCode BuildMCTrackInfo::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+    if(msgLevel(MSG::DEBUG)) debug() << "==> Finalize" << endmsg;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }

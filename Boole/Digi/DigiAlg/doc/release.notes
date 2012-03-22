@@ -4,6 +4,12 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-03-22 - Marco Cattaneo
+ - Adapt BooleInit to removal of random seeds from ProcessHeader
+ - Fix unprotected debugs
+ - Fix trivial icc remarks
+ - Fix UNINIT_CTOR defects
+
 !========================== DigiAlg v4r20 2010-05-07 =========================
 ! 2010-05-05 - Johannes Albrecht
  - Set simple odin configuration as default: 

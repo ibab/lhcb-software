@@ -1,4 +1,3 @@
-// $Id: FilterMCPrimaryVtx.cpp,v 1.1 2009-04-06 09:53:58 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -18,8 +17,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( FilterMCPrimaryVtx );
-
+DECLARE_ALGORITHM_FACTORY( FilterMCPrimaryVtx )
 
 //=============================================================================
 // Standard constructor, initializes variables

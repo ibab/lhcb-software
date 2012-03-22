@@ -1,4 +1,3 @@
-// $Id: MergeEventAlg.cpp,v 1.16 2009-04-06 09:53:59 cattanem Exp $
 #define MERGEEVENTALG_CPP
 // Include files
 
@@ -30,7 +29,7 @@
  */
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( MergeEventAlg );
+DECLARE_ALGORITHM_FACTORY( MergeEventAlg )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -41,6 +40,7 @@ MergeEventAlg::MergeEventAlg ( const std::string& name,
   , m_mergeType( "LHCBackground" )
   , m_mergeSelectorName( "LHCBkgSelector" )
   , m_mergeSelector(0)
+  , m_mergeISelector(0)
   , m_mergeIt(0)
   , m_lumiTool(0)
   , m_eventCounter(0)
