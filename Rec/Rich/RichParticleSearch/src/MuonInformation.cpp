@@ -1,4 +1,3 @@
-// $Id: $
 // Include files
 
 // from Gaudi
@@ -23,9 +22,9 @@ DECLARE_TOOL_FACTORY( MuonInformation )
                                     const std::string& name,
                                     const IInterface* parent )
     : GaudiTool ( type, name , parent )
+    , m_caloElectron(0)
 {
   declareInterface<IMuonInformation>(this);
-  //  m_caloElectron = tool<ICaloElectron>("CaloElectron", this);
 }
 
 //=============================================================================
@@ -49,16 +48,10 @@ StatusCode MuonInformation::initialize()
 
 int MuonInformation::HasMuonInformation(const LHCb::Track* track)
 {
-  //m_caloElectron = tool<ICaloElectron>("CaloElectron", this);
   int hasMuonPID =0;
-  //  m_caloElectron = tool<ICaloElectron>("CaloElectron", this);
   const LHCb::ProtoParticles* pps = get< LHCb::ProtoParticles > (LHCb::ProtoParticleLocation::Charged);
-  if( 0 == pps ) {
-    info()<<"No proto particles"<<endmsg;
-    return StatusCode::FAILURE ;
-  }
-  const LHCb::Track* Prototrack;
 
+  const LHCb::Track* Prototrack;
 
   // Loop over PP
   for( LHCb::ProtoParticles::const_iterator ipp = pps->begin() ;
@@ -68,7 +61,7 @@ int MuonInformation::HasMuonInformation(const LHCb::Track* track)
 
     Prototrack = pp->track();
     if (Prototrack != track){
-      debug()<<"Tracks do not match"<<endmsg;
+      if ( msgLevel(MSG::DEBUG) ) debug()<<"Tracks do not match"<<endmsg;
       continue;
     }
     if (Prototrack == track){
@@ -81,12 +74,12 @@ int MuonInformation::HasMuonInformation(const LHCb::Track* track)
       //const LHCb::RichPID* richPID = pp->richPID();
       if(muonPID == 0){
         hasMuonPID =0;
-        debug()<<" No Muon PID"<<endmsg;
+        if ( msgLevel(MSG::DEBUG) ) debug()<<" No Muon PID"<<endmsg;
         continue;
       }
       if (muonPID != 0 ){
         hasMuonPID = 1;
-        debug()<<"Muon PID "<<muonPID<<endmsg;
+        if ( msgLevel(MSG::DEBUG) ) debug()<<"Muon PID "<<muonPID<<endmsg;
       }
 
       bool isloosemuontrack = muonPID->IsMuonLoose();

@@ -1,8 +1,15 @@
 !-----------------------------------------------------------------------------
 ! Package     : Rich/RichParticleSearch
 ! Responsible : Matt Coombes
-! Purpose     : Find exotic particles with the RICHes. Get Noble price.
+! Purpose     : Find exotic particles with the RICHes. Get Nobel price.
 !-----------------------------------------------------------------------------
+
+! 2012-03-22 - Marco Cattaneo
+ - Fix to get run number and event number from MCHeader, not from random seeds
+ - Get run number and event number once per event, rather than once per segment!
+ - Fix UNINIT_CTOR defects
+ - Fix unprotected debugs
+ - Various minor cleanups
 
 !========================= RichParticleSearch v1r5 2011-12-15 ================
 ! 2011-12-02 - Chris Jones

@@ -1,5 +1,3 @@
-
-// $Id: $
 // Include files
 
 // From Gaudi
@@ -12,10 +10,9 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-//#include "Kernel/IOnOffline.h"
 #include "Event/RecVertex.h"
 #include "GaudiAlg/GaudiTool.h"
-#include "Event/ProcessHeader.h"
+#include "Event/MCHeader.h"
 
 //namespaces
 
@@ -42,6 +39,7 @@ DECLARE_ALGORITHM_FACTORY( RichParticleSearchMain )
       m_ckAngle           ( NULL ),
       m_isoTrack          ( NULL ),
       m_tkIndex     ( NULL ),
+      m_MuonInformation   ( NULL ),
       m_signal     ( NULL )
 {
 
@@ -91,7 +89,7 @@ StatusCode RichParticleSearchMain::initialize() {
 
 
   if ( m_useMCTruth ) {
-    debug()<<"Use MC in ParticleSearch"<<endmsg;
+    if ( msgLevel(MSG::DEBUG) ) debug()<<"Use MC in ParticleSearch"<<endmsg;
     acquireTool( "RichRecMCTruthTool",   m_richRecMCTruth );
     acquireTool( "RichParticleProperties", m_richPartProp );
   }
@@ -100,13 +98,15 @@ StatusCode RichParticleSearchMain::initialize() {
   EvtNum =0;
   m_tkTotal = 0;
 
-  debug()<<"IsoCuts "<<m_IsoCut<<endmsg;
-
-  debug()<<"MaxRichRecTracks "<<m_maxUsedTracks<<endmsg;
-
   m_radiator = static_cast<Rich::RadiatorType>(m_radTemp);
+
+  if ( msgLevel(MSG::DEBUG) ) {
+    debug()<<"IsoCuts "<<m_IsoCut<<endmsg;
+    debug()<<"MaxRichRecTracks "<<m_maxUsedTracks<<endmsg;
+    debug() << "Radiator:" << m_radiator << " " << m_radTemp << endmsg;
+  }
+  
   m_particleType =2;//Pion
-  debug() << "Radiator:" << m_radiator << " " << m_radTemp << endmsg;
 
   // m_pType = static_cast<Rich::ParticleIDType>(m_particleType);
   //debug() << "Fixed particle type:" << m_pType << endmsg;
@@ -118,7 +118,7 @@ StatusCode RichParticleSearchMain::initialize() {
     StatusCode scM = m_MuonInformation->initialize();
   }
 
-  debug() << "Finished Initialization" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "Finished Initialization" << endmsg;
   return StatusCode::SUCCESS;
 }
 
@@ -139,9 +139,10 @@ StatusCode RichParticleSearchMain::execute() {
     {
       return Error( "Problem Making Tracks" );
     }
-    debug () << "No tracks found : Created " << richTracks()->size()
-             << " RichRecTracks " << richSegments()->size()
-             << " RichRecSegments" << endmsg;
+    if ( msgLevel(MSG::DEBUG) ) 
+      debug () << "No tracks found : Created " << richTracks()->size()
+               << " RichRecTracks " << richSegments()->size()
+               << " RichRecSegments" << endmsg;
   }
   if ( msgLevel(MSG::DEBUG) )
   {
@@ -149,8 +150,9 @@ StatusCode RichParticleSearchMain::execute() {
   }
   if ( (int)richTracks()->size() > m_maxUsedTracks )
   {
-    debug() << "Found " << richTracks()->size() << ">"
-            << m_maxUsedTracks << " max usable tracks, stopping." << endmsg;
+    if ( msgLevel(MSG::DEBUG) ) 
+      debug() << "Found " << richTracks()->size() << ">"
+              << m_maxUsedTracks << " max usable tracks, stopping." << endmsg;
     return StatusCode::SUCCESS;
   }
 
@@ -159,17 +161,19 @@ StatusCode RichParticleSearchMain::execute() {
     {
       return Error( "Problem Making Pixels" );
     }
-    debug() << "No Pixels found : Created "
-            << richPixels()->size() << " RichRecPixels" << endmsg;
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "No Pixels found : Created "
+              << richPixels()->size() << " RichRecPixels" << endmsg;
   }
 
   if ( richPhotons()->empty() ) {
     photonCreator()->reconstructPhotons().ignore();
-    debug() << "No photons found : Created "
-            << richPhotons()->size() << " RichRecPhotons" << endmsg;
+    if ( msgLevel(MSG::DEBUG) ) 
+      debug() << "No photons found : Created "
+              << richPhotons()->size() << " RichRecPhotons" << endmsg;
   }
   int trackCounter =0;
-  debug()<< "Event "<<EvtNum<<endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug()<< "Event "<<EvtNum<<endmsg;
 
   //Get int for RICH; 0 Aerogel; 1 RICH1Gas; 2 Rich2Gas
   const int RICHint = GetRichInt();
@@ -188,28 +192,16 @@ StatusCode RichParticleSearchMain::execute() {
 
 
   EvtNum++;
+  if ( msgLevel(MSG::DEBUG) ) debug()<< "Event "<<EvtNum<<endmsg;
+  
   // =========================================================================//
   // Iterate over segments
   for ( LHCb::RichRecSegments::const_iterator iSeg = richSegments()->begin();
         iSeg != richSegments()->end(); ++iSeg )
   {
-    //runNumber and eventNumber added by Viet Nga
-    unsigned long long runNumber = 0;
-    unsigned long long evtNumber = 0;
-    if (m_useMCTruth)
-    {
-      const LHCb::ProcessHeader* header = get<LHCb::ProcessHeader>(LHCb::ProcessHeaderLocation::Digi);
-      const std::vector<long int> seeds = header-> randomSeeds();
-      runNumber = seeds[0];
-      evtNumber = seeds[1];
-    }
-
-
     LHCb::RichRecSegment* segment = *iSeg;
-    debug()<< "Event "<<EvtNum<<endmsg;
-    debug()<< "trackCounter "<<trackCounter<<endmsg;
-
-
+    if ( msgLevel(MSG::DEBUG) ) debug()<< "trackCounter "<<trackCounter<<endmsg;
+    
     // Saturated CK angle for segment
     double SatCK = m_ckAngle->saturatedCherenkovTheta(segment);
     // Maximum allowed angle
@@ -231,7 +223,7 @@ StatusCode RichParticleSearchMain::execute() {
     int MCtype(-1);
     if ( m_useMCTruth ) {
       const ParticleIDType mcType = m_richRecMCTruth->mcParticleType( segment );
-      debug()<< "mcType: "<<mcType<<endmsg;
+      if ( msgLevel(MSG::DEBUG) ) debug()<< "mcType: "<<mcType<<endmsg;
       //assign nmber to each type of true particle to store in NTuple
       MCtype = (int) mcType;
     }//end if use truth
@@ -443,6 +435,12 @@ StatusCode RichParticleSearchMain::execute() {
 
               if ( m_useMCTruth )
               { // if use Truth information
+
+
+                //runNumber and eventNumber added by Viet Nga
+                const LHCb::MCHeader* header = get<LHCb::MCHeader>(LHCb::MCHeaderLocation::Default);
+                unsigned long long runNumber = header->runNumber();
+                unsigned long long evtNumber = header->evtNumber();
 
                 TrackTuple->column( "trackKey", trackKey);
                 TrackTuple->column( "runNumber", (unsigned int)runNumber);
