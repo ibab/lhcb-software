@@ -19,6 +19,7 @@
 std::ostream& LHCb::ProtoParticle::fillStream( std::ostream & s ) const
 {
   s << "{"
+    << " Track "     << this->track()
     << " CaloHypos " << this->calo()
     << " RichPID "   << this->richPID()
     << " MuonPID "   << this->muonPID()
