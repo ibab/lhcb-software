@@ -76,7 +76,7 @@ StatusCode TupleToolRecoStats::fill( Tuples::Tuple& tup )
   test &= tup->column( prefix+"nMuonCoordsS4",     rS ? rS->info(LHCb::RecSummary::nMuonCoordsS4,-1) : -2 );
   test &= tup->column( prefix+"nMuonTracks",       rS ? rS->info(LHCb::RecSummary::nMuonTracks,-1)   : -2 );
 
-  return StatusCode(test) ;
+  return StatusCode(test);
 }
 
 // Declaration of the Tool Factory

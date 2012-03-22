@@ -105,16 +105,16 @@ StatusCode TupleToolGeometry::fill( const Particle* mother
   //=========================================================================
   if( P->isBasicParticle() ){
     if (msgLevel(MSG::VERBOSE)) verbose() << "No need to look for endVertex of " << prefix << endmsg ;
-  } else {    
+  } else {
     //=========================================================================
     if (msgLevel(MSG::VERBOSE) && P->endVertex()) { // https://savannah.cern.ch/bugs/?92524
       verbose() << "Before cast : " << P->endVertex() << endmsg ;
-      verbose() << "Container " << P->endVertex()->parent()->registry()->identifier() 
+      verbose() << "Container " << P->endVertex()->parent()->registry()->identifier()
                 << " key " << P->endVertex()->key() << endmsg ;
     }
-    
+
     const VertexBase* evtx = P->endVertex();
-    if( 0==evtx ){    
+    if( 0==evtx ){
       Warning("No endVertex",1,StatusCode::FAILURE);
       return Error("Can't retrieve the end vertex for " + prefix );
     }
@@ -125,11 +125,11 @@ StatusCode TupleToolGeometry::fill( const Particle* mother
     // end vertex
     sc = fillVertex(evtx,prefix+"_ENDVERTEX",tuple);
     if (!sc) {
-      Warning("Could not fill Endvertex "+prefix,1,StatusCode::FAILURE);        
+      Warning("Could not fill Endvertex "+prefix,1,StatusCode::FAILURE);
       return sc;
     }
   }
-  
+
   const VertexBase* aPV = NULL;
 
   //=========================================================================
@@ -141,7 +141,7 @@ StatusCode TupleToolGeometry::fill( const Particle* mother
     if(aPV && msgLevel(MSG::VERBOSE)) verbose() << "Got best PV of particle : " << *aPV  << endmsg  ;
     sc = fillVertexFull(aPV,P,prefix,"_OWNPV",tuple);
     if (!sc){
-      Warning("Could not fill best PV",1,StatusCode::FAILURE); 
+      Warning("Could not fill best PV",1,StatusCode::FAILURE);
       return sc;
     }
   }
@@ -168,7 +168,7 @@ StatusCode TupleToolGeometry::fill( const Particle* mother
     if (isVerbose()) {
       sc = fillVertexFull(aPV,P,prefix,"_ORIVX",tuple);
       if (!sc) {
-        Warning("Could not fill VertexFull "+prefix,1,StatusCode::FAILURE);        
+        Warning("Could not fill VertexFull "+prefix,1,StatusCode::FAILURE);
         return sc;
       }
     }
@@ -181,12 +181,12 @@ StatusCode TupleToolGeometry::fill( const Particle* mother
       }
       if( !P->isBasicParticle() ) sc = fillFlight(aPV,P,prefix,tuple,"_ORIVX");
       if (!sc) {
-        Warning("Could not fill Flight",1,StatusCode::FAILURE);        
+        Warning("Could not fill Flight",1,StatusCode::FAILURE);
         return sc;
       }
-      
+
     }
- 
+
     if (!sc) return sc;
   }
   //=========================================================================
@@ -205,16 +205,16 @@ StatusCode TupleToolGeometry::fillVertexFull(const LHCb::VertexBase* vtx,
   if( 0==vtx ) counter("Can't retrieve the " +vtx_name+ " vertex for " + prefix )++;
   StatusCode sc = fillVertex(vtx,prefix+vtx_name,tuple);
   if (!sc) {
-    Warning("Could not fill Endvertex "+prefix,1,StatusCode::FAILURE);   
+    Warning("Could not fill Endvertex "+prefix,1,StatusCode::FAILURE);
     return sc;
   }
   sc = fillBPV(vtx,P,prefix,tuple,vtx_name);
   if (!sc) {
-    Warning("Could not fillBPV "+prefix,1,StatusCode::FAILURE); 
+    Warning("Could not fillBPV "+prefix,1,StatusCode::FAILURE);
     return sc;
   }
   if( !P->isBasicParticle() ) sc = fillFlight(vtx,P,prefix,tuple,vtx_name);
-  if (!sc)  Warning("Error in fillVertexFull "+prefix,1,StatusCode::FAILURE);        
+  if (!sc)  Warning("Error in fillVertexFull "+prefix,1,StatusCode::FAILURE);
   return sc;
 
 }
@@ -244,7 +244,7 @@ StatusCode TupleToolGeometry::fillBPV( const VertexBase* primVtx
     test &= tuple->column( prefix + "_IPCHI2"+trail, chi2 );
   }
 
-  if (!test)  Warning("Error in fillBPV "+prefix,1,StatusCode::FAILURE);        
+  if (!test)  Warning("Error in fillBPV "+prefix,1,StatusCode::FAILURE);
   return StatusCode(test) ;
 }
 //=========================================================================
@@ -265,7 +265,7 @@ StatusCode TupleToolGeometry::fillMinIP( const Particle* P
   if(msgLevel(MSG::VERBOSE)) verbose() << "PV size: "  << PV.size() << endmsg  ;
   if ( !PV.empty() )
   {
-    if(msgLevel(MSG::VERBOSE)) verbose() << "Filling IP " << prefix + "_MINIP : " 
+    if(msgLevel(MSG::VERBOSE)) verbose() << "Filling IP " << prefix + "_MINIP : "
                                          << P << " PVs:" << PV.size() << endmsg ;
 
     for ( RecVertex::Range::const_iterator pv = PV.begin() ; pv!=PV.end() ; ++pv)
@@ -326,7 +326,7 @@ StatusCode TupleToolGeometry::fillMinIP( const Particle* P
 
   // --------------------------------------------------
   if(msgLevel(MSG::VERBOSE)) verbose() << "Return from fillMinIP: " << prefix  << " " << test << endmsg  ;
-  if (!test)  Warning("Error in fillMinIP",1,StatusCode::FAILURE);        
+  if (!test)  Warning("Error in fillMinIP",1,StatusCode::FAILURE);
   return StatusCode(test) ;
 }
 //=========================================================================
@@ -360,7 +360,7 @@ StatusCode TupleToolGeometry::fillVertex( const LHCb::VertexBase* vtx
   }
 
   // --------------------------------------------------
-  if (!test)  Warning("Error in fillVertex "+vtx_name,1,StatusCode::FAILURE);        
+  if (!test)  Warning("Error in fillVertex "+vtx_name,1,StatusCode::FAILURE);
   return StatusCode(test) ;
 
 }
@@ -404,7 +404,7 @@ StatusCode TupleToolGeometry::fillFlight( const VertexBase* oriVtx
     test &= tuple->column( prefix + "_DIRA"+trail, cosPFD );
   }
 
-  if (!test)  Warning("Error in fillFlight "+prefix,1,StatusCode::FAILURE);        
+  if (!test)  Warning("Error in fillFlight "+prefix,1,StatusCode::FAILURE);
   return StatusCode(test);
 }
 // =====================================================

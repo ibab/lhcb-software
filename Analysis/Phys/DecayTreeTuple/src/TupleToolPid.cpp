@@ -44,8 +44,8 @@ StatusCode TupleToolPid::fill( const Particle*
     bool test = true;
     test &= tuple->column( prefix+"_ID", P->particleID().pid() );
 
-    if( !P->isBasicParticle() ) return StatusCode(test); // no rich info for composite!
-    if( isPureNeutralCalo(P)) return StatusCode(test); // no rich information for calo neutrals
+    if ( !P->isBasicParticle() ) return StatusCode(test); // no PID info for composite!
+    if ( isPureNeutralCalo(P)  ) return StatusCode(test); // no PID information for calo neutrals
 
     const ProtoParticle* proto = P->proto();
     if ( proto )
@@ -83,6 +83,7 @@ StatusCode TupleToolPid::fill( const Particle*
 
       // RICH
       const RichPID * richPID = proto->richPID();
+      info() << proto->parent()->registry()->identifier() << " " << *proto << endmsg;
       test &= tuple->column( prefix+"_hasRich", richPID != NULL );
 
       // CALO
