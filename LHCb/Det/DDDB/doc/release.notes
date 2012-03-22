@@ -4,6 +4,12 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+! 2012-03-22 - Illya Shapoval
+ - Update default DQFLAGS database tags:
+   . DQFLAGS, 2011: dq-20120322 (new flags and fixes for the previous ones)
+   . DQFLAGS, 2012: dq-20120322 (no 2012 flags so far, just updating to the
+     latest 2011 one)
+
 ! 2012-03-16 - Marco Cattaneo
  - Update database tags for latest 2012 global tags:
    . DDDB,     2012: head-20120316
