@@ -4,6 +4,10 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2012-03-22 - Wouter Hulsbergen
+- implemented faster method to invert transport matrix
+- exploit emptiness of transport matrix in zero B field
+
 !========================= TrackFitEvent v5r15 2012-03-17 =========================
 ! 2012-03-16 - Wouter Hulsbergen 
 - bug fix in filter logic: backward state could be in state 'smoothed'

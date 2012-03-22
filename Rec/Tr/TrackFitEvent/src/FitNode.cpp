@@ -4,12 +4,10 @@
 // local
 #include "Event/FitNode.h"
 #include "Event/KalmanFitResult.h"
-#include "TriangularInverter.h"
 
 using namespace Gaudi;
 using namespace Gaudi::Math;
 using namespace LHCb;
-using namespace TriangularInversion;
 /** @file FitNode.cpp
  *
  *  This File contains the implementation of the FitNode.
@@ -48,16 +46,79 @@ namespace {
     return success ;
   }
     
-  template<class Matrix, class SymMatrix>
-  void similarity( const Matrix& F,
-		   const SymMatrix& origin,
-		   SymMatrix& target)
+  void transportcovariance( const Gaudi::TrackMatrix& F,
+			    const Gaudi::TrackSymMatrix& origin,
+			    Gaudi::TrackSymMatrix& target)
   {
-    // The temporary is actually important here. SMatrix is not
-    // computing A*B*C very optimally.
-    static ROOT::Math::SMatrix<double, 5,5> FC ;
-    FC = F*origin ;
-    ROOT::Math::AssignSym::Evaluate(target,FC*Transpose(F)) ;
+    bool isLine =  F(0,4)==0 ;
+    if( isLine ) {
+      target = origin ;
+      target(0,0) += 2 * origin(2,0) * F(0,2) + origin(2,2) * F(0,2) * F(0,2) ;
+      target(2,0) += origin(2,2) * F(0,2) ;
+      target(1,1) += 2 * origin(3,1) * F(1,3) + origin(3,3) * F(1,3) * F(1,3) ;
+      target(3,1) += origin(3,3) * F(1,3) ;
+      target(1,0) += origin(2,1) * F(0,2) + origin(3,0) * F(1,3) + origin(3,2) * F(0,2) * F(1,3) ;
+      target(2,1) += origin(3,2) * F(1,3);
+      target(3,0) += origin(3,2) * F(0,2);
+    } else {
+      // The temporary is actually important here. SMatrix is not
+      // computing A*B*C very optimally.
+      static ROOT::Math::SMatrix<double, 5,5> FC ;
+      FC = F*origin ;
+      ROOT::Math::AssignSym::Evaluate(target,FC*Transpose(F)) ;
+    }
+  }
+
+  void transportvector( const Gaudi::TrackMatrix& F,
+			const Gaudi::TrackVector& origin,
+			Gaudi::TrackVector& target)
+  {
+    bool isLine =  F(0,4)==0 ;
+    if( isLine ) {
+      target = origin ;
+      target(0) += F(0,2) * origin(2) ;
+      target(1) += F(1,3) * origin(3) ;
+    } else {
+      target = F * origin ;
+    }
+  }
+
+  void inverttransport( const Gaudi::TrackMatrix& F,
+			Gaudi::TrackMatrix& Finv )
+  {
+    // it would save time if qw assume that Finv is either diagonal or filled with 0?
+    Finv = F ;
+    bool isLine =  F(0,4)==0 ;
+    if( isLine ) {
+      Finv(0,2) = -F(0,2) ;
+      Finv(1,3) = -F(1,3) ;
+    } else {
+      //Finv(0,0) = Finv(1,1) = Finv(4,4) = 1 ;
+      // write
+      //      ( 1  0 |  S00 S01 | U0 )
+      //      ( 0  1 |  S10 S01 | U1 )
+      // F =  ( 0  0 |  T00 T01 | V0 )
+      //      ( 0  0 |  T10 T11 | V1 )
+      //      ( 0  0 |   0   0  | 1  )
+      // then we have
+      // Tinv = T^{-1}
+      double det = F(2,2)*F(3,3)-F(2,3)*F(3,2) ;
+      Finv(2,2) = F(3,3)/det ;
+      Finv(3,3) = F(2,2)/det ;
+      Finv(2,3) = -F(2,3)/det ;
+      Finv(3,2) = -F(3,2)/det ;
+      // Vinv = - T^-1 * V
+      Finv(2,4) = -Finv(2,2)*F(2,4) -Finv(2,3)*F(3,4) ; 
+      Finv(3,4) = -Finv(3,2)*F(2,4) -Finv(3,3)*F(3,4) ; 
+      // Uinv = S * T^-1 * V - U = - S * Vinv - U
+      Finv(0,4) = -F(0,4) - F(0,2)*Finv(2,4) - F(0,3)*Finv(3,4) ;
+      Finv(1,4) = -F(1,4) - F(1,2)*Finv(2,4) - F(1, 3)*Finv(3,4) ;
+      // Sinv  = - S * T^{-1}
+      Finv(0,2) = - F(0,2)*Finv(2,2) - F(0,3)*Finv(3,2) ;
+      Finv(0,3) = - F(0,2)*Finv(2,3) - F(0,3)*Finv(3,3) ;
+      Finv(1,2) = - F(1,2)*Finv(2,2) - F(1,3)*Finv(3,2) ;
+      Finv(1,3) = - F(1,2)*Finv(2,3) - F(1,3)*Finv(3,3) ;
+    }
   }
 }
 
@@ -172,8 +233,8 @@ namespace LHCb {
   
   void FitNode::setTransportMatrix( const Gaudi::TrackMatrix& transportMatrix )  {
     m_transportMatrix = transportMatrix;
-    // compute and cache the inverse transport matrix
-    invertAlmostUpperTriangular( transportMatrix ,  m_invertTransportMatrix , 3 );
+    // invert the transport matrix. We could save some time by doing this on demand only.
+    inverttransport( m_transportMatrix, m_invertTransportMatrix ) ;
     // we still need to think about the logic for setting the initial state
     resetFilterStatus() ;
   }
@@ -293,18 +354,14 @@ namespace LHCb {
         if(direction==Forward) {
           const TrackMatrix& F = transportMatrix() ;
           stateVec = F * previousState.stateVector() + transportVector() ;
-          //similarityAlmostUpperTriangular( F, previousState.covariance() , stateCov , 3 );
-          //stateCov = Similarity( F,previousState.covariance() ) ;
-          similarity(F,previousState.covariance() , stateCov) ;
+          transportcovariance(F,previousState.covariance(),stateCov) ;
           stateCov += this->noiseMatrix();
         } else {
           const TrackMatrix& invF = prevnode->invertTransportMatrix();
           static TrackSymMatrix tempCov ;
           tempCov = previousState.covariance() + prevnode->noiseMatrix();
           stateVec = invF * ( previousState.stateVector() - prevnode->transportVector()) ;
-          //stateCov = Similarity( invF, tempCov );
-          //similarityAlmostUpperTriangular( invF, tempCov , stateCov , 3 );
-          similarity(invF,tempCov,stateCov) ;
+          transportcovariance(invF,tempCov,stateCov) ;
         }
       }
     } else {
