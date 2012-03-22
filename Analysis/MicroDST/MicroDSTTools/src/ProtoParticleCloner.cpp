@@ -61,59 +61,89 @@ LHCb::ProtoParticle* ProtoParticleCloner::clone(const LHCb::ProtoParticle* proto
 {
   if ( !protoParticle ) return NULL;
 
+  if ( msgLevel(MSG::VERBOSE) )
+    verbose() << "Cloning ProtoParticle " << protoParticle->key() << " in "
+              << protoParticle->parent()->registry()->identifier()
+              << " " << *protoParticle
+              << endmsg;
+
   LHCb::ProtoParticle* protoParticleClone =
     cloneKeyedContainerItem<BasicProtoParticleCloner>(protoParticle);
 
-  if ( !protoParticleClone ) return NULL;
-
-  if ( m_trackCloner )
+  if ( protoParticleClone )
   {
-    protoParticleClone->setTrack( (*m_trackCloner)(protoParticle->track()) );
-  }
 
-  // Rich PID
-  LHCb::RichPID* clonedRichPID =
-    cloneKeyedContainerItem<RichPIDCloner>(protoParticle->richPID());
-  if ( clonedRichPID )
-  {
-    // set the main track
-    clonedRichPID->setTrack( protoParticleClone->track() );
-  }
-  protoParticleClone->setRichPID(clonedRichPID);
-
-  // MUON PID
-  LHCb::MuonPID* clonedMuonPID =
-    cloneKeyedContainerItem<MuonPIDCloner>(protoParticle->muonPID());
-  if ( clonedMuonPID )
-  {
-    // Set the main track
-    clonedMuonPID->setIDTrack( protoParticleClone->track() );
-
-    // Clone and set the Muon Track
-    clonedMuonPID->setMuonTrack( (*m_trackCloner)(protoParticle->muonPID()->muonTrack()) );
-  }
-  protoParticleClone->setMuonPID(clonedMuonPID);
-
-  // CALO
-  protoParticleClone->clearCalo();
-  const SmartRefVector<LHCb::CaloHypo> & caloHypos = protoParticle->calo();
-  if ( !caloHypos.empty() )
-  {
-    for ( SmartRefVector<LHCb::CaloHypo>::const_iterator iCalo = caloHypos.begin();
-          iCalo != caloHypos.end(); ++iCalo )
+    LHCb::Track * clonedTrack = NULL;
+    if ( m_trackCloner )
     {
-      // Basic Cloner
-      LHCb::CaloHypo * hypoClone = cloneKeyedContainerItem<CaloHypoCloner>(*iCalo);
-      if ( hypoClone )
+      clonedTrack = (*m_trackCloner)(protoParticle->track());
+    }
+    protoParticleClone->setTrack( clonedTrack );
+
+    // Rich PID
+    LHCb::RichPID* clonedRichPID =
+      cloneKeyedContainerItem<RichPIDCloner>(protoParticle->richPID());
+    if ( clonedRichPID )
+    {
+      // set the main track
+      clonedRichPID->setTrack( clonedTrack );
+    }
+    protoParticleClone->setRichPID(clonedRichPID);
+
+    // MUON PID
+    LHCb::MuonPID* clonedMuonPID =
+      cloneKeyedContainerItem<MuonPIDCloner>(protoParticle->muonPID());
+    if ( clonedMuonPID )
+    {
+      // Set the main track
+      clonedMuonPID->setIDTrack( clonedTrack );
+      // Clone and set the Muon Track
+      LHCb::Track * clonedMuonTrack = NULL;
+      if ( m_trackCloner )
       {
-        // For basic Cloner, set hypo, cluster and digit smartref vectors to empty
-        // as the basic cloning keeps them pointing to the originals
-        hypoClone->clearHypos();
-        hypoClone->clearDigits();
-        hypoClone->clearClusters();
-        // save
-        protoParticleClone->addToCalo(hypoClone);
+        clonedMuonTrack = (*m_trackCloner)(protoParticle->muonPID()->muonTrack());
       }
+      clonedMuonPID->setMuonTrack( clonedMuonTrack );
+    }
+    protoParticleClone->setMuonPID(clonedMuonPID);
+
+    // CALO
+    protoParticleClone->clearCalo();
+    const SmartRefVector<LHCb::CaloHypo> & caloHypos = protoParticle->calo();
+    if ( !caloHypos.empty() )
+    {
+      for ( SmartRefVector<LHCb::CaloHypo>::const_iterator iCalo = caloHypos.begin();
+            iCalo != caloHypos.end(); ++iCalo )
+      {
+        // Basic Cloner
+        LHCb::CaloHypo * hypoClone = cloneKeyedContainerItem<CaloHypoCloner>(*iCalo);
+        if ( hypoClone )
+        {
+          // For basic Cloner, set hypo, cluster and digit smartref vectors to empty
+          // as the basic cloning keeps them pointing to the originals
+          hypoClone->clearHypos();
+          hypoClone->clearDigits();
+          hypoClone->clearClusters();
+          // save
+          protoParticleClone->addToCalo(hypoClone);
+        }
+      }
+    }
+
+  }
+
+  if ( msgLevel(MSG::VERBOSE) )
+  {
+    if ( protoParticleClone )
+    {
+      verbose() << "Cloned ProtoParticle " << protoParticleClone->key() << " in "
+                << protoParticleClone->parent()->registry()->identifier()
+                << " " << *protoParticleClone
+                << endmsg;
+    }
+    else
+    {
+      verbose() << "FAILED to clone ProtoParticle" << endmsg;
     }
   }
 
