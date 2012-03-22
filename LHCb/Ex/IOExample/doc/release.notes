@@ -4,6 +4,9 @@
 ! Purpose: Demonstrate how to write and read back event data
 !-------------------------------------------------------------------------------
 
+! 2012-03-22 - Marco Cattaneo
+ - Adapt test references to removal of random number seeds from ProcessHeader
+
 !========================= IOExample v4r5 2012-02-28 =========================
 ! 2012-02-27 - Marco Cattaneo
  - Fix reference comparisons also for icc (tiny numerical differences wrt gcc)
