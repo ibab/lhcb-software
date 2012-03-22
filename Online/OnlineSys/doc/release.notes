@@ -6,6 +6,19 @@
 !-----------------------------------------------------------------------------
 </PRE>
 
+<H1><A NAME=v4r62>2012-03-22 OnlineSys v4r62</A></H1>
+<PRE>
+   Based in Gaudi v23r1, 
+   Updated packages are:
+     Checkpointing       v0r8     Online
+     Gaucho              v7r23    Online
+     GaudiCheckpointing  v0r10    Online
+     OnlineBase          v1r14    Online
+     OnlineTasks         v1r46    Online
+     Presenter           v3r3     Online
+     RootCnv             v1r14    Online
+</PRE>
+
 <H1><A NAME=v4r61>2012-03-13 OnlineSys v4r61</A></H1>
 <PRE>
    Based in Gaudi v23r1, 

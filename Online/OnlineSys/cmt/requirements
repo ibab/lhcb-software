@@ -1,5 +1,5 @@
 package OnlineSys
-version v4r61
+version v4r62
 
 branches cmt doc
  
@@ -18,14 +18,14 @@ use GaudiObjDesc      v11r13
 #macro CCPCHist_use "CCPCHist v2r6 Online" target-x86_64 ""
 #use $(CCPCHist_use)
 use Camera              v1r23    Online
-use Checkpointing       v0r7     Online
+use Checkpointing       v0r8     Online
 use CondDBServer        v1r4     Online
 use DailyReport         v1r2     Online
 use DIM                 v19r30   Online
 ####use ExampleGaucho       v3r4     Online
 use FarmMonitor         v2r9     Online
-use Gaucho              v7r22    Online
-use GaudiCheckpointing  v0r9     Online
+use Gaucho              v7r23    Online
+use GaudiCheckpointing  v0r10    Online
 use GaudiOnline         v2r59    Online
 use GaudiRootCnvTests   v1r6     Online
 use GaudiSerialize      v0r10    Online
@@ -36,17 +36,17 @@ use HistDBPython        v1r6     Online
 use InsertDB            v1r9     Online
 use MBMDump             v1r15    Online
 use OMAlib              v4r1     Online
-use OnlineBase          v1r13    Online
+use OnlineBase          v1r14    Online
 #Obsolete: use OnlineDummyReader v1r4     Online
 use OnlineHistDB        v8r1     Online
 use OnlineKernel        v2r9     Online
 use OnlineTools         v1r4     Online
-use OnlineTasks         v1r45    Online
+use OnlineTasks         v1r46    Online
 
-use Presenter           v3r2     Online
+use Presenter           v3r3     Online
 use PyDIM               v2r11    Online
 use RawBankSizes        v2r14    Online
-use RootCnv             v1r13    Online
+use RootCnv             v1r14    Online
 use ROMon               v1r36    Online
 use ROLogger            v0r24    Online
 ##macro Stomp_use "" CERN "Stomp v1r2 Online"

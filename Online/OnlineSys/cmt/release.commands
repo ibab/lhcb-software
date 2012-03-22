@@ -1,0 +1,6 @@
+cd ..
+svn commit -m "Release of Online ${VERSION}";
+echo ${VERSION}>cmt/version.cmt;
+tag_package OnlineSys ${VERSION};
+svn mkdir -m "Release of Online ${VERSION}" svn+ssh://svn.cern.ch/reps/lhcb/Online/tags/ONLINE/ONLINE_${VERSION};
+svn cp -m "Release of Online ${VERSION}" svn+ssh://svn.cern.ch/reps/lhcb/Online/trunk/cmt svn+ssh://svn.cern.ch/reps/lhcb/Online/tags/ONLINE/ONLINE_${VERSION}/;
