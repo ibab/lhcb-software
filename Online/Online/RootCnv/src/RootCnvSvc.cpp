@@ -243,7 +243,8 @@ RootCnvSvc::connectDatabase(CSTR dataset, int mode, RootDataConnection** con)  {
 	m_incidentSvc->fireIncident(Incident(dataset,mode == IDataConnection::READ
 					     ? IncidentType::FailInputFile
 					     : IncidentType::FailOutputFile));
-	return error("Cannot open data file:"+dataset);
+	// An error message was already printed by the IODataManager. no need to do it here!
+	return StatusCode::FAILURE;
       }
     }
     RootDataConnection* pc = dynamic_cast<RootDataConnection*>(c);
