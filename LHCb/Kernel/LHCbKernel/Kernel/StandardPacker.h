@@ -124,7 +124,7 @@ public:
 
   /** returns an int for a Smart Ref.
    *  @arg  out : Output data object, to store the links
-   *  @arg  parent : Pointer to the parent container of the SmartRef, method ->parent()
+   *  @arg  parent : Pointer to the parent container of the SmartRef, method->parent()
    *  @arg  key    : returned by the method .linkID() of the SmartRef
    */
   int reference( DataObject* out,
@@ -134,22 +134,42 @@ public:
     if ( key != (key & 0x0FFFFFFF) )
     {
       std::cout << "************************* Key over 28 bits in StandardPacker ***********************" 
+                << " " << key
                 << std::endl;
     }
-    const int myLinkID = (int)linkID(out,parent) << 28;
+    const int rawLinkID = (int)linkID(out,parent);
+    if ( rawLinkID != (rawLinkID & 0x0000000F) )
+    {
+      std::cout << "************************* LinkID over 4 bits in StandardPacker ***********************" 
+                << " " << rawLinkID
+                << std::endl;
+    }
+    const int myLinkID = rawLinkID << 28;
     return key + myLinkID;
   }
 
   /** returns an int for a Smart Ref.
    *  @arg  out : Output data object, to store the links
    *  @arg  targetName : Name of the target
-   *  @arg  key    : returned by the method .linkID() of the SmartRef
+   *  @arg  key : returned by the method .linkID() of the SmartRef
    */
   int reference( DataObject* out,
                  const std::string& targetName,
                  const int key ) const
   {
+    if ( key != (key & 0x0FFFFFFF) )
+    {
+      std::cout << "************************* Key over 28 bits in StandardPacker ***********************" 
+                << " " << key
+                << std::endl;
+    }
     const int ID = (int)linkID(out,targetName);
+    if ( ID != (ID & 0x0000000F) )
+    {
+      std::cout << "************************* LinkID over 4 bits in StandardPacker ***********************" 
+                << " " << ID
+                << std::endl;
+    }
     const int myLinkID = (ID << 28);
     return key + myLinkID;
   }
