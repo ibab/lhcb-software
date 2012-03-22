@@ -6,6 +6,9 @@
 !               functions and functors.
 !-----------------------------------------------------------------------------
 
+! 2012-03-22 - Chris Jones
+ - Small improvements to MicroDSTCommon base class
+
 !========================= MicroDSTBase v3r1p3 2012-03-01 =========================
 
 ! 2012-03-01 - Chris Jones
