@@ -38,6 +38,8 @@ DECLARE_ALGORITHM_FACTORY( RecInit )
 RecInit::RecInit( const std::string& name,
                   ISvcLocator* pSvcLocator)
   : LbAppInit ( name , pSvcLocator )
+  , m_memoryTool(0)
+  , m_incidentSvc(0)
 {
   declareProperty( "RawEventLocation"  ,  m_rawEventLocation = LHCb::RawEventLocation::Default, 
                    "where to find the raw event" );
@@ -138,7 +140,6 @@ StatusCode RecInit::execute()
   header->setApplicationVersion( this->appVersion() );
   header->setRunNumber( runNumber );
   header->setEvtNumber( evtNumber );
-  header->setRandomSeeds( seeds );
   header->setCondDBTags( this->condDBTags() );
   header->setGpsTime( odin->gpsTime() );
   header->setRawID( rawID );

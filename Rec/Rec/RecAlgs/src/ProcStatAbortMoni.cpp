@@ -1,5 +1,3 @@
-// $Id: $
-
 // local
 #include "ProcStatAbortMoni.h"
 
@@ -10,7 +8,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( ProcStatAbortMoni );
+DECLARE_ALGORITHM_FACTORY( ProcStatAbortMoni )
 
 //=============================================================================
 // Standard constructor, initializes variables

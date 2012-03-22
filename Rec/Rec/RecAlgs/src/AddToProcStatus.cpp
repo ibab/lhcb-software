@@ -1,4 +1,3 @@
-// $Id: $
 // Include files 
 
 // from Gaudi
@@ -15,7 +14,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( AddToProcStatus );
+DECLARE_ALGORITHM_FACTORY( AddToProcStatus )
 
 
 //=============================================================================
@@ -77,8 +76,6 @@ StatusCode AddToProcStatus::execute() {
   // explicitly add a status code)
   procStat->addAlgorithmStatus(name(), m_subsystem, m_reason, m_status , m_abort );
   return Warning("Processing aborted", StatusCode::SUCCESS, 0);
-
-  return StatusCode::SUCCESS;
 }
 
 //=============================================================================
