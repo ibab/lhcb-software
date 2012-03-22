@@ -109,11 +109,6 @@ namespace Gaudi {
      */
     StatusCode connectDatabase(const std::string& dataset, int mode, RootDataConnection** con);
 
-  public:
-
-    /// Access default section (Tree) name
-    //const std::string& section() const { return m_section; }
-
     /// ConversionSvc overload: initialize Db service
     virtual StatusCode initialize();
 
