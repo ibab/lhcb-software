@@ -133,7 +133,7 @@ ask for the contributor name.""")
     partition, new_globalTag, base_globalTag = args[:3]
     localTags = args[3:]
 
-    partitions = ["DDDB", "LHCBCOND", "SIMCOND"]
+    partitions = ["DDDB", "LHCBCOND", "SIMCOND", "DQFLAGS"]
     if partition not in partitions:
         parser.error("'%s' is not a valid partition name. Allowed: %s" % \
                      (partition, partitions))

@@ -136,6 +136,9 @@ and for a short message for the release notes.""")
                       " the 'ref_tag' which was between IOV 'since' and 'until' values"
                       " and will be applied on top of the HEAD."
                       )
+    parser.add_option("-P","--patch", type = "int",
+                      help = "numerical id of the patch on savannah"
+                      )
 
     parser.set_default("dest", "sqlite")
     parser.set_default("rel_notes",os.path.join(os.environ["SQLDDDBROOT"], "doc", "release_notes.xml"))
@@ -505,7 +508,8 @@ def update_dom_rel_notes(options, local_tag, flag, flag_value):
     rel_notes.addNote(contributor = options.contributor,
                       partitions = {'DQFLAGS':(local_tag, {'modified':['/Conditions/DQ/Flags'],'added':[]})},
                       description = descr,
-                      datatypes = ["All"])
+                      datatypes = ["All"],
+                      patch = options.patch)
     return rel_notes
 
 def _commit_dq_flag(db, flag, flag_value, since, until, ref_tag, local_tag, rel_notes):
