@@ -1,4 +1,3 @@
-// $Id: ReadPackedDst.cpp,v 1.13 2010-05-18 09:03:21 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -238,7 +237,7 @@ StatusCode ReadPackedDst::execute() {
       eventNumber = (eventNumber << 32) + nextInt();
       recHeader->setEvtNumber( eventNumber );
       unsigned nb = nextInt();
-      std::vector<long int> seeds;
+      std::vector<long long> seeds;
       for ( unsigned int kk=0 ; nb > kk; ++kk ) {
         seeds.push_back( nextInt() );
       }

@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2012-03-22 - Marco Cattaneo
+ - Follow change in type of ProcessHeader::m_randomSeeds
+
 !========================= EventPacker v2r13 2012-03-14 =========================
 ! 2012-03-06 - Olivier Callot
  - New algorithmc PackCluster and UnpackCluster. Thefirst one process a container
