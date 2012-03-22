@@ -142,7 +142,7 @@ void VertexPacker::unpack( const PackedData       & pvert,
 }
 
 void VertexPacker::unpack( const PackedDataVector & pverts,
-                           DataVector           & verts ) const
+                           DataVector             & verts ) const
 {
   verts.reserve( pverts.data().size() );
 

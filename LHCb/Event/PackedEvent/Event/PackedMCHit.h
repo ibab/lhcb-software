@@ -81,9 +81,14 @@ namespace LHCb
     typedef std::vector<LHCb::PackedMCHit> Vector;
 
   public:
+    
+    /// Default Packing Version
+    static char defaultPackingVersion() { return 0; }
+
+  public:
 
     /// Standard constructor
-    PackedMCHits( ) : m_packingVersion(0) { }
+    PackedMCHits( ) : m_packingVersion(defaultPackingVersion()) { }
 
     /// Destructor
     virtual ~PackedMCHits( ) { }

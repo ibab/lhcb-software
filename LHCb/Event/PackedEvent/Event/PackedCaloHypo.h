@@ -43,7 +43,7 @@ namespace LHCb {
       firstDigit( c.firstDigit ), lastDigit( c.lastDigit ),
       firstCluster( c.firstCluster ), lastCluster( c.lastCluster ),
       firstHypo( c.firstHypo ), lastHypo( c.lastHypo )
-    { }
+    {}
 
     int key;
     int hypothesis;

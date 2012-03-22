@@ -36,10 +36,9 @@ namespace LHCb
         mcParticle(-1)
     {}
 
-    int   history;
-    int   richSmartID;
-    int   mcParticle;
-
+    int history;
+    int richSmartID;
+    int mcParticle;
   };
 
   // -----------------------------------------------------------------------
@@ -68,9 +67,14 @@ namespace LHCb
     typedef std::vector<LHCb::PackedMCRichDigitSummary> Vector;
 
   public:
+    
+    /// Default Packing Version
+    static char defaultPackingVersion() { return 0; }
+
+  public:
 
     /// Standard constructor
-    PackedMCRichDigitSummarys( ) : m_packingVersion(0) { }
+    PackedMCRichDigitSummarys( ) : m_packingVersion(defaultPackingVersion()) { }
 
     /// Destructor
     virtual ~PackedMCRichDigitSummarys( ) { }

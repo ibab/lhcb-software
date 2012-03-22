@@ -98,9 +98,14 @@ namespace LHCb
     typedef std::vector<long long> OutgoingParticles;
 
   public:
+    
+    /// Default Packing Version
+    static char defaultPackingVersion() { return 1; }
+
+  public:
 
     /// Standard constructor
-    PackedVertices( ) : m_packingVersion(1) { }
+    PackedVertices( ) : m_packingVersion(defaultPackingVersion()) { }
 
     /// Destructor
     virtual ~PackedVertices( ) { }

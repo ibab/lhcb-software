@@ -34,14 +34,15 @@ namespace LHCb
       : pidResultCode(0),
         dllEl(0),dllMu(0),dllPi(0),dllKa(0),dllPr(0),
         track(-1),
-        dllBt(0)
+        dllBt(0),
+        key(0)
     {}
 
     int pidResultCode;                      
     int dllEl,dllMu,dllPi,dllKa,dllPr;
     int track;          
     int dllBt;
-
+    int key;
   };
 
   // -----------------------------------------------------------------------
@@ -71,8 +72,13 @@ namespace LHCb
 
   public:
 
+    /// Default Packing Version
+    static char defaultPackingVersion() { return 2; }
+
+  public:
+
     /// Standard constructor
-    PackedRichPIDs( ) : m_packingVersion(0) { }
+    PackedRichPIDs( ) : m_packingVersion(defaultPackingVersion()) { }
 
     /// Destructor
     virtual ~PackedRichPIDs( ) { }

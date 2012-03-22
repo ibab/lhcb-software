@@ -84,9 +84,14 @@ namespace LHCb
     typedef std::vector<LHCb::PackedMCRichOpticalPhoton> Vector;
 
   public:
+    
+    /// Default Packing Version
+    static char defaultPackingVersion() { return 0; }
+
+  public:
 
     /// Standard constructor
-    PackedMCRichOpticalPhotons( ) : m_packingVersion(0) { }
+    PackedMCRichOpticalPhotons( ) : m_packingVersion(defaultPackingVersion()) { }
 
     /// Destructor
     virtual ~PackedMCRichOpticalPhotons( ) { }

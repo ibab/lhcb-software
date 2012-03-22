@@ -89,9 +89,14 @@ namespace LHCb
     typedef std::vector<LHCb::PackedWeight> WeightVector;
 
   public:
+    
+    /// Default Packing Version
+    static char defaultPackingVersion() { return 0; }
+
+  public:
 
     /// Standard constructor
-    PackedWeightsVector( ) : m_packingVersion(0) { }
+    PackedWeightsVector( ) : m_packingVersion(defaultPackingVersion()) { }
 
     /// Destructor
     virtual ~PackedWeightsVector( ) { }

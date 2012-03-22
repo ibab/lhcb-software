@@ -42,7 +42,6 @@ namespace LHCb
     int   sensDetID;
     char  time;
     int   mcParticle;
-
   };
 
   // -----------------------------------------------------------------------
@@ -74,9 +73,14 @@ namespace LHCb
     typedef std::vector<LHCb::PackedMCCaloHit> Vector;
 
   public:
+    
+    /// Default Packing Version
+    static char defaultPackingVersion() { return 0; }
+
+  public:
 
     /// Standard constructor
-    PackedMCCaloHits( ) : m_packingVersion(0) { }
+    PackedMCCaloHits( ) : m_packingVersion(defaultPackingVersion()) { }
 
     /// Destructor
     virtual ~PackedMCCaloHits( ) { }

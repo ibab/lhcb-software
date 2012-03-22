@@ -129,9 +129,14 @@ namespace LHCb
     typedef std::vector<long long> Daughters;
 
   public:
+    
+    /// Default Packing Version
+    static char defaultPackingVersion() { return 0; }
+
+  public:
 
     /// Standard constructor
-    PackedParticles( ) : m_packingVersion(0) { }
+    PackedParticles( ) : m_packingVersion(defaultPackingVersion()) { }
 
     /// Destructor
     virtual ~PackedParticles( ) { }

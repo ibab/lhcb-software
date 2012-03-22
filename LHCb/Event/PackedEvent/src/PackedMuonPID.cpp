@@ -15,7 +15,8 @@ void MuonPIDPacker::pack( const DataVector & pids,
                           PackedDataVector & ppids ) const
 {
   ppids.data().reserve( pids.size() );
-  if ( 0 == ppids.packingVersion() )
+  if ( 1 == ppids.packingVersion() ||
+       0 == ppids.packingVersion()  )
   {
     for ( DataVector::const_iterator iD = pids.begin();
           iD != pids.end(); ++iD )
@@ -24,6 +25,7 @@ void MuonPIDPacker::pack( const DataVector & pids,
       ppids.data().push_back( PackedData() );
       PackedData & ppid = ppids.data().back();
       // fill data
+      ppid.key      = pid.key();
       ppid.MuonLLMu = m_pack.deltaLL(pid.MuonLLMu());
       ppid.MuonLLBg = m_pack.deltaLL(pid.MuonLLBg());
       ppid.nShared  = (int)pid.nShared();
@@ -54,7 +56,8 @@ void MuonPIDPacker::unpack( const PackedDataVector & ppids,
                             DataVector       & pids ) const
 {
   pids.reserve( ppids.data().size() );
-  if ( 0 == ppids.packingVersion() )
+  if ( 1 == ppids.packingVersion() ||
+       0 == ppids.packingVersion()  )
   {
     for ( PackedDataVector::Vector::const_iterator iD = ppids.data().begin();
           iD != ppids.data().end(); ++iD )
@@ -62,7 +65,8 @@ void MuonPIDPacker::unpack( const PackedDataVector & ppids,
       const PackedData & ppid = *iD;
       // make and save new pid in container
       Data * pid  = new Data();
-      pids.add( pid );
+      if ( ppids.packingVersion() == 0 ) { pids.add( pid ); }
+      else                  { pids.insert( pid, ppid.key ); }
       // Fill data from packed object
       pid->setMuonLLMu( m_pack.deltaLL(ppid.MuonLLMu) );
       pid->setMuonLLBg( m_pack.deltaLL(ppid.MuonLLBg) );

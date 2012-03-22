@@ -44,7 +44,6 @@ namespace LHCb
     int mcParticle;
     int mcRichTrack;
     std::vector<int> mcPhotons, mcHits;
-
   };
 
   // -----------------------------------------------------------------------
@@ -72,9 +71,14 @@ namespace LHCb
     typedef std::vector<LHCb::PackedMCRichSegment> Vector;
 
   public:
+    
+    /// Default Packing Version
+    static char defaultPackingVersion() { return 0; }
+
+  public:
 
     /// Standard constructor
-    PackedMCRichSegments( ) : m_packingVersion(0) { }
+    PackedMCRichSegments( ) : m_packingVersion(defaultPackingVersion()) { }
 
     /// Destructor
     virtual ~PackedMCRichSegments( ) { }

@@ -39,7 +39,6 @@ namespace LHCb
     int key;
     std::vector<int> mcSegments;
     int mcParticle;
-
   };
 
   // -----------------------------------------------------------------------
@@ -68,9 +67,14 @@ namespace LHCb
     typedef std::vector<LHCb::PackedMCRichTrack> Vector;
 
   public:
+    
+    /// Default Packing Version
+    static char defaultPackingVersion() { return 0; }
+
+  public:
 
     /// Standard constructor
-    PackedMCRichTracks( ) : m_packingVersion(0) { }
+    PackedMCRichTracks( ) : m_packingVersion(defaultPackingVersion()) { }
 
     /// Destructor
     virtual ~PackedMCRichTracks( ) { }
