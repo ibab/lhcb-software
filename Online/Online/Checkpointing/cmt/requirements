@@ -2,7 +2,7 @@
 # Maintainer : Markus Frank
 #============================================================================
 package           Checkpointing
-version           v0r7
+version           v0r8
 #============================================================================
 branches          cmt doc src Checkpointing
 # dependency list
