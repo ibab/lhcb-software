@@ -30,9 +30,8 @@ TrackSmeared::TrackSmeared( const std::string& name,
                             ISvcLocator* pSvcLocator)
   : DVAlgorithm ( name , pSvcLocator )
 {
-  declareProperty( "InputLocation",m_trackLocation = LHCb::TrackLocation::Default);
-  declareProperty( "OutputLocation",m_outputLocation = "Smeared");
-  declareProperty( "ProtoLocation",m_protoLocation = LHCb::ProtoParticleLocation::Charged);
+  declareProperty( "InputLocation",m_trackLocation);
+  declareProperty( "OutputLocation",m_outputLocation);
   declareProperty( "Seed",m_seed = 4357);
   declareProperty( "xpar1_mc",m_xpar1_mc = 7.6);
   declareProperty( "xpar2_mc",m_xpar2_mc = 24.8);
@@ -48,7 +47,11 @@ TrackSmeared::TrackSmeared( const std::string& name,
   declareProperty( "usePhi",m_usePhi = true );
   declareProperty( "smearBest", m_smearBest = false);
   declareProperty( "smearProto", m_smearProto = false );
-  declareProperty( "smearCopied", m_smearCopied = false );
+
+  // Parameters for MC10 and Reco12
+  /*
+    
+
   declareProperty( "paramsx_data",m_paramsx_data=
                    boost::assign::list_of< std::pair<double,double> >
                    (7.39663,25.375)(11.9523,30.8468)(12.1657,31.0318)(6.80381,26.2239)
@@ -65,6 +68,27 @@ TrackSmeared::TrackSmeared( const std::string& name,
                    boost::assign::list_of< std::pair<double,double> >
                    (9.85327,19.1644)(6.61456,28.2261)(6.21135,29.2543)(10.0675,19.4316)
                    (9.74202,19.0929)(6.13729,28.6578)(5.31868,29.8177)(10.6302,18.7859) );
+  */
+  // Parameters for MC11 and Stripping17, don't mix them as the method to exctract them was changed.
+  declareProperty( "paramsx_data",m_paramsx_data=
+                   boost::assign::list_of< std::pair<double,double> >
+                   (15.8007 , 21.5995 )(17.083 , 26.8743 )(17.188 , 26.9004 )(15.2431 , 21.8942 )
+                   (15.3789 , 21.6944 )(17.3643 , 26.0733 )(18.1501 , 26.4945 )(15.9901 , 21.751 ));
+  
+  declareProperty( "paramsy_data",m_paramsy_data=
+                   boost::assign::list_of< std::pair<double,double> >
+                   (15.4397 , 22.0227 )(17.2131 , 25.725 )(17.3457 , 25.8134 )(15.1637 , 22.3395 )
+                   (15.4863 , 21.9516 )(17.8457 , 24.7536 )(17.6028 , 25.6401 )(15.5212 , 22.0329 ) );
+  declareProperty( "paramsx_mc",m_paramsx_mc=
+                   boost::assign::list_of< std::pair<double,double> >
+                   (12.241 , 16.793 )(15.4021 , 26.2156 )(15.0332 , 26.9101 )(12.4106 , 17.1177 )
+                   (12.9271 , 16.7202 )(14.9721 , 26.2175 )(15.4448 , 26.4068 )(12.0711 , 17.2668 ) );
+  declareProperty( "paramsy_mc",m_paramsy_mc=
+                   boost::assign::list_of< std::pair<double,double> >
+                   (14.7947 , 17.0342 )(12.9836 , 25.0856 )(12.7721 , 25.6032 )(15.0134 , 17.299 )
+                   (14.652 , 17.3152 )(13.187 , 24.8611 )(12.8251 , 25.2981 )(14.0403 , 17.3576 ) );
+  
+
   m_funcsy_mc.reserve(m_paramsy_mc.size());
   m_funcsx_mc.reserve(m_paramsx_mc.size());
   m_funcsy_data.reserve(m_paramsy_data.size());
@@ -93,8 +117,6 @@ StatusCode TrackSmeared::initialize() {
   info()<< "Random seed: "<< m_seed << endmsg;
   info()<< "use Phi dependency: " << m_usePhi << endmsg;
   info()<< "smear Tracks in Best Container: "<< m_smearBest << endmsg;
-  info()<< "smear Proto particles: "<< m_smearProto << endmsg;
-  info()<< "smear copied tracks: "<< m_smearCopied << endmsg;
   info()<< "++++++++++++++++" << endmsg;
 
   //m_trackFitter = tool<ITrackFitter>("TrackInitFit");
@@ -167,11 +189,9 @@ double TrackSmeared::getSigmay( LHCb::State* state)
 double TrackSmeared::getSigma( LHCb::State* state,  std::vector<TF1*> funcs_data, std::vector<TF1*> funcs_mc)
 {
   double pt = state->pt();
-  double phi = state->momentum().phi() >= 0.0 ?  state->momentum().phi() :  state->momentum().phi() + 2.0*M_PI;
+  double phi = state->momentum().phi() > 0 ?  state->momentum().phi() :  state->momentum().phi() + 2*M_PI;
   double inversept = pt > 0 ? 1.0/pt : 0.0;
   int phiBin = (int)(phi/(2*M_PI)*funcs_data.size());
-  //debug() << "phi " << state->momentum().phi() << '\t' << phi << " bin " << phiBin << " vector sizes" << funcs_data.size() << '\t' << funcs_mc.size() << endmsg;
-  //debug() << phi - 2.0*M_PI << endmsg;
   TF1* func_data = funcs_data[phiBin];
   TF1* func_mc = funcs_mc[phiBin];
   double sigma2 = func_data->Eval(inversept)*func_data->Eval(inversept)-
@@ -185,25 +205,32 @@ double TrackSmeared::getSigma( LHCb::State* state,  std::vector<TF1*> funcs_data
 void TrackSmeared::smearStates(  const std::vector< LHCb::State * > & states )
 {
 
-  //double pt = states[0]->pt();
-  //double inversept = pt > 0 ? 1.0/pt : 0.0;
+  double pt = states[0]->pt();
+  double inversept = pt > 0 ? 1.0/pt : 0.0;
   const double tx = states[0]->tx();
   const double alpha = atan(tx);
   const double ty = states[0]->ty();
   const double gamma = atan(ty);
-  //const double z = states[0]->z();
-  //const double phi = states[0]->momentum().phi();
+  const double z = states[0]->z();
+  const double phi = states[0]->momentum().phi();
   double xrand = 0.0;
   double yrand = 0.0;
-  //double zrand = 0.0;
+  double zrand = 0.0;
   debug()<<"smear: "<<m_smear<<endmsg;
-  double sigmax = m_usePhi ? getSigma(states[0],m_funcsx_data,m_funcsx_mc) : getSigmax(states[0]);
-  double sigmay = m_usePhi ? getSigma(states[0],m_funcsy_data,m_funcsy_mc) : getSigmay(states[0]);
+  double sigmax = getSigma(states[0],m_funcsx_data,m_funcsx_mc);
+  double sigmay = getSigma(states[0],m_funcsy_data,m_funcsy_mc);
 
   if (m_smear)
   {
     xrand = m_rnd->Gaus(0.0,sigmax)/(cos(alpha)*cos(alpha));
     yrand = m_rnd->Gaus(0.0,sigmay)/(cos(gamma)*cos(gamma));
+    if (m_plots){
+      plot(xrand,"xrand",-0.6,0.6,100);
+      plot(yrand,"yrand",-0.6,0.6,100);
+      plot(cos(alpha)*cos(alpha),"cos2alpha",0.0,1.0,100);
+      plot(cos(gamma)*cos(gamma),"cos2gamma",0.0,1.0,100);
+
+    }
     debug()<<"rnd: "<<xrand<<" "<<yrand<<endmsg;
   }
   BOOST_FOREACH(LHCb::State* st ,states){
@@ -218,87 +245,68 @@ void TrackSmeared::smearStates(  const std::vector< LHCb::State * > & states )
 
 
 
-StatusCode TrackSmeared::smearProto(){
-  if  (!exist<LHCb::ProtoParticle::Container>(LHCb::ProtoParticleLocation::Charged)) return StatusCode::FAILURE;
-  LHCb::ProtoParticles* pp = get< LHCb::ProtoParticles >(LHCb::ProtoParticleLocation::Charged) ;
-  LHCb::ProtoParticles* newProtos = new LHCb::ProtoParticles();
-  LHCb::Tracks* newTracks = new LHCb::Tracks();
-  
-  BOOST_FOREACH(const LHCb::ProtoParticle* proto, *pp){
-    // copy protoparticle
-    LHCb::ProtoParticle* smearedProto = proto->clone();
-    debug()<<"######"<<endmsg;
-    debug()<<"proto before p:"<<proto->track()->states()[0]->p()<<".x: "<< proto->track()->states()[0]->x()<<endmsg;
-    // copy track associated to protoparicle
-    LHCb::Track* smearedtrack = new LHCb::Track();
-    smearedtrack->copy(*(smearedProto->track()));
-    const std::vector< LHCb::State * > & states = smearedtrack->states();
-  
-    debug()<<"smeared track before p:"<<smearedtrack->states()[0]->p()<<".x: "<< smearedtrack->states()[0]->x()<<endmsg;
-    smearStates(states);
-    // save smeared track and set to protoparticle
-    debug()<<"smeared track after p:"<<smearedtrack->states()[0]->p()<<".x: "<< smearedtrack->states()[0]->x()<<endmsg;
-    smearedProto->setTrack(smearedtrack);
-    debug()<<"proto after p:"<<smearedProto->track()->states()[0]->p()<<".x: "<< smearedProto->track()->states()[0]->x()<<endmsg;
-    debug()<<"######"<<endmsg;
-    newProtos->add(smearedProto);
-    newTracks->add(smearedtrack);
-    
-  }
-  put(newTracks, "Rec/Track/"+m_outputLocation);
-  put(newProtos, "Rec/ProtoP/"+m_outputLocation);
-  setFilterPassed(true);  // Mandatory. Set to true if event is accepted.
-  return StatusCode::SUCCESS;
-  
+ROOT::Math::Plane3D::Vector TrackSmeared::Ip_vector(const LHCb::State *state, const LHCb::VertexBase* vtx )
+{
+  ROOT::Math::Plane3D::Point pv = vtx->position();
+  ROOT::Math::Plane3D::Point sv = state->position();      // secondary vertex = production vertex of this_particle
+  ROOT::Math::Plane3D::Vector vector(state->momentum());
+  ROOT::Math::Plane3D plane1(vector, pv); //-----Ebene konstruiert aus normale zu vector und pv
+  ROOT::Math::Plane3D::Point point_Ip = plane1.ProjectOntoPlane(sv);
+  ROOT::Math::Plane3D::Vector Ip = pv - point_Ip;
+
+  return Ip;
 }
 
-StatusCode TrackSmeared::smearBest(){
-  if (m_trackLocation!=LHCb::TrackLocation::Default){
-    debug()<<"You know what you are doing? Smearing a different container "<<endmsg;
-  }
-  
-  if  (!exist<LHCb::Track::Range>(m_trackLocation))  return StatusCode::FAILURE;
-  LHCb::Track::Range tracks = get<LHCb::Track::Range>(m_trackLocation) ;
-  // loop over Best Track Container
-  BOOST_FOREACH(const LHCb::Track* tr ,tracks){
-    if (!tr->type() || (LHCb::Track::Long != tr->type() && LHCb::Track::Upstream!= tr->type()) ){
-      debug()<< "No Long or Upstream track! Not smeared!" <<endmsg;
-    } else {
-      debug()<<"Ok smear the track!"<<endmsg;
-      // smear state
-      const std::vector< LHCb::State * > & states = tr->states();
-      if (states.size()>0){
-        debug()<<"old x position "<<states[0]->x()<<endmsg;
-        debug()<<"old y position "<<states[0]->y()<<endmsg;
-        debug()<<"old z position "<<states[0]->z()<<endmsg;
-        smearStates(states);
-        debug()<<"new x position "<<states[0]->x()<<endmsg;
-        debug()<<"new y position "<<states[0]->y()<<endmsg;
-        debug()<<"new z position "<<states[0]->z()<<endmsg;
-      }
-    }
-  }
-  setFilterPassed(true);  // Mandatory. Set to true if event is accepted.
-  return StatusCode::SUCCESS;
-}
 
-StatusCode TrackSmeared::smearCopied(){
-  
-  
-  if  (!exist<LHCb::Track::Range>(m_trackLocation))  return StatusCode::FAILURE;
-  if  (!exist<LHCb::RichPIDs>(LHCb::RichPIDLocation::Offline))  return StatusCode::FAILURE;
-  LHCb::Track::Range tracks = get<LHCb::Track::Range>(m_trackLocation) ;
-  LHCb::RichPIDs* richids  = get<LHCb::RichPIDs>(LHCb::RichPIDLocation::Offline);
+//=============================================================================
+// Main execution
+//=============================================================================
+StatusCode TrackSmeared::execute() {
+
+  debug()<<"==> Execute! "<<endmsg;
+
+
   LHCb::Tracks* newTracks = new LHCb::Tracks();
   LHCb::RichPIDs* newRichIDs = new LHCb::RichPIDs();
+  if  (!exist<LHCb::Track::Range>(m_trackLocation))  return StatusCode::FAILURE;
+  if  (!exist<LHCb::RichPIDs>(LHCb::RichPIDLocation::Offline))  return StatusCode::FAILURE;
+  if  (!exist<LHCb::ProtoParticle::Container>(LHCb::ProtoParticleLocation::Charged)) return StatusCode::FAILURE;
+  
 
+  
+  LHCb::Track::Range tracks = get<LHCb::Track::Range>(m_trackLocation) ;
+  LHCb::RichPIDs* richids  = get<LHCb::RichPIDs>(LHCb::RichPIDLocation::Offline);
+  LHCb::ProtoParticles* pp = get< LHCb::ProtoParticles >(LHCb::ProtoParticleLocation::Charged) ;
+
+  const LHCb::RecVertex::Range vtcs = primaryVertices();
+  const double nPV = vtcs.size();
+  if (m_plots){
+    plot(vtcs.size(),"numberPVs",0.0,5.0,6);
+    BOOST_FOREACH(const LHCb::VertexBase* vtx, vtcs) {
+      plot(vtx->position().x(),"pv_x",10.0,10.0,100);
+      plot(vtx->position().y(),"pv_y",10.0,10.0,100);
+      plot(vtx->position().z(),"pv_z",150.0,150.0,100);
+    }
+  }
+  debug()<<"Number of pvs: "<<vtcs.size()<<endmsg;
+
+  if (m_smearProto){
+    BOOST_FOREACH(const LHCb::ProtoParticle* proto, *pp){
+      const std::vector< LHCb::State * > & states = proto->track()->states();
+      always()<<"proto before p:"<<proto->track()->states()[0]->p()<<".x: "<< proto->track()->states()[0]->x()<<endmsg;
+      smearStates(states);
+      always()<<"proto after p:"<<proto->track()->states()[0]->p()<<".x: "<< proto->track()->states()[0]->x()<<endmsg;
+    }
+  }
+  
 
   BOOST_FOREACH(const LHCb::Track* tr ,tracks)
   {
     LHCb::Track* smearedtrack = new LHCb::Track();
+    //info()<<"test"<<endmsg;
     smearedtrack->copy(*tr);
+    //smearedtrack = tr->cloneWithKey();
 
-    // restore RICH information
     LHCb::RichPID* myid = 0 ;
 
     BOOST_FOREACH(LHCb::RichPID* pid , *richids) {
@@ -312,56 +320,123 @@ StatusCode TrackSmeared::smearCopied(){
       neueid->setTrack(smearedtrack);
       newRichIDs->add(neueid);
     }
-    
+
     if (!tr->type() || LHCb::Track::Long != tr->type() ){
       debug()<< "No Long track! Not smeared!" <<endmsg;
       newTracks->add(smearedtrack);
     } else {
       // smear state
       const std::vector< LHCb::State * > & states = smearedtrack->states();
-      debug()<<"old x position "<<states[0]->x()<<endmsg;
-      debug()<<"old y position "<<states[0]->y()<<endmsg;
-      debug()<<"old z position "<<states[0]->z()<<endmsg;
-      
+      const std::vector< LHCb::State * > & states2 = tr->states();
       if (states.size()>0){
-        smearStates(states);
+        ROOT::Math::Plane3D::Vector relIP(std::numeric_limits<double>::infinity(),
+                                          std::numeric_limits<double>::infinity(),
+                                          std::numeric_limits<double>::infinity());
+
+        const LHCb::VertexBase* relPV = 0;
+        if (m_plots){
+          BOOST_FOREACH(const LHCb::VertexBase* vtx, vtcs) {
+            ROOT::Math::Plane3D::Vector IP_vec = Ip_vector(states[0],vtx);
+            if (IP_vec.R()<relIP.R()) {
+              relIP = IP_vec;
+              relPV = vtx;
+            }
+          }
+          if (relPV){
+            plot(relIP.R(),"ip",0.0,1.0,100);
+            plot(relIP.y(),"ipy",-1.0,1.0,100);
+            plot(relIP.z(),"ipz",-1.0,1.0,100);
+            plot(relIP.x(),"ipx",-1.0,1.0,100);
+            if (states[0]->pt()>0.0){
+              plot(1.0/states[0]->pt(),"inversePt",0.0,0.003);
+              profile1D(1.0/states[0]->pt(),relIP.R(),"ip_profile",0.0,0.003,100);
+              profile1D(1.0/states[0]->pt(),std::abs(relIP.x()),"ipx_profile",0.0,0.003,100);
+              profile1D(1.0/states[0]->pt(),std::abs(relIP.y()),"ipy_profile",0.0,0.003,100);
+            }
+          }
+        }
+
+
+        if (!m_usePhi){
+          double sigmax = getSigmax(states[0]);
+          double sigmay = getSigmay(states[0]);
+          if (m_plots){
+            plot(sigmax,"sigmax",0.0,1.0,100);
+            plot(sigmay,"sigmay",0.0,1.0,100);
+          }
+
+          debug()<<"pt: "<<states[0]->pt()<<" =>sigmax "<<sigmax<<endmsg;
+          debug()<<"    "<<states[0]->pt()<<" =>sigmay "<<sigmay<<endmsg;
+          debug()<<"x position "<<states[0]->x()<<endmsg;
+          debug()<<"y position "<<states[0]->y()<<endmsg;
+          debug()<<"z position "<<states[0]->z()<<endmsg;
+          
+          const double tx = states[0]->tx();
+          const double alpha = atan(tx);
+          const double ty = states[0]->ty();
+          const double gamma = atan(ty);
+          const double z = states[0]->z();
+          double xrand = 0.0;
+          double yrand = 0.0;
+          double zrand = 0.0;
+          debug()<<"smear: "<<m_smear<<endmsg;
+          if (m_smear)
+          {
+            xrand = m_rnd->Gaus(0.0,sigmax)/(cos(alpha)*cos(alpha));
+            yrand = m_rnd->Gaus(0.0,sigmay)/(cos(gamma)*cos(gamma));
+            if (m_plots){
+              plot(xrand,"xrand",-0.6,0.6,100);
+              plot(yrand,"yrand",-0.6,0.6,100);
+              plot(cos(alpha)*cos(alpha),"cos2alpha",0.0,1.0,100);
+              plot(cos(gamma)*cos(gamma),"cos2gamma",0.0,1.0,100);
+              
+            }
+          debug()<<"rnd: "<<xrand<<" "<<yrand<<endmsg;
+          }
+          BOOST_FOREACH(LHCb::State* st ,states){
+            const double x = st->x();
+            const double y = st->y();
+            st->setX(x+xrand);
+            st->setY(y+yrand);
+          }
+        }else{
+          smearStates(states);
+          if (m_smearBest) {
+            always()<<"Before p:"<<tr->states()[0]->p()<<".x: "<< tr->states()[0]->x()<<endmsg;
+            smearStates(states2);
+            always()<<"After p:"<<tr->states()[0]->p()<<".x: "<< tr->states()[0]->x()<<endmsg;
+                  
+          }
+        }
+        
+        
+        if (m_plots && relPV){
+          relIP = Ip_vector(states[0],relPV);
+          plot(relIP.R(),"smeared_ip",0.0,1.0,100);
+          plot(relIP.y(),"smeared_ipy",-1.0,1.0,100);
+          plot(relIP.z(),"smeared_ipz",-1.0,1.0,100);
+          plot(relIP.x(),"smeared_ipx",-1.0,1.0,100);
+          if (states[0]->pt() > 0.0 && nPV == 1){
+            profile1D(1.0/states[0]->pt(),relIP.R(),"smeared_ip_profile",0.0,0.003,100);
+            profile1D(1.0/states[0]->pt(),std::abs(relIP.x()),"smeared_ipx_profile",0.0,0.003,100);
+            profile1D(1.0/states[0]->pt(),std::abs(relIP.y()),"smeared_ipy_profile",0.0,0.003,100);
+          }
+        }
+        debug()<<"new x position "<<states[0]->x()<<endmsg;
+        debug()<<"new y position "<<states[0]->y()<<endmsg;
+        debug()<<"new z position "<<states[0]->z()<<endmsg;
       }
-      debug()<<"new x position "<<states[0]->x()<<endmsg;
-      debug()<<"new y position "<<states[0]->y()<<endmsg;
-      debug()<<"new z position "<<states[0]->z()<<endmsg;
       newTracks->add(smearedtrack);
     }
   }
-  
-  debug() << "adding Container to TES " <<"Rec/Track/"<<m_outputLocation<< endmsg;
+
+  debug() << "adding Container to TES " <<m_outputLocation<< endmsg;
   put(newTracks, "Rec/Track/"+m_outputLocation);
   put(newRichIDs,"Rec/Rich/"+m_outputLocation);
-  
+  //put(newRichIDs,"Rec/Rich/Refit");
+
   setFilterPassed(true);  // Mandatory. Set to true if event is accepted.
   return StatusCode::SUCCESS;
-}
-
-
-
-//=============================================================================
-// Main execution
-//=============================================================================
-StatusCode TrackSmeared::execute() {
-
-  debug()<<"==> Execute! "<<endmsg;
-  if ((m_smearBest && m_smearCopied) || (m_smearBest && m_smearProto) || (m_smearProto && m_smearCopied)){
-    always()<<"OK, if you want to do this, you have to change the following lines and maybe some output containers"<<endmsg;
-    return StatusCode::FAILURE;
-  }
-  if (m_smearBest){
-    return smearBest();
-  }else if (m_smearProto){
-    return smearProto();
-  }else if (m_smearCopied){
-    return smearCopied();
-  }
-  always()<<"YOU HAVE TO DECIDE!!!"<<endmsg;
-  return StatusCode::FAILURE;
 }
 
 //=============================================================================
