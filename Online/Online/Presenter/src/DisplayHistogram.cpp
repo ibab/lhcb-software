@@ -437,6 +437,9 @@ void DisplayHistogram::setDrawingOptions( TPad* pad ) {
       m_titPave->SetX2NDC(x2);
       m_titPave->SetY1NDC(y1);
       m_titPave->SetY2NDC(y2);
+
+      m_titPave->SetBorderSize( 4 );
+      m_titPave->SetFillStyle( 1001 );
     }
   }
 

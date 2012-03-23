@@ -4,6 +4,9 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2012-03-23 - Olivier Callot
+ - Set the default border size=4 and fillStyle = 1001 for the title pave
+
 ! 2012-03-20 - Olivier Callot
  - Print the run number if partion = LHCB and ONLINE.
 
