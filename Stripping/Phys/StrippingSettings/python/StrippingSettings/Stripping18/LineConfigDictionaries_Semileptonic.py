@@ -1,3 +1,72 @@
+
+CharmFromBSemi = {
+    'BUILDERTYPE' : 'CharmFromBSemiAllLinesConf',
+    'CONFIG' :  {
+    "MINIPCHI2"      : 9.0    # adimensiional
+    ,"TRCHI2"        : 4.0    # adimensiional
+    ,"TRCHI2Loose"   : 5.0    # adimensiional    
+    ,"KaonPIDK"      : 4.0    # adimensiional
+    ,"PionPIDK"      : 10.0   # adimensiional
+    ,"PionPIDKTight" : 4.0    # adimensiional
+    ,"MuonIPCHI2"    : 4.00   # adimensiional
+    ,"MuonPT"        : 800.0  # MeV
+    ,"KPiPT"         : 300.0  # MeV
+    ,"DsDIRA"        : 0.99   # adimensiional
+    ,"DsFDCHI2"      : 100.0  # adimensiional
+    ,"DsMassWin"     : 80.0   # MeV
+    ,"DsAMassWin"    : 100.0  # MeV
+    ,"DsIP"          : 7.4    #mm
+    ,"DsVCHI2DOF"    : 6.0    # adimensiional
+    ,"PIDmu"         : -0.0   # adimensiional
+    ,"BDIRA"         : 0.999  #adimensiional
+    ,"BVCHI2DOF"     : 6.0    # adimensiional
+    ,"DZ"            : 0   #mm
+    ,"DDocaChi2Max"  : 20     #adimensiional
+    ,"MINIPCHI2Loose": 4.0   #adimensiional
+    ,"KaonPIDKloose" : -5     #adimensiional
+    ,"PhiVCHI2"      :25.0    #adimensiional
+    ,"PhiMassWin"    :50      #adimensiional
+    ,'KSLLPMin'         : 2000  ## MeV
+    ,'KSLLPTMin'        : 500   ## MeV
+    ,'KSDDPMin'         : 3000  ## MeV
+    ,'KSDDPTMin'        : 800   ## MeV
+    ,'KSLLCutMass'      : 20    ## MeV
+    ,'KSDDCutMass'      : 20    ## MeV
+    ,'KSLLCutFDChi2'    : 100   ## unitless
+    ,'KSDDCutFDChi2'    : 100   ## unitless
+    ,'KSDaugTrackChi2'  : 4     ## max chi2/ndf for Ks daughter tracks
+    ,'KSVertexChi2'     : 6     ## max chi2/ndf for Ks vertex
+    ,'KSCutDIRA'        : 0.99  ## unitless
+    ,'LambdaLLPMin'       : 2000 ## MeV
+    ,'LambdaLLPTMin'      : 500  ## MeV
+    ,'LambdaLLCutMass'    : 30   ## MeV
+    ,'LambdaLLCutFDChi2'  : 100  ## unitless
+    ,'LambdaDDPMin'       : 3000 ## MeV
+    ,'LambdaDDPTMin'      : 800  ## MeV
+    ,'LambdaDDCutMass'    : 30   ## MeV
+    ,'LambdaDDCutFDChi2'  : 100  ## unitless
+    ,'LambdaCutDIRA'      : 0.99 ## unitless
+    ,'LambdaDaugTrackChi2': 4    ## unitless
+    ,'LambdaVertexChi2'   : 6    ## max chi2/ndf for Lambda0 vertex
+    ,"Pi0PtMin"     : 1200         # Minimum Pt of pi0 (MeV)
+    ,"Pi0PMin"      : 3000         # Minimum P of pi0 (MeV)
+    ,"PhotonCL"     : 0.25         # Confidence level for Pi0 photons
+    ,"D02HHPi0AMassWin" : 220  # MeV (mass window for combination)
+    ,"D02HHPi0MassWin"  : 200  # MeV (mass window after vertex fit)
+    ,"D02HHPi0DocaCut"  : 6    # mm
+    ,"D02HHPi0PtCut"    : 2000 # MeV
+    ,"Dstar_preFitMassCut" : 100 # MeV
+    ,"Dstar_Chi2" :  10.0 ## unitless
+    ,"Dstar_SoftPion_PIDe" : 5. ## unitless
+    ,"Dstar_SoftPion_PT" : 200. ## MeV
+    ,"Dstar_wideDMCutLower" : -2. ## MeV
+    ,"Dstar_wideDMCutUpper" : 15. ## MeV
+    },
+    'STREAMS' : ['Charm'] ,
+    'WGs'    : ['Charm']
+    }
+
+
 B2DMuNuX = {
     'BUILDERTYPE' : 'B2DMuNuXAllLinesConf',
     'CONFIG' :  {
@@ -8,7 +77,7 @@ B2DMuNuX = {
     ,"TRCHI2Loose"   : 5.0    # adimensiional
     ,"KaonPIDK"      : 4.0    # adimensiional
     ,"PionPIDK"      : 10.0   # adimensiional
-    ,"PionPIDKTight" : 0.0    # adimensiional
+    ,"PionPIDKTight" : 4.0    # adimensiional
     ,"MuonIPCHI2"    : 4.00   # adimensiional
     ,"MuonPT"        : 800.0  # MeV
     ,"KPiPT"         : 300.0  # MeV
@@ -21,7 +90,8 @@ B2DMuNuX = {
     ,"PIDmu"         : -0.0   # adimensiional
     ,"BDIRA"         : 0.999  #adimensiional
     ,"BVCHI2DOF"     : 6.0    # adimensiional 
-    ,"DZ"            : -9999    #mm
+    ,"DZ"            : 0     #mm
+    ,"DZLoose"       : -9999  #mm
     ,"DDocaChi2Max"  : 20     #adimensiional
     ,"MINIPCHI2Loose" : 4.0   #adimensiional
     ,"KaonPIDKloose" : -5     #adimensiional
