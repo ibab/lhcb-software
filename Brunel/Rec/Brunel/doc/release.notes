@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+- 2012-03-23 Chris Jones
+ . Add HltRoutingBits and HltVertexReports to Trigger/RawEvent on sDSTs.
+
 - Changes to references to reflect changes since Brunel v42r1
   . Minor change in ChargedProtoParticleTupleAlg
     (GlobalReco, not yet in tag collector)

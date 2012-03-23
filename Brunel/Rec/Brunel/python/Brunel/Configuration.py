@@ -29,16 +29,16 @@ class Brunel(LHCbConfigurableUser):
 
     ## Default init sequences
     DefaultInitSequence     = ["Reproc", "Brunel"]
-    
+
     ## Known checking sequences, all run by default
-    KnownCheckSubdets       = ["Pat","RICH","MUON"] 
+    KnownCheckSubdets       = ["Pat","RICH","MUON"]
     KnownExpertCheckSubdets = KnownCheckSubdets+["TT","IT","OT","Tr","CALO","PROTO"]
     ## Default main sequences for real and simulated data
     DefaultSequence = [ "ProcessPhase/Reco",
                         "ProcessPhase/Moni" ]
     DefaultMCSequence   = DefaultSequence + [ "ProcessPhase/MCLinks",
                                               "ProcessPhase/Check" ]
-    
+
     # Steering options
     __slots__ = {
         "EvtMax"          : -1
@@ -53,12 +53,12 @@ class Brunel(LHCbConfigurableUser):
        ,"OutputType"      : "DST"
        ,"PackType"        : "TES"
        ,"Persistency"     : None
-       ,"WriteFSR"        : True 
-       ,"WriteLumi"       : False 
+       ,"WriteFSR"        : True
+       ,"WriteLumi"       : False
        ,"Histograms"      : "OfflineFull"
-       ,"OutputLevel"     : INFO 
-       ,"NoWarnings"      : False 
-       ,"ProductionMode"  : False 
+       ,"OutputLevel"     : INFO
+       ,"NoWarnings"      : False
+       ,"ProductionMode"  : False
        ,"DatasetName"     : "Brunel"
        ,"DDDBtag"         : ""
        ,"CondDBtag"       : ""
@@ -76,7 +76,7 @@ class Brunel(LHCbConfigurableUser):
         }
 
 
-    _propertyDocDct = { 
+    _propertyDocDct = {
         'EvtMax'       : """ Maximum number of events to process (default -1, all events on input files) """
        ,'SkipEvents'   : """ Number of events to skip (default 0) """
        ,'PrintFreq'    : """ The frequency at which to print event numbers (default 1, prints every event) """
@@ -132,7 +132,7 @@ class Brunel(LHCbConfigurableUser):
         if self.getProp( "NoWarnings" ) :
             log.warning("Brunel().NoWarnings=True property is obsolete and maintained for Dirac compatibility. Please use Brunel().ProductionMode=True instead")
             self.setProp( "ProductionMode", True )
-            
+
         # Special settings for production
         if self.getProp( "ProductionMode" ) :
             if not self.isPropertySet( "OutputLevel" ) :
@@ -178,11 +178,11 @@ class Brunel(LHCbConfigurableUser):
 
         # veto Hlt Error Events
         vetoHltErrorEvents = self.getProp("VetoHltErrorEvents")
-        
+
         self.configureSequences( withMC, handleLumi, vetoHltErrorEvents )
 
         self.configureInit( inputType )
-        
+
         self.configureInput( inputType )
 
         self.configureOutput( outputType, withMC, handleLumi )
@@ -198,7 +198,7 @@ class Brunel(LHCbConfigurableUser):
 
             # activate all configured checking (uses MC truth)
             self.configureCheck( histOpt == "Expert" )
-            
+
             # data on demand needed to pack RichDigitSummary for DST, when reading unpacked DIGI
             # Also needed to unpack MCHit containers when expert checking enabled
             ApplicationMgr().ExtSvc += [ "DataOnDemandSvc" ]
@@ -228,7 +228,7 @@ class Brunel(LHCbConfigurableUser):
             HistogramPersistencySvc().OutputFile = histosName
 
     def defineMonitors(self):
-        
+
         # get all defined monitors
         monitors = self.getProp("Monitors") + LHCbApp().getProp("Monitors")
         # Currently no Brunel specific monitors, so pass them all to LHCbApp
@@ -238,16 +238,16 @@ class Brunel(LHCbConfigurableUser):
         from Configurables import (ApplicationMgr,AuditorSvc,SequencerTimerTool)
         ApplicationMgr().ExtSvc += [ 'ToolSvc', 'AuditorSvc' ]
         ApplicationMgr().AuditAlgorithms = True
-        AuditorSvc().Auditors += [ 'TimingAuditor' ] 
+        AuditorSvc().Auditors += [ 'TimingAuditor' ]
         SequencerTimerTool().OutputLevel = 4
-        
+
     def configureSequences(self, withMC, handleLumi, vetoHltErrorEvents):
         brunelSeq = GaudiSequencer("BrunelSequencer")
         brunelSeq.Context = self.getProp("Context")
         ApplicationMgr().TopAlg += [ brunelSeq ]
         brunelSeq.Members += [ "ProcessPhase/Init" ]
         physicsSeq = GaudiSequencer( "PhysicsSeq" )
-        
+
         # Treatment of luminosity events
         if handleLumi:
             lumiSeq = GaudiSequencer("LumiSeq")
@@ -294,7 +294,7 @@ class Brunel(LHCbConfigurableUser):
             addToProc = AddToProcStatus("HltErrorProc",Reason="HltError",Subsystem="Hlt")   # write a procstatus
             hlterrorSeq.Members += [ hltfilterSeq, addToProc ]           # only run if hltfilterSeq fails
             brunelSeq.Members += [ hlterrorSeq ]                         # add this sequece to Brunel _before_ physseq
-            physicsSeq.Members += [ hltfilterSeq ]                       # take good events in physics seq          
+            physicsSeq.Members += [ hltfilterSeq ]                       # take good events in physics seq
 
         # Convert Calo 'packed' banks to 'short' banks if needed
         physicsSeq.Members += ["GaudiSequencer/CaloBanksHandler"]
@@ -352,7 +352,7 @@ class Brunel(LHCbConfigurableUser):
             if ("2009" == self.getProp("DataType")) and (inputType in ["MDF","SDST"]):
                 bkKill.BankTypes = ["VeloFull", "L0PUFull"]
         GaudiSequencer("InitBrunelSeq").Members += [ bkKill ]
-        
+
         # Do not print event number at every event (done already by BrunelInit)
         EventSelector().PrintFreq = -1
 
@@ -386,7 +386,7 @@ class Brunel(LHCbConfigurableUser):
         # By default, Brunel only needs to open one input file at a time
         # Only set to zero if not previously set to something else.
         if not IODataManager().isPropertySet("AgeLimit") : IODataManager().AgeLimit = 0
-        
+
         if inputType in [ "XDST", "DST", "SDST" ]:
             # Kill knowledge of any previous Brunel processing
             from Configurables import ( TESCheck, EventNodeKiller )
@@ -413,7 +413,7 @@ class Brunel(LHCbConfigurableUser):
         if hasattr( self, "Persistency" ):
             self.setOtherProps(LHCbApp(),["Persistency"])
             self.setOtherProps(DstConf(),["Persistency"])
-            
+
         if dstType in [ "XDST", "DST", "SDST" ]:
             writerName = "DstWriter"
             packType  = self.getProp( "PackType" )
@@ -441,34 +441,35 @@ class Brunel(LHCbConfigurableUser):
                 # Allow multiple files open at once (SIM,DST,DIGI etc.)
                 IODataManager().AgeLimit += 1
 
-
             if dstType == "SDST":
-                #repack certain raw banks for the stripping
-                
-                #first the Trigger Raw Event
+                # repack certain raw banks for the stripping
+
+                # first the Trigger Raw Event
                 from Configurables import RawEventSelectiveCopy
                 trigRawBankCopy = RawEventSelectiveCopy('TriggerRawBank')
-                trigRawBankCopy.RawBanksToCopy =[ 'ODIN',
-                                                  'HltSelReports' ,
-                                                  'HltDecReports',
-                                                  'L0Calo',
-                                                  'L0CaloFull',
-                                                  'L0DU',
-                                                  'L0Muon',
-                                                  'L0MuonProcCand',
-                                                  'L0PU'
-                                                  ]
+                trigRawBankCopy.RawBanksToCopy = [ 'ODIN',
+                                                   'HltSelReports',
+                                                   'HltDecReports',
+                                                   'HltRoutingBits',
+                                                   'HltVertexReports',
+                                                   'L0Calo',
+                                                   'L0CaloFull',
+                                                   'L0DU',
+                                                   'L0Muon',
+                                                   'L0MuonProcCand',
+                                                   'L0PU'
+                                                   ]
                 trigRawBankCopy.OutputRawEventLocation = "Trigger/RawEvent"
                 GaudiSequencer("OutputDSTSeq").Members += [trigRawBankCopy]
                 
-                #then the Muon Raw Event
+                # then the Muon Raw Event
                 muonRawBankCopy = RawEventSelectiveCopy('MuonRawBank')
-                muonRawBankCopy.RawBanksToCopy =[ 'Muon' ]
+                muonRawBankCopy.RawBanksToCopy = [ 'Muon' ]
                 muonRawBankCopy.OutputRawEventLocation = "Muon/RawEvent"
                 GaudiSequencer("OutputDSTSeq").Members += [muonRawBankCopy]
-                  
+
             from Configurables import TrackToDST
-            
+
             # Filter Best Track States to be written
             trackFilter = TrackToDST("FilterBestTrackStates")
 
@@ -479,7 +480,7 @@ class Brunel(LHCbConfigurableUser):
             from Configurables import ProcessPhase
             ProcessPhase("Output").DetectorList += [ "DST" ]
             GaudiSequencer("OutputDSTSeq").Members += [ trackFilter, muonTrackFilter ]
-            
+
             if packType != "NONE":
                 # Add the sequence to pack the DST containers
                 packSeq = GaudiSequencer("PackDST")
@@ -520,7 +521,7 @@ class Brunel(LHCbConfigurableUser):
         # "Check" histograms filled only with simulated data
 
         RecMoniConf().setProp( "CheckEnabled", True )
-        
+
         if not self.isPropertySet("MCCheckSequence"):
             if expert:
                 checkSeq = self.KnownExpertCheckSubdets
@@ -535,7 +536,7 @@ class Brunel(LHCbConfigurableUser):
                 else:
                     if seq not in self.KnownCheckSubdets:
                         log.warning("Unknown subdet '%s' in MCCheckSequence"%seq)
-                        
+
         checkSeq = self.getProp("MCCheckSequence")
         from Configurables import ProcessPhase
         ProcessPhase("Check").DetectorList += checkSeq
@@ -566,7 +567,7 @@ class Brunel(LHCbConfigurableUser):
 
             # Allow multiple files open at once (SIM,DST,DIGI etc.)
             IODataManager().AgeLimit += 1
-        
+
             if "TT" in checkSeq :
                 from Configurables import ( STEffChecker, MCParticleSelector )
                 from GaudiKernel.SystemOfUnits import GeV
@@ -613,7 +614,7 @@ class Brunel(LHCbConfigurableUser):
 
     ## Apply the configuration
     def __apply_configuration__(self):
-        
+
         GaudiKernel.ProcessJobOptions.PrintOff()
         self.defineGeometry()
         self.defineEvents()
@@ -623,7 +624,7 @@ class Brunel(LHCbConfigurableUser):
                                          "OutputType","DataType","Simulation"])
         self.setOtherProps(RecMoniConf(),["Histograms","Context","DataType","Simulation"])
         self.setOtherProps(TrackSys(),["DataType"])
-        
+
         if self.isPropertySet("RecoSequence") :
             self.setOtherProp(RecSysConf(),"RecoSequence")
         GaudiKernel.ProcessJobOptions.PrintOn()
