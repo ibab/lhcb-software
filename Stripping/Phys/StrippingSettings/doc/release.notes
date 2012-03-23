@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-03-23 - Stefano Perazzini
+ - Updated Stripping18/LineConfigDictionaries_Charmless.py
+
 ! 2012-03-23 - Thomas Blake
  - Updated Stripping18/LineConfigDictionaries_RD.py
 
