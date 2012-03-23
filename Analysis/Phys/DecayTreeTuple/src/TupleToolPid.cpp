@@ -83,7 +83,6 @@ StatusCode TupleToolPid::fill( const Particle*
 
       // RICH
       const RichPID * richPID = proto->richPID();
-      info() << proto->parent()->registry()->identifier() << " " << *proto << endmsg;
       test &= tuple->column( prefix+"_hasRich", richPID != NULL );
 
       // CALO
