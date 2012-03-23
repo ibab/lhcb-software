@@ -4,6 +4,7 @@ Following decays are included:
 * D0->KsHH (also Dstar)
 * D0->Pi0HH (also Dstar)
 * D0->hhhh (also Dstar)
+* D0->KsKs (also Dstar)
 * D+->KsH
 * D+->HMuNu
 * Lc+ -> L0 H
@@ -13,7 +14,7 @@ Dstar methods closely copied from StrippingDstarD2KShh.py by Mat Charles.
 """
 __author__ = ['Mika Vesterinen']
 __date__ = '08/03/2012'
-__version__ = '$Revision: 0.0 $'
+__version__ = '$Revision: 0.1 $'
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles, OfflineVertexFitter
@@ -88,7 +89,7 @@ confdict = {
     ,"Dstar_Chi2" :  10.0 ## unitless
     ,"Dstar_SoftPion_PIDe" : 5. ## unitless
     ,"Dstar_SoftPion_PT" : 200. ## MeV
-    ,"Dstar_wideDMCutLower" : 0 ## MeV
+    ,"Dstar_wideDMCutLower" : -2. ## MeV
     ,"Dstar_wideDMCutUpper" : 15. ## MeV
 
     }
@@ -660,14 +661,10 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         
         ################# DECLARE THE STRIPPING LINES #################################
 
-        #self.registerLine( StrippingLine('D0_to_XKsKs_LLLL' + name + 'Line', prescale = 1, selection = self.sel_D0_to_KsKs_LLLL))
-        #self.registerLine( StrippingLine('D0_to_XKsKs_DDDD' + name + 'Line', prescale = 1, selection = self.sel_D0_to_KsKs_DDDD))
-        #self.registerLine( StrippingLine('D0_to_XKsKs_DDLL' + name + 'Line', prescale = 1, selection = self.sel_D0_to_KsKs_DDLL))
-
         self.registerLine( StrippingLine('b2D0MuXKsKs_DDDD' + name + 'Line', prescale = 1, selection = self.selb2D0MuXKsKs_DDDD))
         self.registerLine( StrippingLine('b2D0MuXKsKs_LLLL' + name + 'Line', prescale = 1, selection = self.selb2D0MuXKsKs_LLLL))
         self.registerLine( StrippingLine('b2D0MuXKsKs_DDLL' + name + 'Line', prescale = 1, selection = self.selb2D0MuXKsKs_DDLL))
-
+        ### D*+ versions
         self.registerLine( StrippingLine('b2DstarMuXKsKs_DDDD' + name + 'Line', prescale = 1, selection = self.selb2DstarMuXKsKs_DDDD))
         self.registerLine( StrippingLine('b2DstarMuXKsKs_LLLL' + name + 'Line', prescale = 1, selection = self.selb2DstarMuXKsKs_LLLL))
         self.registerLine( StrippingLine('b2DstarMuXKsKs_DDLL' + name + 'Line', prescale = 1, selection = self.selb2DstarMuXKsKs_DDLL))

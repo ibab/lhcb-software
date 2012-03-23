@@ -10,7 +10,7 @@ Lc+ -> L0 H, Lc+ -> pHH
 """
 __author__ = ['Liming Zhang, Alessandra Borgia']
 __date__ = '23/07/2010'
-__version__ = '$Revision: 1.7 $'
+__version__ = '$Revision: 1.8 $'
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles, OfflineVertexFitter
@@ -33,7 +33,7 @@ confdict = {
     ,"TRCHI2Loose"   : 5.0    # adimensiional    
     ,"KaonPIDK"      : 4.0    # adimensiional
     ,"PionPIDK"      : 10.0   # adimensiional
-    ,"PionPIDKTight" : 0.0    # adimensiional
+    ,"PionPIDKTight" : 4.0    # adimensiional
     ,"MuonIPCHI2"    : 4.00   # adimensiional
     ,"MuonPT"        : 800.0  # MeV
     ,"KPiPT"         : 300.0  # MeV

@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-03-23 - Mika Vesterinen
+ - Minor changes to StrippingCharmFromBSemi.py and StrippingB2DMuNuX.py
+
 ! 2012-03-21 - Lucio Anderlini
  - StrippingXibc.py: removed some damaging track quality, tightening pT
 
