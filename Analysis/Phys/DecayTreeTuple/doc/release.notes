@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2012-03-23 - Jibo He
+ - TupleToolTISTOS
+  . Added Hlt1Phys Hlt2Phys  
+
 ! 2012-03-21 - Chris Jones
  - Some fixes for running on uDSTs, in TupleToolTrigger and TupleToolStripping.
  - If HltRoutingBits are missing, catch the exception that is thrown in 

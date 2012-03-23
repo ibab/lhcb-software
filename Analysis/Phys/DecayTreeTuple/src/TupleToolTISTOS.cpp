@@ -101,6 +101,13 @@ StatusCode TupleToolTISTOS::fillBasic( const LHCb::Particle*
     tuple->column( prefix+"Hlt1Global"+"_Dec", classifiedDec.decision());
     tuple->column( prefix+"Hlt1Global"+"_TIS", classifiedDec.tis());
     tuple->column( prefix+"Hlt1Global"+"_TOS", classifiedDec.tos());
+
+    // Hlt1Phys
+    m_TriggerTisTosTool->setTriggerInput("Hlt1(?!ODIN)(?!L0)(?!Lumi)(?!Tell1)(?!MB)(?!NZS)(?!Velo)(?!BeamGas)(?!Incident).*Decision");
+    classifiedDec = m_TriggerTisTosTool->triggerTisTos();
+    tuple->column( prefix+"Hlt1Phys"+"_Dec", classifiedDec.decision());
+    tuple->column( prefix+"Hlt1Phys"+"_TIS", classifiedDec.tis());
+    tuple->column( prefix+"Hlt1Phys"+"_TOS", classifiedDec.tos());
   }
 
 
@@ -114,6 +121,13 @@ StatusCode TupleToolTISTOS::fillBasic( const LHCb::Particle*
     tuple->column( prefix+"Hlt2Global"+"_Dec", classifiedDec.decision());
     tuple->column( prefix+"Hlt2Global"+"_TIS", classifiedDec.tis());
     tuple->column( prefix+"Hlt2Global"+"_TOS", classifiedDec.tos());
+
+    // Hlt2Phys
+    m_TriggerTisTosTool->setTriggerInput("Hlt2(?!Forward)(?!DebugEvent)(?!Express)(?!Lumi)(?!Transparent)(?!PassThrough).*Decision");
+    classifiedDec = m_TriggerTisTosTool->triggerTisTos();
+    tuple->column( prefix+"Hlt2Phys"+"_Dec", classifiedDec.decision());
+    tuple->column( prefix+"Hlt2Phys"+"_TIS", classifiedDec.tis());
+    tuple->column( prefix+"Hlt2Phys"+"_TOS", classifiedDec.tos());
   }
 
   if(m_doHlt2)
