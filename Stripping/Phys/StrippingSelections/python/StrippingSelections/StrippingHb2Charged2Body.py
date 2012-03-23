@@ -10,8 +10,7 @@ __date__ = '25/01/2012'
 __version__ = '$Revision: 1.5 $'
 
 __all__ = ('Hb2Charged2BodyLines',
-           'makeB2Charged2Body',
-           'makeB2PPbar')
+           'makeB2Charged2Body')
 
 from Gaudi.Configuration import *
 
@@ -22,6 +21,28 @@ from PhysSelPython.Wrappers      import Selection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils        import LineBuilder, checkConfig
 from Configurables               import SubstitutePID, FilterDesktop
+
+
+default_config = {
+           'PrescaleB2Charged2Body'   : 1,      'PrescaleBs2KK_NoIPCutOnB' : 1,
+           'MinPTB2Charged2Body'      : 1100,
+           'MinIPB2Charged2Body'      : 0.12,
+           'MinIPChi2B2Charged2Body'  : 100, 
+           'TrChi2'                   : 5,
+           'MaxPTB2Charged2Body'      : 2500, 
+           'MaxIPB2Charged2Body'      : 0.25,
+           'MaxIPChi2B2Charged2Body'  : 200,  
+           'CombMassLow'              : 4800,
+           'CombMassHigh'             : 5800,
+           'DOCA'                     : 0.08,
+           'BPT'                      : 1200,
+           'BIP'                      : 0.1,
+           'BIPChi2B2Charged2Body'    : 12,  
+           'BTAU'                     : 0.0006,
+           'MassLow'                  : 4800,
+           'MassHigh'                 : 5800,
+           'PIDKBs2KK_NoIPCutOnB'     : 0.
+           }
 
 ## Change decay descriptor and re-fit decay tree
 def subPID(name, input, mother, plusD, minusD):
@@ -45,23 +66,20 @@ def subPID(name, input, mother, plusD, minusD):
 class Hb2Charged2BodyLines( LineBuilder ) :
     """Class defining the Hb -> hh stripping lines"""
     
-    __configuration_keys__ = ( 'PrescaleB2Charged2Body',  'PrescaleB2PPbar', 'PrescaleBs2KK_NoIPCutOnB',
-                               'MinPTB2Charged2Body',     'MinPTB2PPbar',
+    __configuration_keys__ = ( 'PrescaleB2Charged2Body',  'PrescaleBs2KK_NoIPCutOnB',
+                               'MinPTB2Charged2Body',    
                                'MinIPB2Charged2Body',
-                               'MinIPChi2B2Charged2Body', 'MinIPChi2B2PPbar',
+                               'MinIPChi2B2Charged2Body',
                                'TrChi2',
-                               'PIDppi',
-                               'PIDpk',
-                               'MaxPTB2Charged2Body',     'MaxPTB2PPbar',
+                               'MaxPTB2Charged2Body',  
                                'MaxIPB2Charged2Body',
-                               'MaxIPChi2B2Charged2Body', 'MaxIPChi2B2PPbar',
+                               'MaxIPChi2B2Charged2Body', 
                                'CombMassLow',
-                               'CombMassHigh',            'CombMassWindow',
-                               'DOCA',                    'VertexChi2B2PPbar',
-                               'BPT',                     'BPTB2PPbar',
+                               'CombMassHigh',        
+                               'DOCA',               
+                               'BPT',              
                                'BIP',
-                               'BIPChi2B2Charged2Body',   'BIPChi2B2PPbar',
-                               'BDIRA',
+                               'BIPChi2B2Charged2Body', 
                                'BTAU',
                                'MassLow',
                                'MassHigh',
@@ -80,7 +98,6 @@ class Hb2Charged2BodyLines( LineBuilder ) :
         Lb2PiPlusPMinusName  = name + "Lb2PiPlusPMinus"
         Lb2PPlusKMinusName   = name + "Lb2PPlusKMinus"
         Lb2KPlusPMinusName   = name + "Lb2KPlusPMinus"
-        B2PPbarName          = name + "B2PPbar"
         Bs2KK_NoIPCutOnBName = name + "Bs2KK_NoIPCutOnB"
         
         # make the various stripping selections
@@ -123,44 +140,6 @@ class Hb2Charged2BodyLines( LineBuilder ) :
         
         self.Lb2KPlusPMinus  = subPID(Lb2KPlusPMinusName, self.B2Charged2Body,
                                       "Lambda_b0", "K+", "p~-" )
-
-
-        """
-        self.B2KPlusPiMinus  = subPID(B2KPlusPiMinusName, self.B2Charged2Body,
-                                      "B0", "K+", "pi-" )
-
-        self.B2PiPlusKMinus  = subPID(B2PiPlusKMinusName, self.B2Charged2Body,
-                                      "B0", "pi+", "K-" )
-
-        self.Bs2KPlusKMinus  = subPID(Bs2KPlusKMinusName, self.B2Charged2Body,
-                                      "B_s0", "K+", "K-" )
-
-        self.Lb2PPlusPiMinus = subPID(Lb2PPlusPiMinusName, self.B2Charged2Body,
-                                      "Lambda_b0", "p+", "pi-" )
-        
-        self.Lb2PiPlusPMinus = subPID(Lb2PiPlusPMinusName, self.B2Charged2Body,
-                                      "Lambda_b0", "pi+", "p~-" )
-
-        self.Lb2PPlusKMinus  = subPID(Lb2PPlusKMinusName, self.B2Charged2Body,
-                                      "Lambda_b0", "p+", "K-" )
-        
-        self.Lb2KPlusPMinus  = subPID(Lb2KPlusPMinusName, self.B2Charged2Body,
-                                      "Lambda_b0", "K+", "p~-" )
-        """
-
-        self.B2PPbar = makeB2PPbar( B2PPbarName,
-                                    config['MinPTB2PPbar'],
-                                    config['TrChi2'],
-                                    config['PIDppi'],
-                                    config['PIDpk'],
-                                    config['MinIPChi2B2PPbar'],
-                                    config['MaxIPChi2B2PPbar'],
-                                    config['CombMassWindow'],
-                                    config['MaxPTB2PPbar'], 
-                                    config['VertexChi2B2PPbar'],
-                                    config['BIPChi2B2PPbar'],
-                                    config['BPTB2PPbar'],
-                                    config['BDIRA'] )
         
         self.Bs2KK_NoIPCutOnB = makeBs2KK_NoIPCutOnB( Bs2KK_NoIPCutOnBName,
                                                   config['PIDKBs2KK_NoIPCutOnB'],
@@ -212,46 +191,10 @@ class Hb2Charged2BodyLines( LineBuilder ) :
                                                   prescale  = config['PrescaleB2Charged2Body'],
                                                   selection = self.Lb2KPlusPMinus )
         
-        self.lineB2PPbar = StrippingLine( B2PPbarName+"Line",
-                                          prescale = config['PrescaleB2PPbar'],
-                                          selection = self.B2PPbar )
-        
-        
         self.lineBs2KK_NoIPCutOnB = StrippingLine( Bs2KK_NoIPCutOnBName+"Line",
                                                    prescale = config['PrescaleBs2KK_NoIPCutOnB'],
                                                    selection = self.Bs2KK_NoIPCutOnB)      
  
-        """
-        self.lineB2PiPlusKMinus  = StrippingLine( B2PiPlusKMinusName+"Line",
-                                                  prescale  = config['PrescaleB2Charged2Body'],
-                                                  selection = self.B2PiPlusKMinus )
-        
-        self.lineBs2KPlusKMinus  = StrippingLine( Bs2KPlusKMinusName+"Line",
-                                                  prescale  = config['PrescaleB2Charged2Body'],
-                                                  selection = self.Bs2KPlusKMinus )
-        
-        self.lineLb2PPlusPiMinus = StrippingLine( Lb2PPlusPiMinusName+"Line",
-                                                  prescale  = config['PrescaleB2Charged2Body'],
-                                                  selection = self.Lb2PPlusPiMinus )
-        
-        self.lineLb2PiPlusPMinus = StrippingLine( Lb2PiPlusPMinusName+"Line",
-                                                  prescale  = config['PrescaleB2Charged2Body'],
-                                                  selection = self.Lb2PiPlusPMinus )
-        
-        self.lineLb2PPlusKMinus  = StrippingLine( Lb2PPlusKMinusName+"Line",
-                                                  prescale  = config['PrescaleB2Charged2Body'],
-                                                  selection = self.Lb2PPlusKMinus )
-        
-        self.lineLb2KPlusPMinus  = StrippingLine( Lb2KPlusPMinusName+"Line",
-                                                  prescale  = config['PrescaleB2Charged2Body'],
-                                                  selection = self.Lb2KPlusPMinus )
-        
-        self.lineB2PPbar         = StrippingLine( B2PPbarName+"Line",
-                                                  prescale = config['PrescaleB2PPbar'],
-                                                  selection = self.B2PPbar )
-        """
-
-        self.registerLine(self.lineB2PPbar)    
         self.registerLine(self.lineB2Charged2Body)
         self.registerLine(self.lineB2KPlusPiMinus)
         self.registerLine(self.lineB2PiPlusKMinus)
@@ -282,23 +225,6 @@ def makeB2Charged2Body( name,
                       Algorithm = CombineHb2Charged2Body,
                       RequiredSelections = [ StdNoPIDsPions ] )    
 
-def makeB2PPbar( name,
-                 minPT, trChi2, pidPPi, pidPK, minIPChi2, maxIPChi2,
-                 combMassWindow, maxPT,
-                 vertexChi2, bIPChi2, bPT, bDIRA ) :
-
-    _daughters_cuts = "(PT > %(minPT)s * MeV) & (TRCHI2DOF < %(trChi2)s) & ((PIDp-PIDpi) > %(pidPPi)s) & ( (PIDp-PIDK) > %(pidPK)s ) & (MIPCHI2DV(PRIMARY) > %(minIPChi2)s)" %locals()
-    _combination_cuts = "(ADAMASS('B0') < %(combMassWindow)s * MeV) & ( AMAXCHILD(MAXTREE('p+'==ABSID,PT)) > %(maxPT)s * MeV ) & ( AMAXCHILD(MAXTREE('p+'==ABSID,MIPCHI2DV(PRIMARY))) > %(maxIPChi2)s )" %locals()
-    _mother_cuts = "(PT > %(bPT)s * MeV) & ( VFASPF(VCHI2PDOF) < %(vertexChi2)s ) & ( BPVDIRA > %(bDIRA)s ) & ( BPVIPCHI2() < %(bIPChi2)s )" %locals()
-
-    CombineB2PPbar = CombineParticles( DecayDescriptor = 'B0 -> p+ p~-',
-                                       DaughtersCuts = { "p+" : _daughters_cuts },
-                                       CombinationCut = _combination_cuts,
-                                       MotherCut = _mother_cuts )
-
-    return Selection( name,
-                      Algorithm = CombineB2PPbar,
-                      RequiredSelections = [ StdLooseProtons ] )
 
 def makeBs2KK_NoIPCutOnB( name, pidk,trChi2,minPT,minIP,minIPChi2,
                         maxPT,maxIP,maxIPChi2,combMassLow,combMassHigh,doca,

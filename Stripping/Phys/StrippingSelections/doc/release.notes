@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-03-23 - Stefano Perazzini
+ - Change of StrippingHb2Charged2Body.py (lines to BhadronCompleteEvent stream) 
+   and creation of the new StrippingB2PPbar.py (line to Bhadron stream)
+
 ! 2012-03-23 - Mika Vesterinen
  - Minor changes to StrippingCharmFromBSemi.py and StrippingB2DMuNuX.py
 
