@@ -131,7 +131,7 @@ StatusCode GetArrival::initialize() {
       
       if (msgLevel(MSG::DEBUG) ) debug()<<"ST="<<i<<endmsg;
       
-      for (int j=0;j<npoints;j++){
+      for (unsigned int j=0;j<npoints;j++){
         //int g_ind=i*npoints+j;
         int g_ind=(i-1)*npoints+j;
         m_vprobs[i].push_back(m_probs[g_ind]);

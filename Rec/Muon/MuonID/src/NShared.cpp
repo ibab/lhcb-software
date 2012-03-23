@@ -1,4 +1,3 @@
-// $Id: $
 // Include files 
 
 // from Gaudi
@@ -195,7 +194,7 @@ void NShared::fillNShared()
         (*iTrack)->checkType(LHCb::Track::Downstream))){
       
       int nshared=-1;
-      StatusCode sc = getNShared((**iTrack),nshared);
+      sc = getNShared((**iTrack),nshared);
       if (sc.isFailure()){
         if (msgLevel(MSG::DEBUG) ) 
           debug()<<"Error getting Nshared for track "<<(**iTrack)<<endmsg;
