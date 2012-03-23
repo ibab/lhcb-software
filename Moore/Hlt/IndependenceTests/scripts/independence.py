@@ -78,12 +78,20 @@ def main( options, args ):
         platform = "x86_64-slc5-gcc43-opt"
         splitter = SplitByFiles( filesPerJob = options.FilesPerJob,
                                  maxFiles = options.MaxFiles )
-        site = "CERN.ch"        
+        site = "CERN.ch"
+    elif options.Backend == "LSF":
+        backend = LSF( queue = '8nh' )
+        platform = "x86_64-slc5-gcc43-opt"
+        splitter = SplitByFiles( filesPerJob = options.FilesPerJob,
+                                 maxFiles = options.MaxFiles )
+        site = "CERN.ch"
     else:
         print "Unknown backend specified, possibilities are:"
         print "Stoomboot"
         print "Dirac"
         print "Local"
+        print "LHCbT3"
+        print "LSF"
         return 1
 
     # Use the user specified directory if present
@@ -102,8 +110,7 @@ def main( options, args ):
     Debug = True
 
     # job args needed to determine available lines
-    linesArgs = [ '--version', options.Version,
-                  '-d', options.DataType,
+    linesArgs = [ options.Version, '-d', options.DataType,
                   '--settings', options.ThresholdSettings ]
     
     # Run the lines script to get the available Hlt lines
