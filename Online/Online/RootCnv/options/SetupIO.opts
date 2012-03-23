@@ -1,7 +1,6 @@
 ApplicationMgr.HistogramPersistency = "NONE";
-ApplicationMgr.ExtSvc           += { "Gaudi::RootCnvSvc/RootCnvSvc"};
 JobOptionSvc.OutputLevel         = 4;
-EventPersistencySvc.CnvServices += { "RootCnvSvc" };
+EventPersistencySvc.CnvServices += { "Gaudi::RootCnvSvc/RootCnvSvc" };
 MessageSvc.OutputLevel           = 3;
 ApplicationMgr.AuditAlgorithms   = True ;
 ApplicationMgr.ExtSvc            += { "AuditorSvc"} ;

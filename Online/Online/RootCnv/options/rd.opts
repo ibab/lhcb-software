@@ -3,6 +3,5 @@ ApplicationMgr.TopAlg      = { "ReadAlg" };
 ReadAlg.OutputLevel        = 2;
 EventSelector.FirstEvent   = 1;
 EventSelector.Input        = {"DATAFILE='PFN:data/POOLIO.dst' SVC='Gaudi::RootEvtSelector'"};
-//ApplicationMgr.EvtMax      = 5;
 RootCnvSvc.OutputLevel     = 3;
 ReadAlg.OutputLevel        = 4;
