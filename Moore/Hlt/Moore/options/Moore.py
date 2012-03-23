@@ -15,7 +15,7 @@ from Moore.Configuration import Moore
 #Moore().ThresholdSettings = 'Commissioning_PassThrough'
 #Moore().configLabel = 'ODINRandom acc=0, TELL1Error acc=1'
 
-Moore().ThresholdSettings = 'Physics_draft2011'
+Moore().ThresholdSettings = 'Physics_draft2012'
 
 Moore().Verbose = True
 Moore().EvtMax = 10000
