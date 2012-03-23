@@ -1,16 +1,17 @@
 ApplicationMgr       INFO Application Manager Configured successfully
 {'ApplicationMgr': {'AppName': '',
+                    'AuditAlgorithms': True,
+                    'EvtMax': -1,
                     'ExtSvc': ['Gaudi::MultiFileCatalog/FileCatalog',
                                'Gaudi::IODataManager/IODataManager',
-                               'PoolDbCacheSvc/PoolDbCacheSvc',
-                               'PoolDbCnvSvc/PoolRootEvtCnvSvc',
-                               'PoolDbCnvSvc/PoolRootKeyEvtCnvSvc',
-                               'PoolDbCnvSvc/PoolRootTreeEvtCnvSvc',
-                               'PoolDbCnvSvc/FileRecordCnvSvc'],
+                               'AuditorSvc'],
                     'HistogramPersistency': 'NONE',
                     'OutStream': ['OutputStream/TAEMini'],
+                    'SvcOptMapping': ['Gaudi::MultiFileCatalog/FileCatalog',
+                                      'Gaudi::IODataManager/IODataManager'],
                     'TopAlg': ['LHCb::RawEventTestDump/Dump',
                                'StoreExplorerAlg/Explorer']},
+ 'AuditorSvc': {'Auditors': ['ChronoAuditor']},
  'Dump': {'CheckData': False,
           'DumpData': False,
           'FullDump': False,
@@ -19,48 +20,33 @@ ApplicationMgr       INFO Application Manager Configured successfully
                   'ForceLeaves': True,
                   'RootCLID': 1},
  'EventPersistencySvc': {'CnvServices': ['LHCb::RawDataCnvSvc/RawDataCnvSvc',
-                                         'PoolRootEvtCnvSvc',
-                                         'PoolRootTreeEvtCnvSvc',
-                                         'PoolRootKeyEvtCnvSvc']},
+                                         'Gaudi::RootCnvSvc/RootCnvSvc']},
  'EventSelector': {'Input': ["DATA='file://taeData.dat' SVC='LHCb::MDFSelector'"],
                    'PrintFreq': 200},
  'Explorer': {'AccessForeign': True,
               'Load': True,
               'OutputLevel': 3,
               'PrintFreq': 0.00021000000000000001},
- 'FileCatalog': {'Catalogs': ['xmlcatalog_file:qmTest.xml']},
- 'FileRecordCnvSvc': {'DbType': 'POOL_ROOTTREE', 'ShareFiles': 'YES'},
- 'FileRecordDataSvc': {'EnableFaultHandler': True,
-                       'ForceLeaves': True,
-                       'RootCLID': 1},
- 'FileRecordPersistencySvc': {'CnvServices': ['FileRecordCnvSvc']},
+ 'FileCatalog': {'Catalogs': ['xmlcatalog_file:ROOTIO.xml']},
  'IODataManager': {'AgeLimit': 1, 'OutputLevel': 3},
- 'PoolDbCacheSvc': {'Dlls': ['lcg_RootStorageSvc', 'GaudiKernelDict'],
-                    'DomainOpts': ['Domain[ROOT_All].TREE_MAX_SIZE=500000000000 TYP=longlong'],
-                    'OutputLevel': 1},
- 'PoolRootEvtCnvSvc': {'DbType': 'POOL_ROOT', 'EnableIncident': 1},
- 'PoolRootKeyEvtCnvSvc': {'DbType': 'POOL_ROOTKEY', 'EnableIncident': 1},
- 'PoolRootTreeEvtCnvSvc': {'DbType': 'POOL_ROOTTREE', 'EnableIncident': 1},
+ 'JobOptionSvc': {'OutputLevel': 4},
+ 'MessageSvc': {'OutputLevel': 3},
+ 'ReadAlg': {'OutputLevel': 4},
+ 'RootCnvSvc': {'CacheSize': 50000000, 'GlobalCompression': 'LZMA:3'},
  'TAEMini': {'ItemList': ['/Event#1',
                           '/Event/DAQ#1',
                           '/Event/Prev1/DAQ',
                           '/Event/Prev2',
                           '/Event/Next1/DAQ/RawEvent'],
-             'Output': "DATAFILE='PFN:taePOOL.dat' TYP='POOL_ROOTTREE' OPT='RECREATE'"}}
+             'Output': "DATAFILE='PFN:taeROOT.dat' SVC='RootCnvSvc' OPT='RECREATE'"}}
 +-------------------> Start processing events
-PoolDbCacheSvc      DEBUG Service base class initialized successfully
-PoolDbCacheSvc       INFO POOL output threshold: 'OutputLevel':1
-DbSession            INFO     Open     DbSession
-PoolDbCacheSvc      DEBUG Installed IOHandler for class SmartRefBase
-PoolDbCacheSvc      DEBUG Installed IOHandler for class ContainedObject
-Domain[ROOT_All]     INFO >   Access   DbDomain     UPDATE    [ROOT_All]
-EventPersistenc...   INFO  'CnvServices':[ 'LHCb::RawDataCnvSvc/RawDataCnvSvc' , 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' ]
-EventPersistenc...   INFO Added successfully Conversion service:RawDataCnvSvc
-EventPersistenc...   INFO Added successfully Conversion service:PoolRootEvtCnvSvc
-EventPersistenc...   INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc
-TAEMini              INFO Data source: EventDataSvc output: DATAFILE='PFN:taePOOL.dat' TYP='POOL_ROOTTREE' OPT='RECREATE'
+ChronoStatSvc        INFO  Number of skipped events for MemStat-1
+RootCnvSvc           INFO Setting global ROOT compression to:LZMA:3
+EventPersistenc...   INFO Added successfully Conversion service:RootCnvSvc
+TAEMini              INFO Data source: EventDataSvc output: DATAFILE='PFN:taeROOT.dat' SVC='RootCnvSvc' OPT='RECREATE'
+IODataManager       ERROR Referring to existing dataset file://taeData.dat by its physical name.
+IODataManager       ERROR You may not be able to navigate back to the input file -- processing continues
 EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATA='file://taeData.dat' SVC='LHCb::MDFSelector'
-HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
@@ -68,7 +54,8 @@ EventSelector.D...   INFO Compression:1 Checksum:1
 R__unzip: too small target
 EventSelector.D...   INFO Retry with increased buffer space of 185208 bytes.
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
-Explorer             INFO ========= /Event[0x20c36230@EventDataSvc]:
+EventPersistenc...   INFO Added successfully Conversion service:RawDataCnvSvc
+Explorer             INFO ========= /Event[0x18339c60@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO | +--> /Prev5 [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO | | +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
@@ -102,9 +89,6 @@ Explorer             INFO | |   +--> /RawEvent [Address: CLID=0x3ea Type=0xa0000
 Explorer             INFO   +--> /Next5 [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO     +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO       +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
-Domain[ROOT_All]     INFO ->  Access   DbDatabase   CREATE    [ROOT_All] 26FE952B-F81E-DE11-B1D8-000423D6B700
-Domain[ROOT_All]     INFO                           taePOOL.dat
-RootDBase.open    SUCCESS taePOOL.dat File version:52600
 EventSelector     SUCCESS Reading Event record 201. Record number within stream 1: 201
 EventSelector     SUCCESS Reading Event record 401. Record number within stream 1: 401
 EventSelector     SUCCESS Reading Event record 601. Record number within stream 1: 601
@@ -126,12 +110,31 @@ ApplicationMgr       INFO Application Manager Stopped successfully
 TAEMini              INFO Events output: 3000
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
-FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
-taePOOL.dat          INFO Database being retired...
-Domain[ROOT_All]     INFO ->  Deaccess DbDatabase   CREATE    [ROOT_All] 26FE952B-F81E-DE11-B1D8-000423D6B700
-taePOOL.dat          INFO Database being retired...
-PoolRootTreeEvt...   INFO Disconnected data IO:26FE952B-F81E-DE11-B1D8-000423D6B700[taePOOL.dat]
-Domain[ROOT_All]     INFO >   Deaccess DbDomain     UPDATE    [ROOT_All]
-DbSession            INFO     Closed   DbSession
+RootCnvSvc           INFO Disconnected data IO:682F0A76-EA74-E111-8DD5-003048F0E7CA [taeROOT.dat]
+*****Chrono*****     INFO ****************************************************************************************************
+*****Chrono*****     INFO  The Final CPU consumption ( Chrono ) Table (ordered)
+*****Chrono*****     INFO ****************************************************************************************************
+TAEMini:Stop         INFO Time User   : Tot=    0 [us]                                             #=  1
+TAEMini:Start        INFO Time User   : Tot=    0 [us]                                             #=  1
+Explorer:BeginRun    INFO Time User   : Tot=    0 [us]                                             #=  1
+Explorer:EndRun      INFO Time User   : Tot=    0 [us]                                             #=  1
+Explorer:Start       INFO Time User   : Tot=    0 [us]                                             #=  1
+Explorer:Stop        INFO Time User   : Tot=    0 [us]                                             #=  1
+Dump:BeginRun        INFO Time User   : Tot=    0 [us]                                             #=  1
+Dump:Start           INFO Time User   : Tot=    0 [us]                                             #=  1
+Dump:Stop            INFO Time User   : Tot=    0 [us]                                             #=  1
+Explorer:Finalize    INFO Time User   : Tot=    0 [us]                                             #=  1
+Dump:Finalize        INFO Time User   : Tot=    0 [us]                                             #=  1
+Dump:EndRun          INFO Time User   : Tot=    0 [us]                                             #=  1
+Dump:Initialize      INFO Time User   : Tot=    0 [us]                                             #=  1
+TAEMini:Finalize     INFO Time User   : Tot=    0 [us]                                             #=  1
+Explorer:Initia...   INFO Time User   : Tot=    1 [ms]                                             #=  1
+Explorer:Execute     INFO Time User   : Tot=   14 [ms] Ave/Min/Max= 4.67(+- 68.1)/    0/1e+03 [us] #=3000
+Dump:Execute         INFO Time User   : Tot=   67 [ms] Ave/Min/Max= 22.3(+-  148)/    0/1e+03 [us] #=3000
+TAEMini:Initialize   INFO Time User   : Tot=  134 [ms]                                             #=  1
+TAEMini:Execute      INFO Time User   : Tot= 2.69  [s] Ave/Min/Max=0.898(+- 8.33)/    0/  151 [ms] #=3000
+ChronoStatSvc        INFO Time User   : Tot= 3.97  [s]                                             #=  1
+*****Chrono*****     INFO ****************************************************************************************************
+ChronoStatSvc.f...   INFO  Service finalized successfully
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

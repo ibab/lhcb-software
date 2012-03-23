@@ -125,4 +125,11 @@
     <logical/>
   </File>
 
+  <File ID="DE3FC762-EC74-E111-91F9-003048F0E7CA">
+    <physical>
+      <pfn filetype="ROOT" name="mdfROOT.dat"/>
+    </physical>
+    <logical/>
+  </File>
+
 </POOLFILECATALOG>

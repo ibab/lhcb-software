@@ -170,28 +170,26 @@ def _readMIF(test_castor=None):
   return ApplicationMgr()
   
 #------------------------------------------------------------------------------------------------
-def _createPOOL(test_castor=None):
-  print_header('MDF','CreatePOOL')
+def _createROOT(test_castor=None):
+  print_header('MDF','CreateROOT')
   app  = ApplicationMgr()
+  CFG.importOptions('$ROOTCNVROOT/options/Setup.opts')
   setData(test_castor)
   mdfCheck()
-  mini = CFG.OutputStream('POOLMini')
+  mini = CFG.OutputStream('ROOTMini')
   mini.ItemList          = ["/Event#1", "/Event/DAQ#1"]
-  mini.Output            = "DATAFILE='PFN:mdfPOOL.dat' TYP='POOL_ROOTTREE' OPT='RECREATE'"
+  mini.Output            = "DATAFILE='PFN:mdfROOT.dat' SVC='RootCnvSvc' OPT='RECREATE'"
   app.OutStream  += [mini]
-  CFG.importOptions('$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts')
-  cache = CFG.PoolDbCacheSvc()
-  cache.OutputLevel = 1
   return app
 
 #------------------------------------------------------------------------------------------------
-def _readPOOL(test_castor=None):
-  print_header('MDF','ReadPOOL')
+def _readROOT(test_castor=None):
+  print_header('MDF','ReadROOT')
+  CFG.importOptions('$ROOTCNVROOT/options/Setup.opts')
   mdfCheck()
-  CFG.importOptions('$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts')
   sel = CFG.EventSelector()
   sel.PrintFreq  = 200
-  sel.Input      = ["DATA='PFN:mdfPOOL.dat' TYP='POOL_ROOTTREE' OPT='OLD'"]
+  sel.Input      = ["DATA='PFN:mdfROOT.dat' SVC='Gaudi::RootEvtSelector'"]
   CFG.IODataManager().AgeLimit = 5
   return ApplicationMgr()
 
@@ -212,22 +210,21 @@ def _createTAE(test_castor=None):
 def _readTAE():
   app  = ApplicationMgr()
   mdfCheck()
-  CFG.importOptions('$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts')
+  CFG.importOptions('$ROOTCNVROOT/options/Setup.opts')
   CFG.EventSelector().Input = ["DATA='file://taeData.dat' SVC='LHCb::MDFSelector'"]
   CFG.EventSelector().PrintFreq              = 200
   mini = CFG.OutputStream('TAEMini')
   app.OutStream  += [mini]
   mini.ItemList   = ['/Event#1','/Event/DAQ#1','/Event/Prev1/DAQ','/Event/Prev2','/Event/Next1/DAQ/RawEvent']
-  mini.Output     = "DATAFILE='PFN:taePOOL.dat' TYP='POOL_ROOTTREE' OPT='RECREATE'"
-  CFG.PoolDbCacheSvc().OutputLevel = 1
+  mini.Output     = "DATAFILE='PFN:taeROOT.dat' SVC='RootCnvSvc' OPT='RECREATE'"
   return app
 
 #------------------------------------------------------------------------------------------------
-def _readTAEPOOL():
+def _readTAEROOT():
   app  = ApplicationMgr()
   mdfCheck()
-  CFG.importOptions('$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts')
-  CFG.EventSelector().Input = ["DATA='PFN:taePOOL.dat' TYP='POOL_ROOTTREE' OPT='OLD'"]
+  CFG.importOptions('$ROOTCNVROOT/options/Setup.opts')
+  CFG.EventSelector().Input = ["DATA='PFN:taeROOT.dat' SVC='Gaudi::RootEvtSelector'"]
   CFG.EventSelector().PrintFreq = 200
   return app
 
