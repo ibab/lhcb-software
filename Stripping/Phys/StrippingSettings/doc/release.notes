@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-03-23 - Anton Poluektov 
+   . Update Stripping18/LineConfigDictionaries_B2OC.py (new lines in Beauty2Charm)
+
 ! 2012-03-23 - Will Barter
  -  updated dictionary: Stripping18/LineConfigDictionaries_QEE.py  for Stripping18.
 
