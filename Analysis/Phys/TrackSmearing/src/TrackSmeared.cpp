@@ -204,18 +204,12 @@ double TrackSmeared::getSigma( LHCb::State* state,  std::vector<TF1*> funcs_data
 
 void TrackSmeared::smearStates(  const std::vector< LHCb::State * > & states )
 {
-
-  double pt = states[0]->pt();
-  double inversept = pt > 0 ? 1.0/pt : 0.0;
   const double tx = states[0]->tx();
   const double alpha = atan(tx);
   const double ty = states[0]->ty();
   const double gamma = atan(ty);
-  const double z = states[0]->z();
-  const double phi = states[0]->momentum().phi();
   double xrand = 0.0;
   double yrand = 0.0;
-  double zrand = 0.0;
   debug()<<"smear: "<<m_smear<<endmsg;
   double sigmax = getSigma(states[0],m_funcsx_data,m_funcsx_mc);
   double sigmay = getSigma(states[0],m_funcsy_data,m_funcsy_mc);
@@ -375,10 +369,8 @@ StatusCode TrackSmeared::execute() {
           const double alpha = atan(tx);
           const double ty = states[0]->ty();
           const double gamma = atan(ty);
-          const double z = states[0]->z();
           double xrand = 0.0;
           double yrand = 0.0;
-          double zrand = 0.0;
           debug()<<"smear: "<<m_smear<<endmsg;
           if (m_smear)
           {
