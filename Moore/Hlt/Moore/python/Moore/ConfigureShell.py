@@ -25,13 +25,19 @@ def configureForRunning():
   directory  = checkpoint_dir+sep+'Moore'+sep+App+sep+CFG+sep+COND+sep+DD
   checkpoint_loc  = None
   checkpoint_file = None
-  for i in os.listdir(directory):
-    idx=i.find('.data')
-    if idx>0 and idx==len(i)-5:
-      checkpoint_loc  = directory
-      checkpoint_file = i
-      break
-
+  try:
+    for i in os.listdir(directory):
+      idx=i.find('.data')
+      if idx>0 and idx==len(i)-5:
+        checkpoint_loc  = directory
+        checkpoint_file = i
+        break
+  except Exception,X:
+    print 'echo "[ERROR] Checkpointing requested:'+str(X)+'";'
+    if Mode > 1:
+      Mode = 1
+      print 'echo "[ERROR] Checkpointing requested, but no checkpoint present.";'
+      
   startup    = "-normal"
 
   if Mode==0:
@@ -45,9 +51,12 @@ def configureForRunning():
 
   if os.environ.has_key('CREATE_CHECKPOINT'):
     startup="-checkpoint"
+    Mode = 100
   elif os.environ.has_key('TEST_CHECKPOINT'):
+    print 'echo "[ERROR] Startup mode:TEST_CHECKPOINT='+str(os.environ['TEST_CHECKPOINT'])+' - '+str(Mode)+'";'
     startup="-restore"
 
+  print 'echo "[INFO] Startup mode:'+str(startup)+' - '+str(Mode)+'";'
   if Mode==2 and not os.environ.has_key('TEST_CHECKPOINT'):
     md5 = ''
     shm_md5 = ''
@@ -62,35 +71,39 @@ def configureForRunning():
       copyNewFile(checkpoint_loc,checkpoint_file)
     print 'export CHECKPOINT_DIR=/dev/shm;'
     print 'export CHECKPOINT_FILE='+shared_memory+sep+checkpoint_file+';'
-  elif Mode != 0:
+  elif Mode > 1:
     print 'export CHECKPOINT_DIR='+checkpoint_loc+';'
     print 'export CHECKPOINT_FILE='+checkpoint_loc+sep+checkpoint_file+';'
 
-  # Number of CPUs online:
-  # os.sysconf('SC_NPROCESSORS_ONLN')
-  #
-  # Number of processors known to operating system:
-  # os.sysconf('SC_NPROCESSORS_CONF')
-  ##print 'export NUM_CORES='+str(os.sysconf('SC_NPROCESSORS_ONLN'))+';'
   print 'export NUM_CORES='+str(os.environ['NBOFSLAVES'])+';'
   print 'export APP_STARTUP_OPTS='+startup+';'
 
 #=========================================================================================
 def configureForCheckpoint():
-  print 'echo "Running in checkkpoint production mode....";'
+  print 'echo "Running in checkkpoint PRODUCTION mode....";'
   print 'export APP_STARTUP_OPTS=-checkpoint;'
   print 'export CHECKPOINT_DIR; export CHECKPOINT_FILE;'
 
 #=========================================================================================
+def configureForTest():
+  print 'echo "Running in checkkpoint TESTING mode....";'
+  print 'export APP_STARTUP_OPTS=-restore;'
+  print 'export CHECKPOINT_DIR; export CHECKPOINT_FILE;'
+  print 'export PYTHONPATH=${CHECKPOINT_DIR}:${PYTHONPATH};'
+
+#=========================================================================================
 def doIt():
   try:
-    import OnlineEnvBase as Online
-    if os.environ.has_key('CREATE_CHECKPOINT'):
+    if os.environ.has_key('TEST_CHECKPOINT'):
+      configureForTest()
+    elif os.environ.has_key('CREATE_CHECKPOINT'):
       configureForCheckpoint()
     else:
+      # Running in production mode in the HLT
       configureForRunning()
 
-  except ImportError,X:
+  except Exception,X:
+    print 'echo "Checkpoint production mode:'+str(X)+'";'
     configureForCheckpoint()
 
 #=========================================================================================

@@ -36,7 +36,7 @@ def start(NbOfSlaves) :
 
 
     ## TODO: is this still needed???
-    if OnlineEnv.PartitionName == 'FEST' : Moore().EnableRunChangeHandler = False
+    #if OnlineEnv.PartitionName == 'FEST' : Moore().EnableRunChangeHandler = False
 
     ### pick up requested DB tags
     if hasattr(OnlineEnv,'CondDBTag') and OnlineEnv.CondDBTag : Moore().CondDBtag = OnlineEnv.CondDBTag
