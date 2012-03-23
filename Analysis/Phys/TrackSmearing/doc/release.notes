@@ -3,6 +3,8 @@
 ! Responsible : Sascha Stahl
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+! 2012-03-23 Sascha Stahl
+ - Made MC11/Stripping 17 parameters default
 
 ! 2011-05-01 - Alex Shires
  - Added protection to phi bin calculation in getSigma method
