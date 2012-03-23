@@ -4,7 +4,11 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
-!========================= HltDisplVertices v3r7 2012-03-20 =========================! 2012-03-19 - Victor Coco
+! 2012-03-23 - Patrick Koppenburg
+  VeloWithIP: added some printout in order to debug Bug 92916
+
+!========================= HltDisplVertices v3r7 2012-03-20 =========================
+! 2012-03-19 - Victor Coco
  - modify Hlt2Sel to have the fraction of energy cut at this level 
    (but computed in Hlt2PreSel) + sum pt without velo.
 
