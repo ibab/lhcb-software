@@ -116,6 +116,7 @@ StatusCode ConeVariablesForEW::calculateExtraInfo( const LHCb::Particle *top,
       totalMomentum.SetY(seed->momentum().Y() + coneMomentum.Y());
       totalMomentum.SetZ(seed->momentum().Z() + coneMomentum.Z());
 
+/*
       // -- Calculate the Eta-Phi difference between the summed momentum of all tracks in the cone and the seed
       double deltaEta = 0.;
       double deltaPhi = 0.;
@@ -125,6 +126,7 @@ StatusCode ConeVariablesForEW::calculateExtraInfo( const LHCb::Particle *top,
         if ( deltaPhi > M_PI )
           deltaPhi = 2 * M_PI - deltaPhi;
       }
+*/
       
       // -- Fill the tuple with the variables
       m_mult = multiplicity;
@@ -173,6 +175,7 @@ StatusCode ConeVariablesForEW::calculateExtraInfo( const LHCb::Particle *top,
       neutralConeMomentum.SetY( nvectorP[1] );
       neutralConeMomentum.SetZ( nvectorP[2] );
 
+/*
       // -- Calculate the Eta-Phi difference between the summed momentum of all tracks in the cone and the seed
       double ndeltaEta = 0.;
       double ndeltaPhi = 0.;
@@ -182,6 +185,7 @@ StatusCode ConeVariablesForEW::calculateExtraInfo( const LHCb::Particle *top,
         if ( ndeltaPhi > M_PI )
           ndeltaPhi = 2 * M_PI - ndeltaPhi;
       }
+*/
 
       // -- Fill the tuple with the variables
       m_nmult = nmultiplicity;

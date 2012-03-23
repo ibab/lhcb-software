@@ -72,12 +72,11 @@ StatusCode AddExtraInfo::execute() {
    
     const Particle::Range parts = get<Particle::Range>( location );
     if( parts.empty() ) {
-      Warning("No particles found at "+ location, 
-              StatusCode::SUCCESS,10).ignore();
+      if (msgLevel(MSG::VERBOSE)) verbose() << "No particles found at " << location << endreq;
       continue;
     }
 
-    if (msgLevel(MSG::VERBOSE)) verbose() << " Found "<< parts.size() << " particles" <<endreq;
+   if (msgLevel(MSG::VERBOSE)) verbose() << " Found "<< parts.size() << " particles" <<endreq;
 
     // Loop over particles in the locations
     Particle::Range::const_iterator icand;
