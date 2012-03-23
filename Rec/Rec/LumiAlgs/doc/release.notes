@@ -3,6 +3,15 @@
 ! Responsible : Jaap Panman
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
+! 2012-03-21 - Rosen Matev
+ - Add new algorithm DumpLumiEvents
+   . Reads RAW files containing random events (typically LUMI stream)
+   . Output is ASCII file with name specified by OutputFileName option.
+     For each event in input with nonzero random counter a line with ODIN
+     fields and lumi counters is written. Events are not time-ordered!
+ - Add minimal DumpLumiEvents.py job options
+ - Add QM test dumplumievent.qmt
+
 ! 2012-03-22 - Jaap Panman
  - Fix warnings due to unused code
 
