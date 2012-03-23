@@ -4,6 +4,9 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
+! 2012-03-23 - Victor Coco
+ - VeloWithIP: fixed the bug giving unpredictible behaviour
+
 ! 2012-03-23 - Patrick Koppenburg
   VeloWithIP: added some printout in order to debug Bug 92916
 

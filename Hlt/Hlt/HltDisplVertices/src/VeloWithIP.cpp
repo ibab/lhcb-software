@@ -11,6 +11,7 @@
 #include "LoKi/BeamLineFunctions.h"
 #include "LoKi/LoKiPhys.h"
 #include "LoKi/LoKiTrigger.h"
+#include "GaudiKernel/VectorMap.h"
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( VeloWithIP );
 
@@ -103,10 +104,7 @@ StatusCode VeloWithIP::execute() {
   }
   else{
     std::vector<int> keys;
-    keys.reserve(500);
     const LHCb::Tracks* trackContainer = get<LHCb::Tracks*>( m_TracksLocations[0]) ;
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Else Tracks size " << trackContainer->size() << endmsg ;
-    
     for (LHCb::RecVertex::Range::const_iterator ipv = tRV.begin();tRV.end()!=ipv;++ipv){
       const SmartRefVector< LHCb::Track > & pVtrs =  (*ipv)->tracks();
       for (SmartRefVector< LHCb::Track >::const_iterator iitr = pVtrs.begin(); pVtrs.end()!= iitr; ++iitr ){
@@ -116,18 +114,20 @@ StatusCode VeloWithIP::execute() {
     }
     std::sort(keys.begin(),keys.end());
     unsigned int keyIndex = 0;
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Number of keys: " << keys.size() << endmsg ;
     for( LHCb::Tracks::const_iterator itr = trackContainer->begin() ;
          itr != trackContainer->end(); ++itr ) {
       if ( keyIndex > keys.size()) {
-        fatal() << "Key index " << keyIndex << " larger than keys size " << keys.size() << endmsg ;
+        warning() << "Key index " << keyIndex << " larger than keys size " << keys.size() << endmsg ;
         return StatusCode::FAILURE ;
-      }    
-      if (msgLevel(MSG::VERBOSE)) verbose() << "Comparing: " << (*itr)->key() << " " << keyIndex << " " 
-                                            << keys[keyIndex] << endmsg ;
+      }
+      if( keyIndex == keys.size() ){
+        if (msgLevel(MSG::VERBOSE)) verbose() << "List finninshed Insert ? " << (*itr)->key() << " " << (*itr)->checkFlag(LHCb::Track::Backward)   << endmsg ;
+        if ((*itr)->checkFlag(LHCb::Track::Backward))continue;
+        iptracks->insert((*itr));
+        continue;
+      }
       if ((*itr)->key() < keys[keyIndex]){
-        if (msgLevel(MSG::VERBOSE)) verbose() << "Insert ? " << (*itr)->key() << " " << (*itr)->checkFlag(LHCb::Track::Backward) 
-                                              << endmsg ;
+        if (msgLevel(MSG::VERBOSE)) verbose() << "Insert ? " << (*itr)->key() << " " << (*itr)->checkFlag(LHCb::Track::Backward)   << endmsg ;
         if ((*itr)->checkFlag(LHCb::Track::Backward))continue;
         iptracks->insert((*itr));
       }
@@ -135,6 +135,8 @@ StatusCode VeloWithIP::execute() {
         keyIndex++;
       }
     }
+    //if(maxKey2<maxkeyIndex)fatal() << "Key in PV does not exist in velo 2"<< endmsg ;
+
   }
   if (msgLevel(MSG::DEBUG))  debug() << " input " << inputtrack << " output " << iptracks->size() << endmsg ;
 
