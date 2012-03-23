@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-03-23 - John Back
+ - Added EvtEta2MuMuGamma model from Marcin Chrzaszcz.
+
 ! 2012-03-21 - John Back
  - Added EvtD0gammaDalitz model from Jordi Tico.
    Added K_1+/- vector modes for EvtbTosllBallFF::getVectorFF. 
