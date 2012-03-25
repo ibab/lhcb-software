@@ -388,6 +388,7 @@ public:
   void fillrate(const std::string &prefix,const std::string &cnam,MonMap *mmap);
   void dump();
   void fillsums();
+  StatusCode finalize();
   std::vector<std::string> m_tell1List;
   unsigned long long m_prevupdate;
   ISimpleTrendWriter* m_trender;

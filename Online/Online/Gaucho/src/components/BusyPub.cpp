@@ -70,6 +70,7 @@ StatusCode BusyPub::finalize()
     sc = tools->releaseTool(m_trender);
     m_trender = 0;
   }
+  Service::finalize();
   return StatusCode::SUCCESS;
 }
 

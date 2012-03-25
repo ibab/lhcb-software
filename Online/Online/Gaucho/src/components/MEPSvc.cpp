@@ -165,6 +165,25 @@ StatusCode MEPSvc::initialize()
   return sc;
 }
 
+StatusCode MEPSvc::finalize()
+{
+  StatusCode sc;
+  if (m_trender != 0)
+  {
+//    m_trender->close();
+    SmartIF<IToolSvc> tools;
+    sc = serviceLocator()->service("ToolSvc", tools.pRef());
+    if ( !sc.isSuccess() ) {
+      ::lib_rtl_output(LIB_RTL_FATAL,"DIM(RateSvc): Failed to access ToolsSvc.\n");
+      return sc;
+    }
+    sc = tools->releaseTool(m_trender);
+    m_trender = 0;
+  }
+  Service::finalize();
+  return StatusCode::SUCCESS;
+}
+
 StatusCode MEPSvc::start()
 {
   PubSvc::start();
