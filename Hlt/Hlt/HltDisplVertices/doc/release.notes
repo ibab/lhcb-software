@@ -4,6 +4,9 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
+! 2012-03-25 - Victor Coco
+ - Fix in matter veto treatement in Hlt2PreSelDV.cpp
+
 ! 2012-03-23 - Victor Coco
  - VeloWithIP: fixed the bug giving unpredictible behaviour
 

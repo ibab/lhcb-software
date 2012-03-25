@@ -160,9 +160,8 @@ StatusCode Hlt2SelDV::execute() {
     double errr = sqrt( err(0,0) + err(1,1) );
     
     //Is the particle close to the detector material ?
-    if( m_allOutDet && indet ) continue;    
-    if( !m_allOutDet && !indet) oneOutMat=true;
-
+    if( m_allOutDet && m_RemVtxFromDet!=0 &&  indet ) continue; 
+ 
     if( mass < m_PreyMinMass || 
         nbtrks < m_nTracks || rho <  m_RMin || rho > m_RMax || 
         sumpt < m_SumPt || chi > m_MaxChi2OvNDoF || 
@@ -203,6 +202,7 @@ StatusCode Hlt2SelDV::execute() {
         debug()<<"Particle do not pass the min angle/ FD cut"<< endmsg; 
       continue; 
     }
+    if( !m_allOutDet && !indet) oneOutMat=true;
     Particle clone = Particle( *p );
     clone.addInfo(80,mindist ); 
     clone.addInfo(81, mass ); 

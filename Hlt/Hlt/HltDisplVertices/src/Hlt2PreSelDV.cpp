@@ -331,10 +331,13 @@ bool Hlt2PreSelDV::RecVertex2Particle( const RecVertex* rv,
         
       }
       if( part != NULL ){
+        // apply chi2 cut if the track is not velo
         if (part->proto()->track()->type()!= LHCb::Track::Velo && part->proto()->track()->chi2PerDoF () > m_chi2Long )continue;
         tmpVtx.addToOutgoingParticles( part );
         tmpPart.addToDaughters( part );
+        // is it the highest energy track
         if (part->proto()->track()->type()!= LHCb::Track::Velo && part->momentum().e()>maxE)maxE=part->momentum().e();
+        // if track is velo while we don't want to use velo, do not add the momenta.
         if( ! m_useVeloTrack && part->proto()->track()->type()== LHCb::Track::Velo ) continue;
         mom += part->momentum();
       }      
