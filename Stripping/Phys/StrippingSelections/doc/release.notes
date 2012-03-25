@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-03-25 - Jibo He
+ - __init__.py 
+  . Added StrippingLb2V0hh, StrippingB2PPbar, StrippingB2FourKHigh, StrippingBs2KKhh
+    StrippingBs2KSKS
+
 ! 2012-03-23 - Stefano Perazzini
  - Change of StrippingHb2Charged2Body.py (lines to BhadronCompleteEvent stream) 
    and creation of the new StrippingB2PPbar.py (line to Bhadron stream)

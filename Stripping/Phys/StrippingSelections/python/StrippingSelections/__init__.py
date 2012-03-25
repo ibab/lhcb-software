@@ -137,6 +137,11 @@ import StrippingD02HHForXSec
 
 #import StrippingBu3hFrom2h
 import StrippingB2HHPi0
+import StrippingLb2V0hh
+import StrippingB2PPbar
+import StrippingB2FourKHigh
+import StrippingBs2KKhh
+import StrippingBs2KSKS
 
 import StrippingB2SameChargeMuon
 import StrippingHyperCPX
