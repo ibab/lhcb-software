@@ -4,6 +4,17 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-03-25 - Jibo He
+ - Stripping18/LineConfigDictionaries_BandQ
+   . Added Xibc line
+   . Changed the WG name to "BandQ"
+ - Stripping18/LineConfigDictionaries_Charm
+   . Moved D2HHLTUnbiased to CharmCompleteEvent, and Charm WG
+ - Stripping18/LineConfigDictionaries_MiniBias
+   . Updated conf dict, as said in 
+     https://savannah.cern.ch/bugs/?92254
+ - A working verion of stripping18 dbase
+
 ! 2012-03-23 - Stefano Perazzini
  - Updated Stripping18/LineConfigDictionaries_Charmless.py
 

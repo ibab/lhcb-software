@@ -27,7 +27,7 @@ MicroDSTNeuroBayesMuMu = {
               , 'PostscaleJPsi'     : 1.0
               },
     'STREAMS' : [ 'Leptonic' ],
-    'WGs'    : [ 'BHQ' ]
+    'WGs'    : [ 'BandQ' ]
     }
 
 
@@ -54,7 +54,7 @@ ChiCJPsiGammaConversion = {
                           , 'PostscaleChiCWS'       :   1.0
                           },
     'STREAMS' : [ 'Leptonic' ],
-    'WGs'    : [ 'BHQ' ]
+    'WGs'    : [ 'BandQ' ]
     }
 
 FullDSTDiMuon = {
@@ -218,7 +218,7 @@ FullDSTDiMuon = {
         'Psi2MuMuDetached_LTCuts'                          :  " & (BPVDLS>5) & (MINTREE('mu+'==ABSID,BPVIPCHI2())>4)"
         },
     'STREAMS' : [ 'Dimuon' ],
-    'WGs'    : [ 'BHQ' ]
+    'WGs'    : [ 'BandQ' ]
     }
 
 MicroDSTDiMuon = {
@@ -382,7 +382,7 @@ MicroDSTDiMuon = {
         'Psi2MuMuDetached_LTCuts'                          :   " & (BPVDLS>5)"    
         }, 
     'STREAMS' : [ 'Leptonic' ] ,
-    'WGs'    : [ 'BHQ' ]
+    'WGs'    : [ 'BandQ' ]
     }
 
 X2psi = {
@@ -405,7 +405,7 @@ X2psi = {
     'SSPrescale'       :     0.2 
     },
     'STREAMS' : [ 'Leptonic' ] ,
-    'WGs'    : [ 'BHQ' ]
+    'WGs'    : [ 'BandQ' ]
   }
 
 X2psiGamma = {
@@ -423,7 +423,7 @@ X2psiGamma = {
     'CombMaxMass'      :     5.0   # GeV, no Vtx fit
     },
     'STREAMS' : [ 'Leptonic' ] ,
-    'WGs'    : [ 'BHQ' ]
+    'WGs'    : [ 'BandQ' ]
   }
 
 B2psiX = {
@@ -497,7 +497,7 @@ B2psiX = {
     # =========================================================================    
     },
     'STREAMS' : [ 'Leptonic' ] ,
-    'WGs'    : [ 'BHQ' ]
+    'WGs'    : [ 'BandQ' ]
     }
 
 B2psiX0 = {
@@ -565,7 +565,7 @@ B2psiX0 = {
     # =========================================================================     
     },
     'STREAMS' : [ 'Leptonic' ] ,
-    'WGs'    : [ 'BHQ' ]
+    'WGs'    : [ 'BandQ' ]
     }
 
 
@@ -592,7 +592,7 @@ Bc2JpsiMu = {
     'BcPT'                : 6000.      # MeV, May incrase up to 5000 MeV if needed      
     },
     'STREAMS' : [ 'Leptonic' ] ,
-    'WGs'    : [ 'BHQ' ]
+    'WGs'    : [ 'BandQ' ]
   }
 
 Bc2JpsiH = {
@@ -619,7 +619,7 @@ Bc2JpsiH = {
     'LifetimeCut'         :   ""    
     },
     'STREAMS' : [ 'Leptonic' ],
-    'WGs'    : [ 'BHQ' ]
+    'WGs'    : [ 'BandQ' ]
     }
 
 Bc2JpsiHDetached = {
@@ -646,7 +646,7 @@ Bc2JpsiHDetached = {
     'LifetimeCut'         : " & (BPVLTIME()>0.1*ps)"
     },
     'STREAMS'   : [ 'Dimuon' ],
-    'WGs'    : [ 'BHQ' ]
+    'WGs'    : [ 'BandQ' ]
 }
 
 BuToKX3872 = {
@@ -712,7 +712,7 @@ BuToKX3872 = {
     'Muon_IsMuon'           : True
      },
     'STREAMS' : [ 'Leptonic' ],
-    'WGs'    : [ 'BHQ' ]
+    'WGs'    : [ 'BandQ' ]
     }
 
 HeavyBaryon = {
@@ -729,7 +729,7 @@ HeavyBaryon = {
                           "OmegabminusMassWindow" :      500.    
                           },
     'STREAMS' : [ 'Dimuon' ],
-    'WGs'    : ['BHQ']
+    'WGs'    : ['BandQ']
     }
 
 FullDSTDiElectron = {
@@ -962,7 +962,7 @@ TwoBodyPrompt = {
                   'MinDSSlowPionDauPt' : 150.0 # added
                   },
     'STREAMS' : [ 'Bhadron' ],
-    'WGs'    : [ 'BHQ' ]
+    'WGs'    : [ 'BandQ' ]
     }
 
 Ccbar2Ppbar = {
@@ -985,7 +985,7 @@ Ccbar2Ppbar = {
                     'CCCut'            :  " & (PT>6*GeV)"    
                    },
     'STREAMS' : [ 'Charm' ] ,
-    'WGs'    : [ 'BHQ' ]
+    'WGs'    : [ 'BandQ' ]
 }
 
 Ccbar2PpbarExclusive = {
@@ -1009,7 +1009,7 @@ Ccbar2PpbarExclusive = {
         'CCCut'            :  ""     
         },
     'STREAMS' : [ 'Charm' ] ,
-    'WGs'    : [ 'BHQ' ]
+    'WGs'    : [ 'BandQ' ]
     }
 
 
@@ -1034,7 +1034,7 @@ Ccbar2PpbarDetached = {
     'CCCut'            :  " & (BPVDLS>5)"     
     },
     'STREAMS' : [ 'Charm' ] ,
-    'WGs'    : [ 'BHQ' ]
+    'WGs'    : [ 'BandQ' ]
     }
 
 Ccbar2PhiPhi = {
@@ -1052,7 +1052,7 @@ Ccbar2PhiPhi = {
         'Phi_TisTosSpecs'  : { "Hlt1Global%TIS" : 0, "Hlt2Global%TIS" : 0 }
         },
     'STREAMS' : [ 'Charm' ] ,
-    'WGs'    : [ 'BHQ' ]
+    'WGs'    : [ 'BandQ' ]
     }
 
 Ccbar2Baryons = {
@@ -1065,7 +1065,7 @@ Ccbar2Baryons = {
     'MinMass'          :  2800.    # MeV, after Vtx fit
     },
     'STREAMS' : [ 'Charm' ],
-    'WGs'    : ['BHQ']
+    'WGs'    : ['BandQ']
     }
 
 CharmAssociative = {
@@ -1106,5 +1106,87 @@ CharmAssociative = {
     'DoubleDiMuonPrescale'   : 1.0
     },
     'STREAMS' : [ 'Leptonic' ] ,
-    'WGs'     : [ 'BHQ'    ]
+    'WGs'     : [ 'BandQ'    ]
+    }
+
+Xibc = {
+    'BUILDERTYPE'  : 'XibcBuilder',
+    'CONFIG'       : {
+                          'Pions4Lambdac_MINIPCHI2'             : 0.0
+                        , 'Pion4Lambdac_TRPCHI2'              : 0.015
+                        , 'Pion4Lambdac_PIDK'                 : 15
+                        , 'Pion4Lambdac_PT'                   : '250*MeV'
+                        , 'Protons4Lambdac_TRPCHI2'           : 0.05
+                        , 'Protons4Lambdac_minP'              : '0*GeV'
+                        , 'Kaon4Lambdac_TRPCHI2'              : 0.05
+                        , 'Protons4Lambdac_PIDp'              : -2
+                        , 'Protons4Lambdac_PIDp-PIDK'         : -5
+                        , 'Protons4Lambdac_PT'                : '450*MeV'
+                        , 'Kaon4Lambdac_PT'                   : '450*MeV'
+                        , 'Kaon4Lambdac_PIDK'                 : 0
+                        , 'Kaon4Lambdac_minP'                 : '0*GeV'
+                        , 'Muon4Jpsi_PIDmu'                   : -2
+                        , 'Muon4Jpsi_TRPCHI2'                 : 0.005
+                        , 'Lambdac_MassWindowLarge'           : '120*MeV'
+                        , 'Lambdac_MassWindowTight'           : '30*MeV'                
+                        , 'Lambdac_MinAPT'                    : '1500*MeV' 
+                        , 'Lambdac_MaxADOCA'                  : '0.5*mm'
+                        , 'Lambdac_BPVDIRA'                   : 0.98
+                        , 'Lambdac_minTAU'                    : -0.0001         
+                        , 'Lambdac_ENDVERTEXCHI2'             : 5                                               
+                        , 'Jpsi_MassWindowLarge'              : '150*MeV'
+                        , 'Jpsi_MassWindowTight'              : '50*MeV'
+                        , 'Muon4Jpsi_PT'                      : '650*MeV'
+                        , 'Jpsi_ENDVERTEXCHI2'                : 10
+                        , 'Xibc_ENDVERTEXCHI2'                : 7
+                        , 'Xibc_MassWindow'                   : '1.5*GeV'
+                        , 'Xibc_MINPVIP'                      : 0.1                     
+                        , 'Xibc2LcJpsiPrescale'               : 1.0
+                           ####### #
+                        , 'Protons4Lambda0_PIDp'              : -10
+                        , 'LongProtons4Lambda0_MINIPCHI2'     : 2
+                        , 'Protons4Lambda0_PT'                : '600*MeV'
+                        , 'Pions4Lambda0_PIDK'                : +20
+                        , 'Pions4Lambda0_PT'                  : '0*MeV'
+                        , 'Pions4Lambda0_MINIPCHI2'           : 0.
+                        , 'Lambda0_MassWindowLarge'           : '180*MeV'
+                        , 'Lambda0_MassWindowTight'           : '30*MeV'
+                        , 'Lambda0_APT'                       : '700*MeV'
+                        , 'Lambda0_ENDVERTEXCHI2'             : 10      
+                        , 'Lambda0_DownProtonTrackPvalue'     : 0
+                        , 'Lambda0_DownPionTrackPvalue'       : 0
+                        , 'Lambda0_minFD'                     : '1*mm/GeV'
+                        , 'Pions4Ximinus_PT'                  : '0*MeV'
+                        , 'Pions4Ximinus_PIDK'                : 20
+                        , 'Pions4Ximinus_TRPCHI2'             : 0
+                        , 'Pions4Ximinus_MINIPCHI2'           : 0
+                        , 'Ximinus_MassWindowLarge'           : '120*MeV'
+                        , 'Ximinus_MassWindowTight'           : '40*MeV'
+                        , 'Ximinus_APT'                       : '800*MeV'
+                        , 'Ximinus_FlightDistance'            : '0.1*mm/GeV'
+                        , 'Ximinus_ENDVERTEXCHI2'             : 20
+                        , 'Xic0_MassWindowLarge'              : '600*MeV'
+                        , 'Xic0_MassWindowTight'              : '100*MeV'
+                        , 'Pions4Xic0_PT'                     : '200*MeV'
+                        , 'Pions4Xic0_PIDK'                   : 20
+                        , 'Pions4Xic0_TRPCHI2'                : 0
+                        , 'Xic0_APT'                          : '0*MeV'
+                        , 'Xic0_ENDVERTEXCHI2'                : 20
+                        , 'Xibc0_MassWindow'                  : '1.5*GeV'
+                        , 'Xibc0_ENDVERTEXCHI2'               : 20
+                        , 'HighMassBaryon_MassLowEdge'        : '4.5*GeV'
+                        , 'HighMassBaryon_MinAPT'             : '1*GeV'
+                        , 'ProtonsForHighMassBaryon_TRPCHI2'  : 0.1
+                        , 'ProtonsForHighMassBaryon_PT'       : '1*GeV'
+                        , 'ProtonsForHighMassBaryon_P'        : '4*GeV'
+                        , 'ProtonsForHighMassBaryon_PIDp'     : 13
+                        , 'JpsiForHighMassBaryon_PT'          : '1*GeV'
+                        , 'JpsiForHighMassBaryon_MassWin'     : '40*MeV'
+                        , 'JpsiForHighMassBaryon_MuonPIDmu'   : 0
+                        , 'JpsiProtonForHighMassBaryonCosth'  : 0.992
+                           ####### #
+                        , 'LongTrackGEC'                      : 150 
+                          },
+    'STREAMS' : [ 'Dimuon' ],
+    'WGs'    : ['BandQ']
     }

@@ -1,6 +1,6 @@
 __all__ = [ 'LineConfigDictionaries_B2CC',
             'LineConfigDictionaries_B2OC',
-            'LineConfigDictionaries_BHQ',
+            'LineConfigDictionaries_BandQ',
             'LineConfigDictionaries_Calib',
             'LineConfigDictionaries_Charmless',
             'LineConfigDictionaries_Charm',

@@ -864,8 +864,8 @@ D2HHLTUnbiased = {
         , 'PostscaleD02HH'            :    1.0
         , 'PostscaleDstar2D0Pi_D02HH' :    1.0
     },
-    'WGs' : [ 'All' ],
-    'STREAMS' : [ 'MiniBias' ]
+    'WGs' : [ 'Charm' ],
+    'STREAMS' : [ 'CharmCompleteEvent' ]
     }
 
 JpsiMuMuforD0MuMu = {
