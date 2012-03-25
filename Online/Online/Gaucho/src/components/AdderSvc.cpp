@@ -323,11 +323,13 @@ StatusCode AdderSvc::finalize()
   if (m_AdderSys !=0)  m_AdderSys->stop();
   if (m_adder != 0)
   {
+    m_adder->stop();
     m_AdderSys->Remove(m_adder);
     deletePtr(m_adder);
   }
   if (m_EoRadder != 0)
   {
+    m_EoRadder->stop();
     m_AdderSys->Remove(m_EoRadder);
     deletePtr(m_EoRadder);
   }
