@@ -4,6 +4,7 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+!========================= PackedEvent v4r9 2012-03-26 =========================
 ! 2012-03-22 - Chris Jones
  - Fix the packing of RichPID and MuonPID objects, where the key was not 
    properly restored.
