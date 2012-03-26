@@ -5,6 +5,10 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+!========================= Hlt1Lines v6r17 2012-03-26 =========================
+! 2012-03-26 - Eric van Herwijnen
+ - bug fix in odin definition
+
 !========================= Hlt1Lines v6r16 2012-03-26 =========================
 ! 2012-03-26 - Eric van Herwijnen
  - Subscribe MBNoBias to odin evttyp 2 and set the rate limit very high
