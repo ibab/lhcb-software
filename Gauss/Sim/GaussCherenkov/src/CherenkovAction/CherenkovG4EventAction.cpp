@@ -213,14 +213,16 @@ void CherenkovG4EventAction::BeginOfEventAction ( const G4Event* /* aEvt */ )
       m_CherenkovG4HistoFillSet5= new CherenkovG4HistoFillSet5();
       m_CherenkovG4HistoFillSet5->InitCherenkovG4HistoFillSet5();
       m_RichG4HitRecon -> setCherenkovG4HistoFillSet5Occp(  m_CherenkovG4HistoFillSet5);
-      m_RichG4HitRecon -> setuseOnlySignalHitsInRecon(m_CkvG4HitReconUseOnlySignalHit);
-      m_RichG4HitRecon -> setactivateMinMomForTrackRecon(m_CkvG4HitReconUseOnlyHighMom);
+      //     m_RichG4HitRecon -> setuseOnlySignalHitsInRecon(m_CkvG4HitReconUseOnlySignalHit);
+      // m_RichG4HitRecon -> setactivateMinMomForTrackRecon(m_CkvG4HitReconUseOnlyHighMom);
     }
     
 
   // now for the reconstruction for test.
 
   if(m_RichG4EventActivateCkvRecon) {
+      m_RichG4HitRecon -> setuseOnlySignalHitsInRecon(m_CkvG4HitReconUseOnlySignalHit);
+      m_RichG4HitRecon -> setactivateMinMomForTrackRecon(m_CkvG4HitReconUseOnlyHighMom);
 
     m_RichG4HitRecon ->setSatHitUse( m_RichG4HitReconUseSatHit);
     m_RichG4HitRecon ->setMidRadiatorUse(m_RichG4HitReconUseMidRadiator);

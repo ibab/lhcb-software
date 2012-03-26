@@ -24,13 +24,13 @@ public:
   CherenkovG4HistoDefineSet5( ); 
 
   virtual ~CherenkovG4HistoDefineSet5( ); ///< Destructor
-  void bookCherenkovG4HistogramsSet5();
 
   
 protected:
 
 private:
-  void bookRichG4HistogramsSet5();
+
+  void bookCherenkovG4HistogramsSet5();
   
   IHistogram1D*        m_NumTotHitRich1All;
   IHistogram1D*        m_NumTotHitRich2All;
