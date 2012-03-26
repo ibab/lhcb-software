@@ -85,6 +85,84 @@ RichG4ReconFlatMirr*  RichG4HitRecon::getRichG4ReconFlatMirr()
   return  m_RichG4ReconFlatMirr;
 
 }
+void RichG4HitRecon::RichG4GetHpdOccupancies(const G4Event* anEvent, 
+                                                      int NumRichColl,
+                                             const std::vector<int> & RichG4CollectionID ){
+  IMessageSvc*  msgSvc = RichG4SvcLocator::RichG4MsgSvc ();
+  MsgStream RichG4HitReconlog( msgSvc,"RichG4HitRecon");
+  const std::vector<int> aNumHpdInRich =  m_RichG4CkvRec->NumHpdRich();
+  int irichdet=-1;
+
+  bool applyQuartzWindowRefCorr=true;
+
+
+  G4HCofThisEvent * HCE;
+  G4int NumRichCollection= NumRichColl;
+  int Current_RichG4CollectionID=0;
+  for (int ihcol=0; ihcol<NumRichCollection; ihcol++) {
+    if(ihcol ==0 || ihcol == 1 ){
+      irichdet=0;
+    }else if ( ihcol ==2 || ihcol == 3 ){
+      irichdet =1;
+
+    }
+    Current_RichG4CollectionID =RichG4CollectionID[ihcol];
+    if(Current_RichG4CollectionID >=0 ) {
+      HCE = anEvent->GetHCofThisEvent();
+      RichG4HitsCollection* RHC=NULL;
+      if(HCE){
+        RHC = (RichG4HitsCollection*)(HCE->
+                                      GetHC( Current_RichG4CollectionID));
+      }
+      if(RHC){
+        G4int nHitInCurColl = RHC->entries();
+        for (G4int iha=0; iha<nHitInCurColl ; iha++ ) {
+          RichG4Hit* aHit = (*RHC)[iha];
+          bool OccpSelectThisHit=true;
+
+          G4int aPixelXNum = aHit-> GetCurPixelXNum();
+          G4int aPixelYNum = aHit-> GetCurPixelYNum();
+
+          // const G4ThreeVector & LocalHitCoord = aHit->GetLocalPos();
+          G4int anHpdNum =    aHit-> GetCurHpdNum();
+          G4int aRichDetNum = aHit->  GetCurRichDetNum();
+    	   // now to accomodate the new hpd numbering scheme.
+	        if(  aRichDetNum == 1 ) { anHpdNum -= aNumHpdInRich[0] ;  }
+          if(OccpSelectThisHit) {
+
+            m_RichG4CkvRec->SetCurrentRichDetNum(aRichDetNum );
+            m_RichG4CkvRec->SetCurrentHpdNum(anHpdNum);
+            m_RichG4CkvRec->SetCurrentRichSector(ihcol);
+            
+            Gaudi::XYZPoint aLocalHitFromPixelNum =
+              m_RichG4CkvRec-> GetSiHitCoordFromPixelNum(aPixelXNum,aPixelYNum);
+           
+            Gaudi::XYZPoint aHitOnQwFromPixelNum= m_RichG4CkvRec->
+              ReconPhDetPlaneCoordFromLocalCoord( aLocalHitFromPixelNum, applyQuartzWindowRefCorr);
+            
+            m_RichG4HistoFillSet5Occp->FillRichG4HistoSet5Coordinate(aHit,
+                                        aHitOnQwFromPixelNum,aNumHpdInRich[0]);
+            
+
+            
+          }
+          
+          
+
+
+     
+          
+        }// end   loop over hits
+      }
+      
+    }
+    
+  }// end loop over collections
+ 
+  
+}
+
+
 
 
 void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent, 

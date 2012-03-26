@@ -129,7 +129,7 @@ void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
   title="Total number of Rich2 Hits in large events per event ";
 
   m_hNumTotHitRich2Large= CurHistoSvc->book(m_RichG4HistoPathSet2+"173",
-                              title,1000,0.0,4000.0);
+                              title,1000,0.0,8000.0);
   if(! m_hNumTotHitRich2Large) {
   RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
 

@@ -97,6 +97,8 @@ public:
   }
 
   Gaudi::XYZPoint ReconPhCoordFromLocalCoord( const Gaudi::XYZPoint & aLocalHitCoord, bool applyQwRefCorr );
+  Gaudi::XYZPoint ReconPhDetPlaneCoordFromLocalCoord( const Gaudi::XYZPoint & aLocalHitCoord, bool applyQwRefCorr );
+
   Gaudi::XYZPoint ReconReflectionPointOnSPhMirror(const Gaudi::XYZPoint & aDetectionPoint,
                                              const Gaudi::XYZPoint & aEmissionPoint , const Gaudi::XYZPoint & aQwPoint,
                                              int aRichDetNum, int aFlatMirrNum  );

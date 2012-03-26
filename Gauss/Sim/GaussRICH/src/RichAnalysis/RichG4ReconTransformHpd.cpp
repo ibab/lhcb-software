@@ -231,6 +231,9 @@ RichG4ReconTransformHpd::RichG4ReconTransformHpd( int aRichDetNum,
                   apvbTransInv* apvcTransInv*
                   apvdTransInv* apvfTransInv;
 
+                m_HpdPhDetToLocal = apvfTrans* apvdTrans;
+                m_HpdLocalToPhDet = apvdTransInv* apvfTransInv;
+
               }
 
             }
@@ -345,6 +348,11 @@ RichG4ReconTransformHpd::RichG4ReconTransformHpd( int aRichDetNum,
             m_HpdLocalToGlobal =
               aRich2MasterTransInv*bpvaTransInv*
               bpvbTransInv *  bpvcTransInv * bpvfTransInv;
+
+
+              m_HpdPhDetToLocal = bpvfTrans* bpvcTrans;
+              m_HpdLocalToPhDet = bpvcTransInv* bpvfTransInv;
+
 
           }
 

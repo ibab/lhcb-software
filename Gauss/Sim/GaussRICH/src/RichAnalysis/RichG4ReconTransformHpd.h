@@ -37,6 +37,18 @@ public:
     return m_HpdGlobalToLocal;
   }
 
+  const Gaudi::Transform3D & HpdPhDetToLocal() 
+  {
+   return   m_HpdPhDetToLocal;
+
+  }
+
+  const Gaudi::Transform3D & HpdLocalToPhDet () 
+  {
+    return m_HpdLocalToPhDet;
+  }
+  
+
   void initialise();
 protected:
 
@@ -45,6 +57,10 @@ private:
   Gaudi::Transform3D m_HpdLocalToGlobal;
 
   Gaudi::Transform3D m_HpdGlobalToLocal;
+
+  Gaudi::Transform3D m_HpdPhDetToLocal;
+  Gaudi::Transform3D m_HpdLocalToPhDet;
+  
 
   int   m_Rich1SubMasterPvIndex;
 

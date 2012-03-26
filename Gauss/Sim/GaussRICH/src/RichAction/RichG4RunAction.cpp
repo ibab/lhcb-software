@@ -13,6 +13,8 @@
 #include "RichG4HistoDefineSet2.h"
 #include "RichG4HistoDefineSet3.h"
 #include "RichG4HistoDefineSet4.h"
+#include "RichG4HistoDefineSet5.h"
+
 #include "RichG4HistoDefineTimer.h"
 #include "RichG4Counters.h"
 #include "RichG4GaussPathNames.h"
@@ -43,6 +45,7 @@ RichG4RunAction::RichG4RunAction
   , m_defineRichG4HistoSet2(false)
   , m_defineRichG4HistoSet3(false)
   , m_defineRichG4HistoSet4(false)
+  , m_defineRichG4HistoSet5(false)
   , m_defineRichG4HistoTimer(false)
   , m_aRichG4HistoSet1(0)
   , m_aRichG4HistoSet2(0)
@@ -58,6 +61,7 @@ RichG4RunAction::RichG4RunAction
   declareProperty("DefineRichG4HistoSet2", m_defineRichG4HistoSet2);
   declareProperty("DefineRichG4HistoSet3", m_defineRichG4HistoSet3);
   declareProperty("DefineRichG4HistoSet4", m_defineRichG4HistoSet4);
+  declareProperty("DefineRichG4HistoSet5", m_defineRichG4HistoSet5);
   declareProperty("DefineRichG4HistoTimer",  m_defineRichG4HistoTimer);
 
 
@@ -119,6 +123,10 @@ void RichG4RunAction::BeginOfRunAction( const G4Run* run )
   if(m_defineRichG4HistoSet4) {
 
     m_aRichG4HistoSet4 = new RichG4HistoDefineSet4();
+  }
+  if(m_defineRichG4HistoSet5) {
+
+    m_aRichG4HistoSet5 = new RichG4HistoDefineSet5();
   }
 
 

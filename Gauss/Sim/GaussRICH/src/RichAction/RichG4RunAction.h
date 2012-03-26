@@ -11,6 +11,8 @@ class RichG4HistoDefineSet1;
 class RichG4HistoDefineSet2;
 class RichG4HistoDefineSet3;
 class RichG4HistoDefineSet4;
+class RichG4HistoDefineSet5;
+
 class RichG4HistoDefineTimer;
 
 /** @class GiGaRunActionBase GiGaRunActionBase.h src/RichActions//GiGaRunActionBase.h
@@ -91,6 +93,11 @@ public:
     m_defineRichG4HistoSet4= aboolValue4;
   }
 
+  void setdefineRichG4HistoSet5(bool aboolValue5)
+  {
+    m_defineRichG4HistoSet5= aboolValue5;
+  }
+
   bool FirstTimeOfBeginRichRun() {
     return m_FirstTimeOfBeginRichRun;}
 
@@ -115,6 +122,7 @@ private:
   bool m_defineRichG4HistoSet2;
   bool m_defineRichG4HistoSet3;
   bool m_defineRichG4HistoSet4;
+  bool m_defineRichG4HistoSet5;
   bool m_defineRichG4HistoTimer;
 
 
@@ -122,6 +130,7 @@ private:
   RichG4HistoDefineSet2* m_aRichG4HistoSet2;
   RichG4HistoDefineSet3* m_aRichG4HistoSet3;
   RichG4HistoDefineSet4* m_aRichG4HistoSet4;
+  RichG4HistoDefineSet5* m_aRichG4HistoSet5;
   RichG4HistoDefineTimer* m_aRichG4HistoTimer;
 
   bool  m_FirstTimeOfBeginRichRun;

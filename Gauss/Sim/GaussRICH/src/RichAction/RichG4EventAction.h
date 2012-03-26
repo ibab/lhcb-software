@@ -13,6 +13,7 @@
 #include "../RichAnalysis/RichG4HistoFillSet2.h"
 #include "../RichAnalysis/RichG4HistoFillSet3.h"
 #include "../RichAnalysis/RichG4HistoFillSet4.h"
+#include "../RichAnalysis/RichG4HistoFillSet5.h"
 #include "../RichAnalysis/RichG4HistoFillTimer.h"
 #include "../RichAnalysis/RichG4EventHitCount.h"
 #include "../RichAnalysis/RichG4HitRecon.h"
@@ -157,6 +158,7 @@ private:
   RichG4HistoFillSet2* m_RichG4HistoFillSet2;
   RichG4HistoFillSet3* m_RichG4HistoFillSet3;
   RichG4HistoFillSet4* m_RichG4HistoFillSet4;
+  RichG4HistoFillSet5* m_RichG4HistoFillSet5;
   RichG4HistoFillTimer* m_RichG4HistoFillTimer;
   RichG4EventHitCount* m_RichG4EventHitCounter;
   RichG4HitRecon* m_RichG4HitRecon;
@@ -168,6 +170,7 @@ private:
   bool m_RichEventActionHistoFillActivateSet2;
   bool m_RichEventActionHistoFillActivateSet3;
   bool m_RichEventActionHistoFillActivateSet4;
+  bool m_RichEventActionHistoFillActivateSet5;
   bool m_RichEventActionHistoFillActivateTimer;
   bool m_RichG4EventHitActivateCount;
   bool m_RichG4EventHitActivateCountFullAcc;

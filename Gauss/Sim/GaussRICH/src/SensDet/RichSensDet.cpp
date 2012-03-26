@@ -430,8 +430,8 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   if ( CurrentRichCollectionSet >= 0 ) {
     bool EnableThisHitStore=true;
     G4bool FlagThisHitAsDuplicate=false;
-    //log << MSG::VERBOSE<<" Avoid duplicate  Hits  "<< m_RichAviodDuplicateHitsActivate
-    //       <<"   "<<m_RichFlagDuplicateHitsActivate<< endreq;
+    log << MSG::VERBOSE<<" Avoid duplicate  Hits  "<< m_RichAviodDuplicateHitsActivate
+           <<"   "<<m_RichFlagDuplicateHitsActivate<< endreq;
     G4int CurPixelNumInHpd = m_RichGeomProperty ->GetPixelNumInHpd( CurrentPixelXNum, CurrentPixelYNum);
     
     if(m_RichAviodDuplicateHitsActivate || m_RichFlagDuplicateHitsActivate  ) { 
@@ -452,10 +452,10 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
     
 
     //test print for debug
-      //if(FlagThisHitAsDuplicate ) {
+      if(FlagThisHitAsDuplicate ) {
         
-      //  log << MSG::INFO<<"Current Rich Hpd hit is duplicate HpdNum Pixel PixelX PixelY "<<CurrentHpdNumber<<"  "
-      //     << CurPixelNumInHpd  <<"   "<<  CurrentPixelXNum <<"   "<<CurrentPixelYNum<<endreq;
+        //log << MSG::VERBOSE<<"Current Rich Hpd hit is duplicate HpdNum Pixel PixelX PixelY "<<CurrentHpdNumber<<"  "
+        //   << CurPixelNumInHpd  <<"   "<<  CurrentPixelXNum <<"   "<<CurrentPixelYNum<<endreq;
       //  G4int nHitInCurColl = (m_RichHC[CurrentRichCollectionSet])->entries();
       //  int iha=0;
       //  bool foundDup=false;
@@ -478,7 +478,8 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
       //    
       //  }
       //  
-      // }      
+      }
+      
       // end of test print
       
     }// end test activation of avoiding or flagging hits as duplicate .
@@ -500,6 +501,7 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
     
     }
     
+    
 
     log << MSG::VERBOSE
         << "RichSensdet: Current collection set and Hit number stored  ActivationOfRepatedHits  = "
@@ -511,6 +513,7 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
 
   return true;
 }
+
 
 
 //=============================================================================

@@ -335,6 +335,61 @@ Gaudi::XYZPoint RichG4CkvRecon::ApplyQwRefrCorrAndGetGlobalPos(const Gaudi::XYZP
   return acurGlobalHitPhCath;
         
 }
+Gaudi::XYZPoint  
+RichG4CkvRecon::ReconPhDetPlaneCoordFromLocalCoord (const Gaudi::XYZPoint & aLocalHitCoord, bool applyQwRefCorr )
+{
+  IMessageSvc*  msgSvc = RichG4SvcLocator::RichG4MsgSvc ();
+  MsgStream RichG4CkvReconlog( msgSvc,"RichG4CkvRecon");
+  Gaudi::XYZPoint acurPhDetHitPhCath (0.0,0.0,0.0);
+
+  //  RichG4CkvReconlog << MSG::INFO
+  //                  <<" Local Hit coord on SiDet  "
+  //                  <<aLocalHitCoord.x()
+  //              <<"   "<<aLocalHitCoord.y()
+  //                  <<"   "<<aLocalHitCoord.z()
+  //                  <<endreq;
+
+  if(aLocalHitCoord.x() == -10000.0 ||
+     aLocalHitCoord.y() == -10000.0 ||
+     aLocalHitCoord.z() == -10000.0 ) {
+
+    RichG4CkvReconlog << MSG::ERROR
+                      <<" Hpd local Hit coord not set "
+                      <<endreq;
+  }else {
+
+
+
+    // first convert from hit on the Sidet to Hit on
+    // Photocathode.
+
+
+    Gaudi::XYZPoint curLocalHitPhCath =
+      m_RichG4ReconHpd->ReconHitOnPhCathFromLocalHitCoord(aLocalHitCoord, applyQwRefCorr );
+
+    // now convert to the Ph Det Panel  coord system.
+    if( m_CurrentRichDetNum >=0 &&  m_CurrentHpdNum >=0 ) {
+
+      RichG4ReconTransformHpd* CurHpdTransform =
+        m_HpdTransforms[m_CurrentRichDetNum] [m_CurrentHpdNum];
+      if(CurHpdTransform) {
+
+        Gaudi::Transform3D HpdtoPhDetTransform = CurHpdTransform->HpdLocalToPhDet();
+
+        acurPhDetHitPhCath =
+          HpdtoPhDetTransform * curLocalHitPhCath;
+
+
+        
+      }
+    }
+  }
+  
+
+  return   acurPhDetHitPhCath;
+  
+}
+
 
 Gaudi::XYZPoint  
 RichG4CkvRecon::ReconPhCoordFromLocalCoord (const Gaudi::XYZPoint & aLocalHitCoord, bool applyQwRefCorr )

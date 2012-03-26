@@ -49,6 +49,7 @@ RichG4EventAction::RichG4EventAction( const std::string& type   ,
     m_RichG4HistoFillSet2(0),
     m_RichG4HistoFillSet3(0),
     m_RichG4HistoFillSet4(0),
+    m_RichG4HistoFillSet5(0),
     m_RichG4HistoFillTimer(0),
     m_RichG4EventHitCounter(0),
     m_RichG4HitRecon(0),
@@ -58,6 +59,7 @@ RichG4EventAction::RichG4EventAction( const std::string& type   ,
     m_RichEventActionHistoFillActivateSet2(false),
     m_RichEventActionHistoFillActivateSet3(false),
     m_RichEventActionHistoFillActivateSet4(false),
+    m_RichEventActionHistoFillActivateSet5(false),
     m_RichEventActionHistoFillActivateTimer(false),
     m_RichG4EventHitActivateCount(false),
     m_RichG4EventHitActivateCountFullAcc(false),
@@ -82,6 +84,9 @@ RichG4EventAction::RichG4EventAction( const std::string& type   ,
                    m_RichEventActionHistoFillActivateSet3);
   declareProperty( "RichEventActionHistoFillSet4",
                    m_RichEventActionHistoFillActivateSet4);
+  declareProperty( "RichEventActionHistoFillSet5",
+                   m_RichEventActionHistoFillActivateSet5);
+
   declareProperty( "RichEventActionHistoFillTimer",
                    m_RichEventActionHistoFillActivateTimer);
 
@@ -162,6 +167,7 @@ RichG4EventAction::~RichG4EventAction( ){
   delPointer( m_RichG4HistoFillSet2 );
   delPointer( m_RichG4HistoFillSet3 );
   delPointer( m_RichG4HistoFillSet4 );
+  delPointer( m_RichG4HistoFillSet5 );
   delPointer( m_RichG4HistoFillTimer );
   delPointer( m_RichG4EventHitCounter );
   delPointer( m_RichG4InputMon);
@@ -202,8 +208,19 @@ void RichG4EventAction::BeginOfEventAction ( const G4Event* /* aEvt */ )
       m_RichG4InputMon->setFirstMonInstance(false);
 
     }
-  
+    
   }
+  
+
+  // now to get occupancies
+
+  if(m_RichEventActionHistoFillActivateSet5) {
+    m_RichG4HistoFillSet5= new RichG4HistoFillSet5();
+    m_RichG4HistoFillSet5->InitRichG4HistoFillSet5();
+    m_RichG4HitRecon ->setRichG4HistoFillSet5Occp(m_RichG4HistoFillSet5);
+    
+  }
+  
 
   // now for the reconstruction for test.
 
@@ -333,6 +350,19 @@ void RichG4EventAction::EndOfEventAction( const G4Event* anEvent  /* event */ )
 
   }
 
+  if(m_RichEventActionHistoFillActivateSet5 ) {
+    if( m_RichG4HitRecon != 0 ) {
+      m_RichG4HitRecon->RichG4GetHpdOccupancies( anEvent,
+                                                 m_NumRichColl,m_RichG4CollectionID );
+      
+      m_RichG4HistoFillSet5->FillRichG4HistoSet5NumHits();
+      
+    }
+    
+
+    
+  }
+  
   if(m_RichG4EventActivateCkvRecon) {
 
     if( m_RichG4HitRecon != 0 ) {
