@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-03-26 - Markward Britsch for Florin Maciuc
+ - StrippingBs2KSKS.py
+   Changed Bs mass window from 50 to 150
+
 ! 2012-03-25 - Jibo He
  - __init__.py 
   . Added StrippingLb2V0hh, StrippingB2PPbar, StrippingB2FourKHigh, StrippingBs2KKhh

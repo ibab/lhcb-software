@@ -46,7 +46,7 @@ default_config = {'Trk_Chi2'                : 10.0,
 
                   'KS_LL_pT'                    : 600, # PT_pi+ + PT_pi- >600 MeV
 ##################################################
-                  'B_MassWindowP'                  : 50.0, # B mass window of 100 MeV : ADAMASS('B_s0') < 50.*MeV 
+                  'B_MassWindowP'                  : 150.0, # B mass window of 100 MeV : ADAMASS('B_s0') < 50.*MeV 
                   'B_DOCA'                      : 2.5, # 2.5 mm DOCA cut for the two Kaons
                   'B_IPCHI2'                       : 10, # B IP separation wrt PV
                   'B_IP'                           : 0.4, # mm IP(B)<0.4 mm
