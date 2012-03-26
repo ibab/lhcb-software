@@ -13,6 +13,10 @@ use  IndependenceTests   v1r2p1      Hlt
 use  Hlt1Lines           v6r16       Hlt
 use  HltSettings         v5r22       Hlt
 use  HltDisplVertices    v3r8        Hlt
+use  Hlt2Lines           v8r16       Hlt
+
+# to get histograms of online conditions
+use  HltGlobalMonitor    v3r10       Hlt
 
 # to be future compatible with eventpacking 
 use  EventPacker         v2r13       Event
