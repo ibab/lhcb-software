@@ -165,7 +165,7 @@ class Physics_L038_draft2012( object ):
                                                               , 'Hlt1MBMicroBiasTStation'            : 0
                                                               , 'Hlt1MBMicroBiasVeloRateLimited'     : 0
                                                               , 'Hlt1MBMicroBiasTStationRateLimited' : 0 }
-                                               , 'MaxNoBiasRate' : 11.
+                                               , 'MaxNoBiasRate' : 1000000.
                                                }
                        , Hlt2diphotonDiMuonLinesConf : { 'Prescale' : { 'Hlt2LowMultHadron'     :  1.0 # for 0x0035, this is already done in L0
                                                                       , 'Hlt2LowMultPhoton'     : 0.01

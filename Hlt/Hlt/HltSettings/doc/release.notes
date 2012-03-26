@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+
+! 2012-03-26 - Eric van Herwijnen
+ - set MaxNoBiasRate very high
+
 ! 2012-03-26 - Victor Coco
  - tighten DV_draft2012
 
