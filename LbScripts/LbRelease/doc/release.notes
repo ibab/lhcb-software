@@ -1,3 +1,19 @@
+2012-03-26 Ben Couturier <Ben.Couturier@cern.ch>
+
+	New classes to implement archive and recovery to/from DIRAC
+	* python/LbRelease/Archive/ProjectToolScript.py
+	* python/LbRelease/Archive/__init__.py
+	* python/LbRelease/Archive/ProjectManager.py
+	* python/LbRelease/Archive/DiracArchiver.py
+	New tools to check the files on disk related to a project:
+	* scripts/lb-project-archive-dist
+	* scripts/lb-project-compare-dist
+	* scripts/lb-project-check-archive
+	* scripts/lb-project-archive-release
+	* scripts/lb-project-clean-release
+	* scripts/lb-project-check-dist
+
+
 2012-03-05  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/Info.py: Quicker project lookup (if version is specified)
