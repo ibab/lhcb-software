@@ -467,7 +467,7 @@ Bs2KSKS = {
                      'KS_LL_DOCA_ERR'    : 0.3,
                      'KS_LL_nu'          : (-2.0),
                      'KS_LL_pT'          : 600,
-                     'B_MassWindowP'     : 50.0,
+                     'B_MassWindowP'     : 150.0,
                      'B_DOCA'            : 2.5,
                      'B_IPCHI2'          : 10,
                      'B_IP'              : 0.4,
