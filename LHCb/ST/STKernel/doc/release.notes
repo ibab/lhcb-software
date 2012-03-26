@@ -3,6 +3,7 @@
 ! Responsible : M. Tobin
 !----------------------------------------------------------------------------
 
+!========================= STKernel v2r7 2012-03-26 =========================
 ! 2012-03-07 - Mark Tobin
  - Add end new method to ISTNoiseCalculation interface
 

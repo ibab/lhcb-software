@@ -1,5 +1,5 @@
 package STKernel 
-version           v2r6p1
+version           v2r7
 
 use GaudiKernel v*
 use GaudiAlg    v*
