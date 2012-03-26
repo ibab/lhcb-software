@@ -3,6 +3,8 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH Upgrade
 !----------------------------------------------------------------------------- 
+20120-3-26 - Sajan Easo
+ - Added a some analysis histo modifications.
 !2012-01-27 - Sajan Easo
  Minor improvements to be to use different PMT photocathode types in RichPmtProperties.cpp and CkvG4GaussPathNames.h
 !2011-11-25 - Sajan Easo
