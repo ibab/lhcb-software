@@ -11,7 +11,7 @@ use  IndependenceTests   v1r2p1      Hlt
 
 # fix topo & displvertices bugs, remove nobias and lumi rate limits
 use  Hlt1Lines           v6r16       Hlt
-use  HltSettings         v5r22       Hlt
+use  HltSettings         v5r23       Hlt
 use  HltDisplVertices    v3r8        Hlt
 use  Hlt2Lines           v8r16       Hlt
 
