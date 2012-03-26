@@ -170,6 +170,11 @@ class Physics_draft2012( object ):
                        , Hlt2diphotonDiMuonLinesConf : { 'Prescale' : { 'Hlt2LowMultHadron'     :  1.0 # for 0x0035, this is already done in L0
                                                                       , 'Hlt2LowMultPhoton'     : 0.01
                                                                       } } 
+
+                       , Hlt2InclusiveDiProtonLinesConf: { 'Prescale' : { 'Hlt2DiProton'           :       0.001
+                                                                          , 'Hlt2DiProtonLowMult'  :       0.001
+                                                                      } } 
+
                        }
 
         from Muons_draft2012 import Muons_draft2012
