@@ -4,6 +4,9 @@ Package Coordinator : Bruno Souza de Paula
 Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
 
+! 2012-03-26 - Eric van Herwijnen
+ - Add histograms for the conditions in the online.xml file.
+
 !========================= HltGlobalMonitor v3r9 2012-01-25 =========================
 ! 2011-10-14 - Roel Aaij
  - Add an algorithm to monitor number of IT and Velo hits versus SPD multiplicity.

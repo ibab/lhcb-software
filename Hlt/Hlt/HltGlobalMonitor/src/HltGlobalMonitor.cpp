@@ -131,6 +131,24 @@ StatusCode HltGlobalMonitor::initialize()
 {
    StatusCode sc = HltBaseAlg::initialize(); // must be executed first
    if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+   
+   m_beamSpotX=0.;
+   m_beamSpotY=0.;
+   m_xRC=0.;
+   m_xLA=0.;
+   m_Y=0.;
+   
+   m_magnetCurrent=0.;
+   m_magnetPolarity=0.;
+   m_magnetState=0.;
+   
+   m_rich1Temperature=0.;
+   m_rich1Presssure=0.;
+   m_rich2Temperature=0.;
+   m_rich2Presssure=0.;   
+   
+   m_lhcNCollidingBunches=0;
+   
 
    m_odin = book1D("ODIN trigger type",  "ODIN trigger Type ",-0.5, 7.5, 8);
    m_odinHLT1 = book1D("ODIN_HLT1",  "ODIN trigger Type, after HLT1 ",-0.5, 7.5, 8);
@@ -278,36 +296,110 @@ StatusCode HltGlobalMonitor::initialize()
 
 
    //book the resolver position histograms
-   m_resolvxr50       = book1D("Velo Resolver XR-50", "Velo Resolver XR-50", -50.,50., 100 );
-   m_resolvxr5        = book1D("Velo Resolver XR-5", "Velo Resolver XR-5", -5.,5., 100 );
-   m_resolvxl50       = book1D("Velo Resolver XL-50", "Velo Resolver XL-50", -50.,50., 100 );
-   m_resolvxl5        = book1D("Velo Resolver XL-5", "Velo Resolver XL-5", -5.,5., 100 );
-   m_resolvxe        = book1D("Velo Resolver X Entries", "Velo Resolver XL Entries", -5.,5., 100 );
-   m_resolvy50       = book1D("Velo Resolver Y-50", "Velo Resolver Y-50", -50.,50., 100 );
-   m_resolvy5        = book1D("Velo Resolver Y-5", "Velo Resolver Y-5", -5.,5., 100 );
-   m_resolvye        = book1D("Velo Resolver Y Entries", "Velo Resolver Y Entries", -5.,5., 100 );
+   //m_resolvxr50       = book1D("Velo Resolver XR-50", "Velo Resolver XR-50", -50.,50., 100 );
+   //m_resolvxr5        = book1D("Velo Resolver XR-5", "Velo Resolver XR-5", -1.,1., 100 );
+   //m_resolvxl50       = book1D("Velo Resolver XL-50", "Velo Resolver XL-50", -50.,50., 100 );
+   //m_resolvxl5        = book1D("Velo Resolver XL-5", "Velo Resolver XL-5", -1.,1., 100 );
+   //m_xRC=0.;
+   //m_xLA=0.;
+   //m_Y=0.;
+   m_resolvxle         = bookProfile1D("Velo Resolver XL Entries", "Velo Resolver XL Entries",  0,m_timeSize,int(m_timeSize/m_timeInterval+0.5) );
+   setAxisLabels( m_resolvxle, "time since start of run [min]", "average Velo resolver XL [cm]");
+   m_resolvxre         = bookProfile1D("Velo Resolver XR Entries", "Velo Resolver XR Entries",  0,m_timeSize,int(m_timeSize/m_timeInterval+0.5) );
+   setAxisLabels( m_resolvxre, "time since start of run [min]", "average Velo resolver XR [cm]");
+   
+   //m_resolvy50        = book1D("Velo Resolver Y-50", "Velo Resolver Y-50", -50.,50., 100 );
+   //m_resolvy5         = book1D("Velo Resolver Y-5", "Velo Resolver Y-5", -1.,1., 100 );
+   m_resolvye         = bookProfile1D("Velo Resolver Y Entries", "Velo Resolver Y Entries", 0,m_timeSize,int(m_timeSize/m_timeInterval+0.5) );
+   setAxisLabels( m_resolvye, "time since start of run [min]", "average Velo resolver Y [cm]");
+
+   m_magnetcurrent     = bookProfile1D("Magnet Current", "Magnet Current",  0,m_timeSize,int(m_timeSize/m_timeInterval+0.5) );
+   setAxisLabels( m_magnetcurrent, "time since start of run [min]", "Average Magnet current [A]");
+   m_magnetpolarity    = bookProfile1D("Magnet Polarity", "Magnet Polarity",  0,m_timeSize,int(m_timeSize/m_timeInterval+0.5) );
+   setAxisLabels( m_magnetpolarity, "time since start of run [min]", "Average Magnet polarity");
+   m_magnetstate       = bookProfile1D("Magnet State", "Magnet State",  0,m_timeSize,int(m_timeSize/m_timeInterval+0.5) );   
+   setAxisLabels( m_magnetstate, "time since start of run [min]", "Average Magnet state ");
+  
+   m_rich1pressure     = bookProfile1D("Rich1 Pressure", "Rich1 Pressure", 0,m_timeSize,int(m_timeSize/m_timeInterval+0.5));
+   setAxisLabels( m_rich1pressure, "time since start of run [min]", "average Rich1 Pressure");
+   m_rich1temperature  = bookProfile1D("Rich1 Temperature", "Rich1 Temperature", 0,m_timeSize,int(m_timeSize/m_timeInterval+0.5) );
+   setAxisLabels( m_rich1temperature, "time since start of run [min]", "Rich1 Temperature [K]");
    
    
+   m_rich2pressure     = bookProfile1D("Rich2 Pressure", "Rich2 Pressure",  0,m_timeSize,int(m_timeSize/m_timeInterval+0.5) );
+   setAxisLabels( m_rich2pressure, "time since start of run [min]", "average Rich2 Pressure ");
+   m_rich2temperature  = bookProfile1D("Rich2 Temperature", "Rich2 Temperature", 0,m_timeSize,int(m_timeSize/m_timeInterval+0.5) );
+   setAxisLabels( m_rich2temperature, "time since start of run [min]", "average Rich2 Temperature [K]");
+   
+   m_lhcnbofbunches  = bookProfile1D("Nb of bunches", "Nb of bunches",  0,m_timeSize,int(m_timeSize/m_timeInterval+0.5));
+   setAxisLabels( m_lhcnbofbunches, "time since start of run [min]", "average Nb of bunches");
+   
+   m_lumipars  = bookProfile1D("Lumi parameters", "Lumi parameters", -0.5,3.5,4);
+   m_lumipars_root  = Gaudi::Utils::Aida2ROOT::aida2root(  m_lumipars );
+   std::vector<std::pair<unsigned,std::string> > lumiLabels = boost::assign::list_of< std::pair<unsigned,std::string> >
+      (0,"b-b")
+      (1,"b-e")
+      (2,"e-b")
+      (3,"e-e");
+   if(m_lumipars) setBinLabels( m_lumipars, lumiLabels );
+       
    // Monitor vertex positions
-   std::string condition = "/dd/Conditions/Online/Velo/MotionSystem";
-   registerCondition< HltGlobalMonitor >( condition, m_veloCondition,
+   std::string veloCondition = "/dd/Conditions/Online/Velo/MotionSystem";
+   registerCondition< HltGlobalMonitor >( veloCondition, m_veloCondition,
+                                          &HltGlobalMonitor::updateCondition );
+					  
+
+   // Monitor magnet polarity
+   std::string magnetCondition = "/dd/Conditions/Online/LHCb/Magnet/Set";
+   registerCondition< HltGlobalMonitor >( magnetCondition, m_magnetCondition,
+                                          &HltGlobalMonitor::updateCondition );
+					  
+   // Monitor rich1
+   std::string rich1Condition = "/dd/Conditions/Online/Rich1/R1HltGasParameters";
+   registerCondition< HltGlobalMonitor >( rich1Condition, m_rich1Condition,
+                                          &HltGlobalMonitor::updateCondition );
+					  
+   // Monitor rich2
+   std::string rich2Condition = "/dd/Conditions/Online/Rich2/R2HltGasParameters";
+   registerCondition< HltGlobalMonitor >( rich2Condition, m_rich2Condition,
+                                          &HltGlobalMonitor::updateCondition ); 
+					  
+  // Monitor lhc
+   std::string lhcfillingschemeCondition = "/dd/Conditions/Online/LHCb/LHCFillingScheme";
+   registerCondition< HltGlobalMonitor >( lhcfillingschemeCondition, m_lhcfillingschemeCondition,
+                                          &HltGlobalMonitor::updateCondition );
+					  
+   // Monitor lumipars
+   std::string lumiparsCondition = "/dd/Conditions/Online/LHCb/Lumi/LumiSettings";
+   registerCondition< HltGlobalMonitor >( lumiparsCondition, m_lumiparsCondition,
+                                          &HltGlobalMonitor::updateCondition );
+   /*
+   // Monitor runinfo
+   std::string runinfoCondition = "/dd/Conditions/Online/LHCb/Runinfo";   
+   registerCondition< HltGlobalMonitor >( runinfoCondition, m_runinfoCondition,
                                           &HltGlobalMonitor::updateCondition );
 
-   sc = runUpdate();
-   if ( sc.isFailure() ) {
-      Error( "Could not update conditions from the CondDB" );
-      return sc;
-   }
+   // Monitor run parameters
+   std::string runparsCondition = "/dd/Conditions/Online/LHCb/RunParameters";
+   registerCondition< HltGlobalMonitor >( runparsCondition, m_runparsCondition,
+                                          &HltGlobalMonitor::updateCondition );*/
 
-   updateCondition().ignore();
+   //updateCondition().ignore();
    
-   //fill the histograms when the condition is updated
-   m_resolvxr50->fill(m_xRC);
-   m_resolvxr5->fill(m_xRC);
-   m_resolvxl50->fill(m_xLA);
-   m_resolvxl5->fill(m_xLA);
-   m_resolvy50->fill(m_Y);
-   m_resolvy5->fill(m_Y);
+   //sc = runUpdate();
+   //if ( sc.isFailure() ) {
+   //   Error( "Could not update conditions from the CondDB" );
+   //   return sc;
+   //}  
+   
+   //fill the histograms when the condition is updated;don't fill yet, we don't have the runnumber and cant get to the online.xml
+   //m_resolvxr50->fill(m_xRC);
+   //m_resolvxr5->fill(m_xRC);
+   //m_resolvxl50->fill(m_xLA);
+   //m_resolvxl5->fill(m_xLA);
+   //m_resolvy50->fill(m_Y);
+   //m_resolvy5->fill(m_Y);
+   //monitorResolverpositions();   
 
    // Book the vertex monitoring histograms
    std::vector< double > edges = boost::assign::list_of( 1 )( 10 );
@@ -362,17 +454,47 @@ void HltGlobalMonitor::handle ( const Incident& incident )
 
 //==============================================================================
 StatusCode HltGlobalMonitor::updateCondition()
-{
+{      
   const double xRC = m_veloCondition->paramAsDouble( "ResolPosRC" );
   const double xLA = m_veloCondition->paramAsDouble( "ResolPosLA" );
   const double   Y = m_veloCondition->paramAsDouble( "ResolPosY"  );
+  //std::cout<<" updating xla "<<xLA<< " m_xLA "<<m_xLA<<std::endl;
   m_xRC=xRC;
   m_xLA=xLA;
   m_Y=Y;
   
   m_beamSpotX = ( xRC + xLA ) / 2;
   m_beamSpotY = Y;
-
+  
+  
+  const double magnetCurrent = m_magnetCondition->paramAsDouble( "Current" );
+  m_magnetCurrent = magnetCurrent;
+  const int magnetPolarity = m_magnetCondition->paramAsInt( "Polarity" );
+  m_magnetPolarity = (double) magnetPolarity;
+  const std::string magnetState = m_magnetCondition->paramAsString( "State" );
+  m_magnetState=0.;
+  if (magnetState.compare("OFF")) m_magnetState=0.;
+  if (magnetState.compare("UP")) m_magnetState = 1.;
+  if (magnetState.compare("DOWN")) m_magnetState = -1.; 
+  
+  const double rich1Temperature = m_rich1Condition->paramAsDouble( "Temperature" );  
+  m_rich1Temperature = rich1Temperature;
+  const double rich1Pressure = m_rich1Condition->paramAsDouble( "Pressure" );  
+  m_rich1Presssure = rich1Pressure;
+  const double rich2Temperature = m_rich2Condition->paramAsDouble( "Temperature" );  
+  m_rich2Temperature = rich2Temperature;
+  const double rich2Pressure = m_rich2Condition->paramAsDouble( "Pressure" );  
+  m_rich2Presssure = rich2Pressure;
+   
+   
+  const int lhcNCollidingBunches = m_lhcfillingschemeCondition->paramAsInt( "NCollidingBunches" );
+  m_lhcNCollidingBunches =  lhcNCollidingBunches;
+ 
+  const std::vector<double> lumipars = m_lumiparsCondition->paramAsDoubleVect( "LumiPars" );
+  //m_lumiparvalues.clear();
+  m_lumiparvalues =  lumipars;  
+   
+    
   return StatusCode::SUCCESS;
 }
 
@@ -471,9 +593,28 @@ void HltGlobalMonitor::monitorVertices()
 
 void HltGlobalMonitor::monitorResolverpositions()
 {
-  m_resolvxe->fill(m_xRC);
-  m_resolvye->fill(m_Y);
-
+  double when = m_currentTime / 60;
+  
+  m_resolvxle->fill(when, m_xLA);
+  m_resolvxre->fill(when, m_xRC);
+  m_resolvye->fill(when, m_Y);
+  m_magnetpolarity->fill(when, m_magnetPolarity);
+  m_magnetcurrent->fill(when, m_magnetCurrent);
+  m_magnetstate->fill(when, m_magnetState);
+   
+  m_rich1temperature->fill(when, m_rich1Temperature);
+  m_rich1pressure->fill(when, m_rich1Presssure);
+  m_rich2temperature->fill(when, m_rich2Temperature);
+  m_rich2pressure->fill(when, m_rich2Presssure);   
+   
+  m_lhcnbofbunches->fill(when, m_lhcNCollidingBunches);
+  
+  m_lumipars->reset();
+  for (int i=0;i<m_lumipars->axis().bins();i++) {
+     //std::cout<<" value "<<i<<" = " << m_lumiparvalues[i] <<std::endl;
+     m_lumipars->fill(i,m_lumiparvalues[i]);  
+  }  
+  
 }
 
 //==============================================================================
@@ -483,9 +624,8 @@ void HltGlobalMonitor::monitorTrends()
 
    double elapsedTime = double(System::currentTime( System::microSec ) - m_startEvent);
    fill( m_hltTime, log10(elapsedTime)-3 ,1.0);  // convert to log(time/ms)
-
+   
    double t =  elapsedTime/1000; // convert to ms
-
    double when = m_currentTime / 60;
 
    m_hltEventsTime->fill(when, t);
@@ -510,7 +650,7 @@ void HltGlobalMonitor::monitorTrends()
    // histogram the # of tasks vs. time...
    i = m_tasks->axis().coordToIndex( when );
    if ( m_tasks->binEntries(i)==0 ) m_tasks->fill( when, 1 );
- 
+   
 }
 
 //==============================================================================

@@ -12,6 +12,9 @@
 #include "GaudiKernel/ObjectContainerBase.h"
 #include "HltBase/HltBaseAlg.h"
 
+#include "TProfile.h"
+#include "GaudiUtils/Aida2ROOT.h"
+
 class Condition;
 
 /** @class HltGlobalMonitor HltGlobalMonitor.h
@@ -92,17 +95,38 @@ private:
 
    AIDA::IProfile1D* m_hltTimeVsEvtSize;
    
-   AIDA::IHistogram1D* m_resolvxr50;
-   AIDA::IHistogram1D* m_resolvxr5;
-   AIDA::IHistogram1D* m_resolvxl50;
-   AIDA::IHistogram1D* m_resolvxl5;
-   AIDA::IHistogram1D* m_resolvxe;
-   AIDA::IHistogram1D* m_resolvy50;
-   AIDA::IHistogram1D* m_resolvy5;
-   AIDA::IHistogram1D* m_resolvye;
-
+   //AIDA::IHistogram1D* m_resolvxr50;
+   //AIDA::IHistogram1D* m_resolvxr5;
+   //AIDA::IHistogram1D* m_resolvxl50;
+   //AIDA::IHistogram1D* m_resolvxl5;
+   AIDA::IProfile1D* m_resolvxle;
+   AIDA::IProfile1D* m_resolvxre;
+   //AIDA::IHistogram1D* m_resolvy50;
+   //AIDA::IHistogram1D* m_resolvy5;
+   AIDA::IProfile1D* m_resolvye;
+   AIDA::IProfile1D* m_magnetcurrent;
+   AIDA::IProfile1D* m_magnetpolarity;
+   AIDA::IProfile1D* m_magnetstate;   
+   AIDA::IProfile1D* m_rich1pressure;    
+   AIDA::IProfile1D* m_rich1temperature;
+   AIDA::IProfile1D* m_rich2pressure;  
+   AIDA::IProfile1D* m_rich2temperature;  
+   AIDA::IProfile1D* m_lhcnbofbunches; 
+   AIDA::IProfile1D* m_lumipars;   
+   
+   TProfile* m_lumipars_root;
+   
+      
    // Monitor 3D vertex filter
    Condition* m_veloCondition;
+   Condition* m_magnetCondition;
+   Condition* m_rich1Condition;
+   Condition* m_rich2Condition;
+   Condition* m_lhcfillingschemeCondition;
+   Condition* m_lumiparsCondition;
+   /*Condition* m_runinfoCondition;
+   Condition* m_runparsCondition;*/
+   
    typedef std::vector< AIDA::IHistogram2D* > HistoVector;
    typedef std::map< std::string, HistoVector > HistoMap;
    HistoMap m_vertexHistos;
@@ -111,6 +135,20 @@ private:
    double m_xRC;
    double m_xLA;
    double m_Y;
+   
+   double m_magnetCurrent;
+   double m_magnetPolarity;
+   double m_magnetState;
+   
+   double m_rich1Temperature;
+   double m_rich1Presssure;
+   double m_rich2Temperature;
+   double m_rich2Presssure;   
+   
+   int m_lhcNCollidingBunches;
+   
+   std::vector< double> m_lumiparvalues;
+   
    
    typedef std::map< std::string, std::string > LocationMap;
    LocationMap m_vertexLocations;
