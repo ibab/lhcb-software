@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-03-26 - Anton Poluektov 
+ - Update StrippingDev with dictionaries from Stripping18
+
 ! 2012-03-25 - Jibo He
  - Stripping18/LineConfigDictionaries_BandQ
    . Added Xibc line

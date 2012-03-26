@@ -126,6 +126,45 @@ BetaSPsi2SMuMu = {
     'STREAMS' : [ 'Dimuon' ]
     }
 
+# Bs2Jpsi(ee)Phi (Jibo and Artur)
+BetaSBs2JpsieePhi = {
+    'WGs'		: ['B2CC'],
+    'BUILDERTYPE' 	: 'Bs2JpsieePhiConf',
+    'CONFIG' 	: {
+                 'ElectronPTLoose'            :   500.    # MeV
+               , 'ElectronPIDLoose'           :     0.    # adimensional
+               , 'ElectronTrackCHI2pDOFLoose' :     5.    # adimensional
+               , 'JpsiVertexCHI2pDOFLoose'    :    15.    # adimensional
+               , 'JpsiMassMinLoose'           :  2500.    # MeV
+               , 'JpsiMassMaxLoose'           :  3300.    # MeV
+               , 'KaonTrackCHI2pDOFLoose'     :     5.    # adimensional
+               , 'PhiPTLoose'                 :  1000.    # MeV
+               , 'PhiVertexCHI2pDOFLoose'     :    15.    # adimensional
+               , 'PhiMassMinLoose'            :   990.    # MeV
+               , 'PhiMassMaxLoose'            :  1050.    # MeV
+               , 'BsVertexCHI2pDOFLoose'      :    10.    # adimensional
+               , 'BsMassMinLoose'             :  4500.    # MeV
+               , 'BsMassMaxLoose'             :  6000.    # MeV
+               , 'LifetimeCut'                : " & (BPVLTIME()>0.3*ps)"
+               , 'ElectronPT'            :   800.    # MeV
+               , 'ElectronPID'           :     2.    # adimensional
+               , 'ElectronTrackCHI2pDOF' :     5.    # adimensional
+               , 'JpsiVertexCHI2pDOF'    :    15.    # adimensional
+               , 'JpsiMassMin'           :  2700.    # MeV
+               , 'JpsiMassMax'           :  3300.    # MeV
+               , 'KaonTrackCHI2pDOF'     :     5.    # adimensional
+               , 'KaonPID'               :     0.    # adimensional
+               , 'PhiPT'                 :  1000.    # MeV
+               , 'PhiVertexCHI2pDOF'     :    15.    # adimensional
+               , 'PhiMassMin'            :  1005.    # MeV
+               , 'PhiMassMax'            :  1035.    # MeV
+               , 'BsVertexCHI2pDOF'      :     6.    # adimensional
+               , 'BsMassMin'             :  4500.    # MeV
+               , 'BsMassMax'             :  6000.    # MeV
+               , 'BsDIRA'                :     0.99  # adimensional
+               },
+    'STREAMS' : [ 'Radiative' ]
+    }
 
 B2EtacKst = {
     'WGs'       :       ['B2CC'],
@@ -225,3 +264,119 @@ B2JpsiKshh = {
     },
     'STREAMS'  : [ 'Dimuon' ]
 }
+
+# Bs2EtacPhi/Bs2ChicPhi (Katarzyna)
+BetaSBs2EtacPhi = {
+    'WGs'	:	['B2CC'],
+    'BUILDERTYPE'	:	'Bs2EtacPhiConf',
+    'CONFIG'	:	{
+        'Prescale'                : 1.0 ,
+    'Postscale'               : 1.0 ,
+    #K parameters
+    'K_PT'                    : 500.,
+    'K_TRCHI2'                : 5.,
+    'K_IPCHI2'                : 6.,
+    #pi parameters
+    'pi_PT'                   : 500., 
+    'pi_TRCHI2'               : 5.,
+    'pi_IPCHI2'               : 6.,
+    #phi parameters
+    'phi_VDZ'                 : 0., 
+    'phi_PT'                  : 1000., 
+    'phi_IPCHI2'              : 6.,
+    'phi_VCHI2_VDOF'          : 16.,
+    #rho (for eta_c decay) parameters
+    'rho_etac_VDZ'            : 0.,
+    'rho_etac_VCHI2_VDOF'     : 16.,
+    #phi (for eta_c decay) parameters
+    'phi_etac_VDZ'            : 0.,
+    'phi_etac_VCHI2_VDOF'     : 16.,
+    #eta_c parameters
+    'etac_VDZ'                : 0.,    
+    'etac_PT'                 : 1000.,
+    'etac_IPCHI2'             : 6., 
+    'etac_VCHI2_VDOF'         : 16.,
+    #Bs parameters
+    'Bs_VDZ'                  : 0.,
+    'Bs_DIRA'                 : 0.999,
+    'Bs_IPCHI2'               : 9.,
+    'Bs_VCHI2_VDOF'           : 16.
+        },
+    'STREAMS'  : [ 'Bhadron' ]
+    }
+
+BetaSBs2ChicPhi_Chic2KKPiPi = {
+    'WGs'	:	['B2CC'],
+    'BUILDERTYPE'	:	'Bs2ChicPhi_Chic2KKPiPiConf',
+    'CONFIG'	:	{
+    'Prescale'               : 1.0 ,
+    'Postscale'              : 1.0 ,
+    #K parameters
+    'K_PT'                   : 500.,
+    'K_TRCHI2'               : 5.,
+    'K_IPCHI2'               : 6.,
+    #pi parameters
+    'pi_PT'                  : 500., 
+    'pi_TRCHI2'              : 5.,
+    'pi_IPCHI2'              : 6.,
+    #phi parameters
+    'phi_VDZ'                : 0., 
+    'phi_PT'                 : 1000., 
+    'phi_IPCHI2'             : 6.,
+    'phi_VCHI2_VDOF'         : 16.,
+    #rho (for chi_c decay) parameters
+    'rho_chic_VDZ'           : 0.,
+    'rho_chic_VCHI2_VDOF'    : 16.,
+    #phi (for chi_c decay) parameters
+    'phi_chic_VDZ'           : 0.,
+    'phi_chic_VCHI2_VDOF'    : 16.,
+    #chi_c parameters
+    'chic_VDZ'               : 0.,    
+    'chic_PT'                : 1000.,
+    'chic_IPCHI2'            : 6.,
+    'chic_VCHI2_VDOF'        : 16.,
+    #Bs parameters
+    'Bs_VDZ'                 : 0.,
+    'Bs_DIRA'                : 0.999,
+    'Bs_IPCHI2'              : 9.,
+    'Bs_VCHI2_VDOF'          : 16.
+    },
+    'STREAMS' : [ 'Bhadron' ] 
+    }
+
+BetaSBs2ChicPhi_Chic2PiPiPiPi = {
+    'WGs'	:	['B2CC'],
+    'BUILDERTYPE'	:	'Bs2ChicPhi_Chic2PiPiPiPiConf',
+    'CONFIG'	: {
+    'Prescale'               : 1.0 ,
+    'Postscale'              : 1.0 ,
+    #phi parameters
+    'K_PT'                   : 500.,
+    'K_TRCHI2'               : 5.,
+    'K_IPCHI2'               : 6.,
+    #pi parameters
+    'pi_PT'                  : 500., 
+    'pi_TRCHI2'              : 5.,
+    'pi_IPCHI2'              : 6.,
+    #phi parameters
+    'phi_VDZ'                : 0., 
+    'phi_PT'                 : 1000.,  
+    'phi_IPCHI2'             : 9., 
+    'phi_VCHI2_VDOF'         : 16.,
+    #rho (for chi_c decay) parameters
+    'rho_chic_VDZ'           : 0.,
+    'rho_chic_VCHI2_VDOF'    : 16.,
+    #chi_c parameters
+    'chic_VDZ'               : 0.,    
+    'chic_PT'                : 1000.,
+    'chic_IPCHI2'            : 6.,
+    'chic_VCHI2_VDOF'        : 16.,
+    #Bs parameters
+    'Bs_VDZ'                  : 0.,
+    'Bs_DIRA'                 : 0.999,
+    'Bs_IPCHI2'               : 9.,
+    'Bs_VCHI2_VDOF'           : 16.
+    },
+    'STREAMS' : [ 'Bhadron' ]
+    }
+
