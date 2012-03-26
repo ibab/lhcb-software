@@ -4,6 +4,7 @@
 ! Purpose: Demonstrate how to write and read back event data
 !-------------------------------------------------------------------------------
 
+!========================= IOExample v4r6 2012-03-26 =========================
 ! 2012-03-22 - Marco Cattaneo
  - Adapt test references to removal of random number seeds from ProcessHeader
 
