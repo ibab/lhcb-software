@@ -1,0 +1,146 @@
+#!/usr/bin/env python
+"""
+Scripts compares the files for
+
+lb-project-check-archive <project> <version>
+
+Returns the list of LFNs that should be archived and whether
+they are in the storage element or not
+
+"""
+import sys
+import logging
+
+from LbRelease.Archive.ProjectToolScript import ProjectTool
+from LbRelease.Archive.ProjectManager import *
+from commands import getstatusoutput
+
+
+
+def cleanVersion(name, version):
+    return name.replace(version, "XXXX")
+
+def setVersion(name, version):
+    return name.replace("XXXX", version)
+
+#
+# Main script class
+###############################################################################
+class CheckDist(ProjectTool):
+    """  """
+    def __init__(self):
+        """ Main constructor for the script """
+        ProjectTool.__init__(self, usage = "%prog [options] project version1 version2)",
+                              description = "Compare the distribution files for two projects")
+    def twoColumns(self, width):
+        """ Prepares format string for two large columns """
+        lcol = width /2
+        return "{0:<%d}|{1:>%d}\n" % (lcol, lcol)
+
+    def fourColumns(self, width, scol = 12):
+        """ Prepares format string for two large columns with two smal ones near the center """
+        lcol = (width / 2) - scol
+        return "{0:<%d}{1:>%d}|{2:<%d}{3:>%d}\n" % (lcol, scol, scol, lcol)
+
+    def fourColumnsWithDiff(self, width, scol = 12):
+        """ Prepares format string for two large columns with two smal ones near the center """
+        lcol = (width / 2) - scol
+        return "{0:<%d}{1:>%d}|{2:<%d}{3:>%d} ({4:2.2f}%%)\n" % (lcol, scol, scol, lcol)
+
+
+    def compareFileSets(self, width, path1, list1, version1,  path2, list2, version2):
+        """ Compare sets of files """
+        fdisp = self.fourColumns(width)
+        fdispd = self.fourColumnsWithDiff(width)
+        s = ""
+
+        h1 = set([cleanVersion(f, version1) for f in list1])
+        h2 = set([cleanVersion(f, version2) for f in list2])
+
+        for h in sorted(h1 - h2):
+            n1 =  setVersion (h, version1)
+            s +=  fdisp.format(n1, os.path.getsize(os.path.join(path1, n1)), "", "")
+        for h in sorted(h1 & h2):
+            n1 =  setVersion (h, version1)
+            n2 =  setVersion (h, version2)
+            s1 =  os.path.getsize(os.path.join(path1, n1))
+            s2 =  os.path.getsize(os.path.join(path2, n2))
+            s +=  fdispd.format(n1, s1, s2, n2, 100 * (s2 -s1) / float(s1))
+        for h in sorted(h2 - h1):
+            n2 =  setVersion (h, version2)
+            s +=  fdisp.format("", "", os.path.getsize(os.path.join(path2, n2)), n2)
+        return s
+
+    def compareProjects(self, p1, p2, width = 140):
+        """ Compare two different projects """
+        width = 121
+        tdisp =  self.twoColumns(width)
+        s = tdisp.format(p1.projectName + " "+ p1.version, p2.projectName + " "+ p2.version  )
+        s += width * "=" + "\n\n"
+        s+= "Configs\n"
+        s += width * "-" + "\n"
+
+        # Now comparing cmt configs
+        c1 = set(p1.releasedConfigs)
+        c2 = set(p2.releasedConfigs)
+        for c in sorted(c1 - c2):
+            s +=  tdisp.format(c, "")
+        for c in sorted(c1 & c2):
+            s +=  tdisp.format(c, c)
+        for c in sorted(c2 - c1):
+            s +=  tdisp.format("", c)
+
+        s+= "\nRelease area\n"
+        s += width * "-" + "\n"
+        s += tdisp.format(p1.releaseAreaDir, p2.releaseAreaDir)
+        # to do check volume mountpoint and size
+
+        # Now comparing HTML files
+        s+= "\nHTML Files\n"
+        s += width * "-" + "\n"
+        s+= self.compareFileSets(width, p1.htmldir, p1.htmlfiles, p1.version, \
+                                 p2.htmldir, p2.htmlfiles, p2.version)
+
+        # Now comparing TAR files
+        s+= "\nTAR Files\n"
+        s += width * "-" + "\n"
+        s+= self.compareFileSets(width, p1.distdir, p1.distfiles, p1.version, \
+                                 p2.distdir, p2.distfiles, p2.version)
+
+
+        if (len(p1.lcgdistfiles) > 0 and len(p2.lcgdistfiles) > 0):
+            # Now comparing LCG Dist  files
+            s+= "\nLCG DIST Files\n"
+            s += width * "-" + "\n"
+            s+= self.compareFileSets(width, p1.lcgdistdir, p1.lcgdistfiles, p1.version, \
+                                 p2.lcgdistdir, p2.lcgdistfiles, p2.version)
+        else:
+            s+= "No LCG Dist files\n"
+
+        print s
+
+    def compareMain(self, projectName, v1, v2):
+        """ Main function of the script """
+        # Create the project managers
+        p1 = ProjectManager.loadFromDisk(projectName, v1)
+        p2 = ProjectManager.loadFromDisk(projectName, v2)
+        # And call the comparison method
+        self.compareProjects(p1, p2)
+
+    def main(self):
+        """ Overloading the main, as this takes two versions """
+        # Setup and check the arguments
+        args = self.args
+        if len(args) != 3:
+            print self.parser.get_usage()
+            sys.exit(1)
+
+        self.setLogger()
+        self.projectName = args[0]
+        self.version1 = args[1]
+        self.version2 = args[2]
+        self.compareMain(self.projectName, self.version1, self.version2)
+
+
+if __name__ == '__main__':
+      sys.exit(CheckDist().run())

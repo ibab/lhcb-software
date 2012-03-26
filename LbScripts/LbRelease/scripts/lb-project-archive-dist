@@ -1,0 +1,38 @@
+#!/usr/bin/env python
+"""
+Scripts that archives the dist files for a specific project
+
+lb-project-archive-dist <project> <version>
+
+As a result files are copied to a storage element
+
+"""
+import sys
+import logging
+
+import LbRelease.Archive.DiracArchiver
+from LbRelease.Archive.DiracArchiver import DiracProjectArchiver
+from LbRelease.Archive.ProjectToolScript import ProjectTool
+
+#
+# Main script class
+###############################################################################
+class ArchiveDist(ProjectTool):
+    """  """
+    def __init__(self):
+        """ Main constructor for the script """
+        ProjectTool.__init__(self, usage = "%prog [options] project version)",
+                              description = "Script to archive the files for a project")
+
+    def projectToolMain(self, projectName, version):
+        """ Main function of the script """
+
+        # First checking the grid creentials and the group
+        self.checkCredentials("lhcb_admin")
+
+        # Actually create the archiver instance
+        archiver = DiracProjectArchiver(self.projectName, self.version)
+        archiver.archiveProject()
+
+if __name__ == '__main__':
+      sys.exit(ArchiveDist().run())

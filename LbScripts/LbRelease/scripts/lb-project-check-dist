@@ -1,0 +1,77 @@
+#!/usr/bin/env python
+"""
+Scripts that lists all information relative to the project
+
+lb-project-check-dist <project> <version>
+
+"""
+import sys
+import logging
+
+from LbRelease.Archive.ProjectToolScript import ProjectTool
+from LbRelease.Archive.ProjectManager import *
+
+#
+# Main script class
+###############################################################################
+class CheckDist(ProjectTool):
+    """  """
+    def __init__(self):
+        """ Main constructor for the script """
+        ProjectTool.__init__(self, usage = "%prog [options] project version)",
+                              description = "Script to check whether the distribution  "
+                                            "files for a project are consistent ")
+
+    def checkDistConsistency(self, projectManager):
+        """ Checking the consistency of the files in the release """
+
+        # Check consistency in the files
+        tars = set(projectManager.releasedConfigs)
+        md5s = set( parseConfigFromFileList(projectManager.tarPrefix, \
+                   [ t for t in projectManager.distfiles if t.endswith(CHECKSUM_SUFFIX)]))
+        htmls = set( parseConfigFromFileList(projectManager.tarPrefix, \
+                   [ t for t in projectManager.htmlfiles if t.endswith(HTML_SUFFIX)]))
+
+        print projectManager.report()
+
+
+        print "\nConsistency checks for %s %s" % (projectManager.projectName,
+                                                  projectManager.version)
+        print "======================================="
+        print "TARS without HTML:", tars - htmls
+        print "HTMLS without TAR:", htmls - tars
+        print
+        print "TARS without MD5 :", tars - md5s
+        print "MD5S without TAR :", md5s - tars
+
+        # Checking configs
+        print "\n\nConfig check"
+        print "======================================="
+        configOk = True
+        # Checking that the configs are valid ones
+        for conf in projectManager.releasedConfigs:
+            if conf != "noarch" and not conf in Platform.binary_list:
+                print "Unknown config: %s" % conf
+                configOk = False
+        # Checking the directories in the release area
+        expected_entries = ['include', 'python', 'python.zip', 'scripts', 'doc']
+        rdirs = os.listdir(os.path.join(projectManager.releaseAreaDir, "InstallArea"))
+        for rdir in rdirs:
+            if not ( rdir in expected_entries or rdir in Platform.binary_list ):
+                print 'Unknown InstallArea directory: %s' % rdir
+                configOk = False
+
+        if configOk:
+            print "CMTCONFIG OK"
+
+
+    def projectToolMain(self, projectName, version):
+        """ Main function of the script """
+
+        # Create the project manager
+        pm = ProjectManager.loadFromDisk(projectName, version)
+        pm.loadHTMLDeps()
+        self.checkDistConsistency(pm)
+
+if __name__ == '__main__':
+      sys.exit(CheckDist().run())

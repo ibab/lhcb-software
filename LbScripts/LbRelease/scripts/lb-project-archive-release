@@ -1,0 +1,216 @@
+#!/usr/bin/env python
+"""
+Scripts that creates a tarball of the release area
+and archives it to the storage element
+
+lb-project-archive-release <project> <version>
+
+Returns the list of LFNs that should be archived and whether
+they are in the storage element or not
+
+"""
+import logging
+import os
+import stat
+import sys
+import tarfile
+
+from LbRelease.Archive.ProjectManager import ProjectManager, ARCHIVE_SE
+from LbRelease.Archive.ProjectManager import ARCHIVES, ARCH_CASTOR, ARCH_DIRAC
+from LbRelease.Archive.ProjectToolScript import ProjectTool
+from LbUtils.Temporary import TempDir
+from LbLegacy.Utils import getStatusOutput
+
+#
+# Main script class
+###############################################################################
+class ArchiveRelease(ProjectTool):
+    """  """
+    def __init__(self):
+        """ Main constructor for the script """
+        ProjectTool.__init__(self, usage = "%prog [options] project version",
+                              description = "Script to archive the release area of a project")
+
+
+    def defineOpts(self):
+        parser = self.parser
+        parser.add_option("--reuse-tar", action="store_true",
+                          dest="reusetar",
+                          help="Skip the tarfile build, and reuse the one from previous build.")
+        parser.set_defaults(reusetar=False)
+        parser.add_option("--tarname", action="store",
+                          dest="tarname",
+                          help="Tar file name to use if --reuse-tar is enabled")
+        parser.set_defaults(tarname=None)
+        parser.add_option("--skip-check", action="store_true",
+                          dest="skipcheck",
+                          help="Skip tarball checking before archiving")
+        parser.set_defaults(skipcheck=False)
+        parser.add_option("--archive", action="store", type="choice",
+                          dest="archiveTarget",
+                          choices = ARCHIVES,
+                          help="Specify target for archiving (castor|dirac)")
+        parser.set_defaults(archiveTarget=ARCH_CASTOR)
+
+    def getDefaultProjectTarName(self, projectManager):
+        """ Returns the default name for the tarball """
+        archName =  projectManager.getReleaseAreaArchiveName()
+        fullArchName = os.path.join("/tmp", archName)
+        return fullArchName
+
+
+    # Local method to check that the files in a directory are in the tar
+    def checkDir(self, tar, dir, releaseParent):
+        """ Utility function used by checkReleaseTarball"""
+        # As We don't cd, the dir is absolute, and we can remove
+        # the releaseDir from the string as files in the JAR as archived
+        # with names like GANGA_v507r10/external/....
+        checkOk = True
+        self.log.debug("Checking files in directory: %s " % dir)
+        allfiles = os.listdir(dir)
+        if not releaseParent.endswith("/"):
+            releaseParent += "/"
+        tarprefix = dir.replace(releaseParent, "")
+
+        # Iterating on all files in dir
+        for f in allfiles:
+            # building the paths
+            fullpath = os.path.join(dir, f)
+            tarpath = os.path.join(tarprefix, f)
+
+            # Doing a stat of the file on disk
+            statobj = os.lstat(fullpath)
+            if stat.S_ISREG(statobj.st_mode):
+                tf = tar.getmember(tarpath)
+                if tf == None:
+                    checkOk = False
+                    self.log.error("File %s not found in archive" % tarpath)
+                else:
+                    if tf.size != (statobj[stat.ST_SIZE]):
+                        checkOk = False
+                        self.log.error("File size in tar and filesystem do not match for %s" % tarpath)
+            elif stat.S_ISDIR(statobj.st_mode):
+                checkOk = checkOk and self.checkDir(tar, fullpath, releaseParent)
+        return checkOk
+
+
+    def checkReleaseTarBall(self, projectManager, tarName = None):
+        """ Check the archive tarball for the realease area """
+        # Building the name of the tarball
+        # If specified, a full path has to be entered
+        fullArchName = tarName
+
+        # Otherwise, build the default name for the project
+        if tarName == None:
+            fullArchName = self.getDefaultProjectTarName(projectManager)
+
+        # Opening the corerct tarfile
+        tar = tarfile.open(tarName, "r:gz")
+        tarok = self.checkDir(tar, projectManager.releaseAreaDir, projectManager.releaseAreaParent)
+        tar.close()
+        return tarok
+
+    def prepareReleaseTarBall(self, projectManager):
+        """ Prepare the archive tarball for the realease area """
+        # XXX remove object files
+        # XXX tmpdir ?
+        #tmpdir = TempDir(prefix="archiveProject")
+        fullArchName = self.getDefaultProjectTarName(projectManager)
+
+        # Now building the paths needed to prepare the tar
+        maindir = projectManager.releaseAreaDir
+        parentdir = projectManager.releaseAreaParent
+        projdir = projectManager.releaseAreaProjectName
+        tarCommand = 'tar zcvf %s -C %s %s' % (fullArchName, parentdir, projdir)
+
+        self.log.info("Creating tar ball for release directory: %s" % maindir)
+        self.log.debug("Running: %s" % tarCommand)
+        tar_status, output = getStatusOutput(tarCommand)
+        if tar_status != 0:
+            self.log.error("Could not create tar: %s" % tarOutput)
+            raise Exception("Could not create tar: %s" % tarOutput)
+        self.log.info("Tarball: %s created" % fullArchName)
+        return (fullArchName, tarOutput)
+
+    def archiveToCastor(self, filename, castor_filename):
+        """ Utility function wrapping rfcp """
+        self.log.info("CASTOR Filename %s" % castor_filename)
+        cmd = "rfcp %s %s" % (filename, castor_filename)
+        self.log.debug("Running '%s'" % cmd)
+        (retval, output) = getStatusOutput(cmd)
+        if retval != 0:
+            raise Exception("Copy to CASTOR failed: %s" % output)
+            self.log.error("Copy to CASTOR failed: %s" % output)
+
+    def archiveToDirac(self, filename, lfn):
+        """ Utility function archiving the release area tar to DIRAC """
+
+        # Importing the dirac classes
+        import LbRelease.Archive.DiracArchiver
+        from LbRelease.Archive.DiracArchiver import DiracArchiver
+
+        # Checking that we have the proper credentials
+        self.checkCredentials("lhcb_admin")
+
+        self.log.info("DIRAC LFN %s" % lfn)
+        da = DiracArchiver()
+        res = da.archiveFile(filename, lfn)
+        self.log.debug(res)
+        if res['OK'] == False:
+            self.log.error("Archive Error: " + res['Message'])
+            raise Exception("Archive Error: " + res['Message'])
+
+    def projectToolMain(self, projectName, version):
+        """ Main function of the script """
+
+        # First checking the grid creentials and the group
+        #self.checkCredentials("lhcb_admin")
+
+        # Creates a project manager to get information about the project
+        project = ProjectManager.loadFromDisk(projectName, version)
+        log = self.log
+
+        # Create the tarball
+        tarballName = None
+        if self.options.reusetar:
+            if self.options.tarname:
+                log.info("Not rebuilding tarball - Forcing tarballname to %s" % self.options.tarname)
+                tarballName = self.options.tarname
+            else:
+                tarballName = self.getDefaultProjectTarName(project)
+                log.info("Not rebuilding tarball - using default name")
+        else:
+            # We get the default tarballName from the creation procedure
+            (tarballName, tarlog) = self.prepareReleaseTarBall(project)
+
+        # Now checking the file produced
+        if self.options.skipcheck:
+            log.info("Tarball check skipped as requested")
+        else:
+            log.info("Checking tar: %s" % tarballName)
+            tarok = self.checkReleaseTarBall(project, tarballName)
+            if tarok:
+                log.info("Tarball ok")
+            else:
+                log.error("Tarball problem, exiting!")
+                sys.exit(1)
+
+        # Now archiving the tarball
+        archiveTarget = self.options.archiveTarget
+        log.info("Archiving %s to %s" % (tarballName, archiveTarget))
+        if archiveTarget == ARCH_CASTOR:
+            try:
+                self.archiveToCastor(tarballName, project.getReleaseAreaArchiveNameCASTOR())
+                self.log.info("%s copied to CASTOR" % tarballName)
+            except Exception, e:
+                self.log.error("Error while copying to CASTOR: %s" % str(e))
+        elif archiveTarget == ARCH_DIRAC:
+            try:
+                self.archiveToDirac(tarballName, project.getReleaseAreaArchiveNameDIRAC())
+                self.log.info("%s copied to DIRAC" % tarballName)
+            except Exception, e:
+                self.log.error("Error while copying to DIRAC: %s" % str(e))
+
+if __name__ == '__main__':
+      sys.exit(ArchiveRelease().run())
+
