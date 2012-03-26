@@ -3,6 +3,11 @@ Package     : MooreSys
 Package Coordinator : E. van Herwijnen
 Purpose     : LHCb HLT application
 
+
+</PRE><H1><A NAME=v13r2p1>2012-03-23 Moore v13r2p1</A></H1><PRE>
+Fix topo rate bug; fix displvertices bug. Set rate limit to lumi
+and nobias very high. Subscribe to odin nobias evttyp.
+
 </PRE><H1><A NAME=v13r2>2012-03-17 Moore v13r2</A></H1><PRE>
 Uses Hlt v14r2.
 

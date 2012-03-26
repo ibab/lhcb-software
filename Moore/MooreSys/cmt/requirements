@@ -1,13 +1,26 @@
 package MooreSys
-version v13r2
+version v13r2p1
 branches doc cmt
 
 #=======================================================
 # Don't forget the applications
 #=======================================================
 
-use  Moore               v13r2     Hlt
-use  IndependenceTests   v1r2      Hlt
+use  Moore               v13r2p1     Hlt
+use  IndependenceTests   v1r2p1      Hlt
+
+# fix topo & displvertices bugs, remove nobias and lumi rate limits
+use  Hlt1Lines           v6r16       Hlt
+use  HltSettings         v5r22       Hlt
+use  HltDisplVertices    v3r8        Hlt
+
+# to be future compatible with eventpacking 
+use  EventPacker         v2r13       Event
+use  PackedEvent         v4r8        Event
+
+# for swimming
+use  XMLSummaryKernel    v1r6        Kernel
+use  Swimming            v2r5p1      Phys
 
 # Patches
 
