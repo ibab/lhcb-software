@@ -54,7 +54,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                 , 'L0MidChannel'           : ['MUON,minbias']     # L0 channels accepted for MidLumi
                 , 'LumiLines'              : ['Count','VDM']
                 , 'EnableReco'             : True 
-                , 'MaxRate'                : 997. # pick a prime number...
+                , 'MaxRate'                : 1000000. # pick a prime number...
                 , 'LumiLowRateLimits'      : { 'BeamCrossing' : 'RATE(70)'
                                              , 'Beam1'        : 'RATE(15)'
                                              , 'Beam2'        : 'RATE(10)'
