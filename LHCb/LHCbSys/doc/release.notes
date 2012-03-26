@@ -5,6 +5,105 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v34r2>2012-03-27 LHCbSys v34r2</A></H1><PRE>
+This version uses Gaudi v23r2 and LCG_62b
+Production version for initial 2012 data taking
+
+- Packages modified:  DAQ/DAQUtils v1r6, Det/DDDB v1r52, Event/EventBase v3r0,
+    Event/EventPacker v2r14, Event/PackedEvent v4r9, Event/RecEvent v2r41,
+    Event/TrackEvent v5r16, Ex/IOExample v4r6, GaudiConf v15r8,
+    Kernel/HltInterfaces v4r6, Kerbel/LHCbAlgs v2r49, Kernel/LHCbKernel v13r10,
+    Kernel/PartProp v1r13, Kernel/XMLSummaryKernel v1r6, Rich/RichRecBase v4r11,
+    ST/STKernel v2r7, Tools/CondDBUI v3r14
+
+- In DDDB v1r52
+  . Update default DQFLAGS database tags:
+    o DQFLAGS, 2011: dq-20120322 (new flags and fixes for the previous ones)
+    o DQFLAGS, 2012: dq-20120322 (no 2012 flags so far, just updating to the
+      latest 2011 one)
+  . Update database tags for latest 2012 global tags:
+    o DDDB,     2012: head-20120316
+    o LHCBCOND, 2012: head-20120316
+
+- In EventBase v3r0
+  . Remove ProcessHeader::m_randomSeeds since they are not used anywhere and
+    causes portability problems with persistency of vector<long>
+
+- In EventPacker v2r13, v2r14
+  . Take the default packing version from the packed data, instead of assuming 0.
+  . Improve the debug and verbose messages from the ProtoParticle packer
+    and unpacker
+  . Adapt WritePackedDst,ReadPackedDst to removal of ProcessHeader::m_randomSeeds
+    Writer now writes a zero to mimic the length of the seeds vector, reader does
+    a number of dummy reads equal to the size of the seeds vector
+  . New algorithms PackCluster and UnpackCluster. Packer processes a container of
+    tracks and stores in a PackedCluster container the Velo + ST  clusters.
+    Unpacker regenerates the Velo and  ST cluster containers from the
+    PackedCluster object given as InputName. See release notes for usage details
+
+- In PackedEvent v4r8, v4r9
+  . Fix the packing of RichPID and MuonPID objects, where the key was not
+    properly restored.
+  . Fix the unpacking of Vertices: the reference is a long long.
+
+- In RecEvent v2r41
+  . Include Track pointer in ProtoParticle printout
+
+- In TrackEvent v5r16
+  . Add dictionaries for std::vector<const LHCb::Measurement*>,
+    std::vector<const LHCb::Node*>,
+    Gaudi::Range_<std::vector<const LHCb::Node*> >
+
+- In IOExample v4r6
+  . Adapt test references to removal of random number seeds from ProcessHeader
+
+- In GaudiConf v15r8
+  . Remove the line in DstConf setting the packing version for RichPIDs. The
+    correct value is set by default in the class itself.
+
+- In HltInterfaces v4r6
+  . Update ReadRoutingBits to pass a const RawEvent, and to pass relevantBits
+    by reference not value.
+
+- In LHCbAlgs v2r49
+  . Fix logic bug in IncidentFilter.cpp, Coverity defect #30939
+  . In LHCbApp, do not check DQ flags in case of Simulation
+
+- In LHCbKernel v13r10
+  . Add some additional checks to StandardPacker
+  . New header Kernel/DetectorSegment to handle the representation of a detector
+    segment, a line described as x = a + b * y and z = c + d * y.
+    All parameters in float to minimize memory access.
+
+- In PartProp v1r13
+  . Add some hash functions for ParticleID
+
+- In XMLSummaryKernel v1r6
+  . Make the type of incident used for begin and end event configurable with a
+    default to the standard types (for Swimming use case).
+  . Remove UNLIKELY macros (avoids branching for 2011 swimming releases)
+
+- In RichRecBase v4r11
+  . Added support for HLTImportedTrack in RichTrackID
+
+- In STKernel v2r7
+  . Add end new method to ISTNoiseCalculation interface
+
+- In CondDBUI v3r14
+  . CondDBAdmin_DQ_Commit.py:
+    Add patch id to the release notes DQ entry.
+  . CondDBAdmin_GlobalTag.py:
+    Extend the number of available partitions with DQFLAGS.
+
+- In DAQUtils v1r6, EventPacker v2r14, LHCbAlgs v2r49
+  . Fix UNINIT_CTOR defects
+
+- In DAQUtils v1r6, LHCbKernel v13r10
+  . Fix unprotected debug() messages
+
+- In DAQUtils v1r6, LHCbAlgs v2r49
+  . Fix trivial icc remarks
+
 </PRE><H1><A NAME=v34r1>2012-02-29 LHCbSys v34r1</A></H1><PRE>
 This version uses Gaudi v23r1 and LCG_62a
 Development version for 2012 data taking
