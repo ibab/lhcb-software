@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-03-26 - Johannes Albrecht
+ - remove obsolete setting for topo lines
+
 ! 2012-03-26 - Victor Coco
  - DV_draft2012: settings updated for VeloWithIP fix.
 
