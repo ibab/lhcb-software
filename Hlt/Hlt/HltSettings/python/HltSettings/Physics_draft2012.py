@@ -61,6 +61,7 @@ class Physics_draft2012( object ):
         from Hlt2Lines.Hlt2CommissioningLines  import Hlt2CommissioningLinesConf
         from Hlt1Lines.Hlt1BeamGasLines        import Hlt1BeamGasLinesConf
         from Hlt2Lines.Hlt2diphotonDiMuonLines import Hlt2diphotonDiMuonLinesConf
+        from Hlt2Lines.Hlt2InclusiveDiProtonLines import Hlt2InclusiveDiProtonLinesConf
 
         thresholds = { Hlt1TrackLinesConf :    { 'AllL0_PT'      :  1700
                                                , 'AllL0_P'       : 10000
