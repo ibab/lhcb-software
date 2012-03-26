@@ -4,6 +4,7 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+!========================= EventPacker v2r14 2012-03-26 =========================
 ! 2012-03-22 - Chris Jones
  - Take the default packing version from the packed data, instead of assuming 0.
  - Improve the debug and verbose messages from the ProtoParticle packer 
