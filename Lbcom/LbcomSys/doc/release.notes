@@ -6,6 +6,35 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v12r2>2012-03-27 LbcomSys v12r2</A></H1><PRE>
+This version uses Gaudi v23r2 and LHCb v34r2
+
+- Producion release for initial 2012 data taking
+
+- Packages updated: L0/L0DU v10r19, L0/L0Muon v9r9, ST/STCheckers v3r4,
+    ST/STMonitors v3r8, ST/STTools v4r11
+
+- In L0DU v10r19
+  . Fix coverity problem
+
+- In L0Muon v9r9
+  . Fix bug in L0MuonOutput.cpp : typo in loop over PU when printout in debug()
+
+- In STCheckers v3r4
+  . Fix histogram names in active fraction algorithm as they appear
+    invisible in the root file with /s.
+  . Bug fix in generation of steps in active trend script.
+
+- In STMonitors v3r8
+  . Implement correct error calcuation when filling profile histograms in the NZS
+    monitoring.  Will be used to set alarms in online monitoring.
+
+- In STTools v4r11
+  . Fix memory leak in initialisation.
+  . Fix uninitialised values.
+  . Read pedestal masks from the conditions database.
+  . Implement new methods in noise calculation tools.
+
 </PRE><H1><A NAME=v12r1>2012-02-29 LbcomSys v12r1</A></H1><PRE>
 This version uses Gaudi v23r1 and LHCb v34r1
 
