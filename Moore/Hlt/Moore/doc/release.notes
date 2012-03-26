@@ -3,6 +3,7 @@ Package Coordinator : Eric van Herwijnen
 Purpose     : LHCb HLT application
 
 
+!========================= Moore v13r2p1 2012-03-26 =========================
 ! 2012-03-26 - Eric van Herwijnen
  - Modify  ConfigureShell.py for checkpointing.
 
