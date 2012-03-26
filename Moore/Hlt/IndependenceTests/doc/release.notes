@@ -2,6 +2,7 @@ Package     : Hlt/IndepenceTests
 Package Coordinator : Eric van Herwijnen
 Purpose     : HLT application to test indepence of Hlt lines
 
+!========================= IndependenceTests v1r2p1 2012-03-26 =========================
 ! 2012-03-23 - Roel Aaij
  - Update lines.sh script so the Moore version can be properly passed to it
 
