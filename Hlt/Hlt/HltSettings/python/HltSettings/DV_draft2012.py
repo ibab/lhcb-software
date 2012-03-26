@@ -57,7 +57,7 @@ class DV_draft2012 :
                                , 'Hlt2SingleLonglived' : 4
                                , 'Hlt2SingleDown' : 4
                                , 'Hlt2PreSelSingleDown' : 5
-                               , 'Hlt2SingleLonglivedHighFD' :  5
+                               , 'Hlt2SingleLonglivedHighFD' :  6
                                , 'Hlt2SingleLonglivedHighMass' : 6
                                , 'Hlt2DoubleLonglived' : 4
                                , 'Hlt2SinglePSLonglived' : 4
@@ -76,20 +76,20 @@ class DV_draft2012 :
                                     , 'Hlt2SinglePSLonglived' : 0.4
                                     , 'Hlt2DoublePSLonglived' : 0.4
                                     , 'Hlt2SinglePSLonglivedHighMass' : 0.5
-                                    , 'Hlt2SinglePSLonglivedHighFD' : 2.7
+                                    , 'Hlt2SinglePSLonglivedHighFD' : 3.0
                                     , 'Hlt2SinglePSLonglivedMV' : 0.4  
                                   }
             ,  "MinMass"      : {   'Hlt2RV2P' : 0.
-                                    , 'Hlt2SingleLonglived' : 5000.
+                                    , 'Hlt2SingleLonglived' : 5500.
                                     , 'Hlt2SingleDown' : 3000
                                     , 'Hlt2PreSelSingleDown' : 2800.
-                                    , 'Hlt2SingleLonglivedHighFD' : 3000.
+                                    , 'Hlt2SingleLonglivedHighFD' : 3200.
                                     , 'Hlt2SingleLonglivedHighMass' : 8000.
                                     , 'Hlt2DoubleLonglived' : 2000.
                                     , 'Hlt2SinglePSLonglived' : 0.
                                     , 'Hlt2DoublePSLonglived' : 2000.
                                     , 'Hlt2SinglePSLonglivedHighMass' : 8000.
-                                    , 'Hlt2SinglePSLonglivedHighFD' : 3000.
+                                    , 'Hlt2SinglePSLonglivedHighFD' : 3200.
                                     , 'Hlt2SinglePSLonglivedMV' :0.
 
                                   }
