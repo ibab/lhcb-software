@@ -1,3 +1,8 @@
+2012-03-36B  Ben Couturier  <ben.couturier@cern.ch>
+
+	* python/LbUtils/HTMLDependencyManager.py: Added class to parse the HTML dependency files used
+	by install_project.py
+
 2012-03-05  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbUtils/CMT/Project.py: optimization
@@ -9,11 +14,11 @@
 
 2012-01-18  Ben Couturier  <ben.couturier@cern.ch>
 
-    * python/LbUtils/Script.py: added profiling to Script ancestor. All classes inheriting can now be profiled
-    by calling the --profile option. The result is logged after the script is run.
-        --prof-maxlines=n increases/decreases the length of the output.
-        --prof-sortby=x where x in ["stdname", "calls", "time", "cumulative"] changes the order
-        --prof-dump=filename dumps the statistics to a file instead of logging a summary
+	* python/LbUtils/Script.py: added profiling to Script ancestor. All classes inheriting can now be profiled
+	  by calling the --profile option. The result is logged after the script is run.
+		--prof-maxlines=n increases/decreases the length of the output.
+		--prof-sortby=x where x in ["stdname", "calls", "time", "cumulative"] changes the order
+		--prof-dump=filename dumps the statistics to a file instead of logging a summary
 
 2011-12-12  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
