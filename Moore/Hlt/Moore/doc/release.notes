@@ -2,6 +2,10 @@ Package     : Hlt/Moore
 Package Coordinator : Eric van Herwijnen
 Purpose     : LHCb HLT application
 
+
+! 2012-03-26 - Eric van Herwijnen
+ - Modify  ConfigureShell.py for checkpointing.
+
 ! 2012-03-23 - P. Koppenburg
  - Update moore options to 2012 physics draft.
 

@@ -7,10 +7,8 @@ shared_memory = '/dev/shm'
 def copyNewFile(checkpoint_loc,checkpoint_file):
   checkpoint = checkpoint_loc+sep+checkpoint_file
   print 'echo "  [INFO] Copy new checkpoint:'+checkpoint+'.gz to RAM.";'
-  print 'rm -f '+shared_memory+sep+'Checkpoint.20*;'
-  print checkpoint_dir+'/cmds/get_torrent '+checkpoint+'.gz.torrent;'
+  print checkpoint_dir+'/cmds/copy_torrent '+checkpoint+';'
   print 'export CHECKPOINT_FILE='+shared_memory+sep+checkpoint_file+';'
-  print '/bin/gunzip '+shared_memory+sep+checkpoint_file+'.gz;'
   print 'export CHECKPOINT_TORRENT='+checkpoint_file+'.gz.torrent;'
 
 #=========================================================================================
