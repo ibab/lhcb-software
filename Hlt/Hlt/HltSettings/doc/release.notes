@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-03-26 - Victor Coco
+ - DV_draft2012: settings updated for VeloWithIP fix.
+
 ! 2012-03-21 - P. Hopchev
  - Modified the VDM configurations:
    * Increased the minimum required #tracks per vertex (in VanDerMeerScan_BeamGasConf_Mar12.py) 	
