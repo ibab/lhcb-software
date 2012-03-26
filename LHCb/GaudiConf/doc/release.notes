@@ -3,6 +3,7 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+!========================= GaudiConf v15r8 2012-03-26 =========================
 ! 2012-03-22 - Chris Jones
  - Remove the line in DstConf setting the packing version for RichPIDs. The
    correct value is set by default in the class itself.
