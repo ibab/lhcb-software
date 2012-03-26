@@ -3,6 +3,7 @@
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
 
+!========================= HltInterfaces v4r6 2012-03-26 =========================
 ! 2012-03-21 - Chris Jones
  - Update ReadRoutingBits to pass a const RawEvent, and to pass relevantBits 
    by reference not value.
