@@ -4,6 +4,7 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+!========================= LHCbKernel v13r10 2012-03-26 =========================
 ! 2012-03-22 - Chris Jones
  - Add some additional checks to StandardPacker
 
