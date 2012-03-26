@@ -4,6 +4,9 @@
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
 
+! 2012-03-26 - Paul Seyfert
+ - addition to previous commit
+
 ! 2012-03-20 - Paul Seyfert
  - if available use RecSummary instead of loop over best track container to
    determine verious track multiplicities in the event (also compatible to

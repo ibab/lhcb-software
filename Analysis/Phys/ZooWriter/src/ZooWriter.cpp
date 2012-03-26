@@ -1661,7 +1661,7 @@ void ZooWriter::writeEventODIN(boost::shared_ptr<ZooEv> ev) const
 {
     // get ODIN (ODIN decoder triggers decoding of ODIN if not yet done)
     m_odinDecoder->getTime();
-    const LHCb::ODIN* odin = get<LHCb::ODIN>(LHCb::ODINLocation::Default);
+    const LHCb::ODIN* odin = get<LHCb::ODIN>(LHCb::ODINLocation::Default,false);
     ev->m_eventNumber = odin->eventNumber();
     ev->m_gpsTime = odin->gpsTime();
     ev->m_detectorStatus = odin->detectorStatus();
