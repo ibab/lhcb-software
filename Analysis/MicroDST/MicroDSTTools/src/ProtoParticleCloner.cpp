@@ -34,6 +34,7 @@ ProtoParticleCloner::ProtoParticleCloner( const std::string& type,
   m_trackClonerName ( "TrackCloner"       )
 {
   declareProperty("ICloneTrack", m_trackClonerName);
+  declareProperty("TESVetoList",m_tesVetoList);
   //setProperty( "OutputLevel", 2 );
 }
 
@@ -62,11 +63,23 @@ ProtoParticleCloner::operator() (const LHCb::ProtoParticle* protoParticle)
 LHCb::ProtoParticle*
 ProtoParticleCloner::clone(const LHCb::ProtoParticle* protoParticle)
 {
-  if ( !protoParticle ) 
+  if ( !protoParticle )
   {
     if ( msgLevel(MSG::DEBUG) )
       debug() << "ProtoParticle pointer is NULL !" << endmsg;
     return NULL;
+  }
+
+  if ( !protoParticle->parent() )
+  {
+    this->Warning( "Cannot clone a ProtoParticle with no parent!" ).ignore();
+    return NULL;
+  }
+
+  // Is this location in the veto list ?
+  if ( isVetoed(protoParticle) )
+  {
+    return const_cast<LHCb::ProtoParticle*>(protoParticle);
   }
 
   LHCb::ProtoParticle* protoParticleClone =
@@ -84,31 +97,37 @@ ProtoParticleCloner::clone(const LHCb::ProtoParticle* protoParticle)
     protoParticleClone->setTrack( clonedTrack );
 
     // Rich PID
-    LHCb::RichPID* clonedRichPID =
-      cloneKeyedContainerItem<RichPIDCloner>(protoParticle->richPID());
-    if ( clonedRichPID )
+    if ( !isVetoed(protoParticle->richPID()) )
     {
-      // set the main track
-      clonedRichPID->setTrack( clonedTrack );
+      LHCb::RichPID* clonedRichPID =
+        cloneKeyedContainerItem<RichPIDCloner>(protoParticle->richPID());
+      if ( clonedRichPID )
+      {
+        // set the main track
+        clonedRichPID->setTrack( clonedTrack );
+      }
+      protoParticleClone->setRichPID(clonedRichPID);
     }
-    protoParticleClone->setRichPID(clonedRichPID);
 
     // MUON PID
-    LHCb::MuonPID* clonedMuonPID =
-      cloneKeyedContainerItem<MuonPIDCloner>(protoParticle->muonPID());
-    if ( clonedMuonPID )
+    if ( !isVetoed(protoParticle->muonPID()) )
     {
-      // Set the main track
-      clonedMuonPID->setIDTrack( clonedTrack );
-      // Clone and set the Muon Track
-      LHCb::Track * clonedMuonTrack = NULL;
-      if ( m_trackCloner )
+      LHCb::MuonPID* clonedMuonPID =
+        cloneKeyedContainerItem<MuonPIDCloner>(protoParticle->muonPID());
+      if ( clonedMuonPID )
       {
-        clonedMuonTrack = (*m_trackCloner)(protoParticle->muonPID()->muonTrack());
+        // Set the main track
+        clonedMuonPID->setIDTrack( clonedTrack );
+        // Clone and set the Muon Track
+        LHCb::Track * clonedMuonTrack = NULL;
+        if ( m_trackCloner )
+        {
+          clonedMuonTrack = (*m_trackCloner)(protoParticle->muonPID()->muonTrack());
+        }
+        clonedMuonPID->setMuonTrack( clonedMuonTrack );
       }
-      clonedMuonPID->setMuonTrack( clonedMuonTrack );
+      protoParticleClone->setMuonPID(clonedMuonPID);
     }
-    protoParticleClone->setMuonPID(clonedMuonPID);
 
     // CALO
     protoParticleClone->clearCalo();
@@ -118,17 +137,29 @@ ProtoParticleCloner::clone(const LHCb::ProtoParticle* protoParticle)
       for ( SmartRefVector<LHCb::CaloHypo>::const_iterator iCalo = caloHypos.begin();
             iCalo != caloHypos.end(); ++iCalo )
       {
-        // Basic Cloner
-        LHCb::CaloHypo * hypoClone = cloneKeyedContainerItem<CaloHypoCloner>(*iCalo);
-        if ( hypoClone )
+        const LHCb::CaloHypo * hypo = *iCalo;
+        if ( hypo )
         {
-          // For basic Cloner, set hypo, cluster and digit smartref vectors to empty
-          // as the basic cloning keeps them pointing to the originals
-          hypoClone->clearHypos();
-          hypoClone->clearDigits();
-          hypoClone->clearClusters();
-          // save
-          protoParticleClone->addToCalo(hypoClone);
+          if ( !isVetoed(hypo) )
+          {
+            // Basic Cloner
+            LHCb::CaloHypo * hypoClone = cloneKeyedContainerItem<CaloHypoCloner>(hypo);
+            if ( hypoClone )
+            {
+              // For basic Cloner, set hypo, cluster and digit smartref vectors to empty
+              // as the basic cloning keeps them pointing to the originals
+              hypoClone->clearHypos();
+              hypoClone->clearDigits();
+              hypoClone->clearClusters();
+              // save the clone
+              protoParticleClone->addToCalo(hypoClone);
+            }
+          }
+          else
+          {
+            // save the original
+            protoParticleClone->addToCalo(hypo);
+          }
         }
       }
     }
@@ -139,11 +170,12 @@ ProtoParticleCloner::clone(const LHCb::ProtoParticle* protoParticle)
 }
 
 //=============================================================================
-// Destructor
-//=============================================================================
+
 ProtoParticleCloner::~ProtoParticleCloner() {}
 
 //=============================================================================
 
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( ProtoParticleCloner )
+
+//=============================================================================

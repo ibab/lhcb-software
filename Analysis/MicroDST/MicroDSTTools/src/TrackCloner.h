@@ -39,6 +39,11 @@ private:
 
   typedef MicroDST::BasicItemCloner<LHCb::Track> BasicTrackCloner;
 
+private:
+
+  std::vector<std::string> m_tesVetoList;
+  bool m_cloneAncestors;
+
 };
 
 #endif // MICRODST_TRACKCLONER_H

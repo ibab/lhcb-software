@@ -56,14 +56,16 @@ StatusCode ProtoParticleDeepCloner::initialize()
 
 //=============================================================================
 
-LHCb::ProtoParticle* ProtoParticleDeepCloner::operator() (const LHCb::ProtoParticle* protoParticle)
+LHCb::ProtoParticle* 
+ProtoParticleDeepCloner::operator() (const LHCb::ProtoParticle* protoParticle)
 {
   return this->clone(protoParticle);
 }
 
 //=============================================================================
 
-LHCb::ProtoParticle* ProtoParticleDeepCloner::clone(const LHCb::ProtoParticle* protoParticle)
+LHCb::ProtoParticle* 
+ProtoParticleDeepCloner::clone(const LHCb::ProtoParticle* protoParticle)
 {
   if ( !protoParticle ) return NULL;
 

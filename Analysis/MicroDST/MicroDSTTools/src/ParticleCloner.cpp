@@ -27,14 +27,15 @@
 ParticleCloner::ParticleCloner( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
-  : base_class         ( type, name, parent ),
-    m_vertexCloner     ( NULL ),
-    m_vertexClonerName ( "VertexCloner" ),
-    m_ppCloner         ( NULL ),
+  : base_class         ( type, name, parent    ),
+    m_vertexCloner     ( NULL                  ),
+    m_vertexClonerName ( "VertexCloner"        ),
+    m_ppCloner         ( NULL                  ),
     m_ppClonerName     ( "ProtoParticleCloner" )
 {
   declareProperty("ICloneVertex", m_vertexClonerName);
   declareProperty("ICloneProtoParticle", m_ppClonerName);
+  declareProperty("TESVetoList",m_tesVetoList);
   //setProperty( "OutputLevel", 2 );
 }
 
@@ -108,14 +109,13 @@ LHCb::Particle* ParticleCloner::clone(const LHCb::Particle* particle)
     storeDaughters( particleClone, particle->daughters() );
     
     // ProtoParticle
-    if ( m_ppCloner )
+    const LHCb::ProtoParticle * protoToSet = NULL;
+    if ( m_ppCloner && particle->proto() )
     {
-      particleClone->setProto( (*m_ppCloner)( particle->proto() ) );
+      protoToSet = (*m_ppCloner)( particle->proto() );
     }
-    else
-    {
-      particleClone->setProto( particle->proto() );
-    }
+    if ( protoToSet ) { particleClone->setProto(protoToSet); }
+    
   }
 
   return particleClone;
@@ -140,3 +140,5 @@ void ParticleCloner::storeDaughters(LHCb::Particle* particleClone,
 
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( ParticleCloner )
+
+//=============================================================================

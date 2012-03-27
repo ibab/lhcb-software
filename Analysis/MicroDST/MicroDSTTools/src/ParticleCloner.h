@@ -2,7 +2,8 @@
 #ifndef MICRODST_PARTICLECLONER_H 
 #define MICRODST_PARTICLECLONER_H 1
 
-// Include files
+#include <algorithm>
+
 // from Gaudi
 #include <MicroDST/MicroDSTTool.h>
 #include <MicroDST/ICloneParticle.h>            // Interface
@@ -30,8 +31,11 @@ class ICloneProtoParticle;
  *  @author Juan PALACIOS
  *  @date   2007-11-30
  */
-class ParticleCloner : public extends1<MicroDSTTool, ICloneParticle> {
+class ParticleCloner : public extends1<MicroDSTTool, ICloneParticle> 
+{
+
 public: 
+
   /// Standard constructor
   ParticleCloner( const std::string& type, 
                   const std::string& name,
@@ -63,5 +67,8 @@ private:
 
   std::string m_ppClonerName;
 
+  std::vector<std::string> m_tesVetoList;
+
 };
+
 #endif // MICRODST_PARTICLECLONER_H
