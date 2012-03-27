@@ -4,6 +4,8 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+!========================= EventPacker v2r15 2012-03-27 =========================
+
 ! 2012-03-27 - Chris Jones
  - Various improvements to the PackedCluster support, following work to
    deploy the inclusion of these packed objects in the stripping.
