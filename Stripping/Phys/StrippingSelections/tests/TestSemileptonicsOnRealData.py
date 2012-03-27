@@ -76,7 +76,7 @@ CondDB().IgnoreHeartBeat = True
 from Configurables import FilterDesktop
 
 MakePionsEtc = FilterDesktop('MakePionsEtc')
-MakePionsEtc.InputLocations=["Phys/StdLooseKaons","Phys/StdLoosePions","Phys/StdLooseMuons","Phys/StdLooseDstarWithD02KPi"]
+MakePionsEtc.Inputs=["Phys/StdLooseKaons","Phys/StdLoosePions","Phys/StdLooseMuons","Phys/StdLooseDstarWithD02KPi"]
 MakePionsEtc.Code="ALL"
 
 DaVinci().PrintFreq = 5000

@@ -14,7 +14,7 @@ Dstar methods closely copied from StrippingDstarD2KShh.py by Mat Charles.
 """
 __author__ = ['Mika Vesterinen']
 __date__ = '08/03/2012'
-__version__ = '$Revision: 0.1 $'
+__version__ = '$Revision: 0.2 $'
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles, OfflineVertexFitter
@@ -86,6 +86,7 @@ confdict = {
     ,"D02HHPi0DocaCut"  : 6    # mm
     ,"D02HHPi0PtCut"    : 2000 # MeV
     ,"Dstar_preFitMassCut" : 100 # MeV
+    ,"Dstar_preFitMassCut_HHPi0" : 200 # MeV
     ,"Dstar_Chi2" :  10.0 ## unitless
     ,"Dstar_SoftPion_PIDe" : 5. ## unitless
     ,"Dstar_SoftPion_PT" : 200. ## MeV
@@ -151,6 +152,7 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         ,"D02HHPi0PtCut"
         ,"D02HHPi0DocaCut"
         ,"Dstar_preFitMassCut"
+        ,"Dstar_preFitMassCut_HHPi0"
         ,"Dstar_Chi2"
         ,"Dstar_SoftPion_PIDe"
         ,"Dstar_SoftPion_PT"
@@ -284,28 +286,32 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
             "Dstar_wideDMCutUpper" : config["Dstar_wideDMCutUpper"],
             }
 
-        self.sel_D0_to_4Pi = Selection( "D0_to_4Pi_for" + name,Algorithm = self._D024PiFilter(),RequiredSelections = [StdLoosePions] )        
+        self.sel_D0_to_4Pi = Selection( "D0_to_4Pi_for" + name,Algorithm = self._D024PiFilter(),
+                                        RequiredSelections = [self.selPionloose] )        
         self.selD0Conj_4Pi = Selection('SelConjugate_4PiFor'+name,
                                        Algorithm = ConjugateNeutralPID('Conjugate_4PiFor'+name),
                                        RequiredSelections = [self.sel_D0_to_4Pi])
         self.selDstar_to_4Pi = makeDstar('Dstar_4PiFor'+name, [self.sel_D0_to_4Pi , self.selD0Conj_4Pi],Dstar_cuts)
 
 
-        self.sel_D0_to_K3Pi = Selection( "D0_to_K3Pi_for" + name,Algorithm = self._D02K3PiFilter(),RequiredSelections = [StdLoosePions] )        
+        self.sel_D0_to_K3Pi = Selection( "D0_to_K3Pi_for" + name,Algorithm = self._D02K3PiFilter(),
+                                         RequiredSelections = [self.selPionloose,self.selKaon] )        
         self.selD0Conj_K3Pi = Selection('SelConjugate_K3PiFor'+name,
                                         Algorithm = ConjugateNeutralPID('Conjugate_K3PiFor'+name),
                                         RequiredSelections = [self.sel_D0_to_K3Pi])
         self.selDstar_to_K3Pi = makeDstar('Dstar_K3PiFor'+name, [self.sel_D0_to_K3Pi , self.selD0Conj_K3Pi],Dstar_cuts)
 
 
-        self.sel_D0_to_2K2Pi = Selection( "D0_to_2K2Pi_for" + name,Algorithm = self._D022K2PiFilter(),RequiredSelections = [StdLoosePions] )        
+        self.sel_D0_to_2K2Pi = Selection( "D0_to_2K2Pi_for" + name,Algorithm = self._D022K2PiFilter(),
+                                          RequiredSelections = [self.selPionloose,self.selKaon] )        
         self.selD0Conj_2K2Pi = Selection('SelConjugate_2K2PiFor'+name,
                                        Algorithm = ConjugateNeutralPID('Conjugate_2K2PiFor'+name),
                                        RequiredSelections = [self.sel_D0_to_2K2Pi])
         self.selDstar_to_2K2Pi = makeDstar('Dstar_2K2PiFor'+name, [self.sel_D0_to_2K2Pi , self.selD0Conj_2K2Pi],Dstar_cuts)
         
 
-        self.sel_D0_to_3KPi = Selection( "D0_to_3KPi_for" + name,Algorithm = self._D023KPiFilter(),RequiredSelections = [StdLoosePions] )        
+        self.sel_D0_to_3KPi = Selection( "D0_to_3KPi_for" + name,Algorithm = self._D023KPiFilter(),
+                                         RequiredSelections = [self.selPionloose,self.selKaon] )        
         self.selD0Conj_3KPi = Selection('SelConjugate_3KPiFor'+name,
                                        Algorithm = ConjugateNeutralPID('Conjugate_3KPiFor'+name),
                                         RequiredSelections = [self.sel_D0_to_3KPi])
@@ -343,7 +349,7 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         ### ks K K 
         self.seld02KsKKLL = Selection( "D02KsKKLLfor" + name,
                                          Algorithm = self._D02KsKKFilter(),
-                                         RequiredSelections = [self.selKSLL,self.selPionloose] )           
+                                         RequiredSelections = [self.selKSLL,self.selKaonloose] )           
         self.selD0Conj2KsKKLL = Selection('SelConjugateD02KsKKLLFor'+name,
                                             Algorithm = ConjugateNeutralPID('ConjugateD02KsKKLLFor'+name),
                                             RequiredSelections = [self.seld02KsKKLL])
@@ -351,7 +357,7 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
 
         self.seld02KsKKDD = Selection( "D02KsKKDDfor" + name,
                                          Algorithm = self._D02KsKKFilter(),
-                                         RequiredSelections = [self.selKSDD,self.selPionloose] )           
+                                         RequiredSelections = [self.selKSDD,self.selKaonloose] )           
         self.selD0Conj2KsKKDD = Selection('SelConjugateD02KsKKDDFor'+name,
                                             Algorithm = ConjugateNeutralPID('ConjugateD02KsKKDDFor'+name),
                                             RequiredSelections = [self.seld02KsKKDD])
@@ -360,7 +366,7 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         ### ks K Pi 
         self.seld02KsKPiLL = Selection( "D02KsKPiLLfor" + name,
                                          Algorithm = self._D02KsKPiFilter(),
-                                         RequiredSelections = [self.selKSLL,self.selPionloose] )           
+                                         RequiredSelections = [self.selKSLL,self.selPionloose,self.selKaonloose] )           
         self.selD0Conj2KsKPiLL = Selection('SelConjugateD02KsKPiLLFor'+name,
                                             Algorithm = ConjugateNeutralPID('ConjugateD02KsKPiLLFor'+name),
                                             RequiredSelections = [self.seld02KsKPiLL])
@@ -368,7 +374,7 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
 
         self.seld02KsKPiDD = Selection( "D02KsKPiDDfor" + name,
                                          Algorithm = self._D02KsKPiFilter(),
-                                         RequiredSelections = [self.selKSDD,self.selPionloose] )           
+                                         RequiredSelections = [self.selKSDD,self.selPionloose,self.selKaonloose] )           
         self.selD0Conj2KsKPiDD = Selection('SelConjugateD02KsKPiDDFor'+name,
                                             Algorithm = ConjugateNeutralPID('ConjugateD02KsKPiDDFor'+name),
                                             RequiredSelections = [self.seld02KsKPiDD])
@@ -377,7 +383,8 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         ################## D0 -> HHPi0 WITH MERGED PI0 #######################
         
         Dstar_cuts = {
-            "Dstar_preFitMassCut" : config["Dstar_preFitMassCut"],
+           ## wider mass window than other channels
+            "Dstar_preFitMassCut" : config["Dstar_preFitMassCut_HHPi0"],
             "Dstar_Chi2" : config["Dstar_Chi2"],
             "Dstar_SoftPion_PIDe" : config["Dstar_SoftPion_PIDe"],
             "Dstar_SoftPion_PT" : config["Dstar_SoftPion_PT"],
@@ -396,7 +403,7 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
 
         self.seld02KKPi0Merged = Selection( "D02KKPi0Mergedfor" + name,
                                              Algorithm = self._D02KKPi0Filter(),
-                                             RequiredSelections = [self.selKaon,self.selPionTight,self.selPi0Merged])
+                                             RequiredSelections = [self.selKaon,self.selPi0Merged])
         self.selD0Conj2KKPi0Merged = Selection('SelConjugateKKPi0MergedFor'+name,
                                                   Algorithm = ConjugateNeutralPID('ConjugateKKPi0MergedFor'+name),
                                                   RequiredSelections = [self.seld02KKPi0Merged])
@@ -405,7 +412,7 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
 
         self.seld02PiPiPi0Merged = Selection( "D02PiPiPi0Mergedfor" + name,
                                              Algorithm = self._D02PiPiPi0Filter(),
-                                             RequiredSelections = [self.selKaon,self.selPionTight,self.selPi0Merged])
+                                             RequiredSelections = [self.selPionTight,self.selPi0Merged])
         self.selD0Conj2PiPiPi0Merged = Selection('SelConjugatePiPiPi0MergedFor'+name,
                                                   Algorithm = ConjugateNeutralPID('ConjugatePiPiPi0MergedFor'+name),
                                                   RequiredSelections = [self.seld02PiPiPi0Merged])
@@ -434,7 +441,7 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
 
         self.seld02KKPi0Resolved = Selection( "D02KKPi0Resolvedfor" + name,
                                              Algorithm = self._D02KKPi0Filter(),
-                                             RequiredSelections = [self.selKaon,self.selPionTight,self.selPi0Resolved])
+                                             RequiredSelections = [self.selKaon,self.selPi0Resolved])
         self.selD0Conj2KKPi0Resolved = Selection('SelConjugateKKPi0ResolvedFor'+name,
                                                   Algorithm = ConjugateNeutralPID('ConjugateKKPi0ResolvedFor'+name),
                                                   RequiredSelections = [self.seld02KKPi0Resolved])
@@ -443,7 +450,7 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
 
         self.seld02PiPiPi0Resolved = Selection( "D02PiPiPi0Resolvedfor" + name,
                                              Algorithm = self._D02PiPiPi0Filter(),
-                                             RequiredSelections = [self.selKaon,self.selPionTight,self.selPi0Resolved])
+                                             RequiredSelections = [self.selPionTight,self.selPi0Resolved])
         self.selD0Conj2PiPiPi0Resolved = Selection('SelConjugatePiPiPi0ResolvedFor'+name,
                                                   Algorithm = ConjugateNeutralPID('ConjugatePiPiPi0ResolvedFor'+name),
                                                   RequiredSelections = [self.seld02PiPiPi0Resolved])
@@ -469,23 +476,12 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
                                       RequiredSelections = [self.selPion, self.selKSDD] )
 
 
-        ################ D+/Ds+ -> HHH SELECTIONS ##########################
-        
-        self.seldp2kpipi = Selection( "Dp2KPiPifor" + name,
-                                      Algorithm = self._Dp2KPiPiFilter(),
-                                      RequiredSelections = [self.selKaon, self.selPion] )
-
-        self.selds2kkpi = Selection( "Ds2KKPifor" + name,
-                                     Algorithm = self._Ds2KKPiFilter(),
-                                     RequiredSelections = [self.selKaon, self.selPion] )
-
-        
         ################## D+/Ds+ -> H mu mu SELECTIONS ########################
 
         self.selds2pimumu = Selection( "Ds2PiMuMufor" + name,
                                        Algorithm = self._Ds2PiMuMuFilter(),
                                        RequiredSelections = [self.selPion,self.selmuon] )
-
+        
         self.selds2kmumu = Selection( "Ds2KMuMufor" + name,
                                        Algorithm = self._Ds2KMuMuFilter(),
                                        RequiredSelections = [self.selKaon,self.selmuon] )
@@ -516,8 +512,8 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
                                      RequiredSelections = [self.selKaon, self.selPion, StdLooseProtons ] )
         
         self.sellambdacDCS = Selection( "Lc2PKPiDCSfor" + name,
-                                     Algorithm = self._Lc2PKPiDCSFilter(),
-                                     RequiredSelections = [self.selKaon, self.selPion, StdLooseProtons ] )
+                                        Algorithm = self._Lc2PKPiDCSFilter(),
+                                        RequiredSelections = [self.selKaon, self.selPion, StdLooseProtons ] )
 
         
         #################### MAKE THE "B" CANDIDATES ##############################
@@ -660,7 +656,7 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
 
         
         ################# DECLARE THE STRIPPING LINES #################################
-
+        
         self.registerLine( StrippingLine('b2D0MuXKsKs_DDDD' + name + 'Line', prescale = 1, selection = self.selb2D0MuXKsKs_DDDD))
         self.registerLine( StrippingLine('b2D0MuXKsKs_LLLL' + name + 'Line', prescale = 1, selection = self.selb2D0MuXKsKs_LLLL))
         self.registerLine( StrippingLine('b2D0MuXKsKs_DDLL' + name + 'Line', prescale = 1, selection = self.selb2D0MuXKsKs_DDLL))

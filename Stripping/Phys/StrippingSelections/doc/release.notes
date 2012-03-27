@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-03-27 - Mika Vesterinen
+ - Fixes to a few lines in CharmToBSemi
+
 ! 2012-03-26 - Markward Britsch for Florin Maciuc
  - StrippingBs2KSKS.py
    Changed Bs mass window from 50 to 150
