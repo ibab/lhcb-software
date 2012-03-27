@@ -4,6 +4,7 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+!========================= PatPV v3r23 2012-03-27 =========================
 ! 2012-03-08 - Marco Cattaneo
  - Replace std::sort by std::stable_sort to fix diffs between gcc43 and gcc46
  - Fic UNINIT_CTOR Coverity defects
