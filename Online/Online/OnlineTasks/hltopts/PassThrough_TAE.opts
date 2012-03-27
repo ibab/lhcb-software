@@ -1,0 +1,2 @@
+#include "$HLTOPTS/PassThrough.opts"
+EventSelector.Decode = false;
