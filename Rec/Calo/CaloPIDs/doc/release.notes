@@ -4,6 +4,7 @@
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
 
+!========================= CaloPIDs v5r12 2012-03-27 =========================
 ! 2012-03-15 - Marco Cattaneo
  - Fix unprotected debug() MsgStreams
  - Fix trivial icc remarks
