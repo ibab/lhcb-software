@@ -84,23 +84,35 @@ class CloneSwimmingReports(MicroDSTElement):
 
 class CloneParticleTrees(MicroDSTElement) :
 
-    def __init__( self, branch='',
-                  ProtoParticleConer = "ProtoParticleCloner" ) :
+    def __init__( self,
+                  branch='',
+                  #ProtoParticleCloner = "ProtoParticleCloner",
+                  TESVetoList = [ ] ) :
         MicroDSTElement.__init__(self, branch)
-        self.ppCloner = ProtoParticleConer
+        #self.ppCloner    = "ProtoParticleCloner"
+        self.tesVetoList = TESVetoList
 
     def __call__(self, sel) :
         
         from Configurables import ( CopyParticles,
                                     VertexCloner,
                                     ParticleCloner,
-                                    ProtoParticleCloner )
+                                    ProtoParticleCloner,
+                                    TrackCloner )
         
-        cloner = CopyParticles(self.personaliseName(sel,
-                                                    'CopyParticles'))
-        cloner.InputLocations = self.dataLocations(sel,"Particles")
+        cloner = CopyParticles( name = self.personaliseName(sel,'CopyParticles'),
+                                InputLocations = self.dataLocations(sel,"Particles") )
+        
         cloner.addTool(ParticleCloner, name="ParticleCloner")
-        cloner.ParticleCloner.ICloneProtoParticle=self.ppCloner
+        cloner.ParticleCloner.TESVetoList = self.tesVetoList
+                
+        cloner.addTool(ProtoParticleCloner,name="ProtoParticleCloner")
+        cloner.ProtoParticleCloner.TESVetoList = self.tesVetoList
+
+        cloner.addTool(TrackCloner,name="TrackCloner")
+        cloner.TrackCloner.TESVetoList = self.tesVetoList
+               
+        cloner.ParticleCloner.ICloneProtoParticle = "ProtoParticleCloner"
         
         self.setOutputPrefix(cloner)
 

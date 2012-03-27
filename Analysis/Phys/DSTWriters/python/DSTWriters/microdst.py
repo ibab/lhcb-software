@@ -72,7 +72,7 @@ def microDSTElements(pack=True) :
                  #GlobalEventCounters(configGenerator=_gecConfig),
                  ClonePVs( RecVertexCloner = "RecVertexClonerNoTracks",
                            ClonePVWeights  = False ),
-                 CloneParticleTrees(ProtoParticleConer = "ProtoParticleCloner"),
+                 CloneParticleTrees(),
                  ClonePVRelations(location = "Particle2VertexRelations",
                                   clonePVs = True,
                                   RecVertexCloner = "VertexBaseFromRecVertexClonerNoTracks"),
@@ -99,7 +99,7 @@ def stripMicroDSTElements(pack=True) :
     '''
     elements = [ ClonePVs( RecVertexCloner = "RecVertexClonerNoTracks",
                            ClonePVWeights  = False ),
-                 CloneParticleTrees(ProtoParticleConer = "ProtoParticleCloner"),
+                 CloneParticleTrees(),
                  ClonePVRelations(location = "Particle2VertexRelations",
                                   clonePVs = True,
                                   RecVertexCloner = "VertexBaseFromRecVertexClonerNoTracks"),

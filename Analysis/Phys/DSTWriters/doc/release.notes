@@ -6,11 +6,15 @@
 
 ! 2012-03-27 - Chris Jones
  - Add support for the packed track clusters on uDST streams.
- - Add to the method stripDSTElements the option cloneProtoParticles to 
-   control if the ProtoParticles associated to the Particles for a given
-   stream should be cloned. Useful for streams like the Calibration stream,
-   that create some custom Track and ProtoParticle objects, that are therefore
-   not on the input sDST, and thus not copied enmass to then output DST.
+ - Improve the ProtoParticle cloning to allow for dynamic checking of each
+   ProtoParticle, and dependant data objects, to determine if they should be
+   cloned or not for the stream in question. If the object resides in a TES
+   location known to be completely copied to the stream output (for instance
+   the standard reconstruction locations on DSTs) then it is not copied and
+   the reference to that original container is kept. Otherwise, the objects
+   are fully cloned.
+   Fixes the problem on Calibration (and EW) DST streams that create custom 
+   Tracks, ProtoParticles that where not being properly handled.
 
 !========================= DSTWriters v4r4 2012-03-01 =========================
 
