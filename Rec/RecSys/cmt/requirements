@@ -42,7 +42,7 @@ use RichENNRingFinder    v1r4    Rich # Chris Jones, Ulrich Kerzel
 use RichGlobalPID        v3r18   Rich # Chris Jones
 use RichHPDImageAnalysis v1r11   Rich # Thomas Blake, Chris Jones
 use RichIFBAnalysis      v1r2    Rich # Ross Young, Chris Jones
-use RichParticleSearch   v1r5    Rich # Matt Coombes
+use RichParticleSearch   v1r6    Rich # Matt Coombes
 use RichPIDMerge         v2r9p2  Rich # Chris Jones
 use RichRecAlgorithms    v2r19   Rich # Chris Jones
 use RichRecMCAlgorithms  v1r3p3  Rich # Chris Jones
@@ -74,7 +74,7 @@ use PatFitParams         v4r1    Tr   # Olivier Callot
 use TrackAssociators     v2r9    Tr   # Eduardo Rodrigues, Edwin Bos
 use TrackCheckers        v4r12   Tr   # Eduardo Rodrigues
 use TrackExtrapolators   v2r32p1 Tr   # Eduardo Rodrigues
-use TrackFitEvent        v5r15   Tr   # Eduardo Rodrigues
+use TrackFitEvent        v5r16   Tr   # Eduardo Rodrigues
 use TrackFitter          v4r6p1  Tr   # Eduardo Rodrigues
 use TrackIdealPR         v2r19   Tr   # Eduardo Rodrigues
 use TrackMCTools         v3r1    Tr   # Eduardo Rodrigues

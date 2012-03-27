@@ -11,12 +11,12 @@ This version uses Gaudi v23r2 and LHCb v34r2
 - Production release for initial 2012 data taking
 
 - Packages updated: Calo/CaloPIDs v5r12, Muon/MuonID v9r4, Rec/GlobalReco v6r41,
-    Rec/LumiAlgs v7r5, Rec/RecAlgs v2r7, Tf/FastPV v1r0p1,
-    Tf/PatAlgorithms v4r20, Tf/PatVelo v3r26, Tf/PatVeloTT v3r18,
-    Tf/TrackSeeding v1r6, Tf/TsaAlgorithms v3r26, Tf/PatPV v3r23,
-    Tf/TrackFitEvent v5r16, Tr/TrackFitter v4r6p1, Tr/TrackMonitors v1r38,
-    Tr/TrackProjectors v2r31, Tr/TrackTools v4r13, Tr/TrackUtils v1r45,
-    Velo/VeloRecMonitors v2r18
+    Rec/LumiAlgs v7r5, Rec/RecAlgs v2r7, Rich/RichParticleSearch v1r6, 
+    Tf/FastPV v1r0p1, Tf/PatAlgorithms v4r20, Tf/PatVelo v3r26,
+    Tf/PatVeloTT v3r18, Tf/TrackSeeding v1r6, Tf/TsaAlgorithms v3r26,
+    Tf/PatPV v3r23, Tf/TrackFitEvent v5r16, Tr/TrackFitter v4r6p1,
+    Tr/TrackMonitors v1r38, Tr/TrackProjectors v2r31, Tr/TrackTools v4r13,
+    Tr/TrackUtils v1r45, Velo/VeloRecMonitors v2r18
 
 - In MuonID v9r4
   . Fix bug in method GetPbin. Throw an exception if pBins pointer is null.
@@ -39,6 +39,11 @@ This version uses Gaudi v23r2 and LHCb v34r2
 
 - In RecAlgs v2r7
   . Adapt RecInit to removal of random seeds from ProcessHeader
+
+- In RichParticleSearch v1r6
+  . Fix to get run number and event number from MCHeader, not from random seeds
+  . Get run number and event number once per event, rather than once per segment!
+  . Various minor cleanups
 
 - In FastPV v1r0p1
   . Remove unused variable in TrackForPV.h, fixes UNINIT_CTOR Coverity warning
@@ -92,7 +97,7 @@ This version uses Gaudi v23r2 and LHCb v34r2
     this property in the online jobs to the old default
 
 - In CaloPIDs v5r12, MuonID v9r4, LumiAlgs v7r5, PatVeloTT v3r18, PatPV v3r23,
-     TrackFitter v4r6p1, TrackUtils v1r45
+     TrackFitter v4r6p1, TrackUtils v1r45, RichParticleSearch v1r6
   . Fix unprotected debug() and verbose() MsgStreams
 
 - In CaloPIDs v5r12, MuonID v9r4, RecAlgs v2r7, PatVelo v3r26, PatVeloTT v3r18,
@@ -100,7 +105,8 @@ This version uses Gaudi v23r2 and LHCb v34r2
   . Fix trivial icc remarks
 
 - In CaloPIDs v5r12, MuonID v9r4, LumiAlgs v7r5, RecAlgs v2r7, PatVelo v3r26,
-     TrackSeeding v1r6, PatPV v3r23, TrackFitter v4r6p1, TrackUtils v1r45
+     TrackSeeding v1r6, PatPV v3r23, TrackFitter v4r6p1, TrackUtils v1r45,
+     RichParticleSearch v1r6
   . Fix UNINIT_CTOR defects
 
 - In PatVelo v3r26
