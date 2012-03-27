@@ -3,7 +3,7 @@
 # Maintainer : David Hutchcroft
 #============================================================================
 package           PatVelo
-version           v3r25p2
+version           v3r26
 
 # Structure, i.e. directories to process. 
 #============================================================================

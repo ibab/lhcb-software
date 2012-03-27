@@ -4,6 +4,7 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+!========================= PatVelo v3r26 2012-03-27 =========================
 ! 2012-03-05 - Marco Cattaneo
  - Fix UNINIT_CTOR and FORWARD_NULL Coverity warnings
  - Fix trivial icc remark
