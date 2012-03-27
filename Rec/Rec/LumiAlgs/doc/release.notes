@@ -3,6 +3,8 @@
 ! Responsible : Jaap Panman
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
+
+!========================= LumiAlgs v7r5 2012-03-27 =========================
 ! 2012-03-21 - Rosen Matev
  - Add new algorithm DumpLumiEvents
    . Reads RAW files containing random events (typically LUMI stream)
