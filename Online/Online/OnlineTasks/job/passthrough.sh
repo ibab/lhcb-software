@@ -7,7 +7,14 @@ export LOGFIFO=/tmp/logGaudi.fifo
 export ONLINETASKS=/group/online/dataflow/templates;
 export INFOOPTIONS=/group/online/dataflow/options/${PARTNAME}/${PARTNAME}_Info.opts;
 export NBOFSLAVES=$4;
-export LD_PRELOAD=/sw/lib/lhcb/ONLINE/ONLINE_${ONLINE_VERSION}/InstallArea/${CMTCONFIG}/lib/libCheckpointing.so;
+if test -f /home/online/ONLINE/Online_${ONLINE_VERSION}/InstallArea/${CMTCONFIG}/lib/libCheckpointing.so;
+    then
+    export LD_PRELOAD=/home/online/ONLINE/Online_${ONLINE_VERSION}/InstallArea/${CMTCONFIG}/lib/libCheckpointing.so;
+else
+    export LD_PRELOAD=/sw/lib/lhcb/ONLINE/ONLINE_${ONLINE_VERSION}/InstallArea/${CMTCONFIG}/lib/libCheckpointing.so;
+fi;
+#
+#
 export PYTHONPATH=/group/online/dataflow/options/${PARTNAME}/HLT:$PYTHONPATH;
 TAE_OPT=`python <</EOF
 import OnlineEnvBase as O
