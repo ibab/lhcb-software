@@ -150,8 +150,14 @@ MicroDSTCommon<PBASE>::cloneKeyedContainerItem( const typename itemCloner::Type*
 {
   if ( !item )
   {
-    if ( this->msgLevel(MSG::VERBOSE) )
-      this->verbose() << "cloneKeyedContainerItem: Original Particle is NULL" << endmsg;
+    if ( this->msgLevel(MSG::DEBUG) )
+      this->debug() << "Cannot clone a NULL pointer !" << endmsg;
+    return NULL;
+  }
+
+  if ( !item->parent() )
+  {
+    this->Warning( "Cannot clone an object with no parent!" ).ignore();
     return NULL;
   }
 
@@ -166,20 +172,25 @@ MicroDSTCommon<PBASE>::cloneKeyedContainerItem( const typename itemCloner::Type*
   typename itemCloner::Type * clonedItem = clones->object( item->key() );
   if ( !clonedItem )
   {
-    if ( this->msgLevel(MSG::VERBOSE) )
-      this->verbose() << "cloneKeyedContainerItem: Cloning " << item->key()
-                      << " in " << item->parent()->registry()->identifier()
-                      << " to " << cloneLocation << endmsg;
+    if ( this->msgLevel(MSG::DEBUG) )
+    {
+      this->debug() << "cloneKeyedContainerItem: Cloning item key " << item->key()
+                    << " in " << item->parent()->registry()->identifier()
+                    << " to " << cloneLocation << endmsg;
+      if ( this->msgLevel(MSG::VERBOSE) ) this->verbose() << *item << endmsg;
+    }
 
     clonedItem = itemCloner::clone(item);
     if ( clonedItem )
     {
       clones->insert( clonedItem, item->key() );
+      if ( this->msgLevel(MSG::VERBOSE) ) 
+        this->verbose() << "Cloned item " << *clonedItem << endmsg;
     }
     else
     {
-      if ( this->msgLevel(MSG::VERBOSE) )
-        this->verbose() << "cloneKeyedContainerItem: Cloning FAILED" << endmsg;
+      if ( this->msgLevel(MSG::DEBUG) )
+        this->debug() << "cloneKeyedContainerItem: Cloning FAILED" << endmsg;
     }
   }
 
