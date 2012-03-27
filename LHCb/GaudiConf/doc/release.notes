@@ -3,6 +3,8 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+!========================= GaudiConf v15r9 2012-03-27 =========================
+
 ! 2012-03-27 - Chris Jones
  - Update the stripping DST unpacking options in DstConf to add a new mapping
    tool to handle automatic unpacking of the track clusters.
