@@ -4,6 +4,13 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-03-27 - Jibo He
+ - Stripping18/LineConfigDictionaries_BandQ
+   . Relaxed PT cut of DiMuon on microDST to 2 GeV
+ - Stripping18/LineConfigDictionaries_MiniBias
+   . Fixed NoBias line
+ - Updated dbase
+
 ! 2012-03-27 - Mika Vesterinen
   - Add variable for CharmFromBSemi (wider prefit D* mass window for D0->HHPi0) for Stripping18
 
