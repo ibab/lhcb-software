@@ -1,5 +1,5 @@
 package RecSys
-version           v13r1
+version           v13r2
 
 branches cmt doc tests
 
@@ -9,14 +9,14 @@ branches cmt doc tests
 
 # Calorimeter                         # Maintainer
 use CaloMoniDst          v5r9    Calo # Olivier Deschamps
-use CaloPIDs             v5r11   Calo # Victor Egorychev, Vanya Belyaev
+use CaloPIDs             v5r12   Calo # Victor Egorychev, Vanya Belyaev
 use CaloReco             v5r14   Calo # Olivier Deschamps
 
 # Hlt
 use HltMonitors          v1r4    Hlt  # Roel Aaij
 
 # Muon
-use MuonID               v9r3    Muon # Erica Polycarpo, Miriam Gandelman
+use MuonID               v9r4    Muon # Erica Polycarpo, Miriam Gandelman
 use MuonPIDChecker       v5r2    Muon # Erica Polycarpo, Miriam Gandelman
 use MuonTools            v5r2p2  Muon # Alessia Satta
 use MuonTrackAlign       v1r8p1  Muon # Silvia Pozzi
@@ -26,9 +26,9 @@ use MuonTrackRec         v3r6p1  Muon # Giacomo Graziani
 
 # Non sub-detector specific components
 use ChargedProtoANNPID   v1r6    Rec  # Chris Jones
-use GlobalReco           v6r40   Rec  # Chris Jones
-use LumiAlgs             v7r4    Rec  # Jaap Panman
-use RecAlgs              v2r6    Rec  # Marco Cattaneo
+use GlobalReco           v6r41   Rec  # Chris Jones
+use LumiAlgs             v7r5    Rec  # Jaap Panman
+use RecAlgs              v2r7    Rec  # Marco Cattaneo
 use RecConf              v2r5    Rec  # Rob Lambert
 use RecInterfaces        v1r0    Rec  # Chris Jones
 
@@ -58,14 +58,14 @@ use RichRecTrackTools    v1r33   Rich # Chris Jones
 
 # Tf packages: Track Pattern Recognition
 use FastVelo             v1r7    Tf   # Olivier Callot
-use PatAlgorithms        v4r18   Tf   # Stephanie Hansmann-Menzemer
-use PatVelo              v3r25p2 Tf   # David Hutchcroft
-use PatVeloTT            v3r17   Tf   # Mariusz Witek
+use PatAlgorithms        v4r20   Tf   # Stephanie Hansmann-Menzemer
+use PatVelo              v3r26   Tf   # David Hutchcroft
+use PatVeloTT            v3r18   Tf   # Mariusz Witek
 use TfTools              v1r15p1 Tf   # Stephanie Hansmann-Menzemer
 use TrackMatching        v2r33p1 Tf   # Eduardo Rodrigues
-use TrackSeeding         v1r5    Tf   # Eduardo Rodrigues, Henk Jan Bulten
+use TrackSeeding         v1r6    Tf   # Eduardo Rodrigues, Henk Jan Bulten
 use TrackSys             v7r1    Tf   # Stephanie Hansmann-Menzemer
-use TsaAlgorithms        v3r25p1 Tf   # Matt Needham
+use TsaAlgorithms        v3r26   Tf   # Matt Needham
 
 
 # Tr packages: Track Fit & Pattern Reco Validation with MonteCarlo
@@ -74,21 +74,21 @@ use PatFitParams         v4r1    Tr   # Olivier Callot
 use TrackAssociators     v2r9    Tr   # Eduardo Rodrigues, Edwin Bos
 use TrackCheckers        v4r12   Tr   # Eduardo Rodrigues
 use TrackExtrapolators   v2r32p1 Tr   # Eduardo Rodrigues
-use TrackFitEvent        v5r14   Tr   # Eduardo Rodrigues
-use TrackFitter          v4r4    Tr   # Eduardo Rodrigues
+use TrackFitEvent        v5r15   Tr   # Eduardo Rodrigues
+use TrackFitter          v4r6p1  Tr   # Eduardo Rodrigues
 use TrackIdealPR         v2r19   Tr   # Eduardo Rodrigues
 use TrackMCTools         v3r1    Tr   # Eduardo Rodrigues
-use TrackMonitors        v1r37   Tr   # Wouter Hulsbergen, Stephanie Menzemer
-use TrackProjectors      v2r30   Tr   # Wouter Hulsbergen
-use TrackTools           v4r12   Tr   # Eduardo Rodrigues
-use TrackUtils           v1r44   Tr   # Eduardo Rodrigues
+use TrackMonitors        v1r38   Tr   # Wouter Hulsbergen, Stephanie Menzemer
+use TrackProjectors      v2r31   Tr   # Wouter Hulsbergen
+use TrackTools           v4r13   Tr   # Eduardo Rodrigues
+use TrackUtils           v1r45   Tr   # Eduardo Rodrigues
 
 # Primary Vertex Finder
-use PatPV                v3r22   Tr   # Mariusz Witek
-use FastPV               v1r0    Tf   # Olivier Callot
+use PatPV                v3r23   Tr   # Mariusz Witek
+use FastPV               v1r0p1  Tf   # Olivier Callot
 
 # Velo
-use VeloRecMonitors      v2r17   Velo # Malcom John, Eduardo Rodrigues
+use VeloRecMonitors      v2r18   Velo # Malcom John, Eduardo Rodrigues
 
 # Declare this as a container package
 apply_pattern container_package

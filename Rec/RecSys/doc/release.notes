@@ -5,6 +5,110 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+</PRE><H1><A NAME=v13r2>2012-03-28 RecSys v13r2</A></H1><PRE>
+This version uses Gaudi v23r2 and LHCb v34r2
+
+- Production release for initial 2012 data taking
+
+- Packages updated: Calo/CaloPIDs v5r12, Muon/MuonID v9r4, Rec/GlobalReco v6r41,
+    Rec/LumiAlgs v7r5, Rec/RecAlgs v2r7, Tf/FastPV v1r0p1,
+    Tf/PatAlgorithms v4r20, Tf/PatVelo v3r26, Tf/PatVeloTT v3r18,
+    Tf/TrackSeeding v1r6, Tf/TsaAlgorithms v3r26, Tf/PatPV v3r23,
+    Tf/TrackFitEvent v5r16, Tr/TrackFitter v4r6p1, Tr/TrackMonitors v1r38,
+    Tr/TrackProjectors v2r31, Tr/TrackTools v4r13, Tr/TrackUtils v1r45,
+    Velo/VeloRecMonitors v2r18
+
+- In MuonID v9r4
+  . Fix bug in method GetPbin. Throw an exception if pBins pointer is null.
+  . Make 2011 the default data type in ConfiguredMuonIDs.py.
+    This will be applied for 2012 data type.
+
+- In GlobalReco v6r41
+  . ChargedProtoParticleAdd[CALO]Info.cpp : reduce verbosity when input container
+    is missing
+
+- In LumiAlgs v7r5
+  . Add new algorithm DumpLumiEvents
+    o Reads RAW files containing random events (typically LUMI stream)
+    o Output is ASCII file with name specified by OutputFileName option.
+      For each event in input with nonzero random counter a line with ODIN
+      fields and lumi counters is written. Events are not time-ordered!
+  . Add minimal DumpLumiEvents.py job options
+  . Add QM test dumplumievent.qmt
+  . Fix warnings due to unused code
+
+- In RecAlgs v2r7
+  . Adapt RecInit to removal of random seeds from ProcessHeader
+
+- In FastPV v1r0p1
+  . Remove unused variable in TrackForPV.h, fixes UNINIT_CTOR Coverity warning
+
+- In PatAlgorithms v4r20
+  . PatForwardTool: Bug fix in PatForward in part which uses momentum estimate.
+    Variable was shadowed, resulting in wrong behaviour of the algorithm.
+
+- In PatVeloTT v3r18
+  . Change PatVTTTrack so that debug stream created only when needed
+
+- In TsaAlgorithms v3r26
+  . Use std:stable_sort instead of std::sort everywhere, fixes differences
+    between gcc43 and gcc46
+
+- In PatPV v3r23
+  . Replace std::sort by std::stable_sort to fix diffs between gcc43 and gcc46
+
+- In TrackFitEvent v5r15, v5r16
+  . Implemented faster method to invert transport matrix
+  . Exploit emptiness of transport matrix in zero B field
+  . Bug fix in filter logic: backward state could be in state 'smoothed'
+    without having gone through 'filtered'.
+
+- In TrackFitter v4r5, v4r6, v4r6p1
+  . Add EndVelo state to (forward) velo-only fits
+  . Make sure debug mode doesn't trigger smoothing
+  . Propagate the FroceBiDirectionalFit option to all case in ConfiguredFitter.py
+    (instead of BiDirectionalFit)
+
+- In TrackMonitors v1r38
+  . Reduce range of PV chi2 plot
+  . Added mass pull histogram to TrackParticleMonitor
+  . Defined ranges for Z0 and D0 daughters plots in TrackParticleMonitor
+
+- In TrackProjectors v2r31
+  . Resolve coverity issues in TrackOTLRSignTool
+
+- In TrackTools v4r13
+  . Improve TrackVertexer: use more than just 'firstState' when fitting a set of
+    tracks.
+  . Fixed sign of qOverP on line 161 of FastMomentumEstimate.cpp.
+  . Update of ITTrackSelector for alignment
+
+- In VeloRecMonitors v2r18
+  . Added new plot for "Low ADC Cluster" monitoring to "VeloTrackMonitor"
+    coupling effect of M2 routing line
+  . Changed default for occupancy monitoring to not periodically reset
+    occupancy histograms - this is needed to make the offline monitoring of
+    dead/noisy channels more reliable; online plots will be done by setting
+    this property in the online jobs to the old default
+
+- In CaloPIDs v5r12, MuonID v9r4, LumiAlgs v7r5, PatVeloTT v3r18, PatPV v3r23,
+     TrackFitter v4r6p1, TrackUtils v1r45
+  . Fix unprotected debug() and verbose() MsgStreams
+
+- In CaloPIDs v5r12, MuonID v9r4, RecAlgs v2r7, PatVelo v3r26, PatVeloTT v3r18,
+     TrackSeeding v1r6, PatPV v3r23
+  . Fix trivial icc remarks
+
+- In CaloPIDs v5r12, MuonID v9r4, LumiAlgs v7r5, RecAlgs v2r7, PatVelo v3r26,
+     TrackSeeding v1r6, PatPV v3r23, TrackFitter v4r6p1, TrackUtils v1r45
+  . Fix UNINIT_CTOR defects
+
+- In PatVelo v3r26
+  . Fix FORWARD_NULL defects
+
+- In TrackSeeding v1r6, PatPV v3r23
+  . Replace endreq by endmsg
+
 </PRE><H1><A NAME=v13r1>2012-02-29 RecSys v13r1</A></H1><PRE>
 This version uses Gaudi v23r1 and LHCb v34r1
 
