@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-03-27 - Wouter Hulsbergen
+ - bug fix in TrackTraj: Backward tracks have states in opposite order
+
 !========================= TrackKernel v1r9 2012-02-28 =========================
 ! 2012-02-16 - Wouter Hulsbergen
  - add functionality to vertex a track with an existing vertex to TrackStateVertex

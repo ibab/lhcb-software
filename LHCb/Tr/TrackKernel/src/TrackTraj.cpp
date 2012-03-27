@@ -51,13 +51,17 @@ namespace LHCb
 	}
       }
     }
+    StateContainer statesfromstates(track.states().begin(),track.states().end()) ;
+    // states on backward tracks are in reverse order
+    if( !statesfromstates.empty() && statesfromstates.front()->z() > statesfromstates.back()->z() )
+      std::reverse( statesfromstates.begin(), statesfromstates.end() ) ;
     
     // now use std::merge to add track.states(). we could also use
     // inplace_merge: then we don't need to create a vector for the
     // nodes first. I don't know what is faster.
-    m_states.resize( statesfromnodes.size() + track.states().size() ) ;
+    m_states.resize( statesfromnodes.size() + statesfromstates.size() ) ;
     std::merge( statesfromnodes.begin(), statesfromnodes.end(),
-		track.states().begin(), track.states().end(),
+		statesfromstates.begin(), statesfromstates.end(),
 		m_states.begin(), compareStateZ ) ;
     
     // check states and initialize cache
@@ -108,6 +112,9 @@ namespace LHCb
   {
     // insert
     m_states.insert(m_states.begin(),states.begin(),states.end()) ;
+    // reverse, e.g. for backward tracks
+    if( !m_states.empty() && m_states.front()->z() > m_states.back()->z() )
+      std::reverse( m_states.begin(), m_states.end() ) ;
     // check states and initialize cache
     init(magfieldsvc) ;
   }
