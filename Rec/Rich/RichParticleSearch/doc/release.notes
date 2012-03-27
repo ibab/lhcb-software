@@ -4,6 +4,7 @@
 ! Purpose     : Find exotic particles with the RICHes. Get Nobel price.
 !-----------------------------------------------------------------------------
 
+!========================= RichParticleSearch v1r6 2012-03-27 =========================
 ! 2012-03-22 - Marco Cattaneo
  - Fix to get run number and event number from MCHeader, not from random seeds
  - Get run number and event number once per event, rather than once per segment!
