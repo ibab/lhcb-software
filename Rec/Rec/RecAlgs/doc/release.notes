@@ -4,6 +4,7 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!========================= RecAlgs v2r7 2012-03-27 =========================
 ! 2012-03-22 - Marco Cattaneo
  - Adapt RecInit to removal of random seeds from ProcessHeader
  - Fix UNINIT_CTOR defect
