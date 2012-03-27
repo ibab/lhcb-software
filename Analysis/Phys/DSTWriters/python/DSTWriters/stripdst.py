@@ -16,12 +16,16 @@ from microdstelements import ( CloneParticleTrees,
                                PackRecObjects,
                                CleanEmptyEventNodes )
 
-def stripDSTElements(pack=True) :
-    elements = [ CloneParticleTrees( ProtoParticleConer = "NONE" ),
-                 ClonePVRelations( location = "Particle2VertexRelations",
-                                   clonePVs = True,
-                                   RecVertexCloner = "VertexBaseFromRecVertexCloner" )
-                 ]
+def stripDSTElements(pack=True,cloneProtoParticles=False) :
+    elements = [ ]
+    if cloneProtoParticles :
+        elements += [ CloneParticleTrees() ]
+    else:
+        elements += [ CloneParticleTrees( ProtoParticleConer = "NONE" ) ]
+    elements += [ ClonePVRelations( location = "Particle2VertexRelations",
+                                    clonePVs = True,
+                                    RecVertexCloner = "VertexBaseFromRecVertexCloner" )
+                  ]
     if pack : elements += [ PackStrippingReports(),
                             PackParticlesAndVertices(),
                             PackRecObjects(),

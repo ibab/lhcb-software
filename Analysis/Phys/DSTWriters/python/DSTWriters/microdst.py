@@ -29,7 +29,8 @@ from microdstelements import ( CloneRecHeader,
                                PackStrippingReports,
                                PackParticlesAndVertices,
                                PackRecObjects,
-                               CleanEmptyEventNodes )
+                               CleanEmptyEventNodes,
+                               PackTrackingClusters )
 
 from GaudiConfUtils.ConfigurableGenerators import LoKi__CounterAlg as CounterAlg
 
@@ -44,23 +45,23 @@ _gecConfig = CounterAlg(
     ## Reco information, now all exists in RecSummary
     #
     ## "nPV"           : "CONTAINS ( 'Rec/Vertex/Primary'            ) " ,
-##     "nBest"         : "CONTAINS ( 'Rec/Track/Best'                ) " ,
-##     "nVelo"         : "TrNUM    ( 'Rec/Track/Best' , TrVELO       ) " ,
-##     "nLong"         : "TrNUM    ( 'Rec/Track/Best' , TrLONG       ) " ,
-##     "nUpstream"     : "TrNUM    ( 'Rec/Track/Best' , TrUPSTREAM   ) " ,
-##     "nDownstream"   : "TrNUM    ( 'Rec/Track/Best' , TrDOWNSTREAM ) " ,    
-##     "nTTrack"       : "TrNUM    ( 'Rec/Track/Best' , TrTTRACK     ) " ,
-##     "nBack"         : "TrNUM    ( 'Rec/Track/Best' , TrBACKWARD   ) " ,
-##     "nMuon"         : "CONTAINS ( 'Rec/Track/Muon'                ) " ,
-##     "nEcalClusters" : "CONTAINS ( 'Rec/Calo/EcalClusters'         ) " ,
-##     #
-##     ## some ``raw'' information, now all exists in RecSummary
-##     #
-##     "nSpd"          : "recSummary ( LHCb.RecSummary.nSPDhits      , 'Raw/Spd/Digits'    ) " ,
-##     "nOTClusters"   : "recSummary ( LHCb.RecSummary.nOTClusters   , 'Raw/OT/Times'      ) " ,
-##     "nITClusters"   : "recSummary ( LHCb.RecSummary.nITClusters   , 'Raw/IT/Clusters'   ) " ,
-##     "nTTClusters"   : "recSummary ( LHCb.RecSummary.nITClusters   , 'Raw/TT/Clusters'   ) " ,
-##     "nVeloClusters" : "recSummary ( LHCb.RecSummary.nVeloClusters , 'Raw/Velo/Clusters' ) " 
+    ##     "nBest"         : "CONTAINS ( 'Rec/Track/Best'                ) " ,
+    ##     "nVelo"         : "TrNUM    ( 'Rec/Track/Best' , TrVELO       ) " ,
+    ##     "nLong"         : "TrNUM    ( 'Rec/Track/Best' , TrLONG       ) " ,
+    ##     "nUpstream"     : "TrNUM    ( 'Rec/Track/Best' , TrUPSTREAM   ) " ,
+    ##     "nDownstream"   : "TrNUM    ( 'Rec/Track/Best' , TrDOWNSTREAM ) " ,    
+    ##     "nTTrack"       : "TrNUM    ( 'Rec/Track/Best' , TrTTRACK     ) " ,
+    ##     "nBack"         : "TrNUM    ( 'Rec/Track/Best' , TrBACKWARD   ) " ,
+    ##     "nMuon"         : "CONTAINS ( 'Rec/Track/Muon'                ) " ,
+    ##     "nEcalClusters" : "CONTAINS ( 'Rec/Calo/EcalClusters'         ) " ,
+    ##     #
+    ##     ## some ``raw'' information, now all exists in RecSummary
+    ##     #
+    ##     "nSpd"          : "recSummary ( LHCb.RecSummary.nSPDhits      , 'Raw/Spd/Digits'    ) " ,
+    ##     "nOTClusters"   : "recSummary ( LHCb.RecSummary.nOTClusters   , 'Raw/OT/Times'      ) " ,
+    ##     "nITClusters"   : "recSummary ( LHCb.RecSummary.nITClusters   , 'Raw/IT/Clusters'   ) " ,
+    ##     "nTTClusters"   : "recSummary ( LHCb.RecSummary.nITClusters   , 'Raw/TT/Clusters'   ) " ,
+    ##     "nVeloClusters" : "recSummary ( LHCb.RecSummary.nVeloClusters , 'Raw/Velo/Clusters' ) " 
     }
     )
 
@@ -80,6 +81,7 @@ def microDSTElements(pack=True) :
                  #CloneRawBanks( banks = ['ODIN'] )
                  ]
     if pack : elements += [ PackStrippingReports(),
+                            PackTrackingClusters(),
                             PackParticlesAndVertices(),
                             PackRecObjects(),
                             CleanEmptyEventNodes() ]
@@ -105,6 +107,7 @@ def stripMicroDSTElements(pack=True) :
                  ReFitAndClonePVs(RecVertexCloner = "VertexBaseFromRecVertexClonerNoTracks")
                  ]
     if pack : elements += [ PackStrippingReports(),
+                            PackTrackingClusters(),
                             PackParticlesAndVertices(),
                             PackRecObjects(),
                             CleanEmptyEventNodes() ]

@@ -4,6 +4,14 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2012-03-27 - Chris Jones
+ - Add support for the packed track clusters on uDST streams.
+ - Add to the method stripDSTElements the option cloneProtoParticles to 
+   control if the ProtoParticles associated to the Particles for a given
+   stream should be cloned. Useful for streams like the Calibration stream,
+   that create some custom Track and ProtoParticle objects, that are therefore
+   not on the input sDST, and thus not copied enmass to then output DST.
+
 !========================= DSTWriters v4r4 2012-03-01 =========================
 
 ! 2012-02-29 - Chris Jones

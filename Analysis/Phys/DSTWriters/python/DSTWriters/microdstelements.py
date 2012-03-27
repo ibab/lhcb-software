@@ -404,11 +404,24 @@ class PackParticlesAndVertices(MicroDSTElement) :
     Configurable to pack Particles and Vertices into a single location
     """
     def __call__(self, sel):
-        from Configurables import PackParticlesAndVertices
-        packer = PackParticlesAndVertices(self.personaliseName(sel,"PackPsAndVs"))
-        packer.InputStream = self.branch
-        packer.DeleteInput = True
-        packer.VetoedContainers = [ "/Event/"+self.branch+"/Rec/Vertex/Primary" ]
+        from Configurables import PackParticlesAndVertices as PackPsVs
+        packer = PackPsVs( name = self.personaliseName(sel,"PackPsAndVs"),
+                           InputStream        = self.branch,
+                           DeleteInput        = True,
+                           AlwaysCreateOutput = False,
+                           VetoedContainers = ["/Event/"+self.branch+"/Rec/Vertex/Primary"] )
+        return [packer]
+
+class PackTrackingClusters(MicroDSTElement):
+    """
+    Configurable to pack Tracking Clusters
+    """
+    def __call__(self, sel):
+        from Configurables import PackCluster
+        packer = PackCluster( name       = self.personaliseName(sel,"PackTkClusters"),
+                              InputName  = self.branch + "/Rec/Track/Best",
+                              OutputName = self.branch + "/pRec/Track/Clusters",
+                              AlwaysCreateOutput = False )
         return [packer]
 
 class PackRecObjects(MicroDSTElement) :
