@@ -80,6 +80,7 @@ class RichPIDQCConf(RichConfigurableUser):
             conf = self.getRichCU(DsToPhiPiConf)
             self.propagateOptions(conf)
             conf.setProp("Sequencer",self.newSeq( calibSeq, "RichDsToPhiPiPIDMoni"))
+            #if forceInit : conf.__apply_configuration__()
 
         # Andrew's D* -> D0(KPi) Pi selection and calibration
         if "DstarD0Pi" in calibs :
