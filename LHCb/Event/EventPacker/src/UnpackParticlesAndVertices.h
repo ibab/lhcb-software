@@ -34,8 +34,7 @@ public:
 
   virtual ~UnpackParticlesAndVertices( ); ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
+  virtual StatusCode execute(); ///< Algorithm execution
 
 private:
 

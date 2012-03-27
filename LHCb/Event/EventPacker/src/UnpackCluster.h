@@ -1,8 +1,7 @@
 // $Id: $
-#ifndef UNPACKCLUSTER_H 
+#ifndef UNPACKCLUSTER_H
 #define UNPACKCLUSTER_H 1
 
-// Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "Event/PackedCluster.h"
@@ -13,21 +12,26 @@
  *  @author Olivier Callot
  *  @date   2012-03-06
  */
-class UnpackCluster : public GaudiAlgorithm {
-public: 
+class UnpackCluster : public GaudiAlgorithm 
+{
+
+public:
+
   /// Standard constructor
   UnpackCluster( const std::string& name, ISvcLocator* pSvcLocator );
 
   virtual ~UnpackCluster( ); ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
-
-protected:
+  virtual StatusCode execute(); ///< Algorithm execution
 
 private:
-  std::string m_inputName;
-  std::string m_extension;
+
+  std::string m_inputName;    ///< Input name of packed clusters
+  std::string m_extension;    ///< Name extension (for testing)
+
+  /// Check to prevent recursive calls to this, due to the multiple possible outputs
+  bool m_running;
+
 };
+
 #endif // UNPACKCLUSTER_H

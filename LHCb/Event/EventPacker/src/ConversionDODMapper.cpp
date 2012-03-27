@@ -1,12 +1,12 @@
 // Local parser for vector<pair<string,string> >
 // Must be done very early.
 #include "GaudiKernel/ParsersFactory.h"
-namespace Gaudi 
+namespace Gaudi
 {
-  namespace Parsers 
+  namespace Parsers
   {
-    static StatusCode parse( std::vector<std::pair<std::string, std::string> >& result, 
-                             const std::string& input) 
+    static StatusCode parse( std::vector<std::pair<std::string, std::string> >& result,
+                             const std::string& input)
     {
       return parse_(result, input);
     }
@@ -28,18 +28,13 @@ namespace Gaudi
 // ----------------------------------------------------------------------------
 DECLARE_TOOL_FACTORY(ConversionDODMapper)
 
-#define ON_VERBOSE if (UNLIKELY(msgLevel(MSG::VERBOSE)))
-#define ON_DEBUG   if (UNLIKELY(msgLevel(MSG::DEBUG)))
-#define LOG_VERBOSE ON_VERBOSE verbose()
-#define LOG_DEBUG   ON_DEBUG debug()
-
 // ============================================================================
 // Standard constructor, initializes variables
 // ============================================================================
-  ConversionDODMapper::ConversionDODMapper(const std::string& type, 
-                                           const std::string& name, 
+  ConversionDODMapper::ConversionDODMapper(const std::string& type,
+                                           const std::string& name,
                                            const IInterface* parent)
-    : base_class(type, name, parent)
+    : MapperToolBase(type, name, parent)
 {
   declareProperty("Transformations", m_pathTransfRules,
                   "Dictionary string->string to define the transformation rules. "
@@ -51,6 +46,7 @@ DECLARE_TOOL_FACTORY(ConversionDODMapper)
   declareProperty("AlgorithmsOutputLevels", m_algOutLevels,
                   "Dictionary string->MsgLevel to change the message level "
                   "of a specific converter algorithm type");
+  //setProperty( "OutputLevel", 1 );
 }
 
 // ============================================================================
@@ -59,24 +55,12 @@ DECLARE_TOOL_FACTORY(ConversionDODMapper)
 ConversionDODMapper::~ConversionDODMapper() {}
 
 // ============================================================================
-// Finalize
-// ============================================================================
-StatusCode ConversionDODMapper::finalize()
-{
-  m_jos.reset(); // release JobOptionsSvc
-  return GaudiTool::finalize();
-}
-
-// ============================================================================
 // Initialize
 // ============================================================================
 StatusCode ConversionDODMapper::initialize()
 {
-  const StatusCode sc = GaudiTool::initialize();
+  const StatusCode sc = MapperToolBase::initialize();
   if ( sc.isFailure() ) return sc;
-
-  // No need to check because it's implicit in the base class initialization
-  m_jos = serviceLocator()->service("JobOptionsSvc");
 
   // convert the map in a list of rules
   std::transform( m_pathTransfRules.begin(),
@@ -94,23 +78,23 @@ StatusCode ConversionDODMapper::initialize()
 
 // ============================================================================
 
-DataObject* 
-ConversionDODMapper::candidate(const std::string &path) const 
+DataObject*
+ConversionDODMapper::candidate(const std::string &path) const
 {
   LOG_VERBOSE << " -> ConversionDODMapper::candidate '" << path << "'" << endmsg;
   DataObject * obj(NULL);
-  if ( !path.empty() ) 
+  if ( !path.empty() )
   {
-    if ( exist<DataObject>(path) ) 
+    if ( exist<DataObject>(path) )
     {
       // ... get the source object...
       obj = get<DataObject>(path);
       LOG_VERBOSE
         << "  -> Found object of type "<< System::typeinfoName(typeid(*obj))
-        << ", classID " << obj->clID() 
+        << ", classID " << obj->clID()
         << endmsg;
     }
-    else 
+    else
     {
       LOG_VERBOSE << "  -> No source object found" << endmsg;
     }
@@ -120,7 +104,7 @@ ConversionDODMapper::candidate(const std::string &path) const
 
 // ============================================================================
 
-Gaudi::Utils::TypeNameString 
+Gaudi::Utils::TypeNameString
 ConversionDODMapper::algorithmForPath(const std::string & path)
 {
   LOG_VERBOSE << "ConversionDODMapper::algorithmForPath '" << path << "'" << endmsg;
@@ -130,13 +114,13 @@ ConversionDODMapper::algorithmForPath(const std::string & path)
 
   // If we have a source path and it points to an actual object get the source object...
   const DataObject *obj = candidate(src);
-  if ( obj ) 
+  if ( obj )
   {
     LOG_VERBOSE << " -> Found source data at '" << src << "'" << endmsg;
 
     // ... and choose the correct converter based on the ClassID.
     AlgForTypeMap::iterator item = m_algTypes.find(obj->clID());
-    if ( item != m_algTypes.end() ) 
+    if ( item != m_algTypes.end() )
     {
       // Get the algorithm type
       const std::string &algType = item->second;
@@ -146,25 +130,26 @@ ConversionDODMapper::algorithmForPath(const std::string & path)
       std::replace( algName.begin(), algName.end(), '/', '_' );
 
       // Add the configuration of algorithm instance to the JobOptionsSvc
-      m_jos->addPropertyToCatalogue(algName, StringProperty("InputName", src));
-      m_jos->addPropertyToCatalogue(algName, StringProperty("OutputName", path));
+      joSvc()->addPropertyToCatalogue(algName, StringProperty("InputName", src));
+      joSvc()->addPropertyToCatalogue(algName, StringProperty("OutputName", path));
       // ... including the output level
       OutLevelsMap::iterator level = m_algOutLevels.find(algType);
-      if ( level != m_algOutLevels.end() ) 
+      if ( level != m_algOutLevels.end() )
       {
-        std::stringstream lvl; 
+        std::stringstream lvl;
         lvl << level->second;
-        m_jos->addPropertyToCatalogue(algName, StringProperty("OutputLevel", lvl.str()));
+        joSvc()->addPropertyToCatalogue( algName, 
+                                         StringProperty("OutputLevel",lvl.str()) );
       }
 
       // Return the algorithm type/name.
-      LOG_VERBOSE << " -> Use algorithm type '" << algType << "'" 
+      LOG_VERBOSE << " -> Use algorithm type '" << algType << "'"
                   << " name '" << algName << "'"
                   << endmsg;
       return Gaudi::Utils::TypeNameString(algName,algType);
 
     }
-    else 
+    else
     {
 
       std::ostringstream msg;
@@ -190,11 +175,8 @@ std::string ConversionDODMapper::nodeTypeForPath(const std::string &path)
 
   std::string retS = "";
 
-  // If we have a source path and it points to an actual object...
-  // source path in the transient store
-  const std::string src = transform(path);
-
   // If we have a source path and it points to an actual object get the source object...
+  const std::string src = transform(path);
   const DataObject *obj = candidate(src);
   if ( obj )
   {
@@ -214,20 +196,24 @@ std::string ConversionDODMapper::transform(const std::string & input) const
   std::string result;
 
   // try each mapping rule on the input, stopping on the first non-empty result.
-  for ( RulesList::const_iterator r = m_rules.begin(); 
-        r != m_rules.end() && result.empty(); ++r ) 
+  for ( RulesList::const_iterator r = m_rules.begin();
+        r != m_rules.end() && result.empty(); ++r )
   {
     result = r->apply(input);
   }
-
-  ON_VERBOSE 
+  
+  ON_VERBOSE
   {
     if (result.empty())
+    {
       verbose() << "  -> no source candidate" << endmsg;
+    }
     else
+    {
       verbose() << "  -> source candidate '" << result << "'" << endmsg;
+    }
   }
-
+  
   // either is empty because of no match or not because of early exit.
   return result;
 }

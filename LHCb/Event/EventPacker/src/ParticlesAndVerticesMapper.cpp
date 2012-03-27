@@ -3,7 +3,6 @@
 #include <iterator>
 // From Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/IJobOptionsSvc.h"
 // local
 #include "ParticlesAndVerticesMapper.h"
 
@@ -13,22 +12,19 @@
 // 17/01/2012: Marco Clemencic
 // ----------------------------------------------------------------------------
 
-#define ON_VERBOSE if (UNLIKELY(msgLevel(MSG::VERBOSE)))
-#define ON_DEBUG   if (UNLIKELY(msgLevel(MSG::DEBUG)))
-#define LOG_VERBOSE ON_VERBOSE verbose()
-#define LOG_DEBUG   ON_DEBUG debug()
-
 // ============================================================================
 // Standard constructor, initializes variables
 // ============================================================================
-ParticlesAndVerticesMapper::ParticlesAndVerticesMapper(const std::string& type,
-                                                       const std::string& name,
-                                                       const IInterface* parent)
-  : base_class(type, name, parent)
+ParticlesAndVerticesMapper::
+ParticlesAndVerticesMapper( const std::string& type,
+                            const std::string& name,
+                            const IInterface* parent )
+  : base_class( type, name, parent )
 {
   declareProperty( "UnpackerType",
                    m_unpackerType = "UnpackParticlesAndVertices" );
   declareProperty( "UnpackerOutputLevel", m_unpackersOutputLevel = -1 );
+  //setProperty( "OutputLevel", 1 );
 }
 
 // ============================================================================
@@ -37,24 +33,12 @@ ParticlesAndVerticesMapper::ParticlesAndVerticesMapper(const std::string& type,
 ParticlesAndVerticesMapper::~ParticlesAndVerticesMapper() {}
 
 // ============================================================================
-// Finalize
-// ============================================================================
-StatusCode ParticlesAndVerticesMapper::finalize()
-{
-  m_jos.reset(); // release JobOptionsSvc
-  return GaudiTool::finalize();
-}
-
-// ============================================================================
 // Initialize
 // ============================================================================
 StatusCode ParticlesAndVerticesMapper::initialize()
 {
-  const StatusCode sc = GaudiTool::initialize();
+  const StatusCode sc = MapperToolBase::initialize();
   if ( sc.isFailure() ) return sc;
-
-  // No need to check because it's implicit in the base class initialization
-  m_jos = serviceLocator()->service("JobOptionsSvc");
 
   // Incident service
   incSvc()->addListener( this, IncidentType::BeginEvent );
@@ -84,17 +68,17 @@ ParticlesAndVerticesMapper::algorithmForPath( const std::string & path )
   if ( pathIsHandled(path) )
   {
     // Choose a unique name for the algorithm instance
-    const std::string algName = streamName(path) + "_Converter";
+    const std::string algName = streamName(path) + "_PsAndVsUnpack";
 
     // Add the configuration of algorithm instance to the JobOptionsSvc
-    m_jos->addPropertyToCatalogue( algName,
-                                   StringProperty("InputStream",streamRoot(path)) );
+    joSvc()->addPropertyToCatalogue( algName,
+                                     StringProperty("InputStream",streamRoot(path)) );
     if ( m_unpackersOutputLevel > 0 )
     {
-      std::stringstream lvl; 
+      std::stringstream lvl;
       lvl << m_unpackersOutputLevel;
-      m_jos->addPropertyToCatalogue( algName, 
-                                     StringProperty("OutputLevel",lvl.str()));
+      joSvc()->addPropertyToCatalogue( algName,
+                                       StringProperty("OutputLevel",lvl.str()));
     }
 
     // Return the algorithm type/name.
@@ -116,7 +100,7 @@ ParticlesAndVerticesMapper::nodeTypeForPath( const std::string & path )
 
   NodeTypeMap::const_iterator it = m_nodeTypeMap.find( fixPath(path) );
 
-  const std::string retS = ( it != m_nodeTypeMap.end() ? it->second : "" );
+  const std::string& retS = ( it != m_nodeTypeMap.end() ? it->second : "" );
 
   LOG_VERBOSE << "ParticlesAndVerticesMapper::nodeTypeForPath '"
               << path << "' NodeType '" << retS << "'" << endmsg;
@@ -213,7 +197,7 @@ void ParticlesAndVerticesMapper::addPath( const std::string & path )
 {
   // Make sure paths start with /Event/
   const std::string npath = fixPath(path);
- 
+
   // if not already there, add.
   if ( m_nodeTypeMap.find(npath) == m_nodeTypeMap.end() )
   {
@@ -237,17 +221,6 @@ void ParticlesAndVerticesMapper::addPath( const std::string & path )
     }
   }
 
-}
-
-// ============================================================================
-
-std::string
-ParticlesAndVerticesMapper::streamName( const std::string & path ) const
-{
-  std::string tmp = path;
-  if ( path.substr(0,7) == "/Event/" ) { tmp = tmp.substr(7); }
-  const std::string::size_type slash = tmp.find_first_of( "/" );
-  return tmp.substr(0,slash);
 }
 
 // ============================================================================

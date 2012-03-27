@@ -1,12 +1,8 @@
 #ifndef SRC_CONVERSIONDODMAPPER_H
 #define SRC_CONVERSIONDODMAPPER_H 1
-// Include files
-// from Gaudi
-#include "GaudiAlg/GaudiTool.h"
 
-// Implemented interfaces
-#include "GaudiKernel/IDODAlgMapper.h"
-#include "GaudiKernel/IDODNodeMapper.h"
+// base class
+#include "MapperToolBase.h"
 
 #include <boost/regex.hpp>
 
@@ -39,9 +35,7 @@ class IJobOptionsSvc;
  * @author Marco Clemencic
  * @date 17/01/2012
  */
-class ConversionDODMapper : public extends2< GaudiTool,
-                                             IDODAlgMapper, 
-                                             IDODNodeMapper >
+class ConversionDODMapper : public MapperToolBase
 {
 
 public:
@@ -56,9 +50,6 @@ public:
 
   /// Initialize the tool instance.
   virtual StatusCode initialize();
-
-  /// Initialize the tool instance.
-  virtual StatusCode finalize();
 
 public:
 
@@ -110,10 +101,6 @@ private:
   typedef std::map<std::string, unsigned int> OutLevelsMap;
   OutLevelsMap m_algOutLevels; ///!< AlgorithmsOutputLevels
   /// @}
-
-  /// Reference to the JobOptionsSvc.
-  /// It is needed to configure the Algorithm instances.
-  SmartIF<IJobOptionsSvc> m_jos;
 
 private:
 

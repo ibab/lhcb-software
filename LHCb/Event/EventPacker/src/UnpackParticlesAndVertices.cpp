@@ -13,15 +13,13 @@
 // 2012-01-23 : Olivier Callot
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( UnpackParticlesAndVertices )
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-  UnpackParticlesAndVertices::UnpackParticlesAndVertices( const std::string& name,
-                                                          ISvcLocator* pSvcLocator)
-    : GaudiAlgorithm ( name , pSvcLocator )
+UnpackParticlesAndVertices::
+UnpackParticlesAndVertices( const std::string& name,
+                            ISvcLocator* pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator )
 {
   declareProperty( "InputStream", m_inputStream = "/Event/" );
   declareProperty( "PostFix",     m_postFix     = "" );
@@ -32,26 +30,13 @@ DECLARE_ALGORITHM_FACTORY( UnpackParticlesAndVertices )
 //=============================================================================
 UnpackParticlesAndVertices::~UnpackParticlesAndVertices() {}
 
-//=========================================================================
-//  Initializer: Set the class ids for the various types to be packed
-//=========================================================================
-StatusCode UnpackParticlesAndVertices::initialize( ) 
-{
-  const StatusCode sc = GaudiAlgorithm::initialize(); 
-  if ( sc.isFailure() ) return sc;  
-  
-  info() << "Unpacking in " << m_inputStream << endmsg;
-
-  return sc;
-}
-
 //=============================================================================
 // Main execution
 //=============================================================================
 StatusCode UnpackParticlesAndVertices::execute()
 {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute"  << endmsg;
-  
+
   int nbContainer = 0;
   int nbPart = 0;
   int prevLink = -1;
@@ -71,7 +56,7 @@ StatusCode UnpackParticlesAndVertices::execute()
       const LHCb::PackedParticle& ppart = *itP;
       int key(0),linkID(0);
       m_pack.indexAndKey64( ppart.key, linkID, key );
-      if ( linkID != prevLink ) 
+      if ( linkID != prevLink )
       {
         prevLink = linkID;
         const std::string & containerName = pparts->linkMgr()->link( linkID )->path() + m_postFix;
@@ -79,7 +64,7 @@ StatusCode UnpackParticlesAndVertices::execute()
         // event so quit
         if ( exist<LHCb::Particles>(containerName) )
         {
-          if ( msgLevel(MSG::DEBUG) ) 
+          if ( msgLevel(MSG::DEBUG) )
             debug() << " -> " << containerName << " exists" << endmsg;
           return StatusCode::SUCCESS;
         }
@@ -109,7 +94,7 @@ StatusCode UnpackParticlesAndVertices::execute()
   static const LHCb::VertexPacker vPacker;
   if ( exist<LHCb::PackedVertices>( m_inputStream + LHCb::PackedVertexLocation::InStream ) )
   {
-    LHCb::PackedVertices* pverts = 
+    LHCb::PackedVertices* pverts =
       get<LHCb::PackedVertices>( m_inputStream + LHCb::PackedVertexLocation::InStream );
     for ( std::vector<LHCb::PackedVertex>::iterator itV = pverts->data().begin();
           pverts->data().end() != itV; ++itV )
@@ -117,7 +102,7 @@ StatusCode UnpackParticlesAndVertices::execute()
       const LHCb::PackedVertex& pvert = *itV;
       int key(0),linkID(0);
       m_pack.indexAndKey64( pvert.key, linkID, key );
-      if ( linkID != prevLink ) 
+      if ( linkID != prevLink )
       {
         prevLink = linkID;
         const std::string & containerName = pverts->linkMgr()->link( linkID )->path() + m_postFix;
@@ -148,12 +133,12 @@ StatusCode UnpackParticlesAndVertices::execute()
     LHCb::PackedRecVertices* pRecVerts =
       get<LHCb::PackedRecVertices>( m_inputStream + LHCb::PackedRecVertexLocation::InStream );
     for ( std::vector<LHCb::PackedRecVertex>::iterator itV = pRecVerts->vertices().begin();
-          pRecVerts->vertices().end() != itV; ++itV ) 
+          pRecVerts->vertices().end() != itV; ++itV )
     {
       const LHCb::PackedRecVertex& pRecVert = *itV;
       const int key    = pRecVert.key;
       const int linkID = pRecVert.container;
-      if ( linkID != prevLink ) 
+      if ( linkID != prevLink )
       {
         prevLink = linkID;
         const std::string & containerName = pRecVerts->linkMgr()->link(linkID)->path() + m_postFix;
@@ -195,7 +180,7 @@ StatusCode UnpackParticlesAndVertices::execute()
       int prevSrcLink = -1;
       DataObject* dstContainer = NULL;
       int prevDstLink = -1;
-      for ( int kk = prel.start;  prel.end > kk; ++kk ) 
+      for ( int kk = prel.start;  prel.end > kk; ++kk )
       {
         int srcLink(0), srcKey(0);
         m_pack.indexAndKey64( prels->sources()[kk], srcLink, srcKey );
@@ -208,7 +193,7 @@ StatusCode UnpackParticlesAndVertices::execute()
         LHCb::Particle* from = srcContainer->object( srcKey );
         int dstLink(0), dstKey(0);
         m_pack.indexAndKey64( prels->dests()[kk], dstLink, dstKey );
-        if ( dstLink != prevDstLink ) 
+        if ( dstLink != prevDstLink )
         {
           prevDstLink = dstLink;
           const std::string & dstName = prels->linkMgr()->link( dstLink )->path();
@@ -244,7 +229,7 @@ StatusCode UnpackParticlesAndVertices::execute()
     {
       const LHCb::PackedParticle2Int& pPartId = *itL;
       const int linkID = pPartId.key >> 32;
-      if ( linkID != prevLink ) 
+      if ( linkID != prevLink )
       {
         prevLink = linkID;
         const std::string & containerName = pPartIds->linkMgr()->link( linkID )->path() + m_postFix;
@@ -255,7 +240,7 @@ StatusCode UnpackParticlesAndVertices::execute()
       ++nbPartId;
       int partLink(0), partKey(0);
       m_pack.indexAndKey64( pPartId.container, partLink, partKey );
-      if ( partLink != prevPartLink ) 
+      if ( partLink != prevPartLink )
       {
         prevPartLink = partLink;
         const std::string & partName = pPartIds->linkMgr()->link( partLink )->path();
@@ -263,7 +248,7 @@ StatusCode UnpackParticlesAndVertices::execute()
       }
       LHCb::Particle* part = partContainer->object( partKey );
       std::vector<LHCb::LHCbID> temp;
-      for ( int kk = pPartId.start; pPartId.end != kk; ++kk ) 
+      for ( int kk = pPartId.start; pPartId.end != kk; ++kk )
       {
         temp.push_back( LHCb::LHCbID( pPartIds->ints()[kk] ) );
       }
@@ -283,5 +268,10 @@ StatusCode UnpackParticlesAndVertices::execute()
 
   return StatusCode::SUCCESS;
 }
+
+//=============================================================================
+
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( UnpackParticlesAndVertices )
 
 //=============================================================================

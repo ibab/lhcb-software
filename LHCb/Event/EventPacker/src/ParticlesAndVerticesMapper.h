@@ -4,15 +4,14 @@
 #include <string>
 #include <map>
 
-// from Gaudi
-#include "GaudiAlg/GaudiTool.h"
+// base class
+#include "MapperToolBase.h"
 
 // Implemented interfaces
-#include "GaudiKernel/IDODAlgMapper.h"
-#include "GaudiKernel/IDODNodeMapper.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IIncidentSvc.h"
 
+// Event model
 #include "Event/PackedParticle.h"
 #include "Event/PackedRecVertex.h"
 #include "Event/PackedVertex.h"
@@ -32,9 +31,7 @@ class IJobOptionsSvc;
  * @author Chris Jones
  * @date 06/02/2012
  */
-class ParticlesAndVerticesMapper : public extends3< GaudiTool,
-                                                    IDODAlgMapper,
-                                                    IDODNodeMapper,
+class ParticlesAndVerticesMapper : public extends1< MapperToolBase,
                                                     IIncidentListener >
 {
 
@@ -50,9 +47,6 @@ public:
 
   /// Initialize the tool instance.
   virtual StatusCode initialize();
-
-  /// Initialize the tool instance.
-  virtual StatusCode finalize();
 
 public:
 
@@ -79,15 +73,6 @@ public:
 
 private:
 
-  /// Get the Stream name from a data path
-  std::string streamName( const std::string & path ) const;
-
-  /// Get the stream root from a data path
-  inline std::string streamRoot( const std::string & path ) const
-  {
-    return "/Event/" + streamName(path);
-  }
-
   /// Load the packed data and update the mappings of paths to Node Type
   void updateNodeTypeMap( const std::string & path );
 
@@ -102,19 +87,7 @@ private:
     return ( it != m_nodeTypeMap.end() );
   }
 
-  /// Make sure a path starts with /Event/
-  inline std::string fixPath( const std::string & path ) const
-  {
-    std::string tmp = path;
-    if ( tmp.substr(0,7) != "/Event/" ) { tmp = "/Event/"+tmp; }
-    return tmp;
-  }
-
 private:
-
-  /// Reference to the JobOptionsSvc.
-  /// It is needed to configure the Algorithm instances.
-  SmartIF<IJobOptionsSvc> m_jos;
 
   /// Mapping between TES path and node type
   typedef std::map<std::string,std::string> NodeTypeMap;
@@ -123,13 +96,13 @@ private:
   /// Map to say which stream roots have been processed each event
   std::map<std::string,bool> m_streamsDone;
 
+  StandardPacker m_pack; ///< Standard Packer
+
   /// Unpacker class type
   std::string m_unpackerType;
-
+  
   /// Outputlevel for unpackers created
   int m_unpackersOutputLevel;
-
-  StandardPacker m_pack; ///< Standard Packer
 
 };
 
