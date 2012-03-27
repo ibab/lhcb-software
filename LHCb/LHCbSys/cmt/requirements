@@ -46,7 +46,7 @@ use EventSys              v25r0   Event   # Marco Cattaneo
 use DigiEvent             v2r20   Event   # Marco Cattaneo and sub-det experts
 use EventAssoc            v5r1    Event   # 
 use EventBase             v3r0    Event   # Marco Cattaneo, Gloria Corti
-use EventPacker           v2r14   Event   # Olivier Callot
+use EventPacker           v2r15   Event   # Olivier Callot
 use GenEvent              v6r3    Event   # Gloria Corti
 use HltEvent              v9r2p1  Event   # Jose Angel Hernando-Morata
 use L0Event               v19r4   Event   # Olivier Deschamps, Julien Cogan
@@ -55,7 +55,7 @@ use LinkerInstances       v3r5    Event   # Thomas Ruf
 use LumiEvent             v3r2    Event   # Jaap Panman
 use MCEvent               v2r21   Event   # Gloria Corti and sub-det experts
 use MicroDst              v1r0    Event   # ??
-use PackedEvent           v4r9    Event   # Marco Cattaneo, Olivier Callot
+use PackedEvent           v4r9p1  Event   # Marco Cattaneo, Olivier Callot
 use PhysEvent             v11r15  Event   # Patrick Koppenburg
 use RecEvent              v2r41   Event   # Marco Cattaneo and sub-det experts
 use RecreatePIDTools      v1r4    Event   # Chris Jones
@@ -71,7 +71,7 @@ use IOExample             v4r6    Ex      # Marco Cattaneo
 # Packages without Hat, cannot have comment field.
 
 # Maintainer M.Cattaneo
-use GaudiConf             v15r8
+use GaudiConf             v15r9
 
 # Maintainer ??
 use GaudiConfUtils        v1r0
@@ -137,7 +137,7 @@ use FileStager            v1r7    Tools   # Roel Aaij
 use XmlTools              v6r6    Tools   # Marco Clemencic
 
 use TrackInterfaces       v4r20   Tr      # Matt Needham
-use TrackKernel           v1r9    Tr      # Wouter Hulsbergen
+use TrackKernel           v1r9p1  Tr      # Wouter Hulsbergen
 
 # Declare this as a container package
 apply_pattern container_package

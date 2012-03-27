@@ -10,11 +10,11 @@ This version uses Gaudi v23r2 and LCG_62b
 Production version for initial 2012 data taking
 
 - Packages modified:  DAQ/DAQUtils v1r6, Det/DDDB v1r52, Event/EventBase v3r0,
-    Event/EventPacker v2r14, Event/PackedEvent v4r9, Event/RecEvent v2r41,
-    Event/TrackEvent v5r16, Ex/IOExample v4r6, GaudiConf v15r8,
+    Event/EventPacker v2r15, Event/PackedEvent v4r9p1, Event/RecEvent v2r41,
+    Event/TrackEvent v5r16, Ex/IOExample v4r6, GaudiConf v15r9,
     Kernel/HltInterfaces v4r6, Kerbel/LHCbAlgs v2r49, Kernel/LHCbKernel v13r10,
     Kernel/PartProp v1r13, Kernel/XMLSummaryKernel v1r6, Rich/RichRecBase v4r11,
-    ST/STKernel v2r7, Tools/CondDBUI v3r14
+    ST/STKernel v2r7, Tools/CondDBUI v3r14, Tr/TrackKernel v1r9p1
 
 - In DDDB v1r52
   . Update default DQFLAGS database tags:
@@ -29,7 +29,9 @@ Production version for initial 2012 data taking
   . Remove ProcessHeader::m_randomSeeds since they are not used anywhere and
     causes portability problems with persistency of vector<long>
 
-- In EventPacker v2r13, v2r14
+- In EventPacker v2r13, v2r14, v2r15
+  . Various improvements to the PackedCluster support, following work to
+    deploy the inclusion of these packed objects in the stripping.
   . Take the default packing version from the packed data, instead of assuming 0.
   . Improve the debug and verbose messages from the ProtoParticle packer
     and unpacker
@@ -41,7 +43,8 @@ Production version for initial 2012 data taking
     Unpacker regenerates the Velo and  ST cluster containers from the
     PackedCluster object given as InputName. See release notes for usage details
 
-- In PackedEvent v4r8, v4r9
+- In PackedEvent v4r8, v4r9, v4r9p1
+  . Some small improvements to the PackedCluster class
   . Fix the packing of RichPID and MuonPID objects, where the key was not
     properly restored.
   . Fix the unpacking of Vertices: the reference is a long long.
@@ -57,7 +60,9 @@ Production version for initial 2012 data taking
 - In IOExample v4r6
   . Adapt test references to removal of random number seeds from ProcessHeader
 
-- In GaudiConf v15r8
+- In GaudiConf v15r8, v15r9
+  . Update the stripping DST unpacking options in DstConf to add a new mapping
+    tool to handle automatic unpacking of the track clusters.
   . Remove the line in DstConf setting the packing version for RichPIDs. The
     correct value is set by default in the class itself.
 
@@ -103,6 +108,9 @@ Production version for initial 2012 data taking
 
 - In DAQUtils v1r6, LHCbAlgs v2r49
   . Fix trivial icc remarks
+
+- In TrackKernel v1r9p1
+  . bug fix in TrackTraj: Backward tracks have states in opposite order
 
 </PRE><H1><A NAME=v34r1>2012-02-29 LHCbSys v34r1</A></H1><PRE>
 This version uses Gaudi v23r1 and LCG_62a
