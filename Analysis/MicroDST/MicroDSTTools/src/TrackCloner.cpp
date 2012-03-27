@@ -22,7 +22,10 @@
 TrackCloner::TrackCloner( const std::string& type,
                           const std::string& name,
                           const IInterface* parent )
-  : base_class ( type, name , parent ) { }
+  : base_class ( type, name, parent )
+{
+  //setProperty( "OutputLevel", 2 );
+}
 
 //=============================================================================
 // Destructor

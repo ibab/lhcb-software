@@ -23,12 +23,12 @@
 VertexCloner::VertexCloner( const std::string& type,
                             const std::string& name,
                             const IInterface* parent )
-  :
-  base_class ( type, name , parent ),
-  m_particleCloner(NULL),
-  m_particleClonerName("ParticleCloner")
+  : base_class           ( type, name, parent ),
+    m_particleCloner     ( NULL ),
+    m_particleClonerName ( "ParticleCloner" )
 {
   declareProperty("ICloneParticle", m_particleClonerName);
+  //setProperty( "OutputLevel", 2 );
 }
 
 //=============================================================================
@@ -41,7 +41,7 @@ StatusCode VertexCloner::initialize()
   m_particleCloner = tool<ICloneParticle>(m_particleClonerName,
                                           this->parent() );
 
-  if (m_particleCloner) 
+  if (m_particleCloner)
   {
     debug() << "Found ParticleCloner " << m_particleCloner->name() << endmsg;
   }
@@ -68,11 +68,10 @@ LHCb::Vertex* VertexCloner::clone(const LHCb::Vertex* vertex)
 
   LHCb::Vertex* vertexClone =
     cloneKeyedContainerItem<BasicVertexCloner>(vertex);
-  
+
   vertexClone->clearOutgoingParticles();
 
-  const SmartRefVector< LHCb::Particle > & outParticles = vertex->outgoingParticles();
-
+  const SmartRefVector<LHCb::Particle> & outParticles = vertex->outgoingParticles();
   for ( SmartRefVector<LHCb::Particle>::const_iterator iPart = outParticles.begin();
         iPart != outParticles.end(); ++iPart )
   {

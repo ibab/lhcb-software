@@ -34,6 +34,7 @@ ProtoParticleCloner::ProtoParticleCloner( const std::string& type,
   m_trackClonerName ( "TrackCloner"       )
 {
   declareProperty("ICloneTrack", m_trackClonerName);
+  //setProperty( "OutputLevel", 2 );
 }
 
 //=============================================================================
@@ -50,22 +51,23 @@ StatusCode ProtoParticleCloner::initialize()
 
 //=============================================================================
 
-LHCb::ProtoParticle* ProtoParticleCloner::operator() (const LHCb::ProtoParticle* protoParticle)
+LHCb::ProtoParticle*
+ProtoParticleCloner::operator() (const LHCb::ProtoParticle* protoParticle)
 {
   return this->clone(protoParticle);
 }
 
 //=============================================================================
 
-LHCb::ProtoParticle* ProtoParticleCloner::clone(const LHCb::ProtoParticle* protoParticle)
+LHCb::ProtoParticle*
+ProtoParticleCloner::clone(const LHCb::ProtoParticle* protoParticle)
 {
-  if ( !protoParticle ) return NULL;
-
-  if ( msgLevel(MSG::VERBOSE) )
-    verbose() << "Cloning ProtoParticle " << protoParticle->key() << " in "
-              << protoParticle->parent()->registry()->identifier()
-              << " " << *protoParticle
-              << endmsg;
+  if ( !protoParticle ) 
+  {
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "ProtoParticle pointer is NULL !" << endmsg;
+    return NULL;
+  }
 
   LHCb::ProtoParticle* protoParticleClone =
     cloneKeyedContainerItem<BasicProtoParticleCloner>(protoParticle);
@@ -73,6 +75,7 @@ LHCb::ProtoParticle* ProtoParticleCloner::clone(const LHCb::ProtoParticle* proto
   if ( protoParticleClone )
   {
 
+    // Track
     LHCb::Track * clonedTrack = NULL;
     if ( m_trackCloner )
     {
@@ -130,21 +133,6 @@ LHCb::ProtoParticle* ProtoParticleCloner::clone(const LHCb::ProtoParticle* proto
       }
     }
 
-  }
-
-  if ( msgLevel(MSG::VERBOSE) )
-  {
-    if ( protoParticleClone )
-    {
-      verbose() << "Cloned ProtoParticle " << protoParticleClone->key() << " in "
-                << protoParticleClone->parent()->registry()->identifier()
-                << " " << *protoParticleClone
-                << endmsg;
-    }
-    else
-    {
-      verbose() << "FAILED to clone ProtoParticle" << endmsg;
-    }
   }
 
   return protoParticleClone;
