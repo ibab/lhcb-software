@@ -10,6 +10,7 @@
 #include "Event/TwoProngVertex.h"
 #include "Event/RecVertex.h"
 #include "TrackKernel/TrackStateVertex.h"
+#include "TrackKernel/TrackTraj.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TrackVertexer
@@ -26,22 +27,44 @@ DECLARE_TOOL_FACTORY( TrackVertexer )
 TrackVertexer::TrackVertexer( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
-  : GaudiTool ( type, name , parent ),
-    m_maxNumIter(10),
-    m_maxDChisq(0.01),
-    m_computeMomCov(true),
-    m_discardFailedFits(false)
+: GaudiTool ( type, name , parent ),
+  m_stateprovider("TrackStateProvider",this),
+  m_pocatool("TrajPoca"),
+  m_maxNumIter(10),
+  m_maxDChisq(0.01),
+  m_computeMomCov(true),
+  m_discardFailedFits(false)
 {
   declareInterface<ITrackVertexer>(this);
   declareProperty("MaxNumberOfIterations",m_maxNumIter) ;
   declareProperty("MaxDeltaChisqForConvergence",m_maxDChisq) ;
   declareProperty("ComputeMomentumCovariance",m_computeMomCov) ;
   declareProperty("DiscardFailedFits",m_discardFailedFits) ;
+  declareProperty("StateProvider",m_stateprovider) ;
 }
 //=============================================================================
 // Destructor
 //=============================================================================
 TrackVertexer::~TrackVertexer() {} 
+
+StatusCode TrackVertexer::initialize()
+{
+  StatusCode sc = GaudiTool::initialize() ;
+  if(sc.isSuccess() ) {
+    sc = m_stateprovider.retrieve() ;
+  }
+  if(sc.isSuccess() ) {
+    sc = m_pocatool.retrieve() ;
+  }
+  return sc ;
+}
+
+StatusCode TrackVertexer::finalize()
+{
+  m_stateprovider.release().ignore() ;
+  m_pocatool.release().ignore() ;
+  return GaudiTool::finalize();
+}
 
 LHCb::TwoProngVertex*
 TrackVertexer::fit(const LHCb::State& stateA, const LHCb::State& stateB) const
@@ -89,15 +112,48 @@ TrackVertexer::fit(const StateContainer& tracks) const
 LHCb::RecVertex*
 TrackVertexer::fit(const TrackContainer& tracks) const
 {
-  // TODO: THIS IS NOT EXTRAPOLATING YET!!
-  // Warning("TrackVertexer::fit(const TrackContainer& tracks) is not yet extrapolating!",1) ;
+  // return if insufficient tracks
+  if( tracks.size() < 2 ) return 0 ;
 
-  // get the states. this needs to becomes smarter.
-  StateContainer states ;
-  states.reserve( tracks.size() ) ;
+  // get the track slopes to choose the seed tracks. get also all trajectories.
+  size_t N(tracks.size()) ;
+  std::vector<const LHCb::TrackTraj*> trajectories(N,0) ;
+  std::vector<Gaudi::XYZVector> directions(N) ;
+  size_t i(0) ;
   for( TrackContainer::const_iterator itrack = tracks.begin() ;
-       itrack != tracks.end(); ++itrack ) 
-    states.push_back( &((*itrack)->firstState()) ) ; 
+       itrack != tracks.end(); ++itrack,++i ) {
+    trajectories[i] = m_stateprovider->trajectory( **itrack ) ;
+    directions[i]   = (*itrack)->firstState().slopes().Unit() ;
+  }
+
+  // seed: take pair with the largest "opening angle"
+  // (or do we want invariant mass?)
+  double mincostheta(1) ;
+  size_t trk1(0),trk2(0) ;
+  for( size_t itrk=0; itrk<N; ++itrk) {
+    for( size_t jtrk=0; jtrk<itrk; ++jtrk) {
+      double costheta = directions[itrk].Dot( directions[jtrk] ) ;
+      if( costheta <mincostheta) {
+	trk1 = itrk ;
+	trk2 = jtrk ;
+	mincostheta = costheta ;  
+      }
+    }
+  }
+  
+  // use the poca tool to get the poca of the seed tracks
+  Gaudi::XYZVector deltaX; 
+  double z1(0),z2(0),z(0) ;
+  StatusCode sc = m_pocatool->minimize( *(trajectories[trk1]),z1,
+					*(trajectories[trk2]),z2,
+					deltaX, 0.001*Gaudi::Units::mm );
+  if( sc.isSuccess() ) z = 0.5*(z1+z2) ;
+  
+  // collect the states at the poca
+  StateContainer states(N) ;
+  states.reserve( N ) ;
+  for( size_t itrk=0; itrk<N; ++itrk)
+    states[itrk] = new LHCb::State(trajectories[itrk]->state( z  ) );
   
   // fit the states
   LHCb::RecVertex* recvertex = fit( states ) ;
@@ -107,6 +163,12 @@ TrackVertexer::fit(const TrackContainer& tracks) const
     for( TrackContainer::const_iterator itrack = tracks.begin() ;
 	 itrack != tracks.end(); ++itrack ) 
       recvertex->addToTracks( *itrack ) ;
+  
+  // clean up
+  for( size_t itrk=0; itrk<N; ++itrk) {
+    delete states[itrk] ;
+    //delete trajectories[itrk] ;
+  }
   
   return recvertex ;
 }

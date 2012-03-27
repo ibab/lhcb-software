@@ -5,8 +5,11 @@
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "TrackInterfaces/ITrackVertexer.h"            // Interface
 #include "GaudiKernel/SymmetricMatrixTypes.h"
+#include "GaudiKernel/ToolHandle.h"
+#include "TrackInterfaces/ITrackVertexer.h"            // Interface
+#include "TrackInterfaces/ITrackStateProvider.h"
+#include "Kernel/ITrajPoca.h"
 
 /** @class TrackVertexer TrackVertexer.h
  *  
@@ -40,7 +43,16 @@ public:
   bool computeDecayLength(const LHCb::TwoProngVertex& vertex,
 			  const LHCb::RecVertex& pv,
 			  double& chi2,double& decaylength,double& decaylengtherr) const ;
+  
+  /// initialize
+  StatusCode initialize() ;
+
+  /// finalize
+  StatusCode finalize() ;
+
 private:
+  ToolHandle<ITrackStateProvider> m_stateprovider ;
+  ToolHandle<ITrajPoca> m_pocatool ;
   size_t m_maxNumIter ;    ///< Max number of iterations
   double m_maxDChisq ;     ///< Min change in chisquare to run another iteration
   bool   m_computeMomCov ; ///< Flag to switch on/off computation of momentum covariance matrix

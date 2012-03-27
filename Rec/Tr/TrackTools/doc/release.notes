@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2012-03-27 - Wouter Hulsbergen
+  - improve TrackVertexer: use more than just 'firstState' when fitting a set of tracks.
+
 !========================= TrackTools v4r13 2012-03-27 =========================
 ! 2012-03-13 - Michel De Cian
  - Fixed sign of qOverP on line 161 of FastMomentumEstimate.cpp.
