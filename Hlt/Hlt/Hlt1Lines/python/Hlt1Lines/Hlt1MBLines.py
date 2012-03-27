@@ -25,7 +25,7 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt1Line as Line
         return Line ( 'MBNoBias'
                     , prescale = self.prescale
-                    , ODIN = 'scale(  jbit( ODIN_EVTTYP,2 ), RATE(1000000) ) ' % ( self.getProp('MaxNoBiasRate') )
+                    , ODIN = 'scale(  jbit( ODIN_EVTTYP,2 ), RATE(1000000) ) '
                     , postscale = self.postscale
                     )
     def __create_charm_nobias_line__(self ) :
