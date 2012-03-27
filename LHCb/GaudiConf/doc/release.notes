@@ -3,6 +3,10 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2012-03-27 - Chris Jones
+ - Update the stripping DST unpacking options in DstConf to add a new mapping
+   tool to handle automatic unpacking of the track clusters.
+
 !========================= GaudiConf v15r8 2012-03-26 =========================
 ! 2012-03-22 - Chris Jones
  - Remove the line in DstConf setting the packing version for RichPIDs. The
