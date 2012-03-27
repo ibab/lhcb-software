@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+!========================= Hlt1Lines v6r18 2012-03-27 =========================
+! 2012-03-27 - Eric van Herwijnen
+ - bug fix in odin definition, again
 !========================= Hlt1Lines v6r17 2012-03-26 =========================
 ! 2012-03-26 - Eric van Herwijnen
  - bug fix in odin definition
@@ -1022,4 +1025,5 @@
 !========================== Hlt1Lines v1r0 2009-06-03 ===================
 ! 2009-05-28 - Gerhard Raven
  - initial import of bits from HltConf 
+
 
