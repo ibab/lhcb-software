@@ -4,6 +4,12 @@
 ! Purpose     : Create local copies of files from the grid at runtime.
 !-----------------------------------------------------------------------------
 
+! 2012-03-28 - Roel Aaij
+ - Support '+' in filenames
+ - Delay check for remote file existence until the staging gets to a file.
+ - Return an instance of the FileStagerSvc configurable from the configuration
+   function.
+
 !========================= FileStager v1r7 2012-02-28 =========================
 ! 2012-02-13 - Roel Aaij
  - Move two descriptor mangling functions into a separate library

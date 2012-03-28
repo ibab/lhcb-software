@@ -26,12 +26,15 @@ def configureFileStager( keep = False, tmpdir = None, garbageCommand = 'garbage.
     ApplicationMgr().ExtSvc += [ mgr.getFullName() ]
 
     from os import environ, listdir
+    svc = FileStagerSvc()
     if tmpdir:
-        FileStagerSvc().Tempdir = tmpdir
-    FileStagerSvc().KeepFiles = keep
-    FileStagerSvc().GarbageCollectorCommand = garbageCommand
-    FileStagerSvc().CheckForLocalGarbageCollector = True
+        svc.Tempdir = tmpdir
+    svc.KeepFiles = keep
+    svc.GarbageCollectorCommand = garbageCommand
+    svc.CheckForLocalGarbageCollector = True
 
     # Configure other services to use the correct ones
     RawDataCnvSvc( 'RawDataCnvSvc' ).DataManager = mgr.getFullName() 
     EventSelector().StreamManager = "StagedStreamTool"
+
+    return svc

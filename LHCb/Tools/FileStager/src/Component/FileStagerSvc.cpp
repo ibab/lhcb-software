@@ -280,8 +280,7 @@ StatusCode FileStagerSvc::addFiles( const vector< string >& files )
 
    BOOST_FOREACH( const string& filename, files ) {
       File* file = createFile( filename );
-      // Bad files are skipped. This probably means that gfal_stat failed.
-      if ( file->good() ) m_files.insert( FileWrapper( file ) );
+      m_files.insert( FileWrapper( file ) );
    }
 
    if ( !m_files.empty() ) {
@@ -727,16 +726,7 @@ File* FileStagerSvc::createFile( const string& filename )
    temp << m_tmpdir << "/" << boost::format( "%|x|" ) % hash( remote ) << extension;
 
    File* f = new File( file, command, remote, temp.str() );
-   if ( !f->exists() ) {
-      warning() << "stat failed for: " << remote << endmsg
-                << "Either the remote file does not exist, or there are"
-                << " grid related problems, proxy for example" << endmsg;
-      f->setGood( false );
-   } else {
-      verbose() << "Created file: " << file << " " << command
-                << " " << remote << " " << temp.str() << endmsg;
-      f->setGood( true );
-   }
+   f->setGood(true);
    return f;
 }
 
