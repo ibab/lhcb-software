@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           AlignmentTools
-version           v3r0
+version           v3r0p1
 
 #============================================================================
 # This template is an example for a standard Algorithm package
