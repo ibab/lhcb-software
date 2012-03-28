@@ -78,6 +78,8 @@ L0CaloAlg::L0CaloAlg( const std::string & name , ISvcLocator * pSvcLocator)
   declareProperty( "UsePSSPD"        , m_usePsSpdOpts       = true     ) ;
   declareProperty( "AddECALToHCAL"   , m_addEcalToHcalOpts  = true     ) ;
   declareProperty( "UseNewElectron"  , m_newElectron        = true     ) ;
+  declareProperty( "HcalThreshold"   , m_hcalThreshold      = 8        ) ;
+  declareProperty( "EcalThreshold"   , m_ecalThreshold      = 0        ) ;
   m_spdMult = std::vector< int >( 16 , 0 ) ;
 }
 
@@ -910,6 +912,10 @@ void L0CaloAlg::saveInRawEvent ( int io, int slave, int mask, int type,
   //== Coding for Raw: IO (lsb 1 bit) , Slave (2 bits) , 
   // Mask (1 bit) , type (4 bits), id (16 bits) and et (low 8 bits). 
   if ( 0 == cand.et() ) return;
+  if ( L0DUBase::CaloType::Hadron == type ) 
+    if ( cand.et() <= m_hcalThreshold ) return ;
+  if ( L0DUBase::CaloType::Hadron != type ) 
+    if ( cand.et() <= m_ecalThreshold ) return ;
 
   if (L0DUBase::CaloType::SumEt == type ) {
     warning()<<"Should NOT be of type CaloSumEt .... " << endmsg ;

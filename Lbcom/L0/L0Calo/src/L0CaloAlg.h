@@ -97,6 +97,9 @@ private:
 
   bool        m_createHCALLut             ;   ///< Create HCAL LUT Files for validation boards (Set by options)
   bool        m_newElectron               ;   ///< Use new electron definition in Inner ECAL
+
+  int         m_hcalThreshold             ;   ///< Zero suppression threshold for hadron
+  int         m_ecalThreshold             ;   ///< Zero suppression threshold for electromagnetic
   
   // Local variables
   DeCalorimeter *    m_ecal               ; ///< Pointer to Ecal detector element

@@ -3,6 +3,10 @@
 ! Package Manager : Patrick Robbe & M-H. Schune
 !----------------------------------------------------------------------------
 
+! 2012-03-28 - Patrick Robbe
+ - L0CaloAlg.h/.cpp: add zero-suppression threshold for the emulator of
+   L0Calo data.
+
 !========================= L0Calo v11r6 2011-12-14 =========================
 ! 2011-11-14 - Julien Cogan
  - L0CaloCandidatesFromRaw : add possibility to use rootIInTES using 
