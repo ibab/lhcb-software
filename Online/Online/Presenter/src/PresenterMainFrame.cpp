@@ -4857,11 +4857,11 @@ void PresenterMainFrame::EventInfo(int event, int px, int py, TObject* selected)
               info = std::string(theHisto->GetObjectInfo(px, py));
               unsigned int kk = info.find( "binx=" );
               if ( kk < info.size() ) info = info.substr( kk+5 );
-              m_weblink += "?X=" + info.substr(0, info.find(","));
+              m_weblink += "?binX=" + info.substr(0, info.find(","));
               kk = info.find( "biny=" );
               if ( kk < info.size() ) {
                 info = info.substr( kk+5 );
-                m_weblink += "&Y="+info.substr(0, info.find(","));
+                m_weblink += "&binY="+info.substr(0, info.find(","));
               }
             } else {
               info = std::string(theGraph->GetObjectInfo(px, py));
