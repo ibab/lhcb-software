@@ -3,6 +3,7 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+!========================= TrackFitter v4r7 2012-03-28 =========================
 ! 2012-03-28 - Wouter Hulsbergen
  - Fix bug in commit of 2012-03-15: don't add EndVelo to Backward tracks
  - Make sure to set number of dofs right
