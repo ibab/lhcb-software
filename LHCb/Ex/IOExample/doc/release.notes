@@ -4,6 +4,254 @@
 ! Purpose: Demonstrate how to write and read back event data
 !-------------------------------------------------------------------------------
 
+!========================= IOExample v4r6 2012-03-28 =========================
+! 2012-03-28 - Marco Cattaneo
+ - Adapt references to latest DstConf change
+
+! 2012-03-22 - Marco Cattaneo
+ - Adapt test references to removal of random number seeds from ProcessHeader
+
+!========================= IOExample v4r5 2012-02-28 =========================
+! 2012-02-27 - Marco Cattaneo
+ - Fix reference comparisons also for icc (tiny numerical differences wrt gcc)
+
+! 2012-02-17 - Marco Cattaneo
+ - ioexample.copymc10dsttoroot now takes input file from svcClass=lhcbdisk, 
+   was default.
+
+! 2012-02-15 - Marco Cattaneo
+ - Follow change to DstConf().EnableUnpack option
+
+! 2012-02-07 - Marco Cattaneo
+ - Follow DataOnDemand decoding changes in DstConf. In IOTest, force ToolSvc
+   initialisation before DataOnDemandSvc
+
+!========================= IOExample v4r4 2012-01-31 =========================
+! 2012-01-24 - Marco Cattaneo
+ - Adapt references to RootCnv v1r12 and Gaudi v23
+ - Remove explicit use of RootCnv
+
+! 2011-12-13 - Marco Cattaneo
+ - Add some missing run time dependencies to run tests with cmt run
+ - Remove tests that write POOL files. Remaining tests reading POOL files
+   copy to ROOT files and read them back, comparing outputs.
+
+!========================= IOExample v4r3 2011-12-13 =========================
+! 2011-11-18 - Marco Cattaneo
+ - No longer load HepMCBack in the tests, was only needed for DC06!
+ - Change input file of pooldst tests to an MC09 compatible file
+
+!========================= IOExample v4r2 2011-09-15 =========================
+! 2011-09-15 - Marco Cattaneo
+ - Update tests to follow fixes in RootCnv
+
+! 2011-09-09 - Marco Cattaneo
+ - Really fix the references for .i686, also for _dbg
+
+! 2011-09-07 - Marco Cattaneo
+ - Add test references also for .i686 due to minute differences in unpacking
+
+! 2011-09-05 - Marco Cattaneo
+ - Update POOL tests to force POOL output if default is ROOT
+ - Make ioexample.testunpacktrack test use default I/O technology
+
+! 2011-08-30 - Marco Cattaneo
+ - Update references for change in format of printout of some options with
+   Gaudi > v22r2
+
+!========================= IOExample v4r1 2011-07-25 =========================
+! 2011-07-25 - Marco Cattaneo
+ - Add ioexample.testunpacktrack test, tests that UnpackTrack algorithm works
+   on a track container that has more than 65k LHCbIDs
+
+!========================= IOExample v4r0 2011-06-14 =========================
+! 2011-05-24 - Marco Cattaneo
+ - Adapt to use IOHelper instead of IOConf
+
+! 2011-05-20 - Marco Cattaneo
+ - Follow changes in IOConf, tests also FileRecords
+
+! 2011-05-17 - Marco Cattaneo
+ - Add DataType slot to IOTest configurable, used to switch on HepMCBack DLL
+   in case of MC09 data
+ - Add tests for 2009, Reco08 (dst+mdst), Reco09 (dst+mdst) and MC10 data.
+
+! 2011-05-16 - Marco Cattaneo
+ - Major reorganisation of package:
+   . Added configurable for tests
+   . Options directory removed, all examples are now in tests/options
+   . Tests updated for I/O in both POOL and ROOT persistency format
+     (needs RootCnv)
+
+!====================== IOExample v3r5 2010-09-27 ==============================
+! 2010-09-07 - Marco Cattaneo
+ - Test rfio protocol when reading sim file, rootd protocol when reading digi 
+   file, and xrootd when reading dst file
+
+!====================== IOExample v3r4 2010-01-20 ==============================
+! 2010-01-13 - Marco Cattaneo
+ - Update QMTest references for AlgContextSvc changes (patch 3478) in Gaudi v12r7
+
+! 2010-01-07 - Marco Cattaneo
+ - Update QMTest references for fix to file sharing in GaudiPoolDB options,
+   in Gaudi v12r7
+
+!====================== IOExample v3r3 2009-10-16 ==============================
+! 2009-10-14 - Marco Cattaneo
+ - Replace PoolDigi input file with an MC09 file and update QMTest reference
+
+! 2009-09-21 - Marco Cattaneo
+ - Replace PoolSim input file with an MC09 file and update QMTest reference
+
+!====================== IOExample v3r2 2009-07-28 ==============================
+! 2009-09-03 - Marco Cattaneo
+ - Update QMTest references for changes to Track.xml and introduction of Gaudi
+   CounterSummarySvc
+
+!====================== IOExample v3r1 2009-07-28 ==============================
+! 2009-07-15 - Marco Cattaneo
+ - Update QMTest references for Gaudi v21r3 statistics of Info() messages
+
+!====================== IOExample v3r0 2009-07-13 ==============================
+! 2009-07-09 - Marco Cattaneo
+ - Move DumpTracks algorithm to EventPacker package and remove component library
+ - In QMTests, include the LHCbExclusions file for the validation with reference
+
+!====================== IOExample v2r9 2009-05-07 =========================
+! 2009-04-15 - Marco Cattaneo
+ - Update QMTest references for Gaudi v21 RunRecords -> FileRecords name change
+
+!====================== IOExample v2r8 2009-02-20 =========================
+! 2009-02-20 - Marco Cattaneo
+ - Add conditional use of Castor in QMTest, to run tests on slc5
+
+! 2009-02-07 - Marco Cattaneo
+ - Protect unpackdst test against 10**-8 differences in some variables on 
+   slc4_ia32_gcc34 platform
+
+! 2009-01-22 - Marco Cattaneo
+ - Change input file of unpackdst test, to follow fix in track momentum error
+   packing in EventPacker v1r2
+
+!====================== IOExample v2r7 2009-01-08 =========================
+! 2009-01-06 - Marco Cattaneo
+ - Add a test for DST unpacking
+
+! 2008-12-12 - Marco Cattaneo
+ - Update QMTest references following addition of Run record handling in 
+   Gaudi v20r4
+
+! 2008-12-03 - Marco Cattaneo
+ - Update QMTest reference following fix POOL bug 38775. To be deployed in
+   LCG-56 
+
+!====================== IOExample v2r6 2008-11-17 =========================
+! 2008-11-06 - Marco Cattaneo
+ - Update QMTest reference following changes in GaudiAlgorithm base class
+
+! 2008-11-03 - Marco Cattaneo
+ - Add a library of tests for reading/writing event model objects. Currently
+   contains an algorithm to dump Tracks
+
+! 2008-10-31 - Marco Cattaneo
+ - Update QMTest following fix to spurious warning from HepMCBack
+
+! 2008-10-16 - Marco Cattaneo
+ - Update QMTest reference files for Gaudi v20r3
+
+!====================== IOExample v2r5 2008-07-27 =========================
+! 2008-07-23 - Marco Cattaneo
+ - Add HepMCBack Dll to options reading HepMC 1.26 data
+ - Remove IOMin.exe, use gaudirun.py instead
+ - Add QMTests, to write/read a .sim, .digi, .dst file, 
+   and to read and write a HepMC event record
+
+!====================== IOExample v2r4 2008-01-30 =========================
+! 2008-01-30 - Marco Cattaneo
+ - Replace PoolDbCacheSvc.Catalog by FileCatalog.Catalogs, for Gaudi v19r7
+
+!====================== IOExample v2r3 2007-12-11 =========================
+! 2007-12-11 - Marco Cattaneo
+ - In WriteMDF.opts, include new options for MDF IO
+ - In ReadMin.opts, put algorithms in a sequence and add example of usage of
+   FilterByRunEvent algorithm
+
+!====================== IOExample v2r2 2007-11-07 =========================
+! 2007-11-07 - Marco Cattaneo
+ - Add WriteMDF.opts, example to write an MDF file starting from a DST
+
+!====================== IOExample v2r1 2007-09-07 =========================
+! 2007-09-07 - Marco Cattaneo
+ - Update input files
+ - Fix DataOnDemandSvc usage in ReadMin.opts
+
+!====================== IOExample v2r0p3 2007-03-05 =======================
+! 2007-03-05 - Marco Cattaneo
+ - Remove obsolete ApplicationMgr.DLLs options and other cleanups in options
+
+!====================== IOExample v2r0p2 2006-10-23 =======================
+! 2006-10-23 - Marco Cattaneo
+ - Update input data files for LHCb v21r9
+
+!====================== IOExample v2r0p1 2006-07-28 =======================
+! 2006-07-28 - Marco Cattaneo
+ - Update input data files for LHCb v21r3
+
+!====================== IOExample v2r0 2006-02-20 =========================
+! 2006-02-20 - Marco Cattaneo
+ - Add TestPack.opts to test PackedEvent classes
+
+! 2006-02-15 - Marco Cattaneo
+ - Updates for LHCb v20r0. Input data files to be updated when test data exists
+
+!====================== IOExample v1r5 2005-10-20 =========================
+! 2005-10-20 - Marco Cattaneo
+ - Updates for using Reflex, use InputCopyStream to set up file copy,
+   cleanup obsolete job options
+
+!====================== IOExample v1r4p2 2005-04-21 =======================
+! 2005-04-21 - Marco Cattaneo
+ - Remove dependency on LHCbAlgs
+ - Update input files for LHCb v18r3 event model changes
+
+!====================== IOExample v1r4p1 2005-02-08 =======================
+! 2005-02-08 - Marco Cattaneo
+ - Update WriteMin input files to files produced with Root 4
+
+!======================= IOExample v1r4 2004-11-29 ========================
+! 2004-11-29 - Marco Cattaneo
+ - Update WriteMin input files to files produced with new Rich event model
+ - Add example of DataOnDemandSvc usage to ReadMin.opts
+
+!======================= IOExample v1r3 2004-10-21 ========================
+! 2004-10-21 - Marco Cattaneo
+ - Update WriteMin input files to files produced with new OT event model
+ - Update Dst,Digi contents to new OT event model
+
+!======================= IOExample v1r2 2004-07-14 ========================
+! 2004-07-14 - Marco Cattaneo
+ - Remove usage of obsolete GaudiRootDb format
+ - Add DumpMCEventAlg to ReadMin (similar to obsolete DumpEventExample)
+ - Update WriteMin input files to files produced in DC04
+ - Update Dst,Digi,Sim contents to DC04 versions
+ - Take StoreBrowserAlg from GaudiSvc. Example now consists only of job options
+
+! 2004-06-28 - Marco Cattaneo
+ - Adapted job options for DAQEvent change to component library
+
+!======================= IOExample v1r1 2004-02-12 ========================
+! 2004-02-12 - Marco Cattaneo
+ - Update to use latest output file definitions
+
+!======================= IOExample v1r0 2004-01-19 ========================
+! 2004-12-16 Markus Frank
+  
+  First version!-------------------------------------------------------------------------------
+! Package: IOExample
+! Package Manager: M.Frank
+! Purpose: Demonstrate how to write and read back event data
+!-------------------------------------------------------------------------------
+
 !========================= IOExample v4r6 2012-03-26 =========================
 ! 2012-03-22 - Marco Cattaneo
  - Adapt test references to removal of random number seeds from ProcessHeader

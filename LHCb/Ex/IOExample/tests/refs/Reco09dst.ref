@@ -1,6 +1,6 @@
-# --> Including file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/CopyReco09toROOTdst.py'
+# --> Including file '/build/cattanem/LHCb_v34r2/Ex/IOExample/tests/options/CopyReco09toROOTdst.py'
 # ROOT output file requested. Forcing reading of POOL input files with RootCnv
-# <-- End of file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/CopyReco09toROOTdst.py'
+# <-- End of file '/build/cattanem/LHCb_v34r2/Ex/IOExample/tests/options/CopyReco09toROOTdst.py'
 # applying configuration of IOTest
 # /***** User IOTest/IOTest **************************************************************************
 # |-DataType    = '2011'
@@ -23,7 +23,7 @@
 # |-PackSequencer       = None
 # |-SpilloverPaths      = ['Prev', 'PrevPrev', 'Next', 'NextNext']
 # |                     (default: ['Prev', 'PrevPrev', 'Next', 'NextNext'])
-# |-EnableUnpack        = True  (default: False)
+# |-EnableUnpack        = ['Reconstruction', 'Stripping']  (default: [])
 # |-AlwaysCreate        = False
 # \----- (End of User DstConf/DstConf) ---------------------------------------------------------------
 # /***** User DstConf/DstConf ************************************************************************
@@ -39,15 +39,15 @@
 # |-PackSequencer       = None
 # |-SpilloverPaths      = ['Prev', 'PrevPrev', 'Next', 'NextNext']
 # |                     (default: ['Prev', 'PrevPrev', 'Next', 'NextNext'])
-# |-EnableUnpack        = True  (default: False)
+# |-EnableUnpack        = ['Reconstruction', 'Stripping']  (default: [])
 # |-AlwaysCreate        = False
 # \----- (End of User DstConf/DstConf) ---------------------------------------------------------------
 # applying configuration of DigiConf
 # No Writer defined for DIGI
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr(GaudiCoreSvc v1r0)
-                                          running on lxbuild163.cern.ch on Tue Feb  7 17:32:35 2012
+                                                   Welcome to ApplicationMgr (GaudiCoreSvc v1r1)
+                                          running on lxbuild163.cern.ch on Wed Mar 28 09:53:16 2012
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
@@ -143,7 +143,7 @@ TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 DumpTracks          DEBUG Property update for OutputLevel : new value = 2
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x13a46410@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x13030f30@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
@@ -525,10 +525,9 @@ DumpTracks          DEBUG *** Track ***
    2.05776e-09 9.10265e-10 1.32151e-12-3.73482e-13 2.95728e-14 ]
 
 
-IODataManager        INFO Referring to dataset ROOT-Reco09.dst by its file ID:2252D663-A951-E111-9D7C-003048C9CD62
 EventSelector     SUCCESS Reading Event record 2. Record number within stream 1: 2
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x2aaac3b9c950@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x12f2f5b0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
@@ -903,7 +902,7 @@ DumpTracks          DEBUG *** Track ***
 
 EventSelector     SUCCESS Reading Event record 3. Record number within stream 1: 3
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x2aaab594dd00@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x1a139290@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
@@ -1319,7 +1318,7 @@ DumpTracks          DEBUG *** Track ***
 
 EventSelector     SUCCESS Reading Event record 4. Record number within stream 1: 4
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x2aaac378a940@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x1ae3b3d0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
@@ -1699,7 +1698,7 @@ DumpTracks          DEBUG *** Track ***
 
 EventSelector     SUCCESS Reading Event record 5. Record number within stream 1: 5
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x2aaab59611f0@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x1a9d10e0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
@@ -2109,9 +2108,9 @@ InputCopyStream      INFO Events output: 5
 FSRInputCopyStream   INFO Set up File Summary Record
 FSRInputCopyStream   INFO Events output: 1
 EventLoopMgr         INFO Histograms converted successfully according to request.
-DataOnDemandSvc      INFO Handled "DataFault" incidents: 5/5/40(Alg/Node/Total).
+DataOnDemandSvc      INFO Handled "DataFault" incidents: 5/5/41(Alg/Node/Total).
 ToolSvc              INFO Removing all tools created by ToolSvc
 RootCnvSvc           INFO Disconnected data IO:0EBD6778-BA80-E011-83CC-0025901D492E [root://castorlhcb.cern.ch//castor/cern.ch/grid//lhcb/LHCb/Collision11/DIMUON.DST/00010348/0000/00010348_00000579_1.dimuon.dst?svcClass=lhcbdisk]
-RootCnvSvc           INFO Disconnected data IO:2252D663-A951-E111-9D7C-003048C9CD62 [ROOT-Reco09.dst]
+RootCnvSvc           INFO Disconnected data IO:12658A8F-A978-E111-BD05-003048C9CD62 [ROOT-Reco09.dst]
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully
