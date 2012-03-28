@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-03-28 - Jibo He
+ - Stripping18/LineConfigDictionaries_Calib 
+   . Updated conf dict of MuonIDCalib  
+
 ! 2012-03-27 - Jibo He
  - Stripping18/LineConfigDictionaries_BandQ
    . Relaxed PT cut of DiMuon on microDST to 2 GeV
