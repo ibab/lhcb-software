@@ -3,7 +3,9 @@
 #
 # Setting CMTEXTRATAGS on SLC 5.8 and later 
 #
-if [ ! -n "$CMTEXTRATAGS" ]; then
+if [ ! -n "$CMTEXT_CHKDONE" ]; then
+export CMTEXT_CHKDONE=yes
+if [ ! -n "$CMTEXTRATAGS" ]; then 
      echo "Checking CMTEXTRATAGS"
      if [ -f /etc/redhat-release ]; then
         res=`sed -e 's/Scientific Linux CERN SLC release \([0-9\.]*\).*/\1/i' /etc/redhat-release` 
@@ -16,4 +18,5 @@ if [ ! -n "$CMTEXTRATAGS" ]; then
                 ;;
         esac
     fi
+fi
 fi
