@@ -3,6 +3,8 @@ Package     : MooreSys
 Package Coordinator : E. van Herwijnen
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v13r2p2>2012-03-28 Moore v13r2p2</A></H1><PRE>
+Same as v13r2p2 without EventPacker and PackedEvent.
 
 </PRE><H1><A NAME=v13r2p1>2012-03-23 Moore v13r2p1</A></H1><PRE>
 Fix topo rate bug; fix displvertices bug. Set rate limit to lumi

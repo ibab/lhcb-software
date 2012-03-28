@@ -1,5 +1,5 @@
 package MooreSys
-version v13r2p1
+version v13r2p2
 branches doc cmt
 
 #=======================================================
@@ -19,8 +19,8 @@ use  Hlt2Lines           v8r16       Hlt
 use  HltGlobalMonitor    v3r10       Hlt
 
 # to be future compatible with eventpacking 
-use  EventPacker         v2r13       Event
-use  PackedEvent         v4r8        Event
+#use  EventPacker         v2r13       Event
+#use  PackedEvent         v4r8        Event
 
 # for swimming
 use  XMLSummaryKernel    v1r6        Kernel
