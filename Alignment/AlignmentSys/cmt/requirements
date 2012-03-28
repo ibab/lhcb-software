@@ -1,5 +1,5 @@
 package AlignmentSys
-version           v8r0
+version           v9r0
 
 branches cmt doc
  
@@ -9,18 +9,18 @@ branches cmt doc
 
 # General purpose components
 use AlignmentInterfaces	v3r2	Alignment # Johan Blouw
-use AlignmentTools      v3r1    Alignment # Sebastien Viret
+use AlignmentTools      v3r0p1  Alignment # Sebastien Viret
 use AlignEvent		v1r1    Alignment # Wouter Hulsbergen
 use AlignKernel		v3r4    Alignment # Adlene Hicheur, Wouter Hulsbergen
-use AlignSolvTools	v3r2    Alignment # A. Hicheur, W. Hulsbergen
-use AlignTrTools	v4r10	Alignment # Johan Blouw, Adlene Hicheur, Louis Nicolas
-use TAlignment		v5r6	Alignment # Jan Amoraal, Johan Blouw, Marc Deissenroth, Florin Maciuc
+use AlignSolvTools	v3r3    Alignment # A. Hicheur, W. Hulsbergen
+use AlignTrTools	v4r11	Alignment # Johan Blouw, Adlene Hicheur, Louis Nicolas
+use TAlignment		v5r7	Alignment # Jan Amoraal, Johan Blouw, Marc Deissenroth, Florin Maciuc
 #AlignT2Velo Removed, 03.03.2010
 #use AlignT2Velo         v1r1    Alignment # Steve Blusk
-use VeloAlignment	v4r10	Alignment # Marco Gersabeck
+use VeloAlignment	v4r10p1	Alignment # Marco Gersabeck
 use MisAligner		v1r5	Alignment # Johan Blouw, Manuel Schiller
-use Escher		v4r12	Alignment # Johan Blouw
-use CommonParticles     v8r6    Phys
+use Escher		v4r13	Alignment # Johan Blouw
+use CommonParticles     v8r7    Phys
 
 #=======================================================
 # LHCb Calibration packages
