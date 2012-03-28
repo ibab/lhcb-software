@@ -3,6 +3,72 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v42r2>2012-03-29 Brunel v42r2</A></H1><PRE>
+This version uses projects LCG 62b, Gaudi v23r2, LHCb v34r2, Lbcom v12r2,
+ Rec v13r2 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+Production version for initial 2012 data taking
+
+- External dependencies changes
+  . Uses LCGCMT v62b. Relevant changes are ROOT 5.32.02 and neurobayes 3.7.0
+
+- Persistency changes
+  . Add HltRoutingBits and HltVertexReports to Trigger/RawEvent on SDSTs
+  . Remove ProcessHeader::m_randomSeeds since they are not used anywhere and
+    causes portability problems with persistency of vector<long>
+    (EventBase v3r0, RecAlgs v2r7, RichParticleSearch v1r6)
+  . Fix the packing of RichPID and MuonPID objects, where the key was not
+    properly restored (PackedEvent v4r8)
+
+- Configuration changes
+  . New default global tags for 2012 DataType, first usable tags for 2012 data:
+    o DDDB,     2012: head-20120316
+    o LHCBCOND, 2012: head-20120316
+	  (DDDB v1r52)
+
+- New tuning
+  . Make 2011 the default data type in ConfiguredMuonIDs.py, and apply it for
+    2012 DataType (MuonID v9r4)
+  . Implemented faster method to invert transport matrix (TrackFitEvent v5r16)
+  . Exploit emptiness of transport matrix in zero B field (trackFitEvent v5r16)
+  . Add EndVelo state to (forward) velo-only fits (TrackFitter v4r6)
+  . Propagate the ForceBiDirectionalFit option to all case in ConfiguredFitter.py
+    (instead of BiDirectionalFit) (TrackFitter v4r5)
+ 
+- Bug fixes
+  . Fix in TrackTraj: Backward tracks have states in opposite order
+    (TrackKernel v1r9p1)
+  . PatForwardTool: Bug fix in PatForward in part which uses momentum estimate.
+    Variable was shadowed, resulting in wrong behaviour of the algorithm.
+    (PatAlgorithms v4r20)
+  . Use std:stable_sort instead of std::sort everywhere, fixes differences
+    between gcc43 and gcc46 (TsaAlgorithms v3r26, PatPV v3r23)
+  . Fix in filter logic: backward state could be in state 'smoothed' without
+    having gone through 'filtered' (TrackFitEvent v5r15)
+  . Fix sign of qOverP in FastMomentumEstimate, fixes TT efficiency of Match
+    tracks (TrackTools v4r13)
+  . Fix bug #92491: problems reading vector<long> (ROOT 5.32.02)
+  . Reduce verbosity when failing to access /Event/DAQ (RootCnv v1r14)
+  . Protect some unprotected debug and verbose messages
+    (PatVeloTT v3r18, PatPV v3r23, DAQUtils v1r6, TrackUtils v1r45, 
+     CaloPIDs v5r12, TrackFitter v4r6p1, MuonID v9r4, LHCbKernel v13r10)
+
+- Monitoring changes
+  . Reduce range of PV chi2 plot (TrackMonitors v1r38)
+  . Added mass pull histogram to TrackParticleMonitor (TrackMonitors v1r38)
+  . Defined ranges for Z0 and D0 daughters plots in TrackParticleMonitor
+    (TrackMonitors v1r38)
+  . Added new plot for "Low ADC Cluster" monitoring to "VeloTrackMonitor"
+    coupling effect of M2 routing line (VeloRecMonitors v2r18)
+  . Changed default for occupancy monitoring to not periodically reset
+    occupancy histograms - this is needed to make the offline monitoring of
+    dead/noisy channels more reliable; online plots will be done by setting
+    this property in the online jobs to the old default (VeloRecMonitors v2r18)
+
+- Changes to tests
+  . add a test for 2012 data type (brunel2012magdown), for the time being using
+    2011 data as input. 
+
 </PRE><H1><A NAME=v42r1>2012-03-02 Brunel v42r1</A></H1><PRE>
 This version uses projects LCG 62a, Gaudi v23r1, LHCb v34r1, Lbcom v12r1,
  Rec v13r1 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
