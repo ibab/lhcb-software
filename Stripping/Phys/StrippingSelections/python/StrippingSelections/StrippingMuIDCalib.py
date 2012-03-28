@@ -20,17 +20,18 @@ __version__ = '$Revision: 1.5 $'
 config_params = {    
     'PromptPrescale'           : 0., #not used anymore 0.08 old prescale
     'DetachedPrescale'         : 1.,
-    'DetachedNoMIPPrescale'    : 0.8, #0.3,
-    'DetachedNoMIPHiPPrescale' : 1.,
+    'DetachedNoMIPPrescale'    : 1, #0.3,
+    'DetachedNoMIPHiPPrescale' : 0.,
     'DetachedNoMIPKPrescale'   : 1.,
     'FromLambdacPrescale'      : 1.,
-    'KFromLambdacPrescale'     : 1.,
-    'PiFromLambdacPrescale'    : 1.,
-    'PFromLambdacPrescale'     : 1.,
-    'KISMUONFromLambdacPrescale' : 1.,
-    'PiISMUONFromLambdacPrescale': 1.,
-    'PISMUONFromLambdacPrescale' : 1.
+    'KFromLambdacPrescale'     : 0.,
+    'PiFromLambdacPrescale'    : 0.,
+    'PFromLambdacPrescale'     : 0.,
+    'KISMUONFromLambdacPrescale' : 0.,
+    'PiISMUONFromLambdacPrescale': 0.,
+    'PISMUONFromLambdacPrescale' : 0.
     }
+
 
 __all__     = ( 'MuIDCalibConf',
                 'makePromptSelection',
@@ -133,18 +134,18 @@ class MuIDCalibConf( LineBuilder ):
                                                   prescale = config[ 'PISMUONFromLambdacPrescale' ], selection = self.sel_PISMUONLambdac ) 
 
 
-        self.registerLine( self.line_Prompt )
+        #self.registerLine( self.line_Prompt )
         self.registerLine( self.line_Detached )
         self.registerLine( self.line_DetachedNoMIP )
-        self.registerLine( self.line_DetachedNoMIPHiP )
+        #self.registerLine( self.line_DetachedNoMIPHiP )
         self.registerLine( self.line_DetachedNoMIPK )
         self.registerLine( self.line_Lambdac )
-        self.registerLine( self.line_PiLambdac )
-        self.registerLine( self.line_KLambdac )
-        self.registerLine( self.line_PLambdac )
-        self.registerLine( self.line_PiISMUONLambdac )
-        self.registerLine( self.line_KISMUONLambdac )
-        self.registerLine( self.line_PISMUONLambdac )
+        #self.registerLine( self.line_PiLambdac )
+        #self.registerLine( self.line_KLambdac )
+        #self.registerLine( self.line_PLambdac )
+        #self.registerLine( self.line_PiISMUONLambdac )
+        #self.registerLine( self.line_KISMUONLambdac )
+        #self.registerLine( self.line_PISMUONLambdac )
 
 
 
