@@ -270,7 +270,8 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
     double prevchi2 = track.chi2() ;
     sc = m_trackNodeFitter -> fit( track );
     
-    if ( sc.isFailure() ) return failure( "unable to fit the track" );
+    if ( sc.isFailure() )  return failure( std::string("unable to fit the track. ") +
+					   kalfitresult->getError() );
     
     if ( m_debugLevel ) debug() << "chi2 =  " << track.chi2() 
                                 << " ref state = (" << nodes.back()->refVector() 
@@ -623,7 +624,7 @@ StatusCode TrackMasterFitter::makeNodes( Track& track, LHCb::ParticleID pid ) co
 
   // Add reference nodes depending on track type
   if( m_addDefaultRefNodes ) {
-    if(track.hasVelo() )
+    if(track.hasVelo() && !track.checkFlag(Track::Backward ))
       nodes.push_back( new FitNode( StateParameters::ZEndVelo, State::EndVelo )) ;
     if(track.hasTT() ) {
       nodes.push_back( new FitNode( StateParameters::ZBegRich1, State::BegRich1 )) ;   
@@ -796,20 +797,22 @@ StatusCode TrackMasterFitter::updateTransport(LHCb::Track& track) const
   // FIXME: This is probably the right place to set the number of
   // track parameters in the fitresult: simply check that the
   // propagation does not depend on momentum
+  bool hasMomentum = false ;
 
   // sets the propagation between the previous node and this. node that the reference 
   // of the previous node is used.
   StatusCode sc = StatusCode::SUCCESS ;
   
-  LHCb::TrackFitResult::NodeContainer& nodes = track.fitResult()->nodes() ;
+  LHCb::KalmanFitResult* fitresult = static_cast<LHCb::KalmanFitResult*>(track.fitResult()) ;
+  LHCb::KalmanFitResult::FitNodeRange nodes = fitresult->fitNodes() ;
   if( nodes.size()>1 ) {
     const ITrackExtrapolator* extrap = extrapolator(track.type()) ;
-    LHCb::TrackFitResult::NodeContainer::iterator inode = nodes.begin() ;
+    LHCb::KalmanFitResult::FitNodeRange::iterator inode = nodes.begin() ;
     const LHCb::StateVector* refvector = &((*inode)->refVector()) ;
     TrackMatrix F = TrackMatrix( ROOT::Math::SMatrixIdentity() );
     for(++inode; inode!=nodes.end() && sc.isSuccess() ; ++inode) {
       
-      FitNode* node = dynamic_cast<FitNode*>(*inode) ;
+      FitNode* node = *inode ;
       double z = node->z() ;
       LHCb::StateVector statevector = *refvector ;
       StatusCode thissc = extrap -> propagate(statevector,z,&F) ;
@@ -842,8 +845,19 @@ StatusCode TrackMasterFitter::updateTransport(LHCb::Track& track) const
       
       // update the reference
       refvector = &((*inode)->refVector()) ;
+      
+      // test dtx/dqop to see if the momentum affects this track.
+      if( std::abs(F(2,4)) != 0 ) hasMomentum = true ;
     }
   }
+
+  if( m_useSeedStateErrors ) {
+    // we need to do this until we can properly deal with the seed state
+    fitresult->setNTrackParameters( 0 ) ;
+  } else {
+    fitresult->setNTrackParameters( hasMomentum ? 5 : 4 ) ;
+  }
+
   if( m_debugLevel ) 
     debug() << "End of TrackMasterFitter::updateTransport" << endmsg ;
   return sc ;
