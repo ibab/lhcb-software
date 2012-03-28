@@ -83,8 +83,6 @@ This version uses Gaudi v23r2 and LHCb v34r2
   . Resolve coverity issues in TrackOTLRSignTool
 
 - In TrackTools v4r13
-  . Improve TrackVertexer: use more than just 'firstState' when fitting a set of
-    tracks.
   . Fixed sign of qOverP on line 161 of FastMomentumEstimate.cpp.
   . Update of ITTrackSelector for alignment
 
