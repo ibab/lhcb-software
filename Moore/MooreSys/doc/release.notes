@@ -3,6 +3,9 @@ Package     : MooreSys
 Package Coordinator : E. van Herwijnen
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v13r2p3>2012-03-28 Moore v13r2p3</A></H1><PRE>
+Same as v13r2p1 with HltGlobalMonitor v3r9 and TrackFitter v4r7.
+
 </PRE><H1><A NAME=v13r2p2>2012-03-28 Moore v13r2p2</A></H1><PRE>
 Same as v13r2p2 without EventPacker and PackedEvent.
 
