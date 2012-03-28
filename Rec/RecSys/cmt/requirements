@@ -75,12 +75,12 @@ use TrackAssociators     v2r9    Tr   # Eduardo Rodrigues, Edwin Bos
 use TrackCheckers        v4r12   Tr   # Eduardo Rodrigues
 use TrackExtrapolators   v2r32p1 Tr   # Eduardo Rodrigues
 use TrackFitEvent        v5r16   Tr   # Eduardo Rodrigues
-use TrackFitter          v4r6p1  Tr   # Eduardo Rodrigues
+use TrackFitter          v4r7    Tr   # Wouter Hulsbergen
 use TrackIdealPR         v2r19   Tr   # Eduardo Rodrigues
 use TrackMCTools         v3r1    Tr   # Eduardo Rodrigues
 use TrackMonitors        v1r38   Tr   # Wouter Hulsbergen, Stephanie Menzemer
 use TrackProjectors      v2r31   Tr   # Wouter Hulsbergen
-use TrackTools           v4r13   Tr   # Eduardo Rodrigues
+use TrackTools           v4r14   Tr   # Wouter Hulsbergen
 use TrackUtils           v1r45   Tr   # Eduardo Rodrigues
 
 # Primary Vertex Finder

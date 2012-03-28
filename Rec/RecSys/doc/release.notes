@@ -14,8 +14,8 @@ This version uses Gaudi v23r2 and LHCb v34r2
     Rec/LumiAlgs v7r5, Rec/RecAlgs v2r7, Rich/RichParticleSearch v1r6, 
     Tf/FastPV v1r0p1, Tf/PatAlgorithms v4r20, Tf/PatVelo v3r26,
     Tf/PatVeloTT v3r18, Tf/TrackSeeding v1r6, Tf/TsaAlgorithms v3r26,
-    Tf/PatPV v3r23, Tf/TrackFitEvent v5r16, Tr/TrackFitter v4r6p1,
-    Tr/TrackMonitors v1r38, Tr/TrackProjectors v2r31, Tr/TrackTools v4r13,
+    Tf/PatPV v3r23, Tf/TrackFitEvent v5r16, Tr/TrackFitter v4r7,
+    Tr/TrackMonitors v1r38, Tr/TrackProjectors v2r31, Tr/TrackTools v4r14,
     Tr/TrackUtils v1r45, Velo/VeloRecMonitors v2r18
 
 - In MuonID v9r4
@@ -68,8 +68,9 @@ This version uses Gaudi v23r2 and LHCb v34r2
   . Bug fix in filter logic: backward state could be in state 'smoothed'
     without having gone through 'filtered'.
 
-- In TrackFitter v4r5, v4r6, v4r6p1
+- In TrackFitter v4r5, v4r6, v4r6p1, v4r7
   . Add EndVelo state to (forward) velo-only fits
+  . Make sure to set number of dofs right
   . Make sure debug mode doesn't trigger smoothing
   . Propagate the FroceBiDirectionalFit option to all case in ConfiguredFitter.py
     (instead of BiDirectionalFit)
@@ -82,7 +83,9 @@ This version uses Gaudi v23r2 and LHCb v34r2
 - In TrackProjectors v2r31
   . Resolve coverity issues in TrackOTLRSignTool
 
-- In TrackTools v4r13
+- In TrackTools v4r13, v4r14
+  . Improve TrackVertexer: use more than just 'firstState' when fitting a set
+    of tracks.
   . Fixed sign of qOverP on line 161 of FastMomentumEstimate.cpp.
   . Update of ITTrackSelector for alignment
 
