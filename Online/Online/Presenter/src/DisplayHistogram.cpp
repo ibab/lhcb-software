@@ -213,6 +213,7 @@ void DisplayHistogram::draw( TCanvas * editorCanvas , double xlow , double ylow 
   editorCanvas->cd();
 
   if ( !m_isOverlap ) {
+    std::cout << "xlow " << xlow << " ylow " << ylow << " xup " << xup << " yup " << yup << std::endl;
     pad = new TPad( m_identifier.c_str(),
                     TString(""),
                     fabs(xlow), fabs(ylow), fabs(xup), fabs(yup));
@@ -402,6 +403,8 @@ void DisplayHistogram::setDrawingOptions( TPad* pad ) {
       if (hasOption("STAT_X_SIZE", &fopt)) x2 = x1 + fopt;
       if (hasOption("STAT_Y_OFFS", &fopt)) y1 = fopt;
       if (hasOption("STAT_Y_SIZE", &fopt)) y2 = y1 + fopt;
+      
+      std::cout << "Stat pave: x1 " << x1 << " y1 " << y1 << " x2 " << x2 << " y2 " << y2  << std::endl;  
 
       m_statPave->SetX1NDC(x1);
       m_statPave->SetX2NDC(x2);
@@ -433,6 +436,7 @@ void DisplayHistogram::setDrawingOptions( TPad* pad ) {
       if (hasOption("HTIT_Y_OFFS", &fopt)) y1 = fopt;
       if (hasOption("HTIT_Y_SIZE", &fopt)) y2 = y1 + fopt;
 
+      std::cout << "Tit pave: x1 " << x1 << " y1 " << y1 << " x2 " << x2 << " y2 " << y2  << std::endl;  
       m_titPave->SetX1NDC(x1);
       m_titPave->SetX2NDC(x2);
       m_titPave->SetY1NDC(y1);
@@ -457,6 +461,7 @@ void DisplayHistogram::setDrawingOptions( TPad* pad ) {
   int gridy = gStyle->GetPadGridY();
   if (hasOption("GRIDX", &iopt)) gridx=iopt;
   if (hasOption("GRIDY", &iopt)) gridy=iopt;
+  std::cout << "Grid: gridx " << gridx << " gridy " << gridy  << std::endl;  
   pad->SetGrid(gridx, gridy);
   if ( m_rootHistogram->GetDimension() > 1) {
     if (hasOption("LOGZ", &iopt)) pad->SetLogz(1);

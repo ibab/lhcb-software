@@ -4819,6 +4819,7 @@ void PresenterMainFrame::EventInfo(int event, int px, int py, TObject* selected)
     if ( 0 != selected ) {
       TPad * thePad = dynamic_cast< TPad *>( editorCanvas -> GetClickSelectedPad() ) ;
       if ( 0 != thePad ) {
+        thePad->cd();
         TIter next( thePad -> GetListOfPrimitives() ) ;
         TObject * obj ; 
         TH1 * theHisto( 0 ) ; 
@@ -4832,58 +4833,52 @@ void PresenterMainFrame::EventInfo(int event, int px, int py, TObject* selected)
             break ;
           }
         }
-
-        if ( 0 != theHisto ) {
-          DisplayHistogram* dispH = m_presenterPage.displayHisto( theHisto );
-          if ( NULL != dispH->histo() ) {
-            // Display a pop-up menu
-            m_histomenu -> DeleteEntry( 1 ) ;
-            m_histomenu -> AddEntry( theHisto -> GetName() , 1 , 0 , 0 ,
-                                     m_histomenu -> GetEntry( 10 ) ) ;
-            
-            m_histomenu -> PlaceMenu( px , py , true , true ) ;
-            
-            m_weblink = dispH->histo()->doc() ;
-            if ( ! m_weblink.empty() ) {
-              m_histomenu -> DeleteEntry( 2 ) ;
-              m_histomenu -> AddEntry( "Click for documentation" , 2 ) ;
-              m_histomenu -> Connect( m_histomenu , "Activated(Int_t)",
-                                      "PresenterMainFrame" , this,
-                                      "loadWebPage(Int_t)" );
-            } else {
-              m_histomenu -> DeleteEntry( 2 ) ;
-              if ( pres::Alarm == displayMode() && m_shiftCrew ) {
-                m_histomenu -> AddEntry( "Clear the alarm" , 2 ) ;
-                m_histomenu -> Connect( m_histomenu , "Activated(Int_t)",
-                                        "PresenterMainFrame" , this,
-                                        "clearAlarm(Int_t)" );
-              } else {
-                m_histomenu -> AddEntry( "-- no documentation available --" , 2 ) ;
-              }
-            }
-            break;
-          }
-        } else if ( 0 != theGraph ) {
-          DisplayHistogram* dispH = m_presenterPage.displayHisto( theGraph );
+        DisplayHistogram* dispH = NULL;
+        
+        if ( 0 != theHisto ) dispH = m_presenterPage.displayHisto( theHisto );
+        if ( 0 != theGraph ) dispH = m_presenterPage.displayHisto( theGraph );
+        if ( NULL != dispH ) {
           // Display a pop-up menu
           m_histomenu -> DeleteEntry( 1 ) ;
-          m_histomenu -> AddEntry( theGraph -> GetName() , 1 , 0 , 0 ,
-                                   m_histomenu -> GetEntry( 10 ) ) ;
-          
+          m_histomenu -> DeleteEntry( 2 ) ;
+          if ( 0 != theHisto ) {
+            m_histomenu -> AddEntry( theHisto -> GetName() , 1 , 0 , 0 ,
+                                     m_histomenu -> GetEntry( 10 ) ) ;
+          } else {
+            m_histomenu -> AddEntry( theGraph -> GetName() , 1 , 0 , 0 ,
+                                     m_histomenu -> GetEntry( 10 ) ) ;
+           }            
           m_histomenu -> PlaceMenu( px , py , true , true ) ;
-          
+            
           m_weblink = dispH->histo()->doc() ;
           if ( ! m_weblink.empty() ) {
-            m_histomenu -> DeleteEntry( 2 ) ;
+            std::string info;
+            if ( 0 != theHisto ) {
+              info = std::string(theHisto->GetObjectInfo(px, py));
+              unsigned int kk = info.find( "binx=" );
+              if ( kk < info.size() ) info = info.substr( kk+5 );
+              m_weblink += "?X=" + info.substr(0, info.find(","));
+              kk = info.find( "biny=" );
+              if ( kk < info.size() ) {
+                info = info.substr( kk+5 );
+                m_weblink += "&Y="+info.substr(0, info.find(","));
+              }
+            } else {
+              info = std::string(theGraph->GetObjectInfo(px, py));
+            }    
             m_histomenu -> AddEntry( "Click for documentation" , 2 ) ;
+            m_histomenu -> Connect( m_histomenu , "Activated(Int_t)",
+                                    "PresenterMainFrame" , this,
+                                    "loadWebPage(Int_t)" );
+          } else if ( pres::Alarm == displayMode() && m_shiftCrew ) {
+            m_histomenu -> AddEntry( "Clear the alarm" , 2 ) ;
+            m_histomenu -> Connect( m_histomenu , "Activated(Int_t)",
+                                    "PresenterMainFrame" , this,
+                                    "clearAlarm(Int_t)" );
           } else {
             m_histomenu -> AddEntry( "-- no documentation available --" , 2 ) ;
           }
-          m_histomenu -> Connect( m_histomenu , "Activated(Int_t)",
-                                  "PresenterMainFrame" , this,
-                                  "loadWebPage(Int_t)" );
-          break;
-        }
+        } 
       }
     }
     break ;

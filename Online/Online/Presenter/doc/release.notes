@@ -4,6 +4,11 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2012-03-28 - Olivier Callot
+ - When right-clicking on an histogram with a documentation(web link) associated,
+   the web link is postfixed with ?X=nnn or ?X=nnn&Y=mmm for 1D/2D plots,
+   nnn (and mmm) being the bin number. This should please Marc-Olivier !
+
 ! 2012-03-23 - Olivier Callot
  - Set the default border size=4 and fillStyle = 1001 for the title pave
 
