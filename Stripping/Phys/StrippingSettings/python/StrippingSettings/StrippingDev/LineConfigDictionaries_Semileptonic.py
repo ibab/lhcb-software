@@ -56,6 +56,7 @@ CharmFromBSemi = {
     ,"D02HHPi0DocaCut"  : 6    # mm
     ,"D02HHPi0PtCut"    : 2000 # MeV
     ,"Dstar_preFitMassCut" : 100 # MeV
+    ,"Dstar_preFitMassCut_HHPi0" : 200 # MeV
     ,"Dstar_Chi2" :  10.0 ## unitless
     ,"Dstar_SoftPion_PIDe" : 5. ## unitless
     ,"Dstar_SoftPion_PT" : 200. ## MeV

@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-03-28 - Anton Poluektov 
+ - Fix StrippingDev dictionary (add property to StrippingCharmFromBSemi)
+
 ! 2012-03-28 - Jibo He
  - Stripping18/LineConfigDictionaries_Calib 
    . Updated conf dict of MuonIDCalib  
