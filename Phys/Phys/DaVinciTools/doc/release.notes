@@ -3,6 +3,11 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2012-03-28 - Vanya Belyaev
+
+ - Pi0Veto: reduce the warning messages. Now warning are issued 
+   only in case of self-contradiction decision
+
 ! 2012-03-23 - Anton Poluektov 
   - Fix compilation warnings in src/ConeVariablesForEW.cpp
   - Remove excessive warning messages in src/AddExtraInfo.cpp 

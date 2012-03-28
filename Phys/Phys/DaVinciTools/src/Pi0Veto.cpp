@@ -400,18 +400,25 @@ StatusCode Pi0Veto::Tagger::filter
     //
     LHCb::Particle* _gamma = const_cast<LHCb::Particle*> ( gamma ) ;
     //
-    // erase info
-    if ( _gamma->hasInfo( m_index ) ) 
-    {
-      Warning ( "ExtraInfo to be replaced" ) ;
-      _gamma -> eraseInfo ( m_index ) ; 
-    }
-    //
     const bool result = LoKi::Photons::pi0Veto ( gamma         , 
                                                  other         , 
                                                  massWindow () , 
                                                  massChi2   () , 
                                                  pi0Mass    () ) ;
+    // erase info
+    if ( _gamma->hasInfo( m_index ) ) 
+    {
+      //
+      const double old_result = _gamma->info ( m_index , result ) ;
+      //
+      if      (  result &&  old_result ) {}
+      else if ( !result && !old_result ) {}
+      else 
+      { Warning ( "ExtraInfo to be replaced" , 1 , StatusCode::SUCCESS ) ; }  
+      //
+      _gamma -> eraseInfo ( m_index ) ; 
+    }
+    //
     _gamma->addInfo ( m_index , result ) ;
     //
     cnt += result ;
@@ -491,19 +498,26 @@ StatusCode Pi0Veto::Tagger2g::filter
     //
     LHCb::Particle* _diphoton = const_cast<LHCb::Particle*> ( diphoton ) ;
     //
-    // erase info
-    if ( _diphoton -> hasInfo ( index() ) ) 
-    {
-      Warning ( "ExtraInfo to be replaced " ) ;
-      _diphoton -> eraseInfo  ( index() ) ; 
-    }
-    //
     const bool result = LoKi::Photons::pi0Veto ( gamma1        ,
                                                  gamma2        , 
                                                  other         , 
                                                  massWindow () , 
                                                  massChi2   () , 
                                                  pi0Mass    () ) ;
+    //
+    // erase info
+    if ( _diphoton -> hasInfo ( index() ) ) 
+    {
+      //
+      const double old_result = _diphoton->info ( index() , result ) ;
+      //
+      if      (  result &&  old_result ) {}
+      else if ( !result && !old_result ) {}
+      else 
+      { Warning ( "ExtraInfo to be replaced" , 1 , StatusCode::SUCCESS ) ; }  
+      //
+      _diphoton -> eraseInfo  ( index() ) ; 
+    }
     //
     _diphoton->addInfo  ( index (), result ) ;
     //
