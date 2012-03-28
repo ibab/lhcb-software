@@ -19,7 +19,7 @@ from StrippingConf.Configuration import StrippingConf
 from StrippingConf.StrippingStream import StrippingStream
 from StrippingArchive.Utils import lineBuilder
 lineBuilder = lineBuilder('Stripping17', 'BetaS')
-line = lineBuilder.lineFromName('StrippingBetaSBd2JpsiKsUnbiasedLine')
+line = lineBuilder.lineFromName('StrippingBetaSBd2JpsiKsDetachedLine')
 stream = StrippingStream("B2JpsiXTest", Lines = [line])
 sc = StrippingConf()
 sc.appendStream( stream )

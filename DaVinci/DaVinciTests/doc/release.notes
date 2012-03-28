@@ -4,6 +4,9 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2012-03-28 - Anton Poluektov 
+ - Fix test_decaytreetuple, change deleted test line to the existing one. 
+
 !========================= DaVinciTests v2r13 2012-03-05 =========================
 
 ! 2012-03-04 - Chris Jones
