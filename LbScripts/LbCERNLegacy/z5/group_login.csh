@@ -73,4 +73,4 @@ endif
 
 endif
 
-
+source ${GROUP_DIR}/extras.csh
