@@ -77,7 +77,8 @@ void MonAdder::Configure()
     toLowerCase(nodename);
     m_name= "MON_" + m_MyName;
   }
-  m_cmdname = nodename+"_"+RTL::processName()+"/"+m_MyServiceName+"/"+m_serviceName+"/Timeout";
+  m_outsvcname = m_name+m_serviceName;
+  m_cmdname = nodename+"_"+RTL::processName()+"/"+m_MyName+"/"+m_serviceName+"/Timeout";
 //  DimClient::getDnsNode();
   if (m_DimDns == 0)
   {
@@ -104,7 +105,6 @@ void MonAdder::Configure()
   m_timer = new AddTimer(this,m_rectmo);
   m_serviceexp = boost::regex(m_servicePattern.c_str(),boost::regex_constants::icase);
   m_taskexp = boost::regex(m_taskPattern.c_str(),boost::regex_constants::icase);
-  m_outsvcname = m_name+m_serviceName;
 //  BRTL_create_mutex(&m_maplock);
   m_ser = new AddSerializer((ObjMap*)&m_hmap);
   m_rpc = 0;
