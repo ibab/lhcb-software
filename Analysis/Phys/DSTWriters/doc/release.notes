@@ -4,6 +4,13 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2012-03-28 - Chris Jones
+ - Add an option to the uDST stream element methods to control whether or not
+   the packed Track clusters (for refitting) are included or not. Default is
+   that they are included. Useful, as they add around 1kb/event to the uDSTs, 
+   which are O(10kb/event), so around 10%, so potentially useful to be able to
+   disable this for any stream that knows it will never require track refitting.
+
 ! 2012-03-27 - Chris Jones
  - Add support for the packed track clusters on uDST streams.
  - Improve the ProtoParticle cloning to allow for dynamic checking of each
