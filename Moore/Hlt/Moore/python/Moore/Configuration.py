@@ -154,8 +154,10 @@ class Moore(LHCbConfigurableUser):
             app.ExtSvc.append(mepMgr)
             evtMerger = OnlineEnv.evtMerger(name='Output',buffer=output,location='DAQ/RawEvent',datatype=OnlineEnv.MDF_NONE,routing=1)
             evtMerger.DataType = OnlineEnv.MDF_BANKS
-            eventSelector = OnlineEnv.mbmSelector(input=input, TAE=TAE)
+	    if TAE : eventSelector = OnlineEnv.mbmSelector(input=input, TAE=TAE, decode=False)
+            else : eventSelector = OnlineEnv.mbmSelector(input=input, TAE=TAE)
             app.ExtSvc.append(eventSelector)
+
             OnlineEnv.evtDataSvc()
 	    if self.getProp('REQ1') : eventSelector.REQ1 = self.getProp('REQ1')
             
