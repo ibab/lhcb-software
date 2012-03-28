@@ -15,18 +15,19 @@ use  HltSettings         v5r23       Hlt
 use  HltDisplVertices    v3r8        Hlt
 use  Hlt2Lines           v8r16       Hlt
 
-# to get histograms of online conditions
-use  HltGlobalMonitor    v3r10       Hlt
+# v3r10 contains a bug - go back one version
+use  HltGlobalMonitor    v3r9       Hlt
 
 # to be future compatible with eventpacking 
-#use  EventPacker         v2r13       Event
-#use  PackedEvent         v4r8        Event
+use  EventPacker         v2r13       Event
+use  PackedEvent         v4r8        Event
 
 # for swimming
 use  XMLSummaryKernel    v1r6        Kernel
 use  Swimming            v2r5p1      Phys
 
 # Patches
+use  TrackFitter         v4r7        Tr
 
 # Declare this as a container package
 apply_pattern container_package
