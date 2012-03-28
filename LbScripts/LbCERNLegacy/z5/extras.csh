@@ -3,6 +3,8 @@
 #
 # Force the CMTEXTRATAGS for SLC 5.8 and posterior 
 # 
+if ( ! $?CMTEXT_CHECKDONE ) then
+setenv CMTEXT_CHECKDONE yes
 if ( ! $?CMTEXTRATAGS ) then
     echo "Checking for CMTXTRATAGS setting"
     if ( -e /etc/redhat-release ) then
@@ -12,8 +14,9 @@ if ( ! $?CMTEXTRATAGS ) then
 	    case 5.9:
 	    case 5.10:
 	       echo "Forcing CMTEXTRATAGS"
-	       setenv CMTEXTRATAGS " host-slc5"
+	       setenv CMTEXTRATAGS "host-slc5"
 	       breaksw
 	endsw
     endif
+endif
 endif
