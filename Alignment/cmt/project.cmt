@@ -1,7 +1,7 @@
 project ALIGNMENT
 
-use LBCOM LBCOM_v11r1
-use PHYS   PHYS_v13r1
+use LBCOM LBCOM_v12r2
+use PHYS   PHYS_v14r2
 
 build_strategy	with_installarea
 setup_strategy	root
