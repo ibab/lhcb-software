@@ -786,11 +786,12 @@ Beauty2XGamma = {
                        'CL_MIN'       : 0.25 
                      },
            # Cuts made on all K shorts
-           "KS0" : { 'PT_MIN'        : '500*MeV',
+           "KS0" : { 'PT_MIN'        : '1000*MeV',
                      'BPVVDCHI2_MIN' : 64 ,
                      #'MIPCHI2DV_MIN' : 4,
-                     'MM_MIN'        : '467.*MeV',
-                     'MM_MAX'        : '527.*MeV' },
+                     'VCHI2DOF_MAX'  : 9,
+                     'MM_MIN'        : '480.*MeV',
+                     'MM_MAX'        : '515.*MeV' },
            # Cuts made on all pi0's
            "Pi0" : { 'PT_MIN'        : '1000*MeV',
                      'P_MIN'         : '4000*MeV',

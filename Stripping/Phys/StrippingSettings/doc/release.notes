@@ -4,6 +4,13 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-03-30 - Jibo He
+ - Stripping18/LineConfigDictionaries_BandQXsec.py
+   . DiMuon lines for 8 TeV cross-section measurements
+ - Stripping18/LineConfigDictionaries_RD.py 
+   . Updated conf dict of Beauty2Gamma line, as requested by A. Puig
+ - Updated dbase, copied to dev
+
 ! 2012-Mar-29 - Patrick Spradlin
  - Added configuration dictionary for open charm cross-section lines in
    ICHEP stripping:
