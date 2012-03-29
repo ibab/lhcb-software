@@ -71,7 +71,7 @@ class CheckDist(ProjectTool):
             s +=  fdisp.format("", "", os.path.getsize(os.path.join(path2, n2)), n2)
         return s
 
-    def compareProjects(self, p1, p2, width = 140):
+    def compareProjects(self, p1, p2, width = 160):
         """ Compare two different projects """
         width = 121
         tdisp =  self.twoColumns(width)
