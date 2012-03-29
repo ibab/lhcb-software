@@ -35,12 +35,14 @@ class B2XGammaBuilder(object):
                    'B2RhoGamma'      : ['[B_s0 -> rho(770)0 gamma]cc'],
                    'B2OmegaGammaHH'  : ['[B0 -> omega(782) gamma]cc'],
                    'B2OmegaGammaHHH' : ['[B0 -> omega(782) gamma]cc'],
-                  }
+                   'B2KstarIsoGamma' : ['[B+ -> K*(892)+ gamma]cc'],
+                   }
         inputs = { 'B2KstarGamma'    : self.gamma + self.hh.kstar0,
                    'B2PhiGamma'      : self.gamma + self.hh.phi,
                    'B2RhoGamma'      : self.gamma + self.hh.rho0,
                    'B2OmegaGammaHH'  : self.gamma + self.hh.omega,
                    'B2OmegaGammaHHH' : self.gamma + self.hhh.omega,
+                   'B2KstarIsoGamma' : self.gamma + self.hh.kspi,
                    }
         b2vgamma = makeB2XSels(decays, name, inputs, self.config)
         self.lines.append(ProtoLine(b2vgamma, 1.0))
