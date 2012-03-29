@@ -4,6 +4,9 @@
 ! Purpose     : Provides the grade data required by GenXicc
 !-----------------------------------------------------------------------------
 
+! 2012-03-29 Giacomo Graziani
+- add grade data also for Xi_bc
+
 !======================== BcVegPyData v1r0 2012-03-09 ========================
 ! 2012-03-09 - Patrick Robbe
  - Tagged as v1r0 
