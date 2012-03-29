@@ -4,6 +4,8 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+!========================= DecayTreeTuple v3r21 2012-03-29 =========================
+
 ! 2012-03-23 - Jibo He
  - TupleToolTISTOS
   . Added Hlt1Phys Hlt2Phys  
@@ -17,9 +19,10 @@
  - Fix warning about unsigned long
 
 ! 2012-03-20 - Patrick Koppenburg
- - DecayTreeTupleTemplates.icpp: Ignore TupleToolDecay when initialising tools. This avoids the 
-   red herring 
-   ERROR DecayTreeTuple:: Can't get the tool 'TupleToolDecay/B', check your syntax StatusCode=FAILURE
+ - DecayTreeTupleTemplates.icpp: Ignore TupleToolDecay when initialising tools. 
+   This avoids the red herring 
+   ERROR DecayTreeTuple:: Can't get the tool 'TupleToolDecay/B', check your syntax
+   StatusCode=FAILURE
 
 ! 2012-03-20 - Patrick Koppenburg
  - TupleToolGeometry: Fix misleading message 
@@ -30,7 +33,7 @@
  - TupleToolSwimmingInfo: replace "/" with "_" in decision branch names.
 
 ! 2012-03-14 - Patrick Koppenburg
-	- TupleToolGeometry: do things in slightly different order
+ - TupleToolGeometry: do things in slightly different order
 
 !========================= DecayTreeTuple v3r20 2012-02-09 =========================
 
