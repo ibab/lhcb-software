@@ -4,6 +4,9 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
+! 2012-03-29 - Giacomo Graziani
+  -  Add new classes for XibcPlus, XibcZero and cc
+
 !====================== GaussPhysics v7r3 2011-11-13 =========================
 ! 2011-11-02 - Yasmine Amhis
   -  Add new classes for XibMinus, XibPlus, OmegabMinus, OmegabPlus 
