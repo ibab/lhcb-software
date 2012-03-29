@@ -4,12 +4,15 @@
 ! Responsible : J.P. Palacios
 !=============================================================================
 
+!========================= DaVinciMCTools v10r4 2012-03-29 =========================
+
 ! 2012-03-15 - P. Koppenburg
-	- DumpParticle : follow vertex particles
-x 
+ - DumpParticle : follow vertex particles
+ 
 !========================= DaVinciMCTools v10r3 2012-03-14 =========================
+
 ! 2012-03-14 - P. Koppenburg
-	- New DVAlgorithm DumpParticle that printsout what's in the Inputs[] container
+ - New DVAlgorithm DumpParticle that prints out what's in the Inputs[] container
 
 !========================= DaVinciMCTools v10r2 2011-12-15 =========================
 
