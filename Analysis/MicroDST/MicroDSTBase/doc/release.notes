@@ -6,6 +6,8 @@
 !               functions and functors.
 !-----------------------------------------------------------------------------
 
+!========================= MicroDSTBase v3r2 2012-03-29 =========================
+
 ! 2012-03-27 - Chris Jones
  - Some more improvements to the debug printout in the base classes
 
