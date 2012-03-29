@@ -5,6 +5,8 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+!========================= Swimming v2r6 2012-03-29 =========================
+
 ! 2012-03-20 - Roel Aaij
  - Re-enable output algorithms before exiting to allow correct finalisation.
 
