@@ -61,9 +61,7 @@ StatusCode PackCluster::execute()
   }
 
   // Sort and remove duplicate LHCbIDs
-  std::sort( allIds.begin(), allIds.end() );
-  std::vector<LHCb::LHCbID>::iterator itEnd = std::unique( allIds.begin(), allIds.end() );
-  allIds.resize( itEnd - allIds.begin() );
+  allIds.erase( std::unique(allIds.begin(),allIds.end()), allIds.end() );
 
   // Load the clusters
   LHCb::VeloClusters* vClus = get<LHCb::VeloClusters>(LHCb::VeloClusterLocation::Default);

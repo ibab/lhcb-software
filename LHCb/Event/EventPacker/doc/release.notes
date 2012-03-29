@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2012-03-29 - Chris Jones
+ - Small change to how duplicate LHCbIDs are removed in PackCluster
+
 !========================= EventPacker v2r15 2012-03-27 =========================
 
 ! 2012-03-27 - Chris Jones
