@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-03-30 - Jibo He
+ - StrippingDiMuonForXsection.py
+   . New line for 8 TeV cross section measurements 
+ - __init__.py 
+   . Added StrippingB2TwoBaryons, which replaces StrippingB2PPbar 
+
 ! 2012-03-29 - Ricardo Vazquez Gomez
  - StrippingBeauty2XGamma.py
    Added a new line for B+ -> K*+ gamma. This will allow to measure the isospin CP asymmetry in the B->K*gamma mode.

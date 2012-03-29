@@ -70,6 +70,7 @@ import StrippingBd2MuMuKstarBDT
 import StrippingBeauty2XGamma
 
 import StrippingDiMuonNew
+import StrippingDiMuonForXsection
 import StrippingBc2JpsiHNew
 import StrippingBc2JpsiMuXNew
 import StrippingJpsiMuMuforD0MuMu
@@ -138,7 +139,8 @@ import StrippingD02HHForXSec
 #import StrippingBu3hFrom2h
 import StrippingB2HHPi0
 import StrippingLb2V0hh
-import StrippingB2PPbar
+#import StrippingB2PPbar
+import StrippingB2TwoBaryons
 import StrippingB2FourKHigh
 import StrippingBs2KKhh
 import StrippingBs2KSKS
