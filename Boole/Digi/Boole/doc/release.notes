@@ -5,17 +5,22 @@ Purpose: LHCb Digitization program
 
  - Changes to configuration:
    . Remove dependency on GaudiPoolDb
+   . Set default DataType to 2012
 
  - Changes to tests
    . Remove boole.boole-mc10pool, writing POOL files no longer supported
    . Add a reference file for boole-2010-latestdb test, since 2010 geometry has
      evolved since MC10
+
+ - Changes to references to follow changes in underlying packages
    . Adapt references to introduction of Velo radiation damage simulation, that
      adds the effect of cross-talk on between hits and the second metal routing
      lines on the R sensors. When using DDDB and SIMCOND head, this adds 10%
      "other" FEs, translates to 2% of clusters averaged over detector, 4% in
      R-sensors, due to this sort of coupling. For pre-existing DDDB tags it
      generates a warning about missing conditions.
+   . Adapt boole-fest.ref for reduced L0Calo bank size following application of
+     Hcal threshold in L0Calo emulation of 2012 data (L0Calo) 
 
  - Changes to Digi/Boole/python/Boole/Configuration.py
    . Added configuration for OTDoublePulse.root file which provides a look-up-table
@@ -36,7 +41,7 @@ This version uses projects LCGCMT 61b, Gaudi v22r5, LHCb v33r2, Lbcom v11r2
 This version uses projects LCGCMT 61, Gaudi v22r4, LHCb v33r0, Lbcom v11r0
  and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
 
- - Production release for MC11 simulation.
+ - Production release for MC11+MC11a simulation.
  - No longer compatible with MC09
 
  - Changes to configurable:

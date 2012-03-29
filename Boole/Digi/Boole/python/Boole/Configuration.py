@@ -37,7 +37,7 @@ class Boole(LHCbConfigurableUser):
        ,"ProductionMode"      : False 
        ,"OutputLevel"         : INFO 
        ,"DatasetName"         : "Boole"
-       ,"DataType"            : "2011"
+       ,"DataType"            : "2012"
        ,"DDDBtag"             : ""
        ,"CondDBtag"           : ""
        ,"VeloTell1Processing" : True
