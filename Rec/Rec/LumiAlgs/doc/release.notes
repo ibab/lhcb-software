@@ -3,6 +3,9 @@
 ! Responsible : Jaap Panman
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
+! 2012-03-29 - Rosen Matev
+ - Added event time ordering and output compression (bz2) capabilities
+   to DumpLumiEvents algorithm
 
 !========================= LumiAlgs v7r5 2012-03-27 =========================
 ! 2012-03-21 - Rosen Matev

@@ -12,7 +12,8 @@ IOHelper(None, None).setupServices()
 
 dumpLumiEvents = DumpLumiEvents()
 dumpLumiEvents.OutputLevel = DEBUG
-dumpLumiEvents.OutputFileName = "testDumpLumiEvents.dump"
+dumpLumiEvents.OutputFileName = "testDumpLumiEvents.bz2"
+dumpLumiEvents.NEventsHint = 100
 
 ApplicationMgr().TopAlg = [createODIN(), HltLumiSummaryDecoder(), dumpLumiEvents]
 ApplicationMgr().HistogramPersistency = 'NONE'

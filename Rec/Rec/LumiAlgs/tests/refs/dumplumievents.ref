@@ -3,15 +3,19 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to ApplicationMgr (GaudiCoreSvc v1r1)
-                                          running on lxplus437.cern.ch on Fri Mar 23 10:56:59 2012
+                                          running on lxplus412.cern.ch on Thu Mar 29 11:12:53 2012
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DumpLumiEvents      DEBUG Property update for OutputLevel : new value = 2
 DumpLumiEvents      DEBUG Property update for OutputLevel : new value = 2
 DumpLumiEvents      DEBUG Initialize base class GaudiCommon<Algorithm>
 DumpLumiEvents      DEBUG could not locate CounterSummarySvc, no counter summary will be made
-DumpLumiEvents      DEBUG List of ALL properties of DumpLumiEvents/DumpLumiEvents  #properties = 33
-DumpLumiEvents      DEBUG Property ['Name': Value] =  'OutputFileName':testDumpLumiEvents.dump
+DumpLumiEvents      DEBUG List of ALL properties of DumpLumiEvents/DumpLumiEvents  #properties = 37
+DumpLumiEvents      DEBUG Property ['Name': Value] =  'NEventsHint':100
+DumpLumiEvents      DEBUG Property ['Name': Value] =  'IntermediateStreamFileName':
+DumpLumiEvents      DEBUG Property ['Name': Value] =  'RecVerticesLocation':
+DumpLumiEvents      DEBUG Property ['Name': Value] =  'OutputFileName':testDumpLumiEvents.bz2
+DumpLumiEvents      DEBUG Property ['Name': Value] =  'Sort':True
 DumpLumiEvents      DEBUG Property ['Name': Value] =  'RequireObjects':[  ]
 DumpLumiEvents      DEBUG Property ['Name': Value] =  'VetoObjects':[  ]
 DumpLumiEvents      DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
@@ -45,6 +49,7 @@ DumpLumiEvents      DEBUG Property ['Name': Value] =  'ErrorMax':1
 DumpLumiEvents      DEBUG Property ['Name': Value] =  'Enable':True
 DumpLumiEvents      DEBUG Property ['Name': Value] =  'OutputLevel':2
 DumpLumiEvents      DEBUG ==> Initialize
+DumpLumiEvents       INFO Reserved capacity for 100 elements in key-location pairs vector.
 EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='lfn:lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/81430/081430_0000000113.raw' SVC='LHCb::MDFSelector' OPT='READ'
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
@@ -487,6 +492,36 @@ DumpLumiEvents      DEBUG Property update for OutputLevel : new value = 2
 ApplicationMgr       INFO Application Manager Stopped successfully
 HltLumiSummaryD...   INFO Average event size :     2.8 words
 DumpLumiEvents      DEBUG ==> Finalize
+DumpLumiEvents      DEBUG 6,81430,0,0,5978179,191390844,1288065076621248,0,524288,0,2,1,0,2,0,3337,;0,0,1,0,2,0,6,1,7,619,8,0,11,0,21,2,;
+DumpLumiEvents      DEBUG 6,81430,0,0,5980989,191480956,1288065076871168,0,524288,0,3,1,0,2,0,2986,;0,13,1,39,2,9,6,239,7,14659,8,0,11,2,21,2,;
+DumpLumiEvents      DEBUG 6,81430,0,0,5981537,191498321,1288065076919872,0,524288,0,3,1,0,2,0,1882,;0,28,1,80,2,24,6,234,7,17359,8,0,11,3,21,2,;
+DumpLumiEvents      DEBUG 6,81430,0,0,5983320,191555505,1288065077078464,0,524288,0,3,1,0,2,0,2884,;0,16,1,49,2,15,6,237,7,12299,8,0,11,2,21,2,;
+DumpLumiEvents      DEBUG 6,81430,0,0,5984567,191595251,1288065077189312,0,524288,0,1,1,0,2,0,1624,;0,0,1,0,2,0,6,2,7,519,8,0,11,0,21,2,;
+DumpLumiEvents      DEBUG 6,81430,0,0,5984800,191602657,1288065077210048,0,524288,0,3,1,0,2,0,1555,;0,8,1,66,2,3,6,272,7,16859,8,0,11,2,21,2,;
+DumpLumiEvents      DEBUG 6,81430,0,0,5985162,191614110,1288065077242240,0,524288,0,1,1,0,2,0,637,;0,0,1,0,2,0,6,1,7,399,8,0,11,0,21,2,;
+DumpLumiEvents      DEBUG 6,81430,0,0,5986388,191653442,1288065077351232,0,524288,0,3,1,0,2,0,472,;0,29,1,84,2,22,6,249,7,10079,8,0,11,4,21,2,;
+DumpLumiEvents      DEBUG 6,81430,0,0,5987241,191680739,1288065077427136,0,524288,0,3,1,0,2,0,1939,;0,19,1,70,2,9,6,294,7,16799,8,0,11,2,21,2,;
+DumpLumiEvents      DEBUG 6,81430,0,0,5990105,191772441,1288065077681792,0,524288,0,3,1,0,2,0,2977,;0,32,1,75,2,28,6,189,7,13639,8,0,11,2,21,2,;
+DumpLumiEvents      DEBUG 6,81430,0,0,5991018,191801560,1288065077763008,0,524288,0,3,1,0,2,0,1033,;0,10,1,43,2,9,6,127,7,7439,8,0,11,1,21,2,;
+DumpLumiEvents      DEBUG 6,81430,0,0,6016499,192616065,1288065080028928,0,524288,0,3,1,0,2,0,1429,;0,23,1,59,2,15,6,244,7,13399,8,0,11,1,21,2,;
+DumpLumiEvents      DEBUG 6,81430,0,0,6035063,193210428,1288065081679744,0,524288,0,0,1,0,2,0,1179,;0,0,1,0,2,0,6,3,7,439,8,0,11,0,21,2,;
+DumpLumiEvents      DEBUG 6,81430,0,0,6042222,193439761,1288065082316352,0,524288,0,1,1,0,2,0,1624,;0,0,1,0,2,0,6,0,7,459,8,0,11,0,21,2,;
+DumpLumiEvents      DEBUG 6,81430,0,0,6044820,193522911,1288065082547392,0,524288,0,3,1,0,2,0,2095,;0,73,1,257,2,75,6,526,7,30819,8,0,11,5,21,2,;
+DumpLumiEvents      DEBUG 6,81430,0,0,6044939,193526661,1288065082557952,0,524288,0,3,1,0,2,0,1183,;0,28,1,40,2,16,6,117,7,9479,8,0,11,2,21,2,;
+DumpLumiEvents      DEBUG 6,81430,0,0,6045060,193530572,1288065082568768,0,524288,0,3,1,0,2,0,3262,;0,29,1,138,2,26,6,245,7,20499,8,0,11,3,21,2,;
+DumpLumiEvents      DEBUG 6,81430,0,0,6045100,193531831,1288065082572288,0,524288,0,2,1,0,2,0,3337,;0,0,1,0,2,0,6,0,7,519,8,0,11,0,21,2,;
+DumpLumiEvents      DEBUG 6,81430,0,0,6045133,193532825,1288065082575232,0,524288,0,1,1,0,2,0,661,;0,0,1,0,2,0,6,0,7,459,8,0,11,0,21,2,;
+DumpLumiEvents      DEBUG 6,81430,0,0,6045170,193534070,1288065082578496,0,524288,0,3,1,0,2,0,1450,;0,50,1,122,2,50,6,313,7,15799,8,0,11,3,21,2,;
+DumpLumiEvents      DEBUG 6,81430,0,0,6045316,193538805,1288065082591488,0,524288,0,3,1,0,2,0,1807,;0,25,1,122,2,15,6,357,7,18459,8,0,11,2,21,2,;
+DumpLumiEvents      DEBUG 6,81430,0,0,6045434,193542584,1288065082601984,0,524288,0,3,1,0,2,0,1945,;0,15,1,49,2,11,6,284,7,10639,8,0,11,3,21,2,;
+DumpLumiEvents      DEBUG 6,81430,0,0,6045617,193548440,1288065082618304,0,524288,0,3,1,0,2,0,3124,;0,66,1,110,2,25,6,374,7,25159,8,0,11,4,21,2,;
+DumpLumiEvents      DEBUG 6,81430,0,0,6045664,193549965,1288065082622464,0,524288,0,3,1,0,2,0,3085,;0,39,1,144,2,29,6,463,7,19959,8,0,11,5,21,2,;
+DumpLumiEvents      DEBUG 6,81430,0,0,6045671,193550186,1288065082623104,0,524288,0,3,1,0,2,0,2065,;0,35,1,88,2,26,6,206,7,16779,8,0,11,1,21,2,;
+DumpLumiEvents      DEBUG 6,81430,0,0,6045673,193550240,1288065082623232,0,524288,0,3,1,0,2,0,2146,;0,45,1,99,2,39,6,220,7,17599,8,0,11,3,21,2,;
+DumpLumiEvents      DEBUG 6,81430,0,0,6045732,193552120,1288065082628480,0,524288,0,2,1,0,2,0,3394,;0,0,1,0,2,0,6,0,7,479,8,0,11,0,21,2,;
+DumpLumiEvents      DEBUG 6,81430,0,0,6045829,193555258,1288065082637120,0,524288,0,3,1,0,2,0,124,;0,0,1,0,2,0,6,3,7,579,8,0,11,0,21,2,;
+DumpLumiEvents      DEBUG 6,81430,0,0,6045879,193556868,1288065082641600,0,524288,0,2,1,0,2,0,3355,;0,0,1,0,2,0,6,1,7,439,8,0,11,0,21,2,;
+DumpLumiEvents      DEBUG 6,81430,0,0,6045948,193559081,1288065082647680,0,524288,0,3,1,0,2,0,3109,;0,24,1,41,2,26,6,108,7,6179,8,0,11,2,21,2,;
 DumpLumiEvents      DEBUG Finalize base class GaudiAlgorithm
 DumpLumiEvents      DEBUG Tools to release :
 DumpLumiEvents      DEBUG Services to release :
