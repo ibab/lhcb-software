@@ -4,6 +4,11 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-Mar-29 - Patrick Spradlin
+ - Added configuration dictionary for open charm cross-section lines in
+   ICHEP stripping:
+   + python/StrippingSettings/Stripping18/LineConfigDictionaries_CharmXsec.py 
+
 ! 2012-03-29 - Eduardo Rodrigues
  - StrippingB2PPbar settings replaced by StrippingB2TwoBaryons settings
    (following the replacement of the stripping selection)

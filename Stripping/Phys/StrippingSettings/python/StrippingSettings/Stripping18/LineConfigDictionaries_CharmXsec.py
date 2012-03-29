@@ -68,7 +68,7 @@ D02K3PiForXSec = {
                        , 'Untagged' : None },    
     },
     'WGs' : [ 'Charm' ],
-    'STREAMS' : [ 'MiniBias' ] 
+    'STREAMS' : [ 'ICHEP' ] 
     }
 
 
@@ -95,7 +95,7 @@ D02KPiGeoForXSec = {
     , 'PostscaleDstar2D0Pi_D02HH' :   1.0
     },
     'WGs' : ['Charm'],
-    'STREAMS' : [ 'MiniBias' ] 
+    'STREAMS' : [ 'ICHEP' ] 
     }
     
 
@@ -121,7 +121,7 @@ Dstar2D0Pi_D02KPiForXSec = {
     , 'PostscaleDstar2D0Pi_D02HH' :   1.0
     },
     'WGs' : ['Charm'],
-    'STREAMS' : [ 'MiniBias' ] 
+    'STREAMS' : [ 'ICHEP' ] 
     }
     
 
@@ -133,6 +133,7 @@ Lambdac2PKPiForXSec = {
      , 'Daug_P_MIN'            : 3200.0 * MeV
      , 'Daug_TRCHI2DOF_MAX'    :   10.0
      , 'Daug_BPVIPCHI2_MIN'    :    0.5
+     , 'Daug_1of3_BPVIPCHI2_MIN'   : 4.0
      , 'Proton_PIDp_MIN'       :   10.0
      , 'Pi_PIDK_MAX'           :    0.0
      , 'K_PIDK_MIN'            :   10.0
@@ -145,11 +146,18 @@ Lambdac2PKPiForXSec = {
      , 'Lambdac_BPVLTIME_MAX'  :    0.0012 * ns
      , 'Lambdac_BPVLTIME_MIN'  :    0.0 * ns
      , 'HltFilter'          : "HLT_PASS_RE('Hlt1MB.*')"
+     , 'Hlt2TisTosSpec'     : { }
      , 'PrescaleLambdac2PKPi'  :    1.0
      , 'PostscaleLambdac2PKPi' :    1.0
+     , 'PrescaleLambdac2PKK'      : 1.0
+     , 'PostscaleLambdac2PKK'     : 1.0
+     , 'PrescaleLambdac2PPiPi'    : 1.0
+     , 'PostscaleLambdac2PPiPi'   : 1.0
+     , 'PrescaleLambdac2PPiKWS'   : 1.0
+     , 'PostscaleLambdac2PPiKWS'  : 1.0
     },
     'WGs'          : ['Charm'],
-    'STREAMS'      : [ 'MiniBias' ] 
+    'STREAMS'      : [ 'ICHEP' ] 
     }
 
 
@@ -173,7 +181,7 @@ D2PhiPiForXSec = {
     , 'PostscaleD2PhiPi'          :    1.0
     },
     'WGs' : [ 'Charm' ],
-    'STREAMS' : [ 'MiniBias' ] 
+    'STREAMS' : [ 'ICHEP' ] 
     }
     
 
@@ -211,7 +219,7 @@ D2HHHForXSec = {
     , 'PostscaleD2KPPDCS' : 1.0
     },
     'WGs' : [ 'Charm' ],
-    'STREAMS' : [ 'MiniBias' ] 
+    'STREAMS' : [ 'ICHEP' ] 
     }
 
 D02HHForXSec = { 
@@ -235,7 +243,7 @@ D02HHForXSec = {
      , 'PostscaleDstar2D0Pi_D02HH' :   1.0
     },
     'WGs' : [ 'Charm' ],
-    'STREAMS' : [ 'MiniBias' ] 
+    'STREAMS' : [ 'ICHEP' ] 
     }
 
 
