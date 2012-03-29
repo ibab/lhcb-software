@@ -4,6 +4,8 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+!========================= DSTWriters v4r5 2012-03-29 =========================
+
 ! 2012-03-28 - Chris Jones
  - Add an option to the uDST stream element methods to control whether or not
    the packed Track clusters (for refitting) are included or not. Default is
