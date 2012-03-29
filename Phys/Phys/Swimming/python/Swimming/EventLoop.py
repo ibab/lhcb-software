@@ -395,6 +395,11 @@ def SwimmingEventLoop(gaudi, nEvents):
             gaudi.algorithm('FSRInputCopyStreamWriter').execute()
         __next__()
 
+    # re-enable the output algorithms to allow correct finalisation
+    gaudi.algorithm(writerName).Enable = True
+    if not swimStripping and Swimming().getProp('WriteFSR'):
+        gaudi.algorithm('FSRInputCopyStreamWriter').Enable = True
+
     # Print the number of events processed
     print Swimming().getProp('EventPrint') % eventNumber
     return StatusCode(True)

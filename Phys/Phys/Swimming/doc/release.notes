@@ -5,6 +5,9 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+! 2012-03-20 - Roel Aaij
+ - Re-enable output algorithms before exiting to allow correct finalisation.
+
 ! 2012-03-18 - Roel Aaij
  - Fix XML summary writing.
  - Disable FSRInputCopyStreamWriter when swimming the trigger
