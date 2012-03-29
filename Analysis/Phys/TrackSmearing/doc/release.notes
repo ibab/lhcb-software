@@ -3,8 +3,13 @@
 ! Responsible : Sascha Stahl
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+
+!========================= TrackSmearing v1r2 2012-03-29 =========================
+
 ! 2012-03-23 Sascha Stahl
  - Made MC11/Stripping 17 parameters default
+
+!========================= TrackSmearing v1r1 2012-03-01 =========================
 
 ! 2011-05-01 - Alex Shires
  - Added protection to phi bin calculation in getSigma method
