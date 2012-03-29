@@ -1,3 +1,17 @@
+2012-03-29  Ben Couturier  <Ben.Couturier@cern.ch>
+
+	* doc/release.notes: Updated info for v1r3
+        * z5/group_login.csh: Added call to extras script
+        * z5/group_tcshrc: Added call to extras script
+        * z5/group_zshrc: Added call to extras script
+        * z5/group_login.zsh: Added call to extras script
+        * z5/group_login.sh: Added call to extras script
+        * z5/group_bashrc: Added call to extras script
+	* z5/extra.sh: Force CMTEXTRATAGS to host-slc5 for slc5.8
+	* z5/extra.csh: Force CMTEXTRATAGS to host-slc5 for slc5.8
+
+
+
 2012-02-10  Ben Couturier  <Ben.Couturier@cern.ch>
 
 	* doc/release.notes: Updated info for v1r2
