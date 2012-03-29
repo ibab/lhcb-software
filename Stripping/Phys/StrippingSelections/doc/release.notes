@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-03-29 - Ricardo Vazquez Gomez
+ - StrippingBeauty2XGamma.py
+   Added a new line for B+ -> K*+ gamma. This will allow to measure the isospin CP asymmetry in the B->K*gamma mode.
+
 ! 2012-03-29 - Eduardo Rodrigues
  - StrippingB2TwoBaryons.py replaces StrippingB2PPbar to be able to accommodate
    in the future other Bd,s -> baryon antibaryon decays (not only p pbar)
