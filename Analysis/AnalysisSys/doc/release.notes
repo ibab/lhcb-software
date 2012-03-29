@@ -3,6 +3,38 @@ Package     : AnalysisSys
 Package Coordinator : Chris Jones
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v8r2>2012-03-28 Analysis v8r2 </A></H1><PRE>
+
+Based on Phys v14r2
+
+Updated Packages : MicroDSTBase, MicroDSTTools, DSTWriters,
+                   DaVinciMCTools, DecayTreeTuple, TrackSmearing
+
+In MicroDSTBase, MicroDSTTools, DSTWriters  :
+ . Some more improvements to the debug printout in the base classes
+ . Small improvements to MicroDSTCommon base class
+ . Add an option to the uDST stream element methods to control whether or not
+   the packed Track clusters (for refitting) are included or not. Default is
+   that they are included. Useful, as they add around 1kb/event to the uDSTs, 
+   which are O(10kb/event), so around 10%, so potentially useful to be able to
+   disable this for any stream that knows it will never require track refitting.
+ . Add support for the packed track clusters on uDST streams.
+ . Improve the ProtoParticle cloning to allow for dynamic checking of each
+   ProtoParticle, and dependant data objects, to determine if they should be
+   cloned or not for the stream in question. If the object resides in a TES
+   location known to be completely copied to the stream output (for instance
+   the standard reconstruction locations on DSTs) then it is not copied and
+   the reference to that original container is kept. Otherwise, the objects
+   are fully cloned.
+   Fixes the problem on Calibration (and EW) DST streams that create custom 
+   Tracks, ProtoParticles that where not being properly handled.
+
+In DecayTreeTuple :
+ . Many improvements. See package release notes.
+
+In TrackSmearing :
+ . Made MC11/Stripping 17 parameters default
+
 </PRE><H1><A NAME=v8r1>2012-03-01 Analysis v8r1 </A></H1><PRE>
 
 Based on Phys v14r1
