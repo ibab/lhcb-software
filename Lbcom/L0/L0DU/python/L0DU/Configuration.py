@@ -411,9 +411,11 @@ class L0Conf(LHCbConfigurableUser) :
             emulateL0Muon().L0Context = l0context
             emulateL0DU().L0Context   = l0context
 
-        # Set electron emulation depending on data type
+        # Set electron emulation and Hcal threshold depending on data type
         if self.isPropertySet("DataType"):
             datatype = self.getProp("DataType")
+            if datatype == "2011" or datatype == "2010" or datatype == "2009":
+                emulateL0Calo().HcalThreshold = 0
             if datatype == "2010" or datatype == "2009":
                 emulateL0Calo().UseNewElectron = False
             else:

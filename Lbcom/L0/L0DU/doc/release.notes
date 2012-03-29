@@ -3,6 +3,10 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+! 2012-03-29 - Marco Cattaneo
+ - In Configuration.py, set HcalThreshold of L0Calo Emulation to zero for
+   DataType prior to 2012, to keep backward compatibility following setting
+   of non-zero threshold in L0CaloAlg revision 137622   
 
 !========================= L0DU v10r19 2012-03-26 =========================
 ! 2012-02-15 - Olivier Deschamps
