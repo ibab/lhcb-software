@@ -1,5 +1,8 @@
 """
-Stripping options for (pre-)selecting B -> p pbar
+Stripping options for (pre-)selecting Bd,s -> baryon antibaryon.
+For now it only contains options for Bd,s -> p pbar
+(ultimately it will also select Bd,s -> p Lambda_bar, Lambda Lambda_bar).
+
 Authors: Eduardo Rodrigues
 """
 
@@ -8,7 +11,7 @@ __author__ = ['Eduardo Rodrigues']
 __date__ = '22/03/2012'
 __version__ = '$Revision: 1.5 $'
 
-__all__ = ('B2PPbarLines',
+__all__ = ('B2TwoBaryonLines',
            'makeB2PPbar')
 
 from Gaudi.Configuration import *
@@ -23,21 +26,21 @@ from StrippingUtils.Utils        import LineBuilder, checkConfig
 default_config = { 'PrescaleB2PPbar'   : 1,
                    'MinPTB2PPbar'      : 900,
                    'MinIPChi2B2PPbar'  : 9,
-                   'TrChi2'            : 5,
+                   'TrChi2'            : 4,
                    'PIDppi'            : 0,
-                   'PIDpk'             : -2,
+                   'PIDpk'             : -1,
                    'MaxPTB2PPbar'      : 2100,
                    'MaxIPChi2B2PPbar'  : 25,
                    'CombMassWindow'    : 200,
                    'VertexChi2B2PPbar' : 16,
-                   'BPTB2PPbar'        : 1000,
-                   'BIPChi2B2PPbar'    : 36,
+                   'BPTB2PPbar'        : 1100,
+                   'BIPChi2B2PPbar'    : 20,
                    'BDIRA'             : 0.9995
                  }
 
 
-class B2PPbarLines( LineBuilder ) :
-    """Class defining the Hb -> hh stripping lines"""
+class B2TwoBaryonLines( LineBuilder ) :
+    """Class defining the Bd,s -> baryon antibaryon stripping line"""
     
     __configuration_keys__ = ( 'PrescaleB2PPbar',
                                'MinPTB2PPbar',
@@ -100,4 +103,3 @@ def makeB2PPbar( name,
                       RequiredSelections = [ StdLooseProtons ] )
 
 ########################################################################  
-
