@@ -6,6 +6,8 @@
 ! $Id: release.notes,v 1.43 2010-08-20 13:59:22 jpalac Exp $
 !-----------------------------------------------------------------------------
 
+!========================= MicroDSTTools v2r6 2012-03-29 =========================
+
 ! 2012-03-27 - Chris Jones
  - Improve the ProtoParticle cloning to allow for dynamic checking of each
    ProtoParticle, and dependant data objects, to determine if they should be
