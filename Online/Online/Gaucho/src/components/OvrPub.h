@@ -19,6 +19,7 @@ public:
   StatusCode queryInterface(const InterfaceID& riid, void** ppvIF);
   StatusCode start();
   StatusCode initialize();
+  StatusCode finalize();
   void analyze(void *buff, int siz,MonMap* mmap);
 //  unsigned long long m_prevupdate;
   bool m_enableTrending;
