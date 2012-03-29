@@ -27,23 +27,23 @@ Hb2Charged2Body = {
     }
 
 ##
-## StrippingB2PPbar
+## StrippingB2TwoBaryons
 ##
 B2PPbar = {
     'WGs'         : ['Charmless'],
-    'BUILDERTYPE' : 'B2PPbarLines',
+    'BUILDERTYPE' : 'B2TwoBaryonLines',
     'CONFIG'      : {'PrescaleB2PPbar'   : 1,
                      'MinPTB2PPbar'      : 900,
                      'MinIPChi2B2PPbar'  : 9,
-                     'TrChi2'            : 5,
+                     'TrChi2'            : 4,
                      'PIDppi'            : 0,
-                     'PIDpk'             : -2,
+                     'PIDpk'             : -1,
                      'MaxPTB2PPbar'      : 2100,
                      'MaxIPChi2B2PPbar'  : 25,
                      'CombMassWindow'    : 200,
                      'VertexChi2B2PPbar' : 16,
-                     'BPTB2PPbar'        : 1000,
-                     'BIPChi2B2PPbar'    : 36,
+                     'BPTB2PPbar'        : 1100,
+                     'BIPChi2B2PPbar'    : 20,
                      'BDIRA'             : 0.9995
                     },
     'STREAMS'     : [ 'Bhadron' ]
