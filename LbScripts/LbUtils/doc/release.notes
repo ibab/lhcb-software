@@ -1,4 +1,4 @@
-2012-03-36B  Ben Couturier  <ben.couturier@cern.ch>
+2012-03-26  Ben Couturier  <ben.couturier@cern.ch>
 
 	* python/LbUtils/HTMLDependencyManager.py: Added class to parse the HTML dependency files used
 	by install_project.py

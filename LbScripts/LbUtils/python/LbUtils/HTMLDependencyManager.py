@@ -5,8 +5,8 @@ versions of LHCb software.
 
 To use:
 
-    htmldir = os.path.join(os.environ["LHCBTAR"], "html")
-    p = ProjectFile.loadProject(htmldir, "Gaudi", "v22r5")
+    distdir = os.path.join(os.environ["LHCBTAR"])
+    p = ProjectFile.loadProject(distdir, "Gaudi", "v22r5")
 
 or:
     file = os.path.join(htmldir,"GAUDI_GAUDI_v22r5_x86_64-slc5-gcc43-opt.html")
@@ -16,6 +16,8 @@ or:
 Created on Mar 5, 2012
 @author: Ben Couturier
 '''
+
+import datetime
 import logging
 import os
 import pickle as p
@@ -36,12 +38,13 @@ def parseLHCbArchiveName(name):
     project = None
     version = None
     config = None
+    log = logging.getLogger()
 
     # First checking the case where there is a CMTCONFIG
     m = re.match(LHCb_PNAME_WITHCONFIG, name)
     if m != None:
         if m.group(1) != m.group(2) and m.group(1) != "TOOLS":
-            print "<%s> <%s>" % (m.group(1), m.group(2))
+            log.debug("<%s> <%s>" % (m.group(1), m.group(2)))
             raise Exception("Format error: Project name normally repeated in version in %s" % name)
         project = m.group(1)
         version = m.group(3)
@@ -51,7 +54,7 @@ def parseLHCbArchiveName(name):
         m = re.match(LHCb_PNAME_NOCONFIG, name)
         if m != None:
             if m.group(1) != m.group(2) and m.group(1) != "TOOLS":
-                print "<%s> <%s>" % (m.group(1), m.group(2))
+                log.debug("<%s> <%s>" % (m.group(1), m.group(2)))
                 raise Exception("Format error: Project name normally repeated in version in %s" % name)
             project = m.group(1)
             version = m.group(3)
@@ -102,37 +105,37 @@ def parseDataPackageArchiveName(name):
 class Dependency(object):
     """ Class Representing a software dependency """
     def __str__(self):
-        return "%s (%s, %s, %s) %s" %(self.type, self.project, self.version, self.config, self.fileName)
+        return "%s (%s, %s, %s) %s" %(self.type, self.project, self.version, self.config, self.filename)
 
 class LHCbDependency(Dependency):
     """ Class representing dependency to a LHCb project """
-    def __init__(self, archive, fileName):
+    def __init__(self, archive, filename):
         self.archive = archive
-        self.fileName = fileName
+        self.filename = filename
         self.type = "LHCb"
         (self.project, self.version, self.config) = parseLHCbArchiveName(archive)
 
 class ExternalDependency(Dependency):
     """ Class representing dependency to external software  """
-    def __init__(self, archive, fileName):
+    def __init__(self, archive, filename):
         self.archive = archive
-        self.fileName = fileName
+        self.filename = filename
         self.type = "EXT"
         (self.project, self.version, self.config) = parseExternalArchiveName(archive)
 
 class DataPackageDependency(Dependency):
     """ Class representing dependency to external software  """
-    def __init__(self, archive, fileName):
+    def __init__(self, archive, filename):
         self.archive = archive
-        self.fileName = fileName
+        self.filename = filename
         self.type = "DAT"
         (self.project, self.version, self.config) = parseDataPackageArchiveName(archive)
 
 class SystemDependency(Dependency):
     """ Class representing dependency to external software  """
-    def __init__(self, archive, fileName):
+    def __init__(self, archive, filename):
         self.archive = archive
-        self.fileName = fileName
+        self.filename = filename
         self.type = "SYS"
         (self.project, self.version, self.config) = (archive, archive, archive)
 
@@ -144,13 +147,16 @@ class ProjectFile(object):
     the associated file and dependencies as represented in the html dependency files """
 
     @classmethod
-    def loadFromFile(cls, fileName):
+    def loadFromFile(cls, distdir, filename):
         """ Factory method that creates the ProjectFile object
         from a specific file """
         # Loads the file content
         obj = cls()
-        obj.htmlfileName = fileName
-        f = open(fileName, "r")
+        obj.distdir = distdir
+        obj.htmldir = os.path.join(obj.distdir, "html")
+        obj.htmlfilename = filename
+        obj.htmlbasename = os.path.basename(obj.htmlfilename)
+        f = open(filename, "r")
         fileContent = map (lambda s: s.strip(), f.readlines())
         f.close()
         fileContent = [line for line in fileContent if line != None and line != ""]
@@ -160,24 +166,24 @@ class ProjectFile(object):
         return obj
 
     @classmethod
-    def loadProject(cls, htmldir, projectName, version, config=None):
+    def loadProject(cls, distdir, projectName, version, config=None):
         """ Loads the ProjectFile object from the triplet
         project, version, config """
         p = Project.getProject(projectName, svn_fallback=True, raise_exception=False)
         tar_file = p.tarBallName(version, config)
         tar_file_html = tar_file + ".html"
-        full_tar_file_html = htmldir + os.sep + tar_file_html
+        full_tar_file_html = distdir + os.sep+ "html" + os.sep + tar_file_html
         if not os.path.exists(full_tar_file_html):
             raise Exception(full_tar_file_html + " is missing")
-        return cls.loadFromFile(full_tar_file_html)
+        return cls.loadFromFile(distdir, tar_file_html)
 
-#    def __init__(self, fileName):
+#    def __init__(self, filename):
 #        """ Constructor that loads the dependencies from a html file
 #        in install_project format """
 
         # Loads the file content
-#        self.htmlfileName = fileName
-#        f = open(fileName, "r")
+#        self.htmlfilename = filename
+#        f = open(filename, "r")
 #        fileContent = map (lambda s: s.strip(), f.readlines())
 #        f.close()
 
@@ -191,14 +197,14 @@ class ProjectFile(object):
         if not re.match("^\s*<H3>", fileContent[0]):
             raise Exception("Format error: Dep file should start with H3: %s" % fileContent[0])
 
-        # parsing secong which contains the project name and fileName
+        # parsing secong which contains the project name and filename
         m = re.match("<A NAME=([\w/-]+) HREF=(.*)>([\w-]+)</A>", fileContent[1])
         if m == None:
             raise Exception("Format error: Second line should match <A NAME=([\w/-]+) HREF=(.*)>([\w-]+)</A>")
         #if m.group(1) != m.group(3):
         #    raise Exception("Format error: %s should match %s" % (m.group(1), m.group(3)))
         self.archiveName = m.group(3)
-        self.fileName = m.group(2)
+        self.filename = m.group(2)
 
         if self.archiveName.startswith("DBASE") or self.archiveName.startswith("PARAM"):
             (self.project, self.version, self.config) = parseDataPackageArchiveName(self.archiveName)
@@ -207,7 +213,7 @@ class ProjectFile(object):
         else:
             (self.project, self.version, self.config) = parseLHCbArchiveName(self.archiveName)
 
-        #print "Processing Project file%s/%s/%s %s" % (project, version, config, self.fileName)
+        #print "Processing Project file%s/%s/%s %s" % (project, version, config, self.filename)
 
         # 3rd line should be <MENU> for projects if there are dependencies to be shown...
         #if len(fileContent) > 3 and not fileContent[2].startswith("<MENU><LI>"):
@@ -275,18 +281,18 @@ class ProjectFile(object):
 
 
     def __str__(self):
-        s = "ProjectFile (%s,%s,%s) %s\n" % (self.project, self.version, self.config, self.fileName)
+        s = "ProjectFile (%s,%s,%s) %s\n" % (self.project, self.version, self.config, self.filename)
         for c in self.lhcbDeps, self.externalDeps, self.dbaseDeps, self.paramDeps, self.systemDeps:
             for d in c:
                 s+= "    " + str(d) + "\n"
         return s
 
     def getAllDependenciesFileNames(self):
-        """Returns the fileNames of ALL dependencies for this project file"""
+        """Returns the filenames of ALL dependencies for this project file"""
         depsf = []
         for c in self.lhcbDeps, self.externalDeps, self.dbaseDeps, self.paramDeps, self.systemDeps:
             for d in c:
-                depsf.append(d.fileName)
+                depsf.append(d.filename)
         return depsf
 
     def getAllDependencies(self):
@@ -299,48 +305,123 @@ class ProjectFile(object):
 class LHCbSoftwareDeps(object):
     """ Class containing parsed information about dependencies
     between LHCb projects """
-    def __init__(self, tardir):
-        """ Default constructor """
-        self.projectFiles = []
-        self.tardir = tardir
 
-    def parseHTMLDir(self, htmlDir):
+    #
+    # Static constructors for the Dependency object
+    ###########################################################################
+
+    @classmethod
+    def loadDistInfo(cls, distdir):
+        """ Static method to load all dependency and file information from AFS """
+        deps = cls(distdir)
+        deps.parseHTMLDir()
+        deps.loadDistFiles()
+        return deps
+
+    @classmethod
+    def loadFromDB(cls, dbfile):
+        """ Static method to load all dependency and file information from AFS """
+        deps = cls(None)
+        deps.loadFromDisk(dbfile)
+        return deps
+
+    #
+    # Utilities to build/load the instance
+    ###########################################################################
+
+    def __init__(self, distdir = None):
+        """ Default constructor, should not be used directly """
+        self.projectFiles = []
+        self.archiveList = {}
+        if distdir != None:
+            self.distdir = distdir
+            self.htmldir = os.path.join(self.distdir, "html")
+        self.log = logging.getLogger()
+
+    def parseHTMLDir(self, htmlDir=None):
         """ Method that parses ALL the HTML files in a directory
         to extract the dependencies """
+
+        if htmlDir == None:
+            htmlDir = self.htmldir
+
+        self.log.info("Processing directory: %s" % htmlDir)
         allfiles = [f for f in os.listdir(htmlDir) if f.endswith("html")]
         for i, f in enumerate(allfiles):
-            print "%d ------------- Processing %s" % (i,f)
-            pf = ProjectFile(htmlDir + os.sep + f)
+            self.log.debug("%d - Processing %s" % (i,f))
+            pf = ProjectFile.loadFromFile(self.distdir, htmlDir + os.sep + f)
             self.projectFiles.append(pf)
-            print pf
+            #print pf
+        self.log.info ("Processed %s files" % len(allfiles))
 
-    def saveToDisk(self, fileName):
+    def loadDistFiles(self):
+        """ Add the list of tar files actually on disk """
+        # Listing all files on disk
+        self.log.info("Loading archives from directory: %s" % self.distdir)
+        fileStatuses = {}
+        exludeddirs = ['eclipse', 'DBASE', 'Dirac_project', 'LHCbDirac_project', 'html']
+        for (root, dirs, files) in os.walk(self.distdir):
+            dirs[:] = [d for d in dirs if d not in exludeddirs]
+            prefix = root.replace(self.distdir + os.sep, "")
+            for f in files:
+                if f.endswith(".tar.gz"):
+                    archivename = os.path.join(prefix, f)
+                    fileStatuses[archivename] = "unused"
+        self.log.info("Archives found: %d" % len(fileStatuses.keys()))
+        self.archiveList = fileStatuses
+
+    def saveToDisk(self, filename):
         """ Pickle the dependency DB to disk """
-        p.dump(self.projectFiles, open(fileName, "wb"))
+        db = open(filename, "wb")
+        p.dump(self.distdir, db)
+        p.dump(self.projectFiles, db)
+        p.dump(self.archiveList, db)
+        p.dump(datetime.datetime.now(), db)
+        db.close()
 
-    def loadFromDisk(self, fileName):
+    def loadFromDisk(self, filename):
         """ Reload the pickled dependency list fro disk """
-        self.projectFiles  = p.load(open( fileName, "rb" ))
+        db = open( filename, "rb" )
+        self.distdir = p.load(db)
+        self.htmldir = os.path.join(self.distdir, "html")
+        self.projectFiles  = p.load(db)
+        self.archiveList  = p.load(db)
+        self.dbDate = p.load(db)
+        self.log.info("Database saved on: " + str(self.dbDate))
 
-    def missingReport(self, fileName):
-        f = open(fileName, "w")
+    #
+    # Methods to access/list project files
+    ###########################################################################
+    def findProjectFiles(self, projectNameRe, versionRe, cmtconfigRe):
+        """ Finds projects matching the name regexp """
+        return [pf for pf in self.projectFiles if re.match(projectNameRe, pf.project) != None\
+                and re.match(versionRe, pf.version) != None \
+                and re.match(cmtconfigRe, pf.config) != None ]
+    #
+    # Various reports
+    ###########################################################################
+
+    def missingTarReport(self, filename):
+        """ Creates a report with all the missing tars """
+        f = open(filename, "w")
         f.write("Referencing HTML\tMissing TAR\n")
         for pf in self.projectFiles:
-            if not os.path.exists(self.tardir + os.sep + pf.fileName):
-                f.write(pf.htmlfileName.replace("/afs/cern.ch/lhcb/distribution/", ""))
+            if not os.path.exists(self.distdir + os.sep + pf.filename):
+                f.write(pf.htmlfilename.replace("/afs/cern.ch/lhcb/distribution/", ""))
                 f.write("\t")
-                f.write( pf.fileName)
+                f.write( pf.filename)
                 f.write("\n")
         f.close()
 
-    def missingDependenciesReport(self, fileName):
-        f = open(fileName, "w")
+    def missingDependenciesReport(self, filename):
+        """ Check if there are dependencies missing """
+        f = open(filename, "w")
         f.write("Referencing HTML\tMissing Dependency\n")
         for pf in self.projectFiles:
             for dep in pf.getAllDependencies():
-                if not os.path.exists(self.tardir + os.sep + dep.fileName):
-                    f.write(pf.htmlfileName.replace("/afs/cern.ch/lhcb/distribution/", ""))
+                if not os.path.exists(self.distdir + os.sep + dep.filename):
+                    f.write(pf.htmlfilename.replace("/afs/cern.ch/lhcb/distribution/", ""))
                     f.write("\t")
-                    f.write( dep.fileName)
+                    f.write( dep.filename)
                     f.write("\n")
         f.close()
