@@ -5,6 +5,8 @@
 #include "GaudiKernel/IIncidentListener.h"
 #include "Gaucho/GenTimer.h"
 #include "Gaucho/BRTL_Lock.h"
+#include "GaudiKernel/IToolSvc.h"
+
 class ISimpleTrendWriter;
 class TrndTimer;
 class MemTrnd : public Service

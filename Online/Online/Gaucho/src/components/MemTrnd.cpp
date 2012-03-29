@@ -8,14 +8,24 @@ DECLARE_SERVICE_FACTORY(MemTrnd)
 
 StatusCode MemTrnd::initialize()
 {
+  StatusCode sc;
   Service::initialize();
   std::string syst;
   if (m_trender == 0)
   {
-    const IInterface *a3( m_isvc ) ;
-    const std::string & nam( "SimpleTrendWriter" ) ;
-    IAlgTool *intf = ROOT::Reflex::PluginService::Create< IAlgTool *>( nam , nam , nam , a3 ) ;
-    m_trender = dynamic_cast< ISimpleTrendWriter * >( intf ) ;
+    SmartIF<IToolSvc> tools;
+    sc = serviceLocator()->service("ToolSvc", tools.pRef());
+    if ( !sc.isSuccess() )
+    {
+      ::lib_rtl_output(LIB_RTL_FATAL,"DIM(OvrSvc): Failed to access ToolsSvc.\n");
+      return sc;
+    }
+    sc = tools->retrieveTool("SimpleTrendWriter","MEPSvc",m_trender,this);
+    if ( !sc.isSuccess() )
+    {
+      ::lib_rtl_output(LIB_RTL_FATAL,"MemTrnder: Failed to retrieve SimpleTrendWriter tool\n");
+      return sc;
+    }
   }
   syst = RTL::nodeNameShort()+"_Adder";
   if (m_trender != 0)
@@ -49,6 +59,19 @@ StatusCode MemTrnd::finalize()
   m_trender->addEntry(t1,double(0.0));
   m_trender->addEntry(t2,double(0.0));
   m_trender->saveEvent();
+  StatusCode sc;
+  if (m_trender != 0)
+  {
+//    m_trender->close();
+    SmartIF<IToolSvc> tools;
+    sc = serviceLocator()->service("ToolSvc", tools.pRef());
+    if ( !sc.isSuccess() ) {
+      ::lib_rtl_output(LIB_RTL_FATAL,"DIM(RateSvc): Failed to access ToolsSvc.\n");
+      return sc;
+    }
+    sc = tools->releaseTool(m_trender);
+    m_trender = 0;
+  }
   Service::finalize();
   return StatusCode::SUCCESS;
 }
