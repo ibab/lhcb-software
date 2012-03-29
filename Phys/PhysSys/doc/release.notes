@@ -3,12 +3,44 @@ Package             : PhysSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v14r2>2012-03-28 Phys v14r2 </A></H1><PRE>
+- Based on LHCb v34r2, REC v13r2, Gaudi v23r2
+
+- Packages updated : DaVinciTools, LoKiPhys, LoKiTracks, Swimming
+
+- In DaVinciTools :
+ . Pi0Veto: reduce the warning messages. Now warning are issued 
+   only in case of self-contradiction decision
+ . Fix compilation warnings in src/ConeVariablesForEW.cpp
+ . Remove excessive warning messages in src/AddExtraInfo.cpp 
+
+- In LoKiPhys :
+ . Add functor to BeamLineFunctions to calculate the DOCA to the beamline,
+   using LoKi::FastVertex
+
+- In LoKiTracks :
+ . Add functors related to the Velo hit pattern:
+    TrNVELOSPACEPOINTS, TrNCONSECVELOSPACEPOINTS
+     Evaluating the number of (consecutive) R and Phi hits in the same station,
+     for the Hlt1 displaced vertex line:
+    TrNVELOOVERLAPS, TrNVELOOVERLAPSR, TrNVELOOVERLAPSPHI
+     Evaluating the number of A/C overlap hits, resp. after an OR of R and Phi,
+     R only and Phi only, for the Hlt2 beam halo express stream line
+
+- In Swimming :
+ . Re-enable output algorithms before exiting to allow correct finalisation.
+ . Fix XML summary writing.
+ . Disable FSRInputCopyStreamWriter when swimming the trigger
+ . Change the setting of "EnableUnpack" to be compliant with the new software stack.
+ . Open shelve database read only.
+
 </PRE><H1><A NAME=v14r1>2012-03-01 Phys v14r1 </A></H1><PRE>
 - Based on LHCb v34r1, REC v13r1, Gaudi v23r1
 
-- Packages updated: BBDecTreeTool, DaVinciInterfaces, DaVinciKernel,
-                    DaVinciTools, HighPtJets, LoKiAlgo, LoKiJets,
-                    LoKiPhys, PhysConf, Swimming, VertexFit, ProtoParticleFilter
+- Packages updated : BBDecTreeTool, DaVinciInterfaces, DaVinciKernel,
+                     DaVinciTools, HighPtJets, LoKiAlgo, LoKiJets,
+                     LoKiPhys, PhysConf, Swimming, VertexFit,
+                     ProtoParticleFilter
 
 - In DaVinciInterfaces :
  . Add a new tool interface IStandardParticleProvider that returns a pointer 
