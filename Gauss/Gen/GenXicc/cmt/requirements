@@ -10,7 +10,7 @@ include_dirs $(GENXICCROOT)/include
 
 # =========== dependencies ====================================================
 use      GENSER            v*     Gen
-#use      GenXiccData       v*
+use      GenXiccData       v*
 
 # =========== constituents ====================================================
 library GenXicc   *.F
