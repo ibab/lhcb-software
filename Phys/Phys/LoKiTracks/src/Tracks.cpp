@@ -20,6 +20,8 @@
 #include "LoKi/Tracks.h"
 #include "LoKi/GetTools.h"
 // ============================================================================
+#include "KalmanFilter/FastVertex.h"
+// ============================================================================
 /** @file
  *  Implementation file for classes from the namespace LoKi::Tracks
  *
@@ -811,6 +813,66 @@ LoKi::Tracks::HasTT::operator()
 std::ostream& LoKi::Tracks::HasTT::fillStream( std::ostream& s ) const 
 { return s << "TrHASTT" ; }
 // ============================================================================
+
+
+// ============================================================================
+// Constructor from bound
+// ============================================================================
+LoKi::Tracks::FastDOCAToBeamLine::FastDOCAToBeamLine ( const double bound )
+  : LoKi::BeamSpot( bound )
+  , LoKi::BasicFunctors<const LHCb::Track*>::Function ()
+  , m_beamLine ()
+{}
+// ============================================================================
+// Constructor from bound & condname
+// ============================================================================
+LoKi::Tracks::FastDOCAToBeamLine::FastDOCAToBeamLine
+( const double       bound    ,
+  const std::string& condname )
+  : LoKi::BeamSpot( bound , condname )
+  , LoKi::BasicFunctors<const LHCb::Track*>::Function ()
+  , m_beamLine ()
+{}
+// ============================================================================
+// Update beamspot position
+// ============================================================================
+StatusCode LoKi::Tracks::FastDOCAToBeamLine::updateCondition()
+{
+  StatusCode sc = LoKi::BeamSpot::updateCondition();
+  if ( sc.isFailure() ) { return sc ; }  // RETURN
+  //
+  m_beamLine.clearStates();
+  LHCb::State beamLineState ( LHCb::StateVector( Gaudi::XYZPoint  ( x(), y(), 0.),
+                                                 Gaudi::XYZVector ( 0. , 0. , 1.),
+                                                 0. ) );
+  
+  beamLineState.setLocation( LHCb::State::ClosestToBeam );
+  m_beamLine.addToStates( beamLineState );
+  //
+  return sc;
+}
+// ============================================================================
+// Copy constructor
+// ============================================================================
+LoKi::Tracks::FastDOCAToBeamLine::FastDOCAToBeamLine
+( const LoKi::Tracks::FastDOCAToBeamLine& other )
+  : LoKi::AuxFunBase ( other )
+  , LoKi::BeamSpot ( other )
+  , LoKi::Functor<const LHCb::Track*, double> ( other )
+{
+  m_beamLine = *( other.m_beamLine.clone() ) ;
+}
+// ============================================================================
+// MANDATORY: the only one essential method
+// ============================================================================
+LoKi::Tracks::FastDOCAToBeamLine::result_type
+LoKi::Tracks::FastDOCAToBeamLine::operator()
+  ( LoKi::Tracks::FastDOCAToBeamLine::argument t ) const
+{
+  double doca;
+  LoKi::FastVertex::distance( t, &m_beamLine, doca ) ;
+  return doca;
+}
 
 // ============================================================================
 // The END 

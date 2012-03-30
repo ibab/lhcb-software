@@ -1241,6 +1241,21 @@ namespace LoKi
      */
     const LoKi::Tracks::NTHits                                     TrTNORMIDC ;
     // ========================================================================
+    /** @typedef  Tr_FASTDOCATOBEAMLINE
+     *  Fast DOCA to beam line using TTrDOCA and BEAMSPOT, similar to the
+     *  BEAMSPOTRHO cut
+     *  @see LoKi::Cuts::TTrDOCA
+     *  @see HltUtils::closestDistanceMod
+     *  @see LoKi::Tracks::DistanceOfClosestApproach
+     *  @see LoKi::BeamSpot
+     *  @see LoKi::Cuts::BEAMSPOT
+     *  @see LoKi::Vertices::BeamSpotRho
+     *  @see LoKi::Cuts::BEAMSPOTRHO
+     *  @author Pieter David pieter.david@cern.ch
+     *  @date 2012-02-24
+     */
+    typedef LoKi::Tracks::FastDOCAToBeamLine            Tr_FASTDOCATOBEAMLINE ;
+    // ========================================================================
 #ifdef __INTEL_COMPILER
 #pragma warning(pop) 
 #endif

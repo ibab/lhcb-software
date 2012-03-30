@@ -22,6 +22,7 @@
 #include "LoKi/ExtraInfo.h"
 #include "LoKi/TrackTypes.h"
 #include "LoKi/Interface.h"
+#include "LoKi/BeamSpot.h"
 // ============================================================================
 namespace LoKi
 {
@@ -831,6 +832,46 @@ namespace LoKi
       virtual std::ostream& fillStream( std::ostream& s ) const ;
       // ======================================================================
     } ;
+    // ========================================================================
+    /**
+     *  @class FastDOCAToBeamLine
+     *  use TTrDOCA and BEAMSPOT to evaluate the closest distance of a track to
+     *  the beam line, similar to BEAMSPOTRHO
+     *  @see LoKi::BeamSpot
+     *  @see LoKi::Cuts::VX_BEAMSPOTRHO
+     *  @author Pieter David pieter.david@cern.ch
+     *  @date 2012-02-24
+     */
+    class GAUDI_API FastDOCAToBeamLine
+      : LoKi::BeamSpot
+      , public LoKi::BasicFunctors<const LHCb::Track*>::Function
+    {
+    public:
+      // =====================================================================
+      /// Constructor from resolver bound
+      FastDOCAToBeamLine ( const double       bound    ) ;
+      /// Constructor from resolved bound and condition name
+      FastDOCAToBeamLine ( const double       bound    ,
+                           const std::string& condname ) ;
+      /// MANDATORY: virtual destructor
+      virtual ~FastDOCAToBeamLine() {}
+      /// update the condition
+      StatusCode     updateCondition ();
+      /// Copy constructor
+      FastDOCAToBeamLine( const FastDOCAToBeamLine& other ) ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  FastDOCAToBeamLine* clone() const
+      { return new FastDOCAToBeamLine( *this ) ; }
+      /// MANDATORY: the only one essential method
+      virtual result_type operator() ( argument v ) const ;
+      /// OPTIONAL: nice printout
+      virtual std::ostream& fillStream( std::ostream& s ) const
+      { return s << "Tr_FASTDOCATOBEAMLINE"; }
+    private:
+      /// beamline tracks
+      LHCb::Track m_beamLine;
+    } ;
+    // ========================================================================
   } //                                            end of namespace LoKi::Tracks
   // ==========================================================================
 } //                                                      end of namespace LoKi 

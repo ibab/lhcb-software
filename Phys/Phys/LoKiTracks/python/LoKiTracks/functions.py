@@ -204,6 +204,10 @@ TrNVELOOVERLAPSPHI       = LoKi.Tracks.NumVeloACOverlapHitsPhi          ()
 
 # =============================================================================
 
+## @see LoKi::Tracks::FastDOCAToBeamLine
+Tr_FASTDOCATOBEAMLINE = LoKi.Tracks.FastDOCAToBeamLine
+
+
 
 ## functional part
 _vt       = 'std::vector<const LHCb::Track*>'
