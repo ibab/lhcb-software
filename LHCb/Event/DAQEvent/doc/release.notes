@@ -4,6 +4,10 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !-----------------------------------------------------------------------------
 
+! 2012-03-30 - Marco Cattaneo
+ - Change RawBankReadoutStatusLocation::Default to /Event/Transient/DAQ/Status,
+   to avoid loading /Event/DAQ when recreating this objet on e.g. mDST
+
 !========================= DAQEvent v9r6 2011-12-14 =========================
 ! 2011-11-08 - Chris Jones
  - Add RawEventLocation::Trigger to RawEvent.h
