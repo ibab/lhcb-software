@@ -31,6 +31,7 @@ private:
   std::vector<std::string> m_trs;
   std::vector<std::string> m_bxs;
   std::vector<std::string> m_ros;
+  std::vector<std::string> m_cls;
   int m_winmin,m_winmax;
   long m_all;
   long m_acc;

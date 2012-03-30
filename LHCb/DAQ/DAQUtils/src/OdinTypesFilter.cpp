@@ -31,11 +31,13 @@ OdinTypesFilter::OdinTypesFilter( const std::string& name,
   declareProperty("ReadoutTypes" , m_ros);
   declareProperty("TAEWindowLessThan" , m_winmax=99);
   declareProperty("TAEWindowMoreThan" , m_winmin=-1);
-  declareProperty("Logical"      , m_log="AND");
+  declareProperty("CalibrationTypes", m_cls);
+  declareProperty("Logical"      , m_log="AND"); 
 
   m_bxs.push_back("ALL");
   m_trs.push_back("ALL");
   m_ros.push_back("ALL");
+  m_cls.push_back("ALL");
 }
 //=============================================================================
 // Destructor
@@ -57,7 +59,29 @@ StatusCode OdinTypesFilter::initialize() {
   }
 
 
-  for(std::vector<std::string>::iterator ibx = m_bxs.begin(); ibx != m_bxs.end() ; ++ibx){
+
+
+  for(std::vector<std::string>::iterator icl = m_cls.begin(); icl != m_cls.end() ; ++icl){ 
+    if(*icl == "ALL")continue;
+    int k = 0;
+    std::string  cl;
+    bool ok = false;
+    int max = LHCb::ODIN::CalibrationTypeMask >> LHCb::ODIN::CalibrationTypeBits;
+    while(k <= max && !ok){
+      std::stringstream s("");
+      s << (LHCb::ODIN::CalibrationTypes) k;
+      cl = s.str();
+      if( cl == *icl)ok=true;
+      k++;
+    }
+    if( !ok ){
+      error() << "The requested CalibrationType '" << *icl << "' is not a valid type" << endmsg;
+      return StatusCode::FAILURE;
+    }
+  }
+  
+
+  for(std::vector<std::string>::iterator ibx = m_bxs.begin(); ibx != m_bxs.end() ; ++ibx){ 
     if(*ibx == "ALL")continue;
     int k = 0;
     std::string  bx;
@@ -122,26 +146,29 @@ StatusCode OdinTypesFilter::initialize() {
   info() << m_log << endmsg;
   info() << "Accepted ReadoutTypes : " << m_ros << endmsg;
   info() << m_log << endmsg;
+  info() << "Accepted CalibrationTypes : " << m_cls << endmsg;
+  info() << m_log << endmsg;
   info() << "TAE Window in [" << m_winmin+1 << "," << m_winmax-1 <<"]"<< endmsg;
 
 
 
   // warns trivial requests 
-  if((m_bxs.empty() || m_trs.empty()  || m_ros.empty() || m_winmin>=m_winmax ) && m_log == "AND")
+  if((m_bxs.empty() || m_trs.empty()  || m_ros.empty() || m_winmin>=m_winmax  || m_cls.empty()) && m_log == "AND")
     Warning("BXTypes, TriggerTypes, ReadoutTypes or TAEWindow is empty : ALL events will be rejected !!"
             ,StatusCode::SUCCESS).ignore();
-  if((m_bxs.empty() && m_trs.empty()) && m_ros.empty() && m_winmin>=m_winmax && m_log == "OR")
+  if((m_bxs.empty() && m_trs.empty()) && m_ros.empty() && m_winmin>=m_winmax && m_cls.empty() && m_log == "OR")
     Warning("BXTypes, TriggerTypes, ReadoutTypes and TAEWindow are empties : ALL events will be rejected !!"
             ,StatusCode::SUCCESS).ignore();
   if( *(m_bxs.begin()) == "ALL" 
+      && *(m_cls.begin()) == "ALL" 
       && *(m_trs.begin()) == "ALL" 
       && *(m_ros.begin()) == "ALL" 
       && m_winmin<0 && m_winmax>7
       && m_log == "AND")
     Warning("OdinTypesFilter has no effect : ALL events will be accepted !!"
             ,StatusCode::SUCCESS).ignore();
-  if(( *(m_bxs.begin()) == "ALL"       || *(m_trs.begin()) == "ALL"  || *(m_ros.begin()) == "ALL" || (m_winmin<0&&m_winmax>7)) 
-     && m_log == "OR")
+  if(( *(m_bxs.begin()) == "ALL"       ||*(m_cls.begin()) == "ALL"       
+       || *(m_trs.begin()) == "ALL"  || *(m_ros.begin()) == "ALL" || (m_winmin<0&&m_winmax>7)) && m_log == "OR")
     Warning("OdinTypesFilter has no effect : ALL events will be accepted !!"
             ,StatusCode::SUCCESS).ignore();
 
@@ -162,21 +189,21 @@ StatusCode OdinTypesFilter::execute() {
 
   // treat trivial requests
   setFilterPassed(true);
-  if( *(m_bxs.begin()) == "ALL" && *(m_trs.begin()) == "ALL" && *(m_ros.begin()) == "ALL" &&  (m_winmin<0 && m_winmax>7) 
-      && m_log == "AND"){
+  if( *(m_bxs.begin()) == "ALL" &&*(m_cls.begin()) == "ALL" && *(m_trs.begin()) == "ALL" && *(m_ros.begin()) == "ALL" 
+      &&  (m_winmin<0 && m_winmax>7) && m_log == "AND"){
     m_acc++;
     return StatusCode::SUCCESS;
   }
   
-  if(( *(m_bxs.begin()) == "ALL" || *(m_trs.begin()) == "ALL" || *(m_ros.begin()) == "ALL" || (m_winmin<0 && m_winmax>7)) 
-     && m_log == "OR"){
+  if(( *(m_bxs.begin()) == "ALL" ||*(m_cls.begin()) == "ALL" || *(m_trs.begin()) == "ALL" || *(m_ros.begin()) == "ALL" 
+       || (m_winmin<0 && m_winmax>7)) && m_log == "OR"){
     m_acc++;
     return StatusCode::SUCCESS;
   }
   
   setFilterPassed(false);
-  if( (m_bxs.empty() || m_trs.empty() || m_ros.empty() || m_winmin>=m_winmax) && m_log =="AND")return StatusCode::SUCCESS;
-  if( (m_bxs.empty() && m_trs.empty() && m_ros.empty() && m_winmin>=m_winmax) && m_log =="OR")return StatusCode::SUCCESS;
+  if( (m_bxs.empty() || m_cls.empty() || m_trs.empty() || m_ros.empty() || m_winmin>=m_winmax) && m_log =="AND")return StatusCode::SUCCESS;
+  if( (m_bxs.empty() && m_cls.empty() && m_trs.empty() && m_ros.empty() && m_winmin>=m_winmax) && m_log =="OR")return StatusCode::SUCCESS;
 
   
 
@@ -189,9 +216,11 @@ StatusCode OdinTypesFilter::execute() {
   }
 
   
+  std::stringstream clType("");
   std::stringstream bxType("");
   std::stringstream trType("");
   std::stringstream roType("");
+  clType << (LHCb::ODIN::BXTypes) odin->calibrationType();
   bxType << (LHCb::ODIN::BXTypes) odin->bunchCrossingType();
   trType << (LHCb::ODIN::TriggerType) odin->triggerType();
   roType << (LHCb::ODIN::ReadoutTypes) odin->readoutType();
@@ -199,11 +228,19 @@ StatusCode OdinTypesFilter::execute() {
 
   debug() << " Trigger Type : " << trType.str() << " BXType : " << bxType.str() << endmsg;
 
+  bool clPass =  false;
+  for(std::vector<std::string>::iterator icl = m_cls.begin(); icl != m_cls.end() ; ++icl){
+    if( clType.str() == *icl || "ALL" == *icl ){
+      clPass = true;
+      break;
+    }    
+  } 
+
   bool bxPass =  false;
   for(std::vector<std::string>::iterator ibx = m_bxs.begin(); ibx != m_bxs.end() ; ++ibx){
     if( bxType.str() == *ibx || "ALL" == *ibx ){
       bxPass = true;
-       break;
+      break;
     }    
   } 
   
@@ -226,10 +263,12 @@ StatusCode OdinTypesFilter::execute() {
   bool taePass = false;
   if((int) odin->timeAlignmentEventWindow()>m_winmin && (int) odin->timeAlignmentEventWindow()<m_winmax)taePass=true;
   
-  if(m_log == "AND")setFilterPassed( trPass && bxPass && roPass && taePass);
-  if(m_log == "OR")setFilterPassed( trPass || bxPass || roPass || taePass);
+  if(m_log == "AND")setFilterPassed( trPass && bxPass && roPass && taePass && clPass);
+  if(m_log == "OR")setFilterPassed( trPass || bxPass || roPass || taePass || clPass);
 
   if(filterPassed() )m_acc++;
+
+  counter("ODIN Filter ("+m_log+")")+=int(filterPassed());
   
 
   return StatusCode::SUCCESS;
@@ -246,6 +285,8 @@ StatusCode OdinTypesFilter::finalize() {
   info() << "Accepted BXTypes : " << m_bxs << endmsg;
   info() << m_log << endmsg;
   info() << "Accepted TriggerTypes : " << m_trs << endmsg;
+  info() << m_log << endmsg;
+  info() << "Accepted CalibrationTypes : " << m_cls << endmsg;
   info() << m_log << endmsg;
   info() << "Accepted ReadoutTypes : " << m_ros << endmsg;
   info() << m_log << endmsg;

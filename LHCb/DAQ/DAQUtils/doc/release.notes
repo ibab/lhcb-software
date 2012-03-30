@@ -4,6 +4,12 @@
 ! Purpose     : Various utilities for manipulating RawEvent
 !-----------------------------------------------------------------------------
 
+
+! 2012-03-30 - Olivier Deschamps
+  - new algorithm : RawBankReadoutStatusConverter  : convert ROStatus to ProcStatus
+  - OdinTypesFilter : add filter on CalibrationTypes
+
+
 !========================= DAQUtils v1r6 2012-03-26 =========================
 ! 2012-03-07 - Marco Cattaneo
  - Fix unprotected debug() messages in RawEventSelectiveCopy
