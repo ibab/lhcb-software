@@ -1,5 +1,5 @@
 #!/usr/bin/env gaudirun.py
-from Gaudi.Configuration import ApplicationMgr, DataOnDemandSvc, EventPersistencySvc, EventSelector, FileCatalog, DEBUG
+from Gaudi.Configuration import ApplicationMgr, EventSelector, FileCatalog, DEBUG
 from GaudiConf import IOHelper
 from Configurables import createODIN, HltLumiSummaryDecoder
 from Configurables import DumpLumiEvents
