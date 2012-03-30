@@ -22,9 +22,16 @@
 <lcgdict>
   
   <class name = "LoKi::GetTools" />
-
+  <class name = "LoKi::BeamSpot" />
+  
+  <exclusion>
+    <class    name = "LoKi::BeamSpot">
+      <method name = "="           />
+      <field  name = "m_condition" />
+    </class>
+  </exclusion>
+  
 </lcgdict>
-
 
 <!-- 
      * ========================================================================

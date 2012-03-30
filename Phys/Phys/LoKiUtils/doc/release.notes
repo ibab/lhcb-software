@@ -5,6 +5,9 @@
 ! Purpose     : colleciton of utils for LoKi
 ! -----------------------------------------------------------------------------
 
+! 2012-03-30 - Vanya Belyaev
+ - add BeamSpot-functions from LoKiPhys 
+
 ! ========================== LoKiUtils v1r1p1 2011-02-04 ======================
 
 ! 2011-02-04 - Juan Palacios
