@@ -20,6 +20,7 @@ public:
   // int& ibcstate();
   int& ixiccstate();
   int& nev();
+  double& xmaxwgt();
   inline void init(); // inlined for speed of access (small function)
 private:
   struct COUNTER;
@@ -29,6 +30,7 @@ private:
     //int ibcstate;
     int ixiccstate; // F. Zhang 01-04-11
     int nev;
+    double xmaxwgt;
   };
   int m_dummy;
   double m_realdummy;

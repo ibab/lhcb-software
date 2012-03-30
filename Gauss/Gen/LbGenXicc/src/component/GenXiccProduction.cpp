@@ -1,13 +1,15 @@
 // $Id: GenXiccProduction.cpp,v 1.0 2011-04-11 F. Zhang
 // Include files 
-
+#include <sstream>
 // local
 #include "GenXiccProduction.h"
 #include "LbGenXicc/GenXicc.h"
+#include "LbGenXicc/QQqBaryons.h"
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/ParticleProperty.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // from Event
 #include "Event/GenCollision.h"
@@ -38,6 +40,8 @@ GenXiccProduction::GenXiccProduction( const std::string& type,
 
   declareInterface< IProductionTool >( this ) ;
 
+  declareProperty( "BaryonState", m_BaryonState="Xi_cc+"); // double heavy baryon to be produced
+  declareProperty( "BeamMomentum", m_beamMomentum = 3500 * Gaudi::Units::GeV);
   declareProperty( "GenXiccCommands", m_commandGenXiccVector) ;
   //set the default setting of GenXicc here
   //THE INTERPERATIONS OF THESE VARIABLES CAN BE FOUND IN "COMP. PHYS. COMMUNI. 177(2007)467-478"
@@ -48,14 +52,17 @@ GenXiccProduction::GenXiccProduction( const std::string& type,
   m_defaultGenXiccSettings.push_back( "mixevnt imixtype 1");
   //COMMON BLOCK /COUNTER/IXICCSTATE,NEV
   m_defaultGenXiccSettings.push_back( "counter ixiccstate 1");  //Xi state
+  m_defaultGenXiccSettings.push_back( "counter xmaxwgt 1000000."); //max sampling weight: reducing it improves efficiency but distorces the phase space. 
+                                                                // the typical max value obtained by vegas is ~1.e7 
   //COMMON BLOCK /UPCOM/ECM,PMXICC,PMB,PMC,FXICC,PMOMUP(5,8)
   //                    COLMAT(6,64),BUNDAMP(4),PMOMZERO(5,8)
   //                    DOUBLE COMPLEX COLMAT,BUNDAMP
-  m_defaultGenXiccSettings.push_back( "upcom pmb 5.10");       //mass of b quark
-  m_defaultGenXiccSettings.push_back( "upcom pmc 1.75");   //mass of c quark 
-  m_defaultGenXiccSettings.push_back( "upcom pmxicc 3.50");  
+  // GG 17/2/2012: masses are set by GenXicc (in parameter.F) according to the requested baryon state
+  //  since for internal consistency the baryon mass must be the sum of the 2 heavy quark masses, it is better not to override the internal settings
+  //m_defaultGenXiccSettings.push_back( "upcom pmb 5.10");       //mass of b quark
+  //m_defaultGenXiccSettings.push_back( "upcom pmc 1.75");   //mass of c quark 
+  //m_defaultGenXiccSettings.push_back( "upcom pmxicc 3.50");  
   //                    mass of Xi, note that pmxicc=pmb+pmc exactly
-  m_defaultGenXiccSettings.push_back( "upcom ecm 7000.0");   //E.C.M. of LHC
   //COMMON BLOCK /CONFINE/PTCUT,ETACUT,PSETACUT
   m_defaultGenXiccSettings.push_back( "confine ptcut 0.0");
   m_defaultGenXiccSettings.push_back( "confine etacut 1000000000.0");
@@ -73,10 +80,10 @@ GenXiccProduction::GenXiccProduction( const std::string& type,
   m_defaultGenXiccSettings.push_back( "subopen subenergy 100.0");//GENERALLY USELESS
   m_defaultGenXiccSettings.push_back( "subopen isubonly 0");
   //COMMON BLOCK /USERTRAN/IDPP
-  m_defaultGenXiccSettings.push_back( "usertran idpp 3"); //=IDWTUP
+  m_defaultGenXiccSettings.push_back( "usertran idpp 3"); //=IDWTUP  do not change this, events are reweighted anyway
   //COMMON BLOCK /VEGASINF/NUMBER,NITMX
-  m_defaultGenXiccSettings.push_back( "vegasinf number 1000000");
-  m_defaultGenXiccSettings.push_back( "vegasinf nitmx 20");
+  m_defaultGenXiccSettings.push_back( "vegasinf number 10000");
+  m_defaultGenXiccSettings.push_back( "vegasinf nitmx 2");
   //COMMON BLOCK /VEGCROSS/VEGSEC,VEGERR,IVEGGRADE
   m_defaultGenXiccSettings.push_back( "vegcross iveggrade 0"); 
   //COMMON BLOCK /OUTPDF/IOUTPDF,IPDFNUM
@@ -89,17 +96,9 @@ GenXiccProduction::GenXiccProduction( const std::string& type,
   //                             ipdfnum =  100     200     300          
   m_defaultGenXiccSettings.push_back( "outpdf ipdfnum 300");   
   //COMMON BLOCK /VEGASBIN/NVBIN
-  m_defaultGenXiccSettings.push_back( "vegasbin nvbin 300");   
+  m_defaultGenXiccSettings.push_back( "vegasbin nvbin 100");   
   //COMMON BLOCK /VALMATRIX/CMFACTOR
   m_defaultGenXiccSettings.push_back( "valmatrix cmfactor 1.0");
-  //COMMON BLOCK /MTYPROFXI/MEGENXI
-  m_defaultGenXiccSettings.push_back( "mtypeofxi mgenxi 1");
-  //                        mgenxi = 1 for Xi_cc; = 2 for Xi_bc; =3 for Xi_cc;
-  //COMMON BLOCK /WBSTATE/RATIOU,RATIOD,RATIOS,NBOUND
-  m_defaultGenXiccSettings.push_back( "wbstate nbound 1");
-  //                      nbound = 1 for Xi_{cc}^{++} or Xi_{bc}^{+} or Xi_{bb}^{0}
-  //                             = 2 for Xi_{cc}^{+} or Xi_{bc}^{0} or Xi_{bb}^{-}
-  //                             = 3 for Omega_{cc}^{+} or Omega_{bc}^{0} or Omega_{bb}^{-}
 }
 
 //=============================================================================
@@ -123,19 +122,72 @@ StatusCode GenXiccProduction::initialize( ) {
   m_target = "p+" ;
 
   // Set default GenXicc settings
-  StatusCode  sc = parseGenXiccCommands( m_defaultGenXiccSettings ) ;
+  // GG: call GENXICC2 defaults before our local settings
+  GenXicc::SetXiccDefaultParameters( );
 
-  // read GenXicc command vector from job options
+  // GG: set state according to BaryonState option
+  switch (m_mapBaryon[m_BaryonState]) {
+  case Xiccpp:
+    m_defaultGenXiccSettings.push_back( "mtypeofxi mgenxi 1");
+    m_defaultGenXiccSettings.push_back( "wbstate nbound 1");
+    break;
+  case Xiccp:
+  default:
+    m_defaultGenXiccSettings.push_back( "mtypeofxi mgenxi 1");
+    m_defaultGenXiccSettings.push_back( "wbstate nbound 2");
+    break;
+  case Xibcp:
+    m_defaultGenXiccSettings.push_back( "mtypeofxi mgenxi 2");
+    m_defaultGenXiccSettings.push_back( "wbstate nbound 1");
+    break;
+  case Xibc0:
+    m_defaultGenXiccSettings.push_back( "mtypeofxi mgenxi 2");
+    m_defaultGenXiccSettings.push_back( "wbstate nbound 2");
+    break;
+  case Xibb0:
+    m_defaultGenXiccSettings.push_back( "mtypeofxi mgenxi 3");
+    m_defaultGenXiccSettings.push_back( "wbstate nbound 1");
+    break;
+  case Xibbm:
+    m_defaultGenXiccSettings.push_back( "mtypeofxi mgenxi 3");
+    m_defaultGenXiccSettings.push_back( "wbstate nbound 2");
+    break;
+  case Omegaccp:
+    m_defaultGenXiccSettings.push_back( "mtypeofxi mgenxi 1");
+    m_defaultGenXiccSettings.push_back( "wbstate nbound 3");
+    break;
+  case Omegabc0:
+    m_defaultGenXiccSettings.push_back( "mtypeofxi mgenxi 2");
+    m_defaultGenXiccSettings.push_back( "wbstate nbound 3");
+    break;
+  case Omegabbm:
+    m_defaultGenXiccSettings.push_back( "mtypeofxi mgenxi 3");
+    m_defaultGenXiccSettings.push_back( "wbstate nbound 3");
+    break;
+    
+  }
+  std::stringstream command;
+  // GG: set energy according to BeamMomentum option
+  command << "upcom ecm "<< 2*m_beamMomentum/Gaudi::Units::GeV;
+  m_defaultGenXiccSettings.push_back(command.str().c_str() );   //E.C.M. of LHC
+
+
+  StatusCode  sc = parseGenXiccCommands( m_defaultGenXiccSettings , true) ; // will choose baryon state
+
+  // read GenXicc command vector from job options for addictional settings (cannot change baryon state nor energy)
   sc = parseGenXiccCommands( m_commandGenXiccVector ) ;
 
   if ( ! sc.isSuccess( ) ) 
   return Error( "Unable to read GenXicc commands" , sc ) ;
 
-  GenXicc::SetParameter( );
+  
+// GG: now set the parameters that depend on others and initialize
+  GenXicc::SetXiccConsistentParameters( );
   GenXicc::EvntInit( );
 
   //Initialize of Pythia done here
   sc = PythiaProduction::initialize( ) ;
+
   if ( sc.isFailure() ) return sc ;
 
   return sc ;
@@ -150,8 +202,7 @@ StatusCode GenXiccProduction::generateEvent( HepMC::GenEvent * theEvent ,
   StatusCode sc = PythiaProduction::generateEvent(theEvent, theCollision) ;
   if ( sc.isFailure() ) return sc ;
 
-  //Pythia::PyList(7);
-  //Pythia::PyList(1);
+  if ( msgLevel ( MSG::DEBUG ) ) Pythia::PyList(2);
 
   return StatusCode::SUCCESS ;
 }
@@ -160,8 +211,8 @@ StatusCode GenXiccProduction::generateEvent( HepMC::GenEvent * theEvent ,
 //=============================================================================
 // Parse GenXicc commands stored in a vector
 //=============================================================================
-StatusCode GenXiccProduction::parseGenXiccCommands( const CommandVector & 
-                                                  theCommandVector ) {
+StatusCode GenXiccProduction::parseGenXiccCommands( const CommandVector &theCommandVector , 
+                                                    bool canChangeState) {
   //
   // Parse Commands and Set Values from Properties Service...
   //
@@ -182,24 +233,30 @@ StatusCode GenXiccProduction::parseGenXiccCommands( const CommandVector &
             << "  value " << fl1 << endmsg ;
 
     if ( "mixevnt" == block)
-      if      ( "imix"    == entry )GenXicc::mixevnt().imix()      = int1 ;
+      if      ( "imix"    == entry ) GenXicc::mixevnt().imix()      = int1 ;
       else if ( "imixtype"== entry ) GenXicc::mixevnt().imixtype() = int1 ;
       else return Error(std::string("GenXicc error, mixevnt"));
 
     else if ( "counter" == block)
       if      ( "ixiccstate"    == entry ) GenXicc::counter().ixiccstate() = int1 ;
+      else if ( "xmaxwgt"    == entry ) GenXicc::counter().xmaxwgt() = fl1 ;
       else return Error(std::string("GenXicc error, counter"));
 			
-    else if ( "upcom" == block)
-      if      ( "pmb" == entry ) GenXicc::upcom().pmb()     =fl1;
-      else if ( "pmc" == entry ) GenXicc::upcom().pmc()     =fl1;
-      else if ( "pmxicc"== entry ) GenXicc::upcom().pmxicc()  =fl1;
-      else if ( "ecm" == entry ) GenXicc::upcom().ecm()     =fl1;
+    else if ( "upcom" == block) // GG : do not override internal settings for quark masses
+      if      ( "pmb" == entry ) {if (0) GenXicc::upcom().pmb()     =fl1;}
+      else if ( "pmc" == entry ) {if (0) GenXicc::upcom().pmc()     =fl1;}
+      else if ( "pmxicc"== entry ) {if (0) GenXicc::upcom().pmxicc()  =fl1;}
+      else if ( "ecm" == entry ) {
+        if (canChangeState) GenXicc::upcom().ecm()     =fl1;
+        else warning() << "You cannot change ecm via GenXiccCommands, please use BeamMomentum option" <<endmsg;
+      }
       else return Error (std::string("GenXicc error, upcom"));
 
     else if ( "confine" == block )
       if      ( "ptcut" == entry  ) GenXicc::confine().ptcut() = fl1;
       else if ( "etacut" == entry ) GenXicc::confine().etacut()= fl1;
+      else if ( "pscutmin" == entry ) GenXicc::confine().pscutmin()= fl1;
+      else if ( "pscutmax" == entry ) GenXicc::confine().pscutmax()= fl1;
       else return Error (std::string("GenXicc error, confine"));
     
     else if ( "funtrans"== block )
@@ -245,14 +302,20 @@ StatusCode GenXiccProduction::parseGenXiccCommands( const CommandVector &
       if  ( "cmfactor"   ==entry)GenXicc::valmatrix().cmfactor()=fl1; 
       else return Error (std::string("GenXicc error, valmatrix"));
     
-    else if ( "mtypeofxi"==block )
-      if  ( "mgenxi"   ==entry)GenXicc::mtypeofxi().mgenxi()=int1; 
-      else return Error (std::string("GenXicc error, mtypeofxi"));
-      
-    else if ( "wbstate"==block )
-      if  ( "nbound"   ==entry)GenXicc::wbstate().nbound()=int1; 
-      else return Error (std::string("GenXicc error, wbstate"));
-      
+    else if ( "mtypeofxi"==block) {
+      if (canChangeState) {
+        if  ( "mgenxi"   ==entry)GenXicc::mtypeofxi().mgenxi()=int1; 
+        else return Error (std::string("GenXicc error, mtypeofxi"));
+      }
+      else warning() << "You cannot change mgenxi via GenXiccCommands, please use BaryonState option" <<endmsg;
+    }
+    else if ( "wbstate"==block) {
+      if (canChangeState) {
+        if  ( "nbound"   ==entry) GenXicc::wbstate().nbound()=int1; 
+        else return Error (std::string("GenXicc error, wbstate"));
+      }
+      else warning() << "You cannot change nbound via GenXiccCommands, please use BaryonState option" <<endmsg;
+    }
     else return Error (std::string("GenXicc error in parse parameters"));
   }
   

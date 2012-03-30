@@ -29,17 +29,33 @@ Wbstate   GenXicc::s_wbstate   ;
 //SetParameter Fortran function for Xicc by F. Zhang 10-04-11
 extern "C" {
 #ifdef WIN32
-  void __stdcall SETPARAMETER( ) ;
+  void __stdcall SETXICCDEFAULTPARAMETERS( ) ;
 #else
-  void setparameter_( ) ;
+  void setxiccdefaultparameters_( ) ;
 #endif
 }
 
-void GenXicc::SetParameter( ) {
+extern "C" {
 #ifdef WIN32
-  SETPARAMETER( );
+  void __stdcall SETXICCCONSISTENTPARAMETERS( ) ;
 #else
-  setparameter_( );
+  void setxiccconsistentparameters_( ) ;
+#endif
+}
+
+void GenXicc::SetXiccDefaultParameters( ) {
+#ifdef WIN32
+  SETXICCDEFAULTPARAMETERS( );
+#else
+  setxiccdefaultparameters_( );
+#endif
+}
+
+void GenXicc::SetXiccConsistentParameters( ) {
+#ifdef WIN32
+  SETXICCCONSISTENTPARAMETERS( );
+#else
+  setxiccconsistentparameters_( );
 #endif
 }
 

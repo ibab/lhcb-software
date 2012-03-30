@@ -20,6 +20,8 @@ public:
   double& ptcut();
   double& etacut();
   double& psetacut(); //F. Zhang 01-04-11 
+  double& pscutmin();
+  double& pscutmax();
 
   inline void init(); // inlined for speed of access (small function)
 
@@ -31,6 +33,9 @@ private:
     double ptcut;
     double etacut; 
     double psetacut; //F. Zhang 01-04-11
+    double pscutmin; // G.Graziani 14-02-12
+    double pscutmax;
+    
   };
   int m_dummy;
   double m_realdummy;

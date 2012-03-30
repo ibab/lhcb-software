@@ -45,8 +45,7 @@ XiccDaughtersInLHCb::XiccDaughtersInLHCb( const std::string& type,
   declareProperty( "NeutralThetaMin" , m_neutralThetaMin = 5 * Gaudi::Units::mrad ) ;
   declareProperty( "NeutralThetaMax" , m_neutralThetaMax = 400 * Gaudi::Units::mrad ) ;
   declareProperty( "DecayTool" ,       m_decayToolName = "EvtGenDecay") ;
-  m_sigXiccPID = 4412 ;
-  //always() << "  I am here hahaha             " << endmsg;
+  declareProperty( "BaryonState"    , m_BaryonState="Xi_cc+"); // double heavy baryon to be looked for
 
 }
 
@@ -66,10 +65,12 @@ StatusCode XiccDaughtersInLHCb::initialize( ) {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize and retrieve "
                                       << m_decayToolName << " tool" << endmsg;
 
+
   if ( "" != m_decayToolName )
     m_decayTool = tool< IDecayTool >( m_decayToolName ) ;
 
-  m_decayTool -> setSignal( m_sigXiccPID ) ;
+  m_sigXiccPID = m_mapBaryonPID[m_BaryonState];
+  m_decayTool -> setSignal( m_sigXiccPID  ) ;
 
   return StatusCode::SUCCESS;
 
@@ -102,8 +103,10 @@ bool XiccDaughtersInLHCb::applyCut( ParticleVector & theParticleVector ,
   HepMC::GenEvent::particle_const_iterator it ;
   for ( it = theEvent -> particles_begin() ; it != theEvent -> particles_end() ; ++it )
     if ( abs( (*it) -> pdg_id() ) == m_sigXiccPID ) 
-      if ( ( LHCb::HepMCEvent::DocumentationParticle != (*it) -> status() ) && ( HepMCUtils::IsBAtProduction( *it ) ) ){
+      // GG : particle must not have decayed (no intermediate states)
+      if ( ( LHCb::HepMCEvent::StableInProdGen == (*it) -> status() ) && ( HepMCUtils::IsBAtProduction( *it ) ) ){
         theParticleVector.push_back( *it ) ;
+        verbose()<< "found a signal particle "<< **it << endmsg;
   // Added by F. Zhang 27-04-2011 
   //always() << "               " << endmsg;   
   //always() << "@@@@ XICC4412 FOURMOM = :" << (*it)-> momentum().px() << " MeV/c " << endmsg;
@@ -111,36 +114,29 @@ bool XiccDaughtersInLHCb::applyCut( ParticleVector & theParticleVector ,
   //always() << "@@@@ XICC4412 FOURMOM = :" << (*it)-> momentum().pz() << " MeV/c " << endmsg;
   //always() << "@@@@ XICC4412 FOURMOM = :" << (*it)-> momentum().e() << " MeV " << endmsg;
   //always() << "               " << endmsg;   
-	}
-  std::sort( theParticleVector.begin() , theParticleVector.end() , HepMCUtils::compareHepMCParticles ) ;
+      }
+  //std::sort( theParticleVector.begin() , theParticleVector.end() , HepMCUtils::compareHepMCParticles ) ;
   
-  if ( theParticleVector.empty() ) return false ;
-
+  if ( theParticleVector.empty() ) {
+    warning() << "No double heavy baryon "<<m_BaryonState << " found among the GenXicc products!" << endmsg; 
+    return false ;    
+  }
+  else if(theParticleVector.size() > 1) {
+    warning() << "There are "<<theParticleVector.size() << " " <<m_BaryonState<<" in the GenXicc output!!!"<<endmsg;
+  }
   // To decay the signal particle
   //--------------------------------------------------------------------  
   bool hasFlipped = false ;
   HepMC::GenParticle * theSignal ;
-  //ByYanxi
-  //to select the last particle in the vector
-  //theSignal = theParticleVector.front() ;  
-  theSignal = theParticleVector[theParticleVector.size()-1] ;  
-  // If particle already has daughters, return now
-     if ( 0 != theSignal -> end_vertex() ) {
-           always()<<"MyXicc already decay"<<endmsg;
-        }
+
+  theSignal = theParticleVector.back() ; // in case of multiple signals (should not happen), let's decay only the last one 
+  if ( 0 != theSignal -> end_vertex() ) {
+    error()<<"MyXicc already decayed ??" <<endmsg;
+    return false;
+  }
   m_decayTool -> generateSignalDecay( theSignal , hasFlipped ) ;
   
-  // To do the cut
-  //--------------------------------------------------------------------  
-  ParticleVector::iterator itp ;
-  for ( itp = theParticleVector.begin() ; 
-        itp != theParticleVector.end() ; ) {    
-    if ( ! passCuts( *itp ) ) {
-      itp = theParticleVector.erase( itp ) ;
-    } else ++itp ;
-  }
-  
-  return ( ! theParticleVector.empty() ) ;
+  return passCuts(theSignal);
 }
 
 //=============================================================================
@@ -149,8 +145,10 @@ bool XiccDaughtersInLHCb::applyCut( ParticleVector & theParticleVector ,
 bool XiccDaughtersInLHCb::passCuts( const HepMC::GenParticle * theSignal ) 
   const {
   HepMC::GenVertex * EV = theSignal -> end_vertex() ;
-  //if ( 0 == EV ) {always()<<"NO DECAY VERTEX"<<endmsg;} 
-  if ( 0 == EV ) return true ;
+  if ( 0 == EV ) {
+    warning()<<"SIGNAL HAS NO DECAY VERTEX!!!"<<endmsg;
+    return true; 
+  }
   
   typedef std::vector< HepMC::GenParticle * > Particles ;
   Particles stables ;
@@ -199,16 +197,22 @@ bool XiccDaughtersInLHCb::passCuts( const HepMC::GenParticle * theSignal )
     angle = (*it) -> momentum().theta() ;
     
     LHCb::ParticleID pid( (*it) -> pdg_id() ) ;
+    bool isout=false;
     if ( 0 == pid.threeCharge() ) {
       if ( fabs( angle ) > fabs( m_neutralThetaMax ) ) 
-        return false ;
+        isout=true ;
       if ( fabs( angle ) < fabs( m_neutralThetaMin ) ) 
-        return false ;
+        isout=true ;
     } else {
       if ( fabs( angle ) > fabs( m_chargedThetaMax ) ) 
-        return false ;
+        isout=true ;
       if ( fabs( angle ) < fabs( m_chargedThetaMin ) ) 
-        return false ;
+        isout=true ;
+    }
+    if(isout) {
+      debug() << "particle " << pid << " is out of LHCbacceptance (angle="<<
+        angle/Gaudi::Units::mrad << " mrad)"<<endmsg;
+      return false ;
     }
   }
 

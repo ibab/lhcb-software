@@ -2,6 +2,7 @@
 #define GENERATORS_XICCDAUGHTERSINLHCB_H 1
 
 // Include files
+#include "LbGenXicc/QQqBaryons.h"
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/Transform4DTypes.h"
@@ -22,7 +23,7 @@ class IDecayTool ;
  *  @date   2011-04-22
  */
 
-class XiccDaughtersInLHCb : public GaudiTool, virtual public IGenCutTool {
+class XiccDaughtersInLHCb : public GaudiTool, public QQqBaryons, virtual public IGenCutTool {
  public:
   /// Standard constructor
   XiccDaughtersInLHCb( const std::string& type, 
@@ -79,7 +80,8 @@ private:
   /// Name of the decay tool to use
   std::string m_decayToolName ;
 
-  int  m_sigXiccPID        ;  ///< PDG Id of the Xi_cc 
+  std::string m_BaryonState;  ///< double heavy baryon to be looked for
+  int  m_sigXiccPID        ;  ///< PDG Id of the double heavy baryon
 
 };
 #endif // GENERATORS_XICCDAUGHTERSINLHCB_H

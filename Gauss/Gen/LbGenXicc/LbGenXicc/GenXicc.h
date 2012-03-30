@@ -41,7 +41,8 @@ public:
   static Mtypeofxi & mtypeofxi() { return s_mtypeofxi; }
   static Wbstate   & wbstate()   { return s_wbstate  ; }
 
-  static void SetParameter( ) ;
+  static void SetXiccDefaultParameters( ) ;
+  static void SetXiccConsistentParameters( ) ;
   static void EvntInit( ) ;
 
 protected:

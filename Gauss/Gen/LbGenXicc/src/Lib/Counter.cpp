@@ -22,3 +22,10 @@ int& Counter::nev() {
   init(); // check COMMON is initialized
   return s_counter->nev;
 }
+
+// GG 16.02.2012
+double& Counter::xmaxwgt() {
+  init(); // check COMMON is initialized
+  return s_counter->xmaxwgt;
+}
+

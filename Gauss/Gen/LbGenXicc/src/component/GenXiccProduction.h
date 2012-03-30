@@ -2,6 +2,7 @@
 #define LBGENXICC_GENXICCPRODUCTION_H 1
 
 // Include files
+#include "LbGenXicc/QQqBaryons.h"
 #include "LbPythia/PythiaProduction.h"
 
 /** @class GenXiccProduction GenXiccProduction.h 
@@ -12,7 +13,7 @@
  *  @date   2011-04-10
  */
 
-class GenXiccProduction : public PythiaProduction {
+class GenXiccProduction : public PythiaProduction , public QQqBaryons {
  public:
   /// Standard constructor
   GenXiccProduction( const std::string & type , 
@@ -30,11 +31,12 @@ class GenXiccProduction : public PythiaProduction {
  protected:
 
   /// Parse GenXicc commands from a string vector
-  StatusCode parseGenXiccCommands( const CommandVector & theVector ) ;
+  StatusCode parseGenXiccCommands( const CommandVector & theVector, bool canChangeState = false ) ;
 
 
  private:
-
+  std::string m_BaryonState;                  ///< baryon state to be produced
+  double m_beamMomentum;                      ///< beam momentum
   CommandVector m_defaultGenXiccSettings ;
   CommandVector m_commandGenXiccVector ;      ///< Commands to setup GenXicc
 };

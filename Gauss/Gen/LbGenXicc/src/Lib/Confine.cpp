@@ -28,7 +28,13 @@ double& Confine::psetacut() {      //F. zhang 01-04-11
   return s_confine->psetacut;
 }
 
+double& Confine::pscutmin() {      // G.Graziani 14-02-12
+  init(); // check COMMON is initialized
+  return s_confine->pscutmin;
+}
 
-
-
+double& Confine::pscutmax() {      // G.Graziani 14-02-12
+  init(); // check COMMON is initialized
+  return s_confine->pscutmax;
+}
 

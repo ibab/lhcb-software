@@ -1,6 +1,15 @@
 ! Package     : Gen/LbGenXicc
 ! Responsible : F. Zhang
 
+! 2012-03-29 - Giacomo GRAZIANI
+- extend the code for any heavy baryon state: the state can be now decided with 
+    the "BaryonState" option of GenXiccProduction and XiccDaughtersInLHCb.
+    The possible states are listed in LbGenXicc/QQqBaryons.h.
+    The beam energy is also passed via the BeamMomentum option, so that its value can be taken from Gauss
+- allow the interface to control the parameters for generator level eta cut and maximum event sampling weight
+- ignore intermediate baryon states in XiccDaughtersInLHCb
+
+
 !========================= LbGenXicc v1r0 2012-03-09 =========================
 ! 2012-03-09 - F. Zhang
   - First import of the package
