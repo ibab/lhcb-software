@@ -6,22 +6,11 @@
 // ============================================================================
 #include <cmath>
 // ============================================================================
-// GaudiKernel
-// ============================================================================
-#include "GaudiKernel/ISvcLocator.h"
-#include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/IUpdateManagerSvc.h"
-#include "GaudiKernel/DataObject.h"
-#include "GaudiKernel/IRegistry.h"
-#include "GaudiKernel/SmartIF.h"
-#include "GaudiKernel/SmartDataPtr.h"
-// ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/ILoKiSvc.h"
 #include "LoKi/Constants.h"
 #include "LoKi/BeamLineFunctions.h"
-#include "KalmanFilter/FastVertex.h"
 // ============================================================================
 /** @file 
  *  Collection of "beam-line"-related functors 
@@ -46,178 +35,10 @@
  *                 by $Author$ 
  */
 // ============================================================================
-namespace
-{
-  // ==========================================================================
-  /** @var s_CONDNAME
-   *  the default condition name for velo resolver 
-   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
-   *  @date   2011-06-03
-   */
-  const std::string s_CONDNAME = "/dd/Conditions/Online/Velo/MotionSystem" ;
-  // ==========================================================================
-}
-// ============================================================================
-// Constructor from bound & condiname 
-// ============================================================================
-LoKi::Vertices::BeamSpot::BeamSpot 
-( const double       bound    ,
-  const std::string& condname )
-  : LoKi::AuxFunBase (                       )
-  , m_resolverBound  ( bound                 ) 
-  , m_veloClosed     ( false                 ) 
-  , m_beamSpotX      ( -1 * Gaudi::Units::km ) 
-  , m_beamSpotY      ( -1 * Gaudi::Units::km ) 
-  , m_condName       ( condname              )
-  , m_condition      (                       ) 
-{
-  //
-  LoKi::ILoKiSvc* svc = lokiSvc() ;  
-  //
-  Assert ( 0 != svc      , "Unable to reach LoKi Service!"  ) ;
-  SmartIF<ISvcLocator> loc ( svc ) ;
-  Assert ( loc.isValid() , "Unable to reach ServiceLocator" ) ;
-  //
-  SmartIF<IDataProviderSvc> det =  loc->service<IDataProviderSvc>( "DetectorDataSvc" , true ) ;
-  Assert ( det.isValid() , "Unable to reach Detector Service" ) ;
-  //
-  if ( m_condName.empty () ) { m_condName = s_CONDNAME ; }
-  SmartDataPtr<Condition> cond (  det , condName() ) ;
-  Assert ( !(!cond) , "Unable to locate CONDITION='" + condName() + "'" ) ;
-  //
-  m_condition = cond ;
-  //
-  // update condition & register it
-  //
-  updateCondition   () ;
-  registerCondition () ;
-  //
-}  
-// ============================================================================
-// Constructor from bound
-// ============================================================================
-LoKi::Vertices::BeamSpot::BeamSpot 
-( const double bound ) 
-  : LoKi::AuxFunBase (                       )
-  , m_resolverBound  ( bound                 ) 
-  , m_veloClosed     ( false                 ) 
-  , m_beamSpotX      ( -1 * Gaudi::Units::km ) 
-  , m_beamSpotY      ( -1 * Gaudi::Units::km ) 
-  , m_condName       ( s_CONDNAME            ) 
-  , m_condition      (                       ) 
-{
-  //
-  LoKi::ILoKiSvc* svc = lokiSvc() ;  
-  //
-  Assert ( 0 != svc      , "Unable to reach LoKi Service!"  ) ;
-  SmartIF<ISvcLocator> loc ( svc ) ;
-  Assert ( loc.isValid() , "Unable to reach ServiceLocator" ) ;
-  //
-  SmartIF<IDataProviderSvc> det =  loc->service<IDataProviderSvc>( "DetectorDataSvc" , true ) ;
-  Assert ( det.isValid() , "Unable to reach Detector Service" ) ;
-  //
-  SmartDataPtr<Condition> cond (  det , condName() ) ;
-  Assert ( !(!cond) , "Unable to locate CONDITION='" + condName() + "'" ) ;
-  //
-  m_condition = cond ;
-  //
-  // update condition & register it
-  //
-  updateCondition   () ;
-  registerCondition () ;
-  //
-}  
-// ============================================================================
-// Copy Constructor 
-// ============================================================================
-LoKi::Vertices::BeamSpot::BeamSpot 
-( const LoKi::Vertices::BeamSpot& right ) 
-  : LoKi::AuxFunBase ( right                  ) 
-  , m_resolverBound  ( right.m_resolverBound  ) 
-  , m_veloClosed     ( right.m_veloClosed     ) 
-  , m_beamSpotX      ( right.m_beamSpotX      ) 
-  , m_beamSpotY      ( right.m_beamSpotY      ) 
-  , m_condName       ( right.m_condName       )  
-  , m_condition      ( right.m_condition      )  
-{
-  //
-  // update condition & register it
-  //
-  updateCondition   () ;
-  registerCondition () ;
-  //
-}
-// ============================================================================
-// MANDATORY: virtual destructor 
-// ============================================================================
-LoKi::Vertices::BeamSpot::~BeamSpot() { unregisterCondition () ; }
-// ============================================================================
-// register the condition
-// ============================================================================
-StatusCode LoKi::Vertices::BeamSpot::registerCondition () 
-{
-  //
-  LoKi::ILoKiSvc* svc = lokiSvc() ;  
-  Assert ( 0 != svc , "Unable to reach LoKi Service!"  ) ;
-  //
-  SmartIF<IUpdateManagerSvc> upd  ( svc ) ;
-  Assert ( upd.isValid() , "Unable to reach Update Manager Service" ) ;
-  //
-  LoKi::Vertices::BeamSpot* this_ = this ;
-  upd -> registerCondition
-    ( this_                                         , 
-      m_condName                                    ,
-      &LoKi::Vertices::BeamSpot::updateCondition ) ;
-  //
-  return StatusCode::SUCCESS ;
-}
-// ============================================================================
-// unregister the condition
-// ============================================================================
-StatusCode LoKi::Vertices::BeamSpot::unregisterCondition () 
-{
-  //
-  LoKi::ILoKiSvc* svc = lokiSvc() ;  
-  if ( 0 == svc  ) return StatusCode::SUCCESS;
-  //
-  SmartIF<IUpdateManagerSvc> upd  ( svc ) ;
-  Assert ( upd.isValid() , "Unable to reach Update Manager Service" ) ;
-  //
-  LoKi::Vertices::BeamSpot* this_ = this ;
-  upd -> unregister ( this_ ) ;
-  //
-  return StatusCode::SUCCESS ;
-}
-// ============================================================================
-// update the condition
-// ============================================================================
-StatusCode LoKi::Vertices::BeamSpot::updateCondition () 
-{
-  //
-  Assert ( !(!m_condition) , "Condition is invalid!" ) ;
-  //
-  // Get the parameters
-  //
-  const double xRC = m_condition -> paramAsDouble ( "ResolPosRC" ) ;
-  const double xLA = m_condition -> paramAsDouble ( "ResolPosLA" ) ;
-  const double   Y = m_condition -> paramAsDouble ( "ResolPosY"  ) ;
-  //
-  m_beamSpotX = (xRC + xLA ) / 2;
-  m_beamSpotY = Y ;
-  //
-  // If resolver x position > bound, velo is considered as open
-  //
-  m_veloClosed =
-    std::abs ( xRC - m_beamSpotX ) < m_resolverBound && 
-    std::abs ( xLA - m_beamSpotX ) < m_resolverBound ;
-  //
-  return StatusCode::SUCCESS  ;
-}
-// ============================================================================
 // Constructor from bound
 // ============================================================================
 LoKi::Vertices::BeamSpotRho::BeamSpotRho ( const double bound ) 
-  : LoKi::Vertices::BeamSpot( bound )
+  : LoKi::BeamSpot( bound )
   , LoKi::BasicFunctors<const LHCb::VertexBase*>::Function () 
 {}  
 // ============================================================================
@@ -226,7 +47,7 @@ LoKi::Vertices::BeamSpotRho::BeamSpotRho ( const double bound )
 LoKi::Vertices::BeamSpotRho::BeamSpotRho 
 ( const double       bound    , 
   const std::string& condname ) 
-  : LoKi::Vertices::BeamSpot ( bound , condname )
+  : LoKi::BeamSpot ( bound , condname )
   , LoKi::BasicFunctors<const LHCb::VertexBase*>::Function () 
 {}  
 // ============================================================================
@@ -269,72 +90,8 @@ LoKi::Vertices::BeamSpotRho::operator()
 std::ostream& LoKi::Vertices::BeamSpotRho::fillStream( std::ostream& s ) const 
 {
   s << "VX_BEAMSPOTRHO(" << resolverBound()   << "" ;
-  if ( s_CONDNAME != condName() ) { s << ",'" << condName() << "'" ; }
+  s << ",'" << condName() << "'" ; 
   return s << ")" ;
-}
-
-
-
-
-// ============================================================================
-// Constructor from bound
-// ============================================================================
-LoKi::Tracks::FastDOCAToBeamLine::FastDOCAToBeamLine ( const double bound )
-  : LoKi::Vertices::BeamSpot( bound )
-  , LoKi::BasicFunctors<const LHCb::Track*>::Function ()
-  , m_beamLine ()
-{}
-// ============================================================================
-// Constructor from bound & condname
-// ============================================================================
-LoKi::Tracks::FastDOCAToBeamLine::FastDOCAToBeamLine
-( const double       bound    ,
-  const std::string& condname )
-  : LoKi::Vertices::BeamSpot( bound , condname )
-  , LoKi::BasicFunctors<const LHCb::Track*>::Function ()
-  , m_beamLine ()
-{}
-// ============================================================================
-// Update beamspot position
-// ============================================================================
-StatusCode LoKi::Tracks::FastDOCAToBeamLine::updateCondition()
-{
-  StatusCode sc = LoKi::Vertices::BeamSpot::updateCondition();
-  if ( sc.isSuccess() ) {
-    m_beamLine.clearStates();
-    LHCb::State beamLineState(
-      LHCb::StateVector(
-        Gaudi::XYZPoint( x(), y(), 0.),
-        Gaudi::XYZVector(0., 0., 1.),
-        0.
-      )
-    );
-    beamLineState.setLocation( LHCb::State::ClosestToBeam );
-    m_beamLine.addToStates( beamLineState );
-  }
-  return sc;
-}
-// ============================================================================
-// Copy constructor
-// ============================================================================
-LoKi::Tracks::FastDOCAToBeamLine::FastDOCAToBeamLine
-( const LoKi::Tracks::FastDOCAToBeamLine& other )
-: LoKi::AuxFunBase ( other )
-, LoKi::Vertices::BeamSpot ( other )
-, LoKi::Functor<const LHCb::Track*, double> ( other )
-{
-  m_beamLine = *( other.m_beamLine.clone() ) ;
-}
-// ============================================================================
-// MANDATORY: the only one essential method
-// ============================================================================
-LoKi::Tracks::FastDOCAToBeamLine::result_type
-LoKi::Tracks::FastDOCAToBeamLine::operator()
-  ( LoKi::Tracks::FastDOCAToBeamLine::argument t ) const
-{
-  double doca;
-  LoKi::FastVertex::distance( t, &m_beamLine, doca ) ;
-  return doca;
 }
 // ============================================================================
 // The END 

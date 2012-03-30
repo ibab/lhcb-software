@@ -786,10 +786,8 @@ DPCTAUSIGNIFICANCE = LoKi.Particles.DaughterParticleCTauSignificance
 # =============================================================================
 # moved form LoKi-Trigger 
 # =============================================================================
-BEAMSPOT       = LoKi.Vertices.BeamSpot
+BEAMSPOT       = LoKi.BeamSpot
 VX_BEAMSPOTRHO = LoKi.Vertices.BeamSpotRho
-Tr_FASTDOCATOBEAMLINE = LoKi.Tracks.FastDOCAToBeamLine
-
 
 # =============================================================================
 ## nodes & trees 

@@ -118,13 +118,11 @@
   <class pattern   = "LoKi::ExtraInfo::GetInfo<*>"    />
 
  
-
   <class name = "LoKi::AuxFunBase"  />
   <class name = "LoKi::AuxDTFBase"  />
     
   <class pattern   = "LoKi::Particles::*"   />
   <class pattern   = "LoKi::Vertices::*"    />
-  <class pattern   = "LoKi::Tracks::FastDOCAToBeamLine"      />
   <class pattern   = "LoKi::Legacy::*"      />
   
   <class pattern   = "LoKi::ExtraInfo::GetSmartInfo<*Particle*>"   />
@@ -218,11 +216,6 @@
     <class pattern="LoKi::Vertices::RecVertex2TrackNum">
       <method name="="     />
       <field name="m_cut" />
-    </class>
-
-    <class name ="LoKi::Vertices::BeamSpot">
-      <method name="=" />
-      <field  name="m_condition" />
     </class>
 
     <class name ="LoKi::Vertices::MinMaxDistance">

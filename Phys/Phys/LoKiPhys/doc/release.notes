@@ -5,6 +5,11 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2012-03-30 - Vanya Belyaev
+
+ - reshuffle beam-line/beam-spot functors 
+ - issue warnings for legacy functors 
+
 !========================= LoKiPhys v10r8 2012-03-17 =========================
 ! 2012-03-12 - Pieter David
  - Add functor to BeamLineFunctions to calculate the DOCA to the beamline,

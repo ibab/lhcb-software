@@ -89,7 +89,9 @@ LoKi::Legacy::TrgPointingScoreWithPt::TrgPointingScoreWithPt
 ( const LHCb::VertexBase* vertex ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , LoKi::Vertices::VertexHolder ( vertex ) 
-{}
+{
+  Warning("Functor is obsolete and will be removed form the next release");
+}
 // ============================================================================
 // constructor from the point 
 // ============================================================================
@@ -97,7 +99,9 @@ LoKi::Legacy::TrgPointingScoreWithPt::TrgPointingScoreWithPt
 ( const LoKi::Point3D& point ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , LoKi::Vertices::VertexHolder ( point ) 
-{}
+{
+  Warning("Functor is obsolete and will be removed form the next release");
+}
 // ============================================================================
 // constructor from the holder 
 // ============================================================================
@@ -105,7 +109,9 @@ LoKi::Legacy::TrgPointingScoreWithPt::TrgPointingScoreWithPt
 ( const LoKi::Vertices::VertexHolder& holder ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
   , LoKi::Vertices::VertexHolder ( holder ) 
-{}
+{
+  Warning("Functor is obsolete and will be removed form the next release");
+}
 // ============================================================================
 // copy constructor
 // ============================================================================
@@ -114,7 +120,9 @@ LoKi::Legacy::TrgPointingScoreWithPt::TrgPointingScoreWithPt
   : LoKi::AuxFunBase                      ( right )
   , LoKi::BasicFunctors<const LHCb::Particle*>::Function ( right )
   , LoKi::Vertices::VertexHolder          ( right ) 
-{}
+{
+  Warning("Functor is obsolete and will be removed form the next release");
+}
 // ============================================================================
 LoKi::Legacy::TrgPointingScoreWithPt::result_type 
 LoKi::Legacy::TrgPointingScoreWithPt::pointing
@@ -189,7 +197,9 @@ LoKi::Legacy::TrgPointingScoreWithPtWithBestPV::
 TrgPointingScoreWithPtWithBestPV()
   : LoKi::AuxDesktopBase()
   , LoKi::Legacy::TrgPointingScoreWithPt ( s_VERTEX ) 
-{}
+{
+  Warning("Functor is obsolete and will be removed form the next release");
+}
 // ============================================================================
 // MANDATORY: the clone method ("virtual constructor")
 // ============================================================================
