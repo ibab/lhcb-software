@@ -22,7 +22,7 @@ c...to it's original form easily.
      & 	colmat(6,64),bundamp(4),pmomzero(5,8)
 
 	common/rconst/pi
-	common/counter/ixiccstate,nev
+	common/counter/ixiccstate,nev,xmaxwgt
 	common/mixevnt/imix,imixtype
 	common/mtypeofxi/mgenxi
 	common/subopen/subfactor,subenergy,isubonly

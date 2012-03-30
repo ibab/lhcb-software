@@ -11,7 +11,7 @@ c...note: ixiccstate=3 and 4 are for hadronic production of (xibc)
 	double complex fincol(6,16),colmat,bundamp
 	common/upcom/ecm,pmxicc,pmb,pmc,fxicc,pmomup(5,8),
      & 	colmat(6,64),bundamp(4),pmomzero(5,8)
-      common/counter/ixiccstate,nev
+      common/counter/ixiccstate,nev,xmaxwgt
 	common/mixevnt/imix,imixtype
 	common/ggiter/iggiter
 c...transfer the matrix elements' information: h1=h3*cmfactor

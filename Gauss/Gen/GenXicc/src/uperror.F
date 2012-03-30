@@ -7,7 +7,7 @@ c**********************************************
       implicit double precision(a-h, o-z)
 	implicit integer(i-n)
 
-      common/counter/ixiccstate,nev
+      common/counter/ixiccstate,nev,xmaxwgt
 	common/mixevnt/imix,imixtype
 	common/mtypeofxi/mgenxi
 	common/subopen/subfactor,subenergy,isubonly

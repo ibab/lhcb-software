@@ -13,8 +13,8 @@ c*************************************
 	double complex colmat,bundamp
       common/upcom/ecm,pmxicc,pmb,pmc,fxicc,pmomup(5,8),
      & 	colmat(6,64),bundamp(4),pmomzero(5,8)
-	common/counter/ixiccstate,nev
-	common/confine/ptcut,etacut,psetacut
+	common/counter/ixiccstate,nev,xmaxwgt
+	common/confine/ptcut,etacut,psetacut,pscutmin,pscutmax
       common/funtrans/npdfu
 	common/usertran/idpp
 	common/outpdf/ioutpdf,ipdfnum
@@ -420,13 +420,17 @@ c...you may add some more from pythia manual book.
 	   !write(3,'(a,g10.4)') 'rapidity cut=',etacut
 	end if
 
-	if(psetacut.gt.1.0d+2) then
-	   write(*,'(a)') 'no pseudo-rapidity cut'
-	   !write(3,'(a)') 'no pseudo-rapidity cut'
-	else
-	   write(*,'(a,g10.4)') 'pseudo-rapidity cut=',psetacut
-	   !write(3,'(a,g10.4)') 'pseudo-rapidity cut=',psetacut
-	end if
+         if(psetacut.gt.1.0d+2 .and. pscutmin.lt.(-1.0d+2) 
+     &      .and. pscutmax.gt.1.0d+2) then
+            write(*,'(a)') 'no pseudo-rapidity cut'
+         else
+            if(psetacut.lt.1.0d+2) then
+               write(*,'(a,g10.2)') 'pseudo-rapidity cut: |eta|<',psetacut
+            else
+               write(*,'(a,g10.2,a,g10.2)') 'pseudo-rapidity cut: ',
+     &             pscutmin,'<eta<',pscutmax
+            end if
+         end if
 
       write(*,'(a)') '------------------------------------'
       !write(3,'(a)') '------------------------------------'

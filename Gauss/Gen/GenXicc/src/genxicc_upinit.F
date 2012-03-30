@@ -11,8 +11,7 @@ c      subroutine genxicc_upinit
 c...double precision and integer declarations.
       implicit double precision(a-h, o-z)
       implicit integer(i-n)
-
-      parameter (maxpup=100)
+#include "genxicc_constants.h"
       integer pdfgup,pdfsup,lprup
       common/heprup/idbmup(2),ebmup(2),pdfgup(2),pdfsup(2),
      &idwtup,nprup,xsecup(maxpup),xerrup(maxpup),xmaxup(maxpup),
@@ -20,7 +19,6 @@ c...double precision and integer declarations.
       save /heprup/
  
 c...user process event common block.
-      parameter (maxnup=500)
       common/hepeup/nup,idprup,xwgtup,scalup,aqedup,aqcdup,idup(maxnup),
      &istup(maxnup),mothup(2,maxnup),icolup(2,maxnup),pup(5,maxnup),
      &vtimup(maxnup),spinup(maxnup)
@@ -41,7 +39,7 @@ c...the user own transfer of information.
       double complex colmat,bundamp
       common/upcom/ecm,pmxicc,pmb,pmc,fxicc,pmomup(5,8),
      & 	colmat(6,64),bundamp(4),pmomzero(5,8)
-	common/counter/ixiccstate,nev
+	common/counter/ixiccstate,nev,xmaxwgt
 	logical generate
 	common/genefull/generate
 	common/vegcross/vegsec,vegerr,iveggrade

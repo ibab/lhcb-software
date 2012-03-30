@@ -24,9 +24,8 @@ c                     per iteration.                               c
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
       implicit double precision(a-h,o-z)
 	implicit integer (i-n)
-
+#include "genxicc_constants.h"
 c...pythia common block.
-      parameter (maxnup=500)
       common/hepeup/nup,idprup,xwgtup,scalup,aqedup,aqcdup,idup(maxnup),
      &istup(maxnup),mothup(2,maxnup),icolup(2,maxnup),pup(5,maxnup),
      &vtimup(maxnup),spinup(maxnup)
@@ -38,7 +37,7 @@ c...user process event common block.
       common/vegasbin/nvbin  ! F. Zhang 20-04-2011 IMPORTANT MODIFICATION !!!!
                              ! ":1,$s/NVEGBIN/nvbin/g" 
 	!common/grade/xi(nvbin,10)
-	common/grade/xi(500,10)
+	common/grade/xi(MAXNVBIN,10)
 
 	common/ptpass/ptmin,ptmax,crossmax,etamin,etamax,
      &	smin,smax,ymin,ymax,psetamin,psetamax
@@ -225,13 +224,13 @@ c**************************************************************
       subroutine generand(ndim,xnd,x,ia,weight)
 	implicit double precision(a-h,o-z)
       implicit integer (i-n)
-
+#include "genxicc_constants.h"
 !CC#include "invegas.h"
       
       common/vegasbin/nvbin  ! F. Zhang 20-04-2011 IMPORTANT MODIFICATION !!!!
                              ! ":1,$s/NVEGBIN/nvbin/g" 
 	!common/grade/xi(nvbin,10)
-	common/grade/xi(500,10)
+	common/grade/xi(MAXNVBIN,10)
 	dimension ia(ndim),x(ndim),randx(ndim)
 
       weight=1.0d0

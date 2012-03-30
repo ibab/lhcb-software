@@ -5,12 +5,11 @@ c********************************************************
       double precision function sepfun(ndim,zup,papawt)
 	implicit double precision (a-h,o-z)
 	implicit integer (i-n)
-
+#include "genxicc_constants.h"
 c------------------------
 c...pythia common block.
       common/pydat1/mstu(200),paru(200),mstj(200),parj(200)
 	common/pypars/mstp(200),parp(200),msti(200),pari(200)
-	parameter (maxnup=500)
       common/hepeup/nup,idprup,xwgtup,scalup,aqedup,aqcdup,idup(maxnup),
      &istup(maxnup),mothup(2,maxnup),icolup(2,maxnup),pup(5,maxnup),
      &vtimup(maxnup),spinup(maxnup)
@@ -21,11 +20,11 @@ c...user transformation.
 	double complex colmat,bundamp
 	common/upcom/ecm,pmxicc,pmb,pmc,fxicc,pmomup(5,8),
      & 	colmat(6,64),bundamp(4),pmomzero(5,8)
-	common/counter/ixiccstate,nev
+	common/counter/ixiccstate,nev,xmaxwgt
 	common/rconst/pi
 	common/ptpass/ptmin,ptmax,crossmax,etamin,etamax,
      &	smin,smax,ymin,ymax,psetamin,psetamax
-	common/confine/ptcut,etacut,psetacut
+	common/confine/ptcut,etacut,psetacut,pscutmin,pscutmax
       common/funtrans/npdfu
 
 c...generate---switch for full events.
@@ -411,6 +410,8 @@ c...this part is from the inner part of pythia subroutine pyp().
 c...other confinement can also be added here.
 	if(ptxicc.lt.ptcut .or. abs(eta).gt.etacut .or.
      &	abs(pseta).gt.psetacut) return
+
+      if(pseta.lt.pscutmin .or. pseta.gt.pscutmax) return ! GG 10/2/2012 LHCb-like eta cut
 
 c...energy scale---the transverse mass of xicc.
 	q2 =ptxicc**2+pup(5,3)**2

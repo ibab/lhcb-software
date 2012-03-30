@@ -8,9 +8,8 @@ c******************************************************
 c...preamble: declarations.
       implicit double precision (a-h, o-z)
 	implicit integer(i-n)
-
+#include "genxicc_constants.h"
 c...pythia common block.
-	parameter (maxnup=500)
       common/hepeup/nup,idprup,xwgtup,scalup,aqedup,aqcdup,idup(maxnup),
      &istup(maxnup),mothup(2,maxnup),icolup(2,maxnup),pup(5,maxnup),
      &vtimup(maxnup),spinup(maxnup)
@@ -19,7 +18,7 @@ c...pythia common block.
 	double complex colmat,bundamp
 	common/upcom/ecm,pmxicc,pmb,pmc,fxicc,pmomup(5,8),
      & 	colmat(6,64),bundamp(4),pmomzero(5,8)
-	common/counter/ixiccstate,nev
+	common/counter/ixiccstate,nev,xmaxwgt
 	common/mixevnt/imix,imixtype
 	common/mtypeofxi/mgenxi
 	common/subopen/subfactor,subenergy,isubonly

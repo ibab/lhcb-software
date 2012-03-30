@@ -2,6 +2,14 @@
 ! Responsible : F. Zhang
 
 
+! 2012-03-29 - G.Graziani
+- extend changes to colorflow.F to all QQq baryon states (support for Xi_bc, Xi_bb, Omega_bc, Omega_bb)
+- add LHCb-like generator level cut on eta (default is no cut)
+- add user-controllable parameters (via GenXiccProduction options) for eta cut (pscutmin, pscutmax) and maximum weight (xmaxwgt)
+- split initial parameter settings in two parts that should be called before and after user settings in GenXiccProduction
+- put constants to be shared among routines in include/genxicc_constants.h
+
+
 !========================= GenXicc v1r0 2012-03-09 ===========================
 ! 2012-03-09 - F. Zhang
  - New package:

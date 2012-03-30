@@ -5,7 +5,7 @@ c*******************************************************
       subroutine evntinit
       implicit double precision(a-h, o-z)
 	implicit integer(i-n)
-
+#include "genxicc_constants.h"
 !CC#include "invegas.h"
 
 c------------pythia common block -----------------------
@@ -17,13 +17,11 @@ c...external statement.
 
 c...pythia common block.
       common/pyjets/n,npad,k(4000,5),p(4000,5),v(4000,5)
-      parameter (maxnup=500)
       common/hepeup/nup,idprup,xwgtup,scalup,aqedup,aqcdup,idup(maxnup),
      &istup(maxnup),mothup(2,maxnup),icolup(2,maxnup),pup(5,maxnup),
      &vtimup(maxnup),spinup(maxnup)
       save /hepeup/
 
-      parameter (maxpup=100)
       integer pdfgup,pdfsup,lprup
       common/heprup/idbmup(2),ebmup(2),pdfgup(2),pdfsup(2),
      &idwtup,nprup,xsecup(maxpup),xerrup(maxpup),xmaxup(maxpup),
@@ -47,7 +45,7 @@ c****************************************************
       common/vegasbin/nvbin  ! F. Zhang 20-04-2011 IMPORTANT MODIFICATION !!!!
                              ! ":1,$s/NVEGBIN/nvbin/g"
 	!common/grade/xi(nvbin,10)
-	common/grade/xi(500,10)
+	common/grade/xi(MAXNVBIN,10)
 	common/vegcross/vegsec,vegerr,iveggrade
 
 c...transform of running information.
@@ -83,6 +81,12 @@ c...from pythia and used for vegas running.
      &0.192d0,0.326d0,2*0.2d0,0.2d0,0.2d0,0.29d0,0.2d0,0.4d0,5*0.2d0/,
      &nfin/20*4/
 
+c  GG 16/02/2012 protect against nvbin>MAXNVBIN
+      if (nvbin .gt. MAXNVBIN) then
+         print*, 'GENXICC WARNING: NVBIN=',nvbin,
+     &        ' too high: limited to ',MAXNVBIN
+         nvbin=MAXNVBIN
+      end if
 c************************************************
 c... open recording files.--record mainly the 
 c... vegas running information

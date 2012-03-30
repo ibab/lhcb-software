@@ -11,7 +11,12 @@ cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 c copyright (c)            z.x zhang and x.g. wu                   c
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
-	subroutine setparameter
+
+c GG 17/2/2012: separate the function that initializes parameters to default values (to be called before user settings in LbGenXicc)
+c               from the function producing dependencies among parameters (to be called after user settings in LbGenXicc)
+
+	subroutine setxiccdefaultparameters
+c GG: here we just set the default parameter values
 c...preamble: declarations.
       implicit double precision(a-h, o-z)
 	implicit integer(i-n)
@@ -23,7 +28,7 @@ c...user process event common block...pythia
       common/pydat1/mstu(200),paru(200),mstj(200),parj(200)
 
 c...transform of running information.
-	common/confine/ptcut,etacut,psetacut
+	common/confine/ptcut,etacut,psetacut,pscutmin,pscutmax
 	double complex colmat,bundamp
       common/upcom/ecm,pmxicc,pmb,pmc,fxicc,pmomup(5,8),
      & 	colmat(6,64),bundamp(4),pmomzero(5,8)
@@ -37,7 +42,7 @@ c...transform of the vegas information
       common/vegasinf/number,nitmx
 	common/vegasbin/nvbin
 c...transform of the events number and xicc state.
-	common/counter/ixiccstate,nev
+	common/counter/ixiccstate,nev,xmaxwgt
 c...transform of some common variables
       common/loggrade/ievntdis,igenerate,ivegasopen,igrade,iusecurdir
 	common/mixevnt/imix,imixtype
@@ -119,52 +124,11 @@ c...diquark shall adopt light quark that comes from a soft gluon
 	qmassd=4.75d-3
 	qmasss=104.0d-3
 
-	if(nbound.eq.1) slqmass=qmassu
-	if(nbound.eq.2) slqmass=qmassd
-	if(nbound.eq.3) slqmass=qmasss
-	if(nbound.eq.4) slqmass=0.0d0
-
 c...sub-process information....only for check of most complex
 c...mechanism of gluon-gluon fusion.
 	isubonly =0      !switch on/off subprocess information
       subenergy=60.0d0 !c.m. energy (gev) of the sub-process
 
-c------------------------------------------
-c...set basic parameters. note pmxicc should be equal to
-c...(pmb+pmc) to ensure gauge invariance of amplitude.
-c...values adopted in Phys.Rev.D73,094022(2006).
-c...
-c... further more, to make the second step of diquark fragment 
-c... into the baryon+light ~quark consistently, we make diquark 
-c... slightly bigger than the final baryon mass; so the c and b 
-c... quark masses are slightly bigger than that of Phys.Rev.D73,094022(2006).
-c------------------------------------------
-      if(mgenxi.eq.1) then  !xicc
-	  pmc0  =1.75d0   ! c quark mass (gev)
-	  pmb0  =1.75d0   ! c quark mass (gev)
-	  pmc   =pmc0 +slqmass/2.0d0   ! c quark mass (gev)
-        pmb   =pmb0 +slqmass/2.0d0   ! c quark mass;
-        bmxicc =pmb0+pmc0            ! baryon (cc) mass (gev)
-        pmxicc =pmb+pmc              ! diquark mass (gev)
-	end if
-
-      if(mgenxi.eq.2) then  !xibc
-	  pmc0  =1.80d0    ! c quark mass (gev)
-        pmb0  =5.10d0    ! b quark mass;
-	  pmc  =pmc0 +slqmass/2.0d0    ! c quark mass (gev)
-        pmb  =pmb0 +slqmass/2.0d0    ! b quark mass;
-        bmxicc =pmb0+pmc0            ! baryon xibc mass (gev)
-        pmxicc =pmb+pmc              ! diquark (bc) mass (gev)
-	end if
-
-      if(mgenxi.eq.3) then  !xibb
-	  pmc0  =5.10d0    ! b quark mass (gev)
-        pmb0  =5.10d0    ! b quark mass;
-	  pmc  =pmc0 +slqmass/2.0d0    ! b quark mass (gev)
-        pmb  =pmb0 +slqmass/2.0d0    ! b quark mass;
-        bmxicc =pmb0+pmc0            ! baryon xibb mass (gev)
-        pmxicc =pmb+pmc              ! diquark (bb) mass (gev)
-	end if
 
 c------------------------------------------
 c...kinematical variables
@@ -174,16 +138,9 @@ c------------------------------------------
 
 	etacut  =0.6d+10   !xicc rapidity (y) cut
 	psetacut=1.0d+10   !xicc pseudo-rapidity cut
+        pscutmin=-1.0d+10   ! GG 10/2/2012 allow for LHCb-like eta cut (default is no cut)
+        pscutmax= 1.0d+10   !
 
-c------------------------------------------
-c...all the state has the same value for wavefunction at zero:
-c... r(0)=0.700063D0  <--->  \psi(0)=(0.197)   for xicc
-c... r(0)=0.903773D0  <--->  \psi(0)=(0.255)   for xibc
-c... r(0)=1.382095D0  <--->  \psi(0)=(0.390)   for xibb
-c------------------------------------------
-	if(mgenxi.eq.1) fxicc  =0.700063D0
-	if(mgenxi.eq.2) fxicc  =0.903773D0
-	if(mgenxi.eq.3) fxicc  =1.382095D0
 
 c...h1=h3*cmfactor, Phys.Lett.B568,135(2003)
 c...h1--->c6, h3--->cbar3
@@ -202,14 +159,11 @@ c---------------------------------------
       if(npdfu.eq.2) ecm=0.7d+4 ! F. Zhang 20-04-2011 ENERGYOFLHC   !defined in run.F
 	if(npdfu.eq.3) ecm=ENERGYOFSELEX !defined in run.F
 
-c...for subprocess only
-	if(isubonly.eq.1) subfactor=subenergy/ecm
 
       idpp     =3      !=idwtup: types of pythia generates events
       mstu(111)=1      !setting value of alphas.  pythia parameter
-      if(isubonly.eq.1) mstu(111)=0
 
-	paru(111)=0.2d0  !constant value of alphas, used when mstu(111)=0.
+  	paru(111)=0.2d0  !constant value of alphas, used when mstu(111)=0.
       ievntdis =0      !switch on/off to get the event number
 c                      !distributions for p_t, rap, shat, pseta, y, z.
 
@@ -220,17 +174,11 @@ c...event information
 c...using pythia pdf or not.
       ioutpdf  =1
 
-      if(ioutpdf.eq.0) then
-c	  mstp(51) =7   !used user-preferable one for pythia inner pdf
-	  mstp(51) =10042   !used user-preferable one for pythia inner pdf
-      end if
-
 c...=100, grv98lo; =200, mrst2001l; =300, cteq6hq
 c...Strictly, it must be cteq6hq, which is the only one suitable for
 c...GM-VFN scheme to avoid double counting of gg- and gc- mechanisms.
 c...Other choices can be used as a check with those in literature.
       ipdfnum  =300
-      if(ioutpdf.eq.1 .and. ipdfnum.eq.300) call setctq6(21)   !cteq6hq
 
 c...used by VEGAS
 	number=10000  ! NVEGCALL     !number of calling fxn in each iteration
@@ -298,7 +246,157 @@ c...each mechanism separately.
 c**************************************************
 c**************************************************
 
-	imix=0    ! either to be 1 or 0 for xicc, xibb, xibc
+				imix=0									! either to be 1 or 0 for xicc, xibb, xibc
+				imixtype=1
+				ixiccstate=1
+c----------------------------------------------
+c----------------------------------------------
+
+c GG 16/02/2012  default value for max weight
+				xmaxwgt=1.d+6
+
+c...error message.
+      wronginput=.false.
+	call uperror(wronginput)
+
+	if(wronginput) then
+	 print *, '----- Input error! Resetting the parameters !!!'
+	 print *, '-----     Stop the program !!!'
+	end if
+	
+	return
+	end
+
+
+	subroutine setxiccconsistentparameters
+c GG: here we set the parameters that depend on other parameters, that could have been changed by the LbGenXicc interface
+c...preamble: declarations.
+      implicit double precision(a-h, o-z)
+	implicit integer(i-n)
+
+!CC#include "invegas.h"
+
+c...user process event common block...pythia
+      common/pypars/mstp(200),parp(200),msti(200),pari(200)
+      common/pydat1/mstu(200),paru(200),mstj(200),parj(200)
+
+c...transform of running information.
+	common/confine/ptcut,etacut,psetacut,pscutmin,pscutmax
+	double complex colmat,bundamp
+      common/upcom/ecm,pmxicc,pmb,pmc,fxicc,pmomup(5,8),
+     & 	colmat(6,64),bundamp(4),pmomzero(5,8)
+      common/funtrans/npdfu
+	common/rconst/pi
+	common/usertran/idpp
+	common/vegcross/vegsec,vegerr,iveggrade
+c...transform of pdf information
+	common/outpdf/ioutpdf,ipdfnum
+c...transform of the vegas information
+      common/vegasinf/number,nitmx
+	common/vegasbin/nvbin
+c...transform of the events number and xicc state.
+	common/counter/ixiccstate,nev,xmaxwgt
+c...transform of some common variables
+      common/loggrade/ievntdis,igenerate,ivegasopen,igrade,iusecurdir
+	common/mixevnt/imix,imixtype
+
+c...determing whether adding subtraction term in charm PDF, used for
+c...g+c mechanism to avoid double counting of gc- and gg-mechanisms.
+	common/newpara/ncombine
+
+c...transfer the matrix elements information: h1=h3*cmfactor
+	common/valmatrix/cmfactor
+	common/mtypeofxi/mgenxi
+      common/wbstate/ratiou,ratiod,ratios,nbound
+	common/extramass/bmxicc,bmxibc,bmxibb,slqmass
+c... note: bmxicc=baryon xicc mass; pmxicc=xicc diquark mass
+c... note: slqmass=small light quark mass that constitute baryon.
+
+c...whether to get the gg-subprocess information.
+	common/subopen/subfactor,subenergy,isubonly
+
+	logical wronginput
+
+cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+cc  Note: the UPPERCASE parameters are defined in run.F   cc
+cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+
+
+c...there we take light quark to be their current mass, since
+c...diquark shall adopt light quark that comes from a soft gluon
+
+	if(nbound.eq.1) slqmass=qmassu
+	if(nbound.eq.2) slqmass=qmassd
+	if(nbound.eq.3) slqmass=qmasss
+	if(nbound.eq.4) slqmass=0.0d0
+
+
+c------------------------------------------
+c...set basic parameters. note pmxicc should be equal to
+c...(pmb+pmc) to ensure gauge invariance of amplitude.
+c...values adopted in Phys.Rev.D73,094022(2006).
+c...
+c... further more, to make the second step of diquark fragment 
+c... into the baryon+light ~quark consistently, we make diquark 
+c... slightly bigger than the final baryon mass; so the c and b 
+c... quark masses are slightly bigger than that of Phys.Rev.D73,094022(2006).
+c------------------------------------------
+      if(mgenxi.eq.1) then  !xicc
+	     pmc0  =1.75d0   ! c quark mass (gev)
+	     pmb0  =1.75d0   ! c quark mass (gev)
+	     pmc   =pmc0 +slqmass/2.0d0   ! c quark mass (gev)
+       pmb   =pmb0 +slqmass/2.0d0   ! c quark mass;
+       bmxicc =pmb0+pmc0            ! baryon (cc) mass (gev)
+       pmxicc =pmb+pmc              ! diquark mass (gev)
+		  end if
+
+      if(mgenxi.eq.2) then  !xibc
+	      pmc0  =1.80d0    ! c quark mass (gev)
+        pmb0  =5.10d0    ! b quark mass;
+	      pmc  =pmc0 +slqmass/2.0d0    ! c quark mass (gev)
+        pmb  =pmb0 +slqmass/2.0d0    ! b quark mass;
+        bmxicc =pmb0+pmc0            ! baryon xibc mass (gev)
+        pmxicc =pmb+pmc              ! diquark (bc) mass (gev)
+			end if
+
+      if(mgenxi.eq.3) then  !xibb
+	      pmc0  =5.10d0    ! b quark mass (gev)
+        pmb0  =5.10d0    ! b quark mass;
+				pmc  =pmc0 +slqmass/2.0d0	! b quark mass (gev)
+        pmb  =pmb0 +slqmass/2.0d0    ! b quark mass;
+        bmxicc =pmb0+pmc0            ! baryon xibb mass (gev)
+        pmxicc =pmb+pmc              ! diquark (bb) mass (gev)
+	    end if
+
+
+
+      if(isubonly.eq.1) ptcut=0.0d+0
+
+
+c------------------------------------------
+c...all the state has the same value for wavefunction at zero:
+c... r(0)=0.700063D0  <--->  \psi(0)=(0.197)   for xicc
+c... r(0)=0.903773D0  <--->  \psi(0)=(0.255)   for xibc
+c... r(0)=1.382095D0  <--->  \psi(0)=(0.390)   for xibb
+c------------------------------------------
+	if(mgenxi.eq.1) fxicc  =0.700063D0
+	if(mgenxi.eq.2) fxicc  =0.903773D0
+	if(mgenxi.eq.3) fxicc  =1.382095D0
+
+
+c...for subprocess only
+	if(isubonly.eq.1) subfactor=subenergy/ecm
+
+      if(isubonly.eq.1) mstu(111)=0
+
+
+      if(ioutpdf.eq.0) then
+c	  mstp(51) =7   !used user-preferable one for pythia inner pdf
+	  mstp(51) =10042   !used user-preferable one for pythia inner pdf
+      end if
+
+      if(ioutpdf.eq.1 .and. ipdfnum.eq.300) call setctq6(21)   !cteq6hq
+
 
 	if(isubonly.eq.1) imix=0   ! must fix to 0 for gg-subprocess
 
@@ -328,7 +426,6 @@ c...for xibb:
 c...imixtype=1: mixed events for gg-mechanism.
 
 c************************************************
-        imixtype=1
 
 c****************************************
 c...determing whether add subtraction term in charm PDF, used for
@@ -356,7 +453,6 @@ c...to choose what xicc/xibb state/channel we need to generate.
 c...1--(3s1)_{cbar3} +gg; 2--(1s0)_{c6} +gg; 3--(3s1)_{cbar3} +gc; 
 c...4--(1s0)_{c6} +gc;    5--(3s1)_{cbar3} +cc; 6--(1s0)_{c6} +cc;
 c******************************************
-	  ixiccstate=1
 
 c****************************************
 c...determing whether add subtraction term in charm PDF, used for
@@ -375,7 +471,6 @@ c...to choose what xibc state/channel we need to generate.
 c...1--(3s1)_{cbar3} +gg; 2--(1s0)_{c6} +gg;
 c...3--(3s1)_{c6} +gg; 4--(1s0)_{cbar3} +gg;
 c******************************************
-	  ixiccstate  =1
 	  ncombine=0     ! no use for the case
       end if
 
@@ -384,12 +479,10 @@ c****************************************
 c...to choose what xibc state/channel we need to generate.
 c...1--(3s1)_{cbar3} +gg; 2--(1s0)_{c6} +gg;
 c******************************************
-	  ixiccstate  =1
 	  ncombine=0     ! no use for the case
       end if
 	
-c----------------------------------------------
-c----------------------------------------------
+
 c...error message.
       wronginput=.false.
 	call uperror(wronginput)

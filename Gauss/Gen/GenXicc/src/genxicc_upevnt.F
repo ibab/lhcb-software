@@ -11,17 +11,15 @@ c      subroutine upevnt
 c...  all real arithmetic in double precision.
       implicit double precision(a-h, o-z)
       implicit integer(i-n)
-
+#include "genxicc_constants.h"
 cc!#include "invegas.h"
 
 c...  user process event common block.
-      parameter (maxnup=500)
       common/hepeup/nup,idprup,xwgtup,scalup,aqedup,aqcdup,idup(maxnup),
      &istup(maxnup),mothup(2,maxnup),icolup(2,maxnup),pup(5,maxnup),
      &     vtimup(maxnup),spinup(maxnup)
       save /hepeup/
 
-      parameter (maxpup=100)
       integer pdfgup,pdfsup,lprup
       common/heprup/idbmup(2),ebmup(2),pdfgup(2),pdfsup(2),
      &     idwtup,nprup,xsecup(maxpup),xerrup(maxpup),xmaxup(maxpup),
@@ -32,7 +30,7 @@ c-----------------------------------
       common/vegasbin/nvbin
       common/ptpass/ptmin,ptmax,crossmax,etamin,etamax,
      &     smin,smax,ymin,ymax,psetamin,psetamax
-      common/counter/ixiccstate,nev
+      common/counter/ixiccstate,nev,xmaxwgt
       common/mixevnt/imix,imixtype
       logical generate,ggsub
       common/genefull/generate
@@ -98,9 +96,9 @@ c...  record maximum differential cross-section.
          end if
 c...  added by yangzw, 2011.05.18
 c******the ratio of xwgtup and the xwgtup_max setted at the beginning******
-c      xwt_max = xmaxup(1)+1.
-      xwt_max = 1.0d6     
-      xwt_r=xwgtup/xwt_max
+c modified by GG 2012.02.14  xmaxwgt can now be set from GenXiccProduction
+
+      xwt_r=xwgtup/xmaxwgt
 
       x_r = rand(0)
 

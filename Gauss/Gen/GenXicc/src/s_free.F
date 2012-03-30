@@ -13,7 +13,7 @@ c...helicity amplitude of free quark part: g+g->\bar{c}+c+c+\bar{c}.
      & 	colmat(6,64),bundamp(4),pmomzero(5,8)
       common/tryup/bfun(9,4,64),yup(42),xup(2),idp,idq0,idk1,idk2,
      &	idb1,idb2,idc1,idc2
-	common/counter/ixiccstate,nev
+	common/counter/ixiccstate,nev,xmaxwgt
 	common/ggiter/iggiter
 
       dimension propup(14,4)
