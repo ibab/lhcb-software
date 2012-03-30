@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-03-30 - Alessandra Borgia
+ - StrippingCrossSectionB2DMuNuX.py
+	 . Added 5 lines for cross section measurement to be done with semileptonic lines; Bs->DsMuNu, B->D+MuNu, B->D0MuNu, LambdaB->LambdaCMuNu, with Ds->KKPi, D+->KPiPi, D0->KPi and K3Pi, and LambdaC->pKPi. Adjusted cuts to be similar (if not exactly the same) as the cuts from stripping09, 2010 data."
+
 ! 2012-03-30 - Jibo He
  - StrippingDiMuonForXsection.py
    . New line for 8 TeV cross section measurements 
