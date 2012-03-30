@@ -14,6 +14,7 @@ use Gaucho        v*  Online
 use OnlineHistDB  v*  Online
 use OMAlib        v*  Online
 use Trending      v*  Online
+use PresenterDoc  v*  Online
 
 use ROOT          v*  LCG_Interfaces
 use Python        v*  LCG_Interfaces

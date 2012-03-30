@@ -4,6 +4,10 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2012-03-30 - Olivier Callot
+ - Documentation: If not http, then this is a tool of IPresenterDoc interface
+   that will be called. Definition in th enew Online/PresenterDoc package
+
 ! 2012-03-28 - Olivier Callot
  - When right-clicking on an histogram with a documentation(web link) associated,
    the web link is postfixed with ?X=nnn or ?X=nnn&Y=mmm for 1D/2D plots,

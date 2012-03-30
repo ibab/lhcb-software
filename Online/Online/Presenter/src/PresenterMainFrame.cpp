@@ -51,12 +51,20 @@
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
+// Gaudi
+#include "GaudiKernel/Bootstrap.h"
+#include "GaudiKernel/ISvcLocator.h"
+#include "GaudiKernel/IToolSvc.h"
+#include "Reflex/PluginService.h"
+
 // Online
 #include "dim/dic.hxx"
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OMAlib/OMAlib.h"
 #include "Gaucho/MonObject.h"
 #include "Gaucho/HistTask.h"
+
+#include "PresenterDoc/IPresenterDoc.h"
 
 // Local
 #include "HistogramIdentifier.h"
@@ -4852,24 +4860,50 @@ void PresenterMainFrame::EventInfo(int event, int px, int py, TObject* selected)
             
           m_weblink = dispH->histo()->doc() ;
           if ( ! m_weblink.empty() ) {
-            std::string info;
-            if ( 0 != theHisto ) {
+            if ( 0 != theHisto &&
+                 m_weblink.substr(0,4) != "http" ) {
+              std::string info;
+              int binX = 0;
+              int binY = 0;
               info = std::string(theHisto->GetObjectInfo(px, py));
               unsigned int kk = info.find( "binx=" );
-              if ( kk < info.size() ) info = info.substr( kk+5 );
-              m_weblink += "?binX=" + info.substr(0, info.find(","));
-              kk = info.find( "biny=" );
               if ( kk < info.size() ) {
                 info = info.substr( kk+5 );
-                m_weblink += "&binY="+info.substr(0, info.find(","));
+                std::string xBinString = info.substr(0, info.find(","));
+                sscanf( xBinString.c_str(), "%d", &binX );
+                kk = info.find( "biny=" );
+                if ( kk < info.size() ) {
+                  info = info.substr( kk+5 );
+                  sscanf( info.c_str(), "%d", &binY );
+                }
               }
+
+              // load the proper tool to document the position
+              IService* isvc ;
+              ISvcLocator* iface = Gaudi::svcLocator() ;
+              iface->getService( "ToolSvc" , isvc ) ;
+              const IInterface* a3( isvc ) ;
+              const std::string& name( m_weblink ) ;
+              std::cout <<"== Loading tool " << name << std::endl;
+              IAlgTool * intf = ROOT::Reflex::PluginService::Create< IAlgTool *>( name , name ,
+                                                                                  name , a3 ) ;
+              if ( 0 != intf ) {
+                IPresenterDoc* docTool = dynamic_cast< IPresenterDoc * >( intf ) ;
+                std::string histoName( theHisto->GetName() );
+                info = docTool->document( histoName, binX, binY );
+              } else {
+                char tmp[128];
+                sprintf( tmp, "Tool not found %s, x %d y %d", m_weblink.c_str(), binX, binY );
+                info = tmp;
+              }
+              m_histomenu->AddEntry( info.c_str(), 2 );
+              m_weblink = "";
             } else {
-              info = std::string(theGraph->GetObjectInfo(px, py));
-            }    
-            m_histomenu -> AddEntry( "Click for documentation" , 2 ) ;
-            m_histomenu -> Connect( m_histomenu , "Activated(Int_t)",
-                                    "PresenterMainFrame" , this,
-                                    "loadWebPage(Int_t)" );
+              m_histomenu -> AddEntry( "Click for documentation" , 2 ) ;
+              m_histomenu -> Connect( m_histomenu , "Activated(Int_t)",
+                                      "PresenterMainFrame" , this,
+                                      "loadWebPage(Int_t)" );
+            }
           } else if ( pres::Alarm == displayMode() && m_shiftCrew ) {
             m_histomenu -> AddEntry( "Clear the alarm" , 2 ) ;
             m_histomenu -> Connect( m_histomenu , "Activated(Int_t)",
