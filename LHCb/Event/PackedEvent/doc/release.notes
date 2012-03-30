@@ -4,6 +4,9 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+! 2012-03-30 - Chris Jones
+ - Add a new PackedCaloCluster class
+
 !========================= PackedEvent v4r9p1 2012-03-27 =========================
 
 ! 2012-03-27 - Chris Jones

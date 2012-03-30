@@ -142,12 +142,12 @@ namespace LHCb
   public:
 
     /// Pack RichPIDs
-    void pack( const DataVector & hits,
-               PackedDataVector & phits ) const;
+    void pack( const DataVector & pids,
+               PackedDataVector & ppids ) const;
 
     /// Unpack RichPIDs
-    void unpack( const PackedDataVector & phits,
-                 DataVector       & hits ) const;
+    void unpack( const PackedDataVector & ppids,
+                 DataVector       & pids ) const;
 
     /// Compare two RichPIDs to check the packing -> unpacking performance
     StatusCode check( const DataVector & dataA,

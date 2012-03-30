@@ -108,6 +108,8 @@ StatusCode RichPIDPacker::check( const DataVector & dataA,
   {
     // assume OK from the start
     bool ok = true;
+    // key
+    ok &= (*iA)->key() == (*iB)->key();
     // History code
     ok &= (*iA)->pidResultCode() == (*iB)->pidResultCode();
     // Track reference
