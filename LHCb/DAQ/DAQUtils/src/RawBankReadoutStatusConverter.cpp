@@ -56,7 +56,10 @@ StatusCode RawBankReadoutStatusConverter::initialize() {
       word *= 2;
     }
   }
-  debug() << "Abort mask = " << m_mask << endmsg;
+  if ( msgLevel(MSG::DEBUG) )debug() << "Abort mask = " << m_mask << endmsg;
+  if(m_types.empty())
+    return Warning("No BankTypes requested in RawBankReadoutStatusConverter",StatusCode::SUCCESS);
+
 
   return StatusCode::SUCCESS;
 }
@@ -68,19 +71,16 @@ StatusCode RawBankReadoutStatusConverter::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-
-  if(m_types.empty())
-    return Warning("No BankTypes requested in RawBankReadoutStatusConverter",StatusCode::SUCCESS);
+  if(m_types.empty())return StatusCode::SUCCESS;
   
   // Access RawBankReadoutStatus
   LHCb::RawBankReadoutStatuss*  rStats = NULL;
   if( exist<LHCb::RawBankReadoutStatuss>(LHCb::RawBankReadoutStatusLocation::Default) )
     rStats = get<LHCb::RawBankReadoutStatuss>(LHCb::RawBankReadoutStatusLocation::Default);
-  if(NULL == rStats || rStats->empty() )return StatusCode::SUCCESS;  
+  if( rStats->empty() )return StatusCode::SUCCESS;  
   
   // Access procStatus
   LHCb::ProcStatus* pStat = getOrCreate<LHCb::ProcStatus,LHCb::ProcStatus>(LHCb::ProcStatusLocation::Default);
-  if( pStat == NULL )return StatusCode::SUCCESS;
 
   // loop over rStats
   for(LHCb::RawBankReadoutStatuss::iterator it = rStats->begin() ; it != rStats->end() ; ++it ){    
