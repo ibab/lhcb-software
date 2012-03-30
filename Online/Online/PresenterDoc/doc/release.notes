@@ -1,0 +1,8 @@
+!-----------------------------------------------------------------------------
+! Package     : Online/PresenterDoc
+! Responsible : Olivier Callot
+! Purpose     : Interface and default implementation to document bins
+!-----------------------------------------------------------------------------
+
+! 2012-03-30 - Olivier Callot
+ - Initial release. IPresenterDoc interface and dummy implementation
