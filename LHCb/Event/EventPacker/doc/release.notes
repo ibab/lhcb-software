@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2012-03-30 - Chris Jones
+ - Add support for packing CaloClusters.
+
 ! 2012-03-29 - Chris Jones
  - Small change to how duplicate LHCbIDs are removed in PackCluster
 

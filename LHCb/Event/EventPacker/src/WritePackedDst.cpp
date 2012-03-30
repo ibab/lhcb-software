@@ -19,6 +19,7 @@
 #include "Event/PackedParticle.h"
 #include "Event/PackedVertex.h"
 #include "Event/PackedWeightsVector.h"
+#include "Event/PackedCaloCluster.h"
 #include "Event/RecHeader.h"
 #include "Event/ProcStatus.h"
 #include "Event/ODIN.h"
@@ -237,6 +238,14 @@ StatusCode WritePackedDst::execute()
       PackedBank bank( in );
       storeInBlob( bank, &(*in->data().begin()), in->data().size(), sizeof(LHCb::PackedWeights) );
       storeInBlob( bank, &(*in->weights().begin()), in->weights().size(), sizeof(LHCb::PackedWeight) );
+      m_dst->addBank( m_bankNb++, LHCb::RawBank::DstBank, in->version(), bank.data() );
+
+    } else if ( LHCb::CLID_PackedCaloClusters   == myClID ) {
+
+      LHCb::PackedCaloClusters* in = get<LHCb::PackedCaloClusters>( *itC );
+      PackedBank bank( in );
+      storeInBlob( bank, &(*in->data().begin()), in->data().size(), sizeof(LHCb::PackedCaloCluster) );
+      storeInBlob( bank, &(*in->entries().begin()), in->entries().size(), sizeof(LHCb::PackedCaloClusterEntry) );
       m_dst->addBank( m_bankNb++, LHCb::RawBank::DstBank, in->version(), bank.data() );
 
     } else if ( LHCb::CLID_ProcStatus == myClID ) {

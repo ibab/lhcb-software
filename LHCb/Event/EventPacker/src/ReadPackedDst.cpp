@@ -20,6 +20,7 @@
 #include "Event/PackedParticle.h"
 #include "Event/PackedVertex.h"
 #include "Event/PackedWeightsVector.h"
+#include "Event/PackedCaloCluster.h"
 #include "Event/RecHeader.h"
 #include "Event/ProcStatus.h"
 #include "Event/ODIN.h"
@@ -279,6 +280,14 @@ StatusCode ReadPackedDst::execute() {
       processLinks( weights, version );
       getFromBlob<LHCb::PackedWeights> ( weights->data(),    blobs );
       getFromBlob<LHCb::PackedWeight>  ( weights->weights(), blobs );
+
+    } else if ( LHCb::CLID_PackedCaloClusters   == classID ) {
+      
+      LHCb::PackedCaloClusters* clusters = new LHCb::PackedCaloClusters();
+      put( clusters, name + m_postfix );
+      processLinks( clusters, version );
+      getFromBlob<LHCb::PackedCaloCluster>      ( clusters->data(),    blobs );
+      getFromBlob<LHCb::PackedCaloClusterEntry> ( clusters->entries(), blobs );
 
     } else if ( LHCb::CLID_ProcStatus == classID ) {
 
