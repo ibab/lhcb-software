@@ -69,8 +69,12 @@ class TopoLines :
             # upfront combo cuts
             'AMAXDOCA_MAX'      : 0.2,    # mm        
             'BPVVDCHI2_MIN'     : 100.0,  # unitless
-            #'MIN_TRCHI2DOF_MAX' : 2.4,    # unitless
+            'MIN_TRCHI2DOF_MAX' : 2,      # unitless
+            'ONETRACK_PT_MIN'   : 1700.0,  # MeV 
             'V2BODYCHI2_MAX'    : 10,     # unitless
+            'NV0_2Body_MAX'     : 2,
+            'NV0_3Body_MAX'     : 2,
+            'NV0_4Body_MAX'     : 1,
             # bdt cuts
             'BDT_2BODY_MIN'     : 0.4,
             'BDT_3BODY_MIN'     : 0.4,
@@ -95,7 +99,7 @@ class TopoLines :
             'L0_RAD_FILTER'     : "L0_CHANNEL('Electron') | L0_CHANNEL('Photon')",
             'RAD_TOS'           : True,
             # global event cuts
-            'USE_GEC'           : False,
+            'USE_GEC'           : True,
             'GEC_MAX'           : 500,
             # "simple" cuts            
             'SIMPLE_2BODY_CUTS' : simple_cuts2,
