@@ -1066,11 +1066,21 @@ MINM2     = LoKi.Particles.MinM2
 ## @see LoKi::Cuts::MINANGLE
 MINANGLE  = LoKi.Particles.MinAngle
 
+## @see LoKi::Cuts:::MINMAXPAIR 
+MINMAXPAIR  = LoKi.Particles.MinMaxPair 
+## @see LoKi::Cuts:::MINKULLBACK
+MINKULLBACK = LoKi.Particles.MinKullback
+## @see LoKi::Cuts:::MINANG 
+MINANG      = LoKi.Particles.MinAng 
+## @see LoKi::Cuts:::MINDELTAM2 
+MINDELTAM2  = LoKi.Particles.MinDeltaM2 
+## @see LoKi::Cuts:::MAXOVERLAP
+MAXOVERLAP  = LoKi.Particles.MaxOverlap
 
 ## Legacy stuff
-BPVVDS_LEGACY = LoKi.Legacy.DistanceSignificanceWithBestPV () 
-TRGPOINTINGWPT = LoKi.Legacy.TrgPointingScoreWithPt
-BPVTRGPOINTINGWPT = LoKi.Legacy.TrgPointingScoreWithPtWithBestPV ()
+# BPVVDS_LEGACY     = LoKi.Legacy.DistanceSignificanceWithBestPV () 
+# TRGPOINTINGWPT    = LoKi.Legacy.TrgPointingScoreWithPt
+# BPVTRGPOINTINGWPT = LoKi.Legacy.TrgPointingScoreWithPtWithBestPV ()
 
 
 # =============================================================================

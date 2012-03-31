@@ -60,6 +60,11 @@ LoKi::Particles::MinMaxDistance::MinMaxDistance
   { m_distance  = &LoKi::PhysKinematics::deltaR2 ; }
 }
 // ============================================================================
+double LoKi::Particles::MinMaxDistance::distance 
+( const LHCb::Particle* p1 , 
+  const LHCb::Particle* p2 ) const 
+{ return (*m_distance)( p1 , p2 ) ; }
+// ============================================================================
 // MANDATORY: destructor 
 // ============================================================================
 LoKi::Particles::MinMaxDistance::~MinMaxDistance(){}

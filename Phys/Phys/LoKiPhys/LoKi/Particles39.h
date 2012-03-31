@@ -79,7 +79,7 @@ namespace LoKi
       // ======================================================================
       double distance 
       ( const LHCb::Particle* p1 , 
-        const LHCb::Particle* p2 ) const { return (*m_distance)( p1 , p2 ) ; }
+        const LHCb::Particle* p2 ) const ; 
       // ======================================================================
       /// the actual computation
       double distance ( const LHCb::Particle* p ) const ;
