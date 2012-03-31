@@ -27,7 +27,12 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         # upfront combo cuts
         'AMAXDOCA_MAX'      : 0.2,    # mm        
         'BPVVDCHI2_MIN'     : 100.0,  # unitless
+        'MIN_TRCHI2DOF_MAX' : 2,      # unitless
+        'ONETRACK_PT_MIN'   : 1700.0,  # MeV 
         'V2BODYCHI2_MAX'    : 10,     # unitless
+        'NV0_2Body_MAX'     : 2,
+        'NV0_3Body_MAX'     : 2,
+        'NV0_4Body_MAX'     : 2,
         # bdt cuts
         'BDT_2BODY_MIN'     : 0.4,
         'BDT_3BODY_MIN'     : 0.4,
@@ -119,7 +124,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
 
         # by default, configure as a pass-all filter with similar code.
         max = ' > -1'
-        if self.getProp('USE_GEC'): max = '< ' + self.getProps()['GEC_MAX']
+        if self.getProp('USE_GEC'): max = '< '+str(self.getProps()['GEC_MAX'])
         filtCode = "CONTAINS('"+tracks.outputSelection()+"') " + max
         
         from Configurables import LoKi__VoidFilter as VoidFilter
@@ -185,8 +190,12 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         minPtSum = 3000        
         if n > 2: minPtSum = 4000
         cuts = '(SUMTREE(PT,%s,0.0) > %d*MeV)' % (pid,minPtSum)
-        #cuts += '& (MINTREE(HASTRACK & %s,TRCHI2DOF) < %s)' \
-        #        % (pid,self.getProps()['MIN_TRCHI2DOF_MAX'])
+        cuts += " & (NINTREE(('KS0'==ID)|('Lambda0'==ABSID)) <= %s)" \
+                % self.getProps()['NV0_%dBody_MAX'%n]
+        cuts += '& (MAXTREE(%s,PT) > %s*MeV)' % \
+                (pid,self.getProps()['ONETRACK_PT_MIN'])
+        cuts += '& (MINTREE(HASTRACK & %s,TRCHI2DOF) < %s)' \
+                % (pid,self.getProps()['MIN_TRCHI2DOF_MAX'])
         filter = Hlt2Member(FilterDesktop, 'FilterNforN',
                             Inputs=input,Code=cuts)
         return bindMembers('Topo%d%s' % (n,tag), input+[filter])
@@ -349,7 +358,8 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         decay = [["K*(892)0 -> K+ K+","K*(892)0 -> K+ K-","K*(892)0 -> K- K-",
                   "K*(892)0 -> K+ KS0","K*(892)0 -> K- KS0",
                   "K*(892)0 -> K+ Lambda0","K*(892)0 -> K- Lambda0",
-                  "K*(892)0 -> K+ Lambda~0","K*(892)0 -> K- Lambda~0",],
+                  "K*(892)0 -> K+ Lambda~0","K*(892)0 -> K- Lambda~0",
+                  "K*(892)0 -> KS0 KS0"],
                  ["D*(2010)+ -> K*(892)0 K+", "D*(2010)+ -> K*(892)0 K-",
                   "D*(2010)+ -> K*(892)0 KS0", "D*(2010)+ -> K*(892)0 KS0",
                   "D*(2010)+ -> K*(892)0 Lambda0",
