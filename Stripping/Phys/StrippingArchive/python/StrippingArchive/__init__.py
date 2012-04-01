@@ -14,13 +14,15 @@ _known_strippings = [
   "Stripping16", 
   "Stripping17", 
   "Stripping17b", 
-  "PreStripping18"
+  "PreStripping18",
+  "Stripping18"
 ]
 
 #give a dictionary of strippings which use the same line builders
 _duplicate_strippings={ "Stripping13b"        : "Stripping13",
                         "Stripping13Calib"    : "Stripping13",
-                        "Stripping1Point4Tev" : "Stripping13" }
+                        "Stripping1Point4Tev" : "Stripping13",
+                        "Stripping18b"        : "Stripping18"   }
 
 
 #give a dictionary to describe what each stripping was for
@@ -33,7 +35,9 @@ _stripping_help={"Stripping13"  : "2011 data taking, processing during the first
                  "Stripping16" : "2011 data processing for data in 2011 taken after the July technical stop, many CPU improvements",
                  "Stripping17" : "2011 data reprocessing for all data in 2011, reprocessed at the end of 2011, many bandwidth improvements",
                  "Stripping17b": "2011 data restripping for all data in 2011, DiMuon and Semileptonic streams replace Stripping17, the rest is incremental", 
-                 "PreStripping18": "Test of stripping selections for 2012 data taking, using a part of 2011 sample. "
+                 "PreStripping18": "Test of stripping selections for 2012 data taking, using a part of 2011 sample",
+                 "Stripping18" : "2012 data processing for data taken from start of 2012, including stream dedicated for ICHEP 2012", 
+                 "Stripping18b": "2012 data processing for data taken from start of 2012, without stream dedicated for ICHEP 2012"  
                  }
 
 _strippingKeys = []

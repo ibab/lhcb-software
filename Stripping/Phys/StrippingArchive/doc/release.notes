@@ -4,6 +4,11 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingArchive v1r9 2012-04-01 =========================
+! 2012-04-01 - Jibo He
+ - Included Stripping18, Stripping18b 
+ - Updated test ref
+
 !========================= StrippingArchive v1r8 2012-03-02 =========================
 
 ! 2012-03-02 - Anton Poluektov 
