@@ -4,6 +4,9 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+! 2012-04-01 - Chris Jones
+ - Improve checks for PackedCaloCluster
+
 ! 2012-03-30 - Chris Jones
  - Add a new PackedCaloCluster class
 

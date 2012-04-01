@@ -22,7 +22,7 @@ namespace LHCb
 
   /** @struct CaloClusterEntry Event/PackedCaloCluster.h
    *
-   *  Packed CaloClusterEntry
+   *  Packed LHCb::CaloClusterEntry
    *
    *  @author Christopher Rob Jones
    *  @date   2012-03-30
@@ -31,9 +31,7 @@ namespace LHCb
   {
     /// Default constructor
     PackedCaloClusterEntry()
-      : digit(-1), 
-        status(0),
-        fraction(0)
+      : digit(-1), status(0), fraction(0)
     { }
 
     long long digit;
@@ -43,7 +41,7 @@ namespace LHCb
 
   /** @struct PackedCaloCluster Event/PackedCaloCluster.h
    *
-   *  Packed CaloCluster
+   *  Packed LHCb::CaloCluster
    *
    *  @author Christopher Rob Jones
    *  @date   2012-03-30
@@ -52,21 +50,17 @@ namespace LHCb
   {
     /// Default constructor
     PackedCaloCluster()
-      : key(0),
-        type(0),
-        seed(0),
+      : key(0), type(0), seed(0),
         pos_x(0), pos_y(0), pos_z(0), pos_e(0),
         pos_c0(0), pos_c1(0),
-        pos_cov00(0),pos_cov11(0),pos_cov22(0),
-        pos_cov10(0),pos_cov20(0),pos_cov21(0),
+        pos_cov00(0), pos_cov11(0), pos_cov22(0),
+        pos_cov10(0), pos_cov20(0), pos_cov21(0),
         firstEntry(0), lastEntry(0)
     { }
 
     int key;
     int type;
     unsigned int seed;
-
-    // position
     int pos_x, pos_y, pos_z, pos_e;
     int pos_c0, pos_c1;
     int       pos_cov00,pos_cov11,pos_cov22;
@@ -131,10 +125,10 @@ namespace LHCb
     const ClusterVector & data() const         { return m_clusters; }
 
     /// Write access to the data vector
-    ClusterEntryVector & entries()             { return m_entries; }
+    ClusterEntryVector & entries()             { return m_entries;  }
 
     /// Read access to the data vector
-    const ClusterEntryVector & entries() const { return m_entries; }
+    const ClusterEntryVector & entries() const { return m_entries;  }
 
     /// Set the packing version
     void setPackingVersion( const char ver ) { m_packingVersion = ver; }
@@ -173,8 +167,14 @@ namespace LHCb
     typedef LHCb::PackedCaloCluster        PackedData;
     typedef LHCb::CaloClusters             DataVector;
     typedef LHCb::PackedCaloClusters PackedDataVector;
-    static const std::string& packedLocation()   { return LHCb::PackedCaloClusterLocation::Default; }
-    static const std::string& unpackedLocation() { return LHCb::CaloClusterLocation::Default; }
+    static const std::string& packedLocation()   
+    {
+      return LHCb::PackedCaloClusterLocation::Default; 
+    }
+    static const std::string& unpackedLocation() 
+    {
+      return LHCb::CaloClusterLocation::Default; 
+    }
 
   public:
 
