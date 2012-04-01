@@ -502,6 +502,7 @@ class DstConf(LHCbConfigurableUser):
         mapper.Algorithms[1555] = "DataPacking::Unpack<LHCb::WeightsVectorPacker>"
         mapper.Algorithms[1581] = "UnpackParticlesAndVertices"
         mapper.Algorithms[1559] = "UnpackDecReport"
+        mapper.Algorithms[1541] = "DataPacking::Unpack<LHCb::CaloClusterPacker>"
 
         # Add the tools to the DOD service tools lists
         tools = [clusmapper,pvmapper,mapper]

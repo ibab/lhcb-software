@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2012-04-01 - Chris Jones
+ - Add support for on-demand unpacking of CaloClusters on stripping (m)DSTs.
+
 !========================= GaudiConf v15r9 2012-03-27 =========================
 
 ! 2012-03-27 - Chris Jones
