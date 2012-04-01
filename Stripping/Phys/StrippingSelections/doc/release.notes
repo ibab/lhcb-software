@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingSelections v3r12 2012-04-01 =========================
+! 2012-04-01 - Jibo He
+ - __init__.py 
+  . Added StrippingCrossSectionB2DMuNuX
+
 ! 2012-03-30 - Alessandra Borgia
  - StrippingCrossSectionB2DMuNuX.py
 	 . Added 5 lines for cross section measurement to be done with semileptonic lines; Bs->DsMuNu, B->D+MuNu, B->D0MuNu, LambdaB->LambdaCMuNu, with Ds->KKPi, D+->KPiPi, D0->KPi and K3Pi, and LambdaC->pKPi. Adjusted cuts to be similar (if not exactly the same) as the cuts from stripping09, 2010 data."
