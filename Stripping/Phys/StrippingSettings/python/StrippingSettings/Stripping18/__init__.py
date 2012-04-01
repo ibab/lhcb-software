@@ -9,6 +9,7 @@ __all__ = [ 'LineConfigDictionaries_B2CC',
             'LineConfigDictionaries_RD',
             'LineConfigDictionaries_Semileptonic',
             'LineConfigDictionaries_CharmXsec',
-            'LineConfigDictionaries_BandQXsec'
+            'LineConfigDictionaries_BandQXsec',
+            'LineConfigDictionaries_SemileptonicXsec'
             ]
 

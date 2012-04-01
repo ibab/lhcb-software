@@ -4,6 +4,11 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingSettings v2r12 2012-04-01 ===================
+! 2012-04-01 - Jibo He
+ - Included BandQXsec, CharmXsec SemileptonicXsec into Stripping18 
+ - Updated dbase of Stripping18 and copied to StrippingDev
+
 ! 2012-03-30 - Jibo He
  - Stripping18/LineConfigDictionaries_BandQXsec.py
    . DiMuon lines for 8 TeV cross-section measurements
