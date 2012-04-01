@@ -56,10 +56,11 @@ __all__     = (
 import ROOT
 from   GaudiPython.Bindings   import gbl as cpp
 import LHCbMath.Types
-VE             = cpp.Gaudi.Math.ValueWithError
+Gaudi          = cpp.Gaudi
+VE             = Gaudi.Math.ValueWithError
 SE             = cpp.StatEntity 
-ValueWithError = cpp.Gaudi.Math.ValueWithError
-binomEff       = cpp.Gaudi.Math.binomEff
+ValueWithError = Gaudi.Math.ValueWithError
+binomEff       = Gaudi.Math.binomEff
 import math
 # =============================================================================
 ## global identifier for ROOT objects 

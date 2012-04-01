@@ -5,6 +5,9 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2012-04-01 - Vanya Belyaev
+ - add phase space functor for 2-from-3 body decyas with orbital momentum 
+
 !========================= AnalysisPython v2r9 2012-02-18 =========================
 
 ! 2012-02-18 - Vanya Belyaev

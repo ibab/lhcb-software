@@ -25,6 +25,7 @@
   <class name = "Analysis::Models::Bukin"           />
   <class name = "Analysis::Models::PhaseSpace2"     />
   <class name = "Analysis::Models::PhaseSpaceNL"    />
+  <class name = "Analysis::Models::PhaseSpace23L"   />
   <class name = "Analysis::Models::PhaseSpaceLeft"  />
   <class name = "Analysis::Models::PhaseSpaceRight" />
   <class name = "Analysis::Models::CrystalBallDS"   />

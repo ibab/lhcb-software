@@ -252,7 +252,8 @@ namespace Analysis
                     const double         m1        , 
                     const double         m2        ) ;
       /// "copy constructor"
-      PhaseSpace2 ( const PhaseSpace2& right , const char* name )  ;
+      PhaseSpace2 ( const PhaseSpace2& right     , 
+                    const char*        name  = 0 )  ;
       /// destructor 
       virtual ~PhaseSpace2() ;
       /// clone 
@@ -292,7 +293,8 @@ namespace Analysis
                        RooAbsReal&          threshold ,
                        const unsigned short N         ) ;
       /// "copy constructor"
-      PhaseSpaceLeft ( const PhaseSpaceLeft& right , const char* name )  ;
+      PhaseSpaceLeft ( const PhaseSpaceLeft& right     , 
+                       const char*           name  = 0 )  ;
       /// destructor 
       virtual ~PhaseSpaceLeft() ;
       /// clone 
@@ -334,7 +336,8 @@ namespace Analysis
                         const unsigned short L         , 
                         const unsigned short N         ) ;
       /// "copy constructor"
-      PhaseSpaceRight ( const PhaseSpaceRight& right , const char* name )  ;
+      PhaseSpaceRight ( const PhaseSpaceRight& right     , 
+                        const char*            name  = 0 )  ;
       /// destructor 
       virtual ~PhaseSpaceRight () ;
       /// clone 
@@ -399,6 +402,67 @@ namespace Analysis
       mutable Gaudi::Math::PhaseSpaceNL m_ps ;           // the actual function 
       // ======================================================================
     };
+    // ========================================================================
+    /** @class PhaseSpace23L
+     *  simple model for 2-body phase space from 3-body decays with 
+     *  the orbital momenta:
+     *
+     *   \f$ f \propto q^{2\ell+1}p^{2L+1}\f$, where
+     *     \f$\ell\f$ is the orbital momentum of the pair of particles, 
+     *    and \f$L\f$ is the orbital momentum between the pair and 
+     *    the third particle. 
+     *   E.g. taking \f$\ell=0, L=1\f$, one can get the S-wave contribution for 
+     *   \f$\pi^+\pi^-\f$-mass from \f$B^0\rightarrowJ/\psi\pi^+\pi^-\f$ decay.
+     * 
+     *  @see Gaudi::Math::PhaseSpace23L 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2012-04-01
+     */
+    class PhaseSpace23L : public RooAbsPdf 
+    {
+    public:
+      // ======================================================================
+      ClassDef(Analysis::Models::PhaseSpace23L, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /** constructor from all parameters 
+       *  @param m1 the mass of the first  particle 
+       *  @param m2 the mass of the second particle 
+       *  @param m3 the mass of the third  particle 
+       *  @param m  the mass of the mother particle (m>m1+m2+m3)
+       *  @param L  the angular momentum between the first pair and the third particle
+       *  @param l  the angular momentum between the first and the second particle
+       */
+      PhaseSpace23L ( const char*          name      , 
+                      const char*          title     ,
+                      RooAbsReal&          x         ,
+                      const double         m1        , 
+                      const double         m2        ,
+                      const double         m3        ,
+                      const double         m         ,
+                      const unsigned short L         , 
+                      const unsigned short l     = 0 ) ;
+      /// "copy constructor"
+      PhaseSpace23L ( const PhaseSpace23L& right , const char* name = 0 )  ;
+      /// destructor 
+      virtual ~PhaseSpace23L() ;
+      /// clone 
+      virtual PhaseSpace23L* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      RooRealProxy m_x     ;
+      // ======================================================================
+      // the actual evaluation of function 
+      Double_t evaluate() const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      Gaudi::Math::PhaseSpace23L m_ps23L ;               // the actual function 
+      // ======================================================================
+    } ;
     // ========================================================================
     /** @class CrystalBallDS 
      *  double-sided ``Crystal Ball-function'' 

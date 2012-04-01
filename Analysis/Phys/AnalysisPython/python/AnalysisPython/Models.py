@@ -19,8 +19,64 @@ Module with some useful fit-models
 __version__ = "$Revision$"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@cern.ch"
 __date__    = "2011-12-01"
+__all__     = ()
 # =============================================================================
+import  ROOT 
+from    AnalysisPython.PyRoUts import funID, cpp 
 
+_wrappers_ = {} 
+# =============================================================================
+class _WO_ (object)  :
+    def __init__ ( self , o              ) :        self._o   =  o 
+    def __call__ ( self , x , pars  = [] ) : return self._o ( x [0] )
+    
+# =============================================================================
+## convert the model into TF1
+def _tf1_ ( self , *args ) :
+    """
+    Convert the model to TF1
+    
+    >>> obj = ...
+    
+    >>> fun = obj.tf1 ( 3.0 , 3.2 )
+    
+    >>> fun.Draw() 
+    """
+    key = funID ()
+    #
+    wo  = _WO_ ( self )
+    _wrappers_ [ key ] = wo
+    #
+    return  ROOT.TF1( funID() , wo , *args )
+
+Gaudi = cpp.Gaudi 
+for model in ( Gaudi.Math.Chebyshev              ,
+               Gaudi.Math.Legendre               ,
+               Gaudi.Math.Hermite                ,
+               Gaudi.Math.Positive1              ,
+               Gaudi.Math.Positive2              ,
+               Gaudi.Math.PositiveN              ,
+               Gaudi.Math.PositiveN1             ,
+               Gaudi.Math.PositiveN2             ,
+               Gaudi.Math.BifurcatedGauss        ,
+               Gaudi.Math.Bukin                  ,
+               Gaudi.Math.Novosibirsk            ,
+               Gaudi.Math.CrystalBall            ,
+               Gaudi.Math.CrystalBallDoubleSided ,
+               Gaudi.Math.GramCharlierA          ,
+               Gaudi.Math.PhaseSpace2            ,
+               Gaudi.Math.PhaseSpaceLeft         ,
+               Gaudi.Math.PhaseSpaceRight        ,
+               Gaudi.Math.PhaseSpaceNL           ,
+               Gaudi.Math.PhaseSpace23L          ,
+               Gaudi.Math.BreitWigner            ,
+               Gaudi.Math.Rho0                   ,
+               Gaudi.Math.Rho0FromEtaPrime       ,
+               Gaudi.Math.Flatte                 ,
+               Gaudi.Math.Flatte2                ,
+               Gaudi.Math.Voigt                  ) :
+    model . tf1 = _tf1_ 
+               
 # =============================================================================
 if '__main__' == __name__ :
     

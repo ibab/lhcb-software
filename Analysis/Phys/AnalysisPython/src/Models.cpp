@@ -446,6 +446,50 @@ Double_t Analysis::Models::PhaseSpace2::evaluate() const
 { return m_ps2 ( m_x ) ; }
 // ============================================================================
 
+// ============================================================================
+// Two-body phase space from 3-body decays 
+// ============================================================================
+Analysis::Models::PhaseSpace23L::PhaseSpace23L
+( const char*          name      , 
+  const char*          title     ,
+  RooAbsReal&          x         ,
+  const double         m1        , 
+  const double         m2        ,
+  const double         m3        ,
+  const double         m         ,
+  const unsigned short L         , 
+  const unsigned short l         ) 
+  : RooAbsPdf ( name , title ) 
+  , m_x       ( "x" , "Observable" , this , x ) 
+  , m_ps23L   ( m1 , m2 , m3 , m , L , l ) 
+{}
+// ============================================================================
+// "copy constructor"
+// ============================================================================
+Analysis::Models::PhaseSpace23L::PhaseSpace23L
+( const Analysis::Models::PhaseSpace23L& right , const char* name )  
+  : RooAbsPdf ( right , name )
+  , m_x       ( "x"       , this , right.m_x      ) 
+  , m_ps23L   ( right.m_ps23L ) 
+{}
+// ============================================================================
+// destructor 
+// ============================================================================
+Analysis::Models::PhaseSpace23L::~PhaseSpace23L(){}
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::PhaseSpace23L*
+Analysis::Models::PhaseSpace23L::clone( const char* name ) const 
+{ return new Analysis::Models::PhaseSpace23L(*this,name) ; }
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::PhaseSpace23L::evaluate() const 
+{ return m_ps23L ( m_x ) ; }
+// ============================================================================
+
+
 
 // ============================================================================
 // Left-edge of N-body phase space 
