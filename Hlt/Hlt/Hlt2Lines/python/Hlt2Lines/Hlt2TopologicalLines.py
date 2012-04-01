@@ -28,7 +28,8 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         'AMAXDOCA_MAX'      : 0.2,    # mm        
         'BPVVDCHI2_MIN'     : 100.0,  # unitless
         'MIN_TRCHI2DOF_MAX' : 2,      # unitless
-        'ONETRACK_PT_MIN'   : 1700.0,  # MeV 
+        'ONETRACK_PT_MIN'   : 1700.0, # MeV
+        'ONETRACK_IPCHI2_MIN' : 36,   # unitless
         'V2BODYCHI2_MAX'    : 10,     # unitless
         'NV0_2Body_MAX'     : 2,
         'NV0_3Body_MAX'     : 2,
@@ -192,8 +193,9 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         cuts = '(SUMTREE(PT,%s,0.0) > %d*MeV)' % (pid,minPtSum)
         cuts += " & (NINTREE(('KS0'==ID)|('Lambda0'==ABSID)) <= %s)" \
                 % self.getProps()['NV0_%dBody_MAX'%n]
-        cuts += '& (MAXTREE(%s,PT) > %s*MeV)' % \
-                (pid,self.getProps()['ONETRACK_PT_MIN'])
+        cuts += "&(INTREE(ISBASIC & (PT > %s*MeV) & (MIPCHI2DV(PRIMARY)>%s)))"\
+                % (self.getProps()['ONETRACK_PT_MIN'],
+                   self.getProps()['ONETRACK_IPCHI2_MIN'])
         cuts += '& (MINTREE(HASTRACK & %s,TRCHI2DOF) < %s)' \
                 % (pid,self.getProps()['MIN_TRCHI2DOF_MAX'])
         filter = Hlt2Member(FilterDesktop, 'FilterNforN',
