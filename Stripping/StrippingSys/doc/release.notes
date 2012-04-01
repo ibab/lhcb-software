@@ -3,6 +3,11 @@ Package     : StrippingSys
 Package Coordinator : Jibo He, Anton Poluektov
 Purpose     : LHCb stripping packages
 
+!========================= StrippingSys v4r2 2012-04-01 =========================
+! 2012-04-01 - Jibo He
+ - v4r2 for Stripping18 
+  . Only StrippingSelections, StrippingSettings and StrippingArchive have been changed 
+
 !========================= StrippingSys v4r1 2012-03-01 =========================
 
 ! 2012-03-02 - Anton Poluektov 
