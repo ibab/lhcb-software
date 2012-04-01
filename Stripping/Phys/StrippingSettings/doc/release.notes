@@ -6,6 +6,10 @@
 
 !========================= StrippingSettings v2r12 2012-04-01 ===================
 ! 2012-04-01 - Jibo He
+ - Copied Stripping18 to Stripping18b, with ICHEP stream removed
+ - Produced stripping18b dbase
+
+! 2012-04-01 - Jibo He
  - Included BandQXsec, CharmXsec SemileptonicXsec into Stripping18 
  - Updated dbase of Stripping18 and copied to StrippingDev
 

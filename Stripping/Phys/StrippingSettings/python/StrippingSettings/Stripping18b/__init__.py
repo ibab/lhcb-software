@@ -7,9 +7,6 @@ __all__ = [ 'LineConfigDictionaries_B2CC',
             'LineConfigDictionaries_MiniBias',
             'LineConfigDictionaries_QEE',
             'LineConfigDictionaries_RD',
-            'LineConfigDictionaries_Semileptonic',
-            'LineConfigDictionaries_CharmXsec',
-            'LineConfigDictionaries_BandQXsec',
-            'LineConfigDictionaries_SemileptonicXsec'
+            'LineConfigDictionaries_Semileptonic'
             ]
 
