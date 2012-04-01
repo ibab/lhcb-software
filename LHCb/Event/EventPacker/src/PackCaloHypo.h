@@ -21,7 +21,7 @@ public:
 
   virtual ~PackCaloHypo( ); ///< Destructor
 
-  virtual StatusCode execute   ();    ///< Algorithm execution
+  virtual StatusCode execute(); ///< Algorithm execution
 
 private:
 

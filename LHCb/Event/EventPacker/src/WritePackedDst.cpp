@@ -154,8 +154,8 @@ StatusCode WritePackedDst::execute()
 
       LHCb::PackedCaloHypos* in = get<LHCb::PackedCaloHypos>( *itC );
       PackedBank bank( in );
-      storeInBlob( bank, &(*in->begin())     , (in->end() - in->begin()) , sizeof( LHCb::PackedCaloHypo) );
-      storeInBlob( bank, &(*in->beginRefs()) , in->sizeRef()             , sizeof( int ) );
+      storeInBlob( bank, &(*in->hypos().begin())  , in->hypos().size(), sizeof( LHCb::PackedCaloHypo) );
+      storeInBlob( bank, &(*in->refs().begin())   , in->refs().size() , sizeof( int ) );
       m_dst->addBank( m_bankNb++, LHCb::RawBank::DstBank, in->version(), bank.data() );
 
     } else if ( LHCb::CLID_PackedProtoParticles  == myClID ) {

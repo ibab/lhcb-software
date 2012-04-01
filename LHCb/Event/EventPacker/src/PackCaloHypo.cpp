@@ -30,6 +30,7 @@ DECLARE_ALGORITHM_FACTORY( PackCaloHypo )
   declareProperty( "AlwaysCreateOutput",         m_alwaysOutput = false     );
   declareProperty( "DeleteInput",                m_deleteInput  = false     );
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -57,24 +58,28 @@ StatusCode PackCaloHypo::execute()
 
   for ( LHCb::CaloHypos::const_iterator itH = hypo->begin(); hypo->end() != itH; ++itH )
   {
-    LHCb::PackedCaloHypo pH;
+    // make new packed object
+    out->hypos().push_back( LHCb::PackedCaloHypo() );
+    LHCb::PackedCaloHypo & pH = out->hypos().back();
+
+    // Save the data
     pH.key        = (*itH)->key();
     pH.hypothesis = (*itH)->hypothesis();
     pH.lh         = pack.fltPacked( (*itH)->lh() );
     if ( 0 == (*itH)->position() )
     {
-      pH.z    = 0;
-      pH.posX = 0;
-      pH.posY = 0;
-      pH.posE = 0;
-      pH.cov00 = 0;
-      pH.cov10 = 0;
-      pH.cov20 = 0;
-      pH.cov11 = 0;
-      pH.cov21 = 0;
-      pH.cov22 = 0;
-      pH.centX = 0;
-      pH.centY = 0;
+      pH.z      = 0;
+      pH.posX   = 0;
+      pH.posY   = 0;
+      pH.posE   = 0;
+      pH.cov00  = 0;
+      pH.cov10  = 0;
+      pH.cov20  = 0;
+      pH.cov11  = 0;
+      pH.cov21  = 0;
+      pH.cov22  = 0;
+      pH.centX  = 0;
+      pH.centY  = 0;
       pH.cerr00 = 0;
       pH.cerr10 = 0;
       pH.cerr11 = 0;
@@ -85,12 +90,12 @@ StatusCode PackCaloHypo::execute()
       pH.z    = pack.position( pos->z() );
       pH.posX = pack.position( pos->x() );
       pH.posY = pack.position( pos->y() );
-      pH.posE = pack.energy( pos->e() );
+      pH.posE = pack.energy  ( pos->e() );
 
       // convariance Matrix
-      double err0 = std::sqrt( pos->covariance()(0,0) );
-      double err1 = std::sqrt( pos->covariance()(1,1) );
-      double err2 = std::sqrt( pos->covariance()(2,2) );
+      const double err0 = std::sqrt( pos->covariance()(0,0) );
+      const double err1 = std::sqrt( pos->covariance()(1,1) );
+      const double err2 = std::sqrt( pos->covariance()(2,2) );
 
       pH.cov00 = pack.position( err0 );
       pH.cov11 = pack.position( err1 );
@@ -102,66 +107,62 @@ StatusCode PackCaloHypo::execute()
       pH.centX = pack.position( pos->center()(0) );
       pH.centY = pack.position( pos->center()(1) );
 
-      err0 = std::sqrt( pos->spread()(0,0) );
-      err1 = std::sqrt( pos->spread()(1,1) );
+      const double serr0 = std::sqrt( pos->spread()(0,0) );
+      const double serr1 = std::sqrt( pos->spread()(1,1) );
 
-      pH.cerr00 = pack.position( err0 );
-      pH.cerr11 = pack.position( err1 );
-      pH.cerr10 = pack.fraction( pos->spread()(1,0)/err1/err0 );
+      pH.cerr00 = pack.position( serr0 );
+      pH.cerr11 = pack.position( serr1 );
+      pH.cerr10 = pack.fraction( pos->spread()(1,0)/serr1/serr0 );
     }
 
     //== Store the CaloDigits
-    pH.firstDigit = out->sizeRef();
+    pH.firstDigit = out->refs().size();
     for ( SmartRefVector<LHCb::CaloDigit>::const_iterator itD = (*itH)->digits().begin();
           (*itH)->digits().end() != itD; ++itD )
     {
       if ( *itD )
       {
-        const int myRef = pack.reference( out, (*itD)->parent(), (*itD)->key().all() );
-        out->addRef( myRef );
+        out->refs().push_back( pack.reference( out, (*itD)->parent(), (*itD)->key().all() ) );
       }
       else
       {
         Warning( "Null CaloDigit SmartRef found" ).ignore();
       }
     }
-    pH.lastDigit = out->sizeRef();
+    pH.lastDigit = out->refs().size();
 
     //== Store the CaloClusters
-    pH.firstCluster = out->sizeRef();
+    pH.firstCluster = out->refs().size();
     for ( SmartRefVector<LHCb::CaloCluster>::const_iterator itC = (*itH)->clusters().begin();
           (*itH)->clusters().end() != itC; ++itC )
     {
       if ( *itC )
       {
-        const int myRef = pack.reference( out, (*itC)->parent(), (*itC)->key() );
-        out->addRef( myRef );
+        out->refs().push_back( pack.reference( out, (*itC)->parent(), (*itC)->key() ) );
       }
       else
       {
         Warning( "Null CaloCluster SmartRef found" ).ignore();
       }
     }
-    pH.lastCluster = out->sizeRef();
+    pH.lastCluster = out->refs().size();
 
     //== Store the CaloHypos
-    pH.firstHypo = out->sizeRef();
+    pH.firstHypo = out->refs().size();
     for ( SmartRefVector<LHCb::CaloHypo>::const_iterator itO = (*itH)->hypos().begin();
           (*itH)->hypos().end() != itO; ++itO )
     {
       if ( *itO )
       {
-        const int myRef = pack.reference( out, (*itO)->parent(), (*itO)->key() );
-        out->addRef( myRef );
+        out->refs().push_back( pack.reference( out, (*itO)->parent(), (*itO)->key() ) );
       }
       else
       {
         Warning( "Null CaloCluster CaloHypo found" ).ignore();
       }
     }
-    pH.lastHypo = out->sizeRef();
+    pH.lastHypo = out->refs().size();
 
-    out->addEntry( pH );
   }
 
   // If requested, remove the input data from the TES and delete

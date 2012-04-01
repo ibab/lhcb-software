@@ -6,6 +6,7 @@
 
 ! 2012-03-30 - Chris Jones
  - Add support for packing CaloClusters.
+ - Clean up CaloHypo packing and unpacking
 
 ! 2012-03-29 - Chris Jones
  - Small change to how duplicate LHCbIDs are removed in PackCluster
