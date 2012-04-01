@@ -844,6 +844,19 @@ namespace
     return (*ps)(x) ;
   }
   // ==========================================================================
+  /** helper function for itegration of PhaseSpace23L shape 
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *  @date 2010-05-23
+   */
+  double phase_space_23L_GSL ( double x , void* params )  
+  {
+    //
+    const Gaudi::Math::PhaseSpace23L* ps23L = 
+      (Gaudi::Math::PhaseSpace23L*) params ;
+    //
+    return (*ps23L)(x) ;
+  }
+  // ==========================================================================
   /** helper function for itegration of Voigt shape 
    *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
    *  @date 2010-05-23
@@ -3691,4 +3704,146 @@ bool Gaudi::Math::Voigt::setSigma ( const double x )
   //
   return true ;
 }
+
+
+// ============================================================================
+/*  constructor from four masses and angular momenta 
+ *  @param m1 the mass of the first  particle 
+ *  @param m2 the mass of the second particle 
+ *  @param m3 the mass of the third  particle 
+ *  @param m4 the mass of the mother particle (m4>m1+m2+m3)
+ *  @param L  the angular momentum between the first pair and 
+ *  the third particle
+ *  @param l  the angular momentum between the first and the second particle
+ */
+// ============================================================================
+Gaudi::Math::PhaseSpace23L::PhaseSpace23L 
+( const double         m1 , 
+  const double         m2 , 
+  const double         m3 , 
+  const double         m  , 
+  const unsigned short L  ,
+  const unsigned short l  ) 
+  : std::unary_function<double,double> () 
+//
+  , m_m1 ( std::abs ( m1 ) ) 
+  , m_m2 ( std::abs ( m2 ) ) 
+  , m_m3 ( std::abs ( m3 ) ) 
+  , m_m  ( std::abs ( m  ) ) 
+  , m_l  (            l    )  
+  , m_L  (            L    )  
+//
+  , m_norm ( -1 ) 
+//
+  , m_workspace  () 
+//
+{
+  m_norm = integral() ;
+}
+// ============================================================================
+// destructor
+// ============================================================================
+Gaudi::Math::PhaseSpace23L::~PhaseSpace23L() {}
+// ============================================================================
+// evaluate N/L-body phase space
+// ============================================================================
+double Gaudi::Math::PhaseSpace23L::operator () ( const double x ) const 
+{
+  //
+  if ( x <= m_m1 + m_m2 ) { return 0 ; }
+  if ( x >= m_m  - m_m3 ) { return 0 ; }
+  //
+  const double xm = 0.5 * ( m_m1 + m_m2 + m_m - m_m3 ) ;
+  //
+  const double q  = Gaudi::Math::PhaseSpace2::q ( x  , m_m1 , m_m2  ) ;
+  if ( 0 >= q  ) { return 0 ; }
+  const double qm = Gaudi::Math::PhaseSpace2::q ( xm , m_m1 , m_m2  ) ;
+  if ( 0 >= qm ) { return 0 ; }
+  //
+  const double p  = Gaudi::Math::PhaseSpace2::q ( m_m , m_m3 ,   x  ) ;
+  if ( 0 >= p  ) { return 0 ; }
+  const double pm = Gaudi::Math::PhaseSpace2::q ( m_m , m_m3 ,   xm ) ;
+  if ( 0 >= pm ) { return 0 ; }
+  //
+  // rescale the momenta such away to have a point,
+  // where f=1 at the center of  phase space 
+  //
+  const double qq = q / qm ; 
+  const double pp = p / pm ;
+  //
+  // the regular phase space 
+  double result = qq * pp ;
+  //
+  // take into account the orbital momentum
+  result *= Gaudi::Math::pow ( qq , 2 * m_l )  ;
+  //
+  // take into account the orbital momentum
+  result *= Gaudi::Math::pow ( pp , 2 * m_L ) ; 
+  //
+  if ( 0 < m_norm  ) { result /= m_norm ; }
+  //
+  return result ;
+}
+// ============================================================================
+// get the integral between low and high limits 
+// ============================================================================
+double  Gaudi::Math::PhaseSpace23L::integral 
+( const double low  , 
+  const double high ) const 
+{
+  if ( s_equal ( low , high ) ) { return                 0.0 ; } // RETURN 
+  if (           low > high   ) { return - integral ( high ,                                                     
+                                                      low  ) ; } // RETURN 
+  //
+  if ( high <= m_m1 + m_m2 ) { return 0 ; }
+  if ( low  >= m_m  - m_m3 ) { return 0 ; }
+  //
+  if ( low  <  m_m1 + m_m2 ) { return integral ( m_m1 + m_m2 , high       ) ; }
+  if ( high >  m_m  - m_m3 ) { return integral ( low         , m_m - m_m3 ) ; }
+  //
+  // use GSL to evaluate the integral 
+  //
+  GSL_Handler_Sentry sentry ;
+  //
+  gsl_function F                 ;
+  F.function = &phase_space_23L_GSL ;
+  const PhaseSpace23L* _ps = this  ;
+  F.params   = const_cast<PhaseSpace23L*> ( _ps ) ;
+  //
+  double result   = 1.0 ;
+  double error    = 1.0 ;
+  //
+  const int ierror = gsl_integration_qag 
+    ( &F                ,            // the function 
+      low   , high      ,            // low & high edges 
+      s_PRECISION       ,            // absolute precision            
+      s_PRECISION       ,            // relative precision 
+      s_SIZE            ,            // size of workspace 
+      GSL_INTEG_GAUSS31 ,            // integration rule  
+      workspace ( m_workspace ) ,    // workspace  
+      &result           ,            // the result 
+      &error            ) ;          // the error in result 
+  //
+  if ( ierror ) 
+  { 
+    GSL_Handler_Sentry sentry ;
+    gsl_error ( "Gaudi::Math::PhaseSpace23L::QAG" ,
+                __FILE__ , __LINE__ , ierror ) ; 
+  }
+  //
+  return result ;
+}
+// ============================================================================
+// get the integral 
+// ============================================================================
+double  Gaudi::Math::PhaseSpace23L::integral () const 
+{ return integral ( m_m1 + m_m2 , m_m - m_m3 ) ; }
+
+
+
+
+// ============================================================================
+// The END 
+// ============================================================================
+
 

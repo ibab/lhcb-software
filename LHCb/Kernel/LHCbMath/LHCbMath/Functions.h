@@ -1309,7 +1309,86 @@ namespace Gaudi
       // ======================================================================
     } ;
     // ========================================================================
-    /** @class BeitWigner
+    /** @class PhaseSpace23L
+     *  simple function to represent the phase 
+     *   space of 2 particles from 3-body decays:
+     *   \f$ f \propto q^{2\ell+1}p^{2L+1}\f$, where
+     *     \f$\ell\f$ is the orbital momentum of the pair of particles, 
+     *    and \f$L\f$ is the orbital momentum between the pair and 
+     *    the third particle. 
+     *   E.g. taking \f$\ell=0, L=1\f$, one can get the S-wave contribution for 
+     *   \f$\pi^+\pi^-\f$-mass from \f$B^0\rightarrowJ/\psi\pi^+\pi^-\f$ decay.
+     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
+     *  @date 2012-04-01
+     */
+    class GAUDI_API PhaseSpace23L
+      : public std::unary_function<double,double>     
+    {
+      // ======================================================================
+    public:
+      // ======================================================================
+      /** constructor from four masses and angular momenta 
+       *  @param m1 the mass of the first  particle 
+       *  @param m2 the mass of the second particle 
+       *  @param m3 the mass of the third  particle 
+       *  @param m  the mass of the mother particle (m>m1+m2+m3)
+       *  @param L  the angular momentum between the first pair and 
+       *  the third particle
+       *  @param l  the angular momentum between the first and the second particle
+       */
+      PhaseSpace23L ( const double         m1     , 
+                      const double         m2     , 
+                      const double         m3     , 
+                      const double         m      , 
+                      const unsigned short L      ,
+                      const unsigned short l  = 0 ) ;
+      /// deststructor 
+      ~PhaseSpace23L () ;                                     // deststructor 
+      // ======================================================================
+    public:
+      // ====================================================================== 
+      /// evaluate N/L-body phase space 
+      double operator () ( const double x ) const ;
+      // ====================================================================== 
+    public:
+      // ====================================================================== 
+      /// get the integral 
+      double integral () const ;
+      /// get the integral between low and high limits 
+      double integral ( const double low  , 
+                        const double high ) const ;
+      // ====================================================================== 
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      PhaseSpace23L () ;               // the default constructor is disabled 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the first mass 
+      double m_m1 ;            // the first mass 
+      /// the second mass 
+      double m_m2 ;            // the second mass 
+      /// the third  mass 
+      double m_m3 ;            // the third mass 
+      /// the mass of mother particle 
+      double m_m  ;            // the mass of mother particle 
+      /// the orbital momentum between the first and the second particle 
+      unsigned short m_l ; // the orbital momentum between the 1st and 2nd particled 
+      /// the orbital momentum between the pair an dthe third particle  
+      unsigned short m_L ; // the orbital momentum between the (12) and 3rd particles
+      // ======================================================================
+      /// helper normalization parameter 
+      double m_norm ; // helper normalization parameter 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// integration workspace 
+      Gaudi::Math::WorkSpace m_workspace ;    // integration workspace 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class BreitWigner
      *
      *  J.D.Jackson, 
      *  "Remarks on the Phenomenological Analysis of Resonances",
@@ -1771,7 +1850,7 @@ namespace Gaudi
                           double    m1    , 
                           double    m2    ) ;
       // ======================================================================
-    } // end of namespace Jackson 
+    } //                                               end of namespace Jackson 
     // ========================================================================
   } //                                             end of namespace Gaudi::Math
   // ==========================================================================
