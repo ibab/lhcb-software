@@ -17,7 +17,7 @@ class Hlt1ProtonLinesConf( HltLinesConfigurableUser ):
         , 'DiProton_VeloNHits'  :     9.   # From Track lines
         , 'DiProton_VeloQcut'   :     3.   # From Track lines
           
-        , 'DiProtonLowMult_SpdMult'    :    20.   # dimensionless, Spd Multiplicy cut 
+        , 'DiProtonLowMult_SpdMult'    :    10.   # dimensionless, Spd Multiplicy cut 
         , 'DiProtonLowMult_PT'         :   500.   # MeV, same as LooseForward
         , 'DiProtonLowMult_P'          :  6000.   # MeV, same as LooseForward  
         , 'DiProtonLowMult_MassMin'    :  2800.   # MeV, after Vtx fit
