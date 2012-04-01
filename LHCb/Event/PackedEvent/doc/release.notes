@@ -6,6 +6,7 @@
 
 ! 2012-04-01 - Chris Jones
  - Improve checks for PackedCaloCluster
+ - Clean up PackedCaloHypo class
 
 ! 2012-03-30 - Chris Jones
  - Add a new PackedCaloCluster class

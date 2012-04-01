@@ -8,7 +8,8 @@
 #include <string>
 #include <vector>
 
-namespace LHCb {
+namespace LHCb
+{
 
   /** @struct PackedCaloHypo Event/PackedCaloHypo.h
    *  Packed description of a CaloHypo
@@ -50,7 +51,7 @@ namespace LHCb {
     int lh;
     // from CaloPosition
     int z;
-    // position (3 ) + 3x3 symetric covariance matrix
+    // position (3) + 3x3 symmetric covariance matrix
     int posX;
     int posY;
     int posE;
@@ -65,7 +66,6 @@ namespace LHCb {
     // center in x,y + 2x2 symetric covariance matrix
     int centX;
     int centY;
-
     int cerr00;
     int cerr11;
 
@@ -76,7 +76,6 @@ namespace LHCb {
     unsigned short int firstHypo;
     unsigned short int lastHypo;
   };
-
 
   static const CLID CLID_PackedCaloHypos = 1551;
 
@@ -90,6 +89,7 @@ namespace LHCb {
   }
 
   /** @class PackedCaloHypos Event/PackedCaloHypo.h
+   *
    *  Vector of packed CaloHypos
    *
    *  @author Olivier Callot
@@ -109,30 +109,27 @@ namespace LHCb {
     }
 
     virtual ~PackedCaloHypos( ) {}; ///< Destructor
+
+  public:
+    
     virtual const CLID& clID()  const { return PackedCaloHypos::classID(); }
     static  const CLID& classID()     { return CLID_PackedCaloHypos;       }
 
-    void addEntry( PackedCaloHypo& obj ) { m_vect.push_back( obj ); }
-    std::vector<PackedCaloHypo>::const_iterator begin() const { return m_vect.begin(); }
-    std::vector<PackedCaloHypo>::const_iterator end()   const { return m_vect.end(); }
-    std::vector<PackedCaloHypo>& hypos()                      { return m_vect; }
-    const std::vector<PackedCaloHypo>& hypos() const          { return m_vect; }
+  public:
 
-    void addRef( int i ) { m_refs.push_back( i ); }
-    /// Avoid hidden method
-    virtual unsigned long addRef() { return DataObject::addRef(); }
-    std::vector<int>::const_iterator beginRefs() const { return m_refs.begin(); }
-    unsigned int  sizeRef()                      const { return m_refs.size(); }
-    std::vector<int>& refs()                           { return m_refs; }
-    const std::vector<int>& refs() const               { return m_refs; }
+    std::vector<PackedCaloHypo>& hypos()              { return m_vect; }
+    const std::vector<PackedCaloHypo>& hypos() const  { return m_vect; }
+
+    std::vector<int>& refs()                          { return m_refs; }
+    const std::vector<int>& refs() const              { return m_refs; }
 
   private:
 
     std::vector<PackedCaloHypo> m_vect;
-    std::vector<int>       m_refs;
+    std::vector<int>            m_refs;
 
   };
 
-}  // End of LHCb namespace
+}
 
 #endif // EVENT_PACKEDCALOHYPO_H
