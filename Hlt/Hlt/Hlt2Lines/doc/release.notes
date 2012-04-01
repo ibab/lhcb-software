@@ -8,13 +8,16 @@
 !
 !----------------------------------------------------------------------------
 
+! 2012-04-02 - Jibo He
+ - Tighten SPDMult of DiProtonLowMult from 20 to 10
 
 !========================= Hlt2Lines v8r16 2012-03-26 =========================
 ! 2012-03-20 - Sam Gregson
  - Hlt2CharmHadD2KS0HLines.py
   - Tightened up the lines 
 
-!========================= Hlt2Lines v8r15 2012-03-20 =========================! 2012-03-19 - Victor Coco
+!========================= Hlt2Lines v8r15 2012-03-20 =========================
+! 2012-03-19 - Victor Coco
  - Hlt2DisplVertices.py, update the options to the latests changes in Hlt/HltDisplVertices
 
 ! 2012-03-18 - Jibo He

@@ -50,7 +50,7 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
                   , 'TFRichProtonPIDppi'   :  20.   # CombDLL(p-pi)
                   , 'TFRichProtonPIDpK'    :  10.   # CombDLL(p-K)
 
-                  , 'LowMult_SpdMult'            :    20.
+                  , 'LowMult_SpdMult'            :    10.
                   , 'DiProtonLowMult_Hlt1Req'    :  "HLT_PASS('Hlt1DiProtonLowMultDecision')"
                   # Track Fitted
                   , 'LowMult_TFProtonPT'         :   500.   # MeV
