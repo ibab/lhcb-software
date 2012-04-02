@@ -33,12 +33,15 @@ DECLARE_TOOL_FACTORY( PatTTMagnetTool )
 PatTTMagnetTool::PatTTMagnetTool( const std::string& type,
                   const std::string& name,
                   const IInterface* parent)
-  : GaudiTool( type, name, parent ),
-    m_magFieldSvc(0)
-
+  : GaudiTool( type, name, parent )
+  , m_magFieldSvc(0)
+  , m_lutBdl(0)
+  , m_lutZHalfBdl(0)
+  , m_lutDxLay(0)
+  , m_lutDxToMom(0)
+  , m_STDet(0)
 {
   declareInterface<PatTTMagnetTool>(this);
-
 }
 
 //=========================================================================
@@ -258,7 +261,7 @@ void PatTTMagnetTool::prepareDeflectionTables() {
     m_lutDxLay->getVariableVector(m_lutVar);
     int idLay       = int(m_lutVar[0]+0.000001);
     dydzBeg  = m_lutVar[1];
-    dxdzBeg  = 0;
+    dxdzBeg  = 0.0;
     double zLay = m_zLayers[idLay];
     
     xBeg = 0.;
@@ -310,8 +313,8 @@ void PatTTMagnetTool::prepareDeflectionTables() {
 
   while(!iover) {
     m_lutDxToMom->getVariableVector(m_lutVar);
-    double dxdzBeg  = 0.0;
-    double dydzBeg  = m_lutVar[0];
+    dxdzBeg = 0.0;
+    dydzBeg = m_lutVar[0];
     xBeg = 0.;
     yBeg = 0.;
     zBeg = 0.;

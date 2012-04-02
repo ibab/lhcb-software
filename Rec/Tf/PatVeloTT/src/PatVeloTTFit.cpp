@@ -22,6 +22,9 @@ PatVeloTTFit::PatVeloTTFit(const std::string& type,
                        const std::string& name,
                        const IInterface* parent)
   : GaudiTool(type, name, parent)
+  , m_patVTTTool(0)
+  , m_ttDet(0)
+  , m_PatTTMagnetTool(0)
 {
   declareInterface<IPatVeloTTFit>(this);
 }

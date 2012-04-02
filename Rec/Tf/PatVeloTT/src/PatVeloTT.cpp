@@ -25,6 +25,7 @@ DECLARE_ALGORITHM_FACTORY( PatVeloTT )
 PatVeloTT::PatVeloTT( const std::string& name,
                       ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
+  , m_veloTTTime(0)
 {
   if ( "Hlt" == context() ) {
     m_inputTracksName =  "";

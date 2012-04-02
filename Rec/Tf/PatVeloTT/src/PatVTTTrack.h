@@ -244,11 +244,9 @@
             planeCode = itE->hit()->planeCode();
 
             // Same station TTa or TTb tolerance
-            bool failStaTol = false;
             if(planeCode<2){ // TTa
               if(!stationsLocalHits[4].empty()){
                 if(sameStationTol < itE->distance() - stationsLocalHits[4].front()->distance()){
-                  failStaTol = true;
                   break;
                 } // tolerance
               }
@@ -256,26 +254,21 @@
             else{ // TTb
               if(!stationsLocalHits[5].empty()){
                 if(sameStationTol < itE->distance() - stationsLocalHits[5].front()->distance()){
-                  failStaTol = true;
                   break;
                 } // tolerance
               }
             }
-            if(failStaTol) break;
 
             // Same layer tolerances and maximum of 2 compatible clusters on same layer
-            bool failLayTol = false;
             int n = stationsLocalHits[planeCode].size();
             // Ignore solution if already 2 clusters on this layer
             if(n >= 2) break;
 
             if(n > 0){
               if(sameLayerTol < itE->distance() - stationsLocalHits[planeCode].front()->distance()){
-                failLayTol = true;
                 break;
               } // tolerance
             }
-            if(failLayTol) break;
 
             // Fill lists
             stationsLocalHits[planeCode].push_back(itE); // layers
