@@ -58,7 +58,7 @@ class Physics_draft2012( object ):
         from Hlt1Lines.Hlt1MBLines             import Hlt1MBLinesConf
         from Hlt1Lines.Hlt1CommissioningLines  import Hlt1CommissioningLinesConf
         from Hlt1Lines.Hlt1DisplVertexLines    import Hlt1DisplVertexLinesConf
-        from Hlt1Lines.Hlt1ProtonLinesConf     import Hlt1ProtonLinesConf
+        from Hlt1Lines.Hlt1ProtonLines         import Hlt1ProtonLinesConf
         from Hlt2Lines.Hlt2CommissioningLines  import Hlt2CommissioningLinesConf
         from Hlt1Lines.Hlt1BeamGasLines        import Hlt1BeamGasLinesConf
         from Hlt2Lines.Hlt2diphotonDiMuonLines import Hlt2diphotonDiMuonLinesConf
