@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2012-04-02 - Eric van Herwijnen
+ - another try of odin definition
+ 
 ! 2012-04-02 - Jibo He
  - Tighten SPDMult of Hlt1DiProtonLowMult from 20 to 10
 
