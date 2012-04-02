@@ -4,6 +4,11 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-04-02 - Johannes Albrecht
+ - move prescale for diproton lines from HLT2 to HLT1, where
+   they should have been
+ - adjust diDiMuonDetached and TriMuonTau lines
+
 ! 2012-04-02 - V. Gligorov
  - Make Physics_April{BU}2012 with 
   . looser P cuts (1GeV for all 1Track lines)
