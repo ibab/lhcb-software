@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!========================= Gauss v41r3 2012-04-03 ============================
+! 2012-04-02 - Gloria Corti
+ - Add use of GenXiccData v1r1
+
 ! 2012-02-20 - Gloria Corti
  - GaussVis.py: new options for visualization in python, to replace '.opts'
 
