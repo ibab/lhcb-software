@@ -69,7 +69,7 @@ class Physics_draft2012( object ):
                                                , 'AllL0_IPChi2'  :    16
                                                , 'AllL0_TrChi2'  :     2.25
                                                , 'AllL0_GEC'     : 'Loose'
-                                               , 'AllL0_Velo_NHits' : 9 
+                                               , 'AllL0_Velo_NHits' : 7 
                                                , 'AllL0_Velo_Qcut' : 3  
                                                , 'AllL0_ValidateTT' : False 
                                                , 'Muon_PT'       :  1000 
