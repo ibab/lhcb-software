@@ -10,6 +10,8 @@ C ============================================================================
       END
       SUBROUTINE oniapairs_upinit
       END
+      SUBROUTINE genxicc_upinit
+      END
 C ============================================================================
       SUBROUTINE acermc_upevnt
       END
@@ -20,6 +22,8 @@ C ============================================================================
       SUBROUTINE lheupevnt
       END
       SUBROUTINE oniapairs_upevnt
+      END
+      SUBROUTINE genxicc_upevnt
       END
 C ============================================================================
 C The END 
