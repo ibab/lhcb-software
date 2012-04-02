@@ -1,5 +1,5 @@
 package GaussSys
-version v41r2
+version v41r3
 
 branches cmt doc
 
@@ -12,12 +12,12 @@ use  GenEvent           v6r2    Event
 use  GaudiConf          v15r2
 
 # Gauss application: the application is not built on Win32
-use Gauss               v41r2   Sim
+use Gauss               v41r3   Sim
 
 # Generator packages: Basic configuration
 use GenCuts             v1r4    Gen
-use GENSER              v9r2p1  Gen
-use EvtGen              v12r8   Gen
+use GENSER              v9r3    Gen
+use EvtGen              v12r9   Gen
 use Mint                v1r2    Gen    # Additions to EvtGen
 use EvtGenExtras        v3r2    Gen
 use Generators          v11r4   Gen
@@ -27,10 +27,10 @@ use LbPythia            v10r3   Gen
 # Generators packages: extensions to Pythia6
 #use LbAlpGen             v1r0    Gen   # OFF for the moment
 use BcVegPy              v3r0    Gen
-use GenXicc              v1r0    Gen
+use GenXicc              v1r1    Gen
 use LbBcVegPy            v4r2    Gen
-use LbGenXicc            v1r0    Gen
-use LbHidValley          v3r0    Gen
+use LbGenXicc            v1r1    Gen
+use LbHidValley          v3r1    Gen
 use LbOniaPairs          v1r0    Gen
 
 # Generators packages: alternative to Pythia6 for pp collisions
@@ -61,7 +61,7 @@ use GaussTools          v16r0     Sim
 use GaussRICH		v11r6     Sim
 use GaussTracker	v6r2p1	  Sim
 use GaussCalo		v9r4	  Sim
-use GaussPhysics	v7r3	  Sim
+use GaussPhysics	v7r4	  Sim
 use GaussUMC            v1r1      Sim
 use GaussCherenkov      v1r1p1    Sim
 
