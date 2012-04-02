@@ -3,6 +3,9 @@ Package             : DaVinciSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v30r2p1>2012-04-02 DaVinci v30r2p1</A></H1><PRE>
+Trivial patch release of v30r2, adding support for DataType=2012
+
 </PRE><H1><A NAME=v30r2>2012-04-02 DaVinci v30r2</A></H1><PRE>
 This version uses projects LCG 62b, Gaudi v23r2, LHCb v34r2, Lbcom v12r2,
  Rec v13r2, Phys v14r2, Analysis v8r2 and SQLDDDB v7r*, ParamFiles v8r*, 

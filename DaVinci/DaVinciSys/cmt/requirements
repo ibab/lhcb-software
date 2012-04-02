@@ -1,9 +1,9 @@
 package DaVinciSys
-version v30r2
+version v30r2p1
 
 branches doc cmt
 
-use  DaVinci             v30r2   Phys
+use  DaVinci             v30r2p1   Phys
 use  DaVinciTests        v2r13p1
 
 # Declare this as a container package
