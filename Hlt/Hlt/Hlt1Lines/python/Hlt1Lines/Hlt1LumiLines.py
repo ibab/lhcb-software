@@ -281,7 +281,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
             if i not in HltFactory('ToolSvc.HltFactory').Modules : HltFactory('ToolSvc.HltFactory').Modules += [ i ]
         return Line ( 'Lumi'
                     , prescale = self.prescale
-                    , ODIN = 'scale( ODIN_TRGTYP == LHCb.ODIN.%s , RATE(%s,LoKi.Scalers.RandomPhasePeriodicLimiter)) ' % ( self.getProp('TriggerType'), self.getProp('MaxRate') )
+                    , ODIN = '( ODIN_TRGTYP == LHCb.ODIN.%s ) ' % self.getProp('TriggerType')
                     , algos = self.__create_lumi_algos__( '' )
                     , postscale = self.postscale
                     ) 

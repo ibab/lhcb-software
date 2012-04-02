@@ -6,7 +6,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2012-04-02 - Eric van Herwijnen
- - another try of odin definition
+ - another try of odin definition; remove rate limiter on HltLumiLines.py
  
 ! 2012-04-02 - Jibo He
  - Tighten SPDMult of Hlt1DiProtonLowMult from 20 to 10
