@@ -359,16 +359,22 @@ class LHCbSoftwareDeps(object):
         # Listing all files on disk
         self.log.info("Loading archives from directory: %s" % self.distdir)
         fileStatuses = {}
-        exludeddirs = ['eclipse', 'DBASE', 'Dirac_project', 'LHCbDirac_project', 'html']
+        fileSizes = {}
+        exludeddirs = ['eclipse', 'Dirac_project', 'LHCbDirac_project', 'html', 'TOOLS']
         for (root, dirs, files) in os.walk(self.distdir):
             dirs[:] = [d for d in dirs if d not in exludeddirs]
             prefix = root.replace(self.distdir + os.sep, "")
+            print "In dir %s" % root
             for f in files:
                 if f.endswith(".tar.gz"):
                     archivename = os.path.join(prefix, f)
-                    fileStatuses[archivename] = "unused"
+                    fp = os.path.join(self.distdir, archivename)
+                    if not os.path.islink(fp):
+                        fileStatuses[archivename] = "unused"
+                        fileSizes[archivename] = os.path.getsize(fp)
         self.log.info("Archives found: %d" % len(fileStatuses.keys()))
         self.archiveList = fileStatuses
+        self.archiveSizes = fileSizes
 
     def saveToDisk(self, filename):
         """ Pickle the dependency DB to disk """
@@ -376,6 +382,7 @@ class LHCbSoftwareDeps(object):
         p.dump(self.distdir, db)
         p.dump(self.projectFiles, db)
         p.dump(self.archiveList, db)
+        p.dump(self.archiveSizes, db)
         p.dump(datetime.datetime.now(), db)
         db.close()
 
@@ -386,6 +393,7 @@ class LHCbSoftwareDeps(object):
         self.htmldir = os.path.join(self.distdir, "html")
         self.projectFiles  = p.load(db)
         self.archiveList  = p.load(db)
+        self.archiveSizes  = p.load(db)
         self.dbDate = p.load(db)
         self.log.info("Database saved on: " + str(self.dbDate))
 
