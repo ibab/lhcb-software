@@ -5,6 +5,7 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+!========================= Hlt1Lines v6r19 2012-04-02 =========================
 ! 2012-04-02 - Eric van Herwijnen
  - another try of odin definition; remove rate limiter on HltLumiLines.py
  
