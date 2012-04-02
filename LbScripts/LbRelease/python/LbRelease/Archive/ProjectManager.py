@@ -95,7 +95,7 @@ def fileMatches(expectedPrefix, filename):
 class DistFile(object):
     """ Ancestor for all representation of distribution files """
     def __init__(self, name, project):
-        """ Main contructor for the ancestor
+        """ Main constructor for the ancestor
         Should NOT be called directly"""
         self.name = name
         self.project = project
@@ -103,6 +103,14 @@ class DistFile(object):
     def getLFN(self):
         """ Builds the LFN for a DIST file """
         return LFN_DIST + self.getDistFileName()
+
+    def getCastorFilename(self):
+        """ Builds the CASTOR filename for a DIST file """
+        return CASTOR_DIR + self.getDistFileName()
+
+    def getCastorDirname(self):
+        """ Builds the CASTOR filename for a DIST file """
+        return os.path.dirname(CASTOR_DIR + self.getDistFileName())
 
     def getFullPath(self):
         """ Builds the full path """

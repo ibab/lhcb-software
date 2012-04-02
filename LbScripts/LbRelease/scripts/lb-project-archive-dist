@@ -1,17 +1,17 @@
 #!/usr/bin/env python
 """
-Scripts that archives the dist files for a specific project
+Scripts that archives and htnl files and related dependencies
 
-lb-project-archive-dist <project> <version>
+lb-project-archive-htmldep filename
 
-As a result files are copied to a storage element
+As a result files are copied to CASTOR
 
 """
 import sys
 import logging
 
-import LbRelease.Archive.DiracArchiver
-from LbRelease.Archive.DiracArchiver import DiracProjectArchiver
+from LbRelease.Archive.ProjectManager import ProjectManager, ARCHIVE_SE
+from LbRelease.Archive.ProjectManager import ARCHIVES, ARCH_CASTOR, ARCH_DIRAC
 from LbRelease.Archive.ProjectToolScript import ProjectTool
 
 #
@@ -21,18 +21,51 @@ class ArchiveDist(ProjectTool):
     """  """
     def __init__(self):
         """ Main constructor for the script """
-        ProjectTool.__init__(self, usage = "%prog [options] project version)",
+        ProjectTool.__init__(self, usage = "%prog [options] filename)",
                               description = "Script to archive the files for a project")
+
+    def defineOpts(self):
+        parser = self.parser
+        parser.add_option("--archive", action="store", type="choice",
+                          dest="archiveTarget",
+                          choices = ARCHIVES,
+                          help="Specify target for archiving (castor|dirac)")
+        parser.set_defaults(archiveTarget=ARCH_CASTOR)
+
 
     def projectToolMain(self, projectName, version):
         """ Main function of the script """
+        rc = 1
+        log = self.log
 
-        # First checking the grid creentials and the group
-        self.checkCredentials("lhcb_admin")
+        # Invoking the appropriate archiver (CASTOR or DIRAC)
+        archiveTarget = self.options.archiveTarget
+        log.info("Archiving to %s" % archiveTarget)
+        if archiveTarget == ARCH_CASTOR:
+            try:
+                import LbRelease.Archive.CastorArchiver
+                from LbRelease.Archive.CastorArchiver import CastorProjectArchiver
+                # Actually create the archiver instance
+                archiver = CastorProjectArchiver(self.projectName, self.version)
+                archiver.archiveProject()
+                rc = 0
+            except Exception, e:
+                self.log.error("Error while archiving to CASTOR: %s" % str(e))
+        elif archiveTarget == ARCH_DIRAC:
+            try:
+                import LbRelease.Archive.DiracArchiver
+                from LbRelease.Archive.DiracArchiver import DiracProjectArchiver
+                # First checking the grid creentials and the group
+                self.checkCredentials("lhcb_admin")
+                # Actually create the archiver instance
+                archiver = DiracProjectArchiver(self.projectName, self.version)
+                archiver.archiveProject()
+                rc = 0
+            except Exception, e:
+                self.log.error("Error while archiving to DIRAC: %s" % str(e))
 
-        # Actually create the archiver instance
-        archiver = DiracProjectArchiver(self.projectName, self.version)
-        archiver.archiveProject()
+        return rc
 
 if __name__ == '__main__':
-      sys.exit(ArchiveDist().run())
+    rc = ArchiveDist().run()
+    sys.exit(rc)

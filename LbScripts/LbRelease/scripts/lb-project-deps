@@ -1,0 +1,240 @@
+#!/usr/bin/env python
+"""
+Utility to parse/manage the HTML dependency directory
+"""
+import sys
+import logging
+
+from inspect import getmembers, ismethod
+from commands import getstatusoutput
+from LbUtils.HTMLDependencyManager import *
+from LbRelease.Archive.ProjectToolScript import ProjectTool
+
+DEPSDB="/tmp/lhcb_deps"
+
+APPLICATIONS = ['COMPAT','BRUNEL','GAUSS','DAVINCI','BOOLE','MOORE', \
+                'LBSCRIPTS','DIRAC','LHCBDIRAC','BENDER','LHCBGRID','GANGA',\
+                'ERASMUS','PANORAMIX', 'ALIGNMENT', 'CURIE', 'FEICIM', 'ORWELL', 'PANOPTES', \
+                'VANDERMEER', 'VETRA', 'ONLINE', 'TOOLS']
+
+
+# Main script class
+###############################################################################
+class Deps(ProjectTool):
+    """  """
+    def __init__(self):
+        """ Main constructor for the script """
+
+        desc = """ Check the dependencies for the LHCb project
+        The actions can be:
+        - reload: Parse all files in the HTLM dir to reload the DB
+        - checkMissing: Iterate through the DB to see if any tar file is missing """
+
+        ProjectTool.__init__(self, usage = "%prog [options] action [project version])",
+                              description = desc)
+
+    def defineOpts(self):
+        parser = self.parser
+        parser.add_option("--db", action="store",
+                          dest="dbfile",
+                          help="File name where the list of pickled projects should be stored")
+        parser.set_defaults(dbfile=DEPSDB)
+
+        parser.add_option("--output", action="store",
+                          dest="outputfile",
+                          help="File name where the output should be redirected")
+        parser.set_defaults(outputfile=None)
+
+    def printout(self, str):
+        if self.outputfile != None:
+            self.outputfile.write(str + "\n")
+        else:
+            print str
+
+
+    #
+    # Command callable from the command line
+    ###########################################################################
+    def commandReloadDB(self, dbfile = DEPSDB):
+        """ Reload the database from all the HTML files """
+        log = self.log
+
+        log.info("Loading Distribution info")
+        deps = LHCbSoftwareDeps.loadDistInfo(self.distdir)
+        log.info("Files loaded, saving to %s" % dbfile)
+
+        # Now persisting the file...
+        deps.saveToDisk(dbfile)
+        log.info("Dependencies saved")
+
+    def commandCheckMissing(self, dbfile = DEPSDB):
+        """ Check all packages referenced, to see whether they are available """
+
+        self.log.info("Starting missing check")
+        # Loading the DB
+        deps = LHCbSoftwareDeps.loadFromDB(dbfile)
+
+        missingFiles = []
+        missingDeps = []
+
+        for p in deps.projectFiles:
+            if not os.path.exists(os.path.join(self.distdir, p.filename)):
+                missingFiles.append((p.htmlbasename, p.filename))
+
+            for dep in p.getAllDependencies():
+                if not os.path.exists(os.path.join(self.distdir, dep.filename)):
+                    missingDeps.append((p.htmlbasename, dep.filename))
+
+        # Now printing the result
+        for (h, f) in missingFiles:
+            self.printout("MISSING_TAR %s %s" % (h,f))
+        self.printout("MISSING_TAR_TOTAL %d" % len(missingFiles))
+
+        for (h, f) in missingDeps:
+            self.printout("MISSING_DEP %s %s" % (h,f))
+        self.printout("MISSING_DEP_TOTAL %d" % len(missingDeps))
+
+        self.log.info("Finished missing check")
+
+    def commandCheckReport(self, dbfile = DEPSDB):
+        """ Check all packages referenced, to see whether they are available """
+
+        self.log.info("Running check and creating report")
+
+        # Loading the dependency DB
+        deps = LHCbSoftwareDeps.loadFromDB(dbfile)
+
+        # Basing the list of dependencies on the list of files
+        depList = deps.archiveList
+
+        # Initial list of keys
+        iniList  = set(deps.archiveList.keys())
+
+        # List of referenced files, copy of the list of files...
+        refList = {}
+        for f in depList.keys():
+            refList[f] = 'unref'
+
+        # Now iterating on the list
+        for pf in deps.projectFiles:
+            # In any case checking who's referenced
+            if pf.filename in iniList:
+                  refList[pf.filename] = 'refd'
+            else:
+                  refList[pf.filename] = 'missing'
+            for dep in pf.getAllDependencies():
+                if dep.filename in iniList:
+                    refList[dep.filename] = 'refd'
+                else:
+                    refList[dep.filename] = 'missing'
+
+            # checking if we have an application
+            if pf.project in APPLICATIONS:
+                if pf.filename in iniList:
+                    depList[pf.filename] = 'app'
+                else:
+                    depList[pf.filename] = 'missing'
+                for dep in pf.getAllDependencies():
+                    if dep.filename in iniList:
+                        depList[dep.filename] = 'dep'
+                    else:
+                        depList[dep.filename] = 'missing'
+
+
+        # Now printing the list
+#        f = open("/tmp/report.csv", "w")
+        for k in sorted(set(depList.keys()) | set(refList.keys()) ):
+            fsize = 0
+            depval = ""
+            refval = ""
+            try:
+                fsize = deps.archiveSizes[k]
+            except KeyError, ke:
+                pass
+            try:
+                depval = depList[k]
+            except KeyError, ke:
+                depval = "missing"
+            try:
+                refval = refList[k]
+            except KeyError, ke:
+                refval = "missing"
+
+            self.printout("%s\t%s\t%s\t%s"  %(k, depval, refval, fsize))
+#        f.close()
+        self.log.info("Finished processing")
+
+
+    def commandCheckUnreferenced(self, dbfile = DEPSDB):
+        """ Check all packages referenced, to see whether they are available """
+
+        # Loading the dependency DB
+        deps = LHCbSoftwareDeps.loadFromDB(dbfile)
+
+        # Basing the list of dependencies on the list of files
+        fileset = set(deps.archiveList.keys())
+
+        refList = {}
+        for f in deps.archiveList:
+            refList[f] = 'unref'
+
+        # Now iterating on the list
+        for pf in deps.projectFiles:
+            # In any case checking who's referenced
+            if pf.filename in fileset:
+                refList[pf.filename] = 'refd'
+            for dep in pf.getAllDependencies():
+                if dep.filename in fileset:
+                    refList[dep.filename] = 'refd'
+
+        # Now printing the list
+        for k in refList.keys():
+            if refList[k] == "unref":
+                self.printout("%s\t%s\t%s"  %(k, refList[k], deps.archiveSizes[k]))
+        self.log.info("Finished processing")
+
+    #
+    # Main method
+    ###########################################################################
+    def main(self):
+        """ Overloading the main, as this takes two versions """
+        # Setup and check the arguments
+        args = self.args
+        self.setLogger()
+        self.log.setLevel(logging.INFO)
+        self.distdir = os.environ['LHCBTAR']
+
+        self.dbfile = self.options.dbfile
+        self.outputfilename = self.options.outputfile
+        if self.outputfilename != None:
+            self.outputfile = open(self.outputfilename, "w")
+        else:
+            self.outputfile = None
+
+        if len(args)  == 0:
+            print self.parser.get_usage()
+            sys.exit(1)
+
+        # Checks
+        self.action = args[0].upper()
+
+        # List the commands available
+        functions_list = [ (o[0].replace("command", "").upper(), o[1])  \
+                          for o in getmembers(self, predicate=ismethod) \
+                          if o[0].startswith("command")]
+
+        match = filter( lambda x: x[0] == self.action, functions_list)
+        if len(match) != 1:
+            self.log.error("problem finding command: %s" % self.action)
+            sys.exit(1)
+
+        # Call the function itself
+        return match[0][1](self.dbfile)
+
+
+if __name__ == '__main__':
+    d = Deps()
+    rc = d.run()
+    if d.outputfile != None:
+        d.outputfile.close()
+    sys.exit(rc)

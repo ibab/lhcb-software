@@ -1,0 +1,120 @@
+#!/usr/bin/env python
+"""
+Scripts that archives the dist files for a specific project
+
+lb-project-archive-dist <project> <version>
+
+As a result files are copied to a storage element
+
+"""
+import os
+import sys
+import logging
+
+from LbRelease.Archive.ProjectManager import CASTOR_DIR, ARCHIVES, ARCH_CASTOR, ARCH_DIRAC
+from LbRelease.Archive.ProjectToolScript import ProjectTool
+from LbUtils import HTMLDependencyManager
+
+#
+# Main script class
+###############################################################################
+class ArchiveFile(ProjectTool):
+    """ Archive a specific file """
+    def __init__(self):
+        """ Main constructor for the script """
+        ProjectTool.__init__(self, usage = "%prog [options] htmlFilename",
+                              description = "Script to archive and html field and related dependencies")
+
+    def defineOpts(self):
+        parser = self.parser
+        parser.add_option("--archive", action="store", type="choice",
+                          dest="archiveTarget",
+                          choices = ARCHIVES,
+                          help="Specify target for archiving (castor|dirac)")
+        parser.set_defaults(archiveTarget=ARCH_CASTOR)
+        parser.add_option("--distdir", action="store",
+                          dest="distdir",
+                          help="Specify the release directory")
+        parser.set_defaults(distdir=None)
+        parser.add_option("--remove", action="store_true",
+                          dest="remove",
+                          help="Whether to remove the associated files after archive")
+        parser.set_defaults(remove=False)
+        parser.add_option("--dry-run", action="store_true",
+                          dest="dryrun",
+                          help="Actually perform the copy or not")
+        parser.set_defaults(dryrun=False)
+
+
+    def main(self):
+        """ Overloading the main, as this takes a filename only """
+        # Setup and check the arguments
+        args = self.args
+        if len(args) != 1:
+            print self.parser.get_usage()
+            sys.exit(1)
+
+        self.setLogger()
+        filename = args[0]
+        self.dryrun = self.options.dryrun
+        self.remove = self.options.remove
+
+        # Establishing the distdir, either from the environment or
+        # forced in the properties
+        self.distdir=os.environ['LHCBTAR']
+        if self.options.distdir != None:
+            self.distdir = self.options.distdir
+        # Making sure the distdir finishes with a "/"
+        if not self.distdir.endswith(os.sep):
+            self.distdir+= os.sep
+
+        # Make sure that we have a path relative to the distdir
+        # and a full one
+        if filename.startswith(self.distdir):
+            self.fullfilename = filename
+            self.filename = filename.replace(self.distdir, "")
+        else:
+            self.fullfilename = os.path.join(self.distdir, filename)
+            self.filename = filename
+
+        self.log.info("Archiving %s - dry-run:%s remove:%s" % (self.filename, self.dryrun, self.remove))
+        self.runArchive()
+
+    def runArchive(self):
+        """ Main function of the script """
+        rc = 1
+        log = self.log
+        dryrun = self.dryrun
+
+        filename = self.filename
+        # Invoking the appropriate archiver (CASTOR or DIRAC)
+        archiveTarget = self.options.archiveTarget
+        #log.info("Archiving to %s" % archiveTarget)
+        if archiveTarget == ARCH_CASTOR:
+            try:
+                from LbRelease.Archive.CastorArchiver import CastorArchiver
+                castor_filename = CASTOR_DIR + filename
+                ca = CastorArchiver()
+                if ca.pathExists(castor_filename):
+                    log.info("File already exists: %s" % castor_filename)
+                    rc =0
+                else:
+                    castor_dir = ca.dirname(castor_filename)
+                    if not ca.pathExists(castor_dir):
+                        log.info("Creating directory: %s" % castor_dir)
+                        if not dryrun:
+                            ca.mkdir(castor_dir)
+                    log.info("Archiving file to %s" % castor_filename)
+                    if not dryrun:
+                        ca.archiveFile(self.fullfilename, castor_filename)
+                    log.info("Archived file to %s" % castor_filename)
+                    rc = 0
+            except Exception, e:
+                self.log.error("Error while archiving to CASTOR: %s" % str(e))
+        elif archiveTarget == ARCH_DIRAC:
+            raise NotImplementedError("DIRAC backend not implemented")
+        return rc
+
+if __name__ == '__main__':
+    rc = ArchiveFile().run()
+    sys.exit(rc)

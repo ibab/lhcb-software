@@ -169,6 +169,7 @@ class ArchiveRelease(ProjectTool):
         # Creates a project manager to get information about the project
         project = ProjectManager.loadFromDisk(projectName, version)
         log = self.log
+        rc = 1
 
         # Create the tarball
         tarballName = None
@@ -202,14 +203,19 @@ class ArchiveRelease(ProjectTool):
             try:
                 self.archiveToCastor(tarballName, project.getReleaseAreaArchiveNameCASTOR())
                 self.log.info("%s copied to CASTOR" % tarballName)
+                rc = 0
             except Exception, e:
                 self.log.error("Error while copying to CASTOR: %s" % str(e))
         elif archiveTarget == ARCH_DIRAC:
             try:
                 self.archiveToDirac(tarballName, project.getReleaseAreaArchiveNameDIRAC())
                 self.log.info("%s copied to DIRAC" % tarballName)
+                rc = 0
             except Exception, e:
                 self.log.error("Error while copying to DIRAC: %s" % str(e))
+
+        return rc
+
 
 if __name__ == '__main__':
       sys.exit(ArchiveRelease().run())

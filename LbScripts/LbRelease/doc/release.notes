@@ -7,6 +7,7 @@
 	* python/LbRelease/Archive/DiracArchiver.py
 	New tools to check the files on disk related to a project:
 	* scripts/lb-project-archive-dist
+	* scripts/lb-project-archive-file
 	* scripts/lb-project-compare-dist
 	* scripts/lb-project-check-archive
 	* scripts/lb-project-archive-release
