@@ -21,6 +21,7 @@ Purpose: LHCb Digitization program
      generates a warning about missing conditions.
    . Adapt boole-fest.ref for reduced L0Calo bank size following application of
      Hcal threshold in L0Calo emulation of 2012 data (L0Calo) 
+   . Add filter on CalibrationTypes in OdinTypesFilter (DAQUtils)
 
  - Changes to Digi/Boole/python/Boole/Configuration.py
    . Added configuration for OTDoublePulse.root file which provides a look-up-table
