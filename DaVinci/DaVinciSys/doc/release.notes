@@ -3,8 +3,61 @@ Package             : DaVinciSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics analysis application
 
-! 2012-03-22 - Chris Jones
- - Remove temporarily included packages
+</PRE><H1><A NAME=v30r2>2012-04-02 DaVinci v30r2</A></H1><PRE>
+This version uses projects LCG 62b, Gaudi v23r2, LHCb v34r2, Lbcom v12r2,
+ Rec v13r2, Phys v14r2, Analysis v8r2 and SQLDDDB v7r*, ParamFiles v8r*, 
+ FieldMap v5r*, AppConfig v3r*
+
+Production version for initial 2012 data taking
+
+For full details, see the release notes for Phys v13r2, Analysis v8r2 and 
+Stripping v4r2. Also, see the reconstruction related changes in Brunel v42r2
+
+Executive Summary :-
+
+- External dependencies changes
+ . Uses LCGCMT v62b. Relevant changes are ROOT 5.32.02 and neurobayes 3.7.0
+
+- Loki Improvements
+ . Add functor to BeamLineFunctions to calculate the DOCA to the beamline,
+   using LoKi::FastVertex
+ . Add functors related to the Velo hit pattern:
+   TrNVELOSPACEPOINTS, TrNCONSECVELOSPACEPOINTS
+    Evaluating the number of (consecutive) R and Phi hits in the same station,
+    for the Hlt1 displaced vertex line:
+   TrNVELOOVERLAPS, TrNVELOOVERLAPSR, TrNVELOOVERLAPSPHI
+    Evaluating the number of A/C overlap hits, resp. after an OR of R and Phi,
+    R only and Phi only, for the Hlt2 beam halo express stream line.
+
+- Swimming 
+ . Re-enable output algorithms before exiting to allow correct finalisation.
+ . Fix XML summary writing.
+ . Disable FSRInputCopyStreamWriter when swimming the trigger
+ . Change the setting of "EnableUnpack" to be compliant with the new software stack.
+ . Open shelve database read only.
+
+- DecayTreeTuple 
+ . TupleToolSwimmingInfo: replace "/" with "_" in decision branch names.
+ . Fix some warnings about unsigned long usage.
+ . Some fixes for running on uDSTs, in TupleToolTrigger and TupleToolStripping.
+ . If HltRoutingBits are missing, catch the exception that is thrown in 
+   TupleToolTrigger, so the processing does not terminate.
+ . TupleToolTISTOS : Added Hlt1Phys Hlt2Phys
+
+- Stripping (u)DST Content fixes
+ . Add support for the packed track clusters on uDST streams. 
+   Needed for Track refitting. 
+ . Improve the ProtoParticle cloning to allow for dynamic checking of each
+   ProtoParticle, and dependant data objects, to determine if they should be
+   cloned or not for the stream in question. If the object resides in a TES
+   location known to be completely copied to the stream output (for instance
+   the standard reconstruction locations on DSTs) then it is not copied and
+   the reference to that original container is kept. Otherwise, the objects
+   are fully cloned.
+   Fixes the problem on Calibration (and EW) DST streams that create custom 
+   Tracks, ProtoParticles that where not being properly handled.
+ . Fix the packing of RichPID and MuonPID objects, where the key was not
+   properly restored.
 
 </PRE><H1><A NAME=v30r1p1>2012-03-14 DaVinci v30r1p2</A></H1><PRE>
 Patch for https://savannah.cern.ch/bugs/?92524
