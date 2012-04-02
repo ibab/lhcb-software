@@ -27,7 +27,7 @@ class VanDerMeerScan_Mar12_BeamGasLumiRegPresc50:
         self.NanoBanks =  ['ODIN','HltLumiSummary','HltRoutingBits','DAQ', 'Velo' ]
    
     def L0TCK(self) :
-        return '0x1710'
+        return '0x0041'
 
     def HltType(self) :
         self.verifyType( VanDerMeerScan_Mar12_BeamGasLumiRegPresc50 )
