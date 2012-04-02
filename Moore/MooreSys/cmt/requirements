@@ -1,19 +1,19 @@
 package MooreSys
-version v13r2p3
+version v13r2p4
 branches doc cmt
 
 #=======================================================
 # Don't forget the applications
 #=======================================================
 
-use  Moore               v13r2p1     Hlt
+use  Moore               v13r2p4     Hlt
 use  IndependenceTests   v1r2p1      Hlt
 
 # fix topo & displvertices bugs, remove nobias and lumi rate limits
-use  Hlt1Lines           v6r18       Hlt
-use  HltSettings         v5r23       Hlt
+use  Hlt1Lines           v6r19       Hlt
+use  HltSettings         v5r25       Hlt
 use  HltDisplVertices    v3r8        Hlt
-use  Hlt2Lines           v8r16       Hlt
+use  Hlt2Lines           v8r17       Hlt
 
 # v3r10 contains a bug - go back one version
 use  HltGlobalMonitor    v3r9       Hlt

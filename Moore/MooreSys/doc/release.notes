@@ -3,6 +3,10 @@ Package     : MooreSys
 Package Coordinator : E. van Herwijnen
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v13r2p4>2012-04-02 Moore v13r2p4</A></H1><PRE>
+HltSettings with Physics_April{BU}2012, fixed topo, prescaled diproton,
+removed nobias & lumi rate limiters
+
 </PRE><H1><A NAME=v13r2p3>2012-03-28 Moore v13r2p3</A></H1><PRE>
 Same as v13r2p1 with HltGlobalMonitor v3r9 and TrackFitter v4r7.
 
