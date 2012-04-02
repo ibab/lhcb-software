@@ -489,6 +489,98 @@ Double_t Analysis::Models::PhaseSpace23L::evaluate() const
 { return m_ps23L ( m_x ) ; }
 // ============================================================================
 
+// ============================================================================
+// constructor from all parameters 
+// ============================================================================
+Analysis::Models::LASS23L::LASS23L
+( const char*          name  , 
+  const char*          title ,
+  RooAbsReal&          x     ,
+  RooAbsReal&          m1430 ,
+  RooAbsReal&          g1430 ,
+  RooAbsReal&          a     , 
+  RooAbsReal&          r     , 
+  RooAbsReal&          e     ,                
+  const double         m1    , 
+  const double         m2    ,
+  const double         m3    , 
+  const double         m     ,
+  const unsigned short L     ) 
+//
+  : RooAbsPdf ( name , title ) 
+//
+  , m_x     ( "x"     , "Observable"      , this , x     ) 
+  , m_m0    ( "m0"    , "K*(1430)-mass"   , this , m1430 ) 
+  , m_g0    ( "g0"    , "K*(1430)-width"  , this , g1430 ) 
+  , m_a     ( "a"     , "LASS-a"          , this , a     )
+  , m_r     ( "r"     , "LASS-r"          , this , r     )
+  , m_e     ( "e"     , "LASS-elasticity" , this , e     )
+//
+  , m_lass  ( m1      , m2      , m3   ,  m  , 
+              1430    , 300     , 
+              L       , 
+              1.94e-3 , 1.76e-1 , 1.0    ) 
+{
+  m_lass.setM0 ( m_m0 ) ;
+  m_lass.setG0 ( m_g0 ) ;
+  m_lass.setA  ( m_a  ) ;
+  m_lass.setR  ( m_r  ) ;
+  m_lass.setE  ( m_e  ) ;
+}
+// ============================================================================
+// "copy" constructor 
+// ============================================================================
+Analysis::Models::LASS23L::LASS23L 
+( const Analysis::Models::LASS23L& right , 
+  const char*                      name  ) 
+  : RooAbsPdf ( right , name ) 
+//
+  , m_x     ( "x"  , this , right.m_x  ) 
+  , m_m0    ( "m0" , this , right.m_m0 ) 
+  , m_g0    ( "g0" , this , right.m_g0 ) 
+  , m_a     ( "a"  , this , right.m_a  ) 
+  , m_r     ( "r"  , this , right.m_r  ) 
+  , m_e     ( "e"  , this , right.m_e  ) 
+//
+  , m_lass  ( right.m_lass ) 
+{}
+// ============================================================================
+// destructor 
+// ============================================================================
+Analysis::Models::LASS23L::~LASS23L (){}
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::LASS23L*
+Analysis::Models::LASS23L::clone( const char* name ) const 
+{ return new Analysis::Models::LASS23L ( *this , name ) ; }
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::LASS23L::evaluate() const 
+{
+  m_lass.setM0  ( m_m0 ) ;
+  m_lass.setG0  ( m_g0 ) ;
+  m_lass.setA   ( m_a  ) ;
+  m_lass.setR   ( m_r  ) ;
+  m_lass.setE   ( m_e  ) ;
+  //
+  return m_lass ( m_x  ) ;
+}
+// ===========================================================================
+// get the complex amplitude 
+// ===========================================================================
+std::complex<double> Analysis::Models::LASS23L::amplitude() const 
+{
+  m_lass.setM0  ( m_m0 ) ;
+  m_lass.setG0  ( m_g0 ) ;
+  m_lass.setA   ( m_a  ) ;
+  m_lass.setR   ( m_r  ) ;
+  m_lass.setE   ( m_e  ) ;
+  //
+  return m_lass.amplitude ( m_x  ) ;
+}
+// ============================================================================
 
 
 // ============================================================================

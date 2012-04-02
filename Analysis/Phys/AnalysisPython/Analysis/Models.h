@@ -188,7 +188,7 @@ namespace Analysis
       // ======================================================================
     } ;
     // ========================================================================
-    /** @class Flatte
+    /** @class Flatte2
      *
      *  S.M.Flatte, 
      *  "Coupled-channel analysis of the \f$\pi\eta\f$ 
@@ -464,9 +464,72 @@ namespace Analysis
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class LASS23L
+     *  S-wave Kpi amplitude for Kpi from B-> Kpi X decays
+     *  @see Gaudi::Math::LASS23L
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2012-04-02
+     */
+    class GAUDI_API LASS23L : public RooAbsPdf 
+    {
+    public:
+      // ======================================================================
+      ClassDef(Analysis::Models::LASS23L, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      LASS23L ( const char*          name          , 
+                const char*          title         ,
+                RooAbsReal&          x             ,
+                RooAbsReal&          m1430         ,
+                RooAbsReal&          g1430         ,
+                RooAbsReal&          a             , 
+                RooAbsReal&          r             , 
+                RooAbsReal&          e             ,                
+                const double         m1    = 493.7 , 
+                const double         m2    = 139.6 ,
+                const double         m3    = 3097  , 
+                const double         m     = 5278  ,
+                const unsigned short L     = 1     ) ;
+      /// "copy constructor"
+      LASS23L ( const LASS23L& right , const char* name = 0 )  ;
+      /// destructor 
+      virtual ~LASS23L() ;
+      /// clone 
+      virtual  LASS23L* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// the mass 
+      RooRealProxy m_x     ;
+      /// K*(1430) parameters:
+      RooRealProxy m_m0    ;
+      RooRealProxy m_g0    ;
+      /// LASS parameters 
+      RooRealProxy m_a     ;
+      RooRealProxy m_r     ;
+      RooRealProxy m_e     ;
+      // ======================================================================
+      // the actual evaluation of function 
+      Double_t evaluate() const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the complex amplitude 
+      std::complex<double> amplitude() const ; // get the complex amplitude 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::LASS23L m_lass ;              // the actual function 
+      // ======================================================================
+    } ;
+    // ========================================================================
     /** @class CrystalBallDS 
      *  double-sided ``Crystal Ball-function'' 
      *  for description of gaussian with the tail
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
      *  @date 2011-05-25
      */
     class GAUDI_API CrystalBallDS : public RooAbsPdf 

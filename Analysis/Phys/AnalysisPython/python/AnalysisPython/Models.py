@@ -49,6 +49,20 @@ def _tf1_ ( self , *args ) :
     #
     return  ROOT.TF1( funID() , wo , *args )
 
+# =============================================================================
+## get the regular complex value for amplitude 
+def _amp_ ( self , x ) :
+    """
+    Get the complex value for amplitude
+    
+    >>> fun
+    >>> a = fun.amp ( x )
+    
+    """
+    v = self.amplitude(x)
+    #
+    return complex( v.real() , v.imag() ) 
+
 Gaudi = cpp.Gaudi 
 for model in ( Gaudi.Math.Chebyshev              ,
                Gaudi.Math.Legendre               ,
@@ -74,9 +88,12 @@ for model in ( Gaudi.Math.Chebyshev              ,
                Gaudi.Math.Rho0FromEtaPrime       ,
                Gaudi.Math.Flatte                 ,
                Gaudi.Math.Flatte2                ,
+               Gaudi.Math.LASS23L                ,
                Gaudi.Math.Voigt                  ) :
     model . tf1 = _tf1_ 
-               
+
+Gaudi.Math.LASS23L.amp = _amp_
+
 # =============================================================================
 if '__main__' == __name__ :
     
