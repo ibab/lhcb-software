@@ -353,19 +353,20 @@ void EvtDDalitz::init(){
 
 void EvtDDalitz::initProbMax() {
 
-//probmax different for different modes!  
+  // probmax different for different modes!  
 
-  if ( _flag==1 ) {setProbMax(1000000);}
-  if ( _flag==2 ) {setProbMax(147.9);}
-  if ( _flag==3 ) {setProbMax(5000.0);}
-  if ( _flag==4 ) {setProbMax(3000.0);}
-  if ( _flag==5 ) {setProbMax(10000000.0);}
-  if ( _flag==6 ) {setProbMax(50000.0);}
-  if ( _flag==7 ) {setProbMax(50000.0);}
-  if ( _flag==8 ) {setProbMax(1000000);}
-  if ( _flag==9 ) {setProbMax(1000000);}
-  if ( _flag==10 ) {setProbMax(1000000);}
-  if ( _flag==11 ) {setProbMax(1000000);}
+  if ( _flag==1 ) {setProbMax(2500.0);}
+  if ( _flag==2 ) {setProbMax(150.0);}
+  if ( _flag==3 ) {setProbMax(3000.0);}
+  if ( _flag==4 ) {setProbMax(600.0);}
+  if ( _flag==5 ) {setProbMax(2500000.0);}
+  if ( _flag==6 ) {setProbMax(45000.0);}
+  if ( _flag==7 ) {setProbMax(35000.0);}
+  if ( _flag==8 ) {setProbMax(2500.0);}
+  if ( _flag==9 ) {setProbMax(1700.0);}
+  if ( _flag==10 ) {setProbMax(1300.0);}
+  if ( _flag==11 ) {setProbMax(2200.0);}
+
 }
 
 void EvtDDalitz::decay( EvtParticle *p){

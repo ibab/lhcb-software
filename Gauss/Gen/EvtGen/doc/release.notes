@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-04-02 - John Back
+ - EvtDDalitz.cpp: Updated the maximum probability values in initProbMax().
+
 ! 2012-03-23 - John Back
  - Added EvtEta2MuMuGamma model from Marcin Chrzaszcz.
 
