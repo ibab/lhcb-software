@@ -1,6 +1,7 @@
 ! Package     : Gen/LbGenXicc
 ! Responsible : F. Zhang
 
+!========================= LbGenXicc v1r1 2012-04-02 =========================
 ! 2012-03-29 - Giacomo GRAZIANI
 - extend the code for any heavy baryon state: the state can be now decided with 
     the "BaryonState" option of GenXiccProduction and XiccDaughtersInLHCb.
