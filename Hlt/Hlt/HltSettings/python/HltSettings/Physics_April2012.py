@@ -159,6 +159,9 @@ class Physics_draft2012( object ):
                                                    , "VertexDisplVertex_Tr_CHI2"   : "2.5"
                                                    , "VertexDisplVertex_GEC"       : "Loose"
                                                    }
+                       , Hlt1ProtonLinesConf        : { 'Prescale' : {  'Hlt1DiProtonLowMult'        : 0.01, 
+                                                                        'Hlt1DiProton'               : 0.01
+                                                                       } } 
                        , Hlt1CommissioningLinesConf : { 'Postscale' : { 'Hlt1ErrorEvent'   : 'RATE(0.01)' } }
                        , Hlt2CommissioningLinesConf : { 'Postscale' : { 'Hlt2ErrorEvent'   : 'RATE(0.01)' } }
                        # micro bias lines switched off for high mu physics running              
@@ -172,9 +175,9 @@ class Physics_draft2012( object ):
                                                                       , 'Hlt2LowMultPhoton'     : 0.01
                                                                       } } 
 
-                       , Hlt2InclusiveDiProtonLinesConf: { 'Prescale' : { 'Hlt2DiProton'           :       0.001
-                                                                          , 'Hlt2DiProtonLowMult'  :       0.001
-                                                                      } } 
+                       #, Hlt2InclusiveDiProtonLinesConf: { 'Prescale' : { 'Hlt2DiProton'           :       0.001
+                       #                                                   , 'Hlt2DiProtonLowMult'  :       0.001
+                       #                                               } } 
 
                        }
 
