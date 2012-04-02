@@ -4,6 +4,13 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-04-02 - V. Gligorov
+ - Make Physics_April{BU}2012 with 
+  . looser P cuts (1GeV for all 1Track lines)
+  . looser nVELO cut for 1TrackAllL0 (7 iso 9)
+  . looser PT cut for 1TrackAllL0 for April2012 (1.35 iso 1.7 GeV)
+ - Relax 1Track confirmation cuts in topo to match April2012 setting. 
+
 ! 2012-04-02 - Plamen Hopchev
  - use L0TCK 0x0041 instead of 0x1710 in the VDM configurations VanDerMeerScan_Mar12*
 
