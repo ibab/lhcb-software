@@ -19,28 +19,28 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( OnOfflineTool );
+DECLARE_TOOL_FACTORY( OnOfflineTool )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-OnOfflineTool::OnOfflineTool( const std::string& type,
-                              const std::string& name,
-                              const IInterface* parent )
-  : GaudiTool ( type, name , parent )
-  , m_onlinePVLocation(LHCb::RecVertexLocation::Velo3D)
-  , m_offlinePVLocation(LHCb::RecVertexLocation::Primary)
-  , m_online(false)
-  , m_offlineDistTool("LoKi::DistanceCalculator")
-  , m_onlineDistTool("LoKi::TrgDistanceCalculator")
-  , m_offlineVertexFitter("OfflineVertexFitter" )
-  , m_onlineVertexFitter("LoKi::FastVertexFitter")
-  , m_offlineCombiner("OfflineVertexFitter" )
-  , m_onlineCombiner("LoKi::FastVertexFitter")
-  , m_offlinePVRelatorName("GenericParticle2PVRelator__p2PVWithIPChi2_OfflineDistanceCalculatorName_/P2PVWithIPChi2")
-  , m_onlinePVRelatorName("GenericParticle2PVRelator__p2PVWithIPChi2_OnlineDistanceCalculatorName_/OnlineP2PVWithIPChi2")
-  , m_offlineTESTrunk("Phys")
-  , m_onlineTESTrunk("Hlt2")
+  OnOfflineTool::OnOfflineTool( const std::string& type,
+                                const std::string& name,
+                                const IInterface* parent )
+    : GaudiTool ( type, name , parent )
+    , m_onlinePVLocation(LHCb::RecVertexLocation::Velo3D)
+    , m_offlinePVLocation(LHCb::RecVertexLocation::Primary)
+    , m_online(false)
+    , m_offlineDistTool("LoKi::DistanceCalculator")
+    , m_onlineDistTool("LoKi::TrgDistanceCalculator")
+    , m_offlineVertexFitter("OfflineVertexFitter" )
+    , m_onlineVertexFitter("LoKi::FastVertexFitter")
+    , m_offlineCombiner("OfflineVertexFitter" )
+    , m_onlineCombiner("LoKi::FastVertexFitter")
+    , m_offlinePVRelatorName("GenericParticle2PVRelator__p2PVWithIPChi2_OfflineDistanceCalculatorName_/P2PVWithIPChi2")
+    , m_onlinePVRelatorName("GenericParticle2PVRelator__p2PVWithIPChi2_OnlineDistanceCalculatorName_/OnlineP2PVWithIPChi2")
+    , m_offlineTESTrunk("Phys")
+    , m_onlineTESTrunk("Hlt2")
 {
 
   declareInterface<IOnOffline>(this);
@@ -99,13 +99,13 @@ StatusCode OnOfflineTool::initialize()
 
   if ( context() == "HLT" || context() == "Hlt" )
   {
-    if (msgLevel(MSG::DEBUG)) 
+    if (msgLevel(MSG::DEBUG))
       debug() << "Running in HLT context: Online = true" << endmsg ;
     m_online = true ;
   }
   else if ( context() != "" && context() != "Offline" )
   {
-    Warning( "Unexpected context '" + context() + 
+    Warning( "Unexpected context '" + context() +
              "'. Assuming offline mode, please check !" ).ignore();
   }
 

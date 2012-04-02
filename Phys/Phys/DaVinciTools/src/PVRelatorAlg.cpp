@@ -1,8 +1,8 @@
 // $Id$
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 // from LHCb
 #include "Kernel/IOnOffline.h"
 #include "Kernel/IRelatedPVFinder.h"
@@ -20,90 +20,89 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( PVRelatorAlg );
-
+DECLARE_ALGORITHM_FACTORY( PVRelatorAlg )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-PVRelatorAlg::PVRelatorAlg( const std::string& name,
-                            ISvcLocator* pSvcLocator)
-  : 
-  GaudiAlgorithm ( name , pSvcLocator ),
-  m_particleInputLocation(""),
-  m_PVInputLocation(LHCb::RecVertexLocation::Primary),
-  m_P2PVInputLocation(""),
-  m_P2PVOutputLocation(""),
-  m_useTable(false),
-  m_OnOffline(0),
-  m_pvRelator(0)
+  PVRelatorAlg::PVRelatorAlg( const std::string& name,
+                              ISvcLocator* pSvcLocator)
+    :
+    GaudiAlgorithm ( name , pSvcLocator ),
+    m_particleInputLocation(""),
+    m_PVInputLocation(LHCb::RecVertexLocation::Primary),
+    m_P2PVInputLocation(""),
+    m_P2PVOutputLocation(""),
+    m_useTable(false),
+    m_OnOffline(0),
+    m_pvRelator(0)
 {
   declareProperty("ParticleInputLocation",  m_particleInputLocation);
   declareProperty("PrimaryVertexInputLocation",  m_PVInputLocation);
   declareProperty("P2PVRelationsInputLocation",  m_P2PVInputLocation);
   declareProperty("P2PVRelationsOutputLocation",  m_P2PVOutputLocation);
-  
+
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-PVRelatorAlg::~PVRelatorAlg() {} 
+PVRelatorAlg::~PVRelatorAlg() {}
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode PVRelatorAlg::initialize() {
-
+StatusCode PVRelatorAlg::initialize()
+{
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
   if (m_P2PVInputLocation!="") m_useTable=true;
-  
-  if ( m_useTable ) { 
+
+  if ( m_useTable ) {
     if ( m_particleInputLocation!="" ||
          m_PVInputLocation!=LHCb::RecVertexLocation::Primary)  {
-    return Error("You have set P2PVRelationsLocation and one of ParticleInputLocation and PrimaryVertexInputLocation.",
-                 StatusCode::FAILURE);
+      return Error("You have set P2PVRelationsLocation and one of ParticleInputLocation and PrimaryVertexInputLocation.",
+                   StatusCode::FAILURE);
     }
   } else {
-    if (""==m_particleInputLocation) 
+    if (""==m_particleInputLocation)
       return Error("ParticleInputLocation not set");
   }
 
   if (""==m_P2PVOutputLocation) return Error("P2PVRelationsOutputLocation not set");
-  
+
   m_OnOffline = tool<IOnOffline>("OnOfflineTool",this);
 
   if (0==m_OnOffline) return Error("Failed to get IOnOffline tool");
-  
-  m_pvRelator = tool<IRelatedPVFinder>(m_OnOffline->relatedPVFinderType(), 
+
+  m_pvRelator = tool<IRelatedPVFinder>(m_OnOffline->relatedPVFinderType(),
                                        this);
- 
+
   if (0==m_pvRelator) return Error("Failed to get IRelatedPVFinder tool");
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode PVRelatorAlg::execute() {
-
+StatusCode PVRelatorAlg::execute() 
+{
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   Particle2Vertex::WTable* table = (m_useTable) ? this->tableFromTable() : this->table();
-  
+
   if (0!=table) {
     if ( msgLevel(MSG::VERBOSE) ) {
-      verbose() << "Storing relations table in " 
+      verbose() << "Storing relations table in "
                 << m_P2PVOutputLocation << endmsg;
       verbose() << "Table size " << table->relations().size() << endmsg;
     }
     put(table, m_P2PVOutputLocation);
 
   } else {
-      Error("No table created!",10).ignore();
+    Error("No table created!",10).ignore();
   }
 
   return StatusCode::SUCCESS;
@@ -114,11 +113,11 @@ Particle2Vertex::WTable* PVRelatorAlg::table() const
 
   typedef LHCb::Particle::Range Particles;
   typedef LHCb::RecVertex::Range Vertices;
-  typedef Particle2Vertex::LightWTable RelTable;  
+  typedef Particle2Vertex::LightWTable RelTable;
 
   Particle2Vertex::WTable* table = new Particle2Vertex::WTable();
 
-  if ( !exist< LHCb::Particle::Range>(m_particleInputLocation) || 
+  if ( !exist< LHCb::Particle::Range>(m_particleInputLocation) ||
        !exist< LHCb::RecVertex::Range>(m_PVInputLocation) ) return table;
 
   Particles particles = get<Particles>(m_particleInputLocation);
@@ -128,17 +127,17 @@ Particle2Vertex::WTable* PVRelatorAlg::table() const
 
   for (Particles::const_iterator iPart = particles.begin();
        iPart != particles.end(); ++ iPart) {
-    const RelTable bestPVTable = 
-      m_pvRelator->relatedPVs(*iPart, 
-                              LHCb::VertexBase::ConstVector(vertices.begin(), 
+    const RelTable bestPVTable =
+      m_pvRelator->relatedPVs(*iPart,
+                              LHCb::VertexBase::ConstVector(vertices.begin(),
                                                             vertices.end()));
 
     const RelTable::Range range = bestPVTable.relations();
 
     table->merge(range);
-  }  
+  }
   return table;
- 
+
 }
 //=============================================================================
 Particle2Vertex::WTable* PVRelatorAlg::tableFromTable() const
@@ -149,7 +148,7 @@ Particle2Vertex::WTable* PVRelatorAlg::tableFromTable() const
   typedef Particle2Vertex::LightWTable RelTable;
   typedef Particle2Vertex::WTable Table;
   typedef Particle2Vertex::WTable::InvType InvTable;
-  
+
   const Table* inputTable = i_get<Table>(m_P2PVInputLocation);
 
   if (0==inputTable) return 0;
@@ -165,11 +164,11 @@ Particle2Vertex::WTable* PVRelatorAlg::tableFromTable() const
   Relations::getUniqueTo(invRange.begin(), invRange.end(), particles);
 
   if ( msgLevel(MSG::VERBOSE) ) {
-    verbose() << "tableFromTable found " 
-            << particles.size() << " Particles" 
-            << endmsg;
+    verbose() << "tableFromTable found "
+              << particles.size() << " Particles"
+              << endmsg;
   }
-  
+
   for (Particles::const_iterator iPart = particles.begin();
        iPart != particles.end(); ++iPart) {
 
@@ -179,16 +178,16 @@ Particle2Vertex::WTable* PVRelatorAlg::tableFromTable() const
 
     Relations::getUniqueTo(range.begin(), range.end(), vertices);
 
-    if ( msgLevel(MSG::VERBOSE) ) verbose() << "tableFromTable found " 
-                                            << vertices.size() 
+    if ( msgLevel(MSG::VERBOSE) ) verbose() << "tableFromTable found "
+                                            << vertices.size()
                                             << " related vertices" << endmsg;
 
     const RelTable bestPVTable = m_pvRelator->relatedPVs(*iPart, LHCb::VertexBase::ConstVector(vertices.begin(), vertices.end()));
 
     const RelTable::Range rel = bestPVTable.relations();
 
-    if ( msgLevel(MSG::VERBOSE) ) { 
-      verbose() << "Going to add " << rel.size() 
+    if ( msgLevel(MSG::VERBOSE) ) {
+      verbose() << "Going to add " << rel.size()
                 << " relations to table" << endmsg;
     }
 
@@ -198,13 +197,5 @@ Particle2Vertex::WTable* PVRelatorAlg::tableFromTable() const
   return table;
 
 }
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode PVRelatorAlg::finalize() {
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
-}
 //=============================================================================

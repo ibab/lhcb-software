@@ -14,14 +14,14 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_TOOL_FACTORY( ConeVariables );
+DECLARE_TOOL_FACTORY( ConeVariables )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-ConeVariables::ConeVariables( const std::string& type,
-                              const std::string& name,
-                              const IInterface* parent) : GaudiTool ( type, name , parent )
+  ConeVariables::ConeVariables( const std::string& type,
+                                const std::string& name,
+                                const IInterface* parent) : GaudiTool ( type, name , parent )
 {
   declareInterface<IExtraInfoTool>(this);
   declareProperty( "ConeNumber", m_coneNumber = 1,
@@ -32,6 +32,7 @@ ConeVariables::ConeVariables( const std::string& type,
                    "Set the type of tracks which are considered inside the cone (default = 3)");
 
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -40,7 +41,8 @@ ConeVariables::~ConeVariables() {}
 //=============================================================================
 // Fill Cone Info structure
 //=============================================================================
-StatusCode ConeVariables::calculateExtraInfo( const LHCb::Particle *top, const LHCb::Particle *   part )
+StatusCode ConeVariables::calculateExtraInfo( const LHCb::Particle *top,
+                                              const LHCb::Particle *part )
 {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Fill" << endmsg;
@@ -247,11 +249,11 @@ bool ConeVariables::isTrackInDecay(const LHCb::Track* track){
 
 int ConeVariables::getFirstIndex(void) {
   switch(m_coneNumber) {
-    case 1: return LHCb::Particle::Cone1Index;
-    case 2: return LHCb::Particle::Cone2Index;
-    case 3: return LHCb::Particle::Cone3Index;
-    case 4: return LHCb::Particle::Cone4Index;
-    default: return LHCb::Particle::Cone1Index;
+  case 1: return LHCb::Particle::Cone1Index;
+  case 2: return LHCb::Particle::Cone2Index;
+  case 3: return LHCb::Particle::Cone3Index;
+  case 4: return LHCb::Particle::Cone4Index;
+  default: return LHCb::Particle::Cone1Index;
   }
 }
 
@@ -262,21 +264,21 @@ int ConeVariables::getNumberOfParameters(void) {
 void ConeVariables::getInfo(int index, double & value, std::string & name) {
 
   switch( index - getFirstIndex() ) {
-    case 0  : value = m_coneAngle; name = "angle"; return;
-    case 1  : value = (double)m_mult; name = "mult"; return;
-    case 2  : value = m_px; name = "px"; return;
-    case 3  : value = m_py; name = "py"; return;
-    case 4  : value = m_pz; name = "pz"; return;
-    case 5  : value = m_p;  name = "p" ; return;
-    case 6  : value = m_pt; name = "pt"; return;
-    case 7  : value = m_pxasy; name = "pxasy"; return;
-    case 8  : value = m_pyasy; name = "pyasy"; return;
-    case 9  : value = m_pzasy; name = "pzasy"; return;
-    case 10 : value = m_pasy;  name = "pasy"; return;
-    case 11 : value = m_ptasy; name = "ptasy"; return;
-    case 12 : value = m_deltaEta; name = "deltaEta"; return;
-    case 13 : value = m_deltaPhi; name = "deltaPhi"; return;
-    default: return;
+  case 0  : value = m_coneAngle; name = "angle"; return;
+  case 1  : value = (double)m_mult; name = "mult"; return;
+  case 2  : value = m_px; name = "px"; return;
+  case 3  : value = m_py; name = "py"; return;
+  case 4  : value = m_pz; name = "pz"; return;
+  case 5  : value = m_p;  name = "p" ; return;
+  case 6  : value = m_pt; name = "pt"; return;
+  case 7  : value = m_pxasy; name = "pxasy"; return;
+  case 8  : value = m_pyasy; name = "pyasy"; return;
+  case 9  : value = m_pzasy; name = "pzasy"; return;
+  case 10 : value = m_pasy;  name = "pasy"; return;
+  case 11 : value = m_ptasy; name = "ptasy"; return;
+  case 12 : value = m_deltaEta; name = "deltaEta"; return;
+  case 13 : value = m_deltaPhi; name = "deltaPhi"; return;
+  default: return;
   }
 
 }

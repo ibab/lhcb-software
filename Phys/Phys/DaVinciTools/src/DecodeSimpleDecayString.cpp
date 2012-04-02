@@ -1,6 +1,6 @@
 // $Id$
 // ============================================================================
-// Include files 
+// Include files
 // ============================================================================
 // from ANSI C++
 //#include <math.h>
@@ -13,7 +13,7 @@
 #include "boost/regex.hpp"  // the needed file that causes all the trouble
 #undef MSG
 #ifdef ERROR
-  #undef ERROR
+#undef ERROR
 #endif
 #undef interface
 #undef pascal
@@ -22,7 +22,7 @@
 // ============================================================================
 // GaudiKrnel
 // ============================================================================
-#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/ToolFactory.h"
 // ============================================================================
 // PartProp
 // ============================================================================
@@ -33,9 +33,9 @@
 // Local
 // ============================================================================
 #include "DecodeSimpleDecayString.h"
-/** @file 
+/** @file
  *  Implementation file for class : DecodeSimpleDecayString
- *  @date 2004-06-30 
+ *  @date 2004-06-30
  *  @author Patrick KOPPENBURG
  */
 //-----------------------------------------------------------------------------
@@ -44,40 +44,40 @@ typedef std::vector<std::string> strings ;
 
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( DecodeSimpleDecayString );
+DECLARE_TOOL_FACTORY( DecodeSimpleDecayString )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-DecodeSimpleDecayString::DecodeSimpleDecayString( const std::string& type,
-                                                  const std::string& name,
-                                                  const IInterface* parent )
-  : GaudiTool ( type, name , parent ),
-    m_descriptor(),
-    m_mother(),    
-    m_daughters(),    
-    m_mother_cc(),
-    m_daughters_cc(),    
-    m_ppSvc(0),
-    m_iscc(false)
+  DecodeSimpleDecayString::DecodeSimpleDecayString( const std::string& type,
+                                                    const std::string& name,
+                                                    const IInterface* parent )
+    : GaudiTool ( type, name , parent ),
+      m_descriptor(),
+      m_mother(),
+      m_daughters(),
+      m_mother_cc(),
+      m_daughters_cc(),
+      m_ppSvc(0),
+      m_iscc(false)
 {
   declareInterface<IDecodeSimpleDecayString>(this);
-  
+
   return;
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-DecodeSimpleDecayString::~DecodeSimpleDecayString() {}; 
+DecodeSimpleDecayString::~DecodeSimpleDecayString() {}
 
 //=============================================================================
 // Initialize
 //=============================================================================
-StatusCode DecodeSimpleDecayString::initialize(){
-
+StatusCode DecodeSimpleDecayString::initialize()
+{
   StatusCode sc = GaudiTool::initialize();
   if (!sc) return sc;
-  
+
   m_ppSvc = svc<LHCb::IParticlePropertySvc>
     ( "LHCb::ParticlePropertySvc", true );
   if(!m_ppSvc ) {
@@ -86,40 +86,40 @@ StatusCode DecodeSimpleDecayString::initialize(){
   }
   sc = reset();
   if (msgLevel(MSG::VERBOSE)) verbose() << "Returning " << sc << endmsg ;
-  return sc ;
   
-};
+  return sc;
+}
 
 //=============================================================================
 // setter
 //=============================================================================
-StatusCode DecodeSimpleDecayString::setDescriptor(const std::string& descriptor){
-  
+StatusCode DecodeSimpleDecayString::setDescriptor(const std::string& descriptor)
+{
   StatusCode sc = reset();
   if ( sc.isFailure() ) return sc ;
   m_descriptor = descriptor;
-  if (msgLevel(MSG::DEBUG)) debug() << "Going to strip cc in " << descriptor << endmsg ;  
+  if (msgLevel(MSG::DEBUG)) debug() << "Going to strip cc in " << descriptor << endmsg ;
   sc = strip_cc(); // strip cc part -> sets is_cc
   if ( sc.isFailure() ) return sc ;
-  if (msgLevel(MSG::DEBUG)) debug() << "cc is " << m_iscc << " -> " 
-      << m_descriptor << endmsg ;  
+  if (msgLevel(MSG::DEBUG)) debug() << "cc is " << m_iscc << " -> "
+                                    << m_descriptor << endmsg ;
   sc = splitDescriptor(m_descriptor, m_mother, m_daughters); // split
   if ( sc.isFailure() ) return sc ;
   if ( m_daughters.size() < 2 ){
     error() << "Mother: " << m_mother << ", " << m_daughters.size()
-           << " daughters: " << m_daughters << endmsg ;  
+            << " daughters: " << m_daughters << endmsg ;
     error() << "Seen DecayDescriptor : " << m_descriptor << endmsg ;
     error() << "There must be at least 2 daughters. Use FilterDesktop to filter single Particles." << endmsg ;
     return StatusCode::FAILURE ;
   }
   if (msgLevel(MSG::DEBUG)) debug() << "Mother: " << m_mother << ", " << m_daughters.size()
-      << " daughters: " << m_daughters << endmsg ;  
+                                    << " daughters: " << m_daughters << endmsg ;
   if ( m_iscc ) {
-   if (msgLevel(MSG::DEBUG)) debug() << "Doing cc " << descriptor << endmsg ;  
+    if (msgLevel(MSG::DEBUG)) debug() << "Doing cc " << descriptor << endmsg ;
     sc = do_cc();
     if ( sc.isFailure() ) return sc ;
   }
-  
+
   return sc ;
 }
 //=============================================================================
@@ -140,17 +140,17 @@ StatusCode DecodeSimpleDecayString::getStrings
  std::vector<std::string>& daughters) const {
   mother = m_mother ;
   daughters = m_daughters ;
-  
+
   return StatusCode::SUCCESS ;
 }
 //=============================================================================
 StatusCode DecodeSimpleDecayString::getStrings_cc
 (std::string& mother,
  std::vector<std::string>& daughters) const {
-  
+
   mother = m_mother_cc ;
   daughters = m_daughters_cc ;
-  
+
   return StatusCode::SUCCESS ;
 }
 
@@ -174,11 +174,11 @@ StatusCode DecodeSimpleDecayString::buildPIDs
  const strings& in_d,
  int& mother,
  std::vector<int>& daughters) const {
-  
+
   StatusCode sc = PID(in_m, mother);
   if ( ! sc.isSuccess() ) return sc ;
   strings::const_iterator id;
-  for ( id = in_d.begin(); id != in_d.end(); id++ ) {    
+  for ( id = in_d.begin(); id != in_d.end(); id++ ) {
     int pid ;
     sc = PID(*id, pid);
     if ( ! sc.isSuccess() ) return sc ;
@@ -201,11 +201,11 @@ StatusCode DecodeSimpleDecayString::PID(const std::string& ps, int& pid) const
 //=============================================================================
 // Decode descriptor. Code from Gerhard.
 //=============================================================================
-StatusCode 
-DecodeSimpleDecayString::splitDescriptor(const std::string& descriptor, 
+StatusCode
+DecodeSimpleDecayString::splitDescriptor(const std::string& descriptor,
                                          std::string& mother,
                                          strings& daughters)const {
-  static const boost::regex 
+  static const boost::regex
     expression(
                "^\\s*" // skip initial whitespace
                "(\\S+)" // mother, i.e. everything upto "->"
@@ -227,17 +227,18 @@ DecodeSimpleDecayString::splitDescriptor(const std::string& descriptor,
 // Conjugator
 //=============================================================================
 StatusCode DecodeSimpleDecayString::do_cc(void) {
-  if (msgLevel(MSG::DEBUG)) debug() << "Doing cc " << m_descriptor << endmsg ;  
+  if (msgLevel(MSG::DEBUG)) debug() << "Doing cc " << m_descriptor << endmsg ;
   std::string descriptor_cc = conjugate(m_descriptor);
   StatusCode sc = splitDescriptor(descriptor_cc, m_mother_cc, m_daughters_cc);
-  return sc;  
+  return sc;
 }
 //=============================================================================
 // Conjugator from Gerhard
 //=============================================================================
-std::string DecodeSimpleDecayString::conjugate(const std::string& descriptor) 
-const{
-  std::string answer; 
+std::string DecodeSimpleDecayString::conjugate(const std::string& descriptor)
+  const
+{
+  std::string answer;
   std::string mother;
   strings daughters;
   StatusCode sc = splitDescriptor(descriptor, mother ,daughters);
@@ -249,9 +250,9 @@ const{
   answer += cc->particle();
   answer += " -> ";
   for (strings::iterator i = daughters.begin(); i != daughters.end(); ++i) {
-    const LHCb::ParticleProperty* part = m_ppSvc->find( *i );
+    part = m_ppSvc->find( *i );
     if (NULL==part) Exception("Cannot find ParticleProperty for "+(*i));
-    const LHCb::ParticleProperty* cc = part->antiParticle();
+    cc = part->antiParticle();
     if (cc==0) Exception("Particle "+(*i)+" does not have an antiparticle!");
     answer += " " ;
     answer += cc->particle();
@@ -283,35 +284,35 @@ StatusCode DecodeSimpleDecayString::strip_cc(void)
     m_iscc = true;
   } else m_iscc = false;
 
-  return StatusCode::SUCCESS;  
+  return StatusCode::SUCCESS;
 }
 // ============================================================================
 
 // ==========================================================================
-/*  get the decay form the descriptor 
- *  @param decay (output) the decay 
- *  @return status code 
+/*  get the decay form the descriptor
+ *  @param decay (output) the decay
+ *  @return status code
  */
 // ==========================================================================
-StatusCode DecodeSimpleDecayString::getDecay    
-( Decays::Decay& decay ) const  
+StatusCode DecodeSimpleDecayString::getDecay
+( Decays::Decay& decay ) const
 {
   //
   decay.setMother     ( m_mother    ) ;
   decay.setDaughters  ( m_daughters ) ;
-   //
+  //
   return decay.validate ( m_ppSvc ) ;
 }
 // ==========================================================================
-/*  get the charge conjugate decay form the descriptor 
- *  @param decay (output) the decay 
- *  @return status code 
+/*  get the charge conjugate decay form the descriptor
+ *  @param decay (output) the decay
+ *  @return status code
  */
 // ==========================================================================
-StatusCode DecodeSimpleDecayString::getDecay_cc    
-( Decays::Decay& decay ) const  
+StatusCode DecodeSimpleDecayString::getDecay_cc
+( Decays::Decay& decay ) const
 {
-  if ( !m_iscc ) { return StatusCode::FAILURE ; }  
+  if ( !m_iscc ) { return StatusCode::FAILURE ; }
   //
   decay.setMother     ( m_mother_cc    ) ;
   decay.setDaughters  ( m_daughters_cc ) ;
@@ -319,12 +320,12 @@ StatusCode DecodeSimpleDecayString::getDecay_cc
   return decay.validate ( m_ppSvc ) ;
 }
 // ==========================================================================
-/*  get all decays form the descriptor 
+/*  get all decays form the descriptor
  *  @param decays (output) the vector of decays
- *  @return status code 
+ *  @return status code
  */
-StatusCode DecodeSimpleDecayString::getDecays    
-( std::vector<Decays::Decay>& decays ) const 
+StatusCode DecodeSimpleDecayString::getDecays
+( std::vector<Decays::Decay>& decays ) const
 {
   decays.clear() ;
   // the main decay:
@@ -332,7 +333,7 @@ StatusCode DecodeSimpleDecayString::getDecays
   StatusCode sc = decay1.validate ( m_ppSvc ) ;
   if ( sc.isFailure() ) { return sc ; }
   decays.push_back ( decay1 ) ;
-  if ( m_iscc ) 
+  if ( m_iscc )
   {
     Decays::Decay decay2 ( m_mother_cc , m_daughters_cc ) ;
     sc = decay2.validate ( m_ppSvc ) ;
@@ -347,5 +348,5 @@ StatusCode DecodeSimpleDecayString::getDecays
 
 
 // ============================================================================
-// The END 
+// The END
 // ============================================================================

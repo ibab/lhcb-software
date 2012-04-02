@@ -10,7 +10,9 @@
 // ============================================================================
 // Boost
 // ============================================================================
-#include <boost/foreach.hpp>
+#include "boost/foreach.hpp"
+#include "boost/numeric/conversion/bounds.hpp"
+#include "boost/limits.hpp"
 // ============================================================================
 // Functionality now in a tool
 // ============================================================================
@@ -131,8 +133,8 @@ private:
   ISubstitutePID::SubstitutionMap  m_map  ; // mapping : { 'decay-component' : "new-pid" }
   // ==========================================================================
   /// Substitute Tool
-  ISubstitutePID* m_substitute  ; // tool
-  unsigned long m_maxParticles;
+  ISubstitutePID* m_substitute; // tool
+  unsigned int m_maxParticles;
   std::string m_stopIncidentType;
   mutable IIncidentSvc* m_incSvc; ///< the incident service
 } ;
@@ -153,11 +155,11 @@ SubstitutePID::SubstitutePID                   //        standard constructor
 ( const std::string& name ,                    // the algorithm instance name
   ISvcLocator*       pSvc )                   //  pointer to Service Locator
   : FitDecayTrees ( name , pSvc )
-  , m_map  ()
-  , m_substitute(0)
-  , m_maxParticles(-1) 
+  , m_map()
+  , m_substitute(NULL)
+  , m_maxParticles(boost::numeric::bounds<unsigned int>::highest()) 
   , m_stopIncidentType() 
-  , m_incSvc(0)
+  , m_incSvc(NULL)
 {
   FilterDesktop* _this = this ;
   declareProperty
@@ -234,8 +236,7 @@ StatusCode SubstitutePID::filter
           substituted.begin() ; substituted.end() != ip ; ++ip )
   {
     //
-    if ( m_maxParticles > 0 &&
-         i_markedParticles().size() > m_maxParticles )
+    if ( i_markedParticles().size() > m_maxParticles )
     {
       Warning ( "Maximum number of allowed particles reached",
                 StatusCode::SUCCESS);

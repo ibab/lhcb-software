@@ -1,11 +1,11 @@
 // $Id$
-// Include files 
+// Include files
 
 // from Gaudi
 #include "GaudiKernel/SmartIF.h"  // TMP
 #include "GaudiKernel/IAlgorithm.h"// TMP
 #include "GaudiKernel/IAlgManager.h"// TMP
-#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/ToolFactory.h"
 
 #include "LoKi/AlgFunctors.h"
 
@@ -19,22 +19,23 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( CheckSelResultsTool );
+DECLARE_TOOL_FACTORY( CheckSelResultsTool )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-CheckSelResultsTool::CheckSelResultsTool( const std::string& type,
-                                          const std::string& name,
-                                          const IInterface* parent )
-  : GaudiTool( type, name , parent )
+  CheckSelResultsTool::CheckSelResultsTool( const std::string& type,
+                                            const std::string& name,
+                                            const IInterface* parent )
+    : GaudiTool( type, name , parent )
 {
-  declareInterface<ICheckSelResults>(this);  
+  declareInterface<ICheckSelResults>(this);
 }
+
 //=============================================================================
 /** check if the event has been (pre)selected by a certain selection
- *  @param  selection selection name 
- *  @return true if the event has been (pre)selected 
+ *  @param  selection selection name
+ *  @return true if the event has been (pre)selected
  */
 //=============================================================================
 bool CheckSelResultsTool::isSelected ( const Selection  & selection) const {
@@ -52,11 +53,11 @@ bool CheckSelResultsTool::isSelected ( const Selection  & selection) const {
   LoKi::Algorithms::Executed exec(selection) ;
   if ( exec()) {
     LoKi::Algorithms::Passed pass(selection) ;
-    if (msgLevel(MSG::DEBUG)) debug() << selection << " ran during this processing. Result is " 
+    if (msgLevel(MSG::DEBUG)) debug() << selection << " ran during this processing. Result is "
                                       << pass() << endmsg ;
     return pass() ;
-  } 
-  
+  }
+
   if (msgLevel(MSG::DEBUG)) {
     debug() << selection << " has not been run." << endmsg ;
   }
@@ -65,9 +66,9 @@ bool CheckSelResultsTool::isSelected ( const Selection  & selection) const {
 
 //=============================================================================
 /** check if the event has been (pre)selected by certain selection(s)
- *  @param  selections vector of selection names 
- *  @param  ANDMode    flag to distinguish AND/OR modes 
- *  @return true if the event has been (pre)selected by *ALL* 
+ *  @param  selections vector of selection names
+ *  @param  ANDMode    flag to distinguish AND/OR modes
+ *  @return true if the event has been (pre)selected by *ALL*
  *    selections (AND-mode) or by at least one preselection (OR-mode)
  */
 //=============================================================================
@@ -87,6 +88,6 @@ bool CheckSelResultsTool::isSelected ( const Selections & selections ,
 //=============================================================================
 // Destructor
 //=============================================================================
-CheckSelResultsTool::~CheckSelResultsTool() {} 
+CheckSelResultsTool::~CheckSelResultsTool() {}
 
 //=============================================================================

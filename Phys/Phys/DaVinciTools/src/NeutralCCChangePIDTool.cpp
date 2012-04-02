@@ -1,8 +1,8 @@
 // $Id$
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h"
 
 // local
 #include "NeutralCCChangePIDTool.h"
@@ -14,26 +14,24 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( NeutralCCChangePIDTool );
-
+DECLARE_TOOL_FACTORY( NeutralCCChangePIDTool )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-NeutralCCChangePIDTool::NeutralCCChangePIDTool( const std::string& type,
-                                                const std::string& name,
-                                                const IInterface* parent )
-  : GaudiTool ( type, name , parent )
-  , m_ppSvc(0)
+  NeutralCCChangePIDTool::NeutralCCChangePIDTool( const std::string& type,
+                                                  const std::string& name,
+                                                  const IInterface* parent )
+    : GaudiTool ( type, name , parent )
+    , m_ppSvc(0)
 {
   declareInterface<IChangePIDTool>(this);
- 
 }
 
 //=============================================================================
 // Destructor
 //=============================================================================
-NeutralCCChangePIDTool::~NeutralCCChangePIDTool() {} 
+NeutralCCChangePIDTool::~NeutralCCChangePIDTool() {}
 
 
 //=============================================================================
@@ -48,7 +46,7 @@ StatusCode NeutralCCChangePIDTool::initialize()
   /// Get reference to the ParticlePropertySvc
   m_ppSvc = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc", true);
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 
@@ -74,8 +72,8 @@ LHCb::Particle NeutralCCChangePIDTool::changePID( const LHCb::Particle &oldpart 
     /// Test for validity of ParticleProperty and for non-self-conjugate
     if( newpp && newpp != oldpp )
     {
-      LHCb::Particle newpart = oldpart;			/// Local copy
-      newpart.setParticleID( LHCb::ParticleID( newpp->pythiaID()) );	/// Change PID
+      LHCb::Particle newpart = oldpart;   /// Local copy
+      newpart.setParticleID( LHCb::ParticleID( newpp->pythiaID()) ); /// Change PID
 
       /// Verbosity
       verbose() << "Returning " << newpart.particleID().pid()
@@ -85,7 +83,7 @@ LHCb::Particle NeutralCCChangePIDTool::changePID( const LHCb::Particle &oldpart 
                 << " with momentum " << oldpart.momentum() << " m="
                 << oldpart.measuredMass() << endreq;
 
-      return newpart;					/// Return by value
+      return newpart;     /// Return by value
     }
   }
 
@@ -104,7 +102,8 @@ LHCb::Particle NeutralCCChangePIDTool::changePID( const LHCb::Particle &oldpart 
 //   input particle, hence an exception will be raised if any one of the
 //   input Particles is not neutral or has a self-conjugate PID.
 //=============================================================================
-std::vector<LHCb::Particle> NeutralCCChangePIDTool::changePID( const LHCb::Particle::ConstVector &inparts )
+std::vector<LHCb::Particle>
+NeutralCCChangePIDTool::changePID( const LHCb::Particle::ConstVector &inparts )
 {
   std::vector<LHCb::Particle> outparts;
 

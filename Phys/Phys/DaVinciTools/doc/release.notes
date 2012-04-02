@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2012-04-02 - Chris Jones
+ - Fix various icc11 compiler warnings and remarks
+
 !========================= DaVinciTools v22r14 2012-03-29 =========================
 
 ! 2012-03-28 - Vanya Belyaev

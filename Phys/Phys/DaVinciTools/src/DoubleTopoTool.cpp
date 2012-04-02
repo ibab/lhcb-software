@@ -1,6 +1,6 @@
 // $Id: $  -*- C++ -*-                                                        
 // ============================================================================
-// Include files                                                               
+// Include files
 #include <string>
 #include <fstream>
 #include <vector>
@@ -26,7 +26,7 @@ void getHltObjP4(const LHCb::HltObjectSummary *obj,Gaudi::LorentzVector &p4){
 }
 
 double getHltObjsAngle(const LHCb::HltObjectSummary *obj1,
-		       const LHCb::HltObjectSummary *obj2){
+                       const LHCb::HltObjectSummary *obj2){
   Gaudi::LorentzVector p41,p42;
   getHltObjP4(obj1,p41);
   getHltObjP4(obj2,p42);
@@ -35,7 +35,7 @@ double getHltObjsAngle(const LHCb::HltObjectSummary *obj1,
 }
 
 double getHltObjsMass(const LHCb::HltObjectSummary *obj1,
-		      const LHCb::HltObjectSummary *obj2){
+                      const LHCb::HltObjectSummary *obj2){
   Gaudi::LorentzVector p41,p42;
   getHltObjP4(obj1,p41);
   getHltObjP4(obj2,p42);
@@ -43,7 +43,7 @@ double getHltObjsMass(const LHCb::HltObjectSummary *obj1,
 }
 
 bool addLHCbIDs(SmartRefVector< LHCb::HltObjectSummary >::const_iterator iter,
-		std::vector<int> &ids){
+                std::vector<int> &ids){
   unsigned int len = iter->target()->lhcbIDs().size();
   if(len > 0){
     for(unsigned int i = 0; i < len; i++){
@@ -60,40 +60,40 @@ void getLHCbIDs(const LHCb::HltObjectSummary *obj, std::vector<int> &ids){
     iter4;
   int n = 0;
   for(iter1=sub1.begin();iter1!=sub1.end();++iter1){
-    const SmartRefVector< LHCb::HltObjectSummary > &sub2 
+    const SmartRefVector< LHCb::HltObjectSummary > &sub2
       = iter1->target()->substructure();
     for(iter2=sub2.begin(); iter2!=sub2.end();++iter2){
       n++; //std::cout << "a";
       if(!addLHCbIDs(iter2,ids)){
-	n--; //std::cout << "b";
-	const SmartRefVector< LHCb::HltObjectSummary > &sub3 
-	  = iter2->target()->substructure();
-	for(iter3=sub3.begin(); iter3!=sub3.end();++iter3){
-	  n++; //std::cout << "c";
-	  if(!addLHCbIDs(iter3,ids)){
-	    n--; //std::cout << "d";
-	    const SmartRefVector< LHCb::HltObjectSummary > &sub4 
-	      = iter3->target()->substructure();
-	    for(iter4=sub4.begin(); iter4!=sub4.end();++iter4){
-	      n++; //std::cout << "e";
-	      addLHCbIDs(iter4,ids);
-	    }
-	  }
-	}
+        n--; //std::cout << "b";
+        const SmartRefVector< LHCb::HltObjectSummary > &sub3
+          = iter2->target()->substructure();
+        for(iter3=sub3.begin(); iter3!=sub3.end();++iter3){
+          n++; //std::cout << "c";
+          if(!addLHCbIDs(iter3,ids)){
+            n--; //std::cout << "d";
+            const SmartRefVector< LHCb::HltObjectSummary > &sub4
+              = iter3->target()->substructure();
+            for(iter4=sub4.begin(); iter4!=sub4.end();++iter4){
+              n++; //std::cout << "e";
+              addLHCbIDs(iter4,ids);
+            }
+          }
+        }
       }
     }
   }
   /*
-  std::cout << std::endl;
-  int len = ids.size();
-  std::cout << "LHCb IDs: (" << n << ":" << len << ") [ ";
-  //for(int i = 0; i < len; i++) std::cout << ids[i] << " ";
-  std::cout << "]" << std::endl;
+    std::cout << std::endl;
+    int len = ids.size();
+    std::cout << "LHCb IDs: (" << n << ":" << len << ") [ ";
+    //for(int i = 0; i < len; i++) std::cout << ids[i] << " ";
+    std::cout << "]" << std::endl;
   */
 }
 
 bool doHltObjsOverlap(const LHCb::HltObjectSummary *obj1,
-		      const LHCb::HltObjectSummary *obj2){
+                      const LHCb::HltObjectSummary *obj2){
   std::vector<int> ids1, ids2;
   getLHCbIDs(obj1,ids1);
   getLHCbIDs(obj2,ids2);
@@ -107,7 +107,7 @@ bool doHltObjsOverlap(const LHCb::HltObjectSummary *obj1,
 }
 
 bool doLHCbIDsOverlap(const std::vector<int> &ids1,
-		      const std::vector<int> &ids2){
+                      const std::vector<int> &ids2){
   unsigned int l1 = ids1.size(), l2 = ids2.size();
   for(unsigned int i = 0; i < l1; i++){
     for(unsigned int j = 0; j < l2; j++){
@@ -120,7 +120,7 @@ bool doLHCbIDsOverlap(const std::vector<int> &ids1,
 
 class DoubleTopoTool : public extends1<GaudiTool,IAccept> {
 
-  friend class ToolFactory<DoubleTopoTool>; 
+  friend class ToolFactory<DoubleTopoTool>;
 
 private:
 
@@ -131,12 +131,12 @@ private:
   float m_minAngle;
   float m_minMass;
   ITriggerTisTos *m_tistostool;
-  
+
 
 protected:
 
   DoubleTopoTool(const std::string& type,const std::string& name,
-		 const IInterface* parent);
+                 const IInterface* parent);
   ~DoubleTopoTool(){}
 
 public:
@@ -148,7 +148,7 @@ public:
 // =============================================================================
 
 DoubleTopoTool::DoubleTopoTool(const std::string& type,const std::string& name,
-			       const IInterface* parent)
+                               const IInterface* parent)
   : base_class(type,name,parent), m_tistostool(0) {
   declareProperty("minAngle", m_minAngle = 2/57.);
   declareProperty("minMass", m_minMass = 20000.0);
@@ -175,25 +175,25 @@ bool DoubleTopoTool::accept() const {
     for(unsigned int j = i+1; j < num; j++){
       if(lhcbIDs[j].size() == 0) getLHCbIDs(hltObjs[j],lhcbIDs[j]);
       if(!doLHCbIDsOverlap(lhcbIDs[i],lhcbIDs[j])){
-	if(getHltObjsAngle(hltObjs[i],hltObjs[j]) > m_minAngle &&
-	   getHltObjsMass(hltObjs[i],hltObjs[j]) > m_minMass) return true;
-	//if(getHltObjsMass(hltObjs[i],hltObjs[j]) > m_minMass) return true;
+        if(getHltObjsAngle(hltObjs[i],hltObjs[j]) > m_minAngle &&
+           getHltObjsMass(hltObjs[i],hltObjs[j]) > m_minMass) return true;
+        //if(getHltObjsMass(hltObjs[i],hltObjs[j]) > m_minMass) return true;
       }
     }
   }
   /*
-  for(iter1 = hltObjs.begin(); iter1 != hltObjs.end(); iter1++){
+    for(iter1 = hltObjs.begin(); iter1 != hltObjs.end(); iter1++){
     for(iter2 = iter1+1; iter2 != hltObjs.end(); iter2++){
-      if(!doHltObjsOverlap(*iter1,*iter2)){
-	if(getHltObjsAngle(*iter1,*iter2) > m_minAngle) {
-	  return true;
-	}
-      }
+    if(!doHltObjsOverlap(*iter1,*iter2)){
+    if(getHltObjsAngle(*iter1,*iter2) > m_minAngle) {
+    return true;
     }
-  }
+    }
+    }
+    }
   */
   return false;
 }
 // =============================================================================
-DECLARE_TOOL_FACTORY(DoubleTopoTool);
+DECLARE_TOOL_FACTORY(DoubleTopoTool)
 // =============================================================================

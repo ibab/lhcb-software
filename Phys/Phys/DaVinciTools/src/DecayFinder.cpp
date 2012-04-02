@@ -1,5 +1,5 @@
 // $Id$
-// Include files 
+// Include files
 #include <list>
 #include <functional>
 #include <algorithm>
@@ -19,31 +19,29 @@
 using namespace Gaudi::Units;
 
 //-----------------------------------------------------------------------------
-/** @file 
+/** @file
  *  Implementation file for class DecayFinder
  *
- *  @date 23/04/2002 
+ *  @date 23/04/2002
  *  @author Olivier Dormond
  */
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( DecayFinder );
+DECLARE_TOOL_FACTORY( DecayFinder )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-DecayFinder::DecayFinder( const std::string& type,
-                          const std::string& name,
-                          const IInterface* parent )
-  : 
-  GaudiTool ( type, name , parent ),
-  m_ppSvc(0), 
-  m_source("B0 -> pi+ pi-"), 
-  m_decay(0), 
-  m_members(0)
+  DecayFinder::DecayFinder( const std::string& type,
+                            const std::string& name,
+                            const IInterface* parent )
+    : GaudiTool ( type, name , parent ),
+      m_ppSvc(0),
+      m_source("B0 -> pi+ pi-"),
+      m_decay(0),
+      m_members(0)
 {
-
   declareInterface<IDecayFinder>(this);
 
   declareProperty( "Decay", m_source );
@@ -58,7 +56,6 @@ DecayFinder::~DecayFinder( )
 {
   if( m_decay ) delete m_decay;
   if( m_members ) delete m_members;
-  
 }
 
 //=============================================================================
@@ -67,11 +64,10 @@ StatusCode DecayFinder::initialize()
 {
   StatusCode sc = GaudiTool::initialize();
   if (!sc) return sc ;
-  
+
   debug() << "==> Initializing" << endreq;
 
   if( serviceLocator() ) {
-    StatusCode sc = StatusCode::FAILURE;
     sc = serviceLocator()->service("LHCb::ParticlePropertySvc",m_ppSvc);
     if (!sc) return sc ;
   }
@@ -81,7 +77,7 @@ StatusCode DecayFinder::initialize()
                           StatusCode::FAILURE );
   }
 
-  sc = service("EventDataSvc", m_EDS, true);   
+  sc = service("EventDataSvc", m_EDS, true);
   if( sc.isFailure() ) {
     fatal() << " Unable to locate Event Data Service" << endreq;
     return sc;
@@ -98,13 +94,14 @@ StatusCode DecayFinder::initialize()
             << endreq;
     return StatusCode::SUCCESS;
   }
+  
   debug() << "Could not compile the decay description" << endreq;
   return StatusCode::FAILURE;
 }
 //=============================================================================
-StatusCode DecayFinder::finalize() 
+StatusCode DecayFinder::finalize()
 {
-  
+
   //  if (m_ppSvc ) delete m_ppSvc;
   //  if (m_EDS )   delete m_EDS;
 
@@ -285,7 +282,7 @@ void DecayFinder::descendants( const LHCb::Particle *head,
     term = false;
     descendants( *pi, result, leaf );
   }
- 
+
   if( !leaf || term )
     result.push_back(const_cast<LHCb::Particle *>(head));
 }
@@ -360,7 +357,7 @@ DecayFinder::Descriptor::~Descriptor()
   if( alternate )
     delete alternate;
   //  if (m_ppSvc) delete m_ppSvc;
-  
+
 }
 
 std::string DecayFinder::Descriptor::describe( void )
@@ -390,7 +387,7 @@ std::string DecayFinder::Descriptor::describe( void )
     result += ')';
   return result;
 }
-  
+
 bool DecayFinder::Descriptor::test( const LHCb::Particle *part,
                                     LHCb::Particle::ConstVector *collect,
                                     std::vector<std::pair<const LHCb::Particle*,

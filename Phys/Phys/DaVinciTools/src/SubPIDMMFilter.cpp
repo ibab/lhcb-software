@@ -5,7 +5,9 @@
 #include "GaudiKernel/IIncidentSvc.h"
 #include "LoKi/ParticleProperties.h"
 #include "LoKi/select.h"
-#include <boost/foreach.hpp>
+#include "boost/foreach.hpp"
+#include "boost/numeric/conversion/bounds.hpp"
+#include "boost/limits.hpp"
 #include "FilterDesktop.h"
 // ============================================================================
 /** @class SubPIDMMFilter
@@ -64,7 +66,7 @@ private:
   std::vector<std::vector<double> > m_masses;
   double m_mmMin;
   double m_mmMax;
-  unsigned long m_maxParticles;
+  unsigned int m_maxParticles;
   std::string m_stopIncidentType;
   mutable IIncidentSvc* m_incSvc; ///< the incident service
 };
@@ -89,7 +91,7 @@ SubPIDMMFilter::SubPIDMMFilter(const std::string& name,ISvcLocator* pSvc)
   : FilterDesktop(name,pSvc),
     m_mmMin(0),
     m_mmMax(0),
-    m_maxParticles(-1),
+    m_maxParticles(boost::numeric::bounds<unsigned int>::highest()),
     m_stopIncidentType(),
     m_incSvc(0)
 {
@@ -114,7 +116,8 @@ StatusCode SubPIDMMFilter::filter(const LHCb::Particle::ConstVector& input,
     const LHCb::Particle* p = *ip ;
     if ( 0 == p ) { continue ; }
     for(int i = 0; i < size; ++i){
-      if(m_maxParticles > 0 && i_markedParticles().size() > m_maxParticles){
+      if ( i_markedParticles().size() > m_maxParticles ) 
+      {
         reachedMax = true;
         Warning("Maximum number of allowed particles reached",
                 StatusCode::SUCCESS);

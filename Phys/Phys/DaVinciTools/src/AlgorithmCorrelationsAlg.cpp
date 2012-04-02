@@ -1,8 +1,8 @@
 // $Id$
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "Kernel/ICheckSelResults.h"
 
 #include "Kernel/IAlgorithmCorrelations.h"            // Interface
@@ -18,14 +18,14 @@
 
 // Declaration of the Algorithm Factory
 
-DECLARE_ALGORITHM_FACTORY( AlgorithmCorrelationsAlg );
+DECLARE_ALGORITHM_FACTORY( AlgorithmCorrelationsAlg )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-AlgorithmCorrelationsAlg::AlgorithmCorrelationsAlg( const std::string& name,
-                                                ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  AlgorithmCorrelationsAlg::AlgorithmCorrelationsAlg( const std::string& name,
+                                                      ISvcLocator* pSvcLocator)
+    : GaudiAlgorithm ( name , pSvcLocator )
     , m_algorithmsRow ()
     , m_algorithmsColumn ()
     , m_algoCorr()
@@ -42,12 +42,13 @@ AlgorithmCorrelationsAlg::AlgorithmCorrelationsAlg( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-AlgorithmCorrelationsAlg::~AlgorithmCorrelationsAlg() {}; 
+AlgorithmCorrelationsAlg::~AlgorithmCorrelationsAlg() {}
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode AlgorithmCorrelationsAlg::initialize() {
+StatusCode AlgorithmCorrelationsAlg::initialize() 
+{
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
@@ -58,27 +59,27 @@ StatusCode AlgorithmCorrelationsAlg::initialize() {
   if (m_algorithmsColumn.empty()){
     err() << "No algorithms defined. Use Algorithms option." << endmsg;
     return StatusCode::FAILURE ;
-  } 
-  
-  if (msgLevel(MSG::DEBUG)) debug() << "Algorithms to check correlations: " 
+  }
+
+  if (msgLevel(MSG::DEBUG)) debug() << "Algorithms to check correlations: "
                                     << m_algorithmsColumn << endmsg ;
   sc =  m_algoCorr->algorithms(m_algorithmsColumn);
   if (!sc) return sc ;
-  // all algorithms 
+  // all algorithms
   m_algorithms = m_algorithmsColumn ;
 
   if (m_algorithmsRow.empty()){
-    if (msgLevel(MSG::DEBUG)) debug() << "No algorithms row defined. -> square matrix." 
+    if (msgLevel(MSG::DEBUG)) debug() << "No algorithms row defined. -> square matrix."
                                       << endmsg;
   } else {
-    if (msgLevel(MSG::DEBUG)) debug() << "Algorithms to check correlations against:" 
+    if (msgLevel(MSG::DEBUG)) debug() << "Algorithms to check correlations against:"
                                       << m_algorithmsRow << endmsg ;
     sc = m_algoCorr->algorithmsRow(m_algorithmsRow); // resets stuff
     // now add algorithmsRow to algorithms for further processing
-    for ( std::vector<std::string>::const_iterator r = m_algorithmsRow.begin() ; 
+    for ( std::vector<std::string>::const_iterator r = m_algorithmsRow.begin() ;
           r!= m_algorithmsRow.end() ; r++){
       bool found = false ;
-      for ( std::vector<std::string>::const_iterator c = m_algorithmsColumn.begin() ; 
+      for ( std::vector<std::string>::const_iterator c = m_algorithmsColumn.begin() ;
             c!= m_algorithmsColumn.end() ; c++){
         if ( *c == *r ) {
           found = true ;
@@ -87,41 +88,43 @@ StatusCode AlgorithmCorrelationsAlg::initialize() {
         if (!found) m_algorithms.push_back(*r);
       }
     }
-    
+
     if (!sc) return sc ;
   }
 
-  if (msgLevel(MSG::DEBUG)) debug() << "All algorithms to be considered : " 
+  if (msgLevel(MSG::DEBUG)) debug() << "All algorithms to be considered : "
                                     <<  m_algorithms << endmsg ;
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode AlgorithmCorrelationsAlg::execute() {
+StatusCode AlgorithmCorrelationsAlg::execute() 
+{
+  if (msgLevel(MSG::DEBUG)) 
+    debug() << "==> Execute" << endmsg;
 
-  debug() << "==> Execute" << endmsg;
-
-  for ( std::vector<std::string>::const_iterator a = m_algorithms.begin() ; 
+  for ( std::vector<std::string>::const_iterator a = m_algorithms.begin() ;
         a!= m_algorithms.end() ; a++){
     bool pass = m_selTool->isSelected(*a);
-    if (msgLevel(MSG::DEBUG)) debug() << *a << " gets result "  
+    if (msgLevel(MSG::DEBUG)) debug() << *a << " gets result "
                                       << pass << endmsg ;
     m_algoCorr->fillResult(*a,pass) ;
   }
-  
+
   counter("Events")++ ;
   return m_algoCorr->endEvent();
-};
+}
 
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode AlgorithmCorrelationsAlg::finalize() {
-
-  debug() << "==> Finalize" << endmsg;
+StatusCode AlgorithmCorrelationsAlg::finalize()
+{
+  if (msgLevel(MSG::DEBUG)) 
+    debug() << "==> Finalize" << endmsg;
 
   StatusCode sc = StatusCode::SUCCESS ;
 

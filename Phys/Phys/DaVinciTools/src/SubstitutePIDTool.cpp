@@ -1,8 +1,8 @@
 // $Id: $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/ToolFactory.h"
 #include "LoKi/IDecay.h"
 #include "LoKi/Decays.h"
 //#include "LoKi/select.h"
@@ -23,35 +23,35 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( SubstitutePIDTool );
-
+DECLARE_TOOL_FACTORY( SubstitutePIDTool )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-SubstitutePIDTool::SubstitutePIDTool( const std::string& type,
-                                      const std::string& name,
-                                      const IInterface* parent )
-  : GaudiTool ( type, name , parent )
-                                    // mapping : { 'decay-component' : "new-pid" } (property)
-  , m_map  ()
-                                    // the actual substitution engine 
-  , m_subs () 
-  , m_to_be_updated1   ( false )
-  , m_initialized( false )
+  SubstitutePIDTool::SubstitutePIDTool( const std::string& type,
+                                        const std::string& name,
+                                        const IInterface* parent )
+    : GaudiTool ( type, name , parent )
+                                      // mapping : { 'decay-component' : "new-pid" } (property)
+    , m_map  ()
+                                      // the actual substitution engine
+    , m_subs ()
+    , m_to_be_updated1   ( false )
+    , m_initialized( false )
 {
   declareInterface<ISubstitutePID>(this);
   SubstitutePIDTool* _this = this ;
-  declareProperty 
-    ( "Substitutions" , 
-      m_map           , 
+  declareProperty
+    ( "Substitutions" ,
+      m_map           ,
       "PID-substitutions :  { ' decay-component' : 'new-pid' }" )
     -> declareUpdateHandler ( &SubstitutePIDTool::updateHandler , _this ) ;
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
-SubstitutePIDTool::~SubstitutePIDTool() {} 
+SubstitutePIDTool::~SubstitutePIDTool() {}
 
 //=============================================================================
 // Initialize
@@ -65,15 +65,15 @@ StatusCode SubstitutePIDTool::initialize(  ){
   }
   sc = decodeCode(m_map) ; /// try if it'n non empty
   m_initialized = true ;
-  return sc; 
+  return sc;
 }
 // ============================================================================
-// decode the code 
+// decode the code
 // ============================================================================
-StatusCode SubstitutePIDTool::decodeCode( SubstitutionMap newMap ) 
+StatusCode SubstitutePIDTool::decodeCode( SubstitutionMap newMap )
 {
   //
-  // decode "substitutions" 
+  // decode "substitutions"
   //
   if (msgLevel(MSG::DEBUG)) debug() << "decodeCode newMap " << newMap << endmsg ;
   if ( newMap.empty() ){
@@ -92,39 +92,39 @@ StatusCode SubstitutePIDTool::decodeCode( SubstitutionMap newMap )
   ///
   m_subs.clear() ;
   LHCb::IParticlePropertySvc* ppSvc = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc", true);
-  for ( SubstitutionMap::const_iterator item = m_map.begin() ; 
-        m_map.end() != item ; ++item ) 
+  for ( SubstitutionMap::const_iterator item = m_map.begin() ;
+        m_map.end() != item ; ++item )
   {
-    /// construct the tree 
+    /// construct the tree
     if (msgLevel(MSG::DEBUG)) debug() << "* -> Map: " << item->first << " : " << item->second << endmsg ;
     Decays::IDecay::Tree tree = factory->tree ( item->first ) ;
     if ( !tree  )
     {
       StatusCode sc = tree.validate ( ppSvc ) ;
-      if ( sc.isFailure() ) 
+      if ( sc.isFailure() )
       {
-        return Error ( "Unable to validate the tree '" + 
+        return Error ( "Unable to validate the tree '" +
                        tree.toString() + "' built from the descriptor '"
                        + item->first   + "'" , sc ) ;
       }
     }
-    // get ParticleID 
+    // get ParticleID
     const LHCb::ParticleProperty* pp = ppSvc->find ( item->second ) ;
-    if ( 0 == pp ) 
+    if ( 0 == pp )
     { return Error ( "Unable to find ParticleID for '" + item->second + "'" ) ; }
     //
-    if (msgLevel(MSG::DEBUG)) debug() << "* -> Inserting " << tree 
+    if (msgLevel(MSG::DEBUG)) debug() << "* -> Inserting " << tree
                                       << " in map for PID " <<  pp->particleID() << endmsg ;
     Substitution sub ( tree , pp->particleID() ) ;
     //
-    m_subs.push_back ( sub ) ; 
+    m_subs.push_back ( sub ) ;
   }
   //
-  if ( m_subs.size() != m_map.size() ) 
+  if ( m_subs.size() != m_map.size() )
   { return Error("Mismatch in decoded substitution container") ; }
   if (msgLevel(MSG::DEBUG)) {
     debug() << "ISub Size: " << m_subs.size() << " " << m_map.size() << endmsg ;
-    for ( Substitutions::iterator isub = m_subs.begin() ; 
+    for ( Substitutions::iterator isub = m_subs.begin() ;
           m_subs.end() != isub ; ++isub ) {
       debug() << "* -> ISub: " << isub -> m_pid << " Size: " << m_subs.size() << endmsg ;
     }
@@ -139,30 +139,30 @@ StatusCode SubstitutePIDTool::decodeCode( SubstitutionMap newMap )
 StatusCode SubstitutePIDTool::substitute(const LHCb::Particle::ConstVector& input,
                                          LHCb::Particle::ConstVector& output)
 {
-  // 
-  // substitute 
+  //
+  // substitute
   //
   if (m_to_be_updated1) decodeCode(m_map);
   StatEntity& cnt = counter("#substituted") ;
-  for ( LHCb::Particle::ConstVector::const_iterator ip = 
-          input.begin() ; input.end() != ip ; ++ip ) 
+  for ( LHCb::Particle::ConstVector::const_iterator ip =
+          input.begin() ; input.end() != ip ; ++ip )
   {
     const LHCb::Particle* p = *ip ;
     if ( 0 == p ) { continue ; }
     //
-    // clone the whole decay tree 
+    // clone the whole decay tree
     LHCb::DecayTree tree ( *p ) ;
     //
     cnt += substitute ( tree.head() ) ;
     output.push_back ( tree.release() ) ;
   }
-  
+
   return StatusCode::SUCCESS ;
-  
+
 }
 
 // ============================================================================
-// perform the actual substitution 
+// perform the actual substitution
 // ============================================================================
 unsigned int SubstitutePIDTool::substitute ( LHCb::Particle* p )
 {
@@ -170,8 +170,8 @@ unsigned int SubstitutePIDTool::substitute ( LHCb::Particle* p )
   //
   unsigned int substituted = 0 ;
   //
-  for ( Substitutions::iterator isub = m_subs.begin() ; 
-        m_subs.end() != isub ; ++isub ) 
+  for ( Substitutions::iterator isub = m_subs.begin() ;
+        m_subs.end() != isub ; ++isub )
   {
     if (msgLevel(MSG::DEBUG)) debug() << "ISub: " << isub -> m_pid << " Size: " << m_subs.size() << endmsg ;
     LHCb::Particle** _p = &p ;
@@ -179,8 +179,8 @@ unsigned int SubstitutePIDTool::substitute ( LHCb::Particle* p )
     LHCb::Particle::ConstVector found ;
     if ( 0 == isub->m_finder.findDecay ( _p , _p + 1 , found ) ) { continue ; }
     //
-    for ( LHCb::Particle::ConstVector::const_iterator ip = found.begin() ; 
-          found.end() != ip ; ++ip ) 
+    for ( LHCb::Particle::ConstVector::const_iterator ip = found.begin() ;
+          found.end() != ip ; ++ip )
     {
       const LHCb::Particle* pf = *ip ;
       int pid = pf->particleID().pid() ;
@@ -189,9 +189,9 @@ unsigned int SubstitutePIDTool::substitute ( LHCb::Particle* p )
       if ( 0 == pf_ ) { continue ; }
       pf_ ->setParticleID ( isub -> m_pid ) ;
       //
-      if (msgLevel(MSG::DEBUG)) debug() << "Substituted a " << pid << " by a " 
+      if (msgLevel(MSG::DEBUG)) debug() << "Substituted a " << pid << " by a "
                                         << pf_->particleID().pid() << endmsg ;
-      ++substituted    ;   
+      ++substituted    ;
       ++(isub->m_used) ;
     }
   }
@@ -206,18 +206,18 @@ unsigned int SubstitutePIDTool::substitute ( LHCb::Particle* p )
 // ============================================================================
 unsigned int SubstitutePIDTool::correctP4 ( LHCb::Particle* p )
 {
-  if ( 0 == p ) { return 0 ; } // RETURN 
+  if ( 0 == p ) { return 0 ; } // RETURN
   //
-  if ( p->isBasicParticle () ) 
+  if ( p->isBasicParticle () )
   {
     const Gaudi::LorentzVector& oldMom = p->momentum() ;
     //
-    const double newMass   = LoKi::Particles::massFromPID ( p->particleID() ) ; 
+    const double newMass   = LoKi::Particles::massFromPID ( p->particleID() ) ;
     const double newEnergy = ::sqrt ( oldMom.P2() + newMass*newMass ) ;
     //
     Gaudi::LorentzVector newMom = Gaudi::LorentzVector () ;
-    newMom.SetXYZT ( oldMom.Px () , 
-                     oldMom.Py () , 
+    newMom.SetXYZT ( oldMom.Px () ,
+                     oldMom.Py () ,
                      oldMom.Pz () , newEnergy ) ;
     //
     p -> setMomentum(newMom) ;
@@ -231,8 +231,8 @@ unsigned int SubstitutePIDTool::correctP4 ( LHCb::Particle* p )
   unsigned int num = 0 ;
   //
   Gaudi::LorentzVector sum ;
-  for ( DAUGHTERS::const_iterator idau = daughters.begin() ; 
-        daughters.end() != idau ; ++idau ) 
+  for ( DAUGHTERS::const_iterator idau = daughters.begin() ;
+        daughters.end() != idau ; ++idau )
   {
     const LHCb::Particle* dau = *idau ;
     if ( 0 == dau ) { continue ; }                // CONTINUE
@@ -241,7 +241,7 @@ unsigned int SubstitutePIDTool::correctP4 ( LHCb::Particle* p )
     sum += dau->momentum() ;
   }
   //
-  if (  0 != num ) 
+  if (  0 != num )
   {
     p -> setMomentum     ( sum     ) ;
     p -> setMeasuredMass ( sum.M() ) ;
@@ -250,14 +250,14 @@ unsigned int SubstitutePIDTool::correctP4 ( LHCb::Particle* p )
   return num ;
 }
 //=============================================================================
-void SubstitutePIDTool::updateHandler ( Property& p ) 
+void SubstitutePIDTool::updateHandler ( Property& p )
 {
   // no action if not initialized yet:
   if ( Gaudi::StateMachine::INITIALIZED > FSMState() ) { return ; }
   m_to_be_updated1 = true ;
-  /// mark as "to-be-updated" 
-  Warning ( "The structural property '" + p.name() + 
-            "' is updated. It will take effect at the next call" , 
+  /// mark as "to-be-updated"
+  Warning ( "The structural property '" + p.name() +
+            "' is updated. It will take effect at the next call" ,
             StatusCode( StatusCode::SUCCESS, true ) ) ;
   debug () << "The updated property is: " << p << endreq ;
 }
