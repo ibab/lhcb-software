@@ -4,6 +4,7 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================= HltSettings v5r24 2012-04-02 =========================
 ! 2012-04-02 - Johannes Albrecht
  - move prescale for diproton lines from HLT2 to HLT1, where
    they should have been
