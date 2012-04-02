@@ -857,6 +857,18 @@ namespace
     return (*ps23L)(x) ;
   }
   // ==========================================================================
+  /** helper function for itegration of LASS23L shape 
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *  @date 2010-05-23
+   */
+  double LASS_23L_GSL ( double x , void* params )  
+  {
+    //
+    const Gaudi::Math::LASS23L* lass = (Gaudi::Math::LASS23L*) params ;
+    //
+    return (*lass)(x) ;
+  }
+  // ==========================================================================
   /** helper function for itegration of Voigt shape 
    *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
    *  @date 2010-05-23
@@ -870,6 +882,132 @@ namespace
   }
   // ==========================================================================
 } //                                                 end of anonymous namespace 
+// ============================================================================
+namespace 
+{
+  // ==========================================================================
+  /// get the complex Flatte amplitude (pipi-channel)
+  std::complex<double> flatte_amp 
+  ( const double x     , 
+    const double m0    , 
+    const double m0g1  , 
+    const double g2og1 , 
+    const double mK    , 
+    const double mPi   )
+  {
+    //
+    if ( 2 * mPi >= x ) { return 0 ; }
+    //
+    const double qPP = 2 * Gaudi::Math::PhaseSpace2::q1 ( x , mPi , mPi ) / x ;
+    const double qKK = 2 * Gaudi::Math::PhaseSpace2::q1 ( x , mK  , mK  ) / x ;
+    //
+    const std::complex<double> rho_PP = 
+      0 <= qPP ? 
+      std::complex<double> ( qPP , 0                ) :
+      std::complex<double> (   0 , std::abs ( qPP ) ) ;
+    //
+    const std::complex<double> rho_KK = 
+      0 <= qKK ? 
+      std::complex<double> ( qKK , 0                ) :
+      std::complex<double> (   0 , std::abs ( qKK ) ) ;
+    //
+    static const std::complex<double> s_j ( 0 , 1 ) ;
+    //
+    const std::complex<double> v = 
+      m0 * m0 - x * x - s_j * ( m0g1 * rho_PP + m0g1 * g2og1 * rho_KK ) ;
+    //
+    // attention: normalization phactors and phase space are here!
+    //
+    const double d = 2 * std::abs ( m0g1 * qPP * x ) / M_PI ;
+    //
+    return  std::sqrt ( d ) / v ;
+  }
+  // ==========================================================================
+  /// get the complex Flatte amplitude (KK-channel)
+  std::complex<double> flatte2_amp 
+  ( const double x     , 
+    const double m0    , 
+    const double m0g1  , 
+    const double g2og1 , 
+    const double mK    , 
+    const double mPi   )
+  {
+    //
+    if ( 2 * mK >= x ) { return 0 ; }
+    //
+    const double qPP = 2 * Gaudi::Math::PhaseSpace2::q1 ( x , mPi , mPi ) / x ;
+    const double qKK = 2 * Gaudi::Math::PhaseSpace2::q1 ( x , mK  , mK  ) / x ;
+    //
+    const std::complex<double> rho_PP = 
+      0 <= qPP ? 
+      std::complex<double> ( qPP , 0                ) :
+      std::complex<double> (   0 , std::abs ( qPP ) ) ;
+    //
+    const std::complex<double> rho_KK = 
+      0 <= qKK ? 
+      std::complex<double> ( qKK , 0                ) :
+      std::complex<double> (   0 , std::abs ( qKK ) ) ;
+    //
+    static const std::complex<double> s_j ( 0 , 1 ) ;
+    //
+    const std::complex<double> v = 
+      m0 * m0 - x * x - s_j * ( m0g1 * rho_PP + m0g1 * g2og1 * rho_KK ) ;
+    //
+    // attention: normalization phactors and phase space are here!
+    //
+    const double d = 2 * std::abs ( m0g1 * g2og1 * qKK * x ) / M_PI ;
+    //
+    return  std::sqrt ( d ) / v ;
+  }
+  // ==========================================================================
+  /// get the complex Breit amplitude
+  std::complex<double> breit
+  ( const double x     , 
+    const double m0    , 
+    const double gamma )
+  {
+    //
+    static const std::complex<double> s_j ( 0 , 1 ) ;
+    //
+    const std::complex<double> v = 
+      m0 * m0 - x * x - s_j * m0 * gamma ;
+    //
+    // attention: normalization factors and phase space are here!
+    //
+    const double d = 2 * std::abs ( m0 * gamma  * x ) / M_PI ;
+    //
+    return  std::sqrt ( d ) / v ;
+  }  
+  // ==========================================================================
+  typedef double (*rho_fun) ( double , double , double , double ) ;
+  //// calculate the current width 
+  double gamma_run ( const double gam0    ,
+                     const double x       , 
+                     const double m1      ,
+                     const double m2      ,
+                     const double m0      ,
+                     const unsigned int L ,
+                     rho_fun fun = 0      )  
+  {
+    //
+    if ( m1 + m2 >= x ) { return 0 ; }   // RETURN 
+    //
+    const double q  = Gaudi::Math::PhaseSpace2::q ( x  , m1 , m2 ) ;
+    const double q0 = Gaudi::Math::PhaseSpace2::q ( m0 , m1 , m2 ) ;
+    //
+    if ( 0 >= q || 0 >= q0 ) { return 0 ; }  // RETURN 
+    //
+    const double r  = 
+      0 != fun ? (*fun) ( x  , m0 , m1 , m2 ) : 1.0 ;
+    const double r0 =
+      0 != fun ? (*fun) ( m0 , m0 , m1 , m2 ) : 1.0 ;
+    //
+    if ( 0 >= r0 )           { return 0 ; }  // RETURN 
+    //
+    return gam0 * Gaudi::Math::pow ( q / q0 , 2 * L + 1 ) * ( r / r0 ) ;  
+  }
+  // ==========================================================================
+} // end of the anonymous namespace 
 // ============================================================================
 // evaluate Chebyshev polynomial 
 // ============================================================================
@@ -2586,21 +2724,14 @@ double Gaudi::Math::BreitWigner::operator() ( const double x ) const
 double Gaudi::Math::BreitWigner::gamma ( const double x ) const 
 {
   //
-  if ( m_m1 + m_m2 >= x ) { return 0 ; }   // RETURN 
+  return gamma_run ( m_gam0    , 
+                     x         , 
+                     m_m1      , 
+                     m_m2      , 
+                     m_m0      , 
+                     m_L       , 
+                     m_rho_fun ) ;
   //
-  const double q  = Gaudi::Math::PhaseSpace2::q ( x    , m_m1 , m_m2 ) ;
-  const double q0 = Gaudi::Math::PhaseSpace2::q ( m_m0 , m_m1 , m_m2 ) ;
-  //
-  if ( 0 >= q || 0 >= q0 ) { return 0 ; }  // RETURN 
-  //
-  const double r  = 
-    0 != m_rho_fun ? (*m_rho_fun) ( x    , m_m0  , m_m1 , m_m2 ) : 1.0 ;
-  const double r0 =
-    0 != m_rho_fun ? (*m_rho_fun) ( m_m0 , m_m0  , m_m1 , m_m2 ) : 1.0 ;
-  //
-  if ( 0 >= r0 )           { return 0 ; }  // RETURN 
-  //
-  return m_gam0 * Gaudi::Math::pow ( q / q0 , 2 * m_L + 1 ) * ( r / r0 ) ;  
 }
 // ============================================================================
 bool Gaudi::Math::BreitWigner::setM0     ( const double x ) 
@@ -2834,104 +2965,6 @@ Gaudi::Math::Flatte::Flatte
 // destructor 
 // ============================================================================
 Gaudi::Math::Flatte::~Flatte(){}
-// ============================================================================
-namespace 
-{
-  // ==========================================================================
-  /// get the complex Flatte amplitude (pipi-channel)
-  std::complex<double> flatte_amp 
-  ( const double x     , 
-    const double m0    , 
-    const double m0g1  , 
-    const double g2og1 , 
-    const double mK    , 
-    const double mPi   )
-  {
-    //
-    if ( 2 * mPi >= x ) { return 0 ; }
-    //
-    const double qPP = 2 * Gaudi::Math::PhaseSpace2::q1 ( x , mPi , mPi ) / x ;
-    const double qKK = 2 * Gaudi::Math::PhaseSpace2::q1 ( x , mK  , mK  ) / x ;
-    //
-    const std::complex<double> rho_PP = 
-      0 <= qPP ? 
-      std::complex<double> ( qPP , 0                ) :
-      std::complex<double> (   0 , std::abs ( qPP ) ) ;
-    //
-    const std::complex<double> rho_KK = 
-      0 <= qKK ? 
-      std::complex<double> ( qKK , 0                ) :
-      std::complex<double> (   0 , std::abs ( qKK ) ) ;
-    //
-    static const std::complex<double> s_j ( 0 , 1 ) ;
-    //
-    const std::complex<double> v = 
-      m0 * m0 - x * x - s_j * ( m0g1 * rho_PP + m0g1 * g2og1 * rho_KK ) ;
-    //
-    // attention: normalization phactors and phase space are here!
-    //
-    const double d = 2 * std::abs ( m0g1 * qPP * x ) / M_PI ;
-    //
-    return  std::sqrt ( d ) / v ;
-  }
-  // ==========================================================================
-  /// get the complex Flatte amplitude (KK-channel)
-  std::complex<double> flatte2_amp 
-  ( const double x     , 
-    const double m0    , 
-    const double m0g1  , 
-    const double g2og1 , 
-    const double mK    , 
-    const double mPi   )
-  {
-    //
-    if ( 2 * mK >= x ) { return 0 ; }
-    //
-    const double qPP = 2 * Gaudi::Math::PhaseSpace2::q1 ( x , mPi , mPi ) / x ;
-    const double qKK = 2 * Gaudi::Math::PhaseSpace2::q1 ( x , mK  , mK  ) / x ;
-    //
-    const std::complex<double> rho_PP = 
-      0 <= qPP ? 
-      std::complex<double> ( qPP , 0                ) :
-      std::complex<double> (   0 , std::abs ( qPP ) ) ;
-    //
-    const std::complex<double> rho_KK = 
-      0 <= qKK ? 
-      std::complex<double> ( qKK , 0                ) :
-      std::complex<double> (   0 , std::abs ( qKK ) ) ;
-    //
-    static const std::complex<double> s_j ( 0 , 1 ) ;
-    //
-    const std::complex<double> v = 
-      m0 * m0 - x * x - s_j * ( m0g1 * rho_PP + m0g1 * g2og1 * rho_KK ) ;
-    //
-    // attention: normalization phactors and phase space are here!
-    //
-    const double d = 2 * std::abs ( m0g1 * g2og1 * qKK * x ) / M_PI ;
-    //
-    return  std::sqrt ( d ) / v ;
-  }
-  // ==========================================================================
-  /// get the complex Breit amplitude
-  std::complex<double> breit
-  ( const double x     , 
-    const double m0    , 
-    const double gamma )
-  {
-    //
-    static const std::complex<double> s_j ( 0 , 1 ) ;
-    //
-    const std::complex<double> v = 
-      m0 * m0 - x * x - s_j * m0 * gamma ;
-    //
-    // attention: normalization factors and phase space are here!
-    //
-    const double d = 2 * std::abs ( m0 * gamma  * x ) / M_PI ;
-    //
-    return  std::sqrt ( d ) / v ;
-  }  
-  // ==========================================================================
-} // end of the anonymous namespace 
 // ============================================================================
 // get the value of Flatte function 
 // ============================================================================
@@ -3745,6 +3778,16 @@ Gaudi::Math::PhaseSpace23L::PhaseSpace23L
 // ============================================================================
 Gaudi::Math::PhaseSpace23L::~PhaseSpace23L() {}
 // ============================================================================
+// get the momentum of 1st particle in rest frame of (1,2)
+// ============================================================================
+double Gaudi::Math::PhaseSpace23L::q ( const double x ) const 
+{ return Gaudi::Math::PhaseSpace2::q ( x  , m_m1 , m_m2  ) ; }
+// ============================================================================
+// get the momentum of 3rd particle in rest frame of mother
+// ============================================================================
+double Gaudi::Math::PhaseSpace23L::p ( const double x ) const 
+{ return Gaudi::Math::PhaseSpace2::q ( m_m  , m_m3 , x ) ; }
+// ============================================================================
 // evaluate N/L-body phase space
 // ============================================================================
 double Gaudi::Math::PhaseSpace23L::operator () ( const double x ) const 
@@ -3755,21 +3798,15 @@ double Gaudi::Math::PhaseSpace23L::operator () ( const double x ) const
   //
   const double xm = 0.5 * ( m_m1 + m_m2 + m_m - m_m3 ) ;
   //
-  const double q  = Gaudi::Math::PhaseSpace2::q ( x  , m_m1 , m_m2  ) ;
-  if ( 0 >= q  ) { return 0 ; }
-  const double qm = Gaudi::Math::PhaseSpace2::q ( xm , m_m1 , m_m2  ) ;
-  if ( 0 >= qm ) { return 0 ; }
+  const double q0 = q ( x  ) ;
+  if ( 0 >= q0 ) { return 0 ; }
   //
-  const double p  = Gaudi::Math::PhaseSpace2::q ( m_m , m_m3 ,   x  ) ;
-  if ( 0 >= p  ) { return 0 ; }
-  const double pm = Gaudi::Math::PhaseSpace2::q ( m_m , m_m3 ,   xm ) ;
-  if ( 0 >= pm ) { return 0 ; }
+  const double p0 = p ( x  ) ;
+  if ( 0 >= p0 ) { return 0 ; }
   //
-  // rescale the momenta such away to have a point,
-  // where f=1 at the center of  phase space 
-  //
-  const double qq = q / qm ; 
-  const double pp = p / pm ;
+  // rescale momenta 
+  const double qq = q0 / x    ;
+  const double pp = p0 / m_m  ;
   //
   // the regular phase space 
   double result = qq * pp ;
@@ -3795,11 +3832,11 @@ double  Gaudi::Math::PhaseSpace23L::integral
   if (           low > high   ) { return - integral ( high ,                                                     
                                                       low  ) ; } // RETURN 
   //
-  if ( high <= m_m1 + m_m2 ) { return 0 ; }
-  if ( low  >= m_m  - m_m3 ) { return 0 ; }
+  if ( high <= lowEdge  () ) { return 0 ; }
+  if ( low  >= highEdge () ) { return 0 ; }
   //
-  if ( low  <  m_m1 + m_m2 ) { return integral ( m_m1 + m_m2 , high       ) ; }
-  if ( high >  m_m  - m_m3 ) { return integral ( low         , m_m - m_m3 ) ; }
+  if ( low  <  lowEdge  () ) { return integral ( lowEdge() , high        ) ; }
+  if ( high >  highEdge () ) { return integral ( low       , highEdge () ) ; }
   //
   // use GSL to evaluate the integral 
   //
@@ -3837,11 +3874,229 @@ double  Gaudi::Math::PhaseSpace23L::integral
 // get the integral 
 // ============================================================================
 double  Gaudi::Math::PhaseSpace23L::integral () const 
-{ return integral ( m_m1 + m_m2 , m_m - m_m3 ) ; }
+{ return integral ( lowEdge () , highEdge() ) ; }
+// ============================================================================
 
 
-
-
+// ============================================================================
+// LASS: Kpi S-wave for  X -> (K pi) Y decays..
+// ============================================================================
+/*  constructor from all masses and angular momenta 
+ *  @param m1 the mass of the first  particle 
+ *  @param m2 the mass of the second particle 
+ *  @param m3 the mass of the third  particle 
+ *  @param m  the mass of the mother particle (m>m1+m2+m3)
+ *  @param L  the angular momentum between the first pair and the third 
+ *  @param a  the LASS parameter 
+ *  @param r  the LASS parameter 
+ */
+// ============================================================================
+Gaudi::Math::LASS23L::LASS23L
+( const double         m1 , 
+  const double         m2 , 
+  const double         m3 , 
+  const double         m  , 
+  const double         m0 , 
+  const double         g0 ,
+  const unsigned short L  ,
+  const double         a  , 
+  const double         r  , 
+  const double         e  ) 
+  : std::unary_function<double,double> () 
+  , m_m0 ( std::abs ( m0 ) ) 
+  , m_g0 ( std::abs ( g0 ) ) 
+  , m_a  ( std::abs ( a  ) ) 
+  , m_r  ( std::abs ( r  ) ) 
+  , m_e  ( std::abs ( e  ) ) 
+// phase space
+  , m_ps ( m1 , m2 , m3 , m , L , 0 )  
+//
+  , m_workspace () 
+{}
+// ============================================================================
+// destructor 
+// ============================================================================
+Gaudi::Math::LASS23L::~LASS23L(){}
+// ============================================================================
+// set the proper parameters 
+// ============================================================================
+bool Gaudi::Math::LASS23L::setM0 ( const double x ) 
+{
+  //
+  const double v = std::abs ( x ) ;
+  if ( s_equal ( v , m_m0 ) ) { return false ; }
+  //
+  m_m0 = v ;
+  //
+  return true ;
+}
+// ============================================================================
+// set the proper parameters 
+// ============================================================================
+bool Gaudi::Math::LASS23L::setG0 ( const double x ) 
+{
+  //
+  const double v = std::abs ( x ) ;
+  if ( s_equal ( v , m_g0 ) ) { return false ; }
+  //
+  m_g0 = v ;
+  //
+  return true ;
+}
+// ============================================================================
+// set the proper parameters 
+// ============================================================================
+bool Gaudi::Math::LASS23L::setA ( const double x ) 
+{
+  //
+  const double v = std::abs ( x ) ;
+  if ( s_equal ( v , m_a ) ) { return false ; }
+  //
+  m_a = v ;
+  //
+  return true ;
+}
+// ============================================================================
+// set the proper parameters 
+// ============================================================================
+bool Gaudi::Math::LASS23L::setR ( const double x ) 
+{
+  //
+  const double v = std::abs ( x ) ;
+  if ( s_equal ( v , m_r ) ) { return false ; }
+  //
+  m_r = v ;
+  //
+  return true ;
+}
+// ============================================================================
+// set the proper parameters 
+// ============================================================================
+bool Gaudi::Math::LASS23L::setE ( const double x ) 
+{
+  //
+  const double v = std::abs ( x ) ;
+  if ( s_equal ( v , m_e ) ) { return false ; }
+  //
+  m_e = v ;
+  //
+  return true ;
+}
+// ============================================================================
+// get the (complex) LASS amplitude 
+// ============================================================================
+std::complex<double> 
+Gaudi::Math::LASS23L::amplitude ( const double x ) const 
+{
+  //
+  if ( x <= m_ps.lowEdge  () ) { return 0 ; }  // RETURN 
+  if ( x >= m_ps.highEdge () ) { return 0 ; }  // RETURN 
+  //
+  const double q  = m_ps.q ( x    ) ;
+  if ( 0 > q  )                { return 0 ; }  // RETURN 
+  //
+  // get the width:
+  const double gs = gamma_run ( m_g0       , 
+                                x          , 
+                                m_ps.m1 () , 
+                                m_ps.m2 () , 
+                                m_m0       , 
+                                m_ps.l  () ) * m_m0 / x  ; 
+  //
+  // phase shift:
+  const double cotB = 1.0 / ( m_a * q ) + 0.5 * m_r * q  ;
+  // phase shift: 
+  const double cotR = ( m_m0 * m_m0 - x * x )  / m_m0 / gs ;
+  //
+  const double sinB =  1.0 / std::sqrt ( 1 + cotB*cotB ) ;
+  const double cosB = cotB * sinB ;
+  //
+  // exp( i*pi/2 ) 
+  static const std::complex<double> i = std::complex<double>( 0 , 1 );
+  //
+  // exp( i*Delta_B )
+  std::complex<double> deltaB ( cosB , sinB ) ;
+  //
+  // the amplitude
+  std::complex<double> A = 
+    1.0 / ( cotB - i ) + m_e * deltaB * deltaB / ( cotR - i ) ;
+  //
+  // scale it! 
+  std::complex<double> T = A * ( x / q ) ;
+  //
+  return T ;
+}
+// ============================================================================
+// get the phase space factor
+// ============================================================================
+double Gaudi::Math::LASS23L::phaseSpace ( const double x ) const 
+{ return std::max ( 0.0 , m_ps ( x ) ) ; }
+// ============================================================================
+// evaluate LASS 
+// ============================================================================
+double Gaudi::Math::LASS23L::operator () ( const double x ) const 
+{ 
+  const double result = phaseSpace  ( x ) ;
+  if ( 0 >= result ) { return 0 ; }
+  //
+  return result * std::norm ( amplitude( x ) ) ;
+}
+// ============================================================================
+// get the integral between low and high limits 
+// ============================================================================
+double  Gaudi::Math::LASS23L::integral 
+( const double low  , 
+  const double high ) const 
+{
+  if ( s_equal ( low , high ) ) { return                 0.0 ; } // RETURN 
+  if (           low > high   ) { return - integral ( high ,                                                     
+                                                      low  ) ; } // RETURN 
+  //
+  if ( high <= m_ps.lowEdge  () ) { return 0 ; }
+  if ( low  >= m_ps.highEdge () ) { return 0 ; }
+  //
+  if ( low  <  m_ps.lowEdge  () ) 
+  { return integral ( m_ps.lowEdge() , high             ) ; }
+  if ( high >  m_ps.highEdge () ) 
+  { return integral ( low            , m_ps.highEdge () ) ; }
+  //
+  // use GSL to evaluate the integral 
+  //
+  GSL_Handler_Sentry sentry ;
+  //
+  gsl_function F                 ;
+  F.function         = &LASS_23L_GSL ;
+  const LASS23L* _ps = this  ;
+  F.params           = const_cast<LASS23L*> ( _ps ) ;
+  //
+  double result   = 1.0 ;
+  double error    = 1.0 ;
+  //
+  const int ierror = gsl_integration_qag 
+    ( &F                ,            // the function 
+      low   , high      ,            // low & high edges 
+      s_PRECISION       ,            // absolute precision            
+      s_PRECISION       ,            // relative precision 
+      s_SIZE            ,            // size of workspace 
+      GSL_INTEG_GAUSS31 ,            // integration rule  
+      workspace ( m_workspace ) ,    // workspace  
+      &result           ,            // the result 
+      &error            ) ;          // the error in result 
+  //
+  if ( ierror ) 
+  { 
+    GSL_Handler_Sentry sentry ;
+    gsl_error ( "Gaudi::Math::LASS23L::QAG" ,
+                __FILE__ , __LINE__ , ierror ) ; 
+  }
+  //
+  return result ;
+}
+// ============================================================================
+// get the integral 
+// ============================================================================
+double  Gaudi::Math::LASS23L::integral () const 
+{ return integral ( m_ps.lowEdge () , m_ps.highEdge() ) ; }
 // ============================================================================
 // The END 
 // ============================================================================

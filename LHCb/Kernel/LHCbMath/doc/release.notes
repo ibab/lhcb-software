@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2012-04-02 - Vanya Belyaev
+ - add LASS shape for S-wave Kpi 
+
 ! 2012-04-01 - Vanya Belyaev
  - add phase space function for 2-from-3 decays with orbital momentum
 

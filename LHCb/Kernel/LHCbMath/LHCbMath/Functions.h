@@ -9,6 +9,7 @@
 // ============================================================================
 #include <functional>
 #include <vector>
+#include <complex>
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -1352,6 +1353,22 @@ namespace Gaudi
       // ====================================================================== 
     public:
       // ====================================================================== 
+      double m1        () const { return m_m1 ; }
+      double m2        () const { return m_m2 ; }      
+      double m3        () const { return m_m3 ; }      
+      double m         () const { return m_m  ; }      
+      unsigned short l () const { return m_l  ; }      
+      unsigned short L () const { return m_L  ; }      
+      // ======================================================================
+      double lowEdge   () const { return m1 () + m2 () ; }      
+      double highEdge  () const { return m  () - m3 () ; }      
+      /// get the mome ntum of 1st particle in rest frame of (1,2)
+      double         q ( const double x ) const ;
+      /// get the momentum of 3rd particle in rest frame of mother
+      double         p ( const double x ) const ;
+      // ====================================================================== 
+    public:
+      // ====================================================================== 
       /// get the integral 
       double integral () const ;
       /// get the integral between low and high limits 
@@ -1538,9 +1555,9 @@ namespace Gaudi
     public:
       // ======================================================================
       // constructor from all parameters
-      Rho0  ( const double m0       = 770 , 
-              const double gam0     = 150 ,
-              const double pi_mass  = 139 ) ;
+      Rho0  ( const double m0       = 770   , 
+              const double gam0     = 150   ,
+              const double pi_mass  = 139.6 ) ;
       /// destructor 
       virtual ~Rho0 () ;
       // ======================================================================
@@ -1555,13 +1572,13 @@ namespace Gaudi
     public:
       // ======================================================================
       /// constructor from all parameters
-      Rho0FromEtaPrime  ( const double m0        = 770 , 
-                          const double gam0      = 150 ,
-                          const double pi_mass   = 139 , 
-                          const double eta_prime = 958 ) ;
+      Rho0FromEtaPrime  ( const double m0        = 770   , 
+                          const double gam0      = 150   ,
+                          const double pi_mass   = 139.6 , 
+                          const double eta_prime = 957.7 ) ;
       /// constructor from all parameters
-      Rho0FromEtaPrime  ( const Gaudi::Math::Rho0& rho , 
-                          const double eta_prime = 958 ) ;
+      Rho0FromEtaPrime  ( const Gaudi::Math::Rho0& rho   , 
+                          const double eta_prime = 957.7 ) ;
       /// destructor 
       virtual ~Rho0FromEtaPrime () ;
       // ======================================================================
@@ -1597,8 +1614,8 @@ namespace Gaudi
       Flatte  ( const double m0    = 980      , 
                 const double m0g1  = 165*1000 ,  
                 const double g2og1 = 4.21     , 
-                const double mK    = 497      , 
-                const double mPi   = 139      ) ;                
+                const double mK    = 493.7    , 
+                const double mPi   = 139.6    ) ;                
       /// destructor 
       virtual ~Flatte () ;  
       // ======================================================================
@@ -1677,8 +1694,8 @@ namespace Gaudi
       Flatte2  ( const double m0    = 980      , 
                  const double m0g1  = 165*1000 ,  
                  const double g2og1 = 4.21     , 
-                 const double mK    = 497      , 
-                 const double mPi   = 139      ) ;                
+                 const double mK    = 493.7    , 
+                 const double mPi   = 139.6    ) ;                
       /// destructor 
       virtual ~Flatte2 () ;  
       // ======================================================================
@@ -1851,6 +1868,92 @@ namespace Gaudi
                           double    m2    ) ;
       // ======================================================================
     } //                                               end of namespace Jackson 
+    // ========================================================================
+    /** @class LASS23L
+     *  simple function to represent the phase 
+     *   space of 2 particles from 3-body decays:
+     *   \f$ f \propto q^{2\ell+1}p^{2L+1}\f$, where
+     *     \f$\ell\f$ is the orbital momentum of the pair of particles, 
+     *    and \f$L\f$ is the orbital momentum between the pair and 
+     *    the third particle. 
+     *   E.g. taking \f$\ell=0, L=1\f$, one can get the S-wave contribution for 
+     *   \f$\pi^+\pi^-\f$-mass from \f$B^0\rightarrowJ/\psi\pi^+\pi^-\f$ decay.
+     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
+     *  @date 2012-04-01
+     */
+    class GAUDI_API LASS23L : public std::unary_function<double,double>     
+    {
+      // ======================================================================
+    public:
+      // ======================================================================
+      /** constructor from all masses and angular momenta 
+       *  @param m1 the mass of the first  particle 
+       *  @param m2 the mass of the second particle 
+       *  @param m3 the mass of the third  particle 
+       *  @param m  the mass of the mother particle (m>m1+m2+m3)
+       *  @param L  the angular momentum between the first pair and the third 
+       *  @param a  the LASS parameter 
+       *  @param r  the LASS parameter 
+       */
+      LASS23L ( const double         m1 =  493.7  , 
+                const double         m2 =  139.6  , 
+                const double         m3 = 3097    , 
+                const double         m  = 5278    , 
+                const double         m0 = 1435    , 
+                const double         g0 =  279    ,
+                const unsigned short L  =    1    ,
+                const double         a  = 1.94e-3 , 
+                const double         r  = 1.76e-3 , 
+                const double         e  = 1.0     ) ;
+      /// destructor 
+      virtual ~LASS23L () ;                                     // deststructor 
+      // ======================================================================
+    public:
+      // ====================================================================== 
+      /// get the (complex) LASS amplitude 
+      std::complex<double> amplitude  ( const double x ) const ;
+      /// get the phase space factor 
+      double               phaseSpace ( const double x ) const ;
+      /// evaluate LASS 
+      double operator () ( const double x ) const ;
+      // ====================================================================== 
+    public:
+      // ====================================================================== 
+      bool setM0 ( const double value ) ;
+      bool setG0 ( const double value ) ;
+      bool setA  ( const double value ) ;
+      bool setR  ( const double value ) ;
+      bool setE  ( const double value ) ;
+      // ====================================================================== 
+    public:
+      // ====================================================================== 
+      /// get the integral 
+      double integral () const ;
+      /// get the integral between low and high limits 
+      double integral ( const double low  , 
+                        const double high ) const ;
+      // ====================================================================== 
+    private:
+      // ======================================================================
+      /// the pole position for scalar meson 
+      double   m_m0 ;
+      double   m_g0 ;
+      /// LASS-parameters 
+      double   m_a  ;
+      double   m_r  ;      
+      double   m_e  ;      
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// phase space 
+      Gaudi::Math::PhaseSpace23L m_ps    ;    // phase space 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// integration workspace 
+      Gaudi::Math::WorkSpace m_workspace ;    // integration workspace 
+      // ======================================================================
+    } ;
     // ========================================================================
   } //                                             end of namespace Gaudi::Math
   // ==========================================================================
