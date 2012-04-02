@@ -4,8 +4,12 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
+!====================== GaussPhysics v7r4 2012-04-02 =========================
 ! 2012-03-29 - Giacomo Graziani
   -  Add new classes for XibcPlus, XibcZero and cc
+
+! 2012-03-15 - Zenwhei Yang
+  - Add new classes for Xicc
 
 !====================== GaussPhysics v7r3 2011-11-13 =========================
 ! 2011-11-02 - Yasmine Amhis
