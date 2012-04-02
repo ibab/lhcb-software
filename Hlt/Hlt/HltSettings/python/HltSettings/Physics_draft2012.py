@@ -58,10 +58,11 @@ class Physics_draft2012( object ):
         from Hlt1Lines.Hlt1MBLines             import Hlt1MBLinesConf
         from Hlt1Lines.Hlt1CommissioningLines  import Hlt1CommissioningLinesConf
         from Hlt1Lines.Hlt1DisplVertexLines    import Hlt1DisplVertexLinesConf
+        from Hlt1Lines.Hlt1ProtonLinesConf     import Hlt1ProtonLinesConf
         from Hlt2Lines.Hlt2CommissioningLines  import Hlt2CommissioningLinesConf
         from Hlt1Lines.Hlt1BeamGasLines        import Hlt1BeamGasLinesConf
         from Hlt2Lines.Hlt2diphotonDiMuonLines import Hlt2diphotonDiMuonLinesConf
-        from Hlt2Lines.Hlt2InclusiveDiProtonLines import Hlt2InclusiveDiProtonLinesConf
+        #from Hlt2Lines.Hlt2InclusiveDiProtonLines import Hlt2InclusiveDiProtonLinesConf
 
         thresholds = { Hlt1TrackLinesConf :    { 'AllL0_PT'      :  1700
                                                , 'AllL0_P'       : 10000
@@ -160,6 +161,9 @@ class Physics_draft2012( object ):
                                                    , "VertexDisplVertex_GEC"       : "Loose"
                                                    }
                        , Hlt1CommissioningLinesConf : { 'Postscale' : { 'Hlt1ErrorEvent'   : 'RATE(0.01)' } }
+                       , Hlt1ProtonLinesConf        : { 'Prescale' : {  'Hlt1DiProtonLowMult'        : 0.01, 
+                                                                        'Hlt1DiProton'               : 0.01
+                                                                       } } 
                        , Hlt2CommissioningLinesConf : { 'Postscale' : { 'Hlt2ErrorEvent'   : 'RATE(0.01)' } }
                        # micro bias lines switched off for high mu physics running              
                        , Hlt1MBLinesConf :     { 'Prescale' : { 'Hlt1MBMicroBiasVelo'                : 0
@@ -171,10 +175,10 @@ class Physics_draft2012( object ):
                        , Hlt2diphotonDiMuonLinesConf : { 'Prescale' : { 'Hlt2LowMultHadron'     :  1.0 # for 0x0035, this is already done in L0
                                                                       , 'Hlt2LowMultPhoton'     : 0.01
                                                                       } } 
-
-                       , Hlt2InclusiveDiProtonLinesConf: { 'Prescale' : { 'Hlt2DiProton'           :       0.001
-                                                                          , 'Hlt2DiProtonLowMult'  :       0.001
-                                                                      } } 
+                       
+                       #, Hlt2InclusiveDiProtonLinesConf: { 'Prescale' : { 'Hlt2DiProton'           :       0.001
+                       #                                                   , 'Hlt2DiProtonLowMult'  :       0.001
+                       #                                               } } 
 
                        }
 
