@@ -2,7 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : Eric van Herwijnen
 Purpose     : LHCb HLT application
 
-
+! 2012-04-02 - Eric van Herwijnen
+ - Change to ConfigureShell.py for checkpointing.
+ 
 ! 2012-03-28 - Eric van Herwijnen
  - Change to Configuration.py to read TAE events.
 

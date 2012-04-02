@@ -23,19 +23,20 @@ def configureForRunning():
   directory  = checkpoint_dir+sep+'Moore'+sep+App+sep+CFG+sep+COND+sep+DD
   checkpoint_loc  = None
   checkpoint_file = None
-  try:
-    for i in os.listdir(directory):
-      idx=i.find('.data')
-      if idx>0 and idx==len(i)-5:
-        checkpoint_loc  = directory
-        checkpoint_file = i
-        break
-  except Exception,X:
-    print 'echo "[ERROR] Checkpointing requested:'+str(X)+'";'
-    if Mode > 1:
-      Mode = 1
-      print 'echo "[ERROR] Checkpointing requested, but no checkpoint present.";'
-      
+  if Mode > 1:
+    try:
+      for i in os.listdir(directory):
+        idx=i.find('.data')
+        if idx>0 and idx==len(i)-5:
+          checkpoint_loc  = directory
+          checkpoint_file = i
+          break
+    except Exception,X:
+      ###print 'echo "[ERROR] Checkpointing requested:'+str(X)+'";'
+      if Mode > 1:
+        Mode = 1
+        print 'echo "[ERROR] Checkpointing requested, but no checkpoint present.";'
+
   startup    = "-normal"
 
   if Mode==0:
