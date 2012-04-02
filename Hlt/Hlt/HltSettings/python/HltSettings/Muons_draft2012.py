@@ -87,7 +87,8 @@ class Muons_draft2012 :
 
         d.update( { Hlt2InclusiveDiMuonLinesConf : { 
             ## Cut values
-            'UnbiasedDiMuonMinMass'    : 2900      # MeV
+            'TrChi2Tight'              : 4
+            ,'UnbiasedDiMuonMinMass'    : 2900      # MeV
             ,'UnbiasedDiMuonPt'        : 0.0      # MeV
             ,'UnbiasedDiMuonMuPt'      : 0.0      # MeV
             ,'UnbiasedDiMuonLowPt'     : 0.0      # MeV
@@ -105,15 +106,23 @@ class Muons_draft2012 :
             ,'UnbiasedBmmVertexChi2'   : 10
             ,'UnbiasedZmmMinMass'      :40000     # MeV
             ,'UnbiasedZmmPt'           :  0.0     # MeV
-            ,'DetachedDiMuonPt'        : 1500     #MeV
+            ,'DetachedDiMuonPt'        :   600     #MeV 
             ,'DetachedDiMuonDLS'       :   7
-            ,'DetachedDiMuonMinMass'   :   0 #MeV
-            ,'DetachedDiMuIPChi2'      :   9
+            ,'DetachedDiMuonMuPt'      : 300      #Mev 
+            ,'DetachedDiMuonMinMass'   :   0 #MeV 
+            ,'DetachedDiMuIPChi2'      :   25
+            ,'DetachedDiMuonVertexChi2':   8
             ,'DetachedHeavyDiMuonMinMass': 2950 # MeV
             ,'DetachedHeavyDiMuonDLS'  :   5
             ,'DetachedJPsiDLS'           : 3
             ,'DetachedJPsiMassWindow'    : 120 #MeV 
 
+            ,'MultiMu_GoodMuon_Chi2_IP'   : 4
+            ,'MultiMu_TightMuon_Chi2_IP'  : 36
+            ,'MultiMu_DiMuon_DLS'         : 6
+            ,'MultiMu_Tau3Mu_MassWindow'  : 300   #MeV
+            ,'MultiMu_Tau3Mu_max_PT'      : 0
+            
             , 'Prescale'   : { 'Hlt2DiMuon'                  :  0   
                                , 'Hlt2DiMuonLowMass'         :  0   
                                , 'Hlt2DiMuonJPsi'            :  1   #JA 20120301: try to release prescale from 0.2
