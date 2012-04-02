@@ -76,7 +76,7 @@ namespace LHCb
   /// Namespace for locations in TDS
   namespace PackedCaloClusterLocation
   {
-    static const std::string& Default = "pRec/Calo/Cluster";
+    static const std::string& Default = "pRec/Calo/Clusters";
   }
 
   /** @class PackedCaloClusters Event/PackedCaloCluster.h
