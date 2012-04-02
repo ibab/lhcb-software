@@ -18,6 +18,8 @@
 #include "Event/Particle.h"
 #include "Event/Vertex.h"
 
+using namespace LHCb;
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : EventInfoTupleTool
 //
@@ -26,28 +28,29 @@
 
 // Declaration of the Tool Factory
 // actually acts as a using namespace TupleTool
-DECLARE_TOOL_FACTORY( TupleToolPropertime );
+DECLARE_TOOL_FACTORY( TupleToolPropertime )
 
-using namespace LHCb;
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TupleToolPropertime::TupleToolPropertime( const std::string& type,
-                                          const std::string& name,
-                                          const IInterface* parent )
-  : TupleToolBase ( type, name , parent )
-  , m_dva(0)
-  , m_fit(0)
+  TupleToolPropertime::TupleToolPropertime( const std::string& type,
+                                            const std::string& name,
+                                            const IInterface* parent )
+    : TupleToolBase ( type, name , parent )
+    , m_dva(0)
+    , m_fit(0)
 {
   declareInterface<IParticleTupleTool>(this);
 
   declareProperty("ToolName", m_toolName = "PropertimeFitter" );
-  declareProperty("FitToPV", m_fitToPV = false ); // true determines proper time of all particles w.r.t. their best PV
-                                                  // false (default) determines proper time w.r.t. mother particle
 
+  // true determines proper time of all particles w.r.t. their best PV
+  // false (default) determines proper time w.r.t. mother particle
+  declareProperty("FitToPV", m_fitToPV = false );
 }//=============================================================================
 
-StatusCode TupleToolPropertime::initialize() {
+StatusCode TupleToolPropertime::initialize()
+{
   if( ! TupleToolBase::initialize() ) return StatusCode::FAILURE;
 
   m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
@@ -120,7 +123,7 @@ StatusCode TupleToolPropertime::fill( const Particle* mother
 }
 
 const Vertex* TupleToolPropertime::originVertex( const Particle* top
-                                                 , const Particle* P ) const 
+                                                 , const Particle* P ) const
 {
   if( top == P || P->isBasicParticle() ) return NULL;
 

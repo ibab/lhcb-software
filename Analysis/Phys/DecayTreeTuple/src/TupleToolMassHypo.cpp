@@ -22,7 +22,7 @@
 
 // Declaration of the Tool Factory
 // actually acts as a using namespace TupleTool
-DECLARE_TOOL_FACTORY( TupleToolMassHypo );
+DECLARE_TOOL_FACTORY( TupleToolMassHypo )
 
 //=============================================================================
 // Standard constructor, initializes variables

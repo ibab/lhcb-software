@@ -184,4 +184,28 @@ bool TupleToolTriggerBase::compileMyList(const std::vector<std::string>& list)
 
 }
 
+StatusCode TupleToolTriggerBase::fillBasic( const LHCb::Particle*
+                                            , const LHCb::Particle*
+                                            , const std::string&
+                                            , Tuples::Tuple& )
+{
+  return Error("Don't call the fill of the baseclass!!");
+}
 
+StatusCode TupleToolTriggerBase::fillBasic(Tuples::Tuple& )
+{
+  return Error("Don't call the fill of the baseclass!!");
+}
+
+StatusCode TupleToolTriggerBase::fillVerbose( const LHCb::Particle*
+                                              , const LHCb::Particle*
+                                              , const std::string&
+                                              , Tuples::Tuple& )
+{
+  return Error("Don't call the fill of the baseclass!!");
+}
+
+StatusCode TupleToolTriggerBase::fillVerbose( Tuples::Tuple& )
+{
+  return Error("Don't call the fill of the baseclass!!");
+}

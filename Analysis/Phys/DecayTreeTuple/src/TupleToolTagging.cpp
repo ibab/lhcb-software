@@ -21,6 +21,8 @@
 #include "Event/RecVertex.h"
 #include <utility>
 
+using namespace LHCb;
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : EventInfoTupleTool
 //
@@ -29,9 +31,7 @@
 
 // Declaration of the Tool Factory
 // actually acts as a using namespace TupleTool
-DECLARE_TOOL_FACTORY( TupleToolTagging );
-
-using namespace LHCb;
+DECLARE_TOOL_FACTORY( TupleToolTagging )
 
 //=============================================================================
 // Standard constructor, initializes variables

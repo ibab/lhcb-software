@@ -15,15 +15,15 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TupleToolL0Data );
+DECLARE_TOOL_FACTORY( TupleToolL0Data )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TupleToolL0Data::TupleToolL0Data( const std::string& type,
-                                  const std::string& name,
-                                  const IInterface* parent ):
-  TupleToolBase ( type, name , parent )
+  TupleToolL0Data::TupleToolL0Data( const std::string& type,
+                                    const std::string& name,
+                                    const IInterface* parent ):
+    TupleToolBase ( type, name , parent )
 {
   declareInterface<IEventTupleTool>(this);
   declareProperty( "DataList", m_list );
@@ -56,7 +56,6 @@ StatusCode TupleToolL0Data::initialize()
   return sc;
 }
 
-
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -65,7 +64,8 @@ TupleToolL0Data::~TupleToolL0Data() {}
 
 
 
-StatusCode TupleToolL0Data::fill( Tuples::Tuple& tuple){
+StatusCode TupleToolL0Data::fill( Tuples::Tuple& tuple)
+{
   const std::string prefix=fullName();
   if(!m_l0->decodeBank())Warning("Unable to decode L0DU rawBank", StatusCode::SUCCESS).ignore();
   const std::map<std::string, std::pair<unsigned int,double> >&  datamap = m_l0->datas();

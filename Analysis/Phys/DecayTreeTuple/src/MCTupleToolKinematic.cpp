@@ -1,9 +1,9 @@
 // $Id: MCTupleToolKinematic.cpp,v 1.5 2010-06-02 07:25:30 pkoppenb Exp $
-// Include files 
+// Include files
 #include "gsl/gsl_sys.h"
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/Vector3DTypes.h"
 
@@ -23,8 +23,7 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( MCTupleToolKinematic );
-
+DECLARE_TOOL_FACTORY( MCTupleToolKinematic )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -41,7 +40,7 @@ MCTupleToolKinematic::MCTupleToolKinematic( const std::string& type,
 
   // Store the end and origin true vertex information
   declareProperty( "StoreVertexInfo",  m_storeVertexes = true );
-  
+
   // Store the propertime information for associated composite particle
   declareProperty( "StorePropertimeInfo", m_storePT = true );
 
@@ -49,7 +48,7 @@ MCTupleToolKinematic::MCTupleToolKinematic( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-MCTupleToolKinematic::~MCTupleToolKinematic() {} 
+MCTupleToolKinematic::~MCTupleToolKinematic() {}
 
 //=============================================================================
 // initialize
@@ -64,27 +63,27 @@ StatusCode MCTupleToolKinematic::initialize()
 //=============================================================================
 // Fill
 //=============================================================================
-StatusCode MCTupleToolKinematic::fill( const LHCb::MCParticle* 
+StatusCode MCTupleToolKinematic::fill( const LHCb::MCParticle*
                                        , const LHCb::MCParticle* mcp
                                        , const std::string& head
                                        , Tuples::Tuple& tuple )
 {
   const std::string prefix=fullName(head);
   bool test = true;
-  
+
   if (msgLevel(MSG::DEBUG)) debug() << "MCTupleToolKinematic::fill " << head << endmsg ;
 
   int mcPid = 0;
   double mcTau = -1;
   double mcPT = 0;
-  
+
   Gaudi::XYZVector endVertex, originVertex;
-  Gaudi::LorentzVector trueP; 
+  Gaudi::LorentzVector trueP;
   bool hasOsc = false ;
 
   if (msgLevel(MSG::VERBOSE)) verbose() << "MCTupleToolKinematic::fill mcp " << mcp << endmsg ;
   // pointer is ready, prepare the values:
-  if( mcp ) 
+  if( mcp )
   {
     mcPid = mcp->particleID().pid();
     trueP = mcp->momentum();
@@ -98,47 +97,47 @@ StatusCode MCTupleToolKinematic::fill( const LHCb::MCParticle*
       if (msgLevel(MSG::VERBOSE)) verbose() << "     vertices " << mcp->endVertices().size() << endmsg ;
       endVertex = endVertices.front()->position(); // the first item, the other are discarded.
       if (msgLevel(MSG::VERBOSE)) verbose() << "     origin vertex " << mcp->originVertex() << endmsg ;
-      
+
       // lifetime
       if( m_storePT )
       {
         Gaudi::XYZVector dist = endVertex - originVertex;
-        // copied from DecayChainNTuple // 
+        // copied from DecayChainNTuple //
         mcTau = trueP.M() * dist.Dot( trueP.Vect() ) / trueP.Vect().mag2();
         mcTau /= Gaudi::Units::c_light;  // nanoseconds
         hasOsc = mcp->hasOscillated() ;
         if (msgLevel(MSG::DEBUG)) debug() << head << " " << mcPid << " time " << mcTau << " oscil" << hasOsc << endmsg ;
       }
-    }  
+    }
   }
 
   if (msgLevel(MSG::VERBOSE)) verbose() << "MCTupleToolKinematic::fill filling " << head << endmsg ;
 
   // fill the tuple:
-  //test &= tuple->column( head+"_TRUEID", mcPid );  
+  //test &= tuple->column( head+"_TRUEID", mcPid );
   if( m_storeKinetic )
   {
     test &= tuple->column( prefix + "_TRUEP_", trueP );
     test &= tuple->column( prefix+"_TRUEPT", mcPT );
   }
-  
+
   //if (!isStable(mcp)){ //NO!! becuase then the tuple tools might be different each time
-    
+
   if( m_storeVertexes )
   {
     test &= tuple->column( prefix + "_TRUEORIGINVERTEX_", originVertex );
     test &= tuple->column( prefix + "_TRUEENDVERTEX_", endVertex );
     test &= tuple->column( prefix + "_TRUEISSTABLE",  isStable(mcp));
   }
-    
+
   if( m_storePT )
   {
     test &= tuple->column( prefix + "_TRUETAU", mcTau );
     test &= tuple->column( prefix + "_OSCIL", hasOsc );
   }
   //}
-  
+
   if (msgLevel(MSG::VERBOSE)) verbose() << "MCTupleToolKinematic::fill bye " << prefix << endmsg ;
-  
+
   return StatusCode(test);
 }

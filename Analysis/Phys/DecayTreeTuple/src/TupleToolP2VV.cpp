@@ -21,8 +21,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TupleToolP2VV );
-
+DECLARE_TOOL_FACTORY( TupleToolP2VV )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -38,6 +37,7 @@ TupleToolP2VV::TupleToolP2VV( const std::string& type,
   declareProperty( "FillTransversity", m_trans = true );
   declareProperty( "FillHelicity", m_helicity = true );
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================

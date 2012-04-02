@@ -1,8 +1,8 @@
 // $Id: $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
@@ -21,6 +21,8 @@
 // from Kernel
 #include "Kernel/IParticle2MCAssociator.h"
 
+using namespace LHCb;
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : MCTupleToolPrompt
 //
@@ -28,20 +30,17 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( MCTupleToolPrompt );
-
-
-using namespace LHCb;
+DECLARE_TOOL_FACTORY( MCTupleToolPrompt )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-MCTupleToolPrompt::MCTupleToolPrompt( const std::string& type,
-                                      const std::string& name,
-                                      const IInterface* parent )
-  : TupleToolBase ( type, name , parent )
-  , m_p2mcAssoc(NULL)
-  , m_p2mcAssocType("DaVinciSmartAssociator")
+  MCTupleToolPrompt::MCTupleToolPrompt( const std::string& type,
+                                        const std::string& name,
+                                        const IInterface* parent )
+    : TupleToolBase ( type, name , parent )
+    , m_p2mcAssoc(NULL)
+    , m_p2mcAssocType("DaVinciSmartAssociator")
 {
   declareInterface<IParticleTupleTool>(this);
 
@@ -49,7 +48,7 @@ MCTupleToolPrompt::MCTupleToolPrompt( const std::string& type,
   declareProperty( "MaxLifetime", m_maxLifetime = 1e-7
                    , "Maximum lifetime of short-lived particles (ns)" );
   declareProperty( "StoreLongLivedParticleID", m_storeLongLivedPid=true);
-  declareProperty( "IP2MCPAssociatorType", m_p2mcAssocType); 
+  declareProperty( "IP2MCPAssociatorType", m_p2mcAssocType);
 }
 
 StatusCode MCTupleToolPrompt::initialize()
@@ -59,38 +58,38 @@ StatusCode MCTupleToolPrompt::initialize()
   if (isVerbose()) m_storeLongLivedPid=true;
 
   sc = service("ParticlePropertySvc", m_ppSvc);
-  
+
   if (sc.isFailure()) return sc;
 
   m_p2mcAssoc = tool<IParticle2MCAssociator>(m_p2mcAssocType, this);
-  
+
   return StatusCode::SUCCESS;
 }
 
-StatusCode MCTupleToolPrompt::fill( const LHCb::Particle* 
+StatusCode MCTupleToolPrompt::fill( const LHCb::Particle*
                                     , const LHCb::Particle* P
                                     , const std::string& head
                                     , Tuples::Tuple& tuple )
 {
-  
-    
+
+
   const std::string prefix = fullName(head);
 
   Assert (P && m_p2mcAssoc, "No particle found , or misconfigured DaVinci smart associator" );
 
   if (P->isBasicParticle()) return StatusCode::SUCCESS; // don't fill for basic particles
   bool test=true;
-  
+
   int longLivedPid=0;
   int longLivedKey=0;
-  
+
   int isPrompt=-1;
-  
+
   int mcParentPid=0;
   int mcParentKey=0;
-  
+
   double lcl_lifetime;
-  
+
   const LHCb::MCParticle *mcp = 0;
 
   if (msgLevel(MSG::VERBOSE)) verbose() << "MCTupleToolPrompt::getting related MCP to " << P << endmsg ;
@@ -98,12 +97,12 @@ StatusCode MCTupleToolPrompt::fill( const LHCb::Particle*
   if (msgLevel(MSG::VERBOSE)) verbose() << "TupleToolMCTruth::got mcp " << mcp << endmsg ;
 
   const LHCb::MCParticle *mcp_parent = mcp;
-  
+
   ParticleProperty * lclPprop;
-  
+
   if (msgLevel(MSG::DEBUG)) debug() << "MCTupleToolPrompt::fill " << head << endmsg;
-  
-  if (mcp) 
+
+  if (mcp)
   {
     isPrompt=1;
     while( isPrompt && mcp_parent->mother() )
@@ -115,25 +114,25 @@ StatusCode MCTupleToolPrompt::fill( const LHCb::Particle*
 
       lclPprop = m_ppSvc->findByStdHepID(mcp_parent->particleID().pid());
       lcl_lifetime = lclPprop->lifetime();
-      
+
       if(msgLevel(MSG::DEBUG))
       {
-        debug() << "Particle: " << lclPprop->evtGenName() 
+        debug() << "Particle: " << lclPprop->evtGenName()
                 << "  lifetime: " << lcl_lifetime << endmsg;
       }
-      
-      if ( lcl_lifetime > m_maxLifetime*Gaudi::Units::ns ) 
+
+      if ( lcl_lifetime > m_maxLifetime*Gaudi::Units::ns )
       {
         isPrompt=0;
         longLivedPid=mcParentPid;
         longLivedKey=mcParentKey;
       }
-    }  
+    }
   }
 
-  if (msgLevel(MSG::DEBUG)) debug() << "MCTupleToolPrompt::fill - filling " 
+  if (msgLevel(MSG::DEBUG)) debug() << "MCTupleToolPrompt::fill - filling "
                                     << head << endmsg;
-  
+
   test &= tuple->column( prefix+"_MC_ISPROMPT", isPrompt );
   if (m_storeLongLivedPid)
   {
@@ -146,6 +145,6 @@ StatusCode MCTupleToolPrompt::fill( const LHCb::Particle*
 //=============================================================================
 // Destructor
 //=============================================================================
-MCTupleToolPrompt::~MCTupleToolPrompt() {} 
+MCTupleToolPrompt::~MCTupleToolPrompt() {}
 
 //=============================================================================

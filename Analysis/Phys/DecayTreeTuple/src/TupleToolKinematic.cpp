@@ -22,16 +22,17 @@
 
 // Declaration of the Tool Factory
 // actually acts as a using namespace TupleTool
-DECLARE_TOOL_FACTORY( TupleToolKinematic );
+DECLARE_TOOL_FACTORY( TupleToolKinematic )
+
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TupleToolKinematic::TupleToolKinematic( const std::string& type,
-                                        const std::string& name,
-                                        const IInterface* parent )
-  : TupleToolBase ( type, name , parent )
-  , m_transporter()
-  , m_transporterName ("ParticleTransporter:PUBLIC")
+  TupleToolKinematic::TupleToolKinematic( const std::string& type,
+                                          const std::string& name,
+                                          const IInterface* parent )
+    : TupleToolBase ( type, name , parent )
+    , m_transporter()
+    , m_transporterName ("ParticleTransporter:PUBLIC")
 {
   declareInterface<IParticleTupleTool>(this);
 
@@ -96,9 +97,11 @@ StatusCode TupleToolKinematic::fill( const LHCb::Particle* mother
   }
   return StatusCode(test);
 }
-//=============================================================================
-double TupleToolKinematic::preFitMass(const LHCb::Particle* p) const {
 
+//=============================================================================
+
+double TupleToolKinematic::preFitMass(const LHCb::Particle* p) const 
+{
   Gaudi::LorentzVector Mom ;
   for ( SmartRefVector< LHCb::Particle >::const_iterator d = p->daughters().begin();
         d != p->daughters().end() ; ++d){

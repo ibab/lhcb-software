@@ -20,8 +20,12 @@
  *  @author Patrick Koppenburg
  *  @date   2009-02-17
  */
-class MCTupleToolDalitz : public TupleToolBase, virtual public IMCParticleTupleTool {
+class MCTupleToolDalitz : public TupleToolBase, 
+                          virtual public IMCParticleTupleTool 
+{
+
 public: 
+
   /// Standard constructor
   MCTupleToolDalitz( const std::string& type, 
                      const std::string& name,
@@ -35,9 +39,9 @@ public:
 			   , const std::string&
 			   , Tuples::Tuple& );
 
-protected:
-
 private:
+
+  // Horrid way of sharing code. Should use inheritance instead ...
 #include "TupleToolDalitz.icpp"
 
 };

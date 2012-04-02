@@ -1,9 +1,9 @@
 // $Id: TupleToolAngles.cpp,v 1.5 2010-01-26 15:39:26 rlambert Exp $
-// Include files 
+// Include files
 #include "gsl/gsl_sys.h"
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/Vector3DTypes.h"
 
@@ -23,45 +23,37 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TupleToolAngles );
-
+DECLARE_TOOL_FACTORY( TupleToolAngles )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TupleToolAngles::TupleToolAngles( const std::string& type,
-                                        const std::string& name,
-                                        const IInterface* parent )
-  : TupleToolBase ( type, name , parent ),
-    m_wrtMother(0)
+  TupleToolAngles::TupleToolAngles( const std::string& type,
+                                    const std::string& name,
+                                    const IInterface* parent )
+    : TupleToolBase ( type, name , parent ),
+      m_wrtMother(0)
 {
   declareInterface<IParticleTupleTool>(this);
   declareProperty("WRTMother",m_wrtMother=true,
-		  "Turn false to fill angles with respect to top of tree");
+                  "Turn false to fill angles with respect to top of tree");
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
-TupleToolAngles::~TupleToolAngles() {} 
+TupleToolAngles::~TupleToolAngles() {}
 
-//=============================================================================
-// initialize
-//=============================================================================
-
-StatusCode TupleToolAngles::initialize(){
-  if( ! TupleToolBase::initialize() ) return StatusCode::FAILURE;
-  return StatusCode::SUCCESS ;
-}
 //=============================================================================
 // Fill
 //=============================================================================
 StatusCode TupleToolAngles::fill( const LHCb::Particle* top
-                                     , const LHCb::Particle* part
-                                     , const std::string& head
-                                     , Tuples::Tuple& tuple )
+                                  , const LHCb::Particle* part
+                                  , const std::string& head
+                                  , Tuples::Tuple& tuple )
 {
   const std::string prefix=fullName(head);
-  
+
   bool test = true;
   const LHCb::Particle* mother=top;
   if(m_wrtMother) mother=findMother(top,part);
@@ -70,17 +62,17 @@ StatusCode TupleToolAngles::fill( const LHCb::Particle* top
   // fill the tuple:
   test &= tuple->column( prefix+"_CosTheta", cosT );
   if(isVerbose()) test &= tuple->column( prefix+"_Theta", acos(cosT) );
-  if ( msgLevel(MSG::DEBUG)) debug() << mother->particleID().pid() << " " << mother->momentum() << " " 
+  if ( msgLevel(MSG::DEBUG)) debug() << mother->particleID().pid() << " " << mother->momentum() << " "
                                      << part->particleID().pid() << " " << part->momentum() << endmsg ;
   return StatusCode(test) ;
-  
+
 }
 //=============================================================================
 // Fill
 //=============================================================================
 
 const LHCb::Particle* TupleToolAngles::findMother( const LHCb::Particle* top
-						 , const Particle* P ) const 
+                                                   , const Particle* P ) const
 {
   if( top == P || top->isBasicParticle() ) return 0;
 
@@ -93,7 +85,7 @@ const LHCb::Particle* TupleToolAngles::findMother( const LHCb::Particle* top
       return top;
     }
   }
-  
+
   // vertex not yet found, get deeper in the decay:
   for( it = dau.begin(); dau.end()!=it; ++it ){
     if( P != *it && !(*it)->isBasicParticle() ){

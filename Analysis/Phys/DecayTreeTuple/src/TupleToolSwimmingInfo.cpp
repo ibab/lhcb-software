@@ -15,6 +15,9 @@
 #include "GaudiAlg/TupleObj.h"
 
 #include "Event/Particle.h"
+
+using namespace LHCb;
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : TupleToolSwimmingInfo
 //
@@ -23,16 +26,15 @@
 
 // Declaration of the Tool Factory
 // actually acts as a using namespace TupleTool
-DECLARE_TOOL_FACTORY( TupleToolSwimmingInfo );
+DECLARE_TOOL_FACTORY( TupleToolSwimmingInfo )
 
-using namespace LHCb;
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TupleToolSwimmingInfo::TupleToolSwimmingInfo( const std::string& type,
-                                              const std::string& name,
-                                              const IInterface* parent )
-  : TupleToolBase ( type, name , parent )
+  TupleToolSwimmingInfo::TupleToolSwimmingInfo( const std::string& type,
+                                                const std::string& name,
+                                                const IInterface* parent )
+    : TupleToolBase ( type, name , parent )
 {
   declareInterface<IParticleTupleTool>(this);
   declareProperty("ReportsLocation" , m_swimRelTableLoc  = "/Event/SwimmingMicroDST/SingleCandidate/P2TPRelations");

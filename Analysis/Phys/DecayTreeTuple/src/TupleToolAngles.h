@@ -25,30 +25,35 @@
  *  @date   2009-09-04
  */
 
-class TupleToolAngles : public TupleToolBase, virtual public IParticleTupleTool {
+class TupleToolAngles : public TupleToolBase, 
+                        virtual public IParticleTupleTool 
+{
+
 public: 
+  
   /// Standard constructor
   TupleToolAngles( const std::string& type, 
                       const std::string& name,
                       const IInterface* parent);
 
   virtual ~TupleToolAngles( ); ///< Destructor
-  virtual StatusCode initialize();
+  
   virtual StatusCode fill( const LHCb::Particle*
 			   , const LHCb::Particle*
 			   , const std::string&
 			   , Tuples::Tuple& );
 
-protected:
-
 private:
+
 #include "Theta.icpp"
 
   const LHCb::Particle* findMother( const LHCb::Particle* top
-                              , const LHCb::Particle* P ) const ;
+                              , const LHCb::Particle* P ) const;
+
+private:
   
   bool m_wrtMother;
-private:
 
 };
+
 #endif // TUPLETOOLANGLES_H

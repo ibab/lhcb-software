@@ -1,3 +1,6 @@
+
+private:
+
 //=============================================================================
 // The templated method filling the tuple for Particles and MCParticles
 //=============================================================================
@@ -7,43 +10,50 @@ StatusCode fill( const std::vector<const TYPE*> dauts      /// daughters
                  , const std::string head                  /// header
                  , Tuples::Tuple& tuple                    /// tuple
                  , bool revert ){                          /// revert all PID (because mother is antiparticle)
-  
+
   const std::string prefix=fullName(head);
   bool test = true;
-  
+
   typename std::vector<const TYPE*>::const_iterator i, j;
   for ( i = dauts.begin() ; i!= dauts.end() ; ++i){
-    std::string n1 = name( (*i)->particleID(), revert );
+    std::string n1 = particleName( (*i)->particleID(), revert );
     Gaudi::LorentzVector p1 = (*i)->momentum() ;
     for ( j = dauts.begin() ; i!= j ; ++j){
-      std::string n2 = name( (*j)->particleID(), revert );                                        
+      std::string n2 = particleName( (*j)->particleID(), revert );
       Gaudi::LorentzVector p = p1+(*j)->momentum() ;
-      if (msgLevel(MSG::VERBOSE)) verbose() << (*i)->particleID().pid() << " " << (*j)->particleID().pid()  << " " 
-                                            << prefix+"Dalitz_"+n1+"_"+n2+"_M2"<< " " << revert << endmsg ;
+      if (msgLevel(MSG::VERBOSE))
+        verbose() << (*i)->particleID().pid() << " " << (*j)->particleID().pid()  << " "
+                  << prefix+"Dalitz_"+n1+"_"+n2+"_M2"<< " " << revert << endmsg ;
       test &= tuple->column( prefix+"Dalitz_"+n1+"_"+n2+"_M2",p.M2()  );
     }
   }
 
-  return StatusCode(test) ;
-  
+  return StatusCode(test);
 }
 
 /// get name of particle or anti-particle
-std::string name(const LHCb::ParticleID& id, bool revert)const{
+std::string particleName(const LHCb::ParticleID& id, bool revert)const
+{
   return Decays::escape( ( revert ?
                            ppSvc()->find( id )->antiParticle()->particle() :
                            ppSvc()->find( id )->particle() )) ;
 }
 
 /// get particle property serivce
-const LHCb::IParticlePropertySvc* ppSvc()const{
-  return m_ppSvc ;
+const LHCb::IParticlePropertySvc* ppSvc()const
+{
+  return m_ppSvc;
 }
 
-StatusCode initialize(){
+public:
+
+StatusCode initialize()
+{
   if (!TupleToolBase::initialize()) return StatusCode::FAILURE ;
   m_ppSvc = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc", true );
   return StatusCode::SUCCESS ;
 }
+
+private:
 
 LHCb::IParticlePropertySvc* m_ppSvc ;

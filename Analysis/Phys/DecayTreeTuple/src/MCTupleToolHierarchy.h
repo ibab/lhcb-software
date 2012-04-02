@@ -19,9 +19,9 @@
  *
  *
  * - head_MC_MOTHER_ID : true mc mother ID
- 
+
  * - head_MC_MOTHER_KEY : true mc mother key
- 
+
  * - head_MC_GD_MOTHER_ID : grand mother ID
 
  * - head_MC_GD_MOTHER_KEY : grand mother key
@@ -35,26 +35,23 @@
  *  @author Stephane Poss
  *  @date   2008-02-28
  */
-class MCTupleToolHierarchy : public TupleToolBase, virtual public IMCParticleTupleTool {
+class MCTupleToolHierarchy : public TupleToolBase, 
+                             virtual public IMCParticleTupleTool 
+{
+  
 public:
+  
   /// Standard constructor
   MCTupleToolHierarchy( const std::string& type,
-		    const std::string& name,
-		    const IInterface* parent);
+                        const std::string& name,
+                        const IInterface* parent);
 
   virtual ~MCTupleToolHierarchy(){}; ///< Destructor
 
   virtual StatusCode fill( const LHCb::MCParticle*
-			   , const LHCb::MCParticle*
-			   , const std::string&
-			   , Tuples::Tuple& );
-
-  virtual StatusCode initialize();
-  //  virtual StatusCode finalize();
-
-private:
-
-  //  const GaudiAlgorithm* getParent() const ;
+                           , const LHCb::MCParticle*
+                           , const std::string&
+                           , Tuples::Tuple& );
 
 };
 

@@ -24,19 +24,19 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TupleToolTISTOS );
+DECLARE_TOOL_FACTORY( TupleToolTISTOS )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TupleToolTISTOS::TupleToolTISTOS( const std::string& type,
-                                  const std::string& name,
-                                  const IInterface* parent )
-  : TupleToolTriggerBase  ( type, name , parent )
-  , m_TriggerTisTosName   ( "TriggerTisTos"     )
-  , m_L0TriggerTisTosName ( "L0TriggerTisTos"   )
-  , m_TriggerTisTosTool   ( NULL                )
-  , m_L0TriggerTisTosTool ( NULL                )
+  TupleToolTISTOS::TupleToolTISTOS( const std::string& type,
+                                    const std::string& name,
+                                    const IInterface* parent )
+    : TupleToolTriggerBase  ( type, name , parent )
+    , m_TriggerTisTosName   ( "TriggerTisTos"     )
+    , m_L0TriggerTisTosName ( "L0TriggerTisTos"   )
+    , m_TriggerTisTosTool   ( NULL                )
+    , m_L0TriggerTisTosTool ( NULL                )
 {
   declareInterface<IParticleTupleTool>(this);
   declareProperty("TriggerTisTosName",m_TriggerTisTosName);
@@ -216,4 +216,14 @@ StatusCode TupleToolTISTOS::fillVerbose( const LHCb::Particle*
     }
   }
   return StatusCode::SUCCESS;
+}
+
+StatusCode TupleToolTISTOS::fillBasic( Tuples::Tuple& T )
+{
+  return TupleToolTriggerBase::fillBasic(T);
+}
+
+StatusCode TupleToolTISTOS::fillVerbose( Tuples::Tuple& T )
+{
+  return TupleToolTriggerBase::fillVerbose(T);
 }

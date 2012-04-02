@@ -17,6 +17,9 @@
 
 #include <boost/lexical_cast.hpp>
 
+using namespace Gaudi;
+using namespace LHCb;
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : TupleTool
 //
@@ -24,25 +27,20 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TupleToolDecay );
-
-
-using namespace Gaudi;
-using namespace LHCb;
-
+DECLARE_TOOL_FACTORY( TupleToolDecay )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TupleToolDecay::TupleToolDecay( const std::string& type,
-                                const std::string& name,
-                                const IInterface* parent )
-  : GaudiTool ( type, name , parent )
-  , m_hasMatched( false )
-  , m_myName(name)
-  , m_dkFinder(0)
-  , m_mcdkFinder(0)
-  , m_isMC(false)
+  TupleToolDecay::TupleToolDecay( const std::string& type,
+                                  const std::string& name,
+                                  const IInterface* parent )
+    : GaudiTool( type, name , parent )
+    , m_hasMatched( false )
+    , m_myName(name)
+    , m_dkFinder(0)
+    , m_mcdkFinder(0)
+    , m_isMC(false)
 {
   declareInterface<TupleToolDecay>(this);
 
@@ -57,8 +55,9 @@ TupleToolDecay::~TupleToolDecay() {}
 
 //=============================================================================
 
-StatusCode TupleToolDecay::initialize( const std::string& dcy, bool isMC ){
-  if( ! GaudiTool::initialize() ) return StatusCode::FAILURE;
+StatusCode TupleToolDecay::initializeDecay( const std::string& dcy, bool isMC )
+{
+  if ( !GaudiTool::initialize() ) return StatusCode::FAILURE;
 
   m_isMC = isMC ;
 

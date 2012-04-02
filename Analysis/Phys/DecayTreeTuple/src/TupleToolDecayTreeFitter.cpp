@@ -29,8 +29,7 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TupleToolDecayTreeFitter );
-
+DECLARE_TOOL_FACTORY( TupleToolDecayTreeFitter )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -44,7 +43,7 @@ TupleToolDecayTreeFitter::TupleToolDecayTreeFitter( const std::string& type,
   , m_particleDescendants()
   , m_map ()
   , m_substitute()
-  
+
 {
   declareProperty("daughtersToConstrain", m_massConstraints , "List of particles to contrain to mass");
   declareProperty("constrainToOriginVertex", m_constrainToOriginVertex = false,
@@ -52,8 +51,8 @@ TupleToolDecayTreeFitter::TupleToolDecayTreeFitter( const std::string& type,
   declareProperty("MaxPV", m_maxPV = 10  , "Maximal number of PVs considered");
   declareProperty( "Substitutions" ,m_map, "PID-substitutions :  { ' decay-component' : 'new-pid' }" ) ;
   declareInterface<IParticleTupleTool>(this);
-
 }
+
 //=============================================================================
 StatusCode TupleToolDecayTreeFitter::initialize()
 {
@@ -83,7 +82,7 @@ StatusCode TupleToolDecayTreeFitter::initialize()
     info() << "All fields will be prepended with ``" << m_extraName << "''" <<endmsg;
   }
 
-  if ( !m_map.empty() ){ 
+  if ( !m_map.empty() ){
     m_substitute = tool<ISubstitutePID>("SubstitutePIDTool",this);
     sc = m_substitute->decodeCode( m_map );
   }
@@ -115,7 +114,7 @@ StatusCode TupleToolDecayTreeFitter::fill( const LHCb::Particle* mother
     m_substitute->substitute ( tree.head() ) ;
   }
 
-  if (m_constrainToOriginVertex){  
+  if (m_constrainToOriginVertex){
     if (msgLevel(MSG::DEBUG)) {
       debug() << "Constrain the origin vertex" << endmsg;
     }

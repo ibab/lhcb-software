@@ -10,10 +10,11 @@ class DVAlgorithm;
 class ILifetimeFitter;
 class IVertexFit;
 
-namespace LHCb {
+namespace LHCb
+{
   class Particle;
   class Vertex;
-};
+}
 
 /** @class TupleToolParticleReFit TupleToolParticleReFit.h jborel/TupleToolParticleReFit.h
  * \brief Use a standard vertex fitter to refit head of a decay chain and fill DecayTreeTuple
@@ -26,13 +27,13 @@ namespace LHCb {
  * - head_OVrefit_MMERR
  * - head_OVrefit_P
  * - head_OVrefit_PT
- * - head_OVrefit_P[E|X|Y|Z] 
+ * - head_OVrefit_P[E|X|Y|Z]
  * - head_OVrefit_TAU
  * - head_OVrefit_TAUERR
  * - head_OVrefit_TAUCHI2
  *
- * The middle name "OV" standard for "OfflineVertexFitter" and can be changed   
- * by setting the "ExtraName" property. 
+ * The middle name "OV" standard for "OfflineVertexFitter" and can be changed
+ * by setting the "ExtraName" property.
  *
  * The main purpose of the tool is to get the MM and TAU varibales after
  * refitting the B particle with or without a certain daughter mass cosntraint.
@@ -51,22 +52,27 @@ namespace LHCb {
  *  @author Yuehong Xie
  *  @date   2010-11-2
  */
-class TupleToolParticleReFit : public TupleToolBase, virtual public IParticleTupleTool {
+class TupleToolParticleReFit : public TupleToolBase,
+                               virtual public IParticleTupleTool
+{
+
 public:
+
   /// Standard constructor
   TupleToolParticleReFit( const std::string& type,
-		       const std::string& name,
-		       const IInterface* parent);
+                          const std::string& name,
+                          const IInterface* parent);
 
-  virtual ~TupleToolParticleReFit(){}; ///< Destructor
+  virtual ~TupleToolParticleReFit(){} ///< Destructor
 
   virtual StatusCode initialize();
-  
+
   virtual StatusCode fill( const LHCb::Particle*, const LHCb::Particle*
-			   , const std::string&, Tuples::Tuple& );
+                           , const std::string&, Tuples::Tuple& );
 
 
 private:
+
   DVAlgorithm* m_dva;
   ILifetimeFitter* m_timefitter;
   IVertexFit* m_vtxfitter;

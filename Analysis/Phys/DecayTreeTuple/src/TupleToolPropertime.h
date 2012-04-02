@@ -10,16 +10,17 @@
 class DVAlgorithm;
 class ILifetimeFitter;
 
-namespace LHCb {
+namespace LHCb
+{
   class Particle;
   class Vertex;
-};
+}
 
 /** @class TupleToolPropertime TupleToolPropertime.h jborel/TupleToolPropertime.h
  * \brief Fills the propertime for DecayTreeTuple
  *
  * Columns filled:
- * - head_TAU 
+ * - head_TAU
  * - head_TAUERR
  * - head_TAUCHI2
  *
@@ -28,30 +29,35 @@ namespace LHCb {
  *  @author Jeremie Borel
  *  @date   2007-11-07
  */
-class TupleToolPropertime : public TupleToolBase, virtual public IParticleTupleTool {
+class TupleToolPropertime : public TupleToolBase,
+                            virtual public IParticleTupleTool
+{
+
 public:
+
   /// Standard constructor
   TupleToolPropertime( const std::string& type,
-		       const std::string& name,
-		       const IInterface* parent);
+                       const std::string& name,
+                       const IInterface* parent);
 
-  virtual ~TupleToolPropertime(){}; ///< Destructor
+  virtual ~TupleToolPropertime(){} ///< Destructor
 
   virtual StatusCode initialize();
-  
-  virtual StatusCode fill( const LHCb::Particle*, const LHCb::Particle*
-			   , const std::string&, Tuples::Tuple& );
 
+  virtual StatusCode fill( const LHCb::Particle*, const LHCb::Particle*
+                           , const std::string&, Tuples::Tuple& );
 
 private:
+
   DVAlgorithm* m_dva;
   ILifetimeFitter* m_fit;
 
   const LHCb::Vertex* originVertex( const  LHCb::Particle*
-				    , const LHCb::Particle* ) const;
+                                    , const LHCb::Particle* ) const;
 
   std::string m_toolName;
   bool        m_fitToPV;
+
 };
 
 #endif // JBOREL_TUPLETOOLPROPERTIME_H

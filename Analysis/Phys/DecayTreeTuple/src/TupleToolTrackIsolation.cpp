@@ -19,14 +19,15 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_TOOL_FACTORY( TupleToolTrackIsolation );
+DECLARE_TOOL_FACTORY( TupleToolTrackIsolation )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TupleToolTrackIsolation::TupleToolTrackIsolation( const std::string& type,
-                                                  const std::string& name,
-                                                  const IInterface* parent) : TupleToolBase ( type, name , parent )
+  TupleToolTrackIsolation::TupleToolTrackIsolation( const std::string& type,
+                                                    const std::string& name,
+                                                    const IInterface* parent)
+    : TupleToolBase ( type, name , parent )
 {
   declareInterface<IParticleTupleTool>(this);
   declareProperty( "MinConeAngle", m_minConeAngle = 0.5,

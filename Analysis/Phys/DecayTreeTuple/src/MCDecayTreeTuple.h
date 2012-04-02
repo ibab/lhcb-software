@@ -12,7 +12,7 @@
  * \brief This is the new version of the so-called DecayChainNTuple
  *
  * \section basics (Basic usage:)
- * 
+ *
  * MCDecayTreeTuple has a decay descriptor (given by the Decay
  * property). One line of the Tuple if filled for each reconstructed
  * candidate. This algorithm is NOT backward compatible with
@@ -34,11 +34,13 @@
  * \sa DecayTreeTuple IEventTupleTool IMCParticleTupleTool
  *
  * \author Jeremie Borel with the help of Patrick and lhcb-davinci@cern.ch
- * \date 2007-11-01 
+ * \date 2007-11-01
  */
-class MCDecayTreeTuple : public DecayTreeTupleBase  {
+class MCDecayTreeTuple : public DecayTreeTupleBase
+{
 
- public:
+public:
+
   /// Standard constructor
   MCDecayTreeTuple( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -46,9 +48,7 @@ class MCDecayTreeTuple : public DecayTreeTupleBase  {
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-private:
 };
 
 #endif // MCDECAYTREETUPLE_H

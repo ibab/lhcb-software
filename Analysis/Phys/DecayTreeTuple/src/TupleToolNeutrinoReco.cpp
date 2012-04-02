@@ -23,16 +23,16 @@
 
 // Declaration of the Tool Factory
 // actually acts as a using namespace TupleTool
-DECLARE_TOOL_FACTORY( TupleToolNeutrinoReco );
+DECLARE_TOOL_FACTORY( TupleToolNeutrinoReco )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TupleToolNeutrinoReco::TupleToolNeutrinoReco( const std::string& type,
-                                              const std::string& name,
-                                              const IInterface* parent )
-  : TupleToolBase ( type, name , parent )
-  , m_dva(NULL)
+  TupleToolNeutrinoReco::TupleToolNeutrinoReco( const std::string& type,
+                                                const std::string& name,
+                                                const IInterface* parent )
+    : TupleToolBase ( type, name , parent )
+    , m_dva(NULL)
 {
   declareInterface<IParticleTupleTool>(this);
 
@@ -40,6 +40,7 @@ TupleToolNeutrinoReco::TupleToolNeutrinoReco( const std::string& type,
 }
 
 //=============================================================================
+
 StatusCode TupleToolNeutrinoReco::initialize()
 {
   if( ! TupleToolBase::initialize() ) return StatusCode::FAILURE;
@@ -51,7 +52,6 @@ StatusCode TupleToolNeutrinoReco::initialize()
 
   return StatusCode::SUCCESS;
 }
-
 
 //=============================================================================
 

@@ -86,39 +86,22 @@ protected:
 
   std::vector< std::string > l0TriggersFromL0DU() const;
 
-private:
+protected:
 
   virtual StatusCode fillBasic( const LHCb::Particle*
                                 , const LHCb::Particle*
                                 , const std::string&
-                                , Tuples::Tuple&  )
-  {
-    Error("Don't call the fill of the baseclass!!");
-    return StatusCode::FAILURE;
-  };
+                                , Tuples::Tuple& );
 
-  virtual StatusCode fillBasic(Tuples::Tuple& )
-  {
-    Error("Don't call the fill of the baseclass!!");
-    return StatusCode::FAILURE;
-  };
-
+  virtual StatusCode fillBasic( Tuples::Tuple& );
 
   virtual StatusCode fillVerbose( const LHCb::Particle*
                                   , const LHCb::Particle*
                                   , const std::string&
-                                  , Tuples::Tuple&  )
-  {
-    Error("Don't call the fill of the baseclass!!");
-    return StatusCode::FAILURE;
-  };
+                                  , Tuples::Tuple& );
 
-  virtual StatusCode fillVerbose( Tuples::Tuple&  )
-  {
-    Error("Don't call the fill of the baseclass!!");
-    return StatusCode::FAILURE;
-  };
-
+  virtual StatusCode fillVerbose( Tuples::Tuple& );
 
 };
+
 #endif // TUPLETOOLTRIGGERBASE_H

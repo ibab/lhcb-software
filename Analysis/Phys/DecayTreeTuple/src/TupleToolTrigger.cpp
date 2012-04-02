@@ -28,23 +28,23 @@ DECLARE_TOOL_FACTORY( TupleToolTrigger )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TupleToolTrigger::TupleToolTrigger( const std::string& type,
-                                    const std::string& name,
-                                    const IInterface* parent )
-  : TupleToolTriggerBase ( type, name , parent )
-  , m_routingBits(0)
+  TupleToolTrigger::TupleToolTrigger( const std::string& type,
+                                      const std::string& name,
+                                      const IInterface* parent )
+    : TupleToolTriggerBase ( type, name , parent )
+    , m_routingBits(0)
 {
   declareInterface<IEventTupleTool>(this);
   //declareProperty( "FillL0", m_fillL0=true, "Fill L0" ); now in the base class
   //declareProperty( "FillHlt", m_fillHlt=true, "Fill Hlt" ); now in the base class
   //depracated, use VerboseHlt1, VerboseHlt2 or VerboseL0
   //declareProperty( "AllIntermediateSteps", m_allSteps=false, "Fill also intermediate steps" );
-  for ( unsigned int i = 32 ; i < 96 ; i++)
+  for ( unsigned int i = 32 ; i < 96 ; ++i)
   {
     m_routingBits.push_back(i);
   }
   declareProperty( "RoutingBits", m_routingBits, "Routing bits to fill" );
-  declareProperty( "RawEventLocations", 
+  declareProperty( "RawEventLocations",
                    m_rawEventLocs = boost::assign::list_of
                    (LHCb::RawEventLocation::Trigger)
                    (LHCb::RawEventLocation::Default) );
@@ -64,7 +64,7 @@ StatusCode TupleToolTrigger::initialize ( )
 
 //=============================================================================
 
-StatusCode TupleToolTrigger::fillBasic( Tuples::Tuple& tuple ) 
+StatusCode TupleToolTrigger::fillBasic( Tuples::Tuple& tuple )
 {
   if (msgLevel(MSG::DEBUG)) debug() << "Tuple Tool Trigger Basic" << endmsg ;
 
@@ -255,4 +255,33 @@ StatusCode TupleToolTrigger::fillRoutingBits( Tuples::Tuple& tuple )
   }
 
   return StatusCode::SUCCESS;
+}
+
+StatusCode TupleToolTrigger::fillBasic( const LHCb::Particle* P1
+                                        , const LHCb::Particle* P2
+                                        , const std::string& S
+                                        , Tuples::Tuple& T )
+{
+  return TupleToolTriggerBase::fillBasic(P1,P2,S,T);
+}
+
+StatusCode TupleToolTrigger::fillVerbose( const LHCb::Particle* P1
+                                          , const LHCb::Particle* P2
+                                          , const std::string& S
+                                          , Tuples::Tuple& T )
+{
+  return TupleToolTriggerBase::fillBasic(P1,P2,S,T);
+}
+
+StatusCode TupleToolTrigger::fill( Tuples::Tuple& tuple )
+{
+  return TupleToolTriggerBase::fill(tuple);
+}
+
+StatusCode TupleToolTrigger::fill( const LHCb::Particle* top
+                                   , const LHCb::Particle* part
+                                   , const std::string& head
+                                   , Tuples::Tuple& tuple )
+{
+  return TupleToolTriggerBase::fill(top,part,head,tuple);
 }

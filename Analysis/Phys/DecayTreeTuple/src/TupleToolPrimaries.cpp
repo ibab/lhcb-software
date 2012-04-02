@@ -13,7 +13,7 @@
 #include "Event/Track.h"
 #include "Kernel/IOnOffline.h"
 
-//#include <functional>
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TupleToolPrimaries
@@ -23,17 +23,15 @@
 
 // Declaration of the Tool Factory
 // actually acts as a using namespace TupleTool
-DECLARE_TOOL_FACTORY( TupleToolPrimaries );
-
-using namespace LHCb;
+DECLARE_TOOL_FACTORY( TupleToolPrimaries )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TupleToolPrimaries::TupleToolPrimaries( const std::string& type,
-                                        const std::string& name,
-                                        const IInterface* parent )
-  : TupleToolBase ( type, name , parent )
+  TupleToolPrimaries::TupleToolPrimaries( const std::string& type,
+                                          const std::string& name,
+                                          const IInterface* parent )
+    : TupleToolBase ( type, name , parent )
 {
   declareInterface<IEventTupleTool>(this);
   declareProperty("InputLocation", m_pvLocation = "" ,
@@ -134,7 +132,7 @@ double TupleToolPrimaries::sumPT(const LHCb::RecVertex* pv) const {
   for (SmartRefVector< LHCb::Track >::const_iterator t = pv->tracks().begin() ;
        t!= pv->tracks().end() ; ++t) {
     if (0==*t) {
-      Warning("Cannot resolve pointer to Track. Probably a microDST. Set Verbose to false.", 
+      Warning("Cannot resolve pointer to Track. Probably a microDST. Set Verbose to false.",
               StatusCode::FAILURE,10);
       return -1;
     }

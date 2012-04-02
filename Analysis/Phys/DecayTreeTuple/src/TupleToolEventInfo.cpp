@@ -31,15 +31,15 @@ using namespace Gaudi;
 using namespace LHCb;
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TupleToolEventInfo );
+DECLARE_TOOL_FACTORY( TupleToolEventInfo )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TupleToolEventInfo::TupleToolEventInfo( const std::string& type,
-                                        const std::string& name,
-                                        const IInterface* parent )
-  : TupleToolBase ( type, name , parent )
+  TupleToolEventInfo::TupleToolEventInfo( const std::string& type,
+                                          const std::string& name,
+                                          const IInterface* parent )
+    : TupleToolBase ( type, name , parent )
 {
   declareInterface<IEventTupleTool>(this);
   declareProperty("InputLocation", m_pvLocation = "" ,
@@ -70,8 +70,8 @@ StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple )
   else if( exist<ODIN>( LHCb::ODINLocation::Default, false ) )
   {
     odin = get<ODIN>( LHCb::ODINLocation::Default, false );
-  } 
-  else 
+  }
+  else
   {
     // should always be available ...
     return Error( "Cannot load the ODIN data object", StatusCode::SUCCESS );
@@ -88,14 +88,14 @@ StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple )
   if (exist<RecVertex::Container>(m_pvLocation)) nPVs = (get<RecVertex::Container>(m_pvLocation))->size();
 
   LHCb::L0DUReport* report = NULL;
-  if(exist<L0DUReport>( LHCb::L0DUReportLocation::Default) ) 
+  if(exist<L0DUReport>( LHCb::L0DUReportLocation::Default) )
   {
     report = get<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default);
-  } 
-  else if(exist<L0DUReport>( LHCb::L0DUReportLocation::Default, false) ) 
+  }
+  else if(exist<L0DUReport>( LHCb::L0DUReportLocation::Default, false) )
   {
     report = get<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default,false);
-  } 
+  }
   else
   {
     Warning("Can't get LHCb::L0DUReportLocation::Default (" +
@@ -103,22 +103,22 @@ StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple )
   }
 
   LHCb::HltDecReports* decreport = NULL;
-  if(exist<HltDecReports>( LHCb::HltDecReportsLocation::Default) ) 
+  if(exist<HltDecReports>( LHCb::HltDecReportsLocation::Default) )
   {
     decreport = get<LHCb::HltDecReports>(LHCb::HltDecReportsLocation::Default);
   }
-  else if(exist<HltDecReports>( LHCb::HltDecReportsLocation::Default, false) ) 
+  else if(exist<HltDecReports>( LHCb::HltDecReportsLocation::Default, false) )
   {
     decreport = get<LHCb::HltDecReports>(LHCb::HltDecReportsLocation::Default, false);
   }
-  else 
+  else
   {
     Warning("Can't get LHCb::HltDecReportsLocation::Default (" +
             LHCb::HltDecReportsLocation::Default + ")").ignore();
   }
 
   bool test = true;
-  
+
   // Fill the tuple
 
   if (!m_mu.empty()) test &= tuple->column( prefix+"Mu", m_mu[odin->runNumber()] );

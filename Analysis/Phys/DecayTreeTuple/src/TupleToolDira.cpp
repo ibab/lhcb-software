@@ -16,6 +16,9 @@
 #include "Event/Vertex.h"
 #include "Event/RecVertex.h"
 #include "Event/Particle.h"
+
+using namespace LHCb;
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : DiraTupleTool
 //
@@ -24,16 +27,15 @@
 
 // Declaration of the Tool Factory
 // actually acts as a using namespace TupleTool
-DECLARE_TOOL_FACTORY( TupleToolDira );
+DECLARE_TOOL_FACTORY( TupleToolDira )
 
-using namespace LHCb;
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TupleToolDira::TupleToolDira( const std::string& type,
-                              const std::string& name,
-                              const IInterface* parent )
-  : TupleToolBase ( type, name , parent )
+  TupleToolDira::TupleToolDira( const std::string& type,
+                                const std::string& name,
+                                const IInterface* parent )
+    : TupleToolBase ( type, name , parent )
 
 {
   declareInterface<IParticleTupleTool>(this);

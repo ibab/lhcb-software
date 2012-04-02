@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2012-04-02 - Chris Jones
+ - Suppress the numerous icc11 compiler remarks and warnings.
+
 !========================= DecayTreeTuple v3r21 2012-03-29 =========================
 
 ! 2012-03-23 - Jibo He

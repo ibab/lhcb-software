@@ -9,9 +9,10 @@
 
 class IBackgroundCategory;
 
-namespace LHCb{
+namespace LHCb
+{
   class Particle;
-};
+}
 
 /** @class TupleToolMCBackgroundInfo TupleToolMCBackgroundInfo.h
  *

@@ -13,6 +13,8 @@
 #include "Event/Particle.h"
 #include "Event/MCParticle.h"
 
+using namespace LHCb;
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : EventInfoTupleTool
 //
@@ -21,28 +23,17 @@
 
 // Declaration of the Tool Factory
 // actually acts as a using namespace TupleTool
-DECLARE_TOOL_FACTORY( MCTupleToolHierarchy );
+DECLARE_TOOL_FACTORY( MCTupleToolHierarchy )
 
-using namespace LHCb;
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-MCTupleToolHierarchy::MCTupleToolHierarchy( const std::string& type,
-                                            const std::string& name,
-                                            const IInterface* parent )
-  : TupleToolBase ( type, name , parent )
+  MCTupleToolHierarchy::MCTupleToolHierarchy( const std::string& type,
+                                              const std::string& name,
+                                              const IInterface* parent )
+    : TupleToolBase ( type, name , parent )
 {
   declareInterface<IMCParticleTupleTool>(this);
-
-
-}
-
-//=============================================================================
-
-StatusCode MCTupleToolHierarchy::initialize(){
-  if( ! TupleToolBase::initialize() ) return StatusCode::FAILURE;
-
-  return StatusCode::SUCCESS;
 }
 
 //=============================================================================
@@ -53,7 +44,7 @@ StatusCode MCTupleToolHierarchy::fill( const LHCb::MCParticle*
 {
   const std::string prefix=fullName(head);
   bool test=true;
-  
+
 
   int mc_mother_id = 0;
   int mc_mother_key = 0;

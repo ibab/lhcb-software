@@ -16,6 +16,9 @@
 #include "GaudiAlg/TupleObj.h"
 
 #include "Event/Particle.h"
+
+using namespace LHCb;
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : GeometryTupleTool
 //
@@ -24,19 +27,18 @@
 
 // Declaration of the Tool Factory
 // actually acts as a using namespace TupleTool
-DECLARE_TOOL_FACTORY( TupleToolGeometry );
+DECLARE_TOOL_FACTORY( TupleToolGeometry )
 
-using namespace LHCb;
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TupleToolGeometry::TupleToolGeometry( const std::string& type,
-                                      const std::string& name,
-                                      const IInterface* parent )
-  :
-  TupleToolBase ( type, name , parent )
-  , m_dist(0)
-  , m_dva(0)
+  TupleToolGeometry::TupleToolGeometry( const std::string& type,
+                                        const std::string& name,
+                                        const IInterface* parent )
+    :
+    TupleToolBase ( type, name , parent )
+    , m_dist(0)
+    , m_dva(0)
 {
   declareInterface<IParticleTupleTool>(this);
   declareProperty("RefitPVs",m_refitPVs=false,

@@ -1,8 +1,8 @@
 // $Id: EventTuple.cpp,v 1.4 2009-06-01 15:40:27 pkoppenb Exp $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IRegistry.h"
 
 #include "Kernel/IEventTupleTool.h"            // Interface
@@ -17,8 +17,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( EventTuple );
-
+DECLARE_ALGORITHM_FACTORY( EventTuple )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -31,13 +30,13 @@ EventTuple::EventTuple( const std::string& name,
   m_collectionName = name + "/ETC" ;
   declareProperty("ToolList", m_toolList, "List of tools to be used" );
   declareProperty("TupleName", m_tupleName="EventTuple", "Name of nTuple" );
-  declareProperty("CollectionName", m_collectionName = "", 
+  declareProperty("CollectionName", m_collectionName = "",
                   "Default is evtColPath()");
- }
+}
 //=============================================================================
 // Destructor
 //=============================================================================
-EventTuple::~EventTuple() {} 
+EventTuple::~EventTuple() {}
 
 //=============================================================================
 // Initialization
@@ -58,10 +57,10 @@ StatusCode EventTuple::initialize() {
     if (m_collectionName == ""){
       m_collectionName =  evtColPath() ;
     }
-    info() << "Will be writing an ETC with name " << m_collectionName 
+    info() << "Will be writing an ETC with name " << m_collectionName
            << "/" << m_tupleName << endmsg ;
-  }  
-  
+  }
+
   return StatusCode::SUCCESS;
 }
 
@@ -77,12 +76,12 @@ StatusCode EventTuple::execute() {
   Tuple tuple = ( produceEvtCols () ? evtCol(m_tupleName,m_collectionName) : nTuple( m_tupleName ));
   if (msgLevel(MSG::VERBOSE)) verbose() << "Got tuple" << endmsg ;
   if (produceEvtCols()){
-    // pick up the location of the event --   
-    // this is what makes the tag collection a collection...   
+    // pick up the location of the event --
+    // this is what makes the tag collection a collection...
     DataObject* pObject = get<DataObject>("/Event");
     if (0!=pObject) {
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Filling Address " << endmsg ;
-      StatusCode sc = tuple->column("Address", pObject->registry()->address() );
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Filling Address " << endmsg ;
+      sc = tuple->column("Address", pObject->registry()->address() );
       if (!sc) {
         err() << "Error writing address" << endmsg ;
         return sc;
@@ -93,7 +92,7 @@ StatusCode EventTuple::execute() {
       return StatusCode::FAILURE ;
     }
   }
-  
+
   tuple->column( "EventInSequence", counter("Event").nEntries()).ignore();
   for ( std::vector<IEventTupleTool*>::iterator i = m_tools.begin() ; i!= m_tools.end() ; ++i){
     if (msgLevel(MSG::VERBOSE)) verbose() << "Filling " << (*i)->name() << endmsg ;
@@ -103,16 +102,6 @@ StatusCode EventTuple::execute() {
   }
   if (msgLevel(MSG::VERBOSE)) verbose() << "Writing tuple" << endmsg ;
   return tuple->write();
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode EventTuple::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiTupleAlg::finalize();  // must be called after all other actions
 }
 
 //=============================================================================

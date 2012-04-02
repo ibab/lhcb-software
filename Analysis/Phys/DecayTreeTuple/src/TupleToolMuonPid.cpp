@@ -17,11 +17,8 @@
 // 2007-11-07 : Jeremie Borel
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-// actually acts as a using namespace TupleTool
-DECLARE_TOOL_FACTORY( TupleToolMuonPid );
-
 using namespace LHCb;
+
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -88,3 +85,7 @@ StatusCode TupleToolMuonPid::fill( const Particle*
   }
   return StatusCode::FAILURE;
 }
+
+// Declaration of the Tool Factory
+// actually acts as a using namespace TupleTool
+DECLARE_TOOL_FACTORY( TupleToolMuonPid )

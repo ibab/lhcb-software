@@ -1,7 +1,7 @@
 // $Id: MCDecayTreeTuple.cpp,v 1.6 2010-04-20 06:40:48 rlambert Exp $
-// Include files 
+// Include files
 
-#include "boost/lexical_cast.hpp" 
+#include "boost/lexical_cast.hpp"
 #include "Kernel/Escape.h"
 // local
 #include "MCDecayTreeTuple.h"
@@ -15,51 +15,53 @@ using namespace Gaudi ;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( MCDecayTreeTuple );
-
+DECLARE_ALGORITHM_FACTORY( MCDecayTreeTuple )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-MCDecayTreeTuple::MCDecayTreeTuple( const std::string& name,
-                                ISvcLocator* pSvcLocator)
-  : DecayTreeTupleBase ( name , pSvcLocator )
+  MCDecayTreeTuple::MCDecayTreeTuple( const std::string& name,
+                                      ISvcLocator* pSvcLocator)
+    : DecayTreeTupleBase ( name , pSvcLocator )
 {
   declareProperty( "TupleName", m_tupleName="MCDecayTree" );
   // fill some default value
   m_toolList.push_back( "MCTupleToolKinematic" );
   m_toolList.push_back( "TupleToolEventInfo" );
-  
-  declareProperty( "ToolList", m_toolList );
 
+  declareProperty( "ToolList", m_toolList );
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
-MCDecayTreeTuple::~MCDecayTreeTuple() {} 
+MCDecayTreeTuple::~MCDecayTreeTuple() {}
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode MCDecayTreeTuple::initialize() {
-  StatusCode sc = DecayTreeTupleBase::initialize(); 
+StatusCode MCDecayTreeTuple::initialize() 
+{
+  const StatusCode sc = DecayTreeTupleBase::initialize();
   if ( sc.isFailure() ) return sc;
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
-  return  initializeDecays(true) ;
+  return initializeDecays(true) ;
 }
+
 //=============================================================================
 // Execute
 //=============================================================================
-StatusCode MCDecayTreeTuple::execute(){
+StatusCode MCDecayTreeTuple::execute()
+{
   if (msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
-  counter("Event")++;
+  ++counter("Event");
 
   LHCb::MCParticle::ConstVector mothers ;
   const LHCb::MCParticle* head = 0 ;
   while ( m_mcdkFinder->findDecay( head) ){
     mothers.push_back(head);
-  }  
+  }
   if( mothers.empty() ){
     if (msgLevel(MSG::VERBOSE)) verbose() << "No mothers of decay " << m_headDecay << " found" << endreq;
     setFilterPassed(false);
@@ -86,18 +88,9 @@ StatusCode MCDecayTreeTuple::execute(){
   if( test ){
     if (msgLevel(MSG::VERBOSE)) verbose() << "NTuple sucessfully filled" << endreq;
   }
-  
+
   setFilterPassed(test);
-  // Mandatory. Set to true if event is accepted.  
+  // Mandatory. Set to true if event is accepted.
   return StatusCode::SUCCESS;
-  
-}
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode MCDecayTreeTuple::finalize() {
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return DecayTreeTupleBase::finalize();
 }

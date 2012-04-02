@@ -65,7 +65,7 @@ protected:
   template<class CLASS>
   inline int number( const std::string& location)
   {
-    return ( safeExist<CLASS>(location) ? (get<CLASS>(location))->size() : -1 );
+    return ( safeExist<CLASS>(location) ? (int)(get<CLASS>(location))->size() : -1 );
   }
 
   /// Get the TES location of an object.

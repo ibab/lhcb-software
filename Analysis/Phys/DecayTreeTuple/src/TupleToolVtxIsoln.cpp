@@ -14,6 +14,9 @@
 #include "GaudiAlg/TupleObj.h"
 
 #include "Event/Particle.h"
+
+using namespace LHCb;
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : TupleToolVtxIsoln
 //
@@ -23,19 +26,18 @@
 
 // Declaration of the Tool Factory
 // actually acts as a using namespace TupleTool
-DECLARE_TOOL_FACTORY( TupleToolVtxIsoln );
+DECLARE_TOOL_FACTORY( TupleToolVtxIsoln )
 
-using namespace LHCb;
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TupleToolVtxIsoln::TupleToolVtxIsoln( const std::string& type,
-                                      const std::string& name,
-                                      const IInterface* parent )
-  : TupleToolBase ( type, name , parent )
-  , m_dva(0)
-  , m_dist(0)
-  , m_pVertexFit(0)
+  TupleToolVtxIsoln::TupleToolVtxIsoln( const std::string& type,
+                                        const std::string& name,
+                                        const IInterface* parent )
+    : TupleToolBase ( type, name , parent )
+    , m_dva(0)
+    , m_dist(0)
+    , m_pVertexFit(0)
 {
   declareInterface<IParticleTupleTool>(this);
 

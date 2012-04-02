@@ -7,9 +7,9 @@
 // local
 #include "MCTupleToolInteractions.h"
 
-#include "Event/GenHeader.h" 
-#include "Event/MCHeader.h" 
-#include "Kernel/ParticleID.h" 
+#include "Event/GenHeader.h"
+#include "Event/MCHeader.h"
+#include "Kernel/ParticleID.h"
 #include <Event/RecVertex.h>
 
 #include "GaudiAlg/Tuple.h"
@@ -27,43 +27,41 @@ using namespace Gaudi;
 using namespace LHCb;
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( MCTupleToolInteractions );
+DECLARE_TOOL_FACTORY( MCTupleToolInteractions )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-MCTupleToolInteractions::MCTupleToolInteractions( const std::string& type,
-                                                  const std::string& name,
-                                                  const IInterface* parent )
-  : TupleToolBase ( type, name , parent )
-  ,m_mean(0.)
-  ,m_adjustmean(0.)
-  ,m_normaliseAt(0)
-  //,m_prefix("EVT_Int")
-  ,m_useRecPV(false)
-  //,m_fillDetails(false)
+  MCTupleToolInteractions::MCTupleToolInteractions( const std::string& type,
+                                                    const std::string& name,
+                                                    const IInterface* parent )
+    : TupleToolBase ( type, name , parent )
+    ,m_mean(0.)
+    ,m_adjustmean(0.)
+    ,m_normaliseAt(0)
+    ,m_useRecPV(false)
 {
   declareInterface<IEventTupleTool>(this);
-  
+
   // overwrite the mean value of interactions for this event
   declareProperty( "Mean", m_mean=0. );
 
   // calculate a scaling factor to approximate this number of interactions per event
   declareProperty( "AdjustMean", m_adjustmean=0. );
-  
+
   // normalise the scaling factor such that it is equal to 1 at this value of I
   declareProperty( "NormaliseAt", m_normaliseAt=0 );
-  
+
   // prefix to give to the variables, in case you want to use two copies of this tool
   declareProperty( "ExtraName", m_extraName="EVT_Int" );
-  
+
   // use the #of reconstructed PVs, rather than the MC Collisions.
   declareProperty( "UseRecPV", m_useRecPV=false );
-  
+
   //deprecated, use Verbose
   // fill extra information on MCPV, MC Collisions and Reconstructed PVs
   //declareProperty( "FillDetails", m_fillDetails=false );
-  
+
   // change the default PV location
   declareProperty( "RecPVLocation", m_RecPVLocation=LHCb::RecVertexLocation::Primary );
 }
@@ -78,7 +76,7 @@ StatusCode MCTupleToolInteractions::initialize() {
 
 //=============================================================================
 
-StatusCode MCTupleToolInteractions::fill( Tuples::Tuple& tuple ) 
+StatusCode MCTupleToolInteractions::fill( Tuples::Tuple& tuple )
 {
   const std::string prefix=fullName();
   unsigned int n =1;
@@ -88,35 +86,35 @@ StatusCode MCTupleToolInteractions::fill( Tuples::Tuple& tuple )
   verbose() << "getting gen header" << endmsg;
   const LHCb::GenHeader* gh = get<LHCb::GenHeader>(LHCb::GenHeaderLocation::Default);
   verbose() << "gen header OK? " << (gh!=NULL) << endmsg;
-  
 
-  if(gh && gh->collisions().size()>0)  
+
+  if(gh && gh->collisions().size()>0)
   {
     MCI = gh->collisions().size() ;
     verbose() << "retrieved I from genHeader" << endmsg;
   }
-  
+
   if(MCI<=0 || isVerbose())
   {
-      
+
     verbose() << "getting MCHeader" << endmsg;
     const LHCb::MCHeader* mch = get<LHCb::MCHeader>(LHCb::MCHeaderLocation::Default);
     verbose() << "mc header OK? " << (mch!=NULL) << endmsg;
-      
-    if(mch) 
+
+    if(mch)
     {
       verbose() << "retrieved MCPVs from MCHeader" << endmsg;
       MCPV = mch->primaryVertices().size() ;
     }
   }
-  
+
   if(isVerbose() || m_useRecPV)
   {
     verbose() << "getting PV container" << endmsg;
     const RecVertex::Container* PV = get<LHCb::RecVertex::Container>(m_RecPVLocation);
     verbose() << "PV container OK? " << (PV!=NULL) << endmsg;
-      
-    if(PV) 
+
+    if(PV)
     {
       verbose() << "retrieved PVs from " << (m_RecPVLocation)  << endmsg;
       RecPV = PV->size() ;
@@ -126,39 +124,39 @@ StatusCode MCTupleToolInteractions::fill( Tuples::Tuple& tuple )
   else if(!m_useRecPV && MCI > 0) n=MCI;
   else if(!m_useRecPV && MCPV > 0) n=MCPV;
   else warning() << "could not retrieve number of interactions, filling as if n=1" << endmsg;
-  
-  
+
+
   double mean=m_mean;
   if(mean==0.)
   {
     verbose() << "calculating mean" << endmsg;
     //extract it from the GenHeader
-      
+
     //as in the IPileUpTool for FixedLuminosity.{h,cpp}
     if(gh && gh->crossingFreq() && gh->luminosity() && gh->totCrossSection())
     {
       verbose() << "using genheader " << mean << endmsg;
       mean=gh->luminosity()*gh->totCrossSection()/gh->crossingFreq();
     }
-      
+
     //if it isn't in the GenHeader, then make a default, the DC06 mean
-    else 
+    else
     {
       verbose() << "using default for DC06 data " << mean << endmsg;
       mean=(2.e32 /Gaudi::Units::cm2/Gaudi::Units::s)*(102.4 * Gaudi::Units::millibarn)/(30.0 * Gaudi::Units::megahertz);
     }
-      
-      
+
+
     verbose() << "calculated mean " << mean << endmsg;
     //if it isn't in the GenHeader, then make a default
   }
-  
+
   verbose() << "Filling tuples" << endmsg;
   bool test = true;
   test &= tuple->column( prefix + "_I" , n );
   test &= tuple->column( prefix + "_Mean" , mean );
   test &= tuple->column( prefix + "_Prob" , poisson(mean,n) );
-  
+
   if(m_adjustmean!=0.)
   {
     verbose() << "Filling adjusted tuples" << endmsg;

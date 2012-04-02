@@ -14,22 +14,22 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TupleToolProtoPData );
+DECLARE_TOOL_FACTORY( TupleToolProtoPData )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TupleToolProtoPData::TupleToolProtoPData( const std::string& type,
-                                          const std::string& name,
-                                          const IInterface* parent ):
-  TupleToolBase ( type, name , parent ){
-  declareInterface<IParticleTupleTool>(this);
-  declareProperty( "DataList", m_list );
-  declareProperty( "LastData", m_last=1000);
-  // default : all Comb and Prob data
-  m_list.push_back("*Comb*");
-  m_list.push_back("*Prob*");
-}
+  TupleToolProtoPData::TupleToolProtoPData( const std::string& type,
+                                            const std::string& name,
+                                            const IInterface* parent ):
+    TupleToolBase ( type, name , parent ){
+    declareInterface<IParticleTupleTool>(this);
+    declareProperty( "DataList", m_list );
+    declareProperty( "LastData", m_last=1000);
+    // default : all Comb and Prob data
+    m_list.push_back("*Comb*");
+    m_list.push_back("*Prob*");
+  }
 
 //=============================================================================
 

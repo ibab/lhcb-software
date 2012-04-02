@@ -25,15 +25,15 @@ using namespace Gaudi;
 using namespace LHCb;
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TupleToolGeneration );
+DECLARE_TOOL_FACTORY( TupleToolGeneration )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TupleToolGeneration::TupleToolGeneration( const std::string& type,
-                                          const std::string& name,
-                                          const IInterface* parent )
-  : TupleToolBase ( type, name , parent )
+  TupleToolGeneration::TupleToolGeneration( const std::string& type,
+                                            const std::string& name,
+                                            const IInterface* parent )
+    : TupleToolBase ( type, name , parent )
 {
   declareInterface<IEventTupleTool>(this);
 }

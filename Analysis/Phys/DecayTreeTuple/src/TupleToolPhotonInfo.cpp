@@ -21,16 +21,16 @@ using namespace Gaudi;
 using namespace LHCb;
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TupleToolPhotonInfo );
+DECLARE_TOOL_FACTORY( TupleToolPhotonInfo )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TupleToolPhotonInfo::TupleToolPhotonInfo( const std::string& type,
-                                          const std::string& name,
-                                          const IInterface* parent )
-  : TupleToolBase ( type, name , parent ),
-    m_PhotonID(22)
+  TupleToolPhotonInfo::TupleToolPhotonInfo( const std::string& type,
+                                            const std::string& name,
+                                            const IInterface* parent )
+    : TupleToolBase ( type, name , parent ),
+      m_PhotonID(22)
 {
   declareInterface<IParticleTupleTool>(this);
 }

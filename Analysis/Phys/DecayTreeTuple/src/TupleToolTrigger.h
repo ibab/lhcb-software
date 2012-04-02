@@ -49,17 +49,20 @@ public:
   /// Standard constructor
   TupleToolTrigger( const std::string& type,
                     const std::string& name,
-                    const IInterface* parent);
+                    const IInterface* parent );
 
-  virtual ~TupleToolTrigger( ){}; ///< Destructor
+  virtual ~TupleToolTrigger( ) {} ///< Destructor
 
   StatusCode initialize();
 
-  //implimented in the baseclass
-  StatusCode fill( Tuples::Tuple& tuple )
-  {
-    return TupleToolTriggerBase::fill(tuple);
-  }
+public:
+
+  virtual StatusCode fill( Tuples::Tuple& tuple );
+
+  virtual StatusCode fill( const LHCb::Particle* top
+                           , const LHCb::Particle* part
+                           , const std::string& head
+                           , Tuples::Tuple& tuple );
 
 private:
 
@@ -69,9 +72,23 @@ private:
   StatusCode fillHlt( Tuples::Tuple&, const std::string &);
   StatusCode fillRoutingBits( Tuples::Tuple& );
 
-  StatusCode fillBasic(Tuples::Tuple& tuple );
+  virtual StatusCode fillBasic(Tuples::Tuple& tuple );
 
-  StatusCode fillVerbose(Tuples::Tuple& tuple );
+  virtual StatusCode fillVerbose(Tuples::Tuple& tuple );
+
+private:
+
+  virtual StatusCode fillBasic( const LHCb::Particle*
+                                , const LHCb::Particle*
+                                , const std::string&
+                                , Tuples::Tuple& );
+
+  virtual StatusCode fillVerbose( const LHCb::Particle*
+                                  , const LHCb::Particle*
+                                  , const std::string&
+                                  , Tuples::Tuple& );
+
+private:
 
   std::vector<unsigned int> m_routingBits ; ///< Routing bits to fill
 

@@ -1,28 +1,30 @@
 // $Id: OnePart.h,v 1.4 2009-01-20 11:09:16 pkoppenb Exp $
-#ifndef ONEPART_H 
+#ifndef ONEPART_H
 #define ONEPART_H 1
 
 // Include files
 
 /** @class OnePart OnePart.h
- *  
+ *
  *  Helper class for DecayTreeTupleBase
  *
  *  Stores info about one particle and its tools
  *
- *  @author Jérémie Borel 
+ *  @author Jérémie Borel
  *  @date   2007-11-01
  *  @author Patrick Koppenburg - extracted from DecayTreeTuple
  *  @date   2009-01-09
  */
 class IParticleTupleTool ;
 class IMCParticleTupleTool ;
-namespace Decays{
-  
-  class OnePart {
+namespace Decays
+{
+  class OnePart 
+  {
   public:
     /// constructor
-    OnePart( std::string partname, std::string head );
+    OnePart( const std::string& partname, 
+             const std::string& head );
     /// destructor
     ~OnePart();
     /// Refers to the tuple column name prefix
@@ -33,7 +35,7 @@ namespace Decays{
     std::string getRealName();
     /// Refers to the particle's real syntax (not escaped)
     const std::string& getRealName() const;
-    /// Prints the tree strucutre, if verbose, also prints the tool list 
+    /// Prints the tree strucutre, if verbose, also prints the tool list
     void printStructure( std::ostream& os, bool verbose=false ) const ;
     /// depth
     int depth() const;
@@ -56,7 +58,7 @@ namespace Decays{
     std::vector<std::string> mctoolList() const;
     /// clear list of tools
     void clearTools();
-    
+
   private:
     std::string m_head, m_realname; //< real name of particle
     OnePart();                      //< constructor
@@ -67,8 +69,8 @@ namespace Decays{
     std::vector< IMCParticleTupleTool* > m_mctools; //< tools
   };
 
-  // ===============================================================  
-  // ======================= inline & template body ================    
+  // ===============================================================
+  // ======================= inline & template body ================
   // ===============================================================
   /** join a container with a separation char. */
   template <class ForwardIterator> std::string join( ForwardIterator first,
@@ -76,7 +78,7 @@ namespace Decays{
                                                      const char* sep = ", ",
                                                      const char* ifempty = "none")
   {
-    std::stringstream  ret; 
+    std::stringstream  ret;
     ForwardIterator it(first), it2( first );
     if( first == last ) return std::string(ifempty);
     ++it2;
@@ -93,8 +95,7 @@ namespace Decays{
     }
     ret << *it;
     return ret.str();
-    
-  };
-  
+  }
+
 }
 #endif // ONEPART_H

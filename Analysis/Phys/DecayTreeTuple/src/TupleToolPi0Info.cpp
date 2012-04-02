@@ -21,15 +21,16 @@ using namespace Gaudi;
 using namespace LHCb;
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TupleToolPi0Info );
+DECLARE_TOOL_FACTORY( TupleToolPi0Info )
+
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TupleToolPi0Info::TupleToolPi0Info( const std::string& type,
-                                    const std::string& name,
-                                    const IInterface* parent )
-  : TupleToolBase ( type, name , parent ),
-    m_Pi0ID(111)
+  TupleToolPi0Info::TupleToolPi0Info( const std::string& type,
+                                      const std::string& name,
+                                      const IInterface* parent )
+    : TupleToolBase ( type, name , parent ),
+      m_Pi0ID(111)
 {
   declareInterface<IParticleTupleTool>(this);
   declareProperty("RequireMCTruth",m_RequireMCTruth = false);

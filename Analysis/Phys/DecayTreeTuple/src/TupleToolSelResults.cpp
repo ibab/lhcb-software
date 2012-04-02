@@ -1,8 +1,8 @@
 // $Id: TupleToolSelResults.cpp,v 1.2 2010-01-26 15:39:26 rlambert Exp $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/ToolFactory.h"
 
 // local
 #include "TupleToolSelResults.h"
@@ -15,17 +15,17 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TupleToolSelResults );
+DECLARE_TOOL_FACTORY( TupleToolSelResults )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TupleToolSelResults::TupleToolSelResults( const std::string& type,
-                                          const std::string& name,
-                                          const IInterface* parent )
-  : TupleToolBase ( type, name , parent ),
-    m_selTool(0),
-    m_selections(0)
+  TupleToolSelResults::TupleToolSelResults( const std::string& type,
+                                            const std::string& name,
+                                            const IInterface* parent )
+    : TupleToolBase ( type, name , parent ),
+      m_selTool(0),
+      m_selections(0)
 {
   declareInterface<IEventTupleTool>(this);
   declareProperty("Selections", m_selections, "List of algorithm names");
@@ -36,35 +36,35 @@ TupleToolSelResults::TupleToolSelResults( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-TupleToolSelResults::~TupleToolSelResults() {} 
+TupleToolSelResults::~TupleToolSelResults() {}
 
 //=============================================================================
 // init
 //=============================================================================
-StatusCode TupleToolSelResults::initialize() 
+StatusCode TupleToolSelResults::initialize()
 {
   StatusCode sc = TupleToolBase::initialize();
   if ( sc.isFailure() ) return sc;
   m_selTool = tool<ICheckSelResults>("CheckSelResultsTool",this);
   return sc ;
-} 
+}
 
 //=============================================================================
 // Fill
 //=============================================================================
-StatusCode TupleToolSelResults::fill( Tuples::Tuple& tup) 
+StatusCode TupleToolSelResults::fill( Tuples::Tuple& tup)
 {
   const std::string prefix = fullName();
   bool test = true;
-  for ( std::vector<std::string>::const_iterator s = m_selections.begin() ; 
+  for ( std::vector<std::string>::const_iterator s = m_selections.begin() ;
         s != m_selections.end(); ++s )
   {
     test &= tup->column(prefix+(*s),m_selTool->isSelected(*s));
-    if (!test) 
+    if (!test)
     {
       err() << "Cannot fill variable name " << prefix+(*s) << endmsg ;
       break;
     }
   }
   return StatusCode(test) ;
-} 
+}

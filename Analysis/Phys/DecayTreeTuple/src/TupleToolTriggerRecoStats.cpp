@@ -1,8 +1,8 @@
 // $Id: TupleToolTriggerRecoStats.cpp,v 1.3 2010-05-09 11:33:18 gligorov Exp $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/ToolFactory.h"
 
 // local
 #include "TupleToolTriggerRecoStats.h"
@@ -15,7 +15,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TupleToolTriggerRecoStats );
+DECLARE_TOOL_FACTORY( TupleToolTriggerRecoStats )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -39,20 +39,20 @@ TupleToolTriggerRecoStats::TupleToolTriggerRecoStats( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-TupleToolTriggerRecoStats::~TupleToolTriggerRecoStats() { } 
+TupleToolTriggerRecoStats::~TupleToolTriggerRecoStats() { }
 
 //=============================================================================
 //=============================================================================
 // Fill
 //=============================================================================
-StatusCode TupleToolTriggerRecoStats::fill( Tuples::Tuple& tup) 
+StatusCode TupleToolTriggerRecoStats::fill( Tuples::Tuple& tup)
 {
   const std::string prefix=fullName();
   bool test = true;
-  for ( std::vector<std::string>::const_iterator l = m_locations.begin() ; 
+  for ( std::vector<std::string>::const_iterator l = m_locations.begin() ;
         l != m_locations.end() ; ++l)
   {
     test &= tup->column(prefix+"NumberOf"+*l,number<LHCb::Particles>("/Event/Hlt2/"+*l+"/Particles"));
   }
   return StatusCode(test) ;
-} 
+}

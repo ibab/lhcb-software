@@ -110,7 +110,7 @@ StatusCode TupleToolMCTruth::fill( const LHCb::Particle*
       mcp = (*iMCAss)->relatedMCP(P);
       if ( mcp ) break;
     }
-    if (msgLevel(MSG::VERBOSE)) 
+    if (msgLevel(MSG::VERBOSE))
       verbose() << "Got mcp " << mcp << endmsg ;
   }
 
@@ -134,5 +134,4 @@ StatusCode TupleToolMCTruth::fill( const LHCb::Particle*
 
 // Declaration of the Tool Factory
 // actually acts as a using namespace TupleTool
-DECLARE_TOOL_FACTORY( TupleToolMCTruth );
-
+DECLARE_TOOL_FACTORY( TupleToolMCTruth )

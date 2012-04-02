@@ -27,14 +27,14 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TupleToolCPU );
+DECLARE_TOOL_FACTORY( TupleToolCPU )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 TupleToolCPU::TupleToolCPU( const std::string& type,
-					const std::string& name,
-					const IInterface* parent )
+                            const std::string& name,
+                            const IInterface* parent )
   : TupleToolBase ( type, name , parent )
   , m_timerTool(0)
   , m_timer(0)
@@ -43,18 +43,18 @@ TupleToolCPU::TupleToolCPU( const std::string& type,
 }
 //=============================================================================
 
-StatusCode TupleToolCPU::initialize() {
-  StatusCode sc = TupleToolBase::initialize(); // must be executed first
+StatusCode TupleToolCPU::initialize()
+{
+  const StatusCode sc = TupleToolBase::initialize(); 
   m_timerTool = tool<ISequencerTimerTool>( "SequencerTimerTool" ); //global tool
   m_timer = m_timerTool->addTimer( name() );
   m_timerTool->start(m_timer) ; /// start it now
-  
   return sc ;
 }
 
 //=============================================================================
 
-StatusCode TupleToolCPU::fill( Tuples::Tuple& tuple ) 
+StatusCode TupleToolCPU::fill( Tuples::Tuple& tuple )
 {
   const std::string prefix=fullName();
 

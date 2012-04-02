@@ -7,6 +7,8 @@
 #include "Kernel/IParticleTupleTool.h"            // Interface
 #include "Kernel/ITriggerTisTos.h"
 
+class IP2VVPartAngleCalculator;
+
 /** @class TupleToolTISTOS TupleToolTISTOS.h
  *
  *  This is an adaptation of the TISTOS example by Tomasz
@@ -38,7 +40,6 @@
  *  @author V. Gligorov
  *  @date   2008-04-09
  */
-class IP2VVPartAngleCalculator;
 
 class TupleToolTISTOS : public TupleToolTriggerBase,
                         virtual public IParticleTupleTool
@@ -68,18 +69,22 @@ private:
 
 private:
 
-  StatusCode fillBasic( const LHCb::Particle*
-                        , const LHCb::Particle* P
-                        , const std::string& head
-                        , Tuples::Tuple& tuple );
+  virtual StatusCode fillBasic( const LHCb::Particle*
+                                , const LHCb::Particle* P
+                                , const std::string& head
+                                , Tuples::Tuple& tuple );
 
+  virtual StatusCode fillVerbose( const LHCb::Particle*
+                                  , const LHCb::Particle* P
+                                  , const std::string& head
+                                  , Tuples::Tuple& tuple );
 
+private:
 
-  StatusCode fillVerbose( const LHCb::Particle*
-                          , const LHCb::Particle* P
-                          , const std::string& head
-                          , Tuples::Tuple& tuple );
+  virtual StatusCode fillBasic( Tuples::Tuple& T );
 
+  virtual StatusCode fillVerbose( Tuples::Tuple& T );
 
 };
+
 #endif // TUPLETOOLTISTOS_H

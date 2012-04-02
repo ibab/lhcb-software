@@ -114,7 +114,7 @@ bool DecayTreeTupleBase::initializeDecays( const bool isMC )
   {
     if (msgLevel(MSG::DEBUG)) debug() << "Try now to instanciate " << mit->first << endreq;
     TupleToolDecay *m = tool<TupleToolDecay>( "TupleToolDecay", mit->first, this );
-    if( !m->initialize( mit->second, isMC ) )
+    if( !m->initializeDecay( mit->second, isMC ) )
     {
       Error( "Cannot initialize '" + mit->first + "' branch properly, skipping it." );
       continue;

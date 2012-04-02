@@ -1,9 +1,9 @@
 // $Id: MCTupleToolAngles.cpp,v 1.5 2010-06-24 12:43:40 rlambert Exp $
-// Include files 
+// Include files
 #include "gsl/gsl_sys.h"
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/Vector3DTypes.h"
 
@@ -23,53 +23,45 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( MCTupleToolAngles );
-
+DECLARE_TOOL_FACTORY( MCTupleToolAngles )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-MCTupleToolAngles::MCTupleToolAngles( const std::string& type,
+  MCTupleToolAngles::MCTupleToolAngles( const std::string& type,
                                         const std::string& name,
                                         const IInterface* parent )
-  : TupleToolBase ( type, name , parent )
+    : TupleToolBase ( type, name , parent )
 {
   declareInterface<IMCParticleTupleTool>(this);
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
-MCTupleToolAngles::~MCTupleToolAngles() {} 
+MCTupleToolAngles::~MCTupleToolAngles() {}
 
-//=============================================================================
-// initialize
-//=============================================================================
-
-StatusCode MCTupleToolAngles::initialize(){
-  if( ! TupleToolBase::initialize() ) return StatusCode::FAILURE;
-  return StatusCode::SUCCESS ;
-}
 //=============================================================================
 // Fill
 //=============================================================================
 StatusCode MCTupleToolAngles::fill( const LHCb::MCParticle* mother
-                                     , const LHCb::MCParticle* mcp
-                                     , const std::string& head
-                                     , Tuples::Tuple& tuple )
+                                    , const LHCb::MCParticle* mcp
+                                    , const std::string& head
+                                    , Tuples::Tuple& tuple )
 {
   const std::string prefix=fullName(head);
-  
+
   bool test = true;
-  
+
   double cosT =-999.;
-  
+
   if ( 0!=mcp && 0!=mother && mcp!=mother ) cosT = cosTheta(mother->momentum(), mcp->momentum() );
   // fill the tuple:
   test &= tuple->column( prefix+"_TRUECosTheta", cosT );
   if(isVerbose()) test &= tuple->column( prefix+"_TRUETheta", acos(cosT) );
-  if ( msgLevel(MSG::DEBUG) && 0!=mcp && 0!=mother) debug() << mother->particleID().pid() << " " << mother->momentum() << " " 
-                                     << mcp->particleID().pid() << " " << mcp->momentum() << endmsg ;
- 
-  return StatusCode(test) ;
+  if ( msgLevel(MSG::DEBUG) && 0!=mcp && 0!=mother) 
+    debug() << mother->particleID().pid() << " " << mother->momentum() << " "
+            << mcp->particleID().pid() << " " << mcp->momentum() << endmsg ;
   
+  return StatusCode(test);
 }

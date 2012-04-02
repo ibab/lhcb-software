@@ -18,6 +18,8 @@
 #include "Event/Particle.h"
 #include "Event/Vertex.h"
 
+using namespace LHCb;
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : TupleToolParticleReFit
 //
@@ -26,32 +28,33 @@
 
 // Declaration of the Tool Factory
 // actually acts as a using namespace TupleTool
-DECLARE_TOOL_FACTORY( TupleToolParticleReFit );
+DECLARE_TOOL_FACTORY( TupleToolParticleReFit )
 
-using namespace LHCb;
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TupleToolParticleReFit::TupleToolParticleReFit( const std::string& type,
-                                                const std::string& name,
-                                                const IInterface* parent )
-  : TupleToolBase ( type, name , parent )
-  , m_dva(0)
-  , m_timefitter(0)
-  , m_vtxfitter(0)
+  TupleToolParticleReFit::TupleToolParticleReFit( const std::string& type,
+                                                  const std::string& name,
+                                                  const IInterface* parent )
+    : TupleToolBase ( type, name , parent )
+    , m_dva(0)
+    , m_timefitter(0)
+    , m_vtxfitter(0)
 {
   declareInterface<IParticleTupleTool>(this);
 
   declareProperty("PropertimeFitterName", m_timefitterName = "PropertimeFitter" );
   declareProperty("VertexFitterName",     m_vertexfitterName = "OfflineVertexFitter" );
 
-}//=============================================================================
+}
 
-StatusCode TupleToolParticleReFit::initialize() 
+//=============================================================================
+
+StatusCode TupleToolParticleReFit::initialize()
 {
   const StatusCode sc = TupleToolBase::initialize();
   if ( sc.isFailure() ) return sc;
- 
+
   m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
   if (0==m_dva) return Error("Couldn't get parent DVAlgorithm",
                              StatusCode::FAILURE);

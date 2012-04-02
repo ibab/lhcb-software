@@ -15,7 +15,7 @@ class IPVReFitter;
 namespace LHCb {
   class Particle;
   class VertexBase;
-};
+}
 
 
 /** @class TupleToolGeometry TupleToolGeometry.h jborel/TupleToolGeometry.h
@@ -32,11 +32,11 @@ namespace LHCb {
  * - head_OWNPV_[X|Y|Z]ERR : related primary vertex position error estimate for composite particles
  * - head_OWNPV_CHI2 : related primary vertex chi2
  * - head_OWNPV_NDOF : related primary vertex nDoF
- * - head_IP_OWNPV : impact parameter with respect to the PhysDesktop::relatedVertex() considered particle 
- * - head_IPCHI2_OWNPV : impact parameter chi2 with respect to the PhysDesktop::relatedVertex() considered particle 
- * - head_FD_OWNPV : flight distance of composite particle wrt. the PhysDesktop::relatedVertex() considered particle 
- * - head_FDCHI2_OWNPV : flight distance significance in units of chi2 wrt. the PhysDesktop::relatedVertex() considered particle 
- * - head_DIRA_OWNPV : direction angle wrt. the PhysDesktop::relatedVertex() considered particle 
+ * - head_IP_OWNPV : impact parameter with respect to the PhysDesktop::relatedVertex() considered particle
+ * - head_IPCHI2_OWNPV : impact parameter chi2 with respect to the PhysDesktop::relatedVertex() considered particle
+ * - head_FD_OWNPV : flight distance of composite particle wrt. the PhysDesktop::relatedVertex() considered particle
+ * - head_FDCHI2_OWNPV : flight distance significance in units of chi2 wrt. the PhysDesktop::relatedVertex() considered particle
+ * - head_DIRA_OWNPV : direction angle wrt. the PhysDesktop::relatedVertex() considered particle
  *
  *  If Verbose is true:
  *
@@ -48,7 +48,7 @@ namespace LHCb {
  * - head_IP_TOPPV : impact parameter with respect to the PhysDesktop::relatedVertex() of the top of decay chain
  * - head_IPCHI2_TOPPV : impact parameter chi2 with respect to the PhysDesktop::relatedVertex() of the top of decay chain
  * - head_FD_TOPPV : flight distance of composite particle wrt. the PhysDesktop::relatedVertex() of the top of decay chain
- * - head_FDCHI2_TOPPV : flight distance significance in units of chi2 wrt. 
+ * - head_FDCHI2_TOPPV : flight distance significance in units of chi2 wrt.
  *      the PhysDesktop::relatedVertex() of the top of decay chain
  * - head_DIRA_TOPPV : direction angle wrt. the PhysDesktop::relatedVertex() of the top of decay chain
  *
@@ -67,28 +67,32 @@ namespace LHCb {
  *  @author Jeremie Borel
  *  @date   2007-11-07
  */
-class TupleToolGeometry : public TupleToolBase, virtual public IParticleTupleTool {
+class TupleToolGeometry : public TupleToolBase,
+                          virtual public IParticleTupleTool
+{
+
 public:
+
   /// Standard constructor
   TupleToolGeometry( const std::string& type,
-		     const std::string& name,
-		     const IInterface* parent);
-  
+                     const std::string& name,
+                     const IInterface* parent);
+
   virtual ~TupleToolGeometry( ){}; ///< Destructor
-  
+
   virtual StatusCode initialize();
-  
+
   StatusCode fill( const LHCb::Particle*
-		   , const LHCb::Particle*
-		   , const std::string&
-		   , Tuples::Tuple& );
+                   , const LHCb::Particle*
+                   , const std::string&
+                   , Tuples::Tuple& );
 
 private:
 
   /// fill end vertex stuff
-  StatusCode fillVertexFull(const LHCb::VertexBase* vtx, 
-		     const LHCb::Particle* P, 
-		     std::string head, std::string vtx_name, Tuples::Tuple&) const ;
+  StatusCode fillVertexFull(const LHCb::VertexBase* vtx,
+                            const LHCb::Particle* P,
+                            std::string head, std::string vtx_name, Tuples::Tuple&) const ;
 
   /// origin vertex
   const LHCb::VertexBase* originVertex( const  LHCb::Particle*
@@ -103,15 +107,15 @@ private:
   StatusCode fillVertex(const LHCb::VertexBase* vtx, std::string vtx_name, Tuples::Tuple&) const ;
 
   /// fill flight
-  StatusCode fillFlight(const LHCb::VertexBase* oriVtx, const LHCb::Particle*, 
+  StatusCode fillFlight(const LHCb::VertexBase* oriVtx, const LHCb::Particle*,
                         std::string, Tuples::Tuple&, std::string trail = "") const ;
 
   const IDistanceCalculator* m_dist;
 
   bool m_refitPVs;
 
-//bool m_fillMother;
-  
+  //bool m_fillMother;
+
   DVAlgorithm* m_dva;
 
   IPVReFitter* m_pvReFitter;

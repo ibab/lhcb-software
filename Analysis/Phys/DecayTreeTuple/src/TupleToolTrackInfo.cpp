@@ -19,15 +19,15 @@
 
 // Declaration of the Tool Factory
 // actually acts as a using namespace TupleTool
-DECLARE_TOOL_FACTORY( TupleToolTrackInfo );
+DECLARE_TOOL_FACTORY( TupleToolTrackInfo )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TupleToolTrackInfo::TupleToolTrackInfo( const std::string& type,
-                                        const std::string& name,
-                                        const IInterface* parent )
-  : TupleToolBase ( type, name , parent )
+  TupleToolTrackInfo::TupleToolTrackInfo( const std::string& type,
+                                          const std::string& name,
+                                          const IInterface* parent )
+    : TupleToolBase ( type, name , parent )
 {
   declareInterface<IParticleTupleTool>(this);
 }
