@@ -12,4 +12,4 @@ if [ -z $DIM_DNS_NODE ]; then
 fi;
 #
 cd /dev/shm;
-`which dimget.exe` -torrent=$*;
+`which dimget.exe` -torrent=$* -retry=5;

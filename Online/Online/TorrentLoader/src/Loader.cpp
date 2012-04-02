@@ -19,6 +19,7 @@
 #include "RTL/time.h"
 #include "RTL/Lock.h"
 #include "CPP/IocSensor.h"
+#include "CPP/TimeSensor.h"
 extern "C" {
 #include "dis.h"
 #include "dic.h"
@@ -170,8 +171,8 @@ void NetworkFilter::add_range(unsigned int first, unsigned int last, int flag) {
   this->ip_filter::add_rule(address(address_v4(first)), address(address_v4(last)), flag);
 }
 
-Main::Main(int argc, char** argv) 
-  : m_session(0), m_publish(0), m_command(0)
+Main::Main(int argc, char** argv)
+: m_session(0), m_publish(0)
 {
   enum { ALLOWED=0, BLOCKED=ip_filter::blocked };
   NetworkFilter filter;
@@ -181,7 +182,7 @@ Main::Main(int argc, char** argv)
   unsigned short first_port = 6881, last_port = 6889;
   int upload = 0, download = 0, print = LIB_RTL_WARNING, tier=2;
   unsigned long mask = 0;
-  vector<string> trackers;
+  vector<string> trackers, seeders;
   RTL::CLI cli(argc,argv,help);
   bool monitoring = cli.getopt("monitoring",1);
   cli.getopt("first_port",   2,first_port);
@@ -224,8 +225,22 @@ Main::Main(int argc, char** argv)
 
   // Setup IP filter
   filter.add_range (0,0xFFFFFFFF, BLOCKED);
-  filter.add_host  (seeder,  ALLOWED);
-  ::lib_rtl_output(LIB_RTL_INFO,"Seeder:  Allow access to:%s - %s\n",seeder.c_str(),filter.ntoa(seeder).c_str());
+  trk = seeder;
+  for(size_t idx=trk.find(','); idx != string::npos; idx=trk.find(','))   {
+    string tmp = trk;
+    trk = tmp.substr(idx+1);
+    tmp = tmp.substr(0,idx);
+    seeders.push_back(tmp);
+    filter.add_host  (tmp, ALLOWED);
+    ::lib_rtl_output(LIB_RTL_INFO,"Seeder: Allow access to:%s - %s\n",tmp.c_str(),filter.ntoa(tmp).c_str());
+  }
+  if ( !trk.empty() )  {
+    seeders.push_back(trk);
+    filter.add_host  (trk, ALLOWED);
+    ::lib_rtl_output(LIB_RTL_INFO,"Seeder: Allow access to:%s - %s\n",trk.c_str(),filter.ntoa(trk).c_str());
+  }
+  //filter.add_host  (seeder,  ALLOWED);
+  //::lib_rtl_output(LIB_RTL_INFO,"Seeder:  Allow access to:%s - %s\n",seeder.c_str(),filter.ntoa(seeder).c_str());
 
   // Setup tracker list and fill IP filter
   trk = tracker;
@@ -268,11 +283,21 @@ Main::Main(int argc, char** argv)
   if ( tier >= 1 ) {  // Subfarm 
     filter.add_subnet(farm_node, 0x01, 0xFE, ALLOWED);
   }
+  // allow the workers also to talk to neighboring subfarm controllers
+  if ( tier == 2 && ::toupper(farm_node[0])=='H' ) {
+    string tmp = farm_node;
+    char c = ::tolower(farm_node[3]);
+    farm_node[3] = char(c < 'f' ? c+1 : 'a');
+    filter.add_host(farm_node,ALLOWED);
+    farm_node[3] = char(c < 'e' ? c+2 : c=='e' ? 'a' : 'b');
+    filter.add_host(farm_node,ALLOWED);
+  }
 
   // Now build the main objects
   string   nam = "/" + strupper(node) + "/" + RTL::processName();
   Session* session = new Session  (this, tier, monitoring, dir, interface, first_port, last_port, trackers);
-  m_command = new Command  (this, "/"+seeder+"/TorrentLoader", nam);
+  for(vector<string>::iterator i=seeders.begin();i!=seeders.end();++i)
+    m_command.push_back(new Command  (this, "/"+(*i)+"/TorrentLoader", nam));
   m_publish = new Publisher(this, nam);
   m_session = session;
   session->setDownloadLimit(download);
@@ -286,7 +311,9 @@ Main::Main(int argc, char** argv)
 Main::~Main()   {
   deletePtr(m_session);
   deletePtr(m_publish);
-  deletePtr(m_command);
+  for(vector<Interactor*>::iterator i=m_command.begin();i!=m_command.end();++i)
+    delete (*i);
+  m_command.clear();
 }
 
 int Main::run() {
@@ -306,7 +333,13 @@ void Main::handle(const Event& event) {
     case CMD_COMMAND_FAILED:
     case CMD_COMMAND_PARENT:
       // Forward the request to the Command handler
-      ioc.send(m_command,event.type,event.iocPtr<string>());
+      for(vector<Interactor*>::iterator i=m_command.begin();i!=m_command.end();++i)
+	ioc.send(*i,event.type,new string(*event.iocPtr<string>()));
+      // Remove the torrent
+      if ( event.type == CMD_COMMAND_DONE ) {
+	ioc.send(this,CMD_REMOVE_TORRENT,new string("REMOVE:"+(*event.iocPtr<string>())));
+      }
+      delete event.iocPtr<string>();
       return;
     case CMD_MONITOR_TORRENT:
       ioc.send(m_publish,event.type,event.iocPtr<SessionStatus>());
@@ -391,8 +424,11 @@ void Publisher::handle(const Event& event) {
 Command::Command(Interactor* handler, const string& parent, const std::string& nam)
   : m_parent(parent), m_svcID(0), m_cmdID(0), m_handler(handler)
 {
-  m_svcID = ::dis_add_service((char*)(nam+"/status").c_str(),(char*)"C",0,0,feedStatus,(long)this);
-  m_cmdID = ::dis_add_cmnd((char*)(nam+"/command").c_str(),(char*)"C",handleCommand,(long)this);
+  static int mm_svcID=0, mm_cmdID=0;
+  if ( !mm_svcID ) mm_svcID = ::dis_add_service((char*)(nam+"/status").c_str(),(char*)"C",0,0,feedStatus,(long)this);
+  if ( !mm_cmdID ) mm_cmdID = ::dis_add_cmnd((char*)(nam+"/command").c_str(),(char*)"C",handleCommand,(long)this);
+  m_svcID = mm_svcID;
+  m_cmdID = mm_cmdID;
 }
 
 /// Default destructor
@@ -580,7 +616,7 @@ void Session::setSessionInfo()   const   {
   ::gettimeofday(&tv,0);
   session_status s = m_session->status();
   cache_status   c = m_session->get_cache_status();
-  m_status->num_peers        = s.num_peers;
+  m_status->num_peers        = m_session->num_connections();
   m_status->blocks_written   = c.blocks_written;
   m_status->blocks_read      = c.blocks_read;
   m_status->blocks_read_hit  = c.blocks_read_hit;
@@ -656,8 +692,9 @@ void Session::removeAllTorrents(bool flush) {
 /// Add a new torrent
 void Session::addTorrent(const std::string& nam) {
   Torrents::const_iterator i = m_torrents.find(nam);
-  if ( m_tier > 0 && i == m_torrents.end() )   {
-    removeAllTorrents();
+  if ( m_tier > 1 )   {
+    //removeAllTorrents(true);
+    //i = m_torrents.find(nam);
   }
   if ( i == m_torrents.end() ) {
     char out[41];
@@ -1060,7 +1097,7 @@ void Session::handle(const Event& event) {
 
 extern "C" int torrent_runserver(int argc, char** argv) {
   Main m(argc, argv);
-  print_startup(("Starting Bittorrent load server on node "+RTL::nodeName()).c_str());
+  print_startup("START: Bittorrent load server");
   return m.run();
 }
 
@@ -1118,14 +1155,15 @@ extern "C" int torrent_dimget(int argc, char** argv)  {
     ::dim_set_dns_node((char*)dns.c_str());
   }
   copy = torrent;
+  if ( timeout < 100 ) timeout *= 1000;
   while( retry>0 ) {
     int res = ::dic_cmnd_service((char*)name.c_str(),(void*)cmd.c_str(),cmd.length()+1);
     if ( res != 1 ) {
       ::lib_rtl_output(LIB_RTL_FATAL,"Failed to notify parent '%s' to load torrent %s\n",
 		       name.c_str(),cmd.c_str());
     }
+    ::lib_rtl_sleep(500);
     unsigned int id = ::dic_info_service ((char*)status.c_str(),MONITORED,0,0,0,torrent_reply,(long)&torrent,0,0);
-    if ( timeout < 100 ) timeout *= 1000;
     for(int delta = timeout+1; torrent != "OK" && delta>0; delta -= 1000) {
       if ( torrent == "OK"     ) break;
       if ( torrent == "FAILED" ) break;

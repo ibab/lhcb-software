@@ -17,6 +17,7 @@
 
 // C++ include files
 #include <string>
+#include <vector>
 
 // Framework include files
 #include "RTL/rtl.h"
@@ -312,7 +313,7 @@ namespace BitTorrent {
   struct Main : public Interactor {
     Interactor* m_session;
     Interactor* m_publish;
-    Interactor* m_command;
+    std::vector<Interactor*> m_command;
 
   public:
     /// Standard constructor
