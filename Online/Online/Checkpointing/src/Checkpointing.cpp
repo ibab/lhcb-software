@@ -16,11 +16,15 @@ HIDDEN(int)    m_isspace(char s) {
 }
 
 HIDDEN(int) m_strcmp(const char* t, const char* s) {
-  if ( t && s ) {
+  if ( t && t == s ) {
+    return 0;
+  }
+  else if ( t && s ) {
     for(; *t && *s && *t==*s; ++s, ++t) ;
     if ( *t == *s ) return 0;
+    return 1;
   }
-  return 1;
+  return 0;
 }
 
 HIDDEN(int) m_strncmp(const char* t, const char* s, size_t len) {

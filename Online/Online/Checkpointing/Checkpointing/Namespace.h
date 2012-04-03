@@ -27,6 +27,7 @@ namespace CHECKPOINTING_NAMESPACE {
   };
   enum MTCP_RESTORE_FLAGS {
     MTCP_STDIN_ENV    = (1<<0),  // = 1
+    MTCP_SAVE_LIBS    = (1<<1),  // = 2
     MTCP_LAST_FLAG    = (1<<31)
   };
 }

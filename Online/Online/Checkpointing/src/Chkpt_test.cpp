@@ -56,10 +56,11 @@ static long make_checkPoint() {
   return 0;
 }
 
-int test_thread_checkpoint() {
+int test_thread_checkpoint(int flag) {
   static pthread_t main_pid;
   int rc;
 
+  checkpointing_set_save_flags(flag);
   if ((rc=::pthread_create (&main_pid, NULL, main_thread, (void*)5)) < 0) {
     mtcp_output(MTCP_FATAL,"Error CREATE main thread: %s rc=%d\n",::strerror(errno),rc);
   }
@@ -98,7 +99,7 @@ int test_thread_checkpoint() {
 }
 
 int test_set_sys_environment() {
-  chkpt_sys.restart_flags = MTCP_STDIN_ENV;
+  checkpointing_set_restart_flags(MTCP_STDIN_ENV);
   return checkpointing_sys_set_environment(&chkpt_sys);
 }
 
@@ -125,6 +126,7 @@ extern "C" int chkpt_tests(int argc, char** argv) {
     else if ( argc>i && argv[i][1] == 'p' ) prt   = (argv[++i][0]-'0')|(prt&MTCP_PRINT_NO_PID);
     else if ( argc>i && argv[i][1] == 'n' ) prt  |= MTCP_PRINT_NO_PID;
     else if ( argc>i && argv[i][1] == 'e' ) flag |= MTCP_STDIN_ENV;
+    else if ( argc>i && argv[i][1] == 'l' ) flag |= MTCP_SAVE_LIBS;
   }
   ::fprintf(stdout,"Checkpointing_test: print level:%d flag:%d tst function:%s [%c%c%c%c]\n",
 	    prt,flag,q,p[0],p[1],p[2],p[3]);
@@ -141,7 +143,7 @@ extern "C" int chkpt_tests(int argc, char** argv) {
   else if ( opt == *(int*)"p_read"    ) test_Process_read();
   else if ( opt == *(int*)"p_restore" ) test_Process_restore();
 
-  else if ( opt == *(int*)"t_checkpo" ) test_thread_checkpoint();
+  else if ( opt == *(int*)"t_checkpo" ) test_thread_checkpoint(flag);
   else if ( opt == *(int*)"t_environ" ) test_set_environment(flag);
   else if ( opt == *(int*)"t_senviron") test_set_sys_environment();
   else mtcp_output(MTCP_ERROR,"No function given. Test is meaningless.\n");

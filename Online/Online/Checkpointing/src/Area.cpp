@@ -28,9 +28,10 @@ int Area::read(const void* ptr, const AreaHandler& handler) {
 /// Write memory area descriptor and data to file given by the file handle
 int Area::streamOut(void* ptr, bool write_nulls)    const {
   unsigned char* out = (unsigned char*)ptr;
+  const char* my_name = name;
   if ( 0 == out ) return 0;
-  else if ( m_strcmp(name,chkpt_sys.checkpointFile)  == 0 ) return 0;
-  else if ( m_strcmp(name,chkpt_sys.checkpointImage) == 0 ) return 0;
+  else if ( m_strcmp(my_name,chkpt_sys.checkpointFile)  == 0 ) return 0;
+  else if ( m_strcmp(my_name,chkpt_sys.checkpointImage) == 0 ) return 0;
   else {
     int flg = mapFlags();
     size_t len = sizeof(Area)-sizeof(name)+name_len+1;
@@ -38,8 +39,8 @@ int Area::streamOut(void* ptr, bool write_nulls)    const {
     out += m_memcpy(out,this,len);
     // This may be optimized:
     // We normally only need:
-    len = dataLength();
-    if ( !write_nulls && 0 == (len=dataLength()) ) {
+    len = checkpointing_area_datalength(this);
+    if ( !write_nulls && 0 == (len=checkpointing_area_datalength(this)) ) {
       // Only streamOut NULL-size marker
       out += saveInt(out,0);
     }
@@ -51,29 +52,30 @@ int Area::streamOut(void* ptr, bool write_nulls)    const {
 	// to be reloaded from the disk 
 	if ( mtcp_sys_msync(low,size,MS_INVALIDATE) < 0 ){
 	  mtcp_output(MTCP_FATAL,"sync_shared_memory: error %d Invalidating %X at %p from %s + %X",
-		      mtcp_sys_errno,size,low,name,offset);
+		      mtcp_sys_errno,size,low,my_name,offset);
 	}
       }
       if ( prot[0] != 'r' ) {
 	out += m_memset(out,0,size);
-	print(MTCP_DEBUG,"NULL  memory area:");
+	checkpointing_area_print(this,MTCP_DEBUG,"NULL  memory area:");
       }
       else {
 	out += m_memcpy(out,(void*)low,size);
-	print(MTCP_DEBUG,"Wrote memory area:");
+	checkpointing_area_print(this,MTCP_DEBUG,"Wrote memory area:");
       }
     }
     out += saveMarker(out,MEMAREA_END_MARKER);
-    print(MTCP_DEBUG,"Wrote memory area:");
+    checkpointing_area_print(this,MTCP_DEBUG,"Wrote memory area:");
     return addr_diff(out,ptr);
   }
 }
 
 /// Write memory area descriptor and data to file given by the file handle
 int Area::write(int fd, bool write_nulls)    const {
+  const char* my_name = name;
   if ( fd <= 0 ) return 0;
-  else if ( m_strcmp(name,chkpt_sys.checkpointFile)  == 0 ) return 0;
-  else if ( m_strcmp(name,chkpt_sys.checkpointImage) == 0 ) return 0;
+  else if ( m_strcmp(my_name,chkpt_sys.checkpointFile)  == 0 ) return 0;
+  else if ( m_strcmp(my_name,chkpt_sys.checkpointImage) == 0 ) return 0;
   else {
     int    bytes = 0;
     int    flg = mapFlags();
@@ -84,11 +86,11 @@ int Area::write(int fd, bool write_nulls)    const {
     // This may be optimized:
     // We normally only need:
     // if (flg & MAP_ANONYMOUS || flg & MAP_SHARED)
-    len = dataLength();
-    if ( !write_nulls && 0 == (len=dataLength()) ) {
+    len = checkpointing_area_datalength(this);
+    if ( !write_nulls && 0 == (len=checkpointing_area_datalength(this)) ) {
       // Only write NULL-size marker
       bytes += writeInt(fd,0);
-      print(MTCP_DEBUG,"EMPTY memory area:");
+      checkpointing_area_print(this,MTCP_DEBUG,"EMPTY memory area:");
     }
     else   {
       bytes += writeInt(fd,size);
@@ -98,22 +100,22 @@ int Area::write(int fd, bool write_nulls)    const {
 	// to be reloaded from the disk 
 	if ( mtcp_sys_msync(low,size,MS_INVALIDATE) < 0 ){
 	  mtcp_output(MTCP_FATAL,"sync_shared_memory: error %d Invalidating %X at %p from %s + %X",
-		      mtcp_sys_errno,size,low,name,offset);
+		      mtcp_sys_errno,size,low,my_name,offset);
 	}
       }
       if ( prot[0] != 'r' ) {
 	bytes += m_writeset(fd,0,size);
-	print(MTCP_DEBUG,"NULL  memory area:");
+	checkpointing_area_print(this,MTCP_DEBUG,"NULL  memory area:");
       }
       else {
 	long* ptr, *start, *sp;
-	if ( m_strcmp(name,"[stack]") == 0 ) {
+	if ( m_strcmp(my_name,"[stack]") == 0 ) {
 	  sp = (long*)low;
 	  start = ptr = (long*)malloc(((size/sizeof(long))+2)*sizeof(long));
 	}
-	if ( m_strcmp(name,"[stack]") == 0 ) {
-#if 0
-#endif
+	if ( m_strcmp(my_name,"[stack]") == 0 ) {
+	  // Between the copy of the stack memory and the call to
+	  // getcontext, the stack may not change!
 	  for(;sp<(long*)high;++ptr,++sp) *ptr = *sp;
 	  bytes += m_writemem(fd,start,size);
 	  ::free(start);
@@ -129,34 +131,12 @@ int Area::write(int fd, bool write_nulls)    const {
 	{
 	  bytes += m_writemem(fd,(void*)low,size);
 	}
-	print(MTCP_DEBUG,"Wrote memory area:");
+	checkpointing_area_print(this,MTCP_DEBUG,"Wrote memory area:");
       }
     }
     bytes += writeMarker(fd,MEMAREA_END_MARKER);
     return bytes;
   }
-}
-
-/// Calculate the size of the data to be written
-int Area::dataLength()  const {
-  return checkpointing_area_datalength(this);
-}
-
-/// returns the full spze requirement to save this memory area
-int Area::length() const {
-  int len = 2*sizeof(Marker) + sizeof(Area) - (sizeof(name) - name_len - 1) + sizeof(int);
-  len += dataLength();
-  return len;
-}
-
-/// Print area descriptor to standard output
-void Area::print(const char* opt) const {
-  checkpointing_area_print(this,MTCP_INFO,opt);
-}
-
-/// Print area descriptor to standard output
-void Area::print(int lvl,const char* opt) const {
-  checkpointing_area_print(this,lvl,opt);
 }
 
 /// Access protection flags for this memory area
@@ -173,4 +153,3 @@ int Area::mapFlags() const {
 int Area::isFile() const {
   return name[0] == '/';
 }
-

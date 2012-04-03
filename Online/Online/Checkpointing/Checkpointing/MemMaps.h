@@ -45,21 +45,12 @@ namespace CHECKPOINTING_NAMESPACE {
     int  write(int fd, bool force_nulls=false) const;
     /// Stream out memory area descriptor and to memory
     int  streamOut(void* address, bool force_nulls=false) const;
-    /// Print area descriptor to standard output
-    void print(const char* opt="") const;
-    /// Print area descriptor with debug level to standard output
-    void print(int lvl,const char* opt="") const;
     /// Access protection flags for this memory area
     int  protection() const;
     /// Access mmap flags for this memory area
     int  mapFlags() const;
     /// Simple check if the memory area is mapped to a file
     int  isFile() const;
-    /// Returns the full size requirement to save this memory area
-    int  length() const;
-    /// Calculate the size of the data segment to be written
-    int  dataLength()  const;
-
   };
 
   /** @class AreaHandler
@@ -83,12 +74,10 @@ namespace CHECKPOINTING_NAMESPACE {
   protected:
     long m_bytes;
     long m_count;
-    long m_space;
     int  updateCounts(const Area& a);
   public:
     AreaBaseHandler();
     long bytes() const {  return m_bytes; }
-    long space() const {  return m_space; }
     long count() const {  return m_count; }
     static int do_map(const Area&, const unsigned char*, int data_len) 
     {      return data_len;    }
@@ -105,6 +94,23 @@ namespace CHECKPOINTING_NAMESPACE {
   public:
     AreaPrintHandler();
     int handle(int which, const Area& a);
+  };
+
+  /** @class AreaLibHandler
+   *
+   * @author  M.Frank
+   * @version 1.0
+   */
+  class AreaLibHandler : public AreaBaseHandler {
+    int    m_fd;
+    int    m_len;
+    int    m_numLibs;
+    char** m_libs;
+  public:
+    AreaLibHandler(int fd);
+    int handle(int which, const Area& a);
+    int numLibs() const {  return m_numLibs; }
+    void release();
   };
 
   /** @class AreaInfoHandler

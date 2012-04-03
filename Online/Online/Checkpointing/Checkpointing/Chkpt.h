@@ -20,6 +20,9 @@ extern "C" {
   int  checkpointing_start_child();
   int  checkpointing_fork_process();
   int  checkpointing_current_thread_id();
+  int  checkpointing_set_lib_directory(const char* lib_dir);
+  int  checkpointing_set_save_flags(int flags);
+  int  checkpointing_set_restart_flags(int flags);
 }
 
 #endif // CHECKPOINTING_CHKPT_H

@@ -34,6 +34,9 @@ namespace CHECKPOINTING_NAMESPACE  {
   STATIC(int) checkpointing_process_read_memory(Process*, const void* addr);
   STATIC(int) checkpointing_process_read(Process* p, const void* addr);
 
+  /// Skip library section. We got it already....
+  STATIC(int) checkpointing_process_fskip_libs(Process*, int fd);
+
   STATIC(int) checkpointing_process_fskip_sys(Process*,int fd);
   STATIC(int) checkpointing_process_fread_files(Process*,int fd);
   STATIC(int) checkpointing_process_fread_memory(Process*,int fd);
@@ -63,10 +66,17 @@ namespace CHECKPOINTING_NAMESPACE  {
   STATIC(void) checkpointing_sys_print(const SysInfo* s);
   /// Aquire system information (for writing/initialization)
   STATIC(void) checkpointing_sys_aquire(SysInfo* s);
+  /// Set save flags
+  STATIC(void) checkpointing_sys_set_save_flags(SysInfo* sys, int flags);
+  /// Set save flags
+  STATIC(void) checkpointing_sys_set_lib_directory(SysInfo* sys, const char* dir_name);
+  /// Set restart flags
+  STATIC(void) checkpointing_sys_set_restart_flags(SysInfo* sys, int flags);
+
   /// Get program context
   //STATIC(int) checkpointing_sys_get_context();
   /// Main restart routine in checkpointing image
-  STATIC(void) checkpointing_sys_restore_start(Stack* stack,int print_level,int optional_flags);
+  STATIC(void) checkpointing_sys_restore_start(int argc, char** argv, char** environ, const char* libs_dir, int print_level,int optional_flags);
   /// Secondary restore routine. Execution starts once we jumped to the local stack.
   STATIC(void) checkpointing_sys_restore_process();
   /// Final restart routine. Execution starts once we are back on the stack of the restored process.
@@ -150,6 +160,13 @@ namespace CHECKPOINTING_NAMESPACE  {
   STATIC(int) checkpointing_memory_scan(AreaHandler* handler);
   /// Write the memory areas to checkpoint file
   STATIC(int) checkpointing_memory_write(int fd);
+
+  struct Area;
+  /// Write all mapped libraries to file identified by fileno fd_out
+  STATIC(int) checkpointing_libs_fwrite(int fd);
+  /// Write single library content to file identified by fileno fd_out
+  STATIC(int) checkpointing_library_fwrite(int fd, const Area* a);
+
 
   // CHECKPOINTING_NAMESPACE::
 }

@@ -36,7 +36,7 @@ namespace CHECKPOINTING_NAMESPACE    {
     };
 
     typedef unsigned long mem_address_t;
-    typedef void  (*start_restore_t)(Stack* stack,int print_level,int optional_flags);
+    typedef void  (*start_restore_t)(int argc, char** argv, char** environ, const char* libs_dir,int print_level,int optional_flags);
     typedef void  (*end_restore_t)();
 
     /// Current stack limit
@@ -92,6 +92,8 @@ namespace CHECKPOINTING_NAMESPACE    {
     int             restart_type;
     /// Optional flags to steer restore
     int             restart_flags;
+    /// Optional flags for saving
+    int             save_flags;
     /// Process stack info: argv[0]
     char*           utgid;
     /// Length of argv[0] string
@@ -103,6 +105,9 @@ namespace CHECKPOINTING_NAMESPACE    {
     char            checkpointImage[1024];
     /// The name/path of the checkpoint file
     char            checkpointFile[1024];
+    /// The name/path of the library restoration directory
+    char            checkpointLibs[1024];
+    /// The full argv[0] string
     char            arg0String[1024];
 
 #ifndef CHECKPOINTING_SYSINFO_STRUCT_ONLY

@@ -29,8 +29,6 @@ template <class T> int default_handle(const AreaHandler* p,int which, const Area
 
 
 AreaBaseHandler::AreaBaseHandler() : m_bytes(0), m_count(0)   {
-  // Memarea size without individual areas
-  m_space = 2*sizeof(Marker)+sizeof(int);
   f_map     = default_map<AreaBaseHandler>;
   f_handle  = default_handle<AreaBaseHandler>;
 }
@@ -40,7 +38,6 @@ int AreaBaseHandler::updateCounts(const Area& a)   {
   long pg = chkpt_sys.pageSize;
   long sz = pg - 1;
   p->m_bytes += size_t((a.size+sz)/pg)*pg;
-  p->m_space += a.length();
   ++p->m_count;
   return 1;
 }
@@ -58,21 +55,64 @@ AreaPrintHandler::AreaPrintHandler() : AreaBaseHandler()  {
 }
 
 int AreaPrintHandler::handle(int, const Area& a)    {
-  a.print();
+  checkpointing_area_print(&a,MTCP_INFO,"");
   return updateCounts(a);
 }
 
+AreaLibHandler::AreaLibHandler(int fd) 
+  : AreaBaseHandler(), m_fd(fd)
+{
+  f_handle = default_handle<AreaLibHandler>;
+  m_numLibs = 0;
+  m_len = 1000;
+  m_libs = (char**)::malloc(m_len*sizeof(char*));
+  for(char** p=m_libs; p<m_libs+m_len; ++p) *p=0;
+}
+
+void AreaLibHandler::release()  {
+  for(char** p=m_libs; *p; ++p) ::free(*p);
+  free(m_libs);
+}
+
+int AreaLibHandler::handle(int, const Area& a)    {
+  // Skip images, which are no files
+  if ( a.name[0] != '/' ) {
+    return 0;
+  }
+  // Skip already saved images
+  for(int i=0; i<m_numLibs; ++i)  {
+    if ( m_libs[i] && m_strcmp(m_libs[i],a.name) == 0 )   {
+      return 0;
+    }
+  }
+  // This one we now save!
+  int bytes = checkpointing_library_fwrite(m_fd, &a);
+  if ( bytes > 0 ) {
+    if ( m_numLibs+1 > m_len ) {
+      m_libs = (char**)::realloc(m_libs,(1000+m_len)*sizeof(char*));
+      for(char** p=m_libs+m_len; p<m_libs+(1000+m_len)*sizeof(char); ++p) *p=0;
+      m_len += 1000;
+    }
+    mtcp_output(MTCP_INFO,"AreaLibHandler: Added image file[%d]: %s %d bytes\n",m_numLibs,a.name,bytes);
+    m_libs[m_numLibs] = (char*)::malloc(a.name_len+1);
+    m_memcpy(m_libs[m_numLibs], a.name, a.name_len+1);
+    m_bytes += bytes;
+    m_numLibs++;
+  }
+  return bytes;
+}
+
 AreaInfoHandler::AreaInfoHandler() {
-  stack[0]      = stack[1]      = 0;
-  vdso[0]       = vdso[1]       = 0;
-  vsyscall[0]   = vsyscall[1]   = 0;
-  imageAddr[0]  = ULONG_MAX;
-  imageAddr[1]  = 0;
-  checkpointAddr[0] = ULONG_MAX;
-  checkpointAddr[1] = 0;
-  highAddr          = 0;
-  image[0]          = 0;
-  m_prev            = false;
+  stack[0]           = stack[1]      = 0;
+  vdso[0]            = vdso[1]       = 0;
+  vsyscall[0]        = vsyscall[1]   = 0;
+  imageAddr[0]       = ULONG_MAX;
+  imageAddr[1]       = 0;
+  checkpointAddr[0]  = ULONG_MAX;
+  checkpointAddr[1]  = 0;
+  highAddr           = 0;
+  image[0]           = 0;
+  m_prev             = false;
   f_handle = default_handle<AreaInfoHandler>;
 }
 
@@ -175,7 +215,7 @@ int AreaChkptWriteHandler::handle(int, const Area& a)    {
       rc = m_writeset(m_fd,0,a.size);
     }
     if ( rc > 0 ) m_bytes += rc;
-    a.print("Write raw image:");
+    checkpointing_area_print(&a,MTCP_INFO,"Write raw image:");
     m_prev = m_prev ? false : true;
     return rc;
   }

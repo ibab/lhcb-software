@@ -7,7 +7,6 @@
 #include "Checkpointing/Thread.h"
 #include "Checkpointing/ThreadsLock.h"
 #include "Checkpointing/FileMap.h"
-#include "Checkpointing/Process.h"
 #include "Checkpointing/Chkpt.h"
 #include "Checkpointing.h"
 #include "Restore.h"
@@ -23,8 +22,6 @@
 #include <unistd.h>
 
 using namespace Checkpointing;
-
-
 
 extern "C" MainThread* libProcessRestore_main_instance() {
   static MainThread* p = 0;
@@ -308,20 +305,35 @@ extern "C" int checkpointing_init_checkpoints() {
   return p ? 1 : 0;
 }
 
-extern "C" int checkpointing_initialize_parent(int argc, char** argv, char** environment) {
+extern "C" int checkpointing_initialize_parent(int argc, char** argv, char** environment)   {
   MainThread* p = libProcessRestore_main_instance_init(argc,argv,environment);
   return p ? 1 : 0;
 }
 
-extern "C" int checkpointing_set_utgid(const char* new_utgid) {
+extern "C" int checkpointing_set_save_flags(int flags)   {
+  checkpointing_sys_set_save_flags(&chkpt_sys, flags);
+  return 1;
+}
+
+extern "C" int checkpointing_set_restart_flags(int flags)   {
+  checkpointing_sys_set_restart_flags(&chkpt_sys, flags);
+  return 1;
+}
+
+extern "C" int checkpointing_set_lib_directory(const char* lib_dir)   {
+  checkpointing_sys_set_lib_directory(&chkpt_sys, lib_dir);
+  return 1;
+}
+
+extern "C" int checkpointing_set_utgid(const char* new_utgid)   {
   return checkpointing_sys_set_utgid(&chkpt_sys, new_utgid);
 }
 
-extern "C" int checkpointing_force_utgid(const char* new_utgid) {
+extern "C" int checkpointing_force_utgid(const char* new_utgid)   {
   return checkpointing_sys_force_utgid(&chkpt_sys, new_utgid);
 }
 
-extern "C" int checkpointing_show_sig_actions() {
+extern "C" int checkpointing_show_sig_actions()   {
   struct sigaction a;
   for (int i=1; i<NSIG; ++i ) {
     void** mask = (void**)&a.sa_mask;

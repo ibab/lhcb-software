@@ -13,7 +13,6 @@
 #include <cstdio>
 #include <cstdlib>
 #include <climits>
-#include <alloca.h>
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <linux/personality.h>
@@ -26,10 +25,22 @@ static int checkMarker(int fd, Marker should) {
   const char* a = (char*)&got;
   const char* b = (char*)&should;
   if ( got != should ) {
-    mtcp_output(MTCP_ERROR,"Seen invalid markers: Got:%d %c%c%c%c Should be:%d %c%c%c%c\n",
+    mtcp_output(MTCP_ERROR,"Seen invalid markers: Got:%d '%c%c%c%c' Should be:%d '%c%c%c%c'\n",
 	     got,a[0],a[1],a[2],a[3],should,b[0],b[1],b[2],b[3]);
   }
   return 1;
+}
+
+static inline size_t m_strlen(const char* s) {
+  size_t l = 0;
+  for(; *s; ++s) ++l;
+  return l;
+}
+static inline size_t m_strcpy(char* t, const char* s) {
+  const char* q=s;
+  for(; *q; ++q, ++t) *t = *q;
+  *t = 0;
+  return q-s;
 }
 
 void mtcp_executable(char* cmd_file) {
@@ -41,12 +52,17 @@ void mtcp_executable(char* cmd_file) {
   cmd_file[cmd_len] = 0;
 }
 
-static void load(int org_argc, char** org_argv, const char* file_name, int advise, bool restart, SysInfo::start_restore_t* func) {
+static void load(int org_argc, char** org_argv, const char* file_name, const char* lib_dir, int advise, bool restart, SysInfo::start_restore_t* func) {
   typedef void* pvoid;
   const Marker PROCESS_BEGIN_MARKER = *(Marker*)"PROC";
   const Marker SYS_BEGIN_MARKER     = *(Marker*)"PSYS";
   const Marker SYS_END_MARKER       = *(Marker*)"psys";
-  int   rc, siz, fd, fdnum;
+  const Marker LIBS_BEGIN_MARKER    = *(Marker*)"LIBS";
+  const Marker LIBS_END_MARKER      = *(Marker*)"libs";
+  const Marker LIBRARY_BEGIN_MARKER = *(Marker*)"XLIB";
+  const Marker LIBRARY_END_MARKER   = *(Marker*)"xlib";
+  int   rc, siz, fd, fdnum, num_libs;
+  long  libs_size = 0;
   struct stat sb;
   SysInfo sys;
 
@@ -60,6 +76,59 @@ static void load(int org_argc, char** org_argv, const char* file_name, int advis
     mtcp_output(MTCP_FATAL,"Failed to open checkpoint file:%s\n",file_name);
   }
   checkMarker(fd,PROCESS_BEGIN_MARKER);
+
+  checkMarker(fd,LIBS_BEGIN_MARKER);
+  mtcp_sys_read(fd,&libs_size,sizeof(long));
+  mtcp_sys_read(fd,&num_libs,sizeof(int));
+  if ( libs_size > 0 )   {
+    if ( !lib_dir || !restart ) {
+      long offset = ::lseek(fd,0,SEEK_CUR);
+      mtcp_sys_lseek(fd,offset+libs_size,SEEK_SET);
+      mtcp_output(MTCP_INFO,"Ignore image section in checkpoint file:%s - restoring originals\n",file_name);
+    }
+    else {
+      int dir_len = m_strlen(lib_dir);
+      for ( int ilib=0; ilib<num_libs; ++ilib ) {
+	char lib[PATH_MAX], buffer[PATH_MAX];
+	mtcp_sys_mkdir(lib_dir,0777);
+	m_strcpy(lib,lib_dir);
+	if ( lib[dir_len-1] != '/' ) { lib[dir_len]='/';lib[dir_len+1]=0; }
+	checkMarker(fd,LIBRARY_BEGIN_MARKER);
+	mtcp_sys_read(fd,&siz,sizeof(siz));
+	mtcp_sys_read(fd,lib+m_strlen(lib),siz);
+	mtcp_sys_read(fd,&siz,sizeof(siz));
+	mtcp_sys_unlink(lib);
+	int lib_fd = mtcp_sys_open(lib,O_WRONLY|O_TRUNC|O_CREAT,0777);
+	if ( lib_fd < 0 ) {
+	  mtcp_output(MTCP_FATAL,"restore: error restoring image file:%s  errno:%d\n",lib,mtcp_sys_errno);
+	}
+	mtcp_output(MTCP_INFO,"Restoring %d bytes for library[%d/%d] %s\n",siz,ilib+1,num_libs,lib);
+	while(siz>=PATH_MAX) {
+	  mtcp_sys_read(fd,buffer,sizeof(buffer));
+	  int rc = mtcp_sys_write(lib_fd,buffer,sizeof(buffer));
+	  if ( rc < 0 ) {
+	    mtcp_output(MTCP_FATAL,"restore: error writing image file:%s  errno:%d\n",lib,mtcp_sys_errno);
+	  }
+	  siz -= PATH_MAX;
+	}
+	while(siz>0) {
+	  mtcp_sys_read(fd,buffer,1);
+	  int rc = mtcp_sys_write(lib_fd,buffer,1);
+	  if ( rc < 0 ) {
+	    mtcp_output(MTCP_FATAL,"restore: error writing image file:%s  errno:%d\n",lib,mtcp_sys_errno);
+	  }
+	  siz -= 1;
+	}
+	mtcp_sys_close(lib_fd);
+	checkMarker(fd,LIBRARY_END_MARKER);
+      }
+    }
+  }
+  else {
+    mtcp_output(MTCP_INFO,"Image section is EMPTY in checkpoint file:%s - restoring originals\n",file_name);
+  }
+  checkMarker(fd,LIBS_END_MARKER);
+
   checkMarker(fd,SYS_BEGIN_MARKER);
   mtcp_sys_read(fd,&siz,sizeof(siz));
   mtcp_output(MTCP_DEBUG,"SysInfo has a size of %d bytes\n",siz);
@@ -87,22 +156,22 @@ static void load(int org_argc, char** org_argv, const char* file_name, int advis
       mtcp_executable(cmdLine);
       for(i=0; i<num_arg;++i) {
 	mtcp_output(MTCP_DEBUG,"SysInfo-arg[%d] = %s\n",i,ptr);
-	ptr += ::strlen(ptr)+1;
-	l1+= ::strlen(ptr)+1;
+	ptr += m_strlen(ptr)+1;
+	l1+= m_strlen(ptr)+1;
       }
       for(i=0; i<num_env;++i) {
 	mtcp_output(MTCP_DEBUG,"SysInfo-env[%d] = %s\n",i,ptr);
 	envp[i] = ptr;
-	ptr += ::strlen(ptr)+1;
+	ptr += m_strlen(ptr)+1;
       }
       envp[num_env] = 0;
       for(i=0; i<org_argc;++i) {
 	mtcp_output(MTCP_DEBUG,"SysInfo-restart-arg[%d] = %s\n",i,org_argv[i]);
 	argv[i] = org_argv[i];
-	l2 += ::strlen(argv[i])+1;
+	l2 += m_strlen(argv[i])+1;
       }
       argv[org_argc] = (char*)"-runnow";
-      l2 += ::strlen(argv[org_argc])+1;
+      l2 += m_strlen(argv[org_argc])+1;
       argv[org_argc+1] = 0;
       for(e=environ, count=0;e&&*e; ++e)count++;
       mtcp_output(MTCP_INFO,"SysInfo-arg-len  %d \n",long(org_argv[0])-sys.arg0);
@@ -225,6 +294,7 @@ int main(int argc, char** argv, char** envp) {
   environ = envp;
   if ( argc > 1 ) {
     int prt = MTCP_WARNING, opts=0;
+    const char* libs_dir = 0;
     {
       int advise=0, norestart=1;
       const char* file_name = 0;
@@ -235,20 +305,17 @@ int main(int argc, char** argv, char** envp) {
 	else if ( argc>i && argv[i][1] == 'e' ) opts |= MTCP_STDIN_ENV;
 	else if ( argc>i && argv[i][1] == 'a' ) advise = 1;
 	else if ( argc>i && argv[i][1] == 'r' ) norestart = 0;
+	else if ( argc>i && argv[i][1] == 'l' ) libs_dir = argv[++i];
 	else if ( argc>i && argv[i][1] == 'd' ) ::sleep(10);
       }
       if ( 0 == file_name ) return usage();
       mtcp_set_debug_level(prt /* MTCP_ERROR prt */);
       mtcp_output(MTCP_INFO,"restore: print level:%d input:%s\n",prt,file_name);
-      load(argc, argv, file_name, advise, norestart==1, &func);
+      load(argc, argv, file_name, libs_dir, advise, norestart==1, &func);
     }
-    Stack stack;
-    stack.argv = argv;
-    stack.argc = argc;
-    stack.environment = environ;
     // Now call the restore function - it shouldn't return. 
     // Checkpoint file is still open and positioned to the beginning.
-    (*func)(&stack,prt,opts);
+    (*func)(argc,argv,environ,libs_dir,prt,opts);
     mtcp_output(MTCP_FATAL,"restore: restore routine returned (it should never do this!)\n");
     mtcp_abort();
   }

@@ -28,6 +28,11 @@ DefineMarker(MEMAREA_END_MARKER,  "area");
 DefineMarker(MEMMAP_BEGIN_MARKER, "MMAP");
 DefineMarker(MEMMAP_END_MARKER,   "mmap");
 
+DefineMarker(LIBS_BEGIN_MARKER,   "LIBS");
+DefineMarker(LIBS_END_MARKER,     "libs");
+DefineMarker(LIBRARY_BEGIN_MARKER,"XLIB");
+DefineMarker(LIBRARY_END_MARKER,  "xlib");
+
 
 
 /// Print content to stack saved in context
@@ -335,25 +340,66 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_fread_memory(Process*
   return 0;
 }
 
+/// Skip library section. We got it already....
+STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_fskip_libs(Process*, int fd) {
+  int num_libs;
+  long offset, len = 0;
+  int in = readMarker(fd,LIBS_BEGIN_MARKER);
+  in += readLong(fd,&len);
+  in += readInt(fd,&num_libs);
+  if ( len > 0 ) {
+    offset = mtcp_sys_lseek(fd,0,SEEK_CUR);
+    mtcp_sys_lseek(fd,offset+len,SEEK_SET);
+  }
+  in += readMarker(fd,LIBS_END_MARKER);
+  return in;
+}
+
+/// Read entire process information from checkpoint file. Skip irrelevant enteties
 STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_fread(Process* p, int fd) {
   long rc = 0;
   if ( fd > 0 ) {
     mtcp_output(MTCP_DEBUG,"fd:%d, Start reading at position:%p\n",fd,rc);
     if ( (rc=checkpointing_process_fread_header(p,fd)) ) {
       mtcp_output(MTCP_INFO,"fd:%d, Read %ld bytes of process header.\n",fd,rc);
+
+      /// Skip libraries
+      if ( (rc=checkpointing_process_fskip_libs(p,fd)) ) {
+	mtcp_output(MTCP_INFO,"fd:%d, Read %ld bytes of process sysinfo.\n",fd,rc);
+      }
+      else {
+	mtcp_output(MTCP_FATAL,"fd:%d Failed to skip library section.\n",fd,rc);
+	return 0;
+      }
+      /// Skip SysInfo (we got it already...)
       if ( (rc=checkpointing_process_fskip_sys(p,fd)) ) {
 	mtcp_output(MTCP_INFO,"fd:%d, Read %ld bytes of process sysinfo.\n",fd,rc);
-	if ( (rc=checkpointing_process_fread_files(p,fd)) ) {
-	  mtcp_output(MTCP_INFO,"fd:%d, Read %ld bytes of process file info.\n",fd,rc);
-	  if ( (rc=checkpointing_process_fread_memory(p,fd)) ) {
-	    mtcp_output(MTCP_INFO,"fd:%d, Read %ld bytes of process memory.\n",fd,rc);
-	    if ( (rc=checkpointing_process_fread_trailer(p,fd)) ) {
-	      mtcp_output(MTCP_INFO,"fd:%d, Read %ld bytes of process trailer.\n",fd,rc);
-	      //checkpointing_sys_restore_finish();
-	      return 1;
-	    }
-	  }
-	}
+      }
+      else {
+	mtcp_output(MTCP_FATAL,"fd:%d Failed to skip SysInfo section.\n",fd,rc);
+	return 0;
+      }
+      /// Read and save file sections
+      if ( (rc=checkpointing_process_fread_files(p,fd)) ) {
+	mtcp_output(MTCP_INFO,"fd:%d, Read %ld bytes of process file info.\n",fd,rc);
+      }
+      else {
+	mtcp_output(MTCP_FATAL,"fd:%d Failed to process file sections.\n",fd,rc);
+	return 0;
+      }
+      /// Read and remap memory sections
+      if ( (rc=checkpointing_process_fread_memory(p,fd)) ) {
+	mtcp_output(MTCP_INFO,"fd:%d, Read %ld bytes of process memory.\n",fd,rc);
+      }
+      else {
+	mtcp_output(MTCP_FATAL,"fd:%d Failed to process memory sections.\n",fd,rc);
+	return 0;
+      }
+      /// Read process trailer
+      if ( (rc=checkpointing_process_fread_trailer(p,fd)) ) {
+	mtcp_output(MTCP_INFO,"fd:%d, Read %ld bytes of process trailer.\n",fd,rc);
+	//checkpointing_sys_restore_finish();
+	return 1;
       }
     }
   }
@@ -410,6 +456,17 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_area_fread(Area* a,int fd, in
   in += m_fread(fd,a,len);
   in += m_fread(fd,a->name,a->name_len+1);
   in += readInt(fd,&l);
+  if ( a->name[0] && a->name[0] == '/' && 
+       chkpt_sys.save_flags&MTCP_SAVE_LIBS &&
+       chkpt_sys.checkpointLibs[0] ) {
+    char tmp[PATH_MAX];
+    const char *p0, *p1;
+    m_strcpy(tmp,chkpt_sys.checkpointLibs);
+    for(p0=a->name, p1=a->name; *p0; ++p0) if (*p0=='/') p1=p0;
+    m_strcpy(tmp+m_strlen(tmp),p1);
+    m_strcpy(a->name,tmp);
+    a->name_len = m_strlen(a->name);
+  }
   in += map ? (*map)(handler,*a,fd,l) : l;
   in += readMarker(fd,MEMAREA_END_MARKER);
   checkpointing_area_print(a,MTCP_DEBUG,"Read memory area:");

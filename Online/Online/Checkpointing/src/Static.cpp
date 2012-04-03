@@ -22,7 +22,8 @@ DefineMarker(SYS_BEGIN_MARKER,    "PSYS");
 DefineMarker(SYS_END_MARKER,      "psys");
 
 //#define STACKSIZE 4096      // size of temporary stack (in quadwords)
-#define STACKSIZE 1024      // size of temporary stack (in quadwords)
+#define STACKSIZE 2048      // size of temporary stack (in quadwords)
+//#define STACKSIZE 1024      // size of temporary stack (in quadwords)
 /* temp stack used internally by restore so we don't go outside the
  *   libmtcp.so address range for anything;
  * including "+ 1" since will set %esp/%rsp to tempstack+STACKSIZE
@@ -49,6 +50,7 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_initialize(SysInfo* sys)
   sys->sysInfo            = 0;
   sys->pageSize           = ::sysconf(_SC_PAGESIZE);
   sys->checkpointFD       = lim.rlim_max-1;
+  sys->checkpointLibs[0]  = 0;
   sys->checkpointFile[0]  = 0;
   sys->checkpointImage[0] = 0;
   sys->motherofall        = 0;
@@ -56,6 +58,7 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_initialize(SysInfo* sys)
   sys->chkptPID           = 0;
   sys->restart_type       = 0;
   sys->restart_flags      = 0;
+  sys->save_flags         = 0;
   sys->utgid              = 0;
   sys->utgidLen           = 0;
   sys->argv               = 0;
@@ -68,8 +71,28 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_initialize(SysInfo* sys)
   sys->restore_arglen     = 0;
 }
 
+/// Set directory name for libraries to be restored.
+STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_set_lib_directory(SysInfo* sys, const char* dir_name)   {
+  if ( dir_name ) {
+    m_memcpy(sys->checkpointLibs,dir_name,m_strlen(dir_name));
+  }
+  else {
+    sys->checkpointLibs[0] = 0;
+  }
+}
+
+/// Set save flags
+STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_set_save_flags(SysInfo* sys, int flags) {
+  sys->save_flags = flags;
+}
+
+/// Set restart flags
+STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_set_restart_flags(SysInfo* sys, int flags) {
+  sys->restart_flags = flags;
+}
+
 /// Main restart routine in checkpointing image
-STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_restore_start(Stack* stack,int print_level,int flags) {
+STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_restore_start(int argc, char** argv, char** env, const char* libs_dir,int print_level,int flags) {
   /* If we just replace extendedStack by (tempstack+STACKSIZE) in "asm"
    * below, the optimizer generates non-PIC code if it's not -O0 - Gene
    */
@@ -80,7 +103,11 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_restore_start(Stack* sta
     mtcp_output(MTCP_FATAL,"restore: Failed [%d] to seek back to beginning of the checkpoint file\n",mtcp_sys_errno);
   }
   chkpt_sys.restart_flags = flags;
-  checkpointing_sys_init_restore_stack(&chkpt_sys,stack->argc,stack->argv,stack->environment);
+  checkpointing_sys_init_restore_stack(&chkpt_sys,argc,argv,env);
+  if ( libs_dir )
+    m_strcpy(chkpt_sys.checkpointLibs,libs_dir);
+  else
+    chkpt_sys.checkpointLibs[0] = 0;
   checkpointing_sys_print(&chkpt_sys);
 
   // Now we move the process to the temporary stack allocated in this image
