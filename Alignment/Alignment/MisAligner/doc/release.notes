@@ -7,8 +7,11 @@ Purpose: LHCb Alignment packages.
 	 Misalignment paramaters will be stored in xml files which then have to
 	 uploaded to the conditions data base by hand, using the tools in Det/ConddbUI
 
+</PRE><H1><A NAME=v2r0>2012-04-03 MisAligner v2r0</A></H1><PRE>
 ! 2012-03-02 - Wouter Hulsbergen
  - cleanup requirement file
+
+Required for all Gaudi >=v23r0
 
 </PRE><H1><A NAME=v1r5>2011-06-20 MisAligner v1r5</A></H1><PRE>
 ! 2011-06-20 - Rob Lambert
@@ -46,4 +49,3 @@ Purpose: LHCb Alignment packages.
 </PRE><H1><A NAME=v1r0>2009-02-21 MisAligner v1r0</A></H1><PRE>
 - J. Blouw/M. Schiller, first release
 </PRE>
-
