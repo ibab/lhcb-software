@@ -18,7 +18,7 @@ def __update_conf__( current, extra ) :
                 cur[k] = v
             print 'result: %s' % cur[k]
 
-class Physics_draft2012( object ):
+class Physics_AprilBU2012( object ):
     """
     Settings draft for 2012 running.
     
@@ -44,8 +44,8 @@ class Physics_draft2012( object ):
         return '0x0040'
 
     def HltType(self) :
-        self.verifyType( Physics_draft2012 ) 
-        return          'Physics_draft2012'
+        self.verifyType( Physics_AprilBU2012 ) 
+        return          'Physics_AprilBU2012'
     
     def Thresholds(self) :
         """

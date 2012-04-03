@@ -6,6 +6,7 @@
 
 ! 2012-04-03 - E. van Herwijnen
  - Remove the prescale on the diproton lines in Physics_April{BU}201
+ - change the classname from draft to Physics_April{BU}201
 
 !========================= HltSettings v5r25 2012-04-02 =========================
 ! 2012-04-02 - E. van Herwijnen
