@@ -4,7 +4,11 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
-!====================== GaussPhysics v7r4 2012-04-02 =========================
+!====================== GaussPhysics v7r4 2012-04-03 =========================
+! 2011-04-03 - Gloria Corti
+ - Put back definitions for XibMinus, XibPlus, OmegabMinus, OmegabPlus that
+   were removed by mistake
+
 ! 2012-03-29 - Giacomo Graziani
   -  Add new classes for XibcPlus, XibcZero and cc
 
