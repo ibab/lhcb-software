@@ -4,7 +4,8 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
-~2012-04-03 - Johannes Albrecht
+!========================= HltSettings v5r26 2012-04-03 =========================
+! 2012-04-03 - Johannes Albrecht
  - Muons_draft2012: loosen Psi2S cuts
  - Physics_draft2012: put in NoSPD L0 for 1Track, single and dimuons
  - update also Physics April settings
