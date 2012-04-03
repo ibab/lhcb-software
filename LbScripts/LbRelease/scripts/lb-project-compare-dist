@@ -23,6 +23,14 @@ def cleanVersion(name, version):
 def setVersion(name, version):
     return name.replace("XXXX", version)
 
+def truncateName(name, width):
+    """ Truncate the names that are too long to a given width"""
+    if len(name) < width:
+        return name
+    tmpname = name[len(name) -width:]
+    return '..' + tmpname[2:]
+
+
 #
 # Main script class
 ###############################################################################
@@ -32,9 +40,17 @@ class CheckDist(ProjectTool):
         """ Main constructor for the script """
         ProjectTool.__init__(self, usage = "%prog [options] project version1 version2)",
                               description = "Compare the distribution files for two projects")
+
+    def defineOpts(self):
+        parser = self.parser
+        parser.add_option("--width", action="store",
+                          dest="width",
+                          help="Specify the report width")
+        parser.set_defaults(width=140)
+
     def twoColumns(self, width):
         """ Prepares format string for two large columns """
-        lcol = width /2
+        lcol = width / 2
         return "{0:<%d}|{1:>%d}\n" % (lcol, lcol)
 
     def fourColumns(self, width, scol = 12):
@@ -45,35 +61,41 @@ class CheckDist(ProjectTool):
     def fourColumnsWithDiff(self, width, scol = 12):
         """ Prepares format string for two large columns with two smal ones near the center """
         lcol = (width / 2) - scol
-        return "{0:<%d}{1:>%d}|{2:<%d}{3:>%d} ({4:2.2f}%%)\n" % (lcol, scol, scol, lcol)
+        return "{0:<%d}{1:>%d}|{2:<%d}{3:>%d} ({4:>+2.2f}%%)\n" % (lcol, scol, scol, lcol)
 
 
     def compareFileSets(self, width, path1, list1, version1,  path2, list2, version2):
         """ Compare sets of files """
-        fdisp = self.fourColumns(width)
-        fdispd = self.fourColumnsWithDiff(width)
+        smallColumnWidth = 12
+        fdisp = self.fourColumns(width, smallColumnWidth)
+        fdispd = self.fourColumnsWithDiff(width, smallColumnWidth)
         s = ""
+
+        largeColumnWidth = (width / 2) - smallColumnWidth
 
         h1 = set([cleanVersion(f, version1) for f in list1])
         h2 = set([cleanVersion(f, version2) for f in list2])
 
         for h in sorted(h1 - h2):
             n1 =  setVersion (h, version1)
-            s +=  fdisp.format(n1, os.path.getsize(os.path.join(path1, n1)), "", "")
+            nf1 = truncateName(n1,largeColumnWidth)
+            s +=  fdisp.format(nf1, os.path.getsize(os.path.join(path1, n1)), "", "")
         for h in sorted(h1 & h2):
             n1 =  setVersion (h, version1)
             n2 =  setVersion (h, version2)
+            nf1 = truncateName(n1,largeColumnWidth)
+            nf2 = truncateName(n2,largeColumnWidth)
             s1 =  os.path.getsize(os.path.join(path1, n1))
             s2 =  os.path.getsize(os.path.join(path2, n2))
-            s +=  fdispd.format(n1, s1, s2, n2, 100 * (s2 -s1) / float(s1))
+            s +=  fdispd.format(nf1, s1, s2, nf2, 100 * (s2 -s1) / float(s1))
         for h in sorted(h2 - h1):
             n2 =  setVersion (h, version2)
-            s +=  fdisp.format("", "", os.path.getsize(os.path.join(path2, n2)), n2)
+            nf2 = truncateName(n2,largeColumnWidth)
+            s +=  fdisp.format("", "", os.path.getsize(os.path.join(path2, n2)), nf2)
         return s
 
     def compareProjects(self, p1, p2, width = 160):
         """ Compare two different projects """
-        width = 121
         tdisp =  self.twoColumns(width)
         s = tdisp.format(p1.projectName + " "+ p1.version, p2.projectName + " "+ p2.version  )
         s += width * "=" + "\n\n"
@@ -115,17 +137,17 @@ class CheckDist(ProjectTool):
             s+= self.compareFileSets(width, p1.lcgdistdir, p1.lcgdistfiles, p1.version, \
                                  p2.lcgdistdir, p2.lcgdistfiles, p2.version)
         else:
-            s+= "No LCG Dist files\n"
+            s+= "\nNo LCG Dist files\n"
 
         print s
 
-    def compareMain(self, projectName, v1, v2):
+    def compareMain(self, projectName, v1, v2, width):
         """ Main function of the script """
         # Create the project managers
         p1 = ProjectManager.loadFromDisk(projectName, v1)
         p2 = ProjectManager.loadFromDisk(projectName, v2)
         # And call the comparison method
-        self.compareProjects(p1, p2)
+        self.compareProjects(p1, p2, width)
 
     def main(self):
         """ Overloading the main, as this takes two versions """
@@ -139,7 +161,7 @@ class CheckDist(ProjectTool):
         self.projectName = args[0]
         self.version1 = args[1]
         self.version2 = args[2]
-        self.compareMain(self.projectName, self.version1, self.version2)
+        self.compareMain(self.projectName, self.version1, self.version2, int(self.options.width))
 
 
 if __name__ == '__main__':
