@@ -898,27 +898,19 @@ namespace
     //
     if ( 2 * mPi >= x ) { return 0 ; }
     //
-    const double qPP = 2 * Gaudi::Math::PhaseSpace2::q1 ( x , mPi , mPi ) / x ;
-    const double qKK = 2 * Gaudi::Math::PhaseSpace2::q1 ( x , mK  , mK  ) / x ;
-    //
     const std::complex<double> rho_PP = 
-      0 <= qPP ? 
-      std::complex<double> ( qPP , 0                ) :
-      std::complex<double> (   0 , std::abs ( qPP ) ) ;
-    //
+      Gaudi::Math::PhaseSpace2::q1 ( x , mPi , mPi )  ;
     const std::complex<double> rho_KK = 
-      0 <= qKK ? 
-      std::complex<double> ( qKK , 0                ) :
-      std::complex<double> (   0 , std::abs ( qKK ) ) ;
+      Gaudi::Math::PhaseSpace2::q1 ( x , mK  , mK  )  ;
     //
+    // 
     static const std::complex<double> s_j ( 0 , 1 ) ;
     //
     const std::complex<double> v = 
-      m0 * m0 - x * x - s_j * ( m0g1 * rho_PP + m0g1 * g2og1 * rho_KK ) ;
+      m0 * m0 - x * x - s_j * m0g1 * ( rho_PP + g2og1 * rho_KK ) ;
     //
-    // attention: normalization phactors and phase space are here!
-    //
-    const double d = 2 * std::abs ( m0g1 * qPP * x ) / M_PI ;
+    // attention: normalization factors and phase space are here!
+    const double d = 2 * std::abs ( x * m0g1 * rho_PP ) / M_PI ;
     //
     return  std::sqrt ( d ) / v ;
   }
@@ -935,27 +927,19 @@ namespace
     //
     if ( 2 * mK >= x ) { return 0 ; }
     //
-    const double qPP = 2 * Gaudi::Math::PhaseSpace2::q1 ( x , mPi , mPi ) / x ;
-    const double qKK = 2 * Gaudi::Math::PhaseSpace2::q1 ( x , mK  , mK  ) / x ;
-    //
     const std::complex<double> rho_PP = 
-      0 <= qPP ? 
-      std::complex<double> ( qPP , 0                ) :
-      std::complex<double> (   0 , std::abs ( qPP ) ) ;
-    //
+      Gaudi::Math::PhaseSpace2::q1 ( x , mPi , mPi ) ;
     const std::complex<double> rho_KK = 
-      0 <= qKK ? 
-      std::complex<double> ( qKK , 0                ) :
-      std::complex<double> (   0 , std::abs ( qKK ) ) ;
+      Gaudi::Math::PhaseSpace2::q1 ( x , mK  , mK  ) ;
     //
     static const std::complex<double> s_j ( 0 , 1 ) ;
     //
     const std::complex<double> v = 
-      m0 * m0 - x * x - s_j * ( m0g1 * rho_PP + m0g1 * g2og1 * rho_KK ) ;
+      m0 * m0 - x * x - s_j * m0g1 * ( rho_PP + g2og1 * rho_KK ) ;
     //
-    // attention: normalization phactors and phase space are here!
+    // attention: normalization factors and phase space are here!
     //
-    const double d = 2 * std::abs ( m0g1 * g2og1 * qKK * x ) / M_PI ;
+    const double d = 2 * std::abs ( x * m0g1 * g2og1 * rho_KK ) / M_PI ;
     //
     return  std::sqrt ( d ) / v ;
   }
@@ -2326,15 +2310,30 @@ Gaudi::Math::PhaseSpace2::~PhaseSpace2(){}
 // evaluate 2-body phase space 
 // ============================================================================
 double Gaudi::Math::PhaseSpace2::operator () ( const double x ) const 
+{ return phasespace ( x , m_m1 , m_m2 ) ; }
+// ============================================================================
+/* calculate the phase space for   m -> m1 + m2 
+ *  \f$ \Phi = \frac{1}{8\pi} \frac{ \lambda^{\frac{1}{2}} \left( m^2 , m_1^2, m_2_2 \right) }{ m^2 }\f$, 
+ *  where \f$\lambda\f$ is a triangle function 
+ */
+// ============================================================================
+double Gaudi::Math::PhaseSpace2::phasespace 
+( const double         m  , 
+  const double         m1 , 
+  const double         m2 , 
+  const unsigned short L  ) 
 {
   //
-  if ( m_m1 + m_m2 >= x ) { return 0 ; } // return  
+  if ( 0 >= m || 0 > m1 || 0 > m2 ) { return 0 ; } // RETURN  
+  if ( m < m1 + m2                ) { return 0 ; } // RETURN 
   //
-  const double x2 = x * x ;
+  const double msq = m * m ;
+  const double lam = triangle ( msq  , m1 * m1 , m2 * m2 ) ;
+  //
+  static const double s_inv8pi = 1.0 / ( 8 * M_PI ) ;
   // 
-  return std::sqrt  ( triangle  ( x2          , 
-                                  m_m1 * m_m1 , 
-                                  m_m2 * m_m2 ) ) / x2 / 8 / M_PI ;
+  return 0 < lam ? 
+    s_inv8pi * Gaudi::Math::pow ( std::sqrt ( lam ) / msq , 2 * L + 1 ) : 0.0 ;
 }
 // ============================================================================
 /*  calculate the triangle function 
@@ -2349,10 +2348,10 @@ Gaudi::Math::PhaseSpace2::triangle
 ( const double a , 
   const double b , 
   const double c ) 
-{ return a*a + b*b + c*c - 2*a*b - 2*b*c - 2*a*c ; }
+{ return a * a + b * b + c * c - 2 * a * b - 2 * b * c - 2 * a * c ; }
 // ============================================================================
-/**calculate the particle momentum in rest frame 
- *  @param m the mass 
+/*  calculate the particle momentum in rest frame 
+ *  @param m  the mass 
  *  @param m1 the mass of the first particle 
  *  @param m2 the mass of the second particle 
  *  @return the momentum in rest frame (physical values only)
@@ -2362,17 +2361,25 @@ double Gaudi::Math::PhaseSpace2::q
 ( const double m  , 
   const double m1 , 
   const double m2 ) 
-{ return std::max ( 0.0 , q1 ( m , m1 , m2 ) ) ; }
+{
+  // 
+  if ( 0 >= m || 0 > m1 || 0 > m2 ) { return 0 ; }
+  //
+  const double lam = triangle ( m * m  , m1 * m1 , m2 * m2 ) ;
+  //
+  return 0 < lam ? 0.5  * std::sqrt (  lam ) / m : 0 ;  
+}
 // ============================================================================
 /** calculate the particle momentum in rest frame 
  *  @param m the mass 
  *  @param m1 the mass of the first particle 
  *  @param m2 the mass of the second particle 
  *  @return the momentum in rest frame 
- *  @return the momentum in rest frame  (negative for non-physical branch)
+ *  @return the momentum in rest frame  (imaginary for non-physical branch)
  */
 // ============================================================================
-double Gaudi::Math::PhaseSpace2::q1 
+std::complex<double>
+Gaudi::Math::PhaseSpace2::q1 
 ( const double m  , 
   const double m1 , 
   const double m2 ) 
@@ -2380,19 +2387,13 @@ double Gaudi::Math::PhaseSpace2::q1
   // 
   if ( 0 >= m || 0 > m1 || 0 > m2 ) { return 0 ; }
   //
-  const double m_2  = m  * m  ;
-  const double d1   = m1 + m2 ;
-  const double d2   = m1 - m2 ;
-  //
-  const double num  = ( m_2 - d1 * d1 ) * ( m_2 - d2 * d2 ) ;
+  const double lam = triangle ( m * m , m1 * m1 , m2 * m2 ) ;
   //
   return 
-    0 <= num ? 
-    0.5  * std::sqrt (  num ) / m :
-    -0.5 * std::sqrt ( -num ) / m ;
+    0 <= lam ? 
+    std::complex<double> (     0.5  * std::sqrt (  lam ) / m , 0 ) :
+    std::complex<double> ( 0 , 0.5  * std::sqrt ( -lam ) / m     ) ;
 }
-// ============================================================================
-
 // ============================================================================
 // constructor from threshold and number of particles 
 // ============================================================================
@@ -2496,8 +2497,8 @@ Gaudi::Math::PhaseSpaceNL::PhaseSpaceNL
   const unsigned short l          , 
   const unsigned short n          ) 
   : std::unary_function<double,double> () 
-  , m_threshold1 ( std::min ( std::abs ( threshold1 ) ,std::abs ( threshold2 ) ) ) 
-  , m_threshold2 ( std::max ( std::abs ( threshold1 ) ,std::abs ( threshold2 ) ) )                           
+  , m_threshold1 ( std::min ( std::abs ( threshold1 ) , std::abs ( threshold2 ) ) ) 
+  , m_threshold2 ( std::max ( std::abs ( threshold1 ) , std::abs ( threshold2 ) ) )                           
   , m_N          ( std::max ( l , n ) ) 
   , m_L          ( std::min ( l , n ) ) 
   , m_norm       ( 1 ) 
@@ -2987,7 +2988,7 @@ double Gaudi::Math::Flatte::flatte ( const double x ) const
       m_K     ,
       m_Pi    ) ;
   //
-  return amp.real() * amp.real() + amp.imag () * amp.imag () ;
+  return std::norm ( amp ) ;
 } 
 // ============================================================================
 // get the function for KK-channel  
@@ -3006,7 +3007,7 @@ double Gaudi::Math::Flatte::flatte2 ( const double x ) const
       m_K     ,
       m_Pi    ) ;
   //
-  return amp.real() * amp.real() + amp.imag () * amp.imag () ;
+  return std::norm ( amp ) ;
 } 
 // ============================================================================
 // get the integral between low and high limits 
@@ -3777,18 +3778,15 @@ Gaudi::Math::PhaseSpace23L::PhaseSpace23L
 // destructor
 // ============================================================================
 Gaudi::Math::PhaseSpace23L::~PhaseSpace23L() {}
-// ============================================================================
 // get the momentum of 1st particle in rest frame of (1,2)
 // ============================================================================
 double Gaudi::Math::PhaseSpace23L::q ( const double x ) const 
-{ return Gaudi::Math::PhaseSpace2::q ( x  , m_m1 , m_m2  ) ; }
+{ return Gaudi::Math::PhaseSpace2::q ( x , m_m1 , m_m2 ) ; }
 // ============================================================================
 // get the momentum of 3rd particle in rest frame of mother
 // ============================================================================
 double Gaudi::Math::PhaseSpace23L::p ( const double x ) const 
-{ return Gaudi::Math::PhaseSpace2::q ( m_m  , m_m3 , x ) ; }
-// ============================================================================
-// evaluate N/L-body phase space
+{ return Gaudi::Math::PhaseSpace2::q ( m_m , x , m_m3 ) ; }
 // ============================================================================
 double Gaudi::Math::PhaseSpace23L::operator () ( const double x ) const 
 {
@@ -3796,30 +3794,12 @@ double Gaudi::Math::PhaseSpace23L::operator () ( const double x ) const
   if ( x <= m_m1 + m_m2 ) { return 0 ; }
   if ( x >= m_m  - m_m3 ) { return 0 ; }
   //
-  const double xm = 0.5 * ( m_m1 + m_m2 + m_m - m_m3 ) ;
+  // represent 3-body phase space as extention of 2-body phase space 
+  double ps =  x / M_PI *  
+    Gaudi::Math::PhaseSpace2::phasespace ( x   , m_m1 , m_m2 , m_l  ) * 
+    Gaudi::Math::PhaseSpace2::phasespace ( m_m ,    x , m_m3 , m_L  ) ;
   //
-  const double q0 = q ( x  ) ;
-  if ( 0 >= q0 ) { return 0 ; }
-  //
-  const double p0 = p ( x  ) ;
-  if ( 0 >= p0 ) { return 0 ; }
-  //
-  // rescale momenta 
-  const double qq = q0 / x    ;
-  const double pp = p0 / m_m  ;
-  //
-  // the regular phase space 
-  double result = qq * pp ;
-  //
-  // take into account the orbital momentum
-  result *= Gaudi::Math::pow ( qq , 2 * m_l )  ;
-  //
-  // take into account the orbital momentum
-  result *= Gaudi::Math::pow ( pp , 2 * m_L ) ; 
-  //
-  if ( 0 < m_norm  ) { result /= m_norm ; }
-  //
-  return result ;
+  return 0 < m_norm ? ps / m_norm : ps ;
 }
 // ============================================================================
 // get the integral between low and high limits 
@@ -3843,9 +3823,9 @@ double  Gaudi::Math::PhaseSpace23L::integral
   GSL_Handler_Sentry sentry ;
   //
   gsl_function F                 ;
-  F.function = &phase_space_23L_GSL ;
+  F.function               = &phase_space_23L_GSL ;
   const PhaseSpace23L* _ps = this  ;
-  F.params   = const_cast<PhaseSpace23L*> ( _ps ) ;
+  F.params                 = const_cast<PhaseSpace23L*> ( _ps ) ;
   //
   double result   = 1.0 ;
   double error    = 1.0 ;
@@ -3993,7 +3973,7 @@ Gaudi::Math::LASS23L::amplitude ( const double x ) const
   if ( x >= m_ps.highEdge () ) { return 0 ; }  // RETURN 
   //
   const double q  = m_ps.q ( x    ) ;
-  if ( 0 > q  )                { return 0 ; }  // RETURN 
+  if ( 0 >= q                ) { return 0 ; }  // RETURN 
   //
   // get the width:
   const double gs = gamma_run ( m_g0       , 

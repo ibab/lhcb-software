@@ -1127,7 +1127,7 @@ namespace Gaudi
     public :
       // ======================================================================
       /** calculate the triangle function 
-       *  \f$ \lambda ( a , b, c ) = a^2 + b^2 + c^2 - 2ab - 2bc - 2 ca \f$ 
+       *  \f[ \lambda ( a , b, c ) = a^2 + b^2 + c^2 - 2ab - 2bc - 2ca \f] 
        *  @param a parameter a 
        *  @param b parameter b 
        *  @param c parameter b 
@@ -1139,6 +1139,7 @@ namespace Gaudi
         const double c ) ;
       // ======================================================================
       /** calculate the particle momentum in rest frame 
+       *  \f[ q = \frac{1}{2}\frac{ \lambda^{\frac{1}{2}} \left( m^2 , m_1^2, m_2^2 \right) }{ m }\f], 
        *  @param m the mass 
        *  @param m1 the mass of the first particle 
        *  @param m2 the mass of the second particle 
@@ -1153,13 +1154,27 @@ namespace Gaudi
        *  @param m the mass 
        *  @param m1 the mass of the first particle 
        *  @param m2 the mass of the second particle 
-       *  @return the momentum in rest frame  (negative for non-physical branch)
+       *  @return the momentum in rest frame  (imaginary for non-physical branch)
        */
-      static double  q1
+      static std::complex<double> q1
       ( const double m  , 
         const double m1 , 
         const double m2 ) ;
       // ====================================================================== 
+      /** calculate the phase space for   m -> m1 + m2 
+       *  \f[ \Phi = \frac{1}{8\pi} \left( \frac{ \lambda^{\frac{1}{2}} \left( m^2 , m_1^2, m_2^2 \right) }{ m^2 }\right)^{2L+1}\f], 
+       *  where \f$\lambda\f$ is a triangle function 
+       *  @param m the mass 
+       *  @param m1 the mass of the first particle 
+       *  @param m2 the mass of the second particle 
+       *  @return two-body phase space  
+       */
+      static double phasespace 
+      ( const double         m      , 
+        const double         m1     , 
+        const double         m2     , 
+        const unsigned short L  = 0 ) ;
+      // ======================================================================
     } ;  
     // ========================================================================
     /** @class PhaseSpaceLeft
@@ -1362,7 +1377,7 @@ namespace Gaudi
       // ======================================================================
       double lowEdge   () const { return m1 () + m2 () ; }      
       double highEdge  () const { return m  () - m3 () ; }      
-      /// get the mome ntum of 1st particle in rest frame of (1,2)
+      /// get the momentum of 1st particle in rest frame of (1,2)
       double         q ( const double x ) const ;
       /// get the momentum of 3rd particle in rest frame of mother
       double         p ( const double x ) const ;
