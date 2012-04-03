@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2012-04-03 - Johannes Albrecht
+ - add slot to 1TrackMuon for L0 cut
+
 !========================= Hlt1Lines v6r19 2012-04-02 =========================
 ! 2012-04-02 - Eric van Herwijnen
  - another try of odin definition; remove rate limiter on HltLumiLines.py

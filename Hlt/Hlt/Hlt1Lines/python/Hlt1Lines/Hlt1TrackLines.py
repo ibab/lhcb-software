@@ -48,6 +48,7 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
                     ,   'Muon_Velo_Qcut'    : 999 #OFF
                     ,   'Muon_GEC'          : 'Loose'
                     ,   'Muon_ValidateTT'   : False
+                    ,   'Muon_L0Channels'   : "Muon,DiMuon"
                     ,   'Photon_PT'         : 1200.
                     ,   'Photon_P'          : 10000.
                     ,   'Photon_IP'         : 0.100
@@ -224,6 +225,7 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         from HltLine.HltLine import Hlt1Line   as Line
         ps = self.getProps()
         PhotonTrackL0Channels = ps['Photon_L0Channels'].split(",")
+        MuonTrackL0Channels = ps['Muon_L0Channels'].split(",")
         Line ( 'TrackAllL0'
              , prescale = self.prescale
              , postscale = self.postscale
@@ -233,7 +235,7 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         Line ( 'TrackMuon'
              , prescale = self.prescale
              , postscale = self.postscale
-             , L0DU = "|".join( [ "L0_CHANNEL('%s')" % channel for channel in ['Muon','DiMuon'] ] ) 
+             , L0DU = "|".join( [ "L0_CHANNEL('%s')" % channel for channel in MuonTrackL0Channels ] ) 
              , algos =  self.hlt1TrackMuon_Streamer( "TrackMuon", self.localise_props( "Muon" ) )
              )
         Line ( 'TrackPhoton'
