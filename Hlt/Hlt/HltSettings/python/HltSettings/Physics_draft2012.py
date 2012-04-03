@@ -80,6 +80,7 @@ class Physics_draft2012( object ):
                                                , 'Muon_TrChi2'   :     5.0  
                                                , 'Muon_GEC'      : 'Loose'
                                                , 'Muon_ValidateTT' : False
+                                               , 'Muon_L0Channels' : 'Muon,DiMuon,MuonNoSPD,DiMuonNoSPD'  
                                                , 'Photon_PT'     :  1200
                                                , 'Photon_P'      :  6000
                                                , 'Photon_IP'     :     0.100
@@ -88,6 +89,7 @@ class Physics_draft2012( object ):
                                                , 'Photon_L0Channels' : 'PhotonHi,ElectronHi' 
                                                , 'Photon_GEC'        : 'Loose'
                                                , 'Photon_ValidateTT' : False
+                                                 
                                                }
                      , Hlt1ElectronLinesConf : { 'SingleElectronNoIP_P'          : 20000
                                                , 'SingleElectronNoIP_PT'         : 10000
@@ -126,6 +128,12 @@ class Physics_draft2012( object ):
                                                , 'MultiMuonNoIP_TrChi2'     :    5
                                                , 'MultiMuonNoIP_GT'         :  2.5
                                                , 'MultiMuonNoIP_GEC'        : 'Loose'
+                                               ,'L0Channels'               : {
+                                                   'SingleMuonHighPT' : ( 'Muon', 'MuonNoSPD'),
+                                                   'SingleMuonNoIP'   : ( 'Muon', 'MuonNoSPD'),
+                                                   'DiMuonLowMass'    : ( 'Muon', 'MuonNoSPD', 'DiMuon', 'DiMuonNoSPD' ),
+                                                   'DiMuonHighMass'   : ( 'Muon', 'MuonNoSPD', 'DiMuon', 'DiMuonNoSPD' ),
+                                                   'MultiMuonNoIP'    : ( 'Muon', 'MuonNoSPD', 'DiMuon', 'DiMuonNoSPD' ) }
                                                , 'Prescale'                 : { 'Hlt1SingleMuonNoIP' : 0.01,
                                                                                 'Hlt1MultiMuonNoIP'  : 0.0 }
                                                }
@@ -237,27 +245,28 @@ class Physics_draft2012( object ):
         """
         Returns a list of active lines
         """
-        lines =  [ 'Hlt1BeamGasNoBeamBeam1', 'Hlt1BeamGasNoBeamBeam2'
-                 , 'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2'
-                 , 'Hlt1BeamGasCrossingEnhancedBeam1', 'Hlt1BeamGasCrossingEnhancedBeam2'
-                 , 'Hlt1BeamGasCrossingForcedReco', 'Hlt1BeamGasCrossingForcedRecoFullZ'
-                 , 'Hlt1BeamGasCrossingParasitic', 'Hlt1BeamGasHighRhoVertices'
-                 , 'Hlt1NoPVPassThrough'
-                 , 'Hlt1CharmCalibrationNoBias'
-                 , 'Hlt1TrackMuon', 'Hlt1TrackAllL0', 'Hlt1TrackPhoton'
-                 , 'Hlt1TrackForwardPassThrough','Hlt1TrackForwardPassThroughLoose'
+        lines =  [ #'Hlt1BeamGasNoBeamBeam1', 'Hlt1BeamGasNoBeamBeam2'
+                 #, 'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2'
+                 #, 'Hlt1BeamGasCrossingEnhancedBeam1', 'Hlt1BeamGasCrossingEnhancedBeam2'
+                 #, 'Hlt1BeamGasCrossingForcedReco', 'Hlt1BeamGasCrossingForcedRecoFullZ'
+                 #, 'Hlt1BeamGasCrossingParasitic', 'Hlt1BeamGasHighRhoVertices'
+                 #, 'Hlt1NoPVPassThrough'
+                 #, 'Hlt1CharmCalibrationNoBias'
+                  'Hlt1TrackMuon', 'Hlt1TrackAllL0', 'Hlt1TrackPhoton'
+                 #, 'Hlt1TrackForwardPassThrough','Hlt1TrackForwardPassThroughLoose'
                  , 'Hlt1VertexDisplVertex'
                  , 'Hlt1SingleMuonNoIP', 'Hlt1SingleMuonHighPT'
                  , 'Hlt1SingleElectronNoIP'
                  , 'Hlt1DiMuonLowMass', 'Hlt1DiMuonHighMass'
-                 , 'Hlt1DiProtonLowMult', 'Hlt1DiProton'
-                 , 'Hlt1Lumi', 'Hlt1LumiMidBeamCrossing'
-                 , 'Hlt1L0Any','Hlt1L0AnyNoSPD'
-                 , 'Hlt1L0HighSumETJet'
-                 , 'Hlt1MBNoBias' 
-                 , 'Hlt1ODINTechnical', 'Hlt1Tell1Error' , 'Hlt1ErrorEvent' # , 'Hlt1Incident' 
-                 , 'Hlt1MBMicroBiasVelo','Hlt1MBMicroBiasTStation'
-                 , 'Hlt1VeloClosingMicroBias' ]
+                 #, 'Hlt1DiProtonLowMult', 'Hlt1DiProton'
+                 #, 'Hlt1Lumi', 'Hlt1LumiMidBeamCrossing'
+                 #, 'Hlt1L0Any','Hlt1L0AnyNoSPD'
+                 #, 'Hlt1L0HighSumETJet'
+                 #, 'Hlt1MBNoBias' 
+                 #, 'Hlt1ODINTechnical', 'Hlt1Tell1Error' , 'Hlt1ErrorEvent' # , 'Hlt1Incident' 
+                 #, 'Hlt1MBMicroBiasVelo','Hlt1MBMicroBiasTStation'
+                 #, 'Hlt1VeloClosingMicroBias'
+                 ]
 
         lines += [ i + 'RateLimited' for i in lines
                    if i.startswith('Hlt1MBMicroBias')

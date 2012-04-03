@@ -4,6 +4,11 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+~2012-04-03 - Johannes Albrecht
+ - Muons_draft2012: loosen Psi2S cuts
+ - Physics_draft2012: put in NoSPD L0 for 1Track, single and dimuons
+
+
 ! 2012-04-03 - E. van Herwijnen
  - Physics_AprilBU2012 inherits from Physics_April2012
 
