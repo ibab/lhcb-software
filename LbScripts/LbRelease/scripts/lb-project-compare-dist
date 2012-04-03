@@ -47,6 +47,10 @@ class CheckDist(ProjectTool):
                           dest="width",
                           help="Specify the report width")
         parser.set_defaults(width=140)
+        parser.add_option("--hide-md5", action="store_true",
+                          dest="hidemd5",
+                          help="Hide the md5 files in the report")
+        parser.set_defaults(hidemd5=False)
 
     def twoColumns(self, width):
         """ Prepares format string for two large columns """
@@ -120,14 +124,37 @@ class CheckDist(ProjectTool):
         # Now comparing HTML files
         s+= "\nHTML Files\n"
         s += width * "-" + "\n"
-        s+= self.compareFileSets(width, p1.htmldir, p1.htmlfiles, p1.version, \
-                                 p2.htmldir, p2.htmlfiles, p2.version)
-
+        s+= self.compareFileSets(width, p1.htmldir, \
+                                 [ x for x in p1.htmlfiles if not x.endswith("md5") ], \
+                                 p1.version, \
+                                 p2.htmldir, \
+                                 [ x for x in p2.htmlfiles if not x.endswith("md5") ], \
+                                  p2.version)
+        if not self.hidemd5:
+            s+= "\n"
+            s+= self.compareFileSets(width, p1.htmldir, \
+                                 [ x for x in p1.htmlfiles if x.endswith("md5") ], \
+                                 p1.version, \
+                                 p2.htmldir, \
+                                 [ x for x in p2.htmlfiles if x.endswith("md5") ], \
+                                  p2.version)
         # Now comparing TAR files
         s+= "\nTAR Files\n"
         s += width * "-" + "\n"
-        s+= self.compareFileSets(width, p1.distdir, p1.distfiles, p1.version, \
-                                 p2.distdir, p2.distfiles, p2.version)
+        s+= self.compareFileSets(width, p1.distdir, \
+                                 [ x for x in p1.distfiles if not x.endswith("md5") ], \
+                                 p1.version, \
+                                 p2.distdir, \
+                                 [ x for x in p2.distfiles if not x.endswith("md5") ]
+                                 , p2.version)
+        if not self.hidemd5:
+            s+= "\n"
+            s+= self.compareFileSets(width, p1.distdir, \
+                                 [ x for x in p1.distfiles if x.endswith("md5") ], \
+                                 p1.version, \
+                                 p2.distdir, \
+                                 [ x for x in p2.distfiles if x.endswith("md5") ]
+                                 , p2.version)
 
 
         if (len(p1.lcgdistfiles) > 0 and len(p2.lcgdistfiles) > 0):
@@ -161,6 +188,7 @@ class CheckDist(ProjectTool):
         self.projectName = args[0]
         self.version1 = args[1]
         self.version2 = args[2]
+        self.hidemd5 = self.options.hidemd5
         self.compareMain(self.projectName, self.version1, self.version2, int(self.options.width))
 
 
