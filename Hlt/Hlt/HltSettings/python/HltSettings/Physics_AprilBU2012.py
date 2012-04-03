@@ -23,7 +23,7 @@ from Physics_April2012 import Physics_April2012
 
 class Physics_AprilBU2012( Physics_April2012 ):
    def L0TCK(self) :
-       return '0x0040'
+       return '0x003B'
        
    def Thresholds(self) :
        from Hlt1Lines.Hlt1TrackLines          import Hlt1TrackLinesConf
