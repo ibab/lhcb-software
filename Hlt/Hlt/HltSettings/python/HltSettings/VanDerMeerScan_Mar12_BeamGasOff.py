@@ -30,7 +30,7 @@ class VanDerMeerScan_Mar12_BeamGasOff:
 
     def HltType(self) :
         self.verifyType( VanDerMeerScan_Mar12_BeamGasOff )
-        return          'VanDerMeerScan_Mar12_BeamGasOff'
+        return          'VanDerMeerScan_Mar12'
     
     def ActiveHlt1Lines(self) :
         """ Returns a list of active Hlt1 Lines """

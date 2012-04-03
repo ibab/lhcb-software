@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-04-03 - Plamen Hopchev 
+ - Modify the four files VanDerMeerScan_Mar12* so that the function HltType(self)
+   returns the same string (necessary in order to be fast-run-changeable)
+
 ! 2012-04-03 - E. van Herwijnen
  - Remove the prescale on the diproton lines in Physics_April{BU}201
  - change the classname from draft to Physics_April{BU}201
