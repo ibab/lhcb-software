@@ -194,7 +194,6 @@ ODIN_EVTTYP    = LoKi.Odin.EventType ()
 ## @see LoKi::Cuts::ODIN_ERRBITS
 ODIN_ERRBITS   = LoKi.Odin.ErrorBits () 
 
-
 ## @see LoKi::Cuts::ODIN_FALSE
 ODIN_FALSE     = LoKi.Constant( _o1 + ',bool'  ) ( False )
 
@@ -230,6 +229,13 @@ ODIN_EVTNUMBER = LoKi.Odin.EvtNumber
 ODIN_RUNEVTNUMBER = LoKi.Odin.RunEvtNumber 
 ## @see LoKi::Cuts::ODIN_RUNEVT
 ODIN_RUNEVT       = LoKi.Odin.RunEvtNumber 
+
+## @see LoKi::Cuts::ODIN_EVT1
+ODIN_EVT1 = LoKi.Odin.Evt1
+
+## @see LoKi::Cuts::ODIN_EVT2
+ODIN_EVT2 = LoKi.Odin.Evt2
+
 
 
 ## @see LoKi::Cuts::ODIN_TCK

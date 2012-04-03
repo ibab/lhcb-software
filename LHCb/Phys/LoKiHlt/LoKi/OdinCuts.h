@@ -201,6 +201,42 @@ namespace LoKi
      */
     typedef LoKi::Odin::EvtNumber                              ODIN_EVTNUMBER ;
     // ========================================================================
+    /** @typedef ODIN_EVT1
+     *  get the event number (modulo)  
+     *  @code
+     * 
+     *  const ODIN_EVT1 evt = ODIN_EVT1( 1000000000L ) ;
+     *
+     *  const LHCb::ODIN* odin = ...
+     * 
+     *  const double e = evt ( odin ) ;
+     *
+     *  @endcode
+     *  @see LoKi::Odin::Evt1 
+     *  @see LHCb::ODIN::eventNumber 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2012-04-03     
+     */
+    typedef LoKi::Odin::Evt1                                        ODIN_EVT1 ;
+    // ========================================================================
+    /** @typedef ODIN_EVT2
+     *  get the event number (integer division) 
+     *  @code
+     * 
+     *  const ODIN_EVT2 evt = ODIN_EVT2( 1000000000L ) ;
+     *
+     *  const LHCb::ODIN* odin = ...
+     * 
+     *  const double e = evt ( odin ) ;
+     *
+     *  @endcode
+     *  @see LoKi::Odin::Evt2
+     *  @see LHCb::ODIN::eventNumber 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2012-04-03     
+     */
+    typedef LoKi::Odin::Evt2                                        ODIN_EVT2 ;
+    // ========================================================================
     /** @var ODIN_RUNEVT
      *  Simple checkfor event number 
      *  @code

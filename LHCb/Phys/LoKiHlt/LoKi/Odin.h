@@ -78,6 +78,73 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class Evt1
+     *  The trivial function with return even number-number (modulo)
+     *  @see LHCb::ODIN::eventNumber % modulo  
+     *  @see LoKi::Cuts::ODIN_EVT1
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2012-04-03
+     */
+    class Evt1: public LoKi::BasicFunctors<const LHCb::ODIN*>::Function
+    {
+    public:
+      // ======================================================================
+      /// constructor from the modulo 
+      Evt1 ( const unsigned long long modulo ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~Evt1() ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Evt1* clone() const ; 
+      /// MANDATORY: the only essential method 
+      virtual result_type operator() ( argument o ) const ;
+      /// OPTIONAL: the nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      unsigned long long modulo () const { return m_modulo ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// no default constructor 
+      Evt1 () ;                                       // no default constructor 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the modulo
+      unsigned long long m_modulo ; // the modulo
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Evt2
+     *  The trivial function with return even number-number (modulo)
+     *  @see LHCb::ODIN::eventNumber / modulo  
+     *  @see LoKi::Cuts::ODIN_EVT2
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2012-04-03
+     */
+    class Evt2: public LoKi::Odin::Evt1 
+    {
+    public:
+      // ======================================================================
+      /// constructor from the modulo 
+      Evt2 ( const unsigned long long modulo ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~Evt2() ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Evt2* clone() const ; 
+      /// MANDATORY: the only essential method 
+      virtual result_type operator() ( argument o ) const ;
+      /// OPTIONAL: the nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// no default constructor 
+      Evt2 () ;                                       // no default constructor 
+      // ======================================================================
+    } ;
+    // ========================================================================
     /** @class Orbit
      *  The trivial function with return orbit-number 
      *  @see LHCb::ODIN::orbitNumber 
@@ -621,8 +688,9 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================    
-    /** @class HltRouingBits 
+    /** @class HltRoutingBits 
      *  Simple predicate to check the hlt routing bits 
+     *  @see LoKi::Cuts::ODIN_ROUTINGBITS
      *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
      *  @date 2010-05-17
      */

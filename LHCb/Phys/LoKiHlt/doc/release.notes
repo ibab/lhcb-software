@@ -4,6 +4,12 @@
 ! Purpose     : collection of functors&factory for HLT 
 ! -----------------------------------------------------------------------------
 
+! 2012-04-03 - Vanya Belyaev
+
+ - ODIN_EVT1
+   ODIN_EVT2 
+
+
 !========================= LoKiHlt v3r8 2012-02-28 =========================
 ! 2012-02-14 - Vanya Belyaev
  - small fix 
