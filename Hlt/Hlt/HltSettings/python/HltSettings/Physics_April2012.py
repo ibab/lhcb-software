@@ -79,6 +79,7 @@ class Physics_April2012( object ):
                                                , 'Muon_TrChi2'   :     5.0  
                                                , 'Muon_GEC'      : 'Loose'
                                                , 'Muon_ValidateTT' : False
+                                               , 'Muon_L0Channels' : 'Muon,DiMuon,MuonNoSPD,DiMuonNoSPD' 
                                                , 'Photon_PT'     :  1200
                                                , 'Photon_P'      :  1000
                                                , 'Photon_IP'     :     0.100
@@ -125,6 +126,13 @@ class Physics_April2012( object ):
                                                , 'MultiMuonNoIP_TrChi2'     :    5
                                                , 'MultiMuonNoIP_GT'         :  2.5
                                                , 'MultiMuonNoIP_GEC'        : 'Loose'
+                                               ,'L0Channels'               : {
+                                                   'SingleMuonHighPT' : ( 'Muon', 'MuonNoSPD'),
+                                                   'SingleMuonNoIP'   : ( 'Muon', 'MuonNoSPD'),
+                                                   'DiMuonLowMass'    : ( 'Muon', 'MuonNoSPD', 'DiMuon', 'DiMuonNoSPD' ),
+                                                   'DiMuonHighMass'   : ( 'Muon', 'MuonNoSPD', 'DiMuon', 'DiMuonNoSPD' ),
+                                                   'MultiMuonNoIP'    : ( 'Muon', 'MuonNoSPD', 'DiMuon', 'DiMuonNoSPD' ) }
+
                                                , 'Prescale'                 : { 'Hlt1SingleMuonNoIP' : 0.01,
                                                                                 'Hlt1MultiMuonNoIP'  : 0.0 }
                                                }
