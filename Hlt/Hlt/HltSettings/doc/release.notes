@@ -4,10 +4,12 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-04-03 - E. van Herwijnen
+ - Remove the prescale on the diproton lines in Physics_April{BU}201
+
 !========================= HltSettings v5r25 2012-04-02 =========================
 ! 2012-04-02 - E. van Herwijnen
  - Modified Physics_April{BU}2012 to use L0 39{40} 
-
 
 !========================= HltSettings v5r24 2012-04-02 =========================
 ! 2012-04-02 - Johannes Albrecht
