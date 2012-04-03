@@ -3,6 +3,9 @@ Package     : MooreSys
 Package Coordinator : E. van Herwijnen
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v13r2p5>2012-04-03 Moore v13r2p5</A></H1><PRE>
+For loose SPD settings.
+
 </PRE><H1><A NAME=v13r2p4>2012-04-02 Moore v13r2p4</A></H1><PRE>
 HltSettings with Physics_April{BU}2012, fixed topo, prescaled diproton,
 removed nobias & lumi rate limiters
