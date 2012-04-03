@@ -101,13 +101,13 @@ class Physics_April2012( object ):
                                                , 'SingleMuonHighPT_PT'      : 4800
                                                , 'SingleMuonHighPT_TrChi2'  :    5
                                                , 'SingleMuonHighPT_GEC'     : 'Loose'
-                                               , 'SingleMuonNoIP_P'         : 6000
+                                               , 'SingleMuonNoIP_P'         : 1000
                                                , 'SingleMuonNoIP_PT'        : 1300
                                                , 'SingleMuonNoIP_TrChi2'    :    5
                                                , 'SingleMuonNoIP_GEC'       : 'Loose'
                                                , 'DiMuonLowMass_VxDOCA'     :  0.2
                                                , 'DiMuonLowMass_VxChi2'     :   25
-                                               , 'DiMuonLowMass_P'          : 6000
+                                               , 'DiMuonLowMass_P'          : 1000
                                                , 'DiMuonLowMass_PT'         :  500
                                                , 'DiMuonLowMass_TrChi2'     :    5
                                                , 'DiMuonLowMass_M'          :    0
@@ -115,12 +115,12 @@ class Physics_April2012( object ):
                                                , 'DiMuonLowMass_GEC'        : 'Loose'
                                                , 'DiMuonHighMass_VxDOCA'    :  0.2
                                                , 'DiMuonHighMass_VxChi2'    :   25
-                                               , 'DiMuonHighMass_P'         : 6000
+                                               , 'DiMuonHighMass_P'         : 1000
                                                , 'DiMuonHighMass_PT'        :  500
                                                , 'DiMuonHighMass_TrChi2'    :    5
                                                , 'DiMuonHighMass_M'         : 2700
                                                , 'DiMuonHighMass_GEC'       : 'Loose'
-                                               , 'MultiMuonNoIP_P'          : 6000
+                                               , 'MultiMuonNoIP_P'          : 1000
                                                , 'MultiMuonNoIP_PT'         :  500
                                                , 'MultiMuonNoIP_TrChi2'     :    5
                                                , 'MultiMuonNoIP_GT'         :  2.5
