@@ -2,6 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : Eric van Herwijnen
 Purpose     : LHCb HLT application
 
+!========================= Moore v13r2p5 2012-04-03 =========================
+ - use online v4r62
+
 !========================= Moore v13r2p4 2012-04-02 =========================
 ! 2012-04-02 - Eric van Herwijnen
  - Change to ConfigureShell.py for checkpointing.
@@ -687,3 +690,4 @@ Purpose     : LHCb HLT application
 
 </PRE><H1><A NAME=v1r0>2005-06-15 Moore v1r0</A></H1><PRE>
 First release, for RTTC tests
+
