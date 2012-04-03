@@ -1395,7 +1395,7 @@ StatusCode LoKi::DistanceCalculator::_distance
     LoKi::KalmanFilter::TrEntries4::iterator first  = m_entries4.begin() ;
     LoKi::KalmanFilter::TrEntries4::iterator second = first + 1          ;   
     //
-    StatusCode sc = LoKi::KalmanFilter::load ( &m_state1 , *first  ) ;
+    sc = LoKi::KalmanFilter::load ( &m_state1 , *first  ) ;
     if ( sc.isFailure() ) 
     { return _Error ( "_distance(V): error from KalmanFilter::load(1)" , sc ) ; }
     //
@@ -1417,7 +1417,7 @@ StatusCode LoKi::DistanceCalculator::_distance
 }
 // ============================================================================
 /// the factory (needed for instantiation)
-DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,DistanceCalculator) ;
+DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,DistanceCalculator)
 // ============================================================================
 // The END 
 // ============================================================================

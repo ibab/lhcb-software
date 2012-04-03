@@ -152,7 +152,7 @@ StatusCode LoKi::SmartParticleCombiner::combine
 }
 // ============================================================================
 /// the factory needed for instantiation
-DECLARE_NAMESPACE_TOOL_FACTORY ( LoKi , SmartParticleCombiner ) ;
+DECLARE_NAMESPACE_TOOL_FACTORY ( LoKi , SmartParticleCombiner )
 // ============================================================================
 
 // ============================================================================

@@ -1120,7 +1120,7 @@ StatusCode LoKi::TrgDistanceCalculator::_distance
 }
 // ============================================================================
 /// the factory (needed for instantiation)
-DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,TrgDistanceCalculator) ;
+DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,TrgDistanceCalculator)
 // ============================================================================
 // The END 
 // ============================================================================

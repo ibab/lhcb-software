@@ -598,7 +598,7 @@ StatusCode LoKi::MassFitter::fit
 }
 // ============================================================================
 /// the factory ( needed for instantiation)
-DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,MassFitter) ;
+DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,MassFitter)
 // ============================================================================
 // The END 
 // ============================================================================

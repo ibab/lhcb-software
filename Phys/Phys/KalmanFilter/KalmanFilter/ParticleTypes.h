@@ -41,22 +41,23 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-01-04
      */
-    enum ParticleType {
-      // ======================================================================
-      /// Unknown/unspecified particle type 
-      UnspecifiedParticle = 0 ,            // Unknown/unspecified particle type 
-      /// Short-lived (verticing) particles
-      ShortLivedParticle      ,                  //        Short-lived particle
-      /// Long-lived/stable particle
-      LongLivedParticle       ,                  //  Long-lived/stable particle
-      /// Photon-like 
-      GammaLikeParticle       ,                  //        Photon-like particle 
-      /// Di-Photon-like 
-      DiGammaLikeParticle                        //     Di-Photon-like particle 
-      // ======================================================================
-    } ;
+    enum ParticleType
+      {
+        // ====================================================================
+        /// Unknown/unspecified particle type 
+        UnspecifiedParticle = 0 ,          // Unknown/unspecified particle type 
+        /// Short-lived (verticing) particles
+        ShortLivedParticle      ,                //        Short-lived particle
+        /// Long-lived/stable particle
+        LongLivedParticle       ,                //  Long-lived/stable particle
+        /// Photon-like 
+        GammaLikeParticle       ,                //        Photon-like particle 
+        /// Di-Photon-like 
+        DiGammaLikeParticle                      //     Di-Photon-like particle 
+        // ====================================================================
+      } ;
     // ========================================================================
-  } ; //                                    end of namespace LoKi::KalmanFilter 
+  } //                                    end of namespace LoKi::KalmanFilter 
   // ==========================================================================
 } //                                                      end of namespace LoKi
 // ============================================================================

@@ -230,7 +230,7 @@ StatusCode LoKi::DirectionFitter::fit
 }
 // ============================================================================
 /// Declaration of the Tool Factory
-DECLARE_NAMESPACE_TOOL_FACTORY( LoKi , DirectionFitter );
+DECLARE_NAMESPACE_TOOL_FACTORY( LoKi , DirectionFitter )
 // ============================================================================
 // The END
 // ============================================================================

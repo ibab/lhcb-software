@@ -175,7 +175,7 @@ StatusCode LoKi::LifetimeFitter::fit
 }
 // ============================================================================
 /// Declaration of the Tool Factory
-DECLARE_NAMESPACE_TOOL_FACTORY( LoKi , LifetimeFitter );
+DECLARE_NAMESPACE_TOOL_FACTORY( LoKi , LifetimeFitter )
 // ============================================================================
 // The END 
 // ============================================================================

@@ -788,7 +788,7 @@ StatusCode LoKi::VertexFitter::_transport
 }  
 // ============================================================================
 /// the factory needed for instantiation
-DECLARE_NAMESPACE_TOOL_FACTORY ( LoKi , VertexFitter ) ;
+DECLARE_NAMESPACE_TOOL_FACTORY ( LoKi , VertexFitter )
 // ============================================================================
 
 // ============================================================================

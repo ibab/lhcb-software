@@ -100,7 +100,7 @@ namespace LoKi
     /// the copy constructor is disabled  
     FakeReFitter ( const FakeReFitter& ) ; // no copy constructor 
     /// the assignement operator is disabled  
-    FakeReFitter& operator=( const FakeReFitter& ) ; // no assignement
+    FakeReFitter& operator=( const FakeReFitter& ) ; // no assignment
   };
   // ==========================================================================
 } //                                                      end of namespace LoKi 
@@ -127,7 +127,7 @@ StatusCode LoKi::FakeReFitter::reFit ( LHCb::Particle&  particle ) const
 }
 // ============================================================================
 /// Declaration of the Tool Factory
-DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,FakeReFitter);
+DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,FakeReFitter)
 // ============================================================================
 // The END 
 // ============================================================================

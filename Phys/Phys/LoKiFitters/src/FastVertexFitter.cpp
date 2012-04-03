@@ -132,7 +132,7 @@ LoKi::FastVertexFitter::FastVertexFitter
 LoKi::FastVertexFitter::~FastVertexFitter(){}
 // ============================================================================
 /// the factory needed for instantiation
-DECLARE_NAMESPACE_TOOL_FACTORY ( LoKi , FastVertexFitter ) ;
+DECLARE_NAMESPACE_TOOL_FACTORY ( LoKi , FastVertexFitter )
 // ============================================================================
 
 // ============================================================================
