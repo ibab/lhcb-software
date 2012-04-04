@@ -52,7 +52,7 @@ namespace LHCb  {
     std::string               m_taskType;
     /// Property: Utgid patters used to build the child instance name (default: '%N_%T_%02d')
     std::string               m_utgid;
-    /// Property: lib directory for libraries contained in the checkpoint (Default:/dev/shm/checkpoint)
+    /// Property: lib directory for libraries contained in the checkpoint (default:/dev/shm/checkpoint)
     std::string               m_libDirectory;
     /// Property: Checkpoint save flags (0=None, 2=Save_libs[default])
     int                       m_saveFlags;
@@ -73,6 +73,10 @@ namespace LHCb  {
     int                       m_childSleep;
     /// Property to force UTGID to environ and argv[0] (default: 0 [false])
     int                       m_forceUTGID;
+    /// Property: Invoke incident APP_INITIALIZED from service on start (default: false)
+    bool                      m_invokeIncident;
+    /// Property: Instance is running online and re-establishes the DIM connection
+    bool                      m_connectDIM;
     /// Property: Set to 1 if the child processes should become session leaders
     bool                      m_childSessions;
     /// Property: Set to 1 if the file descriptor table should be dump during child restart
@@ -304,6 +308,8 @@ CheckpointSvc::CheckpointSvc(const string& nam,ISvcLocator* pSvc)
   declareProperty("CheckpointLibs",         m_libDirectory  = "/dev/shm/checkpoint");
   declareProperty("CheckpointSaveFlags",    m_saveFlags     = CHECKPOINTING_NAMESPACE::MTCP_SAVE_LIBS);
   declareProperty("CheckpointRestartFlags", m_restartFlags  = 0);
+  declareProperty("InvokeIncident",         m_invokeIncident= false);
+  declareProperty("ConnectToDIM",           m_connectDIM    = true);
 }
 
 /// IInterface implementation : queryInterface
@@ -324,13 +330,15 @@ StatusCode CheckpointSvc::initialize() {
     typedef void* (*instance_t)();
     string proc = RTL::processName();
     instance_t func = 0;
-    sc = System::getProcedureByName(0,"DimTaskFSM_instance",(System::EntryPoint*)&func);
-    if( !sc.isSuccess() ) {
-      log << MSG::FATAL << "Cannot access function: DimTaskFSM_instance" << endmsg;
-      return sc;
+    if ( m_connectDIM ) {
+      sc = System::getProcedureByName(0,"DimTaskFSM_instance",(System::EntryPoint*)&func);
+      if( !sc.isSuccess() ) {
+	log << MSG::FATAL << "Cannot access function: DimTaskFSM_instance" << endmsg;
+	return sc;
+      }
+      log << MSG::INFO << RTL::processName() << "> Reconnect handle:" << (unsigned long)func;
+      m_fsm = (ITaskFSM*)func();
     }
-    log << MSG::INFO << RTL::processName() << "> Reconnect handle:" << (unsigned long)func;
-    m_fsm = (ITaskFSM*)func();
     log << " Interactor: " << (unsigned long) m_fsm << endmsg;
     if ( m_numInstances < 0 ) {
       m_numInstances = ::atol(::getenv("NBOFSLAVES"));
@@ -358,6 +366,9 @@ StatusCode CheckpointSvc::start() {
     log << MSG::FATAL << "Failed to start service base class." << endmsg;
     return sc;
   }
+  if ( m_invokeIncident ) {
+    m_incidentSvc->fireIncident(Incident(name(),"APP_INITIALIZED"));
+  }
   if ( m_masterProcess )    {  // Only the master does anything on start!
     if ( m_useCores || (m_numInstances != 0) )   {
       stopMainInstance();
@@ -371,8 +382,10 @@ StatusCode CheckpointSvc::start() {
       m_restartChildren = true;
       m_state = m_targetState;     // Update internal Gaudi FSM
       resumeMainInstance(true);    // And restore execution
-      m_fsm->setTargetState(ITaskFSM::ST_RUNNING);
-      m_fsm->declareState(ITaskFSM::ST_RUNNING);
+      if ( m_connectDIM )  {
+	m_fsm->setTargetState(ITaskFSM::ST_RUNNING);
+	m_fsm->declareState(ITaskFSM::ST_RUNNING);
+      }
       return watchChildren();  // Will never return for the parent's instance!
     }
   }
@@ -614,8 +627,10 @@ int CheckpointSvc::saveCheckpoint() {
       }
       else {
 	MsgStream log(msgSvc(),name());
-	log << MSG::INFO << MARKER << " FINISHED CHECKPOINT " << endmsg
-	    << "Wrote checkpoint with " << ret << " bytes to " << m_checkPoint << endmsg;
+	log << MSG::INFO << MARKER << " FINISHED CHECKPOINT " << endmsg;
+	if ( m_connectDIM ) {
+	  log << "Wrote checkpoint with " << ret << " bytes to " << m_checkPoint << endmsg;
+	}
       }
       return StatusCode::SUCCESS;
     }
@@ -632,7 +647,9 @@ int CheckpointSvc::saveCheckpoint() {
 int CheckpointSvc::stopMainInstance() {
   MsgStream log(msgSvc(),name());
   // First get rid of DIM
-  m_fsm->disconnectDIM();
+  if ( m_connectDIM ) {
+    m_fsm->disconnectDIM();
+  }
   ::lib_rtl_sleep(100);
   if ( m_files ) ::free(m_files);
   m_files = 0;
@@ -669,13 +686,15 @@ int CheckpointSvc::resumeMainInstance(bool with_resume_child_threads) {
   // This new command make sure nothing will happen 
   // ever again inside Gaudi.
   //
-  Command* command = 0;
-  if ( m_useCores || (m_numInstances != 0) )   {
-    if ( FSMState() == Gaudi::StateMachine::RUNNING )    {
-      command = new Command(proc,this,m_fsm);
+  if ( m_connectDIM ) {
+    Command* command = 0;
+    if ( m_useCores || (m_numInstances != 0) )   {
+      if ( FSMState() == Gaudi::StateMachine::RUNNING )    {
+	command = new Command(proc,this,m_fsm);
+      }
     }
+    m_fsm->connectDIM(command);
   }
-  m_fsm->connectDIM(command);
   return 1;
 }
 
@@ -751,7 +770,9 @@ int CheckpointSvc::execChild() {
   if ( dns ) {
     ::dis_set_dns_node((char*)dns);
   }
-  m_fsm->connectDIM(0);
+  if ( m_connectDIM ) {
+    m_fsm->connectDIM(0);
+  }
   return StatusCode::SUCCESS;
 }
 
@@ -842,8 +863,10 @@ void CheckpointSvc::handle(const Incident& inc) {
       resumeMainInstance(!restore);
     }
   }
+  if ( inc.type() == "APP_INITIALIZED" ) {
+  }
   else if ( inc.type() == "APP_RUNNING" ) {
-    string proc  = RTL::processName();
+    // string proc  = RTL::processName();
     //    ::dis_start_serving((char*)proc.c_str());
   }
   else if ( inc.type() == "APP_STOPPED" ) {
