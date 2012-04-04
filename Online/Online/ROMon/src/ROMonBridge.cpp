@@ -221,6 +221,7 @@ ROMonBridge::~ROMonBridge() {
 /// Add cluster data points to bridge
 void ROMonBridge::addCluster(const string& sf) {
   m_servers.push_back(new ClusterListener(m_print<LIB_RTL_INFO, sf, m_prefix));
+  //::lib_rtl_output(LIB_RTL_ALWAYS,"[ROMonBridge] Added subfarm:%s",sf.c_str());
 }
 
 /// Interactor override ....

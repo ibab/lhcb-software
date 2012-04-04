@@ -4,7 +4,7 @@
 #include "CPP/IocSensor.h"
 #include "RTL/readdir.h"
 #include "RTL/strdef.h"
-#include <iostream>
+#include "RTL/rtl.h"
 #include <cstring>
 #include <cstdlib>
 #include <vector>
@@ -50,6 +50,7 @@ PartitionListener::PartitionListener(Interactor* par, const string& nam, const s
     StringV::iterator i;
     size_t idx = 0;
     dirent* e = 0;
+    f->push_back(name());
     while ( (e=::readdir(dir)) != 0 ) {
       sf_nam = e->d_name;
       idx = sf_nam.find(".xml");
@@ -58,17 +59,24 @@ PartitionListener::PartitionListener(Interactor* par, const string& nam, const s
 	  sf_nam = sf_nam.substr(0,idx);
 	  for(size_t j=0; j<sf_nam.length(); ++j)
 	    sf_nam[j] = char(::tolower(sf_nam[j]));
-	  if ( m_match.empty() || m_match=="*" )
+	  if ( m_match.empty() || m_match=="*" ) {
+	    //::lib_rtl_output(LIB_RTL_FATAL,"Use File: %s\n",sf_nam.c_str());
 	    f->push_back(sf_nam);
-	  else if ( ::strcase_match_wild(sf_nam.c_str(),m_match.c_str()) ) 
+	  }
+	  else if ( ::strcase_match_wild(sf_nam.c_str(),m_match.c_str()) ) {
+	    //::lib_rtl_output(LIB_RTL_FATAL,"Use File: %s\n",sf_nam.c_str());
 	    f->push_back(sf_nam);
+	  }
+	  else {
+	    //::lib_rtl_output(LIB_RTL_FATAL,"Skip File: %s\n",sf_nam.c_str());
+	  }
         }
       }
     }
     IocSensor::instance().send(parent(),CMD_CONNECT,f.release());
     return;
   }
-  cout << "Error reading XML directory:" << dir_name << endl;
+  ::lib_rtl_output(LIB_RTL_FATAL,"Error reading XML directory: %s\n",dir_name.c_str());
   ::exit(1);
 }
 
