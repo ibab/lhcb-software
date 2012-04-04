@@ -8,8 +8,10 @@ FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml" ]
 #-- Use latest 2011 database tags for real data
 Brunel().DataType = "2011"
 
-# Reco12 crashes, bug #89269, fixed in Brunel v41r1p1 and >v41r2
+# Two Reco12 crashes, bug #89269, fixed in Brunel v41r1p1 and >v41r2
+# One crash, bug #93382, introduced in Brunel v42r2, fixed in v42r2p1
 from GaudiConf.IOHelper import IOHelper
 IOHelper("MDF").inputFiles( [
   "DATAFILE='root:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/testFiles/102896_0000000146-evt12267.raw?svcClass=default'"
-, "DATAFILE='root:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/testFiles/102897_0000000127-evt35859.raw?svcClass=default'" ] )
+, "DATAFILE='root:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/testFiles/102897_0000000127-evt35859.raw?svcClass=default'"
+, "DATAFILE='root:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/testFiles/103127_0000000001-evt2277.raw?svcClass=default'" ] )

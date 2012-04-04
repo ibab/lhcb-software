@@ -3,6 +3,15 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v42r2p1>2012-04-04 Brunel v42r2p1</A></H1><PRE>
+This version uses projects LCG 62b, Gaudi v23r2, LHCb v34r2, Lbcom v12r2,
+ Rec v13r2 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+Production version for initial 2012 data taking
+
+- Changes to tests
+  . Add to 2011-crashes.py a test for bug #93382
+ 
 </PRE><H1><A NAME=v42r2>2012-03-29 Brunel v42r2</A></H1><PRE>
 This version uses projects LCG 62b, Gaudi v23r2, LHCb v34r2, Lbcom v12r2,
  Rec v13r2 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
