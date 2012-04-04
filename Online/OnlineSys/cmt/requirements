@@ -44,6 +44,7 @@ use OnlineTools         v1r4     Online
 use OnlineTasks         v1r46    Online
 
 use Presenter           v3r3     Online
+use PresenterDoc        v1r0     Online
 use PyDIM               v2r11    Online
 use RawBankSizes        v2r14    Online
 use RootCnv             v1r14    Online
