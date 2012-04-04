@@ -874,7 +874,11 @@ StatusCode DeVeloRType::distToM2Line(const Gaudi::XYZPoint& point,
   double logarithm = (m_pitchSlope*(radius - m_innerR)+m_innerPitch) /
     m_innerPitch;
   double strip = log(logarithm)/m_pitchSlope;
+  // no routing lines below strip 0 (+ rounding error fix)
+  if( strip < 0. ) return StatusCode::FAILURE; 
   unsigned int closestStrip = LHCb::Math::round(strip);
+  // sanity check in case of rounding error
+  if( closestStrip > 2047 ) closestStrip = 2047; 
   distToStrip = fabs(strip - closestStrip)*rPitch(closestStrip);
 
   bool OKM2 = distToM2Line(lPoint.x(), lPoint.y(), vID, distToM2);
