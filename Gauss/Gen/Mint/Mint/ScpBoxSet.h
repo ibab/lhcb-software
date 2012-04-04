@@ -44,8 +44,11 @@ class ScpBoxSet : public std::vector<ScpBox>{
 
   bool addData(const IDalitzEvent& evt);
   bool addData(const IDalitzEvent* evt);
+  bool addData(int);
+
   bool addMC(IDalitzEvent& evt, double weight);
   bool addMC(IDalitzEvent* evt, double weight);
+  bool addMC(int);
 
   bool subtractData(const IDalitzEvent& evt);
   bool subtractData(const IDalitzEvent* evt);
@@ -76,6 +79,8 @@ class ScpBoxSet : public std::vector<ScpBox>{
   const DalitzHistoSet& histoMC()const;
 
   double scp(double normFactorPassed=1) const;
+
+  bool boxSet(const IDalitzEvent* Devt);
 
   void save();
 };

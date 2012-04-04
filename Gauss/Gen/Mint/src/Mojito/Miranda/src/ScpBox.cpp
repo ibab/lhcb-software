@@ -70,6 +70,12 @@ bool ScpBox::addData(const IDalitzEvent& evt){
   _nData++;
   return true;
 }
+
+bool ScpBox::thisBox(const IDalitzEvent* evt)
+{
+	if(! _area.isInside(*evt)) return false;
+	return true;
+}
 bool ScpBox::addData(const IDalitzEvent* evt){
   bool dbThis=false;
   if(0 == evt) return false;
@@ -79,8 +85,19 @@ bool ScpBox::addData(const IDalitzEvent* evt){
     cout << "found data event inside area. This is the event:" << endl;
     evt->print();
   }
-
   _nData++;
+  return true;
+}
+
+bool ScpBox::addData(int entries){
+  bool dbThis = true;
+  if (dbThis) std::cout << "Adding: " << entries << std::endl;
+  _nData = _nData + entries;
+  return true;
+}
+
+bool ScpBox::addMC(int entries){
+  _nMC = _nMC + entries;
   return true;
 }
 bool ScpBox::addMC(const IDalitzEvent& evt, double weight){

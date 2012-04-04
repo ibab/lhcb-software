@@ -82,6 +82,20 @@ bool ScpBoxSet::addData(const IDalitzEvent* evt){
   }
   return false;
 }
+
+bool ScpBoxSet::addData(int entries){
+	std::cout << "Adding Data " << entries << std::endl;
+	std::cout << "Size " << this->size() << std::endl;
+
+  for(unsigned int i=0; i < this->size(); i++){
+	  std::cout << "HERE" << std::endl;
+    if ((*this)[i].addData(entries)){
+      return true;
+    }
+  }
+  return false;
+}
+
 bool ScpBoxSet::addMC(IDalitzEvent& evt, double weight){
   for(unsigned int i=0; i < this->size(); i++){
     if((*this)[i].addMC(evt, weight)){
@@ -107,6 +121,16 @@ bool ScpBoxSet::addMC(IDalitzEvent* evt, double weight){
   }
   return false;
 }
+
+bool ScpBoxSet::addMC(int entries){
+  for(unsigned int i=0; i < this->size(); i++){
+    if((*this)[i].addMC(entries)){
+      return true;
+    }
+  }
+  return false;
+}
+
 void ScpBoxSet::printBoxInfo(std::ostream& os) const{
   os << "ScpBoxSet with " << this->size() << " sub-box";
   if(this->size() > 1) os << "es";
@@ -277,6 +301,20 @@ bool ScpBoxSet::subtractMC(IDalitzEvent* evt, double weight){
     }
   }
   return false;
+}
+
+
+
+
+bool ScpBoxSet::boxSet(const IDalitzEvent* Devt)
+{
+	 for(unsigned int i=0; i < this->size(); i++){
+		 if((*this)[i].thisBox(Devt))
+		 {
+		    	return true;
+		 }
+	 }
+	return false;
 }
 
 void ScpBoxSet::save(){

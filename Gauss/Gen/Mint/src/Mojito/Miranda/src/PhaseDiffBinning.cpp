@@ -64,9 +64,9 @@ int PhaseDiffBinning::createBinning(IDalitzEventList* events){
   const IDalitzEvent* evt0 = events->getREvent(0);
   if(0 == evt0) return 0;
 
-  IDalitzEvent* evt1 = evt0->clone();
+//  IDalitzEvent* evt1 = evt0->clone();
 //  IDalitzEvent* evt1 = evt0;
-  std::complex<double> amp = _fas->getVal(evt1);
+//  std::complex<double> amp = _fas->getVal(evt1);
   
   ScpBoxSet boxSet;
     for(unsigned int i=0; i < _nbins; i++){
@@ -81,6 +81,10 @@ int PhaseDiffBinning::createBinning(IDalitzEventList* events){
 
 }
 
+void PhaseDiffBinning::SetfasCC(FitAmpSum* fasCC)
+{
+	_fasCC = fasCC;
+}
 
 void PhaseDiffBinning::fillData(IDalitzEventList* data){
   data->Start();
@@ -97,20 +101,47 @@ void PhaseDiffBinning::fillData(IDalitzEventList* data){
   
   double phaseDiff= 0;
 
-  FitAmpSum* fasCC = new FitAmpSum(_fas);
-  fasCC->CPConjugateSameFitParameters();
+//  FitAmpSum* fasCC = new FitAmpSum(_fas);
+////  FitAmpSum* fasCC = _fas->GetCloneSameFitParameters();
+//  _fas->GetCloneSameFitParameters();
+//  fasCC->CPConjugateSameFitParameters();
 
   while(data->Next()){
     bool foundBox=false;
-//    IDalitzEvent* evt1 = evt0->clone();
-  //  IDalitzEvent* evt1 = evt0;
-    std::complex<double> amp = _fas->getVal(data->getEvent());
+
+    IDalitzEvent* Evt = data->getEvent();
+
+  	  vector<TLorentzVector> PArray(5);
+
+  	  PArray[0] = Evt->p(0);
+  	  PArray[1] = Evt->p(1);
+  	  PArray[2] = Evt->p(2);
+  	  PArray[3] = Evt->p(3);
+  	  PArray[4] = Evt->p(4);
+
+  	  DalitzEventPattern pat = Evt->eventPattern();
+  	  DalitzEventPattern patCC = pat.makeCPConjugate();
+
+//  	  std::cout << "Get Patterns" << pat << ", " << patCC << std::endl;
+
+
+  	  DalitzEvent* EvtCC = new DalitzEvent(patCC, PArray);
+
+//  	  EvtCC->print();
+//  	  _fas->print();
+
+
+      std::complex<double> amp = _fas->getVal(Evt);
+
+//  	  std::cout << "Got amp " << amp.real() << ", " << std::endl;
+
+
+//    std::complex<double> amp = _fas->getVal(data->getEvent());
 //    MINT::counted_ptr<FitAmpList> fasCC = _fas->GetCloneSameFitParameters();
-    
-    
 //    fasCC->CPConjugateSameFitParameters();
-    std::complex<double> ampCC = fasCC->getVal(data->getEvent());
-    
+    std::complex<double> ampCC = _fasCC->getVal(EvtCC);
+//	  std::cout << "Got ampCC " << ampCC.real() << ", " << std::endl;
+
 //    std::complex<double> ampCC;
 //    ampCC.real() = 10;
 //    ampCC.imag() = 10;
@@ -138,7 +169,7 @@ void PhaseDiffBinning::fillData(IDalitzEventList* data){
     	 phaseDiff = phaseDiff + 2*3.14159265;
      }	
       
-       
+//       std::cout << "HERE" << std::endl;
     for (int i = 0; i < _nbins; i++)
     {
     	if (phaseDiff > (2*3.14159265/(_nbins))*i && phaseDiff < (2*3.14159265/(_nbins))*(i+1))
@@ -177,19 +208,43 @@ void PhaseDiffBinning::fillDataCC(IDalitzEventList* data){
   double phaseCC = 0;
   
   double phaseDiff= 0;
-  FitAmpSum* fasCC = new FitAmpSum(_fas);
-  fasCC->CPConjugateSameFitParameters();
+//  FitAmpSum* fasCC = new FitAmpSum(_fas);
+//  fasCC->CPConjugateSameFitParameters();
 
   while(data->Next()){
+
+	  // Have to clone the event and CC it. Then get the amp for D and DBar
+
+	  IDalitzEvent* Evt = data->getEvent();
+
+	  vector<TLorentzVector> PArray(5);
+
+	  PArray[0] = Evt->p(0);
+	  PArray[1] = Evt->p(1);
+	  PArray[2] = Evt->p(2);
+	  PArray[3] = Evt->p(3);
+	  PArray[4] = Evt->p(4);
+
+	  DalitzEventPattern pat = Evt->eventPattern();
+	  DalitzEventPattern patCC = pat.makeCPConjugate();
+
+	  DalitzEvent* EvtCC = new DalitzEvent(patCC, PArray);
+
+//	  EvtCC->print();
+//	  _fas->print();
+
     bool foundBox=false;
-    std::complex<double> amp = _fas->getVal(data->getEvent());
+    std::complex<double> amp = _fas->getVal(EvtCC);
 //    std::cout << "Real " << amp.real() << std::endl;
 //    std::cout << "Imag " << amp.imag() << std::endl;
 
 //    MINT::counted_ptr<FitAmpList> fasCC = _fas->GetCloneSameFitParameters();
 
 //    fasCC->CPConjugateSameFitParameters();
-    std::complex<double> ampCC = fasCC->getVal(data->getEvent());
+
+//    Evt->print();
+//    _fasCC->print();
+    std::complex<double> ampCC = _fasCC->getVal(Evt);
 //        std::cout << "Real " << amp.real() << std::endl;
 //        std::cout << "Imag " << amp.imag() << std::endl;
 //        std::cout << "RealCC " << ampCC.real() << std::endl;
@@ -210,6 +265,10 @@ void PhaseDiffBinning::fillDataCC(IDalitzEventList* data){
     phase = atan2(im,real);
     phaseCC = atan2(imCC,realCC);
     
+//    std::cout << "phase: " << phase << std::endl;
+//    std::cout << "phaseCC: " << phaseCC << std::endl;
+
+
     if (phase < 0)
     {
     	phase = phase + 2*3.14159265;

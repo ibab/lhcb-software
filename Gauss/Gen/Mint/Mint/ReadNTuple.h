@@ -33,12 +33,17 @@ private:
 	  std::string _ntpName;
 	  long int _maxEvents;
 
+	  TTree* friendTree;
 	  // Variables to read in
 	  std::vector<std::vector<float> > m_input_var;
 	  std::vector<int> m_pdg;
 	  std::vector<int> set_pat;
 	  std::vector<float> m_mother_var;
 	  int m_mother_pdg;
+
+	  std::vector<float> m_slowPion_var;
+	  int m_slowPion_pdg;
+	  bool slowPion;
 
 	  int m_particle;
 	  const char* _cuts;
@@ -66,11 +71,15 @@ public:
 
 	  bool SetDaughterBranchAddress(const char* Px, const char* Py, const char* Pz, const char* E, const char* pdg );
 	  bool SetMotherBranchAddress(const char* Px, const char* Py, const char* Pz, const char* E, const char* pdg );
+	  void AddSlowPion(const char* Px = "SlowPion_PX", const char* Py= "SlowPion_PY",
+			  	  	  const char* Pz= "SlowPion_PZ", const char* E= "SlowPion_E",
+			  	  	  const char* pdg = "SlowPion_ID" );
 
 	  bool SetEventPattern(DalitzEventPattern*);
 
 	  void ApplyFiducalCuts();
-	  bool passFiducalCuts();
+	  bool passFiducalCuts(unsigned int entry);
+	  bool passedFidCuts(float dx, float dy, float dz);
 
 	  bool AddFriend(std::string fname
 	  	      	  , std::string ntpName);
@@ -78,7 +87,9 @@ public:
 	  bool getUpdatedTree();
 
 	  MINT::counted_ptr<DalitzEvent> readEntry(unsigned int entry);
-	  bool readit(DiskResidentEventList* listPtr, int nEvents=10);
+	  bool readit(DiskResidentEventList* listPtr, int nEvents=-1, double scale = 1.0);
+
+	  bool testEventPattern();
 
 };
 

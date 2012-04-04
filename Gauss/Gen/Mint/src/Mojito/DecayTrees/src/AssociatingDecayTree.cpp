@@ -27,14 +27,21 @@ bool AssociatingDecayTree::associateFinalStates() const{
     = _theDecay.finalStateInThisOrder(fs_pat);
   //  cout << "sorted" << endl;
   if(sorted.size() != fs_pat.size()){
-    
+	  cout << "Sizes: " << sorted.size() << " " << fs_pat.size() << endl;
+
     std::cout << "ERROR in AssociatingDecayTree::associate!"
 	      << " fs_pattern : ";
     for(unsigned int i=0; i<fs_pat.size(); i++){
       std::cout << "(" << i << ") " << fs_pat[i] << ", ";
     }
     std::cout << std::endl;
-    //   std::cout << "\n does not match decay:\n" << _theDecay << std::endl;
+
+    for(unsigned int i=0; i<sorted.size(); i++){
+          std::cout << "(" << i << ") " << *(sorted[i]) << ", ";
+        }
+    std::cout << std::endl;
+
+//       std::cout << "\n does not match decay:\n" << _theDecay << std::endl;
     
     return false;
   }

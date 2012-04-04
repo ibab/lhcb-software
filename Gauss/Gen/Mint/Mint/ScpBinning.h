@@ -73,6 +73,7 @@ protected:
   int numBins() const;
 
   double getScp_perBin() const;
+  double getScpErr_perBin(double mean) const;
   double scp_ofBin(unsigned int i) const;
   double getMaxScp() const;
   double getMinScp() const;
@@ -103,7 +104,13 @@ protected:
 
   int SetBinning(const char*);
 
-  void save(const char*);
+  void saveBinning(const char*);
+
+  double getMinEntries() const;
+
+  void saveAsNTuple(const char* tuplsFileName, IDalitzEventList* data);
+
+  double Scp(const IDalitzEvent* Devt);
 
   friend class lessByScpBoxData;
   friend class lessByScpBoxScp;

@@ -30,8 +30,11 @@ class ScpBox{
 
   bool addData(const IDalitzEvent& evt);
   bool addData(const IDalitzEvent* evt);
+  bool addData(int entries);
+
   bool addMC(const IDalitzEvent& evt, double weight);
   bool addMC(const IDalitzEvent* evt, double weight);
+  bool addMC(int entries);
 
   bool subtractData(const IDalitzEvent& evt);
   bool subtractData(const IDalitzEvent* evt);
@@ -62,6 +65,8 @@ class ScpBox{
 
   double t40Min() const{return _area._t40.min();} // = s123
   double t40Max() const{return _area._t40.max();}
+
+  bool thisBox(const IDalitzEvent* evt);
 
   void print(std::ostream& os = std::cout) const;
 

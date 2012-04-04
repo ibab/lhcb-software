@@ -24,11 +24,13 @@
 #include <iostream>
 #include <algorithm>
 
+using namespace std;
 class PhaseBinning : public ScpBinning {
 
   FitAmpSum* _fas;
 
   int _nbins;
+  DalitzEventPattern _pdg;
  public:
   PhaseBinning()
   {
@@ -39,15 +41,29 @@ class PhaseBinning : public ScpBinning {
 	  _fas = fas;
 	  _nbins = nbins;
   }
+  PhaseBinning(const char* filename,
+		  	  DalitzEventPattern pdg,
+		  	  const char* treename = "PhaseBinning");
 
   virtual void fillData(IDalitzEventList* data);
   virtual void fillDataCC(IDalitzEventList* data);
  
   int createBinning(IDalitzEventList* events );
+  int createBinning(DalitzEventPattern pdg );
 
   virtual double setEvents(IDalitzEventList* data
 			 , IDalitzEventList* mc
 			 );
+
+  double MaxPhase(int bin);
+
+  double Phase(std::complex<double>);
+
+  double MinPhase(int bin);
+
+  void Save(const char* name = "PhaseBinning");
+
+  PhaseBinning operator + (PhaseBinning);
 
 };
 

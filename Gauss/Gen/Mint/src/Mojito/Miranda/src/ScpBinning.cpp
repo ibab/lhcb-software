@@ -14,6 +14,7 @@
 #include <algorithm>
 #include <iostream>
 
+//#define DEBUG
 using namespace MINT;
 using namespace std;
 
@@ -102,6 +103,7 @@ int ScpBinning::createBinning(IDalitzEventList* events
   const IDalitzEvent* evt0 = events->getREvent(0);
   if(0 == evt0) return 0;
   if (minPerBin < 20) minPerBin = 20; // Saftey factor as method not valid for few entries
+
 
   ScpBoxSet boxes = splitBoxes(events, maxPerBin);
 
@@ -232,18 +234,23 @@ void ScpBinning::fillData(IDalitzEventList* data){
   while(data->Next()){
     bool foundBox=false;
     for(unsigned int i=0; i < _boxSets.size(); i++){
-      if(_boxSets[i].addData(data->getEvent())){
-//    	  data->getEvent()->print();
-//    	  TLorentzVector vec = data->getEvent()->p(1);
-//    	  double Px = vec.Px();
-//    	  double Py = vec.Py();
-//    	  double Pz = vec.Pz();
+//    	IDalitzEvent* Evt = data->getEvent();
+//    	      if (Evt->phaseSpace() != 0)
+	      if (1 == 1)
+    	      {
+    	    	  if(_boxSets[i].addData(data->getEvent())){
+	//    	  data->getEvent()->print();
+	//    	  TLorentzVector vec = data->getEvent()->p(1);
+	//    	  double Px = vec.Px();
+	//    	  double Py = vec.Py();
+	//    	  double Pz = vec.Pz();
 
-//    	  std::cout << "Px: " << Px << " Py: " << Py << " Pz: " << Pz << std::endl;
-    	  foundBox=true;
-    	  _nData++;
-    	  break;
-      }
+	//    	  std::cout << "Px: " << Px << " Py: " << Py << " Pz: " << Pz << std::endl;
+			  foundBox=true;
+			  _nData++;
+			  break;
+		  }
+       }
     }
     if(! foundBox){
       cout << "WARNING in ScpBinning::fillData:"
@@ -264,10 +271,16 @@ void ScpBinning::fillDataCC(IDalitzEventList* data){
   while(data->Next()){
     bool foundBox=false;
     for(unsigned int i=0; i < _boxSets.size(); i++){
-      if(_boxSets[i].addMC(data->getEvent(),1.0)){
-	foundBox=true;
-	_nDataCC++;
-	break;
+      IDalitzEvent* Evt = data->getEvent();
+//      if (Evt->phaseSpace() != 0)
+//      {
+      if (1 == 1)
+	      {
+    	  if(_boxSets[i].addMC(data->getEvent(),1.0)){
+    		  foundBox=true;
+    		  _nDataCC++;
+    		  break;
+    	  }
       }
     }
   }
@@ -394,6 +407,10 @@ void ScpBinning::setBoxesNormFactors(){
 
 double ScpBinning::scp_ofBin(unsigned int i) const{
   if(i > _boxSets.size()) return -9999;
+	#ifdef DEBUG
+  std::cout << "Scp of bin " << i << " " << _boxSets[i].scp(normFactor());
+  std::cout << " box size: "<< _boxSets.size() << std::endl;
+	#endif
   return _boxSets[i].scp(normFactor());
 }
 
@@ -406,8 +423,19 @@ double ScpBinning::getScp_perBin() const{
     double scp = scp_ofBin(i);
     sum += scp;
   }
-
   return sum/numBins();
+}
+
+double ScpBinning::getScpErr_perBin(double mean) const{
+  if(_nDataCC <= 0) return -9999;
+  if(_nData <=0 ) return -9999;
+
+  double sum=0;
+  for(unsigned int i=0; i < _boxSets.size(); i++){
+    double scp = scp_ofBin(i);
+    sum = sum + (scp - mean)*(scp - mean);
+  }
+  return sqrt(sum/numBins());
 }
 
 double ScpBinning::getMinScp() const{
@@ -650,7 +678,7 @@ int ScpBinning::NEntires()
 
 int ScpBinning::SetBinning(const char* binningFileName)
 {
-	 bool dbThis = false;
+	 bool dbThis = true;
 	 TFile* in_Boxfile = new TFile(binningFileName,"READ");
 	 TTree* Binning_tree;
 	 Binning_tree=dynamic_cast<TTree*>(in_Boxfile->Get("SCPBinning"));
@@ -747,7 +775,7 @@ int ScpBinning::SetBinning(const char* binningFileName)
 	 return 1;
 }
 
-void ScpBinning::save(const char* binningFileName)
+void ScpBinning::saveBinning(const char* binningFileName)
 {
 		 TFile* out_Boxfile = new TFile(binningFileName,"RECREATE");
 		 TTree *out_BoxTree = new TTree("SCPBinning","SCPBinning");
@@ -803,9 +831,66 @@ void ScpBinning::save(const char* binningFileName)
 		 out_Boxfile->Close();
 }
 
+double ScpBinning::getMinEntries() const{
+	double min=9999;
+	  for(unsigned int i=0; i < _boxSets.size(); i++){
+	    double entries = _boxSets[i].nData();
+	    double entriesCC = _boxSets[i].nMC();
+	    if((entries) < (min)) min=entries;
+	    if((entriesCC) < (min)) min=entriesCC;
+
+	  }
+
+	  return min;
+}
+
+void ScpBinning::saveAsNTuple(const char* tuplsFileName, IDalitzEventList* data)
+{
+	TFile *out_file = new TFile(tuplsFileName,"RECREATE");
+	TTree* out_tree = new TTree("SCPVariables","SCPVariables");
+	float SCP = 0;
+	float PxD0 = 0;
+
+	TBranch *newBranch = out_tree->Branch("SCP", &SCP, "SCP/F");
+//	TBranch *newBranchPXD0 = out_tree->Branch("PXD0", &PxD0, "PXD0/F");
+//	TBranch *newBranchPYD0 = out_tree->Branch("PYD0", &PyD0, "PYD0/F");
+
+//	TBranch *newBranchPYD0 = out_tree->Branch("PYD0", &PyD0, "PYD0/F");
 
 
+	data->Start();
+	while(data->Next()){
+		const IDalitzEvent* Devt = data->getEvent();
+		TLorentzVector p0(Devt->p(0));
+		TLorentzVector p1(Devt->p(1));
+		TLorentzVector p2(Devt->p(2));
+		TLorentzVector p3(Devt->p(3));
+		TLorentzVector p4(Devt->p(4));
+		PxD0 = p0.Px();
+		SCP = Scp(Devt);
+		#ifdef DEBUG
+		std::cout << "SCP for bin " << SCP << endl;
+		#endif
 
+		out_tree->Fill();
+	  }
+	out_tree->Write();
+	out_file->Close();
+}
+
+double ScpBinning::Scp(const IDalitzEvent* Devt)
+{
+	double ScpOfEvt = 0;
+	for(unsigned int i=0; i < _boxSets.size(); i++){
+	      if(_boxSets[i].boxSet(Devt))
+	      {
+	    	  ScpOfEvt = scp_ofBin(i);
+	    	  break;
+	      }
+	}
+	 return ScpOfEvt;
+
+}
 
 bool lessByScpBoxSetScp::operator()(const ScpBoxSet& a, const ScpBoxSet& b) const{
   return (a.scp(m_norm)) < (b.scp(m_norm));

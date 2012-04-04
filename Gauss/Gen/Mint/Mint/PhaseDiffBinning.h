@@ -28,9 +28,14 @@
 class PhaseDiffBinning : public PhaseBinning {
 
   FitAmpSum* _fas;
+  FitAmpSum* _fasCC;
+
   int _nbins;
 
  public:
+
+  void SetfasCC(FitAmpSum* fasCC);
+
   PhaseDiffBinning(FitAmpSum* fas, int nbins = 9)
   {
 	  _fas = fas;
