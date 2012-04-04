@@ -170,10 +170,11 @@ HIDDEN(size_t) m_writemem(int fd, const void* ptr, size_t size) {
 }
 
 HIDDEN(size_t) m_fcopy(int to_fd, int from_fd, size_t len) {
-  long c, rem=len%sizeof(c);
-  for(size_t i=0, n=len/sizeof(c); i<n;++i) {
-    mtcp_sys_read(from_fd,&c,sizeof(c));
-    mtcp_sys_write(to_fd,&c,sizeof(c));
+  char buff[1024];
+  long rem = len%sizeof(buff);
+  for(size_t i=0, n=len/sizeof(buff); i<n; ++i) {
+    mtcp_sys_read(from_fd,buff,sizeof(buff));
+    mtcp_sys_write(to_fd,buff,sizeof(buff));
   }
   if ( 0 != rem ) {
     char p;
