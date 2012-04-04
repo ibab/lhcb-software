@@ -4,6 +4,13 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2012-04-04 - V. Gligorov
+ - Add options to TupleToolSwimmingInfo to allow it to grab particles by hand
+   from a specified location, in order to solve (hack) problem with the
+   D*->D0pi chain in which the D0 linked to from the D* is not the same D0
+   linking to the swimming reports.
+ - Currently only works for one candidate per event.   
+
 ! 2012-04-02 - Chris Jones
  - Suppress the numerous icc11 compiler remarks and warnings.
 
