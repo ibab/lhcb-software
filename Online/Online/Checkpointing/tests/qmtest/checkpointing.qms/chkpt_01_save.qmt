@@ -6,6 +6,7 @@
 	<text>chkpt_tests</text>
 	<text>-p</text><text>3</text>
 	<text>-n</text>
+	<text>-l</text>
 	<text>-f</text><text>t_checkpoint</text>
   </set></argument>
   <argument name="unsupported_platforms"><set>

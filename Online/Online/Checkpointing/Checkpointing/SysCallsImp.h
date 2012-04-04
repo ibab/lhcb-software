@@ -119,6 +119,7 @@ STATIC(void) mtcp_output(int lvl,char const *format, ...)  {
     case MTCP_WARNING: rwrite(" WARNING ",9); break;
     case MTCP_ERROR:   rwrite(" ERROR   ",9); break;
     case MTCP_FATAL:   rwrite(" FATAL   ",9); break;
+    case MTCP_ALWAYS:  rwrite(" ALWAYS  ",9); break;
     default:           rwrite(" ALWAYS  ",9); break;
     }
   }

@@ -2,6 +2,11 @@
 
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>../test_restore.sh</text></argument>
+  <argument name="args"><set>
+	<text>-p</text><text>3</text>
+	<text>-n</text>
+	<text>-i</text><text>proc.dat</text>
+  </set></argument>
   <argument name="unsupported_platforms"><set>
 		<text>i686.*</text>
 		<text>win.*</text>

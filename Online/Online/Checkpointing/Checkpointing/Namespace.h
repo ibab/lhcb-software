@@ -18,7 +18,8 @@ namespace CHECKPOINTING_NAMESPACE {
     MTCP_INFO         = 2,
     MTCP_WARNING      = 3,
     MTCP_ERROR        = 4,
-    MTCP_FATAL        = 5,
+    MTCP_ALWAYS       = 5,
+    MTCP_FATAL        = 6,
     MTCP_MAX_LEVEL    = 15,
     MTCP_SPARE_FLAG0  = (1<<4),  // = 16
     MTCP_SPARE_FLAG1  = (1<<5),  // = 32

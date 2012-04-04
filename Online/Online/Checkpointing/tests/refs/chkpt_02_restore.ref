@@ -7,4 +7,33 @@ Chr[2]...
 Chr[3]...
 ...main thread cancelled ...
 ...wait for Child thread to exit...
+mtcp  ALWAYS  Linked image: /home/frankm/cmtuser/Gaudi_v22r5/Online/OnlineKernel/x86_64-slc5-gcc43-dbg/gentest.exe
+mtcp  ALWAYS  Linked image: /home/frankm/cmtuser/Gaudi_v22r5/Online/Checkpointing/x86_64-slc5-gcc43-dbg/restore.exe
+mtcp  ALWAYS  Linked image: /home/frankm/cmtuser/Gaudi_v22r5/Online/OnlineKernel/x86_64-slc5-gcc43-dbg/gentest.exe
+mtcp  ALWAYS  Linked image: /home/frankm/cmtuser/Gaudi_v22r5/Online/Checkpointing/x86_64-slc5-gcc43-dbg/restore.exe
+mtcp  ALWAYS  Linked image: /lib64/ld-2.5.so
+mtcp  ALWAYS  Linked image: /lib64/ld-2.5.so
+mtcp  ALWAYS  Linked image: /lib64/ld-2.5.so
+mtcp  ALWAYS  Linked image: /lib64/libdl-2.5.so
+mtcp  ALWAYS  Linked image: /lib64/libdl-2.5.so
+mtcp  ALWAYS  Linked image: /lib64/libdl-2.5.so
+mtcp  ALWAYS  Linked image: /lib64/libdl-2.5.so
+mtcp  ALWAYS  Linked image: /sw/lib/lcg/external/gcc/4.3.5/x86_64/lib64/libstdc++.so.6
+mtcp  ALWAYS  Linked image: /sw/lib/lcg/external/gcc/4.3.5/x86_64/lib64/libstdc++.so.6
+mtcp  ALWAYS  Linked image: /sw/lib/lcg/external/gcc/4.3.5/x86_64/lib64/libstdc++.so.6
+mtcp  ALWAYS  Linked image: /sw/lib/lcg/external/gcc/4.3.5/x86_64/lib64/libgcc_s.so.1
+mtcp  ALWAYS  Linked image: /sw/lib/lcg/external/gcc/4.3.5/x86_64/lib64/libgcc_s.so.1
+mtcp  ALWAYS  Linked image: /sw/lib/lcg/external/gcc/4.3.5/x86_64/lib64/libgcc_s.so.1
+mtcp  ALWAYS  Linked image: /lib64/libc-2.5.so
+mtcp  ALWAYS  Linked image: /lib64/libc-2.5.so
+mtcp  ALWAYS  Linked image: /lib64/libc-2.5.so
+mtcp  ALWAYS  Linked image: /lib64/libc-2.5.so
+mtcp  ALWAYS  Linked image: /lib64/libm-2.5.so
+mtcp  ALWAYS  Linked image: /lib64/libm-2.5.so
+mtcp  ALWAYS  Linked image: /lib64/libm-2.5.so
+mtcp  ALWAYS  Linked image: /lib64/libm-2.5.so
+mtcp  ALWAYS  Linked image: /lib64/libpthread-2.5.so
+mtcp  ALWAYS  Linked image: /lib64/libpthread-2.5.so
+mtcp  ALWAYS  Linked image: /lib64/libpthread-2.5.so
+mtcp  ALWAYS  Linked image: /lib64/libpthread-2.5.so
 ...Child ended...exit...

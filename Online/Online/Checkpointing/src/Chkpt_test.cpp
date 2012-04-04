@@ -89,6 +89,16 @@ int test_thread_checkpoint(int flag) {
       if ( (rc=::pthread_join(main_pid,&val)) < 0 ) {
 	mtcp_output(MTCP_FATAL,"Error JOIN main thread: %s rc=%d\n",::strerror(errno),rc);
       }
+      int rc;
+      FILE* fd = ::fopen("/proc/self/maps","r");
+      char* buff = 0;
+      size_t len=0;
+      while( (rc=::getline(&buff,&len,fd)) > 0 ) {
+	char* ptr = strchr(buff,'/');
+	if ( ptr ) mtcp_output(MTCP_ALWAYS,"Linked image: %s",ptr);
+      }
+      if ( buff ) ::free(buff);
+      ::fclose(fd);
       ::fprintf(stdout,"...Child ended...exit...\n");
       ::fflush(stdout);
       run = false;
