@@ -33,6 +33,8 @@ public:
 private:
   std::string m_swimRelTableLoc;
   std::string m_swimRepsStage;  
+  bool m_useExtraLoc;
+  std::string m_extraLoc; 
 
   typedef LHCb::Relation2D<LHCb::Particle, LHCb::SwimmingReport> P2TPRelation;
 

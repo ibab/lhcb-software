@@ -38,6 +38,8 @@ DECLARE_TOOL_FACTORY( TupleToolSwimmingInfo )
 {
   declareInterface<IParticleTupleTool>(this);
   declareProperty("ReportsLocation" , m_swimRelTableLoc  = "/Event/SwimmingMicroDST/SingleCandidate/P2TPRelations");
+  declareProperty("UseExtraLocation", m_useExtraLoc = false);
+  declareProperty("ExtraLocation", m_extraLoc = "");
   declareProperty("ReportStage"     , m_swimRepsStage    = "Trigger");
 }
 
@@ -63,14 +65,30 @@ StatusCode TupleToolSwimmingInfo::fill( const Particle*
   }
 
   if( P ){
+    const Particle* thisP = P;
+    if (m_useExtraLoc) {
+      const Particles* extraPs = get<Particles>(m_extraLoc); 
+      if (!extraPs) {
+        warning() << "Could not get extra particles!" << endmsg;
+        return StatusCode::FAILURE;
+      }
+      const Particle* extraP = *(extraPs->begin());
+      if (extraP) {
+        thisP = extraP; 
+      } else {
+        warning() << "Could not get extra particles!" << endmsg;
+        return StatusCode::FAILURE;
+      }
+    
+    }
     bool test = true;
 
-    P2TPRelation::Range range = relatePart->relations(P);
+    P2TPRelation::Range range = relatePart->relations(thisP);
     if (range.size() != 1) return StatusCode::FAILURE;
 
     LHCb::SwimmingReport* report = range.begin()->to();
 
-    if( !P->isBasicParticle() ) {
+    if( !thisP->isBasicParticle() ) {
       // Loop over turning points to fill decision names and insert vectors
       MapType line_decisions;
       const tPoints& turns = report->turningPoints(m_swimRepsStage);
@@ -121,7 +139,7 @@ StatusCode TupleToolSwimmingInfo::fill( const Particle*
           if (!tp.dec()) {
             entry.second.push_back(false);
           } else {
-            entry.second.push_back(tp.participated(entry.first, *P));
+            entry.second.push_back(tp.participated(entry.first, *thisP));
           }
         }
       }
