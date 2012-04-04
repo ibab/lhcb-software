@@ -44,8 +44,6 @@ RawBankReadoutStatusMonitor::RawBankReadoutStatusMonitor( const std::string& nam
     m_degree++;
     word *= 2;
   }
-  
-
   setHistoDir( name );
 }
 //=============================================================================

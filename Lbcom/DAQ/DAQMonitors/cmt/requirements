@@ -7,14 +7,15 @@ version           v1r4
 
 branches          cmt doc src
 
+use   ROOT   v*  LCG_Interfaces
 use DAQEvent v* Event
 use GaudiAlg v*
 
 include_path      none
 
-macro_append ROOT_linkopts " -lHist " \
-                     WIN32 " libHist.lib "
+macro_append ROOT_linkopts " -lHist -lGraf -lRIO" \
+                     WIN32 " libHist.lib libGraf.lib libRIO.lib"
 
-library          DAQMonitors    ../src/*.cpp 
+library          DAQMonitors  -import=AIDA  ../src/*.cpp 
 apply_pattern    component_library library=DAQMonitors
 
