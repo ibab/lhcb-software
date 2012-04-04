@@ -2,6 +2,11 @@
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
 
+!========================= VeloDet v13r18p1 2012-04-04 =======================
+! 2012-04-03 - David Hutchcroft
+ - Fixed crash in DeVeloRType when getting closest M2 line to points at inner
+   edge of acceptance. Fixes https://savannah.cern.ch/bugs/?93382
+
 !========================= VeloDet v13r18 2012-01-31 =========================
 ! 2012-01-12 - David Hutchcroft
  - Added a new function to DeVeloRType to map the 2nd metal layer to the hits
