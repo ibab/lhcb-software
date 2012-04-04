@@ -1,0 +1,39 @@
+...Child out of select:-1 errno:4 [Interrupted system call]
+Chr[2]...
+...stop threads after restore from file:proc.dat
+... checkpoint successfully restored ...
+...restoring main thread. rc=1...
+...Child out of select:-1 errno:4 [Interrupted system call]
+Chr[3]...
+...main thread cancelled ...
+...wait for Child thread to exit...
+mtcp  ALWAYS  Linked image: /tmp/checkpoint/gentest.exe
+mtcp  ALWAYS  Linked image: /home/frankm/cmtuser/Gaudi_v22r5/Online/Checkpointing/x86_64-slc5-gcc43-dbg/restore.exe
+mtcp  ALWAYS  Linked image: /tmp/checkpoint/gentest.exe
+mtcp  ALWAYS  Linked image: /home/frankm/cmtuser/Gaudi_v22r5/Online/Checkpointing/x86_64-slc5-gcc43-dbg/restore.exe
+mtcp  ALWAYS  Linked image: /tmp/checkpoint/ld-2.5.so
+mtcp  ALWAYS  Linked image: /tmp/checkpoint/ld-2.5.so
+mtcp  ALWAYS  Linked image: /tmp/checkpoint/ld-2.5.so
+mtcp  ALWAYS  Linked image: /tmp/checkpoint/libdl-2.5.so
+mtcp  ALWAYS  Linked image: /tmp/checkpoint/libdl-2.5.so
+mtcp  ALWAYS  Linked image: /tmp/checkpoint/libdl-2.5.so
+mtcp  ALWAYS  Linked image: /tmp/checkpoint/libdl-2.5.so
+mtcp  ALWAYS  Linked image: /tmp/checkpoint/libstdc++.so.6
+mtcp  ALWAYS  Linked image: /tmp/checkpoint/libstdc++.so.6
+mtcp  ALWAYS  Linked image: /tmp/checkpoint/libstdc++.so.6
+mtcp  ALWAYS  Linked image: /tmp/checkpoint/libgcc_s.so.1
+mtcp  ALWAYS  Linked image: /tmp/checkpoint/libgcc_s.so.1
+mtcp  ALWAYS  Linked image: /tmp/checkpoint/libgcc_s.so.1
+mtcp  ALWAYS  Linked image: /tmp/checkpoint/libc-2.5.so
+mtcp  ALWAYS  Linked image: /tmp/checkpoint/libc-2.5.so
+mtcp  ALWAYS  Linked image: /tmp/checkpoint/libc-2.5.so
+mtcp  ALWAYS  Linked image: /tmp/checkpoint/libc-2.5.so
+mtcp  ALWAYS  Linked image: /tmp/checkpoint/libm-2.5.so
+mtcp  ALWAYS  Linked image: /tmp/checkpoint/libm-2.5.so
+mtcp  ALWAYS  Linked image: /tmp/checkpoint/libm-2.5.so
+mtcp  ALWAYS  Linked image: /tmp/checkpoint/libm-2.5.so
+mtcp  ALWAYS  Linked image: /tmp/checkpoint/libpthread-2.5.so
+mtcp  ALWAYS  Linked image: /tmp/checkpoint/libpthread-2.5.so
+mtcp  ALWAYS  Linked image: /tmp/checkpoint/libpthread-2.5.so
+mtcp  ALWAYS  Linked image: /tmp/checkpoint/libpthread-2.5.so
+...Child ended...exit...

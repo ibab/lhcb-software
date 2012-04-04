@@ -1,0 +1,18 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>../test_restore.sh</text></argument>
+  <argument name="args"><set>
+	<text>-p</text><text>3</text>
+	<text>-n</text>
+	<text>-i</text><text>proc.dat</text>
+	<text>-l</text><text>/tmp/checkpoint</text>
+  </set></argument>
+
+  <argument name="unsupported_platforms"><set>
+		<text>i686.*</text>
+		<text>win.*</text>
+		<text>slc4_ia32.*</text>
+  </set></argument>
+  <argument name="reference"><text>../refs/chkpt_03_restore.ref</text></argument>
+</extension>
