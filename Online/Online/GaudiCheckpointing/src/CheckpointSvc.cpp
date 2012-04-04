@@ -48,23 +48,30 @@ namespace LHCb  {
     std::string               m_checkPoint;
     /// Property: Partition name used to build the child instance name
     std::string               m_partition;
-    /// Property: Task type used to build the child instance name
+    /// Property: Task type used to build the child instance name (default: 'Gaudi')
     std::string               m_taskType;
-    /// Property: Utgid patters used to build the child instance name
+    /// Property: Utgid patters used to build the child instance name (default: '%N_%T_%02d')
     std::string               m_utgid;
-    /// Property: Number of instances to be forked.
+    /// Property: lib directory for libraries contained in the checkpoint (Default:/dev/shm/checkpoint)
+    std::string               m_libDirectory;
+    /// Property: Checkpoint save flags (0=None, 2=Save_libs[default])
+    int                       m_saveFlags;
+    /// Property: Checkpoint restart flags  (default: 0)
+    int                       m_restartFlags;
+    
+    /// Property: Number of instances to be forked.  (default: 0)
     int                       m_numInstances;
-    /// Property: printout level for the checkpoint/restore mechanism    
+    /// Property: printout level for the checkpoint/restore mechanism (default:WARNING)
     int                       m_printLvl;
-    /// Property: forst child index for fork mechanism
+    /// Property: first child index for fork mechanism (default: 0)
     int                       m_firstChild;
-    /// Property: Exit progam after producing the checkpoint file
+    /// Property: Exit progam after producing the checkpoint file (default: 1[true])
     int                       m_exit;
-    /// Property: Wait for children with debugger for n seconds
+    /// Property: Wait for children with debugger for n seconds (default: 0 ms)
     int                       m_childWait;
-    /// Property to make children sleep after fork
+    /// Property to make children sleep after fork ( default:250 ms)
     int                       m_childSleep;
-    /// Property to force UTGID to environ and argv[0]
+    /// Property to force UTGID to environ and argv[0] (default: 0 [false])
     int                       m_forceUTGID;
     /// Property: Set to 1 if the child processes should become session leaders
     bool                      m_childSessions;
@@ -173,6 +180,7 @@ namespace LHCb  {
 #include "GaudiKernel/MsgStream.h" 
 #include "GaudiOnline/ITaskFSM.h"
 #include "Checkpointing/Chkpt.h"
+#include "Checkpointing/Namespace.h"
 #include "RTL/rtl.h"
 
 #include <cerrno>
@@ -277,22 +285,25 @@ CheckpointSvc::CheckpointSvc(const string& nam,ISvcLocator* pSvc)
 {
   m_masterProcess = true;
   m_restartChildren = false;
-  declareProperty("NumberOfInstances",   m_numInstances  = 0);
-  declareProperty("UseCores",            m_useCores      = false);
-  declareProperty("ChildSessions",       m_childSessions = false);
-  declareProperty("DumpFiles",           m_dumpFD        = false);
-  declareProperty("Checkpoint",          m_checkPoint    = "");
-  declareProperty("PrintLevel",          m_printLvl      = MSG::WARNING);
-  declareProperty("Partition",           m_partition     = "");
-  declareProperty("TaskType",            m_taskType      = "Gaudi");
-  declareProperty("UtgidPattern",        m_utgid         = "%N_%T_%02d");
-  declareProperty("ExitAfterCheckpoint", m_exit          = 1);
-  declareProperty("KillChildren",        m_killChildren  = false);
-  declareProperty("FirstChild",          m_firstChild    = 0);
-  declareProperty("ChildWait",           m_childWait     = 0);
-  declareProperty("ChildSleep",          m_childSleep    = 250);
-  declareProperty("ForceUtgid",          m_forceUTGID    = 0);
-  declareProperty("RestoreOptionClients",m_restoreOptionClients);
+  declareProperty("NumberOfInstances",      m_numInstances  = 0);
+  declareProperty("UseCores",               m_useCores      = false);
+  declareProperty("ChildSessions",          m_childSessions = false);
+  declareProperty("DumpFiles",              m_dumpFD        = false);
+  declareProperty("Checkpoint",             m_checkPoint    = "");
+  declareProperty("PrintLevel",             m_printLvl      = MSG::WARNING);
+  declareProperty("Partition",              m_partition     = "");
+  declareProperty("TaskType",               m_taskType      = "Gaudi");
+  declareProperty("UtgidPattern",           m_utgid         = "%N_%T_%02d");
+  declareProperty("ExitAfterCheckpoint",    m_exit          = 1);
+  declareProperty("KillChildren",           m_killChildren  = false);
+  declareProperty("FirstChild",             m_firstChild    = 0);
+  declareProperty("ChildWait",              m_childWait     = 0);
+  declareProperty("ChildSleep",             m_childSleep    = 250);
+  declareProperty("ForceUtgid",             m_forceUTGID    = 0);
+  declareProperty("RestoreOptionClients",   m_restoreOptionClients);
+  declareProperty("CheckpointLibs",         m_libDirectory  = "/dev/shm/checkpoint");
+  declareProperty("CheckpointSaveFlags",    m_saveFlags     = CHECKPOINTING_NAMESPACE::MTCP_SAVE_LIBS);
+  declareProperty("CheckpointRestartFlags", m_restartFlags  = 0);
 }
 
 /// IInterface implementation : queryInterface
@@ -581,6 +592,13 @@ int CheckpointSvc::saveCheckpoint() {
   if ( !m_checkPoint.empty() ) {{
       MsgStream log(msgSvc(),name());
       log << MSG::ALWAYS << MARKER << " WRITING  CHECKPOINT " << endmsg;
+    }
+    if ( !m_libDirectory.empty() )  {
+      m_saveFlags |= CHECKPOINTING_NAMESPACE::MTCP_SAVE_LIBS;
+      checkpointing_set_lib_directory(m_libDirectory.c_str());
+    }
+    if ( 0 != m_saveFlags ) {
+      checkpointing_set_save_flags(m_saveFlags);
     }
     int fd = ::open(m_checkPoint.c_str(),O_CREAT|O_TRUNC|O_WRONLY,S_IRWXU|S_IRWXG|S_IRWXO);
     if ( fd > 0 ) {
