@@ -1,0 +1,15 @@
+#include "$GAUDIROOTCNVTESTSROOT/options/CRD.all.opts"
+ApplicationMgr.ExtSvc += "LHCb::CheckpointSvc/CheckpointSvc";
+CheckpointSvc.NumberOfInstances = 0;
+CheckpointSvc.UseCores = false;
+CheckpointSvc.ChildSessions       = false;
+CheckpointSvc.DumpFiles           = false;
+CheckpointSvc.Checkpoint          = "collrd.checkpoint";
+CheckpointSvc.PrintLevel          = 3;
+CheckpointSvc.OutputLevel         = 2;
+CheckpointSvc.ExitAfterCheckpoint = 2;
+CheckpointSvc.CheckpointSaveFlags = 2;
+CheckpointSvc.CheckpointLibs      = "/dev/shm/checkpoint";
+CheckpointSvc.InvokeIncident      = true;
+CheckpointSvc.ConnectToDIM        = false;
+
