@@ -4,6 +4,9 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+! 2012-04-04 - Chris Jones
+ - Fix gcc 4.6 warning in PackedCaloCluster
+
 ! 2012-04-01 - Chris Jones
  - Improve checks for PackedCaloCluster
  - Clean up PackedCaloHypo class

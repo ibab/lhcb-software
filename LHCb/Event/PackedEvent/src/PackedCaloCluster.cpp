@@ -63,7 +63,8 @@ void CaloClusterPacker::pack( const DataVector & clus,
       {
         pclus.entries().push_back( PackedCaloClusterEntry() );
         PackedCaloClusterEntry & pEnt = pclus.entries().back();
-        if ( NULL != (*iEn).digit() )
+        
+        if ( NULL != (*iEn).digit().target() )
         {
           pEnt.digit = m_pack.reference64( &pclus,
                                            (*iEn).digit()->parent(),
