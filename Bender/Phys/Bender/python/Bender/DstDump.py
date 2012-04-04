@@ -70,8 +70,12 @@ __version__ = '$Revision$'
 __all__     = ()  ## nothing to import 
 __usage__   = 'dst_dump [options] file1 [ file2 [ file3 [ file4 ....'
 # =============================================================================
+## logging
+# =============================================================================
+from Bender.Logger import getLogger 
+logger = getLogger( __name__ )
+# =============================================================================
 from Bender.DstExplorer import makeParser, configure 
-
 # =============================================================================
 if '__main__' == __name__ :
     
@@ -113,7 +117,7 @@ if '__main__' == __name__ :
         '-d'                         ,
         '--dod'                   ,
         dest    = 'DataOnDemand'      ,
-        help    = "Dump the known DOD-locations (fragile), (+)" ,
+        help    = "Dump the known DOD-locations (fragile!), (+)" ,
         action  = "store_true"       ,
         default = False    
         )
@@ -179,7 +183,6 @@ if '__main__' == __name__ :
         if not dct.has_key(key) : dct[key] = SE()             
         dct[key] += float(val)
             
-
     dodSvc = gaudi.service('DataOnDemandSvc')
     
     nSelEvents = {}
@@ -199,7 +202,7 @@ if '__main__' == __name__ :
         nodes = evtSvc.nodes ( node      = options.RootInTES ,
                                forceload = True              )
         if not nodes :
-            print "warning: no nodes are selected for Root:'%s'" % options.RootInTES
+            logger.warning ( "No nodes are selected for Root:'%s'" % options.RootInTES )
 
         nodes = set ( nodes ) 
         links = set ()
@@ -332,10 +335,8 @@ if '__main__' == __name__ :
     outputFile.write(  "   Analysed " + str(iEvent) + " events")
     _printMessage += [ "   Analysed " + str(iEvent) + " events" ] 
 
-
     print '\n\n\n'
     for m in _printMessage : print m 
-    # print _printMessage
     print '\n\n\n'
 
  

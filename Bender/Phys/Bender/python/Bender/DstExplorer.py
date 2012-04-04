@@ -120,7 +120,11 @@ __version__ = '$Revision$'
 __all__     = ()  ## nothing to import 
 __usage__   = 'dst_explorer [options] file1 [ file2 [ file3 [ file4 ....'
 # =============================================================================
-
+## logging
+# =============================================================================
+from Bender.Logger import getLogger 
+logger = getLogger( __name__ )
+# =============================================================================
 ## create the parser
 def makeParser ( usage = None ,
                  vers  = None ) :
@@ -173,15 +177,6 @@ def makeParser ( usage = None ,
         )
     ## 
     parser.add_option (
-        '-p'                          ,
-        '--persistency'               ,
-        type    = 'str'               , 
-        dest    = 'Persistency'       ,
-        help    = "``Persistency'' attribute for DaVinci [default : %default]" ,
-        default = 'ROOT'                  
-        )
-    ## 
-    parser.add_option (
         '-m'                          ,
         '--micro'                     ,
         action  = "store_true"        ,
@@ -216,6 +211,15 @@ def makeParser ( usage = None ,
         default = ''           
         )
     ##
+    parser.add_option (
+        '-u'                       ,
+        '--useoracle'              ,
+        action  = "store_true"     ,
+        dest    = 'UseOracle'      ,
+        help    = "Use Oracle-DB"  ,
+        default = False   
+        )
+    ##
     return parser
 
 # =============================================================================
@@ -226,21 +230,30 @@ def configure ( options , arguments ) :
     """
     #
     ## redefine output level for 'quiet'-mode
-    if options.OutputLevel > 5 : options.OutputLevel = 5
-    if options.OutputLevel < 0 : options.OutputLevel = 0
+    if options.OutputLevel > 5 :
+        options.OutputLevel = 5
+        logger.info('set OutputLevel to be %s ' % options.OutputLevel )
+        
+    if options.OutputLevel < 0 :
+        options.OutputLevel = 0
+        logger.info('set OutputLevel to be %s ' % options.OutputLevel )
+        
     if options.Quiet and 4 > options.OutputLevel :
         options.OutputLevel = 4
+        logger.info('set OutputLevel to be %s ' % options.OutputLevel )
         
     if options.Simulation and '2009' == options.DataType :
         options.DataType = 'MC09'
+        logger.info('set DataType to be MC09')
+        
     if options.Simulation and '2010' == options.DataType :
         options.DataType = 'MC10'
+        logger.info('set DataType to be MC10')
             
     #
     ## start the actual action:
     #
-    from Configurables       import DaVinci
-    
+    from Configurables       import DaVinci    
     ext = "dst"
     for a in arguments :
         p   = a.rfind ( '.' )
@@ -251,7 +264,6 @@ def configure ( options , arguments ) :
     daVinci = DaVinci (
         DataType    = options.DataType    ,
         Simulation  = options.Simulation  ,
-        Persistency = options.Persistency , 
         Lumi        = False              
         )
     
@@ -266,7 +278,8 @@ def configure ( options , arguments ) :
     if options.RootInTES :
         from Bender.MicroDST import uDstConf 
         uDstConf(options.RootInTES)
-            
+        logger.info('Reconfigure uDST')
+   
     if not options.Simulation and options.DataType in ( '2010' , '2011' ) :
         #
         ## try to use the latest available tags:
@@ -274,14 +287,16 @@ def configure ( options , arguments ) :
         from Configurables import CondDB    
         CondDB ( UseLatestTags = [ options.DataType ] )
         import os 
-        if os.environ.has_key('LHCBGRIDSYSROOT') :
+        if options.UseOracle and os.environ.has_key('LHCBGRIDSYSROOT') :
             if os.environ.has_key('LHCBGRIDCONFIGROOT') :
                 if os.path.exists ( os.environ['LHCBGRIDSYSROOT'] )  :
                     if os.path.exists ( os.environ['LHCBGRIDCONFIGROOT'] )  :
                         #
                         ## Use Oracle if possible
                         CondDB ( UseOracle = True  )
-
+                        logger.info('Oracle DB will be used')
+                        
+                    
     ## Reset all DaVinci sequences 
     def _action ( ) :
         """
@@ -309,14 +324,14 @@ def configure ( options , arguments ) :
             m = MessageSvc ( OutputLevel = options.OutputLevel )
             
             from GaudiConf import IOHelper
-            ioh = IOHelper ( Input = options.Persistency ) 
+            ioh = IOHelper () 
             ioh.setupServices()
             
     ## prepare to copy good/marked/tagged evenst
     if hasattr ( options, 'OutputFile' ) and options.OutputFile :
         from Bender.Utils import copyGoodEvents
         if 0 <= options.OutputFile.find ( '.' ) : 
-            copyGoodEvents ( options.OutputFile ) 
+            copyGoodEvents (             options.OutputFile         ) 
         else :
             copyGoodEvents ( "%s.%s" % ( options.OutputFile , ext ) ) 
 
@@ -329,8 +344,9 @@ def configure ( options , arguments ) :
     ## set input data
     from Bender.Main import setData 
     setData ( arguments , catalogs , options.Castor  )
-    
-    
+
+    if not options.Quiet : print daVinci
+        
 # =============================================================================
 if '__main__' == __name__ :
     
@@ -371,14 +387,13 @@ if '__main__' == __name__ :
     else                  : from Bender.Main     import *
     
     ## instantiate the application manager 
-    gaudi=appMgr ()
+    gaudi  = appMgr ()
     
     evtSel = gaudi.evtSel() 
 
     ## initialize and read the first event
-    gaudi.run(1)
+    run ( 1 )
     
-        
 # =============================================================================
 # The END 
 # =============================================================================

@@ -294,39 +294,11 @@ def trgDecs ( self            ,
         
     if not isinstance ( triggers , dict ) : 
         return self.Warning ( 'Invalid argument "triggers"' , SUCCESS )
+
+    #
+    ## print tistos-statistics 
+    tistos_print ( triggers , self.Warning ) 
     
-    VE = cpp.Gaudi.Math.ValueWithError
-    be = cpp.Gaudi.Math.binomEff 
-
-    for part in triggers :
-        
-        trigs = self.triggers[part]
-        
-        print 90*'*'
-        print ' Triggers for ', part 
-        print 90*'*'
-        
-        if not isinstance ( trigs , dict ) : 
-            self.Warning ( 'Invalid key "%s"' % part  , SUCCESS )
-            continue
-        
-        tkeys = trigs.keys()
-        tkeys.sort()
-
-        for k in tkeys :
-            
-            trg = trigs[ k ]            
-            tot  = trg['TOTAL']
-            print k , part, '  #lines: %5d #events %-5d ' %  ( max( len(trg)-1 , 0 ) , tot ) 
-            keys = trg.keys()
-            keys.sort()
-            
-            for k in keys :
-                v   = trg[k]
-                eff = be ( v , tot ) * 100 
-                print ' %s  \t %s ' % ( eff.toString ("(%6.2f +-%5.2f )") , k ) 
-
-
     print 90*'*'
 
     import shelve
@@ -664,6 +636,141 @@ def _tisTosFini ( self , triggers = None ) :
     if hasattr ( self ,   'tistos' ) : self .   tistos = None
     
     return SUCCESS 
+
+# =============================================================================
+## print tis-tos statistics
+#
+#  @code
+#
+#  >>> tistos = ...
+#  >>> tistos_print ( tistos )
+#
+#  @endcode
+# 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2012-03-23  
+# 
+def tistos_print ( triggers , warn = None ) :
+    """
+    print tis-tos statistic
+    
+    >>> tistos = ...
+    >>> tistos_print ( tistos )
+    
+    """
+    VE = cpp.Gaudi.Math.ValueWithError
+    be = cpp.Gaudi.Math.binomEff 
+    
+    for part in triggers :
+        
+        trigs = triggers[part]
+        
+        print 90*'*'
+        print ' Triggers for ', part 
+        print 90*'*'
+        
+        if not isinstance ( trigs , dict ) : 
+            if warn :  warn ( 'Invalid key "%s"' % part  , SUCCESS )
+            else    :  print  'Invalid key "%s"' % part 
+            continue
+        
+        tkeys = trigs.keys()
+        tkeys.sort()
+        
+        for k in tkeys :
+            
+            trg = trigs[ k ]            
+            tot  = trg['TOTAL']
+            print k , part, '  #lines: %5d #events %-5d ' %  ( max( len(trg)-1 , 0 ) , tot ) 
+            keys = trg.keys()
+            keys.sort()
+            
+            for k in keys :
+                v   = trg[k]
+                eff = be ( v , tot ) * 100 
+                print ' %s  \t %s ' % ( eff.toString ("(%6.2f +-%5.2f )") , k ) 
+                
+                
+    print 90*'*'
+
+# =============================================================================
+## merge tistos data-bases
+#
+#  @code
+#
+#    >>> db1 = ...
+#    >>> db2 = ...
+#    >>> merged = tistos_merge ( db1 , db2 )
+#
+#    >>> merged = tistos_merge ( [ 'db1' , 'db2' , 'db3'] ) 
+#
+#  @endcode 
+# 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2012-03-23  
+# 
+def tistos_merge ( dbase , tistos = {} ) :
+    
+    import shelve, os, copy  
+
+    ## the actual merge 
+    if isinstance ( dbase , dict )  :
+        merged = copy.deepcopy ( tistos )
+        
+        ## loop over particles 
+        for particle in dbase :
+            ## new key ? 
+            if not merged.has_key( particle ) :
+                merged[particle] = copy.deepcopy ( dbase[particle] ) 
+                continue             
+            trigs   = dbase  [ particle ]
+            trigs_m = merged [ particle ]
+            ## loop over trigger-sets 
+            for t in trigs_n :
+                ## new key?
+                if not trigs_m.has_key ( t ) :
+                    trigs_m [ t ] = copy.deepcopy ( trigs[t] )
+                    continue 
+                trg   = trigs   [t]
+                trg_m = trigs_m [t]
+                ## loop over trigger lines 
+                for k in trg :
+                    ## new key 
+                    if not trg_m.has_key ( k ) :
+                        trg_m [ k ] = copy.deepcopy ( trg[k] )
+                        continue
+                    cnt       = trg[k]  ## the actual counter                
+                    trg_m[k] += cnt     ## update the counter 
+
+        return merged
+
+    ## db-name 
+    if isinstance ( dbase , str )  :
+        #
+        dbase = os.path.expandvars ( dbase)
+        dbase = os.path.expanduser ( dbase )
+        dbase = shelve.open ( dbase ,  'r' )
+        #
+        return tistos_merge ( dbase , tistos )
+    
+    ## extract the dictionary from db 
+    if isinstance ( dbase , shelve.Shelf )  :
+        #
+        try    :
+            tt = dbase['tistos']
+        except :
+            tt = {}
+            #
+        return tistos_merge ( tt , tistos )
+        
+    ## merge the sequence 
+    if isinstance ( dbase , ( list , tuple ) ) or hasattr ( dbase , '__iter__' ) :
+        tt = tistos
+        for db in dbase : tt = tistos_merge ( db , tt )
+        return tt 
+    
+    return tistos 
+        
     
 # =============================================================================
 Algo.decisions         =  decisions

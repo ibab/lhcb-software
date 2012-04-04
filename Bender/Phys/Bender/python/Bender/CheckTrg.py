@@ -67,8 +67,12 @@ __all__     = ()  ## nothing to import
 __usage__   = 'CheckTrg [options] line file1 [ file2 [ file3 [ file4 ....'
 # =============================================================================
 import ROOT 
-
-
+# =============================================================================
+## logging
+# =============================================================================
+from Bender.Logger import getLogger 
+logger = getLogger( __name__ )
+# =============================================================================
 ## postpone the massive import from Bender 
 def chkTrg  ( ) :
     
@@ -231,7 +235,6 @@ if '__main__' == __name__ :
     daVinci = DaVinci (
         DataType        = options.DataType         ,
         Simulation      = options.Simulation       ,
-        Persistency     = options.Persistency      ,
         EventPreFilters = fltrs.filters('Filters') ,
         InputType       = InputType                ,
         Lumi            = False          
@@ -244,16 +247,16 @@ if '__main__' == __name__ :
             #
             from Configurables import CondDB    
             CondDB ( UseLatestTags = [ options.DataType ] )
-            import os 
-            if os.environ.has_key('LHCBGRIDSYSROOT') :
+            import os
+            if options.UseOracle and os.environ.has_key('LHCBGRIDSYSROOT') :
                 if os.environ.has_key('LHCBGRIDCONFIGROOT') :
                     if os.path.exists ( os.environ['LHCBGRIDSYSROOT'] )  :
                         if os.path.exists ( os.environ['LHCBGRIDCONFIGROOT'] ) :
                             #
                             ## Use Oracle if possible
-                            #
                             CondDB ( UseOracle = True  )
-
+                            logger.info('Oracle DB will be used')
+                            
 
     if options.RootInTES: 
         # ------- decoding set-up start ----------
@@ -261,6 +264,7 @@ if '__main__' == __name__ :
         #from Bender.uDstTisTos import configureL0AndHltDecoding
         from Bender.MicroDST import uDstConf 
         uDstConf(options.RootInTES)
+        logger.info('Reconfigure uDST')
         # ------- decoding set-up end  -----------
         
     
@@ -317,8 +321,8 @@ if '__main__' == __name__ :
     # dod.Dump = True
     
     print 90*'*'
-    print '  Line     : ' , Line
-    print '  RootInTES: ' , rootInTES
+    logger.info ( '  Line     : %s' %  Line     ) 
+    logger.info ( '  RootInTES: %s' % rootInTES ) 
     print 90*'*'
     
     alg.trgDecs()
