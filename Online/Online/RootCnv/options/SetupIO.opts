@@ -13,3 +13,4 @@ ReadAlg.OutputLevel              = 4;
 RootCnvSvc.CacheSize             = 50000000;
 RootCnvSvc.GlobalCompression     = "LZMA:3";
 ApplicationMgr.SvcOptMapping    += { "Gaudi::MultiFileCatalog/FileCatalog", "Gaudi::IODataManager/IODataManager" };
+ChronoStatSvc.OutputLevel        = 4;

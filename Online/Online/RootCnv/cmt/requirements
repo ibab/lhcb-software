@@ -24,7 +24,7 @@ library RootCnv ../components/*.cpp
 macro_append RootCnv_pp_cppflags ' -D__POOL_COMPATIBILITY -D$(GaudiPolicy_project_release) '
 apply_pattern component_library library=RootCnv
 macro_append  RootCnv_dependencies  " RootCnvLib "
-###macro_append  MDF_cppflags "" target-vc9 " -wd4996 "
+macro_append RootCnv_pp_cppflags ' -DROMON_SYS_STANDALONE '
 
 application gaudi_merge ../merge/merge.cpp
 macro_append gaudi_merge_dependencies  " RootCnvLib "
