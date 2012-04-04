@@ -3,6 +3,10 @@
 ! Package Manager : Patrick Robbe & M-H. Schune
 !----------------------------------------------------------------------------
 
+! 2012-04-04 - Patrick Robbe
+ - L0CaloCheckCalibCte.cpp: correct ADC -> L0ADC conversion for 
+   large calibration constas (>255)
+
 ! 2012-03-28 - Patrick Robbe
  - L0CaloAlg.h/.cpp: add zero-suppression threshold for the emulator of
    L0Calo data.

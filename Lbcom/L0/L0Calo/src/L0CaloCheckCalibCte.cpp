@@ -128,17 +128,25 @@ int L0CaloCheckCalibCte::l0adcFromAdc( const int adc ,
   if ( adc < 0 ) return 0 ;
 
   unsigned long calibCte = m_calo -> cellParam( id ).l0Constant() ;
-  
+
+  int theAdc = adc ;
+
+  if ( calibCte > 255 ) { 
+    theAdc = 4 * adc ;
+    if ( ( adc & 0xC00 ) != 0 ) 
+      theAdc = 0xFFF ;
+    calibCte = calibCte / 4 ;
+  }
   
   unsigned long v1, v2, v3, v4, v5, v6, v7, v8 ;
-  v1 = adc ;
-  v2 = ( adc << 1 ) ;
-  v3 = ( adc << 2 ) ;
-  v4 = ( adc << 3 ) ;
-  v5 = ( adc << 4 ) ;
-  v6 = ( adc << 5 ) ;
-  v7 = ( adc << 6 ) ;
-  v8 = ( adc << 7 ) ;
+  v1 = theAdc ;
+  v2 = ( theAdc << 1 ) ;
+  v3 = ( theAdc << 2 ) ;
+  v4 = ( theAdc << 3 ) ;
+  v5 = ( theAdc << 4 ) ;
+  v6 = ( theAdc << 5 ) ;
+  v7 = ( theAdc << 6 ) ;
+  v8 = ( theAdc << 7 ) ;
   
   unsigned long s1, s2, s3, s4, s5, s6, s7, s8 ;
   s1 = calibCte & 0x1 ;
