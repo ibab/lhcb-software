@@ -20,6 +20,7 @@ use     DigiEvent       v*      Event
 use     RecEvent        v*      Event
 use	L0Event		v*	Event
 use     CaloUtils       v*      Calo
+use     DAQUtils        v*      DAQ
 
 # ============================================================================
 # Own include-files 

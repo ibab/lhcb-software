@@ -3,17 +3,23 @@
 CaloBanksHandler.Members = {"GaudiSequencer/PrsBanksHandler",
                             "GaudiSequencer/EcalBanksHandler",
                             "GaudiSequencer/HcalBanksHandler"};
+
+
 CaloBanksHandler.IgnoreFilterPassed = true; // the 3 sequences have to run independantly
 
 EcalBanksHandler.Members = { "CheckCaloBank/EcalCheckBanks",      // Check if compressed banks exist. If not ...
                              "CaloZSupAlg/EcalADCs",                      // ... Ecal CaloAdcs from packed bank
                              "CaloTriggerAdcsFromRawAlg/EcalTrigFromRaw", // ... Ecal L0CaloAdcs from packed bank
+                             "RawBankReadoutStatusConverter/EcalProcStatus", // ... Convert ReadoutStatus to ProcStatus
+                             "RawBankReadoutStatusFilter/EcalROFilter"     , // ... stop processing in case of ReadoutStatus != OK
                              "CaloFillRawBuffer/EcalFillRawBuffer",       // ... Fill RawBank::EcalE & EcalTrig
                              "bankKiller/RemoveEcalPackedBanks"};         // ... and remove packed bank
 
 HcalBanksHandler.Members = { "CheckCaloBank/HcalCheckBanks",     // ...  Check if compressed banks exist. If not ...
                              "CaloZSupAlg/HcalADCs",                      // ... Ecal CaloAdcs from packed bank
                              "CaloTriggerAdcsFromRawAlg/HcalTrigFromRaw", // ... Ecal L0CaloAdcs from packed bank
+                             "RawBankReadoutStatusConverter/HcalProcStatus", // ... Convert ReadoutStatus to ProcStatus
+                             "RawBankReadoutStatusFilter/HcalROFilter"     , // ... stop processing in case of ReadoutStatus != OK
                              "CaloFillRawBuffer/HcalFillRawBuffer",       // ... Fill RawBank::EcalE & EcalTrig
                              "bankKiller/RemoveHcalPackedBanks"};         // ... and remove packed bank
 
@@ -21,6 +27,8 @@ PrsBanksHandler.Members = { "CheckCaloBank/PrsCheckBanks",        // ...Check if
                             "CaloDigitsFromRaw/PrsADCs",                   // ... Prs CaloAdcs from packed bank
                             "CaloTriggerBitsFromRawAlg/PrsL0Bit",          // ... Prs L0PrsSpdHit from packed bank
                             "CaloTriggerBitsFromRawAlg/SpdL0Bit",          // ... Spd L0PrsSpdHit from packed bank
+                            "RawBankReadoutStatusConverter/PrsProcStatus", // ... Convert ReadoutStatus to ProcStatus
+                            "RawBankReadoutStatusFilter/PrsROFilter"     , // ... stop processing in case of ReadoutStatus != OK
                             "CaloFillPrsSpdRawBuffer/PrsSpdFillRawBuffer", // ... Fill RawBank::PrsE & PrsTrig
                             "bankKiller/RemovePrsPackedBanks"};            // ... and remove packed bank
 
@@ -35,5 +43,22 @@ PrsADCs.OutputType="ADCs";
 //CaloBanksHandler.MeasureTime=true;
 //CaloFillCompressedBanks.MeasureTime=true;
 
+
+// Readout Status   -> ProcStatus
+EcalProcStatus.System="Ecal";
+EcalProcStatus.BankTypes={"EcalPacked"};
+HcalProcStatus.System="Hcal";
+HcalProcStatus.BankTypes={"HcalPacked"};
+PrsProcStatus.System="Prs";
+PrsProcStatus.BankTypes={"PrsPacked"};
+
+
+// Readout Status Filter (switch off conversion in case of corrupted bank)
+EcalROFilter.BankType=21; // EcalPacked
+EcalROFilter.RejectionMask=4095;   // stop in case of any problem
+HcalROFilter.BankType=22; // HcalPacked
+HcalROFilter.RejectionMask=4095;   // stop in case of any problem
+PrsROFilter.BankType=23; // PrsPacked
+PrsROFilter.RejectionMask=4095;   // stop in case of any problem
 
 
