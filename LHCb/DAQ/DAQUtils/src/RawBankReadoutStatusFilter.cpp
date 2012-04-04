@@ -73,15 +73,14 @@ StatusCode RawBankReadoutStatusFilter::execute() {
     status = statuss->object( LHCb::RawBank::BankType(m_type) );  
   } else {
     Warning("No Readout status container found at "+ LHCb::RawBankReadoutStatusLocation::Default 
-            + " -> will act as the bank " + Gaudi::Utils::toString(m_type) + " was Missing !!",StatusCode::SUCCESS).ignore();    
-    value = LHCb::RawBankReadoutStatus::Missing;
+            + " for the bank " + Gaudi::Utils::toString(m_type),StatusCode::SUCCESS).ignore();    
+    value = LHCb::RawBankReadoutStatus::MissingStatus;
   }
   if(NULL != status){
     value = status->status();
   }else{ 
-    Warning("No Readout status found for bankType "+ Gaudi::Utils::toString(m_type) 
-            +" -> will act as the bank  was Missing !!",StatusCode::SUCCESS).ignore(); 
-    value = LHCb::RawBankReadoutStatus::Missing;
+    Warning("No Readout status found for bankType "+ Gaudi::Utils::toString(m_type),StatusCode::SUCCESS).ignore(); 
+    value = LHCb::RawBankReadoutStatus::MissingStatus;
   }
 
   int decision = value & m_mask;  

@@ -77,7 +77,7 @@ StatusCode RawBankReadoutStatusConverter::execute() {
   LHCb::RawBankReadoutStatuss*  rStats = NULL;
   if( exist<LHCb::RawBankReadoutStatuss>(LHCb::RawBankReadoutStatusLocation::Default) )
     rStats = get<LHCb::RawBankReadoutStatuss>(LHCb::RawBankReadoutStatusLocation::Default);
-  if( rStats->empty() )return StatusCode::SUCCESS;  
+  if( rStats ==NULL || rStats->empty() )return StatusCode::SUCCESS;  
   
   // Access procStatus
   LHCb::ProcStatus* pStat = getOrCreate<LHCb::ProcStatus,LHCb::ProcStatus>(LHCb::ProcStatusLocation::Default);

@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 
+! 2012-04-03 - Olivier Deschamps
+  - RawBankReadoutStatusFilter :  set status to MissingStatus when no ReadoutStatus container is found (was "Missing" bank)
+
 ! 2012-03-30 - Olivier Deschamps
   - new algorithm : RawBankReadoutStatusConverter  : convert ROStatus to ProcStatus
   - OdinTypesFilter : add filter on CalibrationTypes
