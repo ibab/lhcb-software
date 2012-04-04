@@ -22,13 +22,13 @@ __all__ = ('HighPtJetsLinesConf',
 confdict = {
        'MinWeightSeedCut' : 6
     ,  'ConeExtFactorCut' : 4.0
-    ,  'MaxDeltaPhiCut'   : 5.4
-    ,  'MaxDeltaEtaCut'   : 0.15
+    ,  'MaxDeltaPhiCut'   : 6.5
+    ,  'MaxDeltaEtaCut'   : 0.35
     ,  'Min1stJetPtCut'   : 10.0
-    ,  'Min2ndJetPtCut'   : 7.0
-    ,  'JetMultCut'       : 2
-    ,  'MaxRPVCut'        : 0.8
-    ,  'scale'            : 0.2
+    ,  'Min2ndJetPtCut'   : 0.0
+    ,  'JetMultCut'       : 1
+    ,  'MaxRPVCut'        : 0.5
+    ,  'scale'            : 0.1
  }
 
 class HighPtJetsLinesConf(LineBuilder) :
@@ -66,5 +66,6 @@ class HighPtJetsLinesConf(LineBuilder) :
 
     def _makeHighPtJetLine(self, name):
         return StrippingLine(name ,
+                             HLT = "HLT_PASS_RE('Hlt2HighPtJets.*Decision')",
                              prescale = self.__confdict__['scale'],
                              selection = self._makeHighPtJetSel(name))

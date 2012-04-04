@@ -5,6 +5,10 @@
 ! -----------------------------------------------------------------------------
 
 !========================= StrippingSelections v3r12 2012-04-01 =========================
+
+! 2012-04-04 - Marcin Kucharczyk
+ - Retune StrippingHighPtJets and StrippingInclbJets wrt new dedicated trigger rates
+
 ! 2012-04-01 - Jibo He
  - __init__.py 
   . Added StrippingCrossSectionB2DMuNuX
