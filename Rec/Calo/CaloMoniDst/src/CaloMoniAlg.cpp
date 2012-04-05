@@ -90,6 +90,7 @@ CaloMoniAlg::CaloMoniAlg( const std::string& name,
   m_areas.push_back("Outer");
   m_areas.push_back("Middle");
   m_areas.push_back("Inner");  
+
   
   //set default detectorName
   m_detData = LHCb::CaloAlgUtils::CaloNameFromAlg( name );

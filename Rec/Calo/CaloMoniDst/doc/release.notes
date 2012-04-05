@@ -4,6 +4,11 @@
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
 
+
+! 2012-04-05 - Olivier Deschamps
+ - SpdMonitor : set splitArea=true as the default for Calo2Dview histos 
+
+
 !========================= CaloMoniDst v5r9 2011-09-06 =========================
 ! 2011-09-03 - Olivier Deschamps
  - fix CaloAlignment.cpp

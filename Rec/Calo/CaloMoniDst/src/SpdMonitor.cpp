@@ -37,7 +37,9 @@ public:
 protected:
   SpdMonitor ( const std::string& name, ISvcLocator* pSvc )
     : CaloMoniAlg ( name , pSvc )
-    , m_nEvents   ( 0 ) {};
+    , m_nEvents   ( 0 ) {
+    m_split=true;  // Area splitting is the default !
+  };
   virtual ~SpdMonitor() {};
   
 private:   
