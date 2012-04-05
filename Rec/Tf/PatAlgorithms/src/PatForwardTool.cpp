@@ -560,10 +560,10 @@ void PatForwardTool::fillXList ( PatFwdTrackCandidate& track,
           if ( !hit->hit()->isYCompatible( yRegion, yCompat ) )
             continue;
 
-
           hit->setSelected( true );
           hit->setIgnored( false );
-
+          hit->setRlAmb( 0 );
+          
           if (hit->hit()->type() == Tf::RegionID::OT)
             if ( m_maxOTDrift < hit->driftDistance() ||
                  m_minOTDrift > hit->driftDistance() ) {
