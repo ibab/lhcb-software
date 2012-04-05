@@ -6,9 +6,9 @@
 
   <File ID="10000001-6BB3-DE11-9269-001EC9AD0A4E">
     <physical>
-
-      <pfn filetype="MDF" name="file:///castorfs/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/78330/078330_0000000001.raw"/>
+      <pfn filetype="MDF" name="file:///daqarea/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/94009/094009_0000000043.raw" />
 <!--
+      <pfn filetype="MDF" name="file:///castorfs/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/78330/078330_0000000001.raw"/>
       <pfn filetype="MDF" name="file:///daqarea/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/77360/077360_0000000002.raw" />
       <pfn filetype="MDF" name="file:///daqarea/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/73600/073600_0000000001.raw" />
       <pfn filetype="MDF" name="file:///daqarea/lhcb/data/2010/RAW/EXPRESS/LHCb/COLLISION10/70657/070657_0000000001.raw"/>

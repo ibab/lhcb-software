@@ -1,7 +1,7 @@
 #!/bin/bash
 . ${GAUDIONLINEROOT}/tests/cmt/preamble.sh
 export NODENAME=`python -c "print '$HOST'.split('.')[0]"`
-export PYTHONPATH=`cd ..;dirname $PWD`/InstallArea/python:${PYTHONPATH};
+export PYTHONPATH=`cd ..;dirname $PWD`/InstallArea/python:/group/online/dataflow/options/LHCb/RECONSTRUCTION:${PYTHONPATH};
 ulimit -d 2097152
 ulimit -m 2097152
 ulimit -v 2097152
@@ -12,9 +12,9 @@ start_task()
 }
 start_Brunel()
 {
-    start_task Brunel_0 "from Gaudi.Configuration import importOptions;importOptions('../python/BrunelOnline.py');"
-    start_task Brunel_1 "from Gaudi.Configuration import importOptions;importOptions('../python/BrunelOnline.py');"
-    start_task Brunel_2 "from Gaudi.Configuration import importOptions;importOptions('../python/BrunelOnline.py');"
+    start_task Brunel_0 "from Gaudi.Configuration import importOptions;importOptions('../python/TestBrunel.py');"
+    # start_task Brunel_1 "from Gaudi.Configuration import importOptions;importOptions('../python/BrunelOnline.py');"
+    # start_task Brunel_2 "from Gaudi.Configuration import importOptions;importOptions('../python/BrunelOnline.py');"
 }
 #
 start_task MbmEvents "import GaudiOnlineTests;GaudiOnlineTests.runRecBuffer()"
@@ -33,5 +33,9 @@ $BIGTERM MBMMon@${HOST}     -e "export UTGID=${NODENAME}/MBMMon;    exec -a \${U
 start_Brunel
 # start_task Mdf2Mbm "import GaudiOnlineTests;GaudiOnlineTests.runMDF2MBM(['Events'])"
 # start_task Mdf2Mbm "import GaudiOnlineTests;GaudiOnlineTests.runMDF2MBM2(['Events'])"
-# start_task Mdf2Mbm "import GaudiOnlineTests;GaudiOnlineTests.runMDF2MBMRepro(['Events'],'FID:10000001-6BB3-DE11-9269-001EC9AD0A4E')"
+
+sleep 40
+
+start_task Mdf2Mbm "import GaudiOnlineTests;GaudiOnlineTests.runMDF2MBMRepro(['Events'],'FID:10000001-6BB3-DE11-9269-001EC9AD0A4E')"
+
 tail -n 5 ${0}

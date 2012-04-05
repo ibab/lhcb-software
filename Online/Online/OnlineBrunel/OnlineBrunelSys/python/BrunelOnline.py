@@ -12,7 +12,7 @@ import Gaudi.Configuration as Gaudi
 import GaudiKernel
 from GaudiKernel.ProcessJobOptions import PrintOff,InstallRootLoggingHandler,logging
 
-PrintOff(999)
+#PrintOff(999)
 InstallRootLoggingHandler(level=logging.CRITICAL)
 
 processingType ='DataTaking'
@@ -74,20 +74,35 @@ def patchBrunel(true_online_version):
   import GaudiConf.DstConf
   import Brunel.Configuration
   from Configurables import CondDB, DstConf, HistogramPersistencySvc, EventLoopMgr
-
+  import OnlineEnv as Online
+  
   brunel = Brunel.Configuration.Brunel()
-  EventLoopMgr().OutputLevel = MSG_INFO
+
+  try:
+    brunel.DDDBtag    = Online.DDDBTag
+  except:
+    print "DDDBTag not found, use default"
+
+  try:
+    brunel.CondDBtag = Online.CondDBTag
+  except:
+    print "CondDBTag not found, use default"
 
   conddb = CondDB()
   conddb.IgnoreHeartBeat = True
 
   brunel.WriteFSR  = False # This crashes Jaap's stuff
 
-  EventLoopMgr().OutputLevel = MSG_ERROR
+  EventLoopMgr().OutputLevel = MSG_DEBUG #ERROR
   EventLoopMgr().Warnings    = False
+
+  from Configurables import EventClockSvc
+  EventClockSvc().InitialTime = 1322701200000000000
+
   
   if true_online_version:
     brunel.OutputLevel       = 999
+    #brunel.OutputLevel       = MSG_INFO
     brunel.PrintFreq         = -1
 
   if processingType == 'Reprocessing':
@@ -103,9 +118,10 @@ def patchBrunel(true_online_version):
     from Configurables import Serialisation, ProcessPhase
     brunel.WriteLumi = False
     brunel.Histograms = 'Online'
-    print '[WARN] Running brunel with histogram settings:Online'
+    ##print '[WARN] Running brunel with histogram settings:Online'
     sys.stdout.flush()
     Brunel.Configuration.Brunel.configureOutput = dummy
+    """
     ProcessPhase("Output").DetectorList += [ 'DST' ]
     brunel.setProp( 'DatasetName', 'GaudiSerialize' )
     DstConf().Writer       = 'DstWriter'
@@ -114,7 +130,7 @@ def patchBrunel(true_online_version):
     Serialisation().Writer = 'Writer'
     ##Serialisation().Explorer = True
     Serialisation()._ConfigurableUser__addPassiveUseOf(DstConf())
-    
+    """
   HistogramPersistencySvc().OutputFile = ""
   HistogramPersistencySvc().OutputLevel = MSG_ERROR
   return brunel
@@ -145,7 +161,7 @@ def setupOnline():
     sel.REQ1 = requirement
   app.EvtSel  = sel
   app.Runable = Online.evtRunable(mep)
-  app.Runable.NumErrorToStop = 1;
+  app.Runable.NumErrorToStop = -1;
   app.ExtSvc.append(mep)
   app.ExtSvc.append(sel)
   app.AuditAlgorithms = False
@@ -153,7 +169,8 @@ def setupOnline():
   Configs.MonitorSvc().OutputLevel = MSG_ERROR
   Configs.MonitorSvc().UniqueServiceNames = 1
   Configs.RootHistCnv__PersSvc("RootHistSvc").OutputLevel = MSG_ERROR
-  app.OutputLevel = MSG_WARNING
+  app.OutputLevel = MSG_DEBUG #WARNING
+  #app.OutputLevel = MSG_INFO
 
 #============================================================================================================
 def patchMessages():
@@ -163,16 +180,19 @@ def patchMessages():
 
         @author M.Frank
   """
+  import OnlineEnv as Online
   app=Gaudi.ApplicationMgr()
   Configs.AuditorSvc().Auditors = []
   app.MessageSvcType = 'LHCb::FmcMessageSvc'
   if Gaudi.allConfigurables.has_key('MessageSvc'):
     del Gaudi.allConfigurables['MessageSvc']
-  msg=Configs.LHCb__FmcMessageSvc('MessageSvc')
+  msg = Configs.LHCb__FmcMessageSvc('MessageSvc')
   msg.fifoPath      = os.environ['LOGFIFO']
   msg.LoggerOnly    = True
   msg.doPrintAlways = False
-  msg.OutputLevel   = MSG_WARNING
+  #  msg.OutputLevel   = MSG_WARNING
+  #  msg.OutputLevel   = Online.OutputLevel
+  msg.OutputLevel   = MSG_INFO
 
 #============================================================================================================
 def start():

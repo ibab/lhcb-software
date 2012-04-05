@@ -1,7 +1,6 @@
 #include "$PARTITIONOPTS"
 MessageSvc.OutputLevel            = @OnlineEnv.OutputLevel;
 MessageSvc.doPrintAlways          = True;
-//MessageSvc.OutputLevel            = 1;
 MessageSvc.fifoPath               = "$LOGFIFO";
 
 MEPManager.PartitionID            = @OnlineEnv.PartitionID;

@@ -85,14 +85,14 @@ class OnlineApplication:
     self.appMgr.HistogramPersistency = 'ROOT'
 
     forker = Configs.LHCb__CheckpointSvc("CheckpointSvc")
-    forker.NumberOfInstances   =  0
+    forker.NumberOfInstances   = 5
     forker.UseCores            = False
     forker.ChildSessions       = False
     forker.DumpFiles           = False
-    forker.Checkpoint          = "Checkpoint.data"
+    #forker.Checkpoint          = "Checkpoint.data"
     forker.PrintLevel          = 3  # 1=MTCP_DEBUG 2=MTCP_INFO 3=MTCP_WARNING 4=MTCP_ERROR
     forker.OutputLevel         = 2  # 1=VERBOSE 2=DEBUG 3=INFO 4=WARNING 5=ERROR 6=FATAL
-    forker.ExitAfterCheckpoint = True
+    #forker.ExitAfterCheckpoint = False
     self.appMgr.ExtSvc.append(forker)
 
     self.appMgr.SvcOptMapping.append('LHCb::OnlineEvtSelector/EventSelector')
@@ -227,5 +227,5 @@ if os.environ.has_key('MSGSVC') and os.environ['MSGSVC']=='LHCb::FmcMessageSvc':
   app.true_online_version = True
 msg=app.patchMessages()
 msg.doPrintAlways = True
-###msg.OutputLevel   = 3
+msg.OutputLevel   = 3
 app.start()
