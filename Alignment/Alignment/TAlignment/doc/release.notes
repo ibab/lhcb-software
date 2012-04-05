@@ -3,6 +3,9 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 
+! 2012-04-05 - Frederic Dupertuis
+ - add the 2012 IT survey xmls for Magnet On and Off conditions
+
 !========================= TAlignment v5r7 2012-03-28 =========================
 ! 2012-03-06 - Wouter Hulsbergen
  - add functionality to delay initialization of alignment frame till first event
