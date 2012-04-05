@@ -212,16 +212,39 @@ def pi0sMoni ( context ) :
     
     from Configurables import  CaloPi0Monitor
 
-    alg = getAlgo  ( CaloPi0Monitor   ,
+
+    alg = getAlgo ( GaudiSequencer    , 
+                    "DiPhotonMoni"   ,
+                    context           )
+
+    alg1 = getAlgo  ( CaloPi0Monitor   ,
                      'ResolvedPi0Mon' ,
                      context          )
+
+    alg2 = getAlgo  ( CaloPi0Monitor   ,
+                      'EtaMon' ,
+                      context          )
     
-    if not alg.isPropertySet('PhotonPtFilter') :
-        alg.PhotonPtFilter = 500.*MeV;
+    if not alg1.isPropertySet('PhotonPtFilter') :
+        alg1.PhotonPtFilter = 500.*MeV;
 
-    if not alg.isPropertySet('histoList') :
-        alg.histoList = [ "1", "2" , "3" , "4", "5", "6", "7" ]
+    if not alg1.isPropertySet('histoList') :
+        alg1.histoList = [ "1", "2" , "3" , "4", "5", "6", "7" ]
 
+
+    if not alg2.isPropertySet('PhotonMaxPtFilter') :
+        alg2.PhotonMaxPtFilter = 1000.*MeV;
+
+    if not alg2.isPropertySet('HistoMassMin') :
+        alg2.HistoMassMin = 400.*MeV;
+
+    if not alg2.isPropertySet('HistoMassMax') :
+        alg2.HistoMassMax = 700.*MeV;
+
+    if not alg2.isPropertySet('histoList') :
+        alg2.histoList = [ "1", "2" , "3" , "4", "5", "6", "7" ]
+
+    alg.Members = [ alg1 , alg2 ]
     setTheProperty ( alg , 'Context' , context )
     
     return alg

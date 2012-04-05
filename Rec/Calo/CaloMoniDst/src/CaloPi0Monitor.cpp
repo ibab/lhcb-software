@@ -33,13 +33,13 @@ public:
   virtual StatusCode initialize()
   { StatusCode sc = CaloMoniAlg::initialize(); // must be executed first
     if ( sc.isFailure() ) return sc; // error already printedby GaudiAlgorithm
-    hBook1( "1", "pi0 multiplicity " + inputData() , m_multMin  , m_multMax , m_multBin );
-    hBook1( "2", "pi0 energy " + inputData()       , m_energyMin  , m_energyMax , m_energyBin );
-    hBook1( "3", "pi0 et     " + inputData()       , m_etMin  , m_etMax , m_etBin );
-    hBook1( "4", "pi0 Mass   " + inputData()       , m_massMin  , m_massMax , m_massBin );
-    hBook1( "5", "gg combinatorial background" + inputData()       , m_massMin  , m_massMax , m_massBin );
-    hBook1( "6", "bkg-substracted pi0 mass   " + inputData()       , m_massMin  , m_massMax , m_massBin );
-    hBook1( "7", "pi0 mass  for |y|-gamma > " + Gaudi::Utils::toString(m_yCut) + " "  
+    hBook1( "1", "(gg) multiplicity " + inputData() , m_multMin  , m_multMax , m_multBin );
+    hBook1( "2", "(gg) energy " + inputData()       , m_energyMin  , m_energyMax , m_energyBin );
+    hBook1( "3", "(gg) et     " + inputData()       , m_etMin  , m_etMax , m_etBin );
+    hBook1( "4", "(gg) mass   " + inputData()       , m_massMin  , m_massMax , m_massBin );
+    hBook1( "5", "(gg) combinatorial background" + inputData()       , m_massMin  , m_massMax , m_massBin );
+    hBook1( "6", "bkg-substracted (gg) mass   " + inputData()       , m_massMin  , m_massMax , m_massBin );
+    hBook1( "7", "(gg) mass  for |y|-gamma > " + Gaudi::Utils::toString(m_yCut) + " "  
             + inputData()  , m_massMin  , m_massMax , m_massBin );
     m_calo = getDet<DeCalorimeter>(DeCalorimeterLocation::Ecal);
     // get tool
@@ -69,6 +69,7 @@ protected:
     declareProperty( "AllowConverted"   , m_conv = false);
     declareProperty( "RejectedYBand"    , m_yCut = 300);
     declareProperty( "PhotonPrsFilterMin", m_prsPhoton = 10*Gaudi::Units::MeV);
+    declareProperty( "PhotonMaxPtFilter", m_ptMaxPhoton= 0);
 
     m_multMax = 150;
     addToInputs( LHCb::CaloAlgUtils::CaloHypoLocation("Photons",context() ) );
@@ -85,6 +86,7 @@ private:
   CaloPi0Monitor &operator=( const CaloPi0Monitor& );
 private:
   double m_ptPhoton;
+  double m_ptMaxPhoton;
   double m_isol;
   double m_prsPhoton;
   DeCalorimeter* m_calo;
@@ -147,6 +149,7 @@ StatusCode CaloPi0Monitor::execute()
       if ( 0 == *g2 ) continue;
       LHCb::CaloMomentum momentum2( *g2 );
       if(momentum2.pt() < m_ptPhoton)continue;
+      if( std::max(momentum1.pt(),momentum2.pt()) < m_ptMaxPhoton)continue;
       if( !m_conv && m_toSpd->multiplicity ( *(*g2) , "Spd"  ) > 0 )continue;
       if( m_toPrs->energy ( *(*g1) , "Prs"  ) < m_prsPhoton )continue;
       Gaudi::LorentzVector v2( momentum2.momentum() );

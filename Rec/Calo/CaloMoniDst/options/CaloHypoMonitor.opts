@@ -3,9 +3,16 @@ CaloHypoMon.Members    += { "CaloHypoMonitor/ElectronMon"
                             ,"CaloHypoMonitor/SplitPhotonMon" 
                             ,"CaloHypoMonitor/MergedPi0Mon"
                             ,"CaloPi0Monitor/ResolvedPi0Mon" 
+                            ,"CaloPi0Monitor/EtaMon" 
 };             
 
 ResolvedPi0Mon.PhotonPtFilter = 500.*MeV;
+
+// Eta->gg
+EtaMon.PhotonMaxPtFilter=1000.*MeV;
+EtaMon.HistoMassMin=400.*MeV;
+EtaMon.HistoMassMax=700.*MeV;
+
 
 // Moning of different Hypotheses
 //ElectronMon.Input    = "Rec/Calo/Electrons";
