@@ -1130,7 +1130,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         elif (self.__shortTrackLocation() == Hlt2ForwardTracksName) :
             trackRecoSequence        =     [self.__hlt2ForwardTracking()]
         elif (self.__shortTrackLocation() == Hlt2DownstreamTracksName ) :
-            trackRecoSequence         =    [self.__hlt2DownstreamTracking()]
+            trackRecoSequence         =    [self.__hlt2ForwardTracking(), self.__hlt2DownstreamTracking()]
         # Do the clone killing if required 
         if self.getProp("DoCloneKilling") : 
             trackRecoSequence        +=      [cloneKiller]
