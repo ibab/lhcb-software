@@ -279,7 +279,7 @@ class Hlt2CharmHadLambdaCLambdaHLinesConf(HltLinesConfigurableUser) :
                      "& (VFASPF(VCHI2PDOF) < %(LambdaCMotherVertexChi2)s)" \
                      "& (PT > %(LambdaCMotherPT)s)" \
                      "& (MIPCHI2DV(PRIMARY) < %(LambdaCMotherMIPChi2)s)" \
-                     "& ((CHILD( VFASPF(VZ) , 'Lambda0' == ID ) - VFASPF(VZ)) > %(Lambda0LLZDiff)s)" % self.getProps()
+                     "& ((CHILD( VFASPF(VZ) , 'Lambda0' == ABSID ) - VFASPF(VZ)) > %(Lambda0LLZDiff)s)" % self.getProps()
 
         # Daughter cuts defined in bachelor pion/kaon filter      
         
@@ -312,7 +312,7 @@ class Hlt2CharmHadLambdaCLambdaHLinesConf(HltLinesConfigurableUser) :
                      "& (VFASPF(VCHI2PDOF) < %(LambdaCMotherVertexChi2)s)" \
                      "& (PT > %(LambdaCMotherPT)s)" \
                      "& (MIPCHI2DV(PRIMARY) < %(LambdaCMotherMIPChi2)s)" \
-                     "& ((CHILD( VFASPF(VZ) , 'Lambda0' == ID ) - VFASPF(VZ)) > %(Lambda0DDZDiff)s)" % self.getProps()
+                     "& ((CHILD( VFASPF(VZ) , 'Lambda0' == ABSID ) - VFASPF(VZ)) > %(Lambda0DDZDiff)s)" % self.getProps()
 
         # Daughter cuts defined in bachelor pion/kaon filter      
         
