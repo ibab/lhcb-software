@@ -5,6 +5,9 @@ Purpose: LHCb reconstruction program
 
 - Changes to references since v42r2p1
   . Add algorithms to convert ROStatus to ProcStatus (CaloDAQ, DAQUtils)
+  . add eta->gg monitoring (CaloMoniDst)
+  . Fix in PatForward: left-right ambiguity bit of PatFwdHits was not being
+    reset when reusing hits (PatAlgorithms)
 
 </PRE><H1><A NAME=v42r2p1>2012-04-04 Brunel v42r2p1</A></H1><PRE>
 This version uses projects LCG 62b, Gaudi v23r2, LHCb v34r2, Lbcom v12r2,
