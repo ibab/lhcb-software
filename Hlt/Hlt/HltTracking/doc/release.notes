@@ -5,6 +5,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2012-04-06 - V. Gligorov
+ - Fix independence problem in downstream tracking 
+
 !========================= HltTracking v9r14 2012-03-20 =========================
 ! 2012-03-20 - S. Stahl
  - Set p cut of Forward tracking to 1 GeV in Hlt1TrackUpgradeConf.py 
