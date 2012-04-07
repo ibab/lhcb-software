@@ -3,6 +3,11 @@
 ! Purpose     : TisTosTobbing of the trigger 
 ! =============================================================================
 
+! 2012-04-07 - Tomasz Skwarnicki
+ - collect Calo EM info from ProtoParticle::ExtraInfo if available instead of Hypos
+ - print ERROR if no Calo info, or no Muon info found while requested
+ - add protection against missing CaloClusters while CaloHypo present
+
 !========================= TisTosTobbing v7r5 2011-12-15 =========================
 
 ! 2011-12-05 - Patrick Koppenburg

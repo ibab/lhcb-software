@@ -151,66 +151,128 @@ std::vector<LHCb::LHCbID> ParticleTisTos::protoParticleHits(const ProtoParticle 
   // Ecal via CaloHypo
   if( ( m_TOSFrac[kEcal] > 0.0 && (m_caloClustForCharged||m_caloClustForNeutral)  ) ){
     if ( msgLevel(MSG::VERBOSE) ) verbose() << " protoParticleHits ECAL VIA CaloHypo " << endmsg;
-    const SmartRefVector< LHCb::CaloHypo > &caloVec = pp.calo();
-    if( caloVec.size() > 0 ){
-      const LHCb::CaloHypo*   hypo  = *(caloVec.begin());
-      if( hypo ){                
-        LHCb::CaloCellID centerCell,centerCell1,dummyCell;      
-        if( 0!=onit && m_caloClustForCharged ){
-          if( LHCb::CaloHypo::EmCharged == hypo->hypothesis() ){
-            if ( msgLevel(MSG::VERBOSE) ) verbose() << " protoParticleHits EmCharged " << endmsg;
-            if( (hypo->clusters().begin())->target() ){    
-              centerCell  = (*(hypo->clusters().begin()))->seed();
-            }                    
-          }
-        } else if( m_caloClustForNeutral ){
-          if( LHCb::CaloHypo::Photon == hypo->hypothesis() ){
-            if ( msgLevel(MSG::VERBOSE) ) verbose() << " protoParticleHits Photon " << endmsg;
-            if( (hypo->clusters().begin())->target() ){              
-              centerCell  = (*(hypo->clusters().begin()))->seed();
-            }                    
-          } else if (  LHCb::CaloHypo::Pi0Merged == hypo->hypothesis() ){
-            if ( msgLevel(MSG::VERBOSE) ) verbose() << " protoParticleHits Pi0Merged " << endmsg;
-            // Split Photons
-            const SmartRefVector<LHCb::CaloHypo>& hypos = hypo->hypos();
-            if( hypos.size()>1 ){ 
-              const LHCb::CaloHypo* g1 = *(hypos.begin() );
-              if( g1 ){              
-                if( (g1->clusters().begin())->target() )
-                  centerCell  = (*(g1->clusters().begin()))->seed();
-              }            
-              const LHCb::CaloHypo* g2 = *(hypos.begin()+1 );
-              if( g2 ){
-                if( (g2->clusters().begin())->target() )              
-                  centerCell1 = (*(g2->clusters().begin()))->seed();
-              }
-            }                    
-          }        
+
+
+    // new Apr 6, 2012:  collect calo cell IDs from ProtoParticle::ExtraInfo if available
+    LHCb::CaloCellID caloCell( LHCb::CaloCellID::ContentType(0) );
+    bool caloOK(false);
+
+    if( 0!=onit ){
+      caloOK = true; // don't care about calo info for charged if not found (we also project tracks!)
+      if( m_caloClustForCharged )
+        caloCell = LHCb::CaloCellID( LHCb::CaloCellID::ContentType( pp.info( LHCb::ProtoParticle::CaloChargedID, 0 ) ) );
+      //deb info() << " charged " << caloCell.all() << endmsg;
+    } else {
+      if( m_caloClustForNeutral ){
+        caloCell = LHCb::CaloCellID( LHCb::CaloCellID::ContentType( pp.info( LHCb::ProtoParticle::CaloNeutralID, 0 ) ) );
+        //deb info() << " neutral " << caloCell.all() << endmsg;
+      } else {
+        caloOK = true; // don't want calo info for neutrals
+      }
+    }
+    // deb caloCell = LHCb::CaloCellID( LHCb::CaloCellID::ContentType(0) );
+    if( caloCell.all() != 0 ){
+      caloOK = true;      
+      hits.push_back(caloCell);      
+      if( extend ){        
+        if( m_ecalDeCal==0 ){
+          m_ecalDeCal = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal );
+        }        
+        BOOST_FOREACH( LHCb::CaloCellID cell,m_ecalDeCal->neighborCells(caloCell))
+        {
+          hits.push_back(cell);
         }
-        
-        if( !(centerCell == dummyCell) ){
-          hits.push_back(centerCell);
-          if( extend ){
-            if( m_ecalDeCal==0 ){ m_ecalDeCal = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal ); }
-            BOOST_FOREACH( LHCb::CaloCellID cell,m_ecalDeCal->neighborCells(centerCell))
-              {
-                hits.push_back(cell);
+      }
+    // ExtraInfo failed: dig into CaloHypo and Clusters only in case of neutrals when requsted
+    } else if( 0==onit && m_caloClustForNeutral ) {  
+      
+      //deb info() << " trying calo hypos" << endmsg;
+
+      const SmartRefVector< LHCb::CaloHypo > &caloVec = pp.calo();
+      if( caloVec.size() > 0 ){
+        const LHCb::CaloHypo*   hypo  = *(caloVec.begin());
+        if( hypo ){                
+          //deb info() << " inside hypo" << endmsg;
+          if( hypo->clusters().size() > 0 ){          
+            //deb info() << " inside hypo passed clusters " << endmsg;
+            LHCb::CaloCellID centerCell,centerCell1,dummyCell;      
+            //       next if always false: left in for historical reasons
+            if( 0!=onit && m_caloClustForCharged ){
+              if( LHCb::CaloHypo::EmCharged == hypo->hypothesis() ){
+                //deb info() << " charged hypo " << endmsg;
+                if ( msgLevel(MSG::VERBOSE) ) verbose() << " protoParticleHits EmCharged " << endmsg;
+                if( (hypo->clusters().begin())->target() ){    
+                  centerCell  = (*(hypo->clusters().begin()))->seed();
+                  //deb info() << " charged hypo ok " << endmsg;
+                }                    
               }
-          }          
-          if( !(centerCell1 == dummyCell) ){
-            hits.push_back(centerCell1);
-            if( extend ){
-              if( m_ecalDeCal==0 ){ m_ecalDeCal = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal ); }
-              BOOST_FOREACH( LHCb::CaloCellID cell,m_ecalDeCal->neighborCells(centerCell))
+            } else if( m_caloClustForNeutral ){
+              if( LHCb::CaloHypo::Photon == hypo->hypothesis() ){
+                if ( msgLevel(MSG::VERBOSE) ) verbose() << " protoParticleHits Photon " << endmsg;
+                if( (hypo->clusters().begin())->target() ){              
+                  centerCell  = (*(hypo->clusters().begin()))->seed();
+                  //deb info() << " gamma hypo ok " << endmsg;
+                }                    
+              } else if (  LHCb::CaloHypo::Pi0Merged == hypo->hypothesis() ){
+                if ( msgLevel(MSG::VERBOSE) ) verbose() << " protoParticleHits Pi0Merged " << endmsg;
+                // Split Photons
+                const SmartRefVector<LHCb::CaloHypo>& hypos = hypo->hypos();
+                if( hypos.size()>1 ){
+                  const LHCb::CaloHypo* g1 = *(hypos.begin() );
+                  if( g1 ){              
+                    if( (g1->clusters().begin())->target() ){
+                      centerCell  = (*(g1->clusters().begin()))->seed();
+                      //deb info() << " piomareged hypo ok " << endmsg;
+                    }         
+                  }
+                  const LHCb::CaloHypo* g2 = *(hypos.begin()+1 );
+                  if( g2 ){
+                    if( (g2->clusters().begin())->target() )              
+                      centerCell1 = (*(g2->clusters().begin()))->seed();
+                  }
+                }    
+              } else {
+                caloOK = true; // not a photon nor pi0 ; don't expect calo            
+              }
+          
+            } else {
+              caloOK = true; // do not want calo even for neutrals
+            }
+        
+            if( !(centerCell == dummyCell) ){
+              //deb info() << " CALOOK " << endmsg;
+              caloOK = true;          
+              hits.push_back(centerCell);
+              if( extend ){
+                if( m_ecalDeCal==0 ){ m_ecalDeCal = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal ); }
+                BOOST_FOREACH( LHCb::CaloCellID cell,m_ecalDeCal->neighborCells(centerCell))
                 {
                   hits.push_back(cell);
                 }
-            }                  
+              }          
+              if( !(centerCell1 == dummyCell) ){
+                hits.push_back(centerCell1);
+                if( extend ){
+                  if( m_ecalDeCal==0 ){ m_ecalDeCal = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal ); }
+                  BOOST_FOREACH( LHCb::CaloCellID cell,m_ecalDeCal->neighborCells(centerCell))
+                  {
+                    hits.push_back(cell);
+                  }
+                }                  
+              }
+            }
           }
-        }              
+        }
       }
+    } else {
+      caloOK = true; // OK not to find calo info for charged tracks
     }
+    
+    if( caloOK == false )
+      Error( "No Calo info found: TisTos of photons and pi0s will be defunct", StatusCode::SUCCESS, 1 ).setChecked();
+    
   }
+  
   
 
   // add muon hits only if needed 
@@ -225,6 +287,8 @@ std::vector<LHCb::LHCbID> ParticleTisTos::protoParticleHits(const ProtoParticle 
         if( mu!=0 ){                                                                   
           hits.insert(hits.end(),mu->lhcbIDs().begin(),mu->lhcbIDs().end());
           if ( msgLevel(MSG::VERBOSE) ) verbose() << " protoParticleHits fs muon hits inserted " << endmsg;
+        } else {
+          Error( "No Muon Tracks found: TisTos of muon triggers may be defunct", StatusCode::SUCCESS, 1 ).setChecked();          
         }
       }
     }
@@ -280,6 +344,7 @@ bool ParticleTisTos::addToSignal( const LHCb::Particle & particle )
     const ProtoParticle* pp = particle.proto();
     if( 0!=pp ){
       if ( msgLevel(MSG::VERBOSE) ) verbose() << " addToSignal with Particle PROTOPARTICLE " << endmsg;
+      //deb info() << particle << endmsg;
       if( addToSignal(*pp) )sigModified=true;  
     } else {
         Error("Particle passed as signal has no daughters and ProtoParticle is not accessible; TisTossing is not possible",
