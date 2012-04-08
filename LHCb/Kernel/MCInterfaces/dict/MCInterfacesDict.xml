@@ -18,5 +18,8 @@
   <class name = "ITrackGhostClassification"   />
   <class name = "IVisPrimVertTool"            />
   <class name = "IHepMCParticleSelector"         />
+  
+  <class name = "IGenCutTool"          />
+  <class name = "IFullGenEventCutTool" />
 
 </lcgdict>

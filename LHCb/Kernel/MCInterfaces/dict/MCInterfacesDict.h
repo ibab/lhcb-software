@@ -33,6 +33,8 @@
 #include "MCInterfaces/IMCReconstructed.h"
 
 #include "MCInterfaces/IHepMCParticleSelector.h"
+#include "MCInterfaces/IGenCutTool.h"
+#include "MCInterfaces/IFullGenEventCutTool.h"
 
 #endif // DICT_MCINTERFACESDICT_H
 
