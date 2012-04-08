@@ -315,7 +315,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         props = self.getProps()
         comboCuts = 'AM > 0'
         if useComboCuts:
-            comboCuts = "(AM < 7000*MeV) & ((ANUM(ID=='KS0')>0) | "
+            comboCuts = "(AM < 7000*MeV) & ((ANUM((ID=='KS0')|(ABSID=='Lambda0'))>0) | "
             comboCuts += '((AALLSAMEBPV |(AMINCHILD(MIPCHI2DV(PRIMARY)) > 16))'
             comboCuts += " & (AMAXDOCA('LoKi::DistanceCalculator') < %s)))" \
                          % props["AMAXDOCA_MAX"]
