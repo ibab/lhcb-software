@@ -55,7 +55,6 @@ StatusCode VeloWithIP::execute() {
   //always()<<m_ipcut<<endreq;
   int inputtrack (0);
   
-  LoKi::Types::VFun beamSpotCut = LoKi::Cuts::VX_BEAMSPOTRHO( 1. ) ;
   using namespace LoKi        ;
   using namespace LoKi::Types ;
   using namespace LoKi::Cuts ;

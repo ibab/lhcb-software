@@ -4,6 +4,9 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
+! 2012-04-09 - Victor Coco
+ - remove declared but unused functor from VeloWithIP 
+
 ! 2012-03-25 - Victor Coco
  - Fix in matter veto treatement in Hlt2PreSelDV.cpp
 
