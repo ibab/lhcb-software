@@ -1,0 +1,87 @@
+
+keep =  [  'Hlt1DiMuonHighMass',                  
+    'Hlt1DiMuonLowMass',
+    'Hlt1TrackAllL0',
+    'Hlt1TrackMuon',
+    'Hlt1TrackPhoton',
+    'Hlt1Lumi',
+    'Hlt1LumiMidBeamCrossing',
+    'Hlt1MBNoBias',
+    'Hlt1MBMicroBiasVelo',
+    'Hlt1MBMicroBiasVeloRateLimited',
+    'Hlt1MBMicroBiasTStation',
+    'Hlt1MBMicroBiasTStationRateLimited',
+    'Hlt1ODINTechnical',
+    'Hlt1VeloClosingMicroBias',
+    'Hlt1ErrorEvent',
+    'Hlt1Global',
+    'Hlt2DiMuonJPsi',
+    'Hlt2DiMuonJPsiHighPT',
+    'Hlt2DiMuonPsi2S',
+    'Hlt2DiMuonPsi2SHighPT',
+    'Hlt2DiMuonB',
+    'Hlt2DiMuonZ',
+    'Hlt2DiMuonDY1',
+    'Hlt2DiMuonDY2',
+    'Hlt2DiMuonDY3',
+    'Hlt2DiMuonDY4',
+    'Hlt2DiMuonDetached',
+    'Hlt2DiMuonDetachedHeavy',
+    'Hlt2DiMuonDetachedJPsi',
+    'Hlt2Topo2BodyBBDT',
+    'Hlt2Topo3BodyBBDT',
+    'Hlt2Topo4BodyBBDT',
+    'Hlt2TopoMu2BodyBBDT',
+    'Hlt2TopoMu3BodyBBDT',
+    'Hlt2TopoMu4BodyBBDT',
+    'Hlt2TopoE2BodyBBDT',
+    'Hlt2TopoE3BodyBBDT',
+    'Hlt2TopoE4BodyBBDT',
+    'Hlt2TopoRad2BodyBBDT',
+    'Hlt2TopoRad2plus1BodyBBDT',
+    'Hlt2IncPhi',
+    'Hlt2IncPhiSidebands',
+    'Hlt2PassThrough',
+    'Hlt2Transparent',
+    'Hlt2Lumi',
+    'Hlt2DebugEvent',
+    'Hlt2CharmHadD02HH_D02PiPi',
+    'Hlt2CharmHadD02HH_D02PiPiWideMass',
+    'Hlt2CharmHadD02HH_D02KK',
+    'Hlt2CharmHadD02HH_D02KKWideMass',
+    'Hlt2CharmHadD02HH_D02KPi',
+    'Hlt2CharmHadD02HH_D02KPiWideMass',
+    'Hlt2ExpressJPsi',
+    'Hlt2ExpressJPsiTagProbe',
+    'Hlt2ExpressLambda',
+    'Hlt2ExpressKS',
+    'Hlt2ExpressDs2PhiPi',
+    'Hlt2ExpressBeamHalo',
+    'Hlt2ExpressDStar2D0Pi',
+    'Hlt2ExpressD02KPi',
+    'Hlt2SingleMuon',
+    'Hlt2SingleMuonHighPT',
+    'Hlt2SingleMuonVHighPT',
+    'Hlt2SingleMuonLowPT',
+    'Hlt2RadiativeTopoTrack',
+    'Hlt2RadiativeTopoPhoton',
+    'Hlt2ErrorEvent',
+    'Hlt2Global'
+ ]
+
+oldtck = 0x007f0040 
+hlt1lines = getHlt1Lines(oldtck)
+hlt2lines = getHlt2Lines(oldtck)
+drop = []
+for h in hlt1lines + hlt2lines : 
+        l = h.split('/')[1]
+        if l not in keep : drop += [ l ]
+
+cas = ConfigTarFileAccessSvc(Mode='ReadWrite')
+patch = { 'id': 0x007f0040
+        , 'updates' :  dict( ( i + 'PreScaler'  , { 'AcceptFraction' : '0' } ) for i in drop  )
+        , 'label' : 'prescale nonessential to zero'
+        , 'cas' : cas 
+}
+ids = { 0x00860040 : updateProperties( **patch ) }
+createTCKEntries( ids, cas = cas )
