@@ -13,7 +13,7 @@ use HltCommon           v8r4    Hlt   # Gerhard Raven
 use HltConf             v9r15   Hlt   # Vanya Belyaev, Gerhard Raven
 use HltCosmics          v1r0p2  Hlt   # Stephan Nies
 use HltDisplVertices    v3r9    Hlt   # Neil Gauvin, Victor Coco
-use HltGlobalMonitor    v3r10   Hlt   # Bruno de Paula
+use HltGlobalMonitor    v3r9    Hlt   # Bruno de Paula
 use HltL0Conf           v3r0p1  Hlt   # Johannes Albrecht
 use HltLine             v5r1p7  Hlt   # Vanya Belyaev, Gerhard Raven
 use HltLuminosity       v2r19   Hlt   # Jaap Panman
