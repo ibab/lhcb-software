@@ -3,10 +3,15 @@
 // ============================================================================
 #include <boost/foreach.hpp>
 // ============================================================================
+// Event 
+// ============================================================================
+#include "Event/RecVertex.h"
+// ============================================================================
 // Local
 // ============================================================================
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "LoKi/AuxFunBase.h"
+#include "LoKi/Constants.h"
 #include "LTTools.h"
 #include "LoKi/TrackCutAsRecVertexCut.h"
 // ============================================================================
@@ -44,7 +49,18 @@ LoKi::RecVertices::Hlt_TrackCutAsRecVertexCut_Any::operator()
   ( LoKi::RecVertices::Hlt_TrackCutAsRecVertexCut_Any::argument v ) const
 {
   result_type ret = false;
-  BOOST_FOREACH( SmartRef<LHCb::Track> tr, v->tracks() )
+
+  //
+  const LHCb::VertexBase* vb = v ;
+  const LHCb::RecVertex*  rv = dynamic_cast<const LHCb::RecVertex*> ( vb ) ;
+  //
+  if ( 0 == rv ) 
+  {
+    Error ("LHCb::VertexBase* is not LHCb::RecVertex*, return PositiveInfinity");
+    return LoKi::Constants::PositiveInfinity ;
+  }
+  //
+  BOOST_FOREACH( SmartRef<LHCb::Track> tr, rv->tracks() )
   {
     if ( ! m_useExtraInfo ) {
       ret = ret || ( m_cut( tr ) );
@@ -69,8 +85,15 @@ LoKi::RecVertices::Hlt_TrackCutAsRecVertexCut_All::operator()
   ( LoKi::RecVertices::Hlt_TrackCutAsRecVertexCut_All::argument v ) const
 {
   result_type ret = true;
-  SmartRefVector<LHCb::Track>::const_iterator it = v->tracks().begin();
-  while ( ret && ( it != v->tracks().end() ) ) {
+  const LHCb::VertexBase* vb = v ;
+  const LHCb::RecVertex*  rv = dynamic_cast<const LHCb::RecVertex*> ( vb ) ;
+  if( 0 == rv )
+  {
+    Error ("LHCb::VertexBase* is not LHCb::RecVertex*, return PositiveInfinity");
+    return LoKi::Constants::PositiveInfinity ;
+  }
+  SmartRefVector<LHCb::Track>::const_iterator it = rv->tracks().begin();
+  while ( ret && ( it != rv->tracks().end() ) ) {
     ret = m_cut( *it );
     ++it;
   }

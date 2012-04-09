@@ -17,6 +17,7 @@
 // ============================================================================
 #include "LoKi/UpgradeVertices.h"
 #include "LoKi/Combiner.h"
+#include "LoKi/Constants.h"
 // ============================================================================
 // local
 // ============================================================================
@@ -166,7 +167,7 @@ StatusCode LoKi::Hlt1::UpgradeVertices::upgradeVertices
     { Error ( "Invalid Hlt::Stage,     skip it!") ; continue ; } // CONTINUE
     //
     // upgrade single track
-    if ( !stage->is<LHCb::RecVertex>() )
+    if ( !stage->is<LHCb::VertexBase>() )
     { Error ( "No LHCb::RecVertex,     skip it!") ; continue ; } // CONTINUE
     //
     StatusCode sc = _i_upgrade_recvertex_j
@@ -199,10 +200,18 @@ StatusCode LoKi::Hlt1::UpgradeVertices::_i_upgrade_recvertex_j
   if ( 0 == input ) { return Error ( "Hlt::Candidate* points to NULL") ; }
   //
   const Hlt::Stage* stage = input->currentStage() ;
-  if ( 0 == stage || !stage->is<LHCb::RecVertex> () )
+  if ( 0 == stage || !stage->is<LHCb::VertexBase> () )
   { return Error ( "Invalid Hlt::Stage*" ) ; }
   //
-  const LHCb::RecVertex*    inputVertex = stage->get<LHCb::RecVertex> () ;
+  const LHCb::VertexBase*   vb = stage->get<LHCb::VertexBase> () ;
+  const LHCb::RecVertex*    inputVertex =  dynamic_cast<const LHCb::RecVertex*> ( vb ) ;
+  //
+  if ( 0 == inputVertex ) 
+  {
+    Error ("LHCb::VertexBase* is not LHCb::RecVertex*, return PositiveInfinity");
+    return LoKi::Constants::PositiveInfinity ;
+  }
+  //stage->get<LHCb::RecVertex> () ;
 
   const TRKs& tracks = inputVertex -> tracks();
   if ( 2 != tracks.size() ) { return Error ( " nTrack != 2, skip it! " ) ; }

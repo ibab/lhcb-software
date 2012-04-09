@@ -256,10 +256,10 @@ namespace LoKi
        *  @param slot the slot:
        *  @see Hlt::Candidate::get
        */
-      SlotFun
+      /*SlotFun
       ( const LoKi::BasicFunctors<const LHCb::RecVertex*>::Function& fun ,
         const int     slot = 0 ,
-        const double  bad  = 0 ) ;
+        const double  bad  = 0 ) ;*/
       /** constructor
        *  @param fun the function
        *  @param slot the slot:
@@ -381,9 +381,9 @@ namespace LoKi
        *     - negative value corresponds to initiator stage
        *     - posiitve value corresponds to step-back in history
        */
-      SlotCut
+      /*SlotCut
       ( const LoKi::BasicFunctors<const LHCb::RecVertex*>::Predicate& cut ,
-        const int slot  =  0 ) ;
+      const int slot  =  0 ) ;*/
       /** constructor
        *  @param fun the predicate
        *  @param slot the slot:
@@ -478,9 +478,9 @@ namespace LoKi
        *  @param slot the slot:
        *  @see Hlt::Candidate::get
        */
-        SlotFilter
+      /*  SlotFilter
       ( const LoKi::BasicFunctors<const LHCb::RecVertex*>::Predicate& cut,
-            const int slot =  0 );
+      const int slot =  0 );*/
       /** constructor
        *  @param fun the predicate
        *  @param slot the slot:
@@ -546,10 +546,10 @@ namespace LoKi
        *  @param slot the slot:
        *  @see Hlt::Candidate::get
        */
-        SlotMap
+      /*  SlotMap
       ( const LoKi::BasicFunctors<const LHCb::RecVertex*>::Function& fun,
             const int    slot =  0 ,
-        const double bad  =  0 ) ;
+	    const double bad  =  0 ) ;*/
       /** constructor
        *  @param fun the function
        *  @param slot the slot:

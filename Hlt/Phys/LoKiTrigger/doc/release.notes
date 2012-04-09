@@ -5,6 +5,14 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2012-04-09 - Victor Coco
+ - Fix related to UpgradeVertices and TrackCutAsRecVertexCut to avoid use of 
+   RecVertex adapters
+    * removed from HltCandidates.* class the RecVertex filter / fun / cut and map 
+      and equivalent in LoKiTriggerDict.h
+    * base the TrackCutAsRecVertexCut.* class on VertexBase instead of RecVertex 
+    * modify UpgradeVertices to access the stage as VertexBase
+  
 !========================= LoKiTrigger v12r6 2012-03-17 =========================
 ! 2012-03-14 - Pieter David
  - Add adapters from a RecVertex cut to a track cut, with the option to pass

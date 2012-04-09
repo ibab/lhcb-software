@@ -7,7 +7,7 @@
 // Event
 // ============================================================================
 #include "Event/Track.h"
-#include "Event/RecVertex.h"
+#include "Event/VertexBase.h"
 // ============================================================================
 // Local
 // ============================================================================
@@ -29,7 +29,7 @@ namespace LoKi
      * @date   2012-02-27
      */
     class GAUDI_API Hlt_TrackCutAsRecVertexCut_Any
-      : public LoKi::BasicFunctors<const LHCb::RecVertex*>::Predicate
+      : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Predicate
     {
       // ======================================================================
     public:
@@ -40,7 +40,7 @@ namespace LoKi
       Hlt_TrackCutAsRecVertexCut_Any
       ( const LoKi::BasicFunctors<const LHCb::Track*>::Predicate& cut ,
         bool useExtraInfo = false                                     )
-      : LoKi::BasicFunctors<const LHCb::RecVertex*>::Predicate()
+      : LoKi::BasicFunctors<const LHCb::VertexBase*>::Predicate()
       , m_cut          ( cut )
       , m_useExtraInfo ( useExtraInfo )
       { if ( useExtraInfo ) { retrieveFailKey() ; } }
@@ -80,7 +80,7 @@ namespace LoKi
      * @date   2012-01-02
      */
     class GAUDI_API Hlt_TrackCutAsRecVertexCut_All
-      : public LoKi::BasicFunctors<const LHCb::RecVertex*>::Predicate
+      : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Predicate
     {
       // ======================================================================
     public:
