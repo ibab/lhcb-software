@@ -5,7 +5,12 @@
 ! Purpose     : track-related functors for LoKi-framework 
 ! -----------------------------------------------------------------------------
 
+! 2012-04-09 - Vanya Belyaev
+
+ - remove track-cloning for beam-line functios 
+
 ! 2012-03-30 - Vanya Belyaev
+
  - add beam-line functor
 
 !========================= LoKiTracks v2r5 2012-03-17 =========================

@@ -860,7 +860,7 @@ LoKi::Tracks::FastDOCAToBeamLine::FastDOCAToBeamLine
   , LoKi::BeamSpot ( other )
   , LoKi::Functor<const LHCb::Track*, double> ( other )
 {
-  m_beamLine = *( other.m_beamLine.clone() ) ;
+  m_beamLine.copy ( other.m_beamLine ) ;
 }
 // ============================================================================
 // MANDATORY: the only one essential method
