@@ -1,10 +1,10 @@
-!$Id: release.notes,v 1.148 2010-09-08 12:55:25 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Vladimir Gligorov / Johannes Albrecht
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+!========================= HltTracking v9r15 2012-04-09 =========================
 ! 2012-04-06 - V. Gligorov
  - Fix independence problem in downstream tracking 
 
