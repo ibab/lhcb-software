@@ -1,17 +1,15 @@
-! $Id$
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiTrigger
 ! Responsible : Vanya BELYAEV
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiTrigger v12r7 2012-04-09 =========================
 ! 2012-04-09 - Vanya Belyaev
-
  - remove down-cast from Upgrade Vertices
  - remove commented lines 
 
 ! 2012-04-09 - Victor Coco
-
  - Fix related to UpgradeVertices and TrackCutAsRecVertexCut to avoid use of 
    RecVertex adapters
     * removed from HltCandidates.* class the RecVertex filter / fun / cut and map 
