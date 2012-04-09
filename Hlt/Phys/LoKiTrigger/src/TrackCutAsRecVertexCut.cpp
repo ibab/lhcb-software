@@ -23,7 +23,17 @@
  * @date 2012-02-27
  * @author Pieter David pieter.david@cern.ch
  */
-
+// ============================================================================
+LoKi::RecVertices::Hlt_TrackCutAsRecVertexCut_Any::Hlt_TrackCutAsRecVertexCut_Any
+( const LoKi::BasicFunctors<const LHCb::Track*>::Predicate& cut ,
+  const bool useExtraInfo                                       )
+  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Predicate()
+  , m_cut          ( cut )
+  , m_useExtraInfo ( useExtraInfo )
+{ 
+  if ( useExtraInfo ) { retrieveFailKey() ; } 
+}
+// ============================================================================
 void LoKi::RecVertices::Hlt_TrackCutAsRecVertexCut_Any::retrieveFailKey()
 {
   // from LoKi::Hlt1::HelperTool
@@ -77,6 +87,11 @@ LoKi::RecVertices::Hlt_TrackCutAsRecVertexCut_Any::operator()
   return ret;
 }
 
+// ============================================================================
+LoKi::RecVertices::Hlt_TrackCutAsRecVertexCut_All::Hlt_TrackCutAsRecVertexCut_All
+( const LoKi::BasicFunctors<const LHCb::Track*>::Predicate& cut )
+  : m_cut( cut )
+{}
 // ============================================================================
 // MANDATORY: the only one essential method
 // ============================================================================

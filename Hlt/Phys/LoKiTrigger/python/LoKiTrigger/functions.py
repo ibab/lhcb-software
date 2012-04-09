@@ -252,7 +252,7 @@ TC_DITRACKS2   = LoKi.Hlt1.DiTrackMaker2
 # =============================================================================
 
 ## @see LoKi::Cuts::VX_BEAMSPOTRHO
-BEAMSPOT       = LoKi.Vertices.BeamSpot
+## BEAMSPOT       = LoKi.Vertices.BeamSpot
 VX_BEAMSPOTRHO = LoKi.Vertices.BeamSpotRho
 
 # ============================================================================

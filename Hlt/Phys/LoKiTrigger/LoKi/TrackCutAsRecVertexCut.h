@@ -39,11 +39,7 @@ namespace LoKi
        */
       Hlt_TrackCutAsRecVertexCut_Any
       ( const LoKi::BasicFunctors<const LHCb::Track*>::Predicate& cut ,
-        bool useExtraInfo = false                                     )
-      : LoKi::BasicFunctors<const LHCb::VertexBase*>::Predicate()
-      , m_cut          ( cut )
-      , m_useExtraInfo ( useExtraInfo )
-      { if ( useExtraInfo ) { retrieveFailKey() ; } }
+        const bool useExtraInfo = false                               ) ;
       /// MANDATORY: virtual destructor
       virtual ~Hlt_TrackCutAsRecVertexCut_Any() {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -89,9 +85,7 @@ namespace LoKi
        * @param cut  track cut
        */
       Hlt_TrackCutAsRecVertexCut_All
-      ( const LoKi::BasicFunctors<const LHCb::Track*>::Predicate& cut )
-      : m_cut( cut )
-      {}
+      ( const LoKi::BasicFunctors<const LHCb::Track*>::Predicate& cut ) ;
       /// MANDATORY: virtual destructor
       virtual ~Hlt_TrackCutAsRecVertexCut_All () {}
       /// MANDATORY: clone method ("virtual constructor")
