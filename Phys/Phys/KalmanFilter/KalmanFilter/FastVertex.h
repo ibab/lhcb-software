@@ -10,6 +10,10 @@
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/Vector3DTypes.h"
 // ============================================================================
+// LHCbMath 
+// ============================================================================
+#include "LHCbMath/Line.h"
+// ============================================================================
 // DaVinciTypes 
 // ============================================================================
 #include "Kernel/RecVertexHolder.h"
@@ -55,6 +59,11 @@ namespace LoKi
    */
   class GAUDI_API FastVertex 
   {
+    // ========================================================================
+  public:
+    // ========================================================================
+    /// get the actual type of the line  
+    typedef Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector>          Line ;
     // ========================================================================
   public:
     // ========================================================================
@@ -274,6 +283,66 @@ namespace LoKi
     static 
     StatusCode distance 
     ( const LHCb::Track*      track1          , 
+      const LHCb::Track*      track2          , 
+      double&                 doca            , 
+      const bool              iterate = false ) ;
+    // ========================================================================
+    /** evaluate the distance between the track and the line 
+     *
+     *  @code 
+     * 
+     *   const LHCb::Track*      track   = ... ;
+     *   const Line              line    = ... ;
+     *
+     *   double doca   ;
+     *
+     *   StatusCode sc = LoKi::FastVertex::distance 
+     *                     ( track  ,   // the track 
+     *                       line   ,   // the line  
+     *                       doca   ) ; // the distance 
+     * 
+     *  @endcode 
+     *
+     *  @param track1 (INPUT)  the track 
+     *  @param line2  (INPUT)  the line 
+     *  @param doca    (OUTPUT) DOCA
+     *  @param iterate (INPUT)  iterate?
+     *  @author Vanya Belyaev  Ivan.Belyaev@cern.ch
+     *  @date   2010-12-03
+     */
+    static 
+    StatusCode distance 
+    ( const LHCb::Track*      track1          , 
+      const Line&             line2           , 
+      double&                 doca            , 
+      const bool              iterate = false ) ;
+    // =======================================================================
+    /** evaluate the distance between the track and the line 
+     *
+     *  @code 
+     * 
+     *   const Line              line    = ... ;
+     *   const LHCb::Track*      track   = ... ;
+     *
+     *   double doca   ;
+     *
+     *   StatusCode sc = LoKi::FastVertex::distance 
+     *                     ( line   ,   // the line  
+     *                       track  ,   // the track 
+     *                       doca   ) ; // the distance 
+     * 
+     *  @endcode 
+     *
+     *  @param line1   (INPUT)  the line 
+     *  @param track2  (INPUT)  the track 
+     *  @param doca    (OUTPUT) DOCA
+     *  @param iterate (INPUT)  iterate?
+     *  @author Vanya Belyaev  Ivan.Belyaev@cern.ch
+     *  @date   2010-12-03
+     */
+    static 
+    StatusCode distance 
+    ( const Line&             line1           , 
       const LHCb::Track*      track2          , 
       double&                 doca            , 
       const bool              iterate = false ) ;

@@ -36,8 +36,7 @@
 namespace 
 {
   // ==========================================================================
-  /// get the actual type of the line  
-  typedef Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector> Line_ ;
+  typedef LoKi::FastVertex::Line                                        Line_ ;
   // ==========================================================================
   /// construct the line trajectory from the track
   inline 
@@ -106,8 +105,8 @@ LHCb::RecVertexHolder LoKi::FastVertex::makeVertex
   const LHCb::State* state1 = state ( *track1 ) ;
   const LHCb::State* state2 = state ( *track2 ) ;
   //
-  Line_ line1 ( line ( *state1 ) ) ;
-  Line_ line2 ( line ( *state2 ) ) ;
+  Line line1 ( line ( *state1 ) ) ;
+  Line line2 ( line ( *state2 ) ) ;
   //
   // (re)use the nice functions by Matt&Juan
   Gaudi::Math::closestPointParams ( line1 , line2 , mu1 , mu2 ) ;
@@ -411,8 +410,8 @@ bool LoKi::FastVertex::checkDistance
   const LHCb::State* state1 = state ( *track1 ) ;
   const LHCb::State* state2 = state ( *track2 ) ;
   //
-  Line_ line1 ( line ( *state1 ) ) ;
-  Line_ line2 ( line ( *state2 ) ) ;
+  Line line1 ( line ( *state1 ) ) ;
+  Line line2 ( line ( *state2 ) ) ;
   //
   // (re)use the nice functions by Matt&Juan
   Gaudi::Math::closestPointParams ( line1 , line2 , mu1 , mu2 ) ;
@@ -504,8 +503,8 @@ StatusCode LoKi::FastVertex::distance
   const LHCb::State* state1 = state ( *track1 ) ;
   const LHCb::State* state2 = state ( *track2 ) ;
   //
-  Line_ line1 = line ( *state1 )  ;
-  Line_ line2 = line ( *state2 )  ;
+  Line line1 = line ( *state1 )  ;
+  Line line2 = line ( *state2 )  ;
   //
   // (re)use the nice functions by Matt&Juan
   Gaudi::Math::closestPointParams ( line1 , line2 , mu1 , mu2 ) ;
@@ -584,8 +583,8 @@ StatusCode LoKi::FastVertex::distance
   const LHCb::State* state1 = state ( *track1 ) ;
   const LHCb::State* state2 = state ( *track2 ) ;
   //
-  Line_ line1 = line ( *state1 )  ;
-  Line_ line2 = line ( *state2 ) ;
+  Line line1 = line ( *state1 )  ;
+  Line line2 = line ( *state2 ) ;
   //
   // (re)use the nice functions by Matt&Juan
   Gaudi::Math::closestPointParams ( line1 , line2 , mu1 , mu2 ) ;
@@ -642,6 +641,115 @@ StatusCode LoKi::FastVertex::distance
   //
   return StatusCode::SUCCESS ;
 }
+// ============================================================================
+/*  evaluate the distance between the track and the line 
+ *
+ *  @code 
+ * 
+ *   const LHCb::Track*      track   = ... ;
+ *   const Line              line    = ... ;
+ *
+ *   double doca   ;
+ *
+ *   StatusCode sc = LoKi::FastVertex::distance 
+ *                     ( track  ,   // the track 
+ *                       line   ,   // the line  
+ *                       doca   ) ; // the distance 
+ * 
+ *  @endcode 
+ *
+ *  @param track1  (INPUT)  the track 
+ *  @param line2   (INPUT)  the line 
+ *  @param doca    (OUTPUT) DOCA
+ *  @param iterate (INPUT)  iterate?
+ *  @author Vanya Belyaev  Ivan.Belyaev@cern.ch
+ *  @date   2010-12-03
+ */
+// ============================================================================
+StatusCode LoKi::FastVertex::distance 
+( const LHCb::Track*            track1  , 
+  const LoKi::FastVertex::Line& line2   , 
+  double&                       doca    , 
+  const bool                    iterate ) 
+{
+  //
+  doca = -1.e+99 ;
+  //
+  if ( 0 == track1 ) { return StatusCode::FAILURE ; }
+  //
+  double mu1 = 0 ;
+  double mu2 = 0 ;
+  //
+  const LHCb::State* state1 = state ( *track1 ) ;
+  //
+  Line line1 = line ( *state1 )  ;
+  //
+  // (re)use the nice functions by Matt&Juan
+  Gaudi::Math::closestPointParams ( line1 , line2 , mu1 , mu2 ) ;
+  //
+  Gaudi::XYZPoint point1 = line1 ( mu1 ) ; // the point on the first  trajectory
+  Gaudi::XYZPoint point2 = line2 ( mu2 ) ; // the point on the second trajectory
+  //
+  if ( iterate ) 
+  {
+    //
+    const LHCb::State* state1_ = state ( *track1 , point1.Z() ) ;
+    //
+    if ( state1_ != state1 ) 
+    {
+      state1 = state1_ ;
+      line1  = line ( *state1 )  ;
+      //
+      // (re)use the nice functions by Matt&Juan
+      Gaudi::Math::closestPointParams ( line1 , line2 , mu1 , mu2 ) ;
+      //
+      point1 = line1 ( mu1 ) ; // the point on the first  trajectory
+      point2 = line2 ( mu2 ) ; // the point on the second trajectory
+      //
+    }
+  }
+  //
+  // apply DOCA cut (if needed) 
+  //
+  doca = ( point1 - point2 ).R() ;
+  //
+  return StatusCode::SUCCESS ;
+}
+// ============================================================================
+/*  evaluate the distance between the track and the line 
+ *
+ *  @code 
+ * 
+ *   const Line              line    = ... ;
+ *   const LHCb::Track*      track   = ... ;
+ *
+ *   double doca   ;
+ *
+ *   StatusCode sc = LoKi::FastVertex::distance 
+ *                     ( line   ,   // the line  
+ *                       track  ,   // the track 
+ *                       doca   ) ; // the distance 
+ * 
+ *  @endcode 
+ *
+ *  @param line1   (INPUT)  the line 
+ *  @param track2  (INPUT)  the track 
+ *  @param doca    (OUTPUT) DOCA
+ *  @param iterate (INPUT)  iterate?
+ *  @author Vanya Belyaev  Ivan.Belyaev@cern.ch
+ *  @date   2010-12-03
+ */
+// ============================================================================
+StatusCode LoKi::FastVertex::distance 
+( const LoKi::FastVertex::Line& line1   , 
+  const LHCb::Track*            track2  , 
+  double&                       doca    , 
+  const bool                    iterate ) 
+{ 
+  return distance ( track2 , line1 , doca , iterate ) ; 
+}
+
+  
 // ============================================================================
 // The END 
 // ============================================================================

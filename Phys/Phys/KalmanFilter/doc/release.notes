@@ -5,6 +5,12 @@
 ! Purpose     : Kalman filter Utilities for Vertex fit 
 ! -----------------------------------------------------------------------------
 
+! 2012-04-09 - Vanya Belyaev
+
+ - FastVertex 
+  
+    add a function for Pieter David for DOCA between line and track 
+
 !========================= KalmanFilter v1r3 2011-09-07 =========================
 ! 2011-07-29 - Vanya Belyaev
 
