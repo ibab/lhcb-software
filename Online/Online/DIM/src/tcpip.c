@@ -66,6 +66,7 @@ typedef int pid_t;
 #include <sys/ioctl.h>
 #include <errno.h>
 #include <netdb.h>
+
 #endif
 
 #include <stdio.h>
@@ -889,6 +890,7 @@ int tcpip_open_client( int conn_id, char *node, char *task, int port )
 #endif
 	int path, val, ret_code, ret;
 	int a,b,c,d;
+/* Fix for gcc 4.6 "dereferencing type-punned pointer will break strict-aliasing rules"?!*/
 	unsigned char ipaddr_buff[4];
 	unsigned char *ipaddr = ipaddr_buff;
 	int host_number = 0;
@@ -1012,9 +1014,9 @@ int tcpip_open_client( int conn_id, char *node, char *task, int port )
 	sockname.sin_family = PF_INET;
 #ifndef VxWorks
     if(host_number)
-                sockname.sin_addr = *(struct in_addr *) ipaddr;
+		sockname.sin_addr = *((struct in_addr *) ipaddr);
     else
-		sockname.sin_addr = *(struct in_addr *) host->h_addr;
+		sockname.sin_addr = *((struct in_addr *) host->h_addr);
 #else
     if(host_number)
 		sockname.sin_addr = *((struct in_addr *) ipaddr);

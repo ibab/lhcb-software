@@ -1515,8 +1515,8 @@ printf("Updating %s for %s@%s (req_id = %d)\n",
 					servp->name, conn_id,
 					Net_conns[conn_id].task, Net_conns[conn_id].node);
 			}
+			fflush(stdout);
 		}
-		fflush(stdout);
 		if(reqp->delay_delete > 1)
 		{
 			reqp->to_delete = 1;
@@ -1559,8 +1559,12 @@ void remove_service( int req_id )
 	service_id = (reqp->service_id | 0x80000000);
 	dis_packet->service_id = htovl(service_id);
 	dis_packet->size = htovl(DIS_HEADER);
-	if( !dna_write(reqp->conn_id, dis_packet, DIS_HEADER) ) 
+	if( !dna_write_nowait(reqp->conn_id, dis_packet, DIS_HEADER) ) 
 	{
+		dim_print_date_time();
+		printf(" Server Removing Service: Couldn't write to Conn %3d : Client %s@%s\n",
+			reqp->conn_id, Net_conns[reqp->conn_id].task, Net_conns[reqp->conn_id].node);
+		fflush(stdout);
 		release_conn(reqp->conn_id, 0, 0);
 	}
 }

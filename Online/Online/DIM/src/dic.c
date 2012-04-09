@@ -90,7 +90,7 @@ _DIM_PROTO( static void execute_service,      (DIS_PACKET *packet,
 void print_packet(DIS_PACKET *packet)
 {
 	dim_print_date_time();
-	printf(" - Bad ID received from server -> Packet received:\n");
+	printf("Bad ID received from server -> Packet received:\n");
 	printf("\tpacket->size = %d\n",vtohl(packet->size));
 	printf("\tpacket->service_id = %d\n",vtohl(packet->service_id));
 }
@@ -159,7 +159,7 @@ static void recv_rout( int conn_id, DIS_PACKET *packet, int size, int status )
 		{
 			dna_get_node_task(conn_id, node, task);
 			dim_print_date_time();
-			printf(" - Conn %d: Server %s on node %s Disconnected\n",
+			printf("Conn %d: Server %s on node %s Disconnected\n",
 				conn_id, task, node);
 			fflush(stdout);
 		}
@@ -361,7 +361,7 @@ static void recv_rout( int conn_id, DIS_PACKET *packet, int size, int status )
 		{
 			dna_get_node_task(conn_id, node, task);
 			dim_print_date_time();
-			printf(" - Conn %d: Server %s on node %s Connected\n",
+			printf("Conn %d: Server %s on node %s Connected\n",
 				conn_id, task, node);
 			fflush(stdout);
 		}
@@ -1028,7 +1028,7 @@ void dic_release_service( unsigned service_id )
 		dic_packet->type = htovl(DIM_DELETE);
 		dic_packet->service_id = htovl(service_id);
 		dic_packet->size = htovl(DIC_HEADER);
-		dna_write( conn_id, dic_packet, DIC_HEADER );
+		dna_write_nowait( conn_id, dic_packet, DIC_HEADER );
 		release_service( servp );
 		break;
 	case WAITING_SERVER_UP :
@@ -1441,7 +1441,7 @@ static int handle_dns_info( DNS_DIC_PACKET *packet )
 			if(Debug_on)
 			{
 				dim_print_date_time();
-				printf(" - Conn %d, Server %s on node %s Connecting\n",
+				printf("Conn %d, Server %s on node %s Connecting\n",
 					conn_id, dic_connp->task_name, dic_connp->node_name);
 				fflush(stdout);
 			}
@@ -1477,7 +1477,7 @@ static int handle_dns_info( DNS_DIC_PACKET *packet )
 				if(Debug_on)
 				{
 					dim_print_date_time();
-					printf(" - Failed connecting to Server %s on node %s port %d\n",
+					printf("Failed connecting to Server %s on node %s port %d\n",
 						task_name, node_name, port);
 					fflush(stdout);
 				}
@@ -1491,6 +1491,7 @@ static int handle_dns_info( DNS_DIC_PACKET *packet )
 			tmout = BAD_CONN_TIMEOUT * (bad_connp->n_retries - 1);
 			if(tmout > 120)
 				tmout = 120;
+      if (tmout == 0) tmout = 1;
 			dtq_start_timer(tmout, retry_bad_connection, (long)bad_connp);
 			if(( servp->type == COMMAND )||( servp->type == ONCE_ONLY ))
 				return(0);
@@ -1829,7 +1830,14 @@ int send_service(int conn_id, DIC_SERVICE *servp)
 	dic_packet->service_id = htovl(servp->serv_id);
 	dic_packet->format = htovl(MY_FORMAT);
 	dic_packet->size = htovl(DIC_HEADER);
-	ret = dna_write(conn_id, dic_packet, DIC_HEADER);
+	ret = dna_write_nowait(conn_id, dic_packet, DIC_HEADER);
+	if(!ret)
+	{
+		dim_print_date_time();
+		printf(" Client Sending Service Request: Couldn't write to Conn %3d : Server %s@%s\n",
+			conn_id, Net_conns[conn_id].task, Net_conns[conn_id].node);
+		fflush(stdout);
+	}
 	return(ret);
 }
 
