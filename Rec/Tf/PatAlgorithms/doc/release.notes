@@ -4,11 +4,11 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================= PatAlgorithms v4r21 2012-04-09 =========================
 ! 2012-04-05 - Sascha Stahl
  - PatForwardTool: Bug fix in PatForward, flag for left right ambiguity is now reset when
                    collecting hits.Before independence of different iterations 
                    of the Forward tracking was broken.
-
 
 !========================= PatAlgorithms v4r20 2012-03-16 =========================
 !========================= PatAlgorithms v4r19 2012-03-07 =========================
