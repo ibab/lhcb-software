@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 
+! 2012-04-10 - Olivier Deschamps
+  - OdinTypesFilter : bug fix for CalibrationTypes
+
+
 ! 2012-04-03 - Olivier Deschamps
   - RawBankReadoutStatusFilter :  set status to MissingStatus when no ReadoutStatus container is found (was "Missing" bank)
 

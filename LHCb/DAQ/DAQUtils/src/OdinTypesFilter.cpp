@@ -220,7 +220,7 @@ StatusCode OdinTypesFilter::execute() {
   std::stringstream bxType("");
   std::stringstream trType("");
   std::stringstream roType("");
-  clType << (LHCb::ODIN::BXTypes) odin->calibrationType();
+  clType << (LHCb::ODIN::CalibrationTypes) odin->calibrationType();
   bxType << (LHCb::ODIN::BXTypes) odin->bunchCrossingType();
   trType << (LHCb::ODIN::TriggerType) odin->triggerType();
   roType << (LHCb::ODIN::ReadoutTypes) odin->readoutType();
