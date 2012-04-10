@@ -73,6 +73,7 @@ StatusCode TimingTuple::execute()
   fillTuple(tuple, "Memory", (double)System::virtualMemory());
   fillTuple(tuple, "Time", t );
 
+  fillTuple(tuple, "nPVs", summary->info(LHCb::RecSummary::nPVs,-999) );
   fillTuple(tuple, "VeloClusters", summary->info(LHCb::RecSummary::nVeloClusters,-999) );
   fillTuple(tuple, "TTClusters", summary->info(LHCb::RecSummary::nTTClusters,-999) );
   fillTuple(tuple, "ITClusters", summary->info(LHCb::RecSummary::nITClusters,-999) );

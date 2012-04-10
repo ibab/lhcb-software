@@ -4,6 +4,9 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-04-10 - Patrick Koppenburg
+ - TimingTuple: Add nPVs
+
 !========================= RecAlgs v2r7 2012-03-27 =========================
 ! 2012-03-22 - Marco Cattaneo
  - Adapt RecInit to removal of random seeds from ProcessHeader
