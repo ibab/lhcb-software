@@ -3,6 +3,11 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+! 2012-04-10 - Olivier Deschamps
+  - new algorithm : L0DataFilter (filter on any (set of) condition(s) on L0DU data)
+  - new algorithm : L0DataNtp : tupling L0Data
+
+
 ! 2012-03-29 - Marco Cattaneo
  - In Configuration.py, set HcalThreshold of L0Calo Emulation to zero for
    DataType prior to 2012, to keep backward compatibility following setting
