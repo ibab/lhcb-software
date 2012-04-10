@@ -170,11 +170,18 @@ class RecSysConf(LHCbConfigurableUser):
         # MUON
         if "MUON" in recoSeq:
             from MuonID import ConfiguredMuonIDs
+            from Configurables import RawBankReadoutStatusConverter,RawBankReadoutStatusFilter
             cm=ConfiguredMuonIDs.ConfiguredMuonIDs(data=self.getProp("DataType"),
                                                    specialData=self.getProp("SpecialData"))
             MuonIDSeq=cm.getMuonIDSeq()
-            GaudiSequencer("RecoMUONSeq").Members += [ "MuonRec", MuonIDSeq ]
-            
+            RawBankReadoutStatusConverter("MuonProcStatus").System="Muon"
+            RawBankReadoutStatusConverter("MuonProcStatus").BankTypes=["Muon"]
+            RawBankReadoutStatusFilter("MuonROFilter").BankType=13
+            RawBankReadoutStatusFilter("MuonROFilter").RejectionMask=2067            
+            GaudiSequencer("RecoMUONSeq").Members += [ "MuonRec",
+                                                       "RawBankReadoutStatusConverter/MuonProcStatus", 
+                                                       "RawBankReadoutStatusFilter/MuonROFilter",  MuonIDSeq ]
+           
             if self.getProp("DataType") == 'Upgrade' and "VELOPIX" in recoSeq:
                 from RecoUpgrade import RecoTrackingUpgrade
                 RecoTrackingUpgrade.ConfigVeloPixProvider( MuonIDAlg().myMuIDTool.fitter )
