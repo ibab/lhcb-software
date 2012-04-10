@@ -27,13 +27,13 @@ version       v19r3
 author        Vanya BELYAEV
 
 # =========== Bender Application itself =======================================
-use           Bender         v19r3  Phys 
+use           Bender         v19r3   Phys 
   
 # =========== Bender-based tools and scripts ==================================
-use           BenderTools    v1r0    Phys 
+use           BenderTools    v19r3   Phys 
 
 # =========== examples of usage of Bender "in practice" =======================
-use           BenderExample  v19r0    Ex
+use           BenderExample  v19r3   Ex
 
 # =========== Bender tutorial =================================================
 use           BenderTutor    v18r0   Tutorial

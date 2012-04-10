@@ -23,6 +23,16 @@
 ! -----------------------------------------------------------------------------
 </PRE>
 
+<A NAME=v19r3>2012-04-07 Bender v19r3 based on the DaVinci v30r2p1</A>
+
+<PRE>		
+The version is similar  to v19r2. 
+All bender tools and scripts are moved into separate package.
+New algorithm (inspired by the original code by Greig Cowan) 
+for getting the efficinecy of geenrator-level cuts 
+is added.
+</PRE>
+
 <A NAME=v19r2>2012-04-04 Bender v19r2 based on the DaVinci v30r2p1</A>
 
 <PRE>		
