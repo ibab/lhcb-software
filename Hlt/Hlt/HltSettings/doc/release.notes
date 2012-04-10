@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-04-10 - V. Gligorov
+ - AprilEmergency2012 threshold settings with tuning from Sascha/Christoph
+   which takes us more or less back to 2011 HLT1 cuts.
+
 !========================= HltSettings v5r26 2012-04-03 =========================
 ! 2012-04-03 - Johannes Albrecht
  - Muons_draft2012: loosen Psi2S cuts
