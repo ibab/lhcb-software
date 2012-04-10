@@ -55,7 +55,7 @@ __version__ = " Version $Revision$"
 ## import everything from bender 
 from   Bender.Main               import *
 from   GaudiKernel.SystemOfUnits import MeV , GeV, mm 
-import Bender.TisTos 
+import BenderTools.TisTos 
 # =============================================================================
 ## Simple class to look for Chi_b-peak 
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu

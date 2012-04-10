@@ -53,7 +53,7 @@ from   Bender.Main         import *   ## import all bender goodies
 import LHCbMath.Types                 ## easy access to various geometry routines 
 from   Gaudi.Configuration import *   ## needed for job configuration
 # ===========================================================================================
-import Bender.TisTos                  ## add methods for TisTos 
+import BenderTools.TisTos             ## add methods for TisTos 
 # =============================================================================
 ## @class TisTosGet
 #  Simple algorithm to get tis/tos-decisions for charm particles 

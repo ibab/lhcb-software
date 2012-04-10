@@ -22,13 +22,14 @@
 # =============================================================================
 package          BenderExample
 author           Vanya BELYAEV
-version          v19r0
+version          v19r3
 
 # ============== structure ===================================================
 branches         cmt doc python
 
 # ============== dependencies ================================================
 use              Bender       v* Phys 
+use              BenderTools  v* Phys 
 
 # ============== patterns =====================================================
 apply_pattern    install_python_modules 
