@@ -104,12 +104,20 @@ TorrentSubfarmDisplay::~TorrentSubfarmDisplay()  {
 typedef SubfarmTorrentStatus::Sessions Sessions;
 typedef SessionStatus::Torrents Torrents;
 
-string torrent_file(const SubfarmTorrentStatus& sf)   {
+static string torrent_file(const SubfarmTorrentStatus& sf)   {
+  map<string,int> tmap;
   for(Sessions::const_iterator i=sf.sessions.begin(); i!=sf.sessions.end(); i=sf.sessions.next(i)) {
     const Torrents& t = (*i).torrents;
     for(Torrents::const_iterator j=t.begin(); j!=t.end();j=t.next(j))
-      return (*j).name;
+      if ( tmap.find((*j).name) != tmap.end() ) ++tmap[(*j).name];
+      else tmap[(*j).name] = 1;
   }
+  int maxi = 0;
+  map<string,int>::const_iterator k=tmap.begin(),mx=tmap.begin();
+  for(; k != tmap.end(); ++k) {
+    if ( (*k).second > maxi ) { maxi = (*k).second; mx=k; }
+  }
+  if ( mx != tmap.end() ) return (*mx).first;
   return "---No torrent file known---";
 }
 
@@ -150,9 +158,19 @@ void TorrentSubfarmDisplay::showNodes(const SubfarmTorrentStatus& sf)   {
 	       float(s.total_upload)/1024.f, float(s.total_download)/1024.0f,
 	       float(s.upload_rate)/1024.f,float(s.download_rate)/1024.f);
     ::sprintf(text2,"No torrent information availible for this node.");
+
+    Torrents::const_iterator ti = s.torrents.end();
     for(Torrents::const_iterator j=s.torrents.begin(); j!=s.torrents.end();j=s.torrents.next(j))   {
       const TorrentStatus& t = *j;
       ++cnt_torrents;
+      if ( t.name == torrent ) {
+	ti = j;
+	break;
+      }
+    }
+    for(Torrents::const_iterator j=s.torrents.begin(); j!=s.torrents.end();j=s.torrents.next(j))   {
+      const TorrentStatus& t = *j;
+      if ( ti != s.torrents.end() && j != ti ) continue;
       ::snprintf(text2,sizeof(text2),"%16s%6d%9.2f%6d%6d%10d%10d",
 		 states[t.state], t.num_peers, 100.f*t.progress,
 		 t.num_pieces_done, t.num_pieces_total,

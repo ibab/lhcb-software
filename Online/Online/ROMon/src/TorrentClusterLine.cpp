@@ -153,6 +153,25 @@ void TorrentClusterLine::initialDisplay() {
   end_update();
 }
 
+static string torrent_file(const SubfarmTorrentStatus& sf)   {
+  typedef SessionStatus::Torrents Torrents;
+  typedef SubfarmTorrentStatus::Sessions Sessions;
+  map<string,int> tmap;
+  for(Sessions::const_iterator i=sf.sessions.begin(); i!=sf.sessions.end(); i=sf.sessions.next(i)) {
+    const Torrents& t = (*i).torrents;
+    for(Torrents::const_iterator j=t.begin(); j!=t.end();j=t.next(j))
+      if ( tmap.find((*j).name) != tmap.end() ) ++tmap[(*j).name];
+      else tmap[(*j).name] = 1;
+  }
+  int maxi = 0;
+  map<string,int>::const_iterator k=tmap.begin(),mx=tmap.begin();
+  for(; k != tmap.end(); ++k) {
+    if ( (*k).second > maxi ) { maxi = (*k).second; mx=k; }
+  }
+  if ( mx != tmap.end() ) return (*mx).first;
+  return "---No torrent file known---";
+}
+
 void TorrentClusterLine::display() {
   typedef SessionStatus::Torrents Torrents;
   typedef SubfarmTorrentStatus::Sessions Sessions;
@@ -172,12 +191,21 @@ void TorrentClusterLine::display() {
 
   ::memset(&sum,0,sizeof(sum));
   pos = 85+CLUSTERLINE_START;
+  torrent = torrent_file(*sf);
   for(Sessions::const_iterator i=sf->sessions.begin(); i!=sf->sessions.end(); i=sf->sessions.next(i)) {
     int col = COL_ALARM;
     const SessionStatus& s = *i;
+    Torrents::const_iterator ti = s.torrents.end();
     for(Torrents::const_iterator j=s.torrents.begin(); j!=s.torrents.end();j=s.torrents.next(j))   {
       const TorrentStatus& t = *j;
-      if ( torrent.empty() ) torrent = t.name;
+      if ( t.name == torrent ) {
+	ti = j;
+	break;
+      }
+    }
+    for(Torrents::const_iterator j=s.torrents.begin(); j!=s.torrents.end();j=s.torrents.next(j))   {
+      const TorrentStatus& t = *j;
+      if ( ti != s.torrents.end() && j != ti ) continue;
       switch(t.state) {
       case TorrentStatus::queued_for_checking:
 	col = COL_WARNING;
