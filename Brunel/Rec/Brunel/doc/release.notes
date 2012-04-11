@@ -4,7 +4,8 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
 - Changes to references since v42r2p1
-  . Add algorithms to convert ROStatus to ProcStatus (CaloDAQ, DAQUtils)
+  . Add algorithms to convert ROStatus to ProcStatus for Calo and Muon 
+    (CaloDAQ, DAQUtils, RecConf)
   . add eta->gg monitoring (CaloMoniDst)
   . Fix in PatForward: left-right ambiguity bit of PatFwdHits was not being
     reset when reusing hits (PatAlgorithms)
