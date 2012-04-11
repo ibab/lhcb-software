@@ -4,6 +4,10 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2012-04-11 - Chris Jones
+ - Fix a bug where when running in the HLT, the Rich::TabulatedProperty1D
+   object for the HLT refractive index interpolator was not deleted.
+
 !========================= RichDet v16r9 2012-01-31 =========================
 ! 2012-01-06 - Chris Jones
  - Add some additional debug and verbose printouts to DeRichSystem

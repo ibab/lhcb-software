@@ -46,9 +46,13 @@ DeRichRadiator::DeRichRadiator(const std::string & name) :
 //=========================================================================
 DeRichRadiator::~DeRichRadiator()
 {
-  delete m_refIndex;
-  delete m_rayleigh;
-  delete m_absorption;
+  if ( m_hltRefIndex != m_refIndex )
+  {
+    delete m_hltRefIndex; m_hltRefIndex = NULL;
+  }
+  delete m_refIndex;   m_refIndex   = NULL;
+  delete m_rayleigh;   m_rayleigh   = NULL;
+  delete m_absorption; m_absorption = NULL;
 }
 
 StatusCode DeRichRadiator::initialize()
