@@ -236,6 +236,7 @@ void OMAlib::doAlgList() {
   m_algorithms["HMerge"] = new OMAHMerge(this);
   m_algorithms["Scale"] = new OMAScale(this);
   m_algorithms["Add"] =  new OMAAdd(this);
+  m_algorithms["Asymmetry"] =  new OMAAsymmetry(this);
   m_algorithms["Multiply"] =  new OMAMultiply(this);
   m_algorithms["Project"] =  new OMAProject(this);
   m_algorithms["Rebin"] =  new OMARebin(this);

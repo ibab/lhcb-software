@@ -103,11 +103,11 @@ void OMAFitFunction::fit(TH1* histo, std::vector<float>* initValues, std::vector
   if(m_useTF1) {
     histo->Fit((TF1*) this,"0Q","",xmin,xmax);
     TF1 * fitf = histo -> GetFunction( this -> GetName() ) ;
-    if ( fitf ) fitf -> Draw( "LSAME" ) ;
+    if ( fitf ) {fitf -> Draw( "LSAME" ) ; fitf->SetLineColor(4); }
   } else {
     histo->Fit(m_funcString.c_str(),"0Q","",xmin,xmax);
     TF1 * fitf = histo -> GetFunction( m_funcString.c_str() ) ;
-    if ( fitf ) fitf -> Draw( "LSAME" ) ;
+    if ( fitf ) {fitf -> Draw( "LSAME" ) ; fitf->SetLineColor(4); }
   }
 }
 

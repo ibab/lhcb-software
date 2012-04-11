@@ -2,6 +2,11 @@
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
 
+
+! 20120411
+- add OMAAsymmetry algorithm
+- draw fitted curves in blue
+
 ! ======== v4r1 ===============
 
 ! 20110811
