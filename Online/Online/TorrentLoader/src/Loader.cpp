@@ -13,6 +13,15 @@
 //====================================================================
 // $Header:$
 #define WITH_SHIPPED_GEOIP_H
+
+// This is a pure hack, but I do not know how to get out of this otherwise.
+// Somehow the LCG boost libraries are not what libtorrent expects really
+#ifdef  BOOST_FILESYSTEM_VERSION
+#undef  BOOST_FILESYSTEM_VERSION
+#define BOOST_FILESYSTEM_VERSION 2
+#endif
+//============= End-of-hack =============
+
 #include "TorrentLoader/Loader.h"
 #include "ROMon/TorrentMon.h"
 
@@ -62,6 +71,12 @@ enum {
   CMD_MONITOR_TORRENT,
   LAST
 };
+namespace {
+  struct DimLock {
+    DimLock() { dim_lock(); }
+    ~DimLock() { dim_unlock(); }
+  };
+}
 
 /// Static printer (RTL overload)
 static size_t printout(void* context, int level, const char* fmt, va_list args)  {
@@ -285,12 +300,19 @@ Main::Main(int argc, char** argv)
   }
   // allow the workers also to talk to neighboring subfarm controllers
   if ( tier == 2 && ::toupper(farm_node[0])=='H' ) {
+    const char rows[] = {'a','b','c','d','e','f',0};
     string tmp = farm_node;
-    char c = ::tolower(farm_node[3]);
-    farm_node[3] = char(c < 'f' ? c+1 : 'a');
-    filter.add_host(farm_node,ALLOWED);
-    farm_node[3] = char(c < 'e' ? c+2 : c=='e' ? 'a' : 'b');
-    filter.add_host(farm_node,ALLOWED);
+    for(const char* r=rows; *r; ++r)  {
+      tmp[3] = *r;
+      filter.add_host(tmp,ALLOWED);
+    }
+#if 0
+    char c = ::tolower(tmp[3]);
+    tmp[3] = char(c < 'f' ? c+1 : 'a');
+    filter.add_host(tmp,ALLOWED);
+    tmp[3] = char(c < 'e' ? c+2 : c=='e' ? 'a' : 'b');
+    filter.add_host(tmp,ALLOWED);
+#endif
   }
 
   // Now build the main objects
@@ -604,10 +626,7 @@ void Session::setIPFilter(const NetworkFilter& filter) {
 }
 
 void Session::updateMonitoring()  const {
-  setSessionInfo();
-  setTorrentInfo();
-  RTL::Lock  lock(m_lock);
-  IocSensor::instance().send(m_parent,CMD_MONITOR_TORRENT,m_status->clone());
+  IocSensor::instance().send((Interactor*)this,CMD_MONITOR_TORRENT,(void*)0);
 }
 
 /// Update the session monitoring block. Does 
@@ -634,7 +653,6 @@ void Session::setSessionInfo()   const   {
 /// Update the session monitoring block. Does reallocate the memory block if necessary
 void Session::setTorrentInfo()   const   {
   if ( int(m_torrents.size()) > m_status->torrents.size() ) {
-    //RTL::Lock  lock(m_lock);
     m_status = m_status->reallocate(m_torrents.size());
   }
   SessionStatus::Torrents::iterator it = m_status->torrents.reset();
@@ -674,6 +692,7 @@ void Session::setDownloadLimit(int mb_per_second) {
 
 /// Remove all torrents and optionally clear caches
 void Session::removeAllTorrents(bool flush) {
+  RTL::Lock lock(m_lock);
   for(Torrents::iterator i = m_torrents.begin(); i != m_torrents.end(); ++i)  {
     char out[41];    
     torrent_handle& handle = (*i).second;
@@ -691,10 +710,11 @@ void Session::removeAllTorrents(bool flush) {
 
 /// Add a new torrent
 void Session::addTorrent(const std::string& nam) {
+  RTL::Lock lock(m_lock);
   Torrents::const_iterator i = m_torrents.find(nam);
-  if ( m_tier > 1 )   {
-    //removeAllTorrents(true);
-    //i = m_torrents.find(nam);
+  if ( m_tier> 1 && i == m_torrents.end() ) {
+    RTL::Lock lock_reverse(m_lock,true);
+    removeAllTorrents(true);
   }
   if ( i == m_torrents.end() ) {
     char out[41];
@@ -754,6 +774,7 @@ void Session::addTorrent(const std::string& nam) {
 
 /// Remove an existing torrent
 void Session::removeTorrent(const std::string& nam) {
+  RTL::Lock lock(m_lock);
   Torrents::iterator i = m_torrents.find(nam);
   if ( i != m_torrents.end() ) {
     char out[41];
@@ -1060,6 +1081,7 @@ void Session::operator()(state_changed_alert const& a) const {
     }
     ::lib_rtl_output(LIB_RTL_INFO,"%-24s : %s -> %s -- %s\n",
 		     a.what(),states[a.prev_state],states[a.state],a.message().c_str());
+    RTL::Lock lock(m_lock);
     for(Torrents::const_iterator i=m_torrents.begin(); i!=m_torrents.end();++i) {
       if ( handle == (*i).second ) {
 	IocSensor::instance().send(m_parent,CMD_COMMAND_DONE,new string((*i).first));
@@ -1084,6 +1106,13 @@ void Session::handle(const Event& event) {
       str = auto_ptr<string>(event.iocPtr<string>());
       addTorrent(*str.get());
       return;
+    case CMD_MONITOR_TORRENT: {
+      RTL::Lock lock(m_lock);
+      setSessionInfo();
+      setTorrentInfo();
+      IocSensor::instance().send(m_parent,CMD_MONITOR_TORRENT,m_status->clone());
+      break;
+    }
     default:
       break;
     }

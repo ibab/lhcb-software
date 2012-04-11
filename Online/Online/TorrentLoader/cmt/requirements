@@ -10,7 +10,6 @@ use BitTorrent   v* Online -no_auto_imports
 apply_pattern install_more_includes more=TorrentLoader
 
 library TorrentLoader -import=DIM -import=ROMon -import=BitTorrent -import=OnlineBase ../src/*.cpp
-
 macro_append TorrentLoader_shlibflags ' $(Boost_linkopts_thread) '
 macro_append TorrentLoader_shlibflags ' $(Boost_linkopts_system) '
 macro_append TorrentLoader_shlibflags ' $(Boost_linkopts_filesystem) '
