@@ -19,7 +19,7 @@ __version__ = " CVS tag $Name: not supported by cvs2svn $ , version $Revision$ "
 
 __all__ = [ 'Counter' , 'VE' , 'HistosBase', 'HistoMapBase' , 'HistoMap' , 'LambdaMap' , 'pi0Mass' ]
 
-from GaudiPython.Bindings import gbl as _cpp
+from LoKiCore.basic import cpp as _cpp
 
 Counter    = _cpp.StatEntity
 VE         = _cpp.Gaudi.Math.ValueWithError
