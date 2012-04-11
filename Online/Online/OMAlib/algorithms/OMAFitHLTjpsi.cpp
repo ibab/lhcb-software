@@ -26,7 +26,7 @@ OMAFitHLTjpsi::OMAFitHLTjpsi()  :
   m_funcString= "[0]*exp(-((x-[1])**2/(2*[2]**2)))+[3]+[4]*(x-[1])/[2]";
   initfun();
   ((TF1*) this)->SetRange(300,10000);
-  ((TF1*) this)->SetLineColor(2);
+  ((TF1*) this)->SetLineColor(4);
 }
 
 
