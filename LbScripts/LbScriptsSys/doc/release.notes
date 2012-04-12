@@ -1,5 +1,38 @@
 2012-03-06 Ben Couturier <Ben.Couturier@cern.ch>
 
+	* cmt/requirements: release of version v6r7p4
+
+	LbConfiguration
+	* python/LbConfiguration/Package.py: Added new package GenXiccData
+	* scripts/generateLogin: Set CMTEXTRATAGS to NO_PYTHON_LIBPATH to avoid having the python 
+	shared library path in cache
+
+	LbRelease
+	New classes to implement archive and recovery to/from DIRAC
+	* python/LbRelease/Archive/ProjectToolScript.py
+	* python/LbRelease/Archive/ProjectManager.py
+	* python/LbRelease/Archive/DiracArchiver.py
+	New tools to check the files on disk related to a project:
+	* scripts/lb-project-archive-dist
+	* scripts/lb-project-archive-file
+	* scripts/lb-project-compare-dist
+	* scripts/lb-project-check-archive
+	* scripts/lb-project-archive-release
+	* scripts/lb-project-clean-release
+	* scripts/lb-project-check-dist
+	Other:
+	* python/LbRelease/Info.py: Quicker project lookup (if version is specified)
+	* python/LbRelease/ReleaseNotes.py: fixed to undestand a Gaudi release notes too
+	* scripts/branch_package: the file was not committed
+
+	LbUtils
+	* python/LbUtils/HTMLDependencyManager.py: Added class to parse the HTML dependency files used
+	by install_project.py
+	* python/LbUtils/CMT/Project.py: optimization
+	* python/LbUtils/CMT/Package.py: optimization
+
+2012-03-06 Ben Couturier <Ben.Couturier@cern.ch>
+
 	* cmt/requirements: release of version v6r7p3
 
 	LbLegacy	
