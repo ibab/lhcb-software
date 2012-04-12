@@ -41,8 +41,9 @@ package_names = ['XmlDDDB',
                  'CPConfig',
                  'RDConfig',
                  'CharmConfig',
-		 'TMVAWeights',
-                 'ProdConf']
+                 'TMVAWeights',
+                 'ProdConf',
+                 'GenXiccData']
 
 class PackageConfException(Exception):
     pass
@@ -278,6 +279,8 @@ MIBData.setProject("PARAM")#IGNORE:E0602
 TMVAWeights.setProject("PARAM")#IGNORE:E0602
 
 ProdConf.setProject("DBASE")#IGNORE:E0602
+
+GenXiccData.setProject("PARAM")#IGNORE:E0602
 
 L0TCK.setHat("TCK")#IGNORE:E0602
 L0TCK.setProject("DBASE")#IGNORE:E0602

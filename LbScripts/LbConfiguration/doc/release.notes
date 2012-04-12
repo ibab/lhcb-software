@@ -1,8 +1,11 @@
+2012-04-12  Ben Couturier <Ben.Couturier@cern.ch>
+
+	* python/LbConfiguration/Package.py: Added new package GenXiccData
+
 2012-03-14  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* scripts/generateLogin: Set CMTEXTRATAGS to NO_PYTHON_LIBPATH to avoid having the python shared 
 	library path in cache
-
 
 2012-03-06  Ben Couturier <Ben.Couturier@cern.ch>
 
