@@ -140,6 +140,17 @@
 <code> return new CaloPosition( *this );</code>
 </method>
 
+<method
+    name    = "fillStream"
+    desc    = "Print this CaloPosition data object in a human readable way"
+    type    = "std::ostream&amp;"
+    virtual = "FALSE"
+    const   = "TRUE">
+  <arg
+      type = "std::ostream"
+      name = "s"/>
+</method>
+
 </class>
 </package>
 </gdd>

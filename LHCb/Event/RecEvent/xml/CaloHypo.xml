@@ -156,12 +156,12 @@
 />
 
 <relation
-        name = "digits"
-        desc = "References to the Calorimeter Digits"
-        type = "LHCb::CaloDigit"
-        multiplicity = "M"
-        nonconstaccessor = "TRUE"
-/>
+    name = "digits"
+    desc = "References to the Calorimeter Digits"
+    type = "LHCb::CaloDigit"
+    multiplicity = "M"
+    nonconstaccessor = "TRUE"
+ />
 
 <relation
  name = "clusters"
@@ -184,11 +184,9 @@
  const  = "TRUE"
  access = "PUBLIC" >
  <code> 
- if( 0 != m_position ) { return m_position ->               e () ;}
- return 0 ;
+ return ( 0 != m_position ? m_position->e() : 0 );
 </code>
 </method>
-
 
 <method
  desc    = "Cloning of the object ('virtual constructor') "
@@ -199,11 +197,21 @@
  access  = "PUBLIC" >
 <code>
  CaloHypo* hypo = new CaloHypo( *this ); 
- if( 0 != position () ) { hypo->setPosition( position() -> clone() ) ;} 
+ if ( 0 != position() ) { hypo->setPosition( position()->clone() ); } 
  return hypo;
 </code>
 </method>
 
+<method
+    name    = "fillStream"
+    desc    = "Print this CaloHypo data object in a human readable way"
+    type    = "std::ostream&amp;"
+    virtual = "FALSE"
+    const   = "TRUE">
+  <arg
+      type = "std::ostream"
+      name = "s"/>
+</method>
 
 </class>
 

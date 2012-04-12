@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+! 2012-04-12 - Chris Jones
+ - Improvements to the fillStream methods for CaloPosition and CaloHypo
+
 !========================= RecEvent v2r41 2012-03-26 =========================
 ! 2012-03-22 - Chris Jones
  - Include Track pointer in ProtoParticle printout
