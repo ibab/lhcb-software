@@ -7,6 +7,9 @@
 ! 2012-04-12 - Chris Jones
  - Improve a bit the debugging messages from ChargedProtoParticleAddMuonInfo
    and ChargedProtoParticleAddRichInfo
+ - Add a work around to ChargedProtoParticleAddMuonInfo to attempt to recreate
+   missing Track SmartRefs in stripping <18 data, due to a bug in the way the track
+   references was saved in uDSTs.
 
 !========================= RecreatePIDTools v1r4 2011-11-07 =========================
 ! 2011-10-18 - J. Helder Lopes

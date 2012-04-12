@@ -62,10 +62,6 @@ ChargedProtoParticleAddRichInfo::~ChargedProtoParticleAddRichInfo() { }
 //=============================================================================
 StatusCode ChargedProtoParticleAddRichInfo::execute()
 {
-  // Load the RichPIDs
-  const bool richSc = getRichData();
-  if ( !richSc ) { return StatusCode::SUCCESS; }
-
   // ProtoParticle container
   if ( !exist<ProtoParticles>(m_protoPath) )
   {
@@ -73,6 +69,10 @@ StatusCode ChargedProtoParticleAddRichInfo::execute()
                     StatusCode::SUCCESS );
   }
   LHCb::ProtoParticles * protos = get<ProtoParticles>(m_protoPath);
+
+  // Load the RichPIDs
+  const bool richSc = getRichData();
+  if ( !richSc ) { return StatusCode::SUCCESS; }
 
   // Loop over proto particles
   for ( ProtoParticles::iterator iProto = protos->begin();

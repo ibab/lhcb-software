@@ -23,7 +23,7 @@ DECLARE_ALGORITHM_FACTORY( ChargedProtoParticleAddMuonInfo )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-ChargedProtoParticleAddMuonInfo::
+  ChargedProtoParticleAddMuonInfo::
 ChargedProtoParticleAddMuonInfo( const std::string& name,
                                  ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
@@ -39,7 +39,7 @@ ChargedProtoParticleAddMuonInfo( const std::string& name,
   {
     m_muonPath   = LHCb::MuonPIDLocation::Offline;
     m_protoPath  = LHCb::ProtoParticleLocation::Charged;
-  } 
+  }
 
   // Muon data
   declareProperty( "InputMuonPIDLocation", m_muonPath );
@@ -59,10 +59,6 @@ ChargedProtoParticleAddMuonInfo::~ChargedProtoParticleAddMuonInfo() { }
 //=============================================================================
 StatusCode ChargedProtoParticleAddMuonInfo::execute()
 {
-  // Load the MuonPIDs
-  const bool muonSc = getMuonData();
-  if ( !muonSc ) { return StatusCode::SUCCESS; }
-
   // ProtoParticle container
   if ( !exist<LHCb::ProtoParticles>(m_protoPath) )
   {
@@ -70,6 +66,10 @@ StatusCode ChargedProtoParticleAddMuonInfo::execute()
                     StatusCode::SUCCESS );
   }
   LHCb::ProtoParticles * protos = get<LHCb::ProtoParticles>(m_protoPath);
+
+  // Load the MuonPIDs
+  const bool muonSc = getMuonData();
+  if ( !muonSc ) { return StatusCode::SUCCESS; }
 
   // Loop over proto particles
   for ( LHCb::ProtoParticles::iterator iProto = protos->begin();
@@ -96,7 +96,7 @@ void ChargedProtoParticleAddMuonInfo::updateMuon( LHCb::ProtoParticle * proto ) 
 
   // Does this track have a MUON PID result ?
   TrackToMuonPID::const_iterator iM = m_muonMap.find( proto->track() );
-  if ( m_muonMap.end() == iM ) 
+  if ( m_muonMap.end() == iM )
   {
     if ( msgLevel(MSG::VERBOSE) )
       verbose() << " -> NO associated MuonPID object found" << endmsg;
@@ -129,11 +129,11 @@ void ChargedProtoParticleAddMuonInfo::updateMuon( LHCb::ProtoParticle * proto ) 
   proto->setMuonPID( muonPID );
 
   // check Loose IsMuonLoose flag - Reject non-muons
-  if ( !muonPID->IsMuonLoose() ) 
+  if ( !muonPID->IsMuonLoose() )
   {
     if ( msgLevel(MSG::VERBOSE) )
     {
-      verbose() << " -> Rejected by IsMuonLoose cut" << endmsg; 
+      verbose() << " -> Rejected by IsMuonLoose cut" << endmsg;
     }
     return;
   }
@@ -159,7 +159,7 @@ bool ChargedProtoParticleAddMuonInfo::getMuonData()
   // Do we have any MuonPID results
   if ( !exist<LHCb::MuonPIDs>(m_muonPath) )
   {
-    Warning( "No MuonPIDs at '" + m_muonPath + 
+    Warning( "No MuonPIDs at '" + m_muonPath +
              "' -> ProtoParticles will not be changed.", StatusCode::SUCCESS, 1 ).ignore();
     return false;
   }
@@ -169,7 +169,10 @@ bool ChargedProtoParticleAddMuonInfo::getMuonData()
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Successfully loaded " << muonpids->size()
             << " MuonPIDs from " << m_muonPath << endmsg;
-  
+
+  // Pointer for bug work around below, if needed.
+  const LHCb::ProtoParticles * protos = NULL;
+
   // refresh the reverse mapping
   for ( LHCb::MuonPIDs::const_iterator iM = muonpids->begin();
         iM != muonpids->end(); ++iM )
@@ -178,15 +181,35 @@ bool ChargedProtoParticleAddMuonInfo::getMuonData()
     {
       m_muonMap[ (*iM)->idTrack() ] = *iM;
       if ( msgLevel(MSG::VERBOSE) )
-        verbose() << "MuonPID key=" << (*iM)->key() 
+        verbose() << "MuonPID key=" << (*iM)->key()
                   << " has Track key=" << (*iM)->idTrack()->key()
                   << " " << (*iM)->idTrack() << endmsg;
     }
     else
     {
       std::ostringstream mess;
-      mess << "MuonPID key=" << (*iM)->key() << " has NULL Track pointer";
+      mess << "MuonPID key=" << (*iM)->key() << " has NULL Track pointer. "
+           << "Will try and work around using track keys ...";
       Warning( mess.str() ).ignore();
+
+      // Bug in old (u)DSTs. Try and work around using track keys ...
+      // Eventually to be removed
+      if ( !protos ) protos = get<LHCb::ProtoParticles>(m_protoPath);
+      for ( LHCb::ProtoParticles::const_iterator iProto = protos->begin();
+            iProto != protos->end(); ++iProto )
+      {
+        if ( (*iProto)->track() &&
+             (*iProto)->track()->key() == (*iM)->key() )
+        {
+          m_muonMap[ (*iProto)->track() ] = *iM;
+          if ( msgLevel(MSG::VERBOSE) )
+            verbose() << "MuonPID key=" << (*iM)->key()
+                      << " has Track key=" << (*iProto)->track()->key()
+                      << " " << (*iProto)->track() << endmsg;
+          break;
+        }
+      }
+
     }
   }
 
