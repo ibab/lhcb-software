@@ -472,9 +472,11 @@ namespace LHCb {
 
   public:
 
-    /// the runs declared close by the RunDB
+    /// the runs declared closed by the RunDB 
     std::set<unsigned int> m_closedRuns;
-    	
+    
+    /// the number of discarded events for each run
+    std::map<unsigned int, unsigned int> m_discardedEvents;	
     /// Destructor.
     virtual ~MDFWriterNet();
 

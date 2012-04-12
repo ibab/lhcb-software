@@ -295,8 +295,8 @@ StatusCode MDFWriterNet::initialize(void)
     m_MonitorSvc->declareInfo("TotEvts", m_TotEvts, "Total events seen", this);
   }
 
-  m_discardCurrentRun = false;
-  m_currentRunNumber=0;
+//  m_discardCurrentRun = false;
+  m_currentRunNumber = 0;
   m_CleanUpStop = false;
   m_Finalized = false;
   m_StopRetry = false;
@@ -678,7 +678,7 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
     return StatusCode::SUCCESS;
   } 
 
-  static int nbLate=0;
+//  static int nbLate=0;
   unsigned int runNumber = getRunNumber(mHeader, len);
   if ((int)runNumber == -1) { 
       *m_log << MSG::FATAL << WHERE 
@@ -689,20 +689,23 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
 
   // If we get a newer run number, start a timeout on the open files of the previous runs. 
   if(m_currentRunNumber < runNumber) {
+#if 0    
       if(nbLate != 0)
           *m_log << MSG::WARNING << WHERE << nbLate << " events were lost, for run number <= " << m_currentRunNumber << endmsg;
       nbLate = 0;
-
+#endif
       m_currentRunNumber = runNumber;
-      m_discardCurrentRun = false;
+//      m_discardCurrentRun = false;
       m_TotEvts = 0;
   }
 
-  if(m_currFile == NULL || runNumber != m_currFile->getRunNumber()) {
+  if (m_currFile == NULL || runNumber != m_currFile->getRunNumber()) {
     m_currFile = m_openFiles.getFile(runNumber);
     // Do not accept event from previous runs if no file is open anymore 
-    if(!m_currFile && ((runNumber == m_currentRunNumber && m_discardCurrentRun) || (m_closedRuns.find(runNumber) != m_closedRuns.end()))) {
-      if (!(++nbLate % 10000)) *m_log << MSG::WARNING << " Discarded " << nbLate << " events belonging to closed runs" << endmsg;
+    if (!m_currFile && (m_closedRuns.find(runNumber) != m_closedRuns.end())) {
+      m_discardedEvents[runNumber]++;
+      if (!(m_discardedEvents[runNumber] % 10000)) *m_log << MSG::WARNING << WHERE << " Discarded " << m_discardedEvents[runNumber] << 
+        " events belonging to run# " << runNumber << endmsg;
       
       if (pthread_mutex_unlock(&m_SyncFileList)) {
         *m_log << MSG::ERROR << WHERE << " Unlocking mutex" << endmsg;
@@ -738,8 +741,8 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
               *m_log << MSG::ERROR
                      << " Exception: "
                      << e.what() << endmsg;
-	      m_closedRuns.insert(runNumber);
-              m_discardCurrentRun = true;
+	            m_closedRuns.insert(runNumber);
+              m_discardedEvents[runNumber] = 0;
               if (pthread_mutex_unlock(&m_SyncFileList)) {
                 *m_log << MSG::ERROR << WHERE << " Unlocking mutex" << endmsg;
                 return StatusCode::FAILURE;
