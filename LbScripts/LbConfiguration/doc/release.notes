@@ -1,5 +1,6 @@
 2012-04-12  Ben Couturier <Ben.Couturier@cern.ch>
 
+	* cmt/requirements: release of version v6r7p4
 	* python/LbConfiguration/Package.py: Added new package GenXiccData
 
 2012-03-14  Ben Couturier <Ben.Couturier@cern.ch>
