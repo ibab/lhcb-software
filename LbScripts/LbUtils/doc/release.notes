@@ -1,3 +1,7 @@
+2012-04-12  Ben Couturier  <ben.couturier@cern.ch>
+
+	* cmt/requirements: release of version v3r8
+
 2012-03-26  Ben Couturier  <ben.couturier@cern.ch>
 
 	* python/LbUtils/HTMLDependencyManager.py: Added class to parse the HTML dependency files used
