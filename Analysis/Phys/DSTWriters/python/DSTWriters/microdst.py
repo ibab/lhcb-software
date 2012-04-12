@@ -72,7 +72,7 @@ def microDSTElements(pack=True,saveTrackClusters=True) :
                  ClonePVRelations(location = "Particle2VertexRelations",
                                   clonePVs = True,
                                   RecVertexCloner = "VertexBaseFromRecVertexClonerNoTracks"),
-                 CloneLHCbIDs(fullDecayTree = True),
+                 #CloneLHCbIDs(fullDecayTree = True),
                  ReFitAndClonePVs(RecVertexCloner = "VertexBaseFromRecVertexClonerNoTracks")
                  ]
     if pack :
@@ -99,7 +99,7 @@ def stripMicroDSTElements(pack=True,saveTrackClusters=True) :
                  ClonePVRelations( location = "Particle2VertexRelations",
                                    clonePVs = True,
                                    RecVertexCloner = "VertexBaseFromRecVertexClonerNoTracks" ),
-                 CloneLHCbIDs(fullDecayTree = True),
+                 #CloneLHCbIDs(fullDecayTree = True),
                  ReFitAndClonePVs(RecVertexCloner = "VertexBaseFromRecVertexClonerNoTracks")
                  ]
     if pack :

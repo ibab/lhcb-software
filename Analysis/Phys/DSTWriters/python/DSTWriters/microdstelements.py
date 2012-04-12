@@ -98,21 +98,28 @@ class CloneParticleTrees(MicroDSTElement) :
                                     VertexCloner,
                                     ParticleCloner,
                                     ProtoParticleCloner,
-                                    TrackCloner )
+                                    TrackCloner,
+                                    CaloHypoCloner,
+                                    CaloClusterCloner )
         
         cloner = CopyParticles( name = self.personaliseName(sel,'CopyParticles'),
                                 InputLocations = self.dataLocations(sel,"Particles") )
         
         cloner.addTool(ParticleCloner, name="ParticleCloner")
         cloner.ParticleCloner.TESVetoList = self.tesVetoList
+        cloner.ParticleCloner.ICloneProtoParticle = "ProtoParticleCloner"
                 
         cloner.addTool(ProtoParticleCloner,name="ProtoParticleCloner")
         cloner.ProtoParticleCloner.TESVetoList = self.tesVetoList
 
         cloner.addTool(TrackCloner,name="TrackCloner")
         cloner.TrackCloner.TESVetoList = self.tesVetoList
-               
-        cloner.ParticleCloner.ICloneProtoParticle = "ProtoParticleCloner"
+
+        cloner.addTool(CaloHypoCloner,name="CaloHypoCloner")
+        cloner.CaloHypoCloner.TESVetoList = self.tesVetoList
+
+        cloner.addTool(CaloClusterCloner,name="CaloClusterCloner")
+        cloner.CaloClusterCloner.TESVetoList = self.tesVetoList
         
         self.setOutputPrefix(cloner)
 
@@ -356,10 +363,9 @@ class CloneLHCbIDs(MicroDSTElement) :
         self._fullDecay = fullDecayTree
     def __call__(self, sel) :
         from Configurables import CopyParticle2LHCbIDs
-        cloner =  CopyParticle2LHCbIDs(self.personaliseName(sel,
-                                                            'CopyLHCbIDs'),
-                                       FullDecayTree = self._fullDecay)
-        cloner.InputLocations = self.dataLocations(sel,"Particles")
+        cloner = CopyParticle2LHCbIDs( name = self.personaliseName(sel,'CopyLHCbIDs'),
+                                       FullDecayTree  = self._fullDecay,
+                                       InputLocations = self.dataLocations(sel,"Particles") )
         self.setOutputPrefix(cloner)
         return [cloner]
 
@@ -398,18 +404,18 @@ class PackStrippingReports(MicroDSTElement) :
     def __call__(self, sel):
         from Configurables import PackDecReport
         # Packer for the full object, at /Event/Strip/
-        fpacker = PackDecReport("PackFullStripReps")
-        fpacker.InputName   = "Strip/Phys/DecReports"
-        fpacker.OutputName  = "Strip/pPhys/DecReports"
-        fpacker.DeleteInput = True
+        fpacker = PackDecReport( name = "PackFullStripReps",
+                                 InputName   = "Strip/Phys/DecReports",
+                                 OutputName  = "Strip/pPhys/DecReports",
+                                 DeleteInput = True )
         # Packer for stream dependant location, if present
         # Probably will not be used, so could be removed eventually,
         # but keep for the moment
-        spacker = PackDecReport(self.personaliseName(sel,"PackStripReps"))
-        spacker.InputName   = self.branch + "/Phys/DecReports"
-        spacker.OutputName  = self.branch + "/pPhys/DecReports"
-        spacker.DeleteInput = True
-        return [fpacker,spacker]
+##         spacker = PackDecReport( name = self.personaliseName(sel,"PackStripReps"),
+##                                  InputName   = self.branch + "/Phys/DecReports",
+##                                  OutputName  = self.branch + "/pPhys/DecReports",
+##                                  DeleteInput = True )
+        return [fpacker]
 
 class PackParticlesAndVertices(MicroDSTElement) :
     """
@@ -420,6 +426,7 @@ class PackParticlesAndVertices(MicroDSTElement) :
         packer = PackPsVs( name = self.personaliseName(sel,"PackPsAndVs"),
                            InputStream        = self.branch,
                            DeleteInput        = True,
+                           EnableCheck        = True,
                            AlwaysCreateOutput = False,
                            VetoedContainers = ["/Event/"+self.branch+"/Rec/Vertex/Primary"] )
         return [packer]
@@ -444,6 +451,8 @@ class PackRecObjects(MicroDSTElement) :
 
         deleteInput = True
 
+        testPacking = False
+
         algs = [ ]
 
         # NOTE : The order is important here.
@@ -452,12 +461,14 @@ class PackRecObjects(MicroDSTElement) :
         from Configurables import PackProtoParticle
         algs += [ PackProtoParticle( name = self.personaliseName(sel,"PackChargedProtos"),
                                      AlwaysCreateOutput = False,
-                                     DeleteInput = deleteInput,
+                                     DeleteInput        = deleteInput,
+                                     EnableCheck        = testPacking,
                                      InputName          = self.branch + "/Rec/ProtoP/Charged",
                                      OutputName         = self.branch + "/pRec/ProtoP/Charged" ),
                   PackProtoParticle( name = self.personaliseName(sel,"PackNeutralProtos"),
                                      AlwaysCreateOutput = False,
-                                     DeleteInput = deleteInput,
+                                     DeleteInput        = deleteInput,
+                                     EnableCheck        = testPacking,
                                      InputName          = self.branch + "/Rec/ProtoP/Neutrals",
                                      OutputName         = self.branch + "/pRec/ProtoP/Neutrals" )
                   ]
@@ -467,56 +478,73 @@ class PackRecObjects(MicroDSTElement) :
         for hypo in [ 'Electrons','Photons','MergedPi0s','SplitPhotons' ] :
             algs += [ PackCaloHypo( name = self.personaliseName(sel,"PackCalo"+hypo),
                                     AlwaysCreateOutput = False,
-                                    DeleteInput = deleteInput,
-                                    InputName  = self.branch + "/Rec/Calo/"  + hypo,
-                                    OutputName = self.branch + "/pRec/Calo/" + hypo )
+                                    DeleteInput        = deleteInput,
+                                    EnableCheck        = testPacking,
+                                    InputName          = self.branch + "/Rec/Calo/"  + hypo,
+                                    OutputName         = self.branch + "/pRec/Calo/" + hypo )
                       ]
-            
+
+        # CALO Clusters
+        from Configurables import DataPacking__Pack_LHCb__CaloClusterPacker_ as PackCaloClusters
+        for type in [ 'EcalClusters','HcalClusters','EcalSplitClusters' ] :
+            algs += [ PackCaloClusters( name = self.personaliseName(sel,"Pack"+type),
+                                        AlwaysCreateOutput = False,
+                                        DeleteInput        = deleteInput,
+                                        EnableCheck        = testPacking,
+                                        InputName          = self.branch + "/Rec/Calo/"  + type,
+                                        OutputName         = self.branch + "/pRec/Calo/" + type )
+                      ]
+
         # RICH PIDs
         from Configurables import DataPacking__Pack_LHCb__RichPIDPacker_ as PackRichPIDs
         algs += [ PackRichPIDs( name = self.personaliseName(sel,"PackRichPIDs"),
                                 AlwaysCreateOutput = False,
-                                DeleteInput = deleteInput,
-                                InputName  = self.branch + "/Rec/Rich/PIDs",
-                                OutputName = self.branch + "/pRec/Rich/PIDs" )
+                                DeleteInput        = deleteInput,
+                                EnableCheck        = testPacking,
+                                InputName          = self.branch + "/Rec/Rich/PIDs",
+                                OutputName         = self.branch + "/pRec/Rich/PIDs" )
                   ]
         
         # MUON PIDs
         from Configurables import DataPacking__Pack_LHCb__MuonPIDPacker_ as PackMuonPIDs
         algs += [ PackMuonPIDs( name = self.personaliseName(sel,"PackMuonPIDs"),
                                 AlwaysCreateOutput = False,
-                                DeleteInput = deleteInput,
-                                InputName  = self.branch + "/Rec/Muon/MuonPID",
-                                OutputName = self.branch + "/pRec/Muon/MuonPID" )
+                                DeleteInput        = deleteInput,
+                                EnableCheck        = testPacking,
+                                InputName          = self.branch + "/Rec/Muon/MuonPID",
+                                OutputName         = self.branch + "/pRec/Muon/MuonPID" )
                   ]
 
         # PVs
         from Configurables import PackRecVertex
-        from Configurables import DataPacking__Pack_LHCb__WeightsVectorPacker_ as PackPVWeights
+        #from Configurables import DataPacking__Pack_LHCb__WeightsVectorPacker_ as PackPVWeights
         algs += [ PackRecVertex( name = self.personaliseName(sel,"PackPVs"),
                                  AlwaysCreateOutput = False,
-                                 DeleteInput = deleteInput,
-                                 InputName  = self.branch + "/Rec/Vertex/Primary",
-                                 OutputName = self.branch + "/pRec/Vertex/Primary" ),
-                  PackPVWeights( name = self.personaliseName(sel,"PackPVWeights"),
-                                 AlwaysCreateOutput = False,
-                                 DeleteInput = deleteInput,
-                                 InputName  = self.branch + "/Rec/Vertex/Weights",
-                                 OutputName = self.branch + "/pRec/Vertex/Weights" )
+                                 DeleteInput        = deleteInput,
+                                 #EnableCheck        = testPacking, # To Do
+                                 InputName          = self.branch + "/Rec/Vertex/Primary",
+                                 OutputName         = self.branch + "/pRec/Vertex/Primary" )
+##                   PackPVWeights( name = self.personaliseName(sel,"PackPVWeights"),
+##                                  AlwaysCreateOutput = False,
+##                                  DeleteInput        = deleteInput,
+##                                  InputName          = self.branch + "/Rec/Vertex/Weights",
+##                                  OutputName         = self.branch + "/pRec/Vertex/Weights" )
                   ]
 
         # Tracks
         from Configurables import PackTrack
         algs += [ PackTrack( name = self.personaliseName(sel,"PackBestTracks"),
                              AlwaysCreateOutput = False,
-                             DeleteInput = deleteInput,
-                             InputName  = self.branch + "/Rec/Track/Best",
-                             OutputName = self.branch + "/pRec/Track/Best" ),
+                             DeleteInput        = deleteInput,
+                             EnableCheck        = testPacking,
+                             InputName          = self.branch + "/Rec/Track/Best",
+                             OutputName         = self.branch + "/pRec/Track/Best" ),
                   PackTrack( name = self.personaliseName(sel,"PackMuonTracks"),
                              AlwaysCreateOutput = False,
-                             DeleteInput = deleteInput,
-                             InputName  = self.branch + "/Rec/Track/Muon",
-                             OutputName = self.branch + "/pRec/Track/Muon" )
+                             DeleteInput        = deleteInput,
+                             EnableCheck        = testPacking,
+                             InputName          = self.branch + "/Rec/Track/Muon",
+                             OutputName         = self.branch + "/pRec/Track/Muon" )
                   ]
                 
         return algs
