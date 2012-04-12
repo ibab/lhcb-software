@@ -65,7 +65,8 @@ namespace LHCb
     int pos_c0, pos_c1;
     int       pos_cov00,pos_cov11,pos_cov22;
     short int pos_cov10,pos_cov20,pos_cov21;
-    int pos_spread00,pos_spread11,pos_spread10;
+    int pos_spread00,pos_spread11;
+    short int pos_spread10;
     unsigned short int firstEntry, lastEntry;
   };
 
@@ -138,7 +139,7 @@ namespace LHCb
 
   private:
 
-    /// Data packing version (not used as yet, but for any future schema evolution)
+    /// Data packing version
     char m_packingVersion;
 
     /// The packed data objects
@@ -163,10 +164,10 @@ namespace LHCb
   public:
 
     // These are required by the templated algorithms
-    typedef LHCb::CaloCluster                    Data;
-    typedef LHCb::PackedCaloCluster        PackedData;
-    typedef LHCb::CaloClusters             DataVector;
-    typedef LHCb::PackedCaloClusters PackedDataVector;
+    typedef LHCb::CaloCluster                     Data;
+    typedef LHCb::PackedCaloCluster         PackedData;
+    typedef LHCb::CaloClusters              DataVector;
+    typedef LHCb::PackedCaloClusters  PackedDataVector;
     static const std::string& packedLocation()   
     {
       return LHCb::PackedCaloClusterLocation::Default; 
@@ -176,10 +177,15 @@ namespace LHCb
       return LHCb::CaloClusterLocation::Default; 
     }
 
+  private:
+
+    /// Default Constructor hidden
+    CaloClusterPacker() : m_parent(NULL) {}
+
   public:
 
     /// Default Constructor
-    CaloClusterPacker() {}
+    CaloClusterPacker( GaudiAlgorithm & parent ) : m_parent(&parent) {}
 
   public:
 
@@ -189,17 +195,28 @@ namespace LHCb
 
     /// Unpack Calo Clusters
     void unpack( const PackedDataVector & pclus,
-                 DataVector       & cluss ) const;
+                 DataVector             & cluss ) const;
+
+    /// Compare two Calo Clusters containers to check the packing -> unpacking performance
+    StatusCode check( const DataVector & dataA,
+                      const DataVector & dataB ) const;
 
     /// Compare two Calo Clusters to check the packing -> unpacking performance
-    StatusCode check( const DataVector & dataA,
-                      const DataVector & dataB,
-                      GaudiAlgorithm & parent ) const;
+    StatusCode check( const Data & dataA,
+                      const Data & dataB ) const;
+
+  public:
+
+    /// Access the parent algorithm
+    GaudiAlgorithm& parent() const { return *m_parent; }
 
   private:
 
     /// Standard packing of quantities into integers ...
     StandardPacker m_pack;
+
+    /// Pointer to parent algorithm
+    GaudiAlgorithm * m_parent;
 
   };
 

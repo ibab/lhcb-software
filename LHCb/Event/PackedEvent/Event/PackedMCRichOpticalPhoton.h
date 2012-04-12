@@ -147,30 +147,43 @@ namespace LHCb
     static const std::string& packedLocation()   { return LHCb::PackedMCRichOpticalPhotonLocation::Default; }
     static const std::string& unpackedLocation() { return LHCb::MCRichOpticalPhotonLocation::Default; }
 
-  public:
+  private:
 
     /// Default Constructor
     MCRichOpticalPhotonPacker() : PhotEnScale ( 5.0e8 ) {}
 
   public:
 
+    /// Constructor
+    MCRichOpticalPhotonPacker( GaudiAlgorithm & parent )
+      : m_parent(&parent), PhotEnScale(5.0e8) {}
+
+  public:
+
     /// Pack an MCRichOpticalPhoton
-    void pack( const DataVector       & phots,
+    void pack( const DataVector & phots,
                PackedDataVector & pphots ) const;
 
     /// Unpack an MCRichOpticalPhoton
     void unpack( const PackedDataVector & pphots,
-                 DataVector       & phots ) const;
+                 DataVector             & phots ) const;
 
     /// Compare two MCRichHits to check the packing -> unpacking performance
     StatusCode check( const DataVector & dataA,
-                      const DataVector & dataB,
-                      GaudiAlgorithm & parent ) const;
+                      const DataVector & dataB ) const;
+
+  private:
+
+    /// Access the parent algorithm
+    GaudiAlgorithm& parent() const { return *m_parent; }
 
   private:
 
     /// Standard packing of quantities into integers ...
     StandardPacker m_pack;
+
+    /// Pointer to parent algorithm
+    GaudiAlgorithm * m_parent;
 
   private:
     

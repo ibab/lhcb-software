@@ -13,6 +13,8 @@
 // Event
 #include "Event/RecVertex.h"
 
+class GaudiAlgorithm;
+
 namespace LHCb
 {
 
@@ -152,10 +154,15 @@ namespace LHCb
     static const std::string& packedLocation()   { return LHCb::PackedRecVertexLocation::Primary; }
     static const std::string& unpackedLocation() { return LHCb::RecVertexLocation::Primary; }
 
+  private:
+
+    /// Default Constructor hidden
+    RecVertexPacker() {}
+
   public:
 
-    /// Default Constructor
-    RecVertexPacker() {}
+    /// Constructor
+    RecVertexPacker( GaudiAlgorithm & parent ) : m_parent(&parent) {}
 
   public:
 
@@ -181,8 +188,16 @@ namespace LHCb
 
   private:
 
+    /// Access the parent algorithm
+    GaudiAlgorithm& parent() const { return *m_parent; }
+
+  private:
+
     /// Standard packing of quantities into integers ...
     StandardPacker m_pack;
+
+    /// Pointer to parent algorithm
+    GaudiAlgorithm * m_parent;
 
   };
 

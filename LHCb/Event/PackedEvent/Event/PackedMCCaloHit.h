@@ -134,10 +134,16 @@ namespace LHCb
     typedef LHCb::MCCaloHits             DataVector;
     typedef LHCb::PackedMCCaloHits PackedDataVector;
 
+  private:
+
+    /// Default Constructor hidden
+    MCCaloHitPacker() : m_energyScale( 1.0e2 ) { }
+
   public:
 
-    /// Default Constructor
-    MCCaloHitPacker() : m_energyScale( 1.0e2 ) { }
+    /// Constructor
+    MCCaloHitPacker( GaudiAlgorithm & parent )
+      : m_parent(&parent), m_energyScale( 1.0e2 ) { }
 
   public:
 
@@ -147,17 +153,24 @@ namespace LHCb
 
     /// Unpack MCCaloHits
     void unpack( const PackedDataVector & phits,
-                 DataVector       & hits ) const;
+                 DataVector             & hits ) const;
 
     /// Compare two MCCaloHits to check the packing -> unpacking performance
     StatusCode check( const DataVector & dataA,
-                      const DataVector & dataB,
-                      GaudiAlgorithm & parent ) const;
+                      const DataVector & dataB ) const;
+
+  private:
+
+    /// Access the parent algorithm
+    GaudiAlgorithm& parent() const { return *m_parent; }
 
   private:
 
     /// Standard packing of quantities into integers ...
     StandardPacker m_pack;
+
+    /// Pointer to parent algorithm
+    GaudiAlgorithm * m_parent;
 
   protected:
 
@@ -178,7 +191,7 @@ namespace LHCb
   class MCSpdHitPacker : public MCCaloHitPacker
   {
   public:
-    MCSpdHitPacker() : MCCaloHitPacker()
+    MCSpdHitPacker(GaudiAlgorithm & parent) : MCCaloHitPacker(parent)
     {
       m_energyScale = 1.0e2;
     }
@@ -198,7 +211,7 @@ namespace LHCb
   class MCPrsHitPacker : public MCCaloHitPacker
   {
   public:
-    MCPrsHitPacker() : MCCaloHitPacker()
+    MCPrsHitPacker(GaudiAlgorithm & parent) : MCCaloHitPacker(parent)
     {
       m_energyScale = 1.0e2;
     }
@@ -218,7 +231,7 @@ namespace LHCb
   class MCEcalHitPacker : public MCCaloHitPacker
   {
   public:
-    MCEcalHitPacker() : MCCaloHitPacker()
+    MCEcalHitPacker(GaudiAlgorithm & parent) : MCCaloHitPacker(parent)
     {
       m_energyScale = 1.0e2;
     }
@@ -238,7 +251,7 @@ namespace LHCb
   class MCHcalHitPacker : public MCCaloHitPacker
   {
   public:
-    MCHcalHitPacker() : MCCaloHitPacker()
+    MCHcalHitPacker(GaudiAlgorithm & parent) : MCCaloHitPacker(parent)
     {
       m_energyScale = 1.0e2;
     }

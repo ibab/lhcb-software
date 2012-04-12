@@ -46,7 +46,6 @@ namespace LHCb
     int   tof;
     int   mp;
     int   mcParticle;
-
   };
 
   // -----------------------------------------------------------------------
@@ -142,32 +141,48 @@ namespace LHCb
     typedef LHCb::MCHits             DataVector;
     typedef LHCb::PackedMCHits PackedDataVector;
 
+  private:
+
+    /// Default Constructor hidden
+    MCHitPacker( ) 
+      : m_parent(NULL),
+        m_dispScale ( 1.0e2 ),
+        m_enScale   ( 5.0e3 ) {}
+
   public:
 
-    /// Default Constructor
-    MCHitPacker() 
-      : m_dispScale ( 1.0e2 ),
+    /// Constructor
+    MCHitPacker( GaudiAlgorithm & parent ) 
+      : m_parent(&parent),
+        m_dispScale ( 1.0e2 ),
         m_enScale   ( 5.0e3 ) {}
     
   public:
 
     /// Pack MCHits
-    void pack( const DataVector       & hits,
+    void pack( const DataVector & hits,
                PackedDataVector & phits ) const;
 
     /// Unpack MCHits
     void unpack( const PackedDataVector & phits,
-                 DataVector       & hits ) const;
+                 DataVector             & hits ) const;
 
     /// Compare two MCHits to check the packing -> unpacking performance
     StatusCode check( const DataVector & dataA,
-                      const DataVector & dataB,
-                      GaudiAlgorithm & parent ) const;
+                      const DataVector & dataB ) const;
+
+  private:
+
+    /// Access the parent algorithm
+    GaudiAlgorithm& parent() const { return *m_parent; }
 
   private:
 
     /// Standard packing of quantities into integers ...
     StandardPacker m_pack;
+
+    /// Pointer to parent algorithm
+    GaudiAlgorithm * m_parent;
 
   protected:
 
@@ -191,7 +206,7 @@ namespace LHCb
   class MCVeloHitPacker : public MCHitPacker
   {
   public:
-    MCVeloHitPacker() : MCHitPacker()
+    MCVeloHitPacker( GaudiAlgorithm & parent ) : MCHitPacker(parent)
     {
       m_dispScale = 1.0e2;
       m_enScale   = 5.0e3;
@@ -210,7 +225,7 @@ namespace LHCb
   class MCPuVetoHitPacker : public MCHitPacker
   {
   public:
-    MCPuVetoHitPacker() : MCHitPacker()
+    MCPuVetoHitPacker( GaudiAlgorithm & parent ) : MCHitPacker(parent)
     {
       m_dispScale = 1.0e2;
       m_enScale   = 5.0e3;
@@ -229,7 +244,7 @@ namespace LHCb
   class MCVeloPixHitPacker : public MCHitPacker
   {
   public:
-    MCVeloPixHitPacker() : MCHitPacker()
+    MCVeloPixHitPacker( GaudiAlgorithm & parent ) : MCHitPacker(parent)
     {
       m_dispScale = 1.0e2;
       m_enScale   = 5.0e3;
@@ -249,7 +264,7 @@ namespace LHCb
   class MCTTHitPacker : public MCHitPacker
   {
   public:
-    MCTTHitPacker() : MCHitPacker()
+    MCTTHitPacker( GaudiAlgorithm & parent ) : MCHitPacker(parent)
     {
       m_dispScale = 1.0e2;
       m_enScale   = 5.0e3;
@@ -268,7 +283,7 @@ namespace LHCb
   class MCITHitPacker : public MCHitPacker
   {
   public:
-    MCITHitPacker() : MCHitPacker()
+    MCITHitPacker( GaudiAlgorithm & parent ) : MCHitPacker(parent)
     {
       m_dispScale = 1.0e2;
       m_enScale   = 5.0e3;
@@ -287,7 +302,7 @@ namespace LHCb
   class MCOTHitPacker : public MCHitPacker
   {
   public:
-    MCOTHitPacker() : MCHitPacker()
+    MCOTHitPacker( GaudiAlgorithm & parent ) : MCHitPacker(parent)
     {
       m_dispScale = 1.0e2;
       m_enScale   = 5.0e3;
@@ -306,7 +321,7 @@ namespace LHCb
   class MCMuonHitPacker : public MCHitPacker
   {
   public:
-    MCMuonHitPacker() : MCHitPacker()
+    MCMuonHitPacker( GaudiAlgorithm & parent ) : MCHitPacker(parent)
     {
       m_dispScale = 1.0e2;
       m_enScale   = 5.0e3;

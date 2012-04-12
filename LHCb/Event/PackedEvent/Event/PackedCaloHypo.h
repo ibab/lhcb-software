@@ -2,11 +2,19 @@
 #ifndef EVENT_PACKEDCALOHYPO_H
 #define EVENT_PACKEDCALOHYPO_H 1
 
-// Include files
-// Include files
 #include "GaudiKernel/DataObject.h"
+#include "GaudiKernel/StatusCode.h"
+
+// Kernel
+#include "Kernel/StandardPacker.h"
+
+// Event
+#include "Event/CaloHypo.h"
+
 #include <string>
 #include <vector>
+
+class GaudiAlgorithm;
 
 namespace LHCb
 {
@@ -52,17 +60,11 @@ namespace LHCb
     // from CaloPosition
     int z;
     // position (3) + 3x3 symmetric covariance matrix
-    int posX;
-    int posY;
-    int posE;
+    int posX, posY, posE;
 
-    int cov00;
-    int cov11;
-    int cov22;
-    short int cov10;
-    short int cov20;
-    short int cov21;
-    short int cerr10;    // non diagonal terms of the x,y spread matrix.
+    int cov00, cov11, cov22;
+    short int cov10, cov20, cov21;
+    short int cerr10; // non diagonal terms of the x,y spread matrix.
     // center in x,y + 2x2 symetric covariance matrix
     int centX;
     int centY;
@@ -127,6 +129,62 @@ namespace LHCb
 
     std::vector<PackedCaloHypo> m_vect;
     std::vector<int>            m_refs;
+
+  };
+
+  /** @class CaloHypoPacker Event/PackedCaloHypo.h
+   *
+   *  Utility class to handle the packing and unpacking of CaloHypos
+   *
+   *  @author Christopher Rob Jones
+   *  @date   05/04/2012
+   */
+  class CaloHypoPacker
+  {
+
+  public:
+
+    typedef LHCb::CaloHypo                    Data;
+    typedef LHCb::PackedCaloHypo        PackedData;
+    typedef LHCb::CaloHypos             DataVector;
+    typedef LHCb::PackedCaloHypos PackedDataVector;
+
+  private:
+
+    /// Default Constructor hidden
+    CaloHypoPacker() : m_parent(NULL) {}
+
+  public:
+
+    /// Default Constructor
+    CaloHypoPacker( GaudiAlgorithm & parent ) : m_parent(&parent) {}
+
+  public:
+
+    /// Pack CaloHypos
+    void pack( const DataVector & hypos,
+               PackedDataVector & phypos ) const;
+
+    /// Unpack CaloHypos
+    void unpack( const PackedDataVector & phypos,
+                 DataVector             & hypos ) const;
+
+    /// Compare two CaloHypos to check the packing -> unpacking performance
+    StatusCode check( const DataVector & dataA,
+                      const DataVector & dataB ) const;
+
+  private:
+
+    /// Access the parent algorithm
+    GaudiAlgorithm& parent() const { return * m_parent; }
+
+  private:
+
+    /// Standard packing of quantities into integers ...
+    StandardPacker m_pack;
+
+    /// Pointer to parent algorithm
+    GaudiAlgorithm * m_parent;
 
   };
 

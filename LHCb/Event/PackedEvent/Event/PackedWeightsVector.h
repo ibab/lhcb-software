@@ -37,7 +37,6 @@ namespace LHCb
 
     int key;           ///< key of the track this weight is associated with
     short int weight;  ///< Weight of this track in the vertex
-
   };
 
   /** @struct PackedWeights Event/PackedWeightsVector.h
@@ -57,7 +56,6 @@ namespace LHCb
     unsigned short int firstWeight;  ///< index to first weight
     unsigned short int lastWeight;   ///< index to last weight
     unsigned int pvKey;              ///< The PV Key
-
   };
 
   // -----------------------------------------------------------------------
@@ -161,10 +159,15 @@ namespace LHCb
     static const std::string& packedLocation()   { return LHCb::PackedWeightsVectorLocation::Default; }
     static const std::string& unpackedLocation() { return LHCb::WeightsVectorLocation::Default; }
 
+  private:
+
+    /// Default Constructor hidden
+    WeightsVectorPacker() : m_parent(NULL) {}
+
   public:
 
     /// Default Constructor
-    WeightsVectorPacker() {}
+    WeightsVectorPacker( GaudiAlgorithm & parent ) : m_parent(&parent) {}
 
   public:
 
@@ -174,17 +177,24 @@ namespace LHCb
 
     /// Unpack Data
     void unpack( const PackedDataVector & pweightsV,
-                 DataVector       & weightsV ) const;
+                 DataVector             & weightsV ) const;
 
     /// Compare two data vectors to check the packing -> unpacking performance
     StatusCode check( const DataVector & dataA,
-                      const DataVector & dataB,
-                      GaudiAlgorithm & parent ) const;
+                      const DataVector & dataB ) const;
+
+  private:
+
+    /// Access the parent algorithm
+    GaudiAlgorithm& parent() const { return *m_parent; }
 
   private:
 
     /// Standard packing of quantities into integers ...
     StandardPacker m_pack;
+
+    /// Pointer to parent algorithm
+    GaudiAlgorithm * m_parent;
 
   };
 

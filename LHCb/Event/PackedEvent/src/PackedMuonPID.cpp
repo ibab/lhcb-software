@@ -97,13 +97,12 @@ void MuonPIDPacker::unpack( const PackedDataVector & ppids,
 }
 
 StatusCode MuonPIDPacker::check( const DataVector & dataA,
-                                 const DataVector & dataB,
-                                 GaudiAlgorithm & parent ) const
+                                 const DataVector & dataB ) const
 {
   StatusCode sc = StatusCode::SUCCESS;
 
   // checker
-  const DataPacking::DataChecks ch(parent);
+  const DataPacking::DataChecks ch(parent());
 
   // Loop over data containers together and compare
   DataVector::const_iterator iA(dataA.begin()), iB(dataB.begin());
@@ -116,7 +115,7 @@ StatusCode MuonPIDPacker::check( const DataVector & dataA,
     // History code
     ok &= (*iA)->Status() == (*iB)->Status();
     // Track references
-    ok &= (*iA)->idTrack() == (*iB)->idTrack();
+    ok &= (*iA)->idTrack()   == (*iB)->idTrack();
     ok &= (*iA)->muonTrack() == (*iB)->muonTrack();
     // DLLs
     ok &= ch.compareDoubles( "MuonLLMu", (*iA)->MuonLLMu(), (*iB)->MuonLLMu() );
@@ -127,11 +126,11 @@ StatusCode MuonPIDPacker::check( const DataVector & dataA,
     // If comparison not OK, print full information
     if ( !ok )
     {
-      parent.warning() << "Problem with MuonPID data packing :-" << endmsg
-                       << "  Original PID : " << **iA
-                       << endmsg
-                       << "  Unpacked PID : " << **iB
-                       << endmsg;
+      parent().warning() << "Problem with MuonPID data packing :-" << endmsg
+                         << "  Original PID : " << **iA
+                         << endmsg
+                         << "  Unpacked PID : " << **iB
+                         << endmsg;
       sc = StatusCode::FAILURE;
     }
   }

@@ -85,13 +85,12 @@ void MCRichHitPacker::unpack( const PackedDataVector & phits,
 }
 
 StatusCode MCRichHitPacker::check( const DataVector & dataA,
-                                   const DataVector & dataB,
-                                   GaudiAlgorithm & parent ) const
+                                   const DataVector & dataB ) const
 {
   StatusCode sc = StatusCode::SUCCESS;
 
   // checker
-  const DataPacking::DataChecks ch(parent);
+  const DataPacking::DataChecks ch(parent());
 
   // Loop over data containers together and compare
   DataVector::const_iterator iA(dataA.begin()), iB(dataB.begin());
@@ -117,11 +116,11 @@ StatusCode MCRichHitPacker::check( const DataVector & dataA,
     // If comparison not OK, print full information
     if ( !ok )
     {
-      parent.warning() << "Problem with MCRichHit data packing :-" << endmsg
-                       << "  Original Hit : " << **iA
-                       << endmsg
-                       << "  Unpacked Hit : " << **iB
-                       << endmsg;
+      parent().warning() << "Problem with MCRichHit data packing :-" << endmsg
+                         << "  Original Hit : " << **iA
+                         << endmsg
+                         << "  Unpacked Hit : " << **iB
+                         << endmsg;
       sc = StatusCode::FAILURE;
     }
   }

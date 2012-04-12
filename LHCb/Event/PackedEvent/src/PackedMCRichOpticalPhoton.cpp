@@ -142,13 +142,12 @@ void MCRichOpticalPhotonPacker::unpack( const PackedDataVector & pphots,
 }
 
 StatusCode MCRichOpticalPhotonPacker::check( const DataVector & dataA,
-                                             const DataVector & dataB,
-                                             GaudiAlgorithm & parent ) const
+                                             const DataVector & dataB ) const
 {
   StatusCode sc = StatusCode::SUCCESS;
 
   // checker
-  const DataPacking::DataChecks ch(parent);
+  const DataPacking::DataChecks ch(parent());
 
   // Loop over data containers together and compare
   DataVector::const_iterator iA(dataA.begin()), iB(dataB.begin());
@@ -187,11 +186,11 @@ StatusCode MCRichOpticalPhotonPacker::check( const DataVector & dataA,
     // If comparison not OK, print full information
     if ( !ok )
     {
-      parent.warning() << "Problem with MCRichOpticalPhoton data packing :-" << endmsg
-                       << "  Original Photon : " << **iA
-                       << endmsg
-                       << "  Unpacked Photon : " << **iB
-                       << endmsg;
+      parent().warning() << "Problem with MCRichOpticalPhoton data packing :-" << endmsg
+                         << "  Original Photon : " << **iA
+                         << endmsg
+                         << "  Unpacked Photon : " << **iB
+                         << endmsg;
       sc = StatusCode::FAILURE;
     }
   }

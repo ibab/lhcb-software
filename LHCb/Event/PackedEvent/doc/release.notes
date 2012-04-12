@@ -4,6 +4,10 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+! 2012-04-12 - Chris Jones
+ - Various improvements to the packers, to improve the way the checks are 
+   implemented. Allows the checking to be run directly by the packing algorithms.
+
 ! 2012-04-04 - Chris Jones
  - Fix gcc 4.6 warning in PackedCaloCluster
 

@@ -210,10 +210,15 @@ namespace LHCb
     static const std::string& packedLocation()   { return LHCb::PackedParticleLocation::User; }
     static const std::string& unpackedLocation() { return LHCb::ParticleLocation::User; }
 
+  private:
+
+    /// Default Constructor hidden
+    ParticlePacker() : m_parent(NULL) {}
+
   public:
 
     /// Default Constructor
-    ParticlePacker() {}
+    ParticlePacker( GaudiAlgorithm & parent ) : m_parent(&parent) {}
 
   public:
 
@@ -236,15 +241,26 @@ namespace LHCb
     void unpack( const PackedDataVector & pparts,
                  DataVector             & parts ) const;
 
-    /// Compare two Particles to check the packing -> unpacking performance
+    /// Compare two Particle vectors to check the packing -> unpacking performance
     StatusCode check( const DataVector & dataA,
-                      const DataVector & dataB,
-                      GaudiAlgorithm & parent ) const;
+                      const DataVector & dataB ) const;
+
+    /// Compare two Particles to check the packing -> unpacking performance
+    StatusCode check( const Data & dataA,
+                      const Data & dataB ) const;
+
+  private:
+
+    /// Access the parent algorithm
+    GaudiAlgorithm& parent() const { return *m_parent; }
 
   private:
 
     /// Standard packing of quantities into integers ...
     StandardPacker m_pack;
+
+    /// Pointer to parent algorithm
+    GaudiAlgorithm * m_parent;
 
   };
 

@@ -15,6 +15,7 @@ branches          cmt doc Event dict src
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
 use	GaudiKernel     v*
+use	GaudiAlg        v*
 use     LHCbKernel      v*     Kernel
 use     MCEvent         v*     Event
 use     RecEvent        v*     Event

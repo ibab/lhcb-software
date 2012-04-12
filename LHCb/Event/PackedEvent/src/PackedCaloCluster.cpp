@@ -37,7 +37,7 @@ void CaloClusterPacker::pack( const DataVector & clus,
       pclu.pos_x = m_pack.position( clu.position().x() );
       pclu.pos_y = m_pack.position( clu.position().y() );
       pclu.pos_z = m_pack.position( clu.position().z() );
-      pclu.pos_e = m_pack.position( clu.position().e() );
+      pclu.pos_e = m_pack.energy  ( clu.position().e() );
       //
       pclu.pos_c0 = m_pack.position( clu.position().center()[0] );
       pclu.pos_c1 = m_pack.position( clu.position().center()[1] );
@@ -47,14 +47,16 @@ void CaloClusterPacker::pack( const DataVector & clus,
       const double err2 = std::sqrt( clu.position().covariance()(2,2) );
       pclu.pos_cov00 = m_pack.position( err0 );
       pclu.pos_cov11 = m_pack.position( err1 );
-      pclu.pos_cov22 = m_pack.position( err2 );
+      pclu.pos_cov22 = m_pack.energy  ( err2 );
       pclu.pos_cov10 = m_pack.fraction( clu.position().covariance()(1,0)/err1/err0 );
       pclu.pos_cov20 = m_pack.fraction( clu.position().covariance()(2,0)/err2/err0 );
       pclu.pos_cov21 = m_pack.fraction( clu.position().covariance()(2,1)/err2/err1 );
       //
-      pclu.pos_spread00 = m_pack.position( clu.position().spread()(0,0) );
-      pclu.pos_spread11 = m_pack.position( clu.position().spread()(1,1) );
-      pclu.pos_spread10 = m_pack.position( clu.position().spread()(1,0) );
+      const double serr0 = std::sqrt( clu.position().spread()(0,0) );
+      const double serr1 = std::sqrt( clu.position().spread()(1,1) );
+      pclu.pos_spread00 = m_pack.position( serr0 );
+      pclu.pos_spread11 = m_pack.position( serr1 );
+      pclu.pos_spread10 = m_pack.fraction( clu.position().spread()(1,0)/serr1/serr0 );
 
       // entries
       pclu.firstEntry = pclus.entries().size();
@@ -63,7 +65,6 @@ void CaloClusterPacker::pack( const DataVector & clus,
       {
         pclus.entries().push_back( PackedCaloClusterEntry() );
         PackedCaloClusterEntry & pEnt = pclus.entries().back();
-        
         if ( NULL != (*iEn).digit().target() )
         {
           pEnt.digit = m_pack.reference64( &pclus,
@@ -112,7 +113,7 @@ void CaloClusterPacker::unpack( const PackedDataVector & pclus,
       clu->position().setZ( m_pack.position(pclu.pos_z) );
       clu->position().setParameters( CaloP::Parameters( m_pack.position(pclu.pos_x),
                                                         m_pack.position(pclu.pos_y),
-                                                        m_pack.position(pclu.pos_e) ) );
+                                                        m_pack.energy  (pclu.pos_e) ) );
       //
       clu->position().setCenter( CaloP::Center( m_pack.position(pclu.pos_c0),
                                                 m_pack.position(pclu.pos_c1) ) );
@@ -120,7 +121,7 @@ void CaloClusterPacker::unpack( const PackedDataVector & pclus,
       CaloP::Covariance & cov = clu->position().covariance();
       const double err0 = m_pack.position( pclu.pos_cov00 );
       const double err1 = m_pack.position( pclu.pos_cov11 );
-      const double err2 = m_pack.position( pclu.pos_cov22 );
+      const double err2 = m_pack.energy  ( pclu.pos_cov22 );
       cov(0,0) = err0 * err0;
       cov(1,0) = err1 * err0 * m_pack.fraction( pclu.pos_cov10 );
       cov(1,1) = err1 * err1;
@@ -128,10 +129,12 @@ void CaloClusterPacker::unpack( const PackedDataVector & pclus,
       cov(2,1) = err2 * err1 * m_pack.fraction( pclu.pos_cov21 );
       cov(2,2) = err2 * err2;
       //
-      CaloP::Spread & spread = clu->position().spread();
-      spread(0,0) = m_pack.position( pclu.pos_spread00 );
-      spread(1,1) = m_pack.position( pclu.pos_spread11 );
-      spread(1,0) = m_pack.position( pclu.pos_spread10 );
+      CaloP::Spread & spr = clu->position().spread();
+      const double serr0 = m_pack.position( pclu.pos_spread00 );
+      const double serr1 = m_pack.position( pclu.pos_spread11 );
+      spr(0,0) = serr0 * serr0;
+      spr(1,0) = serr1 * serr0 * m_pack.fraction( pclu.pos_spread10 );
+      spr(1,1) = serr1 * serr1;
 
       // entries
       for ( unsigned int iE = pclu.firstEntry; iE < pclu.lastEntry; ++iE )
@@ -164,79 +167,85 @@ void CaloClusterPacker::unpack( const PackedDataVector & pclus,
 }
 
 StatusCode CaloClusterPacker::check( const DataVector & dataA,
-                                     const DataVector & dataB,
-                                     GaudiAlgorithm & parent ) const
+                                     const DataVector & dataB ) const
 {
   StatusCode sc = StatusCode::SUCCESS;
-
-  // checker
-  const DataPacking::DataChecks ch(parent);
 
   // Loop over data containers together and compare
   DataVector::const_iterator iA(dataA.begin()), iB(dataB.begin());
   for ( ; iA != dataA.end() && iB != dataB.end(); ++iA, ++iB )
   {
-    // assume OK from the start
-    bool ok = true;
-
-    // checks here
-
-    // key
-    ok &= (*iA)->key()  == (*iB)->key();
-    // type
-    ok &= (*iA)->type() == (*iB)->type();
-    // seed
-    ok &= (*iA)->seed() == (*iB)->seed();
-
-    // 'positions'
-    ok &= ch.compareDoubles( "Position-X",
-                             (*iA)->position().x(), (*iB)->position().x() );
-    ok &= ch.compareDoubles( "Position-Y",
-                             (*iA)->position().y(), (*iB)->position().y() );
-    ok &= ch.compareDoubles( "Position-Z",
-                             (*iA)->position().z(), (*iB)->position().z() );
-    ok &= ch.compareDoubles( "Position-E",
-                             (*iA)->position().e(), (*iB)->position().e() );
-    ok &= ch.compareVectors( "Position-Center",
-                             (*iA)->position().center(), (*iB)->position().center() );
-    ok &= ch.compareMatrices<Gaudi::SymMatrix3x3,3,3>( "Position-Covariance",
-                                                       (*iA)->position().covariance(), 
-                                                       (*iB)->position().covariance() );
-    ok &= ch.compareMatrices<Gaudi::SymMatrix2x2,2,2>( "Position-Spread",
-                                                       (*iA)->position().spread(), 
-                                                       (*iB)->position().spread() );
-
-    // Entries
-    const bool entsSizeOK = (*iA)->entries().size() == (*iB)->entries().size();
-    ok &= entsSizeOK;
-    if ( entsSizeOK )
-    {
-      LHCb::CaloCluster::Entries::const_iterator iEA((*iA)->entries().begin());
-      LHCb::CaloCluster::Entries::const_iterator iEB((*iB)->entries().begin());
-      for ( ; iEA != (*iA)->entries().end() && iEB != (*iB)->entries().end(); 
-            ++iEA, ++iEB )
-      {
-        ok &= (*iEA).digit()  == (*iEB).digit();
-        ok &= (*iEA).status() == (*iEB).status();
-        ok &= ch.compareDoubles( "Entry-Fraction", 
-                                 (*iEA).fraction(), (*iEB).fraction() );
-      }
-    }
-
-    // force printout for tests
-    //ok = false;
-    // If comparison not OK, print full information
-    if ( !ok )
-    {
-      parent.warning() << "Problem with CaloCluster data packing :-" << endmsg
-                       << "  Original Cluster : " << **iA
-                       << endmsg
-                       << "  Unpacked Cluster : " << **iB
-                       << endmsg;
-      sc = StatusCode::FAILURE;
-    }
+    sc = sc && check( **iA, **iB );
   }
 
   // Return final status
   return sc;
+}
+
+StatusCode CaloClusterPacker::check( const Data & dataA,
+                                     const Data & dataB ) const
+{
+  // assume OK from the start
+  bool ok = true;
+
+  // checker
+  const DataPacking::DataChecks ch(parent());
+
+  // checks here
+
+  // key
+  ok &= ch.compareInts( "key", dataA.key(), dataB.key() );
+  // type
+  ok &= ch.compareInts( "type", dataA.type(), dataB.type() );
+  // seed
+  ok &= ch.compareInts( "seed", dataA.seed().all(), dataB.seed().all() );
+
+  // 'positions'
+  ok &= ch.compareDoubles( "Position-X",
+                           dataA.position().x(), dataB.position().x() );
+  ok &= ch.compareDoubles( "Position-Y",
+                           dataA.position().y(), dataB.position().y() );
+  ok &= ch.compareDoubles( "Position-Z",
+                           dataA.position().z(), dataB.position().z() );
+  ok &= ch.compareEnergies( "Position-E",
+                            dataA.position().e(), dataB.position().e() );
+  ok &= ch.compareVectors( "Position-Center",
+                           dataA.position().center(), dataB.position().center() );
+  ok &= ch.compareMatrices<Gaudi::SymMatrix3x3,3,3>( "Position-Covariance",
+                                                     dataA.position().covariance(),
+                                                     dataB.position().covariance() );
+  ok &= ch.compareMatrices<Gaudi::SymMatrix2x2,2,2>( "Position-Spread",
+                                                     dataA.position().spread(),
+                                                     dataB.position().spread() );
+
+  // Entries
+  const bool entsSizeOK = dataA.entries().size() == dataB.entries().size();
+  ok &= entsSizeOK;
+  if ( entsSizeOK )
+  {
+    LHCb::CaloCluster::Entries::const_iterator iEA(dataA.entries().begin());
+    LHCb::CaloCluster::Entries::const_iterator iEB(dataB.entries().begin());
+    for ( ; iEA != dataA.entries().end() && iEB != dataB.entries().end();
+          ++iEA, ++iEB )
+    {
+      ok &= (*iEA).digit()  == (*iEB).digit();
+      ok &= (*iEA).status() == (*iEB).status();
+      ok &= ch.compareDoubles( "Entry-Fraction",
+                               (*iEA).fraction(), (*iEB).fraction() );
+    }
+  }
+
+  // force printout for tests
+  //ok = false;
+  // If comparison not OK, print full information
+  if ( !ok )
+  {
+    parent().warning() << "Problem with CaloCluster data packing :-" << endmsg
+                       << "  Original Cluster : " << dataA
+                       << endmsg
+                       << "  Unpacked Cluster : " << dataB
+                       << endmsg;
+  }
+
+  return ( ok ? StatusCode::SUCCESS : StatusCode::FAILURE );
 }

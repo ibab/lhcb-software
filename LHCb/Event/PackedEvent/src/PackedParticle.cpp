@@ -255,7 +255,7 @@ void ParticlePacker::unpack( const PackedData       & ppart,
     for ( unsigned int iiD = ppart.firstDaughter; iiD < ppart.lastDaughter; ++iiD )
     {
       int hintID(0), key(0);
-      m_pack.hintAndKey64( pparts.daughters()[iiD], 
+      m_pack.hintAndKey64( pparts.daughters()[iiD],
                            &pparts, &parts, hintID, key );
       SmartRef<LHCb::Particle> ref(&parts,hintID,key);
       part.addToDaughters( ref );
@@ -291,113 +291,120 @@ void ParticlePacker::unpack( const PackedDataVector & pparts,
 }
 
 StatusCode ParticlePacker::check( const DataVector & dataA,
-                                  const DataVector & dataB,
-                                  GaudiAlgorithm & parent ) const
+                                  const DataVector & dataB ) const
 {
   StatusCode sc = StatusCode::SUCCESS;
-
-  // checker
-  const DataPacking::DataChecks ch(parent);
 
   // Loop over data containers together and compare
   DataVector::const_iterator iA(dataA.begin()), iB(dataB.begin());
   for ( ; iA != dataA.end() && iB != dataB.end(); ++iA, ++iB )
   {
-    // assume OK from the start
-    bool ok = true;
-
-    // checks here
-
-    // PID
-    ok &= (*iA)->particleID() == (*iB)->particleID();
-
-    // Mass
-    ok &= ch.compareDoubles( "MeasuredMass",
-                             (*iA)->measuredMass(), (*iB)->measuredMass() );
-    ok &= ch.compareDoubles( "MeasuredMassError",
-                             (*iA)->measuredMassErr(), (*iB)->measuredMassErr() );
-
-    // momentum
-    ok &= ch.compareLorentzVectors( "Momentum",
-                                    (*iA)->momentum(), (*iB)->momentum() );
-
-    // reference position
-    ok &= ch.comparePoints( "ReferencePoint",
-                            (*iA)->referencePoint(), (*iB)->referencePoint() );
-
-    // Mom Cov
-    ok &= ch.compareMatrices<Gaudi::SymMatrix4x4,4,4>( "MomCov",
-                                                       (*iA)->momCovMatrix(),
-                                                       (*iB)->momCovMatrix() );
-
-    // Pos Cov
-    ok &= ch.compareMatrices<Gaudi::SymMatrix3x3,3,3>( "PosCov",
-                                                       (*iA)->posCovMatrix(),
-                                                       (*iB)->posCovMatrix() );
-
-    // PosMom Cov
-    ok &= ch.compareMatrices<Gaudi::Matrix4x3,4,3>( "PosMomCov",
-                                                    (*iA)->posMomCovMatrix(),
-                                                    (*iB)->posMomCovMatrix() );
-
-    // Extra info
-    const bool extraSizeOK = (*iA)->extraInfo().size() == (*iB)->extraInfo().size();
-    ok &= extraSizeOK;
-    if ( extraSizeOK )
-    {
-      LHCb::Particle::ExtraInfo::const_iterator iEA = (*iA)->extraInfo().begin();
-      LHCb::Particle::ExtraInfo::const_iterator iEB = (*iB)->extraInfo().begin();
-      for ( ; iEA != (*iA)->extraInfo().end() && iEB != (*iB)->extraInfo().end();
-            ++iEA, ++iEB )
-      {
-        const bool keyOK   = iEA->first == iEB->first;
-        const bool valueOK = ch.compareDoubles( "ExtraInfo", iEA->second, iEB->second );
-        ok &= keyOK && valueOK;
-      }
-    }
-    else
-    {
-      parent.warning() << "ExtraInfo different sizes" << endmsg;
-    }
-
-    // end vertex
-    ok &= ch.comparePointers( "EndVertex", (*iA)->endVertex(), (*iB)->endVertex() );
-
-    // proto particle
-    ok &= ch.comparePointers( "ProtoParticle", (*iA)->proto(), (*iB)->proto() );
-
-    // daughters
-    const bool dauSizeOK = (*iA)->daughters().size() == (*iB)->daughters().size();
-    ok &= dauSizeOK;
-    if ( dauSizeOK )
-    {
-      SmartRefVector<LHCb::Particle>::const_iterator iDA = (*iA)->daughters().begin();
-      SmartRefVector<LHCb::Particle>::const_iterator iDB = (*iB)->daughters().begin();
-      for ( ; iDA != (*iA)->daughters().end() && iDB != (*iB)->daughters().end();
-            ++iDA, ++iDB )
-      {
-        ok &= ch.comparePointers( "Daughters", &**iDA, &**iDB );
-      }
-    }
-    else
-    {
-      parent.warning() << "Daughters different sizes" << endmsg;
-    }
-
-    // force printout for tests
-    //ok = false;
-    // If comparison not OK, print full information
-    if ( !ok )
-    {
-      parent.warning() << "Problem with Particle data packing :-" << endmsg
-                       << "  Original Particle : " << **iA
-                       << endmsg
-                       << "  Unpacked Particle : " << **iB
-                       << endmsg;
-      sc = StatusCode::FAILURE;
-    }
+    sc = sc && check( **iA, **iB );
   }
 
   // Return final status
   return sc;
+}
+
+StatusCode ParticlePacker::check( const Data & dataA,
+                                  const Data & dataB ) const
+{
+  // assume OK from the start
+  bool ok = true;
+
+  // checker
+  const DataPacking::DataChecks ch(parent());
+
+  // checks here
+
+  // PID
+  ok &= dataA.particleID() == dataB.particleID();
+
+  // Mass
+  ok &= ch.compareEnergies( "MeasuredMass",
+                           dataA.measuredMass(), dataB.measuredMass() );
+  ok &= ch.compareEnergies( "MeasuredMassError",
+                           dataA.measuredMassErr(), dataB.measuredMassErr() );
+
+  // momentum
+  ok &= ch.compareLorentzVectors( "Momentum",
+                                  dataA.momentum(), dataB.momentum() );
+
+  // reference position
+  ok &= ch.comparePoints( "ReferencePoint",
+                          dataA.referencePoint(), dataB.referencePoint() );
+
+  // Mom Cov
+  ok &= ch.compareMatrices<Gaudi::SymMatrix4x4,4,4>( "MomCov",
+                                                     dataA.momCovMatrix(),
+                                                     dataB.momCovMatrix() );
+
+  // Pos Cov
+  ok &= ch.compareMatrices<Gaudi::SymMatrix3x3,3,3>( "PosCov",
+                                                     dataA.posCovMatrix(),
+                                                     dataB.posCovMatrix() );
+
+  // PosMom Cov
+  ok &= ch.compareMatrices<Gaudi::Matrix4x3,4,3>( "PosMomCov",
+                                                  dataA.posMomCovMatrix(),
+                                                  dataB.posMomCovMatrix() );
+
+  // Extra info
+  const bool extraSizeOK = dataA.extraInfo().size() == dataB.extraInfo().size();
+  ok &= extraSizeOK;
+  if ( extraSizeOK )
+  {
+    LHCb::Particle::ExtraInfo::const_iterator iEA = dataA.extraInfo().begin();
+    LHCb::Particle::ExtraInfo::const_iterator iEB = dataB.extraInfo().begin();
+    for ( ; iEA != dataA.extraInfo().end() && iEB != dataB.extraInfo().end();
+          ++iEA, ++iEB )
+    {
+      const bool keyOK   = iEA->first == iEB->first;
+      ok &= keyOK;
+      //const bool valueOK = ch.compareDoubles( "ExtraInfo", iEA->second, iEB->second );
+      //ok &= valueOK; // Don't trigger a warning just because the value is different ..
+    }
+  }
+  else
+  {
+    parent().warning() << "ExtraInfo different sizes" << endmsg;
+  }
+
+  // end vertex
+  ok &= ch.comparePointers( "EndVertex", dataA.endVertex(), dataB.endVertex() );
+
+  // proto particle
+  ok &= ch.comparePointers( "ProtoParticle", dataA.proto(), dataB.proto() );
+
+  // daughters
+  const bool dauSizeOK = dataA.daughters().size() == dataB.daughters().size();
+  ok &= dauSizeOK;
+  if ( dauSizeOK )
+  {
+    SmartRefVector<LHCb::Particle>::const_iterator iDA = dataA.daughters().begin();
+    SmartRefVector<LHCb::Particle>::const_iterator iDB = dataB.daughters().begin();
+    for ( ; iDA != dataA.daughters().end() && iDB != dataB.daughters().end();
+          ++iDA, ++iDB )
+    {
+      ok &= ch.comparePointers( "Daughters", &**iDA, &**iDB );
+    }
+  }
+  else
+  {
+    parent().warning() << "Daughters different sizes" << endmsg;
+  }
+
+  // force printout for tests
+  //ok = false;
+  // If comparison not OK, print full information
+  if ( !ok )
+  {
+    parent().warning() << "Problem with Particle data packing :-" << endmsg
+                       << "  Original Particle : " << dataA
+                       << endmsg
+                       << "  Unpacked Particle : " << dataB
+                       << endmsg;
+  }
+
+  return ( ok ? StatusCode::SUCCESS : StatusCode::FAILURE );
 }

@@ -2,10 +2,19 @@
 #ifndef EVENT_PACKEDPROTOPARTICLE_H 
 #define EVENT_PACKEDPROTOPARTICLE_H 1
 
-// Include files
 #include "GaudiKernel/DataObject.h"
+#include "GaudiKernel/StatusCode.h"
+
 #include <string>
 #include <vector>
+
+// Kernel
+#include "Kernel/StandardPacker.h"
+
+// Event
+#include "Event/ProtoParticle.h"
+
+class GaudiAlgorithm;
 
 namespace LHCb
 {
@@ -82,6 +91,62 @@ namespace LHCb
     std::vector<PackedProtoParticle> m_vect;
     std::vector<int>                 m_refs;
     std::vector<std::pair<int,int> > m_extra;
+
+  };
+
+  /** @class ProtoParticlePacker Event/PackedProtoParticle.h
+   *
+   *  Utility class to handle the packing and unpacking of ProtoParticles
+   *
+   *  @author Christopher Rob Jones
+   *  @date   05/04/2012
+   */
+  class ProtoParticlePacker
+  {
+
+  public:
+
+    typedef LHCb::ProtoParticle                    Data;
+    typedef LHCb::PackedProtoParticle        PackedData;
+    typedef LHCb::ProtoParticles             DataVector;
+    typedef LHCb::PackedProtoParticles PackedDataVector;
+
+  private:
+
+    /// Default Constructor hidden
+    ProtoParticlePacker() : m_parent(NULL) {}
+
+  public:
+
+    /// Default Constructor
+    ProtoParticlePacker( GaudiAlgorithm & parent ) : m_parent(&parent) {}
+
+  public:
+
+    /// Pack ProtoParticles
+    void pack( const DataVector & protos,
+               PackedDataVector & pprotos ) const;
+
+    /// Unpack ProtoParticles
+    void unpack( const PackedDataVector & pprotos,
+                 DataVector             & protos ) const;
+
+    /// Compare two ProtoParticles to check the packing -> unpacking performance
+    StatusCode check( const DataVector & dataA,
+                      const DataVector & dataB ) const;
+
+  private:
+
+    /// Access the parent algorithm
+    GaudiAlgorithm& parent() const { return * m_parent; }
+
+  private:
+
+    /// Standard packing of quantities into integers ...
+    StandardPacker m_pack;
+
+    /// Pointer to parent algorithm
+    GaudiAlgorithm * m_parent;
 
   };
 

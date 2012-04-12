@@ -138,30 +138,42 @@ namespace LHCb
     static const std::string& unpackedLocation()
     { return LHCb::MCRichSegmentLocation::Default; }
 
-  public:
+  private:
 
-    /// Default Constructor
+    /// Default Constructor hidden
     MCRichSegmentPacker() {}
 
   public:
 
+    /// Constructor
+    MCRichSegmentPacker( GaudiAlgorithm & parent ) : m_parent(&parent) {}
+
+  public:
+
     /// Pack an MCRichSegment
-    void pack( const DataVector  & segs,
+    void pack( const DataVector & segs,
                PackedDataVector & psegs ) const;
 
     /// Unpack an MCRichSegment
     void unpack( const PackedDataVector & psegs,
-                 DataVector       & segs ) const;
+                 DataVector             & segs ) const;
 
     /// Compare two MCRichHits to check the packing -> unpacking performance
     StatusCode check( const DataVector & dataA,
-                      const DataVector & dataB,
-                      GaudiAlgorithm & parent ) const;
+                      const DataVector & dataB ) const;
+
+  private:
+
+    /// Access the parent algorithm
+    GaudiAlgorithm& parent() const { return *m_parent; }
 
   private:
 
     /// Standard packing of quantities into integers ...
     StandardPacker m_pack;
+
+    /// Pointer to parent algorithm
+    GaudiAlgorithm * m_parent;
 
   };
 

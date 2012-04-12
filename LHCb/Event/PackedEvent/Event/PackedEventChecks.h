@@ -97,26 +97,28 @@ namespace DataPacking
                          const double tol = 1.0e-4 ) const;
 
     /// Compare two int values
-    inline bool compareInts( const int a,
+    inline bool compareInts( const std::string & name,
+                             const int a,
                              const int b ) const
     {
       const bool ok = ( a == b );
       if (!ok)
       {
-        parent->warning() << "compare(signed)Ints failed :-" << endmsg
+        parent->warning() << name << " compare (signed)Ints failed :-" << endmsg
                           << "  " << a << " " << b << endmsg;
       }
       return ok;
     }
 
     /// Compare two unsigned int values
-    inline bool compareInts( const unsigned int a,
+    inline bool compareInts( const std::string & name,
+                             const unsigned int a,
                              const unsigned int b ) const
     {
       const bool ok = ( a == b );
       if (!ok)
       {
-        parent->warning() << "compare(unsigned)Ints failed" << endmsg
+        parent->warning() << name << " compare (unsigned)Ints failed" << endmsg
                           << "  " << a << " " << b << endmsg;
       }
       return ok;

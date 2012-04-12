@@ -134,10 +134,15 @@ namespace LHCb
     static const std::string& packedLocation()   { return LHCb::PackedMCRichHitLocation::Default; }
     static const std::string& unpackedLocation() { return LHCb::MCRichHitLocation::Default; }
 
+  private:
+
+    /// Default Constructor hidden
+    MCRichHitPacker() {}
+
   public:
 
-    /// Default Constructor
-    MCRichHitPacker() {}
+    /// Constructor
+    MCRichHitPacker( GaudiAlgorithm & parent ) : m_parent(&parent) {}
 
   public:
 
@@ -151,13 +156,20 @@ namespace LHCb
 
     /// Compare two MCRichHits to check the packing -> unpacking performance
     StatusCode check( const DataVector & dataA,
-                      const DataVector & dataB,
-                      GaudiAlgorithm & parent ) const;
+                      const DataVector & dataB ) const;
+
+  private:
+
+    /// Access the parent algorithm
+    GaudiAlgorithm& parent() const { return *m_parent; }
 
   private:
 
     /// Standard packing of quantities into integers ...
     StandardPacker m_pack;
+
+    /// Pointer to parent algorithm
+    GaudiAlgorithm * m_parent;
 
   };
 

@@ -45,7 +45,6 @@ namespace LHCb
     int idtrack;
     int mutrack;
     int key;
-
   };
 
   // -----------------------------------------------------------------------
@@ -108,7 +107,7 @@ namespace LHCb
 
   private:
 
-    /// Data packing version (not used as yet, but for any future schema evolution)
+    /// Data packing version 
     char   m_packingVersion;
 
     /// The packed data objects
@@ -137,10 +136,15 @@ namespace LHCb
     static const std::string& packedLocation()   { return LHCb::PackedMuonPIDLocation::Default; }
     static const std::string& unpackedLocation() { return LHCb::MuonPIDLocation::Default; }
 
+  private:
+
+    /// Default Constructor hidden
+    MuonPIDPacker() : m_parent(NULL) {}
+
   public:
 
     /// Default Constructor
-    MuonPIDPacker() {}
+    MuonPIDPacker( GaudiAlgorithm & parent ) : m_parent(&parent) {}
 
   public:
 
@@ -150,17 +154,24 @@ namespace LHCb
 
     /// Unpack MuonPIDs
     void unpack( const PackedDataVector & phits,
-                 DataVector       & hits ) const;
+                 DataVector             & hits ) const;
 
     /// Compare two MuonPIDs to check the packing -> unpacking performance
     StatusCode check( const DataVector & dataA,
-                      const DataVector & dataB,
-                      GaudiAlgorithm & parent ) const;
+                      const DataVector & dataB ) const;
+
+  private:
+
+    /// Access the parent algorithm
+    GaudiAlgorithm& parent() const { return *m_parent; }
 
   private:
 
     /// Standard packing of quantities into integers ...
     StandardPacker m_pack;
+
+    /// Pointer to parent algorithm
+    GaudiAlgorithm * m_parent;
 
   };
 

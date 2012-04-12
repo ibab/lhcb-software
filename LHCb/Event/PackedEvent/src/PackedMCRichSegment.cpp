@@ -11,7 +11,7 @@
 
 using namespace LHCb;
 
-void MCRichSegmentPacker::pack( const DataVector       & segs,
+void MCRichSegmentPacker::pack( const DataVector & segs,
                                 PackedDataVector & psegs ) const
 {
   psegs.data().reserve( segs.size() );
@@ -169,13 +169,12 @@ void MCRichSegmentPacker::unpack( const PackedDataVector & psegs,
 }
 
 StatusCode MCRichSegmentPacker::check( const DataVector & dataA,
-                                       const DataVector & dataB,
-                                       GaudiAlgorithm & parent ) const
+                                       const DataVector & dataB ) const
 {
   StatusCode sc = StatusCode::SUCCESS;
 
   // checker
-  const DataPacking::DataChecks ch(parent);
+  const DataPacking::DataChecks ch(parent());
 
   // Loop over data containers together and compare
   DataVector::const_iterator iA(dataA.begin()), iB(dataB.begin());
@@ -249,11 +248,11 @@ StatusCode MCRichSegmentPacker::check( const DataVector & dataA,
     // If comparison not OK, print full information
     if ( !ok )
     {
-      parent.warning() << "Problem with MCRichSegment data packing :-" << endmsg
-                       << "  Original Segment : " << **iA
-                       << endmsg
-                       << "  Unpacked Segment : " << **iB
-                       << endmsg;
+      parent().warning() << "Problem with MCRichSegment data packing :-" << endmsg
+                         << "  Original Segment : " << **iA
+                         << endmsg
+                         << "  Unpacked Segment : " << **iB
+                         << endmsg;
       sc = StatusCode::FAILURE;
     }
   }

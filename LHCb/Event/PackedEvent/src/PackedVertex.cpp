@@ -24,7 +24,7 @@ void VertexPacker::pack( const Data & vert,
     pvert.x          = m_pack.position( vert.position().x() );
     pvert.y          = m_pack.position( vert.position().y() );
     pvert.z          = m_pack.position( vert.position().z() );
-    
+
     // convariance Matrix
     const double err0 = std::sqrt( vert.covMatrix()(0,0) );
     const double err1 = std::sqrt( vert.covMatrix()(1,1) );
@@ -58,7 +58,7 @@ void VertexPacker::pack( const Data & vert,
     {
       pverts.addExtra( (*itE).first, m_pack.fltPacked( (*itE).second ) );
     }
-    pvert.lastInfo = pverts.extras().size(); 
+    pvert.lastInfo = pverts.extras().size();
   }
   else
   {
@@ -104,7 +104,7 @@ void VertexPacker::unpack( const PackedData       & pvert,
     vert.setPosition( Gaudi::XYZPoint( m_pack.position( pvert.x ),
                                        m_pack.position( pvert.y ),
                                        m_pack.position( pvert.z ) ) );
-    
+
     // convariance Matrix
     const double err0 = m_pack.position( pvert.cov00 );
     const double err1 = m_pack.position( pvert.cov11 );
@@ -162,40 +162,56 @@ void VertexPacker::unpack( const PackedDataVector & pverts,
 }
 
 StatusCode VertexPacker::check( const DataVector & dataA,
-                                const DataVector & dataB,
-                                GaudiAlgorithm & parent ) const
+                                const DataVector & dataB ) const
 {
   StatusCode sc = StatusCode::SUCCESS;
-
-  // checker
-  const DataPacking::DataChecks ch(parent);
 
   // Loop over data containers together and compare
   DataVector::const_iterator iA(dataA.begin()), iB(dataB.begin());
   for ( ; iA != dataA.end() && iB != dataB.end(); ++iA, ++iB )
   {
-    // assume OK from the start
-    bool ok = true;
-
-    // checks here
-
-    // technique
-    ok &= (*iA)->technique() == (*iB)->technique();
-
-    // force printout for tests
-    //ok = false;
-    // If comparison not OK, print full information
-    if ( !ok )
-    {
-      parent.warning() << "Problem with Vertex data packing :-" << endmsg
-                       << "  Original Vertex : " << **iA
-                       << endmsg
-                       << "  Unpacked Vertex : " << **iB
-                       << endmsg;
-      sc = StatusCode::FAILURE;
-    }
+    sc = sc && check( **iA, **iB );
   }
 
   // Return final status
   return sc;
+}
+
+StatusCode VertexPacker::check( const Data & dataA,
+                                const Data & dataB ) const
+{
+  // assume OK from the start
+  bool ok = true;
+
+  // checker
+  const DataPacking::DataChecks ch(parent());
+
+  // checks here
+
+  // technique
+  ok &= dataA.technique() == dataB.technique();
+  // Chi^2
+  ok &= ch.compareDoubles( "Chi^2", dataA.chi2(), dataB.chi2() );
+  // NDOF
+  ok &= ch.compareInts( "nDOF", dataA.nDoF(), dataB.nDoF() );
+  // Position
+  ok &= ch.comparePoints( "Position", dataA.position(), dataB.position() );
+  // Cov matrix
+  ok &= ch.compareMatrices<Gaudi::SymMatrix3x3,3,3>( "Covariance",
+                                                     dataA.covMatrix(),
+                                                     dataB.covMatrix() );
+
+  // force printout for tests
+  //ok = false;
+  // If comparison not OK, print full information
+  if ( !ok )
+  {
+    parent().warning() << "Problem with Vertex data packing :-" << endmsg
+                       << "  Original Vertex : " << dataA
+                       << endmsg
+                       << "  Unpacked Vertex : " << dataB
+                       << endmsg;
+  }
+
+  return ( ok ? StatusCode::SUCCESS : StatusCode::FAILURE );
 }

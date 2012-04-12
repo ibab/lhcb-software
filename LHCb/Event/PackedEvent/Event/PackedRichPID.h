@@ -124,6 +124,7 @@ namespace LHCb
    */
   class RichPIDPacker
   {
+
   public:
 
     // These are required by the templated algorithms
@@ -134,10 +135,15 @@ namespace LHCb
     static const std::string& packedLocation()   { return LHCb::PackedRichPIDLocation::Default; }
     static const std::string& unpackedLocation() { return LHCb::RichPIDLocation::Default; }
 
+  private:
+
+    /// Default Constructor hidden
+    RichPIDPacker() : m_parent(NULL) {}
+
   public:
 
-    /// Default Constructor
-    RichPIDPacker() {}
+    /// Constructor
+    RichPIDPacker( GaudiAlgorithm & parent ) : m_parent(&parent) {}
 
   public:
 
@@ -147,17 +153,24 @@ namespace LHCb
 
     /// Unpack RichPIDs
     void unpack( const PackedDataVector & ppids,
-                 DataVector       & pids ) const;
+                 DataVector             & pids ) const;
 
     /// Compare two RichPIDs to check the packing -> unpacking performance
     StatusCode check( const DataVector & dataA,
-                      const DataVector & dataB,
-                      GaudiAlgorithm & parent ) const;
+                      const DataVector & dataB ) const;
+
+  private:
+
+    /// Access the parent algorithm
+    GaudiAlgorithm& parent() const { return *m_parent; }
 
   private:
 
     /// Standard packing of quantities into integers ...
     StandardPacker m_pack;
+
+    /// Pointer to parent algorithm
+    GaudiAlgorithm * m_parent;
 
   };
 

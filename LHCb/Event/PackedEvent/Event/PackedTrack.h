@@ -2,15 +2,26 @@
 #ifndef EVENT_PACKEDTRACK_H
 #define EVENT_PACHEDTRACK_H 1
 
-// Include files
-#include "GaudiKernel/DataObject.h"
 #include <string>
 #include <vector>
+
+// Kernel
+#include "Kernel/StandardPacker.h"
+
+// Event
+#include "Event/Track.h"
+
+// Gaudi
+#include "GaudiKernel/DataObject.h"
+#include "GaudiKernel/StatusCode.h"
+
+class GaudiAlgorithm;
 
 namespace LHCb
 {
 
   /** @class PackedTrack PackedTrack.h Event/PackedTrack.h
+   *
    *  Packed description of a track
    *
    *  Version 2: Added new data members to PackedTrack to follow the upgraded Track.
@@ -56,14 +67,13 @@ namespace LHCb
     //== Note that Nodes and Measurements on Track are transient only, an thus never stored.
   };
 
-
   /** @class PackedState PackedState.h Event/PackedState.h
+   *
    *  Describe a packed state
    *
    *  @author Olivier Callot
    *  @date   2008-11-07
    */
-
   struct PackedState
   {
 
@@ -140,31 +150,20 @@ namespace LHCb
       m_extra.reserve(5000);
     }
 
-    virtual ~PackedTracks( ) {}; ///< Destructor
+    virtual ~PackedTracks( ) {} ///< Destructor
+
     virtual const CLID& clID()  const { return PackedTracks::classID(); }
     static  const CLID& classID()     { return CLID_PackedTracks;       }
 
-    void addEntry( PackedTrack& obj ) { m_vect.push_back( obj ); }
-    std::vector<PackedTrack>::const_iterator begin() const { return m_vect.begin(); }
-    std::vector<PackedTrack>::const_iterator end()   const { return m_vect.end(); }
     std::vector<PackedTrack>& tracks() { return m_vect; }
     const std::vector<PackedTrack>& tracks() const { return m_vect; }
 
-    void addId( int i ) { m_ids.push_back( i ); }
-    std::vector<int>::const_iterator beginIds() const { return m_ids.begin(); }
-    unsigned int  sizeId()                      const { return m_ids.size(); }
     std::vector<int>& ids() { return m_ids; }
     const std::vector<int>& ids() const { return m_ids; }
 
-    void addState( PackedState& obj ) { m_state.push_back( obj ); }
-    std::vector<PackedState>::const_iterator beginState() const { return m_state.begin(); }
-    unsigned int sizeState()                         const { return m_state.size(); }
     std::vector<PackedState>& states() { return m_state; }
     const std::vector<PackedState>& states() const { return m_state; }
 
-    void addExtra( int a, int b ) { std::pair<int,int> tmp( a, b ); m_extra.push_back( tmp ); }
-    std::vector<std::pair<int,int> >::const_iterator beginExtra() const { return m_extra.begin(); }
-    unsigned int sizeExtra()                         const { return m_extra.size(); }
     std::vector<std::pair<int,int> >& extras() { return m_extra; }
     const std::vector<std::pair<int,int> >& extras() const { return m_extra; }
 
@@ -174,6 +173,75 @@ namespace LHCb
     std::vector<PackedState> m_state;
     std::vector<int>    m_ids;
     std::vector<std::pair<int,int> > m_extra;
+
+  };
+
+  /** @class TrackPacker Event/PackedTrack.h
+   *
+   *  Utility class to handle the packing and unpacking of Tracks
+   *
+   *  @author Christopher Rob Jones
+   *  @date   05/04/2012
+   */
+  class TrackPacker
+  {
+
+  public:
+
+    typedef LHCb::Track                    Data;
+    typedef LHCb::PackedTrack        PackedData;
+    typedef LHCb::Tracks             DataVector;
+    typedef LHCb::PackedTracks PackedDataVector;
+
+  private:
+
+    /// Default Constructor hidden
+    TrackPacker() : m_parent(NULL) {}
+
+  public:
+
+    /// Default Constructor
+    TrackPacker( GaudiAlgorithm & parent ) : m_parent(&parent) {}
+
+  public:
+
+    /// Pack Tracks
+    void pack( const DataVector & tracks,
+               PackedDataVector & ptracks ) const;
+
+    /// Unpack Tracks
+    void unpack( const PackedDataVector & ptracks,
+                 DataVector             & tracks ) const;
+
+    /// Compare two Tracks to check the packing -> unpacking performance
+    StatusCode check( const DataVector & dataA,
+                      const DataVector & dataB ) const;
+
+  private:
+
+    /// Convert a state to a packed state
+    void convertState( const LHCb::State& state,
+                       PackedDataVector & ptracks ) const;
+
+    /// Convert a packed state to a state in a track
+    void convertState( const LHCb::PackedState& pSta,
+                       LHCb::Track & tra ) const;
+
+    void compareStates( const LHCb::State& oSta,
+                        const LHCb::State& tSta ) const;
+
+  private:
+
+    /// Access the parent algorithm
+    GaudiAlgorithm& parent() const { return * m_parent; }
+
+  private:
+
+    /// Standard packing of quantities into integers ...
+    StandardPacker m_pack;
+
+    /// Pointer to parent algorithm
+    GaudiAlgorithm * m_parent;
 
   };
 
