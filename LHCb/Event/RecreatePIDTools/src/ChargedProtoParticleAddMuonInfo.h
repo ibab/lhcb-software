@@ -4,9 +4,6 @@
  *
  * Header file for algorithm ChargedProtoParticleAddMuonInfo
  *
- * CVS Log :-
- * $Id: ChargedProtoParticleAddMuonInfo.h,v 1.1 2009-08-29 20:37:18 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
  */
@@ -14,6 +11,9 @@
 
 #ifndef GLOBALRECO_ChargedProtoParticleAddMuonInfo_H
 #define GLOBALRECO_ChargedProtoParticleAddMuonInfo_H 1
+
+// STL
+#include <sstream>
 
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"

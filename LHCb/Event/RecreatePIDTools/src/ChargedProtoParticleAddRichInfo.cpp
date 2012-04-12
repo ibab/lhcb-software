@@ -4,9 +4,6 @@
  *
  * Implementation file for algorithm ChargedProtoParticleAddRichInfo
  *
- * CVS Log :-
- * $Id: ChargedProtoParticleAddRichInfo.cpp,v 1.5 2010-03-09 18:53:02 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 28/08/2009
  */
@@ -91,6 +88,47 @@ StatusCode ChargedProtoParticleAddRichInfo::execute()
 }
 
 //=============================================================================
+// Add RICH info to the protoparticle
+//=============================================================================
+void ChargedProtoParticleAddRichInfo::updateRICH( ProtoParticle * proto ) const
+{
+  if ( msgLevel(MSG::VERBOSE) )
+    verbose() << "Trying ProtoParticle " << proto->key() << endmsg;
+
+  // Erase current RichPID information
+  proto->removeRichInfo();
+
+  // Does this track have a RICH PID result ?
+  TrackToRichPID::const_iterator iR = m_richMap.find( proto->track() );
+  if ( m_richMap.end() == iR ) 
+  {
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << " -> NO associated RichPID object found" << endmsg;
+    return;
+  }
+
+  // RichPID for this track is found, so save data
+  const LHCb::RichPID * richPID = (*iR).second;
+
+  // RichPID for this track is found, so save data
+  if ( msgLevel(MSG::VERBOSE) )
+    verbose() << " -> Found RichPID data : DLLs = " << richPID->particleLLValues() << endmsg;
+
+  // reference to RichPID object
+  proto->setRichPID( richPID );
+
+  // Store the raw RICH PID info
+  proto->addInfo( LHCb::ProtoParticle::RichDLLe,   richPID->particleDeltaLL(Rich::Electron) );
+  proto->addInfo( LHCb::ProtoParticle::RichDLLmu,  richPID->particleDeltaLL(Rich::Muon) );
+  proto->addInfo( LHCb::ProtoParticle::RichDLLpi,  richPID->particleDeltaLL(Rich::Pion) );
+  proto->addInfo( LHCb::ProtoParticle::RichDLLk,   richPID->particleDeltaLL(Rich::Kaon) );
+  proto->addInfo( LHCb::ProtoParticle::RichDLLp,   richPID->particleDeltaLL(Rich::Proton) );
+  proto->addInfo( LHCb::ProtoParticle::RichDLLbt,  richPID->particleDeltaLL(Rich::BelowThreshold) );
+
+  // Store History
+  proto->addInfo( LHCb::ProtoParticle::RichPIDStatus, richPID->pidResultCode() );
+
+}
 
 //=============================================================================
 // Loads the RICH data
@@ -111,53 +149,28 @@ bool ChargedProtoParticleAddRichInfo::getRichData()
   // yes, so load them
   const RichPIDs * richpids = get<RichPIDs>( m_richPath );
   if ( msgLevel(MSG::DEBUG) )
-  {
     debug() << "Successfully loaded " << richpids->size()
             << " RichPIDs from " << m_richPath << endmsg;
-  }
 
   // refresh the reverse mapping
   for ( RichPIDs::const_iterator iR = richpids->begin();
         iR != richpids->end(); ++iR )
   {
-    m_richMap[ (*iR)->track() ] = *iR;
+    if ( (*iR)->track() )
+    {
+      m_richMap[ (*iR)->track() ] = *iR;
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << "RichPID key=" << (*iR)->key() 
+                  << " has Track key=" << (*iR)->track()->key()
+                  << " " << (*iR)->track() << endmsg;
+    }
+    else
+    {
+      std::ostringstream mess;
+      mess << "RichPID key=" << (*iR)->key() << " has NULL Track pointer";
+      Warning( mess.str() ).ignore();
+    }
   }
 
   return true;
-}
-
-//=============================================================================
-// Add RICH info to the protoparticle
-//=============================================================================
-void ChargedProtoParticleAddRichInfo::updateRICH( ProtoParticle * proto ) const
-{
-  // Erase current RichPID information
-  proto->removeRichInfo();
-
-  // Does this track have a RICH PID result ?
-  TrackToRichPID::const_iterator iR = m_richMap.find( proto->track() );
-  if ( m_richMap.end() == iR ) return;
-
-  const LHCb::RichPID * richPID = (*iR).second;
-
-  // RichPID for this track is found, so save data
-  if ( msgLevel(MSG::VERBOSE) )
-  {
-    verbose() << " -> Found RichPID data : DLLs = " << richPID->particleLLValues() << endmsg;
-  }
-
-  // reference to RichPID object
-  proto->setRichPID( richPID );
-
-  // Store the raw RICH PID info
-  proto->addInfo( LHCb::ProtoParticle::RichDLLe,   richPID->particleDeltaLL(Rich::Electron) );
-  proto->addInfo( LHCb::ProtoParticle::RichDLLmu,  richPID->particleDeltaLL(Rich::Muon) );
-  proto->addInfo( LHCb::ProtoParticle::RichDLLpi,  richPID->particleDeltaLL(Rich::Pion) );
-  proto->addInfo( LHCb::ProtoParticle::RichDLLk,   richPID->particleDeltaLL(Rich::Kaon) );
-  proto->addInfo( LHCb::ProtoParticle::RichDLLp,   richPID->particleDeltaLL(Rich::Proton) );
-  proto->addInfo( LHCb::ProtoParticle::RichDLLbt,  richPID->particleDeltaLL(Rich::BelowThreshold) );
-
-  // Store History
-  proto->addInfo( LHCb::ProtoParticle::RichPIDStatus, richPID->pidResultCode() );
-
 }

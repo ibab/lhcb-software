@@ -84,40 +84,39 @@ StatusCode ChargedProtoParticleAddMuonInfo::execute()
 }
 
 //=============================================================================
-
-//=============================================================================
 // Replace MUON info to the protoparticle
 //=============================================================================
 void ChargedProtoParticleAddMuonInfo::updateMuon( LHCb::ProtoParticle * proto ) const
 {
   if ( msgLevel(MSG::VERBOSE) )
-  {
     verbose() << "Trying ProtoParticle " << proto->key() << endmsg;
-  }
 
   // Erase current MuonPID information
   proto->removeMuonInfo();
 
   // Does this track have a MUON PID result ?
   TrackToMuonPID::const_iterator iM = m_muonMap.find( proto->track() );
-  if ( m_muonMap.end() == iM ) return;
+  if ( m_muonMap.end() == iM ) 
+  {
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << " -> NO associated MuonPID object found" << endmsg;
+    return;
+  }
 
   // MuonPID object is found
   const LHCb::MuonPID * muonPID = (*iM).second;
 
   // MuonPID for this track is found, so save data
   if ( msgLevel(MSG::VERBOSE) )
-  {
     verbose() << " -> Found MuonPID data : MuLL=" <<  muonPID->MuonLLMu()
               << " BkLL=" <<  muonPID->MuonLLBg()
               << " nSharedHits=" << muonPID->nShared()
               << " isMuonLoose=" << muonPID->IsMuonLoose()
               << " isMuon=" << muonPID->IsMuon()
               << endmsg;
-  }
 
   // Store History
-  proto->addInfo( LHCb::ProtoParticle::MuonPIDStatus, muonPID->Status()   );
+  proto->addInfo( LHCb::ProtoParticle::MuonPIDStatus, muonPID->Status() );
 
   // store acceptance flag for those in acceptance (lack of flag signifies
   // track was outside acceptance)
@@ -168,16 +167,27 @@ bool ChargedProtoParticleAddMuonInfo::getMuonData()
   // yes, so load them
   const LHCb::MuonPIDs * muonpids = get<LHCb::MuonPIDs>( m_muonPath );
   if ( msgLevel(MSG::DEBUG) )
-  {
     debug() << "Successfully loaded " << muonpids->size()
             << " MuonPIDs from " << m_muonPath << endmsg;
-  }
-
+  
   // refresh the reverse mapping
   for ( LHCb::MuonPIDs::const_iterator iM = muonpids->begin();
         iM != muonpids->end(); ++iM )
   {
-    m_muonMap[ (*iM)->idTrack() ] = *iM;
+    if ( (*iM)->idTrack() )
+    {
+      m_muonMap[ (*iM)->idTrack() ] = *iM;
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << "MuonPID key=" << (*iM)->key() 
+                  << " has Track key=" << (*iM)->idTrack()->key()
+                  << " " << (*iM)->idTrack() << endmsg;
+    }
+    else
+    {
+      std::ostringstream mess;
+      mess << "MuonPID key=" << (*iM)->key() << " has NULL Track pointer";
+      Warning( mess.str() ).ignore();
+    }
   }
 
   return true;

@@ -4,6 +4,10 @@
 ! Purpose     : Components to fully rebuild PIDs from packed DST
 !-----------------------------------------------------------------------------
 
+! 2012-04-12 - Chris Jones
+ - Improve a bit the debugging messages from ChargedProtoParticleAddMuonInfo
+   and ChargedProtoParticleAddRichInfo
+
 !========================= RecreatePIDTools v1r4 2011-11-07 =========================
 ! 2011-10-18 - J. Helder Lopes
  - Add MuonPIDStatus to protoparticle additional info even if IsMuonLoose = 0, to 
