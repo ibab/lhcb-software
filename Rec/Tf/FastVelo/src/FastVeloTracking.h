@@ -47,6 +47,8 @@ public:
   void makeSpaceTracks( FastVeloTrack& input );
 
   void mergeSpaceClones();
+  
+  void beamSplashSpaceMerge(); ///< Merge "space" tracks if beam splash event is detected
 
   void findUnusedPhi();
 
@@ -111,7 +113,10 @@ private:
 
   double m_phiUnusedFirstTol;
   double m_phiUnusedSecondTol;
-  
+
+  double m_maxTrackClusterFrac; ///< fraction of tracks allowed per cluster (check for splash events)
+  double m_maxMergeManyTracks; ///< fraction of clusters to remove clone in splash event
+
   //== Debugging controls
   std::string      m_debugToolName;
   int              m_wantedKey;

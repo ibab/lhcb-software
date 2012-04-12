@@ -4,6 +4,13 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+! 2012-04-12 - David Hutchcroft
+ - Added a sanity check just before conversion to LHCb::Tracks that if there is 
+   more than 1 track for every 4 clusters the event should be very aggressivly 
+   clone killed (default only 10% overlap allowed). To fix cases of off axis 
+   beam backgrounds causing a combinatoric explosion in the number of VELO tracks
+   made and subsequent processing time. See Savannah bug #93550.
+
 !========================= FastVelo v1r7 2012-02-28 =========================
 ! 2012-02-17 - Olivier Callot
  - Improve for lareg IP tracks:

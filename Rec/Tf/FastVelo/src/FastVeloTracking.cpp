@@ -4,6 +4,8 @@
 #include "GaudiKernel/AlgFactory.h"
 #include "Event/Track.h"
 
+#include "Event/VeloLiteCluster.h"
+
 // local
 #include "FastVeloTracking.h"
 
@@ -59,6 +61,9 @@ FastVeloTracking::FastVeloTracking( const std::string& name,
 
   declareProperty( "PhiUnusedFirstTol",  m_phiUnusedFirstTol  = 5. );
   declareProperty( "PhiUnusedSecondTol", m_phiUnusedSecondTol = 10. );
+
+  declareProperty( "MaxTrackClusterFrac",m_maxTrackClusterFrac = 0.25 );
+  declareProperty( "MaxMergeManyTracks",m_maxMergeManyTracks=0.1);
 
   // Parameters for debugging
   declareProperty( "DebugToolName"     , m_debugToolName  = ""        );
@@ -209,6 +214,9 @@ StatusCode FastVeloTracking::execute() {
 
   if ( m_doTiming ) m_timerTool->start( m_timeFinal );
   mergeSpaceClones();  // Cleanup tracks with different R, same phis...
+
+  // Add a test on ratio of tracks to clusters to instigate second level of merging
+  beamSplashSpaceMerge();
 
   makeLHCbTracks( outputTracks );
 
@@ -466,6 +474,70 @@ void FastVeloTracking::mergeSpaceClones( ) {
       }
     }
   }
+}
+
+//=========================================================================
+//  In the case of beam splashes where nTrack > nClus*maxFrac do second level of merging
+//=========================================================================
+void FastVeloTracking::beamSplashSpaceMerge( ) {
+  if( m_spaceTracks.size() < 2 ) return; // skip empty or near empty events
+  // grab the number of VeloLiteClusters
+  unsigned int nVlite = 
+    get<LHCb::VeloLiteCluster::FastContainer>(LHCb::VeloLiteClusterLocation::Default)->size();
+
+  unsigned int nGoodBefore(0);
+  unsigned int nGoodAfter(0);
+  if ( m_isDebug ) {
+    debug() << "Comparing " << m_spaceTracks.size() << " tracks to " << nVlite
+            << "*" << m_maxTrackClusterFrac 
+            << " = "<< (nVlite*m_maxTrackClusterFrac) << " max tracks before splash killer" << endmsg;
+    for ( FastVeloTracks::iterator itT1 = m_spaceTracks.begin(); m_spaceTracks.end() != itT1; ++itT1 ) {
+      if ( (*itT1).isValid() ) ++nGoodBefore;
+    }
+  }
+  // happly nothing to do if we can return here
+  if( m_spaceTracks.size() < (nVlite*m_maxTrackClusterFrac) ) return; 
+  // OK so this is a splash event
+  Warning("Fired high track to cluster ratio: assume beam splash and do agressive clone killing",
+	  StatusCode::SUCCESS,0).ignore();
+
+  for ( FastVeloTracks::iterator itT1 = m_spaceTracks.begin(); m_spaceTracks.end() != itT1; ++itT1 ) {
+    if ( !(*itT1).isValid() ) continue;
+    for ( FastVeloTracks::iterator itT2 = itT1+1; m_spaceTracks.end() != itT2; ++itT2 ) {
+      if ( !(*itT2).isValid() ) continue;
+      unsigned int nShort = ((*itT2).nbRHits() + (*itT2).phiHits().size());
+      unsigned int nLong = ((*itT2).nbRHits() + (*itT2).phiHits().size());
+      FastVeloTracks::iterator iShort = itT2;
+      if( nLong < nShort ){
+        nShort = ((*itT1).nbRHits() + (*itT1).phiHits().size());
+        iShort = itT1;
+      }
+      unsigned int nCommon = 0;
+      FastVeloHits::iterator iV1,iV2;
+      // compare R
+      for( iV1 = (*itT1).rHits().begin(); iV1 != (*itT1).rHits().end(); ++iV1 ){        
+        for( iV2 = (*itT2).rHits().begin(); iV2 != (*itT2).rHits().end(); ++iV2 ){
+          if( (*iV1)->lhcbID() == (*iV2)->lhcbID() ) ++nCommon;
+        }
+      }
+      // then compare phi
+      for( iV1 = (*itT1).phiHits().begin(); iV1 != (*itT1).phiHits().end(); ++iV1 ){        
+        for( iV2 = (*itT2).phiHits().begin(); iV2 != (*itT2).phiHits().end(); ++iV2 ){
+          if( (*iV1)->lhcbID() == (*iV2)->lhcbID() ) ++nCommon;
+        }
+      }
+      if( ((double)nCommon/(double)nShort) > m_maxMergeManyTracks ) {
+        iShort->setValid(false);
+        if ( m_isDebug ) {
+          debug() << "removed track " << iShort - m_spaceTracks.begin() << endmsg;
+        }
+      }
+    }
+    if((*itT1).isValid()) ++nGoodAfter;
+  }        
+  if(m_isDebug ) 
+    debug() <<"Reduced " << nGoodBefore << " tracks to " << nGoodAfter
+            << " in clone killing for splash events" << endmsg;
 }
 
 //=========================================================================
