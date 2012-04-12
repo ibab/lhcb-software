@@ -1,3 +1,7 @@
+2012-04-12 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v4r7p2
+
 2012-04-03 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* scripts/lb-project-compare-dist: Fixed to truncate filename to avoid report overflowing
