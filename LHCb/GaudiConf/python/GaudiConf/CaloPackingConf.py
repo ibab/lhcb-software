@@ -31,15 +31,16 @@ class CaloDstPackConf ( ConfigurableUser ) :
     """
     ##define slots
     __slots__ = {
-        'Sequence'    : None      , ## The sequence to be appended
-        'Hypos'       : [ 'Photons'      ,
-                          'Electrons'    ,
-                          'MergedPi0s'   ,
-                          'SplitPhotons'
-                          ]       , ## The list of hypos to be packed 
-        'Enable'      : False     , ## Enable/disable the packing 
-        'OutputLevel' : INFO      , ## The global output level
-        'AlwaysCreate': False       ## Abort/continue if missing input to packers
+        'Sequence'     : None      , ## The sequence to be appended
+        'Hypos'        : [ 'Photons'      ,
+                           'Electrons'    ,
+                           'MergedPi0s'   ,
+                           'SplitPhotons'
+                           ]       , ## The list of hypos to be packed 
+        'Enable'       : False     , ## Enable/disable the packing 
+        'OutputLevel'  : INFO      , ## The global output level
+        'AlwaysCreate' : False     , ## Abort/continue if missing input to packers
+        'EnableChecks' : False
        }
     ## documentation lines
     _propetyDocDct = {
@@ -47,7 +48,8 @@ class CaloDstPackConf ( ConfigurableUser ) :
         'Hypos'       : """ the list of hypos to be packed """ , 
         'Enable'      : """ Enable/disable the packing     """ , 
         "OutputLevel" : """ The global output level        """ ,
-        'AlwaysCreate': """ Flags whether to create output packed objects even if input missing """
+        'AlwaysCreate': """ Flags whether to create output packed objects even if input missing """,
+        "EnableChecks": """ Enable packing checks """ 
         }
     
     ## Check the configuration
@@ -80,7 +82,8 @@ class CaloDstPackConf ( ConfigurableUser ) :
             self.getProp ('Enable'      ) ,
             self.getProp ('Hypos'       ) ,
             self.getProp ('OutputLevel' ) ,
-            self.getProp ('AlwaysCreate')
+            self.getProp ('AlwaysCreate') ,
+            self.getProp ('EnableChecks')
             )
 
 # =============================================================================
@@ -143,7 +146,8 @@ def caloHypoDstPack (
                  'MergedPi0s'   ,
                  'SplitPhotons' ] ,
     level    = INFO               ,  
-    alwaysCreate = False
+    alwaysCreate = False          ,
+    EnableChecks = False
     ) :
     """
     Define the Dst-packing rules
@@ -164,7 +168,8 @@ def caloHypoDstPack (
             AlwaysCreateOutput = alwaysCreate ,
             InputName          = _input       ,
             OutputName         = _output      ,
-            OutputLevel        = level   )
+            OutputLevel        = level        ,
+            EnableCheck        = EnableChecks )
         sequence.Members .append ( _alg )
         log.debug ('CaloHypoDstPack: add %s ' % _alg.getFullName() )
 

@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2012-04-12 - Chris Jones
+ - Add the Calo objects to the packing tests.
+
 ! 2012-04-01 - Chris Jones
  - Add support for on-demand unpacking of CaloClusters on stripping (m)DSTs.
 

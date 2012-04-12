@@ -229,6 +229,7 @@ class DstConf(LHCbConfigurableUser):
                                     ChargedProtoParticleRemovePIDInfo )
 
         alwaysCreate = self.getProp("AlwaysCreate")
+        doChecks     = self.getProp("EnablePackingChecks")
 
         packDST.Members += [ PackTrack( name = "PackTracks", AlwaysCreateOutput = alwaysCreate) ]
 
@@ -246,6 +247,7 @@ class DstConf(LHCbConfigurableUser):
             CaloDstPackConf ( Enable = True )
         caloPack.Sequence     = caloPackSeq
         caloPack.AlwaysCreate = alwaysCreate
+        caloPack.EnableChecks = doChecks
 
         # Clean the PID information in the Charged ProtoParticles
         protoPidClean = ChargedProtoParticleRemovePIDInfo("ProtoParticlePIDClean")
