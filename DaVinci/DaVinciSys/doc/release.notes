@@ -3,6 +3,9 @@ Package             : DaVinciSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v30r2p2>2012-04-12 DaVinci v30r2p2</A></H1><PRE>
+Patch release with fixed Phys/KaliCalo package
+
 </PRE><H1><A NAME=v30r2p1>2012-04-02 DaVinci v30r2p1</A></H1><PRE>
 Trivial patch release of v30r2, adding support for DataType=2012
 
