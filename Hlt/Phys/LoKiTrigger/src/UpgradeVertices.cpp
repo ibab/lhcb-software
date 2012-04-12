@@ -37,11 +37,11 @@
 LoKi::Hlt1::UpgradeVertices::UpgradeVertices
 ( const std::string&              output     ,     // output selection name/key
   const LoKi::Hlt1::UpgradeConf&  config     ,     //             configuration
-        bool                      allow1Fail )
+        bool                      allow1Fail ,
+  const std::string&              clonedTracksLocation )
   : LoKi::Hlt1::Upgrade   ( output, config )
-  , m_cuts_trivial        ( true           )
-  , m_cuts                ( LoKi::Constant<const LHCb::Track*,bool>( true ) )
   , m_allow1Fail          ( allow1Fail     )
+  , m_clonedTracksLocation( clonedTracksLocation )
 { if ( m_allow1Fail ) { retrieveFailKey() ; } }
 // ============================================================================
 /* constructor from all configuration parameters
@@ -52,45 +52,11 @@ LoKi::Hlt1::UpgradeVertices::UpgradeVertices
 LoKi::Hlt1::UpgradeVertices::UpgradeVertices
 ( const std::string&              output     ,     // output selection name/key
   const LoKi::Hlt1::UpgradeTool&  config     ,     //             configuration
-        bool                      allow1Fail )
+        bool                      allow1Fail ,
+  const std::string&              clonedTracksLocation )
   : LoKi::Hlt1::Upgrade( output, config )
-  , m_cuts_trivial        ( true           )
-  , m_cuts                ( LoKi::Constant<const LHCb::Track*,bool>( true ) )
   , m_allow1Fail          ( allow1Fail     )
-{ if ( m_allow1Fail ) { retrieveFailKey() ; } }
-// ============================================================================
-/* constructor from all configuration parameters
- *  @param output  the output selection name
- *  @param config  the tool configuration
- *  @param cuts    cuts to be applied on the tracks after upgrade
- */
-// ============================================================================
-LoKi::Hlt1::UpgradeVertices::UpgradeVertices
-( const std::string&              output     ,     // output selection name/key
-  const LoKi::Hlt1::UpgradeConf&  config     ,     //             configuration
-  const LoKi::TrackTypes::TrCuts& cuts       ,     //                track cuts
-        bool                      allow1Fail )
-  : LoKi::Hlt1::Upgrade   ( output, config )
-  , m_cuts_trivial        ( false          )
-  , m_cuts                ( cuts           )
-  , m_allow1Fail          ( allow1Fail     )
-{ if ( m_allow1Fail ) { retrieveFailKey() ; } }
-// ============================================================================
-/* constructor from all configuration parameters
- *  @param output  the output selection name
- *  @param config  the tool configuration
- *  @param cuts    cuts to be applied on the tracks after upgrade
- */
-// ============================================================================
-LoKi::Hlt1::UpgradeVertices::UpgradeVertices
-( const std::string&              output     ,     // output selection name/key
-  const LoKi::Hlt1::UpgradeTool&  config     ,     //             configuration
-  const LoKi::TrackTypes::TrCuts& cuts       ,     //                track cuts
-        bool                      allow1Fail )
-  : LoKi::Hlt1::Upgrade( output, config )
-  , m_cuts_trivial        ( false          )
-  , m_cuts                ( cuts           )
-  , m_allow1Fail          ( allow1Fail     )
+  , m_clonedTracksLocation( clonedTracksLocation )
 { if ( m_allow1Fail ) { retrieveFailKey() ; } }
 // ============================================================================
 // Retrieve ExtraInfo key for failed tracks
@@ -175,7 +141,7 @@ StatusCode LoKi::Hlt1::UpgradeVertices::upgradeVertices
         output        ,
         otracks       ) ;
     //
-    if ( sc.isFailure() ) { Warning( "Error from i_uprgade_multi_track", sc, 0 ) ; }
+    if ( sc.isFailure() ) { Warning( "Error from i_uprgade_recvertex_j", sc, 0 ) ; }
     //
   } //                                      end of the loop over new candidates
   //
@@ -251,6 +217,7 @@ StatusCode LoKi::Hlt1::UpgradeVertices::_i_upgrade_recvertex_j
       if ( tr1FailedNow ) {
         // failed now, need to check the flag
         LHCb::Track* newTr = tr1->clone();
+        storedTracks(m_clonedTracksLocation)->add(newTr);
         newTr->addInfo(m_failKey, 1.);
         tracks1.push_back(newTr);
       } else {
@@ -263,6 +230,7 @@ StatusCode LoKi::Hlt1::UpgradeVertices::_i_upgrade_recvertex_j
       if ( tr2FailedNow ) {
         // failed now, need to check the flag
         LHCb::Track* newTr = tr2->clone();
+        storedTracks(m_clonedTracksLocation)->add(newTr);
         newTr->addInfo(m_failKey, 1.);
         tracks2.push_back(newTr);
       } else {
@@ -366,37 +334,6 @@ size_t LoKi::Hlt1::UpgradeVertices::make
 
     // skip invalid
     if ( 0 == first || 0 == second      ) { continue ; }              // CONTINUE
-    // apply cut on tracks
-    if ( !m_cuts_trivial ) {
-      if ( !m_allow1Fail ) {
-        if ( ! ( m_cuts(first) && m_cuts(second) ) ) { continue ; }
-      } else {
-        bool failFirst = first->hasInfo(m_failKey);
-        bool failSecond = second->hasInfo(m_failKey);
-        if ( failFirst && failSecond ) {
-          // should not occur
-          continue ;
-        } else if ( failFirst ) {
-          if ( ! m_cuts(second) ) { continue ; }
-        } else if ( failSecond ) {
-          if ( ! m_cuts(first) ) { continue ; }
-        } else { // both passed up to this point
-          if ( ! m_cuts(first) ) {
-            if ( m_cuts(second) ) {
-              LHCb::Track* newTrack = first->clone();
-              newTrack->addInfo(m_failKey, 1.);
-              first = newTrack;
-            } else { continue; }
-          } else {
-            if ( ! m_cuts(second) ) {
-              LHCb::Track* newTrack = second->clone();
-              newTrack->addInfo(m_failKey, 1.);
-              second = newTrack;
-            } // else, both pass, so nothing to do
-          }
-        }
-      }
-    }
     // skip the same
     if ( first == second                ) { continue ; }              // CONTINUE
     // reduce the double count :
@@ -406,13 +343,13 @@ size_t LoKi::Hlt1::UpgradeVertices::make
     if ( HltUtils::matchIDs ( *first , *second ) ) { continue ; }     // CONTINUE
 
     // create the vertex
-    std::auto_ptr<LHCb::RecVertex> vertex ( new LHCb::RecVertex() ) ;
+    LHCb::RecVertex* vertex = newRecVertex();
 
     /// fill it with some information
     creator ( *first , *second , *vertex ) ;
 
     // good vertex! add it to the outptu container
-    vertices.push_back ( vertex.release() ) ; // "vertex is not valid anymore
+    vertices.push_back ( vertex ) ;
 
   }  // end of loop over all combinations
   //

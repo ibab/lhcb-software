@@ -4,6 +4,9 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2012-04-12 - Pieter David
+ - fix more UpgradeVertices memory leaks
+
 !========================= LoKiTrigger v12r7 2012-04-09 =========================
 ! 2012-04-09 - Vanya Belyaev
  - remove down-cast from Upgrade Vertices

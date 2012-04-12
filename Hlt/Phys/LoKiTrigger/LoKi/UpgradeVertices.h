@@ -60,7 +60,9 @@ namespace LoKi
       ( const std::string&              output  ,  // output selection name/key
         const LoKi::Hlt1::UpgradeConf&  config  ,  //             configuration
               bool                      allow1Fail =
-        false                                   ) ;
+        false                                   ,
+        const std::string&              clonedTracksLocation =
+        "Hlt/Track/Tmp"                         ) ;
       // ======================================================================
       /** constructor from all configuration parameters
        *  @param output  the output selection name
@@ -70,31 +72,9 @@ namespace LoKi
       ( const std::string&              output  ,  // output selection name/key
         const LoKi::Hlt1::UpgradeTool&  config  ,  //             configuration
               bool                      allow1Fail =
-        false                                   ) ;
-      // ======================================================================
-      /** constructor from all configuration parameters
-       *  @param output  the output selection name
-       *  @param config  the tool configuration
-       *  @param cuts    cuts to be applied on the tracks after upgrade
-       */
-      UpgradeVertices
-      ( const std::string&              output  ,  // output selection name/key
-        const LoKi::Hlt1::UpgradeConf&  config  ,  //             configuration
-        const LoKi::TrackTypes::TrCuts& cuts    ,  //                track cuts
-              bool                      allow1Fail =
-        false                                   ) ;
-      // ======================================================================
-      /** constructor from all configuration parameters
-       *  @param output  the output selection name
-       *  @param config  the tool configuration
-       *  @param cuts    cuts to be applied on the tracks after upgrade
-       */
-      UpgradeVertices
-      ( const std::string&              output  ,  // output selection name/key
-        const LoKi::Hlt1::UpgradeTool&  config  ,  //             configuration
-        const LoKi::TrackTypes::TrCuts& cuts    ,  //                track cuts
-              bool                      allow1Fail =
-        false                                   ) ;
+        false                                   ,
+        const std::string&              clonedTracksLocation =
+        "Hlt/Track/Tmp"                         ) ;
       // ======================================================================
       /// MANDATORY: virtual destructor
       virtual ~UpgradeVertices () ;
@@ -110,13 +90,11 @@ namespace LoKi
       /// the default constructor is disabled
       UpgradeVertices();                 // the default constructor is disabled
       // ======================================================================
-      bool m_cuts_trivial;
-      LoKi::TrackTypes::TrCut m_cuts;
-      // ======================================================================
-      // ======================================================================
       bool m_allow1Fail;
       // ======================================================================
       int  m_failKey;
+      // ======================================================================
+      std::string m_clonedTracksLocation;
       // ======================================================================
       /** upgrade the candidates
        *  @param input   input recvertices
