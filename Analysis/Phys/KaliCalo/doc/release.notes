@@ -4,6 +4,8 @@
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
 
+!========================= KaliCalo v4r12p2 2012-04-12 =========================
+
 ! 2012-04-12 - Daria Savrina
  - import cpp from LoKiCore rather then from Bindings
 
