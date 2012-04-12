@@ -130,10 +130,10 @@ StatusCode WritePackedDst::execute()
 
       LHCb::PackedTracks* in = get<LHCb::PackedTracks>( *itC );
       PackedBank bank( in );
-      storeInBlob( bank, &(*in->begin())      , (in->end() - in->begin()) , sizeof( LHCb::PackedTrack) );
-      storeInBlob( bank, &(*in->beginState()) , in->sizeState()           , sizeof( LHCb::PackedState) );
-      storeInBlob( bank, &(*in->beginIds())   , in->sizeId()              , sizeof( int ) );
-      storeInBlob( bank, &(*in->beginExtra()) , in->sizeExtra()           , sizeof( std::pair<int,int> ) );
+      storeInBlob( bank, &(*in->tracks().begin())  , in->tracks().size()  , sizeof( LHCb::PackedTrack) );
+      storeInBlob( bank, &(*in->states().begin())  , in->states().size()  , sizeof( LHCb::PackedState) );
+      storeInBlob( bank, &(*in->ids().begin())     , in->ids().size()     , sizeof( int ) );
+      storeInBlob( bank, &(*in->extras().begin())  , in->extras().size()  , sizeof( std::pair<int,int> ) );
       m_dst->addBank( m_bankNb++, LHCb::RawBank::DstBank, in->version(), bank.data() );
 
     } else if ( LHCb::CLID_PackedRichPIDs        == myClID ) {

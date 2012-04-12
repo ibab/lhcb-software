@@ -55,7 +55,7 @@ StatusCode PackRecVertex::execute()
   put( out, m_outputName );
   out->setVersion( (unsigned char)m_version ); 
 
-  static const LHCb::RecVertexPacker rvPacker;
+  const LHCb::RecVertexPacker rvPacker(*dynamic_cast<GaudiAlgorithm*>(this));
 
   for ( LHCb::RecVertices::const_iterator itV = verts->begin(); 
         verts->end() != itV; ++itV ) 

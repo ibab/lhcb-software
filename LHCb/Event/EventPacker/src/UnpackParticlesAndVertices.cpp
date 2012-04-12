@@ -45,7 +45,7 @@ StatusCode UnpackParticlesAndVertices::execute()
   //== Process the Particles
   //=================================================================
   LHCb::Particles* parts = NULL;
-  static const LHCb::ParticlePacker pPacker;
+  const LHCb::ParticlePacker pPacker(*dynamic_cast<GaudiAlgorithm*>(this));
   if ( exist<LHCb::PackedParticles>(m_inputStream+LHCb::PackedParticleLocation::InStream) )
   {
     LHCb::PackedParticles* pparts =
@@ -91,7 +91,7 @@ StatusCode UnpackParticlesAndVertices::execute()
   int nbVert = 0;
   prevLink = -1;
   LHCb::Vertices* verts = NULL;
-  static const LHCb::VertexPacker vPacker;
+  const LHCb::VertexPacker vPacker(*dynamic_cast<GaudiAlgorithm*>(this));
   if ( exist<LHCb::PackedVertices>( m_inputStream + LHCb::PackedVertexLocation::InStream ) )
   {
     LHCb::PackedVertices* pverts =
@@ -127,7 +127,7 @@ StatusCode UnpackParticlesAndVertices::execute()
   int nbRecVert = 0;
   prevLink = -1;
   LHCb::RecVertices* recVerts = NULL;
-  static const LHCb::RecVertexPacker rvPacker;
+  const LHCb::RecVertexPacker rvPacker(*dynamic_cast<GaudiAlgorithm*>(this));
   if ( exist<LHCb::PackedRecVertices>( m_inputStream + LHCb::PackedRecVertexLocation::InStream ) )
   {
     LHCb::PackedRecVertices* pRecVerts =

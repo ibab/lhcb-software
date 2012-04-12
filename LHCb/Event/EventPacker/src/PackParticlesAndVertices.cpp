@@ -16,7 +16,7 @@ DECLARE_ALGORITHM_FACTORY( PackParticlesAndVertices )
 // Standard constructor, initializes variables
 //=============================================================================
   PackParticlesAndVertices::PackParticlesAndVertices( const std::string& name,
-                                      ISvcLocator* pSvcLocator)
+                                                      ISvcLocator* pSvcLocator )
     : GaudiAlgorithm ( name , pSvcLocator )
 {
   declareProperty( "InputStream",        m_inputStream   = "/Event"  );
@@ -24,6 +24,7 @@ DECLARE_ALGORITHM_FACTORY( PackParticlesAndVertices )
   declareProperty( "ForceReading",       m_forceReading  = false     );
   declareProperty( "DeleteInput",        m_deleteInput   = false     );
   declareProperty( "ListRemaining",      m_listRemaining = false     );
+  declareProperty( "EnableCheck",        m_enableCheck   = false     );
   declareProperty( "VetoedContainers",   m_vetoedConts  );
 
   m_clIdParticles   = 0x60000 + LHCb::CLID_Particle;
@@ -31,7 +32,6 @@ DECLARE_ALGORITHM_FACTORY( PackParticlesAndVertices )
   m_clIdRecVertices = 0x60000 + LHCb::CLID_RecVertex;
   m_clIdPart2Vert   = 0xEA9168DC;   // One of Vanya's relation, Particle to Vertex
   m_clIdPart2Ints   = 880; // Defined in the .cpp of this class!!!!
-
 }
 
 //=============================================================================
@@ -39,22 +39,10 @@ DECLARE_ALGORITHM_FACTORY( PackParticlesAndVertices )
 //=============================================================================
 PackParticlesAndVertices::~PackParticlesAndVertices() {}
 
-//=========================================================================
-//  Initializer: Set the class ids for the various types to be packed
-//=========================================================================
-StatusCode PackParticlesAndVertices::initialize( ) 
-{
-  const StatusCode sc = GaudiAlgorithm::initialize(); 
-  if ( sc.isFailure() ) return sc;  
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
-  return sc;
-}
-
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode PackParticlesAndVertices::execute() 
+StatusCode PackParticlesAndVertices::execute()
 {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
@@ -65,13 +53,13 @@ StatusCode PackParticlesAndVertices::execute()
   // List of data objects TES locations
   std::vector<std::string> names;
 
-  if ( m_forceReading ) 
+  if ( m_forceReading )
   {
     // fake class ID to get no container, but load.
-    selectContainers( root, names, 0, true ); 
+    selectContainers( root, names, 0, true );
   }
 
-  if ( m_listRemaining ) 
+  if ( m_listRemaining )
   {
     info() << "Initial objects are:" << endmsg;
     selectContainers( root, names, 0xFFFFFFFF );
@@ -85,20 +73,20 @@ StatusCode PackParticlesAndVertices::execute()
   if ( !names.empty() )
   {
     LHCb::PackedParticles* pparts = new LHCb::PackedParticles();
-    put( pparts, m_inputStream + LHCb::PackedParticleLocation::InStream );  
-    if ( msgLevel( MSG::DEBUG ) ) 
+    put( pparts, m_inputStream + LHCb::PackedParticleLocation::InStream );
+    if ( msgLevel( MSG::DEBUG ) )
       debug() << "=== Process Particle containers :" << endmsg;
-    for ( std::vector<std::string>::const_iterator itS = names.begin(); 
-          names.end() != itS; ++itS ) 
+    for ( std::vector<std::string>::const_iterator itS = names.begin();
+          names.end() != itS; ++itS )
     {
       LHCb::Particles* parts = get<LHCb::Particles>( *itS );
       if ( m_deleteInput ) toBeDeleted.push_back( parts );
       if ( parts->empty() ) continue;
-      if ( msgLevel( MSG::DEBUG ) ) 
+      if ( msgLevel( MSG::DEBUG ) )
         debug() << format( "%4d particles in ", parts->size() ) << *itS << endmsg;
       packAParticleContainer( parts, *pparts );
     }
-    if ( msgLevel( MSG::DEBUG ) ) 
+    if ( msgLevel( MSG::DEBUG ) )
       debug() << "Stored " << pparts->data().size() << " packed tracks" << endmsg;
   }
 
@@ -108,19 +96,19 @@ StatusCode PackParticlesAndVertices::execute()
   {
     LHCb::PackedVertices* pverts = new LHCb::PackedVertices();
     put( pverts, m_inputStream + LHCb::PackedVertexLocation::InStream );
-    if ( msgLevel( MSG::DEBUG ) ) 
+    if ( msgLevel( MSG::DEBUG ) )
       debug() << "=== Process Vertex containers :" << endmsg;
-    for ( std::vector<std::string>::const_iterator itS = names.begin(); 
-          names.end() != itS; ++itS ) 
+    for ( std::vector<std::string>::const_iterator itS = names.begin();
+          names.end() != itS; ++itS )
     {
       LHCb::Vertices* verts = get<LHCb::Vertices>( *itS );
       if ( m_deleteInput ) toBeDeleted.push_back( verts );
       if ( verts->empty() ) continue;
-      if ( msgLevel( MSG::DEBUG ) ) 
+      if ( msgLevel( MSG::DEBUG ) )
         debug () << format( "%4d vertices in ", verts->size() ) << *itS << endmsg;
       packAVertexContainer( verts, *pverts );
     }
-    if ( msgLevel( MSG::DEBUG ) ) 
+    if ( msgLevel( MSG::DEBUG ) )
       debug() << "Stored " << pverts->data().size() << " packed vertices" << endmsg;
   }
 
@@ -131,19 +119,19 @@ StatusCode PackParticlesAndVertices::execute()
     LHCb::PackedRecVertices* prverts = new LHCb::PackedRecVertices();
     put( prverts, m_inputStream + LHCb::PackedRecVertexLocation::InStream );
     prverts->setVersion( 2 ); // CRJ - Increment version for new RecVertex with weights
-    if ( msgLevel( MSG::DEBUG ) ) 
+    if ( msgLevel( MSG::DEBUG ) )
       debug() << "=== Process RecVertices containers :" << endmsg;
-    for ( std::vector<std::string>::const_iterator itS = names.begin(); 
-          names.end() != itS; ++itS ) 
+    for ( std::vector<std::string>::const_iterator itS = names.begin();
+          names.end() != itS; ++itS )
     {
       LHCb::RecVertices* rverts = get<LHCb::RecVertices>( *itS );
       if ( m_deleteInput ) toBeDeleted.push_back( rverts );
       if ( rverts->empty() ) continue;
-      if ( msgLevel( MSG::DEBUG ) ) 
+      if ( msgLevel( MSG::DEBUG ) )
         debug () << format( "%4d RecVertices in ", rverts->size() ) << *itS << endmsg;
       packARecVertexContainer( rverts, *prverts );
     }
-    if ( msgLevel( MSG::DEBUG ) ) 
+    if ( msgLevel( MSG::DEBUG ) )
       debug() << "Stored " << prverts->vertices().size() << " packed RecVertices" << endmsg;
   }
 
@@ -153,19 +141,19 @@ StatusCode PackParticlesAndVertices::execute()
   {
     LHCb::PackedRelations* prels = new LHCb::PackedRelations();
     put( prels, m_inputStream + LHCb::PackedRelationsLocation::InStream );
-    if ( msgLevel( MSG::DEBUG ) ) 
+    if ( msgLevel( MSG::DEBUG ) )
       debug() << "=== Process Relation containers :" << endmsg;
     for ( std::vector<std::string>::const_iterator itS = names.begin();
-          names.end() != itS; ++itS ) 
+          names.end() != itS; ++itS )
     {
       RELATION* rels = get<RELATION>( *itS );
       if ( m_deleteInput ) toBeDeleted.push_back( rels );
       if ( rels->relations().empty() ) continue;
-      if ( msgLevel( MSG::DEBUG ) ) 
+      if ( msgLevel( MSG::DEBUG ) )
         debug () << format( "%4d relations in ", rels->relations().size() ) << *itS << endmsg;
       packARelationContainer( rels, *prels );
     }
-    if ( msgLevel( MSG::DEBUG ) ) 
+    if ( msgLevel( MSG::DEBUG ) )
       debug() << "Stored " << prels->relations().size() << " packed relation" << endmsg;
   }
 
@@ -175,27 +163,27 @@ StatusCode PackParticlesAndVertices::execute()
   {
     LHCb::PackedParticle2Ints* pPartIds = new LHCb::PackedParticle2Ints();
     put( pPartIds, m_inputStream + LHCb::PackedParticle2IntsLocation::InStream );
-    if ( msgLevel( MSG::DEBUG ) ) 
+    if ( msgLevel( MSG::DEBUG ) )
       debug() << "=== Process Particle2LHCbIDs containers :" << endmsg;
-    for ( std::vector<std::string>::const_iterator itS = names.begin(); 
-          names.end() != itS; ++itS ) 
+    for ( std::vector<std::string>::const_iterator itS = names.begin();
+          names.end() != itS; ++itS )
     {
       DaVinci::Map::Particle2LHCbIDs* partIds = get<DaVinci::Map::Particle2LHCbIDs>( *itS );
       if ( m_deleteInput ) toBeDeleted.push_back( partIds );
       if ( partIds->empty() ) continue;
-      if ( msgLevel( MSG::DEBUG ) ) 
+      if ( msgLevel( MSG::DEBUG ) )
         debug() << format( "%4d particles2LHCbIDs in ", partIds->size() ) << *itS << endmsg;
       packAParticleLHCbIDContainer( partIds, *pPartIds );
     }
-    if ( msgLevel( MSG::DEBUG ) ) 
+    if ( msgLevel( MSG::DEBUG ) )
       debug() << "Stored " << pPartIds->relations().size() << " packed Particle2Ints" << endmsg;
   }
 
-  //== Remove the converted containers if requested  
-  if ( m_deleteInput ) 
+  //== Remove the converted containers if requested
+  if ( m_deleteInput )
   {
     for ( std::vector<DataObject*>::iterator itO = toBeDeleted.begin();
-          toBeDeleted.end() != itO; ++itO ) 
+          toBeDeleted.end() != itO; ++itO )
     {
       evtSvc()->unregisterObject( *itO );
       delete *itO;
@@ -214,8 +202,8 @@ StatusCode PackParticlesAndVertices::execute()
 //=========================================================================
 // Select iteratively the containers ending with 'Prefix'
 //=========================================================================
-void PackParticlesAndVertices::selectContainers ( DataObject* obj, 
-                                                  std::vector<std::string>& names, 
+void PackParticlesAndVertices::selectContainers ( DataObject* obj,
+                                                  std::vector<std::string>& names,
                                                   const unsigned int classID,
                                                   const bool forceRead )
 {
@@ -223,41 +211,41 @@ void PackParticlesAndVertices::selectContainers ( DataObject* obj,
   typedef std::vector<IRegistry*> Leaves;
   Leaves leaves;
   StatusCode sc = mgr->objectLeaves( obj, leaves );
-  if ( sc ) 
+  if ( sc )
   {
-    for ( Leaves::const_iterator iL = leaves.begin(); leaves.end() != iL; ++iL ) 
+    for ( Leaves::const_iterator iL = leaves.begin(); leaves.end() != iL; ++iL )
     {
       const std::string& id = (*iL)->identifier();
       DataObject* tmp(NULL);
-      if ( forceRead ) 
+      if ( forceRead )
       {
         sc = eventSvc()->retrieveObject( id, tmp );
       }
-      else 
+      else
       {
         sc = eventSvc()->findObject( id, tmp );
       }
-      if ( sc && NULL != tmp ) 
+      if ( sc && NULL != tmp )
       {
-        if ( 0xFFFFFFFF == classID ) 
+        if ( 0xFFFFFFFF == classID )
         {
-          if ( tmp->clID() != CLID_DataObject ) 
+          if ( tmp->clID() != CLID_DataObject )
           {
-            info() << format( "Class %8.8x (%5d) name ", tmp->clID(), tmp->clID()&0xFFFF ) 
+            info() << format( "Class %8.8x (%5d) name ", tmp->clID(), tmp->clID()&0xFFFF )
                    << id << endmsg;
           }
         }
         if ( tmp->clID() == classID )
         {
-          if ( msgLevel(MSG::DEBUG) ) 
+          if ( msgLevel(MSG::DEBUG) )
             debug() << "Found container " << id << endmsg;
-          
+
           std::vector<std::string>::const_iterator iV = std::find( m_vetoedConts.begin(),
                                                                    m_vetoedConts.end(),
                                                                    id );
           if ( iV == m_vetoedConts.end() )
           {
-            if ( msgLevel(MSG::DEBUG) ) 
+            if ( msgLevel(MSG::DEBUG) )
               debug() << " --> Selected ... " << id << endmsg;
             names.push_back( id );
           }
@@ -276,13 +264,18 @@ void PackParticlesAndVertices::selectContainers ( DataObject* obj,
 //=========================================================================
 //  Pack a container of particles in the PackedParticles object
 //=========================================================================
-void PackParticlesAndVertices::packAParticleContainer ( const LHCb::Particles* parts, 
-                                                        LHCb::PackedParticles& pparts ) 
+void 
+PackParticlesAndVertices::packAParticleContainer ( const LHCb::Particles* parts,
+                                                   LHCb::PackedParticles& pparts )
 {
-  static const LHCb::ParticlePacker pPacker;
+  const LHCb::ParticlePacker pPacker(*this);
+
+  // checks
+  LHCb::Particles* unpacked = ( m_enableCheck ? new LHCb::Particles() : NULL );
+  if ( unpacked ) { put( unpacked, "/Event/Transient/PsAndVsParticleTest" ); }
 
   for ( LHCb::Particles::const_iterator iD = parts->begin();
-        iD != parts->end(); ++iD ) 
+        iD != parts->end(); ++iD )
   {
     const LHCb::Particle& part = **iD;
 
@@ -293,8 +286,26 @@ void PackParticlesAndVertices::packAParticleContainer ( const LHCb::Particles* p
     // reference to original container and key
     ppart.key = m_pack.reference64( &pparts, part.parent(), part.key() );
 
-    // pack the physics info 
+    // pack the physics info
     pPacker.pack( part, ppart, pparts );
+
+    // checks ?
+    if ( unpacked )
+    {
+      int key(0),linkID(0);
+      m_pack.indexAndKey64( ppart.key, linkID, key );
+      LHCb::Particle* testObj = new LHCb::Particle();
+      unpacked->insert( testObj, key );
+      pPacker.unpack( ppart, *testObj, pparts, *unpacked );
+      pPacker.check( part, *testObj );
+    }
+  }
+
+  // clean up test data
+  if ( unpacked )
+  {
+    evtSvc()->unregisterObject( unpacked );
+    delete unpacked;
   }
 
   if ( !m_deleteInput ) parts->registry()->setAddress( 0 );
@@ -303,25 +314,47 @@ void PackParticlesAndVertices::packAParticleContainer ( const LHCb::Particles* p
 //=========================================================================
 //  Pack a container of vertices in the PackedVertices object
 //=========================================================================
-void PackParticlesAndVertices::packAVertexContainer ( const LHCb::Vertices* verts, 
+void PackParticlesAndVertices::packAVertexContainer ( const LHCb::Vertices* verts,
                                                       LHCb::PackedVertices& pverts )
 {
-  static const LHCb::VertexPacker vPacker;
+  const LHCb::VertexPacker vPacker(*this);
+
+  // checks
+  LHCb::Vertices* unpacked = ( m_enableCheck ? new LHCb::Vertices() : NULL );
+  if ( unpacked ) { put( unpacked, "/Event/Transient/PsAndVsVertexTest" ); }
 
   for ( LHCb::Vertices::const_iterator iD = verts->begin();
-        iD != verts->end(); ++iD ) 
+        iD != verts->end(); ++iD )
   {
     const LHCb::Vertex& vert = **iD;
 
     // Make a new packed data object and save
     pverts.data().push_back( LHCb::PackedVertex() );
     LHCb::PackedVertex& pvert = pverts.data().back();
-    
+
     // reference to original container and key
     pvert.key = m_pack.reference64( &pverts, vert.parent(), vert.key() );
 
     // fill remaining physics info
     vPacker.pack( vert, pvert, pverts );
+
+    // checks ?
+    if ( unpacked )
+    {
+      int key(0),linkID(0);
+      m_pack.indexAndKey64( pvert.key, linkID, key );
+      LHCb::Vertex* testObj = new LHCb::Vertex();
+      unpacked->insert( testObj, key );
+      vPacker.unpack( pvert, *testObj, pverts, *unpacked );
+      vPacker.check( vert, *testObj );
+    }
+  }
+
+  // clean up test data
+  if ( unpacked )
+  {
+    evtSvc()->unregisterObject( unpacked );
+    delete unpacked;
   }
 
   if ( !m_deleteInput ) verts->registry()->setAddress( 0 );
@@ -330,7 +363,7 @@ void PackParticlesAndVertices::packAVertexContainer ( const LHCb::Vertices* vert
 //=========================================================================
 //  Pack a container of relations in the Pack object
 //=========================================================================
-void PackParticlesAndVertices::packARelationContainer ( const RELATION* rels, 
+void PackParticlesAndVertices::packARelationContainer ( const RELATION* rels,
                                                         LHCb::PackedRelations& prels )
 {
   // Make a new packed data object and save
@@ -352,13 +385,13 @@ void PackParticlesAndVertices::packARelationContainer ( const RELATION* rels,
 //=========================================================================
 //  Pack a container of RecVertex
 //=========================================================================
-void PackParticlesAndVertices::packARecVertexContainer( const LHCb::RecVertices* rVerts, 
-                                                        LHCb::PackedRecVertices& pRVerts ) 
+void PackParticlesAndVertices::packARecVertexContainer( const LHCb::RecVertices* rVerts,
+                                                        LHCb::PackedRecVertices& pRVerts )
 {
-  static const LHCb::RecVertexPacker rvPacker;
+  const LHCb::RecVertexPacker rvPacker(*dynamic_cast<GaudiAlgorithm*>(this));
 
   for ( LHCb::RecVertices::const_iterator iD = rVerts->begin();
-        iD != rVerts->end(); ++iD ) 
+        iD != rVerts->end(); ++iD )
   {
     const LHCb::RecVertex& rVert = **iD;
 
@@ -375,17 +408,17 @@ void PackParticlesAndVertices::packARecVertexContainer( const LHCb::RecVertices*
   }
 
   // Clear the registry address of the unpacked container, to prevent reloading
-  if ( !m_deleteInput ) rVerts->registry()->setAddress( 0 );  
+  if ( !m_deleteInput ) rVerts->registry()->setAddress( 0 );
 }
 
 //=========================================================================
 //  Pack a container of vertices in the PackedVertices object
 //=========================================================================
-void 
-PackParticlesAndVertices::packAParticleLHCbIDContainer ( const DaVinci::Map::Particle2LHCbIDs* partIds, 
-                                                         LHCb::PackedParticle2Ints& pPartIds ) 
+void
+PackParticlesAndVertices::packAParticleLHCbIDContainer ( const DaVinci::Map::Particle2LHCbIDs* partIds,
+                                                         LHCb::PackedParticle2Ints& pPartIds )
 {
-  
+
   for ( unsigned int kk = 0; partIds->size() > kk; ++kk )
   {
     // Make a new packed data object and save
@@ -397,8 +430,8 @@ PackParticlesAndVertices::packAParticleLHCbIDContainer ( const DaVinci::Map::Par
     // reference to original container and key
     pPartId.container = m_pack.reference64( &pPartIds, part->parent(), part->key() );
     pPartId.start     = pPartIds.ints().size();
-    for ( std::vector<LHCb::LHCbID>::const_iterator itId = ids.begin(); 
-          ids.end() != itId; ++itId ) 
+    for ( std::vector<LHCb::LHCbID>::const_iterator itId = ids.begin();
+          ids.end() != itId; ++itId )
     {
       pPartIds.ints().push_back( (*itId).lhcbID() );
     }

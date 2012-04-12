@@ -80,7 +80,7 @@ StatusCode Unpack<PACKER>::execute()
       data->setVersion(pdata->version());
 
       // Packer
-      static const PACKER packer;
+      const PACKER packer(*dynamic_cast<GaudiAlgorithm*>(this));
 
       // Fill unpacked data
       packer.unpack( *pdata, *data );

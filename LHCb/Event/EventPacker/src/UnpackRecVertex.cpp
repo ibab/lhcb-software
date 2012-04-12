@@ -58,7 +58,7 @@ StatusCode UnpackRecVertex::execute()
   newRecVertices->reserve(dst->vertices().size());
   put( newRecVertices, m_outputName );
 
-  static const LHCb::RecVertexPacker rvPacker;
+  const LHCb::RecVertexPacker rvPacker(*dynamic_cast<GaudiAlgorithm*>(this));
   
   for ( std::vector<LHCb::PackedRecVertex>::const_iterator itS = dst->vertices().begin();
         dst->vertices().end() != itS; ++itS ) 

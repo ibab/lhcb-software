@@ -4,6 +4,10 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2012-04-12 - Chris Jones
+ - Improvements to the packers, adding an option to allow checking of the 
+   packing to be done directly by the packing algorithms.
+
 ! 2012-03-30 - Chris Jones
  - Add support for packing CaloClusters.
  - Clean up CaloHypo packing and unpacking
@@ -31,7 +35,7 @@
 
 !========================= EventPacker v2r13 2012-03-14 =========================
 ! 2012-03-06 - Olivier Callot
- - New algorithmc PackCluster and UnpackCluster. Thefirst one process a container
+ - New algorithmc PackCluster and UnpackCluster. The first one process a container
    of track and store in a PackedCluster container the Velo + ST clusters. Input
    and output names controlled as usual by InputName and OutputName.
    UnpackCluster generate the Velo and  ST cluster containers from the PackedCluster

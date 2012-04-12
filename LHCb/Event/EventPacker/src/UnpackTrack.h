@@ -9,29 +9,32 @@
 #include "Event/PackedTrack.h"
 
 /** @class UnpackTrack UnpackTrack.h
+ *
  *  Unpack the PackedTrack
  *
  *  @author Olivier Callot
  *  @date   2008-11-14
  */
-class UnpackTrack : public GaudiAlgorithm {
+class UnpackTrack : public GaudiAlgorithm
+{
+
 public: 
+
   /// Standard constructor
   UnpackTrack( const std::string& name, ISvcLocator* pSvcLocator );
 
   virtual ~UnpackTrack( ); ///< Destructor
 
-  virtual StatusCode execute   ();    ///< Algorithm execution
-
-protected:
-
-  void convertState ( const LHCb::PackedState& pSta, LHCb::Track* tra );
+  virtual StatusCode execute(); ///< Algorithm execution
 
 private:
-  std::string m_inputName;
-  std::string m_outputName;
+
+  std::string m_inputName;  ///< Input location
+  std::string m_outputName; ///< Output location
   bool m_alwaysOutput;      ///< Flag to turn on the creation of output, even when input is missing
   std::string m_ancestorFor;  ///< Container name for which ancestors shoudl be built
   std::string m_ancestorSource; ///< Container where ancestors are.
+
 };
+
 #endif // UNPACKTRACK_H

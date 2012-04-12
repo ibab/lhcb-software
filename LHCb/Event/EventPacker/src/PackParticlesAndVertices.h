@@ -39,8 +39,7 @@ public:
 
   virtual ~PackParticlesAndVertices( ); ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
+  virtual StatusCode execute(); ///< Algorithm execution
 
 private:
 
@@ -80,6 +79,7 @@ private:
   bool m_alwaysOutput;      ///< Flag to turn on the creation of output, even when input is missing
   bool m_forceReading;      ///< If true, read the containers from file. Else (def) take what is in TES
   bool m_deleteInput;       ///< delete the containers after packing if true.
+  bool m_enableCheck;       ///< Flag to turn on automatic unpacking and checking of the output post-packing
   bool m_listRemaining;     ///< list the remaining objects after packing
   std::vector<std::string> m_vetoedConts; ///< Vetoed containers. Will not be packed.
   StandardPacker m_pack;
@@ -89,6 +89,7 @@ private:
   unsigned int m_clIdRecVertices;
   unsigned int m_clIdPart2Vert;
   unsigned int m_clIdPart2Ints;
+
 };
 
 #endif // PACKPARTICLESANDVERTICES_H

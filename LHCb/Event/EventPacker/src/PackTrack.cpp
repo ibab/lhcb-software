@@ -28,7 +28,9 @@ DECLARE_ALGORITHM_FACTORY( PackTrack )
   declareProperty( "OutputName", m_outputName = LHCb::PackedTrackLocation::Default );
   declareProperty( "AlwaysCreateOutput",         m_alwaysOutput = false     );
   declareProperty( "DeleteInput",                m_deleteInput  = false     );
+  declareProperty( "EnableCheck",                m_enableCheck  = false     );
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -37,60 +39,44 @@ PackTrack::~PackTrack() {}
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode PackTrack::execute() {
-
+StatusCode PackTrack::execute()
+{
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   // If input does not exist, and we aren't making the output regardless, just return
-  if ( !m_alwaysOutput && !exist<LHCb::Tracks>(m_inputName) ) return StatusCode::SUCCESS;
+  if ( !m_alwaysOutput && 
+       !exist<LHCb::Tracks>(m_inputName) ) return StatusCode::SUCCESS;
 
+  // Input
   LHCb::Tracks* tracks = getOrCreate<LHCb::Tracks,LHCb::Tracks>( m_inputName );
+
+  // Output
   LHCb::PackedTracks* out = new LHCb::PackedTracks();
-  out->tracks().reserve(tracks->size());
   put( out, m_outputName );
   out->setVersion( 3 );
 
-  StandardPacker pack;
+  // Track Packer
+  const LHCb::TrackPacker packer(*this);
 
-  for ( LHCb::Tracks::const_iterator itT = tracks->begin(); tracks->end() != itT; ++itT ) {
-    LHCb::PackedTrack newTrk;
-    LHCb::Track* track = *itT;
+  // Pack the tracks
+  packer.pack( *tracks, *out );
 
-    newTrk.key        = track->key();
-    newTrk.chi2PerDoF = pack.fltPacked( track->chi2PerDoF() );
-    newTrk.nDoF       = track->nDoF();
-    newTrk.flags      = track->flags();
-    newTrk.likelihood = pack.fltPacked( track->likelihood() );
-    newTrk.ghostProba = pack.fltPacked( track->ghostProbability() );
-
-    //== Store the LHCbID as int
-    newTrk.firstId    = out->sizeId();
-    for ( std::vector<LHCb::LHCbID>::const_iterator itI = track->lhcbIDs().begin();
-          track->lhcbIDs().end() != itI; ++itI ) {
-      out->addId((*itI).lhcbID() );
-    }
-    newTrk.lastId    = out->sizeId();
-    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
-      debug() << "Stored LHCbIDs from " << newTrk.firstId << " to " << newTrk.lastId << endmsg;
-
-    //== Handle the states in the track
-    newTrk.firstState = out->sizeState();
-    for ( std::vector<LHCb::State*>::const_iterator itS = track->states().begin();  track->states().end() != itS; ++itS ) {
-      convertState( *itS, out );
-    }
-    newTrk.lastState = out->sizeState();
-    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
-      debug() << "Stored states from " << newTrk.firstState << " to " << newTrk.lastState << endmsg;
-
-    //== Handles the ExtraInfo
-    newTrk.firstExtra = out->sizeExtra();
-    for ( GaudiUtils::VectorMap<int,double>::iterator itE = track->extraInfo().begin();
-          track->extraInfo().end() != itE; ++itE ) {
-      out->addExtra( (*itE).first, pack.fltPacked( (*itE).second ) );
-    }
-    newTrk.lastExtra = out->sizeExtra();
-
-    out->addEntry( newTrk );
+  // Packing checks
+  if ( UNLIKELY(m_enableCheck) )
+  {
+    // make new unpacked output data object
+    LHCb::Tracks * unpacked = new LHCb::Tracks();
+    put( unpacked, m_inputName+"_PackingCheck" );
+    
+    // unpack
+    packer.unpack( *out, *unpacked );
+    
+    // run checks
+    packer.check( *tracks, *unpacked ).ignore();
+    
+    // clean up after checks
+    evtSvc()->unregisterObject( unpacked );
+    delete unpacked;
   }
 
   // If requested, remove the input data from the TES and delete
@@ -107,56 +93,9 @@ StatusCode PackTrack::execute() {
   }
 
   // Summary of the size of the PackTracks container
-  counter("# PackedTracks") += out->end() - out->begin();
+  counter("# PackedTracks") += out->tracks().size();
 
   return StatusCode::SUCCESS;
-}
-//=========================================================================
-//  Convert a track state
-//=========================================================================
-void PackTrack::convertState ( const LHCb::State* state, LHCb::PackedTracks* out) {
-
-  LHCb::PackedState newState;
-  StandardPacker pack;
-
-  newState.flags = state->flags();
-
-  newState.x    = pack.position( state->x()  );
-  newState.y    = pack.position( state->y()  );
-  newState.z    = pack.position( state->z()  );
-  newState.tx   = pack.slope   ( state->tx() );
-  newState.ty   = pack.slope   ( state->ty() );
-  double p = 0.;
-  if ( 0 != state->qOverP() ) p = 1./ state->qOverP();
-  newState.p    = pack.energy  ( p );
-  p = pack.energy( newState.p );  //== Get the coded value in case of saturation, to code properly the error later
-
-  // convariance Matrix
-  std::vector<double> err;
-  err.push_back( sqrt( state->errX2() ) );
-  err.push_back( sqrt( state->errY2() ) );
-  err.push_back( sqrt( state->errTx2() ) );
-  err.push_back( sqrt( state->errTy2() ) );
-  err.push_back( sqrt( state->errQOverP2() ) );
-
-  newState.cov_00 = pack.position( err[0] );
-  newState.cov_11 = pack.position( err[1] );
-  newState.cov_22 = pack.slope   ( err[2] );
-  newState.cov_33 = pack.slope   ( err[3] );
-  newState.cov_44 = pack.energy  ( 1.e5 * fabs(p) * err[4] ); //== 1.e5 * dp/p (*1.e2)
-
-  newState.cov_10 = pack.fraction( state->covariance()(1,0)/err[1]/err[0] );
-  newState.cov_20 = pack.fraction( state->covariance()(2,0)/err[2]/err[0] );
-  newState.cov_21 = pack.fraction( state->covariance()(2,1)/err[2]/err[1] );
-  newState.cov_30 = pack.fraction( state->covariance()(3,0)/err[3]/err[0] );
-  newState.cov_31 = pack.fraction( state->covariance()(3,1)/err[3]/err[1] );
-  newState.cov_32 = pack.fraction( state->covariance()(3,2)/err[3]/err[2] );
-  newState.cov_40 = pack.fraction( state->covariance()(4,0)/err[4]/err[0] );
-  newState.cov_41 = pack.fraction( state->covariance()(4,1)/err[4]/err[1] );
-  newState.cov_42 = pack.fraction( state->covariance()(4,2)/err[4]/err[2] );
-  newState.cov_43 = pack.fraction( state->covariance()(4,3)/err[4]/err[3] );
-
-  out->addState( newState );
 }
 
 //=============================================================================

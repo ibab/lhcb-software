@@ -49,11 +49,11 @@ StatusCode Check<PACKER>::execute()
     }
 
     // Packer
-    static const PACKER packer;
+    const PACKER packer(*dynamic_cast<GaudiAlgorithm*>(this));
 
     // compare the containers
     // For the moment just carry on if an error is returned (with a message)
-    packer.check( *dataA, *dataB, *dynamic_cast<GaudiAlgorithm*>(this) ).ignore();
+    packer.check( *dataA, *dataB ).ignore();
 
   }
 
