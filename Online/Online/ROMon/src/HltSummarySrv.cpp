@@ -194,7 +194,7 @@ HltSummarySrv::~HltSummarySrv() {
 void HltSummarySrv::addCluster(const string& sf) {
   m_servers.push_back(new HltSummaryListener(this, sf, m_print<LIB_RTL_INFO));
 }
-
+#define GIGA_BYTE (1<<30)
 /// Publish collected data to DIM services
 void HltSummarySrv::collectData() {
   typedef DeferredHLTSubfarmStats _S;
@@ -204,7 +204,7 @@ void HltSummarySrv::collectData() {
   typedef _S::Node::Runs          _R;
   map<int,int> tot_runs;
   long tot_nodes = 0, tot_files = 0;
-  long long tot_blocks = 0, free_blocks = 0;
+  long long tot_bytes = 0, free_bytes = 0;
   char txt[132];
 
   DimLock lock;
@@ -216,6 +216,8 @@ void HltSummarySrv::collectData() {
       if ( d->data ) {
 	const _S* stats = (_S*)d->data;
 	const _N& nodes = *(stats->nodes());
+	// Explicitly ignore "HLTA" subfarms
+	if ( strncmp(stats->name,"hlta",4) == 0 ) continue;
 	for (_N::const_iterator n=nodes.begin(); n!=nodes.end(); n=nodes.next(n))  {
 	  const _R& runs = (*n).runs;
 	  const Diskspace& disk = (*n).localdisk;
@@ -228,19 +230,19 @@ void HltSummarySrv::collectData() {
 	  long tot = disk.numBlocks;
 	  long fr  = disk.freeBlocks;
 	  if ( (tot-fr) < 1 ) fr = tot;
-	  tot_blocks += tot;
-	  free_blocks += fr;
+	  tot_bytes += tot*disk.blockSize;
+	  free_bytes += fr*disk.blockSize;
 	  ++tot_nodes;
-	  //::lib_rtl_output(LIB_RTL_DEBUG,"Node:%s Total blocks:%lld Free:%lld  %7.2f %%",
+	  //::lib_rtl_output(LIB_RTL_DEBUG,"Node:%s Total bytes:%lld Free:%lld  %7.2f %%",
 	  //		   (*n).name,tot,fr,100.f*float(fr)/float(tot));
 	}
       }
     }
   }
-  if ( tot_blocks <= 0 ) tot_blocks = 1;
-  ::lib_rtl_output(LIB_RTL_DEBUG,"Nodes:%ld Runs:%ld Files:%ld Total blocks:%lld Free:%lld  %7.2f %%",
-		   tot_nodes, tot_runs.size(),tot_files,tot_blocks,free_blocks,
-		   100.f*float(free_blocks)/float(tot_blocks));
+  if ( tot_bytes <= 0 ) tot_bytes = 1;
+  ::lib_rtl_output(LIB_RTL_DEBUG,"Nodes:%ld Runs:%ld Files:%ld Total bytes:%lld Free:%lld  %7.2f %%",
+		   tot_nodes, tot_runs.size(),tot_files,tot_bytes,free_bytes,
+		   100.f*float(free_bytes)/float(tot_bytes));
 
   m_run_result = "";
   for(map<int,int>::const_iterator j=tot_runs.begin();j!=tot_runs.end();++j) {
@@ -249,7 +251,7 @@ void HltSummarySrv::collectData() {
   }
   if ( tot_runs.size()>0 ) m_run_result = m_run_result.substr(0,m_run_result.length()-1);
   ::sprintf(txt,"%ld|%ld|%ld|%lld|%lld",tot_nodes,long(tot_runs.size()),
-	    tot_files,tot_blocks,free_blocks);
+	    tot_files,tot_bytes/GIGA_BYTE,free_bytes/GIGA_BYTE);
   m_summary_result = txt;
 }
 
