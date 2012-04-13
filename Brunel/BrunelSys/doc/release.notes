@@ -3,6 +3,35 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v42r2p2>2012-04-13 Brunel v42r2p2</A></H1><PRE>
+This version uses projects LCG 62b, Gaudi v23r2, LHCb v34r2, Lbcom v12r2,
+ Rec v13r2 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+Production version including patches for initial 2012 data taking
+
+- New tuning
+  . Update default database tags for 2012, to pick up first 2012 alignment
+    (DDDB v1r53)
+  . Added a sanity check in FastVelo just before conversion to LHCb::Tracks: if
+    there is more than 1 track for every 4 clusters the event should be very 
+    aggressively clone killed (default only 10% overlap allowed). Fix cases of
+    off axis beam backgrounds causing a combinatoric explosion in the number of
+    VELO tracks made and subsequent processing time. See Savannah bug #93550.
+    (FastVelo v1r8)
+
+- Bug fixes
+  . Fix in PatForward: left-right ambiguity bit of PatFwdHits was not being
+    reset when reusing hits (PatAlgorithms v4r21)
+  . Add algorithms to convert ROStatus to ProcStatus for Calo and Muon 
+    (CaloDAQ v4r27, DAQUtils v1r7, RecConf v2r6)
+
+- Changes to monitoring
+  . add eta->gg monitoring (CaloMoniDst v5r10)
+
+- Changes to tests
+  . Add 2012-crashes.py. Currently tests fix for huge processing times, 
+    bug #93550, fixed in FastVelo v1r8
+
 </PRE><H1><A NAME=v42r2p1>2012-04-04 Brunel v42r2p1</A></H1><PRE>
 This version uses projects LCG 62b, Gaudi v23r2, LHCb v34r2, Lbcom v12r2,
  Rec v13r2 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*

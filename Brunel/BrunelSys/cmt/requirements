@@ -1,5 +1,5 @@
-package BrunelSys
-version           v42r2p1
+package           BrunelSys
+version           v42r2p2
 
 branches cmt doc tests
  
@@ -8,7 +8,7 @@ branches cmt doc tests
 #=======================================================
 
 # Brunel application
-use Brunel v42r2p1   Rec
+use Brunel v42r2p2   Rec
 
 # Add here any component libraries to be added as patches
 
@@ -22,4 +22,12 @@ apply_pattern container_package
 apply_pattern QMTestSummarize
 
 # Packages from other projects updated temporarily in this release
-use VeloDet v13r18p1 Det
+use CaloDAQ       v4r27    Calo
+use CaloMoniDst   v5r10    Calo
+use DAQUtils      v1r7     DAQ
+use DDDB          v1r53    Det
+use VeloDet       v13r18p1 Det
+use LumiAlgs      v7r6     Rec
+use RecConf       v2r6     Rec
+use FastVelo      v1r8     Tf
+use PatAlgorithms v4r21    Tf
