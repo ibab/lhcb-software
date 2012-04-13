@@ -146,7 +146,9 @@ def _extractPkgFromProperty(packagename, property_content):
             hat, package = package.split("/")
         if packagename.lower() == package.lower() and project.upper() in [x.upper() for x in project_names] :
             pj = PackageConf(package)
-            pj.setProject(project)
+            # BC: here we need to make sure the project name is in uppercase,
+            # As this is done for all data packages defined in this file
+            pj.setProject(project.upper())
             if hat :
                 pj.setHat(hat)
             break

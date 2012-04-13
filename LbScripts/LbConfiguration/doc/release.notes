@@ -1,3 +1,8 @@
+2012-04-13  Ben Couturier <Ben.Couturier@cern.ch>
+
+	* python/LbConfiguration/Package.py: Fixed bug so that dynamic lookup of package list from
+        distarea/conf directory sets project name correctly. 
+
 2012-04-12  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v6r7p4
