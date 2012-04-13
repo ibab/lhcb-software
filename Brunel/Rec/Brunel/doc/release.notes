@@ -3,12 +3,22 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-- Changes to references since v42r2p1
+</PRE><H1><A NAME=v42r2p2>2012-04-13 Brunel v42r2p2</A></H1><PRE>
+This version uses projects LCG 62b, Gaudi v23r2, LHCb v34r2, Lbcom v12r2,
+ Rec v13r2 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+Production version including patches for initial 2012 data taking
+
+- Changes to references to reflect changes since v42r2p1
   . Add algorithms to convert ROStatus to ProcStatus for Calo and Muon 
-    (CaloDAQ, DAQUtils, RecConf)
-  . add eta->gg monitoring (CaloMoniDst)
+    (CaloDAQ v4r27, DAQUtils v1r7, RecConf v2r6)
+  . add eta->gg monitoring (CaloMoniDst v5r10)
   . Fix in PatForward: left-right ambiguity bit of PatFwdHits was not being
-    reset when reusing hits (PatAlgorithms)
+    reset when reusing hits (PatAlgorithms v4r21)
+
+- Changes to tests
+  . Add 2012-crashes.py. Currently tests fix for huge processing times, 
+    bug #93550, fixed in FastVelo v1r8
 
 </PRE><H1><A NAME=v42r2p1>2012-04-04 Brunel v42r2p1</A></H1><PRE>
 This version uses projects LCG 62b, Gaudi v23r2, LHCb v34r2, Lbcom v12r2,
