@@ -19,6 +19,7 @@ Production version including patches for initial 2012 data taking
 - Changes to tests
   . Add 2012-crashes.py. Currently tests fix for huge processing times, 
     bug #93550, fixed in FastVelo v1r8
+  . Update brunel.brunel2012magdown to use a 2012 run... 
 
 </PRE><H1><A NAME=v42r2p1>2012-04-04 Brunel v42r2p1</A></H1><PRE>
 This version uses projects LCG 62b, Gaudi v23r2, LHCb v34r2, Lbcom v12r2,
