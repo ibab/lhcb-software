@@ -60,15 +60,13 @@ namespace LHCb  {
     bool           m_noDrop;
     StringProperty m_fifoPath;
     int            m_tryN;
-    char           m_hostName[80];
-    const char*    m_pName;
     int            fifoFD;
     int            dfltFifoFD;
     int droppedN;
     bool dropped;
     StatusCode openFifo();
     void changeFifo(Property& prop);
-    virtual void getPName();
+    const char* getPName();
     virtual int printM(int out,int severity,const char* fName,const char *format,...);
     virtual int dimLoggerMsgSend(char *buf,int fifoFD);
     virtual int stdErrMsgSend(char *buf);

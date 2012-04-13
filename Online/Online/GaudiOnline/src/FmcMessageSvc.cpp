@@ -20,12 +20,11 @@ DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,FmcMessageSvc)
 
 /// Constructor
 LHCb::FmcMessageSvc::FmcMessageSvc(const std::string& name,ISvcLocator* svcloc)
-:OnlineMessageSvc(name,svcloc)
+ : OnlineMessageSvc(name,svcloc)
 {
   const char* fifo = ::getenv("LOGFIFO");
   setErrorLogger(this);
-  m_hostName[0] = 0;
-  m_pName       = NULL;
+  getPName();
   fifoFD      = NO_FIFO;
   dfltFifoFD  = NO_FIFO;
   declareProperty("fifoPath",m_fifoPath= fifo ? fifo : "/tmp/logSrv.fifo");
@@ -60,15 +59,9 @@ StatusCode LHCb::FmcMessageSvc::initialize()  {
 StatusCode LHCb::FmcMessageSvc::start()   {
   StatusCode sc = OnlineMessageSvc::start();
   if(sc.isFailure())return sc;
-  // After a fork, we have to reload here the utgid
   if( fifoFD != NO_FIFO )  {
     close(fifoFD);
     fifoFD = NO_FIFO;
-  }
-  if ( m_pName ) {
-    m_hostName[0] = 0;
-    delete m_pName;
-    m_pName = 0;
   }
   return openFifo();
 }
@@ -81,30 +74,21 @@ StatusCode LHCb::FmcMessageSvc::restart()  {
       close(fifoFD);
       fifoFD = NO_FIFO;
     }
-    if ( m_pName ) {
-      m_hostName[0] = 0;
-      delete m_pName;
-      m_pName = 0;
-    }
     return openFifo();
   }
   return sc;
 }
 
+/*-------------------------------------------------------------------------*/
 void LHCb::FmcMessageSvc::changeFifo(Property& ) {
-  /*-------------------------------------------------------------------------*/
   if(fifoFD != NO_FIFO)  {
     close(fifoFD);
     fifoFD = NO_FIFO;
   }
-  if ( m_pName ) {
-    m_hostName[0] = 0;
-    delete m_pName;
-    m_pName = 0;
-  }
   openFifo();
 }
 
+/*-------------------------------------------------------------------------*/
 StatusCode LHCb::FmcMessageSvc::openFifo() {
   const char *dfltFifoPath="/tmp/logSrv.fifo";
   int errU=0;
@@ -114,17 +98,6 @@ StatusCode LHCb::FmcMessageSvc::openFifo() {
   /*-------------------------------------------------------------------------*/
   droppedN=0;
   /*-------------------------------------------------------------------------*/
-  /* process name */
-  if(!m_pName)getPName();
-
-  /* host name */
-  if(m_hostName[0]=='\0')  {
-    char *p;
-    gethostname(m_hostName,80);
-    p=strchr(m_hostName,'.');
-    if(p)*p='\0';
-  }
-
   if ( fifo_name.length()>0 && fifo_name[0]=='$' )  {
     std::string fn = fifo_name.substr(1);
     if ( ::getenv(fn.c_str()) ) {
@@ -137,13 +110,13 @@ StatusCode LHCb::FmcMessageSvc::openFifo() {
   /* If the logger is a secondary logger, try to open also the default       */
   /* logger to send it possible errors in opening the secondary logger.      */
   if( ::strcmp(fifo_name.c_str(),dfltFifoPath))  {
-    /* check if dfltFifoPath is writable */
+    // check if dfltFifoPath is writable 
     if( ::access(dfltFifoPath,W_OK)!=-1) {   /* write access to dfltFifoPath OK */
-      /* get dfltFifoPath information */
+      // get dfltFifoPath information
       if( ::stat(dfltFifoPath,&statBuf)!=-1) {  /* dfltFifoPath information got */
-        /* check if dfltFifoPath is a FIFO */
+        // check if dfltFifoPath is a FIFO
         if( S_ISFIFO(statBuf.st_mode))     {        /* dfltFifoPath is a FIFO */
-          /* open dfltFifoPath */
+          // open dfltFifoPath
           dfltFifoFD = ::open(dfltFifoPath,O_RDWR|O_NONBLOCK|O_APPEND);
           if(dfltFifoFD!=NO_FIFO)      {         /* dfltFifoPath open() succeeded */
             errU|=L_DIM;
@@ -163,7 +136,7 @@ StatusCode LHCb::FmcMessageSvc::openFifo() {
 	     dflt ? "(without" : "",
 	     dflt ? "or"       : fifo_name.c_str(),
 	     dflt ? "options)" : "<srv_name>",
-	     m_hostName);
+	     RTL::nodeNameShort().c_str());
     }
     return StatusCode::FAILURE;
   }
@@ -191,7 +164,7 @@ StatusCode LHCb::FmcMessageSvc::openFifo() {
 	     dflt ? "(without" : "",
 	     dflt ? "or"       : fifo_name.c_str(),
 	     dflt ? "options)" : "<srv_name>",
-	     m_hostName);
+	     RTL::nodeNameShort().c_str());
     }
     else    {
       printM(errU,MSG::FATAL,__func__,"open(\"%s\"): %s!",fifo_name.c_str(),::strerror(errno));
@@ -256,7 +229,6 @@ void LHCb::FmcMessageSvc::report(int typ,const std::string& src,const std::strin
   size_t msgLen=0;
   size_t bufAvailLen=0;
   std::string logMsg;
-  const std::string& utgid = RTL::processName();
 
   /*-------------------------------------------------------------------------*/
   /* time string */
@@ -267,8 +239,8 @@ void LHCb::FmcMessageSvc::report(int typ,const std::string& src,const std::strin
   /*-------------------------------------------------------------------------*/
   /* compose message header */
   typ = (typ>int(sizeof(sl)/sizeof(sl[0]))) ? (sizeof(sl)/sizeof(sl[0]))-1 : (typ<0 ? 0 : typ);
-  snprintf(header,BUF_SZ/2,"%s%s%s: %s(%s): %s: ",sNow,sl[typ],m_hostName,
-           m_pName,utgid.c_str(),src.c_str());
+  snprintf(header,BUF_SZ/2,"%s%s%s: %s(%s): %s: ",sNow,sl[typ],RTL::nodeNameShort().c_str(),
+           getPName(),RTL::processName().c_str(),src.c_str());
   /* NULL-terminate header if truncated */
   if(!memchr(header,0,BUF_SZ/2))header[BUF_SZ/2-1]='\0';
   /*-------------------------------------------------------------------------*/
@@ -332,22 +304,28 @@ bool LHCb::FmcMessageSvc::isDropped()   {
 /*****************************************************************************/
 /* get the process name (the executable image file name, i.e. argv[0])       */
 /*****************************************************************************/
-void LHCb::FmcMessageSvc::getPName()   {
-  char pathName[1024]="";
-  int len=0;
-  char buf[BUF_SZ]="";
-  /*-------------------------------------------------------------------------*/
-  len=readlink("/proc/self/exe",pathName,sizeof(pathName));
-  if(len==-1)  {
-    snprintf(buf,BUF_SZ,"[ERROR] %s: readlink(): %s.",__func__,
-             strerror(errno));
-    syslog(LOG_ERR|LOG_DAEMON,buf);
-    fprintf(stderr,"%s\n",buf);
-    exit(1);
+const char* LHCb::FmcMessageSvc::getPName()   {
+  static char* pname = 0;
+  if ( pname ) {
+    return pname;
   }
-  pathName[len]='\0';
-  m_pName = strdup(basename(pathName));
-  return;
+  else {
+    char pathName[1024]="";
+    int len=0;
+    char buf[BUF_SZ]="";
+    /*-------------------------------------------------------------------------*/
+    len=readlink("/proc/self/exe",pathName,sizeof(pathName));
+    if(len==-1)  {
+      snprintf(buf,BUF_SZ,"[ERROR] %s: readlink(): %s.",__func__,
+	       strerror(errno));
+      syslog(LOG_ERR|LOG_DAEMON,buf);
+      fprintf(stderr,"%s\n",buf);
+      exit(1);
+    }
+    pathName[len]='\0';
+    pname = strdup(basename(pathName));
+  }
+  return pname;
 }
 /*****************************************************************************/
 /* Substitute of fprintf() to print either to STDERR and SYSLOG.             */
@@ -358,7 +336,6 @@ int LHCb::FmcMessageSvc::printM(int out,int severity,const char* fName,const cha
   enum outType{L_DIM=0x1,L_STD=0x2,L_SYS=0x4};
   const char *sl[8]={"[NIL]  ","[VERB] ","[DEBUG]","[INFO] ","[WARN] ","[ERROR]",
 		     "[FATAL]", "[ALWAYS]"};
-  const std::string& utgid = RTL::processName();
   time_t now;
   struct tm lNow;
   char rawMsg[BUF_SZ]="";
@@ -383,8 +360,8 @@ int LHCb::FmcMessageSvc::printM(int out,int severity,const char* fName,const cha
   /* compose message string with header */
   severity = (severity>int(sizeof(sl)/sizeof(sl[0]))) 
     ? (sizeof(sl)/sizeof(sl[0]))-1 : (severity<0 ? 0 : severity);
-  snprintf(msg,BUF_SZ,"%s%s%s: %s(%s): %s(): %s\n",sNow,sl[severity],m_hostName,
-           m_pName,utgid.c_str(),fName,rawMsg);
+  snprintf(msg,BUF_SZ,"%s%s%s: %s(%s): %s(): %s\n",sNow,sl[severity],RTL::nodeNameShort().c_str(),
+           getPName(),RTL::processName().c_str(),fName,rawMsg);
   /*-------------------------------------------------------------------------*/
   msg[BUF_SZ-1]='\0';
   /* add newline if missed */
@@ -398,7 +375,7 @@ int LHCb::FmcMessageSvc::printM(int out,int severity,const char* fName,const cha
   if(out&L_STD)stdErrMsgSend(msg);
   if(out&L_SYS)  {
     /* compose message string with short header */
-    snprintf(msg,BUF_SZ,"(%s): %s%s(): %s",utgid.c_str(),sl[severity],fName,rawMsg);
+    snprintf(msg,BUF_SZ,"(%s): %s%s(): %s",RTL::processName().c_str(),sl[severity],fName,rawMsg);
     /* add string terminator if missed */
     if(!memchr(msg,0,BUF_SZ))msg[BUF_SZ-1]='\0';
     sysLogMsgSend(msg,severity);
