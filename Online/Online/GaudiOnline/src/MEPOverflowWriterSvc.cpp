@@ -36,7 +36,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <errno.h>
-
+#include "dic.hxx"
 
 
 using MBM::Producer;
@@ -318,5 +318,12 @@ std::string MEPOverflowWriterSvc::FileTime()
 }
 void MEPOverflowWriterSvc::handleFileWriteError()
 {
-
+  std::string node;
+  node = RTL::nodeNameShort();
+  for (unsigned int i=0;i<node.size();i++)
+  {
+    node[i] = toupper(node[i]);
+  }
+  std::string cmdname=node+"_MEPRx01/setOverflow";
+  DimClient::sendCommand(cmdname.c_str(),0);
 }
