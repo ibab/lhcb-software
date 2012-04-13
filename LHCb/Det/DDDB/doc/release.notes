@@ -4,6 +4,11 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+! 2012-04-13 - Marco Cattaneo
+ - Update database tags for latest global tags:
+   . DDDB,           2012: head-20120413
+   . LHCBCOND, 2011, 2012: head-20120413
+
 !========================= DDDB v1r52 2012-03-22 =========================
 ! 2012-03-22 - Illya Shapoval
  - Update default DQFLAGS database tags:
