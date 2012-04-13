@@ -4,6 +4,7 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+!========================= FastVelo v1r8 2012-04-13 =========================
 ! 2012-04-12 - David Hutchcroft
  - Added a sanity check just before conversion to LHCb::Tracks that if there is 
    more than 1 track for every 4 clusters the event should be very aggressivly 
