@@ -4,18 +4,17 @@
 ! Purpose     : Various utilities for manipulating RawEvent
 !-----------------------------------------------------------------------------
 
-
+!========================= DAQUtils v1r7 2012-04-13 =========================
 ! 2012-04-10 - Olivier Deschamps
   - OdinTypesFilter : bug fix for CalibrationTypes
 
-
 ! 2012-04-03 - Olivier Deschamps
-  - RawBankReadoutStatusFilter :  set status to MissingStatus when no ReadoutStatus container is found (was "Missing" bank)
+  - RawBankReadoutStatusFilter :  set status to MissingStatus when no
+    ReadoutStatus container is found (was "Missing" bank)
 
 ! 2012-03-30 - Olivier Deschamps
   - new algorithm : RawBankReadoutStatusConverter  : convert ROStatus to ProcStatus
   - OdinTypesFilter : add filter on CalibrationTypes
-
 
 !========================= DAQUtils v1r6 2012-03-26 =========================
 ! 2012-03-07 - Marco Cattaneo
