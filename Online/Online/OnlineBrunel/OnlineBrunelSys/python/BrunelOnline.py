@@ -92,12 +92,17 @@ def patchBrunel(true_online_version):
   conddb.IgnoreHeartBeat = True
 
   brunel.WriteFSR  = False # This crashes Jaap's stuff
+  brunel.DataType = "2012"
 
   EventLoopMgr().OutputLevel = MSG_DEBUG #ERROR
   EventLoopMgr().Warnings    = False
 
   from Configurables import EventClockSvc
   EventClockSvc().InitialTime = 1322701200000000000
+
+  brunel.UseDBSnapshot = True     # try it
+  # brunel.DBSnapshotDirectory = "/scratch/pkoppenb/work/DQ/OnlineBrunel/conditions"
+#  brunel.PartitionName = "FEST"
 
   
   if true_online_version:
@@ -133,6 +138,9 @@ def patchBrunel(true_online_version):
     """
   HistogramPersistencySvc().OutputFile = ""
   HistogramPersistencySvc().OutputLevel = MSG_ERROR
+
+  print brunel
+  
   return brunel
 
 #============================================================================================================
