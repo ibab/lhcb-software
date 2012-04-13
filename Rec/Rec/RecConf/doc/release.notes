@@ -4,8 +4,10 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+!========================= RecConf v2r6 2012-04-13 =========================
 ! 2012-04-10 - Alessia Satta
- - Add options in the Muon configuration phase to convert the RawReadoutBankStatus to ProcStatus
+ - Add options in the Muon configuration phase to convert the 
+   RawReadoutBankStatus to ProcStatus
 
 !========================= RecConf v2r5 2012-01-31 =========================
 ! 2012-01-12 - Chris Jones
