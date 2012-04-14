@@ -2,7 +2,6 @@
 #ifndef MICRODST_KEYEDCONTAINERCLONERALG_H
 #define MICRODST_KEYEDCONTAINERCLONERALG_H 1
 
-// Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 // From MicroDST
@@ -77,27 +76,11 @@ namespace MicroDST
       for ( std::vector<std::string>::const_iterator iLoc = this->inputTESLocations().begin();
             iLoc != this->inputTESLocations().end(); ++iLoc )
       {
-
-        const std::string inputLocation = niceLocationName(*iLoc);
-        const std::string outputLocation =
-          this->outputTESLocation( inputLocation );
-
-        if ( msgLevel(MSG::VERBOSE) )
-          verbose() << "Going to clone KeyedContainer from " << inputLocation
-                    << " into " << outputLocation << endmsg;
-
-        const typename T::Container* cont =
-          copyKeyedContainer<CLONER>( inputLocation, m_cloner );
-
-        if ( !cont )
-        {
-          Warning("Unable to clone or get container from "+ inputLocation,
-                  StatusCode::FAILURE, 0).ignore();
-        }
+        copyKeyedContainer<CLONER>( niceLocationName(*iLoc), m_cloner );
       }
-
+      
       setFilterPassed(true);
-
+      
       return StatusCode::SUCCESS;
     }
 

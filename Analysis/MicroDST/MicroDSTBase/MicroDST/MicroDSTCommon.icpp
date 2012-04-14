@@ -32,7 +32,6 @@ template <class PBASE>
 StatusCode MicroDSTCommon<PBASE>::finalize()
 {
   this->debug() << "==> Finalize" << endmsg;
-
   return PBASE::finalize();  // must be called after all other actions
 }
 
@@ -87,8 +86,8 @@ MicroDSTCommon<PBASE>::copyKeyedContainer( const std::string& from,
   const _container* data = this->getInputContainer<_container>( from );
   if ( !data )
   {
-    this->Warning("copyKeyedContainer found no data at "+from,
-                  StatusCode::FAILURE, 0).ignore();
+//     this->Warning("copyKeyedContainer found no data at "+from,
+//                   StatusCode::FAILURE, 0).ignore();
     return NULL;
   }
 
@@ -101,19 +100,19 @@ template <class PBASE>
 template <class Cloner >
 const typename Cloner::Type::Container*
 MicroDSTCommon<PBASE>::copyKeyedContainer( const typename Cloner::Type::Container* from,
-                                           Cloner* cloner    )
+                                           Cloner* cloner )
 {
   typedef typename Cloner::Type _type;
   typedef typename _type::Container _container;
-  const std::string location =  MicroDST::objectLocation(from);
+  const std::string location = MicroDST::objectLocation(from);
   if ( this->msgLevel(MSG::VERBOSE) )
     this->verbose() << "now copy container for location " << location
                     << " to location " << outputTESLocation(location) << endmsg;
 
   if ( !from )
   {
-    this->Warning("copyKeyedContainer found no data at "+ location,
-                  StatusCode::FAILURE, 0).ignore();
+//     this->Warning("copyKeyedContainer found no data at "+ location,
+//                   StatusCode::FAILURE, 0).ignore();
     return NULL;
   }
 
@@ -201,7 +200,8 @@ MicroDSTCommon<PBASE>::cloneKeyedContainerItem( const typename itemCloner::Type*
 
 template <class PBASE>
 template <class T>
-const T* MicroDSTCommon<PBASE>::getStoredClone( const KeyedObject<int>* original    ) const
+const T* 
+MicroDSTCommon<PBASE>::getStoredClone( const KeyedObject<int>* original ) const
 {
   return getStoredClone<T>(original);
 }
@@ -218,18 +218,17 @@ T* MicroDSTCommon<PBASE>::getStoredClone( const KeyedObject<int>* original )
   const std::string cloneLocation =
     outputTESLocation(MicroDST::objectLocation(original->parent()));
 
-  if (!exist<typename T::Container>(cloneLocation)) return NULL;
+  if ( !exist<typename T::Container>(cloneLocation) ) return NULL;
 
   typename T::Container* clones = get<typename T::Container>(cloneLocation);
-
   if ( !clones )
   {
-    this->Error("Didn't find container at "+ cloneLocation,
+    this->Error("Did not find cloned container at "+ cloneLocation,
                 StatusCode::FAILURE,1).ignore();
     return NULL;
   }
 
-  return clones->object(original->key() );
+  return clones->object( original->key() );
 }
 
 //=============================================================================
@@ -238,10 +237,11 @@ template <class PBASE>
 template <class T>
 T* MicroDSTCommon<PBASE>::getOutputContainer( const std::string& location )
 {
-  if ( !exist<T>( location ) )
+  if ( !exist<T>(location) )
   {
     T* container = new T();
-    this->put(container, location);
+    this->put( container, location );
+    return container;
   }
   return this->get<T>( location );
 }
@@ -254,8 +254,8 @@ const T* MicroDSTCommon<PBASE>::getInputContainer( const std::string& location )
 {
   if ( !exist<T>(location) )
   {
-    this->Warning("Container location "+location+" does not exist",
-                  StatusCode::FAILURE, 0).ignore();
+//     this->Warning("Container location "+location+" does not exist",
+//                   StatusCode::FAILURE, 0).ignore();
     return NULL;
   }
   else

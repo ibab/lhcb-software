@@ -6,6 +6,10 @@
 !               functions and functors.
 !-----------------------------------------------------------------------------
 
+! 2012-04-14 - Chris Jones
+ - Suppress various superfluous Warning messages about missing or empty 
+   TES locations
+
 !========================= MicroDSTBase v3r2 2012-03-29 =========================
 
 ! 2012-03-27 - Chris Jones

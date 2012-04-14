@@ -60,4 +60,5 @@ private:
   std::vector<std::string> m_inputTESLocations;
 
 };
+
 #endif // COPYANDSTOREDATA_H

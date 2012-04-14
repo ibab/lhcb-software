@@ -30,8 +30,8 @@ namespace MicroDST
    */
 
   template <typename TABLE>
-  class RelationsFromClonerAlg : public MicroDSTAlgorithm 
-{
+  class RelationsFromClonerAlg : public MicroDSTAlgorithm
+  {
 
   private:
 
@@ -57,10 +57,10 @@ namespace MicroDST
     //===========================================================================
     StatusCode initialize()
     {
-      StatusCode sc = MicroDSTAlgorithm::initialize(); 
+      StatusCode sc = MicroDSTAlgorithm::initialize();
       if ( sc.isFailure() ) return sc;
 
-      if ( inputTESLocation().empty() ) 
+      if ( inputTESLocation().empty() )
       {
         verbose() << "Setting input TES location to default: "
                   << LOCATION::Default << endmsg;
@@ -92,7 +92,7 @@ namespace MicroDST
       const std::string outputLocation =
         this->outputTESLocation( inputLocation );
 
-      if ( msgLevel(MSG::VERBOSE) ) 
+      if ( msgLevel(MSG::VERBOSE) )
       {
         verbose() << "Going to clone relations from "
                   << inputLocation
@@ -108,22 +108,22 @@ namespace MicroDST
 
       if (exist<TABLE>(inputLocation) )
       {
-        if ( msgLevel(MSG::VERBOSE) ) 
+        if ( msgLevel(MSG::VERBOSE) )
         {
           verbose() << "Retrieving relations table from "
                     << inputLocation << endmsg;
         }
         const TABLE* table = get<TABLE>(inputLocation);
-        if (table && !table->relations().empty() ) 
+        if (table && !table->relations().empty() )
         {
-          if ( msgLevel(MSG::VERBOSE) ) 
+          if ( msgLevel(MSG::VERBOSE) )
           {
             verbose() << "found table with "<< table->relations().size()
                       << " entries!" << endmsg;
           }
           TABLE* cloneTable = m_tableCloner(table);
           DaVinci::Utils::DataObjectGuard guard(cloneTable);
-          if ( msgLevel(MSG::VERBOSE) ) 
+          if ( msgLevel(MSG::VERBOSE) )
           {
             verbose() << "Going to store relations table from "
                       << inputLocation
@@ -131,24 +131,24 @@ namespace MicroDST
             verbose() << "Number of relations in cloned table: "
                       << cloneTable->relations().size() << endmsg;
           }
-          if (!cloneTable->relations().empty()) 
+          if (!cloneTable->relations().empty())
           {
             put( cloneTable, outputLocation );
           }
-        } 
+        }
         else
         {
-          if ( msgLevel(MSG::VERBOSE) ) 
+          if ( msgLevel(MSG::VERBOSE) )
           {
             this->Warning("Found no table at "+inputLocation,
                           StatusCode::FAILURE, 0).ignore();
           }
         }
 
-      } 
-      else 
+      }
+      else
       {
-        if ( msgLevel(MSG::VERBOSE) ) 
+        if ( msgLevel(MSG::VERBOSE) )
         {
           this->Warning("Found no table at "+inputLocation,
                         StatusCode::FAILURE, 0).ignore();
@@ -167,12 +167,12 @@ namespace MicroDST
 
     inline typename TABLE::From cloneFrom(const typename TABLE::From from)
     {
-      if (0==from) 
+      if (NULL==from)
       {
         error() << "FROM is NUL!!!!" << endmsg;
         return 0;
       }
-      if (0==from->parent()) 
+      if (NULL==from->parent())
       {
         Warning("From is not in TES. Cannot clone!", StatusCode::FAILURE,0).ignore();
         return 0;

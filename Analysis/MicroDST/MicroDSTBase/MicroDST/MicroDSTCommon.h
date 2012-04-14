@@ -156,8 +156,6 @@ protected:
 
   inline const std::string outputTESLocation(const std::string& inputLocation) const
   {
-    //     return m_rootInTES + this->outputPrefix() + "/" +
-    //       niceLocationName(inputLocation);
     return this->outputPrefix() + "/" + niceLocationName(inputLocation);
   }
 
@@ -186,6 +184,8 @@ private:
   std::string m_fullOutputTESLocation;
 
 };
+
 // templated method implementations.
 #include "MicroDSTCommon.icpp"
+
 #endif // MICRODST_MICRODSTCOMMON_H

@@ -18,16 +18,15 @@
 //=============================================================================
 MicroDSTAlgorithm::MicroDSTAlgorithm( const std::string& name,
                                       ISvcLocator* pSvcLocator)
-  :
-  MicroDSTCommon<GaudiAlgorithm> ( name , pSvcLocator ),
-  m_inputTESLocation(""),
-  m_inputTESLocations()
+  : MicroDSTCommon<GaudiAlgorithm> ( name , pSvcLocator ),
+    m_inputTESLocation(""),
+    m_inputTESLocations()
 {
   this->declareProperty( "InputLocation", m_inputTESLocation );
-
   m_inputTESLocations.clear();
   this->declareProperty( "InputLocations", m_inputTESLocations );
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -36,12 +35,10 @@ MicroDSTAlgorithm::~MicroDSTAlgorithm() {}
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode MicroDSTAlgorithm::initialize() 
+StatusCode MicroDSTAlgorithm::initialize()
 {
-  StatusCode sc = MicroDSTCommon<GaudiAlgorithm>::initialize(); 
-  if ( sc.isFailure() ) return sc; 
-
-  debug() << "==> Initialize" << endmsg;
+  StatusCode sc = MicroDSTCommon<GaudiAlgorithm>::initialize();
+  if ( sc.isFailure() ) return sc;
 
   if ( !m_inputTESLocations.empty() && !m_inputTESLocation.empty() )
   {
@@ -52,23 +49,22 @@ StatusCode MicroDSTAlgorithm::initialize()
   {
     this->setInputTESLocation(m_inputTESLocation);
   }
-  
+
   return sc;
 }
 
 //=============================================================================
-StatusCode MicroDSTAlgorithm::execute() 
+
+StatusCode MicroDSTAlgorithm::execute()
 {
-  debug() << "==> Execute" << endmsg;
   return StatusCode::SUCCESS;
 }
 
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode MicroDSTAlgorithm::finalize() 
+StatusCode MicroDSTAlgorithm::finalize()
 {
-  debug() << "==> Finalize" << endmsg;
   return MicroDSTCommon<GaudiAlgorithm>::finalize();
 }
 //=============================================================================
