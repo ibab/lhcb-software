@@ -18,8 +18,11 @@ namespace LHCb {
  *  @author Juan Palacios
  *  @date   2010-09-28
  */
-class CopyParticle2TisTosDecisions : public MicroDSTAlgorithm {
+class CopyParticle2TisTosDecisions : public MicroDSTAlgorithm
+{
+
 public: 
+
   /// Standard constructor
   CopyParticle2TisTosDecisions( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -27,7 +30,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
 

@@ -93,9 +93,9 @@ void CopyParticle2LHCbIDs::executeLocation(const std::string& particleLocation)
 
   if ( !exist<LHCb::Particle::Range>(particleLocation) ) 
   {
-    Warning( "No LHCb::Particle::Range found at " + particleLocation,
-             StatusCode::SUCCESS,
-             0 ).ignore();
+//     Warning( "No LHCb::Particle::Range found at " + particleLocation,
+//              StatusCode::SUCCESS,
+//              0 ).ignore();
     return;
   }
 
@@ -104,9 +104,9 @@ void CopyParticle2LHCbIDs::executeLocation(const std::string& particleLocation)
 
   if ( particles.empty() ) 
   {
-    Warning( "No LHCb::Particles in LHCb::Particle::Range " + particleLocation,
-             StatusCode::SUCCESS,
-             0 ).ignore();
+//     Warning( "No LHCb::Particles in LHCb::Particle::Range " + particleLocation,
+//              StatusCode::SUCCESS,
+//              0 ).ignore();
     return;
   }
   

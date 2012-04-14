@@ -3,6 +3,9 @@
 ! Responsible : Juan Palacios
 !==============================================================================
 
+! 2012-04-14 - Chris Jones
+ - Suppress some unneccessary warnings about missing or empty TES locations
+
 !========================= MicroDSTAlgorithm v5r6 2011-12-15 =========================
 
 ! 2011-12-12 - Chris Jones
