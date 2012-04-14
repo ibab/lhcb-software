@@ -21,23 +21,29 @@
 //-----------------------------------------------------------------------------
 
 //=============================================================================
-// Standard constructor, initializes variables
-//=============================================================================
+
 CaloHypoCloner::CaloHypoCloner( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
-  : base_class ( type, name , parent ),
-    m_caloClusterCloner(NULL),
-    m_caloClusterClonerName("CaloClusterCloner") { }
+  : base_class              ( type, name, parent  ),
+    m_caloClusterCloner     ( NULL                ),
+    m_caloClusterClonerName ( "CaloClusterCloner" )
+{
+  declareProperty( "CloneHypos",    m_cloneHypos    = true  );
+  declareProperty( "CloneClusters", m_cloneClusters = true  );
+  declareProperty( "CloneDigits",   m_cloneDigits   = false );
+  //setProperty( "OutputLevel", 2 );
+}
 
 //=============================================================================
 
 StatusCode CaloHypoCloner::initialize()
 {
-  StatusCode sc = base_class::initialize();
+  const StatusCode sc = base_class::initialize();
   if ( sc.isFailure() ) return sc;
 
-  m_caloClusterCloner = tool<ICloneCaloCluster>(m_caloClusterClonerName, this->parent() );
+  m_caloClusterCloner = tool<ICloneCaloCluster>( m_caloClusterClonerName,
+                                                 this->parent() );
 
   return sc;
 }
@@ -53,83 +59,112 @@ LHCb::CaloHypo* CaloHypoCloner::operator() (const LHCb::CaloHypo* hypo)
 
 LHCb::CaloHypo* CaloHypoCloner::clone(const LHCb::CaloHypo* hypo)
 {
+  if ( !hypo )
+  {
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "CaloHypo pointer is NULL !" << endmsg;
+    return NULL;
+  }
+
+  if ( !hypo->parent() )
+  {
+    this->Warning( "Cannot clone a CaloHypo with no parent !" ).ignore();
+    return NULL;
+  }
+
+  // Is this object in the veto list ?
+  if ( isVetoed(hypo) ) { return const_cast<LHCb::CaloHypo*>(hypo); }
+
   LHCb::CaloHypo* clone =
     cloneKeyedContainerItem<BasicCaloHypoCloner>(hypo);
+  if ( !clone ) return clone;
 
-  if (!clone) return clone;
-
+  // Clone linked hypos
   clone->clearHypos();
-  const SmartRefVector<LHCb::CaloHypo> & hypos = hypo->hypos();
-  if (!hypos.empty())
+  if ( m_cloneHypos )
   {
-    SmartRefVector<LHCb::CaloHypo> clonedHypos;
-    for ( SmartRefVector<LHCb::CaloHypo>::const_iterator iCalo = hypos.begin();
-          iCalo != hypos.end(); ++iCalo )
+    const SmartRefVector<LHCb::CaloHypo> & hypos = hypo->hypos();
+    if ( !hypos.empty() )
     {
-      if ( *iCalo )
+      SmartRefVector<LHCb::CaloHypo> clonedHypos;
+      for ( SmartRefVector<LHCb::CaloHypo>::const_iterator iCalo = hypos.begin();
+            iCalo != hypos.end(); ++iCalo )
       {
-        LHCb::CaloHypo * _hypo = (*this)(*iCalo);
-        if ( _hypo ) { clonedHypos.push_back(_hypo); }
+        if ( *iCalo )
+        {
+          LHCb::CaloHypo * _hypo = (*this)(*iCalo);
+          if ( _hypo ) { clonedHypos.push_back(_hypo); }
+        }
+        else
+        {
+          Warning( "CaloHypo has null hypo SmartRef -> skipping",
+                   StatusCode::SUCCESS ).ignore();
+        }
       }
-      else
-      {
-        Warning( "CaloHypo has null hypo SmartRef -> skipping", StatusCode::SUCCESS ).ignore();
-      }
+      clone->setHypos(clonedHypos);
     }
-    clone->setHypos(clonedHypos);
   }
 
   clone->clearDigits();
-  const SmartRefVector<LHCb::CaloDigit> & digits = hypo->digits();
-  if (!digits.empty())
+  if ( m_cloneDigits )
   {
-    SmartRefVector<LHCb::CaloDigit> clonedDigits;
-    for ( SmartRefVector<LHCb::CaloDigit>::const_iterator iCalo = digits.begin();
-          iCalo != digits.end(); ++iCalo )
+    const SmartRefVector<LHCb::CaloDigit> & digits = hypo->digits();
+    if ( !digits.empty() )
     {
-      if ( *iCalo )
+      SmartRefVector<LHCb::CaloDigit> clonedDigits;
+      for ( SmartRefVector<LHCb::CaloDigit>::const_iterator iCalo = digits.begin();
+            iCalo != digits.end(); ++iCalo )
       {
-        LHCb::CaloDigit * _digit = cloneKeyedContainerItem<BasicCaloDigitCloner>(*iCalo);
-        if ( _digit ) { clonedDigits.push_back( _digit ); }
+        if ( *iCalo )
+        {
+          LHCb::CaloDigit * _digit =
+            cloneKeyedContainerItem<BasicCaloDigitCloner>(*iCalo);
+          if ( _digit ) { clonedDigits.push_back( _digit ); }
+        }
+        else
+        {
+          Warning( "CaloHypo has null digit SmartRef -> skipping",
+                   StatusCode::SUCCESS ).ignore();
+        }
       }
-      else
-      {
-        Warning( "CaloHypo has null digit SmartRef -> skipping", StatusCode::SUCCESS ).ignore();
-      }
+      clone->setDigits(clonedDigits);
     }
-    clone->setDigits(clonedDigits);
   }
 
   clone->clearClusters();
-  const SmartRefVector<LHCb::CaloCluster> & clusters = hypo->clusters();
-  if (!clusters.empty())
+  if ( m_cloneClusters )
   {
-    SmartRefVector<LHCb::CaloCluster> clonedClusters;
-    for ( SmartRefVector<LHCb::CaloCluster>::const_iterator iCalo = clusters.begin();
-          iCalo != clusters.end(); ++iCalo )
+    const SmartRefVector<LHCb::CaloCluster> & clusters = hypo->clusters();
+    if ( !clusters.empty() )
     {
-      if ( *iCalo )
+      SmartRefVector<LHCb::CaloCluster> clonedClusters;
+      for ( SmartRefVector<LHCb::CaloCluster>::const_iterator iCalo = clusters.begin();
+            iCalo != clusters.end(); ++iCalo )
       {
-        LHCb::CaloCluster * _cluster = (*m_caloClusterCloner)(*iCalo);
-        if ( _cluster ) { clonedClusters.push_back( _cluster ); }
+        if ( *iCalo )
+        {
+          LHCb::CaloCluster * _cluster = (*m_caloClusterCloner)(*iCalo);
+          if ( _cluster ) { clonedClusters.push_back( _cluster ); }
+        }
+        else
+        {
+          Warning( "CaloHypo has null cluster SmartRef -> skipping",
+                   StatusCode::SUCCESS ).ignore();
+        }
       }
-      else
-      {
-        Warning( "CaloHypo has null cluster SmartRef -> skipping", StatusCode::SUCCESS ).ignore();
-      }
+      clone->setClusters(clonedClusters);
     }
-    clone->setClusters(clonedClusters);
   }
 
   return clone;
 }
 
 //=============================================================================
-// Destructor
-//=============================================================================
+
 CaloHypoCloner::~CaloHypoCloner() {}
 
 //=============================================================================
 
-// Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( CaloHypoCloner )
+
+//=============================================================================

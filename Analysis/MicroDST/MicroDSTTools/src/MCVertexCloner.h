@@ -2,10 +2,11 @@
 #ifndef MCVERTEXCLONER_H
 #define MCVERTEXCLONER_H 1
 
-// Include files
-#include <MicroDST/MicroDSTTool.h>
-#include <MicroDST/ICloneMCVertex.h>            // Interface
+#include "ObjectClonerBase.h"
+
+#include <MicroDST/ICloneMCVertex.h>
 #include <MicroDST/ICloneMCParticle.h>
+
 /** @class MCVertexCloner MCVertexCloner.h
  *
  *  MicroDSTTool to clone an LHCb::MCVertex and place it in a TES location
@@ -17,7 +18,7 @@
  *  @author Juan PALACIOS
  *  @date   2007-11-30
  */
-class MCVertexCloner : public extends1<MicroDSTTool, ICloneMCVertex>
+class MCVertexCloner : public extends1<ObjectClonerBase,ICloneMCVertex>
 {
 
 public:

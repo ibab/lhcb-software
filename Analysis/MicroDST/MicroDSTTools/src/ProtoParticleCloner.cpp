@@ -4,15 +4,6 @@
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 
-// from LHCb
-#include "Event/ProtoParticle.h"
-#include "Event/Track.h"
-#include "Event/MuonPID.h"
-#include "Event/RichPID.h"
-
-// from MicroDST
-#include <MicroDST/ICloneTrack.h>
-
 // local
 #include "ProtoParticleCloner.h"
 
@@ -23,19 +14,16 @@
 //-----------------------------------------------------------------------------
 
 //=============================================================================
-// Standard constructor, initializes variables
-//=============================================================================
+
 ProtoParticleCloner::ProtoParticleCloner( const std::string& type,
                                           const std::string& name,
                                           const IInterface* parent )
-  :
-  base_class        ( type, name , parent ),
-  m_trackCloner     ( NULL                ),
-  m_trackClonerName ( "TrackCloner"       )
+  : base_class       ( type, name, parent ),
+    m_trackCloner    ( NULL               ),
+    m_caloHypoCloner ( NULL               )
 {
-  declareProperty("ICloneTrack", m_trackClonerName);
-  declareProperty("TESVetoList",m_tesVetoList);
-  //setProperty( "OutputLevel", 2 );
+  declareProperty("ICloneTrack",    m_trackClonerName    = "TrackCloner"    );
+  declareProperty("ICloneCaloHypo", m_caloHypoClonerName = "CaloHypoCloner" );
 }
 
 //=============================================================================
@@ -46,6 +34,11 @@ StatusCode ProtoParticleCloner::initialize()
   if ( sc.isFailure() ) return sc;
 
   m_trackCloner = tool<ICloneTrack>( m_trackClonerName, this->parent() );
+  if ( !m_caloHypoClonerName.empty() && m_caloHypoClonerName != "NONE" )
+  {
+    m_caloHypoCloner = tool<ICloneCaloHypo>( m_caloHypoClonerName,
+                                             this->parent() );
+  }
 
   return sc;
 }
@@ -76,7 +69,7 @@ ProtoParticleCloner::clone(const LHCb::ProtoParticle* protoParticle)
     return NULL;
   }
 
-  // Is this location in the veto list ?
+  // Is this object in the veto list ?
   if ( isVetoed(protoParticle) )
   {
     return const_cast<LHCb::ProtoParticle*>(protoParticle);
@@ -142,17 +135,27 @@ ProtoParticleCloner::clone(const LHCb::ProtoParticle* protoParticle)
         {
           if ( !isVetoed(hypo) )
           {
-            // Basic Cloner
-            LHCb::CaloHypo * hypoClone = cloneKeyedContainerItem<CaloHypoCloner>(hypo);
-            if ( hypoClone )
+            if ( m_caloHypoCloner )
             {
-              // For basic Cloner, set hypo, cluster and digit smartref vectors to empty
-              // as the basic cloning keeps them pointing to the originals
-              hypoClone->clearHypos();
-              hypoClone->clearDigits();
-              hypoClone->clearClusters();
-              // save the clone
-              protoParticleClone->addToCalo(hypoClone);
+              // Use full cloning tool
+              LHCb::CaloHypo * hypoClone = (*m_caloHypoCloner)(*iCalo);
+              // save
+              if ( hypoClone ) { protoParticleClone->addToCalo(hypoClone); }
+            }
+            else
+            {
+              // Use basic Cloner
+              LHCb::CaloHypo * hypoClone = cloneKeyedContainerItem<CaloHypoCloner>(hypo);
+              if ( hypoClone )
+              {
+                // For basic Cloner, set hypo, cluster and digit smartref vectors to empty
+                // as the basic cloning keeps them pointing to the originals
+                hypoClone->clearHypos();
+                hypoClone->clearDigits();
+                hypoClone->clearClusters();
+                // save the clone
+                protoParticleClone->addToCalo(hypoClone);
+              }
             }
           }
           else

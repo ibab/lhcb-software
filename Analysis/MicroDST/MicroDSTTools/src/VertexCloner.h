@@ -2,11 +2,10 @@
 #ifndef MICRODST_VERTEXCLONER_H
 #define MICRODST_VERTEXCLONER_H 1
 
-// Include files
-#include <MicroDST/MicroDSTTool.h>
-#include <MicroDST/ICloneVertex.h>            // Interface
+#include "ObjectClonerBase.h"
+
+#include <MicroDST/ICloneVertex.h>
 #include <MicroDST/ICloneParticle.h>
-#include <MicroDST/Functors.hpp>
 
 /** @class VertexCloner VertexCloner.h src/VertexCloner.h
  *
@@ -18,7 +17,7 @@
  *  @author Juan PALACIOS
  *  @date   2007-11-30
  */
-class VertexCloner : public extends1<MicroDSTTool, ICloneVertex> 
+class VertexCloner : public extends1<ObjectClonerBase,ICloneVertex> 
 {
 
 public:

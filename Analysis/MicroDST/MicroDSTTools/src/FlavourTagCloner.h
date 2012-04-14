@@ -2,10 +2,9 @@
 #ifndef FLAVOURTAGCLONER_H
 #define FLAVOURTAGCLONER_H 1
 
-// Include files
-// from MicroDST
-#include "MicroDST/MicroDSTTool.h"
-#include "MicroDST/ICloneFlavourTag.h"            // Interface
+#include "ObjectClonerBase.h"
+
+#include "MicroDST/ICloneFlavourTag.h"
 
 namespace LHCb
 {
@@ -18,7 +17,7 @@ namespace LHCb
  *  @author Juan PALACIOS
  *  @date   2008-08-08
  */
-class FlavourTagCloner : public extends1<MicroDSTTool, ICloneFlavourTag>
+class FlavourTagCloner : public extends1<ObjectClonerBase,ICloneFlavourTag>
 {
 
 public:

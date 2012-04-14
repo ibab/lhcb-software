@@ -2,17 +2,15 @@
 #ifndef MICRODST_CALOCLUSTERCLONER_H
 #define MICRODST_CALOCLUSTERCLONER_H 1
 
-// Include files
-// from Gaudi
-#include <MicroDST/MicroDSTTool.h>
+#include "ObjectClonerBase.h"
+
 #include <MicroDST/ICloneCaloCluster.h>            // Interface
 #include <MicroDST/Functors.hpp>
 
-namespace LHCb
-{
-  class CaloDigit;
-  class CaloCluster;
-}
+// from LHCb
+#include "Event/CaloCluster.h"
+#include "Event/CaloDigit.h"
+#include "Event/CaloCluster.h"
 
 /** @class CaloClusterCloner CaloClusterCloner.h src/CaloClusterCloner.h
  *
@@ -22,7 +20,7 @@ namespace LHCb
  *  @date   2010-08-13
  */
 
-class CaloClusterCloner : public extends1<MicroDSTTool, ICloneCaloCluster>
+class CaloClusterCloner : public extends1<ObjectClonerBase,ICloneCaloCluster>
 {
 
 public:
@@ -43,7 +41,9 @@ private:
 private:
 
   typedef MicroDST::BasicItemCloner<LHCb::CaloCluster> BasicCaloClusterCloner;
-  typedef MicroDST::BasicItemCloner<LHCb::CaloDigit> BasicCaloDigitCloner;
+  typedef MicroDST::BasicItemCloner<LHCb::CaloDigit>   BasicCaloDigitCloner;
+
+  bool m_cloneEntries;
 
 };
 

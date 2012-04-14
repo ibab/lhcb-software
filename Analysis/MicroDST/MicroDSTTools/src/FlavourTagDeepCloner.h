@@ -2,10 +2,9 @@
 #ifndef FLAVOURTAGDEEPCLONER_H
 #define FLAVOURTAGDEEPCLONER_H 1
 
-// Include files
-// from MicroDST
-#include "MicroDST/MicroDSTTool.h"
-#include "MicroDST/ICloneFlavourTag.h"            // Interface
+#include "ObjectClonerBase.h"
+
+#include "MicroDST/ICloneFlavourTag.h" 
 
 namespace LHCb
 {
@@ -22,7 +21,7 @@ class ICloneParticle;
  *  @author Juan PALACIOS
  *  @date   2009-11-17
  */
-class FlavourTagDeepCloner : public extends1<MicroDSTTool, ICloneFlavourTag>
+class FlavourTagDeepCloner : public extends1<ObjectClonerBase,ICloneFlavourTag>
 {
 
 public:

@@ -2,10 +2,9 @@
 #ifndef RECVERTEXCLONER_H
 #define RECVERTEXCLONER_H 1
 
-// Include files
-// from Gaudi
-#include <MicroDST/MicroDSTTool.h>
-#include <MicroDST/ICloneRecVertex.h>            // Interface
+#include "ObjectClonerBase.h"
+
+#include <MicroDST/ICloneRecVertex.h>
 
 // local
 #include "RecVertexClonerFunctors.h"
@@ -19,7 +18,7 @@
  *  @author Juan PALACIOS
  *  @date   2007-12-05
  */
-class RecVertexCloner : public extends1<MicroDSTTool, ICloneRecVertex>
+class RecVertexCloner : public extends1<ObjectClonerBase,ICloneRecVertex>
 {
 
 public:

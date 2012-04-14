@@ -2,11 +2,9 @@
 #ifndef MICRODST_WEIGHTSVECTORCLONER_H
 #define MICRODST_WEIGHTSVECTORCLONER_H 1
 
-// Include files
-// from Gaudi
-#include <MicroDST/MicroDSTTool.h>
-#include <MicroDST/ICloneWeightsVector.h>            // Interface
-#include <MicroDST/Functors.hpp>
+#include "ObjectClonerBase.h"
+
+#include <MicroDST/ICloneWeightsVector.h>
 
 /** @class WeightsVectorCloner WeightsVectorCloner.h src/WeightsVectorCloner.h
  *
@@ -18,7 +16,7 @@
  *  @date   2010-10-03
  */
 
-class WeightsVectorCloner : public extends1<MicroDSTTool, ICloneWeightsVector>
+class WeightsVectorCloner : public extends1<ObjectClonerBase,ICloneWeightsVector>
 {
 
 public:

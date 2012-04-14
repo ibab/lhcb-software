@@ -2,9 +2,8 @@
 #ifndef MCPARTICLECLONER_H
 #define MCPARTICLECLONER_H 1
 
-// Include files
-// from Gaudi
-#include <MicroDST/MicroDSTTool.h>
+#include "ObjectClonerBase.h"
+
 #include <MicroDST/ICloneMCParticle.h>            // Interface
 #include <MicroDST/ICloneMCVertex.h>
 
@@ -32,7 +31,7 @@
  *  @author Juan PALACIOS
  *  @date   2007-11-30
  */
-class MCParticleCloner : public extends1<MicroDSTTool, ICloneMCParticle>
+class MCParticleCloner : public extends1<ObjectClonerBase,ICloneMCParticle>
 {
 
 public:

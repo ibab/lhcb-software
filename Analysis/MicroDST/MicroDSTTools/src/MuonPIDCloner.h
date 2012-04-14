@@ -2,10 +2,9 @@
 #ifndef MICRODST_MUONPIDCLONER_H
 #define MICRODST_MUONPIDCLONER_H 1
 
-// Include files
-// from Gaudi
-#include <MicroDST/MicroDSTTool.h>
-#include <MicroDST/ICloneMuonPID.h>            // Interface
+#include "ObjectClonerBase.h"
+
+#include <MicroDST/ICloneMuonPID.h> 
 #include <MicroDST/Functors.hpp>
 
 /** @class MuonPIDCloner MuonPIDCloner.h src/MuonPIDCloner.h
@@ -17,7 +16,7 @@
  *  @author Juan PALACIOS
  *  @date   2010-08-13
  */
-class MuonPIDCloner : public extends1<MicroDSTTool, ICloneMuonPID>
+class MuonPIDCloner : public extends1<ObjectClonerBase,ICloneMuonPID>
 {
 
 public:

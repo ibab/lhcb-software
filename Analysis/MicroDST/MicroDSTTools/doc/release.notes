@@ -6,6 +6,16 @@
 ! $Id: release.notes,v 1.43 2010-08-20 13:59:22 jpalac Exp $
 !-----------------------------------------------------------------------------
 
+! 2012-03-30 - Chris Jones
+ - Remove ProtoParticleDeepCloner. Functionality is now merged with 
+   ProtoParticleCloner
+ - Add a new base class 'ObjectClonerBase' for all cloning tools.
+ - Improve the CaloHypo cloning tool. Cloning of the related Hypos, Digits 
+   and Clusters are now options. By default Hypos and Clusters are cloned, but
+   digits are not.
+ - Improve the CaloClusterCloner cloning tool. Cloning of the Entries is now
+   optional (disabled by default).
+
 !========================= MicroDSTTools v2r6 2012-03-29 =========================
 
 ! 2012-03-27 - Chris Jones

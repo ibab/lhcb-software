@@ -2,11 +2,9 @@
 #ifndef MICRODST_TRACKCLONER_H
 #define MICRODST_TRACKCLONER_H 1
 
-// Include files
-// from Gaudi
-#include <MicroDST/MicroDSTTool.h>
-#include <MicroDST/ICloneTrack.h>            // Interface
-#include <MicroDST/Functors.hpp>
+#include "ObjectClonerBase.h"
+
+#include <MicroDST/ICloneTrack.h>
 
 /** @class TrackCloner TrackCloner.h src/TrackCloner.h
  *
@@ -17,7 +15,7 @@
  *  @author Juan PALACIOS
  *  @date   2008-04-01
  */
-class TrackCloner : public extends1<MicroDSTTool, ICloneTrack>
+class TrackCloner : public extends1<ObjectClonerBase,ICloneTrack>
 {
 
 public:
@@ -41,7 +39,6 @@ private:
 
 private:
 
-  std::vector<std::string> m_tesVetoList;
   bool m_cloneAncestors;
 
 };

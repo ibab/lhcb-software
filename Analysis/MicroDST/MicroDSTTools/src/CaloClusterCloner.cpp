@@ -1,13 +1,7 @@
 // $Id: CaloClusterCloner.cpp,v 1.1 2010-08-13 14:33:57 jpalac Exp $
-// Include files
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-
-// from LHCb
-#include "Event/CaloCluster.h"
-#include "Event/CaloDigit.h"
-#include "Event/CaloCluster.h"
 
 // local
 #include "CaloClusterCloner.h"
@@ -19,16 +13,19 @@
 //-----------------------------------------------------------------------------
 
 //=============================================================================
-// Standard constructor, initializes variables
-//=============================================================================
+
 CaloClusterCloner::CaloClusterCloner( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
-  : base_class ( type, name , parent ) { }
+  : base_class ( type, name , parent )
+{
+  declareProperty( "CloneEntries", m_cloneEntries = false );
+}
 
 //=============================================================================
 
-LHCb::CaloCluster* CaloClusterCloner::operator() (const LHCb::CaloCluster* cluster)
+LHCb::CaloCluster* 
+CaloClusterCloner::operator() (const LHCb::CaloCluster* cluster)
 {
   return this->clone(cluster);
 }
@@ -37,36 +34,57 @@ LHCb::CaloCluster* CaloClusterCloner::operator() (const LHCb::CaloCluster* clust
 
 LHCb::CaloCluster* CaloClusterCloner::clone(const LHCb::CaloCluster* cluster)
 {
+  if ( !cluster )
+  {
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "CaloCluster pointer is NULL !" << endmsg;
+    return NULL;
+  }
+
+  if ( !cluster->parent() )
+  {
+    this->Warning( "Cannot clone a CaloCluster with no parent !" ).ignore();
+    return NULL;
+  }
+
+  // Is this object in the veto list ?
+  if ( isVetoed(cluster) ) { return const_cast<LHCb::CaloCluster*>(cluster); }
+
   LHCb::CaloCluster* clone =
     cloneKeyedContainerItem<BasicCaloClusterCloner>(cluster);
-
   if ( !clone ) return clone;
 
-  const std::vector<LHCb::CaloClusterEntry> & entries = cluster->entries();
-
-  if (!entries.empty())
+  // Clone the entries ?
+  clone->entries().clear();
+  if ( m_cloneEntries )
   {
-    std::vector<LHCb::CaloClusterEntry> clonedEntries;
-    for ( std::vector<LHCb::CaloClusterEntry>::const_iterator iCalo = entries.begin();
-          iCalo != entries.end(); ++iCalo )
+    const std::vector<LHCb::CaloClusterEntry> & entries = cluster->entries();
+    if ( !entries.empty() )
     {
-      const LHCb::CaloDigit* digitClone = cloneKeyedContainerItem<BasicCaloDigitCloner>((*iCalo).digit());
-      LHCb::CaloClusterEntry entryClone = (*iCalo);
-      entryClone.setDigit(digitClone);
-      clonedEntries.push_back(entryClone);
+      std::vector<LHCb::CaloClusterEntry> clonedEntries;
+      for ( std::vector<LHCb::CaloClusterEntry>::const_iterator iCalo = entries.begin();
+            iCalo != entries.end(); ++iCalo )
+      {
+        const LHCb::CaloDigit* digitClone =
+          cloneKeyedContainerItem<BasicCaloDigitCloner>( (*iCalo).digit() );
+        LHCb::CaloClusterEntry entryClone(*iCalo);
+        entryClone.setDigit(digitClone);
+        clonedEntries.push_back(entryClone);
+      }
+      clone->setEntries( clonedEntries );
     }
-    clone->setEntries( clonedEntries );
   }
 
   return clone;
 }
 
 //=============================================================================
-// Destructor
-//=============================================================================
+
 CaloClusterCloner::~CaloClusterCloner() {}
 
 //=============================================================================
 
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( CaloClusterCloner )
+
+//=============================================================================

@@ -4,14 +4,6 @@
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 
-// from LHCb
-#include "Event/Particle.h"
-#include "Event/Vertex.h"
-
-// From MicroDST
-#include <MicroDST/ICloneVertex.h>
-#include <MicroDST/ICloneProtoParticle.h>
-
 // local
 #include "ParticleCloner.h"
 
@@ -22,26 +14,20 @@
 //-----------------------------------------------------------------------------
 
 //=============================================================================
-// Standard constructor, initializes variables
-//=============================================================================
+
 ParticleCloner::ParticleCloner( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
-  : base_class         ( type, name, parent    ),
-    m_vertexCloner     ( NULL                  ),
-    m_vertexClonerName ( "VertexCloner"        ),
-    m_ppCloner         ( NULL                  ),
-    m_ppClonerName     ( "ProtoParticleCloner" )
+  : base_class         ( type, name, parent ),
+    m_vertexCloner     ( NULL               ),
+    m_ppCloner         ( NULL               )
 {
-  declareProperty("ICloneVertex", m_vertexClonerName);
-  declareProperty("ICloneProtoParticle", m_ppClonerName);
-  declareProperty("TESVetoList",m_tesVetoList);
-  //setProperty( "OutputLevel", 2 );
+  declareProperty("ICloneVertex",        m_vertexClonerName="VertexCloner"   );
+  declareProperty("ICloneProtoParticle", m_ppClonerName="ProtoParticleCloner");
 }
 
 //=============================================================================
-// Destructor
-//=============================================================================
+
 ParticleCloner::~ParticleCloner() {}
 
 //=============================================================================

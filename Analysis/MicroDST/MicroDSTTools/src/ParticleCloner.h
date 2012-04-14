@@ -4,14 +4,16 @@
 
 #include <algorithm>
 
-// from Gaudi
-#include <MicroDST/MicroDSTTool.h>
-#include <MicroDST/ICloneParticle.h>            // Interface
+#include "ObjectClonerBase.h"
 
-#include <MicroDST/Functors.hpp>
+#include <MicroDST/ICloneParticle.h>
 
-class ICloneVertex;
-class ICloneProtoParticle;
+#include <MicroDST/ICloneVertex.h>
+#include <MicroDST/ICloneProtoParticle.h>
+
+// from LHCb
+#include "Event/Particle.h"
+#include "Event/Vertex.h"
 
 /** @class ParticleCloner ParticleCloner.h src/ParticleCloner.h
  *  
@@ -31,7 +33,7 @@ class ICloneProtoParticle;
  *  @author Juan PALACIOS
  *  @date   2007-11-30
  */
-class ParticleCloner : public extends1<MicroDSTTool, ICloneParticle> 
+class ParticleCloner : public extends1<ObjectClonerBase,ICloneParticle> 
 {
 
 public: 
@@ -66,8 +68,6 @@ private:
   ICloneProtoParticle* m_ppCloner;
 
   std::string m_ppClonerName;
-
-  std::vector<std::string> m_tesVetoList;
 
 };
 

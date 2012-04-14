@@ -2,15 +2,17 @@
 #ifndef MICRODST_PROTOPARTICLEPARTICLECLONER_H
 #define MICRODST_PROTOPARTICLECLONER_H 1
 
-// Include files
-// from Gaudi
-#include <MicroDST/MicroDSTTool.h>
-#include <MicroDST/ICloneProtoParticle.h>            // Interface
-#include <MicroDST/Functors.hpp>
+#include "ObjectClonerBase.h"
+
+#include <MicroDST/ICloneProtoParticle.h>  
+#include <MicroDST/ICloneTrack.h>
+#include <MicroDST/ICloneCaloHypo.h>
+
 #include "Event/MuonPID.h"
 #include "Event/RichPID.h"
 #include "Event/CaloHypo.h"
-class ICloneTrack;
+#include "Event/ProtoParticle.h"
+#include "Event/Track.h"
 
 /** @class ProtoParticleCloner ProtoParticleCloner.h src/ProtoParticleCloner.h
  *
@@ -24,7 +26,7 @@ class ICloneTrack;
  *  @author Juan PALACIOS
  *  @date   2008-04-01
  */
-class ProtoParticleCloner : public extends1<MicroDSTTool, ICloneProtoParticle>
+class ProtoParticleCloner : public extends1<ObjectClonerBase,ICloneProtoParticle>
 {
 
 public:
@@ -44,24 +46,6 @@ private:
 
   LHCb::ProtoParticle* clone(const LHCb::ProtoParticle* protoParticle);
 
-  template<class TYPE>
-  bool isVetoed( const TYPE * obj ) const
-  {
-    const bool veto =
-      ( obj && obj->parent() &&
-        !m_tesVetoList.empty() &&
-        m_tesVetoList.end() != std::find( m_tesVetoList.begin(),
-                                          m_tesVetoList.end(),
-                                          obj->parent()->registry()->identifier() ) );
-    if ( veto )
-    {
-      if ( msgLevel(MSG::DEBUG) )
-        debug() << "Object in " << obj->parent()->registry()->identifier()
-                << " is VETO'ed from cloning. Returning original pointer" << endmsg;
-    }
-    return veto;
-  }
-
 private:
 
   typedef MicroDST::BasicItemCloner<LHCb::ProtoParticle> BasicProtoParticleCloner;
@@ -70,10 +54,10 @@ private:
   typedef MicroDST::BasicItemCloner<LHCb::CaloHypo> CaloHypoCloner;
 
   ICloneTrack* m_trackCloner;
+  ICloneCaloHypo* m_caloHypoCloner;
 
   std::string m_trackClonerName;
-
-  std::vector<std::string> m_tesVetoList;
+  std::string m_caloHypoClonerName;
 
 };
 

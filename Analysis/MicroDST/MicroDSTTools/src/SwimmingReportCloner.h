@@ -2,10 +2,8 @@
 #ifndef SWIMMINGREPORTCLONER_H
 #define SWIMMINGREPORTCLONER_H 1
 
-// Include files
-// from Gaudi
-#include <MicroDST/Functors.hpp>
-#include <MicroDST/MicroDSTTool.h>
+#include "ObjectClonerBase.h"
+
 #include <MicroDST/ICloneSwimmingReport.h>
 
 namespace LHCb
@@ -20,7 +18,7 @@ namespace LHCb
  *  @author Roel Aaij
  *  @date   2010-10-09
  */
-class SwimmingReportCloner : public extends1<MicroDSTTool, ICloneSwimmingReport>
+class SwimmingReportCloner : public extends1<ObjectClonerBase,ICloneSwimmingReport>
 {
 
 public:
