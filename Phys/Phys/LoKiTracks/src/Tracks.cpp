@@ -20,8 +20,6 @@
 #include "LoKi/Tracks.h"
 #include "LoKi/GetTools.h"
 // ============================================================================
-#include "KalmanFilter/FastVertex.h"
-// ============================================================================
 /** @file
  *  Implementation file for classes from the namespace LoKi::Tracks
  *
@@ -841,26 +839,10 @@ StatusCode LoKi::Tracks::FastDOCAToBeamLine::updateCondition()
   StatusCode sc = LoKi::BeamSpot::updateCondition();
   if ( sc.isFailure() ) { return sc ; }  // RETURN
   //
-  m_beamLine.clearStates();
-  LHCb::State beamLineState ( LHCb::StateVector( Gaudi::XYZPoint  ( x(), y(), 0.),
-                                                 Gaudi::XYZVector ( 0. , 0. , 1.),
-                                                 0. ) );
-  
-  beamLineState.setLocation( LHCb::State::ClosestToBeam );
-  m_beamLine.addToStates( beamLineState );
+  m_beamLine = LoKi::FastVertex::Line( Gaudi::XYZPoint ( x(), y(), 0. ),
+                                       Gaudi::XYZVector( 0. , 0. , 1. ) );
   //
   return sc;
-}
-// ============================================================================
-// Copy constructor
-// ============================================================================
-LoKi::Tracks::FastDOCAToBeamLine::FastDOCAToBeamLine
-( const LoKi::Tracks::FastDOCAToBeamLine& other )
-  : LoKi::AuxFunBase ( other )
-  , LoKi::BeamSpot ( other )
-  , LoKi::Functor<const LHCb::Track*, double> ( other )
-{
-  m_beamLine.copy ( other.m_beamLine ) ;
 }
 // ============================================================================
 // MANDATORY: the only one essential method
@@ -870,7 +852,7 @@ LoKi::Tracks::FastDOCAToBeamLine::operator()
   ( LoKi::Tracks::FastDOCAToBeamLine::argument t ) const
 {
   double doca;
-  LoKi::FastVertex::distance( t, &m_beamLine, doca ) ;
+  LoKi::FastVertex::distance( t, m_beamLine, doca );
   return doca;
 }
 

@@ -24,6 +24,8 @@
 #include "LoKi/Interface.h"
 #include "LoKi/BeamSpot.h"
 // ============================================================================
+#include "KalmanFilter/FastVertex.h"
+// ============================================================================
 namespace LoKi
 {
   // ==========================================================================
@@ -857,8 +859,6 @@ namespace LoKi
       virtual ~FastDOCAToBeamLine() {}
       /// update the condition
       StatusCode     updateCondition ();
-      /// Copy constructor
-      FastDOCAToBeamLine( const FastDOCAToBeamLine& other ) ;
       /// MANDATORY: clone method ("virtual constructor")
       virtual  FastDOCAToBeamLine* clone() const
       { return new FastDOCAToBeamLine( *this ) ; }
@@ -868,8 +868,8 @@ namespace LoKi
       virtual std::ostream& fillStream( std::ostream& s ) const
       { return s << "Tr_FASTDOCATOBEAMLINE"; }
     private:
-      /// beamline tracks
-      LHCb::Track m_beamLine;
+      /// beamline
+      LoKi::FastVertex::Line m_beamLine;
     } ;
     // ========================================================================
   } //                                            end of namespace LoKi::Tracks
