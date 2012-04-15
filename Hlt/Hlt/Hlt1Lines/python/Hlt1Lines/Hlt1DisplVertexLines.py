@@ -38,7 +38,7 @@ class Hlt1DisplVertexLinesConf( HltLinesConfigurableUser ):
         , "VertexDisplVertexPS_GEC"         : "Loose"
         , "Priorities"                    : { "VertexDisplVertex"   : 128
                                             , "VertexDisplVertexPS" : 128 }
-        , "Prescale"                      : { "VertexDisplVertexPS" : 0.001 }
+        , "Prescale"                      : { "Hlt1VertexDisplVertexPS" : 0.001 }
         }
 
     def localise_props( self, prefix ):
