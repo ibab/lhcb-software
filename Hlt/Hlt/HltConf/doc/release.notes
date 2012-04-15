@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2012-04-15 - Pieter David
+ - add HltANNSvc ID's for prescaled version of the Hlt1 displaced vertex line
+
 !========================= HltConf v9r15 2012-03-20 =========================
 ! 2012-03-20 - Johannes Albrecht
 - change Express lines global postscale to 50Hz 
