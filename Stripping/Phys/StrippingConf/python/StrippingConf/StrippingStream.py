@@ -84,6 +84,7 @@ class StrippingStream ( object ) :
 	linesSeq = GaudiSequencer("StrippingStreamSeq"+self.name(),
                                   ModeOR = True,
                                   #ShortCircuit = False,
+                                  OutputLevel = WARNING, 
                                   Members = self.algs)
 
 	from StrippingLine import StrippingLine
@@ -116,6 +117,7 @@ class StrippingStream ( object ) :
                 self.seq = GaudiSequencer("StrippingSequenceStream"+self.name(),
                                       ModeOR = True,
                                       ShortCircuit = False,
+                                      OutputLevel = WARNING, 
                                       Members = self.algs + [ self.streamLine.configurable() ] )
             else : 
                 # If BadEventSelection is used, the stream sequencer has to be "protected" by 
@@ -124,6 +126,7 @@ class StrippingStream ( object ) :
             	lineSeq = GaudiSequencer("StrippingProtectedSequence"+self.name(),
                                           ModeOR = True,
                                           ShortCircuit = False,
+                                          OutputLevel = WARNING, 
                                           Members = self.algs + [ self.streamLine.configurable() ] )
                                           
                 # The structure differs depending on whether we want to accept or reject bad events
@@ -134,6 +137,7 @@ class StrippingStream ( object ) :
             	    # If the bad event condition passes, the stream sequencer will not run
 
         	    self.seq = GaudiSequencer("StrippingSequenceStream" + self.name(), 
+                                          OutputLevel = WARNING, 
         	                          Members = [ self.eventSelectionLine.configurable(), lineSeq ] )
             	    self.seq.ModeOR = True 
         	    self.seq.ShortCircuit = True
@@ -149,6 +153,7 @@ class StrippingStream ( object ) :
         	    
         	    badEventSeq = GaudiSequencer("StrippingBadEventSequence"+self.name(), 
         					 Members = [ self.eventSelectionLine.configurable() ], 
+                                                 OutputLevel = WARNING, 
         	                                 IgnoreFilterPassed = True)
         	    
         	    # Now create a LoKi filter that negates the result of the bad event selection
@@ -167,6 +172,7 @@ class StrippingStream ( object ) :
         	    # then the stream sequence. 
         	    
         	    self.seq = GaudiSequencer("StrippingSequenceStream" + self.name(), 
+                                          OutputLevel = WARNING, 
         	                          Members = [ badEventSeq, goodEventFilter, lineSeq ] )
 
         return self.seq

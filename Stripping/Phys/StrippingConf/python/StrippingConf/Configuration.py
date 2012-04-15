@@ -102,6 +102,7 @@ class StrippingConf ( object ) :
             self._sequence = GaudiSequencer(self._name,
                                             ModeOR = True, 
                                             ShortCircuit = False,
+                                            OutputLevel = WARNING, 
                                             Members = self._streamSequencers)
         return self._sequence
 

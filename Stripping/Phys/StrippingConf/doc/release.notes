@@ -4,6 +4,9 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2012-04-15 - Anton Poluektov 
+ - Reduce output from stripping sequencers
+
 !========================== StrippingConf v4r4 2012-03-01 ====================
 
 ! 2012-02-26 - Mike Williams

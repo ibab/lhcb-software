@@ -472,7 +472,7 @@ class StrippingLine(object):
 #                                                     , InputSelection = 'TES:/Event/Strip/%s/Particles'%self.outputLocation()
 #                                                     , OutputSelection = decisionName(line, 'Stripping')) ]
 
-            mdict.update( { 'Filter1' : GaudiSequencer( filterName ( line,'Stripping' ) , Members = self._members ) })
+            mdict.update( { 'Filter1' : GaudiSequencer( filterName ( line,'Stripping' ) , Members = self._members, OutputLevel = WARNING ) })
             
         mdict.update( { 'HltDecReportsLocation' : self.fullHDRLocation } )
         if (self.outputLocation()) : 
