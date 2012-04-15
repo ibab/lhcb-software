@@ -5,6 +5,12 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2012-04-14 - Pieter David
+ - Add a cut on the number of Velo tracks before the "vertexing" step
+   in the displaced vertex line, to protect against very high CPU and
+   memory usage on events with large amoungs of high-IP tracks
+   see also https://savannah.cern.ch/bugs/?93550
+ - Add a prescaled version of the same line without this cut
 
 !========================= Hlt1Lines v6r20 2012-04-03 =========================
 ! 2012-04-03 - Johannes Albrecht
