@@ -5,6 +5,14 @@ $! $Id: release.notes,v 1.167 2010-09-19 09:03:47 robbep Exp $
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
+! 2012-04-16 - John Back
+ - Some changes in EvtGenDecay.cpp to be compatible with the trunk of EvtGen:
+    a) use updated static instance for EvtGen/EvtDecayTable functions
+    b) added EvtPythia6 include header to still allow Pythia6 initialisation
+      (for some reason, this is still needed here for the initial p-p event)
+    c) commented out photos external fortran function calls.
+   Branch v11r4b is a copy of the trunk prior to the above changes.
+
 !======================= Generators v11r4 2012-02-12 =========================
 ! 2012-02-12 - Gloria Corti
  - Few changes in Generation.cpp and GenCounters for counting in Pythia8 and 
