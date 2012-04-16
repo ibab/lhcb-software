@@ -160,6 +160,7 @@ namespace ROMon {
     std::auto_ptr<ClusterDisplay>    m_roDisplay;
     std::auto_ptr<ClusterDisplay>    m_sysDisplay;
     std::auto_ptr<ClusterDisplay>    m_torrentDisplay;
+    std::auto_ptr<ClusterDisplay>    m_deferHltDisplay;
     std::auto_ptr<ProcessDisplay>    m_procDisplay;
     std::auto_ptr<CtrlNodeDisplay>   m_ctrlDisplay;
     std::auto_ptr<BufferDisplay>     m_mbmDisplay;
@@ -202,6 +203,8 @@ namespace ROMon {
     int showSubfarm();
     /// Show window with node control information
     int showCtrlWindow();
+    /// Show window with deferred trigger information for a subfarm
+    int showDeferHltWindow();
     /// Show window with processes on a given node
     int showProcessWindow(int full=0);
     /// Show window with CPU information of a given subfarm

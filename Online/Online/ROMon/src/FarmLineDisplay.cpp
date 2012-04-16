@@ -387,8 +387,8 @@ int FarmLineDisplay::showDeferredSummaryWindow() {
 
 /// Handle keyboard interrupts
 int FarmLineDisplay::handleKeyboard(int key)    {
+  // Invoke here run processing summary!
   if ( m_mode == HLTDEFER_MODE && (key == 'S' || key=='s') ) {
-    // Invoke here run processing summary!
     return showDeferredSummaryWindow();
   }
   else if ( FarmDisplayBase::handleKeyboard(key) == WT_SUCCESS ) {
@@ -507,6 +507,9 @@ void FarmLineDisplay::handle(const Event& ev) {
       }
       if ( m_torrentDisplay.get() )   {
         IocSensor::instance().send(m_torrentDisplay.get(),ROMonDisplay::CMD_UPDATEDISPLAY,this);
+      }
+      if ( m_deferHltDisplay.get() )   {
+        IocSensor::instance().send(m_deferHltDisplay.get(),ROMonDisplay::CMD_UPDATEDISPLAY,this);
       }
       if ( m_summaryDisplay.get() )   {
         IocSensor::instance().send(m_summaryDisplay.get(),CMD_UPDATE,&m_lines);

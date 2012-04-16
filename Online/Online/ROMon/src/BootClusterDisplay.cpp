@@ -119,9 +119,9 @@ void BootClusterDisplay::update(const void* data) {
     else                ::strcpy(text1,"<Unknown>");
     if ( n.mountReq>0 ) ::strftime(text2,sizeof(text2),"%H:%M:%S",::localtime(&mount));
     else                ::strcpy(text2,"<Unknown>");
-    if ( n.fmcStart>0 ) ::strftime(text3,sizeof(text3),"%H:%M:%S",::localtime(&fmc));
+    if ( n.fmcStart>0 ) ::strftime(text3,sizeof(text3),"%Y-%m-%d %H:%M:%S",::localtime(&fmc));
     else                ::strcpy(text3,"<Unknown>");
-    ::sprintf(txt,"  %-10s %4s %5s %4s %4s %4s %4s %4s %4s %4s   %03X %10s%10s%10s",
+    ::sprintf(txt,"  %-10s %4s %5s %4s %4s %4s %4s %4s %4s %4s   %03X %10s%10s%21s",
               n.name,_F(DHCP_REQUESTED),_F(MOUNT_REQUESTED),_F(CPU_STARTED),_F(ETH0_STARTED),_F(ETH1_STARTED),
               _F(PCI_STARTED),_F(TCP_STARTED),_F(FMC_STARTED),_F(TASKMAN_OK),st,text1,text2,text3);
     if      ( 0 != (st&BootNodeStatus::TASKMAN_OK)      ) col = GREEN|INVERSE;

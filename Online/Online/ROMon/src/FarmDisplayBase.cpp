@@ -129,6 +129,8 @@ int FarmDisplayBase::showHelpWindow() {
     m_helpDisplay = auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","mbm"));
   else if ( m_ctrlDisplay.get() ) 
     m_helpDisplay = auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","ctrl"));
+  else if ( m_deferHltDisplay.get() ) 
+    m_helpDisplay = auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","defer_hlt"));
   else if ( m_procDisplay.get() ) 
     m_helpDisplay = auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","procs"));
   else if ( m_cpuDisplay.get() ) 
@@ -166,6 +168,7 @@ int FarmDisplayBase::showSubfarm()    {
     m_torrentDisplay = auto_ptr<ClusterDisplay>(0);
     m_roDisplay      = auto_ptr<ClusterDisplay>(0);
     m_sysDisplay     = auto_ptr<ClusterDisplay>(0);
+    m_deferHltDisplay= auto_ptr<ClusterDisplay>(0);
     m_cpuDisplay     = auto_ptr<CPUDisplay>(0);
     m_mbmDisplay     = auto_ptr<BufferDisplay>(0);
     m_procDisplay    = auto_ptr<ProcessDisplay>(0);
@@ -252,6 +255,31 @@ int FarmDisplayBase::showCtrlWindow() {
     }
     m_ctrlDisplay->show(m_anchorY+5,m_anchorX+12);
     MouseSensor::instance().add(this,m_ctrlDisplay->display());
+  }
+  return WT_SUCCESS;
+}
+
+/// Show window with deferred trigger information for a subfarm
+int FarmDisplayBase::showDeferHltWindow() {
+  DisplayUpdate update(this,true);
+  if ( m_deferHltDisplay.get() ) {
+    if ( m_helpDisplay.get() ) showHelpWindow();
+    MouseSensor::instance().remove(this,m_deferHltDisplay->display());
+    m_deferHltDisplay->finalize();
+    m_nodeSelector = swapMouseSelector(this,m_deferHltDisplay.get(),m_subfarmDisplay);
+    m_deferHltDisplay = auto_ptr<ClusterDisplay>(0);
+    return WT_SUCCESS;
+  }
+  string dnam = strlower(selectedCluster());
+  if ( !dnam.empty() ) {
+    string node = "-node="+dnam;
+    string svc = "-servicename="+svcPrefix()+dnam+"/ROpublish/HLTDefer";
+    const char* argv[] = {"", svc.c_str(), "-delay=300" };
+    ClusterDisplay* disp = createHltSubfarmDisplay(SUBFARM_WIDTH+20,SUBFARM_HEIGHT,m_anchorX+3,m_anchorY,3,(char**)argv);
+    m_deferHltDisplay = auto_ptr<ClusterDisplay>(disp);
+    m_deferHltDisplay->initialize();
+    m_nodeSelector = swapMouseSelector(this,m_subfarmDisplay,m_deferHltDisplay.get());
+    IocSensor::instance().send(this,CMD_UPDATE,m_deferHltDisplay.get());
   }
   return WT_SUCCESS;
 }
@@ -480,6 +508,8 @@ bool FarmDisplayBase::handleMouseEvent(const MouseEvent* m) {
       IocSensor::instance().send(this,CMD_SHOWSTATS,this);
     else if ( m_sysDisplay.get() )
       IocSensor::instance().send(this,CMD_SHOWSYS,this);
+    else if ( m_deferHltDisplay.get() )
+      IocSensor::instance().send(this,CMD_SHOWDEFERRED,this);
     else
       IocSensor::instance().send(this,CMD_SHOWSUBFARM,this);
     return true;
@@ -492,6 +522,9 @@ bool FarmDisplayBase::handleIocEvent(const Event& ev) {
   switch(ev.type) {
   case CMD_SHOWSUBFARM:
     showSubfarm();
+    return true;
+  case CMD_SHOWDEFERRED:
+    showDeferHltWindow();
     return true;
   case CMD_SHOWTORRENT:
     showTorrentWindow();
@@ -574,6 +607,10 @@ int FarmDisplayBase::handleKeyboard(int key)    {
     case 'c':
     case 'C':
       return showCpuWindow();
+    case 'd':
+    case 'D':
+      IocSensor::instance().send(this,CMD_SHOWDEFERRED,this);
+      break;
     case 'k':
     case 'K':
       IocSensor::instance().send(this,CMD_SHOWCTRL,this);
