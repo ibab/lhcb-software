@@ -5,6 +5,7 @@
 ! Purpose     : track-related functors for LoKi-framework 
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiTracks v2r6 2012-04-17 =========================
 ! 2012-04-09 - Pieter David
  - use the new LoKi::FastVertex::distance(line,track) method for the
    FastDOCAToBeamLine functor
