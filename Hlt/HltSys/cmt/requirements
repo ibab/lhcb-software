@@ -29,9 +29,9 @@ use LoKiTrigger         v12r8   Phys  # Vanya Belyaev
 
 #temporary
 use KalmanFilter        v1r4    Phys
-use LokiPhys            v10r9   Phys
-use LokiTracks          v2r6    Phys
-use LokiUtils           v1r2    Phys
+use LoKiPhys            v10r9   Phys
+use LoKiTracks          v2r6    Phys
+use LoKiUtils           v1r2    Phys
 
 use FastVelo            v1r8    Tf
 use PatAlgorithms       v4r21   Tf
