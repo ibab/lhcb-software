@@ -1,16 +1,16 @@
 package HltSys
-version           v14r3
+version           v14r4
 
 branches cmt doc
 
-use Hlt1Lines           v6r20   Hlt   # Gerhard Raven, Vava Gligorov, Johannes Albrecht, Roel Aaij
+use Hlt1Lines           v6r21   Hlt   # Gerhard Raven, Vava Gligorov, Johannes Albrecht, Roel Aaij
 use Hlt1Muons           v1r5    Hlt   # Roel Aaij
 use Hlt2Lines           v8r18   Hlt   # Vava Gligorov, Johannes Albrecht, Gerhard Raven
 use Hlt2SharedParticles v6r7    Hlt   # Patrick Koppenburg, Gerhard Raven
 use HltBase             v12r3   Hlt   # Gerhard Raven
 use HltBeamGasAlley     v3r0    Hlt   # Plamen Hopchev
 use HltCommon           v8r4    Hlt   # Gerhard Raven
-use HltConf             v9r15   Hlt   # Vanya Belyaev, Gerhard Raven
+use HltConf             v9r16   Hlt   # Vanya Belyaev, Gerhard Raven
 use HltCosmics          v1r0p2  Hlt   # Stephan Nies
 use HltDisplVertices    v3r9    Hlt   # Neil Gauvin, Victor Coco
 use HltGlobalMonitor    v3r9    Hlt   # Bruno de Paula
@@ -25,7 +25,16 @@ use HltSettings         v5r27   Hlt   # Parick Koppenburg, Gerhard Raven
 use HltTisTosTobbing    v1r1    Hlt   # Tomasz Skwarnicki
 use HltTracking         v9r16   Hlt   # Johannes Albrecht, Vava Gligorov
 use TCKUtils            v1r10   Hlt   # Gerhard Raven
-use LoKiTrigger         v12r7   Phys  # Vanya Belyaev
+use LoKiTrigger         v12r8   Phys  # Vanya Belyaev
+
+#temporary
+use KalmanFilter        v1r4    Phys
+use LokiPhys            v10r9   Phys
+use LokiTracks          v2r6    Phys
+use LokiUtils           v1r2    Phys
+
+use FastVelo            v1r8    Tf
+use PatAlgorithms       v4r21   Tf
 
 # Declare this as a container package
 apply_pattern container_package
