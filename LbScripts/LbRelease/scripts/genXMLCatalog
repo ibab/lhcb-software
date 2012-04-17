@@ -23,7 +23,7 @@ except:
     command = ' '.join(sys.argv)
     #print command
     sys.exit( os.system(". SetupProject.sh LHCbDirac &>/dev/null; "+ command))
-    
+
 opts, args = getopt.getopt( sys.argv[1:], \
                             "ho:n:s:f:p:d:vig", \
                             ["help", "options=", "site=", "catalog=", "depth=", "newoptions=","ignore"])
@@ -108,9 +108,9 @@ for opt in optFiles:
 gaudiRun = "gaudirun.py -n -o %s %s" % (tmpFile, runOpts)
 if not gaudiVerbose: gaudiRun += " &>/dev/null"
 if verbose: print "Extract list of input files from", optFiles
-    
+
 if  os.system("which gaudirun.py &>/dev/null") != 0:
-    rc = os.system(". SetupProject.sh Gaudi &>/dev/null;" + gaudiRun)
+    rc = os.system(". SetupProject.sh LHCb &>/dev/null;" + gaudiRun)
 else:
     rc = os.system(gaudiRun)
 if rc:
@@ -144,10 +144,10 @@ try:
     while done and os.system("dirac-proxy-info --checkvalid > /dev/null") != 0:
         print "You don't have a valid proxy, we create one..."
         done = os.system("lhcb-proxy-init")
-        
+
     if depth > 1:
         from DIRAC.Core.Base import Script
-        from LHCbDIRAC.NewBookkeepingSystem.Client.AncestorFiles import getAncestorFiles
+        from LHCbDIRAC.BookkeepingSystem.Client.AncestorFiles import getAncestorFiles
         Script.parseCommandLine( ignoreErrors = True )
         # Seems getAncestrorFiles only works for one file...
         #result = getAncestorFiles(lfnList,depth)
@@ -163,7 +163,7 @@ try:
                 sys.exit(1)
             fullList += result['Value']
         lfnList = fullList
-    
+
     from DIRAC.Interfaces.API.Dirac import *
     if not verbose:
         gLogger.setLevel("Always")
