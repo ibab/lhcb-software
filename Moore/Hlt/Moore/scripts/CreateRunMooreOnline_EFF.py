@@ -76,6 +76,7 @@ print 'generating '+ sys.argv[1]
 file = open(sys.argv[1],'w+')
 file.write( """#!/bin/sh
 #!/bin/sh
+ulimit -v 3221225472
 export PARENT=$1
 export PARTNAME=$2
 if test -n "$3" ;
@@ -144,11 +145,11 @@ elif test "${APP_STARTUP_OPTS}" = "-restore";      ## RunInfo flag=2
 	    echo "== Testing CHECKPOINT file......Please be patient.";
 	    echo "=============================================================================";
 	    eval `python ${MOOREROOT}/python/Moore/ConfigureFromCheckpoint.py`;
-	    echo exec -a ${UTGID} ${CHECKPOINT_BIN}/restore.exe -p 4 -e -i ${CHECKPOINT_FILE};
+	    echo exec -a ${UTGID} ${CHECKPOINT_BIN}/restore.exe -p 4 -e -l /dev/shm/checkpoint -i ${CHECKPOINT_FILE};
 	    echo "=============================================================================";
 	fi;
 	eval `python ${MOOREROOT}/python/Moore/ConfigureFromCheckpoint.py` | \\
-        exec -a ${UTGID} ${CHECKPOINT_BIN}/restore.exe -p 4 -e -i ${CHECKPOINT_FILE};
+        exec -a ${UTGID} ${CHECKPOINT_BIN}/restore.exe -p 4 -e -l /dev/shm/checkpoint -i ${CHECKPOINT_FILE};
     else
 	echo " [FATAL] =============================================================================";
 	echo " [FATAL] == File:  ${CHECKPOINT_FILE}";

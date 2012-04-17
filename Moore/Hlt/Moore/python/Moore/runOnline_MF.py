@@ -16,7 +16,7 @@ def start() :
     Moore().RunMonitoringFarm = True
 
     # TODO: change 0x4 into 0x10000 (NoBias)
-    Moore().REQ1 = 'EvType=2;TriggerMask=0x0,0x4,0x0,0x0;VetoMask=0,0,0,0x700;MaskType=ANY;UserType=USER;Frequency=PERC;Perc=100.0'
+    Moore().REQ1 = 'EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=USER;Frequency=PERC;Perc=100.0'
 
     ### default database setup
     Moore().Simulation = False
@@ -25,6 +25,8 @@ def start() :
     Moore().UseDBSnapshot = True
     Moore().IgnoreDBHeartBeat = True
     Moore().EnableRunChangeHandler = ( OnlineEnv.HLTType not in ['PA','PassThrough' ] )
+    Moore().HistogrammingLevel = 'Line'
+    Moore().Verbose = True
 
     ### pick up requested DB tags
     if hasattr(OnlineEnv,'CondDBTag') and OnlineEnv.CondDBTag : Moore().CondDBtag = OnlineEnv.CondDBTag
@@ -35,9 +37,11 @@ def start() :
     MonitorSvc().ExpandNameInfix       = "<part>_x_<program>/";
     MonitorSvc().PartitionName         = OnlineEnv.PartitionName;
     MonitorSvc().ProgramName           = "HltExpertMon_00";
+    
 	
     from Configurables import UpdateAndReset
     UpdateAndReset().saveHistograms = 1	
+    #UpdateAndReset().saverCycle     = 3600
 
     # Forward all attributes of 'OnlineEnv' to the job options service...
     from GaudiKernel.Proxy.Configurable import ConfigurableGeneric

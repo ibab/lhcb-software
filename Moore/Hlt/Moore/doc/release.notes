@@ -2,6 +2,11 @@ Package     : Hlt/Moore
 Package Coordinator : Eric van Herwijnen
 Purpose     : LHCb HLT application
 
+
+! 2012-04-17 - Eric van Herwijnen
+ - Change CreateRunMooreOnline_EFF.py: add library for checkpoint execution and ulimit -m to limit memory consumption
+ - change runMooreOnline_MF.py to run Moore in monitoring farm
+
 !========================= Moore v13r3 2012-04-09 ===========================
 ! 2012-04-09 - Marco Cattaneo
  - Use HLT v14r3 and Online v4r63
