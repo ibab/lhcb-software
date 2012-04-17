@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-04-17 - Paul Seyfert
+ - Adjust new(=2012) track chi2 behaviour (VeloMuon tracks differently affected than longtracks)
+
 !========================= StrippingSelections v3r12 2012-04-01 =========================
 
 ! 2012-04-04 - Marcin Kucharczyk

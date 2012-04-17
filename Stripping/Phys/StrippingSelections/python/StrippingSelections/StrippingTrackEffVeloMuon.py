@@ -43,7 +43,8 @@ from SelPy.utils import ( UniquelyNamedObject,
                           ClonableObject,
                           SelectionBase )
 confdict={
-			"TrChi2Mu":		5.	# adimensional
+			"TrChi2VeMu":		5.	# adimensional
+		,	"TrChi2LongMu":		3.	# adimensional
 		,	"JpsiPt":		0.5	# GeV
 		,	"TrPt":			100.	# MeV
 		,	"TrP":			5.	# GeV
@@ -65,7 +66,8 @@ class StrippingTrackEffVeloMuonConf(LineBuilder):
     Definition of tag and probe JPsi stripping.
     """
     __configuration_keys__ = (
-				'TrChi2Mu',
+				'TrChi2VeMu',
+                                'TrChi2LongMu',
 				'JpsiPt',
 				'TrPt',
 				'TrP',
@@ -91,8 +93,8 @@ class StrippingTrackEffVeloMuonConf(LineBuilder):
 	self.TisTosPreFilter2Jpsi = selHlt2Jpsi('TisTosFilter2Jpsifor'+name, hlt1Filter = self.TisTosPreFilter1Jpsi, HLT2TisTosSpecs = config['HLT2TisTosSpecs'], HLT2PassOnAll = config['HLT2PassOnAll'])
 
 	# CHECK FOR TAG-TRACKS
-	muCut = "((TRCHI2DOF < %(TrChi2Mu)s)) & (PT > %(TrPt)s) & (P > %(LongP)s) & (PIDmu > %(MuDLL)s)" % config
-	vmCut = "((TRCHI2DOF < %(TrChi2Mu)s)) & (PT > %(TrPt)s) & (P > %(TrP)s)" % config
+	muCut = "((TRCHI2DOF < %(TrChi2LongMu)s)) & (PT > %(TrPt)s) & (P > %(LongP)s) & (PIDmu > %(MuDLL)s)" % config
+	vmCut = "((TRCHI2DOF < %(TrChi2VeMu)s)) & (PT > %(TrPt)s) & (P > %(TrP)s)" % config
         self.longbothJpsi = longtrackFilter( name+'LongJpsiBoth', trackAlgo = 'LongMu', partSource = StdLooseMuons, muCut = muCut)
 	self.longMinusJpsi = chargeFilter( name+'LongJpsiMinus', trackAlgo = 'LongMu',   partSource = self.longbothJpsi, charge = -1, vmCut = vmCut, muCut = muCut)
 	self.longPlusJpsi = chargeFilter( name+'LongJpsiPlus', trackAlgo =  'LongMu',   partSource = self.longbothJpsi, charge = 1, vmCut = vmCut, muCut = muCut)
@@ -112,7 +114,6 @@ class StrippingTrackEffVeloMuonConf(LineBuilder):
 							   plusCharge = self.veloMuonPlusJpsi, 
 							   minusCharge = self.longMinusJpsi,
 							   mode = 1,
-							   TrChi2Mu = config['TrChi2Mu'], 
 							   TrPt = config['TrPt'], 
 							   TrP = config['TrP'],
 							   MuDLL = config['MuDLL'],
@@ -127,7 +128,6 @@ class StrippingTrackEffVeloMuonConf(LineBuilder):
 							   plusCharge = self.longPlusJpsi, 
 							   minusCharge = self.veloMuonMinusJpsi,
 							   mode = 2,
-							   TrChi2Mu = config['TrChi2Mu'], 
 							   TrPt = config['TrPt'],  
 							   TrP = config['TrP'],
 							   MuDLL = config['MuDLL'],
@@ -188,7 +188,7 @@ def makeMyMuons(name, protoParticlesMaker):
    return Selection(name+"SelVeloMuonParts", Algorithm = particleMaker, RequiredSelections = [protoParticlesMaker], InputDataSetter=None)
 
 def makeResonanceVeloMuTrackEff(name, resonanceName, decayDescriptor, plusCharge, minusCharge, 
-                              mode, TrChi2Mu, TrPt, TrP, MuDLL, MassPreComb, VertChi2, MassPostComb, JpsiPt):    
+                              mode, TrPt, TrP, MuDLL, MassPreComb, VertChi2, MassPostComb, JpsiPt):    
    """
    Create and return a Resonance -> mu mu Selection object, with one track a long track
    and the other a MuonVelo track.
@@ -327,6 +327,7 @@ def trackingPreFilter(name, prefilter):
    preve.outputLocation = "Rec/Track/UnFittedVelo"
    preve.bestLocation = ""
 
+   #TODO: apparently FastVelo is now (april 2012) run with fixes in the production which don't neccessarily apply to the stripping...
    alg = GaudiSequencer("VeloMuonTrackingFor"+name,
                          Members = [ DecodeVeloRawBuffer(name+"VeloDecoding",DecodeToVeloLiteClusters=True,DecodeToVeloClusters=True),
 			         FastVeloTracking(name+"FastVelo",OutputTracksName="Rec/Track/Velo"),
