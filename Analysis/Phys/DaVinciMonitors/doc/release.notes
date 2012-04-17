@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2012-04-17  - Giacomo Graziani
+ - fix a bug in MuEffMonitor that was affecting the DQ efficiency histograms
+
 !========================= DaVinciMonitors v1r17 2012-02-09 =========================
 
 ! 2012-01-25 - Patrick Koppenburg

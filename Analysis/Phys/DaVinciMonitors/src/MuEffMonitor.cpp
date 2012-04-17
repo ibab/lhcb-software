@@ -72,8 +72,8 @@ MuEffMonitor::MuEffMonitor( const std::string& name,
   declareProperty ( "Chi2MuMin"     ,m_Chi2MuMin = 10) ; // chi2 cut global track to mu matching (very loose)
   declareProperty ( "nSigmaXother"  ,m_nSigmaXother = 2); // matching window in sigma for other stations (tight)
   declareProperty ( "nSigmaYother"  ,m_nSigmaYother = 2); // matching window in sigma for other stations (tight)
-  declareProperty ( "Chi2OtherMuMin",m_Chi2OtherMuMin = 999) ; // or chi2 cut global track to mu matching other stations 
-  declareProperty ( "Chi2MuGlobal"  ,m_Chi2MuGlobal = 1.5) ; // max chi2/ndf for global candidates 
+  declareProperty ( "Chi2OtherMuMin",m_Chi2OtherMuMin = 99) ; // or chi2 cut global track to mu matching other stations 
+  declareProperty ( "Chi2MuGlobal"  ,m_Chi2MuGlobal = 99) ; // max chi2/ndf for global candidates 
   declareProperty ( "CosThetaCut"   ,m_CosThetaCut = 0.99 ) ;
   declareProperty ( "xyDistCut"     ,m_xyDistCut = 5. ) ; // cm
   declareProperty ( "RequireCrossing", m_mustCross = true );
@@ -541,6 +541,7 @@ StatusCode MuEffMonitor::fillCoordVectors(){
   
   m_coordPos.clear();
   m_coordPos.resize(m_NStation * m_NRegion);
+  m_nReqStations=m_origReqStations;
 
   // get the MuonCoords for each station in turn
   LHCb::MuonCoords* coords = get<LHCb::MuonCoords>(LHCb::MuonCoordLocation::MuonCoords);
@@ -923,6 +924,7 @@ void MuEffMonitor::fillHistos(){
     bool otherStationsWellMatched=true;
     for (int js=0 ; js<m_NStation; js++) {
       if(js == s) continue;
+      if (false == m_Muon.hitInM[js]) continue;
       if(m_Muon.mtcSigmax[js] > m_nSigmaXother) { otherStationsWellMatched=false; break;}
       if(m_Muon.mtcSigmay[js] > m_nSigmaYother) { otherStationsWellMatched=false; break;}
     }

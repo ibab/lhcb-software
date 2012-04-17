@@ -30,8 +30,8 @@ moneff.EhcalMin = 500.
         
 moneff.Chi2ProbTrMin = 0.01
 moneff.Chi2MuMin = 10.
-moneff.nSigmaXother =2;
-moneff.nSigmaYother =2;
+moneff.nSigmaXother =2.
+moneff.nSigmaYother =2.
 
 moneff.HistoLevel = "OfflineFull"        
 moneff.OutputLevel = 4
