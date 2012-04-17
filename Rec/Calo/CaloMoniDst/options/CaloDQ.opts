@@ -11,3 +11,5 @@ ResolvedPi0Mon.histoList = { "1", "2" , "3" , "4" , "5",  "6" , "7"};
 EtaMon.histoList         = { "1", "2" , "3" , "4" , "5",  "6" , "7"};
 EcalProtoPMon.histoList  = { "All" };
 SpdMon.histoList         = { "All" };
+Photon2L0Calo.histoList  = { "0", "1", "2" , "3" };
+Electron2L0Calo.histoList  = { "0", "1", "2" , "3" };

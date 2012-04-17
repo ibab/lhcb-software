@@ -1,0 +1,8 @@
+Calo2L0Mon.Members += {"L0CaloScale/Photon2L0Calo"
+    ,"L0CaloScale/Electron2L0Calo"
+    };
+
+Photon2L0Calo.EtFilter=200.*MeV;
+Electron2L0Calo.EtFilter=200.*MeV;
+Photon2L0Calo.SplitAreas=true;
+Electron2L0Calo.SplitAreas=true;

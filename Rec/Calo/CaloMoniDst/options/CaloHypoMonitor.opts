@@ -6,7 +6,9 @@ CaloHypoMon.Members    += { "CaloHypoMonitor/ElectronMon"
                             ,"CaloPi0Monitor/EtaMon" 
 };             
 
-ResolvedPi0Mon.PhotonPtFilter = 500.*MeV;
+ResolvedPi0Mon.PhotonPtFilter = 200.*MeV;
+ResolvedPi0Mon.IsolationFilter = 3; // temp
+ResolvedPi0Mon.HistoMassMax = 250.; // temp
 
 // Eta->gg
 EtaMon.PhotonMaxPtFilter=1000.*MeV;

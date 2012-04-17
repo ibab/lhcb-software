@@ -4,6 +4,10 @@
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
 
+! 2012-04-17 - Olivier Deschamps
+ - new algorithm : L0CaloScale to compare CaloCluster/CaloHypo/L0Cluster transverse energy
+
+
 !========================= CaloMoniDst v5r10 2012-04-13 =======================
 ! 2012-04-05 - Olivier Deschamps
  - Add eta->gg monitoring (re-use resolvedPi0 algorithm)
