@@ -4,6 +4,7 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+!========================= HltConf v9r16 2012-04-17 =========================
 ! 2012-04-15 - Pieter David
  - add HltANNSvc ID's for prescaled version of the Hlt1 displaced vertex line
 
