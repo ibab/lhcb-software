@@ -3,6 +3,9 @@ Package     : MooreSys
 Package Coordinator : E. van Herwijnen
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v13r4>2012-04-17 Moore v13r4</A></H1><PRE>
+Uses Hlt v14r4. 
+
 </PRE><H1><A NAME=v13r3>2012-04-09 Moore v13r3</A></H1><PRE>
 Uses Hlt v14r3. Bug fixes for 2012 data taking
 

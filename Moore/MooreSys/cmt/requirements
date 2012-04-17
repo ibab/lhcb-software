@@ -1,18 +1,17 @@
 package MooreSys
-version v13r3
+version v13r4
 branches doc cmt
 
 #=======================================================
 # Don't forget the applications
 #=======================================================
 
-use  Moore               v13r3       Hlt
+use  Moore               v13r4       Hlt
 use  IndependenceTests   v1r2p1      Hlt
 
 # Bug fixes on top of LHCb v34r2 release stack
 use VeloDet       v13r18p1 Det
-use PatAlgorithms v4r21    Tf
-use LoKiPhys      v10r8p1  Phys
+
 
 # Declare this as a container package
 apply_pattern container_package
