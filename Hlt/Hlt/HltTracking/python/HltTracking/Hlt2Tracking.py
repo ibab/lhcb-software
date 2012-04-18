@@ -1384,8 +1384,9 @@ class Hlt2Tracking(LHCbConfigurableUser):
         PatDownstream            = PatDownstream(self.getProp("Prefix")+'PatDownstream')
         PatDownstream.InputLocation  = self.__hlt2SeedTracking().outputSelection()
         PatDownstream.OutputLocation = downstreamTrackOutputLocation
-        #PatDownstream.UseForward    = True
-        #PatDownstream.SeedFilter    = True
+        PatDownstream.ForwardLocation = fwdtracks.outputSelection()
+        PatDownstream.MatchLocation = matchtracks.outputSelection()
+        #Set to true to remove used seeds and tt hits
         PatDownstream.RemoveUsed     = True
         PatDownstream.RemoveAll      = True
   
