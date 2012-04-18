@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones, J. Palacios, Olivier Deschamps
 !==============================================================================
 
+! 2012-04-18 - Wouter Hulsbergen
+ - Added V0FromDstMaker: transforms Brunel V0 list into Particles
+
 !========================= ParticleMaker v6r1 2012-02-03 =========================
 
 ! 2012-01-27 - Eric van Herwijnen
