@@ -1130,7 +1130,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         elif (self.__shortTrackLocation() == Hlt2ForwardTracksName) :
             trackRecoSequence        =     [self.__hlt2ForwardTracking()]
         elif (self.__shortTrackLocation() == Hlt2DownstreamTracksName ) :
-            trackRecoSequence         =    [self.__hlt2ForwardTracking(), self.__hlt2DownstreamTracking()]
+            trackRecoSequence         =    [self.__hlt2DownstreamTracking()]
         # Do the clone killing if required 
         if self.getProp("DoCloneKilling") : 
             trackRecoSequence        +=      [cloneKiller]
@@ -1333,7 +1333,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
          
         # Build the bindMembers        
         bm_name         = self.getProp("Prefix")+"SeedTracking" 
-        bm_members      = self.__hlt2TrackerDecoding().members() + [recoSeeding]
+        bm_members      = self.__hlt2VeloTracking().members() + self.__hlt2TrackerDecoding().members() + \
+                          self.__hlt2ForwardTracking().members() + [recoSeeding]
         bm_output       = seedTrackOutputLocation
 
         return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
@@ -1379,13 +1380,16 @@ class Hlt2Tracking(LHCbConfigurableUser):
         from HltLine.HltLine    import bindMembers
     
         downstreamTrackOutputLocation    = _baseTrackLocation(self.getProp("Prefix"),Hlt2DownstreamTracksName)
-    
+
+        fwdtracks   = self.__hlt2ForwardTracking()    
+        matchtracks = self.__hlt2MatchTracking()
+
         ### Downstream tracking
-        PatDownstream            = PatDownstream(self.getProp("Prefix")+'PatDownstream')
-        PatDownstream.InputLocation  = self.__hlt2SeedTracking().outputSelection()
-        PatDownstream.OutputLocation = downstreamTrackOutputLocation
+        PatDownstream                 = PatDownstream(self.getProp("Prefix")+'PatDownstream')
+        PatDownstream.InputLocation   = self.__hlt2SeedTracking().outputSelection()
+        PatDownstream.OutputLocation  = downstreamTrackOutputLocation
         PatDownstream.ForwardLocation = fwdtracks.outputSelection()
-        PatDownstream.MatchLocation = matchtracks.outputSelection()
+        PatDownstream.MatchLocation   = matchtracks.outputSelection()
         #Set to true to remove used seeds and tt hits
         PatDownstream.RemoveUsed     = True
         PatDownstream.RemoveAll      = True
@@ -1404,7 +1408,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
  
         # Build the bindMembers        
         bm_name         = self.getProp("Prefix")+"DownstreamTracking" 
-        bm_members      = self.__hlt2SeedTracking().members() + [PatDownstream]
+        bm_members      = self.__hlt2MatchTracking().members() + [PatDownstream]
         bm_output       = downstreamTrackOutputLocation
 
         return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
