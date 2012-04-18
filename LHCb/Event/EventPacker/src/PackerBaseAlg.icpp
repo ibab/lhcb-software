@@ -112,15 +112,15 @@ StatusCode Pack<PACKER>::execute()
         packer.check( *data, *unpacked ).ignore();
 
         // clean up after checks
-        evtSvc()->unregisterObject( unpacked );
-        delete unpacked;
+        StatusCode sc = evtSvc()->unregisterObject( unpacked );
+        if( sc.isSuccess() ) delete unpacked;
       }
 
       // If requested, remove the input data from the TES and delete
-      if ( m_deleteInput )
+      if ( UNLIKELY(m_deleteInput) )
       {
-        evtSvc()->unregisterObject( data );
-        delete data;
+        StatusCode sc = evtSvc()->unregisterObject( data );
+        if( sc.isSuccess() ) delete data;
         data = NULL;
       }
       else

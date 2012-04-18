@@ -1,4 +1,3 @@
-// $Id: PackProtoParticle.cpp,v 1.7 2009-11-10 10:25:07 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -76,15 +75,15 @@ StatusCode PackProtoParticle::execute()
     packer.check( *parts, *unpacked ).ignore();
     
     // clean up after checks
-    evtSvc()->unregisterObject( unpacked );
-    delete unpacked;
+    StatusCode sc = evtSvc()->unregisterObject( unpacked );
+    if( sc.isSuccess() ) delete unpacked;
   }
 
   // If requested, remove the input data from the TES and delete
-  if ( m_deleteInput )
+  if ( UNLIKELY(m_deleteInput) )
   {
-    evtSvc()->unregisterObject( parts );
-    delete parts;
+    StatusCode sc = evtSvc()->unregisterObject( parts );
+    if( sc.isSuccess() ) delete parts;
     parts = NULL;
   }
   else

@@ -1,4 +1,3 @@
-// $Id: PackRecVertex.cpp,v 1.6 2009-11-07 12:20:39 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -74,10 +73,10 @@ StatusCode PackRecVertex::execute()
   }
 
   // If requested, remove the input data from the TES and delete
-  if ( m_deleteInput )
+  if ( UNLIKELY(m_deleteInput) )
   {
-    evtSvc()->unregisterObject( verts );
-    delete verts;
+    StatusCode sc = evtSvc()->unregisterObject( verts );
+    if( sc.isSuccess() ) delete verts;
     verts = NULL;
   }
   else

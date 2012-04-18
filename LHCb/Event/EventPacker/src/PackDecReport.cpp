@@ -1,4 +1,3 @@
-// $Id: $
 // Include files 
 
 // from Gaudi
@@ -84,10 +83,10 @@ StatusCode PackDecReport::execute()
   }
 
   // If requested, remove the input data from the TES and delete
-  if ( m_deleteInput )
+  if ( UNLIKELY(m_deleteInput) )
   {
-    evtSvc()->unregisterObject( reports );
-    delete reports; 
+    StatusCode sc = evtSvc()->unregisterObject( reports );
+    if( sc.isSuccess() ) delete reports; 
     reports = NULL;
   }
   else

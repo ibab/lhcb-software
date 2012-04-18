@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2012-04-18 - Marco Cattaneo
+ - Fix untested StatusCodes
+
 ! 2012-04-12 - Chris Jones
  - Improvements to the packers, adding an option to allow checking of the 
    packing to be done directly by the packing algorithms.

@@ -80,7 +80,7 @@ StatusCode PackParticlesAndVertices::execute()
           names.end() != itS; ++itS )
     {
       LHCb::Particles* parts = get<LHCb::Particles>( *itS );
-      if ( m_deleteInput ) toBeDeleted.push_back( parts );
+      if ( UNLIKELY(m_deleteInput) ) toBeDeleted.push_back( parts );
       if ( parts->empty() ) continue;
       if ( msgLevel( MSG::DEBUG ) )
         debug() << format( "%4d particles in ", parts->size() ) << *itS << endmsg;
@@ -102,7 +102,7 @@ StatusCode PackParticlesAndVertices::execute()
           names.end() != itS; ++itS )
     {
       LHCb::Vertices* verts = get<LHCb::Vertices>( *itS );
-      if ( m_deleteInput ) toBeDeleted.push_back( verts );
+      if ( UNLIKELY(m_deleteInput) ) toBeDeleted.push_back( verts );
       if ( verts->empty() ) continue;
       if ( msgLevel( MSG::DEBUG ) )
         debug () << format( "%4d vertices in ", verts->size() ) << *itS << endmsg;
@@ -125,7 +125,7 @@ StatusCode PackParticlesAndVertices::execute()
           names.end() != itS; ++itS )
     {
       LHCb::RecVertices* rverts = get<LHCb::RecVertices>( *itS );
-      if ( m_deleteInput ) toBeDeleted.push_back( rverts );
+      if ( UNLIKELY(m_deleteInput) ) toBeDeleted.push_back( rverts );
       if ( rverts->empty() ) continue;
       if ( msgLevel( MSG::DEBUG ) )
         debug () << format( "%4d RecVertices in ", rverts->size() ) << *itS << endmsg;
@@ -147,7 +147,7 @@ StatusCode PackParticlesAndVertices::execute()
           names.end() != itS; ++itS )
     {
       RELATION* rels = get<RELATION>( *itS );
-      if ( m_deleteInput ) toBeDeleted.push_back( rels );
+      if ( UNLIKELY(m_deleteInput) ) toBeDeleted.push_back( rels );
       if ( rels->relations().empty() ) continue;
       if ( msgLevel( MSG::DEBUG ) )
         debug () << format( "%4d relations in ", rels->relations().size() ) << *itS << endmsg;
@@ -169,7 +169,7 @@ StatusCode PackParticlesAndVertices::execute()
           names.end() != itS; ++itS )
     {
       DaVinci::Map::Particle2LHCbIDs* partIds = get<DaVinci::Map::Particle2LHCbIDs>( *itS );
-      if ( m_deleteInput ) toBeDeleted.push_back( partIds );
+      if ( UNLIKELY(m_deleteInput) ) toBeDeleted.push_back( partIds );
       if ( partIds->empty() ) continue;
       if ( msgLevel( MSG::DEBUG ) )
         debug() << format( "%4d particles2LHCbIDs in ", partIds->size() ) << *itS << endmsg;
@@ -180,13 +180,13 @@ StatusCode PackParticlesAndVertices::execute()
   }
 
   //== Remove the converted containers if requested
-  if ( m_deleteInput )
+  if ( UNLIKELY(m_deleteInput) )
   {
     for ( std::vector<DataObject*>::iterator itO = toBeDeleted.begin();
           toBeDeleted.end() != itO; ++itO )
     {
-      evtSvc()->unregisterObject( *itO );
-      delete *itO;
+      StatusCode sc = evtSvc()->unregisterObject( *itO );
+      if( sc.isSuccess() ) delete *itO;
     }
   }
 
@@ -304,8 +304,8 @@ PackParticlesAndVertices::packAParticleContainer ( const LHCb::Particles* parts,
   // clean up test data
   if ( unpacked )
   {
-    evtSvc()->unregisterObject( unpacked );
-    delete unpacked;
+    StatusCode sc = evtSvc()->unregisterObject( unpacked );
+    if( sc.isSuccess() ) delete unpacked;
   }
 
   if ( !m_deleteInput ) parts->registry()->setAddress( 0 );
@@ -353,8 +353,8 @@ void PackParticlesAndVertices::packAVertexContainer ( const LHCb::Vertices* vert
   // clean up test data
   if ( unpacked )
   {
-    evtSvc()->unregisterObject( unpacked );
-    delete unpacked;
+    StatusCode sc = evtSvc()->unregisterObject( unpacked );
+    if( sc.isSuccess() ) delete unpacked;
   }
 
   if ( !m_deleteInput ) verts->registry()->setAddress( 0 );
