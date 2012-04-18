@@ -3,7 +3,7 @@ narg=$#
 nar=0
 distribute=False
 
-if [ $narg != 2 ] ; then
+if [ $narg -lt 2 ] ; then
   echo "Usage : $0 [option] version"
   echo "      : -D to relase Dirac"
   echo "      : -L to release LHCBDirac"
@@ -18,31 +18,22 @@ while [ $nar -lt $narg ] ; do
        -D )
           lbpackage=Dirac
           package=DIRAC
-          if [ $nar -lt $narg ] ; then
-            nar=$(( ++nar ))
-          else
-            break
-          fi
+          shift
+          version=$1
           shift
           ;;
        -L )
           lbpackage=LHCbDirac
           package=LHCbDIRAC
-          if [ $nar -lt $narg ] ; then
-            nar=$(( ++nar ))
-          else
-            break
-          fi
+          shift
+          version=$1
           shift
           ;;
        -W )
           lbpackage=LHCbWebDirac
           package=LHCbWebDIRAC
-          if [ $nar -lt $narg ] ; then
-            nar=$(( ++nar ))
-          else
-            break
-          fi
+          shift
+          version=$1
           shift
           ;;
        -t )
@@ -50,15 +41,14 @@ while [ $nar -lt $narg ] ; do
           shift
           ;;
        * )
-          version=$1
-          if [ $nar -lt $narg ] ; then
-            nar=$(( ++nar ))
-          else
-            break
-          fi
           shift
           ;;
-   esac
+  esac
+  if [ $nar -lt $narg ] ; then
+    nar=$(( ++nar ))
+  else
+    break
+  fi
 done
 
 echo "We will prepare the release for $package $version"
