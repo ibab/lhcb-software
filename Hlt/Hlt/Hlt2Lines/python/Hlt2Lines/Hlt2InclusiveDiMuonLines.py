@@ -197,6 +197,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                    'MultiMu_Tau3Mu_MassWindow'  : 300   * MeV ,
                    ## max(PT) for 1-muon from tau      ## [ 1 GeV   -> 1.4 GeV ]
                    'MultiMu_Tau3Mu_max_PT'      :   1   * GeV ,
+                   'MultiMu_Tau3Mu_ctau'        : 45  ,  #mum
                    ## pt(Gamma) for dimuon+gamma line  ## [ 4 GeV   -> 8   GeV ]
                    'DiMuonGamma_Gamma_PT'       :   4   * GeV , 
                    ## chi2(IP) for good pions, kaons and protons ## [ 9 -> 16 ]
@@ -783,7 +784,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                      ]
         
         Preambulo  = Preambulo0 + [
-            "goodTrack = TRCHI2DOF < 6 " , 
+            "goodTrack = (TRCHI2DOF < %(TrChi2Tight)g) " , 
             "goodMuon  = goodTrack                                     & ( BPVIPCHI2() > %(MultiMu_GoodMuon_Chi2_IP)g  ) " ,
             "tightMuon = goodTrack & ( PT > %(MultiMu_TightMuon_PT)g ) & ( BPVIPCHI2() > %(MultiMu_TightMuon_Chi2_IP)g ) " ,            
             # related to tau->3mu 
@@ -916,7 +917,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
             ( AM12            > min_m12   ) & 
             AHASCHILD ( PT    > %(MultiMu_Tau3Mu_max_PT)g     ) 
             """ % self.getProps() ,
-            MotherCut       = " ( chi2vx < 25 ) & ( ctau > 45 * um ) "
+            MotherCut       = " ( chi2vx < 25 ) & ( ctau > %(MultiMu_Tau3Mu_ctau)g * um) "% self.getProps() 
             )
         #
         ## maker of dimu plus mu cominations 

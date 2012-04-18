@@ -8,6 +8,8 @@
 !
 !----------------------------------------------------------------------------
 
+! 2012-04-18 - Johannes Albrecht
+ - make some cuts of muon lines to slot
 
 ! 2012-04-18 - B. VIAUD
  - Re-wrote Hlt2CharmHadD02HHHHDstLines.py
