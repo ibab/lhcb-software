@@ -76,8 +76,12 @@ StatusCode PackRecVertex::execute()
   if ( UNLIKELY(m_deleteInput) )
   {
     StatusCode sc = evtSvc()->unregisterObject( verts );
-    if( sc.isSuccess() ) delete verts;
-    verts = NULL;
+    if( sc.isSuccess() ) {
+      delete verts;
+      verts = NULL;
+    }
+    else
+      return Error("Failed to delete input data as requested", sc );
   }
   else
   {

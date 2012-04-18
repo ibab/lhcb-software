@@ -6,6 +6,7 @@
 
 ! 2012-04-18 - Marco Cattaneo
  - Fix untested StatusCodes
+ - Packers return Error if they fail to unregister data when requested in options
 
 ! 2012-04-12 - Chris Jones
  - Improvements to the packers, adding an option to allow checking of the 

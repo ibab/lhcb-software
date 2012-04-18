@@ -86,8 +86,12 @@ StatusCode PackDecReport::execute()
   if ( UNLIKELY(m_deleteInput) )
   {
     StatusCode sc = evtSvc()->unregisterObject( reports );
-    if( sc.isSuccess() ) delete reports; 
-    reports = NULL;
+    if( sc.isSuccess() ) {
+      delete reports; 
+      reports = NULL;
+    }
+    else
+      return Error("Failed to delete input data as requested", sc );
   }
   else
   {

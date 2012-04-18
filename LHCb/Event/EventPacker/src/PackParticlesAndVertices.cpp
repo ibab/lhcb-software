@@ -186,7 +186,10 @@ StatusCode PackParticlesAndVertices::execute()
           toBeDeleted.end() != itO; ++itO )
     {
       StatusCode sc = evtSvc()->unregisterObject( *itO );
-      if( sc.isSuccess() ) delete *itO;
+      if( sc.isSuccess() ) 
+        delete *itO;
+      else
+        Error("Failed to delete input data as requested", sc ).ignore();
     }
   }
 
@@ -305,7 +308,10 @@ PackParticlesAndVertices::packAParticleContainer ( const LHCb::Particles* parts,
   if ( unpacked )
   {
     StatusCode sc = evtSvc()->unregisterObject( unpacked );
-    if( sc.isSuccess() ) delete unpacked;
+    if( sc.isSuccess() )
+      delete unpacked;
+    else
+      Error("Failed to delete test data after unpacking check", sc ).ignore();
   }
 
   if ( !m_deleteInput ) parts->registry()->setAddress( 0 );
@@ -354,7 +360,10 @@ void PackParticlesAndVertices::packAVertexContainer ( const LHCb::Vertices* vert
   if ( unpacked )
   {
     StatusCode sc = evtSvc()->unregisterObject( unpacked );
-    if( sc.isSuccess() ) delete unpacked;
+    if( sc.isSuccess() )
+      delete unpacked;
+    else
+      Error("Failed to delete test data after unpacking check", sc ).ignore();
   }
 
   if ( !m_deleteInput ) verts->registry()->setAddress( 0 );

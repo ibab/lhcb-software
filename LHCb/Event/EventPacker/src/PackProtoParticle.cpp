@@ -76,15 +76,22 @@ StatusCode PackProtoParticle::execute()
     
     // clean up after checks
     StatusCode sc = evtSvc()->unregisterObject( unpacked );
-    if( sc.isSuccess() ) delete unpacked;
+    if( sc.isSuccess() ) 
+      delete unpacked;
+    else
+      return Error("Failed to delete test data after unpacking check", sc );
   }
 
   // If requested, remove the input data from the TES and delete
   if ( UNLIKELY(m_deleteInput) )
   {
     StatusCode sc = evtSvc()->unregisterObject( parts );
-    if( sc.isSuccess() ) delete parts;
-    parts = NULL;
+    if( sc.isSuccess() ) {
+      delete parts;
+      parts = NULL;
+    }
+    else
+      return Error("Failed to delete input data as requested", sc );
   }
   else
   {
