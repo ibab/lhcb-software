@@ -44,6 +44,7 @@ from Hlt2Lines.Hlt2InclusiveMuonLines     import Hlt2InclusiveMuonLinesConf
 from Hlt2Lines.Hlt2InclusivePhiLines      import Hlt2InclusivePhiLinesConf
 from Hlt2Lines.Hlt2TopologicalLines       import Hlt2TopologicalLinesConf
 from Hlt2Lines.Hlt2B2XGammaLines          import Hlt2B2XGammaLinesConf
+from Hlt2Lines.Hlt2D2XGammaLines          import Hlt2D2XGammaLinesConf
 from Hlt2Lines.Hlt2B2HHLines              import Hlt2B2HHLinesConf
 from Hlt2Lines.Hlt2B2LLXLines             import Hlt2B2LLXLinesConf
 from Hlt2Lines.Hlt2CharmHadD02HHLines     import Hlt2CharmHadD02HHLinesConf
@@ -117,6 +118,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
                              , Hlt2B2JpsiXLinesConf
                              , Hlt2B2PhiXLinesConf
                              , Hlt2B2XGammaLinesConf
+                             , Hlt2D2XGammaLinesConf
                              , Hlt2B2HHLinesConf
                              , Hlt2B2HHLTUnbiasedLinesConf
                              , Hlt2B2LLXLinesConf                         
