@@ -129,11 +129,10 @@ def RecoTracking(exclude=[]):
       OTRawBankDecoder().TimeWindow = ( -8.0*ns, 56.0*ns )                     
       
    # Get the fitters
-   from TrackFitter.ConfiguredFitters import ConfiguredFit, ConfiguredFitSeed
+   from TrackFitter.ConfiguredFitters import ConfiguredFit, ConfiguredFitSeed, ConfiguredMasterFitter
    
    # Clone killer
-   cloneKiller = TrackEventCloneKiller()
-   cloneKiller.TracksInContainers = []   
+   tracklists = []
    
    # Is this standard sequence?
    stdSeq = "fastSequence" not in TrackSys().getProp("ExpertTracking")
@@ -146,7 +145,7 @@ def RecoTracking(exclude=[]):
       PatAlgConf.ForwardConf().configureAlg()
       if TrackSys().timing() :
          PatForward("PatForward").TimingMeasurement = True;    
-      cloneKiller.TracksInContainers += ["Rec/Track/Forward"]
+      tracklists += ["Rec/Track/Forward"]
    
    ## Seed pattern
    if "TsaSeed" in trackAlgs and "PatSeed" in trackAlgs :
@@ -175,7 +174,7 @@ def RecoTracking(exclude=[]):
          PatAlgConf.CosmicConf().configureAlg()
          
    if "TsaSeed" in trackAlgs or "PatSeed" in trackAlgs :
-      cloneKiller.TracksInContainers += ["Rec/Track/Seed"]
+      tracklists += ["Rec/Track/Seed"]
       if "Match" in trackAlgs :
          # Fit now
          track.DetectorList += [ "SeedFit" ]
@@ -204,13 +203,13 @@ def RecoTracking(exclude=[]):
       track.DetectorList += [ "MatchPat" ]
       GaudiSequencer("TrackMatchPatSeq").Members += [ PatMatch("PatMatch") ]
    if "Match" in trackAlgs or "PatMatch" in trackAlgs :
-      cloneKiller.TracksInContainers  += ["Rec/Track/Match"]
+      tracklists  += ["Rec/Track/Match"]
          
    ## Downstream
    if "Downstream" in trackAlgs :
       track.DetectorList += [ "DownstreamPat" ]
       GaudiSequencer("TrackDownstreamPatSeq").Members += [ PatDownstream() ];
-      cloneKiller.TracksInContainers += ["Rec/Track/Downstream"]
+      tracklists += ["Rec/Track/Downstream"]
       from PatAlgorithms import PatAlgConf
       #PatAlgConf.DownstreamConf().configureAlg()
       if TrackSys().timing() :
@@ -223,41 +222,56 @@ def RecoTracking(exclude=[]):
       GaudiSequencer("TrackVeloTTPatSeq").Members += [ PatVeloTT("PatVeloTT")] 
       from PatVeloTT import PatVeloConf
       PatVeloConf.PatVeloTTConf().configureAlg()      
-      cloneKiller.TracksInContainers += ["Rec/Track/VeloTT"]
+      tracklists += ["Rec/Track/VeloTT"]
       if TrackSys().timing() :
          PatVeloTT("PatVeloTT").TimingMeasurement = True;
          
 
    ### Clean clone and fit
    track.DetectorList += ["Fit"]
-   cloneKiller.TracksOutContainer = "Rec/Track/AllBest"
-   GaudiSequencer("TrackFitSeq").Members += [ cloneKiller ]
-   GaudiSequencer("TrackFitSeq").Members += [TrackStateInitAlg("InitBestFit")]
-   TrackStateInitAlg("InitBestFit").TrackLocation = "Rec/Track/AllBest"
-   if "FastVelo" in trackAlgs :
-      TrackStateInitAlg("InitBestFit").addTool( TrackStateInitTool("TrackStateInitTool" ) )
-      TrackStateInitTool( "TrackStateInitTool" ).VeloFitterName = "FastVeloFitLHCbIDs"
+   if TrackSys().getProp("OldCloneKiller"):
+      cloneKiller = TrackEventCloneKiller()
+      cloneKiller.TracksInContainers = tracklists
+      cloneKiller.TracksOutContainer = "Rec/Track/AllBest"
+      GaudiSequencer("TrackFitSeq").Members += [ cloneKiller ]
+      from Configurables import TrackStateInitAlg
+      stateInitAlg = TrackStateInitAlg("InitBestFit")
+      stateInitAlg.TrackLocation = "Rec/Track/AllBest"
+      if "FastVelo" in trackAlgs :
+         stateInitAlg.StateInitTool.VeloFitterName = "FastVeloFitLHCbIDs"
+      GaudiSequencer("TrackFitSeq").Members += [stateInitAlg]
 
-   GaudiSequencer("TrackFitSeq").Members += [ConfiguredFit("FitBest","Rec/Track/AllBest")]      
-   from Configurables import TrackContainerCopy
-   copyBest = TrackContainerCopy( "CopyBest" )
-   copyBest.inputLocation = "Rec/Track/AllBest";
-   GaudiSequencer("TrackFitSeq").Members += [ copyBest ]
-
+      GaudiSequencer("TrackFitSeq").Members += [ConfiguredFit("FitBest","Rec/Track/AllBest")]      
+      from Configurables import TrackContainerCopy
+      copyBest = TrackContainerCopy( "CopyBest" )
+      copyBest.inputLocation = "Rec/Track/AllBest";
+      GaudiSequencer("TrackFitSeq").Members += [ copyBest ]
                                  
-   ## Velo fitting
-   if "Velo" in trackAlgs or "FastVelo" in trackAlgs :
-      ## Prepare the velo tracks for the fit
-      track.DetectorList += [ "VeloFit"]
-      GaudiSequencer("TrackVeloFitSeq").Members += [ TrackPrepareVelo()]
-      ## Fit the velo tracks
-      GaudiSequencer("TrackVeloFitSeq").Members += [ ConfiguredFit("FitVelo","Rec/Track/PreparedVelo") ]
-      ## copy the velo tracks to the "best" container (except in RDST case)
-      if TrackSys().getProp( "OutputType" ).upper() != "RDST":
-         copyVelo = TrackContainerCopy( "CopyVelo" )
-         copyVelo.inputLocation = "Rec/Track/PreparedVelo";
-         GaudiSequencer("TrackVeloFitSeq").Members += [ copyVelo ]
-         
+      ## Velo fitting
+      if "Velo" in trackAlgs or "FastVelo" in trackAlgs :
+         ## Prepare the velo tracks for the fit
+         track.DetectorList += [ "VeloFit"]
+         GaudiSequencer("TrackVeloFitSeq").Members += [ TrackPrepareVelo()]
+         ## Fit the velo tracks
+         GaudiSequencer("TrackVeloFitSeq").Members += [ ConfiguredFit("FitVelo","Rec/Track/PreparedVelo") ]
+         ## copy the velo tracks to the "best" container (except in RDST case)
+         if TrackSys().getProp( "OutputType" ).upper() != "RDST":
+            copyVelo = TrackContainerCopy( "CopyVelo" )
+            copyVelo.inputLocation = "Rec/Track/PreparedVelo";
+            GaudiSequencer("TrackVeloFitSeq").Members += [ copyVelo ]
+   else:
+      from Configurables import (TrackBestTrackCreator, TrackStateInitAlg)
+      trackfitseq = GaudiSequencer("TrackFitSeq")
+      if "Velo" in trackAlgs or "FastVelo" in trackAlgs :
+         tracklists += ["Rec/Track/Velo"]
+      #for tracklist in tracklists:
+      #   trackfitseq.Members.append( TrackStateInitAlg(tracklist.replace("Rec/Track/","InitFit"),
+      #                                                 TrackLocation = tracklist ) )
+      # create the best track creator and configure its fitter
+      bestTrackCreator = TrackBestTrackCreator( TracksInContainers = tracklists )
+      ConfiguredMasterFitter( bestTrackCreator.Fitter )
+      trackfitseq.Members.append( bestTrackCreator )
+      
    ## Extra track information sequence
    extraInfos = TrackSys().getProp("TrackExtraInfoAlgorithms")
    if len(extraInfos) > 0 :

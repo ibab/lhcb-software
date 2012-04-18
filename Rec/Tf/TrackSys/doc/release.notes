@@ -4,6 +4,10 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2012-04-18 - Wouter Hulsbergen
+ - switch to new clone killer ('TrackBestTrackCreator').
+   old sequence can be recovered with TrackSys().OldCloneKiller = True.
+
 !========================= TrackSys v7r1 2012-02-28 =========================
 ! 2012-02-07 - Manuel Tobias Schiller
  - fix a bug in python/TrackSys/PatChecking.py which causes the

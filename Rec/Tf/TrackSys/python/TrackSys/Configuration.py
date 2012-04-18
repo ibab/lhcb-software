@@ -29,6 +29,7 @@ class TrackSys(LHCbConfigurableUser):
        ,"ForceNewSeq" : False  # use new tracking sequence independent of DataType
        ,"ForceOldSeq" : False  # use old tracking sequence independent of DataType
        ,"GlobalCuts"  : {}     # global event cuts for tracking
+       ,"OldCloneKiller" : False
         }
     
     ## Possible expert options
