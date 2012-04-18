@@ -147,7 +147,7 @@ try:
 
     if depth > 1:
         from DIRAC.Core.Base import Script
-        from LHCbDIRAC.BookkeepingSystem.Client.AncestorFiles import getAncestorFiles
+        from LHCbDIRAC.BookkeepingSystem.Client.BookkeepingClient import BookkeepingClient
         Script.parseCommandLine( ignoreErrors = True )
         # Seems getAncestrorFiles only works for one file...
         #result = getAncestorFiles(lfnList,depth)
@@ -155,14 +155,12 @@ try:
         #    print "Error getting ancestor files..."
         #    sys.exit(1)
         #lfnList = result['Value']
-        fullList = []
-        for lfn in lfnList:
-            result = getAncestorFiles(lfn,depth)
-            if not result['OK']:
-                print "Error getting ancestor files..."
-                sys.exit(1)
-            fullList += result['Value']
-        lfnList = fullList
+        bk = BookkeepingClient()
+        result = bk.getFileAncestors(lfnList,depth)
+        if not result['OK']:
+          print "Error getting ancestor files..."
+          sys.exit(1)
+        lfnList = [x[0]['FileName'] for x in result['Value']['Successful'].values()] + result['Value']['Successful'].keys()
 
     from DIRAC.Interfaces.API.Dirac import *
     if not verbose:
