@@ -3,6 +3,7 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "Event/Track.h"
+#include "Event/ProcStatus.h" 
 
 #include "Event/VeloLiteCluster.h"
 
@@ -498,8 +499,15 @@ void FastVeloTracking::beamSplashSpaceMerge( ) {
   // happly nothing to do if we can return here
   if( m_spaceTracks.size() < (nVlite*m_maxTrackClusterFrac) ) return; 
   // OK so this is a splash event
-  Warning("Fired high track to cluster ratio: assume beam splash and do agressive clone killing",
+  Warning("Fired high track to cluster ratio: assume beam splash and do aggressive clone killing",
 	  StatusCode::SUCCESS,0).ignore();
+
+  // set ProcStat for this event to flag the splash in ProcStatus 
+  // not aborting the event and using 1 as flag for FastVeloTracking status 
+  LHCb::ProcStatus *pStat =  
+    getOrCreate<LHCb::ProcStatus,LHCb::ProcStatus>(LHCb::ProcStatusLocation::Default); 
+  pStat->addAlgorithmStatus("FastVeloTracking","VELO","BeamSplashFastVelo",1,false);  
+ 
 
   for ( FastVeloTracks::iterator itT1 = m_spaceTracks.begin(); m_spaceTracks.end() != itT1; ++itT1 ) {
     if ( !(*itT1).isValid() ) continue;

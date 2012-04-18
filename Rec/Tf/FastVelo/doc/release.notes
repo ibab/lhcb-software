@@ -4,6 +4,9 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+! 2012-04-18 - David Hutchcroft
+ - Added a ProcStatus when clone killing fired to make monitoring easier
+
 !========================= FastVelo v1r8 2012-04-13 =========================
 ! 2012-04-12 - David Hutchcroft
  - Added a sanity check just before conversion to LHCb::Tracks that if there is 
