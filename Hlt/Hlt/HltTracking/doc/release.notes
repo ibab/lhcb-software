@@ -4,6 +4,12 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+
+! 2012-04-18 - B. VIAUD
+  - The Hlt2CharmHadD02HHHHLines.py has been deteleted
+    from Hlt2Lines: remove the reference to it 
+    in Hlt2Tracking.py
+
 ! 2012-04-18 - Sascha Stahl
   - Fixed configuration of Downstream tracking to not run on already used seeds
 		and hits
