@@ -3,6 +3,10 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2012-04-18 - Marco Cattaneo
+ - Use the new EnableCheck functionality of the Packers for the packing tests,
+   instead of separate Pack, Unpack, Compare algorithms 
+
 ! 2012-04-12 - Chris Jones
  - Add the Calo objects to the packing tests.
 
