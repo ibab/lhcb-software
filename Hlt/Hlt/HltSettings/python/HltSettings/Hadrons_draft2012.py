@@ -54,7 +54,7 @@ class Hadrons_draft2012 :
             #DiPhi
             'Hlt2DiPhi',
             # DPhiGamma
-            'Hlt2D2PhiGamma'
+            #'Hlt2D2PhiGamma'
             ]
 
         # For inclusive phi extend using Albert's new setting
