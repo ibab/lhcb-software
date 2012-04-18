@@ -11,6 +11,8 @@ __all__ = ('HeavyBaryonsConf')
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from StandardParticles import StdLoosePions, StdNoPIDsDownPions, StdLooseKaons, StdLooseDownKaons
+from StandardParticles import  StdAllLoosePions, StdAllLooseKaons
+
 from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
@@ -43,14 +45,18 @@ class HeavyBaryonsConf(LineBuilder) :
 
            #make a merged list for pions 
            self.MergedPionsList = MergedSelection( "MergedPionsFor" + self.name,
-                                                   RequiredSelections =  [DataOnDemand(Location = "Phys/StdLoosePions/Particles"),
-                                                                          DataOnDemand(Location = "Phys/StdNoPIDsDownPions/Particles")])
+                                                   #RequiredSelections =  [DataOnDemand(Location = "Phys/StdLoosePions/Particles"),
+                                                   #                       DataOnDemand(Location = "Phys/StdNoPIDsDownPions/Particles")])
+                                                   RequiredSelections =  [DataOnDemand(Location = "Phys/StdAllLoosePions/Particles"), # take all long tracks
+                                                                          DataOnDemand(Location = "Phys/StdNoPIDsDownPions/Particles")]) # take all downstream tracks
            
         
            
            self.MergedKaonsList = MergedSelection( "MergedKaonsFor" + self.name,
-                                                   RequiredSelections =  [DataOnDemand(Location = "Phys/StdLooseKaons/Particles"),
-                                                                          DataOnDemand(Location = "Phys/StdLooseDownKaons/Particles")])
+                                                   #RequiredSelections =  [DataOnDemand(Location = "Phys/StdLooseKaons/Particles"),
+                                                   #                       DataOnDemand(Location = "Phys/StdLooseDownKaons/Particles")])
+                                                   RequiredSelections =  [DataOnDemand(Location = "Phys/StdAllLooseKaons/Particles"),# take all long tracks
+                                                                          DataOnDemand(Location = "Phys/StdLooseDownKaons/Particles")])# take all downstream tracks
            #make a merged list for kaons
            self.PionsList = self.createSubSel( OutputList = "PionsFor" + self.name,
                                                InputList = self.MergedPionsList,
