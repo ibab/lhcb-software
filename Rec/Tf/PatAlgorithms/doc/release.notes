@@ -4,6 +4,11 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2012-04-18 - Sascha Stahl
+ - PatDownstream: Added options to set the output location of the matching and forward
+									tracking in PatDownstream. Now used seeds and tt hits can be removed
+									also in the HLT.
+
 !========================= PatAlgorithms v4r21 2012-04-09 =========================
 ! 2012-04-05 - Sascha Stahl
  - PatForwardTool: Bug fix in PatForward, flag for left right ambiguity is now reset when

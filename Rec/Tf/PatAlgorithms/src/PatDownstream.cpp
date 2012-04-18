@@ -53,6 +53,8 @@ PatDownstream::PatDownstream( const std::string& name,
 {
   declareProperty( "InputLocation" , m_inputLocation  = ""    );
   declareProperty( "OutputLocation", m_outputLocation = LHCb::TrackLocation::Downstream );
+  declareProperty( "ForwardLocation", m_forwardLocation = LHCb::TrackLocation::Forward );
+  declareProperty( "MatchLocation", m_matchLocation = LHCb::TrackLocation::Match );
   declareProperty( "PrintTracks"   , m_printTracks    = false );
   declareProperty( "TimingMeasurement", m_doTiming = false);
   declareProperty( "deltaP"        , m_deltaP        = 2.0  );
@@ -364,11 +366,12 @@ StatusCode PatDownstream::finalize() {
 //  Cleanup already used T-Seeds
 //=========================================================================
 void PatDownstream::prepareSeeds(LHCb::Tracks* inTracks, std::vector<LHCb::Track*>& myInTracks){
-  if ( exist<LHCb::Tracks>( LHCb::TrackLocation::Match ) ) {
-    LHCb::Tracks* match = get<LHCb::Tracks>( LHCb::TrackLocation::Match );
+  if ( exist<LHCb::Tracks>( m_matchLocation ) ) {
+    LHCb::Tracks* match = get<LHCb::Tracks>( m_matchLocation );
     if (!m_removeUsed) {
       myInTracks.insert( myInTracks.end(), inTracks->begin(), inTracks->end() );
     } else {
+      if (m_printing) debug()<<"Remove seeds and tt hits from Match tracks"<<endmsg;
       for ( LHCb::Tracks::const_iterator itT = inTracks->begin();
             inTracks->end() != itT; itT++ ) {
         LHCb::Track* tr = (*itT);
@@ -382,7 +385,7 @@ void PatDownstream::prepareSeeds(LHCb::Tracks* inTracks, std::vector<LHCb::Track
             if ( tr == pt ) {
               if ( m_printing ) debug() << " is used in match " << matchTr->key(); 
               if ( m_removeAll || matchTr->chi2PerDoF() < m_longChi2 ) {
-                if ( m_printing ) debug() << " good longtrack " << matchTr->key(); 
+                if ( m_printing ) debug() << " good longtrack " << matchTr->key()<<endmsg; 
                 store = false;
                 tagUsedTT( matchTr );
                 break;
@@ -420,8 +423,10 @@ void PatDownstream::ttCoordCleanup ( ) {
   
   //== Tag hit used in forward
   if ( m_removeUsed ) {
-    if ( exist<LHCb::Tracks>( LHCb::TrackLocation::Forward ) ) {
-      LHCb::Tracks* tracks = get<LHCb::Tracks>( LHCb::TrackLocation::Forward );
+    if ( exist<LHCb::Tracks>( m_forwardLocation ) ) {
+      if (m_printing) debug()<<"Remove TT hits from Forward tracks from location "
+                             <<m_forwardLocation <<endmsg;
+      LHCb::Tracks* tracks = get<LHCb::Tracks>( m_forwardLocation );
       BOOST_FOREACH(const LHCb::Track* tr, *tracks) {
         if (m_removeAll || tr->chi2PerDoF()<m_longChi2) tagUsedTT( tr );
       }
@@ -438,6 +443,7 @@ void PatDownstream::tagUsedTT( const LHCb::Track* tr ) {
     if ( !id.isTT() ) continue;
     BOOST_FOREACH(const PatTTHit* hit, ttCoords) {
       if ( hit->hit()->lhcbID() == id ) {
+        if (m_printing) debug()<<"tag hit as used "<<hit->hit()->lhcbID()<<endmsg;
         hit->hit()->setStatus( Tf::HitBase::UsedByPatMatch, true );
         break;
       }
@@ -471,8 +477,12 @@ void PatDownstream::getPreSelection( PatDownTrack& track ) {
         if ( !reg->isXCompatible( xReg, xPredTol ) ) continue;
         Tf::TTStationHitManager<PatTTHit>::HitRange coords = m_ttHitManager->hits( kSta, kLay, kReg );
         BOOST_FOREACH(PatTTHit* hit, coords) {
-	  if (hit->hit()->ignore()) continue;
-          if ( hit->hit()->testStatus( Tf::HitBase::UsedByPatMatch ) ) continue;
+          if (hit->hit()->ignore()) continue;
+          if ( hit->hit()->testStatus( Tf::HitBase::UsedByPatMatch ) ) {
+            if (m_printing) debug()<<"Skip hit "<<hit->hit()->lhcbID()<<endmsg;
+            continue;
+          }
+          
           const double yPos   = track.yAtZ( hit->z() );
           if ( !hit->hit()->isYCompatible( yPos, yTol ) ) continue;
           

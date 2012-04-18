@@ -76,6 +76,8 @@ private:
 
   std::string   m_inputLocation;
   std::string   m_outputLocation;
+  std::string   m_forwardLocation;
+  std::string   m_matchLocation;
   double        m_deltaP;
   double        m_xPredTol;
   double        m_xPredTol2;
