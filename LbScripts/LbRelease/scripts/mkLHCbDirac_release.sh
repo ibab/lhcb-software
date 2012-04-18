@@ -76,7 +76,7 @@ if [ $distribute == "True" ] ; then
   dirac-distribution -r $version -t server,client -l LHCb -D /afs/cern.ch/lhcb/distribution/LHCbDirac_project
 fi
 
-if [ $package != "LHCbWebDirac" ] then
+if [ $package != "LHCbWebDirac" ] ; then
   dirac-create-svn-cmt-tag $lbpackage $version
 fi
 
