@@ -4,6 +4,11 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2012-04-18 - B. VIAUD
+  - The Hlt2CharmHadD02HHHHLines.py has been deteleted
+    from Hlt2Lines: remove the reference to it 
+    in Hlt2.py.
+
 !========================= HltConf v9r16 2012-04-17 =========================
 ! 2012-04-15 - Pieter David
  - add HltANNSvc ID's for prescaled version of the Hlt1 displaced vertex line
