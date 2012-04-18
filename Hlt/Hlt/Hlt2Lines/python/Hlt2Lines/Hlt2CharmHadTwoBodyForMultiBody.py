@@ -8,7 +8,6 @@ from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 from GaudiKernel.SystemOfUnits import MeV, GeV, mm
 
 from Hlt2Lines.Hlt2CharmHadD2HHHLines     import Hlt2CharmHadD2HHHLinesConf
-from Hlt2Lines.Hlt2CharmHadD02HHHHLines   import Hlt2CharmHadD02HHHHLinesConf
 
 ## Must inherit from HltLinesConfigurableUser for slots to be updated by
 ## HltSettings, even though this configurable does not directly define a
@@ -24,8 +23,7 @@ class Hlt2CharmHadTwoBodyForMultiBodyConf(HltLinesConfigurableUser) : # {
     """
 
     ## Must be configured before every configurable that uses it.
-    __used_configurables__ = [   Hlt2CharmHadD2HHHLinesConf
-                               , Hlt2CharmHadD02HHHHLinesConf ]
+    __used_configurables__ = [   Hlt2CharmHadD2HHHLinesConf ]
 
     __slots__ = {
                   ## 2-body Input for 3Body

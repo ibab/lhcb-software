@@ -19,12 +19,12 @@ class Hlt2CharmHadD02HHHHDstLinesConf(HltLinesConfigurableUser) :
                   , 'VtxPVDispChi2_4Body'         : 36.0     # unitless
                   , 'BPVVDR_4Body'                : 0.0     # rho(PV-SV) mm
                   , 'VtxChi2_4Body'               : 15.0     # unitless
-                  , 'DIPChi2_4Body'               : 50.0     # unitless
+                  , 'DIPChi2_4Body'               : 42.0     # unitless
                   , 'BPVDIRA_4Body'               : 0.9999   # unitless
                   , 'DSumPt_4Body'                : 1500.0 * MeV
                   , 'MCOR_MAX_4Body'              : 3500.0 * MeV
-                  , 'Sig_M_MIN'                   : 1800.0 * MeV
-                  , 'Sig_M_MAX'                   : 1930.0 * MeV
+                  , 'Sig_M_MIN'                   : 1790.0 * MeV
+                  , 'Sig_M_MAX'                   : 1940.0 * MeV
                   , 'WideMass_M_MIN'              : 1700.0 * MeV
                   , 'WideMass_M_MAX'              : 2100.0 * MeV
                   ## D* combination
@@ -52,6 +52,18 @@ class Hlt2CharmHadD02HHHHDstLinesConf(HltLinesConfigurableUser) :
                         , 'Hlt2CharmHadD02HHHHDst_3KpiWideMass' : 0.1
                         , 'Hlt2CharmHadD02HHHHDst_Ch2'         : 0.0
                         , 'Hlt2CharmHadD02HHHHDst_Ch2WideMass' : 0.1
+                        , 'Hlt2CharmHadD02HHHH_4piWideMass' : 0.05
+                        , 'Hlt2CharmHadD02HHHH_K3piWideMass' : 0.05
+                        , 'Hlt2CharmHadD02HHHH_KKpipiWideMass' : 0.05
+                        , 'Hlt2CharmHadD02HHHH_2K2piWideMass' : 0.05
+                        , 'Hlt2CharmHadD02HHHH_3KpiWideMass' : 0.05
+                        , 'Hlt2CharmHadD02HHHH_Ch2'         : 0.0
+                        , 'Hlt2CharmHadD02HHHH_Ch2WideMass' : 0.1
+                        , 'Hlt2CharmHadD02HHHH_4pi' : 0.1
+                        , 'Hlt2CharmHadD02HHHH_K3pi' : 0.1
+                        , 'Hlt2CharmHadD02HHHH_KKpipi' : 0.1
+                        , 'Hlt2CharmHadD02HHHH_2K2pi' : 0.1 
+                        , 'Hlt2CharmHadD02HHHH_3Kpi' : 0.1                          
                         }
                   , 'HltANNSvcID'  : {
                           'Hlt2CharmHadD02HHHHDst2BodyDecision'    : 62007
@@ -67,6 +79,18 @@ class Hlt2CharmHadD02HHHHDstLinesConf(HltLinesConfigurableUser) :
                         , 'Hlt2CharmHadD02HHHHDst_3KpiWideMassDecision' : 62017
                         , 'Hlt2CharmHadD02HHHHDst_Ch2Decision'         : 62018
                         , 'Hlt2CharmHadD02HHHHDst_Ch2WideMassDecision' : 62019
+                        , 'Hlt2CharmHadD02HHHH_4piDecision'         : 62049
+                        , 'Hlt2CharmHadD02HHHH_4piWideMassDecision' : 62050
+                        , 'Hlt2CharmHadD02HHHH_K3piDecision'         : 62051
+                        , 'Hlt2CharmHadD02HHHH_K3piWideMassDecision' : 62052
+                        , 'Hlt2CharmHadD02HHHH_KKpipiDecision'         : 62053
+                        , 'Hlt2CharmHadD02HHHH_KKpipiWideMassDecision' : 62054
+                        , 'Hlt2CharmHadD02HHHH_2K2piDecision'         : 62055
+                        , 'Hlt2CharmHadD02HHHH_2K2piWideMassDecision' : 62056
+                        , 'Hlt2CharmHadD02HHHH_3KpiDecision'         : 62057
+                        , 'Hlt2CharmHadD02HHHH_3KpiWideMassDecision' : 62058
+                        , 'Hlt2CharmHadD02HHHH_Ch2Decision'         : 62059
+                        , 'Hlt2CharmHadD02HHHH_Ch2WideMassDecision' : 62060
                         }
                 }
 
@@ -495,6 +519,8 @@ class Hlt2CharmHadD02HHHHDstLinesConf(HltLinesConfigurableUser) :
         #
         
         # D0->pi+pi-pi+pi- ###################################################################################
+
+        # 1) Tagged decays
         line = Hlt2Line(modeName4pi, prescale = self.prescale
                         , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Hlt2Charm4Body4pi]
                         , postscale = self.postscale
@@ -511,10 +537,34 @@ class Hlt2CharmHadD02HHHHDstLinesConf(HltLinesConfigurableUser) :
         annSvcID = self._scale(decName,'HltANNSvcID')
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
 
+        # 2) UnTagged decays
+        NoTag = 'CharmHadD02HHHH_4pi' 
+        NoTagWM = 'CharmHadD02HHHH_4piWideMass'
+        
+        line = Hlt2Line(NoTag, prescale = self.prescale
+                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Charm4BodyMassWin4pi]
+                        , postscale = self.postscale
+                        )
+        decName = 'Hlt2' + NoTag + 'Decision'
+        annSvcID = self._scale(decName,'HltANNSvcID')
+        HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
+
+        line = Hlt2Line(NoTagWM, prescale = self.prescale
+                        , algos = [ PV3D(),Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Charm4BodyWideMassWin4pi]
+                        , postscale = self.postscale
+                        )
+        decName = 'Hlt2' + NoTagWM  + 'Decision'
+        annSvcID = self._scale(decName,'HltANNSvcID')
+        HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
+
+
+
         ############################################################################################################
 
         
         # D0-> K-pi+pi+pi- / K+pi-pi-pi+  ##########################################################################
+
+        # 1) Tagged decays
         line = Hlt2Line(modeNameKm3pi, prescale = self.prescale
                         , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Hlt2Charm4BodyKm3pi]
                         , postscale = self.postscale
@@ -531,10 +581,34 @@ class Hlt2CharmHadD02HHHHDstLinesConf(HltLinesConfigurableUser) :
         annSvcID = self._scale(decName,'HltANNSvcID')
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
 
+
+        # 2) UnTagged decays
+        NoTag = 'CharmHadD02HHHH_K3pi' 
+        NoTagWM = 'CharmHadD02HHHH_K3piWideMass'
+        
+        line = Hlt2Line(NoTag, prescale = self.prescale
+                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Charm4BodyMassWinKm3pi]
+                        , postscale = self.postscale
+                        )
+        decName = 'Hlt2' + NoTag + 'Decision'
+        annSvcID = self._scale(decName,'HltANNSvcID')
+        HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
+
+        line = Hlt2Line(NoTagWM, prescale = self.prescale
+                        , algos = [ PV3D(),Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Charm4BodyWideMassWinKm3pi]
+                        , postscale = self.postscale
+                        )
+        decName = 'Hlt2' + NoTagWM  + 'Decision'
+        annSvcID = self._scale(decName,'HltANNSvcID')
+        HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
+
+
         ############################################################################################################
 
         
         # D0->K+K-pi+pi-  ###################################################################################
+
+        # 1) Tagged decays
         line = Hlt2Line(modeNameKKpipi, prescale = self.prescale
                         , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Hlt2Charm4BodyKKpipi]
                         , postscale = self.postscale
@@ -551,10 +625,34 @@ class Hlt2CharmHadD02HHHHDstLinesConf(HltLinesConfigurableUser) :
         annSvcID = self._scale(decName,'HltANNSvcID')
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
 
+        # 2) UnTagged decays
+        NoTag = 'CharmHadD02HHHH_KKpipi' 
+        NoTagWM = 'CharmHadD02HHHH_KKpipiWideMass'
+        
+        line = Hlt2Line(NoTag, prescale = self.prescale
+                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Charm4BodyMassWinKKpipi]
+                        , postscale = self.postscale
+                        )
+        decName = 'Hlt2' + NoTag + 'Decision'
+        annSvcID = self._scale(decName,'HltANNSvcID')
+        HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
+
+        line = Hlt2Line(NoTagWM, prescale = self.prescale
+                        , algos = [ PV3D(),Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Charm4BodyWideMassWinKKpipi]
+                        , postscale = self.postscale
+                        )
+        decName = 'Hlt2' + NoTagWM  + 'Decision'
+        annSvcID = self._scale(decName,'HltANNSvcID')
+        HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
+
+
+
         ############################################################################################################
 
 
         # D0->K+K+pi-pi-  / K-K-pi+pi+ #############################################################################
+
+        # 1) Tagged decays
         line = Hlt2Line(modeName2Kp2Pm, prescale = self.prescale
                         , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Hlt2Charm4Body2Kp2Pm]
                         , postscale = self.postscale
@@ -571,10 +669,33 @@ class Hlt2CharmHadD02HHHHDstLinesConf(HltLinesConfigurableUser) :
         annSvcID = self._scale(decName,'HltANNSvcID')
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
 
+        # 2) UnTagged decays
+        NoTag = 'CharmHadD02HHHH_2K2pi' 
+        NoTagWM = 'CharmHadD02HHHH_2K2piWideMass'
+        
+        line = Hlt2Line(NoTag, prescale = self.prescale
+                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Charm4BodyMassWin2Kp2Pm]
+                        , postscale = self.postscale
+                        )
+        decName = 'Hlt2' + NoTag + 'Decision'
+        annSvcID = self._scale(decName,'HltANNSvcID')
+        HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
+
+        line = Hlt2Line(NoTagWM, prescale = self.prescale
+                        , algos = [ PV3D(),Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Charm4BodyWideMassWin2Kp2Pm]
+                        , postscale = self.postscale
+                        )
+        decName = 'Hlt2' + NoTagWM  + 'Decision'
+        annSvcID = self._scale(decName,'HltANNSvcID')
+        HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
+
+
         ############################################################################################################
 
 
         # D0->K+K+K-pi- / K-K-K+pi+   ##############################################################################
+
+        # 1) Tagged decays
         line = Hlt2Line(modeName3KPm, prescale = self.prescale
                         , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Hlt2Charm4Body3KPm]
                         , postscale = self.postscale
@@ -591,10 +712,35 @@ class Hlt2CharmHadD02HHHHDstLinesConf(HltLinesConfigurableUser) :
         annSvcID = self._scale(decName,'HltANNSvcID')
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
 
+        # 2) UnTagged decays
+        NoTag = 'CharmHadD02HHHH_3Kpi' 
+        NoTagWM = 'CharmHadD02HHHH_3KpiWideMass'
+        
+        line = Hlt2Line(NoTag, prescale = self.prescale
+                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Charm4BodyMassWin3KPm]
+                        , postscale = self.postscale
+                        )
+        decName = 'Hlt2' + NoTag + 'Decision'
+        annSvcID = self._scale(decName,'HltANNSvcID')
+        HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
+
+        line = Hlt2Line(NoTagWM, prescale = self.prescale
+                        , algos = [ PV3D(),Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Charm4BodyWideMassWin3KPm]
+                        , postscale = self.postscale
+                        )
+        decName = 'Hlt2' + NoTagWM  + 'Decision'
+        annSvcID = self._scale(decName,'HltANNSvcID')
+        HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
+
+
+
+
         ############################################################################################################
 
 
         # D -> K+pi+pi+pi- / K-pi-pi-pi+   ##############################################################################
+
+        # 1) Tagged decays
         line = Hlt2Line(modeNameCh2, prescale = self.prescale
                         , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Hlt2Charm4BodyCh2]
                         , postscale = self.postscale
@@ -610,6 +756,28 @@ class Hlt2CharmHadD02HHHHDstLinesConf(HltLinesConfigurableUser) :
         decName = 'Hlt2' + wideMassNameCh2 + 'Decision'
         annSvcID = self._scale(decName,'HltANNSvcID')
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
+
+        # 2) UnTagged decays
+        NoTag = 'CharmHadD02HHHH_Ch2' 
+        NoTagWM = 'CharmHadD02HHHH_Ch2WideMass'
+        
+        line = Hlt2Line(NoTag, prescale = self.prescale
+                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Charm4BodyMassWinCh2]
+                        , postscale = self.postscale
+                        )
+        decName = 'Hlt2' + NoTag + 'Decision'
+        annSvcID = self._scale(decName,'HltANNSvcID')
+        HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
+
+        line = Hlt2Line(NoTagWM, prescale = self.prescale
+                        , algos = [ PV3D(),Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Charm4BodyWideMassWinCh2]
+                        , postscale = self.postscale
+                        )
+        decName = 'Hlt2' + NoTagWM  + 'Decision'
+        annSvcID = self._scale(decName,'HltANNSvcID')
+        HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
+
+
 
         ############################################################################################################
 

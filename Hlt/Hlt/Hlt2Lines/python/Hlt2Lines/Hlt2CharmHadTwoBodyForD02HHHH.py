@@ -9,7 +9,7 @@ from GaudiKernel.SystemOfUnits import MeV, GeV, mm
 
 from Hlt2Lines.Hlt2CharmHadD02HHHHDstLines import Hlt2CharmHadD02HHHHDstLinesConf 
 from Hlt2Lines.Hlt2CharmHadD02HHHHDstNoHlt1Lines  import Hlt2CharmHadD02HHHHDstNoHlt1LinesConf 
-from Hlt2Lines.Hlt2CharmHadD02HHHHLines  import Hlt2CharmHadD02HHHHLinesConf 
+
 
 
 
@@ -27,15 +27,15 @@ class Hlt2CharmHadTwoBodyForD02HHHHConf(HltLinesConfigurableUser) : # {
     """
 
     ## Must be configured before every configurable that uses it.
-    __used_configurables__ = [Hlt2CharmHadD02HHHHDstLinesConf,Hlt2CharmHadD02HHHHDstNoHlt1LinesConf,Hlt2CharmHadD02HHHHLinesConf]
+    __used_configurables__ = [Hlt2CharmHadD02HHHHDstLinesConf,Hlt2CharmHadD02HHHHDstNoHlt1LinesConf]
 
     __slots__ = {
                     'Trk_PT_MIN'                :  300.0 * MeV
                   , 'Trk_P_MIN'                 : 3000.0 * MeV
-                  , 'Trk_MIPCHI2DV_MIN'         :    1.8      # unitless
+                  , 'Trk_MIPCHI2DV_MIN'         :    6.      # unitless
                   , 'Trk_TRCHI2DOF_MAX'         :    3.0      # unitless
                   , 'Pair_AMINDOCA_MAX'         :    0.1 * mm
-                  , 'Pair_BPVVDCHI2_MIN'        :   15.0      # unitless  
+                  , 'Pair_BPVVDCHI2_MIN'        :   20.0      # unitless  
                   , 'Pair_BPVVD_MIN'            :    0.0 * mm
                   , 'Pair_SumAPT_MIN'           :    0.0 * MeV
                   , 'Pair_BPVCORRM_MAX'         : 3500.0 * MeV

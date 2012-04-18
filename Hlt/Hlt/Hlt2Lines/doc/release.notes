@@ -8,6 +8,17 @@
 !
 !----------------------------------------------------------------------------
 
+
+! 2012-04-18 - B. VIAUD
+ - Re-wrote Hlt2CharmHadD02HHHHDstLines.py
+   to reconstruct the tagged and untagged D candidates
+   in a single sequence.
+
+ - Consequence1 removed Hlt2CharmHadD02HHHHLines.py 
+   in which the untagged lines were done before
+ - Consequence2 removed the ref to Hlt2CharmHadD02HHHHLines.py 
+   in Hlt2CharmHadTwoBodyForMultiBody.py and Hlt2CharmHadTwoBodyForD02HHHH.py
+
 !========================= Hlt2Lines v8r18 2012-04-09 =========================
 ! 2012-04-06 - V. Gligorov
  - Fix ABSID bug in Lc->Lh lines
