@@ -60,16 +60,16 @@ class TopoLines :
             'ALL_PT_MIN'        : 500.0,  # MeV
             'ALL_P_MIN'         : 5000.0, # MeV
             'ALL_MIPCHI2DV_MIN' : 4.0,    # unitless
-            'MU_TRCHI2DOF_MAX'  : 3.0,    # unitless
-            'E_TRCHI2DOF_MAX'   : 4.0,    # unitless
-            'HAD_TRCHI2DOF_MAX' : 3.0,    # unitless
+            'MU_TRCHI2DOF_MAX'  : 2.5,    # unitless
+            'E_TRCHI2DOF_MAX'   : 2.5,    # unitless
+            'HAD_TRCHI2DOF_MAX' : 2.5,    # unitless
             # V0's
             'USE_KS'            : True,
             'USE_LAMBDA'        : True,
             # upfront combo cuts
             'AMAXDOCA_MAX'      : 0.2,    # mm        
             'BPVVDCHI2_MIN'     : 100.0,  # unitless
-            'MIN_TRCHI2DOF_MAX' : 2,      # unitless
+            'MIN_TRCHI2DOF_MAX' : 1.5,      # unitless
             'ONETRACK_PT_MIN'   : 1350.0, # MeV
             'ONETRACK_IPCHI2_MIN' : 9,   # unitless   
             'V2BODYCHI2_MAX'    : 10,     # unitless
