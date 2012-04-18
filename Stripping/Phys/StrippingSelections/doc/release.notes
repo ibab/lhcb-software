@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+
+! 2012-04-18 Yasmine Amhis 
+  - Changes made to StrippingHeavyBaryons
+     . Adjust mass windows cuts for Xi and Omega 
+    Put back Alltracks for the bachlors. 
+
 ! 2012-04-17 - Paul Seyfert
  - Adjust new(=2012) track chi2 behaviour (VeloMuon tracks differently affected than longtracks)
 
