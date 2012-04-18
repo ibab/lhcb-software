@@ -61,12 +61,12 @@ protected:
   StatusCode createVeloTTStates(LHCb::Track& track ) const ;
   
 private:
+  std::string   m_veloFitterName ;  
+  double m_ptVelo ;
   IPatSeedFit* m_seedFit ;
   ITrackFitter* m_veloFitter ;  
-  std::string   m_veloFitterName ;  
-  IPatVeloTTFit* m_veloTTFit;
-
-  ITrackExtrapolator* m_extrapolator;
+  IPatVeloTTFit* m_veloTTFit ;
+  const ITrackExtrapolator* m_extrapolator;
   const DeSTDetector* m_ttdetector ;
 } ;
 

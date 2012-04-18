@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2012-04-18 - Wouter Hulsbergen
+  - StateInitTool: set velo momentum the way it used to be done in TrackPrepareVelo.
+    (temporarily?)
+
 !========================= TrackTools v4r14 2012-03-28 =========================
 ! 2012-03-27 - Wouter Hulsbergen
   - improve TrackVertexer: use more than just 'firstState' when fitting a set

@@ -14,11 +14,12 @@ TrackStateInitTool::TrackStateInitTool( const std::string& type,
 					const std::string& name,
 					const IInterface* parent)
   : GaudiTool ( type, name , parent )
-  ,m_veloFitter(0)
   ,m_veloFitterName("")
+  ,m_veloFitter(0)
 {
   declareInterface<ITrackStateInit>(this);
   declareProperty( "VeloFitterName" , m_veloFitterName = "Tf::PatVeloFitLHCbIDs/FitVelo");
+  declareProperty( "ptVelo", m_ptVelo = 400.*Gaudi::Units::MeV);
 }
 
 TrackStateInitTool::~TrackStateInitTool() {}
@@ -103,6 +104,18 @@ StatusCode TrackStateInitTool::createVeloStates( LHCb::Track& track ) const
   track.setFlags(flags) ;
   track.setType(savedType) ;
 
+  // assign 'standard' momentum. from TrackPrepareVelo
+  if( m_ptVelo > 0 ) {
+    int charge = 2*(track.key()%2)-1 ;
+    double tx = track.firstState().tx() ;
+    double ty = track.firstState().ty() ;
+    double slope2 = GSL_MAX( tx*tx + ty*ty, 1e-20);
+    double qop = charge * sqrt( slope2 ) / (m_ptVelo * sqrt( 1. + slope2 ));
+    BOOST_FOREACH( LHCb::State* state, track.states() ) {
+      state->setQOverP( qop ) ;
+    }
+  }
+  
   return sc ;
 }
 
