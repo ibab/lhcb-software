@@ -1,4 +1,7 @@
 #!/bin/bash
+#
+# $HeadURL$
+# __RCSID__ = $Id$
 narg=$#
 nar=0
 distribute=False
