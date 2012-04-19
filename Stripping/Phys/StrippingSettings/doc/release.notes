@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-04-19 - Jibo He
+ - Stripping19
+	. Removed lines of ICEHP stream 
+
 !========================= StrippingSettings v2r12 2012-04-01 ===================
 ! 2012-04-01 - Jibo He
  - Copied Stripping18 to Stripping18b, with ICHEP stream removed
