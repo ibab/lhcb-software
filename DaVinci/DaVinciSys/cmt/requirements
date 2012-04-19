@@ -1,13 +1,14 @@
 package DaVinciSys
-version v30r2p2
+version v30r2p3
 
 branches doc cmt
 
-use  DaVinci             v30r2p2   Phys
+use  DaVinci             v30r2p3   Phys
 use  DaVinciTests        v2r13p1
 
 # Temporary
 use  KaliCalo            v4r12p2   Phys
+use  DaVinciMonitors     v1r18     Phys
 
 # Declare this as a container package
 apply_pattern container_package
