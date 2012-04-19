@@ -29,6 +29,7 @@ __all__     = ('CharmedAndCharmedStrangeSpectroscopyConf',
                'makeDp2KmPipPip',
                'makePromptD02KPi',
                'makeDs2KKPi',
+               'makeDs2KKPiList',
                'makeD02K3Pi',
                'makeDstarD02K3Pi',
                'makePromptTracks',
@@ -140,7 +141,8 @@ class CharmedAndCharmedStrangeSpectroscopyConf( LineBuilder ):
         self.sel_LoosePromptPi = makePromptSoftTracks( name+"LoosePromptPi", "Phys/StdAllLoosePions/Particles")
         self.sel_D02K3Pi = makeD02K3Pi( name+"D02K3Pi", self.sel_LoosePi, self.sel_LooseK )
         self.sel_DstarD02K3Pi = makeDstarD02K3Pi( name+"DstarD02K3Pi", self.sel_D02K3Pi, self.sel_LoosePromptPi )
-       
+        self.sel_DsList = makeDs2KKPiList( name+"DsList" )
+
 
         '''
         combine particles
@@ -172,7 +174,7 @@ class CharmedAndCharmedStrangeSpectroscopyConf( LineBuilder ):
         self.DsKs_line      = StrippingLine( name_DsKs_line     , prescale = config[ 'DsKs_prescale' ]     , selection = self.DsKs      )
         self.DsKm_line      = StrippingLine( name_DsKm_line     , prescale = config[ 'DsKm_prescale' ]     , selection = self.DsKm      )
         self.DstarD02K3PiKs_line = StrippingLine( name_DstarD02K3PiKs_line , prescale = config[ 'DstarD02K3PiKs_prescale' ] , selection = self.DstarD02K3PiKs  )
-        #self.Ds_line        = StrippingLine( name_Ds_line     , prescale = 1     , selection = self.sel_Ds     )
+        self.Ds_line        = StrippingLine( name_Ds_line     , prescale = 1     , selection = self.sel_DsList     ) 
 
         '''
         register stripping lines
@@ -185,7 +187,7 @@ class CharmedAndCharmedStrangeSpectroscopyConf( LineBuilder ):
         self.registerLine( self.DstarpPim_line )
         self.registerLine( self.DzP_line )
         self.registerLine( self.DpP_line )
-        #self.registerLine( self.Ds_line )
+        #self.registerLine( self.Ds_line ) #for testing only
         self.registerLine( self.DsKm_line )
         self.registerLine( self.DsKs_line )
         self.registerLine( self.DstarD02K3PiKs_line )
@@ -291,6 +293,16 @@ def makeDs2KKPi( name, pions, kaons ):
                                          MotherCut = motherCuts
                                          )
     return Selection( name, Algorithm = DsFilter, RequiredSelections = [ pions, kaons ] )
+
+def makeDs2KKPiList( name ):
+    Dtracks_cuts = "(PT>250*MeV) & (P>3*GeV) & (P < 100*GeV) & (TRPCHI2>0.0001) & (HASRICH)"
+    Dcuts = "(BPVDIRA > 0.99999) & (VFASPF(VCHI2/VDOF)<8) & (PT>2.*GeV) & (MIPCHI2DV(PRIMARY) < 16.0) & (BPVVDCHI2 > 25)"
+    cut_code = "(CHILDCUT(" + Dtracks_cuts + ",1) & CHILDCUT(" + Dtracks_cuts + ",2) & CHILDCUT(" + Dtracks_cuts + ",3) & " + Dcuts + ")"
+    DFilter = FilterDesktop( Code = cut_code )
+    stdD = DataOnDemand( Location = "Phys/StdVeryTightDsplus2KKPi/Particles" )
+    return Selection( name,
+                      Algorithm = DFilter,
+                      RequiredSelections = [ stdD ] )
 
 
 def makeD02K3Pi( name, pions, kaons ):
