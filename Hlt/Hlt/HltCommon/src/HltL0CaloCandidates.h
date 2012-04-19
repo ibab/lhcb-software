@@ -22,6 +22,14 @@
  *  @based on J.A. Hernando's and Gerhard Raven's work
  *  @based on the ideas of the HltIsPhotonTool by M.Witek
  */
+
+class SortL0CaloByEt {
+  public:
+  bool operator()(const LHCb::L0CaloCandidate* c1, const LHCb::L0CaloCandidate* c2) { return  c1->etCode() > c2->etCode() ; }
+};
+
+  
+
 class HltL0CaloCandidates : public GaudiHistoAlg {
 public: 
   /// Standard constructor
@@ -50,6 +58,7 @@ private:
       bool m_hasThreshold;
       int  m_threshold;
   };
+    bool checkID(LHCb::CaloCellID id, std::vector<LHCb::CaloCellID>& ids);
 
   // Configuration
   std::string                          m_l0Location;  
