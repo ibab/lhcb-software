@@ -4,7 +4,7 @@ export PARENT=$1
 # remove the args because they interfere with the cmt scripts
 export HOME=/home/$(/usr/bin/whoami)
 # pick up 'our' setup... 
-source /group/hlt/MOORE/Moore_v10r2/Hlt/Moore/job/SetupMoore_v10r2.sh
+source /group/hlt/MOORE/Moore_v13r4/Hlt/Moore/job/SetupMoore_v13r4.sh
 
 export DIM_DNS_NODE=mona08
 echo ${UTGID} Running as $(/usr/bin/whoami) with DIM_DNS_NODE $DIM_DNS_NODE and home $HOME , cmtconfig $CMTCONFIG
