@@ -32,10 +32,11 @@
    * - MajAxProj: Major axis of the ellipse for the cut on the projection
    * - MinAxProj: Minor axis of the ellipse for the cut on the projection
    * - ZTTProj: Z-Position which state has to be closest to
+   * The parameters were tuned on MC11a and differ from the ones stated in LHCb-INT-2010-20
    *  
    *  @author Olivier Callot
    *  @author Michel De Cian (added method and code restructured)
-   *  @date   2010-04-14 
+   *  @date   2012-04-19 
    *  
    */
 

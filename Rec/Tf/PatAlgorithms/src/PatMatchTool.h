@@ -120,6 +120,7 @@ class PatMatchTool : public GaudiTool,
 
 	// use tool for momentum parametrisation
 	std::string m_fastMomentumToolName;
+	std::string m_addTTClusterName;
 	bool m_addTT;
 	bool m_writeNNVariables;
 

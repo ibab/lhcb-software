@@ -3,6 +3,11 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2012-04-19 - Michel De Cian
+ - PatMatchTool: Make the name of the tool that adds the TT hits a property (helpful for testing modified TT hit adding 
+tools)
+ - PatAddTTCoord: Adapting parameters to optimal values found in MC11a and fixing the slope at zMSPoint instead of 
+zTTField in the chi2 fit.
 
 ! 2012-04-18 - Sascha Stahl
  - PatDownstream: Added options to set the output location of the matching and forward

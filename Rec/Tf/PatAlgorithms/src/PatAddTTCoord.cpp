@@ -29,20 +29,20 @@ PatAddTTCoord::PatAddTTCoord( const std::string& type,
   : GaudiTool ( type, name , parent )
 {
   declareInterface<IAddTTClusterTool>(this);
-  declareProperty( "ZTTField"  , m_zTTField            =  1725. * Gaudi::Units::mm );
-  declareProperty( "ZMSPoint"  , m_zMSPoint            =  750. * Gaudi::Units::mm  );
-  declareProperty( "TTParam"   , m_ttParam             =  28.                      );
+  declareProperty( "ZTTField"  , m_zTTField            =  1740. * Gaudi::Units::mm );
+  declareProperty( "ZMSPoint"  , m_zMSPoint            =  400. * Gaudi::Units::mm  );
+  declareProperty( "TTParam"   , m_ttParam             =  29.                      );
   declareProperty( "ZTTProj"   , m_zTTProj             =  2500. * Gaudi::Units::mm );
-  declareProperty( "MaxChi2Tol" , m_maxChi2Tol         =  1.7                      );
-  declareProperty( "MaxChi2Slope", m_maxChi2Slope      =  28000                    );
-  declareProperty( "MaxChi2POffset", m_maxChi2POffset  =  200                      );
-  declareProperty( "YTolSlope" , m_yTolSlope           =  40000.                   );
+  declareProperty( "MaxChi2Tol" , m_maxChi2Tol         =  2.0                      );
+  declareProperty( "MaxChi2Slope", m_maxChi2Slope      =  25000                    );
+  declareProperty( "MaxChi2POffset", m_maxChi2POffset  =  100                      );
+  declareProperty( "YTolSlope" , m_yTolSlope           =  20000.                   );
   declareProperty( "XTol"      , m_xTol                =  1.0                      );
-  declareProperty( "XTolSlope" , m_xTolSlope           =  28000.0                  );
-  declareProperty( "MajAxProj" , m_majAxProj           =  17  * Gaudi::Units::mm   );
-  declareProperty( "MinAxProj" , m_minAxProj           =  2   * Gaudi::Units::mm   );
+  declareProperty( "XTolSlope" , m_xTolSlope           =  30000.0                  );
+  declareProperty( "MajAxProj" , m_majAxProj           =  20.0  * Gaudi::Units::mm   );
+  declareProperty( "MinAxProj" , m_minAxProj           =  2.0   * Gaudi::Units::mm   );
 
-}
+  }
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -285,7 +285,7 @@ void PatAddTTCoord::calculateChi2(PatTTHits& goodTT, double& chi2, const double&
 
     mat[0] = fixedWeight; // -- Fix X = 0 with fixedWeight
     mat[1] = 0.;
-    mat[2] = fixedWeight * (m_zTTProj-m_zTTField)*(m_zTTProj-m_zTTField); // -- Fix slope by point a z=TTfield
+    mat[2] = fixedWeight * (m_zTTProj-m_zMSPoint)*(m_zTTProj-m_zMSPoint); // -- Fix slope by point at multiple scattering point
     mat[3] = 0.;
     mat[4] = 0.;
     mat[5] = fixedWeight;  // -- Fix Y = 0 with fixedWeight
@@ -327,7 +327,7 @@ void PatAddTTCoord::calculateChi2(PatTTHits& goodTT, double& chi2, const double&
 
     chi2 = fixedWeight * ( offset * offset +
                            offsetY * offsetY +
-                           (m_zTTProj-m_zTTField)*(m_zTTProj-m_zTTField)*slope * slope );
+                           (m_zTTProj-m_zMSPoint)*(m_zTTProj-m_zMSPoint)*slope * slope );
 
     unsigned int nIndep = nDoF;
 

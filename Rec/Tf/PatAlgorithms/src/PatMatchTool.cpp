@@ -50,6 +50,7 @@ PatMatchTool::PatMatchTool(const std::string& type,
     declareProperty("FastMomentumToolName",
 					m_fastMomentumToolName = "FastMomentumEstimate");
     declareProperty("AddTTClusters"   , m_addTT            = true);
+    declareProperty("AddTTClusterName", m_addTTClusterName = "PatAddTTCoord");
     declareProperty("writeNNVariables", m_writeNNVariables = true);
 
 }
@@ -71,7 +72,7 @@ StatusCode PatMatchTool::initialize()
     if (UNLIKELY(msgLevel(MSG::DEBUG)))
 	debug() << "==> Initialize" << endmsg;
 
-    m_addTTClusterTool = tool<IAddTTClusterTool>("PatAddTTCoord");
+    m_addTTClusterTool = tool<IAddTTClusterTool>(m_addTTClusterName);
 
     m_fastMomentumTool = tool<ITrackMomentumEstimate>(m_fastMomentumToolName);
 
