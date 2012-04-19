@@ -3,6 +3,9 @@
 ! Package manager : J.Amoraal
 !------------------------------------------------------------------------------
 
+! 2012-04-19 - Alexandr Kozlinskiy
+ - OTReadOutWindow algorithms updated to load readOutGate values from database.
+
 !========================= OTDAQ v7r11 2011-11-07 =========================
 ! 2011-10-12 - Marco Cattaneo
  - Fix icc remark

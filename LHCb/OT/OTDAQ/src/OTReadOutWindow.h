@@ -8,6 +8,8 @@
 // OTDAQ
 #include "OTDAQ/IOTReadOutWindow.h"
 
+#include <DetDesc/Condition.h>
+
 /** @class OTReadOutWindow OTReadOutWindow.h OTDAQ/OTReadOutWindow.h
  *
  *  Tool for getting the read-out window parameters.
@@ -28,6 +30,8 @@ public:
   /// destructor
   virtual ~OTReadOutWindow();
 
+  StatusCode initialize();
+
   /// Start of read out window for each station
   std::vector<double> startReadOutGate();
 
@@ -39,6 +43,9 @@ private:
   std::vector<double> m_startReadOutGate;  ///< start of readout gate
   double m_sizeOfReadOutGate;              ///< end of readout gate
 
+  Condition* condReadOutGate;
+
+  StatusCode condReadOutGateUpdate();
 };
 
 inline std::vector<double> OTReadOutWindow::startReadOutGate()
