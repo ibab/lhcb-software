@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-04-19 Johannes Albrecht
+ - adapt LFV lines to select B2pmu
 
 ! 2012-04-18 Yasmine Amhis 
   - Changes made to StrippingHeavyBaryons

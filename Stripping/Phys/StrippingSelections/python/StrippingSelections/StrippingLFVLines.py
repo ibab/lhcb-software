@@ -16,6 +16,7 @@ __all__ = ('LFVLinesConf',
            'makeB2eMu',
            'makeB2ee',
            'makeB2hemu'
+           'makeB2pMu',
            )
 
 from Gaudi.Configuration import *
@@ -38,7 +39,8 @@ class LFVLinesConf(LineBuilder) :
                                   'Tau2MuMuePrescale',
                                   'B2eMuPrescale',
                                   'B2eePrescale',                                  
-                                  'B2heMuPrescale',                                  
+                                  'B2heMuPrescale',
+                                  'B2pMuPrescale',
                                   )
     
     #### This is the dictionary of all tunable cuts ########
@@ -48,7 +50,8 @@ class LFVLinesConf(LineBuilder) :
         'Tau2MuMuePrescale'         :1,
         'B2eMuPrescale'       :1,
         'B2eePrescale'        :1,
-        'B2heMuPrescale'      :1,                         
+        'B2heMuPrescale'      :1,
+        'B2pMuPrescale'       :1,
         }                
     
     
@@ -63,12 +66,14 @@ class LFVLinesConf(LineBuilder) :
         emu_name=name+'B2eMu'
         ee_name=name+'B2ee'
         hemu_name=name+'B2heMu'
+        pmu_name=name+'B2pMu'
 
         self.selTau2PhiMu = makeTau2PhiMu(tau_name)
         self.selTau2eMuMu = makeTau2eMuMu(mme_name)
         self.selB2eMu = makeB2eMu(emu_name)
         self.selB2ee = makeB2ee(ee_name)
         self.selB2heMu = makeB2heMu(hemu_name)
+        self.selB2pMu = makeB2pMu(pmu_name)
                 
         self.tau2PhiMuLine = StrippingLine(tau_name+"Line",
                                      prescale = config['TauPrescale'],
@@ -100,13 +105,19 @@ class LFVLinesConf(LineBuilder) :
                                      algos = [ self.selB2heMu ]
                                      )
 
-        
+
+        self.b2pMuLine = StrippingLine(pmu_name+"Line",
+                                     prescale = config['B2pMuPrescale'],
+                                     postscale = config['Postscale'],
+                                     algos = [ self.selB2pMu ]
+                                     )
               
         self.registerLine(self.tau2PhiMuLine)
         self.registerLine(self.tau2eMuMuLine)
         self.registerLine(self.b2eMuLine)
         self.registerLine(self.b2eeLine)
         self.registerLine(self.b2heMuLine)
+        self.registerLine(self.b2pMuLine)
 
 def makeTau2PhiMu(name):
     """
@@ -290,3 +301,39 @@ def makeB2heMu(name):
                       Algorithm = Bs2heMu,
                       RequiredSelections = [ _stdLooseMuons,_stdLooseElectrons,
                                              _stdLoosePions, _stdLooseKaons ])
+
+
+def makeB2pMu(name):
+    """
+    Please contact Johannes Albrecht if you think of prescaling this line!
+    
+    Arguments:
+    name        : name of the Selection.
+    """
+    
+    from Configurables import OfflineVertexFitter
+    Bs2pMu = CombineParticles("Combine"+name)
+    Bs2pMu.DecayDescriptor = "[B_s0 -> p+ mu-]cc"
+    #Bs2pMu.addTool( OfflineVertexFitter() )
+    #Bs2pMu.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+    #Bs2pMu.OfflineVertexFitter.useResonanceVertex = False
+    #Bs2pMu.ReFitPVs = True
+    Bs2pMu.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 4 )",
+                             "e+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 4 )"}
+
+    Bs2pMu.CombinationCut = "(ADAMASS('B_s0')<600*MeV)"\
+                            "& (AMAXDOCA('')<0.3*mm)"
+    
+    Bs2pMu.MotherCut = "(VFASPF(VCHI2/VDOF)<9) "\
+                       "& (ADMASS('B_s0') < 600*MeV )"\
+                       "& (BPVDIRA > 0) "\
+                       "& (BPVVDCHI2> 225)"\
+                       "& (BPVIPCHI2()< 25) "
+
+    _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
+    _stdLooseProtons= DataOnDemand(Location = "Phys/StdLooseProtons/Particles")
+
+    return Selection (name,
+                      Algorithm = Bs2pMu,
+                      RequiredSelections = [ _stdLooseMuons,_stdLooseProtons])
+
