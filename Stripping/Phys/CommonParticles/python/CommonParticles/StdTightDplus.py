@@ -8,7 +8,11 @@ Configuration file for 'Standard Tight Dplus'"""
 __author__  = "Sandra Amato"
 __version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $"
 # =============================================================================
-__all__ = ( 'StdTightDplus2KPiPiOppSignPi' ,'locations')
+__all__ = ( 
+    'StdTightDplus2KPiPiOppSignPi' ,
+    'StdVeryTightDsplus2KKPi',
+    'locations'
+    )
 from Gaudi.Configuration import *
 from Configurables       import CombineParticles
 from CommonParticles.Utils import *
@@ -26,6 +30,18 @@ StdTightDplus2KPiPiOppSignPi.CombinationCut = "((AM>1760.*MeV) & (AM<2080.*MeV) 
 StdTightDplus2KPiPiOppSignPi.MotherCut = "((VFASPF(VCHI2) < 30 ) & (M>1770.*MeV) & (M < 2070.*MeV) & (BPVVDCHI2>36) & (BPVDIRA>0.98))"
 
 locations = updateDoD ( StdTightDplus2KPiPiOppSignPi )
+
+## ===========================================================================
+StdVeryTightDsplus2KKPi = CombineParticles( 'StdVeryTightDsplus2KKPi' )
+StdVeryTightDsplus2KKPi.Inputs = [ "Phys/StdLooseKaons/Particles", "Phys/StdLoosePions/Particles" ]
+StdVeryTightDsplus2KKPi.DecayDescriptor = "[D_s+ -> K- K+ pi+]cc"
+StdVeryTightDsplus2KKPi.DaughtersCuts = {
+    "K+"  : "(P > 2*GeV) & ((PIDK-PIDpi) > 5.)",
+    "pi+" : "(P > 2*GeV)  & ((PIDK-PIDpi) < 5.)"
+    }
+StdVeryTightDsplus2KKPi.CombinationCut = "((AM>1900.*MeV) & (AM<2040.*MeV) & ((APT>1.*GeV) | (ASUM(PT)>1.*GeV)) & (ADOCAMAX('')<0.5*mm))"
+StdVeryTightDsplus2KKPi.MotherCut = "((VFASPF(VCHI2) < 30 ) & (M>1920.*MeV) & (M < 2020.*MeV) & (BPVVDCHI2>36) & (BPVDIRA>0.98))" 
+locations = updateDoD ( StdVeryTightDsplus2KKPi )
 
 ## ============================================================================
 if '__main__' == __name__ :
