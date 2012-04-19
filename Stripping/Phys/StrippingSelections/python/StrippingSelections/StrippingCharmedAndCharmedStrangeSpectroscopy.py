@@ -116,8 +116,9 @@ class CharmedAndCharmedStrangeSpectroscopyConf( LineBuilder ):
         name_DstarpPim_line        = name + '_DstarpPim'
         name_DzP_line              = name + '_DzP'
         name_DpP_line              = name + '_DpP'
-        name_DsKs_line             = name + '_DsKs'
         name_DsKm_line             = name + '_DsKm'
+        name_DsKs_line             = name + '_DsKs'
+        name_Ds_line               = name + '_Ds'
 
 
         '''
@@ -129,13 +130,13 @@ class CharmedAndCharmedStrangeSpectroscopyConf( LineBuilder ):
         self.sel_KS02DD = makeKS02DD( name+"KSDownDown" )
         self.sel_KS0 = MergedSelection( name+"KS0", RequiredSelections = [ self.sel_KS02LL, self.sel_KS02DD ] )
         self.sel_Dstarp = makeDstar2D0pi( name+"Dstar" )
-        self.sel_Ds = makeDs2KKPi( name+"Ds" )
         self.sel_D0 = makePromptD02KPi( name+"D0" )
         self.sel_K = makePromptTracks( name+"K", "Phys/StdTightKaons/Particles")
         self.sel_Pi = makePromptTracks( name+"Pi", "Phys/StdTightPions/Particles")
         self.sel_P  = makePromptTracks( name+"P", "Phys/StdTightProtons/Particles")
-        self.sel_LoosePi  = makeNoPromptTracks( name+"LoosePi", "Phys/StdAllLoosePions/Particles")
-        self.sel_LooseK   = makeNoPromptTracks( name+"LooseK", "Phys/StdAllLooseKaons/Particles")
+        self.sel_LoosePi  = makeNoPromptTracks( name+"LoosePi", "Phys/StdLoosePions/Particles")
+        self.sel_LooseK   = makeNoPromptTracks( name+"LooseK", "Phys/StdLooseKaons/Particles")
+        self.sel_Ds = makeDs2KKPi( name+"Ds", self.sel_LoosePi, self.sel_LooseK )
         self.sel_LoosePromptPi = makePromptSoftTracks( name+"LoosePromptPi", "Phys/StdAllLoosePions/Particles")
         self.sel_D02K3Pi = makeD02K3Pi( name+"D02K3Pi", self.sel_LoosePi, self.sel_LooseK )
         self.sel_DstarD02K3Pi = makeDstarD02K3Pi( name+"DstarD02K3Pi", self.sel_D02K3Pi, self.sel_LoosePromptPi )
@@ -171,7 +172,8 @@ class CharmedAndCharmedStrangeSpectroscopyConf( LineBuilder ):
         self.DsKs_line      = StrippingLine( name_DsKs_line     , prescale = config[ 'DsKs_prescale' ]     , selection = self.DsKs      )
         self.DsKm_line      = StrippingLine( name_DsKm_line     , prescale = config[ 'DsKm_prescale' ]     , selection = self.DsKm      )
         self.DstarD02K3PiKs_line = StrippingLine( name_DstarD02K3PiKs_line , prescale = config[ 'DstarD02K3PiKs_prescale' ] , selection = self.DstarD02K3PiKs  )
-     
+        #self.Ds_line        = StrippingLine( name_Ds_line     , prescale = 1     , selection = self.sel_Ds     )
+
         '''
         register stripping lines
         '''
@@ -183,8 +185,9 @@ class CharmedAndCharmedStrangeSpectroscopyConf( LineBuilder ):
         self.registerLine( self.DstarpPim_line )
         self.registerLine( self.DzP_line )
         self.registerLine( self.DpP_line )
-        self.registerLine( self.DsKs_line )
+        #self.registerLine( self.Ds_line )
         self.registerLine( self.DsKm_line )
+        self.registerLine( self.DsKs_line )
         self.registerLine( self.DstarD02K3PiKs_line )
 
 
@@ -279,26 +282,24 @@ def makePromptD02KPi( name ):
                       Algorithm = D0Filter,
                       RequiredSelections = [ stdD0 ] )
 
+def makeDs2KKPi( name, pions, kaons ):
+    combinationCuts = "(ADAMASS('D_s+')<200.0*MeV) & ((APT>1.*GeV) | (ASUM(PT)>1.*GeV))  & (ADOCAMAX('')<0.5*mm)"
+    motherCuts      = "(M>1.92*GeV) & (M<2.02*GeV) & (BPVDIRA > 0.999) & (MIPCHI2DV(PRIMARY) < 25) & (BPVVDCHI2 > 25) & (VFASPF(VCHI2) < 30)" 
+    DsFilter        = CombineParticles ( DecayDescriptor = "[D_s+ -> K+ K- pi+]cc",
+                                         DaughtersCuts = { "K+" : "ALL", "pi+" : "ALL" },
+                                         CombinationCut = combinationCuts,
+                                         MotherCut = motherCuts
+                                         )
+    return Selection( name, Algorithm = DsFilter, RequiredSelections = [ pions, kaons ] )
 
-def makeDs2KKPi( name ):
-    DsTracks = '(PT > 250*MeV) & (P > 3*GeV) & (P < 100*GeV) & (TRPCHI2 > 0.0001) & (HASRICH)'
-    cut1 = "((CHILDCUT(MIPCHI2DV(PRIMARY) > 25.0, 1)) | (CHILDCUT(MIPCHI2DV(PRIMARY) > 25.0,2)) | (CHILDCUT(MIPCHI2DV(PRIMARY) > 25.0,3)))"
-    cut2 = "((CHILDCUT(PT > 0.6*GeV,1) & CHILDCUT(PT > 0.6*GeV,2)) | (CHILDCUT(PT > 0.6*GeV,3) & CHILDCUT(PT > 0.6*GeV,2)) | (CHILDCUT(PT > 0.6*GeV,3) & CHILDCUT(PT > 0.6*GeV,1)))"
-    Cut_Ds = '(BPVDIRA > 0.99999) & (MIPCHI2DV(PRIMARY) < 16) & (BPVVDCHI2 > 25) & (VFASPF(VCHI2/VDOF)<8) & (PT > 2.5*GeV) & ' + cut1 + " & " + cut2 
-    code = '(' + Cut_Ds + '& CHILDCUT(' + DsTracks + ',1) & CHILDCUT(' + DsTracks + ',2) & CHILDCUT(' + DsTracks + ',3))'
-    DsFilter = FilterDesktop( Code = code )
-    stdDs = DataOnDemand( Location = "Phys/StdLooseDsplus2KKPi/Particles" )
-    return Selection ( name,
-                       Algorithm = DsFilter,
-                       RequiredSelections = [ stdDs ] )
 
 def makeD02K3Pi( name, pions, kaons ):
-    combinationCuts = "(ADAMASS('D0')<110.0*MeV) & (APT>500.0*MeV) & (AMAXDOCA('')<0.15*mm)"
-    motherCuts = "(VFASPF(VCHI2/VDOF)<10) & (BPVVDCHI2>25) & (MIPCHI2DV(PRIMARY) < 16.0) & (BPVDIRA>0.9998) & (ADMASS('D0')<100.0*MeV) & (PT>2.0*GeV)" 
+    combinationCuts = "(ADAMASS('D0')<100.0*MeV) & (APT>800.0*MeV) & (AMAXDOCA('')<0.15*mm)"
+    motherCuts = "(VFASPF(VCHI2/VDOF)<10) & (BPVVDCHI2>36) & (MIPCHI2DV(PRIMARY) < 16.0) & (BPVDIRA>0.9999) & (ADMASS('D0')<100.0*MeV) & (PT>2.0*GeV)" 
     D0Filter = CombineParticles ( DecayDescriptor = "[D0 -> K- pi+ pi- pi+]cc",
+                                  DaughtersCuts = { "K+" : "ALL", "pi+" : "ALL" },
                                   CombinationCut = combinationCuts,
-                                  MotherCut = motherCuts,
-                                  DaughtersCuts = { "K+" : "ALL", "pi+" : "ALL" }
+                                  MotherCut = motherCuts
                                   )
 
     return Selection( name,
@@ -307,7 +308,7 @@ def makeD02K3Pi( name, pions, kaons ):
 
 
 def makeDstarD02K3Pi( name, D0, pions ):
-   combinationCuts = "(APT>3.0*GeV) & (AMAXDOCA('')<0.22*mm)" 
+   combinationCuts = "(APT>3.0*GeV) & (AMAXDOCA('')<0.2*mm)" 
    motherCuts = "(M-MAXTREE('D0'==ABSID,M)<160*MeV) & (VFASPF(VCHI2/VDOF)<20)"
    DstarFilter = CombineParticles ( DecayDescriptor = "[D*(2010)+ -> pi+ D0]cc",
                                     CombinationCut  = combinationCuts,
@@ -328,7 +329,12 @@ def makePromptTracks( name, particle ):
                       RequiredSelections = [ stdTightTrack ] )
 
 def makeNoPromptTracks( name, particle ):
-    cuts = "(ISLONG) & (PT>250*MeV) & (P>1*GeV) & (MIPCHI2DV(PRIMARY)>16.0) & (TRPCHI2>0.0001) & (HASRICH)"
+    cuts = "(ISLONG) & (PT>400*MeV) & (P>1*GeV) & (MIPCHI2DV(PRIMARY)>25.0) & (TRPCHI2>0.0001) & (HASRICH) & (TRCHI2DOF<3)"
+    if particle.endswith( "Pions/Particles" ) :
+        cuts = cuts + " & ((PIDK-PIDpi)<7)"
+    if particle.endswith( "Kaons/Particles" ) :
+        cuts = cuts + " & ((PIDK-PIDpi)>0)"
+
     TrackFilter = FilterDesktop( Code = cuts )
     stdTrack = DataOnDemand( Location = particle )
     return Selection( name,
