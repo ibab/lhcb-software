@@ -31,9 +31,9 @@ from HltTrackNames import HltGlobalTrackLocation
 from HltTrackNames import Hlt2ChargedProtoParticleSuffix, Hlt2NeutralProtoParticleSuffix  
 from HltTrackNames import HltRichDefaultHypos, HltRichDefaultRadiators
 from HltTrackNames import Hlt2TrackingRecognizedFitTypesForRichID 
-from HltTrackNames import HltRichDefaultTrackCuts
+from HltTrackNames import HltRichDefaultTrackCuts, HltDefaultTrackCuts
 
-from Configurables import CaloProcessor, RichRecSysConf
+from Configurables import CaloProcessor, RichRecSysConf, TrackSelector
 
 from Hlt2Lines.Hlt2CharmHadLambdaC2LambdaHLines import Hlt2CharmHadLambdaCLambdaHLinesConf 
 from Hlt2Lines.Hlt2B2DXLines              import Hlt2B2DXLinesConf
@@ -44,11 +44,14 @@ from Hlt2Lines.Hlt2InclusiveMuonLines     import Hlt2InclusiveMuonLinesConf
 from Hlt2Lines.Hlt2InclusivePhiLines      import Hlt2InclusivePhiLinesConf
 from Hlt2Lines.Hlt2TopologicalLines       import Hlt2TopologicalLinesConf
 from Hlt2Lines.Hlt2B2XGammaLines          import Hlt2B2XGammaLinesConf
+#commented out v13r4p1
 from Hlt2Lines.Hlt2D2XGammaLines          import Hlt2D2XGammaLinesConf
 from Hlt2Lines.Hlt2B2HHLines              import Hlt2B2HHLinesConf
 from Hlt2Lines.Hlt2B2LLXLines             import Hlt2B2LLXLinesConf
 from Hlt2Lines.Hlt2CharmHadD02HHLines     import Hlt2CharmHadD02HHLinesConf
 from Hlt2Lines.Hlt2CharmHadTwoBodyForMultiBody     import Hlt2CharmHadTwoBodyForMultiBodyConf
+#needed for v13r4p1
+#from Hlt2Lines.Hlt2CharmHadD02HHHHLines  import Hlt2CharmHadD02HHHHLinesConf
 from Hlt2Lines.Hlt2CharmHadD2HHHLines     import Hlt2CharmHadD2HHHLinesConf
 from Hlt2Lines.Hlt2CharmHadTwoBodyForD02HHHH  import Hlt2CharmHadTwoBodyForD02HHHHConf
 from Hlt2Lines.Hlt2CharmHadD02HHHHDstLines  import Hlt2CharmHadD02HHHHDstLinesConf
@@ -105,6 +108,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
                              , Hlt2CharmHadD02HHKsLinesConf
                              , Hlt2CharmHadTwoBodyForMultiBodyConf
                              , Hlt2CharmHadTwoBodyForD02HHHHConf
+                             #needed for v13r4p1
+                             #, Hlt2CharmHadD02HHHHLinesConf
                              , Hlt2CharmHadD02HHHHDstLinesConf
                              , Hlt2CharmHadD02HHHHDstNoHlt1LinesConf  
                              , Hlt2CharmSemilepD02HMuNuLinesConf
@@ -118,6 +123,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
                              , Hlt2B2JpsiXLinesConf
                              , Hlt2B2PhiXLinesConf
                              , Hlt2B2XGammaLinesConf
+                             #commented out for v13r4p1
                              , Hlt2D2XGammaLinesConf
                              , Hlt2B2HHLinesConf
                              , Hlt2B2HHLTUnbiasedLinesConf
@@ -154,6 +160,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
                 , "RichHypos"                       : HltRichDefaultHypos
                 , "RichRadiators"                   : HltRichDefaultRadiators
                 , "RichTrackCuts"                   : HltRichDefaultTrackCuts
+                , "TrackCuts"                       : HltDefaultTrackCuts
                 , "Hlt2ForwardMaxVelo"              : 0
                 # TODO : make these variables, not slots 
                 , "__hlt2ChargedNoPIDsProtosSeq__"  : 0
@@ -816,6 +823,12 @@ class Hlt2Tracking(LHCbConfigurableUser):
             chargedProtosOutputLocation = self.__protosLocation(Hlt2ChargedProtoParticleSuffix) + "/" + outputLocation
             charged_name = self.__pidAlgosAndToolsPrefix()+outputLocation.replace("/","")+'ChargedProtoPAlg'
             charged      = ChargedProtoParticleMaker(charged_name)
+            charged.addTool(TrackSelector,name="TrackSelector")
+            ts=charged.TrackSelector
+            cuts=self.getProp("TrackCuts")
+            ts.setProp("MinChi2Cut",cuts['Chi2Cut'][0])
+            ts.setProp("MaxChi2Cut",cuts['Chi2Cut'][1])
+           
             # Need to allow for fitted tracks
             # This is now done inside the staged fast fit based on the fastFitType passed
             tracks          = self.__hlt2StagedFastFit()
@@ -832,6 +845,12 @@ class Hlt2Tracking(LHCbConfigurableUser):
                                                     "/" + outputLocation
             charged_secondLoop_name = self.__pidAlgosAndToolsPrefix()+outputLocation.replace("/","")+'ChargedSecondLoopProtoPAlg'
             charged_secondLoop      = ChargedProtoParticleMaker(charged_secondLoop_name)
+            charged_secondLoop.addTool(TrackSelector,name="TrackSelector")
+            ts=charged_secondLoop.TrackSelector
+            cuts=self.getProp("TrackCuts")
+            ts.setProp("MinChi2Cut",cuts['Chi2Cut'][0])
+            ts.setProp("MaxChi2Cut",cuts['Chi2Cut'][1])
+                       
             tracks_secondLoop       = self.__hlt2StagedFastFit(secondLoop=True)
             charged_secondLoop.Inputs  = [tracks_secondLoop.outputSelection()]
             charged_secondLoop.Output = chargedProtosSecondLoopOutputLocation           
@@ -1095,15 +1114,6 @@ class Hlt2Tracking(LHCbConfigurableUser):
         #
         hlt2TrackingOutput      = _baseTrackLocation(self.getProp("Prefix"),self.__shortTrackLocation())
         
-        # The clone killing
-        from Configurables import TrackEventCloneKiller, TrackCloneFinder
-        cloneKiller = TrackEventCloneKiller( self.__trackingAlgosAndToolsPrefix()+'FastCloneKiller'
-                                           , TracksInContainers         = [hlt2TrackingOutput]
-                                           , SkipSameContainerTracks    = False
-                                           , CopyTracks                 = False)
-        cloneKiller.addTool(TrackCloneFinder, name = 'CloneFinderTool')
-        cloneKiller.CloneFinderTool.RestrictedSearch = True
-        
         # Finally make the sequence
         # The sequence called depends on the track type, so far we recognise two track types
         # for Long tracks the options doSeeding, doCloneKilling, etc. are meaningful
@@ -1119,22 +1129,33 @@ class Hlt2Tracking(LHCbConfigurableUser):
             hlt2TracksToMergeIntoLong    =    []
             hlt2TracksToMergeIntoLong   +=    [ self.__hlt2ForwardTracking().outputSelection()]
             hlt2TracksToMergeIntoLong   +=    [ self.__hlt2MatchTracking().outputSelection()  ]
-            from Configurables import CreateFastTrackCollection
-            #### CreateFastTrackCollection
-            recoCopy = CreateFastTrackCollection(self.__trackingAlgosAndToolsPrefix()+'TrackCopy'
-                                               , InputLocations = hlt2TracksToMergeIntoLong
-                                               , OutputLocation = hlt2TrackingOutput
-                                               , SlowContainer     = True) 
-            ##############################
-            trackRecoSequence        +=     [recoCopy]
+            # Do the clone killing if required 
+            if self.getProp("DoCloneKilling") :
+               
+                from Configurables import TrackEventCloneKiller, TrackCloneFinder
+                
+                cloneKiller = TrackEventCloneKiller( self.__trackingAlgosAndToolsPrefix()+'FastCloneKiller'
+                                                     , TracksInContainers         = hlt2TracksToMergeIntoLong
+                                                     , TracksOutContainer         = hlt2TrackingOutput
+                                                     , SkipSameContainerTracks    = False
+                                                     , CopyTracks                 = True)
+                cloneKiller.addTool(TrackCloneFinder, name = 'CloneFinderTool')
+                cloneKiller.CloneFinderTool.RestrictedSearch = True
+                
+                trackRecoSequence        +=      [cloneKiller]
+            else :
+                from Configurables import CreateFastTrackCollection
+                recoCopy = CreateFastTrackCollection(self.__trackingAlgosAndToolsPrefix()+'TrackCopy'
+                                                     , InputLocations = hlt2TracksToMergeIntoLong
+                                                     , OutputLocation = hlt2TrackingOutput
+                                                     , SlowContainer  = True) 
+                trackRecoSequence        +=     [recoCopy]
+
         elif (self.__shortTrackLocation() == Hlt2ForwardTracksName) :
             trackRecoSequence        =     [self.__hlt2ForwardTracking()]
         elif (self.__shortTrackLocation() == Hlt2DownstreamTracksName ) :
             trackRecoSequence         =    [self.__hlt2DownstreamTracking()]
-        # Do the clone killing if required 
-        if self.getProp("DoCloneKilling") : 
-            trackRecoSequence        +=      [cloneKiller]
-
+  
         # Build the bindMembers        
         bm_name         = self.__trackingAlgosAndToolsPrefix()+"TrackingSeq"
         bm_members      = trackRecoSequence
@@ -1458,6 +1479,12 @@ class Hlt2Tracking(LHCbConfigurableUser):
             bm_output = '/Event/'+caloName+'LowElectron/ProtoP/Charged'
             chargedName = self.__pidAlgosAndToolsPrefix()+bm_output.replace("/","")+'ChargedProtoPAlg'
             charged     = ChargedProtoParticleMaker(chargedName)
+            charged.addTool(TrackSelector,name="TrackSelector")
+            ts=charged.TrackSelector
+            cuts=self.getProp("TrackCuts")
+            ts.setProp("MinChi2Cut",cuts['Chi2Cut'][0])
+            ts.setProp("MaxChi2Cut",cuts['Chi2Cut'][1])
+           
             charged.Inputs = [tracks.outputSelection()]
             charged.Output = bm_output
             bm_members += [charged]
