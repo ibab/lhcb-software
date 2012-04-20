@@ -264,15 +264,25 @@ StatusCode MuonPIDChecker::execute() {
   }
 
   // get  MuonPID objects 
-  LHCb::MuonPIDs* pMuids=get<LHCb::MuonPIDs>(m_MuonPIDsPath);
-  if (!pMuids){
-    Warning("execute:: Failed to get MuonPID container", StatusCode::SUCCESS).ignore();
+  LHCb::MuonPIDs* pMuids=0;
+  if ( exist<LHCb::MuonPIDs>(m_MuonPIDsPath)){
+    pMuids=get<LHCb::MuonPIDs>(m_MuonPIDsPath);
+    if (!pMuids){
+      Warning("execute:: Failed to get MuonPID from container", StatusCode::SUCCESS).ignore();
+    }
+  } else {
+    Warning("execute:: Failed. MuonPID container doesn't exist", StatusCode::SUCCESS).ignore();
   }
 
   // Get muon tracks to loop over
-  LHCb::Tracks* muTracks = get<LHCb::Tracks>(m_MuonTracksPath);
-  if (!muTracks){
-    Warning("execute:: Failed to get MuonTrack container", StatusCode::SUCCESS).ignore();
+  LHCb::Tracks* muTracks = 0;
+  if ( exist<LHCb::Tracks>(m_MuonTracksPath)){
+    muTracks = get<LHCb::Tracks>(m_MuonTracksPath);
+    if (!muTracks){
+      Warning("execute:: Failed to get MuonTrack from container", StatusCode::SUCCESS).ignore();
+    }
+  } else {
+    Warning("execute:: Failed. MuonTrack container doesn't exist", StatusCode::SUCCESS).ignore();
   }
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "execute:: Start loop over tracks" << endmsg;
@@ -304,10 +314,10 @@ StatusCode MuonPIDChecker::execute() {
         continue;
       }
 
-      getMuonPIDInfo(pTrack, pMuids);
+      if(pMuids) getMuonPIDInfo(pTrack, pMuids);
       if ( msgLevel(MSG::DEBUG) ) debug() << "execute:: MuonPID info retrieved for track "<< m_nTr  << endmsg;
 
-      getMuonTrackInfo(pTrack, muTracks);
+      if(muTracks) getMuonTrackInfo(pTrack, muTracks);
       if ( msgLevel(MSG::DEBUG) ) debug() << "execute:: MuonTrack info retrieved for track "<< m_nTr << endmsg;
 
       if (m_TrIsPreSel>0) {

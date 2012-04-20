@@ -2,6 +2,9 @@
 ! Responsible : E. Polycarpo, H. Lopes    
 !----------------------------------------------------------------------------
 
+! 2012-04-20 - Helder Lopes
+ - Added protection when retrieving MuonPID and Muon track containers
+
 !====================== MuonPIDChecker v5r2 2010-06-21 ======================
 ! 2010-06-19 - Erica Polycarpo
  - use strings instead of char for titles 
