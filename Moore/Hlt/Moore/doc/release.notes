@@ -3,6 +3,7 @@ Package Coordinator : Eric van Herwijnen
 Purpose     : LHCb HLT application
 
 
+!========================= Moore v13r4p1 2012-04-20 =========================
 !========================= Moore v13r4 2012-04-17 =========================
 ! 2012-04-17 - Eric van Herwijnen
  - Change CreateRunMooreOnline_EFF.py: add library for checkpoint execution and ulimit -m to limit memory consumption
