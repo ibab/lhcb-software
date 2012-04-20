@@ -6,6 +6,8 @@ Purpose: LHCb reconstruction program
 - Changes to references to reflect changes since v42r2p2
   . Use the new EnableCheck functionality of the Packers for the packing tests,
     instead of separate Pack, Unpack, Compare algorithms (GaudiConf, EventPacker)
+  . Switch to new TrackBestTrackCreator clone killer
+    (TrackSys, TrackTools, TrackUtils)
 
 </PRE><H1><A NAME=v42r2p2>2012-04-13 Brunel v42r2p2</A></H1><PRE>
 This version uses projects LCG 62b, Gaudi v23r2, LHCb v34r2, Lbcom v12r2,
