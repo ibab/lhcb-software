@@ -259,17 +259,18 @@ def RecoTracking(exclude=[]):
             copyVelo.inputLocation = "Rec/Track/PreparedVelo";
             GaudiSequencer("TrackVeloFitSeq").Members += [ copyVelo ]
    else:
-      from Configurables import (TrackBestTrackCreator, TrackStateInitAlg)
-      trackfitseq = GaudiSequencer("TrackFitSeq")
+      # complete the list of track lists
       if "Velo" in trackAlgs or "FastVelo" in trackAlgs :
          tracklists += ["Rec/Track/Velo"]
-      #for tracklist in tracklists:
-      #   trackfitseq.Members.append( TrackStateInitAlg(tracklist.replace("Rec/Track/","InitFit"),
-      #                                                 TrackLocation = tracklist ) )
-      # create the best track creator and configure its fitter
+      # create the best track creator
+      from Configurables import TrackBestTrackCreator
       bestTrackCreator = TrackBestTrackCreator( TracksInContainers = tracklists )
+      # configure its fitter and stateinittool
       ConfiguredMasterFitter( bestTrackCreator.Fitter )
-      trackfitseq.Members.append( bestTrackCreator )
+      if "FastVelo" in trackAlgs :
+         bestTrackCreator.StateInitTool.VeloFitterName = "FastVeloFitLHCbIDs"
+      # add to the sequence
+      GaudiSequencer("TrackFitSeq").Members.append( bestTrackCreator )
       
    ## Extra track information sequence
    extraInfos = TrackSys().getProp("TrackExtraInfoAlgorithms")

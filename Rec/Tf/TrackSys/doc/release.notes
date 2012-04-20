@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2012-04-20 - Wouter Hulsbergen
+ - switch BestTrackCreator to the right FastVelo fitting tool
+
 ! 2012-04-20 - Marco Cattaneo
  - Clean up imports in RecoTracking.py
 
