@@ -189,6 +189,9 @@ class Physics_May2012( object ):
 
                        }
 
+        from Express_Hlt2_draft2012 import Express_Hlt2_draft2012
+        __update_conf__(thresholds, Express_Hlt2_draft2012().Thresholds() )
+
         from Muons_April2012 import Muons_April2012
         __update_conf__(thresholds,  Muons_April2012().Thresholds() )
 
