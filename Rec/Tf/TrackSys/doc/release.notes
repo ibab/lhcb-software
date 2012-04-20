@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2012-04-20 - Marco Cattaneo
+ - Clean up imports in RecoTracking.py
+
 ! 2012-04-18 - Wouter Hulsbergen
  - switch to new clone killer ('TrackBestTrackCreator').
    old sequence can be recovered with TrackSys().OldCloneKiller = True.

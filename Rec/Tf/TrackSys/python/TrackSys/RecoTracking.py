@@ -4,25 +4,6 @@ import GaudiKernel.ProcessJobOptions
 from TrackSys.Configuration import *
 from GaudiKernel.SystemOfUnits import mm
 
-from Configurables import ( ProcessPhase, MagneticFieldSvc,
-                            DecodeVeloRawBuffer,
-                            Tf__PatVeloRTracking, Tf__PatVeloSpaceTool,
-                            Tf__PatVeloSpaceTracking, Tf__PatVeloGeneralTracking,
-                            Tf__PatVeloTrackTool, Tf__PatVeloGeneric,
-                            FastVeloTracking,
-                            RawBankToSTClusterAlg, RawBankToSTLiteClusterAlg,
-                            PatForward,
-                            TrackEventFitter,
-                            Tf__Tsa__Seed, Tf__Tsa__SeedTrackCnv,
-                            PatSeeding,
-                            TrackMatchVeloSeed, PatDownstream, PatVeloTT,
-                            TrackStateInitAlg, TrackStateInitTool,
-                            FilterMatchTracks, FilterDownstreamTracks, FilterSeedTracks,
-                            TrackEventCloneKiller, TrackPrepareVelo,
-                            TrackAddLikelihood, TrackLikelihood, TrackAddNNGhostId, Tf__OTHitCreator,
-                            TrackBuildCloneTable, TrackCloneCleaner, AlignMuonRec,
-                            TrackEraseExtraInfo, PatMatch
-                           )
 
 def RecoTracking(exclude=[]):
    '''What used to be in the options file, moved here'''
@@ -37,6 +18,7 @@ def RecoTracking(exclude=[]):
    trackAlgs = TrackSys().getProp("TrackPatRecAlgorithms")
 
    if "Velo" or "FastVelo" in trackAlgs :
+      from Configurables import DecodeVeloRawBuffer
       GaudiSequencer("RecoDecodingSeq").Members += [ DecodeVeloRawBuffer("DecodeVeloClusters")]
 
       veloClusters = DecodeVeloRawBuffer("DecodeVeloClusters")
@@ -46,8 +28,9 @@ def RecoTracking(exclude=[]):
       if( "Velo" in globalCuts ) :
           veloClusters.MaxVeloClusters =  globalCuts["Velo"]
       
+   from Configurables import RawBankToSTClusterAlg, RawBankToSTLiteClusterAlg
    GaudiSequencer("RecoDecodingSeq").Members += [ RawBankToSTClusterAlg("CreateTTClusters"),
-                                                   RawBankToSTLiteClusterAlg("CreateTTLiteClusters")]
+                                                  RawBankToSTLiteClusterAlg("CreateTTLiteClusters") ]
    
    createITClusters = RawBankToSTClusterAlg("CreateITClusters")
    createITLiteClusters = RawBankToSTLiteClusterAlg("CreateITLiteClusters")
@@ -67,16 +50,20 @@ def RecoTracking(exclude=[]):
    
    ## Velo tracking
    if "FastVelo" in trackAlgs :
+      from Configurables import FastVeloTracking
       GaudiSequencer("RecoVELOSeq").Members += [ FastVeloTracking() ]
       if TrackSys().timing() :
          FastVeloTracking().TimingMeasurement = True; 
 
    if "Velo" in trackAlgs :
+      from Configurables import Tf__PatVeloGeneralTracking
       if TrackSys().veloOpen():
          if TrackSys().beamGas(): 
+            from Configurables import Tf__PatVeloGeneric
             GaudiSequencer("RecoVELOSeq").Members += [ Tf__PatVeloGeneric("PatVeloGeneric"),
                                                        Tf__PatVeloGeneralTracking("PatVeloGeneralTracking")]
          else:
+            from Configurables import Tf__PatVeloTrackTool
             GaudiSequencer("RecoVELOSeq").Members += [ Tf__PatVeloGeneralTracking("PatVeloGeneralTracking")]
             Tf__PatVeloGeneralTracking("PatVeloGeneralTracking").PointErrorMin = 2*mm;
             Tf__PatVeloGeneralTracking("PatVeloGeneralTracking").addTool(Tf__PatVeloTrackTool("PatVeloTrackTool"))
@@ -84,6 +71,7 @@ def RecoTracking(exclude=[]):
             if TrackSys().timing() :
                Tf__PatVeloGeneralTracking("PatVeloGeneralTracking").TimingMeasurement = True;
       else:
+         from Configurables import ( Tf__PatVeloRTracking, Tf__PatVeloSpaceTool, Tf__PatVeloSpaceTracking )
          GaudiSequencer("RecoVELOSeq").Members += [ Tf__PatVeloRTracking("PatVeloRTracking"),
                                                     Tf__PatVeloSpaceTracking("PatVeloSpaceTracking"),
                                                     Tf__PatVeloGeneralTracking("PatVeloGeneralTracking")
@@ -114,9 +102,11 @@ def RecoTracking(exclude=[]):
       TrackInterpolator().addTool( TrackMasterExtrapolator( MaterialLocator = 'SimplifiedMaterialLocator' ), name='Extrapolator')
       
    ## Tracking sequence
+   from Configurables import ProcessPhase
    track = ProcessPhase("Track");
    GaudiSequencer("RecoTrSeq").Members += [ track ]
-   
+
+   from Configurables import MagneticFieldSvc
    if TrackSys().fieldOff() : MagneticFieldSvc().ForcedSignedCurrentScaling = 0.
    
    if "noDrifttimes" in TrackSys().getProp("ExpertTracking"):
@@ -140,6 +130,7 @@ def RecoTracking(exclude=[]):
    ## Forward pattern
    if "Forward" in trackAlgs :
       track.DetectorList += [ "ForwardPat" ]
+      from Configurables import PatForward
       GaudiSequencer("TrackForwardPatSeq").Members +=  [ PatForward("PatForward") ]
       from PatAlgorithms import PatAlgConf
       PatAlgConf.ForwardConf().configureAlg()
@@ -150,8 +141,10 @@ def RecoTracking(exclude=[]):
    ## Seed pattern
    if "TsaSeed" in trackAlgs and "PatSeed" in trackAlgs :
       raise RuntimeError("Cannot run both Tsa and Pat Seeding at once")
+
    if "TsaSeed" in trackAlgs :
       track.DetectorList += [ "SeedPat" ]
+      from Configurables import Tf__Tsa__Seed, Tf__Tsa__SeedTrackCnv
       GaudiSequencer("TrackSeedPatSeq").Members += [Tf__Tsa__Seed("TsaSeed"),
                                                     Tf__Tsa__SeedTrackCnv( "TsaSeedTrackCnv" )]
       from TsaAlgorithms import TsaAlgConf
@@ -161,6 +154,7 @@ def RecoTracking(exclude=[]):
       
    if "PatSeed" in trackAlgs :
       track.DetectorList += [ "SeedPat" ]
+      from Configurables import PatSeeding
       GaudiSequencer("TrackSeedPatSeq").Members += [PatSeeding("PatSeeding")]
       from PatAlgorithms import PatAlgConf
       PatAlgConf.SeedingConf().configureAlg()
@@ -179,6 +173,7 @@ def RecoTracking(exclude=[]):
          # Fit now
          track.DetectorList += [ "SeedFit" ]
          ## Seed fit initialization
+         from Configurables import TrackStateInitAlg, TrackStateInitTool
          GaudiSequencer("TrackSeedFitSeq").Members += [TrackStateInitAlg("InitSeedFit")]
          TrackStateInitAlg("InitSeedFit").TrackLocation = "Rec/Track/Seed"
          if "FastVelo" in trackAlgs :
@@ -192,6 +187,7 @@ def RecoTracking(exclude=[]):
       raise RuntimeError("Cannot run both TrackMatching and PatMatch at once")
    if "Match" in trackAlgs :
       track.DetectorList += [ "MatchPat" ]
+      from Configurables import TrackMatchVeloSeed
       GaudiSequencer("TrackMatchPatSeq").Members += [ TrackMatchVeloSeed("TrackMatch") ]
       from TrackMatching import TrackMatchConf
       TrackMatchConf.MatchingConf().configureAlg()      
@@ -201,6 +197,7 @@ def RecoTracking(exclude=[]):
 
    if "PatMatch" in trackAlgs :
       track.DetectorList += [ "MatchPat" ]
+      from Configurables import PatMatch
       GaudiSequencer("TrackMatchPatSeq").Members += [ PatMatch("PatMatch") ]
    if "Match" in trackAlgs or "PatMatch" in trackAlgs :
       tracklists  += ["Rec/Track/Match"]
@@ -208,6 +205,7 @@ def RecoTracking(exclude=[]):
    ## Downstream
    if "Downstream" in trackAlgs :
       track.DetectorList += [ "DownstreamPat" ]
+      from Configurables import PatDownstream
       GaudiSequencer("TrackDownstreamPatSeq").Members += [ PatDownstream() ];
       tracklists += ["Rec/Track/Downstream"]
       from PatAlgorithms import PatAlgConf
@@ -219,6 +217,7 @@ def RecoTracking(exclude=[]):
    ## Velo-TT pattern
    if "VeloTT" in trackAlgs :
       track.DetectorList += ["VeloTTPat"]
+      from Configurables import PatVeloTT
       GaudiSequencer("TrackVeloTTPatSeq").Members += [ PatVeloTT("PatVeloTT")] 
       from PatVeloTT import PatVeloConf
       PatVeloConf.PatVeloTTConf().configureAlg()      
@@ -230,11 +229,11 @@ def RecoTracking(exclude=[]):
    ### Clean clone and fit
    track.DetectorList += ["Fit"]
    if TrackSys().getProp("OldCloneKiller"):
+      from Configurables import TrackEventCloneKiller, TrackStateInitAlg, TrackContainerCopy
       cloneKiller = TrackEventCloneKiller()
       cloneKiller.TracksInContainers = tracklists
       cloneKiller.TracksOutContainer = "Rec/Track/AllBest"
       GaudiSequencer("TrackFitSeq").Members += [ cloneKiller ]
-      from Configurables import TrackStateInitAlg
       stateInitAlg = TrackStateInitAlg("InitBestFit")
       stateInitAlg.TrackLocation = "Rec/Track/AllBest"
       if "FastVelo" in trackAlgs :
@@ -242,7 +241,6 @@ def RecoTracking(exclude=[]):
       GaudiSequencer("TrackFitSeq").Members += [stateInitAlg]
 
       GaudiSequencer("TrackFitSeq").Members += [ConfiguredFit("FitBest","Rec/Track/AllBest")]      
-      from Configurables import TrackContainerCopy
       copyBest = TrackContainerCopy( "CopyBest" )
       copyBest.inputLocation = "Rec/Track/AllBest";
       GaudiSequencer("TrackFitSeq").Members += [ copyBest ]
@@ -251,6 +249,7 @@ def RecoTracking(exclude=[]):
       if "Velo" in trackAlgs or "FastVelo" in trackAlgs :
          ## Prepare the velo tracks for the fit
          track.DetectorList += [ "VeloFit"]
+         from Configurables import TrackPrepareVelo
          GaudiSequencer("TrackVeloFitSeq").Members += [ TrackPrepareVelo()]
          ## Fit the velo tracks
          GaudiSequencer("TrackVeloFitSeq").Members += [ ConfiguredFit("FitVelo","Rec/Track/PreparedVelo") ]
@@ -280,6 +279,7 @@ def RecoTracking(exclude=[]):
       
       ## Clone finding and flagging
       if "CloneFlagging" in extraInfos :
+         from Configurables import TrackBuildCloneTable, TrackCloneCleaner
          trackClones = GaudiSequencer("TrackClonesSeq")
          GaudiSequencer("TrackAddExtraInfoSeq").Members += [ trackClones ]
          trackClones.MeasureTime = True
@@ -297,6 +297,7 @@ def RecoTracking(exclude=[]):
       
       ## Add the likelihood information
       if "TrackLikelihood" in extraInfos and ('TrackLikelihood' not in exclude):
+         from Configurables import TrackAddLikelihood, TrackLikelihood 
          trackAddLikelihood = TrackAddLikelihood()
          trackAddLikelihood.addTool( TrackLikelihood, name = "TrackMatching_likTool" )
          trackAddLikelihood.TrackMatching_likTool.otEff = 0.9
@@ -304,15 +305,17 @@ def RecoTracking(exclude=[]):
          
       ## ghost probability using a Neural Net
       if "GhostProbability" in extraInfos :
+         from Configurables import TrackAddNNGhostId
          GaudiSequencer("TrackAddExtraInfoSeq").Members += [ TrackAddNNGhostId() ]
          
    track.DetectorList += ["EraseExtraInformation"]
-   
+   from Configurables import TrackEraseExtraInfo
    GaudiSequencer("TrackEraseExtraInformationSeq").Members += [ TrackEraseExtraInfo() ]
    
    
    ## Muon alignment tracks
    if "MuonAlign" in trackAlgs :
+      from Configurables import TrackEventFitter, AlignMuonRec
       track.DetectorList += ["MuonRec"]
       GaudiSequencer("TrackMuonRecSeq").Members += [ AlignMuonRec("AlignMuonRec"),
                                                      TrackEventFitter("MuonTrackFitter") ]
