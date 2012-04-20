@@ -4,6 +4,7 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================= HltSettings v5r28 2012-04-20 =========================
 - 2012-04-18 - Johannes Albrecht
  - add Physics_May2012, contains tuned versions of 1Track, Hlt1DiMuons, Topo 
 
