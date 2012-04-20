@@ -42,11 +42,13 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                                , 'Hlt2ExpressD02KPi'      : 'RATE(5)'
                                , 'Hlt2ExpressHLT1Physics' : 'RATE(1)'
                                  }
+                 , 'TrackChi2'               :    4
                  , 'ExJPsiMassWindow'        :   80   # MeV
                  , 'ExJPsiTrkChi2'           :    5
                  , 'ExJPsiVChi2'             :   10
                  , 'ExJPsiPt'                : 1000   # MeV
                  , 'ExJPsiMuPt'              :  500   # MeV
+                 , 'ExJPsiMuIPChi2'          :   25
                  , 'ExJPsiTPMassWindow'      :  200   # MeV
                  , 'ExJPsiTPVChi2'           :    5
                  , 'ExJPsiTDVChi2'           :  225
@@ -167,6 +169,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                              " & (PT>%(ExJPsiPt)s*MeV)"\
                              " & (VFASPF(VCHI2PDOF)<%(ExJPsiVChi2)s)"\
                              " & (MINTREE('mu-'==ABSID,TRCHI2DOF)<%(ExJPsiTrkChi2)s)"\
+                             " & (MINTREE('mu-'==ABSID,(MIPCHI2DV(PRIMARY))<%(ExJPsiMuIPChi2)s)"\
                              " & (MINTREE('mu-'==ABSID,PT)>%(ExJPsiMuPt)s*MeV) " %  self.getProps() 
                              , Inputs  = [ TrackFittedDiMuon ]
                              , InputPrimaryVertices = "None"
@@ -320,7 +323,8 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
 			       " & (MIPCHI2DV(PRIMARY) > %(ExPhiMIPCHI2DV)s)"%  self.getProps()
                               , DaughtersCuts = {"K+":"(PT>%(ExPhiKPt)s*MeV)"\
                                                   " & (P>%(ExPhiKP)s*MeV)"\
-						  " & (MIPCHI2DV(PRIMARY) > %(ExPhiKMIPCHI2DV)s)"%  self.getProps()}
+						  " & (MIPCHI2DV(PRIMARY) > %(ExPhiKMIPCHI2DV)s)"\
+                                                 "(TRCHI2DOF<%(MuTrackTrChi2)s) "%  self.getProps()}
                              , MotherMonitor  =  Hlt2Monitor("M", "M(KK)",1020,self.getProp("ExPhiMassWin"))
                              )
 
