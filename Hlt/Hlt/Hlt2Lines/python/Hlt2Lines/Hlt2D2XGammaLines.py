@@ -18,29 +18,29 @@ class Hlt2D2XGammaLinesConf(HltLinesConfigurableUser) :
     @date 15-04-2012
     '''
 
-    __slots__ = { # Common cuts    
-                    'TrChi2'       : 5.       # dimensionless
-                   ,'TrPT'         : 300.      # MeV
-                   ,'photonPT'     : 2000.     # MeV
-                    # D2PhiGamma    
-                   ,'TrIPchi2Phi'  : 9.       # Dimensionless
-                   ,'PhiVCHI2'     : 25.       # dimensionless
-                   ,'PhiMassWinL'  : 105.       # MeV
-                   ,'PhiMassWinT'  : 100.       # MeV
-                   ,'DPVIPchi2'   : 20.      # Dimensionless
-                   ,'DMassWin'    : 100.     # MeV
-                   ,'DDirAngle'   : 0.063  #0.998    # Dimensionless
-                   ,'D_PT'         : 500     # MeV
+    __slots__ = { 'TrChi2'       : 5.       # dimensionless
+                  ,'TrPT'         : 300.      # MeV
+                  ,'TrIPchi2Phi'  : 16.       # Dimensionless
+                  ## photon
+                  ,'photonPT'     : 1500.     # MeV
+                  # Phi cuts
+                  ,'PhiVCHI2'     : 16.       # dimensionless
+                  ,'PhiMassWinL'  : 55.       # MeV
+                  ,'PhiMassWinT'  : 50.       # MeV
+                  ## D0 cuts
+                  ,'DMassWin'    : 300.     # MeV
+                  ,'DDirAngle'   : 0.063  #0.998    # Dimensionless
+                  ,'D_PT'         : 1000     # MeV
                   # Photons
-                   ,'UseL0Photons' : False
+                  ,'UseL0Photons' : False
                   # HLT filter
                    ,'HLT1FILTER'   : "HLT_PASS_RE('Hlt1(?!ODIN)(?!L0)(?!Lumi)(?!Tell1)(?!MB)(?!Velo)(?!BeamGas)(?!Incident).*Decision')" 
-                   ,'L0FILTER'     : ""#"|".join( [ "L0_CHANNEL('%s')" % channel for channel in ['Photon','Electron'] ] ) 
+                  ,'L0FILTER'     : ""#"|".join( [ "L0_CHANNEL('%s')" % channel for channel in ['Photon','Electron'] ] ) 
                   # Pre- and postscale
                    ,'Prescale'     : { 'Hlt2D2PhiGamma$'   : 1.0
-                                      ,'Hlt2D2PhiGamma.+' : 0.1       # prescale by a factor of 10
+                                       ,'Hlt2D2PhiGamma.+' : 0.1       # prescale by a factor of 10
                                        }
-                                   
+                  
                    ,'Postscale'    : {'Hlt2D2PhiGamma$'   : 1.0
                                       ,'Hlt2D2PhiGamma.+' : 1.0
                                       }
@@ -105,9 +105,9 @@ class Hlt2D2XGammaLinesConf(HltLinesConfigurableUser) :
                                       , DecayDescriptors = ["D0 -> phi(1020) gamma"]
                                       , DaughtersCuts = { "gamma": "(PT>%(photonPT)s*MeV)" % self.getProps() }
                                       , CombinationCut = "(ADAMASS('D0')<1.1*%(DMassWin)s*MeV)" % self.getProps()
-                                      , MotherCut = "((BPVDIRA > cos(%(DDirAngle)s)) & (BPVIPCHI2()< %(DPVIPchi2)s) & (ADMASS('D0')<%(DMassWin)s*MeV) & (PT > %(D_PT)s*MeV))" % self.getProps()
+                                      , MotherCut = "((ADMASS('D0')<%(DMassWin)s*MeV) & (PT > %(D_PT)s*MeV))" % self.getProps() #(BPVDIRA > cos(%(DDirAngle)s)) & (BPVIPCHI2()< %(DPVIPchi2)s)
                                       , Preambulo = ["from math import cos"]
-                                      , Inputs  = [ Photons,  Hlt2Phi4D2PhiGamma ] #  
+                                      , Inputs  = [ Hlt2Phi4D2PhiGamma, Photons] #  
                                       )
         
         ############################################################################
