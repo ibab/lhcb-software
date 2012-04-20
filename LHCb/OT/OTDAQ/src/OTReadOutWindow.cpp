@@ -38,6 +38,9 @@ OTReadOutWindow::~OTReadOutWindow()
 
 StatusCode OTReadOutWindow::initialize()
 {
+  StatusCode sc = GaudiTool::initialize();
+  if(sc.isFailure()) return sc;
+
   if(existDet<DataObject>(detSvc(), "Conditions/Calibration/OT/ReadOutGates"))
   {
     try
