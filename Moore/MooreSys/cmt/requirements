@@ -10,7 +10,7 @@ use  Moore               v13r4p1     Hlt
 use  IndependenceTests   v1r2p1      Hlt
 
 # Bug fixes on top of Hlt v14r4
-use  Hlt2Lines           v8r18b      Hlt
+use  Hlt2Lines           v8r18p1      Hlt
 use  HltSettings         v5r28       Hlt
 
 # Bug fixes on top of LHCb v34r2 release stack
