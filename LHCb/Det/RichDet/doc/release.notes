@@ -4,6 +4,10 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2012-04-21 - Chris Jones
+ - Add methods to DeRichMultiSolidRadiator to allow explicit access to the
+   Aerogel full and sub tiles. Useful for the Aerogel calibration.
+
 ! 2012-04-11 - Chris Jones
  - Fix a bug where when running in the HLT, the Rich::TabulatedProperty1D
    object for the HLT refractive index interpolator was not deleted.

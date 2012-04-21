@@ -78,6 +78,7 @@ StatusCode DeRichMultiSolidRadiator::geometryUpdate()
   m_toTopLevel.clear();
   m_toLowLevel.clear();
   m_radiators.clear();
+  m_fullTiles.clear();
 
   // multi solid specific initialisation
   const ILVolume* topLV = geometry()->lvolume();
@@ -176,7 +177,7 @@ DeRichMultiSolidRadiator::addSubTileVolumes ( const ILVolume* lv,
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Adding sub tile volumes" << endmsg;
 
-  std::string aAgelLocation = DeRichLocations::Aerogel;
+  const std::string& aAgelLocation = DeRichLocations::Aerogel;
   std::string aAgelSubTileMasterLocation = aAgelLocation.substr(0,aAgelLocation.size()-7);
 
   for ( ILVolume::PVolumes::const_iterator pviter = lv->pvBegin(); 
@@ -212,9 +213,30 @@ DeRichMultiSolidRadiator::addSubTileVolumes ( const ILVolume* lv,
 
       } // end loop over sub tiles
 
-    }// end if , checking for Agel full tile
+      // Save list of full tiles
+      // get the volume number
+      const std::string::size_type numPos = (*pviter)->name().find(':');
+      if ( numPos == std::string::npos )
+      {
+        error() << "Cannot find aerogel tile number " << (*pviter)->name() << endmsg;
+        return StatusCode::FAILURE;
+      }
+      const std::string tileNumStr = (*pviter)->name().substr(numPos+1);
+      const std::string radLoc = DeRichLocations::Aerogel+"T"+tileNumStr+":"+tileNumStr;
+      SmartDataPtr<DeRichRadiator> deFullRad( dataSvc(), radLoc );
+      if ( !deFullRad )
+      {
+        error() << "Cannot find DeRichRadiator " << radLoc << " "
+                << (*pviter)->name() << endmsg;
+        return StatusCode::FAILURE;
+      }
+      if ( msgLevel(MSG::DEBUG) )
+        debug() << "Loading " << radLoc << " " << tileNumStr << endmsg;
+      m_fullTiles.push_back( deFullRad );
 
-  }// end loop over container daughters
+    } // end if , checking for Agel full tile
+
+  } // end loop over container daughters
 
   return StatusCode::SUCCESS;
 }
@@ -259,13 +281,14 @@ DeRichMultiSolidRadiator::addFullTileVolumes ( const ILVolume* lv,
       SmartDataPtr<DeRichRadiator> deRad( dataSvc(), radLoc );
       if ( !deRad )
       {
-        error() << "Cannot find DeRichRadiator " << radLoc<<"  "
+        error() << "Cannot find DeRichRadiator " << radLoc << " "
                 << (*pviter)->name() << endmsg;
         return StatusCode::FAILURE;
       }
       if ( msgLevel(MSG::DEBUG) )
         debug() << "Loading " << radLoc << " " << tileNumStr << endmsg;
       m_radiators.push_back( deRad );
+      m_fullTiles.push_back( deRad );
 
       // Declare UMS dependencies
       // CRJ Probably not needed ...
@@ -464,11 +487,11 @@ DeRichMultiSolidRadiator::refractiveIndex( const double energy,
 {
   double refIn(0);
   // Loop over all tiles and form an average
-  for ( DeRichRadiator::Vector::const_iterator iRad = m_radiators.begin();
-        iRad != m_radiators.end(); ++iRad )
+  for ( DeRichRadiator::Vector::const_iterator iRad = radiators().begin();
+        iRad != radiators().end(); ++iRad )
   {
     // Should this be a weighted average of some form ?
     refIn += (*((*iRad)->refIndex(hlt)))[energy*Gaudi::Units::eV];
   }
-  return ( m_radiators.empty() ? refIn : refIn/m_radiators.size() );
+  return ( radiators().empty() ? refIn : refIn/radiators().size() );
 }

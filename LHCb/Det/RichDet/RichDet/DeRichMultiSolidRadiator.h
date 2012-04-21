@@ -92,8 +92,16 @@ public:
 
 public:
 
-  /// Access to the list of single solid radiators
+  /** Access to the list of single solid radiators. 
+   *  Will be either sub-tiles, or tiles, depending on which are active in the DB
+   */
   inline const DeRichRadiator::Vector& radiators() const { return m_radiators; }
+
+  /// Explicit Access to sub-tiles (if active)
+  inline const DeRichRadiator::Vector& subTileRadiators() const { return radiators(); }
+
+  /// Explicit Access to full tiles
+  inline const DeRichRadiator::Vector& fullTileRadiators() const { return m_fullTiles; }
 
 private:
 
@@ -109,8 +117,6 @@ private:
   StatusCode addSubTileVolumes(const ILVolume* lv,
                         const std::string& volName,
                         const Gaudi::Transform3D& toUpperLevel);
-
-
 
   /// UMS update on geometry changes
   StatusCode geometryUpdate();
@@ -129,8 +135,11 @@ private:
   Transforms m_toTopLevel; ///< Tranforms to top level of the detector element
   Transforms m_toLowLevel; ///< Tranforms to low (solid) level of the detector element
 
-  /// The DeRichRadiators that make up this radiator
+  /// The DeRichRadiators (sub-tiles) that make up this radiator
   DeRichRadiator::Vector m_radiators;
+
+  /// Explicit list of full tiles
+  DeRichRadiator::Vector m_fullTiles;
 
   /// First update flag
   bool m_firstUpdate;
