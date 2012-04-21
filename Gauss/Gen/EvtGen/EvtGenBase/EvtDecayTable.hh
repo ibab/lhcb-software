@@ -40,6 +40,10 @@ public:
   EvtDecayBase* getDecay(int ipar, int imode);
 
   void readDecayFile(const std::string dec_name, bool verbose=true);
+  void readXMLDecayFile(const std::string dec_name, bool verbose=true);
+
+  bool stringToBoolean(std::string valStr);
+  void checkParticle(std::string particle);
 
   int findChannel(EvtId parent,std::string model,int ndaug, 
 		  EvtId *daugs,

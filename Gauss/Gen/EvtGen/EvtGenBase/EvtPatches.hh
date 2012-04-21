@@ -5,4 +5,4 @@ typedef long            clock_t; /* relative time in a specified resolution */
 #endif  /* ifndef _CLOCK_T */
 #endif
 
-#define _unused(x) (void) x 
+#define _unused(x) ((void)x)

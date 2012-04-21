@@ -73,7 +73,7 @@ EvtGen::EvtGen(const char* const decayName,
 	       EvtRandomEngine* randomEngine,
 	       EvtAbsRadCorr* isrEngine,
 	       const std::list<EvtDecayBase*>* extraModels,
-	       int mixingType){
+	       int mixingType, bool useXml){
 
 
   report(INFO,"EvtGen") << "Initializing EvtGen"<<endl;
@@ -97,7 +97,11 @@ EvtGen::EvtGen(const char* const decayName,
   
   _pdl.readPDT(pdtTableName);
 
-  EvtDecayTable::getInstance()->readDecayFile(decayName,false);
+  if(useXml) {
+    EvtDecayTable::getInstance()->readXMLDecayFile(decayName,false);
+  } else {
+    EvtDecayTable::getInstance()->readDecayFile(decayName,false);
+  }
 
   _mixingType = mixingType;
   report(INFO,"EvtGen") << "Mixing type integer set to "<<_mixingType<<endl;
@@ -153,7 +157,7 @@ EvtGen::EvtGen(const char* const decayName,
 }
 
 
-void EvtGen::readUDecay(const char* const uDecayName){
+void EvtGen::readUDecay(const char* const uDecayName, bool useXml){
 
   ifstream indec;
 
@@ -163,7 +167,11 @@ void EvtGen::readUDecay(const char* const uDecayName){
   else{  
     indec.open(uDecayName);
     if (indec) {
-      EvtDecayTable::getInstance()->readDecayFile(uDecayName,true);
+      if(useXml) {
+        EvtDecayTable::getInstance()->readXMLDecayFile(uDecayName,true);
+      } else {
+        EvtDecayTable::getInstance()->readDecayFile(uDecayName,true);
+      }
     }    
     else{
       

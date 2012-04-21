@@ -4,6 +4,13 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-04-21 - John Back
+ - Added code from Daniel Craik to allow the use of xml decay.dec files
+   and to use a more general Dalitz plot model interface, again using
+   xml syntax to specify resonances, dynamics terms and amplitude 
+   coefficients. This will eventually replace the EvtDDalitz model,
+   avoiding the need for hardcoded resonance setttings/parameters.
+
 ! 2012-04-02 - John Back
  - EvtDDalitz.cpp: Updated the maximum probability values in initProbMax().
 

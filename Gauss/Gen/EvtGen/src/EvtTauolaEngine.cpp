@@ -210,13 +210,13 @@ int EvtTauolaEngine::getModeInt(EvtDecayBase* decayModel) {
 
 bool EvtTauolaEngine::doDecay(EvtParticle* tauParticle) {
 
+  if (_initialised == false) {this->initialise();}
+
   if (tauParticle == 0) {return false;}
 
   // Check that we have a tau particle.
   EvtId partId = tauParticle->getId();
   if (abs(EvtPDL::getStdHep(partId)) != _tauPDG) {return false;}
-
-  if (_initialised == false) {this->initialise();}
 
   int nTauDaug = tauParticle->getNDaug();
 
@@ -323,7 +323,7 @@ void EvtTauolaEngine::decayTauEvent(EvtParticle* tauParticle) {
 
   // Run the Tauola algorithm
   tauolaEvent.decayTaus();
-  
+
   // Loop over all tau particles in the HepMC event and create their EvtParticle daughters.
   // Store all final "stable" descendent particles as the tau daughters, i.e.
   // let Tauola decay any resonances such as a_1 or rho.

@@ -26,6 +26,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sstream>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtRandom.hh"
 #include "EvtGenBase/EvtDecayTable.hh"
@@ -34,9 +35,12 @@
 #include "EvtGenBase/EvtDecayBase.hh"
 #include "EvtGenBase/EvtModel.hh"
 #include "EvtGenBase/EvtParser.hh"
+#include "EvtGenBase/EvtParserXml.hh"
 #include "EvtGenBase/EvtReport.hh"
 #include "EvtGenBase/EvtModelAlias.hh"
 #include "EvtGenBase/EvtRadCorr.hh"
+#include "EvtGenBase/EvtExtGeneratorCommandsTable.hh"
+
 using std::endl;
 using std::fstream;
 using std::ifstream;
@@ -756,6 +760,433 @@ void EvtDecayTable::readDecayFile(const std::string dec_name, bool verbose){
 			      << EvtPDL::getMinMass(temp) << " to " << minMass << endl;
       EvtPDL::reSetMassMin(temp,minMass);
     }
+  }
+}
+
+void EvtDecayTable::readXMLDecayFile(const std::string dec_name, bool verbose){
+  if ( _decaytable.size() < EvtPDL::entries() ) _decaytable.resize(EvtPDL::entries());
+  EvtModel &modelist=EvtModel::instance();
+  EvtExtGeneratorCommandsTable* extGenCommands = EvtExtGeneratorCommandsTable::getInstance();
+
+  EvtParserXml parser;
+  parser.open(dec_name);
+
+  EvtId ipar;
+  std::string decayParent = "";
+  double brfrSum = 0.;
+  std::vector<EvtModelAlias> modelAliasList;
+  bool endReached = false;
+
+  while(parser.readNextTag()) {
+      //TAGS FOUND UNDER DATA
+      if(parser.getParentTagTitle() == "data") {
+        if(parser.getTagTitle() == "photos") {
+          std::string usage = parser.readAttribute("usage");
+          if(usage == "always") {
+            EvtRadCorr::setAlwaysRadCorr();
+            if ( verbose )
+              report(INFO,"EvtGen")
+                << "As requested, PHOTOS will be turned on for all decays."<<endl;
+          } else if(usage == "never") {
+            EvtRadCorr::setNeverRadCorr();
+            if ( verbose )
+              report(INFO,"EvtGen")
+                << "As requested, PHOTOS will be turned off."<<endl;
+          } else {
+            EvtRadCorr::setNormalRadCorr();
+            if ( verbose )
+              report(INFO,"EvtGen")
+                << "As requested, PHOTOS will be turned on only when requested."<<endl;
+          }
+
+        } else if(parser.getTagTitle() == "alias") {
+          std::string alias = parser.readAttribute("name");
+          std::string particle = parser.readAttribute("particle");
+          checkParticle(particle);
+          EvtId id=EvtPDL::getId(particle);
+
+          EvtPDL::alias(id,alias);
+          if ( _decaytable.size() < EvtPDL::entries() ) _decaytable.resize(EvtPDL::entries());
+
+        } else if(parser.getTagTitle() == "modelAlias") {
+          std::vector<std::string> modelArgList;
+
+          std::string alias = parser.readAttribute("name");
+          std::string model = parser.readAttribute("model");
+          std::string paramStr = parser.readAttribute("params");
+          std::istringstream paramStream(paramStr);
+
+          std::string param;
+          while(std::getline(paramStream, param, ' ')) {
+            modelArgList.push_back(param);
+          }
+          EvtModelAlias newAlias(alias,model,modelArgList);
+          modelAliasList.push_back(newAlias);
+
+        } else if(parser.getTagTitle() == "chargeConj") {
+          std::string particle = parser.readAttribute("particle");
+          std::string conjugate = parser.readAttribute("conjugate");
+
+          EvtId a=EvtPDL::getId(particle);
+          EvtId abar=EvtPDL::getId(conjugate);
+
+          checkParticle(particle);
+          checkParticle(conjugate);
+
+          EvtPDL::aliasChgConj(a,abar);
+
+        } else if(parser.getTagTitle() == "conjDecay") {
+          std::string particle = parser.readAttribute("particle");
+
+          EvtId a=EvtPDL::getId(particle);
+          EvtId abar=EvtPDL::chargeConj(a);
+
+          checkParticle(particle);
+          checkParticle(abar.getName());
+
+          if (_decaytable[a.getAlias()].getNMode()!=0) {
+            if ( verbose )
+              report(DEBUG,"EvtGen") <<
+                "Redefined decay of "<<particle.c_str()<<" in ConjDecay"<<endl;
+
+            _decaytable[a.getAlias()].removeDecay();
+          }
+
+          //take contents of abar and conjugate and store in a
+          _decaytable[a.getAlias()].makeChargeConj(&_decaytable[abar.getAlias()]);
+          
+        } else if(parser.getTagTitle() == "define") {
+          std::string name = parser.readAttribute("name");
+          std::string value = parser.readAttribute("value");
+          EvtSymTable::define(name,value);
+
+        } else if(parser.getTagTitle() == "particle") {
+          std::string name = parser.readAttribute("name");
+          double mass = parser.readAttributeDouble("mass");
+          double width = parser.readAttributeDouble("width");
+          double minMass = parser.readAttributeDouble("massMin");
+          double maxMass = parser.readAttributeDouble("massMax");
+          std::string birthFactor = parser.readAttribute("includeBirthFactor");
+          std::string decayFactor = parser.readAttribute("includeDecayFactor");
+          std::string lineShape = parser.readAttribute("lineShape");
+          double blattWeisskopf = parser.readAttributeDouble("blattWeisskopfFactor");
+          bool fixLS = parser.readAttributeBool("fixLS");
+
+          EvtId thisPart = EvtPDL::getId(name);
+          checkParticle(name);
+
+          if(mass != -1) {
+            EvtPDL::reSetMass(thisPart, mass);
+            report(DEBUG,"EvtGen") <<"Refined mass for " << EvtPDL::name(thisPart).c_str() << " to be " << mass << endl;
+          }
+          if(width != -1) {
+            EvtPDL::reSetWidth(thisPart, width);
+            report(DEBUG,"EvtGen") <<"Refined width for " << EvtPDL::name(thisPart).c_str() << " to be " << width << endl;
+          }
+          if(minMass != -1) {
+            EvtPDL::reSetMassMin(thisPart,minMass);
+            report(DEBUG,"EvtGen") <<"Refined minimum mass for " << EvtPDL::name(thisPart).c_str() << " to be " << minMass << endl;
+          }
+          if(maxMass != -1) {
+            EvtPDL::reSetMassMax(thisPart,maxMass);
+            report(DEBUG,"EvtGen") <<"Refined maximum mass for " << EvtPDL::name(thisPart).c_str() << " to be " << maxMass << endl;
+          }
+          if(!birthFactor.empty()) {
+            EvtPDL::includeBirthFactor(thisPart,stringToBoolean(birthFactor));
+            if(verbose) {
+              if(stringToBoolean(birthFactor)) {
+                report(DEBUG,"EvtGen") <<"Include birth factor for " << EvtPDL::name(thisPart).c_str() <<endl;
+              } else {
+                report(DEBUG,"EvtGen") <<"No longer include birth factor for " << EvtPDL::name(thisPart).c_str() <<endl;
+              }
+            }
+          }
+          if(!decayFactor.empty()) {
+            EvtPDL::includeDecayFactor(thisPart,stringToBoolean(decayFactor));
+            if(verbose) {
+              if(stringToBoolean(decayFactor)) {
+                report(DEBUG,"EvtGen") <<"Include decay factor for " << EvtPDL::name(thisPart).c_str() <<endl;
+              } else {
+                report(DEBUG,"EvtGen") <<"No longer include decay factor for " << EvtPDL::name(thisPart).c_str() <<endl;
+              }
+            }
+          }
+          if(!lineShape.empty()) {
+            EvtPDL::changeLS(thisPart,lineShape);
+            if ( verbose )
+              report(DEBUG,"EvtGen") <<"Change lineshape to " << lineShape << " for " << EvtPDL::name(thisPart).c_str() <<endl;
+          }
+          if(blattWeisskopf != -1) {
+            EvtPDL::reSetBlatt(thisPart,blattWeisskopf);
+            if ( verbose )
+              report(DEBUG,"EvtGen") <<"Redefined Blatt-Weisskopf factor "
+                                     << EvtPDL::name(thisPart).c_str() << " to be " << blattWeisskopf << endl;
+          }
+          if(fixLS) {
+            EvtPDL::fixLSForSP8(thisPart);
+            if ( verbose )
+              report(DEBUG,"EvtGen") <<"Fixed lineshape for SP8 --from D.Lange,J.Smith " << EvtPDL::name(thisPart).c_str() <<endl;
+          }
+        } else if(parser.getTagTitle() == "lineShapePW") {
+          std::string parent = parser.readAttribute("parent");
+          std::string daug1 = parser.readAttribute("daug1");
+          std::string daug2 = parser.readAttribute("daug2");
+          int pw = parser.readAttributeInt("pw");
+
+          checkParticle(parent);
+          checkParticle(daug1);
+          checkParticle(daug2);
+
+          EvtId thisPart = EvtPDL::getId(parent);
+          EvtId thisD1 = EvtPDL::getId(daug1);
+          EvtId thisD2 = EvtPDL::getId(daug2);
+
+          EvtPDL::setPWForDecay(thisPart,pw,thisD1,thisD2);
+          EvtPDL::setPWForBirthL(thisD1,pw,thisPart,thisD2);
+          EvtPDL::setPWForBirthL(thisD2,pw,thisPart,thisD1);
+          if ( verbose )
+            report(DEBUG,"EvtGen") <<"Redefined Partial wave for " << parent.c_str() << " to "
+                                   << daug1.c_str() << " " << daug2.c_str() << " ("<<pw<<")"<<endl;
+
+        } else if(parser.getTagTitle() == "decay") { //start of a particle
+          brfrSum = 0.;
+          decayParent = parser.readAttribute("name");
+          checkParticle(decayParent);
+          ipar=EvtPDL::getId(decayParent);
+
+          if (_decaytable[ipar.getAlias()].getNMode()!=0) {
+            report(DEBUG,"EvtGen") <<"Redefined decay of "
+                                   <<decayParent.c_str()<<endl;
+            _decaytable[ipar.getAlias()].removeDecay();
+          }
+
+        } else if(parser.getTagTitle() == "copyDecay") {
+          std::string particle = parser.readAttribute("particle");
+          std::string copy = parser.readAttribute("copy");
+
+          EvtId newipar=EvtPDL::getId(particle);
+          EvtId oldipar=EvtPDL::getId(copy);
+
+          checkParticle(particle);
+          checkParticle(copy);
+
+          if (_decaytable[newipar.getAlias()].getNMode()!=0) {
+            report(DEBUG,"EvtGen") <<"Redefining decay of "
+                                   <<particle<<endl;
+            _decaytable[newipar.getAlias()].removeDecay();
+          }
+          _decaytable[newipar.getAlias()] = _decaytable[oldipar.getAlias()];
+
+        } else if(parser.getTagTitle() == "removeDecay") {
+          decayParent = parser.readAttribute("particle");
+          checkParticle(decayParent);
+          ipar=EvtPDL::getId(decayParent);
+
+          if (_decaytable[ipar.getAlias()].getNMode()==0) {
+            report(DEBUG,"EvtGen") << "No decays to delete for "
+                                   << decayParent.c_str() << endl;
+          } else {
+            report(DEBUG,"EvtGen") <<"Deleting selected decays of "
+                                   <<decayParent.c_str()<<endl;
+          }
+
+        } else if(parser.getTagTitle() == "pythiaParam") {
+          Command command;
+          command["GENERATOR"] = parser.readAttribute("generator");
+          command["MODULE"]    = parser.readAttribute("module");
+          command["PARAM"]     = parser.readAttribute("param");
+          command["VALUE"]     = parser.readAttribute("value");
+          command["VERSION"]   = "PYTHIA8";
+          extGenCommands->addCommand("PYTHIA", command);
+
+        } else if(parser.getTagTitle() == "pythia6Param") {
+          Command command;
+          command["GENERATOR"] = parser.readAttribute("generator");
+          command["MODULE"]    = parser.readAttribute("module");
+          command["PARAM"]     = parser.readAttribute("param");
+          command["VALUE"]     = parser.readAttribute("value");
+          command["VERSION"]   = "PYTHIA6";
+          extGenCommands->addCommand("PYTHIA", command);
+
+        } else if(parser.getTagTitle() == "/data") { //end of data
+          endReached = true;
+          parser.close();
+          break;
+        } else if(parser.getTagTitle() == "Title" || parser.getTagTitle() == "Details"
+               || parser.getTagTitle() == "Author" || parser.getTagTitle() == "Version"
+          //the above tags are expected to be in the XML decay file but are not used by EvtGen
+               || parser.getTagTitle() == "dalitzDecay" || parser.getTagTitle() == "copyDalitz") {
+          //the above tags are only used by EvtGenModels/EvtDalitzTable
+        } else {  report(INFO,"EvtGen") << "Unknown tag "<<parser.getTagTitle()
+                  <<" found in XML decay file near line "<<parser.getLineNumber()<<". Tag will be ignored."<<endl;
+        }
+      //TAGS FOUND UNDER DECAY
+      } else if(parser.getParentTagTitle() == "decay") {
+        if(parser.getTagTitle() == "channel") { //start of a channel
+          int nDaughters = 0;
+          EvtId daughter[MAX_DAUG];
+
+          EvtDecayBase* temp_fcn_new;
+          std::string temp_fcn_new_model;
+          std::vector<std::string> temp_fcn_new_args;
+
+          double brfr = parser.readAttributeDouble("br");
+          std::string daugStr = parser.readAttribute("daughters");
+          std::istringstream daugStream(daugStr);
+          std::string model = parser.readAttribute("model");
+          std::string paramStr = parser.readAttribute("params");
+          std::istringstream paramStream(paramStr);
+          bool decVerbose = parser.readAttributeBool("verbose");
+          bool decPhotos = parser.readAttributeBool("photos");
+          bool decSummary = parser.readAttributeBool("summary");
+
+          std::string daugh;
+          while(std::getline(daugStream, daugh, ' ')) {
+            checkParticle(daugh);
+            daughter[nDaughters++] = EvtPDL::getId(daugh);
+          }
+
+          int modelAlias = -1;
+          for(size_t iAlias=0;iAlias<modelAliasList.size();iAlias++){
+            if ( modelAliasList[iAlias].matchAlias(model) ) {
+              modelAlias=iAlias;
+              break;
+            }
+          }
+
+          if ( modelAlias==-1 ) {
+            if(!modelist.isModel(model)){
+              report(ERROR,"EvtGen") <<
+                "Expected to find a model name near line "<<parser.getLineNumber()<<","<<
+                "found:"<<model.c_str()<<endl;
+              report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
+              ::abort();
+            }
+          } else {
+            model=modelAliasList[modelAlias].getName();
+          }
+
+          temp_fcn_new_model = model;
+          temp_fcn_new = modelist.getFcn(model);
+
+          if(decPhotos) temp_fcn_new->setPHOTOS();
+          if(decVerbose) temp_fcn_new->setVerbose();
+          if(decSummary) temp_fcn_new->setSummary();
+
+          int ierr;
+          if(modelAlias == -1) {
+            std::string param;
+            while(std::getline(paramStream, param, ' ')) {
+              temp_fcn_new_args.push_back(EvtSymTable::get(param,ierr));
+              if (ierr) {
+                report(ERROR,"EvtGen")
+                  <<"Reading arguments near line "<<parser.getLineNumber()<<" and found:"<<
+                  param.c_str()<<endl;
+                report(ERROR,"EvtGen")
+                  << "Will terminate execution!"<<endl;
+                ::abort();
+              }
+            }
+          } else {
+            std::vector<std::string> copyMe=modelAliasList[modelAlias].getArgList();
+            temp_fcn_new_args=copyMe;
+          }
+
+          brfrSum+=brfr;
+
+          temp_fcn_new->saveDecayInfo(ipar,nDaughters,
+                                      daughter,
+                                      temp_fcn_new_args.size(),
+                                      temp_fcn_new_args,
+                                      temp_fcn_new_model,
+                                      brfr);
+
+          double massMin=0.0;
+
+          for (int i=0;i<temp_fcn_new->nRealDaughters();i++){
+            if ( EvtPDL::getMinMass(daughter[i])>0.0001 ){
+              massMin+=EvtPDL::getMinMass(daughter[i]);
+            } else {
+              massMin+=EvtPDL::getMeanMass(daughter[i]);
+            }
+          }
+
+          _decaytable[ipar.getAlias()].addMode(temp_fcn_new,brfrSum,massMin);
+
+        } else if(parser.getTagTitle() == "/decay") { //end of a particle
+          _decaytable[ipar.getAlias()].finalize();
+        } else report(INFO,"EvtGen") << "Unexpected tag "<<parser.getTagTitle()
+                                     <<" found in XML decay file near line "<<parser.getLineNumber()<<". Tag will be ignored."<<endl;
+      //TAGS FOUND UNDER REMOVEDECAY
+      } else if(parser.getParentTagTitle() == "removeDecay") {
+        if(parser.getTagTitle() == "channel") { //start of a channel
+          int nDaughters = 0;
+          EvtId daughter[MAX_DAUG];
+
+          std::string daugStr = parser.readAttribute("daughters");
+          std::istringstream daugStream(daugStr);
+
+          std::string daugh;
+          while(std::getline(daugStream, daugh, ' ')) {
+            checkParticle(daugh);
+            daughter[nDaughters++] = EvtPDL::getId(daugh);
+          }
+
+          EvtDecayBase* temp_fcn_new = modelist.getFcn("PHSP");
+          std::vector<std::string> temp_fcn_new_args;
+          std::string temp_fcn_new_model("PHSP");
+          temp_fcn_new->saveDecayInfo(ipar, nDaughters,
+                                      daughter,
+                                      0,
+                                      temp_fcn_new_args,
+                                      temp_fcn_new_model,
+                                      0.);
+          _decaytable[ipar.getAlias()].removeMode(temp_fcn_new);
+        } else if(parser.getTagTitle() != "/removeDecay") {
+          report(INFO,"EvtGen") << "Unexpected tag "<<parser.getTagTitle()
+                                <<" found in XML decay file near line "<<parser.getLineNumber()<<". Tag will be ignored."<<endl;
+        }
+      }
+  }//while lines in file
+
+  if(!endReached) {
+    report(INFO,"EvtGen") << "Either the decay file ended prematurely or the file is badly formed.\n"
+                          <<"Error occured near line"<<parser.getLineNumber()<<endl;
+    ::abort();
+  }
+
+  //Now we may need to reset the minimum mass for some particles????
+  for (size_t ii=0; ii<EvtPDL::entries(); ii++){
+    EvtId temp(ii,ii);
+    int nModTot=getNMode(ii);
+    //no decay modes
+    if ( nModTot == 0 ) continue;
+    //0 width?
+    if ( EvtPDL::getWidth(temp) < 0.0000001 ) continue;
+    int jj;
+    double minMass=EvtPDL::getMaxMass(temp);
+    for (jj=0; jj<nModTot; jj++) {
+      double tmass=_decaytable[ii].getDecay(jj).getMassMin();
+      if ( tmass< minMass) minMass=tmass;
+    }
+    if ( minMass > EvtPDL::getMinMass(temp) ) {
+      if ( verbose )
+        report(INFO,"EvtGen") << "Given allowed decays, resetting minMass " << EvtPDL::name(temp).c_str() << " "
+                              << EvtPDL::getMinMass(temp) << " to " << minMass << endl;
+      EvtPDL::reSetMassMin(temp,minMass);
+    }
+  }
+}
+
+bool EvtDecayTable::stringToBoolean(std::string valStr) {
+  return (valStr == "true" || valStr == "1" || valStr == "on" || valStr == "yes");
+}
+
+void EvtDecayTable::checkParticle(std::string particle) {
+  if (EvtPDL::getId(particle)==EvtId(-1,-1)) {
+    report(ERROR,"EvtGen") <<"Unknown particle name:"<<particle.c_str()<<endl;
+    report(ERROR,"EvtGen") <<"Will terminate execution!"<<endl;
+    ::abort();
   }
 }
 

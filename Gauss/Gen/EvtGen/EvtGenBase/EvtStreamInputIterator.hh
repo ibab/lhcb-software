@@ -14,7 +14,10 @@
 #define EVT_STREAM_INPUT_ITERATOR_HH
 
 #include "EvtGenBase/EvtStreamAdapter.hh"
+
 #include <iterator>
+#include <cstddef>
+
 using std::input_iterator_tag;
 
 template <class Point>

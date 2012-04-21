@@ -148,6 +148,8 @@
 
 #include "EvtGenModels/EvtTauola.hh"
 
+#include "EvtGenModels/EvtGenericDalitz.hh"
+
 #include "EvtGenModels/EvtModelReg.hh"
 using std::fstream;
 using std::cout;
@@ -282,5 +284,7 @@ EvtModelReg::EvtModelReg(const std::list<EvtDecayBase*>* extraModels)
 
     modelist.registerModel(new EvtPythia);
     modelist.registerModel(new EvtTauola);
+
+    modelist.registerModel(new EvtGenericDalitz());
 
 }

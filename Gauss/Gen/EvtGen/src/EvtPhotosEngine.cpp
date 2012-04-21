@@ -77,9 +77,9 @@ void EvtPhotosEngine::initialise() {
 
 bool EvtPhotosEngine::doDecay(EvtParticle* theMother) {
 
-  if (theMother == 0) {return false;}
-
   if (_initialised == false) {this->initialise();}
+
+  if (theMother == 0) {return false;}
 
   // Create a dummy HepMC GenEvent containing a single vertex, with the mother
   // assigned as the incoming particle and its daughters as outgoing particles.
