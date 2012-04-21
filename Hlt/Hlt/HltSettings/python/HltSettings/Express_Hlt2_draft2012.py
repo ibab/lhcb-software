@@ -64,3 +64,5 @@ class Express_Hlt2_draft2012(object) :
          
              
             }})
+
+        return d
