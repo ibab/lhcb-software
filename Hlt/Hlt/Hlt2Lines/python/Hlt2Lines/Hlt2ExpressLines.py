@@ -168,8 +168,8 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                              , Code = " (ADMASS('J/psi(1S)')<%(ExJPsiMassWindow)s*MeV)"\
                              " & (PT>%(ExJPsiPt)s*MeV)"\
                              " & (VFASPF(VCHI2PDOF)<%(ExJPsiVChi2)s)"\
+                             "& (MINTREE('mu-'==ABSID,MIPCHI2DV(PRIMARY)) > %(ExJPsiTrkChi2)s )"\
                              " & (MINTREE('mu-'==ABSID,TRCHI2DOF)<%(ExJPsiTrkChi2)s)"\
-                             " & (MINTREE('mu-'==ABSID,(MIPCHI2DV(PRIMARY))<%(ExJPsiMuIPChi2)s)"\
                              " & (MINTREE('mu-'==ABSID,PT)>%(ExJPsiMuPt)s*MeV) " %  self.getProps() 
                              , Inputs  = [ TrackFittedDiMuon ]
                              , InputPrimaryVertices = "None"
@@ -324,7 +324,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                               , DaughtersCuts = {"K+":"(PT>%(ExPhiKPt)s*MeV)"\
                                                   " & (P>%(ExPhiKP)s*MeV)"\
 						  " & (MIPCHI2DV(PRIMARY) > %(ExPhiKMIPCHI2DV)s)"\
-                                                 "(TRCHI2DOF<%(TrackChi2)s) "%  self.getProps()}
+                                                 "& (TRCHI2DOF<%(TrackChi2)s) "%  self.getProps()}
                              , MotherMonitor  =  Hlt2Monitor("M", "M(KK)",1020,self.getProp("ExPhiMassWin"))
                              )
 
