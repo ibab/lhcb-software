@@ -193,12 +193,14 @@ StatusCode GetElementsToBeAligned::initialize() {
     } else {
       for(std::vector<const DetectorElement*>::iterator ielem = detelements.begin() ;
           ielem != detelements.end(); ++ielem) {
-	//check that there isn't already a group with this name. if there is, add the dofs
+	//check that there isn't already a group with this name. if there is, only set the dofs
 	std::string name = AlignmentElement::stripElementName( (*ielem)->name()) ;
 	NonConstElements::iterator jelem = alignelements.begin() ;
 	while( jelem != alignelements.end() && (*jelem)->name() != name) ++jelem ;
 	if( jelem != alignelements.end() ) {
-	  (*jelem)->addDofs( dofs ) ;
+	  warning() << "Multiple specifications of dofs for alignable "
+		    << name << ". Using '" << dofs << "'." << endreq ;
+	  (*jelem)->setDofs( dofs ) ;
 	} else {
 	  alignelements.push_back(new AlignmentElement(**ielem, index++, dofs,m_useLocalFrame));
 	}

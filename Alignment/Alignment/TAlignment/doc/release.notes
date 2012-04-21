@@ -3,6 +3,10 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 
+! 2012-04-21 - Wouter Hulsbergen
+ - if alignment elements are specified more than once, it takes the 
+   last set of specifief dofs, rather than the joint set
+
 ! 2012-04-05 - Frederic Dupertuis
  - add the 2012 IT survey xmls for Magnet On and Off conditions
 

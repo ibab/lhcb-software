@@ -218,6 +218,9 @@ public:
   /** add more dofs to this alignable */
   void addDofs( const std::string& dofs ) ;
 
+  /** set the dofs to this alignable */
+  void setDofs( const std::string& dofs ) ;
+
   /** if this alignable has no 'own' detector conditions because its
       daughters serve the same detector elements, then return a vector
       with the dofs shared with its daughters. */

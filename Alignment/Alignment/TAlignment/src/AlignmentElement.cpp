@@ -109,6 +109,13 @@ void AlignmentElement::addDofs( const std::string& dofs )
   m_lastDeltaDelta = AlParameters( m_dofMask ) ;
 }
 
+void AlignmentElement::setDofs( const std::string& dofs )
+{
+  for(size_t ipar = 0; ipar<AlParameters::NumPars; ++ipar) 
+    m_dofMask.setActive(ipar,dofs.find( AlParameters::parName(ipar ) ) != std::string::npos ) ;
+  m_lastDeltaDelta = AlParameters( m_dofMask ) ;
+}
+
 void AlignmentElement::addElements( const std::vector<const DetectorElement*>& newelements )
 {
   // first check that the element hasn't been used yet
