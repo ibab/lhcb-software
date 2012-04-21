@@ -324,7 +324,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                               , DaughtersCuts = {"K+":"(PT>%(ExPhiKPt)s*MeV)"\
                                                   " & (P>%(ExPhiKP)s*MeV)"\
 						  " & (MIPCHI2DV(PRIMARY) > %(ExPhiKMIPCHI2DV)s)"\
-                                                 "(TRCHI2DOF<%(MuTrackTrChi2)s) "%  self.getProps()}
+                                                 "(TRCHI2DOF<%(TrackChi2)s) "%  self.getProps()}
                              , MotherMonitor  =  Hlt2Monitor("M", "M(KK)",1020,self.getProp("ExPhiMassWin"))
                              )
 
