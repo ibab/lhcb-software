@@ -154,6 +154,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       from Configurables import HltANNSvc
       from Hlt2SharedParticles.TrackFittedDiMuon import TrackFittedDiMuon
       from Configurables import FilterDesktop
+      from HltTracking.HltPVs import PV3D
       '''
       Comment content of express stream here
       '''
@@ -180,7 +181,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       
       line = Hlt2Line('ExpressJPsi'
                       , prescale = self.prescale 
-                      , algos = [ TrackFittedDiMuon, filter ]
+                      , algos = [  PV3D(), TrackFittedDiMuon, filter ]
                       , postscale = self.postscale
                       )
       #--------------------------------------------
