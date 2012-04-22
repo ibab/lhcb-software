@@ -166,7 +166,7 @@ D2hh = {
            'Dstar_AMDiff_MAX': 165.,
            'Dstar_VCHI2VDOF_MAX': 100.,
            'Dstar_MDiff_MAX': 160.,
-           'UntaggedCFLinePrescale': 1.0,
+           'UntaggedCFLinePrescale': 0.1,
            'UntaggedCFLinePostscale': 1.,
            'UntaggedSCSLinePrescale': 1.,
            'UntaggedSCSLinePostscale': 1.,
@@ -196,6 +196,74 @@ D2hh = {
     'WGs' : [ 'Charm' ],
     'STREAMS' : [ 'CharmToBeSwum' ]
     }
+
+## D0 -> h+h- (tagged & untagged).
+## Responsible: Marco Gersabeck
+## Prescaled version that writes to full DST.
+D2hhCompleteEvent = {
+    'BUILDERTYPE' : 'D2hhConf',
+    'CONFIG'      : {
+           'DaugPtMin': 800.,
+           'DaugPtMax': 1500.,
+           'DaugPtLoose': 500.,
+           'DaugP': 5000.,
+           'DaugPLoose': 3000.,
+           'DaugIPChi2': 9.,
+           'DaugIPChi2Loose': 4.,
+           'DaugTrkChi2': 3.,
+           'DaugTrkChi2Loose': 4.,
+           'HighPIDK': 5.,
+           'LowPIDK': 0.,
+           'D0Pt': 2000.,
+           'D0PtLoose': 1500.,
+           'D0MassWindowCentre': 1865.,
+           'D0MassWindowWidth': 100.,
+           'D0KPiMassWindowWidthLow':  -100.,
+           'D0KPiMassWindowWidthHigh': 200.,
+           'D0PiPiMassWindowWidthLow':  -75.,
+           'D0PiPiMassWindowWidthHigh': 200.,
+           'D0KKMassWindowWidthLow': -100.,
+           'D0KKMassWindowWidthHigh': 200.,
+           'D0P': 5000.,
+           'D0VtxChi2Ndof': 10.,
+           'D0FDChi2': 40.,
+           'D0BPVDira': 0.9999,
+           'D0DOCA': 0.07,
+           'Daug_TRCHI2DOF_MAX': 5.,
+           'Dstar_AMDiff_MAX': 165.,
+           'Dstar_VCHI2VDOF_MAX': 100.,
+           'Dstar_MDiff_MAX': 160.,
+           'UntaggedCFLinePrescale': 0.001,
+           'UntaggedCFLinePostscale': 1.0,
+           'UntaggedSCSLinePrescale': 0.01,
+           'UntaggedSCSLinePostscale': 1.0,
+           'TaggedRSLinePrescale': 0.01,
+           'TaggedRSLinePostscale': 1.,
+           'TaggedWSLinePrescale': 0.01,
+           'TaggedWSLinePostscale': 1.,
+           'TaggedSCSLinePrescale': 0.01,
+           'TaggedSCSLinePostscale': 1.,
+           'TaggedRSSSLinePrescale': 0.01,
+           'TaggedRSSSLinePostscale': 1.,
+           'TaggedSCSSSLinePrescale': 0.01,
+           'TaggedSCSSSLinePostscale': 1.,
+           'UntaggedTISLinePrescale': 0.0,
+           'UntaggedTISLinePostscale': 1.,
+           'UntaggedKpiOnly': False,
+           'RunSameSign': False,
+           'RunTISLines': False,
+           'RunDefault': True,
+           'UseTOSFilter': True,
+           'AddPartialD': True,
+           'Hlt1TOS': { 'Hlt1TrackAllL0Decision%TOS' : 0 },
+           'Hlt2TOSKPi': { 'Hlt2CharmHadD02HH_D02KPiDecision%TOS' : 0, 'Hlt2CharmHadD02HH_D02KPiWideMassDecision%TOS' : 0, 'Hlt2CharmHadD02KPiDecision%TOS' : 0, 'Hlt2CharmHadD02KPiWideMassDecision%TOS' : 0 },
+           'Hlt2TOSKK': { 'Hlt2CharmHadD02HH_D02KKDecision%TOS' : 0, 'Hlt2CharmHadD02HH_D02KKWideMassDecision%TOS' : 0, 'Hlt2CharmHadD02KKDecision%TOS' : 0, 'Hlt2CharmHadD02KKWideMassDecision%TOS' : 0 },
+           'Hlt2TOSPiPi': { 'Hlt2CharmHadD02HH_D02PiPiDecision%TOS' : 0, 'Hlt2CharmHadD02HH_D02PiPiWideMassDecision%TOS' : 0, 'Hlt2CharmHadD02PiPiDecision%TOS' : 0, 'Hlt2CharmHadD02PiPiWideMassDecision%TOS' : 0 }
+    } ,
+    'WGs' : [ 'Charm' ],
+    'STREAMS' : [ 'CharmCompleteEvent' ]
+    }
+
 
 ## Control version of above line.
 ## Responsible: Marco Gersabeck
@@ -813,6 +881,67 @@ DstarD2KShh = {
     },
     'WGs' : ['Charm'],
     'STREAMS' : [ 'CharmToBeSwum' ]
+    }
+
+## KShh. Mat Charles.
+## Test:  Yes
+## Control version of above, prescaled and going to full DST
+DstarD2KShhCompleteEvent = {
+    'BUILDERTYPE' : 'DstarD2KShhBuilder',
+    'CONFIG'      : {
+    'LongTrackGEC'          :  150        ## Global event cut on number of long tracks
+    ,'KSLLCutDIRA'          :    0.9997   ## unitless
+    ,'KSDDCutDIRA'          :    0.99995  ## unitless
+    ,'KSLLCutMass'          :   11.4      ## in MeV
+    ,'KSDDCutMass'          :   24.9      ## in MeV
+    ,'KSLLCutFDChi2'        :  100        ## unitless
+    ,'KSDDCutFDChi2'        :  100        ## unitless
+    ,'trackFromDCutP'       : 1500.0      ## in MeV
+    ,'trackFromDCutPIDe'    :   10.0      ## unitless -- note that this means (DLLe - DLLx) < 10 for x=K,pi
+    ,'trackFromDCutPIDp'    :   15.0      ## unitless -- note that this means (DLLp - DLLx) < 15 for x=K,pi
+    ,'pionFromDCutPIDK'     :   -1.0
+    ,'kaonFromDCutPIDpi'    :   -3.0
+    ,'pionFromDCutTRCHI2DOF':    4.0      ## unitless
+    ,'kaonFromDCutTRCHI2DOF':    5.0      ## unitless
+    ,'DCutDIRA'             :    0.0      ## unitless -- remove "backwards-going" D0
+    ,'DCutTau'              :    0.3      ## ps
+    ,'DCutVtxChi2_KK'       :   21.0      ## unitless
+    ,'DCutVtxChi2_KP'       :   15.0      ## unitless
+    ,'DCutVtxChi2_PP'       :   13.0      ## unitless
+    ,'preFitDCutPT'         : 1500.0      ## in MeV
+    ,'preFitDMassCut_LL'    :  130        ## in MeV
+    ,'preFitDMassCut_DD'    :  270        ## in MeV
+    ,'wideDMassCut_KKLL'    :   57.2      ## in MeV
+    ,'wideDMassCut_KPLL'    :   92.0      ## in MeV
+    ,'wideDMassCut_PPLL'    :  110.0      ## in MeV
+    ,'wideDMassCut_KKDD'    :   72.0      ## in MeV
+    ,'wideDMassCut_KPDD'    :  120.0      ## in MeV
+    ,'wideDMassCut_PPDD'    :  140.0      ## in MeV
+    ,'preFitDstarMassCut'   :  200.0      ## in MeV; make sure it's well above the largest D mass window
+    ,'wideDMCutLower'       :   -2.0      ## in MeV: allow negative tail made by CombineParticles
+    ,'wideDMCutUpper'       :   15.0      ## in MeV
+    ,'DstarCutPT_KK'        : 2200.0      ## in MeV
+    ,'DstarCutPT_KP'        : 2200.0      ## in MeV
+    ,'DstarCutPT_PP'        : 2200.0      ## in MeV
+    ,'DstarCutChi2NDOF_KK'  :   60.0      ## unitless
+    ,'DstarCutChi2NDOF_KP'  :   20.0      ## unitless
+    ,'DstarCutChi2NDOF_PP'  :   20.0      ## unitless
+    ,'SoftPionCutPIDe'      :    5.0      ## unitless
+    ,'KKLLPrescale'         :    0.05
+    ,'KKLLPostscale'        :    1.0
+    ,'KPLLPrescale'         :    0.025
+    ,'KPLLPostscale'        :    1.0
+    ,'PPLLPrescale'         :    0.025
+    ,'PPLLPostscale'        :    1.0
+    ,'KKDDPrescale'         :    0.05
+    ,'KKDDPostscale'        :    1.0
+    ,'KPDDPrescale'         :    0.025
+    ,'KPDDPostscale'        :    1.0
+    ,'PPDDPrescale'         :    0.025
+    ,'PPDDPostscale'        :    1.0
+    },
+    'WGs' : ['Charm'],
+    'STREAMS' : [ 'CharmCompleteEvent' ]
     }
 
 
