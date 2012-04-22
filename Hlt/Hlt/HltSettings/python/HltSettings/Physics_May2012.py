@@ -62,6 +62,7 @@ class Physics_May2012( object ):
         from Hlt1Lines.Hlt1BeamGasLines        import Hlt1BeamGasLinesConf
         from Hlt2Lines.Hlt2diphotonDiMuonLines import Hlt2diphotonDiMuonLinesConf
         from Hlt2Lines.Hlt2InclusiveDiProtonLines import Hlt2InclusiveDiProtonLinesConf
+        from Hlt2Lines.Hlt2DisplVerticesLines  import Hlt2DisplVerticesLinesConf
 
         thresholds = { Hlt1TrackLinesConf :    { 'AllL0_PT'      :  1700
                                                , 'AllL0_P'       : 10000
@@ -166,6 +167,8 @@ class Physics_May2012( object ):
                                                    , "VertexDisplVertex_Tr_PT"     : "1.7*GeV"
                                                    , "VertexDisplVertex_Tr_CHI2"   : "2.5"
                                                    , "VertexDisplVertex_GEC"       : "Loose"
+
+                                                   , 'Prescale' : { 'Hlt1VertexDisplVertex'     :  0  }
                                                    }
                        #, Hlt1ProtonLinesConf        : { 'Prescale' : {  'Hlt1DiProtonLowMult'        : 0.01, 
                        #                                                 'Hlt1DiProton'               : 0.01
@@ -186,6 +189,10 @@ class Physics_May2012( object ):
                        #, Hlt2InclusiveDiProtonLinesConf: { 'Prescale' : { 'Hlt2DiProton'           :       0.001
                        #                                                   , 'Hlt2DiProtonLowMult'  :       0.001
                        #                                               } } 
+
+                       , Hlt2DisplVerticesLinesConf : {  'Prescale' : 
+                                                            { 'Hlt2DisplVerticesHighMassSingle' : 0 }
+                                                         }
 
                        }
 
