@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-04-23 Fatima Soomro
+- Added StrippingD2XGamma.py contains only one line to reconstruct D* tagged D0->Phi gamma decay
+
 ! 2012-04-23 Ricardo Vazquez Gomez
  - Small bug fix in the name of a decay (change particle to anti-particle)
 
