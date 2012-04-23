@@ -1,7 +1,7 @@
 #pragma once
 #include "string.h"
-#include "ObjSerializer.h"
-#include "dimhist.h"
+#include "Gaucho/ObjSerializer.h"
+#include "Gaucho/dimhist.h"
 #include "Gaucho/Utilities.h"
 //#define AddPtr(ptr,offs) (void*)((char *)ptr +offs)
 

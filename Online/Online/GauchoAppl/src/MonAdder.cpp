@@ -1,6 +1,6 @@
 #include "GauchoAppl/MonAdder.h"
 #include "Gaucho/MonTypes.h"
-#include "GauchoAppl/SerialHeader.h"
+#include "Gaucho/SerialHeader.h"
 #include "Gaucho/dimhist.h"
 #include "Gaucho/Utilities.h"
 #include "GauchoAppl/AdderSys.h"

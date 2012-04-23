@@ -4,7 +4,7 @@
 #include "Gaucho/ObjRPC.h"
 #include "Gaucho/MonHist.h"
 #include "Gaucho/RootHists.h"
-#include "GauchoAppl/RateService.h"
+#include "Gaucho/RateService.h"
 #include "dis.hxx"
 #include "TDirectory.h"
 #include <vector>
