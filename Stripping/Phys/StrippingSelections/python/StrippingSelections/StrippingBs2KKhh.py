@@ -21,7 +21,7 @@ config_params = {'PRPrescale'     : 1.,
                  'PRResMinP'      : 1.,
                  'PRResMaxMass'   : 4000.,
                  'PRResVtxChiDOF' : 9.,
-                 'PRBMinM'        : 4600.,
+                 'PRBMinM'        : 5000.,
                  'PRBMaxM'        : 5600.,
                  'PRPhiWindow'    : 25.,
                  'PRBVtxChi2DOF'  : 9.,
@@ -100,7 +100,7 @@ def mkDiTrackList( name,
     Di-track selection
     """
     _diTrackPreVertexCuts = "(APT> %(MinPTCut)s *MeV) & (AP> %(MinPCut)s *GeV) & (AM< %(MaxMassCut)s *MeV)" % locals()
-    _diTrackPostVertexCuts = "(MIPCHI2DV(PRIMARY) > 5)"
+    _diTrackPostVertexCuts = "(MIPCHI2DV(PRIMARY) > 10)"
     
     _combineDiTrack = CombineParticles( DecayDescriptor="rho(770)0 -> pi+ pi-",
 					CombinationCut = _diTrackPreVertexCuts,
@@ -118,7 +118,7 @@ def mkKKTrackList( name,
     KK selection
     """
 
-    _code = "(MIPCHI2DV(PRIMARY) > 16) & (ADMASS('phi(1020)')< %(PhiWindowMassCut)s *MeV) & (PT> %(MinPTCut)s *MeV) & (P> %(MinPCut)s *GeV)" % locals()
+    _code = "(MIPCHI2DV(PRIMARY) > 10) & (ADMASS('phi(1020)')< %(PhiWindowMassCut)s *MeV) & (PT> %(MinPTCut)s *MeV) & (P> %(MinPCut)s *GeV)" % locals()
     _stdPhi = DataOnDemand(Location="Phys/StdTightPhi2KK/Particles")
     _phiFilter = FilterDesktop(Code = _code)
 
