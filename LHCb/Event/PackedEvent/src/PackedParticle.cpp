@@ -410,11 +410,13 @@ StatusCode ParticlePacker::check( const Data & dataA,
   // If comparison not OK, print full information
   if ( !ok )
   {
+    const std::string loc = ( dataA.parent() && dataA.parent()->registry() ? 
+                              dataA.parent()->registry()->identifier() : "Not in TES" );
     parent().warning() << "Problem with Particle data packing :-" << endmsg
-                       << "  Original Particle : " << dataA
-                       << endmsg
-                       << "  Unpacked Particle : " << dataB
-                       << endmsg;
+                       << "  Original Particle in '" << loc << "'" << endmsg
+                       << dataA << endmsg
+                       << "  Unpacked Particle" << endmsg
+                       << dataB << endmsg;
   }
 
   return ( ok ? StatusCode::SUCCESS : StatusCode::FAILURE );

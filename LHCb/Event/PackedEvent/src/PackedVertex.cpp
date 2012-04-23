@@ -206,11 +206,13 @@ StatusCode VertexPacker::check( const Data & dataA,
   // If comparison not OK, print full information
   if ( !ok )
   {
+    const std::string loc = ( dataA.parent() && dataA.parent()->registry() ? 
+                              dataA.parent()->registry()->identifier() : "Not in TES" );
     parent().warning() << "Problem with Vertex data packing :-" << endmsg
-                       << "  Original Vertex : " << dataA
-                       << endmsg
-                       << "  Unpacked Vertex : " << dataB
-                       << endmsg;
+                       << "  Original Vertex in '" << loc << "'" << endmsg
+                       << dataA << endmsg
+                       << "  Unpacked Vertex" << endmsg
+                       << dataB << endmsg;
   }
 
   return ( ok ? StatusCode::SUCCESS : StatusCode::FAILURE );

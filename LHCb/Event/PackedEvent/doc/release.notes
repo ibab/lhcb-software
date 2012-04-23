@@ -7,6 +7,7 @@
 ! 2012-04-23 - Chris Jones
  - New version of the Particle packing, to (try) and fix consistency problems.
  - Improve the CaloCluster checking to avoid some false positives.
+ - Print the TES location of Particles and Vertices with packing problems.
 
 ! 2012-04-12 - Chris Jones
  - Various improvements to the packers, to improve the way the checks are 
