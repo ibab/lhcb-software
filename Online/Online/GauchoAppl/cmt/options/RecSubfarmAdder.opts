@@ -1,0 +1,44 @@
+// Job options file. Simple Online monitoring example
+//==============================================================
+//#include "$OPTIONS"
+
+ApplicationMgr.ExtSvc               += { "AdderSvc" };
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+Runable.Wait                         = 3;  // 1 of running as daemon
+
+MessageSvc.OutputLevel  = 3;
+HistogramPersistencySvc.Warnings = false;
+
+//AdderSvc.taskname="RecBrunel"; // Could be empty.
+//AdderSvc.refreshTime=20;
+//AdderSvc.dimclientdns="hlt01";
+//AdderSvc.partitionname="LHCb";
+
+//AdderSvc.subfarmname=@OnlineEnv.SubFarms;
+//AdderSvc.partitionname=@OnlineEnv.PartitionName;
+
+AdderSvc.SourceTaskPattern="Adder";
+AdderSvc.MyName="Adder";
+//AdderSvc.SourceServiceName="Data";
+
+
+AdderSvc::AdderType="subfarm"; //Possible values are "node", "sf" or "subfarm" and "top" or "part"
+AdderSvc::SourceTaskPattern="GAUCHOJOB"; //Process Name (UTGID) of the job to be added without generation _xx and the nodename
+                                         // e.g. "Gauchojob" or "RecBrunel"
+AdderSvc::InDNS"=""; //name of the DNS node from which the adder should retrieve it's services
+                     // for node adders the default is current nodename -last two digits
+                     // e.g. if nodename is hltc0406 InDns will become hltc04
+                     // for subfarm adders the default is the current hostname
+AdderSvc::OutDNS"=""; // currently ignored
+AdderSvc::TopLevel"=false;
+AdderSvc::SaveRootDir = "/home/beat/Hist/Savesets";
+AdderSvc::IsSaver" = false;
+AdderSvc::SaveInterval = 900;
+AdderSvc::PartitionName="Beat";
+AdderSvc::SaveSetTaskName="Moore"; // name under which the histograms should be saved (only used when IsSaver is true
+AdderSvc::ExpandRate=false; // should MonRates be expanded into individual services
+AdderSvc::TaskPattern=AdderSvc.TaskPattern="<part>_Mona09[0-9][0-9]_Adder(.*)";
+AdderSvc::ServicePattern="";

@@ -1,0 +1,56 @@
+// Job options file. Simple Online monitoring example
+//==============================================================
+//#include "$INFOOPTIONS"
+
+ApplicationMgr.ExtSvc               += { "AdderSvc/AdderSvc1","AdderSvc/AdderSvc2","AdderSvc/AdderSvc3","AdderSvc/AdderSvc4"};
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+Runable.Wait                         = 3;  // 1 of running as daemon (Class1 task)
+//Runable.Wait                         = 1;  // 1 of running as daemon (Class0 task)
+
+//MessageSvc.OutputLevel               = @OnlineEnv.OutputLevel;
+HistogramPersistencySvc.Warnings     = false;
+
+
+AdderSvc1.AdderType          = "node"; //Possible values are "node","subfarm" and "top" or "part"
+AdderSvc1.SourceTaskPattern  = "GAUCHOJOB"; //Process Name (UTGID) of the job to be added without generation _xx and the nodename
+                                         // e.g. "Gauchojob" or "RecBrunel"
+AdderSvc1.MyName             = "<node>_GauchoAdder";
+AdderSvc1.TopLevel           = false;
+AdderSvc1.ExpandRate         = false; // should MonRates be expanded into individual services
+AdderSvc1.TaskPattern        = "<node>_GauchoJob_";
+AdderSvc1.ServicePattern     = "";
+AdderSvc1.AdderClass         = "Counter";
+
+AdderSvc2.AdderType          = "node"; //Possible values are "node","subfarm" and "top" or "part"
+AdderSvc2.SourceTaskPattern  = "GAUCHOJOB"; //Process Name (UTGID) of the job to be added without generation _xx and the nodename
+                                         // e.g. "Gauchojob" or "RecBrunel"
+AdderSvc2.MyName             = "<node>_GauchoAdder";
+AdderSvc2.TopLevel           = false;
+AdderSvc2.ExpandRate         = false; // should MonRates be expanded into individual services
+AdderSvc2.TaskPattern        = "<node>_GauchoJob_";
+AdderSvc2.ServicePattern     = "";
+AdderSvc2.AdderClass         = "hists";
+
+
+AdderSvc3.AdderType          = "node"; //Possible values are "node","subfarm" and "top" or "part"
+AdderSvc3.SourceTaskPattern  = "MEPRx"; //Process Name (UTGID) of the job to be added without generation _xx and the nodename
+                                         // e.g. "Gauchojob" or "RecBrunel"
+AdderSvc3.MyName             = "<node>_MEPrxAdder";
+AdderSvc3.TopLevel           = false;
+AdderSvc3.ExpandRate         = false; // should MonRates be expanded into individual services
+AdderSvc3.TaskPattern        = "<node>_MEPRx_";
+AdderSvc3.ServicePattern     = "";
+AdderSvc3.AdderClass         = "Counter";
+
+AdderSvc4.AdderType          = "node"; //Possible values are "node","subfarm" and "top" or "part"
+AdderSvc4.SourceTaskPattern  = "MEPRx"; //Process Name (UTGID) of the job to be added without generation _xx and the nodename
+                                        // e.g. "Gauchojob" or "RecBrunel"
+AdderSvc4.MyName             = "<node>_MEPrxAdder";
+AdderSvc4.TopLevel           = false;
+AdderSvc4.ExpandRate         = false; // should MonRates be expanded into individual services
+AdderSvc4.TaskPattern        = "<node>_MEPRx_";
+AdderSvc4.ServicePattern     = "";
+AdderSvc4.AdderClass         = "hists";
