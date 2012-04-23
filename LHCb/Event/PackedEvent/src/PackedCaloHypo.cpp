@@ -273,15 +273,15 @@ StatusCode CaloHypoPacker::check( const DataVector & dataA,
       if ( 5.e-5  < fabs( oDiag[3] - tDiag[3] ) ) isOK = false;
       if ( 5.e-5  < fabs( oDiag[4] - tDiag[4] ) ) isOK = false;
 
-      oFrac.push_back(  oPos->covariance()(1,0) / oDiag[1] / oDiag[0] );
-      oFrac.push_back(  oPos->covariance()(2,0) / oDiag[2] / oDiag[0] );
-      oFrac.push_back(  oPos->covariance()(2,1) / oDiag[2] / oDiag[1] );
-      oFrac.push_back(  oPos->spread()(1,0)     / oDiag[3] / oDiag[4] );
+      oFrac.push_back( oPos->covariance()(1,0) / oDiag[1] / oDiag[0] );
+      oFrac.push_back( oPos->covariance()(2,0) / oDiag[2] / oDiag[0] );
+      oFrac.push_back( oPos->covariance()(2,1) / oDiag[2] / oDiag[1] );
+      oFrac.push_back( oPos->spread()(1,0)     / oDiag[3] / oDiag[4] );
 
-      tFrac.push_back(  tPos->covariance()(1,0) / tDiag[1] / tDiag[0] );
-      tFrac.push_back(  tPos->covariance()(2,0) / tDiag[2] / tDiag[0] );
-      tFrac.push_back(  tPos->covariance()(2,1) / tDiag[2] / tDiag[1] );
-      tFrac.push_back(  tPos->spread()(1,0)     / tDiag[3] / tDiag[4] );
+      tFrac.push_back( tPos->covariance()(1,0) / tDiag[1] / tDiag[0] );
+      tFrac.push_back( tPos->covariance()(2,0) / tDiag[2] / tDiag[0] );
+      tFrac.push_back( tPos->covariance()(2,1) / tDiag[2] / tDiag[1] );
+      tFrac.push_back( tPos->spread()(1,0)     / tDiag[3] / tDiag[4] );
 
       for ( unsigned int kk = 0 ; oFrac.size() > kk ; ++kk ) 
       {

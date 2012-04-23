@@ -211,12 +211,51 @@ StatusCode CaloClusterPacker::check( const Data & dataA,
                             dataA.position().e(), dataB.position().e() );
   ok &= ch.compareVectors( "Position-Center",
                            dataA.position().center(), dataB.position().center() );
-  ok &= ch.compareMatrices<Gaudi::SymMatrix3x3,3,3>( "Position-Covariance",
-                                                     dataA.position().covariance(),
-                                                     dataB.position().covariance() );
-  ok &= ch.compareMatrices<Gaudi::SymMatrix2x2,2,2>( "Position-Spread",
-                                                     dataA.position().spread(),
-                                                     dataB.position().spread() );
+
+  //   ok &= ch.compareMatrices<Gaudi::SymMatrix3x3,3,3>( "Position-Covariance",
+  //                                                      dataA.position().covariance(),
+  //                                                      dataB.position().covariance() );
+  //   ok &= ch.compareMatrices<Gaudi::SymMatrix2x2,2,2>( "Position-Spread",
+  //                                                      dataA.position().spread(),
+  //                                                      dataB.position().spread() );
+
+  // Same checks as in caloHypo for covariance and spread
+  // -------------------------------------------------------------------------
+  std::vector<double> oDiag, tDiag, oFrac, tFrac;
+
+  oDiag.push_back( std::sqrt(dataA.position().covariance()(0,0)) );
+  oDiag.push_back( std::sqrt(dataA.position().covariance()(1,1)) );
+  oDiag.push_back( std::sqrt(dataA.position().covariance()(2,2)) );
+  oDiag.push_back( std::sqrt(dataA.position().spread()(0,0)) );
+  oDiag.push_back( std::sqrt(dataA.position().spread()(1,1)) );
+
+  tDiag.push_back( std::sqrt(dataB.position().covariance()(0,0)) );
+  tDiag.push_back( std::sqrt(dataB.position().covariance()(1,1)) );
+  tDiag.push_back( std::sqrt(dataB.position().covariance()(2,2)) );
+  tDiag.push_back( std::sqrt(dataB.position().spread()(0,0)) );
+  tDiag.push_back( std::sqrt(dataB.position().spread()(1,1)) );
+
+  if ( 5.e-5  < fabs( oDiag[0] - tDiag[0] ) ) ok = false;
+  if ( 5.e-5  < fabs( oDiag[1] - tDiag[1] ) ) ok = false;
+  if ( 5.e-3  < fabs( oDiag[2] - tDiag[2] ) ) ok = false;
+  if ( 5.e-5  < fabs( oDiag[3] - tDiag[3] ) ) ok = false;
+  if ( 5.e-5  < fabs( oDiag[4] - tDiag[4] ) ) ok = false;
+
+  oFrac.push_back( dataA.position().covariance()(1,0) / oDiag[1] / oDiag[0] );
+  oFrac.push_back( dataA.position().covariance()(2,0) / oDiag[2] / oDiag[0] );
+  oFrac.push_back( dataA.position().covariance()(2,1) / oDiag[2] / oDiag[1] );
+  oFrac.push_back( dataA.position().spread()(1,0)     / oDiag[3] / oDiag[4] );
+
+  tFrac.push_back( dataB.position().covariance()(1,0) / tDiag[1] / tDiag[0] );
+  tFrac.push_back( dataB.position().covariance()(2,0) / tDiag[2] / tDiag[0] );
+  tFrac.push_back( dataB.position().covariance()(2,1) / tDiag[2] / tDiag[1] );
+  tFrac.push_back( dataB.position().spread()(1,0)     / tDiag[3] / tDiag[4] );
+
+  for ( unsigned int kk = 0; oFrac.size() > kk; ++kk )
+  {
+    if ( 2.e-5 < fabs( oFrac[kk] - tFrac[kk] ) ) ok = false;
+  }
+  // -------------------------------------------------------------------------
 
   // Entries
   const bool entsSizeOK = dataA.entries().size() == dataB.entries().size();

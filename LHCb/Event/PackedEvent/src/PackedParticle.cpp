@@ -15,7 +15,7 @@ void ParticlePacker::pack( const Data & part,
                            PackedData & ppart,
                            PackedDataVector & pparts ) const
 {
-  if ( 0 == pparts.packingVersion()  )
+  if ( 1 == pparts.packingVersion() )
   {
 
     // Particle ID
@@ -44,8 +44,8 @@ void ParticlePacker::pack( const Data & part,
     const double merr11 = std::sqrt( part.momCovMatrix()(1,1) );
     const double merr22 = std::sqrt( part.momCovMatrix()(2,2) );
     const double merr33 = std::sqrt( part.momCovMatrix()(3,3) );
-    ppart.momCov00 = m_pack.slope( merr00/px );
-    ppart.momCov11 = m_pack.slope( merr11/py );
+    ppart.momCov00 = m_pack.energy( merr00 );
+    ppart.momCov11 = m_pack.energy( merr11 );
     ppart.momCov22 = m_pack.energy( merr22 );
     ppart.momCov33 = m_pack.energy( merr33 );
     ppart.momCov10 = m_pack.fraction( part.momCovMatrix()(1,0) / (merr11*merr00) );
@@ -159,7 +159,8 @@ void ParticlePacker::unpack( const PackedData       & ppart,
                              const PackedDataVector & pparts,
                              DataVector             & parts ) const
 {
-  if ( 0 == pparts.packingVersion() )
+  if ( 0 == pparts.packingVersion() ||
+       1 == pparts.packingVersion() )
   {
 
     // particle ID
@@ -184,8 +185,18 @@ void ParticlePacker::unpack( const PackedData       & ppart,
 
     // Mom Cov
     Gaudi::SymMatrix4x4 & momCov = *(const_cast<Gaudi::SymMatrix4x4*>(&part.momCovMatrix()));
-    const double merr00 = m_pack.slope( ppart.momCov00 ) * px;
-    const double merr11 = m_pack.slope( ppart.momCov11 ) * py;
+    double merr00(0), merr11(0);
+    if ( 0 == pparts.packingVersion() )
+    {
+      // Buggy packing used for Stripping18
+      merr00 = m_pack.slope( ppart.momCov00 ) * px;
+      merr11 = m_pack.slope( ppart.momCov11 ) * py;
+    }
+    else
+    {
+      merr00 = m_pack.energy( ppart.momCov00 );
+      merr11 = m_pack.energy( ppart.momCov11 );
+    }
     const double merr22 = m_pack.energy( ppart.momCov22 );
     const double merr33 = m_pack.energy( ppart.momCov33 );
     momCov(0,0) = std::pow( merr00, 2 );
