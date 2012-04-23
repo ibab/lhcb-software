@@ -160,6 +160,9 @@ namespace LHCb {
       int64_t                     m_notReqPkt;
       int64_t                     m_incEvt;
       int64_t                     m_totBadMEP;
+      int                         m_totMEPproduced;
+      int                         m_totMEPproducedLive;
+      int                         m_totMEPproducedOvfl;
       int                         m_maxErrors;
       std::vector<int64_t>        m_badLenPkt;
       std::vector<int64_t>        m_misPkt;

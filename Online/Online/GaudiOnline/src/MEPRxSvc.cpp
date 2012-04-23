@@ -65,7 +65,7 @@ typedef unsigned int uint;
   a << MSG::ERROR << x << " " << MEPRxSys::sys_err_msg() << " in " << __PRETTY_FUNCTION__<< ":"  << __FILE__<<  ":(" << __LINE__ << ")" << endmsg;} while(0);
 #endif
 
-#define PUBCNT(name, desc) do {m_ ## name = 0; m_monSvc->declareInfo(#name, m_ ## name, desc, this);} while(0);
+#define PUBCNT(name, desc)   do {m_ ## name = 0; m_monSvc->declareInfo(#name, m_ ## name, desc, this);} while(0);
 // Sent as 64bit integers ("X")
 #define PUB64CNT(name, desc) do {m_ ## name = 0; m_monSvc->declareInfo(#name,"X", & m_ ## name, sizeof(int64_t), desc, this);} while(0);
 #define PUBARRAYCNT(name, desc) do {m_monSvc->declareInfo(#name, "X", & m_ ## name [0], m_ ## name.size() * sizeof(int64_t), desc, this);} while(0);
@@ -489,6 +489,11 @@ int MEPRx::spaceAction() {
   m->setSize(m_brx);
   m_buf->declareEvent();
   int sc = m_buf->sendSpace();
+  if (m_eventType == EVENT_TYPE_MEP) {
+    (m_parent->m_totMEPproduced)++;
+    if (m_buf == m_liveBuf) (m_parent->m_totMEPproducedLive)++;
+    else (m_parent->m_totMEPproducedOvfl)++;
+  }
   m_parent->m_complTimeSock->fill(1.0 * (m_age), 1.0);
   m_parent->m_L0IDDiff->fill(1.0 * m_l0ID - m_prevL0ID, 1.0);
   m_parent->m_tLastComp = m_parent->m_tLastAdded;
@@ -1189,6 +1194,9 @@ void MEPRxSvc::publishCounters()
   PUB64CNT(totMEPReqPkt,       "Total Sent MEP-request packets");
   PUB64CNT(numMEPRecvTimeouts, "MEP-receive Timeouts");
   PUB64CNT(notReqPkt,          "Total unsolicited packets");
+  PUBCNT(totMEPproduced,       "Total produced complete MEPs");
+  PUBCNT(totMEPproducedOvfl,   "Total produced complete MEPs into Overflow buf");
+  PUBCNT(totMEPproducedLive,   "Total produced complete MEPs into MEP buf");
   PUBARRAYCNT(badLenPkt,       "MEPs with mismatched length");
   PUBARRAYCNT(misPkt,          "Missing MEPs");
   PUBARRAYCNT(badPckFktPkt,    "MEPs with wrong packing (MEP) factor");
@@ -1213,6 +1221,9 @@ void MEPRxSvc::clearCounters() {
   resetCounters(m_noShow, m_nSrc);
   m_totMEPReq          = 0;
   m_totMEPReqPkt       = 0;
+  m_totMEPproduced     = 0;
+  m_totMEPproducedOvfl = 0;
+  m_totMEPproducedLive = 0;
   m_numMEPRecvTimeouts = 0;
   m_notReqPkt          = 0;
   m_totRxOct           = 0;
