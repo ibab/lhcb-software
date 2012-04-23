@@ -36,9 +36,9 @@ GauchoCountAdder.TaskPattern         = "<node>_GauchoJob_";
 GauchoCountAdder.ServicePattern      = "MON_<node>_GauchoJob_(.*)/Counter/";
 GauchoCountAdder.AdderClass          = "Counter";
 
-OverflowAdder.MyName                 = "<node>_Overflow";
-OverflowAdder.TaskPattern            = "<node>_Overflow_";
-OverflowAdder.ServicePattern         = "MON_<node>_Overflow_(.*)/Counter/";
+OverflowAdder.MyName                 = "<node>_OverflowWr";
+OverflowAdder.TaskPattern            = "<node>_OverflowWr_";
+OverflowAdder.ServicePattern         = "MON_<node>_OverflowWr_(.*)/Counter/";
 OverflowAdder.AdderClass             = "Counter";
 
 MEPrxHistAdder.MyName                = "<node>_MEPrx";

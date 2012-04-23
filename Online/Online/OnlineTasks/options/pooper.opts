@@ -15,6 +15,9 @@ ApplicationMgr.ExtSvc               += {
 ApplicationMgr.ExtSvc               += {
 					"BusyPub"
                                        };
+ApplicationMgr.ExtSvc               += {
+					"OvrPub"
+                                       };
 //ApplicationMgr.ExtSvc               += {
 //					"StrandedServices/strand"
 //					};
@@ -37,6 +40,7 @@ MEPrxCountPub.ServicePattern      = "MON_<part>_hlt01_MEPrx_00/Counter/";
 //MEPrxCountPub.AdderClass          = "Counter";
 MEPrxCountPub.InDNS               = "mona08";
 MEPrxCountPub.Tell1List=@OnlineEnv.Tell1Boards;
+MEPrxCountPub.TrendingOn          = true;
 
 HLTRater.MyName              = "<part>_X_Rater";
 HLTRater.PartitionName       = @OnlineEnv.PartitionName;
@@ -69,6 +73,14 @@ BusyPub.ServicePattern      = "MON_<part>_hlt01_Busy_00/Counter/";
 BusyPub.AdderClass          = "Counter";
 BusyPub.InDNS               = "mona08";
 BusyPub.TrendingOn          = true;
+
+OvrPub.MyName              = "<part>_X_OvrPub";
+OvrPub.PartitionName       = @OnlineEnv.PartitionName;
+OvrPub.TaskPattern         = "PART[0-9][0-9]_Adder_(.*)";
+OvrPub.ServicePattern      = "MON_<part>_hlt01_OverflowWr_00/Counter/";
+OvrPub.AdderClass          = "Counter";
+OvrPub.InDNS               = "mona08";
+OvrPub.TrendingOn          = true;
 
 //strand.PartitionName = @OnlineEnv.PartitionName;
 //strans.SubFarms = @OnlineEnv.SubFarms;

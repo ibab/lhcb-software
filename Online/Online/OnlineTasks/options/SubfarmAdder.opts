@@ -50,10 +50,10 @@ GauchoCountAdder.ServicePattern      = "MON_<node>[0-9][0-9]_GauchoJob/Counter/"
 GauchoCountAdder.AdderClass          = "Counter";
 GauchoCountAdder.InDNS               = "<node>";
 
-OverflowAdder.MyName              = "<part>_<node>_Overflow";
+OverflowAdder.MyName              = "<part>_<node>_OverflowWr";
 OverflowAdder.PartitionName       = @OnlineEnv.PartitionName;
 OverflowAdder.TaskPattern         = "<node>[0-9][0-9]_Adder";
-OverflowAdder.ServicePattern      = "MON_<node>[0-9][0-9]_Overflow/Counter/";
+OverflowAdder.ServicePattern      = "MON_<node>[0-9][0-9]_OverflowWr/Counter/";
 OverflowAdder.AdderClass          = "Counter";
 OverflowAdder.InDNS               = "<node>";
 
