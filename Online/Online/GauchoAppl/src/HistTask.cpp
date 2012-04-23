@@ -5,7 +5,7 @@
  *      Author: beat
  */
 
-#include "Gaucho/HistTask.h"
+#include "GauchoAppl/HistTask.h"
 #include "Gaucho/Utilities.h"
 #include "Gaucho/MonHist.h"
 //HistTask::HistTask(const std::string &task,const std::string &dns)

@@ -1,5 +1,5 @@
-#include "Gaucho/AddTimer.h"
-#include "Gaucho/MonAdder.h"
+#include "GauchoAppl/AddTimer.h"
+#include "GauchoAppl/MonAdder.h"
 #include <stdexcept>
 AddTimer::AddTimer(MonAdder *tis, int period, int typ) : GenTimer((void*)tis,period*1000,typ)
 {

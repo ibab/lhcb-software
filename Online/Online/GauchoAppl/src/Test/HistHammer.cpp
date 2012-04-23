@@ -5,7 +5,7 @@
  *      Author: beat
  */
 
-#include "Gaucho/HistTask.h"
+#include "GauchoAppl/HistTask.h"
 #include "TH1D.h"
 #include "TH2D.h"
 #include "TProfile.h"

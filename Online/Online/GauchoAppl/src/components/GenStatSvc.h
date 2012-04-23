@@ -3,9 +3,9 @@
 
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IIncidentListener.h"
-#include "Gaucho/MonAdder.h"
+#include "GauchoAppl/MonAdder.h"
 #include "PubSvc.h"
-#include "Gaucho/COutService.h"
+#include "GauchoAppl/COutService.h"
 
 // Forward declarations
 class GenStatSvc : public PubSvc

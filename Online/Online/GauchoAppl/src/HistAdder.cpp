@@ -1,16 +1,16 @@
-#include "Gaucho/HistAdder.h"
+#include "GauchoAppl/HistAdder.h"
 #include "Gaucho/ObjService.h"
 #include "Gaucho/MonServer.h"
 #include "Gaucho/ObjRPC.h"
 #include "Gaucho/MonHist.h"
 #include "Gaucho/RootHists.h"
-#include "Gaucho/RateService.h"
+#include "GauchoAppl/RateService.h"
 #include "dis.hxx"
 #include "TDirectory.h"
 #include <vector>
 #include "string.h"
 #include "Gaucho/Utilities.h"
-#include "Gaucho/AdderSys.h"
+#include "GauchoAppl/AdderSys.h"
 typedef std::pair<std::string, void*> HistPair;
 
 HistAdder::HistAdder(char *myName, char *serviceName)

@@ -5,7 +5,7 @@
  *      Author: beat
  */
 
-#include "Gaucho/CounterTask.h"
+#include "GauchoAppl/CounterTask.h"
 #include "Gaucho/MonCounter.h"
 int main(int , char *argv[]) // Taskname, DNS Node
 {

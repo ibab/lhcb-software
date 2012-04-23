@@ -3,7 +3,7 @@
 
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IToolSvc.h"
-#include "Gaucho/MonAdder.h"
+#include "GauchoAppl/MonAdder.h"
 #include "PubSvc.h"
 
 // Forward declarations

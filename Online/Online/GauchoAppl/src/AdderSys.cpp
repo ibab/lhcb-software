@@ -4,8 +4,8 @@
  *  Created on: Feb 28, 2011
  *      Author: beat
  */
-#include "Gaucho/AdderSys.h"
-#include "Gaucho/InfoHandlers.h"
+#include "GauchoAppl/AdderSys.h"
+#include "GauchoAppl/InfoHandlers.h"
   AdderSys::AdderSys()
 {
   this->gg_TaskHandler = new HAdderTaskInfoHandler();

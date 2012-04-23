@@ -4,9 +4,9 @@
  *  Created on: Mar 1, 2011
  *      Author: beat
  */
-#include "Gaucho/InfoHandlers.h"
-#include "Gaucho/AdderSys.h"
-#include "Gaucho/MonAdder.h"
+#include "GauchoAppl/InfoHandlers.h"
+#include "GauchoAppl/AdderSys.h"
+#include "GauchoAppl/MonAdder.h"
 #include "Gaucho/Utilities.h"
 
 #include <memory>

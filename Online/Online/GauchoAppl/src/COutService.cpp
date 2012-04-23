@@ -5,7 +5,7 @@
  *      Author: beat
  */
 #include <typeinfo>
-#include "Gaucho/COutService.h"
+#include "GauchoAppl/COutService.h"
 template <typename T> COutService<T>::COutService(std::string nam):COutServiceBase(nam)
 {
 //  printf("New Standard Output Service %s of type %s\n",nam.c_str(),typeid(T).name());

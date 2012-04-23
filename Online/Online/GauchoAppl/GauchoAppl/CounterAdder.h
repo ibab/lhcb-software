@@ -1,7 +1,7 @@
 #ifndef ONLINE_GAUCHO_COUNTERADDER_H
 #define ONLINE_GAUCHO_COUNTERADDER_H
 
-#include "Gaucho/MonAdder.h"
+#include "GauchoAppl/MonAdder.h"
 
 class CounterAdder : public MonAdder
 {

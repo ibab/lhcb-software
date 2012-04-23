@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-#include "Gaucho/Misc.h"
+#include "GauchoAppl/Misc.h"
 
 Misc::Misc()
 {
@@ -14,20 +14,20 @@ Misc::~Misc()
 }
 
 std::vector<std::string>  Misc::splitString(const std::string &str, const char *s){
-  
+
   std::vector<std::string> found;
-  
+
   std::size_t begin = 0;
   while (true){
     std::size_t end = str.find(s, begin);
     if (std::string::npos == end) break;
-    
+
     found.push_back(str.substr(begin, end - begin));
     begin = end + 1;
   }
-  
+
   if (begin < str.size()) found.push_back(str.substr(begin, str.size()));
-  
+
   return found;
 }
 
@@ -81,7 +81,7 @@ std::string Misc::stringToUpper(std::string strToConvert)
       strToConvert[i] = toupper(strToConvert[i]);
    }
    return strToConvert;//return the converted string
-} 
+}
 
 
 void Misc::printSerializedString(const char * c, int size)
@@ -100,7 +100,7 @@ void Misc::printSerializedString(const char * c, int size)
 std::string Misc::charToString(char * c, int size)
 {
   int i=0;
-  
+
  // cout << "content (" << size << " bytes):" << endl;
   std::string value = "";
   while(i < size && c != 0)

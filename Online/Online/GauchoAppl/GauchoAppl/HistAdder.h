@@ -5,8 +5,8 @@
 #include "Gaucho/ObjService.h"
 #include <map>
 #include <string>
-#include "Gaucho/AddSerializer.h"
-#include "Gaucho/MonAdder.h"
+#include "GauchoAppl/AddSerializer.h"
+#include "GauchoAppl/MonAdder.h"
 
 class ObjService;
 class MonServer;

@@ -4,10 +4,10 @@
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IHistogramSvc.h"
 
-#include "Gaucho/HistAdder.h"
-#include "Gaucho/CounterAdder.h"
+#include "GauchoAppl/HistAdder.h"
+#include "GauchoAppl/CounterAdder.h"
 #include "Gaucho/SaveTimer.h"
-#include "Gaucho/AdderSys.h"
+#include "GauchoAppl/AdderSys.h"
 #include "Gaucho/Utilities.h"
 #include "Gaucho/IGauchoMonitorSvc.h"
 #include "AIDA/IHistogram.h"
