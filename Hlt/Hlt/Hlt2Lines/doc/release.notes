@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2012-04-23 - Jibo He
+ - Added DiMuonDetachedPsi2S line, with the same cuts as the DetachedJPsi   
+
 ! 2012-04-20 - Johannes Albrecht
  - adjust express lines
 

@@ -670,6 +670,28 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
 
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonDetachedJPsiDecision" : 50044 } )
 
+        """
+        Inclusive Detached Psi(2S)
+        With the same cuts as Detached J/psi
+
+        """
+        Hlt2SelDetachedPsi2S = Hlt2Member( FilterDesktop
+                                           , "FilterDetachedPsi2S"
+                                           , Inputs  = [ TrackFittedDiMuon ]
+                                           , Code =  "(MAXTREE('mu-'==ABSID,TRCHI2DOF) < %(TrChi2Tight)s )"\
+                                           " & (ADMASS('psi(2S)')<%(DetachedJPsiMassWindow)s*MeV) "\
+                                           " & (BPVDLS>%(DetachedJPsiDLS)s )"%  self.getProps() 
+                                           )
+        
+        DiMuonDetachedPsi2S = Hlt2Line ( 'DiMuonDetachedPsi2S'
+                                         , prescale = self.prescale 
+                                         , algos = [ PV3D(), TrackFittedDiMuon, Hlt2SelDetachedPsi2S ]
+                                         , postscale = self.postscale
+                                         )
+
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonDetachedPsi2SDecision" : 50144 } )        
+        
+
         #--------------------------------------------
         '''                           
         line for dimuon without PV reconstruction  
