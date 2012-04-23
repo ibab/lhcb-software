@@ -42,6 +42,7 @@ class Muons_April2012 :
             'Hlt2DiMuonDetached',
             'Hlt2DiMuonDetachedJPsi',
             'Hlt2DiMuonDetachedHeavy',
+            'Hlt2DiMuonDetachedPsi2S',
 
             #'Hlt2DiMuonNoPV',#remove on request buy Dermot Morgan, May3, 2011
 
