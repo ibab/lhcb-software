@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2012-04-23 - Chris Jones
+ - Fix a few more untested StatusCodes
+
 ! 2012-04-18 - Marco Cattaneo
  - Fix untested StatusCodes
  - Packers return Error if they fail to unregister data when requested in options

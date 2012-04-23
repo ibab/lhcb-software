@@ -42,7 +42,8 @@ StatusCode PackCaloHypo::execute()
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   // If input does not exist, and we aren't making the output regardless, just return
-  if ( !m_alwaysOutput && !exist<LHCb::CaloHypos>(m_inputName) ) return StatusCode::SUCCESS;
+  if ( !m_alwaysOutput && 
+       !exist<LHCb::CaloHypos>(m_inputName) ) return StatusCode::SUCCESS;
 
   // inputs
   LHCb::CaloHypos* hypos = getOrCreate<LHCb::CaloHypos,LHCb::CaloHypos>( m_inputName );

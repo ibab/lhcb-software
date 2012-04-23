@@ -300,18 +300,23 @@ PackParticlesAndVertices::packAParticleContainer ( const LHCb::Particles* parts,
       LHCb::Particle* testObj = new LHCb::Particle();
       unpacked->insert( testObj, key );
       pPacker.unpack( ppart, *testObj, pparts, *unpacked );
-      pPacker.check( part, *testObj );
+      pPacker.check( part, *testObj ).ignore();
     }
+
   }
 
   // clean up test data
   if ( unpacked )
   {
-    StatusCode sc = evtSvc()->unregisterObject( unpacked );
-    if( sc.isSuccess() )
+    const StatusCode sc = evtSvc()->unregisterObject( unpacked );
+    if ( sc.isSuccess() )
+    {
       delete unpacked;
+    }
     else
-      Error("Failed to delete test data after unpacking check", sc ).ignore();
+    {
+      Exception( "Failed to delete test data after unpacking check" );
+    }
   }
 
   if ( !m_deleteInput ) parts->registry()->setAddress( 0 );
@@ -352,7 +357,7 @@ void PackParticlesAndVertices::packAVertexContainer ( const LHCb::Vertices* vert
       LHCb::Vertex* testObj = new LHCb::Vertex();
       unpacked->insert( testObj, key );
       vPacker.unpack( pvert, *testObj, pverts, *unpacked );
-      vPacker.check( vert, *testObj );
+      vPacker.check( vert, *testObj ).ignore();
     }
   }
 
