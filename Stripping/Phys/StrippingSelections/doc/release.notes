@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-04-23 Sean Benson
+ - Change StrippingBs2KKhh to use StdTightPhi
+ - Adjusted B mass window and vertex cuts
+
 ! 2012-04-19 Johannes Albrecht
  - adapt LFV lines to select B2pmu
 
