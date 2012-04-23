@@ -451,7 +451,7 @@ class PackRecObjects(MicroDSTElement) :
 
         deleteInput = True
 
-        testPacking = False
+        testPacking = True
 
         algs = [ ]
 
