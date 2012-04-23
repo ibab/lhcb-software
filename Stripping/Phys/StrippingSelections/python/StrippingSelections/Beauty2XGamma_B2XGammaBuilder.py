@@ -87,7 +87,7 @@ class B2XGammaBuilder(object):
     def _makeB2VVGamma(self, name):
         """Makes B -> V V gamma"""
         decays = { 'B2KstarPhiGamma'    : ['[B0 -> K*(892)0 phi(1020) gamma]cc'],
-                   'Bs2KstarPhiGamma'   : ['[B_s0 -> K*(892)0 phi(1020) gamma]cc'],
+                   'Bs2KstarPhiGamma'   : ['[B_s0 -> K*(892)~0 phi(1020) gamma]cc'],
                    'Bs2KstarKstarGamma' : ['[B_s0 -> K*(892)0 K*(892)~0 gamma]cc'],
                    'Bs2PhiPhiGamma'     : ['B_s0 -> phi(1020) phi(1020) gamma'],
                  }

@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2012-04-23 Ricardo Vazquez Gomez
+ - Small bug fix in the name of a decay (change particle to anti-particle)
+
+! 2012-04-23 Ricardo Vazquez Gomez
  - Change Radiative stream with photons
  - Use same B pT sum cut than trigger. Reduces rate by 25%
  - Bug fixes in few lines.
