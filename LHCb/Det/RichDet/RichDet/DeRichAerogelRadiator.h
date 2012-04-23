@@ -58,7 +58,7 @@ public:
 public:
 
   /// Indicates if this represents a sub-tile(true) or full primary tile (false)
-  inline bool subTile() const { return m_subTile; }
+  inline bool subTile()          const { return m_subTile; }
 
   /// Access the primary Aerogel tile ID number
   inline int primaryTileID()     const { return m_tileNumber; }
@@ -75,7 +75,7 @@ public:
    */
   inline int subtileIDInTile()   const { return m_subtileNumInTile;  }
 
-  /// Returns a unique tile ID number, when sub-tiles are both active in inactive
+  /// Returns a unique tile ID number, when sub-tiles are both active and inactive
   inline int tileID() const 
   { 
     return ( !subTile() ? primaryTileID() :
