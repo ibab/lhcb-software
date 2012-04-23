@@ -30,32 +30,3 @@ apply_pattern component_library library=Gaucho
 macro_append Gaucho_dependencies  " GauchoLib "
 macro_append Gaucho_shlibflags " $(Boost_linkopts_regex) "
 
-private
-application Addertst group=tests ../src/Test/Addertst.cpp
-macro_append  Addertst_dependencies   " GauchoLib "
-
-application RPCTest group=tests ../src/Test/RPCTest.cpp
-macro_append  RPCTest_dependencies    " GauchoLib "
-
-application HistTest group=tests ../src/Test/HistTest.cpp
-macro_append  HistTest_dependencies    " GauchoLib "
-
-application HistHammer group=tests ../src/Test/HistHammer.cpp
-macro_append  HistHammer_dependencies    " GauchoLib "
-
-application CounterTest group=tests ../src/Test/CounterTest.cpp
-macro_append  CounterTest_dependencies    " GauchoLib "
-
-application Cycler group=tests ../src/Test/Cycler.cpp
-macro_append  Cycler_dependencies    " GauchoLib "
-
-application RateTest group=tests ../src/Test/RateTest.cpp
-macro_append  RateTest_dependencies    " GauchoLib "
-
-application segvtst group=tests ../src/Test/segvtst.cpp
-macro_append  segvtst_dependencies    " GauchoLib "
-
-#application procfstst group=tests ../src/Test/procfstst.cpp
-#macro_append  _dependencies    " GauchoLib "
-
-##macro_append Gaucho_shlibflags " -pthread " WIN32 ""
