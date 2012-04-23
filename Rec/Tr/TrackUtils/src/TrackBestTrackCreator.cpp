@@ -46,7 +46,7 @@ namespace  {
     LHCbIDs TIds ;
   private:
     LHCb::Track* m_track ;
-    long int m_weight ;
+    unsigned long int m_weight ;
     double m_qOverP ;
     bool m_owntrack ;
 
@@ -80,8 +80,8 @@ namespace  {
       // first sort by type
       int weightFromType[10] = {0,11,10,20,15,16,12,2,3} ; 
       m_weight = 100000 * weightFromType[atrack->type()] ;
-      // then sort long tracks by the number of TT planes
-      if( atrack->type()==LHCb::Track::Long ) m_weight += 10000*hp.tt().count() ;
+      // then sort by the number of TT planes
+      m_weight += 10000*hp.tt().count() ;
       // then sort by number of T layers / velo _clusters_
       m_weight += 100*hp.numTLayers() ;
       m_weight += 100*( (hp.veloRA()|hp.veloRC()) & (hp.veloPhiA()|hp.veloPhiC()) ).count() ;
@@ -102,6 +102,8 @@ namespace  {
     bool operator<( const TrackData& rhs) const { return m_weight > rhs.m_weight ; }
     // get q/p (set by stateinittool)
     double qOverP() const { return m_qOverP ; }
+    // return the weight used for sorting
+    unsigned long int weight() const { return m_weight; }
   } ;
 
   struct TrackDataSorter
@@ -152,6 +154,8 @@ private:
   double m_maxOverlapFracVelo ;
   double m_maxOverlapFracT ;
   double m_maxOverlapFracTT ;
+  double m_minLongLongDeltaQoP ;
+  double m_minLongDownstreamDeltaQoP ;
   double m_maxChi2DoF ;
   double m_maxChi2DoFVelo ;
   double m_maxChi2DoFT ;
@@ -197,6 +201,8 @@ TrackBestTrackCreator::TrackBestTrackCreator( const std::string& name,
   declareProperty( "MaxChi2DoFVelo", m_maxChi2DoFVelo = 999 ) ;
   declareProperty( "MaxChi2DoFT", m_maxChi2DoFT = 999 ) ;
   declareProperty( "MaxChi2DoFMatchTT", m_maxChi2DoFMatchAndTT = 999 ) ;
+  declareProperty( "MinLongLongDeltaQoP", m_minLongLongDeltaQoP = 1e-6 ) ;
+  declareProperty( "MinLongDownstreamDeltaQoP", m_minLongDownstreamDeltaQoP = 5e-6 ) ;
 }
 
 //=============================================================================
@@ -337,8 +343,8 @@ StatusCode TrackBestTrackCreator::execute()
 
   // sort them
   std::stable_sort( alltracks.begin(), alltracks.end(), TrackDataSorter() ) ;
- 
-  // loop over all tracks and add them to output container if they
+
+   // loop over all tracks and add them to output container if they
   // pass selector and are not yet there.
   std::vector<TrackData*> selectedtracks ;
   selectedtracks.reserve( alltracks.size() ) ;
@@ -367,7 +373,8 @@ StatusCode TrackBestTrackCreator::execute()
 	  plot( dqop, "LLDqopVeloOrClones", -1e-5, 1e-5) ;
 	}
 #endif
-	found = TClones(**it,**jt) && ( std::abs( dqop ) < 1e-6 || veloOrClones(**it,**jt)) ; break;
+	found = TClones(**it,**jt) && 
+	  ( std::abs( dqop ) < m_minLongLongDeltaQoP || veloOrClones(**it,**jt)) ; break;
       case LHCb::Track::Long + offset*LHCb::Track::Downstream:
       case LHCb::Track::Downstream + offset*LHCb::Track::Long:
 #ifdef DEBUGHISTOGRAMS
@@ -377,7 +384,8 @@ StatusCode TrackBestTrackCreator::execute()
 	    plot( dqop, "DLDqopTTClones", -2e-5, 2e-5) ;
 	}
 #endif
-	found = TClones(**it,**jt) && ( std::abs(dqop) < 5e-6 || TTClones(**it,**jt) ); break ;
+	found = TClones(**it,**jt) && 
+	  ( std::abs(dqop) < m_minLongDownstreamDeltaQoP || TTClones(**it,**jt) ); break ;
       case LHCb::Track::Downstream + offset*LHCb::Track::Downstream:
 	// it seems that there are no down stream tracks that share T hits ...
 #ifdef DEBUGHISTOGRAMS

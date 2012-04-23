@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-04-23 - Wouter Hulsbergen
+ - Replaced some hard coded cuts by properties in TrackBestTrackCreator
+
 ! 2012-04-18 - Wouter Hulsbergen
  - Added TrackBestTrackCreator
 
