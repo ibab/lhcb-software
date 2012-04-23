@@ -87,6 +87,8 @@ private:
   double        m_maxDistance;
   double        m_maxWindow;
   double        m_maxChisq;
+  double        m_minMomentum;
+  double        m_minPt;
   bool          m_removeUsed;
   bool          m_removeAll;
     

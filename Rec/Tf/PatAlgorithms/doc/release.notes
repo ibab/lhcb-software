@@ -3,6 +3,11 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+
+! 2012-04-23 - Sascha Stahl
+ - PatMatchTool : Added option MinMomentum and MinPt to reject tracks with a certain momentum.
+ - PatDownstream : Added option MinMomentum and MinPt to reject tracks with a certain momentum.
+
 ! 2012-04-19 - Michel De Cian
  - PatMatchTool: Make the name of the tool that adds the TT hits a property (helpful for testing modified TT hit adding 
 tools)

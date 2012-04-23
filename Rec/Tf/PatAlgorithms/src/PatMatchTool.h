@@ -139,6 +139,10 @@ class PatMatchTool : public GaudiTool,
 	double m_magnetBend;
 	double m_momentumScale;
 	double m_maxChi2;
+  double m_minMomentum;
+  double m_minPt;
+  
+
 };
 
 #endif // PATMATCHTOOL_H

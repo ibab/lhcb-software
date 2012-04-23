@@ -85,6 +85,8 @@ PatDownstream::PatDownstream( const std::string& name,
   declareProperty( "StateErrorTX2" , m_stateErrorTX2 =  6.e-5);
   declareProperty( "StateErrorTY2" , m_stateErrorTY2 =  1.e-4);
   declareProperty( "StateErrorP"   , m_stateErrorP   =  0.15);
+  declareProperty( "MinPt"                 , m_minPt                 =  0. * Gaudi::Units::MeV );
+  declareProperty( "MinMomentum"           , m_minMomentum           =  0. * Gaudi::Units::GeV );
 
   // Change this in order to remove hits and T-tracks used for longtracks.
   // RemoveAll configures that everything is removed.
@@ -768,6 +770,19 @@ bool PatDownstream::acceptCandidate( PatDownTrack& track, PatDownTrack&  bestTra
   maxPoints = nbMeasureOK;
   if ( maxPoints > 4 ) maxPoints = 4;
   
+  //== calculate pt and p
+ 
+  const double momentum = std::abs(track.moment());
+  const double tx2 = track.slopeX()*track.slopeX();
+  const double ty2 = track.slopeY()*track.slopeY();
+  const double sinTrack = sqrt( 1. - 1./(1.+tx2 + ty2) );
+  const double pt = sinTrack*momentum;
+  
+  if (momentum<m_minMomentum) return false;
+  if (pt<m_minPt) return false;
+  
+  
+
   BOOST_FOREACH( PatTTHit* hit, bestTrack.hits() ) {
     hit->hit()->setStatus( Tf::HitBase::UsedByPatDownstream, false );
   }
