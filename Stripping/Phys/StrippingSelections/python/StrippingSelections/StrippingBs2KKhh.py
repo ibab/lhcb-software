@@ -20,11 +20,11 @@ config_params = {'PRPrescale'     : 1.,
                  'PRResMinPT'     : 900.,
                  'PRResMinP'      : 1.,
                  'PRResMaxMass'   : 4000.,
-                 'PRResVtxChiDOF' : 25.,
-                 'PRBMinM'        : 5000.,
+                 'PRResVtxChiDOF' : 9.,
+                 'PRBMinM'        : 4600.,
                  'PRBMaxM'        : 5600.,
                  'PRPhiWindow'    : 25.,
-                 'PRBVtxChi2DOF'  : 25.,
+                 'PRBVtxChi2DOF'  : 9.,
 		 'PRIPCHI2' : 25}
 
 
@@ -33,7 +33,6 @@ from GaudiConfUtils.ConfigurableGenerators import CombineParticles, FilterDeskto
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdLooseKaons
 from StandardParticles import StdNoPIDsPions
 
 name = "BsPhiRho"
@@ -59,11 +58,8 @@ class BsPhiRhoConf(LineBuilder) :
         LineBuilder.__init__(self, name, config)
 
         _trkFilter = FilterDesktop(Code = "(TRCHI2DOF < 4) & (MIPCHI2DV(PRIMARY) > 16)")
-        self.TrackListKK = Selection( 'TrackListKK' + self.name,
-                                    Algorithm = _trkFilter,
-                                    RequiredSelections = [StdLooseKaons])
-
-        self.TrackListhh = Selection( 'TrackList' + self.name,
+        
+	self.TrackListhh = Selection( 'TrackList' + self.name,
                                     Algorithm = _trkFilter,
                                     RequiredSelections = [StdNoPIDsPions])
 
@@ -75,11 +71,9 @@ class BsPhiRhoConf(LineBuilder) :
                                             VtxChi2DOFCut = config['PRResVtxChiDOF'] )
 
         self.KKTrackList = mkKKTrackList( name="KKTracksForCharmlessB"+ self.name,
-                                            trkList=self.TrackListKK,
                                             MinPTCut = config['PRResMinPT'],
                                             MinPCut = config['PRResMinP'],
-                                            PhiWindowMassCut = config['PRPhiWindow'],
-                                            VtxChi2DOFCut = config['PRResVtxChiDOF'] )
+                                            PhiWindowMassCut = config['PRPhiWindow'] )
 
 	Bs2PRName = self.name
         self.B2CharmlessPRKKhh = mkBs2PRKKhh( Bs2PRName,
@@ -117,24 +111,20 @@ def mkDiTrackList( name,
                      RequiredSelections = [ trkList ] )
 
 def mkKKTrackList( name,
-                     trkList,
                      MinPTCut,
                      MinPCut,
-                     PhiWindowMassCut,
-                     VtxChi2DOFCut ) :
+                     PhiWindowMassCut ) :
     """
     KK selection
     """
-    _diTrackPreVertexCuts = "(APT> %(MinPTCut)s *MeV) & (AP> %(MinPCut)s *GeV)" % locals()
-    _diTrackPostVertexCuts = "(ADMASS('phi(1020)')<%(PhiWindowMassCut)s*MeV) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s)" % locals()
-    
-    _combineDiTrack = CombineParticles( DecayDescriptor="phi(1020) -> K+ K-",
-					CombinationCut = _diTrackPreVertexCuts,
-                                        MotherCut = _diTrackPostVertexCuts )
 
-    return Selection(name,
-                     Algorithm = _combineDiTrack,
-                     RequiredSelections = [ trkList ] )
+    _code = "(MIPCHI2DV(PRIMARY) > 16) & (ADMASS('phi(1020)')< %(PhiWindowMassCut)s *MeV) & (PT> %(MinPTCut)s *MeV) & (P> %(MinPCut)s *GeV)" % locals()
+    _stdPhi = DataOnDemand(Location="Phys/StdTightPhi2KK/Particles")
+    _phiFilter = FilterDesktop(Code = _code)
+
+    return Selection (name,
+                      Algorithm = _phiFilter,
+                      RequiredSelections = [_stdPhi])
 
 def mkBs2PRKKhh( name,
                   diTrkList,
