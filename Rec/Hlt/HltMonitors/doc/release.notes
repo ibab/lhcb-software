@@ -4,6 +4,12 @@
 ! Purpose     : Offline Monitoring of Hlt rates and composition
 !-----------------------------------------------------------------------------
 
+! 2012-04-23 - Patrick Koppenburg
+ - src/HltCompositionMonitor.cpp : do all Hlt2 lines
+ - python/HltMonitors/ConfiguredHltMonitors.py
+   . Run EventTimeMonitor (need Rec/RecAlgs r138776)
+   . Run HltRateMoniror instance for MB lines
+
 !========================= HltMonitors v1r4 2011-07-27 =========================
 ! 2011-06-22 - Roel Aaij
  - Fix uninitialised m_disabled.

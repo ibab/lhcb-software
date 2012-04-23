@@ -53,7 +53,7 @@ HltCompositionMonitor::HltCompositionMonitor(const std::string& name,
 
    declareProperty( "HltDecReportsLocation", m_decReportsLocation =
                     HltDecReportsLocation::Default );
-   declareProperty( "Regexes", m_regexes = assign::list_of( "Hlt2Express.*Decision" ) );
+   declareProperty( "Regexes", m_regexes = assign::list_of( "Hlt2.*Decision" ) );
 
 }
 
