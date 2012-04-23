@@ -5,7 +5,7 @@
  *      Author: beat
  */
 
-#include "GauchoAppl/CounterTask.h"
+#include "Gaucho/CounterTask.h"
 #include "Gaucho/Utilities.h"
 #include "Gaucho/MonCounter.h"
 //HistTask::HistTask(const std::string &task,const std::string &dns)
