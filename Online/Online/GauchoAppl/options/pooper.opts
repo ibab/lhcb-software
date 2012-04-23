@@ -1,0 +1,27 @@
+// Job options file. Simple Online monitoring example
+//==============================================================
+#include "$INFOOPTIONS"
+ApplicationMgr.ExtSvc               += {
+					"OvrPub"
+                                       };
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+Runable.Wait                         = 3;  // 1 of running as daemon
+MessageSvc.OutputLevel               = 3; //@OnlineEnv.OutputLevel;
+
+//MessageSvc.fifoPath                = "$LOGFIFO";
+//MessageSvc.LoggerOnly              = true;  // Set to false for stdout
+HistogramPersistencySvc.Warnings   = false;
+
+
+
+OvrPub.MyName              = "<part>_X_OvrPub";
+OvrPub.PartitionName       = @OnlineEnv.PartitionName;
+OvrPub.TaskPattern         = "PART[0-9][0-9]_Adder_(.*)";
+OvrPub.ServicePattern      = "MON_<part>_hlt01_Overflow_00/Counter/";
+OvrPub.AdderClass          = "Counter";
+OvrPub.InDNS               = "mona08";
+OvrPub.TrendingOn          = true;
+

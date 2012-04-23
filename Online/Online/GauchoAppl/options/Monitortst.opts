@@ -1,0 +1,13 @@
+// Job options file. Simple Online monitoring example
+//==============================================================
+//#include "$OPTIONS"
+
+ApplicationMgr.ExtSvc               += { "MonitorSvc" };
+//ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+Runable.Wait                         = 3;  // 1 of running as daemon
+ApplicationMgr.TopAlg += {"Monitortst"};
+MonitorSvc.ExpandCounterServices = 1;
+MonitorSvc.ExpandNameInfix = "<proc>/";
