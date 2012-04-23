@@ -18,10 +18,10 @@ config_params = {'Q2BPrescale'     : 1.,
                  'Q2BResMinPT'     : 900.,
                  'Q2BResMinP'      : 1.,
                  'Q2BResMaxMass'   : 2500.,
-                 'Q2BResVtxChiDOF' : 14.,
-                 'Q2BBMinM'        : 5000.,
-                 'Q2BBMaxM'        : 5600.,
-                 'Q2BBVtxChi2DOF'  : 14.,
+                 'Q2BResVtxChiDOF' : 9.,
+                 'Q2BBMinM'        : 5200.,
+                 'Q2BBMaxM'        : 5500.,
+                 'Q2BBVtxChi2DOF'  : 9.,
                  'Q2BIPCHI2' : 25}
 
 
