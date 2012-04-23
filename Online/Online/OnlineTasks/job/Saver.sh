@@ -42,6 +42,7 @@ echo "options "${OPTIONS} "dim dns node "${DIM_DNS_NODE}
 if [[ ${PARTNAME} == "LHCb" ]]
    then 
       . ./setupOnline.sh 
+#      export LD_LIBRARY_PATH=/home/beat/cmtuser/myOnline/Online/Gaucho/x86_64-slc5-gcc46-dbg:$LD_LIBRARY_PATH;
       exec -a ${UTGID} ${CLASS1_TASK} -options=../options/pooper.opts &
    elif [[ ${PARTNAME} == "FEST" ]]
    then

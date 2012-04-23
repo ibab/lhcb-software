@@ -10,6 +10,8 @@ fi
 
 DATE=`date +%Y"-"%m"-"%d`
 
+export SQLITEDBPATH="/sw/lib/lhcb/SQLite/SQLDDDB/db"
+
 for partition in LHCBCOND DDDB SIMCOND; do
    if test -n "$2"; then export DB=$2
       else export DB=/group/online/hlt/conditions/${partition}_$TAG.db
