@@ -40,7 +40,7 @@ config = { # Cuts made on all charged input particles in all lines
                      },
            # Cuts made on all K shorts
            "KS0" : { 'PT_MIN'        : '1000*MeV',
-                     'BPVVDCHI2_MIN' : 64 ,
+                     'BPVVDCHI2_MIN' : 81 ,
                      #'MIPCHI2DV_MIN' : 4,
                      'VCHI2DOF_MAX'  : 9,
                      'MM_MIN'        : '480.*MeV',
@@ -51,7 +51,7 @@ config = { # Cuts made on all charged input particles in all lines
                      'CHILDCL1_MIN'  : 0.25,
                      'CHILDCL2_MIN'  : 0.25 },
            # Cuts made on all B's and Lb's used in all lines
-           "B2X" : { 'SUMPT_MIN'     : '4000*MeV',
+           "B2X" : { 'SUMPT_MIN'     : '5000*MeV',
                      'VCHI2DOF_MAX'  : 9,
                      'BPVIPCHI2_MAX' : 9,
                      #'BPVLTIME_MIN'  : '0.0*ps',
@@ -62,7 +62,7 @@ config = { # Cuts made on all charged input particles in all lines
                      },
            # Cuts for rho, K*, phi, omega
            "HH": { 'MASS_WINDOW'      : {'KST':'150*MeV','RHO':'250*MeV','PHI':'15*MeV','OMEGA':'30*MeV'}, 
-                   'DAUGHTERS'        : {'PT_MIN':'300*MeV','P_MIN':'3000*MeV'},
+                   'DAUGHTERS'        : {'PT_MIN':'500*MeV','P_MIN':'3000*MeV'},
                    'piLAMBDADAUGHTERS': {'PT_MIN':'300*MeV','P_MIN':'3000*MeV','PIDK_MAX':'5'},   # only for pH
                    'pLAMBDADAUGHTERS' : {'PT_MIN':'1200*MeV','P_MIN':'10000*MeV','PIDp_MIN':'5'}, # only for pH
                    'kLAMBDADAUGHTERS' : {'PT_MIN':'300*MeV','P_MIN':'3000*MeV','PIDK_MIN':'0'},    # only for pH

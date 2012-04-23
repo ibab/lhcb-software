@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-04-23 Ricardo Vazquez Gomez
+ - Change Radiative stream with photons
+ - Use same B pT sum cut than trigger. Reduces rate by 25%
+ - Bug fixes in few lines.
+ - Adjust mass windows for omega and all hh particles  
+
 ! 2012-04-23 Sean Benson
  - Change StrippingBs2KKhh to use StdTightPhi
  - Adjusted B mass window and vertex cuts on StrippingB2FourKHigh

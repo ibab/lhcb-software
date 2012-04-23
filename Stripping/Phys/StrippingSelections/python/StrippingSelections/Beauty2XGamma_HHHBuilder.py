@@ -71,8 +71,8 @@ class HHHBuilder(object):
         #massWindow = '(750*MeV < AM < 815*MeV)'
         #massWindow = "(AM < %s)" % (self.config['MASS_WINDOW']['OMEGA'])
 
-        r = self._makeX2HHH('Omega2PiPiPi0Resolved',['omega(782) -> pi+ pi- pi0'],'(AM<1500*MeV)',self.config,[self.pions]+self.pi0['Resolved'],True)
-        m = self._makeX2HHH('Omega2PiPiPi0Merged',['omega(782) -> pi+ pi- pi0'],'(AM<1500*MeV)',self.config,[self.pions]+self.pi0['Merged'],True)
+        r = self._makeX2HHH('Omega2PiPiPi0Resolved',['omega(782) -> pi+ pi- pi0'],'(AM<1200*MeV)',self.config,[self.pions]+self.pi0['Resolved'],True)
+        m = self._makeX2HHH('Omega2PiPiPi0Merged',['omega(782) -> pi+ pi- pi0'],'(AM<1200*MeV)',self.config,[self.pions]+self.pi0['Merged'],True)
         mass = self._massWindow('OMEGA','omega(782)').replace('ADAMASS','ADMASS')
         presel = MergedSelection('Omega2PiPiPi0Beauty2XGamma',RequiredSelections=[r,m])
         return [filterSelection('Omega2PiPiPi0',mass,[presel])]
