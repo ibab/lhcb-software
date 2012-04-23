@@ -1376,7 +1376,11 @@ class Hlt2Tracking(LHCbConfigurableUser):
         recoMatch         = PatMatch(self.getProp("Prefix")+'Match'
                                  , VeloInput = self.__hlt2VeloTracking().outputSelection()
                                  , SeedInput = self.__hlt2SeedTracking().outputSelection()
-                                    , MatchOutput = matchTrackOutputLocation)
+                                 , MatchOutput = matchTrackOutputLocation)
+        from Configurables   import PatMatchTool
+        recoMatch.addTool(PatMatchTool, name="PatMatchTool")
+        recoMatch.PatMatchTool.MinMomentum = 1000
+        recoMatch.PatMatchTool.MinPt = 300
    
         if self.getProp("EarlyDataTracking") :
             # Do something special in case of early data
@@ -1412,8 +1416,10 @@ class Hlt2Tracking(LHCbConfigurableUser):
         PatDownstream.ForwardLocation = fwdtracks.outputSelection()
         PatDownstream.MatchLocation   = matchtracks.outputSelection()
         #Set to true to remove used seeds and tt hits
-        PatDownstream.RemoveUsed     = True
+        PatDownstream.RemoveUsed     = False
         PatDownstream.RemoveAll      = True
+        PatDownstream.MinMomentum = 0
+        PatDownstream.MinPt = 0
   
         if self.getProp("EarlyDataTracking") :
             # Do something special in case of early data

@@ -4,6 +4,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2012-04-23 - Sascha Stahl
+  - Added option MinMomentum and MinPt to Downstream and Matchtracking
+
+
 ! 2012-04-20 - Sascha Stahl
   - Implemented global track cut in tracking sequence. Value set in HltTrackNames.py
 		Fixed Clonekiller. Clonekiller only runs when forward and matching are run.
