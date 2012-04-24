@@ -76,6 +76,7 @@ text file which can be imported into any spreadsheet application
 This script creates a new DB slice from the XYZ.pck.bz2 data spat out in the last
 step. It needs to run under a particular environment 
 
+ > SetupProject LHCbDirac
  > SetupProject LHCb --runtime LHCbDirac --use LHCbDiracSys
  > lhcb-proxy-init -g lhcb_calibration
  > ./CreateCondDBLayer.py

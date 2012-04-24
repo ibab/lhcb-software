@@ -52,7 +52,7 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck.bz2"):
                 print "(n-1) Scale Rich1 =",r1,"Rich2",r2
             
                 # Make a job object
-                j = Job( application = Brunel( version = 'v40r1' ) )
+                j = Job( application = Brunel( version = 'v42r2p1' ) )
 
                 # name
                 j.name = "RefInControl"
@@ -101,11 +101,11 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck.bz2"):
                 j.submit()
 
 ## Submits DB calibration jobs
-def submitCalibrationJobs(name="",BrunelVer="v40r1",pickledRunsList=[]):
+def submitCalibrationJobs(name="",BrunelVer="v42r2p1",pickledRunsList=[]):
     submitRecoJobs(name,BrunelVer,pickledRunsList,"RefInCalib")
 
 ## Submit DB Verification Jobs
-def submitVerificationJobs(name="",BrunelVer="v40r1",pickledRunsList=[]):
+def submitVerificationJobs(name="",BrunelVer="v42r2p1",pickledRunsList=[]):
     submitRecoJobs(name,BrunelVer,pickledRunsList,"RefInVerify")
 
 ## Real underlying method
@@ -164,19 +164,20 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
     # Custom DB slices for both job types (calibration and verification)
     dbFiles = [ ]
 
-    # RICH Mirror alignment
-    dbFiles += ["2011MirrorAlign-27102011"]
+    # Tracking early 2012 update
+    dbFiles += ["Tracking.alignDB.early2012.2days.jpsi"]
 
-    # RePro II
-    #dbFiles += ["2011-PhaseTwoRePro-RootFiles-RunAligned-Sobel-Smoothed0.5hours-HPDOcc-21102011"]
-    #dbFiles += ["2011-PhaseTwoRePro-RootFiles-RunAligned-Sobel-Smoothed1.5hours-HPDAlign-21102011"]
+    # First mirror alignment
+    dbFiles += ["2012MirrorAlign-19042012"]
 
-    # RePro III
-    dbFiles += ["2011-ReproIII-RunAligned-Sobel-Smoothed0.5hours-HPDOcc-01112011"]
-    dbFiles += ["2011-ReproIII-RunAligned-Sobel-Smoothed1.5hours-HPDAlign-01112011"]
+    # Reset Aerogel
+    dbFiles += ["2012AerogelCalibReset-21042012-V2"]
 
-    # Tracking
-    #dbFiles += ["TrackingDB-v5.6series","Velo2011"] 
+    # First HPD image alignment
+    dbFiles += ["2012-RootFiles-RunAligned-Sobel-Smoothed1.5hours-HPDAlign-19042012"]
+
+    # HPD occupancies
+    dbFiles += ["2012-RootFiles-RunAligned-Sobel-Smoothed0.5hours-HPDOcc-19042012"]
 
     # Only for Calibration jobs only
     if jobType == "RefInCalib" :
@@ -185,14 +186,12 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
 
     # For verification jobs only, use custom DB Slice for n-1 corrections
     if jobType == "RefInVerify" :
-        #pass
-        dbFiles += ["RefInCalib-2011-NewTkRichAlign-V1_BR-v40r1-21102011"]
+        pass
+        #bFiles += ["RefInCalib-2011-NewTkRichAlign-V1_BR-v42r2p1-21102011"]
 
     # Configure additional DBs
     for dbFile in dbFiles :
         dbopts += ["CondDB().addLayer(CondDBAccessSvc(\""+dbFile+"\",ConnectionString=\"sqlite_file:"+dbFile+".db/LHCBCOND\",DefaultTAG=\"HEAD\"))\n"]
-        # Add to actual sandbox
-        #mySandBox += ["databases/"+dbFile+".db"]
         # Upload to LFNs
         lfnname = "LFN:/lhcb/user/j/jonrob/DBs/"+dbFile+".db"
         if not uploadFile("databases/"+dbFile+".db",lfnname) : return False
@@ -345,10 +344,10 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
     #minMaxRun = [ 103936, 99999999 ] # Third phase of 2011 RePro
 
     # Bad runs to always skip
-    badRuns = [ 89537 ]
-    # RICH1 desync runs
+    badRuns = [ ]
+    badRuns += [ 89537 ]  # Not sure why
+    badRuns += [ 111730 ] # RICH signals missing for unknown reason
     
-
     # Loop over jobs
     nFailedFits = 0
     print "Looping over the runs ..."
@@ -685,8 +684,8 @@ def recoCKTheta(jobs,rad='Rich1Gas'):
 # ====================================================================================
 
 def uploadFile(pfn,lfn,sites=['CERN-USER','RAL-USER','IN2P3-USER',
-                              'PIC-USER','CNAF-USER','NIKHEF-USER','GRIDKA-USER']):
-    
+                              'PIC-USER','CNAF-USER','GRIDKA-USER']):
+    #   ,'NIKHEF-USER'
     from Ganga.GPI import PhysicalFile, LogicalFile
     import time
 
@@ -792,7 +791,7 @@ def queryBKDB(run):
     from Ganga.GPI import diracAPI
     import time
     
-    cmd = ( "from LHCbDIRAC.NewBookkeepingSystem.Client.BookkeepingClient import BookkeepingClient;" +
+    cmd = ( "from LHCbDIRAC.BookkeepingSystem.Client.BookkeepingClient import BookkeepingClient;" +
             "result = BookkeepingClient().getRunInformations("+str(run)+")" )
 
     res = { 'OK' : False }
@@ -877,15 +876,15 @@ def getListOfJobs(tag,name,BrunelVer,statuscodes,MinRun=0,MaxRun=99999999,desc="
     for d in sorted(dict.keys()) : cJobs += [dict[d]]
     return cJobs
 
-def getCalibrationJobList(name="",BrunelVer="v40r1",statuscodes=['completed'],
+def getCalibrationJobList(name="",BrunelVer="v42r2p1",statuscodes=['completed'],
                           MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInCalib',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
-def getVerificationJobList(name="",BrunelVer="v40r1",statuscodes=['completed'],
+def getVerificationJobList(name="",BrunelVer="v42r2p1",statuscodes=['completed'],
                            MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInVerify',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
-def getControlJobList(name="",BrunelVer="v40r1",statuscodes=['completed'],
+def getControlJobList(name="",BrunelVer="v42r2p1",statuscodes=['completed'],
                       MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInControl',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
@@ -1320,22 +1319,36 @@ def checkInputDataReplicas(lfns):
 
 def filesPerJob(nFiles):
     if nFiles == 1  : return 1
-    if nFiles == 2  : return 2
-    if nFiles == 3  : return 3
+    if nFiles == 2  : return 1
+    if nFiles == 3  : return 1
     if nFiles == 4  : return 2
-    if nFiles == 5  : return 3
-    if nFiles == 6  : return 3
+    if nFiles == 5  : return 2
+    if nFiles == 6  : return 2
     if nFiles == 7  : return 3
-    if nFiles == 8  : return 4
+    if nFiles == 8  : return 2
     if nFiles == 9  : return 3
     if nFiles == 10 : return 5
     if nFiles == 12 : return 4
     if nFiles == 18 : return 6
     if nFiles < 20  : return 5
     if nFiles < 100 : return 6
+##     if nFiles == 1  : return 1
+##     if nFiles == 2  : return 2
+##     if nFiles == 3  : return 3
+##     if nFiles == 4  : return 2
+##     if nFiles == 5  : return 3
+##     if nFiles == 6  : return 3
+##     if nFiles == 7  : return 3
+##     if nFiles == 8  : return 4
+##     if nFiles == 9  : return 3
+##     if nFiles == 10 : return 5
+##     if nFiles == 12 : return 4
+##     if nFiles == 18 : return 6
+##     if nFiles < 20  : return 5
+##     if nFiles < 100 : return 6
     return 10
 
-def removeCalibrationDataSet(name,BrunelVer="v40r1"):
+def removeCalibrationDataSet(name,BrunelVer="v42r2p1"):
     from Ganga.GPI import jobtree
     js = getCalibrationJobList(name,BrunelVer,
                                statuscodes=['completed','running','submitted','failed'])
@@ -1344,7 +1357,7 @@ def removeCalibrationDataSet(name,BrunelVer="v40r1"):
     if jobtree.exists(path) : jobtree.rm(path)
     jobtree.cd('/RichCalibration')
 
-def removeVerificationDataSet(name,BrunelVer="v40r1"):
+def removeVerificationDataSet(name,BrunelVer="v42r2p1"):
     from Ganga.GPI import jobtree
     js = getVerificationJobList(name,BrunelVer,
                                statuscodes=['completed','running','submitted','failed'])

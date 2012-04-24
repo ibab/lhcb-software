@@ -50,11 +50,13 @@ def initialise():
   #LHCbApp().DDDBtag   = "head-20110303"
   #LHCbApp().CondDBtag = "head-20110524"
   
-  DDDBConf(DataType = "2011")
-  #LHCbApp().DDDBtag   = "head-20110302"
-  #LHCbApp().CondDBtag = "head-20110622"
-  LHCbApp().DDDBtag   = "head-20110722" 
-  LHCbApp().CondDBtag = "head-20110722"
+  #DDDBConf(DataType = "2011")
+  #LHCbApp().DDDBtag   = "head-20110722" 
+  #LHCbApp().CondDBtag = "head-20110722"
+
+  DDDBConf(DataType = "2012")
+  LHCbApp().DDDBtag   = "head-20120316"
+  LHCbApp().CondDBtag = "head-20120316"
   
   # Set message level to info and above only
   msgSvc().setOutputLevel(3)
@@ -163,8 +165,8 @@ def fillDB(calibration,db,runsTimes,rad):
     #dStopTime  = datetime.datetime(  2100,  12,   31,   23,   59,  59  )
 
     startTime = correctStartTime( run, getUNIXTime(dStartTime) )
-    stopTime  = getUNIXTime( dStopTime  )
-    #stopTime  = 9223372036854775807 # cool.ValidityKeyMax
+    #stopTime  = getUNIXTime( dStopTime  )
+    stopTime  = 9223372036854775807 # cool.ValidityKeyMax
 
     # Scale factor
     scale = '%g' % scaleF[0]

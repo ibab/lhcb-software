@@ -33,14 +33,18 @@ def initialise():
         #LHCbApp().DDDBtag   = "head-20110303"
         #LHCbApp().CondDBtag = "head-20110524"
         
-        DDDBConf(DataType = "2011")
-        LHCbApp().DDDBtag   = "head-20110722" 
-        LHCbApp().CondDBtag = "head-20110722"
+        #DDDBConf(DataType = "2011")
+        #LHCbApp().DDDBtag   = "head-20110722" 
+        #LHCbApp().CondDBtag = "head-20110722"
         #LHCbApp().CondDBtag = "HEAD"
 
-        # Aerogel Sub Tiles
-        #CondDB().LocalTags["LHCBCOND"] = ["rich1-20110624"]
-        #CondDB().LocalTags["DDDB"]     = ["rich1-20110624"]
+        DDDBConf(DataType = "2012")
+        LHCbApp().DDDBtag   = "head-20120316" 
+        LHCbApp().CondDBtag = "head-20120316"
+        LHCbApp().CondDBtag = "HEAD"
+        CondDB().addLayer(CondDBAccessSvc("2012Aerogel",
+                                          ConnectionString="sqlite_file:2012Aerogel.db/LHCBCOND",
+                                          DefaultTAG="HEAD"))
 
         # Set message level to info and above only
         msgSvc().setOutputLevel(3)
@@ -119,7 +123,7 @@ def xmlFooter():
     return """
 </DDDB>"""
 
-def run(rootFile="/usera/jonesc/NFS/RootFiles/AerogelSubTileCalib/AeroCalib-2011.root"):
+def run(rootFile="2012.root"):
 
     from ROOT import TFile
 
@@ -136,17 +140,25 @@ def run(rootFile="/usera/jonesc/NFS/RootFiles/AerogelSubTileCalib/AeroCalib-2011
     globals()["imageFileName"] = "results/Aerogel.pdf"
     printCanvas('[')
 
+    # Root histo dir
+    rootHistDir = "RICH/RiCKResLongTight/Aerogel/"
+    #rootHistDir = "RICH/RiCKResLong/Aerogel/"
+
     # Start the new XML
     newXML = xmlHeader()
 
     # primary tile IDs to use the full sub tile calibration for
+    #fullCalibTiles = [ ]
     fullCalibTiles = [ 2, 4, 10, 12 ]
     #fullCalibTiles = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ]
 
-    # Loop over the tiles
-    tiles = aerogel.radiators()
+    # Loop over the (all) tiles
+    tiles = [ ]
+    for t in aerogel.fullTileRadiators() : tiles += [t]
+    for t in aerogel.subTileRadiators()  : tiles += [t]
     print "found", len(tiles), "aerogel tiles"
-    for tile in  tiles :
+    lastPrimaryTile = -999
+    for tile in tiles :
 
         # Load the conditions
         cond = tile.condition( "AerogelParameters" )
@@ -156,9 +168,10 @@ def run(rootFile="/usera/jonesc/NFS/RootFiles/AerogelSubTileCalib/AeroCalib-2011
 
         # Get the histogram to fit
         OK = False
-        if tile.subTile() and tile.primaryTileID() in fullCalibTiles :
+        useSubTile = tile.subTile() and tile.primaryTileID() in fullCalibTiles
+        if useSubTile :
             
-            histID = "RICH/RiCKResLongTight/Aerogel/subtiles/ckResAll-SubTile" + str(tile.tileID())
+            histID = rootHistDir + "subtiles/ckResAll-SubTile" + str(tile.tileID())
             print "Full SubTile Calibration for", tile.tileID()
             hist = file.Get(histID)
             if hist.GetEntries() < minEntries :
@@ -168,7 +181,7 @@ def run(rootFile="/usera/jonesc/NFS/RootFiles/AerogelSubTileCalib/AeroCalib-2011
                     
         if not OK :
             
-            histID = "RICH/RiCKResLongTight/Aerogel/tiles/ckResAll-Tile" + str(tile.primaryTileID())
+            histID = rootHistDir + "tiles/ckResAll-Tile" + str(tile.primaryTileID())
             print "Full Tile Calibration for", tile.tileID()
             hist = file.Get(histID)
                     
@@ -176,15 +189,31 @@ def run(rootFile="/usera/jonesc/NFS/RootFiles/AerogelSubTileCalib/AeroCalib-2011
     
         # fit
         result = fit(hist)
-        printCanvas()
-        
-        if result['OK'] :
-            N = newN(nzero,result['shift'])
-            
-            # Update condition
-            cond.addParam("CurrentAerogel_nAtFixedLambda",N)
+        if useSubTile or lastPrimaryTile != tile.primaryTileID() : printCanvas()
+        lastPrimaryTile = tile.primaryTileID()
 
-            print "   -> Shift =", result['shift'], "oldN =", nzero, "newN =", N
+        # Extract the shift
+        shift = 0
+        if result['OK'] : shift = result['shift']
+        # Manual forced shift list
+        forcedList = { 0  : 0.0,
+                       1  : 0.0,
+                       4  : 0.0,
+                       7  : 0.0,
+                       8  : 0.0,
+                       12 : -0.01 }
+        if tile.primaryTileID() in forcedList.keys() :
+            shift = forcedList[tile.primaryTileID()]
+            print "   -> Forcing shift to", shift
+        
+        # New n
+        N = newN(nzero,shift)
+        
+        # Update condition
+        cond.addParam("CurrentAerogel_nAtFixedLambda",N)
+        
+        # Print
+        print "   -> Shift =", shift, "oldN =", nzero, "newN =", N               
 
         # Write out the new condition
         newXML += cond.toXml() + '\n' + '\n' 
@@ -222,7 +251,7 @@ def fit(hist):
         # Get x value of highest content bin in the search range
         maxBin = 0
         max = 0
-        for bin in range(1,hist.GetNbinsX()-1):
+        for bin in range(1,hist.GetNbinsX()):
             x = hist.GetBinCenter(bin) 
             if x > searchX[0] and x < searchX[1] :
                 cont = hist.GetBinContent(bin)
@@ -254,10 +283,5 @@ def fit(hist):
     return result
 
 def newN(oldN,shift):
-
     from math import acos, cos
-
-    thetaZero = acos(1.0/oldN)
-    N = 1.0 / cos(thetaZero+shift)
-
-    return N
+    return 1.0 / cos( acos(1.0/oldN) + shift )

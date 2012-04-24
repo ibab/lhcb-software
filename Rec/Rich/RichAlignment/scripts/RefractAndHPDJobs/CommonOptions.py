@@ -12,9 +12,14 @@ from Configurables import Brunel, LHCbApp, CondDB
 #LHCbApp().CondDBtag = "head-20110622"
 
 # For 2011 data
-importOptions("$APPCONFIGOPTS/Brunel/DataType-2011.py")
-LHCbApp().DDDBtag   = "head-20110914"
-LHCbApp().CondDBtag = "head-20111111"
+#importOptions("$APPCONFIGOPTS/Brunel/DataType-2011.py")
+#LHCbApp().DDDBtag   = "head-20110914"
+#LHCbApp().CondDBtag = "head-20111111"
+
+# For 2012 data
+importOptions("$APPCONFIGOPTS/Brunel/DataType-2012.py")
+LHCbApp().DDDBtag   = "head-20120316"
+LHCbApp().CondDBtag = "head-20120316"
 
 # Aerogel Sub Tiles
 #CondDB().LocalTags["LHCBCOND"] = ["rich1-20110624"]
@@ -22,10 +27,10 @@ LHCbApp().CondDBtag = "head-20111111"
 
 # Initial IOV time
 # http://www.onlineconversion.com/unix_time.htm
-from Configurables import EventClockSvc
+#from Configurables import EventClockSvc
 #EventClockSvc( InitialTime = 1306879200000000000 ) # 1st June 2011
 #EventClockSvc( InitialTime = 1317460149000000000 ) # 1st Octo 2011
-EventClockSvc( InitialTime = 1319155200000000000 ) # 21st Octo 2011
+#EventClockSvc( InitialTime = 1319155200000000000 ) # 21st Octo 2011
 
 # No output files
 Brunel().OutputType = "None"
@@ -55,7 +60,8 @@ from Configurables import RichRecQCConf
 rMoni = RichRecQCConf("OfflineRichMoni")
 rMoni.removeMonitors ( ["HPDIFBMonitoring","PidMonitoring","TracklessRingAngles"] )
 # Open up the CK res plot range, for the Wide photon selection
-rMoni.CKThetaResRange = [ 0.045, 0.008, 0.004 ]
+#rMoni.CKThetaResRange = [ 0.045, 0.008, 0.004 ]
+rMoni.CKThetaResRange = [ 0.05, 0.008, 0.004 ]
 # Add HPD occ plots
 rMoni.addMonitor("HPDHitPlots")
 

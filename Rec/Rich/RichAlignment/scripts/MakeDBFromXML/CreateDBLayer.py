@@ -67,9 +67,9 @@ def fileMD5(file):
 #dbFileName = "Tracking2011Align-v5.3"
 
 # Mirror alignment
-upAlign    = "/usera/jonesc/NFS/DetDB/2011Mirrors/MagUp"
-dnAlign    = "/usera/jonesc/NFS/DetDB/2011Mirrors/MagDown"
-dbFileName = "2011MirrorAlign"
+#upAlign    = "/usera/jonesc/NFS/DetDB/2012Mirrors/MagUp"
+#dnAlign    = "/usera/jonesc/NFS/DetDB/2012Mirrors/MagDown"
+#dbFileName = "2012MirrorAlign"
 
 # Move HPD Occupancies
 #upAlign = "/usera/jonesc/NFS/DetDB/MoveHPDOccs"
@@ -92,9 +92,9 @@ dbFileName = "2011MirrorAlign"
 #dbFileName = "OldHPDOccs"
 
 # Aerogel calibration
-#upAlign = "/usera/jonesc/NFS/DetDB/Aerogel"
-#dnAlign = "/usera/jonesc/NFS/DetDB/Aerogel"
-#dbFileName = "AerogelCalib"
+upAlign = "/usera/jonesc/NFS/DetDB/Aerogel"
+dnAlign = "/usera/jonesc/NFS/DetDB/Aerogel"
+dbFileName = "2012AerogelCalibReset"
 
 # The following dates are extracted from spreadsheets here
 # http://marwww.in2p3.fr/~legac/LHCb/
@@ -134,13 +134,16 @@ field = { }
 #field[ datetime.datetime(  2011,   6,   11,    2,    0,   0  ) ] = upAlign
 #field[ datetime.datetime(  2011,   7,   27,    0,   30,   0  ) ] = dnAlign
 #field[ datetime.datetime(  2011,   8,   17,   11,    0,   0  ) ] = upAlign
-field[ datetime.datetime(  2011,   9,   16,   17,    0,   0  ) ] = dnAlign
-field[ datetime.datetime(  2011,   9,   28,    3,    0,   0  ) ] = upAlign
-field[ datetime.datetime(  2011,  10,    7,    4,    0,   0  ) ] = dnAlign
-field[ datetime.datetime(  2011,  10,   22,    5,    0,   0  ) ] = upAlign
+#field[ datetime.datetime(  2011,   9,   16,   17,    0,   0  ) ] = dnAlign
+#field[ datetime.datetime(  2011,   9,   28,    3,    0,   0  ) ] = upAlign
+#field[ datetime.datetime(  2011,  10,    7,    4,    0,   0  ) ] = dnAlign
+#field[ datetime.datetime(  2011,  10,   22,    5,    0,   0  ) ] = upAlign
 
 # End of 2011
 #stop = datetime.datetime(  2011,  12,   31,   23,   59,  59  )
+
+# 2012                     Year  Month  Day   Hour  Min  Sec
+field[ datetime.datetime(  2012,   4,    1,    1,    0,   0  ) ] = dnAlign
 
 # Long way away ...
 stop = datetime.datetime(  2100,  12,   31,   23,   59,  59  )

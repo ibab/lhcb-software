@@ -1,7 +1,7 @@
 
 from Brunel.Configuration import *
 
-importOptions("$APPCONFIGOPTS/UseOracle.py")
+#importOptions("$APPCONFIGOPTS/UseOracle.py")
 
 importOptions("CommonOptions.py")
 
