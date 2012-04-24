@@ -8,6 +8,7 @@
 !
 !----------------------------------------------------------------------------
 
+!========================= Hlt2Lines v8r19 2012-04-24 =========================
 ! 2012-04-24 - V. Gligorov
  - Add Hlt2CharmHadD02HHXDstLines lines
   . Serve to trigger tagged D0->hhX, where X is any missing particle
