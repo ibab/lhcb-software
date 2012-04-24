@@ -1,6 +1,6 @@
-#include "Gaucho/CounterAdder.h"
+#include "GauchoAppl/CounterAdder.h"
 
-#include "Gaucho/AdderSys.h"
+#include "GauchoAppl/AdderSys.h"
 #include "Gaucho/Utilities.h"
 #include "Gaucho/IGauchoMonitorSvc.h"
 #include "AIDA/IHistogram1D.h"
