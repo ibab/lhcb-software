@@ -4,6 +4,7 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================= HltSettings v5r29 2012-04-204=========================
 ! 2012-04-24 - V. Gligorov
  - Add Hlt2CharmHadD02HHXDstLines lines to CharmHadrons
  - Prescale DisplacedVertexLines to 0 by default
