@@ -4,6 +4,7 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!========================= HltCommon v8r5 2012-02-24 =========================
 ! 2012-04-19 - Albert Puig
  - Added CaloID check and sorting of L0Calo Candidates sorting by Et.
 
