@@ -885,7 +885,9 @@ DstarD2KShh = {
 
 ## KShh. Mat Charles.
 ## Test:  Yes
-## Control version of above, prescaled and going to full DST
+## Control version of above, going to full DST
+## For Stripping19 we bump the prescale of KSKK and KSpipi to 1 because
+## the trigger is changing and we need to figure out how to swim them.
 DstarD2KShhCompleteEvent = {
     'BUILDERTYPE' : 'DstarD2KShhBuilder',
     'CONFIG'      : {
@@ -927,17 +929,17 @@ DstarD2KShhCompleteEvent = {
     ,'DstarCutChi2NDOF_KP'  :   20.0      ## unitless
     ,'DstarCutChi2NDOF_PP'  :   20.0      ## unitless
     ,'SoftPionCutPIDe'      :    5.0      ## unitless
-    ,'KKLLPrescale'         :    0.05
+    ,'KKLLPrescale'         :    1.0
     ,'KKLLPostscale'        :    1.0
     ,'KPLLPrescale'         :    0.025
     ,'KPLLPostscale'        :    1.0
-    ,'PPLLPrescale'         :    0.025
+    ,'PPLLPrescale'         :    1.0
     ,'PPLLPostscale'        :    1.0
-    ,'KKDDPrescale'         :    0.05
+    ,'KKDDPrescale'         :    1.0
     ,'KKDDPostscale'        :    1.0
     ,'KPDDPrescale'         :    0.025
     ,'KPDDPostscale'        :    1.0
-    ,'PPDDPrescale'         :    0.025
+    ,'PPDDPrescale'         :    1.0
     ,'PPDDPostscale'        :    1.0
     },
     'WGs' : ['Charm'],
