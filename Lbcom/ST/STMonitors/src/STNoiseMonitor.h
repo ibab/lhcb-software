@@ -25,6 +25,7 @@
  *
  */
 class TH2D;
+class TProfile;
 
 namespace ST {
   class ISTNoiseCalculationTool;
@@ -81,41 +82,52 @@ namespace ST {
     const LHCb::ODIN* m_ODIN;///< Time of the first event in the run
     std::string m_odinEvent;///< String of the time of the first run
 
+    /// Histogram of number of nzs banks per tell1
+    AIDA::IHistogram1D* m_1d_nNZS;
+
     /// Map of RAW noise histograms booked in initialize
-    std::map<int, AIDA::IProfile1D*> m_raw_noiseHistos;
+    std::map<int, TProfile*> m_raw_noiseHistos;
 
     /// Map of pedestal histograms booked in initialize
-    std::map<int, AIDA::IProfile1D*> m_raw_pedestalHistos;
+    std::map<int, TProfile*> m_raw_pedestalHistos;
+
+    /// Map of pedestal subtracted noise histograms booked in initialize
+    std::map<int, TProfile*> m_pedsub_noiseHistos;
+
+    /// Map of pedestal histograms after pedestal subtraction booked in initialize
+    std::map<int, TProfile*> m_pedsub_pedestalHistos;
 
     /// Map of CMS noise histograms booked in initialize
-    std::map<int, AIDA::IProfile1D*> m_cms_noiseHistos;
+    std::map<int, TProfile*> m_cms_noiseHistos;
 
-    /// Map of CMS pedestal histograms booked in initialize
-    std::map<int, AIDA::IProfile1D*> m_cms_pedestalHistos;
+    /// Map of pedestal histograms after LCMS booked in initialize
+    std::map<int, TProfile*> m_cms_pedestalHistos;
 
     /// Map of CMS noise histograms booked in initialize
-    std::map<int, AIDA::IProfile1D*> m_cm_noiseHistos;
+    std::map<int, TProfile*> m_cm_noiseHistos;
 
-    /// Map of average RAW noise per port histograms booked in initialize
-    std::map<int, AIDA::IProfile1D*> m_average_raw_noiseHistos;
+//     /// Map of average RAW noise per port histograms booked in initialize
+//     std::map<int, TProfile*> m_average_raw_noiseHistos;
 
-    /// Map of average raw pedestal per port histograms booked in initialize
-    std::map<int, AIDA::IProfile1D*> m_average_raw_pedestalHistos;
+//     /// Map of average raw pedestal per port histograms booked in initialize
+//     std::map<int, TProfile*> m_average_raw_pedestalHistos;
 
-    /// Map of average CMS noise per port histograms booked in initialize
-    std::map<int, AIDA::IProfile1D*> m_average_cms_noiseHistos;
+//     /// Map of average CMS noise per port histograms booked in initialize
+//     std::map<int, TProfile*> m_average_cms_noiseHistos;
 
-    /// Map of average CMS pedestal per port histograms booked in initialize
-    std::map<int, AIDA::IProfile1D*> m_average_cms_pedestalHistos;
+//     /// Map of average CMS pedestal per port histograms booked in initialize
+//     std::map<int, TProfile*> m_average_cms_pedestalHistos;
 
-    /// Map of average CMS per port noise histograms booked in initialize
-    std::map<int, AIDA::IProfile1D*> m_average_cm_noiseHistos;
+//     /// Map of average CMS per port noise histograms booked in initialize
+//     std::map<int, TProfile*> m_average_cm_noiseHistos;
 
     /// Histograms of all strips combined
     AIDA::IHistogram1D* m_1d_raw_noise;///< Raw noise of each strip
+    AIDA::IHistogram1D* m_1d_pedsub_noise;///< Pedestal Subtracted noise of each strip
     AIDA::IHistogram1D* m_1d_cms_noise;///< CMS noise of each strip
     AIDA::IHistogram1D* m_1d_cm_noise;///< CM noise of each strip
     AIDA::IHistogram1D* m_1d_raw_pedestal;///< Raw pedestal of each strip
+    AIDA::IHistogram1D* m_1d_pedsub_pedestal;///< Pedestal of each strip after pedestal subtraction
     AIDA::IHistogram1D* m_1d_cms_pedestal;///< CMS pedestal of each strip
 
     // Maps of histograms by sector type
@@ -125,17 +137,14 @@ namespace ST {
     std::map<std::string, AIDA::IHistogram1D*> m_1d_raw_pedestalByType;///< Raw pedestal of each strip
     std::map<std::string, AIDA::IHistogram1D*> m_1d_cms_pedestalByType;///< CMS pedestal of each strip
 
-    AIDA::IProfile1D* m_1dp_AvRAWNoisePerTell1;///< Average raw noise in each tell1
-    AIDA::IProfile1D* m_1dp_AvCMSNoisePerTell1;///< Average cms noise in each tell1
-    AIDA::IProfile1D* m_1dp_AvCMNoisePerTell1;///< Average cm noise in each tell1
-
-    TH2D* m_2d_PedestalPerLinkVsTell1;///< 2d map of pedestal vs link
-    AIDA::IProfile1D* m_1dp_AvRAWPedestalPerTell1;///< Average raw pedestal in each tell1
-    AIDA::IProfile1D* m_1dp_AvCMSPedestalPerTell1;///< Average cms pedestal in each tell1
-
+    TH2D* m_2d_RawPedestalPerLinkVsTell1;///< 2d map of raw pedestal vs link
     TH2D* m_2d_RawNoisePerLinkVsTell1;///< 2d map of raw noise vs link
-    TH2D* m_2d_CMSNoisePerLinkVsTell1;///< 2d map of raw noise vs link
-    TH2D* m_2d_CMNoisePerLinkVsTell1;///< 2d map of raw noise vs link
+
+    TH2D* m_2d_PedSubPedestalPerLinkVsTell1;///< 2d map of pedestal subtracted ADC values vs link
+    TH2D* m_2d_PedSubNoisePerLinkVsTell1;///< 2d map of pedestal subtracted noise vs link
+
+    TH2D* m_2d_CMSPedestalPerLinkVsTell1;///< 2d map of lcms pedestal vs link
+    TH2D* m_2d_CMSNoisePerLinkVsTell1;///< 2d map of lcms noise vs link
 
     /// 2d map used for normalisation of noise, pedestal plots as 2d profile histograms are not supported by online monitoring
     TH2D* m_2d_NormalisationPerLinkVsTell1;
@@ -156,10 +165,15 @@ namespace ST {
     /// Make summary plots
     bool m_summaryPlots;
 
+    /// plot by sensor type (long/short IT; 1-4, TT)
+    bool m_plotByType;
+
     unsigned int m_nStripsInSector;///< number of strips in sector (from STDAQ::nStripsInXTSector where X== T or I)
 
     std::map<int, std::vector<DeSTSector*> > m_sectorMap;///< Map of DeSTSectors (for use filling / type histograms)
     std::map<std::string, std::string> m_types;///< keep map of sector types to book / type histograms
+
+    bool m_debug;///< true if output level of msg service is debug
 
   };
 }

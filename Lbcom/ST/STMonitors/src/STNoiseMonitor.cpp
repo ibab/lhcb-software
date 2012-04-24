@@ -38,10 +38,11 @@ using namespace LHCb;
 using namespace AIDA;
 using namespace STDAQ;
 using namespace STBoardMapping;
+using namespace Gaudi::Utils;//::Aida2ROOT::aida2root
 
 namespace ST{
   DECLARE_ALGORITHM_FACTORY( STNoiseMonitor)
-}
+    }
 //--------------------------------------------------------------------
 //
 //  STNoiseMonitor
@@ -49,7 +50,7 @@ namespace ST{
 //--------------------------------------------------------------------
 
 ST::STNoiseMonitor::STNoiseMonitor( const std::string& name, 
-                            ISvcLocator* pSvcLocator ) :
+                                    ISvcLocator* pSvcLocator ) :
   ST::HistoAlgBase(name, pSvcLocator)
 {
   // constructer
@@ -71,6 +72,9 @@ ST::STNoiseMonitor::STNoiseMonitor( const std::string& name,
   // Make summary plots
   declareProperty("SummaryPlots", m_summaryPlots=true );
 
+  // plot by sensor type (long/short IT; 1-4, TT)
+  declareProperty("PlotBySensorType", m_plotByType=false );
+
 }
 
 StatusCode ST::STNoiseMonitor::initialize() {
@@ -82,6 +86,8 @@ StatusCode ST::STNoiseMonitor::initialize() {
 
   m_evtNumber = 0;
 
+  m_debug = msgLevel( MSG::DEBUG );
+ 
   m_noiseTool = tool<ST::ISTNoiseCalculationTool>(m_noiseToolType, m_noiseToolName);
 
   // Read following period, reset rate and skip events from configuration of tool
@@ -122,6 +128,9 @@ StatusCode ST::STNoiseMonitor::initialize() {
 }
 
 void ST::STNoiseMonitor::bookHistograms() {
+
+  m_1d_nNZS = book1D("Number of NZS banks", "#  NZS banks / TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s);
+
   // Get the tell1 mapping from source ID to tell1 number
   std::map<unsigned int, unsigned int>::const_iterator itT = (this->readoutTool())->SourceIDToTELLNumberMap().begin();
   for(; itT != (this->readoutTool())->SourceIDToTELLNumberMap().end(); ++itT) {
@@ -136,82 +145,89 @@ void ST::STNoiseMonitor::bookHistograms() {
     // Create a title for the histogram
     std::string strTellID  = boost::lexical_cast<std::string>(tellID);
 
-    //================================================== noise / strip
+    //================================================== noise / strip 
+
     // Raw Noise
     HistoID raw_noiseHistoID        = "raw_noise_$tell" + strTellID;
     std::string raw_noiseHistoTitle = " Raw Noise for " + detType() + "TELL" + strTellID;
-    m_raw_noiseHistos[sourceID] = 
-      bookProfile1D(raw_noiseHistoID, raw_noiseHistoTitle, -0.5, nStripsPerBoard-0.5, nStripsPerBoard);
+    m_raw_noiseHistos[sourceID] = Aida2ROOT::aida2root( bookProfile1D(raw_noiseHistoID, raw_noiseHistoTitle, -0.5, 
+                                                                      nStripsPerBoard-0.5, nStripsPerBoard) );
+                                                              
     HistoID raw_pedHistoID        = "raw_pedestal_$tell" + strTellID;
     std::string raw_pedHistoTitle = "Raw Pedestal for " + detType() + "TELL" + strTellID;
-    m_raw_pedestalHistos[sourceID] = bookProfile1D(raw_pedHistoID, raw_pedHistoTitle, -0.5, nStripsPerBoard-0.5, nStripsPerBoard);
+    m_raw_pedestalHistos[sourceID] = Aida2ROOT::aida2root( bookProfile1D(raw_pedHistoID, raw_pedHistoTitle, 
+                                                                         -0.5, nStripsPerBoard-0.5, nStripsPerBoard) );
+                                                                         
+
+    // Pedestal subtracted noise
+    HistoID pedsub_noiseHistoID        = "pedsub_noise_$tell" + strTellID;
+    std::string pedsub_noiseHistoTitle = "Pedestal Subtracted Noise for " + detType() + "TELL" + strTellID;
+    m_pedsub_noiseHistos[sourceID] = 
+      Aida2ROOT::aida2root( bookProfile1D(pedsub_noiseHistoID, pedsub_noiseHistoTitle, 
+                                          -0.5, nStripsPerBoard-0.5, nStripsPerBoard) );
+    HistoID pedsub_pedHistoID        = "pedsub_pedestal_$tell" + strTellID;
+    std::string pedsub_pedHistoTitle = "Pedestal after Pedestal Subtraction for " + detType() + "TELL" + strTellID;
+    m_pedsub_pedestalHistos[sourceID] = 
+      Aida2ROOT::aida2root( bookProfile1D(pedsub_pedHistoID, pedsub_pedHistoTitle, 
+                                          -0.5, nStripsPerBoard-0.5, nStripsPerBoard) );
+
     // Common Mode Subtracted Noise
     HistoID cms_noiseHistoID        = "cms_noise_$tell" + strTellID;
     std::string cms_noiseHistoTitle = "Common Mode Subtracted Noise for " + detType() + "TELL" + strTellID;
     m_cms_noiseHistos[sourceID] = 
-      bookProfile1D(cms_noiseHistoID, cms_noiseHistoTitle, -0.5, nStripsPerBoard-0.5, nStripsPerBoard);
+      Aida2ROOT::aida2root( bookProfile1D(cms_noiseHistoID, cms_noiseHistoTitle, 
+                                          -0.5, nStripsPerBoard-0.5, nStripsPerBoard) );
     HistoID cms_pedHistoID        = "cms_pedestal_$tell" + strTellID;
     std::string cms_pedHistoTitle = "Pedestal after CMS for " + detType() + "TELL" + strTellID;
-    m_cms_pedestalHistos[sourceID] = bookProfile1D(cms_pedHistoID, cms_pedHistoTitle, -0.5, nStripsPerBoard-0.5, nStripsPerBoard);
+    m_cms_pedestalHistos[sourceID] = 
+      Aida2ROOT::aida2root( bookProfile1D(cms_pedHistoID, cms_pedHistoTitle, 
+                                          -0.5, nStripsPerBoard-0.5, nStripsPerBoard) );
+
     // Common Mode Noise
     HistoID cm_noiseHistoID        = "cm_noise_$tell" + strTellID;
     std::string cm_noiseHistoTitle = "Common Mode Noise for " + detType() + "TELL" + strTellID;
-    m_cm_noiseHistos[sourceID] = bookProfile1D(cm_noiseHistoID, cm_noiseHistoTitle, -0.5, nStripsPerBoard-0.5, nStripsPerBoard);
-
-    //================================================== noise / beetle port
-    // Raw Noise
-    HistoID average_raw_noiseHistoID        = "average_raw_noise_$tell" + strTellID;
-    std::string average_raw_noiseHistoTitle = "Average Raw Noise for " + detType() + "TELL" + strTellID;
-    m_average_raw_noiseHistos[sourceID] = bookProfile1D(average_raw_noiseHistoID, average_raw_noiseHistoTitle,0., 96., 96);
-    HistoID average_raw_pedHistoID        = "average_raw_pedestal_$tell" + strTellID;
-    std::string average_raw_pedHistoTitle = "Average Raw Pedestal for " + detType() + "TELL" + strTellID;
-    m_average_raw_pedestalHistos[sourceID] = bookProfile1D(average_raw_pedHistoID, average_raw_pedHistoTitle, 0., 96., 96);
-    // Common Mode Subtracted Noise
-    HistoID average_cms_noiseHistoID        = "average_cms_noise_$tell" + strTellID;
-    std::string average_cms_noiseHistoTitle = "Average Common Mode Subtracted Noise for " + detType() + "TELL" + strTellID;
-    m_average_cms_noiseHistos[sourceID] = 
-      bookProfile1D(average_cms_noiseHistoID, average_cms_noiseHistoTitle, 0., 96., 96);
-    HistoID average_cms_pedHistoID        = "average_cms_pedestal_$tell" + strTellID;
-    std::string average_cms_pedHistoTitle = "Average Pedestal after CMS for " + detType() + "TELL" + strTellID;
-    m_average_cms_pedestalHistos[sourceID] = bookProfile1D(average_cms_pedHistoID, average_cms_pedHistoTitle, 0., 96., 96);
-    // Common Mode Noise
-    HistoID average_cm_noiseHistoID        = "average_cm_noise_$tell" + strTellID;
-    std::string average_cm_noiseHistoTitle = "Average Common Mode Noise for " + detType() + "TELL" + strTellID;
-    m_average_cm_noiseHistos[sourceID] = bookProfile1D(average_cm_noiseHistoID, average_cm_noiseHistoTitle, 0., 96., 96);
+    m_cm_noiseHistos[sourceID] = Aida2ROOT::aida2root( bookProfile1D(cm_noiseHistoID, cm_noiseHistoTitle, 
+                                                                     -0.5, nStripsPerBoard-0.5, nStripsPerBoard) );
 
   }
   if( m_summaryPlots ) {
-    m_1dp_AvRAWNoisePerTell1 = bookProfile1D("Average RAW Noise vs TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s);
-    m_1dp_AvCMSNoisePerTell1 = bookProfile1D("Average CMS Noise vs TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s);
-    m_1dp_AvCMNoisePerTell1  = bookProfile1D("Average CM Noise vs TELL1",  0.5, m_nTELL1s+0.5, m_nTELL1s);
-    m_1dp_AvRAWPedestalPerTell1 = bookProfile1D("Average Pedestal (RAW) vs TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s);
-    m_1dp_AvCMSPedestalPerTell1 = bookProfile1D("Average Pedestal (CMS) vs TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s);
 
+    m_2d_RawPedestalPerLinkVsTell1 = 
+      Aida2ROOT::aida2root( book2D("Mean Raw ADCs per link vs TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s, 0., 96., 96) );
     m_2d_RawNoisePerLinkVsTell1 = 
-      Gaudi::Utils::Aida2ROOT::aida2root( book2D("Raw Noise per link vs TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s, 0., 96., 96) );
+      Aida2ROOT::aida2root( book2D("Raw Noise per link vs TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s, 0., 96., 96) );
+
+    m_2d_PedSubPedestalPerLinkVsTell1 = 
+      Aida2ROOT::aida2root( book2D("Mean Ped Subtracted ADCs per link vs TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s, 0., 96., 96) );
+    m_2d_PedSubNoisePerLinkVsTell1 = 
+      Aida2ROOT::aida2root( book2D("Pedestal Subtracted Noise per link vs TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s, 0., 96., 96) );
+                                       
+    m_2d_CMSPedestalPerLinkVsTell1 = 
+      Aida2ROOT::aida2root( book2D("Mean CMS ADCs per link vs TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s, 0., 96., 96) );
     m_2d_CMSNoisePerLinkVsTell1 = 
-      Gaudi::Utils::Aida2ROOT::aida2root( book2D("CMS Noise per link vs TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s, 0., 96., 96) );
-    m_2d_CMNoisePerLinkVsTell1 = 
-      Gaudi::Utils::Aida2ROOT::aida2root( book2D("CM Noise per link vs TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s, 0., 96., 96) );
-    //   m_2d_PedestalPerLinkVsTell1 = 
-    //     Gaudi::Utils::Aida2ROOT::aida2root( book2D("Pedestal per link vs TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s, 0., 96., 96) );
+      Aida2ROOT::aida2root( book2D("CMS Noise per link vs TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s, 0., 96., 96) );
+
     m_2d_NormalisationPerLinkVsTell1 = 
-      Gaudi::Utils::Aida2ROOT::aida2root( book2D("Normalisation", 0.5, m_nTELL1s+0.5, m_nTELL1s, 0., 96., 96) );
+      Aida2ROOT::aida2root( book2D("Normalisation", 0.5, m_nTELL1s+0.5, m_nTELL1s, 0., 96., 96) );
 
-    m_1d_raw_noise = book1D("Raw noise", 0., 10., 1000);
-    m_1d_cms_noise = book1D("CMS noise", 0., 10., 1000);
-    m_1d_cm_noise  = book1D("Common Mode noise", 0., 10., 1000);
-    m_1d_raw_pedestal = book1D("Raw pedestal", 100., 160., 100);
-    m_1d_cms_pedestal = book1D("CMS pedestal", -5., 5., 1000);
+    m_1d_raw_noise = book1D("Raw noise", 0., 10., 500);
+    m_1d_pedsub_noise = book1D("Pedestal subtracted noise", 0., 10., 500);
+    m_1d_cms_noise = book1D("CMS noise", 0., 10., 500);
+    m_1d_cm_noise  = book1D("Common Mode noise", 0., 10., 500);
+    m_1d_raw_pedestal = book1D("Raw pedestal", 100., 160., 500);
+    m_1d_pedsub_pedestal = book1D("Pedestal subtracted pedestal", -5, 5., 501);
+    m_1d_cms_pedestal = book1D("CMS pedestal", -5., 5., 501);
 
-    std::map<std::string, std::string>::iterator iType = m_types.begin();
-    for(; iType != m_types.end(); ++iType) {
-      std::string type = (*iType).first;
-      m_1d_raw_noiseByType[type] = book1D("Raw noise "+type, 0., 10., 1000);
-      m_1d_cms_noiseByType[type] = book1D("CMS noise "+type, 0., 10., 1000);
-      m_1d_cm_noiseByType[type]  = book1D("Common Mode noise "+type, 0., 10., 1000);
-      m_1d_raw_pedestalByType[type] = book1D("Raw pedestal "+type, 100., 160., 100);
-      m_1d_cms_pedestalByType[type] = book1D("CMS pedestal "+type, -5., 5., 1000);
+    if(m_plotByType) {
+      std::map<std::string, std::string>::iterator iType = m_types.begin();
+      for(; iType != m_types.end(); ++iType) {
+        std::string type = (*iType).first;
+        m_1d_raw_noiseByType[type] = book1D("Raw noise "+type, 0., 10., 500);
+        m_1d_cms_noiseByType[type] = book1D("CMS noise "+type, 0., 10., 500);
+        m_1d_cm_noiseByType[type]  = book1D("Common Mode noise "+type, 0., 10., 500);
+        m_1d_raw_pedestalByType[type] = book1D("Raw pedestal "+type, 100., 160., 500);
+        m_1d_cms_pedestalByType[type] = book1D("CMS pedestal "+type, -5., 5., 501);
+      }
     }
   }
 }
@@ -219,6 +235,7 @@ void ST::STNoiseMonitor::bookHistograms() {
 StatusCode ST::STNoiseMonitor::execute() { 
   m_evtNumber++;
 
+  if(m_debug) debug() << "execute:\t" << m_evtNumber << endreq;
   // Get the time of the first event and convert to a string for the histogram title.
   if(m_evtNumber == 1) {
     if(m_useODINTime) {
@@ -246,6 +263,8 @@ StatusCode ST::STNoiseMonitor::execute() {
     bool needToUpdate = false;
     
     unsigned int sourceID = (*itT);
+    unsigned int tell1 = (this->readoutTool())->SourceIDToTELLNumber(sourceID);
+    m_1d_nNZS->fill(tell1);
 
     // Loop over number of events for FPGA-PP and see if the histograms need to be reset
     std::vector<unsigned int>::const_iterator itEvts = m_noiseTool->cmsNEventsPPBegin(sourceID);
@@ -262,7 +281,7 @@ StatusCode ST::STNoiseMonitor::execute() {
     if( needToUpdate ) updateNoiseHistogram( sourceID );
     
   } // boards
-  if( m_summaryPlots && m_updateRate > 0 ) updateSummaryHistograms();
+  if( m_summaryPlots && m_updateRate > 0 && m_evtNumber%m_updateRate == 0) updateSummaryHistograms();
 
   return StatusCode::SUCCESS;
 }
@@ -270,7 +289,7 @@ StatusCode ST::STNoiseMonitor::execute() {
 StatusCode ST::STNoiseMonitor::finalize() {
   //printHistos();
   // Update all histograms at the end
-  std::map<int, AIDA::IProfile1D*>::const_iterator itH = m_raw_noiseHistos.begin();
+  std::map<int, TProfile*>::const_iterator itH = m_raw_noiseHistos.begin();
 
   for( ; itH != m_raw_noiseHistos.end(); ++itH ) { 
     // Limit to selected tell1s
@@ -287,45 +306,34 @@ StatusCode ST::STNoiseMonitor::finalize() {
 }
 
 void ST::STNoiseMonitor::updateNoiseHistogram(unsigned int sourceID, bool updateTitle) {
+  if(m_debug) debug() << "updateNoiseHistograms:\t" << m_evtNumber << endreq;
   // Get the histogram and reset it in case it is already booked. 
   if( m_raw_noiseHistos.find(sourceID) != m_raw_noiseHistos.end() 
       && m_raw_pedestalHistos.find(sourceID) != m_raw_pedestalHistos.end()
+      && m_pedsub_noiseHistos.find(sourceID) != m_pedsub_noiseHistos.end() 
+      && m_pedsub_pedestalHistos.find(sourceID) != m_pedsub_pedestalHistos.end()
       && m_cms_noiseHistos.find(sourceID) != m_cms_noiseHistos.end() 
       && m_cms_pedestalHistos.find(sourceID) != m_cms_pedestalHistos.end()
-      && m_cm_noiseHistos.find(sourceID) != m_cm_noiseHistos.end()
-      && m_average_raw_noiseHistos.find(sourceID) != m_average_raw_noiseHistos.end() 
-      && m_average_raw_pedestalHistos.find(sourceID) != m_average_raw_pedestalHistos.end()
-      && m_average_cms_noiseHistos.find(sourceID) != m_average_cms_noiseHistos.end() 
-      && m_average_cms_pedestalHistos.find(sourceID) != m_average_cms_pedestalHistos.end()
-      && m_average_cm_noiseHistos.find(sourceID) != m_average_cm_noiseHistos.end() ) { 
+      && m_cm_noiseHistos.find(sourceID) != m_cm_noiseHistos.end() ){
 
     // Plots / strip
-    IProfile1D* raw_noiseHist = m_raw_noiseHistos.find(sourceID)->second;
-    raw_noiseHist->reset();
-    IProfile1D* raw_pedestalHist = m_raw_pedestalHistos.find(sourceID)->second;
-    raw_pedestalHist->reset();
+    TProfile* raw_noiseHist = m_raw_noiseHistos.find(sourceID)->second;
+    raw_noiseHist->Reset();
+    TProfile* raw_pedestalHist = m_raw_pedestalHistos.find(sourceID)->second;
+    raw_pedestalHist->Reset();
   
-    IProfile1D* cms_noiseHist = m_cms_noiseHistos.find(sourceID)->second;
-    cms_noiseHist->reset();
-    IProfile1D* cms_pedestalHist = m_cms_pedestalHistos.find(sourceID)->second;
-    cms_pedestalHist->reset();
+    TProfile* pedsub_noiseHist = m_pedsub_noiseHistos.find(sourceID)->second;
+    pedsub_noiseHist->Reset();
+    TProfile* pedsub_pedestalHist = m_pedsub_pedestalHistos.find(sourceID)->second;
+    pedsub_pedestalHist->Reset();
   
-    IProfile1D* cm_noiseHist = m_cm_noiseHistos.find(sourceID)->second;
-    cm_noiseHist->reset();
-
-    // Plots / port
-    IProfile1D* average_raw_noiseHist = m_average_raw_noiseHistos.find(sourceID)->second;
-    average_raw_noiseHist->reset();
-    IProfile1D* average_raw_pedestalHist = m_average_raw_pedestalHistos.find(sourceID)->second;
-    average_raw_pedestalHist->reset();
+    TProfile* cms_noiseHist = m_cms_noiseHistos.find(sourceID)->second;
+    cms_noiseHist->Reset();
+    TProfile* cms_pedestalHist = m_cms_pedestalHistos.find(sourceID)->second;
+    cms_pedestalHist->Reset();
   
-    IProfile1D* average_cms_noiseHist = m_average_cms_noiseHistos.find(sourceID)->second;
-    average_cms_noiseHist->reset();
-    IProfile1D* average_cms_pedestalHist = m_average_cms_pedestalHistos.find(sourceID)->second;
-    average_cms_pedestalHist->reset();
-  
-    IProfile1D* average_cm_noiseHist = m_average_cm_noiseHistos.find(sourceID)->second;
-    average_cm_noiseHist->reset();
+    TProfile* cm_noiseHist = m_cm_noiseHistos.find(sourceID)->second;
+    cm_noiseHist->Reset();
 
     // Loop over strips in tell1
     unsigned int strip=0;
@@ -333,38 +341,32 @@ void ST::STNoiseMonitor::updateNoiseHistogram(unsigned int sourceID, bool update
     std::vector<double>::const_iterator itRawNoise = m_noiseTool->rawNoiseBegin(sourceID);
     std::vector<double>::const_iterator itRawNoiseEnd = m_noiseTool->rawNoiseEnd(sourceID);
 
+    std::vector<double>::const_iterator itPedSubPed = m_noiseTool->pedSubMeanBegin(sourceID);
+    std::vector<double>::const_iterator itPedSubNoise = m_noiseTool->pedSubNoiseBegin(sourceID);
+
     std::vector<double>::const_iterator itCMSPed = m_noiseTool->cmsMeanBegin(sourceID);
     std::vector<double>::const_iterator itCMSNoise = m_noiseTool->cmsNoiseBegin(sourceID);
 
     std::vector<bool>::const_iterator itStatus = m_noiseTool->stripStatusBegin(sourceID);
-    for(; itRawNoise != itRawNoiseEnd; ++itRawNoise, ++itRawPed, ++itCMSNoise, ++itCMSPed, ++itStatus, ++strip) {
+    for(; itRawNoise != itRawNoiseEnd; ++itRawNoise, ++itRawPed, ++itPedSubNoise, ++itPedSubPed, 
+          ++itCMSNoise, ++itCMSPed, ++itStatus, ++strip) {
       if(*itStatus) {
-        raw_noiseHist->fill( strip, (*itRawNoise) );
-        raw_pedestalHist->fill( strip, (*itRawPed) );
-        cms_noiseHist->fill( strip, (*itCMSNoise) );
-        cms_pedestalHist->fill( strip, (*itCMSPed) );
-        int port = strip / LHCbConstants::nStripsInPort;;
-        average_raw_noiseHist->fill( port, (*itRawNoise) );
-        average_raw_pedestalHist->fill( port, (*itRawPed) );
-        average_cms_noiseHist->fill( port, (*itCMSNoise) );
-        average_cms_pedestalHist->fill( port, (*itCMSPed) );
-//         m_1dp_AvRAWNoisePerTell1->fill(tell1,(*itNoiseRAW));
-//         m_1dp_AvRAWPedestalPerTell1->fill(tell1,(*itPedRAW));
-//         m_1dp_AvCMSNoisePerTell1->fill(tell1,(*itNoiseCMS));
-//         m_1dp_AvCMSPedestalPerTell1->fill(tell1,(*itPedCMS));
+        raw_noiseHist->Fill( strip, (*itRawNoise) );
+        raw_pedestalHist->Fill( strip, (*itRawPed) );
+        pedsub_noiseHist->Fill( strip, (*itPedSubNoise) );
+        pedsub_pedestalHist->Fill( strip, (*itPedSubPed) );
+        cms_noiseHist->Fill( strip, (*itCMSNoise) );
+        cms_pedestalHist->Fill( strip, (*itCMSPed) );
         double commonMode = gsl_pow_2(*itRawNoise)-gsl_pow_2(*itCMSNoise);
         if(commonMode > 0) commonMode = sqrt(commonMode);
         else commonMode = 0;
-        cm_noiseHist->fill( strip, commonMode );
-        average_cm_noiseHist->fill( port, commonMode );
-//         m_1dp_AvCMNoisePerTell1->fill(tell1, commonMode);
+        cm_noiseHist->Fill( strip, commonMode );
       }
     }
     if(updateTitle) {
-      TProfile* profNoise = Gaudi::Utils::Aida2ROOT::aida2root ( raw_noiseHist );
-      std::string title=profNoise->GetTitle();
+      std::string title=raw_noiseHist->GetTitle();
       title += " "+m_odinEvent;
-      profNoise->SetTitle(title.c_str());
+      raw_noiseHist->SetTitle(title.c_str());
     }
   } else {
     unsigned int tellID = m_useSourceID ? sourceID : (this->readoutTool())->SourceIDToTELLNumber(sourceID);
@@ -373,67 +375,86 @@ void ST::STNoiseMonitor::updateNoiseHistogram(unsigned int sourceID, bool update
 }
 
 void ST::STNoiseMonitor::updateSummaryHistograms(){
+
+  if(m_debug) debug() << "updateSummaryHistograms:\t" << m_evtNumber << endreq;
   m_1d_raw_noise->reset();
   m_1d_raw_pedestal->reset();
+  m_1d_pedsub_noise->reset();
+  m_1d_pedsub_pedestal->reset();
   m_1d_cms_noise->reset();
   m_1d_cms_pedestal->reset();
   m_1d_cm_noise->reset();
 
-  std::map<std::string, std::string>::iterator iType = m_types.begin();
-  for(; iType != m_types.end(); ++iType) {
-    std::string type = (*iType).first;
-    m_1d_raw_noiseByType[type]->reset();
-    m_1d_cms_noiseByType[type]->reset();
-    m_1d_cm_noiseByType[type]->reset();
-    m_1d_raw_pedestalByType[type]->reset();
-    m_1d_cms_pedestalByType[type]->reset();
+  m_2d_RawPedestalPerLinkVsTell1->Reset();
+  m_2d_RawNoisePerLinkVsTell1->Reset();
+  m_2d_PedSubPedestalPerLinkVsTell1->Reset();
+  m_2d_PedSubNoisePerLinkVsTell1->Reset();
+  m_2d_CMSPedestalPerLinkVsTell1->Reset();
+  m_2d_CMSNoisePerLinkVsTell1->Reset();
+  m_2d_NormalisationPerLinkVsTell1->Reset();
+
+  if(m_plotByType) {
+    std::map<std::string, std::string>::iterator iType = m_types.begin();
+    for(; iType != m_types.end(); ++iType) {
+      std::string type = (*iType).first;
+      m_1d_raw_noiseByType[type]->reset();
+      m_1d_cms_noiseByType[type]->reset();
+      m_1d_cm_noiseByType[type]->reset();
+      m_1d_raw_pedestalByType[type]->reset();
+      m_1d_cms_pedestalByType[type]->reset();
+    }
   }
   std::map<unsigned int, unsigned int>::const_iterator itT = (this->readoutTool())->SourceIDToTELLNumberMap().begin();
   for(; itT != (this->readoutTool())->SourceIDToTELLNumberMap().end(); ++itT) {
     unsigned int sourceID = (*itT).first;
-
+    unsigned int tell1ID =  (*itT).second;
     std::vector<double>::const_iterator itRawPed = m_noiseTool->pedestalBegin(sourceID);
     std::vector<double>::const_iterator itRawNoise = m_noiseTool->rawNoiseBegin(sourceID);
     std::vector<double>::const_iterator itRawNoiseEnd = m_noiseTool->rawNoiseEnd(sourceID);
     
+    std::vector<double>::const_iterator itPedSubPed = m_noiseTool->pedSubMeanBegin(sourceID);
+    std::vector<double>::const_iterator itPedSubNoise = m_noiseTool->pedSubNoiseBegin(sourceID);
+    
     std::vector<double>::const_iterator itCMSPed = m_noiseTool->cmsMeanBegin(sourceID);
     std::vector<double>::const_iterator itCMSNoise = m_noiseTool->cmsNoiseBegin(sourceID);
-    
+
     std::vector<bool>::const_iterator itStatus = m_noiseTool->stripStatusBegin(sourceID);
     std::vector<DeSTSector*>* sectors = &m_sectorMap[sourceID];
     int strip=0;
     int sector=0;
-    for(; itRawNoise != itRawNoiseEnd; ++itRawNoise, ++itRawPed, ++itCMSNoise, ++itCMSPed, ++itStatus, ++strip) {
+    for(; itRawNoise != itRawNoiseEnd; ++itRawNoise, ++itRawPed, ++itPedSubNoise, ++itPedSubPed, ++itCMSNoise, ++itCMSPed,
+          ++itStatus, ++strip) {
       if(*itStatus) {
         m_1d_raw_noise->fill( (*itRawNoise) );
         m_1d_raw_pedestal->fill( (*itRawPed) );
+        m_1d_pedsub_noise->fill( (*itPedSubNoise) );
+        m_1d_pedsub_pedestal->fill( (*itPedSubPed) );
         m_1d_cms_noise->fill( (*itCMSNoise) );
         m_1d_cms_pedestal->fill( (*itCMSPed) );
-//         int port = strip / LHCbConstants::nStripsInPort;;
-//         average_raw_noiseHist->fill( port, (*itRawNoise) );
-//         average_raw_pedestalHist->fill( port, (*itRawPed) );
-//         average_cms_noiseHist->fill( port, (*itCMSNoise) );
-//         average_cms_pedestalHist->fill( port, (*itCMSPed) );
-//         m_1dp_AvRAWNoisePerTell1->fill(tell1,(*itNoiseRAW));
-//         m_1dp_AvRAWPedestalPerTell1->fill(tell1,(*itPedRAW));
-//         m_1dp_AvCMSNoisePerTell1->fill(tell1,(*itNoiseCMS));
-//         m_1dp_AvCMSPedestalPerTell1->fill(tell1,(*itPedCMS));
         double commonMode = gsl_pow_2(*itRawNoise)-gsl_pow_2(*itCMSNoise);
         if(commonMode > 0) commonMode = sqrt(commonMode);
         else commonMode = 0;
         m_1d_cm_noise->fill(commonMode);
-//         average_cm_noiseHist->fill( port, commonMode );
-//         m_1dp_AvCMNoisePerTell1->fill(tell1, commonMode);
-        sector = strip / m_nStripsInSector;
-        if((*sectors)[sector] != 0) {
-          std::string type=(*sectors)[sector]->type();
-          m_1d_raw_noiseByType[type]->fill( (*itRawNoise) );
-          m_1d_raw_pedestalByType[type]->fill( (*itRawPed) );
-          m_1d_cms_noiseByType[type]->fill( (*itCMSNoise) );
-          m_1d_cms_pedestalByType[type]->fill( (*itCMSPed) );
-          m_1d_cm_noiseByType[type]->fill( commonMode );
-        }          
-      }
+        int port = strip / LHCbConstants::nStripsInPort;
+        m_2d_RawPedestalPerLinkVsTell1->Fill(tell1ID, port, (*itRawPed));
+        m_2d_RawNoisePerLinkVsTell1->Fill(tell1ID, port, (*itRawNoise));
+        m_2d_PedSubPedestalPerLinkVsTell1->Fill(tell1ID, port, (*itPedSubPed));
+        m_2d_PedSubNoisePerLinkVsTell1->Fill(tell1ID, port, (*itPedSubNoise));
+        m_2d_CMSPedestalPerLinkVsTell1->Fill(tell1ID, port, (*itCMSPed));
+        m_2d_CMSNoisePerLinkVsTell1->Fill(tell1ID, port, (*itCMSNoise));
+        m_2d_NormalisationPerLinkVsTell1->Fill(tell1ID, port, 1.);
+        if(m_plotByType) {
+          sector = strip / m_nStripsInSector;
+          if((*sectors)[sector] != 0) {
+            std::string type=(*sectors)[sector]->type();
+            m_1d_raw_noiseByType[type]->fill( (*itRawNoise) );
+            m_1d_raw_pedestalByType[type]->fill( (*itRawPed) );
+            m_1d_cms_noiseByType[type]->fill( (*itCMSNoise) );
+            m_1d_cms_pedestalByType[type]->fill( (*itCMSPed) );
+            m_1d_cm_noiseByType[type]->fill( commonMode );
+          }          
+        }
+      } // strip status
     }
   }
 
