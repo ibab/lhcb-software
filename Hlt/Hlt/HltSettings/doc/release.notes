@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-04-24 - V. Gligorov (for A. Puig)
+ - Prescale BBDT based radiative topological trigger to 0, cut based rad topo
+   takes less rate and gives good enough performance.
+
 !========================= HltSettings v5r29 2012-04-204=========================
 ! 2012-04-24 - V. Gligorov
  - Add Hlt2CharmHadD02HHXDstLines lines to CharmHadrons
