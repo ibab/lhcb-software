@@ -49,7 +49,7 @@ use PresenterDoc        v1r0     Online
 use PyDIM               v2r11    Online
 use RawBankSizes        v2r14    Online
 use RootCnv             v1r15    Online
-use ROMon               v1r37    Online
+use ROMon               v1r38    Online
 use ROLogger            v0r24    Online
 ##macro Stomp_use "" CERN "Stomp v1r2 Online"
 ##use $(Stomp_use)
@@ -58,7 +58,7 @@ use Trending            v2r1     Online
 use UPI                 v1r21    Online
 use UPIR                v1r4     Online
 #Obsolete: use Viewer            v1r5     Online
-use Writer              v1r39    Online
+use Writer              v1r40    Online
 
 # Declare this as a container package
 apply_pattern container_package
