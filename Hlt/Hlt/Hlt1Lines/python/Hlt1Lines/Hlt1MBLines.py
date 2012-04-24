@@ -11,6 +11,7 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
                 , 'BXTypes'                : ['NoBeam', 'BeamCrossing','Beam1','Beam2']
                 , 'MicroBiasOdin'          : '(ODIN_TRGTYP == LHCb.ODIN.LumiTrigger)'
                 , 'MaxNoBiasRate'          : 1000000.
+		, 'Prescale'               : { 'Hlt1MBNoBias' : 0.1 }
                 , 'Postscale'              : { 'Hlt1MBMicroBias.*RateLimited' : 'RATE(500)', 
                                                'Hlt1CharmCalibrationNoBias' : 'RATE(500)'  }
                 }

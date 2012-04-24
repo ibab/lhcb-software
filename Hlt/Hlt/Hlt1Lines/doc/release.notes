@@ -5,6 +5,8 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2012-04-24 - E. v. Herwijnen
+ - Set a prescale of 10 to the Hlt1MBNoBias line.
 ! 2012-04-24 - V. Gligorov
  - Switch the charm calibration lines to use ODIN nobias and not lumi events.
 
