@@ -4,6 +4,10 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+! 2012-04-24 - V. Gligorov
+ - Tighten cut in shared Ks particles on the track chi2 of the LL children from
+   4 to 3.  
+
 !========================= Hlt2SharedParticles v6r7 2012-03-16 =========================
 ! 2012-03-15 - Albert Puig
  - Added DiElectronFromL0 with new calo reconstruction.
