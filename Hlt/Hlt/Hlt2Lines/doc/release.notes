@@ -8,6 +8,22 @@
 !
 !----------------------------------------------------------------------------
 
+! 2012-04-24 - V. Gligorov
+ - Add Hlt2CharmHadD02HHXDstLines lines
+  . Serve to trigger tagged D0->hhX, where X is any missing particle
+  . Contain a narrow mass and a prescaled wide mass line 
+ - Tighten track chi2 cuts in the following lines to match the default
+   maximum of 3 applied upfront in the tracking
+  . Hlt2B2HHLTUnbiasedLines.py
+  . Hlt2B2HHLines.py
+  . Hlt2B2HHPi0Lines.py
+  . Hlt2CharmHadD02HHHHDstLines.py
+  . Hlt2CharmHadD02HHKsLines.py
+  . Hlt2CharmHadD2KS0HLines.py
+  . Hlt2CharmHadLambdaC2LambdaHLines.py
+  . Hlt2CharmHadTwoBodyForD02HHHH.py
+  . Hlt2CharmSemilepD02HMuNuLines.py
+
 ! 2012-04-23 - Jibo He
  - Added DiMuonDetachedPsi2S line, with the same cuts as the DetachedJPsi   
 
