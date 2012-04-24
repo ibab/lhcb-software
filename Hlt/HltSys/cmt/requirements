@@ -34,7 +34,7 @@ use LoKiTracks          v2r6    Phys
 use LoKiUtils           v1r2    Phys
 
 use FastVelo            v1r8    Tf
-use PatAlgorithms       v4r22   Tf
+use PatAlgorithms       v4r23   Tf
 
 # Declare this as a container package
 apply_pattern container_package
