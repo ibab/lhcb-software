@@ -16,7 +16,7 @@ from Configurables import DaVinci
 #
 from Configurables import PrintDecayTree, PrintHeader, PrintMCTree
 pJpsi = PrintDecayTree('PrintJpsi')
-pJpsi.InputLocations = [ "MyJpsi"  ]
+pJpsi.Inputs = [ "MyJpsi"  ]
 pMC = PrintMCTree()
 pMC.ParticleNames = [ 'J/psi(1S)' ]
 #
@@ -24,7 +24,7 @@ ph = PrintHeader()
 #
 from Configurables import DecayTreeTuple
 tuple = DecayTreeTuple("Tuple")
-tuple.InputLocations = [ "MyJpsi" ]
+tuple.Inputs = [ "MyJpsi" ]
 tuple.ToolList +=  [ "TupleToolMCBackgroundInfo", "TupleToolMCTruth", "TupleToolKinematic" ]
 tuple.Decay = "J/psi(1S) -> ^mu+ ^mu-"
 
