@@ -4,6 +4,11 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-04-24 - John Back
+ - From Jordi Tico: Solved two bugs in the EvtD0gammaDalitz model;
+   configuration of the conjugated model, and using only the B charge
+   to determine the model used, not the D flavour.
+
 ! 2012-04-21 - John Back
  - Added code from Daniel Craik to allow the use of xml decay.dec files
    and to use a more general Dalitz plot model interface, again using

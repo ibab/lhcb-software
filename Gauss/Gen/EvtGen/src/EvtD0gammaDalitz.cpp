@@ -86,41 +86,36 @@ void EvtD0gammaDalitz::init()
   EvtId parId = getParentId();
 
   EvtId dau[ 3 ];
-  for ( int index = 0; index < 3; index++ ) {
+  for ( int index = 0; index < 3; index++ )
+  {
     dau[ index ] = getDaug( index );
   }
 
-  if ( parId == _D0 ) { // Look for K0bar h+ h-. The order will be K[0SL] h+ h-
-    for ( int index = 0; index < 3; index++ ) {
-      if      ( ( dau[ index ] == _K0B ) || ( dau[ index ] == _KS ) || ( dau[ index ] == _KL ) ) {
-	_d1 = index;
-      } else if ( ( dau[ index ] == _PIP ) || ( dau[ index ] == _KP ) ) {
-	_d2 = index;
-      } else if ( ( dau[ index ] == _PIM ) || ( dau[ index ] == _KM ) ) {
-	_d3 = index;
-      } else {
-	reportInvalidAndExit();
-      }
+  // Look for K0bar h+ h-. The order will be K[0SL] h+ h-
+  for ( int index = 0; index < 3; index++ )
+  {
+    if      ( ( dau[ index ] == _K0B ) || ( dau[ index ] == _KS ) || ( dau[ index ] == _KL ) )
+    {
+      _d1 = index;
     }
-  } else if ( parId == _D0B ) { // Look for K0 h+ h-. The order will be K[0SL] h- h+
-    for ( int index = 0; index < 3; index++ ) {
-      if      ( ( dau[ index ] == _K0  ) || ( dau[ index ] == _KS ) || ( dau[ index ] == _KL ) ) {
-	_d1 = index;
-      } else if ( ( dau[ index ] == _PIM ) || ( dau[ index ] == _KM ) ) {
-	_d2 = index;
-      } else if ( ( dau[ index ] == _PIP ) || ( dau[ index ] == _KP ) ) {
-	_d3 = index;
-      } else {
-	reportInvalidAndExit();
-      }
+    else if ( ( dau[ index ] == _PIP ) || ( dau[ index ] == _KP ) )
+    {
+      _d2 = index;
     }
-  } else {
-    reportInvalidAndExit();
+    else if ( ( dau[ index ] == _PIM ) || ( dau[ index ] == _KM ) )
+    {
+      _d3 = index;
+    }
+    else
+    {
+      reportInvalidAndExit();
+    }
   }
 
   // Check if we're dealing with Ks pi pi or with Ks K K.
   _isKsPiPi = false;
-  if ( dau[ _d2 ] == _PIP || dau[ _d2 ] == _PIM ) {
+  if ( dau[ _d2 ] == _PIP || dau[ _d2 ] == _PIM )
+  {
     _isKsPiPi = true;
   }
 
@@ -137,14 +132,20 @@ void EvtD0gammaDalitz::decay( EvtParticle* part )
 {
   // Check if the D is from a B+- -> D0 K+- decay with the appropriate model.
   EvtParticle* parent = part->getParent(); // If there are no mistakes, should be B+ or B-.
-  if (parent != 0 && EvtDecayTable::getInstance()->getDecayFunc( parent )->getName() == "BTODDALITZCPK" ) {
+  if (parent != 0 && EvtDecayTable::getInstance()->getDecayFunc( parent )->getName() == "BTODDALITZCPK" )
+  {
     EvtId parId = parent->getId();
-    if ( ( parId == _BP ) || ( parId == _BM ) ) {
+    if ( ( parId == _BP ) || ( parId == _BM ) )
+    {
       _bFlavor = parId;
-    } else {
+    }
+    else
+    {
       reportInvalidAndExit();
     }
-  } else {
+  }
+  else
+  {
     reportInvalidAndExit();
   }
 
@@ -173,18 +174,18 @@ void EvtD0gammaDalitz::decay( EvtParticle* part )
   EvtComplex ampDir;
   EvtComplex ampCnj;
 
-  if ( _isKsPiPi ) {
-
+  if ( _isKsPiPi )
+  {
     // Direct and conjugated Dalitz points.
     EvtDalitzPoint pointDir( _mKs, _mPi, _mPi, mSqAB, mSqBC, mSqAC );
-    EvtDalitzPoint pointCnj( _mKs, _mPi, _mPi, mSqAB, mSqBC, mSqAC );
+    EvtDalitzPoint pointCnj( _mKs, _mPi, _mPi, mSqAC, mSqBC, mSqAB );
 
     // Direct and conjugated amplitudes.
     ampDir = dalitzKsPiPi( pointDir );
     ampCnj = dalitzKsPiPi( pointCnj );
-
-  } else {
-
+  }
+  else
+  {
     // Direct and conjugated Dalitz points.
     EvtDalitzPoint pointDir( _mKs, _mK, _mK, mSqAB, mSqBC, mSqAC );
     EvtDalitzPoint pointCnj( _mKs, _mK, _mK, mSqAC, mSqBC, mSqAB );
@@ -192,12 +193,14 @@ void EvtD0gammaDalitz::decay( EvtParticle* part )
     // Direct and conjugated amplitudes.
     ampDir = dalitzKsKK( pointDir );
     ampCnj = dalitzKsKK( pointCnj );
-
   }
 
-  if ( _bFlavor == _BP ) {
+  if ( _bFlavor == _BP )
+  {
     amp = ampCnj + rB * exp( EvtComplex( 0., delta + gamma ) ) * ampDir;
-  } else {
+  }
+  else
+  {
     amp = ampDir + rB * exp( EvtComplex( 0., delta - gamma ) ) * ampCnj;
   }
 
