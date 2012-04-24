@@ -6,6 +6,7 @@
  - Change default initialisation value for the reference point in the
    Particle class from (0,0,-1km) to (0,0,-100m), to be within the range the
    Particle length scale packing can handle.
+ - Add some divide by zero protection to Particle::slopes
 
 !========================= PhysEvent v11r15 2012-02-28 =========================
 ! 2012-02-24 - Anton Poluektov 

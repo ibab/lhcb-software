@@ -300,8 +300,7 @@
 	const="TRUE"
 	>
 	<code>
-          return LHCb::Particle::ConstVector( m_daughters.begin() , 
-          m_daughters.end() );
+          return LHCb::Particle::ConstVector( m_daughters.begin(), m_daughters.end() );
 	</code>
       </method>
       <attribute
@@ -340,7 +339,7 @@
         const="TRUE"
         > 
         <code>
-          ExtraInfo::iterator i = m_extraInfo.find( key ) ;
+          ExtraInfo::const_iterator i = m_extraInfo.find( key ) ;
           return m_extraInfo.end() == i ? def : i->second ;
         </code>
       </method>
@@ -359,12 +358,12 @@
         type="Gaudi::XYZVector" 
         name="slopes" 
         const="TRUE" 
-        desc="slopes (Px/Pz, Py/Pz. 1) at reference point"
+        desc="Returns slopes ( Px/Pz, Py/Pz, 1 ) at reference point"
         > 
         <code>
-	  return Gaudi::XYZVector(m_momentum.X()/m_momentum.Z(),
-                                  m_momentum.Y()/m_momentum.Z(),
-                                  1.);
+	  return Gaudi::XYZVector( fabs(m_momentum.Z()) > 0 ? m_momentum.X()/m_momentum.Z() : 0 ,
+	                           fabs(m_momentum.Z()) > 0 ? m_momentum.Y()/m_momentum.Z() : 0 ,
+	                           1.0 );
         </code>
       </method>
 
