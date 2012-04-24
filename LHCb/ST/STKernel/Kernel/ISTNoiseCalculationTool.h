@@ -78,18 +78,48 @@ namespace ST {
     /// Return an iterator corresponding to the number of events containing data in the last PP for a given TELL1 source ID
     virtual std::vector<unsigned int>::const_iterator cmsNEventsPPEnd( const unsigned int TELL1SourceID ) const = 0;
 
+    /** Return an iterator corresponding to the RMS noise after pedestal subtraction on the first
+        channel for a given TELL1 source ID **/
+    virtual std::vector<double>::const_iterator pedSubNoiseBegin(const unsigned int TELL1SourceID ) const = 0;
+
+    /** Return an iterator corresponding to the RMS noise after pedestal subtraction on the last 
+        channel for a given TELL1 source ID **/
+    virtual std::vector<double>::const_iterator pedSubNoiseEnd(const unsigned int TELL1SourceID ) const = 0;
+
+    /** Return an iterator corresponding to the mean ADC value after pedestal subtraction for the 
+        first channel for a given TELL1 source ID **/
+    virtual std::vector<double>::const_iterator pedSubMeanBegin( const unsigned int TELL1SourceID ) const = 0;
+
+    /** Return an iterator corresponding to the mean ADC value after pedestal subtraction for the last 
+        channel for a given TELL1 source ID **/
+    virtual std::vector<double>::const_iterator pedSubMeanEnd( const unsigned int TELL1SourceID ) const = 0;
+
+    /** Return an iterator corresponding to the mean squared ADC value after pedestal subtraction for the first 
+        channel for a given TELL1 source ID **/
+    virtual std::vector<double>::const_iterator pedSubMeanSquaredBegin( const unsigned int TELL1SourceID ) const = 0;
+
+    /** Return an iterator corresponding to the mean squared ADC value after pedestal subtraction for the last 
+        channel for a given TELL1 source ID **/
+    virtual std::vector<double>::const_iterator pedSubMeanSquaredEnd( const unsigned int TELL1SourceID ) const = 0;
+
+    /// Return an iterator corresponding to the number of events containing data in the first PP for a given TELL1 source ID
+    virtual std::vector<unsigned int>::const_iterator pedSubNEventsPPBegin( const unsigned int TELL1SourceID ) const = 0;
+
+    /// Return an iterator corresponding to the number of events containing data in the last PP for a given TELL1 source ID
+    virtual std::vector<unsigned int>::const_iterator pedSubNEventsPPEnd( const unsigned int TELL1SourceID ) const = 0;
+
     /// Return an iterator corresponding to the status of the first channel for a given TELL1 source ID
     virtual std::vector<bool>::const_iterator stripStatusBegin( const unsigned int TELL1SourceID ) const = 0;
 
     /// Return an iterator corresponding to the status of the last channel for a given TELL1 source ID
     virtual std::vector<bool>::const_iterator stripStatusEnd( const unsigned int TELL1SourceID ) const = 0;
 
-    /** Return an iterator corresponding to the number of events used in the calculation of RAW+CMS noise after outlier removal
-        for the first channel of a given TELL1 source ID **/
+    /** Return an iterator corresponding to the number of events used in the calculation of noise (RAW, CMS, pedSub)
+        after outlier removal for the first channel of a given TELL1 source ID **/
     virtual std::vector<unsigned int>::const_iterator nEventsBegin( const unsigned int TELL1SourceID ) const = 0;
 
-    /** Return an iterator corresponding to the number of events used in the calculation of RAW+CMS noise after outlier removal
-        for the last channel of a given TELL1 source ID **/
+    /** Return an iterator corresponding to the number of events used in the calculation of noise (RAW, CMS, pedSub)
+        after outlier removal for the last channel of a given TELL1 source ID **/
     virtual std::vector<unsigned int>::const_iterator nEventsEnd( const unsigned int TELL1SourceID ) const = 0;
 
     /// Return the period of the an exponential moving average. (Set to -1 to have a cumulative average.)
