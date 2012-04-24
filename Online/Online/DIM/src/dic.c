@@ -188,8 +188,10 @@ static void recv_rout( int conn_id, DIS_PACKET *packet, int size, int status )
 			{
 				service_tmout( servp->serv_id );
 			}
+/*
 			servp->pending = WAITING_DNS_UP;
 			servp->conn_id = 0;
+*/
 			auxp = servp->prev;
 			move_to_notok_service( servp );
 			servp = auxp;
@@ -242,8 +244,10 @@ static void recv_rout( int conn_id, DIS_PACKET *packet, int size, int status )
 				if( servp->type != COMMAND )
 				{
 					service_tmout( servp->serv_id );
+/*
 					servp->pending = WAITING_DNS_UP;
 					servp->conn_id = 0;
+*/
 					move_to_notok_service( servp );
 				}
 				else
@@ -1491,7 +1495,9 @@ static int handle_dns_info( DNS_DIC_PACKET *packet )
 			tmout = BAD_CONN_TIMEOUT * (bad_connp->n_retries - 1);
 			if(tmout > 120)
 				tmout = 120;
-      if (tmout == 0) tmout = 1;
+/* Can not be 0, the callback of dtq_start_timer(0) is not protected */
+			if(tmout == 0)
+				tmout = 1;
 			dtq_start_timer(tmout, retry_bad_connection, (long)bad_connp);
 			if(( servp->type == COMMAND )||( servp->type == ONCE_ONLY ))
 				return(0);
@@ -1555,8 +1561,10 @@ void move_to_notok_service();
 					(DLL *) bad_connp->conn.service_head,
 				 	(DLL *) servp)) )
 	{
+/*
 		servp->pending = WAITING_DNS_UP;
 		servp->conn_id = 0;
+*/
 		auxp = servp->prev;
 		move_to_notok_service( servp );
 		servp = auxp;
@@ -1571,19 +1579,23 @@ void move_to_ok_service( DIC_SERVICE *servp, int conn_id )
 {
 	if(Dic_conns[conn_id].service_head)
 	{
+		DISABLE_AST
 		servp->pending = NOT_PENDING;
 		servp->tmout_done = 0;
 		dll_remove( (DLL *) servp );
 		dll_insert_queue( (DLL *) Dic_conns[conn_id].service_head,
 			  (DLL *) servp );
+		ENABLE_AST
 	}
 }
 
 void move_to_bad_service( DIC_SERVICE *servp, DIC_BAD_CONNECTION *bad_connp)
 {
+	DISABLE_AST
 	servp->pending = WAITING_DNS_UP;
 	dll_remove( (DLL *) servp );
 	dll_insert_queue( (DLL *) bad_connp->conn.service_head, (DLL *) servp );
+	ENABLE_AST
 }
 
 void move_to_cmnd_service( DIC_SERVICE *servp )
@@ -1591,17 +1603,22 @@ void move_to_cmnd_service( DIC_SERVICE *servp )
 /*
 	if(servp->pending != WAITING_CMND_ANSWER)
 */
+	DISABLE_AST
 	servp->pending = NOT_PENDING;
 	servp->tmout_done = 0;
 	dll_remove( (DLL *) servp );
 	dll_insert_queue( (DLL *) Cmnd_head, (DLL *) servp );
+	ENABLE_AST
 }
 
 void move_to_notok_service(DIC_SERVICE *servp )
 {
-
+	DISABLE_AST
+	servp->pending = WAITING_DNS_UP;
+	servp->conn_id = 0;
 	dll_remove( (DLL *) servp );
 	dll_insert_queue( (DLL *) Service_pend_head, (DLL *) servp );
+	ENABLE_AST
 }
 
 static void get_format_data(int format, FORMAT_STR *format_data, char *def)

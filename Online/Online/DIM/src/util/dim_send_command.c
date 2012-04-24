@@ -73,6 +73,7 @@ char **argv;
 int i;
 int silent = 0;
 char data[1024] = {'\0'};
+int data_int, data_int_flag = 0;
 char dns_node[128], *ptr;
 int dns_port = 0;
 
@@ -94,6 +95,10 @@ int dns_port = 0;
 		{
 			silent = 1;
 		}
+		else if(!strcmp(argv[i],"-i"))
+		{
+			data_int_flag = 1;
+		}
 		else
 		{
 			if(!str[0])
@@ -101,7 +106,9 @@ int dns_port = 0;
 				strcpy(str, argv[i]);
 			}
 			else if(!data[0])
+			{
 				strcpy(data,argv[i]);
+			}
 		}
 	}
 	if(dns_node[0])
@@ -115,12 +122,20 @@ int dns_port = 0;
 	if(!str[0])
 	{
 		printf("dim_send_command: Insufficient parameters\n");
-		printf("usage: dim_send_command <cmnd_name> [<data>] [-dns <dns_node>] [-s]\n");
+		printf("usage: dim_send_command <cmnd_name> [<data>] [-dns <dns_node>] [-s] [-i]\n");
 		exit(0);
 	}
 	if(!data[0])
 		data[0] = '\0';
-	dic_cmnd_callback(str,data,strlen(data)+1, rout, silent);
+	if(data_int_flag)
+	{
+		sscanf(data,"%d",&data_int);
+		dic_cmnd_callback(str,&data_int,sizeof(int), rout, silent);
+	}
+	else
+	{
+		dic_cmnd_callback(str,data,strlen(data)+1, rout, silent);
+	}
 	while(!received)
 	  dim_wait();
 	sleep(1);

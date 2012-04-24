@@ -56,7 +56,7 @@ void rout_list( int *tag, char *buf, int *size )
 void version_rout( int *tag, int *buf, int *size)
 {
 	if(tag){}
-	printf("Received VERSION %lx, %d\n", (unsigned long)buf, *size);
+	printf("Received VERSION %lx, %d\n", (long)buf, *size);
 }
 
 void rout( tag, buf, size )

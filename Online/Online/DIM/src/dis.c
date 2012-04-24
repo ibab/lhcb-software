@@ -2619,10 +2619,12 @@ int find_release_request(int conn_id, int service_id)
 				}
 			}
 		}
+/* The client should close the connection (there may be commands)
 		if( dll_empty((DLL *)clip->requestp_head) ) 
 		{
 			release_conn( conn_id, 0, 0 );
 		}
+*/
 	}
 	ENABLE_AST
 	return(1);
