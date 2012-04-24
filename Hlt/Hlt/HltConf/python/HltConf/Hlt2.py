@@ -58,6 +58,7 @@ from Hlt2Lines.Hlt2CharmHadMinBiasLines import Hlt2CharmHadMinBiasLinesConf
 from Hlt2Lines.Hlt2HighPtJetsLines     import Hlt2HighPtJetsLinesConf
 from Hlt2Lines.Hlt2CharmHadLambdaC2LambdaHLines import Hlt2CharmHadLambdaCLambdaHLinesConf
 from Hlt2Lines.Hlt2CharmHadD2KS0KS0Lines import Hlt2CharmHadD2KS0KS0LinesConf
+from Hlt2Lines.Hlt2CharmHadD02HHXDstLines import Hlt2CharmHadD02HHXDstLinesConf
 #
 # The tracking configurations
 #
@@ -124,6 +125,7 @@ class Hlt2Conf(LHCbConfigurableUser):
                              , Hlt2CharmHadMinBiasLinesConf
                              , Hlt2HighPtJetsLinesConf
                              , Hlt2CharmHadD2KS0KS0LinesConf
+                             , Hlt2CharmHadD02HHXDstLinesConf
                              ]
 
     __slots__ = { "DataType"                   : '2010'    # datatype is one of 2009, MC09, DC06...
