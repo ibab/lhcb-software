@@ -4,6 +4,13 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-04-24 - V. Gligorov
+ - Add Hlt2CharmHadD02HHXDstLines lines to CharmHadrons
+ - Prescale DisplacedVertexLines to 0 by default
+ - Turn off D->Phigamma line
+ - Tighten Topo link to 1Track explicitly to 1700/16/1.5 
+   in PT/IPCHI2/TRCHI2 
+
 ! 2012-04-20 - Johannes Albrecht
  - insert Psi2S lines
 
