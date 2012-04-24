@@ -38,7 +38,7 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt1Line as Line
         return Line ( 'CharmCalibrationNoBias'
                     , prescale = self.prescale
-                    , ODIN = '(ODIN_TRGTYP == LHCb.ODIN.LumiTrigger)&(ODIN_BXTYP == LHCb.ODIN.BeamCrossing)' 
+                    , ODIN = 'jbit( ODIN_EVTTYP,2 )'
                     , postscale = self.postscale
                     ) 
     def __create_microbias_line__(self, name, tracking) :
