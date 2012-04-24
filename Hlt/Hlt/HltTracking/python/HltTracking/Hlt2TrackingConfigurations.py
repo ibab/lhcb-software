@@ -45,7 +45,8 @@ def Hlt2BiKalmanFittedDownstreamTracking() :
                                                                                  Hlt2Tracks             = Hlt2DownstreamTracksName,
                                                                                  DoFastFit              = True,
                                                                                  DoSeeding              = True,
-                                                                                 DoCloneKilling         = False   
+                                                                                 DoCloneKilling         = False,
+                                                                                 TrackCuts              = {"Chi2Cut" : [0.,4.] }    
                                                                         )
 #
 # With track fitting and RICH PID for 3 hypotheses (kaon-proton-pion), but no seeding
