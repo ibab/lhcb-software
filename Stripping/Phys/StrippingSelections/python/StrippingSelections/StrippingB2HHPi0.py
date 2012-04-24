@@ -1,7 +1,7 @@
 
 __author__ = 'Regis Lefevre'
-__date__ = '2011.02.24'
-__version__ = '$Revision: 1.3 $'
+__date__ = '2012.04.20'
+__version__ = '$Revision: 1.4 $'
 
 '''
 Stripping selection for B -> h h pi0
@@ -13,7 +13,7 @@ Stripping selection for B -> h h pi0
 #################################################################
 
 from Gaudi.Configuration import *
-from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
@@ -52,6 +52,17 @@ class StrippingB2HHPi0Conf(LineBuilder) :
         myPions       = StdNoPIDsPions
 	myMergedPi0   = StdLooseMergedPi0
 	myResolvedPi0 = StdLooseResolvedPi0
+
+        #---------------------------------------
+        # pi0 selection
+        self.selpi0r = makeB2HHPi0pi0r( name + '_pi0r',
+                                        config,
+                                        inputSel = [myResolvedPi0]
+                                        )
+        self.selpi0m = makeB2HHPi0pi0m( name + '_pi0m',
+                                        config,
+                                        inputSel = [myMergedPi0]
+                                        )        
         #---------------------------------------
         # hh selection
         self.selrho = makeB2HHPi0rho( name + '_rho',
@@ -64,12 +75,12 @@ class StrippingB2HHPi0Conf(LineBuilder) :
 	self.selresolved = makeB2HHPi0R( name + 'R',
 	                                 config,
 					 DecayDescriptor = 'B0 -> rho(770)0 pi0',
-					 inputSel = [self.selrho, myResolvedPi0]
+					 inputSel = [self.selpi0r, self.selrho]
                                          )				       
-	self.selmerged = makeB2HHPi0M( name + 'M',
+        self.selmerged = makeB2HHPi0M( name + 'M',
 	                               config,
 				       DecayDescriptor = 'B0 -> rho(770)0 pi0',
-				       inputSel = [self.selrho, myMergedPi0]
+				       inputSel = [self.selpi0m, self.selrho ]
                                        )
         #---------------------------------------
         # Stripping lines
@@ -88,13 +99,40 @@ class StrippingB2HHPi0Conf(LineBuilder) :
         self.registerLine(self.B2HHPi0M_line)
 
 ##############################################################
+def makeB2HHPi0pi0r(name,
+                   config,
+                   inputSel
+                   ) :
+
+    _pi0r = "(PT>%(Pi0MinPT_R)s *MeV) & (MM>%(ResPi0MinMM)s *MeV) & (MM<%(ResPi0MaxMM)s *MeV) & (CHILD(CL,1)>%(ResPi0MinGamCL)s) & (CHILD(CL,2)>%(ResPi0MinGamCL)s)" % locals()['config']
+
+    _pi0rFilter = FilterDesktop(Code=_pi0r)
+
+    return Selection ( name+'Sel',
+                       Algorithm = _pi0rFilter,
+                       RequiredSelections = inputSel )
+
+##############################################################
+def makeB2HHPi0pi0m(name,
+                   config,
+                   inputSel
+                   ) :
+
+    _pi0m = "(PT>%(Pi0MinPT_M)s *MeV)" % locals()['config']
+    
+    _pi0mFilter = FilterDesktop(Code=_pi0m)
+
+    return Selection ( name+'Sel',
+                       Algorithm = _pi0mFilter,
+                       RequiredSelections = inputSel )
+##############################################################
 def makeB2HHPi0rho(name,
                    config,
                    DecayDescriptor,
                    inputSel
                    ) :
 
-    _piCuts ="(PT>%(PiMinPT)s *MeV) & (P>%(PiMinP)s *MeV) & (TRPCHI2>%(PiMinTrackProb)s) & (MIPCHI2DV(PRIMARY)>%(PiMinIPChi2)s)" %locals()['config']
+    _piCuts ="(PT>%(PiMinPT)s *MeV) & (P>%(PiMinP)s *MeV) & (TRPCHI2>%(PiMinTrackProb)s) & (MIPCHI2DV(PRIMARY)>%(PiMinIPChi2)s)" % locals()['config']
     _daughterCuts = { 'pi+' : _piCuts, 'pi-' : _piCuts }
     _combCuts = "(AALL)"  % locals()['config']
     _motherCuts = "(VFASPF(VPCHI2)>%(BMinVtxProb)s) & (BPVVDCHI2>%(BMinVVDChi2)s)" % locals()['config']
@@ -116,7 +154,7 @@ def makeB2HHPi0R( name,
                   ) :
 
     _rhoCuts = "(ALL)" % locals()['config']
-    _pi0Cuts = "(PT>%(Pi0MinPT_R)s *MeV) & (MM>%(ResPi0MinMM)s *MeV) & (MM<%(ResPi0MaxMM)s *MeV) & (CHILD(CL,1)>%(ResPi0MinGamCL)s) & (CHILD(CL,2)>%(ResPi0MinGamCL)s)" %locals()['config']
+    _pi0Cuts = "(ALL)" % locals()['config']
     _daughterCuts = { 'rho(770)0' : _rhoCuts, 'pi0' : _pi0Cuts }
     _combCuts = "(AM>%(BMinM)s *MeV) & (AM<%(BMaxM)s *MeV)" % locals()['config']
     _motherCuts = "(PT>%(BMinPT_R)s *MeV) & (BPVIPCHI2()<%(BMaxIPChi2)s) & (BPVDIRA>%(BMinDIRA)s)" % locals()['config']
@@ -139,7 +177,7 @@ def makeB2HHPi0M( name,
                   ) :
 
     _rhoCuts = "(ALL)" % locals()['config']
-    _pi0Cuts = "(PT>%(Pi0MinPT_M)s *MeV)" %locals()['config']
+    _pi0Cuts = "(ALL)" % locals()['config']
     _daughterCuts = { 'rho(770)0' : _rhoCuts, 'pi0' : _pi0Cuts }
     _combCuts = "(AM>%(BMinM)s *MeV) & (AM<%(BMaxM)s *MeV)" % locals()['config']
     _motherCuts = "(PT>%(BMinPT_M)s *MeV) & (BPVIPCHI2()<%(BMaxIPChi2)s) & (BPVDIRA>%(BMinDIRA)s)" % locals()['config']
