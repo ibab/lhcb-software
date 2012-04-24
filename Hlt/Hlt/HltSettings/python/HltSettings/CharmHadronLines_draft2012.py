@@ -29,49 +29,33 @@ class CharmHadronLines :
 
                   ### from Hlt2CharmHadD2HHHLines
                   , 'Hlt2CharmHadD2HHH'
-                  , 'Hlt2CharmHadD2HHHWideMass',
+                  , 'Hlt2CharmHadD2HHHWideMass'
 
                   # KS0 KS0
-                  'Hlt2CharmHadD2KS0KS0',
-                  'Hlt2CharmHadD2KS0KS0WideMass',
+                  ,'Hlt2CharmHadD2KS0KS0'
+                  ,'Hlt2CharmHadD2KS0KS0WideMass'
 
                   ### from Hlt2CharmHadD02HHHH(Dst)Lines
-                  'Hlt2CharmHadD02HHHH_4pi',
-                  'Hlt2CharmHadD02HHHH_4piWideMass',
-                  'Hlt2CharmHadD02HHHH_K3pi',
-                  'Hlt2CharmHadD02HHHH_K3piWideMass',
-                  'Hlt2CharmHadD02HHHH_KKpipi',
-                  'Hlt2CharmHadD02HHHH_KKpipiWideMass',
-                  'Hlt2CharmHadD02HHHH_2K2pi',
-                  'Hlt2CharmHadD02HHHH_2K2piWideMass',
-                  'Hlt2CharmHadD02HHHH_3Kpi',
-                  'Hlt2CharmHadD02HHHH_3KpiWideMass',
-                  'Hlt2CharmHadD02HHHH_Ch2',
-                  'Hlt2CharmHadD02HHHH_Ch2WideMass',
-                  'Hlt2CharmHadD02HHHHDst_4pi',
-                  'Hlt2CharmHadD02HHHHDst_4piWideMass',
-                  'Hlt2CharmHadD02HHHHDst_K3pi',
-                  'Hlt2CharmHadD02HHHHDst_K3piWideMass',
-                  'Hlt2CharmHadD02HHHHDst_KKpipi',
-                  'Hlt2CharmHadD02HHHHDst_KKpipiWideMass',
-                  'Hlt2CharmHadD02HHHHDst_2K2pi',
-                  'Hlt2CharmHadD02HHHHDst_2K2piWideMass',
-                  'Hlt2CharmHadD02HHHHDst_3Kpi',
-                  'Hlt2CharmHadD02HHHHDst_3KpiWideMass',
-                  'Hlt2CharmHadD02HHHHDst_Ch2',
-                  'Hlt2CharmHadD02HHHHDst_Ch2WideMass',
-                  'Hlt2CharmHadD02HHHHDstNoHltOne_4pi',
-                  'Hlt2CharmHadD02HHHHDstNoHltOne_4piWideMass',
-                  'Hlt2CharmHadD02HHHHDstNoHltOne_K3pi',
-                  'Hlt2CharmHadD02HHHHDstNoHltOne_K3piWideMass',
-                  'Hlt2CharmHadD02HHHHDstNoHltOne_KKpipi',
-                  'Hlt2CharmHadD02HHHHDstNoHltOne_KKpipiWideMass',
-                  'Hlt2CharmHadD02HHHHDstNoHltOne_2K2pi',
-                  'Hlt2CharmHadD02HHHHDstNoHltOne_2K2piWideMass',
-                  'Hlt2CharmHadD02HHHHDstNoHltOne_3Kpi',
-                  'Hlt2CharmHadD02HHHHDstNoHltOne_3KpiWideMass',
-                  'Hlt2CharmHadD02HHHHDstNoHltOne_Ch2',
-                  'Hlt2CharmHadD02HHHHDstNoHltOne_Ch2WideMass'
+                  ,'Hlt2CharmHadD02HHHH_4pi'
+                  ,'Hlt2CharmHadD02HHHH_4piWideMass'
+                  ,'Hlt2CharmHadD02HHHH_K3pi'
+                  ,'Hlt2CharmHadD02HHHH_K3piWideMass'
+                  ,'Hlt2CharmHadD02HHHH_KKpipi'
+                  ,'Hlt2CharmHadD02HHHH_KKpipiWideMass'
+                  ,'Hlt2CharmHadD02HHHH_2K2pi'
+                  ,'Hlt2CharmHadD02HHHH_2K2piWideMass'
+                  ,'Hlt2CharmHadD02HHHH_3Kpi'
+                  ,'Hlt2CharmHadD02HHHH_3KpiWideMass'
+                  ,'Hlt2CharmHadD02HHHHDst_4pi'
+                  ,'Hlt2CharmHadD02HHHHDst_4piWideMass'
+                  ,'Hlt2CharmHadD02HHHHDst_K3pi'
+                  ,'Hlt2CharmHadD02HHHHDst_K3piWideMass'
+                  ,'Hlt2CharmHadD02HHHHDst_KKpipi'
+                  ,'Hlt2CharmHadD02HHHHDst_KKpipiWideMass'
+                  ,'Hlt2CharmHadD02HHHHDst_2K2pi'
+                  ,'Hlt2CharmHadD02HHHHDst_2K2piWideMass'
+                  ,'Hlt2CharmHadD02HHHHDst_3Kpi'
+                  ,'Hlt2CharmHadD02HHHHDst_3KpiWideMass'
 
                   ### from Hlt2CharmHadD02HHKsLines
                   , 'Hlt2CharmHadD02HHKsLL'
@@ -103,6 +87,12 @@ class CharmHadronLines :
                   , 'Hlt2CharmHadMinBiasD02KK'
                   , 'Hlt2CharmHadMinBiasDplus2hhh'
                   , 'Hlt2CharmHadMinBiasLambdaC2LambdaPi'
+   
+                  #hhX lines 
+                  , 'Hlt2CharmHadD02HHXDst_hhX'
+                  , 'Hlt2CharmHadD02HHXDst_hhXWideMass'   
+                  #Radiative
+                  #, 'Hlt2D2PhiGamma'
              ]
         
         return lines
@@ -130,8 +120,8 @@ class CharmHadronLines :
                         , 'D0_BPVDIRA_MIN'           : 0.99985    # neuter
                         , 'D0_VCHI2PDOF_MAX'         : 10.0       # neuter
                         , 'D0_PT_MIN'                : 2000.0 * MeV
-                        , 'Sig_M_MIN'                : 1815.0 * MeV
-                        , 'Sig_M_MAX'                : 1915.0 * MeV
+                        , 'Sig_M_MIN'                : 1790.0 * MeV
+                        , 'Sig_M_MAX'                : 1930.0 * MeV
                         , 'WideMass_M_MIN'           : 1715.0 * MeV
                         , 'WideMass_M_MAX'           : 2065.0 * MeV
                         ## 2-body inclusive!

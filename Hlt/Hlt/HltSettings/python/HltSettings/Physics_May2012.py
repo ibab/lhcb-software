@@ -167,8 +167,7 @@ class Physics_May2012( object ):
                                                    , "VertexDisplVertex_Tr_PT"     : "1.7*GeV"
                                                    , "VertexDisplVertex_Tr_CHI2"   : "2.5"
                                                    , "VertexDisplVertex_GEC"       : "Loose"
-
-                                                   , 'Prescale' : { 'Hlt1VertexDisplVertex'     :  0  }
+                                                   , "Prescale" : {'Hlt1VertexDisplVertex':0.0,'Hlt1VertexDisplVertexPS' : 0.0} 
                                                    }
                        #, Hlt1ProtonLinesConf        : { 'Prescale' : {  'Hlt1DiProtonLowMult'        : 0.01, 
                        #                                                 'Hlt1DiProton'               : 0.01
