@@ -3,6 +3,9 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+
+
+!========================= PatAlgorithms v4r23 2012-04-24 =========================
 ! 2012-04-24 - Sascha Stahl
  - PatMatchTool : Momentum estimate now protected against failure.
 
