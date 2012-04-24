@@ -4,6 +4,7 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+!========================= HltConf v9r17 2012-04-24 =========================
 ! 2012-04-24 - V. Gligorov
  - Add Hlt2CharmHadD02HHXDstLines lines to Hlt2
 
