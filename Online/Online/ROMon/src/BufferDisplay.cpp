@@ -151,8 +151,8 @@ void BufferDisplay::update(const void* data) {
       ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
     }
   }
-  ::scrc_put_chars(m_display,"",NORMAL,++line,2,1);
-  ::scrc_put_chars(m_display,"      << Mouse-Left-Double-Click down here to close the window >>",NORMAL,++line,2,1);
+  ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
+  ::scrc_put_chars(m_display,"      << Mouse-Left-Double-Click down here to close the window >>",NORMAL,++line,1,1);
   ::memset(txt,' ',m_display->cols);
   txt[m_display->cols-1]=0;
   while(line<m_display->rows)

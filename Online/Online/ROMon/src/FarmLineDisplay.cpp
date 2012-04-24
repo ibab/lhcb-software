@@ -494,6 +494,7 @@ void FarmLineDisplay::handle(const Event& ev) {
       if ( m_summaryDisplay.get() )   {
         IocSensor::instance().send(m_summaryDisplay.get(),CMD_UPDATE,&m_lines);
       }
+      IocSensor::instance().send(this,CMD_SUMMARIZE,this);
       break;
     case CMD_UPDATE:
       if ( m_subfarmDisplay )   {
@@ -531,6 +532,21 @@ void FarmLineDisplay::handle(const Event& ev) {
       }
       TimeSensor::instance().add(this,1,m_subfarmDisplay);
       break;
+
+    case CMD_SUMMARIZE: {
+      char text[132];
+      ClusterLine::Summary summary;
+      for(k=m_lines.begin(); k != m_lines.end(); ++k, ++cnt)
+	(*k).second->collect(summary);
+      if ( summary.size() > 0 ) {
+	DisplayUpdate update(this,false);
+	if ( m_mode == HLTDEFER_MODE ) {
+	  ::sprintf(text," Total:%13s %6ld %6ld %6ld ","",summary[0].second,summary[1].second,summary[2].second);
+	  ::scrc_put_chars(m_display,text,BG_BLUE|FG_WHITE|BOLD,CLUSTERLINE_FIRSTPOS+int(m_lines.size())+1,1,1);
+	}
+      }
+      break;
+    }
     case CMD_ADD: {
       StringV farms;
       for(k=m_lines.begin(); k != m_lines.end(); ++k) {

@@ -30,6 +30,7 @@ namespace ROMon {
     CMD_RUNSTATE,
     CMD_PARTITIONID,
     CMD_NOTIFY,
+    CMD_SUMMARIZE,
 
     CMD_ADD_ALARM,
     CMD_SHOW_ALARM,

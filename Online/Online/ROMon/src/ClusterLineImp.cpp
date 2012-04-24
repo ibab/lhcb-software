@@ -67,8 +67,13 @@ namespace ROMon {
    */
   class HltDeferLine : public ClusterLine, public Interactor  {
     typedef std::set<std::string> StrSet;
-    int                 m_numFiles;
+    /// Number of nodes in this subfarm
+    int                 m_numNodes;
+    /// Number of runs in the subfarm
     int                 m_numRuns;
+    /// Number of files deferred
+    int                 m_numFiles;
+    /// Number of updates received
     int                 m_numUpdate;
     /// Flag to indicate probles with entity
     bool                m_hasProblems;
@@ -87,7 +92,9 @@ namespace ROMon {
     /// Default destructor
     virtual ~HltDeferLine();
     /// Display function drawing on pasteboard of current display
-    void display();
+    virtual void display();
+    /// Collect summary data
+    virtual void collect(Summary& summary)  const;
     /// Interactor overload: Display callback handler
     void handle(const Event& ev);
   };
@@ -887,6 +894,7 @@ HltDeferLine::HltDeferLine(FarmLineDisplay* p, const string& partition, const st
   m_numUpdate   = 0;
   m_numFiles    = 0;
   m_numRuns     = 0;
+  m_numNodes    = 0;
   m_lastUpdate  = time(0);
   m_hasProblems = false;
   connect(strlower(m_name)+"/ROpublish/HLTDefer");
@@ -937,6 +945,19 @@ void HltDeferLine::excludedHandler(void* tag, void* address, int* size) {
   }
 }
 
+/// Collect summary data
+void HltDeferLine::collect(Summary& summary)  const {
+  if ( summary.size() == 0 ) {
+    summary.push_back(make_pair("Nodes",0));
+    summary.push_back(make_pair("Runs", 0));
+    summary.push_back(make_pair("Files",0));
+  }
+  summary[0].second += m_numNodes;
+  summary[2].second += m_numFiles;
+  if ( m_numRuns > summary[1].second )
+    summary[1].second = m_numRuns;
+}
+
 void HltDeferLine::display() {
   typedef DeferredHLTSubfarmStats HLTStats;
   typedef HLTStats::Nodes Nodes;
@@ -958,7 +979,9 @@ void HltDeferLine::display() {
   for (Nodes::const_iterator ni=nodes->begin(); ni!=nodes->end(); ni=nodes->next(ni))  {
     ++numNodes;
   }
-
+  m_numNodes = numNodes;
+  m_numRuns  = numRuns;
+  m_numFiles = numFiles;
   RTL::Lock lock(InternalDisplay::screenLock());
   time_t t1 = numNodes == 0 ? time(0) : s->firstUpdate().first;
   ::strftime(txt,sizeof(txt)," %H:%M:%S ",::localtime(&t1));

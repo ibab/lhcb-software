@@ -212,6 +212,10 @@ int NodeStatsCollector::monitorHLT() {
     }
     ::closedir(dir);
   }
+  else { // If the overflow directory does not exist, the disk-space is void!
+    h->localdisk.freeBlocks = 0;
+    h->localdisk.numBlocks  = 0;
+  }
   DeferredHLTStats::Runs::iterator ir = h->runs.reset();
   map<int,int>::iterator           i  = files.begin();
   for(; i!=files.end(); ++i) {

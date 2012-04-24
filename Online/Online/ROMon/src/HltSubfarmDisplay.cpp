@@ -124,7 +124,7 @@ void HltSubfarmDisplay::showNodes()  {
     float fr  = gb*(disk.freeBlocks>0 ? disk.freeBlocks : 1);
     float tot = gb*disk.numBlocks;
     ::sprintf(text,"%7d/%-3d   %5.0f %5.0f  %5.1f %%", 
-	      exc_runs, exc_files, fr, tot,100.f*(1.f-fr/tot));
+	      exc_runs, exc_files, fr, tot,tot < 1e-10 ? 100. : 100.f*(1.f-fr/tot));
     disp->draw_line_normal(fmt,(*n).name, runs.size(), numFiles, val.c_str(), text);
   }
   disp->draw_line_normal("");
@@ -132,7 +132,7 @@ void HltSubfarmDisplay::showNodes()  {
   disp->draw_line_normal("");
   disp->draw_line_normal("");
   disp->draw_line_normal("");
-  disp->draw_line_normal("<Mouse-left double-click> or <ENTER> to close window");
+  disp->draw_line_normal("   <Mouse-left double-click> or <ENTER> to close window");
 }
 
 /// Update header information
@@ -176,9 +176,12 @@ string HltSubfarmDisplay::nodeName(size_t offset) {
     size_t cnt;
     _N::const_iterator n;
     const _N* nodes = stats->nodes();
-    for (n=nodes->begin(), cnt=0; n!=nodes->end(); n=nodes->next(n), ++cnt)  {
-      if ( cnt == offset ) {
-        return (*n).name;
+    if ( offset > 0 )  {
+      --offset;
+      for (n=nodes->begin(), cnt=0; n!=nodes->end(); n=nodes->next(n), ++cnt)  {
+	if ( cnt == offset ) {
+	  return (*n).name;
+	}
       }
     }
   }

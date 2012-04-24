@@ -17,6 +17,7 @@
 
 // C++ include files
 #include <string>
+#include <vector>
 
 // Framework includes
 
@@ -35,6 +36,8 @@ namespace ROMon {
    *   @author M.Frank
    */
   class ClusterLine  {
+  public:
+    typedef std::vector<std::pair<std::string,long> > Summary;
   protected:
     std::string        m_name;
     std::string        m_partition;
@@ -74,6 +77,8 @@ namespace ROMon {
     virtual void initialDisplay();
     /// Display function drawing on pasteboard of current display
     virtual void display();
+    /// Collect summary data
+    virtual void collect(Summary& /* summary */ )  const {          }
     /// DIM command service callback
     static void dataHandler(void* tag, void* address, int* size);
   };

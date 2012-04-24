@@ -51,14 +51,11 @@ also close all associated lower level windows mentioned above.
 +++ Show process displays (a la top):
 p or P displays all processes, which have the UTGID environment set. 
        These are typically processes used by the LHCb data aquisition.
-CTRL-V displays all system tasks.                 CTRL-B displays all non-system tasks
-CTRL-P shows all PVSS processes.                  CTRL-N displays all driver tasks.
+CTRL-P shows all PVSS processes.                  b or B displays the BOOT summary of a given subfarm. 
+CTRL-V displays all system tasks.                        Once invoked, type H for further help.
+CTRL-B displays all non-system tasks              s or S displays the statistics summary of a given subfarm (CPU+MBM).
+CTRL-N displays all driver tasks.                        Once invoked, type H for further help.
 T or t shows the torrent download information.    L or l shows the system information
-+++ Show BOOT information:
-b or B displays the BOOT summary of a given subfarm. Once invoked, type H for further help.
-
-+++ Show farm statistics:
-s or S displays the statistics summary of a given subfarm (CPU+MBM). Once invoked, type H for further help.
 
 Invokation of the same command again closes the window.
 </subfarm>
@@ -78,18 +75,11 @@ also close all associated lower level windows mentioned above.
 +++ Show process displays (a la top):
 p or P displays all processes, which have the UTGID environment set. 
        These are typically processes used by the LHCb data aquisition.
-CTRL-V displays all system tasks.                 CTRL-B displays all non-system tasks
-CTRL-P shows all PVSS processes.                  CTRL-N displays all driver tasks.
+CTRL-P shows all PVSS processes.                  c or C displays the CPU summary of a given node. 
+CTRL-V displays all system tasks.                        For space reasons not all nodes are expanded.
+CTRL-B displays all non-system tasks              b or B displays the BOOT summary of a given subfarm. 
+CTRL-N displays all driver tasks.                 s or S displays the statistics summary of a given subfarm (CPU+MBM). 
 T or t shows the torrent download information.    L or l shows the system information
-
-+++ Show CPU usage of a node:
-c or C displays the CPU summary of a given node. For space reasons not all nodes are expanded.
-
-+++ Show BOOT information:
-b or B displays the BOOT summary of a given subfarm. Once invoked, type H for further help.
-
-+++ Show farm statistics:
-s or S displays the statistics summary of a given subfarm (CPU+MBM). Once invoked, type H for further help.
 
 Invokation of the same command again closes the window.
 </subfarm_ctrl>
