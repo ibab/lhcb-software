@@ -327,8 +327,8 @@ StatusCode TrackPacker::check( const DataVector & dataA,
     {
       if ( oTrack->lhcbIDs()[kk].lhcbID() != tTrack->lhcbIDs()[kk].lhcbID() )     isOK = false;
     }
-    LHCb::Track::ExtraInfo oExtra = oTrack->extraInfo();
-    LHCb::Track::ExtraInfo tExtra = tTrack->extraInfo();
+    const LHCb::Track::ExtraInfo& oExtra = oTrack->extraInfo();
+    const LHCb::Track::ExtraInfo& tExtra = tTrack->extraInfo();
     if ( oExtra.size() != tExtra.size() ) isOK = false;
     LHCb::Track::ExtraInfo::const_iterator oIt = oExtra.begin();
     LHCb::Track::ExtraInfo::const_iterator tIt = tExtra.begin();
@@ -340,7 +340,8 @@ StatusCode TrackPacker::check( const DataVector & dataA,
 
     if ( oTrack->nStates() != tTrack->nStates() ) isOK = false;
 
-    if ( !isOK || MSG::DEBUG >= parent().msgLevel() ) {
+    if ( !isOK || MSG::DEBUG >= parent().msgLevel() )
+    {
       parent().info() << "===== Track key " << oTrack->key() << endmsg;
       parent().info() << format( "Old   chi2 %10.4f  nDoF %6i flags %8x nLhcbID %4d nExtra %4d  nStates %4d",
                                  oTrack->chi2PerDoF(), oTrack->nDoF(), oTrack->flags(),
@@ -407,40 +408,41 @@ void TrackPacker::compareStates ( const LHCb::State& oSta,
   tDiag.push_back( std::sqrt(tSta.errTy2()) );
   tDiag.push_back( std::sqrt(tSta.errQOverP2() ) );
 
-  if ( 5.e-5  < fabs( oDiag[0] - tDiag[0] ) ) isOK = false;
-  if ( 5.e-5  < fabs( oDiag[1] - tDiag[1] ) ) isOK = false;
-  if ( 5.e-8  < fabs( oDiag[2] - tDiag[2] ) ) isOK = false;
-  if ( 5.e-8  < fabs( oDiag[3] - tDiag[3] ) ) isOK = false;
+  if ( 5.e-5 < fabs( oDiag[0] - tDiag[0] ) ) isOK = false;
+  if ( 5.e-5 < fabs( oDiag[1] - tDiag[1] ) ) isOK = false;
+  if ( 5.e-8 < fabs( oDiag[2] - tDiag[2] ) ) isOK = false;
+  if ( 5.e-8 < fabs( oDiag[3] - tDiag[3] ) ) isOK = false;
   //== Don't report problem if the term saturated: 2.e9 times energy scale 1.e-2
-  if ( 5.     < fabs( oDiag[4]*oP*1.e5 - tDiag[4]*tP*1.e5 ) &&
-       fabs( tDiag[4]*tP*1.e5 ) < 1.999e7 ) isOK = false;
+  if ( 5.    < fabs( oDiag[4]*oP*1.e5 - tDiag[4]*tP*1.e5 ) &&
+       fabs( tDiag[4]*tP*1.e5 ) < 1.999e7                   ) isOK = false;
 
   std::vector<double> oFrac;
-  oFrac.push_back(  oSta.covariance()(1,0) / oDiag[1] / oDiag[0] );
-  oFrac.push_back(  oSta.covariance()(2,0) / oDiag[2] / oDiag[0] );
-  oFrac.push_back(  oSta.covariance()(2,1) / oDiag[2] / oDiag[1] );
-  oFrac.push_back(  oSta.covariance()(3,0) / oDiag[3] / oDiag[0] );
-  oFrac.push_back(  oSta.covariance()(3,1) / oDiag[3] / oDiag[1] );
-  oFrac.push_back(  oSta.covariance()(3,2) / oDiag[3] / oDiag[2] );
-  oFrac.push_back(  oSta.covariance()(4,0) / oDiag[4] / oDiag[0] );
-  oFrac.push_back(  oSta.covariance()(4,1) / oDiag[4] / oDiag[1] );
-  oFrac.push_back(  oSta.covariance()(4,2) / oDiag[4] / oDiag[2] );
-  oFrac.push_back(  oSta.covariance()(4,3) / oDiag[4] / oDiag[3] );
+  oFrac.push_back( oSta.covariance()(1,0) / oDiag[1] / oDiag[0] );
+  oFrac.push_back( oSta.covariance()(2,0) / oDiag[2] / oDiag[0] );
+  oFrac.push_back( oSta.covariance()(2,1) / oDiag[2] / oDiag[1] );
+  oFrac.push_back( oSta.covariance()(3,0) / oDiag[3] / oDiag[0] );
+  oFrac.push_back( oSta.covariance()(3,1) / oDiag[3] / oDiag[1] );
+  oFrac.push_back( oSta.covariance()(3,2) / oDiag[3] / oDiag[2] );
+  oFrac.push_back( oSta.covariance()(4,0) / oDiag[4] / oDiag[0] );
+  oFrac.push_back( oSta.covariance()(4,1) / oDiag[4] / oDiag[1] );
+  oFrac.push_back( oSta.covariance()(4,2) / oDiag[4] / oDiag[2] );
+  oFrac.push_back( oSta.covariance()(4,3) / oDiag[4] / oDiag[3] );
 
   std::vector<double> tFrac;
-  tFrac.push_back(  tSta.covariance()(1,0) / tDiag[1] / tDiag[0] );
-  tFrac.push_back(  tSta.covariance()(2,0) / tDiag[2] / tDiag[0] );
-  tFrac.push_back(  tSta.covariance()(2,1) / tDiag[2] / tDiag[1] );
-  tFrac.push_back(  tSta.covariance()(3,0) / tDiag[3] / tDiag[0] );
-  tFrac.push_back(  tSta.covariance()(3,1) / tDiag[3] / tDiag[1] );
-  tFrac.push_back(  tSta.covariance()(3,2) / tDiag[3] / tDiag[2] );
-  tFrac.push_back(  tSta.covariance()(4,0) / tDiag[4] / tDiag[0] );
-  tFrac.push_back(  tSta.covariance()(4,1) / tDiag[4] / tDiag[1] );
-  tFrac.push_back(  tSta.covariance()(4,2) / tDiag[4] / tDiag[2] );
-  tFrac.push_back(  tSta.covariance()(4,3) / tDiag[4] / tDiag[3] );
+  tFrac.push_back( tSta.covariance()(1,0) / tDiag[1] / tDiag[0] );
+  tFrac.push_back( tSta.covariance()(2,0) / tDiag[2] / tDiag[0] );
+  tFrac.push_back( tSta.covariance()(2,1) / tDiag[2] / tDiag[1] );
+  tFrac.push_back( tSta.covariance()(3,0) / tDiag[3] / tDiag[0] );
+  tFrac.push_back( tSta.covariance()(3,1) / tDiag[3] / tDiag[1] );
+  tFrac.push_back( tSta.covariance()(3,2) / tDiag[3] / tDiag[2] );
+  tFrac.push_back( tSta.covariance()(4,0) / tDiag[4] / tDiag[0] );
+  tFrac.push_back( tSta.covariance()(4,1) / tDiag[4] / tDiag[1] );
+  tFrac.push_back( tSta.covariance()(4,2) / tDiag[4] / tDiag[2] );
+  tFrac.push_back( tSta.covariance()(4,3) / tDiag[4] / tDiag[3] );
 
   unsigned int kk;
-  for ( kk = 0 ; oFrac.size() > kk ; ++kk ) {
+  for ( kk = 0 ; oFrac.size() > kk ; ++kk ) 
+  {
     if ( 2.e-5 < fabs( oFrac[kk] - tFrac[kk] ) ) isOK = false;
   }
 

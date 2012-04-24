@@ -235,11 +235,11 @@ StatusCode CaloClusterPacker::check( const Data & dataA,
   tDiag.push_back( std::sqrt(dataB.position().spread()(0,0)) );
   tDiag.push_back( std::sqrt(dataB.position().spread()(1,1)) );
 
-  if ( 5.e-5  < fabs( oDiag[0] - tDiag[0] ) ) ok = false;
-  if ( 5.e-5  < fabs( oDiag[1] - tDiag[1] ) ) ok = false;
-  if ( 5.e-3  < fabs( oDiag[2] - tDiag[2] ) ) ok = false;
-  if ( 5.e-5  < fabs( oDiag[3] - tDiag[3] ) ) ok = false;
-  if ( 5.e-5  < fabs( oDiag[4] - tDiag[4] ) ) ok = false;
+  if ( 5.e-5 < fabs( oDiag[0] - tDiag[0] ) ) ok = false;
+  if ( 5.e-5 < fabs( oDiag[1] - tDiag[1] ) ) ok = false;
+  if ( 5.e-3 < fabs( oDiag[2] - tDiag[2] ) ) ok = false;
+  if ( 5.e-5 < fabs( oDiag[3] - tDiag[3] ) ) ok = false;
+  if ( 5.e-5 < fabs( oDiag[4] - tDiag[4] ) ) ok = false;
 
   oFrac.push_back( dataA.position().covariance()(1,0) / oDiag[1] / oDiag[0] );
   oFrac.push_back( dataA.position().covariance()(2,0) / oDiag[2] / oDiag[0] );

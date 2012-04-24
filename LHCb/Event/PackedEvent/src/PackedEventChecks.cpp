@@ -148,8 +148,8 @@ DataChecks::compareVectors( const std::string & name,
 
 bool
 DataChecks::compareDoubles( const std::string & name,
-                            const double a,
-                            const double b,
+                            const double& a,
+                            const double& b,
                             const double tol ) const
 {
   const bool ok = ( std::fabs( a - b ) < tol );

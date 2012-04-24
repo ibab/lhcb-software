@@ -10,6 +10,9 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
 
+// Boost
+#include "boost/array.hpp"
+
 namespace DataPacking
 {
 
@@ -40,10 +43,10 @@ namespace DataPacking
 
     /// Compare two Matrices
     template < class TYPE, unsigned int N, unsigned int M >
-    inline bool compareMatrices(  const std::string & name,
-                                  const TYPE & a,
-                                  const TYPE & b,
-                                  const double tol = 5.0e-3 ) const
+    inline bool compareMatrices( const std::string & name,
+                                 const TYPE & a,
+                                 const TYPE & b,
+                                 const double tol = 5.0e-3 ) const
     {
       bool ok = true;
       for ( unsigned int n = 0; n<N; ++n )
@@ -55,6 +58,41 @@ namespace DataPacking
           double tolRel = tol * fabs( a(n,m) );
           if ( tolRel < tol ) tolRel = tol;
           ok &= compareDoubles( text.str(), a(n,m), b(n,m), tolRel );
+        }
+      }
+      return ok;
+    }
+
+    /// Compare two 'Covariance' Matrices
+    template < class TYPE, unsigned int N >
+    inline bool compareCovMatrices( const std::string & name,
+                                    const TYPE & a,
+                                    const TYPE & b,
+                                    const boost::array<double,N> tolOnDiag,
+                                    const double tolOffDiag ) const
+    {
+      bool ok = true;
+      for ( unsigned int n = 0; n<N; ++n )
+      {
+        for ( unsigned int m = n; m<N; ++m )
+        {
+          std::ostringstream text;
+          text << name << ":" << n << m;
+          if ( m == n )
+          { // On diagonal
+            ok &= compareDoubles( text.str(), 
+                                  std::sqrt(a(n,m)), 
+                                  std::sqrt(b(n,m)),
+                                  tolOnDiag[n] );
+          }
+          else
+          { // Off diagonal
+            const double testA = ( fabs(a(n,n)) > 0 && fabs(a(m,m)) > 0 ?
+                                   a(n,m) / std::sqrt( a(n,n) * a(m,m) ) : 0 );
+            const double testB = ( fabs(b(n,n)) > 0 && fabs(b(m,m)) > 0 ?
+                                   b(n,m) / std::sqrt( b(n,n) * b(m,m) ) : 0 );
+            ok &= compareDoubles( text.str(), testA, testB, tolOffDiag );
+          }
         }
       }
       return ok;
@@ -92,8 +130,8 @@ namespace DataPacking
 
     /// Compare two double values
     bool compareDoubles( const std::string & name,
-                         const double a,
-                         const double b,
+                         const double& a,
+                         const double& b,
                          const double tol = 1.0e-4 ) const;
 
     /// Compare two int values
@@ -126,8 +164,8 @@ namespace DataPacking
 
     /// Compare two double 'energy' values
     inline bool compareEnergies( const std::string & name,
-                                 const double a,
-                                 const double b,
+                                 const double& a,
+                                 const double& b,
                                  const double tol = 5.0e-3 ) const
     {
       return compareDoubles( name, a, b, tol );
@@ -135,8 +173,8 @@ namespace DataPacking
 
     /// Compare two double 'energy' vectors (e.g. Momentum vectors)
     inline bool compareEnergies( const std::string & name,
-                                 const Gaudi::XYZVector & a,
-                                 const Gaudi::XYZVector & b,
+                                 const Gaudi::XYZVector& a,
+                                 const Gaudi::XYZVector& b,
                                  const double tol = 5.0e-3 ) const
     {
       return compareVectors( name, a, b, tol );

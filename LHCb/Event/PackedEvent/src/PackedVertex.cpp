@@ -191,7 +191,7 @@ StatusCode VertexPacker::check( const Data & dataA,
   // technique
   ok &= dataA.technique() == dataB.technique();
   // Chi^2
-  ok &= ch.compareDoubles( "Chi^2", dataA.chi2(), dataB.chi2() );
+  ok &= ch.compareDoubles( "Chi^2", dataA.chi2(), dataB.chi2(), 1.0e-3 );
   // NDOF
   ok &= ch.compareInts( "nDOF", dataA.nDoF(), dataB.nDoF() );
   // Position

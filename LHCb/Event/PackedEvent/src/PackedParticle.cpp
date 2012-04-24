@@ -333,9 +333,10 @@ StatusCode ParticlePacker::check( const Data & dataA,
 
   // Mass
   ok &= ch.compareEnergies( "MeasuredMass",
-                           dataA.measuredMass(), dataB.measuredMass() );
+                            dataA.measuredMass(), dataB.measuredMass() );
+
   ok &= ch.compareEnergies( "MeasuredMassError",
-                           dataA.measuredMassErr(), dataB.measuredMassErr() );
+                            dataA.measuredMassErr(), dataB.measuredMassErr() );
 
   // momentum
   ok &= ch.compareLorentzVectors( "Momentum",
@@ -346,9 +347,11 @@ StatusCode ParticlePacker::check( const Data & dataA,
                           dataA.referencePoint(), dataB.referencePoint() );
 
   // Mom Cov
-  ok &= ch.compareMatrices<Gaudi::SymMatrix4x4,4,4>( "MomCov",
-                                                     dataA.momCovMatrix(),
-                                                     dataB.momCovMatrix() );
+  const boost::array<double,4> tolDiag = {{ 5.0e-3, 5.0e-3, 5.0e-3, 5.0e-3  }};
+  ok &= ch.compareCovMatrices<Gaudi::SymMatrix4x4,4>( "MomCov",
+                                                      dataA.momCovMatrix(),
+                                                      dataB.momCovMatrix(),
+                                                      tolDiag, 2.0e-5 );
 
   // Pos Cov
   ok &= ch.compareMatrices<Gaudi::SymMatrix3x3,3,3>( "PosCov",
@@ -370,15 +373,23 @@ StatusCode ParticlePacker::check( const Data & dataA,
     for ( ; iEA != dataA.extraInfo().end() && iEB != dataB.extraInfo().end();
           ++iEA, ++iEB )
     {
+      std::ostringstream mess;
+      mess << "ExtraInfo:" << (LHCb::Particle::additionalInfo)iEA->first;
       const bool keyOK   = iEA->first == iEB->first;
+      if ( !keyOK ) parent().warning() << mess << " Different Keys" << endmsg;
       ok &= keyOK;
-      //const bool valueOK = ch.compareDoubles( "ExtraInfo", iEA->second, iEB->second );
-      //ok &= valueOK; // Don't trigger a warning just because the value is different ..
+      const double relTol = 1.0e-3;
+      double tol = relTol * fabs(iEA->second);
+      if ( tol < relTol ) tol = relTol;
+      const bool valueOK = ch.compareDoubles( mess.str(),
+                                              iEA->second, iEB->second,
+                                              tol );
+      ok &= valueOK;
     }
   }
   else
   {
-    parent().warning() << "ExtraInfo different sizes" << endmsg;
+    parent().warning() << "ExtraInfo has different sizes" << endmsg;
   }
 
   // end vertex
@@ -410,7 +421,7 @@ StatusCode ParticlePacker::check( const Data & dataA,
   // If comparison not OK, print full information
   if ( !ok )
   {
-    const std::string loc = ( dataA.parent() && dataA.parent()->registry() ? 
+    const std::string loc = ( dataA.parent() && dataA.parent()->registry() ?
                               dataA.parent()->registry()->identifier() : "Not in TES" );
     parent().warning() << "Problem with Particle data packing :-" << endmsg
                        << "  Original Particle in '" << loc << "'" << endmsg

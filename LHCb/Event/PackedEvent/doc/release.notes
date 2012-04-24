@@ -4,6 +4,10 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+! 2012-04-24 - Chris Jones
+ - Improvements to the checks of Particle packing, to remove some false
+   positives when comparing the momemtnum covariance matrix.
+
 ! 2012-04-23 - Chris Jones
  - New version of the Particle packing, to (try) and fix consistency problems.
  - Improve the CaloCluster checking to avoid some false positives.
