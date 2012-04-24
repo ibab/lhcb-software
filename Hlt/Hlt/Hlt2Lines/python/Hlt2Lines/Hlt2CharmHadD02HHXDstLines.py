@@ -14,17 +14,18 @@ class Hlt2CharmHadD02HHXDstLinesConf(HltLinesConfigurableUser) :
                   , 'TrkP_SlowPion'               : 3000.0 * MeV
                   , 'TrkChi2_SlowPion'            : 2.5
                   , 'TrkChi2_MAX_Child_MAX'       : 2.0
-                  , 'IPCHI2_MAX_Child_MIN'        : 49.
+                  , 'IPCHI2_MAX_Child_MIN'        : 25.
                   , 'IPCHI2_PiSlow_MAX'           : 9.      
                   , 'PairMaxDoca_Dstar'           : 100.0 * mm
-                  , 'PT_Dstar_MIN'                : 5000.0 * MeV  
-                  , 'DIRA_D0_MIN'                 : 0.999
-                  , 'FDCHI2_D0_MIN'               : 225.
-                  , 'VCHI2_D0_MAX'                : 10.  
+                  , 'PT_Dstar_MIN'                : 3500.0 * MeV  
+                  , 'DIRA_D0_MIN'                 : 0.99
+                  , 'FDCHI2_D0_MIN'               : 100.
+                  , 'VCHI2_D0_MAX'                : 10. 
+                  , 'M_MAX'                       : 1900. 
                   , 'DeltaM_MIN'                  : 0.0 * MeV
-                  , 'DeltaM_MAX'                  : 200.0 * MeV
+                  , 'DeltaM_MAX'                  : 250.0 * MeV
                   , 'DeltaM_MINwide'              : 0.0 * MeV
-                  , 'DeltaM_MAXwide'              : 250.0 * MeV
+                  , 'DeltaM_MAXwide'              : 500.0 * MeV
                   ## GEC
                   , 'GEC_Filter_NTRACK'        : False       # do or do not
                   , 'GEC_NTRACK_MAX'           : 180        # max number of tracks
@@ -115,6 +116,7 @@ class Hlt2CharmHadD02HHXDstLinesConf(HltLinesConfigurableUser) :
                       " & (MAXTREE((('pi+'==ABSID) | ('K+'==ABSID)),MIPCHI2DV(PRIMARY)) > %(IPCHI2_MAX_Child_MIN)s)" \
                       " & (BPVVDCHI2 > %(FDCHI2_D0_MIN)s)"\
                       " & (BPVDIRA > %(DIRA_D0_MIN)s)" \
+                      " & (M < %(M_MAX)s)" \
                       " & (VFASPF(VCHI2PDOF) < %(VCHI2_D0_MAX)s)" % self.getProps() 
         slowpioncut = " ( MIPCHI2DV(PRIMARY) < %(IPCHI2_PiSlow_MAX)s)" % self.getProps()
         childcuts = {"K*(892)0" : kstchildcut ,
