@@ -102,7 +102,8 @@ namespace DataPacking
     bool compareLorentzVectors( const std::string & name,
                                 const Gaudi::LorentzVector & a,
                                 const Gaudi::LorentzVector & b,
-                                const double tol = 5.0e-3 ) const;
+                                const double tolV    = 5.0e-3,
+                                const double tolMass = 5.0e-2 ) const;
 
     /// Compare two points to within the given tolerance
     bool comparePoints( const std::string & name,
