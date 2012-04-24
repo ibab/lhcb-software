@@ -26,8 +26,8 @@ from StandardParticles import StdAllLoosePions
 
 
 __author__=['Christian Elsasser']
-__date__='16/01/2012'
-__version__='$Revision: 2.0 $'
+__date__='16/04/2012'
+__version__='$Revision: 3.0 $'
 
 config_params = {'Z2TauTau_Prong_LinePrescale'  : 1.0,
     'Z2TauTau_Prong_LinePostscale' : 1.0,
@@ -39,7 +39,7 @@ config_params = {'Z2TauTau_Prong_LinePrescale'  : 1.0,
     #'Z_MASS_HIGH'                 : not set,    # MeV/c2
     #'VCHI2_Z_MAX'                 : not set,    # dl
     ###
-    'PT_HAD_MIN'                   : '1000',     # MeV/c
+    'PT_HAD_MIN'                   : '1500',     # MeV/c
     'TRACKCHI2_HAD_MAX'            : '10',       # dl
     ###
     'PT_TAU_MIN'                   : '8000',    # MeV/c
@@ -91,7 +91,7 @@ class Z02TauTauProngConf(LineBuilder) :
         self.name = name
         
         
-        
+        PVRange = True
         
         
         #self.__PVOutputLocation__                  = "Rec/Vertex/Primary" 
@@ -120,6 +120,7 @@ class Z02TauTauProngConf(LineBuilder) :
         self.Z2TauTauLine             = StrippingLine(  name+"_Line",
                                                       prescale    = config['Z2TauTau_Prong_LinePrescale'],
                                                       postscale   = config['Z2TauTau_Prong_LinePostscale'],
+                                                      checkPV     = PVRange,
                                                       selection   = self._createZ(name   = name,
                                                                                   tauSel = selTau[name],
                                                                                   config = config)
@@ -128,6 +129,7 @@ class Z02TauTauProngConf(LineBuilder) :
         self.Z2TauTauSameSignLine     = StrippingLine(  name+"_SameSign_Line",
                                                       prescale    = config['Z2TauTau_Prong_LinePrescale'],
                                                       postscale   = config['Z2TauTau_Prong_LinePostscale'],
+                                                      checkPV     = PVRange,
                                                       selection   = self._createZ_SameSign(name   = name+"_SameSign",
                                                                                            tauSel = selTau[name],
                                                                                            config = config)
@@ -136,6 +138,7 @@ class Z02TauTauProngConf(LineBuilder) :
         self.Z2TauTauSameSignTauLine  = StrippingLine(  name+"_SameSignTau_Line",
                                                       prescale    = config['Z2TauTau_Prong_LinePrescale'],
                                                       postscale   = config['Z2TauTau_Prong_LinePostscale'],
+                                                      checkPV     = PVRange,
                                                       selection   = self._createZ(name   = name+"_SameSignTau",
                                                                                   tauSel = selTau[name+"_SameSignTau"],
                                                                                   config = config)
@@ -144,6 +147,7 @@ class Z02TauTauProngConf(LineBuilder) :
         self.Z2TauTauSameSignAllLine  = StrippingLine(  name+"_SameSignAll_Line",
                                                       prescale    = config['Z2TauTau_Prong_LinePrescale'],
                                                       postscale   = config['Z2TauTau_Prong_LinePostscale'],
+                                                      checkPV     = PVRange,
                                                       selection   = self._createZ_SameSign(name   = name+"_SameSignAll",
                                                                                            tauSel = selTau[name+"_SameSignTau"],
                                                                                            config = config)
@@ -162,17 +166,18 @@ class Z02TauTauProngConf(LineBuilder) :
     ### CREATING Z CANDIDATE
     def _createZ(self, name,tauSel,config) :
         """
-            Z0 selection
-            """
+        Z0 selection
+        """
         
         
-        _combcut        = "(AM > "                        + config['Z_MASS_LOW']          + "*MeV)"
+        _combcut        = "(AM > " + config['Z_MASS_LOW'] + "*MeV)"
         _Zcut           = "ALL"
         
-        _CombineZ       = CombineParticles(  DecayDescriptors          = ["Z0 -> tau+ tau-"],
-                                           CombinationCut            = _combcut,
-                                           MotherCut                 = _Zcut
-                                           #Preambulo                = "",#_preambulo
+        _CombineZ       = CombineParticles(  DecayDescriptors   = ["Z0 -> tau+ tau-"],
+                                           CombinationCut       = _combcut,
+                                           MotherCut            = _Zcut,
+                                           WriteP2PVRelations   = False
+                                           #Preambulo           = "",#_preambulo
                                            )
         _CombineZConf   = _CombineZ.configurable("Combine_"+name+"_Z")
         _CombineZConf.ParticleCombiners.update({'':'MomentumCombiner'}) 
@@ -189,14 +194,14 @@ class Z02TauTauProngConf(LineBuilder) :
             """
         
         
-        _combcut        = "(AM > "                        + config['Z_MASS_LOW']          + "*MeV)"
+        _combcut        = "(AM > " + config['Z_MASS_LOW'] + "*MeV)"
         _Zcut           = "ALL"
         
-        _CombineZ       = CombineParticles(  DecayDescriptors          = ['[Z0 -> tau+ tau+]cc'],
-                                           CombinationCut            = _combcut,
-                                           MotherCut                 = _Zcut,
-                                           WriteP2PVRelations        = False
-                                           #Preambulo                = "",#_preambulo
+        _CombineZ       = CombineParticles(  DecayDescriptors   = ['[Z0 -> tau+ tau+]cc'],
+                                           CombinationCut       = _combcut,
+                                           MotherCut            = _Zcut,
+                                           WriteP2PVRelations   = False
+                                           #Preambulo           = "",#_preambulo
                                            )
         _CombineZConf   = _CombineZ.configurable("Combine_"+name+"_Z")
         _CombineZConf.ParticleCombiners.update({'':'MomentumCombiner'}) 
@@ -230,47 +235,46 @@ class Z02TauTauProngConf(LineBuilder) :
                                            MotherCut                 = _taucut
                                            )
         
-        return Selection(   name                 = name+"_TauProng",
-                         Algorithm            = _CombineTau,
-                         RequiredSelections   = [hadSel]
+        return Selection(   name            = name+"_TauProng",
+                         Algorithm          = _CombineTau,
+                         RequiredSelections = [hadSel]
                          )
     
     def _createTauProng_SameSign(self,name,hadSel,config) :
         """
-            Tau Prong selection Same Sign
-            """
+        Tau Prong selection Same Sign
+        """
         
         selectionCuts   = self._hadIntermediateKinematicCutsProng(config)
         
         _combcut        = selectionCuts[0] + " & "\
-            "(AM > "                            + config['TAU_MASS_LOW']          + "*MeV)  & "\
-            "(AM < "                            + config['TAU_MASS_HIGH']         + "*MeV)"#  & "\
+            "(AM > " + config['TAU_MASS_LOW']  + "*MeV)  & "\
+            "(AM < " + config['TAU_MASS_HIGH'] + "*MeV)"#  & "\
         
         
         
         _taucut         = selectionCuts[1]
         
         
-        _CombineTau     = CombineParticles(  DecayDescriptor           = "[tau+ -> pi+ pi+ pi+]cc",
-                                           CombinationCut            = _combcut,
-                                           MotherCut                 = _taucut
+        _CombineTau     = CombineParticles(  DecayDescriptor = "[tau+ -> pi+ pi+ pi+]cc",
+                                           CombinationCut    = _combcut,
+                                           MotherCut         = _taucut
                                            )
         
-        return Selection(   name                 = name+"_TauProng",
-                         Algorithm            = _CombineTau,
-                         RequiredSelections   = [hadSel]
+        return Selection(   name            = name+"_TauProng",
+                         Algorithm          = _CombineTau,
+                         RequiredSelections = [hadSel]
                          )
     
     
     ### CREATING PRONG 
     def _createHadProng(self, name, config) :
         """
-            Hadron selection Prong
-            """
+        Hadron selection Prong
+        """
         selectionCuts   = self._hadFinalStateKinematicCutsProng(config)
         
-        _filter         = FilterDesktop(Code                      = selectionCuts
-                                        )
+        _filter         = FilterDesktop(Code = selectionCuts )
         
         return Selection(   name+"_HadProng",
                          Algorithm            = _filter,
@@ -286,8 +290,9 @@ class Z02TauTauProngConf(LineBuilder) :
     
     ### KINEMATIC CUTS FOR PRONG
     def _hadFinalStateKinematicCutsProng(self,config):
-        _code     = "(PT > "                 + config['PT_HAD_MIN'] +"*MeV) & "\
-            "(TRCHI2DOF < "          + config['TRACKCHI2_HAD_MAX'] + ")"
+        _code     = "(PT > " + config['PT_HAD_MIN'] +"*MeV) & "\
+            "(TRCHI2DOF < "  + config['TRACKCHI2_HAD_MAX'] + ") & "\
+            "~(ISMUON)"
         return _code 
 
 
