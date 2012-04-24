@@ -4,6 +4,7 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================= PatAlgorithms v4r22 2012-04-24 =========================
 ! 2012-04-23 - Sascha Stahl
  - PatMatchTool : Added option MinMomentum and MinPt to reject tracks with a certain momentum.
  - PatDownstream : Added option MinMomentum and MinPt to reject tracks with a certain momentum.
@@ -16,8 +17,8 @@ zTTField in the chi2 fit.
 
 ! 2012-04-18 - Sascha Stahl
  - PatDownstream: Added options to set the output location of the matching and forward
-									tracking in PatDownstream. Now used seeds and tt hits can be removed
-									also in the HLT.
+   tracking in PatDownstream. Now used seeds and tt hits can be removed
+   also in the HLT.
 
 !========================= PatAlgorithms v4r21 2012-04-09 =========================
 ! 2012-04-05 - Sascha Stahl
