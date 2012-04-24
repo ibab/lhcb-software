@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2012-04-24 - Johannes Albrecht
+ - reduce nVelo hits cut to 6k
+
 !========================= Hlt1Lines v6r22 2012-04-24 =========================
 ! 2012-04-24 - E. v. Herwijnen
  - Set a prescale of 10 to the Hlt1MBNoBias line.

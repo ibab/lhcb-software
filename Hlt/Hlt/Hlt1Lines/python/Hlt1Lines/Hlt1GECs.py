@@ -5,7 +5,7 @@ def Hlt1GECStreamer( gec = 'Loose', accept = True ):
                          'MaxVeloHits' :  3000 },
              'Loose' : { 'MaxOTHits'   : MaxOTHits,
                          'MaxITHits'   :  3000,
-                         'MaxVeloHits' : 10000 } }
+                         'MaxVeloHits' : 6000 } }
     from Configurables import Hlt__GEC
     from HltLine.HltDecodeRaw import DecodeIT,DecodeVELO
     from HltLine.HltLine import bindMembers
