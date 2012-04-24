@@ -14,7 +14,7 @@ Dstar methods closely copied from StrippingDstarD2KShh.py by Mat Charles.
 """
 __author__ = ['Mika Vesterinen']
 __date__ = '08/03/2012'
-__version__ = '$Revision: 0.2 $'
+__version__ = '$Revision: 0.3 $'
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles, OfflineVertexFitter
@@ -32,7 +32,8 @@ __all__ = ('CharmFromBSemiAllLinesConf',
            'confdict')
 
 confdict = {
-    "MINIPCHI2"      : 9.0    # adimensiional
+    "GEC_nLongTrk" : 250    # adimensional
+    ,"MINIPCHI2"      : 9.0    # adimensiional
     ,"TRCHI2"        : 4.0    # adimensiional
     ,"TRCHI2Loose"   : 5.0    # adimensiional    
     ,"KaonPIDK"      : 4.0    # adimensiional
@@ -45,6 +46,8 @@ confdict = {
     ,"DsFDCHI2"      : 100.0  # adimensiional
     ,"DsMassWin"     : 80.0   # MeV
     ,"DsAMassWin"    : 100.0  # MeV
+    ,"Dto4h_MassWin" : 40.0   # MeV
+    ,"Dto4h_AMassWin": 42.0  # MeV
     ,"DsIP"          : 7.4    #mm
     ,"DsVCHI2DOF"    : 6.0    # adimensiional
     ,"PIDmu"         : -0.0   # adimensiional
@@ -98,7 +101,8 @@ confdict = {
 class CharmFromBSemiAllLinesConf(LineBuilder) :
     
     __configuration_keys__ = (
-        "MINIPCHI2"     
+        "GEC_nLongTrk"
+        ,"MINIPCHI2"     
         ,"TRCHI2"     
         ,"TRCHI2Loose"   
         ,"KaonPIDK"      
@@ -111,6 +115,8 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         ,"DsFDCHI2"      
         ,"DsMassWin"     
         ,"DsAMassWin"    
+        ,"Dto4h_MassWin"     
+        ,"Dto4h_AMassWin"    
         ,"DsIP"          
         ,"DsVCHI2DOF"    
         ,"PIDmu"         
@@ -656,77 +662,80 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
 
         
         ################# DECLARE THE STRIPPING LINES #################################
+
+        GECs = { "Code":"( recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %(GEC_nLongTrk)s )" % config,
+                     "Preambulo": ["from LoKiTracks.decorators import *"]}
         
-        self.registerLine( StrippingLine('b2D0MuXKsKs_DDDD' + name + 'Line', prescale = 1, selection = self.selb2D0MuXKsKs_DDDD))
-        self.registerLine( StrippingLine('b2D0MuXKsKs_LLLL' + name + 'Line', prescale = 1, selection = self.selb2D0MuXKsKs_LLLL))
-        self.registerLine( StrippingLine('b2D0MuXKsKs_DDLL' + name + 'Line', prescale = 1, selection = self.selb2D0MuXKsKs_DDLL))
+        self.registerLine( StrippingLine('b2D0MuXKsKs_DDDD' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2D0MuXKsKs_DDDD))
+        self.registerLine( StrippingLine('b2D0MuXKsKs_LLLL' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2D0MuXKsKs_LLLL))
+        self.registerLine( StrippingLine('b2D0MuXKsKs_DDLL' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2D0MuXKsKs_DDLL))
         ### D*+ versions
-        self.registerLine( StrippingLine('b2DstarMuXKsKs_DDDD' + name + 'Line', prescale = 1, selection = self.selb2DstarMuXKsKs_DDDD))
-        self.registerLine( StrippingLine('b2DstarMuXKsKs_LLLL' + name + 'Line', prescale = 1, selection = self.selb2DstarMuXKsKs_LLLL))
-        self.registerLine( StrippingLine('b2DstarMuXKsKs_DDLL' + name + 'Line', prescale = 1, selection = self.selb2DstarMuXKsKs_DDLL))
+        self.registerLine( StrippingLine('b2DstarMuXKsKs_DDDD' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2DstarMuXKsKs_DDDD))
+        self.registerLine( StrippingLine('b2DstarMuXKsKs_LLLL' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2DstarMuXKsKs_LLLL))
+        self.registerLine( StrippingLine('b2DstarMuXKsKs_DDLL' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2DstarMuXKsKs_DDLL))
 
         ########### D0 -> HHHHH
-        self.registerLine( StrippingLine('b2D0MuXK3Pi' + name + 'Line', prescale = 1, selection = self.selb2D0MuXK3Pi) )
-        self.registerLine( StrippingLine('b2D0MuX4Pi' + name + 'Line', prescale = 1, selection = self.selb2D0MuX4Pi) )
-        self.registerLine( StrippingLine('b2D0MuX2K2Pi' + name + 'Line', prescale = 1, selection = self.selb2D0MuX2K2Pi) )
-        self.registerLine( StrippingLine('b2D0MuX3KPi' + name + 'Line', prescale = 1, selection = self.selb2D0MuX3KPi) )
+        self.registerLine( StrippingLine('b2D0MuXK3Pi' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2D0MuXK3Pi) )
+        self.registerLine( StrippingLine('b2D0MuX4Pi' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2D0MuX4Pi) )
+        self.registerLine( StrippingLine('b2D0MuX2K2Pi' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2D0MuX2K2Pi) )
+        self.registerLine( StrippingLine('b2D0MuX3KPi' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2D0MuX3KPi) )
         ## D*+ versions
-        self.registerLine( StrippingLine('b2DstarMuXK3Pi' + name + 'Line', prescale = 1, selection = self.selb2DstarMuXK3Pi) )
-        self.registerLine( StrippingLine('b2DstarMuX4Pi' + name + 'Line', prescale = 1, selection = self.selb2DstarMuX4Pi) )
-        self.registerLine( StrippingLine('b2DstarMuX2K2Pi' + name + 'Line', prescale = 1, selection = self.selb2DstarMuX2K2Pi) )
-        self.registerLine( StrippingLine('b2DstarMuX3KPi' + name + 'Line', prescale = 1, selection = self.selb2DstarMuX3KPi) )
+        self.registerLine( StrippingLine('b2DstarMuXK3Pi' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2DstarMuXK3Pi) )
+        self.registerLine( StrippingLine('b2DstarMuX4Pi' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2DstarMuX4Pi) )
+        self.registerLine( StrippingLine('b2DstarMuX2K2Pi' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2DstarMuX2K2Pi) )
+        self.registerLine( StrippingLine('b2DstarMuX3KPi' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2DstarMuX3KPi) )
         
         ########### D0 -> Ks HH 
-        self.registerLine( StrippingLine('b2DstarMuXKsPiPiLL'+name+'Line',prescale = 1,selection = self.selb2DstarMuXKsPiPiLL) ) 
-        self.registerLine( StrippingLine('b2DstarMuXKsPiPiDD'+name+'Line',prescale = 1,selection = self.selb2DstarMuXKsPiPiDD) )
-        self.registerLine( StrippingLine('b2DstarMuXKsKPiLL'+name+'Line',prescale = 1,selection = self.selb2DstarMuXKsKPiLL) )
-        self.registerLine( StrippingLine('b2DstarMuXKsKPiDD'+name+'Line',prescale = 1,selection = self.selb2DstarMuXKsKPiDD) )
-        self.registerLine( StrippingLine('b2DstarMuXKsKKLL'+name+'Line',prescale = 1,selection = self.selb2DstarMuXKsKKLL) )
-        self.registerLine( StrippingLine('b2DstarMuXKsKKDD'+name+'Line',prescale = 1,selection = self.selb2DstarMuXKsKKDD) )
+        self.registerLine( StrippingLine('b2DstarMuXKsPiPiLL'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2DstarMuXKsPiPiLL) ) 
+        self.registerLine( StrippingLine('b2DstarMuXKsPiPiDD'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2DstarMuXKsPiPiDD) )
+        self.registerLine( StrippingLine('b2DstarMuXKsKPiLL'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2DstarMuXKsKPiLL) )
+        self.registerLine( StrippingLine('b2DstarMuXKsKPiDD'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2DstarMuXKsKPiDD) )
+        self.registerLine( StrippingLine('b2DstarMuXKsKKLL'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2DstarMuXKsKKLL) )
+        self.registerLine( StrippingLine('b2DstarMuXKsKKDD'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2DstarMuXKsKKDD) )
         ## D*+ versions
-        self.registerLine( StrippingLine('b2D0MuXKsPiPiLL'+name+'Line',prescale = 1,selection = self.selb2D0MuXKsPiPiLL) )
-        self.registerLine( StrippingLine('b2D0MuXKsPiPiDD'+name+'Line',prescale = 1,selection = self.selb2D0MuXKsPiPiDD) )
-        self.registerLine( StrippingLine('b2D0MuXKsKKLL'+name+'Line',prescale = 1,selection = self.selb2D0MuXKsKKLL) )
-        self.registerLine( StrippingLine('b2D0MuXKsKKDD'+name+'Line',prescale = 1,selection = self.selb2D0MuXKsKKDD) )
-        self.registerLine( StrippingLine('b2D0MuXKsKPiLL'+name+'Line',prescale = 1,selection = self.selb2D0MuXKsKPiLL) )
-        self.registerLine( StrippingLine('b2D0MuXKsKPiDD'+name+'Line',prescale = 1,selection = self.selb2D0MuXKsKPiDD) )
+        self.registerLine( StrippingLine('b2D0MuXKsPiPiLL'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2D0MuXKsPiPiLL) )
+        self.registerLine( StrippingLine('b2D0MuXKsPiPiDD'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2D0MuXKsPiPiDD) )
+        self.registerLine( StrippingLine('b2D0MuXKsKKLL'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2D0MuXKsKKLL) )
+        self.registerLine( StrippingLine('b2D0MuXKsKKDD'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2D0MuXKsKKDD) )
+        self.registerLine( StrippingLine('b2D0MuXKsKPiLL'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2D0MuXKsKPiLL) )
+        self.registerLine( StrippingLine('b2D0MuXKsKPiDD'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2D0MuXKsKPiDD) )
 
         ########### D0 -> HHPi0 
-        self.registerLine( StrippingLine('b2D0MuXKPiPi0Resolved'+name+'Line',prescale = 1,selection = self.selb2D0MuXKPiPi0Resolved) )
-        self.registerLine( StrippingLine('b2D0MuXKKPi0Resolved'+name+'Line',prescale = 1,selection = self.selb2D0MuXKKPi0Resolved) )
-        self.registerLine( StrippingLine('b2D0MuXPiPiPi0Resolved'+name+'Line',prescale = 1,selection = self.selb2D0MuXPiPiPi0Resolved) )
-        self.registerLine( StrippingLine('b2D0MuXKPiPi0Merged'+name+'Line',prescale = 1,selection = self.selb2D0MuXKPiPi0Merged) )
-        self.registerLine( StrippingLine('b2D0MuXKKPi0Merged'+name+'Line',prescale = 1,selection = self.selb2D0MuXKKPi0Merged) )
-        self.registerLine( StrippingLine('b2D0MuXPiPiPi0Merged'+name+'Line',prescale = 1,selection = self.selb2D0MuXPiPiPi0Merged) )
+        self.registerLine( StrippingLine('b2D0MuXKPiPi0Resolved'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2D0MuXKPiPi0Resolved) )
+        self.registerLine( StrippingLine('b2D0MuXKKPi0Resolved'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2D0MuXKKPi0Resolved) )
+        self.registerLine( StrippingLine('b2D0MuXPiPiPi0Resolved'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2D0MuXPiPiPi0Resolved) )
+        self.registerLine( StrippingLine('b2D0MuXKPiPi0Merged'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2D0MuXKPiPi0Merged) )
+        self.registerLine( StrippingLine('b2D0MuXKKPi0Merged'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2D0MuXKKPi0Merged) )
+        self.registerLine( StrippingLine('b2D0MuXPiPiPi0Merged'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2D0MuXPiPiPi0Merged) )
         ## D*+ versions
-        self.registerLine( StrippingLine('b2DstarMuXKPiPi0Resolved'+name+'Line',prescale = 1,selection = self.selb2DstarMuXKPiPi0Resolved) )
-        self.registerLine( StrippingLine('b2DstarMuXKKPi0Resolved'+name+'Line',prescale = 1,selection = self.selb2DstarMuXKKPi0Resolved) )
-        self.registerLine( StrippingLine('b2DstarMuXPiPiPi0Resolved'+name+'Line',prescale = 1,selection = self.selb2DstarMuXPiPiPi0Resolved) )
-        self.registerLine( StrippingLine('b2DstarMuXKPiPi0Merged'+name+'Line',prescale = 1,selection = self.selb2DstarMuXKPiPi0Merged) )
-        self.registerLine( StrippingLine('b2DstarMuXKKPi0Merged'+name+'Line',prescale = 1,selection = self.selb2DstarMuXKKPi0Merged) )
-        self.registerLine( StrippingLine('b2DstarMuXPiPiPi0Merged'+name+'Line',prescale = 1,selection = self.selb2DstarMuXPiPiPi0Merged) )
+        self.registerLine( StrippingLine('b2DstarMuXKPiPi0Resolved'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2DstarMuXKPiPi0Resolved) )
+        self.registerLine( StrippingLine('b2DstarMuXKKPi0Resolved'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2DstarMuXKKPi0Resolved) )
+        self.registerLine( StrippingLine('b2DstarMuXPiPiPi0Resolved'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2DstarMuXPiPiPi0Resolved) )
+        self.registerLine( StrippingLine('b2DstarMuXKPiPi0Merged'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2DstarMuXKPiPi0Merged) )
+        self.registerLine( StrippingLine('b2DstarMuXKKPi0Merged'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2DstarMuXKKPi0Merged) )
+        self.registerLine( StrippingLine('b2DstarMuXPiPiPi0Merged'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2DstarMuXPiPiPi0Merged) )
         
         ########### D+ -> KsH
-        self.registerLine( StrippingLine('b2DsMuXKsLLK' + name + 'Line', prescale = 1, selection = self.selb2DsMuXKsLLK) )
-        self.registerLine( StrippingLine('b2DsMuXKsDDK' + name + 'Line', prescale = 1, selection = self.selb2DsMuXKsDDK) )
-        self.registerLine( StrippingLine('b2DsMuXKsLLPi' + name + 'Line', prescale = 1, selection = self.selb2DsMuXKsLLPi) )
-        self.registerLine( StrippingLine('b2DsMuXKsDDPi' + name + 'Line', prescale = 1, selection = self.selb2DsMuXKsDDPi) )
+        self.registerLine( StrippingLine('b2DsMuXKsLLK' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2DsMuXKsLLK) )
+        self.registerLine( StrippingLine('b2DsMuXKsDDK' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2DsMuXKsDDK) )
+        self.registerLine( StrippingLine('b2DsMuXKsLLPi' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2DsMuXKsLLPi) )
+        self.registerLine( StrippingLine('b2DsMuXKsDDPi' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2DsMuXKsDDPi) )
 
         ########## D+ -> H mu mu
-        self.registerLine( StrippingLine('b2DsMuXPiMuMu' + name + 'Line', prescale = 1, selection = self.selb2DsMuXPiMuMu) )
-        self.registerLine( StrippingLine('b2DsMuXKMuMu' + name + 'Line', prescale = 1, selection = self.selb2DsMuXKMuMu) )
+        self.registerLine( StrippingLine('b2DsMuXPiMuMu' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2DsMuXPiMuMu) )
+        self.registerLine( StrippingLine('b2DsMuXKMuMu' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2DsMuXKMuMu) )
         
         ########## Lambda_c+ -> Lambda H
-        self.registerLine( StrippingLine('b2MuXLc2L0LLPi' + name + 'Line', prescale = 1, selection = self.selb2Lc2L0LLPiMuX) )
-        self.registerLine( StrippingLine('b2MuXLc2L0DDPi' + name + 'Line', prescale = 1, selection = self.selb2Lc2L0DDPiMuX) )
-        self.registerLine( StrippingLine('b2MuXLc2L0LLK' + name + 'Line', prescale = 1, selection = self.selb2Lc2L0LLKMuX) )
-        self.registerLine( StrippingLine('b2MuXLc2L0DDK' + name + 'Line', prescale = 1, selection = self.selb2Lc2L0DDKMuX) )
+        self.registerLine( StrippingLine('b2MuXLc2L0LLPi' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2Lc2L0LLPiMuX) )
+        self.registerLine( StrippingLine('b2MuXLc2L0DDPi' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2Lc2L0DDPiMuX) )
+        self.registerLine( StrippingLine('b2MuXLc2L0LLK' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2Lc2L0LLKMuX) )
+        self.registerLine( StrippingLine('b2MuXLc2L0DDK' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2Lc2L0DDKMuX) )
 
         ########## Lambda_c+ -> p HH 
-        self.registerLine( StrippingLine('b2LcMuX' + name + 'Line', prescale = 1, selection = self.selb2LcMuX) )
-        self.registerLine( StrippingLine('b2LcDCSMuX' + name + 'Line', prescale = 1, selection = self.selb2LcDCSMuX) )
-        self.registerLine( StrippingLine('b2Lc2pPiPiMuX' + name + 'Line', prescale = 1, selection = self.selb2Lc2pPiPiMuX) ) 
-        self.registerLine( StrippingLine('b2Lc2pKKMuX' + name + 'Line', prescale = 1, selection = self.selb2Lc2pKKMuX) )
+        self.registerLine( StrippingLine('b2LcMuX' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2LcMuX) )
+        self.registerLine( StrippingLine('b2LcDCSMuX' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2LcDCSMuX) )
+        self.registerLine( StrippingLine('b2Lc2pPiPiMuX' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2Lc2pPiPiMuX) ) 
+        self.registerLine( StrippingLine('b2Lc2pKKMuX' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2Lc2pKKMuX) )
         
 
         
@@ -842,10 +851,10 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
 
     def _D02K3PiFilter( self ):
         _decayDescriptors = [ '[D0 -> K- pi+ pi- pi+]cc' ]
-        _combinationCut = "(ADAMASS('D0') < %(DsAMassWin)s *MeV) & (APT > 1500.*MeV) & (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
+        _combinationCut = "(ADAMASS('D0') < %(Dto4h_AMassWin)s *MeV) & (APT > 1500.*MeV) & (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
         _daughtersCuts = { "pi+" : "  (PT > 250 *MeV) & (P>2.0*GeV)"\
                            "& (TRCHI2DOF < %(TRCHI2)s)" % self.__confdict__}
-        _motherCut = " (ADMASS('D0') < %(DsMassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
+        _motherCut = " (ADMASS('D0') < %(Dto4h_MassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
                      "& (INTREE((ABSID=='pi+')& (PT > %(KPiPT)s *MeV) &(MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s)))" \
                      "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s)"  % self.__confdict__
         _d02k3pi = CombineParticles( DecayDescriptors = _decayDescriptors,
@@ -856,10 +865,10 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
 
     def _D024PiFilter( self ):
         _decayDescriptors = [ '[D0 -> pi+ pi- pi+ pi-]cc' ]
-        _combinationCut = "(ADAMASS('D0') < %(DsAMassWin)s *MeV) & (APT > 1500.*MeV) & (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
+        _combinationCut = "(ADAMASS('D0') < %(Dto4h_AMassWin)s *MeV) & (APT > 1500.*MeV) & (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
         _daughtersCuts = { "pi+" : "  (PT > 250 *MeV) & (P>2.0*GeV)"\
                            "& (TRCHI2DOF < %(TRCHI2)s)" % self.__confdict__}
-        _motherCut = " (ADMASS('D0') < %(DsMassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
+        _motherCut = " (ADMASS('D0') < %(Dto4h_MassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
                      "& (INTREE((ABSID=='pi+')& (PT > %(KPiPT)s *MeV) &(MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s)))" \
                      "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s)"  % self.__confdict__
         _d02k3pi = CombineParticles( DecayDescriptors = _decayDescriptors,
@@ -871,10 +880,10 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
     
     def _D022K2PiFilter( self ):
         _decayDescriptors = [ '[D0 -> K+ K- pi+ pi-]cc' ]
-        _combinationCut = "(ADAMASS('D0') < %(DsAMassWin)s *MeV) & (APT > 1500.*MeV) & (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
+        _combinationCut = "(ADAMASS('D0') < %(Dto4h_AMassWin)s *MeV) & (APT > 1500.*MeV) & (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
         _daughtersCuts = { "pi+" : "  (PT > 250 *MeV) & (P>2.0*GeV)"\
                            "& (TRCHI2DOF < %(TRCHI2)s)" % self.__confdict__}
-        _motherCut = " (ADMASS('D0') < %(DsMassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
+        _motherCut = " (ADMASS('D0') < %(Dto4h_MassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
                      "& (INTREE((ABSID=='pi+')& (PT > %(KPiPT)s *MeV) &(MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s)))" \
                      "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s)"  % self.__confdict__
         _d02k3pi = CombineParticles( DecayDescriptors = _decayDescriptors,
@@ -885,10 +894,10 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
 
     def _D023KPiFilter( self ):
         _decayDescriptors = [ '[D0 -> K+ K- K- pi+]cc' ]
-        _combinationCut = "(ADAMASS('D0') < %(DsAMassWin)s *MeV) & (APT > 1500.*MeV) & (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
+        _combinationCut = "(ADAMASS('D0') < %(Dto4h_AMassWin)s *MeV) & (APT > 1500.*MeV) & (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
         _daughtersCuts = { "pi+" : "  (PT > 250 *MeV) & (P>2.0*GeV)"\
                            "& (TRCHI2DOF < %(TRCHI2)s)" % self.__confdict__}
-        _motherCut = " (ADMASS('D0') < %(DsMassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
+        _motherCut = " (ADMASS('D0') < %(Dto4h_MassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
                      "& (INTREE((ABSID=='pi+')& (PT > %(KPiPT)s *MeV) &(MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s)))" \
                      "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s)"  % self.__confdict__
         _d02k3pi = CombineParticles( DecayDescriptors = _decayDescriptors,
