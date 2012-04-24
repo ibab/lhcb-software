@@ -145,15 +145,19 @@ StatusCode PatMatchTool::match(const LHCb::Tracks& velos,
     StatusCode sc = m_fastMomentumTool->calculate(&vState,&sState,
                                                   qOverP, sigmaQOverP, cubicFit);
 
-    const double momentum=std::abs(1./qOverP);
-    const double tx2 = vState.tx()*vState.tx();
-    const double ty2 = vState.ty()*vState.ty();
-    const double sinTrack = sqrt( 1. - 1./(1.+tx2 + ty2) );
-    const double pt = sinTrack*momentum;
-    
-    if (momentum < m_minMomentum ) continue;
-    if (pt < m_minPt ) continue;
-    
+    if (sc.isFailure()) {
+      Warning("momentum determination failed!",sc).ignore();
+      // assume the Velo/T station standalone reco do something reasonable
+    } else {
+      // adjust q/p and its uncertainty
+      const double momentum = std::abs(1./qOverP);
+      const double tx2 = vState.tx()*vState.tx();
+      const double ty2 = vState.ty()*vState.ty();
+      const double sinTrack = sqrt( 1. - 1./(1.+tx2 + ty2) );
+      const double pt = sinTrack*momentum;
+      if (momentum < m_minMomentum ) continue;
+      if (pt < m_minPt ) continue;
+    } 
 
     vUsed = sUsed = true;
 
