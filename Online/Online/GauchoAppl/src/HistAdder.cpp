@@ -4,7 +4,7 @@
 #include "Gaucho/ObjRPC.h"
 #include "Gaucho/MonHist.h"
 #include "Gaucho/RootHists.h"
-#include "Gaucho/RateService.h"
+#include "GauchoAppl/RateService.h"
 #include "dis.hxx"
 #include "TDirectory.h"
 #include <vector>
@@ -46,9 +46,9 @@ void HistAdder::addBuffer(void *buff, int siz,MonInfo *)
   DimHistbuff1 *pp = (DimHistbuff1*)hstart;
   while (pp<bend)
   {
+    if (pp->reclen == 0) break;
     char *nam = (char*)AddPtr(pp,pp->nameoff);
     hmap.insert(HistPair(std::string(nam),pp));
-    if (pp->reclen == 0) break;
     pp=(DimHistbuff1*)AddPtr(pp,pp->reclen);
   }
   for (MonIter i=hmap.begin();i!=hmap.end();i++)

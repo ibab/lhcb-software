@@ -11,7 +11,7 @@
 #include "Gaucho/IGauchoMonitorSvc.h"
 #include "AIDA/IHistogram.h"
 #include "Gaucho/MonCounter.h"
-#include "Gaucho/RateService.h"
+#include "GauchoAppl/RateService.h"
 #include "Trending/ITrendingTool.h"
 #include "Trending/ISimpleTrendWriter.h"
 

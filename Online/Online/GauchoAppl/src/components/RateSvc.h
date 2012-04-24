@@ -5,7 +5,7 @@
 #include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "PubSvc.h"
-#include "Gaucho/COutService.h"
+#include "GauchoAppl/COutService.h"
 #include <vector>
 // Forward declarations
 class MonAdder;
