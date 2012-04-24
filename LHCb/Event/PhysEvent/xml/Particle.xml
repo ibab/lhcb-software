@@ -103,13 +103,13 @@
         explicit = "TRUE"
         argList="const LHCb::ParticleID&amp; pid"
         desc="Constructor from ParticleID"
-        initList = "KeyedObject&lt;int&gt;(), m_particleID(pid), m_measuredMass(-1.0), m_measuredMassErr(0.0), m_momentum(0.0, 0.0, 0.0, -1*Gaudi::Units::GeV), m_referencePoint(0.0, 0.0, -1*Gaudi::Units::km), m_momCovMatrix(), m_posCovMatrix(), m_posMomCovMatrix(), m_extraInfo()"
+        initList = "KeyedObject&lt;int&gt;(), m_particleID(pid), m_measuredMass(-1.0), m_measuredMassErr(0.0), m_momentum(0.0, 0.0, 0.0, -1*Gaudi::Units::GeV), m_referencePoint(0.0, 0.0, -100*Gaudi::Units::m), m_momCovMatrix(), m_posCovMatrix(), m_posMomCovMatrix(), m_extraInfo()"
         />
 
       <constructor
         argList="const LHCb::ParticleID&amp; pid, const int key"
         desc="Constructor from ParticleID and key"
-        initList = "KeyedObject&lt;int&gt;(key), m_particleID(pid), m_measuredMass(-1.0), m_measuredMassErr(0.0), m_momentum(0.0, 0.0, 0.0, -1*Gaudi::Units::GeV), m_referencePoint(0.0, 0.0, -1*Gaudi::Units::km), m_momCovMatrix(), m_posCovMatrix(), m_posMomCovMatrix(), m_extraInfo()"
+        initList = "KeyedObject&lt;int&gt;(key), m_particleID(pid), m_measuredMass(-1.0), m_measuredMassErr(0.0), m_momentum(0.0, 0.0, 0.0, -1*Gaudi::Units::GeV), m_referencePoint(0.0, 0.0, -100*Gaudi::Units::m), m_momCovMatrix(), m_posCovMatrix(), m_posMomCovMatrix(), m_extraInfo()"
         />
 
       <method
@@ -217,7 +217,7 @@
         name="referencePoint"
         desc="Point at which the momentum is given in LHCb reference frame - convention: take the one that minimizes the extrapolations needs"
         type="Gaudi::XYZPoint"
-        init="0.0, 0.0, -1*Gaudi::Units::km"
+        init="0.0, 0.0, -100*Gaudi::Units::m"
         />
       <relation
         name="endVertex"
@@ -354,6 +354,7 @@
           return m_extraInfo.erase( key ) ; 
         </code>
       </method>
+
       <method 
         type="Gaudi::XYZVector" 
         name="slopes" 
