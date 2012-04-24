@@ -406,12 +406,13 @@ LFVLines = {
     'STREAMS' : [ 'Dimuon' ],
     'WGs'     : [ 'RD' ],
     'CONFIG'  : {
-    'Postscale'           : 1,
-    'TauPrescale'         : 1,
-    'Tau2MuMuePrescale'   : 1,
-    'B2eMuPrescale'       : 1,
-    'B2eePrescale'        : 1,
-    'B2heMuPrescale'      : 1 
+        'Postscale'           :1,
+        'TauPrescale'         :1,
+        'Tau2MuMuePrescale'   :1,
+        'B2eMuPrescale'       :1,
+        'B2eePrescale'        :1,
+        'B2heMuPrescale'      :1,
+        'B2pMuPrescale'       :1,
     }
     }
 

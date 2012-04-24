@@ -205,7 +205,8 @@ TrackEffVeloMuon = {
     'WGs' : [ 'ALL' ],
     'STREAMS' : [ 'Calibration' ],
     'CONFIG' : {
-                        "TrChi2Mu":             5.      # adimensional
+			"TrChi2VeMu":		5.	# adimensional
+		,	"TrChi2LongMu":		3.	# adimensional
                 ,       "JpsiPt":               0.5     # GeV
                 ,       "TrPt":                 100.    # MeV
                 ,       "TrP":                  5.      # GeV
