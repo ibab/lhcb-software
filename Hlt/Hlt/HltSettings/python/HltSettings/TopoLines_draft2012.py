@@ -107,7 +107,7 @@ class TopoLines :
             'SIMPLE_3BODY_CUTS' : simple_cuts3,
             'SIMPLE_4BODY_CUTS' : simple_cuts4,            
             # pre and post scales
-            'Prescale'   : {}, 
+            'Prescale'   : {'Hlt2TopoRad2BodyBBDT' : 0.0, 'Hlt2TopoRad2plus1BodyBBDT' : 0.0}, 
             'Postscale'  : {}
             }})
 
