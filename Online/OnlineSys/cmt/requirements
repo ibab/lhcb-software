@@ -24,8 +24,8 @@ use DailyReport         v1r2     Online
 use DIM                 v19r30p1 Online
 ####use ExampleGaucho       v3r4     Online
 use FarmMonitor         v2r9     Online
-use Gaucho              v7r24    Online
-use GauchoAppl          v1r3     Online
+use Gaucho              v7r25    Online
+use GauchoAppl          v1r4     Online
 use GaudiCheckpointing  v0r11    Online
 use GaudiOnline         v2r60    Online
 use GaudiRootCnvTests   v1r7     Online
