@@ -6,6 +6,19 @@
 !-----------------------------------------------------------------------------
 </PRE>
 
+<H1><A NAME=v4r64>2012-04-25 OnlineSys v4r64</A></H1>
+<PRE>
+   Based in Gaudi v23r2, 
+   Updated packages are:
+     DIM                 v19r33   Online
+     Gaucho              v7r25    Online
+     GauchoAppl          v1r4     Online
+     GaudiOnline         v2r61    Online
+     OMAlib              v4r2     Online
+     OnlineTasks         v1r48    Online
+     ROMon               v1r38    Online
+     Writer              v1r40    Online
+</PRE>
 
 <H1><A NAME=v4r63>2012-04-09 OnlineSys v4r63</A></H1>
 <PRE>

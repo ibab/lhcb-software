@@ -1,5 +1,5 @@
 package OnlineSys
-version v4r63
+version v4r64
 
 branches cmt doc
  
@@ -21,13 +21,13 @@ use Camera              v1r23    Online
 use Checkpointing       v0r9     Online
 use CondDBServer        v1r4     Online
 use DailyReport         v1r2     Online
-use DIM                 v19r30p1 Online
+use DIM                 v19r33   Online
 ####use ExampleGaucho       v3r4     Online
 use FarmMonitor         v2r9     Online
 use Gaucho              v7r25    Online
 use GauchoAppl          v1r4     Online
 use GaudiCheckpointing  v0r11    Online
-use GaudiOnline         v2r60    Online
+use GaudiOnline         v2r61    Online
 use GaudiRootCnvTests   v1r7     Online
 use GaudiSerialize      v0r10    Online
 use GaudiUPI            v1r14    Online
@@ -42,7 +42,7 @@ use OnlineBase          v1r14    Online
 use OnlineHistDB        v8r1     Online
 use OnlineKernel        v2r9     Online
 use OnlineTools         v1r4     Online
-use OnlineTasks         v1r47    Online
+use OnlineTasks         v1r48    Online
 
 use Presenter           v3r4     Online
 use PresenterDoc        v1r0     Online
