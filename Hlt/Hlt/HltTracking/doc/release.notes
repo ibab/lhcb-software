@@ -4,22 +4,25 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
-! 2012-04-23 - Sascha Stahl
-  - Added option MinMomentum and MinPt to Downstream and Matchtracking
+! 2012-04-24 - V. Gligorov
+ - Relax default track chi2 cut for downstream tracks to 3
+ - Update default data type to 2012
+ - Add Hlt2CharmHadD02HHXDstLines lines 
 
+! 2012-04-23 - Sascha Stahl
+ - Added option MinMomentum and MinPt to Downstream and Matchtracking
 
 ! 2012-04-20 - Sascha Stahl
-  - Implemented global track cut in tracking sequence. Value set in HltTrackNames.py
+ - Implemented global track cut in tracking sequence. Value set in HltTrackNames.py
 		Fixed Clonekiller. Clonekiller only runs when forward and matching are run.
 
-
 ! 2012-04-18 - B. VIAUD
-  - The Hlt2CharmHadD02HHHHLines.py has been deteleted
+ - The Hlt2CharmHadD02HHHHLines.py has been deteleted
     from Hlt2Lines: remove the reference to it 
     in Hlt2Tracking.py
 
 ! 2012-04-18 - Sascha Stahl
-  - Fixed configuration of Downstream tracking to not run on already used seeds
+ - Fixed configuration of Downstream tracking to not run on already used seeds
 		and hits
 
 !========================= HltTracking v9r16 2012-04-10 =========================
