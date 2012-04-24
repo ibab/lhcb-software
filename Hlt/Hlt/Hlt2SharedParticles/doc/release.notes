@@ -4,6 +4,7 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+!========================= Hlt2SharedParticles v6r8 2012-04-24 =========================
 ! 2012-04-24 - V. Gligorov
  - Tighten cut in shared Ks particles on the track chi2 of the LL children from
    4 to 3.  
