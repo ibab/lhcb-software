@@ -33,7 +33,7 @@ class Hlt2CharmSemilepD02HMuNuLinesConf(HltLinesConfigurableUser) :
 
                 , 'TrkPt_SlowPion'            : 300.0 * MeV
                 , 'TrkP_SlowPion'             : 3000.0 * MeV
-                , 'TrkChi2_SlowPion'          : 100.0
+                , 'TrkChi2_SlowPion'          : 3.0
 		, 'PairMaxDoca_Dstar'	      : 120.0 * mm
                 , 'DeltaM_MIN'                : 0.0 * MeV
                 , 'DeltaM_MAX'                : 250.0 *MeV

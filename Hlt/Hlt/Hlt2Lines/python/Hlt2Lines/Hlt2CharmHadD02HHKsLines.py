@@ -53,7 +53,7 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
                 , 'KshhTFDwKsLLSymMassWin'  : 100.0 * MeV  # restored to 100 MeV 120315 mds
                 , 'KshhTFDwKsDDSymMassWin'  : 120.0 * MeV  # restored to 120 MeV 120315 mds
                 , 'ComRobUseGEC'            : True       # do or do not 
-                , 'ComRobGEC'               : 120        # max number of tracks
+                , 'ComRobGEC'               : 180        # max number of tracks
                 , 'HLT1FILTER'               : ''
                 , 'TisTosParticleTaggerSpecs': { "Hlt1Track.*Decision%TOS":0 }
                 , 'name_prefix'              : 'CharmHadD02HHKs'

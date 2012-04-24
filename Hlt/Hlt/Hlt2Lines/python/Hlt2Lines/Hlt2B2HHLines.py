@@ -5,7 +5,7 @@ from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 class Hlt2B2HHLinesConf(HltLinesConfigurableUser) :
     __slots__ = {  'BMassWinLow'         : 4700   # MeV
                    ,'BMassWinHigh'       : 5900   # MeV
-                   ,'TrChi2'             : 5      # 
+                   ,'TrChi2'             : 3.      # 
                    ,'PionPT'             : 1000   # MeV
                    ,'PionIP'             : 0.12   # mm
                    ,'doca'               : 0.1    # mm

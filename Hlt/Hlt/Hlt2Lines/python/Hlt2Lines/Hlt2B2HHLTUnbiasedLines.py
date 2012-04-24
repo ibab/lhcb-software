@@ -12,7 +12,7 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
                    ,'KaonPmin'           : 10000       # MeV
                    ,'BPmin'              : 10000
                    ,'PIDK_max'           :     0.1
-                   ,'TrackChi2'          :    5.
+                   ,'TrackChi2'          :    3.
                    ,'VertexChi2'         :    10.0
                    ,'AbsCosTheta'        :     0.9
                    ,'Expertise'          : '2010Tuning'

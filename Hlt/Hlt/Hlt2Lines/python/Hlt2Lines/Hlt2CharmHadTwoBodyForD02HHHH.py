@@ -42,6 +42,7 @@ class Hlt2CharmHadTwoBodyForD02HHHHConf(HltLinesConfigurableUser) : # {
                   , 'name_prefix'              : 'CharmHadTwoBodyForD02HHHH'
                   ##
                   , '__hlt2TwoBodySeq__'       : None
+                  , '__hlt2TwoBodyHHXSeq__'    : None  
                 }
 
 
@@ -52,6 +53,8 @@ class Hlt2CharmHadTwoBodyForD02HHHHConf(HltLinesConfigurableUser) : # {
         return self.getProp("__hlt2TwoBodySeq__")
     # }
 
+    def twoBodyHHXSequence(self) :
+        return self.getProp("__hlt2TwoBodyHHXSeq__")
 
     def __apply_configuration__(self) : # {
         from HltLine.HltLine import Hlt2Member, bindMembers
@@ -83,9 +86,20 @@ class Hlt2CharmHadTwoBodyForD02HHHHConf(HltLinesConfigurableUser) : # {
                           , MotherCut = twoBodyMotherCut
                           , Inputs = [ BiKalmanFittedPions, BiKalmanFittedKaons ])
 
+        CharmHHXCombine = Hlt2Member( CombineParticles
+                          , "CombineHHX"                          
+                          , DecayDescriptors = ["K*(892)0 -> pi+ pi-","K*(892)0 -> K+ K-","K*(892)0 -> K- pi+","K*(892)0 -> K+ pi-"]
+                          , DaughtersCuts = { "pi+" : twoBodyDaughterCut,
+                                              "K+"  : twoBodyDaughterCut }
+                          , CombinationCut = twoBodyCombCut 
+                          , MotherCut = twoBodyMotherCut
+                          , Inputs = [ BiKalmanFittedPions, BiKalmanFittedKaons ])
+
         twoBodySeq = bindMembers(self.getProp('name_prefix'), [ BiKalmanFittedPions, BiKalmanFittedKaons, PV3D(), Charm2BodyCombine ])
+        twoBodyHHXSeq = bindMembers(self.getProp('name_prefix')+"HHX", [ BiKalmanFittedPions, BiKalmanFittedKaons, PV3D(), CharmHHXCombine ])
  
         self.setProp('__hlt2TwoBodySeq__', twoBodySeq)
+        self.setProp('__hlt2TwoBodyHHXSeq__',twoBodyHHXSeq)
     # }
 
 # }

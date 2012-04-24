@@ -10,19 +10,19 @@ class Hlt2CharmHadLambdaCLambdaHLinesConf(HltLinesConfigurableUser) :
    # define some values so that they are not hard-coded
     __slots__ = {
                   ## Lambda0 daughter pion cuts - Lambda0LL
-                    'Lambda0LLDaugPionTrackChi2' : 5.0
+                    'Lambda0LLDaugPionTrackChi2' : 3.0
                   , 'Lambda0LLDaugPionMIPChi2'   : 36.0
 
                   ## Lambda0 daughter pion cuts - Lambda0DD
-                  , 'Lambda0DDDaugPionTrackChi2' : 5.0
+                  , 'Lambda0DDDaugPionTrackChi2' : 4.0
                   , 'Lambda0DDDaugPionMIPChi2'   : 10.0
 
                   ## Lambda0 daughter proton cuts - Lambda0LL
-                  , 'Lambda0LLDaugProtonTrackChi2' : 5.0
+                  , 'Lambda0LLDaugProtonTrackChi2' : 3.0
                   , 'Lambda0LLDaugProtonMIPChi2'   : 36.0
 
                   ## Lambda0 daughter proton cuts - Lambda0DD
-                  , 'Lambda0DDDaugProtonTrackChi2' : 5.0
+                  , 'Lambda0DDDaugProtonTrackChi2' : 3.0
                   , 'Lambda0DDDaugProtonMIPChi2'   : 10.0
                                         
                   ## Lambda0 mother cuts - Lambda0LL
@@ -40,25 +40,25 @@ class Hlt2CharmHadLambdaCLambdaHLinesConf(HltLinesConfigurableUser) :
                   ## Bachelor pion cuts - Lambda0LL
                   , 'Lambda0LLBachPionP'         : 2500.0 * MeV
                   , 'Lambda0LLBachPionPT'        : 250.0 * MeV
-                  , 'Lambda0LLBachPionTrackChi2' : 5.0
+                  , 'Lambda0LLBachPionTrackChi2' : 3.0
                   , 'Lambda0LLBachPionMIPChi2'   : 4.0
 
                   ## Bachelor pion cuts - Lambda0DD
                   , 'Lambda0DDBachPionP'         : 2500.0 * MeV
                   , 'Lambda0DDBachPionPT'        : 250.0 * MeV
-                  , 'Lambda0DDBachPionTrackChi2' : 5.0
+                  , 'Lambda0DDBachPionTrackChi2' : 3.0
                   , 'Lambda0DDBachPionMIPChi2'   : 4.0
 
                   ## Bachelor kaon cuts - Lambda0LL
                   , 'Lambda0LLBachKaonP'         : 2500.0 * MeV
                   , 'Lambda0LLBachKaonPT'        : 250. * MeV
-                  , 'Lambda0LLBachKaonTrackChi2' : 5.0
+                  , 'Lambda0LLBachKaonTrackChi2' : 3.0
                   , 'Lambda0LLBachKaonMIPChi2'   : 4.0
 
                   ## Bachelor kaon cuts - Lambda0DD
                   , 'Lambda0DDBachKaonP'         : 2500.0 * MeV
                   , 'Lambda0DDBachKaonPT'        : 250. * MeV
-                  , 'Lambda0DDBachKaonTrackChi2' : 5.0
+                  , 'Lambda0DDBachKaonTrackChi2' : 3.0
                   , 'Lambda0DDBachKaonMIPChi2'   : 4.0
 
                   ## Lambda_c cuts

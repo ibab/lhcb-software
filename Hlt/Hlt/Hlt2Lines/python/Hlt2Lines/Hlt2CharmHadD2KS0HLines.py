@@ -10,7 +10,7 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
    # define some values so that they are not hard-coded
     __slots__ = {
                   ## KS0 daughter pion cuts - KS0LL
-                    'KS0DaugTrackChi2' : 4.0
+                    'KS0DaugTrackChi2' : 3.0
                   , 'KS0DaugMIPChi2'   : 36.0
 
                   ## KS0 daughter pion cuts - KS0DD
@@ -34,25 +34,25 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
                   ## Bachelor pion cuts - KS0LL
                   , 'BachPionP'         : 2000.0 * MeV
                   , 'BachPionPT'        : 200.0 * MeV
-                  , 'BachPionTrackChi2' : 4.0
+                  , 'BachPionTrackChi2' : 3.0
                   , 'BachPionMIPChi2'   : 12.0
 
                   ## Bachelor pion cuts - KS0DD
                   , 'BachPionPDD'         : 2000.0 * MeV
                   , 'BachPionPTDD'        : 200.0 * MeV
-                  , 'BachPionTrackChi2DD' : 4.0
+                  , 'BachPionTrackChi2DD' : 3.0
                   , 'BachPionMIPChi2DD'   : 12.0
 
                   ## Bachelor kaon cuts - KS0LL
                   , 'BachKaonP'         : 2000.0 * MeV
                   , 'BachKaonPT'        : 200. * MeV
-                  , 'BachKaonTrackChi2' : 4.0
+                  , 'BachKaonTrackChi2' : 3.0
                   , 'BachKaonMIPChi2'   : 12.0
 
                   ## Bachelor kaon cuts - KS0DD
                   , 'BachKaonPDD'         : 2000.0 * MeV
                   , 'BachKaonPTDD'        : 200. * MeV
-                  , 'BachKaonTrackChi2DD' : 4.0
+                  , 'BachKaonTrackChi2DD' : 3.0
                   , 'BachKaonMIPChi2DD'   : 12.0
 
                   ## D meson cuts

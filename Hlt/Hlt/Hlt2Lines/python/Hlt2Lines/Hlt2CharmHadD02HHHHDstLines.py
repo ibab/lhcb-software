@@ -30,7 +30,7 @@ class Hlt2CharmHadD02HHHHDstLinesConf(HltLinesConfigurableUser) :
                   ## D* combination
                   , 'TrkPt_SlowPion'              : 300.0 * MeV 
                   , 'TrkP_SlowPion'               : 3000.0 * MeV
-                  , 'TrkChi2_SlowPion'            : 100.0
+                  , 'TrkChi2_SlowPion'            : 3.0
                   , 'PairMaxDoca_Dstar'           : 100.0 * mm
                   , 'DeltaM_MIN'                  : 0.0 * MeV
                   , 'DeltaM_MAX'                  : 170.0 * MeV
@@ -51,14 +51,14 @@ class Hlt2CharmHadD02HHHHDstLinesConf(HltLinesConfigurableUser) :
                         , 'Hlt2CharmHadD02HHHHDst_2K2piWideMass' : 0.1
                         , 'Hlt2CharmHadD02HHHHDst_3KpiWideMass' : 0.1
                         , 'Hlt2CharmHadD02HHHHDst_Ch2'         : 0.0
-                        , 'Hlt2CharmHadD02HHHHDst_Ch2WideMass' : 0.1
+                        , 'Hlt2CharmHadD02HHHHDst_Ch2WideMass' : 0.0
                         , 'Hlt2CharmHadD02HHHH_4piWideMass' : 0.05
                         , 'Hlt2CharmHadD02HHHH_K3piWideMass' : 0.05
                         , 'Hlt2CharmHadD02HHHH_KKpipiWideMass' : 0.05
                         , 'Hlt2CharmHadD02HHHH_2K2piWideMass' : 0.05
                         , 'Hlt2CharmHadD02HHHH_3KpiWideMass' : 0.05
                         , 'Hlt2CharmHadD02HHHH_Ch2'         : 0.0
-                        , 'Hlt2CharmHadD02HHHH_Ch2WideMass' : 0.1
+                        , 'Hlt2CharmHadD02HHHH_Ch2WideMass' : 0.0
                         , 'Hlt2CharmHadD02HHHH_4pi' : 0.1
                         , 'Hlt2CharmHadD02HHHH_K3pi' : 0.1
                         , 'Hlt2CharmHadD02HHHH_KKpipi' : 0.1

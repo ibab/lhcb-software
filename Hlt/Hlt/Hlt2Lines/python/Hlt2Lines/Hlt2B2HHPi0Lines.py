@@ -5,8 +5,8 @@ class Hlt2B2HHPi0LinesConf(HltLinesConfigurableUser) :
     __slots__ = {
                     'PiMinPT'               : 500       # MeV
                     ,'PiMinP'               : 5000      # MeV
-                    ,'TrackMaxChi2Ndof'     : 4         # unitless
-                    ,'MaxMinTrackChi2Ndof'  : 2.4       # unitless 
+                    ,'TrackMaxChi2Ndof'     : 3.         # unitless
+                    ,'MaxMinTrackChi2Ndof'  : 2.       # unitless 
                     ,'PiMinIPChi2'          : 9         # unitless
 
                     ,'MaxDOCA'              : 0.2       # mm
