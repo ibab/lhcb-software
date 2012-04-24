@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2012-04-24 - Dmitry Golubkov
+ - BremAdder: correct minor bug in testing if the track has been bremsstrahlung-corrected
+
 ! 2012-04-02 - Chris Jones
  - Fix various icc11 compiler warnings and remarks
 

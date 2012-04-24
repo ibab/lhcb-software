@@ -67,18 +67,33 @@ bool BremAdder::brem4particle( LHCb::Particle* particle, std::string what ) cons
   }
 
 
-  // check if bremmStrahlung has already been added
-  const LHCb::State  state = proto->track()->firstState();
+  // Choice of LHCb::State copied from ChargedParticleMakerBase::usedState(const LHCb::Track * track)
+  // as used to set Particle::momentum() by NoPIDsParticleMaker and CombinedParticleMaker::fillParticle()
+  const LHCb::State* uState = 0 ;
+  // default: closest to the beam:
+  if ( ! uState ) { uState = proto->track()->stateAt( LHCb::State::ClosestToBeam    ) ; }
+  // if not availabel: first measurementr
+  if ( ! uState ) { uState = proto->track()->stateAt( LHCb::State::FirstMeasurement ) ; }
+  // backup
+  if ( ! uState )
+  {
+    Warning("No state closest to beam or at first measurement for track. Using first state instead",
+            10,StatusCode::SUCCESS).ignore() ;
+    uState = &proto->track()->firstState() ;
+  }
+
+  // check if bremsstrahlung has already been added
+  const LHCb::State  state = *uState;
   bool bremIsAdded = false;
   double eps = 1E-4;
   if( fabs( particle->momentum().P() - state.p()) > eps ) bremIsAdded = true ;
   //
   if( bremIsAdded  && "add" == what ){
-    debug() << " The bremstrahlung has already been added - nothing to add"<< endreq;
+    debug() << " The bremsstrahlung has already been added - nothing to add"<< endreq;
     return false;
   }
   if( !bremIsAdded && "remove" == what ){
-    debug() << " No bremstrahlung had been added - nothing to remove "<< endreq;
+    debug() << " No bremsstrahlung had been added - nothing to remove "<< endreq;
     return false;
   }
   //
