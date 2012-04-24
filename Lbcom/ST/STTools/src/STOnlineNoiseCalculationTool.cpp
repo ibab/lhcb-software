@@ -40,9 +40,11 @@ ST::STOnlineNoiseCalculationTool::STOnlineNoiseCalculationTool( const std::strin
 {
   declareInterface<ST::ISTNoiseCalculationTool>(this);
 
+  // Location of ADC values after pedestal subtraction
+  declareSTConfigProperty("PedSubInputData", m_pedSubLocation, LHCb::STTELL1DataLocation::TTPedSubADCs);
+
   // Location of ADC values after the Common Mode Suppression
-  declareSTConfigProperty("LCMSInputData" , m_LCMSLocation,
-                          LHCb::STTELL1DataLocation::TTLCMSADCs);
+  declareSTConfigProperty("LCMSInputData",   m_LCMSLocation,   LHCb::STTELL1DataLocation::TTLCMSADCs);
 
   // Remove outliers from the CMS noise calculation
   declareProperty("RemoveOutliers", m_removeOutliers = true);
@@ -80,22 +82,29 @@ StatusCode ST::STOnlineNoiseCalculationTool::calculateNoise() {
     return StatusCode::SUCCESS;
   }
 
-  // Get the data
+  // Get the RAW data
   const LHCb::STTELL1Datas* data = get<LHCb::STTELL1Datas>(m_dataLocation);
   if(data->empty()) return Warning("Data is empty "+m_dataLocation, StatusCode::SUCCESS, 10);
   //debug() << "Found " << data->size() << " boards." << endmsg;
 
-  // Get the data
+  // Get the pedestal substracted data
+  const LHCb::STTELL1Datas* pedSub = get<LHCb::STTELL1Datas>(m_pedSubLocation);
+  if(pedSub->empty()) return Warning("Data is empty "+m_pedSubLocation, StatusCode::SUCCESS, 10);
+  //debug() << "Found " << data->size() << " boards." << endmsg;
+
+  // Get the LCMS data
   const LHCb::STTELL1Datas* lcms = get<LHCb::STTELL1Datas>(m_LCMSLocation);
   if(lcms->empty()) return Warning("Data is empty "+m_LCMSLocation, StatusCode::SUCCESS, 10);
   //debug() << "Found " << data->size() << " boards." << endmsg;
 
-  if(data->size() != lcms->size()) return Error("Mis-match in size of RAW and LCMS data", StatusCode::SUCCESS, 10);
-
+  if(data->size() != lcms->size() && data->size() != pedSub->size() && lcms->size() != pedSub->size()) {
+    return Error("Mis-match in size of data containers", StatusCode::SUCCESS, 10);
+  }
   // loop over the data
   LHCb::STTELL1Datas::const_iterator iterFullData = data->begin(); 
   LHCb::STTELL1Datas::const_iterator iterLCMSData = lcms->begin(); 
-  for (; iterFullData != data->end(); ++iterFullData, ++iterLCMSData){
+  LHCb::STTELL1Datas::const_iterator iterPedSubData = pedSub->begin(); 
+  for (; iterFullData != data->end(); ++iterFullData, ++iterLCMSData, ++iterPedSubData){
 
     // get the tell board and the data headers
     unsigned int tellID = (*iterFullData)->TELL1ID();
@@ -105,9 +114,13 @@ StatusCode ST::STOnlineNoiseCalculationTool::calculateNoise() {
       continue;
     }
     const LHCb::STTELL1Data::Data& dataValues = (*iterFullData)->data();
+    unsigned int tellIDPedSub = (*iterPedSubData)->TELL1ID();
+    const LHCb::STTELL1Data::Data& pedSubValues = (*iterPedSubData)->data();
     unsigned int tellIDLCMS = (*iterLCMSData)->TELL1ID();
     const LHCb::STTELL1Data::Data& lcmsValues = (*iterLCMSData)->data();
-    if(tellID != tellIDLCMS) return Error("Different TELL1s", StatusCode::SUCCESS, 10);
+    if(tellID != tellIDLCMS && tellID != tellIDPedSub && tellIDLCMS != tellIDPedSub) {
+      return Error("Data from different TELL1s", StatusCode::SUCCESS, 10);
+    }
     // Store tell1s with an NZS bank
     m_tell1WithNZS.push_back(tellID);
 
@@ -125,6 +138,11 @@ StatusCode ST::STOnlineNoiseCalculationTool::calculateNoise() {
     std::vector<double>* cmsNoise = &m_cmsNoiseMap[tellID];
     std::vector<unsigned int>* cmsNEventsPP = &m_cmsNEventsPP[tellID];
 
+    std::vector<double>* pedSubMean = &m_pedSubMeanMap[tellID];
+    std::vector<double>* pedSubMeanSq = &m_pedSubMeanSqMap[tellID];
+    std::vector<double>* pedSubNoise = &m_pedSubNoiseMap[tellID];
+    std::vector<unsigned int>* pedSubNEventsPP = &m_pedSubNEventsPP[tellID];
+
     // Local copy of pedestal and thresholds used on the TELL1
     //    std::vector<std::pair<double, int> >* pedestals = &m_pedestalMaps[tellID][0];
     std::vector<std::pair<double, double> >* thresholds = &m_thresholdMap[tellID];
@@ -138,6 +156,7 @@ StatusCode ST::STOnlineNoiseCalculationTool::calculateNoise() {
       // Count the number of events per PP
       (*rawNEventsPP)[pp]++;
       (*cmsNEventsPP)[pp]++;
+      (*pedSubNEventsPP)[pp]++;
       if(m_countRoundRobin) this->countRoundRobin(tellID, pp);
 
       // Loop over the links (i.e. Beetles)
@@ -153,15 +172,18 @@ StatusCode ST::STOnlineNoiseCalculationTool::calculateNoise() {
           if((*stripStatus)[strip]) {
             const int rawValue = dataValues[beetle][iStrip];
             const int lcmsValue = lcmsValues[beetle][iStrip];
+            const int pedSubValue = pedSubValues[beetle][iStrip];
             bool updateRaw=true; 
+            bool updatePedSub=true;
             bool updateCMS=true;
             if(m_removeOutliers) {
               //            if(fabs(rawValue-(*pedestals)[strip].first) > (*thresholds)[strip].first) updateRaw=false;
+              if(fabs(static_cast<double>(pedSubValue)) > (*thresholds)[strip].first) updatePedSub=false;
               if(fabs(static_cast<double>(lcmsValue)) > (*thresholds)[strip].second) updateCMS=false;
             }
             // Calculate the pedestal and the pedestal squared
             // Cumulative average up to m_followingPeriod; after that exponential moving average
-            if( updateRaw && updateCMS ) { // only update the noise if both criteria are fulfilled
+            if( updateRaw && updatePedSub && updateCMS ) { // only update the noise if both criteria are fulfilled
               (*nEvents)[strip] += 1;
               int nEvt = (*nEvents)[strip];
               if( m_followingPeriod > 0 && nEvt > m_followingPeriod ) {
@@ -173,6 +195,10 @@ StatusCode ST::STOnlineNoiseCalculationTool::calculateNoise() {
               (*rawPedestal)[strip] = (*rawMean)[strip];
               (*rawMeanSq)[strip] = ((*rawMeanSq)[strip]*(nEvt-1) + gsl_pow_2(rawValue) ) / nEvt;
               (*rawNoise)[strip] = sqrt( (*rawMeanSq)[strip] - gsl_pow_2((*rawMean)[strip]) );
+              // pedestal subtracted noise
+              (*pedSubMean)[strip] = ((*pedSubMean)[strip]*(nEvt-1) + pedSubValue ) / nEvt;
+              (*pedSubMeanSq)[strip] = ((*pedSubMeanSq)[strip]*(nEvt-1) + gsl_pow_2(pedSubValue) ) / nEvt;
+              (*pedSubNoise)[strip] = sqrt( (*pedSubMeanSq)[strip] - gsl_pow_2((*pedSubMean)[strip]) );
               // cms noise
               (*cmsMean)[strip] = ((*cmsMean)[strip]*(nEvt-1) + lcmsValue ) / nEvt;
               (*cmsMeanSq)[strip] = ((*cmsMeanSq)[strip]*(nEvt-1) + gsl_pow_2(lcmsValue) ) / nEvt;

@@ -115,12 +115,42 @@ namespace ST {
     /// Return an iterator corresponding to the number of events containing data in the last PP for a given TELL1 source ID
     virtual std::vector<unsigned int>::const_iterator cmsNEventsPPEnd( const unsigned int TELL1SourceID ) const;
 
-    /** Return an iterator corresponding to the number of events used in the calculation of RAW+CMS noise after outlier removal
-        for the first channel of a given TELL1 source ID **/
+    /** Return an iterator corresponding to the RMS noise after pedestal subtraction on the first
+        channel for a given TELL1 source ID **/
+    virtual std::vector<double>::const_iterator pedSubNoiseBegin(const unsigned int TELL1SourceID ) const;
+
+    /** Return an iterator corresponding to the RMS noise after pedestal subtraction on the last 
+        channel for a given TELL1 source ID **/
+    virtual std::vector<double>::const_iterator pedSubNoiseEnd(const unsigned int TELL1SourceID ) const;
+
+    /** Return an iterator corresponding to the mean ADC value after pedestal subtraction for the 
+        first channel for a given TELL1 source ID **/
+    virtual std::vector<double>::const_iterator pedSubMeanBegin( const unsigned int TELL1SourceID ) const;
+
+    /** Return an iterator corresponding to the mean ADC value after pedestal subtraction for the last 
+        channel for a given TELL1 source ID **/
+    virtual std::vector<double>::const_iterator pedSubMeanEnd( const unsigned int TELL1SourceID ) const;
+
+    /** Return an iterator corresponding to the mean squared ADC value after pedestal subtraction for the first 
+        channel for a given TELL1 source ID **/
+    virtual std::vector<double>::const_iterator pedSubMeanSquaredBegin( const unsigned int TELL1SourceID ) const;
+
+    /** Return an iterator corresponding to the mean squared ADC value after pedestal subtraction for the last 
+        channel for a given TELL1 source ID **/
+    virtual std::vector<double>::const_iterator pedSubMeanSquaredEnd( const unsigned int TELL1SourceID ) const;
+
+    /// Return an iterator corresponding to the number of events containing data in the first PP for a given TELL1 source ID
+    virtual std::vector<unsigned int>::const_iterator pedSubNEventsPPBegin( const unsigned int TELL1SourceID ) const;
+
+    /// Return an iterator corresponding to the number of events containing data in the last PP for a given TELL1 source ID
+    virtual std::vector<unsigned int>::const_iterator pedSubNEventsPPEnd( const unsigned int TELL1SourceID ) const;
+
+    /** Return an iterator corresponding to the number of events used in the calculation of noise (RAW, CMS, pedSub)
+        after outlier removal for the first channel of a given TELL1 source ID **/
     virtual std::vector<unsigned int>::const_iterator nEventsBegin( const unsigned int TELL1SourceID ) const;
 
-    /** Return an iterator corresponding to the number of events used in the calculation of RAW+CMS noise after outlier removal
-        for the last channel of a given TELL1 source ID **/
+    /** Return an iterator corresponding to the number of events used in the calculation of noise (RAW, CMS, pedSub)
+        after outlier removal for the last channel of a given TELL1 source ID **/
     virtual std::vector<unsigned int>::const_iterator nEventsEnd( const unsigned int TELL1SourceID ) const;
 
     /// Return an iterator corresponding to the status of the first channel for a given TELL1 source ID
@@ -175,9 +205,17 @@ namespace ST {
     DataMap m_cmsMeanSqMap;          ///< Local calculation of mean of ADCs squared after Common Mode Suppression
     DataMap m_cmsNoiseMap;           ///< Internal map of the noise after Common Mode Suppression
 
+    DataMap m_pedSubMeanMap;            ///< Local calculation of mean of ADCs after Pedestal Subtraction
+    DataMap m_pedSubMeanSqMap;          ///< Local calculation of mean of ADCs squared after Pedestal Subtraction
+    DataMap m_pedSubNoiseMap;           ///< Internal map of the noise after Pedestal Subtraction
+
     /// Internal map of number of events per tell1 and FPGA-PP used in the calculation of the noise.
-    std::map<unsigned int, std::vector<unsigned int> > m_rawNEventsPP;///< Number of events in RAW noise calculation
-    std::map<unsigned int, std::vector<unsigned int> > m_cmsNEventsPP;///< Number of events in CMS noise calculation
+    /// Number of events in RAW noise calculation
+    std::map<unsigned int, std::vector<unsigned int> > m_rawNEventsPP;
+    /// Number of events in CMS noise calculation
+    std::map<unsigned int, std::vector<unsigned int> > m_cmsNEventsPP;
+    /// Number of events in noise calculation after pedestal subtraction
+    std::map<unsigned int, std::vector<unsigned int> > m_pedSubNEventsPP;
 
     /// Cache the status of each strip (1==OK, 0!=OK)
     typedef std::map<unsigned int, std::vector<bool> > StatusMap;

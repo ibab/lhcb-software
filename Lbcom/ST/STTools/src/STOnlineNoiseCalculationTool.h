@@ -52,6 +52,7 @@ namespace ST {
     // Job options
 
     std::string m_LCMSLocation;///< Input location of LCMS ADC values
+    std::string m_pedSubLocation;///< Input location of pedestal subtracted ADC values
     bool m_removeOutliers;///< Remove outliers from noise calculation
 
   };

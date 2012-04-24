@@ -155,6 +155,11 @@ void ST::STNoiseToolBase::resetNoiseCounters( const unsigned int TELL1SourceID )
   m_cmsNoiseMap[TELL1SourceID].resize(3072, 0.0);
   m_cmsNEventsPP[TELL1SourceID].resize(4,0);
 
+  m_pedSubMeanMap[TELL1SourceID].resize(3072, 0.0);
+  m_pedSubMeanSqMap[TELL1SourceID].resize(3072, 0.0);
+  m_pedSubNoiseMap[TELL1SourceID].resize(3072, 0.0);
+  m_pedSubNEventsPP[TELL1SourceID].resize(4,0);
+
 }
 //=============================================================================
 // Destructor
@@ -289,7 +294,7 @@ std::vector<double>::const_iterator ST::STNoiseToolBase::pedestalBegin( const un
   return m_rawPedestalMap.find(TELL1SourceID)->second.begin();
 }
 
-/// Return an iterator corresponding to the RAW RMS noise on the first channel for a given TELL1 source ID
+/// Return an iterator corresponding to the pedestal value of the last channel for a given TELL1 source ID
 std::vector<double>::const_iterator ST::STNoiseToolBase::pedestalEnd( const unsigned int TELL1SourceID ) const {
   if(m_rawPedestalMap.find(TELL1SourceID) == m_rawPedestalMap.end()) {
     error() << "This should never happen! Did you pass TELLID rather than source ID? " << TELL1SourceID << endmsg;
@@ -297,7 +302,7 @@ std::vector<double>::const_iterator ST::STNoiseToolBase::pedestalEnd( const unsi
   return m_rawPedestalMap.find(TELL1SourceID)->second.end();
 }
 
-/// Return an iterator corresponding to the pedestal value of the first channel for a given TELL1 source ID
+/// Return an iterator corresponding to the RAW RMS noise on the first channel for a given TELL1 source ID
 std::vector<double>::const_iterator ST::STNoiseToolBase::rawNoiseBegin( const unsigned int TELL1SourceID ) const {
   if(m_rawNoiseMap.find(TELL1SourceID) == m_rawNoiseMap.end()) {
     error() << "This should never happen! Did you pass TELLID rather than source ID? " << TELL1SourceID << endmsg;
@@ -414,8 +419,7 @@ std::vector<double>::const_iterator ST::STNoiseToolBase::cmsMeanSquaredEnd( cons
 
 /// Return an iterator corresponding to the number of events containing data in the first PP for a given TELL1 source ID
 std::vector<unsigned int>::const_iterator ST::STNoiseToolBase::cmsNEventsPPBegin
-( const unsigned int TELL1SourceID ) const
-{
+( const unsigned int TELL1SourceID ) const {
   if(m_cmsNEventsPP.find(TELL1SourceID) == m_cmsNEventsPP.end()) {
     error() << "This should never happen! Did you pass TELLID rather than source ID? " << TELL1SourceID << endmsg;
   }
@@ -431,8 +435,78 @@ std::vector<unsigned int>::const_iterator ST::STNoiseToolBase::cmsNEventsPPEnd
   return m_cmsNEventsPP.find(TELL1SourceID)->second.end();
 }
 
-/** Return an iterator corresponding to the number of events used in the calculation of RAW+CMS noise after outlier removal
-    for the first channel of a given TELL1 source ID **/
+/** Return an iterator corresponding to the RMS noise after pedestal subtraction on the first
+    channel for a given TELL1 source ID **/
+std::vector<double>::const_iterator ST::STNoiseToolBase::pedSubNoiseBegin(const unsigned int TELL1SourceID ) const {
+  if(m_pedSubNoiseMap.find(TELL1SourceID) == m_pedSubNoiseMap.end()) {
+    error() << "This should never happen! Did you pass TELLID rather than source ID? " << TELL1SourceID << endmsg;
+  }
+  return m_pedSubNoiseMap.find(TELL1SourceID)->second.begin();
+}
+
+/** Return an iterator corresponding to the RMS noise after pedestal subtraction on the last 
+    channel for a given TELL1 source ID **/
+std::vector<double>::const_iterator ST::STNoiseToolBase::pedSubNoiseEnd(const unsigned int TELL1SourceID ) const {
+  if(m_pedSubNoiseMap.find(TELL1SourceID) == m_pedSubNoiseMap.end()) {
+    error() << "This should never happen! Did you pass TELLID rather than source ID? " << TELL1SourceID << endmsg;
+  }
+  return m_pedSubNoiseMap.find(TELL1SourceID)->second.end();
+}
+
+/** Return an iterator corresponding to the mean ADC value after pedestal subtraction for the 
+    first channel for a given TELL1 source ID **/
+std::vector<double>::const_iterator ST::STNoiseToolBase::pedSubMeanBegin( const unsigned int TELL1SourceID ) const {
+  if(m_pedSubMeanMap.find(TELL1SourceID) == m_pedSubMeanMap.end()) {
+    error() << "This should never happen! Did you pass TELLID rather than source ID? " << TELL1SourceID << endmsg;
+  }
+  return m_pedSubMeanMap.find(TELL1SourceID)->second.begin();
+}
+
+/** Return an iterator corresponding to the mean ADC value after pedestal subtraction for the last 
+    channel for a given TELL1 source ID **/
+std::vector<double>::const_iterator ST::STNoiseToolBase::pedSubMeanEnd( const unsigned int TELL1SourceID ) const {
+  if(m_pedSubMeanMap.find(TELL1SourceID) == m_pedSubMeanMap.end()) {
+    error() << "This should never happen! Did you pass TELLID rather than source ID? " << TELL1SourceID << endmsg;
+  }
+  return m_pedSubMeanMap.find(TELL1SourceID)->second.end();
+}
+
+/** Return an iterator corresponding to the mean squared ADC value after pedestal subtraction for the first 
+    channel for a given TELL1 source ID **/
+std::vector<double>::const_iterator ST::STNoiseToolBase::pedSubMeanSquaredBegin( const unsigned int TELL1SourceID ) const {
+  if(m_pedSubMeanSqMap.find(TELL1SourceID) == m_pedSubMeanSqMap.end()) {
+    error() << "This should never happen! Did you pass TELLID rather than source ID? " << TELL1SourceID << endmsg;
+  }
+  return m_pedSubMeanSqMap.find(TELL1SourceID)->second.begin();
+}
+
+/** Return an iterator corresponding to the mean squared ADC value after pedestal subtraction for the last 
+    channel for a given TELL1 source ID **/
+std::vector<double>::const_iterator ST::STNoiseToolBase::pedSubMeanSquaredEnd( const unsigned int TELL1SourceID ) const {
+  if(m_pedSubMeanSqMap.find(TELL1SourceID) == m_pedSubMeanSqMap.end()) {
+    error() << "This should never happen! Did you pass TELLID rather than source ID? " << TELL1SourceID << endmsg;
+  }
+  return m_pedSubMeanSqMap.find(TELL1SourceID)->second.end();
+}
+
+/// Return an iterator corresponding to the number of events containing data in the first PP for a given TELL1 source ID
+std::vector<unsigned int>::const_iterator ST::STNoiseToolBase::pedSubNEventsPPBegin( const unsigned int TELL1SourceID ) const {
+  if(m_pedSubNEventsPP.find(TELL1SourceID) == m_pedSubNEventsPP.end()) {
+    error() << "This should never happen! Did you pass TELLID rather than source ID? " << TELL1SourceID << endmsg;
+  }
+  return m_pedSubNEventsPP.find(TELL1SourceID)->second.begin();
+}
+
+/// Return an iterator corresponding to the number of events containing data in the last PP for a given TELL1 source ID
+std::vector<unsigned int>::const_iterator ST::STNoiseToolBase::pedSubNEventsPPEnd( const unsigned int TELL1SourceID ) const {
+  if(m_pedSubNEventsPP.find(TELL1SourceID) == m_pedSubNEventsPP.end()) {
+    error() << "This should never happen! Did you pass TELLID rather than source ID? " << TELL1SourceID << endmsg;
+  }
+  return m_pedSubNEventsPP.find(TELL1SourceID)->second.end();
+}
+
+/** Return an iterator corresponding to the number of events used in the calculation of noise (RAW, CMS, pedSub)
+    after outlier removal for the first channel of a given TELL1 source ID **/
 std::vector<unsigned int>::const_iterator ST::STNoiseToolBase::nEventsBegin( const unsigned int TELL1SourceID ) const {
   if(m_nEvents.find(TELL1SourceID) == m_nEvents.end()) {
     error() << "This should never happen! Did you pass TELLID rather than source ID? " << TELL1SourceID << endmsg;
@@ -440,8 +514,8 @@ std::vector<unsigned int>::const_iterator ST::STNoiseToolBase::nEventsBegin( con
   return m_nEvents.find(TELL1SourceID)->second.begin();
 };
 
-/** Return an iterator corresponding to the number of events used in the calculation of RAW+CMS noise after outlier removal
-    for the last channel of a given TELL1 source ID **/
+/** Return an iterator corresponding to the number of events used in the calculation of noise (RAW, CMS, pedSub)
+    after outlier removal for the last channel of a given TELL1 source ID **/
 std::vector<unsigned int>::const_iterator ST::STNoiseToolBase::nEventsEnd( const unsigned int TELL1SourceID ) const {
   if(m_nEvents.find(TELL1SourceID) == m_nEvents.end()) {
     error() << "This should never happen! Did you pass TELLID rather than source ID? " << TELL1SourceID << endmsg;
