@@ -1238,7 +1238,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         recoForward.PatForwardTool.MaxChi2Track = CommonForwardTrackingOptions["MaxChi2Track"]
         recoForward.PatForwardTool.MinHits = CommonForwardTrackingOptions["MinHits"]
         recoForward.PatForwardTool.MinOTHits = CommonForwardTrackingOptions["MinOTHits"]
-        recoForward.PatForwardTool.MinMomentum = 1000
+        recoForward.PatForwardTool.MinMomentum = 3000
         recoForward.PatForwardTool.MinPt = 300
      
         if self.getProp("EarlyDataTracking") :
@@ -1381,7 +1381,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
                                  , MatchOutput = matchTrackOutputLocation)
         from Configurables   import PatMatchTool
         recoMatch.addTool(PatMatchTool, name="PatMatchTool")
-        recoMatch.PatMatchTool.MinMomentum = 1000
+        recoMatch.PatMatchTool.MinMomentum = 3000
         recoMatch.PatMatchTool.MinPt = 300
    
         if self.getProp("EarlyDataTracking") :
