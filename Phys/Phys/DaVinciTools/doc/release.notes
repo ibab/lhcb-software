@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2012-04-24 - Anton Poluektov 
+  - Fix AddExtraInfo.cpp so that it never returns FAILURE in execute()
+
 ! 2012-04-24 - Dmitry Golubkov
  - BremAdder: correct minor bug in testing if the track has been bremsstrahlung-corrected
 

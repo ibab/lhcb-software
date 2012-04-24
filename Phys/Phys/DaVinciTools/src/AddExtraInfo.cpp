@@ -91,8 +91,8 @@ StatusCode AddExtraInfo::execute() {
 
         StatusCode sc = (*iTool)->calculateExtraInfo(*icand, *icand);
         if (sc.isFailure()) {
-          error() << "Error calculating extra info" << endreq;
-          return sc;
+          warning() << "Error calculating extra info" << endreq;
+          continue;
         }
 
         int index = (*iTool)->getFirstIndex();
