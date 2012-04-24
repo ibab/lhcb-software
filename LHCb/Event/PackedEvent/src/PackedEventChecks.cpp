@@ -24,7 +24,7 @@ DataChecks::compareLorentzVectors( const std::string & name,
   const Gaudi::XYZVector av(a.x(),a.y(),a.z());
   const Gaudi::XYZVector bv(b.x(),b.y(),b.z());
   const bool vOK = compareVectors( name+":Vect", av, bv, tolV );
-  const bool mOK = compareEnergies( name+":Energy", a.M(), b.M(), tolE );
+  const bool mOK = compareEnergies( name+":Energy", a.E(), b.E(), tolE );
   return vOK && mOK;
 }
 
