@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2012-04-24 - V. Gligorov
+ - Add Hlt2CharmHadD02HHXDstLines lines to Hlt2
+
 ! 2012-04-18 - B. VIAUD
   - The Hlt2CharmHadD02HHHHLines.py has been deteleted
     from Hlt2Lines: remove the reference to it 
