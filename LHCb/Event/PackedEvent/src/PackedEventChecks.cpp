@@ -19,12 +19,12 @@ DataChecks::compareLorentzVectors( const std::string & name,
                                    const Gaudi::LorentzVector & a,
                                    const Gaudi::LorentzVector & b,
                                    const double tolV,
-                                   const double tolMass ) const
+                                   const double tolE ) const
 {
   const Gaudi::XYZVector av(a.x(),a.y(),a.z());
   const Gaudi::XYZVector bv(b.x(),b.y(),b.z());
   const bool vOK = compareVectors( name+":Vect", av, bv, tolV );
-  const bool mOK = compareDoubles( name+":mass", a.M(), b.M(), tolMass );
+  const bool mOK = compareEnergies( name+":Energy", a.M(), b.M(), tolE );
   return vOK && mOK;
 }
 

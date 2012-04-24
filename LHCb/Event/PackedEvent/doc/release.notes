@@ -7,9 +7,8 @@
 ! 2012-04-24 - Chris Jones
  - Improvements to the checks of Particle packing, to remove some false
    positives when comparing the momemtnum covariance matrix.
- - Increase the tolerance on the mass part of the LorentzVector checks, to
-   account for 'small difference of large numbers' machine precision issues,
-   for instance for photons where the mass should be 0.
+ - Change the 'mass' check for LorentzVectors to energy, to avoid machine 
+   precision issues with comparions of small differences of large numbers.
 
 ! 2012-04-23 - Chris Jones
  - New version of the Particle packing, to (try) and fix consistency problems.
