@@ -4,6 +4,15 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-04-24 - Vanya Belyaev
+
+ - StrippingPsiXforBandQ.py
+  
+     - tighten the default selection of pions and kaons 
+     - allow   pion and kaon selection to be redefiend from configuration
+     - allow FILTER, ODIN, L0DU and HLT filters... 
+
+
 ! 2012-04-24 Mika Vesterinen
 - Timing improvements for StrippingCharmFromBSemi.py
 - Add loose GEC (number of long tracks) to all lines.

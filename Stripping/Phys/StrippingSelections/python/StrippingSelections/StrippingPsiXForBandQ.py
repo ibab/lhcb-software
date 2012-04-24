@@ -4,7 +4,7 @@
 # =============================================================================
 ## @file
 # 
-#  The coherent (miroDST) stripping for B -> psi(') + X for B&Q 
+#   The coherent (miroDST) stripping for B -> psi(') + X for B&Q 
 #
 #   @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #   @date   2012-02-19
@@ -36,10 +36,10 @@ from PhysSelPython.Wrappers                import Selection
 # =============================================================================
 # Standard Particles 
 # =============================================================================
-from StandardParticles      import ( StdLoosePions       ,
-                                     StdLooseKaons       ,
-                                     StdLooseMuons       , 
-                                     StdLoosePi02gg      ) ## for gamma-eff
+from StandardParticles  import ( StdLoosePions       ,
+                                 StdLooseKaons       ,
+                                 StdLooseMuons       , 
+                                 StdLoosePi02gg      ) ## for gamma-eff
 # =============================================================================
 ## logging
 # =============================================================================
@@ -54,6 +54,13 @@ _default_configuration_ = {
     ## PV-requiremens
     #
     'CheckPV'   : True ,
+    #
+    ## Global filter
+    # 
+    'FILTER'    : None ,   ## VOID filter 
+    'ODIN'      : None ,   ## ODIN filter 
+    'L0DU'      : None ,   ## L0   filter 
+    'HLT'       : None ,   ## HLT  filter
     #
     ## c*tau cut for B-hadrons 
     #
@@ -70,7 +77,12 @@ _default_configuration_ = {
     ( CLONEDIST     > 5000       )     
     """ , 
     #
-    ## tight (K,pi) for 5(K,pi), 6(K.pi)-decays
+    ## pions and kaons
+    # 
+    'PionCut'   : " MIPCHI2DV() > 9 " , 
+    'KaonCut'   : " MIPCHI2DV() > 9 " , 
+    #
+    ## tight (K,pi) for multibody decays
     #
     'TightPi' : ' ( P > 3.2 * GeV ) & HASRICH & ( PIDpi - PIDK  > 0 ) ' , 
     'TightK'  : ' ( P > 3.2 * GeV ) & HASRICH & ( PIDK  - PIDpi > 0 ) ' ,
@@ -154,7 +166,7 @@ class PsiX_BQ_Conf(LineBuilder) :
         Constructor
         """
         # check the names 
-        if 'PsiX0' != name :
+        if 'PsiX' != name :
             logger.warning ( 'The non-default name is specified "%s"' % name  ) 
             
         from copy import deepcopy
@@ -227,116 +239,181 @@ class PsiX_BQ_Conf(LineBuilder) :
         #
         sel = [
             # =================================================================
-            ## 1h
             #
+            ## 1h
+            #            
             StrippingLine (
-            "B2PsiPiFor"   + self.name()             ,
-            prescale       = self['B2PsiPiPrescale'] , 
-            checkPV        = self['CheckPV']         ,
-            algos          = [ self.psi_pi ()      ] ) ,
+            "B2PsiPiFor"    + self.name()              ,
+            prescale        = self ['B2PsiPiPrescale'] , 
+            checkPV         = self ['CheckPV']         ,
+            FILTER          = self ['FILTER' ]         ,
+            ODIN            = self ['ODIN'   ]         ,
+            L0DU            = self ['L0DU'   ]         ,
+            HLT             = self ['L0DU'   ]         ,
+            algos           = [ self.psi_pi ()      ]  ) ,
             ## 
             StrippingLine (
-            "B2PsiKFor"     + self.name()             ,
-            prescale        = self['B2PsiKPrescale' ] , 
-            checkPV         = self['CheckPV']         ,
-            algos           = [ self.psi_K ()       ] ) ,
+            "B2PsiKFor"     + self.name()              ,
+            prescale        = self ['B2PsiKPrescale' ] , 
+            checkPV         = self ['CheckPV']         ,
+            FILTER          = self ['FILTER' ]         ,
+            ODIN            = self ['ODIN'   ]         ,
+            L0DU            = self ['L0DU'   ]         ,
+            HLT             = self ['L0DU'   ]         ,
+            algos           = [ self.psi_K ()       ]  ) ,
             #
             ## 2h
             #
             StrippingLine (
-            "B2Psi2PiFor"   + self.name()             ,
-            prescale        = self['B2Psi2PiPrescale' ] , 
-            checkPV         = self['CheckPV']         ,
-            algos           = [ self.psi_2pi ()       ] ) ,            
+            "B2Psi2PiFor"   + self.name()                ,
+            prescale        = self ['B2Psi2PiPrescale' ] , 
+            checkPV         = self ['CheckPV']           ,
+            FILTER          = self ['FILTER' ]           ,
+            ODIN            = self ['ODIN'   ]           ,
+            L0DU            = self ['L0DU'   ]           ,
+            HLT             = self ['L0DU'   ]           ,
+            algos           = [ self.psi_2pi ()       ]  ) ,            
             ##
             StrippingLine (
-            "B2PsiKPiFor"   + self.name()             ,
-            prescale        = self['B2PsiKPiPrescale' ] , 
-            checkPV         = self['CheckPV']         ,
-            algos           = [ self.psi_Kpi ()       ] ) ,
-            ##
+            "B2PsiKPiFor"   + self.name()                ,
+            prescale        = self ['B2PsiKPiPrescale' ] , 
+            checkPV         = self ['CheckPV']           ,
+            FILTER          = self ['FILTER' ]           ,
+            ODIN            = self ['ODIN'   ]           ,
+            L0DU            = self ['L0DU'   ]           ,
+            HLT             = self ['L0DU'   ]           ,
+            algos           = [ self.psi_Kpi ()       ]  ) ,
+            #
             StrippingLine (
-            "B2Psi2KFor"    + self.name()             ,
-            prescale        = self['B2Psi2KPrescale' ] , 
-            checkPV         = self['CheckPV']         ,
-            algos           = [ self.psi_2K ()       ] ) ,
+            "B2Psi2KFor"    + self.name()               ,
+            prescale        = self ['B2Psi2KPrescale' ] , 
+            checkPV         = self ['CheckPV']          ,
+            FILTER          = self ['FILTER' ]          ,
+            ODIN            = self ['ODIN'   ]          ,
+            L0DU            = self ['L0DU'   ]          ,
+            HLT             = self ['L0DU'   ]          ,
+            algos           = [ self.psi_2K ()       ]  ) ,
             #
             ## 3h
             #
             StrippingLine (
-            "B2Psi3KFor"    + self.name()             ,
-            prescale        = self['B2Psi3KPrescale' ] , 
-            checkPV         = self['CheckPV']         ,
-            algos           = [ self.psi_3K ()       ] ) ,
+            "B2Psi3KFor"    + self.name()               ,
+            prescale        = self ['B2Psi3KPrescale' ] , 
+            checkPV         = self ['CheckPV']          ,
+            FILTER          = self ['FILTER' ]          ,
+            ODIN            = self ['ODIN'   ]          ,
+            L0DU            = self ['L0DU'   ]          ,
+            HLT             = self ['L0DU'   ]          ,
+            algos           = [ self.psi_3K ()       ]  ) ,  
             ##
             StrippingLine (
-            "B2Psi3PiFor"   + self.name()             ,
-            prescale        = self['B2Psi3PiPrescale' ] , 
-            checkPV         = self['CheckPV']         ,
-            algos           = [ self.psi_3pi ()       ] ) ,
+            "B2Psi3PiFor"   + self.name()                ,
+            prescale        = self ['B2Psi3PiPrescale' ] , 
+            checkPV         = self ['CheckPV']           ,
+            FILTER          = self ['FILTER' ]           ,
+            ODIN            = self ['ODIN'   ]           ,
+            L0DU            = self ['L0DU'   ]           ,
+            HLT             = self ['L0DU'   ]           ,
+            algos           = [ self.psi_3pi ()       ]  ) ,
             ##
             StrippingLine (
-            "B2Psi3KPiFor"  + self.name()              ,
-            prescale        = self['B2Psi3KPiPrescale' ] , 
-            checkPV         = self['CheckPV']          ,
-            algos           = [ self.psi_3Kpi ()       ] ) ,
+            "B2Psi3KPiFor"  + self.name()                 ,
+            prescale        = self ['B2Psi3KPiPrescale' ] , 
+            checkPV         = self ['CheckPV']            ,
+            FILTER          = self ['FILTER' ]            ,
+            ODIN            = self ['ODIN'   ]            ,
+            L0DU            = self ['L0DU'   ]            ,
+            HLT             = self ['L0DU'   ]            ,
+            algos           = [ self.psi_3Kpi ()       ]  ) ,
             #
             ## 4h
             #
             StrippingLine (
-            "B2Psi4PiFor"   + self.name()               ,
-            prescale        = self['B2Psi4PiPrescale' ] , 
-            checkPV         = self['CheckPV']           ,
-            algos           = [ self.psi_4pi ()       ] ) ,
+            "B2Psi4PiFor"   + self.name()                ,
+            prescale        = self ['B2Psi4PiPrescale' ] , 
+            checkPV         = self ['CheckPV']           ,
+            FILTER          = self ['FILTER' ]           ,
+            ODIN            = self ['ODIN'   ]           ,
+            L0DU            = self ['L0DU'   ]           ,
+            HLT             = self ['L0DU'   ]           ,
+            algos           = [ self.psi_4pi ()       ]  ) ,
             ##
             StrippingLine (
-            "B2Psi4KPiFor"  + self.name()               ,
-            prescale        = self['B2Psi4KPiPrescale' ] , 
-            checkPV         = self['CheckPV']           ,
-            algos           = [ self.psi_4Kpi ()       ] ) ,
+            "B2Psi4KPiFor"  + self.name()                 ,
+            prescale        = self ['B2Psi4KPiPrescale' ] , 
+            checkPV         = self ['CheckPV']            ,
+            FILTER          = self ['FILTER' ]            ,
+            ODIN            = self ['ODIN'   ]            ,
+            L0DU            = self ['L0DU'   ]            ,
+            HLT             = self ['L0DU'   ]            ,
+            algos           = [ self.psi_4Kpi ()       ]  ) ,
             ##
             StrippingLine (
             "B2Psi4KFor"    + self.name()               ,
-            prescale        = self['B2Psi4KPrescale' ] , 
-            checkPV         = self['CheckPV']           ,
-            algos           = [ self.psi_4K ()       ] ) ,
+            prescale        = self ['B2Psi4KPrescale' ] , 
+            checkPV         = self ['CheckPV']          ,
+            FILTER          = self ['FILTER' ]          ,
+            ODIN            = self ['ODIN'   ]          ,
+            L0DU            = self ['L0DU'   ]          ,
+            HLT             = self ['L0DU'   ]          ,
+            algos           = [ self.psi_4K ()       ]  ) ,
             #
             ## 5h
             #
             StrippingLine (
-            "B2Psi5PiFor"   + self.name()               ,
-            prescale        = self['B2Psi5PiPrescale' ] , 
-            checkPV         = self['CheckPV']           ,
-            algos           = [ self.psi_5pi ()       ] ) ,
+            "B2Psi5PiFor"   + self.name()                ,
+            prescale        = self ['B2Psi5PiPrescale' ] , 
+            checkPV         = self ['CheckPV']           ,
+            FILTER          = self ['FILTER' ]           ,
+            ODIN            = self ['ODIN'   ]           ,
+            L0DU            = self ['L0DU'   ]           ,
+            HLT             = self ['L0DU'   ]           ,
+            algos           = [ self.psi_5pi ()       ]  ) ,
             ##
             StrippingLine (
-            "B2Psi5KPiFor"  + self.name()               ,
-            prescale        = self['B2Psi5KPiPrescale' ] , 
-            checkPV         = self['CheckPV']           ,
-            algos           = [ self.psi_5Kpi ()       ] ) ,
+            "B2Psi5KPiFor"  + self.name()                 ,
+            prescale        = self ['B2Psi5KPiPrescale' ] , 
+            checkPV         = self ['CheckPV']            ,
+            FILTER          = self ['FILTER' ]            ,
+            ODIN            = self ['ODIN'   ]            ,
+            L0DU            = self ['L0DU'   ]            ,
+            HLT             = self ['L0DU'   ]            ,
+            algos           = [ self.psi_5Kpi ()       ]  ) ,
             #
             ## 6h
             #
             StrippingLine (
-            "B2Psi6PiFor"   + self.name()               ,
-            prescale        = self['B2Psi6PiPrescale' ] , 
-            checkPV         = self['CheckPV']           ,
-            algos           = [ self.psi_5pi ()       ] ) ,
+            "B2Psi6PiFor"   + self.name()                ,
+            prescale        = self ['B2Psi6PiPrescale' ] , 
+            checkPV         = self ['CheckPV']           ,
+            FILTER          = self ['FILTER' ]           ,
+            ODIN            = self ['ODIN'   ]           ,
+            L0DU            = self ['L0DU'   ]           ,
+            HLT             = self ['L0DU'   ]           ,
+            algos           = [ self.psi_5pi ()       ]  ) ,
             ##
             StrippingLine (
-            "B2Psi6KPiFor"  + self.name()               ,
-            prescale        = self['B2Psi6KPiPrescale' ] , 
-            checkPV         = self['CheckPV']           ,
-            algos           = [ self.psi_5Kpi ()       ] ) ,
+            "B2Psi6KPiFor"  + self.name()                 ,
+            prescale        = self [ 'B2Psi6KPiPrescale' ], 
+            checkPV         = self [ 'CheckPV' ]          ,
+            FILTER          = self [ 'FILTER'  ]          ,
+            ODIN            = self [ 'ODIN'    ]          ,
+            L0DU            = self [ 'L0DU'    ]          ,
+            HLT             = self [ 'L0DU'    ]          ,
+            algos           = [ self.psi_5Kpi ()       ]  ) ,
             ##
             # =================================================================
             # Helper line to study gamma/pi0 reconstruction efficiency
             # =================================================================
             StrippingLine (
-            "B2PsiKstFor"   + self.name()               ,
-            prescale        = self['B2PsiKstPrescale' ] , 
-            checkPV         = self['CheckPV']           ,
-            algos           = [ self.psi_Kst ()       ] ) ,
+            "B2PsiKstFor"   + self.name()                 ,
+            prescale        = self [ 'B2PsiKstPrescale' ] , 
+            checkPV         = self [ 'CheckPV' ]          ,
+            FILTER          = self [ 'FILTER'  ]          ,
+            ODIN            = self [ 'ODIN'    ]          ,
+            L0DU            = self [ 'L0DU'    ]          ,
+            HLT             = self [ 'L0DU'    ]          ,
+            algos           = [ self.psi_Kst ()       ]   ) ,
             ##
             # =================================================================
             ]
@@ -354,6 +431,8 @@ class PsiX_BQ_Conf(LineBuilder) :
             self.muons        () ,
             self.pions        () ,
             self.kaons        () ,
+            self.pionsTight   () ,
+            self.kaonsTight   () ,
             ## composite
             self.psi          () ,
             self.psi_prompt   () ,
@@ -383,16 +462,109 @@ class PsiX_BQ_Conf(LineBuilder) :
         
         return self._add_selection ( 'Selections' , sel )
     
-    ## pions :
-    def pions     ( self ) : return StdLoosePions 
-    ## kaons :
-    def kaons     ( self ) : return StdLooseKaons 
+    
     ## muons 
     def muons     ( self ) : return StdLooseMuons 
     
     ## pi0s :
     def pi0s      ( self ) : return StdLoosePi02gg 
+    
+    ## pions :
+    def pions     ( self ) :
+        """
+        Pions for   B -> psi X lines 
+        """        
+        sel = self._selection ( 'Pion_Selection')
+        if sel : return sel
+        
+        alg  = FilterDesktop (
+            ##
+            Preambulo = self['Preambulo'] ,
+            ##
+            Code = self['PionCut'] ,
+            ##
+            )
+        
+        sel  = Selection (
+            "SelPiFor"         + self.name()     ,
+            Algorithm          =   alg           ,
+            RequiredSelections = [ StdLoosePions ]  
+            )
+        
+        return self._add_selection( 'Pion_Selection' , sel ) 
+    
+    ## kaons :
+    def kaons     ( self ) :
+        """
+        Kaons for   B -> psi X lines 
+        """
+        sel = self._selection ( 'Kaon_Selection')
+        if sel : return sel
 
+        alg  = FilterDesktop (
+            ##
+            Preambulo = self['Preambulo'] ,
+            ##
+            Code = self['KaonCut'] ,
+            ##
+            )
+        
+        sel  = Selection (
+            "SelKFor"      + self.name()     ,
+            Algorithm          =   alg           ,
+            RequiredSelections = [ StdLooseKaons ]  
+            )
+        
+        return self._add_selection( 'Kaon_Selection' , sel ) 
+
+    ## tight pions :
+    def pionsTight     ( self ) :
+        """
+        Tight Pions for   B -> psi X lines 
+        """        
+        sel = self._selection ( 'TightPion_Selection')
+        if sel : return sel
+        
+        alg  = FilterDesktop (
+            ##
+            Preambulo = self['Preambulo'] ,
+            ##
+            Code = self['TightPi'] ,
+            ##
+            )
+        
+        sel  = Selection (
+            "SelTightPiFor"      + self.name()   ,
+            Algorithm          =   alg           ,
+            RequiredSelections = [ self.pions()  ]  
+            )
+        
+        return self._add_selection( 'TightPion_Selection' , sel ) 
+
+    ## tight kaons :
+    def kaonsTight     ( self ) :
+        """
+        Tight kaons for   B -> psi X lines 
+        """
+        sel = self._selection ( 'TightKaon_Selection')
+        if sel : return sel
+        
+        alg  = FilterDesktop (
+            ##
+            Preambulo = self['Preambulo'] ,
+            ##
+            Code = self['TightK'] ,
+            ##
+            )
+        
+        sel  = Selection (
+            "SelTightKFor"     + self.name()     ,
+            Algorithm          =   alg           ,
+            RequiredSelections = [ self.kaons()  ]  
+            )
+        
+        return self._add_selection( 'TightKaon_Selection' , sel ) 
+    
     ## psi(') -> mu+ mu-
     def psi ( self ) :
         """
@@ -709,8 +881,8 @@ class PsiX_BQ_Conf(LineBuilder) :
         sel  = Selection (
             "SelPsi3PiFor"     + self.name()     ,
             Algorithm          =   alg           ,
-            RequiredSelections = [ self.psi   () , 
-                                   self.pions () ] 
+            RequiredSelections = [ self.psi        () , 
+                                   self.pionsTight () ] 
             )
         
         return self._add_selection( 'Psi3Pi_Selection' , sel ) 
@@ -744,10 +916,10 @@ class PsiX_BQ_Conf(LineBuilder) :
             )
         
         sel  = Selection (
-            "SelPsi3KFor"      + self.name()     ,
-            Algorithm          =   alg           ,
-            RequiredSelections = [ self.psi   () , 
-                                   self.kaons () ] 
+            "SelPsi3KFor"      + self.name()          ,
+            Algorithm          =   alg                ,
+            RequiredSelections = [ self.psi        () , 
+                                   self.kaonsTight () ] 
             )
         
         return self._add_selection( 'Psi3K_Selection' , sel ) 
@@ -784,9 +956,9 @@ class PsiX_BQ_Conf(LineBuilder) :
         sel  = Selection (
             "SelPsi3KPiFor"    + self.name()     ,
             Algorithm          =   alg           ,
-            RequiredSelections = [ self.psi   () , 
-                                   self.kaons () ,
-                                   self.pions () ] 
+            RequiredSelections = [ self.psi        () , 
+                                   self.kaonsTight () ,
+                                   self.pionsTight () ] 
             )
         
         return self._add_selection( 'Psi3KPi_Selection' , sel )
@@ -818,10 +990,10 @@ class PsiX_BQ_Conf(LineBuilder) :
             )
         
         sel  = Selection (
-            "SelPsi4PiFor"       + self.name()     ,
+            "SelPsi4PiFor"     + self.name()     ,
             Algorithm          =   alg           ,
-            RequiredSelections = [ self.psi   () , 
-                                   self.pions () ] 
+            RequiredSelections = [ self.psi        () , 
+                                   self.pionsTight () ] 
             )
         
         return self._add_selection( 'Psi4Pi_Selection' , sel ) 
@@ -892,11 +1064,11 @@ class PsiX_BQ_Conf(LineBuilder) :
             )
         
         sel  = Selection (
-            "SelPsi4KPiFor"       + self.name()     ,
+            "SelPsi4KPiFor"    + self.name()     ,
             Algorithm          =   alg           ,
-            RequiredSelections = [ self.psi   () ,
-                                   self.kaons () , 
-                                   self.pions () ] 
+            RequiredSelections = [ self.psi        () ,
+                                   self.kaonsTight () , 
+                                   self.pionsTight () ] 
             )
         
         return self._add_selection( 'Psi4KPi_Selection' , sel ) 
@@ -933,9 +1105,9 @@ class PsiX_BQ_Conf(LineBuilder) :
         
         sel  = Selection (
             "SelPsi5PiFor"      + self.name()     ,
-            Algorithm          =   alg           ,
-            RequiredSelections = [ self.psi   () , 
-                                   self.pions () ] 
+            Algorithm          =   alg            ,
+            RequiredSelections = [ self.psi        () , 
+                                   self.pionsTight () ] 
             )
         
         return self._add_selection( 'Psi5Pi_Selection' , sel ) 
@@ -959,11 +1131,6 @@ class PsiX_BQ_Conf(LineBuilder) :
             "[B+ -> J/psi(1S) K+ K+  pi+ K-  K- ]cc" ,            
             ],
             ##
-            DaughtersCuts = {
-            'pi+'       : self['TightPi'] ,
-            'K+'        : self['TightK' ] ,
-            },
-            ##
             Preambulo = self['Preambulo'] ,
             ##
             CombinationCut = """
@@ -982,9 +1149,9 @@ class PsiX_BQ_Conf(LineBuilder) :
         sel  = Selection (
             "SelPsi5KPiFor"    + self.name()    ,
             Algorithm          =   alg           ,
-            RequiredSelections = [ self.psi   () ,
-                                   self.kaons () ,
-                                   self.pions () ]
+            RequiredSelections = [ self.psi        () ,
+                                   self.kaonsTight () ,
+                                   self.pionsTight () ]
             
             )
         
@@ -1020,9 +1187,9 @@ class PsiX_BQ_Conf(LineBuilder) :
         
         sel  = Selection (
             "SelPsi6PiFor"       + self.name()     ,
-            Algorithm          =   alg           ,
-            RequiredSelections = [ self.psi   () , 
-                                   self.pions () ] 
+            Algorithm          =   alg             ,
+            RequiredSelections = [ self.psi        () , 
+                                   self.pionsTight () ] 
             )
         
         return self._add_selection( 'Psi6Pi_Selection' , sel ) 
@@ -1047,11 +1214,6 @@ class PsiX_BQ_Conf(LineBuilder) :
             ##
             Preambulo = self['Preambulo'] ,
             ##
-            DaughtersCuts = {
-            'pi+'       : self [ 'TightPi' ] ,
-            'K+'        : self [ 'TightK'  ] ,
-            },
-            ##
             CombinationCut = """
             mb0_acut         &
             ADOCACHI2CUT ( 9 , '')             
@@ -1068,9 +1230,9 @@ class PsiX_BQ_Conf(LineBuilder) :
         sel  = Selection (
             "SelPsi6KPiFor"    + self.name()     ,
             Algorithm          =   alg           ,
-            RequiredSelections = [ self.psi   () , 
-                                   self.kaons () ,
-                                   self.pions () ] 
+            RequiredSelections = [ self.psi        () , 
+                                   self.kaonsTight () ,
+                                   self.pionsTight () ] 
             )
         
         return self._add_selection( 'Psi6KPi_Selection' , sel ) 
