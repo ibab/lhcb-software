@@ -2,6 +2,9 @@
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
 
+! 2012-04-25 - Julien Cogan
+ - Add getter method for pads to allow direct access of pads used by the L0Muon
+
 !========================= L0Event v19r4 2011-06-14 =========================
 ! 2011-06-10 - Olivier Deschamps
   - L0DUCounter : counter base change from 10^3 to 10^6 : WAS NOT PROPERLY DONE IN XML ON 2011-01-24 !!

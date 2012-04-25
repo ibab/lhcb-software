@@ -39,11 +39,11 @@
       <location name="PU"       place="Trig/L0/MuonPU"/>
       <constructor  desc="Empty constructor"/>
       <constructor argList="double pt, double theta, double phi, 
-                            std::vector&lt;MuonTileID&gt; pads, int encodedPt" 
+                            std::vector&lt;LHCb::MuonTileID&gt; pads, int encodedPt" 
 			    desc="Constructor with full information"/>
 
-      <method const="TRUE" type="std::vector&lt;MuonTileID&gt;" name="muonTileIDs" argList="unsigned int station" 
-                    desc="Accessor to the list of MuonTileIDs in a given station"/>
+      <method const="TRUE" type="std::vector&lt;LHCb::MuonTileID&gt;" name="muonTileIDs" argList="unsigned int station" 
+                    desc="Accessor to the list of LHCb::MuonTileIDs in a given station"/>
       
       <method const="TRUE" type="bool" name="operator&lt;" argList="const L0MuonCandidate lmc" 
                     desc="Comparison operator for sorting candidates in Pt"/>
@@ -53,8 +53,8 @@
       <attribute name="pt" type="double" desc="Pt of the candidate" setMeth="FALSE"/>
       <attribute name="theta" type="double" desc="Theta at IP of the candidate" setMeth="FALSE"/>
       <attribute name="phi" type="double" desc="Phi at IP of the candidate" setMeth="FALSE"/>
-      <attribute name="pads" type="std::vector&lt;MuonTileID&gt;" desc="Pads used in the candidate"  
-                 setMeth="FALSE" getMeth="FALSE"/>      
+      <attribute name="pads" type="std::vector&lt;LHCb::MuonTileID&gt;" desc="Pads used in the candidate"  
+                 setMeth="FALSE" />      
       <attribute name="encodedPt" type="int" desc="encoded Pt of the candidate" setMeth="FALSE"/>
     </class>  
   </package>
