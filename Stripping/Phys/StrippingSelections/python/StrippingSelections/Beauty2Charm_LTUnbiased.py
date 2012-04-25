@@ -6,7 +6,7 @@ from GaudiConfUtils.ConfigurableGenerators import CombineParticles
 from PhysSelPython.Wrappers import Selection
 from Beauty2Charm_LoKiCuts import LoKiCuts
 from Beauty2Charm_Utils import *
-from StandardParticles import StdNoPIDsKaons
+from StandardParticles import StdAllNoPIDsKaons
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
@@ -15,7 +15,7 @@ class LTUnbiasedBuilder(object):
     
     def __init__(self,d,config):
         self.config = deepcopy(config)
-        self.kaons = [topoInputs('PromptKaons',[StdNoPIDsKaons])]
+        self.kaons = [topoInputs('PromptKaons',[StdAllNoPIDsKaons])]
         self.d = d
         self.lines = []  
         self._makeB02DH('D2HHH',self.d.hhh_cf_pid)

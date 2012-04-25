@@ -44,7 +44,7 @@ def filterPi0s(which,inputs,config):
     return filterSelection('Pi0'+which+'Inputs',code,inputs)
 
 def topoInputsCuts(): # Don't need IP chi2 cut b/c is in 1st filter
-    return "(TRCHI2DOF<3) & (PT > 500*MeV) & (P > 5000*MeV)"
+    return "(TRCHI2DOF<2.5) & (PT > 500*MeV) & (P > 5000*MeV)"
 
 def topoKSInputsCuts(): # Don't need IP chi2 cut b/c is in 1st filter
     return "(PT > 500*MeV) & (P > 5000*MeV) & (BPVVDCHI2 > 1000)"
