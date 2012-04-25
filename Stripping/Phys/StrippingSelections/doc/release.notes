@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-04-25 - Victor Coco
+ - tighten cuts in StrippingDisplVertices to match the retention requirements
+
 ! 2012-04-25 - Anton Poluektov 
  - Changes in Beauty2Charm: 
    * Remove IPchi2 cut for bachelor in Beauty2Charm LT-unbiased B->DK selection. 

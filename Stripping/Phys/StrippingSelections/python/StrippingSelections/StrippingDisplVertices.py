@@ -61,27 +61,27 @@ confdict = {
     'MinR':{
        'PreselVelo':     0.4*mm ,
        'SinglePS': 0.4*mm ,
-       'JPsiHLT': 0.4*mm ,
-       'MinBias': 0.4*mm ,
+       'JPsiHLT': 0.7*mm ,
+       'MinBias': 0.7*mm ,
        'SingleDown': 3.0*mm ,
-       'Double': 0.4*mm ,
-       'SingleHighMass': 0.6*mm , 
-       'SingleHighFD': 4.*mm,
-       'SingleMedium': 2.7*mm
+       'Double': 1.0*mm ,
+       'SingleHighMass': 1.5*mm , 
+       'SingleHighFD': 5.*mm,
+       'SingleMedium': 3.2*mm
     },
     'MinMass':{
        'PreselVelo': 3.*GeV , 
        'SinglePS': 3.*GeV ,  
-       'JPsiHLT': 3.*GeV , 
-       'MinBias': 3.*GeV , 
+       'JPsiHLT': 5.5*GeV , 
+       'MinBias': 5.5*GeV , 
        'SingleDown': 4.5*GeV,
-       'Double': 3.5*GeV , 
-       'SingleHighMass':  10.*GeV,
-       'SingleHighFD': 6.7*GeV,
-       'SingleMedium': 8.7*GeV
+       'Double': 6.*GeV , 
+       'SingleHighMass':  15.*GeV,
+       'SingleHighFD': 7.*GeV,
+       'SingleMedium': 10.*GeV
     },
     'MinMass2':{
-       'Double': 4.*GeV 
+       'Double': 7.*GeV 
     },
     'MinSumPt':{
        'PreselVelo': 3.*GeV , 
@@ -97,13 +97,13 @@ confdict = {
     'NTracks':{
        'PreselVelo':     4,
        'SinglePS': 4 ,
-       'JPsiHLT': 4 ,
+       'JPsiHLT': 6 ,
        'MinBias': 4 ,
        'SingleDown': 4 ,
-       'Double':4 ,
-       'SingleHighMass': 5,
-       'SingleHighFD': 5,
-       'SingleMedium': 5
+       'Double':6 ,
+       'SingleHighMass': 6,
+       'SingleHighFD': 7,
+       'SingleMedium': 6
     },
     'MinZ':{   
        'SingleDown': 150.*mm  ,
@@ -134,7 +134,7 @@ confdict = {
        'SingleDown': '' ,
        'Double': '' ,
        'SingleHighMass':'',
-       'SingleHighFD':'',
+       'SingleHighFD':"",
        'SingleMedium':'',
        'JPsiHLT':"HLT_PASS_RE('Hlt2DiMuonJPsiDecision')",
        'MinBias':"HLT_PASS_RE('Hlt1MBNoBiasDecision')",
