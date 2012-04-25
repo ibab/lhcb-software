@@ -1102,3 +1102,99 @@ Lambdac2PHH = {
     'WGs'          : ['Charm'],
     'STREAMS'      : [ 'Charm' ]
     }
+
+# D0 -> phi gamma
+# Responsible: Fatima Soomro
+# Added: Stripping19
+# Lives in StrippingD2XGamma.py
+D2XGamma = {
+    'BUILDERTYPE' : 'StrippingD2XGammaConf',
+    'CONFIG'      : {
+        'TrChi2'              : 5.
+        ,'TrIPchi2Phi'         : 25.
+        ,'TrPTPhi'            : 500.
+        ,'kDLL'               : 2.0
+        ,'PhiMassWin'          : 50.
+        ,'PhiVCHI2'            : 16.
+        ,'D0MassWin'           : 300.
+        ,'D_BPVLTIME'          : 0.2 * picosecond ## not used ATM
+        ,'D0_PT'               : 1000.
+        ,'photonPT'            : 1500.
+        ,'DstVCHI2'            : 25.
+        ,'deltaMass'           : 160.0
+        ,'pvRefit'             : False
+        ,'D02PhiGammaPreScale'               : 1.0
+        ,'D02PhiGammaPostScale'              : 1.0
+        ,'PionLocation'   : "Phys/StdLoosePions/Particles"
+        ,'PhiLocation' : "Phys/StdLoosePhi2KK/Particles"
+    },
+    'WGs' : [ 'Charm' ],
+    'STREAMS' : ['CharmCompleteEvent' ]
+}
+
+# D0 -> h+ h- pi-
+# Responsible: Marco Gersabeck
+# Added: Stripping19
+# Lives in StrippingDstarD2hhpi0.py
+DstarD2hhpi0 = {
+    'BUILDERTYPE' : 'DstarD2hhpi0Conf',
+    'CONFIG'      : {
+           'DaugPtMin': 800.,
+           'DaugPtMax': 1250.,
+           'DaugPtLoose': 500.,
+           'DaugP': 5000.,
+           'DaugPLoose': 3000.,
+           'DaugIPChi2Loose': 9.,
+           'DaugIPChi2': 25.,
+           'DaugTrkChi2': 3.,
+           'DaugTrkChi2Loose': 4.,
+           'HighPIDK': 5.,
+           'LowPIDK': 0.,
+           'D0Pt': 1800.,
+           'D0PtLoose': 1500.,
+           'D0MassWindowCentre': 1865.,
+           'D0MassWindowWidth': 100.,
+           'D0KPiMassWindowWidthLow':  -100.,
+           'D0KPiMassWindowWidthHigh': 100.,
+           'D0PiPiMassWindowWidthLow':  -75.,
+           'D0PiPiMassWindowWidthHigh': 200.,
+           'D0KKMassWindowWidthLow': -100.,
+           'D0KKMassWindowWidthHigh': 200.,
+           'D0P': 5000.,
+           'D0VtxChi2Ndof': 10.,
+           'D0FDChi2': 40.,
+           'D0BPVDira': 0.9999,
+           'D0DOCA': 0.07,
+           'KstPt': 1800.,
+           'KstP': 5000.,
+           'KstVtxChi2Ndof': 10.,
+           'KstFDChi2': 40.,
+           'KstDOCA': 0.07,
+           'KstMassWindowCentre': 1865.,
+           'KstKPiMassWindowWidthHigh': 50.,
+           'Daug_TRCHI2DOF_MAX': 3.,
+           'Dstar_AMDiff_MAX': 185.,
+           'Dstar_VCHI2VDOF_MAX': 100.,
+           'Dstar_MDiff_MAX': 180.,
+           'Pi0MinPT_R':1000.,
+           'Pi0MinPT_M':2000.,
+           'ResPi0MinGamCL': 0.2,
+           'TaggedRSLinePrescale': 1.,
+           'TaggedRSLinePostscale': 1.,
+           'TaggedWSLinePrescale': 1.,
+           'TaggedWSLinePostscale': 1.,
+           'TaggedSCSLinePrescale': 1.,
+           'TaggedSCSLinePostscale': 1.,
+           'TaggedRSSSLinePrescale': 1.,
+           'TaggedRSSSLinePostscale': 1.,
+           'TaggedSCSSSLinePrescale': 1.,
+           'TaggedSCSSSLinePostscale': 1.,
+           'RunSameSign': True,
+           'RunDefault': True,
+           'UseTOSFilter': True,
+           'Hlt2TOS': { 'Hlt2CharmHadD02HHXDst_hhXDecision%TOS' : 0, 'Hlt2CharmHadD02HHXDst_hhXWideMassDecision%TOS' : 0, 'Hlt2Global%TIS' : 0 }
+         },
+    'WGs' : [ 'Charm' ],
+    'STREAMS' : ['Charm' ] 
+}
+
