@@ -375,7 +375,11 @@ public:
   DetMap_T<long long> m_DetMap_diff;
   DetMap_T<double> m_DetMap_rate;
   DimService *m_LHCbDataRate;
+  DimService *m_MEPTotRateSvc;
+  DimService *m_MEPDefRateSvc;
   float m_DataRate;
+  float m_MEPRate;
+  float m_MEPDeferred;
   bool m_enableTrending;
   StatusCode initialize();
   StatusCode start();

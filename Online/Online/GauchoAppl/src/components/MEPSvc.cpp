@@ -271,6 +271,16 @@ void MEPSvc::analyze(void *, int ,MonMap* mmap)
     }
     m_trender->saveEvent();
   }
+  if (m_MEPTotRateSvc == 0)
+  {
+    m_MEPTotRateSvc = new DimService((char*)(m_PartitionName+"_InputMEPRate").c_str(),m_MEPRate);
+  }
+  m_MEPTotRateSvc->updateService(m_MEPRate);
+  if (m_MEPDefRateSvc == 0)
+  {
+    m_MEPDefRateSvc = new DimService((char*)(m_PartitionName+"_DeferMEPRate").c_str(),m_MEPDeferred);
+  }
+  m_MEPDefRateSvc->updateService(m_MEPDeferred);
 }
 
 void MEPSvc::dump()
@@ -333,11 +343,16 @@ MEPSvc::MEPSvc(const std::string& name, ISvcLocator* sl) : PubSvc(name,sl)
     s_counterTypes.push_back("TLostMEP");
   }
   m_LHCbDataRate = 0;
+  m_MEPTotRateSvc = 0;
+  m_MEPDefRateSvc =0;
+
 }
 
 MEPSvc::~MEPSvc()
 {
   deletePtr(m_LHCbDataRate);
+  deletePtr(m_MEPTotRateSvc);
+  deletePtr(m_MEPDefRateSvc);
 }
 
 StatusCode MEPSvc::queryInterface(const InterfaceID& riid, void** ppvIF)
