@@ -48,7 +48,7 @@ class D2hhhConf(LineBuilder) :
     Exports as instance data members:
     selKKP             :  get StdLooseDplus2KKP 
     selKPP             :  get StdLooseDplus2KPP 
-    selPPP             :  get StdLooseDplus2PPP 
+    selPPP             :  get StdTightDplus2PPP 
     selKPPos           :  get StdLooseDplus2KPPi (DCS)
     selTightKaon       :  get StdTightKaons
     selNoPIDsPion      :  get StdNoPIDsPion 
@@ -120,7 +120,7 @@ class D2hhhConf(LineBuilder) :
 
         self.selKKP = DataOnDemand(Location = "Phys/StdLooseDplus2KKPi/Particles")
         self.selKPP = DataOnDemand(Location = "Phys/StdLooseDplus2KPiPi/Particles")
-        self.selPPP = DataOnDemand(Location = "Phys/StdLooseDplus2PiPiPi/Particles")
+        self.selPPP = DataOnDemand(Location = "Phys/StdTightDplus2PiPiPi/Particles")
         self.selKPPos = DataOnDemand(Location = "Phys/StdTightDplus2KPiPiOppSignPi/Particles")
         self.selKKK = DataOnDemand(Location = "Phys/StdLooseDplus2KKK/Particles")
         self.selKKPos = DataOnDemand(Location = "Phys/StdLooseDsplus2KKPiOppSign/Particles")
