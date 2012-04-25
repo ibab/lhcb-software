@@ -4,6 +4,11 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+
+! 2012-04-25 - E. van Herwijnen
+ - Added Physics_May2012_DisplVertices.py = Physics_May2012 with unprescaled
+   displaced vertices lines.
+
 ! 2012-04-24 - V. Gligorov (for A. Puig)
  - Prescale BBDT based radiative topological trigger to 0, cut based rad topo
    takes less rate and gives good enough performance.
