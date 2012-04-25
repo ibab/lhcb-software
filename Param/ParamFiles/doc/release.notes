@@ -5,6 +5,9 @@
 !               simulation and digitization
 !-----------------------------------------------------------------------------
 
+! 2012-04-25 - Julien Cogan
+ - add LUT for L0Muon pt computation
+
 !======================= ParamFiles v8r6 2012-01-18 ==========================
 ! 2012-01-17 - Alexander Bien
 - added new OTDoublePulse.root file which provides a look-up-table
