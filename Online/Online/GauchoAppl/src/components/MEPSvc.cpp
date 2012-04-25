@@ -170,6 +170,7 @@ StatusCode MEPSvc::finalize()
   StatusCode sc;
   if (m_trender != 0)
   {
+    m_trender->finalize();
 //    m_trender->close();
     SmartIF<IToolSvc> tools;
     sc = serviceLocator()->service("ToolSvc", tools.pRef());
@@ -198,32 +199,28 @@ void MEPSvc::analyze(void *, int ,MonMap* mmap)
 {
   m_DetMap.Zero();
   m_DetMap_rate.Zero();
-  MonMap::iterator rxMepit,it;
-  rxMepit = mmap->end();
-  for (it = mmap->begin();it != mmap->end();it++)
+  MonMap::iterator Meptotit,MepOvrit,MepMooreit;
+  Meptotit = mmap->find("R_Runable/totMEPproduced");
+  MepOvrit = mmap->find("R_Runable/totMEPproducedOvfl");
+  MepMooreit = mmap->find("R_Runable/totMEPproducedLive");
+  double Mepstot, MepsMoore, Mepsovr;
+  Mepstot = 0.0;
+  MepsMoore = 0.0;
+  Mepsovr = 0.0;
+  if (Meptotit != mmap->end())
   {
-//    CntrDescr *a;
-//    a= ((CntrDescr*)MonCounter::de_serialize((*it).second));
-//    printf("%s\n",a->name.c_str());
-//    printf("\t%d\n",a->i_data);
-//    printf("\t%ld\n",a->l_data);
-//    printf("\t%f\n",a->f_data);
-//    printf("\t%f\n",a->d_data);
-
-    if ((*it).first.find("R_Runable/rxMEP") != std::string::npos)
-    {
-      rxMepit = it;
-      break;
-    }
+    CntrDescr *h = (CntrDescr*)MonCounter::de_serialize(Meptotit->second);
+    Mepstot = h->d_data;
   }
-  double rxMeps;
-  if (rxMepit != mmap->end())
+  if (MepMooreit != mmap->end())
   {
-
+    CntrDescr *h = (CntrDescr*)MonCounter::de_serialize(MepMooreit->second);
+    MepsMoore = h->d_data;
   }
-  else
+  if (MepOvrit != mmap->end())
   {
-    rxMeps = 0.0;
+    CntrDescr *h = (CntrDescr*)MonCounter::de_serialize(MepOvrit->second);
+    Mepsovr = h->d_data;
   }
   for(size_t i=0; i<s_counterTypes.size();i++)
   {
@@ -264,7 +261,14 @@ void MEPSvc::analyze(void *, int ,MonMap* mmap)
         m_trender->addEntry(ii->first, d);
       }
     }
-    m_trender->addEntry("RxMepRate",rxMeps);
+    m_trender->addEntry("MEPrx Output Rate",Mepstot);
+    m_trender->addEntry("MEPrx Rate to Moore",MepsMoore);
+    m_trender->addEntry("MEPrx Output rate",Mepsovr);
+    if (Mepstot >0.0)
+    {
+      double deffrac = 100.0*Mepsovr/Mepstot;
+      m_trender->addEntry("Deferred HLT fraction",deffrac);
+    }
     m_trender->saveEvent();
   }
 }
