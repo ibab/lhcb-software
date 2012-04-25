@@ -69,7 +69,7 @@ class TopoLines :
             # upfront combo cuts
             'AMAXDOCA_MAX'      : 0.2,    # mm        
             'BPVVDCHI2_MIN'     : 100.0,  # unitless
-            'MIN_TRCHI2DOF_MAX' : 1.5,      # unitless
+            'MIN_TRCHI2DOF_MAX' : 2.0,      # unitless
             'ONETRACK_PT_MIN'   : 1700.0, # MeV
             'ONETRACK_IPCHI2_MIN' : 16,   # unitless   
             'V2BODYCHI2_MAX'    : 10,     # unitless
