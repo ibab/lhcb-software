@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2012-04-26 - V. Gligorov
+ - Relax HHKs lines for M. Sokoloff
+
 ! 2012-04-25 - V. Gligorov
  - Significantly loosen Hlt2CharmHadD02HHXDstLines to gain efficiency.
 
