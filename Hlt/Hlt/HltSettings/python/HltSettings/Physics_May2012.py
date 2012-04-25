@@ -167,7 +167,7 @@ class Physics_May2012( object ):
                                                    , "VertexDisplVertex_Tr_PT"     : "1.7*GeV"
                                                    , "VertexDisplVertex_Tr_CHI2"   : "2.5"
                                                    , "VertexDisplVertex_GEC"       : "Loose"
-                                                   , "Prescale" : {'Hlt1VertexDisplVertex':0.0,'Hlt1VertexDisplVertexPS' : 0.0} 
+                                                   , "Prescale" : {'Hlt1VertexDisplVertex':1.0 }
                                                    }
                        #, Hlt1ProtonLinesConf        : { 'Prescale' : {  'Hlt1DiProtonLowMult'        : 0.01, 
                        #                                                 'Hlt1DiProton'               : 0.01
@@ -190,7 +190,17 @@ class Physics_May2012( object ):
                        #                                               } } 
 
                        , Hlt2DisplVerticesLinesConf : {  'Prescale' : 
-                                                            { 'Hlt2DisplVerticesHighMassSingle' : 0 }
+                                                            { 'Hlt2DisplVerticesHighMassSingle'               : 0
+                                                              , 'Hlt2DisplVerticesSingle'                     : 0
+                                                              , 'Hlt2DisplVerticesDouble'                     : 0
+                                                              , 'Hlt2DisplVerticesHighMassSingle'             : 0 
+                                                              , 'Hlt2DisplVerticesHighFDSingle'               : 0
+                                                              , 'Hlt2DisplVerticesSinglePostScaled'           : 0
+                                                              , 'Hlt2DisplVerticesSingleDown'                 : 0
+                                                              , 'Hlt2DisplVerticesDoublePostScaled'           : 0
+                                                              , 'Hlt2DisplVerticesSingleHighMassPostScaled'   : 0
+                                                              , 'Hlt2DisplVerticesSingleHighFDPostScaled'     : 0
+                                                              , 'Hlt2DisplVerticesSingleMVPostScaled'         : 0    }               
                                                          }
 
                        }

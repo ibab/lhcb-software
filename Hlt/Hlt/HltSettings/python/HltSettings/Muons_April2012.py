@@ -100,7 +100,7 @@ class Muons_April2012 :
             ,'UnbiasedJPsiMassWindow'  : 120      # MeV
             ,'UnbiasedJPsiHighPt'      : 2000     # MeV
             ,'UnbiasedJPsiHighPTMassWindow' : 100
-            ,'UnbiasedPsi2SPt'         :   0      # MeV
+            ,'UnbiasedPsi2SPt'         :   2000      # MeV
             ,'UnbiasedPsi2SMuPt'       : 0.0      # MeV
             ,'UnbiasedPsi2SMassWindow' : 120      # MeV
             ,'UnbiasedPsi2SPtHigh'     : 3500      #MeV
@@ -129,8 +129,8 @@ class Muons_April2012 :
            
             , 'Prescale'   : { 'Hlt2DiMuon'                  :  0   
                                , 'Hlt2DiMuonLowMass'         :  0   
-                               , 'Hlt2DiMuonJPsi'            :  1   #JA 20120301: try to release prescale from 0.2
-                               , 'Hlt2DiMuonPsi2S'           :  1
+                               , 'Hlt2DiMuonJPsi'            :  1 
+                               , 'Hlt2DiMuonPsi2S'           :  0.1
                                , 'Hlt2DiMuonDY1'             :  0.005
                                , 'Hlt2DiMuonDY2'             :  0.03
                                , 'Hlt2DiMuonAndGamma'        :  0

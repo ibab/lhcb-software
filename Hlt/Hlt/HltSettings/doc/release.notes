@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-04-205- Johannes Albrecht
+ - properly remove Displaced vertices lines
+ - prescale & tighten prompt Psi2S line
+  
 ! 2012-04-25 - E. van Herwijnen
  - Removed Physics_May2012_DisplVertices.py: we modify the TCK.
 
