@@ -4,6 +4,8 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-04-25 - E. van Herwijnen
+ - Removed Physics_May2012_DisplVertices.py: we modify the TCK.
 
 ! 2012-04-25 - E. van Herwijnen
  - Added Physics_May2012_DisplVertices.py = Physics_May2012 with unprescaled
