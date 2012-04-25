@@ -4,6 +4,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2012-04-26 - V. Gligorov
+ - Relax default PT cut in forward upgrade for TrackAllL0 to 1.25 GeV
+ - Tighten track chi2 cuts in HLT2 proton ID to 3 
+
 ! 2012-04-24 - Johannes Allbrecht
  - bring p cut in forward and matching to 3 gev
 
