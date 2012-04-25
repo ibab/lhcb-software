@@ -8,5 +8,6 @@
 #include "L0Interfaces/IL0DUFromRawTool.h" 
 #include "L0Interfaces/IL0MuonOverflowTool.h" 
 #include "L0Interfaces/IL0ProcessorDataDecoder.h" 
+#include "L0Interfaces/IL0MuonPtTool.h"
 
 #endif //DICT_L0INTERFACESDICT_H 

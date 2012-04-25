@@ -6,6 +6,7 @@
   <class name    = "IL0DUFromRawTool"              />
   <class name    = "IL0MuonOverflowTool"           />
   <class name    = "IL0ProcessorDataDecoder"       />
+  <class name    = "IL0MuonPtTool"                 />
 
 </lcgdict>
 
