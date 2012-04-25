@@ -5,7 +5,9 @@
 
 #include "MuonKernel/MuonSystemLayout.h"
 #include "ProcessorKernel/Property.h"
-#include "ProcessorKernel/Unit.h"
+//#include "ProcessorKernel/Unit.h"
+#include "L0MuonKernel/L0MUnit.h"
+#include "L0MuonKernel/L0MPtLUT.h"
 
 // Interface
 #include "L0Interfaces/IL0DUConfigProvider.h"
@@ -108,7 +110,8 @@ private:
                                       ///<  - 1: from the input of the processor (extracted form L0Muon itself) 
 
   // For trigger emulation
-  L0Muon::Unit*  m_muontriggerunit; ///< Top Unit of the L0Muon emulator
+  //L0Muon::Unit*  m_muontriggerunit; ///< Top Unit of the L0Muon emulator
+  L0Muon::L0MUnit*  m_muontriggerunit; ///< Top Unit of the L0Muon emulator
 
   L0MuonOutputs* m_outputTool; ///< For output to RAwEvent, TES ot L0ProcessorDatas
 
@@ -125,6 +128,11 @@ private:
 
   Condition * m_l0CondCtrl ;  ///< Pointer to the L0 Controller board conditions 
   Condition * m_l0CondProc ;  ///< Pointer to the L0 Processing board conditions
+
+  std::string m_lut_path;     ///< Directory containing the LUT file
+  std::string m_lut_basename; ///< BaseName of the LUT file 
+  std::string m_lut_version;  ///< Version of LUT to be used (appended to the basename)
+  L0MPtLUT * m_lut;             ///< LUT object
 
   /// Call back function to check the Version condition database content  
   StatusCode updateL0CondVersion() ;

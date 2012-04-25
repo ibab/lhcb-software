@@ -24,6 +24,7 @@
 // Emulator
 #include "L0MuonKernel/UnitFactory.h"
 #include "L0MuonKernel/L0MuonKernelFromXML.h"
+#include "L0MuonKernel/MuonTriggerUnit.h"
 
 DECLARE_ALGORITHM_FACTORY( L0MuonAlg );
 
@@ -80,9 +81,16 @@ L0MuonAlg::L0MuonAlg(const std::string& name,
   declareProperty("DAQMode"        , m_mode        = 1 );
   declareProperty("Compression"    , m_compression = true );
 
+  declareProperty("LUTPath", m_lut_path = "$PARAMFILESROOT/data");
+  declareProperty("LUTBaseName", m_lut_basename = "L0MuonM1M2LUT_");
+  declareProperty("LUTVersion", m_lut_version = "V2");
+  
   m_totEvent = 0;
   m_totBx = 0;
   m_itck = -1 ;
+
+  m_lut = new L0MPtLUT();
+  
 }
 
 
@@ -97,13 +105,25 @@ StatusCode L0MuonAlg::initialize()
   info() <<  "XML file = " << xmlFileName << endmsg;
   L0Muon::L0MuonKernelFromXML(xmlFileName);
   L0Muon::UnitFactory* ufactory = L0Muon::UnitFactory::instance();
-  m_muontriggerunit = ufactory->topUnit();
+  m_muontriggerunit = dynamic_cast<L0Muon::L0MUnit *> (ufactory->topUnit());
   if( msgLevel(MSG::DEBUG) ) debug() <<  "MuonTrigger build from xml "<< endmsg;
 
   // Set debug mode
   if (m_debug) {
     m_muontriggerunit->setDebugMode();
     info() <<  "MuonTrigger debug mode "<< endmsg;
+  }
+
+  //
+  // Set LUT 
+  //
+  std::string lutFileName = L0MuonUtils::SubstituteEnvVarInPath(m_lut_path+'/'+m_lut_basename+m_lut_version);
+  bool lut_ok = m_lut->read(lutFileName);
+  if (lut_ok) {
+    m_muontriggerunit->setLUTPointer(m_lut);
+    info()<< "MuonTrigger will use "<<lutFileName<<" to get pt of candidates"<< endmsg;
+  } else {
+    info()<< "Can not read LUT "<<lutFileName<<" MuonTrigger will compute pt according to formulae"<< endmsg;
   }
 
   // Set properties

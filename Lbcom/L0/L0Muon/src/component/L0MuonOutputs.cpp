@@ -935,6 +935,7 @@ LHCb::L0MuonCandidate* L0MuonOutputs::l0muoncandidate(L0Muon::PMuonCandidate can
   std::vector<double> kine = L0Muon::kine(pads[0],pads[1],m_version,debugFlag);
 
   int encodedPT=cand->pT()+((cand->charge()<<7)&0x80);
+  double pt = cand->pT()*40.;
   
   //   debug()<<" L0MuonOutputs::l0muoncandidate "<<l0context
   //          <<std::hex
@@ -943,7 +944,7 @@ LHCb::L0MuonCandidate* L0MuonOutputs::l0muoncandidate(L0Muon::PMuonCandidate can
   //          <<std::dec
   //          <<" charge= "<<cand->charge() 
   //          <<" pt= "<<kine[0]<<endmsg;
-  LHCb::L0MuonCandidate *pl0muoncandidate = new LHCb::L0MuonCandidate(kine[0], kine[1], kine[2], pads, encodedPT);
+  LHCb::L0MuonCandidate *pl0muoncandidate = new LHCb::L0MuonCandidate(pt, kine[1], kine[2], pads, encodedPT);
   return pl0muoncandidate;
 }
 

@@ -3,6 +3,10 @@
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !-----------------------------------------------------------------------------
 
+! 2012-04-24 - Julien Cogan
+ - Allow to use LUT in emulator for pt computation
+ - Add a new tool to recompute L0Muon candidate pt using LUT
+
 !========================= L0Muon v9r9 2012-03-26 =========================
 ! 2012-02-29 - Julien Cogan
  - Fix bug in L0MuonOutput.cpp : typo in loop over PU when 
