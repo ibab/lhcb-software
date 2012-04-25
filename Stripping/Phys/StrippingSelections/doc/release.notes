@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-04-25 - Sandra Amato
+ - StrippingD2hhh_conh
+     changed input location for D2PPP to StdTightDplusPPP, new cuts are pidK < 3 and min_ipchi2 > 6.
+
 ! 2012-04-24 - Vanya Belyaev
 
  - StrippingPsiXforBandQ.py
