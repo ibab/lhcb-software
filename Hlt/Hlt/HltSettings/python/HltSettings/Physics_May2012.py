@@ -92,7 +92,7 @@ class Physics_May2012( object ):
                                                }
                      , Hlt1ElectronLinesConf : { 'SingleElectronNoIP_P'          : 20000
                                                , 'SingleElectronNoIP_PT'         : 10000
-                                               , 'SingleElectronNoIP_TrChi2'     :     5
+                                               , 'SingleElectronNoIP_TrChi2'     :     3
                                                , 'SingleElectronNoIP_TrNTHits'   :     0 #OFF
                                                , 'SingleElectronNoIP_Velo_NHits' :     0 #OFF
                                                , 'SingleElectronNoIP_Velo_Qcut'  :   999 #OFF

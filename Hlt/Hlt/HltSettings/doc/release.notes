@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-04-26 - Sascha Stahl
+ - Set track chi2 for electron lines to 3.
+
 ! 2012-04-205- Johannes Albrecht
  - properly remove Displaced vertices lines
  - prescale & tighten prompt Psi2S line
