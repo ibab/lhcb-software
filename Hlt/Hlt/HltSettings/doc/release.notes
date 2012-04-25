@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-04-26 -  V. Gligorov
+ - Loosen Topo link to 1Track explicitly to 1700/16/2.0
+
 ! 2012-04-26 - Sascha Stahl
  - Set track chi2 for electron lines to 3.
 
