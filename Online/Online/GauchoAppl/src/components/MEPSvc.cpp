@@ -271,6 +271,8 @@ void MEPSvc::analyze(void *, int ,MonMap* mmap)
     }
     m_trender->saveEvent();
   }
+  m_MEPRate = Mepstot;
+  m_MEPDeferred = Mepsovr;
   if (m_MEPTotRateSvc == 0)
   {
     m_MEPTotRateSvc = new DimService((char*)(m_PartitionName+"_InputMEPRate").c_str(),m_MEPRate);
