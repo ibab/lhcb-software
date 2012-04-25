@@ -170,7 +170,7 @@ StatusCode MEPSvc::finalize()
   StatusCode sc;
   if (m_trender != 0)
   {
-    m_trender->finalize();
+//    m_trender->finalize();
 //    m_trender->close();
     SmartIF<IToolSvc> tools;
     sc = serviceLocator()->service("ToolSvc", tools.pRef());
