@@ -83,7 +83,7 @@ L0MuonAlg::L0MuonAlg(const std::string& name,
 
   declareProperty("LUTPath", m_lut_path = "$PARAMFILESROOT/data");
   declareProperty("LUTBaseName", m_lut_basename = "L0MuonM1M2LUT_");
-  declareProperty("LUTVersion", m_lut_version = "V2");
+  declareProperty("LUTVersion", m_lut_version = "V3");
   
   m_totEvent = 0;
   m_totBx = 0;
