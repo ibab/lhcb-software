@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-04-25 - Mika Vesterinen
+ - StrippingCharmFromBSemi.py
+ - Fix D*->D0->HHpi0 lines, and tighter PID cuts on pions in 4 body charm.
+
 ! 2012-04-25 - Victor Coco
  - tighten cuts in StrippingDisplVertices to match the retention requirements
 

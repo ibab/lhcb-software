@@ -14,7 +14,7 @@ Dstar methods closely copied from StrippingDstarD2KShh.py by Mat Charles.
 """
 __author__ = ['Mika Vesterinen']
 __date__ = '08/03/2012'
-__version__ = '$Revision: 0.3 $'
+__version__ = '$Revision: 0.4 $'
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles, OfflineVertexFitter
@@ -38,7 +38,7 @@ confdict = {
     ,"TRCHI2Loose"   : 5.0    # adimensiional    
     ,"KaonPIDK"      : 4.0    # adimensiional
     ,"PionPIDK"      : 10.0   # adimensiional
-    ,"PionPIDKTight" : 0.0    # adimensiional
+    ,"PionPIDKTight" : 4.0    # adimensiional
     ,"MuonIPCHI2"    : 4.00   # adimensiional
     ,"MuonPT"        : 800.0  # MeV
     ,"KPiPT"         : 300.0  # MeV
@@ -293,7 +293,7 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
             }
 
         self.sel_D0_to_4Pi = Selection( "D0_to_4Pi_for" + name,Algorithm = self._D024PiFilter(),
-                                        RequiredSelections = [self.selPionloose] )        
+                                        RequiredSelections = [self.selPionTight] )        
         self.selD0Conj_4Pi = Selection('SelConjugate_4PiFor'+name,
                                        Algorithm = ConjugateNeutralPID('Conjugate_4PiFor'+name),
                                        RequiredSelections = [self.sel_D0_to_4Pi])
@@ -301,7 +301,7 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
 
 
         self.sel_D0_to_K3Pi = Selection( "D0_to_K3Pi_for" + name,Algorithm = self._D02K3PiFilter(),
-                                         RequiredSelections = [self.selPionloose,self.selKaon] )        
+                                         RequiredSelections = [self.selPionTight,self.selKaon] )        
         self.selD0Conj_K3Pi = Selection('SelConjugate_K3PiFor'+name,
                                         Algorithm = ConjugateNeutralPID('Conjugate_K3PiFor'+name),
                                         RequiredSelections = [self.sel_D0_to_K3Pi])
@@ -309,7 +309,7 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
 
 
         self.sel_D0_to_2K2Pi = Selection( "D0_to_2K2Pi_for" + name,Algorithm = self._D022K2PiFilter(),
-                                          RequiredSelections = [self.selPionloose,self.selKaon] )        
+                                          RequiredSelections = [self.selPionTight,self.selKaon] )        
         self.selD0Conj_2K2Pi = Selection('SelConjugate_2K2PiFor'+name,
                                        Algorithm = ConjugateNeutralPID('Conjugate_2K2PiFor'+name),
                                        RequiredSelections = [self.sel_D0_to_2K2Pi])
@@ -317,7 +317,7 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         
 
         self.sel_D0_to_3KPi = Selection( "D0_to_3KPi_for" + name,Algorithm = self._D023KPiFilter(),
-                                         RequiredSelections = [self.selPionloose,self.selKaon] )        
+                                         RequiredSelections = [self.selPionTight,self.selKaon] )        
         self.selD0Conj_3KPi = Selection('SelConjugate_3KPiFor'+name,
                                        Algorithm = ConjugateNeutralPID('Conjugate_3KPiFor'+name),
                                         RequiredSelections = [self.sel_D0_to_3KPi])
@@ -601,12 +601,12 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         
         ## Dstar ###
         DecayDescriptors = [ '[B0 -> D*(2010)+ mu-]cc', '[B0 -> D*(2010)+ mu+]cc' ]
-        self.selb2DstarMuXKPiPi0Resolved = makeb2DMuX('b2DstarMuXKPiPi0Resolved'+name,DecayDescriptors,MuSel,self.seld02KPiPi0Resolved,BCuts)
-        self.selb2DstarMuXKKPi0Resolved = makeb2DMuX('b2DstarMuXKKPi0Resolved'+name,DecayDescriptors,MuSel,self.seld02KKPi0Resolved,BCuts)
-        self.selb2DstarMuXPiPiPi0Resolved = makeb2DMuX('b2DstarMuXPiPiPi0Resolved'+name,DecayDescriptors,MuSel,self.seld02PiPiPi0Resolved,BCuts)
-        self.selb2DstarMuXKPiPi0Merged = makeb2DMuX('b2DstarMuXKPiPi0Merged'+name,DecayDescriptors,MuSel,self.seld02KPiPi0Merged,BCuts)
-        self.selb2DstarMuXKKPi0Merged = makeb2DMuX('b2DstarMuXKKPi0Merged'+name,DecayDescriptors,MuSel,self.seld02KKPi0Merged,BCuts)
-        self.selb2DstarMuXPiPiPi0Merged = makeb2DMuX('b2DstarMuXPiPiPi0Merged'+name,DecayDescriptors,MuSel,self.seld02PiPiPi0Merged,BCuts)
+        self.selb2DstarMuXKPiPi0Resolved = makeb2DMuX('b2DstarMuXKPiPi0Resolved'+name,DecayDescriptors,MuSel,self.selDstar_2KPiPi0Resolved,BCuts)
+        self.selb2DstarMuXKKPi0Resolved = makeb2DMuX('b2DstarMuXKKPi0Resolved'+name,DecayDescriptors,MuSel,self.selDstar_2KKPi0Resolved,BCuts)
+        self.selb2DstarMuXPiPiPi0Resolved = makeb2DMuX('b2DstarMuXPiPiPi0Resolved'+name,DecayDescriptors,MuSel,self.selDstar_2PiPiPi0Resolved,BCuts)
+        self.selb2DstarMuXKPiPi0Merged = makeb2DMuX('b2DstarMuXKPiPi0Merged'+name,DecayDescriptors,MuSel,self.selDstar_2KPiPi0Merged,BCuts)
+        self.selb2DstarMuXKKPi0Merged = makeb2DMuX('b2DstarMuXKKPi0Merged'+name,DecayDescriptors,MuSel,self.selDstar_2KKPi0Merged,BCuts)
+        self.selb2DstarMuXPiPiPi0Merged = makeb2DMuX('b2DstarMuXPiPiPi0Merged'+name,DecayDescriptors,MuSel,self.selDstar_2PiPiPi0Merged,BCuts)
         
         
         ############### B0 -> MU X D+ -> Ks H  #########################
