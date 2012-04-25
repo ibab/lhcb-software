@@ -43,6 +43,17 @@ StdVeryTightDsplus2KKPi.CombinationCut = "((AM>1900.*MeV) & (AM<2040.*MeV) & ((A
 StdVeryTightDsplus2KKPi.MotherCut = "((VFASPF(VCHI2) < 30 ) & (M>1920.*MeV) & (M < 2020.*MeV) & (BPVVDCHI2>36) & (BPVDIRA>0.98))" 
 locations = updateDoD ( StdVeryTightDsplus2KKPi )
 
+##########################################################################################
+# D+ -> 3 pi is a clone of D+ -> K Pi Pi 
+#
+from StdLooseDplus import StdLooseDplus2KPiPi
+StdTightDplus2PiPiPi = StdLooseDplus2KPiPi.clone("StdTightDplus2PiPiPi")
+StdTightDplus2PiPiPi.Inputs = [ "Phys/StdLoosePions/Particles" ]
+StdTightDplus2PiPiPi.DecayDescriptor = "[D+ -> pi- pi+ pi+]cc"
+StdTightDplus2PiPiPi.DaughtersCuts = {"pi+" : "(P > 2*GeV)  & ((PIDK-PIDpi) < 3.) & ((MIPCHI2DV(PRIMARY)) > 6.0 )"}
+locations = updateDoD ( StdTightDplus2PiPiPi )
+##########################################################################################
+
 ## ============================================================================
 if '__main__' == __name__ :
 
