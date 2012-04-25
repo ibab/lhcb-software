@@ -4,6 +4,18 @@
 ! Purpose     : 
 !------------------------------------------------------------------------------
 
+! 2012-04-24 - Julien Cogan
+ - Manage Look Up Table for pt computation :
+  - new class to handle Pt Look Up Table (L0MPtLUT)
+  - L0MUnit (generic Unit): new data member holding a pointer to the LUT, 
+    plus corresponding set and get methods
+  - CoreUnit : retrieve the pointer from MuonTriggerUnit (in constructor)
+  - Tower : in constructor, store the pointer to the LUT; in process_tower, use
+    the pointer in pt computation (if not empty).
+ - Modification of the kine method which computes pt in ProcUtilities to allow
+   to specify the positions of the pads. This is used to compute the LUT taking
+   into account the muon geometry
+
 !========================= L0MuonKernel v9r6 2011-01-31 =========================
 ! 2011-01-27 - Julien Cogan
  - Fix remaining windows errors (misuse of pow)

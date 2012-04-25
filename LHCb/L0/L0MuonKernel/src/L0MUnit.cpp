@@ -5,8 +5,10 @@
 #include "ProcessorKernel/RegisterFactory.h"
 
 L0Muon::L0MUnit::L0MUnit():Unit(){
+  m_plut = 0;
 }
 L0Muon::L0MUnit::L0MUnit(LHCb::MuonTileID id):Unit(){
+  m_plut = 0;
   m_mid = id;
 }
 
@@ -14,6 +16,7 @@ L0Muon::L0MUnit::~L0MUnit(){
 }
 
 L0Muon::L0MUnit::L0MUnit(DOMNode* pNode):Unit() {
+  m_plut = 0;
   //Get the attributes
   // // //std::cout << "<L0MUnit::L0MUnit> has node any attribute ?"<<pNode->hasAttributes()<<std::endl;
   DOMNamedNodeMap* di = pNode->getAttributes();
@@ -110,9 +113,9 @@ void L0Muon::L0MUnit::unitFromNode(DOMNode* pNode)
 {
   //Get the attributes
   DOMNamedNodeMap* di = pNode->getAttributes();
-  std::string type = getAttributeStr(di, "type");
+  std::string child_type = getAttributeStr(di, "type");
   L0Muon::UnitFactory* ufactory = L0Muon::UnitFactory::instance();
-  Unit* pu = ufactory->createUnit(pNode,type);
+  Unit* pu = ufactory->createUnit(pNode,child_type);
   addUnit(pu);
 }
 
@@ -236,5 +239,14 @@ std::string L0Muon::L0MUnit::getAttributeStr(DOMNamedNodeMap* di, const char* ke
   XMLString::release(&valC);   //Release memory used by the transcode method
   return valS;
   
+}
+void L0Muon::L0MUnit::setLUTPointer(L0MPtLUT * plut)
+{
+  m_plut  = plut;
+  std::vector<L0Muon::Unit*>::iterator  iu;
+  for (iu=m_units.begin();iu!=m_units.end();iu++){
+    L0Muon::L0MUnit * imu = dynamic_cast<L0Muon::L0MUnit *> (*iu);
+    imu->setLUTPointer(plut);
+  }
 }
 

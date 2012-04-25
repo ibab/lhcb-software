@@ -223,9 +223,24 @@ void  L0Muon::xyFromPad(LHCb::MuonTileID pad, double& x, double& y, int procVers
     
 }
 
+/*
 // Compute pt, theta and phi
 std::vector<double> L0Muon::kine(LHCb::MuonTileID p1, LHCb::MuonTileID p2, int procVersion, bool debug) {
 
+double x1=0., y1=0., z1=0.;// M1 hit coordinates
+double x2=0., y2=0., z2=0.;// M2 hit coordinates
+
+xyFromPad(p1,x1,y1,procVersion);
+xyFromPad(p2,x2,y2,procVersion);
+
+return kine(p1,p2,procVersion,debug,x1,y1,z1,x2,y2,z2);
+}
+*/
+
+// Compute pt, theta and phi
+std::vector<double> L0Muon::kine(LHCb::MuonTileID p1, LHCb::MuonTileID p2, int procVersion, bool debug,\
+                                 double x1, double y1, double z1,\
+                                 double x2, double y2, double z2) {
   if (procVersion==0) return  L0Muon::kineV0(p1,p2,debug);
 
   // the kinematic variables to be returned
@@ -237,11 +252,27 @@ std::vector<double> L0Muon::kine(LHCb::MuonTileID p1, LHCb::MuonTileID p2, int p
   double d3    = 309.5 ; // Z(M2)-Z(M1)   =  309.5
   double alpha =   1.39; // alpha (KICK?) =    1.39 
 
-  double x1=0., y1=0.;// M1 hit coordinates
-  double x2=0., y2=0.;// M2 hit coordinates
+  if ( (z1>0.) || (z2>0.) ){
+    d2=(z1/10.)-d1;
+    d3=(z2-z1)/10.;
+  }
 
-  xyFromPad(p1,x1,y1,procVersion);
-  xyFromPad(p2,x2,y2,procVersion);
+  //double x1=0., y1=0.;// M1 hit coordinates
+  //double x2=0., y2=0.;// M2 hit coordinates
+  
+  if ( (x1==0.) || (y1==0.) ) {
+    xyFromPad(p1,x1,y1,procVersion);
+  } else {
+    x1=x1/10.;
+    y1=y1/10.;
+  }
+  
+  if ( (x2==0.) || (y2==0.) ) {
+    xyFromPad(p2,x2,y2,procVersion);
+  } else {
+    x2=x2/10.;
+    y2=y2/10.;
+  }
 
   double x0 = x1 - d2*(x2-x1)/d3;
   double y0 = y1*d1/(d1+d2);

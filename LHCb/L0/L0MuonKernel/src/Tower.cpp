@@ -9,7 +9,6 @@
 
 L0Muon::Tower::Tower() {
 
-
   // Init the FOI MAX (set the size of the tower)
   m_maxXFoI[0] = 24; //12;
   m_maxXFoI[1] = 5;
@@ -44,6 +43,7 @@ L0Muon::Tower::Tower() {
   m_ignoreM2=false;
   m_debug = false;
 
+  m_lut=0;
 }
 
 L0Muon::Tower::~Tower() {}
@@ -302,9 +302,12 @@ std::vector<L0Muon::PMuonCandidate> L0Muon::Tower::processTower(LHCb::MuonTileID
         int offM1=0;  // expressed with M3 granularity (la tour est 'super-homogène') 
         candFlag=false;
         sta=0;
-        if (m_debug) std::cout <<"--- Tower::processTower: Search in station sta= "<<sta<< std::endl;
-        if (m_debug) std::cout <<"--- Tower::processTower: Max foi X,Y= "<<m_maxXFoI[sta]<<" , "<<m_maxYFoI[sta]<< std::endl;
-        if (m_debug) std::cout <<"--- Tower::processTower:     foi X,Y= "<<m_xfoi[sta]<<" , "<<m_yfoi[sta]<< std::endl;
+        if (m_debug) {
+          std::cout <<"--- Tower::processTower: Search in station sta= "<<sta<< std::endl;
+          std::cout <<"--- Tower::processTower: Max foi X,Y= "<<m_maxXFoI[sta]<<" , "<<m_maxYFoI[sta]<< std::endl;
+          std::cout <<"--- Tower::processTower:     foi X,Y= "<<m_xfoi[sta]<<" , "<<m_yfoi[sta]<< std::endl;
+        }
+        
         // Extrapolation in M1
         int signM2 =offM2>0 ? +1:-1;
         //         int extrapM1=signM2*L0Muon::ExtrapolationM1[signM2*offM2];
@@ -333,10 +336,13 @@ std::vector<L0Muon::PMuonCandidate> L0Muon::Tower::processTower(LHCb::MuonTileID
             }
           }
           if (padM1.isValid()) {
-            if (m_debug) std::cout <<"--- Tower::processTower:     forced Bit ON found yxM1 is "
-                                   <<yxM1.first<<","<<yxM1.second<< std::endl;
-            if (m_debug) std::cout <<"--- Tower::processTower:     forced Bit ON found mid is "
-                                   <<padM1.toString()<< std::endl;
+            if (m_debug) {
+              std::cout <<"--- Tower::processTower:     forced Bit ON found yxM1 is "
+                        <<yxM1.first<<","<<yxM1.second<< std::endl;
+              std::cout <<"--- Tower::processTower:     forced Bit ON found mid is "
+                        <<padM1.toString()<< std::endl;
+            }
+            
             candFlag=true;
           } else {
             if (m_debug) std::cout <<"--- Tower::processTower:     forced Bit ON no valid pad found"<< std::endl;
@@ -366,26 +372,32 @@ std::vector<L0Muon::PMuonCandidate> L0Muon::Tower::processTower(LHCb::MuonTileID
             colCentral = m_xfoi[sta];
             // Loop over colums in the field 
             for (int icol=0; icol<2*m_xfoi[sta]+1;icol++){
-              if (m_debug) std::cout <<"--- Tower::processTower:     inside loop over columns icol= "<<icol<< std::endl;
               //               int ipendulum = (icol==0) ? 0 : int(pow(-1,icol+1)*int((icol+1)/2));
               //               int ipendulum = (icol==0) ? 0 : int(pow(-1,icol)*int((icol+1)/2)); // start searching towards beam
               int ipendulum = L0Muon::pendulumM1(icol, m_procVersion);
-              if (m_debug) std::cout <<"--- Tower::processTower:     inside loop over columns ipendulum= "
-                                     <<ipendulum<< std::endl;
               colInd=colCentral+ipendulum;
-              if (m_debug) std::cout <<"--- Tower::processTower:     inside loop over columns bit is #= "
-                                     <<m_xfoi[sta]+ipendulum<< std::endl;
-              if (m_debug) std::cout <<"--- Tower::processTower:     inside loop over columns test= "
-                                     <<field.test(colInd)<< std::endl;
+              if (m_debug) {
+                std::cout <<"--- Tower::processTower:     inside loop over columns icol= "<<icol<< std::endl;
+                std::cout <<"--- Tower::processTower:     inside loop over columns ipendulum= "
+                          <<ipendulum<< std::endl;
+                std::cout <<"--- Tower::processTower:     inside loop over columns bit is #= "
+                          <<m_xfoi[sta]+ipendulum<< std::endl;
+                std::cout <<"--- Tower::processTower:     inside loop over columns test= "
+                          <<field.test(colInd)<< std::endl;
+              }
+              
               if (field.test(colInd)==true) {
                 offM1 = ipendulum;
                 std::pair<int,int> yxM1(rowseed,colseed+m_maxXFoI[sta]+extrapM1+ipendulum);
                 padM1 = getPadIdMap(sta, yxM1);
                 candFlag=true;
-                if (m_debug) std::cout <<"--- Tower::processTower:     Bit ON found yxM1 is "
-                                       <<yxM1.first<<","<<yxM1.second<< std::endl;
-                if (m_debug) std::cout <<"--- Tower::processTower:     Bit ON found mid is "
-                                       <<padM1.toString()<< std::endl;
+                if (m_debug) {
+                  std::cout <<"--- Tower::processTower:     Bit ON found yxM1 is "
+                            <<yxM1.first<<","<<yxM1.second<< std::endl;
+                  std::cout <<"--- Tower::processTower:     Bit ON found mid is "
+                            <<padM1.toString()<< std::endl;
+                }
+                
                 break;
               }
             } // End of Loop over colums in the field 
@@ -399,18 +411,65 @@ std::vector<L0Muon::PMuonCandidate> L0Muon::Tower::processTower(LHCb::MuonTileID
         // In next version, it is given in the granularity of M1.
         offM1 = L0Muon::offsetM1(offM1,m_procVersion);
         
-        if (m_debug) std::cout <<"--- Tower::processTower: CANDIDATE FOUND"<< std::endl;
-        if (m_debug) std::cout <<"--- Tower::processTower:  colM3= "<< colseed <<" rowM3= "<<rowseed << std::endl;
-        if (m_debug) std::cout <<"--- Tower::processTower:  offM2= "<< offM2 << std::endl;
-        if (m_debug) std::cout <<"--- Tower::processTower:  offM1= "<< offM1 <<std::endl;
+        if (m_debug) {
+          std::cout <<"--- Tower::processTower: CANDIDATE FOUND"<< std::endl;
+          std::cout <<"--- Tower::processTower:  colM3= "<< colseed <<" rowM3= "<<rowseed << std::endl;
+          std::cout <<"--- Tower::processTower:  offM2= "<< offM2 << std::endl;
+          std::cout <<"--- Tower::processTower:  offM1= "<< offM1 <<std::endl;
+          
+          std::cout <<"--- Tower::processTower: padM1= "<<padM1.toString()<< std::endl;
+          std::cout <<"--- Tower::processTower: padM2= "<<padM2.toString()<< std::endl;
+          
+          std::cout <<"--- Tower::processTower: plut= "<<m_lut<< std::endl;
+        }
         
         // Compute PT
-        if (m_debug) std::cout <<"--- Tower::processTower: padM1= "<<padM1.toString()<< std::endl;
-        if (m_debug) std::cout <<"--- Tower::processTower: padM2= "<<padM2.toString()<< std::endl;
-        double pt = L0Muon::kine(padM1,padM2,m_procVersion,m_debug)[0];
-        int ipt=L0Muon::encodePT(pt,m_procVersion,m_debug);
-        
-        if (m_debug) std::cout <<"--- Tower::processTower: pt= "<<pt<< std::endl;
+
+        int ipt = -1;
+        if (m_lut==0) {
+          double pt = L0Muon::kine(padM1,padM2,m_procVersion,m_debug)[0];
+          ipt=L0Muon::encodePT(pt,m_procVersion,m_debug);
+          if (m_debug) std::cout <<"--- Tower::processTower: (from kine) pt= "<<pt<<" encoded= "<<ipt<<std::endl;
+        } else {
+
+          std::pair<int,int> yxM3(rowseed,colseed);
+          LHCb::MuonTileID padM3  = getPadIdMap(2, yxM3);
+          LHCb::MuonTileID m3pad  = padM3;
+
+          int M2nx = colseed+offM2;
+          int M2ny = rowseed;
+          LHCb::MuonTileID m2pad(puID,MuonLayout(48,8),M2nx,M2ny);
+          m2pad.setStation(1);
+          if (!m2pad.isValid()){
+            if ( m2pad.nX()>=2*m2pad.layout().xGrid() ) {
+              std::vector<LHCb::MuonTileID> lpads =  m2pad.layout().tilesInRegion(m2pad,m2pad.region());
+              //if (lpads.size()!=1) {
+              //  std::cout <<"--- Tower::processTower: ERROR M2 PAD DOES NOT COVER EXACTLY ONE PAD IN UPPER REGION"<<std::endl;
+              //}
+              m2pad = lpads[0];
+            } //else {
+            //  std::cout <<"--- Tower::processTower: ERROR m2pad NOT Valid"<<std::endl;
+            //}
+          } 
+          int M1nx = colseed+extrapM1;
+          int M1ny = rowseed;  
+          M1nx = L0Muon::addM1Offset(M1nx, offM1, m_procVersion);
+          LHCb::MuonTileID m1pad(puID,MuonLayout(24,8),M1nx,M1ny);
+          m1pad.setStation(0);
+          if (!m1pad.isValid()){
+            if ( m1pad.nX()>=2*m1pad.layout().xGrid() ) {
+              std::vector<LHCb::MuonTileID> lpads =  m1pad.layout().tilesInRegion(m1pad,m1pad.region());
+              //if (lpads.size()!=1) {
+              //  std::cout <<"--- Tower::processTower: ERROR M1 PAD DOES NOT COVER EXACTLY ONE PAD IN UPPER REGION"<<std::endl;
+              //}
+              m1pad = lpads[0];
+            } //else {
+            //  std::cout <<"--- Tower::processTower: ERROR m1pad NOT Valid"<<std::endl;
+            //}
+          }
+          ipt = m_lut->getEncodedPt(m2pad,m1pad);
+          if (m_debug) std::cout <<"--- Tower::processTower: (from LUT) encoded= "<<ipt<<std::endl;
+        }
 
         // Create MuonCandidate (without the pu and board info)
         L0Muon::PMuonCandidate muoncand( new L0Muon::MuonCandidate());

@@ -11,7 +11,7 @@
 #include "ProcessorKernel/Register.h"
 #include "Kernel/MuonTileID.h"
 #include "L0MuonKernel/MuonCandidate.h"
-
+#include "L0MuonKernel/L0MPtLUT.h"
 
 namespace L0Muon {
 
@@ -68,6 +68,11 @@ namespace L0Muon {
        - #m_ignoreM1, #m_ignoreM2 are set via Tower::ignoreM1 and Tower::ignoreM2
        - #m_procVersion is set via Tower::procVersion
        .
+       \n
+       The PT is computed using either:
+       - a LUT for which a pointer is given in the constructor,
+       - the formulae described in LHCb-2002-042 if the pointer is null.
+       is ccan be com
        \n
        The algorithm parts depending on the processor version are implemented in functions defined in ProcUtilities.h :
        - order in which the hits are looked for in M1 and M2 is determined 
@@ -173,6 +178,13 @@ namespace L0Muon {
     void setIgnoreM2(bool ignoreM2){ 
       m_ignoreM2 = ignoreM2; 
     }
+
+    /** set pointer to LUT
+        @param m_lut : pointer to the L0MPtLUT object holding the pt LUT
+    */
+    void setLUTPointer(L0MPtLUT * lut){ 
+      m_lut = lut;
+    }
           
     /// Draw tower
     void draw();
@@ -209,6 +221,8 @@ namespace L0Muon {
     bool m_ignoreM2;   ///< Ignore M2 flag   
     
     bool m_debug;      ///< Debug flag
+
+    L0MPtLUT * m_lut;  ///< Pointer to the pt Look Up Table
 
 };
 

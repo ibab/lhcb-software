@@ -150,7 +150,10 @@ namespace L0Muon {
     std::string type() {
       return "CoreUnit";
     }
-     
+
+    /// Set the pointer to the pt Look Up Table
+    void setLUTPointer(L0MPtLUT * plut);
+
   private:
 
     Tower  m_tower;                          ///< Object where the candidate search algorithm is performed 

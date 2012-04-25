@@ -8,6 +8,7 @@
 #include <xercesc/parsers/AbstractDOMParser.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLString.hpp>
+#include "L0MuonKernel/L0MPtLUT.h"
 
 XERCES_CPP_NAMESPACE_USE
 
@@ -69,6 +70,9 @@ namespace L0Muon {
     /// Save the Unit in XML format.
     std::string toXML(std::string tab="");
 
+    /// Set the pointer to the pt Look Up Table
+    virtual void setLUTPointer(L0MPtLUT * plut);
+
   protected:
     /// MuonTileID identifying the Unit
     LHCb::MuonTileID m_mid;
@@ -93,6 +97,12 @@ namespace L0Muon {
     
     /// Utility for XML decoding: get the child Unit from the given node
     void unitFromNode(DOMNode* pNode);
+
+  private:
+
+    /// Pointer to the pt Look Up Table
+    L0MPtLUT * m_plut;
+
   };
 
 };  // namespace L0Muon

@@ -2,7 +2,7 @@
 
 #include "L0MuonKernel/CoreUnit.h"
 #include "L0MuonKernel/MuonTriggerUnit.h"
-
+#include "L0MuonKernel/L0MPtLUT.h"
 
 L0Muon::CoreUnit::CoreUnit() {
 }
@@ -11,6 +11,7 @@ L0Muon::CoreUnit::CoreUnit(LHCb::MuonTileID id):L0MUnit(id) {
 }
     
 L0Muon::CoreUnit::CoreUnit(DOMNode* pNode):L0MUnit(pNode) {  
+
   m_tower = Tower();
   m_ignoreM1 = false;
 }
@@ -524,15 +525,17 @@ std::vector<L0Muon::PMuonCandidate> L0Muon::CoreUnit::process(int xfoiM1,int xfo
 
   return candidates;
   
-  
 }
-
 
 void L0Muon::CoreUnit::postexecute() {
   releaseInputRegisters();
   releaseOutputRegisters();
 }
 
-
+void L0Muon::CoreUnit::setLUTPointer(L0MPtLUT * plut)
+{
+  m_tower.setLUTPointer(plut);
+  L0MUnit::setLUTPointer(plut);
+}
 
 

@@ -47,7 +47,9 @@ namespace L0Muon {
   void xyFromPad(LHCb::MuonTileID pad, double& x, double& y,int procVersion=-1);
 
   /// Used to compute PT (Tower::processTower and L0MuonOutputs::l0muoncandidate).
-  std::vector<double> kine(LHCb::MuonTileID p1, LHCb::MuonTileID p2,int procVersion=-1, bool debug=false);
+  //std::vector<double> kine(LHCb::MuonTileID p1, LHCb::MuonTileID p2,int procVersion=-1, bool debug=false);
+  std::vector<double> kine(LHCb::MuonTileID p1, LHCb::MuonTileID p2,int procVersion=-1, bool debug=false,\
+                           double x1=0., double y1=0., double z1=0., double x2=0., double y2=0., double z2=0.);
   std::vector<double> kineV0(LHCb::MuonTileID p1, LHCb::MuonTileID p2, bool debug=false);
   
   /// Used to encode PT (Tower::processTower).
