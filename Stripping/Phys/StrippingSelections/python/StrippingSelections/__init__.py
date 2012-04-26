@@ -175,6 +175,9 @@ import StrippingTau23MuLines
 import StrippingLFVLines
 import StrippingBu2K1MuMu
 
+import StrippingDstarD2hhpi0
+import StrippingD2XGamma
+
 from sys import modules as _modules
 _this = _modules[__name__]
 

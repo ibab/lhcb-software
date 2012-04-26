@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-04-26 - Anton Poluektov 
+ - Fix typos in python/StrippingSelections/StrippingB2Kphiphi.py
+ - Add new builders to __init__.py
+
 ! 2012-04-26 - Evelina Gersabeck
  - StrippingBu2K1MuMu.py
    - A few minor modifications to improve the timing.
@@ -72,7 +76,7 @@
 - Add loose GEC (number of long tracks) to all lines.
 - Tighter mass window for the D0->hhhh lines.
 
-! 2012-04-24 Olivier Deschamps for Régis Lefèvre
+! 2012-04-24 Olivier Deschamps for R??gis Lef??vre
 	- update B2HHPi0.py & D02KPiPi0.py
 
 ! 2012-04-23 Fatima Soomro

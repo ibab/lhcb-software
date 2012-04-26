@@ -32,10 +32,10 @@ config_params = {
     #K parameters
     'K_PT'                    : 400.,          # tutaj sie zgadza z moim davinci
     'K_IPCHI2'                : 6.25,
-    'K_TRCHI2'                : 3.3       # tautaj dodałem ciecie na track_chi2
+    'K_TRCHI2'                : 3.3,       # tautaj doda??em ciecie na track_chi2
     
     #phi1 parameters
-         #tylko raz chyba można dac ciecia wiec wybieram ciasniejsze
+    #tylko raz chyba mo??na dac ciecia wiec wybieram ciasniejsze
     'phi_VDZ'                 : 0.,
     'phi_PT'                  : 300,             ## tutaj bez zmian
     'phi_IPCHI2'              : 6.,
@@ -46,14 +46,14 @@ config_params = {
  
     #B parameters
     'B_ADAMASS'              : 500.,
-    'B_DIRA'                 : 0.999
+    'B_DIRA'                 : 0.999, 
     'B_IPCHI2'               : 12.25,   # tutaj w offline selection jest 25
     'B_VCHI2_VDOF'           : 16.,
     'B_LTCHI2'               : 64.,
     'B_VDZ'                  : 0.
 
     }
-# Podsumowanie jest dodane ostrzejsze Cięcie na track <5, teraz chyba będzie trzeba napisać od początku DAVINCI i TMVA
+# Podsumowanie jest dodane ostrzejsze Ci??cie na track <5, teraz chyba b??dzie trzeba napisa?? od pocz??tku DAVINCI i TMVA
 
 
 
