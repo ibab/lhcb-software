@@ -36,6 +36,10 @@ class CondDB(ConfigurableUser):
                   "HeartBeatCondition" : "/Conditions/Online/LHCb/Tick",
                   "UseLatestTags" : [],
                   "QueryGranularity" : 0,
+                  "UseDBSnapshot"     : False ,
+                  "DBSnapshotDirectory" : "/group/online/hlt/conditions" ,
+                  "PartitionName" : "LHCb" ,
+                  'EnableRunChangeHandler' : False
                   }
     _propertyDocDct = {
                        'Tags' : """ Dictionary of tags (partition:tag) to use for the COOL databases """,
@@ -267,10 +271,56 @@ class CondDB(ConfigurableUser):
             accsvc.CondDBReader = self.__make_sqlite_local_copy__(reader, local_dir)
         return newaccsvc
 
+    def _configureDBSnapshot(self):
+        
+        baseloc = self.getProp( "DBSnapshotDirectory" )
+        # hack to allow us to change connectionstrings...
+        self.UseOracle = True             # needed?
+        self.DisableLFC = True
+
+        # Set alternative connection strings and tags
+        # if simulation is False, we use DDDB, LHCBCOND and ONLINE
+        #                  True          DDDB, SIMCOND
+        # (see Det/DetCond's configurable... )
+        dbPartitions = { False : [ "DDDB", "LHCBCOND", "ONLINE" ]
+                       , True :  [ "DDDB", "SIMCOND" ]
+                       }
+
+        tag = self.getProp("Tags")
+        for part in dbPartitions[ self.getProp('Simulation') ] :
+            if tag[part] is 'default' : raise KeyError('must specify an explicit %s tag'%part)
+            self.PartitionConnectionString[part] = "sqlite_file:%(dir)s/%(part)s_%(tag)s.db/%(part)s" % {"dir":  baseloc,
+                                                                                                           "part": part,
+                                                                                                           "tag":  tag[part]}
+            # always use HEAD -- blindly trust the snapshot to be
+            # right (this is faster, but less safe)
+            # conddb.Tags[part] = 'HEAD'
+            self.Tags[part] = tag[part]
+
+        # Set the location of the Online conditions
+        from Configurables import MagneticFieldSvc
+        MagneticFieldSvc().UseSetCurrent = True
+
+        if self.getProp('EnableRunChangeHandler') : 
+            online_xml = '%s/%s/online_%%d.xml' % (baseloc, self.getProp('PartitionName')[0:4] )
+            from Configurables import RunChangeHandlerSvc
+            rch = RunChangeHandlerSvc()
+            rch.Conditions = { "Conditions/Online/LHCb/Magnet/Set"        : online_xml
+                             , "Conditions/Online/Velo/MotionSystem"      : online_xml
+                             , "Conditions/Online/LHCb/Lumi/LumiSettings" : online_xml
+                             , "Conditions/Online/LHCb/RunParameters"     : online_xml
+                             , "Conditions/Online/Rich1/R1HltGasParameters" : online_xml
+                             , "Conditions/Online/Rich2/R2HltGasParameters" : online_xml
+                             }
+            ApplicationMgr().ExtSvc.append(rch)
+
     def __apply_configuration__(self):
         """
         Converts the high-level information passed as properties into low-level configuration.
         """
+        # special case for online
+        if self.getProp('UseDBSnapshot') : self._configureDBSnapshot()
+
         # Set the usage of the latest global tag and (optionally) all available
         # local tags which exist on top of it
         if self.getProp("UseLatestTags"):
@@ -570,3 +620,5 @@ def configureOnlineSnapshots(start = None, end = None, connStrFunc = None):
     until = 0x7fffffffffffffffL # Defined in PyCool.cool as ValidityKeyMax
     descr = "'%s':(%d,%d)" % ( accSvc.getFullName(), since, until )
     ONLINE.Readers.append(descr)
+
+    
