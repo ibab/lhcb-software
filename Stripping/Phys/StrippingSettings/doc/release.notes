@@ -4,6 +4,12 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-04-27 - Jibo He
+ - Stripping19/LineConfigDictionaries_BandQ.py
+   . Update conf dict of B2psiX
+   . Comment out TwoBodyPrompt
+ - Updated Stripping19 dbase 
+
 ! 2012-04-26 - Thomas Blake
  - Update to K1 mu mu dictionary in LineConfigDictionaries_RD
 
@@ -62,7 +68,7 @@
 
 ! 2012-04-19 - Jibo He
  - Stripping19
-	. Removed lines of ICEHP stream 
+  . Removed lines of ICEHP stream 
 
 !========================= StrippingSettings v2r12 2012-04-01 ===================
 ! 2012-04-01 - Jibo He
