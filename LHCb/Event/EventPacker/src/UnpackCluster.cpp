@@ -28,6 +28,7 @@ DECLARE_ALGORITHM_FACTORY( UnpackCluster )
   declareProperty( "InputName" , m_inputName = LHCb::PackedClusterLocation::Default );
   declareProperty( "Extension",  m_extension = "" );
   declareProperty( "AlwaysCreateOutput", m_alwaysOutput = false );
+  //setProperty( "OutputLevel", 1 );
 }
 
 //=============================================================================
@@ -96,6 +97,8 @@ StatusCode UnpackCluster::execute()
       bool high = ( id & 0x10 ) != 0;
       const LHCb::VeloLiteCluster vl( vId, frac, size, high );
       LHCb::VeloCluster* vCl = new LHCb::VeloCluster( vl, adcs );
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << " Unpacked " << vCl->channelID() << endmsg;
       vClus->insert( vCl, vCl->channelID() );
     } 
     else if ( 2 == det || 3 == det )
@@ -121,6 +124,8 @@ StatusCode UnpackCluster::execute()
         {
           itClus->insert( sCl, sCl->channelID() );
         }
+        if ( msgLevel(MSG::VERBOSE) )
+          verbose() << " Unpacked " << sCl->channelID() << endmsg;
       } 
       else 
       {
