@@ -4,8 +4,11 @@ Package Coordinator: P. Koppenburg, Gerhard Raven
 Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger
+	 
+</PRE><H1><A NAME=v15r1>2012-04-26 HltSys v15r1</A></H1><PRE>
+Version for may 2012 datataking with tuned p/pt/chi2 cuts.
 
-</PRE><H1><A NAME=v14r5>2012-04-24 HltSys v14r5</A></H1><PRE>
+</PRE><H1><A NAME=v15r0>2012-04-24 HltSys v15r0</A></H1><PRE>
 Tune chi2 cuts. Subscribe CharmCalibrationNoBias to ODIN Nobias. 
 Prescale Hlt1MBNoBias by 10.
 
