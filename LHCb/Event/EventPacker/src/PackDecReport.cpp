@@ -47,10 +47,20 @@ StatusCode PackDecReport::execute()
   if ( !m_alwaysOutput && 
        !exist<LHCb::HltDecReports>(m_inputName) ) return StatusCode::SUCCESS;
 
-  LHCb::HltDecReports* reports = getOrCreate<LHCb::HltDecReports,LHCb::HltDecReports>( m_inputName );
+  // Create the output output
+  if ( exist<LHCb::PackedDecReport>(m_outputName) )
+  {
+    // Need for use case of uDST writing from DSTS...
+    return Warning( "Packed DecReports already exist at '" + 
+                    m_outputName + "' -> Packing aborted", StatusCode::SUCCESS );
+  }
   LHCb::PackedDecReport* out = new LHCb::PackedDecReport();
   put( out, m_outputName );
 
+  // Get the input
+  LHCb::HltDecReports* reports = getOrCreate<LHCb::HltDecReports,LHCb::HltDecReports>( m_inputName );
+
+  // loop and pack
   for ( LHCb::HltDecReports::Container::const_iterator itR = reports->decReports().begin();
         reports->decReports().end() != itR; ++itR) 
   {
