@@ -490,16 +490,16 @@ BuToK1MuMu = {
 Z02TauTauProng = {
     'BUILDERTYPE'  : 'Z02TauTauProngConf',
     'CONFIG'       : {
-                 'Z2TauTau_Prong_LinePrescale'  : 1.0,
-                 'Z2TauTau_Prong_LinePostscale' : 1.0,
-                 'TAU_MASS_LOW'                 : '600.0',    # MeV/c2
-                 'TAU_MASS_HIGH'                : '1600.0',   # MeV/c2
-                 'Z_MASS_LOW'                   : '45000.0',  # MeV/c2
-                 'PT_HAD_MIN'                   : '1000',     # MeV/c
-                 'TRACKCHI2_HAD_MAX'            : '10',       # dl
-                 'PT_TAU_MIN'                   : '8000',     # MeV/c
-                 'VCHI2_TAU_MAX'                : '20'        # dl
-                 },
+    'Z2TauTau_Prong_LinePrescale'  : 1.0,
+    'Z2TauTau_Prong_LinePostscale' : 1.0,
+    'TAU_MASS_LOW'                 : '600.0',    # MeV/c2
+    'TAU_MASS_HIGH'                : '1600.0',   # MeV/c2
+    'Z_MASS_LOW'                   : '45000.0',  # MeV/c2
+    'PT_HAD_MIN'                   : '1500',     # MeV/c
+    'TRACKCHI2_HAD_MAX'            : '10',       # dl
+    'PT_TAU_MIN'                   : '8000',    # MeV/c
+    'VCHI2_TAU_MAX'                : '20'        # dl
+    },
     'WGs' : [ 'RD' ],
     'STREAMS' : [ 'EW' ]
     }
