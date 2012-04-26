@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-04-026 - Mika Vesterinen
+ - Stripping 19: LineConfigDictionaries_Semileptonic.py
+   + timing improvements to CharmFromBSemi lines
+
 ! 2012-04-26 - Thomas Blake
  - Updated B2XMuMu in LineConfigDictionaries_RD.py
  - Fixed formatting issues in LineConfigDictionaries_Charm.py
