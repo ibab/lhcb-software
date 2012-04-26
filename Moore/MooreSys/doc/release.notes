@@ -3,6 +3,9 @@ Package     : MooreSys
 Package Coordinator : E. van Herwijnen
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v14r1>2012-04-26 Moore v14r1</A></H1><PRE>
+For May 2012 data taking.
+
 </PRE><H1><A NAME=v13r4p1>2012-04-20 Moore v13r4p1</A></H1><PRE>
 As v13r4, with Physics_May2012 settings and improved 
 Hlt2InclusiveDiMuonLines.py
