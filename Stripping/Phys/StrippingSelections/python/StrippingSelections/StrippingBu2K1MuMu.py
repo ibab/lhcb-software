@@ -55,13 +55,16 @@ Stripping_BuToK1MuMu_TestDictonary = {
     'Dimu_Dau_MaxIPCHI2'  : 9.0,
     
     # Track cuts
-    'Track_CHI2nDOF'      :    5.0,
+    'Track_CHI2nDOF'      :    2.5,
  
     # Hadron cuts
-    'Hadron_MinIPCHI2'    :    9.0,
+    'Hadron_MinIPCHI2'    :    16.0,
+    'Hadron_PT'           :    500,
+    'K_PIDK_min'          :      0,
+    'pi_PIDK_max'        :      5,
 
     # Muon cuts
-    'Muon_MinIPCHI2'      :    9.0,
+    'Muon_MinIPCHI2'      :    16.0,
     'Muon_IsMuon'         :   False,
     'MuonNoPIDs_PIDmu'    :    0.0
     }
@@ -117,6 +120,9 @@ class StrippingBuToK1MuMuConf(LineBuilder):
         
         # Hadron cuts
         'Hadron_MinIPCHI2',
+        'Hadron_PT',         
+        'K_PIDK_min',         
+        'pi_PIDK_max',       
         
         # Muon cuts
         'Muon_MinIPCHI2',
@@ -129,6 +135,10 @@ class StrippingBuToK1MuMuConf(LineBuilder):
         Requires a configuration dictionary, config, which must provide all the settings for cuts which are not hard coded'''
         
         LineBuilder.__init__(self, name, config)
+
+ #       _globalEventCuts = (
+ #           "(recSummary (LHCb.RecSummary.nLongTracks, 'Rec/Track/Long') < 800 )"
+ #           ) % config
         
         self.name = name
         
@@ -163,12 +173,13 @@ class StrippingBuToK1MuMuConf(LineBuilder):
         self.DiMuonCut = DaughterCuts + " & (BPVVDCHI2 > %(Dimu_FlightChi2)s) & " \
                          "(MAXTREE(ISBASIC,MIPCHI2DV(PRIMARY))> %(Dimu_Dau_MaxIPCHI2)s )" %config
         
-        TrackCuts = "(TRCHI2DOF < %(Track_CHI2nDOF)s)" %config
+        TrackCuts = "(TRCHI2DOF < %(Track_CHI2nDOF)s) " %config
         
-        HadronCuts = "(MIPCHI2DV(PRIMARY) > %(Hadron_MinIPCHI2)s)" %config
+        HadronCuts = "(MIPCHI2DV(PRIMARY) > %(Hadron_MinIPCHI2)s)&"\
+                     "(PT > %(Hadron_PT)s * MeV)" %config
         
-        self.KaonCut = TrackCuts + " & " + HadronCuts
-        self.PionCut = TrackCuts + " & " + HadronCuts
+        self.KaonCut = TrackCuts + " & " + HadronCuts #+ "& (PIDK > %(K_PIDK_min)s)" %config
+        self.PionCut = TrackCuts + " & " + HadronCuts #+ "& (PIDK < %(pi_PIDK_max)s)" %config
         
         self.MuonCut = TrackCuts + " & (MIPCHI2DV(PRIMARY) > %(Muon_MinIPCHI2)s)" %config
         
@@ -266,10 +277,14 @@ class StrippingBuToK1MuMuConf(LineBuilder):
                
         MyStdKaons = None
         
+
         if(UseNoPIDsHadrons == True):
             MyStdKaons = StdAllNoPIDsKaons
         else:
             MyStdKaons = StdAllLooseKaons
+
+#just a test
+#        MyStdKaons = StdAllLooseKaons
             
         from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
         FilterKaon = FilterDesktop()
@@ -292,9 +307,10 @@ class StrippingBuToK1MuMuConf(LineBuilder):
         '''
         
         from StandardParticles import StdAllNoPIDsPions, StdAllNoPIDsKaons, StdAllLooseKaons, StdAllLoosePions
-        
+
+        #just a test!!!!!
         _requires =  [StdAllNoPIDsKaons, StdAllNoPIDsPions] if UseNoPIDsParticles else [StdAllLooseKaons, StdAllLoosePions] 
-        
+        #_requires = [StdAllLooseKaons, StdAllLoosePions]         
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         CombineK1 = CombineParticles()
         

@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-04-26 - Evelina Gersabeck
+ - StrippingBu2K1MuMu.py
+   - A few minor modifications to improve the timing.
+     PT cut for the hadrons (>500MeV), track chi2 < 2.5, IPCHI > 16 
 
 ! 2012-04-26 - Benoit Viaud
  - StrippingD2XMuMuSS.py
