@@ -47,7 +47,7 @@
 	  argList="int key"
 	  explicit = "TRUE"
 	  desc="create a vertex with a selected key"
-	  initList="KeyedObject&lt;int&gt;( key ), m_position(0.0, 0.0, -1*Gaudi::Units::km), m_covMatrix(), m_chi2(-1.0), m_nDoF(-1), m_extraInfo()"
+	  initList="KeyedObject&lt;int&gt;( key ), m_position(0.0, 0.0, -100*Gaudi::Units::m), m_covMatrix(), m_chi2(-1.0), m_nDoF(-1), m_extraInfo()"
 	  />
       
       <constructor
@@ -90,7 +90,7 @@
         name="position"
         desc="Position in LHCb reference system"
         type="Gaudi::XYZPoint"
-        init="0.0, 0.0, -1*Gaudi::Units::km"
+        init="0.0, 0.0, -100*Gaudi::Units::m"
 	/>
 
       <attribute
@@ -213,8 +213,18 @@
         </code>
       </method>
 
+      <method 
+         name    = "fillStream" 
+         desc    = "Print this Particle in a human readable way"
+         type    = "std::ostream&amp;" 
+         virtual = "FALSE" 
+         const   = "TRUE">
+         <arg 
+           type = "std::ostream" 
+           name = "s"/>
+      </method>
+
     </class>
   </package>
-
 
 </gdd>

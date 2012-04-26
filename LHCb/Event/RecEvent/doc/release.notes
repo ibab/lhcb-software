@@ -4,6 +4,11 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+! 2012-04-26 - Chris Jones
+ - Improvements to the fillStream methods for VertexBase
+ - Change the default initialisation for VertexBase::position from
+   (0,0,-1*km) to (0,0,-100*m) to avoid packing truncation issues.
+
 ! 2012-04-12 - Chris Jones
  - Improvements to the fillStream methods for CaloPosition and CaloHypo
 
