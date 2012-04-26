@@ -18,7 +18,7 @@ def __update_conf__( current, extra ) :
                 cur[k] = v
             print 'result: %s' % cur[k]
 
-class Physics_May2012( object ):
+class Physics_MayBU2012( object ):
     """
     Settings for 2012 running.
 
@@ -41,11 +41,11 @@ class Physics_May2012( object ):
             raise RuntimeError( 'Must update HltType when modifying ActiveHlt.Lines()' )
         
     def L0TCK(self) :
-        return '0x003C'
+        return '0x003D'
 
     def HltType(self) :
-        self.verifyType( Physics_May2012 ) 
-        return          'Physics_May2012'
+        self.verifyType( Physics_MayBU2012 ) 
+        return          'Physics_MayBU2012'
     
     def Thresholds(self) :
         """

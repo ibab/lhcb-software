@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================= HltSettings v5r31 2012-04-26 =========================
+! 2012-04-26 -  E. van Herwijnen
+ - Physics_May2012.py to use L0 3C and Physics_MayBU2012.py L0 3D
+
 !========================= HltSettings v5r30 2012-04-26 =========================
 ! 2012-04-26 -  V. Gligorov
  - Loosen Topo link to 1Track explicitly to 1700/16/2.0
