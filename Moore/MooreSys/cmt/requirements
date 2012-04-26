@@ -1,5 +1,5 @@
 package MooreSys
-version v14r1
+version v14r1p1
 branches doc cmt
 
 #=======================================================
@@ -9,6 +9,8 @@ branches doc cmt
 use  Moore               v14r1       Hlt
 use  IndependenceTests   v1r2p1      Hlt
 
+#get the right HltSettings
+use  HltSettings         v5r32       Hlt
 
 # Bug fixes on top of LHCb v34r2 release stack
 use VeloDet       v13r18p1 Det
