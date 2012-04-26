@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-04-26 - Marianna Fontana
+ - StrippingBs2KSKS.py
+   - Fixed a small bug in syntax
+
+
 ! 2012-04-26 - Thomas Blake
  - Removed same sign combiantions and upadted combinatorics to re-use rho 
 	 for K* and Lambda* for B2XMuMu stripping line. 
