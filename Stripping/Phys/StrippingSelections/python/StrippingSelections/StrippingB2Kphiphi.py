@@ -30,25 +30,25 @@ config_params = {
     'Prescale'                : 1.0 ,
     'Postscale'               : 1.0 ,
     #K parameters
-    'K_PT'                    : 300.,          # tutaj sie zgadza z moim davinci
-    'K_IPCHI2'                : 6.,
-    'K_TRCHI2'                : 5.0,       # tautaj dodałem ciecie na track_chi2
+    'K_PT'                    : 400.,          # tutaj sie zgadza z moim davinci
+    'K_IPCHI2'                : 6.25,
+    'K_TRCHI2'                : 3.,       # tautaj dodałem ciecie na track_chi2
     
     #phi1 parameters
          #tylko raz chyba można dac ciecia wiec wybieram ciasniejsze
     'phi_VDZ'                 : 0.,
-    'phi_PT'                  : 300.,             ## tutaj bez zmian
+    'phi_PT'                  : 350.,             ## tutaj bez zmian
     'phi_IPCHI2'              : 6.,
-    'phi_VCHI2_VDOF'          : 25.,
-    'phi_MM_max'              : 1070., # delta masy(ta zmiana)
+    'phi_VCHI2_VDOF'          : 16.,
+    'phi_MM_max'              : 1060., # delta masy(ta zmiana)
     'phi_MM_min'              : 980.,
 
  
     #B parameters
     'B_ADAMASS'              : 500.,
-    'B_DIRA'                 : 0.999,
+    'B_DIRA'                 : 0.9995,
     'B_IPCHI2'               : 12.25,   # tutaj w offline selection jest 25
-    'B_VCHI2_VDOF'           : 25.,
+    'B_VCHI2_VDOF'           : 16.,
     'B_LTCHI2'               : 64.,
     'B_VDZ'                  : 0.
 
@@ -147,7 +147,7 @@ def makeKaons (
     K_IPCHI2
     ):
 
-    _code = "(PT>%(K_PT)s*MeV) & (TRCHI2DOF<%(K_TRCHI2)s) & (MIPCHI2DV(PRIMARY)>%(K_IPCHI2)s)" %locals()
+    _code = "(PIDK  - PIDpi > -2.  )  &  (PT>%(K_PT)s*MeV) & (TRCHI2DOF<%(K_TRCHI2)s) & (MIPCHI2DV(PRIMARY)>%(K_IPCHI2)s)" %locals()
     _kaonsFilter = FilterDesktop(Code = _code)
     _stdKaons = DataOnDemand(Location = "Phys/StdLooseKaons/Particles")
 

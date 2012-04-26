@@ -14,11 +14,62 @@ DefaultTrackingCuts().Cuts  = { "Chi2Cut" : [ 0, 3 ],
 from StrippingConf.StrippingStream import StrippingStream
 stream = StrippingStream("Test")
 
-from StrippingSelections.StrippingDiMuonNew import DiMuonConf as dummy_builder
-from StrippingSelections.StrippingDiMuonNew import config_default
 
-dlb = dummy_builder('DiMuon',config_default)
+
+from StrippingSelections.StrippingBs2ChicPhi_Chic2KKPiPi import Bs2ChicPhi_Chic2KKPiPiConf as builder
+from StrippingSelections.StrippingBs2ChicPhi_Chic2KKPiPi import config_params as config_params0
+
+lb0 = builder('Bs2ChicPhi_Chic2KKPiPi',config_params0)
+
+
+
+
+from StrippingSelections.StrippingB2EtacKst import B2EtacKstConf as builder
+from StrippingSelections.StrippingB2EtacKst import config_params as config_params1
+
+lb1 = builder('B2ChicKst',config_params1)
+
+
+
+# tutaj wszystko z Chic
+
+from StrippingSelections.StrippingBs2EtacPhi import Bs2EtacPhiConf as builder
+from StrippingSelections.StrippingBs2EtacPhi import config_params as config_params01
+
+lb01 = builder('Bs2EtacPhi',config_params01)
+
+from StrippingSelections.StrippingB2EtacKst import B2EtacKstConf as builder
+from StrippingSelections.StrippingB2EtacKst import config_params as config_params02
+
+lb02 = builder('B2EtacKst',config_params02)
+
+
+
+
+
+
+stream.appendLines( lb0.lines() )
+stream.appendLines( lb1.lines() )
+stream.appendLines( lb01.lines() )
+stream.appendLines( lb02.lines() )
+
+
+
+
+
+
+
+
+
+from StrippingSelections.StrippingB2Kphiphi import B2KPhiPhiConf as dummy_builder
+from StrippingSelections.StrippingB2Kphiphi import config_params
+
+dlb = dummy_builder('B2KPhiPhi',config_params)
 stream.appendLines( dlb.lines() )
+
+
+
+
 
 from Configurables import  ProcStatusCheck
 filterBadEvents =  ProcStatusCheck()
