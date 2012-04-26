@@ -403,11 +403,11 @@ BsPhiRho = {
                  'PRResMinPT'     : 900.,
                  'PRResMinP'      : 1.,
                  'PRResMaxMass'   : 4000.,
-                 'PRResVtxChiDOF' : 25.,
+                 'PRResVtxChiDOF' : 9.,
                  'PRBMinM'        : 5000.,
                  'PRBMaxM'        : 5600.,
                  'PRPhiWindow'    : 25.,
-                 'PRBVtxChi2DOF'  : 25.,
+                 'PRBVtxChi2DOF'  : 9.,
                  'PRIPCHI2' : 25
                  },
     'STREAMS' : [ 'Bhadron' ]
@@ -422,10 +422,10 @@ Bs2Q2Body4K = {
                      'Q2BResMinPT'     : 900.,
                      'Q2BResMinP'      : 1.,
                      'Q2BResMaxMass'   : 2500.,
-                     'Q2BResVtxChiDOF' : 14.,
-                     'Q2BBMinM'        : 5000.,
-                     'Q2BBMaxM'        : 5600.,
-                     'Q2BBVtxChi2DOF'  : 14.,
+                     'Q2BResVtxChiDOF' : 9.,
+                     'Q2BBMinM'        : 5200.,
+                     'Q2BBMaxM'        : 5500.,
+                     'Q2BBVtxChi2DOF'  : 9.,
                      'Q2BIPCHI2' : 25
                     },
     'STREAMS'     : ['Bhadron']
