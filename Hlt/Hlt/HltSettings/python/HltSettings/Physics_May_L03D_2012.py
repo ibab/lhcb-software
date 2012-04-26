@@ -20,7 +20,7 @@ def __update_conf__( current, extra ) :
 
 from Physics_May2012 import Physics_May2012
 
-class Physics_May_L03D_2012( Physics_May_L03D_2012 ):
+class Physics_May_L03D_2012( Physics_May2012 ):
     """
     Settings for 2012 running.
 
