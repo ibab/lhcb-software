@@ -78,7 +78,7 @@ NoPIDDstarWithD02RSKPi = {
     , 'KK_WrongMass'     : 25 * MeV       ## MeV (3 sigma veto)
     , 'PiPi_WrongMass'   : 25 * MeV       ## MeV (3 sigma veto)
     ##
-    , 'Prescale'         : 0.482          ## unitless
+    , 'Prescale'         : 0.90           ## unitless
     , 'Postscale'        : 1.00           ## unitless
     ##
     , 'Monitor'          : False           ## Activate the monitoring?

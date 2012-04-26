@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-04-26 - Andrew Powell
+ - Stripping19: Updates to LineConfigDictionaries_Calib.py
+
 ! 2012-04-26 - Mat Charles
  - Stripping19: LineConfigDictionaries_Charm.py
     + Updates of D(s)+ -> h mu mu lines from Benoit to control CPU
