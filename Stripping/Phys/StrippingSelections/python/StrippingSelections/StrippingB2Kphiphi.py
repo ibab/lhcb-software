@@ -32,12 +32,12 @@ config_params = {
     #K parameters
     'K_PT'                    : 400.,          # tutaj sie zgadza z moim davinci
     'K_IPCHI2'                : 6.25,
-    'K_TRCHI2'                : 3.,       # tautaj dodałem ciecie na track_chi2
+    'K_TRCHI2'                : 3.3       # tautaj dodałem ciecie na track_chi2
     
     #phi1 parameters
          #tylko raz chyba można dac ciecia wiec wybieram ciasniejsze
     'phi_VDZ'                 : 0.,
-    'phi_PT'                  : 350.,             ## tutaj bez zmian
+    'phi_PT'                  : 300,             ## tutaj bez zmian
     'phi_IPCHI2'              : 6.,
     'phi_VCHI2_VDOF'          : 16.,
     'phi_MM_max'              : 1060., # delta masy(ta zmiana)
@@ -46,7 +46,7 @@ config_params = {
  
     #B parameters
     'B_ADAMASS'              : 500.,
-    'B_DIRA'                 : 0.9995,
+    'B_DIRA'                 : 0.999
     'B_IPCHI2'               : 12.25,   # tutaj w offline selection jest 25
     'B_VCHI2_VDOF'           : 16.,
     'B_LTCHI2'               : 64.,
