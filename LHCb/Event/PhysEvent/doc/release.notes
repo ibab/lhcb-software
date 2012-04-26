@@ -2,6 +2,10 @@
 ! Responsible : P. Koppenburg, J.P. Palacios
 !----------------------------------------------------------------------------
 
+! 2012-04-26 - Chris Jones
+ - Provide a custom fillStream method for the Particle and Vertex class, 
+   improving on the default G.O.D. generated ones.
+
 ! 2012-04-24 - Chris Jones
  - Change default initialisation value for the reference point in the
    Particle class from (0,0,-1km) to (0,0,-100m), to be within the range the

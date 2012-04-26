@@ -27,3 +27,25 @@ Gaudi::SymMatrix7x7 LHCb::Particle::covMatrix() const
 }
 
 //=============================================================================
+
+std::ostream& LHCb::Particle::fillStream(std::ostream& s) const
+{
+  s << "{ " 
+    << "particleID      : " << m_particleID << std::endl
+    << "measuredMass    : " << m_measuredMass << std::endl
+    << "measuredMassErr : " << m_measuredMassErr << std::endl
+    << "momentum        : " << m_momentum << std::endl
+    << "referencePoint  : " << m_referencePoint << std::endl
+    << "momCovMatrix    : " << std::endl << m_momCovMatrix << std::endl
+    << "posCovMatrix    : " << std::endl << m_posCovMatrix << std::endl
+    << "posMomCovMatrix : " << std::endl << m_posMomCovMatrix << std::endl
+    << "extraInfo       : ["; 
+  for ( ExtraInfo::const_iterator i = extraInfo().begin();
+        i != extraInfo().end(); ++i )
+  {
+    const LHCb::Particle::additionalInfo info =
+      static_cast<LHCb::Particle::additionalInfo>(i->first);
+    s << " " << info << "=" << i->second;
+  }
+  return s << " ] }";
+}

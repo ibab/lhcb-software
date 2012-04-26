@@ -122,14 +122,25 @@
         >
 	<code>
 	 std::vector&lt;const LHCb::Particle*&gt; out;
-	  for (SmartRefVector&lt;LHCb::Particle&gt;::const_iterator i=m_outgoingParticles.begin();
-	  i!=m_outgoingParticles.end();++i){
-	  out.push_back(*i);
+	  for ( SmartRefVector&lt;LHCb::Particle&gt;::const_iterator i = m_outgoingParticles.begin();
+	        i != m_outgoingParticles.end(); ++i ) 
+          {
+	    out.push_back(*i);
 	  }
 	  return out;
 	</code>
       </method>
 
+      <method 
+         name    = "fillStream" 
+         desc    = "Print this Particle in a human readable way"
+         type    = "std::ostream&amp;" 
+         virtual = "FALSE" 
+         const   = "TRUE">
+         <arg 
+           type = "std::ostream" 
+           name = "s"/>
+      </method>
 
     </class>
   </package>
