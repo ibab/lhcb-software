@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-04-26 - Mat Charles
+ - Stripping19: LineConfigDictionaries_Charm.py
+    + Re-included cross-section lines from Stripping18
+
 ! 2012-04-26 - Will Barter
  - Stripping 19: LineConfigDictionaries_QEE.py
     + Update to DisplVertices lines to reduced timing.
