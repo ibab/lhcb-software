@@ -10,7 +10,7 @@ from Gaudi.Configuration  import *
 import GaudiKernel.ProcessJobOptions
 from Configurables import ( LHCbConfigurableUser, LHCbApp, RecSysConf, TrackSys,
                             RecMoniConf,GaudiSequencer, RichRecQCConf, DstConf,
-                            LumiAlgsConf, L0Conf, GlobalRecoChecks )
+                            LumiAlgsConf, L0Conf, GlobalRecoChecks, CondDB )
 
 ## @class Brunel
 #  Configurable for Brunel application
@@ -73,6 +73,10 @@ class Brunel(LHCbConfigurableUser):
        ,"RawBanksToKill"  : None
        ,"CaloPhotonChecker" : False
        ,"VetoHltErrorEvents" : True
+        # only use for Online running
+       ,"UseDBSnapshot" : False
+       ,"PartitionName" : "LHCb"
+       ,"DBSnapshotDirectory" : "/group/online/hlt/conditions"
         }
 
 
@@ -109,7 +113,11 @@ class Brunel(LHCbConfigurableUser):
        ,'RawBanksToKill':""" Raw banks to remove from RawEvent before processing. Removed also from DST copy of RawEvent """
        ,'CaloPhotonChecker':""" Temporary workaround to bug #73392 """
        ,"VetoHltErrorEvents" : """Do not reconstruct events that have been flagged as error by Hlt"""
-       }
+        # only use for Online running
+        ,"UseDBSnapshot" : """Use a snapshot for velo position and rich pressure"""
+        ,"PartitionName" : """Name of the partition when running (needed to find DB: '', 'FEST', or 'LHCb'"""
+        ,"DBSnapshotDirectory" : """Local Directory where the snapshot is"""
+        }
 
     KnownInputTypes  = [ "MDF",  "DST", "SDST", "XDST", "DIGI" ]
     KnownHistograms  = [ "None", "Online", "OfflineExpress", "OfflineFull", "Expert" ]
@@ -174,7 +182,7 @@ class Brunel(LHCbConfigurableUser):
 
 
         # Flag to handle or not LumiEvents
-        handleLumi = inputType in ["MDF"] and not withMC
+        handleLumi = inputType in ["MDF"] and not withMC and not self.getProp('UseDBSnapshot')
 
         # veto Hlt Error Events
         vetoHltErrorEvents = self.getProp("VetoHltErrorEvents")
@@ -612,10 +620,40 @@ class Brunel(LHCbConfigurableUser):
                 self.setOtherProps(GlobalRecoChecks(),["OutputType"])
                 GlobalRecoChecks().Sequencer = GaudiSequencer("CheckPROTOSeq")
 
+    def _configureDBSnapshot(self):
+        """
+        Configure the database to use the online snapshot
+        """
+        tag = { "DDDB":     self.getProp('DDDBtag')
+                , "LHCBCOND": self.getProp('CondDBtag')
+                , "SIMCOND" : self.getProp('CondDBtag') 
+                , "ONLINE"  : 'fake'
+                }
+
+        cdb = CondDB()
+        cdb.Tags = tag
+        cdb.setProp('IgnoreHeartBeat', True)
+        cdb.setProp('EnableRunChangeHandler', True)
+        self.setOtherProps( cdb, [ 'UseDBSnapshot',
+                                   'DBSnapshotDirectory',
+                                   'PartitionName' ])
+
+        print "# WARNING using hack https://savannah.cern.ch/task/index.php?27329#comment45"
+        from Configurables import RichRecSysConf
+        rConf = RichRecSysConf("RichOfflineRec")
+        rConf.Context = "HLT"
+        from Configurables import RichRecQCConf
+        rMoni = RichRecQCConf("OfflineRichMoni")
+        rMoni.Context = "HLT"
+
     ## Apply the configuration
     def __apply_configuration__(self):
 
         GaudiKernel.ProcessJobOptions.PrintOff()
+
+        # database hacking for online
+        if self.getProp('UseDBSnapshot') : self._configureDBSnapshot()
+
         self.defineGeometry()
         self.defineEvents()
         self.defineOptions()
