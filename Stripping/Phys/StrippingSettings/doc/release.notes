@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-04-26 - Thomas Blake
+ - Update to K1 mu mu dictionary in LineConfigDictionaries_RD
+
 ! 2012-04-26 - Andrew Powell
  - Stripping19: Updates to LineConfigDictionaries_Calib.py
 
