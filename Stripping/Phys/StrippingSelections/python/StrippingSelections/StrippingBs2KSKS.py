@@ -148,7 +148,7 @@ class Bs2KSKSConf(LineBuilder) :
         _docacut   = "(ACUTDOCA(%s*mm,''))"    % config['KS_LL_DOCA']
 
 	_CombinationCuts = _massCut2 + '&' + _docacut
-..... 
+        
         # after vertex fit cuts    
         _massCut     = "(ADMASS('KS0')<%s*MeV)"   % config['KS_LL_MassWindow']
         _vtxCut      = "(VFASPF(VCHI2)<%s)"       % config['KS_LL_VtxChi2']

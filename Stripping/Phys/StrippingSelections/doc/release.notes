@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-04-26 - Thomas Blake
+ - Removed same sign combiantions and upadted combinatorics to re-use rho 
+	 for K* and Lambda* for B2XMuMu stripping line. 
+ - Bug fix for Bs2KSKS. 
+
+
 ! 2012-04-26 - Ricardo Vazquez Gomez
  - StrippingBeauty2XGamma
    - Tighten the particle masses in Beauty2XGamma_HHBuilder.py to reduce the timing spent on particle creation

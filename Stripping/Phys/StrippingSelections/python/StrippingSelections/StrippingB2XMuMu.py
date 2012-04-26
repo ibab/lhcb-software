@@ -3,7 +3,7 @@ __author__ = 'Paul Schaack'
 __date__ = '12/02/2011'
 __version__ = '$Revision: 1.1 $'
 
-__all__ = ( 'B2XMuMuConf' )
+__all__ = ( 'B2XMuMuNewConf' )
 
 """
 Stripping selection for B_{s,d} channels
@@ -16,6 +16,7 @@ from PhysSelPython.Wrappers import Selection, AutomaticData, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from LHCbKernel.Configuration import *  #check if needed
+from Configurables import SubstitutePID
 
 
 #################
@@ -31,7 +32,7 @@ defaultConfig = {
     , 'BDIRA'              : 0.999968      # dimensionless
     , 'BFDCHI2'            : 100.0         # dimensionless
     , 'KpiMINIPCHI2'       : 9.0           # dimensionless
-    , 'KpiTRACKCHI2'       : 4.0           # dimensionless    
+    , 'KpiTRACKCHI2'       : 3.0           # dimensionless    
     , 'KpiVXCHI2NDOF'      : 9.0           # dimensionless
     , 'MuonMINIPCHI2'      : 16.0           # dimensionless
     , 'MuonTRACKCHI2'      : 4.0           # dimensionless
@@ -66,10 +67,31 @@ defaultConfig = {
 #
 #################
 
-defaultName = "B2XMuMu"
+defaultName = "B2XMuMuNew"
+
+## Change decay descriptor and re-fit decay tree
+def subPID(name, input, mother, plusD, minusD):
+    ddChangeAlg = SubstitutePID( name+"SubPIDAlg",
+                                 Code = "DECTREE('rho(770)0 -> pi+ pi-')",
+                                 Substitutions = { ' rho(770)0 -> ^pi+  X- ' : plusD,
+                                                   ' rho(770)0 ->  X+   X- ' : mother},
+                                 MaxChi2PerDoF = -666 )
+#                                                   ' rho(770)0 ->  X+  ^pi-' : minusD,
+    
+    newDDescr =  Selection( name+"SubPIDSel",
+                            Algorithm = ddChangeAlg,
+                            RequiredSelections = [input])
+
+#    return Selection(name+"pickDecay",
+#                     Algorithm = FilterDesktop( name+"decayFltr",
+#                                                Code = "DECTREE('%s' -> '%s' '%s')" % (mother, plusD, minusD) ),
+#                     RequiredSelections = [newDDescr])
+    return Selection(name+"pickDecay",
+                     Algorithm = FilterDesktop( Code = "DECTREE('%s -> %s %s')" % (mother, plusD, minusD) ),
+                     RequiredSelections = [newDDescr])
 
 
-class B2XMuMuConf(LineBuilder) :
+class B2XMuMuNewConf(LineBuilder) :
 
     __configuration_keys__ = (
         'BVXCHI2NDOF'
@@ -125,11 +147,11 @@ class B2XMuMuConf(LineBuilder) :
         self.Dplus = self.__Dplus__(config)
         self.Lambda = self.__Lambda__(config)
         self.Pi0 = self.__Pi0__(config)
-        self.Phi = self.__Phi__(self.Kaons, config)
         self.Rho = self.__Rho__(self.Pions, config)
-        self.Kstar = self.__Kstar__(self.Kaons, self.Pions, config)
+        self.Phi = self.__Phi__(self.Rho, config)
+        self.Kstar = self.__Kstar__(self.Rho, config)
         self.K1 = self.__K1__(self.Kaons, self.Pions, config)
-        self.Lambdastar = self.__Lambdastar__(self.Protons, self.Kaons, config)
+        self.Lambdastar = self.__Lambdastar__(self.Rho, config)
         self.Kstar2KsPi = self.__Kstar2KsPi__(self.Kshort, self.Pions, config)
         self.Kstar2KPi0 = self.__Kstar2KPi0__(self.Kaons, self.Pi0, config)
 
@@ -186,7 +208,9 @@ class B2XMuMuConf(LineBuilder) :
         Make and return a Dimuon
         """      
         _dimuon2mumu = CombineParticles()
-        _dimuon2mumu.DecayDescriptors = ["J/psi(1S) -> mu+ mu-", " J/psi(1S) -> mu+ mu+", " J/psi(1S) -> mu- mu-"]
+        _dimuon2mumu.DecayDescriptors = ["J/psi(1S) -> mu+ mu-"]
+        # removed same charge modes for timing reasons
+        #, " J/psi(1S) -> mu+ mu+", " J/psi(1S) -> mu- mu-"]
         _dimuon2mumu.CombinationCut = "(AM < %(DimuonUPPERMASS)s *MeV)" % conf
         _dimuon2mumu.MotherCut = self.__DimuonCuts__(conf)
         
@@ -450,17 +474,68 @@ class B2XMuMuConf(LineBuilder) :
 
 
 
-    def __Phi__(self, Kaons, conf):
+#    def __Phi__(self, Kaons, conf):
+    def __Phi__(self, Rho, conf):
         """
         Make a phi
         """      
-        _phi2kk = CombineParticles()
-        _phi2kk.DecayDescriptors = [ "phi(1020) -> K+ K-", "phi(1020) -> K+ K+", "phi(1020) -> K- K-" ]
-        _phi2kk.MotherCut = self.__KpiCuts__(conf)
+#        _phi2kk = CombineParticles()
+#        _phi2kk.DecayDescriptors = [ "phi(1020) -> K+ K-", "phi(1020) -> K+ K+", "phi(1020) -> K- K-" ]
+#        _phi2kk.MotherCut = self.__KpiCuts__(conf)
+#
+#        _selPHI2KK = Selection( "Selection_"+self.name+"_Phi",
+#                                     Algorithm = _phi2kk,
+#                                     RequiredSelections = [ Kaons ] )
+        ddksrsChangeAlg = SubstitutePID( self.name+"PhirsSubPIDAlg",
+                                     Code = "DECTREE('X0 -> X+ X-')",
+                                     Substitutions = { ' X0 -> ^X+ X- ' : 'K+' ,
+                                                       ' X0 -> X+ ^X- ' : 'K-' , 
+                                                       ' X0 -> X+ X- ' : 'phi(1020)'}, 
+                                     MaxChi2PerDoF = -666 )
+    
+        newDksrsDescr =  Selection( self.name+"_Phi_rsSubPIDSel",
+                                Algorithm = ddksrsChangeAlg,
+                                RequiredSelections = [Rho])
 
-        _selPHI2KK = Selection( "Selection_"+self.name+"_Phi",
-                                     Algorithm = _phi2kk,
-                                     RequiredSelections = [ Kaons ] )
+        srsPick = Selection(self.name+"_Phi_rsPickDecay",
+                     Algorithm = FilterDesktop( Code = "DECTREE('phi(1020) -> K+ K-')" ),
+                     RequiredSelections = [newDksrsDescr])
+
+        ddkswsChangeAlg = SubstitutePID( self.name+"PhiwsSubPIDAlg",
+                                     Code = "DECTREE('X0 -> X+ X+')",
+                                     Substitutions = { ' X0 -> ^X+ X+ ' : 'K+' ,
+                                                       ' X0 -> X+ ^X+ ' : 'K+' ,
+                                                       ' X0 -> X+ X+ ' : 'phi(1020)'}, 
+                                     MaxChi2PerDoF = -666 )
+    
+        newDkswsDescr =  Selection( self.name+"_Phi_wsSubPIDSel",
+                                Algorithm = ddkswsChangeAlg,
+                                RequiredSelections = [Rho])
+
+        swsPick = Selection(self.name+"_Phi_wsPickDecay",
+                     Algorithm = FilterDesktop( Code = "DECTREE('phi(1020) -> K+ K+')" ),
+                     RequiredSelections = [newDkswsDescr])
+
+        ddakswsChangeAlg = SubstitutePID( self.name+"PhiawsSubPIDAlg",
+                                     Code = "DECTREE('X0 -> X- X-')",
+                                     Substitutions = { ' X0 -> X- ^X- ' : 'K-' ,
+                                                       ' X0 -> ^X- X- ' : 'K-' ,
+                                                       ' X0 -> X- X- ' : 'phi(1020)'}, 
+                                     MaxChi2PerDoF = -666 )
+    
+        newDakswsDescr =  Selection( self.name+"_Phi_awsSubPIDSel",
+                                Algorithm = ddakswsChangeAlg,
+                                RequiredSelections = [Rho])
+
+        aswsPick = Selection(self.name+"_Phi_awsPickDecay",
+                     Algorithm = FilterDesktop( Code = "DECTREE('phi(1020) -> K- K-')" ),
+                     RequiredSelections = [newDakswsDescr])
+
+
+        _selPHI2KK = MergedSelection("Selection_"+self.name+"_Phi",
+                                         RequiredSelections = [srsPick, swsPick, aswsPick])
+
+
         return _selPHI2KK
     
     def __Rho__(self, Pions, conf):
@@ -468,7 +543,9 @@ class B2XMuMuConf(LineBuilder) :
         Make a rho
         """      
         _rho2pipi = CombineParticles()
-        _rho2pipi.DecayDescriptors = [ "rho(770)0 -> pi+ pi-", "rho(770)0 -> pi+ pi+" , "rho(770)0 -> pi- pi-" ]
+        _rho2pipi.DecayDescriptors = [ "rho(770)0 -> pi+ pi-" ]
+        # removed same charge modes for timing reasons
+        # , "rho(770)0 -> pi+ pi+" , "rho(770)0 -> pi- pi-" ]
         _rho2pipi.MotherCut = self.__KpiCuts__(conf)
 
         _selRHO2PIPI = Selection( "Selection_"+self.name+"_Rho",
@@ -476,17 +553,92 @@ class B2XMuMuConf(LineBuilder) :
                                      RequiredSelections = [ Pions ] )
         return _selRHO2PIPI
 
-    def __Kstar__(self, Kaons, Pions, conf):
+    def __Kstar__(self, Rho, conf):
         """
         Make a kstar
         """      
-        _kstar2kpi = CombineParticles()
-        _kstar2kpi.DecayDescriptors = [ "[K*(892)0 -> K+ pi-]cc", "[K*(892)0 -> K+ pi+]cc" ]
-        _kstar2kpi.MotherCut = self.__KpiCuts__(conf)
+        ddksrsChangeAlg = SubstitutePID( self.name+"rsSubPIDAlg",
+                                     Code = "DECTREE('X0 -> X+ X-')",
+                                     Substitutions = { ' X0 -> ^X+ X- ' : 'K+' ,
+                                                       ' X0 -> X+ X- ' : 'K*(892)0'}, 
+                                     MaxChi2PerDoF = -666 )
+    
+        newDksrsDescr =  Selection( self.name+"_Kstar_rsSubPIDSel",
+                                Algorithm = ddksrsChangeAlg,
+                                RequiredSelections = [Rho])
 
-        _selKSTAR2KPI = Selection( "Selection_"+self.name+"_Kstar",
-                                     Algorithm = _kstar2kpi,
-                                     RequiredSelections = [ Kaons, Pions ] )
+        srsPick = Selection(self.name+"_Kstar_rsPickDecay",
+                     Algorithm = FilterDesktop( Code = "DECTREE('K*(892)0 -> K+ pi-')" ),
+                     RequiredSelections = [newDksrsDescr])
+
+        ddaksrsChangeAlg = SubstitutePID( self.name+"arsSubPIDAlg",
+                                     Code = "DECTREE('X0 -> X+ X-')",
+                                     Substitutions = { ' X0 -> X+ ^X- ' : 'K-' ,
+                                                       ' X0 -> X+ X- ' : 'K*(892)~0'}, 
+                                     MaxChi2PerDoF = -666 )
+    
+        newDaksrsDescr =  Selection( self.name+"_aKstar_rsSubPIDSel",
+                                Algorithm = ddaksrsChangeAlg,
+                                RequiredSelections = [Rho])
+
+        asrsPick = Selection(self.name+"_Kstar_arsPickDecay",
+                     Algorithm = FilterDesktop( Code = "DECTREE('K*(892)~0 -> K- pi+')" ),
+                     RequiredSelections = [newDaksrsDescr])
+
+        ddkswsChangeAlg = SubstitutePID( self.name+"wsSubPIDAlg",
+                                     Code = "DECTREE('X0 -> X+ X+')",
+                                     Substitutions = { ' X0 -> ^X+ X+ ' : 'K+' ,
+                                                       ' X0 -> X+ X+ ' : 'K*(892)0'}, 
+                                     MaxChi2PerDoF = -666 )
+    
+        newDkswsDescr =  Selection( self.name+"_Kstar_wsSubPIDSel",
+                                Algorithm = ddkswsChangeAlg,
+                                RequiredSelections = [Rho])
+
+        dd2kswsChangeAlg = SubstitutePID( self.name+"ws2SubPIDAlg",
+                                     Code = "DECTREE('X0 -> X+ X+')",
+                                     Substitutions = { ' X0 -> X+ ^X+ ' : 'K+' ,
+                                                       ' X0 -> X+ X+ ' : 'K*(892)0'}, 
+                                     MaxChi2PerDoF = -666 )
+    
+        newD2kswsDescr =  Selection( self.name+"_Kstar_ws2SubPIDSel",
+                                Algorithm = dd2kswsChangeAlg,
+                                RequiredSelections = [Rho])
+
+        swsPick = Selection(self.name+"_Kstar_wsPickDecay",
+                     Algorithm = FilterDesktop( Code = "DECTREE('K*(892)0 -> K+ pi+')" ),
+                     RequiredSelections = [newDkswsDescr, newD2kswsDescr])
+
+        ddakswsChangeAlg = SubstitutePID( self.name+"awsSubPIDAlg",
+                                     Code = "DECTREE('X0 -> X- X-')",
+                                     Substitutions = { ' X0 -> ^X- X- ' : 'K-' ,
+                                                       ' X0 -> X- X- ' : 'K*(892)~0'}, 
+                                     MaxChi2PerDoF = -666 )
+    
+        newDakswsDescr =  Selection( self.name+"_aKstar_wsSubPIDSel",
+                                Algorithm = ddakswsChangeAlg,
+                                RequiredSelections = [Rho])
+
+        dd2akswsChangeAlg = SubstitutePID( self.name+"aws2SubPIDAlg",
+                                     Code = "DECTREE('X0 -> X- X-')",
+                                     Substitutions = { ' X0 -> X- ^X- ' : 'K-' ,
+                                                       ' X0 -> X- X- ' : 'K*(892)~0'}, 
+                                     MaxChi2PerDoF = -666 )
+    
+        newD2akswsDescr =  Selection( self.name+"_aKstar_ws2SubPIDSel",
+                                Algorithm = dd2akswsChangeAlg,
+                                RequiredSelections = [Rho])
+
+        aswsPick = Selection(self.name+"_Kstar_awsPickDecay",
+                     Algorithm = FilterDesktop( Code = "DECTREE('K*(892)~0 -> K- pi-')" ),
+                     RequiredSelections = [newDakswsDescr, newD2akswsDescr])
+
+
+        _selKSTAR2KPI = MergedSelection("Selection_"+self.name+"_Kstar",
+                                         RequiredSelections = [srsPick, asrsPick, swsPick, aswsPick])
+
+#        _kstar2kpi.DecayDescriptors = [ "[K*(892)0 -> K+ pi-]cc", "[K*(892)0 -> K+ pi+]cc" ]
+#
         return _selKSTAR2KPI
 
 
@@ -505,17 +657,98 @@ class B2XMuMuConf(LineBuilder) :
         return _selK12KPIPI
 
     
-    def __Lambdastar__(self, Protons, Kaons, conf):
+
+    def __Lambdastar__(self, Rho, conf):
         """
         Make a Lambda* 
-        """      
-        _lambdastar2pk = CombineParticles()
-        _lambdastar2pk.DecayDescriptors = [ "[Lambda(1520)0 -> p+ K-]cc", "[Lambda(1520)0 -> p+ K+]cc" ]
-        _lambdastar2pk.MotherCut = self.__pKCuts__(conf)
+        """
+        
+        ddksrsChangeAlg = SubstitutePID( self.name+"LSrsSubPIDAlg",
+                                     Code = "DECTREE('X0 -> X+ X-')",
+                                     Substitutions = { ' X0 -> ^X+ X- ' : 'p+' ,
+                                                       ' X0 -> X+ ^X- ' : 'K-' , 
+                                                       ' X0 -> X+ X- ' : 'Lambda(1520)0'}, 
+                                     MaxChi2PerDoF = -666 )
+    
+        newDksrsDescr =  Selection( self.name+"_Lambdastar_rsSubPIDSel",
+                                Algorithm = ddksrsChangeAlg,
+                                RequiredSelections = [Rho])
 
-        _selLAMBDASTAR2PK = Selection( "Selection_"+self.name+"_Lambdastar",
-                                     Algorithm = _lambdastar2pk,
-                                     RequiredSelections = [ Protons, Kaons ] )
+        srsPick = Selection(self.name+"_Lambdastar_rsPickDecay",
+                     Algorithm = FilterDesktop( Code = "DECTREE('Lambda(1520)0 -> p+ K-')" ),
+                     RequiredSelections = [newDksrsDescr])
+
+        ddaksrsChangeAlg = SubstitutePID( self.name+"LSarsSubPIDAlg",
+                                     Code = "DECTREE('X0 -> X+ X-')",
+                                     Substitutions = { ' X0 -> X+ ^X- ' : 'p~-' ,
+                                                       ' X0 -> ^X+ X- ' : 'K+' , 
+                                                       ' X0 -> X+ X- ' : 'Lambda(1520)~0'}, 
+                                     MaxChi2PerDoF = -666 )
+    
+        newDaksrsDescr =  Selection( self.name+"_aLambdastar_rsSubPIDSel",
+                                Algorithm = ddaksrsChangeAlg,
+                                RequiredSelections = [Rho])
+
+        asrsPick = Selection(self.name+"_Lambdastar_arsPickDecay",
+                     Algorithm = FilterDesktop( Code = "DECTREE('Lambda(1520)~0 -> p~- K+')" ),
+                     RequiredSelections = [newDaksrsDescr])
+
+        ddkswsChangeAlg = SubstitutePID( self.name+"LSwsSubPIDAlg",
+                                     Code = "DECTREE('X0 -> X+ X+')",
+                                     Substitutions = { ' X0 -> ^X+ X+ ' : 'p+' ,
+                                                       ' X0 -> X+ ^X+ ' : 'K+' , 
+                                                       ' X0 -> X+ X+ ' : 'Lambda(1520)0'}, 
+                                     MaxChi2PerDoF = -666 )
+    
+        newDkswsDescr =  Selection( self.name+"_Lambdastar_wsSubPIDSel",
+                                Algorithm = ddkswsChangeAlg,
+                                RequiredSelections = [Rho])
+
+        dd2kswsChangeAlg = SubstitutePID( self.name+"LSws2SubPIDAlg",
+                                     Code = "DECTREE('X0 -> X+ X+')",
+                                     Substitutions = { ' X0 -> X+ ^X+ ' : 'p+' ,
+                                                       ' X0 -> ^X+ X+ ' : 'K+' , 
+                                                       ' X0 -> X+ X+ ' : 'Lambda(1520)0'}, 
+                                     MaxChi2PerDoF = -666 )
+    
+        newD2kswsDescr =  Selection( self.name+"_Lambdastar_ws2SubPIDSel",
+                                Algorithm = dd2kswsChangeAlg,
+                                RequiredSelections = [Rho])
+
+        swsPick = Selection(self.name+"_Lambdastar_wsPickDecay",
+                     Algorithm = FilterDesktop( Code = "DECTREE('Lambda(1520)0 -> p+ K+')" ),
+                     RequiredSelections = [newDkswsDescr, newD2kswsDescr])
+
+        ddakswsChangeAlg = SubstitutePID( self.name+"LSawsSubPIDAlg",
+                                     Code = "DECTREE('X0 -> X- X-')",
+                                     Substitutions = { ' X0 -> ^X- X- ' : 'p~-' ,
+                                                       ' X0 -> X- ^X- ' : 'K-' , 
+                                                       ' X0 -> X- X- ' : 'Lambda(1520)~0'}, 
+                                     MaxChi2PerDoF = -666 )
+    
+        newDakswsDescr =  Selection( self.name+"_Lambdastar_awsSubPIDSel",
+                                Algorithm = ddakswsChangeAlg,
+                                RequiredSelections = [Rho])
+
+        dd2akswsChangeAlg = SubstitutePID( self.name+"LSaws2SubPIDAlg",
+                                     Code = "DECTREE('X0 -> X- X-')",
+                                     Substitutions = { ' X0 -> X- ^X- ' : 'p~-' ,
+                                                       ' X0 -> ^X- X- ' : 'K-' , 
+                                                       ' X0 -> X- X- ' : 'Lambda(1520)~0'}, 
+                                     MaxChi2PerDoF = -666 )
+    
+        newD2akswsDescr =  Selection( self.name+"_Lambdastar_aws2SubPIDSel",
+                                Algorithm = dd2akswsChangeAlg,
+                                RequiredSelections = [Rho])
+
+        aswsPick = Selection(self.name+"_Lambdastar_awsPickDecay",
+                     Algorithm = FilterDesktop( Code = "DECTREE('Lambda(1520)~0 -> p~- K-')" ),
+                     RequiredSelections = [newDakswsDescr, newD2akswsDescr])
+
+
+        _selLAMBDASTAR2PK = MergedSelection("Selection_"+self.name+"_Lambdastar",
+                                         RequiredSelections = [srsPick, asrsPick, swsPick, aswsPick])
+
         return _selLAMBDASTAR2PK
 
     def __Dplus__(self, conf):
@@ -562,17 +795,19 @@ class B2XMuMuConf(LineBuilder) :
                                       "[B+ -> J/psi(1S) K+]cc",
                                       "[B+ -> J/psi(1S) pi+]cc",
                                       "[B+ -> J/psi(1S) K*(892)+]cc",
-                                      "[B+ -> J/psi(1S) K_1(1270)+]cc",
                                       "[B+ -> J/psi(1S) D+]cc",
                                       "[Lambda_b0 -> J/psi(1S) Lambda0]cc",
                                       "[Lambda_b0 -> J/psi(1S) Lambda(1520)0]cc"]
+
+        # "[B+ -> J/psi(1S) K_1(1270)+]cc",
+        # removed K1 for timing reasons
         
         _b2xmumu.CombinationCut = "(AM > 4900.0 *MeV) & (AM < 7000.0 *MeV)"
         _b2xmumu.MotherCut = self.__BsCuts__(conf)
         
         _sel_Daughters = MergedSelection("Selection_"+self.name+"_daughters",
                                          RequiredSelections = [Protons, Kaons, Pions, Kshort, Lambda,
-                                                               Phi, Rho, Dplus, Kstar, K1, Lambdastar,
+                                                               Rho, Phi, Dplus, Kstar, Lambdastar,
                                                                Kstar2KsPi, Kstar2KPi0])
         sel = Selection( "Selection_"+self.name+"_bs2xmumu",
                          Algorithm = _b2xmumu,
