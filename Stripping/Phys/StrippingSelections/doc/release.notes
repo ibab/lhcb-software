@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-04-26 - Marianna Fontana
+ - StrippingBs2KSKS.py
+   - Changed input container from StdAllNoPIDsPions to StdNoPIDsPions
+
 ! 2012-04-26 - Katarzyna Senderowska
  - StrippingBs2ChicPhi_Chic2KKPiPi, StrippingBs2ChicPhi_Chic2PiPi, Stripping Bs2EtacPhi, StrippingB2EtacKst, StrippingB2ChicK
  - PT/IPCHI2/VCHI2 cuts tightened and PID cuts added to match timing requirements
