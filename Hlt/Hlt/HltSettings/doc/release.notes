@@ -4,6 +4,7 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================= HltSettings v5r30 2012-04-26 =========================
 ! 2012-04-26 -  V. Gligorov
  - Loosen Topo link to 1Track explicitly to 1700/16/2.0
 
@@ -25,7 +26,7 @@
  - Prescale BBDT based radiative topological trigger to 0, cut based rad topo
    takes less rate and gives good enough performance.
 
-!========================= HltSettings v5r29 2012-04-204=========================
+!========================= HltSettings v5r29 2012-04-24 =========================
 ! 2012-04-24 - V. Gligorov
  - Add Hlt2CharmHadD02HHXDstLines lines to CharmHadrons
  - Prescale DisplacedVertexLines to 0 by default
