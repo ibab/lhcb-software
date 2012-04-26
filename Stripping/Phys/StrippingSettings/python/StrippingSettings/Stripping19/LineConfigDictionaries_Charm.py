@@ -520,26 +520,26 @@ D2XMuMu = {
     'CONFIG' : {
     'MuonP'                     : 3000.,        # MeV
     'MuonPT'                    :  500.,        # MeV
-    'MuonMINIPCHI2'             :    4,         # adminensional
-    'MuonTRCHI2'                :    8,         # adminensional
+    'MuonMINIPCHI2'             :    6.,        # adminensional
+    'MuonTRCHI2'                :    3.,        # adminensional
     'PionP'                     : 2000.,        # MeV
     'PionPT'                    :  300.,        # MeV
-    'PionMINIPCHI2'             :    6,         # adminensional
-    'PionTRCHI2'                :    8,         # adminensional
+    'PionMINIPCHI2'             :    6.,        # adminensional
+    'PionTRCHI2'                :  2.5,         # adminensional
     'KaonP'                     : 2000.,        # MeV
     'KaonPT'                    :  300.,        # MeV
     'KaonPIDK'                  :   -1.,        # adimensional
-    'KaonMINIPCHI2'             :    6,         # adminensional
-    'KaonTRCHI2'                :    8,         # adminensional
-    'MINIPCHI2_CS_hhmumu'       :    1,         # adminensional
-    'PT_CS_hhmumu'              :  400,         # MeV
+    'KaonMINIPCHI2'             :    6.,        # adminensional
+    'KaonTRCHI2'                :   2.5,        # adminensional
+    'MINIPCHI2_CS_hhmumu'       :    6.,        # adminensional
+    'PT_CS_hhmumu'              :  400.,        # MeV
     'DimuonMass'                :  250.,        # MeV
-    'DVCHI2DOF'                 :    5,         # adminensional
-    'DMAXDOCA'                  :    0.25,      # mm
-    'DdauMAXIPCHI2'             :   20,         # adimensinal
-    'DFDCHI2'                   :    9,         # adimensional
+    'DVCHI2DOF'                 :    5.,        # adminensional
+    'DMAXDOCA'                  :  0.15,        # mm
+    'DdauMAXIPCHI2'             :   20.,        # adimensinal
+    'DFDCHI2'                   :    9.,        # adimensional
     'DDIRA'                     :    0.9999,    # adimensional
-    'DIPCHI2'                   :   30,         # adimensional
+    'DIPCHI2'                   :   30.,        # adimensional
     'DMassWin'                  :  200.,        # MeV, mass window
     'DMassWin_CS_hhmumu'        :  100.,        # MeV, mass window
     'DMassLow'                  : 1763.,        # MeV, low-mass veto
@@ -577,26 +577,26 @@ D2XMuMuMicro = {
     'CONFIG' : {
     'MuonP'                     : 3000.,        # MeV
     'MuonPT'                    :  500.,        # MeV
-    'MuonMINIPCHI2'             :    4,         # adminensional
-    'MuonTRCHI2'                :    8,         # adminensional
+    'MuonMINIPCHI2'             :    6.,        # adminensional
+    'MuonTRCHI2'                :    3.,        # adminensional
     'PionP'                     : 2000.,        # MeV
     'PionPT'                    :  300.,        # MeV
-    'PionMINIPCHI2'             :    6,         # adminensional
-    'PionTRCHI2'                :    8,         # adminensional
+    'PionMINIPCHI2'             :    6.,        # adminensional
+    'PionTRCHI2'                :  2.5,         # adminensional
     'KaonP'                     : 2000.,        # MeV
     'KaonPT'                    :  300.,        # MeV
     'KaonPIDK'                  :   -1.,        # adimensional
-    'KaonMINIPCHI2'             :    6,         # adminensional
-    'KaonTRCHI2'                :    8,         # adminensional
-    'MINIPCHI2_CS_hhmumu'       :    1,         # adminensional
-    'PT_CS_hhmumu'              :  400,         # MeV
+    'KaonMINIPCHI2'             :    6.,        # adminensional
+    'KaonTRCHI2'                :   2.5,        # adminensional
+    'MINIPCHI2_CS_hhmumu'       :    6.,        # adminensional
+    'PT_CS_hhmumu'              :  400.,        # MeV
     'DimuonMass'                :  250.,        # MeV
-    'DVCHI2DOF'                 :    5,         # adminensional
-    'DMAXDOCA'                  :    0.25,      # mm
-    'DdauMAXIPCHI2'             :   20,         # adimensinal
-    'DFDCHI2'                   :    9,         # adimensional
+    'DVCHI2DOF'                 :    5.,        # adminensional
+    'DMAXDOCA'                  :  0.15,        # mm
+    'DdauMAXIPCHI2'             :   20.,        # adimensinal
+    'DFDCHI2'                   :    9.,        # adimensional
     'DDIRA'                     :    0.9999,    # adimensional
-    'DIPCHI2'                   :   30,         # adimensional
+    'DIPCHI2'                   :   30.,        # adimensional
     'DMassWin'                  :  200.,        # MeV, mass window
     'DMassWin_CS_hhmumu'        :  100.,        # MeV, mass window
     'DMassLow'                  : 1763.,        # MeV, low-mass veto

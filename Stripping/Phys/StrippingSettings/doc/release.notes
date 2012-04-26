@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-04-26 - Mat Charles
+ - Stripping19: LineConfigDictionaries_Charm.py
+    + Updates of D(s)+ -> h mu mu lines from Benoit to control CPU
+
 ! 2012-04-026 - Mika Vesterinen
  - Stripping 19: LineConfigDictionaries_Semileptonic.py
    + timing improvements to CharmFromBSemi lines
