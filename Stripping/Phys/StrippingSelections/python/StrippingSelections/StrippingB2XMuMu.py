@@ -75,23 +75,18 @@ def subPID(name, input, mother, plusD, minusD):
                                  Code = "DECTREE('rho(770)0 -> pi+ pi-')",
                                  Substitutions = { ' rho(770)0 -> ^pi+  X- ' : plusD,
                                                    ' rho(770)0 ->  X+   X- ' : mother},
-                                 MaxChi2PerDoF = -666 )
-#                                                   ' rho(770)0 ->  X+  ^pi-' : minusD,
+                                 MaxChi2PerDoF = -666 )    
     
     newDDescr =  Selection( name+"SubPIDSel",
                             Algorithm = ddChangeAlg,
                             RequiredSelections = [input])
 
-#    return Selection(name+"pickDecay",
-#                     Algorithm = FilterDesktop( name+"decayFltr",
-#                                                Code = "DECTREE('%s' -> '%s' '%s')" % (mother, plusD, minusD) ),
-#                     RequiredSelections = [newDDescr])
     return Selection(name+"pickDecay",
                      Algorithm = FilterDesktop( Code = "DECTREE('%s -> %s %s')" % (mother, plusD, minusD) ),
                      RequiredSelections = [newDDescr])
 
 
-class B2XMuMuNewConf(LineBuilder) :
+class B2XMuMuConf(LineBuilder) :
 
     __configuration_keys__ = (
         'BVXCHI2NDOF'
