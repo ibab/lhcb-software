@@ -28,6 +28,7 @@ private:
 
   std::string m_inputName;    ///< Input name of packed clusters
   std::string m_extension;    ///< Name extension (for testing)
+  bool m_alwaysOutput;        ///< Flag to turn on the creation of output, even when input is missing
 
   /// Check to prevent recursive calls to this, due to the multiple possible outputs
   bool m_running;

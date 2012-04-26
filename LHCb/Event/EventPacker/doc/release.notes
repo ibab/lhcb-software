@@ -4,6 +4,10 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2012-04-26 - Chris Jones
+ - Protect UnpackCluster against the possibility that the packed clusters 
+   are missing
+
 ! 2012-04-23 - Chris Jones
  - Fix a few more untested StatusCodes
 
