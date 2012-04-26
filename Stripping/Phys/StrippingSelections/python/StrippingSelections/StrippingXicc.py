@@ -45,7 +45,7 @@ __all__ = ( 'XiccBuilder'               ## LineBuilder class specialization
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
-from PhysSelPython.Wrappers import Selection, DataOnDemand
+from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdAllLoosePions, StdAllLooseKaons, StdAllLooseProtons
@@ -219,6 +219,7 @@ class XiccBuilder(LineBuilder) :
         self.stdLambdaDD = DataOnDemand(Location = 'Phys/StdLooseLambdaDD/Particles')
         self.combineXiLL = makeXi(name+'CombineXiLL', self.stdLambdaLL, _my_immutable_config['Xi_LL_ADAMASS_HalfWin'], _my_immutable_config['Xi_LL_ADMASS_HalfWin'])
         self.combineXiDD = makeXi(name+'CombineXiDD', self.stdLambdaDD, _my_immutable_config['Xi_DD_ADAMASS_HalfWin'], _my_immutable_config['Xi_DD_ADMASS_HalfWin'])
+        self.combineXi   = mergeLists(name+'CombineXi', [ self.combineXiLL, self.combineXiDD ] )
 
         # Combine Xi- with pion(s) to make Xic0, Xic+
         self.combineXicZero = makeXicZero(name+"CombineXicZero", [ self.combineXiLL, self.combineXiDD, self.dauPi ])
@@ -411,6 +412,9 @@ class XiccBuilder(LineBuilder) :
         self.registerLine(self.lineXicc7)
         self.registerLine(self.lineXicc8)
 
+def mergeLists(localName, inputSelections) :
+    return MergedSelection ( localName,
+                             RequiredSelections = inputSelections )
 
 def makeLc(localName, configDict = _my_immutable_config) :
     ## Pick up standard Lambdac -> p K- pi+
