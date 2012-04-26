@@ -4,6 +4,13 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================= HltSettings v5r32 2012-04-26 =========================
+! 2012-04-26 -  E. van Herwijnen
+ - Physics_May2012.py, Physics_MayBU2012.py, Physics_MayOPT2012.py, 
+   Physics_May_L03D_2012.py, Physics_MayBU_L03D_2012.py and 
+   Physics_MayOPT_L03D_2012.py as discussed in the OPG: default, backup and 
+   optimistic for 2 L0 TCKs 3C (default) and 3D (tight)
+  
 !========================= HltSettings v5r31 2012-04-26 =========================
 ! 2012-04-26 -  E. van Herwijnen
  - Physics_May2012.py to use L0 3C and Physics_MayBU2012.py L0 3D
