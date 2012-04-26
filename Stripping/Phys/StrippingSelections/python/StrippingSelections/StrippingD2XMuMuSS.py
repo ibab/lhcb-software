@@ -1,7 +1,7 @@
 
-__author__ = ['Malcolm John']
-__date__ = '27/5/2011'
-__version__ = '$Revision: 1.6 $'
+__author__ = ['Malcolm John', 'B. Viaud', 'O. Kochebina']
+__date__ = '26/4/2012'
+__version__ = '$Revision: 1.7 $'
 
 '''
 D->Xu(Xu) mu mu , Xu=pi/K channels and control samples.
@@ -9,26 +9,26 @@ D->Xu(Xu) mu mu , Xu=pi/K channels and control samples.
 
 config_params =  {'MuonP'         : 3000. ,    #MeV
                   'MuonPT'        : 500.  ,    #MeV
-                  'MuonMINIPCHI2' : 4     ,    #adminensional
-                  'MuonTRCHI2'    : 8     ,    #adminensional
+                  'MuonMINIPCHI2' : 6     ,    #adminensional
+                  'MuonTRCHI2'    : 3     ,    #adminensional
                   
                   'PionP'         : 2000. ,    #MeV
                   'PionPT'        : 300.  ,    #MeV
                   'PionMINIPCHI2' : 6     ,    #adminensional
-                  'PionTRCHI2'    : 8     ,    #adminensional
+                  'PionTRCHI2'    : 2.5     ,    #adminensional
                   
                   'KaonP'         : 2000. ,    #MeV
                   'KaonPT'        : 300.  ,    #MeV
                   'KaonPIDK'      : -1.   ,    #adimensional
                   'KaonMINIPCHI2' : 6     ,    #adminensional
-                  'KaonTRCHI2'    : 8     ,    #adminensional
+                  'KaonTRCHI2'    : 2.5     ,    #adminensional
 
-                  'MINIPCHI2_CS_hhmumu' : 1. , #adminensional
+                  'MINIPCHI2_CS_hhmumu' : 6. , #adminensional
                   'PT_CS_hhmumu' : 400 , #MeV
                   
                   'DimuonMass'    : 250.  ,    #MeV
                   'DVCHI2DOF'     : 5     ,    #adminensional                              
-                  'DMAXDOCA'      : 0.25  ,    #mm
+                  'DMAXDOCA'      : 0.15  ,    #mm
                   'DdauMAXIPCHI2' : 20    ,    #adimensinal
                   'DFDCHI2'       : 9     ,    #adimensional
                   'DDIRA'         : 0.9999,    #adimensional
@@ -377,14 +377,15 @@ class D2XMuMuConf(LineBuilder) :
         Handy interface for D2PiPiPi
         """
         return makeD2PiPiPi(name
-                              , pionSel
-                              , muonSel
-                              , DVCHI2DOF = config['DVCHI2DOF']
-                              , DDIRA = config['DDIRA']
-                              , DIPCHI2 = config['DIPCHI2']
-                              , DMassWin = config['DMassWin']
-                              , DMassLow = config['DMassLow']
-                              , DimuonMass = config['DimuonMass'])
+                            , pionSel
+                            , muonSel
+                            , DMAXDOCA = config['DMAXDOCA']
+                            , DVCHI2DOF = config['DVCHI2DOF']
+                            , DDIRA = config['DDIRA']
+                            , DIPCHI2 = config['DIPCHI2']
+                            , DMassWin = config['DMassWin']
+                            , DMassLow = config['DMassLow']
+                            , DimuonMass = config['DimuonMass'])
 
 #####################################################
     def _makeD2PiMuMuOS(self, name, pionSel, muonSel, config):
@@ -394,6 +395,7 @@ class D2XMuMuConf(LineBuilder) :
         return makeD2PiMuMuOS(name
                               , pionSel
                               , muonSel
+                              , DMAXDOCA = config['DMAXDOCA']
                               , DVCHI2DOF = config['DVCHI2DOF']
                               , DDIRA = config['DDIRA']
                               , DIPCHI2 = config['DIPCHI2']
@@ -409,6 +411,7 @@ class D2XMuMuConf(LineBuilder) :
         return makeD2PiMuMuSS(name
                               , pionSel
                               , muonSel
+                              , DMAXDOCA = config['DMAXDOCA']
                               , DVCHI2DOF = config['DVCHI2DOF']
                               , DDIRA = config['DDIRA']
                               , DIPCHI2 = config['DIPCHI2']
@@ -424,6 +427,7 @@ class D2XMuMuConf(LineBuilder) :
         return makeD2KMuMuOS(name
                              , kaonSel
                              , muonSel
+                             , DMAXDOCA = config['DMAXDOCA']
                              , DVCHI2DOF = config['DVCHI2DOF']
                              , DDIRA = config['DDIRA']
                              , DIPCHI2 = config['DIPCHI2']
@@ -439,6 +443,7 @@ class D2XMuMuConf(LineBuilder) :
         return makeD2KMuMuSS(name
                              , kaonSel
                              , muonSel
+                             , DMAXDOCA = config['DMAXDOCA']
                              , DVCHI2DOF = config['DVCHI2DOF']
                              , DDIRA = config['DDIRA']
                              , DIPCHI2 = config['DIPCHI2']
@@ -563,7 +568,7 @@ class D2XMuMuConf(LineBuilder) :
 #
 # Out of class
 #####################################################
-def makeD2PiPiPi(name, pionSel, muonSel, DMassWin, DMassLow, DimuonMass, DVCHI2DOF, DIPCHI2, DDIRA):
+def makeD2PiPiPi(name, pionSel, muonSel,DMAXDOCA, DMassWin, DMassLow, DimuonMass, DVCHI2DOF, DIPCHI2, DDIRA):
     """
     Makes the D+ -> pi+ (pi+ pi-)
     """
@@ -572,6 +577,7 @@ def makeD2PiPiPi(name, pionSel, muonSel, DMassWin, DMassLow, DimuonMass, DVCHI2D
                    RequiredSelections=[muonSel] )
 
     _combcut = "(ADAMASS('D+') < %(DMassWin)s *MeV) & "\
+               "(AMAXDOCA('')<%(DMAXDOCA)s) & " \
 		           "(AM > %(DMassLow)s *MeV) &"\
                "(AM23 > %(DimuonMass)s *MeV)" % locals()
 
@@ -585,15 +591,16 @@ def makeD2PiPiPi(name, pionSel, muonSel, DMassWin, DMassLow, DimuonMass, DVCHI2D
     _Combine.ReFitPVs = True
     return Selection(name,
                      Algorithm = _Combine,
-                     RequiredSelections = [ pionSel, rhos ] )
+                     RequiredSelections = [ rhos, pionSel ] )
 
 #####################################################
-def makeD2PiMuMuOS(name, pionSel, muonSel, DMassWin, DMassLow, DimuonMass, DVCHI2DOF, DIPCHI2, DDIRA):
+def makeD2PiMuMuOS(name, pionSel, muonSel,DMAXDOCA, DMassWin, DMassLow, DimuonMass, DVCHI2DOF, DIPCHI2, DDIRA):
     """
     Makes the D+ -> pi+ mu+ mu- 
     """
 
     _combcut = "(ADAMASS('D+') < %(DMassWin)s *MeV) & "\
+               "(AMAXDOCA('')<%(DMAXDOCA)s) & " \
 		           "(AM > %(DMassLow)s *MeV) &"\
                "(AM23 > %(DimuonMass)s *MeV)" % locals()
 
@@ -607,15 +614,16 @@ def makeD2PiMuMuOS(name, pionSel, muonSel, DMassWin, DMassLow, DimuonMass, DVCHI
     _Combine.ReFitPVs = True
     return Selection(name,
                      Algorithm = _Combine,
-                     RequiredSelections = [ pionSel, muonSel ] )
+                     RequiredSelections = [ muonSel, pionSel ] )
 
 #####################################################
-def makeD2PiMuMuSS(name, pionSel, muonSel, DMassWin, DMassLow, DimuonMass, DVCHI2DOF, DIPCHI2, DDIRA):
+def makeD2PiMuMuSS(name, pionSel, muonSel, DMAXDOCA, DMassWin, DMassLow, DimuonMass, DVCHI2DOF, DIPCHI2, DDIRA):
     """
     Makes the D- -> pi+ mu- mu-
     """
     
     _combcut = "(ADAMASS('D-') < %(DMassWin)s *MeV) & "\
+               "(AMAXDOCA('')<%(DMAXDOCA)s) & " \
 		           "(AM > %(DMassLow)s *MeV) &"\
                "(AM23 > %(DimuonMass)s *MeV)" % locals()
 
@@ -629,15 +637,16 @@ def makeD2PiMuMuSS(name, pionSel, muonSel, DMassWin, DMassLow, DimuonMass, DVCHI
     _Combine.ReFitPVs = True
     return Selection(name,
                      Algorithm = _Combine,
-                     RequiredSelections = [ pionSel, muonSel ] )
+                     RequiredSelections = [  muonSel, pionSel ] )
 
 #####################################################
-def makeD2KMuMuOS(name, kaonSel, muonSel, DMassWin, DMassLow, DimuonMass, DVCHI2DOF, DIPCHI2, DDIRA):
+def makeD2KMuMuOS(name, kaonSel, muonSel,DMAXDOCA, DMassWin, DMassLow, DimuonMass, DVCHI2DOF, DIPCHI2, DDIRA):
     """
     Makes the D+ -> K+ mu+ mu-
     """
     
     _combcut = "(ADAMASS('D+') < %(DMassWin)s *MeV) & "\
+               "(AMAXDOCA('')<%(DMAXDOCA)s) & " \
 		           "(AM > %(DMassLow)s *MeV) &"\
                "(AM23 > %(DimuonMass)s *MeV)" % locals()
     
@@ -651,15 +660,16 @@ def makeD2KMuMuOS(name, kaonSel, muonSel, DMassWin, DMassLow, DimuonMass, DVCHI2
     _Combine.ReFitPVs = True
     return Selection(name,
                      Algorithm = _Combine,
-                     RequiredSelections = [ kaonSel, muonSel ] )
+                     RequiredSelections = [ muonSel, kaonSel ] )
 
 #####################################################
-def makeD2KMuMuSS(name, kaonSel, muonSel, DMassWin, DMassLow, DimuonMass, DVCHI2DOF, DIPCHI2, DDIRA):
+def makeD2KMuMuSS(name, kaonSel, muonSel,DMAXDOCA, DMassWin, DMassLow, DimuonMass, DVCHI2DOF, DIPCHI2, DDIRA):
     """
     Makes the D- -> K+ mu- mu-
     """
     
     _combcut = "(ADAMASS('D-') < %(DMassWin)s *MeV) & "\
+               "(AMAXDOCA('')<%(DMAXDOCA)s) & " \
 		           "(AM > %(DMassLow)s *MeV) &"\
                "(AM23 > %(DimuonMass)s *MeV)" % locals()
     
@@ -673,7 +683,7 @@ def makeD2KMuMuSS(name, kaonSel, muonSel, DMassWin, DMassLow, DimuonMass, DVCHI2
     _Combine.ReFitPVs = True
     return Selection(name,
                      Algorithm = _Combine,
-                     RequiredSelections = [ kaonSel, muonSel ] )
+                     RequiredSelections = [ muonSel, kaonSel ] )
 
 #####################################################
 def makeD02KKMuMu(name, kaonSel, muonSel, DMAXDOCA, DdauMAXIPCHI2, DFDCHI2, DVCHI2DOF, DDIRA, DIPCHI2, DMassWin, DMassLow, DimuonMass):
@@ -700,7 +710,7 @@ def makeD02KKMuMu(name, kaonSel, muonSel, DMAXDOCA, DdauMAXIPCHI2, DFDCHI2, DVCH
     _Combine.ReFitPVs = True
     return Selection(name,
                      Algorithm = _Combine,
-                     RequiredSelections = [ kaonSel, muonSel ] )
+                     RequiredSelections = [ muonSel, kaonSel ] )
 
 
 #####################################################
@@ -728,7 +738,7 @@ def makeD02PiPiMuMu(name, pionSel, muonSel, DMAXDOCA, DdauMAXIPCHI2, DFDCHI2, DV
     _Combine.ReFitPVs = True
     return Selection(name,
                      Algorithm = _Combine,
-                     RequiredSelections = [ pionSel, muonSel ] )
+                     RequiredSelections = [ muonSel, pionSel] )
 
 
 #####################################################

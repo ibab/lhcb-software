@@ -4,6 +4,13 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+
+! 2012-04-26 - Benoit Viaud
+ - StrippingD2XMuMuSS.py
+   - A few minor modifications to improve the timing.
+     In particular: muons treated before the kaons and pions
+     in the particle filters. DOCA cuts added to 3 body modes.
+
 ! 2012-04-26 - Marianna Fontana
  - StrippingBs2KSKS.py
    - Fixed a small bug in syntax
