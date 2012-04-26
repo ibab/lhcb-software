@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-04-26 - Ricardo Vazquez Gomez
+ - StrippingBeauty2XGamma
+   - Tighten the particle masses in Beauty2XGamma_HHBuilder.py to reduce the timing spent on particle creation
+
 ! 2012-04-26 - Marianna Fontana
  - StrippingBs2KSKS.py
    - Changed input container from StdAllNoPIDsPions to StdNoPIDsPions

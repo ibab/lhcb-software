@@ -101,7 +101,7 @@ class HHBuilder(object):
     def _makePiPi(self):
         '''Makes X -> pi+pi-'''
         return [self._makeX2HH('X2PiPi',['rho(770)0 -> pi+ pi-'],
-                              '(AM < 5.0*GeV)',self.config,[self.pions])]
+                              '(AM < 3.0*GeV)',self.config,[self.pions])]
 
     def _makeOmega(self):
         ''' Makes Omega -> pi+ pi- '''
@@ -122,9 +122,9 @@ class HHBuilder(object):
     def _makePiPiWSSels(self):
         '''Makes X -> pi+pi+ + c.c.'''
         plus = self._makeX2HH('X2PiPiWSPlus',['rho(770)+ -> pi+ pi+'],
-                              '(AM < 5.0*GeV)',self.config,[self.pions])
+                              '(AM < 3.0*GeV)',self.config,[self.pions])
         minus = self._makeX2HH('X2PiPiWSMinus',['rho(770)- -> pi- pi-'],
-                               '(AM < 5.0*GeV)',self.config,[self.pions])
+                               '(AM < 3.0*GeV)',self.config,[self.pions])
         return [plus,minus]
 
     def _makePiPiWS(self):
@@ -135,10 +135,10 @@ class HHBuilder(object):
     def _makeKPi(self,pipi):
         '''Makes X -> K+pi- + c.c.'''
         sel1 = self._makeX2HH('X2KPi',['K*(892)0 -> pi+ pi-'],
-                              '(AM < 1.1*GeV)',
+                              '(AM < 2.5*GeV)',
                               self.config,[self.pions])
         sel2 = self._makeX2HH('X2KPiBar',['K*(892)~0 -> pi+ pi-'],
-                              '(AM < 1.1*GeV)',
+                              '(AM < 2.5*GeV)',
                               self.config,[self.pions])
         decays = [['K+','pi-'],['pi+','K-']]
         filter = SubPIDMMFilter('X2KPiSubPIDBeauty2XGamma',Code='ALL',
@@ -153,7 +153,7 @@ class HHBuilder(object):
     def _makeKK(self,pipi):
         '''Makes X -> K+K-.'''
         sel = self._makeX2HH('X2KK',['phi(1020) -> pi+ pi-'],
-                             '(AM < 1.1*GeV)',
+                             '(AM < 2.5*GeV)',
                               self.config,[self.pions])
         decays = [['K+','K-']]
         filter = SubPIDMMFilter('X2KKSubPIDBeauty2XGamma',Code='ALL',
@@ -179,10 +179,10 @@ class HHBuilder(object):
         '''Makes X -> Ks0pi- + c.c.'''
         ## Change the mass window to 4.5 GeV to improve the timing
         dd = self._makeXPLUS2HH('X2KsPiDD',['[K*(892)+ -> KS0 pi+]cc'],
-                                '(AM < 4.5*GeV)',self.config,
+                                '(AM < 2.5*GeV)',self.config,
                                 self.ks["DD"]+[self.pions])
         ll = self._makeXPLUS2HH('X2KsPiLL',['[K*(892)+ -> KS0 pi+]cc'],
-                                '(AM < 4.5*GeV)',self.config,
+                                '(AM < 2.5*GeV)',self.config,
                                 self.ks["DD"]+[self.pions])
         return [MergedSelection('X2KsPiBeauty2XGamma',
                                 RequiredSelections=[dd,ll])]
@@ -190,20 +190,20 @@ class HHBuilder(object):
     def _makeKPi0(self):
         '''Makes X -> K+pi0 + c.c.'''
         m = self._makeXPLUS2HH('X2KPi0Merged',['[K*(892)+ -> K+ pi0]cc'],
-                               '(AM < 5*GeV)',self.config,
+                               '(AM < 2.5*GeV)',self.config,
                                self.pi0["Merged"]+[self.kaons],True)
         r = self._makeXPLUS2HH('X2KPi0Resolved',['[K*(892)+ -> K+ pi0]cc'],
-                               '(AM < 5*GeV)',self.config,
+                               '(AM < 2.5*GeV)',self.config,
                                self.pi0["Resolved"]+[self.kaons],True)
         return [MergedSelection('X2KPi0Beauty2XGamma',RequiredSelections=[m,r])]
 
     def _makePiPi0(self):
         '''Makes X -> pi+pi0'''        
         m = self._makeXPLUS2HH('X2PiPi0Merged',['[rho(770)+ -> pi+ pi0]cc'],
-                               'AM < 5*GeV',self.config,
+                               'AM < 2.5*GeV',self.config,
                                [self.pions]+self.pi0["Merged"],True)
         r = self._makeXPLUS2HH('X2PiPi0Resolved',['[rho(770)+ -> pi+ pi0]cc'],
-                               'AM < 5*GeV',self.config,
+                               'AM < 2.5*GeV',self.config,
                                [self.pions]+self.pi0["Resolved"],True)
         return [MergedSelection('X2PiPi0Beauty2XGamma',
                                 RequiredSelections=[m,r])]
