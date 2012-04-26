@@ -28,34 +28,34 @@ config_params = {
     'Prescale'               : 1.0 ,
     'Postscale'              : 1.0 ,
     #K parameters
-    'K_PT'                   : 500.,
-    'K_TRCHI2'               : 5.,
-    'K_IPCHI2'               : 6.,
+    'K_PT'                   : 650.,
+    'K_TRCHI2'               : 3.,
+    'K_IPCHI2'               : 6.75,
     #pi parameters
-    'pi_PT'                  : 500., 
-    'pi_TRCHI2'              : 5.,
-    'pi_IPCHI2'              : 6.,
+    'pi_PT'                  : 650., 
+    'pi_TRCHI2'              : 3.,
+    'pi_IPCHI2'              : 6.75,
     #phi parameters
     'phi_VDZ'                : 0., 
     'phi_PT'                 : 1000., 
     'phi_IPCHI2'             : 6.,
-    'phi_VCHI2_VDOF'         : 16.,
+    'phi_VCHI2_VDOF'         : 6.,
     #rho (for chi_c decay) parameters
     'rho_chic_VDZ'           : 0.,
-    'rho_chic_VCHI2_VDOF'    : 16.,
+    'rho_chic_VCHI2_VDOF'    : 6.,
     #phi (for chi_c decay) parameters
     'phi_chic_VDZ'           : 0.,
-    'phi_chic_VCHI2_VDOF'    : 16.,
+    'phi_chic_VCHI2_VDOF'    : 6.,
     #chi_c parameters
     'chic_VDZ'               : 0.,    
     'chic_PT'                : 1000.,
     'chic_IPCHI2'            : 6.,
-    'chic_VCHI2_VDOF'        : 16.,
+    'chic_VCHI2_VDOF'        : 7.,
     #Bs parameters
     'Bs_VDZ'                 : 0.,
     'Bs_DIRA'                : 0.999,
     'Bs_IPCHI2'              : 9.,
-    'Bs_VCHI2_VDOF'          : 16.
+    'Bs_VCHI2_VDOF'          : 9.
     }
 
 
@@ -194,7 +194,7 @@ def makeKaons (
     K_IPCHI2
     ):
 
-    _code = "(PT>%(K_PT)s) & (TRCHI2DOF<%(K_TRCHI2)s) & (MIPCHI2DV(PRIMARY)>%(K_IPCHI2)s)" %locals()
+    _code = "(PT>%(K_PT)s) & (TRCHI2DOF<%(K_TRCHI2)s) & (MIPCHI2DV(PRIMARY)>%(K_IPCHI2)s) & (PIDK-PIDpi>4)" %locals()
     _kaonsFilter = FilterDesktop(Code = _code)
     _stdKaons = DataOnDemand(Location = "Phys/StdTightKaons/Particles")
 
@@ -212,7 +212,7 @@ def makePions(
     pi_IPCHI2
     ):
 
-    _code = "(PT>%(pi_PT)s) & (TRCHI2DOF<%(pi_TRCHI2)s) & (MIPCHI2DV(PRIMARY)>%(pi_IPCHI2)s)" %locals() 
+    _code = "(PT>%(pi_PT)s) & (TRCHI2DOF<%(pi_TRCHI2)s) & (MIPCHI2DV(PRIMARY)>%(pi_IPCHI2)s) & (PIDpi-PIDK>4)" %locals() 
     _pionsFilter = FilterDesktop(Code = _code)
     _stdPions = DataOnDemand(Location = "Phys/StdTightPions/Particles")
 

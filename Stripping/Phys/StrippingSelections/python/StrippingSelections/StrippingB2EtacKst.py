@@ -28,34 +28,34 @@ config_params = {
     'Prescale'                : 1.0 ,
     'Postscale'               : 1.0 ,
     #K parameters
-    'K_PT'                    : 600.,
-    'K_TRCHI2'                : 3.7,
-    'K_IPCHI2'                : 6.,
+    'K_PT'                    : 650.,
+    'K_TRCHI2'                : 3.,
+    'K_IPCHI2'                : 6.5,
     #pi parameters
-    'pi_PT'                   : 600., 
-    'pi_TRCHI2'               : 3.7,
-    'pi_IPCHI2'               : 6.,
+    'pi_PT'                   : 650., 
+    'pi_TRCHI2'               : 3.,
+    'pi_IPCHI2'               : 6.5,
     #kst parameters
     'kst_VDZ'                 : 0., 
     'kst_PT'                  : 1000., 
     'kst_IPCHI2'              : 6.,
-    'kst_VCHI2_VDOF'          : 16.,
+    'kst_VCHI2_VDOF'          : 6.,
     #rho (for eta_c decay) parameters
     'rho_etac_VDZ'            : 0.,
-    'rho_etac_VCHI2_VDOF'     : 16.,
+    'rho_etac_VCHI2_VDOF'     : 6.,
     #phi (for eta_c decay) parameters
     'phi_etac_VDZ'            : 0.,
-    'phi_etac_VCHI2_VDOF'     : 16.,
+    'phi_etac_VCHI2_VDOF'     : 6.,
     #eta_c parameters
     'etac_VDZ'                : 0.,    
     'etac_PT'                 : 600.,
     'etac_IPCHI2'             : 6., 
-    'etac_VCHI2_VDOF'         : 16.,
+    'etac_VCHI2_VDOF'         : 7.,
     #B parameters
     'B_VDZ'                  : 0.,
     'B_DIRA'                 : 0.999,
     'B_IPCHI2'               : 9.,
-    'B_VCHI2_VDOF'           : 16.
+    'B_VCHI2_VDOF'           : 9.
     }
 
 
@@ -194,7 +194,7 @@ def makeKaons (
     K_IPCHI2
     ):
 
-    _code = "(PT>%(K_PT)s) & (TRCHI2DOF<%(K_TRCHI2)s) & (MIPCHI2DV(PRIMARY)>%(K_IPCHI2)s)" %locals()
+    _code = "(PT>%(K_PT)s) & (TRCHI2DOF<%(K_TRCHI2)s) & (MIPCHI2DV(PRIMARY)>%(K_IPCHI2)s) & (PIDK-PIDpi>3)" %locals()
     _kaonsFilter = FilterDesktop(Code = _code)
     _stdKaons = DataOnDemand(Location = "Phys/StdTightKaons/Particles")
 
@@ -212,7 +212,7 @@ def makePions(
     pi_IPCHI2
     ):
 
-    _code = "(PT>%(pi_PT)s) & (TRCHI2DOF<%(pi_TRCHI2)s) & (MIPCHI2DV(PRIMARY)>%(pi_IPCHI2)s)" %locals() 
+    _code = "(PT>%(pi_PT)s) & (TRCHI2DOF<%(pi_TRCHI2)s) & (MIPCHI2DV(PRIMARY)>%(pi_IPCHI2)s) & (PIDpi-PIDK>3)" %locals() 
     _pionsFilter = FilterDesktop(Code = _code)
     _stdPions = DataOnDemand(Location = "Phys/StdTightPions/Particles")
 
@@ -313,7 +313,7 @@ def makeEtac2RhoPhi (
     etac_VCHI2_VDOF
     ):
     
-    _etac_combinationCuts = "(ADAMASS('eta_c(1S)')<200.*MeV) & (APT>%(etac_PT)s*MeV)" %locals()
+    _etac_combinationCuts = "(ADAMASS('eta_c(1S)')<100.*MeV) & (APT>%(etac_PT)s*MeV)" %locals()
     _etac_motherCuts = "(BPVVDZ>%(etac_VDZ)s) & (MIPCHI2DV(PRIMARY)>%(etac_IPCHI2)s) & (VFASPF(VCHI2/VDOF)<%(etac_VCHI2_VDOF)s)" %locals()
     
     _etac2phirho = CombineParticles (
@@ -340,7 +340,7 @@ def makeB2EtacKst (
     B_VCHI2_VDOF
     ):
     
-    _B_combinationCuts = "(ADAMASS('B0')<500.*MeV)" %locals()
+    _B_combinationCuts = "(ADAMASS('B0')<300.*MeV)" %locals()
     _B_motherCuts = "(BPVVDZ>%(B_VDZ)s) & (BPVDIRA>%(B_DIRA)s) & (MIPCHI2DV(PRIMARY)<%(B_IPCHI2)s) & (VFASPF(VCHI2/VDOF)<%(B_VCHI2_VDOF)s)" %locals()
     
     _B = CombineParticles (  

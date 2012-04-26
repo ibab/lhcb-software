@@ -25,29 +25,29 @@ config_params = {
     'Prescale'               : 1.0 ,
     'Postscale'              : 1.0 ,
     #K parameters
-    'K_PT'                   : 600.,
-    'K_TRCHI2'               : 3.7,
-    'K_IPCHI2'               : 6.,
+    'K_PT'                   : 650.,
+    'K_TRCHI2'               : 3.,
+    'K_IPCHI2'               : 6.5,
     #pi parameters
-    'pi_PT'                  : 600., 
-    'pi_TRCHI2'              : 3.7,
-    'pi_IPCHI2'              : 6.,
+    'pi_PT'                  : 650., 
+    'pi_TRCHI2'              : 3.,
+    'pi_IPCHI2'              : 6.5,
     #rho (for chi_c decay) parameters
     'rho_chic_VDZ'           : 0.,
-    'rho_chic_VCHI2_VDOF'    : 16.,
+    'rho_chic_VCHI2_VDOF'    : 6.,
     #phi (for chi_c decay) parameters
     'phi_chic_VDZ'           : 0.,
-    'phi_chic_VCHI2_VDOF'    : 16.,
+    'phi_chic_VCHI2_VDOF'    : 6.,
     #chi_c parameters
     'chic_VDZ'               : 0.,    
     'chic_PT'                : 1000.,
     'chic_IPCHI2'            : 6.,
-    'chic_VCHI2_VDOF'        : 16.,
+    'chic_VCHI2_VDOF'        : 7.,
     #B parameters
     'B_VDZ'                 : 0.,
     'B_DIRA'                : 0.999,
     'B_IPCHI2'              : 9.,
-    'B_VCHI2_VDOF'          : 16.
+    'B_VCHI2_VDOF'          : 9.
     }
 
 
@@ -172,7 +172,7 @@ def makeKaons (
     K_IPCHI2
     ):
 
-    _code = "(PT>%(K_PT)s) & (TRCHI2DOF<%(K_TRCHI2)s) & (MIPCHI2DV(PRIMARY)>%(K_IPCHI2)s)" %locals()
+    _code = "(PT>%(K_PT)s) & (TRCHI2DOF<%(K_TRCHI2)s) & (MIPCHI2DV(PRIMARY)>%(K_IPCHI2)s) & (PIDK-PIDpi>4)" %locals()
     _kaonsFilter = FilterDesktop(Code = _code)
     _stdKaons = DataOnDemand(Location = "Phys/StdTightKaons/Particles")
 
@@ -190,7 +190,7 @@ def makePions(
     pi_IPCHI2
     ):
 
-    _code = "(PT>%(pi_PT)s) & (TRCHI2DOF<%(pi_TRCHI2)s) & (MIPCHI2DV(PRIMARY)>%(pi_IPCHI2)s)" %locals() 
+    _code = "(PT>%(pi_PT)s) & (TRCHI2DOF<%(pi_TRCHI2)s) & (MIPCHI2DV(PRIMARY)>%(pi_IPCHI2)s) & (PIDpi-PIDK>4)" %locals() 
     _pionsFilter = FilterDesktop(Code = _code)
     _stdPions = DataOnDemand(Location = "Phys/StdTightPions/Particles")
 
@@ -262,7 +262,7 @@ def makeChic2RhoPhi (
     chic_VCHI2_VDOF,
     ):
     
-    _chic_combinationCuts = "(ADAMASS('chi_c0(1P)')<200.*MeV) & (APT>%(chic_PT)s*MeV)" %locals()
+    _chic_combinationCuts = "(ADAMASS('chi_c0(1P)')<100.*MeV) & (APT>%(chic_PT)s*MeV)" %locals()
     _chic_motherCuts = "(BPVVDZ>%(chic_VDZ)s) & (MIPCHI2DV(PRIMARY)>%(chic_IPCHI2)s) & (VFASPF(VCHI2/VDOF)<%(chic_VCHI2_VDOF)s)" %locals()
     
     _chic2phirho = CombineParticles (
@@ -290,7 +290,7 @@ def makeB2ChicK (
     ):
     
     
-    _B_combinationCuts = "(ADAMASS('B+')<500.*MeV)" %locals()
+    _B_combinationCuts = "(ADAMASS('B+')<300.*MeV)" %locals()
     _B_motherCuts = "(BPVVDZ>%(B_VDZ)s) & (BPVDIRA>%(B_DIRA)s) & (MIPCHI2DV(PRIMARY)<%(B_IPCHI2)s) & (VFASPF(VCHI2/VDOF)<%(B_VCHI2_VDOF)s)" %locals()
     
     _B = CombineParticles ( 
