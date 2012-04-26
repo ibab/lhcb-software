@@ -48,6 +48,10 @@ Bd2KstarMuMu = {
     }
 
 
+
+# Updated XMuMu line to disable contributions from K1
+# and remove same-sign combiantorics
+
 B2XMuMu =  {
     'BUILDERTYPE' : 'B2XMuMuConf',
     'CONFIG' : {
@@ -775,60 +779,56 @@ B2XTau = {
 #
 # b -> X gamma 
 
+
+
 Beauty2XGamma = {
     'BUILDERTYPE' : 'Beauty2XGamma',
     'CONFIG' : {
+
     "ALL" : {  'TRCHI2DOF_MAX' : 3,
                'PT_MIN'        : '300*MeV',
-                      'P_MIN'         : '1000*MeV',
-                      'MIPCHI2DV_MIN' : 16 },
-           # Cuts made on the photon
-           "GAMMA" : { 'PT_MIN'       : '2500*MeV',
-                       'CL_MIN'       : 0.25 
-                     },
-           # Cuts made on all K shorts
-           "KS0" : { 'PT_MIN'        : '1000*MeV',
-                     'BPVVDCHI2_MIN' : 64 ,
-                     #'MIPCHI2DV_MIN' : 4,
-                     'VCHI2DOF_MAX'  : 9,
-                     'MM_MIN'        : '480.*MeV',
-                     'MM_MAX'        : '515.*MeV' },
-           # Cuts made on all pi0's
-           "Pi0" : { 'PT_MIN'        : '1000*MeV',
-                     'P_MIN'         : '4000*MeV',
-                     'CHILDCL1_MIN'  : 0.25,
-                     'CHILDCL2_MIN'  : 0.25 },
-           # Cuts made on all B's and Lb's used in all lines
-           "B2X" : { 'SUMPT_MIN'     : '4000*MeV',
-                     'VCHI2DOF_MAX'  : 9,
-                     'BPVIPCHI2_MAX' : 9,
-                     'BPVDIRA_MIN'   : 0.9998,
-                     'AM_MIN'        : '4000*MeV',
-                     'AM_MAX'        : '7000*MeV',
-                     },
-           # Cuts for rho, K*, phi, omega
-           "HH": { 'MASS_WINDOW'      : {'KST':'150*MeV','RHO':'250*MeV','PHI':'15*MeV','OMEGA':'30*MeV'}, 
-                   'DAUGHTERS'        : {'PT_MIN':'300*MeV','P_MIN':'3000*MeV'},
-                   'piLAMBDADAUGHTERS': {'PT_MIN':'300*MeV','P_MIN':'3000*MeV','PIDK_MAX':'5'},   # only for pH
-                   'pLAMBDADAUGHTERS' : {'PT_MIN':'1200*MeV','P_MIN':'10000*MeV','PIDp_MIN':'5'}, # only for pH
-                   'kLAMBDADAUGHTERS' : {'PT_MIN':'300*MeV','P_MIN':'3000*MeV','PIDK_MIN':'0'},    # only for pH
-                   'VCHI2DOF_MAX'     : 9,
-                   'BPVVDCHI2_MIN'    : 81, 
-                   'ASUMPT_MIN'       : '1500*MeV',
-                   },
-           # Cuts for omega -> 3 body decay
-           "HHH": { 'MASS_WINDOW'   : {'OMEGA': '150*MeV'},
-                    'DAUGHTERS'     : {'PT_MIN':'300*MeV','P_MIN':'2000*MeV'},
-                    'VCHI2DOF_MAX'  : 9,
-                    'BPVVDCHI2_MIN' : 64, 
-                    'ASUMPT_MIN'    : '1600*MeV',
-                    },
-           # PID cuts
-           "PID" : { 'P'  : {'PIDp_MIN' : 0},
-                     'PI' : {'PIDK_MAX' : 20},
-                     'K'  : {'PIDK_MIN' : -10} },
-                  "Prescales"  : {},
-                  "GECNTrkMax" : 500 },
+               'P_MIN'         : '1000*MeV',
+               'MIPCHI2DV_MIN' : 16 },
+    "GAMMA" : { 'PT_MIN'       : '2500*MeV',
+                'CL_MIN'       : 0.25
+                },
+    "KS0" : { 'PT_MIN'        : '1000*MeV',
+              'BPVVDCHI2_MIN' : 81 ,
+              'VCHI2DOF_MAX'  : 9,
+              'MM_MIN'        : '480.*MeV',
+              'MM_MAX'        : '515.*MeV' },
+    "Pi0" : { 'PT_MIN'        : '1000*MeV',
+              'P_MIN'         : '4000*MeV',
+              'CHILDCL1_MIN'  : 0.25,
+              'CHILDCL2_MIN'  : 0.25 },
+    "B2X" : { 'SUMPT_MIN'     : '5000*MeV',
+              'VCHI2DOF_MAX'  : 9,
+              'BPVIPCHI2_MAX' : 9,
+              'BPVDIRA_MIN'   : 0.9998,
+              'AM_MIN'        : '4000*MeV',
+              'AM_MAX'        : '7000*MeV',
+              },
+    "HH": { 'MASS_WINDOW'      : {'KST':'150*MeV','RHO':'250*MeV','PHI':'15*MeV','OMEGA':'30*MeV'},
+            'DAUGHTERS'        : {'PT_MIN':'500*MeV','P_MIN':'3000*MeV'},
+            'piLAMBDADAUGHTERS': {'PT_MIN':'300*MeV','P_MIN':'3000*MeV','PIDK_MAX':'5'},   # only for pH
+            'pLAMBDADAUGHTERS' : {'PT_MIN':'1200*MeV','P_MIN':'10000*MeV','PIDp_MIN':'5'}, # only for pH
+            'kLAMBDADAUGHTERS' : {'PT_MIN':'300*MeV','P_MIN':'3000*MeV','PIDK_MIN':'0'},    # only for pH
+            'VCHI2DOF_MAX'     : 9,
+            'BPVVDCHI2_MIN'    : 81,
+            'ASUMPT_MIN'       : '1500*MeV',
+            },
+    
+    "HHH": { 'MASS_WINDOW'   : {'OMEGA': '150*MeV'},
+             'DAUGHTERS'     : {'PT_MIN':'300*MeV','P_MIN':'2000*MeV'},
+             'VCHI2DOF_MAX'  : 9,
+             'BPVVDCHI2_MIN' : 64,
+             'ASUMPT_MIN'    : '1600*MeV',
+             },
+    "PID" : { 'P'  : {'PIDp_MIN' : 0},
+              'PI' : {'PIDK_MAX' : 20},
+              'K'  : {'PIDK_MIN' : -10} },
+    "Prescales"  : {},
+    "GECNTrkMax" : 500 },
     'WGs'    : ['RD'],
     'STREAMS' : [ 'Radiative' ] 
     }

@@ -1108,29 +1108,29 @@ Lambdac2PHH = {
 # Added: Stripping19
 # Lives in StrippingD2XGamma.py
 D2XGamma = {
-    'BUILDERTYPE' : 'StrippingD2XGammaConf',
-    'CONFIG'      : {
-        'TrChi2'              : 5.
-        ,'TrIPchi2Phi'         : 25.
-        ,'TrPTPhi'            : 500.
-        ,'kDLL'               : 2.0
-        ,'PhiMassWin'          : 50.
-        ,'PhiVCHI2'            : 16.
-        ,'D0MassWin'           : 300.
-        ,'D_BPVLTIME'          : 0.2 * picosecond ## not used ATM
-        ,'D0_PT'               : 1000.
-        ,'photonPT'            : 1500.
-        ,'DstVCHI2'            : 25.
-        ,'deltaMass'           : 160.0
-        ,'pvRefit'             : False
-        ,'D02PhiGammaPreScale'               : 1.0
-        ,'D02PhiGammaPostScale'              : 1.0
-        ,'PionLocation'   : "Phys/StdLoosePions/Particles"
-        ,'PhiLocation' : "Phys/StdLoosePhi2KK/Particles"
+    'BUILDERTYPE' : 'StrippingD2XGammaConf',
+    'CONFIG' : {
+    'TrChi2'              : 5.
+    ,'TrIPchi2Phi'         : 25.
+    ,'TrPTPhi'            : 500.
+    ,'kDLL'               : 2.0
+    ,'PhiMassWin'          : 50.
+    ,'PhiVCHI2'            : 16.
+    ,'D0MassWin'           : 300.
+    ,'D_BPVLTIME'          : 0.2 * picosecond ## not used ATM
+    ,'D0_PT'               : 1000.
+    ,'photonPT'            : 1500.
+    ,'DstVCHI2'            : 25.
+    ,'deltaMass'           : 160.0
+    ,'pvRefit'             : False
+    ,'D02PhiGammaPreScale'               : 1.0
+    ,'D02PhiGammaPostScale'              : 1.0
+    ,'PionLocation'   : "Phys/StdLoosePions/Particles"
+    ,'PhiLocation' : "Phys/StdLoosePhi2KK/Particles"
     },
-    'WGs' : [ 'Charm' ],
-    'STREAMS' : ['CharmCompleteEvent' ]
-}
+    'WGs' : [ 'Charm' ],
+    'STREAMS' : ['CharmCompleteEvent' ]
+    }
 
 # D0 -> h+ h- pi-
 # Responsible: Marco Gersabeck
@@ -1194,8 +1194,8 @@ DstarD2hhpi0 = {
            'UseTOSFilter': True,
            'Hlt2TOS': { 'Hlt2CharmHadD02HHXDst_hhXDecision%TOS' : 0, 'Hlt2CharmHadD02HHXDst_hhXWideMassDecision%TOS' : 0, 'Hlt2Global%TIS' : 0 }
          },
-    'WGs' : [ 'Charm' ],
-    'STREAMS' : ['Charm' ] 
+    'WGs' : [ 'Charm' ],
+    'STREAMS' : ['Charm' ] 
 }
 
 # Cross-section lines.

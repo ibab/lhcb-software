@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-04-26 - Thomas Blake
+ - Updated B2XMuMu in LineConfigDictionaries_RD.py
+ - Fixed formatting issues in LineConfigDictionaries_Charm.py
+
 ! 2012-04-26 - Will Barter
  - Stripping 19: LineConfigDictionaries_RD.py (updates to EW stream lines from RD Working Group)
 	  + Update Z02TauTauProng to reduce timing.
