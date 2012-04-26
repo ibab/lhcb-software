@@ -1,5 +1,7 @@
 '''
-Module for construction of B-->MuMuMuMu stripping selections and lines
+Module for construction of B-->MuMuMuMu and D-->MuMuMuMu stripping selections and lines
+
+NOTE: If timing for D-->MuMuMuMu is too excessive, uncomment lines 105 and 106 instead of prescaling (long timing is due to high multiplicity events)
 
 Exported symbols (use python help!):
      - ..
@@ -57,7 +59,7 @@ class B2MuMuMuMuLinesConf(LineBuilder) :
         'B2MuMuMuMuLinePrescale'    : 1,
         'B2MuMuMuMuLinePostscale'   : 1,
         'D2MuMuMuMuLinePrescale'    : 1,
-        'D2MuMuMuMuLinePostscale'   : 1,
+        'D2MuMuMuMuLinePostscale'   : 1
         }                
     
     
@@ -73,10 +75,22 @@ class B2MuMuMuMuLinesConf(LineBuilder) :
         default_name=name
 
         D_name='D2MuMuMuMu'
+	Dst_name = 'Dstar2D2MuMuMuMu'
+	Dimuon_name = 'Dimuon'
+        self.inPions = DataOnDemand(Location = "Phys/StdLoosePions/Particles")
+        self.inMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
 
-        self.selDefault = makeDefault(default_name)
+        self.selDefault = makeDefault(default_name,
+						inputSel = [ self.inMuons ])
 
-        self.selD2MuMuMuMu = makeD2MuMuMuMu(D_name)
+        self.selDimuon = makeDimuon(Dimuon_name,
+						inputSel = [ self.inMuons ])
+
+        self.selD2MuMuMuMu = makeD2MuMuMuMu(D_name,
+						inputSel = [ self.selDimuon ])
+
+        self.selDstar2D2MuMuMuMu = makeDstar2D2MuMuMuMu(Dst_name,
+						inputSel = [ self.inPions, self.selD2MuMuMuMu ])
 
 
         self.defaultLine = StrippingLine(default_name+"Line",
@@ -88,7 +102,9 @@ class B2MuMuMuMuLinesConf(LineBuilder) :
         self.D2MuMuMuMuLine = StrippingLine(D_name+"Line",
                                             prescale = config['D2MuMuMuMuLinePrescale'],
                                             postscale = config['D2MuMuMuMuLinePostscale'],
-                                            algos = [ self.selD2MuMuMuMu ]
+#                                             FILTER = {"Code":"(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < 150 )",
+#                                            "Preambulo":["from LoKiTracks.decorators import *"]},
+                                            algos = [ self.selDstar2D2MuMuMuMu ]
                                             )
         
       
@@ -98,7 +114,7 @@ class B2MuMuMuMuLinesConf(LineBuilder) :
 
 
 
-def makeDefault(name) :
+def makeDefault(name,inputSel) :
     """
     B --> 4 mu selection
     should become     inclusive bb-->4 mu selection  ??
@@ -111,7 +127,7 @@ def makeDefault(name) :
     Detached4mu.VertexFitters.update( { "" : "OfflineVertexFitter"} )
     Detached4mu.OfflineVertexFitter.useResonanceVertex = False
     Detached4mu.ReFitPVs = True
-    Detached4mu.DaughtersCuts = { "mu+" : "(TRCHI2DOF < 5 ) "\
+    Detached4mu.DaughtersCuts = { "mu+" : "(TRCHI2DOF < 2.5 ) "\
                                   " & (MIPCHI2DV(PRIMARY)> 9.)"}
                                  
     Detached4mu.CombinationCut = "(ADAMASS('B_s0')<1000*MeV) "\
@@ -123,43 +139,84 @@ def makeDefault(name) :
                               "& (BPVIPCHI2()< 25) "
     
 
-    _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
-
     return Selection (name,
                       Algorithm = Detached4mu,
-                      RequiredSelections = [ _stdLooseMuons ])
+                      RequiredSelections = inputSel)
+
+def makeDimuon(name,inputSel) :
+    """
+    dimuon selection
+    """
+    from Configurables import OfflineVertexFitter
+    Dimuon = CombineParticles("Combine"+name)
+    Dimuon.DecayDescriptor = "[J/psi(1S) -> mu+ mu-]cc"
+    Dimuon.addTool( OfflineVertexFitter() )
+    Dimuon.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+    Dimuon.OfflineVertexFitter.useResonanceVertex = False
+    Dimuon.ReFitPVs = True
+    Dimuon.DaughtersCuts = { "mu+" : "(TRCHI2DOF < 2.0 ) "\
+                                  " & (MIPCHI2DV(PRIMARY)> 4.)"\
+                                  " & (P> 3000.*MeV)"}
+
+    Dimuon.CombinationCut =   " (AMAXDOCA('')<0.3*mm) "
+
+ 
+    Dimuon.MotherCut = "(VFASPF(VCHI2/VDOF)<12.) "\
+                        "& (BPVVDCHI2 > 16.) "\
+                         "& (M < 2500.)"
 
 
-def makeD2MuMuMuMu(name) :
+    return Selection (name,
+                      Algorithm = Dimuon,
+                      RequiredSelections = inputSel)
+
+
+def makeD2MuMuMuMu(name,inputSel) :
     """
     D --> 4 mu selection
-    should become     inclusive bb-->4 mu selection  ??
     """
     from Configurables import OfflineVertexFitter
     D2MuMuMuMu = CombineParticles("Combine"+name)
-    D2MuMuMuMu.DecayDescriptor = "D0 -> mu+ mu- mu+ mu-"
-    # Set the OfflineVertexFitter to keep the 4 tracks and not the J/Psi Kstar:
+    D2MuMuMuMu.DecayDescriptor = "[D0 -> J/psi(1S) J/psi(1S)]cc"
     D2MuMuMuMu.addTool( OfflineVertexFitter() )
     D2MuMuMuMu.VertexFitters.update( { "" : "OfflineVertexFitter"} )
     D2MuMuMuMu.OfflineVertexFitter.useResonanceVertex = False
     D2MuMuMuMu.ReFitPVs = True
-    D2MuMuMuMu.DaughtersCuts = { "mu+" : "(TRCHI2DOF < 5 ) "\
-                                  " & (MIPCHI2DV(PRIMARY)> 9.)"}
 
-    D2MuMuMuMu.CombinationCut =  "(ADAMASS('D0')<1000*MeV) "\
+    D2MuMuMuMu.CombinationCut =  "(ADAMASS('D0')<500*MeV) "\
                                  "& (AMAXDOCA('')<0.3*mm) "
 
  
-    D2MuMuMuMu.MotherCut = "(VFASPF(VCHI2/VDOF)<10) "\
-                              "& (BPVDIRA > 0.9998) "\
-                              "& (BPVVDCHI2>48.)"\
-                              " & (M>864.83) & (M<2868.47)"\
-                              "& (BPVIPCHI2()< 30) "
-    
-
-    _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
+    D2MuMuMuMu.MotherCut = "(VFASPF(VCHI2/VDOF)<12.) "\
+                              "& (BPVVDCHI2 > 16.) "\
+                              "& (BPVDIRA > 0.) "\
+                              " & (M>1364.83) & (M<2368.47)"\
+			      "& (MIPCHI2DV(PRIMARY) < 36. )"
 
 
     return Selection (name,
                       Algorithm = D2MuMuMuMu,
-                      RequiredSelections = [ _stdLooseMuons ])
+                      RequiredSelections = inputSel)
+
+def makeDstar2D2MuMuMuMu(name,inputSel) :
+    from Configurables import OfflineVertexFitter
+    """
+    D* --> pi (D0 --> 4 mu) selection
+    """
+
+    Dstar2Dpi = CombineParticles("CombineDstar"+name)
+    Dstar2Dpi.DecayDescriptor = "[D*(2010)+ -> D0 pi+]cc"
+    Dstar2Dpi.addTool( OfflineVertexFitter() )
+    Dstar2Dpi.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+    Dstar2Dpi.ReFitPVs = True
+    Dstar2Dpi.DaughtersCuts = { "pi+" : "(TRCHI2DOF < 2.0 ) "\
+				" & (MIPCHI2DV(PRIMARY) < 36.)"}
+    Dstar2Dpi.CombinationCut =  "(ADAMASS('D*(2010)+')<500.*MeV) "\
+				" & ( AMAXDOCA('')< 0.3*mm)"
+    Dstar2Dpi.MotherCut   =     "(VFASPF(VCHI2/VDOF) < 12.)"\
+				" & (MM - CHILD(MM,1) > 120.*MeV) & (MM - CHILD(MM,1) < 174.*MeV)"
+
+
+    return Selection (name,
+                      Algorithm = Dstar2Dpi,
+                      RequiredSelections = inputSel)
