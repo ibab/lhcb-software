@@ -222,8 +222,8 @@ class XiccBuilder(LineBuilder) :
         self.combineXi   = mergeLists(name+'CombineXi', [ self.combineXiLL, self.combineXiDD ] )
 
         # Combine Xi- with pion(s) to make Xic0, Xic+
-        self.combineXicZero = makeXicZero(name+"CombineXicZero", [ self.combineXiLL, self.combineXiDD, self.dauPi ])
-        self.combineXicPlus = makeXicPlus(name+"CombineXicPlus", [ self.combineXiLL, self.combineXiDD, self.dauPi ])
+        self.combineXicZero = makeXicZero(name+"CombineXicZero", [ self.combineXi, self.dauPi ])
+        self.combineXicPlus = makeXicPlus(name+"CombineXicPlus", [ self.combineXi, self.dauPi ])
 
 
         # Combine Lc+ with a K and a pi to make a Xicc+ or Xicc++:
