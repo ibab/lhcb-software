@@ -1,7 +1,6 @@
 '''
 Module for construction of B-->MuMuMuMu and D-->MuMuMuMu stripping selections and lines
 
-NOTE: If timing for D-->MuMuMuMu is too excessive, uncomment lines 105 and 106 instead of prescaling (long timing is due to high multiplicity events)
 
 Exported symbols (use python help!):
      - ..
@@ -102,8 +101,6 @@ class B2MuMuMuMuLinesConf(LineBuilder) :
         self.D2MuMuMuMuLine = StrippingLine(D_name+"Line",
                                             prescale = config['D2MuMuMuMuLinePrescale'],
                                             postscale = config['D2MuMuMuMuLinePostscale'],
-#                                             FILTER = {"Code":"(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < 150 )",
-#                                            "Preambulo":["from LoKiTracks.decorators import *"]},
                                             algos = [ self.selDstar2D2MuMuMuMu ]
                                             )
         
@@ -152,17 +149,17 @@ def makeDimuon(name,inputSel) :
     Dimuon.DecayDescriptor = "[J/psi(1S) -> mu+ mu-]cc"
     Dimuon.addTool( OfflineVertexFitter() )
     Dimuon.VertexFitters.update( { "" : "OfflineVertexFitter"} )
-    Dimuon.OfflineVertexFitter.useResonanceVertex = False
-    Dimuon.ReFitPVs = True
+
     Dimuon.DaughtersCuts = { "mu+" : "(TRCHI2DOF < 2.0 ) "\
                                   " & (MIPCHI2DV(PRIMARY)> 4.)"\
                                   " & (P> 3000.*MeV)"}
 
     Dimuon.CombinationCut =   " (AMAXDOCA('')<0.3*mm) "
 
+
  
     Dimuon.MotherCut = "(VFASPF(VCHI2/VDOF)<12.) "\
-                        "& (BPVVDCHI2 > 16.) "\
+			"& (BPVVDZ > 0.) " \
                          "& (M < 2500.)"
 
 
@@ -180,19 +177,14 @@ def makeD2MuMuMuMu(name,inputSel) :
     D2MuMuMuMu.DecayDescriptor = "[D0 -> J/psi(1S) J/psi(1S)]cc"
     D2MuMuMuMu.addTool( OfflineVertexFitter() )
     D2MuMuMuMu.VertexFitters.update( { "" : "OfflineVertexFitter"} )
-    D2MuMuMuMu.OfflineVertexFitter.useResonanceVertex = False
-    D2MuMuMuMu.ReFitPVs = True
+
 
     D2MuMuMuMu.CombinationCut =  "(ADAMASS('D0')<500*MeV) "\
                                  "& (AMAXDOCA('')<0.3*mm) "
 
  
     D2MuMuMuMu.MotherCut = "(VFASPF(VCHI2/VDOF)<12.) "\
-                              "& (BPVVDCHI2 > 16.) "\
-                              "& (BPVDIRA > 0.) "\
-                              " & (M>1364.83) & (M<2368.47)"\
-			      "& (MIPCHI2DV(PRIMARY) < 36. )"
-
+			      "& (MIPCHI2DV(PRIMARY) < 25. )"
 
     return Selection (name,
                       Algorithm = D2MuMuMuMu,
@@ -208,9 +200,8 @@ def makeDstar2D2MuMuMuMu(name,inputSel) :
     Dstar2Dpi.DecayDescriptor = "[D*(2010)+ -> D0 pi+]cc"
     Dstar2Dpi.addTool( OfflineVertexFitter() )
     Dstar2Dpi.VertexFitters.update( { "" : "OfflineVertexFitter"} )
-    Dstar2Dpi.ReFitPVs = True
     Dstar2Dpi.DaughtersCuts = { "pi+" : "(TRCHI2DOF < 2.0 ) "\
-				" & (MIPCHI2DV(PRIMARY) < 36.)"}
+				" & (MIPCHI2DV(PRIMARY) < 25.)"}
     Dstar2Dpi.CombinationCut =  "(ADAMASS('D*(2010)+')<500.*MeV) "\
 				" & ( AMAXDOCA('')< 0.3*mm)"
     Dstar2Dpi.MotherCut   =     "(VFASPF(VCHI2/VDOF) < 12.)"\
