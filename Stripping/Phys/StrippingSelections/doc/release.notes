@@ -4,6 +4,7 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingSelections v3r13 2012-04-27 =========================
 ! 2012-04-26 - Anton Poluektov 
  - Fix typos in python/StrippingSelections/StrippingB2Kphiphi.py
  - Add new builders to __init__.py
