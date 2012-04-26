@@ -5,6 +5,7 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+!========================= Hlt1Lines v6r23 2012-04-26 =========================
 ! 2012-04-24 - Johannes Albrecht
  - reduce nVelo hits cut to 6k
 
