@@ -719,7 +719,7 @@ Xicc = {
     'CONFIG'      : {
      'LongTrackGEC' : 150
     ,'controlPrescaleLc' : 0.05
-    ,'controlPrescaleXic' : 1.0
+    ,'controlPrescaleXic' : 0.3
     , 'controlPrescaleDp' : 0.001
     , 'controlPrescaleD0' : 0.001
     , 'controlPrescaleDsp' : 0.00
