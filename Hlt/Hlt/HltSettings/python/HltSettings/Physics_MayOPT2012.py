@@ -32,7 +32,7 @@ class Physics_MayOPT2012( Physics_May2012 ):
     
     def Thresholds(self) :
        from Hlt1Lines.Hlt1TrackLines          import Hlt1TrackLinesConf
-       thresholds = Physics_April2012.Thresholds(self)
+       thresholds = Physics_May2012.Thresholds(self)
        thresholds[ Hlt1TrackLinesConf ]['AllL0_TrChi2'] = 2.0
        thresholds[ Hlt1TrackLinesConf ]['Photon_TrChi2'] = 2.0
        thresholds[ Hlt1TrackLinesConf ]['AllL0_ValidateTT'] = True
