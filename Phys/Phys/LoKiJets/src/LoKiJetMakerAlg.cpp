@@ -30,6 +30,8 @@
 #include "boost/lexical_cast.hpp"
 
 #include "TH2D.h"
+#include "TMath.h"
+#include "Math/VectorUtil.h"
 
 class TH2D;
 // ============================================================================
@@ -221,6 +223,8 @@ StatusCode LoKi::JetMaker::analyse   ()
       
       LoKi::Types::Fun mtf = LoKi::Cuts::INFO(9003,-10.);
       LoKi::Types::Fun n90 = LoKi::Cuts::INFO(9002,-10.);
+      LoKi::Types::Fun cpf = LoKi::Cuts::INFO(9006,-10.);
+      LoKi::Types::Fun width = LoKi::Cuts::INFO(9007,-10.);
       LoKi::Types::Fun nPVInfo = LoKi::Cuts::INFO(9005,-10.);
       if ( 0 == m_maker ) 
       { m_maker = tool<IJetMaker> ( m_makerName ,m_makerName, this ) ; }
@@ -276,6 +280,8 @@ StatusCode LoKi::JetMaker::analyse   ()
     
     LoKi::Types::Fun mtf = LoKi::Cuts::INFO(9003,-10.);
     LoKi::Types::Fun n90 = LoKi::Cuts::INFO(9002,-10.);
+    LoKi::Types::Fun cpf = LoKi::Cuts::INFO(9006,-10.);
+    LoKi::Types::Fun width = LoKi::Cuts::INFO(9007,-10.);
     LoKi::Types::Fun nPVInfo = LoKi::Cuts::INFO(9005,-10.);
     
     // save all jets
@@ -308,23 +314,32 @@ StatusCode LoKi::JetMaker::appendJetIDInfo( LHCb::Particle* jet )
   std::vector<const LHCb::Particle *>::iterator idaughter = daughtersvector.begin();
 
   double mtf;    /// Highest pT track / Jet pT
+  double cpf;    /// charged pT fraction - V0s are not included
+  double width;  /// jet width
   int    n90;    /// Number of items responsible for at least 90% of the jet momentum
   int    ntrk;   /// Number of tracks
 
   float auxptmax=-1, sumpt=0; int iitems=0;
+  double tpx=0, tpy=0;
   std::vector<float> itemspt;
-  ntrk=n90=0;
+  ntrk=n90=width=0; 
 
   for (;idaughter != daughtersvector.end() ; ++idaughter){
     const LHCb::Particle * daughter = *idaughter;
     if(daughter->particleID().threeCharge()!=0) {
       ntrk++; auxptmax = daughter->momentum().Pt() > auxptmax ? daughter->momentum().Pt() : auxptmax;
+      tpx+=daughter->momentum().Px(); tpy+=daughter->momentum().Py();
     }
     iitems++; float pt = daughter->momentum().Pt(); sumpt+=pt;
     itemspt.push_back(pt);
+    for(int ii=0; ii<iitems; ii++) if(itemspt[ii]<pt) {
+      float aux = itemspt[ii]; itemspt[ii]=pt; pt = aux;}
+    width += ROOT::Math::VectorUtil::DeltaR(daughter->momentum(),jet->momentum()) * daughter->momentum().Pt();
   }
 
   mtf = auxptmax / jet->momentum().Pt(); mtf = 0 > mtf ? 0 : mtf; mtf = 1 < mtf ? 1 : mtf;
+  cpf = TMath::Sqrt(tpx*tpx+tpy*tpy)/jet->momentum().Pt();
+  width /= sumpt;
 
   sort (itemspt.begin(), itemspt.end());
   float auxptsum = 0; n90=0;
@@ -338,6 +353,8 @@ StatusCode LoKi::JetMaker::appendJetIDInfo( LHCb::Particle* jet )
   jet->addInfo ( 9001 , ntrk );
   jet->addInfo ( 9002 , n90 );
   jet->addInfo ( 9003 , mtf );
+  jet->addInfo ( 9006 , cpf );
+  jet->addInfo ( 9007 , width );
   jet->addInfo ( 9004 , NsatCells(jet) );
   jet->addInfo ( 9005 , N_HasPVInfo(jet) );
   
