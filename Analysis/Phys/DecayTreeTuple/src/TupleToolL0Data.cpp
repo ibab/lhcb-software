@@ -31,6 +31,7 @@ DECLARE_TOOL_FACTORY( TupleToolL0Data )
   declareProperty( "TCKList" , m_tcks );
 
   // Accepted/rejected data
+  m_list.push_back("ALL");      // add all data but ...
   m_list.push_back("!*Status*");
   m_list.push_back("!*More*");
   m_list.push_back("!*CU*");
@@ -42,7 +43,7 @@ DECLARE_TOOL_FACTORY( TupleToolL0Data )
   m_list.push_back("!*M5*");
   m_list.push_back("!*M6*");
   m_list.push_back("!*M7*");
-  //  m_list.push_back("!*Add*");
+  m_list.push_back("!*Add*");
 }
 
 

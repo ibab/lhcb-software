@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2012-04-27 - Olivier Deschamps
+ - Add a new tool TupleToolVeto that flag a particle when already used to build another particle in a given container (relies on DaVinciTools/ParticleVeto)
+ - TupleToolL0Data : fix  default setting
+
 ! 2012-04-04 - V. Gligorov
  - Add options to TupleToolSwimmingInfo to allow it to grab particles by hand
    from a specified location, in order to solve (hack) problem with the
