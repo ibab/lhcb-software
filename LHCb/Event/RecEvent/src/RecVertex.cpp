@@ -13,7 +13,18 @@
 
 void LHCb::RecVertex::removeFromTracks(const LHCb::Track* track)
 {
+  // Possible to have tracks but no weights, if the vertex was persisted
+  // before the weights where added, without packing. If this happens, give
+  // each track a default weight of 1
+  if ( !m_tracks.empty() && m_weights.empty() )
+  {
+    m_weights = std::vector<float>( m_tracks.size(), 1.0 );
+  }
+
+  // At this point, the two vectors *must* have the same size
   assert( m_tracks.size() == m_weights.size() );
+
+  // If we have tracks, look for the one to remove
   if ( !m_tracks.empty() )
   {
     // Does the track vector have this track in it ?
@@ -30,6 +41,7 @@ void LHCb::RecVertex::removeFromTracks(const LHCb::Track* track)
       m_weights.erase( m_weights.begin() + index );
     }
   }
+
 }
 
 LHCb::RecVertex::TrackWithWeightVector
@@ -65,7 +77,17 @@ LHCb::RecVertex::setTracksWithWeights( const TrackWithWeightVector& tracksAndWei
 bool LHCb::RecVertex::setTrackWeight( const LHCb::Track* track,
                                       const float weight )
 {
+  // Possible to have tracks but no weights, if the vertex was persisted
+  // before the weights where added, without packing. If this happens, give
+  // each track a default weight of 1
+  if ( !m_tracks.empty() && m_weights.empty() )
+  {
+    m_weights = std::vector<float>( m_tracks.size(), 1.0 );
+  }
+
+  // At this point, the two vectors *must* have the same size
   assert( m_tracks.size() == m_weights.size() );
+
   bool OK = false;
   if ( !m_tracks.empty() )
   {
@@ -88,8 +110,9 @@ bool LHCb::RecVertex::setTrackWeight( const LHCb::Track* track,
 
 std::pair<bool,float> LHCb::RecVertex::trackWeight( const LHCb::Track* track ) const
 {
-  assert( m_tracks.size() == m_weights.size() );
   std::pair<bool,float> weight(false,0.0);
+
+  // Find the weight for this track
   if ( !m_tracks.empty() )
   {
     // Try and find the track
@@ -101,7 +124,14 @@ std::pair<bool,float> LHCb::RecVertex::trackWeight( const LHCb::Track* track ) c
       // Get the index from the iterator
       const unsigned int index = (unsigned int) ( iTk - m_tracks.begin() );
       // Get the weight
-      weight.second = m_weights[index];
+      if ( m_tracks.size() == m_weights.size() )
+      {
+        weight.second = m_weights[index];
+      }
+      else
+      {
+        weight.second = 1.0;
+      }
       weight.first  = true;
     }
   }

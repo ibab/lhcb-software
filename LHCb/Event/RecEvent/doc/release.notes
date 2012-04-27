@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+! 2012-04-27 - Chris Jones
+ - Fix a bug in the RecVertex class when a vertex had tracks but no weights.
+
 ! 2012-04-26 - Chris Jones
  - Improvements to the fillStream methods for VertexBase
  - Change the default initialisation for VertexBase::position from
