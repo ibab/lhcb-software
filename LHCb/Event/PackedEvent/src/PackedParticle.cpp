@@ -175,8 +175,8 @@ void ParticlePacker::unpack( const PackedData       & ppart,
     const double px   = m_pack.slope( ppart.lv_px ) * pz;
     const double py   = m_pack.slope( ppart.lv_py ) * pz;
     const double mass = ppart.lv_mass;
-    part.setMomentum( Gaudi::LorentzVector( px, py, pz,
-                                            std::sqrt(px*px+py*py+pz*pz+mass*mass) ) );
+    const double E    = std::sqrt( (px*px) + (py*py) + (pz*pz) + (mass*mass) );
+    part.setMomentum( Gaudi::LorentzVector( px, py, pz, E ) );
 
     // reference point
     part.setReferencePoint( Gaudi::XYZPoint( m_pack.position(ppart.refx),

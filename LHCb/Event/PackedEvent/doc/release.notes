@@ -6,6 +6,10 @@
 
 !========================= PackedEvent v4r10 2012-04-27 =========================
 
+! 2012-04-27 - Chris Jones
+ - Some final fine tuning of the packing checks, to removal some residual
+   warnings from LorentzVector energy checks.
+
 ! 2012-04-24 - Chris Jones
  - Improvements to the checks of Particle packing, to remove some false
    positives when comparing the momentum covariance matrix.
