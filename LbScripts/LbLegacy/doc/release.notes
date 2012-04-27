@@ -1,5 +1,6 @@
 2012-04-27 Ben Couturier <Ben.Couturier@cern.ch>
 
+	* python/LbLegacy/install_project.py: fix format for output when Update script fails.
 	* python/LbLegacy/LHCb_config.py: Added VetraTB
 
 2012-03-06 Ben Couturier <Ben.Couturier@cern.ch>

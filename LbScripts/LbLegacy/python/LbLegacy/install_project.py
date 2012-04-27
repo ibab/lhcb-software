@@ -428,7 +428,7 @@ def callUpdateCommand(project, version):
             log.info("Executing Update for %s %s: \"%s\" in %s" % (project, version, cmd, wd))
             rc = systemCall(cmd, workdir=wd, env=_post_install_env)
             if rc != 0 :
-                log.error("Update command for %s %s returned %d" % rc)
+                log.error("Update command for %s %s returned %d" % (project, version, rc))
     else :
         log.debug("Project %s %s has no postinstall command" % (project, version))
     return rc
