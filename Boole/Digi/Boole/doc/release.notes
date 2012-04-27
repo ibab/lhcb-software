@@ -22,9 +22,12 @@ Purpose: LHCb Digitization program
    . Adapt boole-fest.ref for reduced L0Calo bank size following application of
      Hcal threshold in L0Calo emulation of 2012 data (L0Calo) 
    . Add filter on CalibrationTypes in OdinTypesFilter (DAQUtils)
+   . Use LUT for L0Muon pt computation, with V3 as default
+     (L0MuonKernel, L0Muon, ParamFiles v8r7)
 
  - Changes to Digi/Boole/python/Boole/Configuration.py
-   . Added configuration for OTDoublePulse.root file which provides a look-up-table
+   . Added configuration for OTDoublePulse.root file which provides a 
+     look-up-table (available in ParamFiles v8r7)
 
 </PRE><H1><A NAME=v23r2>2011-12-19 Boole v23r2</A></H1><PRE>
 This version uses projects LCGCMT 61b, Gaudi v22r5, LHCb v33r2, Lbcom v11r2
