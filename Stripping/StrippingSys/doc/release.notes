@@ -5,7 +5,10 @@ Purpose     : LHCb stripping packages
 
 !========================= StrippingSys v4r3 2012-04-27 =========================
 
-  - Release v4r2 for Stripping19
+! 2012-04-27 - Anton Poluektov 
+  - Fix test reference. Retag as v4r3
+
+  - Release v4r3 for Stripping19
     * CommonParticles v8r8: added StdTightDplus2PPP
     * StrippingConf v4r5: Reduce output from stripping sequencers
     * StrippingSelections v3r13: 
