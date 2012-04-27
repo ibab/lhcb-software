@@ -33,7 +33,6 @@ void RecVertexPacker::pack( const Data & vert,
 
   //== Store the Tracks and weights
   pvert.firstTrack = pverts.refs().size();
-  //std::cout << verts.registry()->identifier() << std::endl;
   std::vector<float>::const_iterator iW = vert.weights().begin();
   for ( SmartRefVector<LHCb::Track>::const_iterator itT = vert.tracks().begin();
         vert.tracks().end() != itT; ++itT, ++iW )
