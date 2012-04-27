@@ -3,10 +3,12 @@
 ! Responsible : Patrick Koppenburg
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
-!
+
+!========================= DaVinciMonitors v1r19 2012-04-27 =========================
+
 ! 2012-04-27 - Patrizia de Simone
-  - Efficiency plots with and without MIP cut on the selected sample in
-    MuEffMonitor  
+ - Efficiency plots with and without MIP cut on the selected sample in
+   MuEffMonitor  
 
 !========================= DaVinciMonitors v1r18 2012-04-19 =========================
 
