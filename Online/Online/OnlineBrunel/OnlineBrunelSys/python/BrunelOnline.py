@@ -101,7 +101,6 @@ def patchBrunel(true_online_version):
   EventClockSvc().InitialTime = 1322701200000000000
 
   brunel.UseDBSnapshot = True     # try it
-  # brunel.DBSnapshotDirectory = "/scratch/pkoppenb/work/DQ/OnlineBrunel/conditions"
 #  brunel.PartitionName = "FEST"
 
   
