@@ -3,6 +3,10 @@
 ! Responsible : Patrick Koppenburg
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
+!
+! 2012-04-27 - Patrizia de Simone
+  - Efficiency plots with and without MIP cut on the selected sample in
+    MuEffMonitor  
 
 !========================= DaVinciMonitors v1r18 2012-04-19 =========================
 
@@ -33,7 +37,7 @@
   - new histograms for efficiency versus P, XY, chamber
 
 !======================= DaVinciMonitors v1r15 2011-09-07 =====================
-! 2011-08-27 - Patricia Disimone
+! 2011-08-27 - Patrizia de Simone
   - The Muon Stations efficiency monitor MuEffMonitor has been moved from 
     Muon/MuonTrackMonitor to Phys/DaVinciMonitors. The main changes are : 
    1) muon candidates TIS unbiased, 
