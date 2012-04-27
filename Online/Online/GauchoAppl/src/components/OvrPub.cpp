@@ -130,6 +130,7 @@ OvrPub::OvrPub(const std::string& name, ISvcLocator* sl)
   m_NoBytes = 0.0;
   m_NoFiles = 0.0;
   m_NoMEPs = 0.0;
+  m_NoBytesSvc = m_NoFilesSvc = m_NoMEPsSvc = 0;
 }
 
 OvrPub::~OvrPub()
