@@ -4,6 +4,10 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+
+! 2012-04-27 - Olivier Deschamps
+ - Add a new tool interface IParticleVeto that checks if a particle is already used to build another particle in a given container
+
 !========================= DaVinciInterfaces v2r13 2012-03-01 =========================
 
 ! 2012-02-26 - Chris Jones
