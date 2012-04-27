@@ -7,7 +7,9 @@ from Configurables import ( GaudiSequencer, LoKi__JetMaker, LoKi__FastJetMaker, 
 
 
 class JetMakerConf:
-    def __init__(self, _name, Inputs = ['Phys/PFBannedParticles/Particles','Phys/PFParticles/Particles'], R = 0.5 , PtMin = 5000., AssociateWithPV = False , JetEnergyCorrection = False , JetID = False ):
+
+    def __init__(self, _name, Inputs = ['Phys/PFBannedParticles/Particles','Phys/PFParticles/Particles'], R = 0.5 , PtMin = 5000., AssociateWithPV = False , JetEnergyCorrection = False , JetID = False, jetidnumber=98 , algtype="anti-kt"):
+         jetname_dict = {"kt":0,"Cambridge":1,"anti-kt":2}
          self.name = _name
          self.Inputs = Inputs
          self.AssociateWithPV = AssociateWithPV
@@ -16,7 +18,9 @@ class JetMakerConf:
          self.JetEnergyCorrection = JetEnergyCorrection
          self.JetID = JetID
          self.jetMakerTool =  'LoKi__FastJetMaker'
-         self.jetMakerType =  2
+         #self.jetMakerType =  2
+         self.jetMakerType =  jetname_dict[algtype]
+         self.jetidnumber = jetidnumber
          self.algorithms = []
          self.setupJetMaker()
 
@@ -34,6 +38,7 @@ class JetMakerConf:
         tool.RParameter = self.R
         tool.PtMin = self.PtMin
         tool.Recombination = 0
+        tool.JetID = self.jetidnumber
         if self.JetEnergyCorrection:
             algo.ApplyJEC = True
             algo.HistoPath = 'JEC/'
