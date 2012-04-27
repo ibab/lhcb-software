@@ -10,6 +10,10 @@ Purpose: LHCb reconstruction program
     (TrackSys, TrackTools, TrackUtils)
   . Add minimum bias rate and event time monitors to Hlt monitor sequence
     (HltMonitors, RecAlgs)
+  . Use LHCBCOND tag head-20120420 on 2012 data: new Ecal calibration, Rich 
+    mirror alignments, refractive index and HPD image calibrations, OT T0 
+    calibration and parameterisation of resolution leading to improved pull vs
+    momentum distribution (DDDB)
 
 </PRE><H1><A NAME=v42r2p2>2012-04-13 Brunel v42r2p2</A></H1><PRE>
 This version uses projects LCG 62b, Gaudi v23r2, LHCb v34r2, Lbcom v12r2,
