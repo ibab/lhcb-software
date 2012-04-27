@@ -1,6 +1,6 @@
 #============================================================================
-# Created    : 2007-12-05
-# Maintainer : Patrick Koppenburg
+# Created    : 2012-04-27
+# Maintainer : Matt Needham
 #============================================================================
 package           DaVinciTrackFitting
 version           v1r0
@@ -19,9 +19,9 @@ use   DecayTreeFitter    v*    Phys
 use   Boost              v*    LCG_Interfaces
 use   LoKiCore           v*    Phys
 use   LoKiPhys           v*    Phys
-use   TrackEvent v* Event
-use   TrackFitEvent v* Tr
-use   LHCbKernel v* Kernel
+use   TrackEvent         v*    Event
+use   TrackFitEvent      v*    Tr
+use   LHCbKernel         v*    Kernel
 use   TrackKernel        v*    Tr
 
 include_path      none
@@ -30,6 +30,7 @@ include_path      none
 # Component library building rule
 #============================================================================
 library          DaVinciTrackFitting  ../src/*.cpp 
+
 #============================================================================
 # define component library link options
 #============================================================================
