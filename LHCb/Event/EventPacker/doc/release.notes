@@ -4,10 +4,12 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+!========================= EventPacker v2r16 2012-04-27 =========================
+
 ! 2012-04-26 - Chris Jones
  - Protect UnpackCluster against the possibility that the packed clusters 
    are missing
- - Add protection in PackDecReport incase the packer tries to repack existing
+ - Add protection in PackDecReport in case the packer tries to repack existing
    reports. Needed for the use case of creating a packed private (u)DST from an
    already packed (u)DST
 
