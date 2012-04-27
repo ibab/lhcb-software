@@ -58,7 +58,7 @@ private:
   double          m_MomentumCut;  // Minimum momentum cut
   double          m_MomentumCutM4;  // Minimum momentum cut for M4
   double          m_MomentumCutM5;  // Minimum momentum cut for M5
-  bool            m_useCalo;      // use calorimeters for selection
+  //bool            m_useCalo;      // use calorimeters for selection
   double          m_EecalMax, m_EecalMin;  // Asymmetric Ecal Mip enregy window
   double          m_EhcalMax, m_EhcalMin;  // Asymmetric Hcal Mip enregy window
   
@@ -107,8 +107,10 @@ private:
   AIDA::IHistogram1D *m_PP_hit[5];
   AIDA::IHistogram1D *m_PN_hit[5];
   AIDA::IHistogram1D *m_StationsEff_den, *m_StationsEff_num;
+  AIDA::IHistogram1D *m_StatEffNoMIP_den, *m_StatEffNoMIP_num;
   AIDA::IHistogram1D *m_StationsEff_denP, *m_StationsEff_numP, *m_StationsEff_denN, *m_StationsEff_numN;
   AIDA::IHistogram1D *m_RegionsEff_den, *m_RegionsEff_num;
+  AIDA::IHistogram1D *m_RegEffNoMIP_den, *m_RegEffNoMIP_num;
   AIDA::IHistogram1D *m_RegionsEff_denP, *m_RegionsEff_numP, *m_RegionsEff_denN, *m_RegionsEff_numN;
 
   AIDA::IHistogram2D *m_hit_numP[5][4]; 
@@ -133,8 +135,8 @@ private:
   // variables for the candidates:
   //--------------------------------
 
-
-  long   m_nTrk; 
+  bool m_muInCalo;
+  long m_nTrk; 
   std::vector<const LHCb::ProtoParticle*> m_preCandidate; 
   std::vector<const LHCb::State*> m_preCandState; 
 
@@ -258,6 +260,7 @@ private:
   bool DoTrackPreSelection(const LHCb::Track *pTrack, const LHCb::State * &muState);
   bool DoTrackSelection();
   bool DoAccCheck();
+  bool DoAccSel();
   bool DoHitsInPad();
   bool DoCaloMIP(const LHCb::ProtoParticle *pProto);
   bool isolatedTrack();

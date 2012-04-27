@@ -58,7 +58,7 @@ MuEffMonitor::MuEffMonitor( const std::string& name,
   declareProperty ( "MomentumCut"   ,m_MomentumCut =    5000. ) ; //MeV
   declareProperty ( "MomentumCutM4" ,m_MomentumCutM4 =  9000. ) ;
   declareProperty ( "MomentumCutM5" ,m_MomentumCutM5 = 10000. ) ;
-  declareProperty ( "UseCalo"       ,m_useCalo = false );
+  //declareProperty ( "UseCalo"       ,m_useCalo = false );
   declareProperty ( "EecalMax"      ,m_EecalMax = 1000. ) ;
   declareProperty ( "EecalMin"      ,m_EecalMin = -100. ) ;
   declareProperty ( "EhcalMax"      ,m_EhcalMax = 3500. ) ;
@@ -108,7 +108,7 @@ StatusCode MuEffMonitor::initialize() {
   
   if (m_notOnline) {
     m_nEvts   = book1D("m_nEvts","number of processed evts",0.5, 2.5, 2 );
-    m_nTracks = book1D("m_nTracks","number of tracks after selection steps",-0.5, 15.5, 16 );
+    m_nTracks = book1D("m_nTracks","number of tracks after selection steps",-0.5, 16.5, 17 );
     m_trNdof = book1D("m_trNdof","number of track dof", -0.5,49.5,50);
     m_trExtErrX = book1D("m_trExtErrX","Error on X track extrapolation to M2",0.,50.,50);
     m_trExtErrY = book1D("m_trExtErrY","Error on Y track extrapolation to M2",0.,50.,50);
@@ -190,6 +190,9 @@ StatusCode MuEffMonitor::initialize() {
     }
   }
   
+  m_StatEffNoMIP_den = book1D("m_StatEffNoMIP_den","selected tracks (no MIP cut)",-0.5,5.5,6); 
+  m_StatEffNoMIP_num = book1D("m_StatEffNoMIP_num","selected tracks (no MIP cut) with hits ",-0.5,5.5,6);  
+
   m_StationsEff_den = book1D("m_StationsEff_den","selected tracks",-0.5,5.5,6); 
   m_StationsEff_num = book1D("m_StationsEff_num","selected tracks with hits ",-0.5,5.5,6); 
   m_StationsEff_denP = book1D("m_StationsEff_denP","selected + tracks",-0.5,5.5,6); 
@@ -197,6 +200,10 @@ StatusCode MuEffMonitor::initialize() {
   m_StationsEff_denN = book1D("m_StationsEff_denN","selected - tracks",-0.5,5.5,6); 
   m_StationsEff_numN = book1D("m_StationsEff_numN","selected - tracks with hits ",-0.5,5.5,6); 
   
+
+  m_RegEffNoMIP_den = book1D("m_RegEffNoMIP_den","selected tracks (no MIP cut)",-0.5,20.5,21); 
+  m_RegEffNoMIP_num = book1D("m_RegEffNoMIP_num","selected tracks (no MIP cut) with hits ",-0.5,20.5,21);
+
   m_RegionsEff_den = book1D("m_RegionsEff_den","selected tracks",-0.5,20.5,21); 
   m_RegionsEff_num = book1D("m_RegionsEff_num","selected tracks with hits ",-0.5,20.5,21);
   m_RegionsEff_denP = book1D("m_RegionsEff_denP","selected + tracks",-0.5,20.5,21); 
@@ -330,8 +337,7 @@ StatusCode MuEffMonitor::execute() {
     }
     
     //===== Track selection
-    if ( DoTrackSelection() ) {    
-      
+    if ( DoTrackSelection() ) {
       // ====== Fetch the values of the tracks:
       m_nTrk++;
       if(m_measureTime) m_timer->start(m_timeFil);
@@ -627,37 +633,42 @@ bool MuEffMonitor::DoTrackSelection(){
 
   //======  require Mips in Calos       
   if(m_measureTime) m_timer->start(m_timeCal);
-  bool muInCalo= DoCaloMIP(m_Muon.proto);
+  bool m_muInCalo= DoCaloMIP(m_Muon.proto);
   if(m_measureTime) m_timer->stop(m_timeCal);
-  if (m_useCalo && !muInCalo) return false;
+  //if (m_useCalo && !muInCalo) return false;
   if (m_notOnline) m_nTracks->fill(4.);
 
-  // isolation cut
+  // =======  isolation cut
   if(m_measureTime) m_timer->start(m_timeIso);
   bool trkIso = isolatedTrack();
   if(m_measureTime) m_timer->stop(m_timeIso);
   if ( !trkIso ) return false;
   if (m_notOnline) m_nTracks->fill(5.);
 
-   //======  Do Extrapolation and acceptance cut
-  if(m_measureTime) m_timer->start(m_timeExr);  
-  bool extrap = estrapola();
-  bool muInAcceptance = false;
-  if(extrap) muInAcceptance=DoAccCheck();
-  if(m_measureTime) m_timer->stop(m_timeExr);
+   //======  Do acceptance cut and Extrapolation
+  bool muInAcceptance=DoAccCheck();
   if (!muInAcceptance) return false;
+
+  if(m_measureTime) m_timer->start(m_timeExr);  
+  bool extrap = estrapola();  
+  if(m_measureTime) m_timer->stop(m_timeExr);
   if (m_notOnline) m_nTracks->fill(6.);
+
+  //======= Do Fiducial Volume cut
+  bool muInFV=DoAccSel();
+  if (!muInFV) return false;
+  if (m_notOnline) m_nTracks->fill(7.);
 
    // ==  Require matching in muon detector
   if(m_measureTime) m_timer->start(m_timeMuM);
   bool muMatched = DoHitsInPad();
   if(m_measureTime) m_timer->stop(m_timeMuM);
   if (!muMatched) return false;     
-  if (m_notOnline) m_nTracks->fill(7.);
+  if (m_notOnline) m_nTracks->fill(8.);
 
   // == require good chi2 from muon matching
   if (m_Muon.Chisq/(2*m_Muon.nMatchedSt) > m_Chi2MuMin) return false;
-  if (m_notOnline) m_nTracks->fill(8.);
+  if (m_notOnline) m_nTracks->fill(9.);
 
   // TISTOSsing
   int L0Tis=0, Hlt1Tis=0, Hlt2Tis=0;
@@ -692,16 +703,50 @@ bool MuEffMonitor::DoTrackSelection(){
   }
 
   if(m_measureTime) m_timer->stop(m_timeTis);
-  if (m_notOnline) m_nTracks->fill(9.);
+  if (m_notOnline) m_nTracks->fill(10.);
 
   return true;
 }
 
-// Check if the track is in the muon detector acceptance:
 //===============================
 bool MuEffMonitor::DoAccCheck(){
 //===============================
+//       
+// get state closest state to M2 and M5
+// x(z') = x(z) + (dx/dz * (z' - z))
+
+  const LHCb::State * &mstate = m_Muon.stateP;
+
+  double M2trackX = (mstate->x() + ( mstate->tx()*(m_stationZ[1]-mstate->z()) ));
+  double M2trackY = (mstate->y() + ( mstate->ty()*(m_stationZ[1]-mstate->z()) ));
+
+  double M5trackX = (mstate->x() + ( mstate->tx()*(m_stationZ[4]-mstate->z()) ));
+  double M5trackY = (mstate->y() + ( mstate->ty()*(m_stationZ[4]-mstate->z()) ));
+  
   // == Returns true if the track is in the muon detector acceptance
+
+  bool OuterFV2 =  ( (fabs(M2trackX) < (m_stationOuterX[1]+m_nSigmaFidVol*m_padSizeX[7])) &&
+                     (fabs(M2trackY) < (m_stationOuterY[1]+m_nSigmaFidVol*m_padSizeY[7])) );
+
+  bool InnerFV2 =  ( (fabs(M2trackX) > (m_stationInnerX[1]-m_nSigmaFidVol*2.*m_padSizeX[4])) ||
+                     (fabs(M2trackY) > (m_stationInnerY[1]-m_nSigmaFidVol*2.*m_padSizeY[4])) );
+
+  bool OuterFV5 =  ( (fabs(M5trackX) < (m_stationOuterX[4]+m_nSigmaFidVol*m_padSizeX[19])) &&
+                     (fabs(M5trackY) < (m_stationOuterY[4]+m_nSigmaFidVol*m_padSizeY[19])) );
+
+  bool InnerFV5 =  ( (fabs(M5trackX) > (m_stationInnerX[4]-m_nSigmaFidVol*2.*m_padSizeX[16])) ||
+                     (fabs(M5trackY) > (m_stationInnerY[4]-m_nSigmaFidVol*2.*m_padSizeY[16])) );
+
+  bool Volume_Fiduciale = ( (OuterFV2 && InnerFV2)&&(OuterFV5 && InnerFV5) );
+
+  return Volume_Fiduciale;  
+}
+
+// Check if the track is in the muon detector acceptance:
+//===============================
+bool MuEffMonitor::DoAccSel(){
+//===============================
+//== Returns true if the track is in the muon detector acceptance
   for (int s=0; s<m_NStation ; s+=4) { // loop on stations 1 and 5
     double marginX = m_nSigmaFidVol*sqrt(m_Muon.err2X[s]);
     double marginY = m_nSigmaFidVol*sqrt(m_Muon.err2Y[s]);
@@ -733,8 +778,11 @@ bool MuEffMonitor::DoCaloMIP(const LHCb::ProtoParticle *proto) {
 }
  
 // Removes cases of clones/ambiguous tracks
+//==============================================
 bool MuEffMonitor::isolatedTrack() {
+//==============================================
   const LHCb::State * &iState = m_Muon.stateP;
+
   for (std::vector<const LHCb::State*>::iterator jt = m_preCandState.begin(); jt != m_preCandState.end(); jt++) {
     const LHCb::State * jState = *jt;
     if (jState == m_Muon.stateP) continue;
@@ -777,6 +825,7 @@ bool MuEffMonitor::estrapola(){
     m_Muon.trackY[station] = ExtraState.y();
     m_Muon.err2X[station] = ExtraState.errX2();
     m_Muon.err2Y[station] = ExtraState.errY2();
+
     if (m_notOnline && station==1) { 
       m_trExtErrX->fill(sqrt(ExtraState.errX2())); 
       m_trExtErrY->fill(sqrt(ExtraState.errY2()));
@@ -800,17 +849,21 @@ bool MuEffMonitor::DoHitsInPad(){
   m_seleids.clear();
   
   for(int station = m_NStation-1 ; station >= 0 ; station--) {
+
     double Chisq_min = 99999.;
     double bestmtcSigmax=0., bestmtcSigmay=0.;
     bool crossedHitFound = false;
     std::vector<coordExtent_>::const_iterator goodHit;
 
     for(int region = 0 ; region < m_NRegion ; region++){
+
       if (m_coordPos[station*m_NRegion + region].empty()) continue; 
-      std::vector<coordExtent_>::const_iterator itPos;     
+      std::vector<coordExtent_>::const_iterator itPos;  
+   
       for (itPos = m_coordPos[station*m_NRegion + region].begin();
            itPos != m_coordPos[station*m_NRegion + region].end();
            itPos++) {
+
         double uncross = (station == 0 || ((station>2)&&(region==0))) ? false : itPos->m_pCoord->uncrossed();
         if (uncross && m_mustCross) continue;
         if (uncross && crossedHitFound) continue; // always prefer crossed hits
@@ -821,10 +874,14 @@ bool MuEffMonitor::DoHitsInPad(){
         // dimensions of the hitted pad
         const double& dx = itPos->m_dx;
         const double& dy = itPos->m_dy;
+       
+        double Err2x = (dx*dx*4)/12. +  m_Muon.err2X[station];
+        double Err2y = (dy*dy*4)/12. +  m_Muon.err2Y[station];     
+        double Dx = m_nSigmaX[station]*sqrt(Err2x);
+        double Dy = m_nSigmaX[station]*sqrt(Err2y);
         
         // dimensions of the hitted pad (+) error on extrapolated track position
-        double Err2x = (dx*dx*4)/12. +  m_Muon.err2X[station];
-        double Err2y = (dy*dy*4)/12. +  m_Muon.err2Y[station];
+      
         double xdist = (x-m_Muon.trackX[station]);
         double ydist = (y-m_Muon.trackY[station]);
         
@@ -832,12 +889,12 @@ bool MuEffMonitor::DoHitsInPad(){
         double mtcSigmay = fabs(ydist)/sqrt(Err2y);
         double Chisq = pow(xdist,2.)/Err2x + pow(ydist,2.)/Err2y;
         
-        if(fabs(xdist) < m_nSigmaX[station]*sqrt(Err2x) &&
-           fabs(ydist) < m_nSigmaY[station]*sqrt(Err2y)) {
+        if ((fabs(xdist) < Dx) && (fabs(ydist) < Dy)) {
+
           // pad is compatible with the track
           if ( (Chisq < Chisq_min) ||
                (!crossedHitFound && !uncross) // always prefer crossed hits
-               ) {
+              ) {
             m_Muon.hitInM[station] = true;
             Chisq_min = Chisq;
             bestmtcSigmax = mtcSigmax;
@@ -883,26 +940,34 @@ void MuEffMonitor::fillHistos(){
     m_Sene  -> fill(m_Muon.Ehcal, m_Muon.Eecal);
   }
 
-  int carica = (m_Muon.pTrack)->charge(); 
+  int carica = (m_Muon.pTrack)->charge();
 
-  // total efficiency
-  if (m_Muon.Mom > m_MomentumCutM5 &&
-      m_Muon.Chisq/(2*m_Muon.nMatchedSt) < m_Chi2MuGlobal) { // good global candidate
-    m_StationsEff_den -> fill(0.);
-    if(carica > 0) m_StationsEff_denP -> fill(0.);
-    else m_StationsEff_denN -> fill(0.);
-    
+  // total efficiency 
+  if ( (m_Muon.Mom > m_MomentumCutM5) &&
+       (m_Muon.Chisq/(2*m_Muon.nMatchedSt) < m_Chi2MuGlobal) ) { // good global candidate
+
     bool allGood=true;
     for (int is=(m_ignoreM1 ? 1 : 0); is<m_NStation; is++) 
       if (!m_Muon.hitInM[is]) allGood=false;
-    if(allGood) {
-      m_StationsEff_num -> fill(0.);
-      if(carica > 0) m_StationsEff_numP -> fill(0.);
-      else m_StationsEff_numN -> fill(0.);
-    }
+    
+    m_StatEffNoMIP_den -> fill(0.);
+    if(allGood) m_StatEffNoMIP_num -> fill(0.);
+  
+    if (m_muInCalo) {
+      
+      m_StationsEff_den -> fill(0.);
+      if(carica > 0) m_StationsEff_denP -> fill(0.);
+      else m_StationsEff_denN -> fill(0.);  
+
+      if(allGood) {
+        m_StationsEff_num -> fill(0.);
+        if(carica > 0) m_StationsEff_numP -> fill(0.);
+        else m_StationsEff_numN -> fill(0.);
+      }
+    } 
   }
 
-  //bool goodGlobalCandidate=true;
+  // bool goodGlobalCandidate=true;
 
   // efficiency of each station/region
   for (int s= (m_ignoreM1 ? 1 : 0); s<m_NStation; s++) {
@@ -930,62 +995,79 @@ void MuEffMonitor::fillHistos(){
     }
     if (!otherStationsWellMatched) continue; // track is not matched well enough with other mu stations
     if (m_notOnline) {
-      m_nTracks->fill(11.+s);
+
+      m_nTracks->fill(12.+s);
       double P = m_Muon.Mom/Gaudi::Units::GeV;
       double X = m_Muon.trackX[s];
       double Y = m_Muon.trackY[s];
       int chamber = xy2Chamber(X, Y, s, m_Muon.reg[s]);
-      m_P[s] -> fill(P);
-      if(carica > 0)
-        m_PP[s] -> fill(P);
-      else       
-        m_PN[s] -> fill(P);
-
-      if(carica > 0) {
-        m_hit_denP[s][r] -> fill(X,Y);
-      }
-      else {
-        m_hit_denN[s][r] -> fill(X,Y);
-      }
-      m_chamberEff_den[s][r]->fill((double) chamber);
-
-      if (m_Muon.hitInM[s]) {
-        m_P_hit[s]-> fill(P);        
+        
+      if (m_muInCalo) {        
+        m_P[s] -> fill(P);
+        if(carica > 0)
+          m_PP[s] -> fill(P);
+        else       
+          m_PN[s] -> fill(P);
+        
         if(carica > 0) {
-          m_PP_hit[s] -> fill(P);
-          m_hit_numP[s][r] -> fill(X,Y);
+          m_hit_denP[s][r] -> fill(X,Y);
         }
         else {
-          m_PN_hit[s] -> fill(P);
-          m_hit_numN[s][r] -> fill(X,Y);
+          m_hit_denN[s][r] -> fill(X,Y);
         }
-        m_chamberEff_num[s][r]->fill((double) chamber);
+      
+        if (m_Muon.hitInM[s]) {
+          m_P_hit[s]-> fill(P);        
+          if(carica > 0) {
+            m_PP_hit[s] -> fill(P);
+            m_hit_numP[s][r] -> fill(X,Y);
+          }
+          else {
+            m_PN_hit[s] -> fill(P);
+            m_hit_numN[s][r] -> fill(X,Y);
+          }       
+        }
       }
+      m_chamberEff_den[s][r]->fill((double) chamber);
+      if (m_Muon.hitInM[s])  m_chamberEff_num[s][r]->fill((double) chamber);
     }
 
     int region = s*4 + m_Muon.reg[s] +1;
-    m_StationsEff_den -> fill(s+1);
-    m_RegionsEff_den  -> fill(region);
-    if(carica > 0) {
-      m_StationsEff_denP -> fill(s+1);
-      m_RegionsEff_denP -> fill(region);
-    }
-    else {
-      m_StationsEff_denN -> fill(s+1);
-      m_RegionsEff_denN -> fill(region);
+
+    m_StatEffNoMIP_den -> fill(s+1);
+    m_RegEffNoMIP_den  -> fill(region);
+
+    if (m_muInCalo) {
+      
+      m_StationsEff_den -> fill(s+1);
+      m_RegionsEff_den  -> fill(region);
+      if(carica > 0) {
+        m_StationsEff_denP -> fill(s+1);
+        m_RegionsEff_denP -> fill(region);
+      }
+      else {
+        m_StationsEff_denN -> fill(s+1);
+        m_RegionsEff_denN -> fill(region);
+      }
     }
     
     if (m_Muon.hitInM[s]) {
-      m_StationsEff_num -> fill(s+1);
-      m_RegionsEff_num  -> fill(region);
-      if(carica > 0) {
-        m_StationsEff_numP -> fill(s+1);
-        m_RegionsEff_numP -> fill(region);
-    }
-      else {
-        m_StationsEff_numN -> fill(s+1);
-        m_RegionsEff_numN -> fill(region);
-      }
+      m_StatEffNoMIP_num -> fill(s+1);
+      m_RegEffNoMIP_num  -> fill(region);
+
+      if (m_muInCalo) {
+        
+        m_StationsEff_num -> fill(s+1);
+        m_RegionsEff_num  -> fill(region);
+        if(carica > 0) {
+          m_StationsEff_numP -> fill(s+1);
+          m_RegionsEff_numP -> fill(region);
+        }
+        else {
+          m_StationsEff_numN -> fill(s+1);
+          m_RegionsEff_numN -> fill(region);
+        }
+      } 
     }
     
   }
