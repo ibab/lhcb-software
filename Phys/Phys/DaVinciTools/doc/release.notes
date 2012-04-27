@@ -3,6 +3,12 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+
+
+! 2012-04-27 - Olivier Deschamps
+ - Add a new tool ParticleVeto that checks if a particle is already used to build another particle in a given container
+
+
 !========================= DaVinciTools v22r15 2012-04-27 =========================
 
 ! 2012-04-24 - Anton Poluektov 
