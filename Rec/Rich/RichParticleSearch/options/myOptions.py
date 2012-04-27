@@ -13,7 +13,7 @@ from Configurables import Brunel, LHCbApp, CondDB, CondDBAccessSvc, ApplicationM
 # Run faster over dsts
 from Configurables import DstConf
 ApplicationMgr().ExtSvc += [ "DataOnDemandSvc" ]
-DstConf().EnableUnpack = True
+DstConf().EnableUnpack = ["Reconstruction"]
 
 from Configurables import RichRecSysConf
 rConf = RichRecSysConf("RichOfflineRec")

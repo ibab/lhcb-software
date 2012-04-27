@@ -6,27 +6,25 @@ package           RichParticleSearch
 version           v1r6
 
 #============================================================================
-# Structure, i.e. directories to process. 
+# Structure 
 #============================================================================
 branches          cmt doc src options
+
 #============================================================================
-# Used packages. Specify the version, * at the end specifies 'any revision'
-#    Put as many lines as needed, with all packages, without the '#'
+# Used packages
 #============================================================================
-# use   Package      v1r*    Hat
 use  RichRecBase          v*    Rich
 use  MCEvent              v*    Event
+use  PhysEvent            v*    Event
 use  MCInterfaces         v*    Kernel
 
-private
-#use GaudiObjDesc v* -no_auto_imports
-end_private
-
 #include_path      none
+
 #============================================================================
 # Component library building rule
 #============================================================================
 library          RichParticleSearch    ../src/*.cpp  -import=AIDA
+
 #============================================================================
 # define component library link options
 #============================================================================
