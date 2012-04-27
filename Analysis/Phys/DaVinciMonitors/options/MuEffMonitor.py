@@ -22,10 +22,10 @@ moneff.MuEffExtrap.OutputLevel = 5
 moneff.RequiredStations = 4
 moneff.MomentumCut = 5000.
 
-moneff.UseCalo  = False
+##moneff.UseCalo  = False
 moneff.EecalMax = 1000.
 moneff.EhcalMax = 3500.
-moneff.EhcalMin = 500.
+moneff.EhcalMin = 1000.
 
         
 moneff.Chi2ProbTrMin = 0.01
