@@ -227,9 +227,9 @@ MicroDSTDiMuon = {
         'MicroDST'                                 :   True   ,
     
         # DiMuon line
-        'DiMuon_Prescale'                          :     0.5  ,
+        'DiMuon_Prescale'                          :     1.   ,
         'DiMuon_Postscale'                         :     1.   ,
-        'DiMuon_checkPV'                           :  False   ,  
+        'DiMuon_checkPV'                           : False    ,  
         
         'DiMuon_MuonPT'                            :   650.   ,  # MeV
         'DiMuon_MuonP'                             : -8000.   ,  # MeV, no cut now 
@@ -237,7 +237,7 @@ MicroDSTDiMuon = {
         'DiMuon_MinMass'                           :  3000.   ,  # MeV
         'DiMuon_MaxMass'                           :  4000.   ,  # MeV
         'DiMuon_VCHI2PDOF'                         :    20.   , 
-        'DiMuon_PT'                                :  3000.   ,  # MeV
+        'DiMuon_PT'                                :  2000.   ,  # MeV
 
         # DiMuon Same Sign line
         'DiMuonSameSign_Prescale'                  :     0.05 ,
@@ -433,6 +433,13 @@ B2psiX = {
     #
     'CheckPV'   : True ,
     #
+    ## Global filter
+    # 
+    'FILTER'    : None ,   ## VOID filter 
+    'ODIN'      : None ,   ## ODIN filter 
+    'L0DU'      : None ,   ## L0   filter 
+    'HLT'       : None ,   ## HLT  filter
+    #
     ## c*tau cut for B-hadrons 
     #
     'CTAU'      : 100 * micrometer , 
@@ -448,12 +455,17 @@ B2psiX = {
     ( CLONEDIST     > 5000       )     
     """ , 
     #
-    ## tight (K,pi) for 5(K,pi), 6(K.pi)-decays
+    ## pions and kaons
+    # 
+    'PionCut'   : " MIPCHI2DV() > 9 " , 
+    'KaonCut'   : " MIPCHI2DV() > 9 " , 
+    #
+    ## tight (K,pi) for multibody decays
     #
     'TightPi' : ' ( P > 3.2 * GeV ) & HASRICH & ( PIDpi - PIDK  > 0 ) ' , 
     'TightK'  : ' ( P > 3.2 * GeV ) & HASRICH & ( PIDK  - PIDpi > 0 ) ' ,
     #
-    ## useful shortcuts:
+        ## useful shortcuts:
     #
     'Preambulo' : [
     ## shortcut for chi2 of vertex fit 
@@ -472,8 +484,10 @@ B2psiX = {
     "mb0_cut   = in_range ( 5.150 * GeV ,  M , 5.500 * GeV ) " ,
     "mbc_cut   = in_range ( 5.150 * GeV ,  M , 6.500 * GeV ) " ,
     ] ,
-    #     ## Prescales 
-    #     'B2PsiPiPrescale'   : 1.0 ,
+    # =========================================================================
+    ## Prescales 
+    # =========================================================================
+    'B2PsiPiPrescale'   : 1.0 ,
     'B2PsiKPrescale'    : 1.0 ,
     #
     'B2Psi2PiPrescale'  : 1.0 ,
@@ -493,8 +507,7 @@ B2psiX = {
     #
     'B2Psi6PiPrescale'  : 1.0 ,
     'B2Psi6KPiPrescale' : 1.0 ,
-    #     'B2PsiKstPrescale'  : 1.0 
-    # =========================================================================    
+    # =========================================================================
     },
     'STREAMS' : [ 'Leptonic' ] ,
     'WGs'    : [ 'BandQ' ]
@@ -721,12 +734,12 @@ HeavyBaryon = {
                           'PionPIDK'              :       5.,
                           'KaonPIDK'              :      -5.,
                           'DLSForLongLived'       :       5.,
-                          'XiMassWindow'          :      50.,
-                          'XistarMassWindow'      :      150.,
-                          'OmegaMassWindow'       :      500.,
-                          "XibminusMassWindow"    :      300.,
-                          "XibzeroMassWindow"     :      500.,
-                          "OmegabminusMassWindow" :      500.    
+                          'XiMassWindow'          :      30.,
+                          'XistarMassWindow'      :     150.,
+                          'OmegaMassWindow'       :      30.,
+                          "XibminusMassWindow"    :     300.,
+                          "XibzeroMassWindow"     :     500.,
+                          "OmegabminusMassWindow" :     500.
                           },
     'STREAMS' : [ 'Dimuon' ],
     'WGs'    : ['BandQ']
@@ -888,82 +901,82 @@ MicroDSTDiElectron = {
 
 
 
-TwoBodyPrompt = {
-    'BUILDERTYPE'  :  'TwoBody_promptConf',
-    'CONFIG' :  { 'nbody':              2,
-                  'MinBMass':        3690.0,
-                  'MaxBMass':        100000.0,
-                  'MinBPt':          2000.0,
-                  'MaxBVertChi2DOF':   10.0,
-                  'MaxBPVVDCHI2Comb' : 10.,
-                  'MinBPVDIRA' : 0.999,
-                  'MinNvc':             3,
-                  'MinFly':1,
-                  'doLm':            True,
-                  'doDz':            True,
-                  'doDp':            True,
-                  'doDs':            True,
-                  'doLc':            True,
-                  'doPh':            True,
-                  'doJp':            True,
-                  'doDS':            True,
-                  'MinSingleTrackPtPi' : 6000.0,
-                  'MinSingleTrackPtK' : 4000.0,
-                  'MinSingleTrackPtp' : 3500.0,  
-                  'MaxSingleTrackIPChi2DV' : 5.0,   # changed 
-                  'MinDPIDpSingle' : 10.0,
-                  'MinDPIDKSingle' : 5.0,
-                  'MinLongLivedDauPt' : 200.0,
-                  'MinLongLivedDauIPChi2' : 4.0,      
-                  'MinLongLivedPt' : 3000.0,
-                  'MinKsPt':2500.,
-                  'MaxLongLivedIPChi2' : 10.0,
-                  'MaxLongLivedVertChi2DOF' : 10.0,
-                  'MinLongLivedPVVDChi2' : 200.0,   # halved
-                  'MaxKsDeltaM' : 25.0, 
-                  'MaxLmDeltaM' : 15.0, 
+## TwoBodyPrompt = {
+##     'BUILDERTYPE'  :  'TwoBody_promptConf',
+##     'CONFIG' :  { 'nbody':              2,
+##                   'MinBMass':        3690.0,
+##                   'MaxBMass':        100000.0,
+##                   'MinBPt':          2000.0,
+##                   'MaxBVertChi2DOF':   10.0,
+##                   'MaxBPVVDCHI2Comb' : 10.,
+##                   'MinBPVDIRA' : 0.999,
+##                   'MinNvc':             3,
+##                   'MinFly':1,
+##                   'doLm':            True,
+##                   'doDz':            True,
+##                   'doDp':            True,
+##                   'doDs':            True,
+##                   'doLc':            True,
+##                   'doPh':            True,
+##                   'doJp':            True,
+##                   'doDS':            True,
+##                   'MinSingleTrackPtPi' : 6000.0,
+##                   'MinSingleTrackPtK' : 4000.0,
+##                   'MinSingleTrackPtp' : 3500.0,  
+##                   'MaxSingleTrackIPChi2DV' : 5.0,   # changed 
+##                   'MinDPIDpSingle' : 10.0,
+##                   'MinDPIDKSingle' : 5.0,
+##                   'MinLongLivedDauPt' : 200.0,
+##                   'MinLongLivedDauIPChi2' : 4.0,      
+##                   'MinLongLivedPt' : 3000.0,
+##                   'MinKsPt':2500.,
+##                   'MaxLongLivedIPChi2' : 10.0,
+##                   'MaxLongLivedVertChi2DOF' : 10.0,
+##                   'MinLongLivedPVVDChi2' : 200.0,   # halved
+##                   'MaxKsDeltaM' : 25.0, 
+##                   'MaxLmDeltaM' : 15.0, 
                   
-                  'MinDPIDK' : 5.0,
-                  'MinDPIDp' : 5.0,
+##                   'MinDPIDK' : 5.0,
+##                   'MinDPIDp' : 5.0,
                   
-                  'MinDPIDpK' : 5.0,
-                  'MinDPIDKforD0Dplus' : 0.0,
-                  'MinDDauPt' : 250.0,
-                  'MinDDauIPChi2' : 7.0,      
-                  'MinDPt' : 1200.0,       
-                  'MaxDIPChi2' : 10.0,   # changed
-                  'MaxDVertChi2DOF' : 10.0,
-                  'MinDPVVDChi2' : 50.0,  # halved/2 
-                  'MaxDDeltaM' : 30.0,
+##                   'MinDPIDpK' : 5.0,
+##                   'MinDPIDKforD0Dplus' : 0.0,
+##                   'MinDDauPt' : 250.0,
+##                   'MinDDauIPChi2' : 7.0,      
+##                   'MinDPt' : 1200.0,       
+##                   'MaxDIPChi2' : 10.0,   # changed
+##                   'MaxDVertChi2DOF' : 10.0,
+##                   'MinDPVVDChi2' : 50.0,  # halved/2 
+##                   'MaxDDeltaM' : 30.0,
                   
-                  'MinDDauIPChi2Lc': 2. ,   
-                  'MinDPVVDChi2Lc': 5., 
+##                   'MinDDauIPChi2Lc': 2. ,   
+##                   'MinDPVVDChi2Lc': 5., 
                                     
-                  'MinPhDauPt' : 1000.0,      
-                  'MaxPhDauIPChi2' : 5.0,  # changed      
-                  'MinPhPt' : 2500.0,      
-                  'MaxPhVertChi2DOF' : 10.0,
-                  'MaxPhDeltaM' : 20.0, 
+##                   'MinPhDauPt' : 1000.0,      
+##                   'MaxPhDauIPChi2' : 5.0,  # changed      
+##                   'MinPhPt' : 2500.0,      
+##                   'MaxPhVertChi2DOF' : 10.0,
+##                   'MaxPhDeltaM' : 20.0, 
                   
-                  'MinJpDauPt' : 500.0,      
-                  'MaxJpDauIPChi2' : 10.0,   # changed
-                  'MinJpPt' : 1000.0,      
-                  'MaxJpVertChi2DOF' : 10.0,
+##                   'MinJpDauPt' : 500.0,      
+##                   'MaxJpDauIPChi2' : 10.0,   # changed
+##                   'MinJpPt' : 1000.0,      
+##                   'MaxJpVertChi2DOF' : 10.0,
                   
-                  'MaxDSD0VertChi2DOF' : 10.0,
-                  'MinDSD0PVVDChi2' : 60.0,   # halved/2
-                  'MaxDSD0DeltaM' : 30.0,
-                  'MinDSPt' : 1000.0,      
-                  'MaxDSDeltaM':3.0,
-                  'MaxDSSlowPionIPChi2':7.,  # added   
-                  'MaxDSD0IPChi2':7.,  # added
-                  'MinDSD0DauPt' : 250.0, # added
-                  'MinDSD0DauIPChi2' : 9.0,
-                  'MinDSSlowPionDauPt' : 150.0 # added
-                  },
-    'STREAMS' : [ 'Bhadron' ],
-    'WGs'    : [ 'BandQ' ]
-    }
+##                   'MaxDSD0VertChi2DOF' : 10.0,
+##                   'MinDSD0PVVDChi2' : 60.0,   # halved/2
+##                   'MaxDSD0DeltaM' : 30.0,
+##                   'MinDSPt' : 1000.0,      
+##                   'MaxDSDeltaM':3.0,
+##                   'MaxDSSlowPionIPChi2':7.,  # added   
+##                   'MaxDSD0IPChi2':7.,  # added
+##                   'MinDSD0DauPt' : 250.0, # added
+##                   'MinDSD0DauIPChi2' : 9.0,
+##                   'MinDSSlowPionDauPt' : 150.0 # added
+##                   },
+##     'STREAMS' : [ 'Bhadron' ],
+##     'WGs'    : [ 'BandQ' ]
+##     }
 
 Ccbar2Ppbar = {
     'BUILDERTYPE'	: 'Ccbar2PpbarConf',

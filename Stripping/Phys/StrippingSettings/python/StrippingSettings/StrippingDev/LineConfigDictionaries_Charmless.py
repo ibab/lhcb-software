@@ -27,23 +27,23 @@ Hb2Charged2Body = {
     }
 
 ##
-## StrippingB2PPbar
+## StrippingB2TwoBaryons
 ##
 B2PPbar = {
     'WGs'         : ['Charmless'],
-    'BUILDERTYPE' : 'B2PPbarLines',
+    'BUILDERTYPE' : 'B2TwoBaryonLines',
     'CONFIG'      : {'PrescaleB2PPbar'   : 1,
                      'MinPTB2PPbar'      : 900,
                      'MinIPChi2B2PPbar'  : 9,
-                     'TrChi2'            : 5,
+                     'TrChi2'            : 4,
                      'PIDppi'            : 0,
-                     'PIDpk'             : -2,
+                     'PIDpk'             : -1,
                      'MaxPTB2PPbar'      : 2100,
                      'MaxIPChi2B2PPbar'  : 25,
                      'CombMassWindow'    : 200,
                      'VertexChi2B2PPbar' : 16,
-                     'BPTB2PPbar'        : 1000,
-                     'BIPChi2B2PPbar'    : 36,
+                     'BPTB2PPbar'        : 1100,
+                     'BIPChi2B2PPbar'    : 20,
                      'BDIRA'             : 0.9995
                     },
     'STREAMS'     : [ 'Bhadron' ]
@@ -403,11 +403,11 @@ BsPhiRho = {
                  'PRResMinPT'     : 900.,
                  'PRResMinP'      : 1.,
                  'PRResMaxMass'   : 4000.,
-                 'PRResVtxChiDOF' : 25.,
+                 'PRResVtxChiDOF' : 9.,
                  'PRBMinM'        : 5000.,
                  'PRBMaxM'        : 5600.,
                  'PRPhiWindow'    : 25.,
-                 'PRBVtxChi2DOF'  : 25.,
+                 'PRBVtxChi2DOF'  : 9.,
                  'PRIPCHI2' : 25
                  },
     'STREAMS' : [ 'Bhadron' ]
@@ -422,10 +422,10 @@ Bs2Q2Body4K = {
                      'Q2BResMinPT'     : 900.,
                      'Q2BResMinP'      : 1.,
                      'Q2BResMaxMass'   : 2500.,
-                     'Q2BResVtxChiDOF' : 14.,
-                     'Q2BBMinM'        : 5000.,
-                     'Q2BBMaxM'        : 5600.,
-                     'Q2BBVtxChi2DOF'  : 14.,
+                     'Q2BResVtxChiDOF' : 9.,
+                     'Q2BBMinM'        : 5200.,
+                     'Q2BBMaxM'        : 5500.,
+                     'Q2BBVtxChi2DOF'  : 9.,
                      'Q2BIPCHI2' : 25
                     },
     'STREAMS'     : ['Bhadron']

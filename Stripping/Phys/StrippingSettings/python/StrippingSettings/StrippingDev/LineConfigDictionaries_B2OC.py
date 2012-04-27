@@ -2,10 +2,10 @@ Beauty2Charm = {
   'BUILDERTYPE' : 'Beauty2CharmConf',
   'CONFIG' : {
     "ALL" : { # Cuts made on all charged input particles in all lines
-    'TRCHI2DOF_MAX' : 4,
+    'TRCHI2DOF_MAX' : 2.5,
     'PT_MIN'        : '100*MeV',
     'P_MIN'         : '1000*MeV',
-    'MIPCHI2DV_MIN' : 4
+    'MIPCHI2DV_MIN' : 9.
     },
     "KS0" : { # Cuts made on all K shorts
     'PT_MIN'        : '250*MeV',

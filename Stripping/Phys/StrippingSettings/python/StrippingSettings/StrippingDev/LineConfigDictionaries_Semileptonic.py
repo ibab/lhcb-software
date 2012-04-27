@@ -2,30 +2,31 @@
 CharmFromBSemi = {
     'BUILDERTYPE' : 'CharmFromBSemiAllLinesConf',
     'CONFIG' :  {
-    "MINIPCHI2"      : 9.0    # adimensiional
-    ,"TRCHI2"        : 4.0    # adimensiional
-    ,"TRCHI2Loose"   : 5.0    # adimensiional    
-    ,"KaonPIDK"      : 4.0    # adimensiional
-    ,"PionPIDK"      : 10.0   # adimensiional
-    ,"PionPIDKTight" : 4.0    # adimensiional
-    ,"MuonIPCHI2"    : 4.00   # adimensiional
+    "GEC_nLongTrk"    : 250   #adimensional
+    ,"MINIPCHI2"      : 9.0    # adimensional
+    ,"TRCHI2"        : 4.0    # adimensional
+    ,"TRCHI2Loose"   : 5.0    # adimensional    
+    ,"KaonPIDK"      : 4.0    # adimensional
+    ,"PionPIDK"      : 10.0   # adimensional
+    ,"PionPIDKTight" : 4.0    # adimensional
+    ,"MuonIPCHI2"    : 4.00   # adimensional
     ,"MuonPT"        : 800.0  # MeV
     ,"KPiPT"         : 300.0  # MeV
-    ,"DsDIRA"        : 0.99   # adimensiional
-    ,"DsFDCHI2"      : 100.0  # adimensiional
+    ,"DsDIRA"        : 0.99   # adimensional
+    ,"DsFDCHI2"      : 100.0  # adimensional
     ,"DsMassWin"     : 80.0   # MeV
     ,"DsAMassWin"    : 100.0  # MeV
     ,"DsIP"          : 7.4    #mm
-    ,"DsVCHI2DOF"    : 6.0    # adimensiional
-    ,"PIDmu"         : -0.0   # adimensiional
-    ,"BDIRA"         : 0.999  #adimensiional
-    ,"BVCHI2DOF"     : 6.0    # adimensiional
+    ,"DsVCHI2DOF"    : 6.0    # adimensional
+    ,"PIDmu"         : -0.0   # adimensional
+    ,"BDIRA"         : 0.999  #adimensional
+    ,"BVCHI2DOF"     : 6.0    # adimensional
     ,"DZ"            : 0   #mm
-    ,"DDocaChi2Max"  : 20     #adimensiional
-    ,"MINIPCHI2Loose": 4.0   #adimensiional
-    ,"KaonPIDKloose" : -5     #adimensiional
-    ,"PhiVCHI2"      :25.0    #adimensiional
-    ,"PhiMassWin"    :50      #adimensiional
+    ,"DDocaChi2Max"  : 20     #adimensional
+    ,"MINIPCHI2Loose": 4.0   #adimensional
+    ,"KaonPIDKloose" : -5     #adimensional
+    ,"PhiVCHI2"      :25.0    #adimensional
+    ,"PhiMassWin"    :50      #adimensional
     ,'KSLLPMin'         : 2000  ## MeV
     ,'KSLLPTMin'        : 500   ## MeV
     ,'KSDDPMin'         : 3000  ## MeV
@@ -62,6 +63,8 @@ CharmFromBSemi = {
     ,"Dstar_SoftPion_PT" : 200. ## MeV
     ,"Dstar_wideDMCutLower" : -2. ## MeV
     ,"Dstar_wideDMCutUpper" : 15. ## MeV
+    ,"Dto4h_MassWin" : 40. ## MeV
+    ,"Dto4h_AMassWin" : 42. ## MeV
     },
     'STREAMS' : ['Charm'] ,
     'WGs'    : ['Charm']
@@ -73,31 +76,31 @@ B2DMuNuX = {
     'CONFIG' :  {
     "PrescalD0Mu"    : 0.5
     ,"PrescalDsPi_fakes"  : 0.5    # for Bs->(Ds->PhiPi)Pi for Fakes line
-    ,"MINIPCHI2"      : 9.0   # adimensiional    
-    ,"TRCHI2"        : 4.0    # adimensiional
-    ,"TRCHI2Loose"   : 5.0    # adimensiional
-    ,"KaonPIDK"      : 4.0    # adimensiional
-    ,"PionPIDK"      : 10.0   # adimensiional
-    ,"PionPIDKTight" : 4.0    # adimensiional
-    ,"MuonIPCHI2"    : 4.00   # adimensiional
+    ,"MINIPCHI2"      : 9.0   # adimensional    
+    ,"TRCHI2"        : 4.0    # adimensional
+    ,"TRCHI2Loose"   : 5.0    # adimensional
+    ,"KaonPIDK"      : 4.0    # adimensional
+    ,"PionPIDK"      : 10.0   # adimensional
+    ,"PionPIDKTight" : 4.0    # adimensional
+    ,"MuonIPCHI2"    : 4.00   # adimensional
     ,"MuonPT"        : 800.0  # MeV
     ,"KPiPT"         : 300.0  # MeV
-    ,"DsDIRA"        : 0.99   # adimensiional
-    ,"DsFDCHI2"      : 100.0  # adimensiional
+    ,"DsDIRA"        : 0.99   # adimensional
+    ,"DsFDCHI2"      : 100.0  # adimensional
     ,"DsMassWin"     : 80.0   # MeV
     ,"DsAMassWin"    : 100.0  # MeV      
     ,"DsIP"          : 7.4    #mm
-    ,"DsVCHI2DOF"    : 6.0    # adimensiional
-    ,"PIDmu"         : -0.0   # adimensiional
-    ,"BDIRA"         : 0.999  #adimensiional
-    ,"BVCHI2DOF"     : 6.0    # adimensiional 
+    ,"DsVCHI2DOF"    : 6.0    # adimensional
+    ,"PIDmu"         : -0.0   # adimensional
+    ,"BDIRA"         : 0.999  #adimensional
+    ,"BVCHI2DOF"     : 6.0    # adimensional 
     ,"DZ"            : 0     #mm
     ,"DZLoose"       : -9999  #mm
-    ,"DDocaChi2Max"  : 20     #adimensiional
-    ,"MINIPCHI2Loose" : 4.0   #adimensiional
-    ,"KaonPIDKloose" : -5     #adimensiional
-    ,"PhiVCHI2"      :25.0    #adimensiional
-    ,"PhiMassWin"    :50      #adimensiional
+    ,"DDocaChi2Max"  : 20     #adimensional
+    ,"MINIPCHI2Loose" : 4.0   #adimensional
+    ,"KaonPIDKloose" : -5     #adimensional
+    ,"PhiVCHI2"      :25.0    #adimensional
+    ,"PhiMassWin"    :50      #adimensional
     ,'KSLLPMin'         : 2000  ## MeV
     ,'KSLLPTMin'        : 500   ## MeV
     ,'KSDDPMin'         : 3000  ## MeV
@@ -371,23 +374,23 @@ B0q2DplusMuX = {
 D0ForBXX = {
     'BUILDERTYPE'       : 'D0forBXXLinesConf',
     'CONFIG'    : {
-    "PreScale"      : 0.005   # adimensiional
-    ,"PreScaleRS"   : 1.0    # adimensiional
-    ,"PreScaleWS"   : 0.2    # adimensiional
-    ,"MINIPCHI2"     : 9.0   # adimensiional
-    ,"TRCHI2"        : 3.0   # adimensiional
-    ,"KaonPIDK"      : 4.0   # adimensiional
-    ,"PionPIDK"      : 10.0   # adimensiional
+    "PreScale"      : 0.005   # adimensional
+    ,"PreScaleRS"   : 1.0    # adimensional
+    ,"PreScaleWS"   : 0.2    # adimensional
+    ,"MINIPCHI2"     : 9.0   # adimensional
+    ,"TRCHI2"        : 3.0   # adimensional
+    ,"KaonPIDK"      : 4.0   # adimensional
+    ,"PionPIDK"      : 10.0   # adimensional
     ,"PT"            : 300.0  # MeV
-    ,"D0DIRA"        : 0.9999    # adimensiional
-    ,"D0DIRAK3Pi"    : 0.9999    # adimensiional
-    ,"FDCHI2"        : 100.0   # adimensiional
+    ,"D0DIRA"        : 0.9999    # adimensional
+    ,"D0DIRAK3Pi"    : 0.9999    # adimensional
+    ,"FDCHI2"        : 100.0   # adimensional
     ,"D0AMassWin"    : 100.0   # MeV
     ,"D0MassWin"     : 80.0  # MeV
     ,"D0IP"          : 0.2    #mm
     ,"D0K3PiIP"      : 0.2    #mm
-    ,"D0VCHI2DOF"    : 6.0   # adimensiional
-    ,"DDocaChi2Max" : 20   #adimensiional 
+    ,"D0VCHI2DOF"    : 6.0   # adimensional
+    ,"DDocaChi2Max" : 20   #adimensional 
      },
     'STREAMS' : ['CharmCompleteEvent'],
     'WGs'    : ['Semileptonic'] 

@@ -6,6 +6,9 @@
 
 !========================= StrippingSettings v2r13 2012-04-27 ===================
 
+! 2012-04-27 - Anton Poluektov 
+ - Fix StrippingDev and retag as v2r13
+
 ! 2012-04-27 - Thomas Blake
  - Removed B2SameChargeMuon from LineConfigDictionaries_RD for stripping 19
 

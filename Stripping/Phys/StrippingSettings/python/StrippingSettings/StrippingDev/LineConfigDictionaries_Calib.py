@@ -38,7 +38,7 @@ MuIDCalib = {
     'STREAMS'     : [ 'PID' ],
     'CONFIG'      : {
     'PromptPrescale'           : 0.0,
-    'DetachedPrescale'         : 0.0,
+    'DetachedPrescale'         : 1.0,
     'DetachedNoMIPPrescale'    : 1.0,
     'DetachedNoMIPHiPPrescale' : 0.0,
     'DetachedNoMIPKPrescale'   : 1.0,
@@ -48,7 +48,7 @@ MuIDCalib = {
     'PFromLambdacPrescale'     : 0.0,
     'KISMUONFromLambdacPrescale' : 0.0,
     'PiISMUONFromLambdacPrescale': 0.0,
-    'PISMUONFromLambdacPrescale' : 0.0 
+    'PISMUONFromLambdacPrescale' : 0.0
     }
     }
 
@@ -78,7 +78,7 @@ NoPIDDstarWithD02RSKPi = {
     , 'KK_WrongMass'     : 25 * MeV       ## MeV (3 sigma veto)
     , 'PiPi_WrongMass'   : 25 * MeV       ## MeV (3 sigma veto)
     ##
-    , 'Prescale'         : 0.482          ## unitless
+    , 'Prescale'         : 0.90           ## unitless
     , 'Postscale'        : 1.00           ## unitless
     ##
     , 'Monitor'          : False           ## Activate the monitoring?
@@ -205,7 +205,8 @@ TrackEffVeloMuon = {
     'WGs' : [ 'ALL' ],
     'STREAMS' : [ 'Calibration' ],
     'CONFIG' : {
-                        "TrChi2Mu":             5.      # adimensional
+			"TrChi2VeMu":		5.	# adimensional
+		,	"TrChi2LongMu":		3.	# adimensional
                 ,       "JpsiPt":               0.5     # GeV
                 ,       "TrPt":                 100.    # MeV
                 ,       "TrP":                  5.      # GeV
