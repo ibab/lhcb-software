@@ -1,3 +1,7 @@
+2012-04-27  Ben Couturier <Ben.Couturier@cern.ch>
+
+	* python/LbConfiguration/Project.py: Added project VetraTB
+
 2012-04-13  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* python/LbConfiguration/Package.py: Fixed bug so that dynamic lookup of package list from
