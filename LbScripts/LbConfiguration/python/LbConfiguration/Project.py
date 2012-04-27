@@ -572,3 +572,5 @@ Stripping.setAFSVolumeName("STRIP")#IGNORE:E0602
 VanDerMeer.setFullSize(50000)#IGNORE:E0602
 VanDerMeer.setAFSVolumeName("VDM")#IGNORE:E0602
 
+# VetraTB
+VetraTB.setAFSVolumeName("VETRTB")#IGNORE:E0602
