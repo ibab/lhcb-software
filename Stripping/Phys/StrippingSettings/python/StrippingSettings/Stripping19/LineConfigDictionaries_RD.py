@@ -189,17 +189,17 @@ HyperCP = {
     }
 
 # Same-sign searches
-# Wenbin
+# Wenbin - removed for Stripping 19
 
-B2SameChargeMuon = {
-    'BUILDERTYPE'  : 'StrippingB2SameChargeMuonConf',
-    'CONFIG'  : {
-    'LinePrescale'        :    1.   ,
-    'LinePostscale'       :    1.
-    },
-    'WGs' : [ 'RD' ],
-    'STREAMS' : [ 'Dimuon' ]
-    }
+#B2SameChargeMuon = {
+#    'BUILDERTYPE'  : 'StrippingB2SameChargeMuonConf',
+#    'CONFIG'  : {
+#    'LinePrescale'        :    1.   ,
+#    'LinePostscale'       :    1.
+#    },
+#    'WGs' : [ 'RD' ],
+#    'STREAMS' : [ 'Dimuon' ]
+#    }
 
 
 # Bu2LLK ( B+ -> ee K and mu mu K )

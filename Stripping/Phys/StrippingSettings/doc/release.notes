@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-04-27 - Thomas Blake
+ - Removed B2SameChargeMuon from LineConfigDictionaries_RD for stripping 19
+
 ! 2012-04-27 - Jibo He
  - Stripping19/LineConfigDictionaries_BandQ.py
    . Update conf dict of B2psiX
