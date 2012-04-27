@@ -75,6 +75,10 @@ StatusCode UnpackRecVertex::execute()
   if ( (int)dst->version() < 2 && 
        exist<LHCb::WeightsVectors>(m_weightsLoc) )
   {
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "Old pre-Weights PVs found. Will load weights vector and update"
+              << endmsg;
+    
     const LHCb::WeightsVectors * weightsV = get<LHCb::WeightsVectors>(m_weightsLoc);
 
     // loop over PVs and load the weights for each
@@ -84,12 +88,14 @@ StatusCode UnpackRecVertex::execute()
       const LHCb::WeightsVector * weights = weightsV->object((*iRV)->key());
       if ( weights )
       {
+
+        // build a map with the new weights for each track
         std::map<const LHCb::Track*,float> trksWeights;
         for ( SmartRefVector<LHCb::Track>::const_iterator iTk = (*iRV)->tracks().begin();
               iTk != (*iRV)->tracks().end(); ++iTk )
         {
-          float wgt = 1.0;
           // Find the weight for this track
+          float wgt = 1.0;
           for ( std::vector<std::pair<int,float> >::const_iterator iWW = weights->weights().begin();
                 iWW != weights->weights().end(); ++iWW )
           {
@@ -99,14 +105,23 @@ StatusCode UnpackRecVertex::execute()
               break;
             }
           }
+          // save the weight in the map
           trksWeights[*iTk] = wgt;
         }
+
+        // Clear all existing tracks in the PV
         (*iRV)->clearTracks();
+
+        // Add the tracks back, with the new weights
         for ( std::map<const LHCb::Track*,float>::const_iterator iTW = trksWeights.begin();
               iTW != trksWeights.end(); ++iTW )
         {
+          if ( msgLevel(MSG::DEBUG) )
+            debug() << " -> Setting Track " << iTW->first->key() << " weight " << iTW->second
+                    << endmsg;
           (*iRV)->addToTracks( iTW->first, iTW->second );
         }
+
       }
     }
 
