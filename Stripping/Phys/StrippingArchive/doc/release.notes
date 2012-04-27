@@ -4,6 +4,9 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-04-27 - Anton Poluektov 
+ - Add Stripping19
+
 !========================= StrippingArchive v1r9 2012-04-01 =========================
 ! 2012-04-01 - Jibo He
  - Included Stripping18, Stripping18b 
