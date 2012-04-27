@@ -263,7 +263,7 @@ void MEPSvc::analyze(void *, int ,MonMap* mmap)
     }
     m_trender->addEntry("MEPrx Output Rate",Mepstot);
     m_trender->addEntry("MEPrx Rate to Moore",MepsMoore);
-    m_trender->addEntry("MEPrx Output rate",Mepsovr);
+    m_trender->addEntry("MEPrx Overflow Rate",Mepsovr);
     if (Mepstot >0.0)
     {
       double deffrac = 100.0*Mepsovr/Mepstot;
