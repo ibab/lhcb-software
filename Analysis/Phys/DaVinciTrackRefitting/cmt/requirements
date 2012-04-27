@@ -34,6 +34,5 @@ library          DaVinciTrackFitting  ../src/*.cpp
 #============================================================================
 # define component library link options
 #============================================================================
-macro_append DaVinciTrackFittingGenConfUser_dependencies DaVinciTrackFittingDbMerge
 apply_pattern    component_library library=DaVinciTrackFitting
 apply_pattern    install_python_modules
