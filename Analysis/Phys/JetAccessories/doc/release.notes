@@ -7,6 +7,9 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2012-04-27 - Murilo Rangel
+- Added option in JetMaker python
+
 !========================= JetAccessories v1r3 2012-02-09 =========================
 
 ! 2012-01-27 - Victor Coco
