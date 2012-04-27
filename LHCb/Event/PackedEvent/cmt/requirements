@@ -1,9 +1,9 @@
 #============================================================================
 # Created    : 2005-02-07
-# Maintainer : Olivier Callot
+# Maintainer : Olivier Callot, Chris Jones
 #============================================================================
 package           PackedEvent
-version           v4r9p1
+version           v4r10
 
 #============================================================================
 # Structure, i.e. directories to process. 

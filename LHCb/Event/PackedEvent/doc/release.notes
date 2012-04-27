@@ -4,11 +4,13 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+!========================= PackedEvent v4r10 2012-04-27 =========================
+
 ! 2012-04-24 - Chris Jones
  - Improvements to the checks of Particle packing, to remove some false
-   positives when comparing the momemtnum covariance matrix.
+   positives when comparing the momentum covariance matrix.
  - Change the 'mass' check for LorentzVectors to energy, to avoid machine 
-   precision issues with comparions of small differences of large numbers.
+   precision issues with comparsions of small differences of large numbers.
 
 ! 2012-04-23 - Chris Jones
  - New version of the Particle packing, to (try) and fix consistency problems.
