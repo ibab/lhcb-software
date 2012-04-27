@@ -1,3 +1,8 @@
+2012-04-26 Joel Closier <joel.closier@cern.ch>
+
+        * python/LbRelease : add new script onlineInstallSoftware.py (for the online installation)
+        * scripts/mkLHCbDirac_release.sh : to make a LHCb/Dirac release on AFs
+
 2012-04-12 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v4r7p2
