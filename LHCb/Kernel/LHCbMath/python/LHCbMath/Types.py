@@ -2,8 +2,6 @@
 # =============================================================================
 # $Id$
 # =============================================================================
-# $URL$
-# =============================================================================
 ## @file
 #
 #  Simple file to provide "easy" access in python for
@@ -111,11 +109,57 @@ Gaudi.Math.Point3D        = Gaudi.XYZPoint
 Gaudi.Vector3D            = Gaudi.XYZVector
 Gaudi.Math.Vector3D       = Gaudi.XYZVector
 
-Gaudi.Vector2             = _RM.SVector( 'double' , 2 )
-Gaudi.Vector3             = _RM.SVector( 'double' , 3 )
-Gaudi.Vector4             = _RM.SVector( 'double' , 4 )
-Gaudi.Vector5             = _RM.SVector( 'double' , 5 )
-Gaudi.Vector8             = _RM.SVector( 'double' , 8 )
+# =============================================================================
+## try to pickup the vector
+@staticmethod 
+def _vector_ ( i , typ = 'double' ) :
+    """
+    Pick up the vector of correspoding size
+    
+    >>>  V3   = Gaudi.Math.Vector(3)
+    >>>  vct  = V3 ()
+    
+    """
+    return _RM.SVector ( typ , i )
+        
+# =============================================================================
+## try to pickup the matrix 
+@staticmethod 
+def _matrix_ ( i , j , typ = 'double' ) :
+    """
+    Pick up the matrix of correspoding size
+    
+    >>>  M3x4   = Gaudi.Math.Matrix(3,4)
+    >>>  matrix = M3x4 ()
+    
+    """
+    return _RM.SMatrix ( "%s,%d,%d" % ( typ , i , j ) )
+
+# =============================================================================
+## try to pickup the symmeric matrix 
+@staticmethod 
+def _sym_matrix_ ( i , typ = 'double' ) :
+    """
+    Pick up the symmetric matrix of correspoding size
+    
+    >>>  SymM3  = Gaudi.Math.SymMatrix(3)
+    >>>  matrix = SymM3 ()
+    
+    """
+    return _RM.SMatrix('%s,%d,%d,ROOT::Math::MatRepSym<%s,%d>' %  ( typ , i , i , typ , i ) )
+
+Gaudi.Vector         =     _vector_
+Gaudi.Math.Vector    =     _vector_
+Gaudi.Matrix         =     _matrix_
+Gaudi.Math.Matrix    =     _matrix_
+Gaudi.SymMatrix      = _sym_matrix_
+Gaudi.Math.SymMatrix = _sym_matrix_
+
+Gaudi.Vector2             = Gaudi.Vector(2)
+Gaudi.Vector3             = Gaudi.Vector(3)
+Gaudi.Vector4             = Gaudi.Vector(4)
+Gaudi.Vector5             = Gaudi.Vector(5)
+Gaudi.Vector8             = Gaudi.Vector(8)
 
 Gaudi.Math.Vector2        = Gaudi.Vector2 
 Gaudi.Math.Vector3        = Gaudi.Vector3 
@@ -123,17 +167,18 @@ Gaudi.Math.Vector4        = Gaudi.Vector4
 Gaudi.Math.Vector5        = Gaudi.Vector5 
 Gaudi.Math.Vector8        = Gaudi.Vector8 
 
-Gaudi.SymMatrix2x2        = _RM.SMatrix('double,2,2,ROOT::Math::MatRepSym<double,2>')
-Gaudi.SymMatrix3x3        = _RM.SMatrix('double,3,3,ROOT::Math::MatRepSym<double,3>')    
-Gaudi.SymMatrix4x4        = _RM.SMatrix('double,4,4,ROOT::Math::MatRepSym<double,4>')
-Gaudi.SymMatrix5x5        = _RM.SMatrix('double,5,5,ROOT::Math::MatRepSym<double,5>')
-Gaudi.SymMatrix6x6        = _RM.SMatrix('double,6,6,ROOT::Math::MatRepSym<double,6>')
+
+Gaudi.SymMatrix2x2        = Gaudi.SymMatrix(2)
+Gaudi.SymMatrix3x3        = Gaudi.SymMatrix(3)    
+Gaudi.SymMatrix4x4        = Gaudi.SymMatrix(4)    
+Gaudi.SymMatrix5x5        = Gaudi.SymMatrix(5)    
+Gaudi.SymMatrix6x6        = Gaudi.SymMatrix(6)    
 ## LHCb::Particle
-Gaudi.SymMatrix7x7        = _RM.SMatrix('double,7,7,ROOT::Math::MatRepSym<double,7>')
+Gaudi.SymMatrix7x7        = Gaudi.SymMatrix(7)
 ## Gaudi::Math::ParticleParams 
-Gaudi.SymMatrix8x8        = _RM.SMatrix('double,8,8,ROOT::Math::MatRepSym<double,8>')
+Gaudi.SymMatrix8x8        = Gaudi.SymMatrix(8)
 ## LHCb:TwoProngVertex
-Gaudi.SymMatrix9x9        = _RM.SMatrix('double,9,9,ROOT::Math::MatRepSym<double,9>')
+Gaudi.SymMatrix9x9        = Gaudi.SymMatrix(9)
 
 
 Gaudi.Math.SymMatrix3x3   = Gaudi.SymMatrix2x2 
@@ -149,7 +194,7 @@ Gaudi.Math.SymMatrix9x9   = Gaudi.SymMatrix9x9
 # specific matrices for 'tracks'
 #
 
-Gaudi.Matrix5x5             = _RM.SMatrix('double,5,5')
+Gaudi.Matrix5x5             = Gaudi.Matrix(5,5)
 Gaudi.TrackMatrix           = Gaudi.Matrix5x5 
 Gaudi.Math.Matrix5x5        = Gaudi.Matrix5x5 
 Gaudi.Math.TrackMatrix      = Gaudi.TrackMatrix 
@@ -163,9 +208,8 @@ Gaudi.Math.TrackVector      = Gaudi.TrackVector
 #
 # matrix from LHCb::Particle
 #
-Gaudi.Matrix4x3             = _RM.SMatrix('double,4,3')
+Gaudi.Matrix4x3             = Gaudi.Matrix(4,3)
 Gaudi.Math.Matrix4x3        = Gaudi.Matrix4x3
-
     
 ## Gaudi::Math
 Gaudi.Math.XYZLine           = cpp.Gaudi.Math.Line(Gaudi.XYZPoint,Gaudi.XYZVector)
@@ -185,12 +229,15 @@ Gaudi.Math.asym              = Gaudi.Math.Functions.asym
 Gaudi.Math.binomEff          = Gaudi.Math.Functions.binomEff 
 
 ## vectors of vectors
-Gaudi.Vectors2       = std.vector( Gaudi.Vector2 )
-Gaudi.Vectors3       = std.vector( Gaudi.Vector3 )
-Gaudi.Vectors4       = std.vector( Gaudi.Vector4 )
+Gaudi.Vectors2       = std.vector ( Gaudi.Vector2 )
+Gaudi.Vectors3       = std.vector ( Gaudi.Vector3 )
+Gaudi.Vectors4       = std.vector ( Gaudi.Vector4 )
 Gaudi.Math.Vectors2  = Gaudi.Vectors2 
 Gaudi.Math.Vectors3  = Gaudi.Vectors3
 Gaudi.Math.Vectors4  = Gaudi.Vectors4 
+
+
+
 
 ## ============================================================================
 ## some useful decoration:

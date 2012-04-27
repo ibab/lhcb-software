@@ -64,6 +64,7 @@
   <class name    = "std::vector<ROOT::Math::SVector<double,2> >" />
   <class name    = "std::vector<ROOT::Math::SVector<double,3> >" />
   <class name    = "std::vector<ROOT::Math::SVector<double,4> >" />
+
   
   <function name = "Gaudi::Math::blind"           />
   <function name = "Gaudi::Math::pow"             />
@@ -86,7 +87,10 @@
   <function name    = "LHCb::Math::knuth_equal_to_double"  />
   <function name    = "Gaudi::Math::lomont_compare_double" />
   <function pattern = "Gaudi::Math::Jackson::jackson*"     />
-
+  
+  <class name = "Gaudi::Math::Chi2Solution<4,2,double>"         />
+  <class name = "Gaudi::Math::Chi2Solution<4,2,double>::CMTRX2" />
+  
   <exclusion>
     <class name = "ROOT::Math::SVector&lt;double,2&gt;"     />
     <class name = "ROOT::Math::SVector&lt;double,4&gt;"     />

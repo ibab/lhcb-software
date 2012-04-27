@@ -5,10 +5,14 @@
 // ============================================================================
 // Include files
 // ============================================================================
+#include <vector>
+#include <list>
+// ============================================================================
 #ifdef _WIN32
 #pragma warning ( disable : 4305 ) // truncation double to Scalar in GenVector
 #pragma warning ( disable : 4244 ) // conversion double to float in GenVector
 #endif
+// ============================================================================
 #include "LHCbMath/GeomFun.h"
 #include "LHCbMath/LineTypes.h"
 #include "GaudiKernel/Plane3DTypes.h"
@@ -22,8 +26,7 @@
 #include "LHCbMath/EigenSystem.h"
 #include "LHCbMath/Functions.h"
 #include "LHCbMath/LHCbMath.h"
-#include <vector>
-#include <list>
+#include "LHCbMath/Chi2Solution.h"
 // ============================================================================
 /** @file LHCbMathDict.h 
  *  
@@ -301,6 +304,13 @@ namespace
     std::vector<Gaudi::Vector2>  _vct_2 ;
     std::vector<Gaudi::Vector3>  _vct_3 ;
     std::vector<Gaudi::Vector3>  _vct_4 ;
+    
+    Gaudi::Math::Chi2Solution<4,2>          __cs1 ;
+    Gaudi::Math::Chi2Solution<4,2>::DATA    __cs2 ;
+    Gaudi::Math::Chi2Solution<4,2>::COV2    __cs3 ;
+    Gaudi::Math::Chi2Solution<4,2>::CMTRX2  __cs4 ;
+    Gaudi::Math::Chi2Solution<4,2>::COFF    __cs5 ;
+    Gaudi::Math::Chi2Solution<4,2>::VECT    __cs6 ;
     
   };
 }
