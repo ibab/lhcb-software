@@ -15,7 +15,8 @@ _known_strippings = [
   "Stripping17", 
   "Stripping17b", 
   "PreStripping18",
-  "Stripping18"
+  "Stripping18", 
+  "Stripping19"
 ]
 
 #give a dictionary of strippings which use the same line builders
@@ -37,7 +38,8 @@ _stripping_help={"Stripping13"  : "2011 data taking, processing during the first
                  "Stripping17b": "2011 data restripping for all data in 2011, DiMuon and Semileptonic streams replace Stripping17, the rest is incremental", 
                  "PreStripping18": "Test of stripping selections for 2012 data taking, using a part of 2011 sample",
                  "Stripping18" : "2012 data processing for data taken from start of 2012, including stream dedicated for ICHEP 2012", 
-                 "Stripping18b": "2012 data processing for data taken from start of 2012, without stream dedicated for ICHEP 2012"  
+                 "Stripping18b": "2012 data processing for data taken from start of 2012, without stream dedicated for ICHEP 2012", 
+                 "Stripping19" : "2012 data processing for data taken from start of 2012, selections tightened to improve timing"
                  }
 
 _strippingKeys = []
