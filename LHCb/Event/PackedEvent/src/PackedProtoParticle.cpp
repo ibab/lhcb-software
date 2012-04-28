@@ -265,12 +265,14 @@ ProtoParticlePacker::check( const DataVector & dataA,
       parent().info() << format( "Test  track %8x  richPID %8X  muonPID%8x  nCaloHypo%4d nExtra%4d",
                                  tTrack, tRichPID, tMuonPID, tHypo.size(), tExtra.size() )
                       << endmsg;
-      for ( kk = 0 ; oHypo.size() != kk ; ++kk ) {
+      for ( kk = 0 ; oHypo.size() != kk ; ++kk )
+      {
         parent().info() << format( "   old CaloHypo %8x   new %8x", oHypo[kk], tHypo[kk] )  << endmsg;
       }
       oIt = oExtra.begin();
       tIt = tExtra.begin();
-      for ( kk = 0 ; oExtra.size() != kk ; ++kk, ++oIt, ++tIt ) {
+      for ( kk = 0 ; oExtra.size() != kk ; ++kk, ++oIt, ++tIt ) 
+      {
         parent().info() << format( "   old Extra %5d %12.4f     new %5d %12.4f",
                                    (*oIt).first, (*oIt).second, (*tIt).first, (*tIt).second )
                         << endmsg;

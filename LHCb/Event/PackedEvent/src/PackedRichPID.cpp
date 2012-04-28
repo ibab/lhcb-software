@@ -1,4 +1,3 @@
-// $Id: PackedRichPID.cpp,v 1.9 2010-04-11 14:27:15 jonrob Exp $
 
 // local
 #include "Event/PackedRichPID.h"
@@ -128,11 +127,14 @@ StatusCode RichPIDPacker::check( const DataVector & dataA,
     // If comparison not OK, print full information
     if ( !ok )
     {
+      const std::string loc = ( dataA.registry() ?
+                                dataA.registry()->identifier() : "Not in TES" );
       parent().warning() << "Problem with RichPID data packing :-" << endmsg
-                         << "  Original PID : " << **iA
-                         << endmsg
-                         << "  Unpacked PID : " << **iB
-                         << endmsg;
+                         << "  Original PID key=" << (**iA).key() 
+                         << " in '" << loc << "'" << endmsg
+                         << **iA << endmsg
+                         << "  Unpacked PID" << endmsg
+                         << **iB << endmsg;
       sc = StatusCode::FAILURE;
     }
   }

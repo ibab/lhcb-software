@@ -1,4 +1,3 @@
-// $Id: PackedParticle.cpp,v 1.3 2010-05-19 09:04:08 jonrob Exp $
 
 // local
 #include "Event/PackedParticle.h"
@@ -343,16 +342,18 @@ StatusCode ParticlePacker::check( const Data & dataA,
                           dataA.referencePoint(), dataB.referencePoint() );
 
   // Mom Cov
-  const boost::array<double,4> tolDiag = {{ 5.0e-3, 5.0e-3, 5.0e-3, 5.0e-3  }};
+  const boost::array<double,4> tolDiagMomCov = {{ 5.0e-3, 5.0e-3, 5.0e-3, 5.0e-3 }};
   ok &= ch.compareCovMatrices<Gaudi::SymMatrix4x4,4>( "MomCov",
                                                       dataA.momCovMatrix(),
                                                       dataB.momCovMatrix(),
-                                                      tolDiag, 2.0e-5 );
+                                                      tolDiagMomCov, 2.0e-5 );
 
   // Pos Cov
-  ok &= ch.compareMatrices<Gaudi::SymMatrix3x3,3,3>( "PosCov",
-                                                     dataA.posCovMatrix(),
-                                                     dataB.posCovMatrix() );
+  const boost::array<double,3> tolDiagPosCov = {{ 5.0e-3, 5.0e-3, 5.0e-3 }};
+  ok &= ch.compareCovMatrices<Gaudi::SymMatrix3x3,3>( "PosCov",
+                                                      dataA.posCovMatrix(),
+                                                      dataB.posCovMatrix(),
+                                                      tolDiagPosCov, 2.0e-5 );
 
   // PosMom Cov
   ok &= ch.compareMatrices<Gaudi::Matrix4x3,4,3>( "PosMomCov",
@@ -420,7 +421,8 @@ StatusCode ParticlePacker::check( const Data & dataA,
     const std::string loc = ( dataA.parent() && dataA.parent()->registry() ?
                               dataA.parent()->registry()->identifier() : "Not in TES" );
     parent().warning() << "Problem with Particle data packing :-" << endmsg
-                       << "  Original Particle in '" << loc << "'" << endmsg
+                       << "  Original Particle key=" << dataA.key() 
+                       << " in '" << loc << "'" << endmsg
                        << dataA << endmsg
                        << "  Unpacked Particle" << endmsg
                        << dataB << endmsg;

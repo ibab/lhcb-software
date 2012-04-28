@@ -39,32 +39,33 @@ namespace LHCb
         cov00(0), cov11(0), cov22(0),
         cov10(0), cov20(0), cov21(0),
         firstOutgoingPart(0), 
-        lastOutgoingPart(0)
+        lastOutgoingPart(0),
+        firstInfo(0), lastInfo(0)
     {}
     
     /// Key and possibly container index.
     long long key; 
 
-    /// packed technique
-    int technique;
-    int chi2;
-    int nDoF;
-    int x;
-    int y;
-    int z;
-    int cov00;
-    int cov11;
-    int cov22;
-    short int cov10;
-    short int cov20;
-    short int cov21;
+    int technique;    ///< packed technique
+    int chi2;         ///< packed chi^2
+    int nDoF;         ///< packed nDOF
+
+    // Position
+    int x, y, z;
+
+    // Covariance matrix
+    int cov00, cov11, cov22;
+    short int cov10, cov20, cov21;
 
     /// first outgoing particle
     unsigned int firstOutgoingPart;
-
     /// last outgoing particle
     unsigned int lastOutgoingPart;
-    unsigned int firstInfo,   lastInfo;
+
+    /// first info
+    unsigned int firstInfo;
+    /// last info
+    unsigned int lastInfo;
 
   };
 
@@ -96,6 +97,12 @@ namespace LHCb
 
     /// Outgoing Particles
     typedef std::vector<long long> OutgoingParticles;
+
+    /// Packed Extra Info
+    typedef std::pair<int,int> ExtraInfo;
+
+    /// Packed Extra Info Vector
+    typedef std::vector<ExtraInfo> ExtraInfoVector;
 
   public:
     
@@ -137,14 +144,18 @@ namespace LHCb
     char packingVersion() const { return m_packingVersion; }
 
     /// add an extra info
-    void addExtra( int a, int b ) { std::pair<int,int> tmp( a, b ); m_extra.push_back( tmp ); }
-    std::vector<std::pair<int,int> >& extras()             { return m_extra; }
-    const std::vector<std::pair<int,int> >& extras() const { return m_extra; }
+    void addExtra( const int a, const int b ) { m_extra.push_back( ExtraInfo(a,b) ); }
+
+    /// Write access the extra info
+    ExtraInfoVector& extras()             { return m_extra; }
+
+    /// Read access the extra info
+    const ExtraInfoVector& extras() const { return m_extra; }
 
   private:
 
-    /// Data packing version (not used as yet, but for any future schema evolution)
-    char   m_packingVersion;
+    /// Data packing version
+    char m_packingVersion;
 
     /// The packed data objects
     Vector m_vect;
@@ -153,7 +164,7 @@ namespace LHCb
     OutgoingParticles m_parts;
 
     /// Extra info
-    std::vector<std::pair<int,int> > m_extra;
+    ExtraInfoVector m_extra;
 
   };
 

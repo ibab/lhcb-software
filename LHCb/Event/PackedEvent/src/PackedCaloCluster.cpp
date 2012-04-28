@@ -279,11 +279,14 @@ StatusCode CaloClusterPacker::check( const Data & dataA,
   // If comparison not OK, print full information
   if ( !ok )
   {
+    const std::string loc = ( dataA.parent() && dataA.parent()->registry() ?
+                              dataA.parent()->registry()->identifier() : "Not in TES" );
     parent().warning() << "Problem with CaloCluster data packing :-" << endmsg
-                       << "  Original Cluster : " << dataA
-                       << endmsg
-                       << "  Unpacked Cluster : " << dataB
-                       << endmsg;
+                       << "  Original Cluster key=" << dataA.key() 
+                       << " in '" << loc << "'" << endmsg
+                       << dataA << endmsg
+                       << "  Unpacked Cluster" << endmsg
+                       << dataB << endmsg;
   }
 
   return ( ok ? StatusCode::SUCCESS : StatusCode::FAILURE );

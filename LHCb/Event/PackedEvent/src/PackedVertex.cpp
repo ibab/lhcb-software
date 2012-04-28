@@ -18,12 +18,12 @@ void VertexPacker::pack( const Data & vert,
   if ( 1 == pverts.packingVersion() )
   {
     // technique
-    pvert.technique = static_cast<int>(vert.technique());
-    pvert.chi2       = m_pack.fltPacked( vert.chi2() );
-    pvert.nDoF       = vert.nDoF();
-    pvert.x          = m_pack.position( vert.position().x() );
-    pvert.y          = m_pack.position( vert.position().y() );
-    pvert.z          = m_pack.position( vert.position().z() );
+    pvert.technique = static_cast<int>( vert.technique() );
+    pvert.chi2      = m_pack.fltPacked( vert.chi2() );
+    pvert.nDoF      = vert.nDoF();
+    pvert.x         = m_pack.position( vert.position().x() );
+    pvert.y         = m_pack.position( vert.position().y() );
+    pvert.z         = m_pack.position( vert.position().z() );
 
     // convariance Matrix
     const double err0 = std::sqrt( vert.covMatrix()(0,0) );
@@ -129,7 +129,7 @@ void VertexPacker::unpack( const PackedData       & pvert,
     //== Handles the ExtraInfo
     for ( unsigned short int kEx = pvert.firstInfo; pvert.lastInfo > kEx; ++kEx )
     {
-      const std::pair<int,int>& info = *(pverts.extras().begin()+kEx);
+      const PackedDataVector::ExtraInfo& info = *(pverts.extras().begin()+kEx);
       vert.addInfo( info.first, m_pack.fltPacked( info.second ) );
     }
   }
@@ -197,9 +197,11 @@ StatusCode VertexPacker::check( const Data & dataA,
   // Position
   ok &= ch.comparePoints( "Position", dataA.position(), dataB.position() );
   // Cov matrix
-  ok &= ch.compareMatrices<Gaudi::SymMatrix3x3,3,3>( "Covariance",
-                                                     dataA.covMatrix(),
-                                                     dataB.covMatrix() );
+  const boost::array<double,3> tolDiag = {{ 5.0e-3, 5.0e-3, 5.0e-3 }};
+  ok &= ch.compareCovMatrices<Gaudi::SymMatrix3x3,3>( "Covariance",
+                                                      dataA.covMatrix(),
+                                                      dataB.covMatrix(),
+                                                      tolDiag, 2.0e-5 );
 
   // force printout for tests
   //ok = false;
@@ -209,7 +211,8 @@ StatusCode VertexPacker::check( const Data & dataA,
     const std::string loc = ( dataA.parent() && dataA.parent()->registry() ? 
                               dataA.parent()->registry()->identifier() : "Not in TES" );
     parent().warning() << "Problem with Vertex data packing :-" << endmsg
-                       << "  Original Vertex in '" << loc << "'" << endmsg
+                       << "  Original Vertex key=" << dataA.key() 
+                       << " in '" << loc << "'" << endmsg
                        << dataA << endmsg
                        << "  Unpacked Vertex" << endmsg
                        << dataB << endmsg;

@@ -1,10 +1,14 @@
 !-----------------------------------------------------------------------------
 ! Package     : Event/PackedEvent
-! Responsible : Olivier Callot
+! Responsible : Olivier Callot, Chris Jones
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
-!========================= PackedEvent v4r10 2012-04-27 =========================
+!========================= PackedEvent v4r10 2012-04-28 =========================
+
+! 2012-04-28 - Chris Jones
+ - Some more tune tuning of the packing checks. 
+ - Add the object key to and warnings that are issued.
 
 ! 2012-04-27 - Chris Jones
  - Some final fine tuning of the packing checks, to removal some residual

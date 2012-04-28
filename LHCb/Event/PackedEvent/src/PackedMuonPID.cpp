@@ -126,11 +126,14 @@ StatusCode MuonPIDPacker::check( const DataVector & dataA,
     // If comparison not OK, print full information
     if ( !ok )
     {
+      const std::string loc = ( dataA.registry() ?
+                                dataA.registry()->identifier() : "Not in TES" );
       parent().warning() << "Problem with MuonPID data packing :-" << endmsg
-                         << "  Original PID : " << **iA
-                         << endmsg
-                         << "  Unpacked PID : " << **iB
-                         << endmsg;
+                         << "  Original PID key=" << (**iA).key() 
+                         << " in '" << loc << "'" << endmsg
+                         << **iA << endmsg
+                         << "  Unpacked PID" << endmsg
+                         << **iB << endmsg;
       sc = StatusCode::FAILURE;
     }
   }

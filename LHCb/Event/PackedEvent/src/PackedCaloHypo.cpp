@@ -1,4 +1,3 @@
-// $Id: $
 
 // local
 #include "Event/PackedCaloHypo.h"
@@ -336,11 +335,14 @@ StatusCode CaloHypoPacker::check( const DataVector & dataA,
 
     if ( !isOK || MSG::DEBUG >= parent().msgLevel() ) 
     {
+      const std::string loc = ( dataA.registry() ?
+                                dataA.registry()->identifier() : "Not in TES" );
       parent().warning() << "Problem with CaloHypo data packing :-" << endmsg
-                         << "  Original CaloHypo : " << *oHypo
-                         << endmsg
-                         << "  Unpacked CaloHypo : " << *tHypo
-                         << endmsg;
+                         << "  Original CaloHypo key=" << oHypo->key() 
+                         << " in '" << loc << "'" << endmsg
+                         << *oHypo  << endmsg
+                         << "  Unpacked CaloHypo" << endmsg
+                         << *tHypo << endmsg;
     }
 
   }

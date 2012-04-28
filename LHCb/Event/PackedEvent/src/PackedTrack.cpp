@@ -447,7 +447,8 @@ void TrackPacker::compareStates ( const LHCb::State& oSta,
   }
 
   if ( MSG::VERBOSE >= parent().msgLevel() ) isOK = false; //== force printing
-  if ( !isOK ) {
+  if ( !isOK ) 
+  {
     parent().info() << "=== State differ: " << endmsg;
     parent().info() << "     old "
                     << format( " %12.5f %12.5f %12.5f %12.9f %12.9f %12.3f",
