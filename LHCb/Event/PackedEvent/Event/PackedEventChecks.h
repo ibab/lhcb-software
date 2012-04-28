@@ -1,4 +1,4 @@
-// $Id: PackedEventChecks.h,v 1.1 2009-10-21 16:40:16 jonrob Exp $
+
 #ifndef EVENT_PACKEDEVENTCHECKS_H
 #define EVENT_PACKEDEVENTCHECKS_H 1
 
@@ -102,8 +102,8 @@ namespace DataPacking
     bool compareLorentzVectors( const std::string & name,
                                 const Gaudi::LorentzVector & a,
                                 const Gaudi::LorentzVector & b,
-                                const double tolV    = 5.0e-3,
-                                const double tolE    = 1.0e-2 ) const;
+                                const double tolV = 5.0e-3,
+                                const double tolE = 1.0e-2 ) const;
 
     /// Compare two points to within the given tolerance
     bool comparePoints( const std::string & name,

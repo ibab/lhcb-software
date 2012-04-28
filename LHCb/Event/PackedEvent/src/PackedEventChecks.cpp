@@ -20,11 +20,11 @@ DataChecks::compareLorentzVectors( const std::string & name,
                                    const double tolV,
                                    const double tolE ) const
 {
-  const Gaudi::XYZVector av(a.x(),a.y(),a.z());
-  const Gaudi::XYZVector bv(b.x(),b.y(),b.z());
-  const bool vOK = compareVectors( name+":Vect", av, bv, tolV );
-  const bool mOK = compareEnergies( name+":Energy", a.E(), b.E(), tolE );
-  return vOK && mOK;
+  const Gaudi::XYZVector av(a.px(),a.py(),a.pz());
+  const Gaudi::XYZVector bv(b.px(),b.py(),b.pz());
+  const bool vOK = compareVectors ( name+":Vect",   av,    bv,    tolV );
+  const bool eOK = compareEnergies( name+":Energy", a.E(), b.E(), tolE );
+  return vOK && eOK;
 }
 
 bool
