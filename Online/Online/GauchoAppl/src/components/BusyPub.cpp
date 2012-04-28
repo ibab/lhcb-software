@@ -88,6 +88,7 @@ void BusyPub::analyze(void *, int ,MonMap* mmap)
   bogo_d = (CntrDescr*)MonCounter::de_serialize((*j).second);
   bsy = bsy_d->d_data;
   bogo = bogo_d->d_data;
+  if (bogo < 0.00001) return;
   m_fLoad = bsy/bogo;
 //  printf("Farm Load: %f\n",m_fLoad);
   if (m_FarmLoad == 0)
