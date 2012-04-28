@@ -1017,13 +1017,13 @@ double Gaudi::Math::Hermite::operator() ( const double x ) const
  */
 // ============================================================================
 Gaudi::Math::BifurcatedGauss::BifurcatedGauss 
-( const double peak  , 
-  const double sigma , 
-  const double asym  ) 
+( const double peak   , 
+  const double sigmaL , 
+  const double sigmaR )
   : std::unary_function<double,double> () 
   , m_peak    ( peak ) 
-  , m_sigma   ( std::fabs ( sigma ) ) 
-  , m_asym    ( std::tanh ( asym  ) )
+  , m_sigmaL  ( std::fabs ( sigmaL ) ) 
+  , m_sigmaR  ( std::fabs ( sigmaR ) ) 
 //
 {}
 // ============================================================================
@@ -1037,15 +1037,12 @@ double Gaudi::Math::BifurcatedGauss::operator() ( const double x ) const
 {
   const double dx = x - m_peak ;
   //
-  const double sigma_L = m_sigma * ( 1 + m_asym ) ;
-  const double sigma_R = m_sigma * ( 1 - m_asym ) ;
-  //
-  const double norm = s_SQRTPIHALF * ( sigma_L + sigma_R ) ;
+  const double norm = s_SQRTPIHALF * ( sigmaL() + sigmaR() ) ;
   //
   return 
     dx < 0 ?
-    my_exp ( -0.5 * dx * dx / sigma_L / sigma_L ) / norm :
-    my_exp ( -0.5 * dx * dx / sigma_R / sigma_R ) / norm ;
+    my_exp ( -0.5 * dx * dx / sigmaL () / sigmaL () ) / norm :
+    my_exp ( -0.5 * dx * dx / sigmaR () / sigmaR () ) / norm ;
 }
 // ============================================================================
 // get the integral 
@@ -1062,15 +1059,12 @@ double  Gaudi::Math::BifurcatedGauss::integral
   if (           low > high   ) { return - integral ( high ,                                                     
                                                       low  ) ; } // RETURN 
   //
-  const double sigma_L = m_sigma * ( 1 + m_asym ) ;
-  const double sigma_R = m_sigma * ( 1 - m_asym ) ;
-  //
-  const double norm = s_SQRTPIHALF * ( sigma_L + sigma_R ) ;
+  const double norm = s_SQRTPIHALF * ( sigmaL() + sigmaR() ) ;
   //
   // left half-gaussian 
   if       ( high <= m_peak ) 
   {
-    return gaussian_int ( 0.5 / sigma_L / sigma_L , 
+    return gaussian_int ( 0.5 / sigmaL() / sigmaL() , 
                           0                       , 
                           low  - m_peak           , 
                           high - m_peak           ) / norm ;
@@ -1079,7 +1073,7 @@ double  Gaudi::Math::BifurcatedGauss::integral
   // right half-gaussian 
   else if ( low >= m_peak )  
   {
-    return gaussian_int ( 0.5 / sigma_R / sigma_R , 
+    return gaussian_int ( 0.5 / sigmaR() / sigmaR() , 
                           0                       , 
                           low  - m_peak           , 
                           high - m_peak           ) / norm ;
@@ -1091,21 +1085,20 @@ double  Gaudi::Math::BifurcatedGauss::integral
     integral ( m_peak , high   ) ;
 }
 // ============================================================================
-bool Gaudi::Math::BifurcatedGauss::setSigma ( const double value ) 
+bool Gaudi::Math::BifurcatedGauss::setSigmaL ( const double value ) 
 { 
   const double value_ = std::fabs ( value ) ; 
-  if ( s_equal ( m_sigma , value_ ) ) { return false ; }
-  m_sigma = value_ ;
+  if ( s_equal ( m_sigmaL , value_ ) ) { return false ; }
+  m_sigmaL = value_ ;
   //
   return true ;
 }
 // ============================================================================
-bool Gaudi::Math::BifurcatedGauss::setAsym ( const double value ) 
-{
-  //
-  const double value_ = std::tanh ( value ) ;
-  if ( s_equal ( m_asym , value_ ) ) { return false ; }
-  m_asym = value_ ;
+bool Gaudi::Math::BifurcatedGauss::setSigmaR ( const double value ) 
+{ 
+  const double value_ = std::fabs ( value ) ; 
+  if ( s_equal ( m_sigmaR , value_ ) ) { return false ; }
+  m_sigmaR = value_ ;
   //
   return true ;
 }
@@ -1117,6 +1110,15 @@ bool Gaudi::Math::BifurcatedGauss::setPeak( const double value )
   //
   return true ;
 }
+// ============================================================================
+double Gaudi::Math::BifurcatedGauss::sigma   () const 
+{ return 0.5  * ( sigmaL() + sigmaR() )            ; }  
+// ============================================================================
+double Gaudi::Math::BifurcatedGauss::asym    () const 
+{ return 0.5  * ( sigmaL() - sigmaR() ) / sigma () ; } 
+ // ============================================================================
+
+
 // ============================================================================
 // WorskSpace 
 // ============================================================================

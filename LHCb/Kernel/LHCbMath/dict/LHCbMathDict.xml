@@ -64,6 +64,7 @@
   <class name    = "std::vector<ROOT::Math::SVector<double,2> >" />
   <class name    = "std::vector<ROOT::Math::SVector<double,3> >" />
   <class name    = "std::vector<ROOT::Math::SVector<double,4> >" />
+  <class name    = "std::vector<ROOT::Math::SVector<double,6> >" />
 
   
   <function name = "Gaudi::Math::blind"           />
@@ -90,12 +91,15 @@
   
   <class name = "Gaudi::Math::Chi2Solution<4,2,double>"         />
   <class name = "Gaudi::Math::Chi2Solution<4,2,double>::CMTRX2" />
+  <class name = "Gaudi::Math::Chi2Solution<6,2,double>"         />
+  <class name = "Gaudi::Math::Chi2Solution<6,2,double>::CMTRX2" />
   
   <exclusion>
     <class name = "ROOT::Math::SVector&lt;double,2&gt;"     />
     <class name = "ROOT::Math::SVector&lt;double,4&gt;"     />
     <class name = "ROOT::Math::SVector&lt;double,3&gt;"     />
     <class name = "ROOT::Math::SVector&lt;double,5&gt;"     />
+    <class name = "ROOT::Math::SVector&lt;double,6&gt;"     />
     <class name = "ROOT::Math::SVector&lt;double,8&gt;"     />
     <class name = "Gaudi::Math::SVectorWithError&lt;2,double&gt;::Value"       />
     <class name = "Gaudi::Math::SVectorWithError&lt;2,double&gt;::Covariance"  />
@@ -107,6 +111,8 @@
     <class name = "Gaudi::Math::SVectorWithError&lt;5,double&gt;::Covariance"  />
     <class name = "Gaudi::Math::SVectorWithError&lt;7,double&gt;::Value"       />
     <class name = "Gaudi::Math::SVectorWithError&lt;7,double&gt;::Covariance"  />
+    <class name = "Gaudi::Math::SVectorWithError&lt;6,double&gt;::Value"       />
+    <class name = "Gaudi::Math::SVectorWithError&lt;6,double&gt;::Covariance"  />
     <class name = "Gaudi::Math::SVectorWithError&lt;8,double&gt;::Value"       />
     <class name = "Gaudi::Math::SVectorWithError&lt;8,double&gt;::Covariance"  />
     

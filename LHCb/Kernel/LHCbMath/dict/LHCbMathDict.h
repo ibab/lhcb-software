@@ -297,6 +297,7 @@ namespace
     Gaudi::Math::SVectorWithError<3,double> __sv3 ;
     Gaudi::Math::SVectorWithError<4,double> __sv4 ;
     Gaudi::Math::SVectorWithError<5,double> __sv5 ;
+    Gaudi::Math::SVectorWithError<6,double> __sv6 ;
     Gaudi::Math::SVectorWithError<8,double> __sv8 ;
     //
     std::vector<Gaudi::Math::ValueWithError>  _dver ;
@@ -305,12 +306,19 @@ namespace
     std::vector<Gaudi::Vector3>  _vct_3 ;
     std::vector<Gaudi::Vector3>  _vct_4 ;
     
-    Gaudi::Math::Chi2Solution<4,2>          __cs1 ;
-    Gaudi::Math::Chi2Solution<4,2>::DATA    __cs2 ;
-    Gaudi::Math::Chi2Solution<4,2>::COV2    __cs3 ;
-    Gaudi::Math::Chi2Solution<4,2>::CMTRX2  __cs4 ;
-    Gaudi::Math::Chi2Solution<4,2>::COFF    __cs5 ;
-    Gaudi::Math::Chi2Solution<4,2>::VECT    __cs6 ;
+    Gaudi::Math::Chi2Solution<4,2>          __cs11 ;
+    Gaudi::Math::Chi2Solution<4,2>::DATA    __cs21 ;
+    Gaudi::Math::Chi2Solution<4,2>::COV2    __cs31 ;
+    Gaudi::Math::Chi2Solution<4,2>::CMTRX2  __cs41 ;
+    Gaudi::Math::Chi2Solution<4,2>::COFF    __cs51 ;
+    Gaudi::Math::Chi2Solution<4,2>::VECT    __cs61 ;
+    
+    Gaudi::Math::Chi2Solution<6,2>          __cs12 ;
+    Gaudi::Math::Chi2Solution<6,2>::DATA    __cs22 ;
+    Gaudi::Math::Chi2Solution<6,2>::COV2    __cs32 ;
+    Gaudi::Math::Chi2Solution<6,2>::CMTRX2  __cs42 ;
+    Gaudi::Math::Chi2Solution<6,2>::COFF    __cs52 ;
+    Gaudi::Math::Chi2Solution<6,2>::VECT    __cs62 ;
     
   };
 }

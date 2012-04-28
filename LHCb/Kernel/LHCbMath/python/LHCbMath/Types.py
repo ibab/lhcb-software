@@ -159,6 +159,7 @@ Gaudi.Vector2             = Gaudi.Vector(2)
 Gaudi.Vector3             = Gaudi.Vector(3)
 Gaudi.Vector4             = Gaudi.Vector(4)
 Gaudi.Vector5             = Gaudi.Vector(5)
+Gaudi.Vector6             = Gaudi.Vector(6)
 Gaudi.Vector8             = Gaudi.Vector(8)
 
 Gaudi.Math.Vector2        = Gaudi.Vector2 
@@ -217,6 +218,7 @@ Gaudi.Math.SVector2WithError = cpp.Gaudi.Math.SVectorWithError(2,'double')
 Gaudi.Math.SVector3WithError = cpp.Gaudi.Math.SVectorWithError(3,'double')
 Gaudi.Math.SVector4WithError = cpp.Gaudi.Math.SVectorWithError(4,'double')
 Gaudi.Math.SVector5WithError = cpp.Gaudi.Math.SVectorWithError(5,'double')
+Gaudi.Math.SVector6WithError = cpp.Gaudi.Math.SVectorWithError(6,'double')
 Gaudi.Math.SVector8WithError = cpp.Gaudi.Math.SVectorWithError(8,'double')
 
 Gaudi.XYZLine                = Gaudi.Math.XYZLine
@@ -446,7 +448,9 @@ def _v_str_ ( self , fmt = ' %g' ) :
 for t in  ( Gaudi.Vector2 ,
             Gaudi.Vector3 ,
             Gaudi.Vector4 ,
-            Gaudi.Vector5 ) :
+            Gaudi.Vector5 ,
+            Gaudi.Vector6 ) :
+            
     if not hasattr ( t , '_new_str_' ) :
         t._new_str_ = _v_str_
         t.__str__   = _v_str_
@@ -459,6 +463,7 @@ for t in ( Gaudi.Math.ValueWithError         ,
            Gaudi.Math.SVector3WithError      , 
            Gaudi.Math.SVector4WithError      , 
            Gaudi.Math.SVector5WithError      , 
+           Gaudi.Math.SVector6WithError      , 
            Gaudi.Math.SVector8WithError      ) :
     if not hasattr ( t , '_new_str_' ) :
         t._new_str_ = t.toString

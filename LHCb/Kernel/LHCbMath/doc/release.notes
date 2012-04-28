@@ -6,6 +6,13 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2012-04-28 - Vanya Belyaev
+ - fix Bifurcated gaussian,
+   extend the generic solution for Chi2-problem,
+   add the dictionary
+   extend random-module with asymmetric gaussian 
+
+
 ! 2012-04-27 - Vanya Belyaev
  - add generic solved for N-dimensional Chi2-problem with R-constraint
 

@@ -562,12 +562,12 @@ namespace Gaudi
       // ======================================================================
       /** constructor from all parameters 
        *  @param peak    the peak posiion 
-       *  @param sigma   ("mean" sigma)
-       *  @param phi     (mixing angle)
+       *  @param sigmaL  (left  sigma)
+       *  @param sigmaR  (right sigma)
        */
       BifurcatedGauss 
       ( const double peak  , 
-        const double sigma , 
+        const double sigmaL , 
         const double asym  ) ;
       // ======================================================================
       /// destructor 
@@ -582,16 +582,18 @@ namespace Gaudi
       // ====================================================================== 
       double peak    () const { return m_peak    ; }
       double m0      () const { return peak()    ; }
-      double sigma   () const { return m_sigma   ; }
-      double asym    () const { return m_asym    ; }
+      double sigmaL  () const { return m_sigmaL  ; }
+      double sigmaR  () const { return m_sigmaR  ; }
+      double sigma   () const ;
+      double asym    () const ;
       // ====================================================================== 
     public:
       // ======================================================================
       bool setPeak    ( const double value ) ;
       bool setM0      ( const double value ) { return setPeak ( value ) ; }
       bool setMass    ( const double value ) { return setPeak ( value ) ; }
-      bool setSigma   ( const double value ) ;
-      bool setAsym    ( const double value ) ;
+      bool setSigmaL  ( const double value ) ;
+      bool setSigmaR  ( const double value ) ;
       // ====================================================================== 
     public:
       // ====================================================================== 
@@ -610,10 +612,10 @@ namespace Gaudi
       // ======================================================================
       /// the peak position 
       double m_peak    ;      //                              the peak position 
-      /// sigma 
-      double m_sigma   ;      // sigma 
-      /// asymmetry 
-      double m_asym    ;      // phi
+      /// sigma left  
+      double m_sigmaL ;       // sigma-left 
+      /// sigma right
+      double m_sigmaR ;       // sigma-right 
       // ======================================================================
     } ;
     // ========================================================================
@@ -1139,7 +1141,8 @@ namespace Gaudi
         const double c ) ;
       // ======================================================================
       /** calculate the particle momentum in rest frame 
-       *  \f[ q = \frac{1}{2}\frac{ \lambda^{\frac{1}{2}} \left( m^2 , m_1^2, m_2^2 \right) }{ m }\f], 
+       *  \f[ q = \frac{1}{2}\frac{ \lambda^{\frac{1}{2}} 
+       *        \left( m^2 , m_1^2, m_2^2 \right) }{ m }\f], 
        *  @param m the mass 
        *  @param m1 the mass of the first particle 
        *  @param m2 the mass of the second particle 
@@ -1162,7 +1165,8 @@ namespace Gaudi
         const double m2 ) ;
       // ====================================================================== 
       /** calculate the phase space for   m -> m1 + m2 
-       *  \f[ \Phi = \frac{1}{8\pi} \left( \frac{ \lambda^{\frac{1}{2}} \left( m^2 , m_1^2, m_2^2 \right) }{ m^2 }\right)^{2L+1}\f], 
+       *  \f[ \Phi = \frac{1}{8\pi} \left( \frac{ \lambda^{\frac{1}{2}} 
+       *       \left( m^2 , m_1^2, m_2^2 \right) }{ m^2 }\right)^{2L+1}\f], 
        *  where \f$\lambda\f$ is a triangle function 
        *  @param m the mass 
        *  @param m1 the mass of the first particle 
@@ -1406,9 +1410,9 @@ namespace Gaudi
       /// the mass of mother particle 
       double m_m  ;            // the mass of mother particle 
       /// the orbital momentum between the first and the second particle 
-      unsigned short m_l ; // the orbital momentum between the 1st and 2nd particled 
+      unsigned short m_l ; // the orbital momentum between the 1st and 2nd 
       /// the orbital momentum between the pair an dthe third particle  
-      unsigned short m_L ; // the orbital momentum between the (12) and 3rd particles
+      unsigned short m_L ; // the orbital momentum between the (12) and 3rd 
       // ======================================================================
       /// helper normalization parameter 
       double m_norm ; // helper normalization parameter 
@@ -1442,12 +1446,12 @@ namespace Gaudi
        *  In Nuovo Cimento, Vol. XXXIV, N.6
        */
       enum JacksonRho {
-        Jackson_0  = 0 ,  /// \f$\rho(\omega) = 1 \f$ 
-        Jackson_A2     ,  /// (A.2) \f$ 1^- \rightarrow 0^- 0^- \f$ , l = 1 
-        Jackson_A3     ,  /// (A.3) \f$          1^- \rightarrow 0^- 1^- \f$ , l = 1 
-        Jackson_A4     ,  /// (A.4) \f$ \frac{3}{2}+ \rightarrow 0^- \frac{1}{2}^+ \f$ , l = 1
-        Jackson_A5     ,  /// (A.5) \f$ \frac{3}{2}- \rightarrow 0^- \frac{1}{2}^+ \f$ , l = 2
-        Jackson_A7     ,  /// (A.7) - recommended for rho0 -> pi+ pi-
+        Jackson_0  = 0 ,/// \f$\rho(\omega) = 1 \f$ 
+        Jackson_A2 ,/// \f$ 1^- \rightarrow 0^- 0^- \f$ , l = 1 
+        Jackson_A3 ,/// \f$          1^- \rightarrow 0^- 1^- \f$ , l = 1 
+        Jackson_A4 ,/// \f$ \frac{3}{2}+ \rightarrow 0^- \frac{1}{2}^+ \f$ , l = 1
+        Jackson_A5 ,/// \f$ \frac{3}{2}- \rightarrow 0^- \frac{1}{2}^+ \f$ , l = 2
+        Jackson_A7 ,/// recommended for rho0 -> pi+ pi-
       } ;
       // ======================================================================
     protected:
