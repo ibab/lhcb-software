@@ -3,8 +3,11 @@ Package     : MooreSys
 Package Coordinator : E. van Herwijnen
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v14r1p1>2012-04-29 Moore v14r2</A></H1><PRE>
+As v14r1 with HltSettings v5r33 (for 3 physics TCK families)
+
 </PRE><H1><A NAME=v14r1p1>2012-04-26 Moore v14r1p1</A></H1><PRE>
-As v14r1p1 with HltSettings v5r32 (for 6 physics TCKS)
+As v14r1 with HltSettings v5r32 (for 6 physics TCKS)
 
 </PRE><H1><A NAME=v14r1>2012-04-26 Moore v14r1</A></H1><PRE>
 For May 2012 data taking.
