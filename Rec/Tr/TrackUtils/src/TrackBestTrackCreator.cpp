@@ -197,11 +197,11 @@ TrackBestTrackCreator::TrackBestTrackCreator( const std::string& name,
   declareProperty( "FitTracks", m_fitTracks = true ) ;
   declareProperty( "StateInitTool", m_stateinittool ) ;
   declareProperty( "Fitter", m_fitter ) ;
-  declareProperty( "MaxChi2DoF", m_maxChi2DoF = 5 ) ;
+  declareProperty( "MaxChi2DoF", m_maxChi2DoF = 3 ) ;
   declareProperty( "MaxChi2DoFVelo", m_maxChi2DoFVelo = 999 ) ;
   declareProperty( "MaxChi2DoFT", m_maxChi2DoFT = 999 ) ;
   declareProperty( "MaxChi2DoFMatchTT", m_maxChi2DoFMatchAndTT = 999 ) ;
-  declareProperty( "MinLongLongDeltaQoP", m_minLongLongDeltaQoP = 1e-6 ) ;
+  declareProperty( "MinLongLongDeltaQoP", m_minLongLongDeltaQoP = -1 ) ;
   declareProperty( "MinLongDownstreamDeltaQoP", m_minLongDownstreamDeltaQoP = 5e-6 ) ;
 }
 

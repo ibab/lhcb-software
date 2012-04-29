@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-04-29 - Wouter Hulsbergen
+ - changes in TrackBestTrackCreator: tightened chi2 cut to 3 and removed dqop cut
+
 ! 2012-04-23 - Wouter Hulsbergen
  - Replaced some hard coded cuts by properties in TrackBestTrackCreator
 
