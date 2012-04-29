@@ -22,18 +22,18 @@
 #
 # =============================================================================
 package       BenderSys
-version       v19r4
+version       v19r5
 
 author        Vanya BELYAEV
 
 # =========== Bender Application itself =======================================
-use           Bender         v19r4   Phys 
+use           Bender         v19r5   Phys 
   
 # =========== Bender-based tools and scripts ==================================
-use           BenderTools    v19r3   Phys 
+use           BenderTools    v19r5   Phys 
 
 # =========== examples of usage of Bender "in practice" =======================
-use           BenderExample  v19r3   Ex
+use           BenderExample  v19r5   Ex
 
 # =========== Bender tutorial =================================================
 use           BenderTutor    v18r0   Tutorial
