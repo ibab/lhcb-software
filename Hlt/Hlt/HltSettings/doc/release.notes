@@ -4,6 +4,12 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================= HltSettings v5r33 2012-04-29 =========================
+! 2012-04-29 -  E. van Herwijnen, C. Langenbruch
+ - Three families Physics_May2012.py, Physics_MayBU2012.py, Physics_MayOPT2012.py 
+   Create fast run changeable TCKs for tight L0 with TCKsh
+   Remove 3D settings
+
 !========================= HltSettings v5r32 2012-04-26 =========================
 ! 2012-04-26 -  E. van Herwijnen
  - Physics_May2012.py, Physics_MayBU2012.py, Physics_MayOPT2012.py, 
