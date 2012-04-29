@@ -180,7 +180,6 @@ def configure ( options , arguments ) :
     if options.RootInTES :
         from Bender.MicroDST import uDstConf 
         uDstConf(options.RootInTES)
-        logger.info('Reconfigure uDST')
    
     if not options.Simulation and options.DataType in ( '2010' , '2011' ) :
         #

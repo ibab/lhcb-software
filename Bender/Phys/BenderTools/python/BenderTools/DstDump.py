@@ -97,9 +97,9 @@ if '__main__' == __name__ :
         )
 
     parser.add_option (
-        '-o'                         ,
-        '--output'                   ,
-        dest    = 'OutputFile'       ,
+        '-p'                         ,
+        '--summary'                  ,
+        dest    = 'SummaryFile'      ,
         help    = "Output file with dst-summary" ,
         type    = 'str'              , 
         default = 'dst_summary.txt'    
@@ -295,18 +295,14 @@ if '__main__' == __name__ :
     length += 2-7
         
     _printMessage = []
-    outputFile    = open ( options.OutputFile, 'w')
     
     lline   = ' +' + ( length + 58 ) * '-' + '+'
-    outputFile.write(lline + '\n')
     _printMessage += [ lline ] 
     
     message = ' | %8s | %15s | %7s | %4s | %6s |' % ( 'Total ' , '     Mean     ' , '  rms  ' ,  'min' , ' max ' ) 
     message = " | %s %s" % ( 'Location'.ljust(length) , message )
     
-    outputFile.write(message + '\n')
     _printMessage += [ message ] 
-    outputFile.write(lline   + '\n')
     _printMessage += [ lline   ]
     
     for loc in keys :
@@ -327,20 +323,21 @@ if '__main__' == __name__ :
             
         message = " | %s %s" % ( l.ljust(length) , message )
 
-        outputFile.write(message + '\n')
         _printMessage += [ message ] 
         
-    outputFile.write(lline + '\n')
-    _printMessage += [ lline ] 
-    
-    outputFile.write(  "   Analysed " + str(iEvent) + " events")
+    _printMessage += [ lline ]     
     _printMessage += [ "   Analysed " + str(iEvent) + " events" ] 
 
+    
     print '\n\n\n'
-    for m in _printMessage : print m 
+    ofile  = open ( options.SummaryFile , 'w' )     
+    for line in _printMessage :
+        print           line   
+        print >> ofile, line 
+    ofile.close()
     print '\n\n\n'
-
- 
+    
+    
 # =============================================================================
 # The END 
 # =============================================================================

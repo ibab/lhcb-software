@@ -5,6 +5,15 @@
 ! Purpose     : colelctoon of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! ==================== Phys/BenderTools v19r5 2012-04-29 ======================
+
+! 2012-04-29 - Vanya Belyaev
+ - many minor fixes 
+
+! 2012-04-26 - Vanya Belyaev
+
+ - minor fix in dst-dump 
+
 ! ==================== Phys/BenderTools v19r3 2012-04-10 ======================
 
 ! 2012-04-10 - Vanya Belyaev

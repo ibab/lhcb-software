@@ -53,6 +53,11 @@ __all__= (
     'trgDecs'      , ## print trigger statistics 
     'tisTos'       , ## fill N-tuple with TisTos information
     )
+# =============================================================================
+## logging
+# =============================================================================
+from Bender.Logger import getLogger 
+logger = getLogger( __name__ )
 # ==============================================================================
 from   LoKiCore.basic  import cpp
 from   Bender.Main     import SUCCESS, Algo
@@ -268,11 +273,12 @@ def decisions ( self             ,
 #
 #  @endcode 
 #  
-#  @param p        (input)         the particle
-#  @param triggers (update/output) the triggers
-#  @param l0tistos (input)         the tool for L0-tistos 
-#  @param   tistos (input)         the tool for Hlt1/Hlt2-tistos
-#  @param   dbname (input)         the name of output shelve-file
+#  @param p         (input)         the particle
+#  @param triggers  (update/output) the triggers
+#  @param l0tistos  (input)         the tool for L0-tistos 
+#  @param   tistos  (input)         the tool for Hlt1/Hlt2-tistos
+#  @param   dbname  (input)         the name of output shelve-file
+#  @param   txtname (input)         the name of output txt-file 
 #
 #  It also dumps the statistics into shelve data base 
 # 
@@ -280,7 +286,8 @@ def decisions ( self             ,
 #  @date   2011-06-21 
 def trgDecs ( self            ,
               triggers = None ,
-              db_name  = ''   ) :
+              db_name  = ''   ,
+              txt_name = ''   ) :
     """
     
     Print trigger decisions, collected by ``decisions'' method
@@ -296,11 +303,15 @@ def trgDecs ( self            ,
         return self.Warning ( 'Invalid argument "triggers"' , SUCCESS )
 
     #
-    ## print tistos-statistics 
-    tistos_print ( triggers , self.Warning ) 
-    
+    #
+    ## print tistos-statistics
+    if not txt_name : txt_name = self.name () + '_tistos.txt'
+    #
+    tistos_print ( triggers , self.Warning ) ## std-out 
+    tistos_print ( triggers , self.Warning , open ( txt_name , 'w' ) ) ## txt-file
+    #
     print 90*'*'
-
+    #
     import shelve
     if not db_name : db_name = self.name () + '_tistos'
     db = shelve.open( db_name )
@@ -650,7 +661,9 @@ def _tisTosFini ( self , triggers = None ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2012-03-23  
 # 
-def tistos_print ( triggers , warn = None ) :
+def tistos_print ( triggers     ,
+                   warn  = None ,
+                   ofile = None ) :
     """
     print tis-tos statistic
     
@@ -660,18 +673,23 @@ def tistos_print ( triggers , warn = None ) :
     """
     VE = cpp.Gaudi.Math.ValueWithError
     be = cpp.Gaudi.Math.binomEff 
-    
+
+    if not ofile :
+        import sys 
+        ofile = sys.stdout
+        
     for part in triggers :
         
         trigs = triggers[part]
         
-        print 90*'*'
-        print ' Triggers for ', part 
-        print 90*'*'
+        print >> ofile , 90*'*'
+        print >> ofile , ' Triggers for ', part 
+        print >> ofile , 90*'*'
+        
         
         if not isinstance ( trigs , dict ) : 
             if warn :  warn ( 'Invalid key "%s"' % part  , SUCCESS )
-            else    :  print  'Invalid key "%s"' % part 
+            else    :  print >> ofile, 'Invalid key "%s"' % part 
             continue
         
         tkeys = trigs.keys()
@@ -681,17 +699,17 @@ def tistos_print ( triggers , warn = None ) :
             
             trg = trigs[ k ]            
             tot  = trg['TOTAL']
-            print k , part, '  #lines: %5d #events %-5d ' %  ( max( len(trg)-1 , 0 ) , tot ) 
+            print >> ofile, k , part, '  #lines: %5d #events %-5d ' %  ( max( len(trg)-1 , 0 ) , tot ) 
             keys = trg.keys()
             keys.sort()
-            
+
             for k in keys :
                 v   = trg[k]
-                eff = be ( v , tot ) * 100 
-                print ' %s  \t %s ' % ( eff.toString ("(%6.2f +-%5.2f )") , k ) 
+                eff = be ( v , tot ) * 100
+                print >> ofile,' %s  \t %s ' % ( eff.toString ("(%6.2f +-%5.2f )") , k ) 
                 
                 
-    print 90*'*'
+    print >> ofile , 90*'*'
 
 # =============================================================================
 ## merge tistos data-bases
@@ -778,6 +796,10 @@ Algo.trgDecs           =  trgDecs
 Algo.tisTos            =  tisTos 
 Algo.tisTos_initialize = _tisTosInit
 Algo.tisTos_finalize   = _tisTosFini
+# =============================================================================
+# make report 
+# =============================================================================
+logger.info('Add TisTos functionality to Bender.Algo class')
 # =============================================================================
 if '__main__' == __name__ :
     
