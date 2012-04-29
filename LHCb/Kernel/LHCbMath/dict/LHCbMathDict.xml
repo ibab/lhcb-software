@@ -87,6 +87,8 @@
   <function name    = "LHCb::Math::equal_to_uint"          />
   <function name    = "LHCb::Math::knuth_equal_to_double"  />
   <function name    = "Gaudi::Math::lomont_compare_double" />
+  <function name    = "Gaudi::Math::interpolate_1D"        />
+  <function name    = "Gaudi::Math::interpolate_2D"        />
   <function pattern = "Gaudi::Math::Jackson::jackson*"     />
   
   <class name = "Gaudi::Math::Chi2Solution<4,2,double>"         />

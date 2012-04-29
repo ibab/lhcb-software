@@ -876,6 +876,64 @@ Gaudi::Math::ValueWithError Gaudi::Math::log10
   return Gaudi::Math::ValueWithError ( v , e1 * e1 * b.cov2 () ) ;
 }
 // ============================================================================
+/*  simple linear interpolation 
+ *  @param x  the value to evaluate the function 
+ *  @param x0 the abscissa for the first  point
+ *  @param y0 the function value for the first  point
+ *  @param x1 the abscissa for the second point
+ *  @param y1 the function value for the second point
+ *  @return linear interpolation at point x
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError Gaudi::Math::interpolate_1D
+( const double                       x  , 
+  const double                       x0 ,
+  const Gaudi::Math::ValueWithError& y0 , 
+  const double                       x1 ,
+  const Gaudi::Math::ValueWithError& y1 ) 
+{
+  //
+  const double c0 = ( x - x1 ) / ( x0 - x1 ) ;
+  const double c1 = ( x - x0 ) / ( x1 - x0 ) ;
+  //
+  return c0 * y0 + c1 * y1 ;
+}
+// ============================================================================
+/*  simple (bi)linear interpolation 
+ *  @param x  the x-coordiate to evaluate the function 
+ *  @param y  the y-coordiate to evaluate the function 
+ *  @param x0 the x-coordinate for the first  pair of points
+ *  @param x1 the x-coordinate for the second pair of points
+ *  @param y0 the y-coordinate for the first  pair of points
+ *  @param y1 the y-coordinate for the second pair of points
+ *  @param v00 the function value 
+ *  @param v01 the function value 
+ *  @param v10 the function value 
+ *  @param v11 the function value 
+ *  @return bilinear interpolation at point (x,y)
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError Gaudi::Math::interpolate_2D 
+( const double                       x   , 
+  const double                       y   , 
+  const double                       x0  ,
+  const double                       x1  ,
+  const double                       y0  ,
+  const double                       y1  ,
+  const Gaudi::Math::ValueWithError& v00 , 
+  const Gaudi::Math::ValueWithError& v01 , 
+  const Gaudi::Math::ValueWithError& v10 , 
+  const Gaudi::Math::ValueWithError& v11 ) 
+{
+  //
+  const double c00 =  ( x - x1 ) * ( y - y1 ) / ( x0 - x1 ) / ( y0 - y1 ) ;
+  const double c01 =  ( x - x1 ) * ( y - y0 ) / ( x0 - x1 ) / ( y1 - y0 ) ;
+  const double c10 =  ( x - x0 ) * ( y - y1 ) / ( x1 - x0 ) / ( y0 - y1 ) ;
+  const double c11 =  ( x - x0 ) * ( y - y0 ) / ( x1 - x0 ) / ( y1 - y0 ) ;
+  //
+  return c00 * v00 + c01 * v01 + c10 * v10 + c11 * v11  ;
+} 
+// ============================================================================
 // Boost.Bind
 // ============================================================================
 #include "boost/bind.hpp"

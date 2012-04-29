@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2012-04-29 - Vanya Belyaev
+ - minor polishing 
+
 ! 2012-04-28 - Vanya Belyaev
  - fix Bifurcated gaussian,
    extend the generic solution for Chi2-problem,
