@@ -50,7 +50,10 @@ __date__    = "2011-10-05"
 __version__ = "$Revision$"
 __all__     = ( 'trunkConf' , )
 # =============================================================================
-
+## logging
+# =============================================================================
+from Bender.Logger import getLogger 
+logger = getLogger( __name__ )
 # =============================================================================
 ## configure variopsi uDst settings from RootInTES 
 def uDstConf ( rootInTes ) :
@@ -62,18 +65,21 @@ def uDstConf ( rootInTes ) :
     ## pick up all goodies from Juan
     #
     import MicroDSTConf.TriggerConfUtils as TCU
-
+    #
     #
     ## 'rootify'
     #
     if 0 != rootInTes.find ( '/Event/') : rootInTes = '/Event/' + rootInTes 
 
     rootInTes = TCU.fixTrunk ( rootInTes )
-
+    
+    logger.info("Reconfigure uDST to use    RootInTES='%s'" % rootInTes )
+    
     #
     ## configure L0,Hlt,e tc using Juan's functions:
     #
     TCU.configureL0AndHltDecoding ( rootInTes )
+    logger.info("Configure L0&HLT decoding  RootInTES='%s'" % rootInTes )
 
     from Configurables import DataOnDemandSvc
     dod = DataOnDemandSvc( Dump = True )
@@ -104,7 +110,8 @@ def uDstConf ( rootInTes ) :
     dod.AlgMap [ odin    . Target ] = odin
     dod.AlgMap [ summary . Target ] = summary
     dod.AlgMap [ header  . Target ] = header
-
+    
+    logger.info("Configure ODIN,Raw&Summary RootInTES='%s'" % rootInTes )
     #
     ##
     #
@@ -116,6 +123,7 @@ def uDstConf ( rootInTes ) :
     from Configurables import DecodePileUpData
     pileupDec = DecodePileUpData()
     pileupDec.RawEventLocation              = rootInTes + 'DAQ/RawEvent' 
+
     
     
 # =============================================================================
