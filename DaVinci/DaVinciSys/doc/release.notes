@@ -3,7 +3,7 @@ Package             : DaVinciSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics analysis application
 
-</PRE><H1><A NAME=v30r2p3>2012-04-19 DaVinci v30r2p3</A></H1><PRE>
+</PRE><H1><A NAME=v30r3>2012-04-29 DaVinci v30r3</A></H1><PRE>
 Patch release for Stripping 19, for post April 2012 TS data taking.
 
 In additional, the following patched packages are included :
@@ -12,12 +12,12 @@ In additional, the following patched packages are included :
   . To fix problems with the accuracy of the Particle momentum covariance
     matrix patching.
   . Adds a new PackedCaloCluster class. Will only be used in the next full
-    strack release of DaVinci.
+    stack release of DaVinci.
   . Various improvements to the packing checkers.
  - Phys/DaVinciTools
   . Fix AddExtraInfo so that it never returns FAILURE in execute()
-  . BremAdder: correct minor bug in testing if the track has been 
-    bremsstrahlung-corrected
+  . BremAdder: Correct minor bug in testing if the track has been 
+    bremsstrahlung corrected
  - Phys/DaVinciMonitors v1r19
   . Muon Efficiency plots with and without MIP cut on the selected sample 
     in MuEffMonitor
