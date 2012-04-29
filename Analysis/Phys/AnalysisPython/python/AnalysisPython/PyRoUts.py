@@ -199,14 +199,14 @@ def _h1_set_item_ ( h1 , ibin , v ) :
     #
     if   isinstance ( v , ( int , long ) ) :
         
-        if   0  < v   : return _h1_set_item_ ( h1 , ibin , VE ( v , v ) )
-        elif 0 == v   : return _h1_set_item_ ( h1 , ibin , VE ( v , 1 ) )
-        else          : return _h1_set_item_ ( h1 , ibin , VE ( v , 0 ) )
+        if   0  < v   : return _h1_set_item_ ( h1 , ibin , VE   ( v , v ) )
+        elif 0 == v   : return _h1_set_item_ ( h1 , ibin , VE   ( v , 1 ) )
+        else          : return _h1_set_item_ ( h1 , ibin , VE   ( v , 0 ) )
         
     elif isinstance ( v , float ) :
         
-        if _int ( v ) : return _h1_set_item_ ( h1 , ibin , long ( v ) )
-        else          : return _h1_set_item_ ( h1 , ibin , VE ( v , 0 ) )
+        if _int ( v ) : return _h1_set_item_ ( h1 , ibin , long ( v     ) )
+        else          : return _h1_set_item_ ( h1 , ibin , VE   ( v , 0 ) )
 
     ## check the validity of the bin 
     if not ibin in h1 : raise IndexError 
@@ -448,6 +448,7 @@ def interpolate_2D ( x   , y  ,
     
     return c00 * v00 + c01 * v01 + c10 * v10 + c11 * v11 
 
+
 # =============================================================================
 ## histogram as function 
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
@@ -613,6 +614,53 @@ ROOT.TH2F . findBin  = _h2_find_
 ROOT.TH2D . findBin  = _h2_find_
 ROOT.TH3F . findBin  = _h3_find_
 ROOT.TH3D . findBin  = _h3_find_
+
+# ============================================================================
+## find the first X-value for the certain Y-value 
+def _h1_find_X ( self             ,
+                 v                ,
+                 forward   = True ) : 
+    
+    ##
+    if hasattr ( v , 'value' ) : v = v.value()
+    ##
+    mn , mx  = self.minmax()
+    ##
+    if v < mn.value() :
+        return hist.xmin() if forward else hist.xmax ()  
+    if v > mx.value() :
+        return hist.xmax() if forward else hist.xmin () 
+    
+    nb  = len ( hist ) 
+    
+    ax  = hist.GetXaxis()
+    
+    for i in hist :
+        
+        j  = i+1
+        if not j in hist : continue
+        
+        ib = i if forward else nb + 1 - i 
+        jb = j if forward else nb + 1 - j 
+        
+        vi = hist [ ib ].value () 
+        vj = hist [ jb ].value ()
+        
+        if  vi <= v <= vj or vj <= v <= vi :
+            
+            xi = ax.GetBinCenter ( ib )
+            xj = ax.GetBinCenter ( jb )
+            
+            if   vi == v             : return xi
+            elif vj == v             : return xj 
+            
+            dv = vi - vj
+            dx = xi - xj
+
+            if   vi == vj or 0 == dv : return 0.5 * ( xi + xj ) 
+            
+            return (v*dx+vi*xj-vj*xi)/dv
+
 
 # =============================================================================
 ## histogram as function 
@@ -849,7 +897,6 @@ ROOT.TH3F  . iteritems     = _h3_iteritems_
 ROOT.TH3D  . iteritems     = _h3_iteritems_
 
 
-
 # =============================================================================
 ## iterate over items in TAxis
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
@@ -1011,7 +1058,8 @@ def histoGuess ( histo , mass , sigma ) :
     return p00, p03, p04 , smin , smax  
 
 
-ROOT.TH1.histoGuess = histoGuess
+ROOT.TH1F . histoGuess = histoGuess
+ROOT.TH1D . histoGuess = histoGuess
 
 # =============================================================================
 ## use likelihood in histogram fit ? 
@@ -1045,7 +1093,7 @@ ROOT.TH1.useLL = useLL
 def allInts ( histo         ,
               diff  = 1.e-4 ) :
     """
-    Natural histiogram with all integer entries ?
+    Natural histogram with all integer entries ?
     """
     
     diff = abs ( diff )
@@ -1068,6 +1116,11 @@ ROOT.TH1.allInts = allInts
 def binomEff_h1 ( h1 , h2 ) :
     """
     Calculate the efficiency histogram using the binomial erorrs
+    
+    >>> h1 = ...
+    >>> h2 = ...
+    >>> h3 = h1 // h2
+    
     """
     func = binomEff
     #
@@ -1107,6 +1160,11 @@ ROOT.TH1.  binomEff    = binomEff_h1
 def binomEff_h2 ( h1 , h2 ) :
     """
     Calculate the efficiency histogram using the binomial erorrs
+
+    >>> h1 = ...
+    >>> h2 = ...
+    >>> h3 = h1 // h2
+    
     """
     func = binomEff
     #
@@ -1146,6 +1204,11 @@ ROOT.TH2.  binomEff    = binomEff_h2
 def binomEff_h3 ( h1 , h2 ) :
     """
     Calculate the efficiency histogram using the binomial erorrs
+
+    >>> h1 = ...
+    >>> h2 = ...
+    >>> h3 = h1 // h2
+    
     """
     func = binomEff
     #
@@ -1189,7 +1252,11 @@ ROOT.TH3.__floordiv__  = binomEff_h3
 #  @date   2011-06-07
 def _h1_oper_ ( h1 , h2 , oper ) :
     """
-    Operation with the histogram 
+    Operation with the histogram
+
+    >>> h1     = ...
+    >>> h2     = ...
+    >>> result = h1 (oper) h2 
     """
     if                                 not h1.GetSumw2() : h1.Sumw2()
     if hasattr ( h2 , 'GetSumw2' ) and not h2.GetSumw2() : h2.Sumw2()
@@ -1265,6 +1332,10 @@ def _h1_ioper_ ( h1 , h2 , oper ) :
 def _h1_div_ ( h1 , h2 ) :
     """
     Divide the histograms 
+    
+    >>> h1     = ...
+    >>> h2     = ...
+    >>> result = h1 / h2  
     """
     return _h1_oper_ ( h1 , h2 , lambda x,y : x/y ) 
 # =============================================================================
@@ -1274,6 +1345,10 @@ def _h1_div_ ( h1 , h2 ) :
 def _h1_mul_ ( h1 , h2 ) :
     """
     Multiply the histograms 
+    
+    >>> h1     = ...
+    >>> h2     = ...
+    >>> result = h1 * h2  
     """
     return _h1_oper_ ( h1 , h2 , lambda x,y : x*y ) 
 # =============================================================================
@@ -1283,6 +1358,10 @@ def _h1_mul_ ( h1 , h2 ) :
 def _h1_add_ ( h1 , h2 ) :
     """
     Add the histograms 
+    
+    >>> h1     = ...
+    >>> h2     = ...
+    >>> result = h1 + h2  
     """
     return _h1_oper_ ( h1 , h2 , lambda x,y : x+y ) 
 # =============================================================================
@@ -1292,6 +1371,10 @@ def _h1_add_ ( h1 , h2 ) :
 def _h1_sub_ ( h1 , h2 ) :
     """
     Subtract the histogram 
+    
+    >>> h1     = ...
+    >>> h2     = ...
+    >>> result = h1 - h2  
     """
     return _h1_oper_ ( h1 , h2 , lambda x,y : x-y ) 
 # =============================================================================
@@ -1301,6 +1384,10 @@ def _h1_sub_ ( h1 , h2 ) :
 def _h1_frac_ ( h1 , h2 ) :
     """
     ``Fraction'' the histogram h1/(h1+h2)
+    
+    >>> h1     = ...
+    >>> h2     = ...
+    >>> result = h1.frac  ( h2 ) 
     """
     return _h1_oper_ ( h1 , h2 , lambda x,y : x.frac(y) ) 
 # =============================================================================
@@ -1309,7 +1396,12 @@ def _h1_frac_ ( h1 , h2 ) :
 #  @date   2011-06-07
 def _h1_asym_ ( h1 , h2 ) :
     """
-    ``Fraction'' the histogram (h1-h2)/(h1+h2)
+    ``Asymmetry'' the histogram (h1-h2)/(h1+h2)
+    
+    >>> h1     = ...
+    >>> h2     = ...
+    >>> result = h1.asym ( h2 ) 
+    
     """
     return _h1_oper_ ( h1 , h2 , lambda x,y : x.asym(y) ) 
 # =============================================================================
@@ -1319,6 +1411,11 @@ def _h1_asym_ ( h1 , h2 ) :
 def _h1_chi2_ ( h1 , h2 ) :
     """
     ``Chi2-tension'' the histogram
+    
+    >>> h1     = ...
+    >>> h2     = ...
+    >>> result = h1.chi2  ( h2 ) 
+    
     """
     return _h1_oper_ ( h1 , h2 , lambda x,y : VE ( x.chi2 ( y ) , 0 ) ) 
 # =============================================================================
@@ -1328,6 +1425,11 @@ def _h1_chi2_ ( h1 , h2 ) :
 def _h1_mean_ ( h1 , h2 ) :
     """
     ``Mean'' the histograms
+    
+    >>> h1     = ...
+    >>> h2     = ...
+    >>> result = h1.average  ( h2 ) 
+    
     """
     return _h1_oper_ ( h1 , h2 , lambda x,y : x.mean ( y ) ) 
 
@@ -1358,19 +1460,60 @@ def _h1_pow_ ( h1 , val ) :
         
     return result 
 
-ROOT.TH1._oper_    = _h1_oper_
 
-ROOT.TH1.__div__   = _h1_div_
-ROOT.TH1.__mul__   = _h1_mul_
-ROOT.TH1.__add__   = _h1_add_
-ROOT.TH1.__sub__   = _h1_sub_
-ROOT.TH1.__pow__   = _h1_pow_
+# =============================================================================
+## 'abs' the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2012-04-29
+def _h1_abs_ ( h1 , val ) :
+    """
+    ``abs'' the histogram
 
-ROOT.TH1.  frac    = _h1_frac_
-ROOT.TH1.  asym    = _h1_asym_
-ROOT.TH1.  chi2    = _h1_chi2_
-ROOT.TH1.  average = _h1_mean_
+    >>> h      = ...
+    >>> result = abs ( h )
+    """
+    if not h1.GetSumw2() : h1.Sumw2()
+    #
+    result = h1.Clone( hID() )
+    if not result.GetSumw2() : result.Sumw2()
+    #
+    for i1,x1,y1 in h1.iteritems() :
+        #
+        result.SetBinContent ( i1 , 0 ) 
+        result.SetBinError   ( i1 , 0 )
+        #
+        v = abs ( y1 )  
+        #
+        result.SetBinContent ( i1 , v.value () ) 
+        result.SetBinError   ( i1 , v.error () )
+        
+    return result 
 
+
+
+ROOT.TH1D . _oper_    = _h1_oper_
+ROOT.TH1D . __div__   = _h1_div_
+ROOT.TH1D . __mul__   = _h1_mul_
+ROOT.TH1D . __add__   = _h1_add_
+ROOT.TH1D . __sub__   = _h1_sub_
+ROOT.TH1D . __pow__   = _h1_pow_
+ROOT.TH1D . __abs__   = _h1_abs_
+ROOT.TH1D .  frac     = _h1_frac_
+ROOT.TH1D .  asym     = _h1_asym_
+ROOT.TH1D .  chi2     = _h1_chi2_
+ROOT.TH1D .  average  = _h1_mean_
+
+ROOT.TH1F . _oper_    = _h1_oper_
+ROOT.TH1F . __div__   = _h1_div_
+ROOT.TH1F . __mul__   = _h1_mul_
+ROOT.TH1F . __add__   = _h1_add_
+ROOT.TH1F . __sub__   = _h1_sub_
+ROOT.TH1F . __pow__   = _h1_pow_
+ROOT.TH1F . __abs__   = _h1_abs_
+ROOT.TH1F .  frac     = _h1_frac_
+ROOT.TH1F .  asym     = _h1_asym_
+ROOT.TH1F .  chi2     = _h1_chi2_
+ROOT.TH1F .  average  = _h1_mean_
 
 # =============================================================================
 ##  Division with the histograms 
@@ -1379,6 +1522,11 @@ ROOT.TH1.  average = _h1_mean_
 def _h1_idiv_ ( h1 , h2 ) :
     """
     Divide the histograms 
+    
+    >>> h1  = ...
+    >>> h2  = ...
+    >>> h1 /=  h2 
+    
     """
     return _h1_ioper_ ( h1 , h2 , lambda x,y : x/y ) 
 # =============================================================================
@@ -1388,6 +1536,11 @@ def _h1_idiv_ ( h1 , h2 ) :
 def _h1_imul_ ( h1 , h2 ) :
     """
     Multiply the histograms 
+    
+    >>> h1  = ...
+    >>> h2  = ...
+    >>> h1 *=  h2 
+    
     """
     return _h1_ioper_ ( h1 , h2 , lambda x,y : x*y ) 
 # =============================================================================
@@ -1396,7 +1549,12 @@ def _h1_imul_ ( h1 , h2 ) :
 #  @date   2011-06-07
 def _h1_iadd_ ( h1 , h2 ) :
     """
-    Add the histograms 
+    Add the histograms
+    
+    >>> h1  = ...
+    >>> h2  = ...
+    >>> h1 +=  h2 
+    
     """
     return _h1_ioper_ ( h1 , h2 , lambda x,y : x+y ) 
 # =============================================================================
@@ -1405,7 +1563,12 @@ def _h1_iadd_ ( h1 , h2 ) :
 #  @date   2011-06-07
 def _h1_isub_ ( h1 , h2 ) :
     """
-    Subtract the histogram 
+    Subtract the histogram
+    
+    >>> h1  = ...
+    >>> h2  = ...
+    >>> h1 -=  h2 
+    
     """
     return _h1_ioper_ ( h1 , h2 , lambda x,y : x-y ) 
 # =============================================================================
@@ -1421,7 +1584,11 @@ ROOT.TH1.__isub__   = _h1_isub_
 #  @date   2011-06-07
 def _h1_rdiv_ ( h1 , h2 ) :
     """
-    Divide the histograms 
+    Divide the histograms
+
+    >>> h1     = ...
+    >>> obj    = ...
+    >>> result = obj / h1 
     """
     return _h1_oper_ ( h1 , h2 , lambda x,y : y/x ) 
 # =============================================================================
@@ -1431,6 +1598,10 @@ def _h1_rdiv_ ( h1 , h2 ) :
 def _h1_rmul_ ( h1 , h2 ) :
     """
     Multiply the histograms 
+
+    >>> h1     = ...
+    >>> obj    = ...
+    >>> result = obj * h1 
     """
     return _h1_oper_ ( h1 , h2 , lambda x,y : y*x ) 
 # =============================================================================
@@ -1439,7 +1610,11 @@ def _h1_rmul_ ( h1 , h2 ) :
 #  @date   2011-06-07
 def _h1_radd_ ( h1 , h2 ) :
     """
-    Add the histograms 
+    Add the histograms
+    
+    >>> h1     = ...
+    >>> obj    = ...
+    >>> result = obj + h1 
     """
     return _h1_oper_ ( h1 , h2 , lambda x,y : y+x ) 
 # =============================================================================
@@ -1448,7 +1623,11 @@ def _h1_radd_ ( h1 , h2 ) :
 #  @date   2011-06-07
 def _h1_rsub_ ( h1 , h2 ) :
     """
-    Subtract the histogram 
+    Subtract the histogram
+            
+    >>> h1     = ...
+    >>> obj    = ...
+    >>> result = obj - h1 
     """
     return _h1_oper_ ( h1 , h2 , lambda x,y : y-x ) 
 # =============================================================================
@@ -1462,12 +1641,254 @@ ROOT.TH1F.__radd__   = _h1_radd_
 ROOT.TH1F.__rsub__   = _h1_rsub_
 
 # =============================================================================
+## find the first X-value for the given Y-value 
+def _h1_xfind_ ( self           ,
+                 v              ,
+                 forward = True ) :
+    """
+    
+    Find the first X-value for the given Y-value
+
+    >>> h1 = ...
+    >>> x = h1.find_X ( 1000 )
+
+    >>> h1 = ...
+    >>> x = h1.find_X ( 1000 , False )
+    
+    """
+    #
+    if hasattr (  v , 'value' ) : v = v.value()
+    #
+    mn = self [ self.GetMinimumBin() ]
+    mx = self [ self.GetMaximumBin() ]
+
+    #
+    if v < mn.value() :
+        return self.xmin() if forward else self.xmax ()
+    #
+    if v > mx.value() :
+        return self.xmax() if forward else self.xmin () 
+    
+    nb = len ( self )
+    ax = self.GetXaxis () 
+    
+    for i in self :
+        
+        j  = i+1
+        if not j in self : continue
+        
+        ib = i if forward else nb + 1 - i 
+        jb = j if forward else nb + 1 - j 
+        
+        vi = self [ ib ].value () 
+        vj = self [ jb ].value ()
+        
+        if  vi <= v <= vj or vj <= v <= vi :
+            
+            xi = ax.GetBinCenter ( ib )
+            xj = ax.GetBinCenter ( jb )
+            
+            if   vi == v             : return xi   ## RETURN 
+            elif vj == v             : return xj   ## RETURN 
+            
+            dv = vi - vj
+            dx = xi - xj
+            
+            if   vi == vj or 0 == dv : return 0.5 * ( xi + xj )  ## RETURN
+            
+            return (v*dx+vi*xj-vj*xi)/dv                         ## RETURN
+        
+
+ROOT.TH1F . find_X = _h1_xfind_
+ROOT.TH1D . find_X = _h1_xfind_
+
+
+# =======================================================================
+## get "n-sigma" interval assuming the presence of peak
+def _h1_CL_interval_ ( self       ,
+                       nsigma = 1 ) : 
+    """
+    Get ``n-sigma'' interval for the distribution.
+
+    >>> h = ...
+    >>> xlow,xhigh = h.cl_interval( 1 ) 
+    """
+    mv   = self.maxv()
+    import math 
+    
+    try :
+        #
+        f    = math.exp    ( -0.5 * nsigma * nsigma )
+        x1   = self.find_X ( mv * f , True  )
+        x2   = self.find_X ( mv * f , False )
+        #
+    except :
+        #
+        x1,x2 = self.xminmax () 
+        
+    return x1,x2 
+    
+ROOT.TH1F . cl_interval = _h1_CL_interval_
+ROOT.TH1D . cl_interval = _h1_CL_interval_
+            
+# =============================================================================
+## get the minumum value for the histogram 
+def _h_minv_ ( self ) :
+    """
+    Get the minimum value for the histogram
+
+    >>> h  = ...
+    >>> mv = h.minv ()
+    """
+    mv = VE ( 1.e+100 , -1 ) 
+    for ibin in self :
+        v = self[ibin]
+        if v.value() <= mv.value() or mv.error() < 0 : mv = v
+    return mv 
+
+# =============================================================================
+## get the maximum value for the histogram 
+def _h_maxv_ ( self ) :
+    """
+    Get the minimum value for the histogram
+
+    >>> h  = ...
+    >>> mv = h.maxv ()
+    """
+    mv = VE ( -1.e+100 , -1 ) 
+    for ibin in self :
+        v = self[ibin]
+        if v.value() >= mv.value() or mv.error() < 0 : mv = v
+    return mv 
+        
+# =============================================================================
+## get the minmaximum values for the histogram 
+def _h_minmax_ ( self ) :
+    """
+    Get the minmax pair for the histogram
+    
+    >>> h     = ...
+    >>> mn,mx = h.minmax ()
+    """
+    return self.minv() , self.maxv() 
+
+ROOT.TH1. minv    = _h_minv_
+ROOT.TH1. maxv    = _h_maxv_
+ROOT.TH1. minmax  = _h_minmax_
+
+# ============================================================================
+## get the minimum valeu for X-axis 
+def _ax_min_ ( self ) :
+    """
+    Get the minimum value for X-axis
+
+    >>> xmin = h.xmin()
+    """
+    ax = self.GetXaxis () 
+    return ax.GetXmin()
+# ============================================================================
+## get the minimum value for y-axis 
+def _ay_min_ ( self ) :
+    """
+    Get the minimum value for Y-axis
+
+    >>> ymin = h.ymin()
+    """
+    ay = self.GetYaxis () 
+    return ay.GetXmin()
+# ============================================================================
+## get the minimum value for z-axis 
+def _az_min_ ( self ) :
+    """
+    Get the minimum value for Z-axis
+
+    >>> zmin = h.zmin()
+    """
+    az = self.GetZaxis () 
+    return az.GetXmin()
+
+# ============================================================================
+## get the maximum value for X-axis 
+def _ax_max_ ( self ) :
+    """
+    Get the maximum value for X-axis
+
+    >>> xmax = h.xmax()
+    """
+    ax = self.GetXaxis () 
+    return ax.GetXmax()
+# ============================================================================
+## get the maximum value for y-axis 
+def _ay_max_ ( self ) :
+    """
+    Get the maximum value for Y-axis
+
+    >>> ymax = h.ymax()
+    """
+    ay = self.GetYaxis () 
+    return ay.GetXmax()
+# ============================================================================
+## get the maximum value for z-axis 
+def _az_max_ ( self ) :
+    """
+    Get the maximum value for Z-axis
+
+    >>> zmax = h.zmax()
+    """
+    az = self.GetZaxis () 
+    return az.GetXmax()
+
+ROOT.TH1D. xmin    = _ax_min_
+ROOT.TH1D. xmax    = _ax_max_
+ROOT.TH1D. ymin    = _h_minv_
+ROOT.TH1D. ymax    = _h_maxv_
+
+ROOT.TH1F. xmin    = _ax_min_
+ROOT.TH1F. xmax    = _ax_max_
+ROOT.TH1F. ymin    = _h_minv_
+ROOT.TH1F. ymax    = _h_maxv_
+
+ROOT.TH2 . xmin    = _ax_min_
+ROOT.TH2 . xmax    = _ax_max_
+ROOT.TH2 . ymin    = _ay_min_
+ROOT.TH2 . ymax    = _ay_max_
+ROOT.TH2 . zmin    = _h_minv_
+ROOT.TH2 . zmax    = _h_maxv_
+
+ROOT.TH3 . xmin    = _ax_min_
+ROOT.TH3 . xmax    = _ax_max_
+ROOT.TH3 . ymin    = _ay_min_
+ROOT.TH3 . ymax    = _ay_max_
+ROOT.TH3 . zmin    = _az_min_
+ROOT.TH3 . zmax    = _az_max_
+
+ROOT.TH1D. xminmax = lambda s : ( s.xmin() , s.xmax() )
+ROOT.TH1D. yminmax = lambda s : ( s.ymin() , s.ymax() )
+ROOT.TH1F. xminmax = lambda s : ( s.xmin() , s.xmax() )
+ROOT.TH1F. yminmax = lambda s : ( s.ymin() , s.ymax() )
+
+ROOT.TH2 . xminmax = lambda s : ( s.xmin() , s.xmax() )
+ROOT.TH2 . yminmax = lambda s : ( s.ymin() , s.ymax() )
+ROOT.TH2 . zminmax = lambda s : ( s.zmin() , s.zmax() )
+
+ROOT.TH3 . xminmax = lambda s : ( s.xmin() , s.xmax() )
+ROOT.TH3 . yminmax = lambda s : ( s.ymin() , s.ymax() )
+ROOT.TH3 . zminmax = lambda s : ( s.zmin() , s.zmax() )
+
+
+    
+# =============================================================================
 ## operation with the histograms 
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-07
 def _h2_oper_ ( h1 , h2 , oper ) :
     """
-    Operation with the histogram 
+    Operation with the histogram
+        
+    >>> h1     = ...
+    >>> h2     = ...
+    >>> result = h1 (oper) h2
+    
     """
     if                                 not h1.GetSumw2() : h1.Sumw2()
     if hasattr ( h2 , 'GetSumw2' ) and not h2.GetSumw2() : h2.Sumw2()
@@ -1500,7 +1921,12 @@ def _h2_oper_ ( h1 , h2 , oper ) :
 #  @date   2011-06-07
 def _h2_div_ ( h1 , h2 ) :
     """
-    Divide the histograms 
+    Divide the histograms
+    
+    >>> h1     = ...
+    >>> h2     = ...
+    >>> result = h1 / h2
+    
     """
     return _h2_oper_ ( h1 , h2 , lambda x,y : x/y ) 
 # =============================================================================
@@ -1510,6 +1936,10 @@ def _h2_div_ ( h1 , h2 ) :
 def _h2_mul_ ( h1 , h2 ) :
     """
     Multiply the histograms 
+    
+    >>> h1     = ...
+    >>> h2     = ...
+    >>> result = h1 * h2 
     """
     return _h2_oper_ ( h1 , h2 , lambda x,y : x*y ) 
 # =============================================================================
@@ -1519,6 +1949,10 @@ def _h2_mul_ ( h1 , h2 ) :
 def _h2_add_ ( h1 , h2 ) :
     """
     Add the histograms 
+    
+    >>> h1     = ...
+    >>> h2     = ...
+    >>> result = h1 + h2 
     """
     return _h2_oper_ ( h1 , h2 , lambda x,y : x+y ) 
 # =============================================================================
@@ -1527,7 +1961,11 @@ def _h2_add_ ( h1 , h2 ) :
 #  @date   2011-06-07
 def _h2_sub_ ( h1 , h2 ) :
     """
-    Subtract the histogram 
+    Subtract the histogram
+    
+    >>> h1     = ...
+    >>> h2     = ...
+    >>> result = h1 - h2 
     """
     return _h2_oper_ ( h1 , h2 , lambda x,y : x-y ) 
 # =============================================================================
@@ -1537,6 +1975,11 @@ def _h2_sub_ ( h1 , h2 ) :
 def _h2_frac_ ( h1 , h2 ) :
     """
     ``Fraction'' the histogram h1/(h1+h2)
+    
+    >>> h1     = ...
+    >>> h2     = ...
+    >>> frac   = h1.frac ( h2 )
+
     """
     return _h2_oper_ ( h1 , h2 , lambda x,y : x.frac(y) ) 
 # =============================================================================
@@ -1546,6 +1989,10 @@ def _h2_frac_ ( h1 , h2 ) :
 def _h2_asym_ ( h1 , h2 ) :
     """
     ``Asymmetry'' the histogram (h1-h2)/(h1+h2)
+    
+    >>> h1     = ...
+    >>> h2     = ...
+    >>> asym   = h1.asym ( h2 )
     """
     return _h2_oper_ ( h1 , h2 , lambda x,y : x.asym(y) ) 
 # =============================================================================
@@ -1554,7 +2001,11 @@ def _h2_asym_ ( h1 , h2 ) :
 #  @date   2011-06-07
 def _h2_chi2_ ( h1 , h2 ) :
     """
-    ``Chi2-tension'' for the histograms 
+    ``Chi2-tension'' for the histograms
+    
+    >>> h1     = ...
+    >>> h2     = ...
+    >>> chi2   = h1.chi2 ( h2 ) 
     """
     return _h2_oper_ ( h1 , h2 , lambda x,y : VE ( x.chi2 ( y ) , 0 ) ) 
 # =============================================================================
@@ -1563,7 +2014,11 @@ def _h2_chi2_ ( h1 , h2 ) :
 #  @date   2011-06-07
 def _h2_mean_ ( h1 , h2 ) :
     """
-    ``Average'' for the histograms 
+    ``Average'' for the histograms
+    
+    >>> h1     = ...
+    >>> h2     = ...
+    >>> mean   = h1.average ( h2 ) 
     """
     return _h2_oper_ ( h1 , h2 , lambda x,y : x.mean ( y ) )  
 
@@ -1573,7 +2028,11 @@ def _h2_mean_ ( h1 , h2 ) :
 #  @date   2011-06-07
 def _h2_pow_ ( h1 , val ) :
     """
-    ``pow'' the histogram 
+    ``pow'' the histogram
+    
+    >>> h2     = ...
+    >>> result = h2 ** 2 
+
     """
     if not h1.GetSumw2() : h1.Sumw2()
     #
@@ -1594,6 +2053,35 @@ def _h2_pow_ ( h1 , val ) :
         
     return result 
 
+# =============================================================================
+## 'abs' the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
+def _h2_abs_ ( h1 ) :
+    """
+    ``abs'' the histogram
+
+    >>> h2     = ...
+    >>> result = abs ( h2 ) 
+    """
+    if not h1.GetSumw2() : h1.Sumw2()
+    #
+    result = h1.Clone( hID() )
+    if not result.GetSumw2() : result.Sumw2()
+    #
+    for ix1,iy1,x1,y1,z1 in h1.iteritems() :
+        #
+        result.SetBinContent ( ix1 , iy1 , 0 ) 
+        result.SetBinError   ( ix1 , iy1 , 0 )
+        #
+        v = abs  ( z1 ) 
+        #
+        result.SetBinContent ( ix1 , iy1 , v.value () ) 
+        result.SetBinError   ( ix1 , iy1 , v.error () )
+        
+    return result 
+
+
 ROOT.TH2._oper_   = _h2_oper_
 
 ROOT.TH2.__div__  = _h2_div_
@@ -1601,11 +2089,13 @@ ROOT.TH2.__mul__  = _h2_mul_
 ROOT.TH2.__add__  = _h2_add_
 ROOT.TH2.__sub__  = _h2_sub_
 ROOT.TH2.__pow__  = _h2_pow_
+ROOT.TH2.__abs__  = _h2_abs_
 
 ROOT.TH2.  frac    = _h2_frac_
 ROOT.TH2.  asym    = _h2_asym_
 ROOT.TH2.  chi2    = _h2_chi2_
 ROOT.TH2.  average = _h2_mean_
+
 
 
 def _h2_box_  ( self , opts = '' ) : return self.Draw( opts + 'box' )
@@ -1621,6 +2111,11 @@ ROOT.TH2.  lego = _h2_lego_
 def _h3_oper_ ( h1 , h2 , oper ) :
     """
     Operation with the histogram 
+    
+    >>> h1 = ...
+    >>> h2 = ...
+    >>> h3 = h1 (oper) h2
+    
     """
     if                                 not h1.GetSumw2() : h1.Sumw2()
     if hasattr ( h2 , 'GetSumw2' ) and not h2.GetSumw2() : h2.Sumw2()
@@ -1652,6 +2147,10 @@ def _h3_oper_ ( h1 , h2 , oper ) :
 def _h3_div_ ( h1 , h2 ) :
     """
     Divide the histograms 
+    
+    >>> h1 = ...
+    >>> h2 = ...
+    >>> h3 = h1 / h2 
     """
     return _h3_oper_ ( h1 , h2 , lambda x,y : x/y ) 
 # =============================================================================
@@ -1660,7 +2159,11 @@ def _h3_div_ ( h1 , h2 ) :
 #  @date   2011-06-07
 def _h3_mul_ ( h1 , h2 ) :
     """
-    Multiply the histograms 
+    Multiply the histograms
+    
+    >>> h1 = ...
+    >>> h2 = ...
+    >>> h3 = h1 * h2 
     """
     return _h3_oper_ ( h1 , h2 , lambda x,y : x*y ) 
 # =============================================================================
@@ -1670,6 +2173,10 @@ def _h3_mul_ ( h1 , h2 ) :
 def _h3_add_ ( h1 , h2 ) :
     """
     Add the histograms 
+    
+    >>> h1 = ...
+    >>> h2 = ...
+    >>> h3 = h1 + h2 
     """
     return _h3_oper_ ( h1 , h2 , lambda x,y : x+y ) 
 # =============================================================================
@@ -1678,7 +2185,11 @@ def _h3_add_ ( h1 , h2 ) :
 #  @date   2011-06-07
 def _h3_sub_ ( h1 , h2 ) :
     """
-    Subtract the histogram 
+    Subtract the histogram
+    
+    >>> h1 = ...
+    >>> h2 = ...
+    >>> h3 = h1 - h2 
     """
     return _h3_oper_ ( h1 , h2 , lambda x,y : x-y ) 
 # =============================================================================
@@ -1688,6 +2199,11 @@ def _h3_sub_ ( h1 , h2 ) :
 def _h3_frac_ ( h1 , h2 ) :
     """
     ``Fraction'' the histogram h1/(h1+h2)
+    
+    >>> h1 = ...
+    >>> h2 = ...
+    >>> h3 = h1.frac ( h2 )
+    
     """
     return _h3_oper_ ( h1 , h2 , lambda x,y : x.frac(y) ) 
 # =============================================================================
@@ -1697,6 +2213,11 @@ def _h3_frac_ ( h1 , h2 ) :
 def _h3_asym_ ( h1 , h2 ) :
     """
     ``Asymmetry'' the histogram (h1-h2)/(h1+h2)
+    
+    >>> h1 = ...
+    >>> h2 = ...
+    >>> h3 = h1.asym ( h2 )
+    
     """
     return _h3_oper_ ( h1 , h2 , lambda x,y : x.asym(y) ) 
 # =============================================================================
@@ -1705,7 +2226,12 @@ def _h3_asym_ ( h1 , h2 ) :
 #  @date   2011-06-07
 def _h3_chi2_ ( h1 , h2 ) :
     """
-    ``Chi2-tension'' for the histograms 
+    ``Chi2-tension'' for the histograms
+    
+    >>> h1 = ...
+    >>> h2 = ...
+    >>> h3 = h1.chi2 ( h2 )
+    
     """
     return _h3_oper_ ( h1 , h2 , lambda x,y : VE ( x.chi2 ( y ) , 0 ) ) 
 # =============================================================================
@@ -1714,7 +2240,11 @@ def _h3_chi2_ ( h1 , h2 ) :
 #  @date   2011-06-07
 def _h3_mean_ ( h1 , h2 ) :
     """
-    ``Average'' for the histograms 
+    ``Average'' for the histograms
+
+    >>> h1 = ...
+    >>> h2 = ...
+    >>> h3 = h1.average ( h2 ) 
     """
     return _h3_oper_ ( h1 , h2 , lambda x,y : x.mean ( y ) )  
 
@@ -1725,6 +2255,9 @@ def _h3_mean_ ( h1 , h2 ) :
 def _h3_pow_ ( h1 , val ) :
     """
     ``pow'' the histogram 
+    
+    >>> h1      = ...
+    >>> result  = h1 ** 3 
     """
     if not h1.GetSumw2() : h1.Sumw2()
     #
@@ -2206,6 +2739,10 @@ def _h1_as_tf1_ ( self , func = lambda s : s.value () ) :
                       ax.GetXmax () )
     
     f1.SetNpx  ( 10 * ax.GetNbins() )
+
+    f1._funobj = fun  
+    f1._histo  = fun._histo
+    f1._func   = fun._func
     
     return f1 
     
@@ -2234,6 +2771,10 @@ def _h2_as_tf2_ ( self , func = lambda s : s.value () ) :
     
     f2.SetNpx  ( 10 * ax.GetNbins() )
     f2.SetNpy  ( 10 * ay.GetNbins() )
+    
+    f2._funobj = fun  
+    f2._histo  = fun._histo
+    f2._func   = fun._func
     
     return f2
 

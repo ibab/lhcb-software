@@ -5,6 +5,14 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2012-04-29 - Vanya Belyaev
+
+ - PyRoUts:
+     - add intervals
+     - add  (x,y,z,v)min/max-functions, 
+     - improve documentation
+
+
 ! 2012-04-02 - Vanya Belyaev
  - add LASS model for Kpi S-wave scattering 
 
