@@ -29,13 +29,12 @@ class RichTrackCreatorConfig(RichConfigurableUser):
        ,"SpecialData"    : []   # Various special data processing options. See KnownSpecialData in RecSys for all options
        ,"InputTracksLocation" : "" # The input location for tracks
        ,"OutputLevel"    : INFO    # The output level to set all algorithms and tools to use
-       ,"TrackTypes"     : [ "Forward","Match","Seed","VeloTT","KsTrack" ]
         # CRJ : Defaults pre-data cuts "CloneDistCut" : [-1e10,1e300] "Likelihood"   : [-100,1e300]
        ,"TrackCuts"      : None
        ,"MaxInputTracks" : None
        ,"MaxUsedTracks"  : None
         }
-
+    
     ## Initialize 
     def initialize(self):
         # default values
@@ -44,13 +43,17 @@ class RichTrackCreatorConfig(RichConfigurableUser):
         self.setRichDefaults ( "MaxUsedTracks",  { "Offline" : 1000, 
                                                    "HLT"     : 500 } )
         self.setRichDefault ( "TrackCuts", "Offline",
-                              { "Forward" : { "Chi2Cut" : [0,10], "PCut" : [0,9999999] },
-                                "Match"   : { "Chi2Cut" : [0,10], "PCut" : [0,9999999] },
-                                "Seed"    : { "Chi2Cut" : [0,10], "PCut" : [1,9999999] },
-                                "VeloTT"  : { "Chi2Cut" : [0,10], "PCut" : [1,9999999] },
-                                "KsTrack" : { "Chi2Cut" : [0,10], "PCut" : [1,9999999] } } )
+                              { "Forward" : { "Chi2Cut" : [0,5], "PCut" : [0,9999999] },
+                                "Match"   : { "Chi2Cut" : [0,5], "PCut" : [0,9999999] },
+                                "Seed"    : { "Chi2Cut" : [0,5], "PCut" : [1,9999999] },
+                                "VeloTT"  : { "Chi2Cut" : [0,5], "PCut" : [1,9999999] },
+                                "KsTrack" : { "Chi2Cut" : [0,5], "PCut" : [1,9999999] } } )
         self.setRichDefault ( "TrackCuts", "HLT",
-                              { "Forward" : { "Chi2Cut" : [0,16], "PCut" : [1,9999999] } } )
+                              { "Forward" : { "Chi2Cut" : [0,4], "PCut" : [1,9999999] },
+                                "Match"   : { "Chi2Cut" : [0,4], "PCut" : [1,9999999] },
+                                "Seed"    : { "Chi2Cut" : [0,4], "PCut" : [1,9999999] },
+                                "VeloTT"  : { "Chi2Cut" : [0,4], "PCut" : [1,9999999] },
+                                "KsTrack" : { "Chi2Cut" : [0,4], "PCut" : [1,9999999] } } )
 
     ## @brief Set OutputLevel 
     def setOutputLevel(self,conponent):
@@ -83,7 +86,6 @@ class RichTrackCreatorConfig(RichConfigurableUser):
         # Track selector
         trselname = "TrackSelector"
         trackCr.addTool( self.richTools().trackSelector(trselname), name=trselname )
-        trackCr.TrackSelector.TrackAlgs = self.getProp("TrackTypes")
         import TrackSelectorTools
         TrackSelectorTools.configureTrackSelectorCuts(trackCr.TrackSelector,self.getProp("TrackCuts"))
            

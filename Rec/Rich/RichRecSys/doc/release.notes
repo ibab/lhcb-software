@@ -4,6 +4,14 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2012-04-30 - Chris Jones
+ - Make the default list of tracks used in the HLT the same as offline.
+ - Update offline track chi^2 cut from 0->10 to 0->5. Tracking now applies
+   its own cut anyway (0->3 currently) so this no longer does anything, but
+   keep just for sanity check.
+ - Improve the way the track types are set, to fix a bug in the HLT where the
+   requested track types to use was not always respected.
+
 !========================= RichRecSys v4r4 2011-08-31 =========================
 ! 2011-08-25 - Chris Jones
  - Explicitly set options for the pixel background tools, for each iteration

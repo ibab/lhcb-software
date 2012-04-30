@@ -8,7 +8,8 @@ from Configurables import ( Rich__Rec__ForwardTrackSelector,
 
 # Method to just set the cuts in a track selector object
 def configureTrackSelectorCuts(selector,cuts):
-    for type in cuts.keys() :
+    selector.TrackAlgs = sorted(cuts.keys())
+    for type in sorted(cuts.keys()) :
         if type == "Forward" : selector.addTool( Rich__Rec__ForwardTrackSelector, type )
         if type == "Match"   : selector.addTool( Rich__Rec__MatchTrackSelector,   type )
         if type == "VeloTT"  : selector.addTool( Rich__Rec__VeloTTTrackSelector,  type )
