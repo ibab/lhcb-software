@@ -1,3 +1,7 @@
+2012-04-30  Ben Couturier <Ben.Couturier@cern.ch>
+
+	* LbConfiguration/tests/ConfigurationFactoryTest.py: Fixed so that test can be run from any location. 
+
 2012-04-27  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* python/LbConfiguration/Project.py: Added project VetraTB
