@@ -1,4 +1,23 @@
-2012-03-06 Ben Couturier <Ben.Couturier@cern.ch>
+2012-04-30 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v6r7p5
+
+	LbConfiguration
+	* LbConfiguration/tests/ConfigurationFactoryTest.py: Fixed so that test can be run from any location.
+	* python/LbConfiguration/Project.py: Added project VetraTB
+	* python/LbConfiguration/Package.py: Fixed bug so that dynamic lookup of package list from
+	distarea/conf directory sets project name correctly.
+
+	Lblegacy
+	* python/LbLegacy/install_project.py: fix format for output when Update script fails.
+	* python/LbLegacy/LHCb_config.py: Added VetraTB
+	
+	LbRelease
+	* scripts/genXMLCatalog: The NewBookkeepingSystem is changed to BookkeepingSystem and it allows to create a catalog with new format based on IOHelper.
+	* python/LbRelease : add new script onlineInstallSoftware.py (for the online installation)
+	* scripts/mkLHCbDirac_release.sh : to make a LHCb/Dirac release on AFs
+	
+2012-04-12 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v6r7p4
 
