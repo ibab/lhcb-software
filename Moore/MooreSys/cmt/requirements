@@ -1,20 +1,20 @@
 package MooreSys
-version v14r2
+version v14r3
 branches doc cmt
 
 #=======================================================
 # Don't forget the applications
 #=======================================================
 
-use  Moore               v14r2       Hlt
+use  Moore               v14r3       Hlt
 use  IndependenceTests   v1r2p1      Hlt
 
 #get the right HltSettings
 use  HltSettings         v5r33       Hlt
 
 # Bug fixes on top of LHCb v34r2 release stack
-use VeloDet       v13r18p1 Det
-
+use VeloDet              v13r18p1    Det
+use RichRecSys           v4r5        Rich
 
 # Declare this as a container package
 apply_pattern container_package
