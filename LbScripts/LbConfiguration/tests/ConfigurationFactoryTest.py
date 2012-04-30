@@ -19,7 +19,7 @@ class ConfigurationFactoryTestCase(unittest.TestCase):
         unittest.TestCase.tearDown(self)
 
     def testSimpleProjectLoad(self):
-        projects = loadProjects("TestProjectConfig.xml")
+        projects = loadProjects(os.path.join(os.path.dirname(__file__), "TestProjectConfig.xml"))
         self.assertEquals(len(projects), 2)
         gaudi = projects[0]
         self.assertEquals(gaudi.Name(), "Gaudi")
@@ -38,7 +38,7 @@ class ConfigurationFactoryTestCase(unittest.TestCase):
         projxml = serializeProjects(projects)
         newxml = projxml.toprettyxml(indent=" ")
         # Loading initial fine and sanitizing (serialized version does not have xsd ref
-        f = open("conf/ProjectConfig.xml", "r")
+        f = open(os.path.join(os.path.dirname(__file__), "conf", "ProjectConfig.xml"), "r")
         oldxml = f.read()
         self.compareProjectsXML(oldxml, newxml)
 
@@ -65,22 +65,22 @@ class ConfigurationFactoryTestCase(unittest.TestCase):
 
 
     def testLoadAllProjectsFromFile(self):
-        self.loadAllProjects("conf/ProjectConfig.xml")
+        self.loadAllProjects(os.path.join(os.path.dirname(__file__), "conf", "ProjectConfig.xml"))
 
 
     def testProjectFactory(self):
         factory = Factory()
-        factory.setConfigDir("./conf")
+        factory.setConfigDir(os.path.join(os.path.dirname(__file__), "conf"))
         projects = factory.getProjects()
         projxml = serializeProjects(projects)
         newxml = projxml.toprettyxml(indent=" ")
-        f = open("conf/ProjectConfig.xml", "r")
+        f = open(os.path.join(os.path.dirname(__file__), "conf", "ProjectConfig.xml"), "r")
         oldxml = f.read()
         self.compareProjectsXML(oldxml, newxml)
 
     def testSingleProjectFactory(self):
         factory = Factory()
-        factory.setConfigDir("./conf")
+        factory.setConfigDir(os.path.join(os.path.dirname(__file__), "conf"))
         gaudi = factory.getProject("Gaudi")
         self.assertEquals(gaudi.Name(), "Gaudi")
 
@@ -88,7 +88,7 @@ class ConfigurationFactoryTestCase(unittest.TestCase):
         packages = loadPackages(url)
         pdom = serializePackages(packages)
         newxml = pdom.toprettyxml(indent=" ")
-        f = open("conf/PackageConfig.xml", "r")
+        f = open(os.path.join(os.path.dirname(__file__), "conf", "PackageConfig.xml"), "r")
         oldxml = f.read()
         self.comparePackagesXML(oldxml, newxml)
 
@@ -115,21 +115,21 @@ class ConfigurationFactoryTestCase(unittest.TestCase):
         self.assertEquals(newxml,  oldxml)
 
     def testLoadAllPackagesFromFile(self):
-        self.loadAllPackages("conf/PackageConfig.xml")
+        self.loadAllPackages(os.path.join(os.path.dirname(__file__), "conf", "PackageConfig.xml"))
 
     def testPackageFactory(self):
         factory = Factory()
-        factory.setConfigDir("./conf")
+        factory.setConfigDir(os.path.join(os.path.dirname(__file__), "conf"))
         projects = factory.getPackages()
         projxml = serializePackages(projects)
         newxml = projxml.toprettyxml(indent=" ")
-        f = open("conf/PackageConfig.xml", "r")
+        f = open(os.path.join(os.path.dirname(__file__), "conf", "PackageConfig.xml"), "r")
         oldxml = f.read()
         self.comparePackagesXML(oldxml, newxml)
 
 
     def testMainConfigLoad(self):
-        config = loadMainConfig("conf/MainConfig.xml")
+        config = loadMainConfig(os.path.join(os.path.dirname(__file__), "conf", "MainConfig.xml"))
         self.assertEqual(config.distribution_url, u"http://cern.ch/lhcbproject/dist")
         self.assertEqual(config.Python_version, u"2.5")
         self.assertEqual(config.CMT_version, u"v1r20p20090520")
@@ -141,7 +141,7 @@ class ConfigurationFactoryTestCase(unittest.TestCase):
 if __name__ == '__main__':
     logging.basicConfig()
     log = logging.getLogger()
-    log.setLevel(logging.DEBUG)
+    log.setLevel(logging.INFO)
     console = logging.StreamHandler()
     console.setFormatter(logging.Formatter("%(levelname)-8s: %(message)s"))
     log.addHandler(console)
