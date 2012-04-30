@@ -29,24 +29,14 @@ namespace Rich
     TrackSelectorBase::TrackSelectorBase( const std::string& type,
                                           const std::string& name,
                                           const IInterface* parent )
-      : Rich::Rec::ToolBase ( type, name , parent )
+      : Rich::Rec::ToolBase ( type, name, parent )
     {
       // interface
       declareInterface<ITrackSelector>(this);
 
       // Default track types to select
-      if ( context() == "HLT" || context() == "Hlt" )
-      {
-        m_minPCut = 2.0;
-        m_trNames = boost::assign::list_of("Forward");
-      }
-      else // offline
-      { 
-        m_minPCut = 0.0;
-        m_trNames =
-          boost::assign::list_of("Forward")("Match")("Seed")("VeloTT")("KsTrack");
-      }
-      declareProperty( "TrackAlgs", m_trNames );
+      declareProperty( "TrackAlgs", m_trNames = 
+                       boost::assign::list_of("Forward")("Match")("Seed")("VeloTT")("KsTrack") );
 
       declareProperty( "MinPCut",       m_minPCut     = 0.0 ); // in GeV
       declareProperty( "MaxPCut",       m_maxPCut     = 500 ); // in GeV

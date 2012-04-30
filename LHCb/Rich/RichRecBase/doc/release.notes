@@ -4,6 +4,10 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2012-04-30 - Chris Jones
+ - Remove context() specific default settings for TrackSelectorBase "TrackAlgs"
+   property. Default is now just all known types.
+
 !========================= RichRecBase v4r11 2012-03-26 =========================
 ! 2012-03-01 - Wouter Hulsbergen
  - Added support for HLTImportedTrack in RichTrackID
