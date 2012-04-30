@@ -29,8 +29,6 @@ private:
 
 public:
 
-
-
 	  ReadNTupleBase()
 	  {
 
@@ -41,8 +39,9 @@ public:
 
 	  }
 
-
 };
+
+
 
 
 #endif

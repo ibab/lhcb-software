@@ -25,7 +25,7 @@
 using namespace std;
 using namespace MINT;
 
-template <typename T>
+template <typename T, typename N>
 class ReadNTuple: public ReadNTupleBase
 {
 private:
@@ -38,13 +38,13 @@ private:
 
 	  TTree* friendTree;
 	  // Variables to read in
-	  std::vector<std::vector<float> > m_input_var;
+	  std::vector<std::vector<N> > m_input_var;
 	  std::vector<T> m_pdg; // change for DTF
 	  std::vector<int> set_pat;
-	  std::vector<float> m_mother_var;
+	  std::vector<N> m_mother_var;
 	  T m_mother_pdg; // change for DTF
 
-	  std::vector<float> m_slowPion_var;
+	  std::vector<N> m_slowPion_var;
 	  int m_slowPion_pdg;
 	  bool slowPion;
 
@@ -143,8 +143,8 @@ public:
 };
 
 
-template <typename T>
-std::string ReadNTuple<T>::newFilename() const{
+template <typename T, typename N>
+std::string ReadNTuple<T,N>::newFilename() const{
 	bool exists = true;
 	ofstream checkFile;
 	int i=0;
@@ -160,8 +160,8 @@ std::string ReadNTuple<T>::newFilename() const{
 	return newFilename;
 }
 
-template <typename T>
-bool ReadNTuple<T>::AddFriend(std::string fname
+template <typename T, typename N>
+bool ReadNTuple<T,N>::AddFriend(std::string fname
 	      	  	  	  	  , std::string ntpName)
 {
 	if (fname == "" || ntpName == "")
@@ -185,8 +185,8 @@ bool ReadNTuple<T>::AddFriend(std::string fname
 //
 //}
 
-template <typename T>
-bool ReadNTuple<T>::getUpdatedTree()
+template <typename T, typename N>
+bool ReadNTuple<T,N>::getUpdatedTree()
 {
 
   TEntryList* elist=0;
@@ -239,14 +239,14 @@ bool ReadNTuple<T>::getUpdatedTree()
 //	set_pat = pat->getVectorOfInts();
 //}
 
-template <typename T>
-void ReadNTuple<T>::ApplyFiducalCuts()
+template <typename T, typename N>
+void ReadNTuple<T,N>::ApplyFiducalCuts()
 {
 	_applyFiducalCuts = true;
 }
 
-template <typename T>
-bool ReadNTuple<T>::passedFidCuts(float dx, float dy, float dz)
+template <typename T, typename N>
+bool ReadNTuple<T,N>::passedFidCuts(float dx, float dy, float dz)
 {
 	bool passCuts = true;
 	if (fabs(dx) > 0.317*(dz - 2400))
@@ -270,8 +270,8 @@ bool ReadNTuple<T>::passedFidCuts(float dx, float dy, float dz)
 			return passCuts;
 }
 // Fiducal Cuts
-template <typename T>
-bool ReadNTuple<T>::passFiducalCuts(unsigned int entry)
+template <typename T, typename N>
+bool ReadNTuple<T,N>::passFiducalCuts(unsigned int entry)
 {
 	_tree->GetEntry(entry);
 	bool passCuts = true;
@@ -292,8 +292,8 @@ bool ReadNTuple<T>::passFiducalCuts(unsigned int entry)
 	return passCuts;
 }
 
-template <typename T>
-bool ReadNTuple<T>::SetDaughterBranchAddress(const char* Px, const char* Py, const char* Pz, const char* E, const char* pdg )
+template <typename T, typename N>
+bool ReadNTuple<T,N>::SetDaughterBranchAddress(const char* Px, const char* Py, const char* Pz, const char* E, const char* pdg )
 {
 
 	_oldTree->SetBranchAddress(Px,(float*)&m_input_var[0][m_particle]);
@@ -306,8 +306,8 @@ bool ReadNTuple<T>::SetDaughterBranchAddress(const char* Px, const char* Py, con
 	return true;
 }
 
-template <typename T>
-bool ReadNTuple<T>::SetMotherBranchAddress(const char* Px, const char* Py, const char* Pz, const char* E, const char* pdg )
+template <typename T, typename N>
+bool ReadNTuple<T,N>::SetMotherBranchAddress(const char* Px, const char* Py, const char* Pz, const char* E, const char* pdg )
 {
 
 	_oldTree->SetBranchAddress(Px,(float*)&m_mother_var[0]);
@@ -319,8 +319,8 @@ bool ReadNTuple<T>::SetMotherBranchAddress(const char* Px, const char* Py, const
 	return true;
 }
 
-template <typename T>
-MINT::counted_ptr<DalitzEvent> ReadNTuple<T>::readEntry(unsigned int entry){
+template <typename T, typename N>
+MINT::counted_ptr<DalitzEvent> ReadNTuple<T,N>::readEntry(unsigned int entry){
 
   // we read the MC-truth 4-momenta as we want to re-weight
   // according to the trugh.
@@ -474,8 +474,8 @@ MINT::counted_ptr<DalitzEvent> ReadNTuple<T>::readEntry(unsigned int entry){
   return evtPtr;
 }
 
-template <typename T>
-bool ReadNTuple<T>::readit(DiskResidentEventList* listPtr, int maxEvents, double scale){
+template <typename T, typename N>
+bool ReadNTuple<T,N>::readit(DiskResidentEventList* listPtr, int maxEvents, double scale){
   getUpdatedTree();
   if(0 == listPtr) return false;
   int numEvents = 0;
@@ -511,8 +511,8 @@ bool ReadNTuple<T>::readit(DiskResidentEventList* listPtr, int maxEvents, double
   return true;
 }
 
-template <typename T>
-bool ReadNTuple<T>::testEventPattern()
+template <typename T, typename N>
+bool ReadNTuple<T,N>::testEventPattern()
 {
 
 	_tree->GetEntry(0);
@@ -538,8 +538,8 @@ bool ReadNTuple<T>::testEventPattern()
 }
 
 
-template <typename T>
-void ReadNTuple<T>::AddSlowPion(const char* Px, const char* Py, const char* Pz, const char* E, const char* pdg )
+template <typename T, typename N>
+void ReadNTuple<T,N>::AddSlowPion(const char* Px, const char* Py, const char* Pz, const char* E, const char* pdg )
 {
 
 	_oldTree->SetBranchAddress(Px,(float*)&m_slowPion_var[0]);
