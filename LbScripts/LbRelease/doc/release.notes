@@ -1,3 +1,6 @@
+2012-05-12 Zoltan Mathe <zoltan.mathe@ucdconnect.ie>
+  * scripts/genXMLCatalog: The NewBookkeepingSystem is changed to BookkeepingSystem and it allows to create a catalog with new format based on IOHelper.
+
 2012-04-26 Joel Closier <joel.closier@cern.ch>
 
         * python/LbRelease : add new script onlineInstallSoftware.py (for the online installation)
