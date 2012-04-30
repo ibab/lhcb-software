@@ -6,7 +6,7 @@ Purpose: LHCb reconstruction program
 - Changes to references to reflect changes since v42r2p2
   . Use the new EnableCheck functionality of the Packers for the packing tests,
     instead of separate Pack, Unpack, Compare algorithms (GaudiConf, EventPacker)
-  . Switch to new TrackBestTrackCreator clone killer
+  . Switch to new TrackBestTrackCreator clone killer. Chi2 cut set to 3.
     (TrackSys, TrackTools, TrackUtils)
   . Add minimum bias rate and event time monitors to Hlt monitor sequence
     (HltMonitors, RecAlgs)
