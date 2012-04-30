@@ -27,9 +27,9 @@ class GlobalRecoConf(LHCbConfigurableUser):
                   ,"RecoSequencer" : None    # The sequencer to use
                   ,"OutputLevel" : INFO      # The printout level to use
                   ,"TrackTypes"  : [ "Long", "Upstream", "Downstream" ]
-                  ,"TrackCuts"   : {  "Long"       : { "Chi2Cut" : [0,10] }
-                                     ,"Upstream"   : { "Chi2Cut" : [0,10] }
-                                     ,"Downstream" : { "Chi2Cut" : [0,10] }
+                  ,"TrackCuts"   : {  "Long"       : { "Chi2Cut" : [0,5] }
+                                     ,"Upstream"   : { "Chi2Cut" : [0,5] }
+                                     ,"Downstream" : { "Chi2Cut" : [0,5] }
                                    }
                   ,"AddANNPIDInfo" : True
                   ,"DataType"     : "" # Type of data, propagated from application

@@ -28,23 +28,13 @@ DECLARE_ALGORITHM_FACTORY( ChargedProtoParticleMoni )
   // histo base dir
   setProperty ( "HistoTopDir", "PROTO/" );
 
-  // context specific locations
-  if ( context() == "HLT" || context() == "Hlt" )
-  {
-    m_tracksPath = "";
-    m_protoPath  = "";
-  }
-  else
-  {
-    m_tracksPath = LHCb::TrackLocation::Default;
-    m_protoPath  = LHCb::ProtoParticleLocation::Charged;
-  }
-
   // Input data
-  declareProperty( "InputTrackLocation", m_tracksPath );
+  declareProperty( "InputTrackLocation", 
+                   m_tracksPath = LHCb::TrackLocation::Default );
 
   // output data
-  declareProperty( "OutputProtoParticleLocation", m_protoPath );
+  declareProperty( "OutputProtoParticleLocation", 
+                   m_protoPath = LHCb::ProtoParticleLocation::Charged );
 }
 
 //=============================================================================

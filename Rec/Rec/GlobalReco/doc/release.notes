@@ -4,6 +4,12 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2012-04-30 - Chris Jones
+ - Change default track chi^2 cut from 0->10 to 0->5, to reflect tracking 
+   changes. Note that by default in the tracking clone killing a cut of 0->3 is
+   now applied, so this cut does nothing. Retain though as a sanity check.
+ - Remove context() specific default job options from ChargedProtoParticleMoni
+
 !========================= GlobalReco v6r41 2012-03-27 =========================
 ! 2011-03-16 - Olivier Deschamps
  - ChargedProtoParticleAdd[CALO]Info.cpp : reduce verbosity when input container
