@@ -4,6 +4,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+!========================= HltTracking v9r20 2012-04-30 ========================
+! 2012-04-29 - V. Gligorov
+ - Fix Rich so lines using RICH PID use Forward as well as Match tracks
+
 !========================= HltTracking v9r19 2012-04-26 ========================
 ! 2012-04-26 - V. Gligorov
  - Relax default PT cut in forward upgrade for TrackAllL0 to 1.25 GeV
