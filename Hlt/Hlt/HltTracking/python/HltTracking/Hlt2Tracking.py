@@ -1022,6 +1022,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         richConf.Particles          = self.getProp("RichHypos")
         # Set cuts on which tracks enter the RICH reco
         richConf.trackConfig().TrackCuts = self.getProp("RichTrackCuts")
+        richConf.gpidConfig().TrackCuts  = self.getProp("RichTrackCuts") 
         richConf.Radiators          = self.getProp("RichRadiators")
         # Set the sequence to run the RICH PID in
         richConf.setProp("RecoSequencer",richSeq)
