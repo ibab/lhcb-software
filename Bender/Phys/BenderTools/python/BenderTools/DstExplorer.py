@@ -143,7 +143,8 @@ def configure ( options , arguments ) :
     if options.Quiet and 4 > options.OutputLevel :
         options.OutputLevel = 4
         logger.info('set OutputLevel to be %s ' % options.OutputLevel )
-        
+
+          
     if options.Simulation and '2009' == options.DataType :
         options.DataType = 'MC09'
         logger.info('set DataType to be MC09')
@@ -151,18 +152,26 @@ def configure ( options , arguments ) :
     if options.Simulation and '2010' == options.DataType :
         options.DataType = 'MC10'
         logger.info('set DataType to be MC10')
+        
+    if options.Simulation and '2011' == options.DataType :
+        options.DataType = 'MC11'
+        logger.info('set DataType to be MC11')
             
     #
     ## start the actual action:
     #
-    from Configurables       import DaVinci    
+    from Configurables       import DaVinci
+    
     ext = "dst"
-    for a in arguments :
+    arguments_ = arguments
+    if 1 < len( arguments_ ) : arguments_ = arguments_[:-1]        
+    for a in arguments_ :
         p   = a.rfind ( '.' )
         if 0 <= p : 
             ext = a[p+1:]
             break
-        
+
+
     daVinci = DaVinci (
         DataType    = options.DataType    ,
         Simulation  = options.Simulation  ,
@@ -178,15 +187,18 @@ def configure ( options , arguments ) :
         options.RootInTES = '/Event/' + options.RootInTES
         
     if options.RootInTES :
-        from Bender.MicroDST import uDstConf 
+        from BenderTools.MicroDST import uDstConf 
         uDstConf(options.RootInTES)
    
-    if not options.Simulation and options.DataType in ( '2010' , '2011' ) :
+    if not options.Simulation and options.DataType in ( '2010' ,
+                                                        '2011' ,
+                                                        '2012' ) :
         #
         ## try to use the latest available tags:
         #
         from Configurables import CondDB    
         CondDB ( UseLatestTags = [ options.DataType ] )
+        logger.info('Use latest tags for %s' % options.DataType )
         import os 
         if options.UseOracle and os.environ.has_key('LHCBGRIDSYSROOT') :
             if os.environ.has_key('LHCBGRIDCONFIGROOT') :

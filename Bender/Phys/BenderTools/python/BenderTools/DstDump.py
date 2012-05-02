@@ -142,8 +142,7 @@ if '__main__' == __name__ :
     from Configurables import Gaudi__RootCnvSvc    as RootCnvSvc 
     from Configurables import Gaudi__IODataManager as IODataManager
     from Configurables import LHCb__RawDataCnvSvc  as RawDataCnvSvc 
-    
-    
+        
     msg = MessageSvc()
     msg.OutputLevel = 5
     
@@ -171,8 +170,11 @@ if '__main__' == __name__ :
     
     if options.RootInTES and 0 != options.RootInTES.find ( '/Event/' ) :
         options.RootInTES = '/Event/' + options.RootInTES 
-        
-    ## instantiate the application manager 
+
+
+    #
+    ## instantiate the application manager
+    #
     gaudi=appMgr ()
     
     #

@@ -263,7 +263,7 @@ if '__main__' == __name__ :
         # ------- decoding set-up start ----------
         #from MicroDSTConf.TriggerConfUtils import configureL0AndHltDecoding
         #from Bender.uDstTisTos import configureL0AndHltDecoding
-        from Bender.MicroDST import uDstConf 
+        from BenderTools.MicroDST import uDstConf 
         uDstConf(options.RootInTES)
         logger.info('Reconfigure uDST')
         # ------- decoding set-up end  -----------
