@@ -4,6 +4,7 @@
 ! Purpose     : Components to fully rebuild PIDs from packed DST
 !-----------------------------------------------------------------------------
 
+!========================= RecreatePIDTools v1r5 2012-05-02 =========================
 ! 2012-04-12 - Chris Jones
  - Improve a bit the debugging messages from ChargedProtoParticleAddMuonInfo
    and ChargedProtoParticleAddRichInfo
