@@ -2,6 +2,7 @@
 ! Responsible : E. Polycarpo, H. Lopes    
 !----------------------------------------------------------------------------
 
+!========================= MuonPIDChecker v5r3 2012-05-02 =========================
 ! 2012-04-20 - Helder Lopes
  - Added protection when retrieving MuonPID and Muon track containers
 
