@@ -1,8 +1,14 @@
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingArchive
-! Responsible : Thomas Blake, Rob Lambert
+! Responsible : Stripping coordinators
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
+
+!========================= StrippingArchive v1r11 2012-05-03 ========================
+! 2012-05-03 - Jibo He
+ - python/StrippingArchive/__init__.py
+  . Added stripping19a, which uses the same linebuilders as stripping19
+ - updated test ref
 
 !========================= StrippingArchive v1r10 2012-04-27 ========================
 ! 2012-04-27 - Anton Poluektov 

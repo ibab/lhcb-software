@@ -1,8 +1,8 @@
 # Created    : 15/05/2009
-# Maintainer : T. Blake, R. Lambert
+# Maintainer : Stripping coordinators
 
 package           StrippingArchive
-version           v1r10
+version           v1r11
 
 # Structure, i.e. directories to process.
 #============================================================================
