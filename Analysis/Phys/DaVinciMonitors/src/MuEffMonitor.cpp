@@ -633,7 +633,7 @@ bool MuEffMonitor::DoTrackSelection(){
 
   //======  require Mips in Calos       
   if(m_measureTime) m_timer->start(m_timeCal);
-  bool m_muInCalo= DoCaloMIP(m_Muon.proto);
+  m_muInCalo= DoCaloMIP(m_Muon.proto);
   if(m_measureTime) m_timer->stop(m_timeCal);
   //if (m_useCalo && !muInCalo) return false;
   if (m_notOnline) m_nTracks->fill(4.);
@@ -652,6 +652,7 @@ bool MuEffMonitor::DoTrackSelection(){
   if(m_measureTime) m_timer->start(m_timeExr);  
   bool extrap = estrapola();  
   if(m_measureTime) m_timer->stop(m_timeExr);
+  if ( !extrap ) return false;
   if (m_notOnline) m_nTracks->fill(6.);
 
   //======= Do Fiducial Volume cut
