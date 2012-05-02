@@ -1,5 +1,5 @@
 package RecSys
-version           v13r2
+version           v13r3
 
 branches cmt doc tests
 
@@ -8,16 +8,16 @@ branches cmt doc tests
 #=======================================================
 
 # Calorimeter                         # Maintainer
-use CaloMoniDst          v5r9    Calo # Olivier Deschamps
+use CaloMoniDst          v5r11   Calo # Olivier Deschamps
 use CaloPIDs             v5r12   Calo # Victor Egorychev, Vanya Belyaev
 use CaloReco             v5r14   Calo # Olivier Deschamps
 
 # Hlt
-use HltMonitors          v1r4    Hlt  # Roel Aaij
+use HltMonitors          v1r5    Hlt  # Roel Aaij
 
 # Muon
 use MuonID               v9r4    Muon # Erica Polycarpo, Miriam Gandelman
-use MuonPIDChecker       v5r2    Muon # Erica Polycarpo, Miriam Gandelman
+use MuonPIDChecker       v5r3    Muon # Erica Polycarpo, Miriam Gandelman
 use MuonTools            v5r2p2  Muon # Alessia Satta
 use MuonTrackAlign       v1r8p1  Muon # Silvia Pozzi
 use MuonTrackMonitor     v2r6    Muon # Giacomo Graziani
@@ -26,10 +26,10 @@ use MuonTrackRec         v3r6p1  Muon # Giacomo Graziani
 
 # Non sub-detector specific components
 use ChargedProtoANNPID   v1r6    Rec  # Chris Jones
-use GlobalReco           v6r41   Rec  # Chris Jones
-use LumiAlgs             v7r5    Rec  # Jaap Panman
-use RecAlgs              v2r7    Rec  # Marco Cattaneo
-use RecConf              v2r5    Rec  # Rob Lambert
+use GlobalReco           v6r42   Rec  # Chris Jones
+use LumiAlgs             v7r6    Rec  # Jaap Panman
+use RecAlgs              v2r8    Rec  # Marco Cattaneo
+use RecConf              v2r6    Rec  # Rob Lambert
 use RecInterfaces        v1r0    Rec  # Chris Jones
 
 # Non sub-detector specific components upgrade related
@@ -42,7 +42,7 @@ use RichENNRingFinder    v1r4    Rich # Chris Jones, Ulrich Kerzel
 use RichGlobalPID        v3r18   Rich # Chris Jones
 use RichHPDImageAnalysis v1r11   Rich # Thomas Blake, Chris Jones
 use RichIFBAnalysis      v1r2    Rich # Ross Young, Chris Jones
-use RichParticleSearch   v1r6    Rich # Matt Coombes
+use RichParticleSearch   v1r7    Rich # Matt Coombes
 use RichPIDMerge         v2r9p2  Rich # Chris Jones
 use RichRecAlgorithms    v2r19   Rich # Chris Jones
 use RichRecMCAlgorithms  v1r3p3  Rich # Chris Jones
@@ -51,20 +51,20 @@ use RichRecMonitors      v2r33   Rich # Chris Jones
 use RichRecPhotonTools   v1r9    Rich # Chris Jones
 use RichRecQC            v2r57   Rich # Chris Jones
 use RichRecStereoTools   v1r8p1  Rich # Chris Jones
-use RichRecSys           v4r4    Rich # Chris Jones
+use RichRecSys           v4r5    Rich # Chris Jones
 use RichRecTemplateRings v1r5    Rich # Sajan Easo
 use RichRecTools         v4r20   Rich # Chris Jones
 use RichRecTrackTools    v1r33   Rich # Chris Jones
 
 # Tf packages: Track Pattern Recognition
-use FastVelo             v1r7    Tf   # Olivier Callot
-use PatAlgorithms        v4r20   Tf   # Stephanie Hansmann-Menzemer
+use FastVelo             v1r9    Tf   # Olivier Callot
+use PatAlgorithms        v4r23   Tf   # Stephanie Hansmann-Menzemer
 use PatVelo              v3r26   Tf   # David Hutchcroft
-use PatVeloTT            v3r18   Tf   # Mariusz Witek
+use PatVeloTT            v3r19   Tf   # Mariusz Witek
 use TfTools              v1r15p1 Tf   # Stephanie Hansmann-Menzemer
 use TrackMatching        v2r33p1 Tf   # Eduardo Rodrigues
 use TrackSeeding         v1r6    Tf   # Eduardo Rodrigues, Henk Jan Bulten
-use TrackSys             v7r1    Tf   # Stephanie Hansmann-Menzemer
+use TrackSys             v7r2    Tf   # Stephanie Hansmann-Menzemer
 use TsaAlgorithms        v3r26   Tf   # Matt Needham
 
 
@@ -80,8 +80,8 @@ use TrackIdealPR         v2r19   Tr   # Eduardo Rodrigues
 use TrackMCTools         v3r1    Tr   # Eduardo Rodrigues
 use TrackMonitors        v1r38   Tr   # Wouter Hulsbergen, Stephanie Menzemer
 use TrackProjectors      v2r31   Tr   # Wouter Hulsbergen
-use TrackTools           v4r14   Tr   # Wouter Hulsbergen
-use TrackUtils           v1r45   Tr   # Eduardo Rodrigues
+use TrackTools           v4r15   Tr   # Wouter Hulsbergen
+use TrackUtils           v1r46   Tr   # Eduardo Rodrigues
 
 # Primary Vertex Finder
 use PatPV                v3r23   Tr   # Mariusz Witek

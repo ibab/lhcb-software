@@ -5,6 +5,102 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+</PRE><H1><A NAME=v13r3>2012-05-03 RecSys v13r3</A></H1><PRE>
+This version uses Gaudi v23r2 and LHCb v34r2
+
+- Production release for 2012 data taking
+
+- Packages updated: Calo/CaloMoniDst v5r11, Hlt/HltMonitors v1r5,
+    Muon/MuonPIDChecker v5r3, Rec/GlobalReco v6r42, Rec/LumiAlgs v7r6,
+    Rec/RecAlgs v2r8, Rec/RecConf v2r6, Rich/RichParticleSearch v1r7,
+    Rich/RichRecSys v4r5, Tf/FastVelo v1r9, Tf/PatAlgorithms v4r23,
+    Tf/PatVeloTT v3r19, Tf/TrackSys v7r2, Tr/TrackTools v4r15,
+    Tr/TrackUtils v1r46
+
+- In CaloMoniDst v5r10, v5r11
+  . New algorithm : L0CaloScale to compare CaloCluster/CaloHypo/L0Cluster
+    transverse energy
+  .  Add eta->gg monitoring (re-use resolvedPi0 algorithm)
+  . SpdMonitor : set splitArea=true as the default for Calo2Dview histos
+
+- In HltMonitors v1r5
+  . python/HltMonitors/ConfiguredHltMonitors.py
+    o Run EventTimeMonitor (need Rec/RecAlgs r138776)
+    o Run HltRateMoniror instance for MB lines
+
+- In MuonPIDChecker v5r3
+  . Added protection when retrieving MuonPID and Muon track containers
+
+- In GlobalReco v6r42
+  . Change default track chi^2 cut from 0->10 to 0->5, to reflect tracking
+    changes. Note that by default in the tracking clone killing a cut of 0->3 is
+    now applied, so this cut does nothing. Retain though as a sanity check.
+  . Remove context() specific default job options from ChargedProtoParticleMoni
+
+- In LumiAlgs v7r6
+  . Added event time ordering and output compression (bz2) capabilities
+    to DumpLumiEvents algorithm
+
+- In RecAlgs v2r8
+  . New EventTimeMonitor that stores the event times in 4 histos: y,d,h,s.
+  . TimingTuple: Add nPVs
+
+- In RecConf v2r6
+  . Add options in the Muon configuration phase to convert the
+    RawReadoutBankStatus to ProcStatus
+
+- In RichParticleSearch v1r7
+  . Add an explicit usage against PhysEvent, to fix a linking issue
+  . Fix the way unpacking is enabled in DstConf, for the latest releases.
+
+- In RichRecSys v4r5
+  . Make the default list of tracks used in the HLT the same as offline.
+  . Update offline track chi^2 cut from 0->10 to 0->5. Tracking now applies
+    its own cut anyway (0->3 currently) so this no longer does anything, but
+    keep just for sanity check.
+  . Improve the way the track types are set, to fix a bug in the HLT where the
+    requested track types to use was not always respected.
+
+- In FastVelo v1r8, v1r9
+  . Added a ProcStatus when clone killing fired to make monitoring easier
+  . Added a sanity check just before conversion to LHCb::Tracks that if there is
+    more than 1 track for every 4 clusters the event should be very aggressivly
+    clone killed (default only 10% overlap allowed). To fix cases of off axis
+    beam backgrounds causing a combinatoric explosion in the number of VELO
+    tracks made and subsequent processing time. See Savannah bug #93550.
+
+- In PatAlgorithms v4r21, v4r22, v4r23
+  . PatMatchTool : Momentum estimate now protected against failure.
+  . PatMatchTool, PatDownstream : Added option MinMomentum and MinPt
+    to reject tracks with a certain momentum.
+  . PatMatchTool: Make the name of the tool that adds the TT hits a property
+  . PatAddTTCoord: Adapting parameters to optimal values found in MC11a and 
+    fixing the slope at zMSPoint instead of TTField in the chi2 fit.
+  . PatDownstream: Added options to set the output location of the matching and
+    forward tracking in PatDownstream. Now used seeds and tt hits can be removed
+    also in the HLT.
+  . PatForwardTool: Bug fix in PatForward, flag for left right ambiguity is now
+    reset when collecting hits. Before independence of different iterations
+    of the Forward tracking was broken.
+
+- In PatVeloTT v3r19
+  . Remove unnecessary bool flags from PatVTTTrack.h, fixes DEADCODE warnings
+  . Fix UNINIT_CTOR defects
+  . Fix trivial hidden variable icc remarks
+
+- In TrackSys v7r2
+  . Clean up imports in RecoTracking.py
+  . Switch to new clone killer ('TrackBestTrackCreator').
+    Old sequence can be recovered with TrackSys().OldCloneKiller = True.
+
+- In TrackTools v4r15
+  . StateInitTool: set velo momentum the way it used to be done in
+    TrackPrepareVelo (temporarily?).
+
+- In TrackUtils v1r46
+  . Added TrackBestTrackCreator. 
+    Current version has a cut at chi2=3, and no dqop cut
+
 </PRE><H1><A NAME=v13r2>2012-03-28 RecSys v13r2</A></H1><PRE>
 This version uses Gaudi v23r2 and LHCb v34r2
 
