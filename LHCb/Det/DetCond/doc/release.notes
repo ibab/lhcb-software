@@ -4,9 +4,10 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+!========================= DetCond v12r24 2012-05-02 =========================
 ! 2012-04-26 - Patrick Koppenburg
- - Configuration: add properties allowing to configure from online_RunNumber.xml snapshots. 
-   for Online Brunel. This is stolen from Moore. 
+ - Configuration: add properties allowing to configure from online_RunNumber.xml
+   snapshots. For Online Brunel. This is stolen from Moore. 
 
 !========================= DetCond v12r23 2012-02-01 =========================
 ! 2012-02-01 - Marco Clemencic
