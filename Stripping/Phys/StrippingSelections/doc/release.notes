@@ -2,8 +2,9 @@
 ! Package     : Phys/StrippingSelections
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
-! -----------------------------------------------------------------------------
-
+! ----------------------------------------------------------------------------- 
+! 2012-05-02 - Stefania Vecchi
+ - removed ReFitPV=true in python/StrippingSelections/StrippingBd2DstarMuNu.py to match the time requirements
 !========================= StrippingSelections v3r13 2012-04-27 =========================
 ! 2012-04-26 - Anton Poluektov 
  - Fix typos in python/StrippingSelections/StrippingB2Kphiphi.py

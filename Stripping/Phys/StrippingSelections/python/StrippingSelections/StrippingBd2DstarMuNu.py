@@ -371,7 +371,7 @@ class Bd2DstarMuNuOneLineConf(LineBuilder):
             DecayDescriptors = ["[B0 -> D*(2010)- mu+]cc", "[B0 -> D*(2010)+ mu+]cc"], #includes wrong charges
             CombinationCut = self.BCombCut,
             MotherCut      = self.BCut,
-            ReFitPVs       = True
+            ##ReFitPVs       = True
             )
         
         SelBd2DstarMuNu = Selection("Sel"+self._name, Algorithm=CombBd2DstarMuNu,
