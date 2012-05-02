@@ -1,8 +1,14 @@
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingSettings
-! Responsible : Anton Poluektov
+! Responsible : Stripping coordinators
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
+
+!======================= StrippingSettings v2r13p1 2012-05-03 ===================
+! 2012-05-03 - Jibo He
+ - Stripping19a/LineConfigDictionaries_Charm.py
+   . Bug fix to D2XGamma
+ - produced dbase for stripping19a
 
 !========================= StrippingSettings v2r13 2012-04-27 ===================
 

@@ -1112,20 +1112,20 @@ D2XGamma = {
     'CONFIG' : {
     'TrChi2'              : 5.
     ,'TrIPchi2Phi'         : 25.
-    ,'TrPTPhi'            : 500.
-    ,'kDLL'               : 2.0
-    ,'PhiMassWin'          : 50.
-    ,'PhiVCHI2'            : 16.
-    ,'D0MassWin'           : 300.
-    ,'D_BPVLTIME'          : 0.2 * picosecond ## not used ATM
+    ,'TrPTPhi'              : 500.
+    ,'kDLL'                 : 2.0
+    ,'PhiMassWin'       : 50.
+    ,'PhiVCHI2'           : 16.
+    ,'D0MassWin'        : 200.
+    ,'D_BPVLTIME'     : 0.2 * picosecond ## not used ATM
     ,'D0_PT'               : 1000.
-    ,'photonPT'            : 1500.
-    ,'DstVCHI2'            : 25.
-    ,'deltaMass'           : 160.0
+    ,'photonPT'           : 1700.
+    ,'DstVCHI2'           : 25.
+    ,'deltaMass'          : 160.0
     ,'pvRefit'             : False
     ,'D02PhiGammaPreScale'               : 1.0
     ,'D02PhiGammaPostScale'              : 1.0
-    ,'PionLocation'   : "Phys/StdLoosePions/Particles"
+    ,'PionLocation'   : "Phys/StdAllNoPIDsPions/Particles"
     ,'PhiLocation' : "Phys/StdLoosePhi2KK/Particles"
     },
     'WGs' : [ 'Charm' ],

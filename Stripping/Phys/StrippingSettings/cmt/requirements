@@ -1,8 +1,8 @@
 # Created    : 15/02/2010
-# Maintainer : A. Poluektov
+# Maintainer : Stripping coordinators
 
 package           StrippingSettings
-version           v2r13
+version           v2r13p1
 
 # Structure, i.e. directories to process. 
 #============================================================================
