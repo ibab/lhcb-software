@@ -267,6 +267,7 @@ StatusCode RateSvc::queryInterface(const InterfaceID& riid, void** ppvIF)
 StatusCode RateSvc::start()
 {
   StatusCode sc;
+  sc = PubSvc::start();
   if (sc.isSuccess() && m_enableTrending && m_trender == 0)
   {
     SmartIF<IToolSvc> tools;
@@ -284,7 +285,6 @@ StatusCode RateSvc::start()
       m_trender->setMaxTimeNoWrite(600);
     }
   }
-  PubSvc::start();
   m_adder->SetCycleFn(RATESVC::Analyze,this);
   m_started = true;
   m_NamePrefix = m_PartitionName+"_";
