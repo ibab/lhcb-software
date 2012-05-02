@@ -5,6 +5,148 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v34r3>2012-05-03 LHCbSys v34r3</A></H1><PRE>
+This version uses Gaudi v23r2 and LCG_62b
+Production version for 2012 data taking
+
+- Packages modified: Calo/CaloDAQ v4r27, DAQ/DAQUtils v1r7, Det/DDDB v1r54,
+    Det/DetCond v12r22, Det/RichDet v16r10, Det/VeloDet v13r18p1,
+    Event/DAQEvent v9r7, Event/EventPacker v2r16, Event/L0Event v19r5, 
+    Event/PackedEvent v4r10, Event/PhysEvent v11r16, Event/RecEvent v2r42,
+    Event/RecreatePIDTools v1r5, GaudiConf v15r10, Kernel/LHCbMath v3r30,
+    Kernel/MCInterfaces v1r15, L0/L0Interfaces v2r1, L0/L0MuonKernel v9r7,
+    OT/OTDAQ v7r12, Phys/LoKiHlt v3r9, Rich/RichRecBase v4r12, ST/STKernel v2r8
+
+- In CaloDAQ v4r27
+  . CaloBankHandler.opts : create ProcStatus - stop conversion in case of
+    ReadoutStatus error
+
+- In DAQUtils v1r7
+  . OdinTypesFilter : add filter on CalibrationTypes
+  . RawBankReadoutStatusFilter :  set status to MissingStatus when no
+    ReadoutStatus container is found (was "Missing" bank)
+  . New algorithm: RawBankReadoutStatusConverter - convert ROStatus to ProcStatus
+
+- In DDDB v1r53, v1r54
+  . Update database tags for latest global tags:
+    o LHCBCOND, 2011, 2012: head-20120420
+    o DDDB,           2012: head-20120413
+
+- In DetCond v12r22
+  . Configuration: add properties allowing to configure from online_RunNumber.xml
+    snapshots. For Online Brunel. This is stolen from Moore.
+
+- In RichDet v16r10
+  . Add methods to DeRichMultiSolidRadiator to allow explicit access to the
+    Aerogel full and sub tiles. Useful for the Aerogel calibration.
+  . Fix a bug where when running in the HLT, the Rich::TabulatedProperty1D
+    object for the HLT refractive index interpolator was not deleted.
+
+- In VeloDet v13r18p1
+  .Fixed crash in DeVeloRType when getting closest M2 line to points at inner
+   edge of acceptance. Fixes https://savannah.cern.ch/bugs/?93382
+
+- In DAQEvent v9r7
+  . Fix typo in  RawBankReadoutStatus::Status enum
+  . Change RawBankReadoutStatusLocation::Default to /Event/Transient/DAQ/Status,
+    to avoid loading /Event/DAQ when recreating this object on e.g. MDST
+
+- In EventPacker v2r16
+  . Protect UnpackCluster against the possibility that the packed clusters
+    are missing
+  . Add protection in PackDecReport in case the packer tries to repack existing
+    reports. Needed for the use case of creating a packed private (u)DST from an
+    already packed (u)DST
+  . Fix untested StatusCodes
+  . Packers return Error if they fail to unregister data if requested in options
+  . Improvements to the packers, adding an option to allow checking of the
+    packing to be done directly by the packing algorithms.
+  . Add support for packing CaloClusters.
+  . Clean up CaloHypo packing and unpacking
+  . Small change to how duplicate LHCbIDs are removed in PackCluster
+
+- In L0Event v19r5 
+  . Add getter method for pads to allow direct access of pads used by the L0Muon
+
+- In PackedEvent v4r10
+  . New version of the Particle packing, to (try) and fix consistency problems
+    o Includes improvements to remove some false positives when comparing the 
+      momentum covariance matrix and 'mass' check for LorentzVectors to energy.
+  . Improve the CaloCluster checking to avoid some false positives.
+  . Print the TES location of Particles and Vertices with packing problems, add
+    the object key to any warnings that are issued.
+  . Various improvements to the packers, to improve the way the checks are
+    implemented. Allows checking to be run directly by the packing algorithms.
+  . Clean up PackedCaloHypo class
+  . Add a new PackedCaloCluster class
+
+- In PhysEvent v11r16
+  . Provide a custom fillStream method for the Particle and Vertex class,
+    improving on the default G.O.D. generated ones.
+  . Change default initialisation value for the reference point in the
+    Particle class from (0,0,-1km) to (0,0,-100m), to be within the range the
+    Particle length scale packing can handle.
+  . Add some divide by zero protection to Particle::slopes
+
+- In RecEvent v2r42
+  . Fix a bug in the RecVertex class when a vertex had tracks but no weights.
+  . Improvements to the fillStream methods for CaloPosition, CaloHypo, VertexBase
+  . Change the default initialisation for VertexBase::position from
+    (0,0,-1*km) to (0,0,-100*m) to avoid packing truncation issues.
+
+- In RecreatePIDTools v1r5
+  . Improve a bit the debugging messages from ChargedProtoParticleAddMuonInfo
+    and ChargedProtoParticleAddRichInfo
+  . Add a work around to ChargedProtoParticleAddMuonInfo to attempt to recreate
+    missing Track SmartRefs in stripping <18 data, due to a bug in the way the
+    track references were saved in uDSTs.
+
+- In GaudiConf v15r10
+  . In DstConf:
+    o Use the new EnableCheck functionality of the Packers for the packing tests,
+      instead of separate Pack, Unpack, Compare algorithms
+    o Add the Calo objects to the packing tests.
+    o Add support for on-demand unpacking of CaloClusters on stripping (m)DSTs.
+
+- In LHCbMath v3r30
+  . Fix Bifurcated gaussian,
+  . Extend random-module with asymmetric gaussian
+  . Add generic solution for N-dimensional Chi2-problem with R-constraint
+  . Add LASS shape for S-wave Kpi
+  . Add phase space function for 2-from-3 decays with orbital momentum
+
+- In MCInterfaces v1r15
+  . Build dictionatries for IGenCutTool and IFullGenEventCutTool interfaces
+
+- In L0/L0Interfaces v2r1
+  . IL0MuonPtTool : (new) tool to recompute L0Muon candidate PT from LUT
+
+- In L0MuonKernel v9r7
+  . Manage Look Up Table for pt computation :
+    o new class to handle Pt Look Up Table (L0MPtLUT)
+    o L0MUnit (generic Unit): new data member holding a pointer to the LUT,
+      plus corresponding set and get methods
+    o CoreUnit : retrieve the pointer from MuonTriggerUnit (in constructor)
+    o Tower : in constructor, store the pointer to the LUT; in process_tower, use
+      the pointer in pt computation (if not empty).
+  . Modification of the kine method which computes pt in ProcUtilities to allow
+    to specify the positions of the pads. This is used to compute the LUT taking
+    into account the muon geometry
+
+- In OT/OTDAQ v7r12
+  . OTReadOutWindow algorithms updated to load readOutGate values from database.
+
+- In LoKiHlt v3r9
+  . Add functors ODIN_EVT1, ODIN_EVT2
+
+- In RichRecBase v4r12
+  . Remove context() specific default settings for TrackSelectorBase "TrackAlgs"
+    property. Default is now just all known types.
+
+- In STKernel v2r8
+  . Add end new method to return noise after pedestal subtraction
+    to ISTNoiseCalculation interface.
+
 </PRE><H1><A NAME=v34r2>2012-03-27 LHCbSys v34r2</A></H1><PRE>
 This version uses Gaudi v23r2 and LCG_62b
 Production version for initial 2012 data taking
