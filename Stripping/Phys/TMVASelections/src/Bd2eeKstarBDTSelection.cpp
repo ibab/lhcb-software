@@ -42,7 +42,9 @@ Bd2eeKstarBDTSelection::Bd2eeKstarBDTSelection( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-Bd2eeKstarBDTSelection::~Bd2eeKstarBDTSelection() {}
+Bd2eeKstarBDTSelection::~Bd2eeKstarBDTSelection() {
+  delete []m_values;
+}
 
 //=============================================================================
 // Initialize
@@ -91,10 +93,6 @@ StatusCode Bd2eeKstarBDTSelection::initialize() {
 // Finalize
 //=============================================================================
 StatusCode Bd2eeKstarBDTSelection::finalize() {
-  
-  if(m_values) {
-    delete []m_values;
-  }
 
   if(m_BDTReader) delete m_BDTReader; 
   

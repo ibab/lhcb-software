@@ -4,6 +4,11 @@
 ! Purpose     : To accommodate all TMVA based selections used in stripping
 !-----------------------------------------------------------------------------
 
+!========================= TMVASelections v1r1 2012-05-03 =========================
+! 2012-05-03 - Jibo He
+ - src/Bd2eeKstarBDTSelection.cpp
+  . Delete the newed array in the destructor
+
 !========================= TMVASelections v1r0 2012-02-09 =========================
 
 ! 2012-02-07 - Jibo He
