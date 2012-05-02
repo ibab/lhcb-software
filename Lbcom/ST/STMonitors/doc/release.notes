@@ -4,13 +4,14 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+!========================= STMonitors v3r8 2012-05-02 =========================
 ! 2012-04-24 - Mark Tobin
  - Add new histograms to the noise monitoring algorithms to show summaries over
- all strips.
+   all strips.
 
 ! 2012-03-07 - Mark Tobin
  - Implement correct error calcuation when filling profile histograms in the NZS
- monitoring.  Will be used to set alarms in online monitoring.
+   monitoring.  Will be used to set alarms in online monitoring.
 
 !========================= STMonitors v3r7p2 2012-01-31 =========================
 ! 2012-01-17 - Marco Cattaneo
