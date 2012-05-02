@@ -6,6 +6,43 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v12r3>2012-05-03 LbcomSys v12r3</A></H1><PRE>
+This version uses Gaudi v23r2 and LHCb v34r3
+
+- Production release for 2012 data taking
+
+- Packages updated: DAQ/DAQMonitors v1r5, L0/L0Calo v11r7, L0/L0DU v10r20, 
+    L0/L0Muon v9r10, ST/STMonitors v3r9, ST/STTools v4r12
+
+- In DAQMonitors v1r5
+  . RawBankSizeMonitor : add 1D histogram and global profile (per bankType) + 
+    counters. Convert banksize in Bytes
+
+- In L0Calo v11r7
+  . L0CaloCheckCalibCte.cpp: correct ADC -> L0ADC conversion for
+    large calibration constants (>255)
+  . L0CaloAlg.h/.cpp: add zero-suppression threshold for the emulator of
+    L0Calo data.
+
+- In L0DU v10r20
+  . New algorithm L0DataFilter: filter on any (set of) condition(s) on L0DU data
+  . New algorithm L0DataNtp : tupling L0Data
+  . In Configuration.py, set HcalThreshold of L0Calo Emulation to zero for
+    DataType prior to 2012, to keep backward compatibility following setting
+    of non-zero threshold in L0CaloAlg revision 137622
+
+- In L0Muon v9r10
+  . Allow to use LUT in emulator for pt computation
+  . Add a new tool to recompute L0Muon candidate pt using LUT
+
+- In STMonitors v3r9
+  . Add new histograms to the noise monitoring algorithms to show summaries over
+    all strips.
+
+- In STTools v4r12
+  . Implement methods to return pedestal subtracted noise in noise 
+    calculation tools.
+
 </PRE><H1><A NAME=v12r2>2012-03-27 LbcomSys v12r2</A></H1><PRE>
 This version uses Gaudi v23r2 and LHCb v34r2
 
