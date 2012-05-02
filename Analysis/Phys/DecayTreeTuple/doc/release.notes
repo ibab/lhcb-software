@@ -5,13 +5,19 @@
 !-----------------------------------------------------------------------------
 
 ! 2012-05-02 - Fatima Soomro
- - Added TupleToolIsolationTwoBody and TupleToolMuonIDCalib. 
- - The former is based on Giampi's isolation tool which should go into DVTools at some point... After that it will be a matter of a few lines to get isolation extract the isolation variable for a track. There are many parameters which can be tuned, see Giampi's talk on this in Dec 2011.
- -  The latter is used for Muon (mis)ID studies, particularly for Bs-> mumu. An example of how to configure this tool can be found at
+ - Added TupleToolIsolationTwoBody
+  + Based on Giampi's isolation tool which should go into DVTools at some 
+    point... After that it will be a matter of a few lines to get isolation 
+    extract the isolation variable for a track. There are many parameters which 
+    can be tuned, see Giampi's talk on this in Dec 2011.
+ - Added TupleToolMuonIDCalib
+  + The latter is used for Muon (mis)ID studies, particularly for Bs-> mumu. 
+    An example of how to configure this tool can be found at
     http://svnweb.cern.ch/world/wsvn/lhcb/Erasmus/trunk/Phys/LNFNTuples/scripts/muID_mdst_March2012.py
 
 ! 2012-04-27 - Olivier Deschamps
- - Add a new tool TupleToolVeto that flag a particle when already used to build another particle in a given container (relies on DaVinciTools/ParticleVeto)
+ - Add a new tool TupleToolVeto that flag a particle when already used to build 
+   another particle in a given container (relies on DaVinciTools/ParticleVeto)
  - TupleToolL0Data : fix  default setting
 
 ! 2012-04-04 - V. Gligorov
