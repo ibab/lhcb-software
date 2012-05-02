@@ -3,7 +3,7 @@
 # Maintainer : Marco Cattaneo
 #============================================================================
 package           DAQMonitors
-version           v1r4
+version           v1r5
 
 branches          cmt doc src
 
