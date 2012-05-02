@@ -3,6 +3,9 @@
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !-----------------------------------------------------------------------------
 
+! 2012-05-02 - Julien Cogan
+ - L0MuonAlg (fix) : delete pointer to LUT in finalize
+
 ! 2012-04-24 - Julien Cogan
  - Allow to use LUT in emulator for pt computation
  - Add a new tool to recompute L0Muon candidate pt using LUT

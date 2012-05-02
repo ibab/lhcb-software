@@ -363,6 +363,8 @@ StatusCode L0MuonAlg::finalize()
   L0Muon::UnitFactory* ufactory = L0Muon::UnitFactory::instance();
   delete(ufactory);
 
+  delete(m_lut);
+
   info() << "- ------------------------------------------------------------------"<<endmsg;
   info() << "- ========> Final summary of the L0Muon trigger (emulator) <========"<<endmsg;
   info() << "- Total number of events processed           : "
