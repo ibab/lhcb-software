@@ -3,6 +3,7 @@
 ! Package manager : J.Amoraal
 !------------------------------------------------------------------------------
 
+!========================= OTDAQ v7r12 2012-05-02 =========================
 ! 2012-04-19 - Alexandr Kozlinskiy
  - OTReadOutWindow algorithms updated to load readOutGate values from database.
 
