@@ -3,6 +3,15 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v42r3>2012-05-03 Brunel v42r3</A></H1><PRE>
+This version uses projects LCG 62b, Gaudi v23r2, LHCb v34r3, Lbcom v12r3,
+ Rec v13r3 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+Production version for 2012 data taking
+
+- Changes to Configurable
+  . Fixes to allow Brunel to run online with condDB snapshot
+
 - Changes to references to reflect changes since v42r2p2
   . Use the new EnableCheck functionality of the Packers for the packing tests,
     instead of separate Pack, Unpack, Compare algorithms (GaudiConf, EventPacker)
@@ -14,6 +23,9 @@ Purpose: LHCb reconstruction program
     mirror alignments, refractive index and HPD image calibrations, OT T0 
     calibration and parameterisation of resolution leading to improved pull vs
     momentum distribution (DDDB)
+  . Update Rich offline track chi^2 cut from 0->10 to 0->5. Tracking now applies
+    its own cut anyway (0->3 currently) so this no longer does anything, but keep
+    just for sanity check (RichRecSys)
 
 </PRE><H1><A NAME=v42r2p2>2012-04-13 Brunel v42r2p2</A></H1><PRE>
 This version uses projects LCG 62b, Gaudi v23r2, LHCb v34r2, Lbcom v12r2,
