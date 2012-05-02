@@ -130,7 +130,7 @@ StatusCode MonitorSvc::initialize()
 /// Incident handler implemenentation: Inform that a new incident has occured
 void MonitorSvc::handle(const Incident& inc) {
   MsgStream log(msgSvc(),name());
-  log << MSG::DEBUG << "Got incident from:" << inc.source() << ": " << inc.type() << endmsg;
+  log << MSG::INFO << "MonitorSvc: Got incident from:" << inc.source() << ": " << inc.type() << endmsg;
   if ( inc.type() == "APP_RUNNING" ) {
     i_start().ignore();
   }
