@@ -107,3 +107,37 @@ def configureVeloSensorAlignment():
     surveyconstraints.XmlUncertainties += [ 
         'Velo/Velo(Left|Right)/Module(00|01|40|41) : 0.0001 0.0001 0.0001 0.000001 0.000001 0.000001' ]
 
+# Early 2012 data alignment
+def configureEarlyDataAlignment( fixQOverPBias = True ) :
+    TAlignment().WriteCondSubDetList += ['Velo','TT','IT','OT','MUON']
+  
+    # define the alignment elements
+    elements = Alignables()
+    elements.Velo("None")
+    elements.VeloRight("Tx")
+    elements.VeloLeft("Tx")
+    elements.IT("None")
+    elements.ITBoxes("TxTzRz")
+    elements.ITLayers("TxTz")
+    elements.OT("None")
+    elements.OTCFrames("Tx")
+    elements.OTCFrameLayers("Tz")
+    elements.TT("None")
+    elements.TTLayers("None")
+    elements.TTModules("TxRz")
+    elements.Tracker("None")
+    TAlignment().ElementsToAlign = list(elements)
+
+    # make sure that the velo stays where it was
+    TAlignment().Constraints = constraints = []
+    constraints.append("VeloHalfAverage : Velo/Velo(Left|Right) : Tx ")
+    # fix the q/p scale by not moving T in X. note that you do not
+    # want to do this if you use D0 in the alignment
+    if fixQOverPBias:
+        constraints.append("OT3X : OT/T3X1U.Side : Tx")
+ 
+    # tweak the survey a little bit to fix the z-scale to survey
+    surveyconstraints = SurveyConstraints()
+    surveyconstraints.All()
+    # make sure we fix the z-scale
+    surveyconstraints.XmlUncertainties += ["OT/T3X1U : 0.5 0.5 0.00001 0.0001 0.0001 0.0001" ]

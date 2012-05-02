@@ -79,7 +79,8 @@ class SurveyConstraints( LHCbConfigurableUser ):
                               "TTCSide : 0 0 0 0 0 0 : 0.2 0.2 0.2 0.001 0.001 0.001" ]
  
     def IT( self ) :
-        self.XmlFiles += [ self.defaultSurveyDir() + "IT/Detectors_ITSurvey2011YBoxBilayerCorrected.xml" ]
+        #        self.XmlFiles += [ self.defaultSurveyDir() + "IT/Detectors_ITSurvey2011YBoxBilayerCorrected.xml" ]
+        self.XmlFiles += [ self.defaultSurveyDir() + "IT/Detectors_ITSurvey_MagOn_2012ZSurvey2011YBoxBilayerCorrected.xml" ]
         self.XmlUncertainties += [ "ITSystem                   : 1 1 1 0.01 0.01 0.01",
                                    "ITT.                       : 0.5 0.5 0.5 0.001 0.001 0.001",
                                    "ITT.*?Box                  : 0.5 0.5 0.5 0.001 0.001 0.001",
