@@ -3,6 +3,7 @@
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !-----------------------------------------------------------------------------
 
+!========================= L0Muon v9r10 2012-05-02 =========================
 ! 2012-05-02 - Julien Cogan
  - L0MuonAlg (fix) : delete pointer to LUT in finalize
 
