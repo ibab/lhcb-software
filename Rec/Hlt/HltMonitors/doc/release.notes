@@ -4,6 +4,7 @@
 ! Purpose     : Offline Monitoring of Hlt rates and composition
 !-----------------------------------------------------------------------------
 
+!========================= HltMonitors v1r5 2012-05-02 =========================
 ! 2012-04-23 - Patrick Koppenburg
  - src/HltCompositionMonitor.cpp : do all Hlt2 lines
  - python/HltMonitors/ConfiguredHltMonitors.py
