@@ -1,8 +1,12 @@
 !-----------------------------------------------------------------------------
 ! Package     : Rec/ChargedProtoANNPID
 ! Responsible : Chris Jones
-! Purpose     : 
+! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
+
+! 2012-05-02 - Chris Jones
+ - Remove context() specific input track locations in 
+   ChargedProtoANNPIDCommonBase. Default is now the offline location.
 
 !========================= ChargedProtoANNPID v1r6 2012-01-31 ================
 

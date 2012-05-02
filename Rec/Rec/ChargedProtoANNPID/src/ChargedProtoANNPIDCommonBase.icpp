@@ -14,12 +14,9 @@
 template <class PBASE>
 void ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::initCommonConstructor()
 {
-  // context specific locations
-  m_protoPath = ( ( this->context() == "HLT" || this->context() == "Hlt" ) ?
-                  LHCb::ProtoParticleLocation::HltCharged                  :
-                  LHCb::ProtoParticleLocation::Charged                     );
   // Job Options
-  this->declareProperty( "ProtoParticleLocation", m_protoPath );
+  this->declareProperty( "ProtoParticleLocation", 
+                         m_protoPath = LHCb::ProtoParticleLocation::Charged );
 }
 
 //=============================================================================
