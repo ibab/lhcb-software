@@ -10,7 +10,7 @@ This version uses Gaudi v23r2 and LCG_62b
 Production version for 2012 data taking
 
 - Packages modified: Calo/CaloDAQ v4r27, DAQ/DAQUtils v1r7, Det/DDDB v1r54,
-    Det/DetCond v12r22, Det/RichDet v16r10, Det/VeloDet v13r18p1,
+    Det/DetCond v12r24, Det/RichDet v16r10, Det/VeloDet v13r18p1,
     Event/DAQEvent v9r7, Event/EventPacker v2r16, Event/L0Event v19r5, 
     Event/PackedEvent v4r10, Event/PhysEvent v11r16, Event/RecEvent v2r42,
     Event/RecreatePIDTools v1r5, GaudiConf v15r10, Kernel/LHCbMath v3r30,
@@ -32,7 +32,7 @@ Production version for 2012 data taking
     o LHCBCOND, 2011, 2012: head-20120420
     o DDDB,           2012: head-20120413
 
-- In DetCond v12r22
+- In DetCond v12r24
   . Configuration: add properties allowing to configure from online_RunNumber.xml
     snapshots. For Online Brunel. This is stolen from Moore.
 
