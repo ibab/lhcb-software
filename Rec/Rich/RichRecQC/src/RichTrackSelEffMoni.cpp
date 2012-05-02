@@ -71,7 +71,7 @@ void TrackSelEff::prebookHistograms( const std::string & tkClass )
   richProfile1D( tkClass+"effVP",  "RICH Track Sel. Eff. V P",  1.00*GeV, 100.0*GeV, nBins1D() );
   richProfile1D( tkClass+"effVPt", "RICH Track Sel. Eff. V Pt", 0.10*GeV, 8.0*GeV,   nBins1D() );
   richProfile1D( tkClass+"effVChi2PDOF",
-                 "RICH Track Sel. Eff. V Chi^2 / D.O.F.", 0, 10, nBins1D() );
+                 "RICH Track Sel. Eff. V Chi^2 / D.O.F.", 0, 3, nBins1D() );
   richProfile1D( tkClass+"effVLikelihood", "RICH Track Sel. Eff. V Likelihood", -100, 0, nBins1D() );
   richProfile1D( tkClass+"effVGhostProb", "RICH Track Sel. Eff. V Ghost Probability", 0.0, 1.0, nBins1D() );
   richProfile1D( tkClass+"effVCloneDist", "RICH Track Sel. Eff. V Clone Distance", 0.0, 6e3, nBins1D() );
@@ -86,7 +86,7 @@ void TrackSelEff::trackPlots( const std::string & tag )
 
   richHisto1D( tag+"P",  "Track Momentum",            0*GeV, 100*GeV, nBins1D() );
   richHisto1D( tag+"Pt", "Track Transverse Momentum", 0*GeV, 8*GeV,   nBins1D() );
-  richHisto1D( tag+"Chi2PDOF", "Track Chi^2 / D.O.F.", 0, 10, nBins1D() );
+  richHisto1D( tag+"Chi2PDOF", "Track Chi^2 / D.O.F.", 0, 3, nBins1D() );
   richHisto1D( tag+"Likelihood", "Track Likelihood", -100, 0, nBins1D() );
   richHisto1D( tag+"GhostProb", "Track Ghost Probability", 0.0, 1.0, nBins1D() );
   richHisto1D( tag+"CloneDist", "Track Clone Distance", 0.0, 6e3, nBins1D() );

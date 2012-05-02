@@ -238,7 +238,7 @@ class RichRecQCConf(RichConfigurableUser):
             mon.TrackSelector.MinPtCut   = 0.5
             mon.TrackSelector.MaxPtCut   = bigvalue
             mon.TrackSelector.MinChi2Cut = 0
-            mon.TrackSelector.MaxChi2Cut = 3
+            mon.TrackSelector.MaxChi2Cut = 2
             mon.TrackSelector.MinLikelihood   = -40
             mon.TrackSelector.MaxLikelihood   =  bigvalue
             mon.TrackSelector.MinCloneDistCut = 5000
