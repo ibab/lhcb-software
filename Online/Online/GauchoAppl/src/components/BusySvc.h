@@ -25,6 +25,7 @@ public:
   double m_idlebogus;
   double m_busybogus;
   double m_bogus;
+  double m_Mybogus;
   bool m_first;
   IMonitorSvc *m_pMonitorSvc;
   IdleTimer *m_timer;

@@ -31,8 +31,9 @@ StatusCode BusySvc::initialize()
   }
   if (m_bogus == 0.0)
   {
-    getBogus(m_bogus);
+    getBogus(m_Mybogus);
   }
+  m_bogus = m_Mybogus;
   calcIdle();
   m_timer = new IdleTimer(this);
   m_pMonitorSvc->declareInfo("IdleFraction",m_idlebogus,"",this);
@@ -44,6 +45,7 @@ StatusCode BusySvc::initialize()
 StatusCode BusySvc::start()
 {
   Service::start();
+  m_bogus = m_Mybogus;
   m_timer->Start();
   return StatusCode::SUCCESS;
 }
@@ -167,6 +169,7 @@ void BusySvc::calcIdle()
       break;
     }
   }
+  m_bogus = m_Mybogus;
   m_idlebogus = p_id*m_bogus;
   m_busybogus = (1.0-p_id)*m_bogus;
 //  printf ("Idle Percentage %f weighted %f\n",p_id, m_idlebogus);

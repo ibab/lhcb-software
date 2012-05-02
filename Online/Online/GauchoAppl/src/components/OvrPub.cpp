@@ -92,32 +92,32 @@ void OvrPub::analyze(void *, int ,MonMap* mmap)
   NFiles = ((CntrDescr*)MonCounter::de_serialize((*j).second))->l_data;
   NMEPs = ((CntrDescr*)MonCounter::de_serialize((*k).second))->l_data;
   RMeps = ((CntrDescr*)MonCounter::de_serialize((*MEPRate).second))->d_data;
-  m_NoBytes = (float)BOut/1.0e09;
+  m_NoBytes = float(double(BOut)/1.0e09);
   m_NoFiles = NFiles;
   m_NoMEPs  = NMEPs;
   m_MEPRate = RMeps;
-//  if (m_NoBytesSvc == 0)
-//  {
-//    m_NoBytesSvc = new DimService((char*)(std::string("Stat/")+m_PartitionName+"_X_Overflow/NoBytes").c_str(),m_NoBytes);
-//  }
-//  m_NoBytesSvc->updateService(m_NoBytes);
-//  if (m_NoFilesSvc == 0)
-//  {
-//    m_NoFilesSvc = new DimService((char*)(std::string("Stat/")+m_PartitionName+"_X_Overflow/NoFiles").c_str(),m_NoFiles);
-//  }
-//  m_NoFilesSvc->updateService(m_NoFiles);
-//  if (m_NoMEPsSvc == 0)
-//  {
-//    m_NoMEPsSvc = new DimService((char*)(std::string("Stat/")+m_PartitionName+"_X_Overflow/NoMEPs").c_str(),m_NoMEPs);
-//  }
-//  m_NoMEPsSvc->updateService(m_NoMEPs);
+  if (m_NoBytesSvc == 0)
+  {
+    m_NoBytesSvc = new DimService((char*)(std::string("Stat/")+m_PartitionName+"_X_Overflow/NoBytes").c_str(),m_NoBytes);
+  }
+  m_NoBytesSvc->updateService(m_NoBytes);
+  if (m_NoFilesSvc == 0)
+  {
+    m_NoFilesSvc = new DimService((char*)(std::string("Stat/")+m_PartitionName+"_X_Overflow/NoFiles").c_str(),m_NoFiles);
+  }
+  m_NoFilesSvc->updateService(m_NoFiles);
+  if (m_NoMEPsSvc == 0)
+  {
+    m_NoMEPsSvc = new DimService((char*)(std::string("Stat/")+m_PartitionName+"_X_Overflow/NoMEPs").c_str(),m_NoMEPs);
+  }
+  m_NoMEPsSvc->updateService(m_NoMEPs);
 
   if (m_enableTrending)
   {
     m_trender->startEvent();
-    m_trender->addEntry("BytesWrittenToOverflow", (double)BOut/1.0e09);
-    m_trender->addEntry("NumberOfFilesinOverflow", (double)NFiles);
-    m_trender->addEntry("NumberOfMEPsinOverflow", (double)NMEPs);
+    m_trender->addEntry("BytesWrittenToOverflow", double(m_NoBytes));
+    m_trender->addEntry("NumberOfFilesinOverflow", double(NFiles));
+    m_trender->addEntry("NumberOfMEPsinOverflow", double(NMEPs));
     m_trender->addEntry("OverFlowMEPRate",RMeps);
     m_trender->saveEvent();
   }
