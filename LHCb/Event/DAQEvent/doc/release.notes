@@ -4,6 +4,7 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !-----------------------------------------------------------------------------
 
+!========================= DAQEvent v9r7 2012-05-02 =========================
 ! 2012-04-03 - Olivier Deschamps
  - Fix typo in  RawBankReadoutStatus::Status enum
 
