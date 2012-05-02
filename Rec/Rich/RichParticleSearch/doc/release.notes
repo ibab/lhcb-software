@@ -4,6 +4,7 @@
 ! Purpose     : Find exotic particles with the RICHes. Get Nobel price.
 !-----------------------------------------------------------------------------
 
+!========================= RichParticleSearch v1r7 2012-05-02 =========================
 ! 2012-04-27 - Chris Jones
  - Add an explicit usage against PhysEvent, to fix a linking issue
  - Fix the way unpacking is enabled in DstConf, for the latest releases.
