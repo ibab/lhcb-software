@@ -3,6 +3,7 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+!========================= GaudiConf v15r10 2012-05-02 =========================
 ! 2012-04-18 - Marco Cattaneo
  - Use the new EnableCheck functionality of the Packers for the packing tests,
    instead of separate Pack, Unpack, Compare algorithms 
