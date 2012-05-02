@@ -41,16 +41,17 @@ TupleToolDalitz::~TupleToolDalitz() {}
 StatusCode TupleToolDalitz::fill( const LHCb::Particle* mother
                                   , const LHCb::Particle* part
                                   , const std::string& head
-                                  , Tuples::Tuple& tuple ){
+                                  , Tuples::Tuple& tuple )
+{
   const std::string prefix=fullName(head);
 
   if (msgLevel(MSG::VERBOSE)) verbose() << "Dalitz fill " << prefix << " " << mother
                                         << " " << part << endmsg ;
   if (0==part) return StatusCode::FAILURE ;
-  const LHCb::Particle::ConstVector dauts = part->daughtersVector() ;
-  if ( 2>=dauts.size() ){
+  const LHCb::Particle::ConstVector& dauts = part->daughtersVector() ;
+  if ( 2 >= dauts.size() )
+  {
     return Warning("Will not fill Dalitz of two body decay "+prefix,StatusCode::SUCCESS,0);
   }
   return fill(dauts,"",tuple,(part->particleID().pid()<0)) ;
-
 }
