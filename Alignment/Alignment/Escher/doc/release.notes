@@ -6,6 +6,10 @@ Purpose : Gaudi application used to perform
 
 </PRE><H1><A NAME=v4r13>2012-03-28 Escher v4r13</A></H1><PRE>
 
+! 2012-05-02 - Maurizio Martinelli
+ - added an option to gaudipariter.py to write alignment results into
+   a specified directory
+
 ! 2012-03-28 - Rob Lambert
  - Minor changes from Wouter and Mauritzio
  - added printsequence

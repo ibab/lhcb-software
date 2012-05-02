@@ -7,6 +7,7 @@ parser.add_option("-n","--numiter",type="int", dest="numiter",help="number of it
 parser.add_option("-f","--firstiter",type="int", dest="firstiter",help="first iterations", default=0)
 parser.add_option("-e","--numevents",type="int", dest="numevents",help="number of events", default=-1)
 parser.add_option("-p","--numprocesses",type="int", dest="numprocs",help="number of processes", default=8)
+parser.add_option("-b","--baseDir", type='string', dest="basedir",help="directory to store output", default='AlignmentResults')
 parser.add_option("-d","--aligndb", action = 'append', dest="aligndb",help="path to file with LHCBCOND database layer")
 parser.add_option("--dddb", action = 'append', dest="dddb",help="path to file with DDDB database layer")
 parser.add_option("-r", "--roothistofile",dest="histofile",help="name of histogram file",default = "histograms.root")
@@ -14,6 +15,9 @@ parser.add_option("-r", "--roothistofile",dest="histofile",help="name of histogr
 
 import os
 rundir = os.getcwd()
+
+os.mkdir(opts.basedir)
+os.chdir(opts.basedir)
 
 for i in range(opts.firstiter,opts.numiter) :
     print "Iteration nr: ", i, "\n"
@@ -51,8 +55,9 @@ for i in range(opts.firstiter,opts.numiter) :
     os.system( 'gzip logfile.txt' )
     # keep only the last version of the derivatives. they take too much space.
     # os.system( 'mv -f myderivatives.dat ..')
-    os.chdir(rundir)
+    os.chdir(rundir+'/'+opts.basedir)
 
 # create a single alignlog file
 os.system('rm -f alignlog.txt')
 os.system('cat Iter?/alignlog.txt Iter1?/alignlog.txt Iter2?/alignlog.txt > alignlog.txt')
+os.chdir(rundir)
