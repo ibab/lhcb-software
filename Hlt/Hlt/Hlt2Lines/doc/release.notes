@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2012-05-02 - Sascha Stahl
+ - Fixed bug in Jpsi express line. Now asks for a PV, 
+   before cutting on the impact parameter.
+
 !========================= Hlt2Lines v8r20 2012-04-26 =========================
 ! 2012-04-26 - V. Gligorov
  - Relax HHKs lines for M. Sokoloff
