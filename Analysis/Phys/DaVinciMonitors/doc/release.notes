@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2012-05-02 - Patrizia de Simone
+ - Minor fixes to avoid warning messages about used variables
+
 !========================= DaVinciMonitors v1r19 2012-04-27 =========================
 
 ! 2012-04-27 - Patrizia de Simone
