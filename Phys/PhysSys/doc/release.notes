@@ -7,7 +7,7 @@ Purpose             : LHCb physics packages
 - Based on LHCb v34r3, REC v13r3 and Gaudi v23r2
 
 - Packages updated : DaVinciInterfaces, DaVinciTools, LoKiFitters,
-                     LoKiJets, ParticleMaker, TisTosTobbing
+                     LoKiJets, ParticleMaker, TisTosTobbing, VertexFit
 
 - In DaVinciInterfaces and DaVinciTools :
  . Add a new tool with interface IParticleVeto that checks if a particle 
