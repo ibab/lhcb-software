@@ -7,6 +7,7 @@
 #include <fstream>
 #include <vector>
 #include <map>
+#include <set>
 #include <algorithm>
 #include <time.h>
 
@@ -44,6 +45,29 @@ namespace io = boost::iostreams;
 #include "GaudiKernel/StringKey.h"
 
 namespace {
+
+#ifndef _WIN32
+  class CleanupAtExit {
+  public:
+        static CleanupAtExit& instance() {
+              static  CleanupAtExit theOne;
+              return theOne;
+        }
+
+        void add(const std::string& name)    { m_files.insert(name); }
+        void remove(const std::string& name) { m_files.erase(name);  }
+  private :
+        CleanupAtExit() {} 
+        ~CleanupAtExit() {
+                for (std::set<std::string>::const_iterator i=m_files.begin();i!=m_files.end();++i) {
+                        cerr << "ConfigTarFileAccessSvc::CleanupAtExit: removing " << *i << endl;
+                        unlink(i->c_str());
+                        cerr << "ConfigTarFileAccessSvc::CleanupAtExit: removed " << *i << endl;
+                }
+        }
+        std::set<std::string> m_files;
+  };
+#endif
 
   struct DefaultFilenameSelector {
     bool operator()(const std::string& /*fname*/) const { return true; }
@@ -158,14 +182,17 @@ namespace ConfigTarFileAccessSvc_details {
             // filename in the same directory with O_EXCL and O_CREAT set. If O_CREAT is not set, 
             // the effect is undefined.
             //
-            m_lock = open(lckname.c_str(), O_RDWR|O_CREAT|O_EXCL); // will fail if file already exists...
+            m_lock = open(lckname.c_str(), O_RDWR|O_CREAT|O_EXCL);
             if (m_lock < 0) { 
                 cerr << "trying to open  " << m_name << " for writing, but lockfile " << lckname << " already exists." << endl;
-                cerr << "This (most likely) means that some other process is writing to this file " << endl;
-                cerr << "Refusing to continue to preserve integrety of " << m_name << "... goodbye" << endl;
+                cerr << "This (most likely) means that some other process intends to write into " << m_name << endl;
+                cerr << "Refusing to continue to preserve integrity of " << m_name << "... goodbye" << endl;
                 ::abort();
             }
             cerr << "succesfully created lock file " << lckname << endl;
+            CleanupAtExit::instance().add(lckname);
+            // TODO: write some text to the lockfile to identify this process: machine name, pid...
+            //       which can be used in the above failure case to point out the source of the clash...
       }
 #endif
       m_file.open(m_name.c_str(), mode | ios::in | ios::binary );
@@ -228,6 +255,8 @@ namespace ConfigTarFileAccessSvc_details {
             close(m_lock);
             unlink( ( m_name + ".lock").c_str() );
             cerr << "removed lock file " << ( m_name+".lock" )  << endl;
+            CleanupAtExit::instance().remove(m_name+".lock");
+
       }
 #endif
     }
