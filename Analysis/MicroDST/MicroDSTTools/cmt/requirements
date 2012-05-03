@@ -5,8 +5,8 @@
 # $Id: requirements,v 1.13 2010-08-11 12:54:02 jpalac Exp $
 #==============================================================================
 
-package MicroDST/MicroDSTTools
-version v2r6
+package MicroDSTTools
+version v2r7
 
 # =============== structure ===================================================
 branches src cmt doc
