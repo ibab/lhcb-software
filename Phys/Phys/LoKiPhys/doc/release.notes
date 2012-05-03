@@ -6,15 +6,16 @@
 ! -----------------------------------------------------------------------------
 
 !========================= LoKiPhys v10r9 2012-04-17 =========================
+
 ! 2012-03-31 - Vanya Belyaev
  - add "anti-clone"-functors for Walter Bonivento 
 
 ! 2012-03-30 - Vanya Belyaev
-
  - reshuffle beam-line/beam-spot functors 
  - issue warnings for legacy functors 
 
 !========================= LoKiPhys v10r8 2012-03-17 =========================
+
 ! 2012-03-12 - Pieter David
  - Add functor to BeamLineFunctions to calculate the DOCA to the beamline,
    using LoKi::FastVertex
