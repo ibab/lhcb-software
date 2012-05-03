@@ -3,6 +3,61 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v24r0>2012-05-04 Boole v24r0</A></H1><PRE>
+This version uses projects LCGCMT 62b, Gaudi v23r2, LHCb v34r3, Lbcom v12r3
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
+
+ - Production release for first MC/2012 simulation.
+
+ - External dependencies changes
+   . Uses LCGCMT v62b. Relevant changes are ROOT 5.32.02 and Boost 1.48
+
+ - Supported platforms and libraries
+   . Added support for for gcc46 on slc5 (64-bit only)
+
+ - Changes to configuration:
+   . Force use of new SQLDDDB v7r* distribution scheme (DDDB v1r51)
+   . Set default DataType to 2012
+   . Added configuration for OTDoublePulse.root file which provides a 
+     look-up-table (available in ParamFiles v8r7)
+   . OTReadOutWindow algorithms updated to load readOutGate values from database.
+     (OTDAQ v7r12)
+
+ - Persistency changes
+   . Removed support for POOL persistency
+   . Change default Root compression algorithm to LZMA, with compression level 6
+     (RootCnv v1r13)
+     N.B. This setting should not be used for intermediate files to be deleted at
+     the end of the production workflow, since it unnecessarily slows down Boole.
+     Can be switched off with $APPCONFIGOPTS/Persistency/Compression-ZLIB-1.py
+     (AppConfig v3r133)
+   . Remove ProcessHeader::m_randomSeeds since they are not used anywhere and
+     causes portability problems with persistency of vector<long>
+     (EventBase v3r0, DigiAlg v4r21)
+
+ - New tuning
+   . Introduce Velo radiation damage simulation, adds the effect of cross-talk on
+     between hits and the second metal routing lines on the R sensors. When using
+     DDDB and SIMCOND tags containing velo-20120120, this adds 10% "other" FEs,
+     translates to 2% of clusters averaged over detector, 4% in R-sensors, due to
+     this sort of coupling. For older DDDB tags it generates a warning about
+     missing conditions. (VeloDet v13r18+v13r18p1, VeloSimulation v3r12)
+   . Apply Hcal threshold in L0Calo emulation of 2012 data, reduces L0Calo bank
+     size (L0Calo v11r7) 
+   . Use LUT for L0Muon pt computation, with V3 as default
+     (L0MuonKernel v9r7, L0Muon v9r10, ParamFiles v8r7)
+
+ - Bug fixes
+   . Fix switching off of Boost memory allocators in event model classes in debug
+     builds, that was broken several LCGCMT releases ago
+     (GaudiObjDesc v11r13, LHCbKernel v13r9)
+   . Fix bug #92491: problems reading vector<long> (ROOT 5.32.02)
+
+ - Changes to tests
+   . Remove boole.boole-mc10pool, writing POOL files no longer supported
+   . Add a reference file for boole-2010-latestdb test, since 2010 geometry has
+     evolved since MC10
+
 </PRE><H1><A NAME=v23r2>2011-12-19 Boole v23r2</A></H1><PRE>
 This version uses projects LCGCMT 61b, Gaudi v22r5, LHCb v33r2, Lbcom v11r2
  and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
