@@ -1,5 +1,5 @@
 # $Id: requirements,v 1.25 2010-08-26 17:06:22 jpalac Exp $
-package MicroDST
+package MicroDSTAlgorithm
 version           v5r6p1
 
 #############################################################
@@ -37,7 +37,3 @@ library MicroDSTAlgorithm ../src/*.cpp
 apply_pattern component_library library=MicroDSTAlgorithm
 
 #===============================================================
-
-#===============================================================
-
-
