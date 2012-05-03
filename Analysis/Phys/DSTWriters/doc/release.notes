@@ -6,9 +6,6 @@
 
 !========================= DSTWriters v4r6 2012-05-03 =========================
 
-! 2012-04-23 - Chris Jones
- - Enable by default the (u)DST packing checks
-
 ! 2012-04-01 - Chris Jones
  - Turn off by default the addition of the 'LHCbID Maps' to stripping uDSTs.
    These where added to support TisTos'ing, but now all the information should
