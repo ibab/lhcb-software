@@ -6,8 +6,8 @@
 # $Id: requirements,v 1.23 2010-09-07 10:26:24 jpalac Exp $
 #==============================================================================
 
-package MicroDST/MicroDSTBase
-version v3r2
+package MicroDSTBase
+version v3r2p1
 
 # =============== structure ===================================================
 branches MicroDST src cmt doc
@@ -16,13 +16,14 @@ branches MicroDST src cmt doc
 use GaudiKernel        v*
 use GaudiAlg           v*
 use DaVinciUtils       v*  Phys
+
 # =============== include directories =========================================
 apply_pattern install_more_includes more=MicroDST
 
+#==============================================================================
 # build a link kibrary
 library MicroDSTBaseLib ../src/Lib/*.cpp
 apply_pattern linker_library library=MicroDSTBaseLib
 
-#==============================================================================
 #==============================================================================
 
