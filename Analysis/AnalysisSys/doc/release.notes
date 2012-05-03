@@ -3,8 +3,45 @@ Package     : AnalysisSys
 Package Coordinator : Chris Jones
 Purpose     : LHCb analysis packages
 
-! 2012-04-27 - Chris Jones
- - Add DaVinciTrackRefitting
+</PRE><H1><A NAME=v8r3>2012-05-03 Analysis v8r3 </A></H1><PRE>
+
+Based on Phys v14r3
+
+New Packages : DaVinciTrackRefitting
+
+Updated Packages : MicroDSTAlgorithm, MicroDSTBase, MicroDSTTools,
+                   AnalysisPython, DSTWriters, DaVinciMonitors,
+                   DecayTreeTuple, JetAccessories, KaliCalo
+
+In DaVinciTrackRefitting :
+ . First version of a new package, to collect tools to allow easy
+   track refitting on (u)DSTs. Work in progress.
+
+In MicroDSTAlgorithm, MicroDSTBase, MicroDSTTools, DSTWriters
+ . Suppress variable superfluous messages in the stripping
+ . Remove ProtoParticleDeepCloner. Functionality is now merged with 
+   ProtoParticleCloner
+ . Add a new base class 'ObjectClonerBase' for all cloning tools.
+ . Improve the CaloHypo cloning tool. Cloning of the related Hypos, Digits 
+   and Clusters are now options. By default Hypos and Clusters are cloned, but
+   digits are not.
+ . Improve the CaloClusterCloner cloning tool. Cloning of the Entries is now
+   optional (disabled by default).
+ . Enable by default the (u)DST packing checks
+ . Turn off by default the addition of the 'LHCbID Maps' to stripping uDSTs.
+   These where added to support TisTos'ing, but now all the information should
+   be availabled from the cloned candidates themselves.
+ . Enable packing of the cloned CaloClusters.
+
+In AnalysisPython :
+ . PyRoUts: Add intervals and (x,y,z,v)min/max-functions, 
+ . Add LASS model for Kpi S-wave scattering 
+ . Add phase space functor for 2-from-3 body decyas with orbital momentum 
+
+In DecayTreeTuple :
+ . Added TupleToolVeto, TupleToolIsolationTwoBody and TupleToolMuonIDCalib tools
+ . Add options to TupleToolSwimmingInfo to allow it to grab particles by hand
+   from a specified location
 
 </PRE><H1><A NAME=v8r2>2012-03-28 Analysis v8r2 </A></H1><PRE>
 
