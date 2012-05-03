@@ -5,19 +5,19 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+!========================= AnalysisPython v2r10 2012-05-03 =========================
+
 ! 2012-04-29 - Vanya Belyaev
-
  - PyRoUts:
-     - add intervals
-     - add  (x,y,z,v)min/max-functions, 
-     - improve documentation
-
+  . Add intervals
+  . Add  (x,y,z,v)min/max-functions, 
+  . Improve documentation
 
 ! 2012-04-02 - Vanya Belyaev
- - add LASS model for Kpi S-wave scattering 
+ - Add LASS model for Kpi S-wave scattering 
 
 ! 2012-04-01 - Vanya Belyaev
- - add phase space functor for 2-from-3 body decyas with orbital momentum 
+ - Add phase space functor for 2-from-3 body decyas with orbital momentum 
 
 !========================= AnalysisPython v2r9 2012-02-18 =========================
 
