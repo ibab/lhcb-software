@@ -1,11 +1,8 @@
 # Created    : 23/08/2004
 # Maintainer : P. Koppenburg, J. Palacios
-#
-# Documentation on the requirement file can be found at
-# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           ParticleMaker
-version           v6r1
+version           v6r2
 
 # Structure, i.e. directories to process. 
 #============================================================================
