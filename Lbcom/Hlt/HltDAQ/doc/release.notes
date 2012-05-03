@@ -4,6 +4,10 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+! 2012-05-03 - Gerhard Raven
+ - add low-level locking protocol to avoid multiple writers in different processes
+   to ConfigTarFileAccessSvc
+
 !========================= HltDAQ v2r14p1 2012-01-31 =========================
 ! 2012-01-09 - A Mazurov
  - Fix warning: variable ‘rv’ set but not used

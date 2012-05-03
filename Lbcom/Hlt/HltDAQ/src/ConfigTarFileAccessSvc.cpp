@@ -12,6 +12,7 @@
 
 #ifndef _WIN32
 #include <unistd.h>
+#include <fcntl.h>
 #include <sys/types.h>
 #include <pwd.h>
 #include <grp.h>
@@ -36,7 +37,6 @@ namespace fs = boost::filesystem;
 #include "boost/iostreams/operations.hpp"
 #include "boost/iostreams/seek.hpp"
 namespace io = boost::iostreams;
-
 
 
 #include "GaudiKernel/SvcFactory.h"
@@ -140,12 +140,34 @@ namespace ConfigTarFileAccessSvc_details {
   public:
     TarFile(const std::string& name, ios::openmode mode = ios::in, bool compressOnWrite = false )
       : m_name(name)
+      , m_lock(-1)
       , m_leof(0)
       , m_indexUpToDate(false)
       , m_myUid(0)
       , m_myGid(0)
       , m_compressOnWrite( compressOnWrite )
     {
+#ifndef _WIN32
+      if (mode&ios::out) {
+            std::string lckname = m_name + ".lock";
+            // From http://pubs.opengroup.org/onlinepubs/7908799/xsh/open.html:
+            //
+            // O_CREAT and O_EXCL are set, open() will fail if the file exists. The check for 
+            // the existence of the file and the creation of the file if it does not exist will 
+            // be atomic with respect to other processes executing open() naming the same 
+            // filename in the same directory with O_EXCL and O_CREAT set. If O_CREAT is not set, 
+            // the effect is undefined.
+            //
+            m_lock = open(lckname.c_str(), O_RDWR|O_CREAT|O_EXCL); // will fail if file already exists...
+            if (m_lock < 0) { 
+                cerr << "trying to open  " << m_name << " for writing, but lockfile " << lckname << " already exists." << endl;
+                cerr << "This (most likely) means that some other process is writing to this file " << endl;
+                cerr << "Refusing to continue to preserve integrety of " << m_name << "... goodbye" << endl;
+                ::abort();
+            }
+            cerr << "succesfully created lock file " << lckname << endl;
+      }
+#endif
       m_file.open(m_name.c_str(), mode | ios::in | ios::binary );
     }
     bool good() const { return m_file.good(); }
@@ -200,6 +222,14 @@ namespace ConfigTarFileAccessSvc_details {
 
     ~TarFile() {
       m_file.close();
+#ifndef _WIN32
+      if (! (m_lock<0) )  { 
+            cerr << "releasing lock " << endl;
+            close(m_lock);
+            unlink( ( m_name + ".lock").c_str() );
+            cerr << "removed lock file " << ( m_name+".lock" )  << endl;
+      }
+#endif
     }
   private:
     struct Info {
@@ -269,6 +299,7 @@ namespace ConfigTarFileAccessSvc_details {
 
     std::string m_name;
     mutable fstream m_file;
+    mutable int m_lock;
     mutable std::map<Gaudi::StringKey,Info> m_index;
     mutable long m_leof;
     mutable bool m_indexUpToDate;
