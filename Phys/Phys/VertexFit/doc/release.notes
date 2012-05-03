@@ -4,6 +4,8 @@
 ! Responsible : Yuehong Xie
 !===========================================================================
 
+!========================= VertexFit v6r9 2012-05-03 =========================
+
 ! 2012-05-03 - Chris Jones
  - Suppress messages about missing or empty vertex containers in PVReFitterAlg
 
