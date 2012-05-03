@@ -3,6 +3,7 @@
 ! Package manager : Jan Amoraal
 !--------------------------------------------------------------------------
 
+!========================= OTSimulation v5r2 2012-05-03 =========================
 ! 2011-12-19 - Jeroen Van Tilburg
  - Double pulses are now added by a tool
  - Two implementation: OTSimpleDoublePulseTool (old) and OTLUTDoublePulseTool.
