@@ -11,8 +11,7 @@ version           v1r0
 branches          cmt doc src python
 
 #============================================================================
-# Used packages. Specify the version, * at the end specifies 'any revision'
-#    Put as many lines as needed, with all packages, without the '#'
+# Used packages.
 #============================================================================
 use   DaVinciKernel      v*    Phys
 use   DecayTreeFitter    v*    Phys
