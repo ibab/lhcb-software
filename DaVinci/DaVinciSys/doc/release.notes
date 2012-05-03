@@ -3,6 +3,35 @@ Package             : DaVinciSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v30r4>2012-05-03 DaVinci v30r4</A></H1><PRE>
+New full stack release based on LHCb v34r3, Lbcom v12r3,
+Rec v13r3, Phys v14r3, Analysis v8r3 and Stripping v4r3p1
+
+Executive Summary :-
+
+- Stripping (u)DST Content changes
+ . Improve the CaloHypo cloning tool. Cloning of the related Hypos, Digits 
+   and Clusters are now options. By default Hypos and Clusters are cloned, but
+   digits are not. Improves support for Tistos'ing on uDSTs.
+ . Improve the CaloHypo cloning tool. Cloning of the related Hypos, Digits 
+   and Clusters are now options. By default Hypos and Clusters are cloned, but
+   digits are not.
+ . Turn off by default the addition of the 'LHCbID Maps' to stripping uDSTs.
+   These where added to support TisTos'ing, but now all the information should
+   be availabled from the cloned candidates themselves.
+ . Enable packing of the cloned CaloClusters.
+
+- DecayTreeTuple :
+ . Added TupleToolVeto, TupleToolIsolationTwoBody and TupleToolMuonIDCalib tools
+ . Add options to TupleToolSwimmingInfo to allow it to grab particles by hand
+   from a specified location
+
+- ParticleMaker :
+ . Added V0FromDstMaker: Transforms Brunel V0 list into Particles
+
+- In TisTosTobbing :
+ . Collect Calo EM info from ProtoParticle::ExtraInfo if available
+
 </PRE><H1><A NAME=v30r3>2012-04-29 DaVinci v30r3</A></H1><PRE>
 Patch release for Stripping 19, for post April 2012 TS data taking.
 

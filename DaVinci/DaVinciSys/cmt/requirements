@@ -1,18 +1,10 @@
 package DaVinciSys
-version v30r3
+version v30r4
 
 branches doc cmt
 
-use  DaVinci             v30r3     Phys
+use  DaVinci             v30r4     Phys
 use  DaVinciTests        v2r13p1
-
-# Temporary
-#use  KaliCalo            v4r12p2   Phys
-#use  DaVinciMonitors     v1r19     Phys
-#use  PackedEvent         v4r10     Event
-#use  EventPacker         v2r16     Event
-#use  RecEvent            v2r42     Event
-#use  DaVinciTools        v22r15    Phys
 
 # Declare this as a container package
 apply_pattern container_package
