@@ -3,7 +3,7 @@
 # Maintainer : Patrick Koppenburg
 #============================================================================
 package           DaVinciMonitors
-version           v1r19
+version           v1r19p1
 
 #============================================================================
 # Structure, i.e. directories to process. 
