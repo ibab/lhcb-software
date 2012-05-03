@@ -21,7 +21,6 @@ typedef struct {
  public:
   int nTracks;                    // number of tracks in a vertex
   int nVeloTracks;                // number of velo tracks in a vertex
-  int nBackTracks;                // number of backward tracks in a vertex
   Gaudi::XYZPoint position;       // position
   Gaudi::XYZPoint positionSigma;  // position sigmas
   int indexMCPVInfo;              // index to MCPVInfo

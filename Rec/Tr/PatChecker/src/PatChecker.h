@@ -1,4 +1,3 @@
-// $Id: PatChecker.h,v 1.3 2008-06-01 17:28:53 mjohn Exp $
 #ifndef PATCHECKER_H 
 #define PATCHECKER_H 1
 
@@ -34,7 +33,6 @@
     
     
   private:
-    bool m_level1;
     bool m_checkMissedVeloSpace;
     bool m_checkMissedForward;
     bool m_checkMissedSeed;

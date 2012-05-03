@@ -26,6 +26,7 @@ PatTTCounter::PatTTCounter( const std::string& type,
 {
   declareInterface<IPatTTCounter>(this);
   m_link      = NULL;
+  m_invTable  = NULL;
   m_nbGhost   = 0.;
   m_nbGhostHit = 0.;
   m_totTrack   = 0;

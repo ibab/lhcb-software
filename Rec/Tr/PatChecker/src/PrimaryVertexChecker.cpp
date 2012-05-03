@@ -33,6 +33,7 @@ DECLARE_ALGORITHM_FACTORY(PrimaryVertexChecker)
 PrimaryVertexChecker::PrimaryVertexChecker(const std::string& name,
                  ISvcLocator* pSvcLocator)
   : GaudiTupleAlg (name,pSvcLocator)
+  , m_forcedBtool(NULL)
 {
     declareProperty("nTracksToBeRecble",  m_nTracksToBeRecble = 5);
     declareProperty("produceNtuple",      m_produceNtuple     = false);
@@ -143,8 +144,8 @@ StatusCode PrimaryVertexChecker::execute() {
     recinfo.positionSigma = a3d;
     recinfo.nTracks = pv->tracks().size();
     recinfo.nVeloTracks = count_velo_tracks(pv);
-    recpvvec.push_back(recinfo);
     recinfo.indexMCPVInfo = -1;
+    recpvvec.push_back(recinfo);
   }
 
   // Fill MC PV info
@@ -163,13 +164,13 @@ StatusCode PrimaryVertexChecker::execute() {
         mcprimvert.indexRecPVInfo = -1;
         mcprimvert.nCorrectTracks = 0;
         mcprimvert.multClosestMCPV = 0;
+        mcprimvert.distToClosestMCPV = 999999.;        
         mcprimvert.m_mcPartInMCPV.clear();
         mcprimvert.m_recTracksInMCPV.clear();
         mcpvvec.push_back(mcprimvert);
       }
     }
   }
-
 
   if ( m_matchByTracks ) {
 
@@ -180,7 +181,6 @@ StatusCode PrimaryVertexChecker::execute() {
     count_reconstructible_mc_particles(mcpvvec);
 
   }        
-
 
   std::sort(mcpvvec.begin(),mcpvvec.end(),sortmlt);
 

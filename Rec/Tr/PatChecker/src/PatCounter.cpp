@@ -25,6 +25,7 @@ PatCounter::PatCounter( const std::string& type,
 {
   declareInterface<PatCounter>(this);
   m_link     = NULL;
+  m_invTable = NULL;
   m_totTrackSpc = 0;
   m_totTrackGrl = 0;
   m_totTrackGen = 0;

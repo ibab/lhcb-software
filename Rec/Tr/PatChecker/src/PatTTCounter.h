@@ -1,4 +1,3 @@
-// $Id: PatTTCounter.h,v 1.1.1.1 2007-10-09 18:41:19 smenzeme Exp $
 #ifndef PATTTCOUNTER_H 
 #define PATTTCOUNTER_H 1
 

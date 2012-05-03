@@ -1,4 +1,3 @@
-// $Id: PatLHCbID2MCParticle.h,v 1.2 2009-08-27 07:48:50 smenzeme Exp $
 #ifndef PATLHCBID2MCPARTICLE_H 
 #define PATLHCBID2MCPARTICLE_H 1
 
@@ -50,7 +49,6 @@
     }  
     
   private:
-    bool        m_level1;
     std::string m_targetName;
     std::vector<const LHCb::MCParticle*> m_partList;
     ToolHandle<Tf::IOTHitCreator> m_othitcreator;

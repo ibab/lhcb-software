@@ -1,4 +1,3 @@
-// $Id: PatTrack2MCParticle.h,v 1.2 2007-10-22 15:50:57 ocallot Exp $
 #ifndef PATTRACK2MCPARTICLE_H 
 #define PATTRACK2MCPARTICLE_H 1
 
@@ -40,7 +39,6 @@
 			  LinkerWithKey<LHCb::MCParticle, LHCb::Track>& trackLink
 			  );
   private:
-    bool   m_level1;
     std::string m_lhcbLinks;
     double m_fractionOK;
     std::vector<std::string> m_locations;

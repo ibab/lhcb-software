@@ -26,6 +26,8 @@ DECLARE_ALGORITHM_FACTORY( PatChecker )
 PatChecker::PatChecker( const std::string& name,
                         ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
+  , m_initTime(0)
+  , m_partTime(0)
 {
   declareProperty( "CheckMissedVeloSpace", m_checkMissedVeloSpace  = false );
   declareProperty( "CheckMissedForward",   m_checkMissedForward    = false );

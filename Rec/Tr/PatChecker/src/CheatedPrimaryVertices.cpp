@@ -26,7 +26,10 @@ DECLARE_ALGORITHM_FACTORY(CheatedPrimaryVertices)
 //=============================================================================
 CheatedPrimaryVertices::CheatedPrimaryVertices(const std::string& name,
                                                ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm(name,pSvcLocator) {
+  : GaudiAlgorithm(name,pSvcLocator)
+  , m_inputTracks(NULL)
+  , m_outputVertices(NULL)
+{
   declareProperty("InputTracksName", m_inputTracksName = "Rec/Track/Best");
   declareProperty("OutputVerticesName", m_outputVerticesName = 
                                         "Hlt/Vertex/PV2D");
@@ -44,7 +47,7 @@ CheatedPrimaryVertices::~CheatedPrimaryVertices() {
 StatusCode CheatedPrimaryVertices::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
   if (!sc) return sc;
-  debug() << "Initialisation" << endmsg;
+  if(msgLevel(MSG::DEBUG)) debug() << "Initialisation" << endmsg;
   return StatusCode::SUCCESS;
 }
 
@@ -54,16 +57,10 @@ StatusCode CheatedPrimaryVertices::initialize() {
 StatusCode CheatedPrimaryVertices::execute() {
 
   if(msgLevel(MSG::DEBUG)) debug() << "Execute" << endmsg;
-  IDataProviderSvc *m_EventSvc;
-  if(serviceLocator())
-    serviceLocator()->service("EventDataSvc", m_EventSvc, true);
-  if(!m_EventSvc) {
-    error() << "Unable to find EventDataSvc" << endmsg;
-    return StatusCode::FAILURE;
-  }
-  MCTrackInfo trInfo(m_EventSvc, msgSvc());
-  LinkedTo<LHCb::MCParticle> trackMClink(m_EventSvc, msgSvc(), 
-                                         LHCb::TrackLocation::Default);
+
+  MCTrackInfo trInfo( evtSvc(), msgSvc() );
+  LinkedTo<LHCb::MCParticle> trackMClink( evtSvc(), msgSvc(), 
+                                          LHCb::TrackLocation::Default);
   m_inputTracks = get<LHCb::Tracks>(m_inputTracksName);
   m_outputVertices = new LHCb::RecVertices();
   put(m_outputVertices,m_outputVerticesName);

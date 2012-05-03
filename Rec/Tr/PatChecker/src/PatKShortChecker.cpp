@@ -27,6 +27,9 @@ PatKShortChecker::PatKShortChecker( const std::string& name,
                               ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
   , m_inputLocation    ( LHCb::TrackLocation::Default )
+  , m_trToMCP(NULL)
+  , m_seedToMCP(NULL)
+  , m_downToMCP(NULL)
 {
   declareProperty( "InputLocation"  , m_inputLocation );
 }
