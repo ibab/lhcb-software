@@ -2,38 +2,41 @@
 # <-- End of file '/build/cattanem/Brunel_HEAD/BrunelSys/tests/options/testBrunel.py'
 # applying configuration of Brunel
 # /***** User Brunel/Brunel **************************************************************************
-# |-Persistency        = None
-# |-Histograms         = 'OfflineFull'
-# |-SkipEvents         = 0
-# |-DatasetName        = 'Brunel'
-# |-ProductionMode     = False
-# |-PackType           = 'TES'
-# |-WriteLumi          = False
-# |-DDDBtag            = ''
-# |-WithMC             = False
-# |-MainSequence       = ['ProcessPhase/Reco', 'ProcessPhase/Moni']  (default: None)
-# |-OutputType         = 'DST'
-# |-DigiType           = 'Default'
-# |-VetoHltErrorEvents = True
-# |-MCCheckSequence    = None
-# |-InputType          = 'MDF'  (default: 'MDF')
-# |-PrintFreq          = 1
-# |-OutputLevel        = 3
-# |-EvtMax             = 0  (default: -1)
-# |-CondDBtag          = ''
-# |-Context            = 'Offline'
-# |-RecoSequence       = None
-# |-Simulation         = False
-# |-MCLinksSequence    = ['L0', 'Unpack', 'Tr']  (default: ['L0', 'Unpack', 'Tr'])
-# |-InitSequence       = ['Reproc', 'Brunel']  (default: None)
-# |-DataType           = '2011'
-# |-NoWarnings         = False
-# |-WriteFSR           = True
-# |-RecL0Only          = False
-# |-RawBanksToKill     = None
-# |-SpecialData        = []  (default: [])
-# |-Monitors           = ['FPE', 'SC']  (default: [])
-# |-CaloPhotonChecker  = False
+# |-Persistency         = None
+# |-Histograms          = 'OfflineFull'
+# |-SkipEvents          = 0
+# |-DatasetName         = 'Brunel'
+# |-ProductionMode      = False
+# |-PackType            = 'TES'
+# |-WriteLumi           = False
+# |-DDDBtag             = ''
+# |-WithMC              = False
+# |-MainSequence        = ['ProcessPhase/Reco', 'ProcessPhase/Moni']  (default: None)
+# |-OutputType          = 'DST'
+# |-DigiType            = 'Default'
+# |-PartitionName       = 'LHCb'
+# |-VetoHltErrorEvents  = True
+# |-MCCheckSequence     = None
+# |-InputType           = 'MDF'  (default: 'MDF')
+# |-DBSnapshotDirectory = '/group/online/hlt/conditions'
+# |-PrintFreq           = 1
+# |-OutputLevel         = 3
+# |-EvtMax              = 0  (default: -1)
+# |-Simulation          = False
+# |-Context             = 'Offline'
+# |-RecoSequence        = None
+# |-CondDBtag           = ''
+# |-MCLinksSequence     = ['L0', 'Unpack', 'Tr']  (default: ['L0', 'Unpack', 'Tr'])
+# |-UseDBSnapshot       = False
+# |-InitSequence        = ['Reproc', 'Brunel']  (default: None)
+# |-DataType            = '2011'
+# |-NoWarnings          = False
+# |-WriteFSR            = True
+# |-RecL0Only           = False
+# |-RawBanksToKill      = None
+# |-SpecialData         = []  (default: [])
+# |-Monitors            = ['FPE', 'SC']  (default: [])
+# |-CaloPhotonChecker   = False
 # \----- (End of User Brunel/Brunel) -----------------------------------------------------------------
 # /***** User RecSysConf/RecSysConf ******************************************************************
 # |-DataType     = '2011'
@@ -74,12 +77,12 @@
 # DstWriter.OptItemList=['/Event/Phys/Selections#1']
 # No Writer defined for DIGI
 # WARNING: Using default tag head-20111102 for partition DDDB
-# WARNING: Using default tag head-20120413 for partition LHCBCOND
+# WARNING: Using default tag head-20120420 for partition LHCBCOND
 # WARNING: Using default tag dq-20120322 for partition DQFLAGS
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v42r1
-                                          running on lxbuild163.cern.ch on Tue Apr 24 08:27:14 2012
+                                          running on lxbuild163.cern.ch on Thu May  3 07:54:29 2012
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -88,7 +91,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   1.42 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.53 times the speed of a 2.8 GHz Xeon.
 ChronoStatSvc        INFO  Number of skipped events for MemStat-1
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
@@ -101,8 +104,8 @@ BrunelInit        SUCCESS Requested to process 0 events
 BrunelInit        SUCCESS ==================================================================
 RootHistSvc          INFO Writing ROOT histograms to: Brunel-histos.root
 HistogramPersis...   INFO Added successfully Conversion service:RootHistSvc
-HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r6/data/PhotonPdf.root as CaloNeutralPIDs
-HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r6/data/CaloPIDs_DC09_v1.root as CaloPIDs
+HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r7/data/PhotonPdf.root as CaloNeutralPIDs
+HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r7/data/CaloPIDs_DC09_v1.root as CaloPIDs
 LumiSeq              INFO OR Member list: GaudiSequencer/LumiCounters, HltRoutingBitsFilter/LumiFilter, HltRoutingBitsFilter/PhysFilter, with context 'Offline'
 LumiCounters         INFO OR Member list: GaudiSequencer/LumiNoBeamSeq, GaudiSequencer/LumiBeamCrossingSeq, GaudiSequencer/LumiBeam1Seq, GaudiSequencer/LumiBeam2Seq, GaudiSequencer/TimeSpanSeq, EventAccounting/EventAccount, with context 'Offline'
 LumiNoBeamSeq        INFO Member list: LoKi::ODINFilter/FilterNoBeam, HltLumiSummaryDecoder/LumiDecodeNoBeam, FilterOnLumiSummary/LumiFilterNoBeam, LumiAccounting/LumiCountNoBeam, with context 'Offline'
@@ -111,7 +114,7 @@ COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
 DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
 DDDB                 INFO Using TAG "head-20111102"
 LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/LHCBCOND.db/LHCBCOND"
-LHCBCOND             INFO Using TAG "head-20120413"
+LHCBCOND             INFO Using TAG "head-20120420"
 LumiBeamCrossin...   INFO Member list: LoKi::ODINFilter/FilterBeamCrossing, HltLumiSummaryDecoder/LumiDecodeBeamCrossing, FilterOnLumiSummary/LumiFilterBeamCrossing, LumiAccounting/LumiCountBeamCrossing, with context 'Offline'
 LumiBeam1Seq         INFO Member list: LoKi::ODINFilter/FilterBeam1, HltLumiSummaryDecoder/LumiDecodeBeam1, FilterOnLumiSummary/LumiFilterBeam1, FilterFillingScheme/FillingBeam1, LumiAccounting/LumiCountBeam1, with context 'Offline'
 ONLINE_2011          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2011.db/ONLINE"
@@ -223,12 +226,12 @@ ToolSvc.Offline...   INFO Particle types considered = [electron, muon, pion, kao
 ToolSvc.Offline...   INFO Av. optical distortion correction parameters : [0.03, 0.017, -0.014]
 ToolSvc.Offline...   INFO Maximum number of pixels per event = 30000
 RichOfflineTrac...   INFO Member list: Rich::Rec::Initialise/CreateOfflineTracks, with context 'Offline'
-ToolSvc.Offline...   INFO Track Selection : [Forward, Match, Seed, VeloTT, KsTrack]
-ToolSvc.Offline...   INFO  Forward     : P = 0.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->1.00e+01
-ToolSvc.Offline...   INFO  Match       : P = 0.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->1.00e+01
-ToolSvc.Offline...   INFO  Seed        : P = 1.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->1.00e+01
-ToolSvc.Offline...   INFO  VeloTT      : P = 1.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->1.00e+01
-ToolSvc.Offline...   INFO  KsTrack     : P = 1.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->1.00e+01
+ToolSvc.Offline...   INFO Track Selection : [Forward, KsTrack, Match, Seed, VeloTT]
+ToolSvc.Offline...   INFO  Forward     : P = 0.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->5.00e+00
+ToolSvc.Offline...   INFO  KsTrack     : P = 1.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->5.00e+00
+ToolSvc.Offline...   INFO  Match       : P = 0.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->5.00e+00
+ToolSvc.Offline...   INFO  Seed        : P = 1.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->5.00e+00
+ToolSvc.Offline...   INFO  VeloTT      : P = 1.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->5.00e+00
 ToolSvc.Offline...   INFO Aerogel  Track RichTraceMode[ DetectionPrecision=SimpleHPDs DetPlaneBoundaries=IgnoreHPDAcceptance [Will correct for refraction at Aerogel/Rich1Gas boundary] ]
 ToolSvc.Offline...   INFO Rich1Gas Track RichTraceMode[ DetectionPrecision=SimpleHPDs DetPlaneBoundaries=IgnoreHPDAcceptance ]
 ToolSvc.Offline...   INFO Rich2Gas Track RichTraceMode[ DetectionPrecision=SimpleHPDs DetPlaneBoundaries=IgnoreHPDAcceptance ]
@@ -280,12 +283,12 @@ OfflineIsolated...   INFO Max Fit Variance            : [100, 100, 100]
 RichOfflinePIDSeq    INFO Member list: GaudiSequencer/RichOfflineGPIDSeq, Rich::Rec::HierarchicalPIDMerge/MergeOfflineRichPIDs, with context 'Offline'
 RichOfflineGPIDSeq   INFO Member list: GaudiSequencer/RichOfflineGPIDInitSeq, GaudiSequencer/RichOfflineGPIDLLSeq, Rich::Rec::GlobalPID::Finalize/RichOfflineGPIDFin, with context 'Offline'
 RichOfflineGPID...   INFO Member list: Rich::Rec::GlobalPID::Initialize/RichOfflineGPIDInit, Rich::Rec::GlobalPID::DigitSel/RichOfflineGPIDDigSel, Rich::Rec::GlobalPID::TrackSel/RichOfflineGPIDTrSel, with context 'Offline'
-RichOfflineGPID...   INFO Track Selection : [Forward, Match, Seed, VeloTT, KsTrack]
-RichOfflineGPID...   INFO  Forward     : P = 0.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->1.00e+01
-RichOfflineGPID...   INFO  Match       : P = 0.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->1.00e+01
-RichOfflineGPID...   INFO  Seed        : P = 1.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->1.00e+01
-RichOfflineGPID...   INFO  VeloTT      : P = 1.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->1.00e+01
-RichOfflineGPID...   INFO  KsTrack     : P = 1.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->1.00e+01
+RichOfflineGPID...   INFO Track Selection : [Forward, KsTrack, Match, Seed, VeloTT]
+RichOfflineGPID...   INFO  Forward     : P = 0.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->5.00e+00
+RichOfflineGPID...   INFO  KsTrack     : P = 1.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->5.00e+00
+RichOfflineGPID...   INFO  Match       : P = 0.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->5.00e+00
+RichOfflineGPID...   INFO  Seed        : P = 1.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->5.00e+00
+RichOfflineGPID...   INFO  VeloTT      : P = 1.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->5.00e+00
 RichOfflineGPID...   INFO Member list: Rich::Rec::PixelBackgroundAlg/RichOfflineBckEstIt0, Rich::Rec::GlobalPID::Likelihood/RichOfflineGPIDLLIt0, Rich::Rec::PixelBackgroundAlg/RichOfflineBckEstIt1, Rich::Rec::GlobalPID::Likelihood/RichOfflineGPIDLLIt1, with context 'Offline'
 RichOfflineBckE...   INFO Will ignore expected signals when computing backgrounds
 RichOfflineBckE...   INFO Minimum pixel background = 0
@@ -660,7 +663,7 @@ ToolSvc.FastVel...   INFO Maximum number of Velo hits 0
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   1.42 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.53 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
