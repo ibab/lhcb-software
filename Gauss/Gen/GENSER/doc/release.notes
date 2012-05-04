@@ -4,6 +4,9 @@ xs!-----------------------------------------------------------------------------
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2012-05-04 - Gloria Corti
+ - Take the latest version of pythia8 163
+
 ! 2012-01-26 - Gloria Corti
  - Take the latest version of pythia8 160
  - Remove temporary patch to link photos++ and tauola++ with missing links

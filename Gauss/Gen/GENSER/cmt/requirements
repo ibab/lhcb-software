@@ -40,7 +40,7 @@ macro alpgen_native_version "2.1.3d"
 
 #-- Pythia 8
 #============================================================================
-macro pythia8_native_version "160"
+macro pythia8_native_version "163"
 macro_append pythia8_linkopts " -lhepmcinterface "
 #set PYTHIA8DATA $(pythia8_home)/share/xmldoc
 
