@@ -16,9 +16,8 @@ use GaudiPolicy  v*
 
 #-- Photos
 #============================================================================
-macro photos_native_version "215.4"
-use photos v* LCG_GeneratorsInterfaces
-
+#macro photos_native_version "215.4"
+#use photos v* LCG_GeneratorsInterfaces
 
 #-- LHAPDF
 #============================================================================
@@ -70,12 +69,12 @@ macro_append GENSER_linkopts " $(pythia6_linkopts) "
 
 #-- Photos
 #============================================================================
-library      photosforgauss   photos/*.F 
+#library      photosforgauss   photos/*.F 
 
-apply_pattern linker_library library=photosforgauss
+#apply_pattern linker_library library=photosforgauss
 
 # force the order of link for photos
-macro_append GENSER_linkopts " $(photos_linkopts) "
+#macro_append GENSER_linkopts " $(photos_linkopts) "
 
 #-- Hijing
 #============================================================================

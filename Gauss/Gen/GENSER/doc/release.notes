@@ -4,6 +4,9 @@ xs!-----------------------------------------------------------------------------
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2012-05-04 - John Back
+ - Remove old photos (v2) from cmt/requirements file.
+
 ! 2012-05-04 - Gloria Corti
  - Take the latest version of pythia8 163
 
