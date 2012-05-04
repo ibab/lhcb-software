@@ -1,5 +1,9 @@
 // $Id: $
 // Include files
+#include "Photos/Photos.h"
+#include "Photos/PhotosHepMCEvent.h"
+#include "Photos/PhotosHepMCParticle.h"
+#include "Photos/PhotosParticle.h"
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -9,21 +13,6 @@
 
 // local
 #include "ApplyPhotos.h"
-
-// FORTRAN declarations
-extern "C" void phoini_() ;
-extern "C" void begevtgenstorex_(int *,int *,int *,int *,
-                                int *,int *,int *,int *,
-                                double *,double *,double *,
-                                double *,double *,double *,
-                                double *,double *,double *);
-extern "C" void begevtgengetx_(int *,int *,int *,int *,
-                              int *,int *,int *,int *,
-                              double *,double *,double *,
-                              double *,double *,double *,
-                              double *,double *,double *);
-
-extern "C" void photos_(int *);
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : ApplyPhotos
@@ -67,7 +56,11 @@ StatusCode ApplyPhotos::initialize() {
         it != m_pdgIdList.end() ; ++it ) m_pdgIds.insert( *it ) ;
   
   // Initialize PHOTOS
-  phoini_() ;
+  Photos::initialize();
+  // Set minimum photon energy (50keV at 1 GeV scale)
+  Photos::setInfraredCutOff(50.0e-6);
+  // Increase the maximum possible value of the interference weight
+  Photos::maxWtInterference(4.0); // 2^n, where n = number of charges (+,-)
 
   return StatusCode::SUCCESS;
 }
@@ -94,89 +87,16 @@ StatusCode ApplyPhotos::execute() {
 	  HepMC::GenVertex * EV = (*itP)->end_vertex();
 	  if ( 0 == EV ) continue ;
 	  
-	  // Store the Z0 parameters in the HEPEVT common block
-	  int entry = 1 ;
-	  int eventnum = 1 ;
-	  int numparticle = 1 ;
-	  int istat = 2 ;
-	  int partnum = (*itP) -> pdg_id() ;
-	  int mother = 0 ;
-	  int daugfirst = 2 ;
-	  int dauglast = 1 + EV->particles_out_size();
-	  double px = (*itP)->momentum().px();
-	  double py = (*itP)->momentum().py();
-	  double pz = (*itP)->momentum().pz();
-	  double e  = (*itP)->momentum().e();
-	  double m  = (*itP)->momentum().m();
-	  double x = 0. ;
-	  double y = 0. ;
-	  double z = 0. ;
-	  double t = 0. ;
-	  
-	  begevtgenstorex_(&entry,&eventnum,&numparticle,&istat,&partnum,
-			   &mother,&daugfirst,&dauglast,
-			   &px,&py,&pz,&e,&m,&x,&y,&z,&t);
+	  // Create an event with only the initial particle itP and its immediate
+	  // daughters. Then call Photos++ on this event. Next, modify the original
+	  // event information with the new Photos++ results.
 
+	  PhotosHepMCEvent photosEvent(ev);
 
-	  HepMC::GenVertex::particle_iterator iter ;
-	  for ( iter = EV -> particles_begin( HepMC::children ) ;
-		iter != EV -> particles_end( HepMC::children ) ; ++iter ) {
-	    entry++ ;
-	    numparticle++ ;
-	    istat = 1 ;
-	    partnum = (*iter)->pdg_id() ;
-	    mother = 1 ;
-	    daugfirst = 0 ;
-	    dauglast = 0 ;
-	    px = (*iter)->momentum().px() ;
-	    py = (*iter)->momentum().py() ;
-	    pz = (*iter)->momentum().pz() ;
-	    e  = (*iter)->momentum().e()  ;
-	    m  = (*iter)->momentum().m()  ;
-	    
-	    begevtgenstorex_(&entry,&eventnum,&numparticle,&istat,&partnum,
-			     &mother,&daugfirst,&dauglast,
-			     &px,&py,&pz,&e,&m,&x,&y,&z,&t);
-	    
-	  }
-	  // call PHOTOS
-	  entry = 1 ;
-	  photos_( &entry ) ;
-	  
-	  // get back the parameters and update the event
-	  int numparticlephotos ;
-	  begevtgengetx_(&entry,&eventnum,&numparticlephotos,&istat,&partnum,
-			 &mother,&daugfirst,&dauglast,
-			 &px,&py,&pz,&e,&m,&x,&y,&z,&t);
-	  if ( numparticlephotos == numparticle ) continue ;
-	  
-	  int i = 0 ;
-	  int np ;
-	  for ( iter = EV -> particles_begin( HepMC::children ) ;
-		iter != EV -> particles_end( HepMC::children ) ; ++iter ) {
-	    entry = i + 2 ;
-	    
-	    begevtgengetx_(&entry,&eventnum,&np,&istat,&partnum,
-			   &mother,&daugfirst,&dauglast,
-			   &px,&py,&pz,&e,&m,&x,&y,&z,&t);
-	    
-	    double mp = (*iter)->momentum().m() ;
-	    e = sqrt(mp*mp+px*px+py*py+pz*pz) ;
-	    (*iter)->set_momentum(HepMC::FourVector(px,py,pz,e)) ;
-	    i++ ;
-	  }
-	  
-	  // Add the new photons
-	  for ( entry = numparticle + 1 ; entry <= numparticlephotos ; ++entry ) {
-	    begevtgengetx_(&entry,&eventnum,&np,&istat,&partnum,
-			   &mother,&daugfirst,&dauglast,
-			   &px,&py,&pz,&e,&m,&x,&y,&z,&t) ;
-	    e = sqrt( px*px + py*py + pz*pz ) ;
-	    HepMC::GenParticle * new_photon = new
-	      HepMC::GenParticle( HepMC::FourVector( px , py , pz , e ) , 22 , 
-				  LHCb::HepMCEvent::StableInDecayGen ) ;
-	    EV -> add_particle_out( new_photon ) ;
-	  }
+	  // Run the Photos algorithm. 
+	  // New photons should be automatically added to the (original) GenEvent pointer.
+	  photosEvent.process();
+
 	}
       }
     }
