@@ -42,7 +42,7 @@ public:
   bool isTagInline() { return _inLineTag; }
   
   std::string readAttribute(std::string attribute);
-  bool readAttributeBool(std::string attribute);
+  bool readAttributeBool(std::string attribute, bool defaultValue=false);
   int readAttributeInt(std::string attribute, int defaultValue=-1);
   double readAttributeDouble(std::string attribute, double defaultValue=-1.);
 

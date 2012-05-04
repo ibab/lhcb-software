@@ -21,6 +21,8 @@
 #include "EvtGenModels/EvtGenericDalitz.hh"
 #include "EvtGenModels/EvtDalitzTable.hh"
 #include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtDalitzPoint.hh"
+#include "EvtGenBase/EvtPDL.hh"
 
 std::string EvtGenericDalitz::getName() {
   return "GENERIC_DALITZ";
@@ -90,10 +92,21 @@ void EvtGenericDalitz::decay(EvtParticle *p) {
   EvtVector4R p4_d2 = p->getDaug(_d2)->getP4();
   EvtVector4R p4_d3 = p->getDaug(_d3)->getP4();
 
+  double mA = p->getDaug(_d1)->mass();
+  double mB = p->getDaug(_d2)->mass();
+  double mC = p->getDaug(_d3)->mass();
+
+  double m2AB = ( p4_d1 + p4_d2 ).mass2();
+  double m2CA = ( p4_d1 + p4_d3 ).mass2();
+  double m2BC = ( p4_d2 + p4_d3 ).mass2();
+
+  EvtDalitzPoint point( mA, mB, mC, m2AB, m2BC, m2CA );
+
   EvtComplex amp(0,0);
-  std::vector<EvtResonancePrototype>::iterator i = _resonances.begin();
+  std::vector<std::pair<EvtComplex,EvtDalitzReso> >::iterator i = _resonances.begin();
   for( ; i!= _resonances.end(); i++) {
-    amp += (*i).getAmp(p4_p, p4_d1, p4_d2, p4_d3);
+    std::pair<EvtComplex,EvtDalitzReso> res = (*i);
+    amp += res.first * res.second.evaluate( point );
   }
 
   vertex(amp);

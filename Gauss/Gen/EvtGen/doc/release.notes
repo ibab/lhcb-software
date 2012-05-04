@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-05-04 - John Back
+ - Updated various generic xml Dalitz code from Daniel Craik.
+
 ! 2012-04-24 - John Back
  - From Jordi Tico: Solved two bugs in the EvtD0gammaDalitz model;
    configuration of the conjugated model, and using only the B charge

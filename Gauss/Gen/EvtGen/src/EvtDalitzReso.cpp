@@ -36,7 +36,7 @@ using EvtCyclic3::Pair;
 
 // single Breit-Wigner
 EvtDalitzReso::EvtDalitzReso(const EvtDalitzPlot& dp, Pair pairAng, Pair pairRes, 
-			     EvtSpinType::spintype spin, double m0, double g0, NumType typeN) 
+			     EvtSpinType::spintype spin, double m0, double g0, NumType typeN, double f_b, double f_d) 
   : _dp(dp),
     _pairAng(pairAng),
     _pairRes(pairRes),
@@ -46,13 +46,14 @@ EvtDalitzReso::EvtDalitzReso(const EvtDalitzPlot& dp, Pair pairAng, Pair pairRes
     _massFirst(dp.m(first(pairRes))),_massSecond(dp.m(second(pairRes))),
     _m0_mix(-1.),_g0_mix(0.),_delta_mix(0.),_amp_mix(0.,0.),
     _g1(-1.),_g2(-1.),_coupling2(Undefined),
+    _f_b(f_b), _f_d(f_d),
     _kmatrix_index(-1),_fr12prod(0.,0.),_fr13prod(0.,0.),_fr14prod(0.,0.),_fr15prod(0.,0.),_s0prod(0.),
     _a(0.),_r(0.),_Blass(0.),_phiB(0.),_R(0.),_phiR(0.)
 {
   _vb = EvtTwoBodyVertex(_m0,_dp.m(EvtCyclic3::other(_pairRes)),_dp.bigM(),_spin); 
   _vd = EvtTwoBodyVertex(_massFirst,_massSecond,_m0,_spin);
-  _vb.set_f( 0.0 ); // Default values for Blatt-Weisskopf factors.
-  _vd.set_f( 1.5 );
+  _vb.set_f( _f_b ); // Default values for Blatt-Weisskopf factors are 0.0 and 1.5.
+  _vd.set_f( _f_d );
   assert(_typeN != K_MATRIX && _typeN != K_MATRIX_I && _typeN != K_MATRIX_II);  // single BW cannot be K-matrix
 }
 
@@ -70,6 +71,7 @@ EvtDalitzReso::EvtDalitzReso(const EvtDalitzPlot& dp, Pair pairAng, Pair pairRes
     _massFirst(dp.m(first(pairRes))),_massSecond(dp.m(second(pairRes))),
     _m0_mix(m0_mix),_g0_mix(g0_mix),_delta_mix(delta_mix),_amp_mix(amp_mix),
     _g1(-1.),_g2(-1.),_coupling2(Undefined),
+    _f_b(0.0), _f_d(1.5),
     _kmatrix_index(-1),_fr12prod(0.,0.),_fr13prod(0.,0.),_fr14prod(0.,0.),_fr15prod(0.,0.),_s0prod(0.),
     _a(0.),_r(0.),_Blass(0.),_phiB(0.),_R(0.),_phiR(0.)
 {
@@ -93,6 +95,7 @@ EvtDalitzReso::EvtDalitzReso(const EvtDalitzPlot& dp, Pair pairAng, Pair pairRes
     _massFirst(dp.m(first(pairRes))),_massSecond(dp.m(second(pairRes))),
     _m0_mix(-1.),_g0_mix(0.),_delta_mix(0.),_amp_mix(0.,0.),
     _g1(g1),_g2(g2),_coupling2(coupling2),
+    _f_b(0.0), _f_d(1.5),
     _kmatrix_index(-1),_fr12prod(0.,0.),_fr13prod(0.,0.),_fr14prod(0.,0.),_fr15prod(0.,0.),_s0prod(0.),
     _a(0.),_r(0.),_Blass(0.),_phiB(0.),_R(0.),_phiR(0.)
 {
@@ -117,6 +120,7 @@ EvtDalitzReso::EvtDalitzReso(const EvtDalitzPlot& dp, Pair pairRes, std::string 
     _massFirst(dp.m(first(pairRes))),_massSecond(dp.m(second(pairRes))),
     _m0_mix(-1.),_g0_mix(0.),_delta_mix(0.),_amp_mix(0.,0.),
     _g1(-1.),_g2(-1.),_coupling2(Undefined),
+    _f_b(0.), _f_d(0.),
     _kmatrix_index(-1),_fr12prod(fr12prod),_fr13prod(fr13prod),_fr14prod(fr14prod),_fr15prod(fr15prod),_s0prod(s0prod),
     _a(0.),_r(0.),_Blass(0.),_phiB(0.),_R(0.),_phiR(0.)
 {
@@ -142,6 +146,7 @@ EvtDalitzReso::EvtDalitzReso(const EvtDalitzPlot& dp, Pair pairRes,
     _massFirst(dp.m(first(pairRes))),_massSecond(dp.m(second(pairRes))),
     _m0_mix(-1.),_g0_mix(0.),_delta_mix(0.),_amp_mix(0.,0.),
     _g1(-1.),_g2(-1.),_coupling2(Undefined),
+    _f_b(0.0), _f_d(1.5),
     _kmatrix_index(-1),_fr12prod(0.,0.),_fr13prod(0.,0.),_fr14prod(0.,0.),_fr15prod(0.,0.),_s0prod(0.),
     _a(a),_r(r),_Blass(B),_phiB(phiB),_R(R),_phiR(phiR)
 {
@@ -150,6 +155,22 @@ EvtDalitzReso::EvtDalitzReso(const EvtDalitzPlot& dp, Pair pairRes,
   _vd.set_f( 1.5 ); // Default values for Blatt-Weisskopf factors.
 }
 
+
+//Flatte
+EvtDalitzReso::EvtDalitzReso(const EvtDalitzPlot& dp, EvtCyclic3::Pair pairRes, double m0)
+  : _dp(dp),
+    _pairRes(pairRes),
+    _typeN(FLATTE),
+    _m0(m0), _g0(0.),
+    _massFirst(dp.m(first(pairRes))),_massSecond(dp.m(second(pairRes))),
+    _m0_mix(-1.),_g0_mix(0.),_delta_mix(0.),_amp_mix(0.,0.),
+    _g1(-1.),_g2(-1.),_coupling2(Undefined),
+    _f_b(0.), _f_d(0.),
+    _kmatrix_index(-1),_fr12prod(0.,0.),_fr13prod(0.,0.),_fr14prod(0.,0.),_fr15prod(0.,0.),_s0prod(0.),
+    _a(0.),_r(0.),_Blass(0.),_phiB(0.),_R(0.),_phiR(0.)
+{
+  _spin=EvtSpinType::SCALAR;
+}
 
 
 EvtDalitzReso::EvtDalitzReso(const EvtDalitzReso& other) 
@@ -163,10 +184,12 @@ EvtDalitzReso::EvtDalitzReso(const EvtDalitzReso& other)
     _massFirst(other._massFirst),_massSecond(other._massSecond),
     _m0_mix(other._m0_mix),_g0_mix(other._g0_mix),_delta_mix(other._delta_mix),_amp_mix(other._amp_mix),
     _g1(other._g1),_g2(other._g2),_coupling2(other._coupling2),
+    _f_b(other._f_b), _f_d(other._f_d),
     _kmatrix_index(other._kmatrix_index),
     _fr12prod(other._fr12prod),_fr13prod(other._fr13prod),_fr14prod(other._fr14prod),_fr15prod(other._fr15prod),
     _s0prod(other._s0prod),
-    _a(other._a),_r(other._r),_Blass(other._Blass),_phiB(other._phiB),_R(other._R),_phiR(other._phiR)
+    _a(other._a),_r(other._r),_Blass(other._Blass),_phiB(other._phiB),_R(other._R),_phiR(other._phiR),
+    _flatteParams(other._flatteParams)
 {}
 
 
@@ -178,6 +201,9 @@ EvtComplex EvtDalitzReso::evaluate(const EvtDalitzPoint& x)
 {
   double m = sqrt(x.q(_pairRes));
 
+  if (_typeN==NON_RES) 
+    return EvtComplex(1.0,0.0);
+
   // do use always hash table (speed up fitting)
   if (_typeN==K_MATRIX || _typeN==K_MATRIX_I || _typeN==K_MATRIX_II)
     return Fvector( m*m, _kmatrix_index );
@@ -185,9 +211,15 @@ EvtComplex EvtDalitzReso::evaluate(const EvtDalitzPoint& x)
   if (_typeN==LASS)
     return lass(m*m);
 
+  if (_typeN==FLATTE)
+    return flatte(m);
+
   EvtComplex amp(1.0,0.0);
 
-  if (_dp.bigM() != x.bigM()) _vb = EvtTwoBodyVertex(_m0,_dp.m(EvtCyclic3::other(_pairRes)),x.bigM(),_spin); 
+  if (fabs(_dp.bigM() - x.bigM()) > 0.000001) {
+    _vb = EvtTwoBodyVertex(_m0,_dp.m(EvtCyclic3::other(_pairRes)),x.bigM(),_spin);
+    _vb.set_f(_f_b);
+  }
   EvtTwoBodyKine vb(m,x.m(EvtCyclic3::other(_pairRes)),x.bigM());
   EvtTwoBodyKine vd(_massFirst,_massSecond,m);   
 
@@ -835,5 +867,19 @@ EvtComplex EvtDalitzReso::lass(double s)
 }
 
 
+EvtComplex EvtDalitzReso::flatte(const double& m) {
 
+  EvtComplex w;
 
+  for (vector<EvtFlatteParam>::const_iterator param = _flatteParams.begin();
+       param != _flatteParams.end();
+       ++param) {
+    double m1 = (*param).m1(); double m2 = (*param).m2();
+    double g = (*param).g();
+    w += (g*g*sqrtCplx((1-((m1-m2)*(m1-m2))/(m*m))*(1-((m1+m2)*(m1+m2))/(m*m))));
+  }
+  
+  EvtComplex denom = _m0*_m0 - m*m - EvtComplex(0,1)*w;
+
+  return EvtComplex(1.0,0.0)/denom;
+}

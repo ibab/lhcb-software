@@ -21,7 +21,6 @@ use         pythia8      v*  LCG_GeneratorsInterfaces
 
 macro photos++_native_version 3.3
 macro tauola++_native_version 1.0.5.p1
-#macro pythia8_native_version 153
 
 set PYTHIA8DATA $(pythia8_home)/xmldoc
 

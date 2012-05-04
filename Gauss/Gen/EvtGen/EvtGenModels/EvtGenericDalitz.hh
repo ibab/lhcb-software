@@ -23,7 +23,7 @@
 
 #include "EvtGenBase/EvtDecayAmp.hh"
 #include "EvtGenBase/EvtFlatte.hh"
-#include "EvtGenModels/EvtResonancePrototype.hh"
+#include "EvtGenBase/EvtDalitzReso.hh"
 #include <string>
 #include <vector>
 
@@ -47,7 +47,7 @@ public:
 private:
 
   int _d1,_d2,_d3;
-  std::vector<EvtResonancePrototype> _resonances;
+  std::vector<std::pair<EvtComplex,EvtDalitzReso> > _resonances;
 };
 
 #endif

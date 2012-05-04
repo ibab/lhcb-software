@@ -24,6 +24,11 @@
 #include "EvtGenModels/EvtDalitzDecayInfo.hh"
 #include "EvtGenBase/EvtId.hh"
 
+#include "EvtGenBase/EvtDalitzReso.hh"
+#include "EvtGenBase/EvtDalitzPlot.hh"
+#include "EvtGenBase/EvtCyclic3.hh"
+#include "EvtGenBase/EvtSpinType.hh"
+
 #include <map>
 #include <string>
 #include <vector>
@@ -48,6 +53,10 @@ protected:
   ~EvtDalitzTable();
 
 private:
+
+  EvtDalitzReso getResonance(std::string shape, EvtDalitzPlot dp, EvtCyclic3::Pair angPair, EvtCyclic3::Pair resPair,
+                             EvtSpinType::spintype spinType, double mass, double width, double FFp, double FFr);
+  int getDaughterPairs(EvtId* resDaughter, EvtId* daughter, std::vector< std::pair<EvtCyclic3::Pair,EvtCyclic3::Pair> >& angAndResPairs);
 
   std::map<EvtId, std::vector<EvtDalitzDecayInfo> > _dalitztable;
   std::vector<std::string> _readFiles;

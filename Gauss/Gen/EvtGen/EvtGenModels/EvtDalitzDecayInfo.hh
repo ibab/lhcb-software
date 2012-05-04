@@ -23,7 +23,7 @@
 
 #include "EvtGenBase/EvtComplex.hh"
 #include "EvtGenBase/EvtId.hh"
-#include "EvtGenModels/EvtResonancePrototype.hh"
+#include "EvtGenBase/EvtDalitzReso.hh"
 #include <vector>
 
 class EvtDalitzDecayInfo {
@@ -33,10 +33,11 @@ public:
     : _d1(d1), _d2(d2), _d3(d3), _probMax(0.) {}
   ~EvtDalitzDecayInfo() {}
 
-  void addResonance(EvtResonancePrototype res) {_resonances.push_back(res);}
+  void addResonance(EvtComplex amp, EvtDalitzReso res) {_resonances.push_back(std::pair<EvtComplex, EvtDalitzReso>(amp,res));}
+  void addResonance(std::pair<EvtComplex,EvtDalitzReso> res) {_resonances.push_back(res);}
   void setProbMax(double probMax) {_probMax = probMax;}
 
-  const std::vector<EvtResonancePrototype>& getResonances() const {return _resonances;}
+  const std::vector< std::pair<EvtComplex, EvtDalitzReso> >& getResonances() const {return _resonances;}
   double getProbMax() const {return _probMax;}
 
   inline const EvtId& daughter1() const {return _d1;}
@@ -46,7 +47,7 @@ public:
 private:
 
   EvtId _d1, _d2, _d3;
-  std::vector<EvtResonancePrototype> _resonances;
+  std::vector<std::pair<EvtComplex, EvtDalitzReso> > _resonances;
   double _probMax;
 
 };

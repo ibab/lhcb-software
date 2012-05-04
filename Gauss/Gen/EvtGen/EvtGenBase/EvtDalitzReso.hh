@@ -25,6 +25,7 @@
 #include "EvtGenBase/EvtDalitzPoint.hh"
 #include "EvtGenBase/EvtDecayAmp.hh"
 #include "EvtGenBase/EvtBlattWeisskopf.hh"
+#include "EvtGenBase/EvtFlatte.hh"
 
 using std::vector;
 using std::map;
@@ -38,7 +39,7 @@ public:
   enum NumType { NBW            = 0 , RBW_ZEMACH        = 1 , RBW_KUEHN  = 2 , RBW_CLEO        = 3 ,
 		 RBW_ZEMACH2    = 4 , GS_CLEO           = 5 , K_MATRIX   = 6 , RBW_CLEO_ZEMACH = 7 ,
 		 GS_CLEO_ZEMACH = 8 , LASS              = 9 , K_MATRIX_I = 10, K_MATRIX_II     = 11,
-		 GAUSS_CLEO     = 12, GAUSS_CLEO_ZEMACH = 13 };
+		 GAUSS_CLEO     = 12, GAUSS_CLEO_ZEMACH = 13, FLATTE = 14, NON_RES = 15 };
 
   // Coupling type
   //  ChgPion : pi+ pi-
@@ -50,10 +51,10 @@ public:
   //  EtaPion : eta pi0
   enum CouplingType {Undefined=0,PicPic=1,PizPiz,PiPi,KcKc,KzKz,KK,EtaPic,EtaPiz,PicPicKK,WA76};
 
-  EvtDalitzReso() {};
+  EvtDalitzReso() : _typeN(NON_RES) {};
 
   EvtDalitzReso(const EvtDalitzPlot& dp, EvtCyclic3::Pair pairAng, EvtCyclic3::Pair pairRes, 
-		EvtSpinType::spintype spin, double m0, double g0, NumType typeN);
+		EvtSpinType::spintype spin, double m0, double g0, NumType typeN, double f_b=0.0, double f_d=1.5);
 
   EvtDalitzReso(const EvtDalitzPlot& dp, EvtCyclic3::Pair pairAng, EvtCyclic3::Pair pairRes, 
 		EvtSpinType::spintype spin, double m0, double g0, NumType typeN,
@@ -70,6 +71,9 @@ public:
   EvtDalitzReso(const EvtDalitzPlot& dp, EvtCyclic3::Pair pairRes, double m0, double g0,
 		double a, double r, double B, double phiB, double R, double phiR);
 
+  //Flatte
+  EvtDalitzReso(const EvtDalitzPlot& dp, EvtCyclic3::Pair pairRes, double m0);
+
   EvtDalitzReso(const EvtDalitzReso& other);
 
   ~EvtDalitzReso();
@@ -80,6 +84,8 @@ public:
 
   void set_fd( double R ) { _vd.set_f( R ); }
   void set_fb( double R ) { _vb.set_f( R ); }
+
+  void addFlatteParam(const EvtFlatteParam& param) { _flatteParams.push_back(param); }
 
 private:
   EvtComplex psFactor(double& ma, double& mb, double& m);
@@ -101,6 +107,9 @@ private:
   EvtComplex mixFactor(EvtComplex prop, EvtComplex prop_mix);
   EvtComplex Fvector( double s, int index );
   EvtComplex lass(double s);
+  EvtComplex flatte(const double& m);
+
+  inline EvtComplex sqrtCplx(double in) { return (in > 0) ? EvtComplex(sqrt(in), 0) : EvtComplex(0, sqrt(-in)); }
 
   // Dalitz plot
   EvtDalitzPlot _dp; 
@@ -133,6 +142,9 @@ private:
   double _g1,_g2;
   CouplingType _coupling2;
 
+  // variables for Blatt-Weisskopf form factors
+  double _f_b, _f_d;
+
   // K-matrix 
   int _kmatrix_index;
   EvtComplex _fr12prod,_fr13prod,_fr14prod,_fr15prod;
@@ -145,6 +157,10 @@ private:
   double _phiB;
   double _R;
   double _phiR;
+
+  // Flatte
+  std::vector<EvtFlatteParam> _flatteParams;
+
 };
 
 #endif

@@ -160,9 +160,10 @@ std::string EvtParserXml::readAttribute(std::string attribute) {
   return "";
 }
 
-bool EvtParserXml::readAttributeBool(std::string attribute) {
+bool EvtParserXml::readAttributeBool(std::string attribute, bool defaultValue) {
   std::string valStr = readAttribute(attribute);
-  return (valStr == "true" || valStr == "1" || valStr == "on" || valStr == "yes");
+  if(!defaultValue) return (valStr == "true" || valStr == "1" || valStr == "on" || valStr == "yes");
+  else return (valStr != "false" && valStr != "0" && valStr != "off" && valStr != "no");
 }
 
 int EvtParserXml::readAttributeInt(std::string attribute, int defaultValue) {
