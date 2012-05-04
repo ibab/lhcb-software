@@ -4,6 +4,9 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2012-05-04 - Chris Jones
+ - Update reference block in test_standardintermediate_run.qmt
+
 !========================= DaVinciTests v2r13p1 2012-04-02 =========================
 
 ! 2012-03-28 - Anton Poluektov 
