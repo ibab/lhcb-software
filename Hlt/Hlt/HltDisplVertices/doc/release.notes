@@ -4,6 +4,9 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
+! 2012-05-04 - Victor Coco
+ - fix x86_64-slc5-gcc46 warnings.
+
 !========================= HltDisplVertices v3r9 2012-04-09 =========================
 ! 2012-04-09 - Victor Coco
  - remove declared but unused functor from VeloWithIP 

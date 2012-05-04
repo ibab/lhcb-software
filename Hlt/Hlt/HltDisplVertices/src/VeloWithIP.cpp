@@ -82,7 +82,6 @@ StatusCode VeloWithIP::execute() {
         if ((*itr)->checkFlag(LHCb::Track::Backward))continue;
         inputtrack+=1;
         double minip= 1.e6;
-        const LHCb::RecVertex* minV=NULL;
         for (LHCb::RecVertex::Range::const_iterator ipv = tRV.begin();tRV.end()!=ipv;++ipv){
           double ipchi2 = 0.0 ;
           double impact = 0.0 ;
@@ -91,7 +90,6 @@ StatusCode VeloWithIP::execute() {
           if (sc.isFailure())continue;
           if (impact<minip){
             minip=impact;
-            minV = *ipv;
           }
         }
         if (minip > m_ipcut) {

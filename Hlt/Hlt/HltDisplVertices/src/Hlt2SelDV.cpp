@@ -109,10 +109,7 @@ StatusCode Hlt2SelDV::execute() {
 
   vector<int>  nboftracks;
   vector<double> chindof, px, py, pz, e, x, y, z, errx, erry, errz, sumpts,  indets,masses,minvd,rs,massCorrs,massCorrsIP,thetas;
-  int nPV(0);
-  int nPVSel(0);
   const RecVertex::Range PVs = this->primaryVertices();
-  nPV =PVs.size();
   //double tmp = 1000;
   std::vector<const RecVertex*> SelectedPVs; 
   for ( RecVertex::Range::const_iterator i = PVs.begin(); 
@@ -126,7 +123,6 @@ StatusCode Hlt2SelDV::execute() {
     if( !HasBackAndForwardTracks( pv ) ) continue;
     SelectedPVs.push_back(pv);
   }
-  nPVSel =SelectedPVs.size();
  
   if( msgLevel( MSG::DEBUG ) )
     debug()<<"--------Reconstructed Displ. Vertices --------------"<< endmsg;
@@ -182,7 +178,6 @@ StatusCode Hlt2SelDV::execute() {
       if ((p->endVertex()->position().z()-(*ipv)->position().z())<0.)continue;
       // Get BestIP...
       Gaudi::XYZPoint vertex = (*ipv)->position();
-      Gaudi::XYZPoint point = pos;
       Gaudi::XYZVector direction (mom.Px(),mom.Py(),mom.Pz()); 
       Gaudi::XYZVector d = direction.unit();
       Gaudi::XYZVector ipV = d.Cross((pos-vertex).Cross(d));
