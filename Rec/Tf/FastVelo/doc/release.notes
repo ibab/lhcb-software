@@ -4,6 +4,9 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+! 2012-05-04 - David Hutchcroft
+ - Added a protection against FPE (divide by zero) in FastVeloTrack::solve
+
 !========================= FastVelo v1r9 2012-05-02 =========================
 ! 2012-04-18 - David Hutchcroft
  - Added a ProcStatus when clone killing fired to make monitoring easier
