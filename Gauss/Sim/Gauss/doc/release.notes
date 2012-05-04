@@ -4,6 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2012-05-04 - Gloria Corti
+ - Remove use of GaudiPoolDb as no longer in Gaudi and not needed.
+ - First version post-MC11, only compile it against latest stack but do not
+   change external libraries as Pythia6 or Geant4
+
 !========================= Gauss v41r3 2012-04-03 ============================
 ! 2012-04-02 - Gloria Corti
  - Add use of GenXiccData v1r1

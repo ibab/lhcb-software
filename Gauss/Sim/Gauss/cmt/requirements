@@ -3,7 +3,7 @@
 # Maintainer : Gloria Corti, Florence Ranjard
 #============================================================================
 package Gauss
-version v41r3
+version v41r4
 
 #============================================================================
 #-- Structure
@@ -39,7 +39,7 @@ use HepMC              v*     LCG_Interfaces -no_auto_imports
  
 # From GAUDI project
 use Gaudi              v*                    -no_auto_imports
-use GaudiPoolDb        v*                    -no_auto_imports
+#use GaudiPoolDb        v*                    -no_auto_imports
  
 # From LHCB project
 use EventPacker        v*     Event          -no_auto_imports
