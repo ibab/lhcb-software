@@ -5,6 +5,14 @@
 ! Purpose     : colelctoon of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! 2012-05-05 - Vanya Belyaev
+
+ - few minor fixes 
+
+! 2012-05-02 - Vanya Belyaev
+
+ - allow 2012 to be data type 
+
 ! ==================== Phys/BenderTools v19r5 2012-04-29 ======================
 
 ! 2012-04-29 - Vanya Belyaev

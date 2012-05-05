@@ -278,7 +278,6 @@ def decisions ( self             ,
 #  @param l0tistos  (input)         the tool for L0-tistos 
 #  @param   tistos  (input)         the tool for Hlt1/Hlt2-tistos
 #  @param   dbname  (input)         the name of output shelve-file
-#  @param   txtname (input)         the name of output txt-file 
 #
 #  It also dumps the statistics into shelve data base 
 # 
@@ -286,8 +285,7 @@ def decisions ( self             ,
 #  @date   2011-06-21 
 def trgDecs ( self            ,
               triggers = None ,
-              db_name  = ''   ,
-              txt_name = ''   ) :
+              db_name  = ''   ) :
     """
     
     Print trigger decisions, collected by ``decisions'' method
@@ -304,17 +302,19 @@ def trgDecs ( self            ,
 
     #
     #
-    ## print tistos-statistics
-    if not txt_name : txt_name = self.name () + '_tistos.txt'
+    if not db_name :
+        db_name = self.name () + '_tistos'
+    #
+    txt_file = db_name + '.txt'
+    db_file  = db_name + '.db'
     #
     tistos_print ( triggers , self.Warning ) ## std-out 
-    tistos_print ( triggers , self.Warning , open ( txt_name , 'w' ) ) ## txt-file
+    tistos_print ( triggers , self.Warning , open ( txt_file , 'w' ) ) ## txt-file
     #
     print 90*'*'
     #
     import shelve
-    if not db_name : db_name = self.name () + '_tistos'
-    db = shelve.open( db_name )
+    db = shelve.open ( db_file )
     db [ 'tistos' ] = triggers
     db.close()
     

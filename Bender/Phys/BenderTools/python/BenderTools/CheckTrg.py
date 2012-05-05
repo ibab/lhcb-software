@@ -290,7 +290,6 @@ if '__main__' == __name__ :
             t . UseParticle2LHCbIDsMap = 2
             t . PropertiesPrint        = False
             t . TriggerInputWarnings   = True
-
     ##
     inputLine =  Line
     Alg = chkTrg()
