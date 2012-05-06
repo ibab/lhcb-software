@@ -260,12 +260,15 @@ StatusCode TrackSmeared::execute() {
   debug()<<"==> Execute! "<<endmsg;
 
 
-  LHCb::Tracks* newTracks = new LHCb::Tracks();
-  LHCb::RichPIDs* newRichIDs = new LHCb::RichPIDs();
   if  (!exist<LHCb::Track::Range>(m_trackLocation))  return StatusCode::FAILURE;
   if  (!exist<LHCb::RichPIDs>(LHCb::RichPIDLocation::Offline))  return StatusCode::FAILURE;
   if  (!exist<LHCb::ProtoParticle::Container>(LHCb::ProtoParticleLocation::Charged)) return StatusCode::FAILURE;
+
+  LHCb::Tracks* newTracks = new LHCb::Tracks();
+  LHCb::RichPIDs* newRichIDs = new LHCb::RichPIDs();
   
+  put(newTracks, "Rec/Track/"+m_outputLocation);
+  put(newRichIDs,"Rec/Rich/"+m_outputLocation);
 
   
   LHCb::Track::Range tracks = get<LHCb::Track::Range>(m_trackLocation) ;
@@ -423,8 +426,6 @@ StatusCode TrackSmeared::execute() {
   }
 
   debug() << "adding Container to TES " <<m_outputLocation<< endmsg;
-  put(newTracks, "Rec/Track/"+m_outputLocation);
-  put(newRichIDs,"Rec/Rich/"+m_outputLocation);
   //put(newRichIDs,"Rec/Rich/Refit");
 
   setFilterPassed(true);  // Mandatory. Set to true if event is accepted.
@@ -437,6 +438,21 @@ StatusCode TrackSmeared::execute() {
 StatusCode TrackSmeared::finalize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
+
+  delete m_funcx_data;
+  delete m_funcx_mc;
+  delete m_funcy_data;
+  delete m_funcy_mc;
+  delete m_rnd;
+  
+
+  for(unsigned int i = 0; i< m_paramsx_data.size(); i++){
+
+    delete m_funcsx_mc[i];
+    delete m_funcsy_mc[i];
+    delete m_funcsx_data[i];
+    delete m_funcsy_data[i];
+  }
 
   return DVAlgorithm::finalize();
 }
