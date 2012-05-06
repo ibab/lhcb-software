@@ -8,9 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
-! 2012-05-02 - Sascha Stahl
+! 2012-05-03 - Sascha Stahl
  - Fixed bug in Jpsi express line. Now asks for a PV, 
-   before cutting on the impact parameter.
+   before cutting on the impact parameter. Removed also unnecessary option.
 
 !========================= Hlt2Lines v8r20 2012-04-26 =========================
 ! 2012-04-26 - V. Gligorov

@@ -169,11 +169,10 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                              , Code = " (ADMASS('J/psi(1S)')<%(ExJPsiMassWindow)s*MeV)"\
                              " & (PT>%(ExJPsiPt)s*MeV)"\
                              " & (VFASPF(VCHI2PDOF)<%(ExJPsiVChi2)s)"\
-                             " & (MINTREE('mu-'==ABSID,MIPCHI2DV(PRIMARY)) > %(ExJPsiMuIPChi2)s )"\
+                             " & (MINTREE('mu-'==ABSID,MIPCHI2DV(PRIMARY))>%(ExJPsiMuIPChi2)s )"\
                              " & (MINTREE('mu-'==ABSID,TRCHI2DOF)<%(ExJPsiTrkChi2)s)"\
                              " & (MINTREE('mu-'==ABSID,PT)>%(ExJPsiMuPt)s*MeV) " %  self.getProps() 
                              , Inputs  = [ TrackFittedDiMuon ]
-                             , UseP2PVRelations = False
                              , PreMonitor  =  Hlt2Monitor( "M","M(#mu#mu)",3097,self.getProp("ExJPsiMassWindow"),'M_in',nbins=101) 
                              , PostMonitor =  Hlt2Monitor( "M","M(#mu#mu)",3097,self.getProp("ExJPsiMassWindow"),'M_out',nbins=101)
                              )
