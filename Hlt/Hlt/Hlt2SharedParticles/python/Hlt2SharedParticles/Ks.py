@@ -53,6 +53,7 @@ from Hlt2SharedParticles.GoodParticles import GoodPions
 from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedDownPions, BiKalmanFittedPions
 from Configurables import CombineParticles
 from HltLine.HltLine import bindMembers, Hlt2Member
+from HltTracking.HltPVs import PV3D
 
 __all__ = ( 'KsLL', 'KsDD' )
 
@@ -78,7 +79,7 @@ Hlt2SharedKsLLTF = Hlt2Member( CombineParticles, "KsLLTF"
                            , Inputs = [ BiKalmanFittedPions ]
                            )
 
-KsLLTF = bindMembers( "SharedKsLLTF", [BiKalmanFittedPions , Hlt2SharedKsLLTF ] )
+KsLLTF = bindMembers( "SharedKsLLTF", [PV3D(),BiKalmanFittedPions , Hlt2SharedKsLLTF ] )
 
 # Now the downstream K shorts, requires fitted tracks!
 Hlt2SharedKsDD = Hlt2Member( CombineParticles, "KsDD"
@@ -91,5 +92,5 @@ Hlt2SharedKsDD = Hlt2Member( CombineParticles, "KsDD"
                            , Inputs = [ BiKalmanFittedDownPions ]
                            )
 
-KsDD = bindMembers( "SharedKsDD", [ BiKalmanFittedDownPions , Hlt2SharedKsDD ] )
+KsDD = bindMembers( "SharedKsDD", [ PV3D(),BiKalmanFittedDownPions , Hlt2SharedKsDD ] )
 

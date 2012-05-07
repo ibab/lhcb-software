@@ -59,7 +59,7 @@ Hlt2SharedD02KsPiPi = Hlt2Member( CombineParticles
                                 )
 
 _KsLL =  bindMembers( None
-                    , [ GaudiSequencer('SeqKsForHlt2SharedD02KsHH', ModeOR=True, ShortCircuit=False, Members = KsV0LL.members()  + KsLL.members()) ]
+                    , [ GaudiSequencer('SeqKsForHlt2SharedD02KsHH', ModeOR=True, ShortCircuit=True, Members = KsV0LL.members()  + KsLL.members()) ]
                     ).setOutputSelection( [ KsV0LL.outputSelection(), KsLL.outputSelection()] )
 ####@TODO:@FIXME: maybe we need seperate D0 -> Ks_1 Pi Pi, D0 -> Ks_2 Pi Pi instead of the this OR...
 
