@@ -3,6 +3,10 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2012-05-07 - Chris Jones
+ - Update CombineParticles to not save candidates in the MaxCandidate or
+   MaxCombination limit is hit.
+
 !========================= DaVinciTools v22r16 2012-05-03 =========================
 
 ! 2012-04-27 - Olivier Deschamps

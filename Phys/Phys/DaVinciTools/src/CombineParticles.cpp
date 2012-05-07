@@ -833,17 +833,19 @@ StatusCode CombineParticles::execute    ()  // standard execution
   
   if ( m_useInputParticles && msgLevel ( MSG::INFO ) )
   {
-    info () 
-      << " The external set of " << particles.size() 
-      << " particles is used instead of InputLocations " 
-      << endreq ; 
+    info() << " The external set of " << particles.size() 
+           << " particles is used instead of InputLocations " 
+           << endreq ; 
   }
   
   if ( msgLevel ( MSG::VERBOSE ) ) 
   {
-    for ( LHCb::Particle::ConstVector::const_iterator i = particles.begin(); i!=particles.end();++i)
+    for ( LHCb::Particle::ConstVector::const_iterator i = particles.begin(); 
+          i != particles.end(); ++i )
+    {
       verbose() << "Input :  " << (*i)->key() << " " << (*i)->particleID().pid() << " " 
                 << (*i)->momentum() << endmsg ;
+    }
   }
 
   // flag to monitor combinations 
@@ -862,7 +864,8 @@ StatusCode CombineParticles::execute    ()  // standard execution
         LoKi::Particles::Identifier() == idau->m_pid && idau->m_cut  ) ;
     // some statistics:
     counter( "# " + r.name () ) += r.size() ;
-    if (msgLevel(MSG::VERBOSE)){
+    if (msgLevel(MSG::VERBOSE))
+    {
       for ( Selected::Range::const_iterator i = r.begin(); i!=r.end();++i)
         verbose() << "Select: " << (*i)->key() << " " << (*i)->particleID().pid() << " "
                   << (*i)->momentum() << endmsg ;
@@ -887,24 +890,23 @@ StatusCode CombineParticles::execute    ()  // standard execution
   // the counter of recontructed/selected decays:
   size_t nTotal = 0 ;
   
+  // Flag to indicate if processing is aborted
   bool problem = false ;
   
   LHCb::Particle::ConstVector saved ;
-  saved.reserve ( 1000 ) ;
+  saved.reserve ( 100 ) ; // CRJ : Was 1000. Seems a bit big ?
   
   // loop over all decays 
-  for ( std::vector<Decays::Decay>::const_iterator 
-          idecay = m_decays.begin() ; 
-        m_decays.end() != idecay ; ++idecay ) 
+  for ( std::vector<Decays::Decay>::const_iterator idecay = m_decays.begin() ; 
+        m_decays.end() != idecay && !problem ; ++idecay ) 
   {
     // the counter of "good" selected decays 
-    size_t nGood = 0 ;                        // the counter of "good" selected decays 
+    size_t nGood = 0 ;
     
     // comparison criteria to remove of double counts for the same pid 
     const LoKi::Particles::PidCompare compare = LoKi::Particles::PidCompare () ;
     
-    // create the actual object for looping:
-    
+    // create the actual object for looping
     Combiner loop ;
     
     // fill it with the input data:
@@ -917,8 +919,8 @@ StatusCode CombineParticles::execute    ()  // standard execution
     { counter ( "# max size" + idecay->toString() ) += loop.size() ; }
     if ( 0 < m_maxComb && m_maxComb <= loop.size() ) 
     {
-      Warning ( "Combiner size exceeds the limit for " + idecay->toString() ) ;
-      if ( m_maxCombStop ) { problem = true ; continue ; }             // CONTINUE
+      Warning ( "Combiner size exceeds the limit for " + idecay->toString() ).ignore() ;
+      if ( m_maxCombStop ) { problem = true ; continue ; }        // CONTINUE
     }
     
     // here we can start the actual looping
@@ -927,11 +929,12 @@ StatusCode CombineParticles::execute    ()  // standard execution
       
       if ( 0 < m_maxCand && m_maxCand <= nGood )  
       {
-        Warning ( "Too many saved candidates for " + idecay->toString(), StatusCode::SUCCESS, 0 ) ;
-        if ( m_maxCandStop ) {  problem = true ; break ; }          //  BREAK
+        Warning ( "Too many saved candidates for " + idecay->toString(),
+                  StatusCode::SUCCESS, 0 ).ignore() ;
+        if ( m_maxCandStop ) { problem = true ; break ; }         //  BREAK
       }
       
-      if ( !loop.unique ( compare ) ) { continue ; }                // CONTINUE 
+      if ( !loop.unique ( compare ) ) { continue ; }              // CONTINUE 
       
       // get the actual('current') combination:
       LHCb::Particle::ConstVector combination ( loop.dim() ) ;
@@ -940,9 +943,12 @@ StatusCode CombineParticles::execute    ()  // standard execution
 
       if ( msgLevel(MSG::VERBOSE) )
       {
-        for ( LHCb::Particle::ConstVector::const_iterator i = combination.begin(); i!=combination.end();++i)
+        for ( LHCb::Particle::ConstVector::const_iterator i = combination.begin(); 
+              i != combination.end(); ++i )
+        {
           verbose() << "New Com: " << (*i)->key() << " " << (*i)->particleID().pid() << " "
                     << (*i)->momentum() << endmsg ; 
+        }
       }
       if ( checkOverlap()->foundOverlap ( combination ) ) 
       {
@@ -978,8 +984,9 @@ StatusCode CombineParticles::execute    ()  // standard execution
       // StatusCode sc = vertexFitter()->fit( combination , mother , vertex ) ;
       if ( sc.isFailure() ) 
       { 
-        Print ( "Error from IParticleCombiner, skip the combination" , sc, MSG::DEBUG ) ;
-        ++counter("Error from IParticleCombiner, skip the combination");
+        const std::string mess = "Error from IParticleCombiner, skip the combination";
+        Print( mess, sc, MSG::DEBUG ) ;
+        ++counter(mess);
         continue ;                                                 // CONTINUE 
       }
       
@@ -988,50 +995,54 @@ StatusCode CombineParticles::execute    ()  // standard execution
       if ( 0 != m_combinationPlots ) 
       {
         const StatusCode scc = m_combinationPlots->fillPlots ( &mother ) ;
-        if ( scc.isFailure() ) { Warning ( "Error from CombinationPlots" , scc ) ; } 
+        if ( scc.isFailure() ) { Warning ( "Error from CombinationPlots", scc ).ignore() ; } 
       }
       
       // apply the cut on "mother" particle
-      if ( !m_cut  ( &mother ) )  { continue ; }                    // CONTINUE
+      if ( !m_cut( &mother ) )  { continue ; }                    // CONTINUE
       
       // keep the good candidate:
       const LHCb::Particle* particle = this->markTree( &mother ) ;
-      if ( monitorMother ) { saved.push_back  ( particle ) ; }
+      if ( monitorMother ) { saved.push_back( particle ) ; }
       
       if ( 0 != m_motherPlots ) 
       {
         const StatusCode scc = m_motherPlots->fillPlots ( particle ) ;
-        if ( scc.isFailure() ) { Warning ( "Error from MotherPlots" , scc ) ; } 
+        if ( scc.isFailure() ) { Warning ( "Error from MotherPlots" , scc ).ignore() ; } 
       }
       
       // increment number of good decays 
-      ++nGood       ;
+      ++nGood;
       
     } // the loop over combinations
     
     // some statistics
-    counter ( "#" + idecay->toString() ) += nGood ;
-    nTotal += nGood ;
+    if ( problem ) nGood = 0; // Nothing saved if a problem occurred
+    counter ( "#" + idecay->toString() ) += nGood;
+    nTotal += nGood;
     
   } // the loop over the decays
-  
+
+  // If a problem occurred, do not save anything
+  if ( problem ) nTotal = 0;
+ 
   // the final statistics 
-  counter ( "# selected" ) += nTotal ;
+  counter ( "# selected" ) += nTotal;
   
   // monitor mother particles
-  if ( monitorMother ) { m_motherMonitor ( saved ) ; }
+  if ( monitorMother && !problem ) { m_motherMonitor ( saved ) ; }
   
   // reset the "use external input" flag
   m_useInputParticles = false ;
   
   // the final decision 
-  setFilterPassed ( 0 != nTotal ) ;
+  setFilterPassed ( 0 != nTotal && !problem ) ;
   
   if ( problem ) 
   {
     debug() <<  "A problem with combinatorics has occured"  << endmsg;
     if ( !m_stopIncidentName.empty() ) 
-    { incSvc()->fireIncident   ( Incident ( name() , m_stopIncidentName ) ) ; }
+    { incSvc()->fireIncident( Incident ( name() , m_stopIncidentName ) ) ; }
   }
 
   return StatusCode::SUCCESS ;
@@ -1043,8 +1054,8 @@ StatusCode CombineParticles::execute    ()  // standard execution
 // ============================================================================
 void CombineParticles::handle ( const Incident& )
 {
-  m_inputParticles.clear()   ;          // clear the input container 
-  m_useInputParticles= false ;          // reset the flag
+  m_inputParticles.clear()    ;      // clear the input container 
+  m_useInputParticles = false ;      // reset the flag
 }
 // ============================================================================
 /** set the input particles
@@ -1058,10 +1069,9 @@ StatusCode CombineParticles::setInput
 {
   m_inputParticles    = input ;
   m_useInputParticles = true  ;
-  info () 
-    << "The external set of " << input.size() 
-    << " particles will be used as input instead of InputLocations " 
-    << endreq ;
+  info() << "The external set of " << input.size() 
+         << " particles will be used as input instead of InputLocations " 
+         << endreq ;
   return StatusCode ( StatusCode::SUCCESS , true ) ;
 }
 // =============================================================================
