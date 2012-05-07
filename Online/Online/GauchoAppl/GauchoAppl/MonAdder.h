@@ -68,6 +68,11 @@ public:
     m_pid = -1;
     m_timeouts = 0;
   }
+  virtual ~INServiceDescr()
+  {
+    deallocPtr(m_buffer);
+    m_bufsiz =0;
+  }
   void *CpyBuffer(void *buff, int siz)
   {
     if (m_bufsiz < siz)
