@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2012-05-08 - V. Gligorov
+ - Relax Hlt1 tracking P cuts to 3 GeV for both loose and tight forward
+
 !========================= HltTracking v9r20 2012-04-30 ========================
 ! 2012-04-29 - V. Gligorov
  - Fix Rich so lines using RICH PID use Forward as well as Match tracks
