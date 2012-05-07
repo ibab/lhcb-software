@@ -43,7 +43,8 @@ package_names = ['XmlDDDB',
                  'CharmConfig',
                  'TMVAWeights',
                  'ProdConf',
-                 'GenXiccData']
+                 'GenXiccData',
+                 'ExoticaConfig']
 
 class PackageConfException(Exception):
     pass
@@ -310,3 +311,6 @@ RDConfig.setProject("DBASE")#IGNORE:E0602
 
 CharmConfig.setHat("WG")#IGNORE:E0602
 CharmConfig.setProject("DBASE")#IGNORE:E0602
+
+ExoticaConfig.setHat("WG")#IGNORE:E0602
+ExoticaConfig.setProject("DBASE")#IGNORE:E0602
