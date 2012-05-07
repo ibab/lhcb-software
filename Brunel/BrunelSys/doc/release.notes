@@ -3,6 +3,26 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v42r3p1>2012-05-08 Brunel v42r3p1</A></H1><PRE>
+This version uses projects LCG 62b, Gaudi v23r2, LHCb v34r3, Lbcom v12r3,
+ Rec v13r3 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+Production version for 2012 simulation (v42r3b branch)
+
+- Changes to Configurable
+  . Propagate "Simulation" slot to TrackSys()
+  . Change default DataType to 2012
+
+- New tuning
+  . MC11 dEdx correction is now applied by default in case of Simulation.
+    (Previously resuired AppConfig options) (TrackSys v7r3)
+
+- Bug fixes
+  . Added a protection against FPE (divide by zero) in FastVeloTrack::solve
+    (FastVelo v1r9p1)
+  . In PrimaryVertexChecker, fix more missing initialisations in RecPVInfo and
+    MCPVInfo causing FPE on i686 architecture. (PatChecker v3r12)
+
 </PRE><H1><A NAME=v42r3>2012-05-04 Brunel v42r3</A></H1><PRE>
 This version uses projects LCG 62b, Gaudi v23r2, LHCb v34r3, Lbcom v12r3,
  Rec v13r3 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
