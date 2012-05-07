@@ -271,6 +271,21 @@ def RecoTracking(exclude=[]):
          bestTrackCreator.StateInitTool.VeloFitterName = "FastVeloFitLHCbIDs"
       # add to the sequence
       GaudiSequencer("TrackFitSeq").Members.append( bestTrackCreator )
+
+   ### Change dEdx correction for simulated data
+   if TrackSys().getProp("Simulation"):
+      if TrackSys().getProp("OldCloneKiller"):
+         fitBest = TrackEventFitter("FitBest")
+         fitBest.addTool(TrackMasterFitter("Fitter"))
+         fitBest.Fitter.addTool(DetailedMaterialLocator(), name="MaterialLocator")
+         fitBest.Fitter.MaterialLocator.addTool(StateDetailedBetheBlochEnergyCorrectionTool("GeneralDedxTool"))
+         fitBest.Fitter.MaterialLocator.GeneralDedxTool.EnergyLossFactor = 0.86
+      else:
+         from Configurables import TrackBestTrackCreator,StateDetailedBetheBlochEnergyCorrectionTool,DetailedMaterialLocator
+         fitter = TrackBestTrackCreator().Fitter
+         fitter.addTool(DetailedMaterialLocator(), name="MaterialLocator")
+         fitter.MaterialLocator.addTool(StateDetailedBetheBlochEnergyCorrectionTool("GeneralDedxTool"))
+         fitter.MaterialLocator.GeneralDedxTool.EnergyLossFactor = 0.86
       
    ## Extra track information sequence
    extraInfos = TrackSys().getProp("TrackExtraInfoAlgorithms")

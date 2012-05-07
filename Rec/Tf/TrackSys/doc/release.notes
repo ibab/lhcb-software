@@ -4,6 +4,425 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2012-05-07 - Marco Cattaneo
+ - Add Simulation slot to TrackSys(). Default False
+ - In RecoTracking.py, if Simulation is True, apply energy loss correction
+   factor of 0.86 as was done in MC11. This calibration will change when major
+   version of Geant changes, so will require a switch on simulation type when
+   that happens.
+
+!========================= TrackSys v7r2 2012-05-02 =========================
+! 2012-04-20 - Wouter Hulsbergen
+ - switch BestTrackCreator to the right FastVelo fitting tool
+
+! 2012-04-20 - Marco Cattaneo
+ - Clean up imports in RecoTracking.py
+
+! 2012-04-18 - Wouter Hulsbergen
+ - switch to new clone killer ('TrackBestTrackCreator').
+   old sequence can be recovered with TrackSys().OldCloneKiller = True.
+
+!========================= TrackSys v7r1 2012-02-28 =========================
+! 2012-02-07 - Manuel Tobias Schiller
+ - fix a bug in python/TrackSys/PatChecking.py which causes the
+   TrackEffChecker not to be run on Velo tracks if FastVelo is used
+
+! 2012-02-07 - Marco Cattaneo
+ - Remove unnecessary import from RecoTracking.py
+
+!========================= TrackSys v7r0 2011-08-31 =========================
+! 2011-08-30 - Jeroen van Tilburg
+ - Changed default global event cut for number of OT hits from 1M to 15k. 
+
+!========================= TrackSys v6r3 2011-07-28 =========================
+! 2011-07-28 - Marco Cattaneo
+ - Add protections for invalid GlobalCuts
+
+! 2011-07-26 - Marco Cattaneo
+ - Add new slot TrackSys().GlobalCuts. It consists of a dictionary which is
+   then used to set global event cuts on the number of hits used in the
+   tracking. Default values are { 'Velo':6000, 'IT':999999, 'OT':999999 },
+   except for DataTypes MC09,2008,2009,2010,Upgrade where the defaults are
+   those defined in the algorithms
+ - Cut on number of Velo clusters is defined by setting MaxVeloClusters
+   property of DecodeVeloRawBuffer in VeloTracking.py 
+
+!========================= TrackSys v6r2 2011-05-10 =========================
+! 2011-05-10 - Marco Cattaneo
+ - Add switch to apply fiducial time window in OTRawBankDecoder. Default is to
+   apply window of -8.0*ns to 56.0*ns. Switched off by setting
+   TrackSys().ExpertTracking += ["disableOTTimeWindow"]
+
+!========================= TrackSys v6r1 2011-02-28 =========================
+! 2011-02-04 - Stephanie Hansmann-Menzemer
+ - add 2011 as data type
+
+!========================= TrackSys v6r0 2011-02-02 =========================
+! 2011-02-01 - Rob Lambert
+ - Fixed typo in TrackSys configurable getProb->getProp
+
+! 2011-02-01 - Stephanie Hansmann-Menzemer
+- add switch for MC09 to be propagated to STTools to ensure to run with
+APE=0.0 on MC
+
+! 2011-01-31 - Stephanie Hansmann-Menzemer
+- bug fix for cosmic sequence
+
+! 2011-01-28 - Stephanie Hansmann-Menzemer
+ - add switch ForceNewSeq and ForceOldSeq to run tracking sequence which are
+ not default for a given data set.
+
+! 2011-01-27 - Stephanie Hansmann-Menzemer
+ - change to new tracking reco sequence from 2011 data taking on
+ - set early data tuning as default
+
+!========================= TrackSys v5r1 2010-12-16 =========================
+! 2010-12-10 - Olivier Callot
+ - Remove an instanciation of HLT2FastVelo, a test that went to svn by mistake...
+
+! 2010-11-25 - Olivier Callot
+ - Select the tool for state recreation before the fit, if FastVelo
+ - Split the instantiation of the track associators and checkers according to what is
+   run in the pattern. Always associate the best container.
+
+! 2010-10-07 - Olivier Callot
+ - Add option "FastVelo" in TrackSys to use the new FastVelo package instead of PatVelo
+
+!============================ TrackSys v5r0 2010-08-04 ======================
+! 2010-09-22 - Victor Coco
+ - add a call to the upgrade configurables for reconstruction and Pat checking
+   when there is the special type "upgrade"
+
+!============================ TrackSys v4r37 2010-08-04 ======================
+! 2010-08-04 - Stephanie Hansmann-Menzemer
+ - add a extra copy step to the best track container, to remove tracks with
+   failed fit
+
+! 2010-07-27 - Rob Lambert
+ - Propagate DataType into a slot of TrackSys
+
+! 2010-07-30 - Olivier Callot
+ - Fit the seed only if the MATCH algorithm is there. PatMatch doesn't need it.
+
+!============================ TrackSys v4r36 2010-07-27 ======================
+! 2010-07-27 - Rob Lambert
+ - Added slot for DataType propagated from Brunel()
+ - PrimaryVertexChecker not run for DC06 because of FPE
+
+! 2010-07-27 - Stephanie Hansmann-Menzemer
+ - add switches for timing measurements in RecoTracking.py
+
+
+!============================ TrackSys v4r35 2010-07-20 ======================
+! 2010-07-20 - Marco Cattaneo
+ - Remove RecoTrackingOld.py. Can always be retrieved from SVN if needed...
+
+! 2010-07-06 - Olivier Callot
+ - New version of RecoTracking, the old one kept as 'RecoTrackingOld.py'
+   This fits the tracks after clone cleaning for speed
+   Old behaviour available by setting TrackSys().FilterBeforeFit = False
+
+!============================ TrackSys v4r34 2010-06-21 ======================
+! 2010-06-21 - Stephanie Hansmann-Menzemer
+ - Add switch for timing measurements
+
+! 2010-06-18 - Olivier Callot
+ - Add a slot 'FilterBeforeFit' to TrackSys to include filtering algorithms
+   before the track fit, to increase speed
+ - Add algorytjms FilterMatchTracks / Downstream / Seed conditionnaly in 
+   RecoTracking.py in front of the respective fit sequence
+
+! 2010-06-09 - Rob Lambert
+ - fix savannah bug #bug 68610, missing import statement in RecoTracking.py
+
+!============================ TrackSys v4r33 2010-05-21 ======================
+! 2010-05-12 - Rob Lambert
+ - Removed obsolete options RecoTracking.py and PatChecking.py
+
+! 2010-05-11 - Rob Lambert
+ - Adapted RecoTracking for upgrade purposes
+
+! 2010-05-11 - Rob Lambert
+ - fixed cut-and-paste error in PatChecking.py
+
+! 2010-05-05 - Rob Lambert
+ - Adapt to changes in STTools for new python modules
+
+! 2010-05-04 - Rob Lambert
+ - Adapt RecoTracking.py to new python modules
+
+! 2010-05-03 - Rob Lambert
+ - Copy RecoTracking.py to a python function instead of an options file
+ - Copy PatChecking.py to a python function instead of an options file
+
+!============================ TrackSys v4r32 2010-03-19 ======================
+! 2010-04-23 - Marco Cattaneo
+ - In RecoTracking.py, follow change in names of MagneticFieldSvc options
+
+!============================ TrackSys v4r31 2010-03-19 ======================
+! 2010-03-15 - Stephanie Hansmann-Menzemer
+ -  add ST error tuning for the fit (only for early data)
+
+!============================ TrackSys v4r30 2010-02-15 ======================
+! 2009-02-13 - Stephanie Hansmann-Menzemer 
+ - move all hit decoding/clustering at the beginning of the tracking sequence
+
+!============================ TrackSys v4r29 2009-12-11 ======================
+! 2009-12-10 - Stephanie Hansmann-Menzemer
+ - moved headTunign options to RecSys.SpecialData "earlyData"
+
+! 2009-12-09 - Sascha Stahl
+ - added expert option "headTuning" to TrackSys
+ - headTuning sets options in PatDownstream
+ - changed TrackEffChecker for Downstream tracks in PatChecking.py.
+   Selection criteria is now ChargedDownstream.
+
+!============================ TrackSys v4r28 2009-11-22 ======================
+! 2009-11-22 - Stephanie Hansmann-Menzemer
+ - add beamGas as specialData option (VeloGeneric is thus used)
+
+! 2009-11-17 - Wouter Hulsbergen
+ - Added option to turn off material corrections in track fit
+
+!============================ TrackSys v4r27 2009-11-16 ======================
+! 2009-11-16 - Rob Lambert
+ - Kostyantyn Holubyev extra changes in RecoTracking.py
+
+! 2009-11-13 - Patrick Koppenburg
+ - Remove options/TrackRecoHLT.py
+
+! 2009-11-11 - Kostyantyn Holubyev
+ - RecoTracking.py:
+    if TrackSys().ExpertTracking = [ "fastSequence" ], fast reconstruction 
+    sequence is run, which postpones all fits until Best container is formed.
+    TrackCloneFinder decides which track among the two is a clone from the 
+   numbers of LHCb IDs only. If the number of LHCb IDs for two track is the 
+   same, a clone is assigned randomly. Saves 30-40% of reconstruction time.
+
+! 2009-11-11 - Kostyantyn Holubyev        
+ - RecoTracking.py:
+    Option to run PatMatch is added.
+
+! 2009-11-11 - Kostyantyn Holubyev
+ - RecoTracking.py:           
+   In the standard sequence:
+      1) All the track types are fitted using the same configuration of the 
+         TrackMasterFitter.
+      2) If TrackMatching is used, the additional RefitSeed sequence is introduced 
+         to refit Seed tracks using the standard fitter configuration.
+
+! 2009-11-03 - Stephanie Hansmann-Menzemer
+ - automatic settings for cosmic reconstruction in Configurables
+
+
+!============================ TrackSys v4r26 2009-10-20 ======================
+! 2009-10-07 - Johannes Albrecht
+ - RecoTracking.py: Use TrackAddNNGhostId instead of NeuralNetTmva to 
+   calculate ghost probability
+ - requirements: remove dependence on NNTools
+
+! 2009-10-06 - Marco Cattaneo
+ - Remove obsolete options files RecoTracking.opts, NoFieldTracking.opts
+ - Remove from RecoTracking.py import of obsolete options file
+   $TRACKTOOLSROOT/options/FastMomentumEstimate.opts"
+
+!============================ TrackSys v4r25 2009-09-03 ======================
+! 2009-09-01 - Stephanie Hansmann-Menzemer
+- remove filling of expected hit pattern from tracking sequence
+
+! 2009-08-27 - Stephanie Hansmann-Menzemer
+- add algorithm needed for hit efficiency to track checking sequence
+
+! 2009-08-05 - Stephanie Hansmann-Menzemer
+- add cleaning of track extra info in pattern reco sequence
+
+!============================ TrackSys v4r24 2009-06-17 ======================
+! 2009-06-04 - Stephanie Hansmann-Menzemer
+- require long tracks in efficiency checking of best track container
+
+! 2009-05-31 - Stephanie Hansmann-Menzemer
+- Use Downstream tracking both in RecoTracking.py and PatChecking.py in case
+  off fieldOff
+
+!============================ TrackSys v4r23 2009-05-25 ======================
+! 2009-05-25 - Marco Cattaneo
+ - In PatChecking.py, switch off TrackAssociator("AssocDownstream") and
+   TrackEffChecker("Downstream") in fieldOff case, for consistency with
+   RecoTracking.py
+
+!============================ TrackSys v4r22 2009-03-10 ======================
+! 2009-03-04 - Stephanie Hansmann-Menzemer
+ - add fitter initialization tool in track fitting sequence
+
+!============================ TrackSys v4r21 2009-02-20 ======================
+! 2009-02-11 - Wouter Hulsbergen
+ - Removed OTTimeCreator from sequence
+ - Switch to special OT decoder for cosmics
+
+!============================ TrackSys v4r20 2009-01-12 ======================
+! 2009-01-06 - Marco Cattaneo
+ - In case of RDST output, do not add to TrackVeloFitSeq the algorithm to copy
+   Velo tracks into Best container. Avoids having to remove it later when 
+   defining the RDST content
+
+! 2008-12-05 - Mariusz Witek
+ - Activate PV checker algorithm in PatChecking.py
+
+! 2008-12-01 - Marco Cattaneo
+ - Add "WithMC" option to TrackSys Configurable, and import PatChecking.py if it
+   is set to True
+ - Fix PatChecking.py to handle correctly TrackSys().veloOpen() case
+
+!============================ TrackSys v4r19 2008-11-21 ======================
+! 2008-11-14 - Chris Jones
+ - Fixes to python Configurable for latest Gaudi changes
+
+! 2008-10-28 - Chris Jones
+ - Add a new method to TracySys to allow user to more easily set the special
+   data options (Used in Panoramix).
+
+! 2008-10-24 - Marco Cattaneo
+ - Fix an option in Fitting.py for using a public tool (to please Gaudi v20r3)
+ - Remove version numbers from uses in requirements
+
+! 2008-10-22 - Stephanie Hansmann-Menzemer
+ - translate PatChecking.opts in PatChecking.py
+
+! 2008-10-21 - Chris Jones
+ - Improvements to Python configuration to allow easier re-configuration for
+   cosmic reconstruction.
+
+! 2008-10-21 Wouter Hulsbergen
+ - keep only one instance of TrackResChecker
+
+! 2008-10-20 M Needham
+ - Change detType IT decoding option name to DetType 
+
+! 2008-10-15 - Marco Cattaneo
+ - Remove obsolete TrackPython package from requirements
+
+! 2008-10-15 - David Hutchcroft
+ - Removed TELL1->Velo sensor mapping from VeloTEDOne.py as it is now in CondDB
+
+!============================ TrackSys v4r18 2008-10-02 ======================
+! 2008-09-28 - Stephanie Hansmann-Menzemer
+ - Add MuonTrackAlignRec to RecoTracking.py
+
+! 2008-09-25 - Stephanie Hansmann-Menzemer
+ - Add TrackRecoHLT.py to run HLT2 sequence
+
+! 2008-09-19 - David Hutchcroft
+ - Added VeloTEDOne.py to optimise the reconstruction of the VELO for TED data
+   taken in August and up to Sept 10th 2008.
+
+! 2008-09-12 - Chris Jones
+ - Port TrackClones.opts to python (directly included in RecoTracking.py)
+ - Remove obsolete TrackClones.opts
+ - Add missing CMT use statements to requirements file
+
+! 2008-09-03 - Wouter Hulsbergen
+ - replace Fitting.py with ConfiguredFitters
+
+!============================ TrackSys v4r17 2008-09-05 ======================
+! 2008-09-03 - Stephanie Hansmann-Menzemer
+ - bug fix in Fitting.py  
+
+! 2008-08-27 - Stephanie Hansmann-Menzemer
+ - add option file for track checking sequence, 
+ - fix yet another bug for BfieldOff in RecoTracking.py
+
+! 2008-08-20 - Stephanie Hansmann-Menzemer
+ - fix bug for nonDrifttimes and BfieldOff in Fitting.py and RecoTracking.py
+
+! 2008-08-15 - Chris Jones
+ - Minor improvements to python configurable TrackSys, to fit in with changes
+   in RecSys
+
+!============================ TrackSys v4r16 2008-07-29 ======================
+! 2008-07-28 - Marco Cattaneo
+ - Add a TrackSys configurable, with options expertHistos, fieldOff, veloOpen, 
+   expertTracking. RecoTracking.opts and Fitting.py now test on TrackSys()
+   options instead of Brunel() options
+
+!============================ TrackSys v4r15 2008-07-18 ======================
+! 2008-07-18 - Marco Cattaneo
+ - In RecoTracking.py:
+   . "usePatSeeding" is now an "expertTracking" option
+   . Fix typo in name of "TrackClonesSeq"
+
+! 2008-07-15 - Stephanie Hansmann-Menzemer
+ - move Fitting.py and RecoTracking.py in option directory, remove python 
+   directory - add switches for "noDrifttimes" and "simplifiedGeometry"
+
+! 2008-07-11 - Stephanie Hansmann-Menzemer
+ - Add python directory with Fitting.py and RecoTracking.py
+
+!============================ TrackSys v4r14 2008-06-03 ======================
+! 2008-06-03 - Marco Cattaneo
+ - Add TrackMonitors to requirements
+
+! 2008-06-01 - David Hutchcroft
+ - Added a line to set PatVeloSpaceTool to flag clusters as used, was default
+
+! 2008-02-27 - Wouter Hulsbergen
+ - In Fitting.opts:
+   . use default extrapolator also for seed, velo, velo-tt fits
+   . extrapolate also downstream tracks to beamline (for Ks)
+
+!============================ TrackSys v4r13 2008-01-28 ======================
+! 2008-01-28 - Manuel Schiller
+ - In NoFieldTracking.opts, added include to use new PatSeeding tuning when
+   running without magnetic field, but left it commented out because
+   PatSeeding is not executed in the default setup
+
+! 2008-01-18 - Marco Cattaneo
+ - In RecoTracking.opts, sdd NeuralNetTmva ghost probability algorithm to end
+   of tracking sequence
+
+!============================ TrackSys v4r12 2007-13-11 ======================
+! 2007-12-13 - Marco Cattaneo
+ - Update NoFieldTracking.opts and VeloOpenTracking.opts to Tf tracking sequence
+
+! 2007-12-11 - Stephanie Hansmann-Menzemer
+ - Switch on use of TT to PatForward in RecoTracking.opts (default has changed)
+
+! 2007-12-03 - Wouter Hulsbergen
+ - Added TrackV0.opts 
+
+! 2007-11-30 - Wouter Hulsbergen
+ - Removed reference to TsaSeedReferenceCreator in Fitting.opts
+
+!============================ TrackSys v4r11 2007-11-05 ======================
+! 2007-11-05 - Marco Cattaneo
+ - Fixed CloneKiller options to use also Downstream tracks as input
+ - Updated NoFieldTracking.opts and DSTRefitting.opts with new name of downstream
+   tracking sequences
+
+! 2007-11-05 Johannes Albrecht
+   - options/RecoTracking.opts and NoFieldTracking.opts
+   include parameter file for fast momentum estimate tool
+
+! 2007-11-05 Eduardo Rodrigues
+ - fixed typo in DSTRefitting.opts
+
+! 2007-10-22 - Olivier Callot
+ - Update RecoTracking and Fitting.opts to re-introduce the downstream tracks.
+
+!============================ TrackSys v4r10 2007-10-12 ======================
+! 2007-10-12 - Marco Cattaneo
+ - Update TrackTools version
+
+! 2007-10-10 - Stephanie Hansmann-Menzemer
+  - modify option files to work for Tf framework
+
+! 2007-10-09 - Stephanie Hansmann-Menzemer
+  - import Tf/TrackSys from Tr/TrackSys, for former release notes see Tr/TrackSys
+!-----------------------------------------------------------------------------
+! Package     : Tf/TrackSys
+! Responsible : Eduardo Rodrigues
+! Purpose     : Defines the global Track set of packages, for tracking.
+!-----------------------------------------------------------------------------
+
 !========================= TrackSys v7r2 2012-05-02 =========================
 ! 2012-04-20 - Wouter Hulsbergen
  - switch BestTrackCreator to the right FastVelo fitting tool
