@@ -103,7 +103,7 @@ class Hlt2CharmHadLambdaCLinesConf(HltLinesConfigurableUser) :
                       "& (BPVDIRA > %(Lc_BPVDIRA_MIN)s )" \
                       "& (BPVVDR < %(Lc_BPVVDR_MAX)s)" \
                       "& (BPVVDCHI2 > %(Lc_BPVVDCHI2_MIN)s )" \
-                      "& (BPVLTIME() < %(Lc_BPVLTIME_MAX)s )" % self.getProps()
+                      "& (BPVLTIME('PropertimeFitter/properTime:PUBLIC') < %(Lc_BPVLTIME_MAX)s )" % self.getProps()
 
 
         Hlt2CharmHadLambdaC2KPPi = Hlt2Member( CombineParticles 

@@ -214,7 +214,7 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
 
         parentcuts = "(VFASPF(VCHI2PDOF)< %(KshhTFD0VtxChi2UL)s )" \
                      "& (PT> %(KshhTFD0PtLL)s)" \
-                     "& (BPVLTIME() > %(KshhTFD0BpvlTimeLL)s * ps)" \
+                     "& (BPVLTIME('PropertimeFitter/properTime:PUBLIC') > %(KshhTFD0BpvlTimeLL)s * ps)" \
                      "& (BPVIPCHI2() < %(KshhTFD0PVIPCHI2UL)s )"\
                      "& (MM < %(KshhTFD0MassUL)s )"\
                      "& (MM > %(KshhTFD0MassLL)s )"\
@@ -335,7 +335,7 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
         #######
         KSLL_FilterCuts= """(ADMASS('KS0')<%(KshhTFKsLLMothSymMassWin)s) 
                & (BPVVDCHI2 > %(KshhTFKsLLVtxPVDispChi2LL)s) 
-               & (BPVLTIME() > %(KshhTFKsLLBpvlTimeLL)s * ps)
+               & (BPVLTIME('PropertimeFitter/properTime:PUBLIC') > %(KshhTFKsLLBpvlTimeLL)s * ps)
                & (VFASPF(VCHI2)<%(KshhTFKsLLVtxChi2UL)s) 
                & (CHILDCUT((MIPCHI2DV(PRIMARY) > %(KshhTFKsLLTrkPVIPChi2LL)s ),1))
                & (CHILDCUT((MIPCHI2DV(PRIMARY) > %(KshhTFKsLLTrkPVIPChi2LL)s ),2))

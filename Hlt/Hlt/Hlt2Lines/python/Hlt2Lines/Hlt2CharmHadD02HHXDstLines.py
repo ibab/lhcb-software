@@ -12,14 +12,14 @@ class Hlt2CharmHadD02HHXDstLinesConf(HltLinesConfigurableUser) :
                   ## D* combination
                   'TrkPt_SlowPion'              : 300.0 * MeV 
                   , 'TrkP_SlowPion'               : 3000.0 * MeV
-                  , 'TrkChi2_SlowPion'            : 2.0
-                  , 'TrkChi2_MAX_Child_MAX'       : 2.0
+                  , 'TrkChi2_SlowPion'            : 2.25
+                  , 'TrkChi2_MAX_Child_MAX'       : 2.25
                   , 'IPCHI2_MAX_Child_MIN'        : 36.
                   , 'IPCHI2_PiSlow_MAX'           : 9.      
                   , 'PairMaxDoca_Dstar'           : 100.0 * mm
-                  , 'PT_Dstar_MIN'                : 3750.0 * MeV  
+                  , 'PT_Dstar_MIN'                : 3500.0 * MeV  
                   , 'DIRA_D0_MIN'                 : 0.99
-                  , 'FDCHI2_D0_MIN'               : 100.
+                  , 'FDCHI2_D0_MIN'               : 150.
                   , 'VCHI2_D0_MAX'                : 10. 
                   , 'M_MAX'                       : 1900. 
                   , 'DeltaM_MIN'                  : 0.0 * MeV
@@ -27,7 +27,7 @@ class Hlt2CharmHadD02HHXDstLinesConf(HltLinesConfigurableUser) :
                   , 'DeltaM_MINwide'              : 0.0 * MeV
                   , 'DeltaM_MAXwide'              : 500.0 * MeV
                   ## GEC
-                  , 'GEC_Filter_NTRACK'        : False       # do or do not
+                  , 'GEC_Filter_NTRACK'        : True       # do or do not
                   , 'GEC_NTRACK_MAX'           : 180        # max number of tracks
                   , 'TisTosParticleTaggerSpecs': { "Hlt1Track.*Decision%TOS":0 }
                   , 'name_prefix'              : 'CharmHadD02HHXDst'

@@ -249,7 +249,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                                   " & in_range ( 0 , VFASPF ( VCHI2 ) ,  %(ExLambdaVChi2)s   )" \
                                   " & ( VFASPF ( VZ  ) < %(ExLambdaVZ)s)" \
                                   " & in_range ( 0 , BPVLTFITCHI2()   ,  %(ExLambdaLTimeChi2)s )" \
-                                  " & ( BPVLTIME()*c_light > %(ExLambdaCTau)s)" \
+                                  " & ( BPVLTIME('PropertimeFitter/properTime:PUBLIC')*c_light > %(ExLambdaCTau)s)" \
                                   " & ( ADWM( 'KS0' , WM( 'pi+' , 'pi-') )  > %(ExLambdaWSMassKS)s)"  %  self.getProps()
                                   , DaughtersCuts = { "p+"  :  "(P>%(ExLambdaPP)s)"\
                                                       " & (ISLONG) " \
@@ -287,7 +287,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                               , MotherCut = "(ADMASS('KS0') < %(ExKSMassWin)s )" \
                               "& (VFASPF (VZ) < %(ExKSMaxZ)s) " \
                               "& in_range(0, BPVLTFITCHI2(), %(ExKSLTimeChi2)s )" \
-                              "& ( BPVLTIME()*c_light > %(ExKSCTau)s)"\
+                              "& ( BPVLTIME('PropertimeFitter/properTime:PUBLIC')*c_light > %(ExKSCTau)s)"\
                               "& (ADWM( 'Lambda0' , WM( 'p+' , 'pi-') ) >%(ExKSWrongMass)s)" \
                               "& (ADWM( 'Lambda0' , WM( 'pi+' , 'p~-') ) > %(ExKSWrongMass)s)" %  self.getProps()
                               , MotherMonitor  =  Hlt2Monitor("M", "M(#pi#pi)",498,self.getProp("ExKSMassWin"))
