@@ -4,6 +4,10 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+! 2012-05-08 - V. Gligorov
+ - Fix BPVLTIME cut in shard Ks
+ - Revert mistaken ''fix'' to ModeOR from previous commit. 
+
 ! 2012-05-07 - V. Gligorov
  - Explicitly require PV3D in shared Ks
  - Fix MoreOR independence problem in Pi/D0
