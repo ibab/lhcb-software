@@ -4,6 +4,12 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-05-08 - V. Gligorov
+ - Add draftJune2012 Physics settings. 
+  . Relax HLT1 by putting all P cuts to 3 GeV, 1TrackAllL0 PT cut to 1.5 GeV
+  . Loosen explicit 1Track link in the topo to carry a PT cut of 1.0 GeV
+  . Tighten BDT cut in Topo 4 body from .3 to .5
+
 !========================= HltSettings v5r33 2012-04-29 =========================
 ! 2012-04-29 -  E. van Herwijnen, C. Langenbruch
  - Three families Physics_May2012.py, Physics_MayBU2012.py, Physics_MayOPT2012.py 
