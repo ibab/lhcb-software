@@ -204,7 +204,8 @@ StatusCode MuonHitChecker::execute() {
     Tuple nt1 = nTuple(41,"MC HITS",CLID_ColumnWiseTuple);
 
     //    nt1->column("Run", m_run,0,1000000);
-    nt1->column("Event",m_evt,0,10000);
+    int pippo=m_evt;
+    nt1->column("Event",pippo,0,10000);
 
     nt1->farray("is", m_sta ,"Nhits",1000);
     nt1->farray("ir", m_reg ,"Nhits",1000);

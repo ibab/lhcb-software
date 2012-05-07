@@ -59,7 +59,7 @@ StatusCode MuonMultipleScatteringChecker::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
   const LHCb::MCHeader* evt = get<LHCb::MCHeader>(m_mcHeader);
 
-  long  m_evt = evt->evtNumber();
+  int  m_evt = evt->evtNumber();
 
   DeMuonDetector * muonD = getDet<DeMuonDetector>("/dd/Structure/LHCb/DownstreamRegion/Muon");
   // get the MCHits
@@ -234,7 +234,9 @@ StatusCode MuonMultipleScatteringChecker::execute() {
     // book vectors of histos
     if(m_fillNtuple ) {
       Tuple nt1 = nTuple(1,"MC Muon HITS",CLID_ColumnWiseTuple);
-      nt1->column("Event",m_evt,0,10000);
+      //nt1->column("Event",m_evt,(short int) 0,(short int) 10000);
+      int pippo=m_evt;
+      nt1->column("Event",pippo, 0, 10000);
       nt1->farray("station", c_station ,"Nhits",1000);
       nt1->farray("region", c_region ,"Nhits",1000);
       nt1->farray("chamber", c_chamber ,"Nhits",1000);
