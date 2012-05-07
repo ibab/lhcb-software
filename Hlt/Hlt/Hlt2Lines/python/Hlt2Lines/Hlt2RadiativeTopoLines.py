@@ -180,7 +180,7 @@ class Hlt2RadiativeTopoConf(HltLinesConfigurableUser):
       inputAll = GaudiSequencer("InputRadTopoALL",
                                 Members=inputs,
                                 ModeOR=True,
-                                ShortCircuit=False)
+                                ShortCircuit=True)
       __filter = Hlt2Member(FilterDesktop,
                             'FilterRadTopoAllInput',
                             Inputs=finputs,

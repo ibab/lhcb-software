@@ -12,12 +12,12 @@ class Hlt2CharmHadD02HHXDstLinesConf(HltLinesConfigurableUser) :
                   ## D* combination
                   'TrkPt_SlowPion'              : 300.0 * MeV 
                   , 'TrkP_SlowPion'               : 3000.0 * MeV
-                  , 'TrkChi2_SlowPion'            : 2.5
+                  , 'TrkChi2_SlowPion'            : 2.0
                   , 'TrkChi2_MAX_Child_MAX'       : 2.0
-                  , 'IPCHI2_MAX_Child_MIN'        : 25.
+                  , 'IPCHI2_MAX_Child_MIN'        : 36.
                   , 'IPCHI2_PiSlow_MAX'           : 9.      
                   , 'PairMaxDoca_Dstar'           : 100.0 * mm
-                  , 'PT_Dstar_MIN'                : 3500.0 * MeV  
+                  , 'PT_Dstar_MIN'                : 3750.0 * MeV  
                   , 'DIRA_D0_MIN'                 : 0.99
                   , 'FDCHI2_D0_MIN'               : 100.
                   , 'VCHI2_D0_MAX'                : 10. 

@@ -350,7 +350,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
             inputs.append(ldd)
             finputs.append(LDD)
         inputAll = GaudiSequencer("TopoInputALLSeq",Members=inputs,ModeOR=True,
-                                  ShortCircuit=False)
+                                  ShortCircuit=True)
         filter = Hlt2Member(FilterDesktop,'TopoFilterAllInput',Inputs=finputs,
                             Code='ALL')
         return bindMembers("TopoInputALL", [inputAll, filter])
