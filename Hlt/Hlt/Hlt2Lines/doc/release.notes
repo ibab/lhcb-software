@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2012-05-08 - V. Gligorov
+ - Correct use of BPVLTIME functors in some lines
+ - Small changes to default D->HHH and HHX line cuts
+
 ! 2012-05-07 - V. Gligorov
  - Tighten track chi2, vertex chi2 cuts in D->HHH lines
  - Tighten track chi2, IPCHI2, PT cuts in inclusive D* line
