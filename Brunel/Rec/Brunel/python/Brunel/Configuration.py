@@ -44,7 +44,7 @@ class Brunel(LHCbConfigurableUser):
         "EvtMax"          : -1
        ,"SkipEvents"      : 0
        ,"PrintFreq"       : 1
-       ,"DataType"        : "2011"
+       ,"DataType"        : "2012"
        ,"WithMC"          : False
        ,"Simulation"      : False
        ,"RecL0Only"       : False
@@ -661,7 +661,7 @@ class Brunel(LHCbConfigurableUser):
         self.setOtherProps(RecSysConf(),["Histograms","SpecialData","Context",
                                          "OutputType","DataType","Simulation"])
         self.setOtherProps(RecMoniConf(),["Histograms","Context","DataType","Simulation"])
-        self.setOtherProps(TrackSys(),["DataType"])
+        self.setOtherProps(TrackSys(),["DataType","Simulation"])
 
         if self.isPropertySet("RecoSequence") :
             self.setOtherProp(RecSysConf(),"RecoSequence")

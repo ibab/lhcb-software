@@ -3,9 +3,23 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-- Changes to references to reflect changes since v42r3
+- Changes to references to reflect changes since v42r3p1
   . Reduce the chi^2 range from 0-10 to 0-3, to adapt to tracking changes. Reduce
     the 'tight' track monitoring selection to chi^2 < 2 (RichRecQC)
+
+</PRE><H1><A NAME=v42r3p1>2012-05-08 Brunel v42r3p1</A></H1><PRE>
+This version uses projects LCG 62b, Gaudi v23r2, LHCb v34r3, Lbcom v12r3,
+ Rec v13r3 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+Production version for 2012 simulation (v42r3b branch)
+
+- Changes to Configurable
+  . Propagate "Simulation" slot to TrackSys()
+  . Change default DataType to 2012
+
+- Changes to references to reflect changes since v42r3
+  . All MC references updated following change to TrackSys whereby MC11 dEdx
+    correction is now applied by default in case of Simulation (TrackSys v7r3)
 
 </PRE><H1><A NAME=v42r3>2012-05-03 Brunel v42r3</A></H1><PRE>
 This version uses projects LCG 62b, Gaudi v23r2, LHCb v34r3, Lbcom v12r3,
