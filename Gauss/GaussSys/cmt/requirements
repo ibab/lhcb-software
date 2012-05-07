@@ -7,10 +7,6 @@ branches cmt doc
 # Gauss packages
 #==================================================================
 
-# Take latest version of GaudiConf and GenEvent
-use  GenEvent           v6r2    Event
-use  GaudiConf          v15r2
-
 # Gauss application: the application is not built on Win32
 use Gauss               v41r3   Sim
 
