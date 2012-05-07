@@ -3,6 +3,9 @@
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Algorithm for OT rt and t0 calibration
 
+! 2012-05-07 Alexandr Kozlinskiy
+  - Monitoring algos for T0/TR calibration.
+
 </PRE><H1><A NAME=v1r5>2010-03-03 OTCAlibration v1r5</A></H1><PRE>
 ! 2010-02-09 Johan Blouw
  - The windows compiler complains about sqrt of an integer.
