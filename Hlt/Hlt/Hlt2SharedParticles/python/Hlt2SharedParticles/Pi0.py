@@ -34,7 +34,7 @@ Hlt2MergedPi0s.MassWindow 	= 60.* MeV
 ##########################################################################
 # Make both
 #
-SeqHlt2Pi0 = GaudiSequencer('SeqHlt2Pi0 ',  ModeOR=True, ShortCircuit=True,
+SeqHlt2Pi0 = GaudiSequencer('SeqHlt2Pi0 ',  ModeOR=True, ShortCircuit=False,
                             Members = [ Hlt2MergedPi0s, Hlt2ResolvedPi0s])
 ##########################################################################
 # Make the pi0
@@ -58,7 +58,7 @@ Hlt2MergedPi0sFromL0.MassWindow 	= 60.* MeV
 ##########################################################################
 # Make both
 #
-SeqHlt2Pi0FromL0 = GaudiSequencer('SeqHlt2Pi0FromL0 ',  ModeOR=True, ShortCircuit=True,
+SeqHlt2Pi0FromL0 = GaudiSequencer('SeqHlt2Pi0FromL0 ',  ModeOR=True, ShortCircuit=False,
                             Members = [ Hlt2MergedPi0sFromL0, Hlt2ResolvedPi0sFromL0])
 #
 # define exported symbols -- these are for available

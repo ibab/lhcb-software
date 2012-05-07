@@ -75,7 +75,7 @@ Hlt2SharedKsLLTF = Hlt2Member( CombineParticles, "KsLLTF"
 ## original code                           , CombinationCut = "(ADAMASS('KS0')<50*MeV)"
                            , CombinationCut = "(ADAMASS('KS0')<50*MeV) "
 ## original code                           , MotherCut = "(ADMASS('KS0')<35*MeV) & (VFASPF(VCHI2PDOF)<30)"
-                           , MotherCut = "(ADMASS('KS0')<35*MeV) & (VFASPF(VCHI2PDOF)<30) & (BPVLTIME() > 2.0*ps) "
+                           , MotherCut = "(ADMASS('KS0')<35*MeV) & (VFASPF(VCHI2PDOF)<30) & (BPVLTIME('PropertimeFitter/properTime:PUBLIC') > 2.0*ps) "
                            , Inputs = [ BiKalmanFittedPions ]
                            )
 
