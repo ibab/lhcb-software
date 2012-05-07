@@ -4,6 +4,10 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+! 2012-05-07 - V. Gligorov
+ - Explicitly require PV3D in shared Ks
+ - Fix MoreOR independence problem in Pi/D0
+
 !========================= Hlt2SharedParticles v6r9 2012-04-26 =========================
 ! 2012-04-26 - V. Gligorov
  - Relax Ks DD cuts for M. Sokoloff
