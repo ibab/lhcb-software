@@ -4,6 +4,7 @@
 ! Purpose     : Checker for pattern recognition
 !-----------------------------------------------------------------------------
 
+!========================= PatChecker v3r12 2012-05-07 =========================
 ! 2012-05-03 - Marco Cattaneo
   - In PrimaryVertexChecker, fix more missing initialisations in RecPVInfo and
     MCPVInfo causing FPE on i686 architecture.
