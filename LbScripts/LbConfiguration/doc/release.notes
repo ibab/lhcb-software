@@ -1,3 +1,7 @@
+2012-05-08  Ben Couturier <Ben.Couturier@cern.ch>
+
+	* python/LbConfiguration/Package.py: Added new package EWConfig
+
 2012-05-07  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* python/LbConfiguration/Package.py: Added new package ExoticaConfig
