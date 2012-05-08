@@ -5,6 +5,9 @@ $! $Id: release.notes,v 1.167 2010-09-19 09:03:47 robbep Exp $
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
+! 2012-05-08 - Gloria Corti
+ - Fix linking problems with boost newer version from building with Gaudi v23r2
+
 ! 2012-05-04 - John Back
  - Changed src/component/ApplyPhotos.cpp to use Photos++
  - Removed src/Lib/photos_utils.F

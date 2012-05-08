@@ -20,6 +20,7 @@ use           GenEvent          v*                Event
 use           MCInterfaces      v*                Kernel
 use           EvtGen            v*                Gen
 use           EvtGenExtras      v*                Gen
+use           Boost             v*                LCG_Interfaces -no_auto_imports
 
 #============================================================================
 # Include directories
@@ -37,7 +38,7 @@ macro_append  GeneratorsSrc     "" \
                          WIN32  "Lib/ExternalGenerator.cpp  Lib/Signal.cpp "
 
 library       GeneratorsLib $(GeneratorsLibSrc)
-library       Generators    $(GeneratorsSrc)
+library       Generators    -import=Boost $(GeneratorsSrc)
 
 #============================================================================
 # define component and linker libraries link options (order is essential)
@@ -56,3 +57,6 @@ macro_prepend HepMC_linkopts "-L$(HepMC_home)/lib -lHepMCfio " \
 #============================================================================
 apply_pattern disable_package_on platform=target-winxp
 
+private
+macro_append Boost_linkopts " $(Boost_linkopts_filesystem) $(Boost_linkopts_system) "
+end_private
