@@ -59,7 +59,7 @@ use GaussTracker	v6r2p1	  Sim
 use GaussCalo		v9r4	  Sim
 use GaussPhysics	v7r4	  Sim
 use GaussUMC            v1r1      Sim
-use GaussCherenkov      v1r1p1    Sim
+#use GaussCherenkov      v1r1p1    Sim  # temporarily off for genConf problems
 
 # Monitoring packages
 use GaussMonitor	v6r8      Sim
