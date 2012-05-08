@@ -35,9 +35,11 @@ StatusCode fill( const std::vector<const TYPE*> dauts      /// daughters
 std::string particleName(const LHCb::ParticleID& id, bool revert)const
 {
   const LHCb::ParticleProperty* ppp = ppSvc()->find( id );
-  if (0==ppp) {
-    err() << "Unknown Particle ID " << id << endmsg ;
-    Exception("Unknown Particle ID");
+  if (!ppp)
+  {
+    std::ostringstream mess;
+    mess << "Unknown ParticleID " << id;
+    Exception( mess.str() );
   }
   return Decays::escape( ( revert ?
                            ppp->antiParticle()->particle() :

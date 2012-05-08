@@ -10,6 +10,7 @@
 #include <iterator>
 #include <cmath>
 #include <map>
+#include <sstream>
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TupleToolWZJets
@@ -268,9 +269,11 @@ bool TupleToolWZJets::MatchAndStoreIsoJets(const IJetMaker::Jets& IsoJets)
            (*m_LokiIsoJetFilter)(*iJet))
         {
           const LHCb::ParticleProperty* ppp = m_ppSvc->find((LHCb::ParticleID)((*DecProduct)->particleID().abspid()));
-          if (0==ppp) {
-            err() << "Unknown PID " << (*DecProduct)->particleID().abspid() << endmsg ;
-            Exception("Unknown PID");
+          if (!ppp)
+          {
+            std::ostringstream mess;
+            mess << "Unknown ParticleID " << (*DecProduct)->particleID().abspid();
+            Exception( mess.str() );
           }
           if (m_IsoJetAbsID)
             test &= WriteJetComparisonToTuple(*iJet,ppp->name());
