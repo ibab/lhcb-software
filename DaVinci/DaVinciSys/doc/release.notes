@@ -3,6 +3,17 @@ Package             : DaVinciSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v30r4p1>2012-05-08 DaVinci v30r4p1</A></H1><PRE>
+
+New patch release on top of DaVinci v30r4
+
+In DaVinciTools :
+ . Update CombineParticles to not save candidates in the MaxCandidate or
+   MaxCombination limit is hit.
+
+In DecayTreeTuple
+ . Protect TupleToolDalitz and TupleToolWZJets against NULL ParticleProperties.
+
 </PRE><H1><A NAME=v30r4>2012-05-03 DaVinci v30r4</A></H1><PRE>
 New full stack release based on LHCb v34r3, Lbcom v12r3,
 Rec v13r3, Phys v14r3, Analysis v8r3 and Stripping v4r3p1
