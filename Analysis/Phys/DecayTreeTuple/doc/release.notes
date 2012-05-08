@@ -6,6 +6,7 @@
 
 ! 2012-05-08 - Patrick Koppenburg
  - Protect TupleToolDalitz against NULL ParticleProperties. See Bug https://savannah.cern.ch/bugs/?94383
+ - Do so as well in TupleToolWZJets
 
 !========================= DecayTreeTuple v3r22 2012-05-03 =========================
 

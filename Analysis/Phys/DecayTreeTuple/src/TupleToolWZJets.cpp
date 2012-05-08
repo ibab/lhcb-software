@@ -80,7 +80,8 @@ StatusCode TupleToolWZJets::fill( const LHCb::Particle *top,
   if ( msgLevel(MSG::DEBUG) ) debug() << "Recieved" << AddJets.size()  << "additional jets from the jet algorithm."<< endmsg;
   AddDecProducts(myParts);
   StatusCode scIso = m_IsoJetMaker->makeJets(myParts.begin(), myParts.end(), IsoJets);
-  if ( msgLevel(MSG::DEBUG) ) debug() << "Recieved " << AddJets.size()  << " isolation jet canditates from the jet algorithm."<< endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "Recieved " << AddJets.size()  
+                                      << " isolation jet canditates from the jet algorithm."<< endmsg;
 
   // match IsoJets to particles
   test &= StoreAdditionalJets(AddJets);
@@ -186,14 +187,6 @@ LHCb::Particles& TupleToolWZJets::GetParticles()
   std::map<int,int> particleCharges = boost::assign::map_list_of(-1,0)(0,0)(1,0); //counter
   addBasicParticles(particleCharges, myParts,inputParts);
 
-  //  for(LHCb::Particle::ConstVector::const_iterator parts = inputParts.begin(); parts != inputParts.end(); ++parts)
-  //    if (!isParticleInDecay(*parts))
-  //    {
-  //      if ( msgLevel(MSG::DEBUG) ) debug() << "Adding Particle of type " << (*parts)->particleID ()  << " to the collection."<< endmsg;
-  //      //      myParts.insert(new LHCb::Particle(**parts));
-  //      //      particleCharges[(*parts)->charge()]++;
-  //      addBasicParticles(particleCharges, myParts,parts)
-  //    }
   if (m_verbose)
   {
     (*m_tuple)->column( m_prefix+"_ChargedTracksUsed",particleCharges[-1]+particleCharges[+1]);
@@ -247,7 +240,9 @@ bool TupleToolWZJets::StoreAdditionalJets(const IJetMaker::Jets& AddJets)
         test &= WriteJetComparisonToTuple(*iJet,m_prefix+"_Jet"+ boost::lexical_cast<std::string>(numJets));
     }
     else
-      if ( msgLevel(MSG::DEBUG) ) debug() << "Jet number " << std::distance( (IJetMaker::Jets::const_iterator) AddJets.begin(),iJet)  << " failed selection."<< endmsg;
+      if ( msgLevel(MSG::DEBUG) ) debug() << "Jet number " 
+                                          << std::distance( (IJetMaker::Jets::const_iterator) AddJets.begin(),iJet)  
+                                          << " failed selection."<< endmsg;
   for(unsigned int i = numJets+1;i<=m_MaxJets;i++)// fill remaining jets slots in tuple with dummys
     test &= WriteJetComparisonToTuple(NULL,m_prefix+"_Jet"+ boost::lexical_cast<std::string>(i));
   test &= (*m_tuple)->column( m_prefix+"_NumJets", numJets);
@@ -272,10 +267,15 @@ bool TupleToolWZJets::MatchAndStoreIsoJets(const IJetMaker::Jets& IsoJets)
            (*daughter)  ->info(LHCb::Particle::LastGlobal + m_magic,-1000)&&
            (*m_LokiIsoJetFilter)(*iJet))
         {
+          const LHCb::ParticleProperty* ppp = m_ppSvc->find((LHCb::ParticleID)((*DecProduct)->particleID().abspid()));
+          if (0==ppp) {
+            err() << "Unknown PID " << (*DecProduct)->particleID().abspid() << endmsg ;
+            Exception("Unknown PID");
+          }
           if (m_IsoJetAbsID)
-            test &= WriteJetComparisonToTuple(*iJet,m_BaseName+"IsoJet"+m_ppSvc->find((LHCb::ParticleID)((*DecProduct)->particleID().abspid()))->name());
+            test &= WriteJetComparisonToTuple(*iJet,ppp->name());
           else
-            test &= WriteJetComparisonToTuple(*iJet,m_BaseName+"IsoJet"+m_ppSvc->find((LHCb::ParticleID)((*DecProduct)->particleID()))->name());
+            test &= WriteJetComparisonToTuple(*iJet,ppp->name());
           if ((*ThisIsoJetFound)&&msgLevel(MSG::WARNING))
             warning() << "Found more than one IsoJet!" << endmsg;
           *ThisIsoJetFound = true;
@@ -290,10 +290,15 @@ bool TupleToolWZJets::MatchAndStoreIsoJets(const IJetMaker::Jets& IsoJets)
          ++DecProduct)
       if (!*ThisIsoJetFound++)//write default value to tuple
       {
+        const LHCb::ParticleProperty* ppp = m_ppSvc->find((LHCb::ParticleID)((*DecProduct)->particleID().abspid()));
+        if (0==ppp) {
+          err() << "Unknown PID " << (*DecProduct)->particleID().abspid() << endmsg ;
+          Exception("Unknown PID");
+        }
         if (m_IsoJetAbsID)
-          test &= WriteJetComparisonToTuple(NULL,m_BaseName+"IsoJet"+m_ppSvc->find((LHCb::ParticleID)((*DecProduct)->particleID().abspid()))->name());
+          test &= WriteJetComparisonToTuple(NULL,m_BaseName+"IsoJet"+ppp->name());
         else
-          test &= WriteJetComparisonToTuple(NULL,m_BaseName+"IsoJet"+m_ppSvc->find((LHCb::ParticleID)((*DecProduct)->particleID()))->name());
+          test &= WriteJetComparisonToTuple(NULL,m_BaseName+"IsoJet"+ppp->name());
         if(msgLevel(MSG::DEBUG))
           debug() << "IsoJet missing!" << endmsg;
       }
