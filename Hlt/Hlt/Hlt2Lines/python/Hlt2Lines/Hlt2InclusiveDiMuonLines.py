@@ -1120,7 +1120,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
             postscale = self.postscale ,  ## postscale 
             # the main structure 
             algos     = [
-            #
+            PV3D()         ,  ## recontruct PV
             Muons          ,  ## get muons 
             Check_3mu      ,  ## require at least 3 muons
             DiMuons        ,  ## get dimuons
