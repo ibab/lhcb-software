@@ -63,6 +63,16 @@ RichSensDet::RichSensDet( const std::string& type   ,
   declareProperty("RichAviodDuplicateHitsActivate", m_RichAviodDuplicateHitsActivate);
   declareProperty("RichFlagDuplicateHitsactivate", m_RichFlagDuplicateHitsActivate);
   
+}
+
+//=============================================================================
+// Initialize, method of GiGaSensDetBase
+//=============================================================================
+StatusCode RichSensDet::initialize() {
+  StatusCode sc = GiGaSensDetBase::initialize();
+  if (sc.isFailure()) return sc;
+
+  
   IDataProviderSvc* detSvc;
   if ( svcLoc()->service( "DetectorDataSvc" , detSvc , true ) ) {
 
@@ -90,9 +100,19 @@ RichSensDet::RichSensDet( const std::string& type   ,
     ResetHpdMapInCurrentEvent();
     
     
+  } else {
+    return StatusCode::FAILURE;
   }
-  
-  
+
+  return sc;
+}
+
+//=============================================================================
+// Finalize, method of GiGaSensDetBase
+//=============================================================================
+StatusCode RichSensDet::finalize() {
+
+  return GiGaSensDetBase::finalize();
 
 }
 

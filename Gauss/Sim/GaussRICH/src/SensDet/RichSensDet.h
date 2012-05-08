@@ -43,6 +43,12 @@ public:
   /// destructor (virtual and protected)
   virtual ~RichSensDet();
 
+  /// initialize
+  StatusCode initialize();
+
+  /// finalize
+  StatusCode finalize();
+
   /** process the hit
    *  @param step     pointer to current Geant4 step
    *  @param history  pointert to touchable history

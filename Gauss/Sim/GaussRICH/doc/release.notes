@@ -3,26 +3,41 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
-2012-03-26 - Sajan Easo
+
+! 2012-05-08 - Gloria Corti
+ - Move content of constructor of SensDet/RichSensDet and 
+   RichAction/RichG4EventAction to method initialize that has been introduced.
+   This should work correctly as the initialize is called immediately after 
+   the constructor.
+   The move is needed as services where called in the constructor and this was
+   causing a crash when genConf was run to produce the configurable. This is
+   due to the fact that in Gaudi v23 GaudiSvc has been segmented and genConf
+   tries to load the services many times.
+   As the initialize method in now implemented the finalize delegating to the
+   base class has also been put in place.
+
+! 2012-03-26 - Sajan Easo
  - Added some histograms for occupancy studies.
-2012-01-27 - Sajan Easo
+! 2012-01-27 - Sajan Easo
 - Modif to reflect the minor changes in aerogel tile size for the analysis part. 
-2012-01-12 - Sajan Easo
+! 2012-01-12 - Sajan Easo
 - Addedd the modifications to use the new aerogel structure, essentially the paths to CO2 surrounding aerogel.
-!2011-11-20 - Sajan Easo
+! 2011-11-20 - Sajan Easo
  - Couple of adaptations to be compatible new RichDet in RichHpdProperties and GetMCRichHitsAlg
-!2011-11-11 - Sajan Easo
+! 2011-11-11 - Sajan Easo
 - Changed from using DeRichHPD to DeRichPD in RichHpdProperties for acquiring the QE, 
   in order to be  compatible with recent changes in RichDet
-!
+
 !========================= GaussRICH v11r6 2011-10-17 ========================
-!2011-10-14 - Sajan Easo
+! 2011-10-14 - Sajan Easo
 - Modified the RichAnalysis.opts to avoid some debug printout at initialization.
 !========================= GaussRICH v11r5 2011-09-20 ========================
-!2011-9-27 - Sajan Easo
+! 2011-9-27 - Sajan Easo
  - Set the hit smearing values in the options file named RichEfficiency.opts
-!2011-9-14 - Sajan Easo
+! 2011-9-14 - Sajan Easo
  - Fixed a typo in RichAnalysis.opts
+
+! 2012-05-08 - Gloria Corti
 
 !2011-9-02 - Sajan Easo
 - RICH inefficiency applied as default in the RichEfficiency.opts as part of

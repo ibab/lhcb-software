@@ -45,7 +45,12 @@ public:
   ///  destructor (virtual and protected)
   virtual ~RichG4EventAction();
 
+  /// initialize
+  StatusCode initialize();
   
+  /// finalize
+  StatusCode finalize();
+
   virtual void BeginOfEventAction ( const G4Event* );
   virtual void EndOfEventAction   ( const G4Event* );
   int RichG4CollectionID(int CollNum ) 

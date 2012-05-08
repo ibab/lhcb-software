@@ -126,6 +126,31 @@ RichG4EventAction::RichG4EventAction( const std::string& type   ,
   for (int ic=0; ic<m_NumRichColl; ++ic) {
     m_RichG4CollectionID.push_back(-1);
   }
+}
+
+//=============================================================================
+// Destructor
+//=============================================================================
+RichG4EventAction::~RichG4EventAction( ){
+
+  delPointer( m_RichG4HistoFillSet1 );
+  delPointer( m_RichG4HistoFillSet2 );
+  delPointer( m_RichG4HistoFillSet3 );
+  delPointer( m_RichG4HistoFillSet4 );
+  delPointer( m_RichG4HistoFillSet5 );
+  delPointer( m_RichG4HistoFillTimer );
+  delPointer( m_RichG4EventHitCounter );
+  delPointer( m_RichG4InputMon);
+}
+
+//=============================================================================
+// Initialize, method of GiGaSensDetBase
+//=============================================================================
+StatusCode RichG4EventAction::initialize() {
+  
+  StatusCode sc = GiGaEventActionBase::initialize();
+  if (sc.isFailure()) return sc;
+
   //  if(m_RichEventActionHistoFillActivateSet1) {
 
   m_RichG4HistoFillSet1 = new RichG4HistoFillSet1();
@@ -156,22 +181,18 @@ RichG4EventAction::RichG4EventAction( const std::string& type   ,
   
   m_RichG4InputMon = new RichG4InputMon();
 
+  return sc;
 }
 
 //=============================================================================
-// Destructor
+// Finalize, method of GiGaSensDetBase
 //=============================================================================
-RichG4EventAction::~RichG4EventAction( ){
+StatusCode RichG4EventAction::finalize() {
 
-  delPointer( m_RichG4HistoFillSet1 );
-  delPointer( m_RichG4HistoFillSet2 );
-  delPointer( m_RichG4HistoFillSet3 );
-  delPointer( m_RichG4HistoFillSet4 );
-  delPointer( m_RichG4HistoFillSet5 );
-  delPointer( m_RichG4HistoFillTimer );
-  delPointer( m_RichG4EventHitCounter );
-  delPointer( m_RichG4InputMon);
+  return GiGaEventActionBase::finalize();
+
 }
+
 
 //=============================================================================
 // BeginOfEventAction (G4)
