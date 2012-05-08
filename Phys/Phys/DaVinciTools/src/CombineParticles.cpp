@@ -718,7 +718,8 @@ StatusCode CombineParticles::decodeAllCuts()
       {
         sc = factory->get ( imoni->second , item.m_monitor , preambulo() ) ;
         if ( sc.isFailure() )
-        { return Error ( "Unable to  decode the monitor for '" + ic->first + "':" + imoni->second , sc ) ; }
+        { return Error ( "Unable to  decode the monitor for '" + 
+                         ic->first + "':" + imoni->second , sc ) ; }
         item.m_moni = true ;
         debug () << "The decoded monitor for '"+ ( ic->first )
           + "' is: " << item.m_moni << endreq ;
@@ -803,20 +804,20 @@ StatusCode CombineParticles::initialize ()  // standard initialization
 // ============================================================================
 // the standard execution      of the algorithm
 // ============================================================================
-StatusCode CombineParticles::execute    ()  // standard execution
+StatusCode CombineParticles::execute()  // standard execution
 {
   setFilterPassed ( false ) ;
 
   if ( m_to_be_updated1 )
   {
-    StatusCode sc = updateMajor() ;
+    const StatusCode sc = updateMajor() ;
     if ( sc.isFailure() )
     { return Error ( "Error from updateMajor"  , sc ) ; }  // RETURN
   }
 
   if ( m_to_be_updated2 )
   {
-    StatusCode sc = updateHistos () ;
+    const StatusCode sc = updateHistos () ;
     if ( sc.isFailure() )
     { return Error ( "Error from updateHistos" , sc ) ; }  // RETURN
   }
@@ -909,7 +910,7 @@ StatusCode CombineParticles::execute    ()  // standard execution
     // create the actual object for looping
     Combiner loop ;
 
-    // fill it with the input data:
+    // fill it with the input data
     const Decays::Decay::Items& items = idecay->children() ;
     for ( Decays::Decay::Items::const_iterator child = items.begin() ;
           items.end() != child ; ++child ) { loop.add ( daughters ( child->name() ) ) ; }
@@ -919,7 +920,8 @@ StatusCode CombineParticles::execute    ()  // standard execution
     { counter ( "# max size" + idecay->toString() ) += loop.size() ; }
     if ( 0 < m_maxComb && m_maxComb <= loop.size() )
     {
-      Warning ( "Combiner size exceeds the limit for " + idecay->toString() ).ignore() ;
+      Warning ( "MaxCombinations exceeded for '" + idecay->toString() + "'",
+                StatusCode::FAILURE, 0 ).ignore() ;
       if ( m_maxCombStop ) { problem = true ; continue ; }        // CONTINUE
     }
 
@@ -929,8 +931,8 @@ StatusCode CombineParticles::execute    ()  // standard execution
 
       if ( 0 < m_maxCand && m_maxCand <= nGood )
       {
-        Warning ( "Too many saved candidates for " + idecay->toString(),
-                  StatusCode::SUCCESS, 0 ).ignore() ;
+        Warning ( "MaxCandidates exceeded for '" + idecay->toString() + "'",
+                  StatusCode::FAILURE, 0 ).ignore() ;
         if ( m_maxCandStop ) { problem = true ; break ; }         //  BREAK
       }
 
@@ -1034,9 +1036,11 @@ StatusCode CombineParticles::execute    ()  // standard execution
   // the final decision
   setFilterPassed ( 0 != nTotal && !problem ) ;
 
+  // Finally, if configured fire an incident
   if ( problem )
   {
-    debug() <<  "A problem with combinatorics has occured"  << endmsg;
+    if ( msgLevel(MSG::DEBUG) )
+      debug() <<  "A problem with combinatorics has occured"  << endmsg;
     if ( !m_stopIncidentName.empty() )
     { incSvc()->fireIncident( Incident ( name() , m_stopIncidentName ) ) ; }
   }
