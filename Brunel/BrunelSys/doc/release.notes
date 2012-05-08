@@ -3,6 +3,18 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v42r3p2>2012-05-09 Brunel v42r3p2</A></H1><PRE>
+This version uses projects LCG 62b, Gaudi v23r2, LHCb v34r3, Lbcom v12r3,
+ Rec v13r3 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+Production version for 2012 data taking and simulation (v42r3b branch)
+
+- Bug fixes
+  . Bug #95645: Fixed small memory leak in TrackITOverlapMonitor
+    (TrackMonitors v1r38p1)
+  . Bug #94407: Changed to dynamic array (vector) for the size of the LHCbIDs in
+    the TrackBestTrackCreator internal track container (TrackUtils v1r47)
+
 </PRE><H1><A NAME=v42r3p1>2012-05-08 Brunel v42r3p1</A></H1><PRE>
 This version uses projects LCG 62b, Gaudi v23r2, LHCb v34r3, Lbcom v12r3,
  Rec v13r3 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
