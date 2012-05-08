@@ -631,9 +631,12 @@ std::string DecayFinder::ParticleMatcher::describe( void )
     result += "## MUST NOT COMPILE ##";
     break;
   case id:
-    result += m_ppSvc->find( LHCb::ParticleID( parms.stdHepID ) )->particle();
-    // result += m_ppSvc->findByStdHepID(parms.stdHepID)->particle();
-    break;
+    {  
+      const LHCb::ParticleProperty* ppp = m_ppSvc->find( LHCb::ParticleID( parms.stdHepID ) );
+      if (0==ppp){result += "## UNKNOWN Particle ##";}
+      else{result += ppp->particle();};
+      break;
+    }
   case quark:
     result += "<X";
     switch( parms.quarks.q1 ) {

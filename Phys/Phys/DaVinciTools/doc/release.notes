@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2012-05-08 - Patrick Koppenburg
+ - https://savannah.cern.ch/bugs/?94383 : Protect against crash.
+
 ! 2012-05-07 - Chris Jones
  - Update CombineParticles to not save candidates in the MaxCandidate or
    MaxCombination limit is hit.
