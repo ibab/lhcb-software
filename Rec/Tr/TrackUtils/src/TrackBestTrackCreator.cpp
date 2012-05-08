@@ -40,7 +40,8 @@ namespace  {
     // ordered by detector type. for now, let's just create containers
   public:
     //typedef Range_<LHCb::Track::LHCbIDContainer> LHCbIDs ;
-    typedef StaticArray<LHCb::LHCbID,64> LHCbIDs ;
+    //typedef StaticArray<LHCb::LHCbID,128> LHCbIDs ;
+    typedef std::vector<LHCb::LHCbID> LHCbIDs;
     LHCbIDs veloIds, veloRIds,veloPhiIds ;
     LHCbIDs TTIds ;
     LHCbIDs TIds ;
@@ -56,24 +57,27 @@ namespace  {
     TrackData() : m_track(0), m_owntrack(false) {}
     TrackData(LHCb::Track* atrack, bool owntrack=true)
       : m_track(atrack),
-	m_weight(0), 
-	m_qOverP(atrack->firstState().qOverP()),
-	m_owntrack(owntrack)
+        m_weight(0), 
+        m_qOverP(atrack->firstState().qOverP()),
+        m_owntrack(owntrack)
     {
+      veloIds.reserve(48); veloRIds.reserve(24); veloPhiIds.reserve(24);
+      TTIds.reserve(6);
+      TIds.reserve(24);
       const LHCb::Track::LHCbIDContainer& ids = atrack->lhcbIDs() ;
       for( LHCb::Track::LHCbIDContainer::const_iterator id = ids.begin() ;
-	   id != ids.end(); ++id ) {
-	switch( id->detectorType() ) {
-	case LHCb::LHCbID::Velo: 
-	  veloIds.push_back(*id) ; 
-	  if( id->isVeloR() ) veloRIds.push_back(*id) ;
-	  else veloPhiIds.push_back(*id) ;
-	  break ;
-	case LHCb::LHCbID::TT: TTIds.push_back(*id) ; break ;
-	case LHCb::LHCbID::OT: 
-	case LHCb::LHCbID::IT: TIds.push_back(*id) ; break ;
-	default: break ;
-	}
+           id != ids.end(); ++id ) {
+        switch( id->detectorType() ) {
+        case LHCb::LHCbID::Velo: 
+          veloIds.push_back(*id) ; 
+          if( id->isVeloR() ) veloRIds.push_back(*id) ;
+          else veloPhiIds.push_back(*id) ;
+          break ;
+        case LHCb::LHCbID::TT: TTIds.push_back(*id) ; break ;
+        case LHCb::LHCbID::OT: 
+        case LHCb::LHCbID::IT: TIds.push_back(*id) ; break ;
+        default: break ;
+        }
       }
       // compute a weight for sorting.
       LHCb::HitPattern hp(ids) ;
@@ -86,7 +90,7 @@ namespace  {
       m_weight += 100*hp.numTLayers() ;
       m_weight += 100*( (hp.veloRA()|hp.veloRC()) & (hp.veloPhiA()|hp.veloPhiC()) ).count() ;
       // only finally sort by total number of hits
-      m_weight += ids.size() ;
+      m_weight += ids.size() ;      
     }
 
     // destructor
@@ -261,8 +265,7 @@ namespace {
 	++first2;
       else {
 	++first1;
-	++first2;
-	++rc ;
+	++first2;	++rc ;
       }
     return rc ;
   }
@@ -326,17 +329,18 @@ StatusCode TrackBestTrackCreator::execute()
   BOOST_FOREACH( const std::string& location, m_tracksInContainers) {
     LHCb::Track::Range tracks = get<LHCb::Track::Range>(location);
     alltracks.reserve( alltracks.size() + tracks.size()) ;
+
     BOOST_FOREACH( const LHCb::Track* itr, tracks) {
       // clone the track
       LHCb::Track* track = itr->clone() ;
       StatusCode sc = StatusCode::SUCCESS ;
       if( m_initTrackStates )
-	sc = m_stateinittool->fit(*track,true);
+        sc = m_stateinittool->fit(*track,true);
       if( sc.isSuccess() ) 
-	alltracks.push_back(new TrackData(track)) ;
+        alltracks.push_back(new TrackData(track)) ;
       else {
-	delete track ;
-	Warning("TrackStateInitTool fit failed", sc, 0 ).ignore() ;
+        delete track ;
+        Warning("TrackStateInitTool fit failed", sc, 0 ).ignore() ;
       }
     }
   }
@@ -356,6 +360,7 @@ StatusCode TrackBestTrackCreator::execute()
 	 jt != selectedtracks.end() &&!found; ++jt) {
       // rely on the fact that tracks were sorted Long, Downstream, Upstream, Velo, T
       // note: 'clone' can also mean that either of them has no hits in this region
+
       const LHCb::Track* itrack = (*it)->track() ;
       const LHCb::Track* jtrack = (*jt)->track() ;
       int itype = itrack->type() ;

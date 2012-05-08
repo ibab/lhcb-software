@@ -4,6 +4,10 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-05-08 - Jeroen Van Tilburg
+ - TrackBestTrackCreator: Changed to dynamic array (vector) for the size of the
+  LHCbIDs in the internal track container.
+
 !========================= TrackUtils v1r46 2012-05-02 =========================
 ! 2012-04-29 - Wouter Hulsbergen
  - changes in TrackBestTrackCreator: tightened chi2 cut to 3 and removed dqop cut
