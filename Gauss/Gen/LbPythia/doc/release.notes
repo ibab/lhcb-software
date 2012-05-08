@@ -4,6 +4,9 @@
 ! Purpose     : Package for Pythia 6 in Gauss
 !-----------------------------------------------------------------------------
 
+! 2012-05-08 - Gloria Corti
+ - Fix for new version of boost as taken from Gaudi v23r2
+
 !========================= LbPythia v10r3 2011-11-11 =========================
 ! 2011-12-20 - Patrick Robbe
  - Pysubs.cpp: fix bug in accessing the KFIN Pythia common block

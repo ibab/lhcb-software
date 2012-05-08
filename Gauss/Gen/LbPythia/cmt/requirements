@@ -19,6 +19,7 @@ include_dirs  $(LBPYTHIAROOT)
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================
 use           Generators        v*          Gen
+use           Boost             v*          LCG_Interfaces -no_auto_imports
 
 #============================================================================
 # Linker and Component library building rule
@@ -37,3 +38,6 @@ apply_pattern library_stamps    library=LbPythiaLib
 #============================================================================
 apply_pattern disable_package_on platform=target-winxp
 
+private
+macro_append Boost_linkopts " $(Boost_linkopts_filesystem) $(Boost_linkopts_system) "
+end_private
