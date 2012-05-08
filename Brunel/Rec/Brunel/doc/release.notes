@@ -7,6 +7,9 @@ Purpose: LHCb reconstruction program
   . Reduce the chi^2 range from 0-10 to 0-3, to adapt to tracking changes. Reduce
     the 'tight' track monitoring selection to chi^2 < 2 (RichRecQC)
 
+- Changes to tests
+  . Add a test for bug #94407 in brunel.2012-crashes
+
 </PRE><H1><A NAME=v42r3p2>2012-05-09 Brunel v42r3p2</A></H1><PRE>
 This version uses projects LCG 62b, Gaudi v23r2, LHCb v34r3, Lbcom v12r3,
  Rec v13r3 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*

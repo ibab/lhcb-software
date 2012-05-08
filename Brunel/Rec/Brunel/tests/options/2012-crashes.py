@@ -13,4 +13,5 @@ from GaudiConf.IOHelper import IOHelper
 IOHelper("MDF").inputFiles( [
   "DATAFILE='root:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/testFiles/111473_0000000110_evt11603.raw?svcClass=default'"
 , "DATAFILE='root:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/testFiles/111702_0000000001_evt110102.raw?svcClass=default'"
-, "DATAFILE='root:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/testFiles/111800_0000000026_evt16533.raw?svcClass=default'" ] )
+, "DATAFILE='root:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/testFiles/111800_0000000026_evt16533.raw?svcClass=default'"
+, "DATAFILE='root:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/testFiles/114752_0000000076_evt377.raw?svcClass=default'" ] )
