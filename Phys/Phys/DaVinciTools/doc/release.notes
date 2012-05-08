@@ -9,7 +9,7 @@
  - https://savannah.cern.ch/bugs/?94383 : Protect against crash.
 
 ! 2012-05-07 - Chris Jones
- - Update CombineParticles to not save candidates in the MaxCandidate or
+ - Update CombineParticles to not save candidates if the MaxCandidate or
    MaxCombination limit is hit.
 
 !========================= DaVinciTools v22r16 2012-05-03 =========================
