@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-05-08 - Wouter Hulsbergen
+ - Fixed small memory leak in TrackITOverlapMonitor
+
 !========================= TrackMonitors v1r38 2012-03-27 =========================
 ! 2012-03-19 - Patrick Koppenburg
  - Reduce range of PV chi2 plot

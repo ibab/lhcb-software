@@ -132,7 +132,13 @@ TrackITOverlapMonitor::TrackITOverlapMonitor( const std::string& name,
   declareProperty("MaxTolY", m_maxTolY = 50.0 ) ;
 }
 
-TrackITOverlapMonitor::~TrackITOverlapMonitor() {}
+TrackITOverlapMonitor::~TrackITOverlapMonitor()
+{
+  BOOST_FOREACH( DeltaHistogrammer* h, m_histograms ) {
+    delete h ;
+  }
+  m_histograms.clear() ;
+}
 
 
 StatusCode TrackITOverlapMonitor::initialize() {
