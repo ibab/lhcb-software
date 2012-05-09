@@ -3,6 +3,11 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
+
+! 2012-05-09 - Patrick Koppenburg
+ - Use Rate limiter from cond DB in No Bias line https://savannah.cern.ch/bugs/?94262
+
+
 ! 2012-05-02 - Stefania Vecchi
  - removed ReFitPV=true in python/StrippingSelections/StrippingBd2DstarMuNu.py to match the time requirements
 !========================= StrippingSelections v3r13 2012-04-27 =========================
