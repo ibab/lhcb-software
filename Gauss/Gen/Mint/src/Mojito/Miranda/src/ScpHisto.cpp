@@ -89,7 +89,7 @@ void ScpHisto::SaveAs(const char* name, const char* Options)
 	pulls->GetYaxis()->SetTitle("");
 	pulls->GetYaxis()->SetLabelSize(0.1);
 	pulls->GetYaxis()->SetRangeUser(-5,5);
-//	pulls->SetMarkerStyle(15);
+	pulls->SetMarkerStyle(11);
 //	pulls->Draw("B");
 	pulls->Draw(Options);
 	c1->SaveAs(name);
