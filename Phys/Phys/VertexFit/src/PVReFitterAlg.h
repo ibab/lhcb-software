@@ -94,7 +94,6 @@ private:
   std::string m_pvReFitterType;
   bool m_useIPVOfflineTool;
   bool m_useIPVReFitter;
-  std::string m_particleInputLocation;
   std::vector<std::string> m_particleInputLocations;
   std::string m_PVInputLocation;
   std::string m_particle2VertexRelationsOutputLocation;

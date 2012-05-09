@@ -39,7 +39,6 @@ DECLARE_ALGORITHM_FACTORY( PVReFitterAlg )
       m_pvReFitterType("AdaptivePVReFitter"),
       m_useIPVOfflineTool(false),
       m_useIPVReFitter(true),
-      m_particleInputLocation(""),
       m_particleInputLocations(),
       m_PVInputLocation(""),
       m_particle2VertexRelationsOutputLocation(""),
@@ -50,7 +49,6 @@ DECLARE_ALGORITHM_FACTORY( PVReFitterAlg )
   declareProperty("IPVReFitter",    m_pvReFitterType);
   declareProperty("UseIPVOfflineTool", m_useIPVOfflineTool);
   declareProperty("UseIPVReFitter",    m_useIPVReFitter);
-  declareProperty("ParticleInputLocation",  m_particleInputLocation);
   declareProperty("ParticleInputLocations",  m_particleInputLocations);
   declareProperty("PrimaryVertexInputLocation",  m_PVInputLocation);
 }
@@ -70,26 +68,6 @@ StatusCode PVReFitterAlg::initialize()
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
-  if ( !m_particleInputLocations.empty() &&
-       !m_particleInputLocation.empty()  )
-  {
-    return Error("You have set both ParticleInputLocation AND ParticleInputLocations properties");
-  }
-
-  if ( m_particleInputLocations.empty() )
-  {
-    if ( m_particleInputLocation.empty() )
-    {
-      return Error("You have to set either ParticleInputLocation OR ParticleInputLocations properties");
-    }
-    else
-    {
-      Warning("ParticleInputLocation is deprecated. Please use ParticleInputLocations list.",
-              StatusCode::SUCCESS).ignore();
-    }
-    m_particleInputLocations.push_back(m_particleInputLocation);
-  }
-
   if (m_useIPVOfflineTool)
   {
     m_pvOfflineTool = tool<IPVOfflineTool> (m_pvOfflinetoolType, this);
@@ -104,7 +82,8 @@ StatusCode PVReFitterAlg::initialize()
 
   if ( !m_useIPVOfflineTool && !m_useIPVReFitter )
   {
-    return Error("At least one of UseIPVOfflineTool and UseIPVReFitter must be true!", StatusCode::FAILURE);
+    return Error("At least one of UseIPVOfflineTool and UseIPVReFitter must be true!",
+                 StatusCode::FAILURE);
   }
 
   m_onOfflineTool = tool<IOnOffline>("OnOfflineTool", this);
@@ -116,7 +95,7 @@ StatusCode PVReFitterAlg::initialize()
 
   if (m_PVInputLocation.empty())
   {
-    m_PVInputLocation=m_onOfflineTool->primaryVertexLocation();
+    m_PVInputLocation = m_onOfflineTool->primaryVertexLocation();
   }
 
   return sc;

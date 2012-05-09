@@ -4,6 +4,10 @@
 ! Responsible : Yuehong Xie
 !===========================================================================
 
+! 2012-05-09 - Chris Jones
+ - Remove obsolete "ParticleInputLocation" property from PVReFitterAlg. 
+   Use "ParticleInputLocations" instead
+
 !========================= VertexFit v6r9 2012-05-03 =========================
 
 ! 2012-05-03 - Chris Jones
