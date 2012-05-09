@@ -4,6 +4,10 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+
+! 2012-05-09 - Jaap Panman
+ - Correct DB interpretation of random lumi rate for 2012 data
+
 !========================= LumiAlgs v7r6 2012-04-13 =========================
 ! 2012-03-29 - Rosen Matev
  - Added event time ordering and output compression (bz2) capabilities

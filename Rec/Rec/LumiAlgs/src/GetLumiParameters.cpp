@@ -389,8 +389,14 @@ StatusCode GetLumiParameters::processDB() {
             << "HLT rate : " << m_rateHLT << endmsg ;
   }
   
-  // HLT rate can never be greater than the ODIN rate (ODIN in kHz)
-  m_rateBB = std::min( m_rateHLT, m_odinTotalRate*1000. ) * m_odinFraction;
+  // HLT rate can never be greater than the ODIN rate (ODIN in kHz), but zero prescale means all
+  if ( m_rateHLT > 0 ) {
+    m_rateBB = std::min( m_rateHLT, m_odinTotalRate*1000. ) * m_odinFraction;
+  }
+  else {
+    m_rateBB = m_odinTotalRate * 1000. * m_odinFraction;
+  }
+  
   if (msgLevel(MSG::DEBUG)) {
     debug() << "Random BB rate: " << m_rateBB << endmsg;
     debug() << "B1NBunches : " << m_B1NBunches << " "

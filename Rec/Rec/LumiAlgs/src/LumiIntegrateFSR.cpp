@@ -148,7 +148,7 @@ StatusCode LumiIntegrateFSR::initialize() {
 //=============================================================================
 StatusCode LumiIntegrateFSR::execute() {
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
+  // if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
   // use tool to count events for this file
   m_integratorTool->countEvents( );
 
@@ -441,9 +441,9 @@ LHCb::TimeSpanFSR* LumiIntegrateFSR::trigger_event( std::string primaryFileRecor
     unsigned int toolTCK =  m_databaseTool->getTCK();
     double toolOdinFraction = m_databaseTool->OdinFraction();
     double toolRandomRate = m_databaseTool->HLTRandomRate();
-    debug() << "TCK:           " << toolTCK << endmsg;
-    debug() << "OdinFraction:  " << toolOdinFraction << endmsg;
-    debug() << "Randomrate:    " << toolRandomRate << endmsg;
+    debug() << "TCK:            " << toolTCK << endmsg;
+    debug() << "OdinFraction:   " << toolOdinFraction << endmsg;
+    debug() << "HLT Randomrate: " << toolRandomRate << endmsg;
   }
 
   // get the database parameters
@@ -459,11 +459,11 @@ LHCb::TimeSpanFSR* LumiIntegrateFSR::trigger_event( std::string primaryFileRecor
   m_calibScaleError = m_databaseTool->CalibScaleError();
 
   if ( msgLevel(MSG::DEBUG) ) {
-    debug() << "bunches:       " << m_calibCollidingBunches << endmsg;
-    debug() << "LHCfrequency:  " << m_calibRevolutionFrequency << endmsg;
-    debug() << "BB RandomRate: " << m_calibRandomFrequencyBB << endmsg;
-    debug() << "absolutescale: " << m_calibScale << endmsg;
-    debug() << "scale error:   " << m_calibScaleError << endmsg;
+    debug() << "bunches:        " << m_calibCollidingBunches << endmsg;
+    debug() << "LHCfrequency:   " << m_calibRevolutionFrequency << endmsg;
+    debug() << "BB RandomRate:  " << m_calibRandomFrequencyBB << endmsg;
+    debug() << "absolutescale:  " << m_calibScale << endmsg;
+    debug() << "scale error:    " << m_calibScaleError << endmsg;
   }
 
   // flag correct data
