@@ -428,8 +428,8 @@ double ScpBinning::NormDiff_ofBin(unsigned int i) const{
 
 double ScpBinning::Err_ofBin(unsigned int i) const{
   if(i > _boxSets.size()) return -9999;
-  ndata = _boxSets[i].nData();
-  ndataCC = _boxSets[i].nMC();
+  int ndata = _boxSets[i].nData();
+  int ndataCC = _boxSets[i].nMC();
   double A = sqrt(sqrt(ndata)/ndata) + sqrt(sqrt(ndataCC)/ndataCC));
   return A;
 }
