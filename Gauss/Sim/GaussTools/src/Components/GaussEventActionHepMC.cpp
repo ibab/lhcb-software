@@ -48,7 +48,7 @@ StatusCode GaussEventActionHepMC::initialize()
   StatusCode sc = GiGaEventActionBase::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by base class
 
-  m_ppSvc = svc<IParticlePropertySvc> ( "ParticlePropertySvc", true );
+  m_ppSvc = svc<IParticlePropertySvc> ( "Gaudi::ParticlePropertySvc", true );
 
   return StatusCode::SUCCESS;
 

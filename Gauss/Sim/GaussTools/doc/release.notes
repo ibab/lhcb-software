@@ -4,6 +4,10 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+! 2012-05-09 - Gloria Corti
+ - Fix run time problem with finding of ParticlePropertySvc that in Gaudi
+   v23 is in the Gaudi:: namespace. 
+
 !======================== GaussTools v16r0 2011-07-24 ========================
 ! 2011-06-19 - Patrick Robbe
  - src/Components/RadLengthColl.cpp: fix compilation warning 

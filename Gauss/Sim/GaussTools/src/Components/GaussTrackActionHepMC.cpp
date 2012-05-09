@@ -107,7 +107,7 @@ StatusCode GaussTrackActionHepMC::initialize ()
   if( sc.isFailure() ) 
   { return Error("Could not initialize the base class!", sc ); }
 
-  m_ppSvc = svc<IParticlePropertySvc> ( "ParticlePropertySvc", true );
+  m_ppSvc = svc<IParticlePropertySvc> ( "Gaudi::ParticlePropertySvc", true );
 
   return Print("Iinitialized successfully" , 
                StatusCode::SUCCESS         , MSG::VERBOSE );
