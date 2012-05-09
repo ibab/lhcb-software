@@ -244,45 +244,14 @@ class Moore(LHCbConfigurableUser):
 
         from Configurables import CondDB
         conddb = CondDB()
+        conddb.Tags = tag
         # hack to allow us to chance connectionstrings...
         conddb.UseOracle = True
         conddb.DisableLFC = True
-        # Set alternative connection strings and tags
-        # if simulation is False, we use DDDB, LHCBCOND and ONLINE
-        #                  True          DDDB, SIMCOND
-        # (see Det/DetCond's configurable... )
-        dbPartitions = { False : [ "DDDB", "LHCBCOND", "ONLINE" ]
-                       , True :  [ "DDDB", "SIMCOND" ]
-                       }
-        for part in dbPartitions[ self.getProp('Simulation') ] :
-            if tag[part] is 'default' : raise KeyError('must specify an explicit %s tag'%part)
-            conddb.PartitionConnectionString[part] = "sqlite_file:%(dir)s/%(part)s_%(tag)s.db/%(part)s" % {"dir":  baseloc,
-                                                                                                           "part": part,
-                                                                                                           "tag":  tag[part]}
-            # always use HEAD -- blindly trust the snapshot to be
-            # right (this is faster, but less safe)
-            # conddb.Tags[part] = 'HEAD'
-            conddb.Tags[part] = tag[part]
-
-        # Set the location of the Online conditions
-        from Configurables import MagneticFieldSvc
-        MagneticFieldSvc().UseSetCurrent = True
-
-        conddb.IgnoreHeartBeat = self.getProp('IgnoreDBHeartBeat') 
-
-        if self.getProp('EnableRunChangeHandler') : 
-            online_xml = '%s/%s/online_%%d.xml' % (baseloc, self.getProp('PartitionName')[0:4] )
-            from Configurables import RunChangeHandlerSvc
-            rch = RunChangeHandlerSvc()
-            rch.Conditions = { "Conditions/Online/LHCb/Magnet/Set"        : online_xml
-                             , "Conditions/Online/Velo/MotionSystem"      : online_xml
-                             , "Conditions/Online/LHCb/Lumi/LumiSettings" : online_xml
-                             , "Conditions/Online/LHCb/RunParameters"     : online_xml
-                             , "Conditions/Online/Rich1/R1HltGasParameters" : online_xml
-                             , "Conditions/Online/Rich2/R2HltGasParameters" : online_xml
-                             }
-            ApplicationMgr().ExtSvc.append(rch)
-
+        conddb.setProp('IgnoreHeartBeat',self.getProp('IgnoreDBHeartBeat')  )
+        self.setOtherProps( conddb, [ 'UseDBSnapshot',
+                                   'DBSnapshotDirectory',
+                                   'PartitionName' ])
 
     def _configureInput(self):
         files = self.getProp('inputFiles')
