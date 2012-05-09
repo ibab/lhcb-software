@@ -107,9 +107,9 @@ int ScpBinning::createBinning(IDalitzEventList* events
 
   ScpBoxSet boxes = splitBoxes(events, maxPerBin);
 
-  double norm = this->normFactor();
-  lessByScpBoxScp sorter;
-  sorter.SetNorm(norm);
+//  double norm = this->normFactor();
+  lessByScpBoxData sorter;
+//  sorter.SetNorm(norm);
   sort(boxes.begin(), boxes.end(), sorter);
 
 //  lessByScpBoxData sorter;
@@ -158,7 +158,7 @@ int ScpBinning::mergeBoxes(ScpBoxSet& boxes, int minPerBin){
   ScpBoxSet boxSet;
   for(unsigned int i=0; i < boxes.size(); i++){
 		boxSet.add(boxes[i]);
-		if(boxSet.nData() >= minPerBin){
+		if(boxSet.nData() >= minPerBin || boxSet.nMC() >= minPerBin ){
 		  _boxSets.push_back(boxSet);
 		  boxSet.clear();
 		}
@@ -207,7 +207,7 @@ ScpBoxSet ScpBinning::splitBoxes(IDalitzEventList* events
     ScpBoxSet newBoxes;
     needToSplitMore=false;
     for(unsigned int i=0; i < boxes.size(); i++){
-      if( boxes[i].nData() > maxPerBin ){
+      if( (boxes[i].nData() + boxes[i].nMC() ) > maxPerBin ){
     	  needToSplitMore=true;
     	  newBoxes.add(boxes[i].split());
       }
@@ -936,7 +936,7 @@ bool lessByScpBoxSetScp::operator()(const ScpBoxSet& a, const ScpBoxSet& b) cons
 
 bool lessByScpBoxData::operator()(const ScpBox& a, const ScpBox& b) const{
 
-  return a.nData() < b.nData();
+  return (a.nData() + a.nMC()) < (b.nData() + b.nMC());
 }
 
 bool lessByScpBoxScp::operator()(const ScpBox& a, const ScpBox& b) const{
