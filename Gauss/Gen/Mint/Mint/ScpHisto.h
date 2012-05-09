@@ -27,7 +27,7 @@ public:
 	int Diff_ofbin(unsigned int i);
 	void MakeGraph();
 	int LargestDiff();
-	void SaveGraphPDF(const char* name, const char* Options = "AP");
+	void SaveAs(const char* name, const char* Options = "AP");
 	void Write(const char* fileName, const char* name);
 	void MakeNormGraph();
 	double NormDiff_ofbin(unsigned int i);

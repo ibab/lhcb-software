@@ -72,7 +72,7 @@ void ScpHisto::MakeNormGraph()
 	MakeNormPull();
 }
 
-void ScpHisto::SaveGraphPDF(const char* name, const char* Options)
+void ScpHisto::SaveAs(const char* name, const char* Options)
 {
 	TCanvas * c1 = new TCanvas("c1","SCP Plots");
 	TPad*    upperPad = new TPad("upperPad", "upperPad",   .005, .2525, .995, .995);
