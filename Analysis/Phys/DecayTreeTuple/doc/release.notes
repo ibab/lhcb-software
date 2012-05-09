@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2012-05-09 - Rob Lambert
+ - throw NameError in addBranches if the branch name contains whitespace
+ - bug #94449
+
 !========================= DecayTreeTuple v3r22p1 2012-05-08 =========================
 
 ! 2012-05-08 - Patrick Koppenburg

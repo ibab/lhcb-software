@@ -138,12 +138,16 @@ def addBranches(self, branches):
     raise TypeError, ("you're trying to add branches to something which doesn't support branching, "+str(type(self)))
   if type(branches) is not type({}):
     raise TypeError, ("expected a dictionary of branches, got a "+str(type(branches))+" instead")
-
+  
   if self.Branches is None:
     self.Branches={}
   
   instances={}
   for branch in branches:
+    #check for whitespace
+    for char in ' \t\r\n':
+      if char in branch:
+        raise NameError, ("You have tried to add a branch named '"+branch+"',which contains whitespace. This is not permitted.")
     self.Branches[branch]=branches[branch]
     self.addTool(TupleToolDecay,branch)
     exec('instances[branch]=self.'+branch)
