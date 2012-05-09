@@ -10,7 +10,7 @@ from Gaudi.Configuration import *
 from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPions, BiKalmanFittedDownPions, BiKalmanFittedProtons, BiKalmanFittedDownProtons
 from Configurables import CombineParticles
 from HltLine.HltLine import bindMembers, Hlt2Member
-
+from HltTracking.HltPVs import PV3D
 __all__ = ( 'LambdaLLTrackFitted', 'LambdaDDTrackFitted' )
 
 ##################################################
@@ -20,7 +20,7 @@ Hlt2SharedLambdaLLTrackFitted = Hlt2Member( CombineParticles, "LambdaLLTrackFitt
                                             , DaughtersCuts = { "pi+" : "(TRCHI2DOF<4)& (MIPCHI2DV(PRIMARY)>36)",
                                                                 "p+"  : "(TRCHI2DOF<4)& (MIPCHI2DV(PRIMARY)>36)"} 
                                             , CombinationCut = "(ADAMASS('Lambda0')<50*MeV)"
-                                            , MotherCut = "(ADMASS('Lambda0')<20*MeV) & (VFASPF(VCHI2PDOF)<30) & (BPVLTIME() > 2.0*ps) "
+                                            , MotherCut = "(ADMASS('Lambda0')<20*MeV) & (VFASPF(VCHI2PDOF)<30) & (BPVLTIME('PropertimeFitter/properTime:PUBLIC') > 2.0*ps) "
                                             , Inputs = [ BiKalmanFittedPions, BiKalmanFittedProtons ]
                                             )
 
@@ -35,7 +35,7 @@ Hlt2SharedLambdaDDTrackFitted = Hlt2Member( CombineParticles, "LambdaDDTrackFitt
                                             , Inputs = [ BiKalmanFittedDownPions, BiKalmanFittedDownProtons ]
                                             )
 
-LambdaLLTrackFitted = bindMembers( "Shared", [ BiKalmanFittedPions, BiKalmanFittedProtons, Hlt2SharedLambdaLLTrackFitted ] )
-LambdaDDTrackFitted = bindMembers( "Shared", [ BiKalmanFittedDownPions, BiKalmanFittedDownProtons, Hlt2SharedLambdaDDTrackFitted ] )
+LambdaLLTrackFitted = bindMembers( "Shared", [ PV3D(), BiKalmanFittedPions, BiKalmanFittedProtons, Hlt2SharedLambdaLLTrackFitted ] )
+LambdaDDTrackFitted = bindMembers( "Shared", [ PV3D(), BiKalmanFittedDownPions, BiKalmanFittedDownProtons, Hlt2SharedLambdaDDTrackFitted ] )
 
 
