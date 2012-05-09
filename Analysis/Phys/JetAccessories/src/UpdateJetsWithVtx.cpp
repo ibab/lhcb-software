@@ -43,6 +43,7 @@ protected:
   { 
     declareProperty ( "InputJetsLocation"   ,  m_inputJetsLocation   , "Location of jets to be updated") ;
     declareProperty ( "InputVertexLocation" ,  m_inputVertexLocation , "Location of vertices to be updated") ; 
+    declareProperty ( "UseJetVertex"        ,  m_useBaseVertex = false  , "Compute the weight wrt. the base vertex of the jet") ; 
     // declareProperty ( "UpdatedJetsLocation" ,  m_updatedJetsLocation , "Location of the updated jets") ; 
   }
   
@@ -95,6 +96,7 @@ private:
 private:  
   std::string m_inputJetsLocation ;
   std::string m_inputVertexLocation ;
+  bool m_useBaseVertex ;
   //std::string m_updatedJetsLocation ;
 
    IOnOffline* m_OnOffline ; 
@@ -157,76 +159,108 @@ StatusCode UpdateJetsWithVtx::execute ()
     const LHCb::Particles* myInput = get<LHCb::Particles>( m_inputVertexLocation );
 
   
-  for( LHCb::Particles::const_iterator secjet =myJets->begin() ; myJets->end()!= secjet ; secjet++ )
+    for( LHCb::Particles::const_iterator secjet =myJets->begin() ; myJets->end()!= secjet ; secjet++ )
     {
       std::vector<float> tmp_jet;
       tmp_jet.push_back(KEY(*secjet));
       tmp_jet.push_back(-1.);
       tmp_jet.push_back(-1.);
       double nonDown(0.);
-      Parts daug_secjet ;
+      Parts daug_secjetfirst ;
       int jetPID = PID(*secjet);
-      LoKi::Extract::getParticles (*secjet, std::back_inserter (daug_secjet), PID!=jetPID);
-      for(Parts::iterator idaug_secjet = daug_secjet.begin() ; daug_secjet.end() != idaug_secjet   ; idaug_secjet++ )
-	{
-	  if((*idaug_secjet)->proto()==NULL)continue;
-	  const LHCb::Track* track_second = (*idaug_secjet)->proto()->track();
-	  if ( track_second== NULL )continue;
-	  if (track_second->type() != LHCb::Track::Downstream){
-	    nonDown+=E(*idaug_secjet);
-	  }     
-	}
+      LoKi::Extract::getParticles (*secjet, std::back_inserter (daug_secjetfirst), PID!=jetPID);
+      for(Parts::iterator idaug_secjet = daug_secjetfirst.begin() ; daug_secjetfirst.end() != idaug_secjet   ; idaug_secjet++ )
+      {
+        if((*idaug_secjet)->proto()==NULL)continue;
+        const LHCb::Track* track_second = (*idaug_secjet)->proto()->track();
+        if ( track_second== NULL )continue;
+        if (track_second->type() != LHCb::Track::Downstream){
+          nonDown+=E(*idaug_secjet);
+        }     
+      }
       tmp_jet.push_back(nonDown);
       jetList.push_back(tmp_jet);
       for(LHCb::Particles::const_iterator primjet =myInput->begin() ; myInput->end()!= primjet ; primjet++)
-	{  
-	  double weight_jetsec_jetprim = 0.;
-	  Parts daug_secjet ;
-	  int jetPID = PID(*secjet);
-	  int vertPID = PID(*primjet);
-	  LoKi::Extract::getParticles (*secjet, std::back_inserter (daug_secjet), PID!=jetPID);
-	  Parts daug_primjet ;
-	  LoKi::Extract::getParticles (*primjet, std::back_inserter (daug_primjet), PID!=vertPID);
-	  for(Parts::iterator idaug_secjet = daug_secjet.begin() ; daug_secjet.end() != idaug_secjet   ; idaug_secjet++ )
-	    {
-	      if((*idaug_secjet)->proto()==NULL)continue;
-	      const LHCb::Track* track_second = (*idaug_secjet)->proto()->track();
-	      if ( track_second== NULL )continue;
-	      for(Parts::iterator idaug_primjet = daug_primjet.begin() ; daug_primjet.end()!= idaug_primjet  ; idaug_primjet++ )
-		{ 
-		  // both are charged and have track... compare tracking LHCbIDs
-		  double sharedID = 0.;
-		  if ((*idaug_primjet)->proto()==NULL)continue;
+      { 
+        if(m_useBaseVertex &&
+           ( std::abs((*secjet)->endVertex()->position().x()-(*primjet)->endVertex()->position().x())>1e-6 ||
+             std::abs((*secjet)->endVertex()->position().y()-(*primjet)->endVertex()->position().y())>1e-6))continue;
+        double weight_jetsec_jetprim = 0.;
+        Parts daug_secjet ;
+        int jetPID = PID(*secjet);
+        int vertPID = PID(*primjet);
+
+        // for correct weight calculation: get energy of vertex without velo tracks
+        double EnoVelo_primjet = 0.;
+        Parts daug_vtx ;
+        LoKi::Extract::getParticles (*primjet, std::back_inserter (daug_vtx), PID!=vertPID);
+        for(Parts::iterator idaug_vtx = daug_vtx.begin() ; daug_vtx.end()!= idaug_vtx  ; idaug_vtx++ ){
+          if ((*idaug_vtx)->proto()==NULL)continue;
+          const LHCb::Track* track_vtx = (*idaug_vtx)->proto()->track();
+          if (track_vtx== NULL )continue;
+          if (track_vtx->type() == LHCb::Track::Velo) continue;
+          EnoVelo_primjet += E(*idaug_vtx);
+        }
+
+        LoKi::Extract::getParticles (*secjet, std::back_inserter (daug_secjet), PID!=jetPID);
+        Parts daug_primjet ;
+        LoKi::Extract::getParticles (*primjet, std::back_inserter (daug_primjet), PID!=vertPID);
+        for(Parts::iterator idaug_secjet = daug_secjet.begin() ; daug_secjet.end() != idaug_secjet   ; idaug_secjet++ )
+        {
+          if((*idaug_secjet)->proto()==NULL)continue;
+          const LHCb::Track* track_second = (*idaug_secjet)->proto()->track();
+          if ( track_second== NULL )continue;
+          for(Parts::iterator idaug_primjet = daug_primjet.begin() ; daug_primjet.end()!= idaug_primjet  ; idaug_primjet++ )
+          { 
+            // both are charged and have track... compare tracking LHCbIDs
+            double sharedID = 0.;
+            if ((*idaug_primjet)->proto()==NULL)continue;
           
-		  const LHCb::Track* track_first = (*idaug_primjet)->proto()->track();
-		  if (track_first== NULL )continue;
+            const LHCb::Track* track_first = (*idaug_primjet)->proto()->track();
+            if (track_first== NULL )continue;
           
-		  const LHCb::Track::LHCbIDContainer idsFirst = track_first->lhcbIDs () ;
+            const LHCb::Track::LHCbIDContainer idsFirst = track_first->lhcbIDs () ;
             
-		  const LHCb::Track::LHCbIDContainer idsSec = track_second->lhcbIDs () ;
-		  for (LHCb::Track::LHCbIDContainer::const_iterator i_idsFirst = idsFirst.begin()
-			 ; idsFirst.end()!=i_idsFirst;i_idsFirst++){
-		    for (LHCb::Track::LHCbIDContainer::const_iterator i_idsSec = idsSec.begin()
-			   ; idsSec.end()!=i_idsSec;i_idsSec++){
-		      if ((*i_idsFirst)==(*i_idsSec)) sharedID += 1.;
-		    }
-		  }
-		  if(idsFirst.size()<idsSec.size()) sharedID = sharedID/idsFirst.size();
-		  else sharedID = sharedID/idsSec.size();
+            const LHCb::Track::LHCbIDContainer idsSec = track_second->lhcbIDs () ;
+            for (LHCb::Track::LHCbIDContainer::const_iterator i_idsFirst = idsFirst.begin()
+                   ; idsFirst.end()!=i_idsFirst;i_idsFirst++){
+              for (LHCb::Track::LHCbIDContainer::const_iterator i_idsSec = idsSec.begin()
+                     ; idsSec.end()!=i_idsSec;i_idsSec++){
+                if ((*i_idsFirst)==(*i_idsSec)) sharedID += 1.;
+              }
+            }
+//             if(idsFirst.size()<idsSec.size()) sharedID = sharedID/idsFirst.size();
+//             else sharedID = sharedID/idsSec.size();
           
-		  // Check how many hits are shared for the tracks and how many calodigit are shared for the ...
-		  if(sharedID>0.9)
-		    {
-		      weight_jetsec_jetprim += E(*idaug_secjet)/E(*primjet);
-		      continue;
-		    }
-		}
-	    }
-	  if(weight_jetsec_jetprim>0) {
-	    table->relate((*primjet),(*secjet),weight_jetsec_jetprim);
-	  }
+//             // Check how many hits are shared for the tracks and how many calodigit are shared for the ...
+//             if(sharedID>0.9)
+//             {
+//               weight_jetsec_jetprim += E(*idaug_secjet)/E(*primjet);
+//               continue;
+//             }
+
+            // New stuff:
+            if(idsFirst.size()<idsSec.size()) sharedID = sharedID/idsSec.size();
+            else sharedID = sharedID/idsFirst.size();
+            
+            // Check how many hits are shared for the tracks and how many calodigit are shared for the ...
+            if(sharedID>=1.)
+            {
+              //weight_jetsec_jetprim += E(*idaug_secjet)/E(*primjet);
+              weight_jetsec_jetprim += E(*idaug_secjet)/EnoVelo_primjet;
+              //std::cout<<"Track Match for track with E="<<E(*idaug_secjet) 
+              //         <<", sharedID:"<<sharedID <<", weight: "<<weight_jetsec_jetprim  <<std::endl;
+              
+              continue;
+            }
+
+          }
+        }
+        if(weight_jetsec_jetprim>0) {
+          table->relate((*primjet),(*secjet),weight_jetsec_jetprim);
+        }
       
-	}
+      }
     }
 
 
@@ -238,18 +272,18 @@ StatusCode UpdateJetsWithVtx::execute ()
       int jet_index = 0;
       // find the links to jet 
       for (IJets2Jets::Table::Range::const_iterator link = links.begin() ; links.end() != link ; ++link ){
-	const LHCb::Particle* theLinkedJet = (*link).to();
-	// For the correspondig jet if the weight is better than previous association, tag it as comming from 
-	// the vertex
-	for (int i = 0 ; i < (int)jetList.size(); i++){
-	  if (jetList[i][0] == KEY(theLinkedJet)){
-	    if (jetList[i][1]<(*link).weight()){
-	      jetList[i][1]=(*link).weight();
-	      jetList[i][2]=(*i_vert)->key();
-	    }
-	  }
-	}
-	jet_index++;
+        const LHCb::Particle* theLinkedJet = (*link).to();
+        // For the correspondig jet if the weight is better than previous association, tag it as comming from 
+        // the vertex
+        for (int i = 0 ; i < (int)jetList.size(); i++){
+          if (jetList[i][0] == KEY(theLinkedJet)){
+            if (jetList[i][1]<(*link).weight()){
+              jetList[i][1]=(*link).weight();
+              jetList[i][2]=(*i_vert)->key();
+            }
+          }
+        }
+        jet_index++;
       }
       vertex_index++;
     }
@@ -257,41 +291,41 @@ StatusCode UpdateJetsWithVtx::execute ()
 
 
 
-  //LHCb::Particles* newJets = new LHCb::Particles();
-  //put (newJets , m_updatedJetsLocation );
+    //LHCb::Particles* newJets = new LHCb::Particles();
+    //put (newJets , m_updatedJetsLocation );
   
-  for (int i = 0 ; i < (int)jetList.size(); i++){
-    if (jetList[i][2]>-0.5 ){
-      myJets->object(jetList[i][0])->setReferencePoint( myInput->object(jetList[i][2])->referencePoint());
-      myJets->object(jetList[i][0])->addInfo(53, jetList[i][1] ); 
-      myJets->object(jetList[i][0])->addInfo(54, jetList[i][1] * E(myInput->object(jetList[i][2])) / jetList[i][3] ); 
+    for (int i = 0 ; i < (int)jetList.size(); i++){
+      if (jetList[i][2]>-0.5 ){
+        if(!m_useBaseVertex)myJets->object(jetList[i][0])->setReferencePoint( myInput->object(jetList[i][2])->referencePoint());
+        myJets->object(jetList[i][0])->addInfo(53, jetList[i][1] ); 
+        myJets->object(jetList[i][0])->addInfo(54, jetList[i][1] * E(myInput->object(jetList[i][2])) / jetList[i][3] ); 
 
-      /*
-	LHCb::Particle* theNewJet = new LHCb::Particle();
-	theNewJet =  myJets->object(jetList[i][0])->clone();
-	theNewJet->setReferencePoint( myInput->object(jetList[i][2])->referencePoint());
-	theNewJet->addInfo(53, jetList[i][1] ); 
-	theNewJet->addInfo(54, jetList[i][1] * E(myInput->object(jetList[i][2])) / jetList[i][3] );*/ 
-      // newJets->insert(theNewJet);
-      //this->markNewTree(theNewJet);
-      setFilterPassed ( true ) ;
-    }
-    else{
-      myJets->object(jetList[i][0])->setReferencePoint( Gaudi::XYZPoint(0.,0.,0.)  );
-      //       myJets->addInfo(53, jetList[i][1] ); 
-      //       myJets->addInfo(54, jetList[i][1] * E(myInput->object(jetList[i][2])) / jetList[i][3] ); 
+        /*
+          LHCb::Particle* theNewJet = new LHCb::Particle();
+          theNewJet =  myJets->object(jetList[i][0])->clone();
+          theNewJet->setReferencePoint( myInput->object(jetList[i][2])->referencePoint());
+          theNewJet->addInfo(53, jetList[i][1] ); 
+          theNewJet->addInfo(54, jetList[i][1] * E(myInput->object(jetList[i][2])) / jetList[i][3] );*/ 
+        // newJets->insert(theNewJet);
+        //this->markNewTree(theNewJet);
+        setFilterPassed ( true ) ;
+      }
+      else{
+        if(!m_useBaseVertex)myJets->object(jetList[i][0])->setReferencePoint( Gaudi::XYZPoint(0.,0.,0.)  );
+        //       myJets->addInfo(53, jetList[i][1] ); 
+        //       myJets->addInfo(54, jetList[i][1] * E(myInput->object(jetList[i][2])) / jetList[i][3] ); 
 
       
-      //       LHCb::Particle* theNewJet = new LHCb::Particle();
-      //       theNewJet =  myJets->object(jetList[i][0])->clone();
-      //       theNewJet->setReferencePoint(Gaudi::XYZPoint(0.,0.,0.));
-      //newJets->insert(theNewJet);
-      //this->markNewTree(theNewJet);
-      setFilterPassed ( true ) ;
-    }  
-  }
+        //       LHCb::Particle* theNewJet = new LHCb::Particle();
+        //       theNewJet =  myJets->object(jetList[i][0])->clone();
+        //       theNewJet->setReferencePoint(Gaudi::XYZPoint(0.,0.,0.));
+        //newJets->insert(theNewJet);
+        //this->markNewTree(theNewJet);
+        setFilterPassed ( true ) ;
+      }  
+    }
   
-  delete table;
+    delete table;
   
   
   }
@@ -308,7 +342,7 @@ StatusCode UpdateJetsWithVtx::execute ()
       const SmartRefVector< LHCb::Track > trks = pv->tracks();
       double pt = 0;
       for ( SmartRefVector< LHCb::Track >::const_iterator itk = trks.begin();  itk != trks.end(); itk++)
-	pt += (*itk)->pt();
+        pt += (*itk)->pt();
 
       PtPV[pt] = pv->position();
 
@@ -316,81 +350,81 @@ StatusCode UpdateJetsWithVtx::execute ()
 
     
     for( LHCb::Particles::const_iterator secjet =myJets->begin() ; myJets->end()!= secjet ; secjet++ )
-      {
+    {
 	
-	std::map< double ,  double> tmpPair;
-	std::map<double, Gaudi::XYZPoint> tmpPair2;
+      std::map< double ,  double> tmpPair;
+      std::map<double, Gaudi::XYZPoint> tmpPair2;
 	
-	// 	for( LHCb::RecVertex::Container::const_iterator ipv = PVS->begin() ; PVS->end()!= ipv ; ipv++ )
-	// 	  {
-	// 	    const LHCb::RecVertex* PV = *ipv;
-	// 	    int endkey = PV->tracks().back()->key();
+      // 	for( LHCb::RecVertex::Container::const_iterator ipv = PVS->begin() ; PVS->end()!= ipv ; ipv++ )
+      // 	  {
+      // 	    const LHCb::RecVertex* PV = *ipv;
+      // 	    int endkey = PV->tracks().back()->key();
 	
 	
-	// 	    SmartRefVector< LHCb::Track >::const_iterator iPV = PV->tracks().begin();
+      // 	    SmartRefVector< LHCb::Track >::const_iterator iPV = PV->tracks().begin();
 	
-	// 	    double PV2JetMatchW = 0.;
-	Parts daug_secjet ;
-	int jetPID = PID(*secjet);
-	LoKi::Extract::getParticles (*secjet, std::back_inserter (daug_secjet), PID!=jetPID);
+      // 	    double PV2JetMatchW = 0.;
+      Parts daug_secjet ;
+      int jetPID = PID(*secjet);
+      LoKi::Extract::getParticles (*secjet, std::back_inserter (daug_secjet), PID!=jetPID);
 
-	if(PVS->size() == 0){
-	  (*secjet)->setReferencePoint(point);
-	}else if(PVS->size() == 1){
-	   LHCb::RecVertex::Container::const_iterator ipv = PVS->begin();      
-	  (*secjet)->setReferencePoint((*ipv)->position());    
+      if(PVS->size() == 0){
+        (*secjet)->setReferencePoint(point);
+      }else if(PVS->size() == 1){
+        LHCb::RecVertex::Container::const_iterator ipv = PVS->begin();      
+        (*secjet)->setReferencePoint((*ipv)->position());    
 
-	}else{   
+      }else{   
 	  
-	  for(Parts::iterator idaug_secjet = daug_secjet.begin() ; daug_secjet.end() != idaug_secjet   ; idaug_secjet++ )
-	    {
+        for(Parts::iterator idaug_secjet = daug_secjet.begin() ; daug_secjet.end() != idaug_secjet   ; idaug_secjet++ )
+        {
 	      
 	      
 	      
-	      if((*idaug_secjet)->proto()==NULL)continue;
-	      if((*idaug_secjet)->charge()==0)continue;
+          if((*idaug_secjet)->proto()==NULL)continue;
+          if((*idaug_secjet)->charge()==0)continue;
 	      
-	      const LHCb::Track* track = (*idaug_secjet)->proto()->track();
-	      if ( track== NULL )continue;
-	      if (track->type() != LHCb::Track::Downstream){
+          const LHCb::Track* track = (*idaug_secjet)->proto()->track();
+          if ( track== NULL )continue;
+          if (track->type() != LHCb::Track::Downstream){
 		
 		
-		const LHCb::VertexBase* vtx =          
-		  m_pvRelator->relatedPV(*idaug_secjet, 
-					 LHCb::VertexBase::ConstVector(PVS->begin(), 
-								       PVS->end()));
+            const LHCb::VertexBase* vtx =          
+              m_pvRelator->relatedPV(*idaug_secjet, 
+                                     LHCb::VertexBase::ConstVector(PVS->begin(), 
+                                                                   PVS->end()));
 		
 		
-		//   std::cout << track->p() << " => " << vtx->position().Z() << std::endl;
-		if(tmpPair.count(vtx->position().Z()) < 0.5 ){
-		  tmpPair[vtx->position().Z()] = track->p();
-		  tmpPair2[(tmpPair.find(vtx->position().Z())->second)] = vtx->position();
-		} else{
-		  double tmpval = tmpPair.find(vtx->position().Z())->second;
-		  tmpval += track->p();
-		  tmpPair2.erase(tmpPair.find(vtx->position().Z())->second);
-		  tmpPair[vtx->position().Z()] = tmpval;
-		  tmpPair2[(tmpPair.find(vtx->position().Z())->second)] = vtx->position();
-		}	      
-	      }
+            //   std::cout << track->p() << " => " << vtx->position().Z() << std::endl;
+            if(tmpPair.count(vtx->position().Z()) < 0.5 ){
+              tmpPair[vtx->position().Z()] = track->p();
+              tmpPair2[(tmpPair.find(vtx->position().Z())->second)] = vtx->position();
+            } else{
+              double tmpval = tmpPair.find(vtx->position().Z())->second;
+              tmpval += track->p();
+              tmpPair2.erase(tmpPair.find(vtx->position().Z())->second);
+              tmpPair[vtx->position().Z()] = tmpval;
+              tmpPair2[(tmpPair.find(vtx->position().Z())->second)] = vtx->position();
+            }	      
+          }
 	      
 	      
-	    }
+        }
 	  
 	  
-	  std::map<double, Gaudi::XYZPoint>::reverse_iterator it3;
+        std::map<double, Gaudi::XYZPoint>::reverse_iterator it3;
 	  
-	  if (tmpPair2.size() > 0){
-	    it3=tmpPair2.rbegin();
-	    (*secjet)->setReferencePoint(((*it3).second));
-	  } else {
-	    it3=PtPV.rbegin();
-	    (*secjet)->setReferencePoint(((*it3).second)); //no charge track into the jet.....
-	  }
-	}
-
-
+        if (tmpPair2.size() > 0){
+          it3=tmpPair2.rbegin();
+          (*secjet)->setReferencePoint(((*it3).second));
+        } else {
+          it3=PtPV.rbegin();
+          (*secjet)->setReferencePoint(((*it3).second)); //no charge track into the jet.....
+        }
       }
+
+
+    }
     
         
     setFilterPassed ( true ) ;
