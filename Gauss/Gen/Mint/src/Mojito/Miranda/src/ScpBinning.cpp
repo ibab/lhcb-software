@@ -420,6 +420,19 @@ int ScpBinning::Diff_ofBin(unsigned int i) const{
   return diff;
 }
 
+double ScpBinning::NormDiff_ofBin(unsigned int i) const{
+  if(i > _boxSets.size()) return -9999;
+  double Normdiff = _boxSets[i].nData() - m_norm*_boxSets[i].nMC();
+  return Normdiff;
+}
+
+double ScpBinning::Err_ofBin(unsigned int i) const{
+  if(i > _boxSets.size()) return -9999;
+  double Err = sqrt(_boxSets[i].nData() + _boxSets[i].nMC());
+  return Err;
+}
+
+
 double ScpBinning::getScp_perBin() const{
   if(_nDataCC <= 0) return -9999;
   if(_nData <=0 ) return -9999;
