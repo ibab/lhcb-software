@@ -49,6 +49,7 @@ void ScpHisto::MakeGraph()
 		ey[i] = Err_ofbin(i);
 	}
 	gr = new TGraphErrors(nbins,x,y,ex,ey);
+	MakePull();
 }
 
 void ScpHisto::MakeNormGraph()
@@ -68,14 +69,31 @@ void ScpHisto::MakeNormGraph()
 		ey[i] = Err_ofbin(i);
 	}
 	gr = new TGraphErrors(nbins,x,y,ex,ey);
+	MakeNormPull();
 }
 
 void ScpHisto::SaveGraphPDF(const char* name, const char* Options)
 {
-	 TCanvas *c1 = new TCanvas("c1","A Simple Graph Example",200,10,700,500);
-	 gr->Draw(Options);
-	 c1->SaveAs(name);
-	 delete c1;
+	TCanvas * c1 = new TCanvas("c1","SCP Plots");
+	TPad*    upperPad = new TPad("upperPad", "upperPad",   .005, .2525, .995, .995);
+	TPad*    lowerPad = new TPad("lowerPad", "lowerPad",   .005, .005,  .995, .2475);
+	lowerPad->Draw();
+	upperPad->Draw();
+	upperPad->cd();
+	gr->Draw(Options);
+	lowerPad->cd();
+	pulls->SetTitle("");
+	pulls->GetXaxis()->SetLabelSize(0);
+	pulls->GetXaxis()->SetTitle("");
+	pulls->GetYaxis()->SetTitle("");
+	pulls->GetYaxis()->SetLabelSize(0.1);
+	pulls->GetYaxis()->SetRangeUser(-5,5);
+//	pulls->Draw("B");
+	pulls->Draw(Options);
+	c1->SaveAs(name);
+	delete upperPad;
+	delete lowerPad;
+	delete c1;
 }
 
 void ScpHisto::Write(const char* fileName, const char* name)
@@ -84,3 +102,33 @@ void ScpHisto::Write(const char* fileName, const char* name)
 	gr->Write(name);
 	delete file;
 }
+
+void ScpHisto::MakeNormPull()
+{
+	unsigned int bins = NBins();
+	Double_t y[bins+1];
+	Double_t x[bins+1];
+	for (unsigned int i = 0; i < bins; ++i)
+	{
+		x[i] = (double)i;
+		y[i] =  NormDiff_ofbin(i)/Err_ofbin(i);
+	}
+	pulls = new TGraph(bins,x,y);
+//	return pull;
+}
+
+void ScpHisto::MakePull()
+{
+	unsigned int bins = NBins();
+	Double_t y[bins+1];
+	Double_t x[bins+1];
+	for (unsigned int i = 0; i < bins; ++i)
+	{
+		x[i] = (Double_t)i;
+		y[i] =  (Double_t)(Diff_ofbin(i))/Err_ofbin(i);
+	}
+	pulls = new TGraph(bins,x,y);
+//	return pull;
+}
+
+
