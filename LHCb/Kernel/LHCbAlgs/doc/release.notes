@@ -4,6 +4,11 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2012-05-09 - Patrick Koppenburg
+ - Bug https://savannah.cern.ch/bugs/?94262
+   . New tool RateFromCondDB that egts the NoBias rate from condtions DB
+   . OfflineRateLimiter : use it
+
 !========================= LHCbAlgs v2r49 2012-03-26 =========================
 ! 2012-03-09 - Marco Cattaneo
  - Fix logic bug in IncidentFilter.cpp, Coverity defect #30939

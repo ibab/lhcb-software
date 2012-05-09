@@ -47,8 +47,7 @@ StatusCode RateFromTCK::initialize(){
   } else {
     warning() << "Conditions/Online/LHCb/RunInfo/Trigger not found, fall back to sampling data" << endmsg;
   }
-  runUpdate();               // initial update of DB
-  return sc ;
+  return runUpdate() ;// initial update of DB
   
 }
 //=============================================================================
