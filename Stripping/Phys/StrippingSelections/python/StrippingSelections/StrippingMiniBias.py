@@ -3,17 +3,18 @@ __date__ = '25/02/2011'
 __version__ = '$Revision: 2 $'
 
 """
-Stripping selections or Minimum Bias physics.
+Stripping selections or Minimum Bias physics.q
 """
 
 # Begin StrippingMinBias.py
 
-config_params = { "NoBiasLine_RE"       : "(HLT_PASS_RE('Hlt1NoBias.*Decision'))",
+config_params = { "NoBiasLine_RE"       : "(HLT_PASS_RE('Hlt1MB.*NoBias.*Decision'))",
                   "NoBiasLine_Rate" : 1,
                   "NoBiasLine_Limiter" : "Hlt1MBNoBiasODINFilter",
                   "L0AnyLine_RE"        : "(HLT_PASS_RE('Hlt1L0Any.*Decision'))",
                   "L0AnyLine_Rate"  : 1,
-                  "L0AnyLine_Limiter" : "Hlt1L0AnyRateLimitedPostScaler"}
+                  "L0AnyLine_Limiter" : "Hlt1L0AnyRateLimitedPostScaler",
+                  }
 
 __all__ = ('MiniBiasConf' )
 
@@ -42,18 +43,21 @@ class MiniBiasConf(LineBuilder) :
       self.NoBiasLine = self._makeLine("MBNoBias",
                                        config["NoBiasLine_RE"],
                                        config["NoBiasLine_Limiter"],
-                                       config["NoBiasLine_Rate"])
+                                       config["NoBiasLine_Rate"],
+                                       UseConditionDB=True )
       self.NoBiasLine = self._makeLine("Hlt1L0Any",
                                        config["L0AnyLine_RE"],
                                        config["L0AnyLine_Limiter"],
                                        config["L0AnyLine_Rate"])
 
-    def _makeLine(self,name,RE,limiter,rate):
+    def _makeLine(self,name,RE,limiter,rate,UseConditionDB=False):
       from Configurables import OfflineRateLimiter  
-         
+
       orl = OfflineRateLimiter(name+"ORL",
                                HltLimiter = limiter,  
-                               Rate = rate)
+                               Rate = rate,
+                               UseCondition = UseConditionDB,
+                               FallBack = UseConditionDB)
 
       line = StrippingLine(name
                            , HLT =  RE
