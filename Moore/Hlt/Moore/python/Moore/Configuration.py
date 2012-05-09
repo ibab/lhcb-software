@@ -250,8 +250,10 @@ class Moore(LHCbConfigurableUser):
         conddb.DisableLFC = True
         conddb.setProp('IgnoreHeartBeat',self.getProp('IgnoreDBHeartBeat')  )
         self.setOtherProps( conddb, [ 'UseDBSnapshot',
-                                   'DBSnapshotDirectory',
-                                   'PartitionName' ])
+                                      'DBSnapshotDirectory',
+                                      'PartitionName',
+                                      'EnableRunChangeHandler'])
+                
 
     def _configureInput(self):
         files = self.getProp('inputFiles')
