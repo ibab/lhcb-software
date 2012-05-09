@@ -176,10 +176,10 @@ StatusCode ST::STOnlineNoiseCalculationTool::calculateNoise() {
             bool updateRaw=true; 
             bool updatePedSub=true;
             bool updateCMS=true;
-            if(m_removeOutliers) {
+            if(m_removeOutliers) { // only update the plots if lcms value < cms_threshold
               //            if(fabs(rawValue-(*pedestals)[strip].first) > (*thresholds)[strip].first) updateRaw=false;
-              if(fabs(static_cast<double>(pedSubValue)) > (*thresholds)[strip].first) updatePedSub=false;
-              if(fabs(static_cast<double>(lcmsValue)) > (*thresholds)[strip].second) updateCMS=false;
+              //              if(fabs(static_cast<double>(pedSubValue)) > (*thresholds)[strip].first) updatePedSub=false;
+              if(fabs(static_cast<double>(lcmsValue)) > (*thresholds)[strip].first) updateCMS=false;
             }
             // Calculate the pedestal and the pedestal squared
             // Cumulative average up to m_followingPeriod; after that exponential moving average

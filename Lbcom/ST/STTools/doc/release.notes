@@ -3,6 +3,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2012-05-09 - Mark Tobin
+ - Bug fix in removal of clusters from noise calculation
+
 !========================= STTools v4r12 2012-05-02 =========================
 ! 2012-04-11 - Mark Tobin
  - Implement methods to return pedestal subtracted noise in noise 
