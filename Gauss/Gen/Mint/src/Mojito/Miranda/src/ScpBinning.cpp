@@ -144,7 +144,7 @@ int ScpBinning::createBinning(IDalitzEventList* events
 int ScpBinning::mergeBoxes(ScpBoxSet& boxes, int minPerBin){
    lessByScpBoxData sorter;
    sort(boxes.begin(), boxes.end(), sorter);
-   double norm = this->normFactor();
+//   double norm = this->normFactor();
 
 
 //   lessByScpBoxScp sorter;
@@ -154,7 +154,7 @@ int ScpBinning::mergeBoxes(ScpBoxSet& boxes, int minPerBin){
   // this way, the smalles boxes come first 
   // makes sure no empty box is left over at the end.
 
-  double SCP = 0;
+//  double SCP = 0;
   ScpBoxSet boxSet;
   for(unsigned int i=0; i < boxes.size(); i++){
 		boxSet.add(boxes[i]);
@@ -271,7 +271,7 @@ void ScpBinning::fillDataCC(IDalitzEventList* data){
   while(data->Next()){
     bool foundBox=false;
     for(unsigned int i=0; i < _boxSets.size(); i++){
-      IDalitzEvent* Evt = data->getEvent();
+//      IDalitzEvent* Evt = data->getEvent();
 //      if (Evt->phaseSpace() != 0)
 //      {
       if (1 == 1)
