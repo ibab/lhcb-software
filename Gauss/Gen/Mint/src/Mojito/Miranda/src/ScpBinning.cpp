@@ -431,7 +431,7 @@ double ScpBinning::Err_ofBin(unsigned int i) const{
   int ndata = _boxSets[i].nData();
   int ndataCC = _boxSets[i].nMC();
   double ErrA = sqrt(ndata);
-  double ErrB = sqrt(ndataCC);
+  double ErrB = sqrt(ndataCC)*m_norm;
   double Err = sqrt(ErrA*ErrA + ErrB*ErrB);
 
   return Err;
