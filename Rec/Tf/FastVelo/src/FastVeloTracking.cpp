@@ -60,6 +60,9 @@ FastVeloTracking::FastVeloTracking( const std::string& name,
   declareProperty( "DeltaQuality"    , m_deltaQuality   = 0.5    );
   declareProperty( "FractionForMerge", m_fractionForMerge= 0.70   );
 
+  declareProperty( "MaxDistToMerge"  , m_maxDistToMerge  = 0.1 * Gaudi::Units::mm );
+  declareProperty( "MaxDeltaSlopeToMerge", m_maxDeltaSlopeToMerge = 0.002 );
+
   declareProperty( "PhiUnusedFirstTol",  m_phiUnusedFirstTol  = 5. );
   declareProperty( "PhiUnusedSecondTol", m_phiUnusedSecondTol = 10. );
 
@@ -419,60 +422,108 @@ void FastVeloTracking::findQuadruplets( unsigned int sens0, bool forward ) {
 //=========================================================================
 void FastVeloTracking::mergeSpaceClones( ) {
   if ( m_spaceTracks.size() < 2 ) return;
+  if ( 0 <= m_wantedKey ) info() << endmsg << "===== Merge Space Clones ====" << endmsg;
   for ( FastVeloTracks::iterator itT1 = m_spaceTracks.begin(); m_spaceTracks.end()-1 != itT1; ++itT1 ) {
     if ( (*itT1).backward() ) continue;
     if ( !(*itT1).isValid() ) continue;
+
+    std::vector<int> strip1(128,-1);
+    FastVeloHits::const_iterator itH;
+    for ( itH = (*itT1).rHits().begin(); (*itT1).rHits().end() != itH; ++itH ) {
+      int sensor = (*itH)->sensor();
+      int strip  = (*itH)->cluster().channelID().strip();
+      if ( sensor < 128 ) strip1[sensor] = strip;
+    }
+    for ( itH = (*itT1).phiHits().begin(); (*itT1).phiHits().end() != itH; ++itH ) {
+      int sensor = (*itH)->sensor();
+      int strip  = (*itH)->cluster().channelID().strip();
+      if ( sensor < 128 ) strip1[sensor] = strip;
+    }
+
+    double zMid = .5 * ( (*itT1).rHits().front()->z() + (*itT1).rHits().back()->z() );
+    double slx  = 0.01 * ((*itT1).xAtZ( zMid+100.) - (*itT1).xAtZ( zMid )) ;
+    double sly  = 0.01 * ((*itT1).yAtZ( zMid+100.) - (*itT1).yAtZ( zMid )) ;
+    
+    
     for ( FastVeloTracks::iterator itT2 = itT1+1; m_spaceTracks.end() != itT2; ++itT2 ) {
       m_debug = m_isDebug;
-      //== different zones -> can not be clone
-      if ( (*itT1).zone() != (*itT2).zone () ) continue;
       if ( (*itT2).backward() ) continue;
       if ( !(*itT2).isValid() ) continue;
 
-      unsigned int minWanted = (*itT1).phiHits().size();
-      if ( (*itT2).phiHits().size() <  minWanted ) minWanted = (*itT2).phiHits().size();
-      unsigned int nCommon = 0;
-      for ( FastVeloHits::const_iterator itH = (*itT2).phiHits().begin();
-            (*itT2).phiHits().end() != itH; ++itH ) {
-        if ( std::find( (*itT1).phiHits().begin(), (*itT1).phiHits().end(), *itH ) !=  (*itT1).phiHits().end() ) nCommon++;
-        if ( matchKey( *itH ) ) m_debug = true;
-      }
-      bool badFirst = false;
-      bool badSecond = false;
-      if ( minWanted * m_fractionForMerge <= nCommon ) {
-        unsigned int nRCommon = 0;
-        unsigned int rWanted =  (*itT1).rHits().size();
-        if ( (*itT2).rHits().size() <  rWanted ) rWanted = (*itT2).rHits().size();
-        for ( FastVeloHits::const_iterator itH = (*itT2).rHits().begin();
-              (*itT2).rHits().end() != itH; ++itH ) {
-          if ( std::find( (*itT1).rHits().begin(), (*itT1).rHits().end(), *itH ) !=  (*itT1).rHits().end() ) nRCommon++;
-        }
-        if ( rWanted * m_fractionForMerge > nRCommon ) continue;
+      double slx2  = 0.01 * ((*itT2).xAtZ( zMid+100.) - (*itT2).xAtZ( zMid )) ;
+      double sly2  = 0.01 * ((*itT2).yAtZ( zMid+100.) - (*itT2).yAtZ( zMid )) ;
 
-        if (  (*itT1).phiHits().size() > minWanted ) {
-          badSecond = true;
-        } else if (  (*itT2).phiHits().size() > minWanted ) {
-          badFirst = true;
-        } else {
-          if ( (*itT1).qFactor() < (*itT2).qFactor() ) {
-            badSecond = true;
-          } else {
-            badFirst = true;
-          }
-        }
-        if ( m_debug ) {
-          info() << "Compare track " << itT1 - m_spaceTracks.begin() << " to " <<  itT2 - m_spaceTracks.begin()
-                 << ", found " << nCommon << " common hits for " << minWanted << endmsg;
-        }
-        if ( badFirst ) {
-          (*itT1).setValid( false );
-          if ( m_debug ) info() << "   Invalidate track " << itT1 - m_spaceTracks.begin() << endmsg;
-        }
-        if ( badSecond ) {
-          (*itT2).setValid( false );
-          if ( m_debug ) info() << "   Invalidate track " << itT2 - m_spaceTracks.begin() << endmsg;
+      double dx = (*itT1).xAtZ( 0. ) - (*itT2).xAtZ( 0. );
+      double dy = (*itT1).yAtZ( 0. ) - (*itT2).yAtZ( 0. );
+      double dslx = slx - slx2;
+      double dsly = sly - sly2;
+      if ( fabs( dslx ) > m_maxDeltaSlopeToMerge || 
+           fabs( dsly ) > m_maxDeltaSlopeToMerge    ) continue;
+      
+      double zClosest = -( dx * dslx + dy * dsly ) / ( dslx*dslx + dsly * dsly );      
+
+      if ( fabs( (*itT1).xAtZ( zClosest ) - (*itT2).xAtZ( zClosest ) ) > m_maxDistToMerge ) continue;
+      if ( fabs( (*itT1).yAtZ( zClosest ) - (*itT2).yAtZ( zClosest ) ) > m_maxDistToMerge ) continue;
+      
+      std::vector<int> strip2(128,-1);
+      FastVeloHits::const_iterator itH;
+      for ( itH = (*itT2).rHits().begin(); (*itT2).rHits().end() != itH; ++itH ) {
+        if ( matchKey( *itH ) ) m_debug = true;
+        int sensor = (*itH)->sensor();
+        int strip  = (*itH)->cluster().channelID().strip();
+        if ( sensor < 128 ) strip2[sensor] = strip;
+      }
+      for ( itH = (*itT2).phiHits().begin(); (*itT2).phiHits().end() != itH; ++itH ) {
+        if ( matchKey( *itH ) ) m_debug = true;
+        int sensor = (*itH)->sensor();
+        int strip  = (*itH)->cluster().channelID().strip();
+        if ( sensor < 128 ) strip2[sensor] = strip;
+      }
+
+      //== Count how many sensors have hits on both, and how many are in commmon
+      int nRInBoth = 0;
+      int nRCommon = 0;
+      for ( int kR = 0 ; 64 > kR ; ++kR ) {
+        if ( strip1[kR] >= 0 && strip2[kR] >=0 ) {
+          nRInBoth++;
+          if ( strip1[kR] == strip2[kR] ) nRCommon++;
         }
       }
+      int nPhiInBoth = 0;
+      int nPhiCommon = 0;
+      for ( int kP = 64 ; 128 > kP ; ++kP ) {
+        if ( strip1[kP] >= 0 && strip2[kP] >=0 ) {
+          nPhiInBoth++;
+          if ( strip1[kP] == strip2[kP] ) nPhiCommon++;
+        }
+      }
+
+      if ( m_debug ) {
+        info() << "#sensors with hits on both " << nRInBoth << "/" << nPhiInBoth 
+               << " with same cluster " << nRCommon << "/" << nPhiCommon << endmsg;
+        printTrack( *itT1, "itT1" );
+        printTrack( *itT2, "itT2" );
+      }
+
+      if ( ( nRInBoth   == 0 || nRCommon   > .4 * nRInBoth   ) &&
+           ( nPhiInBoth == 0 || nPhiCommon > .4 * nPhiInBoth )    ){
+        if ( m_debug ) info() << " === merge ===" << endmsg;
+        for ( itH = (*itT2).rHits().begin(); (*itT2).rHits().end() != itH; ++itH ) {
+          if ( strip1[(*itH)->sensor()] < 0 ) (*itT1).addRHit( *itH );
+        }
+        for ( itH = (*itT2).phiHits().begin(); (*itT2).phiHits().end() != itH; ++itH ) {
+          if ( strip1[(*itH)->sensor()] < 0 ) (*itT1).addPhiCluster( *itH, m_maxChi2ToAdd );
+        }
+        std::sort( (*itT1).rHits().begin(), (*itT1).rHits().end(), FastVeloHit::DecreasingByZ() );
+        std::sort( (*itT1).phiHits().begin(), (*itT1).phiHits().end(), FastVeloHit::DecreasingByZ() );
+        
+        (*itT1).updateRParameters();
+        (*itT1).updatePhiWeights();
+        (*itT1).fitTrack();
+        (*itT1).removeWorstRAndPhi( m_maxChi2PerHit, 6 );
+        (*itT2).setValid( false );
+        if ( m_debug ) printTrack( *itT1, "After merge" );
+      }     
     }
   }
 }
@@ -514,10 +565,10 @@ void FastVeloTracking::beamSplashSpaceMerge( ) {
     for ( FastVeloTracks::iterator itT2 = itT1+1; m_spaceTracks.end() != itT2; ++itT2 ) {
       if ( !(*itT2).isValid() ) continue;
       unsigned int nShort = ((*itT2).nbRHits() + (*itT2).phiHits().size());
-      unsigned int nLong = ((*itT2).nbRHits() + (*itT2).phiHits().size());
+      unsigned int nLong  = ((*itT1).nbRHits() + (*itT1).phiHits().size());
       FastVeloTracks::iterator iShort = itT2;
       if( nLong < nShort ){
-        nShort = ((*itT1).nbRHits() + (*itT1).phiHits().size());
+        nShort = nLong;
         iShort = itT1;
       }
       unsigned int nCommon = 0;
@@ -1513,6 +1564,10 @@ void FastVeloTracking::findUnusedPhi( ) {
               info() << "S0 " << phi0 << " z0 " << zone << " S1 " << phi1 << " z1 " << zone1 << " d1 " << d1 << endmsg;
             }
             if ( fabs( d1 ) > phiUnusedFirstTol ) continue;
+            double dx = (*itH0)->xStripCentre() -  (*itH1)->xStripCentre();
+            double dy = (*itH0)->yStripCentre() -  (*itH1)->yStripCentre();
+            if ( fabs(dx) > phiUnusedFirstTol ) continue;
+            if ( fabs(dy) > phiUnusedFirstTol ) continue;
             double xSeed = .5 * ( (*itH0)->xStripCentre() +  (*itH1)->xStripCentre() );
             double ySeed = .5 * ( (*itH0)->yStripCentre() +  (*itH1)->yStripCentre() );
 
@@ -1531,7 +1586,7 @@ void FastVeloTracking::findUnusedPhi( ) {
                 if ( 0 != (*itH2)->nbUsed() ) continue;
                 double d2 = (*itH2)->distance( xSeed, ySeed );
                 if ( m_debug ) {
-                  info() << " ++ D2 " << d2 ;
+                  info() << format( " ++ D2 %8.3f", d2 );
                   printCoord( *itH2, " : " );
                 }
 
@@ -1547,9 +1602,12 @@ void FastVeloTracking::findUnusedPhi( ) {
                 int rZone = 0;
                 if ( fabs( xSeed - r0->xCentre() ) > fabs( ySeed - r0->yCentre() ) ) rZone = 1;
                 if ( xSeed * ySeed > 0 ) rZone = 3 - rZone;
-                if ( m_debug ) info() << "Looking in R zone " << rZone << " sensor " << r0->number()
-                                      << " xSeed " << xSeed << " ySeed " << ySeed
-                                      << " xCentre " << r0->xCentre() << " yCentre " << r0 -> yCentre() << endmsg;
+                if ( m_debug ) {
+                  info() << "Looking in R zone " << rZone << " sensor " << r0->number()
+                         << " xSeed " << xSeed << " ySeed " << ySeed
+                         << " dx " << dx << " dy " << dy
+                         << " xCentre " << r0->xCentre() << " yCentre " << r0 -> yCentre() << endmsg;
+                }
                 for ( FastVeloHits::const_iterator itR0 = r0->hits(rZone).begin();
                       r0->hits(rZone).end() != itR0; ++itR0 ) {
                   if ( (*itR0)->rLocal() < s0->rMin( zone ) ||
@@ -1563,6 +1621,7 @@ void FastVeloTracking::findUnusedPhi( ) {
                   if ( xSeed < 0 ) spaceZone = 4 + rZone;
                   temp.setPhiClusters( *itR0, spaceZone, *itH0, *itH1, *itH2 );
                   temp.updatePhiWeights();
+                  if ( temp.rAtZ( r1->z() ) > 1000. ) continue;
 
                   if ( m_debug ) {
                     double xLocal = temp.xAtZ( r1->z() ) - r1->xCentre();

@@ -111,6 +111,9 @@ private:
   double m_deltaQuality;
   double m_fractionForMerge;
 
+  double m_maxDistToMerge;
+  double m_maxDeltaSlopeToMerge;
+  
   double m_phiUnusedFirstTol;
   double m_phiUnusedSecondTol;
 

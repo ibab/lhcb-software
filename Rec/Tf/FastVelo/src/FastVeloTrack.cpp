@@ -319,12 +319,8 @@ void FastVeloTrack::solve() {
   double e2 = c1 * a3 - a1 * c3;
   double ec = c1 * ac - a1 * cc;
 
-  double den;
-  if( (e1 * d2 - d1 * e2) != 0. ) {
-    den = 1./(e1 * d2 - d1 * e2);
-  }else{
-    den = 1e-10; // small but not zero, fixes FPE
-  }
+  double den = (e1 * d2 - d1 * e2);
+  if ( 0 != den ) den = 1./den;
   
   m_ty =  ( d1 * ec - e1 * dc ) * den;
   m_y0 =  ( e2 * dc - d2 * ec ) * den;
