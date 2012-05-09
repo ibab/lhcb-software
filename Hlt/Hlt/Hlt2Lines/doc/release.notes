@@ -8,7 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
-! 2012-05-08 - V. Gligorov
+! 2012-05-09 - S. Stahl
+ - B2HHLTUnbiasedDetached line has a lifetime cut but didn't call PV3D.
+
+! 2012-05-08 - S. Stahl
  - DiMuonAndMu line has an IP cut but didn't call PV3D.
  
 ! 2012-05-08 - V. Gligorov

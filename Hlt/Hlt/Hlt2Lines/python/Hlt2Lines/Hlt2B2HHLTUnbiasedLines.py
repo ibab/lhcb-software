@@ -186,11 +186,11 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
                         , algos = nopidAlgos + richpidAlgos 
                         , postscale = self.postscale
                         )
-
+        from HltTracking.HltPVs import PV3D
         line.clone('B2HHLTUnbiasedDetached'
                    , prescale        = self.prescale
                    , postscale       = self.postscale
-                   , algos           = nopidAlgos + richpidAlgos
+                   , algos           = [PV3D()] +nopidAlgos + richpidAlgos
                    , CombineBsKKRich = { "MotherCut"  :  motherCutPIDLT}
                    )
 
