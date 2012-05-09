@@ -273,8 +273,6 @@ void ScpBinning::fillDataCC(IDalitzEventList* data){
     for(unsigned int i=0; i < _boxSets.size(); i++){
       IDalitzEvent* Evt = data->getEvent();
       if (Evt->phaseSpace() != 0)
-      {
-//      if (1 == 1)
 	      {
     	  if(_boxSets[i].addMC(data->getEvent(),1.0)){
     		  foundBox=true;
