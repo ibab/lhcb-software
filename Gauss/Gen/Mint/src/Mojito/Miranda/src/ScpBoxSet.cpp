@@ -239,7 +239,7 @@ double ScpBoxSet::scp(double normFactorPassed) const{
 
 
   int n_data =  this->nData();
-  double n_dataCC = this->nMC();
+  double n_dataCC = this->nMC(); //replaced with weighted data
 
   bool db = false;
 

@@ -80,7 +80,7 @@ void ScpHisto::SaveAs(const char* name, const char* Options)
 	lowerPad->Draw();
 	upperPad->Draw();
 	upperPad->cd();
-	gr->SetMarkerStyle(15);
+//	gr->SetMarkerStyle(15);
 	gr->Draw(Options);
 	lowerPad->cd();
 	pulls->SetTitle("");
@@ -89,7 +89,7 @@ void ScpHisto::SaveAs(const char* name, const char* Options)
 	pulls->GetYaxis()->SetTitle("");
 	pulls->GetYaxis()->SetLabelSize(0.1);
 	pulls->GetYaxis()->SetRangeUser(-5,5);
-	pulls->SetMarkerStyle(15);
+//	pulls->SetMarkerStyle(15);
 //	pulls->Draw("B");
 	pulls->Draw(Options);
 	c1->SaveAs(name);

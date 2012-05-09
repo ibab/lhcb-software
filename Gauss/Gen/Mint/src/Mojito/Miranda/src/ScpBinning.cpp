@@ -318,7 +318,7 @@ double ScpBinning::setEvents(IDalitzEventList* data
   if(dbThis) cout << "... fillMC done, now setting norm factors" << endl;
   setBoxesNormFactors();
   if(dbThis) cout << " done the norm factors, now sorting by chi2" << endl;
-  sortByScp();
+//  sortByScp();
   if(dbThis) cout << " ScpBinning::setEventsAndPdf done" << endl;
   return 0;
 }
@@ -430,8 +430,8 @@ double ScpBinning::Err_ofBin(unsigned int i) const{
   if(i > _boxSets.size()) return -9999;
   int ndata = _boxSets[i].nData();
   int ndataCC = _boxSets[i].nMC();
-  double ErrA = sqrt(ndata)/ndata;
-  double ErrB = sqrt(ndataCC)/ndataCC;
+  double ErrA = sqrt(ndata);
+  double ErrB = sqrt(ndataCC);
   double Err = sqrt(ErrA*ErrA + ErrB*ErrB);
 
   return Err;
@@ -698,7 +698,7 @@ double ScpBinning::setBackgroundEvents(IDalitzEventList* data
   SubtractBackgroundDataCC(dataCC);
   if(dbThis) cout << "... fillMC done, now setting norm factors" << endl;
   if(dbThis) cout << " done the norm factors, now sorting by chi2" << endl;
-  sortByScp();
+//  sortByScp();
   if(dbThis) cout << " ScpBinning::setEventsAndPdf done" << endl;
   return 0;
 }

@@ -174,7 +174,7 @@ bool ScpBox::subtractData(const IDalitzEvent* evt){
 bool ScpBox::subtractMC(const IDalitzEvent& evt, double weight){
   if(! _area.isInside(evt)) return false;
   _nMC--;
-  _nWeightedMC += weight;
+  _nWeightedMC -= weight;
   return true;
 }
 bool ScpBox::subtractMC(const IDalitzEvent* evt, double weight){
@@ -187,8 +187,8 @@ bool ScpBox::subtractMC(const IDalitzEvent* evt, double weight){
   }
   if(! _area.isInside(*evt)) return false;
   _nMC--;
-  _nWeightedMC += weight;
-  _weightMC_Squared += weight*weight;
+  _nWeightedMC -= weight;
+  _weightMC_Squared -= weight*weight;
 
   if(dbThis) cout << "ScpBox::subtractMC returning; have nMC = "<< _nMC << endl;
   return true;
