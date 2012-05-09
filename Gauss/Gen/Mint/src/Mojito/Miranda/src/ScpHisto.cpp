@@ -46,7 +46,7 @@ void ScpHisto::MakeGraph()
 		x[i] = (double)i;
 		y[i] = (double)Diff_ofbin(i);
 		ex[i] = 0;
-		ey[i] = (double)Diff_ofbin(i)*Err_ofbin(i);
+		ey[i] = Err_ofbin(i);
 	}
 	gr = new TGraphErrors(nbins,x,y,ex,ey);
 	MakePull();
@@ -66,7 +66,7 @@ void ScpHisto::MakeNormGraph()
 		x[i] = (double)i;
 		y[i] = NormDiff_ofbin(i);
 		ex[i] = 0;
-		ey[i] = (double)Diff_ofbin(i)*Err_ofbin(i);
+		ey[i] = Err_ofbin(i);
 	}
 	gr = new TGraphErrors(nbins,x,y,ex,ey);
 	MakeNormPull();

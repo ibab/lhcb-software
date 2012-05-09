@@ -430,9 +430,7 @@ double ScpBinning::Err_ofBin(unsigned int i) const{
   if(i > _boxSets.size()) return -9999;
   int ndata = _boxSets[i].nData();
   int ndataCC = _boxSets[i].nMC();
-  double ErrA = sqrt(ndata);
-  double ErrB = sqrt(ndataCC)*m_norm;
-  double Err = sqrt(ErrA*ErrA + ErrB*ErrB);
+  double Err = sqrt(ndata + ndataCC*m_norm*m_norm);
 
   return Err;
 }
