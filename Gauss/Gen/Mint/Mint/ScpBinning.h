@@ -105,6 +105,8 @@ protected:
   void SubtractBackgroundDataCC(IDalitzEventList* data);
 
   int NEntires();
+  int NData();
+  int NDataCC();
 
   int SetBinning(const char*);
 

@@ -704,6 +704,15 @@ int ScpBinning::NEntires()
 	return _nData + _nDataCC;
 }
 
+int ScpBinning::NData()
+{
+	return _nData;
+}
+
+int ScpBinning::NDataCC()
+{
+	return _nDataCC;
+}
 
 int ScpBinning::SetBinning(const char* binningFileName)
 {
