@@ -85,6 +85,8 @@ protected:
 
   int ndof() const;
 
+  int Diff_ofBin(unsigned int i) const;
+
   void print(std::ostream& os = std::cout) const;
 
   void setNorm(double norm)

@@ -414,6 +414,12 @@ double ScpBinning::scp_ofBin(unsigned int i) const{
   return _boxSets[i].scp(normFactor());
 }
 
+int ScpBinning::Diff_ofBin(unsigned int i) const{
+  if(i > _boxSets.size()) return -9999;
+  int diff = _boxSets[i].nData() - _boxSets[i].nMC();
+  return diff;
+}
+
 double ScpBinning::getScp_perBin() const{
   if(_nDataCC <= 0) return -9999;
   if(_nData <=0 ) return -9999;
