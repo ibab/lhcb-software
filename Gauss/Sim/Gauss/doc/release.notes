@@ -6,7 +6,8 @@
 
 ! 2012-05-09 - Gloria Corti
  - Put use of GaudiPartProp to keep using TEMPORARILY the old 
-   ParticleProperySvc and configure it in Gauss() to read file from DDDB
+   ParticleProperySvc and configure it in Gauss() to read file from DDDB.
+   It should be removed for the next release!
  - Update Gauss-DEV.py to use latest 2012 tags
 
 ! 2012-05-04 - Gloria Corti
