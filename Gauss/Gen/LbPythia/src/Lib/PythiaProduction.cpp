@@ -278,7 +278,7 @@ StatusCode PythiaProduction::initialize( ) {
   // these masses after computation from its internal parameters)
   // retrieve the particle property service
   IParticlePropertySvc * ppSvc = 
-    svc< IParticlePropertySvc >( "ParticlePropertySvc" , true ) ;
+    svc< IParticlePropertySvc >( "Gaudi::ParticlePropertySvc" , true ) ;
   IParticlePropertySvc::const_iterator iter ;
   for ( iter = ppSvc -> begin() ; iter != ppSvc -> end() ; ++iter ) {
     if ( isSpecialParticle( *iter ) ) {
@@ -487,7 +487,7 @@ StatusCode PythiaProduction::initializeGenerator( ) {
 
   // Reset the "updated particles" to their defaults
   if ( m_updatedParticles.size() != 0 ) {
-    IParticlePropertySvc* ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc" , true);
+    IParticlePropertySvc* ppSvc = svc<IParticlePropertySvc>("Gaudi::ParticlePropertySvc" , true);
     for ( std::vector<int>::const_iterator it = m_updatedParticles.begin(); it != m_updatedParticles.end(); ++it ) {
       updateParticleProperties(ppSvc->findByStdHepID(*it));
     }
