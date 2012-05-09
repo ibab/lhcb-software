@@ -4,6 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2012-05-09 - Gloria Corti
+ - Put use of GaudiPartProp to keep using TEMPORARILY the old 
+   ParticleProperySvc and configure it in Gauss() to read file from DDDB
+ - Update Gauss-DEV.py to use latest 2012 tags
+
 ! 2012-05-04 - Gloria Corti
  - Remove use of GaudiPoolDb as no longer in Gaudi and not needed.
  - First version post-MC11, only compile it against latest stack but do not

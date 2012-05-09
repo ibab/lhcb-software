@@ -6,17 +6,16 @@
 #   gaudirun.py Gauss-DEV.py <someInputJobConfiguration>.py
 ##############################################################################
 
-from Gaudi.Configuration import *
+from Configurables import Gauss
+theApp = Gauss()
 
 ##############################################################################
 # latest database tags 
 ##############################################################################
 from Configurables import DDDBConf, CondDB, LHCbApp
 
-#CondDB().Simulation = True             # Already taken care of in Gauss()
-LHCbApp().DDDBtag   = "head-20110914"   # Must be set for selecting VELO
+LHCbApp().DDDBtag   = "head-20120413"   # Must be set for selecting VELO
                                         # geometry list in Gauss()
 
 DDDBConf(DataType = "2011")
-CondDB().UseLatestTags = ["2011"]
-
+CondDB().UseLatestTags = ["2012"]

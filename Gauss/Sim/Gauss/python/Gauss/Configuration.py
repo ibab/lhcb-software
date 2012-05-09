@@ -178,6 +178,11 @@ class Gauss(LHCbConfigurableUser):
         # May be needed by some options
         importOptions("$STDOPTS/PreloadUnits.opts")
 
+        # TEMPORARILY until migration to new particle propertysvc set the
+        # options to read table from database. Before it was done by DDDB
+        from Configurables import Gaudi__ParticlePropertySvc
+        Gaudi__ParticlePropertySvc().ParticlePropertiesFile = 'conddb:///param/ParticleTable.txt'
+
         
     ##
     def outputName(self):
@@ -1302,8 +1307,8 @@ class Gauss(LHCbConfigurableUser):
         # defineGeometry() in Brunel, need the same + random seeds
         self.configureRndmEngine()
         self.configureInput()  #defineEvents() in both Boole and Brunel
-        LHCbApp( Simulation = True ) # in Boole? where? 
-        
+        LHCbApp( Simulation = True ) # in Boole? where?
+
         #--Define sequences: generator, simulation
         #  each with its init, make, moni
         #  in the sim phase define the geometry to simulate and the settings

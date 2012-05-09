@@ -32,7 +32,10 @@ use AppConfig          v3r*                  -no_auto_imports
 # Packages needed to compile and link the application
 use GaudiConf          v*                    -no_auto_imports
 use GaudiKernel        v*
- 
+
+# Package needed to run the application as it still uses the old ParticlePropService - MUST be removed in next version       
+use GaudiPartProp      v*                    
+
 # Packages needed to resolve external dependencies at run time
 use Python             v*     LCG_Interfaces -no_auto_imports
 use HepMC              v*     LCG_Interfaces -no_auto_imports
