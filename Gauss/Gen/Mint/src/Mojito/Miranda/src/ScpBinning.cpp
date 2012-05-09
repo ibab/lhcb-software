@@ -428,9 +428,20 @@ double ScpBinning::NormDiff_ofBin(unsigned int i) const{
 
 double ScpBinning::Err_ofBin(unsigned int i) const{
   if(i > _boxSets.size()) return -9999;
-  double Err = sqrt(_boxSets[i].nData() + _boxSets[i].nMC());
-  return Err;
+  ndata = _boxSets[i].nData();
+  ndataCC = _boxSets[i].nMC();
+  double A = sqrt(sqrt(ndata)/ndata) + sqrt(sqrt(ndataCC)/ndataCC));
+  return A;
 }
+//
+//double ScpBinning::NormErr_ofBin(unsigned int i) const{
+//  if(i > _boxSets.size()) return -9999;
+//  ndata = _boxSets[i].nData();
+//  ndataCC = _boxSets[i].nMC();
+//  double A = sqrt(sqrt(ndata)/ndata) + sqrt(sqrt(ndataCC)/ndataCC));
+//  double Err = NormDiff_ofBin(i)*A;
+//  return Err;
+//}
 
 
 double ScpBinning::getScp_perBin() const{
