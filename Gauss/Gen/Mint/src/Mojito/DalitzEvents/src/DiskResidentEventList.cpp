@@ -69,7 +69,7 @@ DiskResidentEventList::DiskResidentEventList(const std::string& fname
   , _cName(treeName)
   , _ntpName(treeName+"NTP")
 {
-  bool dbThis=false;
+  bool dbThis=true;
   openFile();
   cout << "DiskResidentEventList created with file " << fname << endl;
   fromFile();

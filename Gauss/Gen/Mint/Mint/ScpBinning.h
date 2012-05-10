@@ -125,35 +125,29 @@ protected:
 };
 
 class lessByScpBoxData{
- private:
-	double m_norm;
  public:
-	void SetNorm(double norm)
-		{
-			m_norm = norm;
-		}
   bool operator()(const ScpBox& a, const ScpBox& b) const;
 };
 
 class lessByScpBoxScp{
 	private:
-	double m_norm;
+	double m_normSCP;
 
  public:
 	void SetNorm(double norm)
 			{
-				m_norm = norm;
+		m_normSCP = norm;
 			}
   bool operator()(const ScpBox& a, const ScpBox& b) const;
 };
 
 class lessByScpBoxSetScp{
  private:
-	double m_norm;
+	double m_normBoxSet;
  public:
 	void SetNorm(double norm)
 		{
-			m_norm = norm;
+		m_normBoxSet = norm;
 		}
   bool operator()(const ScpBoxSet& a, const ScpBoxSet& b) const;
 };

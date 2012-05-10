@@ -109,7 +109,6 @@ int ScpBinning::createBinning(IDalitzEventList* events
 
 //  double norm = this->normFactor();
   lessByScpBoxData sorter;
-//  sorter.SetNorm(norm);
   sort(boxes.begin(), boxes.end(), sorter);
 
 //  lessByScpBoxData sorter;
@@ -142,8 +141,8 @@ int ScpBinning::createBinning(IDalitzEventList* events
 
 
 int ScpBinning::mergeBoxes(ScpBoxSet& boxes, int minPerBin){
-   lessByScpBoxData sorter;
-   sort(boxes.begin(), boxes.end(), sorter);
+//   lessByScpBoxData sorter;
+//   sort(boxes.begin(), boxes.end(), sorter);
 //   double norm = this->normFactor();
 
 
@@ -287,7 +286,7 @@ void ScpBinning::fillDataCC(IDalitzEventList* data){
 
 void ScpBinning::sortByScp(){
   lessByScpBoxSetScp sorter;
-  sorter.SetNorm(m_norm);
+  sorter.SetNorm(normFactor());
   stable_sort(_boxSets.rbegin(), _boxSets.rend(), sorter);
 }
 
@@ -392,8 +391,8 @@ void ScpBinning::print(std::ostream& os) const{
 
 
 double ScpBinning::normFactor() const{
-//  return ((double)_nData)/_totalMCWeight;
-	return m_norm;
+  return ((double)_nData)/_nDataCC;
+//	return m_norm;
 }
 
 void ScpBinning::setBoxesNormFactors(){
@@ -420,7 +419,7 @@ int ScpBinning::Diff_ofBin(unsigned int i) const{
 
 double ScpBinning::NormDiff_ofBin(unsigned int i) const{
   if(i > _boxSets.size()) return -9999;
-  double Normdiff = _boxSets[i].nData() - m_norm*_boxSets[i].nMC();
+  double Normdiff = _boxSets[i].nData() - normFactor()*_boxSets[i].nMC();
   return Normdiff;
 }
 
@@ -428,7 +427,7 @@ double ScpBinning::Err_ofBin(unsigned int i) const{
   if(i > _boxSets.size()) return -9999;
   int ndata = _boxSets[i].nData();
   int ndataCC = _boxSets[i].nMC();
-  double Err = sqrt(ndata + ndataCC*m_norm*m_norm);
+  double Err = sqrt(ndata + ndataCC*normFactor()*normFactor());
 
   return Err;
 }
@@ -596,7 +595,7 @@ counted_ptr<TH1D> ScpBinning::getScpDistribution() const{
   h->SetDirectory(0);
   for(unsigned int i=0; i < _boxSets.size(); i++){
 //    cout << "filling scp " << i << " "<< _boxSets[i].scp() << endl;
-    h->Fill(_boxSets[i].scp(m_norm));
+    h->Fill(_boxSets[i].scp(normFactor()));
   }
   return h;
 }
@@ -607,7 +606,6 @@ void ScpBinning::drawScpDistribution(const std::string& fname)const{
   h->Draw();
   can.Print(fname.c_str());
 }
-
 
 double ScpBinning::Chi2() const{
 	double chi2 = 0;
@@ -931,7 +929,7 @@ double ScpBinning::Scp(const IDalitzEvent* Devt)
 }
 
 bool lessByScpBoxSetScp::operator()(const ScpBoxSet& a, const ScpBoxSet& b) const{
-  return (a.scp(m_norm)) < (b.scp(m_norm));
+  return (a.scp(m_normBoxSet)) < (b.scp(m_normBoxSet));
 }
 
 bool lessByScpBoxData::operator()(const ScpBox& a, const ScpBox& b) const{
@@ -940,7 +938,7 @@ bool lessByScpBoxData::operator()(const ScpBox& a, const ScpBox& b) const{
 }
 
 bool lessByScpBoxScp::operator()(const ScpBox& a, const ScpBox& b) const{
-  return a.scp(m_norm) < b.scp(m_norm);
+  return a.scp(m_normSCP) < b.scp(m_normSCP);
 }
 
 
