@@ -78,7 +78,7 @@ StatusCode GenerationToSimulation::initialize() {
     // from Gaudi/LHCb ParticlePropertySvc
     if ( m_updateG4ParticleProperties ) {
       IParticlePropertySvc * ppSvc = 
-	svc< IParticlePropertySvc >( "ParticlePropertySvc" , true ) ;
+	svc< IParticlePropertySvc >( "Gaudi::ParticlePropertySvc" , true ) ;
 	
       G4ParticlePropertyTable* PPT = G4ParticlePropertyTable::GetParticlePropertyTable();
       G4ParticleTable * particleTable = G4ParticleTable::GetParticleTable() ;

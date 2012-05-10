@@ -80,7 +80,7 @@ StatusCode SimulationToMCTruth::initialize() {
   if( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm 
   
   debug() << "==> Initialize" << endmsg;
-  m_ppSvc = svc<IParticlePropertySvc> ( "ParticlePropertySvc", true );
+  m_ppSvc = svc<IParticlePropertySvc> ( "Gaudi::ParticlePropertySvc", true );
   
   ParticleProperty * interm = m_ppSvc -> find( "Intermediate" ) ;
   if ( 0 != interm ) m_intermediatePDG = interm -> pdgID() ;
