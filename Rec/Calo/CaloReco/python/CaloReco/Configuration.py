@@ -799,6 +799,7 @@ class CaloLines(LHCbConfigurableUser):
         'LowEt'              : 300.*MeV,
         'ClusterEtFactor'    : 1.,     # pre-cut on cluster Et is factor * Low(High)ET (should be <=1)
         'L0Calo2Calo'        : True,
+        'ClusterizationLevel': 2,      # clusterizationLevel (when L0Calo2Calo == True only)   
         'ProtoOnDemand'      : False,
         'Sequencer'          : None,
         'OutputLevel'        : INFO,
@@ -848,6 +849,9 @@ class CaloLines(LHCbConfigurableUser):
 
         if self.getProp('L0Calo2Calo') : 
             l0calo2calo=HltL0CaloCandidates('L0Calo2Calo')
+            if self.getProp('ClusterizationLevel') > 0 : 
+                level = self.getProp('ClusterizationLevel')
+                l0calo2calo.ClusterizationLevel=level
             addAlgs( caloLines,  l0calo2calo )
             tagHighP = ''
             tagLowP = ''
