@@ -62,7 +62,7 @@ StatusCode MomentumRange::initialize() {
   // Get the mass of the particle to be generated
   //
   IParticlePropertySvc* ppSvc = 
-    svc< IParticlePropertySvc >( "ParticlePropertySvc" , true ) ;
+    svc< IParticlePropertySvc >( "Gaudi::ParticlePropertySvc" , true ) ;
 
   // check momentum and angles
   if ( ( m_minMom   > m_maxMom ) || ( m_minTheta > m_maxTheta ) || ( m_minPhi   > m_maxPhi ) )

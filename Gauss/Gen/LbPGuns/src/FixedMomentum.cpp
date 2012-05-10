@@ -58,7 +58,7 @@ StatusCode FixedMomentum::initialize() {
   // Get the mass of the particle to be generated
   //
   IParticlePropertySvc* ppSvc = 
-    svc< IParticlePropertySvc >( "ParticlePropertySvc" , true ) ;
+    svc< IParticlePropertySvc >( "Gaudi::ParticlePropertySvc" , true ) ;
 
   // setup particle information
   m_masses.clear();

@@ -70,7 +70,7 @@ StatusCode GaussianTheta::initialize( ) {
   
   // Get the mass of the particle to be generated
   IParticlePropertySvc * ppSvc = 
-    svc< IParticlePropertySvc >( "ParticlePropertySvc" , true ) ;
+    svc< IParticlePropertySvc >( "Gaudi::ParticlePropertySvc" , true ) ;
  
   ParticleProperty* particle = ppSvc->findByStdHepID(m_pdgCode); 
   m_mass = particle->mass();

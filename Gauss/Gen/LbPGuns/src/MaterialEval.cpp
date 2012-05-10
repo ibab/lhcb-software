@@ -97,7 +97,7 @@ StatusCode MaterialEval::initialize() {
     return Error( "Could not initialize random number generator" );
   
   IParticlePropertySvc* ppSvc =  
-    svc< IParticlePropertySvc >( "ParticlePropertySvc" , true );
+    svc< IParticlePropertySvc >( "Gaudi::ParticlePropertySvc" , true );
 
   ParticleProperty* particle = ppSvc -> findByStdHepID( m_pdgCode );
   if ( !particle ) {

@@ -116,7 +116,8 @@ StatusCode OTCosmic::initialize() {
   m_bottransform = Gaudi::Transform3D(Gaudi::RotationX(M_PI/2),
 				      Gaudi::Transform3D::Vector(100*Gaudi::Units::cm,-300*Gaudi::Units::cm,600*Gaudi::Units::cm)) ;
 
-  IParticlePropertySvc* ppSvc = svc< IParticlePropertySvc >( "ParticlePropertySvc" , true ) ;
+  IParticlePropertySvc* ppSvc = 
+    svc< IParticlePropertySvc >( "Gaudi::ParticlePropertySvc" , true ) ;
   m_muplus  = ppSvc->findByStdHepID(  13 );
   m_muminus = ppSvc->findByStdHepID( -13 );
   release( ppSvc ) ;
