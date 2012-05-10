@@ -30,8 +30,8 @@ L0Calo2CaloTool::L0Calo2CaloTool(const std::string& type,
   declareProperty("CaloDataProviderTool",   m_dataProviderToolName   = "CaloDataProvider");
   declareProperty("CaloDigitLocation",      m_digitLocation          = LHCb::CaloDigitLocation::Hlt1Ecal);
   declareProperty("CaloClusterLocation",    m_clusterLocation        = LHCb::CaloClusterLocation::EcalHlt1);  
-  declareProperty("NeighbourLevel",         m_neighbourLevel         = 1,
-                  "Level parameter for the CaloClusterizationTool, search clusters in (2+2*Level)x(2+2*Level) region around the seed cell");
+  declareProperty("NeighbourLevel",         m_neighbourLevel         = 2,
+                  "Level parameter for the CaloClusterizationTool, search clusters in (1+2*Level)x(1+2*Level) region around the seed cell");
   declareProperty("Sort",                   m_sort                   = false,
                   "sort the clusters due to energy");
   declareProperty("SortET",                 m_sortET                 = false,
@@ -51,6 +51,8 @@ StatusCode L0Calo2CaloTool::initialize()
   m_clusterizationTool = tool< ICaloClusterization >(m_clusterizationToolName);
   m_dataProviderTool   = tool< ICaloDataProvider >(m_dataProviderToolName, "EcalDataProvider", this, true);
   m_ecalCaloNum        = CaloCellCode::CaloNumFromName("Ecal");
+
+  info() << "Clusterizing Calo around L0 candidates : NeighbourLevel  set to " << m_neighbourLevel << endmsg;
 
   return StatusCode::SUCCESS;
 }

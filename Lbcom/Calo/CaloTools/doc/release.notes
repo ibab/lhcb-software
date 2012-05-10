@@ -3,6 +3,10 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !-------------------------------------------------------------------------------
 
+
+! 2012-05-10 - Olivier Deschamps
+ - L0Calo2Calo tool : default clusterization level set to 2 (5x5 area for merged pi0)
+
 !========================= CaloTools v6r3p1 2011-12-14 =========================
 ! 2011-11-23 - Marco Cattaneo
  - Fix trivial gcc warnings and icc remarks
