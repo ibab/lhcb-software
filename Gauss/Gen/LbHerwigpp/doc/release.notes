@@ -1,3 +1,19 @@
+!-----------------------------------------------------------------------------
+! Package     : Gauss_HEAD/Gen/LbHerwigpp
+! Responsible : Philip Ilten
+! Purpose     : Adaptor package for Herwig++
+!-----------------------------------------------------------------------------
+
+! 2012-05-10 - Gloria Corti
+ - Remove macros setting native version of Herwig++ and ThePeg as they must
+   be set in GENSER in order to be distributed remotely.
+ - Change order of the use of package to have linking in the correct order
+ - Prepend both Herwig++ and ThePeg in the LD_LIBRARY_PATH and remove all 
+   linking of Herwig++ until this is corrected in the LCG_GeneratorsInterfaces
+   packages.
+
 !========================= LbPythia8 v1r0 2010-07-08 =========================
 ! 2010-07-08 - Philip Ilten
  - Initial version of the Herwig++ interface. Much work required.
+
+!=============================================================================
