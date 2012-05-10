@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2012-05-10 - Pieter David
+ - Add Hlt1VertexDisplVertexTracks to HltANNSvc (removes warning from HltSelReportsMaker)
+
 !========================= HltConf v9r17 2012-04-24 =========================
 ! 2012-04-24 - V. Gligorov
  - Add Hlt2CharmHadD02HHXDstLines lines to Hlt2

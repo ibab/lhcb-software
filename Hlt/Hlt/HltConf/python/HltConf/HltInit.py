@@ -184,7 +184,8 @@ HltANNSvc().Hlt1SelectionID = {
     'VeloCandidatesTrackForwardPassThrough' :10121,
     'VeloCandidatesTrackForwardPassThroughLoose' :10122,
     'VeloCandidatesVertexDisplVertex'       : 10123,
-    'VeloCandidatesVertexDisplVertexPS'     : 10124
+    'VeloCandidatesVertexDisplVertexPS'     : 10124,
+    'Hlt1VertexDisplVertexTracks'           : 10125
     #
     # 11K - 20K : added automatically by configuration...
     # 50K+ : used by Hlt2
