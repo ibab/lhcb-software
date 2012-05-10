@@ -4,6 +4,10 @@
 ! Responsible : G.Corti
 ! -----------------------------------------------------------------------------
 
+! 2012-05-10 - Gloria Corti
+ - Fix run time problem with finding of ParticlePropertySvc that in Gaudi
+   v23 is in the Gaudi:: namespace.
+
 ! 2012-03-22 - Marco Cattaneo
  - GenInit.cpp, SimInit.cpp: do not add the random seeds to the Gen/MCHeader,
    following removal of ProcessHeader::m_randomSeeds

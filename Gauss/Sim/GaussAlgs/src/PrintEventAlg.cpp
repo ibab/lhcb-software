@@ -63,7 +63,7 @@ StatusCode PrintEventAlg::initialize()
   StatusCode sc = GaudiAlgorithm::initialize () ;
   if( sc.isFailure() ) { return sc ; }
   
-  m_ppSvc = svc<IParticlePropertySvc> ( "ParticlePropertySvc", true );
+  m_ppSvc = svc<IParticlePropertySvc> ( "Gaudi::ParticlePropertySvc", true );
   return StatusCode::SUCCESS; 
 }
 
