@@ -117,7 +117,7 @@ StatusCode TimeCorrSource::initialize() {
   if ( sc.isFailure( ) ) return sc ;
 
   // Get Particle property service
-  m_ppSvc = svc< IParticlePropertySvc >( "ParticlePropertySvc" , true ) ;
+  m_ppSvc = svc< IParticlePropertySvc >( "Gaudi::ParticlePropertySvc", true ) ;
   
   // Check if particle source file is present
   if ( m_pSourceFile.empty() ) {
