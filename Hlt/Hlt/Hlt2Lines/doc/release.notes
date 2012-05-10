@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2012-05-10 - Pieter David
+ - Add PV3D to the Hlt2 displaced vertex line algorithms (resolves the
+   inconsistencies in the independence tests)
+
 ! 2012-05-09 - S. Stahl
  - B2HHLTUnbiasedDetached line has a lifetime cut but didn't call PV3D.
 

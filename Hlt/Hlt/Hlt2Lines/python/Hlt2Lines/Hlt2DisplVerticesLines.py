@@ -205,9 +205,9 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         
         veloV = None
         if self.getProp('FilterVelo'):
-            veloV = bindMembers('VeloVForDV',  [ hlt2VeloTracking,vwithIP,FilterNumDisplVeloTracks,Hlt2PatPV3D ]).setOutputSelection( Hlt2PatPV3D.OutputVerticesName )
+            veloV = bindMembers('VeloVForDV',  [ hlt2VeloTracking, PV3D ,vwithIP,FilterNumDisplVeloTracks,Hlt2PatPV3D ]).setOutputSelection( Hlt2PatPV3D.OutputVerticesName )
         else :
-            veloV = bindMembers('VeloVForDV',  [ hlt2VeloTracking,Hlt2PatPV3D ]).setOutputSelection( Hlt2PatPV3D.OutputVerticesName )
+            veloV = bindMembers('VeloVForDV',  [ hlt2VeloTracking, PV3D ,Hlt2PatPV3D ]).setOutputSelection( Hlt2PatPV3D.OutputVerticesName )
         #######################################################################
         #Get the pions
         
