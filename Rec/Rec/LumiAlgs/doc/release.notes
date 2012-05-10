@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 
+! 2012-05-10 - Jaap Panman
+ - Restores backward compatibility with 2010
+
 ! 2012-05-09 - Jaap Panman
  - Correct DB interpretation of random lumi rate for 2012 data
 

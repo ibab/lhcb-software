@@ -394,7 +394,12 @@ StatusCode GetLumiParameters::processDB() {
     m_rateBB = std::min( m_rateHLT, m_odinTotalRate*1000. ) * m_odinFraction;
   }
   else {
-    m_rateBB = m_odinTotalRate * 1000. * m_odinFraction;
+    if ( m_calibCollidingBunches > 0 ) {
+      m_rateBB = 0;
+    }
+    else {
+      m_rateBB = m_odinTotalRate * 1000. * m_odinFraction;
+    }
   }
   
   if (msgLevel(MSG::DEBUG)) {
