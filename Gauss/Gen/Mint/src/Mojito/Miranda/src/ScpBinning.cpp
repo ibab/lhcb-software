@@ -141,8 +141,8 @@ int ScpBinning::createBinning(IDalitzEventList* events
 
 
 int ScpBinning::mergeBoxes(ScpBoxSet& boxes, int minPerBin){
-//   lessByScpBoxData sorter;
-//   sort(boxes.begin(), boxes.end(), sorter);
+   lessByScpBoxData sorter;
+   sort(boxes.begin(), boxes.end(), sorter);
 //   double norm = this->normFactor();
 
 
@@ -152,17 +152,19 @@ int ScpBinning::mergeBoxes(ScpBoxSet& boxes, int minPerBin){
 
   // this way, the smalles boxes come first 
   // makes sure no empty box is left over at the end.
-
+  int tot = 0;
 //  double SCP = 0;
   ScpBoxSet boxSet;
   for(unsigned int i=0; i < boxes.size(); i++){
 		boxSet.add(boxes[i]);
-		if(boxSet.nData() >= minPerBin || boxSet.nMC() >= minPerBin ){
+		if(boxSet.nData() >= minPerBin ){
 		  _boxSets.push_back(boxSet);
+		  tot = tot + boxSet.nData();
 		  boxSet.clear();
 		}
   }
   
+  cout << "Total " << tot << endl;
   return _boxSets.size();
 }
 
@@ -206,7 +208,7 @@ ScpBoxSet ScpBinning::splitBoxes(IDalitzEventList* events
     ScpBoxSet newBoxes;
     needToSplitMore=false;
     for(unsigned int i=0; i < boxes.size(); i++){
-      if( (boxes[i].nData() + boxes[i].nMC() ) > maxPerBin ){
+      if( boxes[i].nData() > maxPerBin ){
     	  needToSplitMore=true;
     	  newBoxes.add(boxes[i].split());
       }
@@ -315,7 +317,7 @@ double ScpBinning::setEvents(IDalitzEventList* data
   if(dbThis) cout << "... fillMC done, now setting norm factors" << endl;
   setBoxesNormFactors();
   if(dbThis) cout << " done the norm factors, now sorting by chi2" << endl;
-//  sortByScp();
+  sortByScp();
   if(dbThis) cout << " ScpBinning::setEventsAndPdf done" << endl;
   return 0;
 }
@@ -692,7 +694,7 @@ double ScpBinning::setBackgroundEvents(IDalitzEventList* data
   SubtractBackgroundDataCC(dataCC);
   if(dbThis) cout << "... fillMC done, now setting norm factors" << endl;
   if(dbThis) cout << " done the norm factors, now sorting by chi2" << endl;
-//  sortByScp();
+  sortByScp();
   if(dbThis) cout << " ScpBinning::setEventsAndPdf done" << endl;
   return 0;
 }
@@ -934,7 +936,7 @@ bool lessByScpBoxSetScp::operator()(const ScpBoxSet& a, const ScpBoxSet& b) cons
 
 bool lessByScpBoxData::operator()(const ScpBox& a, const ScpBox& b) const{
 
-  return (a.nData() + a.nMC()) < (b.nData() + b.nMC());
+  return a.nData() < b.nData();
 }
 
 bool lessByScpBoxScp::operator()(const ScpBox& a, const ScpBox& b) const{
