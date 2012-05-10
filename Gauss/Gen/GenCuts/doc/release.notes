@@ -4,6 +4,10 @@
 ! Purpose     : cut tools for Gauss
 !-----------------------------------------------------------------------------
 
+! 2012-05-10 - Gloria Corti
+ - Fix run time problem with finding of ParticlePropertySvc that in Gaudi
+   v23 is in the Gaudi:: namespace.
+
 !========================== GenCuts v1r4 2012-02-12 ========================== 
 ! 2012-02-07 - Patrick Robbe
  - DaughtersInLHCbAndCutsForDstar: new cut applied on D* -> D0 pi decays,

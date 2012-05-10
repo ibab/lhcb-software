@@ -59,7 +59,7 @@ StatusCode BiasedBB::initialize() {
   }
   if ( m_nStableChargedDaugthers > 0 ){
     IParticlePropertySvc * ppSvc = 
-      svc< IParticlePropertySvc > ( "ParticlePropertySvc" ) ;
+      svc< IParticlePropertySvc > ( "Gaudi::ParticlePropertySvc" ) ;
     ParticleProperty * prop = ppSvc -> find( "pi+" ) ;
     m_chargedPIDList.insert( prop->pythiaID ()  );
     prop = ppSvc -> find( "mu+" ) ;

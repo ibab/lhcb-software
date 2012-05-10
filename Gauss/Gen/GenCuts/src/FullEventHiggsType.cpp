@@ -117,7 +117,7 @@ StatusCode FullEventHiggsType::initialize() {
             << endmsg;
 		return StatusCode::FAILURE;
 	}
-  m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc", true);
+  m_ppSvc = svc<IParticlePropertySvc>("Gaudi::ParticlePropertySvc", true);
   m_motherofb_pid = abs( m_ppSvc->find( m_motherofb_id )->pdgID() );
   if( m_subb == "No" ){
     m_b_pid = abs( m_ppSvc->find("b" )->pdgID() );

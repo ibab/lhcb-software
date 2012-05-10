@@ -66,7 +66,7 @@ StatusCode ListOfDaughtersInLHCb::initialize() {
         it != m_pidVector.end() ; ++it ) m_daughtersPIDList.insert( *it ) ;
   
   IParticlePropertySvc * ppSvc = 
-    svc< IParticlePropertySvc > ( "ParticlePropertySvc" ) ;
+    svc< IParticlePropertySvc > ( "Gaudi::ParticlePropertySvc" ) ;
   
   info() << "Cutting at generator level on stable daughters of " ;
   PIDs::const_iterator it ;
