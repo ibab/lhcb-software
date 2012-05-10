@@ -11,6 +11,8 @@
  - Prepend both Herwig++ and ThePeg in the LD_LIBRARY_PATH and remove all 
    linking of Herwig++ until this is corrected in the LCG_GeneratorsInterfaces
    packages.
+ - Fix run time problem with finding of ParticlePropertySvc that in Gaudi
+   v23 is in the Gaudi:: namespace.
 
 !========================= LbPythia8 v1r0 2010-07-08 =========================
 ! 2010-07-08 - Philip Ilten
