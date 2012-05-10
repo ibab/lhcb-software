@@ -48,6 +48,7 @@ protected:
  public:
   ScpBinning();
 
+
   void resetEventCounts();
   virtual void fillData(IDalitzEventList* data);
   virtual void fillDataCC(IDalitzEventList* data);
@@ -86,6 +87,9 @@ protected:
   double Chi2() const;
 
   int ndof() const;
+
+  void SubtractBin(unsigned int i);
+
 
   int Diff_ofBin(unsigned int i) const;
 

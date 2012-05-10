@@ -637,6 +637,16 @@ int ScpBinning::ndof() const
 	return _boxSets.size()-1;
 }
 
+void ScpBinning::SubtractBin(unsigned int i)
+{
+	 int ndata = _boxSets[i].nData();
+	 int ndataCC = _boxSets[i].nMC();
+	 _nData = _nData - ndata;
+	 _nDataCC = _nDataCC - ndataCC;
+	 _boxSets.erase (_boxSets.begin());
+
+}
+
 
 void ScpBinning::SubtractBackgroundData(IDalitzEventList* data){
   data->Start();
