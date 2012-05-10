@@ -101,6 +101,7 @@ class Hlt1DisplVertexLinesConf( HltLinesConfigurableUser ):
 
     def vertexDisplVertex_streamer( self, properties ):
         from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
+        from HltTracking.HltPVs import PV3D
         from Configurables import LoKi__HltUnit as HltUnit
         from HltLine.HltLine import bindMembers
 
@@ -108,6 +109,8 @@ class Hlt1DisplVertexLinesConf( HltLinesConfigurableUser ):
 
         gec = properties["GEC"]
         algos.append( Hlt1GECUnit( properties["GEC"] ) )
+
+        algos.append( PV3D() )
 
         trackUnit = HltUnit(
             "Hlt1%(name)sTrackStreamer" % properties
