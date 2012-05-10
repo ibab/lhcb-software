@@ -109,7 +109,8 @@ private:
 void GiGaHiggsParticles::ConstructParticle () // construct the particles 
 {
   
-  IParticlePropertySvc* ppSvc = svc<IParticlePropertySvc> ("ParticlePropertySvc") ;
+  IParticlePropertySvc* ppSvc = 
+    svc<IParticlePropertySvc> ("Gaudi::ParticlePropertySvc") ;
   
   Strings tmp = m_higgses ;
   {

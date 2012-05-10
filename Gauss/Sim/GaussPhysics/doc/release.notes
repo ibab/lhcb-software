@@ -4,6 +4,10 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
+! 2012-05-10 - Gloria Corti
+ - Fix run time problem with finding of ParticlePropertySvc that in Gaudi
+   v23 is in the Gaudi:: namespace.
+
 !====================== GaussPhysics v7r4 2012-04-03 =========================
 ! 2011-04-03 - Gloria Corti
  - Put back definitions for XibMinus, XibPlus, OmegabMinus, OmegabPlus that
