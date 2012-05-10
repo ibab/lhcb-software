@@ -4,6 +4,11 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+
+
+! 2012-05-10 - Olivier Deschamps
+ - HltL0CalOCandidates.cpp : change ClusterizationLevel default value to 2 (needed for merged Pi0) 
+
 !========================= HltCommon v8r5 2012-02-24 =========================
 ! 2012-04-19 - Albert Puig
  - Added CaloID check and sorting of L0Calo Candidates sorting by Et.

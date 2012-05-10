@@ -36,7 +36,7 @@ HltL0CaloCandidates::HltL0CaloCandidates( const std::string& name,
   declareProperty("TESOutputPrefix", m_TESprefix = "/Event/Rec/Calo");
   declareProperty("EtThresholdLow", m_lowEtThreshold = 500);
   declareProperty("EtThresholdHigh", m_highEtThreshold = 2500);
-  declareProperty("ClusterizationLevel",m_level=1);
+  declareProperty("ClusterizationLevel",m_level=2);
   declareProperty("L0CaloCandidateLocation",m_l0loc=L0CaloCandidateLocation::Full);
 }
 //=============================================================================
