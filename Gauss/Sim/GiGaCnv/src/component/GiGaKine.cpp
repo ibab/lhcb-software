@@ -40,7 +40,7 @@ GiGaKine::GiGaKine( const std::string&   ServiceName          ,
   : GiGaCnvSvcBase(                                  ServiceName          , 
                                                      ServiceLocator       , 
                                                      GiGaKine_StorageType )
-  , m_ppSvcName ("ParticlePropertySvc")
+  , m_ppSvcName ("Gaudi::ParticlePropertySvc")
   , m_ppSvc     ( 0 )                
   ///
   , m_table     (   )

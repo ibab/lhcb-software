@@ -4,6 +4,10 @@
 ! Purpose     : Hold converters between LHCb and Geant4
 !-----------------------------------------------------------------------------
 
+! 2012-05-10 - Gloria Corti
+ - Fix run time problem with finding of ParticlePropertySvc that in Gaudi
+   v23 is in the Gaudi:: namespace.
+
 !======================== GiGaCnv v18r7 2009-11-04 =========================
 ! 2009-10-15 - Silvia MIGLIORANZI
  - Fix compilation warnings on slc5 "type qualifiers ignored on function return 
