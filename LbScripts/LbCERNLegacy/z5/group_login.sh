@@ -56,7 +56,15 @@ else
      rm -f ${LB_BANNER}
      unset LB_BANNER
   else
+    use_cvmfs=0
     if [[ -e ${HOME}/.devLHCBuseCVMFS && -e /cvmfs/lhcb.cern.ch/lib/lhcb/LBSCRIPTS/prod/InstallArea/scripts/LbLogin.sh ]]; then
+      use_cvmfs=1
+    fi
+
+    if [[ $ENVIRONMENT = "BATCH" && -e /cvmfs/lhcb.cern.ch/lib/lhcb/LBSCRIPTS/prod/InstallArea/scripts/LbLogin.sh  && ! -e ${HOME}/.devLHCBuseAFS ]]; then
+      use_cvmfs=1
+    fi
+    if [ $use_cvmfs -eq 1 ]; then
       . /cvmfs/lhcb.cern.ch/lib/lhcb/LBSCRIPTS/prod/InstallArea/scripts/LbLogin.sh --quiet
     else
       . /afs/cern.ch/lhcb/software/releases/LBSCRIPTS/$lbvers/InstallArea/scripts/LbLogin.sh --quiet 

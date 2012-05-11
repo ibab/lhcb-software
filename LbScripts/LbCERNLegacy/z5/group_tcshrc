@@ -12,15 +12,23 @@ if ( ! -e ${HOME}/.oldLHCBLoginscript ) then
   if ( -e ${HOME}/.devLHCBLoginscript ) then
     set lbvers=dev
   endif
+  set use_cvmfs=0
+  if ( -e ${HOME}/.devLHCBuseCVMFS && -e /cvmfs/lhcb.cern.ch/lib/lhcb/LBSCRIPTS/prod/InstallArea/scripts/LbLogin.csh ) then
+    set use_cvmfs=1
+  endif
+  if ( ${ENVIRONMENT} == "BATCH" && ( !  -e ${HOME}/.devLHCBuseAFS ) && -e /cvmfs/lhcb.cern.ch/lib/lhcb/LBSCRIPTS/prod/InstallArea/scripts/LbLogin.csh ) then
+    set use_cvmfs=1
+  endif
+
   if ( $?LBLOGIN_DONE ) then
-    if ( -e ${HOME}/.devLHCBuseCVMFS && -e /cvmfs/lhcb.cern.ch/lib/lhcb/LBSCRIPTS/prod/InstallArea/scripts/LbLogin.csh ) then
+    if ( $use_cvmfs == 1 ) then
      source  /cvmfs/lhcb.cern.ch/lib/lhcb/LBSCRIPTS/prod/InstallArea/scripts/LbLogin.csh  --silent >& /dev/null
    else
      source /afs/cern.ch/lhcb/software/releases/LBSCRIPTS/$lbvers/InstallArea/scripts/LbLogin.csh --silent >& /dev/null 
    endif
   else
      setenv LB_BANNER `mktemp -t LbLogin_banner.XXXXXXXX`
-     if ( -e ${HOME}/.devLHCBuseCVMFS && -e /cvmfs/lhcb.cern.ch/lib/lhcb/LBSCRIPTS/prod/InstallArea/scripts/LbLogin.csh ) then
+     if ( $use_cvmfs == 1 ) then
        source  /cvmfs/lhcb.cern.ch/lib/lhcb/LBSCRIPTS/prod/InstallArea/scripts/LbLogin.csh  --quiet >! ${LB_BANNER}
      else
        source /afs/cern.ch/lhcb/software/releases/LBSCRIPTS/$lbvers/InstallArea/scripts/LbLogin.csh --quiet >! ${LB_BANNER}

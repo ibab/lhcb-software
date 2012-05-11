@@ -52,7 +52,16 @@ else
      rm -f ${LB_BANNER}
      unsetenv LB_BANNER
   else
-     if ( -e ${HOME}/.devLHCBuseCVMFS && -e /cvmfs/lhcb.cern.ch/lib/lhcb/LBSCRIPTS/prod/InstallArea/scripts/LbLogin.csh ) then
+      set use_cvmfs=0
+      if ( -e ${HOME}/.devLHCBuseCVMFS && -e /cvmfs/lhcb.cern.ch/lib/lhcb/LBSCRIPTS/prod/InstallArea/scripts/LbLogin.csh ) then
+	  set use_cvmfs=1
+      endif
+
+      if ( ${ENVIRONMENT} == "BATCH" && ( !  -e ${HOME}/.devLHCBuseAFS ) && -e /cvmfs/lhcb.cern.ch/lib/lhcb/LBSCRIPTS/prod/InstallArea/scripts/LbLogin.csh ) then
+	  set use_cvmfs=1
+      endif
+
+     if ( $use_cvmfs == 0 ) then
        source /cvmfs/lhcb.cern.ch/lib/lhcb/LBSCRIPTS/prod/InstallArea/scripts/LbLogin.csh  --quiet
      else
        source /afs/cern.ch/lhcb/software/releases/LBSCRIPTS/$lbvers/InstallArea/scripts/LbLogin.csh --quiet
