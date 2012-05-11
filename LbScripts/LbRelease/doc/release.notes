@@ -2,7 +2,8 @@
 
 	* python/LbRelease/LHCbDoc: added an option to check if there are problems
 	in the documentation directories; print the name of the AFS volume that
-	should be removed (removal not implemented)
+	should be removed (removal not implemented); ignore OSError as well as IOError
+	when cleaning directories of archived projects
 	* scripts/buildGeneralDoc: added the option --timeout in the call to LHCbDoc
 	(not yet functional)
 

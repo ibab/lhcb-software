@@ -1283,6 +1283,8 @@ def cleanArchivedProjects(root = None):
                 os.remove(l)
             except IOError, x:
                 logging.warning("IOError: %s", x) # ignore exceptions during removal
+            except OSError, x:
+                logging.warning("OSError: %s", x) # ignore exceptions during removal
     # For each archived project, remove the entry in the common directory
     # (docs/<project>/<version>)
     for p in archived_project:
@@ -1293,6 +1295,8 @@ def cleanArchivedProjects(root = None):
             os.remove(l)
         except IOError, x:
             logging.warning("IOError: %s", x) # ignore exceptions during removal
+        except OSError, x:
+            logging.warning("OSError: %s", x) # ignore exceptions during removal
 
 def removeUnusedDocs(root = None):
     """
