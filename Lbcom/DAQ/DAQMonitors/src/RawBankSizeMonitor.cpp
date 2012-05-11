@@ -29,7 +29,7 @@ DECLARE_ALGORITHM_FACTORY( RawBankSizeMonitor )
 {
   declareProperty( "bankNames"   , m_bankNames );
   declareProperty( "MaxSizeMap"  , m_max);
-  declareProperty( "MaxSizeDef"  , m_def=5000);
+  declareProperty( "MaxSizeDef"  , m_def=12000);
   declareProperty( "Bins"        , m_bin=200);
   declareProperty( "Profile"     , m_prof=true);
 
@@ -109,8 +109,8 @@ StatusCode RawBankSizeMonitor::execute() {
       int source   = (*ib)->sourceID();
       if( s_min > source )s_min=source;
       if( s_max < source )s_max=source;      
-      s_sum+=(*ib)->size()/4;  // size in Bytes
-      size[source] = (*ib)->size()/4; // size in Bytes 
+      s_sum+=(*ib)->size();  // size in Bytes
+      size[source] = (*ib)->size(); // size in Bytes 
     }
     counter(name + " total bank size") += s_sum;
     plot1D(s_sum,name+"/0","Overal "+name+" bank size",0,(double) max,m_bin);
