@@ -73,6 +73,7 @@ class ParticleFlowConf:
                           'VerticesLocation':"Rec/Vertex/Primary",  "PFCaloHypoOutputLocation":"Rec/Calo/Hadrons",
                           'CandidateToBanLocation':'','PFProtoParticlesOutputLocation':"Rec/ProtoP/PF",
                           'PFOutputLocation': "Phys/PFParticles/Particles",'PFBannedOutputLocation':"Phys/PFBannedParticles/Particles",
+                          'PFHiddenNeutralOutputLocation':"Phys/PFNeutralParticles/Particles",
                           "CalibECAL_EovP": 0.1,"CalibHCAL_EovP": 0.9,"NSigmaForCaloRecovery": 3.
                           }
 ##          self.paramDef = {'Chi2MaxLong': 5. , 'PtMinLong': 0. , 'AcceptClone': False , 'PtMinDown': 0. ,
@@ -136,6 +137,7 @@ class ParticleFlowConf:
         alg.VerticesLocation       = self.VerticesLocation
         alg.PFOutputLocation       = self.PFOutputLocation
         alg.PFBannedOutputLocation = self.PFBannedOutputLocation
+        alg.PFHiddenNeutralOutputLocation = self.PFHiddenNeutralOutputLocation
         alg.PFProtoParticlesOutputLocation = self.PFProtoParticlesOutputLocation
         alg.PFCaloHypoOutputLocation = self.PFCaloHypoOutputLocation
         
