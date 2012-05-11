@@ -8,7 +8,7 @@ Purpose             : LHCb physics analysis application
 New patch release on top of DaVinci v30r4
 
 In DaVinciTools :
- . Update CombineParticles to not save candidates in the MaxCandidate or
+ . Update CombineParticles to not save candidates if the MaxCandidate or
    MaxCombination limit is hit.
 
 In DecayTreeTuple
