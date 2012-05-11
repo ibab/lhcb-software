@@ -38,12 +38,11 @@ protected:
   ( const std::string& name ,
     ISvcLocator*       pSvc )
     : GaudiAlgorithm ( name , pSvc ),
-   m_OnOffline(0),
-   m_pvRelator(0)
+      m_OnOffline(0),
+      m_pvRelator(0)
   { 
     declareProperty ( "InputJetsLocation"   ,  m_inputJetsLocation   , "Location of jets to be updated") ;
     declareProperty ( "InputVertexLocation" ,  m_inputVertexLocation , "Location of vertices to be updated") ; 
-    declareProperty ( "UseJetVertex"        ,  m_useBaseVertex = false  , "Compute the weight wrt. the base vertex of the jet") ; 
     // declareProperty ( "UpdatedJetsLocation" ,  m_updatedJetsLocation , "Location of the updated jets") ; 
   }
   
@@ -69,7 +68,7 @@ public:
     if (0==m_OnOffline) return Error("Failed to get IOnOffline tool");
     
     m_pvRelator = tool<IRelatedPVFinder>(m_OnOffline->relatedPVFinderType(), 
-					 this);
+                                         this);
     
     if (0==m_pvRelator) return Error("Failed to get IRelatedPVFinder tool");
     
@@ -96,11 +95,10 @@ private:
 private:  
   std::string m_inputJetsLocation ;
   std::string m_inputVertexLocation ;
-  bool m_useBaseVertex ;
   //std::string m_updatedJetsLocation ;
 
-   IOnOffline* m_OnOffline ; 
-   IRelatedPVFinder* m_pvRelator ; 
+  IOnOffline* m_OnOffline ; 
+  IRelatedPVFinder* m_pvRelator ; 
 
 };
 
@@ -146,9 +144,6 @@ StatusCode UpdateJetsWithVtx::execute ()
 
   typedef std::vector<const LHCb::Particle*> Parts;
 
-  //// Create relation table between vertex and jets
-  IJets2Jets::Table* table = new IJets2Jets::Table() ;
-  
   // select
 
   // create a map containing the weight info to vertex
@@ -156,6 +151,9 @@ StatusCode UpdateJetsWithVtx::execute ()
 
 
   if(type == 1){
+    //// Create relation table between vertex and jets
+    IJets2Jets::Table* table = new IJets2Jets::Table() ;
+  
     const LHCb::Particles* myInput = get<LHCb::Particles>( m_inputVertexLocation );
 
   
@@ -166,10 +164,10 @@ StatusCode UpdateJetsWithVtx::execute ()
       tmp_jet.push_back(-1.);
       tmp_jet.push_back(-1.);
       double nonDown(0.);
-      Parts daug_secjetfirst ;
+      Parts daug_secjet ;
       int jetPID = PID(*secjet);
-      LoKi::Extract::getParticles (*secjet, std::back_inserter (daug_secjetfirst), PID!=jetPID);
-      for(Parts::iterator idaug_secjet = daug_secjetfirst.begin() ; daug_secjetfirst.end() != idaug_secjet   ; idaug_secjet++ )
+      LoKi::Extract::getParticles (*secjet, std::back_inserter (daug_secjet), PID!=jetPID);
+      for(Parts::iterator idaug_secjet = daug_secjet.begin() ; daug_secjet.end() != idaug_secjet   ; idaug_secjet++ )
       {
         if((*idaug_secjet)->proto()==NULL)continue;
         const LHCb::Track* track_second = (*idaug_secjet)->proto()->track();
@@ -181,27 +179,11 @@ StatusCode UpdateJetsWithVtx::execute ()
       tmp_jet.push_back(nonDown);
       jetList.push_back(tmp_jet);
       for(LHCb::Particles::const_iterator primjet =myInput->begin() ; myInput->end()!= primjet ; primjet++)
-      { 
-        if(m_useBaseVertex &&
-           ( std::abs((*secjet)->endVertex()->position().x()-(*primjet)->endVertex()->position().x())>1e-6 ||
-             std::abs((*secjet)->endVertex()->position().y()-(*primjet)->endVertex()->position().y())>1e-6))continue;
+      {  
         double weight_jetsec_jetprim = 0.;
         Parts daug_secjet ;
         int jetPID = PID(*secjet);
         int vertPID = PID(*primjet);
-
-        // for correct weight calculation: get energy of vertex without velo tracks
-        double EnoVelo_primjet = 0.;
-        Parts daug_vtx ;
-        LoKi::Extract::getParticles (*primjet, std::back_inserter (daug_vtx), PID!=vertPID);
-        for(Parts::iterator idaug_vtx = daug_vtx.begin() ; daug_vtx.end()!= idaug_vtx  ; idaug_vtx++ ){
-          if ((*idaug_vtx)->proto()==NULL)continue;
-          const LHCb::Track* track_vtx = (*idaug_vtx)->proto()->track();
-          if (track_vtx== NULL )continue;
-          if (track_vtx->type() == LHCb::Track::Velo) continue;
-          EnoVelo_primjet += E(*idaug_vtx);
-        }
-
         LoKi::Extract::getParticles (*secjet, std::back_inserter (daug_secjet), PID!=jetPID);
         Parts daug_primjet ;
         LoKi::Extract::getParticles (*primjet, std::back_inserter (daug_primjet), PID!=vertPID);
@@ -229,31 +211,15 @@ StatusCode UpdateJetsWithVtx::execute ()
                 if ((*i_idsFirst)==(*i_idsSec)) sharedID += 1.;
               }
             }
-//             if(idsFirst.size()<idsSec.size()) sharedID = sharedID/idsFirst.size();
-//             else sharedID = sharedID/idsSec.size();
+            if(idsFirst.size()<idsSec.size()) sharedID = sharedID/idsFirst.size();
+            else sharedID = sharedID/idsSec.size();
           
-//             // Check how many hits are shared for the tracks and how many calodigit are shared for the ...
-//             if(sharedID>0.9)
-//             {
-//               weight_jetsec_jetprim += E(*idaug_secjet)/E(*primjet);
-//               continue;
-//             }
-
-            // New stuff:
-            if(idsFirst.size()<idsSec.size()) sharedID = sharedID/idsSec.size();
-            else sharedID = sharedID/idsFirst.size();
-            
             // Check how many hits are shared for the tracks and how many calodigit are shared for the ...
-            if(sharedID>=1.)
+            if(sharedID>0.9)
             {
-              //weight_jetsec_jetprim += E(*idaug_secjet)/E(*primjet);
-              weight_jetsec_jetprim += E(*idaug_secjet)/EnoVelo_primjet;
-              //std::cout<<"Track Match for track with E="<<E(*idaug_secjet) 
-              //         <<", sharedID:"<<sharedID <<", weight: "<<weight_jetsec_jetprim  <<std::endl;
-              
+              weight_jetsec_jetprim += E(*idaug_secjet)/E(*primjet);
               continue;
             }
-
           }
         }
         if(weight_jetsec_jetprim>0) {
@@ -296,7 +262,7 @@ StatusCode UpdateJetsWithVtx::execute ()
   
     for (int i = 0 ; i < (int)jetList.size(); i++){
       if (jetList[i][2]>-0.5 ){
-        if(!m_useBaseVertex)myJets->object(jetList[i][0])->setReferencePoint( myInput->object(jetList[i][2])->referencePoint());
+        myJets->object(jetList[i][0])->setReferencePoint( myInput->object(jetList[i][2])->referencePoint());
         myJets->object(jetList[i][0])->addInfo(53, jetList[i][1] ); 
         myJets->object(jetList[i][0])->addInfo(54, jetList[i][1] * E(myInput->object(jetList[i][2])) / jetList[i][3] ); 
 
@@ -311,7 +277,7 @@ StatusCode UpdateJetsWithVtx::execute ()
         setFilterPassed ( true ) ;
       }
       else{
-        if(!m_useBaseVertex)myJets->object(jetList[i][0])->setReferencePoint( Gaudi::XYZPoint(0.,0.,0.)  );
+        myJets->object(jetList[i][0])->setReferencePoint( Gaudi::XYZPoint(0.,0.,0.)  );
         //       myJets->addInfo(53, jetList[i][1] ); 
         //       myJets->addInfo(54, jetList[i][1] * E(myInput->object(jetList[i][2])) / jetList[i][3] ); 
 
@@ -330,7 +296,6 @@ StatusCode UpdateJetsWithVtx::execute ()
   
   }
   else if (type ==2){
-    
     const LHCb::RecVertex::Container*  PVS = get<LHCb::RecVertex::Container>( m_inputVertexLocation );
     
     Gaudi::XYZPoint   point  =    Gaudi::XYZPoint(0,0,0);
@@ -428,7 +393,6 @@ StatusCode UpdateJetsWithVtx::execute ()
     
         
     setFilterPassed ( true ) ;
-    
   }      
   
   

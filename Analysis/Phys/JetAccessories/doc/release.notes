@@ -7,6 +7,13 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2012-05-11 - Victor Coco
+ - Remove potential memory leak in UpdateJetsWithVtx.cpp (coverity defect 29332)
+   Remove obsolete code:  JetsUtilsCaloPart.cpp
+                          TagJetsWithSeedFinder.h
+                          TagJetsWithSeedFinder.cpp (was causing coverity defect 24495)
+   Modification to ParticleFlow4Jets.cpp to allow neutral recovery behind tracks
+   Update of ParticleFlow_Config.py to follow the modification of ParticleFlow4Jets
 
 
 ! 2012-05-09 - Veerle Heijne

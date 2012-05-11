@@ -61,6 +61,9 @@ ParticleFlow4Jets::ParticleFlow4Jets( const std::string& name,
   declareProperty( "PFBannedOutputLocation"          ,  m_PFBannedOutputLocation  =  "Phys/PFBannedParticles/Particles"    
                    ,  "Output Location of the Banned particles 4 jets") ; 
 
+  declareProperty( "PFHiddenNeutralOutputLocation"          ,  m_PFHiddenNeutralOutputLocation  =  "Phys/PFNeutralParticles/Particles"    
+                   ,  "Output Location of the Neutral particles form cluster under tracks 4 jets") ; 
+
 
   declareProperty( "TrackSelectorType", m_trSelType = "" 
                    , "TrackSelector for choice of track inputs");
@@ -70,7 +73,7 @@ ParticleFlow4Jets::ParticleFlow4Jets( const std::string& name,
                    , "Location for the calohypo created in PF");
   
   // Track related cuts
-  declareProperty( "UsePIDInfo" , m_usePIDInfo  = false ,
+  declareProperty( "UsePIDInfo" , m_usePIDInfo  = true ,
                    "Use PID information to apply mass hypothwesis to tracks");
   declareProperty( "UseTTHits" , m_useTTHits  = false ,
                    "Use TT info to kill long ghost");
@@ -133,7 +136,14 @@ ParticleFlow4Jets::ParticleFlow4Jets( const std::string& name,
   declareProperty( "UseTTrackBanning", m_banFromTTrack = true, "Use TTrack to ban neutrals");
   declareProperty( "VerticesLocation", m_verticesLocation = LHCb::RecVertexLocation::Primary 
                    , "Location of vertices to which charged paritcles should be related");
-
+  declareProperty( "CalibECAL_EovP", m_alphaECAL = 0.1
+                   , "Fraction of the EovP in ECAL");
+  declareProperty( "CalibHCAL_EovP", m_betaHCAL = 0.9
+                   , "Fraction of the EovP in HCAL");
+  declareProperty( "NSigmaForCaloRecovery", m_nSigmaE = 3
+                   , "From how many sigma E we consider it a new particle");
+  declareProperty( "NeutralRecovery", m_neutralRecovery = false
+                   , "Turn on the neutral recovery");
 }
 //=============================================================================
 // Destructor
@@ -193,6 +203,9 @@ StatusCode ParticleFlow4Jets::initialize() {
   m_filterGhost = tool<IProtoParticleFilter>( "ProtoParticleANNPIDFilter", "ghost", this );
     
 
+  m_ecal = getDet<DeCalorimeter> ( "/dd/Structure/LHCb/DownstreamRegion/Ecal" );
+  m_hcal = getDet<DeCalorimeter> ( "/dd/Structure/LHCb/DownstreamRegion/Hcal" );
+
   info()<<"key cuts for Particle Flow 4 Jets:"<<endmsg;
   info()<<"|--> MinInfMomentumCut              : " << m_cutInfMomTRVal<<endmsg;
   info()<<"|--> MinPhotonID4Photon             : " << m_photonID4Photon <<endmsg;
@@ -205,6 +218,8 @@ StatusCode ParticleFlow4Jets::initialize() {
   info()<<"|--> MaxMatchHCALTr for  "<<m_Chi2HCAL0CutEValue<<" < P < "<<m_Chi2HCAL1CutEValue<<"          : " 
         << m_Chi2HCAL1Cut  <<endmsg;
   info()<<"|--> MaxMatchHCALTr for P > "<<m_Chi2HCAL1CutEValue<<" : " << m_Chi2HCAL2Cut  <<endmsg;
+  info()<<"|--> NeutralRecovery                : " << m_neutralRecovery<<endmsg;
+  info()<<"|--> UsePIDInof                     : " << m_usePIDInfo<<endmsg;
   
 
   return StatusCode::SUCCESS;
@@ -215,7 +230,7 @@ StatusCode ParticleFlow4Jets::initialize() {
 // Main execution
 //=============================================================================
 StatusCode ParticleFlow4Jets::execute() {
-
+  verbose()<<"enter particle flow"<<endreq;
   using namespace LHCb::Calo2Track;
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
@@ -226,6 +241,11 @@ StatusCode ParticleFlow4Jets::execute() {
   
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Few definitions ~~~~~~~~~~~~~~~~~~~~~~
   typedef std::map<int, std::pair< int , int > > BannedIDMap;
+
+  typedef std::map< int , std::vector<double> > ClusterID2DoubleMap;
+  typedef std::map< int , double > ClusterID2EMap;
+  typedef std::map< int , std::vector<int>    > ClusterID2IntMap;
+  typedef std::map< int , int > ClusterID2SatMap;
 
   m_trackKeyToBan.clear();
 
@@ -242,6 +262,12 @@ StatusCode ParticleFlow4Jets::execute() {
   LHCb::Particles* BannedPFParticles = new LHCb::Particles();
   put( BannedPFParticles , m_PFBannedOutputLocation );
 
+  // Some staff for newly created particles
+  LHCb::ProtoParticles* PFProtoParticles = new LHCb::ProtoParticles();
+  put( PFProtoParticles , m_protoPF );
+  LHCb::CaloHypos* PFCaloHypos = new LHCb::CaloHypos();
+  put( PFCaloHypos , m_calohypoPF );
+
   // Create the particle to vertex relation table
   Particle2Vertex::WTable* table = new Particle2Vertex::WTable();
   Particle2Vertex::WTable* tableBanned = new Particle2Vertex::WTable();
@@ -250,7 +276,17 @@ StatusCode ParticleFlow4Jets::execute() {
   BannedIDMap BannedECALClusters;  
   // Map of HCAL clusters to Ban
   BannedIDMap BannedHCALClusters;    
-
+  // Map of charged particle to banned clusters
+  ClusterID2DoubleMap  ECALCluster2MomentaMap;
+  ClusterID2IntMap     ECALCluster2IDMap;
+  ClusterID2DoubleMap  HCALCluster2MomentaMap;
+  ClusterID2IntMap     HCALCluster2IDMap;
+  ClusterID2EMap       ECALCluster2CaloMap;
+  ClusterID2EMap       HCALCluster2CaloMap;
+  ClusterID2SatMap     ECALCluster2NSatMap;
+  ClusterID2SatMap     HCALCluster2NSatMap;
+  ClusterID2EMap       ECALCluster2CovMap;
+  ClusterID2EMap       HCALCluster2CovMap;
   // Eventually store the V0 daughters track keys
   if(m_particleContainers.count("V0") > 0.5){
     for( unsigned int i = 0 ; i < m_particleContainers["V0"].size(); i++){
@@ -266,6 +302,7 @@ StatusCode ParticleFlow4Jets::execute() {
       }
     }
   }
+
 
   verbose()<<"Start charged Loop..."<<endreq;
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~ The main loop for charged components  ~~~~~~~~~~~~~~~~~~~~~~
@@ -287,14 +324,30 @@ StatusCode ParticleFlow4Jets::execute() {
         if ( !m_trSel->accept(*track) ) continue;
         verbose()<<"Track accepted"<<endreq;
       }
-      
       verbose()<<"Tag the track"<<endreq;
       // Extra track check
       tag = tagTrack(track);
       verbose()<<"Track tagged as "<<tag<<endreq;
-
+      LHCb::Particle* theParticle = NULL ;
+      // Save the particle
+      if (tag == KeepInPF){
+	theParticle = MakeParticle( ch_pp , -1 , *table );
+	verbose()<<"Tagged as Keep in PF "<<theParticle<<endreq;
+        PFParticles->insert( theParticle );
+      }
+      else if (tag ==  KeepInPFBanned ){
+	theParticle = MakeParticle( ch_pp , -1 , *table );
+	verbose()<<"Tagged as Keep in Banned PF "<<theParticle<<endreq;
+        BannedPFParticles->insert( theParticle );
+      }
+      else if (tag == Unknown ){
+        Warning("Unknow status for this charged particle");
+      }
+      else{
+	verbose()<<"This track is banned but its cluster can be kept or not"<<endreq;
+      }
+      verbose()<<"theParticle, after insert "<<theParticle<<endreq;
       if ( tag== RejectDoNotBanCluster ) continue;
-      
       
       // Get the ECAL clusters and ban those with small chi2
       LHCb::Calo2Track::IClusTrTable2D::InverseType::Range cRange =  m_tableTrECAL->inverse()->relations ( track ) ;
@@ -302,16 +355,33 @@ StatusCode ParticleFlow4Jets::execute() {
         double chi2TrClu = cRange.front().weight();
         verbose()<<"ECAL Track match at "<<chi2TrClu<<" with Cluster ID : "<<cRange.front().to()->seed().all()
                  <<" Is tagged already?: "<<BannedECALClusters.count(cRange.front().to()->seed().all())<<endreq;
-        
-        if ( chi2TrClu < m_Chi2ECALCut && BannedECALClusters.count(cRange.front().to()->seed().all())<0.5 ) {
-          verbose()<<"Will tag as: "<<TrackMatch<<" from the track "<<track->key()<<endreq;
-          std::pair< double , int > tmpPair;
-          tmpPair.first = TrackMatch ;
-          tmpPair.second =  track->key() ;
-          BannedECALClusters[cRange.front().to()->seed().all()] = tmpPair ;
+        // If the cluster have distance to track smaller than m_Chi2ECALCut, ban it
+        if ( chi2TrClu < m_Chi2ECALCut  ) {
+	  // if already banned don't store again
+	  if ( BannedECALClusters.count(cRange.front().to()->seed().all())<0.5){
+	    verbose()<<"Will tag as: "<<TrackMatch<<" from the track "<<track->key()<<endreq;
+	    std::pair< double , int > tmpPair;
+	    tmpPair.first = TrackMatch ;
+	    tmpPair.second =  track->key() ;
+	    BannedECALClusters[cRange.front().to()->seed().all()] = tmpPair ;
+	    //Cluster2EnergyMap[cRange.front().to()] = cRange.front().to()->e();
+	  }
+	  // In any case, save the link to the particle if it exist
+	  verbose()<<"tag1"<<endreq;
+	  if (theParticle && m_neutralRecovery){ 
+	  verbose()<<"tag12"<<endreq;
+	    verbose()<<cRange.front().to()->seed().all()<<" "<<ECALCluster2MomentaMap.count(cRange.front().to()->seed().all())<<endreq;
+	      ECALCluster2MomentaMap[cRange.front().to()->seed().all()].push_back(theParticle->p());
+	      ECALCluster2IDMap[cRange.front().to()->seed().all()].push_back(theParticle->particleID ().abspid());
+	      ECALCluster2CaloMap[cRange.front().to()->seed().all()] = cRange.front().to()->e();
+	      ECALCluster2NSatMap[cRange.front().to()->seed().all()] = numberOfSaturatedCells( cRange.front().to() , m_ecal );
+	      ECALCluster2CovMap[cRange.front().to()->seed().all()]= cRange.front().to()->position().covariance ()(2,2)/cRange.front().to()->e();
+	  verbose()<<"tag13"<<endreq;
+	  }
         }
       }
-      
+ 
+	  verbose()<<""<<endreq;
       if(m_useHCAL ){
         // Get the calorimeter clusters associated to the track
         LHCb::Calo2Track::IClusTrTable2D::InverseType::Range cRange2 =  m_tableTrHCAL->inverse()->relations ( track ) ;
@@ -323,25 +393,29 @@ StatusCode ParticleFlow4Jets::execute() {
           if ( ((chi2TrClu < m_Chi2HCAL0Cut && cRange2.front().to()->e() <= m_Chi2HCAL0CutEValue) || 
                 (chi2TrClu < m_Chi2HCAL1Cut && cRange2.front().to()->e() > m_Chi2HCAL0CutEValue
                  && cRange2.front().to()->e() <=  m_Chi2HCAL1CutEValue) || 
-                (chi2TrClu < m_Chi2HCAL2Cut && cRange2.front().to()->e() > m_Chi2HCAL1CutEValue) )
-               && BannedHCALClusters.count(cRange2.front().to()->seed().all())<0.5 ) {
-            verbose()<<"Will tag as: "<<TrackMatchHCAL<<" form the track "<<track->key()<<endreq;
-            std::pair< double , int > tmpPair;
-            tmpPair.first = TrackMatchHCAL ;
-            tmpPair.second =  track->key() ;
-            BannedHCALClusters[cRange2.front().to()->seed().all()] = tmpPair ;     
-          }
+                (chi2TrClu < m_Chi2HCAL2Cut && cRange2.front().to()->e() > m_Chi2HCAL1CutEValue) )){
+	    if( BannedHCALClusters.count(cRange2.front().to()->seed().all())<0.5 ) {
+	      verbose()<<"Will HCAL tag as: "<<TrackMatchHCAL<<" form the track "<<track->key()<<endreq;
+	      std::pair< double , int > tmpPair;
+	      tmpPair.first = TrackMatchHCAL ;
+	      tmpPair.second =  track->key() ;
+	      BannedHCALClusters[cRange2.front().to()->seed().all()] = tmpPair ; 
+	      //Cluster2EnergyMap[cRange.front().to()] = cRange.front().to()->e();
+	    }
+	    verbose()<<cRange2.front().to()<<" tag1H"<<endreq;
+	    // In any case, save the link to the particle if it exist
+	    if (theParticle && m_neutralRecovery){
+	  verbose()<<"tag12H"<<endreq;
+	  verbose()<<cRange2.front().to()<<" "<<cRange2.front().to()->seed()<<" "<<cRange2.front().to()->seed().all()<<" H "<<HCALCluster2MomentaMap.count(cRange2.front().to()->seed().all())<<endreq;
+	      HCALCluster2MomentaMap[cRange2.front().to()->seed().all()].push_back(theParticle->p());
+	      HCALCluster2IDMap[cRange2.front().to()->seed().all()].push_back(theParticle->particleID ().abspid());
+	      HCALCluster2CaloMap[cRange2.front().to()->seed().all()] = cRange2.front().to()->e();
+	      HCALCluster2NSatMap[cRange2.front().to()->seed().all()] = numberOfSaturatedCells( cRange2.front().to() , m_hcal );
+	      HCALCluster2CovMap[cRange2.front().to()->seed().all()]= cRange2.front().to()->position().covariance ()(2,2)/cRange2.front().to()->e();
+	  verbose()<<"tag13H"<<endreq;
+	    }
+	  }
         }
-      }
-      // Save the particle
-      if (tag == KeepInPF){
-        PFParticles->insert( MakeParticle( ch_pp , -1 , *table ) );
-      }
-      else if (tag ==  KeepInPFBanned ){
-        BannedPFParticles->insert( MakeParticle( ch_pp , InfMom , *tableBanned) );
-      }
-      else if (tag == Unknown ){
-        Warning("Unknow status for this charged particle");
       }
       
       
@@ -365,12 +439,64 @@ StatusCode ParticleFlow4Jets::execute() {
           }   
         }
       }
+    if (theParticle == NULL)delete(theParticle);
     }
   }
-  
+
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Getting back the hidden neutrals ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  verbose()<<"Before getting the PID and removing the energy"<<endreq;
+  if (m_neutralRecovery){
+    LHCb::Particles* NeutralPFParticles = new LHCb::Particles();
+    put( NeutralPFParticles , m_PFHiddenNeutralOutputLocation );
+    for (ClusterID2DoubleMap::iterator i_cluster = ECALCluster2MomentaMap.begin();  i_cluster !=  ECALCluster2MomentaMap.end(); ++i_cluster ){
+      int clusterID = (*i_cluster).first;
+      double remainingE = ECALCluster2CaloMap[clusterID] ;
+      std::vector< double > momenta =  (*i_cluster).second ;
+      int indexPart(0);
+      for ( std::vector< double >::iterator i_mom = momenta.begin();
+	    i_mom != momenta.end() ; ++i_mom ){
+	double momentum = *i_mom;
+	int absid = ECALCluster2IDMap[clusterID][indexPart];
+	if ( absid == 13 ){
+	  //Eventually remove a mip... nothing for the moment
+	  verbose()<<"This is a Muon don't remove anything for the moment"<<endreq;
+	}
+	else if ( absid == 11 ){
+	  // Electron case. Remove p from the ECAL calorimeter
+	  verbose()<<"This is an electron"<<endreq;
+	  remainingE-=momentum;
+	}
+	else {
+	  // Hadron case. Remove a fraction alpha in ECAL and beta in HCAL
+	  verbose()<<"This is a hadron"<<endreq;
+	  remainingE-=m_alphaECAL*momentum;
+	}
+	indexPart++;
+      }
+      if ( remainingE < m_nSigmaE * ECALCluster2CovMap[clusterID] ) continue;
+      NeutralPFParticles->insert(MakeNeuralParticle(clusterID,0,remainingE,ECALCluster2NSatMap[clusterID],ECALCluster2CaloMap[clusterID],ECALCluster2CovMap[clusterID]));
+    }
+    for (ClusterID2DoubleMap::iterator i_cluster = HCALCluster2MomentaMap.begin();  i_cluster !=  HCALCluster2MomentaMap.end(); ++i_cluster ){
+      int clusterID = (*i_cluster).first;
+      double remainingE = HCALCluster2CaloMap[clusterID];
+      std::vector< double > momenta =  (*i_cluster).second;
+      int indexPart(0);
+      for ( std::vector< double >::iterator i_mom = momenta.begin();
+	    i_mom != momenta.end() ; ++i_mom ){
+	double momentum = *i_mom;
+	int absid = HCALCluster2IDMap[clusterID][indexPart];
+	if( absid != 13 && absid != 11 ){
+	  remainingE-=m_betaHCAL*momentum;
+	}
+	indexPart++;	
+      }
+      if ( remainingE < m_nSigmaE * ECALCluster2CovMap[clusterID] ) continue; 
+      NeutralPFParticles->insert(MakeNeuralParticle(clusterID,1,remainingE,HCALCluster2NSatMap[clusterID],HCALCluster2CaloMap[clusterID],HCALCluster2CovMap[clusterID]));
+    }
+  }
+  verbose()<<"Finiished the loop to create particles"<<endreq;
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~ The loops for electromagnetic neutral components  ~~~~~~~~~~~~~~~~~~~~~~
 
-  const DeCalorimeter* ecal = getDet<DeCalorimeter> ( "/dd/Structure/LHCb/DownstreamRegion/Ecal" );
 
   // Loop over Merged Pi0, if clusters are not tagged yet, use and tag
   verbose()<<"Start merged pi0 Loop..."<<endreq;
@@ -406,7 +532,7 @@ StatusCode ParticleFlow4Jets::execute() {
       BannedECALClusters[hypoClusters[0].target()->seed().all()] = tmpPair ;
       // Add number of saturated ECAL cells
       LHCb::Particle* newP = MPi0->clone();
-      newP->addInfo(955,numberOfSaturatedCells(hypoClusters[0].target(),ecal));
+      newP->addInfo(955,numberOfSaturatedCells(hypoClusters[0].target(),m_ecal));
       // Save the particle
       PFParticles->insert(newP);
     }
@@ -447,7 +573,7 @@ StatusCode ParticleFlow4Jets::execute() {
           skip = true;
           continue;
         }
-        Nsat +=numberOfSaturatedCells(hypoClusters[0].target(),ecal);
+        Nsat +=numberOfSaturatedCells(hypoClusters[0].target(),m_ecal);
 
         // Use Ttrack banning?
         /*if ( m_banFromTTrack ){
@@ -540,7 +666,7 @@ StatusCode ParticleFlow4Jets::execute() {
           newP->addInfo(952, m_tableTrECAL->relations( hypoClusters[0].target() ).front().weight());
           newP->addInfo(953, m_tableTrECAL->relations( hypoClusters[0].target() ).front().to()->type());
         }
-        newP->addInfo(955,numberOfSaturatedCells(hypoClusters[0].target(),ecal));
+        newP->addInfo(955,numberOfSaturatedCells(hypoClusters[0].target(),m_ecal));
         PFParticles->insert( newP );
       }
     }
@@ -551,12 +677,7 @@ StatusCode ParticleFlow4Jets::execute() {
   verbose()<<"m_useHCAL "<<m_useHCAL<<endreq;
   
   if(m_useHCAL){
-    const DeCalorimeter* hcal = getDet<DeCalorimeter> ( "/dd/Structure/LHCb/DownstreamRegion/Hcal" );
     verbose()<<"Start HCAL Loop..."<<endreq;
-    LHCb::ProtoParticles* PFProtoParticles = new LHCb::ProtoParticles();
-    put( PFProtoParticles , m_protoPF );
-    LHCb::CaloHypos* PFCaloHypos = new LHCb::CaloHypos();
-    put( PFCaloHypos , m_calohypoPF );
     verbose()<<"m_clusterContainers.count('Hcal') "<<m_clusterContainers.count("Hcal")<<endreq;
     if (m_clusterContainers.count("Hcal") > 0.5 ){
       
@@ -607,7 +728,7 @@ StatusCode ParticleFlow4Jets::execute() {
           p.addInfo(953, m_tableTrHCAL->relations ( cluster ).front().to()->type());
         }
         
-        p.addInfo(955,numberOfSaturatedCells(cluster,hcal));
+        p.addInfo(955,numberOfSaturatedCells(cluster,m_hcal));
         p.setParticleID( LHCb::ParticleID(-22) );
         p.setReferencePoint( Gaudi::XYZPoint(0.,0.,0.)  );
         p.setMomentum( Gaudi::XYZTVector(px,py,pz,cluen) ) ;
@@ -627,8 +748,7 @@ StatusCode ParticleFlow4Jets::execute() {
   }
   put( table, m_pf2verticesLocation );
   put( tableBanned, m_pfbanned2verticesLocation );
-  
-  debug()<<"PFParticles: "<<PFParticles->size()<<" PFParticlesBanned: "<<BannedPFParticles->size()<<endreq;
+  //  verbose()<<"PFParticles: "<<PFParticles->size()<<" PFParticlesBanned: "<<BannedPFParticles->size()<<" NeoNeutrals: "<<NeutralPFParticles->size()<<endreq;
   
   setFilterPassed ( true ) ;
   
@@ -730,12 +850,13 @@ LHCb::Particle * ParticleFlow4Jets::MakeParticle( const LHCb::ProtoParticle * pp
   //Remaining info at the first state...
   StatusCode sc = m_p2s->state2Particle( tk->firstState(), p );
 
+  verbose()<<"In make particle, original p "<<p<<endreq;
   LHCb::Particle* PFp = p.clone();
   if ( tk->type() == LHCb::Track::Long ||tk->type() == LHCb::Track::Upstream ){
     relate2Vertex(PFp,table);
   }
   
-
+  verbose()<<"In make particle: "<<PFp<<endreq;
   return PFp;
 }
 
@@ -943,4 +1064,41 @@ int ParticleFlow4Jets::numberOfSaturatedCells( const LHCb::CaloCluster* cluster 
     }
   }
   return nbSatCells;
+}
+
+//=============================================================================
+// Create neutral only Particle
+//=============================================================================
+LHCb::Particle * ParticleFlow4Jets::MakeNeuralParticle(int clusterID , int calo , double remainingE , int numberOfSat, double originalE, double covariance){
+  double x(0.),y(0.),z(0.);
+
+  if (calo == 0){
+    LHCb::CaloCellID cellID;
+    cellID.setAll(clusterID);
+    x = m_ecal->cellX(cellID);
+    y =  m_ecal->cellY(cellID);
+    z =  m_ecal->cellZ(cellID);
+  }
+  else{
+    LHCb::CaloCellID cellID;
+    cellID.setAll(clusterID);
+    x =  m_hcal->cellX(cellID);
+    y =  m_hcal->cellY(cellID);
+    z =  m_hcal->cellZ(cellID);
+  }
+  double px =  remainingE*x/sqrt(x*x + y*y + z*z);
+  double py =  remainingE*y/sqrt(x*x + y*y + z*z);
+  double pz =  remainingE*z/sqrt(x*x + y*y + z*z);
+
+  LHCb::Particle* p = new LHCb::Particle();
+  p->addInfo(901,remainingE);//remaining E
+  p->addInfo(902,originalE);//is HCAL or ECAL
+  p->addInfo(903,calo);//is HCAL or ECAL
+  p->addInfo(904,numberOfSat);
+  p->addInfo(905,covariance);//is HCAL or ECAL
+  p->setParticleID( LHCb::ParticleID(22) );
+  p->setReferencePoint( Gaudi::XYZPoint(0.,0.,0.)  );
+  p->setMomentum( Gaudi::XYZTVector(px,py,pz,remainingE) ) ;
+
+  return p;
 }

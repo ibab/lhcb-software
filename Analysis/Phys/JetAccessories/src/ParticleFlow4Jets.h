@@ -68,7 +68,8 @@ private:
   void relate2Vertex(const LHCb::Particle* p , Particle2Vertex::WTable& table);
   
   int numberOfSaturatedCells( const LHCb::CaloCluster* cluster , const DeCalorimeter* calo);
-  
+
+  LHCb::Particle * MakeNeuralParticle(int clusterID , int calo , double remainingE , int numberOfSat,double originalE, double covariance);
   
 
   
@@ -114,6 +115,8 @@ private:
 
   std::string  m_PFBannedOutputLocation;
 
+  std::string m_PFHiddenNeutralOutputLocation;
+
   std::string m_protoPF ;
 
   std::string m_calohypoPF ;
@@ -152,6 +155,9 @@ private:
 
   bool m_alsoBanClone ;
 
+  double m_alphaECAL ;
+  double m_betaHCAL ;
+
   std::vector< int > m_electronPPkeys ;
 
   std::map< int , const LHCb::Track* > m_trackKeyToBan ;
@@ -173,8 +179,12 @@ private:
   typedef std::map< std::string , std::pair< const IProtoParticleFilter* , const LHCb::ParticleProperty * > > ProtoMap;
   ProtoMap m_protoMap;
 
+  int m_nSigmaE;
   
+  bool m_neutralRecovery;
 
+  const DeCalorimeter* m_ecal ;
+  const DeCalorimeter* m_hcal ;
   //-----------------------------------------
 
 

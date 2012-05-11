@@ -58,23 +58,23 @@ from Configurables import ( GaudiSequencer, TrackSelector, DelegatingTrackSelect
 
 
 class ParticleFlowConf:
-    def __init__(self, _name, _InputParticles = ['Photons','NeutralHadrons','Charged','Pi0s','V0s'], _MCSeq = False , _params = {} ):
+    def __init__(self, _name, _InputParticles = ['Photons','NeutralHadrons','Charged','Pi0s','V0s','PFNeutrals'], _MCSeq = False , _params = {} ):
          self.name = _name
          self.InputParticles = _InputParticles
          self.MC = _MCSeq
          ## Default parameter: the closer from what we used before + HCAL
          self.paramDef = {'Chi2MaxLong': 5. , 'PtMinLong': 0. , 'AcceptClone': False , 'PtMinDown': 0. ,
                           'Chi2MaxDown': 10. , 'Chi2MaxUp': 10. , 'PtMinUp': 0. , 'UseTTHits':False ,'MaxChi2NoTT': 5.,
-                          'UseHCAL': True ,'MaxMatchECALTr': 4.,'MinHCALE': 1800.,
+                          'UseHCAL': True ,'MaxMatchECALTr': 4.,'MinHCALE': 1800.,'UsePIDInfo':True,
                           'MaxMatchHCALLowEValue': 5000.,'MaxMatchHCALHighEValue': 10000.,
                           'MaxMatchHCALTrSmallE': 25.,'MaxMatchHCALTrMediumE':16. ,'MaxMatchHCALTrLargeE':16. ,'MaxMatchHCALTr_T': 16.,
                           'MinPhotonID4PhotonTtrack': -2. , 'MinPhotonID4Photon': -1. ,'MaxMatchECALTr_T': 16. ,
                           'MinPhotonIDMax4ResolvedPi0':  -2.,'MinPhotonIDMin4ResolvedPi0':-4., 'MinInfMomentumCut':10. ,
                           'VerticesLocation':"Rec/Vertex/Primary",  "PFCaloHypoOutputLocation":"Rec/Calo/Hadrons",
                           'CandidateToBanLocation':'','PFProtoParticlesOutputLocation':"Rec/ProtoP/PF",
-                          'PFOutputLocation': "Phys/PFParticles/Particles",'PFBannedOutputLocation':"Phys/PFBannedParticles/Particles"
+                          'PFOutputLocation': "Phys/PFParticles/Particles",'PFBannedOutputLocation':"Phys/PFBannedParticles/Particles",
+                          "CalibECAL_EovP": 0.1,"CalibHCAL_EovP": 0.9,"NSigmaForCaloRecovery": 3.
                           }
-
 ##          self.paramDef = {'Chi2MaxLong': 5. , 'PtMinLong': 0. , 'AcceptClone': False , 'PtMinDown': 0. ,
 ##                           'Chi2MaxDown': 7. , 'Chi2MaxUp': 7. , 'PtMinUp': 0. , 'UseTTHits':True ,'MaxChi2NoTT': 3.,
 ##                           'UseHCAL': True ,'MaxMatchECALTr': 4.,'MinHCALE': 1800.,
@@ -172,6 +172,7 @@ class ParticleFlowConf:
                 alg.UseTTHits = self.UseTTHits 
                 alg.MaxMatchECALTr = self.MaxMatchECALTr 
                 alg.MaxMatchECALTr_T = self.MaxMatchECALTr_T
+                alg.UsePIDInfo = self.UsePIDInfo
                 
             if t=='Pi0s':               
                 pLocations.append('Phys/StdLooseResolvedPi0/Particles')
@@ -184,6 +185,14 @@ class ParticleFlowConf:
                 pLocations.append('Phys/StdLooseKsLL/Particles')
                 pLocations.append('Phys/StdLooseLambdaDD/Particles')
                 pLocations.append('Phys/StdLooseLambdaLL/Particles')
+
+            if t=='PFNeutrals':
+                alg.NeutralRecovery = True
+                alg.UsePIDInfo = True
+                alg.CalibECAL_EovP = self.CalibECAL_EovP
+                alg.CalibHCAL_EovP = self.CalibHCAL_EovP
+                alg.NSigmaForCaloRecovery = self.NSigmaForCaloRecovery
+                
         alg.ParticleLocations = pLocations
         #alg.OutputLevel = 0
         self.algorithms.append(alg)
