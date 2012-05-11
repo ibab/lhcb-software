@@ -12,7 +12,7 @@ if ( ! $?CMTEXTRATAGS ) then
  	    case 5.8:
 	    case 5.9:
 	    case 5.10:
-	       echo "Forcing CMTEXTRATAGS=host-slc5"
+	       #echo "Forcing CMTEXTRATAGS=host-slc5"
 	       setenv CMTEXTRATAGS "host-slc5"
 	       breaksw
 	endsw
