@@ -4,12 +4,17 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-05-11 - Jibo He
+ - Added Reco13a test sample 
+ - Updated tests/TestMyStrippingLineOn2012Data.py to use Reco13a 
+ - Added tests/TestMyStrippingLineOn2012Data_Timing.py for timing 
+
 ! 2012-05-09 - Patrick Koppenburg
  - Use Rate limiter from cond DB in No Bias line https://savannah.cern.ch/bugs/?94262
 
-
 ! 2012-05-02 - Stefania Vecchi
  - removed ReFitPV=true in python/StrippingSelections/StrippingBd2DstarMuNu.py to match the time requirements
+
 !========================= StrippingSelections v3r13 2012-04-27 =========================
 ! 2012-04-26 - Anton Poluektov 
  - Fix typos in python/StrippingSelections/StrippingB2Kphiphi.py

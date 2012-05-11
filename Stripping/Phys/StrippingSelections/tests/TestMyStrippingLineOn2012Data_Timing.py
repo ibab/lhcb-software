@@ -46,13 +46,13 @@ from Configurables import AlgorithmCorrelationsAlg
 ac = AlgorithmCorrelationsAlg(Algorithms = sc.selections())
 
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
-DaVinci().EvtMax = 100000
+DaVinci().EvtMax = -1
 DaVinci().PrintFreq = 2000
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )
 DaVinci().appendToMainSequence( [ ac ] )
 DaVinci().DataType  = "2012"
-DaVinci().InputType = "SDST"
+DaVinci().InputType = "DST"
 
 # change the column size of timing table
 from Configurables import TimingAuditor, SequencerTimerTool
@@ -65,7 +65,8 @@ MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 DaVinci().DDDBtag  = "head-20120413"
 DaVinci().CondDBtag = "head-20120420"
 
-# input file
-importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco13a_Run114753_SDST.py")
+from GaudiConf import IOHelper
+IOHelper().inputFiles([
+    'PFN:castor:/castor/cern.ch/user/j/jhe/Stripping18/111473_0000000110-FastVeloFix.dst'])
 
 
