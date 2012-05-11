@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 """
 """
+import sys
 __author__ = "Marco Clemencic"
 
 import os, re
 import shutil
-from datetime import datetime
+from datetime import datetime, timedelta
 from subprocess import Popen, PIPE
 from stat import ST_SIZE
 from LbUtils.afs.directory import isAFSDir, isMountPoint
@@ -314,6 +315,7 @@ class Doc(object):
     _docCollDir = "docs"
     _docLockFile = ".locked"
     _docRebuildFlagFile = "==REBUILD=="
+    _docLockTimeFmt = "%Y-%m-%dT%H:%M:%S.%f" # same as datetime.isoformat()
 
     @classmethod
     def _root(cls, root = None):
@@ -387,7 +389,12 @@ class Doc(object):
 
         # flag to tell if the DOC dir is locked or not
         self._lockFile = os.path.join(self.path, self._docLockFile)
-        self.locked = os.path.exists(self._lockFile)
+        if os.path.exists(self._lockFile):
+            pid, time = open(self._lockFile).read().strip().split(" - ", 1)
+            self.locked = (int(pid), datetime.strptime(time,"%Y-%m-%dT%H:%M:%S.%f"))
+        else:
+            self.locked = None
+
 
         self._rebuildFlagFile = os.path.join(self.path, self._docRebuildFlagFile)
         # flag saying if the directory has already been built or not
@@ -886,7 +893,8 @@ class Doc(object):
             return
         # create lockfile
         self._log.debug("Creating lock file '%s'", self._lockFile)
-        open(self._lockFile, "w").write("%s - %s\n" % (os.getpid(), datetime.now()))
+        open(self._lockFile, "w").write("%s - %s\n" % (os.getpid(),
+                                                       datetime.now().strftime(self._docLockTimeFmt)))
         try:
             # Build the documentation in a temporary directory.
             # - prepare the temporary directory
@@ -1024,7 +1032,7 @@ def allDocs(root = None):
     """
     root = Doc._root(root)
     docs = []
-    for d in os.listdir(root):
+    for d in sorted(os.listdir(root)):
         if Doc._nameRegexp.match(d):
             docs.append(Doc(d, root))
     return docs
@@ -1052,7 +1060,6 @@ def updateLatestLinks(root = None):
                 os.remove(latest)
             _log.info("Moving link %s to %s", os.path.join(p, "latest"), os.path.join(p, v))
             os.symlink(v, latest)
-
 
 #--- Application logic
 def makeDocs(projects, root = None, no_build = False, doxygen_versions = (None, None)):
@@ -1135,6 +1142,48 @@ def makeDocs(projects, root = None, no_build = False, doxygen_versions = (None, 
     projects -= projects_added
     if projects:
         _log.warning("Projects not added: %s", list(projects))
+
+def checkDocs(projects, root = None, timeout = None):
+    """
+    Check if there are no obvious problems in the documentation directories.
+
+    @param projects: list of pairs with (name, version) for each project to use
+    @param root: base directory for the documentation directories
+    @param timeout: number of hours to wait befor considering a Doc directory as
+           too old.
+    @return: 0 in case of no problem, 1 if stale directories, 2 if unknownProjects
+             3 if both stale and unknown
+    """
+    retval = 0
+
+    docs = allDocs(root)
+
+    stale = []
+    if timeout:
+        # stale doc builds
+        now = datetime.now()
+        dt = timedelta(seconds = timeout * 60 *60) # 23 hours
+        stale = [doc for doc in docs if doc.locked and ((now - doc.locked[1]) > dt)]
+
+    if stale:
+        _log.warning("Documentation directories which are locked since more than %d hours", timeout)
+        for doc in stale:
+            _log.warning("\t%s", doc)
+        docs = [doc for doc in docs if doc not in set(stale)]
+        retval |= 1
+
+    # This is tricky removes from the the set of projects passed to the list
+    # ('set(projects)') the projects present in any of the documentations.
+    unknownProjects = reduce(lambda s, v: s.difference(v),
+                             [doc.projects.items() for doc in docs],
+                             set(projects))
+    if unknownProjects:
+        _log.warning("Projects without documentation")
+        for proj, version in sorted(unknownProjects):
+            _log.warning("\t%s %s", proj, version)
+        retval |= 2
+
+    return retval
 
 def getLatestVersions(versions):
     """
@@ -1276,14 +1325,23 @@ def main():
     parser.add_option("-x", "--exclude", action = "append",
                       help = "Delete unused documentations")
     parser.add_option("--doxygen-version", action = "store",
-                      help = "Version of doxygen to use. Note: it works only " +
-                      "when using the LbScript doxygen wrapper and if the " +
-                      "given version exists in the LCG externals")
+                      help = "Version of doxygen to use. Note: it works only "
+                             "when using the LbScript doxygen wrapper and if "
+                             "the given version exists in the LCG externals")
     parser.add_option("--doxygen-py-version", action = "store",
-                      help = "Same as --doxygen-version, but allows to " +
-                      "specify a version of doxygen for the Python " +
-                      "documentation (the default is to use the version " +
-                      "specified with --doxygen-version)")
+                      help = "Same as --doxygen-version, but allows to "
+                             "specify a version of doxygen for the Python "
+                             "documentation (the default is to use the version "
+                             "specified with --doxygen-version)")
+    parser.add_option("--timeout", action = "store",
+                      metavar = "HOURS",
+                      type = "int",
+                      help = "Do not allow the script to run more than the "
+                             "specified number of hours, 0 (default) means no "
+                             "timeout.")
+    parser.add_option("--check", action = "store_true",
+                      help = "Check if there are problems in the Doc directories")
+
 
     opts, args = parser.parse_args()
 
@@ -1302,6 +1360,9 @@ def main():
             projects.add((args[i].upper(), args[i + 1]))
     else:
         parser.error("Wrong number of arguments")
+
+    if opts.check:
+        sys.exit(checkDocs(projects, opts.root, opts.timeout))
 
     # Ensure that the version of doxygen used for Python is the same as the one
     # used for C++ unless specified differently.

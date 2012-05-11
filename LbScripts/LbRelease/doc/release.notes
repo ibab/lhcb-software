@@ -1,3 +1,10 @@
+2012-05-11  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/LHCbDoc: added an option to check if there are problems
+	in the documentation directories
+	* scripts/buildGeneralDoc: added the option --timeout in the call to LHCbDoc
+	(not yet functional)
+
 2012-04-30 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v4r7p3
@@ -160,7 +167,7 @@
 
 	* cmt/requirements: release of version v4r4p1
 
-2011-07-09  Marco Clemencic  <Marco.Clemencic@cern.ch>
+2011-08-09  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* cmt/requirements: release of version v4r4
 

@@ -42,7 +42,7 @@ if [ ! -e $DOCROOT/stop_cron ] ; then
 	# Fine tuning of the environment
     logcmd . SetupProject.sh LbScripts --no-user --runtime LCGCMT graphviz
     # Run the main script
-    logcmd python -m LbRelease.LHCbDoc --debug --clean-archived --remove-unused >>$outlog 2>&1
+    logcmd python -m LbRelease.LHCbDoc --debug --clean-archived --remove-unused --timeout 23 >>$outlog 2>&1
 else
     logmsg "Doc generation disabled ($DOCROOT/stop_cron)"
 fi
