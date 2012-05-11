@@ -6,7 +6,10 @@ import sys, optparse, os
 import GaudiPython
 DecisionMap = GaudiPython.gbl.DecisionMap
 
-def proccessFile( filename, decisionMap, mismatches ):
+def processFile( filename, dm , mismatches ):
+    if not os.path.exists(filename):
+        print '%s does not exist' %filename
+        return
     rootFile = TFile( filename )
     d = rootFile.Get( "TupleHltDecReports" )
     tree = d.Get( "HltDecReportsTuple" )
@@ -16,16 +19,15 @@ def proccessFile( filename, decisionMap, mismatches ):
     for branch in branches:
         branchName = branch.GetName()
         if branchName.find( "Decision" ) != -1:
-            lines.add( branchName )
-    if len( decisions ) != 1:
-        print "Error, more than one decision in this tuple"
-        for decision in decisions: print decision
+            decisions.add( branchName ) ## was lines
     for decision in decisions:
-        liName = decision
+        lineName = decision
+    
+    print "processing " + filename
 
-    print "processing " + lineName
-
+    ientry = 0
     for entry in tree:
+        ientry = ientry +1
         runNumber = getattr( entry, "runNumber" )
         eventNumber = getattr( entry, "eventNumber" )
         key = runNumber, eventNumber
@@ -33,8 +35,8 @@ def proccessFile( filename, decisionMap, mismatches ):
             val = getattr( entry, decision )
             dec = dm.decision( runNumber, eventNumber, decision )
             if val != dec:
-                print "Mismatch! " + str( runNumber ) + " " + str( eventNumber )
-                + " " + decision
+                print "Mismatch! " + str( runNumber ) + " " + str( eventNumber )+ " " + decision + " " + ",single:" + str(val) + ",all:" +str(dec)
+                print './write_single_event.py --outfile=/tmp/mvesteri/%s_%s_%s.dst --events=%s' %(runNumber,eventNumber,decision,ientry-1)
                 if not key in mismatches:
                     mismatches[ key ] = [ decision ]
                 else:
@@ -83,7 +85,8 @@ def main( filename ):
     tuples.pop( 'allLines' )
     for decision, filename in tuples.items():
         processFile( filename, dm, mismatches )
-
+        
+    print "\n"
     print "Found mismatches: "
     for key, decisions in mismatches.items():
         s = decisions[ 0 ]

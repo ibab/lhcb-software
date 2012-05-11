@@ -6,7 +6,7 @@ import os, sys, optparse
 
 # Configuration
 from Gaudi.Configuration import *
-from GaudiConf.Configuration import *
+#from GaudiConf.Configuration import *
 from Moore.Configuration import Moore
 from Configurables import GaudiSequencer as Sequence
 from Configurables import ( EventSelector,
