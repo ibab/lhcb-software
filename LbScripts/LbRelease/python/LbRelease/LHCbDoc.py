@@ -384,7 +384,7 @@ class Doc(object):
                     if not os.path.exists(os.path.join(self.path, l)):
                         self.broken.append(l)
             self._log.debug("Found %d projects: %s", len(self.projects),
-                            " ,".join(map(str, self.projects.items())))
+                            ", ".join(map(str, sorted(self.projects.items()))))
             self.isAfsVolume = _has_AFS and isAFSDir(self.path) and isMountPoint(self.path)
 
         # flag to tell if the DOC dir is locked or not
@@ -402,6 +402,13 @@ class Doc(object):
         if os.path.exists(self._rebuildFlagFile):
             self._log.warning("Re-build requested")
             self.toBeBuilt = True
+        # check that the common links are present
+        # a missing link means problems during the build
+        for project, version in self.projects.items():
+            project = project.lower()
+            if not os.path.exists(self._doclink(project, version)):
+                self._log.warning("Project %s %s in %s but not in common links dir",
+                                  project, version, self.name)
 
     def _allDocNames(self):
         """
@@ -983,23 +990,27 @@ class Doc(object):
             self._log.debug("Removing lock file '%s'", self._lockFile)
             os.remove(self._lockFile)
 
+    def _doclink(self, project, version):
+        """
+        Path to the link in the common directory.
+        """
+        return os.path.join(self.root, self._docCollDir, project, version)
+
     def _updateCommonLinks(self):
         """
         Update the links in the common directory.
         """
-        # update links in the common directory
-        doclinkdir = os.path.join(self.root, self._docCollDir)
-        if not os.path.isdir(doclinkdir):
-            self._log.debug("Creating directory %s", doclinkdir)
-            os.makedirs(doclinkdir)
         for project, version in self.projects.items():
             project = project.lower()
-            # create the project directory if missing
-            if not os.path.isdir(os.path.join(doclinkdir, project)):
-                os.makedirs(os.path.join(doclinkdir, project))
+            # update links in the common directory
+            doclink = self._doclink(project, version)
+            doclinkdir = os.path.dirname(doclink)
+            # create the parent directories if missing
+            if not os.path.isdir(doclinkdir):
+                self._log.debug("Creating directory %s", doclinkdir)
+                os.makedirs(doclinkdir)
             # make the version symlink (if necessary)
-            doclink = os.path.join(doclinkdir, project, version)
-            linkdest = os.path.join("..", "..", self.name, self._docSubdir, "html")
+            linkdest = os.path.relpath(os.path.join(self.output, "html"), doclinkdir)
             if os.path.exists(doclink):
                 try:
                     old = os.readlink(doclink).split(os.path.sep)[2]
