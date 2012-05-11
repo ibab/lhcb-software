@@ -157,7 +157,7 @@ StatusCode MEPSvc::initialize()
     sc = tools->retrieveTool("SimpleTrendWriter","MEPSvc",m_trender,this);
     if (sc.isSuccess() && m_trender != 0)
     {
-      std::string nnam("MEPRx_Trends");
+      std::string nnam = m_TrendPrefix+std::string("MEPRx_Trends");
       m_trender->setPartitionAndName(this->m_PartitionName,nnam);
       m_trender->setMaxTimeNoWrite(600);
     }
@@ -296,6 +296,7 @@ MEPSvc::MEPSvc(const std::string& name, ISvcLocator* sl) : PubSvc(name,sl)
 {
   declareProperty("Tell1List",       m_tell1List);
   declareProperty("TrendingOn",  m_enableTrending = true);
+  declareProperty("TrendPrefix",m_TrendPrefix="");
   m_trender = 0;
 
 //  m_started     = false;

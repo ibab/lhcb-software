@@ -381,6 +381,7 @@ public:
   float m_MEPRate;
   float m_MEPDeferred;
   bool m_enableTrending;
+  std::string m_TrendPrefix;
   StatusCode initialize();
   StatusCode start();
 //  DetData_T m_DetData;
