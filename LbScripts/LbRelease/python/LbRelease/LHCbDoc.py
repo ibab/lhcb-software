@@ -1302,7 +1302,7 @@ def removeUnusedDocs(root = None):
     logging.warning("Removing unused doc directory from %s", root)
     for d in findUnusedDocs(root):
         if d.isAfsVolume:
-            logging.warning("Removal of AFS volumes not yet implemented!")
+            logging.warning("Removal of AFS volumes not yet implemented! (%s)", d.path)
         else:
             logging.warning("Removing %s", d.path)
             shutil.rmtree(d.path)

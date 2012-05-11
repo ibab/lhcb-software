@@ -1,7 +1,8 @@
 2012-05-11  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/LHCbDoc: added an option to check if there are problems
-	in the documentation directories
+	in the documentation directories; print the name of the AFS volume that
+	should be removed (removal not implemented)
 	* scripts/buildGeneralDoc: added the option --timeout in the call to LHCbDoc
 	(not yet functional)
 
