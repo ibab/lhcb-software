@@ -41,6 +41,11 @@ public:
 
   /// destructor (virtual and protected)
   virtual ~CkvSensDet();
+  /// initialize
+  StatusCode initialize();
+
+  /// finalize
+  StatusCode finalize();
 
   /** process the hit
    *  @param step     pointer to current Geant4 step

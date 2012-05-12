@@ -50,6 +50,21 @@ CkvSensDet::CkvSensDet( const std::string& type   ,
     GiGaSensDetBase      ( type , name , parent )
 {
 
+
+}
+
+//=============================================================================
+// Destructor
+//=============================================================================
+CkvSensDet::~CkvSensDet(){}
+//=============================================================================
+// initialize
+//=============================================================================
+StatusCode CkvSensDet::initialize() 
+{
+  StatusCode sc = GiGaSensDetBase::initialize();
+  if (sc.isFailure()) return sc;
+
   IDataProviderSvc* detSvc;
   if ( svcLoc()->service( "DetectorDataSvc" , detSvc , true ) ) {
 
@@ -73,12 +88,18 @@ CkvSensDet::CkvSensDet( const std::string& type   ,
 
   }
 
+  
+  return sc;
+}
+//=============================================================================
+// finalize
+//=============================================================================
+StatusCode CkvSensDet::finalize() 
+{
+  return GiGaSensDetBase::finalize();  
+  
 }
 
-//=============================================================================
-// Destructor
-//=============================================================================
-CkvSensDet::~CkvSensDet(){}
 
 //=============================================================================
 // process the hit (G4VSensitiveDetector method
