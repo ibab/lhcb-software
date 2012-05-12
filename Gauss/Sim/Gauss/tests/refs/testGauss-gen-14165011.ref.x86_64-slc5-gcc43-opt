@@ -1,15 +1,15 @@
-# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r118/options/Gauss/Beam3500GeV-md100-MC11-nu2.py'
-# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r118/options/Gauss/Beam3500GeV-md100-MC11-nu2.py'
-# --> Including file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v41r1/Gen/DecFiles/options/14165011.py'
-# <-- End of file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v41r1/Gen/DecFiles/options/14165011.py'
-# --> Including file '/afs/cern.ch/lhcb/software/releases/GAUSS/GAUSS_v41r1/Gen/LbPythia/options/Pythia.py'
-# <-- End of file '/afs/cern.ch/lhcb/software/releases/GAUSS/GAUSS_v41r1/Gen/LbPythia/options/Pythia.py'
-# --> Including file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v41r1/Sim/Gauss/options/GenStandAlone.py'
-# <-- End of file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v41r1/Sim/Gauss/options/GenStandAlone.py'
-# --> Including file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v41r1/Sim/Gauss/tests/options/testGauss-NoOutput.py'
-# <-- End of file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v41r1/Sim/Gauss/tests/options/testGauss-NoOutput.py'
-# --> Including file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v41r1/Sim/Gauss/tests/options/testGauss-gen-100evts-defaults.py'
-# <-- End of file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v41r1/Sim/Gauss/tests/options/testGauss-gen-100evts-defaults.py'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r134/options/Gauss/Beam3500GeV-md100-MC11-nu2.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r134/options/Gauss/Beam3500GeV-md100-MC11-nu2.py'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/Gen/DecFiles/v25r7/options/14165011.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/Gen/DecFiles/v25r7/options/14165011.py'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/GAUSS/GAUSS_v41r3/Gen/LbPythia/options/Pythia.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/GAUSS/GAUSS_v41r3/Gen/LbPythia/options/Pythia.py'
+# --> Including file '/afs/cern.ch/lhcb/software/DEV/GAUSS/Gauss_v41r3/Sim/Gauss/options/GenStandAlone.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/DEV/GAUSS/Gauss_v41r3/Sim/Gauss/options/GenStandAlone.py'
+# --> Including file '/afs/cern.ch/lhcb/software/DEV/GAUSS/Gauss_v41r3/Sim/Gauss/tests/options/testGauss-NoOutput.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/DEV/GAUSS/Gauss_v41r3/Sim/Gauss/tests/options/testGauss-NoOutput.py'
+# --> Including file '/afs/cern.ch/lhcb/software/DEV/GAUSS/Gauss_v41r3/Sim/Gauss/tests/options/testGauss-gen-100evts-defaults.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/DEV/GAUSS/Gauss_v41r3/Sim/Gauss/tests/options/testGauss-gen-100evts-defaults.py'
 # applying configuration of Gauss
 # WARNING: No simulation phase.
 # WARNING: No event data output produced
@@ -55,8 +55,8 @@
 # WARNING: Using default tag tt-20110126 for partition DQFLAGS
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Gauss version v41r1
-                                          running on lxplus431.cern.ch on Wed Dec  7 10:58:32 2011
+                                                   Welcome to Gauss version v41r3
+                                          running on lxbuild156.cern.ch on Wed May  9 12:08:19 2012
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersistencySvc     INFO Added successfully Conversion service:XmlCnvSvc
@@ -67,7 +67,7 @@ RndmGenSvc.Engine          INFO This is the GEANT4 engine!
 RndmGenSvc                 INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
 TimingAuditor.TIMER        INFO This machine has a speed about   1.91 times the speed of a 2.8 GHz Xeon.
 GaussSequencer             INFO Member list: GaudiSequencer/Generator
-ToolSvc.SequencerTime...   INFO This machine has a speed about   1.90 times the speed of a 2.8 GHz Xeon.
+ToolSvc.SequencerTime...   INFO This machine has a speed about   0.96 times the speed of a 2.8 GHz Xeon.
 Generator                  INFO Member list: GaudiSequencer/GeneratorSlotMainSeq
 GeneratorSlotMainSeq       INFO Member list: GenInit/GaussGen, Generation, GaudiSequencer/GenMonitor
 GaussGen                SUCCESS ==================================================================
@@ -95,7 +95,7 @@ GaussGen                   INFO Luminous region = ( 0.0297432, 0.0297432, 40.305
 GaussGen                   INFO Create BeamForInitialization
 COOLConfSvc                INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc                INFO CORAL Connection Retrial Time-Out set to 900s
-DDDB                       INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r20/db/DDDB.db/DDDB"
+DDDB                       INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/SQLite/SQLDDDB/db/DDDB.db/DDDB"
 DDDB                       INFO Using TAG "head-20101206"
 ParticlePropertySvc        INFO Opened particle properties file : conddb:///param/ParticleTable.txt
 ToolSvc.EvtGenDecay.P...SUCCESS ==================================================================
@@ -254,21 +254,21 @@ Efficiency of the generator level cut : 0.17241 +/- 0.015685
 GenMonitorAlg              INFO
 ======================== Generators Statistics ====================
 =                                                                 =
-= Number of particles generated: 79922
+= Number of particles generated: 79636
 = Number of events: 100
-= Mean multiplicity: 799.22
+= Mean multiplicity: 796.36
 =                                                                 =
-= Number of pseudo stable particles generated: 68020
+= Number of pseudo stable particles generated: 67734
 = Number of events: 100
-= Mean pseudo stable multiplicity: 680.2
+= Mean pseudo stable multiplicity: 677.34
 =                                                                 =
-= Number of charged stable particles generated: 20868
+= Number of charged stable particles generated: 20902
 = Number of events: 100
-= Mean charged stable multiplicity: 208.68
+= Mean charged stable multiplicity: 209.02
 =                                                                 =
-= Number of charged stable particles in LHCb eta 5104
+= Number of charged stable particles in LHCb eta 5088
 = Number of events: 100
-= Mean charged stable multiplicity in LHCb eta: 51.04
+= Mean charged stable multiplicity in LHCb eta: 50.88
 =                                                                 =
 ===================================================================
 GenMonitorAlg           SUCCESS Booked 21 Histogram(s) : 1D=19 2D=2
@@ -314,10 +314,10 @@ ToolSvc                    INFO Removing all tools created by ToolSvc
  Warning: requested subprocess 484 has vanishing cross-section.
  Process switched off!
 
-     Error type 9 has occured after      311 PYEXEC calls:
+     Error type 9 has occured after      309 PYEXEC calls:
      (PYPTIS:) Weight   2.2053E+00 above unity
 
-     Error type 9 has occured after      355 PYEXEC calls:
+     Error type 9 has occured after      352 PYEXEC calls:
      (PYPTIS:) Weight   1.5556E+00 above unity
  Warning: requested subprocess 484 has vanishing cross-section.
  Process switched off!
@@ -328,7 +328,7 @@ ToolSvc                    INFO Removing all tools created by ToolSvc
  Warning: requested subprocess 484 has vanishing cross-section.
  Process switched off!
 
-     Error type 9 has occured after      541 PYEXEC calls:
+     Error type 9 has occured after      535 PYEXEC calls:
      (PYPTIS:) Weight   2.8775E+00 above unity
  Warning: requested subprocess 484 has vanishing cross-section.
  Process switched off!
@@ -410,13 +410,13 @@ ToolSvc                    INFO Removing all tools created by ToolSvc
  ********* Total number of warnings =                    GaussGen.GaussGenMemory SUCCESS Booked 4 Histogram(s) : 1D=4
 GaussGen.GaussGenMemory SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "Delta Memory/MB"                               |        90 |      0.264 |  0.0029333 |    0.13268 |    -0.93200 |     0.79200 |
- | "Total Memory/MB"                               |       100 |   76013.42 |     760.13 |    0.10342 |      760.09 |      761.04 |
+ | "Delta Memory/MB"                               |        90 |      0.264 |  0.0029333 |    0.18146 |    -0.92800 |     0.92400 |
+ | "Total Memory/MB"                               |       100 |   75222.96 |     752.23 |    0.13191 |      752.14 |      753.13 |
 GaussGen.GaussGenMemory SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/2/0
-GaussGen.GaussGenMemory SUCCESS  #WARNINGS   = 2        Message = 'Delta Memory for the event exceeds 3*sigma'
-GaussGen.GaussGenMemory SUCCESS  #WARNINGS   = 6        Message = 'Total Memory for the event exceeds 3*sigma'
+GaussGen.GaussGenMemory SUCCESS  #WARNINGS   = 3        Message = 'Delta Memory for the event exceeds 3*sigma'
+GaussGen.GaussGenMemory SUCCESS  #WARNINGS   = 3        Message = 'Total Memory for the event exceeds 3*sigma'
 ToolSvc.SequencerTime...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTime...   INFO This machine has a speed about   1.90 times the speed of a 2.8 GHz Xeon.
+ToolSvc.SequencerTime...   INFO This machine has a speed about   0.96 times the speed of a 2.8 GHz Xeon.
 ToolSvc.SequencerTime...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.SequencerTime...   INFO --------------------------------------------------------------------------------------------------
 ToolSvc.SequencerTime...   INFO --------------------------------------------------------------------------------------------------
@@ -532,14 +532,14 @@ ToolSvc.SequencerTime...   INFO ------------------------------------------------
 TimingAuditor.TIMER        INFO This machine has a speed about   1.91 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.TIMER        INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.TIMER        INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.TIMER        INFO EVENT LOOP                    |   114.503 |   114.574 |    9.377    1487.1 |     100 |    11.457 |
-TimingAuditor.TIMER        INFO  GaussSequencer               |   114.453 |   114.540 |    9.349    1486.9 |     100 |    11.454 |
-TimingAuditor.TIMER        INFO   Generator                   |   114.453 |   114.538 |    9.346    1486.9 |     100 |    11.454 |
-TimingAuditor.TIMER        INFO    GeneratorSlotMainSeq       |   114.453 |   114.536 |    9.344    1486.9 |     100 |    11.454 |
-TimingAuditor.TIMER        INFO     GaussGen                  |     0.270 |     0.302 |    0.124       1.5 |     100 |     0.030 |
-TimingAuditor.TIMER        INFO     Generation                |   113.883 |   113.924 |    9.005    1484.9 |     100 |    11.392 |
-TimingAuditor.TIMER        INFO     GenMonitor                |     0.290 |     0.302 |    0.074       0.8 |     100 |     0.030 |
-TimingAuditor.TIMER        INFO      GenMonitorAlg            |     0.290 |     0.299 |    0.072       0.8 |     100 |     0.030 |
+TimingAuditor.TIMER        INFO EVENT LOOP                    |   281.677 |   140.967 |   13.967    1794.5 |     100 |    14.097 |
+TimingAuditor.TIMER        INFO  GaussSequencer               |   281.647 |   140.931 |   13.937    1794.3 |     100 |    14.093 |
+TimingAuditor.TIMER        INFO   Generator                   |   281.647 |   140.928 |   13.933    1794.3 |     100 |    14.093 |
+TimingAuditor.TIMER        INFO    GeneratorSlotMainSeq       |   281.647 |   140.925 |   13.930    1794.3 |     100 |    14.092 |
+TimingAuditor.TIMER        INFO     GaussGen                  |     0.530 |     0.270 |    0.151       1.6 |     100 |     0.027 |
+TimingAuditor.TIMER        INFO     Generation                |   280.377 |   140.288 |   13.498    1792.1 |     100 |    14.029 |
+TimingAuditor.TIMER        INFO     GenMonitor                |     0.720 |     0.357 |    0.093       1.1 |     100 |     0.036 |
+TimingAuditor.TIMER        INFO      GenMonitorAlg            |     0.700 |     0.354 |    0.089       1.1 |     100 |     0.035 |
 TimingAuditor.TIMER        INFO --------------------------------------------------------------------------------------------------
 ApplicationMgr             INFO Application Manager Finalized successfully
 ApplicationMgr             INFO Application Manager Terminated successfully

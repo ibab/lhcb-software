@@ -1,23 +1,64 @@
+Particle xi_b- has a strange PDGEncoding
+
+*** G4Exception : PART102
+      issued by : G4ParticleDefintion::G4ParticleDefintion
+Strange PDGEncoding
+*** This is just a warning message.
+Particle xi_b+ has a strange PDGEncoding
+
+*** G4Exception : PART102
+      issued by : G4ParticleDefintion::G4ParticleDefintion
+Strange PDGEncoding
+*** This is just a warning message.
+Particle anti_lambda_b0 has a strange PDGEncoding
+
+*** G4Exception : PART102
+      issued by : G4ParticleDefintion::G4ParticleDefintion
+Strange PDGEncoding
+*** This is just a warning message.
+Particle lambda_b0 has a strange PDGEncoding
+
+*** G4Exception : PART102
+      issued by : G4ParticleDefintion::G4ParticleDefintion
+Strange PDGEncoding
+*** This is just a warning message.
+Particle anti_xi_b0 has a strange PDGEncoding
+
+*** G4Exception : PART102
+      issued by : G4ParticleDefintion::G4ParticleDefintion
+Strange PDGEncoding
+*** This is just a warning message.
+Particle xi_b0 has a strange PDGEncoding
 
 *** G4Exception : PART102
       issued by : G4ParticleDefintion::G4ParticleDefintion
 Strange PDGEncoding
 *** This is just a warning message.
 
-*** G4Exception : PART102
+*** G4Exception : PART104
       issued by : G4ParticleDefintion::G4ParticleDefintion
-Strange PDGEncoding
+Inconsistent spin against PDG code
 *** This is just a warning message.
+G4ParticleDefinition::FillQuarkContents  :  illegal SPIN (3/2 PDG code=-4412
+Particle anti-xi_cc- has a strange PDGEncoding
 
 *** G4Exception : PART102
       issued by : G4ParticleDefintion::G4ParticleDefintion
 Strange PDGEncoding
 *** This is just a warning message.
 
+*** G4Exception : PART104
+      issued by : G4ParticleDefintion::G4ParticleDefintion
+Inconsistent spin against PDG code
+*** This is just a warning message.
+G4ParticleDefinition::FillQuarkContents  :  illegal SPIN (3/2 PDG code=4412
+Particle xi_cc+ has a strange PDGEncoding
+
 *** G4Exception : PART102
       issued by : G4ParticleDefintion::G4ParticleDefintion
 Strange PDGEncoding
 *** This is just a warning message.
+Particle HVpion has a strange PDGEncoding
 
 *** G4Exception : PART102
       issued by : G4ParticleDefintion::G4ParticleDefintion
