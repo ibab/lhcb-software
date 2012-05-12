@@ -3,7 +3,11 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH Upgrade
 !----------------------------------------------------------------------------- 
-20120-3-26 - Sajan Easo
+2012-05-11 - Sajan Easo
+ - Adaption for the recent  Gaudi v23. Moved parts of the constructor in CkvSensDet to its initialize method. 
+   Moved also parts of the constructor in CherenkovEventAction to its initialize method.  The initialize
+   and finalize methods are installed in these two classes as well.
+2012-03-26 - Sajan Easo
  - Added a some analysis histo modifications.
 !2012-01-27 - Sajan Easo
  Minor improvements to be to use different PMT photocathode types in RichPmtProperties.cpp and CkvG4GaussPathNames.h
