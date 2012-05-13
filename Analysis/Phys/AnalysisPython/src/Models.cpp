@@ -402,6 +402,86 @@ Double_t Analysis::Models::CrystalBallDS::evaluate() const
 // ============================================================================
 
 
+
+// ============================================================================
+// Needham
+// ============================================================================
+Analysis::Models::Needham::Needham
+( const char*          name      , 
+  const char*          title     ,
+  RooAbsReal&          x         ,
+  RooAbsReal&          m0        ,
+  RooAbsReal&          sigma     ,    
+  RooAbsReal&          a0        ,    
+  RooAbsReal&          a1        ,    
+  RooAbsReal&          a2        )
+  : RooAbsPdf ( name , title )
+//
+  , m_x       ( "x"       , "Observable"                 , this , x      ) 
+  , m_m0      ( "m0"      , "mass"                       , this , m0     ) 
+  , m_sigma   ( "sigma"   , "sigma"                      , this , sigma  )
+//
+  , m_a0      ( "a0"      , "a0-parameter"               , this , a0     ) 
+  , m_a1      ( "a1"      , "a1-parameter"               , this , a1     ) 
+  , m_a2      ( "a2"      , "a2-parameter"               , this , a2     ) 
+//  
+  , m_needham ( 100 , 1 , 1.9 , 0 , 0 ) 
+{
+  //
+  m_needham.setM0      ( m_m0     ) ;
+  m_needham.setSigma   ( m_sigma  ) ;
+  //
+  m_needham.setA0      ( m_a0     ) ;
+  m_needham.setA1      ( m_a1     ) ;
+  m_needham.setA2      ( m_a2     ) ;
+  //
+}
+// ============================================================================
+// copy constructor 
+// ============================================================================
+Analysis::Models::Needham::Needham
+( const Analysis::Models::Needham& right , 
+  const char*                      name ) 
+  : RooAbsPdf ( right , name ) 
+//
+  , m_x       ( "x"       , this , right.m_x      ) 
+  , m_m0      ( "m0"      , this , right.m_m0     ) 
+  , m_sigma   ( "sigma"   , this , right.m_sigma  )
+//
+  , m_a0      ( "a0"      , this , right.m_a0     ) 
+  , m_a1      ( "a1"      , this , right.m_a1     ) 
+  , m_a2      ( "a2"      , this , right.m_a2     ) 
+//  
+  , m_needham ( right.m_needham ) 
+{}
+// ============================================================================
+// destructor 
+// ============================================================================
+Analysis::Models::Needham::~Needham(){}
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::Needham*
+Analysis::Models::Needham::clone( const char* name ) const 
+{ return new Analysis::Models::Needham ( *this , name ) ; }
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::Needham::evaluate() const 
+{
+  //
+  m_needham . setM0    ( m_m0     ) ;
+  m_needham . setSigma ( m_sigma  ) ;
+  //
+  m_needham . setA0    ( m_a0     ) ;
+  m_needham . setA1    ( m_a1     ) ;
+  m_needham . setA2    ( m_a2     ) ;
+  //
+  return m_needham     ( m_x      ) ;
+}
+// ============================================================================
+
+
 // ============================================================================
 // Two-body phase space 
 // ============================================================================

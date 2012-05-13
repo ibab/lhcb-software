@@ -526,6 +526,58 @@ namespace Analysis
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class Needham
+     *  The special parametrization by Matthew NEEDHAM of 
+     *  ``Crystal Ball-function'' nicely suitable for \f$J/\psi\f$-peak
+     *  @thank Matthew Needham 
+     *  @see Gaudi::Math::Needham
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2012-05-13
+     */
+    class GAUDI_API Needham : public RooAbsPdf 
+    { 
+    public:
+      // ====================================================================== 
+      ClassDef(Analysis::Models::Needham, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      Needham
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         ,
+        RooAbsReal&          m0        ,
+        RooAbsReal&          sigma     ,  
+        RooAbsReal&          a0        ,  
+        RooAbsReal&          a1        ,  
+        RooAbsReal&          a2        ) ;
+      /// "copy" constructor 
+      Needham ( const Needham& right , const char* name = 0 ) ;
+      /// virtual destructor 
+      virtual ~Needham () ;
+      /// clone 
+      virtual  Needham* clone ( const char* name ) const ; 
+      // ======================================================================
+    protected:
+      // ======================================================================
+      RooRealProxy m_x      ;
+      RooRealProxy m_m0     ;
+      RooRealProxy m_sigma  ;
+      RooRealProxy m_a0     ;
+      RooRealProxy m_a1     ;
+      RooRealProxy m_a2     ;
+      // ======================================================================
+      // the actual evaluation of function 
+      Double_t evaluate() const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::Needham m_needham ;                  // the function 
+      // ======================================================================
+    } ;    
+    // ========================================================================
     /** @class CrystalBallDS 
      *  double-sided ``Crystal Ball-function'' 
      *  for description of gaussian with the tail
