@@ -72,7 +72,7 @@ import AnalysisPython.LHCbStyle
 # =============================================================================
 if ROOT.gROOT.IsBatch() :
     ROOT.gROOT.SetBatch ( False )
-    logger.info("Set 'IsBatch' to be %s " % ROOT.gROOT.SetBatch () )
+    logger.info ( "Set 'IsBatch' to be %s " % ROOT.gROOT.SetBatch () )
 # =============================================================================
 # The Heart 
 # =============================================================================
@@ -84,36 +84,11 @@ import AnalysisPython.ZipShelve as ZipShelve
 if ROOT.gROOT.IsBatch() :
     ROOT.gROOT.SetBatch ( False )
     logger.info("Set 'IsBatch' to be %s " % ROOT.gROOT.SetBatch () )
-# =============================================================================
-# tiny decoration for shelve module
-# =============================================================================
-import shelve
-_old_shelve_open_ = shelve.open
-## A bit extended version of shelve.open
-def _new_shelve_open_ ( filename , *kargs , **kwargs ) :
-    """
-    A bit extended version of shelve.open
-    """
-    import os
-    filename = os.path.expandvars ( filename )
-    filename = os.path.expandvars ( filename )
-    filename = os.path.expandvars ( filename )
-    filename = os.path.abspath    ( filename )
-    #
-    return _old_shelve_open_ ( filename , *kargs , **kwargs ) 
 
-_new_shelve_open_ .__doc__ += '\n' + _old_shelve_open_ .__doc__ 
-shelve.open = _new_shelve_open_ 
-## List DB-keys 
-def _ls_ ( self )  :
-    """
-    List DB-keys 
-    """
-    keys = self.keys()
-    keys.sort()
-    for k in keys : print k
+# ============================================================================
+## minor decoration for shelve module 
+from AnalysisPython.shelve_ext import shelve 
 
-shelve.Shelf.ls = _ls_
 # =============================================================================
 cpp = PyRoUts.cpp
 VE  = PyRoUts.VE

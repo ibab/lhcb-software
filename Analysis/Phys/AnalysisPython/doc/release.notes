@@ -5,6 +5,11 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2012-05-13 - Vanya Belyaev
+
+ - add shelve_ext module 
+ - simplify a bit pyroot 
+
 !========================= AnalysisPython v2r10 2012-05-03 =========================
 
 ! 2012-04-29 - Vanya Belyaev

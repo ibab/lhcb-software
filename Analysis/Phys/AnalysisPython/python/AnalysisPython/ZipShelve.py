@@ -175,6 +175,8 @@ class ZipShelf(shelve.Shelf):
         ## expand the actual file name 
         filename  = os.path.expandvars ( filename )
         filename  = os.path.expanduser ( filename )
+        filename  = os.path.expandvars ( filename )
+        filename  = os.path.expandvars ( filename )
 
         self.__gzip          = False 
         self.__filename      = filename
@@ -443,6 +445,10 @@ def open ( filename                                   ,
                       writeback     ,
                       silent        )
 
+
+# ============================================================================
+## a bit more decorations for shelve  (optional)
+import AnalysisPython.shelve_ext
 
 # =============================================================================
 if '__main__' == __name__ :
