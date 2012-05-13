@@ -8,6 +8,7 @@
 #include "RichYield.h"
 using namespace RooFit;
 
+#include "RooHistPdf.h"
 //#include <boost/lexical_cast.hpp>
 
 #include <string>
@@ -44,74 +45,74 @@ string NumToString(double i)
 }
 
 vector<TString> CutsOnBeta()
-{
-	 vector<double> BetaCutsNum = NumCutsOnBeta();
-	 vector<double>::iterator BetaCutsNumIt;
-	 std::vector<TString> BetaCuts;
-	 int counter = 0;
-	 for (BetaCutsNumIt=BetaCutsNum.begin();BetaCutsNumIt<BetaCutsNum.end(); BetaCutsNumIt++)
-	 {
-		 counter++;
-		 TString BetaLow2;
-		 TString BetaHigh2;
-		 if (BetaCutsNumIt==BetaCutsNum.begin())
-		 {
-			 TString BetaLow = NumToString(0.0);
-			 BetaLow2 = BetaLow;
-		 }
-		 else
-		 {
-			 TString BetaLow = NumToString(*(BetaCutsNumIt-1));
-			 BetaLow2 = BetaLow;
-		 }
-		 if (BetaCutsNumIt==BetaCutsNum.end())
-		 {
-			 TString BetaHigh = NumToString(1.0);
-			 BetaHigh2 = BetaHigh;
-		 }
-		 else
-		 {
-			 TString BetaHigh = NumToString(*BetaCutsNumIt);
-			 BetaHigh2 = BetaHigh;
-		 }
-//		 TString BetaHigh = NumToString(*BetaCutsNumIt);
-		 TString BetaCut0 = "(beta) > "+BetaLow2+" && (beta) <= "+BetaHigh2;
+						{
+	vector<double> BetaCutsNum = NumCutsOnBeta();
+	vector<double>::iterator BetaCutsNumIt;
+	std::vector<TString> BetaCuts;
+	int counter = 0;
+	for (BetaCutsNumIt=BetaCutsNum.begin();BetaCutsNumIt<BetaCutsNum.end(); BetaCutsNumIt++)
+	{
+		counter++;
+		TString BetaLow2;
+		TString BetaHigh2;
+		//		if (BetaCutsNumIt==BetaCutsNum.begin())
+		//		{
+		//			TString BetaLow = NumToString(0.0);
+		//			BetaLow2 = BetaLow;
+		//		}
+		//		else
+		//		{
+		TString BetaLow = NumToString(*(BetaCutsNumIt));
+		BetaLow2 = BetaLow;
+		//		}
+		if ((BetaCutsNumIt+1)==BetaCutsNum.end())
+		{
+			TString BetaHigh = NumToString(1.0);
+			BetaHigh2 = BetaHigh;
+		}
+		else
+		{
+			TString BetaHigh = NumToString(*BetaCutsNumIt+1);
+			BetaHigh2 = BetaHigh;
+		}
+		//		 TString BetaHigh = NumToString(*BetaCutsNumIt);
+		TString BetaCut0 = "(beta) > "+BetaLow2+" && (beta) <= "+BetaHigh2;
 
-		 BetaCuts.push_back(BetaCut0);
-	 }
+		BetaCuts.push_back(BetaCut0);
+	}
 
-	 TString BetaCutALL = "(beta) > 0 && (beta) <=  99995";
+	TString BetaCutALL = "(beta) > 0 && (beta) <=  99995";
 
 
-	 BetaCuts.push_back(BetaCutALL);
+	//	BetaCuts.push_back(BetaCutALL);
 
-	 return BetaCuts;
-}
+	return BetaCuts;
+						}
 vector<double> NumCutsOnBeta()
-{
+						{
 	// Define cuts on beta for plotting
-	 double BetaCut0 = 0.9995;
-	 double BetaCut1 = 0.9996; // beta cut to look at how plots vary with beta
-	 double BetaCut2 = 0.9997;
-	 double BetaCut3 = 0.9998;
-	 double BetaCut4 = 0.99985;
-	 double BetaCut5 = 0.9999;
-	 double BetaCut6 = 0.99995;
-	 double BetaCutALL = 99995;
+	double BetaCut0 = 0.9995;
+	double BetaCut1 = 0.9996; // beta cut to look at how plots vary with beta
+	double BetaCut2 = 0.9997;
+	double BetaCut3 = 0.9998;
+	double BetaCut4 = 0.99985;
+	double BetaCut5 = 0.9999;
+	double BetaCut6 = 0.99995;
+	double BetaCutALL = 99995;
 
-	 std::vector<double> BetaCuts;
+	std::vector<double> BetaCuts;
 
-	 BetaCuts.push_back(BetaCut0);
-	 BetaCuts.push_back(BetaCut1);
-	 BetaCuts.push_back(BetaCut2);
-	 BetaCuts.push_back(BetaCut3);
-	 BetaCuts.push_back(BetaCut4);
-	 BetaCuts.push_back(BetaCut5);
-	 BetaCuts.push_back(BetaCut6);
-//	 BetaCuts.push_back(BetaCutALL);
+	//	 BetaCuts.push_back(BetaCut0);
+	//	 BetaCuts.push_back(BetaCut1);
+	//	 BetaCuts.push_back(BetaCut2);
+	//	 BetaCuts.push_back(BetaCut3);
+	//	 BetaCuts.push_back(BetaCut4);
+	//	BetaCuts.push_back(BetaCut5);
+	BetaCuts.push_back(BetaCut6);
+	//	BetaCuts.push_back(BetaCutALL);
 
-	 return BetaCuts;
-}
+	return BetaCuts;
+						}
 
 void RichYield::FitBeta(std::vector<double> FittedMean1)
 {
@@ -123,7 +124,7 @@ void RichYield::FitBeta(std::vector<double> FittedMean1)
 	//cout << FittedMean[0] << endl;
 	for ( int i = 0; i < size; i++ )
 	{
-	//	BetaVNphotons->Fill(Beta[i],FitMean[i]);
+		//	BetaVNphotons->Fill(Beta[i],FitMean[i]);
 		BetaVNphotons->Fill(Beta[i],FittedMean1[i]);
 	}
 
@@ -159,90 +160,89 @@ void RichYield::PlotNPhotonsRich1()
 
 	// Get required data
 	TFile * inputFile = TFile::Open("/Users/mcoombes/Documents/ComputerWork/HeavyParticleSearch/ParticleFinderTuple/Output/ParticleSearchTrack-R1Gas-MC10-sigYield.root");
-  //  TH1* inputHisto = (TH1*) inputFile->Get("PhotonsPerTrackBeta1");
+	//  TH1* inputHisto = (TH1*) inputFile->Get("PhotonsPerTrackBeta1");
 	TTree* inputTree = (TTree*)inputFile->Get("RichParticleSearchR1GasTrackTuple");
 	//Define the observables and ranges over which the PDFs will be made
 	RooRealVar NPhotons("TruePhotonsPerTrack","TruePhotonsPerTrack",start_range,end_range);
 	RooRealVar beta("beta","beta",0.0,1.001);
 
-	 //And create a RooDataSet object containing these observables:
-	 //	For > 1 observable
-   // RooDataSet* data = new RooDataSet("data","data",inputTree,RooArgList(NPhotons,beta));
+	//And create a RooDataSet object containing these observables:
+	//	For > 1 observable
+	// RooDataSet* data = new RooDataSet("data","data",inputTree,RooArgList(NPhotons,beta));
 	RooDataSet data("data","data",inputTree,RooArgList(NPhotons,beta));
-	 //	For  1 observable
-  //  RooDataHist* ReducedDataSet = new RooDataHist("data","data",NPhotons,inputHisto);
+	//	For  1 observable
+	//  RooDataHist* ReducedDataSet = new RooDataHist("data","data",NPhotons,inputHisto);
 	//RooDataHist ReducedDataSet("data","data",NPhotons,inputHisto);
-	 // =========================================================================================================================
-	 // 													Cuts on Beta
-	 // =========================================================================================================================
+	// =========================================================================================================================
+	// 													Cuts on Beta
+	// =========================================================================================================================
 
-     std::vector<TString> BetaCuts = CutsOnBeta();
+	std::vector<TString> BetaCuts = CutsOnBeta();
 
-     vector<TString>::iterator it;
+	vector<TString>::iterator it;
 
-     int BetaCutCounter = 0;
+	int BetaCutCounter = 0;
 
 	// TFile* outFile = new TFile("../output/Yield-"+RICH+".root", "RECREATE");
 
-	 TFile outFile("../output/Yield-"+RICH+".root", "RECREATE");
-
-	 //signal
-	 RooRealVar sig_photons_mean("NPhotons","mean number of photons",28,10,32);
+	TFile outFile("../output/Yield-"+RICH+".root", "RECREATE");
+	//signal
+	RooRealVar sig_photons_mean("NPhotons","mean number of photons",28,10,32);
 	// RooRealVar sig_photons_sigma("#sigma","width of gaussian",6,0,20);
-	 //RooRealVar sig_photons_sigma("#sigma","width of gaussian",6.26);
-	 RooRealVar sig_photons_sigma("#sigma","width of gaussian",10,0,26);
+	//RooRealVar sig_photons_sigma("#sigma","width of gaussian",6.26);
+	RooRealVar sig_photons_sigma("#sigma","width of gaussian",10,0,26);
 
-//	 RooRealVar sig_photons_tail("#tail","tail of gaussian",0,-20,20);
-	 RooRealVar sig_photons_alpha("#alpha","alpha of gaussian",-2,-20,20);
-	 RooAbsPdf* signal_NPhotons = new RooGenericPdf("Generic","Generic PDF","exp(-1*(((@0)-(@1))^(2))/(2*(@2)^(2)))*TMath::Freq(@3*(@0-@1)/@2)",
-				 RooArgList(NPhotons,sig_photons_mean,sig_photons_sigma,sig_photons_alpha));
-
-
-	 //RooAbsPdf* signal_NPhotons = new RooNovosibirsk("signal_photons","signal_photons",NPhotons,sig_photons_mean,sig_photons_sigma,sig_photons_tail);
-//	 RooAbsPdf* signal_NPhotons = new RooGaussian("signal_photons","signal_photons",NPhotons,sig_photons_mean,sig_photons_sigma);
-
-//	 RooAbsPdf* signal_NPhotons = new RooGenericPdf("Generic","Generic PDF","exp(-1*(((@1)-(@2))^(2))/(2*(@3)^(2)))*TMath::Freq((@4)*((@1)-(@2))/(@3))",
-//			 RooArgList(NPhotons,sig_photons_mean,sig_photons_sigma,sig_photons_alpha));
-//			 	 RooArgList(NPhotons,sig_photons_mean,sig_photons_tail));
-
-//	 RooAbsPdf* signal_NPhotons = new RooCBShape("signal_photons","signal_photons",NPhotons,sig_photons_mean,sig_photons_sigma,sig_photons_tail,sig_photons_alpha);
+	//	 RooRealVar sig_photons_tail("#tail","tail of gaussian",0,-20,20);
+	RooRealVar sig_photons_alpha("#alpha","alpha of gaussian",-2,-20,20);
+	RooAbsPdf* signal_NPhotons = new RooGenericPdf("Generic","Generic PDF","exp(-1*(((@0)-(@1))^(2))/(2*(@2)^(2)))*TMath::Freq(@3*(@0-@1)/@2)",
+			RooArgList(NPhotons,sig_photons_mean,sig_photons_sigma,sig_photons_alpha));
 
 
-	 // Background
-  //  RooAbsPdf* bkg_photons = new RooPolynomial("Polynomial","O(1) Polynomial",NPhotons,RooArgList(bkg_photons_p0,bkg_photons_p1));
-	 RooRealVar bkg_photons_a("a","a of exponential",-0.56);
-	 RooAbsPdf* bkg_photons = new RooExponential("Exponential","Exponential",NPhotons,bkg_photons_a);
-     // 	RooAbsPdf* bkg_photons = new RooPolynomial("Polynomial","O(1) Polynomial",NPhotons,RooArgList(bkg_photons_p0,bkg_photons_p1));
+	//RooAbsPdf* signal_NPhotons = new RooNovosibirsk("signal_photons","signal_photons",NPhotons,sig_photons_mean,sig_photons_sigma,sig_photons_tail);
+	//	 RooAbsPdf* signal_NPhotons = new RooGaussian("signal_photons","signal_photons",NPhotons,sig_photons_mean,sig_photons_sigma);
 
-	 // Aerogel photons in RICH1
-	 RooRealVar aero_photons_mean("AeroNPhotons","mean number of photons Aero",5,2,10);
+	//	 RooAbsPdf* signal_NPhotons = new RooGenericPdf("Generic","Generic PDF","exp(-1*(((@1)-(@2))^(2))/(2*(@3)^(2)))*TMath::Freq((@4)*((@1)-(@2))/(@3))",
+	//			 RooArgList(NPhotons,sig_photons_mean,sig_photons_sigma,sig_photons_alpha));
+	//			 	 RooArgList(NPhotons,sig_photons_mean,sig_photons_tail));
+
+	//	 RooAbsPdf* signal_NPhotons = new RooCBShape("signal_photons","signal_photons",NPhotons,sig_photons_mean,sig_photons_sigma,sig_photons_tail,sig_photons_alpha);
+
+
+	// Background
+	//  RooAbsPdf* bkg_photons = new RooPolynomial("Polynomial","O(1) Polynomial",NPhotons,RooArgList(bkg_photons_p0,bkg_photons_p1));
+	RooRealVar bkg_photons_a("a","a of exponential",-0.56);
+	RooAbsPdf* bkg_photons = new RooExponential("Exponential","Exponential",NPhotons,bkg_photons_a);
+	// 	RooAbsPdf* bkg_photons = new RooPolynomial("Polynomial","O(1) Polynomial",NPhotons,RooArgList(bkg_photons_p0,bkg_photons_p1));
+
+	// Aerogel photons in RICH1
+	RooRealVar aero_photons_mean("AeroNPhotons","mean number of photons Aero",5,2,10);
 	// RooRealVar aero_photons_sigma("#sigmaAero","width of gaussian Aero",4,0,7);
-	 RooRealVar aero_photons_sigma("#sigmaAero","width of gaussian Aero",5.9);
-	 RooRealVar aero_photons_alpha("aero#alpha","Aero alpha of gaussian",-2,-20,20);
+	RooRealVar aero_photons_sigma("#sigmaAero","width of gaussian Aero",5.9);
+	RooRealVar aero_photons_alpha("aero#alpha","Aero alpha of gaussian",-2,-20,20);
 
 
-	 // Define the signal Fit function
-	 RooAbsPdf* aero_NPhotons = new RooGaussian("aero_photons","aero_photons",NPhotons,aero_photons_mean,aero_photons_sigma);
-//	 RooAbsPdf* aero_NPhotons = new RooGenericPdf("Generic","Generic PDF","exp(-1*(((@0)-(@1))^(2))/(2*(@2)^(2)))*TMath::Freq(@3*(@0-@1)/@2)",
-//					 RooArgList(NPhotons,aero_photons_mean,aero_photons_sigma,aero_photons_alpha));
+	// Define the signal Fit function
+	RooAbsPdf* aero_NPhotons = new RooGaussian("aero_photons","aero_photons",NPhotons,aero_photons_mean,aero_photons_sigma);
+	//	 RooAbsPdf* aero_NPhotons = new RooGenericPdf("Generic","Generic PDF","exp(-1*(((@0)-(@1))^(2))/(2*(@2)^(2)))*TMath::Freq(@3*(@0-@1)/@2)",
+	//					 RooArgList(NPhotons,aero_photons_mean,aero_photons_sigma,aero_photons_alpha));
 
-//	 std::vector<std::vector<double> > FittedMeanPlusBeta;
-//	 std::vector<std::vector<double>> FittedMeanPlusBetaIterator;
-	 std::vector<double> FittedMean1;
-//	 FittedMean1.push_back(2.0);
+	//	 std::vector<std::vector<double> > FittedMeanPlusBeta;
+	//	 std::vector<std::vector<double>> FittedMeanPlusBetaIterator;
+	std::vector<double> FittedMean1;
+	//	 FittedMean1.push_back(2.0);
 
 
-     for (it = BetaCuts.begin(); it < BetaCuts.end(); it++)
-     {
+	for (it = BetaCuts.begin(); it < BetaCuts.end(); it++)
+	{
 
-    	cout << *it << endl;
-	//	TCut BetaCut;
+		cout << *it << endl;
+		//	TCut BetaCut;
 		TString BetaCut= *it;
-    	BetaCutCounter++;
+		BetaCutCounter++;
 		RooDataSet* ReducedDataSet =  (RooDataSet*)data.reduce(BetaCut);
-    	//RooDataSet ReducedDataSet = (RooDataSet)data.reduce(BetaCut);
+		//RooDataSet ReducedDataSet = (RooDataSet)data.reduce(BetaCut);
 
-		 // Draw data
+		// Draw data
 		RooPlot* NphotonsPlot = NPhotons.frame();
 		ReducedDataSet->plotOn(NphotonsPlot, Binning ((end_range-start_range)));
 		NphotonsPlot->Draw();
@@ -251,7 +251,7 @@ void RichYield::PlotNPhotonsRich1()
 		// Now Fitting
 		// =========================================================================================================================
 
-//		//Yields
+		//		//Yields
 
 		int NEntries = ReducedDataSet->numEntries();
 
@@ -296,7 +296,7 @@ void RichYield::PlotNPhotonsRich1()
 		t->SetTextSize(0.045);
 		t->SetTextFont(62);
 
-	//	FitMean.push_back(sig_photons_mean);
+		//	FitMean.push_back(sig_photons_mean);
 		//The signal component only in dashed blue:
 		photon_pdf->plotOn(NphotonsPlot,Components(*signal_NPhotons),LineColor(kBlue),LineStyle(kDashed));
 		//	The background component only in dashed red:
@@ -304,7 +304,7 @@ void RichYield::PlotNPhotonsRich1()
 
 		photon_pdf->plotOn(NphotonsPlot,Components(*aero_NPhotons),LineColor(kRed),LineStyle(kDashed));
 
-	//	signal_NPhotons->paramOn(NphotonsPlot, Parameters(PlotParametersToPrint), Format("NELU", AutoPrecision(1)), Layout(0.60, 0.9, 0.9));
+		//	signal_NPhotons->paramOn(NphotonsPlot, Parameters(PlotParametersToPrint), Format("NELU", AutoPrecision(1)), Layout(0.60, 0.9, 0.9));
 		// Draw histogram
 		NphotonsPlot->Draw();
 		t->Draw("SAME");
@@ -314,6 +314,8 @@ void RichYield::PlotNPhotonsRich1()
 		TString TbetaCountStr = "Rich1beta"+betaCountStr;
 		TString TbetaCountStr2 = "../output/Rich1Gas/"+TbetaCountStr+".pdf";
 
+		outFile.Open();
+
 		NphotonsPlot->Write(TbetaCountStr);
 		pad1->Update();
 		pad1->Modified();
@@ -321,37 +323,38 @@ void RichYield::PlotNPhotonsRich1()
 		//Save as a .pdf
 
 		//can1->Print(TbetaCountStr2);
+		outFile.Close();
 
 		delete photon_pdf;
 		//delete bkg_photons;
 		//delete signal_NPhotons;
 		//delete aero_NPhotons;
-	//	delete ReducedDataSet;
+		//	delete ReducedDataSet;
 
-     }
-     delete bkg_photons;
-     delete signal_NPhotons;
-     delete aero_NPhotons;
-     std::vector<double>::iterator it2;
-	 for ( it2=FittedMean1.begin(); it2 < FittedMean1.end(); it2++ )
-	 {
+	}
+	delete bkg_photons;
+	delete signal_NPhotons;
+	delete aero_NPhotons;
+	std::vector<double>::iterator it2;
+	for ( it2=FittedMean1.begin(); it2 < FittedMean1.end(); it2++ )
+	{
 		cout << "HERE:" << *it2 << endl;
 		//	BetaVNphotons->Fill(Beta[i],FitMean[i]);
-	 //	BetaVNphotons->Fill(Beta[i],24);
-	 }
+		//	BetaVNphotons->Fill(Beta[i],24);
+	}
 
-     FitBeta(FittedMean1);
-   //  outFile->Write();
-     //delete data;
+	FitBeta(FittedMean1);
+	//  outFile->Write();
+	//delete data;
 }
 
 
 void RichYield::PlotNPhotonsRich2() {
 
 	TString RICH = "R2Gas";
-	int start_range = 5;
-	int end_range = 40;
-		//Open ROOT file for writting histograms to
+	int start_range = 2;
+	int end_range = 50;
+	//Open ROOT file for writting histograms to
 	TCanvas *canR2 = new TCanvas("Rich2","transparent pad",200,10,700,500);
 	canR2->SetFillStyle(4000);
 	//TCanvas canR2("Rich2","NPhotonsRich2",200,10,700,500);
@@ -360,57 +363,58 @@ void RichYield::PlotNPhotonsRich2() {
 	 */
 	canR2->SetFrameFillStyle(4000);
 	gStyle->SetOptStat(10);
-    gStyle->SetOptFit(1111);
+	gStyle->SetOptFit(1111);
 
-    TPad *pad2 = new TPad("pad2","",0,0,1,1);
-    pad2->SetFillStyle(4000); //will be transparent
-    pad2->SetFrameFillStyle(4000);
-    pad2->Draw();
-    pad2->cd();
-
-
-    // Get required data
-    TFile * inputFile = TFile::Open("/Users/mcoombes/Documents/ComputerWork/HeavyParticleSearch/ParticleFinderTuple/Output/ParticleSearchTrack-R2Gas-MC10-sigYield.root");
-    //TH1* inputHisto = (TH1*) inputFile->Get("PhotonsPerTrack");
-    TTree* inputTree = (TTree*)inputFile->Get("RichParticleSearchR2GasTrackTuple");
-    //Define the observables and ranges over which the PDFs will be made
-    RooRealVar NPhotons("PhotonsPerTrack","PhotonsPerTrack",start_range,end_range);
+	TPad *pad2 = new TPad("pad2","",0,0,1,1);
+	pad2->SetFillStyle(4000); //will be transparent
+	pad2->SetFrameFillStyle(4000);
+	pad2->Draw();
+	pad2->cd();
 
 
-    // =========================================================================================================================
-    // 													Cuts on Beta
-    // =========================================================================================================================
-    RooRealVar beta("beta","beta",0.0,2.0);
+	// Get required data
+	TFile * inputFile = TFile::Open("/Users/mcoombes/Documents/ComputerWork/HeavyParticleSearch/ParticleFinderTuple/Output/ParticleSearchTrack-R2Gas-MC-bkgYield.root");
+	//TH1* inputHisto = (TH1*) inputFile->Get("PhotonsPerTrack");
+	TTree* inputTree = (TTree*)inputFile->Get("RichParticleSearchR2GasTrackTuple");
+	//Define the observables and ranges over which the PDFs will be made
+	RooRealVar NPhotons("PhotonsPerTrack","PhotonsPerTrack",start_range,end_range);
 
-     //And create a RooDataSet object containing these observables:
-     //	For > 1 observable
-   // RooDataSet* data = new RooDataSet("data","data",inputTree,RooArgList(NPhotons,beta));
-    RooDataSet data("data","data",inputTree,RooArgList(NPhotons,beta));
 
-     //	For  1 observable
-  //  RooDataHist* ReducedDataSet = new RooDataHist("data","data",NPhotons,inputHisto);
-    //RooDataHist ReducedDataSet("data","data",NPhotons,inputHisto);
-     // =========================================================================================================================
-     // 													Cuts on Beta
-     // =========================================================================================================================
-     std::vector<TString> BetaCuts = CutsOnBeta();
+	// =========================================================================================================================
+	// 													Cuts on Beta
+	// =========================================================================================================================
+	RooRealVar beta("beta","beta",0.0,2.0);
 
-     int BetaCutCounter = 0;
+	//And create a RooDataSet object containing these observables:
+	//	For > 1 observable
+	// RooDataSet* data = new RooDataSet("data","data",inputTree,RooArgList(NPhotons,beta));
+	RooDataSet data("data","data",inputTree,RooArgList(NPhotons,beta));
 
-	 std::vector<double> FittedMean1;
+	//	For  1 observable
+	//  RooDataHist* ReducedDataSet = new RooDataHist("data","data",NPhotons,inputHisto);
+	//RooDataHist ReducedDataSet("data","data",NPhotons,inputHisto);
+	// =========================================================================================================================
+	// 													Cuts on Beta
+	// =========================================================================================================================
+	std::vector<TString> BetaCuts = CutsOnBeta();
 
-	 TFile outFile("../output/Yield-"+RICH+".root", "RECREATE");
+	int BetaCutCounter = 0;
 
-     for (it = BetaCuts.begin(); it < BetaCuts.end(); it++)
-     {
+	std::vector<double> FittedMean1;
 
-    	cout << *it << endl;
+	TFile outFile("../output/Yield-"+RICH+".root", "RECREATE");
+
+	for (it = BetaCuts.begin(); it < BetaCuts.end(); it++)
+	{
+		TCanvas* c1 = new TCanvas("cnv_mass", "", 1024, 768);
+
+		cout << *it << endl;
 		TString BetaCut = *it;
-    	BetaCutCounter++;
+		BetaCutCounter++;
 		RooDataSet* ReducedDataSet = (RooDataSet*)data.reduce(BetaCut);
-    	//RooDataSet ReducedDataSet = (RooDataSet)data.reduce(BetaCut);
+		//RooDataSet ReducedDataSet = (RooDataSet)data.reduce(BetaCut);
 
-		 // Draw data
+		// Draw data
 		RooPlot* NphotonsPlot = NPhotons.frame();
 		ReducedDataSet->plotOn(NphotonsPlot, Binning (end_range-start_range));
 		NphotonsPlot->SetFillStyle(4000);
@@ -424,37 +428,107 @@ void RichYield::PlotNPhotonsRich2() {
 
 		RooRealVar sig_photons_mean("NPhotons","mean number of photons",27,20,30);
 		RooRealVar sig_photons_sigma("#sigma","width of gaussian",5.8,2,9);
+		RooRealVar sig_photons_sigma2("#sigma2","width of gaussian",5.8,2,9);
 
-		 RooRealVar sig_photons_alpha("#alpha","alpha of gaussian",-0.004,-1,1);
-		 RooAbsPdf* signal_NPhotons = new RooGenericPdf("Generic","Generic PDF","exp(-1*(((@0)-(@1))^(2))/(2*(@2)^(2)))*TMath::Freq(@3*(@0-@1)/@2)",
-					 RooArgList(NPhotons,sig_photons_mean,sig_photons_sigma,sig_photons_alpha));
-		// Define the signal Fit function
-		//RooAbsPdf* signal_NPhotons = new RooGaussian("signal_photons","signal_photons",NPhotons,sig_photons_mean,sig_photons_sigma);
+		RooRealVar sig_photons_alpha("#alpha","alpha of gaussian",-0.004,-1,1);
+//		RooAbsPdf* signal_NPhotons = new RooGenericPdf("Generic","Generic PDF","exp(-1*(((@0)-(@1))^(2))/(2*(@2)^(2)))*TMath::Freq(@3*(@0-@1)/@2)",
+//				RooArgList(NPhotons,sig_photons_mean,sig_photons_sigma,sig_photons_alpha));
+//		// Define the signal Fit function
+		RooAbsPdf* signal_gauss1 = new RooGaussian("signal_photons2","signal_photons2",NPhotons,sig_photons_mean,sig_photons_sigma2);
 
+		RooAbsPdf* signal_gauss2 = new RooGaussian("signal_photons1","signal_photons1",NPhotons,sig_photons_mean,sig_photons_sigma);
+		RooRealVar* DELTAsigCB1Alpha    = new RooRealVar("DELTAsigCB1Alpha", "DELTAsigCB1Alpha", 2.5, 0.0, 5.0);
+		RooRealVar* DELTAsigCB1N        = new RooRealVar("DELTAsigCB1N"    , "DELTAsigCB1N"    , 4.0, 0.0, 20.0);
+
+		RooAbsPdf *DELTAsigCB1 = new RooCBShape("signal_photons","signal_photons",NPhotons,sig_photons_mean,sig_photons_sigma,*DELTAsigCB1Alpha,*DELTAsigCB1N);
+
+		RooRealVar corr("corr","corr",0.0,1.0);
+		RooRealVar* DELTAsigCB2Width    = new RooRealVar("DELTAsigCB2Width", "DELTAsigCB2Width", 1.5, 0.0, 5.0);
+		RooRealVar* DELTAsigCB2Alpha    = new RooRealVar("DELTAsigCB2Alpha", "DELTAsigCB2Alpha", -2.5, -5.0, 0.0);
+		RooRealVar* DELTAsigCB2N        = new RooRealVar("DELTAsigCB2N"    , "DELTAsigCB2N"    , 2.0, 0.0, 10.0);
+		RooAbsPdf*  DELTAsigCB2         = new RooCBShape("DELTAsigCB2"     , "DELTAsigCB2"     , NPhotons, sig_photons_mean, *DELTAsigCB2Width, *DELTAsigCB2Alpha, *DELTAsigCB2N);
+		RooRealVar* DELTAsigfrac        = new RooRealVar("DELTAsigfrac"    , "DELTAsigfrac"    , 0.5, 0.0, 1.0);
+//		RooAbsPdf*  signal_NPhotons 		= new RooAddPdf ("DELTAsigPDF"     , "DELTAsigPDF"     , RooArgList(*DELTAsigCB1,*DELTAsigCB2), *DELTAsigfrac);
+
+
+
+//		RooAbsPdf *signal_NPhotons = new RooAddPdf("signal_photons","signal_photons",RooArgList(*signal_gauss1,*signal_gauss2),corr);
+
+//		RooAbsPdf *signal_NPhotons = new RooCBShape("signal_photons","signal_photons",NPhotons,sig_photons_mean,sig_photons_sigma,*DELTAsigCB1Alpha,*DELTAsigCB1N);
+//		RooAbsPdf* signal_NPhotons = new RooGaussian("signal_photons2","signal_photons2",NPhotons,sig_photons_mean,sig_photons_sigma2);
+		RooAbsPdf* signal_NPhotons = new RooBifurGauss("signal_photons2","signal_photons2",NPhotons,sig_photons_mean,sig_photons_sigma,sig_photons_sigma2);
 		//RooAbsPdf* signal_NPhotons = new RooPoisson("signal_photons","signal_photons",NPhotons,sig_photons_mean);
-	   // RooAbsPdf* signal_NPhotons = new RooGenericPdf("Generic","Generic PDF","exp(-1*@1)*(@1)^(@0)/(TMath::Factorial(@0))",RooArgList(NPhotons,sig_photons_mean));
-	  //  RooAbsPdf* signal_NPhotons = new RooPoisson("signal_photons","signal_photons",NPhotons,sig_photons_mean);
+		// RooAbsPdf* signal_NPhotons = new RooGenericPdf("Generic","Generic PDF","exp(-1*@1)*(@1)^(@0)/(TMath::Factorial(@0))",RooArgList(NPhotons,sig_photons_mean));
+//		  RooAbsPdf* signal_NPhotons = new RooPoisson("signal_photons","signal_photons",NPhotons,sig_photons_mean);
+
+		RooRealVar NPhotons2("PhotonsPerTrack2","PhotonsPerTrack2",start_range,end_range);
+		//		DeltaMass->setBinning(RooBinning(1000,piPDG-0.05,delmPDG+12.8));
+		NPhotons.setBinning(RooBinning(end_range-start_range,start_range,end_range));
+
+		TFile *ffbkg = new TFile("/Users/mcoombes/Documents/ComputerWork/HeavyParticleSearch/ParticleFinderTuple/Output/ParticleSearchTrack-R2Gas-MC-bkgYield.root","READ");
+		TTree *ttbkg = (TTree*)ffbkg->Get("RichParticleSearchR2GasTrackTuple");
+
+		TFile *ff = new TFile("/Users/mcoombes/Documents/ComputerWork/HeavyParticleSearch/ParticleFinderTuple/Output/Beta_Cut.root","RECREATE");
+
+		TString Cut = BetaCut + " && (PhotonsPerTrack > 1) && ( PhotonsPerTrack < 51) ";
+		TTree *ttbkg2 = (TTree*)ttbkg->CopyTree(Cut);
+
+		float Background = 0.0;
+		// if this is a TChain, then we need to use the daughter's method
+		ttbkg2->SetBranchStatus("*", 1);
+		float photonBKG = 0;;
+		ttbkg2->SetBranchAddress("PhotonsPerTrack", &photonBKG);
+
+		RooArgSet args(NPhotons);
+		RooDataSet *BKGdata = new RooDataSet("BackgroundData", "BackgroundData", args);
+
+		int nEntries = ttbkg2->GetEntries();
+
+		//	  if (nEntries > nEvents) nEntries = nEvents;
+
+
+		//	if (nEntries > nEvents) nEntries = nEvents;
+
+		cout << "loading " << nEntries << " into data_RSP..." << endl;
+
+		for(int candidate = 0; candidate < nEntries; candidate++){
+			ttbkg2->GetEntry(candidate);
+			NPhotons=photonBKG;
+			BKGdata->add(NPhotons);
+		}
+
+
+		RooDataHist* hist = new RooDataHist("hist","hist",NPhotons, *BKGdata);
+		cout << "Entries in RooDataHist: " << hist->numEntries() << endl;
+		//	 RooHistPdf*   DELTAbackPDF = new RooHistPdf("DELTAbackPDF", "DELTAbackPDF", *DeltaMass, *hist);
 
 		// Define Yields from 0 to Nentries as we don't know the yield prior to fitting
 		int NEntries = ReducedDataSet->numEntries();
-	 //   RooRealVar Nsig("Nsig","Nsig",0.0,NEntries);
-		RooRealVar Nsig("Nsig","Nsig",0.0,NEntries);
+		//   RooRealVar Nsig("Nsig","Nsig",0.0,NEntries);
+		RooRealVar Nsig("Nsig","Nsig",0.0,0);
 
 		//Background
-		RooRealVar bkg_photons_a("a","a of exponential",-0.067, -0.15, 0);
-//		RooRealVar bkg_photons_p0("p0","p0 of Polynomial",-0.02, -0.025, 0);
-//		RooRealVar bkg_photons_p1("p1","p1 of Polynomial",0, 0,20);
+		RooRealVar bkg_photons_a("a","a of exponential",-0.067, -100, 100);
+		RooRealVar bkg_photons_p0("p0","p0 of Polynomial",1, 0, 10);
+		RooRealVar bkg_photons_p1("p1","p1 of Polynomial",1, -10,10);
 
-
+		RooRealVar bkg_photons_mean("NPhotonsBKG","mean number of photons",0,-2,5);
+		RooRealVar bkg_photons_sigma("#sigmaBKG","width of gaussian",5.8,1,10);
 		// Background function
-	 //   RooAbsPdf* bkg_photons = new RooPolynomial("Polynomial","O(1) Polynomial",NPhotons,RooArgList(bkg_photons_p0,bkg_photons_p1));
-	  //  bkg_photons->plotOn(NphotonsPlot);
-		RooAbsPdf* bkg_photons = new RooExponential("Exponential","Exponential",NPhotons,bkg_photons_a);
+//		RooHistPdf* bkg_photons = new RooHistPdf("bkg", "", NPhotons, *hist);
 
-		RooRealVar Nbkg("Nbkg","Nbkg",0.0,NEntries);
+		//		   RooAbsPdf* bkg_photons = new RooPolynomial("Polynomial","O(1) Polynomial",NPhotons,RooArgList(bkg_photons_p0,bkg_photons_p1));
+		//  bkg_photons->plotOn(NphotonsPlot);
+		RooAbsPdf* bkg_photons = new RooExponential("Exponential","Exponential",NPhotons,bkg_photons_a);
+		RooAbsPdf* bkg_photons = new RooGenericPdf("1/x2","Generic PDF","1/((@1)*(@0)*(@0))",RooArgList(NPhotons,bkg_photons_p0,bkg_photons_p1));
+
+//		RooAbsPdf* bkg_photons = new RooGaussian("signal_photons","signal_photons",NPhotons,bkg_photons_mean,bkg_photons_sigma);
+
+		RooRealVar Nbkg("Nbkg","Nbkg",0,NEntries);
 
 		// Combine to make PDF
 		RooAbsPdf *photon_pdf = new RooAddPdf("photon_pdf","photon_pdf",RooArgList(*signal_NPhotons,*bkg_photons),RooArgList(Nsig,Nbkg));
+		//		RooAbsPdf *photon_pdf = new RooHistPdf("bkg", "", NPhotons, *hist);
 
 		// Now Fit the PDF to the data
 		RooFitResult *photon_result = photon_pdf->fitTo(*ReducedDataSet,Extended(),Save());
@@ -472,9 +546,9 @@ void RichYield::PlotNPhotonsRich2() {
 
 		// Add parameters to Fit
 		RooArgSet PlotParametersToPrint("PlotParametersToPrint");
-//		PlotParametersToPrint.add(sig_photons_mean);
-//		PlotParametersToPrint.add(sig_photons_sigma);
-//		PlotParametersToPrint.add(bkg_photons_a);
+		//		PlotParametersToPrint.add(sig_photons_mean);
+		//		PlotParametersToPrint.add(sig_photons_sigma);
+		//		PlotParametersToPrint.add(bkg_photons_a);
 
 		double mean = sig_photons_mean.getVal() + sig_photons_sigma.getVal()*(sig_photons_alpha.getVal()/sqrt(1+sig_photons_alpha.getVal()*sig_photons_alpha.getVal()))*sqrt(2/3.142);
 
@@ -501,6 +575,8 @@ void RichYield::PlotNPhotonsRich2() {
 
 		//signal_NPhotons->paramOn(NphotonsPlot, Parameters(PlotParametersToPrint), Format("NELU", AutoPrecision(1)), Layout(0.60, 0.9, 0.9));
 
+		//		TFile outFile("../output/Yield-"+RICH+".root", "RECREATE");
+
 		// Draw histogram
 		NphotonsPlot->SetFillStyle(4000);
 		NphotonsPlot->Draw();
@@ -516,14 +592,17 @@ void RichYield::PlotNPhotonsRich2() {
 		pad2->Update();
 		pad2->Modified();
 		pad2->SaveAs(TbetaCountStr2);
-//		delete photon_pdf;
+		c1->SaveAs("R2.root");
+		delete c1;
+		//		delete photon_pdf;
 		delete bkg_photons;
 		delete signal_NPhotons;
+		ff->Close();
 
-     }
-   //  outFile->Write();
-     //delete data;
-     FitBeta(FittedMean1);
+	}
+	//  outFile->Write();
+	//delete data;
+	FitBeta(FittedMean1);
 }
 
 void RichYield::PlotNPhotonsAerogel() {
@@ -531,7 +610,7 @@ void RichYield::PlotNPhotonsAerogel() {
 	TString RICH = "Aerogel";
 	int start_range = 2;
 	int end_range = 40;
-		//Open ROOT file for writting histograms to
+	//Open ROOT file for writting histograms to
 	TCanvas *canR2 = new TCanvas("Rich2","transparent pad",200,10,700,500);
 	canR2->SetFillStyle(4000);
 	//TCanvas canR2("Rich2","NPhotonsRich2",200,10,700,500);
@@ -540,51 +619,51 @@ void RichYield::PlotNPhotonsAerogel() {
 	 */
 	canR2->SetFrameFillStyle(4000);
 	gStyle->SetOptStat(10);
-    gStyle->SetOptFit(1111);
+	gStyle->SetOptFit(1111);
 
-    TPad *pad2 = new TPad("pad2","",0,0,1,1);
-    pad2->SetFillStyle(4000); //will be transparent
-    pad2->SetFrameFillStyle(4000);
-    pad2->Draw();
-    pad2->cd();
-
-
-    // Get required data
-    TFile * inputFile = TFile::Open("/Users/mcoombes/Documents/ComputerWork/HeavyParticleSearch/ParticleFinderTuple/Output/ParticleSearchTrack-Aerogel-MC10-sigYield.root");
-    //TH1* inputHisto = (TH1*) inputFile->Get("PhotonsPerTrack");
-    TTree* inputTree = (TTree*)inputFile->Get("RichParticleSearchAerogelTrackTuple");
-    //Define the observables and ranges over which the PDFs will be made
-    RooRealVar NPhotons("PhotonsPerTrack","PhotonsPerTrack",start_range,end_range);
+	TPad *pad2 = new TPad("pad2","",0,0,1,1);
+	pad2->SetFillStyle(4000); //will be transparent
+	pad2->SetFrameFillStyle(4000);
+	pad2->Draw();
+	pad2->cd();
 
 
-    // =========================================================================================================================
-    // 													Cuts on Beta
-    // =========================================================================================================================
-    RooRealVar beta("beta","beta",0.0,2.0);
+	// Get required data
+	TFile * inputFile = TFile::Open("/Users/mcoombes/Documents/ComputerWork/HeavyParticleSearch/ParticleFinderTuple/Output/ParticleSearchTrack-Aerogel-MC10-sigYield.root");
+	//TH1* inputHisto = (TH1*) inputFile->Get("PhotonsPerTrack");
+	TTree* inputTree = (TTree*)inputFile->Get("RichParticleSearchAerogelTrackTuple");
+	//Define the observables and ranges over which the PDFs will be made
+	RooRealVar NPhotons("PhotonsPerTrack","PhotonsPerTrack",start_range,end_range);
 
-     //And create a RooDataSet object containing these observables:
-     //	For > 1 observable
-   // RooDataSet* data = new RooDataSet("data","data",inputTree,RooArgList(NPhotons,beta));
-    RooDataSet data("data","data",inputTree,RooArgList(NPhotons,beta));
 
-     // =========================================================================================================================
-     // 													Cuts on Beta
-     // =========================================================================================================================
-     std::vector<TString> BetaCuts = CutsOnBeta();
+	// =========================================================================================================================
+	// 													Cuts on Beta
+	// =========================================================================================================================
+	RooRealVar beta("beta","beta",0.0,2.0);
 
-     int BetaCutCounter = 0;
-	 TFile outFile("../output/Yield-"+RICH+".root", "RECREATE");
+	//And create a RooDataSet object containing these observables:
+	//	For > 1 observable
+	// RooDataSet* data = new RooDataSet("data","data",inputTree,RooArgList(NPhotons,beta));
+	RooDataSet data("data","data",inputTree,RooArgList(NPhotons,beta));
 
-     for (it = BetaCuts.begin(); it < BetaCuts.end(); it++)
-     {
+	// =========================================================================================================================
+	// 													Cuts on Beta
+	// =========================================================================================================================
+	std::vector<TString> BetaCuts = CutsOnBeta();
 
-    	cout << *it << endl;
+	int BetaCutCounter = 0;
+	TFile outFile("../output/Yield-"+RICH+".root", "RECREATE");
+
+	for (it = BetaCuts.begin(); it < BetaCuts.end(); it++)
+	{
+
+		cout << *it << endl;
 		TString BetaCut = *it;
-    	BetaCutCounter++;
+		BetaCutCounter++;
 		RooDataSet* ReducedDataSet = (RooDataSet*)data.reduce(BetaCut);
-    	//RooDataSet ReducedDataSet = (RooDataSet)data.reduce(BetaCut);
+		//RooDataSet ReducedDataSet = (RooDataSet)data.reduce(BetaCut);
 
-		 // Draw data
+		// Draw data
 		RooPlot* NphotonsPlot = NPhotons.frame();
 		ReducedDataSet->plotOn(NphotonsPlot, Binning (end_range-start_range));
 		NphotonsPlot->SetFillStyle(4000);
@@ -599,19 +678,19 @@ void RichYield::PlotNPhotonsAerogel() {
 		RooRealVar sig_photons_mean("NPhotons","mean number of photons",2,0,20);
 		RooRealVar sig_photons_sigma("#sigma","width of gaussian",10,0,100);
 		RooRealVar sig_photons_alpha("#alpha","alpha of gaussian",-2,-20,20);
-	//	RooAbsPdf* signal_NPhotons = new RooGenericPdf("Generic","Generic PDF","exp(-1*(((@0)-(@1))^(2))/(2*(@2)^(2)))*TMath::Freq(@3*(@0-@1)/@2)",
-	//			RooArgList(NPhotons,sig_photons_mean,sig_photons_sigma,sig_photons_alpha));
+		//	RooAbsPdf* signal_NPhotons = new RooGenericPdf("Generic","Generic PDF","exp(-1*(((@0)-(@1))^(2))/(2*(@2)^(2)))*TMath::Freq(@3*(@0-@1)/@2)",
+		//			RooArgList(NPhotons,sig_photons_mean,sig_photons_sigma,sig_photons_alpha));
 
 		// Define the signal Fit function
 		RooAbsPdf* signal_NPhotons = new RooGaussian("signal_photons","signal_photons",NPhotons,sig_photons_mean,sig_photons_sigma);
 
 		//RooAbsPdf* signal_NPhotons = new RooPoisson("signal_photons","signal_photons",NPhotons,sig_photons_mean);
-	   // RooAbsPdf* signal_NPhotons = new RooGenericPdf("Generic","Generic PDF","exp(-1*@1)*(@1)^(@0)/(TMath::Factorial(@0))",RooArgList(NPhotons,sig_photons_mean));
-	  //  RooAbsPdf* signal_NPhotons = new RooPoisson("signal_photons","signal_photons",NPhotons,sig_photons_mean);
+		// RooAbsPdf* signal_NPhotons = new RooGenericPdf("Generic","Generic PDF","exp(-1*@1)*(@1)^(@0)/(TMath::Factorial(@0))",RooArgList(NPhotons,sig_photons_mean));
+		//  RooAbsPdf* signal_NPhotons = new RooPoisson("signal_photons","signal_photons",NPhotons,sig_photons_mean);
 
 		// Define Yields from 0 to Nentries as we don't know the yield prior to fitting
 		int NEntries = ReducedDataSet->numEntries();
-	 //   RooRealVar Nsig("Nsig","Nsig",0.0,NEntries);
+		//   RooRealVar Nsig("Nsig","Nsig",0.0,NEntries);
 		RooRealVar Nsig("Nsig","Nsig",0.0,NEntries);
 
 		//Background
@@ -621,8 +700,8 @@ void RichYield::PlotNPhotonsAerogel() {
 
 
 		// Background function
-	 //   RooAbsPdf* bkg_photons = new RooPolynomial("Polynomial","O(1) Polynomial",NPhotons,RooArgList(bkg_photons_p0,bkg_photons_p1));
-	  //  bkg_photons->plotOn(NphotonsPlot);
+		//   RooAbsPdf* bkg_photons = new RooPolynomial("Polynomial","O(1) Polynomial",NPhotons,RooArgList(bkg_photons_p0,bkg_photons_p1));
+		//  bkg_photons->plotOn(NphotonsPlot);
 		RooAbsPdf* bkg_photons = new RooExponential("Exponential","Exponential",NPhotons,bkg_photons_a);
 
 		RooRealVar Nbkg("Nbkg","Nbkg",0.0,NEntries);
@@ -667,13 +746,13 @@ void RichYield::PlotNPhotonsAerogel() {
 		pad2->Modified();
 		pad2->SaveAs(TbetaCountStr2);
 
-//		delete photon_pdf;
+		//		delete photon_pdf;
 		delete bkg_photons;
 		delete signal_NPhotons;
 
-     }
-   //  outFile->Write();
-     //delete data;
+	}
+	//  outFile->Write();
+	//delete data;
 }
 
 
