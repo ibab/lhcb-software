@@ -24,6 +24,7 @@ use L0Event         v*    Event
 #
 use MCAssociators   v*    Associators
 
+use ROOT            v*    LCG_Interfaces
 use Boost           v*    LCG_Interfaces
 use GSL             v*    LCG_Interfaces
 use AIDA            v*    LCG_Interfaces
@@ -31,12 +32,9 @@ use AIDA            v*    LCG_Interfaces
 
 
 # =============== constituents ===============================================
-library           CaloMoniDst   *.cpp
+library           CaloMoniDst -import=AIDA  *.cpp
 
 # =============== patterns ===================================================
 apply_pattern     install_python_modules
 apply_pattern     component_library library=CaloMoniDst
-
-# ============================================================================
-# The END 
-# ============================================================================
+macro_append CaloMoniDst_shlibflags " -lHist  -lGraf -lRIO  " WIN32 " libHist.lib libGraf.lib libRIO.lib"

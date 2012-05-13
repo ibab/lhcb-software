@@ -13,6 +13,8 @@
 #include  "Event/L0DUBase.h"
 #include  "CaloUtils/CaloMomentum.h"
 #include  "CaloUtils/CaloAlgUtils.h"
+
+
 // ============================================================================
 // local
 // ============================================================================
@@ -30,6 +32,9 @@ public:
     StatusCode sc = CaloMoniAlg::initialize(); // must be executed first
     if ( sc.isFailure() ) return sc; // error already printedby GaudiAlgorithm
     hBook1(  "0", "matched L0Calo type " + inputData(),  0   ,    2   , 2  );
+    h1binLabel("0",1,"L0Electron");
+    h1binLabel("0",2,"L0Photon");    
+
     hBook1(  "1", "L0Calo(Et)/CaloHypo(Et) " + inputData(),  m_ratMin   ,    m_ratMax   , m_ratBin  );
     hBook1(  "2", "L0Calo(Et)/CaloCluster(Et) " + inputData(),  m_ratMin   ,    m_ratMax   , m_ratBin  );
     hBook1(  "3", "CaloCluster/CaloHypo(Et) " + inputData(),  m_ratMin   ,    m_ratMax   , m_ratBin  );

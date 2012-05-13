@@ -1,4 +1,5 @@
-Calo2L0Mon.Members += {"L0CaloScale/Photon2L0Calo"
+Calo2L0Mon.Members += {
+  "L0CaloScale/Photon2L0Calo"
     ,"L0CaloScale/Electron2L0Calo"
     };
 

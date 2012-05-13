@@ -4,6 +4,11 @@
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
 
+
+- 2012-05-13 - Olivier Deschamps
+ - fix CaloAlignmentNtp
+ - update L0CaloScale
+
 !========================= CaloMoniDst v5r11 2012-05-02 =========================
 ! 2012-04-17 - Olivier Deschamps
  - new algorithm : L0CaloScale to compare CaloCluster/CaloHypo/L0Cluster transverse

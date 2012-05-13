@@ -230,15 +230,18 @@ StatusCode CaloAlignmentNtp::execute() {
       sc=ntp->column("VeloCharge", proto->info(LHCb::ProtoParticle::VeloCharge, -1.));
       sc=ntp->column("DLLe", proto->info(LHCb::ProtoParticle::CombDLLe, 0.));
       sc=ntp->column("RichDLLe", proto->info(LHCb::ProtoParticle::RichDLLe, 0.));
+
       // hypo info
       sc=ntp->column("EoP" , eOp );
       sc=ntp->column("hypoE", momentum.e()  );
       sc=ntp->column("hypoR", hypoR  );
+
       // cluster info
       sc=ntp->column("id", id.index());
       sc=ntp->column("ClusterE",cluster->e());
       sc=ntp->column("ClusterR",clusR); 
       sc=ntp->column("SeedR"   ,cellR); 
+
 
 
       // track info
@@ -253,12 +256,14 @@ StatusCode CaloAlignmentNtp::execute() {
       sc=ntp->column("caloStateErrTY",sqrt( caloElectron()->caloState().covariance()(3,3)));      
       sc=ntp->column("incidence",theta);
 
+
       // brem info
       sc=ntp->column("BremId", bid.index());
       sc=ntp->column("BremP", bP );
       sc=ntp->column("BremR", bremR  );
       sc=ntp->column("BremClusterR", bclusR  );
       sc=ntp->column("BremSeedR"   , bcellR  );
+
       double bStX=0;
       double bStY=0;
       double bStTX=0;
@@ -267,7 +272,12 @@ StatusCode CaloAlignmentNtp::execute() {
       double bStCY=0;
       
       if( hasBrem){
-        const LHCb::State* bState =  proto->track()->stateAt(LHCb::State::BegRich1);
+        LHCb::State* bState =  (LHCb::State*) proto->track()->stateAt(LHCb::State::BegRich1);
+        if( bState == NULL ){
+          bState = proto->track()->states()[0];
+          debug() << proto->track()->states();
+          Warning("BegRich1 state does not exists - used first state",StatusCode::SUCCESS).ignore();
+        }
         bStX = sqrt( bState->covariance()(0,0) );
         bStY = sqrt( bState->covariance()(1,1) );
         bStTX = sqrt( bState->covariance()(2,2) );

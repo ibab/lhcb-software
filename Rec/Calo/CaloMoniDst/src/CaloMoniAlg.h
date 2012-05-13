@@ -14,6 +14,9 @@
 #include "AIDA/IAxis.h"
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
+#include "GaudiUtils/Aida2ROOT.h"
+#include "TROOT.h"
+
 // ============================================================================
 // AIDA 
 // ============================================================================
@@ -137,6 +140,33 @@ public:
       debug() << "Booking histogram1D for whole calo" << endmsg;
     h1[hid] = book1D( hid, titl, low, high, bins );
   }
+
+
+  inline void h1binLabel( const std::string hid,int bin, std::string label ){ 
+    if(!doHisto(hid))return;
+
+    if( m_splitSides){
+      for(unsigned int i = 0;i <2 ;++i){
+        std::string side = (i==0) ? "C-side" : "A-side";
+        GaudiAlg::HistoID id(side + "/" + hid);
+        TH1D* th=Gaudi::Utils::Aida2ROOT::aida2root( h1[id] );
+        th->GetXaxis()->SetBinLabel( bin  , label.c_str() );
+      }      
+    }
+    else if(m_split){
+      for(unsigned int i = 0;i != m_nAreas;++i){
+        // std::string area = CaloCellCode::CaloAreaFromNum( CaloCellCode::CaloNumFromName( m_detData ), i );
+        std::string area = CaloCellCode::caloArea ( CaloCellCode::caloNum( m_detData ), i );
+        if( !validArea( area ))continue;
+        GaudiAlg::HistoID id(area + "/" + hid);
+        TH1D* th=Gaudi::Utils::Aida2ROOT::aida2root( h1[id] );
+        th->GetXaxis()->SetBinLabel( bin  , label.c_str() );
+      }
+    }
+    TH1D* th=Gaudi::Utils::Aida2ROOT::aida2root( h1[hid] );
+    th->GetXaxis()->SetBinLabel( bin  , label.c_str() );
+  }
+
   
   inline void hBook2( const std::string hid,
                       const std::string titl,
