@@ -363,6 +363,7 @@ StatusCode XmlLVolumeCnv::internalCreateObj (xercesc::DOMElement* element,
   xercesc::DOMElement* childElement = (xercesc::DOMElement *) childNode;
   const XMLCh* tagName = childElement->getNodeName();
 
+  
   // try to see if it is a solid and deal with it and a possible
   // transformation if yes
   ISolid* solid = 0;
@@ -577,6 +578,9 @@ XmlLVolumeCnv::dealWithPhysvol (xercesc::DOMElement* element) {
     nameAttribute = nameAttribute.substr (0, columnPos);
     indexed = true;
     if (!digits.empty()) {
+      if ( 0 != m_numeral.size() ) {
+        replaceTagInString(digits);
+      }      
       index = (int) xmlSvc()->eval(digits, false);
     }
   }
@@ -1195,7 +1199,10 @@ SolidBox* XmlLVolumeCnv::dealWithBox (xercesc::DOMElement* element) {
   std::string sizeYAttribute = dom2Std (element->getAttribute (sizeYString));
   std::string sizeZAttribute = dom2Std (element->getAttribute (sizeZString));
   std::string solidName = dom2Std (element->getAttribute (nameString));
-
+  if ( 0 != m_numeral.size() ) {
+    replaceTagInString( solidName );
+  }
+  
   // computes the values
   double sizeX = 0.0;
   double sizeY = 0.0;
