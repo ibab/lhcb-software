@@ -920,6 +920,81 @@ namespace Gaudi
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class Needham
+     *  The special parametrization by Matthew NEEDHAM of 
+     *  ``Crystal Ball-function'' suitable for \f$J/\psi\f$-peak
+     *  @thank Matthew Needham 
+     *  @see Gaudi::Math::CrystalBall
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2012-05-13
+     */
+    class GAUDI_API Needham : public std::unary_function<double,double>     
+    {
+    public:
+      // ======================================================================
+      /** constructor from all parameters 
+       *  @param m0     m0       parameter 
+       *  @param sigma  sigma    parameter 
+       *  @param a0     a0       parameter 
+       *  @param a1     a1       parameter 
+       *  @param a2     a2       parameter 
+       */
+      Needham
+      ( const double m0    = 3096.0     , 
+        const double sigma =   13.0     , 
+        const double a0    =    1.975   , 
+        const double a1    =   -0.0011  , 
+        const double a2    =   -0.00018 ) ;
+      /// destructor 
+      ~Needham() ;
+      // ======================================================================     
+    public:
+      // ====================================================================== 
+      /// evaluate Needham's function 
+      double operator() ( const double x ) const { return m_cb ( x ) ; }
+      // ====================================================================== 
+    public: // trivial accessors 
+      // ======================================================================  
+      double m0    () const { return m_cb.m0    () ; }
+      double peak  () const { return      m0    () ; }
+      double sigma () const { return m_cb.sigma () ; }
+      double a0    () const { return m_a0          ; }
+      double a1    () const { return m_a1          ; }
+      double a2    () const { return m_a2          ; }
+      double alpha () const { return a0()+sigma()*(a1()+sigma()*a2()) ; }
+      // ======================================================================
+    public: // trivial accessors 
+      // ======================================================================
+      bool setM0    ( const double value ) { return m_cb.setM0    ( value ) ; }
+      bool setPeak  ( const double value ) { return      setM0    ( value ) ; }
+      bool setMass  ( const double value ) { return      setPeak  ( value ) ; }
+      bool setSigma ( const double value ) { return m_cb.setSigma ( value ) ; }
+      bool setA0    ( const double value ) ;
+      bool setA1    ( const double value ) ;
+      bool setA2    ( const double value ) ;
+      // ======================================================================
+    public: 
+      // ======================================================================
+      /// get (possibly trunkated) integral 
+      double integral () const { return m_cb.integral() ; }
+      /// get integral between low and high 
+      double integral ( const double low , 
+                        const double high ) const 
+      { return m_cb.integral ( low , high ) ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the function itself 
+      Gaudi::Math::CrystalBall m_cb ; // the fucntion itself
+      /// a0-parameter 
+      double m_a0       ;  // a0_parameter 
+      /// a0-parameter 
+      double m_a1       ;  // a1_parameter 
+      /// a0-parameter 
+      double m_a2       ;  // a2_parameter 
+      // ======================================================================
+    } ;
+    // ========================================================================
     /** @class CrystalBallDoubleSided 
      *  ``Crystal Ball-function'' for description of gaussian with the tail
      *  @date 2011-05-25

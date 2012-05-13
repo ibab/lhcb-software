@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2012-05-13 - Vanya Belyaev
+ - add Needham function for J/psi 
+
 !========================= LHCbMath v3r30 2012-05-02 =========================
 ! 2012-04-29 - Vanya Belyaev
  - minor polishing 

@@ -1881,7 +1881,7 @@ void Gaudi::Math::CrystalBall::integrate ()
   //
   const double x0  = m_m0 - m_alpha * m_sigma ;
   //
-  const double low = m_m0 - s_TRUNC * m_sigma ;
+  const double low = std::max ( m_m0 - s_TRUNC * m_sigma , 0.0 ) ;
   //
   // integrate the tail:
   m_integral  = integral       ( low , x0 ) ;
@@ -1903,6 +1903,60 @@ double Gaudi::Math::CrystalBall::integral () const
   //
   return m_integral ;
 }
+// ============================================================================
+// Needham function 
+// ============================================================================
+/* constructor from all parameters 
+ *  @param m0     m0       parameter 
+ *  @param sigma  sigma    parameter 
+ *  @param a0     a0       parameter 
+ *  @param a1     a1       parameter 
+ *  @param a2     a2       parameter 
+ */
+// ============================================================================
+Gaudi::Math::Needham::Needham
+( const double m0    , 
+  const double sigma , 
+  const double a0    , 
+  const double a1    , 
+  const double a2    ) 
+  : std::unary_function<double,double>()
+/// @see Gaudi::Math:CrystalBall
+  , m_cb  ( m0 , sigma , 1 , 0 ) // Gaudi::Math:CrystalBall
+  , m_a0  ( std::abs ( a0 )  ) 
+  , m_a1  (            a1    ) 
+  , m_a2  (            a2    ) 
+{
+  m_cb.setAlpha ( alpha () ) ;  
+}
+// ============================================================================
+// destructor 
+// ============================================================================
+Gaudi::Math::Needham::~Needham(){}
+// ============================================================================
+bool Gaudi::Math::Needham::setA0 ( const double value ) 
+{
+  const double value_ = std::fabs ( value );
+  if ( s_equal ( value_ , m_a0 ) ) { return false ; } 
+  m_a0      = value_ ;
+  return m_cb.setAlpha ( alpha () ) ;
+}
+// ============================================================================
+bool Gaudi::Math::Needham::setA1 ( const double value ) 
+{
+  if ( s_equal ( value , m_a1 ) ) { return false ; } 
+  m_a1 = value ;
+  return m_cb.setAlpha ( alpha () ) ;
+}
+// ============================================================================
+bool Gaudi::Math::Needham::setA2 ( const double value ) 
+{
+  if ( s_equal ( value , m_a2 ) ) { return false ; } 
+  m_a2 = value ;
+  return m_cb.setAlpha ( alpha () ) ;
+}
+// ===========================================================================
+
 // ============================================================================
 /*  constructor from all parameters 
  *  @param m0 m0 parameter 
