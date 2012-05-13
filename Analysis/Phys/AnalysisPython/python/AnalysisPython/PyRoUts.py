@@ -63,7 +63,14 @@ ValueWithError = Gaudi.Math.ValueWithError
 binomEff       = Gaudi.Math.binomEff
 import math
 # =============================================================================
-## global identifier for ROOT objects 
+# logging 
+# =============================================================================
+from AnalysisPython.Logger import getLogger 
+logger = getLogger( __name__ )
+# =============================================================================
+logger.info ( 'Zillions of decorations for ROOT   objects')
+## ============================================================================
+# global identifier for ROOT objects 
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-07
 def rootID ( prefix = 'o_') :
@@ -3042,7 +3049,8 @@ def ve_adjust ( ve , mn = 0 , mx = 1.0 ) :
     #
     return ve
 
-
+# =============================================================================
+logger.info ( 'Some useful decorations for RooFit objects')
 # =============================================================================
 ## iterator for RooArgList 
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
@@ -3167,7 +3175,8 @@ ROOT.RooRealVar   . ve    = lambda s :      s.as_VE  ()
 
 # =============================================================================
 ## further decoration
-import GaudiPython.HistoUtils 
+import GaudiPython.HistoUtils
+logger.info ( 'Histogram utilities from GaudiPython.HistoUtils' )
 # =============================================================================
 if '__main__' == __name__ :
     

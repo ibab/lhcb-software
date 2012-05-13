@@ -134,10 +134,13 @@ __all__ = (
     'open'         ## helper function to hide the actual DB
     )
 # =============================================================================
-import logging 
-logger = logging.getLogger(__name__)
-if not logger.handlers : logging.basicConfig()
-logger.setLevel(logging.INFO)
+# import logging 
+# logger = logging.getLogger(__name__)
+# if not logger.handlers : logging.basicConfig()
+# logger.setLevel(logging.INFO)
+# =============================================================================
+from AnalysisPython.Logger import getLogger 
+logger = getLogger( __name__ )
 # =============================================================================
 
 try:
@@ -447,6 +450,8 @@ def open ( filename                                   ,
 
 
 # ============================================================================
+logger.info ( "Simple generic (c)Pickle-based ``zipped''-database")
+# =============================================================================
 ## a bit more decorations for shelve  (optional)
 import AnalysisPython.shelve_ext
 

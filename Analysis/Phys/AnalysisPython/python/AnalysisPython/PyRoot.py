@@ -53,7 +53,7 @@ __author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = "2012-09-10"
 __version__ = '$Revision$'
 # =============================================================================
-import ROOT, os, sys, logging
+import ROOT, os, sys
 # =============================================================================
 # local name 
 # =============================================================================
@@ -62,9 +62,9 @@ if '__main__' == _my_name_ : _my_name_ = 'PyRoot'
 # =============================================================================
 # logging 
 # =============================================================================
-logger = logging.getLogger(_my_name_)
-if not logger.handlers : logging.basicConfig()
-logger.setLevel(logging.DEBUG)
+from AnalysisPython.Logger import getLogger 
+logger = getLogger( _my_name_ )
+logger.info ( "Welcome to PyRoot" )
 # =============================================================================
 ## 1) load LHCb-style file
 # =============================================================================
@@ -76,7 +76,8 @@ if ROOT.gROOT.IsBatch() :
 # =============================================================================
 # The Heart 
 # =============================================================================
-canvas  = ROOT.TCanvas( 'Canvas', _my_name_ , 1000 , 800 )
+logger.info ( "Create the default canvas" )
+canvas  = ROOT.TCanvas ( 'Canvas', _my_name_ , 1000 , 800 )
 ## load zillions of decorations for ROOT-objects 
 import AnalysisPython.PyRoUts   as PyRoUts     ## NB: the most important line!
 import AnalysisPython.ZipShelve as ZipShelve 

@@ -17,10 +17,8 @@ __all__ = (
 # =============================================================================
 # logging 
 # =============================================================================
-import logging
-logger = logging.getLogger(__name__)
-if not logger.handlers : logging.basicConfig()
-logger.setLevel(logging.DEBUG)
+from AnalysisPython.Logger import getLogger 
+logger = getLogger(__name__)
 # =============================================================================
 
 ## font 

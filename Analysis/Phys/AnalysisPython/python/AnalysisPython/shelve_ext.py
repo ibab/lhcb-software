@@ -39,6 +39,15 @@ __date__    = "2012-05-13"
 __version__ = "$Revision: 135438 $" 
 __all__     = ()   ## nothing to import 
 # =============================================================================
+# import logging 
+# logger = logging.getLogger(__name__)
+# if not logger.handlers : logging.basicConfig()
+# logger.setLevel(logging.INFO)
+# =============================================================================
+from AnalysisPython.Logger import getLogger 
+logger = getLogger( __name__ )
+# =============================================================================
+
 import shelve
 
 _old_shelve_open_ = shelve.open
@@ -78,15 +87,16 @@ def _ls_ ( self )  :
     keys.sort()
     for k in keys : print k
 
-## reppace teh method in module, if not done yet
-if not hasattr ( shelve , '_new_open_' ) :
+## replace the method in module, if not done yet
+if not hasattr  ( shelve , '_new_open_' ) :
     shelve._new_open_ = _new_shelve_open_
     shelve.     open  = _new_shelve_open_
+    logger.info ( 'Decorate shelve.open method') 
 
-
-## add mehtod to Shelve, if not done yet
+## add method to Shelve, if not done yet
 if not hasattr ( shelve.Shelf, 'ls' ) : 
     shelve.Shelf.ls = _ls_
+    logger.info ( "Add 'ls' method for shelve.Shelf class") 
 
 # =============================================================================
 if '__main__' == __name__ :
