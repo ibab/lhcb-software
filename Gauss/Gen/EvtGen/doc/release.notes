@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-05-14 - John Back
+ - Replaced BaBar specific configuration for BlattWeisskopf birth factors, 
+   from Daniel Craik.
+
 ! 2012-05-04 - John Back
  - Updated various generic xml Dalitz code from Daniel Craik.
 

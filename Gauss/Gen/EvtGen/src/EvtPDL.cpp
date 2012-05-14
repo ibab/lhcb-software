@@ -402,6 +402,10 @@ void EvtPDL::reSetBlatt(EvtId i,double blatt) {
   partlist()[i.getId()].reSetBlatt(blatt);
 }
 
+void EvtPDL::reSetBlattBirth(EvtId i,double blatt) {
+  partlist()[i.getId()].reSetBlattBirth(blatt);
+}
+
 void EvtPDL::includeBirthFactor(EvtId i,bool yesno) {
   partlist()[i.getId()].includeBirthFactor(yesno);
 }

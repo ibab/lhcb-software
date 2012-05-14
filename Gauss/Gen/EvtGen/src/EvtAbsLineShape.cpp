@@ -43,7 +43,6 @@ EvtAbsLineShape::EvtAbsLineShape(double mass, double width, double maxRange, Evt
 
   _includeDecayFact = false;
   _includeBirthFact = false;
-  _applyFixForSP8 = false;
   _mass=mass;
   _width=width;
   _spin=sp;
@@ -74,7 +73,6 @@ EvtAbsLineShape::EvtAbsLineShape(const EvtAbsLineShape& x){
   _width=x._width;
   _spin=x._spin;
   _maxRange=x._maxRange;
-  _applyFixForSP8 = x._applyFixForSP8;
 }
 
 EvtAbsLineShape& EvtAbsLineShape::operator=(const EvtAbsLineShape& x){
@@ -87,7 +85,6 @@ EvtAbsLineShape& EvtAbsLineShape::operator=(const EvtAbsLineShape& x){
   _width=x._width;
   _spin=x._spin;
   _maxRange=x._maxRange;
-  _applyFixForSP8 = x._applyFixForSP8;
   return *this; 
 }
 

@@ -147,6 +147,10 @@ void EvtPartProp::reSetBlatt(double blatt){
   if (!_lineShape) ::abort();
   _lineShape->reSetBlatt(blatt);
 }
+void EvtPartProp::reSetBlattBirth(double blatt){
+  if (!_lineShape) ::abort();
+  _lineShape->reSetBlattBirth(blatt);
+}
 void EvtPartProp::includeBirthFactor(bool yesno){
   if (!_lineShape) ::abort();
   _lineShape->includeBirthFactor(yesno);

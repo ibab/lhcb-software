@@ -349,23 +349,6 @@ void EvtDecayTable::readDecayFile(const std::string dec_name, bool verbose){
       EvtPDL::changeLS(thisPart,tstr);
       if ( verbose )
 	report(DEBUG,"EvtGen") <<"Change lineshape to non-rel BW for " << EvtPDL::name(thisPart).c_str() <<endl;
-    } else if ( token=="SP8LSFIX") {
-      //this was a bug, but preserve functionality as not to confuse people...
-      std::string pname;
-      pname=parser.getToken(itoken++);
-      EvtId thisPart = EvtPDL::getId(pname);
-      EvtPDL::fixLSForSP8(thisPart);
-      if ( verbose )
-	report(DEBUG,"EvtGen") <<"Fixed lineshape for SP8 --from D.Lange,J.Smith " << EvtPDL::name(thisPart).c_str() <<endl;
-
-    } else if ( token=="SP6LSFIX") {
-      std::string pname;
-      pname=parser.getToken(itoken++);
-      EvtId thisPart = EvtPDL::getId(pname);
-      EvtPDL::fixLSForSP8(thisPart);
-      if ( verbose ) 
-	report(DEBUG,"EvtGen") <<"Fixed lineshape for SP8 --from D.Lange,J.Smith " << EvtPDL::name(thisPart).c_str() <<endl;
-
     } else if ( token=="LSFLAT") {
       std::string pname;
       pname=parser.getToken(itoken++);
@@ -391,6 +374,14 @@ void EvtDecayTable::readDecayFile(const std::string dec_name, bool verbose){
       EvtPDL::reSetBlatt(thisPart,tnum);
       if ( verbose )
 	report(DEBUG,"EvtGen") <<"Redefined Blatt-Weisskopf factor " << EvtPDL::name(thisPart).c_str() << " to be " << tnum << endl;
+    } else if ( token=="BlattWeisskopfBirth") {
+      std::string pname;
+      pname=parser.getToken(itoken++);
+      double tnum=atof(parser.getToken(itoken++).c_str());
+      EvtId thisPart = EvtPDL::getId(pname);
+      EvtPDL::reSetBlattBirth(thisPart,tnum);
+      if ( verbose )
+	report(DEBUG,"EvtGen") <<"Redefined Blatt-Weisskopf birth factor " << EvtPDL::name(thisPart).c_str() << " to be " << tnum << endl;
     } else if ( token=="SetLineshapePW") {
       std::string pname;
       pname=parser.getToken(itoken++);
@@ -869,8 +860,8 @@ void EvtDecayTable::readXMLDecayFile(const std::string dec_name, bool verbose){
           std::string birthFactor = parser.readAttribute("includeBirthFactor");
           std::string decayFactor = parser.readAttribute("includeDecayFactor");
           std::string lineShape = parser.readAttribute("lineShape");
-          double blattWeisskopf = parser.readAttributeDouble("blattWeisskopfFactor");
-          bool fixLS = parser.readAttributeBool("fixLS");
+          double blattWeisskopfD = parser.readAttributeDouble("blattWeisskopfFactor");
+          double blattWeisskopfB = parser.readAttributeDouble("blattWeisskopfBirth");
 
           EvtId thisPart = EvtPDL::getId(name);
           checkParticle(name);
@@ -916,16 +907,17 @@ void EvtDecayTable::readXMLDecayFile(const std::string dec_name, bool verbose){
             if ( verbose )
               report(DEBUG,"EvtGen") <<"Change lineshape to " << lineShape << " for " << EvtPDL::name(thisPart).c_str() <<endl;
           }
-          if(blattWeisskopf != -1) {
-            EvtPDL::reSetBlatt(thisPart,blattWeisskopf);
+          if(blattWeisskopfD != -1) {
+            EvtPDL::reSetBlatt(thisPart,blattWeisskopfD);
             if ( verbose )
               report(DEBUG,"EvtGen") <<"Redefined Blatt-Weisskopf factor "
-                                     << EvtPDL::name(thisPart).c_str() << " to be " << blattWeisskopf << endl;
+                                     << EvtPDL::name(thisPart).c_str() << " to be " << blattWeisskopfD << endl;
           }
-          if(fixLS) {
-            EvtPDL::fixLSForSP8(thisPart);
+          if(blattWeisskopfB != -1) {
+            EvtPDL::reSetBlattBirth(thisPart,blattWeisskopfB);
             if ( verbose )
-              report(DEBUG,"EvtGen") <<"Fixed lineshape for SP8 --from D.Lange,J.Smith " << EvtPDL::name(thisPart).c_str() <<endl;
+              report(DEBUG,"EvtGen") <<"Redefined Blatt-Weisskopf birth factor "
+                                     << EvtPDL::name(thisPart).c_str() << " to be " << blattWeisskopfB << endl;
           }
         } else if(parser.getTagTitle() == "lineShapePW") {
           std::string parent = parser.readAttribute("parent");

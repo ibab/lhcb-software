@@ -49,7 +49,8 @@ EvtRelBreitWignerBarrierFact::EvtRelBreitWignerBarrierFact(double mass, double w
   _mass=mass;
   _width=width;
   _spin=sp;
-  _blatt=3.0;
+  _blattDecay=3.0;
+  _blattBirth=1.0;
   _maxRange=maxRange;
   _errorCond=false;
 
@@ -73,7 +74,8 @@ EvtRelBreitWignerBarrierFact::EvtRelBreitWignerBarrierFact(const EvtRelBreitWign
 {
   _massMax=x._massMax;
   _massMin=x._massMin;
-  _blatt=x._blatt;
+  _blattDecay=x._blattDecay;
+  _blattBirth=x._blattBirth;
   _maxRange=x._maxRange;
   _includeDecayFact=x._includeDecayFact;
   _includeBirthFact=x._includeBirthFact;
@@ -87,7 +89,8 @@ EvtRelBreitWignerBarrierFact& EvtRelBreitWignerBarrierFact::operator=(const EvtR
   _spin=x._spin;
   _massMax=x._massMax;
   _massMin=x._massMin;
-  _blatt=x._blatt;
+  _blattDecay=x._blattDecay;
+  _blattBirth=x._blattBirth;
   _maxRange=x._maxRange;
   _includeDecayFact=x._includeDecayFact;
   _includeBirthFact=x._includeBirthFact;
@@ -220,9 +223,10 @@ double EvtRelBreitWignerBarrierFact::getRandMass(EvtId *parId,int nDaug, EvtId *
   // Define relativistic propagator amplitude
 
   EvtTwoBodyVertex vd(massD1,massD2,_mass,Lmin/2);
-  vd.set_f(_blatt);
+  vd.set_f(_blattDecay);
   EvtPropBreitWignerRel bw(_mass,_width);
   EvtMassAmp amp(bw,vd);
+
 
   if ( _includeDecayFact) {
     amp.addDeathFact();
@@ -232,10 +236,7 @@ double EvtRelBreitWignerBarrierFact::getRandMass(EvtId *parId,int nDaug, EvtId *
     if ( _includeBirthFact ) {
 
       EvtTwoBodyVertex vb(_mass,massOthD,massParent,birthl/2);
-      //whoops 060116
-      //needed to actually tell the vertex about the form factor!
-      //otherwise its just 1
-      if ( _applyFixForSP8 ) vb.set_f(_blatt);
+      vb.set_f(_blattBirth);
       amp.setBirthVtx(vb);
       amp.addBirthFact();
       amp.addBirthFactFF();
@@ -266,7 +267,6 @@ double EvtRelBreitWignerBarrierFact::getRandMass(EvtId *parId,int nDaug, EvtId *
   if ( tempMaxLoc < tempMinMass) tempMaxLoc=tempMinMass;
 
   double safetyFactor=1.2;
-  if ( _applyFixForSP8 ) safetyFactor=1.4;
 
   EvtPdfMax<EvtPoint1D> max(safetyFactor*pdf.evaluate(EvtPoint1D(tempMinMass,tempMax,tempMaxLoc)));
 
