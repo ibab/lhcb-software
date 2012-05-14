@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           GaussKine
-version           v4r1
+version           v5r0
 
 #============================================================================
 # Structure, i.e. directories to process. 
