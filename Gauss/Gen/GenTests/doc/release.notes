@@ -5,6 +5,10 @@
 !               tests with Gauss
 !=============================================================================
 
+!========================= GenTests v1r6 2012-05-14 ==========================
+! 2011-11-18 - by Aurelien Martens
+ - Adapt refernce plot script for pythia8 production
+
 !========================= GenTests v1r5 2011-03-15 ==========================
 ! 2011-03-15 - Silvia Miglioranzi
  - Updated the GeneratorReferencePlots.py script to take into account new 
