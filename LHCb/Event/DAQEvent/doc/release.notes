@@ -4,6 +4,9 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !-----------------------------------------------------------------------------
 
+! 2012-05-14 - Olivier Callot
+ - New DAQ bank number for FTCluster.
+
 !========================= DAQEvent v9r7 2012-05-02 =========================
 ! 2012-04-03 - Olivier Deschamps
  - Fix typo in  RawBankReadoutStatus::Status enum
