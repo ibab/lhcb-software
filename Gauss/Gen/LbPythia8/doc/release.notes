@@ -4,9 +4,14 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+!========================= LbPythia8 v3r0 2012-05-14 =========================
 ! 2012-05-10 - Gloria Corti
  - Fix run time problem with finding of ParticlePropertySvc that in Gaudi
    v23 is in the Gaudi:: namespace.
+
+! 2012-01-30 - Aurelien Martens
+ - Many changes including compatibility with latest version of pythia8 165. 
+   Not compatible for <160.
 
 !========================= LbPythia8 v2r3 2011-11-11 =========================
 ! 2011-10-20 - Patrick Robbe
