@@ -7,6 +7,10 @@
 !-----------------------------------------------------------------------------
 
 !=========================== Mint v1r3 2012-05-14 ============================
+! 14-05-2012 - Matt Coombes
+- Added capability to delete SCP bins
+- Added DTF capability with ReadNTuple
+
 ! 17-02-2012 - Matt Coombes
 - Fixed bug in ReadNTuple.h to allow any NTuple to be read by MINT
   
