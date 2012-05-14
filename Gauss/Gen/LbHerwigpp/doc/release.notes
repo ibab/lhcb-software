@@ -4,6 +4,11 @@
 ! Purpose     : Adaptor package for Herwig++
 !-----------------------------------------------------------------------------
 
+
+!========================= LbHerwig v1r0 2012-05-14 =========================
+! 2012-05-14 - Gloria Corti
+ - First release of Herwigpp in LHCb
+
 ! 2012-05-10 - Gloria Corti
  - Remove macros setting native version of Herwig++ and ThePeg as they must
    be set in GENSER in order to be distributed remotely.
@@ -14,7 +19,6 @@
  - Fix run time problem with finding of ParticlePropertySvc that in Gaudi
    v23 is in the Gaudi:: namespace.
 
-!========================= LbPythia8 v1r0 2010-07-08 =========================
 ! 2010-07-08 - Philip Ilten
  - Initial version of the Herwig++ interface. Much work required.
 
