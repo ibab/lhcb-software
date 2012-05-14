@@ -3,6 +3,11 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+
+! 2012-05-14 - Edwige Tournefier & Olivier Deschamps
+  - BremAdder : implement new BremAdder method from Edwige
+
+
 !========================= DaVinciTools v22r17 2012-05-08 =========================
 
 ! 2012-05-08 - Patrick Koppenburg
