@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!========================= Gauss v42r0 2012-05-15 ============================
+! 2012-05-12 - Gloria Corti
+ - Modify reference files for qmtests after running them with v41r3.
+
 ! 2012-05-09 - Gloria Corti
  - Put use of GaudiPartProp to keep using TEMPORARILY the old 
    ParticleProperySvc and configure it in Gauss() to read file from DDDB.

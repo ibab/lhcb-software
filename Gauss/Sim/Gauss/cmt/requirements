@@ -3,7 +3,7 @@
 # Maintainer : Gloria Corti, Florence Ranjard
 #============================================================================
 package Gauss
-version v41r4
+version v42r0
 
 #============================================================================
 #-- Structure
@@ -33,8 +33,9 @@ use AppConfig          v3r*                  -no_auto_imports
 use GaudiConf          v*                    -no_auto_imports
 use GaudiKernel        v*
 
-# Package needed to run the application as it still uses the old ParticlePropService - MUST be removed in next version       
-use GaudiPartProp      v*                    
+# Package needed to run the application as it still uses the old 
+# ParticlePropService - MUST be removed in next version       
+use GaudiPartProp      v*                    -no_auto_imports
 
 # Packages needed to resolve external dependencies at run time
 use Python             v*     LCG_Interfaces -no_auto_imports
@@ -42,7 +43,6 @@ use HepMC              v*     LCG_Interfaces -no_auto_imports
  
 # From GAUDI project
 use Gaudi              v*                    -no_auto_imports
-#use GaudiPoolDb        v*                    -no_auto_imports
  
 # From LHCB project
 use EventPacker        v*     Event          -no_auto_imports
