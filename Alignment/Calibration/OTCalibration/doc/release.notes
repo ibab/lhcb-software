@@ -3,6 +3,9 @@
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Algorithm for OT rt and t0 calibration
 
+! 2012-05-14 Alexandr Kozlinskiy
+  - add example scripts from t0 calibration (scripts directory)
+
 ! 2012-05-07 Alexandr Kozlinskiy
   - Monitoring algos for T0/TR calibration.
 
