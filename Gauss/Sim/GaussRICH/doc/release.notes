@@ -4,6 +4,7 @@
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
 
+!========================= GaussRICH v12r0 2012-05-14 ========================
 ! 2012-05-08 - Gloria Corti
  - Move content of constructor of SensDet/RichSensDet and 
    RichAction/RichG4EventAction to method initialize that has been introduced.
