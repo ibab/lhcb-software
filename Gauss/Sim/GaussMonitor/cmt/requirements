@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           GaussMonitor
-version           v6r8
+version           v6r9
 
 # Structure, i.e. directories to process. 
 #============================================================================
