@@ -50,6 +50,7 @@
   <class name = "IJets2Jets"/>
   <class name = "IDecayTreeFit"/>
   <class name = "IStandardParticleProvider"/>
+  <class name = "IParticleVeto"/>
   
   <class pattern = "extend_interfaces*"/>
 

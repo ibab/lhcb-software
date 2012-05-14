@@ -59,5 +59,6 @@
 #include "Kernel/IJets2Jets.h"
 #include "Kernel/IDecayTreeFit.h"
 #include "Kernel/IStandardParticleProvider.h"
+#include "Kernel/IParticleVeto.h"
 
 #endif // DICT_DAVINCIINTERFACESDICT_H

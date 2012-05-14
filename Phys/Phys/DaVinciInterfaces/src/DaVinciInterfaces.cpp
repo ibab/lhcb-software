@@ -27,6 +27,8 @@
 #include "Kernel/ICheckOverlap.h"
 #include "Kernel/IParticleIsolation.h"
 #include "Kernel/IParticleVeto.h"
+#include "Kernel/IBremAdder.h"
+
 // ============================================================================
 /** @file
  *  Implementation file for class some interfaces from 
@@ -55,7 +57,8 @@ IParticleFilter          :: ~IParticleFilter          () {}
 IDecayTreeFit            :: ~IDecayTreeFit            () {}
 ICheckOverlap            :: ~ICheckOverlap            () {}
 IParticleIsolation       :: ~IParticleIsolation       () {}
-IParticleVeto            :: ~IParticleVeto          () {}
+IParticleVeto            :: ~IParticleVeto            () {}
+IBremAdder               :: ~IBremAdder               () {}
 
 // ============================================================================
 // The END 

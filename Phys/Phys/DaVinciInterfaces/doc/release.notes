@@ -4,7 +4,13 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+
+
+! 2012-05-14 - Olivier Deschamps
+  - change IBremAdder interface
+
 !========================= DaVinciInterfaces v2r14 2012-05-03 =========================
+
 
 ! 2012-04-27 - Olivier Deschamps
  - Add a new tool interface IParticleVeto that checks if a particle is already used

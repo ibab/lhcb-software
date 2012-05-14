@@ -9,6 +9,7 @@
 #include "GaudiKernel/IAlgTool.h"
 // from LHCb
 #include "Event/Particle.h"
+#include "Event/CaloHypo.h"
 
 /** @class IBremAdder IBremAdder.h Kernel/IBremAdder.h
  *  
@@ -20,15 +21,17 @@
 class GAUDI_API IBremAdder : virtual public IAlgTool {
 public: 
 
-  DeclareInterfaceID(IBremAdder, 2, 0);
+  DeclareInterfaceID(IBremAdder, 3, 0);
 
   // Add Brem
-  virtual  bool addBrem( LHCb::Particle* particle ) const = 0 ;
+  virtual  bool addBrem( LHCb::Particle* particle , bool force=false) const = 0 ;
   // Remove Brem
-  virtual  bool removeBrem( LHCb::Particle* particle ) const = 0 ;
-
+  virtual  bool removeBrem( LHCb::Particle* particle , bool force=false) const = 0 ;
+  // get the list of brem candidates
+  virtual const std::vector<const LHCb::CaloHypo*> bremList(const LHCb::Particle* particle)const = 0;
 
 protected:
+  virtual ~IBremAdder() ;               // virtual and protected destructors
 
 private:
 
