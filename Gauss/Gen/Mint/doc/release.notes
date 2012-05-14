@@ -6,6 +6,7 @@
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
 
+!=========================== Mint v1r3 2012-05-14 ============================
 ! 17-02-2012 - Matt Coombes
 - Fixed bug in ReadNTuple.h to allow any NTuple to be read by MINT
   
