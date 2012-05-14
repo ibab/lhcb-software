@@ -3,7 +3,7 @@
 # Maintainer : Gloria Corti
 #============================================================================
 package GaussPhysics
-version v7r4
+version v8r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
