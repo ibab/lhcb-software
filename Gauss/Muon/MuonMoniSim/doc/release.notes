@@ -4,6 +4,10 @@
 ! Purpose       : Monitoring for the muon system for simulated data
 !-----------------------------------------------------------------------------
 
+!======================== MuonMoniSim v2r6 2012-05-15 ========================
+! 2012-05-07 - Alessia Satta
+ - Fix compilation error with Gaudi v23
+
 !======================= MuonMoniSim v2r5p1 2009-07-15 =======================
 ! 2009-06-15 - Gloria CORTI
  - Fix compilation warning for unused variables, commenting out line where
