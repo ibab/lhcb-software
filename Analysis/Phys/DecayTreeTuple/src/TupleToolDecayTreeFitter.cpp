@@ -325,7 +325,6 @@ std::vector<const VertexBase*> TupleToolDecayTreeFitter::originVertex( const Par
   std::vector<const VertexBase*> oriVx;
   if (mother == P){// the origin vertex is the primary.
     const VertexBase* bpv = m_dva->bestPV( P );
-    Warning("This is a test",0,StatusCode::SUCCESS).ignore();
     if (bpv) {
       oriVx.push_back(bpv);
       if (UNLIKELY(MSG::VERBOSE)) verbose() << "Pushed back bpv " << bpv << " from " 
