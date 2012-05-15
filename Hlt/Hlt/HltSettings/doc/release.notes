@@ -4,6 +4,12 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-05-15 - V. Gligorov
+ - Make June2012 Physics settings, based on draftJune2012
+  . Add 1TrackAllL0Tight line
+  . Relax BDT cut in 4 body topo back to 0.3 pending a proper retuning.
+  . Prescale "simple" topo lines to 0 
+
 ! 2012-05-08 - V. Gligorov
  - Add draftJune2012 Physics settings. 
   . Relax HLT1 by putting all P cuts to 3 GeV, 1TrackAllL0 PT cut to 1.5 GeV
