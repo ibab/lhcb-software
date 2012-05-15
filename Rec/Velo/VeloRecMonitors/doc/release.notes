@@ -4,6 +4,11 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2012-05-15 - Silvia Borghi
+ - Updated the "VeloTrackMonitorNT" algorithm:
+   add several variables to all the ntuples (per evt, per track, per cluster on track)
+   add new ntuple for all clusters (not only the ones associated to a track)
+
 !========================= VeloRecMonitors v2r18 2012-03-27 =========================
 ! 2012-03-17 - Zhou Xing
  - Added new plot for "Low ADC Cluster" monitoring to "VeloTrackMonitor"

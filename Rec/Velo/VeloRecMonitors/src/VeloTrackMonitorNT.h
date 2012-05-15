@@ -5,14 +5,17 @@
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
+#include "GaudiKernel/Transform3DTypes.h"
 #include "TrackInterfaces/IVeloClusterPosition.h"
 #include "Event/MCHit.h"
-
+#include<TMath.h>
 // Linker
 #include "Linker/LinkerTool.h"
 
 // Kernel
 #include "Kernel/VeloChannelID.h"
+// from TrackInterfaces
+#include "TrackInterfaces/ITrackFitter.h"
 
 /** @class VeloTrackMonitorNT
  * 
@@ -52,17 +55,33 @@ namespace Velo
 
   private:
 
-    void FillVeloEvNtuple(LHCb::Tracks* tracks);
-    StatusCode FillVeloClNtuple(const LHCb::Track& track);
-    void FillVeloTrNtuple(const LHCb::Track& track);
+    void FillVeloEvNtuple(LHCb::Tracks* tracks,
+                          int n_pv,int n_back, 
+                          double pvx, double pvy, double pvz,
+                          double pvchi2, double pvndof, int pvntr );
+    StatusCode FillVeloClNtuple(const LHCb::Track& track,
+                                int n_pv,int n_back, 
+                                double pvx, double pvy, double pvz,
+                                double pvchi2, double pvndof, int pvntr );
+    StatusCode FillVeloAllClNtuple(LHCb::Tracks* tracks);
+    void FillVeloTrNtuple(const LHCb::Track& track,
+                          int n_pv,int n_back, 
+                          double pvx, double pvy, double pvz,
+                          double pvchi2, double pvndof, int pvntr);
   
   private:
 
     std::string m_tracksInContainer;    ///< Input Tracks container location
+    std::string m_clusterCont;///< Input Clusters container location
+    std::string m_pvContainerName;///< Input PV container location
+    std::string m_fitterName;
+    float m_minocchighocc;
     bool m_clntuple;
     bool m_trntuple;
     bool m_evntuple;
+    bool m_allclntuple;
     bool m_runWithMC;
+    
     std::string m_allString; 
     std::string m_clusterLoc;
     std::string m_asctLocation; 
@@ -71,6 +90,7 @@ namespace Velo
     int m_runodin;
     long unsigned int m_eventodin;
     int m_bunchid;
+    ulonglong m_evTimeGps;
     IVeloExpectation* m_expectTool;
     IVeloClusterPosition* m_clusterTool;
     const Table* m_asctTable;
@@ -89,6 +109,8 @@ namespace Velo
     const LHCb::MCHit* getAssocMCHit(const LHCb::VeloCluster* clus) const;
     LHCb::VeloChannelID weightedMean(const LHCb::VeloCluster* cluster, double& isp);
 
+    /// interface to tracks fitter tool
+    ITrackFitter* m_tracksFitter;
   };
 
 }
