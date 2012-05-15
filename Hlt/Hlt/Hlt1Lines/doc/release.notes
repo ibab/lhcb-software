@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2012-05-15 - V. Gligorov
+ - Add 1TrackAllL0Tight line with harder PT cut for fast run changes
+
 ! 2012-05-10 - Pieter David
  - Add PV3D to the Hlt1 displaced vertex line algorithms, which allows to run
    it as the only Hlt1 line together with Hlt2 lines in the independence tests
