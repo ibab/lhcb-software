@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-05-15 - Ricardo Vazquez Gomez
+ - Remove the CaloClusterization on the StrippingB2XGamma.py as it kills 
+   the smartRef when cloning the CaloHypo already stored on DST
+
 ! 2012-05-11 - Jibo He
  - Added Reco13a test sample 
  - Updated tests/TestMyStrippingLineOn2012Data.py to use Reco13a 

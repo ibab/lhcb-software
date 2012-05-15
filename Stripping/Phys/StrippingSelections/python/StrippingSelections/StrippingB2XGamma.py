@@ -258,11 +258,11 @@ def makePhoton(name, photonPT):
     
     """
     # Configure clusterization
-    from Configurables import CaloClusterizationTool, CellularAutomatonAlg
-    clust = CellularAutomatonAlg("EcalClust")
-    clust.addTool(CaloClusterizationTool,'CaloClusterizationTool')
-    clust.CaloClusterizationTool.ETcut = 300
-    clust.CaloClusterizationTool.withET = True
+    #from Configurables import CaloClusterizationTool, CellularAutomatonAlg
+    #clust = CellularAutomatonAlg("EcalClust")
+    #clust.addTool(CaloClusterizationTool,'CaloClusterizationTool')
+    #clust.CaloClusterizationTool.ETcut = 300
+    #clust.CaloClusterizationTool.withET = True
     # Prepare selection
     _code = "(PT> %(photonPT)s*MeV)" % locals()
     _gammaFilter = FilterDesktop(Code=_code)
