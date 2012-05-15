@@ -4,6 +4,9 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+! 2012-05-15 - V. Gligorov
+ - Make Lambda cuts more in line with KS cuts and tighten lifetime cut in LL. 
+
 ! 2012-05-08 - V. Gligorov
  - Fix BPVLTIME cut in shard Ks
  - Revert mistaken ''fix'' to ModeOR from previous commit. 
