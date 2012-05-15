@@ -28,8 +28,8 @@ Hlt2SharedLambdaLLTrackFitted = Hlt2Member( CombineParticles, "LambdaLLTrackFitt
 # Standard Lambda: Fitted Downstream Tracks
 Hlt2SharedLambdaDDTrackFitted = Hlt2Member( CombineParticles, "LambdaDDTrackFitted"
                                             , DecayDescriptor = "[Lambda0 -> p+ pi-]cc"
-                                            , DaughtersCuts = { "pi+" : "(TRCHI2DOF<4)& (P>3000*MeV)  & (MIPCHI2DV(PRIMARY)>9)",
-                                                                "p+"  : "(TRCHI2DOF<4)& (P>3000*MeV)  & (MIPCHI2DV(PRIMARY)>9)"} 
+                                            , DaughtersCuts = { "pi+" : "(TRCHI2DOF<4)& (P>3000*MeV)  & (PT>175.*MeV)",
+                                                                "p+"  : "(TRCHI2DOF<4)& (P>3000*MeV)  & (PT>175.*MeV)"} 
                                             , CombinationCut = "(ADAMASS('Lambda0')<80*MeV)"
                                             , MotherCut = "(ADMASS('Lambda0')<64*MeV)& (VFASPF(VCHI2PDOF)<30)& (BPVVDZ > 400.0*mm)"
                                             , Inputs = [ BiKalmanFittedDownPions, BiKalmanFittedDownProtons ]
