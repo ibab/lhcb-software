@@ -325,20 +325,33 @@ std::vector<const VertexBase*> TupleToolDecayTreeFitter::originVertex( const Par
   std::vector<const VertexBase*> oriVx;
   if (mother == P){// the origin vertex is the primary.
     const VertexBase* bpv = m_dva->bestPV( P );
-    if (bpv) oriVx.push_back(bpv);
-    else if ( m_constrainToOriginVertex)
-      Warning("NULL bestPV while constraining to origin vertex. Fit will be ignored.",1,StatusCode::SUCCESS).ignore();
+    Warning("This is a test",0,StatusCode::SUCCESS).ignore();
+    if (bpv) {
+      oriVx.push_back(bpv);
+      if (UNLIKELY(MSG::VERBOSE)) verbose() << "Pushed back bpv " << bpv << " from " 
+                                            << bpv->parent()->registry()->identifier() << " at " 
+                                            << bpv->position() << endmsg ;
+    }
+    else if ( m_constrainToOriginVertex){
+      Warning("NULL bestPV while constraining to origin vertex. Fit will be ignored.",0,StatusCode::SUCCESS).ignore();
+    }
     // all the other ones
     /// @todo : keep only the related ones
     for (LHCb::RecVertex::Range::const_iterator pv = m_dva->primaryVertices().begin() ;
          pv!=m_dva->primaryVertices().end() ; ++pv){
-      if ( *pv != bpv ) oriVx.push_back(*pv);
+      if ( *pv != bpv ) {
+        oriVx.push_back(*pv);
+        if (UNLIKELY(MSG::VERBOSE)) verbose() << "Pushed back  pv " << *pv << " from " 
+                                              << (*pv)->parent()->registry()->identifier() << " at " 
+                                              << (*pv)->position() << endmsg ;
+      }     
       if (oriVx.size()>=m_maxPV){
-        Warning("Truncated number of PVs",10,StatusCode::FAILURE).ignore();
+        Warning("Truncated number of PVs",0,StatusCode::FAILURE).ignore();
         break ;
       }
     }
-    Warning("Filled all PVs, including unrelated ones. Fix once https://savannah.cern.ch/task/?19817 is done",
+    Warning("Filled all PVs, including unrelated ones and maybe duplicates. "
+            "Fix once https://savannah.cern.ch/task/?19817 and #89749 are done",
             1,StatusCode::SUCCESS).ignore();
   } else {
     const SmartRefVector< LHCb::Particle >& dau = mother->daughters ();

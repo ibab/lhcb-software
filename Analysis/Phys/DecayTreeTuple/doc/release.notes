@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2012-05-15 - Patrick Koppenburg
+ - Add some verbose printout in TupelToolDecayTreeFitter to link to bug
+   https://savannah.cern.ch/bugs/?89749
+
 ! 2012-05-09 - Rob Lambert
  - throw NameError in addBranches if the branch name contains whitespace
  - bug #94449
