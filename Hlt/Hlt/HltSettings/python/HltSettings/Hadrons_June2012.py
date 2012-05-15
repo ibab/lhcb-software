@@ -1,4 +1,4 @@
-class Hadrons_draftJune2012 :
+class Hadrons_June2012 :
     """
     Threshold settings for Hlt2 hadronic lines: minimal Sept for 2011
     
@@ -59,7 +59,7 @@ class Hadrons_draftJune2012 :
         from Phi_draft2012 import Phi_draft2012 as PhiLines
         lines.extend ( PhiLines().ActiveHlt2Lines() )
 
-        from CharmHadronLines_draftJune2012 import CharmHadronLines
+        from CharmHadronLines_June2012 import CharmHadronLines
         lines.extend ( CharmHadronLines().ActiveHlt2Lines() )
 
         return lines
@@ -70,13 +70,13 @@ class Hadrons_draftJune2012 :
        
         d = { Hlt2B2HHLTUnbiasedLinesConf : {'NetCut' : (1.0 + (0.85))*0.5,'Prescale':{'Hlt2B2HHLTUnbiased' : 0.0} } }
  
-        from TopoLines_draftJune2012 import TopoLines
+        from TopoLines_June2012 import TopoLines
         d.update ( TopoLines().Thresholds() )
 
         from Phi_draft2012 import Phi_draft2012 as PhiLines
         d.update ( PhiLines().Thresholds() )
 
-        from CharmHadronLines_draftJune2012 import CharmHadronLines
+        from CharmHadronLines_June2012 import CharmHadronLines
         d.update ( CharmHadronLines().Thresholds() )
 
         return d

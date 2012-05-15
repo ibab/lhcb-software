@@ -18,7 +18,7 @@ def __update_conf__( current, extra ) :
                 cur[k] = v
             print 'result: %s' % cur[k]
 
-class Physics_draftJune2012( object ):
+class Physics_June2012( object ):
     """
     Settings for 2012 running.
 
@@ -44,8 +44,8 @@ class Physics_draftJune2012( object ):
         return '0x003D'
 
     def HltType(self) :
-        self.verifyType( Physics_draftJune2012 ) 
-        return          'Physics_draftJune2012'
+        self.verifyType( Physics_June2012 ) 
+        return          'Physics_June2012'
     
     def Thresholds(self) :
         """
@@ -228,8 +228,8 @@ class Physics_draftJune2012( object ):
         from Electrons_July2011 import Electrons_July2011
         __update_conf__(thresholds,  Electrons_July2011().Thresholds() )
 
-        from Hadrons_draftJune2012 import Hadrons_draftJune2012
-        __update_conf__(thresholds,  Hadrons_draftJune2012().Thresholds() )
+        from Hadrons_June2012 import Hadrons_June2012
+        __update_conf__(thresholds,  Hadrons_June2012().Thresholds() )
 
         from DV_draft2012 import DV_draft2012
         __update_conf__(thresholds,  DV_draft2012().Thresholds() )
@@ -262,8 +262,8 @@ class Physics_draftJune2012( object ):
         from Electrons_July2011 import Electrons_July2011
         hlt2.extend( Electrons_July2011().ActiveHlt2Lines() )
 
-        from Hadrons_draftJune2012 import Hadrons_draftJune2012
-        hlt2.extend( Hadrons_draftJune2012().ActiveHlt2Lines() )
+        from Hadrons_June2012 import Hadrons_June2012
+        hlt2.extend( Hadrons_June2012().ActiveHlt2Lines() )
        
         from DV_draft2012 import DV_draft2012 
         hlt2.extend( DV_draft2012().ActiveHlt2Lines() )
