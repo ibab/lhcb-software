@@ -33,6 +33,7 @@ class PhysConf(LHCbConfigurableUser) :
         ,  "InputType"         : 'DST'   # Data type
         ,  "AllowPIDRerunning" : True    # Allow, under the correct circumstances, PID reconstruction to be rerun (e.g. MuonID)
         ,  "EnableUnpack"      : None    # Enable unpacking of DST.
+        ,  "CaloReProcessing"  : False   # Force CaloReco reprocessing
         }
 
     __used_configurables__ = (
@@ -97,10 +98,19 @@ class PhysConf(LHCbConfigurableUser) :
             caloReco.RecList = reco_new
             log.warning("PhysConf: CaloReco.RecList is redefined: %s:" %  reco_new )
 
+
+        inputtype = self.getProp('InputType').upper()
+        # Reprocess CaloReco explicitely
+        if ( self.getProp("CaloReProcessing") and inputtype != 'MDST' and inputtype != 'RDST' ) :
+            from Configurables import CaloProcessor
+            caloSeq = GaudiSequencer( 'CaloReProcessing' )
+            caloSeq.Members += [ CaloProcessor('Offline').caloSequence(),CaloProcessor('Offline').protoSequence()] 
+            init.Members += [caloSeq]
+        
+
         # For backwards compatibility with MC09, we need the following to rerun
         # the Muon Reco on old data. To be removed AS SOON as this backwards compatibility
         # is no longer needed
-        inputtype = self.getProp('InputType').upper()
         if ( self.getProp("DataType") == 'MC09' and inputtype != 'MDST' and
              self.getProp("AllowPIDRerunning") and inputtype != 'RDST' ) :
             
