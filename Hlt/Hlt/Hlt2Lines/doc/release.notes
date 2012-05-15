@@ -8,6 +8,13 @@
 !
 !----------------------------------------------------------------------------
 
+! 2012-05-15 - V. Gligorov
+ - Tighten several lines
+  . Hlt2B2HHLTUnbiasedLines move tau cut from 0.1 to 0.3
+  . LambdaC2LambdaH lines, tighten many cuts
+  . hhX lines, tighten PT and IPCHI2 cuts
+  . HHH lines tighten IPCHI2, PT cuts 
+
 ! 2012-05-10 - Pieter David
  - Add PV3D to the Hlt2 displaced vertex line algorithms (resolves the
    inconsistencies in the independence tests)
