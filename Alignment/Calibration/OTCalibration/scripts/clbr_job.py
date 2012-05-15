@@ -1,6 +1,7 @@
 
 UseGrid = True
-path = "/afs/cern.ch/user/a/akozlins/cmtuser/Brunel/"
+#path = "/afs/cern.ch/user/a/akozlins/cmtuser/Brunel/"
+path = "/afs/cern.ch/user/a/akozlins/cmtuser/Brunel_v42r3p2/Calibration/OTCalibration/scripts/"
 
 brunel = Brunel(version = "v42r3p2", user_release_area = "/afs/cern.ch/user/a/akozlins/cmtuser")
 brunel.optsfile = path + "clbr.py"
@@ -12,12 +13,13 @@ brunel.optsfile = path + "clbr.py"
 #RunNr = 101414
 #RunNr = 104034
 
-RunNr = 111185
+#RunNr = 111185
+RunNr = 114281
 
-MaxFiles = 10
+MaxFiles = 100
 
 brunel.extraopts="""
-Brunel().EvtMax = 1000
+Brunel().EvtMax = 10000
 Brunel().PrintFreq = 50
 Brunel().SkipEvents = 0
 """
