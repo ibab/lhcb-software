@@ -28,7 +28,17 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
     #--------------------------------
     #
     # V. Gligorov
-    __slots__ = {       'AllL0_PT'          : 1800.
+    __slots__ = {       'AllL0Tight_PT'     : 1800.
+                    ,   'AllL0Tight_P'           : 10000.
+                    ,   'AllL0Tight_IP'          : 0.100
+                    ,   'AllL0Tight_IPChi2'      : 16.
+                    ,   'AllL0Tight_TrChi2'      : 3.
+                    ,   'AllL0Tight_TrNTHits'    : 16.
+                    ,   'AllL0Tight_Velo_NHits'  : 9.
+                    ,   'AllL0Tight_Velo_Qcut'   : 3.
+                    ,   'AllL0Tight_GEC'         : 'Loose'
+                    ,   'AllL0Tight_ValidateTT'  : False
+                    ,   'AllL0_PT'          : 1800.
                     ,   'AllL0_P'           : 10000.
                     ,   'AllL0_IP'          : 0.100
                     ,   'AllL0_IPChi2'      : 16.
@@ -232,6 +242,12 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
              , L0DU = "L0_DECISION_PHYSICS" 
              , algos = self.hlt1TrackNonMuon_Streamer( "TrackAllL0", self.localise_props( "AllL0" ) )
                )
+        Line ( 'TrackAllL0Tight'
+             , prescale = self.prescale
+             , postscale = self.postscale
+             , L0DU = "L0_DECISION_PHYSICS" 
+             , algos = self.hlt1TrackNonMuon_Streamer( "TrackAllL0Tight", self.localise_props( "AllL0Tight" ) ) 
+               ) 
         Line ( 'TrackMuon'
              , prescale = self.prescale
              , postscale = self.postscale
