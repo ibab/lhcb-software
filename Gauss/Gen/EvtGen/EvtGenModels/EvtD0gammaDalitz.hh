@@ -52,6 +52,8 @@ private:
   // IDs of the relevant particles.
   EvtId _BP;
   EvtId _BM;
+  EvtId _B0;
+  EvtId _B0B;
   EvtId _D0;
   EvtId _D0B;
   EvtId _KM;

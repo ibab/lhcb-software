@@ -135,7 +135,8 @@ void EvtD0gammaDalitz::decay( EvtParticle* part )
   if (parent != 0 && EvtDecayTable::getInstance()->getDecayFunc( parent )->getName() == "BTODDALITZCPK" )
   {
     EvtId parId = parent->getId();
-    if ( ( parId == _BP ) || ( parId == _BM ) )
+    if ( ( parId == _BP ) || ( parId == _BM ) ||
+         ( parId == _B0 ) || ( parId == _B0B) )
     {
       _bFlavor = parId;
     }
@@ -195,7 +196,7 @@ void EvtD0gammaDalitz::decay( EvtParticle* part )
     ampCnj = dalitzKsKK( pointCnj );
   }
 
-  if ( _bFlavor == _BP )
+  if ( _bFlavor == _BP || _bFlavor == _B0 )
   {
     amp = ampCnj + rB * exp( EvtComplex( 0., delta + gamma ) ) * ampDir;
   }
@@ -293,6 +294,8 @@ void EvtD0gammaDalitz::readPDGValues()
   // Define the EvtIds.
   _BP  = EvtPDL::getId( "B+"      );
   _BM  = EvtPDL::getId( "B-"      );
+  _B0  = EvtPDL::getId( "B0"      );
+  _B0B = EvtPDL::getId( "anti-B0" );
   _D0  = EvtPDL::getId( "D0"      );
   _D0B = EvtPDL::getId( "anti-D0" );
   _KM  = EvtPDL::getId( "K-"      );
