@@ -6,14 +6,14 @@ class Hlt2CharmHadD2HHHLinesConf(HltLinesConfigurableUser) :
     __slots__ = {
                  ## 3Body
                     'Trk_PT_MIN'                :  300 * MeV
-                  , 'Trk_P_MIN'                 : 2000 * MeV
+                  , 'Trk_P_MIN'                 : 3000 * MeV
                   , 'Trk_MIPCHI2DV_MIN'         :    6.0      # unitless
                   #, 'Daughter2IPChi2'           :   10.0     # unitless Added by Feng ZHANG
                   , 'Trk_TRCHI2DOF_MAX'         :    3.      # unitless
                   , 'Pair_AMINDOCA_MAX'         :    0.08 * mm
                   , 'D_BPVVDCHI2_MIN'           :  175.0    # unitless
                   , 'D_VCHI2PDOF_MAX'           :   15.0     # unitless
-                  , 'D_BPVIPCHI2_MAX'           :   15.0     # unitless
+                  , 'D_BPVIPCHI2_MAX'           :   12.0     # unitless
                   , 'D_ASUMPT_MIN'              : 2800.0 * MeV
                   #, 'DOCAChi2'                  :   50.0     # Maximum Chi2 Between two daughters BY Feng ZHANG
                   , 'GEC_Filter_NTRACK'         : True     # do or do not

@@ -17,9 +17,9 @@ class Hlt2CharmHadD02HHXDstLinesConf(HltLinesConfigurableUser) :
                   , 'IPCHI2_MAX_Child_MIN'        : 36.
                   , 'IPCHI2_PiSlow_MAX'           : 9.      
                   , 'PairMaxDoca_Dstar'           : 100.0 * mm
-                  , 'PT_Dstar_MIN'                : 3500.0 * MeV  
+                  , 'PT_Dstar_MIN'                : 3750.0 * MeV  
                   , 'DIRA_D0_MIN'                 : 0.99
-                  , 'FDCHI2_D0_MIN'               : 150.
+                  , 'FDCHI2_D0_MIN'               : 100.
                   , 'VCHI2_D0_MAX'                : 10. 
                   , 'M_MAX'                       : 1900. 
                   , 'DeltaM_MIN'                  : 0.0 * MeV

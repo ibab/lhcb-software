@@ -22,7 +22,7 @@ class Hlt2CharmHadLambdaCLambdaHLinesConf(HltLinesConfigurableUser) :
                   , 'Lambda0LLDaugProtonMIPChi2'   : 36.0
 
                   ## Lambda0 daughter proton cuts - Lambda0DD
-                  , 'Lambda0DDDaugProtonTrackChi2' : 3.0
+                  , 'Lambda0DDDaugProtonTrackChi2' : 4.0
                   , 'Lambda0DDDaugProtonMIPChi2'   : 10.0
                                         
                   ## Lambda0 mother cuts - Lambda0LL
@@ -39,27 +39,27 @@ class Hlt2CharmHadLambdaCLambdaHLinesConf(HltLinesConfigurableUser) :
 
                   ## Bachelor pion cuts - Lambda0LL
                   , 'Lambda0LLBachPionP'         : 2500.0 * MeV
-                  , 'Lambda0LLBachPionPT'        : 250.0 * MeV
+                  , 'Lambda0LLBachPionPT'        : 350.0 * MeV
                   , 'Lambda0LLBachPionTrackChi2' : 3.0
-                  , 'Lambda0LLBachPionMIPChi2'   : 4.0
+                  , 'Lambda0LLBachPionMIPChi2'   : 9.0
 
                   ## Bachelor pion cuts - Lambda0DD
                   , 'Lambda0DDBachPionP'         : 2500.0 * MeV
-                  , 'Lambda0DDBachPionPT'        : 250.0 * MeV
+                  , 'Lambda0DDBachPionPT'        : 350.0 * MeV
                   , 'Lambda0DDBachPionTrackChi2' : 3.0
-                  , 'Lambda0DDBachPionMIPChi2'   : 4.0
+                  , 'Lambda0DDBachPionMIPChi2'   : 9.0
 
                   ## Bachelor kaon cuts - Lambda0LL
                   , 'Lambda0LLBachKaonP'         : 2500.0 * MeV
-                  , 'Lambda0LLBachKaonPT'        : 250. * MeV
+                  , 'Lambda0LLBachKaonPT'        : 350. * MeV
                   , 'Lambda0LLBachKaonTrackChi2' : 3.0
-                  , 'Lambda0LLBachKaonMIPChi2'   : 4.0
+                  , 'Lambda0LLBachKaonMIPChi2'   : 9.0
 
                   ## Bachelor kaon cuts - Lambda0DD
                   , 'Lambda0DDBachKaonP'         : 2500.0 * MeV
-                  , 'Lambda0DDBachKaonPT'        : 250. * MeV
+                  , 'Lambda0DDBachKaonPT'        : 350. * MeV
                   , 'Lambda0DDBachKaonTrackChi2' : 3.0
-                  , 'Lambda0DDBachKaonMIPChi2'   : 4.0
+                  , 'Lambda0DDBachKaonMIPChi2'   : 9.0
 
                   ## Lambda_c cuts
                   ## Combo cuts
@@ -69,8 +69,8 @@ class Hlt2CharmHadLambdaCLambdaHLinesConf(HltLinesConfigurableUser) :
                   , 'LambdaCMotherLowMass'    : 2185.0 * MeV
                   , 'LambdaCMotherHighMass'   : 2385.0 * MeV
                   , 'LambdaCMotherVertexChi2' : 15.0
-                  , 'LambdaCMotherMIPChi2'    : 25.0
-                  , 'LambdaCMotherPT'         : 800.0 * MeV
+                  , 'LambdaCMotherMIPChi2'    : 15.0
+                  , 'LambdaCMotherPT'         : 1500.0 * MeV
                  
                   , 'TisTosParticleTaggerSpecs': { "Hlt1Track.*Decision%TOS":0 }
                   , 'name_prefix'              : 'LambdaC'

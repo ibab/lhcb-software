@@ -5,7 +5,7 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
 
     __slots__ = {  'BMassWinLow'         :  5000       # MeV
                    ,'BMassWinHigh'       :  5900       # MeV
-                   ,'BLifetime'          :     0.1     # ps 
+                   ,'BLifetime'          :     0.3     # ps 
                    ,'doca'               :     0.1
                    ,'KaonPTmin'          :  1000       # MeV
                    ,'KaonPTmax'          :  1500       # MeV
