@@ -3,6 +3,9 @@ Package     : MooreSys
 Package Coordinator : E. van Herwijnen
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v14r4>2012-05-16 Moore v14r4</A></H1><PRE>
+Final tuned version for 2012 datataking
+
 </PRE><H1><A NAME=v14r3>2012-04-30 Moore v14r3</A></H1><PRE>
 With Rich/RichRecSys v4r5 fix for lines using Rich PID to use
 match as well as forward tracks
