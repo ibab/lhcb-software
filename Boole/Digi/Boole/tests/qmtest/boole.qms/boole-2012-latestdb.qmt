@@ -1,0 +1,21 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>gaudirun.py</text></argument>
+  <argument name="args"><set>
+    <text>$BOOLEROOT/tests/options/testBoole-defaults.py</text>
+    <text>$BOOLEROOT/tests/options/db-latest-2012.py</text>
+    <text>$APPCONFIGOPTS/Boole/DataType-2012.py</text>
+    <text>$BOOLEOPTS/MC11-Files.py</text>
+    <text>--option</text>
+    <text>from Boole.Configuration import *; Boole().Histograms="Expert";</text>
+   </set></argument>
+  <argument name="reference"><text>../refs/boole-2012-latestdb.ref</text></argument>
+  <argument name="validator"><text>
+from Boole.QMTest.BooleExclusions import preprocessor as BoolePreprocessor
+preprocessor = BoolePreprocessor
+validateWithReference(preproc=preprocessor)
+</text></argument>
+  <argument name="prerequisites"><set>
+    <tuple><text>boole.boole-mc11</text><enumeral>PASS</enumeral></tuple>
+  </set></argument>
+</extension>
