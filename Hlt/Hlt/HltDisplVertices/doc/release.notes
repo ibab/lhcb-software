@@ -4,6 +4,7 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
+!========================= HltDisplVertices v3r10 2012-05-16 =========================
 ! 2012-05-04 - Victor Coco
  - fix x86_64-slc5-gcc46 warnings.
 
