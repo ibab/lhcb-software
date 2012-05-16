@@ -30,6 +30,11 @@ void CounterAdder::addBuffer(void *buff, int siz, MonInfo *)
   while (pp<bend)
   {
     if (pp->reclen == 0) break;
+    if (pp->nameoff != sizeof(DimBuffBase))
+    {
+      printf("+++ Counter Adder: Bad value of name offset (%d). Corrupted record?\n",pp->nameoff);
+      break;
+    }
     char *nam = (char*)AddPtr(pp,pp->nameoff);
     char pnam[2048];
     int limit = 2048;
