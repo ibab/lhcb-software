@@ -1,9 +1,11 @@
+
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+!========================= Hlt2SharedParticles v6r10 2012-05-16 =========================
 ! 2012-05-15 - V. Gligorov
  - Make Lambda cuts more in line with KS cuts and tighten lifetime cut in LL. 
 
