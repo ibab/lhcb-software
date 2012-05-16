@@ -33,11 +33,11 @@ private
 # ==================== private test application =============================
 application  Gaudi              ../main/main.cpp
 macro_append Gaudi_dependencies " GaudiOnline "
-macro_append Gaudi_use_linkopts "" target-icc " -Wl,--no-as-needed "
+macro_append Gaudi_use_linkopts " -L$(tcmalloc_home)/lib -ltcmalloc " target-icc " -Wl,--no-as-needed "
 
 application  GaudiCheckpoint              ../main/checkpoint.cpp
 macro_append GaudiCheckpoint_dependencies " GaudiOnline "
-macro_append GaudiCheckpoint_use_linkopts "" target-icc " -Wl,--no-as-needed "
+macro_append GaudiCheckpoint_use_linkopts " -L$(tcmalloc_home)/lib -ltcmalloc " target-icc " -Wl,--no-as-needed "
 
 # Some dim tests, which failed for checkpointing
 #use DIM v* Online

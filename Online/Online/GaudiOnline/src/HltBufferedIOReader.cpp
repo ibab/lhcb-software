@@ -58,6 +58,9 @@ namespace LHCb  {
     int                    openFile();
     void                   safeRestOfFile(int file_handle);
 
+    /// IRunable implementation : Run the class implementation
+    virtual StatusCode i_run();
+
   public:
     /// Standard Constructor
     HltBufferedIOReader(const std::string& nam, ISvcLocator* svcLoc);
@@ -298,7 +301,7 @@ void HltBufferedIOReader::safeRestOfFile(int file_handle) {
 }
 
 /// IRunable implementation : Run the class implementation
-StatusCode HltBufferedIOReader::run()   {  
+StatusCode HltBufferedIOReader::i_run()   {  
   int file_handle = 0;
   m_receiveEvts = true;
   ::lib_rtl_sleep(10000);
@@ -390,4 +393,19 @@ StatusCode HltBufferedIOReader::run()   {
     m_evtCount = 0;
   }
   return StatusCode::SUCCESS;
+}
+
+/// IRunable implementation : Run the class implementation
+StatusCode HltBufferedIOReader::run()   {  
+  try {
+    return i_run();
+  }
+  catch(const exception& e) {
+    error("Exception while reading MEP files:"+string(e.what()));
+    throw;
+  }
+  catch(...) {
+    error("UNKNWON Exception while reading MEP files.");
+    throw;
+  }
 }

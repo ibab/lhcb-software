@@ -94,10 +94,10 @@ int GaudiTask::execRunable(void* arg)  {
     return ret;
   }
   catch(const exception& e) {
-    cout << "Exception while running main thread:" << e.what() << endl;
+    p->second->output(MSG::FATAL,"Exception while running main thread:"+string(e.what()));
   }
   catch(...) {
-    cout << "Exception while running main thread." << endl;
+    p->second->output(MSG::FATAL,"UNKNWON Exception while running main thread.");
   }
   p->second->setEventThread(false);
   delete p;

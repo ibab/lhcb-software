@@ -19,8 +19,8 @@ typedef long (*func)(int, char**);
 
 int main (int argc, char** argv)  {
 
-  //volatile int *x = new int; //force loading of tcmalloc
-  //*x = 0;
+  volatile int *x = new int; //force loading of tcmalloc
+  *x = 0;
   
   System::ImageHandle h = 0;
   std::string env = std::string("__STARTUP__=")+THE_LOAD_LIBRARY;
