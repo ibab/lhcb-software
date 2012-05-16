@@ -31,6 +31,16 @@ void CounterAdder::addBuffer(void *buff, int siz, MonInfo *)
   {
     if (pp->reclen == 0) break;
     char *nam = (char*)AddPtr(pp,pp->nameoff);
+    char pnam[2048];
+    int limit = 2048;
+    int nlen = strnlen(nam,limit);
+    if (nlen == limit)
+    {
+      strncpy(pnam,nam,limit-1);
+      pnam[sizeof(pnam)] = 0;
+      printf("+++ Counter Adder: Very large name string. First 2048 characters %s out of %d. Skipping record...\n",pnam,pp->namelen);
+      break;
+    }
     hmap.insert(std::make_pair(nam,pp));
     pp=(DimHistbuff1*)AddPtr(pp,pp->reclen);
   }
