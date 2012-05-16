@@ -4,6 +4,16 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-05-16 - P. Hopchev
+ - Created VanDerMeerScan_May12.py and VanDerMeerScan_BeamGasConf_May12.py
+  . This is a 'default' VDM configuration which should be used to make
+    fast-run-changeable VDM TCKs which differ only by the prescales
+    of the beam-gas lines (the required prescale values can be found
+    in VanDerMeerScan_May12.py)
+  . Set the prescale of the Hlt1Lumi line to 1.
+  . Effectively remove the L0 requirement of all BG lines (use L0_ALL)
+  . Set the cut on #tracks per vertex to 10
+
 !========================= HltSettings v5r34 2012-05-16 =========================
 ! 2012-05-15 - V. Gligorov
  - Make June2012 Physics settings, based on draftJune2012
