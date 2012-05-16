@@ -116,7 +116,7 @@ StatusCode Velo::VeloTrackMonitorNT::execute()
       debug()<< "Run "     << odin->runNumber()
              << ", Event " << odin->eventNumber() << endmsg;
     m_runodin=odin->runNumber();
-    m_eventodin=(long unsigned int)odin->eventNumber();
+    m_eventodin=odin->eventNumber();
     m_bunchid= odin->bunchId();
     m_evTimeGps= odin->gpsTime();
    
@@ -230,7 +230,8 @@ StatusCode Velo::VeloTrackMonitorNT::FillVeloClNtuple(const LHCb::Track& track,
 
 {
   Tuple tuple=nTuple("VeloClNtuple", "Clusters on track",CLID_ColumnWiseTuple );
-  float eventTimeMicroSecGps = (float) (m_evTimeGps  - 1270064494071424)/1000000.;
+  long long int tzero= 1270064494071424ll; //there is an ll at the end, so that C++ knows this has to be a long long
+  float eventTimeMicroSecGps = (float) (((m_evTimeGps  - tzero)/1000000.));
   debug()<< "Cluster information ntuple " << endmsg;
 
 
@@ -282,7 +283,6 @@ StatusCode Velo::VeloTrackMonitorNT::FillVeloClNtuple(const LHCb::Track& track,
     double p=track.p()/Gaudi::Units::GeV ;
     double type=track.type();
     unsigned int m_sideLeft=0, m_sideRight=0;
-    unsigned int m_side=3;
     Gaudi::XYZVector global3dDir=Gaudi::XYZVector(slx, sly, 1.);
     //const std::vector< LHCb::LHCbID >& trackIDs = track.lhcbIDs();
     //std::vector< LHCb::LHCbID >::const_iterator it;
@@ -310,14 +310,6 @@ StatusCode Velo::VeloTrackMonitorNT::FillVeloClNtuple(const LHCb::Track& track,
     }
   
     if(nVeloHits>0) adcpertrack = adcpertrack/nVeloHits;
-
-    if (m_sideRight>=1 && m_sideLeft>=1)
-      m_side=2; //overlap
-    else if (m_sideRight>=1)
-      m_side=1; //right-A side
-    else  if (m_sideLeft>=1)
-      m_side=0; //left-C side
-
 
     for( LHCb::Track::ConstNodeRange::const_iterator inode = nodes.begin() ;
          inode != nodes.end(); ++inode) {
@@ -644,7 +636,9 @@ void Velo::VeloTrackMonitorNT::FillVeloTrNtuple(const LHCb::Track& track,
                                                 double pvchi2, double pvndof, int pvntr)
 {
   Tuple tuple=nTuple("VeloTrNtuple", "Track ntuple",CLID_ColumnWiseTuple );
-  float eventTimeMicroSecGps = (float) (m_evTimeGps  - 1270064494071424)/1000000.;
+  long long int tzero= 1270064494071424ll; //there is an ll at the end, so that C++ knows this has to be a long long
+  float eventTimeMicroSecGps = (float) (((m_evTimeGps  - tzero)/1000000.));
+
 
   if(m_runWithMC)
     eventTimeMicroSecGps=0;
@@ -747,7 +741,6 @@ void Velo::VeloTrackMonitorNT::FillVeloTrNtuple(const LHCb::Track& track,
     //Pseudoefficiency for each sensor
     //--------------------------------
     double pseudoEfficiency_sens=0;
-    double sensnumber;
     double N_expTot=0,N_recTot=0;
     
     for(unsigned int i=(sensnmin); i<=sensnmax; i++){
@@ -763,13 +756,12 @@ void Velo::VeloTrackMonitorNT::FillVeloTrNtuple(const LHCb::Track& track,
         debug()<<i<<" N_rec "<<N_rec[i]<<" N_exp "<<N_exp[i]<<endmsg;
       if(N_exp[i]>=1){
         pseudoEfficiency_sens = N_rec[i] / N_exp[i];
-        sensnumber=(double) i;
         if( msgLevel(MSG::DEBUG) )  
           debug()<<i<<" ==> pseudoefficiency "<<pseudoEfficiency_sens<<endmsg;    
         if(N_rec[i] < N_exp[i]){
           const DeVeloSensor* sensor_h = m_veloDet->sensor(i); 
           Gaudi::XYZPoint trackInterceptGlobal_h= extrapolateToZ(&track, sensor_h->z());
-          Gaudi::XYZPoint trackInterceptHalf_h = sensor_h->globalToVeloHalfBox ( trackInterceptGlobal_h );
+          //Gaudi::XYZPoint trackInterceptHalf_h = sensor_h->globalToVeloHalfBox ( trackInterceptGlobal_h );
           Gaudi::XYZPoint trackInterceptLocal_h(0,0,0) ;      
           trackInterceptLocal_h    = sensor_h -> globalToLocal( trackInterceptGlobal_h );
         } 
@@ -777,7 +769,6 @@ void Velo::VeloTrackMonitorNT::FillVeloTrNtuple(const LHCb::Track& track,
       if( msgLevel(MSG::DEBUG) )  
         debug()<<i+64<<" N_rec "<<N_rec[i+64]<<" N_exp "<<N_exp[i+64]<<endmsg;
       pseudoEfficiency_sens = N_rec[i+64] / N_exp[i+64];
-      sensnumber=(double) i+64.;
       if( msgLevel(MSG::DEBUG) )  
         debug()<<i+64<<" ==> pseudoefficiency "<<pseudoEfficiency_sens<<endmsg;
     }//loop on sensors
@@ -852,8 +843,11 @@ void Velo::VeloTrackMonitorNT::FillVeloEvNtuple(LHCb::Tracks* tracks,
   Tuple tuple=nTuple("VeloTrEvNtuple", "Event ntuple",CLID_ColumnWiseTuple );
 
 
+  long long int tzero= 1270064494071424ll; //there is an ll at the end, so that C++ knows this has to be a long long
+  float eventTimeMicroSecGps = (float) (((m_evTimeGps  - tzero)/1000000.));
+  debug()<< "Cluster information ntuple " << endmsg;
 
-  float eventTimeMicroSecGps = (float) (m_evTimeGps  - 1270064494071424)/1000000.;
+
   if(m_runWithMC)
     eventTimeMicroSecGps=0;
 
@@ -915,7 +909,8 @@ void Velo::VeloTrackMonitorNT::FillVeloEvNtuple(LHCb::Tracks* tracks,
   tuple->column( "evt",m_eventodin);
   tuple->column( "bunchid",m_bunchid);
   tuple->column( "evTimeSec",eventTimeMicroSecGps); 
-  tuple->column( "trnum", tracks->size());
+  unsigned int m_trnum=(tracks->size());
+  tuple->column( "trnum",m_trnum);
   tuple->column( "lefttr",  lefttracknum);
   tuple->column( "righttr",  righttracknum);
   tuple->column( "overlaptr",  troverlapnum );   
@@ -945,7 +940,9 @@ StatusCode Velo::VeloTrackMonitorNT::FillVeloAllClNtuple(LHCb::Tracks* tracks)
 
 {
   Tuple tuple=nTuple("VeloAllClNtuple", "All Clusters",CLID_ColumnWiseTuple );
-  float eventTimeMicroSecGps = (float) (m_evTimeGps  - 1270064494071424)/1000000.;
+  long long int tzero= 1270064494071424ll; //there is an ll at the end, so that C++ knows this has to be a long long
+  float eventTimeMicroSecGps = (float) (((m_evTimeGps  - tzero)/1000000.));
+
   debug()<< "All Cluster information ntuple " << endmsg;
   
   LHCb::VeloClusters::const_iterator itVC;
@@ -986,8 +983,10 @@ StatusCode Velo::VeloTrackMonitorNT::FillVeloAllClNtuple(LHCb::Tracks* tracks)
       tuple->column( "evt",m_eventodin);
       tuple->column( "bunchid",m_bunchid);
       tuple->column( "evTimeSec",eventTimeMicroSecGps); //(long) m_evTimeGps));
-      tuple->column( "trnum",(tracks->size()));
-      tuple->column( "totcl",(m_rawClusters->size()));
+      unsigned int m_trnum=(tracks->size());
+      tuple->column( "trnum",m_trnum);
+      unsigned int m_totcl=(m_rawClusters->size());
+      tuple->column( "totcl",m_totcl);
       tuple->column( "pitch",pitch);
       tuple->column( "Rtype",Rtype);
       tuple->column( "clSize",clSize);

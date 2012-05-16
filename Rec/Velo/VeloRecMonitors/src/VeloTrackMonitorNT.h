@@ -87,9 +87,9 @@ namespace Velo
     std::string m_asctLocation; 
     LHCb::VeloClusters* m_rawClusters;
     const DeVelo* m_veloDet ;
-    int m_runodin;
-    long unsigned int m_eventodin;
-    int m_bunchid;
+    unsigned int m_runodin;
+    ulonglong m_eventodin;
+    unsigned int  m_bunchid;
     ulonglong m_evTimeGps;
     IVeloExpectation* m_expectTool;
     IVeloClusterPosition* m_clusterTool;
