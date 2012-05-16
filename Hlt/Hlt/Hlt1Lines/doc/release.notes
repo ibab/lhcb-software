@@ -5,6 +5,7 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+!========================= Hlt1Lines v6r24 2012-05-16 =========================
 ! 2012-05-15 - V. Gligorov
  - Add 1TrackAllL0Tight line with harder PT cut for fast run changes
 
