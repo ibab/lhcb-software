@@ -4,6 +4,7 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================= HltSettings v5r35 2012-05-16 =========================
 ! 2012-05-16 - Johannes Albrecht
  - increase prescale on Hlt2DebugEvent from 1e-4 to 1e-6
  - prescale Hlt2DimuonJPsi to 0.2
