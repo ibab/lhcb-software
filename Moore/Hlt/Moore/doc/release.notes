@@ -2,6 +2,7 @@ Package     : Hlt/Moore
 Package Coordinator : Eric van Herwijnen
 Purpose     : LHCb HLT application
 
+!========================= Moore v14r4 2012-05-16 =========================
 ! 2012-05-09 - Patrick Koppenburg
  - Use DB snapshot configuration from DetCond v12r24 released in LHCb v34r3.
    See https://savannah.cern.ch/task/?27329 and https://savannah.cern.ch/bugs/index.php?94454
