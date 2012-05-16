@@ -119,9 +119,9 @@ void MBM::Consumer::delRequest(int evtype, const unsigned int trmask[4], const u
     if ( sc == MBM_NORMAL )  {
       return;
     }
-    throw std::runtime_error("Failed to delete request to MBM buffer:"+m_buffName+" [Internal Error]");
+    throw std::runtime_error("Failed to delete request from MBM buffer:"+m_buffName+" [Internal Error]");
   }
-  throw std::runtime_error("Failed to delete request to MBM buffer:"+m_buffName+" [Buffer not connected]");
+  throw std::runtime_error("Failed to delete request from MBM buffer:"+m_buffName+" [Buffer not connected]");
 }
 
 int MBM::Consumer::getEventAsync() {

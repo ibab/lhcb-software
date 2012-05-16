@@ -91,26 +91,26 @@ int MBM::Producer::spaceAction() {
     sc = ::mbm_declare_event(m_bmid, e.len, e.type, e.mask, 0, &fadd, &flen, m_partID);
     if ( sc == MBM_REQ_CANCEL ) {
       ::lib_rtl_output(LIB_RTL_ERROR,"Failed to declare event for MBM buffer %s. Request was cancelled.\n",
-        m_buffName.c_str());
+		       m_buffName.c_str());
       return sc;
     }
     else if ( sc == MBM_NORMAL )  {
       sc = ::mbm_send_space(m_bmid);
       if ( sc == MBM_REQ_CANCEL ) {
         ::lib_rtl_output(LIB_RTL_ERROR,"Failed to declare event for MBM buffer %s. Request was cancelled.\n",
-          m_buffName.c_str());
+			 m_buffName.c_str());
         return sc;
       }
       else if ( sc == MBM_NORMAL )  {
         return sc;
       }
       ::lib_rtl_output(LIB_RTL_ERROR,"Failed to send space for MBM buffer %s. status = %d %08X.\n",
-        m_buffName.c_str(),sc,sc);
+		       m_buffName.c_str(),sc,sc);
       throw std::runtime_error("Failed to send space for MBM buffer:"+m_buffName+" [Internal Error]");
     }
     else {
       ::lib_rtl_output(LIB_RTL_ERROR,"Failed to declare event for MBM buffer %s. status = %d %08X.\n",
-        m_buffName.c_str(),sc,sc);
+		       m_buffName.c_str(),sc,sc);
     }
     throw std::runtime_error("Failed to declare event for MBM buffer:"+m_buffName+" [Internal Error]");
   }
@@ -129,9 +129,9 @@ int MBM::Producer::declareEvent() {
       e.len  = flen;
       return MBM_NORMAL;
     }
-    throw std::runtime_error("Failed to declare event for MBM buffer:"+m_buffName+" [Internal Error]");
+    throw std::runtime_error("Failed to declare event to MBM buffer:"+m_buffName+" [Internal Error]");
   }
-  throw std::runtime_error("Failed to declare event for MBM buffer:"+m_buffName+" [Buffer not connected]");
+  throw std::runtime_error("Failed to declare event to MBM buffer:"+m_buffName+" [Buffer not connected]");
 }
 
 /// Declare event on space receival with possibility to declare multiple events
@@ -151,9 +151,9 @@ int MBM::Producer::declareEventTry() {
       e.len  = 0;
       return sc;
     }
-    throw std::runtime_error("Failed to declare event for MBM buffer:"+m_buffName+" [Internal Error]");
+    throw std::runtime_error("Failed to declare event to MBM buffer:"+m_buffName+" [Internal Error]");
   }
-  throw std::runtime_error("Failed to declare event for MBM buffer:"+m_buffName+" [Buffer not connected]");
+  throw std::runtime_error("Failed to declare event to MBM buffer:"+m_buffName+" [Buffer not connected]");
 }
 
 // Action to be called on space receival
@@ -162,9 +162,9 @@ int MBM::Producer::sendSpace() {
     if ( ::mbm_send_space(m_bmid) == MBM_NORMAL )  {
       return MBM_NORMAL;
     }
-    throw std::runtime_error("Failed to send space for MBM buffer:"+m_buffName+" [Internal Error]");
+    throw std::runtime_error("Failed to send space to MBM buffer:"+m_buffName+" [Internal Error]");
   }
-  throw std::runtime_error("Failed to declare event for MBM buffer:"+m_buffName+" [Buffer not connected]");
+  throw std::runtime_error("Failed to declare event to MBM buffer:"+m_buffName+" [Buffer not connected]");
 }
 
 // Rearm action to be called on space receival
@@ -187,11 +187,11 @@ int MBM::Producer::spaceRearm(int new_length) {
       if ( sc == MBM_NORMAL || sc == MBM_REQ_CANCEL )  {
         return sc;
       }
-      throw std::runtime_error("Failed to wait space for MBM buffer:"+m_buffName+" [Internal Error]");
+      throw std::runtime_error("Failed to wait space on MBM buffer:"+m_buffName+" [Internal Error]");
     }
-    throw std::runtime_error("Failed to get event for MBM buffer:"+m_buffName+" [Internal Error]");
+    throw std::runtime_error("Failed to get space from MBM buffer:"+m_buffName+" [Internal Error]");
   }
-  throw std::runtime_error("Failed to declare event for MBM buffer:"+m_buffName+" [Buffer not connected]");
+  throw std::runtime_error("Failed to declare event to MBM buffer:"+m_buffName+" [Buffer not connected]");
 }
 
 // Get space call to fill event data
@@ -210,14 +210,14 @@ int MBM::Producer::getSpaceTry(int len)  {
       if ( sc == MBM_NORMAL || sc == MBM_REQ_CANCEL )  {
         return sc;
       }
-      throw std::runtime_error("Failed to wait space for MBM buffer:"+m_buffName+" [Internal Error]");
+      throw std::runtime_error("Failed to wait space on MBM buffer:"+m_buffName+" [Internal Error]");
     }
     else if ( sc == MBM_NO_ROOM ) {
       return sc;
     }
-    throw std::runtime_error("Failed to get event for MBM buffer:"+m_buffName+" [Internal Error]");
+    throw std::runtime_error("Failed to get space from MBM buffer:"+m_buffName+" [Internal Error]");
   }
-  throw std::runtime_error("Failed to declare event for MBM buffer:"+m_buffName+" [Buffer not connected]");
+  throw std::runtime_error("Failed to declare event to MBM buffer:"+m_buffName+" [Buffer not connected]");
 }
 
 /// send and declare event to consumers
