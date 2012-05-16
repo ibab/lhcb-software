@@ -129,7 +129,7 @@ class Muons_April2012 :
            
             , 'Prescale'   : { 'Hlt2DiMuon'                  :  0   
                                , 'Hlt2DiMuonLowMass'         :  0   
-                               , 'Hlt2DiMuonJPsi'            :  1 
+                               , 'Hlt2DiMuonJPsi'            :  0.2 
                                , 'Hlt2DiMuonPsi2S'           :  0.1
                                , 'Hlt2DiMuonDY1'             :  0.005
                                , 'Hlt2DiMuonDY2'             :  0.03
