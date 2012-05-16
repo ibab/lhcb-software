@@ -3,7 +3,7 @@
 # Maintainer : P. Koppenburg & G.Raven
 
 package           Hlt2SharedParticles
-version           v6r9
+version           v6r10
 
 # ============================================================================
 # ======= the structure ======================================================
