@@ -81,6 +81,9 @@ private:
   AIDA::IHistogram1D* histTrackError17Good;
   AIDA::IHistogram1D* histTrackError89Good;
 
+  AIDA::IHistogram2D* histResidualPullVsDist17Good;
+  AIDA::IHistogram2D* histResidualPullVsDist89Good;
+
 //  AIDA::IHistogram2D* histDriftTimeVsDistGood50;
 //  AIDA::IHistogram2D* histDriftTimeVsDistGood25;
 private:

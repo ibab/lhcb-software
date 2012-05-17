@@ -1,4 +1,4 @@
-
+   
 #include "OTModuleClbrMon.h"
 
 #include <GaudiKernel/AlgFactory.h>
@@ -213,6 +213,12 @@ StatusCode OTModuleClbrMon::initialize()
   histWalkVsHitStrawYGood = book2D("walkVsHitStrawYGood", "walk vs hit straw y (p > 10 GeV)",
     0, 2400, 96, histDriftTimeResidualOpts[0], histDriftTimeResidualOpts[1], (int)histDriftTimeResidualOpts[2]);
 
+  histResidualPullVsDist17Good = book2D("histResidualPullVsDist17Good", "distance residual pull (p> 10 GeV && M == 1-7)",
+    0, 2.5, 100, -5, 5, 100);
+
+  histResidualPullVsDist89Good = book2D("histResidualPullVsDist89Good", "distance residual pull (p> 10 GeV && M == 8-9)",
+    0, 2.5, 100, -5, 5, 100);
+
   if(readXMLs) statusCode = readCondXMLs();
 
   return statusCode;
@@ -355,6 +361,9 @@ StatusCode OTModuleClbrMon::execute()
 
 //          if(tracks->size() <= 50) fill(histDriftTimeVsDistGood50, dist, tdrift, 1.0);
 //          if(tracks->size() <= 25) fill(histDriftTimeVsDistGood25, dist, tdrift, 1.0);
+
+          if(m < 7) fill(histResidualPullVsDist17Good, fabs(dist), distResidual / sqrt(err2), 1.0);
+          if(m >= 7) fill(histResidualPullVsDist89Good, fabs(dist), distResidual / sqrt(err2), 1.0);
         }
 
         if(clone->p() / 1000.0 > 10.0)
