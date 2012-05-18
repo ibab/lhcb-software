@@ -1,0 +1,36 @@
+# =============================================================================
+# Created    : 2012-06-18
+# Maintainer : Oscar Augusto oscar@if.ufrj.br
+# =============================================================================
+package SVJetsAnalysis
+version           v1r0
+author            Oscar Augusto
+
+# =============== structure ===================================================
+branches          cmt doc options src template 
+
+# =============== environment =================================================
+set               LOKIUSERSRC       $(LOKIUSERROOT)/src 
+set               LOKIUSEROPTS      $(LOKIUSERROOT)/options
+
+# =============== dependencies ================================================
+use               LoKiFitters      v*  Phys 
+use               LoKi             v*  Phys 
+use               LoKiAlgo         v* Phys 
+use               LoKiAlgoMC       v*  Phys 
+use               LoKiGenMC        v* Phys
+use               LoKiPhysMC       v* Phys
+use               LHCbMath         v* Kernel 
+
+# macro use_LoKijets "LoKiJets     v*  Phys" WIN32 ""
+# use $(use_LoKijets)
+
+# =============== constituents ================================================
+library           LoKiUser  ../src/*.cpp 
+
+# =============== standard patterns ===========================================
+apply_pattern     component_library library=LoKiUser
+
+# =============================================================================
+# The END 
+# =============================================================================
