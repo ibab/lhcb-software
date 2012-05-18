@@ -15,7 +15,7 @@ use  Hlt2Lines           v8r21       Hlt
 use  Hlt2SharedParticles v6r10       Hlt
 use  HltConf             v9r18       Hlt
 use  HltDisplVertices    v3r10       Hlt
-use  HltSettings         v5r35       Hlt
+use  HltSettings         v5r36       Hlt
 use  HltTracking         v9r21       Hlt
 
 #for RichRecSys v4r5
