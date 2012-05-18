@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================= HltSettings v5r36 2012-05-18 =========================
+ - for Vava: add prescale for topo simple
+
 !========================= HltSettings v5r35 2012-05-16 =========================
 ! 2012-05-16 - Johannes Albrecht
  - increase prescale on Hlt2DebugEvent from 1e-4 to 1e-6
