@@ -552,6 +552,16 @@ namespace Analysis
         RooAbsReal&          a0        ,  
         RooAbsReal&          a1        ,  
         RooAbsReal&          a2        ) ;
+      /// constructor from all parameters 
+      Needham
+      ( const char*          name             , 
+        const char*          title            ,
+        RooAbsReal&          x                ,
+        RooAbsReal&          m0               ,
+        RooAbsReal&          sigma            ,  
+        const double         a0    =  1.975   ,   
+        const double         a1    =  0.0011  ,  
+        const double         a2    = -0.00018 ) ;
       /// "copy" constructor 
       Needham ( const Needham& right , const char* name = 0 ) ;
       /// virtual destructor 
@@ -570,6 +580,10 @@ namespace Analysis
       // ======================================================================
       // the actual evaluation of function 
       Double_t evaluate() const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      bool   m_fixed ;
       // ======================================================================
     private:
       // ======================================================================

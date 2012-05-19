@@ -402,7 +402,6 @@ Double_t Analysis::Models::CrystalBallDS::evaluate() const
 // ============================================================================
 
 
-
 // ============================================================================
 // Needham
 // ============================================================================
@@ -424,7 +423,9 @@ Analysis::Models::Needham::Needham
   , m_a0      ( "a0"      , "a0-parameter"               , this , a0     ) 
   , m_a1      ( "a1"      , "a1-parameter"               , this , a1     ) 
   , m_a2      ( "a2"      , "a2-parameter"               , this , a2     ) 
-//  
+//
+  , m_fixed   ( false ) 
+//
   , m_needham ( 100 , 1 , 1.9 , 0 , 0 ) 
 {
   //
@@ -434,6 +435,39 @@ Analysis::Models::Needham::Needham
   m_needham.setA0      ( m_a0     ) ;
   m_needham.setA1      ( m_a1     ) ;
   m_needham.setA2      ( m_a2     ) ;
+  //
+}
+// ============================================================================
+Analysis::Models::Needham::Needham
+( const char*          name      , 
+  const char*          title     ,
+  RooAbsReal&          x         ,
+  RooAbsReal&          m0        ,
+  RooAbsReal&          sigma     ,  
+  const double         a0        ,  
+  const double         a1        ,  
+  const double         a2        ) 
+  : RooAbsPdf ( name , title )
+//
+  , m_x       ( "x"       , "Observable"    , this , x      ) 
+  , m_m0      ( "m0"      , "mass"          , this , m0     ) 
+  , m_sigma   ( "sigma"   , "sigma"         , this , sigma  )
+//
+  , m_a0      () 
+  , m_a1      ()  
+  , m_a2      () 
+//
+  , m_fixed   ( true  ) 
+//
+  , m_needham ( 100 , 1 , 1.9 , 0 , 0 ) 
+{
+  //
+  m_needham.setM0      ( m_m0     ) ;
+  m_needham.setSigma   ( m_sigma  ) ;
+  //
+  m_needham.setA0      ( a0       ) ;
+  m_needham.setA1      ( a1       ) ;
+  m_needham.setA2      ( a2       ) ;
   //
 }
 // ============================================================================
@@ -451,7 +485,8 @@ Analysis::Models::Needham::Needham
   , m_a0      ( "a0"      , this , right.m_a0     ) 
   , m_a1      ( "a1"      , this , right.m_a1     ) 
   , m_a2      ( "a2"      , this , right.m_a2     ) 
-//  
+//
+  , m_fixed   ( right.m_fixed   ) 
   , m_needham ( right.m_needham ) 
 {}
 // ============================================================================
@@ -473,9 +508,12 @@ Double_t Analysis::Models::Needham::evaluate() const
   m_needham . setM0    ( m_m0     ) ;
   m_needham . setSigma ( m_sigma  ) ;
   //
-  m_needham . setA0    ( m_a0     ) ;
-  m_needham . setA1    ( m_a1     ) ;
-  m_needham . setA2    ( m_a2     ) ;
+  if ( !m_fixed ) 
+  {
+    m_needham . setA0  ( m_a0     ) ;
+    m_needham . setA1  ( m_a1     ) ;
+    m_needham . setA2  ( m_a2     ) ;
+  }
   //
   return m_needham     ( m_x      ) ;
 }
