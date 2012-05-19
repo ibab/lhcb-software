@@ -162,6 +162,25 @@ namespace LoKi
       static Fun::result_type 
       __call__    ( const Fun& fun  , const Type*           o ) 
       { return fun ( o ) ; }
+      //
+      // __call__ as filter 
+      //
+      // __call__ 
+      static LoKi::GenTypes::GenContainer 
+      __call__ ( const Fun& fun  , const LoKi::GenTypes::GenContainer& o ) 
+      { return o >> fun  ; }
+      // __call__ 
+      static LoKi::GenTypes::GenContainer
+      __call__ ( const Fun& fun  , const HepMC::GenEvent* e ) 
+      { return __rrshift__ ( fun , e ) ; }
+      // __rrshift__ 
+      static LoKi::GenTypes::GenContainer
+      __call__ ( const Fun& fun  , const LHCb::HepMCEvent* e ) 
+      { return __rrshift__ ( fun , e ) ; }
+      // __rrshift__ 
+      static LoKi::GenTypes::GenContainer
+      __call__ ( const Fun& fun  , const LHCb::HepMCEvents* e ) 
+      { return __rrshift__ ( fun , e ) ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -169,10 +188,49 @@ namespace LoKi
       static Fun::result_type              
       __rrshift__ ( const Fun& fun  , const Type*           o ) 
       { return o >> fun  ; }
+      //
+      // rrshift as "filter"
+      //
       // __rrshift__ 
-      static const LoKi::GenTypes::GenContainer 
+      static LoKi::GenTypes::GenContainer 
       __rrshift__ ( const Fun& fun  , const LoKi::GenTypes::GenContainer& o ) 
-      { return o >> fun  ; }      
+      { return o >> fun  ; }
+      // __rrshift__ 
+      static LoKi::GenTypes::GenContainer
+      __rrshift__ ( const Fun& fun  , const HepMC::GenEvent* e ) 
+      {
+        LoKi::GenTypes::GenContainer r ;
+        LoKi::Extract::genParticles ( e , std::back_inserter ( r ) , fun ) ;
+        //
+        std::set<const HepMC::GenParticle*> s2 ( r.begin() , r.end() ) ;
+        r.clear() ;
+        r.insert ( r.end() , s2.begin() , s2.end() ) ;
+        return r ;
+      }
+      // __rrshift__ 
+      static LoKi::GenTypes::GenContainer
+      __rrshift__ ( const Fun& fun  , const LHCb::HepMCEvent* e ) 
+      {
+        LoKi::GenTypes::GenContainer r ;
+        LoKi::Extract::genParticles ( e , std::back_inserter ( r ) , fun ) ;
+        //
+        std::set<const HepMC::GenParticle*> s2 ( r.begin() , r.end() ) ;
+        r.clear() ;
+        r.insert ( r.end() , s2.begin() , s2.end() ) ;
+        return r ;
+      }
+      // __rrshift__ 
+      static LoKi::GenTypes::GenContainer
+      __rrshift__ ( const Fun& fun  , const LHCb::HepMCEvents* e ) 
+      {
+        LoKi::GenTypes::GenContainer r ;
+        LoKi::Extract::genParticles ( e , std::back_inserter ( r ) , fun ) ;
+        //
+        std::set<const HepMC::GenParticle*> s2 ( r.begin() , r.end() ) ;
+        r.clear() ;
+        r.insert ( r.end() , s2.begin() , s2.end() ) ;
+        return r ;
+      }
       // ======================================================================
     public:
       // ======================================================================

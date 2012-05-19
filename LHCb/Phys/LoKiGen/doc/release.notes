@@ -13,6 +13,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2012-05-19 - Vanya Belyaev
+
+ - add more rrshift/calls decorators 
+
 !========================= LoKiGen v10r6 2012-02-28 =========================
 ! 2012-02-13 - Vanya Belyaev
  - add GVRHO functor for Marc-Olivier 
