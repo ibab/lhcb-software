@@ -51,7 +51,14 @@ __all__     = ( 'extendfile1' ,
                 'extendfile2' ,
                 'extendfile'  ,
                 'inCastor'    ) 
-
+# =============================================================================
+## logging
+# =============================================================================
+from Bender.Logger import getLogger 
+logger = getLogger( __name__ )
+# =============================================================================
+_castor = '/castor/cern.ch/grid'
+_nsls   = 'nsls -l %s'
 # =============================================================================
 ## check the presence of the file in (CERN) Castor
 #
@@ -75,7 +82,9 @@ __all__     = ( 'extendfile1' ,
 #  @param fname   filename
 #  @param prefix  prefix to be used
 #
-def inCastor ( fname , prefix = '/castor/cern.ch/grid' ) :
+def inCastor ( fname            ,
+               prefix = _castor ,
+               nsns   = _nsls   ) :
     """
     check if the file is accessible from castor:
 
@@ -90,7 +99,7 @@ def inCastor ( fname , prefix = '/castor/cern.ch/grid' ) :
 
     try:
         ## use nsls command to check the file existence 
-        cmd = 'nsls -l %s' % fname    
+        cmd = nsls % fname    
         from subprocess import Popen, PIPE
         p   = Popen( cmd                 ,
                      shell     = True    ,
@@ -137,7 +146,8 @@ def extendfile1 ( filename , castor = False ) :
 
     elif 0 == filename.find ( '/castor/cern.ch/grid/lhcb/data/' )             or \
          0 == filename.find ( '/castor/cern.ch/grid/lhcb/LHCb/Collision10' )  or \
-         0 == filename.find ( '/castor/cern.ch/grid/lhcb/LHCb/Collision11' )  :
+         0 == filename.find ( '/castor/cern.ch/grid/lhcb/LHCb/Collision11' )  or \
+         0 == filename.find ( '/castor/cern.ch/grid/lhcb/LHCb/Collision12' )  :
         
         _len = len(filename) 
         if   _len - 4  == filename.find ( '.raw'  ) :
@@ -201,16 +211,16 @@ def extendfile2 ( filename , castor = False ) :
     ##
     #
     from GaudiConf import IOHelper
-    if 0 < filename.find ( '.mdf' ) or \
-       0 < filename.find ( '.raw' ) or \
-       0 < filename.find ( '.MDF' ) or \
-       0 < filename.find ( '.RAW' )    : 
+    fname_upper = filename.upper() 
+    if 0 < fname_upper.find ( '.MDF' ) or \
+       0 < fname_upper.find ( '.RAW' ) or :
         ioh = IOHelper ( Input = 'MDF'  , Output = 'ROOT' )
     else :
         ioh = IOHelper ( Input = 'ROOT' , Output = 'ROOT' )
         #
     iohstr = str(ioh) 
     if not _gaudi and not _local_dict_.has_key( iohstr ) : 
+        logger.info('Call for IOHelper.setupServices() ')
         ioh.setupServices ()
         _local_dict_[ iohstr ] = 1
         ##
