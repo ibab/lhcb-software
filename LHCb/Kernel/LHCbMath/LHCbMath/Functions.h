@@ -941,9 +941,9 @@ namespace Gaudi
        */
       Needham
       ( const double m0    = 3096.0     , 
-        const double sigma =   13.0     , 
+        const double sigma =   13.5     , 
         const double a0    =    1.975   , 
-        const double a1    =   -0.0011  , 
+        const double a1    =    0.0011  , 
         const double a2    =   -0.00018 ) ;
       /// destructor 
       ~Needham() ;
@@ -985,7 +985,7 @@ namespace Gaudi
     private:
       // ======================================================================
       /// the function itself 
-      Gaudi::Math::CrystalBall m_cb ; // the fucntion itself
+      Gaudi::Math::CrystalBall m_cb ; // the function itself
       /// a0-parameter 
       double m_a0       ;  // a0_parameter 
       /// a0-parameter 
