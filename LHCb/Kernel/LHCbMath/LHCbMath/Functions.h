@@ -1689,7 +1689,12 @@ namespace Gaudi
     // ========================================================================
     /** @class Flatte
      *
-     *  http://www.springerlink.com/content/q773737260425652/
+     *  S.M. Flatté
+     *  "Coupled-channel analysis of the \f$\pi\eta\f$ and \f$K\bar{K}\f$ 
+     *  systems near \f$K\bar{K}\f$threshold"
+     *  Physics Letters B, Volume 63, Issue 2, 19 July 1976, Pages 224-227
+     *
+     *  http://www.sciencedirect.com/science/article/pii/0370269376906547
      *
      *  \f$\pi\pi\f$-channel
      *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
@@ -1769,10 +1774,14 @@ namespace Gaudi
     // ========================================================================
     /** @class Flatte2
      *
-     *  http://www.springerlink.com/content/q773737260425652/
+     *  S.M. Flatté
+     *  "Coupled-channel analysis of the \f$\pi\eta\f$ and \f$K\bar{K}\f$ 
+     *  systems near \f$K\bar{K}\f$threshold"
+     *  Physics Letters B, Volume 63, Issue 2, 19 July 1976, Pages 224-227
+     *
+     *  http://www.sciencedirect.com/science/article/pii/0370269376906547
      *
      *  KK-channel
-     *
      *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
      *  @date 2011-11-30
      */
@@ -1801,6 +1810,9 @@ namespace Gaudi
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class Voight 
+     *  simple Voightian function 
+     */
     class GAUDI_API Voigt
       : public std::unary_function<double,double>     
     {
@@ -1972,7 +1984,7 @@ namespace Gaudi
      *    the third particle. 
      *   E.g. taking \f$\ell=0, L=1\f$, one can get the S-wave contribution for 
      *   \f$\pi^+\pi^-\f$-mass from \f$B^0\rightarrowJ/\psi\pi^+\pi^-\f$ decay.
-     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2012-04-01
      */
     class GAUDI_API LASS23L : public std::unary_function<double,double>     
