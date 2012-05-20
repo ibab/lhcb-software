@@ -121,7 +121,7 @@ class Track2MC(AlgoMC) :
         return AlgoMC.finalize ( self )
     
 # =============================================================================
-def configure ( datafiles , catalogs  = [] ) :
+def configure ( datafiles , catalogs  = [] , castor = False ) :
     """
     Perform the real configuration of the job
     """
@@ -131,19 +131,17 @@ def configure ( datafiles , catalogs  = [] ) :
     ##    
     from Configurables import DaVinci
     daVinci = DaVinci (
-        DataType   = 'MC09' ,
-        Simulation = True   
+        DataType      = '2012' ,
+        Simulation    = True   , 
+        HistogramFile = 'Track2MC_Histos.root'  
         )
-
-    from Configurables import HistogramPersistencySvc
-    HistogramPersistencySvc ( OutputFile = 'Track2MC_Histos.root' ) 
 
     ## configure  Track <--> MC relation table  
     import LoKiPhysMC.Track2MC_Configuration
     import LoKiMC.MC
     
     ## define the input data 
-    setData ( datafiles , catalogs ) 
+    setData ( datafiles , catalogs , castor = True ) 
     
     ##
     ## Dynamic Configuration: Jump into the wonderful world of GaudiPython 
@@ -178,17 +176,11 @@ if __name__ == '__main__' :
     print '*'*120  
   
     configure ( [
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000311_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000312_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000313_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000314_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000315_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000316_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000317_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000318_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000319_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000322_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'"]
+        '/lhcb/MC/DEV/ALLSTREAMS.DST/00018392/0000/00018392_00000016_1.allstreams.dst'
+        ] , castor = True
                 )
+    
+                
     
     run(10) 
 
