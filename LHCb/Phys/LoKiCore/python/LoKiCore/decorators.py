@@ -419,8 +419,14 @@ def decorateCallsCut ( funcs , calls ) :
             
             Uses:\n
             """
-            if not calls.__call__ (s,*a) : return False 
-            return True  
+            result = calls.__call__ ( s , *a )
+            
+            if isinstance ( result ,  ( int , long ) ) :
+                return True if result else False
+            
+            return result 
+            # if not calls.__call__ (s,*a) : return False 
+            # return True  
         
         _call_ . __doc__  += calls.__call__ . __doc__
 

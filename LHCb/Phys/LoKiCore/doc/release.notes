@@ -13,6 +13,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2012-05-20 - Vanya Belyaev
+
+ - improve decorators 
+
 !========================= LoKiCore v11r7 2012-02-28 =========================
 ! 2012-02-14 - Vanya Belyaev
  - small fix 
