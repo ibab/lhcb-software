@@ -55,7 +55,7 @@ __all__     = ( 'uDstConf' , )
 from Bender.Logger import getLogger 
 logger = getLogger( __name__ )
 # =============================================================================
-logger.warnig('Use BenderTools.MicroDST!')
+logger.warning('Use BenderTools.MicroDST!')
 # =============================================================================
 from BenderTools.MicroDST import uDstConf
 

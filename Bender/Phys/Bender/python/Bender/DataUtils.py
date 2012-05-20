@@ -84,7 +84,7 @@ _nsls   = 'nsls -l %s'
 #
 def inCastor ( fname            ,
                prefix = _castor ,
-               nsns   = _nsls   ) :
+               nsls   = _nsls   ) :
     """
     check if the file is accessible from castor:
 
@@ -95,11 +95,15 @@ def inCastor ( fname            ,
     >>> ok = inCastor ( fname , '' ) ## check the explicit location
     
     """
-    if 0 != fname.find ( prefix ) : fname = prefix + fname
 
+    if 0 != fname.find ( prefix ) : fname = prefix + fname
+    
+    ## use nsls command to check the file existence 
+    cmd = nsls % fname
+    
     try:
-        ## use nsls command to check the file existence 
-        cmd = nsls % fname    
+
+        ## 
         from subprocess import Popen, PIPE
         p   = Popen( cmd                 ,
                      shell     = True    ,
@@ -115,7 +119,9 @@ def inCastor ( fname            ,
         ## Require non-empty std-out: 
         for l in stdout : return True    ##  RETURN 
 
-    except : pass
+    except :
+        logger.error('inCastor: failure to use Popen, return False')
+        pass
     
     return False 
 
@@ -211,16 +217,18 @@ def extendfile2 ( filename , castor = False ) :
     ##
     #
     from GaudiConf import IOHelper
-    fname_upper = filename.upper() 
+    #
+    fname_upper = filename.upper()
+    #
     if 0 < fname_upper.find ( '.MDF' ) or \
-       0 < fname_upper.find ( '.RAW' ) or :
+       0 < fname_upper.find ( '.RAW' ) :
         ioh = IOHelper ( Input = 'MDF'  , Output = 'ROOT' )
     else :
         ioh = IOHelper ( Input = 'ROOT' , Output = 'ROOT' )
         #
     iohstr = str(ioh) 
     if not _gaudi and not _local_dict_.has_key( iohstr ) : 
-        logger.info('Call for IOHelper.setupServices() ')
+        logger.info('make use of IOHelper.setupServices() ')
         ioh.setupServices ()
         _local_dict_[ iohstr ] = 1
         ##

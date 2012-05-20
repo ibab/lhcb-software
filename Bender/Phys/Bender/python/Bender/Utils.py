@@ -80,7 +80,11 @@ __all__     = (
     'seekStripDecision' ,
     ##
     )
-
+# =============================================================================
+## logging
+# =============================================================================
+from Bender.Logger import getLogger 
+logger = getLogger( __name__ )
 ## ============================================================================
 ## post action 
 __Bender_Post_Action = None 
@@ -251,18 +255,27 @@ def ls  ( *args , **kwargs ) :
 
 # =============================================================================
 ## define "easy-get"-function to get data for TES 
-def get  ( path ) :
+def get  ( path , selector = lambda s : s ) :
     """
     Get object from  the Transient Store
-
+    
     >>> run(1)
-
+    
     >>> o = get('/Event/Strip')
     
     """
     _g  = appMgr()
     _es = _g.evtSvc()
-    return _es[ path ]
+    data = _es[path]
+    #
+    try : ## try to use the selector 
+        #
+        return selector ( data )
+        # 
+    except:
+        logger.error('Unable to use selector %s ' % selector )
+
+    return data 
 
 # =============================================================================
 ## dump all histogram from the given component 
