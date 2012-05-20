@@ -193,7 +193,7 @@ class RadLen(AlgoMC) :
     
 # =============================================================================
 ## configure the job
-def configure ( datafiles , catalogs = [] ) :
+def configure ( datafiles , catalogs = [] , castor = False ) :
     """
     Configure the job
     """
@@ -204,30 +204,21 @@ def configure ( datafiles , catalogs = [] ) :
     
     from Configurables import DaVinci
     daVinci = DaVinci (
-        DataType    = '2010' ,
-        Simulation  = True   ,
-        Persistency = 'ROOT'
+        DataType      = '2010' ,
+        Simulation    = True   ,
+        HistogramFile = 'RadLen_Histos.root' , 
+        TupleFile     = 'RadLen_Tuples.root' 
         ) 
-    
-    from Configurables import HistogramPersistencySvc 
-    HistogramPersistencySvc ( OutputFile = 'RadLen_Histos.root' )
-    
-    from Configurables import NTupleSvc 
-    NTupleSvc ( Output = [
-        "RADLEN DATAFILE='RadLen_Tuples.root' TYPE='ROOT' OPT='NEW'"] )
     
     from StandardParticles import StdNoPIDsPions
     InputParticles = [ StdNoPIDsPions.outputLocation() ]
     
     ## define/set the input data 
-    setData ( datafiles , catalogs )
+    setData ( datafiles , catalogs , castor )
     
     ##
     ## jump into the world of the actual Gaudi components!
     ## 
-    
-    ## get the actual application manager (create if needed)
-    gaudi = appMgr() 
     
     ## get the actual application manager (create if needed)
     gaudi = appMgr()
@@ -236,7 +227,6 @@ def configure ( datafiles , catalogs = [] ) :
     alg = RadLen(
         'RadLen'                   ,
         HistoPrint     = True      ,
-        NTupleLUN      = 'RADLEN'  , 
         PP2MCs         = [ 'Relations/Rec/ProtoP/Charged'] , 
         Inputs         = InputParticles 
         )
@@ -259,9 +249,10 @@ if __name__ == '__main__' :
     
     ## configure the job:
     inputdata = [
-        '/castor/cern.ch/grid/lhcb/MC/MC10/ALLSTREAMS.DST/00008919/0000/00008919_00000%03d_1.allstreams.dst' % i for i in range ( 1 , 90 ) 
+        '/lhcb/MC/MC10/ALLSTREAMS.DST/00008919/0000/00008919_00000%03d_1.allstreams.dst' % i for i in range ( 11 , 90 ) 
         ]
-    configure( inputdata )  
+    
+    configure( inputdata , castor = True )  
 
     ## run the job
     run(500)

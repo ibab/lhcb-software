@@ -136,22 +136,20 @@ class Bs2DsK(AlgoMC) :
         
 # =============================================================================
 ## configure the job
-def configure ( datafiles  , catalogs = [] ) :
+def configure ( datafiles  , catalogs = [] , castor = False ) :
     """
     Configure the job
     """
     
     from Configurables import DaVinci
     daVinci = DaVinci (
-        DataType    = '2010'  , 
-        Simulation  = True    ,
-        Persistency = 'ROOT'  , 
-        Lumi        = False   
+        DataType      = '2010'  , 
+        Simulation    = True    ,
+        Persistency   = 'ROOT'  ,
+        HistogramFile = 'Bs2DsK_Histos.root' ,       
+        Lumi          = False   
         )
     
-    from Configurables import HistogramPersistencySvc 
-    HistogramPersistencySvc ( OutputFile = 'Bs2DsK_Histos.root' ) 
-
     from StandardParticles import ( StdTightPions   ,
                                     StdNoPIDsKaons  )
     
@@ -159,7 +157,7 @@ def configure ( datafiles  , catalogs = [] ) :
     StdNoPIDsKaons = StdNoPIDsKaons . outputLocation ()
     
     ## define the input data 
-    setData ( datafiles , catalogs )
+    setData ( datafiles , catalogs , castor )
     
     gaudi = appMgr() 
     
@@ -193,9 +191,10 @@ if __name__ == '__main__' :
     
     ## configure the job:
     inputdata = [
-        '/castor/cern.ch/grid/lhcb/MC/MC10/ALLSTREAMS.DST/00008506/0000/00008506_00000%03d_1.allstreams.dst' % i for i in range ( 2 , 29 ) 
+        '/lhcb/MC/MC10/ALLSTREAMS.DST/00008506/0000/00008506_00000%03d_1.allstreams.dst' % i for i in range ( 2 , 29 ) 
         ]
-    configure( inputdata ) 
+    
+    configure( inputdata , castor = True ) 
 
 
     ## run the job

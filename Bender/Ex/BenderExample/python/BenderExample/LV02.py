@@ -169,7 +169,7 @@ class LV02Alg(AlgoMC) :
 
 # =============================================================================
 ## configure the job
-def configure ( datafiles , catalogs = [] ) :
+def configure ( datafiles , catalogs = [] , castor = False ) :
     """
     Configure the job
     """
@@ -180,16 +180,11 @@ def configure ( datafiles , catalogs = [] ) :
     
     from Configurables import DaVinci
     daVinci = DaVinci (
-        DataType    = '2010' , 
-        Simulation  = True   ,
-        Persistency = 'ROOT'
+        DataType      = '2010' , 
+        Simulation    = True   ,
+        HistogramFile = 'LV02_Histos.root' , 
+        TupleFile     = 'LV02_Tuples.root' 
         ) 
-    
-    from Configurables import HistogramPersistencySvc
-    HistogramPersistencySvc ( OutputFile = 'LV02_Histos.root' ) 
-    
-    from Configurables import NTupleSvc
-    NTupleSvc ( Output = [ "LV02 DATAFILE='LV02_Tuples.root' TYPE='ROOT' OPT='NEW'"] )
     
     from StandardParticles import StdTightPions , StdNoPIDsKaons
     InputParticles = [
@@ -198,7 +193,7 @@ def configure ( datafiles , catalogs = [] ) :
         ]
 
     ## define the input data 
-    setData ( datafiles , catalogs ) 
+    setData ( datafiles , catalogs , castor ) 
     
     ##
     ## Dynamic Configuration: Jump into the wonderful world of GaudiPython 
@@ -214,8 +209,6 @@ def configure ( datafiles , catalogs = [] ) :
         PP2MCs = [ 'Relations/Rec/ProtoP/Charged' ] ,
         ## print histos 
         HistoPrint = True   , 
-        ## LUN for N-tuples 
-        NTupleLUN  = 'LV02'  ,
         ## Input particles 
         Inputs     = InputParticles 
         )
@@ -240,10 +233,10 @@ if __name__ == '__main__' :
     
     ## configure the job:
     inputdata1 = [
-        '/castor/cern.ch/grid/lhcb/MC/MC10/ALLSTREAMS.DST/00008506/0000/00008506_00000%03d_1.allstreams.dst' % i for i in range ( 2 , 29 ) 
+        '/lhcb/MC/MC10/ALLSTREAMS.DST/00008506/0000/00008506_00000%03d_1.allstreams.dst' % i for i in range ( 2 , 29 ) 
         ]
     inputdata2 = [
-        '/castor/cern.ch/grid/lhcb/MC/MC10/ALLSTREAMS.DST/00008566/0000/00008566_00000%03d_1.allstreams.dst' % i for i in range ( 1 , 83 ) 
+        '/lhcb/MC/MC10/ALLSTREAMS.DST/00008566/0000/00008566_00000%03d_1.allstreams.dst' % i for i in range ( 1 , 83 ) 
         ]
     
     inputdata = []
@@ -252,7 +245,8 @@ if __name__ == '__main__' :
         inputdata += [ inputdata2[i] ]
 
         
-    configure( inputdata ) 
+    configure( inputdata , castor = True )
+    
     ## run the job
     run(1000)
     

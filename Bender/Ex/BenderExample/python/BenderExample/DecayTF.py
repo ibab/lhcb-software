@@ -187,7 +187,7 @@ class DecayTF(AlgoMC) :
 ## configure the job
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date 2010-05-31
-def configure ( datafiles , catalogs = [] ) :
+def configure ( datafiles , catalogs = [] , castor = False ) :
     """
     Configure the job
     """
@@ -197,25 +197,20 @@ def configure ( datafiles , catalogs = [] ) :
     
     from Configurables import DaVinci
     daVinci = DaVinci (
-        DataType    = '2010'  ,
-        Simulation  = True    ,
-        Persistency = 'ROOT'
+        DataType      = '2010'  ,
+        Simulation    = True    ,
+        HistogramFile = 'DecayTF_Histos.root' , 
+        TupleFile     = 'DecayTF_Tuples.root'
         )
-    
-    from Configurables import HistogramPersistencySvc
-    HistogramPersistencySvc ( OutputFile = 'DecayTF_Histos.root' ) 
-    
-    from Configurables import NTupleSvc
-    NTupleSvc ( Output = [ "PsiPhi DATAFILE='DecayTF_Tuples.root' TYPE='ROOT' OPT='NEW'"] )
-    
-    ## define input data 
-    setData  ( datafiles , catalogs )
     
     from StandardParticles import StdTightKaons, StdTightMuons 
     InputParticles = [
         StdTightKaons  . outputLocation () ,
         StdTightMuons  . outputLocation ()
         ]
+    
+    ## define input data 
+    setData  ( datafiles , catalogs , castor )
     
     ##
     ## Dynamic Configuration: Jump into the wonderful world of GaudiPython 
@@ -230,8 +225,6 @@ def configure ( datafiles , catalogs = [] ) :
         'PsiPhi'              , 
         ## print histos 
         HistoPrint = True     ,
-        ## N-tuple LUN 
-        NTupleLUN  = "PsiPhi" ,
         ## MC-relations
         PP2MCs = [ 'Relations/Rec/ProtoP/Charged' ] ,
         ## input particles :
@@ -242,8 +235,6 @@ def configure ( datafiles , catalogs = [] ) :
         'DecayTF'             ,
         ## print histos 
         HistoPrint = True     ,
-        ## N-tuple LUN 
-        NTupleLUN  = "PsiPhi" ,
         ## MC-relations
         PP2MCs = [ 'Relations/Rec/ProtoP/Charged' ] ,
         ## input particles :
@@ -271,9 +262,10 @@ if __name__ == '__main__' :
     
     ## configure the job:
     inputdata = [
-        '/castor/cern.ch/grid/lhcb/MC/MC10/ALLSTREAMS.DST/00008919/0000/00008919_00000%03d_1.allstreams.dst' % i for i in range ( 1 , 90 ) 
+        '/lhcb/MC/MC10/ALLSTREAMS.DST/00008919/0000/00008919_00000%03d_1.allstreams.dst' % i for i in range ( 1 , 90 ) 
         ]
-    configure( inputdata )  
+    
+    configure( inputdata , castor = True )  
 
     ## run the job
     run(51)

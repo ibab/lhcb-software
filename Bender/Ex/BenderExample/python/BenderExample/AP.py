@@ -92,7 +92,7 @@ class AP(AlgoMC) :
         self.select ( 'pi+' , pions , Q > 0 )
         self.select ( 'pi-' , pions , Q < 0 )
         
-        tup = self.nTuple ( 'my N-tuple' ) 
+        tup = self.nTuple ( 'AP' ) 
         
         ## construct dipions 
         dipion = self.loop ( 'pi+ pi-' , 'KS0' )
@@ -128,7 +128,7 @@ class AP(AlgoMC) :
 
 # =============================================================================
 ## configure the job
-def configure ( datafiles , catalogs = [] ) :
+def configure ( datafiles , catalogs = [] , castor = False ) :
     """
     Configure the job
     """
@@ -139,23 +139,17 @@ def configure ( datafiles , catalogs = [] ) :
     
     from Configurables import DaVinci    
     daVinci = DaVinci (
-        DataType    = '2010' , 
-        Simulation  = True   ,
-        Persistency = 'ROOT' 
+        DataType      = '2012'           , 
+        Simulation    = True             ,
+        HistogramFile = 'AP_Histos.root' ,
+        TupleFile     = 'AP_Tuples.root'        
         ) 
-    
-    from Configurables import HistogramPersistencySvc
-    HistogramPersistencySvc ( OutputFile = 'AP_Histos.root' )
-    
-    from Configurables import NTupleSvc 
-    NTupleSvc ( Output = [ "AP DATAFILE='AP_Tuples.root' TYPE='ROOT' OPT='NEW'"] )
-
     
     from StandardParticles import StdNoPIDsPions    
     StdNoPIDsPions = StdNoPIDsPions.outputLocation()
     
     ## define/set the input data 
-    setData ( datafiles , catalogs )
+    setData ( datafiles , catalogs , castor )
     
     ##
     ## jump into the wonderful world of the actual Gaudi components!
@@ -171,8 +165,6 @@ def configure ( datafiles , catalogs = [] ) :
         PP2MCs         = [ 'Relations/Rec/ProtoP/Charged' ] ,
         ## print histograms ? 
         HistoPrint     = True  ,
-        ## LUN for N-tuples 
-        NTupleLUN      = 'AP'  ,
         ## input particles : 
         Inputs         = [ StdNoPIDsPions ]
         )
@@ -196,9 +188,10 @@ if __name__ == '__main__' :
     
     ## configure the job:
     inputfiles = [
-        '/castor/cern.ch/grid/lhcb/MC/MC10/ALLSTREAMS.DST/00008941/0000/00008941_00000%03d_1.allstreams.dst' % i for i in range ( 1 , 90 ) 
+        '/lhcb/MC/DEV/ALLSTREAMS.DST/00018392/0000/00018392_00000%03d_1.allstreams.dst' % i for i in range ( 1 , 30 ) 
         ]
-    configure ( inputfiles ) 
+    
+    configure ( inputfiles , castor = True ) 
     
     ## run the job
     run(1000)

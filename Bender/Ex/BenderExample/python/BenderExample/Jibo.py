@@ -240,7 +240,7 @@ def configure ( datafiles , catalogs  = [] , castor = False ) :
     
     RootInTES = 'Leptonic'
     
-    from Bender.MicroDST import uDstConf 
+    from BenderTools.MicroDST import uDstConf 
     uDstConf(RootInTES)
     
     from Configurables import Gaudi__IODataManager as IODataManager
@@ -275,8 +275,7 @@ if '__main__' == __name__ :
     print ' Version : %s ' %   __version__
     print ' Date    : %s ' %   __date__
     print '*'*120  
- 
-    
+     
     data = [
         'PFN:castor:/castor/cern.ch/user/j/jhe/PreStripping18/Run97120_DVv30r1p2_Leptonic.mdst'
         ]

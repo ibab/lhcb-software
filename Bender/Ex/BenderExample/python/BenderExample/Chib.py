@@ -294,7 +294,7 @@ if '__main__' == __name__ :
     
     configure ( data , castor = True )
     
-    run ( 100 )
+    run ( 500 )
     
     gaudi = appMgr()
 

@@ -163,7 +163,7 @@ class Lam0(Algo) :
   
 # =============================================================================
 ## configure the job 
-def configure ( datafiles , catalogs = [] ) :
+def configure ( datafiles , catalogs = [] , castor = False ) :
     """
     Job configuration 
     """
@@ -176,17 +176,13 @@ def configure ( datafiles , catalogs = [] ) :
     davinci = DaVinci (
         DataType      = '2010' ,
         PrintFreq     = 1000   ,
-        Persistency   = 'ROOT' , 
         HistogramFile = 'Lam0_Akshay_Histos.root' ,
+        TupleFile     = 'Lam0_Akshay_Tuples.root' , 
         Lumi          = False 
         )
     
     from Configurables import CondDB
     CondDB( IgnoreHeartBeat = True ) 
-    
-    from GaudiConf.Configuration import NTupleSvc
-    ntSvc = NTupleSvc()
-    ntSvc.Output += [ "LAM0 DATAFILE='Lam0_Akshay_Tuples.root' TYPE='ROOT' OPT='NEW'" ]
     
     from StandardParticles import ( StdLoosePions        ,
                                     StdNoPIDsDownPions   ,
@@ -198,8 +194,10 @@ def configure ( datafiles , catalogs = [] ) :
         StdLooseProtons      .outputLocation () ,
         StdNoPIDsDownProtons .outputLocation () 
         ]
+
+    #
     ## define the input data:
-    setData ( datafiles , catalogs )
+    setData ( datafiles , catalogs , castor )
     
     ##
     ## 2. Jump into the wonderful world of the actual Gaudi components!
@@ -211,7 +209,6 @@ def configure ( datafiles , catalogs = [] ) :
     ## create local algorithm:
     alg = Lam0(
         'Lam0'             ,   ## Algorithm name
-        NTupleLUN = 'LAM0' ,   ## Logical unit for output file with N-tuples 
         Inputs    = InputParticles
         )
     
@@ -235,10 +232,10 @@ if '__main__' == __name__ :
     ## minbias-stream 
     inputdata = [
         ## min-bias stream 
-        '/castor/cern.ch/grid' + '/lhcb/data/2010/MINIBIAS.DST/00008378/0000/00008378_00000%03d_1.minibias.dst' % n for n in range ( 1 , 658 )
+        '/lhcb/data/2010/MINIBIAS.DST/00008378/0000/00008378_00000%03d_1.minibias.dst' % n for n in range ( 1 , 658 )
         ]
     
-    configure ( inputdata ) 
+    configure ( inputdata , castor = True ) 
     
     run ( 500 )
 

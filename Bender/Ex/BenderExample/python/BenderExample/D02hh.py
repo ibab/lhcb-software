@@ -117,7 +117,7 @@ class D02hh(AlgoMC) :
 
 # =============================================================================
 ## configure the job
-def configure ( datafiles , catalogs = [] ) :
+def configure ( datafiles , catalogs = [] , castor = False ) :
     """
     Configure the job
     """
@@ -128,14 +128,11 @@ def configure ( datafiles , catalogs = [] ) :
     
     from Configurables import DaVinci
     daVinci = DaVinci (
-        DataType    = '2010' , 
-        Simulation  = True   ,
-        Persistency = 'ROOT' ,        
-        Lumi        = False 
+        DataType      = '2010' , 
+        Simulation    = True   ,
+        HistogramFile = 'D02hh_Histos.root' ,
+        Lumi          = False 
         )
-    
-    from Configurables import HistogramPersistencySvc
-    HistogramPersistencySvc ( OutputFile = 'D02hh_Histos.root' ) 
 
     from StandardParticles import StdNoPIDsKaons, StdNoPIDsPions
     InputParticles = [
@@ -144,7 +141,7 @@ def configure ( datafiles , catalogs = [] ) :
         ]
 
     ## define the input data 
-    setData ( datafiles , catalogs )
+    setData ( datafiles , catalogs , castor )
 
     ##
     ## Dynamic Configuration: Jump into the wonderful world of GaudiPython 
@@ -184,9 +181,10 @@ if __name__ == '__main__' :
     
     ## configure the job:
     inputdata = [
-        '/castor/cern.ch/grid/lhcb/MC/MC10/ALLSTREAMS.DST/00008581/0000/00008581_00000%03d_1.allstreams.dst' % i for i in range ( 1 , 90 ) 
+        '/lhcb/MC/MC10/ALLSTREAMS.DST/00008581/0000/00008581_00000%03d_1.allstreams.dst' % i for i in range ( 1 , 90 ) 
         ]
-    configure( inputdata ) 
+    
+    configure( inputdata , castor = True ) 
 
     ## run the job
     run ( 501 )

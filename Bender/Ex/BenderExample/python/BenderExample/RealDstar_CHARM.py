@@ -123,7 +123,7 @@ class Dstar(Algo) :
 
 # =============================================================================
 ## configure the job 
-def configure ( datafiles , catalogs = [] ) :
+def configure ( datafiles , catalogs = [] , castor = False ) :
     """
     Job configuration 
     """
@@ -142,10 +142,9 @@ def configure ( datafiles , catalogs = [] ) :
         PrintFreq       = 1000   ,
         EventPreFilters = fltrs.filters('Filters') ,
         HistogramFile   = 'RealDstar_CHARM_Histos.root' ,
+        TupleFile       = 'RealDstar_CHARM.root' , 
         ##
-        Lumi            = True ,
-        ##
-        Persistency = 'ROOT'
+        Lumi            = True 
         )
     
     from Configurables import CondDB
@@ -153,10 +152,9 @@ def configure ( datafiles , catalogs = [] ) :
     
     from Configurables import NTupleSvc
     ntSvc = NTupleSvc() 
-    ntSvc.Output += [ "DSTAR DATAFILE='RealDstar_CHARM.root' TYPE='ROOT' OPT='NEW'" ]
     
     ## define the input data:
-    setData ( datafiles , catalogs )
+    setData ( datafiles , catalogs , castor )
     
     ##
     ## 2. Jump into the wonderful world of the actual Gaudi components!
@@ -169,8 +167,6 @@ def configure ( datafiles , catalogs = [] ) :
     alg = Dstar (
         #
         'Dstar'             ,   ## Algorithm name
-        #
-        NTupleLUN = 'DSTAR' ,   ## Logical unit for output file with N-tuples
         #
         ## RecoStripping-09 conventions! 
         RootInTES =  '/Event/Charm'  , 
@@ -197,10 +193,10 @@ if '__main__' == __name__ :
     print '*'*120  
 
     files = [
-        '/castor/cern.ch/grid/lhcb/data/2010/CHARM.MDST/00008383/0000/00008383_00000%03d_1.charm.mdst' % i for i in range(1,650) 
+        '/lhcb/data/2010/CHARM.MDST/00008383/0000/00008383_00000%03d_1.charm.mdst' % i for i in range(1,650) 
         ]
     
-    configure ( files )
+    configure ( files , castor = True )
     
     ## run the job
     run (2000)

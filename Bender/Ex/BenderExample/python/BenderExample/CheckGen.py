@@ -95,24 +95,20 @@ class CheckGen(AlgoMC) :
    
 # =============================================================================
 ## configure the job
-def configure ( datafiles , catalogs = [] ) :
+def configure ( datafiles , catalogs = [] , castor = False ) :
     """
     Configure the job
     """
     
     from Configurables import DaVinci
     daVinci = DaVinci (
-        DataType    = '2010' , 
-        Simulation  = True   ,
-        Persistency = 'ROOT'
+        DataType      = '2010' , 
+        Simulation    = True   ,
+        HistogramFile = 'Photos_Histos_.root'
         ) 
     
-    from Configurables import HistogramPersistencySvc
-    HistogramPersistencySvc ( OutputFile = 'Photos_Histos_.root') 
-    
-    
     ## define/set the input data 
-    setData ( datafiles , catalogs )
+    setData ( datafiles , catalogs , castor )
     
     ##
     ## jump into the world of the actual Gaudi components!
@@ -149,9 +145,10 @@ if __name__ == '__main__' :
     
     ## configure the job:
     inputdata = [
-        '/castor/cern.ch/grid/lhcb/MC/MC10/ALLSTREAMS.DST/00008506/0000/00008506_00000%03d_1.allstreams.dst' % i for i in range ( 2 , 29 ) 
+        '/lhcb/MC/MC10/ALLSTREAMS.DST/00008506/0000/00008506_00000%03d_1.allstreams.dst' % i for i in range ( 2 , 29 ) 
         ]
-    configure ( inputdata ) 
+    
+    configure ( inputdata , castor = True ) 
     
     ## run the job
     run (5000)

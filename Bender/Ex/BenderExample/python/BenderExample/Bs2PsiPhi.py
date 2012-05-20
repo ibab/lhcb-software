@@ -226,7 +226,7 @@ class Bs2PsiPhi(AlgoMC) :
     
 # =============================================================================
 ## configure the job
-def configure ( datafiles , catalogs = [] ) :
+def configure ( datafiles , catalogs = [] , castor = False ) :
     """
     Configure the job
     """
@@ -238,14 +238,9 @@ def configure ( datafiles , catalogs = [] ) :
     daVinci = DaVinci (
         DataType    = '2010' ,
         Simulation  = True   ,
-        Persistency = 'ROOT'
+        HistogramFile = 'Bs2PsiPhi_Histos.root' , 
+        TupleFile     = 'Bs2PsiPhi_Tuples.root' 
         )
-    
-    from Configurables import HistogramPersistencySvc
-    HistogramPersistencySvc ( OutputFile = 'Bs2PsiPhi_Histos.root' ) 
-    
-    from Configurables import NTupleSvc
-    NTupleSvc ( Output = [ "PsiPhi DATAFILE='Bs2PsiPhi_Tuples.root' TYPE='ROOT' OPT='NEW'"] )
     
     from StandardParticles import StdTightKaons, StdTightMuons 
     InputParticles = [
@@ -254,7 +249,7 @@ def configure ( datafiles , catalogs = [] ) :
         ]
 
     ## define input data 
-    setData  ( datafiles , catalogs )
+    setData  ( datafiles , catalogs , castor )
     
     ##
     ## Dynamic Configuration: Jump into the wonderful world of GaudiPython 
@@ -268,8 +263,6 @@ def configure ( datafiles , catalogs = [] ) :
         'PsiPhi'              , 
         ## print histos 
         HistoPrint = True     ,
-        ## N-tuple LUN 
-        NTupleLUN  = "PsiPhi" ,
         ## MC-relations
         PP2MCs     = [ 'Relations/Rec/ProtoP/Charged' ] ,
         ## input particles :
@@ -295,9 +288,10 @@ if __name__ == '__main__' :
     
     ## configure the job:
     inputdata = [
-        '/castor/cern.ch/grid/lhcb/MC/MC10/ALLSTREAMS.DST/00008919/0000/00008919_00000%03d_1.allstreams.dst' % i for i in range ( 1 , 90 ) 
+        '/lhcb/MC/MC10/ALLSTREAMS.DST/00008919/0000/00008919_00000%03d_1.allstreams.dst' % i for i in range ( 1 , 90 ) 
         ]
-    configure( inputdata )  
+    
+    configure( inputdata , castor = True )  
     
     ## run the job
     run(501)

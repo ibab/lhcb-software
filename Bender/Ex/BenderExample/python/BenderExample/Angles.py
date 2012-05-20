@@ -61,7 +61,6 @@ from   ROOT           import Double
 from   PartProp.Nodes import * 
 # =============================================================================
 
-
 IP2VVPartAngleCalculator   = cpp.IP2VVPartAngleCalculator
 IP2VVMCPartAngleCalculator = cpp.IP2VVMCPartAngleCalculator
 
@@ -452,7 +451,7 @@ class Angles (AlgoMC) :
 ## configure the job
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date 2010-05-31
-def configure ( datafiles , catalogs = [] ) :
+def configure ( datafiles , catalogs = [] , castor = False ) :
     """
     Configure the job
     """
@@ -462,19 +461,16 @@ def configure ( datafiles , catalogs = [] ) :
     
     from Configurables import DaVinci
     daVinci = DaVinci (
-        DataType    = '2010'  ,
-        Simulation  = True    ,
-        Persistency = 'ROOT'
-        )
-    
-    from Configurables import HistogramPersistencySvc
-    HistogramPersistencySvc ( OutputFile = 'Angles_Histos.root' ) 
-    
-    from Configurables import NTupleSvc
-    NTupleSvc ( Output = [ "PsiPhi DATAFILE='Angles_Tuples.root' TYPE='ROOT' OPT='NEW'"] )
-    
-    ## define input data 
-    setData  ( datafiles , catalogs )
+        DataType      = '2010'  ,
+        Simulation    = True    ,
+        Persistency   = 'ROOT'  ,
+        HistogramFile = 'Angles_Histos.root' ,
+        TupleFile     = 'Angles_Tuples.root' )
+
+    #
+    ## define input data
+    #
+    setData  ( datafiles , catalogs , castor )
     
     from StandardParticles import StdTightKaons, StdTightMuons
     
@@ -494,8 +490,6 @@ def configure ( datafiles , catalogs = [] ) :
         'PsiPhi'              , 
         ## print histos 
         HistoPrint = True     ,
-        ## N-tuple LUN 
-        NTupleLUN  = "PsiPhi" ,
         ## MC-relations
         PP2MCs = [ 'Relations/Rec/ProtoP/Charged' ] ,
         ## input particles :
@@ -534,9 +528,10 @@ if __name__ == '__main__' :
     
     ## configure the job:
     inputdata = [
-        '/castor/cern.ch/grid/lhcb/MC/MC10/ALLSTREAMS.DST/00008919/0000/00008919_00000%03d_1.allstreams.dst' % i for i in range ( 1 , 90 ) 
+        '/lhcb/MC/MC10/ALLSTREAMS.DST/00008919/0000/00008919_00000%03d_1.allstreams.dst' % i for i in range ( 1 , 90 ) 
         ]
-    configure( inputdata )  
+
+    configure( inputdata , castor = True )  
     
     ## run the job
     run(501)
