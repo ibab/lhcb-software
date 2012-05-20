@@ -5,6 +5,9 @@
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
 
+! 2012-05-20 - Vanya Belyaev
+ - improve dictionaries 
+
 !========================= LoKiAlgo v9r5 2012-03-01 =========================
 
 ! 2012-02-17 - Vanya Belyaev
