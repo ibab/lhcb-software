@@ -45,6 +45,85 @@
  *                 by $Author$
  */
 // ============================================================================
+
+namespace LoKi
+{
+  // ==========================================================================
+  namespace Dicts 
+  {
+    // ========================================================================
+    template <>
+    class CutCalls<LHCb::ProtoParticle>
+    {
+    private:
+      // ======================================================================
+      typedef LHCb::ProtoParticle                                        Type ;
+      typedef LoKi::BasicFunctors<const LHCb::ProtoParticle*>::Predicate Fun  ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      // __call__
+      static Fun::result_type __call__ 
+      ( const Fun&            fun ,  
+        const Type*           o   ) { return fun ( o ) ;  }
+      // __call__
+      static Fun::result_type __call__ 
+      ( const Fun&            fun , 
+        const SmartRef<Type>& o   ) { return fun ( o ) ; }
+      //
+      // __call__ as filter 
+      // 
+      // __call__
+      static Type::ConstVector __call__ 
+      ( const Fun& fun  , const Type::ConstVector&          o )
+      { return __rrshift__ ( fun , o ) ; }
+      // __call__
+      static Type::ConstVector __call__ 
+      ( const Fun& fun  , const Type::Container*            o ) 
+      { return __rrshift__ ( fun , o ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      // __rrshift__
+      static Type::ConstVector __rrshift__ 
+      ( const Fun& fun  , const Type::ConstVector&               o ) 
+      { 
+        Type::ConstVector res  ;
+        res.reserve ( o.size () ) ;
+        LoKi::apply_filter 
+          ( o.begin() , o.end() , fun , std::back_inserter ( res ) ) ;
+        return res ; 
+      }
+      // __rrshift__
+      static Type::ConstVector __rrshift__ 
+      ( const Fun& fun  , const Type::Container*            o ) 
+      { 
+        Type::ConstVector res  ;
+        if ( 0 == o ) { return res ; }
+        res.reserve ( o->size () ) ;
+        LoKi::apply_filter 
+          ( o->begin() , o->end() , fun , std::back_inserter ( res ) ) ;
+        return res ; 
+      }   
+      // __rrshift__
+      static Fun::result_type  __rrshift__ 
+      ( const Fun& fun  , const Type*           o ) { return fun ( o ) ; }
+      // __rrshift__
+      static Fun::result_type  __rrshift__ 
+      ( const Fun& fun  , const SmartRef<Type>& o ) { return fun ( o ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      static LoKi::FunctorFromFunctor<const Type*,bool> __rshift__            
+      ( const Fun& fun  , const Fun&                        o ) 
+      { return fun >> o  ; }
+      // ======================================================================
+    } ;
+    // ========================================================================
+  } //                                             end of namespace LoKi::Dicts
+  // ==========================================================================
+} // 
+// ============================================================================
 namespace
 {
   // ==========================================================================

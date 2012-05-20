@@ -6,6 +6,9 @@
 ! Purpose     : New package to deal with ProtoParticles 
 ! -----------------------------------------------------------------------------
 
+! 2012-05-20 - Vanya Belyaev
+ - imporve dictionareis 
+
 !========================= LoKiProtoParticles v2r0p1 2011-06-16 =========================
 ! 2011-06-05 - Vanya Belyaev
  - fix ICC warnings 
