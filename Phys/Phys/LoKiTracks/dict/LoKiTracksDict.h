@@ -100,11 +100,22 @@ namespace LoKi
       }
       // __rrshift__
       static std::vector<Fun::result_type> __rrshift__ 
-      ( const Fun& fun  , const LHCb::Track::Container&       o ) 
+      ( const Fun& fun  , const LHCb::Track::Container*       o ) 
       {
         std::vector<Fun::result_type> res  ;
-        res.reserve ( o.size () ) ;
-        LoKi::apply ( o.begin() , o.end() , fun , std::back_inserter ( res ) ) ;
+        if ( 0 == o ) { return res ; }
+        res.reserve ( o->size () ) ;
+        LoKi::apply ( o->begin() , o->end() , fun , std::back_inserter ( res ) ) ;
+        return res ;
+      }
+      // __rrshift__
+      static std::vector<Fun::result_type> __rrshift__ 
+      ( const Fun& fun  , const LHCb::Track::Selection*       o ) 
+      {
+        std::vector<Fun::result_type> res  ;
+        if ( 0 == o ) { return res ; }
+        res.reserve ( o->size () ) ;
+        LoKi::apply ( o->begin() , o->end() , fun , std::back_inserter ( res ) ) ;
         return res ;
       }
       // __rrshift__
@@ -154,6 +165,33 @@ namespace LoKi
       static Fun::result_type __call__ 
       ( const Fun&            fun , 
         const SmartRef<Type>& o   ) { return fun ( o ) ; }
+      //
+      // __call__ as filter 
+      // 
+      // __call__
+      static Type::ConstVector __call__ 
+      ( const Fun& fun  , const Type::ConstVector&          o )
+      { return __rrshift__ ( fun , o ) ; }
+      // __call__
+      static Type::ConstVector __call__ 
+      ( const Fun& fun  , const Type::Range&                o ) 
+      { return __rrshift__ ( fun , o ) ; }
+      // __call__
+      static Type::ConstVector __call__ 
+      ( const Fun& fun  , const Type::Container*            o ) 
+      { return __rrshift__ ( fun , o ) ; }
+      // __call__
+      static Type::ConstVector __call__ 
+      ( const Fun& fun  , const Type::Selection*            o ) 
+      { return __rrshift__ ( fun , o ) ; }
+      // __call__
+      static Type::ConstVector __call__ 
+      ( const Fun& fun  , const SmartRefVector<Type>&       o ) 
+      { return __rrshift__ ( fun , o ) ; }
+      // __call__ 
+      static Type::Vector      __call__ 
+      ( const Fun& fun  , const Type::Vector&               o ) 
+      { return __rrshift__ ( fun , o ) ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -179,12 +217,24 @@ namespace LoKi
       }
       // __rrshift__
       static Type::ConstVector __rrshift__ 
-      ( const Fun& fun  , const Type::Container&            o ) 
+      ( const Fun& fun  , const Type::Container*            o ) 
       { 
         Type::ConstVector res  ;
-        res.reserve ( o.size () ) ;
+        if ( 0 == o ) { return res ; }
+        res.reserve ( o->size () ) ;
         LoKi::apply_filter 
-          ( o.begin() , o.end() , fun , std::back_inserter ( res ) ) ;
+          ( o->begin() , o->end() , fun , std::back_inserter ( res ) ) ;
+        return res ; 
+      }   
+      // __rrshift__
+      static Type::ConstVector __rrshift__ 
+      ( const Fun& fun  , const Type::Selection*            o ) 
+      { 
+        Type::ConstVector res  ;
+        if ( 0 == o ) { return res ; }
+        res.reserve ( o->size () ) ;
+        LoKi::apply_filter 
+          ( o->begin() , o->end() , fun , std::back_inserter ( res ) ) ;
         return res ; 
       }   
       // __rrshift__
