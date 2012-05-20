@@ -178,21 +178,97 @@ namespace LoKi
       // ======================================================================
     public:
       // ======================================================================
+      // __call__ 
       static Fun::result_type __call__ 
-      ( const Fun& fun  , const Type*                       o ) { return fun ( o ) ; }
+      ( const Fun& fun  , const Type*                   o ) { return fun ( o ) ; }
+      // __call__ 
       static Fun::result_type __call__ 
-      ( const Fun& fun  , const LHCb::DecayTree&            o ) { return fun ( o ) ; }
+      ( const Fun& fun  , const LHCb::DecayTree&        o ) { return fun ( o ) ; }
+      // __call__ 
       static Fun::result_type __call__ 
-      ( const Fun& fun  , const SmartRef<Type>&             o ) { return fun ( o ) ; }
+      ( const Fun& fun  , const SmartRef<Type>&         o ) { return fun ( o ) ; }
+      //
+      // __call__ as filter 
+      // __rrshift__ 
+      static Type::ConstVector __call__ 
+      ( const Fun& fun  , const Type::ConstVector&      o ) 
+      { return __rrshift__ ( fun, o ) ; }      
+      // __rrshift__ 
+      static Type::ConstVector __call__ 
+      ( const Fun& fun  , const Type::Container*        o ) 
+      { return __rrshift__ ( fun, o ) ; }      
+      // __rrshift__ 
+      static Type::ConstVector __call__ 
+      ( const Fun& fun  , const Type::Selection*        o ) 
+      { return __rrshift__ ( fun, o ) ; }      
+      // __rrshift__ 
+      static Type::ConstVector __call__ 
+      ( const Fun& fun  , const Type::Range&            o ) 
+      { return __rrshift__ ( fun, o ) ; }      
+      // __rrshift__ 
+      static Type::ConstVector __call__ 
+      ( const Fun& fun  , const SmartRefVector<Type>&   o ) 
+      { return __rrshift__ ( fun, o ) ; }      
+      //      
       // ======================================================================
+    public: // __rrshift__
+      // ======================================================================
+      // __rrshift__ 
       static Type::ConstVector __rrshift__ 
       ( const Fun& fun  , const Type::ConstVector& o ) { return o >> fun  ; }
+      // __rrshift__ 
+      static Type::ConstVector __rrshift__ 
+      ( const Fun& fun  , const Type::Container*   o ) 
+      {
+        Type::ConstVector res  ;
+        if ( 0 == o ) { return res ; }
+        res.reserve ( o->size () ) ;
+        LoKi::apply_filter 
+          ( o->begin() , o->end() , fun , std::back_inserter ( res ) ) ;
+        return res ; 
+      }
+      // __rrshift__ 
+      static Type::ConstVector __rrshift__ 
+      ( const Fun& fun  , const Type::Selection*   o ) 
+      {
+        Type::ConstVector res  ;
+        if ( 0 == o ) { return res ; }
+        res.reserve ( o->size () ) ;
+        LoKi::apply_filter 
+          ( o->begin() , o->end() , fun , std::back_inserter ( res ) ) ;
+        return res ; 
+      }
+      // __rrshift__ 
+      static Type::ConstVector __rrshift__ 
+      ( const Fun& fun  , const Type::Range&   o ) 
+      {
+        Type::ConstVector res  ;
+        res.reserve ( o.size () ) ;
+        LoKi::apply_filter 
+          ( o.begin() , o.end() , fun , std::back_inserter ( res ) ) ;
+        return res ; 
+      }
+      // __rrshift__ 
+      static Type::ConstVector __rrshift__ 
+      ( const Fun& fun  , const SmartRefVector<Type>&   o ) 
+      {
+        Type::ConstVector res  ;
+        res.reserve ( o.size () ) ;
+        LoKi::apply_filter 
+          ( o.begin() , o.end() , fun , std::back_inserter ( res ) ) ;
+        return res ; 
+      }
+      // __rrshift__      
+      static Fun::result_type  __rrshift__
+      ( const Fun& fun  , const Type*              o ) { return fun ( o ) ; }
+      // __rrshift__      
       static Fun::result_type  __rrshift__ 
-      ( const Fun& fun  , const Type*                       o ) { return fun ( o ) ; }
+      ( const Fun& fun  , const LHCb::DecayTree&   o ) { return fun ( o ) ; }
+      // __rrshift__      
       static Fun::result_type  __rrshift__ 
-      ( const Fun& fun  , const LHCb::DecayTree&            o ) { return fun ( o ) ; }
-      static Fun::result_type  __rrshift__ 
-      ( const Fun& fun  , const SmartRef<Type>&             o ) { return fun ( o ) ; }
+      ( const Fun& fun  , const SmartRef<Type>&    o ) { return fun ( o ) ; }
+      // ======================================================================
+    public: // __rshift__
       // ======================================================================
       static LoKi::FunctorFromFunctor<const Type*,bool> __rshift__            
       ( const Fun& fun  , const Fun&                        o ) { return fun >> o  ; }
