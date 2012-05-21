@@ -378,6 +378,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt2Member,bindMembers
         TOSParticleTagger = TisTosParticleTagger(name+"Tagger")
         TOSParticleTagger.TisTosSpecs = {"Hlt1TrackAllL0Decision%TOS":0,
+                                         "Hlt1TrackAllL0TightDecision%TOS":0,
                                          "Hlt1TrackMuonDecision%TOS":0,
                                          "Hlt1TrackPhotonDecision%TOS":0}
         TOSParticleTagger.NoRegex = True

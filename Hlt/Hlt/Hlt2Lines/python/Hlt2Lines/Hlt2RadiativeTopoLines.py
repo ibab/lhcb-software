@@ -57,7 +57,7 @@ class Hlt2RadiativeTopoConf(HltLinesConfigurableUser):
                'HLT1Filter'    : "HLT_PASS_RE('Hlt1(?!ODIN)(?!L0)(?!Lumi)(?!Tell1)(?!MB)(?!Velo)(?!BeamGas)(?!Incident).*Decision')" ,
                # TOS
                'USE_TRACKTOS'       : True   ,
-               'TisTosParticleTaggerSpecs': { "Hlt1TrackAllL0Decision%TOS": 0, "Hlt1TrackPhotonDecision%TOS":0 } ,
+               'TisTosParticleTaggerSpecs': { "Hlt1TrackAllL0Decision%TOS": 0, "Hlt1TrackAllL0TightDecision%TOS": 0, "Hlt1TrackPhotonDecision%TOS":0 } ,
                # IDs
                'HltANNSvcID'   : {'RadiativeTopoTrack' : 50515, 
                                   'RadiativeTopoPhoton': 50516} ,

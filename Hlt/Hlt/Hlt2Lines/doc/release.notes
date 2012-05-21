@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2012-05-21 S.Stahl
+ - Added TrackAllL0Tight to TisTosSpecs of Topo and RadiativeTopo.
+
 !========================= Hlt2Lines v8r21 2012-05-16 =========================
 ! 2012-05-15 - V. Gligorov
  - Tighten several lines
