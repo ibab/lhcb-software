@@ -149,14 +149,6 @@ def configure ( options , arguments ) :
         options.DataType = 'MC09'
         logger.info('set DataType to be MC09')
         
-    if options.Simulation and '2010' == options.DataType :
-        options.DataType = 'MC10'
-        logger.info('set DataType to be MC10')
-        
-    if options.Simulation and '2011' == options.DataType :
-        options.DataType = 'MC11'
-        logger.info('set DataType to be MC11')
-            
     #
     ## start the actual action:
     #

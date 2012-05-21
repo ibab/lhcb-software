@@ -55,7 +55,7 @@ __all__     = ( 'uDstConf' , )
 from Bender.Logger import getLogger 
 logger = getLogger( __name__ )
 # =============================================================================
-## configure variopsi uDst settings from RootInTES 
+## configure various uDst settings from RootInTES 
 def uDstConf ( rootInTes ) :
     """
     Various settings for mDst
