@@ -4,6 +4,7 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================= HltSettings v5r37 2012-05-21 =========================
 ! 2012-05-21 - Eric van Herwijnen
  - remove prescale on Hlt2DisplVertices; Hlt2Forward at 0.00001
 
