@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+! 2012-05-21 - Gerhard Raven
+ - specify access mode when creating lockfile
+
 ! 2012-05-03 - Gerhard Raven
  - add low-level locking protocol to avoid multiple writers in different processes
    to ConfigTarFileAccessSvc

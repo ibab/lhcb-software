@@ -182,7 +182,7 @@ namespace ConfigTarFileAccessSvc_details {
             // filename in the same directory with O_EXCL and O_CREAT set. If O_CREAT is not set, 
             // the effect is undefined.
             //
-            m_lock = open(lckname.c_str(), O_RDWR|O_CREAT|O_EXCL);
+            m_lock = open(lckname.c_str(), O_RDWR|O_CREAT|O_EXCL,S_IRUSR|S_IWUSR);
             if (m_lock < 0) { 
                 cerr << "trying to open  " << m_name << " for writing, but lockfile " << lckname << " already exists." << endl;
                 cerr << "This (most likely) means that some other process intends to write into " << m_name << endl;
