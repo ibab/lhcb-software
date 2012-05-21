@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2012-05-21 - Paul Szczypka
+ - Small corrections to RunTimeError execptions in Configuration.py
+
 !========================= Gauss v42r0 2012-05-15 ============================
 ! 2012-05-12 - Gloria Corti
  - Modify reference files for qmtests after running them with v41r3.

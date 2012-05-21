@@ -118,10 +118,10 @@ class Gauss(LHCbConfigurableUser):
         for subdet in self.TrackingSystem + self.PIDSystem:
             for det in self.getProp('DetectorSim')[subdet]:
                 if self.getProp('DetectorGeo')[subdet].count(det) == 0 :
-                    raise RuntimeError("Simulation have been required for '%s' sub-detector but it have been removed of Geometry",det)
+                    raise RuntimeError("Simulation have been required for '%s' sub-detector but it have been removed of Geometry" %det)
             for det in self.getProp('DetectorMoni')[subdet]:
                 if self.getProp('DetectorSim')[subdet].count(det) == 0 :
-                    raise RuntimeError("Monitoring have been required for '%s' sub-detector but it have been removed of Simulations",det)
+                    raise RuntimeError("Monitoring have been required for '%s' sub-detector but it have been removed of Simulations" %det)
     
     ##
     ##
