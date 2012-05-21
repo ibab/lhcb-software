@@ -55,36 +55,7 @@ __all__     = (
     'getLogger' , 
     )
 # =============================================================================
-import logging
-
-# =============================================================================
-## get logger 
-def getLogger ( name                                           ,
-                fmt  = '# %(name)-20s %(levelname)-7s %(message)s' ,
-                lvl  = logging.INFO                            ) :  
-    """
-    Get the proper Bender logger
-    
-    >>> logger = getLogger ( __name__ )
-    
-    """
-    #
-    # while 0 <= name.find ( '.' )  : name = name.replace('.','/')
-    # 
-    logger = logging.getLogger ( name )
-    logger.propagate =  False 
-    #
-    while logger.handlers :
-        logger.removeHandler ( logger.handlers[0] )
-    #
-    lh  = logging.StreamHandler ( )
-    fmt = logging.Formatter ( fmt  )
-    lh  . setFormatter  ( fmt )
-    logger.addHandler( lh ) 
-    #
-    logger.setLevel  ( lvl )
-    #
-    return logger
+from AnalysisPython.Logger import getLogger 
 
 # =============================================================================
 if __name__ == '__main__' :
