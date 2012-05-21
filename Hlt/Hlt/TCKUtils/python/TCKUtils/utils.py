@@ -90,9 +90,19 @@ def getL0Prescales( id, cas  = ConfigAccessSvc() ) :
     return ret
 
 class AccessSvcSingleton(object) :
+    __app = None
     __pcs = None
     __cas = None
     __cte = None
+    def reset(self) :
+        if self._app() : self._app().finalize()
+        AccessSvcSingleton.__pcs = None
+        AccessSvcSingleton.__cas = None
+        AccessSvcSingleton.__cte = None
+        AccessSvcSingleton.__app = None
+
+    def _app(self) :
+        return AccessSvcSingleton.__app
     def _pcs(self) : 
         return AccessSvcSingleton.__pcs
     def _cas(self) : 
@@ -109,11 +119,11 @@ class AccessSvcSingleton(object) :
             pcs = PropertyConfigSvc( ConfigAccessSvc = cas.getFullName() )
             cte = ConfigTreeEditor( PropertyConfigSvc = pcs.getFullName()
                                   , ConfigAccessSvc   = cas.getFullName() )
-            appMgr = _appMgr()
-            appMgr.createSvc(cas.getFullName())
-            AccessSvcSingleton.__cas = appMgr.service(cas.getFullName(),'IConfigAccessSvc') 
-            appMgr.createSvc(pcs.getFullName())
-            AccessSvcSingleton.__pcs = appMgr.service(pcs.getFullName(),'IPropertyConfigSvc')
+            AccessSvcSingleton.__app = _appMgr()
+            self._app().createSvc(cas.getFullName())
+            AccessSvcSingleton.__cas = self._app().service(cas.getFullName(),'IConfigAccessSvc') 
+            self._app().createSvc(pcs.getFullName())
+            AccessSvcSingleton.__pcs = self._app().service(pcs.getFullName(),'IPropertyConfigSvc')
             AccessSvcSingleton.__cte = lambda x : appMgr.toolsvc().create(cte.getFullName(),interface='IConfigTreeEditor')
 
     def resolveTCK(self,tck) :
@@ -510,6 +520,8 @@ class RemoteAccess(object) :
     def __init__( self, cas ) :
         #print 'remote(%s) created at pid=%s' % (self,getpid())
         RemoteAccess._svc = createAccessSvcSingleton( cas = cas )
+    def __del__( self ) :
+        RemoteAccess._svc.reset()
     def rgetConfigTree( self, id ) :
         # maybe prefetch all leafs by invoking 
         # benchmark result: makes no difference whatsoever...
@@ -664,7 +676,6 @@ class AccessProxy( object ) :
         if cas != AccessProxy._cas : return False # different configurable!
         return cas.getProperties() == AccessProxy._properties
     def flush( self ) : # make flush visible such that eg. createTCKEntries can flush the remote and force re-reading...
-        #print 'proxy: flushing remote'
         AccessProxy._cas = None
         AccessProxy._properties = None
         AccessProxy._access = None

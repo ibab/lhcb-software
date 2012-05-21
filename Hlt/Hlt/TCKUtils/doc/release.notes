@@ -4,6 +4,8 @@
 ! Purpose     : utilities for managing and querying Trigger Configuration Keys,
 !               and the underlying information
 !-----------------------------------------------------------------------------
+! 2012-05-21 - Gerhard Raven
+ - add proper shutdown of app mgr so that services get finalized
 
 !========================= TCKUtils v1r10 2012-02-06 =========================
 ! 2011-09-13 - Gerhard Raven
