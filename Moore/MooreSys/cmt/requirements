@@ -18,9 +18,6 @@ use  HltDisplVertices    v3r10       Hlt
 use  HltSettings         v5r37       Hlt
 use  HltTracking         v9r21       Hlt
 
-#for RichRecSys v4r5
-use  HltTracking         v9r20       Hlt
-
 # Bug fixes on top of LHCb v34r2 release stack
 use  VeloDet             v13r18p1    Det
 use  RichRecSys          v4r5        Rich
