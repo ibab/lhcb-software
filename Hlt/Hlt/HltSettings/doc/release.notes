@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-05-21 - Eric van Herwijnen
+ - remove prescale on Hlt2DisplVertices; Hlt2Forward at 0.00001
+
 !========================= HltSettings v5r36 2012-05-18 =========================
  - for Vava: add prescale for topo simple
 

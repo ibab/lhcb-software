@@ -191,7 +191,7 @@ class Physics_June2012( object ):
 
                                                                         } }
                        , Hlt2CommissioningLinesConf : { 'Prescale' : { 'Hlt2PassThrough'  : 0.0001 
-                                                                       , 'Hlt2Forward'      : 0.0001
+                                                                       , 'Hlt2Forward'      : 0.00001
                                                                        , 'Hlt2DebugEvent'   : 0.000001  }
                                                         , 'Postscale' : { 'Hlt2ErrorEvent'   : 'RATE(0.01)' } }
                        # micro bias lines switched off for high mu physics running              
@@ -210,17 +210,17 @@ class Physics_June2012( object ):
                        #                                               } } 
 
                        , Hlt2DisplVerticesLinesConf : {  'Prescale' : 
-                                                            { 'Hlt2DisplVerticesHighMassSingle'               : 0
-                                                              , 'Hlt2DisplVerticesSingle'                     : 0
-                                                              , 'Hlt2DisplVerticesDouble'                     : 0
-                                                              , 'Hlt2DisplVerticesHighMassSingle'             : 0 
-                                                              , 'Hlt2DisplVerticesHighFDSingle'               : 0
-                                                              , 'Hlt2DisplVerticesSinglePostScaled'           : 0
-                                                              , 'Hlt2DisplVerticesSingleDown'                 : 0
-                                                              , 'Hlt2DisplVerticesDoublePostScaled'           : 0
-                                                              , 'Hlt2DisplVerticesSingleHighMassPostScaled'   : 0
-                                                              , 'Hlt2DisplVerticesSingleHighFDPostScaled'     : 0
-                                                              , 'Hlt2DisplVerticesSingleMVPostScaled'         : 0    }               
+                                                            { 'Hlt2DisplVerticesHighMassSingle'               : 1
+                                                              , 'Hlt2DisplVerticesSingle'                     : 1
+                                                              , 'Hlt2DisplVerticesDouble'                     : 1
+                                                              , 'Hlt2DisplVerticesHighMassSingle'             : 1 
+                                                              , 'Hlt2DisplVerticesHighFDSingle'               : 1
+                                                              , 'Hlt2DisplVerticesSinglePostScaled'           : 1
+                                                              , 'Hlt2DisplVerticesSingleDown'                 : 1
+                                                              , 'Hlt2DisplVerticesDoublePostScaled'           : 1
+                                                              , 'Hlt2DisplVerticesSingleHighMassPostScaled'   : 1
+                                                              , 'Hlt2DisplVerticesSingleHighFDPostScaled'     : 1
+                                                              , 'Hlt2DisplVerticesSingleMVPostScaled'         : 1    }               
                                                          }
 
                        }
