@@ -59,9 +59,10 @@ import logging
 
 # =============================================================================
 ## get logger 
-def getLogger ( name                                               ,
-                fmt  = '# %(name)-25s %(levelname)-7s %(message)s' ,
-                lvl  = logging.INFO                                ) :  
+def getLogger ( name                                                 ,
+                fmt    = '# %(name)-25s %(levelname)-7s %(message)s' ,
+                lvl    = logging.INFO                                ,
+                stream = None                                        ) :  
     """
     Get the proper logger
     
@@ -77,12 +78,16 @@ def getLogger ( name                                               ,
     while logger.handlers :
         logger.removeHandler ( logger.handlers[0] )
     #
-    lh  = logging.StreamHandler ( )
-    fmt = logging.Formatter ( fmt  )
-    lh  . setFormatter  ( fmt )
-    logger.addHandler( lh ) 
+    if not stream :
+        import sys
+        stream = sys.stdout
+        
+    lh  = logging.StreamHandler ( stream ) 
+    fmt = logging.Formatter     ( fmt )
+    lh  . setFormatter          ( fmt )
+    logger.addHandler           ( lh  ) 
     #
-    logger.setLevel  ( lvl )
+    logger.setLevel             ( lvl )
     #
     return logger
 
