@@ -124,7 +124,7 @@ class AccessSvcSingleton(object) :
             AccessSvcSingleton.__cas = self._app().service(cas.getFullName(),'IConfigAccessSvc') 
             self._app().createSvc(pcs.getFullName())
             AccessSvcSingleton.__pcs = self._app().service(pcs.getFullName(),'IPropertyConfigSvc')
-            AccessSvcSingleton.__cte = lambda x : appMgr.toolsvc().create(cte.getFullName(),interface='IConfigTreeEditor')
+            AccessSvcSingleton.__cte = lambda x : self._app().toolsvc().create(cte.getFullName(),interface='IConfigTreeEditor')
 
     def resolveTCK(self,tck) :
          tck = _tck(tck)
