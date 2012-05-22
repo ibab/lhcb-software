@@ -129,7 +129,11 @@ void EvtbTosllScalarAmpNew::CalcAmp( EvtParticle *parent,
      (idparent == EvtPDL::getId(std::string("B_s0"))&&
       iddaught == EvtPDL::getId(std::string("eta'")))||
      (idparent == EvtPDL::getId(std::string("anti-B_s0"))&&
-      iddaught == EvtPDL::getId(std::string("eta'")))){
+      iddaught == EvtPDL::getId(std::string("eta'")))||
+     (idparent == EvtPDL::getId(std::string("B_s0"))&&
+      iddaught == EvtPDL::getId(std::string("f_0")))||
+     (idparent == EvtPDL::getId(std::string("anti-B_s0"))&&
+      iddaught == EvtPDL::getId(std::string("f_0")))){
      ms = formFactors->getQuarkMass(3); // m_s mass from the dispersion QM 
      // V_{ts}
      Vtq = unit1*(1.0-0.5*pow(CKM_lambda,2.0)) + 

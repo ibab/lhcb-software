@@ -22,11 +22,13 @@
 //  N.Nikitin (nnikit@mail.cern.ch)  Nvmbr 04, 2011   add \bar B -> omega transition ff
 //  N.Nikitin (nnikit@mail.cern.ch)  Dec   16, 2011   add \bar B -> \bar K_1(1270) transition ff (from H.Hatanaka and Kwei-Chou Yang, PRD78, 074007 (2008))
 //  N.Nikitin (nnikit@mail.cern.ch)  Dec   16, 2011   add \bar B -> \bar K_1(1400) transition ff (from H.Hatanaka and Kwei-Chou Yang, PRD78, 074007 (2008))
+//  N.Nikitin (nnikit@mail.cern.ch)  May   11, 2012   add \bar Bs -> f_0(980) transition ff with NLO corrections from Table II (see P.Colangelo et al., PRD81, 074001 (2010))
 //
 //------------------------------------------------------------------------
 
 #include "EvtGenBase/EvtPatches.hh"
 #include "EvtGenBase/EvtReport.hh"
+#include "EvtGenBase/EvtComplex.hh"
 #include "EvtGenBase/EvtPDL.hh"
 #include "EvtGenModels/EvtbTosllMSFF.hh"
 #include <cmath>
@@ -217,6 +219,29 @@ void EvtbTosllMSFF::getScalarFF(EvtId parent, EvtId daught,
 
      fp = equation9_10(ff0[0], M_P2, t, sigma1[0], sigma2[0], eq_num[0]);
      f0 = equation9_10(ff0[1], M_V2, t, sigma1[1], sigma2[1], eq_num[1]);
+     ft = equation9_10(ff0[2], M_P2, t, sigma1[2], sigma2[2], eq_num[2]);
+
+     models_counter=models_counter+1;
+
+//     report(NOTICE,"EvtGen") <<"\n The function  EvtbTosllMSFF::getVectorFF(...) passed."
+//     << "\n Bs -> eta transition form factors"
+//     << std::endl;          
+  }
+
+
+  // B_s -> f_0(980) transition form factors
+  if((parent == EvtPDL::getId(std::string("B_s0"))&&
+      daught == EvtPDL::getId(std::string("f_0")))||
+     (parent == EvtPDL::getId(std::string("anti-B_s0"))&&
+      daught == EvtPDL::getId(std::string("f_0")))){
+     double ff0[]   ={0.238, 0.238, 0.308};
+     double sigma1[]={ 1.50,  0.53,  1.46};
+     double sigma2[]={ 0.58, -0.36,  0.58};
+     int    eq_num[]={   10,    10,    10};
+     double M_P2=5.366*5.366;   // GeV^2 for B_s^0 - meson
+
+     fp = equation9_10(ff0[0], M_P2, t, sigma1[0], sigma2[0], eq_num[0]);
+     f0 = equation9_10(ff0[1], M_P2, t, sigma1[1], sigma2[1], eq_num[1]);
      ft = equation9_10(ff0[2], M_P2, t, sigma1[2], sigma2[2], eq_num[2]);
 
      models_counter=models_counter+1;

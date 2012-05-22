@@ -4,6 +4,9 @@
 ! Purpose     : Repository of EvtGen models with external linkages
 !-----------------------------------------------------------------------------
 
+! 2012-05-22 - Nikolai Nikitin
+ - Added a new decay Bs -> f0(980) Mu Mu in the BTOSLLMS and BTOSLLMSEXT models.
+
 !======================= EvtGenExtras v3r2 2012-02-12 ========================
 ! 2012-01-31 - Nikolai Nikitin
  - Added new models for B -> K_1(1270) Mu Mu and B -> K_1 (1400) Mu Mu decays
