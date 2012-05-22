@@ -1,3 +1,6 @@
+! 2012-05-22 - Oscar Augusto
+- Removed some unnecessary files.
+- Correct the adhoc problem with doubletopo.
 !=================== Secondary Vertices Jets Analysis ================
 ! 2012-05-18 - Oscar Augusto
 - First Commit. Package to analyse Secondary Vertices Jets, e.g., Z(bb), Z(mumu)+bjets and neutralino to q' qbar + mu.

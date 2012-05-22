@@ -49,6 +49,20 @@
 #include "Kernel/ITriggerTisTos.h"
 // ===========================================================================
 
+// $Id: $  -*- C++ -*-                                                        
+// ============================================================================
+// Include files                                                               
+#include <string>
+#include <fstream>
+#include <vector>
+#include "GaudiKernel/ToolFactory.h"
+#include "GaudiAlg/GaudiTool.h"
+#include "Kernel/IAccept.h"
+#include "Event/HltObjectSummary.h"
+#include "GaudiKernel/Vector3DTypes.h"
+#include "GaudiKernel/Vector4DTypes.h"
+
+// =============================================================================
 /// avoid long names:
 //using namespace LoKi        ;
 //using namespace LoKi::Types ;
@@ -59,6 +73,14 @@
 
 namespace LoKi {
 	namespace JetUtils {
+
+		void getHltObjP4(const LHCb::HltObjectSummary *obj,Gaudi::LorentzVector &p4);
+		double getHltObjsAngle(const LHCb::HltObjectSummary *obj1, const LHCb::HltObjectSummary *obj2);
+		double getHltObjsMass(const LHCb::HltObjectSummary *obj1, const LHCb::HltObjectSummary *obj2);
+		bool addLHCbIDs(SmartRefVector< LHCb::HltObjectSummary >::const_iterator iter, std::vector<int> &ids);
+		void getLHCbIDs(const LHCb::HltObjectSummary *obj, std::vector<int> &ids);
+		bool doHltObjsOverlap(const LHCb::HltObjectSummary *obj1, const LHCb::HltObjectSummary *obj2);
+		bool doLHCbIDsOverlap(const std::vector<int> &ids1, const std::vector<int> &ids2);
 
 		class MCNEndVertices : public LoKi::Types::MCFunc 
 		{

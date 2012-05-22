@@ -23,7 +23,7 @@
 #include "stdio.h"
 #include "stdlib.h"
 #include "TMath.h"
-#include "DoubleTopoTool.h"
+//#include "DoubleTopoTool.h"
 
 #include "JetUtils.h"
 
@@ -36,6 +36,7 @@ using namespace LoKi::Types;
 using namespace LoKi::Cuts;
 using namespace LoKi::Particles;
 using namespace LoKi::Vertices;
+using namespace LoKi::JetUtils;
 
 LOKI_MCALGORITHM(PFbjetsMC)
 {

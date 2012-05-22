@@ -23,11 +23,19 @@
 #include "stdio.h"
 #include "stdlib.h"
 #include "TMath.h"
-#include "DoubleTopoTool.h"
+//#include "DoubleTopoTool.h"
 
 #include "JetUtils.h"
 
 #include <Kernel/IJetMaker.h>
+
+#include "GaudiKernel/ToolFactory.h"
+#include "GaudiAlg/GaudiTool.h"
+#include "Kernel/ITriggerTisTos.h"
+#include "Kernel/IAccept.h"
+#include "Event/HltObjectSummary.h"
+#include "GaudiKernel/Vector3DTypes.h"
+#include "GaudiKernel/Vector4DTypes.h"
 
 using namespace LHCb;
 using namespace LoKi;
@@ -36,6 +44,7 @@ using namespace LoKi::Types;
 using namespace LoKi::Cuts;
 using namespace LoKi::Particles;
 using namespace LoKi::Vertices;
+using namespace LoKi::JetUtils;
 
 LOKI_MCALGORITHM(PFbjets)
 {

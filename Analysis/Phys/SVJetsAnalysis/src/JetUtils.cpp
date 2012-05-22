@@ -44,8 +44,10 @@
 #include "LoKi/GenOscillated.h"
 #include "LoKi/IGenDecay.h"
 
-
 #include "JetUtils.h"
+
+#include "TMath.h"
+using namespace TMath;
 
 LoKi::JetUtils::MCNEndVertices* 
  LoKi::JetUtils::MCNEndVertices::clone() const
@@ -232,4 +234,106 @@ LoKi::JetUtils::GNDaughters::operator()
  ( std::ostream& s ) const { return s << "GNDAUGHTERS" ; }
 
  // =======================================================================
+void LoKi::JetUtils::getHltObjP4(const LHCb::HltObjectSummary *obj,Gaudi::LorentzVector &p4){
+  LHCb::HltObjectSummary::Info info = obj->numericalInfo();
+  double p = 1/info["7#Particle.1/p"];
+  double slopex = info["5#Particle.slopes.x"];
+  double slopey = info["6#Particle.slopes.y"];
+  double slopez = 1/Sqrt(slopex*slopex + slopey*slopey + 1.0);
+  double pz = slopez*p;
+  double mm = info["1#Particle.measuredMass"];
+  p4.SetPxPyPzE(slopex*pz,slopey*pz,pz,Sqrt(p*p+mm*mm));
+}
+
+double LoKi::JetUtils::getHltObjsAngle(const LHCb::HltObjectSummary *obj1,
+		       const LHCb::HltObjectSummary *obj2){
+  Gaudi::LorentzVector p41,p42;
+  getHltObjP4(obj1,p41);
+  getHltObjP4(obj2,p42);
+  //return p41.Vect().Angle(p42.Vect());
+  return Abs(ACos(p41.Vect().Unit().Dot(p42.Vect().Unit())));
+}
+
+double LoKi::JetUtils::getHltObjsMass(const LHCb::HltObjectSummary *obj1,
+		      const LHCb::HltObjectSummary *obj2){
+  Gaudi::LorentzVector p41,p42;
+  getHltObjP4(obj1,p41);
+  getHltObjP4(obj2,p42);
+  return (p41+p42).M();
+}
+
+bool LoKi::JetUtils::addLHCbIDs(SmartRefVector< LHCb::HltObjectSummary >::const_iterator iter,
+		std::vector<int> &ids){
+  unsigned int len = iter->target()->lhcbIDs().size();
+  if(len > 0){
+    for(unsigned int i = 0; i < len; i++){
+      ids.push_back(iter->target()->lhcbIDs()[i].lhcbID());
+    }
+    return true;
+  }
+  return false;
+}
+
+void LoKi::JetUtils::getLHCbIDs(const LHCb::HltObjectSummary *obj, std::vector<int> &ids){
+  const SmartRefVector< LHCb::HltObjectSummary > &sub1 = obj->substructure();
+  SmartRefVector< LHCb::HltObjectSummary >::const_iterator iter1,iter2,iter3,
+    iter4;
+  int n = 0;
+  for(iter1=sub1.begin();iter1!=sub1.end();++iter1){
+    const SmartRefVector< LHCb::HltObjectSummary > &sub2 
+      = iter1->target()->substructure();
+    for(iter2=sub2.begin(); iter2!=sub2.end();++iter2){
+      n++; //std::cout << "a";
+      if(!addLHCbIDs(iter2,ids)){
+	n--; //std::cout << "b";
+	const SmartRefVector< LHCb::HltObjectSummary > &sub3 
+	  = iter2->target()->substructure();
+	for(iter3=sub3.begin(); iter3!=sub3.end();++iter3){
+	  n++; //std::cout << "c";
+	  if(!addLHCbIDs(iter3,ids)){
+	    n--; //std::cout << "d";
+	    const SmartRefVector< LHCb::HltObjectSummary > &sub4 
+	      = iter3->target()->substructure();
+	    for(iter4=sub4.begin(); iter4!=sub4.end();++iter4){
+	      n++; //std::cout << "e";
+	      addLHCbIDs(iter4,ids);
+	    }
+	  }
+	}
+      }
+    }
+  }
+  /*
+  std::cout << std::endl;
+  int len = ids.size();
+  std::cout << "LHCb IDs: (" << n << ":" << len << ") [ ";
+  //for(int i = 0; i < len; i++) std::cout << ids[i] << " ";
+  std::cout << "]" << std::endl;
+  */
+}
+
+bool LoKi::JetUtils::doHltObjsOverlap(const LHCb::HltObjectSummary *obj1,
+		      const LHCb::HltObjectSummary *obj2){
+  std::vector<int> ids1, ids2;
+  getLHCbIDs(obj1,ids1);
+  getLHCbIDs(obj2,ids2);
+  unsigned int l1 = ids1.size(), l2 = ids2.size();
+  for(unsigned int i = 0; i < l1; i++){
+    for(unsigned int j = 0; j < l2; j++){
+      if(ids1[i] == ids2[j]) return true;
+    }
+  }
+  return false;
+}
+
+bool LoKi::JetUtils::doLHCbIDsOverlap(const std::vector<int> &ids1,
+		      const std::vector<int> &ids2){
+  unsigned int l1 = ids1.size(), l2 = ids2.size();
+  for(unsigned int i = 0; i < l1; i++){
+    for(unsigned int j = 0; j < l2; j++){
+      if(ids1[i] == ids2[j]) return true;
+    }
+  }
+  return false;
+}
 //#endif /*JETUTILS_H*/ 

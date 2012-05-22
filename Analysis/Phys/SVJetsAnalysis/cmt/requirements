@@ -10,8 +10,8 @@ author            Oscar Augusto
 branches          cmt doc options src template 
 
 # =============== environment =================================================
-set               LOKIUSERSRC       $(LOKIUSERROOT)/src 
-set               LOKIUSEROPTS      $(LOKIUSERROOT)/options
+#set               LOKIUSERSRC       $(LOKIUSERROOT)/src 
+#set               LOKIUSEROPTS      $(LOKIUSERROOT)/options
 
 # =============== dependencies ================================================
 use               LoKiFitters      v*  Phys 
