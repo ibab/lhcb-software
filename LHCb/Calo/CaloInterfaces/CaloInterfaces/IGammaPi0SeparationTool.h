@@ -10,7 +10,7 @@
 #include "GaudiKernel/IAlgTool.h"
 #include "Event/CaloHypo.h"
 
-static const InterfaceID IID_IGammaPi0SeparationTool ( "IGammaPi0SeparationTool", 1, 0 );
+static const InterfaceID IID_IGammaPi0SeparationTool ( "IGammaPi0SeparationTool", 2, 0 );
 
 /** @class IGammaPi0SeparationTool IGammaPi0SeparationTool.h
  *  
@@ -30,7 +30,12 @@ public:
   virtual double isPhoton(const LHCb::CaloHypo* hypo)=0;
   virtual void ClusterVariables(const LHCb::CaloCluster *cluster,
                         double& fr2, double& fasym, double& fkappa, double& fr2r4, double& etot,
-                        double& Eseed, double& E2, double& ePrs, int& area)=0;
+                        double& Eseed, double& E2, int& area)=0;
+  virtual void PrsVariables(const LHCb::CaloCluster *cluster,
+                                          double& r2PS, double& asymPS, double& kappaPS, double& r2r4PS, 
+                                          double& eSumPS, double& ePrs, double& eMaxPS, double& e2ndPS, double& ecornerPS, 
+                                          int& multiPS, int& multiPS15, int& multiPS30, int& multiPS45)=0;
+
   virtual double inputData(std::string data)=0;
   virtual std::map<std::string,double> inputDataMap()=0;
   
