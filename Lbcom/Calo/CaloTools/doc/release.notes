@@ -4,6 +4,13 @@
 !-------------------------------------------------------------------------------
 
 
+! 2012-05-22 - Olivier Deschamps for Miriam Calvo 
+ - GammaPi0SeparationTool  : new version of the tool (incl. Prs info)
+
+
+! 2012-05-14 - Olivier Deschamps
+ - new algorithm : CheckCaloHypoRef - check CaloHypo->CaloCluster* smart reference backward compatibility 
+
 ! 2012-05-10 - Olivier Deschamps
  - L0Calo2Calo tool : default clusterization level set to 2 (5x5 area for merged pi0)
 

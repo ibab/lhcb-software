@@ -49,7 +49,12 @@ public:
   
   void ClusterVariables(const LHCb::CaloCluster *cluster,
                         double& fr2, double& fasym, double& fkappa, double& fr2r4, double& etot,
-                        double& Eseed, double& E2, double& ePrs, int& area);
+                        double& Eseed, double& E2, int& area);
+ 
+  void PrsVariables(const LHCb::CaloCluster *cluster,
+                    double& r2PS, double& asymPS, double& kappaPS, double& r2r4PS, 
+                    double& eSumPS, double& ePrs, double& eMaxPS, double& e2ndPS, double& ecornerPS, 
+                    int& multiPS, int& multiPS15, int& multiPS30, int& multiPS45);
 
   double inputData(std::string data){
     std::map<std::string,double>::iterator it = m_data.find(data);
@@ -76,12 +81,11 @@ private:
   Gaudi::XYZPoint m_vertex;
   Gaudi::Plane3D m_planePrs;
 
-  double photonDiscriminant(int area, double Ecl, 
-                            double r2, 
-                            double r2r4, 
-                            double asym, 
-                            double kappa,
-                            double Eseed, double E2);
+  double photonDiscriminant(int area,  
+                            double r2, double r2r4, double asym, 
+                            double kappa, double Eseed, double E2,
+                            double r2PS, double asymPS, double eMaxPS, double e2ndPS,
+                            int multiPS, int multiPS15, int multiPS30, int multiPS45); 
 
   std::map<std::string,double> m_data;
 };
