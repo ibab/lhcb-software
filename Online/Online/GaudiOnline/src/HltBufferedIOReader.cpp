@@ -399,7 +399,7 @@ StatusCode HltBufferedIOReader::i_run()
         }
         catch (const exception& e)
         {
-          error("Exception while reading MEP files (spaceRearm): " + string(e.what())+" Skipping rest of file:"+m_current);
+          error("Exception while reading MEP files (spaceRearm): " + string(e.what())+" Skipping rest of file: "+m_current);
           ::close(file_handle);
           file_handle = 0;
           m_current = "";
