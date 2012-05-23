@@ -1,6 +1,7 @@
 // $Id: MuonHit.cpp,v 1.3 2010-02-12 12:19:58 ggiacomo Exp $
 // Include files
 #include <cmath>
+#include <cstdlib>
 #include "MuonInterfaces/MuonHit.h"
 #include "MuonInterfaces/MuonLogHit.h"
 #include "MuonInterfaces/MuonLogPad.h"
@@ -129,8 +130,8 @@ void MuonHit::addPad(MuonLogPad* mp){
       if ((y+dy) > m_hit_maxy) m_hit_maxy = y+dy;
       if ((z-dz) < m_hit_minz) m_hit_minz = z-dz;
       if ((z+dz) > m_hit_maxz) m_hit_maxz = z+dz;
-      recomputePos(&m_padx,&x,&m_dx,&m_xsize,dx);
-      recomputePos(&m_pady,&y,&m_dy,&m_ysize,dy);
+      recomputePos(&m_padx,&x,&m_dx,&m_xsize,dx,true);
+      recomputePos(&m_pady,&y,&m_dy,&m_ysize,dy,true);
       recomputePos(&m_padz,&z,&m_dz,&m_zsize,10*dz);
       SetXYZ(x,y,z);
 
@@ -141,7 +142,7 @@ void MuonHit::addPad(MuonLogPad* mp){
 
 void MuonHit::recomputePos(std::vector<double> *data, 
                            double* pos, double* dpos,
-                           int* clsize, double step) {
+                           int* clsize, double step, bool smear) {
   int np=0;
   double sum=0.,sum2=0.;
   std::vector<double>::iterator ip,previp;
@@ -161,6 +162,10 @@ void MuonHit::recomputePos(std::vector<double> *data,
     }
   }
   *pos = sum/np;
+  if(smear) {
+    // add a little smearing to avoid binning effects
+    *pos += step/10. * (1.e-3*(rand()%1000-500) );
+  }
   if (np>1) {
     *dpos = sqrt( (sum2-sum*sum/np)/(np*np-np)  );
   }

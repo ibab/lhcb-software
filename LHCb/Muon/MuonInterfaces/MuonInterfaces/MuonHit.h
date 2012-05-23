@@ -116,7 +116,7 @@ private:
   void createFromPad(MuonLogPad* mp);
   void recomputePos(std::vector<double> *data, 
                     double* pos, double* dpos,
-                    int* clsize, double step);
+                    int* clsize, double step, bool smear=false);
   void recomputeTime();
   DeMuonDetector* m_muonDet;
   std::vector<MuonLogPad*> m_pads;
