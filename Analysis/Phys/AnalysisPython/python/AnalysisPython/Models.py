@@ -59,9 +59,9 @@ def _amp_ ( self , x ) :
     >>> a = fun.amp ( x )
     
     """
-    v = self.amplitude(x)
+    v = self.amplitude ( x )
     #
-    return complex( v.real() , v.imag() ) 
+    return complex( v.real () , v.imag () ) 
 
 Gaudi = cpp.Gaudi 
 for model in ( Gaudi.Math.Chebyshev              ,
@@ -90,10 +90,13 @@ for model in ( Gaudi.Math.Chebyshev              ,
                Gaudi.Math.Flatte                 ,
                Gaudi.Math.Flatte2                ,
                Gaudi.Math.LASS23L                ,
+               Gaudi.Math.Bugg23L                ,
+               Gaudi.Math.BW23L                  ,
                Gaudi.Math.Voigt                  ) :
     model . tf1 = _tf1_ 
 
 Gaudi.Math.LASS23L.amp = _amp_
+Gaudi.Math.Bugg23L.amp = _amp_
 
 # =============================================================================
 if '__main__' == __name__ :

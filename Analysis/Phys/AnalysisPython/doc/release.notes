@@ -5,6 +5,14 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2012-05-23 - Vanya Belyaev
+ - add Bugg' function for low mass S-wave dipion system ("sigma")
+     *
+     *  The parameterization of sigma pole by 
+     *  B.S.Zou and D.V.Bugg, Phys.Rev. D48 (1993) R3948.
+     *
+     *
+
 !========================= AnalysisPython v2r12 2012-05-21 =========================
 
 ! 2012-05-21 - Vanya Belyaev
