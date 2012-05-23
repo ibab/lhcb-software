@@ -45,6 +45,8 @@
   <class name    = "Gaudi::Math::PhaseSpaceNL"            />
   <class name    = "Gaudi::Math::PhaseSpace23L"           />
   <class name    = "Gaudi::Math::LASS23L"                 />
+  <class name    = "Gaudi::Math::Bugg23L"                 />
+  <class name    = "Gaudi::Math::BW23L"                   />
   <class name    = "Gaudi::Math::BreitWigner">
     <field name = "m_rho_fun" transient = "true"/>      
   </class>

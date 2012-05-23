@@ -1577,13 +1577,19 @@ namespace Gaudi
       // ======================================================================
     public:
       // ======================================================================
-      double m0     () const { return m_m0      ; }
-      double mass   () const { return   m0   () ; }
-      double peak   () const { return   m0   () ; }
-      double gam0   () const { return m_gam0    ; }
-      double gamma0 () const { return   gam0 () ; }
-      double gamma  () const { return   gam0 () ; }
-      double width  () const { return   gam0 () ; }
+      double         m0     () const { return m_m0      ; }
+      double         mass   () const { return   m0   () ; }
+      double         peak   () const { return   m0   () ; }
+      double         gam0   () const { return m_gam0    ; }
+      double         gamma0 () const { return   gam0 () ; }
+      double         gamma  () const { return   gam0 () ; }
+      double         width  () const { return   gam0 () ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      double         m1     () const { return m_m1 ; }
+      double         m2     () const { return m_m2 ; }
+      unsigned short L      () const { return m_L  ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -1649,9 +1655,9 @@ namespace Gaudi
     public:
       // ======================================================================
       // constructor from all parameters
-      Rho0  ( const double m0       = 770   , 
-              const double gam0     = 150   ,
-              const double pi_mass  = 139.6 ) ;
+      Rho0  ( const double m0       = 770   ,     // MeV 
+              const double gam0     = 150   ,     // MeV 
+              const double pi_mass  = 139.6 ) ;   // MeV 
       /// destructor 
       virtual ~Rho0 () ;
       // ======================================================================
@@ -1666,13 +1672,13 @@ namespace Gaudi
     public:
       // ======================================================================
       /// constructor from all parameters
-      Rho0FromEtaPrime  ( const double m0        = 770   , 
-                          const double gam0      = 150   ,
-                          const double pi_mass   = 139.6 , 
-                          const double eta_prime = 957.7 ) ;
+      Rho0FromEtaPrime  ( const double m0        = 770   ,    // MeV 
+                          const double gam0      = 150   ,    // MeV 
+                          const double pi_mass   = 139.6 ,    // MeV 
+                          const double eta_prime = 957.7 ) ;  // MeV 
       /// constructor from all parameters
       Rho0FromEtaPrime  ( const Gaudi::Math::Rho0& rho   , 
-                          const double eta_prime = 957.7 ) ;
+                          const double eta_prime = 957.7 ) ;  // MeV 
       /// destructor 
       virtual ~Rho0FromEtaPrime () ;
       // ======================================================================
@@ -2060,6 +2066,257 @@ namespace Gaudi
       Gaudi::Math::WorkSpace m_workspace ;    // integration workspace 
       // ======================================================================
     } ;
+    // ========================================================================
+    /** @class Bugg23L
+     *  parametrisation of sigma-pole for
+     *  two pion mass distribution from three body decays 
+     *
+     *  The parameterization of sigma pole by 
+     *  B.S.Zou and D.V.Bugg, Phys.Rev. D48 (1993) R3948.
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2012-04-01
+     */
+    class GAUDI_API Bugg23L
+      : public std::unary_function<double,double>     
+    {
+    public:
+      // ======================================================================
+      /** constructor from all masses and angular momenta 
+       *  @param M  mass of sigma (very different from the pole positon!)
+       *  @param g2 width parameter g2 (4pi width)
+       *  @param b1 width parameter b1  (2pi coupling)
+       *  @param b2 width parameter b2  (2pi coupling)
+       *  @param s1 width parameter s1  (cut-off for 4pi coupling)
+       *  @param s2 width parameter s2  (cut-off for 4pi coupling)
+       *  @param a  parameter a (the exponential cut-off) 
+       *  @param m1 the mass of the first  particle 
+       *  @param m3 the mass of the third  particle 
+       *  @param m  the mass of the mother particle (m>m1+m2+m3)
+       *  @param L  the angular momentum between the first pair and the third 
+       */
+      Bugg23L ( const double         M  = 0.9264        ,  // GeV  
+                const double         g2 = 0.0024        ,  // GeV 
+                const double         b1 = 0.5848        ,  // GeV 
+                const double         b2 = 1.6663        ,  // GeV-1 
+                const double         a  = 1.082         ,  // GeV^2
+                const double         s1 = 2.8           ,  // GeV^2 
+                const double         s2 = 3.5           ,
+                const double         m1 =  139.6 / 1000 ,  // MeV
+                const double         m3 = 3097.0 / 1000 ,  // MeV 
+                const double         m  = 5278.0 / 1000 ,  // MeV 
+                const unsigned short L  =    1          ) ;
+      /// destructor 
+      ~Bugg23L () ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// calculate the Breit-Wigner shape
+      double operator() ( const double x ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the amlitude  (not normalized!)
+      std::complex<double> amplitude (  const double x ) const ;
+      /// get the phase space factor (taking into account L)
+      double phaseSpace ( const double x ) const { return m_ps  ( x ) ; }
+      // ======================================================================
+    public:
+      // ====================================================================== 
+      // phase space variables
+      // ====================================================================== 
+      double m1        () const { return m_ps.m1 () ; }
+      double m2        () const { return m_ps.m2 () ; }      
+      double m3        () const { return m_ps.m3 () ; }      
+      double m         () const { return m_ps.m  () ; }      
+      // ======================================================================
+      double lowEdge   () const { return m_ps. lowEdge() ; }
+      double highEdge  () const { return m_ps.highEdge() ; }
+      // ====================================================================== 
+    public:
+      // ====================================================================== 
+      /// get the running width by Bugg
+      std::complex<double> 
+      gamma ( const double x ) const ; // get the running width by Bugg
+      // ====================================================================== 
+    public:
+      // ====================================================================== 
+      /// adler factor 
+      double               adler       ( const double x ) const ; // adler factor 
+      /// ratio of 2pi-phase spaces 
+      double               rho2_ratio  ( const double x ) const ;
+      /// ratio of 4pi-phase spaces 
+      std::complex<double> rho4_ratio  ( const double x ) const ;
+      /// b-factor for 2-pi coupling 
+      double b( const double x ) const { return  b1 () + x * x * b2 () ; }    
+      // ====================================================================== 
+    private:
+      // ====================================================================== 
+      /// approximation for  4pi-phase space
+      std::complex<double> rho4        ( const double x ) const ;
+      // ====================================================================== 
+    public:
+      // ====================================================================== 
+      // sigma & Bugg variables 
+      // ====================================================================== 
+      double M     () const  { return m_M       ; }
+      double M2    () const  { return m_M * m_M ; }
+      double m0    () const  { return   M ()    ; }
+      double mass  () const  { return   M ()    ; }
+      double peak  () const  { return   M ()    ; }
+      // ====================================================================== 
+      double g2    () const  { return m_g2   ; }
+      double b1    () const  { return m_b1   ; }
+      double b2    () const  { return m_b2   ; }
+      double s1    () const  { return m_s1   ; }
+      double s2    () const  { return m_s2   ; }
+      double a     () const  { return m_a    ; }
+      // ====================================================================== 
+      bool setM    ( const double value  ) ;
+      bool setM0   ( const double value  ) { return setM ( value )  ; }
+      bool setMass ( const double value  ) { return setM ( value )  ; }
+      bool setPeak ( const double value  ) { return setM ( value )  ; }
+      // ====================================================================== 
+      bool setG2   ( const double value  ) ;
+      bool setB1   ( const double value  ) ;
+      bool setB2   ( const double value  ) ;
+      bool setS1   ( const double value  ) ;
+      bool setS2   ( const double value  ) ;
+      bool setA    ( const double value  ) ;
+      // ====================================================================== 
+    public:
+      // ====================================================================== 
+      /// get the integral 
+      double integral () const ;
+      /// get the integral between low and high limits 
+      double integral ( const double low  , 
+                        const double high ) const ;
+      // ====================================================================== 
+    private:
+      // ======================================================================
+      // sigma & Bugg varibales 
+      // ======================================================================
+      /// mass of sigma (very different from the pole positon!)
+      double m_M  ; // mass of sigma (very different from the pole positon!)
+      /// width parameter g2 (4pi width)
+      double m_g2 ; // width parameter g2 (4-p width) 
+      /// width parameter b1  (2pi coupling)
+      double m_b1 ; // width parameter b1  (2pi coupling)
+      /// width parameter b2  (2pi coupling)
+      double m_b2 ; // width parameter b2  (2pi coupling)
+      /// width parameter s1  (cut-off for 4pi coupling)
+      double m_s1 ; // width parameter b1  (cut-off for 4pi coupling)
+      /// width parameter s2  (cut-off for 4pi coupling)
+      double m_s2 ; // width parameter b2  (cut-off for 4pi coupling)
+      /// parameter a (the exponential cut-off) 
+      double m_a  ; // parameter a (the exponential cut-off)
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// phase space 
+      Gaudi::Math::PhaseSpace23L m_ps         ; // phase space 
+      // ======================================================================
+    private:
+      /// integration workspace 
+      Gaudi::Math::WorkSpace     m_workspace  ;    // integration workspace 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class BW23L 
+     *  @see Gaudi::Math::BreittWigner 
+     *  @see Gaudi::Math::PhaseSpace23L 
+     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @date 2012-05-23
+     */
+    class GAUDI_API BW23L
+      : public std::unary_function<double,double>     
+    {
+    public:
+      // ======================================================================
+      // constructor from all parameters
+      BW23L ( const double         m0       , 
+              const double         gam0     ,
+              const double         m1       , 
+              const double         m2       , 
+              const double         m3       , 
+              const double         m        , 
+              const unsigned short L1  = 0  , 
+              const unsigned short L2  = 0  ) ;
+      // constructor from all parameters
+      BW23L ( const double         m0       , 
+              const double         gam0     ,
+              const double         m1       , 
+              const double         m2       , 
+              const double         m3       , 
+              const double         m        , 
+              const unsigned short L1       , 
+              const unsigned short L2       ,
+              const Gaudi::Math::BreitWigner::JacksonRho r ) ;
+      /// constructor from BreitWigner  
+      BW23L ( const Gaudi::Math::BreitWigner& bw , 
+              const double                    m3 , 
+              const double                    m  , 
+              const unsigned short            L2 ) ;
+      /// destructor 
+      virtual ~BW23L () ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      BW23L () ;                         // the default constructor is disabled 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// calculate the shape 
+      double operator() ( const double x ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      double m0     () const { return m_bw . m0   () ; }
+      double mass   () const { return        m0   () ; }
+      double peak   () const { return        m0   () ; }
+      double gam0   () const { return m_bw . gam0 () ; }
+      double gamma0 () const { return        gam0 () ; }
+      double gamma  () const { return        gam0 () ; }
+      double width  () const { return        gam0 () ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      bool setM0     ( const double x ) { return m_bw.setM0     ( x ) ; }
+      bool setMass   ( const double x ) { return setM0          ( x ) ; }
+      bool setPeak   ( const double x ) { return setM0          ( x ) ; }      
+      bool setGamma0 ( const double x ) { return m_bw.setGamma0 ( x ) ; }
+      bool setGamma  ( const double x ) { return setGamma0      ( x ) ; }
+      bool setWidth  ( const double x ) { return setGamma0      ( x ) ; }      
+      // ======================================================================
+    public:
+      // ======================================================================
+      double lowEdge   () const { return m_ps. lowEdge() ; }
+      double highEdge  () const { return m_ps.highEdge() ; }
+      // ====================================================================== 
+    public:
+      // ======================================================================
+      /// calculate the current width 
+      double gamma ( const double x ) const { return m_bw.gamma ( x ) ; }
+      // ======================================================================
+    public:
+      // ====================================================================== 
+      /// get the integral 
+      double integral () const ;
+      /// get the integral between low and high limits 
+      double integral ( const double low  , 
+                        const double high ) const ;
+      // ====================================================================== 
+    private:
+      // ======================================================================
+      /// the breit wigner 
+      Gaudi::Math::BreitWigner   m_bw        ;    // the breit wigner 
+      /// the phase space 
+      Gaudi::Math::PhaseSpace23L m_ps        ;    // the phase space
+      /// integration workspace 
+      Gaudi::Math::WorkSpace     m_workspace ;    // integration workspace 
+      // ======================================================================
+    } ;  
     // ========================================================================
   } //                                             end of namespace Gaudi::Math
   // ==========================================================================
