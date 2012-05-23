@@ -248,7 +248,7 @@ int MBM::Producer::spaceRearm(int new_length)
 {
   if (m_bmid != MBM_INV_DESC)
   {
-    char code[32];
+    char code[256];
     EventDesc& e = m_event;
     e.len = new_length;
     int sc = ::mbm_get_space_a(m_bmid, e.len, &e.data, spaceAst, this);
@@ -259,11 +259,11 @@ int MBM::Producer::spaceRearm(int new_length)
       {
         return sc;
       }
-      ::sprintf(code,"%08x",sc);
+      ::sprintf(code,"%08x Length %d",sc,new_length);
       throw std::runtime_error("Failed to wait space on MBM buffer:"
           + m_buffName + " [Internal Error; "+std::string(code)+"]");
     }
-    ::sprintf(code,"%08x",sc);
+    ::sprintf(code,"%08x Length %d",sc,new_length);
     throw std::runtime_error("Failed to get space from MBM buffer:"
         + m_buffName + " [Internal Error; "+std::string(code)+"]");
   }
