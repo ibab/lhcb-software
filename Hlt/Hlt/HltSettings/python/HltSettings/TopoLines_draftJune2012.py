@@ -74,12 +74,13 @@ class TopoLines :
             'ONETRACK_IPCHI2_MIN' : 16,   # unitless   
             'V2BODYCHI2_MAX'    : 10,     # unitless
             'NV0_2Body_MAX'     : 2,
-            'NV0_3Body_MAX'     : 2,
+            'NV0_3Body_MAX'     : 1,
             'NV0_4Body_MAX'     : 1,
+            'MIN_V0_LT'         : '10*ps',
             # bdt cuts
             'BDT_2BODY_MIN'     : 0.4,
-            'BDT_3BODY_MIN'     : 0.4,
-            'BDT_4BODY_MIN'     : 0.3,
+            'BDT_3BODY_MIN'     : 0.5,
+            'BDT_4BODY_MIN'     : 0.5,
             'BDT_2BODYMU_MIN'   : 0.1,
             'BDT_3BODYMU_MIN'   : 0.1,
             'BDT_4BODYMU_MIN'   : 0.1,
