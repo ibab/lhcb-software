@@ -34,6 +34,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         'NV0_2Body_MAX'     : 2,
         'NV0_3Body_MAX'     : 2,
         'NV0_4Body_MAX'     : 2,
+        'MIN_V0_LT'         : '10*ps',
         # bdt cuts
         'BDT_2BODY_MIN'     : 0.4,
         'BDT_3BODY_MIN'     : 0.4,
@@ -351,8 +352,9 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
             finputs.append(LDD)
         inputAll = GaudiSequencer("TopoInputALLSeq",Members=inputs,ModeOR=True,
                                   ShortCircuit=False)
+        cuts = "((ABSID=='K+')|(BPVLTIME('PropertimeFitter/properTime:PUBLIC') > %s))" % self.getProps()['MIN_V0_LT']
         filter = Hlt2Member(FilterDesktop,'TopoFilterAllInput',Inputs=finputs,
-                            Code='ALL')
+                            Code=cuts)
         return bindMembers("TopoInputALL", [inputAll, filter])
 
     def __allNBody(self,n,input,tag):
