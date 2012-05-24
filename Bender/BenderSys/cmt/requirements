@@ -22,18 +22,36 @@
 #
 # =============================================================================
 package       BenderSys
-version       v19r6
+version       v19r7
 
 author        Vanya BELYAEV
 
+# =============================================================================
+# tmp...
+# =============================================================================
+use  LHCbMath           v3r32 Kernel
+use  AnalysisPython     v2r13 Phys 
+#
+use  LoKiCore           v11r8  Phys 
+use  LoKiGen            v10r7  Phys 
+use  LoKiMC             v10r5  Phys
+use  LoKiGenMC          v9r1p1 Phys 
+use  LoKiTracks         v2r7   Phys 
+use  LoKiProtoParticles v2r1   Phys
+use  LoKiPhys           v10r10 Phys  
+use  LoKiPhysMC         v9r5   Phys  
+use  LoKiAlgo           v9r6   Phys 
+use  LoKiAlgoMC         v9r4   Phys 
+# =============================================================================
+
 # =========== Bender Application itself =======================================
-use           Bender         v19r6   Phys 
+use           Bender         v19r7   Phys 
   
 # =========== Bender-based tools and scripts ==================================
-use           BenderTools    v19r6   Phys 
+use           BenderTools    v19r7   Phys 
 
 # =========== examples of usage of Bender "in practice" =======================
-use           BenderExample  v19r5   Ex
+use           BenderExample  v19r7   Ex
 
 # =========== Bender tutorial =================================================
 use           BenderTutor    v18r0   Tutorial
