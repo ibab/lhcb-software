@@ -22,26 +22,26 @@
 #
 # =============================================================================
 package       BenderSys
-version       v19r7
+version       v19r7p1
 
 author        Vanya BELYAEV
 
 # =============================================================================
 # tmp...
 # =============================================================================
-use  LHCbMath           v3r32 Kernel
-use  AnalysisPython     v2r13 Phys 
+use  LHCbMath           v3r32   Kernel
+use  AnalysisPython     v2r13p1 Phys 
 #
-use  LoKiCore           v11r8  Phys 
-use  LoKiGen            v10r7  Phys 
-use  LoKiMC             v10r5  Phys
-use  LoKiGenMC          v9r1p1 Phys 
-use  LoKiTracks         v2r7   Phys 
-use  LoKiProtoParticles v2r1   Phys
-use  LoKiPhys           v10r10 Phys  
-use  LoKiPhysMC         v9r5   Phys  
-use  LoKiAlgo           v9r6   Phys 
-use  LoKiAlgoMC         v9r4   Phys 
+use  LoKiCore           v11r8   Phys 
+use  LoKiGen            v10r7   Phys 
+use  LoKiMC             v10r5   Phys
+use  LoKiGenMC          v9r1p1  Phys 
+use  LoKiTracks         v2r7    Phys 
+use  LoKiProtoParticles v2r1    Phys
+use  LoKiPhys           v10r10  Phys  
+use  LoKiPhysMC         v9r5    Phys  
+use  LoKiAlgo           v9r6    Phys 
+use  LoKiAlgoMC         v9r4    Phys 
 # =============================================================================
 
 # =========== Bender Application itself =======================================
