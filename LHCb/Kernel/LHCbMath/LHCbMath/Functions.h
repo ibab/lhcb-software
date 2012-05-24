@@ -1711,10 +1711,12 @@ namespace Gaudi
     {
     public:
       // ======================================================================
-      /** constructor  from three parameters 
+      /** constructor  from all parameters 
        *  @param m0    the mass 
        *  @param m0g1  parameter \f$ m_0\times g_1\f$
        *  @param g2og2 parameter \f$ g2/g_1       \f$
+       *  @param mK    kaon mass 
+       *  @param mPi   pion mass 
        */
       Flatte  ( const double m0    = 980      , 
                 const double m0g1  = 165*1000 ,  
@@ -1727,8 +1729,16 @@ namespace Gaudi
     public:
       // ======================================================================
       /// get the value of Flatte function 
-      // ======================================================================
       virtual double operator() ( const double x ) const ;
+      /// get the value of Flatte amplitude
+      virtual std::complex<double> amplitude ( const double x ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the amplitude for pipi-channel
+      std::complex<double> flatte_amp  ( const double x ) const ;
+      /// get the amplitude for KK-channel
+      std::complex<double> flatte2_amp ( const double x ) const ;
       // ======================================================================
     public:
       // ======================================================================
@@ -1745,7 +1755,7 @@ namespace Gaudi
       double m0g1   () const { return m_m0g1    ; }
       double g2og1  () const { return m_g2og1   ; }
       double mK     () const { return m_K       ; }
-      double mPi    () const { return m_K       ; }
+      double mPi    () const { return m_Pi       ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -1811,8 +1821,9 @@ namespace Gaudi
     public:
       // ======================================================================
       /// get the value of Flatte function (KK-channel)
-      // ======================================================================
       virtual double operator() ( const double x ) const ;
+      /// get the value of Flatte amplitude
+      virtual std::complex<double> amplitude ( const double x ) const ;
       // ======================================================================
     } ;
     // ========================================================================
@@ -1836,7 +1847,7 @@ namespace Gaudi
       // ======================================================================
       /// get the value of Voigt function 
       // ======================================================================
-      double operator() ( const double x ) const ;
+      virtual double operator() ( const double x ) const ;
       // ======================================================================
     public:
       // ====================================================================== 
@@ -2317,6 +2328,100 @@ namespace Gaudi
       Gaudi::Math::WorkSpace     m_workspace ;    // integration workspace 
       // ======================================================================
     } ;  
+    // ========================================================================
+    /** @class Flatte23L
+     *  \f$\pi\pi\f$-channel
+     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @date 2011-11-30
+     */
+    class GAUDI_API Flatte23L
+      : public std::unary_function<double,double>     
+    {
+    public:
+      // ======================================================================
+      /** constructor  from all parameters 
+       *  @param m0    the mass 
+       *  @param m0g1  parameter \f$ m_0\times g_1\f$
+       *  @param g2og2 parameter \f$ g2/g_1       \f$
+       *  @param mK    kaon mass 
+       *  @param mPi   pion mass
+       *  @param m3    the mass of the third particle 
+       *  @param m     the mass of mother particle  
+       *  @param L     the orbital momentum between the pair and the third particle
+       */
+      Flatte23L  ( const double         m0    =  980.0   ,     // MeV 
+                   const double         m0g1  = 165*1000 ,     // MeV^2
+                   const double         g2og1 =    4.21  ,     // dimensionless 
+                   const double         mK    =  493.7   ,     // MeV 
+                   const double         mPi   =  139.6   ,     // MeV 
+                   const double         m3    = 3096.9   ,     // MeV 
+                   const double         m     = 5366.0   ,     // MeV 
+                   const unsigned short L     = 1        ) ;
+      // ======================================================================
+      /** constructor  from flatte function  
+       *  @param m3    the mass of the third particle 
+       *  @param m     the mass of mother particle  
+       *  @param L     the orbital momentum between the pair and the third particle
+       */
+      Flatte23L  ( const Flatte&        fun              ,     // MeV 
+                   const double         m3    = 3096.9   ,     // MeV 
+                   const double         m     = 5366.0   ,     // MeV 
+                   const unsigned short L     = 1        ) ;      
+      /// destructor 
+      virtual ~Flatte23L () ;  
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the value of Flatte function 
+      // ======================================================================
+      double operator() ( const double x ) const ;
+      // ======================================================================
+      /// get the value of complex Flatte amplitude (pipi-channel) 
+      std::complex<double> amplitude ( const double x ) const 
+      { return m_flatte.flatte_amp ( x ) ; }
+      // ======================================================================      
+    public:
+      // ====================================================================== 
+      double m0     () const { return m_flatte . m0    () ; }
+      double mass   () const { return            m0    () ; }
+      double peak   () const { return            m0    () ; }
+      double m0g1   () const { return m_flatte . m0g1  () ; }
+      double g2og1  () const { return m_flatte . g2og1 () ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      bool setM0     ( const double x ) { return m_flatte . setM0    ( x ) ; }
+      bool setMass   ( const double x ) { return            setM0    ( x ) ; }
+      bool setPeak   ( const double x ) { return            setM0    ( x ) ; }      
+      bool setM0G1   ( const double x ) { return m_flatte . setM0G1  ( x ) ; }
+      bool setG2oG1  ( const double x ) { return m_flatte . setG2oG1 ( x ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      double lowEdge   () const { return m_ps .  lowEdge () ; }
+      double highEdge  () const { return m_ps . highEdge () ; }
+      // ====================================================================== 
+    public:
+      // ====================================================================== 
+      /// get the integral 
+      virtual double integral () const ;
+      /// get the integral between low and high limits 
+      virtual double integral ( const double low  , 
+                                const double high ) const ;
+      // ====================================================================== 
+    private:
+      // ======================================================================
+      /// the actual Flatte function 
+      Gaudi::Math::Flatte        m_flatte ; // the actual Flatte function 
+      /// phase space factor 
+      Gaudi::Math::PhaseSpace23L m_ps     ; // phase space factor 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// integration workspace 
+      Gaudi::Math::WorkSpace m_workspace ;    // integration workspace 
+      // ======================================================================
+    } ;
     // ========================================================================
   } //                                             end of namespace Gaudi::Math
   // ==========================================================================
