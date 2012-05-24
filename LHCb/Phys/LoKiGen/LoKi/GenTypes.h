@@ -12,6 +12,10 @@
 #include "LoKi/Selected.h"
 #include "LoKi/RangeList.h"
 // ============================================================================
+// GenEvent 
+// ============================================================================
+#include "Event/HepMCEvent.h"
+// ============================================================================
 // forward declarations  
 // ============================================================================
 namespace HepMC { class GenParticle ; } 
@@ -229,6 +233,38 @@ namespace LoKi
   { return s << ( this->m_value ? "GVALL" : "GVNONE" ) ; }
   // ==========================================================================  
 } //                                                      end of namespace LoKi
+// ============================================================================
+// a little bit of streamers 
+// ============================================================================
+GAUDI_API 
+LoKi::GenTypes::GenContainer 
+operator >> 
+( const LoKi::GenTypes::GenContainer& input ,  
+  const LoKi::Types::GCuts&           cuts  ) ;
+// ============================================================================
+GAUDI_API 
+LoKi::GenTypes::GenContainer 
+operator >> 
+( const LoKi::GenTypes::GRange&       input ,  
+  const LoKi::Types::GCuts&           cuts  ) ;
+// ============================================================================
+GAUDI_API 
+LoKi::GenTypes::GenContainer 
+operator >> 
+( const LHCb::HepMCEvent*             event ,  
+  const LoKi::Types::GCuts&           cuts  ) ;
+// ============================================================================
+GAUDI_API 
+LoKi::GenTypes::GenContainer 
+operator >> 
+( const LHCb::HepMCEvent::Container*  event ,  
+  const LoKi::Types::GCuts&           cuts  ) ;
+// ============================================================================
+GAUDI_API 
+LoKi::GenTypes::GenContainer 
+operator >> 
+( const HepMC::GenEvent*              event ,  
+  const LoKi::Types::GCuts&           cuts  ) ;
 // ============================================================================
 //                                                                      The END 
 // ============================================================================
