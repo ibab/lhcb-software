@@ -38,6 +38,8 @@ namespace DecayTreeFitter
     bool m_cached ;
     double m_flt ;
     LHCb::State m_state ;
+    double m_bremEnergy ;
+    double m_bremEnergyCov ;
   } ;
 
 }

@@ -5,6 +5,21 @@
 #include "FitParams.h"
 #include "TrackKernel/TrackTraj.h"
 
+namespace {
+  void applyBremCorrection( LHCb::State& state,
+			    double bremEnergy,
+			    double bremEnergyCov )
+  {
+    int charge = state.qOverP() > 0 ? 1 : -1 ;
+    double momentum       = charge/state.qOverP();
+    double momentumCov = state.covariance()(4,4) * std::pow(momentum,4) ;
+    momentum += bremEnergy ;
+    momentumCov += bremEnergyCov ;
+    state.setQOverP( charge / momentum ) ;
+    state.covariance()(4,4) = momentumCov / std::pow(momentum,4) ;
+  }
+}
+
 namespace DecayTreeFitter
 {
 
@@ -15,10 +30,37 @@ namespace DecayTreeFitter
     : RecoParticle(cand,mother),
       m_track(cand.proto()->track()),
       m_cached(false),
-      m_flt(0)
+      m_flt(0),
+      m_bremEnergy(0),
+      m_bremEnergyCov(0)
   {
     // set it to something such that we have a momentum estimate
     m_state = m_track->firstState() ;
+
+    // get the bremenergy correction
+    if( particle().particleID().abspid() == 11 ) {
+      // FIXME: this is a hack. it will go wrong if you fit the
+      // updated decay tree twice. to do this properly we need to use
+      // the bremadding tools, but there are other problems with that.
+      double momentumFromTrack    = 1/std::abs(m_state.qOverP() ) ;
+      double momentumError2FromTrack = m_state.covariance()(4,4) * std::pow(momentumFromTrack,4) ;
+      double momentumFromParticle = particle().momentum().P() ;
+      double momentumError2FromParticle = 
+	particle().momCovMatrix()(3,3) * std::pow(particle().momentum().E()/momentumFromParticle,2) ;
+      m_bremEnergyCov = momentumError2FromParticle - momentumError2FromTrack ;
+      m_bremEnergy = momentumFromParticle - momentumFromTrack ;
+      // if the correction is too small or unphysical, ignore it. the units are MeV.
+      if( !(m_bremEnergyCov >1*Gaudi::Units::MeV*Gaudi::Units::MeV && 
+	    m_bremEnergy>1*Gaudi::Units::MeV ) ) 
+	m_bremEnergy = m_bremEnergyCov = 0 ;
+      if(vtxverbose>=1) {
+	std::cout << "Fitting an electron. ("
+		  << momentumFromTrack << " +/- " << std::sqrt( momentumError2FromTrack ) << ") --> ("
+		  << momentumFromParticle << " +/- " << std::sqrt( momentumError2FromParticle ) << ")" << std::endl ;
+	std::cout << "brem correction: " << m_bremEnergy << " +/- " << std::sqrt( m_bremEnergyCov ) << std::endl ;
+      }
+      applyBremCorrection(m_state,m_bremEnergy,m_bremEnergyCov) ;
+    }
   }
   
   RecoTrack::~RecoTrack() {}
@@ -72,6 +114,11 @@ namespace DecayTreeFitter
       LHCb::TrackTraj traj( *m_track ) ;
       m_state = traj.state( z ) ;
     }
+
+    //deal with bremstrahlung
+    if( m_bremEnergyCov > 0 ) 
+      applyBremCorrection(m_state,m_bremEnergy,m_bremEnergyCov) ;
+    
     m_cached = true ;
     return ErrCode() ;
   }

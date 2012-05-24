@@ -8,6 +8,9 @@
 ! http://www.slac.stanford.edu/spires/find/hep/www?eprint=physics/0503191
 !-----------------------------------------------------------------------------
 
+! 2012-05-24 - Wouter Hulsbergen
+ - Fix for brem correction
+
 !======================= DecayTreeFitter v1r12 2011-12-15 ====================
 
 ! 2011-11-12 - Wouter Hulsbergen
