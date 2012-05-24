@@ -87,7 +87,7 @@ void DiskWrPub::analyze(void *, int ,MonMap* mmap)
   l = mmap->find("R_SND_0/BytesOut");
   if (k == mmap->end()) return;
   double evreq,evcount,evout,bout;
-  double RMeps;
+//  double RMeps;
   evreq = ((CntrDescr*)MonCounter::de_serialize((*i).second))->d_data;
   evcount = ((CntrDescr*)MonCounter::de_serialize((*j).second))->d_data;
   evout = ((CntrDescr*)MonCounter::de_serialize((*k).second))->d_data;
