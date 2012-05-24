@@ -3,6 +3,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2012-05-12 - Mark Tobin
+ - Add option to reset noise counters after a run change
+
 ! 2012-05-09 - Mark Tobin
  - Bug fix in removal of clusters from noise calculation
 

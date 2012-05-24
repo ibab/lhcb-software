@@ -94,6 +94,9 @@ ST::STNoiseToolBase::STNoiseToolBase( const std::string& type,
   // Choose selected steps (for CCEScan)
   declareProperty("Steps", m_steps);
   
+  // Reset counters after a run change
+  declareProperty("ResetAfterRunChange", m_resetRunChange=true);
+  
 }
 
 StatusCode ST::STNoiseToolBase::initialize() {
@@ -139,10 +142,11 @@ StatusCode ST::STNoiseToolBase::initialize() {
   }
   return StatusCode::SUCCESS;
 }
+
 // Reset all noise counters (@ initialise or after change in conditions)
 void ST::STNoiseToolBase::resetNoiseCounters( const unsigned int TELL1SourceID ){
 
-  debug() << "Resetting noise counters for " << TELL1SourceID << endmsg;
+  info() << "Resetting noise counters for " << TELL1SourceID << endmsg;
   m_nEvents[TELL1SourceID].resize(3072, 0);
   m_rawPedestalMap[TELL1SourceID].resize(3072, 0.0);
   m_rawMeanMap[TELL1SourceID].resize(3072, 0.0);
@@ -161,6 +165,17 @@ void ST::STNoiseToolBase::resetNoiseCounters( const unsigned int TELL1SourceID )
   m_pedSubNEventsPP[TELL1SourceID].resize(4,0);
 
 }
+
+// Reset all noise counters (after change in conditions)
+void ST::STNoiseToolBase::resetNoiseCounters(){
+  info() << "Resetting all noise counters" << endmsg;
+  std::map<unsigned int, unsigned int>::const_iterator itT = (this->readoutTool())->SourceIDToTELLNumberMap().begin();
+  for(; itT != (this->readoutTool())->SourceIDToTELLNumberMap().end(); ++itT) {
+    unsigned int TELL1SourceID = (*itT).first;
+    resetNoiseCounters(TELL1SourceID);
+  }  
+}
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -267,6 +282,7 @@ StatusCode ST::STNoiseToolBase::updateNoise() {
       const unsigned int step = odin->calibrationStep();
       if(!binary_search(m_steps.begin(), m_steps.end(), step)) return StatusCode::SUCCESS;
     }
+    if(m_resetRunChange && newRun) resetNoiseCounters();
     this->calculateNoise();
   } else {
     return Warning( "You should only call updateNoise once per event" , StatusCode::SUCCESS , 0);

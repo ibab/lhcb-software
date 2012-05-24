@@ -252,6 +252,8 @@ namespace ST {
     std::vector<unsigned int> m_steps;/// List of steps to look at (useful for CCEScan)
     bool m_selectedSteps;///< Use only selected steps
 
+    bool m_resetRunChange;///< Reset noise counters after run change
+
     bool m_countRoundRobin;///< True if you want to plot number of events per PP in round robin
     void countRoundRobin(unsigned int TELL1SourceID, unsigned int PP);///< Plot histogram of number of round robin events
 
@@ -292,6 +294,9 @@ namespace ST {
 
     /// Reset noise counters for a given tell1 during initialise or after change in TELL1 conditions
     void resetNoiseCounters(const unsigned int TELL1SourceID);
+
+    /// Reset all noise counters
+    void resetNoiseCounters();
 
     bool m_debug;///< True if message service is set for DEBUG or VERBOSE
     bool m_verbose;///< True if message service is set for VERBOSE
