@@ -4,6 +4,9 @@
 ! Purpose     : Collection of useful python modules for LHCb-specific 
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
+!========================= AnalysisPython v2r13p1 2012-05-24 =========================
+
+
 !========================= AnalysisPython v2r13 2012-05-24 =========================
 
 ! 2012-05-24 - Vanya Belyaev
