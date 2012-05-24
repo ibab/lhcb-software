@@ -4,6 +4,7 @@
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
+!========================= LoKiAlgo v9r6 2012-05-24 =========================
 
 ! 2012-05-20 - Vanya Belyaev
  - improve dictionaries 
