@@ -132,20 +132,40 @@ namespace LoKi
       // ======================================================================
     public:
       // ======================================================================
+      // __call__ 
       static Fun::result_type __call__ 
       ( const Fun& fun  , const Type*            o ) { return fun ( o ) ; }
+      // __call__ 
       static Fun::result_type __call__ 
       ( const Fun& fun  , const LHCb::DecayTree& o ) { return fun ( o ) ; }
+      // __call__ 
       static Fun::result_type __call__ 
       ( const Fun& fun  , const SmartRef<Type>&  o ) { return fun ( o ) ; }
+      //
+      // __call__
+      static std::vector<Fun::result_type> __call__
+      ( const Fun& fun  , const Type::ConstVector&   o ) 
+      { return o >> fun  ; }
+      // __call__
+      static std::vector<Fun::result_type> __call__
+      ( const Fun& fun  , const Type::Range&         o ) 
+      { return o >> fun  ; }
+      // __call__
+      static std::vector<Fun::result_type> __call__
+      ( const Fun& fun  , const Type::Container*      o ) 
+      { return o >> fun  ; }
+      // __call__
+      static std::vector<Fun::result_type> __call__
+      ( const Fun& fun  , const Type::Selection*      o ) 
+      { return o >> fun  ; }
+      // __call__
+      static std::vector<Fun::result_type> __call__
+      ( const Fun& fun  , const SmartRefVector<Type>& o ) 
+      { return o >> fun  ; }      
       // ======================================================================
     public:
       // ======================================================================
       // __rrshift__ 
-      static std::vector<Fun::result_type> __rrshift__ 
-      ( const Fun& fun  , const Type::ConstVector& o ) 
-      { return o >> fun  ; }
-      // __rrshift__ 
       static Fun::result_type              __rrshift__ 
       ( const Fun& fun  , const Type*            o ) { return fun ( o ) ; }
       // __rrshift__ 
@@ -154,6 +174,27 @@ namespace LoKi
       // __rrshift__ 
       static Fun::result_type              __rrshift__ 
       ( const Fun& fun  , const SmartRef<Type>&  o ) { return fun ( o ) ; }
+      //
+      // __rrshift__
+      static std::vector<Fun::result_type> __rrshift__
+      ( const Fun& fun  , const Type::ConstVector&   o ) 
+      { return o >> fun  ; }
+      // __rrshift__
+      static std::vector<Fun::result_type> __rrshift__
+      ( const Fun& fun  , const Type::Range&         o ) 
+      { return o >> fun  ; }
+      // __rrshift__
+      static std::vector<Fun::result_type> __rrshift__
+      ( const Fun& fun  , const Type::Container*      o ) 
+      { return o >> fun  ; }
+      // __rrshift__
+      static std::vector<Fun::result_type> __rrshift__
+      ( const Fun& fun  , const Type::Selection*      o ) 
+      { return o >> fun  ; }
+      // __rrshift__
+      static std::vector<Fun::result_type> __rrshift__
+      ( const Fun& fun  , const SmartRefVector<Type>& o ) 
+      { return o >> fun  ; }      
       // ======================================================================
     public:
       // ======================================================================
@@ -189,26 +230,27 @@ namespace LoKi
       ( const Fun& fun  , const SmartRef<Type>&         o ) { return fun ( o ) ; }
       //
       // __call__ as filter 
-      // __rrshift__ 
+      //
+      // __call__ 
       static Type::ConstVector __call__ 
       ( const Fun& fun  , const Type::ConstVector&      o ) 
-      { return __rrshift__ ( fun, o ) ; }      
-      // __rrshift__ 
+      { return o >> fun ; }      
+      // __call__ 
       static Type::ConstVector __call__ 
       ( const Fun& fun  , const Type::Container*        o ) 
-      { return __rrshift__ ( fun, o ) ; }      
-      // __rrshift__ 
+      { return o >> fun ; }      
+      // __call__ 
       static Type::ConstVector __call__ 
       ( const Fun& fun  , const Type::Selection*        o ) 
-      { return __rrshift__ ( fun, o ) ; }      
-      // __rrshift__ 
+      { return o >> fun ; }      
+      // __call__ 
       static Type::ConstVector __call__ 
       ( const Fun& fun  , const Type::Range&            o ) 
-      { return __rrshift__ ( fun, o ) ; }      
-      // __rrshift__ 
+      { return o >> fun ; }      
+      // __call__ 
       static Type::ConstVector __call__ 
       ( const Fun& fun  , const SmartRefVector<Type>&   o ) 
-      { return __rrshift__ ( fun, o ) ; }      
+      { return o >> fun ; }      
       //      
       // ======================================================================
     public: // __rrshift__
@@ -219,45 +261,20 @@ namespace LoKi
       // __rrshift__ 
       static Type::ConstVector __rrshift__ 
       ( const Fun& fun  , const Type::Container*   o ) 
-      {
-        Type::ConstVector res  ;
-        if ( 0 == o ) { return res ; }
-        res.reserve ( o->size () ) ;
-        LoKi::apply_filter 
-          ( o->begin() , o->end() , fun , std::back_inserter ( res ) ) ;
-        return res ; 
-      }
+      { return o >> fun ; }      
       // __rrshift__ 
       static Type::ConstVector __rrshift__ 
       ( const Fun& fun  , const Type::Selection*   o ) 
-      {
-        Type::ConstVector res  ;
-        if ( 0 == o ) { return res ; }
-        res.reserve ( o->size () ) ;
-        LoKi::apply_filter 
-          ( o->begin() , o->end() , fun , std::back_inserter ( res ) ) ;
-        return res ; 
-      }
+      { return o >> fun ; }      
       // __rrshift__ 
       static Type::ConstVector __rrshift__ 
       ( const Fun& fun  , const Type::Range&   o ) 
-      {
-        Type::ConstVector res  ;
-        res.reserve ( o.size () ) ;
-        LoKi::apply_filter 
-          ( o.begin() , o.end() , fun , std::back_inserter ( res ) ) ;
-        return res ; 
-      }
+      { return o >> fun ; }      
       // __rrshift__ 
       static Type::ConstVector __rrshift__ 
-      ( const Fun& fun  , const SmartRefVector<Type>&   o ) 
-      {
-        Type::ConstVector res  ;
-        res.reserve ( o.size () ) ;
-        LoKi::apply_filter 
-          ( o.begin() , o.end() , fun , std::back_inserter ( res ) ) ;
-        return res ; 
-      }
+      ( const Fun& fun  , const SmartRefVector<Type>&   o )
+      { return o >> fun ; }      
+      // ======================================================================
       // __rrshift__      
       static Fun::result_type  __rrshift__
       ( const Fun& fun  , const Type*              o ) { return fun ( o ) ; }
@@ -271,7 +288,7 @@ namespace LoKi
     public: // __rshift__
       // ======================================================================
       static LoKi::FunctorFromFunctor<const Type*,bool> __rshift__            
-      ( const Fun& fun  , const Fun&                        o ) { return fun >> o  ; }
+      ( const Fun& fun  , const Fun&               o ) { return fun >> o  ; }
       // ======================================================================
     } ;
     // ========================================================================
@@ -286,34 +303,97 @@ namespace LoKi
     public:
       // ======================================================================
       static Fun::result_type __call__ 
-      ( const Fun& fun  , const LHCb::VertexBase*           o ) { return fun ( o ) ; }
+      ( const Fun& fun  , const LHCb::VertexBase*           o )
+      { return fun ( o ) ; }
+      // ======================================================================
       static Fun::result_type __call__ 
-      ( const Fun& fun  , const LHCb::Vertex*               o ) { return fun ( o ) ; }
+      ( const Fun& fun  , const SmartRef<LHCb::Vertex>&     o ) 
+      { return fun ( o ) ; }
+      // ======================================================================
       static Fun::result_type __call__ 
-      ( const Fun& fun  , const LHCb::RecVertex*            o ) { return fun ( o ) ; }
+      ( const Fun& fun  , const SmartRef<LHCb::RecVertex>&  o ) 
+      { return fun ( o ) ; }
+      // ======================================================================
       static Fun::result_type __call__ 
-      ( const Fun& fun  , const SmartRef<LHCb::Vertex>&     o ) { return fun ( o ) ; }
-      static Fun::result_type __call__ 
-      ( const Fun& fun  , const SmartRef<LHCb::RecVertex>&  o ) { return fun ( o ) ; }
-      static Fun::result_type __call__ 
-      ( const Fun& fun  , const LHCb::Particle*  o ) 
+      ( const Fun& fun  , const LHCb::Particle*  p ) 
       {
-        if ( 0 == o )
-        {
-          const LHCb::VertexBase* _vb = 0 ;
-          return fun ( _vb ) ;
-        }
-        return fun ( o -> endVertex () ) ; 
-      }
+        const LHCb::VertexBase* _vertex = 0 ;
+        return 0 != p ? fun ( p->endVertex() ) : fun ( _vertex ) ;
+      }      
       // ======================================================================
-    public:
+      // __call__
+      static std::vector<Fun::result_type> __call__ 
+      ( const Fun& fun  , const LHCb::VertexBase::ConstVector&    o ) 
+      { return o >> fun ; }
+      // __call__
+      static std::vector<Fun::result_type> __call__ 
+      ( const Fun& fun  , const LHCb::Vertex::ConstVector&        o ) 
+      { return o >> fun ; }
+      // __call__
+      static std::vector<Fun::result_type> __call__ 
+      ( const Fun& fun  , const LHCb::RecVertex::ConstVector&     o ) 
+      { return o >> fun ; }      
+      // __call__
+      static std::vector<Fun::result_type> __call__ 
+      ( const Fun& fun  , const LHCb::Vertex::Container*          o ) 
+      { return o >> fun ; }
+      // __call__
+      static std::vector<Fun::result_type> __call__ 
+      ( const Fun& fun  , const LHCb::RecVertex::Container*       o ) 
+      { return o >> fun ; }
+      // __call__
+      static std::vector<Fun::result_type> __call__ 
+      ( const Fun& fun  , const SmartRefVector<LHCb::Vertex>&     o ) 
+      { return o >> fun ; }
+      // __call__
+      static std::vector<Fun::result_type> __call__ 
+      ( const Fun& fun  , const SmartRefVector<LHCb::RecVertex>&  o ) 
+      { return o >> fun ; }      
       // ======================================================================
+    public: // __rrshift__
+      // ======================================================================
+      // __rrshift__
       static std::vector<Fun::result_type> __rrshift__ 
       ( const Fun& fun  , const LHCb::VertexBase::ConstVector&    o ) 
-      { return o >> fun  ; }
+      { return o >> fun ; }
+      // __rrshift__
+      static std::vector<Fun::result_type> __rrshift__ 
+      ( const Fun& fun  , const LHCb::Vertex::ConstVector&        o ) 
+      { return o >> fun ; }
+      // __rrshift__
       static std::vector<Fun::result_type> __rrshift__ 
       ( const Fun& fun  , const LHCb::RecVertex::ConstVector&     o ) 
-      { return o >> fun  ; }
+      { return o >> fun ; }      
+      // __rrshift__
+      static std::vector<Fun::result_type> __rrshift__ 
+      ( const Fun& fun  , const LHCb::Vertex::Container*          o ) 
+      { return o >> fun ; }
+      // __rrshift__
+      static std::vector<Fun::result_type> __rrshift__ 
+      ( const Fun& fun  , const LHCb::RecVertex::Container*       o ) 
+      { return o >> fun ; }
+      // __rrshift__
+      static std::vector<Fun::result_type> __rrshift__ 
+      ( const Fun& fun  , const SmartRefVector<LHCb::Vertex>&     o ) 
+      { return o >> fun ; }
+      // __rrshift__
+      static std::vector<Fun::result_type> __rrshift__ 
+      ( const Fun& fun  , const SmartRefVector<LHCb::RecVertex>&  o ) 
+      { return o >> fun ; }      
+      // ======================================================================
+      static Fun::result_type __rrshift__ 
+      ( const Fun& fun  , const LHCb::VertexBase*           o ) { return fun ( o ) ; }
+      static Fun::result_type __rrshift__ 
+      ( const Fun& fun  , const SmartRef<LHCb::Vertex>&     o ) { return fun ( o ) ; }
+      static Fun::result_type __rrshift__ 
+      ( const Fun& fun  , const SmartRef<LHCb::RecVertex>&  o ) { return fun ( o ) ; }
+      //
+      static Fun::result_type __rrshift__ 
+      ( const Fun& fun  , const LHCb::Particle*  p ) 
+      {
+        const LHCb::VertexBase* _vertex = 0 ;
+        return 0 != p ? fun ( p->endVertex() ) : fun ( _vertex ) ;
+      } 
       // ======================================================================
     public:
       // ======================================================================
@@ -341,24 +421,157 @@ namespace LoKi
       // ======================================================================
       static Fun::result_type __call__ 
       ( const Fun& fun  , const LHCb::VertexBase*           o ) { return fun ( o ) ; }
-      static Fun::result_type __call__ 
-      ( const Fun& fun  , const LHCb::Vertex*               o ) { return fun ( o ) ; }
-      static Fun::result_type __call__ 
-      ( const Fun& fun  , const LHCb::RecVertex*            o ) { return fun ( o ) ; }
+      // __call__ 
       static Fun::result_type __call__ 
       ( const Fun& fun  , const SmartRef<LHCb::Vertex>&     o ) { return fun ( o ) ; }
+      // __call__ 
       static Fun::result_type __call__ 
       ( const Fun& fun  , const SmartRef<LHCb::RecVertex>&  o ) { return fun ( o ) ; }
+      //
+      //
+      static Fun::result_type __call__ 
+      ( const Fun& fun  , const LHCb::Particle*  p ) 
+      {
+        const LHCb::VertexBase* _vertex = 0 ;
+        return 0 != p ? fun ( p->endVertex() ) : fun ( _vertex ) ;
+      }
+      // call as filter
+      //
+      // __call__ 
+      static LHCb::VertexBase::ConstVector __call__ 
+      ( const Fun& fun  , const LoKi::Types::VRange&            i )
+      { return i >> fun ; }
+      // __call__ 
+      static LHCb::VertexBase::ConstVector __call__ 
+      ( const Fun& fun  , const LHCb::VertexBase::ConstVector&  i )
+      { return i >> fun ; }
+      // __call__ 
+      static LHCb::VertexBase::ConstVector __call__ 
+      ( const Fun& fun  , const LHCb::Vertex::ConstVector&      i )
+      { return i >> fun ; }
+      // __call__ 
+      static LHCb::RecVertex::ConstVector  __call__ 
+      ( const Fun& fun  , const LHCb::RecVertex::ConstVector&   i )
+      { return i >> fun ; }      
+      // __call__ 
+      static LHCb::VertexBase::ConstVector __call__ 
+      ( const Fun& fun  , const LHCb::Vertex::Container*        i )
+      { return i >> fun ; }
+      // __call__ 
+      static LHCb::RecVertex::ConstVector  __call__ 
+      ( const Fun& fun  , const LHCb::RecVertex::Container*     i )
+      { return i >> fun ; }      
+      // __call__ 
+      static LHCb::VertexBase::ConstVector  __call__ 
+      ( const Fun& fun  , const SmartRefVector<LHCb::Vertex>&   i )
+      { return i >> fun ; }
+      // __call__ 
+      static LHCb::RecVertex::ConstVector   __call__ 
+      ( const Fun& fun  , const SmartRefVector<LHCb::RecVertex>& i )
+      { return i >> fun ; }
       // ======================================================================
-      static LHCb::VertexBase::ConstVector  __rrshift__ 
-      ( const Fun& fun  , const LHCb::VertexBase::ConstVector& o ) 
-      { return o >> fun  ; }
+      // __call__ 
+      static LHCb::Particle::ConstVector __call__ 
+      ( const Fun& fun  , const LHCb::Particle::ConstVector&    i )
+      { return i >> fun ; }
+      // __call__ 
+      static LHCb::Particle::ConstVector __call__ 
+      ( const Fun& fun  , const LHCb::Particle::Container*      i )
+      { return i >> fun ; }
+      // __call__ 
+      static LHCb::Particle::ConstVector __call__ 
+      ( const Fun& fun  , const LHCb::Particle::Selection*      i )
+      { return i >> fun ; }
+      // __call__ 
+      static LHCb::Particle::ConstVector __call__ 
+      ( const Fun& fun  , const SmartRefVector<LHCb::Particle>& i )
+      { return i >> fun ; }
+      // __call__ 
+      static LHCb::Particle::ConstVector __call__ 
+      ( const Fun& fun  , const LHCb::Particle::Range&          i )
+      { return i >> fun ; }      
+      // ======================================================================
+    public:
+      // ======================================================================
+      //
+      // rrshift as filter 
+      //
+      // __rrshift__ 
+      static LHCb::VertexBase::ConstVector __rrshift__ 
+      ( const Fun& fun  , const LHCb::VertexBase::ConstVector&  i )
+      { return i >> fun ; }
+      // __rrshift__ 
+      static LHCb::VertexBase::ConstVector __rrshift__ 
+      ( const Fun& fun  , const LoKi::Types::VRange&            i )
+      { return i >> fun ; }
+      // __rrshift__ 
+      static LHCb::VertexBase::ConstVector __rrshift__ 
+      ( const Fun& fun  , const LHCb::Vertex::ConstVector&      i )
+      { return i >> fun ; }
+      // __rrshift__ 
+      static LHCb::RecVertex::ConstVector  __rrshift__ 
+      ( const Fun& fun  , const LHCb::RecVertex::ConstVector&   i )
+      { return i >> fun ; }      
+      // __rrshift__ 
+      static LHCb::VertexBase::ConstVector __rrshift__ 
+      ( const Fun& fun  , const LHCb::Vertex::Container*        i )
+      { return i >> fun ; }
+      // __rrshift__ 
+      static LHCb::RecVertex::ConstVector  __rrshift__ 
+      ( const Fun& fun  , const LHCb::RecVertex::Container*     i )
+      { return i >> fun ; }      
+      // __rrshift__ 
+      static LHCb::VertexBase::ConstVector __rrshift__ 
+      ( const Fun& fun  , const SmartRefVector<LHCb::Vertex>&   i )
+      { return i >> fun ; }
+      // __rrshift__ 
       static LHCb::RecVertex::ConstVector   __rrshift__ 
-      ( const Fun& fun  , const LHCb::RecVertex::ConstVector&  o ) 
-      { return o >> fun  ; }
+      ( const Fun& fun  , const SmartRefVector<LHCb::RecVertex>& i )
+      { return i >> fun ; }
+      // ======================================================================
+      // some really  weird stuff
+      // ======================================================================
+      // __rrshift__ 
+      static LHCb::Particle::ConstVector __rrshift__ 
+      ( const Fun& fun  , const LHCb::Particle::ConstVector&    i )
+      { return i >> fun ; }
+      // __rrshift__ 
+      static LHCb::Particle::ConstVector __rrshift__ 
+      ( const Fun& fun  , const LHCb::Particle::Container*      i )
+      { return i >> fun ; }
+      // __rrshift__ 
+      static LHCb::Particle::ConstVector __rrshift__ 
+      ( const Fun& fun  , const LHCb::Particle::Selection*      i )
+      { return i >> fun ; }
+      // __rrshift__ 
+      static LHCb::Particle::ConstVector __rrshift__ 
+      ( const Fun& fun  , const SmartRefVector<LHCb::Particle>& i )
+      { return i >> fun ; }
+      // __rrshift__ 
+      static LHCb::Particle::ConstVector __rrshift__ 
+      ( const Fun& fun  , const LHCb::Particle::Range&          i )
+      { return i >> fun ; }      
+      // ======================================================================
+      static Fun::result_type __rrshift__ 
+      ( const Fun& fun  , const LHCb::VertexBase*           o ) { return fun ( o ) ; }
+      // __call__ 
+      static Fun::result_type __rrshift__ 
+      ( const Fun& fun  , const SmartRef<LHCb::Vertex>&     o ) { return fun ( o ) ; }
+      // __call__ 
+      static Fun::result_type __rrshift__ 
+      ( const Fun& fun  , const SmartRef<LHCb::RecVertex>&  o ) { return fun ( o ) ; }
+      //
+      static Fun::result_type __rrshift__ 
+      ( const Fun& fun  , const LHCb::Particle*  p ) 
+      {
+        const LHCb::VertexBase* _vertex = 0 ;
+        return 0 != p ? fun ( p->endVertex() ) : fun ( _vertex ) ;
+      }
+      // ======================================================================
+    public:
       // ======================================================================
       static LoKi::FunctorFromFunctor<const Type*,bool> __rshift__            
-      ( const Fun& fun  , const Fun&                         o ) { return fun >> o  ; }
+      ( const Fun& fun  , const Fun& o ) { return fun >> o  ; }
       // ======================================================================
     } ;
     // ========================================================================

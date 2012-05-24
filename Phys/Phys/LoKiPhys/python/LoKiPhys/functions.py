@@ -222,7 +222,7 @@ M2       = MASS(2)
 ## @see LoKi::Cuts::M23  
 M23      = MASS(2,3)
 ## @see LoKi::Cuts::M24  
-M124     = MASS(2,4)
+M24     = MASS(2,4)
 ## @see LoKi::Cuts::M3  
 M3       = MASS(3)
 ## @see LoKi::Cuts::M34  

@@ -13,6 +13,7 @@
 // Event 
 // ============================================================================
 #include "Event/Particle.h"
+#include "Event/RecVertex.h"
 // ============================================================================
 namespace LoKi 
 {
@@ -205,6 +206,202 @@ namespace LoKi
   { return s << ( this->m_value ? "VALL" : "VNONE" ) ; }
   // ==========================================================================  
 } //                                                      end of namespace LoKi
+// ============================================================================
+#include "LoKi/PhysRangeTypes.h"
+// ============================================================================
+// a little bit of streamers 
+// ============================================================================
+GAUDI_API 
+LHCb::Particle::ConstVector
+operator>> 
+( const LHCb::Particle::ConstVector&    input , 
+  const LoKi::Types::Cuts&              cuts  ) ;
+// ============================================================================
+GAUDI_API 
+LHCb::Particle::ConstVector
+operator>> 
+( const LHCb::Particle::Container*      input , 
+  const LoKi::Types::Cuts&              cuts  ) ;
+// ============================================================================
+GAUDI_API 
+LHCb::Particle::ConstVector
+operator>> 
+( const LHCb::Particle::Selection*      input , 
+  const LoKi::Types::Cuts&              cuts  ) ;
+// ============================================================================
+GAUDI_API 
+LHCb::Particle::ConstVector
+operator>> 
+( const SmartRefVector<LHCb::Particle>& input , 
+  const LoKi::Types::Cuts&              cuts  ) ;
+// ============================================================================
+GAUDI_API 
+LHCb::Particle::ConstVector
+operator>> 
+( const LHCb::Particle::Range&          input , 
+  const LoKi::Types::Cuts&              cuts  ) ;
+// ============================================================================
+// VERTICES 
+// ============================================================================
+GAUDI_API 
+LHCb::VertexBase::ConstVector
+operator>> 
+( const LHCb::VertexBase::ConstVector&  input , 
+  const LoKi::Types::VCuts&             cuts  ) ;
+// ============================================================================
+GAUDI_API 
+LHCb::VertexBase::ConstVector
+operator>> 
+( const LHCb::Vertex::ConstVector&      input , 
+  const LoKi::Types::VCuts&             cuts  ) ;
+// ============================================================================
+GAUDI_API 
+LHCb::RecVertex::ConstVector
+operator>> 
+( const LHCb::RecVertex::ConstVector&   input , 
+  const LoKi::Types::VCuts&             cuts  ) ;
+// ============================================================================
+GAUDI_API 
+LHCb::VertexBase::ConstVector
+operator>> 
+( const SmartRefVector<LHCb::Vertex>&   input , 
+  const LoKi::Types::VCuts&             cuts  ) ;
+// ============================================================================
+GAUDI_API 
+LHCb::RecVertex::ConstVector
+operator>> 
+( const SmartRefVector<LHCb::RecVertex>& input , 
+  const LoKi::Types::VCuts&              cuts  ) ;
+// ============================================================================
+GAUDI_API 
+LHCb::VertexBase::ConstVector
+operator>> 
+( const LHCb::Vertex::Container*        input , 
+  const LoKi::Types::VCuts&             cuts  ) ;
+// ============================================================================
+GAUDI_API 
+LHCb::RecVertex::ConstVector
+operator>> 
+( const LHCb::RecVertex::Container*     input , 
+  const LoKi::Types::VCuts&             cuts  ) ;
+// ============================================================================
+GAUDI_API 
+LHCb::VertexBase::ConstVector
+operator>> 
+( const LoKi::Types::VRange&            input , 
+  const LoKi::Types::VCuts&             cuts  ) ;
+// ============================================================================
+// Functions 
+// ============================================================================
+GAUDI_API 
+std::vector<double>
+operator>> 
+( const LHCb::Particle::ConstVector&    input , 
+  const LoKi::Types::Func&              cuts  ) ;
+// ============================================================================
+GAUDI_API 
+std::vector<double>
+operator>> 
+( const LHCb::Particle::Range&          input , 
+  const LoKi::Types::Func&              cuts  ) ;
+// ============================================================================
+GAUDI_API 
+std::vector<double>
+operator>> 
+( const LHCb::Particle::Container*      input , 
+  const LoKi::Types::Func&              cuts  ) ;
+// ============================================================================
+GAUDI_API 
+std::vector<double>
+operator>> 
+( const LHCb::Particle::Selection*      input , 
+  const LoKi::Types::Func&              cuts  ) ;
+// ============================================================================
+GAUDI_API 
+std::vector<double>
+operator>> 
+( const SmartRefVector<LHCb::Particle>& input , 
+  const LoKi::Types::Func&              cuts  ) ;
+// ============================================================================
+// vertex functions 
+// ============================================================================
+GAUDI_API 
+std::vector<double>
+operator>> 
+( const LHCb::VertexBase::ConstVector&  input , 
+  const LoKi::Types::VFunc&             cuts  ) ;
+// ============================================================================
+GAUDI_API 
+std::vector<double>
+operator>> 
+( const LHCb::Vertex::ConstVector&      input , 
+  const LoKi::Types::VFunc&             cuts  ) ;
+// ============================================================================
+GAUDI_API 
+std::vector<double>
+operator>> 
+( const LHCb::RecVertex::ConstVector&   input , 
+  const LoKi::Types::VFunc&             cuts  ) ;
+// ============================================================================
+GAUDI_API 
+std::vector<double>
+operator>> 
+( const LHCb::Vertex::Container*        input , 
+  const LoKi::Types::VFunc&             cuts  ) ;
+// ============================================================================
+GAUDI_API 
+std::vector<double>
+operator>> 
+( const LHCb::RecVertex::Container*     input , 
+  const LoKi::Types::VFunc&             cuts  ) ;
+// ============================================================================
+GAUDI_API 
+std::vector<double>
+operator>> 
+( const SmartRefVector<LHCb::Vertex>&   input , 
+  const LoKi::Types::VFunc&             cuts  ) ;
+// ============================================================================
+GAUDI_API 
+std::vector<double>
+operator>> 
+( const SmartRefVector<LHCb::RecVertex>&input , 
+  const LoKi::Types::VFunc&             cuts  ) ;
+// ============================================================================
+// Some weird stuff 
+// ============================================================================
+GAUDI_API 
+LHCb::Particle::ConstVector
+operator>> 
+( const LHCb::Particle::ConstVector&    input , 
+  const LoKi::Types::VCuts&             cuts  ) ;
+// ============================================================================
+GAUDI_API 
+LHCb::Particle::ConstVector
+operator>> 
+( const LHCb::Particle::Container*      input , 
+  const LoKi::Types::VCuts&             cuts  ) ;
+// ============================================================================
+GAUDI_API 
+LHCb::Particle::ConstVector
+operator>> 
+( const LHCb::Particle::Selection*      input , 
+  const LoKi::Types::VCuts&             cuts  ) ;
+// ============================================================================
+GAUDI_API 
+LHCb::Particle::ConstVector
+operator>> 
+( const SmartRefVector<LHCb::Particle>& input , 
+  const LoKi::Types::VCuts&             cuts  ) ;
+// ============================================================================
+GAUDI_API 
+LHCb::Particle::ConstVector
+operator>> 
+( const LHCb::Particle::Range&          input , 
+  const LoKi::Types::VCuts&             cuts  ) ;
+// ============================================================================
+
+
+
 // ============================================================================
 //                                                                      The END 
 // ============================================================================

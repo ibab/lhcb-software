@@ -4,7 +4,14 @@
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2012-05-24 - Vanya Belyaev
+
+ - improve interatcive decorators 
+ - fix typo for M24 
+
 !========================= LoKiPhys v10r10 2012-05-24 =========================
+
 
 !========================= LoKiPhys v10r9 2012-04-17 =========================
 
