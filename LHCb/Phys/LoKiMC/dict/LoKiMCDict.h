@@ -112,20 +112,20 @@ namespace LoKi
       //
       // __call__ 
       static LoKi::MCTypes::MCContainer 
-      __call__ ( const Fun& fun  , const LoKi::MCTypes::MCContainer& o ) 
-      { return o >> fun  ; }
+      __call__ ( const Fun& fun  , const LoKi::MCTypes::MCContainer&  e ) 
+      { return e >> fun ; }
       // __call__ 
       static LoKi::MCTypes::MCContainer
       __call__ ( const Fun& fun  , const LHCb::MCParticle::Container* e ) 
-      { return __rrshift__ ( fun , e ) ; }
+      { return e >> fun ; }
       // __call__ 
       static LoKi::MCTypes::MCContainer
       __call__ ( const Fun& fun  , const LoKi::MCTypes::MCRange& e ) 
-      { return __rrshift__ ( fun , e ) ; }
+      { return e >> fun ; }
       // __call__ 
       static LoKi::MCTypes::MCContainer
       __call__ ( const Fun& fun  , const SmartRefVector<Type>& e ) 
-      { return __rrshift__ ( fun , e ) ; }
+      { return e >> fun ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -142,67 +142,20 @@ namespace LoKi
       // ======================================================================
       // __rrshift__ 
       static LoKi::MCTypes::MCContainer 
-      __rrshift__ ( const Fun& fun  , const LoKi::MCTypes::MCContainer& o ) 
-      {
-        //
-        LoKi::MCTypes::MCContainer r ;
-        LoKi::Extract::mcParticles ( o.begin () , 
-                                     o.end   () , 
-                                     std::back_inserter ( r ) , fun ) ;
-        //
-        std::set<const LHCb::MCParticle*> s1 ( r.begin() , r.end() ) ;
-        r.clear  () ;
-        r.insert ( r.end() , s1.begin() , s1.end() ) ;
-        return r ; 
-      }
-      // __call__ 
+      __rrshift__ ( const Fun& fun  , const LoKi::MCTypes::MCContainer&  e ) 
+      { return e >> fun ; }
+      // __rrshift__ 
       static LoKi::MCTypes::MCContainer
       __rrshift__ ( const Fun& fun  , const LHCb::MCParticle::Container* e ) 
-      { 
-        //
-        LoKi::MCTypes::MCContainer r ;
-        if ( 0 == e ) { return r ; }
-        //
-        LoKi::Extract::mcParticles ( e -> begin () , 
-                                     e -> end   () , 
-                                     std::back_inserter ( r ) , fun ) ;
-        //
-        std::set<const LHCb::MCParticle*> s1 ( r.begin() , r.end() ) ;
-        r.clear  () ;
-        r.insert ( r.end() , s1.begin() , s1.end() ) ;
-        return r ;
-      }
-      // __call__ 
+      { return e >> fun ; }
+      // __rrshift__ 
       static LoKi::MCTypes::MCContainer
       __rrshift__ ( const Fun& fun  , const LoKi::MCTypes::MCRange& e ) 
-      { 
-        //
-        LoKi::MCTypes::MCContainer r ;
-        //
-        LoKi::Extract::mcParticles ( e.begin () , 
-                                     e.end   () , 
-                                     std::back_inserter ( r ) , fun ) ;
-        //
-        std::set<const LHCb::MCParticle*> s1 ( r.begin() , r.end() ) ;
-        r.clear  () ;
-        r.insert ( r.end() , s1.begin() , s1.end() ) ;
-        return r ;
-      }
-      // __call__ 
+      { return e >> fun ; }
+      // __rrshift__ 
       static LoKi::MCTypes::MCContainer
       __rrshift__ ( const Fun& fun  , const SmartRefVector<Type>& e ) 
-      { 
-        //
-        LoKi::MCTypes::MCContainer r ;
-        LoKi::Extract::mcParticles ( e.begin () , 
-                                     e.end   () , 
-                                     std::back_inserter ( r ) , fun ) ;
-        //
-        std::set<const LHCb::MCParticle*> s1 ( r.begin() , r.end() ) ;
-        r.clear  () ;
-        r.insert ( r.end() , s1.begin() , s1.end() ) ;
-        return r ;
-      }
+      { return e >> fun ; }
       // ======================================================================
     public:
       // ======================================================================

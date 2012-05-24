@@ -234,6 +234,32 @@ namespace LoKi
   // ==========================================================================  
 } //                                                      end of namespace LoKi
 // ============================================================================
+// a little bit of streamers 
+// ============================================================================
+GAUDI_API 
+LHCb::MCParticle::ConstVector 
+operator>>
+( const LHCb::MCParticle::ConstVector&    input , 
+  const LoKi::Types::MCCuts&              cuts  ) ;
+// ============================================================================
+GAUDI_API 
+LHCb::MCParticle::ConstVector 
+operator>> 
+( const LHCb::MCParticle::Container*      input , 
+  const LoKi::Types::MCCuts&              cuts  ) ;
+// ============================================================================
+GAUDI_API 
+LHCb::MCParticle::ConstVector 
+operator>> 
+( const LoKi::MCTypes::MCRange&           input , 
+  const LoKi::Types::MCCuts&              cuts  ) ;
+// ============================================================================
+GAUDI_API 
+LHCb::MCParticle::ConstVector 
+operator>> 
+( const SmartRefVector<LHCb::MCParticle>& input , 
+  const LoKi::Types::MCCuts&              cuts  ) ;
+// ============================================================================
 //                                                                      The END 
 // ============================================================================
 #endif // LOKI_MCTYPES_H
