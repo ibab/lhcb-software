@@ -92,11 +92,15 @@ for model in ( Gaudi.Math.Chebyshev              ,
                Gaudi.Math.LASS23L                ,
                Gaudi.Math.Bugg23L                ,
                Gaudi.Math.BW23L                  ,
+               Gaudi.Math.Flatte23L              ,
                Gaudi.Math.Voigt                  ) :
     model . tf1 = _tf1_ 
 
-Gaudi.Math.LASS23L.amp = _amp_
-Gaudi.Math.Bugg23L.amp = _amp_
+Gaudi.Math.LASS23L   . amp = _amp_
+Gaudi.Math.Bugg23L   . amp = _amp_
+Gaudi.Math.Flatte    . amp = _amp_
+Gaudi.Math.Flatte2   . amp = _amp_
+Gaudi.Math.Flatte23L . amp = _amp_
 
 # =============================================================================
 if '__main__' == __name__ :

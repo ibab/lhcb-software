@@ -5,6 +5,9 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2012-05-24 - Vanya Belyaev
+ - Add Flatte's function, corrected for proper phase space factors 
+
 ! 2012-05-23 - Vanya Belyaev
  - add Bugg' function for low mass S-wave dipion system ("sigma")
      *
