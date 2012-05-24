@@ -268,6 +268,8 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         if 'ForcedReco' in nameParts[1]:
             l0du = self.getProp('L0Filter')['BB']
             odin = '(ODIN_BXTYP == LHCb.ODIN.BeamCrossing)'
+            #reject lumi events for the FullZ line
+            if whichBeam=='FullZ': odin += ' & (ODIN_TRGTYP != LHCb.ODIN.LumiTrigger)'
         elif 'HighRho' in nameParts[1]:
             l0du = self.getProp('L0Filter')['BB']
             reqBB    = '(ODIN_BXTYP == LHCb.ODIN.BeamCrossing)'
