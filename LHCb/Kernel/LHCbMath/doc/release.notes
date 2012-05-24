@@ -5,6 +5,7 @@
 !               for geometry and matrix algebra
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
+!========================= LHCbMath v3r32 2012-05-24 =========================
 
 ! 2012-05-24 - Vanya Belyaev
  - add Flatte's function properly corrected for phase space factors 
@@ -1022,4 +1023,5 @@
 
 ! 2006-05-08 - Juan Palacios
  - First release of Kernel/LHCbMath
+
 
