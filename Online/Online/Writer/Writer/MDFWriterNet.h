@@ -55,10 +55,10 @@ namespace LHCb {
 
     /// The current file being written to.
     std::string m_fileName;
-    
+
     //// The stream this file belongs to
     std::string m_streamID;
-    
+
     /// The MD5 checksum of the file.
     TMD5 *m_md5;
 
@@ -73,7 +73,7 @@ namespace LHCb {
 
       /// The number of events
       unsigned int m_events;
-      
+
       /// The number of phys events, that means bit 34 in the trigger mask
       /// was set
       unsigned int m_physStat;
@@ -121,7 +121,7 @@ namespace LHCb {
 
 
     /// get the monitor values
-    inline Monitor* getMonitor() { return m_mon; } 
+    inline Monitor* getMonitor() { return m_mon; }
 
     /// Increments the sequence number.
     inline void incSeqNum() { ++m_mon->m_seqNum; }
@@ -134,19 +134,19 @@ namespace LHCb {
 
     /// Returns the number of bytes written to the file so far.
     inline size_t getBytesWritten() { return m_mon->m_bytesWritten; }
-    
+
     /// increases the number of events by one
     inline void incEvents() { m_mon->m_events++; }
-    
+
     /// increases the number of phys events by one
     inline void incPhysStat() { m_mon->m_physStat++; }
 
     /// Increment the trigger type statistic
-    inline bool incTriggerType(int trg) { 
+    inline bool incTriggerType(int trg) {
         bool ret = true;
-        if(trg < MAX_TRIGGER_TYPES && trg >=0) 
-            m_mon->m_trgEvents[trg]+=1; 
-        else ret = false; 
+        if(trg < MAX_TRIGGER_TYPES && trg >=0)
+            m_mon->m_trgEvents[trg]+=1;
+        else ret = false;
         return ret;
     }
 
@@ -164,7 +164,7 @@ namespace LHCb {
     unsigned int getMidLumi(){ return m_mon->m_statEvents[MIDLUMI]; }
     unsigned int getHlt1In() { return m_mon->m_statEvents[HLT1IN]; }
     unsigned int getHlt1Ex() { return m_mon->m_statEvents[HLT1EX]; }
-    
+
     void incPhysEventsIn(){  m_mon->m_statEvents[PHYSIN]++; }
     void incPhysEventsEx(){  m_mon->m_statEvents[PHYSEX]++; }
     void incMBiasEventsIn(){  m_mon->m_statEvents[MBIASIN]++; }
@@ -185,7 +185,7 @@ namespace LHCb {
             memcpy((void*) destBuffer, (void*) m_mon->m_statEvents, size*sizeof(unsigned int));
             return 0;
         }
-        return -1; 
+        return -1;
     }
 
     /// set the value of events, used when there where events before the
@@ -201,7 +201,7 @@ namespace LHCb {
     inline unsigned int getPhysStat() { return m_mon->m_physStat; }
 
     /// get the number of trigger events
-    inline int getTrgEvents(unsigned int * destBuffer, int size) { 
+    inline int getTrgEvents(unsigned int * destBuffer, int size) {
         if(size == MAX_TRIGGER_TYPES) {
             memcpy((void*) destBuffer, (void*) m_mon->m_trgEvents, size*sizeof(unsigned int));
             return 0;
@@ -285,7 +285,7 @@ namespace LHCb {
       if(!m_top) {
 	m_top = f;
 	m_bottom = f;
-        f->setNext(NULL); 
+        f->setNext(NULL);
 	f->setPrev(NULL);
       } else {
 	m_bottom->setNext(f);
@@ -305,7 +305,7 @@ namespace LHCb {
       }
       return NULL;
     }
-    File* removeFile(File *f) 
+    File* removeFile(File *f)
     {
       if(f->getPrev() == NULL)
 	m_top = f->getNext();
@@ -335,7 +335,7 @@ namespace LHCb {
     typedef LHCb::Connection Connection;
   protected:
 
-    
+
 
     /// The maximum number of retry on finalize call runDB communication.
     unsigned int m_MaxRetry;
@@ -353,11 +353,11 @@ namespace LHCb {
     /// Period between two updates.
     int m_UpdatePeriod;
 
-    /// Time when the Online statistics were updated for the last time in the RunDB. 
-    struct timeval m_prevUpdate;   
- 
-    /// Time when the trigger rates were sent to the message queue. 
-    struct timeval m_prevMsgQueue;    
+    /// Time when the Online statistics were updated for the last time in the RunDB.
+    struct timeval m_prevUpdate;
+
+    /// Time when the trigger rates were sent to the message queue.
+    struct timeval m_prevMsgQueue;
 
     /// Condition to perform the MD5 sum on the fly.
     bool m_enableMD5;
@@ -383,6 +383,9 @@ namespace LHCb {
     /// The maximum amount of seconds to wait for events after which a file is closed.
     int m_runFileTimeoutSeconds;
 
+    /// The maximum amount of seconds to wait for events after which a file is closed for LHCb1 Partition.
+    int m_runFileTimeoutSecondsLHCb1;
+
     /// The maximum file size (in MB) to write before creating a new file.
     size_t m_maxFileSizeMB;
 
@@ -400,7 +403,7 @@ namespace LHCb {
 
     /// The number of events for the current run number.
     int m_TotEvts;
-  
+
     /// Property: The stream identifier
     std::string m_streamID;
 
@@ -414,13 +417,13 @@ namespace LHCb {
     Connection *m_srvConnection;
 
     IIncidentSvc* m_incidentSvc;
-    
+
     /// The object that encapsulates all RPC communication.
     RPCComm *m_rpcObj;
 
     /// The message stream to log to.
     MsgStream *m_log;
-    
+
     /// the named queue which is used to send the monitoring messages to the
     /// daemon running on this machines which collects all monitoring values
     /// from all writers on this machine and then publishes them over DIM
@@ -440,7 +443,7 @@ namespace LHCb {
     pthread_mutex_t m_SyncFileList;
 
     /// Monitoring service of the total number of events (just for display in the run control)
-    IMonitorSvc* m_MonitorSvc; 
+    IMonitorSvc* m_MonitorSvc;
 
     /** Generates a new file name from the MDF information.
      * @param runNumber  The current run number, to be included in the file name.
@@ -462,7 +465,7 @@ namespace LHCb {
     /// Count the HLT routing statistics, inclusive and exclusive.
     virtual void countRouteStat(MDFHeader *mHeader, size_t);
 
-    /// Check the integrity of the MDFHeader. Statistics can only be performed on version 3 
+    /// Check the integrity of the MDFHeader. Statistics can only be performed on version 3
     virtual bool checkHeader(const MDFHeader *mHeader, size_t);
 
     // Set the boolean which allows the process to exit from the endless retry loop on XML RPC failures
@@ -472,11 +475,11 @@ namespace LHCb {
 
   public:
 
-    /// the runs declared closed by the RunDB 
+    /// the runs declared closed by the RunDB
     std::set<unsigned int> m_closedRuns;
-    
+
     /// the number of discarded events for each run
-    std::map<unsigned int, unsigned int> m_discardedEvents;	
+    std::map<unsigned int, unsigned int> m_discardedEvents;
     /// Destructor.
     virtual ~MDFWriterNet();
 
@@ -485,7 +488,7 @@ namespace LHCb {
 
     /// Overrides Algorithm::initialize()
     virtual StatusCode initialize();
-    
+
     /// Overrides Algorith::finalize()
     virtual StatusCode finalize();
 
@@ -509,7 +512,7 @@ namespace LHCb {
 
     // handle incidents
     void handle(const Incident&);
-    
+
     /// Writes a chunk to the storage cluster server. Overrides Algorithm::writeBuffer().
     virtual StatusCode writeBuffer(void *const ioDesc, const void *data, size_t len);
 
