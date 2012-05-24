@@ -16,10 +16,10 @@ branches          cmt doc python tests doc src Analysis
 #    Put as many lines as needed, with all packages, without the '#'
 # =============================================================================
 use   GaudiPython  v*  
-use   LHCbMath  HEAD  Kernel
-use   pytools  v*  LCG_Interfaces -no_auto_imports
-use   pyanalysis  v*  LCG_Interfaces -no_auto_imports
-use   ROOT  v*  LCG_Interfaces 
+use   LHCbMath     v*  Kernel
+use   pytools      v*  LCG_Interfaces -no_auto_imports
+use   pyanalysis   v*  LCG_Interfaces -no_auto_imports
+use   ROOT         v*  LCG_Interfaces 
 
 # ================ Produce LCG dictionary =====================================
 apply_pattern      reflex_dictionary_src                                       \
