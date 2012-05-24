@@ -4,6 +4,7 @@
 ! Purpose     : Collection of useful python modules for LHCb-specific 
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
+!========================= AnalysisPython v2r13 2012-05-24 =========================
 
 ! 2012-05-24 - Vanya Belyaev
  - Add Flatte's function, corrected for proper phase space factors 
@@ -294,3 +295,4 @@
 
 ! 2009-07-14 - Juan PALACIOS
  - First import of package.
+!========================= AnalysisPython v2r13 2012-05-24 =========================
