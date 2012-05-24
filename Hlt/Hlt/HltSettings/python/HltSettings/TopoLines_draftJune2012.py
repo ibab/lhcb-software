@@ -79,8 +79,8 @@ class TopoLines :
             'MIN_V0_LT'         : '10*ps',
             # bdt cuts
             'BDT_2BODY_MIN'     : 0.4,
-            'BDT_3BODY_MIN'     : 0.5,
-            'BDT_4BODY_MIN'     : 0.5,
+            'BDT_3BODY_MIN'     : 0.4,
+            'BDT_4BODY_MIN'     : 0.3,
             'BDT_2BODYMU_MIN'   : 0.1,
             'BDT_3BODYMU_MIN'   : 0.1,
             'BDT_4BODYMU_MIN'   : 0.1,
