@@ -5,6 +5,9 @@
 ! Purpose     : track-related functors for LoKi-framework 
 ! -----------------------------------------------------------------------------
 
+! 2012-05-24 - Vanya Belyaev
+ - improve decorators 
+
 !========================= LoKiTracks v2r6 2012-04-17 =========================
 ! 2012-04-09 - Pieter David
  - use the new LoKi::FastVertex::distance(line,track) method for the

@@ -175,6 +175,73 @@ namespace LoKi
   // ==========================================================================
 } //                                                      end of namespace LoKi
 // ============================================================================
+// a little bit of streamers 
+// ============================================================================
+GAUDI_API 
+LHCb::Track::ConstVector
+operator>> 
+( const LHCb::Track::ConstVector&    input ,
+  const LoKi::Types::TrCuts&         cuts  ) ;
+// ============================================================================
+GAUDI_API 
+LHCb::Track::ConstVector
+operator>> 
+( const LHCb::Track::Range&          input ,
+  const LoKi::Types::TrCuts&         cuts  ) ;
+// ===========================================================================
+GAUDI_API 
+LHCb::Track::ConstVector
+operator>> 
+( const SmartRefVector<LHCb::Track>& input ,
+  const LoKi::Types::TrCuts&         cuts  ) ;
+// ===========================================================================
+GAUDI_API 
+LHCb::Track::ConstVector
+operator>> 
+( const LHCb::Track::Container*      input ,
+  const LoKi::Types::TrCuts&         cuts  ) ;
+// ===========================================================================
+GAUDI_API 
+LHCb::Track::ConstVector
+operator>> 
+( const LHCb::Track::Selection*      input ,
+  const LoKi::Types::TrCuts&         cuts  ) ;
+// ===========================================================================
+// functions 
+// ===========================================================================
+GAUDI_API 
+std::vector<double>
+operator>> 
+( const LHCb::Track::ConstVector&    input ,
+  const LoKi::Types::TrFunc&         cuts  ) ;
+// ============================================================================
+GAUDI_API 
+std::vector<double>
+operator>> 
+( const LHCb::Track::Range&          input ,
+  const LoKi::Types::TrFunc&         cuts  ) ;
+// ===========================================================================
+GAUDI_API 
+std::vector<double>
+operator>> 
+( const SmartRefVector<LHCb::Track>& input ,
+  const LoKi::Types::TrFunc&         cuts  ) ;
+// ===========================================================================
+GAUDI_API 
+std::vector<double>
+operator>> 
+( const LHCb::Track::Container*      input ,
+  const LoKi::Types::TrFunc&         cuts  ) ;
+// ===========================================================================
+GAUDI_API 
+std::vector<double>
+operator>> 
+( const LHCb::Track::Selection*      input ,
+  const LoKi::Types::TrFunc&         cuts  ) ;
+// ===========================================================================
+
+
+// ============================================================================
 //                                                                      The END 
 // ============================================================================
 #endif // LOKI_TRACKTYPES_H
