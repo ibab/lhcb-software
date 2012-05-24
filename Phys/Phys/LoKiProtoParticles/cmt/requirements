@@ -4,7 +4,7 @@
 # Maintainer : Vanya BELYAEV
 # =============================================================================
 package           LoKiProtoParticles
-version           v2r0p1
+version           v2r1
 
 # =============================================================================
 branches          cmt doc src dict python LoKi tests  
