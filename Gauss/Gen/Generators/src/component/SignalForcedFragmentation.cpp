@@ -3,8 +3,8 @@
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/PhysicalConstants.h"
 
@@ -53,9 +53,9 @@ StatusCode SignalForcedFragmentation::initialize( ) {
   StatusCode sc = Signal::initialize( ) ;
   if ( sc.isFailure() ) return sc ;
 
-  IParticlePropertySvc * ppSvc = 
-    svc< IParticlePropertySvc >( "ParticlePropertySvc" ) ;
-  ParticleProperty * prop = ppSvc -> findByStdHepID( *m_pids.begin() ) ;
+  LHCb::IParticlePropertySvc * ppSvc = 
+    svc< LHCb::IParticlePropertySvc >( "ParticlePropertySvc" ) ;
+  const LHCb::ParticleProperty * prop = ppSvc -> find( LHCb::ParticleID( *m_pids.begin() ) ) ;
   m_signalMass = prop -> mass() ;
 
   release( ppSvc ) ;

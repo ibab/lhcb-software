@@ -108,14 +108,14 @@ public:
   // ===================================================================
   /// Declare a particle stable to the production generator.
   virtual void setStable
-  ( const ParticleProperty * /* thePP */ ) { }
+  ( const LHCb::ParticleProperty * /* thePP */ ) { }
   // ===================================================================
   /** Update the properties of the particle in the production generator
    *  with values from the particle property service.
    */
   // ===================================================================
   virtual void updateParticleProperties
-  ( const ParticleProperty * /* thePP */ ) {};
+  ( const LHCb::ParticleProperty * /* thePP */ ) {};
   // ===================================================================
   /// Turn off the fragmentation step in the generation.
   virtual void turnOffFragmentation  ( ) {} ;
@@ -147,7 +147,7 @@ public:
    *  the particle property service (like mass of top quark, ...)
    */
   virtual bool isSpecialParticle
-  ( const ParticleProperty* /* thePP */ ) const { return true ; }
+  ( const LHCb::ParticleProperty* /* thePP */ ) const { return true ; }
   // ===================================================================
   /// Prepare the generator to force fragmentationto in the thePdgId flavour.
   virtual StatusCode setupForcedFragmentation

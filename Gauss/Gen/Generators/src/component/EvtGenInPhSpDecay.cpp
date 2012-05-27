@@ -13,12 +13,12 @@
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/IRndmGen.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/GaudiException.h"
+
 //STL
 #include <iostream>
 #include <fstream>
+
 // from Event
 #include "Event/HepMCEvent.h"
 

@@ -8,8 +8,10 @@
 
 // Forward declarations
 namespace HepMC { class GenEvent ; }
-namespace LHCb { class GenCollision ; }
-class ParticleProperty ;
+namespace LHCb { class GenCollision ; 
+  class ParticleProperty ;
+}
+
 
 
 /** @class IProductionTool IProductionTool.h "Generators/IProductionTool.h"
@@ -21,7 +23,7 @@ class ParticleProperty ;
  *  @date   2005-08-16
  */
 
-static const InterfaceID IID_IProductionTool( "IProductionTool" , 3 , 0 ) ;
+static const InterfaceID IID_IProductionTool( "IProductionTool" , 4 , 0 ) ;
 
 class IProductionTool : virtual public IAlgTool {
 public:
@@ -40,12 +42,12 @@ public:
                                     LHCb::GenCollision * theInfo ) = 0 ;
 
   /// Declare a particle stable to the production generator.
-  virtual void setStable( const ParticleProperty * thePP ) = 0 ;
+  virtual void setStable( const LHCb::ParticleProperty * thePP ) = 0 ;
 
   /** Update the properties of the particle in the production generator
    *  with values from the particle property service.
    */
-  virtual void updateParticleProperties( const ParticleProperty * thePP ) = 0 ;
+  virtual void updateParticleProperties( const LHCb::ParticleProperty * thePP ) = 0 ;
 
   /// Turn off the fragmentation step in the generation.
   virtual void turnOffFragmentation( ) = 0 ;
@@ -73,7 +75,7 @@ public:
   /** Define special particles whose properties must not be updated from 
    *  the particle property service (like mass of top quark, ...)
    */
-  virtual bool isSpecialParticle( const ParticleProperty * thePP ) const = 0 ;
+  virtual bool isSpecialParticle( const LHCb::ParticleProperty * thePP ) const = 0 ;
 
   /// Prepare the generator to force fragmentationto in the thePdgId flavour.
   virtual StatusCode setupForcedFragmentation( const int thePdgId ) = 0 ;

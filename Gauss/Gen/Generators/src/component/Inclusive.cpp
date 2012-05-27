@@ -6,8 +6,8 @@
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 
 // from Kernel
 #include "MCInterfaces/IGenCutTool.h"
@@ -73,15 +73,15 @@ StatusCode Inclusive::initialize( ) {
   for ( std::vector<int>::iterator it = m_pidVector.begin() ; 
         it != m_pidVector.end() ; ++it ) m_pids.insert( *it ) ;
   
-  IParticlePropertySvc * ppSvc =
-    svc< IParticlePropertySvc >( "ParticlePropertySvc" ) ;
+  LHCb::IParticlePropertySvc * ppSvc =
+    svc< LHCb::IParticlePropertySvc >( "ParticlePropertySvc" ) ;
   
   info() << "Generating Inclusive events of " ;
   PIDs::const_iterator it ;
   bool bottom( false ) , charm( false ) ;
   
   for ( it = m_pids.begin() ; it != m_pids.end() ; ++it ) {
-    ParticleProperty * prop = ppSvc -> findByStdHepID( *it ) ;
+    const LHCb::ParticleProperty * prop = ppSvc -> find( LHCb::ParticleID( *it ) ) ;
     if ( 0 == prop ) 
       warning() << "PDG Code " << (*it) << " does not exist." << endreq ;
     else {

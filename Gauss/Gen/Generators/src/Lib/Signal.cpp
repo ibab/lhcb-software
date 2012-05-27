@@ -5,8 +5,8 @@
 #include "Generators/Signal.h"
 
 // from Gaudi
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 
 // from Generators
@@ -106,22 +106,22 @@ StatusCode Signal::initialize( ) {
   for ( std::vector<int>::iterator it = m_pidVector.begin() ; 
         it != m_pidVector.end() ; ++it ) m_pids.insert( *it ) ;
         
-  IParticlePropertySvc * ppSvc =
-    svc< IParticlePropertySvc >( "ParticlePropertySvc" ) ;
+  LHCb::IParticlePropertySvc * ppSvc =
+    svc< LHCb::IParticlePropertySvc >( "ParticlePropertySvc" ) ;
     
   info() << "Generating Signal events of " ;
   PIDs::const_iterator it2 ;
   for ( it2 = m_pids.begin() ; it2 != m_pids.end() ; ++it2 ) {
-    ParticleProperty * prop = ppSvc -> findByStdHepID( *it2 ) ;
+    const LHCb::ParticleProperty * prop = ppSvc -> find( LHCb::ParticleID( *it2 ) ) ;
     info() << prop -> particle() << " " ;
  
     LHCb::ParticleID pid( prop -> pdgID() ) ;
      
-    m_signalPID  = abs( prop -> pdgID() ) ;
+    m_signalPID  = pid.abspid() ;
     if ( pid.hasCharm() ) m_signalQuark = LHCb::ParticleID::charm ;
     else if ( pid.hasBottom()    ) m_signalQuark = LHCb::ParticleID::bottom ;     
      
-    if ( prop -> pdgID() > 0 ) { m_sigName = prop -> particle() ; }
+    if ( pid.pid() > 0 ) { m_sigName = prop -> particle() ; }
     else { m_sigBarName = prop -> particle() ; }
      
   }

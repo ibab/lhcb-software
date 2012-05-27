@@ -8,8 +8,8 @@
 #include "boost/tokenizer.hpp"
 #include "boost/algorithm/string/erase.hpp"
 // Gaudi
-#include "GaudiKernel/IParticlePropertySvc.h" 
-#include "GaudiKernel/ParticleProperty.h"
+#include "Kernel/IParticlePropertySvc.h" 
+#include "Kernel/ParticleProperty.h"
 // Kernal
 #include "MCInterfaces/IGenCutTool.h"
 #include "MCInterfaces/IDecayTool.h"
@@ -77,7 +77,7 @@ StatusCode ExternalGenerator::initialize( ) {
     return Error( "Unable to read LHAPDF commands" , sc ) ;
 
   // retrieve the particle property service
-  m_ppSvc = svc< IParticlePropertySvc >( "ParticlePropertySvc" , true ) ;
+  m_ppSvc = svc< LHCb::IParticlePropertySvc >( "ParticlePropertySvc" , true ) ;
 
   // obtain the Decay Tool 
   // (ATTENTION: it has to be initialized before the production tool)
@@ -90,7 +90,7 @@ StatusCode ExternalGenerator::initialize( ) {
 
   // update the particle properties of the production tool
   if ( 0 != m_productionTool ) {
-    IParticlePropertySvc::const_iterator iter ;
+    LHCb::IParticlePropertySvc::iterator iter ;
     for ( iter = m_ppSvc -> begin() ; iter != m_ppSvc -> end() ; ++iter ) {
       if ( ( ! m_productionTool -> isSpecialParticle( *iter ) ) && 
            ( ! m_keepOriginalProperties ) ) 
@@ -98,7 +98,7 @@ StatusCode ExternalGenerator::initialize( ) {
       // set stable in the Production generator all particles known to the
       // decay tool
       if ( 0 != m_decayTool )
-        if ( m_decayTool -> isKnownToDecayTool( (*iter)->pdgID() ) ) 
+        if ( m_decayTool -> isKnownToDecayTool( (*iter)->pdgID().pid() ) ) 
           m_productionTool -> setStable( *iter ) ;    
     }
   }
@@ -183,7 +183,7 @@ StatusCode ExternalGenerator::decayHeavyParticles( HepMC::GenEvent * theEvent,
             it != theEvent -> particles_end() ; ++it ) {
         LHCb::ParticleID pid( (*it) -> pdg_id() ) ;
         if ( (*it) -> generated_mass() > 
-             m_ppSvc -> findByStdHepID( signalPid ) -> mass() )
+             m_ppSvc -> find( LHCb::ParticleID( signalPid ) ) -> mass() )
           particleSet.insert( *it ) ;
         // if signal is KS then decay also K0
         else if ( ( signalPid == 310 ) && ( pid.abspid() == 311 ) )

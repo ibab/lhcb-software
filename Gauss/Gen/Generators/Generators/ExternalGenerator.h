@@ -16,7 +16,7 @@
 class IProductionTool ;
 class IDecayTool ;
 class IGenCutTool ;
-class IParticlePropertySvc ;
+namespace LHCb { class IParticlePropertySvc ; }
 
 namespace HepMC { 
   class GenEvent ; 
@@ -177,6 +177,6 @@ class ExternalGenerator : public GaudiTool ,
   bool m_keepOriginalProperties ;
 
   /// Particle property service
-  IParticlePropertySvc * m_ppSvc ;
+  LHCb::IParticlePropertySvc * m_ppSvc ;
 };
 #endif // GENERATORS_EXTERNALGENERATOR_H
