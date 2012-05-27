@@ -14,8 +14,8 @@
 // from Gaudi
 #include "GaudiKernel/System.h"
 #include "GaudiKernel/DeclareFactoryEntries.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/PhysicalConstants.h"
 
@@ -95,8 +95,9 @@ PythiaProduction::PythiaProduction( const std::string& type,
   , m_validate_HEPEVT ( false ) // force the valiadation of IO_HEPEVT 
   /// the file to dump the HEPEVT inconsistencies 
   , m_inconsistencies ( "HEPEVT_inconsistencies.out" ) 
-  , m_HEPEVT_errors ( 0 ) 
-    // list of particles whose properties should *always* be taken from the ParticlePropertySvc
+  , m_HEPEVT_errors ( 0 )
+  // list of particles whose properties should *always* be taken from 
+                                  // the ParticlePropertySvc
   , m_updatedParticles (   ) // TODO declare this one: vector<int> m_updatedParticles
 {
   declareInterface< IProductionTool >( this ) ;
@@ -119,7 +120,8 @@ PythiaProduction::PythiaProduction( const std::string& type,
       m_inconsistencies , 
       "The file to dump HEPEVT inconsinstencies" ) ;
 
-  declareProperty( "UpdatedParticles", m_updatedParticles, "Particles (specified by their pdgID's) whose properties should *always* be taken from the ParticlePropertySvc, regardless of Pythia defaults or other input files" );
+  declareProperty( "UpdatedParticles", m_updatedParticles,
+                   "Particles (specified by their pdgID's) whose properties should *always* be taken from the ParticlePropertySvc, regardless of Pythia defaults or other input files" );
   
   // Set the default settings for Pythia here:
   m_defaultSettings.clear() ;
@@ -277,17 +279,18 @@ StatusCode PythiaProduction::initialize( ) {
   // in the particle property service (it is because Pythia may have changed
   // these masses after computation from its internal parameters)
   // retrieve the particle property service
-  IParticlePropertySvc * ppSvc = 
-    svc< IParticlePropertySvc >( "Gaudi::ParticlePropertySvc" , true ) ;
-  IParticlePropertySvc::const_iterator iter ;
-  for ( iter = ppSvc -> begin() ; iter != ppSvc -> end() ; ++iter ) {
-    if ( isSpecialParticle( *iter ) ) {
-      int pythiaId = (*iter) -> pythiaID() ;
-      int kc = Pythia::PyComp( pythiaId ) ;
-      (*iter) -> setMass( Pythia::pydat2().pmas( kc , 1 ) * Gaudi::Units::GeV ) ;
-    }
-  }
-  release( ppSvc ) ;
+  // LHCb::IParticlePropertySvc * ppSvc = 
+  //  svc< LHCb::IParticlePropertySvc >( "Gaudi::ParticlePropertySvc" , true ) ;
+  //LHCb::IParticlePropertySvc::iterator iter ;
+  // for ( iter = ppSvc -> begin() ; iter != ppSvc -> end() ; ++iter ) {
+  //if ( isSpecialParticle( *iter ) ) {
+      // int pythiaId = (*iter) -> pythiaID() ;
+      // int kc = Pythia::PyComp( pythiaId ) ;
+      //      (*iter) -> setMass( Pythia::pydat2().pmas( kc , 1 ) * Gaudi::Units::GeV ) ;
+      // Not possible anymore with the new particle property service...
+  // }
+  // }
+  //release( ppSvc ) ;
   return StatusCode::SUCCESS ;
 }
 
@@ -487,9 +490,9 @@ StatusCode PythiaProduction::initializeGenerator( ) {
 
   // Reset the "updated particles" to their defaults
   if ( m_updatedParticles.size() != 0 ) {
-    IParticlePropertySvc* ppSvc = svc<IParticlePropertySvc>("Gaudi::ParticlePropertySvc" , true);
+    LHCb::IParticlePropertySvc* ppSvc = svc< LHCb::IParticlePropertySvc>("Gaudi::ParticlePropertySvc" , true);
     for ( std::vector<int>::const_iterator it = m_updatedParticles.begin(); it != m_updatedParticles.end(); ++it ) {
-      updateParticleProperties(ppSvc->findByStdHepID(*it));
+      updateParticleProperties(ppSvc->find( LHCb::ParticleID( *it ) ));
     }
     release(ppSvc);
   }
@@ -540,7 +543,7 @@ StatusCode PythiaProduction::generateEvent( HepMC::GenEvent * theEvent ,
 //=============================================================================
 // Set stable the given particle in Pythia
 //=============================================================================
-void PythiaProduction::setStable( const ParticleProperty * thePP ) {
+void PythiaProduction::setStable( const LHCb::ParticleProperty * thePP ) {
   int pythiaId = thePP -> pythiaID() ;
   if ( 0 != pythiaId ) {
     int kc = Pythia::PyComp( pythiaId ) ;
@@ -551,7 +554,7 @@ void PythiaProduction::setStable( const ParticleProperty * thePP ) {
 //=============================================================================
 // Update particle properties
 //=============================================================================
-void PythiaProduction::updateParticleProperties( const ParticleProperty * 
+void PythiaProduction::updateParticleProperties( const LHCb::ParticleProperty * 
                                                  thePP ) {
   int pythiaId = thePP -> pythiaID() ;
 
@@ -993,9 +996,9 @@ void PythiaProduction::printRunningConditions( )
 //=============================================================================
 // TRUE if the particle is a special particle which must not be modify
 //=============================================================================
-bool PythiaProduction::isSpecialParticle( const ParticleProperty * thePP ) 
+bool PythiaProduction::isSpecialParticle( const LHCb::ParticleProperty * thePP ) 
   const {
-  switch ( abs( thePP -> pdgID() ) ) {
+  switch ( thePP -> pid() . abspid() ) {
   case 1:
   case 2:
   case 3:

@@ -4,6 +4,9 @@
 ! Purpose     : Package for Pythia 6 in Gauss
 !-----------------------------------------------------------------------------
 
+! 2012-05-27 - Patrick Robbe
+ - Start migration to new ParticlePropertySvc
+
 !========================= LbPythia v11r0 2012-05-14 =========================
 ! 2012-05-09 - Gloria Corti
  - Fix run time problem with finding of ParticlePropertySvc that in Gaudi

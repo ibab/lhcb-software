@@ -7,7 +7,7 @@
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/ParticleProperty.h"
+#include "Kernel/ParticleProperty.h"
 #include "GaudiKernel/PhysicalConstants.h"
 
 // from Event
@@ -425,7 +425,7 @@ StatusCode JetProduction::generateEvent( HepMC::GenEvent * theEvent ,
 //=============================================================================
 // Set stable the given particle in Pythia
 //=============================================================================
-void JetProduction::setStable( const ParticleProperty * thePP ) {
+void JetProduction::setStable( const LHCb::ParticleProperty * thePP ) {
   int pythiaId = thePP -> pythiaID() ;
   if ( 0 != pythiaId ) {
     int kc = Pythia::PyComp( pythiaId ) ;
@@ -436,7 +436,7 @@ void JetProduction::setStable( const ParticleProperty * thePP ) {
 //=============================================================================
 // Update particle properties
 //=============================================================================
-void JetProduction::updateParticleProperties( const ParticleProperty * 
+void JetProduction::updateParticleProperties( const LHCb::ParticleProperty * 
                                                  thePP ) {
   int pythiaId = thePP -> pythiaID() ;
   double pwidth , lifetime ;
@@ -819,9 +819,9 @@ void JetProduction::printRunningConditions( )
 //=============================================================================
 // TRUE if the particle is a special particle which must not be modified
 //=============================================================================
-bool JetProduction::isSpecialParticle( const ParticleProperty * thePP ) 
+bool JetProduction::isSpecialParticle( const LHCb::ParticleProperty * thePP ) 
   const {
-  switch ( abs( thePP -> pdgID() ) ) {
+  switch ( thePP -> pid().abspid() ) {
   case 1:
   case 2:
   case 3:
