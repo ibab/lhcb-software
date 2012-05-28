@@ -24,6 +24,7 @@
   <class name    = "Gaudi::Math::Functions"         />
   <class pattern = "Gaudi::Math::SVectorWithError*" />
   <class name    = "std::vector<Gaudi::Math::ValueWithError>" />
+  <class name    = "std::vector<std::vector<Gaudi::Math::ValueWithError> >" />
   
   <class name    = "Gaudi::Math::ParticleParams"     />
   <class name    = "Gaudi::Math::FitMass"            />

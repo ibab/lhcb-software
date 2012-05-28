@@ -302,6 +302,7 @@ namespace
     Gaudi::Math::SVectorWithError<8,double> __sv8 ;
     //
     std::vector<Gaudi::Math::ValueWithError>  _dver ;
+    std::vector<std::vector<Gaudi::Math::ValueWithError> > _dver2 ;
     //
     std::vector<Gaudi::Vector2>  _vct_2 ;
     std::vector<Gaudi::Vector3>  _vct_3 ;
