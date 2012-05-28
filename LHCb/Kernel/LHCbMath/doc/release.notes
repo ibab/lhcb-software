@@ -5,7 +5,14 @@
 !               for geometry and matrix algebra
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
+
+! 2012-05-28 - Vanya Belyaev
+
+ - add the code for hfits
+
 !========================= LHCbMath v3r32 2012-05-24 =========================
+
+
 
 ! 2012-05-24 - Vanya Belyaev
  - add Flatte's function properly corrected for phase space factors 

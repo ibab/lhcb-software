@@ -80,6 +80,9 @@
   <function name = "Gaudi::Math::mean"            />
   <function name = "Gaudi::Math::asym"            />
   <function name = "Gaudi::Math::frac"            />
+  <function name = "Gaudi::Math::sum"             />
+  <function name = "Gaudi::Math::sumabs"          />
+  <function name = "Gaudi::Math::abssum"          />
   <function name = "Gaudi::Math::binomEff"        />
   <function name = "Gaudi::Math::wilsonEff"       />
   <function name = "Gaudi::Math::agrestiCoullEff" />
@@ -95,6 +98,8 @@
   <function name    = "Gaudi::Math::interpolate_2D"        />
   <function pattern = "Gaudi::Math::Jackson::jackson*"     />
   
+  <class name = "Gaudi::Math::Chi2Fit"   />
+
   <class name = "Gaudi::Math::Chi2Solution<4,2,double>"         />
   <class name = "Gaudi::Math::Chi2Solution<4,2,double>::CMTRX2" />
   <class name = "Gaudi::Math::Chi2Solution<6,2,double>"         />
@@ -129,7 +134,11 @@
     <class name = "Gaudi::Math::BreitWigner">  
       <field name = "m_rho_fun"/>      
     </class>
-
+    <class name = "Gaudi::Math::Chi2Fit">  
+      <field name = "m_solu" />      
+      <field name = "m_cov2" />      
+    </class>
+    
   </exclusion> 
   
 

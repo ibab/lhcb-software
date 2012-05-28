@@ -32,6 +32,10 @@
 // ============================================================================
 #include "boost/static_assert.hpp"
 // ============================================================================
+// Local
+// ============================================================================
+#include "GSL_sentry.h"
+// ============================================================================
 /** @file 
  *  Implementation file for functions from the file LHCbMath/Functions.h
  *
@@ -164,41 +168,7 @@ double Gaudi::Math::Jackson::jackson_A7
 namespace 
 {
   // ==========================================================================
-  // GSL 
-  // ==========================================================================
-  void GSL_local_error
-  ( const char * reason    ,
-    const char * file      ,
-    int          line      ,
-    int          gsl_errno ) 
-  {
-    std::cerr 
-      << " GSL_ERROR : "   << gsl_errno << "/'" << gsl_strerror( gsl_errno ) << "'"
-      << "\t reason '"     << reason    << "' "
-      << "\t file/line '"  << file      << "'/" << line 
-      << std::endl ;  
-  }
-  // ==========================================================================
-  class GSL_Handler_Sentry
-  {
-  public :
-    // ========================================================================
-    /// constructor: loc
-    GSL_Handler_Sentry () 
-      : m_old ( 0 ) 
-    { 
-      // m_old = gsl_set_error_handler ( &GSL_local_error ) ; 
-      m_old = gsl_set_error_handler_off () ; 
-    }
-    //
-    ~GSL_Handler_Sentry () { gsl_set_error_handler ( m_old ) ; }
-    // ========================================================================
-  private:
-    // ========================================================================
-    /// the "old" error handler 
-    gsl_error_handler_t * m_old ; // the "old" error handler 
-    // ========================================================================
-  } ;  
+  typedef Gaudi::Math::GSL::GSL_Error_Handler Sentry ;
   // ==========================================================================
   /// get GSL-workspace
   gsl_integration_workspace* workspace 
@@ -506,7 +476,7 @@ namespace
     if      ( -30 > x ) { return -1 ; }
     else if ( +30 < x ) { return  1 ; }
     //
-    GSL_Handler_Sentry sentry ;
+    Sentry sentry ;
     //
     gsl_sf_result result ;
     const int ierror = gsl_sf_erf_e ( x , &result ) ;
@@ -522,9 +492,8 @@ namespace
       {}
       else 
       {
-        // GSL_Handler_Sentry sentry ;
-        GSL_local_error ( "Error from erf_e function" ,
-                          __FILE__ , __LINE__ , ierror ) ; 
+        gsl_error ( "Error from erf_e function" ,
+                    __FILE__ , __LINE__ , ierror ) ; 
       }
       //
       if      ( -15 > x ) { return -1 ; }
@@ -540,7 +509,7 @@ namespace
   double my_exp ( const double arg ) 
   {
     // 
-    GSL_Handler_Sentry sentry ;
+    Sentry sentry ;
     gsl_sf_result      result ;
     const int          ierror = gsl_sf_exp_e ( arg , &result ) ;
     //
@@ -555,9 +524,8 @@ namespace
            ierror == GSL_EROUND    ) {} /* failed because of roundoff error    */
       else 
       {
-        // GSL_Handler_Sentry sentry ;
-        GSL_local_error ( "Error from exp_e function" ,
-                          __FILE__ , __LINE__ , ierror ) ; 
+        gsl_error ( "Error from exp_e function" ,
+                    __FILE__ , __LINE__ , ierror ) ; 
       }
       //
       if      ( -100 > arg ) { return          0 ; }
@@ -575,7 +543,7 @@ namespace
     // 
     if ( 0 >= arg ) { return -s_INFINITY ; } // REUTRN
     //
-    GSL_Handler_Sentry sentry ;
+    Sentry sentry ;
     gsl_sf_result result ;
     const int     ierror = gsl_sf_log_e ( arg , &result ) ;
     if ( ierror ) 
@@ -590,9 +558,8 @@ namespace
       {}
       else 
       {
-        // GSL_Handler_Sentry sentry ;
-        GSL_local_error ( "Error from exp_e function" ,
-                          __FILE__ , __LINE__ , ierror ) ; 
+        gsl_error ( "Error from exp_e function" ,
+                    __FILE__ , __LINE__ , ierror ) ; 
       }
       //
       if      (  1.e-100 > arg  ) { return -s_INFINITY ; }
@@ -669,7 +636,7 @@ namespace
     }
     //
     // use GSL to evaluate the integral
-    GSL_Handler_Sentry sentry ;
+    Sentry sentry ;
     //
     gsl_function F            ;
     F.function = &gauss_GSL   ;
@@ -696,9 +663,8 @@ namespace
     //
     if ( ierror ) 
     { 
-      // GSL_Handler_Sentry sentry ;      
-      GSL_local_error ( "Gaudi::Math::gaussian_int " ,
-                        __FILE__ , __LINE__ , ierror ) ; 
+      gsl_error ( "Gaudi::Math::gaussian_int " , 
+                  __FILE__ , __LINE__ , ierror ) ; 
     }
     //
     return result ;    
@@ -1389,7 +1355,7 @@ double Gaudi::Math::Bukin::integral
   //
   // use GSL to evaluate the integral
   //
-  GSL_Handler_Sentry sentry ;
+  Sentry sentry ;
   //
   gsl_function F                ;
   F.function = &bukin_GSL ;
@@ -1412,9 +1378,8 @@ double Gaudi::Math::Bukin::integral
   if ( ierror ) 
   { 
     //
-    // GSL_Handler_Sentry sentry ;
-    GSL_local_error ( "Gaudi::Math::Bukin::QAG" ,
-                      __FILE__ , __LINE__ , ierror ) ; 
+    gsl_error ( "Gaudi::Math::Bukin::QAG" ,
+                __FILE__ , __LINE__ , ierror ) ; 
   }
   //
   return result ;
@@ -1598,7 +1563,7 @@ double Gaudi::Math::Novosibirsk::integral
   //
   // use GSL to evaluate the integral 
   //
-  GSL_Handler_Sentry sentry ;
+  Sentry sentry ;
   //
   gsl_function F                ;
   F.function = &novosibirsk_GSL ;
@@ -1622,7 +1587,6 @@ double Gaudi::Math::Novosibirsk::integral
   //
   if ( ierror ) 
   { 
-    GSL_Handler_Sentry sentry ;
     gsl_error ( "Gaudi::Math::Novosibirsk::QAG" ,
                 __FILE__ , __LINE__ , ierror ) ; 
   }
@@ -1655,12 +1619,11 @@ void Gaudi::Math::Novosibirsk::integrate()
   //
   // use GSL to evaluate the tails:
   //
-  GSL_Handler_Sentry sentry ;
+  Sentry sentry ;
   //
   gsl_function F                ;
   F.function = &novosibirsk_GSL ;
   F.params   = const_cast<Novosibirsk*> ( this ) ;
-  //
   //
   // left tail:
   //
@@ -1679,7 +1642,6 @@ void Gaudi::Math::Novosibirsk::integrate()
   //
   if ( ierror_l ) 
   { 
-    GSL_Handler_Sentry sentry ;
     gsl_error ( "Gaudi::Math::Novosibirsk::QAGIL" ,
                 __FILE__ , __LINE__ , ierror_l ) ; 
     tail_l = 0.0 ;
@@ -1703,7 +1665,6 @@ void Gaudi::Math::Novosibirsk::integrate()
   //
   if ( ierror_r ) 
   { 
-    GSL_Handler_Sentry sentry ;
     gsl_error ( "Gaudi::Math::Novosibirsk::QAGIU" ,
                 __FILE__ , __LINE__ , ierror_r ) ; 
     tail_r = 0.0 ;
@@ -2253,7 +2214,7 @@ double Gaudi::Math::GramCharlierA::integral
   //
   // use GSL to evaluate the integral 
   //
-  GSL_Handler_Sentry sentry ;
+  Sentry sentry ;
   //
   gsl_function F                ;
   F.function = &gram_charlier_A_GSL ;
@@ -2277,7 +2238,6 @@ double Gaudi::Math::GramCharlierA::integral
   //
   if ( ierror ) 
   { 
-    GSL_Handler_Sentry sentry ;
     gsl_error ( "Gaudi::Math::GramCharlierA::QAG" ,
                 __FILE__ , __LINE__ , ierror ) ; 
   }
@@ -2624,7 +2584,7 @@ double  Gaudi::Math::PhaseSpaceNL::integral
   //
   // use GSL to evaluate the integral 
   //
-  GSL_Handler_Sentry sentry ;
+  Sentry sentry ;
   //
   gsl_function F                 ;
   F.function = &phase_space_NL_GSL ;
@@ -2647,7 +2607,6 @@ double  Gaudi::Math::PhaseSpaceNL::integral
   //
   if ( ierror ) 
   { 
-    GSL_Handler_Sentry sentry ;
     gsl_error ( "Gaudi::Math::PhaseSpaceNL::QAG" ,
                 __FILE__ , __LINE__ , ierror ) ; 
   }
@@ -2831,7 +2790,7 @@ double  Gaudi::Math::BreitWigner::integral
   //
   // use GSL to evaluate the integral 
   //
-  GSL_Handler_Sentry sentry ;
+  Sentry sentry ;
   //
   gsl_function F                 ;
   F.function = &breit_wigner_GSL ;
@@ -2856,7 +2815,6 @@ double  Gaudi::Math::BreitWigner::integral
   //
   if ( ierror ) 
   { 
-    GSL_Handler_Sentry sentry ;
     gsl_error ( "Gaudi::Math::BreitWigner::QAG" ,
                 __FILE__ , __LINE__ , ierror ) ; 
   }
@@ -2877,7 +2835,7 @@ double  Gaudi::Math::BreitWigner::integral () const
   //
   // use GSL to evaluate the integral 
   //
-  GSL_Handler_Sentry sentry ;
+  Sentry sentry ;
   //
   gsl_function F                 ;
   F.function = &breit_wigner_GSL ;
@@ -2902,7 +2860,6 @@ double  Gaudi::Math::BreitWigner::integral () const
   //
   if ( ierror ) 
   { 
-    GSL_Handler_Sentry sentry ;
     gsl_error ( "Gaudi::Math::BreitWigner::QAGIU" ,
                 __FILE__ , __LINE__ , ierror ) ; 
     result = 0.0 ;
@@ -3138,7 +3095,7 @@ double  Gaudi::Math::Flatte::integral
   //
   // use GSL to evaluate the integral 
   //
-  GSL_Handler_Sentry sentry ;
+  Sentry sentry ;
   //
   gsl_function F                 ;
   F.function = &flatte_GSL ;
@@ -3164,7 +3121,6 @@ double  Gaudi::Math::Flatte::integral
   //
   if ( ierror ) 
   { 
-    GSL_Handler_Sentry sentry ;
     gsl_error ( "Gaudi::Math::Flatte::QAG" ,
                 __FILE__ , __LINE__ , ierror ) ; 
   }
@@ -3185,7 +3141,7 @@ double  Gaudi::Math::Flatte::integral () const
   //
   // use GSL to evaluate the integral 
   //
-  GSL_Handler_Sentry sentry ;
+  Sentry sentry ;
   //
   gsl_function F                 ;
   F.function = &flatte_GSL ;
@@ -3209,7 +3165,6 @@ double  Gaudi::Math::Flatte::integral () const
   //
   if ( ierror ) 
   { 
-    GSL_Handler_Sentry sentry ;
     gsl_error ( "Gaudi::Math::Flatte::QAGIU" ,
                 __FILE__ , __LINE__ , ierror ) ; 
     result = 0.0 ;
@@ -3743,7 +3698,7 @@ double  Gaudi::Math::Voigt::integral
   //
   // use GSL to evaluate the integral 
   //
-  GSL_Handler_Sentry sentry ;
+  Sentry sentry ;
   //
   gsl_function F                 ;
   F.function = &voigt_GSL ;
@@ -3769,7 +3724,6 @@ double  Gaudi::Math::Voigt::integral
   //
   if ( ierror ) 
   { 
-    GSL_Handler_Sentry sentry ;
     gsl_error ( "Gaudi::Math::Voigt::QAG" ,
                 __FILE__ , __LINE__ , ierror ) ; 
   }
@@ -3899,7 +3853,7 @@ double  Gaudi::Math::PhaseSpace23L::integral
   //
   // use GSL to evaluate the integral 
   //
-  GSL_Handler_Sentry sentry ;
+  Sentry sentry ;
   //
   gsl_function F                 ;
   F.function               = &phase_space_23L_GSL ;
@@ -3922,7 +3876,6 @@ double  Gaudi::Math::PhaseSpace23L::integral
   //
   if ( ierror ) 
   { 
-    GSL_Handler_Sentry sentry ;
     gsl_error ( "Gaudi::Math::PhaseSpace23L::QAG" ,
                 __FILE__ , __LINE__ , ierror ) ; 
   }
@@ -4121,7 +4074,7 @@ double  Gaudi::Math::LASS23L::integral
   //
   // use GSL to evaluate the integral 
   //
-  GSL_Handler_Sentry sentry ;
+  Sentry sentry ;
   //
   gsl_function F                 ;
   F.function         = &LASS_23L_GSL ;
@@ -4144,7 +4097,6 @@ double  Gaudi::Math::LASS23L::integral
   //
   if ( ierror ) 
   { 
-    GSL_Handler_Sentry sentry ;
     gsl_error ( "Gaudi::Math::LASS23L::QAG" ,
                 __FILE__ , __LINE__ , ierror ) ; 
   }
@@ -4409,7 +4361,7 @@ double  Gaudi::Math::Bugg23L::integral
   //
   // use GSL to evaluate the integral 
   //
-  GSL_Handler_Sentry sentry ;
+  Sentry sentry ;
   //
   gsl_function F                 ;
   F.function         = &Bugg_23L_GSL ;
@@ -4432,7 +4384,6 @@ double  Gaudi::Math::Bugg23L::integral
   //
   if ( ierror ) 
   { 
-    GSL_Handler_Sentry sentry ;
     gsl_error ( "Gaudi::Math::BUGG23L::QAG" ,
                 __FILE__ , __LINE__ , ierror ) ; 
   }
@@ -4551,7 +4502,7 @@ double  Gaudi::Math::BW23L::integral
   //
   // use GSL to evaluate the integral 
   //
-  GSL_Handler_Sentry sentry ;
+  Sentry sentry ;
   //
   gsl_function F                   ;
   F.function         = &BW_23L_GSL ;
@@ -4574,7 +4525,6 @@ double  Gaudi::Math::BW23L::integral
   //
   if ( ierror ) 
   { 
-    GSL_Handler_Sentry sentry ;
     gsl_error ( "Gaudi::Math::BW23L::QAG" ,
                 __FILE__ , __LINE__ , ierror ) ; 
   }
@@ -4678,7 +4628,7 @@ double  Gaudi::Math::Flatte23L::integral
   //
   // use GSL to evaluate the integral 
   //
-  GSL_Handler_Sentry sentry ;
+  Sentry sentry ;
   //
   gsl_function F                   ;
   F.function             = &Flatte_23L_GSL ;
@@ -4701,7 +4651,6 @@ double  Gaudi::Math::Flatte23L::integral
   //
   if ( ierror ) 
   { 
-    GSL_Handler_Sentry sentry ;
     gsl_error ( "Gaudi::Math::BW23L::QAG" ,
                 __FILE__ , __LINE__ , ierror ) ; 
   }

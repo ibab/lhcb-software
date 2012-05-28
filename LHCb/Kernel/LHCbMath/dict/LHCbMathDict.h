@@ -27,6 +27,7 @@
 #include "LHCbMath/Functions.h"
 #include "LHCbMath/LHCbMath.h"
 #include "LHCbMath/Chi2Solution.h"
+#include "LHCbMath/Chi2Fit.h"
 // ============================================================================
 /** @file LHCbMathDict.h 
  *  

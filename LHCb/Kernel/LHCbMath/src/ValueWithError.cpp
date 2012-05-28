@@ -7,6 +7,7 @@
 #include <cmath>
 #include <string>
 #include <sstream>
+#include <climits>
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -14,6 +15,7 @@
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/Lomont.h"
 #include "GaudiKernel/GaudiException.h"
+#include "GaudiKernel/ToStream.h"
 // ============================================================================
 // local
 // ============================================================================
@@ -934,6 +936,71 @@ Gaudi::Math::ValueWithError Gaudi::Math::interpolate_2D
   return c00 * v00 + c01 * v01 + c10 * v10 + c11 * v11  ;
 } 
 // ============================================================================
+/*  get the sum of the vector 
+ *  @param vct the vector
+ *  @param ini the intial value 
+ *  @return the sum over the vector 
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError 
+Gaudi::Math::sum 
+( const std::vector<Gaudi::Math::ValueWithError>& vct , 
+  Gaudi::Math::ValueWithError                     ini ) 
+{
+  //
+  for ( std::vector<Gaudi::Math::ValueWithError>::const_iterator iv = 
+          vct.begin() ; vct.end() != iv ; ++iv ) { ini += (*iv) ; }
+  //
+  return ini ;
+  //
+}
+// ============================================================================
+/*  get the sum of absolute values for the vector 
+ *  @param vct the vector
+ *  @return the sum over the vector 
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError 
+Gaudi::Math::abssum 
+( const std::vector<Gaudi::Math::ValueWithError>& vct )
+{
+  //
+  ValueWithError val ;
+  for ( std::vector<Gaudi::Math::ValueWithError>::const_iterator iv = 
+          vct.begin() ; vct.end() != iv ; ++iv ) 
+  { val += abs (*iv) ; }
+  //
+  return val ;
+  //
+}
+// ============================================================================
+ 
+// ============================================================================
+// Utiilties 
+// ============================================================================
+// print the vector
+// ============================================================================
+std::ostream& Gaudi::Utils::toStream
+( const std::vector<Gaudi::Math::ValueWithError>& o , std::ostream& s ) 
+{ 
+  //
+  Gaudi::Utils::toStream 
+    ( o.begin () , o.end () , s  , "[ " , " ]" , " , " ) ;
+  //
+  return s ;
+}
+// ============================================================================
+// the output operator for the vector 
+// ============================================================================
+std::ostream& 
+Gaudi::Math::operator<<( std::ostream&                                   s , 
+                         const std::vector<Gaudi::Math::ValueWithError>& v ) 
+{ 
+  return Gaudi::Utils::toStream ( v , s ) ; 
+}
+// ============================================================================
+
+// ============================================================================
 // Boost.Bind
 // ============================================================================
 #include "boost/bind.hpp"
@@ -1031,6 +1098,9 @@ StatusCode Gaudi::Parsers::parse(
     const std::string& input) {
   return parse_(result, input);
 }
+// =============================================================================
+
+
 // =============================================================================
 // The END
 // =============================================================================

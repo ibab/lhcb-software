@@ -78,8 +78,9 @@ namespace Gaudi
       // ======================================================================
     public: // setters 
       // ======================================================================
-      void setValue      ( const double v ) { m_value = v      ; }
-      void setCovariance ( const double c ) { m_cov2  = c      ; }
+      void setValue      ( const double v ) {  m_value = v   ; }
+      void setCov2       ( const double c ) {  m_cov2  = c   ; }
+      void setCovariance ( const double c ) { setCov2  ( c ) ; }
       /** set the error 
        *  @attention invalid covariance is set for negative error 
        */
@@ -531,6 +532,39 @@ namespace Gaudi
       const ValueWithError& v10 , 
       const ValueWithError& v11 ) ;
     // ========================================================================    
+    /** get the sum of the vector 
+     *  @param vct the vecor
+     *  @param ini the intial value 
+     *  @return the sum over the vector 
+     */
+    GAUDI_API 
+    ValueWithError sum 
+    ( const std::vector<ValueWithError>& vct                    , 
+      ValueWithError                     ini = ValueWithError() ) ;
+    // ========================================================================    
+    /** get the sum of the absolute values
+     *  @param vct the vecor
+     *  @param ini the intial value 
+     *  @return the sum over the vector 
+     */
+    GAUDI_API 
+    ValueWithError abssum ( const std::vector<ValueWithError>& vct ) ;
+    // ========================================================================    
+    /** get the sum of the absolute values
+     *  @param vct the vecor
+     *  @param ini the intial value 
+     *  @return the sum over the vector 
+     */
+    inline 
+    ValueWithError sumabs ( const std::vector<ValueWithError>& vct )
+    { return abssum ( vct )  ; }
+    // ========================================================================    
+    /// the output operator for the vector 
+    GAUDI_API 
+    std::ostream& operator<<
+      ( std::ostream& s , 
+        const std::vector<Gaudi::Math::ValueWithError>& v ) ;
+    // ========================================================================
   } //                                             end of namespace Gaudi::Math 
   // ==========================================================================
   namespace Parsers 
@@ -568,6 +602,31 @@ namespace Gaudi
   } //                                          end of namespace Gaudi::Parsers 
   // ==========================================================================
 } //                                                    end of namespace  Gaudi
+// ============================================================================
+namespace Gaudi
+{
+  // ==========================================================================
+  namespace Utils 
+  {
+    // ========================================================================
+    inline 
+    std::ostream& toStream
+    ( const Gaudi::Math::ValueWithError& obj , std::ostream& s )
+    { return obj.fillStream ( s ) ; }
+    // =======================================================================
+    /// print the vector
+    GAUDI_API 
+    std::ostream& toStream
+    ( const std::vector<Gaudi::Math::ValueWithError>& obj , std::ostream& s ) ;
+    // =======================================================================
+    inline 
+    std::string toString ( const Gaudi::Math::ValueWithError& obj )
+    { return obj.toString () ; }
+    // ========================================================================
+  } //                                            end of namespace Gaudi::Utils 
+  // ==========================================================================
+} //                                                     end of namespace Gaudi
+// ============================================================================
 // ============================================================================
 // The END 
 // ============================================================================
