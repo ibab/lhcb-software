@@ -62,7 +62,7 @@ DECLARE_ALGORITHM_FACTORY( RecoQC )
   declareProperty( "EnableAerogelTilePlots", m_aeroTilePlots = false );
 
   declareProperty( "EnablePerPDPlots",    m_pdResPlots    = false );
-  declareProperty( "EnablePerPDColPlots", m_pdColResPlots = false );
+  declareProperty( "EnablePerPDColPlots", m_pdColResPlots = true  );
 
   setProperty( "NBins2DHistos", 100 );
 }

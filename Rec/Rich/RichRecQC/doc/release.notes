@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2012-05-28 - Chris Jones
+ - Enable by default the resolution plots per PD column in RecoQC. 
+   Useful for spotting issues like column timing problems.
+
 ! 2012-05-02 - Chris Jones
  - Reduce the chi^2 range from 0-10 to 0-3, to adapt to tracking changes.
  - Reduce the 'tight' track monitoring selection to chi^2 < 2
