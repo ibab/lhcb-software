@@ -21,30 +21,50 @@ from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdLooseAllPhotons
 
 default_name = 'D2XGamma'
-default_confdict = {'TrChi2'              : 5.        # dimensionless
-                    ,'TrIPchi2Phi'         : 25.       # Dimensionless
-                    ,'kDLL'                : 2.0
-                    ,'TrPTPhi'             : 500. #MeV
-                    ## phi cuts
-                    ,'PhiMassWin'          : 50.       # MeV
-                    ,'PhiVCHI2'            : 16.       # dimensionless
-                    ## D0 cuts
-                    ,'D0MassWin'           : 300.     # MeV
-                    ,'D_BPVLTIME'          : 0.2 * picosecond ## not used ATM
-                    ,'D0_PT'               : 1000. #MeV
-                    ## photon
-                    ,'photonPT'            : 1500.     # MeV
-                    ## D*+ cuts
-                    ,'deltaMass'           : 160.0
-                    ,'DstVCHI2'            : 25.       # dimensionless
-                    ,'pvRefit'             : False
-                    # Pre- and postscales
-                    ,'D02PhiGammaPreScale'               : 1.0
-                    ,'D02PhiGammaPostScale'              : 1.0
-                    ,'PionLocation'   : "Phys/StdLoosePions/Particles"
-                    ,'PhiLocation' : "Phys/StdLoosePhi2KK/Particles"
+## default_confdict = {'TrChi2'              : 5.        # dimensionless
+##                     ,'TrIPchi2Phi'         : 25.       # Dimensionless
+##                     ,'kDLL'                : 2.0
+##                     ,'TrPTPhi'             : 500. #MeV
+##                     ## phi cuts
+##                     ,'PhiMassWin'          : 50.       # MeV
+##                     ,'PhiVCHI2'            : 16.       # dimensionless
+##                     ## D0 cuts
+##                     ,'D0MassWin'           : 200.     # MeV
+##                     ,'D_BPVLTIME'          : 0.2 * picosecond ## not used ATM
+##                     ,'D0_PT'               : 1000. #MeV
+##                     ## photon
+##                     ,'photonPT'            : 1600.     # MeV
+##                     ## D*+ cuts
+##                     ,'deltaMass'           : 160.0
+##                     ,'DstVCHI2'            : 25.       # dimensionless
+##                     ,'pvRefit'             : False
+##                     # Pre- and postscales
+##                     ,'D02PhiGammaPreScale'               : 1.0
+##                     ,'D02PhiGammaPostScale'              : 1.0
+##                     ,'PionLocation'   : "Phys/StdAllNoPIDsPions/Particles"
+##                     ,'PhiLocation' : "Phys/StdLoosePhi2KK/Particles"
                     
-                    } 
+##                     }
+default_confdict = {
+    'TrChi2'              : 5.
+    ,'TrIPchi2Phi'        : 25.
+    ,'TrPTPhi'            : 500.
+    ,'kDLL'               : 2.0
+    ,'PhiMassWin'         : 50.
+    ,'PhiVCHI2'           : 16.
+    ,'D0MassWin'          : 200.
+    ,'D_BPVLTIME'         : 0.2 * picosecond ## not used ATM
+    ,'D0_PT'              : 1000.
+    ,'photonPT'           : 1700.
+    ,'DstVCHI2'           : 25.
+    ,'deltaMass'          : 160.0
+    ,'pvRefit'             : False
+    ,'D02PhiGammaPreScale'               : 1.0
+    ,'D02PhiGammaPostScale'              : 1.0
+    ,'PionLocation'   : "Phys/StdAllNoPIDsPions/Particles"
+    ,'PhiLocation' : "Phys/StdLoosePhi2KK/Particles"
+    }
+
 
 class StrippingD2XGammaConf(LineBuilder):
     """
@@ -159,12 +179,12 @@ def makePhoton(name, photonPT):
     @return: Selection object
     
     """
-    # Configure clusterization
-    from Configurables import CaloClusterizationTool, CellularAutomatonAlg
-    clust = CellularAutomatonAlg("EcalClust")
-    clust.addTool(CaloClusterizationTool,'CaloClusterizationTool')
-    clust.CaloClusterizationTool.ETcut = 300
-    clust.CaloClusterizationTool.withET = True
+##     # Configure clusterization
+##     from Configurables import CaloClusterizationTool, CellularAutomatonAlg
+##     clust = CellularAutomatonAlg("EcalClust")
+##     clust.addTool(CaloClusterizationTool,'CaloClusterizationTool')
+##     clust.CaloClusterizationTool.ETcut = 300
+##     clust.CaloClusterizationTool.withET = True
     # Prepare selection
     _code = "(PT> %(photonPT)s*MeV)" % locals()
     print 'making the photons: ', _code
