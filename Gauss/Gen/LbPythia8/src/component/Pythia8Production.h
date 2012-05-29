@@ -43,10 +43,10 @@ public:
   virtual StatusCode initializeGenerator( ) ;
   
   /// Set particle stable
-  virtual void setStable( const ParticleProperty * thePP ) ;
+  virtual void setStable( const LHCb::ParticleProperty * thePP ) ;
 
   /// Modify particle property
-  virtual void updateParticleProperties( const ParticleProperty * thePP ) ;
+  virtual void updateParticleProperties( const LHCb::ParticleProperty * thePP ) ;
 
   /// Turn on fragmentation
   virtual void turnOnFragmentation( ) ;
@@ -68,7 +68,7 @@ public:
   virtual void printRunningConditions( ) ;
 
   /// Set particles not to update
-  virtual bool isSpecialParticle( const ParticleProperty * thePP ) const ;
+  virtual bool isSpecialParticle( const LHCb::ParticleProperty * thePP ) const ;
 
   /// Apply settings for forced fragmentation method
   virtual StatusCode setupForcedFragmentation( const int thePdgId ) ;

@@ -5,8 +5,8 @@
 // from Gaudi
 #include "GaudiKernel/System.h"
 #include "GaudiKernel/DeclareFactoryEntries.h"
-#include "GaudiKernel/ParticleProperty.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
+#include "Kernel/IParticlePropertySvc.h"
 #include "GaudiKernel/PhysicalConstants.h"
  
 // from Event
@@ -223,15 +223,15 @@ StatusCode Pythia8Production::initializeGenerator( ) {
   Gaudi::XYZVector pBeam1 , pBeam2 ;
   m_beamTool->getMeanBeams( pBeam1 , pBeam2 ) ;  
   // retrieve Gaudi particle property service
-  IParticlePropertySvc* ppSvc( 0 ) ;
-  try { ppSvc = svc< IParticlePropertySvc > ( "Gaudi::ParticlePropertySvc" , 
+  LHCb::IParticlePropertySvc* ppSvc( 0 ) ;
+  try { ppSvc = svc< LHCb::IParticlePropertySvc > ( "Gaudi::ParticlePropertySvc" , 
                                               true ) ; }
   catch ( const GaudiException & exc ) {
     Exception( "Cannot open ParticlePropertySvc to fill EvtGen" , exc ) ;
   }
   
-  mass1 = (ppSvc -> findByStdHepID(m_id1)) -> mass();
-  mass2 = (ppSvc -> findByStdHepID(m_id2)) -> mass();
+  mass1 = (ppSvc -> find( LHCb::ParticleID( m_id1 ) ) ) -> mass();
+  mass2 = (ppSvc -> find( LHCb::ParticleID( m_id2 ) ) ) -> mass();
   
   m_engCM = (sqrt(pBeam1.Dot(pBeam1)+mass1*mass1) +  
              sqrt(pBeam2.Dot(pBeam2) + mass2*mass2))/Gaudi::Units::GeV;
@@ -308,18 +308,18 @@ StatusCode Pythia8Production::generateEvent( HepMC::GenEvent * theEvent ,
 //=============================================================================
 // Set stable the given particle in Pythia8
 //=============================================================================
-void Pythia8Production::setStable( const ParticleProperty * thePP ) {
-  int pdgId = thePP -> pdgID();
+void Pythia8Production::setStable( const LHCb::ParticleProperty * thePP ) {
+  int pdgId = thePP -> pid().pid();
   m_pythia->particleData.mayDecay(pdgId, false);
 }
 
 //=============================================================================
 // Update particle properties
 //=============================================================================
-void Pythia8Production::updateParticleProperties( const ParticleProperty * 
+void Pythia8Production::updateParticleProperties( const LHCb::ParticleProperty * 
                                                   thePP ) {
   int pythiaId = thePP -> pythiaID() ;
-  int pdgId = thePP -> pdgID();
+  int pdgId = thePP -> pid().pid();
   double pwidth , lifetime ;
   if ( 0 != pythiaId ) {
     if ( 0 == thePP -> lifetime() ) pwidth = 0. ;
@@ -437,9 +437,9 @@ int Pythia8Production::processCode( ) {
 //=============================================================================
 // TRUE if the particle is a special particle which must not be modify
 //=============================================================================
-bool Pythia8Production::isSpecialParticle( const ParticleProperty * thePP ) 
+bool Pythia8Production::isSpecialParticle( const LHCb::ParticleProperty * thePP ) 
   const { 
-  switch ( abs( thePP -> pdgID() ) ) {
+  switch ( thePP -> pid().abspid() ) {
   case 1:
   case 2:
   case 3:
