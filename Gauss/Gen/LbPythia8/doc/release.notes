@@ -4,6 +4,9 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+! 2012-05-29 - Patrick Robbe
+ - Use new ParticlePropertySvc
+
 !========================= LbPythia8 v3r0 2012-05-14 =========================
 ! 2012-05-10 - Gloria Corti
  - Fix run time problem with finding of ParticlePropertySvc that in Gaudi
