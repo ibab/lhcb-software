@@ -3,6 +3,10 @@
 ! Package Manager : Patrick Robbe & M-H. Schune
 !----------------------------------------------------------------------------
 
+! 2012-05-29 - Patrick Robbe
+ - L0CaloCandidatesFromRawBank.cpp: sort the L0CaloCandidates containers 
+   according to their Et before storing them in the data store.
+
 !========================= L0Calo v11r7 2012-05-02 =========================
 ! 2012-04-04 - Patrick Robbe
  - L0CaloCheckCalibCte.cpp: correct ADC -> L0ADC conversion for 

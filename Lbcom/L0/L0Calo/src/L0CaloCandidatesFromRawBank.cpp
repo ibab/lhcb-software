@@ -22,6 +22,13 @@
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( L0CaloCandidatesFromRawBank );
 
+struct SortL0CaloByEt { 
+  bool operator() (const LHCb::L0CaloCandidate * c1 , 
+                   const LHCb::L0CaloCandidate * c2) {
+    return  c1->etCode() > c2->etCode() ; 
+  }
+};
+
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -50,7 +57,7 @@ StatusCode L0CaloCandidatesFromRawBank::initialize ( ) {
   // Retrieve the detector elements
   m_ecal = getDet< DeCalorimeter >( DeCalorimeterLocation::Ecal ) ;
   m_hcal = getDet< DeCalorimeter >( DeCalorimeterLocation::Hcal ) ;
-
+  
   Condition* gain = m_ecal->condition( "Gain" );
   if ( 0 == gain ) return Error( "Condition 'Gain' not found in Ecal" ) ;
   
@@ -74,19 +81,23 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES
   const int version , 
   LHCb::RawBankReadoutStatus & readoutStatus ) {
   
+  // temporary containers (ordered by Et)
+  std::multiset< LHCb::L0CaloCandidate * , SortL0CaloByEt > temporaryOutFull ;
+  std::multiset< LHCb::L0CaloCandidate * , SortL0CaloByEt > temporaryOut ;
+
   if ( msgLevel( MSG::DEBUG ) ) 
     debug() << "L0CaloCandidatesFromRawBank ... entering conversion" 
-	    << " for version " << version << endmsg ;
+            << " for version " << version << endmsg ;
   
   Gaudi::XYZPoint dummy( 0. , 0. , 0. ) , center( 0. , 0. , 0. ) ;
   LHCb::L0CaloCandidate * myL0Cand( 0 ) ;
   std::vector< LHCb::L0CaloCandidate * > bestCand ;
   double tol ;
   DeCalorimeter * det ;
-
+  
   std::map< int , LHCb::L0CaloCandidate * > mapHadrons ;
   mapHadrons.clear() ;
-
+  
   unsigned int * ptData( 0 ) ;
   int bankSize( 0 ) , cand( 0 ) , sumEt( 0 ) , mult( 0 ) , rawId( 0 ) , source( 0 ), 
 	  et( 0 ) ;
@@ -125,7 +136,7 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES
       
       if ( msgLevel( MSG::DEBUG ) )
         debug() << " io= "<< io << " slave= " << slave  << " type= " << type 
-	        << endmsg ;
+                << endmsg ;
       
       // add a new "best candidate" if there is not enough
       while ( bestCand.size() <= (unsigned int) type ) bestCand.push_back( 0 );
@@ -149,57 +160,57 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES
           }
         }
 
-	// Total HCAL SumEt -> adds in "Best Candidate" container
-	// If more that one, this is an error -> bank status set to corrupted 
-	// Save SumEt only in default container, not in full not to have it 
-	// twice
+        // Total HCAL SumEt -> adds in "Best Candidate" container
+        // If more that one, this is an error -> bank status set to corrupted 
+        // Save SumEt only in default container, not in full not to have it 
+        // twice
         if ( L0DUBase::CaloType::SumEt == type ) {
           if ( 0 == bestCand[ type ] ) {
             bestCand[ type ]  = new LHCb::L0CaloCandidate ( type , LHCb::CaloCellID() ,
-							    sumEt , sumEt * m_etScale , 
-							    dummy , 0. ) ;
+                                                            sumEt , sumEt * m_etScale , 
+                                                            dummy , 0. ) ;
           } else {
             warning() << "SumEt candidate already filled" << endmsg ;
             readoutStatus.addStatus( 0 , LHCb::RawBankReadoutStatus::Corrupted ) ;
           }
         } else {
-	  // The other cases (intermediate sum per Hadron Selection Board
-	  // are only saved when we do debugDecoding, in the full container
+          // The other cases (intermediate sum per Hadron Selection Board
+          // are only saved when we do debugDecoding, in the full container
           if ( m_doDebugDecoding )  
-            outFull -> add( new LHCb::L0CaloCandidate ( type , LHCb::CaloCellID() ,
-							sumEt , sumEt * m_etScale , 
-							dummy , 0. ) ) ;
+            temporaryOutFull.insert( new LHCb::L0CaloCandidate ( type , LHCb::CaloCellID() ,
+                                                                 sumEt , sumEt * m_etScale , 
+                                                                 dummy , 0. ) ) ;
         }
-	break ;
+        break ;
       case L0DUBase::CaloType::SpdMult:
         mult = 0 ; 
-	// Get SPD multiplicity (total and all 16 inputs)
+        // Get SPD multiplicity (total and all 16 inputs)
         if ( version > 0 ) {
           if ( 1 == io ) mult = ( cand & 0x3FFF ) ;
           if ( 0 == io ) mult = ( cand &  0x3FF ) ;
         } else mult = cand & 0xFFFFFF ;
 
         if ( m_doDebugDecoding )
-	// Save intermediate multiplicities only when doing debug decoding, and save
-	// in Full
+          // Save intermediate multiplicities only when doing debug decoding, and save
+          // in Full
           if ( 0 == io )
-            outFull -> add( new LHCb::L0CaloCandidate ( type , LHCb::CaloCellID(),
-							mult , 0. , dummy , 0. ) ) ;
+            temporaryOutFull.insert( new LHCb::L0CaloCandidate ( type , LHCb::CaloCellID(),
+                                                                 mult , 0. , dummy , 0. ) ) ;
         
-	// Save total multiplicity in default container, not in full
+        // Save total multiplicity in default container, not in full
         if ( ( 1 == io ) || ( 0 == version ) ) { 
           if ( 0 == bestCand[ type ] ) {
             bestCand[ type ] = new LHCb::L0CaloCandidate ( type , LHCb::CaloCellID() ,
-							   mult , 0. , dummy , 0. ) ;
+                                                           mult , 0. , dummy , 0. ) ;
           } else {
             warning() << "SPD Multiplicity candidate is already filled !" 
                       << endmsg ;
             readoutStatus.addStatus( 1 , LHCb::RawBankReadoutStatus::Corrupted ) ;
           }
         }
-	break ;
+        break ;
       default:
-      // All the other cases (electron, photon, pi0L, pi0G, hadron)
+        // All the other cases (electron, photon, pi0L, pi0G, hadron)
         rawId =  ( cand >>8 ) & 0xFFFF ;
         source = 0 ;
         if ( L0DUBase::CaloType::Hadron == type ) {
@@ -211,7 +222,7 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES
           rawId |= 0x8000;  // ECAL
         }
 	    
-	id.setAll( rawId ) ;
+        id.setAll( rawId ) ;
 	    
         if ( det->valid( id ) ) {
           center = det->cellCenter( id ) ;
@@ -234,7 +245,7 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES
           }
         }
         
-	et = cand & 0xFF;
+        et = cand & 0xFF;
         hadronType = false ;
         
         if ( L0DUBase::CaloType::Hadron == type ) {
@@ -262,7 +273,7 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES
                 readoutStatus.addStatus( 0 , LHCb::RawBankReadoutStatus::Corrupted ) ;
               }
             } else { 
-              outFull -> add( myL0Cand ) ;
+              temporaryOutFull.insert( myL0Cand ) ;
               if ( 0 == bestCand[type] ) bestCand[ type ] = myL0Cand ;
               else if ( et > bestCand[type]->etCode() ) bestCand[type] = myL0Cand ;
             }
@@ -272,7 +283,7 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES
               myL0Cand = new LHCb::L0CaloCandidate ( type, id, et, 
                                                      et * m_etScale, center, 
                                                      tol );
-              outFull -> add( myL0Cand ) ;
+              temporaryOutFull.insert( myL0Cand ) ;
             } else { 
               // INPUT Hadrons: select highest duplicate
               myL0Cand = new LHCb::L0CaloCandidate ( type, id, et, 
@@ -300,7 +311,7 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES
               myL0Cand = new LHCb::L0CaloCandidate ( type, id, et, 
                                                      et * m_etScale, center, 
                                                      tol );
-              outFull -> add( myL0Cand ) ;
+              temporaryOutFull.insert( myL0Cand ) ;
             }
           }   
         } else {
@@ -308,7 +319,7 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES
                                                  et * m_etScale, center, 
                                                  tol );
           if ( ( 0 == io ) || ( 0 == version ) ) {
-            outFull -> add( myL0Cand ) ;
+            temporaryOutFull.insert( myL0Cand ) ;
             if ( 0 == version ) {
               if ( 0 == bestCand[type] ) {
                 bestCand[type] = myL0Cand;
@@ -340,7 +351,7 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES
   if ( ! m_doDebugDecoding ) {
     std::map< int , LHCb::L0CaloCandidate * >::const_iterator it ;
     for ( it = mapHadrons.begin() ; it != mapHadrons.end() ; ++it ) {
-      outFull -> add( it -> second ) ;
+      temporaryOutFull.insert( it -> second ) ;
     }
   }
 
@@ -360,17 +371,25 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES
           
           if ( msgLevel( MSG::DEBUG ) ) 
             debug() << "out bestCand type = " << type << *myL0Cand << endreq ;
-          out -> add( myL0Cand );
+          temporaryOut.insert( myL0Cand );
         } else {
-          out -> add( bestCand[ type ] ) ;
+          temporaryOut.insert( bestCand[ type ] ) ;
         }
       } else {
         if ( msgLevel( MSG::DEBUG ) ) 
           debug() << "out bestCand type = " << type << " " << *bestCand[type]
                   << endreq;
-        out -> add( bestCand[ type ] ) ;
+        temporaryOut.insert( bestCand[ type ] ) ;
       }
     }
   }
+
+  // now copy the ordered containers into the final ones:
+  std::multiset< LHCb::L0CaloCandidate * >::iterator it ;
+  for ( it = temporaryOut.begin() ; it != temporaryOut.end() ; ++it ) 
+    out -> add( *it ) ;
+  for ( it = temporaryOutFull.begin() ; 
+        it != temporaryOutFull.end() ; ++it ) 
+    outFull -> add( *it ) ;
 }
 //=============================================================================

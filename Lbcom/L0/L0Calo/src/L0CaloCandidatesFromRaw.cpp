@@ -57,7 +57,7 @@ StatusCode L0CaloCandidatesFromRaw::initialize() {
 //=============================================================================
 StatusCode L0CaloCandidatesFromRaw::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if ( msgLevel( MSG::DEBUG ) ) debug() << "==> Execute" << endmsg;
 
   std::string name = dataLocation( LHCb::L0CaloCandidateLocation::Default ) ;
   std::string nameFull = dataLocation( LHCb::L0CaloCandidateLocation::Full ) ;
