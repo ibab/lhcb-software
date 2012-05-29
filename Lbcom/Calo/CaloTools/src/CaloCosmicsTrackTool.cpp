@@ -37,6 +37,8 @@ CaloCosmicsTrackTool::CaloCosmicsTrackTool( const std::string& type,
                                             const std::string& name,
                                             const IInterface* parent )
   : GaudiTupleTool ( type, name , parent )
+  , m_eCosmics(NULL)
+  , m_hCosmics(NULL)
   , m_odin(NULL)
   , m_track()
 {
