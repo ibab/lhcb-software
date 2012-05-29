@@ -102,7 +102,11 @@ def patchBrunel(true_online_version):
 
   brunel.UseDBSnapshot = True     # try it
 #  brunel.PartitionName = "FEST"
-
+# Hack by Chris
+  print "# Warning using CKThetaQuartzRefractCorrections = [ 0,-0.0001,0 ]"
+  from Configurables import RichRecSysConf
+  rConf = RichRecSysConf("RichOfflineRec")
+  rConf.richTools().photonReco().CKThetaQuartzRefractCorrections = [ 0,-0.0001,0 ] 
   
   if true_online_version:
     brunel.OutputLevel       = 999
