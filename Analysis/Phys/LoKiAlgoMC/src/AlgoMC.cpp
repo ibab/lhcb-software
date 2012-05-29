@@ -252,10 +252,27 @@ LoKi::AlgoMC::mcTruth  ( const std::string& name ) const
 StatusCode LoKi::AlgoMC::clear() 
 {
   StatusCode sc = LoKi::Algo::clear() ;
+  //
+  for ( LoKi::MCTypes::MCSelected::map_iterator imc = 
+          m_mcselected.begin() ; m_mcselected.end() != imc ; ++imc ) 
+  { counter ( "#" + imc->first ) = imc->second.size() ; }
   m_mcselected   .clear () ;
+  //
+  for ( LoKi::MCTypes::MCVSelected::map_iterator imcv = 
+          m_mcvselected.begin() ; m_mcvselected.end() != imcv ; ++imcv ) 
+  { counter ( "#" + imcv->first ) = imcv->second.size() ; }
   m_mcvselected  .clear () ;
+  //
+  for ( LoKi::GenTypes::GenSelected::map_iterator igen = 
+          m_genselected.begin() ; m_genselected.end() != igen ; ++igen ) 
+  { counter ( "#" + igen->first ) = igen->second.size() ; }
   m_genselected  .clear () ;
+  //
+  for ( LoKi::GenTypes::GenVSelected::map_iterator igenv = 
+          m_genvselected.begin() ; m_genvselected.end() != igenv ; ++igenv ) 
+  { counter ( "#" + igenv->first ) = igenv->second.size() ; }
   m_genvselected .clear () ;
+  //
   // clear the matchers  
   for ( MCmatchers::iterator imc = m_mcmatchers.begin() ; 
         m_mcmatchers.end() != imc ; ++imc )
@@ -287,7 +304,7 @@ StatusCode LoKi::AlgoMC::initialize ()
 // ============================================================================
 // make the execution of the algorithm 
 // ============================================================================
-StatusCode LoKi::AlgoMC::execute    () { return LoKi::Algo::execute    () ; } 
+StatusCode LoKi::AlgoMC::execute    () { return LoKi::Algo::execute () ; } 
 // ============================================================================
 // perform the real analysis 
 // ============================================================================
