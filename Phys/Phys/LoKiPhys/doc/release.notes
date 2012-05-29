@@ -5,6 +5,9 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2012-05-29 - Vanya Belyaev
+ - add VCOV2 functor to access the vertex covariance matrix 
+
 ! 2012-05-24 - Vanya Belyaev
 
  - improve interatcive decorators 

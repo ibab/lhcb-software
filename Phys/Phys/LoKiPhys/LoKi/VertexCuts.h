@@ -302,6 +302,29 @@ namespace LoKi
      */  
     const LoKi::Vertices::VertexChi2PerDoF                          VCHI2PDOF ;
     // ========================================================================
+    /** @typedef VCOV2
+     *  access to elements of vertex covariance matrix 
+     *  
+     *  It relies on the method LHCb::VertexBase::covMatrix
+     *
+     *  @code 
+     *  
+     *  const LHCb::VertexBase* v = .. ;
+     *  const double sigma_xx = VCOV2( 0, 0  ) ( v ) ;
+     *
+     *  @endcode
+     *
+     *  @see LoKi::Cuts::VCOV2
+     *  @see LoKi::Vertices::Cov2
+     *  @see LHCb::VertexBase::covMatrix
+     *  @see LHCb::VertexBase 
+     *  @see LHCb::Vertex 
+     *
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2012-05-29
+     */
+    typedef LoKi::Vertices::Cov2                                        VCOV2 ;
+    // ========================================================================
     /** @var VDOF
      *  evaluator of the number of degrees of freedom for the vertex 
      *  

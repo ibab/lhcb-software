@@ -422,6 +422,59 @@ std::ostream& LoKi::Vertices::IsRecVertex::fillStream ( std::ostream& s ) const
 
 
 // ============================================================================
+// VCOV2
+// ============================================================================
+// constructor from the indices 
+// ============================================================================
+LoKi::Vertices::Cov2::Cov2
+( const std::size_t i , 
+  const std::size_t j ) 
+  :  LoKi::BasicFunctors<const LHCb::VertexBase*>::Function () 
+  ,  m_i ( std::max ( i , j ) ) 
+  ,  m_j ( std::min ( i , j ) ) 
+{
+  Assert ( m_i < 3 , "Invalid matrix index " ) ;
+  Assert ( m_j < 3 , "Invalid matrix index " ) ;
+}
+// ============================================================================
+// MANDATORY: virtual destructor
+// ============================================================================
+LoKi::Vertices::Cov2::~Cov2(){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Vertices::Cov2*
+LoKi::Vertices::Cov2::clone () const 
+{ return new LoKi::Vertices::Cov2 ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Vertices::Cov2::result_type 
+LoKi::Vertices::Cov2::operator() 
+  ( LoKi::Vertices::Cov2::argument v ) const 
+{
+  if ( 0 == v ) 
+  {
+    Error ( "Invalid Vertex, return 'InvalidDistance'" ) ;
+    return LoKi::Constants::InvalidChi2 ;                    // RETURN
+  } 
+  //
+  return v->covMatrix() ( m_i , m_j ) ;
+  //
+}
+// ============================================================================
+// OPTIONAL: the specific printout 
+// ============================================================================
+std::ostream& 
+LoKi::Vertices::Cov2::fillStream ( std::ostream& s ) const 
+{ return s << "VCOV2(" << m_i << "," << m_j << ") " ; }
+// ============================================================================
+
+  
+
+
+ 
+// ============================================================================
 // The END 
 // ============================================================================
 

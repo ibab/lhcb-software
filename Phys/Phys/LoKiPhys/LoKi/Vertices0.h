@@ -471,6 +471,44 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class Cov2 
+     *  accessor to covariance matrix 
+     *  @see LHCb::VertexBase
+     *  @see LHCb::VertexBase::covMatrix 
+     *  @see LoKi::Cuts::VCOV2 
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-12-04
+     */     
+    class Cov2 : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function
+    {
+    public:
+      // ======================================================================
+      /// constructor from the indices 
+      Cov2 ( const std::size_t i , 
+             const std::size_t j ) ;
+      /// MANDATORY: virtual destructor
+      virtual ~Cov2 () ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Cov2* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument v ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constriuctor is disabled 
+      Cov2 () ;                         // the default constructor is disabled 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the indices 
+      std::size_t m_i ; // the indices 
+      /// the indices 
+      std::size_t m_j ; // the indices 
+      // ======================================================================
+    } ;
+    // ========================================================================
   } //                                          end of namespace LoKi::Vertices 
   // ==========================================================================
 } //                                                      end of namespace LoKi

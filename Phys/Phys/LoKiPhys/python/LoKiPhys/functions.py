@@ -583,6 +583,8 @@ TECHNIQUE = LoKi.Vertices.Technique   ()
 VTECHNIQUE = TECHNIQUE
 ## @see LoKi::Cuts::VCHI2
 VCHI2     = LoKi.Vertices.VertexChi2        ()
+## @see LoKi::Cuts::VCOV2
+VCOV2     = LoKi.Vertices.Cov2 
 ## @see LoKi::Cuts::VCHI2PDOF
 VCHI2PDOF = LoKi.Vertices.VertexChi2PerDoF  ()
 ## @see LoKi::Cuts::VDOF
