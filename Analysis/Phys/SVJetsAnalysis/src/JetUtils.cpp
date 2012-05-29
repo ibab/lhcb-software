@@ -233,6 +233,13 @@ LoKi::JetUtils::GNDaughters::operator()
  LoKi::JetUtils::GNDaughters::fillStream 
  ( std::ostream& s ) const { return s << "GNDAUGHTERS" ; }
 
+void LoKi::JetUtils::getHltObjSVPos(const LHCb::HltObjectSummary *obj, double &x, double &y, double &z){
+  LHCb::HltObjectSummary::Info info = obj->numericalInfo();
+  x = info["3#Particle.referencePoint.x"];
+  y = info["4#Particle.referencePoint.y"];
+  z = info["2#Particle.referencePoint.z"];
+}
+
  // =======================================================================
 void LoKi::JetUtils::getHltObjP4(const LHCb::HltObjectSummary *obj,Gaudi::LorentzVector &p4){
   LHCb::HltObjectSummary::Info info = obj->numericalInfo();

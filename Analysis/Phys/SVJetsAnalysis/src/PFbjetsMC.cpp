@@ -202,6 +202,7 @@ LOKI_MCALGORITHM(PFbjetsMC)
   if(!m_eventtupletooltrigger->fill(tuple_stdpfjets))error() << "Problem filling the trigger and stripping event information" << endreq ;
 
 	std::vector<float> topo_px,topo_py,topo_pz,topo_e;
+        std::vector<float> topo_svx,topo_svy,topo_svz;
 
 
 	std::vector<const LHCb::HltObjectSummary*> hltObjs
@@ -223,6 +224,11 @@ LOKI_MCALGORITHM(PFbjetsMC)
 		topo_py.push_back(p4.Py());
 		topo_pz.push_back(p4.Pz());
 		topo_e.push_back(p4.E());
+    double x, y, z;
+    getHltObjSVPos(hltObjs[i],x,y,z);
+    topo_svx.push_back(x);
+    topo_svy.push_back(y);
+    topo_svz.push_back(z);
 	}
 
 
@@ -231,6 +237,9 @@ LOKI_MCALGORITHM(PFbjetsMC)
 	tuple_stdpfjets->farray("topo_py",topo_py,"NMaxTopos",10000);
 	tuple_stdpfjets->farray("topo_pz",topo_pz,"NMaxTopos",10000);
 	tuple_stdpfjets->farray("topo_e",topo_e,"NMaxTopos",10000);
+  tuple_stdpfjets->farray("topo_svx",topo_svx,"NMaxTopos",10000);
+  tuple_stdpfjets->farray("topo_svy",topo_svy,"NMaxTopos",10000);
+  tuple_stdpfjets->farray("topo_svz",topo_svz,"NMaxTopos",10000);
 
 	std::vector<int> Ngendaughters;
 	std::vector<int> Ntopotriggers;

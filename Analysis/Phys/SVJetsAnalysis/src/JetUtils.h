@@ -75,6 +75,7 @@ namespace LoKi {
 	namespace JetUtils {
 
 		void getHltObjP4(const LHCb::HltObjectSummary *obj,Gaudi::LorentzVector &p4);
+                void getHltObjSVPos(const LHCb::HltObjectSummary *obj, double &x, double &y, double &z);
 		double getHltObjsAngle(const LHCb::HltObjectSummary *obj1, const LHCb::HltObjectSummary *obj2);
 		double getHltObjsMass(const LHCb::HltObjectSummary *obj1, const LHCb::HltObjectSummary *obj2);
 		bool addLHCbIDs(SmartRefVector< LHCb::HltObjectSummary >::const_iterator iter, std::vector<int> &ids);
