@@ -628,7 +628,7 @@ namespace LoKi
       const VERTEX&      last  , 
       const CUTS&        cut   ) 
     { 
-      return m_vselected.add ( name , first , last , cut ) ; 
+      return m_vselected.add ( name , first , last , cut ) ;
     } 
     // ========================================================================
     /** Extract the selected particles from local LoKi storage  

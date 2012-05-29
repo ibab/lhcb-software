@@ -5,6 +5,9 @@
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
 
+! 2012-05-29 - Vanya Belyaev
+ - add more counters 
+
 ! 2012-05-24 - Vanya Belyaev
  - improve decorators 
 
