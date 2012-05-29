@@ -33,11 +33,11 @@ public:
   
   virtual StatusCode initializeGenerator( ) ;
 
-  virtual void setStable( const ParticleProperty * thePP ) ;
+  virtual void setStable( const LHCb::ParticleProperty * thePP ) ;
   
-  virtual void updateParticleProperties( const ParticleProperty * thePP ) ;
+  virtual void updateParticleProperties( const LHCb::ParticleProperty * thePP ) ;
   
-  virtual bool isSpecialParticle( const ParticleProperty * thePP ) const ;
+  virtual bool isSpecialParticle( const LHCb::ParticleProperty * thePP ) const ;
   
   virtual void turnOnFragmentation( ) ;
   

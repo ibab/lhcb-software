@@ -3,7 +3,7 @@
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
-#include "GaudiKernel/ParticleProperty.h"
+#include "Kernel/ParticleProperty.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/PhysicalConstants.h"
 
@@ -166,14 +166,14 @@ StatusCode HijingProduction::generateEvent( HepMC::GenEvent * theEvent ,
 //=============================================================================
 // Set stable the given particle in Hijing
 //=============================================================================
-void HijingProduction::setStable( const ParticleProperty* /*thePP*/ ) {
+void HijingProduction::setStable( const LHCb::ParticleProperty* /*thePP*/ ) {
   debug() << "HijingProduction::setStable called" << endreq;
 }
 
 //=============================================================================
 // Update particle properties
 //=============================================================================
-void HijingProduction::updateParticleProperties( const ParticleProperty* 
+void HijingProduction::updateParticleProperties( const LHCb::ParticleProperty* 
                                                  /*thePP*/ ) {
   debug() << "HijingProduction::updateParticleProperties called" << endreq;
 }
@@ -225,10 +225,10 @@ void HijingProduction::printRunningConditions() {
 //=============================================================================
 // TRUE if the particle is a special particle and must not be modified
 //=============================================================================
-bool HijingProduction::isSpecialParticle( const ParticleProperty * thePP ) const
+bool HijingProduction::isSpecialParticle( const LHCb::ParticleProperty * thePP ) const
 {
   debug() << "HijingProduction::isSpecialParticle called" << endreq;
-  switch ( abs( thePP -> pdgID() ) )
+  switch ( thePP -> pid().abspid() )
   {
   case 1:
   case 2:

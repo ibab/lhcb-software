@@ -4,6 +4,9 @@
 ! Purpose     : "Interface" to Hijing 
 !-----------------------------------------------------------------------------
 
+! 2012-05-29 - Patrick Robbe  
+ - HijingProduction: use new particle property service
+
 !========================= LbHijing v6r2 2011-11-11 ==========================
 ! 2011-10-20 - Patrick Robbe
  - HijingProduction.cpp: fix coverity warnings
