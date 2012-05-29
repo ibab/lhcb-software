@@ -8,6 +8,7 @@ Purpose: LHCb reconstruction program
     the 'tight' track monitoring selection to chi^2 < 2 (RichRecQC)
   . Improve FastVelo clone rejection (FastVelo)
   . Bug fix in FastVelo beam splash handling (FastVelo)
+  . Enable by default the resolution plots per PD column (RichRecQC)
 
 - Changes to tests
   . Add a test for bug #94407 in brunel.2012-crashes
