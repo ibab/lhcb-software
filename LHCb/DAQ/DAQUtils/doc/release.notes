@@ -4,6 +4,10 @@
 ! Purpose     : Various utilities for manipulating RawEvent
 !-----------------------------------------------------------------------------
 
+! 2012-05-29 - Marco Cattaneo
+ - Fix unprotected debugs in RawBankReadoutStatusFilter.cpp
+ - Fix trivial icc remark
+
 !========================= DAQUtils v1r7 2012-04-13 =========================
 ! 2012-04-10 - Olivier Deschamps
   - OdinTypesFilter : bug fix for CalibrationTypes

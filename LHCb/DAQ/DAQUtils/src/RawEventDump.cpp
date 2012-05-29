@@ -71,7 +71,7 @@ StatusCode RawEventDump::execute() {
   }
 
   return StatusCode::SUCCESS;
-};
+}
 
 
 bool RawEventDump::acceptBank(LHCb::RawBank::BankType i) {

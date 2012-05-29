@@ -40,7 +40,7 @@ StatusCode RawBankReadoutStatusFilter::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  if(msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -50,16 +50,13 @@ StatusCode RawBankReadoutStatusFilter::initialize() {
 //=============================================================================
 StatusCode RawBankReadoutStatusFilter::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if(msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
 
-    
-
-  setFilterPassed(!m_invert); // accept by defaut
+  setFilterPassed(!m_invert); // accept by default
   int value = LHCb::RawBankReadoutStatus::OK;
 
   if(m_type == LHCb::RawBank::LastType){
-    warning() << "No BankType requested in RawBankReadoutStatusFilter -> filterPassed = true" << endmsg;
-    return StatusCode::SUCCESS;
+    return Warning( "No BankType requested in RawBankReadoutStatusFilter -> filterPassed = true", StatusCode::SUCCESS, 0);
   }
   
   
@@ -88,9 +85,8 @@ StatusCode RawBankReadoutStatusFilter::execute() {
   if(filterPassed())counter("Accepted events")+=1;
   else counter("Rejected events")+=1;
 
-  debug() << "Status value : " << value << " Mask : " << m_mask << " => " << filterPassed() << endmsg;
-
-
+  if(msgLevel(MSG::DEBUG)) debug() << "Status value : " << value << " Mask : "
+                                   << m_mask << " => " << filterPassed() << endmsg;
   return StatusCode::SUCCESS;
 }
 
@@ -99,7 +95,7 @@ StatusCode RawBankReadoutStatusFilter::execute() {
 //=============================================================================
 StatusCode RawBankReadoutStatusFilter::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if(msgLevel(MSG::DEBUG)) debug() << "==> Finalize" << endmsg;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
