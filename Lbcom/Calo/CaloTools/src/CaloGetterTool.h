@@ -141,7 +141,7 @@ private:
   bool m_digiUpd;
   bool m_clusUpd;
   bool m_hypoUpd;
-  bool m_provUpd;
+  //  bool m_provUpd;
   std::vector<std::string> m_digiLoc;
   std::vector<std::string> m_clusLoc;
   std::vector<std::string> m_hypoLoc;

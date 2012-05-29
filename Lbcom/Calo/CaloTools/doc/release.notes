@@ -3,16 +3,20 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !-------------------------------------------------------------------------------
 
+! 2012-05-29 - Marco Cattaneo
+ - Fix unused variable in previous commit
+ - Fix UNINIT_CTOR defects
 
 ! 2012-05-22 - Olivier Deschamps for Miriam Calvo 
  - GammaPi0SeparationTool  : new version of the tool (incl. Prs info)
 
-
 ! 2012-05-14 - Olivier Deschamps
- - new algorithm : CheckCaloHypoRef - check CaloHypo->CaloCluster* smart reference backward compatibility 
+ - new algorithm : CheckCaloHypoRef - check CaloHypo->CaloCluster* smart 
+                                      reference backward compatibility 
 
 ! 2012-05-10 - Olivier Deschamps
- - L0Calo2Calo tool : default clusterization level set to 2 (5x5 area for merged pi0)
+ - L0Calo2Calo tool : default clusterization level set to 2 
+                      (5x5 area for merged pi0)
 
 !========================= CaloTools v6r3p1 2011-12-14 =========================
 ! 2011-11-23 - Marco Cattaneo

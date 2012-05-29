@@ -24,6 +24,10 @@ Calo2MCTool::Calo2MCTool( const std::string& type,
                           const std::string& name,
                           const IInterface* parent )
   : GaudiTool ( type, name , parent )
+  , m_sum(0.)
+  , m_category(0)
+  , m_depth(-1)
+  , m_nFrag(0)
 {
   declareInterface<ICalo2MCTool>(this);
 

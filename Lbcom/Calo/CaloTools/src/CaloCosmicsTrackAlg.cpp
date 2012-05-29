@@ -29,6 +29,7 @@ DECLARE_ALGORITHM_FACTORY( CaloCosmicsTrackAlg )
 CaloCosmicsTrackAlg::CaloCosmicsTrackAlg( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : GaudiTupleAlg ( name , pSvcLocator )
+  , m_caloTrack(NULL)
 {
 
   declareProperty("TrackTool" , m_trackToolType = "CaloCosmicsTrackTool");

@@ -34,12 +34,14 @@ Calo2Calo::Calo2Calo( const std::string& type,
                       const std::string& name,
                       const IInterface* parent )
   : GaudiTool ( type, name , parent )
-    ,m_fromCalo("??")
-    ,m_toCalo("??")
-    ,m_cells()
-    ,m_digits()
-    ,m_energy()
-    ,m_count(0)
+  , m_fromCalo("??")
+  , m_toCalo("??")
+  , m_cells()
+  , m_digits()
+  , m_energy()
+  , m_count(0)
+  , m_fromSize(0.)
+  , m_toSize(0.)
 {
   declareInterface<ICalo2Calo>(this);
   declareProperty("IdealGeometry", m_geo = true );

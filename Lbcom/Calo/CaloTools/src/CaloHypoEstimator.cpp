@@ -24,8 +24,13 @@ DECLARE_TOOL_FACTORY( CaloHypoEstimator )
 CaloHypoEstimator::CaloHypoEstimator( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
-  : GaudiTool ( type, name , parent ),
-    m_status(true)
+  : GaudiTool ( type, name , parent )
+  , m_toCalo(NULL)
+  , m_hypo(NULL)
+  , m_cluster(NULL)
+  , m_status(true)
+  , m_electron(NULL)
+  , m_GammaPi0(NULL)
 {
   declareInterface<ICaloHypoEstimator>(this);
 

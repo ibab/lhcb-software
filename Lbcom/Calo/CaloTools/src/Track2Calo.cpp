@@ -36,7 +36,9 @@ Track2Calo::Track2Calo( const std::string& type,
   : GaudiTool ( type, name , parent )
   , m_status         ( false)
   , m_track          ( NULL )
-  , m_det            (){
+  , m_det            ()
+  , m_valid          ( false)
+{
   declareInterface<ITrack2Calo>(this);
   declareProperty ( "ExtrapolatorType" , m_extrapolatorType = "TrackRungeKuttaExtrapolator" ) ;
   declareProperty ( "Tolerance"        , m_tolerance = 0.01 ) ;

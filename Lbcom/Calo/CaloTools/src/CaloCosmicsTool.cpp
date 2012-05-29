@@ -28,6 +28,7 @@ CaloCosmicsTool::CaloCosmicsTool( const std::string& type,
                                     const std::string& name,
                                     const IInterface* parent )
   : GaudiTupleTool ( type, name , parent )
+  , m_calo(NULL)
 {
   declareInterface<ICaloCosmicsTool>(this);
 

@@ -40,6 +40,8 @@ L0Calo2CaloTool::L0Calo2CaloTool(const std::string& type,
                   "false = decode only the Tell1s around the L0CaloCandidate cellID");
 
   declareProperty("ClusterOnTES",m_clusOnTES=false);
+
+  m_ecalCaloNum = CaloCellCode::CaloNumFromName("Ecal");
 }
 // ==========================================================================
 StatusCode L0Calo2CaloTool::initialize()
@@ -50,7 +52,6 @@ StatusCode L0Calo2CaloTool::initialize()
   m_calo               = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal );
   m_clusterizationTool = tool< ICaloClusterization >(m_clusterizationToolName);
   m_dataProviderTool   = tool< ICaloDataProvider >(m_dataProviderToolName, "EcalDataProvider", this, true);
-  m_ecalCaloNum        = CaloCellCode::CaloNumFromName("Ecal");
 
   info() << "Clusterizing Calo around L0 candidates : NeighbourLevel  set to " << m_neighbourLevel << endmsg;
 
