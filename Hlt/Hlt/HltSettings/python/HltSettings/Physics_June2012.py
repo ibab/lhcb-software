@@ -159,17 +159,19 @@ class Physics_June2012( object ):
                                                                , 'Hlt1L0AnyNoSPD'     : 0.01
                                                                }
                                                }
-                       , Hlt1BeamGasLinesConf : { 'Postscale'               : { 'Hlt1BeamGasNoBeamBeam1'           : 'RATE(0.5)'
-                                                                              , 'Hlt1BeamGasNoBeamBeam2'           : 'RATE(0.5)'
-                                                                              , 'Hlt1BeamGasBeam1'                 : 'RATE(2)'
-                                                                              , 'Hlt1BeamGasBeam2'                 : 'RATE(2)'
-                                                                              , 'Hlt1BeamGasCrossingEnhancedBeam1' : 'RATE(0)'
-                                                                              , 'Hlt1BeamGasCrossingEnhancedBeam2' : 'RATE(0)'
-                                                                              , 'Hlt1BeamGasCrossingForcedReco'    : 'RATE(0.5)'
-                                                                              , 'Hlt1BeamGasCrossingForcedRecoFullZ':'RATE(0.5)'
-                                                                              , 'Hlt1BeamGasCrossingParasitic'     : 'RATE(1)'
-                                                                              , 'Hlt1BeamGasHighRhoVertices'       : 'RATE(4)'
-                                                                              }
+                       , Hlt1BeamGasLinesConf : {
+                                         'Prescale'  : { 'Hlt1BeamGasCrossingForcedRecoFullZ': 0.001 }
+                                       , 'Postscale' : { 'Hlt1BeamGasNoBeamBeam1'            : 'RATE(0.5)'
+                                                       , 'Hlt1BeamGasNoBeamBeam2'            : 'RATE(0.5)'
+                                                       , 'Hlt1BeamGasBeam1'                  : 'RATE(2)'
+                                                       , 'Hlt1BeamGasBeam2'                  : 'RATE(2)'
+                                                       , 'Hlt1BeamGasCrossingEnhancedBeam1'  : 'RATE(0)'
+                                                       , 'Hlt1BeamGasCrossingEnhancedBeam2'  : 'RATE(0)'
+                                                       , 'Hlt1BeamGasCrossingForcedReco'     : 'RATE(0.5)'
+                                                       , 'Hlt1BeamGasCrossingForcedRecoFullZ': 'RATE(0.5)'
+                                                       , 'Hlt1BeamGasCrossingParasitic'      : 'RATE(1)'
+                                                       , 'Hlt1BeamGasHighRhoVertices'        : 'RATE(4)'
+                                                       }
                                                 }
                        , Hlt1DisplVertexLinesConf: { "VertexDisplVertex_DOCABL"    : "2.0*mm"
                                                    , "VertexDisplVertex_VELO_NSP"  : "3"

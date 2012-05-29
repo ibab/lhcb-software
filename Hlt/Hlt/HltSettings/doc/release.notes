@@ -4,6 +4,11 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-05-29 - Plamen Hopchev
+ - In Physics_June2012.py set explicitely the prescale of the
+   Hlt1BeamGasCrossingForcedRecoFullZ Line to 0.001 (before was
+   implicit 1.)	
+
 !========================= HltSettings v5r37 2012-05-21 =========================
 ! 2012-05-21 - Eric van Herwijnen
  - remove prescale on Hlt2DisplVertices; Hlt2Forward at 0.00001
