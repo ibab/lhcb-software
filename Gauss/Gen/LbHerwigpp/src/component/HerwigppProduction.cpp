@@ -6,8 +6,8 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/System.h"
 #include "GaudiKernel/DeclareFactoryEntries.h"
-#include "GaudiKernel/ParticleProperty.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
+#include "Kernel/IParticlePropertySvc.h"
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/RndmGenerators.h"
@@ -147,9 +147,9 @@ StatusCode HerwigppProduction::initialize( ) {
   m_beamTool = tool< IBeamTool >( m_beamToolName , this ) ;
   
   // Initialize the particle property service.
-  IParticlePropertySvc* m_ppSvc( 0 ) ;
+  LHCb::IParticlePropertySvc* m_ppSvc( 0 ) ;
   try {
-    m_ppSvc = svc< IParticlePropertySvc > ("Gaudi::ParticlePropertySvc", true);
+    m_ppSvc = svc< LHCb::IParticlePropertySvc > ("Gaudi::ParticlePropertySvc", true);
   }
   catch (const GaudiException &exc) {
     Exception( "Cannot open ParticlePropertySvc", exc);
@@ -164,8 +164,8 @@ StatusCode HerwigppProduction::initialize( ) {
   m_beamTool->getMeanBeams(pBeam1, pBeam2);  
   
   // Find beam masses.
-  double mass1 = (m_ppSvc->findByStdHepID(m_id1))->mass();
-  double mass2 = (m_ppSvc->findByStdHepID(m_id2))->mass();
+  double mass1 = (m_ppSvc->find( LHCb::ParticleID( m_id1 ) ) )->mass();
+  double mass2 = (m_ppSvc->find( LHCb::ParticleID( m_id2 ) ) )->mass();
   
   // Calculate center of mass energy.
   m_cme = (sqrt(pBeam1.Dot(pBeam1)+mass1*mass1) +  
@@ -446,10 +446,10 @@ StatusCode HerwigppProduction::finalize( )
 //=============================================================================
 // Set a particle as stable.
 //=============================================================================
-void HerwigppProduction::setStable(const ParticleProperty *thePP) {
+void HerwigppProduction::setStable(const LHCb::ParticleProperty *thePP) {
 
   // Grab the particle data.
-  ThePEG::PDPtr pd = m_herwigpp->getParticleData(thePP->pdgID());
+  ThePEG::PDPtr pd = m_herwigpp->getParticleData(thePP->pid().pid());
 
   // If Herwig++ particle exists form the command string and execute.
   if (pd) {
@@ -463,10 +463,10 @@ void HerwigppProduction::setStable(const ParticleProperty *thePP) {
 //=============================================================================
 // Update the properties for a particle.
 //=============================================================================
-void HerwigppProduction::updateParticleProperties(const ParticleProperty
+void HerwigppProduction::updateParticleProperties(const LHCb::ParticleProperty
 						  *thePP) {
   // Grab the particle data from the Herwig++ repository.
-  ThePEG::PDPtr pd = m_herwigpp->getParticleData(thePP->pdgID());
+  ThePEG::PDPtr pd = m_herwigpp->getParticleData(thePP->pid().pid());
   
   if (pd) {
     // Grab particle name.
@@ -531,7 +531,7 @@ StatusCode HerwigppProduction::hadronize(HepMC::GenEvent */*theEvent*/,
 
 void HerwigppProduction::printRunningConditions() {}
 
-bool HerwigppProduction::isSpecialParticle(const ParticleProperty * 
+bool HerwigppProduction::isSpecialParticle(const LHCb::ParticleProperty * 
 					   /*thePP*/) const { 
   return false;
 }

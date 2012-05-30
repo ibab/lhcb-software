@@ -4,6 +4,8 @@
 ! Purpose     : Adaptor package for Herwig++
 !-----------------------------------------------------------------------------
 
+! 2012-05-30 - Patrick Robbe
+ - HerwigProduction.cpp: adapt to new particle property service
 
 !========================= LbHerwig v1r0 2012-05-14 =========================
 ! 2012-05-14 - Gloria Corti

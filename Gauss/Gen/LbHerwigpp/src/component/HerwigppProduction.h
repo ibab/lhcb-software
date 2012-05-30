@@ -113,7 +113,7 @@ class HerwigppProduction : public GaudiTool, virtual public IProductionTool {
    * method as changes to the repository do not influence the already created
    * event generator object.
    */
-  virtual void setStable(const ParticleProperty *thePP);
+  virtual void setStable(const LHCb::ParticleProperty *thePP);
 
   /**
    * Update a particle.
@@ -124,7 +124,7 @@ class HerwigppProduction : public GaudiTool, virtual public IProductionTool {
    * the initializeGenerator() methad as changes to the repository do not
    * influence the already created event generator object.
    */
-  virtual void updateParticleProperties(const ParticleProperty * thePP);
+  virtual void updateParticleProperties(const LHCb::ParticleProperty * thePP);
 
   /// Sets Herwig++'s default hadronization handler (ClusterHandler).
   virtual void turnOnFragmentation();
@@ -146,7 +146,7 @@ class HerwigppProduction : public GaudiTool, virtual public IProductionTool {
   virtual void printRunningConditions();
 
   /// This methid is not implemented.
-  virtual bool isSpecialParticle(const ParticleProperty *thePP) const;
+  virtual bool isSpecialParticle(const LHCb::ParticleProperty *thePP) const;
 
   /// This methid is not implemented.
   virtual StatusCode setupForcedFragmentation(const int thePdgId);
