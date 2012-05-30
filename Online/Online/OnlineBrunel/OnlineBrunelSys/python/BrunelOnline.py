@@ -106,7 +106,7 @@ def patchBrunel(true_online_version):
   print "# Warning using CKThetaQuartzRefractCorrections = [ 0,-0.0001,0 ]"
   from Configurables import RichRecSysConf
   rConf = RichRecSysConf("RichOfflineRec")
-  rConf.richTools().photonReco().CKThetaQuartzRefractCorrections = [ 0,-0.0001,0 ] 
+  rConf.richTools().photonReco().CKThetaQuartzRefractCorrections = [ 0,-0.001,0 ] 
   
   if true_online_version:
     brunel.OutputLevel       = 999
