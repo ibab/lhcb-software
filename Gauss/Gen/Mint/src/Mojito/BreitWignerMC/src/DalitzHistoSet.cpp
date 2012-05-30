@@ -337,9 +337,9 @@ bool DalitzHistoSet::drawWithFitAndEachAmps(
 				 , DalitzHistoSet& fit
 				 , std::vector<DalitzHistoSet>& amps
 				 , const std::string& baseName // =""
-				 , const std::string& format // ="eps"
-				 , const std::string& fitDrawOpt // ="HIST C SAME"
-				 ) const{
+           , const std::string& // format // ="eps"
+           , const std::string& // fitDrawOpt // ="HIST C SAME"
+           ) const{
   bool sc=true;
   std::vector<DalitzHistoSet>::iterator amps_it;
 
@@ -381,8 +381,10 @@ bool DalitzHistoSet::drawWithFitAndEachAmps(
 	(*FitHisto).Draw("HIST C SAME");
 	leg->AddEntry(&(*FitHisto),"Fit","l");  // "l" means line
 
-	double NEntries = (*FitHisto).GetEntries();
-	double NormFactor = (*FitHisto).GetNormFactor();
+	// suppress warning double NEntries = (*FitHisto).GetEntries();
+  (*FitHisto).GetEntries();
+	// suppress warning double NormFactor = (*FitHisto).GetNormFactor();
+  (*FitHisto).GetNormFactor();
 
     MINT::counted_ptr<TH1> histo;
 
@@ -401,7 +403,8 @@ bool DalitzHistoSet::drawWithFitAndEachAmps(
 		 leg->AddEntry(&(*histo),title,"l");  // "l" means line
 
 		 (*histo).Draw("HIST C SAME");
-		 double NormFactorAmp = (*histo).GetNormFactor();
+		 // suppress warning double NormFactorAmp = 
+     (*histo).GetNormFactor();
     }
 
     std::string SaveName = it->first.name();

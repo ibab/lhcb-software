@@ -644,7 +644,7 @@ MINT::counted_ptr<TH1> DalitzHistogram::getHisto(){
 	return _h;
 }
 
-bool DalitzHistogram::drawEachAmp( TCanvas& can
+bool DalitzHistogram::drawEachAmp( TCanvas& // can
 			   , const std::string& baseName // =""
 			   , const std::string& drawOpt// =""
 			   , const std::string& format// = "eps"
