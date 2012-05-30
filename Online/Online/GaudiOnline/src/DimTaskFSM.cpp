@@ -16,6 +16,7 @@
 //#define ST_NAME_STOPPED     "STOPPED"
 #define ST_NAME_STOPPED     "READY"
 #define ST_NAME_RUNNING     "RUNNING"
+#define ST_NAME_PAUSED      "PAUSED"
 
 DECLARE_NAMESPACE_OBJECT_FACTORY(LHCb,DimTaskFSM)
 
@@ -70,6 +71,16 @@ namespace  {
 	m_target->setTargetState(Target::ST_UNKNOWN);
         m_target->cancel();
         IOCSENSOR.send(m_target, DimTaskFSM::UNLOAD);
+      }
+      else if ( cmd == "pause"      ) {
+	m_target->setTargetState(Target::ST_PAUSED);
+        m_target->cancel();
+        IOCSENSOR.send(m_target, DimTaskFSM::PAUSE);
+      }
+      else if ( cmd == "continue"      ) {
+	m_target->setTargetState(Target::ST_RUNNING);
+        m_target->cancel();
+        IOCSENSOR.send(m_target, DimTaskFSM::CONTINUE);
       }
       else   {
         m_target->declareState(Target::ST_ERROR);
@@ -208,6 +219,8 @@ std::string DimTaskFSM::stateName(int state) {
     return ST_NAME_RUNNING;
   case ST_STOPPED:
     return ST_NAME_STOPPED;
+  case ST_PAUSED:
+    return ST_NAME_PAUSED;
   case ST_ERROR:
     return ST_NAME_ERROR;
   case ST_UNKNOWN:
@@ -247,6 +260,8 @@ StatusCode DimTaskFSM::declareState(State new_state)  {
       return _declareState(ST_NAME_STOPPED);
     case ST_RUNNING:
       return _declareState(ST_NAME_RUNNING);
+    case ST_PAUSED:
+      return _declareState(ST_NAME_PAUSED);
     case ST_UNKNOWN:
     default:
       m_monitor.state = ST_UNKNOWN;
@@ -300,6 +315,8 @@ void DimTaskFSM::handle(const Event& ev)  {
         _CASE(STOP)         sc=stop();                                break;
         _CASE(FINALIZE)     sc=finalize();                            break;
         _CASE(TERMINATE)    sc=terminate();                           break;
+        _CASE(PAUSE)        sc=pauseProcessing();                     break;
+        _CASE(CONTINUE)     sc=continueProcessing();                  break;
         _CASE(ERROR)        sc=declareState(ST_ERROR);                break;
         _CASE(STARTUP_DONE) sc = startupDone();                       break;
         _CASE(CONNECT_DIM)  sc = connectDIM();                        break;
@@ -415,6 +432,20 @@ StatusCode DimTaskFSM::unload()  {
   ::lib_rtl_sleep(100);
   ::exit(0);
   return StatusCode::SUCCESS;
+}
+
+/// Pause the application  ( RUNNING -> PAUSED )
+StatusCode DimTaskFSM::pauseProcessing()  {
+  m_continue = false;
+  cancel();
+  return declareState(ST_PAUSED);
+}
+
+/// Continue the application  ( PAUSED -> RUNNING )
+StatusCode DimTaskFSM::continueProcessing()  {
+  m_continue = true;
+  rearm();
+  return declareState(ST_RUNNING);
 }
 
 /// Invoke transition to error state                ( ****      -> Error   )

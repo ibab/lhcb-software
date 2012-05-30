@@ -2,7 +2,13 @@
 echo "All args: $*"
 . ${GAUDIONLINEROOT}/tests/cmt/preamble.sh
 #
-start_py_task MBMBuffers "import GaudiOnlineTests;GaudiOnlineTests.runHlt2Buffer()"
+mkdir -p data;
+for i in $(seq -w 0 100);
+  do 
+  ln -s `pwd`/mepData_0.dat data/RUN_$i_$i.dat;
+done;
+#
+start_py_task MBMBuffers "import GaudiOnlineTests;GaudiOnlineTests.runHltBuffer()"
 #
 sleep 4
 #
@@ -10,15 +16,8 @@ sleep 4
 #
 $BIGTERM MBMMon@${HOST}     -e "export UTGID=${NODENAME}/MBMMon;    exec -a \${UTGID} $gaudi_run libOnlineKernel.so mbm_mon"&
 #
-start_py_task Hlt1_0     "import GaudiOnlineTests;GaudiOnlineTests.runHlt1Read()"
-start_py_task Hlt1_1     "import GaudiOnlineTests;GaudiOnlineTests.runHlt1Read()"
-start_py_task Hlt1_2     "import GaudiOnlineTests;GaudiOnlineTests.runHlt1Read()"
-start_py_task Hlt1_3     "import GaudiOnlineTests;GaudiOnlineTests.runHlt1Read()"
+start_py_task RDR_0     "import GaudiOnlineTests;GaudiOnlineTests.runMepFeeder(buffer='Events')"
 #
-start_py_task Hlt2_0     "import GaudiOnlineTests;GaudiOnlineTests.runHlt2Read()"
-#
-start_py_task Shuffle_0  "import GaudiOnlineTests;GaudiOnlineTests.runHltShuffle()"
-
 # For debugging enable this and disable any other
 #$MINITERM Sender@${HOST}    -e "export UTGID=${NODENAME}/DbgTask   ; cat gaudi.gdb; gdb -x gaudi.gdb $GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe" &
 # $BIGTERM MBMDump@${HOST} -e "export UTGID=${NODENAME}/MBMDump; $gaudi_run libMBMDump.so mbmdump" &

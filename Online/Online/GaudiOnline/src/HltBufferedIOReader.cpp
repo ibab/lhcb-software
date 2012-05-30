@@ -43,12 +43,21 @@ namespace LHCb
     bool m_receiveEvts;
     /// Lock handle
     void* m_lock;
+    /// Reference to MEP manager service
     MEPManager* m_mepMgr;
+    /// Reference to buffer manager producer
     MBM::Producer* m_producer;
-    std::string m_buffer;
+    /// Current file name
     std::string m_current;
-    std::string m_directory;
-    std::set<std::string> m_files;
+    /// List of files to process
+    std::set<std::string>      m_files;
+
+    /// Property: Buffer name for data output
+    std::string m_buffer;
+    /// Property: Data directory name
+    std::string                m_directory;
+    /// Property: List of runs to be processed (as strings!)
+    std::vector<std::string>   m_allowedRuns;
 
     /// Monitoring quantity: Number of events processed
     int m_evtCount;
@@ -121,21 +130,20 @@ HltBufferedIOReader::HltBufferedIOReader(const string& nam, ISvcLocator* svcLoc)
   declareProperty("Buffer", m_buffer = "Mep");
   declareProperty("Directory", m_directory = "/localdisk");
   declareProperty("DeleteFiles", m_deleteFiles = true);
+  declareProperty("AllowedRuns", m_allowedRuns);
+  m_allowedRuns.push_back("*");
   ::lib_rtl_create_lock(0, &m_lock);
 }
 
 /// Standard Destructor
-HltBufferedIOReader::~HltBufferedIOReader()
-{
+HltBufferedIOReader::~HltBufferedIOReader()  {
   ::lib_rtl_delete_lock(m_lock);
 }
 
 /// IInterface implementation : queryInterface
-StatusCode HltBufferedIOReader::queryInterface(const InterfaceID& riid,
-    void** ppIf)
+StatusCode HltBufferedIOReader::queryInterface(const InterfaceID& riid, void** ppIf)
 {
-  if (IRunable::interfaceID().versionMatch(riid))
-  {
+  if (IRunable::interfaceID().versionMatch(riid))  {
     *ppIf = (IRunable*) this;
     addRef();
     return StatusCode::SUCCESS;
@@ -144,16 +152,14 @@ StatusCode HltBufferedIOReader::queryInterface(const InterfaceID& riid,
 }
 
 /// IService implementation: initialize the service
-StatusCode HltBufferedIOReader::initialize()
-{
+StatusCode HltBufferedIOReader::initialize()   {
   StatusCode sc;
   if (!(sc = OnlineService::initialize()).isSuccess())
     return error("Failed to initialize service base class.");
   else if (!(sc = service("MEPManager", m_mepMgr)).isSuccess())
     return error("Failed to access MEP manager service.");
   m_producer = m_mepMgr->createProducer(m_buffer, RTL::processName());
-  if (0 == m_producer)
-  {
+  if (0 == m_producer)  {
     return error("Fatal error: Failed to create MBM producer object.");
   }
   incidentSvc()->addListener(this, "DAQ_CANCEL");
@@ -165,12 +171,9 @@ StatusCode HltBufferedIOReader::initialize()
 }
 
 /// IService implementation: finalize the service
-StatusCode HltBufferedIOReader::finalize()
-{
-  if (m_producer)
-  {
-    if (m_mepMgr->FSMState() != Gaudi::StateMachine::OFFLINE)
-    {
+StatusCode HltBufferedIOReader::finalize()  {
+  if (m_producer)  {
+    if (m_mepMgr->FSMState() != Gaudi::StateMachine::OFFLINE)    {
       m_producer->exclude();
     }
     delete m_producer;
@@ -181,11 +184,9 @@ StatusCode HltBufferedIOReader::finalize()
   return OnlineService::finalize();
 }
 
-StatusCode HltBufferedIOReader::sysStart()
-{
+StatusCode HltBufferedIOReader::sysStart()  {
 #if 0
-  if ( m_producer )
-  {
+  if ( m_producer )  {
     m_producer->exclude();
     delete m_producer;
     m_producer = 0;
@@ -198,13 +199,10 @@ StatusCode HltBufferedIOReader::sysStart()
 }
 
 /// IService implementation: finalize the service
-StatusCode HltBufferedIOReader::sysStop()
-{
+StatusCode HltBufferedIOReader::sysStop()   {
   incidentSvc()->removeListener(this);
-  if (m_receiveEvts)
-  {
-    if (m_mepMgr)
-    {
+  if (m_receiveEvts)  {
+    if (m_mepMgr)    {
       m_mepMgr->cancel();
     }
   }
@@ -217,26 +215,21 @@ StatusCode HltBufferedIOReader::sysStop()
 void HltBufferedIOReader::handle(const Incident& inc)
 {
   info("Got incident:" + inc.source() + " of type " + inc.type());
-  if (inc.type() == "DAQ_CANCEL")
-  {
+  if (inc.type() == "DAQ_CANCEL")  {
     m_receiveEvts = false;
-    if (m_mepMgr)
-    {
+    if (m_mepMgr)    {
       m_mepMgr->cancel();
     }
     ::lib_rtl_unlock(m_lock);
   }
-  else if (inc.type() == "DAQ_ENABLE")
-  {
+  else if (inc.type() == "DAQ_ENABLE")  {
     m_receiveEvts = true;
   }
 }
 
-static int file_read(int file, char* p, int len)
-{
+static int file_read(int file, char* p, int len) {
   int tmp = 0;
-  while (tmp < len)
-  {
+  while (tmp < len)   {
     int sc = ::read(file, p + tmp, len - tmp);
     if (sc > 0)
       tmp += sc;
@@ -247,12 +240,10 @@ static int file_read(int file, char* p, int len)
   return 1;
 }
 
-static bool file_write(int file, const void* data, int len)
-{
+static bool file_write(int file, const void* data, int len)   {
   const char* p = (const char*) data;
   int tmp = len;
-  while (tmp > 0)
-  {
+  while (tmp > 0)  {
     int sc = ::write(file, p + len - tmp, tmp);
     if (sc > 0)
       tmp -= sc;
@@ -261,20 +252,27 @@ static bool file_write(int file, const void* data, int len)
   return true;
 }
 
-size_t HltBufferedIOReader::scanFiles()
-{
+size_t HltBufferedIOReader::scanFiles()   {
   m_files.clear();
   DIR* dir = opendir(m_directory.c_str());
-  if (dir)
-  {
+  if (dir)  {
     struct dirent *entry;
-    while ((entry = ::readdir(dir)) != 0)
-    {
+    bool take_all = (m_allowedRuns.size() > 0 && m_allowedRuns[0]=="*");
+    while ((entry = ::readdir(dir)) != 0)    {
       string fname = entry->d_name;
       //cout << "File:" << fname << endl;
-      if (fname == "." || fname == "..")
-      {
+      if (fname == "." || fname == "..")      {
         continue;
+      }
+      else if ( !take_all )  {
+	bool take_run = false;
+	for(vector<string>::const_iterator i=m_allowedRuns.begin(); i!=m_allowedRuns.end(); ++i) {
+	  if ( ::strstr(entry->d_name,(*i).c_str()) != 0 ) {
+	    take_run = true;
+	    break;
+	  }
+	}
+	if ( !take_run ) continue;
       }
       m_files.insert(m_directory + "/" + entry->d_name);
     }
@@ -286,21 +284,16 @@ size_t HltBufferedIOReader::scanFiles()
   return 0;
 }
 
-int HltBufferedIOReader::openFile()
-{
-  while (m_files.size() > 0)
-  {
+int HltBufferedIOReader::openFile()   {
+  while (m_files.size() > 0)  {
     set<string>::iterator i = m_files.begin();
     string fname = *i;
     m_files.erase(i);
     int fd = ::open(fname.c_str(), O_RDONLY | O_BINARY, S_IREAD);
-    if (fd)
-    {
-      if (m_deleteFiles)
-      {
+    if (fd)    {
+      if (m_deleteFiles)      {
         int sc = ::unlink(fname.c_str());
-        if (sc != 0)
-        {
+        if (sc != 0)        {
           error("CANNOT UNLINK file: " + fname + ": " + RTL::errorString());
           ::exit(0);
         }
@@ -317,20 +310,16 @@ int HltBufferedIOReader::openFile()
 
 void HltBufferedIOReader::safeRestOfFile(int file_handle)
 {
-  if (file_handle)
-  {
+  if (file_handle)  {
     char buffer[10 * 1024];
     cout << "Saving rest of file[" << file_handle << "]:" << m_current << endl;
     int cnt = 0, ret, fd = ::open(m_current.c_str(), O_CREAT | O_BINARY
         | O_WRONLY, 0777);
-    if (fd < 0)
-    {
+    if (fd < 0)    {
       error("CANNOT Create file: " + m_current + ": " + RTL::errorString());
     }
-    while ((ret = ::read(file_handle, buffer, sizeof(buffer))) > 0)
-    {
-      if (!file_write(fd, buffer, ret))
-      {
+    while ((ret = ::read(file_handle, buffer, sizeof(buffer))) > 0)  {
+      if (!file_write(fd, buffer, ret))      {
         error("CANNOT write file: " + m_current + ": " + RTL::errorString());
       }
       cnt += ret;
@@ -345,47 +334,47 @@ void HltBufferedIOReader::safeRestOfFile(int file_handle)
 }
 
 /// IRunable implementation : Run the class implementation
-StatusCode HltBufferedIOReader::i_run()
-{
+StatusCode HltBufferedIOReader::i_run()  {
   int file_handle = 0;
+  bool files_processed = false;
   m_receiveEvts = true;
+  bool m_goto_paused = true;
   ::lib_rtl_sleep(10000);
-  while (1)
-  {
-    info("Locking event loop. Waiting for work....");
-    ::lib_rtl_lock(m_lock);
-    if (!m_receiveEvts)
-    {
+  while (1)  {
+    files_processed = scanFiles() == 0;
+    if ( m_goto_paused && files_processed )   {
+      /// Go to state PAUSED, all the work is done
+      incidentSvc()->fireIncident(Incident(name(),"DAQ_PAUSE"));
+    }
+    else if ( files_processed ) {
+      info("Locking event loop. Waiting for work....");
+      ::lib_rtl_lock(m_lock);
+    }
+    if ( !m_receiveEvts )    {
       info("Quitting...");
       break;
     }
     m_evtCount = 0;
-
-    if (scanFiles() == 0)
-    {
+    files_processed = scanFiles() == 0;
+    if ( files_processed )    {
       info("Exit event loop. No more files to process.");
       break;
     }
     // loop over the events
-    while (m_receiveEvts)
-    {
-      if (0 == file_handle)
-      {
+    while (m_receiveEvts)   {
+      if (0 == file_handle)  {
         file_handle = openFile();
-        if (0 == file_handle)
-        {
-          if (scanFiles() == 0)
-          {
+        if (0 == file_handle)   {
+	  files_processed = scanFiles() == 0;
+	  if ( files_processed )    {
             break;
           }
         }
       }
-      if (file_handle)
-      {
+      if (file_handle)  {
         int evt_size;
         int status = ::file_read(file_handle, (char*) &evt_size, sizeof(evt_size));
-        if (status <= 0)
-        {
+        if (status <= 0)   {
           ::close(file_handle);
           file_handle = 0;
           m_current = "";
@@ -393,20 +382,17 @@ StatusCode HltBufferedIOReader::i_run()
         }
         // Careful here: sizeof(int) MUST match me->sizeOf() !
         // The problem is that we do not (yet) have a valid data pointer!
-        try
-        {
+        try   {
           status = m_producer->spaceRearm(sizeof(MEPEVENT) + sizeof(int) + evt_size);
         }
-        catch (const exception& e)
-        {
+        catch (const exception& e)        {
           error("Exception while reading MEP files (spaceRearm): " + string(e.what())+" Skipping rest of file: "+m_current);
           ::close(file_handle);
           file_handle = 0;
           m_current = "";
           continue;
         }
-        if (status == MBM_NORMAL)
-        {
+        if (status == MBM_NORMAL)        {
           static int id = -1;
           MBM::EventDesc& dsc = m_producer->event();
           MEPEVENT* e = (MEPEVENT*) dsc.data;
@@ -418,25 +404,20 @@ StatusCode HltBufferedIOReader::i_run()
           e->packing = -1;
           e->valid = 1;
           e->magic = mep_magic_pattern();
-          for (size_t j = 0; j < MEP_MAX_PACKING; ++j)
-          {
+          for (size_t j = 0; j < MEP_MAX_PACKING; ++j)   {
             e->events[j].begin = 0;
             e->events[j].evID = 0;
             e->events[j].status = EVENT_TYPE_OK;
             e->events[j].signal = 0;
           }
-          //::memset(e->events,0,sizeof(e->events));
-          //char* ptr = ((char*))+me->sizeOf()+sizeof(MEPEVENT);
           status = ::file_read(file_handle, (char*) me->start(), me->size());
-          if (status <= 0)
-          {
+          if (status <= 0)   {
             ::close(file_handle);
             file_handle = 0;
             m_current = "";
             continue;
           }
-          if (status == MBM_NORMAL)
-          {
+          if (status == MBM_NORMAL)  {
             dsc.len = sizeof(MEPEVENT) + me->sizeOf() + me->size();
             //cout << "Event length:" << dsc.len << endl;
             dsc.mask[0] = m_mepMgr->partitionID();
@@ -446,14 +427,12 @@ StatusCode HltBufferedIOReader::i_run()
             dsc.type = EVENT_TYPE_MEP;
             m_producer->declareEvent();
             status = m_producer->sendSpace();
-            if (status == MBM_NORMAL)
-            {
+            if (status == MBM_NORMAL)    {
               m_evtCount++;
             }
           }
         }
-        else if (file_handle)
-        {
+        else if (file_handle)   {
           // undo reading of the first integer before saving rest of file
           ::lseek(file_handle, -sizeof(evt_size), SEEK_CUR);
         }
@@ -467,19 +446,16 @@ StatusCode HltBufferedIOReader::i_run()
 }
 
 /// IRunable implementation : Run the class implementation
-StatusCode HltBufferedIOReader::run()
-{
-  try
-  {
-    return i_run();
+StatusCode HltBufferedIOReader::run()   {
+  try  {
+    StatusCode sc = i_run();
+    return sc;
   }
-  catch (const exception& e)
-  {
+  catch (const exception& e)  {
     error("Exception while reading MEP files:" + string(e.what()));
     throw;
   }
-  catch (...)
-  {
+  catch (...)  {
     error("UNKNWON Exception while reading MEP files.");
     throw;
   }

@@ -42,11 +42,14 @@ namespace LHCb  {
     *                     | READY    |                         |
     *                     +----------+                         |
     *                         |  ^                             |
+    *                         |  |                             |
     *                 start() |  | stop()                      |
-    *                         V  |                             |
-    *                     +-----------+                        |
-    *                     | RUNNING   |------------------------+
-    *                     +-----------+
+    *                         |  |                             |
+    *            pause()      V  |                             |
+    * +--------+ <------- +-----------+                        |
+    * | PAUSED |          | RUNNING   |------------------------+
+    * +--------+ -------> +-----------+
+    *            continue()
     *
     * 
     * @author  M.Frank
@@ -149,6 +152,11 @@ namespace LHCb  {
     virtual StatusCode restart();
     /// Stop the application
     virtual StatusCode stop();
+
+    /// Pause the application  ( RUNNING -> PAUSED )
+    virtual StatusCode pauseProcessing();    
+    /// Continue the application  ( PAUSED -> RUNNING )
+    virtual StatusCode continueProcessing();
 
     /// Access FSM state
     virtual Gaudi::StateMachine::State FSMState() const;

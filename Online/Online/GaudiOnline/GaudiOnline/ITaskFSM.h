@@ -61,6 +61,8 @@ namespace LHCb  {
       FINALIZE,
       TERMINATE,
       UNLOAD, 
+      PAUSE,
+      CONTINUE,
       ERROR,
       STARTUP_DONE,
       CONNECT_DIM=1000
@@ -71,6 +73,7 @@ namespace LHCb  {
       ST_READY     = 'r',
       ST_RUNNING   = 'R',
       ST_STOPPED   = 'S',
+      ST_PAUSED    = 'P',
       ST_ERROR     = 'E',
       TR_ERROR     = ERROR
     };

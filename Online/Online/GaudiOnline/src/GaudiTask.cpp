@@ -224,6 +224,12 @@ void GaudiTask::handle(const Incident& inc)    {
   else if ( inc.type() == "DAQ_FATAL" )  {
     error();
   }
+  else if ( inc.type() == "DAQ_PAUSE" )  {
+    pauseProcessing();
+  }
+  else if ( inc.type() == "DAQ_CONTINUE" )  {
+    continueProcessing();
+  }
 }
 
 StatusCode GaudiTask::cancel()  {
@@ -328,6 +334,10 @@ int GaudiTask::initApplication()  {
 	  if ( loc->service("IncidentSvc",m_incidentSvc, true).isSuccess() )  {
 	    Incident incident(name(),"APP_INITIALIZED");
 	    m_incidentSvc->addListener(this,"DAQ_ERROR");
+	    m_incidentSvc->addListener(this,"DAQ_ERROR_CLEAR");
+	    m_incidentSvc->addListener(this,"DAQ_FATAL");
+	    m_incidentSvc->addListener(this,"DAQ_PAUSE");
+	    m_incidentSvc->addListener(this,"DAQ_CONTINUE");
 	    m_incidentSvc->fireIncident(incident);
 	    return 1;
 	  }
@@ -371,6 +381,10 @@ int GaudiTask::startApplication()  {
 	  goto Error;
 	}
 	m_incidentSvc->addListener(this,"DAQ_ERROR");
+	m_incidentSvc->addListener(this,"DAQ_ERROR_CLEAR");
+	m_incidentSvc->addListener(this,"DAQ_FATAL");
+	m_incidentSvc->addListener(this,"DAQ_PAUSE");
+	m_incidentSvc->addListener(this,"DAQ_CONTINUE");
       }
       StatusCode sc = m_subMgr->start();
       if ( sc.isSuccess() )   {

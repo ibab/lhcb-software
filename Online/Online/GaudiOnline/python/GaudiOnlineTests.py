@@ -146,17 +146,17 @@ def runHlt2Buffer():
   flags = '-s=7000 -e=100 -u=14 -b=12 -f -i=Mep -c -s=2000 -e=100 -u=14 -b=8 -f -i=HltDeferred -c -s=2000 -e=100 -u=14 -b=8 -f -i=Hlt1Accept -c -s=2000 -e=100 -u=14 -b=8 -f -i=Hlt2Input -c -s=2000 -e=100 -u=14 -b=8 -f -i=Send '
   return _run(mbmInitApp(pid,pnam,flags))
 #------------------------------------------------------------------------------------------------
-def runHlt1Read(percent=25,print_freq=0.0001,delay=3):
+def runHlt1Read(percent=25,print_freq=0.0001,delay=100):
   return _run(hltApp(pid,pnam,percent=percent,print_freq=print_freq,delay=delay,buffers=['Mep','Hlt1Accept'],type='ONE',decode=True,event_type=1))
 #------------------------------------------------------------------------------------------------
-def runHlt2Read(percent=5,print_freq=0.0001,delay=100):
+def runHlt2Read(percent=5,print_freq=0.0001,delay=1000):
   return _run(hltApp(pid,pnam,percent=percent,print_freq=print_freq,delay=delay,buffers=['Hlt2Input','Send'],type='ONE',decode=False))
 #------------------------------------------------------------------------------------------------
 def runHltShuffle():
   return _run(deferApp(pid,pnam,buffers=['Hlt1Accept','Hlt2Input','HltDeferred'],type='ALL'))
 #------------------------------------------------------------------------------------------------
-def runMepFeeder():
-  return _run(mepFeederApp(pid,pnam,buffer='Mep'))
+def runMepFeeder(buffer='Mep'):
+  return _run(mepFeederApp(pid,pnam,buffer=buffer))
 #------------------------------------------------------------------------------------------------
 #  New HLT architecture without Hlt1, Hlt2 separation
 #------------------------------------------------------------------------------------------------
