@@ -2687,6 +2687,27 @@ Gaudi::Math::BreitWigner::BreitWigner
 // ============================================================================ 
 Gaudi::Math::BreitWigner::~BreitWigner (){}
 // ============================================================================
+//  calculate the Breit-Wigner amplitude  
+// ============================================================================
+std::complex<double> 
+Gaudi::Math::BreitWigner::amplitude ( const double x ) const 
+{
+  //
+  if ( m_m1 + m_m2 >= x ) { return 0 ; }
+  //
+  const double g  = gamma ( x ) ;
+  if ( 0 >= g ) { return 0 ; }
+  //
+  static const std::complex<double> s_j ( 0 , 1 ) ;
+  //
+  const std::complex<double> v = m0() * m0 () - x * x - s_j * m0() * g ;
+  //
+  const double q  = Gaudi::Math::PhaseSpace2::q ( x    , m1() , m2() ) ;
+  const double q0 = Gaudi::Math::PhaseSpace2::q ( m0() , m1() , m2() ) ;
+  //
+  return  Gaudi::Math::pow ( q / q0 , m_L ) / v ;
+}
+// ============================================================================
 /*  calculate the Breit-Wigner shape
  *  \f$\frac{1}{\pi}\frac{\omega\Gamma(\omega)}{ (\omega_0^2-\omega^2)^2-\omega_0^2\Gammma^2(\omega)-}\f$
  */
@@ -2981,7 +3002,6 @@ std::complex<double> Gaudi::Math::Flatte::flatte_amp
   const std::complex<double> rho_KK = 
     Gaudi::Math::PhaseSpace2::q1 ( x , mK () , mK () )  ;
   //
-  // 
   static const std::complex<double> s_j ( 0 , 1 ) ;
   //
   const std::complex<double> v = 

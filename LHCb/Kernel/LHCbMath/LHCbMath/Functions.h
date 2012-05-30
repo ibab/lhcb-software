@@ -1573,6 +1573,9 @@ namespace Gaudi
       // ======================================================================
     public:
       // ======================================================================
+      /// get breit-wigner amplitude
+      std::complex<double> amplitude ( const double x ) const ;
+      // ======================================================================
       double breit_wigner  ( const double x ) const ;
       // ======================================================================
     public:
@@ -1718,11 +1721,11 @@ namespace Gaudi
        *  @param mK    kaon mass 
        *  @param mPi   pion mass 
        */
-      Flatte  ( const double m0    = 980      , 
-                const double m0g1  = 165*1000 ,  
-                const double g2og1 = 4.21     , 
-                const double mK    = 493.7    , 
-                const double mPi   = 139.6    ) ;                
+      Flatte  ( const double m0    = 980    , 
+                const double m0g1  = 165    , 
+                const double g2og1 = 4.21   , 
+                const double mK    = 493.7  , 
+                const double mPi   = 139.6  ) ;                
       /// destructor 
       virtual ~Flatte () ;  
       // ======================================================================
@@ -1811,7 +1814,7 @@ namespace Gaudi
        *  @param g2og2 parameter \f$ g2/g_1       \f$
        */
       Flatte2  ( const double m0    = 980      , 
-                 const double m0g1  = 165*1000 ,  
+                 const double m0g1  = 165      ,  
                  const double g2og1 = 4.21     , 
                  const double mK    = 493.7    , 
                  const double mPi   = 139.6    ) ;                
@@ -2350,7 +2353,7 @@ namespace Gaudi
        *  @param L     the orbital momentum between the pair and the third particle
        */
       Flatte23L  ( const double         m0    =  980.0   ,     // MeV 
-                   const double         m0g1  = 165*1000 ,     // MeV^2
+                   const double         m0g1  =  165     ,     // MeV^2
                    const double         g2og1 =    4.21  ,     // dimensionless 
                    const double         mK    =  493.7   ,     // MeV 
                    const double         mPi   =  139.6   ,     // MeV 
