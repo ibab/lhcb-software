@@ -194,8 +194,8 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
           // count words per ingress
           nIngressWords += nHPDwords;
 
-          // count words per HPD (for valid SmartIDs)
-          if ( hpdID.isValid() ) hpdWordMap[hpdID] = nHPDwords;
+          // count words and hits per HPD (for valid SmartIDs)
+          if ( hpdID.isValid() ) { hpdWordMap[hpdID] = nHPDwords; }
 
         } // loop over HPDs
 

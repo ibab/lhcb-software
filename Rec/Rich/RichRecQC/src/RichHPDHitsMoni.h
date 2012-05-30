@@ -21,6 +21,7 @@
 // RichKernel
 #include "RichKernel/RichPoissonEffFunctor.h"
 #include "RichKernel/RichStatDivFunctor.h"
+#include "RichKernel/RichMap.h"
 
 // temporary histogramming numbers
 #include "RichRecBase/RichDetParams.h"
@@ -38,7 +39,7 @@ namespace Rich
     //-----------------------------------------------------------------------------
     /** @class HPDHitsMoni RichHPDHitsMoni.h
      *
-     *  Simple monitor for the hits in each HPD
+     *  Simple monitor for the hits in each PD or PD column
      *
      *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
      *  @date   05/04/2002
@@ -59,6 +60,21 @@ namespace Rich
       virtual StatusCode initialize();    // Algorithm initialization
       virtual StatusCode execute   ();    // Algorithm execution
 
+    protected:
+
+      /// Pre-Book all (non-MC) histograms
+      virtual StatusCode prebookHistograms();
+
+    private: // definitions
+
+      /// HPD count map
+      typedef Rich::Map<LHCb::RichSmartID,unsigned int> HPDCountMap;
+
+    private:
+
+      /// Create an empty map of all active HPDs and data size
+      void initMap( HPDCountMap & hpdMap );
+
     private: // data
 
       /// Raw Buffer Decoding tool
@@ -66,6 +82,12 @@ namespace Rich
 
       /// Pointer to RICH system detector element
       const DeRichSystem * m_richSys;
+
+      /// Flag to turn on the creation of individual PD # hit plots
+      bool m_pdNumHits;
+
+      /// Flag to turn on the creation of individual PD hit maps
+      bool m_pdHitMaps;
 
     };
 

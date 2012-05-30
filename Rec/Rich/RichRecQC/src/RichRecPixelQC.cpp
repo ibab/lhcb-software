@@ -158,7 +158,8 @@ StatusCode PixelQC::execute()
                 iPixel != range.end(); ++iPixel )
           {
             // for each pixel loop over the smartIDs
-            for ( LHCb::RichSmartID::Vector::const_iterator iS = (*iPixel)->hpdPixelCluster().smartIDs().begin();
+            for ( LHCb::RichSmartID::Vector::const_iterator iS = 
+                    (*iPixel)->hpdPixelCluster().smartIDs().begin();
                   iS != (*iPixel)->hpdPixelCluster().smartIDs().end(); ++iS )
             {
               // flags

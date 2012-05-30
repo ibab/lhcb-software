@@ -417,7 +417,7 @@ StatusCode RecoQC::execute()
         const LHCb::RichSmartID hpdID = photon->geomPhoton().smartID().pdID();
         const Rich::DAQ::HPDIdentifier hid(hpdID);
         std::ostringstream id,title;
-        id << "PDs/" << hid.number();
+        id << "PDs/pd-" << hid.number();
         title << "Rec-Exp Cktheta | All photons | " << hpdID;
         richHisto1D( HID(id.str(),rad), title.str(), 
                      -m_ckResRange[rad], m_ckResRange[rad], nBins1D(),

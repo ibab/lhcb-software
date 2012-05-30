@@ -349,7 +349,7 @@ class RichRecQCConf(RichConfigurableUser):
                 dataSizeL0 = self.createMonitor(Rich__DAQ__RawDataSize,"RichRawDataSizeL0")
                 dataSizeL0.FillDetailedPlots = self.getProp("Histograms") == "Expert"
                 lSeq.Members += [ HltDecReportsDecoder(),
-                                  LoKi__HDRFilter("RichDataSizeL0Filter",Code="HLT_PASS_SUBSTR('Hlt1L0')"),
+                                  LoKi__HDRFilter("RichDataSizeL0Filter",Code="HLT_PASS('Hlt1L0AnyDecision')"),
                                   dataSizeL0 ]
 
         if "DBConsistencyCheck" in monitors :
@@ -655,7 +655,7 @@ class RichRecQCConf(RichConfigurableUser):
                 lSeq = self.newSeq(seq,check+"L0")
                 lSeq.ReturnOK = True
                 lSeq.Members += [ HltDecReportsDecoder(),
-                                  LoKi__HDRFilter("HPDHitL0Filter",Code="HLT_PASS_SUBSTR('Hlt1L0')"),
+                                  LoKi__HDRFilter("HPDHitL0Filter",Code="HLT_PASS('Hlt1L0AnyDecision')"),
                                   Rich__Rec__HPDHitsMoni("HPDL0HitsMoni") ]
 
         check = "RichTrackGeometry"
