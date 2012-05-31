@@ -1,5 +1,3 @@
-// $Id: STDigitCreator.cpp,v 1.5 2010-04-07 09:27:38 mneedham Exp $
-
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/RndmGenerators.h"
@@ -27,7 +25,7 @@
 
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY( STDigitCreator );
+DECLARE_ALGORITHM_FACTORY( STDigitCreator )
 
 STDigitCreator::STDigitCreator( const std::string& name,
                                 ISvcLocator* pSvcLocator ) :
@@ -165,7 +163,7 @@ void STDigitCreator::genRanNoiseStrips(std::vector<digitPair>& noiseCont) const
   }
 
   // Sort the noise digits by STChannelID
-  std::sort( noiseCont.begin(), noiseCont.end(), Less_by_Channel() );
+  std::stable_sort( noiseCont.begin(), noiseCont.end(), Less_by_Channel() );
 }
 
 void STDigitCreator::createDigits(const MCSTDigits* mcDigitCont, STDigits* digitsCont)

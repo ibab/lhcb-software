@@ -1,5 +1,3 @@
-// $Id: MCSTDepositCreator.cpp,v 1.12 2010-04-24 11:35:12 mneedham Exp $
-
 // GSL 
 #include "gsl/gsl_math.h"
 
@@ -34,7 +32,7 @@
 using namespace LHCb;
 using namespace Gaudi::Units;
 
-DECLARE_ALGORITHM_FACTORY( MCSTDepositCreator );
+DECLARE_ALGORITHM_FACTORY( MCSTDepositCreator )
 
 
 MCSTDepositCreator::MCSTDepositCreator( const std::string& name, 
@@ -161,7 +159,8 @@ StatusCode MCSTDepositCreator::execute()
 
     if (exist<MCHits>(m_spillPaths[iSpill]) == false){   
       // failed to find hits
-      debug() << "Unable to retrieve " + m_spillPaths[iSpill] << endmsg;
+      if( msgLevel(MSG::DEBUG) )
+        debug() << "Unable to retrieve " + m_spillPaths[iSpill] << endmsg;
     }
     else {
       // found spill - create digitizations and add them to deposits container
@@ -191,7 +190,8 @@ void MCSTDepositCreator::createDeposits(const MCHits* mcHitsCont,
 
     DeSTSector* aSector = tracker()->findSector(aHit->midPoint());
     if (aSector == 0) {
-      debug() << "point " << aHit->midPoint() << endreq;
+      if( msgLevel(MSG::DEBUG) )
+        debug() << "point " << aHit->midPoint() << endmsg;
       Warning("Failed to find sector", StatusCode::SUCCESS, 1).ignore();
       continue;
     }

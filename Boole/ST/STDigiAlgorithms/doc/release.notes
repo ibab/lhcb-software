@@ -4,6 +4,13 @@
 ! Purpose     : Algorithms for ST Digitization
 !-----------------------------------------------------------------------------
 
+! 2012-05-31 - Marco Cattaneo
+ - Use stable_sort in STDigitCreator::genRanNoiseStrips, fixes tiny differences
+   between gcc43 and gcc46
+ - Replace endreq by endmsg
+ - Protect unprotected debug()
+ - Fix trivial icc remarks
+
 !========================= STDigiAlgorithms v2r1 2010-06-23 ==================
 ! 2010-06-23 - Marco Cattaneo
  - Remove obsolete file STDigiAlgorithms_dll.cpp

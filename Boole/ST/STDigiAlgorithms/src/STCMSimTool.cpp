@@ -1,5 +1,3 @@
-// $Id: STCMSimTool.cpp,v 1.2 2010-04-11 07:50:01 mneedham Exp $
-
 #include "GaudiKernel/IIncidentSvc.h"
 
 // Gaudi
@@ -10,7 +8,7 @@
 
 #include "STDet/DeSTDetector.h"
 
-DECLARE_TOOL_FACTORY(  STCMSimTool );
+DECLARE_TOOL_FACTORY(  STCMSimTool )
 
 STCMSimTool::STCMSimTool( const std::string& type, 
                                           const std::string& name,
@@ -40,7 +38,7 @@ StatusCode STCMSimTool::initialize(){
   incSvc()->addListener( this, IncidentType::BeginEvent );
 
   return StatusCode::SUCCESS; 
-};
+}
 
 void STCMSimTool::handle ( const Incident& incident )
 {

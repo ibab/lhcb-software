@@ -1,4 +1,3 @@
-// $Id: MCSTDigitCreator.h,v 1.2 2008-10-22 14:44:05 mneedham Exp $
 #ifndef MCSTDIGITCREATOR_H
 #define MCSTDIGITCREATOR_H 1
 
@@ -6,7 +5,7 @@
 
 namespace LHCb {
   class MCSTDeposit;
-};
+}
 
 /** @class MCSTDigitCreator MCSTDigitCreator.h
  *

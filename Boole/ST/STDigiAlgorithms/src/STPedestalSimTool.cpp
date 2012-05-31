@@ -1,5 +1,3 @@
-// $Id: STPedestalSimTool.cpp,v 1.1 2010-04-07 09:27:38 mneedham Exp $
-
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
 
@@ -13,7 +11,7 @@
 
 #include "Kernel/STChannelID.h"
 
-DECLARE_TOOL_FACTORY(  STPedestalSimTool );
+DECLARE_TOOL_FACTORY(  STPedestalSimTool )
 
 STPedestalSimTool::STPedestalSimTool( const std::string& type, 
                                           const std::string& name,

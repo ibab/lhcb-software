@@ -1,5 +1,3 @@
-// $Id: MCSTDigitCreator.cpp,v 1.3 2009-09-10 06:49:19 tskwarni Exp $
-
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
@@ -13,7 +11,7 @@
 
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY( MCSTDigitCreator );
+DECLARE_ALGORITHM_FACTORY( MCSTDigitCreator )
 
 MCSTDigitCreator::MCSTDigitCreator(const std::string& name,
                                              ISvcLocator* pSvcLocator):

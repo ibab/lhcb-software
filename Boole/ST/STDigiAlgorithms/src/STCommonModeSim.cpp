@@ -28,7 +28,7 @@
 
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY( STCommonModeSim );
+DECLARE_ALGORITHM_FACTORY( STCommonModeSim )
 
 STCommonModeSim::STCommonModeSim(const std::string& name, ISvcLocator* pSvcLocator) :
   ST::AlgBase(name, pSvcLocator)

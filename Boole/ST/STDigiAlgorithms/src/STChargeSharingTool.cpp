@@ -1,5 +1,3 @@
-// $Id: STChargeSharingTool.cpp,v 1.2 2010-04-07 09:27:37 mneedham Exp $
-
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
@@ -17,7 +15,7 @@ using namespace GaudiMath;
 using namespace GaudiMath::Interpolation;
 using namespace Gaudi::Units;
 
-DECLARE_TOOL_FACTORY( STChargeSharingTool );
+DECLARE_TOOL_FACTORY( STChargeSharingTool )
 
 STChargeSharingTool::STChargeSharingTool( const std::string& type, 
                                           const std::string& name,
