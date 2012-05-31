@@ -5,6 +5,7 @@ Purpose: LHCb Digitization program
 
  - Changes to references to follow changes in underlying packages
    . Adapt boole-2011-latestdb.ref to new local tag velo-20120515
+   . Fix gcc43/gcc46 differences in STDigitCreator 
 
  - Changes to tests
    . Add a test boole.boole-2012-latestdb. Currently using MC11 input sim file
