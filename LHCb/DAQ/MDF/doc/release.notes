@@ -2,9 +2,12 @@
 ! Package     : DAQ/MDF
 ! Responsible : Markus Frank
 ! Purpose     : Package to handle MDF and MIF data files.
-!               Contains also the data structures to control MEPs and 
+!               Contains also the data structures to control MEPs and
 !               MEP fragments
 !-----------------------------------------------------------------------------
+
+! 2012-05-31 - Marco Clemencic
+ - Adjustment of 'includes' to work on systems with native gcc 4.6.
 
 !========================= MDF v3r32 2011-12-14 =========================
 ! 2011-12-14 - Markus Frank
@@ -71,7 +74,7 @@
 ! 2009-05-25 - Marco Cattaneo
  - In RawDataCnvSvc, use SmartDataPtr to retrieve RawEvent, avoids pointer type
    conversion warning from gcc43 -O2
- - Change RawEventCopy to be a GaudiAlgorithm (was Algorithm). Component 
+ - Change RawEventCopy to be a GaudiAlgorithm (was Algorithm). Component
    library now depends on GaudiAlg
 
 !========================= MDF v3r17p1 2009-05-06 =============================
@@ -81,7 +84,7 @@
 !========================= MDF v3r17 2009-02-18 ===============================
 ! 2009-02-06  Markus Frank
  - Split the MDF library into a pure linker library (MDFLib) and a components
-   library (MDF). The presence of factories in the components 
+   library (MDF). The presence of factories in the components
    library created too much trouble since the stupid rootmap generation
    just takes every factory it can find in this world.
 
@@ -157,7 +160,7 @@
 
 ! 2008-04-09 - Olivier Callot
  - Change the TAE identification from TriggerType to the new field TAEWindow
- - Changes in OnlineRunInfo.h, RawEventHelpers, TAETestCreator and MEPWriter 
+ - Changes in OnlineRunInfo.h, RawEventHelpers, TAETestCreator and MEPWriter
    In this last one, check the packing factor in TAE mode to be odd and below 15.
 
 ! 2008-03-19 - Markus Frank
@@ -190,7 +193,7 @@
  - Fix bug in RawDataCnvSvc introduced by processing TAE events
 
 ! 2008-01-19 - Markus Frank
- - Add helper functions for processing TAE events. Fix bug in RawDtaCnvSvc when 
+ - Add helper functions for processing TAE events. Fix bug in RawDtaCnvSvc when
    accessing TAE events.
  - Fix crucial bug (typo??) in detecting TAE events
  - Fix bug in accessing IODataManager
@@ -209,14 +212,14 @@
  - Add support for TAE events in the RawDataCnvSvc.
    The creation of leaves in the TES is triggered by the content of the TAE
    meta bank.
-   
+
 ! 2007-12-12 - Olivier Callot
  - Add coding of TAE events in the MDF buffer, triggered by the value of the ODIN
    triggerType() = LHCb::ODIN::TimingTrigger or forced by the jobOption
    forceTAE = true of MDFWriter. A pseudo-bank of type TAEHeader is added
    as first bank in the buffer, with description of the various RawEvents found.
-- Add function unpackTAEBuffer in RawEventHelpers to decode the TAE MDF block, 
-  it works also for non-TAE blocks. It returns a vector of pair of (name in TES, 
+- Add function unpackTAEBuffer in RawEventHelpers to decode the TAE MDF block,
+  it works also for non-TAE blocks. It returns a vector of pair of (name in TES,
   RawEvent*).
 
 !========================= MDF v2r7 2007-12-07 ===============================
@@ -247,9 +250,9 @@
   - Fix handling of default RawEventLocation::Default in RawDataCnvSvc
     (leftover from GaudiSerialize development)
   - Remove hard coded strings from /Event/Raw/... to RawEventLocation::Default
-  
+
 ! 2007-08-28 - Albert Puig
-  - Modified commitRawBanks in order to allow a different location of the 
+  - Modified commitRawBanks in order to allow a different location of the
     raw banks in the TES.
   - Bugfix in RawDataAddress.h.
 
@@ -266,7 +269,7 @@
   - Fix bug in MDFIO discovered during the RICH comissioning
 
 ! 2007-02-14 - Sai Suman
- - Removed MDFWriterNet files completely from DAQ/MDF/src and 
+ - Removed MDFWriterNet files completely from DAQ/MDF/src and
    DAQ/MDF/MDF (to remove dependence on XMLRPC).
 
 !======================= MDF v2r4p1 2007-02-13 ===============================
@@ -293,22 +296,22 @@
   - Automatically add MDF bank when creating MDF records from TES.
 
 ! 2006-10-19 - Markus Frank
-  - Add some useful decodings for MEP events, multi-fragments and 
+  - Add some useful decodings for MEP events, multi-fragments and
     fragments into banks.
-  - Add also consistency checks fro MEP events, multi-fragments and 
+  - Add also consistency checks fro MEP events, multi-fragments and
     fragments
 
 ! 2006-10-15 - Markus Frank
   - Change to MDF header type 2: Add datatype word (1 Byte + byte spare)
     MDF Headers v2 are 32 bit aligned.
-  - MDF Header length is now full record length: 
+  - MDF Header length is now full record length:
     Generic header + specific header + opaque data length
-    Adjust to MDF header to description in 
+    Adjust to MDF header to description in
     https://edms.cern.ch/file/784588/1/Online_Raw_Data_Format.doc
-  
+
 ! 2006-10-06 - Markus Frank
   - Introduce handling of MEP events with multiple raw buffers
-  
+
 ! 2006-09-26 - Markus Frank/Suman
   - Fixed MDFWriterLite to switch file on new events.
   - Allow to ignore the checksum when reading old files:

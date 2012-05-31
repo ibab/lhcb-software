@@ -17,10 +17,10 @@
 #include <exception>
 #include <map>
 #include <cstring> // For memcpy, memset with gcc 4.3
+#include <sys/stat.h>
 
 #ifdef _WIN32
   #include <io.h>
-  #include <sys/stat.h>
   static const int S_IRWXU = (S_IREAD|S_IWRITE);
   static const int S_IRWXG = 0;
   #define lseek64 _lseeki64
@@ -225,8 +225,8 @@ char* LHCb::StreamDescriptor::allocate(int len)  {
   return m_data;
 }
 
-void LHCb::StreamDescriptor::getFileConnection(const std::string& con, 
-                                               std::string& file, 
+void LHCb::StreamDescriptor::getFileConnection(const std::string& con,
+                                               std::string& file,
                                                std::string& proto)
 {
   size_t idx0, idx1, idx2, idx3;
@@ -265,7 +265,7 @@ void LHCb::StreamDescriptor::getFileConnection(const std::string& con,
   //std::cout << "getFileConnection>> " << proto << "  -> " << file << std::endl;
 }
 
-void LHCb::StreamDescriptor::getInetConnection( const std::string& con, 
+void LHCb::StreamDescriptor::getInetConnection( const std::string& con,
                                                 std::string& host,
                                                 Networking::in_addr* ip,
                                                 unsigned short& port)
@@ -316,7 +316,7 @@ Access LHCb::StreamDescriptor::connect(const std::string& specs)  {
 	::memset(&sin,0,sizeof(sin));
 	getInetConnection(specs, file, &sin.sin_addr, sin.sin_port);
 	result.ioDesc = Networking::socket(AF_INET, Networking::_SOCK_STREAM, Networking::_IPPROTO_IP);
-	if ( result.ioDesc > 0 )   {        
+	if ( result.ioDesc > 0 )   {
 	  sin.sin_family      = AF_INET;
 	  ::memset(sin.sin_zero,0,sizeof(sin.sin_zero));
 	  int ret = Networking::connect(result.ioDesc, (Networking::sockaddr*)&sin, sizeof(sin));
@@ -405,8 +405,8 @@ Access LHCb::StreamDescriptor::bind(const std::string& specs)  {
 	  result.m_seek  = file_seek;
 	}
 	else {
-	  if ( proto == "dcap"   ||   proto == "dcache" || 
-	       proto =="gsidcap" ||   proto == "castor" || 
+	  if ( proto == "dcap"   ||   proto == "dcache" ||
+	       proto =="gsidcap" ||   proto == "castor" ||
 	       proto == "rfio"   ||   proto == "gfal"  )
 	    {
 	      proto = "root";
@@ -437,8 +437,8 @@ Access LHCb::StreamDescriptor::bind(const std::string& specs)  {
 }
 
 int LHCb::StreamDescriptor::close(Access& c) {
-  int dsc = c.ioDesc; 
-  c.ioDesc = -1; 
+  int dsc = c.ioDesc;
+  c.ioDesc = -1;
   switch(c.type)  {
     case 'F':
       return dsc > 0 ? FileIO::close(dsc) : 0;

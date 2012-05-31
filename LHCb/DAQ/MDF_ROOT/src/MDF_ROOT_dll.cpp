@@ -9,9 +9,10 @@
 #include "MDF/PosixIO.h"
 #include <cstdio>
 #include <cstring>
+#include <sys/stat.h>
+
 #ifdef _WIN32
 #include <io.h>
-#include <sys/stat.h>
 static const int S_IRWXU = (S_IREAD|S_IWRITE);
 #define EXPORT __declspec(dllexport)
 #else
@@ -53,7 +54,7 @@ namespace {
     }
     else {
       spec = url.GetUrl();
-    } 
+    }
 #ifdef MDF_ROOT_DEBUG
     std::cout << "URL:" << url.GetUrl() << std::endl;
     std::cout << "   opts:    " << url.GetOptions() << std::endl;
@@ -120,8 +121,8 @@ namespace {
       TFile* f = (*i).second;
       if ( f->GetBytesRead()+size > f->GetSize() ) {
 #ifdef MDF_ROOT_DEBUG
-	std::cout << "TFile::Read> Bytes read:" << f->GetBytesRead() 
-		  << " Size:"             << f->GetSize() 
+	std::cout << "TFile::Read> Bytes read:" << f->GetBytesRead()
+		  << " Size:"             << f->GetSize()
 		  << " Relative offset:"  << (long)f->GetRelOffset()
 		  << std::endl;
 #endif
@@ -135,7 +136,7 @@ namespace {
   int root_write(int fd, const void *ptr, unsigned int size) {
     FileMap::iterator i = fileMap().find(fd);
     if ( i != fileMap().end() ) {
-      if ( (*i).second->WriteBuffer((const char*)ptr,size)==0 ) 
+      if ( (*i).second->WriteBuffer((const char*)ptr,size)==0 )
         return size;
     }
     return -1;
