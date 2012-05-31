@@ -129,7 +129,7 @@ StatusCode LumiIntegrator::accumulate_mu( LHCb::LumiIntegral* fsr, LHCb::TimeSpa
   //  int thisCoef(0);
   LHCb::LumiIntegral::ValuePair defValue ( -1, 0. );
   for ( int key = 0; key < int(coeff.size()) && key < LHCb::LumiCounters::LastGlobal; key++ ) {
-    if ( coeff[key] != 0 ) {
+    if ( coeff[key] != 0 || mukey == key) {
       if ( fsr->hasInfo(key) ) {
         LHCb::LumiIntegral::ValuePair value = fsr->info( key, defValue );
         std::string counterName = LHCb::LumiCounters::counterKeyToString( key );

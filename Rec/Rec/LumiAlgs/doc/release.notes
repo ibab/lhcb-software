@@ -4,6 +4,8 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2012-05-31 - Jaap Panman
+ - Allow mu calculation for counter different from lumi calculation
 
 ! 2012-05-10 - Jaap Panman
  - Restores backward compatibility with 2010
