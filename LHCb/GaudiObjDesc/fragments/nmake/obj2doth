@@ -1,6 +1,6 @@
-$(dest)${NAME}.obj2doth : ${FULLNAME} 
+$(dest)${NAME}.obj2doth : ${FULLNAME}
 	@echo Producing Header files from ${FULLNAME}
 	@if not exist $(dest) mkdir $(dest)
 	@cd $(dest)
-	@"$(pythonexe)" $(parsetool) $(GODflags) $(${CONSTITUENT}_GODflags) -g src -r $(GAUDIOBJDESCROOT) ${FULLNAME}
+	@"$(pythonexe)" $(parsetool) $(GODflags) $(${CONSTITUENT}_GODflags) -g src -r $(GAUDIOBJDESCROOT) -t $(GAUDIOBJDESCROOT)\xml_files\gdd.dtd ${FULLNAME}
 	@echo "" > ${NAME}.obj2doth

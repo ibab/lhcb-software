@@ -1,4 +1,6 @@
 from xml.parsers.xmlproc import xmlval
+from xml.parsers.xmlproc.xmlapp import PubIdResolver
+import os
 
 #================================================================================
 class GODSrcParser (xmlval.Application):
@@ -12,7 +14,7 @@ class GODSrcParser (xmlval.Application):
 #--------------------------------------------------------------------------------
   def handle_doctype(self,root,pubID,sysID):
     pass
-#--------------------------------------------------------------------------------  
+#--------------------------------------------------------------------------------
   def doc_start(self):
     print 'Parsing Source File ', self.filename,
 #--------------------------------------------------------------------------------
@@ -52,8 +54,8 @@ class GODSrcParser (xmlval.Application):
     pass
 #--------------------------------------------------------------------------------
   def set_locator(self, locator):
-    self.locator = locator  
-  
+    self.locator = locator
+
 #================================================================================
 class GODDbParser (xmlval.Application):
 #--------------------------------------------------------------------------------
@@ -71,16 +73,27 @@ class GODDbParser (xmlval.Application):
     if name == 'class':
       self.data[attr['name']] = attr['file']
 
+class GODPubIdResolver(PubIdResolver):
+    def __init__(self, dtdpath=None):
+        self.dtdpath = dtdpath
+    def resolve_doctype_pubid(self, pubid, sysid):
+        if self.dtdpath:
+            if pubid == "gdd.dtd" or sysid == "gdd.dtd":
+                return self.dtdpath
+        return sysid
+
 #================================================================================
 class xparser:
-#--------------------------------------------------------------------------------  
-  def __init__(self):
+#--------------------------------------------------------------------------------
+  def __init__(self, dtdPath=None):
     self.parser = xmlval.XMLValidator()
+    self.dtdPath = dtdPath
 #--------------------------------------------------------------------------------
   def parseSource(self,sourcefile):
     parser = xmlval.XMLValidator()
     godSrcParser = GODSrcParser(sourcefile)
     parser.set_application(godSrcParser)
+    parser.set_pubid_resolver(GODPubIdResolver(self.dtdPath))
     parser.parse_resource(sourcefile)
     return godSrcParser.data['gdd'][0]
 #--------------------------------------------------------------------------------
@@ -88,6 +101,7 @@ class xparser:
     parser = xmlval.XMLValidator()
     godDbParser = GODDbParser(dbfile)
     parser.set_application(godDbParser)
+    parser.set_pubid_resolver(GODPubIdResolver(self.dtdPath))
     parser.parse_resource(dbfile)
     return godDbParser.data
-  
+

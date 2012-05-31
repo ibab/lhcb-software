@@ -1,6 +1,0 @@
-${NAME}.godify : ${FULLNAME} 
-	@echo Processing files ${FULLNAME} with GOD
-	@if not exist $(srcDest) mkdir $(srcDest)
-	@if not exist $(dctDest) mkdir $(dctDest)
-	@"$(pythonexe)" $(parsetool) $(GODflags) $(${CONSTITUENT}_GODflags) -s $(srcDest) -d $(dctDest) $(GAUDIOBJDESCROOT) ${FULLNAME}
-	@echo "" > ${NAME}.godify

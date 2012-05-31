@@ -4,8 +4,8 @@ rootmap = $(CMTINSTALLAREA)\$(tag)\lib\rootmap
 rootmap = $(PACKAGE_ROOT)\$(tag)\rootmap
 !endif
 
-$(dest)$(package).lcgdict : ${OBJS} 
-	@echo "" > $(package).lcgdict 
+$(dest)$(package).lcgdict : ${OBJS}
+	@echo "" > $(package).lcgdict
 
 
 clean :: ${CONSTITUENT}clean
@@ -15,10 +15,9 @@ ${CONSTITUENT}clean ::
 	$(cleanup_echo) dictionaries and .obj2dict files
 	-$(cleanup_silent) del $(dest)*.obj2dict
 	-$(cleanup_silent) del $(dest)*.cpp
-	-$(cleanup_silent) del $(dtdfile)
 	-$(cleanup_silent) del $(dest)$(package)_dictionary.h
-	-$(cleanup_silent) del $(dest)$(package)_selection.xml 
+	-$(cleanup_silent) del $(dest)$(package)_selection.xml
 	-$(cleanup_silent) del $(dest)$(package).lcgdict
 
 
- 
+

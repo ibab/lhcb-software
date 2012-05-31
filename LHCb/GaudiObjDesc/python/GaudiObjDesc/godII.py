@@ -22,19 +22,20 @@ class godII:
     self.gAssocDicts = 1
     self.allocatorType = 'FROMXML'
     self.default_namespace = 'LHCb'
+    self.dtdPath = os.environ.get("GODDTDPATH")
     self.parseArgs(args[1:])
 #--------------------------------------------------------------------------------
   def usage(self):
     print """
 %s %s
-    
+
 Usage: %s [options] xml-source(s)
 Produce c++ source files and dictionary files from xml descriptions
 
   options:
   -h             display this help and exit
   -v             display version information and exit
-  -g src|dct     produce only sources ('src') or only dictionaries ('dct') 
+  -g src|dct     produce only sources ('src') or only dictionaries ('dct')
   -i             add additional file-package-information from './AddImports.txt'
   -s <path>|env  define possible output destination of source code
                    -s <path>   use path
@@ -55,6 +56,7 @@ Produce c++ source files and dictionary files from xml descriptions
   -n <namespace> define the default namespace to use if not given in XML
                    -n <namespace> use given namespace
                    default        use namespace LHCb
+  -t <path to dtd> path to the DTD file (gdd.dtd)
   --allocator=<type>
                  chose the type of allocator to use. Allowed values are:
                    FROMXML    use what is specified in the XML (default)
@@ -71,7 +73,7 @@ Produce c++ source files and dictionary files from xml descriptions
   """ % (self.argv0, self.version, self.argv0)
 #--------------------------------------------------------------------------------
   def parseArgs(self,args):
-    try: opts,args = getopt.getopt(args, 'hvg:o:i:s:d:x:r:l:n:',['allocator='])
+    try: opts,args = getopt.getopt(args, 'hvg:o:i:s:d:x:r:l:n:t:',['allocator='])
     except getopt.GetoptError, (e):
       print '%s: ERROR: %s' % (self.argv0, e.msg)
       self.usage()
@@ -92,7 +94,7 @@ Produce c++ source files and dictionary files from xml descriptions
           self.gClasses      = 1
           self.gNamespaces   = 1
           self.gAssocDicts   = 0
-          self.gClassDicts   = 0 
+          self.gClassDicts   = 0
         elif a == 'dct':
           gen = a
           self.gClasses      = 0
@@ -144,9 +146,15 @@ Produce c++ source files and dictionary files from xml descriptions
           error = 1
         else:
           self.default_namespace = a
+      if o in ('-t'):
+        if len(a) == 0:
+          print '%s: ERROR Option %s used without parameter' % (self.argv0,o)
+          error = 1
+        else:
+          self.dtdPath = a
 
     self.xmlSources = args
-    
+
     if error:
       self.usage()
       sys.exit(1)
@@ -183,7 +191,7 @@ Produce c++ source files and dictionary files from xml descriptions
     #print 'GODII %s' % self.version
     #print self.fullCommand
 
-    x = xparser.xparser()
+    x = xparser.xparser(dtdPath=self.dtdPath)
 
     srcFiles = []
     for src in self.xmlSources:
@@ -200,7 +208,7 @@ Produce c++ source files and dictionary files from xml descriptions
     if self.gClasses : gClasses = genClasses.genClasses(self.godRoot)
     if self.gNamespaces : gNamespaces = genNamespaces.genNamespaces(self.godRoot)
     if self.gAssocDicts : gAssocDicts = genAssocDicts.genAssocDicts(self.godRoot, self.dictOutput, self.srcOutput)
-    
+
     for srcFile in srcFiles:
 
       #--->PM<--- Needs to be reset each time! Otherwise it doubles the contents for 'instantiations' and 'exclusions'
@@ -240,7 +248,7 @@ Produce c++ source files and dictionary files from xml descriptions
           print '  Generating Header Files'
           gClasses.doit(package,godPackage['class'],self.srcOutput,lname,self.allocatorType)
           print '  - Done'
-          
+
         if self.gClassDicts :
           print '  Generating Dictionaries'
           gClassDicts.doit(godPackage)

@@ -1,7 +1,7 @@
 
 ${CONSTITUENT}_cleanuplist += $(${CONSTITUENT}_headerlist)
 ${CONSTITUENT}_cleanuplist += $(${CONSTITUENT}_obj2dothlist)
- 
+
 clean :: ${CONSTITUENT}clean
 	@cd .
 
@@ -11,6 +11,3 @@ ${CONSTITUENT}clean ::
 	echo $(listof2h)
 	$(cleanup_echo) .obj2doth files:
 	-$(cleanup_silent) rm -f $(${CONSTITUENT}_cleanuplist)
-	-$(cleanup_silent) rm -f $(dtdfile)
-
-

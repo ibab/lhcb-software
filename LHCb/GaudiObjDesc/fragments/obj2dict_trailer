@@ -13,7 +13,4 @@ clean :: ${CONSTITUENT}clean
 
 ${CONSTITUENT}clean ::
 	$(cleanup_echo) dictionaries and .obj2dict files
-	-$(cleanup_silent) rm -f $(${CONSTITUENT}_cleanuplist) 
-	-$(cleanup_silent) rm -f $(dtdfile)
-
-
+	-$(cleanup_silent) rm -f $(${CONSTITUENT}_cleanuplist)

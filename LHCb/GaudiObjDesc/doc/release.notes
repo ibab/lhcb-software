@@ -8,6 +8,10 @@
 ! 2012-05-31 - Marco Clemencic
  - Reorganized the package to conform to the standard structure for python
    modules and scripts.
+ - Modified the main script to accept the path to the DTD file as option.
+ - Modified the fragments to pass the DTD to the script instead of copying it in
+   the packages.
+ - Removed unused fragment (godify).
 
 !========================= GaudiObjDesc v11r13 2012-02-28 =======================
 ! 2012-02-28 - Marco Cattaneo

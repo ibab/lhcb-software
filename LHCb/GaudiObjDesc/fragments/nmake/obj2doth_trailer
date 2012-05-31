@@ -5,6 +5,5 @@ clean :: ${CONSTITUENT}clean
 ${CONSTITUENT}clean ::
 	$(cleanup_echo) .obj2doth files
 	-$(cleanup_silent) del $(dest)*.obj2doth
-	-$(cleanup_silent) del $(dtdfile)
 
- 
+

@@ -7,9 +7,9 @@ ${CONSTITUENT}_obj2dothlist += $(dest)${NAME}.obj2doth
 $(dest)${NAME}.h : $(dest)${NAME}.obj2doth
 
 $(dest)${NAME}.obj2doth : ${FULLNAME}
-	@echo Producing Header files from ${FULLNAME} 
+	@echo Producing Header files from ${FULLNAME}
 	@-mkdir -p $(dest)
-	cd $(dest); $(pythonexe) $(parsetool) $(GODflags) $(${CONSTITUENT}_GODflags) -g src -r $(GAUDIOBJDESCROOT) ${FULLNAME}
+	cd $(dest); $(pythonexe) $(parsetool) $(GODflags) $(${CONSTITUENT}_GODflags) -g src -r $(GAUDIOBJDESCROOT) -t $(GAUDIOBJDESCROOT)/xml_files/gdd.dtd ${FULLNAME}
 	@echo /dev/null > $(dest)${NAME}.obj2doth
 
 

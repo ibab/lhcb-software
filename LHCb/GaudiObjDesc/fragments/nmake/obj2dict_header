@@ -1,14 +1,9 @@
 
 pythonexe     = $(Python_home)\python.exe
 parsetool     = $(GAUDIOBJDESCROOT)\scripts\godII.py
-dest          = ..\$(tag)\dict\$(package)\ 
-dtdfile       = ..\$(xmlsrc)\gdd.dtd 
+dest          = ..\$(tag)\dict\$(package)\
 
 ${CONSTITUENT}_output = $(dest)
 
-${CONSTITUENT} :: $(dtdfile) $(dest)$(package).lcgdict
+${CONSTITUENT} :: $(dest)$(package).lcgdict
 	@echo "-----> ${CONSTITUENT} ok"
-
-$(dtdfile) : $(GAUDIOBJDESCROOT)\xml_files\gdd.dtd
-	@echo "Copying global DTD to current package"
-	@copy $(GAUDIOBJDESCROOT)\xml_files\gdd.dtd $(dtdfile)
