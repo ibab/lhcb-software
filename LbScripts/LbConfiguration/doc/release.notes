@@ -1,3 +1,7 @@
+2012-05-31 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* python/LbConfiguration/Package.py: Added new package SemilepConfig
+
 2012-05-08  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v6r7p6

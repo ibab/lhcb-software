@@ -45,7 +45,8 @@ package_names = ['XmlDDDB',
                  'ProdConf',
                  'GenXiccData',
                  'ExoticaConfig',
-                 'EWConfig']
+                 'EWConfig',
+                 'SemilepConfig']
 
 class PackageConfException(Exception):
     pass
@@ -318,3 +319,6 @@ ExoticaConfig.setProject("DBASE")#IGNORE:E0602
 
 EWConfig.setHat("WG")#IGNORE:E0602
 EWConfig.setProject("DBASE")#IGNORE:E0602
+
+SemilepConfig.setHat("WG")#IGNORE:E0602
+SemilepConfig.setProject("DBASE")#IGNORE:E0602
