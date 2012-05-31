@@ -874,7 +874,7 @@ reg_ver=re.compile("[-a-zA-Z0-9_.:]+",_re_flags)
 reg_enc_name=re.compile("[A-Za-z][-A-Za-z0-9._]*")
 reg_std_alone=re.compile("yes|no")
 if using_unicode:
-    from xml.utils import characters
+    from GaudiObjDesc.xml.utils import characters
     reg_name = characters.re_Name()
     reg_names = characters.re_Names()
     reg_nmtoken = characters.re_Nmtoken()

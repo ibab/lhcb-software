@@ -33,3 +33,7 @@ macro_append cppflags "" \
 macro_append gccxmlopts "" \
            target-dbg " -DGOD_NOALLOC " \
                 WIN32 " -DGOD_NOALLOC "
+
+apply_pattern install_python_modules
+apply_pattern install_scripts
+

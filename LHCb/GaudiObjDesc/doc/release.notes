@@ -5,6 +5,10 @@
 ! Package manager: Stefan Roiser
 !--------------------------------------------------------------------------------
 
+! 2012-05-31 - Marco Clemencic
+ - Reorganized the package to conform to the standard structure for python
+   modules and scripts.
+
 !========================= GaudiObjDesc v11r13 2012-02-28 =======================
 ! 2012-02-28 - Marco Cattaneo
  - Fix requirements to set -DGOD_NOALLOC when tag 'target-dbg' is set, previuosly
@@ -14,7 +18,7 @@
 ! 2011-02-18 - Marco Cattaneo
  - In genClasses.py:
    . Remove #pragma directive to suppress ICC remark 177
-   . Fix the remark instead by declaring the locations as 
+   . Fix the remark instead by declaring the locations as
      static const std::string rather static const std::string&
 
 !========================= GaudiObjDesc v11r11 2011-01-31 =========================
@@ -30,10 +34,10 @@
 
 !========================= GaudiObjDesc v11r10p2 2010-10-25 =========================
 ! 2010-08-24 - Pere Mato
- - Fixed a bug that was visible when several xml files were provided in a single 
+ - Fixed a bug that was visible when several xml files were provided in a single
    command invocation. Class instantiations and exclusions sections were accumulating.
    This was not visible when using CMT because commands are executed with a single
-   xml input file.    
+   xml input file.
 
 !======================== GaudiObjDesc v11r10p1 2010-02-24 ===================
 ! 2010-02-16 - Stefan Roiser
@@ -44,16 +48,16 @@
 ! 2009-12-11 - Stefan
 - Adding new <class> attribute "defaultdestructor". The default value for it is
   set to "TRUE". Setting it to "FALSE" will disable the generation of a default
-  destructor also in the case no other destructor was defined, which was the 
+  destructor also in the case no other destructor was defined, which was the
   case before.
 
 !======================== GaudiObjDesc v11r9 2009-12-11 ======================
 ! 2009-12-03 - Stefan Roiser
-- Adding a new <class> attribute "defaultconstructor". The default for this 
-  attribute is "TRUE". If set to "FALSE" no default constructor for this class 
+- Adding a new <class> attribute "defaultconstructor". The default for this
+  attribute is "TRUE". If set to "FALSE" no default constructor for this class
   will be generated.
 
-  ATTENTION: For I/O a default constructor is paramount, ie. using this feature 
+  ATTENTION: For I/O a default constructor is paramount, ie. using this feature
   will not allow this class to be made persistent anymore.
 
 !======================== GaudiObjDesc v11r8 2009-06-29 ======================
@@ -68,8 +72,8 @@
    macro defined in windows.h. This workaround will become unnecessary with
    Gaudi v21r2
 
-! 2009-05-19 - Hubert Degaudenzi 
- - Removed the override of the LD_LIBRARY_PATH env variable in obj2doth and 
+! 2009-05-19 - Hubert Degaudenzi
+ - Removed the override of the LD_LIBRARY_PATH env variable in obj2doth and
    obj2dict. They are not needed and cause problems when cross-compiling
    slc4 on the slc5 architecture.
 
@@ -101,7 +105,7 @@
  - Fixed bug 33839: genClasses::reset() fix for multiple classes in one XML file
 
 ! 2008-02-12 Stefan
-- changes for attribute types: 
+- changes for attribute types:
   - if the attribute type is a pointer type initialize it to 0 in GODs self
     generated default constructor
   - if the attribute type starts with "const " fix the return type of the get
@@ -109,12 +113,12 @@
 
 ! 2008-02-04 Stefan
 - change for <import> element, so far it was not possible to forward declare a
-  class living in the global namespace. Now with setting the attribute 
+  class living in the global namespace. Now with setting the attribute
   namespace='::' the class will be forward delcared outside the "Event" namespace
   (e.g. LHCb) and otherwise handled as any other forward declaration (ie. included
   after the class body.
 - new feature for ONLY forward declartions (in contrast to including the forward
-  declared type after the class body). To do so set the <import> attribute 
+  declared type after the class body). To do so set the <import> attribute
   soft="FORWARDONLY". The type will be forward declared but not indcluded.
 
 !======================== GaudiObjDesc v11r1 2008-12-24 ======================
@@ -124,7 +128,7 @@
   in the same class this was not possible for each enum because of the scoping.
   A new attribute "unknownValue" of the <enum> element can now be set to over-
   write the value. The default is "Unknown" but can be set to any string, take
-  care to also provide an actual value of the enum with the string set in the 
+  care to also provide an actual value of the enum with the string set in the
   attribute.
 
 !======================== GaudiObjDesc v11r0 2007-11-29 ======================
@@ -146,7 +150,7 @@
 !======================== GaudiObjDesc v10r4p2 2007-11-09 ====================
 ! 2007-11-09 - Marco Cattaneo
  - In god_headers CMT pattern, add dependency of <package> constituent on
-   <package>Obj2Doth constituent, to ensure headers are generated before 
+   <package>Obj2Doth constituent, to ensure headers are generated before
    everything else, as this was not the case on osx platform
 
 !======================== GaudiObjDesc v10r4p1 2007-10-19 ====================
@@ -177,20 +181,20 @@
 ! 2007-09-03 - Marco Cattaneo for Brett Viren
  - Apply Savannah patch 1256:
    Add enum and function tags in selection.xml dictionary selection file if
-   encountered in the input xml  
+   encountered in the input xml
 
 !======================== GaudiObjDesc v10r2 2007-07-18 ======================
 ! 2007-07-18 - Marco Cattaneo for Brett Viren
  - Apply (Gaudi) Savannah patch 1230 to improve namespace handling:
    1) If a <class> doesn't specify a namespace it will inherit it from its
-      <package> 
+      <package>
    2) A default package namespace can be provided to godII's command line via
-      "-n TheNamespace". 
+      "-n TheNamespace".
 
 !======================== GaudiObjDesc v10r1 2007-06-22 ======================
 ! 2007-06-13 Stefan
  - patch from Dave Casper (dcasper@uci.edu)
-   parameterizing the up to now hardcoded "LHCb" namespace which is the scope 
+   parameterizing the up to now hardcoded "LHCb" namespace which is the scope
    for LHCb event classes. It introduces the namespace/scope attributes in the
    DTD which will then be picked up by GOD to generate the namespace name. The
    default value for these newly introduced attributes is "LHCb"
@@ -200,7 +204,7 @@
  - change doxygen style for enum values from ///< to //
 
 ! 2007-06-07 - Pere Mato
- - added new two patterns to generate the headers and dictionaries. 
+ - added new two patterns to generate the headers and dictionaries.
    god_headers: generates the header files using the existing document
    god_dictionary: generates the dictionary header file and selection file and calls the
                    standard relex_dictionary provided by the Reflex LCGCMT interface package
@@ -251,7 +255,7 @@
 !============================ GaudiObjDesc v9r8p1 =======================
 ! 2007-01-25 Stefan
  - Add the -m32 option to the gccxml flags for its invocation. This is needed
-   when producing 32 bit code on a 64 bit machine. The option is triggered 
+   when producing 32 bit code on a 64 bit machine. The option is triggered
    through a macro "gccxmlopts" defined in the requirements file and used in
    the linux fragment of obj2dict
 
@@ -265,7 +269,7 @@
 ! 2006-12-19 Pere Mato
   - Modified fragments for dictionary generation to produce the rootmap in the
     install area or locally depending if building with or without install area.
- 
+
 !============================ GaudiObjDesc v9r7p1 =========================
 ! 2006-08-16 Stefan
 
@@ -307,11 +311,11 @@
 
     Example:
 
-    <import name="qt/qtstring.hh" soft="true" namespace="qt::gui"/> 
+    <import name="qt/qtstring.hh" soft="true" namespace="qt::gui"/>
 
     will produce
 
-    namespace qt { 
+    namespace qt {
       namespace gui {
         class qtstring;
       }
@@ -434,14 +438,14 @@
 - introducing two new typedefs
         typedef KeyedContainer<T,Containers::HashMap> Container;
         typedef KeyedContainer<const T,Containers::Hashmap> ConstContainer;
-  These macros are generated in addition to the 
+  These macros are generated in addition to the
         typedef KeyedContainer<T,Containers::HashMap> Ts;
         (Ts being the the plurial of the class name)
   These macros will be created if a class directly inherits from KeyedObject or
   if the keyedContTypeDef attribute of <class> is set to "TRUE"
 
 !2006-01-30
-- fix for destructor implementation. An empty code element will result in 
+- fix for destructor implementation. An empty code element will result in
   an empty inline implementation
 
 !=============================GaudiObjDesc v9r3============================
@@ -488,7 +492,7 @@
   - element attribute : array, serialize
 
 ! 2005-11-11 - Stefan Roiser (merged from the branch)
-- changed fragments for dictionary generation to generate dictionary headers, 
+- changed fragments for dictionary generation to generate dictionary headers,
   selection files and sources in $(tag)/dict
   User requirements files should be adapted to compile all .cpp files in this
   directory instead of ../dict for compilation of the dictionary library
@@ -505,8 +509,8 @@
 
 !===============================GaudiObjDesc v8r1============================
 ! 2005-10-17 - Marco Cattaneo
- - genClassDicts.py was ignoring "transient" tag in XML description of class 
-   attributes 
+ - genClassDicts.py was ignoring "transient" tag in XML description of class
+   attributes
 
 ! 2005-10-12 - Marco Cattaneo
  - Added class ID to xml generated by genClassDicts.py
@@ -514,7 +518,7 @@
 !===============================GaudiObjDesc v8r0p1============================
 !20051007 - Pere
 - added lcgdict.py and gendict2.py files in /scrips with patches included at SEAL head
-- modified requirements to make use of them 
+- modified requirements to make use of them
 
 !===============================GaudiObjDesc v8r0============================
 !20050908 - Pere
@@ -532,19 +536,19 @@
 
 !20050721 - Stefan
 - move dictionary generation from Reflection to Reflex
-  - GOD now produces header files with proper includes and instantiations of 
-    templated classes plus a selection.xml file which will be passed to the 
+  - GOD now produces header files with proper includes and instantiations of
+    templated classes plus a selection.xml file which will be passed to the
     SEAL lcgdict command to generate dictionary source code.
-  - rewrite of genClassDicts.py  
+  - rewrite of genClassDicts.py
   - remove genAssociations.py
   - new file genAssocDicts.py for generation of Reflex dictionaries for Relations
   - change ob2dict fragments to invoke lcgdict on generated headers
   - remove template files: associations.tpl, dict.tpl
   - new template files: selection_xml.tpl, dictionary_h.tpl
-- new attribute "virtual" (TRUE|FALSE) for generation of virtual destructors 
+- new attribute "virtual" (TRUE|FALSE) for generation of virtual destructors
 
 !20050719 - Hubert Degaudenzi
-- added removal of the xml/gdd.dtd file for the clean target of the 
+- added removal of the xml/gdd.dtd file for the clean target of the
   makefile fragments. fixed bug #9584.
 
 !===============================GaudiObjDesc v7r4============================
@@ -562,7 +566,7 @@
 !===============================GaudiObjDesc v7r3============================
 
 !20050206 - Stefan
-- lowering getter names of bitfields (as for all other getters) 
+- lowering getter names of bitfields (as for all other getters)
   (e.g. HTL()->htl(), PDRow()->pdRow())
 
 !20050203 - Stefan
@@ -574,12 +578,12 @@
 !===============================GaudiObjDesc v7r2============================
 
 !20050127 - Stefan
-- excluding types in namespace std from demangling 
+- excluding types in namespace std from demangling
 
 !20050126 - Stefan
-- genClassDicts.py: fix for dictionary (because of problems with persistency 
-  tools not handling the new 1.9.1.2 clhep classes). Attribute types and 
-  parameter/return types of methods will now be demangled by the compiler 
+- genClassDicts.py: fix for dictionary (because of problems with persistency
+  tools not handling the new 1.9.1.2 clhep classes). Attribute types and
+  parameter/return types of methods will now be demangled by the compiler
   (through GaudiKernel/System::typeinfoName) if they are not fundamental
 
 !20050117 - Stefan
@@ -593,18 +597,18 @@
 !===============================GaudiObjDesc v7r1============================
 
 !20050111 - Stefan
-- generating of typedefs in classes unified. All typedefs are handled by a single function (std::vector,KeyedContainer,ContainedObject) 
+- generating of typedefs in classes unified. All typedefs are handled by a single function (std::vector,KeyedContainer,ContainedObject)
 - class attributes 'stdVectorTypeDef, templateVector, templateList' will be depricated and replaced by new ones
 - ATTENTION: if the typedefs for KeyedObjects/ContainedObjects at the end of the class should be generated, then:
-             - classes not inheriting directly form KeyedObject<T> must have the <class> attribute "keyedContTypeDef" set to "TRUE" 
+             - classes not inheriting directly form KeyedObject<T> must have the <class> attribute "keyedContTypeDef" set to "TRUE"
              - classes not inheriting directly form ContainedObject must have <class> the attribute "contObjectTypeDef" set to "TRUE"
 
 !20050103 - Stefan
 - fix: generate unique include line in case of stl includes (generated from forward declarations)
- 
+
 !===============================GaudiObjDesc v7r0============================
 !20041213 - Stefan
-- changes necessary for windows compilation 
+- changes necessary for windows compilation
   . passing refs to pointers in dictionary stubfunctions needs a cast to the ref
   . changed getters for bitfields to remove a warning of vc71
 
@@ -613,9 +617,9 @@
 
 !20041206 - Stefan
 - new attribute 'checkMeth' (TRUE|FALSE) of <bitfield> which will generate
-  a method to check whether a certain bit of the bitfield is set 
+  a method to check whether a certain bit of the bitfield is set
 
-!20041205 - Stefan 
+!20041205 - Stefan
 - package rewritten in python
 - new features:
   - explicit constructors (attribute 'explicit' (TRUE|FALSE) in <constructor>)
@@ -625,7 +629,7 @@
   - set/get methods of bitfields with self defined types (att 'type' in <bitfield>)
   - better alignment of produced code
 - backward compatible to cpp version of GOD
-- new cmt fragment 'godify' for generating headers and dictionaries 
+- new cmt fragment 'godify' for generating headers and dictionaries
   (old fragments will also work)
 - some options are not used anymore (deprication warnings are printed) and will
   be removed in a future version
@@ -653,9 +657,9 @@
 	  and "nonequals" to "!=", removed function "data"
 
 !20040512 - Stefan
-- bugfix: Class::resolvePending() now called at the end of the loading of 
+- bugfix: Class::resolvePending() now called at the end of the loading of
           each file
-- Constructor of the dictionary now called by the _InitDict() constructor, 
+- Constructor of the dictionary now called by the _InitDict() constructor,
   not static instance anymore
 
 !20040206 - Stefan
@@ -680,9 +684,9 @@
 
 !===============================GaudiObjDesc v6r1==============================
 !20031217 - Stefan
-- <assoc> is now a sub-element of <package> 
+- <assoc> is now a sub-element of <package>
 - new attribute "from" for element <assoc>
-- a new file <packagename>_Associations_dict.cpp will be created containing 
+- a new file <packagename>_Associations_dict.cpp will be created containing
   the initialisations for associations dictionaries for each package
 
 !===============================GaudiObjDesc v6r0==============================
@@ -702,7 +706,7 @@
 - changes to bitfields
   - setters of bitfields with length 1 accept bool as argument
   - getters of bitfields with length 1 return bool
-  - new sizes for bitfields 'bitfield8', 'bitfield16', 'bitfield32' and 
+  - new sizes for bitfields 'bitfield8', 'bitfield16', 'bitfield32' and
     'bitfield64'. Old type 'bitfield' is equal 'bitfield32'
   - bitfield-attribute 'startAtOne' removed
 
@@ -731,7 +735,7 @@
 
 !===============================GaudiObjDesc v4r5p1============================
 !20021112 - Stefan
-- bugfix: corrected the output for 'const' return-values of self-defined methods 
+- bugfix: corrected the output for 'const' return-values of self-defined methods
 
 !===============================GaudiObjDesc v4r5============================
 !20020925 - Stefan
@@ -764,14 +768,14 @@
 
 !20020513 - Stefan
  - Added <attribute=- and <relation>-attribute 'serialize' to specify whether to persistify an object
- - Added <attribute>-attribute 'compression' to enable conversion double<->float 
+ - Added <attribute>-attribute 'compression' to enable conversion double<->float
    while serializing to compress the resulting size
  - Added new <bitfield>-element to handle bitpacking
  - friend-functions are now implemented outside the class-body
 
 !================v4r2=====================================
 ! 20020503 Pere Mato
-- Small problem on the fragment obj2doth_header that forced the re-creation of 
+- Small problem on the fragment obj2doth_header that forced the re-creation of
   all header files each time.
 - Some changes in the generation of dictionaries:
   ~ In methods avoid use of static variables for complex types (one one instance available)
@@ -781,7 +785,7 @@
 !================v4r1=====================================
 
 ! 20020416 Stefan Roiser
- - Added <class>-attribute 'keyedContTypeDef' to force the production of typedefs for KeyedContainers which are inherited 
+ - Added <class>-attribute 'keyedContTypeDef' to force the production of typedefs for KeyedContainers which are inherited
    indirectly from 'KeyedObject' but cannot be resolved through the xml-file (inheritance from a class defined in another xml-file)
  - Gaudi-type 'longlong' recognized as fundamental-one
 
@@ -816,7 +820,7 @@
  - added command-line option '-l <path>' for GODWriteCppDict.exe to define the location of the .h-files
 
 ! 20020402
- - branch created 
+ - branch created
  - necessary patches from v4r0 applied (const chars for sun-compiler, handling of fundamental types)
  - bugfix when compiling dictionary-information with unary operators
  - bugfix when using virtual selfdefined methods
@@ -847,7 +851,7 @@
  - new naming-conventions for getters with abbreviations
  - non-const getter for non-simple attributes, 1-M relations and pointers
  - empty initialization of members in standard-constructor when initialization-value is given
- - only one setter for 1-1-relations with SmartRef<Type> as argument 
+ - only one setter for 1-1-relations with SmartRef<Type> as argument
  - only one addTo- and removeFrom-function for 1-M-relations with SmartRef<Type> as argument
 
 !================v3r1=====================================
@@ -857,7 +861,7 @@
  - bugfix: Defs of <typedef>s recognized as types which do not have to be included
  - bugfix: classes created through xml-file will be added to 'class-database' ad Event/'ClassName'
  - handling of pointers as simple types
- 
+
 !================v3r0=====================================
 ! 20020130 - Stefan Roiser
  - added function to locate the place in the TDS
@@ -881,7 +885,7 @@
  - Better formatting standard output streams
 
 ! 20011130 - Pere Mato
- - changed generation of "getters" for 1-1 relations to return a pointer instead of SmartRef<> 
+ - changed generation of "getters" for 1-1 relations to return a pointer instead of SmartRef<>
 
 ! 20011123 - Stefan Roiser
  - changed serializing functions and operator overloading
@@ -900,9 +904,9 @@
 ! 20011019 - Stefan Roiser
  - many small changes: handling of arguments in selfdefined methods, concatenate class descriptions, produce
    at least one empty constructor, handling and errorhandling of class-attribute 'argList'
- 
+
 ! 20011018 - Stefan Roiser
- - CppWriter generates an entry (classname - packagename/classname) to the 'Headerdatabase' before writing the cpp 
+ - CppWriter generates an entry (classname - packagename/classname) to the 'Headerdatabase' before writing the cpp
 
 ! 20011017 - Stefan Roiser
  - Added production of non-standard constructors, destructors, warning at top of file
