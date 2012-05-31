@@ -1,0 +1,35 @@
+!--------------------------------------------------------------------------
+! Package     : Det/FTDet
+! Purpose     : Interface to the xml description
+! Responsible : Plamen Hopchev
+!--------------------------------------------------------------------------
+
+! 2012-05-30 P. Hopchev
+	- Now create FTChannels also for non-sensitive cells: it is an invalid
+    channel which can be recognized by its non-sense layerID: 15
+	- Now consider that the beam-pipe hole is a circle (as it is in the FT xml DDDB)
+	  and not a square.
+  - Modifications to the function which creates a DetectorSegment from an
+	  FTChannelID
+	- Implement the functions nextChannelLeft and nextChannelRight
+
+! 2012-05-29 P. Hopchev
+	- Modifications to conform better to the LHCb coding conventions
+	- rename directory 'job' to 'options' and add option file to run a test
+    algorithm under the Boole environment
+
+! 2012-05-25 P. Hopchev
+	-	Development of the calculateHits method in DeFTLayer
+	- Currently 12 layers are intialized, with the inner ones inside each
+	  station having stereo angle of +/- 5 degrees
+
+! 2012-05-09 P. Hopchev
+	First implementation of the package.
+	- Adopt the cmt structure of Det/OTDet
+	- Create DeFTDetector and DeFTLayer that read the xml geometry description
+	- Create DeFTStation and DeFTBiLayer corresponding to the xml structure
+	  (not really needed or used for now)
+	- Create the corresponding xml converters (in directory src/component)
+	- Create a test algorithm and tool (in directory src/devel)
+
+!========================= FTDet v0r1 2012-05-08 ==========================
