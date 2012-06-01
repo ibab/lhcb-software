@@ -274,14 +274,16 @@ def RecoTracking(exclude=[]):
 
    ### Change dEdx correction for simulated data
    if TrackSys().getProp("Simulation"):
+      from Configurables import StateDetailedBetheBlochEnergyCorrectionTool,DetailedMaterialLocator
       if TrackSys().getProp("OldCloneKiller"):
+         from Configurables import TrackEventFitter, TrackMasterFitter
          fitBest = TrackEventFitter("FitBest")
          fitBest.addTool(TrackMasterFitter("Fitter"))
          fitBest.Fitter.addTool(DetailedMaterialLocator(), name="MaterialLocator")
          fitBest.Fitter.MaterialLocator.addTool(StateDetailedBetheBlochEnergyCorrectionTool("GeneralDedxTool"))
          fitBest.Fitter.MaterialLocator.GeneralDedxTool.EnergyLossFactor = 0.86
       else:
-         from Configurables import TrackBestTrackCreator,StateDetailedBetheBlochEnergyCorrectionTool,DetailedMaterialLocator
+         from Configurables import TrackBestTrackCreator
          fitter = TrackBestTrackCreator().Fitter
          fitter.addTool(DetailedMaterialLocator(), name="MaterialLocator")
          fitter.MaterialLocator.addTool(StateDetailedBetheBlochEnergyCorrectionTool("GeneralDedxTool"))
