@@ -167,6 +167,25 @@ LHCb::CaloMomentum::CaloMomentum
 {
   addCaloPosition ( hypo ) ;
 }
+
+// vector of CaloHypos (useful to manage bremList from BremAdder tool)
+LHCb::CaloMomentum::CaloMomentum(  const std::vector<const LHCb::CaloHypo*> hypos )
+  : m_caloPositions      ()
+  , m_point              ()
+  , m_pointCovMatrix     ()
+  , m_momentum           ()
+  , m_momCovMatrix       ()
+  , m_momPointCovMatrix  ()
+  , m_status ( LHCb::CaloMomentum::OK    )
+  , m_flag   ( LHCb::CaloMomentum::Empty )
+{  
+  for(std::vector<const LHCb::CaloHypo*>::const_iterator i= hypos.begin();hypos.end()!=i;++i){
+    addCaloPosition ( *i ) ;
+  } 
+}
+
+
+
 // ============================================================================    
 // From (CaloHypo, XYZPoint)
 // ============================================================================

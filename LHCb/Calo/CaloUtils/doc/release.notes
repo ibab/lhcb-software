@@ -3,6 +3,11 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
+
+
+! 2012-05-14 - Olivier Deschamps
+  - CaloMomentum : add constructor from vector<CaloHypo> (useful for bremList() from BremAdder) - New method : multiplicity() returns CaloPositions multiplicity
+
 !========================= CaloUtils v9r3 2012-01-31 ==========================
 ! 2012-01-06 - Olivier Deschamps
  - fix minor bug in CaloAlgUtils::StringMatcher

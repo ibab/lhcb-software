@@ -126,6 +126,7 @@ namespace LHCb
                    const PointCovariance&     cov     ) ;
     // ========================================================================
     /// Special constructors from CaloHypo    
+    CaloMomentum ( const std::vector<const LHCb::CaloHypo*> hypos);
     CaloMomentum ( const LHCb::CaloHypo*      hypo    ) ;
     CaloMomentum ( const LHCb::CaloHypo*      hypo    , 
                    const Point&               point   ) ;
@@ -153,7 +154,7 @@ namespace LHCb
     const CaloPositions&      caloPositions  () const { return m_caloPositions  ; }
     const Point&              referencePoint () const { return m_point          ; }
     const PointCovariance&    pointCovMatrix () const { return m_pointCovMatrix ; }
-    
+    unsigned int              multiplicity   () const { return m_caloPositions.size();}
     int status () const { return m_status ; } 
     int flag   () const { return m_flag   ; }
     // ========================================================================
@@ -221,9 +222,7 @@ namespace LHCb
     // ========================================================================    
   private: // auxillary
     // ========================================================================    
-    /// status 
     int m_status ;                              //                   the status 
-    /// flag
     int m_flag   ;                              //                         flag
     // ========================================================================    
   }; // class CaloMomentum
