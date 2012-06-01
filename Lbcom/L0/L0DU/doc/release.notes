@@ -3,6 +3,12 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+! 2012-06-01 - Julien Cogan
+ - L0Conf :
+   - add new property to be used by Moore : ForceSingleL0Configuration 
+     (makes all L0 algorithms request the same type of L0 config provider)
+   - set default settings for L0 emulation with DataType 2012
+ 
 !========================= L0DU v10r20 2012-05-02 =========================
 ! 2012-04-10 - Olivier Deschamps
   - new algorithm : L0DataFilter (filter on any (set of) condition(s) on L0DU data)

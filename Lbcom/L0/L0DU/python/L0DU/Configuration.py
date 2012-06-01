@@ -23,6 +23,7 @@ class L0Conf(LHCbConfigurableUser) :
         ,"RootInTESOnDemand" : [""]
         ,"EnableTAEOnDemand" : False 
         ,"ReplaceL0BanksWithEmulated" : False
+        ,"ForceSingleL0Configuration" : False  
         ,"ReplayL0DU"     : False 
         ,"SimulateL0"     : False
         ,"EmulateL0"      : False
@@ -200,6 +201,8 @@ class L0Conf(LHCbConfigurableUser) :
                     alg.TCK = "0x1810"
                 elif self.getProp("DataType").upper() in ["2011"]:
                     alg.TCK = "0x0032"
+                elif self.getProp("DataType").upper() in ["2012"]:
+                    alg.TCK = "0x003D"
                 else:
                     alg.TCK = "0x0032"
         log.info("%s will use TCK=%s"%(alg.getFullName(),alg.getProp('TCK')))
@@ -388,6 +391,7 @@ class L0Conf(LHCbConfigurableUser) :
             decodeL0Muon(rootintes).RawEventLocations = raw_locations
             decodeL0DU(rootintes).RawEventLocations   = raw_locations
 
+
     def _setSpecificEmulationOptions(self):
         """Specific options to tune the L0 emulator components."""
 
@@ -416,6 +420,10 @@ class L0Conf(LHCbConfigurableUser) :
             datatype = self.getProp("DataType")
             if datatype == "2011" or datatype == "2010" or datatype == "2009":
                 emulateL0Calo().HcalThreshold = 0
+                emulateL0Calo().EcalThreshold = 0
+            elif datatype == "2012":
+                emulateL0Calo().HcalThreshold = 8 # (default)
+                emulateL0Calo().EcalThreshold = 5 # (default)
             if datatype == "2010" or datatype == "2009":
                 emulateL0Calo().UseNewElectron = False
             else:
@@ -469,6 +477,17 @@ class L0Conf(LHCbConfigurableUser) :
 
         # TCK definitions
         importOptions("$L0TCK/L0DUConfig.opts")
+
+        # Force all L0 components to use the single config provider (for Moore) 
+        if self.getProp("ForceSingleL0Configuration"):
+            def _fixL0DUConfigProviderTypes() :
+                from Gaudi.Configuration import allConfigurables
+                for c in allConfigurables.values() :
+                    if hasattr(c,'L0DUConfigProviderType') : c.L0DUConfigProviderType = 'L0DUConfigProvider'
+
+            from Gaudi.Configuration import appendPostConfigAction
+            appendPostConfigAction( _fixL0DUConfigProviderTypes )
+                                        
 
 class L0ConfError(Exception):
     """ Raised when conflicting options have been selected in L0Conf."""
