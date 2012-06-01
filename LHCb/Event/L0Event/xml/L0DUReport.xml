@@ -550,18 +550,18 @@
         name="preDecisionValueFromSummary" 
         argList="int bx=0"
         desc="return the L0 predDecision value evaluated from the ChannelsDecisionSummaries"
-        type="bool" 
+        type="int" 
         const="TRUE">
         <code> 
           int value = 0;
-          if(0 == m_configuration)return false;
+          if(0 == m_configuration)return value;
           const LHCb::L0DUChannel::Map&amp; channels = m_configuration->channels();
           for(LHCb::L0DUChannel::Map::const_iterator it = channels.begin();it!=channels.end();it++){
            LHCb::L0DUChannel* channel = (*it).second;
            int type =  channel->decisionType();
            if( channelPreDecision( channel->id(),bx  ) )value |= type;
           }
-          return ((value!=0) ? true : false);
+          return value;
         </code>
       </method>
 
