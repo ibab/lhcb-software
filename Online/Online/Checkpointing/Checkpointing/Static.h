@@ -74,7 +74,8 @@ namespace CHECKPOINTING_NAMESPACE    {
     mem_address_t   restore_arg0;
     int             restore_arglen;
     int             restore_argc;
-
+    mem_address_t   restore_utgid;
+    int             restore_utgidLen;
 
     /// Pointer to the process dependent system information (opaque)
     void*           sysInfo;

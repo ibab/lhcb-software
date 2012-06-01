@@ -69,6 +69,8 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_initialize(SysInfo* sys)
   sys->restore_argc       = 0;
   sys->restore_arg0       = 0;
   sys->restore_arglen     = 0;
+  sys->restore_utgid      = 0;
+  sys->restore_utgidLen   = 0;
 }
 
 /// Set directory name for libraries to be restored.
@@ -321,23 +323,20 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_init_restore_stack(SysIn
   char** ee = envp;
   sys->restore_argc   = argc;
   sys->restore_arg0   = mem_address_t(argv[0]);
-  sys->restore_arglen = mem_address_t(argv[argc-1])+m_strlen(argv[argc-1])-sys->restore_arg0;
+  sys->restore_arglen = mem_address_t(argv[argc-1])+m_strlen(argv[argc-1])-sys->restore_arg0+1;
   if ( ee ) {
-#if 0
     for(char* ep=*ee; *ep && *ee; ep=*(++ee)) {
       if ( ep ) {
 	if ( 0 == m_strncmp(ep,"UTGID=",6) ) {
-	  sys->restore_utgid = (char*)ep + 6;
-	  sys->restore_utgidLen = m_strlen(sys->utgid);
+	  char* ptr = ep + 6;
+	  sys->restore_utgid = mem_address_t(ptr);
+	  sys->restore_utgidLen = m_strlen(ptr);
 	  break;
 	}
 	else if ( *(short*)ep == *(short*)"_=" ) break;
       }
     }
-#endif
   }
-  //mtcp_output(MTCP_DEBUG,"Environ:%p argv[0]:%p %s UTGID:%p %s\n",
-  //	      ee,argv[0],argv[0],sys->utgid,sys->utgid ? sys->utgid : "Unknown");
 }
 
 /// Initialize basic variables from stack
@@ -371,30 +370,46 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_init_stack(SysInfo* sys,
 /// Setup process UTGID/argv[0] if availible
 STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_sys_set_utgid(SysInfo* sys, const char* new_utgid) {
   int len = m_strlen(new_utgid)+1;
-  int max_len = sys->restore_arg0 - sys->arg0 - 1;
 #if 0
+  //int max_len = sys->restore_arglen;
   if ( sys->restore_arg0 < sys->arg0 ) {
     mtcp_output(MTCP_ERROR,"Failed to set argv[0] to utgid:%s orig arg0:%p > new arg0:%p len=%d\n",
 		new_utgid, sys->arg0, sys->restore_arg0, len);
   }
 #endif
+  if ( sys->restore_utgid ) {
+    if ( len < sys->restore_utgidLen ) {
+      char* p = (char*)sys->restore_utgid;
+      m_memcpy(p,new_utgid,len);
+      m_memset(p+len,0,sys->restore_utgidLen-len);
+    }
+    else {
+      mtcp_output(MTCP_ERROR,"Failed to update utgid restore stack environment: len(%d)>allowed(%d)\n",
+		  len, sys->restore_utgidLen);
+    }
+  }
   if ( sys->restore_arg0 ) {
     if ( len < sys->restore_arglen ) {
       char* p = (char*)sys->restore_arg0;
       m_memcpy(p,new_utgid,len);
-      mtcp_output(MTCP_INFO,"New UTGID: %p %s - %s\n",sys->restore_arg0,sys->restore_arg0,new_utgid);
-      m_memset(p+len,0,max_len - len);
+      mtcp_output(MTCP_INFO,"New UTGID: %p %s - %s arglen:%d utgidlen:%d\n",
+		  sys->restore_arg0,sys->restore_arg0,new_utgid,sys->restore_arglen,len);
+      if ( sys->restore_arglen > len )  {
+	m_memset(p+len,0,sys->restore_arglen - len);
+      }
       if ( sys->utgid && sys->utgidLen>len ) {
+	mtcp_output(MTCP_INFO,"Sys UTGID: %p %s - %s\n",sys->utgid, sys->utgid,new_utgid);
 	m_memcpy(sys->utgid,new_utgid,len);
       }
       else {
 	mtcp_output(MTCP_ERROR,"Failed to update utgid stack environment: len(%d)>allowed(%d)\n",
 		    len,sys->utgidLen);
       }
-      return ::setenv("UTGID",new_utgid,1);
     }
-    mtcp_output(MTCP_ERROR,"Failed to set argv[0] to utgid:%s orig arg0:%p new arg0:%p len=%d\n",
-		new_utgid, sys->arg0, sys->restore_arg0, len);
+    else {
+      mtcp_output(MTCP_ERROR,"Failed to set argv[0] to utgid:%s orig arg0:%p new arg0:%p len=%d\n",
+		  new_utgid, sys->arg0, sys->restore_arg0, len);
+    }
   }
   return ::setenv("UTGID",new_utgid,1);
 }
