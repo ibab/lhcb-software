@@ -34,8 +34,8 @@ protected:
 
 private:
 
-  DeFTDetector* m_DeFT; ///< A pointer to the top-level FT det. element
-  std::string m_MCHitsLocation; ///< TES location of the FT MC hits
+  DeFTDetector* m_deFT; ///< A pointer to the top-level FT det. element
+  std::string m_mcHitsLocation; ///< TES location of the FT MC hits
   
 };
 #endif // DEFTTESTALG_H

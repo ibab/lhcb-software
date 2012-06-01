@@ -97,47 +97,6 @@ public:
    */
   static const CLID& classID() { return CLID_DeFTLayer; }
 
-  /** Initialization method 
-   *  @return Status of initialization
-   */ 
-  virtual StatusCode initialize();
-
-  /** @return layerID */
-  unsigned int layerID() const;
-
-  /** Set the ID of the layer
-   *  @param layerID The layer ID
-   */
-  void setLayerID(unsigned int layerID);
-
-  /** @return Stereo angle of the layer (in radians) */
-  double angle() const;
-
-  /** @return Tangent of the stereo angle of the layer */
-  double tanAngle() const;
-
-  /** Set the stereo angle of the layer
-   *  @param angle Angle in radians
-   */
-  void setAngle(double angle);
-  
-  /** Get the x-position at the top/bottom of the layer by extrapolating
-   *  along the fibres the initial
-   *  @param x0 x-position
-   *  @param y0 y-position
-   *  to the top/bottom of the layer.
-   *  @return x-position at the layer top (if y0 > 0) or bottom (if y0 < 0)
-   */
-  double xAtVerticalBorder(double x0, double y0) const;
-
-  /** Get the x-position at y=0 by extrapolating along the fibres the initial
-   *  @param x0 x-position
-   *  @param y0 y-position
-   *  to y=0.
-   *  @return x-position at y=0
-   */
-  double xAtYEq0(double x0, double y0) const;
-
   /** Get the list of traveresed SiPM channels. The particle trajectory is a
    *  straight line defined by:
    *  @param globalPointEntry Global entry point
@@ -149,6 +108,76 @@ public:
   StatusCode calculateHits(const Gaudi::XYZPoint&  globalPointEntry,
                            const Gaudi::XYZPoint&  globalPointExit,
                            FTPair&                 vectChanAndFrac) const;
+
+  /// Get the layer ID
+  unsigned int layerID() const { return m_layerID; }
+
+  /// Get the layer stereo angle
+  double angle() const { return m_angle; }
+
+  /// Get the u-coordinate of the cell center
+  double cellUCoordinate(const LHCb::FTChannelID aChan) const;
+
+  /// Accessor to the minimal x-position of the layer area covered with fibres
+  double layerMinX() const { return m_layerMinX; }
+
+  /// Accessor to the maximal x-position of the layer area covered with fibres
+  double layerMaxX() const { return m_layerMaxX; }
+
+  /// Accessor to the minimal y-position of the layer area covered with fibres
+  double layerMinY() const { return m_layerMinY; }
+
+  /// Accessor to the maximal y-position of the layer area covered with fibres
+  double layerMaxY() const { return m_layerMaxY; }
+
+  /// Accessor to the z-position of the layer center
+  double layerCenterZ() const { return m_layerPosZ; }
+
+  /// Make the Test algo a friend so that it can call private methods
+  friend class DeFTTestAlg;
+
+
+private: // private member functions
+
+  /** Initialization method 
+   *  @return Status of initialization
+   */ 
+  virtual StatusCode initialize();
+
+  /** Finalization method - delete objects created with new
+   *  @return Status of finalization
+   */ 
+  virtual StatusCode finalize();
+
+  /** @return Tangent of the stereo angle of the layer */
+  double tanAngle() const { return m_tanAngle; }
+
+  /** Get the x-position at the top/bottom of the layer by extrapolating
+   *  along the fibres the initial
+   *  @param x0 x-position
+   *  @param y0 y-position
+   *  to the top/bottom of the layer.
+   *  @return x-position at the layer top (if y0 > 0) or bottom (if y0 < 0)
+   *  It is assumed that the stereo angle is positive when the angle between
+   *  x and y' is > 90 deg (and therefore dx/dy is < 0).
+   */
+  double xAtVerticalBorder(double x0, double y0) const {
+    if (std::abs(m_angle)<1.e-4) return x0;
+    else {
+      double yAtBorder = (y0>0) ? m_layerMaxY : m_layerMinY;
+      return x0 + (yAtBorder-y0)*m_tanAngle;
+    }
+  }
+
+  /** Get the x-position at y=0 by extrapolating along the fibres the initial
+   *  @param x0 x-position
+   *  @param y0 y-position
+   *  to y=0.
+   *  @return x-position at y=0
+   */
+  double xAtYEq0(double x0, double y0) const {
+    return x0 - y0*m_tanAngle;
+  }
 
   /** Get the sipmID, cellID and fractional position of a hit.
    *  @param uCoord u-coordinate of the hit
@@ -163,9 +192,6 @@ public:
                          unsigned int&       sipmID,
                          unsigned int&       cellID, 
                          double&             fracDistCellCenter) const;
-
-  /// Get the u-coordinate of the cell center
-  double cellUCoordinate(const LHCb::FTChannelID aChan) const;
 
   /** Convert 'gross' cellID (counts sensitive and non-sensitive cells/SiPM edges)
    *  to 'net' cellID (counts only sensitive cells).
@@ -221,14 +247,11 @@ public:
   LHCb::FTChannelID nextChannelRight(const LHCb::FTChannelID& aChan) const;
   
 
-protected:
-
-private:
+private: // private data members
 
   //?? Some of these params to go into the xml DDDB?
   
   unsigned int m_layerID;
-  
   double m_angle;               ///< stereo angle of the layer
   double m_tanAngle;            ///< tangent of stereo angle
 
@@ -256,42 +279,18 @@ private:
   /// the direction of increasing the SiPM ID.
   std::vector<double> m_sipmStepX;
 
+  /// Use a single MsgStream instance (created in initialize)
+  MsgStream* m_msg;
+  /// Print functions
+  MsgStream& debug()   const { return *m_msg << MSG::DEBUG; }
+  MsgStream& info()    const { return *m_msg << MSG::INFO; }
+  MsgStream& error()   const { return *m_msg << MSG::ERROR; }
+  MsgStream& fatal()   const { return *m_msg << MSG::FATAL; }
+
 };
 
 // -----------------------------------------------------------------------------
 //   end of class
 // -----------------------------------------------------------------------------
-
-inline unsigned int DeFTLayer::layerID() const { return m_layerID; }
-inline void DeFTLayer::setLayerID(unsigned int layerID) { m_layerID = layerID; }
-
-inline double DeFTLayer::angle()    const { return m_angle; }
-inline double DeFTLayer::tanAngle() const { return m_tanAngle; }
-inline void   DeFTLayer::setAngle(double angle) {
-  m_angle = angle;
-  m_tanAngle = tan(angle);
-}
-
-/**
- * Calculate the x-position at the top/bottom of a FT layer (where the SiPM are).
- * Extrapolate the initial (x0,y0) along a straight line inclined
- * by m_stereoAngle wrt the y axis. It is assumed that the stereo angle is positive
- * when the angle between x and y' is > 90 deg (and therefore dx/dy is < 0).
- */
-inline double DeFTLayer::xAtVerticalBorder(double x0, double y0) const {
-  // in case of negligible stereo angle return x0
-  if (std::abs(m_angle)<1.e-4) return x0;
-  else {
-    double yAtBorder = (y0>0) ? m_layerMaxY : m_layerMinY;
-    return x0 + (yAtBorder-y0)*m_tanAngle;
-  }
-}
-
-inline double DeFTLayer::xAtYEq0(double x0, double y0) const {
-  // in case of negligible stereo angle return x0
-  if (std::abs(m_angle)<1.e-4) return x0;
-  else return x0 - y0*m_tanAngle;
-}
-
 
 #endif // DEFTLAYER_H

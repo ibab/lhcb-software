@@ -14,8 +14,8 @@
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-DeFTStation::DeFTStation( const std::string& name )
-  : DetectorElement ( name )
+DeFTStation::DeFTStation( const std::string& name ) :
+  DetectorElement ( name )
 {
 
 }

@@ -14,8 +14,8 @@
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-DeFTBiLayer::DeFTBiLayer( const std::string& name )
-  : DetectorElement ( name )
+DeFTBiLayer::DeFTBiLayer( const std::string& name ) :
+  DetectorElement ( name )
 {
 
 }

@@ -29,10 +29,10 @@ DECLARE_ALGORITHM_FACTORY( DeFTTestAlg )
 //=============================================================================
 DeFTTestAlg::DeFTTestAlg( const std::string& name, ISvcLocator* pSvcLocator ) :
   GaudiAlgorithm ( name, pSvcLocator ),
-  m_DeFT(0),
-  m_MCHitsLocation("")
+  m_deFT(0),
+  m_mcHitsLocation("")
 {
-  declareProperty( "MCHitsLocation", m_MCHitsLocation = "/Event/MC/FT/Hits" );
+  declareProperty( "MCHitsLocation", m_mcHitsLocation = "/Event/MC/FT/Hits" );
 }
 
 //=============================================================================
@@ -50,8 +50,8 @@ StatusCode DeFTTestAlg::initialize() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
   /// Retrieve and initialize DeFT
-  m_DeFT = getDet<DeFTDetector>( DeFTDetectorLocation::Default );
-  if ( m_DeFT != 0 ) { debug() << "Successfully retrieved DeFT" << endmsg; }
+  m_deFT = getDet<DeFTDetector>( DeFTDetectorLocation::Default );
+  if ( m_deFT != 0 ) { debug() << "Successfully retrieved DeFT" << endmsg; }
   else { error() << "Error getting DeFT" << endmsg; }
 
   return StatusCode::SUCCESS;
@@ -64,7 +64,7 @@ StatusCode DeFTTestAlg::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-  if ( m_DeFT != 0 ) {
+  if ( m_deFT != 0 ) {
 
     /// Manually defined points
     /*
@@ -80,7 +80,7 @@ StatusCode DeFTTestAlg::execute() {
     */
 
     /// Points of the real MCHits
-    const LHCb::MCHits* hitsCont = get<LHCb::MCHits>(m_MCHitsLocation);
+    const LHCb::MCHits* hitsCont = get<LHCb::MCHits>(m_mcHitsLocation);
     /// Iterate over the first few hits and test the calculateHits method
     LHCb::MCHits::const_iterator aHit;
     for ( aHit=hitsCont->begin(); aHit != hitsCont->end(); ++aHit ) {
@@ -97,21 +97,21 @@ StatusCode DeFTTestAlg::execute() {
               << "the midPoint() of the MC hit: " << pMid << endmsg;
 
       /// check isInside FT
-      bool isInsideFT = m_DeFT->isInside( pMid );
+      bool isInsideFT = m_deFT->isInside( pMid );
       debug() << "Global Point " << pMid << "; isInside =  " << isInsideFT << endmsg;
 
       /// test findStation method
-      const DeFTStation* pStation = m_DeFT->findStation(pMid);
+      const DeFTStation* pStation = m_deFT->findStation(pMid);
       lVolName = (pStation ? pStation->geometry()->lvolumeName() : "");
       debug() << "Found Station: " << lVolName << endmsg;
 
       /// test findBiLayer method
-      const DeFTBiLayer* pBiLayer = m_DeFT->findBiLayer(pMid);
+      const DeFTBiLayer* pBiLayer = m_deFT->findBiLayer(pMid);
       lVolName = (pBiLayer ? pBiLayer->geometry()->lvolumeName() : "");
       debug() << "Found BiLayer: " << lVolName << endmsg;
 
       /// test findLayer method
-      const DeFTLayer* pLayer = m_DeFT->findLayer(pMid);
+      const DeFTLayer* pLayer = m_deFT->findLayer(pMid);
       lVolName = (pLayer ? pLayer->geometry()->lvolumeName() : "");
       debug() << "Found Layer  : " << lVolName << endmsg;
 
@@ -127,7 +127,7 @@ StatusCode DeFTTestAlg::execute() {
   }// end if( m_deFT != 0 )
   
   else {
-    error() << "m_DeFT is not valid" << endmsg;
+    error() << "m_deFT is not valid" << endmsg;
   }
 
   return StatusCode::SUCCESS;

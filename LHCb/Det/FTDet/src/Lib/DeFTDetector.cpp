@@ -13,7 +13,6 @@
 
 // Boost
 #include <boost/lambda/bind.hpp>
-#include "boost/format.hpp"
 
 /** @file DeFTDetector.cpp
  *
@@ -33,11 +32,12 @@ DeFTDetector::DeFTDetector( const std::string& name ) :
   m_stations(),
   m_bilayers(),
   m_layers(),
-  m_angleMagnitude(0.),
-  m_printInitInfo(true)
+  m_printInitInfo(true),
+  m_msg(NULL)
 {
 
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -57,16 +57,14 @@ StatusCode DeFTDetector::initialize(){
 
   StatusCode sc = DetectorElement::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;
-  
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::INFO << "==> Initialize DeFTDetector" << endmsg;
 
-  //m_angleMagnitude = this->params()->param<double>("stereoAngle");
-  m_angleMagnitude = 5. * Gaudi::Units::degree;
+  /// Create a MsgStream object with an add-hoc name (the second argument),
+  /// instead of the ususual name(), which gives a too long string
+  if ( 0 == m_msg ) m_msg = new MsgStream( msgSvc(), "DeFTDetector" );
+
+  *m_msg << MSG::INFO << "==> Initialize DeFTDetector" << endmsg;
 
   /// Fill in the vectors holding pointers to the Daugther DetElements
-  int layerCntr = -1;
-  int stereoAngleSign;
 
   // loop over stations
   typedef IDetectorElement::IDEContainer::const_iterator DEIter;
@@ -82,35 +80,18 @@ StatusCode DeFTDetector::initialize(){
         if ( bilayer != 0 ) {
           /// fill the vector of bilayers
           m_bilayers.push_back(bilayer);
-          ///loop over layers and set their stereoAngle
+          ///loop over layers and fill the vector of layers
           for (iL = (*iBL)->childBegin(); iL!= (*iBL)->childEnd(); ++iL) {
             DeFTLayer* layer = dynamic_cast<DeFTLayer*>(*iL);
-            if ( layer != 0 ) {
-              ++layerCntr;
-
-              ///>>> set layer properties <<<///
-              ///set the layer ID
-              layer->setLayerID( layerCntr );
-
-              ///set the layer stereo angle
-              if      ( layerCntr%4 == 1 ) stereoAngleSign = -1;
-              else if ( layerCntr%4 == 2 ) stereoAngleSign =  1;
-              else stereoAngleSign = 0;
-              layer->setAngle( stereoAngleSign*m_angleMagnitude );
-
-              ///finally, fill the vector of layers
-              m_layers.push_back(layer);
-
-            } //end if( layer != 0 )
-          } // loop layers
-        }
+            if ( layer != 0 ) m_layers.push_back(layer);
+	  } // loop layers
+	}
       } // loop bilayers
     }
   } // loop stations
 
 
   ///>>> print the layer properties <<<///
-
   typedef std::vector<DeFTLayer*>::const_iterator LIter;
   if ( m_printInitInfo ) {
 
@@ -137,26 +118,36 @@ StatusCode DeFTDetector::initialize(){
           beamPipeRadius = innerTube->outerRadius();
         }
 
-        msg << MSG::INFO << "\nProperties of FT layer with ID " << layer->layerID() << ":\n"
-            << "\t\tGeometrical borders: " << boost::format(
-               "xMin/xMax = %7.1f/%7.1f  yMin/yMax = %7.1f/%7.1f  zMin/zMax = %7.1f/%7.1f mm")
-               %xMin %xMax %yMin %yMax %zMin %zMax
-            << "\n\t\tBeam pipe radius: " << boost::format("%7.1f mm") %(beamPipeRadius)
-            << "\n\t\tStereo angle: " << boost::format("%.1f degrees") %(layer->angle() / Gaudi::Units::degree)
-            << endmsg;
+        *m_msg << MSG::ALWAYS << "\nProperties of FT layer with ID " << layer->layerID() << ":\n"
+	       << "\t\tGeometrical borders: "
+	       << format("xMin/xMax = %7.1f /%7.1f  yMin/yMax = %7.1f /%7.1f  zMin/zMax = %7.1f /%7.1f mm",
+			 xMin, xMax, yMin, yMax, zMin, zMax)
+	       << "\n\t\tBeam pipe radius: " << format("%7.1f mm", beamPipeRadius)
+	       << "\n\t\tStereo angle: " << format("%.1f degrees", layer->angle()/Gaudi::Units::degree)
+	       << endmsg;
       } //end if( layer != 0 )
     } //end loop layers
   } //end printInitInfo
 
-
   return StatusCode::SUCCESS;
-
 }
 
-///////////////////////////////////////////////////
+//=============================================================================
+// Finalization
+//=============================================================================
+StatusCode DeFTDetector::finalize(){
+  // destroy the MsgService object
+  if ( m_msg ) {
+    delete m_msg;
+    m_msg = 0;
+  }
+  return StatusCode::SUCCESS;
+}
+
+//=============================================================================
 /// Functions to find the Station, BiLayer or Layer
 /// for a given XYZ point or FTChannel
-///////////////////////////////////////////////////
+//=============================================================================
 
 /// XYZ point -> Station
 const DeFTStation* DeFTDetector::findStation(const Gaudi::XYZPoint& aPoint) const {

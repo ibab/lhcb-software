@@ -11,7 +11,6 @@
 #include "DeFTBiLayer.h"
 #include "DeFTLayer.h"
 
-
 /** @class DeFTDetector DeFTDetector.h "FTDet/DeFTDetector.h"
  *
  *  This is the top-level detector element class of the Fibre Tracker (FT).
@@ -36,12 +35,12 @@ static const CLID CLID_DeFTDetector = 18001;
 
 class DeFTDetector : public DetectorElement {
 
-public: 
+// Typedefs
+typedef std::vector<DeFTStation*> Stations;
+typedef std::vector<DeFTBiLayer*> BiLayers;
+typedef std::vector<DeFTLayer*> Layers;
 
-  // Typedefs
-  typedef std::vector<DeFTStation*> Stations;
-  typedef std::vector<DeFTBiLayer*> BiLayers;
-  typedef std::vector<DeFTLayer*> Layers;
+public: 
 
   /// Standard constructor
   DeFTDetector( const std::string& name = "" );
@@ -59,19 +58,29 @@ public:
    */
   static const CLID& classID() { return CLID_DeFTDetector; }
 
+  /// Make the Test algo a friend so that it can call private methods
+  friend class DeFTTestAlg;
+
+private: // private member functions
+
   /** Initialization method 
    *  @return Status of initialization
    */ 
   virtual StatusCode initialize();
 
+  /** Finalization method - delete objects created with new
+   *  @return Status of finalization
+   */ 
+  virtual StatusCode finalize();
+
   /** @return Vector of pointers to the FT Stations */
-  const Stations& stations() const;
+  const Stations& stations() const { return m_stations; }
 
   /** @return Vector of pointers to the FT BiLayers */
-  const BiLayers& biLayers() const;
+  const BiLayers& biLayers() const { return m_bilayers; }
 
   /** @return Vector of pointers to the FT Layers */
-  const Layers&   layers()   const;
+  const Layers&   layers()   const { return m_layers;   }
 
   /** Find the FT Station where a global point is
    *  @return Pointer to the relevant Station
@@ -90,21 +99,16 @@ public:
 
   //TO-DO (when needed): Similar functions to find S/B/L where an FTChannelID is
 
-protected:
-
-private:
+private: // private data members
 
   Stations m_stations;     ///< vector of pointers to stations
   BiLayers m_bilayers;     ///< vector of pointers to bilayers
   Layers m_layers;         ///< vector of pointers to layers
-  double m_angleMagnitude; ///< magnitude of the stereo angle of the u/v layers (in radians)
   bool m_printInitInfo;    ///< switch for prinitng of the layer properties during initialize
 
-}; //end of class
+  /// Use a single MsgStream instance (created in initialize)
+  MsgStream* m_msg;
 
-/// Methods to get the sub-structure detector elements
-inline const DeFTDetector::Stations& DeFTDetector::stations() const { return m_stations; }
-inline const DeFTDetector::BiLayers& DeFTDetector::biLayers() const { return m_bilayers; }
-inline const DeFTDetector::Layers&   DeFTDetector::layers()   const { return m_layers;   }
+}; //end of class
 
 #endif // DEFTDETECTOR_H

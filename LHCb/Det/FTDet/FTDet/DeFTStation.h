@@ -39,14 +39,12 @@ public:
    */
   static const CLID& classID() { return CLID_DeFTStation; }
 
+private: // private member functions
+
   /** Initialization method 
    *  @return Status of initialization
    */ 
   virtual StatusCode initialize();
-
-protected:
-
-private:
 
 };
 #endif // DEFTSTATION_H

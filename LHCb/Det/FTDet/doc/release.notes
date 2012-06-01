@@ -4,32 +4,55 @@
 ! Responsible : Plamen Hopchev
 !--------------------------------------------------------------------------
 
+! 2012-06-01 P. Hopchev
+  - Change of the public/private policy: now almost all methods and variables
+    are private. Exceptions are the constructors, destructors and classID accessors
+    in all 4 det element classes (Detector, Station, BiLayer, Layer), and
+    the methods 'calculateHits' and 'cellUCoordinate' in Layer.
+  - Make the FTDet test alogrithm a friend of Detector and Layer so that it can
+    call the private methods
+  - In DeFTDetector.h and DeFTLayer.h moved the definitions of the trivial inline
+    functions directly into the class definition
+  - In Detector and Layer create a single MsgStream object at initialize,
+    instead of every time a functions is called. Deallocate the memory by deleting
+    the MsgStream object in newly created finalize methods. For now in Station and
+    BiLayer we print something only in initialize, so the MsgStream modification
+    is not made there.
+  - In Layer added public functions to get xmin, xmax, ymin, ymax and z_at_center
+    of the layer
+  - Now the layerID and the stereoAngle are taken from the xml DDDB (==> requires
+    a new version of the FT DDDB) and the relevant data members are set during the
+    Layer initialization. Removed the Detector obsolete methods setLayerID and setAngle
+  - use "format" instead of "boost::format" for printing the layer properties
+ 
+!========================= First commit to svn (2012-05-31) ==========================
+
 ! 2012-05-30 P. Hopchev
-	- Now create FTChannels also for non-sensitive cells: it is an invalid
+  - Now create FTChannels also for non-sensitive cells: it is an invalid
     channel which can be recognized by its non-sense layerID: 15
-	- Now consider that the beam-pipe hole is a circle (as it is in the FT xml DDDB)
-	  and not a square.
+  - Now consider that the beam-pipe hole is a circle (as it is in the FT xml DDDB)
+    and not a square.
   - Modifications to the function which creates a DetectorSegment from an
-	  FTChannelID
-	- Implement the functions nextChannelLeft and nextChannelRight
+    FTChannelID
+  - Implement the functions nextChannelLeft and nextChannelRight
 
 ! 2012-05-29 P. Hopchev
-	- Modifications to conform better to the LHCb coding conventions
-	- rename directory 'job' to 'options' and add option file to run a test
+  - Modifications to conform better to the LHCb coding conventions
+  - rename directory 'job' to 'options' and add option file to run a test
     algorithm under the Boole environment
 
 ! 2012-05-25 P. Hopchev
-	-	Development of the calculateHits method in DeFTLayer
-	- Currently 12 layers are intialized, with the inner ones inside each
-	  station having stereo angle of +/- 5 degrees
+  - Development of the calculateHits method in DeFTLayer
+  - Currently 12 layers are intialized, with the inner ones inside each
+    station having stereo angle of +/- 5 degrees
 
 ! 2012-05-09 P. Hopchev
-	First implementation of the package.
-	- Adopt the cmt structure of Det/OTDet
-	- Create DeFTDetector and DeFTLayer that read the xml geometry description
-	- Create DeFTStation and DeFTBiLayer corresponding to the xml structure
-	  (not really needed or used for now)
-	- Create the corresponding xml converters (in directory src/component)
-	- Create a test algorithm and tool (in directory src/devel)
+First implementation of the package.
+  - Adopt the cmt structure of Det/OTDet
+  - Create DeFTDetector and DeFTLayer that read the xml geometry description
+  - Create DeFTStation and DeFTBiLayer corresponding to the xml structure
+    (not really needed or used for now)
+  - Create the corresponding xml converters (in directory src/component)
+  - Create a test algorithm and tool (in directory src/devel)
 
 !========================= FTDet v0r1 2012-05-08 ==========================
