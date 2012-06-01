@@ -5,6 +5,8 @@
 	  - improved logging (for debugging)
 	  - added useful checker (Contains, NotContains)
 	  - added checker to allow correct move of packages
+	* python/LbRelease/rcs.py:
+	  - optimized the function to move packages from one project to another
 
 2012-05-11  Marco Clemencic  <Marco.Clemencic@cern.ch>
 

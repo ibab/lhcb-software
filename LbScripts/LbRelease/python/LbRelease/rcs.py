@@ -1105,18 +1105,19 @@ class SubversionCmd(RevisionControlSystem):
                         status = 1
                         log.fatal("%s directory already exists" % ppdir)
                     else :
+                        # get a sparse local copy of the original package
                         log.info("Updating the path %s" % pdir)
                         self._updatePath(pdir, root_dir)
-                        for d in _svn("ls", pdir, cwd = root_dir)[0].splitlines() :
-                            ddir = os.path.join(pdir, d)
-                            _, _, _ = _svn("update", ddir, cwd=root_dir, report_failure=True)
 
+                        # prepare the destination directory
                         ppdir = prdir
-                        pkglist = package.split("/")[:-1]
-                        if pkglist :
-                            ppdir = os.sep.join([prdir] + pkglist)
+                        pkghat = package.split("/")[:-1]
+                        if pkghat:
+                            ppdir = os.sep.join([prdir] + pkghat)
                         log.info("Creating the path %s" % ppdir)
                         self._createPath(ppdir, root_dir)
+
+                        # do the move
                         log.info("Moving %s to %s" %(pdir, ppdir))
                         _, _, _ = _svn("move", pdir, ppdir, cwd=root_dir, report_failure=True)
 
