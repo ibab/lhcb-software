@@ -8,16 +8,25 @@ Created on Nov 25, 2010
 '''
 __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
 
-from StdCheckers import AllPaths, PackageTag, ProjectTag
-from StdCheckers import TagIntermediateDirs, TagRemoval, AllowedUsers, ValidXml, OnPath
+from StdCheckers import AllPaths, NotContains, PackageTag, ProjectTag
+from StdCheckers import TagIntermediateDirs, TagRemoval, AllowedUsers, ValidXml
+from StdCheckers import OnPath, MovePackage
 from StdCheckers import PropertyChecker
+from StdCheckers import tagsFilter
 from Core import Failure
 
-__all__ = ("validTag", "librarian", "nightlyConf", "uniquePackages")
+__all__ = ("notHasTags", "validTag", "librarian", "nightlyConf", "uniquePackages", "default")
+
+# The transaction does not involve tags:
+#   - AllPaths(Failure(), pattern) returns a failure is
+notHasTags = NotContains(tagsFilter)
 
 # Standard tag validation policy
 validTag = AllPaths(TagRemoval() + TagIntermediateDirs() + ProjectTag() + PackageTag(),
-                    ".*/tags/.*")
+                    tagsFilter)
+
+# Package move
+movePackage = MovePackage()
 
 # Check for the librarian account (used to give super user powers to it).
 librarian = AllowedUsers(["liblhcb"])

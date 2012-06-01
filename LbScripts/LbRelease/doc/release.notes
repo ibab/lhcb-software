@@ -1,3 +1,11 @@
+2012-06-01  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/SvnChecker:
+	  - renamed _test.py to tests.py to allow nosetests discovery
+	  - improved logging (for debugging)
+	  - added useful checker (Contains, NotContains)
+	  - added checker to allow correct move of packages
+
 2012-05-11  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/LHCbDoc: added an option to check if there are problems

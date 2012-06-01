@@ -3,16 +3,19 @@ Tests for SvnChecker
 
 Created on Nov 24, 2010
 '''
+from LbRelease.SvnChecker.StdCheckers import MovePackage
 __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
 
 import unittest
 
 import LHCbCheckers
 from Core import FakeTransaction
-from Core import Failure, Success
+from Core import Failure, Success, Not
 from StdCheckers import AllowedUsers
 from StdCheckers import AllPaths, PackageTag, ProjectTag, TagRemoval
 from StdCheckers import TagIntermediateDirs, ValidXml
+
+import logging
 
 class Test(unittest.TestCase):
 
@@ -145,6 +148,7 @@ class Test(unittest.TestCase):
                  ]
 
     move_package = [
+                    # good one
                     (FakeTransaction({'/Dest/trunk/Package': ('A', (999, '/Source/trunk/Package'), 'dir'),
                                       '/Dest/tags/Package': ('A', (999, '/Source/tags/Package'), 'dir'),
                                       '/Dest/branches/Package': ('A', (999, '/Source/branches/Package'), 'dir'),
@@ -152,19 +156,122 @@ class Test(unittest.TestCase):
                                       '/Source/tags/Package': ('D', (-1, None), 'dir'),
                                       '/Source/branches/Package': ('D', (-1, None), 'dir'),
                                       '/': ('M', (-1, None), 'dir')},
-                                      {'/Dest/trunk/Package': 'dir'}),
+                                      {'/': 'dir'},
+                                      node_properties={'/': {'packages':
+                                                             "\n".join(["Package Dest"])
+                                                             }
+                                                       }),
                                       True),
+                    # good one with hat
+                    (FakeTransaction({'/Dest/trunk/Hat/Package': ('A', (999, '/Source/trunk/Hat/Package'), 'dir'),
+                                      '/Dest/tags/Hat/Package': ('A', (999, '/Source/tags/Hat/Package'), 'dir'),
+                                      '/Dest/branches/Hat/Package': ('A', (999, '/Source/branches/Hat/Package'), 'dir'),
+                                      '/Source/trunk/Hat/Package': ('D', (-1, None), 'dir'),
+                                      '/Source/tags/Hat/Package': ('D', (-1, None), 'dir'),
+                                      '/Source/branches/Hat/Package': ('D', (-1, None), 'dir'),
+                                      '/': ('M', (-1, None), 'dir')},
+                                      {'/': 'dir'},
+                                      node_properties={'/': {'packages':
+                                                             "\n".join(["Hat/Package Dest"])
+                                                             }
+                                                       }),
+                                      True),
+                    # good two
+                    (FakeTransaction({'/Dest/trunk/Package': ('A', (999, '/Source/trunk/Package'), 'dir'),
+                                      '/Dest/tags/Package': ('A', (999, '/Source/tags/Package'), 'dir'),
+                                      '/Dest/branches/Package': ('A', (999, '/Source/branches/Package'), 'dir'),
+                                      '/Source/trunk/Package': ('D', (-1, None), 'dir'),
+                                      '/Source/tags/Package': ('D', (-1, None), 'dir'),
+                                      '/Source/branches/Package': ('D', (-1, None), 'dir'),
+                                      '/Dest2/trunk/Hat/Package': ('A', (999, '/Source/trunk/Hat/Package'), 'dir'),
+                                      '/Dest2/tags/Hat/Package': ('A', (999, '/Source/tags/Hat/Package'), 'dir'),
+                                      '/Dest2/branches/Hat/Package': ('A', (999, '/Source/branches/Hat/Package'), 'dir'),
+                                      '/Source/trunk/Hat/Package': ('D', (-1, None), 'dir'),
+                                      '/Source/tags/Hat/Package': ('D', (-1, None), 'dir'),
+                                      '/Source/branches/Hat/Package': ('D', (-1, None), 'dir'),
+                                      '/': ('M', (-1, None), 'dir')},
+                                      {'/': 'dir'},
+                                      node_properties={'/': {'packages':
+                                                             "\n".join(["Package Dest",
+                                                                        "Hat/Package Dest2"])
+                                                             }
+                                                       }),
+                                      True),
+                    # bad property
+                    (FakeTransaction({'/Dest/trunk/Package': ('A', (999, '/Source/trunk/Package'), 'dir'),
+                                      '/Dest/tags/Package': ('A', (999, '/Source/tags/Package'), 'dir'),
+                                      '/Dest/branches/Package': ('A', (999, '/Source/branches/Package'), 'dir'),
+                                      '/Source/trunk/Package': ('D', (-1, None), 'dir'),
+                                      '/Source/tags/Package': ('D', (-1, None), 'dir'),
+                                      '/Source/branches/Package': ('D', (-1, None), 'dir'),
+                                      '/': ('M', (-1, None), 'dir')},
+                                      {'/': 'dir'},
+                                      node_properties={'/': {'packages':
+                                                             "\n".join(["Package Source"])
+                                                             }
+                                                       }),
+                                      False),
+                    # no change in '/'
+                    (FakeTransaction({'/Dest/trunk/Package': ('A', (999, '/Source/trunk/Package'), 'dir'),
+                                      '/Dest/tags/Package': ('A', (999, '/Source/tags/Package'), 'dir'),
+                                      '/Dest/branches/Package': ('A', (999, '/Source/branches/Package'), 'dir'),
+                                      '/Source/trunk/Package': ('D', (-1, None), 'dir'),
+                                      '/Source/tags/Package': ('D', (-1, None), 'dir'),
+                                      '/Source/branches/Package': ('D', (-1, None), 'dir')},
+                                      {'/': 'dir'},
+                                      node_properties={'/': {'packages':
+                                                             "\n".join(["Package Dest"])
+                                                             }
+                                                       }),
+                                      False),
+                    # bad destination in property
+                    (FakeTransaction({'/Dest/trunk/Package': ('A', (999, '/Source/trunk/Package'), 'dir'),
+                                      '/Dest/tags/Package': ('A', (999, '/Source/tags/Package'), 'dir'),
+                                      '/Dest/branches/Package': ('A', (999, '/Source/branches/Package'), 'dir'),
+                                      '/Source/trunk/Package': ('D', (-1, None), 'dir'),
+                                      '/Source/tags/Package': ('D', (-1, None), 'dir'),
+                                      '/Source/branches/Package': ('D', (-1, None), 'dir'),
+                                      '/': ('M', (-1, None), 'dir')},
+                                      {'/': 'dir'},
+                                      node_properties={'/': {'packages':
+                                                             "\n".join(["Package Other"])
+                                                             }
+                                                       }),
+                                      False),
+                    # bad source of copy
+                    (FakeTransaction({'/Dest/trunk/Package': ('A', (999, '/Source/trunk/Package'), 'dir'),
+                                      '/Dest/tags/Package': ('A', (999, '/Other/tags/Package'), 'dir'),
+                                      '/Dest/branches/Package': ('A', (999, '/Source/branches/Package'), 'dir'),
+                                      '/Source/trunk/Package': ('D', (-1, None), 'dir'),
+                                      '/Source/tags/Package': ('D', (-1, None), 'dir'),
+                                      '/Source/branches/Package': ('D', (-1, None), 'dir'),
+                                      '/': ('M', (-1, None), 'dir')},
+                                      {'/': 'dir'},
+                                      node_properties={'/': {'packages':
+                                                             "\n".join(["Package Dest"])
+                                                             }
+                                                       }),
+                                      False),
+                    # Extra changes
+                    (FakeTransaction({'/Dest/trunk/Package': ('A', (999, '/Source/trunk/Package'), 'dir'),
+                                      '/Dest/tags/Package': ('A', (999, '/Source/tags/Package'), 'dir'),
+                                      '/Dest/branches/Package': ('A', (999, '/Source/branches/Package'), 'dir'),
+                                      '/Source/trunk/Package': ('D', (-1, None), 'dir'),
+                                      '/Source/tags/Package': ('D', (-1, None), 'dir'),
+                                      '/Source/branches/Package': ('D', (-1, None), 'dir'),
+                                      '/': ('M', (-1, None), 'dir'),
+                                      "/some/file.txt": ('M', (-1, None), 'file')},
+                                      {'/': 'dir'},
+                                      node_properties={'/': {'packages':
+                                                             "\n".join(["Package Dest"])
+                                                             }
+                                                       }),
+                                      False),
                     ]
-#Transaction:
-#M /
-#A /Phys/branches/Phys/Swimming (from /Erasmus/branches/Phys/Swimming:130538)
-#D /Erasmus/branches/Phys/Swimming
-#D /Erasmus/tags/Phys/Swimming
-#A /Phys/tags/Phys/Swimming (from /Erasmus/tags/Phys/Swimming:130538)
-#A /Phys/trunk/Phys/Swimming (from /Erasmus/trunk/Phys/Swimming:130538)
-#D /Erasmus/trunk/Phys/Swimming
+
 
     def assertCheckTxn(self, txn, checker, result):
+        logging.getLogger("assertCheckTxn").info("--- check ---")
         check = checker(txn)
         msg = "Expected %r but found %r checking\n%s" % (result, check, txn)
         if type(result) is tuple:
@@ -255,21 +362,6 @@ class Test(unittest.TestCase):
         for txn, result in self.tags_int_dirs:
             self.assertCheckTxn(txn, checker, result)
 
-    def test_035_tag_combined(self):
-        """combined tags checks"""
-        checker = LHCbCheckers.validTag
-        for txn, result in ( self.package_tags
-                           + self.project_tags
-                           + self.tags_removal
-                           + self.tags_int_dirs
-                           + self.normal_commits
-                           ):
-            self.assertCheckTxn(txn, checker, result)
-        checker = LHCbCheckers.librarian + LHCbCheckers.validTag
-        for txn, result in self.package_tags + self.project_tags + self.tags_removal + self.tags_int_dirs:
-            txn.properties["svn:author"] = "liblhcb"
-            self.assertCheckTxn(txn, checker, True)
-
     def test_040_valid_xml(self):
         checker = AllPaths(ValidXml(), r".*\.xml$")
         for txn, result in self.xml_files:
@@ -293,6 +385,32 @@ Hat2/Pack2 Proj2
 """}},), True)]:
             self.assertCheckTxn(txn, checker, result)
 
+    def test_060_move_package(self):
+        checker = MovePackage()
+        for txn, result in self.move_package:
+            self.assertCheckTxn(txn, checker, result)
+
+    def test_090_combined(self):
+        """combined checks"""
+        tests = ( self.package_tags
+                + self.project_tags
+                + self.tags_removal
+                + self.tags_int_dirs
+                + self.normal_commits
+                + self.move_package
+                )
+
+        checker = LHCbCheckers.notHasTags + (MovePackage() + LHCbCheckers.validTag)
+        for txn, result in tests:
+            self.assertCheckTxn(txn, checker, result)
+
+        checker = LHCbCheckers.librarian + checker
+        for txn, result in tests:
+            txn.properties["svn:author"] = "liblhcb"
+            self.assertCheckTxn(txn, checker, True)
+
 if __name__ == "__main__":
+    #import logging
+    #logging.basicConfig(level=logging.DEBUG)
     #import sys;sys.argv = ['', 'Test.testName']
     unittest.main()

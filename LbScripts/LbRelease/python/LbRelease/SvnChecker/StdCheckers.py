@@ -5,8 +5,9 @@ Created on Nov 24, 2010
 '''
 __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
 
-from Core import Checker, PathChecker
+from Core import Checker, PathChecker, Not, Failure
 import re
+import logging
 
 class PropertyChecker(Checker):
     """
@@ -36,12 +37,14 @@ class PropertyChecker(Checker):
         return "Value '%s' %s for property '%s'" % (value, res and "allowed" or "not allowed", self.property)
 
     def __call__(self, txn, path = None):
+        self.log.debug("Checking property %s on %s", self.property, path or "transaction")
         if not path:
             value = txn[self.property]
         else:
             value = txn.node_property(path, self.property)
 
         if value is None:
+            self.log.debug("not found (required: %s)", self.mandatory)
             msg = "Property '%s' not found" % self.property
             if path:
                 msg += " on node '%s'" % path
@@ -49,6 +52,7 @@ class PropertyChecker(Checker):
             return (not self.mandatory, msg)
 
         res = self.check(value)
+        self.log.debug("%s value", res and "good" or "bad")
         return (res, self._msg(res, value, path))
 
 def AllowedUsers(users):
@@ -66,6 +70,60 @@ class AllowedUsers2(PropertyChecker):
         super(AllowedUsers2, self).__init__("svn:author", lambda x: x in users)
     def _msg(self, res, value):
         return "User %s %s" % (value, res and "allowed" or "not allowed")
+
+class MovePackage(Checker):
+    """
+    Checker to allow move of packages.
+    A valid transaction must contain a change in the property 'packages' of '/',
+    and move of trunk, tags and branches of the correct package.
+    """
+    def __call__(self, txn):
+        self.log.debug("Check for move signature")
+        if '/' not in txn.changes or txn.change_kind('/') != "M":
+            return (False, "No change in '/'")
+        # we want 'pure' moves, so we need to spot changes that we do not want
+        consumed_changes = ['/']
+        # get new list of packages (dict pkg->project)
+        pkgs = txn.node_property('/', 'packages').splitlines()
+        pkgs = dict([ l.split() for l in map(str.strip, pkgs) if l and not l.startswith("#") ])
+        # find the packages that are being moved
+        moves = []
+        all_changes = list(txn.changes)
+        for p in all_changes:
+            if ('/trunk/' in p) and (txn.change_kind(p) == "D"):
+                src, pkg = p.strip('/').split('/trunk/')
+                moves.append((src, pkg))
+                consumed_changes.append(p)
+        for src, pkg in moves:
+            # find the destination
+            dst = pkgs.get(pkg)
+            self.log.debug("Moving package %s from project %s to %s", pkg, src, dst)
+            if src == dst:
+                self.log.debug("'packages' property still refers to %s for package %s", src, pkg)
+                return (False, "Bad change in property 'packages'")
+            # look for trunk, tags and branches moves
+            for t in ['/trunk/', '/tags/', '/branches/']:
+                s = "/%s%s%s" % (src, t, pkg)
+                if s not in txn.changes or txn.change_kind(s) != 'D':
+                    return (False, "path %s not removed" % s)
+                consumed_changes.append(s)
+                d = "/%s%s%s" % (dst, t, pkg)
+                if d not in txn.changes or txn.change_kind(d) != 'A':
+                    return (False, "path %s not added" % d)
+                try:
+                    c = txn.copied_from(d)[1]
+                except:
+                    c = None
+                if c != s:
+                    return (False, "path %s copied from %s instead of %s" % (d, c, s))
+                consumed_changes.append(d)
+        # check that we consumed all changes
+        extra_changes = sorted([c for c in all_changes if c not in consumed_changes])
+        if extra_changes:
+            self.log.debug("Changes not consumed: %s", extra_changes)
+            return (False, "Cannot mix package move and other changes:\n"
+                            + "\n".join(map(txn.formatChange, extra_changes)))
+        return (True, "Valid move of packages")
 
 class ForeachPath(Checker):
     """
@@ -95,10 +153,12 @@ class ForeachPath(Checker):
 
     def __call__(self, txn):
         res, msg = (True, '')
+        self.log.debug("Looping over paths")
         for path in filter(self.filter, txn.changes):
             res, msg = self.checker(txn, path)
             if self.stop_if == res:
                 break # exit when requested
+        self.log.debug("Loop completed (%s)", res)
         return (res, msg)
 
     def __repr__(self):
@@ -122,6 +182,23 @@ def AllPaths(checker, filter_ = ""):
     Apply the PathChecker to all the paths ensuring that all of them are OK.
     """
     return ForeachPath(checker, filter_, False)
+
+def NotContains(filter_ = ""):
+    """
+    Success if the transaction does not contains the required path, failure if
+    it does.
+    """
+    # AllPaths succeeds if there is no match, so we fail if there is a match and
+    # invert.
+    return AllPaths(Failure(), filter_)
+
+def Contains(filter_ = ""):
+    """
+    Success if the transaction contains the required path, failure if not.
+    """
+    # AllPaths succeeds if there is no match, so we fail if there is a match and
+    # invert.
+    return Not(NotContains(filter_))
 
 class OnPath(Checker):
     """
@@ -157,13 +234,17 @@ class TagCheckerBase(PathChecker):
         raise RuntimeError("Method not implemented")
 
     def __call__(self, txn, path):
+        self.log.debug("check %s", path)
         try:
             _id, src = txn.copied_from(path)
             if not src:
+                self.log.debug("not a copy (no src)")
                 return (False, "Only copies are allowed")
             if not self._validCopy(src, path):
+                self.log.debug("not a valid copy from %s", src)
                 return (False, "Invalid tag copy")
         except:
+            self.log.debug("not a copy")
             # if copy_from fails, it is not a copy
             return (False, "Only copies are allowed")
         return (True, "")
@@ -243,6 +324,7 @@ class TagRemoval(TagCheckerBase):
     Tag checkers to allow/restrict removal of tags.
     """
     def __call__(self, txn, path):
+        self.log.debug("check %s", path)
         if (txn.change_kind(path) == "D"): # removed directory
             ps = path.strip("/").split("/")
             # only tag directories can be removed
@@ -265,6 +347,7 @@ class TagIntermediateDirs(TagCheckerBase):
         Check if the path is a valid directory in the tags subtree.
         Succeed if it is a valid new directory, fails otherwise.
         """
+        self.log.debug("check %s", path)
         if ((txn.change_kind(path) == "A") # new entry
             and (txn.check_path(path) == "dir")): # that is a directory
             # Check that the path make sense
@@ -286,7 +369,6 @@ class TagIntermediateDirs(TagCheckerBase):
                 return (True, "Valid tag intermediate directory")
         return (False, "Invalid tag intermediate directory")
 
-
 class ValidXml(PathChecker):
     """
     Path checker to validate the content of XML files.
@@ -295,10 +377,12 @@ class ValidXml(PathChecker):
     correct by trying to parse it.
     """
     def __call__(self, txn, path):
+        self.log.debug("check %s", path)
         from xml.dom.minidom import parseString
         try:
             data = txn.file_contents(path)
             parseString(data)
+            self.log.debug("Parsable XML")
             return (True, "Parsable XML in '%s'" % path)
         except Exception, x:
             msg = ["Error parsing '%s': %s" % (path, x)]
@@ -312,4 +396,5 @@ class ValidXml(PathChecker):
                 msg.append(marker)
             except:
                 pass
+            self.log.debug("Bad XML")
             return (False, "\n".join(msg))

@@ -23,6 +23,7 @@ from svn.fs import svn_fs_open_txn, svn_fs_txn_root, svn_fs_paths_changed
 from svn.fs import svn_fs_copied_from, svn_fs_check_path, svn_fs_txn_prop, svn_fs_node_prop
 from svn.fs import svn_fs_file_contents, svn_fs_file_length
 
+import logging
 
 class Transaction(object):
     """
@@ -207,7 +208,7 @@ class FakeTransaction(object):
         return s
 
     def __str__(self):
-        return "\n".join(map(self.formatChange, self.changes))
+        return "\n".join(map(self.formatChange, sorted(self.changes)))
 
 class Checker(object):
     """
@@ -215,7 +216,7 @@ class Checker(object):
     It defines the minimal API and a default behavior.
     """
     def __init__(self):
-        pass
+        self.log = logging.getLogger(self.__class__.__name__)
 
     def __call__(self, txn):
         """
@@ -272,10 +273,12 @@ class Or(Checker):
         super(Or, self).__init__()
         self._operands = (a, b)
     def __call__(self, *args):
+        self.log.debug("Start OR block")
         for o in self._operands:
             r, m = o(*args)
             if r:
                 break # stop checking on the first success
+        self.log.debug("End OR block (%s)", r)
         return (r, m)
     def __repr__(self):
         return "%s(%s)" % (self.__class__.__name__, ", ".join(map(repr, self._operands)))
@@ -288,10 +291,12 @@ class And(Checker):
         super(And, self).__init__()
         self._operands = (a, b)
     def __call__(self, *args):
+        self.log.debug("Start AND block")
         for o in self._operands:
             r, m = o(*args)
             if not r:
                 break # stop checking on the first failure
+        self.log.debug("End AND block (%s)", r)
         return (r, m)
     def __repr__(self):
         return "%s(%s)" % (self.__class__.__name__, ", ".join(map(repr, self._operands)))
@@ -305,6 +310,7 @@ class Not(Checker):
         self._operand = a
     def __call__(self, *args):
         r, m = self._operand(*args)
+        self.log.debug("Inverse result %s -> %s", r, not r)
         return (not r, m)
     def __repr__(self):
         return "%s(%r)" % (self.__class__.__name__, self._operand)
@@ -318,6 +324,7 @@ class Success(Checker):
         super(Success, self).__init__()
         self.msg = msg
     def __call__(self, *args):
+        self.log.debug("Forced success")
         return (True, self.msg)
     def __repr__(self):
         return "%s(%r)" % (self.__class__.__name__, self.msg)
@@ -331,6 +338,7 @@ class Failure(Checker):
         super(Failure, self).__init__()
         self.msg = msg
     def __call__(self, *args):
+        self.log.debug("Forced failure")
         return (False, self.msg)
     def __repr__(self):
         return "%s(%r)" % (self.__class__.__name__, self.msg)
