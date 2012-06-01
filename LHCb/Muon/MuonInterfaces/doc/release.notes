@@ -3,9 +3,6 @@
 ! Responsible : Alessia Satta Alessia.Sattaft@cern.ch
 ! =============================================================================
 
-! 2012-05-23 - Giacomo Graziani
-- add a little random smearing to cluster barycenters to avoid binning effects in monitoring histograms
-
 !========================= MuonInterfaces v1r2p2 2011-11-07 =========================
 ! 2011-10-11 - Marco Cattaneo
  - Trivial fix to icc remark
