@@ -15,7 +15,7 @@ from StdCheckers import PropertyChecker
 from StdCheckers import tagsFilter
 from Core import Failure
 
-__all__ = ("notHasTags", "validTag", "librarian", "nightlyConf", "uniquePackages", "default")
+__all__ = ("notHasTags", "validTag", "movePackage", "librarian", "nightlyConf", "uniquePackages")
 
 # The transaction does not involve tags:
 #   - AllPaths(Failure(), pattern) returns a failure is
