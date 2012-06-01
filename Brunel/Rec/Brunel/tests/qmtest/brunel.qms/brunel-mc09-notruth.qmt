@@ -6,7 +6,7 @@
     <text>$BRUNELOPTS/Brunel-MC09-NoTruth.py</text>
     <text>$BRUNELOPTS/MC09-Files.py</text>
     <text>--option</text>
-    <text>from Brunel.Configuration import *; Brunel().EvtMax=5; Brunel().WriteFSR=False</text>
+    <text>from Brunel.Configuration import *; Brunel().EvtMax=5; Brunel().WriteFSR=False; from Configurables import TrackSys; TrackSys().OldCloneKiller=True</text>
   </set></argument>
   <argument name="reference"><text>../refs/testBrunel-MC09-NoTruth.ref</text></argument>
   <argument name="validator"><text>
