@@ -5,6 +5,9 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2012-06-03 - Vanya Belyaev
+ - fiw minor fixes & improvements 
+
 ! 2012-05-28 - Vanya Belyaev
  - add hfits 
 

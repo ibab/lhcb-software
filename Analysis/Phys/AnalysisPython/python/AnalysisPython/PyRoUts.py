@@ -1249,9 +1249,11 @@ def binomEff_h3 ( h1 , h2 ) :
 ROOT.TH3.  binomEff    = binomEff_h3 
 
 
-ROOT.TH1.__floordiv__  = binomEff_h1 
-ROOT.TH2.__floordiv__  = binomEff_h2
-ROOT.TH3.__floordiv__  = binomEff_h3
+ROOT.TH1F . __floordiv__  = binomEff_h1 
+ROOT.TH1D . __floordiv__  = binomEff_h1 
+ROOT.TH2F . __floordiv__  = binomEff_h2
+ROOT.TH2D . __floordiv__  = binomEff_h2
+ROOT.TH3  . __floordiv__  = binomEff_h3
 
 # =============================================================================
 ## operation with the histograms 
@@ -1275,7 +1277,7 @@ def _h1_oper_ ( h1 , h2 , oper ) :
         v1 = float  ( h2 ) 
         h2 = lambda s : VE ( v1 , 0 )
     elif isinstance ( h2 ,    VE ) :
-        v1 =          h2  
+        v1 =     VE ( h2 )
         h2 = lambda s : v1  
     elif isinstance ( h2 ,   ROOT.TF1 ) :
         v1 =          h2  
@@ -1296,7 +1298,6 @@ def _h1_oper_ ( h1 , h2 , oper ) :
         result.SetBinError   ( i1 , v.error () )
         
     return result
-
 
 # =============================================================================
 ## operation with the histograms 
@@ -1412,6 +1413,20 @@ def _h1_asym_ ( h1 , h2 ) :
     """
     return _h1_oper_ ( h1 , h2 , lambda x,y : x.asym(y) ) 
 # =============================================================================
+## ``Difference'' of the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
+def _h1_diff_ ( h1 , h2 ) :
+    """
+    ``Difference'' the histogram 0.5*(h1-h2)/(h1+h2)
+    
+    >>> h1     = ...
+    >>> h2     = ...
+    >>> result = h1.diff ( h2 ) 
+    
+    """
+    return _h1_oper_ ( h1 , h2 , lambda x,y : 0.5*x.asym(y) ) 
+# =============================================================================
 ##  ``Chi2-tension'' of the histograms 
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-07
@@ -1497,33 +1512,8 @@ def _h1_abs_ ( h1 , val ) :
     return result 
 
 
-
-ROOT.TH1D . _oper_    = _h1_oper_
-ROOT.TH1D . __div__   = _h1_div_
-ROOT.TH1D . __mul__   = _h1_mul_
-ROOT.TH1D . __add__   = _h1_add_
-ROOT.TH1D . __sub__   = _h1_sub_
-ROOT.TH1D . __pow__   = _h1_pow_
-ROOT.TH1D . __abs__   = _h1_abs_
-ROOT.TH1D .  frac     = _h1_frac_
-ROOT.TH1D .  asym     = _h1_asym_
-ROOT.TH1D .  chi2     = _h1_chi2_
-ROOT.TH1D .  average  = _h1_mean_
-
-ROOT.TH1F . _oper_    = _h1_oper_
-ROOT.TH1F . __div__   = _h1_div_
-ROOT.TH1F . __mul__   = _h1_mul_
-ROOT.TH1F . __add__   = _h1_add_
-ROOT.TH1F . __sub__   = _h1_sub_
-ROOT.TH1F . __pow__   = _h1_pow_
-ROOT.TH1F . __abs__   = _h1_abs_
-ROOT.TH1F .  frac     = _h1_frac_
-ROOT.TH1F .  asym     = _h1_asym_
-ROOT.TH1F .  chi2     = _h1_chi2_
-ROOT.TH1F .  average  = _h1_mean_
-
 # =============================================================================
-##  Division with the histograms 
+## Division with the histograms 
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-07
 def _h1_idiv_ ( h1 , h2 ) :
@@ -1578,15 +1568,9 @@ def _h1_isub_ ( h1 , h2 ) :
     
     """
     return _h1_ioper_ ( h1 , h2 , lambda x,y : x-y ) 
-# =============================================================================
-ROOT.TH1.__idiv__   = _h1_idiv_
-ROOT.TH1.__imul__   = _h1_imul_
-ROOT.TH1.__iadd__   = _h1_iadd_
-ROOT.TH1.__isub__   = _h1_isub_
-
 
 # =============================================================================
-##  Division with the histograms 
+## Division with the histograms 
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-07
 def _h1_rdiv_ ( h1 , h2 ) :
@@ -1637,15 +1621,38 @@ def _h1_rsub_ ( h1 , h2 ) :
     >>> result = obj - h1 
     """
     return _h1_oper_ ( h1 , h2 , lambda x,y : y-x ) 
+
 # =============================================================================
-ROOT.TH1D.__rdiv__   = _h1_rdiv_
-ROOT.TH1D.__rmul__   = _h1_rmul_
-ROOT.TH1D.__radd__   = _h1_radd_
-ROOT.TH1D.__rsub__   = _h1_rsub_
-ROOT.TH1F.__rdiv__   = _h1_rdiv_
-ROOT.TH1F.__rmul__   = _h1_rmul_
-ROOT.TH1F.__radd__   = _h1_radd_
-ROOT.TH1F.__rsub__   = _h1_rsub_
+
+for t in ( ROOT.TH1F , ROOT.TH1D ) : 
+    
+    t . _oper_    = _h1_oper_
+    t . _ioper_   = _h1_ioper_
+    t . __div__   = _h1_div_
+    t . __mul__   = _h1_mul_
+    t . __add__   = _h1_add_
+    t . __sub__   = _h1_sub_
+    t . __pow__   = _h1_pow_
+    
+    t . __idiv__  = _h1_idiv_
+    t . __imul__  = _h1_imul_
+    t . __iadd__  = _h1_iadd_
+    t . __isub__  = _h1_isub_
+    
+    t . __rdiv__  = _h1_rdiv_
+    t . __rmul__  = _h1_rmul_
+    t . __radd__  = _h1_radd_
+    t . __rsub__  = _h1_rsub_
+    
+    t . __abs__   = _h1_abs_
+    t .  frac     = _h1_frac_
+    t .  asym     = _h1_asym_
+    t .  diff     = _h1_diff_
+    t .  chi2     = _h1_chi2_
+    t .  average  = _h1_mean_
+
+
+
 
 # =============================================================================
 ## find the first X-value for the given Y-value 
@@ -1903,8 +1910,12 @@ def _h2_oper_ ( h1 , h2 , oper ) :
     result = h1.Clone( hID() )
     if not result.GetSumw2() : result.Sumw2()
     #
-    if   isinstance ( h2 , (int,long,float) ) : h2 = lambda x,y : VE(h2,0)
-    elif isinstance ( h2 ,  VE              ) : h2 = lambda x,y :    h2 
+    if   isinstance ( h2 , (int,long,float) ) :
+        v1 = float ( h2 )  
+        h2 = lambda x,y : VE(v1,0)
+    elif isinstance ( h2 ,  VE              ) :
+        v1 =     VE ( h2 )
+        h2 = lambda x,y : v1
     #
     for ix1,iy1,x1,y1,z1 in h1.iteritems() :
         #
@@ -1923,7 +1934,41 @@ def _h2_oper_ ( h1 , h2 , oper ) :
     return result
 
 # =============================================================================
-##  Division with the histograms 
+## operation with the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2012-06-03
+def _h2_ioper_ ( h1 , h2 , oper ) :
+    """
+    Operation with the histogram 
+    """
+    if                                 not h1.GetSumw2() : h1.Sumw2()
+    if hasattr ( h2 , 'GetSumw2' ) and not h2.GetSumw2() : h2.Sumw2()
+    #
+    if   isinstance ( h2 , ( int , long , float ) ) :
+        v1 = float  ( h2 ) 
+        h2 = lambda x,y : VE ( v1 , 0 )
+    elif isinstance ( h2 ,    VE ) :
+        v1 =          h2  
+        h2 = lambda x,y : v1  
+    #
+    for ix1,iy1,x1,y1,z1 in h1.iteritems() :
+        #
+        h1.SetBinContent ( ix1 , iy1 , 0 ) 
+        h1.SetBinError   ( ix1 , iy1 , 0 )
+        #
+        z2 = h2 ( x1.value() , y1.value() ) 
+        #
+        v = VE ( oper ( z1 , z2 ) ) 
+        #
+        if not v.isfinite() : continue 
+        #
+        h1.SetBinContent ( ix1 , iy1 , v.value () ) 
+        h1.SetBinError   ( ix1 , iy1 , v.error () )
+
+    return h1
+
+# =============================================================================
+## Division with the histograms 
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-07
 def _h2_div_ ( h1 , h2 ) :
@@ -1937,7 +1982,7 @@ def _h2_div_ ( h1 , h2 ) :
     """
     return _h2_oper_ ( h1 , h2 , lambda x,y : x/y ) 
 # =============================================================================
-##  Division with the histograms 
+## Division with the histograms 
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-07
 def _h2_mul_ ( h1 , h2 ) :
@@ -1950,7 +1995,7 @@ def _h2_mul_ ( h1 , h2 ) :
     """
     return _h2_oper_ ( h1 , h2 , lambda x,y : x*y ) 
 # =============================================================================
-##  Addition with the histograms 
+## Addition with the histograms 
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-07
 def _h2_add_ ( h1 , h2 ) :
@@ -1963,7 +2008,7 @@ def _h2_add_ ( h1 , h2 ) :
     """
     return _h2_oper_ ( h1 , h2 , lambda x,y : x+y ) 
 # =============================================================================
-##  Subtraction of the histograms 
+## Subtraction of the histograms 
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-07
 def _h2_sub_ ( h1 , h2 ) :
@@ -1975,6 +2020,61 @@ def _h2_sub_ ( h1 , h2 ) :
     >>> result = h1 - h2 
     """
     return _h2_oper_ ( h1 , h2 , lambda x,y : x-y ) 
+
+# =============================================================================
+## Division with the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
+def _h2_rdiv_ ( h1 , h2 ) :
+    """
+    Divide the histograms
+    
+    >>> h1     = ...
+    >>> h2     = ...
+    >>> result = h1 / h2
+    
+    """
+    return _h2_oper_ ( h1 , h2 , lambda x,y : y/x ) 
+# =============================================================================
+## Division with the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
+def _h2_rmul_ ( h1 , h2 ) :
+    """
+    Multiply the histograms 
+    
+    >>> h1     = ...
+    >>> h2     = ...
+    >>> result = h1 * h2 
+    """
+    return _h2_oper_ ( h1 , h2 , lambda x,y : y*x ) 
+# =============================================================================
+## Addition with the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
+def _h2_radd_ ( h1 , h2 ) :
+    """
+    Add the histograms 
+    
+    >>> h1     = ...
+    >>> h2     = ...
+    >>> result = h1 + h2 
+    """
+    return _h2_oper_ ( h1 , h2 , lambda x,y : y+x ) 
+# =============================================================================
+## Subtraction of the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
+def _h2_rsub_ ( h1 , h2 ) :
+    """
+    Subtract the histogram
+    
+    >>> h1     = ...
+    >>> h2     = ...
+    >>> result = h1 - h2 
+    """
+    return _h2_oper_ ( h1 , h2 , lambda x,y : y-x ) 
+
 # =============================================================================
 ##  ``Fraction'' of the histograms 
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
@@ -1990,7 +2090,7 @@ def _h2_frac_ ( h1 , h2 ) :
     """
     return _h2_oper_ ( h1 , h2 , lambda x,y : x.frac(y) ) 
 # =============================================================================
-##  ``Asymmetry'' of the histograms 
+## ``Asymmetry'' of the histograms 
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-07
 def _h2_asym_ ( h1 , h2 ) :
@@ -2002,6 +2102,19 @@ def _h2_asym_ ( h1 , h2 ) :
     >>> asym   = h1.asym ( h2 )
     """
     return _h2_oper_ ( h1 , h2 , lambda x,y : x.asym(y) ) 
+# =============================================================================
+## ``Difference'' of the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2012-06-03
+def _h2_diff_ ( h1 , h2 ) :
+    """
+    ``Difference'' the histogram 0.5*(h1-h2)/(h1+h2)
+    
+    >>> h1     = ...
+    >>> h2     = ...
+    >>> diff   = h1.diff ( h2 )
+    """
+    return _h2_oper_ ( h1 , h2 , lambda x,y : 0.5*x.asym(y) ) 
 # =============================================================================
 ##  ``Chi2-tension'' the histograms 
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
@@ -2088,28 +2201,97 @@ def _h2_abs_ ( h1 ) :
         
     return result 
 
-
-ROOT.TH2._oper_   = _h2_oper_
-
-ROOT.TH2.__div__  = _h2_div_
-ROOT.TH2.__mul__  = _h2_mul_
-ROOT.TH2.__add__  = _h2_add_
-ROOT.TH2.__sub__  = _h2_sub_
-ROOT.TH2.__pow__  = _h2_pow_
-ROOT.TH2.__abs__  = _h2_abs_
-
-ROOT.TH2.  frac    = _h2_frac_
-ROOT.TH2.  asym    = _h2_asym_
-ROOT.TH2.  chi2    = _h2_chi2_
-ROOT.TH2.  average = _h2_mean_
-
+# =============================================================================
+## Division with the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2012-06-03
+def _h2_idiv_ ( h1 , h2 ) :
+    """
+    Divide the histograms 
+    
+    >>> h1  = ...
+    >>> h2  = ...
+    >>> h1 /=  h2 
+    
+    """
+    return _h2_ioper_ ( h1 , h2 , lambda x,y : x/y ) 
+# =============================================================================
+## Division with the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2012-06-03
+def _h2_imul_ ( h1 , h2 ) :
+    """
+    Multiply the histograms 
+    
+    >>> h1  = ...
+    >>> h2  = ...
+    >>> h1 *=  h2 
+    
+    """
+    return _h2_ioper_ ( h1 , h2 , lambda x,y : x*y ) 
+# =============================================================================
+## Addition with the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2012-06-03
+def _h2_iadd_ ( h1 , h2 ) :
+    """
+    Add the histograms
+    
+    >>> h1  = ...
+    >>> h2  = ...
+    >>> h1 +=  h2 
+    
+    """
+    return _h2_ioper_ ( h1 , h2 , lambda x,y : x+y ) 
+# =============================================================================
+## Subtraction of the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2012-06-03
+def _h2_isub_ ( h1 , h2 ) :
+    """
+    Subtract the histogram
+    
+    >>> h1  = ...
+    >>> h2  = ...
+    >>> h1 -=  h2 
+    
+    """
+    return _h2_ioper_ ( h1 , h2 , lambda x,y : x-y ) 
+# =============================================================================
 
 
 def _h2_box_  ( self , opts = '' ) : return self.Draw( opts + 'box' )
 def _h2_lego_ ( self , opts = '' ) : return self.Draw( opts + 'lego')
 
-ROOT.TH2.  box  = _h2_box_
-ROOT.TH2.  lego = _h2_lego_
+for t in ( ROOT.TH2F , ROOT.TH2D ) : 
+    
+    t . _oper_   = _h2_oper_
+    t . __div__  = _h2_div_
+    t . __mul__  = _h2_mul_
+    t . __add__  = _h2_add_
+    t . __sub__  = _h2_sub_
+    t . __pow__  = _h2_pow_
+    t . __abs__  = _h2_abs_
+
+    t . __rdiv__ = _h2_rdiv_
+    t . __rmul__ = _h2_rmul_
+    t . __radd__ = _h2_radd_
+    t . __rsub__ = _h2_rsub_
+
+    t . __idiv__ = _h2_idiv_
+    t . __imul__ = _h2_imul_
+    t . __iadd__ = _h2_iadd_
+    t . __isub__ = _h2_isub_
+    
+    t .  frac    = _h2_frac_
+    t .  asym    = _h2_asym_
+    t .  diff    = _h2_diff_
+    t .  chi2    = _h2_chi2_
+    t .  average = _h2_mean_
+
+    t .  box     = _h2_box_
+    t .  lego    = _h2_lego_
+
 
 # =============================================================================
 ## operation with the histograms 
@@ -2334,8 +2516,8 @@ def _h1_sumv_ ( h , increasing = True ) :
     return result 
 
 # ==============================================================================
-ROOT.TH1F.sumv   = _h1_sumv_ 
-ROOT.TH1D.sumv   = _h1_sumv_ 
+for t in  (ROOT.TH1F , ROOT.TH1D ) : 
+    t . sumv   = _h1_sumv_ 
         
 
 # =============================================================================
@@ -2833,7 +3015,7 @@ ROOT.TH3D.histoDiff = _h_diff_
 ## perform some accumulation for the histogram 
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-07
-def _h_accumulate_ ( h                         ,
+def _h1_accumulate_ ( h                         ,
                      func = lambda s,v : s + v ,
                      cut  = lambda s   : True  , 
                      init = VE ()              ) :
@@ -2849,10 +3031,29 @@ def _h_accumulate_ ( h                         ,
     return result 
 
 # =============================================================================
+## perform some accumulation for the histogram 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
+def _h2_accumulate_ ( h                         ,
+                      func = lambda s,v : s + v ,
+                      cut  = lambda s   : True  , 
+                      init = VE ()              ) :
+    """
+    Accumulate the function value over the histogram
+
+    >>> h =...
+    >>> sum = h.accumulate() 
+    """
+    result = init
+    for i in h.iteritems() :
+        if cut ( i ) : result = func ( result , i[4] )
+    return result 
+
+# =============================================================================
 ## get the sum of entries 
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-07
-def _h_sum_ ( h    ,
+def _h1_sum_ ( h    ,
               low  ,
               high ) :
     """
@@ -2862,7 +3063,7 @@ def _h_sum_ ( h    ,
     >>> h.sum ( 1 , 20 )
     
     """
-    return _h_accumulate_ ( h , cut = lambda s : low<=s[1].value()<=high ) 
+    return _h1_accumulate_ ( h , cut = lambda s : low<=s[1].value()<=high ) 
 
 # =============================================================================
 ## simple scaling
@@ -2897,16 +3098,23 @@ def _h_scale_ ( histo , val = 1.0 ) :
         histo[ ibin ]  = value 
 
     return histo
+
+# =============================================================================    
+for t in ( ROOT.TH1F , ROOT.TH1D ) :    
+    t . accumulate = _h1_accumulate_ 
+    t . sum        = _h1_sum_ 
+    t . integral   = _h1_sum_ 
+
+for t in ( ROOT.TH2F , ROOT.TH2D ) :    
+    t . accumulate = _h2_accumulate_ 
+    t . sum        = _h2_accumulate_
+    t . integral   = _h2_accumulate_ 
+
+
+## generic
+ROOT.TF1 . scale      = _h1_scale_
+
     
-             
-ROOT.TH1  . accumulate = _h_accumulate_ 
-ROOT.TH1F . sum        = _h_sum_ 
-ROOT.TH1D . sum        = _h_sum_
-ROOT.TH1F . integral   = _h_sum_ 
-ROOT.TH1D . integral   = _h_sum_
-ROOT.TH1  . scale      = _h_scale_
-
-
 HStats   = cpp.Gaudi.Utils.HStats
 
 # =============================================================================
