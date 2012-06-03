@@ -24,10 +24,10 @@ BaseTrSegMakerFromRecoTracks::
 BaseTrSegMakerFromRecoTracks( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
-  : Rich::Rec::ToolBase  ( type, name, parent          ),
-    m_deBeam             ( Rich::NRiches               ),
-    m_checkBeamP         ( Rich::NRadiatorTypes        ),
-    m_usedRads           ( Rich::NRadiatorTypes, true  )
+  : ToolBase      ( type, name, parent          ),
+    m_deBeam      ( Rich::NRiches               ),
+    m_checkBeamP  ( Rich::NRadiatorTypes        ),
+    m_usedRads    ( Rich::NRadiatorTypes, true  )
 {
   // the interface
   declareInterface<ITrSegMaker>(this);
@@ -55,7 +55,7 @@ BaseTrSegMakerFromRecoTracks::~BaseTrSegMakerFromRecoTracks() { }
 StatusCode BaseTrSegMakerFromRecoTracks::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = Rich::Rec::ToolBase::initialize();
+  const StatusCode sc = ToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
   if ( !usedRads(Rich::Aerogel) )

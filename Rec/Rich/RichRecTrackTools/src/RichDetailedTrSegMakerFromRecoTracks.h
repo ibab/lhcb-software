@@ -25,6 +25,9 @@
 // Track Extrapolator
 #include "TrackInterfaces/ITrackExtrapolator.h"
 
+// histogramming numbers
+//#include "RichRecBase/RichDetParams.h"
+
 // boost
 #include "boost/assign/list_of.hpp"
 
@@ -155,8 +158,7 @@ namespace Rich
                              const LHCb::State * lStateRef,
                              Gaudi::XYZPoint & midPoint,
                              Gaudi::XYZVector & midMomentum,
-                             LHCb::RichTrackSegment::StateErrors & errors ) const;
-      
+                             LHCb::RichTrackSegment::StateErrors & errors ) const;      
     private: // data
 
       /// Ray tracing tool

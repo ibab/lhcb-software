@@ -158,7 +158,8 @@ int
 DetailedTrSegMakerFromRecoTracks::
 constructSegments( const ContainedObject * obj,
                    std::vector<LHCb::RichTrackSegment*>& segments )
-  const {
+  const
+{
 
   // Try to cast input data to required type for this implementation
   const LHCb::Track * track = dynamic_cast<const LHCb::Track *>(obj);
@@ -167,21 +168,25 @@ constructSegments( const ContainedObject * obj,
     Warning("Input data object is not of type Track").ignore();
     return 0;
   }
-  if ( msgLevel(MSG::VERBOSE) )
+  if ( msgLevel(MSG::DEBUG) )
   {
-    verbose() << "Analysing Track key=" << track->key()
-              << " history=" << track->history()
-              << " : " << track->states().size() << " States at z =";
+    debug() << "Analysing Track key=" << track->key()
+            << " history=" << track->history()
+            << " : " << track->states().size() << " States at z =";
     for ( std::vector<LHCb::State*>::const_iterator iS = track->states().begin();
           iS != track->states().end(); ++iS )
     {
-      if (*iS) verbose() << " " << (*iS)->z();
+      if (*iS) debug() << " " << (*iS)->z();
     }
-    verbose() << endmsg;
+    debug() << endmsg;
   }
 
   // make sure vector is empty
   segments.clear();
+
+  // Histogramming
+  //RADIATOR_GLOBAL_POSITIONS_X;
+  //RADIATOR_GLOBAL_POSITIONS_Y;
 
   // Loop over all radiators
   for ( Radiators::const_iterator radiator = m_radiators.begin();
@@ -204,9 +209,15 @@ constructSegments( const ContainedObject * obj,
     // Get the track entry state points
     const LHCb::State * entryPStateRaw = &(track->closestState(zStart));
     if ( !entryPStateRaw ) { Error( "Problem getting track state" ).ignore(); continue; }
+//     richHisto2D( HID("rawEntry",rad), "Raw State Entry",
+//                  -xRadEntGlo[rad], xRadEntGlo[rad], 200,
+//                  -yRadEntGlo[rad], yRadEntGlo[rad], 200 )->fill( entryPStateRaw->x(),
+//                                                                  entryPStateRaw->y() );
 
     // check tolerance
-    if ( fabs(zStart-entryPStateRaw->z()) > m_zTolerance[rad] )
+    const double entryTol = zStart - entryPStateRaw->z();
+    //    richHisto1D( HID("rawEntryTol",rad), "Entry Tolerance", -3000, 3000, nBins1D() )->fill(entryTol);
+    if ( fabs(entryTol) > m_zTolerance[rad] )
     {
       if ( msgLevel(MSG::VERBOSE) )
       {
@@ -214,6 +225,12 @@ constructSegments( const ContainedObject * obj,
                   << entryPStateRaw->z() << " failed tolerance check dz="
                   << m_zTolerance[rad] << endmsg;
       }
+//       richHisto1D(  HID("entryZ",rad), "Entry Z Failed Tolerance", 
+//                     -2000, 10000, nBins1D() )->fill(entryPStateRaw->z());
+//       richHisto2D( HID("rawEntryFailedTolCheck",rad), "Raw State Entry failed tolerence check",
+//                    -xRadEntGlo[rad], xRadEntGlo[rad], 200,
+//                    -yRadEntGlo[rad], yRadEntGlo[rad], 200 )->fill( entryPStateRaw->x(),
+//                                                                    entryPStateRaw->y() );
       continue;
     }
 
@@ -228,16 +245,22 @@ constructSegments( const ContainedObject * obj,
     }
 
     // choose appropriate z end position for initial track states for this radiator
-    const double zEnd   = ( Rich::Rich2Gas == rad ? m_nomZstates[3] :
-                            Rich::Aerogel  == rad ? m_nomZstates[0] :
-                            m_nomZstates[1] );
+    const double zEnd = ( Rich::Rich2Gas == rad ? m_nomZstates[3] :
+                          Rich::Aerogel  == rad ? m_nomZstates[0] :
+                          m_nomZstates[1] );
 
     // Get the track exit state points
     const LHCb::State * exitPStateRaw = &(track->closestState(zEnd));
     if ( !exitPStateRaw ) { Error( "Problem getting track state" ).ignore(); continue; }
+//     richHisto2D( HID("rawExit",rad), "Raw State Exit",
+//                  -xRadExitGlo[rad], xRadExitGlo[rad], 200,
+//                  -yRadExitGlo[rad], yRadExitGlo[rad], 200 )->fill( exitPStateRaw->x(),
+//                                                                    exitPStateRaw->y() );
 
     // check tolerance
-    if ( fabs(zEnd-exitPStateRaw->z()) > m_zTolerance[rad] )
+    const double exitTol = zEnd - exitPStateRaw->z();
+    //    richHisto1D( HID("rawExitTol",rad), "Exit Tolerance", -3000, 3000, nBins1D() )->fill(exitTol);
+    if ( fabs(exitTol) > m_zTolerance[rad] )
     {
       if ( msgLevel(MSG::VERBOSE) )
       {
@@ -245,6 +268,12 @@ constructSegments( const ContainedObject * obj,
                   << exitPStateRaw->z() << " failed tolerance check dz="
                   << m_zTolerance[rad] << endmsg;
       }
+//       richHisto1D(  HID("exitZ",rad), "Exit Z Failed Tolerance", 
+//                     -2000, 10000, nBins1D() )->fill(exitPStateRaw->z());
+//       richHisto2D( HID("rawExit",rad), "Raw State Exit failed tolerance check",
+//                    -xRadExitGlo[rad], xRadExitGlo[rad], 200,
+//                    -yRadExitGlo[rad], yRadExitGlo[rad], 200 )->fill( exitPStateRaw->x(),
+//                                                                      exitPStateRaw->y() );
       continue;
     }
 
@@ -273,6 +302,15 @@ constructSegments( const ContainedObject * obj,
                 << "   ExitDir  : "
                 << exitPState->slopes() << endmsg;
     }
+
+//     richHisto2D( HID("initialEntry",rad), "Initial Entry",
+//                  -xRadEntGlo[rad], xRadEntGlo[rad], 200,
+//                  -yRadEntGlo[rad], yRadEntGlo[rad], 200 )->fill( entryPState->x(),
+//                                                                  entryPState->y() );
+//     richHisto2D( HID("initialExit",rad), "Initial Exit",
+//                  -xRadExitGlo[rad], xRadExitGlo[rad], 200,
+//                  -yRadExitGlo[rad], yRadExitGlo[rad], 200 )->fill( exitPState->x(),
+//                                                                    exitPState->y() );
 
     // use state closest to the entry point in radiator
     Gaudi::XYZPoint entryPoint1;
@@ -344,6 +382,21 @@ constructSegments( const ContainedObject * obj,
         verbose() << "Failed to intersect exit state" << endmsg;
       }
     } // end !aerogel if
+
+//     if ( !entryStateOK )
+//     {
+//       richHisto2D( HID("entryStateFailedRadInt",rad), "Entry State Failed Radiator Intersections",
+//                    -xRadEntGlo[rad], xRadEntGlo[rad], 200,
+//                    -yRadEntGlo[rad], yRadEntGlo[rad], 200 )->fill( entryPState->x(),
+//                                                                    entryPState->y() );
+//     }
+//     if ( !exitStateOK )
+//     {
+//       richHisto2D( HID("exitStateFailedRadInt",rad), "Exit State Failed Radiator Intersections",
+//                    -xRadExitGlo[rad], xRadExitGlo[rad], 200,
+//                    -yRadExitGlo[rad], yRadExitGlo[rad], 200 )->fill( exitPState->x(),
+//                                                                      exitPState->y() );
+//     }
 
     // transport entry and exit states to best points
     bool sc = false;
@@ -427,8 +480,25 @@ constructSegments( const ContainedObject * obj,
       delete exitPState;
       if (msgLevel(MSG::VERBOSE))
         verbose() << "    --> Failed to use state information. Quitting." << endmsg;
+//       richHisto2D( HID("entryStateFailedToUseState",rad), "Entry State Failed to use state information",
+//                    -xRadEntGlo[rad], xRadEntGlo[rad], 200,
+//                    -yRadEntGlo[rad], yRadEntGlo[rad], 200 )->fill( entryPState->x(),
+//                                                                    entryPState->y() );
+//       richHisto2D( HID("exitStateFailedToUseState",rad), "Exit State Failed to use state information",
+//                    -xRadExitGlo[rad], xRadExitGlo[rad], 200,
+//                    -yRadExitGlo[rad], yRadExitGlo[rad], 200 )->fill( exitPState->x(),
+//                                                                      exitPState->y() );
       continue;
     }
+
+//     richHisto2D( HID("postEntry",rad), "Post Entry",
+//                  -xRadEntGlo[rad], xRadEntGlo[rad], 200,
+//                  -yRadEntGlo[rad], yRadEntGlo[rad], 200 )->fill( entryPState->x(),
+//                                                                  entryPState->y() );
+//     richHisto2D( HID("postExit",rad), "Post Exit",
+//                  -xRadExitGlo[rad], xRadExitGlo[rad], 200,
+//                  -yRadExitGlo[rad], yRadExitGlo[rad], 200 )->fill( exitPState->x(),
+//                                                                    exitPState->y() );
 
     //---------------------------------------------------------------------------------------------
     // Correction for beam pipe intersections
@@ -455,6 +525,14 @@ constructSegments( const ContainedObject * obj,
       {
         if (msgLevel(MSG::VERBOSE))
           verbose() << "   --> Inside beam pipe -> Reject segment" << endmsg;
+//         richHisto2D( HID("entryStateInsideBeamPipe",rad), "Entry State Inside beampipe",
+//                      -xRadEntGlo[rad], xRadEntGlo[rad], 200,
+//                      -yRadEntGlo[rad], yRadEntGlo[rad], 200 )->fill( entryPState->x(),
+//                                                                      entryPState->y() );
+//         richHisto2D( HID("exitStateInsideBeamPipe",rad), "Exit State Inside beampipe",
+//                      -xRadExitGlo[rad], xRadExitGlo[rad], 200,
+//                      -yRadExitGlo[rad], yRadExitGlo[rad], 200 )->fill( exitPState->x(),
+//                                                                        exitPState->y() );
         delete entryPState;
         delete exitPState;
         continue;
@@ -480,11 +558,30 @@ constructSegments( const ContainedObject * obj,
         if (msgLevel(MSG::VERBOSE))
           verbose() << "    --> Error fixing radiator entry/exit points for beam-pipe. Quitting."
                     << endmsg;
+//         richHisto2D( HID("entryStateErrFixRadForBeamP",rad),
+//                      "Entry State Error fixing radiator entry/exit points for beam-pipe",
+//                      -xRadEntGlo[rad], xRadEntGlo[rad], 200,
+//                      -yRadEntGlo[rad], yRadEntGlo[rad], 200 )->fill( entryPState->x(),
+//                                                                      entryPState->y() );
+//         richHisto2D( HID("exitStateErrFixRadForBeamP",rad),
+//                      "Exit State Error fixing radiator entry/exit points for beam-pipe",
+//                      -xRadExitGlo[rad], xRadExitGlo[rad], 200,
+//                      -yRadExitGlo[rad], yRadExitGlo[rad], 200 )->fill( exitPState->x(),
+//                                                                        exitPState->y() );
         continue;
       }
 
     }
     //---------------------------------------------------------------------------------------------
+
+//     richHisto2D( HID("entryPostBeampipe",rad), "Entry Post Beampipe",
+//                  -xRadEntGlo[rad], xRadEntGlo[rad], 200,
+//                  -yRadEntGlo[rad], yRadEntGlo[rad], 200 )->fill( entryPState->x(),
+//                                                                  entryPState->y() );
+//     richHisto2D( HID("exitPostBeampipe",rad), "Exit Post Beampipe",
+//                  -xRadExitGlo[rad], xRadExitGlo[rad], 200,
+//                  -yRadExitGlo[rad], yRadExitGlo[rad], 200 )->fill( exitPState->x(),
+//                                                                    exitPState->y() );
 
     //---------------------------------------------------------------------------------------------
     // a special hack for the Rich1Gas - since the aerogel volume
@@ -493,12 +590,22 @@ constructSegments( const ContainedObject * obj,
     if ( Rich::Rich1Gas == rad ) fixRich1GasEntryPoint( entryPState, entryPStateRaw );
     //---------------------------------------------------------------------------------------------
 
+//     richHisto2D( HID("entryPostR1GasFix",rad), "Entry Post R1 Gas Fix",
+//                  -xRadEntGlo[rad], xRadEntGlo[rad], 200,
+//                  -yRadEntGlo[rad], yRadEntGlo[rad], 200 )->fill( entryPState->x(),
+//                                                                  entryPState->y() );
+
     //---------------------------------------------------------------------------------------------
     // check for intersection with spherical mirror for gas radiators
     // and if need be correct exit point accordingly
     //---------------------------------------------------------------------------------------------
     if ( Rich::Aerogel != rad  ) correctRadExitMirror( *radiator, exitPState, exitPStateRaw );
     //---------------------------------------------------------------------------------------------
+
+//     richHisto2D( HID("exitPostMirrCorr",rad), "Exit Post Mirror Exit Correction",
+//                  -xRadExitGlo[rad], xRadExitGlo[rad], 200,
+//                  -yRadExitGlo[rad], yRadExitGlo[rad], 200 )->fill( exitPState->x(),
+//                                                                    exitPState->y() );
 
     //---------------------------------------------------------------------------------------------
     // Final check that info is reasonable
@@ -509,6 +616,14 @@ constructSegments( const ContainedObject * obj,
     counter( "Track states for " + Rich::text(rad) + " too close in z" ) += (int)ZdiffCheck;
     if ( Zcheck || ZdiffCheck )
     {
+//       richHisto2D( HID("entryFailedFinalCheck",rad), "Entry Final Check",
+//                    -xRadEntGlo[rad], xRadEntGlo[rad], 200,
+//                    -yRadEntGlo[rad], yRadEntGlo[rad], 200 )->fill( entryPState->x(),
+//                                                                    entryPState->y() );
+//       richHisto2D( HID("exitFailedFinalCheck",rad), "Exit Final Check",
+//                    -xRadExitGlo[rad], xRadExitGlo[rad], 200,
+//                    -yRadExitGlo[rad], yRadExitGlo[rad], 200 )->fill( exitPState->x(),
+//                                                                      exitPState->y() );
       delete entryPState;
       delete exitPState;
       continue;
@@ -522,11 +637,28 @@ constructSegments( const ContainedObject * obj,
     {
       if (msgLevel(MSG::VERBOSE))
         verbose() << "    --> Path length too short -> rejecting segment" << endmsg;
+//       richHisto2D( HID("entryTooShortZ",rad), "Entry Too SHort In Z",
+//                    -xRadEntGlo[rad], xRadEntGlo[rad], 200,
+//                    -yRadEntGlo[rad], yRadEntGlo[rad], 200 )->fill( entryPState->x(),
+//                                                                    entryPState->y() );
+//       richHisto2D( HID("exitTooShortZ",rad), "Exit Too SHort In Z",
+//                    -xRadExitGlo[rad], xRadExitGlo[rad], 200,
+//                    -yRadExitGlo[rad], yRadExitGlo[rad], 200 )->fill( exitPState->x(),
+//                                                                      exitPState->y() );
       delete entryPState;
       delete exitPState;
       continue;
     }
     //---------------------------------------------------------------------------------------------
+
+//     richHisto2D( HID("entryBeforeFinal",rad), "Entry Before Final",
+//                  -xRadEntGlo[rad], xRadEntGlo[rad], 200,
+//                  -yRadEntGlo[rad], yRadEntGlo[rad], 200 )->fill( entryPState->x(),
+//                                                                  entryPState->y() );
+//     richHisto2D( HID("exitBeforeFinal",rad), "Exit Before Final",
+//                  -xRadExitGlo[rad], xRadExitGlo[rad], 200,
+//                  -yRadExitGlo[rad], yRadExitGlo[rad], 200 )->fill( exitPState->x(),
+//                                                                    exitPState->y() );
 
     // Create final entry and exit state points and momentum vectors
     const Gaudi::XYZPoint  entryPoint( entryPState->position() );
@@ -567,6 +699,15 @@ constructSegments( const ContainedObject * obj,
                 << "   Exit  : Pnt=" << exitPoint  << " Mom=" << exitStateMomentum
                 << " Ptot=" << std::sqrt(exitStateMomentum.Mag2()) << endmsg;
     }
+
+//     richHisto2D( HID("selectedEntry",rad), "Selected Entry",
+//                  -xRadEntGlo[rad], xRadEntGlo[rad], 200,
+//                  -yRadEntGlo[rad], yRadEntGlo[rad], 200 )->fill( entryPState->x(),
+//                                                                  entryPState->y() );
+//     richHisto2D( HID("selectedExit",rad), "Selected Exit",
+//                  -xRadExitGlo[rad], xRadExitGlo[rad], 200,
+//                  -yRadExitGlo[rad], yRadExitGlo[rad], 200 )->fill( exitPState->x(),
+//                                                                    exitPState->y() );
 
     try
     {
