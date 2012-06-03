@@ -4,6 +4,9 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2012-06-03 - Chris Jones
+ - Update a few histogram limits
+
 !========================= RichRecBase v4r12 2012-05-02 =========================
 ! 2012-04-30 - Chris Jones
  - Remove context() specific default settings for TrackSelectorBase "TrackAlgs"
