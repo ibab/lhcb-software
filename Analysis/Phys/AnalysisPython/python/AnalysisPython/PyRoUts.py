@@ -3112,7 +3112,7 @@ for t in ( ROOT.TH2F , ROOT.TH2D ) :
 
 
 ## generic
-ROOT.TF1 . scale      = _h1_scale_
+ROOT.TF1 . scale      = _h_scale_
 
     
 HStats   = cpp.Gaudi.Utils.HStats
