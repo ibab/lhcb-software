@@ -4,9 +4,6 @@
  *
  *  Header file for algorithm class : Rich::Rec::MC::TrackGeomMoni
  *
- *  CVS Log :-
- *  $Id: RichTrackGeomMoni.h,v 1.12 2007-06-01 09:03:05 cattanem Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
@@ -21,7 +18,7 @@
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
-// temporary histogramming numbers
+// histogramming numbers
 #include "RichRecBase/RichDetParams.h"
 
 // Event
