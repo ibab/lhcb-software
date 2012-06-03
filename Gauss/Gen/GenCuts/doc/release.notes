@@ -4,6 +4,14 @@
 ! Purpose     : cut tools for Gauss
 !-----------------------------------------------------------------------------
 
+! 2012-06-03 - Chris Thomas
+- DaughtersInLHCbAndCutsForDACP: generator-level cuts on:
+   . (Dst p, D0 pT) plane
+   . (Dst p - D0 p, Dst pT - D0 pT) plane
+   . D0 tau
+   . D0 flight distance from origin vertex
+   . D0 daughter p and pT
+
 !========================== GenCuts v1r5 2012-05-14 ========================== 
 ! 2012-05-10 - Gloria Corti
  - Fix run time problem with finding of ParticlePropertySvc that in Gaudi
