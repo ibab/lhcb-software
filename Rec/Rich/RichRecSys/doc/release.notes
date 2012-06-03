@@ -4,6 +4,10 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2012-06-03 - Chris Jones
+ - Remove the CK theta correction factor for Aerogel. Will be taken into
+   account in an incoming recalibration.
+
 !========================= RichRecSys v4r5 2012-04-30 =========================
 
 ! 2012-04-30 - Chris Jones

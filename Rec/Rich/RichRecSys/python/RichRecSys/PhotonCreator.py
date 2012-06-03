@@ -42,7 +42,7 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
         from Configurables import RichTools
 
         if not self.getProp("Simulation") :
-            self.richTools().photonReco().CKThetaQuartzRefractCorrections = [ -0.00625,0,0 ]
+            self.richTools().photonReco().CKThetaQuartzRefractCorrections = [ 0,0,0 ]
 
         # Context
         context = self.getProp("Context")
