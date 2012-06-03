@@ -4,9 +4,6 @@
  *
  *  Header file for tool interface : Rich::DAQ::IPixelClusteringTool
  *
- *  CVS Log :-
- *  $Id: IRichPixelClusteringTool.h,v 1.3 2007-09-04 16:45:09 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
  */

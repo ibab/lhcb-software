@@ -4,9 +4,6 @@
  *
  *  Header file for tool interface : Rich::IDetParameters
  *
- *  CVS Log :-
- *  $Id: IRichDetParameters.h,v 1.8 2007-03-09 17:58:13 jonrob Exp $
- *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
  */
