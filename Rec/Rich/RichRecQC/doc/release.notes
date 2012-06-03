@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2012-05-30 - Chris Jones
- - Fix the L0 filter for 2012
+ - Attempt to fix the L0 filter for 2012
  - Various small improvements to the HPDHitsMoni
 
 ! 2012-05-28 - Chris Jones

@@ -250,6 +250,20 @@ class RichRecQCConf(RichConfigurableUser):
             raise RuntimeError("ERROR : Unknown track selection "+tkCuts)
         return mon
 
+    ## Returns a configured list of L0 filters
+    def l0Filters(self):
+        from Configurables import ( HltDecReportsDecoder, LoKi__HDRFilter,
+                                    #L0DUFromRawAlg, LoKi__L0Filter,
+                                    GaudiSequencer )
+        return [
+                 #LoKi__L0Filter("RichL0Filter",
+                 #               Code='L0_DECISION_PHYSICS'),
+                 HltDecReportsDecoder(),
+                 LoKi__HDRFilter("RichHlt1Filter",
+                                 Code="HLT_PASS('Hlt1L0AnyDecision','Hlt1MBNoBiasDecision')"
+                                 )
+                 ]
+
     ## Check a new sequence and add to main sequence
     def newSeq(self,sequence,name):
         seq = GaudiSequencer(name)
@@ -343,14 +357,12 @@ class RichRecQCConf(RichConfigurableUser):
 
             # Data size plots, L0 unbiased events
             if not self.getProp("Simulation") :
-                from Configurables import LoKi__HDRFilter, HltDecReportsDecoder, GaudiSequencer
+                from Configurables import GaudiSequencer
                 lSeq = self.newSeq(rawSeq,"RichRawDataSizeL0Seq")
                 lSeq.ReturnOK = True
                 dataSizeL0 = self.createMonitor(Rich__DAQ__RawDataSize,"RichRawDataSizeL0")
                 dataSizeL0.FillDetailedPlots = self.getProp("Histograms") == "Expert"
-                lSeq.Members += [ HltDecReportsDecoder(),
-                                  LoKi__HDRFilter("RichDataSizeL0Filter",Code="HLT_PASS('Hlt1L0AnyDecision')"),
-                                  dataSizeL0 ]
+                lSeq.Members = self.l0Filters() + [ dataSizeL0 ]
 
         if "DBConsistencyCheck" in monitors :
             
@@ -646,17 +658,14 @@ class RichRecQCConf(RichConfigurableUser):
 
         check = "HPDHitPlots"
         if check in checks :
-            from Configurables import ( Rich__Rec__HPDHitsMoni, GaudiSequencer, 
-                                        LoKi__HDRFilter, HltDecReportsDecoder )
+            from Configurables import ( Rich__Rec__HPDHitsMoni, GaudiSequencer )
             seq = self.newSeq(sequence,check)
             seq.IgnoreFilterPassed = True
             seq.Members += [ Rich__Rec__HPDHitsMoni("HPDHitsMoni") ]
             if not self.getProp("Simulation") :
                 lSeq = self.newSeq(seq,check+"L0")
                 lSeq.ReturnOK = True
-                lSeq.Members += [ HltDecReportsDecoder(),
-                                  LoKi__HDRFilter("HPDHitL0Filter",Code="HLT_PASS('Hlt1L0AnyDecision')"),
-                                  Rich__Rec__HPDHitsMoni("HPDL0HitsMoni") ]
+                lSeq.Members = self.l0Filters() + [ Rich__Rec__HPDHitsMoni("HPDL0HitsMoni") ]
 
         check = "RichTrackGeometry"
         if check in checks :
