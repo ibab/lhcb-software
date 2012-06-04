@@ -30,6 +30,11 @@
  *  @date   2012-05-26
  */
 // =============================================================================
+#ifdef __INTEL_COMPILER                                   // Disable ICC remark
+//            floating-point equality and inequality comparisons are unreliable
+#pragma warning(disable:1572) 
+#endif
+// ============================================================================
 namespace 
 {
   // ==========================================================================
@@ -84,8 +89,7 @@ namespace
   public:
     // ========================================================================
     const gsl_vector* solution   () const { return m_solution   ; }
-    const gsl_vector* gradient   () const { return m_gradient   ; }    
-    const gsl_matrix* hessian    () const { return m_hessian    ; }    
+    // const gsl_matrix* hessian    () const { return m_hessian    ; }    
     const gsl_matrix* covariance () const { return m_covariance ; }    
     // ========================================================================
   public:
@@ -110,8 +114,6 @@ namespace
     // ========================================================================
     /// the solution 
     gsl_vector* m_solution   ;  // the current solution 
-    /// the gradient 
-    gsl_vector* m_gradient   ;  // the gradient 
     /// the hessian 
     gsl_matrix* m_hessian    ;  // the hessian 
     /// the covariance 
@@ -410,8 +412,8 @@ namespace
     , m_calls_df     ( 0 ) 
     , m_calls_fdf    ( 0 ) 
     , m_calls_fdfddf ( 0 ) 
+    , m_points       ( 0 ) 
     , m_solution     ( 0 ) 
-    , m_gradient     ( 0 )
     , m_hessian      ( 0 )
     , m_covariance   ( 0 )
     , m_chi2         ( s_Inf )
@@ -425,8 +427,6 @@ namespace
     /// free allocated vectors & matrices 
     if ( 0 != m_solution   ) 
     { gsl_vector_free ( m_solution   ) ; m_solution   = 0 ; }
-    if ( 0 != m_gradient   ) 
-    { gsl_vector_free ( m_gradient   ) ; m_gradient   = 0 ; }
     if ( 0 != m_hessian    ) 
     { gsl_matrix_free ( m_hessian    ) ; m_hessian    = 0 ; }
     if ( 0 != m_covariance ) 

@@ -24,7 +24,6 @@
 // ============================================================================
 // Boost
 // ============================================================================
-
 #include "boost/format.hpp"
 #include "boost/math/special_functions/fpclassify.hpp"
 // ============================================================================
@@ -33,6 +32,11 @@
  *  @date 2009-06-03
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  */
+// ============================================================================
+#ifdef __INTEL_COMPILER                                   // Disable ICC remark
+//            floating-point equality and inequality comparisons are unreliable
+#pragma warning(disable:1572) 
+#endif
 // ============================================================================
 // local namespace to hide the details
 // ============================================================================

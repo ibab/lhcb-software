@@ -124,7 +124,7 @@ namespace
     // 
     const double h0  = 0.25 * h ;
     //
-    double values[8]  ;
+    double values[9]  ;
     //
     values [ 0 ] = GSL_FN_EVAL ( f , x - 4 * h0 ) ;
     values [ 1 ] = GSL_FN_EVAL ( f , x - 3 * h0 ) ;
