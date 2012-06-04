@@ -23,7 +23,7 @@
       <location name="IT"      place="MC/IT/Hits"      />
       <location name="OT"      place="MC/OT/Hits"      />
       <location name="Muon"    place="MC/Muon/Hits"    />
-      
+      <location name="FT"      place="MC/FT/Hits"      />
       <attribute
        desc="Sensitive detector identifier, its meaning is different for each sub-detector"
        name="sensDetID"
