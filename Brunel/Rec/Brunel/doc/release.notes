@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+- Changes to configurable
+  . HltRecReports now decoded unconditionally on every event
+  . L0DU now decoded unconditionally on every physics event
+
 - Changes to references to reflect changes since v42r3p1
   . Reduce the chi^2 range from 0-10 to 0-3, to adapt to tracking changes. Reduce
     the 'tight' track monitoring selection to chi^2 < 2 (RichRecQC)
@@ -10,6 +14,9 @@ Purpose: LHCb reconstruction program
   . Bug fix in FastVelo beam splash handling (FastVelo)
   . Enable by default the resolution plots per PD column (RichRecQC)
   . Fix unprotected debugs (DAQUtils)
+  . Remove CK theta correction factor for Aerogel, taken care of in calibration
+    (RichRecSys)
+  . Update L0Filters for Rich monitoring (RichRecQC)
 
 - Changes to tests
   . Add a test for bug #94407 in brunel.2012-crashes

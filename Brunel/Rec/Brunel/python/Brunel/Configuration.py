@@ -284,19 +284,20 @@ class Brunel(LHCbConfigurableUser):
             #brunelSeq.Members += [ lumiSeq ]
 
         # Do not process events flagged as error in Hlt, but still write procstatus
+        from Configurables import HltDecReportsDecoder
         if vetoHltErrorEvents:
             """
             By Patrick Koppenburg, 16/6/2011
             """
-            from Configurables import LoKi__HDRFilter, HltDecReportsDecoder, AddToProcStatus
+            from Configurables import LoKi__HDRFilter, AddToProcStatus
             # identifies events that are not of type Hlt1ErrorEvent or Hlt2ErrorEvent
             filterCode = "HLT_PASS_RE('Hlt1(?!ErrorEvent).*Decision') & HLT_PASS_RE('Hlt2(?!ErrorEvent).*Decision')"  # from Gerhard
             hltErrorFilter = LoKi__HDRFilter('HltErrorFilter', Code = filterCode )   # the filter
             # Make a sequence that selects these events
-            hltfilterSeq = GaudiSequencer( "HltfilterSeq" )
+            hltfilterSeq = GaudiSequencer( "HltFilterSeq" )
             if handleLumi: hltfilterSeq.Members = [ physFilter ]         # protect against lumi (that doesn't have decreports)
-            hltfilterSeq.Members += [HltDecReportsDecoder(),             # decode DecReports
-                                     hltErrorFilter  ]                   # apply filter
+            hltfilterSeq.Members += [ HltDecReportsDecoder(),            # decode DecReports
+                                      hltErrorFilter ]                   # apply filter
             # Sequence to be executed if hltErrorFilter is failing to set ProcStatus
             hlterrorSeq = GaudiSequencer("HltErrorSeq", ModeOR = True, ShortCircuit = True) # anti-logic
             addToProc = AddToProcStatus("HltErrorProc",Reason="HltError",Subsystem="Hlt")   # write a procstatus
@@ -306,17 +307,24 @@ class Brunel(LHCbConfigurableUser):
 
         # Convert Calo 'packed' banks to 'short' banks if needed
         physicsSeq.Members += ["GaudiSequencer/CaloBanksHandler"]
-
-        # Setup L0 filtering if requested, runs L0 before Reco
-        if self.getProp("RecL0Only"):
-            l0TrgSeq = GaudiSequencer("L0TriggerSeq")
-            physicsSeq.Members += [ l0TrgSeq ]
-            L0Conf().L0Sequencer = l0TrgSeq
-            L0Conf().FilterL0FromRaw = True
-            L0Conf().RawEventLocations = ["DAQ/RawEvent"]
-            self.setOtherProps( L0Conf(), ["DataType"] )
-
         importOptions("$CALODAQROOT/options/CaloBankHandler.opts")
+
+        # Decode L0 (and HLT if not already done)
+        trgSeq = GaudiSequencer("DecodeTriggerSeq")
+        l0TrgSeq = GaudiSequencer("L0TriggerSeq")
+        if self.getProp( "DataType" ) not in [ "2008", "2009" ]:
+            trgSeq.Members += [ HltDecReportsDecoder() ]
+        trgSeq.Members += [ l0TrgSeq ]
+        physicsSeq.Members += [ trgSeq ]
+        L0Conf().L0Sequencer = l0TrgSeq
+        L0Conf().RawEventLocations = ["DAQ/RawEvent"]
+        if self.getProp("RecL0Only"):
+            # Setup L0 filtering if requested, runs L0 before Reco
+            L0Conf().FilterL0FromRaw = True
+            self.setOtherProps( L0Conf(), ["DataType"] )
+        else:
+            L0Conf().DecodeL0DU = True
+
         if not self.isPropertySet("MainSequence"):
             if withMC:
                 mainSeq = self.DefaultMCSequence

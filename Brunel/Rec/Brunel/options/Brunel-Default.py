@@ -15,6 +15,7 @@ from Configurables import Brunel
 
 # Just instantiate the configurable...
 theApp = Brunel()
+Brunel.RecL0Only=True;
 
 ###############################################################################
 # I/O datasets are defined in a separate file, see examples in 2008-TED-Data.py

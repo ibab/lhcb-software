@@ -9,6 +9,6 @@
   </set></argument>
   <argument name="validator"><text>
 from Brunel.QMTest.BrunelExclusions import preprocessor
-countErrorLines({"FATAL":0, "WARNING":2, "ERROR":2})
+countErrorLines({"FATAL":0, "WARNING":2, "ERROR":12})
 </text></argument>
 </extension>
