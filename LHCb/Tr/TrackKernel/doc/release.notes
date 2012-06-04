@@ -4,6 +4,11 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-06-04 - Wouter Hulsbergen
+ - Two changes to TrackStateVertex:
+   - now copies input states rather than keeping pointers
+   - particles with negative masshypo will be ignored for p4
+
 !========================= TrackKernel v1r9p1 2012-03-27 =========================
 
 ! 2012-03-27 - Wouter Hulsbergen

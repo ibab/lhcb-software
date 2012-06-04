@@ -54,6 +54,9 @@ namespace LHCb
     /// add a track. invalidates any existing fit. (call 'fit' afterwards)
     void addTrack( const LHCb::State& state ) { addTrack(state,state.stateVector()) ; }
     
+    /// Set the input state for track i. invalidates any existing fit. (call 'fit' afterwards)
+    void setTrack( size_t i, const LHCb::State& state ) { setInputState(i,state) ; }
+
     /// fit a single iteration. returns the delta-chisquare.
     double fitOneStep() ;
 
@@ -84,6 +87,8 @@ namespace LHCb
     LHCb::State stateAtVertex(size_t i) const ;
     /// Input state for track i
     const LHCb::State& inputState(size_t i) const ;
+    /// Set the input state for track i
+    void setInputState( size_t i, const LHCb::State& state ) ;
     /// Position of the vertex
     Gaudi::XYZPoint position() const { return Gaudi::XYZPoint(m_pos(0),m_pos(1),m_pos(2)) ; }
     /// Position covariance of the vertex
