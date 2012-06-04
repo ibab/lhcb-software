@@ -124,6 +124,13 @@ LoKi::Numbers::EvtNumList::EvtNumList
   evt_list::iterator i = std::unique( m_list.begin() , m_list.end() ) ;
   m_list.erase ( i ,  m_list.end() ) ;
 }
+// =============================================================================
+// EvtNumList 
+// =============================================================================
+LoKi::Numbers::EvtNumList::EvtNumList
+( const LoKi::Numbers::EvtNum& evt ) 
+  : m_list ( 1 , evt ) 
+{}
 // ============================================================================
 // append 
 // ============================================================================
@@ -206,6 +213,7 @@ Gaudi::Parsers::parse
   Events events  ;
   StatusCode sc = parse_ ( events , input ) ;
   // 
+  
   result = LoKi::Numbers::EvtNumList ( events );
   //
   return sc ;
@@ -214,9 +222,17 @@ Gaudi::Parsers::parse
 // RunEvt-pair 
 // =============================================================================
 LoKi::Numbers::RunEvt::RunEvt
-( LoKi::Numbers::RunEvt::run_type run , 
-  LoKi::Numbers::RunEvt::evt_type evt ) 
+( const LoKi::Numbers::RunEvt::run_type run , 
+  const LoKi::Numbers::RunEvt::evt_type evt ) 
   : m_pair ( run , evt ) 
+{}
+// =============================================================================
+// RunEvt-pair 
+// =============================================================================
+LoKi::Numbers::RunEvt::RunEvt
+( const LoKi::Numbers::RunEvt::run_type run , 
+  const LoKi::Numbers::EvtNum::evt_type evt ) 
+  : m_pair ( run , LoKi::Numbers::EvtNum ( evt ) ) 
 {}
 // ============================================================================
 // hash 
@@ -269,6 +285,13 @@ LoKi::Numbers::RunEvtList::RunEvtList
   runevt_list::iterator i = std::unique( m_list.begin() , m_list.end() ) ;
   m_list.erase ( i ,  m_list.end() ) ;
 }
+// =============================================================================
+// RunEvtList
+// =============================================================================
+LoKi::Numbers::RunEvtList::RunEvtList
+( const LoKi::Numbers::RunEvt& evt  )  
+  : m_list ( 1 , evt  )  
+{}
 // ============================================================================
 // hash 
 // ============================================================================
@@ -344,38 +367,53 @@ Gaudi::Parsers::parse
   //
   return sc ;
 }
-// ============================================================================
+// ===============================================================================
 // respect python 
 // ============================================================================
 LoKi::Numbers::EvtNumList 
 LoKi::Numbers::add1 
 ( const LoKi::Numbers::EvtNum&     e1 , 
   const LoKi::Numbers::EvtNumList& e2 ) { return e1 + e2 ; }
+//
 LoKi::Numbers::EvtNumList 
 LoKi::Numbers::add1 
 ( const LoKi::Numbers::EvtNumList& e1 , 
   const LoKi::Numbers::EvtNum&     e2 ) { return e1 + e2 ; }
+//
 LoKi::Numbers::EvtNumList 
 LoKi::Numbers::add1 
 ( const LoKi::Numbers::EvtNumList& e1 , 
   const LoKi::Numbers::EvtNumList& e2 ) { return e1 + e2 ; }
+//
 LoKi::Numbers::EvtNumList
 LoKi::Numbers::add1 
 ( const LoKi::Numbers::EvtNumList& e1 , 
   LoKi::Numbers::EvtNum::evt_type  e2 ) { return e1 + e2 ; }
+//
+LoKi::Numbers::EvtNumList 
+LoKi::Numbers::add1 
+( const LoKi::Numbers::EvtNum&     e1 , 
+  const LoKi::Numbers::EvtNum&     e2 ) { return EvtNumList ( e1 )  + e2 ; }
 // =============================================================================
 LoKi::Numbers::RunEvtList 
 LoKi::Numbers::add2 
 ( const LoKi::Numbers::RunEvt&     e1 , 
   const LoKi::Numbers::RunEvtList& e2 ) { return e1 + e2 ; }
+//
 LoKi::Numbers::RunEvtList 
 LoKi::Numbers::add2 
 ( const LoKi::Numbers::RunEvtList& e1 , 
   const LoKi::Numbers::RunEvt&     e2 ) { return e1 + e2 ; }
+// 
 LoKi::Numbers::RunEvtList 
 LoKi::Numbers::add2 
 ( const LoKi::Numbers::RunEvtList& e1 , 
   const LoKi::Numbers::RunEvtList& e2 ) { return e1 + e2 ; }
+// 
+LoKi::Numbers::RunEvtList 
+LoKi::Numbers::add2 
+( const LoKi::Numbers::RunEvt&     e1 , 
+  const LoKi::Numbers::RunEvt&     e2 ) { return e1 + e2 ; }
 // =============================================================================
 // The END 
 // =============================================================================

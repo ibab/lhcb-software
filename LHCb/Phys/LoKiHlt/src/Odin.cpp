@@ -420,8 +420,8 @@ LoKi::Odin::RunEvtNumber::RunEvtNumber
   const LoKi::Odin::RunEvtNumber::evt_type evt ) 
   : LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
   , m_flag    ( One ) 
-  , m_begin   ( run , evt     ) 
-  , m_end     ( run , evt + 1 ) 
+  , m_begin   ( run , evt           ) 
+  , m_end     ( run , evt.evt() + 1 ) 
   , m_runevts (     ) 
 {}
 // ============================================================================

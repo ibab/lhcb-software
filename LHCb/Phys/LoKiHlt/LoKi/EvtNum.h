@@ -110,6 +110,7 @@
     public:
       // =======================================================================
       EvtNumList ( const evt_list& evts = evt_list()  ) ;
+      EvtNumList ( const EvtNum&   evt                ) ;
       // =======================================================================
       std::size_t    size  () const { return m_list.size  () ; }
       bool           empty () const { return m_list.empty () ; }
@@ -153,7 +154,8 @@
       // ======================================================================
     public:
       // ======================================================================
-      RunEvt ( run_type r = 0 , evt_type e = evt_type() ) ;
+      RunEvt ( const run_type r = 0 , const evt_type         e = evt_type() ) ;
+      RunEvt ( const run_type r     , const EvtNum::evt_type e              ) ;
       // ======================================================================      
     public:
       // ======================================================================      
@@ -207,6 +209,7 @@
     public:
       // =======================================================================
       RunEvtList ( const runevt_list& lst = runevt_list() ) ;
+      RunEvtList ( const RunEvt&      evt                 ) ;
       // =======================================================================
       std::size_t size  () const { return m_list.size  () ; }
       bool        empty () const { return m_list.empty () ; }
@@ -290,16 +293,24 @@
     RunEvtList operator+( const RunEvt&     e1 , const RunEvtList&  e2 )
     { return e2 + e1 ; }
     // =========================================================================
+    inline 
+    RunEvtList operator+( const RunEvt&     e1 , const RunEvt&      e2 )
+    { return RunEvtList ( e1 ) + e2  ; }
+    // =========================================================================
     // for python 
     // =========================================================================
     GAUDI_API 
     EvtNumList add1 ( const EvtNum&     e1 , const EvtNumList& e2 ) ;
+    GAUDI_API 
+    EvtNumList add1 ( const EvtNum&     e1 , const EvtNum&     e2 ) ;
     GAUDI_API 
     EvtNumList add1 ( const EvtNumList& e1 , const EvtNum&     e2 ) ;
     GAUDI_API 
     EvtNumList add1 ( const EvtNumList& e1 , const EvtNumList& e2 ) ;
     GAUDI_API 
     EvtNumList add1 ( const EvtNumList& e1 , EvtNum::evt_type  e2 ) ;
+    GAUDI_API 
+    RunEvtList add2 ( const RunEvt&     e1 , const RunEvt&     e2 ) ;
     GAUDI_API 
     RunEvtList add2 ( const RunEvt&     e1 , const RunEvtList& e2 ) ;
     GAUDI_API 

@@ -4,6 +4,9 @@
 ! Purpose     : collection of functors&factory for HLT 
 ! -----------------------------------------------------------------------------
 
+! 2012-06-04 - Vanya Belyaev
+ - minor improvement in treatment of event numbers 
+
 !========================= LoKiHlt v3r9 2012-05-02 =========================
 ! 2012-04-03 - Vanya Belyaev
  - ODIN_EVT1
