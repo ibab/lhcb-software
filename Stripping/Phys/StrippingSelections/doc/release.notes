@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-06-04 - Marcin Kucharczyk
+ - Change particle container in StrippingInclbJets.py
+
 ! 2012-05-15 - Ricardo Vazquez Gomez
  - Remove the CaloClusterization on the StrippingB2XGamma.py as it kills 
    the smartRef when cloning the CaloHypo already stored on DST

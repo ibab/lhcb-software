@@ -15,7 +15,7 @@ from CommonParticles.Utils import *
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from PhysSelPython.Wrappers import Selection, DataOnDemand
-from StandardParticles import StdNoPIDsPions, StdNoPIDsDownPions
+from StandardParticles import StdAllNoPIDsPions
 from StandardParticles import StdLooseAllPhotons
 
 __all__ = ('InclbJetsLinesConf',
@@ -67,7 +67,7 @@ class InclbJetsLinesConf(LineBuilder) :
         selectionAlg.SumMomSV = self.__confdict__['SumMomSVCut']
         selectionAlg.VtxChi2 = self.__confdict__['VtxChi2Cut']
         return Selection("Sel" + name, Algorithm = selectionAlg,
-                         RequiredSelections = [StdNoPIDsPions, StdNoPIDsDownPions, StdLooseAllPhotons])
+                         RequiredSelections = [StdAllNoPIDsPions, StdLooseAllPhotons])
 
     def _makeInclbJetLine(self, name):
         return StrippingLine(name ,
