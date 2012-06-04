@@ -72,7 +72,7 @@ StatusCode HltL0CaloCandidates::execute() {
   // Create containers
   // Loop over candidates
   double etMax = -1.;
-  L0CaloCandidates* candidates = get<L0CaloCandidates>( m_l0loc );
+  const L0CaloCandidates* candidates = get<L0CaloCandidates>( m_l0loc );
 
   // counters
   int nc=0;
@@ -92,7 +92,8 @@ StatusCode HltL0CaloCandidates::execute() {
 
   std::vector<LHCb::CaloCellID> ids;
 
-  std::stable_sort   ( candidates->begin(),candidates->end(),SortL0CaloByEt());
+  // no longer needed (done when producing the candidate on TES)
+  // std::stable_sort   ( candidates->begin(),candidates->end(),SortL0CaloByEt());
   
 
   BOOST_FOREACH(const L0CaloCandidate* calo, *candidates) {
