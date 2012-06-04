@@ -5,6 +5,9 @@
 ! Package manager: Stefan Roiser
 !--------------------------------------------------------------------------------
 
+! 2012-06-04 - Marco Clemencic
+ - Corrected indentation of Python files (with reindent.py).
+
 ! 2012-05-31 - Marco Clemencic
  - Reorganized the package to conform to the standard structure for python
    modules and scripts.

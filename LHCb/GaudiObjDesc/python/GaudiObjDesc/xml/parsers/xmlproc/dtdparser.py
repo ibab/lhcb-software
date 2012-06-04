@@ -497,11 +497,11 @@ class DTDParser(XMLCommonParser):
             elif self.now_at("#REQUIRED"):
                 a_decl="#REQUIRED"
                 a_def=None
-	    elif self.now_at("#FIXED"):
-		self.skip_ws(1)
-		a_decl = "#FIXED"
-		a_def = self.parse_ent_repltext()
-	    else:
+            elif self.now_at("#FIXED"):
+                self.skip_ws(1)
+                a_decl = "#FIXED"
+                a_def = self.parse_ent_repltext()
+            else:
                 self.report_error(3909)
                 a_decl = None
                 a_def = None

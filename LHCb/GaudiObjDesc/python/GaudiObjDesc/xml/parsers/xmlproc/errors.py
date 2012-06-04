@@ -610,7 +610,7 @@ spanish = {
     3012: "No se permite una declaración 'standalone' en una declaración de texto",
     3045: "Los nombres de PI que comienzan por 'xml' están reservados",
     3046: "Versión XML no soportada",
-    
+
     # From xmlproc.XMLProcessor
     3013: "Construcción ilegal",
     3014: "El documento acabó prematuramente. No se cerró el elemento '%s'",
@@ -646,7 +646,7 @@ spanish = {
     3043: "Sección condicional sin cerrar",
     3044: "Se definió el símbolo '%s' más de una vez",
     # next: 3049
-    
+
     # From regular expressions that were not matched
     3900: "No es un nombre válido",
     3901: "No es un número de versión válido (%s)",
@@ -659,7 +659,7 @@ spanish = {
     3909: "No es una definición de atributo por defecto válida",
     3910: "No es un valor de atributo enumerado válido",
     3911: "No es una declaración 'standalone' válida",
-    
+
     # --- Internal errors: 4000-4999
     4000: "Error interno: Pila de la entidad corrupta",
     4001: "Error interno: Se esperaba una referencia a entidad.",
@@ -669,7 +669,7 @@ spanish = {
     # --- XCatalog errors: 5000-5099
     5000: "Elemento XCatalog desconocido: %s.",
     5001: "Falta el atributo XCatalog %s necesario en %s.",
-     
+
     # --- SOCatalog errors: 5100-5199
     5100: "Construcción inválida o no soportada: %s.",
     }

@@ -338,10 +338,10 @@ class XMLProcessor(XMLCommonParser):
         else:
             self.pos=self.pos+1
 
-	try:
+        try:
             elem = self.stack[-1]
             if name != elem:
-		self.report_error(3023,(name,elem))
+                self.report_error(3023,(name,elem))
 
                 # Let's do some guessing in case we continue
                 if len(self.stack)>0 and self.stack[-1]==name:

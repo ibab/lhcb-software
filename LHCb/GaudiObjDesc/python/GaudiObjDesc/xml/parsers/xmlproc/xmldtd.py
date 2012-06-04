@@ -315,11 +315,11 @@ class ElementType:
         return self.content_model["start"]
 
     def final_state(self, state):
-	"True if 'state' is a final state."
-	return self.content_model["final"] & state
-	
+        "True if 'state' is a final state."
+        return self.content_model["final"] & state
+
     def next_state(self, state, elem_name):
-	"""Returns the next state of the content model from the given one
+        """Returns the next state of the content model from the given one
         when elem_name is encountered. Character data is represented as
         '#PCDATA'. If 0 is returned the element is not allowed here or if
         the state is unknown."""

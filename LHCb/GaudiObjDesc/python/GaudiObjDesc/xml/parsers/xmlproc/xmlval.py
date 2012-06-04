@@ -171,9 +171,9 @@ class ValidatingApp(Application):
         self.realapp.set_locator(locator)
 
     def handle_start_tag(self,name,attrs):
-	decl_root = self.dtd.get_root_elem()
-	
-	if self.cur_elem != None:
+        decl_root = self.dtd.get_root_elem()
+
+        if self.cur_elem != None:
             if self.cur_state != -1:
                 next = self.cur_elem.next_state(self.cur_state, name)
                 if next == 0:
@@ -189,35 +189,35 @@ class ValidatingApp(Application):
                 else:
                     self.cur_state = next
 
-	    self.stack.append((self.cur_elem, self.cur_state))
-            
-	elif (not self._seen_root) and decl_root != None and name != decl_root:
-	    self.parser.report_error(2002,name)
+            self.stack.append((self.cur_elem, self.cur_state))
+
+        elif (not self._seen_root) and decl_root != None and name != decl_root:
+            self.parser.report_error(2002,name)
 
         self._seen_root = 1
-	try:
-	    self.cur_elem = self.dtd.get_elem(name)
+        try:
+            self.cur_elem = self.dtd.get_elem(name)
             self.cur_state = self.cur_elem.get_start_state()
-	    self.validate_attributes(self.dtd.get_elem(name), attrs)
-	except KeyError:
-	    self.parser.report_error(2003, name)
-	    self.cur_state = -1
+            self.validate_attributes(self.dtd.get_elem(name), attrs)
+        except KeyError:
+            self.parser.report_error(2003, name)
+            self.cur_state = -1
 
-	self.realapp.handle_start_tag(name, attrs)
-	
+        self.realapp.handle_start_tag(name, attrs)
+
     def handle_end_tag(self,name):
-	"Notifies the application of end tags (and empty element tags)."
-	if self.cur_elem != None and \
-	   not self.cur_elem.final_state(self.cur_state):
+        "Notifies the application of end tags (and empty element tags)."
+        if self.cur_elem != None and \
+           not self.cur_elem.final_state(self.cur_state):
 
             valid = self.cur_elem.get_valid_elements(self.cur_state)
-	    self.parser.report_error(2004, (name, string.join(valid, ", ")))
-	
-	self.realapp.handle_end_tag(name)
+            self.parser.report_error(2004, (name, string.join(valid, ", ")))
 
-	if self.stack!=[]:
-	    (self.cur_elem,self.cur_state)=self.stack[-1]
-	    del self.stack[-1]
+        self.realapp.handle_end_tag(name)
+
+        if self.stack!=[]:
+            (self.cur_elem,self.cur_state)=self.stack[-1]
+            del self.stack[-1]
 
 
 
@@ -243,14 +243,14 @@ class ValidatingApp(Application):
         """Validates the attributes against the element declaration and adds
         fixed and default attributes."""
 
-	# Check the values of the present attributes
-	for attr in attrs.keys():
-	    try:
-		decl = element.get_attr(attr)
-	    except KeyError:
-		self.parser.report_error(2006, attr)
+        # Check the values of the present attributes
+        for attr in attrs.keys():
+            try:
+                decl = element.get_attr(attr)
+            except KeyError:
+                self.parser.report_error(2006, attr)
                 continue
-        
+
             if decl.type!="CDATA":
                 attrs[attr]=string.join(string.split(attrs[attr]))
 

@@ -17,7 +17,7 @@ except ImportError, e:
     # if we are on Python 1.5
     def EncodedFile(file, encoding):
         return file
-    
+
 # --- XMLParseException
 
 class XMLParseException(Exception):
@@ -175,7 +175,7 @@ class DocGenerator(xmlapp.Application):
             self.out = EncodedFile(sys.stdout, "utf-8")
         else:
             self.out = out
-    
+
     def handle_pi(self, target, remainder):
         self.out.write("<?%s %s?>" % (target, remainder))
 
@@ -212,7 +212,7 @@ class DictResolver(xmlapp.PubIdResolver):
 
     def resolve_entity_pubid(self, pubid, sysid):
         return self.mapping.get(pubid, sysid)
-    
+
 # --- Location
 
 class Location:
@@ -233,7 +233,7 @@ class Location:
 
     def __str__(self):
         return "%s:%s:%s" % (self._sysid, self._line, self._column)
-    
+
 # --- Various DTD and validation tools
 
 def load_dtd(sysid):

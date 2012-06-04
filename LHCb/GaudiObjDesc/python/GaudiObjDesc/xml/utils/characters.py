@@ -14,67 +14,67 @@ Nmtokens = Nmtoken+'('+S+Nmtoken+')*'
 import re
 _re_BaseChar = None
 def re_BaseChar():
-  global _re_BaseChar
-  if _re_BaseChar is None:
-    _re_BaseChar = re.compile(BaseChar)
-  return _re_BaseChar
+    global _re_BaseChar
+    if _re_BaseChar is None:
+        _re_BaseChar = re.compile(BaseChar)
+    return _re_BaseChar
 _re_Ideographic = None
 def re_Ideographic():
-  global _re_Ideographic
-  if _re_Ideographic is None:
-    _re_Ideographic = re.compile(Ideographic)
-  return _re_Ideographic
+    global _re_Ideographic
+    if _re_Ideographic is None:
+        _re_Ideographic = re.compile(Ideographic)
+    return _re_Ideographic
 _re_CombiningChar = None
 def re_CombiningChar():
-  global _re_CombiningChar
-  if _re_CombiningChar is None:
-    _re_CombiningChar = re.compile(CombiningChar)
-  return _re_CombiningChar
+    global _re_CombiningChar
+    if _re_CombiningChar is None:
+        _re_CombiningChar = re.compile(CombiningChar)
+    return _re_CombiningChar
 _re_Digit = None
 def re_Digit():
-  global _re_Digit
-  if _re_Digit is None:
-    _re_Digit = re.compile(Digit)
-  return _re_Digit
+    global _re_Digit
+    if _re_Digit is None:
+        _re_Digit = re.compile(Digit)
+    return _re_Digit
 _re_Extender = None
 def re_Extender():
-  global _re_Extender
-  if _re_Extender is None:
-    _re_Extender = re.compile(Extender)
-  return _re_Extender
+    global _re_Extender
+    if _re_Extender is None:
+        _re_Extender = re.compile(Extender)
+    return _re_Extender
 _re_Letter = None
 def re_Letter():
-  global _re_Letter
-  if _re_Letter is None:
-    _re_Letter = re.compile(Letter)
-  return _re_Letter
+    global _re_Letter
+    if _re_Letter is None:
+        _re_Letter = re.compile(Letter)
+    return _re_Letter
 _re_NameChar = None
 def re_NameChar():
-  global _re_NameChar
-  if _re_NameChar is None:
-    _re_NameChar = re.compile(NameChar)
-  return _re_NameChar
+    global _re_NameChar
+    if _re_NameChar is None:
+        _re_NameChar = re.compile(NameChar)
+    return _re_NameChar
 _re_Name = None
 def re_Name():
-  global _re_Name
-  if _re_Name is None:
-    _re_Name = re.compile(Name)
-  return _re_Name
+    global _re_Name
+    if _re_Name is None:
+        _re_Name = re.compile(Name)
+    return _re_Name
 _re_Names = None
 def re_Names():
-  global _re_Names
-  if _re_Names is None:
-    _re_Names = re.compile(Names)
-  return _re_Names
+    global _re_Names
+    if _re_Names is None:
+        _re_Names = re.compile(Names)
+    return _re_Names
 _re_Nmtoken = None
 def re_Nmtoken():
-  global _re_Nmtoken
-  if _re_Nmtoken is None:
-    _re_Nmtoken = re.compile(Nmtoken)
-  return _re_Nmtoken
+    global _re_Nmtoken
+    if _re_Nmtoken is None:
+        _re_Nmtoken = re.compile(Nmtoken)
+    return _re_Nmtoken
 _re_Nmtokens = None
 def re_Nmtokens():
-  global _re_Nmtokens
-  if _re_Nmtokens is None:
-    _re_Nmtokens = re.compile(Nmtokens)
-  return _re_Nmtokens
+    global _re_Nmtokens
+    if _re_Nmtokens is None:
+        _re_Nmtokens = re.compile(Nmtokens)
+    return _re_Nmtokens
