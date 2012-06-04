@@ -197,6 +197,7 @@ namespace LHCb  {
 //====================================================================
 #include "GaudiKernel/SvcFactory.h"
 #include "MDF/RawEventHelpers.h"
+#include <cerrno>
 
 namespace LHCb {
   // Backwards component compatibility
@@ -296,11 +297,11 @@ StatusCode MBMContext::convertMEP(const MBM::EventDesc& e)  {
   if ( m_events.empty() )   {
     MEPEvent* event = (MEPEvent*)ev->data;
     if ( ev->magic != mep_magic_pattern() )  {
-      m_sel->error("Bad MEP magic pattern!!!!");
+      throw runtime_error("Bad MEP magic pattern!!!!");
     }
     decodeMEP2EventFragments(event, pid, m_events);
     if ( m_events.empty() )  {
-      m_sel->error("Bad MEP received. No sub-events !!!!");
+      throw runtime_error("Bad MEP received. No sub-events !!!!");
     }
     for(size_t evID=1; evID<=m_events.size(); ++evID)  {
       ev->events[evID].begin  = long(ev)-long(m_mepStart);
@@ -364,7 +365,7 @@ StatusCode MBMContext::receiveEvent()  {
       }
       // The event is a MEP with multiple events, which must be decoded:
       else if ( m_sel->mustDecode() && e.type == EVENT_TYPE_MEP )  {
-	return convertMEP(e);
+        return convertMEP(e);
       }
       else { // Or: simple case data are data - as it should be
         m_evdesc.setPartitionID(m_consumer->partitionID());
@@ -379,17 +380,22 @@ StatusCode MBMContext::receiveEvent()  {
     catch(const exception& e)  {
       string err = e.what();
       m_sel->error("Failed to read next event:"+err);
+      // We only allow for a max of max_retry consecutive bad entries from MBM
+      // Otherwise things are bad!
       if ( max_retry-- > 0 )  {
 	if (err.substr(0,9)  == "Bad magic" ||
+            err.substr(0,7)  == "Bad MEP"   ||
 	    err.substr(0,12) == "Unknown Bank" ) {
 	  freeEvent();
 	  goto Retry;
 	}
       }
       m_sel->error("Maximum number of retries exceeded. Giving up...");
+      ::exit(EILSEQ);
     }
     catch(...)  {
       m_sel->error("Failed to read next event - Unknown exception.");
+      ::exit(EILSEQ);
     }
   }
   return StatusCode::FAILURE;
