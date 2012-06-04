@@ -1,0 +1,10 @@
+!-----------------------------------------------------------------------------
+! Package     : FT/FTDAQ
+! Responsible : Olivier Callot
+! Purpose     : Code/Decode the FT raw data
+!-----------------------------------------------------------------------------
+
+! 2012-05-14 - Olivier Callot
+ - First minimal implementation, a coder and decoder for FT Clusters. 
+   FTRawEncoder converts FTCluster to banks.
+   FTRawDecoder converts banks to FTRawCluster, for fast processing.
