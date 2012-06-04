@@ -7,6 +7,7 @@
 
 ! 2012-06-04 - Marco Clemencic
  - Corrected indentation of Python files (with reindent.py).
+ - Fixed a minor mistake in the new godII.py script.
 
 ! 2012-05-31 - Marco Clemencic
  - Reorganized the package to conform to the standard structure for python
