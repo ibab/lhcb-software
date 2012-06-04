@@ -25,7 +25,6 @@ OfflineRateLimiter::OfflineRateLimiter( const std::string& name,
   declareProperty("HltLimiter",m_hltLimiter = "Hlt1MBNoBiasODINFilter",
                   "Reference Hlt rate limiter");
   declareProperty("Rate",m_rate = 1.,"Rate to achieve [Hz]");
-  declareProperty("ConditionRate", m_conditionRate = "NoBiasRate");
   declareProperty("UseCondition", m_useCondDB = false);
   declareProperty("FallBack", m_fallback = false);
 }

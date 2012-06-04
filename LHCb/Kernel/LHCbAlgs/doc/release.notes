@@ -4,6 +4,9 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2012-06-04 - Patrick Koppenburg
+ - OfflienRateLimiter: Remove unused property ConditionRate
+
 ! 2012-05-09 - Patrick Koppenburg
  - Bug https://savannah.cern.ch/bugs/?94262
    . New tool RateFromCondDB that egts the NoBias rate from condtions DB

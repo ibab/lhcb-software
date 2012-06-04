@@ -54,7 +54,6 @@ private:
   double m_rate ;                 ///< Target rate
   unsigned int m_tck ;            ///< Last TCK seen
   bool m_useCondDB ;              ///< Use Condition DB
-  bool m_conditionRate ;          ///< Rate in CondDB
   RateFromCondDB* m_condTriggerTool ; ///< Rate from CondDB
   bool m_fallback;                ///< Fallback to TCK if rate is zero (for instance in 2011 data)
 };
