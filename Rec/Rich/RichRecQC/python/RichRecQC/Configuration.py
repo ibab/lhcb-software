@@ -252,13 +252,14 @@ class RichRecQCConf(RichConfigurableUser):
 
     ## Returns a configured list of L0 filters
     def l0Filters(self):
-        from Configurables import ( HltDecReportsDecoder, LoKi__HDRFilter,
-                                    L0DUFromRawAlg, LoKi__L0Filter,
+        ## L0Report and HltDecReport missing in 2008 and 2009 data
+        if ( self.getProp("DataType") in ["2008","2009"] ) : return []
+
+        from Configurables import ( LoKi__HDRFilter,
+                                    LoKi__L0Filter,
                                     GaudiSequencer )
-        return [ L0DUFromRawAlg(),
-                 LoKi__L0Filter("RichL0Filter",
+        return [ LoKi__L0Filter("RichL0Filter",
                                 Code='L0_DECISION_PHYSICS'),
-                 HltDecReportsDecoder(),
                  LoKi__HDRFilter("RichHlt1Filter",
                                  Code="HLT_PASS('Hlt1L0AnyDecision','Hlt1MBNoBiasDecision')"
                                  )
