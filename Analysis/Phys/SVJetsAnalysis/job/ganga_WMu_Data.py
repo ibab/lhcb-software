@@ -4,9 +4,13 @@
 #===============================================================================
 
 # Python modules
-import os
+import os,sys
 
-DaVinciVersion   = 'v30r3'
+cwd = os.getcwd()
+cwd = cwd.split("_")
+davinci_version = (cwd[1].split("/"))[0]
+
+DaVinciVersion   = davinci_version
 my_file          = 'PFDaVinciData.py'
 thisdir          = os.path.abspath(os.path.curdir)
 my_pyFile        = thisdir + "/" + my_file

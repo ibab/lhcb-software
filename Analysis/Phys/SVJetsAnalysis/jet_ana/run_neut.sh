@@ -1,1 +1,1 @@
-./jet_ana.exe crap ../Resources/MC10/NeutMuqq/57/ZJESAllMC.root output/neutmuqq.root MC
+./jet_ana.exe crap rfio:$1/jet_ana/neutmuqq_MC10.root rfio:$1/jet_ana/output/neutmuqq.root MC

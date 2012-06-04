@@ -95,6 +95,7 @@ MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 DaVinci.UserAlgorithms += [loop]
 DaVinci.HistogramFile  = "JEShistosMC.root"
 #DaVinci.EvtMax         = 10000   ## number of events
+DaVinci.Lumi = True
 
 ## define the output N-tuple:
 NTupleSvc(Output = [ "LOOP DATAFILE='ZJESAllMC.root' OPT='NEW' TYP='ROOT'"])

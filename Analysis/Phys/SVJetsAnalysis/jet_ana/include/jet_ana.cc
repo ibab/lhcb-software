@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <vector>
 #include "TFile.h"
+#include "TRFIOFile.h"
 #include "evtsel.h"
 
 int main(int argc, char **argv){
@@ -31,9 +32,9 @@ int main(int argc, char **argv){
    if(isMC) { cout << "true"; } else { cout << "false"; }
    cout << endl;
 
-   TFile *file = new TFile(input,"read");
+   TFile *file = TFile::Open(input,"read");
 
-   TFile *savefile = new TFile(output,"recreate");
+   TFile *savefile = TFile::Open(output,"recreate");
 
    evtsel *mysel = new evtsel(config,file,savefile,isMC);
 

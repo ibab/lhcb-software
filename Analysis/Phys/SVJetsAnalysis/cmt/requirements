@@ -20,6 +20,7 @@ use               LoKiAlgo         v* Phys
 use               LoKiAlgoMC       v*  Phys 
 use               LoKiGenMC        v* Phys
 use               LoKiPhysMC       v* Phys
+use               MetaStable       v* Phys
 use               LHCbMath         v* Kernel 
 
 # macro use_LoKijets "LoKiJets     v*  Phys" WIN32 ""

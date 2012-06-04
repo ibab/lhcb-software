@@ -14,6 +14,7 @@
 #include "LoKi/VertexCast.h"
 #include "LoKi/Particles.h"
 #include "LoKi/ParticleCuts.h"
+#include "LoKi/TrackCuts.h"
 #include "LoKi/VertexCuts.h"
 #include "Kernel/IEventTupleTool.h"
 #include "LoKi/ParticleContextCuts.h"
@@ -26,6 +27,7 @@
 //#include "DoubleTopoTool.h"
 
 #include "JetUtils.h"
+#include "MuonVars.h"
 
 #include <Kernel/IJetMaker.h>
 
@@ -45,6 +47,7 @@ using namespace LoKi::Cuts;
 using namespace LoKi::Particles;
 using namespace LoKi::Vertices;
 using namespace LoKi::JetUtils;
+using namespace LoKi::Tracks;
 
 LOKI_MCALGORITHM(PFbjets)
 {
@@ -95,16 +98,24 @@ LOKI_MCALGORITHM(PFbjets)
 	// Put the number of PVs on the ntuple
 	tuple_stdpfjets->column("NRecPVs",pvs.size());
 
-	tuple_stdpfjets->farray("stdloosemuon_px",PX,
+
+	ITriggerTisTos * m_TriggerTisTosTool = tool<ITriggerTisTos>( "TriggerTisTos",this);
+	ITriggerTisTos * m_L0TriggerTisTosTool = tool<ITriggerTisTos>( "L0TriggerTisTos",this);
+	fill_muon_vars(tuple_stdpfjets, stdloosemuons, m_L0TriggerTisTosTool, m_TriggerTisTosTool);
+
+	/*tuple_stdpfjets->farray("stdloosemuon_px",PX,
 			"stdloosemuon_py",PY,
 			"stdloosemuon_pz",PZ,
 			"stdloosemuon_e",E,stdloosemuons.begin(),stdloosemuons.end(),"NMaxMuons",10000);
 	tuple_stdpfjets->farray("stdloosemuon_pdgid",ID,
 			"stdloosemuon_bpvvz",BPV(VZ),
+			"stdloosemuon_PERR2",PERR2,
 			"stdloosemuon_chi2dof",TRCHI2DOF,stdloosemuons.begin(),stdloosemuons.end(),"NMaxMuons",10000);
 
+	tuple_stdpfjets->farray("stdloosemuon_TrPROBCHI2",TRFUN(TrPROBCHI2),stdloosemuons.begin(),stdloosemuons.end(),"NMaxMuons",10000);
 	tuple_stdpfjets->farray("stdloosemuon_ECAL_E",ECAL_E,stdloosemuons.begin(),stdloosemuons.end(),"NMaxMuons",10000);
 	tuple_stdpfjets->farray("stdloosemuon_HCAL_E",HCAL_E,stdloosemuons.begin(),stdloosemuons.end(),"NMaxMuons",10000);
+	 */
 
 	tuple_stdpfjets->farray("fatjet_px",PX,
 			"fatjet_py",PY,
@@ -179,7 +190,6 @@ LOKI_MCALGORITHM(PFbjets)
 //  tuple_stdpfjets->farray("trk_bestpvz",trk_bestpvz,"NMaxTrks",10000);
 //   tuple_stdpfjets->farray("trk_eta",trk_eta,"NMaxTrks",10000);
 
-  ITriggerTisTos * m_TriggerTisTosTool = tool<ITriggerTisTos>( "TriggerTisTos",this);
   std::vector<std::string> NamesInHlt = m_TriggerTisTosTool->triggerSelectionNames("Hlt2Topo.*Decision");
   //std::vector<std::string>::iterator nameit = NamesInHlt.begin();
   //for(; nameit!=NamesInHlt.end(); ++nameit) info() << *nameit << endreq;
@@ -191,11 +201,15 @@ LOKI_MCALGORITHM(PFbjets)
 
   IEventTupleTool * m_eventtupletool = tool<IEventTupleTool>("TupleToolEventInfo",this);
   m_eventtupletool->fill(tuple_stdpfjets);
+
+  IEventTupleTool * m_eventtupletoolstripping = tool<IEventTupleTool>("TupleToolStripping",this);
+  if(!m_eventtupletoolstripping->fill(tuple_stdpfjets))error() << "Problem filling the trigger and stripping event information" << endreq ;
+
   IEventTupleTool * m_eventtupletooltrigger = tool<IEventTupleTool>("TupleToolTrigger",this);
   if(!Gaudi::Utils::setProperty(m_eventtupletooltrigger,"Verbose","True"))error() << "Problem setting Verbose to true" << endreq ; 
   if(!Gaudi::Utils::setProperty(m_eventtupletooltrigger,"FillStripping","True"))error() << "Problem setting FillStripping to true" << endreq ; 
   if(!Gaudi::Utils::setProperty(m_eventtupletooltrigger,"VerboseHlt2","True"))error() << "Problem setting FillStripping to true" << endreq ; 
-  Gaudi::Utils::setProperty(m_eventtupletooltrigger,"TriggerList","Hlt2SingleHighPTMuon_Decision");
+  Gaudi::Utils::setProperty(m_eventtupletooltrigger,"TriggerList","['Hlt2SingleHighPTMuon_Decision']");
   if(!m_eventtupletooltrigger->fill(tuple_stdpfjets))error() << "Problem filling the trigger and stripping event information" << endreq ;
 
 	std::vector<float> topo_px,topo_py,topo_pz,topo_e;

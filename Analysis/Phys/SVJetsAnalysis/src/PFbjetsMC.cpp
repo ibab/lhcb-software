@@ -13,6 +13,7 @@
 #include "LoKi/Vertices.h"
 #include "LoKi/VertexCast.h"
 #include "LoKi/Particles.h"
+#include "LoKi/HLT.h"
 #include "LoKi/ParticleCuts.h"
 #include "LoKi/VertexCuts.h"
 #include "Kernel/IEventTupleTool.h"
@@ -26,6 +27,7 @@
 //#include "DoubleTopoTool.h"
 
 #include "JetUtils.h"
+#include "MuonVars.h"
 
 #include <Kernel/IJetMaker.h>
 
@@ -37,6 +39,7 @@ using namespace LoKi::Cuts;
 using namespace LoKi::Particles;
 using namespace LoKi::Vertices;
 using namespace LoKi::JetUtils;
+using namespace LoKi::HLT;
 
 LOKI_MCALGORITHM(PFbjetsMC)
 {
@@ -96,7 +99,27 @@ LOKI_MCALGORITHM(PFbjetsMC)
 	// Put the number of PVs on the ntuple
 	tuple_stdpfjets->column("NRecPVs",pvs.size());
 
-	tuple_stdpfjets->farray("stdloosemuon_px",PX,
+	const LHCb::HltDecReports* dr = NULL;
+	const LoKi::HLT::PassDecision wmu = LoKi::HLT::PassDecision ( "StrippingWMuLineDecision" ) ;
+	const LoKi::HLT::PassDecision StrippingSingleDownDisplVertices = LoKi::HLT::PassDecision ( "StrippingSingleDownDisplVerticesDecision" ) ;
+	const LoKi::HLT::PassDecision StrippingSinglePSDisplVertices = LoKi::HLT::PassDecision("StrippingSinglePSDisplVerticesDecision");
+	const LoKi::HLT::PassDecision StrippingSingleHighMassDisplVertices = LoKi::HLT::PassDecision("StrippingSingleHighMassDisplVerticesDecision");
+	const LoKi::HLT::PassDecision StrippingSingleMediumDisplVertices = LoKi::HLT::PassDecision("StrippingSingleMediumDisplVerticesDecision");
+	const LoKi::HLT::PassDecision StrippingSingleHighFDDisplVertices = LoKi::HLT::PassDecision("StrippingSingleHighFDDisplVerticesDecision");
+	if( exist<LHCb::HltDecReports>( "/Event/Strip/Phys/DecReports") ){ 
+		dr = get<LHCb::HltDecReports>( "/Event/Strip/Phys/DecReports");
+		tuple_stdpfjets->column("StrippingWMuLineDecision",(bool) wmu(dr));
+		tuple_stdpfjets->column("StrippingSingleDownDisplVertices",(bool) StrippingSingleDownDisplVertices(dr));
+		tuple_stdpfjets->column("StrippingSinglePSDisplVertices",(bool) StrippingSinglePSDisplVertices(dr));
+		tuple_stdpfjets->column("StrippingSingleHighMassDisplVertices",(bool) StrippingSingleHighMassDisplVertices(dr));
+		tuple_stdpfjets->column("StrippingSingleMediumDisplVertices",(bool) StrippingSingleMediumDisplVertices(dr));
+		tuple_stdpfjets->column("StrippingSingleHighFDDisplVertices",(bool) StrippingSingleHighFDDisplVertices(dr));
+	}
+
+	ITriggerTisTos * m_TriggerTisTosTool = tool<ITriggerTisTos>( "TriggerTisTos",this);
+	ITriggerTisTos * m_L0TriggerTisTosTool = tool<ITriggerTisTos>( "L0TriggerTisTos",this);
+	fill_muon_vars(tuple_stdpfjets, stdloosemuons, m_L0TriggerTisTosTool, m_TriggerTisTosTool);
+	/*tuple_stdpfjets->farray("stdloosemuon_px",PX,
 			"stdloosemuon_py",PY,
 			"stdloosemuon_pz",PZ,
 			"stdloosemuon_e",E,stdloosemuons.begin(),stdloosemuons.end(),"NMaxMuons",10000);
@@ -106,6 +129,7 @@ LOKI_MCALGORITHM(PFbjetsMC)
 
 	tuple_stdpfjets->farray("stdloosemuon_ECAL_E",ECAL_E,stdloosemuons.begin(),stdloosemuons.end(),"NMaxMuons",10000);
 	tuple_stdpfjets->farray("stdloosemuon_HCAL_E",HCAL_E,stdloosemuons.begin(),stdloosemuons.end(),"NMaxMuons",10000);
+	 */
 
 	tuple_stdpfjets->farray("fatjet_px",PX,
 			"fatjet_py",PY,
@@ -182,7 +206,6 @@ LOKI_MCALGORITHM(PFbjetsMC)
 //  tuple_stdpfjets->farray("trk_bestpvz",trk_bestpvz,"NMaxTrks",10000);
 //   tuple_stdpfjets->farray("trk_eta",trk_eta,"NMaxTrks",10000);
 
-  ITriggerTisTos * m_TriggerTisTosTool = tool<ITriggerTisTos>( "TriggerTisTos",this);
   std::vector<std::string> NamesInHlt = m_TriggerTisTosTool->triggerSelectionNames("Hlt2Topo.*Decision");
   //std::vector<std::string>::iterator nameit = NamesInHlt.begin();
   //for(; nameit!=NamesInHlt.end(); ++nameit) info() << *nameit << endreq;

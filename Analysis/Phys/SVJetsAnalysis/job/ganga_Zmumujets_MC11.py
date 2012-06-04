@@ -6,14 +6,19 @@
 # Python modules
 import os
 
-DaVinciVersion   = 'v30r3'
+cwd = os.getcwd()
+cwd = cwd.split("_")
+davinci_version = (cwd[1].split("/"))[0]
+
+DaVinciVersion   = davinci_version
+
 my_file          = 'PFDaVinciMC11.py'
 thisdir          = os.path.abspath(os.path.curdir)
 my_pyFile        = thisdir + "/" + my_file
 
 #-------------------------------------------------------------------------------
 j = Job( application = DaVinci( version = DaVinciVersion ) )
-j.name = 'Zbbinacc_MC11_' + DaVinciVersion
+j.name = 'Zmumujets_MC11_' + DaVinciVersion
 j.application.optsfile  = [ File(my_pyFile) ]
 #j.application.extraopts = '''DaVinci().EvtMax = 1000
 j.application.extraopts = '''DaVinci.EvtMax = -1

@@ -90,10 +90,10 @@ MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
 
 #importOptions('Zmumu_MC11.py')
+#DaVinci.EvtMax         = 1000   ## number of events
 
 DaVinci.UserAlgorithms += [loop]
 DaVinci.HistogramFile  = "JEShistosMC.root"
-#DaVinci.EvtMax         = 1000   ## number of events
 
 ## define the output N-tuple:
 NTupleSvc(Output = [ "LOOP DATAFILE='ZJESAllMC.root' OPT='NEW' TYP='ROOT'"])

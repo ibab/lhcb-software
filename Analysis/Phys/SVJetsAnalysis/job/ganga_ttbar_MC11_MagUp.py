@@ -6,7 +6,12 @@
 # Python modules
 import os
 
-DaVinciVersion   = 'v29r1'
+cwd = os.getcwd()
+cwd = cwd.split("_")
+davinci_version = (cwd[1].split("/"))[0]
+
+DaVinciVersion   = davinci_version
+
 my_file          = 'PFDaVinciMC11.py'
 thisdir          = os.path.abspath(os.path.curdir)
 my_pyFile        = thisdir + "/" + my_file

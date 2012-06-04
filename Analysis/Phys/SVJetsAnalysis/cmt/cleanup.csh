@@ -6,6 +6,6 @@ set tempfile=`${CMTROOT}/mgr/cmt -quiet build temporary_name`
 if $status != 0 then
   set tempfile=/tmp/cmt.$$
 endif
-${CMTROOT}/mgr/cmt cleanup -csh -pack=SVJetsAnalysis -version=v1r0 -path=/afs/cern.ch/user/o/oscar/cmtuser/Analysis_v8r3/Phys $* >${tempfile}; source ${tempfile}
+${CMTROOT}/mgr/cmt cleanup -csh -pack=SVJetsAnalysis -version=v1r0 -path=/afs/cern.ch/user/o/oscar/cmtuser/DaVinci_v30r3/Phys $* >${tempfile}; source ${tempfile}
 /bin/rm -f ${tempfile}
 

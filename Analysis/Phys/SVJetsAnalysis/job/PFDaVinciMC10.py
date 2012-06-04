@@ -29,32 +29,40 @@ DaVinci().Simulation	= True
 #import GaudiPython
 
 ## Configure DaVinci
-
 ## Particle Flow
 from JetAccessories.ParticleFlow_Config import ParticleFlowConf
-p = ParticleFlowConf("PF",['Photons','NeutralHadrons','Charged','Pi0s','V0s'],False,{'CandidateToBanLocation':''})
+inputs = ParticleFlowConf("PF",['Photons','NeutralHadrons','Charged','Pi0s','V0s','PFNeutrals'],False,{"NSigmaForCaloRecovery": 3})
 
-DaVinci.UserAlgorithms = p.algorithms
 
-## Jet Algorithm
+## Jet Recontruction
+RParameter = 0.5
+PtMin = 5000.
+PVAssociation = True
+doJEC = False
+doJetID = False
+JetIDNumber = 98
+AlgType = "anti-kt"
+
 from JetAccessories.JetMaker_Config import JetMakerConf
-#j        = JetMakerConf("StdJets"         ,['Phys/PFBannedParticles/Particles','Phys/PFParticles/Particles'], 0.6 , 10000., True )
-#j        = JetMakerConf("StdJets"         ,['Phys/PFParticles/Particles'], 0.6 , 5000., True )
-j        = JetMakerConf("StdJets"         ,['Phys/PFBannedParticles/Particles','Phys/PFParticles/Particles'], 0.5 , 5000., True, False, False ,98)
-fatj     = JetMakerConf("FatJets"         ,['Phys/PFBannedParticles/Particles','Phys/PFParticles/Particles'], 1.5 , 50000., True, False, False ,99, "Cambridge")
-    
-## Add the jet making to the
-DaVinci.UserAlgorithms += j.algorithms
-DaVinci.UserAlgorithms += fatj.algorithms
+jetmaker = JetMakerConf("StdJets"  ,['Phys/PFBannedParticles/Particles','Phys/PFParticles/Particles','Phys/PFNeutralParticles/Particles'],RParameter, PtMin, PVAssociation, doJEC, doJetID, JetIDNumber, AlgType)
 
-#gaudi = GaudiPython.AppMgr() 
-#TES = gaudi.evtsvc()
-###### From Victor
+RParameter=1.5
+Ptmin=40000
+JetIDNumber = 99
+AlgType = "Cambridge"
+fatjetmaker = JetMakerConf("FatJets"  ,['Phys/PFBannedParticles/Particles','Phys/PFParticles/Particles','Phys/PFNeutralParticles/Particles'],RParameter, PtMin, PVAssociation, doJEC, doJetID, JetIDNumber, AlgType)
+
+
+DaVinci.UserAlgorithms = inputs.algorithms
+
+## Add the jet making to the
+DaVinci.UserAlgorithms += jetmaker.algorithms
+DaVinci.UserAlgorithms += fatjetmaker.algorithms
 
 loop = PFJetsMC(
 	"PFJetsMC"                           ,
 #	InputLocations = ['MC/Particles','Phys/StdLooseMuons,Phys/StdNoPIDsMuons'],
-	Inputs = ['Phys/StdJets','Phys/FatJets','Phys/StdLooseMuons'],
+	Inputs = ['Phys/StdJets','Phys/FatJets','Phys/StdAllLooseMuons'],
 	NTupleLUN      = 'LOOP'                ## Logical File Unit for N-tuples 
 	)
 
