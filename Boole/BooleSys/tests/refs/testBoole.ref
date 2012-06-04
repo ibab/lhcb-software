@@ -43,7 +43,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Boole version v23r2
-                                          running on lxbuild163.cern.ch on Mon Apr 30 14:52:08 2012
+                                          running on lxbuild163.cern.ch on Mon Jun  4 10:40:05 2012
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
@@ -51,7 +51,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   1.98 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.97 times the speed of a 2.8 GHz Xeon.
 BooleSequencer       INFO Member list: ProcessPhase/Init, ProcessPhase/Digi, ProcessPhase/Link, ProcessPhase/Moni, ProcessPhase/Filter
 Init                 INFO Member list: GaudiSequencer/InitBooleSeq, GaudiSequencer/InitDataSeq, GaudiSequencer/InitMuonSeq
 InitBooleSeq         INFO Member list: BooleInit, GaudiSequencer/SpilloverHandler
@@ -200,19 +200,19 @@ ToolSvc.L0CondD...   INFO Registered RAM(BCID) versions = {}
 ToolSvc.L0DUCon...   INFO --------------- TCK = 0x10000------------------
 ToolSvc.L0DUCon...   INFO **** L0DU Config loading : L0TCK = 0x10000 for slot T0 ==> OK
 ToolSvc.L0DUCon...   INFO Short description :: NO DESCRIPTION (L0DUConfig.Template)
-L0Muon               INFO Loading configuration for TCK = 0x32
-ToolSvc.L0DUCon...   INFO --------------- TCK = 0x0032------------------
-ToolSvc.L0DUCon...   INFO **** L0DU Config loading : L0TCK = 0x0032 for slot T0 ==> OK
-ToolSvc.L0DUCon...   INFO Short description :: TCK = 0x0032 : 1350 bunches, mu=1.4 (Feb 2011) == Draft 3.0
-ToolSvc.L0DUCon...   INFO The configuration 0x0032 matches the hardware limitations
-ToolSvc.L0DUCon...   INFO - Usage : Channels [68.8% ]  |  Conditions [21.9% ]; max/type [75.0% ]; order : OK ; reported  : 28/28
+L0Muon               INFO Loading configuration for TCK = 0x3d
+ToolSvc.L0DUCon...   INFO --------------- TCK = 0x003D------------------
+ToolSvc.L0DUCon...   INFO **** L0DU Config loading : L0TCK = 0x003D for slot T0 ==> OK
+ToolSvc.L0DUCon...   INFO Short description :: Same as L0 TCK 0x0040 with tighter cuts (tighter that 0x003C)
+ToolSvc.L0DUCon...   INFO The configuration 0x003D matches the hardware limitations
+ToolSvc.L0DUCon...   INFO - Usage : Channels [75.0% ]  |  Conditions [24.2% ]; max/type [100.0% ]; order : OK ; reported  : 31/31
 L0Muon               INFO updateL0CondVersion: new version in condDB, updating emulator parameters
 L0Muon               INFO MuonTriggerUnit properties are:
 L0Muon               INFO  foiXSize =  6, 5, 0, 4, 8
 L0Muon               INFO  foiYSize =  0, 0, 0, 1, 1
 L0Muon               INFO  ignoreM1 = 0
 L0Muon               INFO  procVersion =   3
-L0DU                 INFO The L0DUConfig (TCK=0x0032) have been succesfully loaded
+L0DU                 INFO The L0DUConfig (TCK=0x003D) have been succesfully loaded
 Link                 INFO Member list: GaudiSequencer/LinkVeloSeq, GaudiSequencer/LinkTTSeq, GaudiSequencer/LinkITSeq, GaudiSequencer/LinkOTSeq, GaudiSequencer/LinkTrSeq, GaudiSequencer/LinkRichSeq, GaudiSequencer/LinkCaloSeq, GaudiSequencer/LinkMuonSeq, GaudiSequencer/LinkL0Seq
 LinkVeloSeq          INFO Member list: DecodeVeloRawBuffer, VeloCluster2MCHitLinker, VeloCluster2MCParticleLinker
 DecodeVeloRawBu...   INFO Cancel processing of events with more than 10000 Velo clusters
@@ -453,14 +453,14 @@ VeloPUSim.RadDa...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 VeloPUSim.RadDa...SUCCESS  #WARNINGS   = 1        Message = 'VELO radiation damage parameters not in conditions DB'
 VeloSim.RadDamage SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 VeloSim.RadDamage SUCCESS  #WARNINGS   = 1        Message = 'VELO radiation damage parameters not in conditions DB'
-ToolSvc.L0DUCon...   INFO --------------- TCK = 0x0032------------------
-ToolSvc.L0DUCon...   INFO The configuration 0x0032 matches the hardware limitations
-ToolSvc.L0DUCon...   INFO - Usage : Channels [68.8% ]  |  Conditions [21.9% ]; max/type [75.0% ]; order : OK ; reported  : 28/28
+ToolSvc.L0DUCon...   INFO --------------- TCK = 0x003D------------------
+ToolSvc.L0DUCon...   INFO The configuration 0x003D matches the hardware limitations
+ToolSvc.L0DUCon...   INFO - Usage : Channels [75.0% ]  |  Conditions [24.2% ]; max/type [100.0% ]; order : OK ; reported  : 31/31
 ToolSvc.L0DUCon...   INFO --------------- TCK = 0x10000------------------
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   1.98 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.97 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
