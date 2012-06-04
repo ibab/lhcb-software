@@ -3,7 +3,10 @@
 ! Responsible	  : Gloria Corti, Silvia MIGLIORANZI
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
-
+!2012-06-04 - Sajan Easo 
+ -Added the activation of physics processes for Torch testbeam simulation in
+  in the cpp files of GaussTrackActionByEnergy,GaussTrackActionHepMC,GaussTrackActionByType,
+  GaussTrackActionByEnergyType and GaussPostTrackAction.
 !======================== GaussTools v17r0 2012-05-14 ========================
 ! 2012-05-09 - Gloria Corti
  - Fix run time problem with finding of ParticlePropertySvc that in Gaudi
