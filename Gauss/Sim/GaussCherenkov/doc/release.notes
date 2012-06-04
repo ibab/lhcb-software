@@ -3,7 +3,8 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH Upgrade
 !----------------------------------------------------------------------------- 
-
+2012-06-01 - Sajan Easo
+ -Added code for Torch Testbeam simulation and  analysis
 !======================== GaussCherenkov v2r0 2012-05-14 =====================
 2012-05-11 - Sajan Easo
  - Adaption for the recent  Gaudi v23. Moved parts of the constructor in CkvSensDet to its initialize method. 
