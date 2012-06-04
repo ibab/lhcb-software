@@ -1,0 +1,14 @@
+GiGa.ModularPL.GiGaPhysConstructorOpCkv.ActivateTorchTBSimulation=true;
+GiGa.ModularPL.GiGaPhysConstructorOpCkv.RichActivateCF4Scintillation=false;
+GiGa.ModularPL.GiGaPhysConstructorOpCkv.RichPmtPhotoElectricPhysicsProcessActivate=false;
+GiGa.ModularPL.GiGaPhysConstructorPhotoDetector.TorchTBMcpEnergyLossActivate=true;
+GiGa.ModularPL.GiGaPhysConstructorPhotoDetector.RichPmtPhysicsProcessActivate=false;
+
+
+// Now for analysis 
+//GiGa.StepSeq.Members  += {"TorchTBBasicStepAnalysis/torchtbbasicAnalysis"};
+GiGa.EventSeq.Members     += { "TorchTBEventAction/torchtbEv"};
+GiGa.EventSeq.torchtbEv.ActivateTorchTBHistoFill6=true;
+GiGa.RunSeq.Members           += { "TorchTBRunAction/torchtbrun"};
+GiGa.RunSeq.torchtbrun.ActivateDefineHistoSet6=true;
+
