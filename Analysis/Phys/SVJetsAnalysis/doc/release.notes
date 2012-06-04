@@ -1,3 +1,9 @@
+! 2012-06-04 - Oscar Augusto
+- Ganga submition scripts (MC10 and MC11) don't depend of DaVinci Version. (get it from cwd)
+- PFbjets(MC) saves the trigger information L0Muon, Hlt1SingleMuonHighPT and Hlt2SingleMuonHighPT
+- PFbjets(MC) saves stripping information WMuLineDecision and .*DisplVerticesDecicion.
+- PFbjets(MC): Different file to Muon Variables (MuonVars).
+- Jet_ana works with castor (have to open a file with TFile::Open) and give the path starting with "rfio:".
 ! 2012-05-22 - Murilo Rangel
 - Added topo_sv position
 - Updated PFDaVinciMC11.py to use default jet parameters
