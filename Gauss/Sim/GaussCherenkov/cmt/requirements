@@ -31,7 +31,11 @@ library          GaussCherenkov    ../src/*.cpp             \
                               ../src/CherenkovAction/*.cpp \
                               ../src/CherenkovAnalysis/*.cpp \
                               ../src/CherenkovMisc/*.cpp \
-                              ../src/CherenkovAssoc/*.cpp
+                              ../src/CherenkovAssoc/*.cpp \
+                              ../src/CherenkovTestBeamPhysProcess/*.cpp \
+                              ../src/CherenkovTestBeamSensDet/*.cpp \
+                              ../src/TorchTestBeamAnalysis/*.cpp
+
 
 # Includes used internally
 #============================================================================
@@ -44,13 +48,17 @@ include_dirs     $(GAUSSCHERENKOVROOT) \
                  $(GAUSSCHERENKOVROOT)/src/CherenkovAnalysis \
                  $(GAUSSCHERENKOVROOT)/src/CherenkovMisc \
                  $(GAUSSCHERENKOVROOT)/src/CherenkovAssoc \
+                 $(GAUSSCHERENKOVROOT)/src/CherenkovTestBeamPhysProcess \
+                 $(GAUSSCHERENKOVROOT)/src/CherenkovTestBeamSensDet  \
+                 $(GAUSSCHERENKOVROOT)/src/TorchTestBeamAnalysis \
                  $(GAUSSRICHROOT) \
                  $(GAUSSRICHROOT)/src/SensDet \
                  $(GAUSSRICHROOT)/src/PhysProcess \
                  $(GAUSSRICHROOT)/src/RichAction \
                  $(GAUSSRICHROOT)/src/Misc \
                  $(GAUSSRICHROOT)/src/RichAnalysis \
-                 $(GAUSSRICHROOT)/src/srcG4
+                 $(GAUSSRICHROOT)/src/srcG4 
+
 
                  
 
