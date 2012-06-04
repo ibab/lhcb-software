@@ -19,6 +19,7 @@
 #include "MDF/RawEventDescriptor.h"
 #include <map>
 #include <list>
+#include "stdio.h"
 
 // Forward declarations
 class IIncidentSvc;
@@ -151,6 +152,7 @@ namespace LHCb
     /// get the file time string
     std::string FileTime();
     virtual void handleFileWriteError();
+    virtual ssize_t Write(int fd, const void *buf, size_t n);
   };
 } // End namespace LHCb
 #endif //  GAUDIONLINE_MEPCONVERTERSVC_H

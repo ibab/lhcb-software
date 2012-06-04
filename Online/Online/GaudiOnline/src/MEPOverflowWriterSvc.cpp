@@ -196,36 +196,11 @@ StatusCode MEPOverflowWriterSvc::run()
     RunDesc *r = m_RunList[m_RunNumber];
     m_FileDesc = r->m_CurrentFileDescr;
     ssize_t status;
-    status = write(m_FileDesc->m_Handle, me, me->size()+me->sizeOf());
+    size_t towrite = me->size()+me->sizeOf();
+    status = Write(m_FileDesc->m_Handle, me, towrite);
     if (status == -1)
     {
-      if (errno == EIO || errno == ENOSPC)
-      {
-        handleFileWriteError();
-      }
-      else if (errno == EINTR)
-      {
-        status = write(m_FileDesc->m_Handle, me, me->size()+me->sizeOf());
-        if (status == -1)
-        {
-          if (errno == EIO || errno == ENOSPC)
-          {
-            handleFileWriteError();
-          }
-          else if (errno == EINTR)
-          {
-            printf("File Write Interrupted again... Giving up...");
-          }
-          else
-          {
-            printf("File Write Error: Errno = %d",errno);
-          }
-        }
-      }
-      else
-      {
-        printf("File Write Error: Errno = %d",errno);
-      }
+      continue;
     }
     else
     {
@@ -242,6 +217,7 @@ StatusCode MEPOverflowWriterSvc::run()
         m_FileDesc->state = C_CLOSED;
         m_FileDesc = openFile(m_RunNumber);
       }
+      continue;
     }
   }
   return StatusCode::SUCCESS;
@@ -326,4 +302,60 @@ void MEPOverflowWriterSvc::handleFileWriteError()
   }
   std::string cmdname=node+"_MEPRx_01/setOverflow";
   DimClient::sendCommand(cmdname.c_str(),0);
+}
+
+ssize_t MEPOverflowWriterSvc::Write(int fd, const void *buf, size_t n)
+{
+  char *cbuf = (char*)buf;
+  size_t towrite = n;
+  int status;
+  int nintr_max = 2;
+  while (towrite > 0)
+  {
+    status = write(fd, cbuf, towrite);
+    if (status >0)
+    {
+      towrite = towrite - status;
+      cbuf += status;
+      continue;
+    }
+    else if (status == 0)
+    {
+      printf("%s: 0 Bytes written! Ignoring MEP\n", RTL::processName().c_str());
+      status = -1;
+      return status;
+    }
+    else if (status == -1)
+    {
+      if (errno == EIO || errno == ENOSPC)
+      {
+        printf("%s: File Write Error (IO or NoSpace): Errno = %d\n", RTL::processName().c_str(),errno);
+        handleFileWriteError();
+        status = -1;
+        return status;
+      }
+      else if (errno == EINTR)
+      {
+        nintr_max--;
+        if (nintr_max >0)
+        {
+          continue;
+        }
+        else
+        {
+          status = -1;
+          return status;
+        }
+      }
+      else
+      {
+        printf("%s: File Write Error: Errno = %d\n", RTL::processName().c_str(),errno);
+        handleFileWriteError();
+        status = -1;
+        return status;
+      }
+    }
+  }
+  status = 0;
+  return status;
 }
