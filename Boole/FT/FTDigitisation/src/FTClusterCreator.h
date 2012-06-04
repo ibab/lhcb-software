@@ -1,0 +1,54 @@
+// $Id$
+#ifndef FTCLUSTERCREATOR_H 
+#define FTCLUSTERCREATOR_H 1
+
+// Include files
+// from Gaudi
+#include "GaudiAlg/GaudiAlgorithm.h"
+
+// LHCbKernel
+#include "Kernel/FTChannelID.h"
+
+#include "Event/MCFTDigit.h"
+
+using namespace LHCb;
+
+/** @class FTClusterCreator FTClusterCreator.h
+ *  
+ *
+ *  @author Eric Cogneras
+ *  @date   2012-04-06
+ */
+class FTClusterCreator : public GaudiAlgorithm {
+public: 
+  /// Standard constructor
+  FTClusterCreator( const std::string& name, ISvcLocator* pSvcLocator );
+
+  virtual ~FTClusterCreator( ); ///< Destructor
+
+  virtual StatusCode initialize();    ///< Algorithm initialization
+  virtual StatusCode execute   ();    ///< Algorithm execution
+  virtual StatusCode finalize  ();    ///< Algorithm finalization
+  
+
+  bool keepAdding(MCFTDigits::const_iterator clusCandIter);///< Check conditions before adding another digit to the cluster
+
+protected:
+
+private:
+
+  std::string m_inputLocation;       ///< MCFTDigit input Container
+  std::string m_outputLocation;      ///< FTCluster output Container
+
+  int m_adcThreshold;   ///<Minimal ADC value for cluster definition
+  unsigned int m_clusterMaxWidth;   ///< Maximal Width for clusters
+
+  unsigned int m_clusterMinCharge;   ///<Minimal total ADC to store the cluster
+  unsigned int m_clusterMaxCharge;   ///<Maximal total ADC to store the cluster
+
+
+
+};
+#endif // FTCLUSTERCREATOR_H
+
+

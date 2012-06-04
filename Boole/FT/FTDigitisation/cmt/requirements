@@ -1,0 +1,20 @@
+package FT/FTDigitisation
+
+version v1r0
+
+branches cmt src options
+
+include_path none
+
+use GSL                 v*    LCG_Interfaces
+use GaudiKernel         v*
+use GaudiAlg            v*
+use FTDet               v*   Det
+use FTEvent               v*    Event
+use LinkerEvent        v*    Event
+use MCEvent             v*    Event
+
+
+# ================= component library ====================
+library FTDigitisation ../src/*.cpp 
+apply_pattern component_library library=FTDigitisation
