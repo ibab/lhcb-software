@@ -137,8 +137,9 @@ void GaussTrackActionByEnergyType::PreUserTrackingAction
     { Error ( "Pre..: G4VProcess         points to NULL!" ) ; return ; } 
     
     if ( ("RichHpdPhotoelectricProcess" == process->GetProcessName()) || 
-         ("RichPmtPhotoelectricProcess" == process->GetProcessName()) ) {
-      Warning ( "Pre..: RichHpdPhotoelectricProcess or RichPmt PhotoelectricProcess particles not kept" );
+         ("RichPmtPhotoelectricProcess" == process->GetProcessName()) || 
+         ( "TorchTBMcpPhotoElectricProcess" == process->GetProcessName())  ) {
+      Warning ( "Pre..: RichHpdPhotoelectricProcess or RichPmt/Mcp PhotoelectricProcess particles not kept" );
       return;
     } 
   }

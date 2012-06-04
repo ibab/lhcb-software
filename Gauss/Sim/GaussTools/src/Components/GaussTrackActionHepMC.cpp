@@ -298,6 +298,8 @@ int GaussTrackActionHepMC::processID(const G4VProcess* creator ) {
       processID = LHCb::MCVertex::RICHPhotoElectric;
     } else if( "RichPmtPhotoelectricProcess" == pname ) {
       processID = LHCb::MCVertex::RICHPhotoElectric;
+    } else if( "TorchTBMcpPhotoElectricProcess" == pname ) {
+      processID = LHCb::MCVertex::RICHPhotoElectric;
     } else if( "RichG4Cerenkov" == pname ) {
       processID = LHCb::MCVertex::Cerenkov;
     } else if( "eIoni" == pname || "hIoni" == pname || "ionIoni" == pname ||

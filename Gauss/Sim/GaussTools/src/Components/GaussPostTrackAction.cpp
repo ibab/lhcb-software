@@ -293,9 +293,11 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
       if ( ("RichHpdPhotoelectricProcess" ==   process->GetProcessName()) ||
          ( "RichHpdSiEnergyLossProcess"  ==   process->GetProcessName()) ||
          ( "RichPmtPhotoelectricProcess" ==   process->GetProcessName()) ||
-         ( "RichPmtSiEnergyLossProcess"  ==   process->GetProcessName())  ) {
+           ( "RichPmtSiEnergyLossProcess"  ==   process->GetProcessName()) ||
+           ( "TorchTBMcpPhotoElectricProcess"  ==   process->GetProcessName()) ||
+           ( "TorchTBMcpEnergyLossProcess"  ==   process->GetProcessName())  ) {
         Warning ( 
-        "RichHpd/PmtPhotoelectricProcess  RichHpd/PmtSiEnergyLossProcess particles not kept",
+        "RichHpd/Pmt/Mcp PhotoelectricProcess  RichHpd/Pmt/Mcp SiEnergyLossProcess particles not kept",
                   StatusCode::SUCCESS, 0 );
         return;
       }
