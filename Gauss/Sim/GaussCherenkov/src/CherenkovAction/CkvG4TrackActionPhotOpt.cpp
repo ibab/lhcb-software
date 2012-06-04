@@ -100,7 +100,7 @@ StatusCode CkvG4TrackActionPhotOpt::initialize()
       "Can't retrieve  " +Rich1DeStructurePathName  +" in CkvG4TrackActionPhotOpt" );
      } 
      else {
-
+       
        m_MaxPhdQuantumEffFromDB=Rich1DE->param<double>("RichPmtMaxQE");
        m_MaxRich1Mirror1Reflect=
                  Rich1DE->param<double>("Rich1Mirror1MaxReflect");
@@ -113,6 +113,7 @@ StatusCode CkvG4TrackActionPhotOpt::initialize()
 
        m_ZDownstreamOfRich1 = 
          Rich1DE->param<double>("RichZDownstreamOfRich1");
+
 
 
        //       m_MaxHpdQuantumEff=Rich1DE->userParameterAsDouble("RichPmtMaxQE");

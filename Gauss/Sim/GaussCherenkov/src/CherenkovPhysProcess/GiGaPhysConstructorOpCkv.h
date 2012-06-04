@@ -111,9 +111,13 @@ public:
   
   //  bool activateRICHCF4ScintillationHisto() 
   //{return m_activateRICHCF4ScintillationHisto;}
+
+  bool activateTorchTestBeamSimulation() 
+  {  return m_activateTorchTestBeamSimulation;}
+  void setaActivateTorchTestBeamSimulation ( bool aActivateTorchTB) 
+  { m_activateTorchTestBeamSimulation=aActivateTorchTB; }
   
 
-  
       
   
     
@@ -137,11 +141,13 @@ private:
   // bool m_IsPSFPreDc06Flag;
   bool m_PmtQEUseNominalTable;
   bool m_ActivateRICHOpticalPhysProc;
+  bool m_ActivatePmtPhotoElectricPhysProc;
   bool m_activateRICHCF4Scintillation;
   // bool m_activateRICHCF4ScintillationHisto;
   bool m_RichApplyScintillationYieldScaleFactor;
   double m_RichScintillationYieldScaleFactor;
   int m_PmtQESource;
+  bool m_activateTorchTestBeamSimulation;
   
   
     

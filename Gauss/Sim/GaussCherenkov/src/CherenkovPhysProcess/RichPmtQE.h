@@ -38,6 +38,9 @@ public:
   double getPmtPhotonWavelenFromEnergy(double photonenergy);
 
   double getPmtQEffFromPhotEnergy(double photonenergy );
+  double getMcpQEffFromPhotEnergy(double photonenergy ) 
+  { return ( getPmtQEffFromPhotEnergy(photonenergy ) ) ;}
+  
 
   double getPmtQEffFromPhotWavelen(double photwavelen );
 

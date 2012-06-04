@@ -310,9 +310,11 @@ RichPmtPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
 
     if( UsePmtMagDistortions() ) {
      
-       LocalElectronDirection=getCathodeToAnodeDirection( currentPmtNumber,
-							   currentRichDetNumber,
-							   LocalElectronOrigin, psfVectInXY );
+      // LocalElectronDirection=getCathodeToAnodeDirection( currentPmtNumber,
+			//				   currentRichDetNumber,
+      //					   LocalElectronOrigin, psfVectInXY );
+
+       LocalElectronDirection=getCathodeToAnodeDirectionDefault();
     }else {
 
     //  now apply the linear and quadratic factor of the demag;
@@ -496,10 +498,13 @@ std::vector<double> RichPmtPhotoElectricEffect::GetPSFXYForASigma(double aPSFsig
    //  }
   return apsfXY;
 }
-G4ThreeVector RichPmtPhotoElectricEffect::getCathodeToAnodeDirection(int ihpdnum,
-                                                                     int richdetnum,
-    								     G4ThreeVector v,
-                                                      std::vector<double>apsfVectInXY ){
+//G4ThreeVector RichPmtPhotoElectricEffect::getCathodeToAnodeDirection(int ihpdnum,
+//                                                      int richdetnum,G4ThreeVector v,
+//                                                      std::vector<double>apsfVectInXY ){
+
+G4ThreeVector RichPmtPhotoElectricEffect::getCathodeToAnodeDirectionDefault(){
+  
+
 
   // v = starting position on cathode
   //  G4double ElectronCathodeRadius = v.perp();

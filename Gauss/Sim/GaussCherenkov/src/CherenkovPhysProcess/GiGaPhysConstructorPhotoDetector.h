@@ -36,6 +36,14 @@ public:
   
   void setRICHPmtPhysProcActivation(bool bAct) 
   { m_ActivateRICHPmtPhysProc=bAct;  }
+
+  bool   ActivateTorchTBMcpEnergyLossProc()
+  {
+    return m_ActivateTorchTBMcpEnergyLossProc;
+  }
+
+  void setActivateTorchTBMcpEnergyLossProc(bool aAct) 
+  { m_ActivateTorchTBMcpEnergyLossProc=aAct;  }
   
   ///
 
@@ -55,6 +63,12 @@ private:
   double m_RichPmtPixelChipEfficiency;
   double m_RichPmtPeBackScatterProb;
   bool m_ActivateRICHPmtPhysProc;
+
+  bool m_ActivateTorchTBMcpEnergyLossProc;
+  double m_TorchTBMcpAnodeEfficiency;
+  double m_TorchMcpAnodeReadoutChipEfficiency;
+  
+
   
 };
 // ============================================================================

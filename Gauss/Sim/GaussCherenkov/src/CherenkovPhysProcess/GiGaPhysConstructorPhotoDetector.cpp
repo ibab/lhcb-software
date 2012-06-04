@@ -49,13 +49,24 @@ GiGaPhysConstructorPhotoDetector::GiGaPhysConstructorPhotoDetector
     m_RichPmtSiDetEfficiency(1.0),
     m_RichPmtPixelChipEfficiency(0.90), 
     m_RichPmtPeBackScatterProb(0.0), /*RWL change 8th Nov 06*/
-    m_ActivateRICHPmtPhysProc(true)   
+    m_ActivateRICHPmtPhysProc(true),
+    m_ActivateTorchTBMcpEnergyLossProc(false),
+    m_TorchTBMcpAnodeEfficiency(1.0),
+    m_TorchMcpAnodeReadoutChipEfficiency(1.0)    
 { 
   // Pixel chip eff changed on Nov 7 for test.
   declareProperty("RichPmtSiDetEfficiency", m_RichPmtSiDetEfficiency);
   declareProperty("RichPmtPixelChipEfficiency", m_RichPmtPixelChipEfficiency);
   declareProperty("RichPmtBackScatterProb" , m_RichPmtPeBackScatterProb);
   declareProperty("RichPmtPhysicsProcessActivate",m_ActivateRICHPmtPhysProc); 
+
+  declareProperty("TorchTBMcpEnergyLossActivate", m_ActivateTorchTBMcpEnergyLossProc);
+  declareProperty("TorchTBMcpAnodeEfficiency",  m_TorchTBMcpAnodeEfficiency);
+  declareProperty("TorchTBMcpAnodeReadoutChipEfficiency", m_TorchMcpAnodeReadoutChipEfficiency);
+  
+
+
+  
  }
 
 
@@ -94,7 +105,7 @@ void GiGaPhysConstructorPhotoDetector::ConstructProcess()
     msg << MSG::DEBUG <<" RICHPmtPhysProcess Activation status  " << activateRICHPmtPhysProcStatus() << endreq;
     
 
-    if( activateRICHPmtPhysProcStatus() ){    
+    if( activateRICHPmtPhysProcStatus() || ActivateTorchTBMcpEnergyLossProc()  ){    
 
       ConstructPmtSiEnLoss();
     }
@@ -147,12 +158,15 @@ void GiGaPhysConstructorPhotoDetector::ConstructPeGenericProcess() {
           // particle->SetApplyCutsFlag(true);
         // particle-> DumpTable() ;
       }
+    
   }
+  
 }
 
 //=============================================================================
 
 #include "RichPmtSiEnergyLoss.h"
+#include "TorchTBMcpEnergyLoss.h"
 
 //=============================================================================
 // ConstructPmtSiEnLoss
@@ -170,46 +184,59 @@ void GiGaPhysConstructorPhotoDetector::ConstructPmtSiEnLoss()
   theRichPmtSiEnergyLossProcess->setPmtSiPixelChipEff (m_RichPmtPixelChipEfficiency);
   theRichPmtSiEnergyLossProcess->setPmtPeBackScaProb(m_RichPmtPeBackScatterProb);
   theRichPmtSiEnergyLossProcess->InitializePmtProcParam();
+
+
+    
+   TorchTBMcpEnergyLoss* theTorchTBMcpEnergyLossProcess =
+     new TorchTBMcpEnergyLoss("TorchTBMcpEnergyLossProcess", fUserDefined  );
+   theTorchTBMcpEnergyLossProcess->setMcpAnodeDetEff(m_TorchTBMcpAnodeEfficiency );
+   theTorchTBMcpEnergyLossProcess->setMcpAnodePixelChipEff(m_TorchMcpAnodeReadoutChipEfficiency);
+   theTorchTBMcpEnergyLossProcess->InitializeMcpProcParam();
+   
   
+  
+
 
   theParticleIterator->reset();
   while( (*theParticleIterator)() ){
     G4ParticleDefinition* particle = theParticleIterator->value();
     G4ProcessManager* pmanager = particle->GetProcessManager();
-    //    G4cout<<"ConstructHpdSiEnLoss: Now at particle:  "<< particle->GetParticleName()<<G4endl;
+    //    G4cout<<"ConstructPmtSiEnLoss: Now at particle:  "<< particle->GetParticleName()<<G4endl;
     
     pmanager->SetVerboseLevel(0);
-    
-    if( theRichPmtSiEnergyLossProcess->IsApplicable(*particle) ) 
-      {
-        //    RichHpdSiEnergyLoss* theRichHpdSiEnergyLossProcess =
-        //  new RichHpdSiEnergyLoss("RichHpdSiEnergyLossProcess");
-        //  G4cout<<"Now HpdSiLoss adding for "<< particle->GetParticleName()<<G4endl;
-        
-	// add this process for any charged particle.
 
-	//    if( ( particle->GetParticleName() == "pe-") || ( particle->GetParticleName() =="e-" ))
-        //  {
-            //            G4cout<<"Now at particle "<< particle->GetParticleName()<<G4endl;
+    if(   activateRICHPmtPhysProcStatus() ) {
+      
+    if( theRichPmtSiEnergyLossProcess->IsApplicable(*particle) ){
+
             pmanager->AddProcess( theRichPmtSiEnergyLossProcess ,-1,2,2);
-	    //   }
-        
+            
+    }
+    }
+    
+    if( m_ActivateTorchTBMcpEnergyLossProc ) {
+      
+      if( theTorchTBMcpEnergyLossProcess ->IsApplicable(*particle) ){
+
+            pmanager->AddProcess( theTorchTBMcpEnergyLossProcess ,-1,2,2);
+            
+       }
+     
+    }
+    
 	      if(particle->GetParticleName() == "pe-")
 	      {
-		//  G4cout<<" All the processes for pe- " <<G4endl;
-		// pmanager->DumpInfo();  
-            
                 (RichPhotoElectron::PhotoElectron())->SetProcessManager(pmanager);
-		// (RichPhotoElectron::PhotoElectron())->GetProcessManager()->DumpInfo();
+                
 	      }
-      }
-    //    if (theDecayProcess->IsApplicable(*particle)) { 
-    //      pmanager ->AddProcess(theDecayProcess);
-    // set ordering for PostStepDoIt and AtRestDoIt
-    //      pmanager ->SetProcessOrdering(theDecayProcess, idxPostStep);
-    //     pmanager ->SetProcessOrdering(theDecayProcess, idxAtRest);
-    //}
+        
   }
+  
+  
 }
+
+
+
+
 
 //=============================================================================

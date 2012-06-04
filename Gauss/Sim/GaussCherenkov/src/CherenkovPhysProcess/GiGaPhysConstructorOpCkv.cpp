@@ -67,10 +67,12 @@ GiGaPhysConstructorOpCkv::GiGaPhysConstructorOpCkv
     m_RichRadiatorMaterialIndex(std::vector<G4int> (3)),
     m_PmtQEUseNominalTable(true),
     m_ActivateRICHOpticalPhysProc(true),
+    m_ActivatePmtPhotoElectricPhysProc(true),
     m_activateRICHCF4Scintillation(true),
     m_RichApplyScintillationYieldScaleFactor(true),
     m_RichScintillationYieldScaleFactor(1.0),
-    m_PmtQESource(0)
+    m_PmtQESource(0),
+    m_activateTorchTestBeamSimulation(false)
 {
   // in the above 3 is for the three radiators.
 
@@ -89,6 +91,7 @@ GiGaPhysConstructorOpCkv::GiGaPhysConstructorOpCkv
 
     declareProperty("RichPmtUseNominalQETable", m_PmtQEUseNominalTable);
   declareProperty("RichOpticalPhysicsProcessActivate", m_ActivateRICHOpticalPhysProc);
+  declareProperty("RichPmtPhotoElectricPhysicsProcessActivate", m_ActivatePmtPhotoElectricPhysProc);
 
   declareProperty("RichActivateCF4Scintillation",  m_activateRICHCF4Scintillation);
   declareProperty("RichApplyScintillationYieldScaleFactor", 
@@ -98,6 +101,11 @@ GiGaPhysConstructorOpCkv::GiGaPhysConstructorOpCkv
   //  declareProperty("RichActivateCF4ScintHisto" , m_activateRICHCF4ScintillationHisto);
   
   declareProperty("RichPmtQESource", m_PmtQESource);
+  
+
+  // Now for the TORCH Testebeam
+
+  declareProperty("ActivateTorchTBSimulation", m_activateTorchTestBeamSimulation );
   
 }
 
@@ -227,6 +235,7 @@ void  GiGaPhysConstructorOpCkv::ConstructPeProcess()
 #include "RichG4OpBoundaryProcess.hh"
 #include "RichPmtPhotoElectricEffect.h"
 #include "RichG4Scintillation.hh"
+#include  "TorchTBMcpPhotoElectricEffect.h"
 
 //=============================================================================
 // ConstructOp
@@ -253,11 +262,15 @@ void GiGaPhysConstructorOpCkv::ConstructOp() {
   //  RichHpdPhotoElectricEffect* theRichHpdPhotoElectricProcess= 
   //  new RichHpdPhotoElectricEffect(this,
   //                   "RichHpdPhotoelectricProcess", fOptical);
-  RichPmtPhotoElectricEffect* theRichPmtPhotoElectricProcess= 
-    new RichPmtPhotoElectricEffect(this,
-                     "RichPmtPhotoelectricProcess", fOptical);
-
-
+  RichPmtPhotoElectricEffect* theRichPmtPhotoElectricProcess = 0;
+  
+  if(m_ActivatePmtPhotoElectricPhysProc) {
+    
+       theRichPmtPhotoElectricProcess = new RichPmtPhotoElectricEffect(this,
+                       "RichPmtPhotoelectricProcess", fOptical);
+                      
+  }
+  
 
   RichG4Scintillation* theRichScintillationProcess= 0;
   
@@ -279,15 +292,36 @@ void GiGaPhysConstructorOpCkv::ConstructOp() {
   //  theRayleighScatteringProcess->SetVerboseLevel(0);
 
   theBoundaryProcess->SetVerboseLevel(0);
+
+  if(m_ActivatePmtPhotoElectricPhysProc) {
   
-  // theRichPmtPhotoElectricProcess->setUsePmtMagDistortions( (G4bool) m_UseHpdMagDistortions);
-  //  theRichPmtPhotoElectricProcess->setPSFPreDc06Flag(m_IsPSFPreDc06Flag);
-  theRichPmtPhotoElectricProcess->setPmtQEUsingNominalTable(m_PmtQEUseNominalTable);
-  theRichPmtPhotoElectricProcess->SetPmtQESourceTable(m_PmtQESource);
-  theRichPmtPhotoElectricProcess->setPmtPhElecParam();
+    // theRichPmtPhotoElectricProcess->setUsePmtMagDistortions( (G4bool) m_UseHpdMagDistortions);
+    //  theRichPmtPhotoElectricProcess->setPSFPreDc06Flag(m_IsPSFPreDc06Flag);
+    theRichPmtPhotoElectricProcess->setPmtQEUsingNominalTable(m_PmtQEUseNominalTable);
+    theRichPmtPhotoElectricProcess->SetPmtQESourceTable(m_PmtQESource);
+    theRichPmtPhotoElectricProcess->setPmtPhElecParam();
 
  
-  msg << MSG::INFO <<"Current PMT QE source "<<m_PmtQESource<<endreq;
+    msg << MSG::INFO <<"Current PMT QE source "<<m_PmtQESource<<endreq;
+  }
+  
+  // Now for the TORCH TestBeam
+  TorchTBMcpPhotoElectricEffect* theTorchMcpPhotoElectricProcess =0;
+  
+
+  if( m_activateTorchTestBeamSimulation ) {
+    
+    theTorchMcpPhotoElectricProcess =
+      new TorchTBMcpPhotoElectricEffect (this, "TorchTBMcpPhotoElectricProcess", fOptical);
+    
+    theTorchMcpPhotoElectricProcess->setMcpPhElecParam();
+    
+
+    
+    
+  }
+  
+
 
   //  G4int MaxNumPhotons = 300;
   // The following is now input from options file. SE 2-2-2004
@@ -316,6 +350,10 @@ void GiGaPhysConstructorOpCkv::ConstructOp() {
   aMaxPhotLim.push_back((G4int) m_MaxPhotonsPerRichCherenkovStepInRich1Gas);
   aMaxPhotLim.push_back((G4int) m_MaxPhotonsPerRichCherenkovStepInRich2Gas);
   aMaxPhotLim.push_back((G4int) m_MaxPhotonsPerRichCherenkovStepInRichQuartzLikeRadiator);
+
+
+
+
 
   RichG4MatRadIdentifier* aRichG4MatRadIdentifier = RichG4MatRadIdentifier::RichG4MatRadIdentifierInstance();
   aRichG4MatRadIdentifier->InitializeRichCkvMatMaxNumPhot(aMaxPhotLim);
@@ -391,7 +429,19 @@ void GiGaPhysConstructorOpCkv::ConstructOp() {
          //         pmanager->AddDiscreteProcess(theRayleighScatteringProcess);
          pmanager->AddDiscreteProcess(theBoundaryProcess);
          //         pmanager->AddDiscreteProcess(theRichHpdPhotoElectricProcess)
+       if(m_ActivatePmtPhotoElectricPhysProc) {
          pmanager->AddDiscreteProcess(theRichPmtPhotoElectricProcess);
+       }
+
+       if( m_activateTorchTestBeamSimulation ) {
+         
+         pmanager->AddDiscreteProcess(theTorchMcpPhotoElectricProcess);
+
+         
+         
+       }
+  
+       
      }
   }
 }

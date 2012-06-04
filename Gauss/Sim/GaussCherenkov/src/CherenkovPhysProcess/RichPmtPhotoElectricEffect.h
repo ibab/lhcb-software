@@ -134,9 +134,12 @@ public:
   
 private:
 
-  G4ThreeVector getCathodeToAnodeDirection(int ipmtnum , int richdetnum , 
-                                          G4ThreeVector aLocalElnOrigin ,
-                                           std::vector<double>apsfVectInXY  );
+  //  G4ThreeVector getCathodeToAnodeDirection(int ipmtnum , int richdetnum , 
+  //                                        G4ThreeVector aLocalElnOrigin ,
+  //                                         std::vector<double>apsfVectInXY  );
+
+  G4ThreeVector getCathodeToAnodeDirectionDefault();
+
 
   G4String m_PrePhotoElectricLogVolName;
   G4String m_PostPhotoElectricLogVolName;

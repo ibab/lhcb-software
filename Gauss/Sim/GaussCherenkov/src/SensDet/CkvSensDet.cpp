@@ -251,7 +251,7 @@ bool CkvSensDet::ProcessHits( G4Step* aStep ,
   G4int CurOptPhotMotherChTrackPDG=0;
   G4int CurRadiatorNumber=-1;
   G4ThreeVector CurEmissPt;
-  G4double CurPhotEnergyAtProd=0;;
+  G4double CurPhotEnergyAtProd=0;
   G4double CurThetaCkvAtProd=0;
   G4double CurPhiCkvAtProd=0;
   G4double CurChTrackTotMom=0;

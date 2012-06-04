@@ -302,11 +302,12 @@ G4VParticleChange* RichPmtSiEnergyLoss::AlongStepDoIt(const G4Track& aTrack,
   //const G4double aEnergyAlreadyDeposit = aStep.GetTotalEnergyDeposit();
   //   cout<<"Pmt sidet Energy already deposited  "
   //             <<aEnergyAlreadyDeposit<<endl;
-  //  G4cout<<"PmtEnergyloss: pe Energy before transfer "<<Eloss<<G4endl;
+
+  // G4cout<<"PmtEnergyloss: pe Energy before transfer "<<Eloss<<G4endl;
   
   G4double EnergyTransfer=
     EnegydepositMultFactor* RichPmtSiEnergyDeposit(Eloss);
-  //     G4cout<<"EnergyTransfer in sidetEloss " << EnergyTransfer<<G4endl;
+  // G4cout<<"EnergyTransfer in sidetEloss " << EnergyTransfer<<G4endl;
 
 
   if(   EnergyTransfer > 0.0 ) {

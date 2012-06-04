@@ -62,6 +62,7 @@
 #include "RichG4AnalysisConstGauss.h"
 #include "RichG4GaussPathNames.h"
 #include "CkvG4GaussPathNames.h"
+#include "TorchTBGaussPathNames.h"
 #include "G4GeometryTolerance.hh"
 
 #include "GaussTools/GaussTrackInformation.h"
@@ -165,8 +166,8 @@ CkvG4OpBoundaryProcess::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 	thePhotonMomentum = aParticle->GetTotalMomentum();
         OldMomentum       = aParticle->GetMomentumDirection();
 	OldPolarization   = aParticle->GetPolarization();
-	//   G4cout<<"G4opbondaryProc: Material1 Materil2 : from"<<Material1->GetName()<<" to  "
-        //         << Material2->GetName() <<G4endl;
+	   G4cout<<"G4opbondaryProc: Material1 Materil2 : from"<<Material1->GetName()<<" to  "
+                 << Material2->GetName() <<G4endl;
 
 	G4MaterialPropertiesTable* aMaterialPropertiesTable;
         G4MaterialPropertyVector* Rindex;
@@ -639,16 +640,17 @@ void CkvG4OpBoundaryProcess::DielectricDielectric(const G4Track& aTrack )
 		// The number of steps the photon travelled is above a large
                 // number like 5000 then the photon is
                 //  killed.
-        //       G4cout<<"dielec-dielec: Total internal refl from "<<Material1->GetName()<<" to  "
-        //   << Material2->GetName() <<" is  with ref index "<<Rindex1
-        //      <<"   "<<Rindex2 <<"   Sint1= "<< sint1
-        //                  << "   Sint2=  "<< sint2 <<G4endl;
+         G4cout<<"dielec-dielec: Total internal refl from "<<Material1->GetName()<<" to  "
+           << Material2->GetName() <<" is  with ref index "<<Rindex1
+              <<"   "<<Rindex2 <<"   Sint1= "<< sint1
+                          << "   Sint2=  "<< sint2 <<G4endl;
         if( (Material1->GetName() ==  AgelMaterialName) ||
             (Material1->GetName() ==  FilterGenericMaterialName) ||
             (Material1->GetName() ==  FilterD263MaterialName) ||
             (Material1->GetName() == Rich1GasQWindowMaterialName) ||
             (Material1->GetName() == Rich2GasQWindowMaterialName )|| 
-            (Material1->GetName() == RichHpdPhCathMatName )) {   // addition made on 2-11-07
+            (Material1->GetName() == RichHpdPhCathMatName ) || 
+            (Material1->GetName() ==  TorchTBQuartzBarMaterialName )  ) {   // addition made on 2-11-07
          	  if(CurPhotStepNum > theMaxPhotStepNumInBoundaryProc ) {
              
              DoAbsorption();
