@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Olivier Callot -->
+<!--- Created : 2012-05-11 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name="FTEvent">
+    <class name   = "FTCluster"
+           id     = "14001"
+           author = "Olivier Callot"
+           desc   = "A cluster as produced by the TELL40"
+           serializers="FALSE">
+      <import   name = "Kernel/FTChannelID" />
+      <location name = "Default"   place="Raw/FT/Clusters"   />
+
+      <template name = "KeyedObjectDict" t1="LHCb::FTChannelID"/>
+      <base     name = "KeyedObject&lt;LHCb::FTChannelID&gt;" />
+      &KeyedObject;
+
+      <constructor desc     = "Constructor"
+                   argList  = "LHCb::FTChannelID&amp; id , double fraction, int size, int charge"
+                   initList = "m_fraction(fraction), m_size(size), m_charge(charge)">
+        <code> this->setKey(id); </code>
+      </constructor>
+
+      <destructor  desc="destructor">
+        <code> // dummy  </code>
+      </destructor>
+
+      <method    name   = "channelID"
+                 desc   = "Retrieve the FTChannelID, key of the object"
+                 type   = "const LHCb::FTChannelID&amp;"
+                 access = "PUBLIC">
+        <code> return key(); </code>
+      </method>
+
+      <attribute name   = "fraction"
+                 desc   = "Fractional part of the channel ID, when barycentre si computed. between 0 and 1"
+                 type   = "double"
+                 access = "PUBLIC"/>
+
+      <attribute name   = "size"
+                 desc   = "Number of cells in this cluster"
+                 type   = "int"
+                 access = "PUBLIC"/>
+
+      <attribute name   = "charge"
+                 desc   = "Total charge in ADC count"
+                 type   = "int"
+                 access = "PUBLIC"/>
+
+    </class>
+  </package>
+</gdd>

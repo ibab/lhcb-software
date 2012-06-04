@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Eric Cogneras -->
+<!--- Created : 2012-05-15 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name="FTEvent">
+    <class name   = "FTDigit"
+           id     = "14004"
+           author = "Eric Cogneras"
+           desc   = "Contains the ADC count for the considered ChannelID"
+           serializers="FALSE">
+      <import   name = "Kernel/FTChannelID" />
+      <location name = "Default"   place="/FT/Digit"   />
+
+      <template name = "KeyedObjectDict" t1="LHCb::FTChannelID"/>
+      <base     name = "KeyedObject&lt;LHCb::FTChannelID&gt;" />
+      &KeyedObject;
+
+      <constructor desc     = "Constructor"
+		   argList  = "LHCb::FTChannelID&amp; id ">
+         <code> this->setKey(id); </code>
+      </constructor>
+
+      <destructor  desc="destructor">
+        <code> // dummy  </code>
+      </destructor>
+
+      <method    name   = "channelID"
+                 desc   = "Retrieve the FTChannelID, key of the object"
+                 type   = "const LHCb::FTChannelID&amp;"
+                 access = "PUBLIC">
+        <code> return key(); </code>
+      </method>
+
+
+      <attribute name   = "charge"
+                 desc   = "charge of the channel in ADC count"
+                 type   = "int"
+                 access = "PRIVATE"/>
+
+    </class>
+  </package>
+</gdd>

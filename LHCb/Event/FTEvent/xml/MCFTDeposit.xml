@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Eric Cogneras -->
+<!--- Created : 2012-05-15 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name="FTEvent">
+    <class name   = "MCFTDeposit"
+           id     = "14002"
+           author = "Eric Cogneras"
+           desc   = " Energy deposited by MCHit in ChannelID"
+           serializers="FALSE">
+      <import   name = "Kernel/FTChannelID" />
+      <import   name = "Event/MCHit" />
+      <location name = "Default"   place="MC/FT/Deposits"   />
+
+      <template name = "KeyedObjectDict" t1="LHCb::FTChannelID"/>
+      <base     name = "KeyedObject&lt;LHCb::FTChannelID&gt;" />
+      &KeyedObject;
+
+      <constructor desc     = "Constructor"
+		   argList  = "LHCb::FTChannelID&amp; id, LHCb::MCHit* aHit, double energy">
+        <code> this->setKey(id); 
+	  m_mcHitVec.push_back(std::make_pair(aHit,energy));
+	</code>
+      </constructor>
+
+      <destructor  desc="destructor">
+        <code> // dummy  </code>
+      </destructor>
+
+      <method    name   = "channelID"
+                 desc   = "Retrieve the FTChannelID, key of the object"
+                 type   = "const LHCb::FTChannelID&amp;"
+                 access = "PUBLIC">
+        <code> return key(); </code>
+      </method>
+
+      <method    name   = "addMCHit"
+                 desc   = "Add MCHit to the m_mcHitVec vector"
+                 type   = "void"
+		 argList = "LHCb::MCHit* hit, double deposit"
+                 access = "PUBLIC">
+        <code> m_mcHitVec.push_back(std::make_pair(hit,deposit)); </code>
+      </method>
+
+      <attribute name   = "mcHitVec"
+                 desc   = "Vector of pairs &lt;MCHit, Deposited energy in MeV&gt;"
+                 type   = "std::vector &lt; std::pair &lt;LHCb::MCHit*, double&gt; &gt;"
+		 setMeth = "FALSE"
+                 access = "PRIVATE"/>
+
+    </class>
+  </package>
+</gdd>
