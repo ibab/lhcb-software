@@ -5,6 +5,10 @@
 !--------------------------------------------------------------------------
 
 ! 2012-06-01 P. Hopchev
+  - In DeFTDetector.h make the method findLayer public to allow access
+    to it in the FT digitization
+
+! 2012-06-01 P. Hopchev
   - Change of the public/private policy: now almost all methods and variables
     are private. Exceptions are the constructors, destructors and classID accessors
     in all 4 det element classes (Detector, Station, BiLayer, Layer), and

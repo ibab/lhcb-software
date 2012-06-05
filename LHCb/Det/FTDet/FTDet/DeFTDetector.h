@@ -58,6 +58,11 @@ public:
    */
   static const CLID& classID() { return CLID_DeFTDetector; }
 
+  /** Find the FT Layer where a global point is
+   *  @return Pointer to the relevant Layer
+   */
+  const DeFTLayer* findLayer(  const Gaudi::XYZPoint& aPoint) const;
+
   /// Make the Test algo a friend so that it can call private methods
   friend class DeFTTestAlg;
 
@@ -92,10 +97,7 @@ private: // private member functions
    */
   const DeFTBiLayer* findBiLayer(const Gaudi::XYZPoint& aPoint) const;
 
-  /** Find the FT Layer where a global point is
-   *  @return Pointer to the relevant Layer
-   */
-  const DeFTLayer*   findLayer(  const Gaudi::XYZPoint& aPoint) const;
+  // findLayer method moved to the public section
 
   //TO-DO (when needed): Similar functions to find S/B/L where an FTChannelID is
 
