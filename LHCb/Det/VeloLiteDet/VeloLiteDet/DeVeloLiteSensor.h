@@ -1,0 +1,252 @@
+#ifndef DEVELOLITE_SENSOR_H
+#define DEVELOLITE_SENSOR_H 1
+
+// STL
+#include <algorithm>
+// Gaudi
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/PhysicalConstants.h"
+// Det/DetDesc
+#include "DetDesc/DetectorElement.h"
+#include "DetDesc/IGeometryInfo.h"
+// Kernel/LHCbKernel 
+#include "Kernel/Trajectory.h"
+
+// Unique class identifier
+static const CLID CLID_DeVeloLiteSensor = 1008301 ;
+
+// Forward declarations
+class DeVeloLiteRType;
+class DeVeloLitePhiType;
+
+namespace LHCb {
+  class VeloLiteChannelID;
+}
+
+/** @class DeVeloLiteSensor DeVeloLiteSensor.h VeloLiteDet/DeVeloLiteSensor.h
+ *
+ *  VeloLite sensor base class (based on DeVeloSensor)
+ *
+ */
+
+class DeVeloLiteSensor : public DetectorElement {
+
+public:
+  /// Constructor
+  DeVeloLiteSensor(const std::string& name = "");
+  /// Destructor
+  virtual ~DeVeloLiteSensor() {}
+
+  /// Object identification
+  static const CLID& classID() {return CLID_DeVeloLiteSensor;}
+  virtual const CLID& clID() const;
+
+  /// Initialisation
+  virtual StatusCode initialize();
+
+  /// Calculate the nearest channel to a 3-d point.
+  virtual StatusCode pointToChannel(const Gaudi::XYZPoint& point,
+                                    LHCb::VeloLiteChannelID& channel,
+                                    double& fraction,
+                                    double& pitch) const = 0;
+  /// Get the nth nearest neighbour for a given channel.
+  virtual StatusCode neighbour(const LHCb::VeloLiteChannelID& start,
+                               const int& nOffset,
+                               LHCb::VeloLiteChannelID& channel) const = 0;
+
+  /// Get the number of channels between two channels
+  virtual StatusCode channelDistance(const LHCb::VeloLiteChannelID& start,
+                                     const LHCb::VeloLiteChannelID& end,
+                                     int& nOffset) const;
+
+  /// Return a trajectory (for track fit) from strip + offset.
+  virtual std::auto_ptr<LHCb::Trajectory> trajectory(const LHCb::VeloLiteChannelID& id, 
+                                                     const double offset) const = 0;
+
+  /** Residual of 3d point to a VeloLiteChannelID
+   *
+   *  This is not a residual in 3d! The supplied 3d point is assumed
+   *  to be in the plane of the sensor and the residual is computed
+   *  in this plane. No check is performed whether the point is 
+   *  actually on the sensor.
+   */
+  virtual StatusCode residual(const Gaudi::XYZPoint& point,
+                              const LHCb::VeloLiteChannelID& channel,
+                              double& residual,
+                              double& chi2) const = 0;
+  /// Residual of 3d point to a VeloLiteChannelID + interstrip fraction
+  virtual StatusCode residual(const Gaudi::XYZPoint& point,
+                              const LHCb::VeloLiteChannelID& channel,
+                              const double interStripFraction,
+                              double& residual,
+                              double& chi2) const = 0;
+
+  /// Determine if a local 3d point is inside the sensor.
+  virtual StatusCode isInActiveArea(const Gaudi::XYZPoint& point) const = 0;
+
+  /// Zone number for a given strip
+  virtual unsigned int zoneOfStrip(const unsigned int strip) const = 0;
+  /// Global zone number for a strip (corrected for downstream facing R sensors)
+  virtual unsigned int globalZoneOfStrip(const unsigned int strip) {
+    unsigned int zone = zoneOfStrip(strip);
+    if (isR() && isDownstream()) zone = m_numberOfZones - 1 - zone;
+    return zone;
+  }
+  /// Number of strips in a given zone
+  virtual unsigned int stripsInZone(const unsigned int zone) const = 0;
+  /// Minimum radius of the sensitive area of a zone
+  virtual double rMin(const unsigned int zone) const = 0;
+  /// Maximum radius of the sensitive area of a zone
+  virtual double rMax(const unsigned int zone) const = 0;
+
+  /// Calculate the length of a strip.
+  virtual double stripLength(const unsigned int strip) const = 0;
+
+  /// Convert local position to global position.
+  /// Local from is +ve x (and Upstream for phi sensors)
+  Gaudi::XYZPoint localToGlobal(const Gaudi::XYZPoint& localPos) const {
+    return m_geometry->toGlobal(localPos);
+  }
+  /// Convert global position to local position.
+  Gaudi::XYZPoint globalToLocal(const Gaudi::XYZPoint& globalPos) const {
+    return m_geometry->toLocal(globalPos);
+  }
+  /// Convert local position to position inside Velo half-box
+  Gaudi::XYZPoint localToVeloHalfBox(const Gaudi::XYZPoint& localPos) const {
+    const Gaudi::XYZPoint globalPos = m_geometry->toGlobal(localPos);
+    return m_halfBoxGeom->toLocal(globalPos);
+  }
+  /// Convert position inside Velo half-box to local position
+  Gaudi::XYZPoint veloHalfBoxToLocal(const Gaudi::XYZPoint& boxPos) const {
+    Gaudi::XYZPoint globalPos = m_halfBoxGeom->toGlobal(boxPos);
+    return m_geometry->toLocal(globalPos);
+  }
+  /// Convert position inside Velo half-box to global position
+  Gaudi::XYZPoint veloHalfBoxToGlobal(const Gaudi::XYZPoint& boxPos) const {
+    return m_halfBoxGeom->toGlobal(boxPos);
+  }
+  /// Convert global position to position inside Velo half-box
+  Gaudi::XYZPoint globalToVeloHalfBox(const Gaudi::XYZPoint& globalPos) const {
+    return m_halfBoxGeom->toLocal(globalPos);
+  }
+
+  /// Pair of points defining start and end points of a strip in the local frame
+  std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint> localStripLimits(unsigned int strip) const {
+    return m_stripLimits[strip];
+  }
+  /// Pair of points defining start and end points of a strip in the global frame
+  std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint> globalStripLimits(unsigned int strip) const {
+    Gaudi::XYZPoint begin = m_geometry->toGlobal(m_stripLimits[strip].first);
+    Gaudi::XYZPoint end = m_geometry->toGlobal(m_stripLimits[strip].second);
+    return std::pair<Gaudi::XYZPoint, Gaudi::XYZPoint>(begin, end);
+  }
+
+  /// Convert local phi to ideal global phi
+  double localPhiToGlobal(double phiLocal) const {
+    if (isDownstream()) phiLocal = -phiLocal;
+    if (isRight()) phiLocal += Gaudi::Units::pi;
+    return phiLocal;
+  }
+
+  /// Z position of the sensor in the global frame
+  double z() const {return m_z;}
+
+  /// Station number, station contains 2 modules (right and left)
+  unsigned int station() const {return (m_sensorNumber & 0x3E) >> 1;}
+
+  /// Right side is x < 0 side of the detector
+  bool isRight() const {return !m_isLeft;}
+  bool isLeft() const {return m_isLeft;}
+  bool isDownstream() const {return m_isDownstream;}
+  bool isPileUp() const {return m_isPileUp;}
+  bool isR() const {return m_isR;}
+  bool isPhi() const {return m_isPhi;}
+
+  /// Fast cast to R sensor, returns 0 for wrong type
+  inline const DeVeloLiteRType* rType() const;
+  /// Fast cast to Phi sensor, returns 0 for wrong type
+  inline const DeVeloLitePhiType* phiType() const;
+
+  unsigned int numberOfStrips() const {return m_numberOfStrips;}
+  unsigned int numberOfZones() const {return m_numberOfZones;}
+
+  /// Minimum radius of the sensitive area
+  double innerRadius() const {return m_innerRadius;}
+  /// Maximum radius of the sensitive area
+  double outerRadius() const {return m_outerRadius;}
+  /// Bounding box of the sensitive area
+  double boundingBoxX() const {return m_boundingBoxX;}
+  double boundingBoxY() const {return m_boundingBoxY;}
+  /// Thickness of the sensor (in mm)
+  double siliconThickness() const {return m_siliconThickness;}
+  /// Software module number
+  std::string module() const {return m_module;}
+  /// Workaround to prevent hidden base class function
+  const std::type_info& type(const std::string &name) const {
+    return ParamValidDataObject::type(name);
+  }
+  std::string type() const {return m_type;}
+  std::string fullType() const {return m_fullType;}
+
+  /// Set/get the sensor number
+  void sensorNumber(unsigned int sensor) {m_sensorNumber = sensor;}
+  unsigned int sensorNumber() const {return m_sensorNumber;}
+
+  /// Convert routing line to chip channel
+  // This used to be (1234 -> 0213)
+  virtual unsigned int RoutingLineToChipChannel(unsigned int routLine) const {
+    return routLine;
+  }
+  /// Convert chip channel to routing line
+  // This used to be (0213 -> 1234) 
+  virtual unsigned int ChipChannelToRoutingLine(unsigned int chipChan) const {
+    return chipChan;
+  }
+
+protected:
+
+  /// Initialisation from XML
+  StatusCode initSensor();
+  /// Register condition call backs (to be called once from initialize())
+  virtual StatusCode registerConditionCallBacks();
+  virtual StatusCode cacheGeometry();
+
+  unsigned int m_numberOfZones;
+  unsigned int m_numberOfStrips;
+  // Map of routing line to strips
+  mutable std::map<unsigned int, unsigned int> m_mapRoutingLineToStrip;
+  // Map of strips to routing lines
+  mutable std::map<unsigned int, unsigned int> m_mapStripToRoutingLine;
+  // Begin and end point of strips
+  std::vector<std::pair<Gaudi::XYZPoint, Gaudi::XYZPoint> > m_stripLimits;
+
+  /// Geometry info of the sensor
+  IGeometryInfo* m_geometry;
+  /// Geometry info of the parent half box
+  IGeometryInfo* m_halfBoxGeom; 
+
+private:
+
+  std::string m_module;
+  std::string m_type;
+  std::string m_fullType;
+  bool m_isLeft;
+  bool m_isDownstream;
+  bool m_isR;
+  bool m_isPhi;
+  bool m_isPileUp;
+  unsigned int m_sensorNumber;
+  double m_siliconThickness;
+  double m_z;
+  double m_innerRadius;
+  double m_outerRadius; 
+  double m_boundingBoxX;
+  double m_boundingBoxY;
+
+  // Output level for message service
+  bool m_debug;
+  bool m_verbose;
+
+};
+
+#endif

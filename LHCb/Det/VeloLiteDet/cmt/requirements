@@ -1,0 +1,41 @@
+# =========================================================================
+package           VeloLiteDet 
+version           v1r0
+
+# =============== structure ===============================================	
+branches         src cmt VeloLiteDet dict
+
+# =============== used packages ===========================================
+use DetDesc     v*    Det
+use DetDescCnv  v*    Det
+use LHCbKernel  v*    Kernel
+use LHCbMath    v*    Kernel
+use GaudiAlg    v*
+use GSL         v*    LCG_Interfaces
+use Boost       v*    LCG_Interfaces
+
+macro_append Boost_linkopts " $(Boost_linkopts_regex) "
+
+# =============== own includes ============================================
+apply_pattern install_more_includes more=VeloLiteDet
+
+# =============== link library (base classes) =============================
+library          VeloLiteDetLib        Lib/*.cpp
+
+# =============== component library =======================================
+library          VeloLiteDet           component/*.cpp
+
+#================ patterns ================================================
+apply_pattern component_library library=VeloLiteDet
+apply_pattern linker_library    library=VeloLiteDetLib
+
+# =============== LCG Dictionaries ============================================
+apply_pattern     reflex_dictionary                                 \
+                  dictionary=VeloLiteDet                            \
+                  headerfiles=$(VELOLITEDETROOT)/dict/VeloLiteDetDict.h     \
+                  selectionfile=$(VELOLITEDETROOT)/dict/VeloLiteDetDict.xml \
+                  options="-U__MINGW32__"
+# Disable some compiler warnings in the automatically generated dict code
+macro_append VeloLiteDetDict_cppflags "" \
+                       target-icc " -wd654"
+
