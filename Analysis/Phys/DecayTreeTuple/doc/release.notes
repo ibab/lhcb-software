@@ -4,6 +4,12 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2012-06-05 - Patrick Koppenburg
+ - TupleToolTrackInfo: 
+   . Add Track likelihood
+   . Move Match chi2 to non verbose mode as this is the suggested chi2 to cut on
+   . Buglet in VELO_UTID
+
 ! 2012-05-15 - Patrick Koppenburg
  - Add some verbose printout in TupelToolDecayTreeFitter to link to bug
    https://savannah.cern.ch/bugs/?89749

@@ -96,7 +96,6 @@ StatusCode TupleToolTrackInfo::fill( const LHCb::Particle*
   }
   if(isVerbose())
   {
-    test &= tuple->column( prefix+"_TRACK_MatchCHI2", track->info(LHCb::Track::FitMatchChi2,-1) );
     //hopefully unique double constructed from multiplying all Velo hit IDs
     double veloUTID=1.;
     //std::vector< unsigned int > veloIDs;
@@ -111,16 +110,18 @@ StatusCode TupleToolTrackInfo::fill( const LHCb::Particle*
       }
     }
     //veloIDs.push_back( 0 );
-    test &= tuple->column( head+"_VELO_UTID", veloUTID );
+    test &= tuple->column( prefix+"_VELO_UTID", veloUTID );
   }
 
   //}
+  test &= tuple->column( prefix+"_TRACK_MatchCHI2", track->info(LHCb::Track::FitMatchChi2,-1) );
   double ghostProbability = -1.0;
   if (track->ghostProbability() != 0)
     ghostProbability = track->ghostProbability();
 
   test &= tuple->column( prefix+"_TRACK_GhostProb",ghostProbability);
   test &= tuple->column( prefix+"_TRACK_CloneDist", track->info(LHCb::Track::CloneDist, -1.) );
+  test &= tuple->column( prefix+"_TRACK_Likelihood", track->likelihood() );
 
 
   return StatusCode(test);
