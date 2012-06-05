@@ -2,7 +2,7 @@ from GaudiKernel.ProcessJobOptions import importOptions
 #importOptions("$APPCONFIGROOT/options/Boole/Upgrade-WithTruth.py")
 
 from Gaudi.Configuration import *
-from Configurables import Boole, LHCbApp, GaudiSequencer, MCFTDepositCreator, MCFTDigitCreator,FTClusterCreator,FTRawBankEncoder,FTRawBankDecoder
+from Configurables import Boole, LHCbApp, GaudiSequencer, MCFTDepositCreator, MCFTDigitCreator,FTClusterCreator#,FTRawBankEncoder,FTRawBankDecoder
 from Configurables import L0Conf, DDDBConf
 L0Conf().TCK = '0x002A'
 
@@ -35,11 +35,11 @@ myAlgCluster.ClusterMaxWidth = 8
 #myAlgCluster.ClusterMaxCharge = 8
 #myAlgCluster.InputLocation = "MC/FT/Digits"
 
-myAlgEncoder = FTRawBankEncoder()
-myAlgEncoder.OutputLevel = DEBUG
+#myAlgEncoder = FTRawBankEncoder()
+#myAlgEncoder.OutputLevel = DEBUG
 
-myAlgDecoder = FTRawBankDecoder()
-myAlgDecoder.OutputLevel = DEBUG
+#myAlgDecoder = FTRawBankDecoder()
+#myAlgDecoder.OutputLevel = DEBUG
 #myAlgEncoder.InputLocation = "MC/FT/Digits"
 
 #GaudiSequencer("LinkFTSeq").Members = [myAlgDeposit,myAlgDigit,myAlgCluster,myAlgEncoder,myAlgDecoder]

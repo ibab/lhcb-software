@@ -10,7 +10,7 @@
 #include "Kernel/FTChannelID.h"
 
 
-using namespace LHCb;
+//using namespace LHCb;
 
 /** @class MCFTDigitCreator MCFTDigitCreator.h
  *  
@@ -29,7 +29,7 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-  int Deposit2ADC(MCFTDeposit* ftdeposit); ///< This function converts deposited energy in ADC Count
+  int deposit2ADC(LHCb::MCFTDeposit* ftdeposit); ///< This function converts deposited energy in ADC Count
   
 protected:
 

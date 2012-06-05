@@ -13,13 +13,11 @@
 // from FTEvent
 #include "Event/MCFTDeposit.h"
 #include "FTDet/DeFTLayer.h"
-//#include "Event/MCParticle.h"
-
-
 
 // local
 #include "MCFTDepositCreator.h"
 
+using namespace LHCb;
 //-----------------------------------------------------------------------------
 // Implementation file for class : MCFTDepositCreator
 //
@@ -60,6 +58,11 @@ StatusCode MCFTDepositCreator::initialize() {
   debug() << ": InputLocation is " <<m_inputLocation << endmsg;
   debug() << ": OutputLocation is " <<m_outputLocation << endmsg;
 
+  /// Retrieve and initialize DeFT
+  m_deFT = getDet<DeFTDetector>( DeFTDetectorLocation::Default );
+  if (m_deFT) { debug() << "Successfully retrieved DeFT" << endmsg; }
+  else { error() << "Error getting DeFT" << endmsg; }
+
 
   return StatusCode::SUCCESS;
 }
@@ -72,10 +75,6 @@ StatusCode MCFTDepositCreator::execute() {
     debug() << "==> Execute" << endmsg;
   }
 
-  /// Retrieve and initialize DeFT
-  DeFTDetector* deFT = getDet<DeFTDetector>( DeFTDetectorLocation::Default );
-  if (deFT) { debug() << "Successfully retrieved DeFT" << endmsg; }
-  else { error() << "Error getting DeFT" << endmsg; }
 
   // retrieve Hits
   const MCHits* mcHitsCont = get<MCHits>(m_inputLocation);
@@ -109,7 +108,7 @@ StatusCode MCFTDepositCreator::execute() {
     ++loopCounter;
 
     //call the calculateHits method
-    const DeFTLayer* pL = deFT->findLayer(aHit->midPoint());
+    const DeFTLayer* pL = m_deFT->findLayer(aHit->midPoint());
     std::vector< std::pair<LHCb::FTChannelID, double> > vectCF;
     if (pL) {
       pL->calculateHits(aHit->entry(), aHit->exit(), vectCF);
@@ -121,7 +120,7 @@ StatusCode MCFTDepositCreator::execute() {
 
     std::vector< std::pair<LHCb::FTChannelID, double> > vectCE;
 
-    if(RelativeXFractionToEnergyFraction(vectCF,vectCE)){
+    if(relativeXFractionToEnergyFraction(vectCF,vectCE)){
       std::vector< std::pair<LHCb::FTChannelID, double> >::const_iterator vecIter;
       for(vecIter = vectCE.begin(); vecIter != vectCE.end(); ++vecIter){
         debug()  << "FTChannel = " << vecIter->first << " EnergyHitFraction = " << vecIter->second << endmsg;
@@ -155,7 +154,7 @@ StatusCode MCFTDepositCreator::finalize() {
 }
 
 //=============================================================================
-StatusCode MCFTDepositCreator::RelativeXFractionToEnergyFraction(const FTDoublePair positionPair, FTDoublePair& energyPair) {
+StatusCode MCFTDepositCreator::relativeXFractionToEnergyFraction(const FTDoublePair positionPair, FTDoublePair& energyPair) {
   double positionSum = positionPair.size();
 
   for(FTDoublePair::const_iterator vecIter = positionPair.begin(); vecIter != positionPair.end(); ++vecIter){

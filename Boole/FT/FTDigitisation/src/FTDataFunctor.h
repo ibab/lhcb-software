@@ -2,12 +2,11 @@
 #ifndef FTDATAFUNCTOR_H 
 #define FTDATAFUNCTOR_H 1
 
-// Include files
-//#include <functional>
-//#include <numeric>
- // from FTEvent
+
+ // from Event
 #include "Event/MCFTDigit.h"
-//#include "Kernel/FTChannelID.h"
+
+
 /** @class FTDataFunctor FTDataFunctor.h
  *  
  *
@@ -34,7 +33,7 @@ namespace FTDataFunctor {
 }
 
 
-struct less_Chan : public std::binary_function<MCFTDigit*, MCFTDigit*, bool>{
- bool operator()(MCFTDigit* x, MCFTDigit* y)const {return x->channelID() < y->channelID();}
+struct less_Chan : public std::binary_function<LHCb::MCFTDigit*, LHCb::MCFTDigit*, bool>{
+ bool operator()(LHCb::MCFTDigit* x, LHCb::MCFTDigit* y)const {return x->channelID() < y->channelID();}
 };
 #endif // FTDATAFUNCTOR_H

@@ -11,7 +11,7 @@
 
 #include "Event/MCFTDigit.h"
 
-using namespace LHCb;
+//using namespace LHCb;
 
 /** @class FTClusterCreator FTClusterCreator.h
  *  
@@ -31,7 +31,7 @@ public:
   virtual StatusCode finalize  ();    ///< Algorithm finalization
   
 
-  bool keepAdding(MCFTDigits::const_iterator clusCandIter);///< Check conditions before adding another digit to the cluster
+  bool keepAdding(LHCb::MCFTDigits::const_iterator clusCandIter);///< Check conditions before adding another digit to the cluster
 
 protected:
 

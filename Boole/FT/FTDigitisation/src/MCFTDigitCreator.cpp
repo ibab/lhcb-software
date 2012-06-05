@@ -14,6 +14,9 @@
 // local
 #include "MCFTDigitCreator.h"
 #include "FTDataFunctor.h"
+
+using namespace LHCb;
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : MCFTDigitCreator
 //
@@ -90,7 +93,7 @@ StatusCode MCFTDigitCreator::execute() {
       aMCParticleMap[vecIter->first->mcParticle()] += vecIter->second;
     }
 
-    MCFTDigit *aDigit = new MCFTDigit(aDeposit->channelID(),Deposit2ADC(aDeposit),aMCParticleMap);
+    MCFTDigit *aDigit = new MCFTDigit(aDeposit->channelID(),deposit2ADC(aDeposit),aMCParticleMap);
     digitCont->insert(aDigit);
   }
 
@@ -130,7 +133,7 @@ StatusCode MCFTDigitCreator::finalize() {
 }
 
 //=============================================================================
-int MCFTDigitCreator::Deposit2ADC(MCFTDeposit* ftdeposit)
+int MCFTDigitCreator::deposit2ADC(LHCb::MCFTDeposit* ftdeposit)
 {
   /// Compute energy sum
   double energySum = 0;

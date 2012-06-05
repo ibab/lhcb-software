@@ -14,7 +14,7 @@
 //#include "FTDet/Sector.h"
 //#include "FTDet/Sensor.h"
 
-using namespace LHCb;
+//using namespace LHCb;
 
 typedef std::vector< std::pair<LHCb::FTChannelID, double> > FTDoublePair;
 
@@ -43,10 +43,13 @@ private:
   std::string m_inputLocation;
   std::string m_outputLocation;
   
+  DeFTDetector* m_deFT;
+  
+
   double m_neighbourFrac;
   std::string m_energySharingMode;
 
-  StatusCode RelativeXFractionToEnergyFraction(const FTDoublePair positionPair, FTDoublePair& energyPair);
+  StatusCode relativeXFractionToEnergyFraction(const FTDoublePair positionPair, FTDoublePair& energyPair);
   
 };
 #endif // MCFTDEPOSITCREATOR_H

@@ -14,6 +14,7 @@
 // local
 #include "FTClusterCreator.h"
 
+using namespace LHCb;
 //-----------------------------------------------------------------------------
 // Implementation file for class : FTClusterCreator
 //
@@ -201,7 +202,7 @@ StatusCode FTClusterCreator::finalize() {
 }
 
 //=============================================================================
-bool FTClusterCreator::keepAdding(MCFTDigits::const_iterator clusCandIter)
+bool FTClusterCreator::keepAdding(LHCb::MCFTDigits::const_iterator clusCandIter)
 {
   /** checks that channelID is :
       - in the same SiPM
