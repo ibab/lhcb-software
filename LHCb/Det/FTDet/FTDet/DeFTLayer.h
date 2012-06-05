@@ -87,6 +87,16 @@ public:
   /// Destructor
   virtual ~DeFTLayer( );
 
+  /** Initialization method 
+   *  @return Status of initialization
+   */ 
+  virtual StatusCode initialize();
+
+  /** Finalization method - delete objects created with new
+   *  @return Status of finalization
+   */ 
+  StatusCode finalize();
+
   /** Retrieves reference to class identifier
    *  @return The class identifier for this class
    */
@@ -115,6 +125,9 @@ public:
   /// Get the layer stereo angle
   double angle() const { return m_angle; }
 
+  /** @return Tangent of the stereo angle of the layer */
+  double tanAngle() const { return m_tanAngle; }
+
   /// Get the u-coordinate of the cell center
   double cellUCoordinate(const LHCb::FTChannelID aChan) const;
 
@@ -133,24 +146,26 @@ public:
   /// Accessor to the z-position of the layer center
   double layerCenterZ() const { return m_layerPosZ; }
 
+  /** Get the FTChannelID of the cell located on the left of the given cell. */
+  LHCb::FTChannelID nextChannelLeft(const LHCb::FTChannelID& aChan) const;
+
+  /** Get the FTChannelID of the cell located on the right of the given cell. */
+  LHCb::FTChannelID nextChannelRight(const LHCb::FTChannelID& aChan) const;
+
+  /** Create a DetectorSegment (straight line representing an FT cell)
+   *  from a global XYZ point
+   */
+  DetectorSegment createDetSegment(const Gaudi::XYZPoint& globalPoint) const;
+
+  /** Create a DetectorSegment (straight line representing an FT cell)
+   *  from an FTChannelID and fractional position within the relevant cell
+   */
+  DetectorSegment createDetSegment(const LHCb::FTChannelID& aChan, double fracPos) const;
+
   /// Make the Test algo a friend so that it can call private methods
   friend class DeFTTestAlg;
 
-
 private: // private member functions
-
-  /** Initialization method 
-   *  @return Status of initialization
-   */ 
-  virtual StatusCode initialize();
-
-  /** Finalization method - delete objects created with new
-   *  @return Status of finalization
-   */ 
-  virtual StatusCode finalize();
-
-  /** @return Tangent of the stereo angle of the layer */
-  double tanAngle() const { return m_tanAngle; }
 
   /** Get the x-position at the top/bottom of the layer by extrapolating
    *  along the fibres the initial
@@ -221,16 +236,6 @@ private: // private member functions
                                const Gaudi::XYZPoint&  gpExit,
                                Gaudi::XYZPoint&        pIntersect) const;
 
-  /** Create a DetectorSegment (straight line representing an FT cell)
-   *  from a global XYZ point
-   */
-  DetectorSegment createDetSegment(const Gaudi::XYZPoint& globalPoint) const;
-
-  /** Create a DetectorSegment (straight line representing an FT cell)
-   *  from an FTChannelID
-   */
-  DetectorSegment createDetSegment(const LHCb::FTChannelID& aChan, double fracPos) const;
-
   /** Function to determine the y coordinate of the crossing point between
    *  the beam-pipe hole (circle) and the fibres. Purely geometrical function.
    *  @param x0 u-coordinate of the fibre (i.e. x@y=0)
@@ -239,13 +244,6 @@ private: // private member functions
    *  @return StatusCode: does the fibre trajectory cross the beam-pipe circle
    */
   StatusCode beamPipeYCoord(const double x0, const int ySign, double& yIntersect) const;
-
-  /** Get the FTChannelID of the cell located on the left of the given cell. */
-  LHCb::FTChannelID nextChannelLeft(const LHCb::FTChannelID& aChan) const;
-
-  /** Get the FTChannelID of the cell located on the right of the given cell. */
-  LHCb::FTChannelID nextChannelRight(const LHCb::FTChannelID& aChan) const;
-  
 
 private: // private data members
 

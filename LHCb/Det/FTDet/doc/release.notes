@@ -4,6 +4,10 @@
 ! Responsible : Plamen Hopchev
 !--------------------------------------------------------------------------
 
+! 2012-06-05 P. Hopchev
+  - In DeFTDetector.h, DeFTStation.h, DeFTBiLayer and DeFTLayer.h:
+    make more methods public
+
 ! 2012-06-01 P. Hopchev
   - In DeFTDetector.h make the method findLayer public to allow access
     to it in the FT digitization

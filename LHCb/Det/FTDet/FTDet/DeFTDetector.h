@@ -48,6 +48,16 @@ public:
   /// Destructor
   virtual ~DeFTDetector( );
 
+  /** Initialization method 
+   *  @return Status of initialization
+   */ 
+  virtual StatusCode initialize();
+
+  /** Finalization method - delete objects created with new
+   *  @return Status of finalization
+   */ 
+  StatusCode finalize();
+
   /** Retrieves reference to class identifier
    *  @return The class identifier for this class
    */
@@ -57,26 +67,6 @@ public:
    *  @return The class identifier for this class
    */
   static const CLID& classID() { return CLID_DeFTDetector; }
-
-  /** Find the FT Layer where a global point is
-   *  @return Pointer to the relevant Layer
-   */
-  const DeFTLayer* findLayer(  const Gaudi::XYZPoint& aPoint) const;
-
-  /// Make the Test algo a friend so that it can call private methods
-  friend class DeFTTestAlg;
-
-private: // private member functions
-
-  /** Initialization method 
-   *  @return Status of initialization
-   */ 
-  virtual StatusCode initialize();
-
-  /** Finalization method - delete objects created with new
-   *  @return Status of finalization
-   */ 
-  virtual StatusCode finalize();
 
   /** @return Vector of pointers to the FT Stations */
   const Stations& stations() const { return m_stations; }
@@ -97,9 +87,17 @@ private: // private member functions
    */
   const DeFTBiLayer* findBiLayer(const Gaudi::XYZPoint& aPoint) const;
 
-  // findLayer method moved to the public section
+  /** Find the FT Layer where a global point is
+   *  @return Pointer to the relevant Layer
+   */
+  const DeFTLayer* findLayer(const Gaudi::XYZPoint& aPoint) const;
 
   //TO-DO (when needed): Similar functions to find S/B/L where an FTChannelID is
+
+  /// Make the Test algo a friend so that it can call private methods
+  friend class DeFTTestAlg;
+
+private: // private member functions
 
 private: // private data members
 

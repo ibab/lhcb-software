@@ -29,6 +29,11 @@ public:
   /// Destructor
   virtual ~DeFTStation( );
 
+  /** Initialization method 
+   *  @return Status of initialization
+   */ 
+  virtual StatusCode initialize();
+
   /** Retrieves reference to class identifier
    *  @return The class identifier for this class
    */
@@ -38,13 +43,6 @@ public:
    *  @return The class identifier for this class
    */
   static const CLID& classID() { return CLID_DeFTStation; }
-
-private: // private member functions
-
-  /** Initialization method 
-   *  @return Status of initialization
-   */ 
-  virtual StatusCode initialize();
 
 };
 #endif // DEFTSTATION_H
