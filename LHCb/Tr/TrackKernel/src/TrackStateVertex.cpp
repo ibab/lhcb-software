@@ -258,7 +258,7 @@ namespace LHCb
   TrackStateVertex::TrackStateVertex( const Gaudi::XYZPoint& reference,
 				      const Gaudi::SymMatrix3x3& refcovariance,
 				      bool isweightmatrix )
-    : m_fitStatus(UnFitted), m_chi2(-1), m_poscov(refcovariance)
+    : m_poscov(refcovariance), m_fitStatus(UnFitted), m_chi2(-1)
   {
     m_refpos(0) =  reference.x() ;
     m_refpos(1) =  reference.y() ;
