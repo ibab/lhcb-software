@@ -128,7 +128,7 @@ StatusCode MCFTDepositCreator::execute() {
           // if reference to the channelID already exists
           (depositCont->object(vecIter->first))->addMCHit(aHit,aHit->energy()*vecIter->second);
         }
-        else{
+        else if ( vecIter->first.layer() < 15 ) {  // Ignore fake cells, i.e. not readout
           // create new entry
           MCFTDeposit *aDeposit = new MCFTDeposit(vecIter->first,aHit,aHit->energy()*vecIter->second);
           depositCont->insert(aDeposit,vecIter->first);
