@@ -68,7 +68,7 @@ L0DUAlg::~L0DUAlg() {}
 StatusCode L0DUAlg::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize() ;
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-  debug() << "==> Initialize" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
 
   //---------------------------
@@ -94,7 +94,8 @@ StatusCode L0DUAlg::initialize() {
   std::istringstream is( m_tck.c_str() );
   is >> std::hex >> itck;
   m_confTool = tool<IL0DUConfigProvider>(m_configType , m_configName );
-  debug() << " loading the configuration for TCK = " << m_tck << " /  " << itck << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) 
+    debug() << " loading the configuration for TCK = " << m_tck << " /  " << itck << endmsg;
   m_config   = m_confTool->config( itck );
   if( NULL == m_config){
     error() << " Unable to load the configuration for TCK = " << m_tck << " /  " << itck << endmsg;
@@ -114,7 +115,8 @@ StatusCode L0DUAlg::execute() {
 
 
   // process the emulator
-  debug() << "Emulator processing ( Data = " << m_dataLocations << ", TCK = " << m_tck << " )" <<endmsg;
+  if ( msgLevel(MSG::DEBUG) ) 
+    debug() << "Emulator processing ( Data = " << m_dataLocations << ", TCK = " << m_tck << " )" <<endmsg;
   StatusCode sc = m_emulator->process(m_config, m_dataLocations );
   if(sc.isFailure()){
     Error("Cannot process the emulator").ignore();
@@ -123,7 +125,7 @@ StatusCode L0DUAlg::execute() {
   
   // push Report and Config on TES
   if(m_writeOnTES){
-    debug() <<"Push L0DUReport on TES" << endmsg;
+    if ( msgLevel(MSG::DEBUG) ) debug() <<"Push L0DUReport on TES" << endmsg;
     LHCb::L0DUReport* report = new LHCb::L0DUReport(m_emulator->emulatedReport());
     std::string loc = dataLocation( m_reportLocation );
     put (report   , loc );
@@ -131,7 +133,8 @@ StatusCode L0DUAlg::execute() {
   
   //push bank in RawBuffer
   if(m_writeBanks){
-    debug() << "Insert RawBank in rawEvent" << endmsg;
+    if ( msgLevel(MSG::DEBUG) ) 
+      debug() << "Insert RawBank in rawEvent" << endmsg;
     const std::vector<unsigned int> block = m_emulator->bank(m_rawVsn);
     LHCb::RawEvent* raw = getOrCreate<LHCb::RawEvent,LHCb::RawEvent>(LHCb::RawEventLocation::Default);
     raw->addBank(m_rawSrcID , m_rawBankType , m_rawVsn , block);
@@ -144,7 +147,7 @@ StatusCode L0DUAlg::execute() {
 //  Finalize
 //=============================================================================
 StatusCode L0DUAlg::finalize() {
-  debug()<< "==> Finalize" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug()<< "==> Finalize" << endmsg;
   return GaudiAlgorithm::finalize();
 }
 

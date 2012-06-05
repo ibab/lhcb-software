@@ -1,4 +1,3 @@
-// $Id: L0CondDBProvider.cpp,v 1.6 2010-01-20 16:30:58 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -26,6 +25,7 @@ L0CondDBProvider::L0CondDBProvider( const std::string& type,
                     const std::string& name,
                     const IInterface* parent )
   : GaudiTool ( type, name , parent ),
+    m_ecal(NULL),
     m_gain(),
     m_cycle(3564)
 {
@@ -39,7 +39,7 @@ L0CondDBProvider::~L0CondDBProvider() {}
 
 //=============================================================================
 StatusCode L0CondDBProvider::initialize(){
-  debug() << "Initialize L0CondDBProvider" <<endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "Initialize L0CondDBProvider" <<endmsg;
   StatusCode sc = GaudiTool::initialize();
   if(sc.isFailure())return sc;
 
@@ -91,7 +91,8 @@ double L0CondDBProvider::caloEtScale(){
     Error("Parameter 'L0EtBin' not found in Ecal 'Gain'",StatusCode::SUCCESS).ignore();
     counter("'L0EtBin' parameter not found in 'Gain' condition")+=1;
   }
-  debug() << "CaloEt scale set to " << caloEtScale << " MeV" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) 
+    debug() << "CaloEt scale set to " << caloEtScale << " MeV" << endmsg;
   return caloEtScale;
 }
 

@@ -1,4 +1,3 @@
-// $Id: L0DUMultiConfigProvider.cpp,v 1.9 2010-02-23 20:06:08 odescham Exp $
 // Include files 
 
 #include<iostream>
@@ -31,8 +30,9 @@ L0DUMultiConfigProvider::L0DUMultiConfigProvider( const std::string& type,
                                                   const std::string& name,
                                                   const IInterface* parent )
   : GaudiTool ( type, name , parent )
-  ,m_configs()
-  ,m_template()
+  , m_configs()
+  , m_provider(NULL)
+  , m_template()
 {
   declareInterface<IL0DUConfigProvider>(this);
   //
@@ -58,7 +58,8 @@ L0DUMultiConfigProvider::~L0DUMultiConfigProvider() {}
 // Initialize is the main method
 //=============================================================================
 StatusCode L0DUMultiConfigProvider::initialize(){
-  debug() << "Initialize L0DUMultiConfigProvider" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) 
+    debug() << "Initialize L0DUMultiConfigProvider" << endmsg;
   StatusCode sc = GaudiTool::initialize();
   if(sc.isFailure())return sc;
 
@@ -168,7 +169,8 @@ LHCb::L0DUConfig*  L0DUMultiConfigProvider::loadConfig( std::string tck ,std::st
 
   std::stringstream s("");
   s <<  "TCK_" << tck ;
-  debug() << "Loading L0DUConfigProvider : " << s.str() << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) 
+    debug() << "Loading L0DUConfigProvider : " << s.str() << endmsg;
   m_provider = tool<IL0DUConfigProvider>("L0DUConfigProvider" , s.str(),this );
 
 
@@ -178,7 +180,8 @@ LHCb::L0DUConfig*  L0DUMultiConfigProvider::loadConfig( std::string tck ,std::st
   std::istringstream is( stck.c_str() );
   is >> std::hex >> itck;
 
-  debug() << "TCK = '"<<tck <<"' -> decimal value = " << itck << endmsg ;
+  if ( msgLevel(MSG::DEBUG) ) 
+    debug() << "TCK = '"<<tck <<"' -> decimal value = " << itck << endmsg ;
 
   LHCb::L0DUConfig* config = m_provider->config( itck , slot);
 
@@ -190,14 +193,16 @@ LHCb::L0DUConfig*  L0DUMultiConfigProvider::loadConfig( std::string tck ,std::st
 
 
 
-  debug() << "looking for configs for slot " << slot << " size = " << m_configs.size() << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) 
+    debug() << "looking for configs for slot " << slot << " size = " << m_configs.size() << endmsg;
   std::map<std::string,LHCb::L0DUConfigs*>::iterator ic = m_configs.find( slot );
   if(ic != m_configs.end())debug() << "configs for slot " << slot << " found : " << (*ic).second << endmsg;
   if(ic == m_configs.end()){
     LHCb::L0DUConfigs* confs = new LHCb::L0DUConfigs();
     m_configs[slot]= confs;
   }
-  debug() << "inserting config " << config << " in container " << m_configs[slot] << " for slot " << slot << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) 
+    debug() << "inserting config " << config << " in container " << m_configs[slot] << " for slot " << slot << endmsg;
   m_configs[slot]->insert( config );
 
   return  config;

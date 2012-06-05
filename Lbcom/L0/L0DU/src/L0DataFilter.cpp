@@ -42,7 +42,7 @@ L0DataFilter::~L0DataFilter() {}
 StatusCode L0DataFilter::initialize() {
   StatusCode sc = L0AlgBase::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-  debug() << "==> Initialize" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
   if( m_selection.empty()) info() << "No selection is defined - filter has no effect" << endmsg;
 
@@ -128,7 +128,7 @@ StatusCode L0DataFilter::execute() {
 //=============================================================================
 StatusCode L0DataFilter::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
   return L0AlgBase::finalize();  // must be called after all other actions
 }
 

@@ -1,4 +1,3 @@
-// $Id: L0DUEmulatorTool.cpp,v 1.16 2010-03-02 16:36:49 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -30,6 +29,10 @@ L0DUEmulatorTool::L0DUEmulatorTool( const std::string& type,
     m_muZeroSup(),
     m_muHighest(),
     m_muPattern(0),
+    m_decoder(NULL),
+    m_condDB(NULL),
+    m_odin(NULL),
+    m_config(NULL),
     m_begEvent(true)
 {
   declareInterface<IL0DUEmulatorTool>(this);
@@ -46,7 +49,7 @@ L0DUEmulatorTool::~L0DUEmulatorTool() {}
 //=============================================================================
 
 StatusCode L0DUEmulatorTool::initialize(){
-  debug() << "Initialize  L0EmulatorTool" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "Initialize  L0EmulatorTool" << endmsg;
   StatusCode sc = GaudiTool::initialize();
   if(sc.isFailure())return sc;
 

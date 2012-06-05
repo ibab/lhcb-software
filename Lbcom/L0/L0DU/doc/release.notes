@@ -3,6 +3,11 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+! 2012-06-05 - Marco Cattaneo
+ - Protect all unprotected debug() and verbose() messages
+ - Fix UNINIT_CTOR defects
+ - Fix trivial icc warning (unused variable)
+
 ! 2012-06-01 - Julien Cogan
  - L0Conf :
    - add new property to be used by Moore : ForceSingleL0Configuration 

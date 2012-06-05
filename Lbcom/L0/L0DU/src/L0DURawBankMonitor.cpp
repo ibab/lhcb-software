@@ -1,4 +1,3 @@
-// $Id: L0DURawBankMonitor.cpp,v 1.25 2010-05-26 10:46:21 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -25,9 +24,14 @@ DECLARE_ALGORITHM_FACTORY( L0DURawBankMonitor )
 //=============================================================================
 L0DURawBankMonitor::L0DURawBankMonitor( const std::string& name,
                                         ISvcLocator* pSvcLocator)
-  : Calo2Dview ( name , pSvcLocator ),
-    m_first(true){
-
+  : Calo2Dview ( name , pSvcLocator )
+  , m_fromRaw(NULL)
+  , m_emuTool(NULL)
+  , m_condDB(NULL)
+  , m_odin(NULL)
+  , m_spd(NULL)
+  , m_first(true)
+{
   declareProperty( "L0DUFromRawTool"   , m_fromRawTool = "L0DUFromRawTool" );  
   declareProperty( "EmulatorTool"      , m_emulatorTool= "L0DUEmulatorTool");
   declareProperty( "Convert"           , m_conv = false);
@@ -60,7 +64,7 @@ StatusCode L0DURawBankMonitor::initialize() {
   StatusCode sc = Calo2Dview::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
   m_first = true;
   if(m_full){
@@ -91,7 +95,7 @@ StatusCode L0DURawBankMonitor::initialize() {
 //=============================================================================
 StatusCode L0DURawBankMonitor::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   if( 0x0 != m_mask )setFilterPassed( false );
 
@@ -353,15 +357,17 @@ StatusCode L0DURawBankMonitor::execute() {
                           ,StatusCode::SUCCESS).ignore();
         if(( m_mask == L0DUBase::L0DUError::BxPGAShift )  )setFilterPassed(true);
       }
-      debug() << "BCID ODIN/L0DU&0x7F/PGA3 : " << odBX << "/" 
-              <<  (0x7F &m_fromRaw->bcid().first) << " / " << m_fromRaw->bcid().second<< endmsg;
+      if ( msgLevel(MSG::DEBUG) ) 
+        debug() << "BCID ODIN/L0DU&0x7F/PGA3 : " << odBX << "/" 
+                <<  (0x7F &m_fromRaw->bcid().first) << " / " << m_fromRaw->bcid().second<< endmsg;
     }
     if( odBX != m_fromRaw->bcid().first){
       fill( histo1D(toHistoID("Status/Summary/1")), L0DUBase::L0DUError::BxOdinShift , 1 );
       if(m_warn)Warning("Status::Warning : L0DU bank monitor summary : -- ODIN/L0DU BXID misaligned -- "
                         ,StatusCode::SUCCESS).ignore();
       if( ( m_mask == L0DUBase::L0DUError::BxOdinShift )  )setFilterPassed(true);
-      debug() << "BCID L0DU/ODIN : " <<  m_fromRaw->bcid().first << " / " << odBX << endmsg;
+      if ( msgLevel(MSG::DEBUG) ) 
+        debug() << "BCID L0DU/ODIN : " <<  m_fromRaw->bcid().first << " / " << odBX << endmsg;
     }
     if( (m_fromRaw->status() & 0x1) ){
       fill( histo1D(toHistoID("Status/Summary/1")), L0DUBase::L0DUError::IdleLink , 1 );
@@ -423,7 +429,7 @@ StatusCode L0DURawBankMonitor::execute() {
 //=============================================================================
 StatusCode L0DURawBankMonitor::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
   return Calo2Dview::finalize();  // must be called after all other actions
 }
@@ -590,7 +596,8 @@ bool L0DURawBankMonitor::emulatorCheck(LHCb::L0DUConfig* config, int unit, std::
   for(LHCb::L0DUChannel::Map::iterator it = channels.begin();it!=channels.end();it++){
     int id = ((*it).second)->id() ;
     if( report.channelPreDecision( id ) != ((*it).second)->emulate()->emulatedPreDecision() ){
-      debug() << "Emulator check error for channel " << (*it).first << endmsg;
+      if ( msgLevel(MSG::DEBUG) ) 
+        debug() << "Emulator check error for channel " << (*it).first << endmsg;
       plot1D( (double) id ,"Status/L0DU/EmulatorCheck/Channels/" + Gaudi::Utils::toString(unit),
               "L0DU channels preDecision emulator check (" + txt + ")" ,-1. ,(double) cBin  , cBin+1);
       check = false;
@@ -605,7 +612,8 @@ bool L0DURawBankMonitor::emulatorCheck(LHCb::L0DUConfig* config, int unit, std::
   for(LHCb::L0DUElementaryCondition::Map::iterator it = conditions.begin();it!=conditions.end();it++){
     int id = ((*it).second)->id() ;
     if( report.conditionValue( id ) != ((*it).second)->emulatedValue() ){
-      debug() << "Emulator check error for condition " << (*it).first << endmsg;
+      if ( msgLevel(MSG::DEBUG) ) 
+        debug() << "Emulator check error for condition " << (*it).first << endmsg;
       plot1D( (double) id ,"Status/L0DU/EmulatorCheck/Conditions/" + Gaudi::Utils::toString(unit), 
               "L0DU conditions value emulator check (" + txt + ")",-1. ,(double) ecBin  , ecBin+1);
       check = false;

@@ -25,6 +25,9 @@ DECLARE_ALGORITHM_FACTORY( L0DataNtp )
 L0DataNtp::L0DataNtp( const std::string& name,
                     ISvcLocator* pSvcLocator)
   : GaudiTupleAlg ( name , pSvcLocator )
+  , m_l0(NULL)
+  , m_l0conf(NULL)
+  , m_l0emu(NULL)
 {
   declareProperty("DataList"   , m_list );
   declareProperty( "ScaledData",m_scale=false);
@@ -56,7 +59,7 @@ L0DataNtp::~L0DataNtp() {}
 StatusCode L0DataNtp::initialize() {
   StatusCode sc = GaudiTupleAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-  debug() << "==> Initialize" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
   m_l0    = tool<IL0DUFromRawTool>("L0DUFromRawTool","L0DUFromRaw" ,this );
   m_l0emu = tool<IL0DUEmulatorTool>("L0DUEmulatorTool","L0DUEmulator",this);
@@ -137,7 +140,7 @@ std::string L0DataNtp::rename(std::string name){
 //=============================================================================
 StatusCode L0DataNtp::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
   return GaudiTupleAlg::finalize();  // must be called after all other actions
 }
 

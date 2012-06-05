@@ -38,7 +38,7 @@ public:
 
 
   virtual void handle(const Incident& /* inc */ ) { 
-    debug() << "IIncident Svc reset" << endmsg;
+    if ( msgLevel(MSG::DEBUG) ) debug() << "IIncident Svc reset" << endmsg;
     m_begEvent = true ;  
     for (std::map<unsigned int, bool>::iterator it = m_procMap.begin(); m_procMap.end() != it; ++it ){
       (*it).second = true;

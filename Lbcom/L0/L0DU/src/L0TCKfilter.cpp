@@ -1,4 +1,3 @@
-// $Id: L0TCKfilter.cpp,v 1.3 2010-01-29 12:49:27 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -53,7 +52,7 @@ StatusCode L0TCKfilter::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
   setFilterPassed(false);
 
-  std::string loc = dataLocation( m_reportLocation );
+  //  std::string loc = dataLocation( m_reportLocation );
 
   // get tck from raw
   if( !exist<LHCb::L0DUReport>( m_reportLocation )){
@@ -73,12 +72,16 @@ StatusCode L0TCKfilter::execute() {
     }
     if( *it == ttck.str() ){
       setFilterPassed(true);
-      debug() << "accepted TCK = " << ttck.str() << " -> set FilterPassed to true" << endmsg;
+       if ( msgLevel(MSG::DEBUG) ) debug()
+         << "accepted TCK = " << ttck.str() << " -> set FilterPassed to true"
+         << endmsg;
       counter("L0TCKFilter accept") += 1;
       return StatusCode::SUCCESS;
     }
   }
-  debug() << "rejected TCK = " << ttck.str() << " -> set FilterPassed to false" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug()
+    << "rejected TCK = " << ttck.str() << " -> set FilterPassed to false"
+    << endmsg;
   counter("L0TCKFilter reject") += 1;
 
   return StatusCode::SUCCESS;

@@ -38,7 +38,8 @@ public:
     if( slot == "") slot = "T0";
     // first : handle TEMPLATE configuration
     if( m_template && tck == LHCb::L0DUTemplateConfig::TCKValue ){
-        debug()<<"loading the TEMPLATE Configuration" << endmsg;
+        if ( msgLevel(MSG::DEBUG) ) 
+          debug()<<"loading the TEMPLATE Configuration" << endmsg;
         return m_config;
     }
 

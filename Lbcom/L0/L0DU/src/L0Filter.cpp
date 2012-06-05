@@ -83,7 +83,7 @@ L0Filter::~L0Filter() {}
 StatusCode L0Filter::initialize() {
   StatusCode sc = L0AlgBase::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-  debug() << "==> Initialize" << endmsg;
+  if ( msgLevel(MSG::DEBUG) )  debug() << "==> Initialize" << endmsg;
 
   if( "Timing" == m_trig){
     info() << "Will require that L0DU 'Timing Trigger Bit' is fired " << endmsg;
@@ -230,7 +230,7 @@ StatusCode L0Filter::execute() {
       setFilterPassed( accept );
     } else {
       setFilterPassed( !accept );
-      verbose() << "Event is rejected by L0 decision " 
+      if( msgLevel(MSG::VERBOSE) ) verbose() << "Event is rejected by L0 decision " 
                 << LHCb::L0DUDecision::Name[m_mask] <<endmsg ;
     }
   }
@@ -254,7 +254,7 @@ StatusCode L0Filter::execute() {
 //=============================================================================
 StatusCode L0Filter::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
   info() << "Filtering : " << m_sel << " events among " << m_count << " processed " << endmsg;
   return L0AlgBase::finalize();  // must be called after all other actions
 }

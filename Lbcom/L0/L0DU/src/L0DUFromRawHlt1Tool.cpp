@@ -1,4 +1,3 @@
-// $Id: $
 // Include files 
 
 // from Gaudi
@@ -25,6 +24,9 @@ L0DUFromRawHlt1Tool::L0DUFromRawHlt1Tool( const std::string& type,
                                           const std::string& name,
                                           const IInterface* parent )
   : GaudiTool ( type, name , parent )
+  , m_processorDatas(NULL)
+  , m_confTool(NULL)
+  , m_config(NULL)
 {
   declareInterface<IL0DUFromRawTool>(this);
   declareProperty( "L0DUConfigProviderName"  , m_configName="L0DUConfig");
@@ -40,7 +42,7 @@ L0DUFromRawHlt1Tool::~L0DUFromRawHlt1Tool() {}
 //  
 //=========================================================================
 StatusCode L0DUFromRawHlt1Tool::initialize ( ) {
-  debug() << "Initialize" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "Initialize" << endmsg;
   StatusCode sc = GaudiTool::initialize();
   if(sc.isFailure())return sc;
 

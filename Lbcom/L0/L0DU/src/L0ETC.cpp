@@ -1,4 +1,3 @@
-// $Id: L0ETC.cpp,v 1.5 2008-03-14 10:37:46 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -44,7 +43,7 @@ StatusCode L0ETC::initialize() {
   StatusCode sc = GaudiTupleAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiTupleAlg
 
-  debug() << "==> Initialize" << endmsg;
+    if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
   /// @todo would be nice to get that from /Event or from L0DU.
   m_l0channels.push_back("L0electron_High");
@@ -70,7 +69,7 @@ StatusCode L0ETC::initialize() {
 //=============================================================================
 StatusCode L0ETC::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   // always pass, will use selection on tag to reduce later...
   setFilterPassed(true);
@@ -107,7 +106,8 @@ StatusCode L0ETC::execute() {
     tup->column ( "L0",  L0->decision() ).ignore() ;
     for ( std::vector<std::string>::const_iterator c = m_l0channels.begin();
           c != m_l0channels.end(); ++c){
-      verbose() << *c << " says " << L0->channelDecisionByName(*c) << endmsg ;
+      if( msgLevel(MSG::VERBOSE) ) 
+        verbose() << *c << " says " << L0->channelDecisionByName(*c) << endmsg ;
       tup->column ( (*c), L0->channelDecisionByName(*c)  ).ignore() ;
     }
   } else {
@@ -128,7 +128,7 @@ StatusCode L0ETC::execute() {
 //=============================================================================
 StatusCode L0ETC::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
   info() << "Number of events " << m_events << endmsg ;
 
   return GaudiTupleAlg::finalize();  // must be called after all other actions

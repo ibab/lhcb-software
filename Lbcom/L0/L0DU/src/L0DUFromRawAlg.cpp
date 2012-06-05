@@ -30,7 +30,8 @@ DECLARE_ALGORITHM_FACTORY( L0DUFromRawAlg )
 L0DUFromRawAlg::L0DUFromRawAlg( const std::string& name,
                                 ISvcLocator* pSvcLocator)
   : L0FromRawBase ( name , pSvcLocator )
-  , m_fromRaw(0)
+  , m_fromRaw(NULL)
+  , m_fromRaw2(NULL)
 {
   declareProperty( "L0DUReportLocation"   , m_L0DUReportLocation =  LHCb::L0DUReportLocation::Default );
   declareProperty( "ProcessorDataLocation", m_procDataLocation   =  LHCb::L0ProcessorDataLocation::L0DU );
@@ -52,7 +53,7 @@ StatusCode L0DUFromRawAlg::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   
-  debug() << "==> Initialize" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
   if ( m_hlt1 &&
        m_fromRawTool == "L0DUFromRawTool" ) { 
@@ -135,7 +136,7 @@ StatusCode L0DUFromRawAlg::execute() {
       typ  = typ  << 1;
       mask = mask >> 1;
     }
-    if( m_fromRaw->report().configuration() != NULL ){
+    if( m_fromRaw->report().configuration() != NULL && msgLevel(MSG::VERBOSE) ) {
       verbose() << "________________ Channels decision ____________________  " << endmsg;
       LHCb::L0DUChannel::Map& channels = m_fromRaw->report().configuration()->channels();
       for(LHCb::L0DUChannel::Map::iterator it = channels.begin();channels.end()!=it;it++){
@@ -158,7 +159,7 @@ StatusCode L0DUFromRawAlg::execute() {
 //  Finalize
 //=============================================================================
 StatusCode L0DUFromRawAlg::finalize() {
-  debug() << "==> Finalize" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 

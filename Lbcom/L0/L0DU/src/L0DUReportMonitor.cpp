@@ -1,4 +1,3 @@
-// $Id: L0DUReportMonitor.cpp,v 1.24 2010-01-29 19:06:20 odescham Exp $
 // Include files 
 #include <cmath>
 // from Gaudi
@@ -68,7 +67,7 @@ StatusCode L0DUReportMonitor::initialize() {
   StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiHistoAlg
 
-  debug() << "==> Initialize" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
   m_prevTCK   = -1;
   if(m_full){
@@ -88,7 +87,7 @@ StatusCode L0DUReportMonitor::initialize() {
 //=============================================================================
 StatusCode L0DUReportMonitor::execute() {
   
-  debug() << "==> Execute" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
   
   
   std::string loc = dataLocation( m_reportLocation );
@@ -159,18 +158,23 @@ StatusCode L0DUReportMonitor::execute() {
     if(m_prevTCK != -1){
       if( !m_split){
         Warning("New configuration tck found : reset all histos",StatusCode::SUCCESS).ignore();
-        debug() << "New configuration : " << tck << " (previous was : " << m_prevTCK << ")" <<endmsg;
-        debug() << "Reset all histograms (number of histos : " << totalNumberOfHistos() << ")" << endmsg;
+        if ( msgLevel(MSG::DEBUG) ) {
+          debug() << "New configuration : " << tck << " (previous was : " << m_prevTCK << ")" <<endmsg;
+          debug() << "Reset all histograms (number of histos : " << totalNumberOfHistos() << ")" << endmsg;
+        }
+        
         // reset all 1D histos
         const Histo1DMapTitle& h1d = histo1DMapTitle();
         for(Histo1DMapTitle::const_iterator id = h1d.begin() ; id != h1d.end() ; id++){
-          debug() << "Reset 1D histo [title = '" << (*id).first << "'," << (*id).second<<"]" << endmsg;
+          if ( msgLevel(MSG::DEBUG) ) 
+            debug() << "Reset 1D histo [title = '" << (*id).first << "'," << (*id).second<<"]" << endmsg;
           if(NULL != (*id).second)(*id).second->reset();
         }
         // reset all 2D histos
         const Histo2DMapTitle& h2d = histo2DMapTitle();
         for(Histo2DMapTitle::const_iterator id = h2d.begin() ; id != h2d.end() ; id++){
-          debug() << "Reset 2D histo [title = '" << (*id).first << "'," << (*id).second<<"]" << endmsg;
+          if ( msgLevel(MSG::DEBUG) ) 
+            debug() << "Reset 2D histo [title = '" << (*id).first << "'," << (*id).second<<"]" << endmsg;
           if(NULL != (*id).second)(*id).second->reset(); 
         }
       } 
@@ -758,7 +762,7 @@ StatusCode L0DUReportMonitor::execute() {
 //=============================================================================
 StatusCode L0DUReportMonitor::finalize() {
   
-  debug() << "==> Finalize" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
 
   
@@ -798,8 +802,10 @@ StatusCode L0DUReportMonitor::finalize() {
     info() << "   ***  Recipe name : '" << config->recipe() << "'" << endmsg;
     info() << "   ***  short description : '" << config->definition() << "'" << endmsg;
     info() << "   **************************************************** " << endmsg;    
-    debug() << "       The complete algorithm description is : " << endmsg;
-    debug() << config->description() << endmsg;
+    if ( msgLevel(MSG::DEBUG) ) {
+      debug() << "       The complete algorithm description is : " << endmsg;
+      debug() << config->description() << endmsg;
+    }    
     info() << " " << endmsg;
 
     info() << "   ------------------------------------------------------------------- " <<endmsg;

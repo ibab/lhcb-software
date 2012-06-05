@@ -1,4 +1,3 @@
-// $Id: L0DUMultiTrends.cpp,v 1.9 2010-02-12 23:40:52 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -35,6 +34,7 @@ L0DUMultiTrends::L0DUMultiTrends( const std::string& name,
     m_hasOrigin(false),
     m_bin(2),
     m_origin(0),
+    m_oBin(299),
     m_count(0)
 {
   declareProperty( "L0DUEmulatorTool"  , m_emulatorTool= "L0DUEmulatorTool");
@@ -74,7 +74,8 @@ StatusCode L0DUMultiTrends::initialize() {
 
 
   // Check
-  if(m_list.empty())debug() << "Empty list of TCKs - only data TCK will be monitored" << endmsg;
+  if ( msgLevel(MSG::DEBUG) && m_list.empty())
+    debug() << "Empty list of TCKs - only data TCK will be monitored" << endmsg;
   for(std::vector<std::string>::iterator it = m_list.begin() ; it != m_list.end() ; it++){
     for(std::vector<std::string>::iterator jt = it+1  ; jt != m_list.end() ; jt++){
       if( (*it) == (*jt) ){
@@ -184,9 +185,10 @@ StatusCode L0DUMultiTrends::execute() {
         // slide
         if( bin2 >= m_trendPeriod){
           int shift = bin2-m_trendPeriod+1; 
-          debug() << "Sliding origin = " << m_origin 
-                  << " time " << time << " s - eventNumber " << odin->eventNumber() 
-                  << "  diff = " << diff << "   shift = " << shift <<endmsg;
+          if ( msgLevel(MSG::DEBUG) ) 
+            debug() << "Sliding origin = " << m_origin 
+                    << " time " << time << " s - eventNumber " << odin->eventNumber() 
+                    << "  diff = " << diff << "   shift = " << shift <<endmsg;
           slideHistos(shift);
           doRates();
           m_oBin -= shift;

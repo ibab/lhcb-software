@@ -1,4 +1,3 @@
-// $Id: L0DUConfigProvider.cpp,v 1.24 2010-02-18 11:16:30 odescham Exp $ // Include files 
 #include "boost/assign/list_of.hpp"
 // from Gaudi
 #include "GaudiKernel/StateMachine.h" 
@@ -121,7 +120,7 @@ StatusCode L0DUConfigProvider::finalize(){
 // Initialize is the main method
 //=============================================================================
 StatusCode L0DUConfigProvider::initialize(){
-  debug() << "Initialize L0DUConfigProvider" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "Initialize L0DUConfigProvider" << endmsg;
   StatusCode sc = GaudiTool::initialize();
   if(sc.isFailure())return sc;
 
@@ -141,15 +140,17 @@ void L0DUConfigProvider::handler(Property& ) {
 }
 
 void L0DUConfigProvider::reset() {
-  debug() << "reset L0DUConfigProvider" << endmsg;
-
-  debug() << "Deleting " <<  m_triggersMap.size() << " L0DUTrigger* " << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) {
+    debug() << "reset L0DUConfigProvider" << endmsg;
+    debug() << "Deleting " <<  m_triggersMap.size() << " L0DUTrigger* " << endmsg;
+  }
   for(LHCb::L0DUTrigger::Map::iterator id=m_triggersMap.begin();id!=m_triggersMap.end();id++){
    delete id->second;
   }
   m_triggersMap.clear();
   
-  debug() << "Deleting " <<  m_dataMap.size() << " L0DUElementaryData* " << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) 
+    debug() << "Deleting " <<  m_dataMap.size() << " L0DUElementaryData* " << endmsg;
   for(LHCb::L0DUElementaryData::Map::iterator id=m_dataMap.begin();id!=m_dataMap.end();id++){
     delete id->second;
   }  
@@ -158,13 +159,15 @@ void L0DUConfigProvider::reset() {
   m_cData = 0;
 
 
-  debug() << "Deleting " <<  m_conditionsMap.size() << " L0DUElementaryConditions* " << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) 
+    debug() << "Deleting " <<  m_conditionsMap.size() << " L0DUElementaryConditions* " << endmsg;
   for(LHCb::L0DUElementaryCondition::Map::iterator id=m_conditionsMap.begin();id!=m_conditionsMap.end();id++){
     delete id->second;
   }
   m_conditionsMap.clear();
   
-  debug() << "Deleting " <<  m_channelsMap.size() << " L0DUElementaryChannels* " << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) 
+    debug() << "Deleting " <<  m_channelsMap.size() << " L0DUElementaryChannels* " << endmsg;
   for(LHCb::L0DUChannel::Map::iterator id=m_channelsMap.begin();id!=m_channelsMap.end();id++){
    delete id->second;
   }
@@ -272,13 +275,15 @@ void L0DUConfigProvider::printConfig(LHCb::L0DUConfig config,std::string slot){
   if( slot == "") slot = "T0";
   info() << "**** L0DU Config loading : L0TCK = " << format("0x%04X" , config.tck()) << " for slot " 
          << slot << " ==> OK " << endmsg;
-  debug() << "              - " << config.data().size()<< " data with "<<endmsg;
-  debug() << "                    - " << m_pData << " predefined data "<<endmsg;
-  debug() << "                    - " << m_cData << " constant   data "<<endmsg;
-  debug() << "                    - " << config.data().size()-m_cData-m_pData << " new data "<<endmsg;
-  debug() << "              - " << config.conditions().size() << " Elementary conditions " << endmsg;
-  debug() << "              - " << config.channels().size()   << " Channels " << endmsg;
-  debug() << " " << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) {
+    debug() << "              - " << config.data().size()<< " data with "<<endmsg;
+    debug() << "                    - " << m_pData << " predefined data "<<endmsg;
+    debug() << "                    - " << m_cData << " constant   data "<<endmsg;
+    debug() << "                    - " << config.data().size()-m_cData-m_pData << " new data "<<endmsg;
+    debug() << "              - " << config.conditions().size() << " Elementary conditions " << endmsg;
+    debug() << "              - " << config.channels().size()   << " Channels " << endmsg;
+    debug() << " " << endmsg;
+  }
   info() <<  "Short description :: " << config.definition()  << endmsg;
   if(m_detail)info() << "Full description  :: " << config.description() << endmsg;
 }
@@ -297,7 +302,8 @@ void L0DUConfigProvider::predefinedData( ) {
     std::string name = PredefinedData::Name[i];
     LHCb::L0DUElementaryData* data = new LHCb::L0DUElementaryData(i,LHCb::L0DUElementaryData::Predefined,name,"Id",name);
     m_dataMap[name]= data;
-    debug() << "Predefined Data : " << data->description() << endmsg;
+    if ( msgLevel(MSG::DEBUG) ) 
+      debug() << "Predefined Data : " << data->description() << endmsg;
     m_pData++;
   }
 }
@@ -314,7 +320,8 @@ void L0DUConfigProvider::constantData(){
       new LHCb::L0DUElementaryData(m_pData+m_cData,LHCb::L0DUElementaryData::Constant,idata->first,"Id",idata->first);
     data->setOperand( idata->second , 1. );
     m_dataMap[idata->first]=data ;
-    debug() << "Constant Data : " << data->summary() << endmsg;
+    if ( msgLevel(MSG::DEBUG) ) 
+      debug() << "Constant Data : " << data->summary() << endmsg;
     m_cData++;
   }  
 }
@@ -339,7 +346,8 @@ std::vector<std::string> L0DUConfigProvider::Parse(std::string flag, std::vector
     std::transform( flag.begin() , flag.end() , uFlag.begin () , ::toupper ) ;
     int index = uConf.find( uFlag );
     if(index != -1 ){
-      verbose() << "Flag '" << flag << "' found in the data string '" << *iconfig << "'" << endmsg;
+      if( msgLevel(MSG::VERBOSE) ) 
+        verbose() << "Flag '" << flag << "' found in the data string '" << *iconfig << "'" << endmsg;
 
       // loop over separators
       int id = iconfig->find(separators.first);
@@ -354,7 +362,8 @@ std::vector<std::string> L0DUConfigProvider::Parse(std::string flag, std::vector
         int to   = iconfig->find(separators.second,from+1);
         if(from != -1 && to != -1){
           val = iconfig->substr(from+1, to-from-1);
-          verbose() << "parsed value = '" << val << "'" <<endmsg;  
+          if( msgLevel(MSG::VERBOSE) ) 
+            verbose() << "parsed value = '" << val << "'" <<endmsg;  
           values.push_back( val );
           id = iconfig->find(separators.first,to+1);
         }
@@ -479,7 +488,8 @@ StatusCode L0DUConfigProvider::createData(){
     m_dataMap[dataName]=data;
     id++;
     
-    debug() << "Created Data : " << data->description() << endmsg;
+    if ( msgLevel(MSG::DEBUG) ) 
+      debug() << "Created Data : " << data->description() << endmsg;
 
   }
   return StatusCode::SUCCESS;
@@ -563,7 +573,8 @@ StatusCode L0DUConfigProvider::createConditions(){
       // TEMP
       int ind = data.rfind("(BCID)");
       std::string vsn = data.substr(0,ind);
-      debug() <<"RAM(BCID) L0DU DATA for RAM vsn = " << vsn << " HAS BEEN DEFINED" <<endmsg;
+      if ( msgLevel(MSG::DEBUG) ) 
+        debug() <<"RAM(BCID) L0DU DATA for RAM vsn = " << vsn << " HAS BEEN DEFINED" <<endmsg;
       //check the RAM version exists
       const std::vector<int> ram = m_condDB->RAMBCID( vsn );
       if( ram.size() == 0){
@@ -647,7 +658,8 @@ StatusCode L0DUConfigProvider::createConditions(){
         return StatusCode::FAILURE;
       }
     }
-    if(reported)debug() << "The condition '" << conditionName << "' is to be reported in L0DUReport " << endmsg;
+    if( reported && msgLevel(MSG::DEBUG) )
+      debug() << "The condition '" << conditionName << "' is to be reported in L0DUReport " << endmsg;
 
 
     // the index (facultatif)  
@@ -685,7 +697,8 @@ StatusCode L0DUConfigProvider::createConditions(){
 
     if( !conditionCheck( condition ) )return Error( "Condition '" + conditionName +"' check failed",StatusCode::FAILURE);
 
-    debug() << "Created Condition : " << condition->description() << endmsg;
+    if ( msgLevel(MSG::DEBUG) ) 
+      debug() << "Created Condition : " << condition->description() << endmsg;
 
   }
   //
@@ -899,7 +912,8 @@ StatusCode L0DUConfigProvider::createChannels(){
         channel->addElementaryCondition ( ic->second ) ;
       } 
     }
-    debug() << "Created Channel : " << channel->description() << endmsg;
+    if ( msgLevel(MSG::DEBUG) ) 
+      debug() << "Created Channel : " << channel->description() << endmsg;
     
     
     m_channelsMap[channelName]=channel;
@@ -1071,7 +1085,8 @@ StatusCode L0DUConfigProvider::createTriggers(){
                   << endmsg;        
       }
     }
-    debug() << "Created Trigger  : " << trigger->description() << endmsg; 
+    if ( msgLevel(MSG::DEBUG) ) 
+      debug() << "Created Trigger  : " << trigger->description() << endmsg; 
     m_triggersMap[triggerName] = trigger;
 
     id++;
@@ -1233,10 +1248,11 @@ bool L0DUConfigProvider::conditionOrdering(){
     for(std::vector<LHCb::L0DUElementaryCondition*>::iterator itt = conds.begin(); itt != conds.end() ; ++itt){
       LHCb::L0DUElementaryCondition* condition = *itt;
 
-      debug() << "Configuration "<< format("0x%04X" , m_tckopts )
-              << " Condition '" << condition->name() 
-              << "'  index = " << condition->id()
-              << "   order = " << iorder<< endmsg;
+      if ( msgLevel(MSG::DEBUG) ) 
+        debug() << "Configuration "<< format("0x%04X" , m_tckopts )
+                << " Condition '" << condition->name() 
+                << "'  index = " << condition->id()
+                << "   order = " << iorder<< endmsg;
 
       if( condition->id() != iorder ){
         m_reOrder = true;

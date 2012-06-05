@@ -1,4 +1,3 @@
-// $Id: L0ProcessorDataDecoder.cpp,v 1.5 2010-03-02 16:36:49 odescham Exp $
 // ============================================================================
 
 // from Gaudi
@@ -23,14 +22,17 @@ L0ProcessorDataDecoder::L0ProcessorDataDecoder
   const std::string& name   ,
   const IInterface*  parent ) 
   : GaudiTool ( type, name , parent )
+  , m_dataContainer(NULL)
   , m_ok(false)
+  , m_condDB(NULL)
 {
   declareInterface<IL0ProcessorDataDecoder> ( this ) ;  
 }
 // ============================================================================
 StatusCode L0ProcessorDataDecoder::initialize () 
 {
-  debug() << "Initialize L0ProcessorDataDecoder" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) 
+    debug() << "Initialize L0ProcessorDataDecoder" << endmsg;
   StatusCode sc = GaudiTool::initialize();
   if(sc.isFailure())return sc;
   m_condDB = tool<IL0CondDBProvider>("L0CondDBProvider");
@@ -41,7 +43,7 @@ StatusCode L0ProcessorDataDecoder::initialize ()
 
 StatusCode L0ProcessorDataDecoder::finalize () 
 {
-  debug() << "release L0ProcessoDataDecoder" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "release L0ProcessoDataDecoder" << endmsg;
   delete m_dataContainer;
   return GaudiTool::finalize();
 }
@@ -87,14 +89,14 @@ bool L0ProcessorDataDecoder::setL0ProcessorData(std::vector<std::string> dataLoc
       m_ok=false;
       break;
     }
-    verbose() << "inserting data from " << *it << endmsg;
+    if( msgLevel(MSG::VERBOSE) ) verbose() << "inserting data from " << *it << endmsg;
     
     LHCb::L0ProcessorDatas* datas = get<LHCb::L0ProcessorDatas>( *it ) ;
     for(LHCb::L0ProcessorDatas::iterator itt=datas->begin();datas->end()!=itt;itt++){
           m_dataContainer->insert(*itt);
     } 
   } 
-  verbose() << "ALL DATA INSERTED" << endmsg;
+  if( msgLevel(MSG::VERBOSE) ) verbose() << "ALL DATA INSERTED" << endmsg;
   return m_ok;
 } 
 
