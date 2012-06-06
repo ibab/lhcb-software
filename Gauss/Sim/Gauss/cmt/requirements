@@ -127,5 +127,13 @@ apply_pattern GaudiApp
 
 #== Run the tests
 private
+  action make_qmtest_files "./makeQMTests.py"
+
+  # Run the action make_option_files when calling make
+  macro_append constituents " make_qmtest_files"
+
+  # Prevent actions to be run twice when calling 'make all_groups'
+  macro_remove cmt_actions_constituents "make_qmtest_files"
+
   apply_pattern QMTest
 end_private
