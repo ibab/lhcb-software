@@ -138,12 +138,12 @@ StatusCode TupleToolTagging::fill( const Particle* mother
   }
 
   // try to find unphysical defaults
-  int dec = -1000;
+  int dec = 0;//-1000
   int cat = -1;
-  double omega = -2;
-  int decOS = -1000;
+  double omega = 0.5;//-2
+  int decOS = 0;
   int catOS = -1;
-  double omegaOS = -2;
+  double omegaOS = 0.5;
 
   if( sc ){
     dec = theTag.decision();
@@ -192,7 +192,7 @@ StatusCode TupleToolTagging::fill( const Particle* mother
     for(std::vector<std::string>::const_iterator t=m_activeTaggers.begin();
         t!=m_activeTaggers.end(); t++)
     {
-      tag_results[*t]=std::pair<int, double >(-1000,-2.);
+      tag_results[*t]=std::pair<int, double >(0,0.5);//-1000,-2
     }
     //fill the map for the taggers which were used
     for(size_t i=0; i<taggers.size(); ++i)
