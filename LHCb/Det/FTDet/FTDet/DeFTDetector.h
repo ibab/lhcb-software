@@ -104,7 +104,6 @@ private: // private data members
   Stations m_stations;     ///< vector of pointers to stations
   BiLayers m_bilayers;     ///< vector of pointers to bilayers
   Layers m_layers;         ///< vector of pointers to layers
-  bool m_printInitInfo;    ///< switch for prinitng of the layer properties during initialize
 
   /// Use a single MsgStream instance (created in initialize)
   MsgStream* m_msg;

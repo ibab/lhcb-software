@@ -4,6 +4,16 @@
 ! Responsible : Plamen Hopchev
 !--------------------------------------------------------------------------
 
+! 2012-06-06 P. Hopchev
+  - Modified the Layer initialization to take into account that in the 
+    latest version of the xml DDDB the beam-pipe is not a cylinder, but a cone
+  - In DeFTDetector.cpp: simlified the code which prints the layer parameters
+    during initialize. Now we take the properties by calling the relevant
+    methods on the layers, instead of taking them from the xml DDDB.
+    Added accessors for the layers min and max z-position.  	
+    Also, the printout of the layer properties is now controlled
+    by the MsgLevel (printing is done only in DEBUG or more verbose level)
+
 ! 2012-06-05 P. Hopchev
   - In DeFTDetector.h, DeFTStation.h, DeFTBiLayer and DeFTLayer.h:
     make more methods public

@@ -143,8 +143,17 @@ public:
   /// Accessor to the maximal y-position of the layer area covered with fibres
   double layerMaxY() const { return m_layerMaxY; }
 
+  /// Accessor to the minimal z-position of the layer
+  double layerMinZ() const { return m_layerMinZ; }
+
+  /// Accessor to the maximal z-position of the layer
+  double layerMaxZ() const { return m_layerMaxZ; }
+
   /// Accessor to the z-position of the layer center
   double layerCenterZ() const { return m_layerPosZ; }
+
+  /// Accessor to the layer beam-pipe radius
+  double layerInnerHoleRadius() const { return m_innerHoleRadius; }
 
   /** Get the FTChannelID of the cell located on the left of the given cell. */
   LHCb::FTChannelID nextChannelLeft(const LHCb::FTChannelID& aChan) const;
@@ -254,8 +263,9 @@ private: // private data members
   double m_tanAngle;            ///< tangent of stereo angle
 
   /// Layer dimensions
-  double m_layerMinX, m_layerMinY;
-  double m_layerMaxX, m_layerMaxY;
+  double m_layerMinX, m_layerMaxX;
+  double m_layerMinY, m_layerMaxY;
+  double m_layerMinZ, m_layerMaxZ;
   double m_layerHalfSizeX, m_layerHalfSizeY, m_layerHalfSizeZ;
   double m_innerHoleRadius;
   double m_layerPosZ;           ///< center of the layer in z

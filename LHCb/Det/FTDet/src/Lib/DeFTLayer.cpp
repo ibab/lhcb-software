@@ -4,7 +4,7 @@
 #include "DetDesc/SolidSubtraction.h"
 #include "DetDesc/SolidChild.h"
 #include "DetDesc/SolidBox.h"
-#include "DetDesc/SolidTubs.h"
+#include "DetDesc/SolidCons.h"
 
 // Gaudi/LHCb Math
 #include "GaudiKernel/Plane3DTypes.h"
@@ -40,9 +40,11 @@ DeFTLayer::DeFTLayer( const std::string& name ) :
   m_tanAngle(0.0),
   // Layer dimensions
   m_layerMinX(0.),
-  m_layerMinY(0.),
   m_layerMaxX(0.),
+  m_layerMinY(0.),
   m_layerMaxY(0.),
+  m_layerMinZ(0.),
+  m_layerMaxZ(0.),
   m_layerHalfSizeX(0.),
   m_layerHalfSizeY(0.),
   m_layerHalfSizeZ(0.),
@@ -99,9 +101,9 @@ StatusCode DeFTLayer::initialize(){
   const SolidSubtraction* subtrObject = dynamic_cast<const SolidSubtraction*>( this->geometry()->lvolume()->solid() );
   const SolidBox*   outerBox = dynamic_cast<const SolidBox*>( subtrObject->coverTop() );
   const SolidChild* tmpChild = dynamic_cast<const SolidChild*>( (*subtrObject)[0] );
-  const SolidTubs* innerTube = dynamic_cast<const SolidTubs*>( tmpChild->solid() );
+  const SolidCons* innerCons = dynamic_cast<const SolidCons*>( tmpChild->solid() );
 
-  if ( 0 == subtrObject || 0 == outerBox || 0 == innerTube ) {
+  if ( 0 == subtrObject || 0 == outerBox || 0 == innerCons ) {
     fatal() << "Can't acquire FT layer geometrical properties. Break ..." << endmsg;
     return StatusCode::FAILURE;
   }
@@ -109,7 +111,7 @@ StatusCode DeFTLayer::initialize(){
   m_layerHalfSizeX = outerBox->xHalfLength();
   m_layerHalfSizeY = outerBox->yHalfLength();
   m_layerHalfSizeZ = outerBox->zHalfLength();
-  m_innerHoleRadius = innerTube->outerRadius();
+  m_innerHoleRadius = innerCons->outerRadiusAtPlusZ();
   m_layerPosZ      = (this->geometry()->toGlobal(Gaudi::XYZPoint(0.,0.,0.))).z();
 
   m_sipmPitchX = m_sipmSizeX + 2*m_sipmEdgeSizeX;
@@ -121,14 +123,15 @@ StatusCode DeFTLayer::initialize(){
   m_layerMinY = -m_layerHalfSizeY;
   m_layerMaxY = -m_layerMinY;
 
-  /*
+  m_layerMinZ = m_layerPosZ - m_layerHalfSizeZ;
+  m_layerMaxZ = m_layerPosZ + m_layerHalfSizeZ;
+
   debug() << "Derived parameters:"
           << "\n\tpitch X: " << m_sipmPitchX
           << "\n\tN of SiPM per quarter: " << m_nSipmPerQuarter
           << "\n\tOuter edge width X: " << m_gapXLayerOuterEdge
           << "\n\tLayer min X: " << m_layerMinX
           << "\n\tLayer max X: " << m_layerMaxX << endmsg;
-  */    
 
   ///fill in the vectors holding the x starting positions (outermost SiPMs)
   double xOrigin, xStep;

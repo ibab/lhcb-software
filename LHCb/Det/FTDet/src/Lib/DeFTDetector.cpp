@@ -3,11 +3,6 @@
 // FTDet
 #include "FTDet/DeFTDetector.h"
 
-// DetDesc
-#include "DetDesc/SolidSubtraction.h"
-#include "DetDesc/SolidChild.h"
-#include "DetDesc/SolidTubs.h"
-
 // Gaudi Kernel
 #include "GaudiKernel/SystemOfUnits.h"
 
@@ -32,7 +27,6 @@ DeFTDetector::DeFTDetector( const std::string& name ) :
   m_stations(),
   m_bilayers(),
   m_layers(),
-  m_printInitInfo(true),
   m_msg(NULL)
 {
 
@@ -93,41 +87,27 @@ StatusCode DeFTDetector::initialize(){
 
   ///>>> print the layer properties <<<///
   typedef std::vector<DeFTLayer*>::const_iterator LIter;
-  if ( m_printInitInfo ) {
+  if ( m_msg->level() <= MSG::DEBUG ) {
 
-    double xMin, xMax, yMin, yMax, zMin, zMax, beamPipeRadius;
     ///loop over layers
     LIter iL;
     for (iL = layers().begin(); iL != layers().end(); ++iL) {
       DeFTLayer* layer = dynamic_cast<DeFTLayer*>(*iL);
       if ( layer != 0 ) {
-        ///get the geometrical limits of the layer
-        xMin=9999., xMax=9999., yMin=9999., yMax=9999., zMin=9999., zMax=9999., beamPipeRadius=9999.;
-        const SolidSubtraction* layerBox = dynamic_cast<const SolidSubtraction*>(
-                                           layer->geometry()->lvolume()->solid() );
-        if ( layerBox != 0 ) {
-          Gaudi::XYZPoint pLocMin( layerBox->xMin(), layerBox->yMin(), layerBox->zMin() );
-          Gaudi::XYZPoint pLocMax( layerBox->xMax(), layerBox->yMax(), layerBox->zMax() );
-          Gaudi::XYZPoint pGlobMin = layer->geometry()->toGlobal( pLocMin );
-          Gaudi::XYZPoint pGlobMax = layer->geometry()->toGlobal( pLocMax );
-          xMin = pGlobMin.x(); yMin = pGlobMin.y(); zMin = pGlobMin.z();
-          xMax = pGlobMax.x(); yMax = pGlobMax.y(); zMax = pGlobMax.z();
-          // Get beam-pipe radius
-          const SolidChild* tmpChild = dynamic_cast<const SolidChild*>( (*layerBox)[0] );
-          const SolidTubs* innerTube = dynamic_cast<const SolidTubs*>( tmpChild->solid() );
-          beamPipeRadius = innerTube->outerRadius();
-        }
 
-        *m_msg << MSG::ALWAYS << "\nProperties of FT layer with ID " << layer->layerID() << ":\n"
-	       << "\t\tGeometrical borders: "
+        *m_msg << MSG::DEBUG << "Properties of FT layer with ID " << layer->layerID() << ":"
+	       << "\tGeometrical borders: "
 	       << format("xMin/xMax = %7.1f /%7.1f  yMin/yMax = %7.1f /%7.1f  zMin/zMax = %7.1f /%7.1f mm",
-			 xMin, xMax, yMin, yMax, zMin, zMax)
-	       << "\n\t\tBeam pipe radius: " << format("%7.1f mm", beamPipeRadius)
-	       << "\n\t\tStereo angle: " << format("%.1f degrees", layer->angle()/Gaudi::Units::degree)
+			 layer->layerMinX(), layer->layerMaxX(),
+			 layer->layerMinY(), layer->layerMaxY(),
+			 layer->layerMinZ(), layer->layerMaxZ())
+	       << "\tBeam pipe radius: " << format("%7.1f mm", layer->layerInnerHoleRadius())
+	       << "\tStereo angle: " << format("%.1f degrees", layer->angle()/Gaudi::Units::degree)
 	       << endmsg;
+
       } //end if( layer != 0 )
     } //end loop layers
-  } //end printInitInfo
+  }
 
   return StatusCode::SUCCESS;
 }
