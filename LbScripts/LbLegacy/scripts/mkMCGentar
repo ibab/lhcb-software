@@ -34,6 +34,7 @@ def help() :
       -d                                 - debug mode \n
       -b or --binary=  <binary>          - for this binary platform \n
       -n or --native=  <Lb project_vers> - application version from where to get native.versions \n
+      -t or --target=  <ouput directory> - destination directoy for the GENSER tar file produced \n
     Examples:
       cd $LHCBTAR/source
       python mkMCGentar.py --native=GAUSS_<version> \n
@@ -67,9 +68,8 @@ def get_native_versions(native_version):
         GENSERVERSION = value.split('\n')[1]
     else:
         GENSERVERSION = value
-
     packages_versions['GENSER'] = GENSERVERSION
-
+    
     for fdline in os.popen('cmt show macros native').readlines():
         if fdline.find('config_version') == -1:
             pack = fdline.split('_')[0]
@@ -82,6 +82,38 @@ def get_native_versions(native_version):
 
     os.chdir(release_area)
     return packages_versions, packages_homes
+
+
+#----------------------------------------------------------------------------
+#
+#  get HepMC version ==============================================
+#
+def get_hepmc_version(native_version):
+    """ Utility method to lookup the HepMC version """
+    if debug_flag == 1: print 'get_hepmc_version', native_version
+
+    NAME = native_version.split('_')[0]
+    version =  native_version.split('_')[1]
+    name = NAME.lower().capitalize()
+    release_area = os.getenv(name +'_release_area')
+    if debug_flag == 1: print 'get_hepmc_version - release_area = ',release_area
+
+    Sys_dir = os.path.join(release_area,NAME,native_version,name+'Sys','cmt')
+    if not os.path.exists(Sys_dir) :
+        Sys_dir = os.path.join(release_area,NAME,native_version,name+'Sys',version,'cmt')
+    if debug_flag == 1: print 'get_hepmc_version -  ',Sys_dir
+    os.chdir(Sys_dir)
+
+    # Checking the HepMC version.
+    # Using value of macro HepMC_config_version
+    status,value = getStatusOutput('cmt sh macro_value HepMC_config_version')
+    if isCMTMessage(value) :
+        HepMC_version = value.split('\n')[1]
+    else:
+        HepMC_version  = value
+
+    return HepMC_version
+
 
 #
 #  get MCGen tar file names ===============================================
@@ -105,19 +137,20 @@ def get_MCGen_base(package_home, genname, genversion):
 #
 #  get tar files from lcg  ==================================================
 #
-def get_tar_files(packages_versions, packages_homes, binary_dir):
-    if debug_flag == 1: print ' get_tar_files for GENSER %s %s '%(packages_versions['GENSER'],binary_dir)
+def get_tar_files(packages_versions, packages_homes, binary_dir, HepMC_version):
 
+    if debug_flag == 1: print ' get_tar_files for GENSER %s %s '%(packages_versions['GENSER'],binary_dir)
+    
     GENSER_vers = 'GENSER_'+packages_versions['GENSER']
-    tarfile = os.path.join(lhcbtar,GENSER_vers+'_'+binary_dir+'.tar.gz')
-    md5file = os.path.join(lhcbtar,GENSER_vers+'_'+binary_dir+'.md5')
+    tarfile = os.path.join(outputdir,GENSER_vers+'_'+binary_dir+'.tar.gz')
+    md5file = os.path.join(outputdir,GENSER_vers+'_'+binary_dir+'.md5')
 
     os.chdir(tmpdir.getName())
 
     for key in packages_versions.keys():
         gen_base = get_MCGen_base(packages_homes[key], key, packages_versions[key])
         gen_root = os.path.basename(gen_base)
-        MCGen_tar_dir = os.path.join(lcg_dir,'MCGenerators','distribution')
+        MCGen_tar_dir = os.path.join(lcg_dir,'MCGenerators_hepmc%s' % HepMC_version,'distribution')
         if gen_root :
             if not os.path.exists(gen_root):
                 os.mkdir(gen_root)
@@ -132,12 +165,18 @@ def get_tar_files(packages_versions, packages_homes, binary_dir):
                 shutil.copyfile(os.path.join(MCGen_tar_dir,file),file)
                 key_value = os.path.join(key,value)
                 str = 'tar --extract --ungzip --file '+file +' '+ os.path.join(key_value,binary_dir)
+                if debug_flag == 1:
+                    print "Running: %s" % str
                 rc = os.system(str)
                 if key == 'lhapdf':
                     str = 'tar --extract --ungzip --file '+file+' '+key_value+'/share/PDFsets/cteq6l.LHpdf'+' '+key_value+'/share/PDFsets/cteq6ll.LHpdf'
+                    if debug_flag == 1:
+                        print "Running: %s" % str
                     rc = os.system(str)
                     if rc != 0 :
                         str = 'tar --extract --ungzip --file '+file+' '+key_value+'/share/lhapdf/PDFsets/cteq6l.LHpdf'+' '+key_value+'/share/lhapdf/PDFsets/cteq6ll.LHpdf'
+                        if debug_flag == 1:
+                            print "Running: %s" % str
                         rc = os.system(str)
                     if rc != 0 :
                         os.remove(file)
@@ -145,6 +184,8 @@ def get_tar_files(packages_versions, packages_homes, binary_dir):
                         if os.path.exists(os.path.join(MCGen_tar_dir,file)):
                             shutil.copyfile(os.path.join(MCGen_tar_dir,file),file)
                         str = 'tar --extract --ungzip --file '+file+' '+key_value+'/share/PDFsets/cteq6l.LHpdf'+' '+key_value+'/share/PDFsets/cteq6ll.LHpdf'
+                        if debug_flag == 1:
+                            print "Running: %s" % str
                         rc = os.system(str)
                     if rc == 0 :
                         print "%s/share/PDFsets/cteq6l.LHpdf found in %s" % (key_value, file)
@@ -154,6 +195,7 @@ def get_tar_files(packages_versions, packages_homes, binary_dir):
         os.chdir(tmpdir.getName())
 
     str = 'tar zcf '+tarfile+' '+' '.join(os.listdir(tmpdir.getName()))
+    print str
     rc = os.system(str)
     if rc == 0:
         md5sum = calculateMD5(tarfile)
@@ -177,13 +219,14 @@ if __name__ == "__main__":
     if os.path.exists(logname): os.remove(logname)
     str = " =========== "+time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())+"\n"
 
-    if sys.platform == 'win32':
-        rmcmd = 'rmdir /s/q '
-    else:
-        rmcmd = '/bin/rm -fr '
+    #if sys.platform == 'win32':
+    #    rmcmd = 'rmdir /s/q '
+    #else:
+    #    rmcmd = '/bin/rm -fr '
 
     lcg_dir = '/afs/cern.ch/sw/lcg/external'
     lhcbtar = os.path.join(os.environ['LHCBHOME'],'distribution','source')
+    outputdir = lhcbtar
     binary = os.environ['CMTCONFIG']
     source = ' '
     package = ' '
@@ -195,8 +238,8 @@ if __name__ == "__main__":
         help()
         sys.exit()
     try:
-        keys, values = getopt.getopt(arguments,'hdb:n:',
-                       ['help','debug','binary=','native='])
+        keys, values = getopt.getopt(arguments,'hdb:n:t:',
+                       ['help','debug','binary=','native=','target='])
 
     except getopt.GetoptError:
         help()
@@ -212,6 +255,9 @@ if __name__ == "__main__":
             binary = value
         if key in ('-n', '--native'):
             native_version = value
+        if key in ('-t', '--target'):
+            print "output directory for tarfiles: %s" % value
+            outputdir = value
 
 
     packages_versions, packages_homes = get_native_versions(native_version)
@@ -219,7 +265,12 @@ if __name__ == "__main__":
         print ' packages_versions = ', packages_versions
         print ' packages_homes = ', packages_homes
 
+    HepMC_version = get_hepmc_version(native_version)
+    if debug_flag == 1:
+        print ' HepMC_version = ', HepMC_version
+
+
     if packages_versions.has_key('GENSER') != 1:
         sys.exit()
     else:
-        rc = get_tar_files(packages_versions, packages_homes, binary)
+        rc = get_tar_files(packages_versions, packages_homes, binary, HepMC_version)
