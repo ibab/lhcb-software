@@ -4,6 +4,8 @@
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+! 2012-06-06 - Stefania Vecchi
+ - OS and SSpi and SSK calibration Strip17
 
 !========================= FlavourTagging v12r8 2012-02-09 =========================
 

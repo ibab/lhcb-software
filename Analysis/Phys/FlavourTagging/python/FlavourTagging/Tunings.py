@@ -12,8 +12,123 @@ __version__ = '$Revision: 1.0 $'
 from Gaudi.Configuration import *
 
 tunings = {
+    #use cuts optimized and calibrated with Strip17 (2011 data 1fb-1)
+    'Strip17_2011' : { 
+        "IPPU_cut" : 3.0,
+        "distphi_cut" : 0.005,
+        #"ForceSignalID" :   , #"Bs", "Bd", "Bu" to force SSk or SSpi
 
-    #use cuts optimized and calibrated with Strip17 (Xmass2011)
+        #Following 2 lines optimize the average and combined (5 cat) performances for B2JpsiK
+        #When performing your analisis, please find yourself the cut which maximeze the Eeff
+        #Probably if you are using Eeff event per event no cut will be needed
+        #"CombineTaggersProbability.ProbMin_OS" : 0.58,
+        #"CombineTaggersProbability.ProbMin" : 0.55,
+        
+        "CombineTaggersProbability.P0_Cal_OS" : 0.392, #+/-0.0016
+        "CombineTaggersProbability.P1_Cal_OS" : 0.953, #+/-0.017
+        "CombineTaggersProbability.Eta_Cal_OS" : 0.362,
+
+        "TaggerMuonTool.Muon_Pt_cut" : 1200,
+        "TaggerMuonTool.Muon_P_cut" : 0.0,
+        "TaggerMuonTool.Muon_IPs_cut" : 0.0,
+        "TaggerMuonTool.Muon_lcs_cut" : 3.2,
+        "TaggerMuonTool.Muon_PIDm_cut" : 2.5,
+        "TaggerMuonTool.Muon_ipPU_cut" : 3.0,
+        "TaggerMuonTool.Muon_distPhi_cut" : 0.005,
+        "TaggerMuonTool.Muon_ProbMin" : 0.0,
+        "TaggerMuonTool.Muon_AverageOmega" : 0.33,
+        "TaggerMuonTool.Muon_P0_Cal" : 0.309, #+/- 0.0038
+        "TaggerMuonTool.Muon_P1_Cal" : 1.1953, #+/- 0.061
+        "TaggerMuonTool.Muon_Eta_Cal" : 0.304,
+
+        "TaggerElectronTool.Ele_Pt_cut" : 1000,
+        "TaggerElectronTool.Ele_P_cut" : 0.0,
+        "TaggerElectronTool.Ele_IPs_cut" : 1.0,
+        "TaggerElectronTool.Ele_lcs_cut" : 3.85,
+        "TaggerElectronTool.Ele_ghost_cut" : -999.,
+        "TaggerElectronTool.Ele_VeloChargeMin" : 0.0,
+        "TaggerElectronTool.Ele_VeloChargeMax" : 1.6,
+        "TaggerElectronTool.Ele_EoverP" : 0.75,
+        "TaggerElectronTool.Ele_PIDe_cut" : 4.0,
+        "TaggerElectronTool.Ele_ipPU_cut" : 5.0,
+        "TaggerElectronTool.Ele_distPhi_cut" : 0.005,
+        "TaggerElectronTool.Ele_ProbMin" : 0.0,
+        "TaggerElectronTool.Ele_AverageOmega" : 0.33,
+        "TaggerElectronTool.Ele_P0_Cal" : 0.306, #+/-0.0056
+        "TaggerElectronTool.Ele_P1_Cal" : 0.974, #+/-0.091
+        "TaggerElectronTool.Ele_Eta_Cal" : 0.346,
+
+        "TaggerKaonOppositeTool.Kaon_Pt_cut" : 700,
+        "TaggerKaonOppositeTool.Kaon_P_cut" : 5000,
+        "TaggerKaonOppositeTool.Kaon_IPs_cut" : 4.3,
+        "TaggerKaonOppositeTool.Kaon_IP_cut" : 1.45,
+        "TaggerKaonOppositeTool.Kaon_lcs_cut" : 2.45,
+        "TaggerKaonOppositeTool.Kaon_ghost_cut" : -999.,
+        "TaggerKaonOppositeTool.Kaon_PIDk_cut" : 0.75,
+        "TaggerKaonOppositeTool.Kaon_PIDkp_cut" : -3.,
+        "TaggerKaonOppositeTool.Kaon_ipPU_cut" : 7.5,
+        "TaggerKaonOppositeTool.Kaon_distPhi_cut" : 0.005,
+        "TaggerKaonOppositeTool.Kaon_ProbMin" : 0.54,
+        "TaggerKaonOppositeTool.Kaon_AverageOmega" : 0.33,
+        "TaggerKaonOppositeTool.Kaon_P0_Cal" : 0.393, #+/-0.002
+        "TaggerKaonOppositeTool.Kaon_P1_Cal" : 0.706, #+/-0.036
+        "TaggerKaonOppositeTool.Kaon_Eta_Cal" : 0.354,
+
+        "TaggerKaonSameTool.KaonSame_Pt_cut" : 850,
+        "TaggerKaonSameTool.KaonSame_P_cut" : 5250,
+        "TaggerKaonSameTool.KaonSame_IP_cut" : 4.125,
+        "TaggerKaonSameTool.KaonSame_lcs_cut" : 3.75,
+        "TaggerKaonSameTool.KaonSame_Phi_cut" : 0.825,
+        "TaggerKaonSameTool.KaonSame_Eta_cut" : 0.6,
+        "TaggerKaonSameTool.KaonSame_dQ_cut" : 1850.,
+        "TaggerKaonSameTool.KaonSame_PIDk_cut" : 3.5,
+        "TaggerKaonSameTool.KaonSame_PIDkp_cut" : -8.5,
+        "TaggerKaonSameTool.KaonSame_ipPU_cut" : 3.0,
+        "TaggerKaonSameTool.KaonSame_distPhi_cut" : 0.005,
+        "TaggerKaonSameTool.KaonSame_ProbMin" : 0.,
+        "TaggerKaonSameTool.KaonSame_AverageOmega" : 0.33,
+        "TaggerKaonSameTool.KaonSame_P0_Cal" : 0.350,
+        "TaggerKaonSameTool.KaonSame_P1_Cal" : 0.51,
+        "TaggerKaonSameTool.KaonSame_Eta_Cal" : 0.324,
+
+        "TaggerPionSameTool.PionSame_Pt_cut" : 600,
+        "TaggerPionSameTool.PionSame_P_cut" : 4000,
+        "TaggerPionSameTool.PionSame_IPs_cut" : 9.,
+        "TaggerPionSameTool.PionSame_lcs_cut" : 5.0,
+        "TaggerPionSameTool.PionSame_deta_max_cut" : 0.35,
+        "TaggerPionSameTool.PionSame_deta_min_cut" : -0.5,
+        "TaggerPionSameTool.PionSame_dphi_cut" : 0.75,
+        "TaggerPionSameTool.PionSame_dR_cut" : 0.75,
+        "TaggerPionSameTool.PionSame_dQ_cut" : 2500,
+        "TaggerPionSameTool.PionSame_dQ_extra_cut" : 1200,
+        "TaggerPionSameTool.PionSame_ghost_cut" : -999.,
+        "TaggerPionSameTool.PionSame_PIDNoK_cut" : 4.3,
+        "TaggerPionSameTool.PionSame_PIDNoP_cut" : 14.0,
+        "TaggerPionSameTool.PionSame_ipPU_cut" : 3.0,
+        "TaggerPionSameTool.PionSame_distPhi_cut" : 0.005,
+        "TaggerPionSameTool.PionSame_ProbMin" : 0.56,
+        "TaggerPionSameTool.PionSame_AverageOmega" : 0.41,
+        "TaggerPionSameTool.PionSame_P0_Cal" : 0.407,
+        "TaggerPionSameTool.PionSame_P1_Cal" : 0.76,
+        "TaggerPionSameTool.PionSame_P2_Cal" : -2.2,
+        "TaggerPionSameTool.PionSame_Eta_Cal" : 0.374,
+
+        "SVertexOneSeedTool.MinSeedProbability" : 0.42,
+        "TaggerVertexChargeTool.Vtx_PowerK" : 0.55,
+        "TaggerVertexChargeTool.Vtx_MinimumVCharge" : 0.2,
+        "TaggerVertexChargeTool.Vtx_Ptsum" : 1.55,
+        "TaggerVertexChargeTool.Vtx_Ptmean" : 0.,
+        "TaggerVertexChargeTool.Vtx_IPSsum" : 10.,
+        "TaggerVertexChargeTool.Vtx_DocaMaxsum" : 0.5,
+        "TaggerVertexChargeTool.Vtx_Psum" : 8.,
+        "TaggerVertexChargeTool.Vtx_Msum" : 0.6,
+        "TaggerVertexChargeTool.Vtx_ProbMin" : 0.54,
+        "TaggerVertexChargeTool.Vtx_AverageOmega" : 0.41,
+        "TaggerVertexChargeTool.Vtx_P0_Cal" : 0.404, #+/-0.002
+        "TaggerVertexChargeTool.Vtx_P1_Cal" : 0.84, #+/-0.032
+        "TaggerVertexChargeTool.Vtx_Eta_Cal" : 0.362
+        },
+
     'Xmass_2011' : { 
         "IPPU_cut" : 3.0,
         "distphi_cut" : 0.005,

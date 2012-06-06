@@ -38,9 +38,10 @@ TaggerKaonSameTool::TaggerKaonSameTool( const std::string& type,
   declareProperty( "KaonSame_PIDkp_cut",m_KaonSPID_kpS_cut = -8.5 );
 
   declareProperty( "KaonSame_ProbMin",   m_ProbMin_kaonS    = 0. ); //no cut
-  declareProperty( "KaonSame_P0_Cal",  m_P0_Cal_kaonS   = 0.0 );
-  declareProperty( "KaonSame_P1_Cal",  m_P1_Cal_kaonS   = 1. );
-  declareProperty( "KaonSame_Eta_Cal", m_Eta_Cal_kaonS  = 0. );
+  // 1fb-1 paper tuning
+  declareProperty( "KaonSame_P0_Cal",  m_P0_Cal_kaonS   = 0.350 );
+  declareProperty( "KaonSame_P1_Cal",  m_P1_Cal_kaonS   = 0.51 );
+  declareProperty( "KaonSame_Eta_Cal", m_Eta_Cal_kaonS  = 0.324 );
 
   m_nnet = 0;
   m_util = 0;

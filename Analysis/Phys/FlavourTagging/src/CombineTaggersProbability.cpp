@@ -24,9 +24,14 @@ CombineTaggersProbability::CombineTaggersProbability( const std::string& type,
 
   declareProperty( "ProbMin",     m_ProbMin     = 0.);
   declareProperty( "ProbMin_OS",  m_ProbMin_OS  = 0.);
+  // Tuning Moriond 2012
+  //declareProperty( "P0_Cal_OS",   m_P0_Cal_OS   = 0.392); 
+  //declareProperty( "P1_Cal_OS",   m_P1_Cal_OS   = 0.921); 
+  //declareProperty( "Eta_Cal_OS",  m_Eta_Cal_OS  = 0.363);
+  // Tuning 1fb-1 paper
   declareProperty( "P0_Cal_OS",   m_P0_Cal_OS   = 0.392); 
-  declareProperty( "P1_Cal_OS",   m_P1_Cal_OS   = 0.921); 
-  declareProperty( "Eta_Cal_OS",  m_Eta_Cal_OS  = 0.363);
+  declareProperty( "P1_Cal_OS",   m_P1_Cal_OS   = 0.953); 
+  declareProperty( "Eta_Cal_OS",  m_Eta_Cal_OS  = 0.362);
 
 }
 CombineTaggersProbability::~CombineTaggersProbability(){}
