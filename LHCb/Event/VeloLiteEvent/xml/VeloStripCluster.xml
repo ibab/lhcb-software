@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" [
+<!ENTITY liteClusterName "VeloStripLiteCluster">
+<!ENTITY channelID "VeloLiteChannelID">
+<!ENTITY VeloStripClusterClass SYSTEM "SiCluster.ent">
+]>
+<gdd>
+  <package name="DigiEvent">
+    <class name="VeloStripCluster"
+           id="4302"
+           author="H. Schindler"
+           desc="Cluster with full ADC information."
+           serializers="FALSE">
+
+      <import name="vector"  std="TRUE"/> 
+      <import name="utility" std="TRUE"/> 
+
+      <location name="Default"
+                place="Raw/VeloLite/Clusters"/>
+
+      <constructor desc="Constructor" 
+                   argList='&liteClusterName; lCluster, 
+                            ADCVector strips'
+                   initList='m_liteCluster(lCluster), m_stripValues(strips)'>
+      </constructor>
+     
+      &VeloStripClusterClass;
+  
+      <constructor desc='copy constructor'
+                   initList='KeyedObject&lt;LHCb::VeloLiteChannelID&gt;(), 
+                             m_liteCluster(lCluster.m_liteCluster), 
+                             m_stripValues(lCluster.m_stripValues)'> 
+        <arg const = 'TRUE' name="lCluster" type="LHCb::VeloStripCluster"/>
+      </constructor>
+  
+      <method name='clone'
+	      type="LHCb::VeloStripCluster*"
+              desc='clone method'
+              const='TRUE'
+	      access = "PUBLIC">
+      <code>
+        return new LHCb::VeloStripCluster(*this);
+      </code>
+    </method>
+  
+    <method name = "firstChannel"
+            type="LHCb::VeloLiteChannelID"
+            desc="first VeloLiteChannelID"
+            const="TRUE">
+      <code>
+        return VeloLiteChannelID(channelID().sensor(), stripValues().front().first, channelID().type());
+      </code>
+    </method>
+
+    <method name = "lastChannel"
+            type="LHCb::VeloLiteChannelID"
+            desc="last VeloLiteChannelID"
+            const="TRUE">
+      <code>
+        return VeloLiteChannelID(channelID().sensor(), stripValues().back().first, channelID().type());    
+      </code>
+    </method>
+
+    <method name="channels"
+            type="std::vector&lt;LHCb::VeloLiteChannelID&gt;"
+            desc="channel IDs"
+            const="TRUE">
+      <code>
+        std::vector&lt;LHCb::VeloLiteChannelID&gt; chanCont;
+        VeloLiteChannelID first = firstChannel();
+        for (unsigned int i = 0; i &lt; size(); ++i) {
+          VeloLiteChannelID aChan(first.sensor(), first.strip() + i, first.type());
+          chanCont.push_back(aChan);
+        }
+        return chanCont;
+      </code>
+    </method>
+
+    <method name="isRType"
+            type="bool"
+            desc="check if R type"
+            const="TRUE" >
+      <code>
+        return m_liteCluster.channelID().isRType();
+      </code> 
+    </method>
+
+    <method name="isPhiType"
+            type="bool"
+            desc="check if Phi type"
+            const="TRUE" >
+      <code>
+        return m_liteCluster.channelID().isPhiType();
+      </code> 
+    </method>
+
+    <method name="isPileUp"
+            type="bool"
+            desc="check if Pile UP "
+            const="TRUE" >
+      <code>
+        return m_liteCluster.channelID().isPileUp();
+      </code> 
+    </method>
+  </class>
+</package>
+</gdd>

@@ -1,0 +1,137 @@
+
+     <import name="Kernel/&channelIDName;"/>
+     <import name="Kernel/FastClusterContainer"/>
+     <import name="Kernel/SiDataFunctor"/>
+     <import name="LHCbMath/LHCbMath"/>
+
+     <typedef desc = "channelID type"
+       type =  "LHCb::&channelIDName;"
+       def = "chan_type"
+       access = "PUBLIC " />
+
+    <typedef desc = "fast container for light clusters"
+       type =  "FastClusterContainer &lt; LHCb::&className;, int &gt;"
+       def = "&className;s"
+       access = "PUBLIC " />
+
+     <typedef desc = "fast container for light clusters (old name: will be removed)"
+       type =  "FastClusterContainer &lt; LHCb::&className;, int &gt;"
+       def = "FastContainer"
+       access = "PUBLIC " />
+
+     <typedef desc = "finding policy"
+       type =  "SiDataFunctor::CompareByChannel &lt; LHCb::&className;&gt;"
+       def = "findPolicy"
+       access = "PUBLIC " /> 
+
+     <constructor desc="Constructor" 
+       argList='&channelIDName; &amp; chan, double fracStrip, 
+                unsigned int size, bool secondThres'>
+       <code>
+
+ unsigned int tFrac = LHCb::Math::round(fracStrip * (1&lt;&lt;(sizeBits - interStripFractionBits)));
+ unsigned int pseudoSize;
+ size &lt; 3 ? pseudoSize = 0 : pseudoSize = 1;
+ unsigned int tThres;
+ secondThres == true ? tThres = 1: tThres = 0;
+
+ m_liteCluster = (chan &lt;&lt; channelIDBits) +
+                 (tFrac &lt;&lt; interStripFractionBits) +
+                 (pseudoSize &lt;&lt; sizeBits)+
+                 (tThres &lt;&lt; highThresholdBits)
+                 ;
+       </code>
+      </constructor>
+
+
+    <constructor desc="Constructor" 
+       argList='unsigned int fracStrip, unsigned int pseudoSize, 
+                bool secondThres, &channelIDName; &amp; chan'>
+       <code>
+ unsigned int tThres;
+ secondThres == true ? tThres = 1: tThres = 0;
+ m_liteCluster = (chan &lt;&lt; channelIDBits) +
+                 (fracStrip &lt;&lt; interStripFractionBits) +
+                 (pseudoSize &lt;&lt; sizeBits)+
+                 (tThres &lt;&lt; highThresholdBits);
+       </code>
+      </constructor>
+
+
+
+     <destructor  desc="destructor">
+     <code>
+     //
+     </code>
+     </destructor>
+
+     <method type='LHCb::&className; &amp;' 
+             name='operator ='
+             argList='const &className; &amp; c'  
+             const='FALSE'  desc='equal'>
+        <code>m_liteCluster = c.m_liteCluster; 
+              return *this; </code>
+     </method>
+
+     <method
+      name="interStripFraction"
+      type="double"
+      desc="position within a strip of cluster centre"
+      const="TRUE">
+     <code>
+ return (fractionUnits()/double(1&lt;&lt;(sizeBits - interStripFractionBits)));
+     </code>
+     </method>
+
+     <method
+      name="pseudoSize"
+      type="unsigned int"
+      desc="number of strips in cluster, 3 means 3 or more"
+      const="TRUE">
+     <code>
+  unsigned int cSize= 1 + ((m_liteCluster &amp; sizeMask) &gt;&gt; sizeBits);
+  if (cSize == 1){
+    if (fractionUnits() != 0) cSize = 2;
+  }
+  else {
+    cSize = 3;
+  }
+  return cSize;
+     </code>
+     </method>
+
+      <method
+      access="PRIVATE"
+      name="fractionUnits"
+      type="int"
+      desc="number between 0 and 7 /8ths of a strip"
+      const="TRUE"
+      >
+      <code> return ((m_liteCluster &amp; interStripFractionMask) &gt;&gt; interStripFractionBits); 
+     </code>
+     </method>
+
+      <method
+      access="PUBLIC"
+      name="channelID"
+      type="LHCb::&channelIDName;"
+      desc="The Channel"
+      const="TRUE"
+      >
+      <code> return &channelIDName;((m_liteCluster &amp; channelIDMask) &gt;&gt; channelIDBits); 
+     </code>
+     </method>
+
+     
+
+
+     <attribute type='bitfield' name='liteCluster' desc='lite Cluster' setMeth="FALSE" getMeth="FALSE">
+        <bitfield name='channelID' length='24' desc='channelID' 
+         setMeth="FALSE" getMeth="FALSE"/>
+        <bitfield name='interStripFraction' length='&posBits;' desc='interStripFractionBits'
+         setMeth="FALSE" getMeth="FALSE"/>
+        <bitfield name='size' length='1' desc='size'
+         setMeth="FALSE" getMeth="FALSE"/>
+        <bitfield name='highThreshold' length='1' desc='high threshold'
+         setMeth="FALSE" getMeth="TRUE"/>
+      </attribute>

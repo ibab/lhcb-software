@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" [
+<!ENTITY channelIDName "VeloLiteChannelID">
+<!ENTITY className "VeloStripLiteCluster">
+<!ENTITY posBits "3">
+<!ENTITY VeloStripLiteClusterClass SYSTEM "SiLiteCluster.ent">
+]>
+<gdd>
+
+<package name="DigiEvent">
+  <class name="&className;" 
+         author="H. Schindler" 
+         desc="Cluster without full ADC information"
+         location="Raw/VeloLite/LiteClusters"
+         serializers="FALSE">
+
+    &VeloStripLiteClusterClass;
+
+    <method name="isRType"
+            type="bool"
+            desc="check if R type"
+            const="TRUE">
+      <code>
+        return channelID().isRType();
+      </code>
+    </method>
+
+    <method name="isPhiType"
+            type="bool"
+            desc="check if Phi type"
+            const="TRUE">
+      <code>
+        return channelID().isPhiType();
+      </code>
+    </method>
+ 
+    <method name="isPileUp"
+            type="bool"
+            desc="check if PileUp"
+            const="TRUE">
+      <code>
+        return channelID().isPileUp();
+      </code>
+    </method>
+ 
+  </class>
+</package>
+</gdd>
+
