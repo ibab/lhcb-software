@@ -1,4 +1,30 @@
 2012-05-08 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v6r7p7
+
+	LbConfiguration
+	* python/LbConfiguration/Package.py: Added new package SemilepConfig
+
+	LbLegacy
+	* scripts/mkMCGentar: Fixed to take tarball from correct directory.
+	(i.e. the one called MCGenerators_hepmcXXXX, not MCGenerators)
+
+	Lbrelease
+	* python/LbRelease/SvnChecker:
+	- renamed _test.py to tests.py to allow nosetests discovery
+	- improved logging (for debugging)
+	- added useful checker (Contains, NotContains)
+	- added checker to allow correct move of packages
+	* python/LbRelease/rcs.py:
+	- optimized the function to move packages from one project to another
+	* python/LbRelease/LHCbDoc: added an option to check if there are problems
+	in the documentation directories; print the name of the AFS volume that
+	should be removed (removal not implemented); ignore OSError as well as IOError
+	when cleaning directories of archived projects; detect missing "common" links
+	* scripts/buildGeneralDoc: added the option --timeout in the call to LHCbDoc
+	(not yet functional)
+
+2012-05-08 Ben Couturier <Ben.Couturier@cern.ch>
 	
 	* cmt/requirements: release of version v6r7p6
 
