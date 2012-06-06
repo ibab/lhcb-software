@@ -5,6 +5,14 @@
 !--------------------------------------------------------------------------
 
 ! 2012-06-06 P. Hopchev
+  - In Layer, added a new member variable for the layer slope dzDy and
+    the relevant accessor method.
+  - Removed the method which creates a det. segment from a XYZ point
+    and simplified the method which creates a det. segment from a
+    ChannelID and the fractional position inside it
+  - Now the created det. segments have the dyDz slope of the layer
+ 	
+! 2012-06-06 P. Hopchev
   - Modified the Layer initialization to take into account that in the 
     latest version of the xml DDDB the beam-pipe is not a cylinder, but a cone
   - In DeFTDetector.cpp: simlified the code which prints the layer parameters

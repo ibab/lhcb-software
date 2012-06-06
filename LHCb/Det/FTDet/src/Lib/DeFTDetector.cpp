@@ -103,6 +103,7 @@ StatusCode DeFTDetector::initialize(){
 			 layer->layerMinZ(), layer->layerMaxZ())
 	       << "\tBeam pipe radius: " << format("%7.1f mm", layer->layerInnerHoleRadius())
 	       << "\tStereo angle: " << format("%.1f degrees", layer->angle()/Gaudi::Units::degree)
+	       << "\tSlope dzDy: " << format("%.5f rad", layer->slopeDzDy())
 	       << endmsg;
 
       } //end if( layer != 0 )

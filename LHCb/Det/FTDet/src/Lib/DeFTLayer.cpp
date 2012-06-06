@@ -38,6 +38,7 @@ DeFTLayer::DeFTLayer( const std::string& name ) :
   // Layer stereo angle
   m_angle(0.0),
   m_tanAngle(0.0),
+  m_dzDy(0.0),
   // Layer dimensions
   m_layerMinX(0.),
   m_layerMaxX(0.),
@@ -125,6 +126,13 @@ StatusCode DeFTLayer::initialize(){
 
   m_layerMinZ = m_layerPosZ - m_layerHalfSizeZ;
   m_layerMaxZ = m_layerPosZ + m_layerHalfSizeZ;
+
+  /// Determine the slope in the y-z plane
+  Gaudi::XYZPoint tmpLocPoint1(0.,    0., 0.);
+  Gaudi::XYZPoint tmpLocPoint2(0., 1000., 0.);
+  Gaudi::XYZPoint tmpGlobPoint1 = this->geometry()->toGlobal( tmpLocPoint1 );
+  Gaudi::XYZPoint tmpGlobPoint2 = this->geometry()->toGlobal( tmpLocPoint2 );
+  m_dzDy = (tmpGlobPoint2.z() - tmpGlobPoint1.z()) / (tmpGlobPoint2.y() - tmpGlobPoint1.y());
 
   debug() << "Derived parameters:"
           << "\n\tpitch X: " << m_sipmPitchX
@@ -568,80 +576,30 @@ StatusCode DeFTLayer::cellCrossingPoint(const double cellEdgeU,
 
 //=============================================================================
 // Function to create a DetectorSegment (straight line representing an FT channel)
-// from a XYZPoint.
-// -->FIXME: The function assumes that the local -> global transformation of the
-// layer is a simple z translation!
-//=============================================================================
-DetectorSegment DeFTLayer::createDetSegment(const Gaudi::XYZPoint& globalPoint) const {
-  if ( ! this->isInside(globalPoint) ) {
-    debug() << "Global point " << globalPoint << " is not inside the Layer!" << endmsg;
-    return DetectorSegment();
-  }
-  else {
-    Gaudi::XYZPoint localPoint = this->geometry()->toLocal( globalPoint );
-  
-    double ds_x0   = xAtYEq0(localPoint.x(), localPoint.y());
-    double ds_z0   = globalPoint.z();
-    double ds_dxDy = m_tanAngle;
-    double ds_dzDy = 0.; ///!!! For now assume dzDy = 0
-    double ds_yMin, ds_yMax;
-
-    if ( localPoint.y() > 0 ) {
-      ds_yMax = m_layerMaxY;
-      /// if we are above the beam pipe yMin is not 0!
-      if ( std::abs(ds_x0) < m_innerHoleRadius ) {
-        StatusCode sc = beamPipeYCoord(ds_x0, 1, ds_yMin);
-        if ( sc.isFailure() ) {
-          error() << "Function beamPipeYCoord found no crossing points, while"
-		  << " there must be at least one crossing point (|x0| is < beam-pipe radus)." << endmsg;
-        }
-      }
-      else ds_yMin = 0.;
-    } // end if (y>0)
-
-    else{
-      ds_yMin = m_layerMinY;
-      /// if we are below the beam pipe yMax is not 0!
-      if ( std::abs(ds_x0) < m_innerHoleRadius ) {
-        StatusCode sc = beamPipeYCoord(ds_x0, -1, ds_yMax);
-        if ( sc.isFailure() ) {
-          error() << "Function beamPipeYCoord found no crossing points, while"
-		  << " there must be at least one crossing point (|x0| is < beam-pipe radus)." << endmsg;
-        }
-      }
-      else ds_yMax = 0;
-    } // end y<=0
-
-    debug() << "Initial point: x, y = " << localPoint.x() << ", " << localPoint.y() << endmsg;
-    debug() << "Detector Segment: x0, z0, dxdy, ymin, ymax: "
-	    << ds_x0 << ", " << ds_z0 << ", " << ds_dxDy << ", " << ds_yMin << ", " << ds_yMax << endmsg;
-
-    return DetectorSegment( ds_x0, ds_z0, ds_dxDy, ds_dzDy, ds_yMin, ds_yMax );
-  }
-}
-
-//=============================================================================
-// Function to create a DetectorSegment (straight line representing an FT channel)
 // from a FTChannelID
 //=============================================================================
 DetectorSegment DeFTLayer::createDetSegment(const LHCb::FTChannelID& aChan,
                                             double fracPos) const {
 
-  /// The procedure is to create an XYZ point with u-coordinate provided by the
-  /// function 'cellUCoordinate' (gives the cell center) and then take into
-  /// account the farctional position inside the cell.
-  /// Then call the function which creates a detector segment from a XYZ point.
-
+  /// Determine the x coordinate at y=0 of the det. segment
   double cellCenter = cellUCoordinate(aChan);
   double segmentU = cellCenter + fracPos*m_cellSizeX;
 
-  // Create a point (along the segment trajectory) which is _inside_ the layer
-  // (if it is not _inside_, the call to createDetSegment below won't work).
-  // Whatever point we pass to createDetSegment it will determine x@y=0 properly
-  double y = (aChan.quarter()>1) ? 1.e3 : -1.e3;
-  double x = segmentU + y*m_tanAngle;
-  double z = m_layerPosZ;
-  return createDetSegment( Gaudi::XYZPoint(x, y, z) );
+  /// Determine the upper and lower boundaries of the det. segment
+  /// For speed, we do not take into account that below/above the beam pipe
+  /// the fibres are shorter
+  
+  double ds_yMin, ds_yMax;
+  if ( aChan.quarter()>1 ) {
+    ds_yMin = 0.;
+    ds_yMax = m_layerMaxY;
+  }
+  else{
+    ds_yMin = m_layerMinY;
+    ds_yMax = 0.;
+  }
+
+  return DetectorSegment( segmentU, m_layerPosZ, m_tanAngle, m_dzDy, ds_yMin, ds_yMax );
 }
 
 //=============================================================================

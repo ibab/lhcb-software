@@ -128,6 +128,9 @@ public:
   /** @return Tangent of the stereo angle of the layer */
   double tanAngle() const { return m_tanAngle; }
 
+  /** @return Layer slope in the y-z plane */
+  double slopeDzDy() const { return m_dzDy; }
+
   /// Get the u-coordinate of the cell center
   double cellUCoordinate(const LHCb::FTChannelID aChan) const;
 
@@ -261,6 +264,7 @@ private: // private data members
   unsigned int m_layerID;
   double m_angle;               ///< stereo angle of the layer
   double m_tanAngle;            ///< tangent of stereo angle
+  double m_dzDy;                ///< layer slope in the y-z plane
 
   /// Layer dimensions
   double m_layerMinX, m_layerMaxX;
