@@ -414,6 +414,16 @@ public:
     return m_halfBoxOffsets[half];
   }
 
+  // For now: sensor number = Tell40 ID 
+  virtual const DeVeloLiteSensor* sensorByTell40Id(unsigned int tell40Id) const {
+    return m_sensors[tell40Id];
+  }
+  virtual bool tell40IdBySensorNumber(unsigned int sensorNumber,
+                                     unsigned int& tell40Id) const {
+    tell40Id = sensorNumber;
+    return true;
+  }
+
   // Public condition related methods 
   /// Update the left half box offset vector
   StatusCode updateLeftHalfBoxOffset();
