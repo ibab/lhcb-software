@@ -1,5 +1,7 @@
 2012-06-06 Ben Couturier <Ben.Couturier@cern.ch>
 
+	* cmt/requirements: release of version v4r7p7
+	* python/LbLegacy/install_project.py: release of version v4r7p7 
 	* scripts/mkMCGentar: Fixed to take tarball from correct directory.
 	(i.e. the one called MCGenerators_hepmcXXXX, not MCGenerators) 
 
