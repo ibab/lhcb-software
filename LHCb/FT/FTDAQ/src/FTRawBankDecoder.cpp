@@ -64,7 +64,7 @@ StatusCode FTRawBankDecoder::execute() {
   for ( std::vector <LHCb::RawBank*>::const_iterator itB = banks.begin(); banks.end() != itB; ++itB ) {
     int source  = (*itB)->sourceID();
     int layer   = source/4;
-    int quarter = layer & 3;
+    int quarter = source & 3;
     int size    = (*itB)->size(); // in bytes, multiple of 4
     short int* pt = (short int*)(*itB)->data();
     debug() << "source " << source << " layer " << layer << " quarter " << quarter << " size " << size << endmsg;

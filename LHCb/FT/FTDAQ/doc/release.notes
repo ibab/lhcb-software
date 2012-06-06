@@ -4,6 +4,9 @@
 ! Purpose     : Code/Decode the FT raw data
 !-----------------------------------------------------------------------------
 
+! 2012-06-06 - Olivier Callot
+ - Fix the decoder, the quarter was wrong!
+
 ! 2012-05-14 - Olivier Callot
  - First minimal implementation, a coder and decoder for FT Clusters. 
    FTRawEncoder converts FTCluster to banks.
