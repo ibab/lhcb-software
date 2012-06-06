@@ -1,0 +1,25 @@
+package           VeloLiteDigitisation
+version           v1r0
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src options
+include_path      none
+
+#============================================================================
+# Used packages
+#============================================================================
+use  MCEvent       v* Event
+use  DigiEvent     v* Event
+use  VeloLiteDet   v* Det
+use  GaudiAlg      v*
+use  GaudiGSL 	   v* 
+#============================================================================
+# Component library building rule
+#============================================================================
+library          VeloLiteDigitisation    ../src/*.cpp -import=AIDA
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=VeloLiteDigitisation
