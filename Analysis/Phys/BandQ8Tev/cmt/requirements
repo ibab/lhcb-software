@@ -1,9 +1,0 @@
-#============================================================================
-# Created    : 2012-04-03
-# Maintainer : M Needham
-
-package BandQ8Tev
-
-branches          cmt doc macros
-
-include_path      none
