@@ -165,11 +165,6 @@ public:
   LHCb::FTChannelID nextChannelRight(const LHCb::FTChannelID& aChan) const;
 
   /** Create a DetectorSegment (straight line representing an FT cell)
-   *  from a global XYZ point
-   */
-  DetectorSegment createDetSegment(const Gaudi::XYZPoint& globalPoint) const;
-
-  /** Create a DetectorSegment (straight line representing an FT cell)
    *  from an FTChannelID and fractional position within the relevant cell
    */
   DetectorSegment createDetSegment(const LHCb::FTChannelID& aChan, double fracPos) const;

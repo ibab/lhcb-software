@@ -5,6 +5,10 @@
 !--------------------------------------------------------------------------
 
 ! 2012-06-06 P. Hopchev
+  - Removed the prototype of the method createDetSegment(XYZPoint) from
+    the Layer header file (ommission in the previous commit).
+
+! 2012-06-06 P. Hopchev
   - In Layer, added a new member variable for the layer slope dzDy and
     the relevant accessor method.
   - Removed the method which creates a det. segment from a XYZ point
