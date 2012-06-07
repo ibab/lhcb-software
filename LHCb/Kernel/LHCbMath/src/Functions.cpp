@@ -391,6 +391,32 @@ namespace
     return (*novosibirsk)(x) ;
   }
   // ==========================================================================
+  /** helper function for itegration of CrystalBall function 
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *  @date 2012-06-06
+   */
+  double crystalball_GSL ( double x , void* params )  
+  {
+    //
+    const Gaudi::Math::CrystalBall* cb = 
+      (Gaudi::Math::CrystalBall*) params ;
+    //
+    return (*cb)(x) ;
+  }
+  // ==========================================================================
+  /** helper function for itegration of CrystalBall function 
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *  @date 2012-06-06
+   */
+  double crystalball2s_GSL ( double x , void* params )  
+  {
+    //
+    const Gaudi::Math::CrystalBallDoubleSided* cb2s = 
+      (Gaudi::Math::CrystalBallDoubleSided*) params ;
+    //
+    return (*cb2s)(x) ;
+  }
+  // ==========================================================================
   /** evaluate the helper function  \f[ f = \frac{\log{1+x}}{x} \f]
    *  it allows to calculate Bukin' function in efficient and regular way  
    *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
@@ -1690,13 +1716,14 @@ Gaudi::Math::CrystalBall::CrystalBall
   const double alpha , 
   const double N     ) 
   : std::unary_function<double,double> () 
-  , m_m0       ( m0                  )
-  , m_sigma    (     std::fabs ( sigma ) )
-  , m_alpha    ( 1 + std::fabs ( alpha ) )
-  , m_N        ( 1 + std::fabs ( N     ) )
+  , m_m0         ( m0                  )
+  , m_sigma      (     std::fabs ( sigma ) )
+  , m_alpha      ( 1 + std::fabs ( alpha ) )
+  , m_N          ( 1 + std::fabs ( N     ) )
 //
-  , m_const    ( 0.0 )  
-  , m_integral ( -1000 ) 
+  , m_const      ( 0.0   )  
+  , m_integral   ( -1000 ) 
+  , m_workspace  () 
 {
   m_const = my_exp ( -0.5 * m_alpha * m_alpha ) ;
 }
@@ -1800,17 +1827,35 @@ double Gaudi::Math::CrystalBall::integral
   //
   // tail
   //
-  const double factor = m_const * std::pow ( m_N / m_alpha * m_sigma , m_N ) ;
+  // use GSL to evaluate the integral 
   //
-  const double c  =  ( m_N / m_alpha - m_alpha ) * m_sigma + m_m0;
+  Sentry sentry ;
   //
-  const double a  = -  low + c ;
-  const double b  = - high + c ;
+  gsl_function F                ;
+  F.function = &crystalball_GSL ;
+  F.params   = const_cast<CrystalBall*> ( this ) ;
   //
-  if ( std::fabs( m_N - 1 ) < 1.e-5 ) { return my_log ( b / a ) * factor ; }
+  double result   = 1.0 ;
+  double error    = 1.0 ;
   //
-  return factor / ( 1 - m_N ) * ( std::pow ( a , 1 - m_N ) - 
-                                  std::pow ( b , 1 - m_N ) ) ;
+  const int ierror = gsl_integration_qag 
+    ( &F                ,            // the function 
+      low   , high      ,            // low & high edges 
+      s_PRECISION       ,            // absolute precision            
+      s_PRECISION       ,            // relative precision 
+      s_SIZE            ,            // size of workspace 
+      GSL_INTEG_GAUSS31 ,            // integration rule  
+      workspace ( m_workspace ) ,    // workspace  
+      &result           ,            // the result 
+      &error            ) ;          // the error in result 
+  //
+  if ( ierror ) 
+  { 
+    gsl_error ( "Gaudi::Math::CrystalBall::QAG" ,
+                __FILE__ , __LINE__ , ierror ) ; 
+  }
+  //
+  return result ;
 }
 // ============================================================================
 // get the (trunkated)  integral
@@ -1895,7 +1940,10 @@ bool Gaudi::Math::Needham::setA2 ( const double value )
   return m_cb.setAlpha ( alpha () ) ;
 }
 // ===========================================================================
-
+// evaluate Needham's function 
+// ===========================================================================
+double Gaudi::Math::Needham::operator() ( const double x ) const 
+{ return m_cb ( x ) ; }
 // ============================================================================
 /*  constructor from all parameters 
  *  @param m0 m0 parameter 
@@ -1911,16 +1959,17 @@ Gaudi::Math::CrystalBallDoubleSided::CrystalBallDoubleSided
   const double alpha_R , 
   const double N_R     ) 
   : std::unary_function<double,double> () 
-  , m_m0       (  m0                        )
-  , m_sigma    (      std::fabs ( sigma   ) )
-  , m_alpha_L  (  1 + std::fabs ( alpha_L ) )
-  , m_N_L      (  1 + std::fabs ( N_L     ) )
-  , m_alpha_R  (  1 + std::fabs ( alpha_R ) )
-  , m_N_R      (  1 + std::fabs ( N_R     ) )
+  , m_m0         (  m0                        )
+  , m_sigma      (      std::fabs ( sigma   ) )
+  , m_alpha_L    (  1 + std::fabs ( alpha_L ) )
+  , m_N_L        (  1 + std::fabs ( N_L     ) )
+  , m_alpha_R    (  1 + std::fabs ( alpha_R ) )
+  , m_N_R        (  1 + std::fabs ( N_R     ) )
 //
-  , m_const_L  (  1 ) 
-  , m_const_R  (  1 )
-  , m_integral ( -1000 ) 
+  , m_const_L    (  1 ) 
+  , m_const_R    (  1 )
+  , m_integral   ( -1000 ) 
+  , m_workspace  () 
 {
   //
   m_const_L = my_exp ( -0.5 * m_alpha_L * m_alpha_L ) ;  
@@ -2047,45 +2096,47 @@ double Gaudi::Math::CrystalBallDoubleSided::integral
   { return integral ( low , x_high ) + integral ( x_high , high ) ; }
   //
   //
-  //  "left tail"
-  if     ( high <= x_low ) 
-  {
-    //
-    const double factor = m_const_L * std::pow ( m_N_L / m_alpha_L * m_sigma , m_N_L ) ;
-    //
-    const double c  =  ( m_N_L / m_alpha_L - m_alpha_L ) * m_sigma + m_m0;
-    //
-    const double a  = -  low + c ;
-    const double b  = - high + c ;
-    //
-    if ( std::fabs( m_N_L - 1 ) < 1.e-5 ) { return my_log ( b / a ) * factor ; }
-    //
-    return factor / ( 1 - m_N_L ) * ( std::pow ( a , 1 - m_N_L ) - 
-                                      std::pow ( b , 1 - m_N_L ) ) ;
-  }
-  //  "right tail"
-  else if ( low  >= x_high ) 
-  {
-    //
-    const double factor = m_const_R * std::pow ( m_N_R / m_alpha_R * m_sigma , m_N_R ) ;
-    //
-    const double c  = ( m_N_R / m_alpha_R - m_alpha_R ) * m_sigma - m_m0;
-    //
-    const double a  = low  + c ;
-    const double b  = high + c ;
-    //
-    if ( std::fabs ( m_N_R - 1 ) < 1.e-5 ) { return my_log ( b / a ) * factor ; }
-    //
-    return factor / ( 1 - m_N_R ) * ( std::pow ( b , 1 - m_N_R ) - 
-                                      std::pow ( a , 1 - m_N_R ) ) ;
-  }
-  //
   // the peak 
   //
-  return gaussian_int ( 0.5 / ( m_sigma * m_sigma ) , 
-                        0            , 
-                        low   - m_m0 ,
-                        high  - m_m0 ) ;
+  if ( x_low <= low && high <= x_high ) 
+  {
+    return gaussian_int ( 0.5 / ( m_sigma * m_sigma ) , 
+                          0            , 
+                          low   - m_m0 ,
+                          high  - m_m0 ) ;
+  }
+  //
+  // tails 
+  //
+  // use GSL to evaluate the integral 
+  //
+  Sentry sentry ;
+  //
+  gsl_function F                ;
+  F.function = &crystalball2s_GSL ;
+  F.params   = const_cast<CrystalBallDoubleSided*> ( this ) ;
+  //
+  double result   = 1.0 ;
+  double error    = 1.0 ;
+  //
+  const int ierror = gsl_integration_qag 
+    ( &F                ,            // the function 
+      low   , high      ,            // low & high edges 
+      s_PRECISION       ,            // absolute precision            
+      s_PRECISION       ,            // relative precision 
+      s_SIZE            ,            // size of workspace 
+      GSL_INTEG_GAUSS31 ,            // integration rule  
+      workspace ( m_workspace ) ,    // workspace  
+      &result           ,            // the result 
+      &error            ) ;          // the error in result 
+  //
+  if ( ierror ) 
+  { 
+    gsl_error ( "Gaudi::Math::CrystalBallDoubleSided::QAG" ,
+                __FILE__ , __LINE__ , ierror ) ; 
+  }
+  //
+  return result ;
 }
 // ============================================================================
 // get the (trunkated)  integral
