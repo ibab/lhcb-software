@@ -298,6 +298,7 @@ StatusCode BTaggingAnalysis::execute() {
   std::vector<float> pID(0), pP(0), pPt(0), pphi(0), pch(0), pip(0), pipsign(0), piperr(0), pipPU(0), pPl(0), ptheta(0);
   std::vector<float> ptrtyp(0), plcs(0), pcloneDist(0), ptsal(0), pdistPhi(0), pveloch(0), pEOverP(0);
   std::vector<float> pPIDe(0), pPIDm(0), pPIDk(0), pPIDp(0),pPIDfl(0);
+  std::vector<float> pPIDNNe(0), pPIDNNm(0), pPIDNNk(0), pPIDNNp(0),pPIDNNpi(0);
   std::vector<float> pMCID(0), pMCP(0), pMCPt(0), pMCphi(0), pMCx(0), pMCy(0), pMCz(0), pMCPl(0),
     pmothID(0), pancID(0), pbFlag(0), pxFlag(0), pvFlag(0), pMC_OS_muon_type(0);
   std::vector<float> pIPSV(0), pIPSVerr(0), pDOCA(0), pDOCAerr(0);
@@ -459,6 +460,7 @@ StatusCode BTaggingAnalysis::execute() {
     //PID information
     // electrons
     pPIDe.push_back( proto->info( ProtoParticle::CombDLLe, -1000.0 ) );
+    pPIDNNe.push_back( proto->info( ProtoParticle::ProbNNe, -1000.0 ) );
     double eOverP  = -999.9;
     if(m_electron->set(axp)){ /// CaloElectron tool
       eOverP  = m_electron->eOverP();
@@ -467,11 +469,16 @@ StatusCode BTaggingAnalysis::execute() {
     pveloch.push_back(proto->info( ProtoParticle::VeloCharge, 0.0 ));        
     // muons
     pPIDm.push_back(proto->info( ProtoParticle::CombDLLmu, -1000.0 ));
+    pPIDNNm.push_back(proto->info( ProtoParticle::ProbNNmu, -1000.0 ));
     int muonNSH = (int) proto->info( ProtoParticle::MuonNShared, -1.0 );
     // kaons
     pPIDk.push_back(proto->info( ProtoParticle::CombDLLk, -1000.0 ));
+    pPIDNNk.push_back(proto->info( ProtoParticle::ProbNNk, -1000.0 ));
     // protons
     pPIDp.push_back(proto->info( ProtoParticle::CombDLLp, -1000.0 ));
+    pPIDNNp.push_back(proto->info( ProtoParticle::ProbNNp, -1000.0 ));
+    // pions
+    pPIDNNpi.push_back(proto->info( ProtoParticle::ProbNNpi, -1000.0 ));
 
     // global flags 
     const bool inEcalACC = proto->info(ProtoParticle::InAccEcal, false);
@@ -653,6 +660,11 @@ StatusCode BTaggingAnalysis::execute() {
   tuple -> farray ("PIDk",    pPIDk, "N", 200);
   tuple -> farray ("PIDp",    pPIDp, "N", 200);
   tuple -> farray ("PIDfl",   pPIDfl, "N", 200);
+  tuple -> farray ("PIDNNe",  pPIDNNe, "N", 200);
+  tuple -> farray ("PIDNNm",  pPIDNNm, "N", 200);
+  tuple -> farray ("PIDNNk",  pPIDNNk, "N", 200);
+  tuple -> farray ("PIDNNp",  pPIDNNp, "N", 200);
+  tuple -> farray ("PIDNNpi",  pPIDNNpi, "N", 200);
   if (m_EnableMC) {
     tuple -> farray ("MCID",    pMCID, "N", 200);
     tuple -> farray ("MCP",     pMCP, "N", 200);

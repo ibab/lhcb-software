@@ -6,6 +6,14 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+! 2012-06-06 - Marc Grabalosa
+ - Added ProbNN variables in BTaggingAnalysis
+ - Changes to /root
+  . New polynomials for SS and OS (corresponding to 1invfb)
+  . Added ProbNN variable
+  . Added sweights reading
+ - Increase to v7r0
+
 !========================= FlavourTaggingChecker v6r9 2012-02-09 =========================
 
 ! 2012-01-30 - Stefania Vecchi
