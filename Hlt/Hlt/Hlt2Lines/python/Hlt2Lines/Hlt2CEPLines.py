@@ -13,35 +13,22 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
     __slots__ = { 'Prescale' : { 'Hlt2LowMultD0'        : 1.0
                                  , 'Hlt2LowMultDp'      : 1.0
                                  , 'Hlt2LowMultChiC'    : 1.0
-                                 , 'Hlt2LowMultD0D0'    : 1.0
-                                 , 'Hlt2LowMultDpDp'    : 1.0
-                                 , 'Hlt2LowMultD0Dp'    : 1.0
                                  , 'Hlt2LowMultD0Inc'   : 1.0
                                  , 'Hlt2LowMultDpInc'   : 1.0
                                  , 'Hlt2LowMultChiCInc' : 1.0
-                                 , 'Hlt2LowMultD0D0Inc' : 1.0
-                                 , 'Hlt2LowMultDpDpInc' : 1.0
-                                 , 'Hlt2LowMultD0DpInc' : 1.0
                                  }
                   , 'Postscale' : { 'Hlt2LowMultD0'        : 1.0
                                     , 'Hlt2LowMultDp'      : 1.0
                                     , 'Hlt2LowMultChiC'    : 1.0
-                                    , 'Hlt2LowMultD0D0'    : 1.0
-                                    , 'Hlt2LowMultDpDp'    : 1.0
-                                    , 'Hlt2LowMultD0Dp'    : 1.0
                                     , 'Hlt2LowMultD0Inc'   : 1.0
                                     , 'Hlt2LowMultDpInc'   : 1.0
                                     , 'Hlt2LowMultChiCInc' : 1.0
-                                    , 'Hlt2LowMultD0D0Inc' : 1.0
-                                    , 'Hlt2LowMultDpDpInc' : 1.0
-                                    , 'Hlt2LowMultD0DpInc' : 1.0
                                     }
                   # D0 -> KPi
                   , 'D2KPi_H_PTmin'       : 100.0 * MeV
                   , 'D2KPi_H_Pmin'        : 1000.0 * MeV
                   , 'D2KPi_H_TrkChi2max'  : 3.0
                   , 'D2KPi_K_PIDKmin'     : 0.0
-                  , 'D2KPi_Pi_PIDKmax'    : 10000.0
                   , 'D2KPi_APTmin'        : 0.0 * MeV
                   , 'D2KPi_ADAMASSmax'    : 80.0 * MeV
                   , 'D2KPi_ADOCAmax'      : 0.5 * mm
@@ -52,7 +39,6 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
                   , 'D2KPiPi_H_Pmin'        : 1000.0 * MeV
                   , 'D2KPiPi_H_TrkChi2max'  : 3.0
                   , 'D2KPiPi_K_PIDKmin'     : 0.0
-                  , 'D2KPiPi_Pi_PIDKmax'    : 10000.0
                   , 'D2KPiPi_APTmin'        : 0.0 * MeV
                   , 'D2KPiPi_ADAMASSmax'    : 80.0 * MeV
                   , 'D2KPiPi_ADOCAmax'      : 0.7 * mm
@@ -63,7 +49,6 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
                   , 'ChiC2HHHH_H_Pmin'        : 1000.0 * MeV
                   , 'ChiC2HHHH_H_TrkChi2max'  : 3.0
                   , 'ChiC2HHHH_K_PIDKmin'     : 0.0
-                  , 'ChiC2HHHH_Pi_PIDKmax'    : 10000.0
                   , 'ChiC2HHHH_APTmin'        : 0.0 * MeV
                   , 'ChiC2HHHH_AMmin'         : 2500.0 * MeV
                   , 'ChiC2HHHH_AMmax'         : 4500.0 * MeV
@@ -74,15 +59,9 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
                   , 'HltANNSvcID' : { "D0"        : 50401
                                       , "Dp"      : 50402
                                       , "ChiC"    : 50403
-                                      , "D0D0"    : 50404
-                                      , "DpDp"    : 50405
-                                      , "D0Dp"    : 50406
-                                      , "D0Inc"   : 50407
-                                      , "DpInc"   : 50408
-                                      , "ChiCInc" : 50409
-                                      , "D0D0Inc" : 50410
-                                      , "DpDpInc" : 50411
-                                      , "D0DpInc" : 50412
+                                      , "D0Inc"   : 50404
+                                      , "DpInc"   : 50405
+                                      , "ChiCInc" : 50406
                                       }
                   } 
 
@@ -104,8 +83,7 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
 
         D2KPi_K_cut      = "(PT > %(D2KPi_H_PTmin)s) & (P > %(D2KPi_H_Pmin)s) & (TRCHI2DOF < %(D2KPi_H_TrkChi2max)s) & " \
                            "(PIDK > %(D2KPi_K_PIDKmin)s) & (ISLONG) " % self.getProps()
-        D2KPi_Pi_cut     = "(PT > %(D2KPi_H_PTmin)s) & (P > %(D2KPi_H_Pmin)s) & (TRCHI2DOF < %(D2KPi_H_TrkChi2max)s) & " \
-                           "(PIDK < %(D2KPi_Pi_PIDKmax)s) & (ISLONG)" % self.getProps()
+        D2KPi_Pi_cut     = "(PT > %(D2KPi_H_PTmin)s) & (P > %(D2KPi_H_Pmin)s) & (TRCHI2DOF < %(D2KPi_H_TrkChi2max)s) & (ISLONG)" % self.getProps()
         D2KPi_Daug_cuts  = { "K+"  : D2KPi_K_cut,
                              "K-"  : D2KPi_K_cut,
                              "pi+" : D2KPi_Pi_cut,
@@ -146,8 +124,7 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
 
         D2KPiPi_K_cut      = "(PT > %(D2KPiPi_H_PTmin)s) & (P > %(D2KPiPi_H_Pmin)s) & (TRCHI2DOF < %(D2KPiPi_H_TrkChi2max)s) & " \
                              "(PIDK > %(D2KPiPi_K_PIDKmin)s) & (ISLONG)" % self.getProps()
-        D2KPiPi_Pi_cut     = "(PT > %(D2KPiPi_H_PTmin)s) & (P > %(D2KPiPi_H_Pmin)s) & (TRCHI2DOF < %(D2KPiPi_H_TrkChi2max)s) & " \
-                             "(PIDK < %(D2KPiPi_Pi_PIDKmax)s) & (ISLONG)" % self.getProps()
+        D2KPiPi_Pi_cut     = "(PT > %(D2KPiPi_H_PTmin)s) & (P > %(D2KPiPi_H_Pmin)s) & (TRCHI2DOF < %(D2KPiPi_H_TrkChi2max)s) & (ISLONG)" % self.getProps()
         D2KPiPi_Daug_cuts  = { "K+"  : D2KPiPi_K_cut,
                                "K-"  : D2KPiPi_K_cut,
                                "pi+" : D2KPiPi_Pi_cut,
@@ -192,8 +169,7 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
 
         ChiC2HHHH_K_cut      = "(PT > %(ChiC2HHHH_H_PTmin)s) & (P > %(ChiC2HHHH_H_Pmin)s) & (TRCHI2DOF < %(ChiC2HHHH_H_TrkChi2max)s) & " \
                                "(PIDK > %(ChiC2HHHH_K_PIDKmin)s) & (ISLONG)" % self.getProps()
-        ChiC2HHHH_Pi_cut     = "(PT > %(ChiC2HHHH_H_PTmin)s) & (P > %(ChiC2HHHH_H_Pmin)s) & (TRCHI2DOF < %(ChiC2HHHH_H_TrkChi2max)s) & " \
-                               "(PIDK < %(ChiC2HHHH_Pi_PIDKmax)s) & (ISLONG)" % self.getProps()
+        ChiC2HHHH_Pi_cut     = "(PT > %(ChiC2HHHH_H_PTmin)s) & (P > %(ChiC2HHHH_H_Pmin)s) & (TRCHI2DOF < %(ChiC2HHHH_H_TrkChi2max)s) & (ISLONG)" % self.getProps()
         ChiC2HHHH_Daug_cuts  = { "K+"  : ChiC2HHHH_K_cut,
                                  "K-"  : ChiC2HHHH_K_cut,
                                  "pi+" : ChiC2HHHH_Pi_cut,
@@ -247,86 +223,6 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
         ChiCInc = bindMembers("ChiCInc", [ Kaons ] + [ Pions ] + [ CombineChiCInc ])
 
         #
-        #=== D0 + D0 ===#
-        #
-
-        CombineD0D0 = Hlt2Member(CombineParticles
-                                 , "Combine"
-                                 , DecayDescriptors = [ "psi(3770) -> D0 D0" ]
-                                 , DaughtersCuts = { "D0" : "ALL" }
-                                 , CombinationCut = "AM > 0"
-                                 , MotherCut = "ALL"
-                                 , Inputs = [ D0 ]
-                                 )
-        
-        D0D0 = bindMembers("D0D0", [ D0 ] + [ CombineD0D0 ])
-        
-        CombineD0D0Inc = Hlt2Member(CombineParticles
-                                    , "Combine"
-                                    , DecayDescriptors = [ "psi(3770) -> D0 D0" ]
-                                    , DaughtersCuts = { "D0" : "ALL" }
-                                    , CombinationCut = "AM > 0"
-                                    , MotherCut = "ALL"
-                                    , Inputs = [ D0Inc ]
-                                    )
-        
-        D0D0Inc = bindMembers("D0D0Inc", [ D0Inc ] + [ CombineD0D0Inc ])
-        
-        #
-        #=== D+ + D+ ===#
-        #
-        
-        CombineDpDp = Hlt2Member(CombineParticles
-                                 , "Combine"
-                                 , DecayDescriptors = [ "psi(3770) -> D+ D+" ]                                                        
-                                 , DaughtersCuts = { "D+" : "ALL" }
-                                 , CombinationCut = "AM > 0"
-                                 , MotherCut = "ALL"
-                                 , Inputs = [ Dp ]
-                                 )
-        
-        DpDp = bindMembers("DpDp", [ Dp ] + [ CombineDpDp ])
-        
-        CombineDpDpInc = Hlt2Member(CombineParticles
-                                    , "Combine"
-                                    , DecayDescriptors = [ "psi(3770) -> D+ D+" ]                                                        
-                                    , DaughtersCuts = { "D+" : "ALL" }
-                                    , CombinationCut = "AM > 0"
-                                    , MotherCut = "ALL"
-                                    , Inputs = [ DpInc ]
-                                    )
-        
-        DpDpInc = bindMembers("DpDpInc", [ DpInc ] + [ CombineDpDpInc ])
-
-        #
-        #=== D0 + D+ ===#
-        #
-
-        CombineD0Dp = Hlt2Member(CombineParticles
-                                 , "Combine"
-                                 , DecayDescriptors = [ "psi(3770) -> D0 D+" ]
-                                 , DaughtersCuts = { "D0" : "ALL",
-                                                     "D+" : "ALL" }
-                                 , CombinationCut = "AM > 0"
-                                 , MotherCut = "ALL"
-                                 , Inputs = [ D0, Dp ]
-                                 )
-
-        D0Dp = bindMembers("D0Dp", [ D0 ] + [ Dp ] + [ CombineD0Dp ])
-
-        CombineD0DpInc = Hlt2Member(CombineParticles
-                                    , "Combine"
-                                    , DecayDescriptors = [ "psi(3770) -> D0 D+" ]
-                                    , DaughtersCuts = { "D0" : "ALL",
-                                                        "D+" : "ALL" }
-                                    , CombinationCut = "AM > 0"
-                                    , MotherCut = "ALL"
-                                    , Inputs = [ D0Inc, DpInc ]
-                                    )
-
-        D0DpInc = bindMembers("D0DpInc", [ D0Inc ] + [ DpInc ] + [ CombineD0DpInc ])
-
-        #
         #=== Filtering algorithms ===#
         #
         
@@ -370,30 +266,6 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
                          , postscale = self.postscale
                          )
 
-        line = Hlt2Line( 'LowMultD0D0'
-                         , prescale = self.prescale
-                         , HLT = HLTreq    
-                         , L0DU = L0req
-                         , algos = [ FilterNumVeloTracks, FilterNumBackTracks, Kaons, Pions, D0, D0D0 ]
-                         , postscale = self.postscale
-                         )
-
-        line = Hlt2Line( 'LowMultDpDp'
-                         , prescale = self.prescale
-                         , HLT = HLTreq    
-                         , L0DU = L0req
-                         , algos = [ FilterNumVeloTracks, FilterNumBackTracks, Kaons, Pions, Dp, DpDp ]
-                         , postscale = self.postscale
-                         )
-
-        line = Hlt2Line( 'LowMultD0Dp'
-                         , prescale = self.prescale
-                         , HLT = HLTreq    
-                         , L0DU = L0req
-                         , algos = [ FilterNumVeloTracks, FilterNumBackTracks, Kaons, Pions, D0, Dp, D0Dp ]
-                         , postscale = self.postscale
-                         )
-
         line = Hlt2Line( 'LowMultD0Inc'
                          , prescale = self.prescale
                          , HLT = HLTreq
@@ -418,30 +290,6 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
                          , postscale = self.postscale
                          )
 
-        line = Hlt2Line( 'LowMultD0D0Inc'
-                         , prescale = self.prescale
-                         , HLT = HLTreq    
-                         , L0DU = L0req
-                         , algos = [ FilterNumVeloTracks, FilterNumBackTracks, Kaons, Pions, D0Inc, D0D0Inc ]
-                         , postscale = self.postscale
-                         )
-
-        line = Hlt2Line( 'LowMultDpDpInc'
-                         , prescale = self.prescale
-                         , HLT = HLTreq    
-                         , L0DU = L0req
-                         , algos = [ FilterNumVeloTracks, FilterNumBackTracks, Kaons, Pions, DpInc, DpDpInc ]
-                         , postscale = self.postscale
-                         )
-
-        line = Hlt2Line( 'LowMultD0DpInc'
-                         , prescale = self.prescale
-                         , HLT = HLTreq    
-                         , L0DU = L0req
-                         , algos = [ FilterNumVeloTracks, FilterNumBackTracks, Kaons, Pions, D0Inc, DpInc, D0DpInc ]
-                         , postscale = self.postscale
-                         )
-
         #
         #=== Register with ANNSvc ===#
         #
@@ -449,12 +297,6 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultD0Decision"      : self.getProp('HltANNSvcID')['D0'] } )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultDpDecision"      : self.getProp('HltANNSvcID')['Dp'] } )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultChiCDecision"    : self.getProp('HltANNSvcID')['ChiC'] } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultD0D0Decision"    : self.getProp('HltANNSvcID')['D0D0'] } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultDpDpDecision"    : self.getProp('HltANNSvcID')['DpDp'] } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultD0DpDecision"    : self.getProp('HltANNSvcID')['D0Dp'] } )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultD0IncDecision"   : self.getProp('HltANNSvcID')['D0Inc'] } )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultDpIncDecision"   : self.getProp('HltANNSvcID')['DpInc'] } )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultChiCIncDecision" : self.getProp('HltANNSvcID')['ChiCInc'] } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultD0D0IncDecision" : self.getProp('HltANNSvcID')['D0D0Inc'] } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultDpDpIncDecision" : self.getProp('HltANNSvcID')['DpDpInc'] } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultD0DpIncDecision" : self.getProp('HltANNSvcID')['D0DpInc'] } )
