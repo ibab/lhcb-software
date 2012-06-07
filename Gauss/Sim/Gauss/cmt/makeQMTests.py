@@ -60,11 +60,11 @@ def main():
     try:
        filesize = os.path.getsize(options.input_file)
     except OSError:
-        logging.error("Input data file doesn't exist!\n")
+        logging.warning("Input data file doesn't exist!\n")
         return
     else:
         if not filesize > 0:
-            logging.error("Input file data is empty\n")
+            logging.warning("Input file data is empty\n")
             return            
     try:
        filesize2 = os.path.getsize(options.input_template)
