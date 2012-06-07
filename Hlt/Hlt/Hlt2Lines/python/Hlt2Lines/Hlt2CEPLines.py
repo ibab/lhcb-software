@@ -246,7 +246,7 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
                          , prescale = self.prescale
                          , HLT = HLTreq
                          , L0DU = L0req
-                         , algos = [ FilterNumVeloTracks, FilterNumBackTracks, Kaons, Pions, D0 ]
+                         , algos = [ velotracks, FilterNumVeloTracks, FilterNumBackTracks, Kaons, Pions, D0 ]
                          , postscale = self.postscale
                          )
 
@@ -254,7 +254,7 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
                          , prescale = self.prescale
                          , HLT = HLTreq    
                          , L0DU = L0req
-                         , algos = [ FilterNumVeloTracks, FilterNumBackTracks, Kaons, Pions, Dp ]
+                         , algos = [ velotracks, FilterNumVeloTracks, FilterNumBackTracks, Kaons, Pions, Dp ]
                          , postscale = self.postscale
                          )
 
@@ -262,7 +262,7 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
                          , prescale = self.prescale
                          , HLT = HLTreq    
                          , L0DU = L0req
-                         , algos = [ FilterNumVeloTracksChiC, FilterNumBackTracks, Kaons, Pions, ChiC ]
+                         , algos = [ velotracks, FilterNumVeloTracksChiC, FilterNumBackTracks, Kaons, Pions, ChiC ]
                          , postscale = self.postscale
                          )
 
@@ -270,7 +270,7 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
                          , prescale = self.prescale
                          , HLT = HLTreq
                          , L0DU = L0req
-                         , algos = [ FilterNumVeloTracks, FilterNumBackTracks, Kaons, Pions, D0Inc ]
+                         , algos = [ velotracks, FilterNumVeloTracks, FilterNumBackTracks, Kaons, Pions, D0Inc ]
                          , postscale = self.postscale
                          )
 
@@ -278,7 +278,7 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
                          , prescale = self.prescale
                          , HLT = HLTreq    
                          , L0DU = L0req
-                         , algos = [ FilterNumVeloTracks, FilterNumBackTracks, Kaons, Pions, DpInc ]
+                         , algos = [ velotracks, FilterNumVeloTracks, FilterNumBackTracks, Kaons, Pions, DpInc ]
                          , postscale = self.postscale
                          )
 
@@ -286,7 +286,7 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
                          , prescale = self.prescale
                          , HLT = HLTreq    
                          , L0DU = L0req
-                         , algos = [ FilterNumVeloTracksChiC, FilterNumBackTracks, Kaons, Pions, ChiCInc ]
+                         , algos = [ velotracks, FilterNumVeloTracksChiC, FilterNumBackTracks, Kaons, Pions, ChiCInc ]
                          , postscale = self.postscale
                          )
 
