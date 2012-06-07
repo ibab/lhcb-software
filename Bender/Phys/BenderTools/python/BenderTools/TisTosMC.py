@@ -53,22 +53,29 @@ __all__= (
     'trgDecs'      , ## print trigger statistics 
     'tistos'       , ## fill N-tuple with TisTos information
     )
+# =============================================================================
+## logging
+# =============================================================================
+from Bender.Logger import getLogger 
+logger = getLogger( __name__ )
 # ==============================================================================
 from   LoKiCore.basic  import cpp
 from   Bender.MainMC   import SUCCESS, AlgoMC 
 # ==============================================================================
 ITriggerSelectionTisTos = cpp.ITriggerSelectionTisTos
 # ==============================================================================
-import TisTos
-decision = TisTos.decision
-trgDecs  = TisTos.decision
-tisTos   = TisTos.tisTos
+import BenderTools.TisTos  as TT
+decisions = TT.decisions
+trgDecs   = TT.trgDecs
+tisTos    = TT.tisTos
+# ==============================================================================
+logger.info ("Add useful methods to class AlgoMC for TisTos'sing ") 
 # =============================================================================
-AlgoMC.decisions         =  decisions
-AlgoMC.trgDecs           =  trgDecs 
-AlgoMC.tisTos            =  tisTos 
-AlgoMC.tisTos_initialize = TisTos._tisTosInit
-AlgoMC.tisTos_finalize   = TisTos._tisTosFini
+AlgoMC.decisions         = decisions
+AlgoMC.trgDecs           = trgDecs 
+AlgoMC.tisTos            = tisTos 
+AlgoMC.tisTos_initialize = TT._tisTosInit
+AlgoMC.tisTos_finalize   = TT._tisTosFini
 # =============================================================================
 if '__main__' == __name__ :
     
@@ -79,7 +86,6 @@ if '__main__' == __name__ :
     print ' Date    : ' , __date__    
     print ' Symbols : ' , __all__    
     print 80*'*'
-
     
 # =============================================================================
 # The END 

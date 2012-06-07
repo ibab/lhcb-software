@@ -49,7 +49,7 @@ __author__  = "Vanya BELYAEV Ivan.Belyaev@cern.ch"
 __date__    = "2011-06-07"
 # =============================================================================
 __all__= (
-    'decision'     , ## collect trigger decisions
+    'decisions'    , ## collect trigger decisions
     'trgDecs'      , ## print trigger statistics 
     'tisTos'       , ## fill N-tuple with TisTos information
     )
@@ -64,6 +64,9 @@ from   Bender.Main     import SUCCESS, Algo
 import LHCbMath.Types 
 # ==============================================================================
 ITriggerSelectionTisTos = cpp.ITriggerSelectionTisTos
+TisTosTob               = cpp.ITisTos.TisTosTob
+# ==============================================================================
+logger.info ("Add useful methods to class Algo   for TisTos'sing ") 
 # ==============================================================================
 ## Collect important trigger lines
 #
@@ -404,107 +407,123 @@ def tisTos ( self             ,
              lines            , 
              l0tistos  = None ,
              tistos    = None ) :
-    """
-    Fill TisTos information into n-tuple
+##     """
+##     Fill TisTos information into n-tuple
     
-    for d in particles : 
-       self.tisTos ( d     ,
-                     tup   ,
-                    'd0_' ,
-                    self.lines ['D0'] , 
-                    self.l0tistos     ,
-                    self.tistos       )
+##     for d in particles : 
+##        self.tisTos ( d     ,
+##                      tup   ,
+##                     'd0_' ,
+##                     self.lines ['D0'] , 
+##                     self.l0tistos     ,
+##                     self.tistos       )
     
 
   
-    ``lines'' here is a dictionary of lines (or regex-patterns) with
-    following keys:
-    - L0TOS
-    - L0TIS
-    - Hlt1TOS
-    - Hlt1TIS
-    - Hlt2TOS
-    - Hlt2TIS
+##     ``lines'' here is a dictionary of lines (or regex-patterns) with
+##     following keys:
+##     - L0TOS
+##     - L0TIS
+##     - Hlt1TOS
+##     - Hlt1TIS
+##     - Hlt2TOS
+##     - Hlt2TIS
     
-    e.g.
+##     e.g.
     
-    lines = {}
-    lines ['L0TOS'  ] = 'L0HadronDecision'
-    lines ['L0TIS'  ] = 'L0(Hadron|Muon|DiMuon)Decision'
-    lines ['Hlt1TOS'] = ...
-    lines ['Hlt1TIS'] = 'Hlt1Topo.*Decision'
-    lines ['Hlt2TOS'] = ...
-    lines ['Hlt2TIS'] = ...
+##     lines = {}
+##     lines ['L0TOS'  ] = 'L0HadronDecision'
+##     lines ['L0TIS'  ] = 'L0(Hadron|Muon|DiMuon)Decision'
+##     lines ['Hlt1TOS'] = ...
+##     lines ['Hlt1TIS'] = 'Hlt1Topo.*Decision'
+##     lines ['Hlt2TOS'] = ...
+##     lines ['Hlt2TIS'] = ...
     
-    Technically it is useful to keep it as ``per-particle-type'' dictionary
+##     Technically it is useful to keep it as ``per-particle-type'' dictionary
     
-    def initialize ( self ) :
-        ...
-        self.lines           = {}
-        self.lines ['B'  ]   = {}
-        self.lines ['B'  ]['L0TOS'] = ...
-        self.lines ['B'  ]['L0TOS'] = ...
-        ...
-        self.lines ['psi']   = {}
-        self.lines ['psi']['L0TOS'] = ...
-        ...
-        return SUCCESS
+##     def initialize ( self ) :
+##         ...
+##         self.lines           = {}
+##         self.lines ['B'  ]   = {}
+##         self.lines ['B'  ]['L0TOS'] = ...
+##         self.lines ['B'  ]['L0TOS'] = ...
+##         ...
+##         self.lines ['psi']   = {}
+##         self.lines ['psi']['L0TOS'] = ...
+##         ...
+##         return SUCCESS
     
-    def analyse ( self ) : 
+##     def analyse ( self ) : 
         
-        particles = ...
+##         particles = ...
         
-        for B in particles : 
-            self.tisTos ( B     ,
-                          tup   ,
-                          'B0_' ,
-                          self.lines['B']   , 
-                          self.l0tistos     ,
-                          self.tistos       )
+##         for B in particles : 
+##             self.tisTos ( B     ,
+##                           tup   ,
+##                           'B0_' ,
+##                           self.lines['B']   , 
+##                           self.l0tistos     ,
+##                           self.tistos       )
 
-        ...
-        return SUCCESS
+##         ...
+##         return SUCCESS
     
-    The function adds few columns to n-tuple, themost important are
-    <label>l0tos_1  that corresponds to   'L0-TOS'  
-    <label>l0tis_2  that corresponds to   'L0-TIS'  
-    <label>l1tos_1  that corresponds to 'Hlt1-TOS'  
-    <label>l1tis_2  that corresponds to 'Hlt1-TIS'  
-    <label>l2tos_1  that corresponds to 'Hlt2-TOS'  
-    <label>l2tis_2  that corresponds to 'Hlt2-TIS'
+##     The function adds few columns to n-tuple, themost important are
+##     <label>l0tos_1  that corresponds to   'L0-TOS'  
+##     <label>l0tis_2  that corresponds to   'L0-TIS'  
+##     <label>l1tos_1  that corresponds to 'Hlt1-TOS'  
+##     <label>l1tis_2  that corresponds to 'Hlt1-TIS'  
+##     <label>l2tos_1  that corresponds to 'Hlt2-TOS'  
+##     <label>l2tis_2  that corresponds to 'Hlt2-TIS'
     
-    """
+##     """
     if hasattr ( p , 'particle' ) :  p = p.particle()
     
     if not l0tistos and hasattr ( self , 'l0tistos' ) : l0tistos = self.l0tistos
     if not   tistos and hasattr ( self ,   'tistos' ) :   tistos = self.  tistos
     #
-    ## start actual Tis/Tos/Tob'ing
+
     #
-    l0tistos . setOfflineInput ( p )
-    tistos   . setOfflineInput ( p )
+    ## create placeholders
     #
-    ## L0
-    # 
-    l0tistos . setTriggerInput ( lines [ 'L0TOS'   ]  )
-    l0_tos   = l0tistos.tisTosTobTrigger ()
-    l0tistos . setTriggerInput ( lines [ 'L0TIS'   ]  )
-    l0_tis   = l0tistos.tisTosTobTrigger () 
-    #
-    ## L1
-    #
-    tistos   . setTriggerInput ( lines [ 'Hlt1TOS' ]  )
-    l1_tos   =   tistos.tisTosTobTrigger ()
-    tistos   . setTriggerInput ( lines [ 'Hlt1TIS' ]  )
-    l1_tis   =   tistos.tisTosTobTrigger ()
-    #
-    ## L2
-    #
-    tistos   . setTriggerInput ( lines [ 'Hlt2TOS' ]  )
-    l2_tos   =   tistos.tisTosTobTrigger ()
-    tistos   . setTriggerInput ( lines [ 'Hlt2TIS' ]  )
-    l2_tis   =   tistos.tisTosTobTrigger ()
+    l0_tos = TisTosTob () 
+    l0_tis = TisTosTob () 
+    l1_tos = TisTosTob () 
+    l1_tis = TisTosTob () 
+    l2_tos = TisTosTob () 
+    l2_tis = TisTosTob () 
     
+    ##
+    if p and l0tistos and tistos : 
+
+        #
+        ## start actual Tis/Tos/Tob'ing
+        #
+        l0tistos . setOfflineInput ( p )
+        tistos   . setOfflineInput ( p )
+        #
+        ## L0
+        # 
+        l0tistos . setTriggerInput ( lines [ 'L0TOS'   ]  )
+        l0_tos   = l0tistos.tisTosTobTrigger ()
+        l0tistos . setTriggerInput ( lines [ 'L0TIS'   ]  )
+        l0_tis   = l0tistos.tisTosTobTrigger () 
+        #
+        ## L1
+        #
+        tistos   . setTriggerInput ( lines [ 'Hlt1TOS' ]  )
+        l1_tos   =   tistos.tisTosTobTrigger ()
+        tistos   . setTriggerInput ( lines [ 'Hlt1TIS' ]  )
+        l1_tis   =   tistos.tisTosTobTrigger ()
+        #
+        ## L2
+        #
+        tistos   . setTriggerInput ( lines [ 'Hlt2TOS' ]  )
+        l2_tos   =   tistos.tisTosTobTrigger ()
+        tistos   . setTriggerInput ( lines [ 'Hlt2TIS' ]  )
+        l2_tis   =   tistos.tisTosTobTrigger ()
+        
+        
     ##     l0_tos     = l0tistos.triggerTisTos ( p , lines [ 'L0TOS'   ]  )
     ##     l0_tis     = l0tistos.triggerTisTos ( p , lines [ 'L0TIS'   ]  )
     
@@ -615,6 +634,20 @@ def _tisTosInit ( self , triggers = {} , lines = {} ) :
     if triggers : self.triggers = deepcopy ( triggers )  
     if lines    : self.lines    = deepcopy ( lines    )
 
+    if lines :
+        parts  = lines.keys()
+        parts.sort()
+        for p in parts :
+            lns  = lines[ p ]
+            self.Print ( ' Tis/Tos lines for %s ' % p , SUCCESS , 7 )
+            trgs = lns.keys()
+            trgs.sort()
+            for t in trgs :
+                self.Print ( '-  %-10s  :  %s ' % ( t , lns[t]  ) , SUCCESS , 7 )
+        if not parts :
+            self.Warning ( 'No PARTICLES are defined for Tis/Tos' , SUCCESS )
+
+            
     return SUCCESS 
 
 
@@ -645,7 +678,22 @@ def _tisTosFini ( self , triggers = None ) :
 
     if hasattr ( self , 'l0tistos' ) : self . l0tistos = None
     if hasattr ( self ,   'tistos' ) : self .   tistos = None
-    
+
+    if not hasattr ( self , 'lines' ) :
+        self.Warning ( 'No LINES are defined ' , SUCCESS )
+    else :
+        parts  = self.lines.keys()
+        parts.sort()
+        for p in parts :
+            lns  = self.lines[ p ]
+            self.Print ( ' Tis/Tos lines for %s ' % p , SUCCESS , 7 )
+            trgs = lns.keys()
+            trgs.sort()
+            for t in trgs :
+                self.Print ( '-  %-10s  :  %s ' % ( t , lns[t]  ) , SUCCESS , 7 )
+        if not parts :
+            self.Warning ( 'No PARTICLES are defined for Tis/Tos' , SUCCESS )
+            
     return SUCCESS 
 
 # =============================================================================
