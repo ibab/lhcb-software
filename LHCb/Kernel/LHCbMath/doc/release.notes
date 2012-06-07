@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2012-06-07 - Vanya Belyaev
+ - minor fix 
+
 ! 2012-06-04 - Vanya Belyaev
  - fix ICC warnings/remarks
    fix some Coverity reports 

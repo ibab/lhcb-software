@@ -362,7 +362,7 @@ namespace
     return chi2 ;
   }
   // ==========================================================================
-  // calculate the function and gradient 
+  // calculate the function, gradient and hesse-matrix
   // ==========================================================================
   double Chi2::fdfddf ( const gsl_vector* x , 
                         gsl_vector*       g , 
@@ -518,10 +518,14 @@ namespace
     //<< " #fdfddf " << calls_fdfddf ()   
     //<< " #points " << points       ()   
     //<< std::endl ;
+
+    
     //
-    // calcualte hessian:
+    /// calcualte hessian:
+    //
     m_hessian = gsl_matrix_alloc ( s->x->size , s->x->size );
     fdfddf ( s->x , 0 , m_hessian ) ;
+    
     // std::cout << " ANALYTICAL " << std::endl ;
     // std::cout << (*m_hessian)   << std::endl ;
     
@@ -622,7 +626,11 @@ Gaudi::Math::Chi2Fit::Chi2Fit
   if ( m_code.isSuccess() ) 
   {
     m_chi2   = c2.chi2    () ;
-    m_calls  = c2.calls_f () + c2.calls_df () + c2.calls_fdf () ;
+    m_calls  =
+      c2.calls_f      () + 
+      c2.calls_df     () + 
+      c2.calls_fdf    () +
+      c2.calls_fdfddf () ;
     m_iters  = c2.iters   () ;
     m_points = c2.points  () ;
     //
