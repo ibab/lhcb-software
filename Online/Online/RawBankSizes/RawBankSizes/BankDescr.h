@@ -4,7 +4,7 @@
 namespace LHCb
 {
 #define HISTPERHIST 3
-std::string titqual[HISTPERHIST]={" (all Triggers)"," (HLTAccept)"," (HLT-Pass)"};
+std::string titqual[HISTPERHIST]={" (all Triggers)"," (HLTAccept)"," (noBias)"};
 std::string namqual[HISTPERHIST]={"(all)","(HLTAccept)","(HLT-Pass)"};
 // titqual[0] = " (all Triggers)";
 // titqual[1] = " (nonLumi)";

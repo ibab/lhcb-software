@@ -394,7 +394,7 @@ StatusCode RawBankSizes::execute()
       MDFHeader *h = b->begin<MDFHeader>();
       const unsigned int *trMask=h->subHeader().H1->triggerMask();
 //      printf("Trigger Mask %0x %0x %0x %0x\n",trMask[0],trMask[1],trMask[2],trMask[3]);
-      if ((trMask[1] & 0x1<<(39-32)) != 0)
+      if ((trMask[1] & 0x10000) != 0)
       {
         nolumi = false;
       }
