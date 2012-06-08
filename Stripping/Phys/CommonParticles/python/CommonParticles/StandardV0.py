@@ -28,6 +28,9 @@ _locations.update ( locations )
 from CommonParticles.StdVeryLooseLambda import *
 _locations.update ( locations )
 
+from CommonParticles.StdV0FromBrunel import *
+_locations.update ( locations )
+
 # redefine the locations 
 locations = _locations
 

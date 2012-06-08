@@ -1,12 +1,15 @@
 !$Id: release.notes,v 1.194 2010-09-09 08:44:10 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
-! Responsible : P. Koppenburg, Juan Palacios
+! Responsible : P. Koppenburg, Chris Jones
 ! Purpose     : Common particles
 !
 ! When adding a Particle make sure it is appended to one of the Standard* files
 !
 !-----------------------------------------------------------------------------
+
+! 2012-06-8 - P. Koppenburg
+  - New StdKsFromV0 that make Ks particles from the V0 Brunel objects. 
 
 !========================= CommonParticles v8r8 2012-04-27 =========================
 
