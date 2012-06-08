@@ -30,6 +30,7 @@
 #include "Kernel/IParticleFilter.h"
 #include "Kernel/IProtoParticleFilter.h"
 #include "Kernel/IDecayTreeFit.h"
+#include "Kernel/ITriggerTisTos.h"
 // ============================================================================
 // TrackInterfaces 
 // ============================================================================
@@ -1055,6 +1056,28 @@ LoKi::GetTools::trackSelector
   //
   // get the tool from the algorithm :
   return alg -> tool<ITrackSelector> ( nick  , alg ) ;   // RETURN 
+}
+// ============================================================================
+/* get the track selector tool 
+ *  -  try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
+ *  @param (INPUT) cntx context service 
+ *  @param (INPUT) nick tool typename/nick 
+ *  @return the tool 
+ */
+// ============================================================================
+const ITriggerTisTos*
+LoKi::GetTools::triggerTisTos 
+( const IAlgContextSvc*   cntx ,
+  const std::string&      nick ) 
+{
+  if ( 0 == cntx ) { return 0 ; }
+  //
+  // get 'simple' algorithm from the context:
+  GaudiAlgorithm* alg = Gaudi::Utils::getGaudiAlg ( cntx ) ;
+  if ( 0 == alg  ) { return 0 ; }                        // RETURN
+  //
+  // get the tool from the algorithm :
+  return alg -> tool<ITriggerTisTos> ( nick  , alg ) ;   // RETURN 
 }
 // ============================================================================
 // The END 

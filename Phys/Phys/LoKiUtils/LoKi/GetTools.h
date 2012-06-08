@@ -22,6 +22,7 @@ class IVertexFit           ;
 class IParticleFilter      ;
 class IProtoParticleFilter ;
 class ITrackSelector       ;
+class ITriggerTisTos       ;
 // ============================================================================
 namespace LoKi 
 {
@@ -492,6 +493,20 @@ namespace LoKi
     static 
     const ITrackSelector* 
     trackSelector
+    ( const IAlgContextSvc*   cntx ,
+      const std::string&      nick ) ;
+    // ========================================================================
+  public:
+    // ========================================================================
+    /** get the track selector tool 
+     *  -  try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
+     *  @param (INPUT) cntx context service 
+     *  @param (INPUT) nick tool typename/nick 
+     *  @return the tool 
+     */
+    static 
+    const ITriggerTisTos*
+    triggerTisTos 
     ( const IAlgContextSvc*   cntx ,
       const std::string&      nick ) ;
     // ========================================================================
