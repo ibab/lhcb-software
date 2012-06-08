@@ -5,6 +5,10 @@
 ! Purpose     : colleciton of utils for LoKi
 ! -----------------------------------------------------------------------------
 
+! 2012-06-08 - Vanya Belyaev
+
+ - add accessor to TisTos tool 
+
 !========================= LoKiUtils v1r2 2012-04-17 =========================
 ! 2012-03-30 - Vanya Belyaev
  - add BeamSpot-functions from LoKiPhys 
