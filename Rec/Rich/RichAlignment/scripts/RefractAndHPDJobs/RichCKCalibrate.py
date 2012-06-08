@@ -16,7 +16,7 @@ histoBase = 'RICH/RiCKResLongTight/'
 def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck.bz2"):
     
     import os
-    from Ganga.GPI import ( Job, LHCbDataset, Brunel, File, DiracSplitter, 
+    from Ganga.GPI import ( Job, LHCbDataset, Brunel, File, SplitByFiles, 
                             SmartMerger, Dirac )
     
     # Number of target events to process
@@ -52,7 +52,7 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck.bz2"):
                 print "(n-1) Scale Rich1 =",r1,"Rich2",r2
             
                 # Make a job object
-                j = Job( application = Brunel( version = 'v42r2p1' ) )
+                j = Job( application = Brunel( version = 'v42r3p2' ) )
 
                 # name
                 j.name = "RefInControl"
@@ -82,7 +82,7 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck.bz2"):
                 j.inputdata = LHCbDataset(lfns)
 
                 # Split job into 1 file per subjob
-                j.splitter = DiracSplitter ( filesPerJob = nFilesPerJob, maxFiles = nFiles )
+                j.splitter = SplitByFiles ( filesPerJob = nFilesPerJob, maxFiles = nFiles )
 
                 # Merge the output
                 j.merger = SmartMerger( files = [j.name+".root"],
@@ -101,18 +101,18 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck.bz2"):
                 j.submit()
 
 ## Submits DB calibration jobs
-def submitCalibrationJobs(name="",BrunelVer="v42r2p1",pickledRunsList=[]):
+def submitCalibrationJobs(name="",BrunelVer="v42r3p2",pickledRunsList=[]):
     submitRecoJobs(name,BrunelVer,pickledRunsList,"RefInCalib")
 
 ## Submit DB Verification Jobs
-def submitVerificationJobs(name="",BrunelVer="v42r2p1",pickledRunsList=[]):
+def submitVerificationJobs(name="",BrunelVer="v42r3p2",pickledRunsList=[]):
     submitRecoJobs(name,BrunelVer,pickledRunsList,"RefInVerify")
 
 ## Real underlying method
 def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
 
     from Ganga.GPI import ( Job, LHCbDataset, Brunel, File,
-                            DiracSplitter, SmartMerger, Dirac )
+                            SplitByFiles, SmartMerger, Dirac )
 
     # If pickled run data list is empty, create full list
     if len(pickledRunsList) == 0 : pickledRunsList = getPickledRunList()
@@ -164,20 +164,11 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
     # Custom DB slices for both job types (calibration and verification)
     dbFiles = [ ]
 
-    # Tracking early 2012 update
-    dbFiles += ["Tracking.alignDB.early2012.2days.jpsi"]
-
-    # First mirror alignment
-    dbFiles += ["2012MirrorAlign-19042012"]
-
     # Reset Aerogel
     dbFiles += ["2012AerogelCalibReset-21042012-V2"]
 
-    # First HPD image alignment
-    dbFiles += ["2012-RootFiles-RunAligned-Sobel-Smoothed1.5hours-HPDAlign-19042012"]
-
-    # HPD occupancies
-    dbFiles += ["2012-RootFiles-RunAligned-Sobel-Smoothed0.5hours-HPDOcc-19042012"]
+    # New MDCS RICH1
+    dbFiles += ["MDCS-RICH1-28052012"]
 
     # Only for Calibration jobs only
     if jobType == "RefInCalib" :
@@ -266,7 +257,7 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
                         j.inputdata = LHCbDataset(sorted(random.sample(lfns,nFiles)))
 
                     # Split job into 1 file per subjob
-                    j.splitter = DiracSplitter ( filesPerJob = nFilesPerJob, maxFiles = nFiles )
+                    j.splitter = SplitByFiles ( filesPerJob = nFilesPerJob, maxFiles = nFiles )
 
                     # Merge the output
                     j.merger = SmartMerger( files = [j.name+".root"],
@@ -413,6 +404,7 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
     textFileName = "results/"+fileNameRoot+".txt"
     print "Opening text file", textFileName
     textShifts = open(textFileName,'w')
+    writeLegionsToTextFile(textShifts)
   
     # For plots (manually make sure sorted by run)
     runs      = array('d')
@@ -516,6 +508,10 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
 
     if nFailedFits > 0 :
         print "WARNING :", nFailedFits, "histogram fits failed"
+
+def writeLegionsToTextFile(file):
+    text = "Run Fill Description StartDate StartTime StopDate StopTime CKRaw CKRawErr CKExp CKExpErr CKMean CKMeanErr CKSigma CKSigmaErr ScaleFactor ScaleFactorErr"
+    file.write(text+"\n")
 
 def writeInfoToTextFile(file,run,ckraw,ckexp,ckmean,cksigma,scale):
     runInfo = getRunInformation(run)
@@ -876,15 +872,15 @@ def getListOfJobs(tag,name,BrunelVer,statuscodes,MinRun=0,MaxRun=99999999,desc="
     for d in sorted(dict.keys()) : cJobs += [dict[d]]
     return cJobs
 
-def getCalibrationJobList(name="",BrunelVer="v42r2p1",statuscodes=['completed'],
+def getCalibrationJobList(name="",BrunelVer="v42r3p2",statuscodes=['completed'],
                           MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInCalib',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
-def getVerificationJobList(name="",BrunelVer="v42r2p1",statuscodes=['completed'],
+def getVerificationJobList(name="",BrunelVer="v42r3p2",statuscodes=['completed'],
                            MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInVerify',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
-def getControlJobList(name="",BrunelVer="v42r2p1",statuscodes=['completed'],
+def getControlJobList(name="",BrunelVer="v42r3p2",statuscodes=['completed'],
                       MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInControl',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
@@ -1348,7 +1344,7 @@ def filesPerJob(nFiles):
 ##     if nFiles < 100 : return 6
     return 10
 
-def removeCalibrationDataSet(name,BrunelVer="v42r2p1"):
+def removeCalibrationDataSet(name,BrunelVer="v42r3p2"):
     from Ganga.GPI import jobtree
     js = getCalibrationJobList(name,BrunelVer,
                                statuscodes=['completed','running','submitted','failed'])
@@ -1357,7 +1353,7 @@ def removeCalibrationDataSet(name,BrunelVer="v42r2p1"):
     if jobtree.exists(path) : jobtree.rm(path)
     jobtree.cd('/RichCalibration')
 
-def removeVerificationDataSet(name,BrunelVer="v42r2p1"):
+def removeVerificationDataSet(name,BrunelVer="v42r3p2"):
     from Ganga.GPI import jobtree
     js = getVerificationJobList(name,BrunelVer,
                                statuscodes=['completed','running','submitted','failed'])

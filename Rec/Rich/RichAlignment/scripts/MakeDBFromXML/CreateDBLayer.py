@@ -82,9 +82,9 @@ def fileMD5(file):
 #dbFileName = "DetNumbers"
 
 # MDMS
-#upAlign = "/usera/jonesc/NFS/DetDB/MDMS"
-#dnAlign = "/usera/jonesc/NFS/DetDB/MDMS"
-#dbFileName = "MDMS-NoHPDOcc"
+upAlign = "/usera/jonesc/NFS/DetDB/MDMS-RICH1"
+dnAlign = "/usera/jonesc/NFS/DetDB/MDMS-RICH1"
+dbFileName = "MDCS-RICH1"
 
 # Old HPD Occ values
 #upAlign = "/usera/jonesc/NFS/DetDB/OldHPDOcc"
@@ -92,9 +92,9 @@ def fileMD5(file):
 #dbFileName = "OldHPDOccs"
 
 # Aerogel calibration
-upAlign = "/usera/jonesc/NFS/DetDB/Aerogel"
-dnAlign = "/usera/jonesc/NFS/DetDB/Aerogel"
-dbFileName = "2012AerogelCalibReset"
+#upAlign = "/usera/jonesc/NFS/DetDB/Aerogel"
+#dnAlign = "/usera/jonesc/NFS/DetDB/Aerogel"
+#dbFileName = "2012AerogelCalibReset"
 
 # The following dates are extracted from spreadsheets here
 # http://marwww.in2p3.fr/~legac/LHCb/
@@ -144,6 +144,9 @@ field = { }
 
 # 2012                     Year  Month  Day   Hour  Min  Sec
 field[ datetime.datetime(  2012,   4,    1,    1,    0,   0  ) ] = dnAlign
+field[ datetime.datetime(  2012,   5,    1,   19,    0,   0  ) ] = upAlign
+field[ datetime.datetime(  2012,   5,    2,   22,   20,   0  ) ] = dnAlign
+field[ datetime.datetime(  2012,   5,   16,   20,    0,   0  ) ] = upAlign
 
 # Long way away ...
 stop = datetime.datetime(  2100,  12,   31,   23,   59,  59  )

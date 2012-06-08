@@ -55,8 +55,8 @@ def initialise():
   #LHCbApp().CondDBtag = "head-20110722"
 
   DDDBConf(DataType = "2012")
-  LHCbApp().DDDBtag   = "head-20120316"
-  LHCbApp().CondDBtag = "head-20120316"
+  LHCbApp().DDDBtag   = "head-20120413"
+  LHCbApp().CondDBtag = "head-20120420"
   
   # Set message level to info and above only
   msgSvc().setOutputLevel(3)

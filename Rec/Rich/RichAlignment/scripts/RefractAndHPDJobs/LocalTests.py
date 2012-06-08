@@ -6,7 +6,7 @@ importOptions("CommonOptions.py")
 
 #importOptions("$APPCONFIGOPTS/UseOracle.py")
 
-CondDB().addLayer(CondDBAccessSvc("2012EarlyTracking",ConnectionString="sqlite_file:databases/Tracking.alignDB.early2012.2days.jpsi.db/LHCBCOND",DefaultTAG="HEAD"))
+CondDB().addLayer(CondDBAccessSvc("MDCS",ConnectionString="sqlite_file:databases/MDCS-RICH1-28052012.db/LHCBCOND",DefaultTAG="HEAD"))
 
 #CondDB().PartitionConnectionString["LHCBCOND"] = "sqlite_file:databases/LHCBCOND-2001RePro.db/LHCBCOND"
 #CondDB().PartitionConnectionString["DDDB"] = "sqlite_file:databases/DDDB-2001RePro.db/DDDB"

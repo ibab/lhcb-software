@@ -39,8 +39,8 @@ def initialise():
         #LHCbApp().CondDBtag = "HEAD"
 
         DDDBConf(DataType = "2012")
-        LHCbApp().DDDBtag   = "head-20120316" 
-        LHCbApp().CondDBtag = "head-20120316"
+        LHCbApp().DDDBtag   = "head-20120413"
+        LHCbApp().CondDBtag = "head-20120420"
         LHCbApp().CondDBtag = "HEAD"
         CondDB().addLayer(CondDBAccessSvc("2012Aerogel",
                                           ConnectionString="sqlite_file:2012Aerogel.db/LHCBCOND",
@@ -149,7 +149,8 @@ def run(rootFile="2012.root"):
 
     # primary tile IDs to use the full sub tile calibration for
     #fullCalibTiles = [ ]
-    fullCalibTiles = [ 2, 4, 10, 12 ]
+    #fullCalibTiles = [ 2, 4, 10, 12 ]
+    fullCalibTiles = [ 2 ]
     #fullCalibTiles = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ]
 
     # Loop over the (all) tiles
@@ -196,12 +197,16 @@ def run(rootFile="2012.root"):
         shift = 0
         if result['OK'] : shift = result['shift']
         # Manual forced shift list
-        forcedList = { 0  : 0.0,
-                       1  : 0.0,
-                       4  : 0.0,
-                       7  : 0.0,
-                       8  : 0.0,
-                       12 : -0.01 }
+##        forcedList = { }
+        forcedList = {
+#             0  : 0.0,
+#             1  : 0.0,
+             4  : 0.0,
+             7  : 0.0,
+             8  : 0.0,
+             12 : 0.0,
+             15 : 0.0
+             }
         if tile.primaryTileID() in forcedList.keys() :
             shift = forcedList[tile.primaryTileID()]
             print "   -> Forcing shift to", shift
@@ -246,7 +251,7 @@ def fit(hist):
         
     else:
 
-        searchX = [-0.01,0.01]
+        searchX = [-0.005,0.005]
 
         # Get x value of highest content bin in the search range
         maxBin = 0
@@ -266,6 +271,8 @@ def fit(hist):
         # Fit range
         fitMin = xPeak - 0.0035
         fitMax = xPeak + 0.0035
+
+        hist.GetXaxis().SetRangeUser(-0.025,0.025)
         
         fFuncType = "gaus"
         fFitF = TF1("FitF",fFuncType,fitMin,fitMax)

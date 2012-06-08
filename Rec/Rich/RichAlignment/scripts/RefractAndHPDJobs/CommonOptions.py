@@ -18,8 +18,8 @@ from Configurables import Brunel, LHCbApp, CondDB
 
 # For 2012 data
 importOptions("$APPCONFIGOPTS/Brunel/DataType-2012.py")
-LHCbApp().DDDBtag   = "head-20120316"
-LHCbApp().CondDBtag = "head-20120316"
+LHCbApp().DDDBtag   = "head-20120413"
+LHCbApp().CondDBtag = "head-20120420"
 
 # Aerogel Sub Tiles
 #CondDB().LocalTags["LHCBCOND"] = ["rich1-20110624"]
