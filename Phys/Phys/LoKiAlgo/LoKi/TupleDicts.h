@@ -255,6 +255,10 @@ namespace Gaudi
   // ==========================================================================
 }
 // ============================================================================
+// DaVinciKernel
+// ============================================================================
+#include "Kernel/ITisTos.h"
+// ============================================================================
 namespace LoKi
 {
   // ==========================================================================
@@ -270,7 +274,19 @@ namespace LoKi
     {
     public:
       // ======================================================================
-      /** add "time" into n-tuple 
+      /** add Tis/Tos/Tobbing information 
+       *  @param tuple the tuple itself 
+       *  @param name the column name 
+       *  @param ttt 
+       *  @return status code 
+       *  @see ITisTos::TisTosTob 
+       */
+      static StatusCode column 
+      ( const Tuples::Tuple&      tuple  , 
+        const std::string&        name   , 
+        const ITisTos::TisTosTob& ttt    ) ;
+      // ======================================================================
+        /** add "time" into n-tuple 
        *  @param tuple the reference to the -tuple 
        *  @param name the column name 
        *  @param time the time 

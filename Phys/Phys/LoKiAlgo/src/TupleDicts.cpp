@@ -517,6 +517,24 @@ StatusCode LoKi::Dicts::TupleAux::column
 StatusCode LoKi::Dicts::TupleAux::column 
 ( const Tuples::Tuple&      tuple   , 
   const Gaudi::Numbers*     cnts    ) { return column ( tuple , "" , cnts ) ; }
+// ===========================================================================
+/*  add Tis/Tos/Tobbing information 
+ *  @param tuple the tuple itself 
+ *  @param name the column name 
+ *  @param ttt 
+ *  @return status code 
+ *  @see ITisTos::TisTosTob 
+ */
+// ===========================================================================
+StatusCode LoKi::Dicts::TupleAux::column
+( const Tuples::Tuple&      tuple  , 
+  const std::string&        name   , 
+  const ITisTos::TisTosTob& ttt    )
+{
+  if ( !tuple.valid() ) { return StatusCode::FAILURE ; }  
+  //
+  return  tuple -> column ( name , ttt.value () , 0u , 15u ) ;
+}
 
 // ============================================================================
 // The END 
