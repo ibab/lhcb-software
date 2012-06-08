@@ -1021,6 +1021,21 @@ CORRM       = LoKi.Particles.MCorrected
 BPVCORRM    = LoKi.Particles.MCorrectedWithBestVertex ()  
 
 
+# =============================================================================
+## Tis/Tos stuff 
+# =============================================================================
+## @see TISTOSTOBDEC 
+TISTOSTOBDEC   = LoKi.Particles.TisTosTobDec
+## @see TISTOSTOB
+TISTOSTOB      = LoKi.Particles.TisTosTobbing
+## @see TIS
+TIS            = LoKi.Particles.Tis 
+## @see TOS
+TOS            = LoKi.Particles.Tos
+## @see TPS
+TPS            = LoKi.Particles.Tps 
+## @see TUS
+TUS            = LoKi.Particles.Tus 
 
 
 SOURCE         = LoKi.Particles.SourceTES
