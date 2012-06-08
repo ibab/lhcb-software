@@ -1058,7 +1058,7 @@ LoKi::GetTools::trackSelector
   return alg -> tool<ITrackSelector> ( nick  , alg ) ;   // RETURN 
 }
 // ============================================================================
-/* get the track selector tool 
+/* get the Tis/Tos-tool
  *  -  try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
  *  @param (INPUT) cntx context service 
  *  @param (INPUT) nick tool typename/nick 
@@ -1078,6 +1078,42 @@ LoKi::GetTools::triggerTisTos
   //
   // get the tool from the algorithm :
   return alg -> tool<ITriggerTisTos> ( nick  , alg ) ;   // RETURN 
+}
+// ============================================================================
+/* get the Tis/Tos-tool
+ *  -  try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
+ *  @param (INPUT) cntx context service 
+ *  @param (INPUT) nick tool typename/nick 
+ *  @return the tool 
+ */
+// ============================================================================
+const ITriggerTisTos*
+LoKi::GetTools::triggerTisTos 
+( const LoKi::ILoKiSvc*   base ,
+  const std::string&      nick ) 
+{
+  if ( 0 == base ) { return 0 ; }
+  //
+  LoKi::ILoKiSvc* svc = const_cast<LoKi::ILoKiSvc*> ( base ) ;
+  // get the context service: 
+  SmartIF<IAlgContextSvc> cntx ( svc ) ;
+  // use it! 
+  return triggerTisTos ( cntx , nick ) ;
+}
+// ============================================================================
+/* get the Tis/Tos-tool
+ *  -  try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
+ *  @param (INPUT) cntx context service 
+ *  @param (INPUT) nick tool typename/nick 
+ *  @return the tool 
+ */
+// ============================================================================
+const ITriggerTisTos*
+LoKi::GetTools::triggerTisTos 
+( const LoKi::AuxFunBase& base ,
+  const std::string&      nick ) 
+{
+  return triggerTisTos ( base.lokiSvc() , nick ) ;
 }
 // ============================================================================
 // The END 

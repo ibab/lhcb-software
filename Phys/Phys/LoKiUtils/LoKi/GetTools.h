@@ -507,6 +507,30 @@ namespace LoKi
     static 
     const ITriggerTisTos*
     triggerTisTos 
+    ( const LoKi::AuxFunBase& cntx ,
+      const std::string&      nick ) ;
+    // ========================================================================
+    /** get the track selector tool 
+     *  -  try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
+     *  @param (INPUT) cntx context service 
+     *  @param (INPUT) nick tool typename/nick 
+     *  @return the tool 
+     */
+    static 
+    const ITriggerTisTos*
+    triggerTisTos 
+    ( const LoKi::ILoKiSvc*   cntx ,
+      const std::string&      nick ) ;
+    // ========================================================================
+    /** get the track selector tool 
+     *  -  try to locate GaudiAlgorithm and rely on GaudiAlgorithm::tool
+     *  @param (INPUT) cntx context service 
+     *  @param (INPUT) nick tool typename/nick 
+     *  @return the tool 
+     */
+    static 
+    const ITriggerTisTos*
+    triggerTisTos 
     ( const IAlgContextSvc*   cntx ,
       const std::string&      nick ) ;
     // ========================================================================
