@@ -5,6 +5,9 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2012-06-08 - Vanya Belyaev
+ - remove legacy stuff 
+
 ! 2012-06-08 - Vanya Belyaev  
  - add the functors for easy (but inefficient) dealing with Tis/Tos-tools 
 

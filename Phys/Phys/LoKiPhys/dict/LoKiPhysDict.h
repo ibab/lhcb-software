@@ -29,7 +29,6 @@
 // ============================================================================
 #include "LoKi/ParticleContextCuts.h"
 #include "LoKi/VertexContextCuts.h"
-#include "LoKi/Legacy1.h"
 #include "LoKi/Particles26.h"
 #include "LoKi/Particles27.h"
 #include "LoKi/Particles28.h"

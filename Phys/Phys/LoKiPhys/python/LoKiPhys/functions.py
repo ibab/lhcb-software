@@ -2,8 +2,6 @@
 # =============================================================================
 # $Id$ 
 # =============================================================================
-# $URL$
-# =============================================================================
 ## @file functions.py LoKiPhys/functions.py
 #  The set of basic decorator for objects from LoKiPhys library
 #  The file is a part of LoKi and Bender projects
@@ -1093,11 +1091,6 @@ MINANG      = LoKi.Particles.MinAng
 MINDELTAM2  = LoKi.Particles.MinDeltaM2 
 ## @see LoKi::Cuts:::MAXOVERLAP
 MAXOVERLAP  = LoKi.Particles.MaxOverlap
-
-## Legacy stuff
-# BPVVDS_LEGACY     = LoKi.Legacy.DistanceSignificanceWithBestPV () 
-# TRGPOINTINGWPT    = LoKi.Legacy.TrgPointingScoreWithPt
-# BPVTRGPOINTINGWPT = LoKi.Legacy.TrgPointingScoreWithPtWithBestPV ()
 
 
 # =============================================================================
