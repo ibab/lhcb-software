@@ -41,9 +41,13 @@ def initialise():
         #LHCbApp().DDDBtag   = "head-20110303"
         #LHCbApp().CondDBtag = "head-20110524"
         
-        DDDBConf(DataType = "2011")
-        LHCbApp().DDDBtag   = "head-20110914"
-        LHCbApp().CondDBtag = "head-20110914"
+        #DDDBConf(DataType = "2011")
+        #LHCbApp().DDDBtag   = "head-20110914"
+        #LHCbApp().CondDBtag = "head-20110914"
+
+        DDDBConf(DataType = "2012")
+        LHCbApp().DDDBtag   = "head-20120413"
+        LHCbApp().CondDBtag = "head-20120420"
 
         # Move HPD Occs
         #cDB.addLayer(CondDBAccessSvc("NewMDMSCondDB-28022011",
@@ -269,6 +273,55 @@ def dateString():
     now = datetime.datetime.now()
     return now.strftime("%d%m%Y")
 
+def queryBookKeeping(run):
+    from LHCbDIRAC.BookkeepingSystem.Client.BookkeepingClient import BookkeepingClient
+    nTries = 0
+    res = { 'OK' : False }
+    while not res['OK'] and nTries < 100:
+        nTries = nTries + 1
+        if nTries > 1 :
+            print "  -> Problem querying DB -> Will try again after 5 secs ..."
+            import time
+            time.sleep(5)
+        res = BookkeepingClient().getRunInformations(int(run))
+    return res
+
+def getAllRuns():
+    from LHCbDIRAC.BookkeepingSystem.Client.BookkeepingClient import BookkeepingClient
+    print "Trying to get a list of all runs this year"
+    nTries = 0
+    res = { 'OK' : False }
+    dict = { 'StartDate'        : "2012-04-01",
+             'EndDate'          : "2012-12-31",
+             'AllowOutsideRuns' : True, # Allows runs to start inside but finish outside the dates
+             'CheckRunStatus'   : False # Don't care if it is processed or not
+             }
+    while not res['OK'] and nTries < 100:
+        nTries = nTries + 1
+        if nTries > 1 :
+            print "  -> Problem querying DB -> Will try again after 5 secs ..."
+            import time
+            time.sleep(5)
+            res = BookkeepingClient().getRunsForAGivenPeriod(dict)
+    runs = [ ]
+    if not res['OK']:
+        print "ERROR geting list of runs"
+    else:
+        runs = res['Value']['Runs']
+    print "Runs", runs
+    runs.sort()
+    return runs
+
+def getNextRun(run,runs):
+    i = runs.index(run)
+    nextrun = 0
+    if i < len(runs)-1 : nextrun = runs[i+1]
+    return nextrun
+        
+def getBestRunEndTime(res,runs):
+    rawstop = res['Value']['RunEnd']
+    return rawstop
+
 def getRunFillData(rootfiles):
 
     print "Getting run and fill information ..."
@@ -309,6 +362,9 @@ def getRunFillData(rootfiles):
         RunDBRunCacheName = "RunDBRunCache.pck.bz2"
         runDBRunCache = loadDict(RunDBRunCacheName)
 
+        # Get the list of runs this year
+        runs = getAllRuns()
+
         # Loop over the sorted run list and get the runfilldata
         tmpTime = 0
         for filename in files:
@@ -319,17 +375,9 @@ def getRunFillData(rootfiles):
             if run in bkDBCache.keys() : res = bkDBCache[run]
 
             if not res['OK'] :
-                
+
                 print " -> Need to query the Bookkeeping DB for run", run, "..."
-                from LHCbDIRAC.NewBookkeepingSystem.Client.BookkeepingClient import BookkeepingClient
-                nTries = 0
-                while not res['OK'] and nTries < 10:
-                    nTries = nTries + 1
-                    if nTries > 1 :
-                        print "  -> Problem querying DB -> Will try again after 5 secs ..."
-                        import time
-                        time.sleep(5)
-                    res = BookkeepingClient().getRunInformations(int(run))
+                res = queryBookKeeping(run)
                 if res['OK'] : bkDBCache[run] = res
 
             rundb_res = { }
@@ -346,14 +394,38 @@ def getRunFillData(rootfiles):
                 # Start and stop times
                 start = res['Value']['RunStart']
                 stop  = res['Value']['RunEnd']
+                #stop  = getBestRunEndTime(res,runs)
 
                 # Run duration in secs
                 unixStart = getUNIXTime(start)
                 unixStop  = getUNIXTime(stop)
                 duration  = (unixStop-unixStart) / (1e9)
 
+                # Check for a long duration, which could suggest the stop time is wrong due to
+                # a bug related to the deferred triggering in the Run DB
+                if duration > (60*60)+30 :
+                    print " -> WARNING : Long duration ... Probably wrong due to RunDB bug ... Will try and fix ..."
+                    nextrun = getNextRun(run,runs)
+                    print "   -> Old stop time", stop
+                    if nextrun != 0 :
+                        import datetime
+                        print "  -> Looking up info for next run", nextrun
+                        nextres = queryBookKeeping(nextrun)
+                        if nextres['OK'] :
+                            stop = nextres['Value']['RunStart'] - datetime.timedelta(seconds=1)
+                        else:
+                            print "   -> Problem with Bookkeeping DB lookup. Will assume run lasted one hour"
+                            stop = start + datetime.timedelta(seconds=3600)
+                    else:
+                        print "  -> No next run. Will assume run lasted one hour"
+                        import datetime
+                        stop = start + datetime.timedelta(seconds=3600)
+                    unixStop = getUNIXTime(stop)
+                    duration = (unixStop-unixStart) / (1e9)
+                    print "   -> New stop time", stop    
+
                 # fill number
-                fill  = int(res['Value']['FillNumber'])
+                fill = int(res['Value']['FillNumber'])
 
                 # Field polarity ?
                 polarity = getFieldPolarity(res)
@@ -470,10 +542,15 @@ def getRunFillData(rootfiles):
     return runfilldata
 
 def getRunDBRunInfo(run):
-
     # Read from the Run DB via the web and convert to python
     import urllib, json
     return json.loads( urllib.urlopen("http://lbrundb.cern.ch/api/run/"+str(run)).read() )
+
+
+def getRunDBFillInfo(fill):
+    # Read from the Run DB via the web and convert to python
+    import urllib, json
+    return json.loads( urllib.urlopen("http://lbrundb.cern.ch/api/fill/"+str(fill)).read() )
 
 def getFieldPolarity(res):
 
@@ -532,7 +609,7 @@ def mergeRootFile(fill,infiles):
 
 def runToFill(run):
     # Database API
-    from LHCbDIRAC.NewBookkeepingSystem.Client.BookkeepingClient import BookkeepingClient
+    from LHCbDIRAC.BookkeepingSystem.Client.BookkeepingClient import BookkeepingClient
     res = BookkeepingClient().getRunInformations(int(run))
     fill = 0
     if res['OK'] :
@@ -543,33 +620,33 @@ def runToFill(run):
         DIRAC.exit(1)
     return fill
 
-def runAll(files='2011-RootFiles.txt'):
+def runAll(files='2012-RootFiles.txt'):
     hpdImageShiftsFollow(files)
-    #hpdImageShiftsAverage(files)
+    hpdImageShiftsAverage(files)
     hpdOccupancies(files)
 
-def hpdOccupancies(files='2011-RootFiles.txt'):
+def hpdOccupancies(files='2012-RootFiles.txt'):
     calibrationByRuns(rootfiles=files,followType="Smoothed",
                       fitType='Sobel',smoothSigmaHours=0.5,
                       createShiftUpdate=False,createMagUpdate=False,createHPDOccUpdate=True)
 
-def hpdImageShiftsFollow(files='2011-RootFiles.txt'):
+def hpdImageShiftsFollow(files='2012-RootFiles.txt'):
     calibrationByRuns(rootfiles=files,followType="Smoothed",
                       fitType='Sobel',smoothSigmaHours=1.5,
                       createShiftUpdate=True,createMagUpdate=False,createHPDOccUpdate=False)
 
-def hpdImageShiftsAverage(files='2011-RootFiles.txt'):
+def hpdImageShiftsAverage(files='2012-RootFiles.txt'):
     calibrationByRuns(rootfiles=files,followType="Average",
                       fitType='Sobel',smoothSigmaHours=1.5,
                       createShiftUpdate=True,createMagUpdate=False,createHPDOccUpdate=False)
     
-def calibrationByRuns(rootfiles='2011-RootFiles.txt',
+def calibrationByRuns(rootfiles='2012-RootFiles.txt',
                       fitType="Sobel",followType="Smoothed",pol=0,smoothSigmaHours=1,
                       createShiftUpdate=True,createMagUpdate=False,createHPDOccUpdate=True):    
     return calibration(rootfiles,'Run',fitType,followType,pol,smoothSigmaHours,
                        createShiftUpdate,createMagUpdate,createHPDOccUpdate)
 
-def calibrationByFills(rootfiles='2011-RootFiles.txt',
+def calibrationByFills(rootfiles='2012-RootFiles.txt',
                        fitType="Sobel",followType="Smoothed",pol=0,smoothSigmaHours=12,
                        createShiftUpdate=True,createMagUpdate=False,createHPDOccUpdate=True):    
     return calibration(rootfiles,'Fill',fitType,followType,pol,smoothSigmaHours,
@@ -722,7 +799,8 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,
             occ = (0,0)
             ok  = False
             if createHPDOccUpdate :
-                occPlot = file.Get('RICH/HPDL0HitsMoni/NumHits_HPDCopyN_'+str(hpdID))
+                #occPlot = file.Get('RICH/HPDL0HitsMoni/NumHits_HPDCopyN_'+str(hpdID))
+                occPlot = file.Get('RICH/HPDHitsMoni/NumHits_HPDCopyN_'+str(hpdID))
                 if occPlot :
                     if occPlot.GetEntries() >= 10 :
                         occ = ( occPlot.GetMean(), occPlot.GetMeanError() )
