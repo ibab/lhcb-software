@@ -36,7 +36,7 @@ DeRichGasRadiator::DeRichGasRadiator(const std::string & name) :
   m_gasParametersCond    (),
   m_hltGasParametersCond (),
   m_scaleFactorCond      ()
-{}
+{ }
 
 //=============================================================================
 // Destructor
@@ -132,6 +132,7 @@ StatusCode DeRichGasRadiator::initialize ( )
                                     &DeRichGasRadiator::updateProperties );
   }
 
+  // If not in HLT mode, update
   if ( !HltMode )
   {
     sc = updMgrSvc()->update(this);
@@ -156,17 +157,17 @@ StatusCode DeRichGasRadiator::updateProperties ( )
 {
 
   // load parameters
-  // get temperature and pressure
-  const double photonEnergyLowLimit     = param<double>("PhotonMinimumEnergy");
-  const double photonEnergyHighLimit    = param<double>("PhotonMaximumEnergy");
-  const double ckvPhotonEnergyLowLimit  = param<double>("PhotonCkvMinimumEnergy");
-  const double ckvPhotonEnergyHighLimit = param<double>("PhotonCkvMaximumEnergy");
-  const unsigned int photonEnergyNumBins  = param<int>("PhotonEnergyNumBins");
-  const unsigned int ckvPhotonEnergyNumBins = param<int>("CkvPhotonEnergyNumBins");
+  const double         photonEnergyLowLimit = param<double>("PhotonMinimumEnergy");
+  const double        photonEnergyHighLimit = param<double>("PhotonMaximumEnergy");
+  const double      ckvPhotonEnergyLowLimit = param<double>("PhotonCkvMinimumEnergy");
+  const double     ckvPhotonEnergyHighLimit = param<double>("PhotonCkvMaximumEnergy");
+  const unsigned int    photonEnergyNumBins = param<int>   ("PhotonEnergyNumBins");
+  const unsigned int ckvPhotonEnergyNumBins = param<int>   ("CkvPhotonEnergyNumBins");
 
   if ( m_gasParametersCond )
   {
-    const double curPressure = m_gasParametersCond->param<double>("Pressure") * 0.001*Gaudi::Units::bar; //convert to bar
+    const double curPressure = ( m_gasParametersCond->param<double>("Pressure") 
+                                 * 0.001*Gaudi::Units::bar ); // convert to bar
     const double curTemp     = m_gasParametersCond->param<double>("Temperature");
     const double scaleFactor = ( !m_scaleFactorCond ? 1.0 :
                                  m_scaleFactorCond->param<double>("CurrentScaleFactor") );
@@ -178,8 +179,8 @@ StatusCode DeRichGasRadiator::updateProperties ( )
            << endmsg;
   }
 
-  if ( (photonEnergyHighLimit < ckvPhotonEnergyHighLimit ) ||
-       (ckvPhotonEnergyLowLimit < photonEnergyLowLimit ) )
+  if ( ( photonEnergyHighLimit   < ckvPhotonEnergyHighLimit ) ||
+       ( ckvPhotonEnergyLowLimit < photonEnergyLowLimit     )  )
   {
     error() << "Inadmissible photon energy limits "
             << photonEnergyHighLimit << " " << ckvPhotonEnergyHighLimit
@@ -264,7 +265,8 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
   aTable.reserve( momVect.size() );
 
   // identify the gas radiator and the ref index formula type.
-  // for now use the Single term formula for CF4 as default. This may be switched to classic by changing the following
+  // for now use the Single term formula for CF4 as default. 
+  // This may be switched to classic by changing the following
   // flag in the future, if needed.
 
   double RefTemperature(293.0);
@@ -289,7 +291,7 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
       gasFractions[0] = 1.0;
   }
 
-  enum GasRadRef {C4F10_Classic, CF4_Classic, CF4_SingleTerm, C3F8_SingleTerm, mixture};
+  enum GasRadRef { C4F10_Classic, CF4_Classic, CF4_SingleTerm, C3F8_SingleTerm, mixture };
 
   GasRadRef curRadMedium = C4F10_Classic;  // initialize with one of the options.
 
@@ -300,19 +302,15 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
     if ( CF4_RefIndex_Use_SingleTerm_Formula )
     {
       curRadMedium=CF4_SingleTerm ;
-      //RefTemperature= param<double> ("CF4ReferenceTempSellmeirAbjean" ); // redundant since stp temp is directly used.
     }
     else
     {
       curRadMedium=CF4_Classic;
-      // RefTemperature = param<double>("CF4ReferenceTempSellmeirClassic"); // not used since is initialized to the
-      // correct value and the old versions of DB does not contain this.
     }
   }
   else if(  material()->name().find("C3F08") != std::string::npos )
   {
     curRadMedium=C3F8_SingleTerm;
-    // RefTemperature= param<double> ("C3F8ReferenceTemp"); // redundant since STP temp is directly used for this case.
   }
   else if (material()->name().find("C4F10")!= std::string::npos )
   { // this check kept for safety.
@@ -408,10 +406,9 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
   }
   else
   {
-
-    error()<<" Unknown radiator medium for refractive index determination in DeRichGasRadiator:  "<<endmsg;
+    error() << "Unknown radiator medium for refractive index determination in DeRichGasRadiator"
+            << endmsg;
     return StatusCode::FAILURE;
-
   }  // end if on ref index options
 
   // calculate ref index
@@ -420,7 +417,7 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
   {
     const double epho = momVect[ibin]/Gaudi::Units::eV;
 
-    if ( (C4F10_Classic == curRadMedium) ||  (CF4_Classic == curRadMedium)  )
+    if ( (C4F10_Classic == curRadMedium) || (CF4_Classic == curRadMedium) )
     {
 
       const double pfe  = (SellF1/( (SellE1* SellE1) - (epho * epho) ) ) +
@@ -429,7 +426,7 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
       nMinus1 = scaleFactor * (std::sqrt((1.0+2*cpfe)/(1.0-cpfe)) - 1.0);
 
     }
-    else if ( (CF4_SingleTerm == curRadMedium)  ||  ( C3F8_SingleTerm == curRadMedium )  )
+    else if ( (CF4_SingleTerm == curRadMedium) || ( C3F8_SingleTerm == curRadMedium ) )
     {
 
       nMinus1 =
@@ -482,7 +479,7 @@ const Rich::TabulatedProperty1D* DeRichGasRadiator::generateHltRefIndex() const
   DeRichGasRadiator* nonConstSelf = const_cast<DeRichGasRadiator*>(this);
 
   // temperature
-  if ( m_hltGasParametersCond !=  m_gasParametersCond )
+  if ( m_hltGasParametersCond != m_gasParametersCond )
   {
 
     updMgrSvc()->registerCondition(nonConstSelf, m_hltGasParametersCond.path(),
