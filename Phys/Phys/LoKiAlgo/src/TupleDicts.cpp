@@ -529,13 +529,28 @@ StatusCode LoKi::Dicts::TupleAux::column
 StatusCode LoKi::Dicts::TupleAux::column
 ( const Tuples::Tuple&      tuple  , 
   const std::string&        name   , 
-  const ITisTos::TisTosTob& ttt    )
+  const ITisTos::TisTosTob& ttt    ,
+  const bool                value  )
 {
   if ( !tuple.valid() ) { return StatusCode::FAILURE ; }  
   //
-  return  tuple -> column ( name , ttt.value () , 0u , 15u ) ;
+  StatusCode sc = tuple -> column ( name , ttt.value () , 0u , 15u ) ;
+  //
+  if ( value || sc.isFailure() ) { return sc ; }             // RETURN 
+  //
+  sc = tuple -> column ( name + "_tos" , ttt.tos      () ) ;
+  if ( sc.isFailure() )          { return sc ; }             // RETURN 
+  sc = tuple -> column ( name + "_tis" , ttt.tis      () ) ;
+  if ( sc.isFailure() )          { return sc ; }             // RETURN 
+  sc = tuple -> column ( name + "_tps" , ttt.tps      () ) ;
+  if ( sc.isFailure() )          { return sc ; }             // RETURN 
+  sc = tuple -> column ( name + "_tus" , ttt.tus      () ) ;
+  if ( sc.isFailure() )          { return sc ; }             // RETURN 
+  sc = tuple -> column ( name + "_dec" , ttt.decision () ) ;
+  if ( sc.isFailure() )          { return sc ; }             // RETURN 
+  //
+  return StatusCode::SUCCESS ;
 }
-
 // ============================================================================
 // The END 
 // ============================================================================
