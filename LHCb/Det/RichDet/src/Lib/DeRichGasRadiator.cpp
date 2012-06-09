@@ -87,8 +87,8 @@ StatusCode DeRichGasRadiator::initialize ( )
     }
     else
     {
-      if ( msgLevel(MSG::DEBUG,msg) )
-        msg << MSG::DEBUG << "Using conditions <GasTemperature> and <GasPressure>" << endmsg;
+      //if ( msgLevel(MSG::DEBUG,msg) )
+      msg << MSG::INFO << "Using conditions <GasTemperature> and <GasPressure>" << endmsg;
       foundGasConditions = true;
       HltMode = false;
     }
