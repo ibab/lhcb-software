@@ -116,6 +116,8 @@ StatusCode DeRichGasRadiator::initialize ( )
   }
 
   info() << "HltMode = " << HltMode << endmsg;
+  info() << "hasCondition RefractivityScaleFactor = " 
+         << hasCondition( "RefractivityScaleFactor" ) << endmsg;
 
   // scale factor
   if ( hasCondition( "RefractivityScaleFactor" ) && !HltMode )
