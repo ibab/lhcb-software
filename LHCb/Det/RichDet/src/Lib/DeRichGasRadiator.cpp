@@ -82,8 +82,8 @@ StatusCode DeRichGasRadiator::initialize ( )
     sc = setupOldGasConditions();
     if ( sc.isFailure() )
     {
-      if ( msgLevel(MSG::DEBUG,msg) )
-        msg <<  MSG::DEBUG << "Did not find non-HLT gas conditions" << endmsg;
+      //if ( msgLevel(MSG::DEBUG,msg) )
+      msg << MSG::INFO << "Did not find non-HLT gas conditions" << endmsg;
     }
     else
     {
@@ -98,15 +98,15 @@ StatusCode DeRichGasRadiator::initialize ( )
   if ( hasCondition( "HltGasParameters" ) && condition( "HltGasParameters" ) )
   {
     m_hltGasParametersCond = condition( "HltGasParameters" );
-    if ( msgLevel(MSG::DEBUG,msg) )
-      msg << MSG::DEBUG << "Found condition <HltGasParameters>" << endmsg;
+    //if ( msgLevel(MSG::DEBUG,msg) )
+    msg << MSG::INFO << "Found condition <HltGasParameters>" << endmsg;
     foundGasConditions = true;
   }
   else  // use offline conditions for hlt
   {
     m_hltGasParametersCond = m_gasParametersCond;
-    if ( msgLevel(MSG::DEBUG,msg) )
-      msg << MSG::DEBUG << "Using offline gas condition for HLT" << endmsg;
+    //if ( msgLevel(MSG::DEBUG,msg) )
+    msg << MSG::INFO << "Using offline gas condition for HLT" << endmsg;
   }
 
   if ( !foundGasConditions )
