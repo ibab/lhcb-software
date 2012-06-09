@@ -2630,6 +2630,176 @@ def makeGraph ( x , y = []  , ex = [] , ey = [] ) :
     return gr
 
 # =============================================================================
+# rebin the histograms
+# =============================================================================
+## get the overlap for 1D-bins 
+def _bin_overlap_1D_ ( x1 , x2 ) :
+    """
+    """
+    #
+    xmin_1 = x1.value() - x1.error () 
+    xmax_1 = x1.value() + x1.error ()
+    if xmin_1 >= xmax_1  : return 0         ## RETURN
+    #
+    xmin_2 = x2.value() - x2.error () 
+    xmax_2 = x2.value() + x2.error ()
+    if xmin_2 >= xmax_2  : return 0         ## RETURN
+    #
+    xmin = max ( xmin_1 , xmin_2 )
+    xmax = min ( xmax_1 , xmax_2 )
+    #
+    if xmin >= xmax      : return 0         ## RETURN 
+    #
+    return ( xmax - xmin ) / 2.0 / x1.error()
+# =============================================================================
+## get the overlap for 2D-bins 
+def _bin_overlap_2D_ ( x1 , y1 , x2 , y2 ) :
+    """
+    """
+    #
+    xmin_1 = x1.value() - x1.error () 
+    xmax_1 = x1.value() + x1.error ()
+    if xmin_1 >= xmax_1  : return 0         ## RETURN
+    #
+    xmin_2 = x2.value() - x2.error () 
+    xmax_2 = x2.value() + x2.error ()
+    if xmin_2 >= xmax_2  : return 0         ## RETURN
+    #
+    ymin_1 = y1.value() - y1.error () 
+    ymax_1 = y1.value() + y1.error ()
+    if ymin_1 >= ymax_1  : return 0         ## RETURN
+    #
+    ymin_2 = y2.value() - y2.error () 
+    ymax_2 = y2.value() + y2.error ()
+    if ymin_2 >= ymax_2  : return 0         ## RETURN
+    #
+    xmin = max ( xmin_1 , xmin_2 )
+    xmax = min ( xmax_1 , xmax_2 )
+    if xmin >= xmax      : return 0         ## RETURN 
+    #
+    ymin = max ( ymin_1 , xmin_2 )
+    ymax = min ( ymax_1 , xmax_2 )
+    if ymin >= ymax      : return 0         ## RETURN 
+    #
+    #
+    return ( xmax - xmin ) * ( ymax - ymin ) / 4.0 / x1.error() / y1.error()  
+
+# ==============================================================================
+## rebin 1D-histogram with NUMBERS 
+def _rebin_nums_1D_ ( h1 , template ) :
+    """
+    Rebin 1D-histogram assuming it is a histogram with *NUMBERS*
+
+    >>> horig    = ...  ## the original historgam 
+    >>> template = ...  ## the template with binnings
+
+    >>> h = horig.rebinNumbers ( template ) 
+    """
+    ##
+    if not h2.GetSumw2() : h2.Sumw2()
+    #
+    ## reset the histogram 
+    for i2 in h2 : h2[i2] = VE(0,0)
+    #
+    for i2 in h2.iteritems() :
+        
+        for i1 in h1.iteritems() :
+            
+            o = _bin_overlap_1D_ ( i1[1] , i2[1] )
+            
+            h2 [ i2[0] ] +=  o * i1[2] 
+            
+    return h2 
+# =============================================================================
+## rebin 1D-histogram as FUNCTION 
+def _rebin_func_1D_ ( h1 , template ) :
+    """
+    Rebin 1D-histogram assuming it is a FUNCTION
+
+    >>> horig    = ...  ## the original historgam 
+    >>> template = ...  ## the template with binnings
+
+    >>> h = horig.rebinFunction ( template ) 
+    """
+    # clone it!
+    h2 = template.Clone( hID() )
+    if not h2.GetSumw2() : h2.Sumw2()
+    ## reset the histogram 
+    for i2 in h2 : h2[i2] = VE(0,0)
+    #
+    for i2 in h2.iteritems() :
+        
+        for i1 in h1.iteritems() :
+            
+            o = _bin_overlap_1D_ ( i2[1] , i1[1] ) ## NOTE THE ORDER!!! 
+            
+            h2 [ i2[0] ] +=  o * i1[2]
+            
+    return h2 
+
+# ==============================================================================
+## rebin 2D-histogram with NUMBERS 
+def _rebin_nums_2D_ ( h1 , template ) :
+    """
+    Rebin 2D-histogram assuming it is a histogram with *NUMBERS*
+
+    >>> horig    = ...  ## the original historgam 
+    >>> template = ...  ## the template with binnings
+
+    >>> h = horig.rebinNumbers ( template ) 
+    """
+    #
+    # clone it!
+    h2 = template.Clone( hID() )
+    if not h2.GetSumw2() : h2.Sumw2()
+    ## reset the histogram 
+    for i2 in h2 : h2[i2] = VE(0,0)
+    #
+    for i2 in h2.iteritems() :
+        
+        for i1 in h1.iteritems() :
+            
+            o = _bin_overlap_2D_ ( i1[2] , i1[3] , i2[2] , i2[3] )
+            
+            h2 [ (i2[0],i2[1]) ] +=  o * i1[4] 
+            
+    return h2 
+# =============================================================================
+## rebin 2D-histogram as FUNCTION 
+def _rebin_func_2D_ ( h1 , template ) :
+    """
+    Rebin 2D-histogram assuming it is a FUNCTION
+
+    >>> horig    = ...  ## the original historgam 
+    >>> template = ...  ## the template with binnings
+
+    >>> h = horig.rebinFunction ( template ) 
+    """
+    # clone it!
+    h2 = template.Clone( hID() )
+    if not h2.GetSumw2() : h2.Sumw2()
+    ## reset the histogram 
+    for i2 in h2 : h2[i2] = VE(0,0)
+    #
+    for i2 in h2.iteritems() :
+        
+        for i1 in h1.iteritems() :
+            
+            o = _bin_overlap_1D_ ( i2[2] , i2[3] , i1[2] , i2[3] ) ## NOTE THE ORDER!!! 
+            
+            h2 [ i2[0] ] +=  o * i1[4]
+            
+    return h2 
+
+for t in ( ROOT.TH1F , ROOT.TH1D ) :
+    t.rebinNumbers  = _rebin_nums_1D_
+    t.rebinFunction = _rebin_func_1D_
+    
+for t in ( ROOT.TH2F , ROOT.TH2D ) :
+    t.rebinNumbers  = _rebin_nums_2D_
+    t.rebinFunction = _rebin_func_2D_
+
+# =============================================================================
 ## convert histogram to graph
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-07

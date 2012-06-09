@@ -5,6 +5,9 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2012-06-09 - Vanya Belyaev
+ - add rebin-functions 
+
 ! 2012-06-03 - Vanya Belyaev
  - fiw minor fixes & improvements 
 
