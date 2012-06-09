@@ -70,8 +70,8 @@ StatusCode DeRichGasRadiator::initialize ( )
   if ( hasCondition("GasParameters") && condition("GasParameters") )
   {
     m_gasParametersCond = condition( "GasParameters" );
-    if ( msgLevel(MSG::DEBUG,msg) )
-      msg << MSG::DEBUG << "Using condition <GasParameters>" << endmsg;
+    //if ( msgLevel(MSG::DEBUG,msg) )
+    msg << MSG::INFO << "Using condition <GasParameters>" << endmsg;
     updMgrSvc()->registerCondition( this, m_gasParametersCond.path(),
                                     &DeRichGasRadiator::updateProperties );
     foundGasConditions = true;
