@@ -115,6 +115,8 @@ StatusCode DeRichGasRadiator::initialize ( )
     return StatusCode::FAILURE;
   }
 
+  info() << "HltMode = " << HltMode << endmsg;
+
   // scale factor
   if ( hasCondition( "RefractivityScaleFactor" ) && !HltMode )
   {
@@ -123,7 +125,7 @@ StatusCode DeRichGasRadiator::initialize ( )
                                     &DeRichGasRadiator::updateProperties );
   }
 
-  // scale factor
+  // composition
   if ( hasCondition( "RadiatorComposition" ) && !HltMode )
   {
     updMgrSvc()->registerCondition( this, condition("RadiatorComposition").path(),
@@ -168,11 +170,12 @@ StatusCode DeRichGasRadiator::updateProperties ( )
     const double curTemp     = m_gasParametersCond->param<double>("Temperature");
     const double scaleFactor = ( !m_scaleFactorCond ? 1.0 :
                                  m_scaleFactorCond->param<double>("CurrentScaleFactor") );
-    if ( msgLevel(MSG::DEBUG) )
-      debug() << "Refractive index update triggered : Pressure = " << curPressure/Gaudi::Units::bar
-              << " bar : Temperature = " << curTemp << " K"
-              << " : (n-1) Scale = " << scaleFactor
-              << endmsg;
+    if ( !m_scaleFactorCond ) info() << "NULL ScaleFactor condition. Using 1.0" << endmsg;
+    //if ( msgLevel(MSG::DEBUG) )
+    info() << "Refractive index update triggered : Pressure = " << curPressure/Gaudi::Units::bar
+           << " bar : Temperature = " << curTemp << " K"
+           << " : (n-1) Scale = " << scaleFactor
+           << endmsg;
   }
 
   if ( (photonEnergyHighLimit < ckvPhotonEnergyHighLimit ) ||
@@ -508,7 +511,7 @@ StatusCode DeRichGasRadiator::updateHltProperties ( )
   // load parameters
   const double photonEnergyLowLimit     = param<double>("PhotonMinimumEnergy");
   const double photonEnergyHighLimit    = param<double>("PhotonMaximumEnergy");
-  const unsigned int photonEnergyNumBins  = param<int>("PhotonEnergyNumBins");
+  const unsigned int photonEnergyNumBins = param<int>("PhotonEnergyNumBins");
 
   if ( photonEnergyHighLimit < photonEnergyLowLimit )
   {
