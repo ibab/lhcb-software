@@ -61,7 +61,8 @@ protected:
   /// to make it possible to replace standard TisTos tools.
   std::string m_TriggerTisTosName;
   std::string m_L0TriggerTisTosName;
-
+  
+  
 private:
 
   ITriggerTisTos* m_TriggerTisTosTool;
@@ -79,12 +80,19 @@ private:
                                   , const std::string& head
                                   , Tuples::Tuple& tuple );
 
+  std::string getName(std::string);
+
 private:
 
   virtual StatusCode fillBasic( Tuples::Tuple& T );
 
   virtual StatusCode fillVerbose( Tuples::Tuple& T );
 
+  std::vector<int> m_pidList; 
+  bool checkPID;
+  std::string m_hlt1Phys;
+  std::string m_hlt2Phys;
+  
 };
 
 #endif // TUPLETOOLTISTOS_H
