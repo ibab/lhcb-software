@@ -286,11 +286,11 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
       return StatusCode::FAILURE;
     }
 
-    numOfGases = compCond->param<int>("NumberOfGases");
-    gasNames =  compCond->paramVect<std::string>("GasNames");
-    gasFractions =  compCond->paramVect<double>("GasFractions");
-    if ( numOfGases == 1 )
-      gasFractions[0] = 1.0;
+    numOfGases   = compCond->param<int>("NumberOfGases");
+    gasNames     = compCond->paramVect<std::string>("GasNames");
+    gasFractions = compCond->paramVect<double>("GasFractions");
+
+    if ( numOfGases == 1 ) { gasFractions[0] = 1.0; }
   }
 
   enum GasRadRef { C4F10_Classic, CF4_Classic, CF4_SingleTerm, C3F8_SingleTerm, mixture };
@@ -312,11 +312,11 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
   }
   else if(  material()->name().find("C3F08") != std::string::npos )
   {
-    curRadMedium=C3F8_SingleTerm;
+    curRadMedium = C3F8_SingleTerm;
   }
   else if (material()->name().find("C4F10")!= std::string::npos )
   { // this check kept for safety.
-    curRadMedium=C4F10_Classic;
+    curRadMedium   = C4F10_Classic;
     RefTemperature = param<double>("C4F10ReferenceTemp");
   }
   else if (material()->name().find("R1RadiatorGas")!= std::string::npos )
@@ -324,7 +324,7 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
     if ( numOfGases == 1 && gasNames[0] == "C4F10" )
     {
       // same as before
-      curRadMedium=C4F10_Classic;
+      curRadMedium   = C4F10_Classic;
       RefTemperature = param<double>("C4F10ReferenceTemp");
     }
     else
