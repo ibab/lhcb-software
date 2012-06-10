@@ -9,8 +9,6 @@
  */
 //----------------------------------------------------------------------------
 
-// Include files
-
 // Gaudi
 #include "GaudiKernel/IUpdateManagerSvc.h"
 #include "GaudiKernel/PhysicalConstants.h"
@@ -29,13 +27,13 @@ const CLID CLID_DeRichGasRadiator = 12042;  // User defined
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-DeRichGasRadiator::DeRichGasRadiator(const std::string & name) :
-  DeRichSingleSolidRadiator(name),
-  m_temperatureCond      (),
-  m_pressureCond         (),
-  m_gasParametersCond    (),
-  m_hltGasParametersCond (),
-  m_scaleFactorCond      ()
+DeRichGasRadiator::DeRichGasRadiator(const std::string & name)
+  : DeRichSingleSolidRadiator(name),
+    m_temperatureCond      (),
+    m_pressureCond         (),
+    m_gasParametersCond    (),
+    m_hltGasParametersCond (),
+    m_scaleFactorCond      ()
 { }
 
 //=============================================================================
@@ -72,7 +70,7 @@ StatusCode DeRichGasRadiator::initialize ( )
     m_gasParametersCond = condition("GasParameters");
     //if ( msgLevel(MSG::DEBUG,msg) )
     msg << MSG::INFO << "Using condition <GasParameters>" << endmsg;
-    updMgrSvc()->registerCondition( this, 
+    updMgrSvc()->registerCondition( this,
                                     m_gasParametersCond.path(),
                                     &DeRichGasRadiator::updateProperties );
     foundGasConditions = true;
@@ -89,7 +87,9 @@ StatusCode DeRichGasRadiator::initialize ( )
     else
     {
       //if ( msgLevel(MSG::DEBUG,msg) )
-      msg << MSG::INFO << "Using conditions <GasTemperature> and <GasPressure>" << endmsg;
+      msg << MSG::INFO 
+          << "Using conditions <GasTemperature> and <GasPressure>" 
+          << endmsg;
       foundGasConditions = true;
       HltMode = false;
     }
@@ -117,7 +117,7 @@ StatusCode DeRichGasRadiator::initialize ( )
   }
 
   info() << "HltMode = " << HltMode << endmsg;
-  info() << "hasCondition RefractivityScaleFactor = " 
+  info() << "hasCondition RefractivityScaleFactor = "
          << hasCondition( "RefractivityScaleFactor" ) << endmsg;
 
   // scale factor
@@ -135,7 +135,7 @@ StatusCode DeRichGasRadiator::initialize ( )
   // composition
   if ( !HltMode && hasCondition("RadiatorComposition") )
   {
-    updMgrSvc()->registerCondition( this, 
+    updMgrSvc()->registerCondition( this,
                                     condition("RadiatorComposition").path(),
                                     &DeRichGasRadiator::updateProperties );
   }
@@ -153,7 +153,7 @@ StatusCode DeRichGasRadiator::initialize ( )
 
   if ( msgLevel(MSG::DEBUG,msg) )
     msg << MSG::DEBUG << "Initialisation Complete" << endmsg;
- 
+
   // return
   return StatusCode::SUCCESS;
 }
@@ -187,8 +187,8 @@ StatusCode DeRichGasRadiator::updateProperties ( )
   if ( !sc ) return sc;
 
   // calculate the refractive index and update Tabulated property
-  sc = calcSellmeirRefIndex( photonMomentumVect, 
-                             m_refIndexTabProp, 
+  sc = calcSellmeirRefIndex( photonMomentumVect,
+                             m_refIndexTabProp,
                              m_gasParametersCond );
   if ( !sc ) return sc;
 
@@ -234,14 +234,18 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
   else // use the old conditions
   {
     if ( m_pressureCond )
-    { curPressure = m_pressureCond->param<double>("CurrentPressure"); }
+    { 
+      curPressure = m_pressureCond->param<double>("CurrentPressure");
+    }
     else
     {
       error() << "Old CurrentPressure Condition missing !!" << endmsg;
       return StatusCode::FAILURE;
     }
     if ( m_temperatureCond )
-    { curTemp     = m_temperatureCond->param<double>("CurrentTemperature"); }
+    { 
+      curTemp     = m_temperatureCond->param<double>("CurrentTemperature"); 
+    }
     else
     {
       error() << "Old CurrentTemperature Condition missing !!" << endmsg;
@@ -259,7 +263,7 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
          << " bar : Temperature = " << curTemp << " K"
          << " : (n-1) Scale = " << scaleFactor
          << endmsg;
-  
+
   // reset table
   TabulatedProperty* modTabProp = const_cast<TabulatedProperty*>( tabProp );
   TabulatedProperty::Table& aTable = modTabProp->table();
@@ -267,7 +271,7 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
   aTable.reserve( momVect.size() );
 
   // identify the gas radiator and the ref index formula type.
-  // for now use the Single term formula for CF4 as default. 
+  // for now use the Single term formula for CF4 as default.
   // This may be switched to classic by changing the following
   // flag in the future, if needed.
 
@@ -282,7 +286,7 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
     compCond = condition( "RadiatorComposition" );
     if ( !compCond )
     {
-      error() << "Zero pointer to condition RadiatorComposition" << endmsg;
+      error() << "NULL pointer to condition RadiatorComposition" << endmsg;
       return StatusCode::FAILURE;
     }
 
@@ -300,26 +304,26 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
   if ( material()->name().find("CF4") != std::string::npos )
   {
     // the following value is for backward compatibility with old versions of DB.
-    bool CF4_RefIndex_Use_SingleTerm_Formula= exists("CF4ReferenceTempSellmeirAbjean") ? true : false;
-    if ( CF4_RefIndex_Use_SingleTerm_Formula )
+    if ( exists("CF4ReferenceTempSellmeirAbjean") )
     {
-      curRadMedium=CF4_SingleTerm ;
+      curRadMedium = CF4_SingleTerm;
     }
     else
     {
-      curRadMedium=CF4_Classic;
+      curRadMedium = CF4_Classic;
     }
   }
-  else if(  material()->name().find("C3F08") != std::string::npos )
+  else if ( material()->name().find("C3F08") != std::string::npos )
   {
     curRadMedium = C3F8_SingleTerm;
   }
-  else if (material()->name().find("C4F10")!= std::string::npos )
-  { // this check kept for safety.
+  else if ( material()->name().find("C4F10") != std::string::npos )
+  { 
+    // this check kept for safety.
     curRadMedium   = C4F10_Classic;
     RefTemperature = param<double>("C4F10ReferenceTemp");
   }
-  else if (material()->name().find("R1RadiatorGas")!= std::string::npos )
+  else if ( material()->name().find("R1RadiatorGas") != std::string::npos )
   {
     if ( numOfGases == 1 && gasNames[0] == "C4F10" )
     {
@@ -332,7 +336,7 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
       curRadMedium = mixture;
     }
   }
-  else if (material()->name().find("R2RadiatorGas")!= std::string::npos )
+  else if ( material()->name().find("R2RadiatorGas") != std::string::npos )
   {
     curRadMedium = mixture;
   }
@@ -345,15 +349,15 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
 
   double SellE1(0.0),SellE2(0.0),SellF1(0.0),SellF2(0.0),SellLorGasFac(0.0);
   double RhoEffectiveSellDefault(0.0),GasMolWeight(0.0) ;
-  double AParam(0.0),AMultParam(0.0),MomConvWave(0.0), aWaveZero(0.0),EphyZSq(0.0);
-  std::vector<double> AParamVect, AMultParamVect, aWaveZeroVect;
-  double GasRhoCur( 0.0 );
+  double AParam(0.0),AMultParam(0.0),MomConvWave(0.0),aWaveZero(0.0),EphyZSq(0.0);
+  std::vector<double> AParamVect,AMultParamVect,aWaveZeroVect;
+  double GasRhoCur(0.0);
 
   // the classic sellmeir formulae here are all at reference temperature of
   // 293K whereas the single pole formulae are at the reference temperature of 273K.
   // the reference temp for classic is read from the db for now.
 
-  if ( (C4F10_Classic == curRadMedium) || (CF4_Classic == curRadMedium)  )
+  if ( (C4F10_Classic == curRadMedium) || (CF4_Classic == curRadMedium) )
   {
 
     SellE1 = param<double>("SellE1Param");
@@ -362,49 +366,57 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
     SellF2 = param<double>("SellF2Param");
     SellLorGasFac = param<double>("SellmeirLorenzFact");
     RhoEffectiveSellDefault = param<double>("RhoEffectiveSellParam");
-    GasMolWeight   = param<double>("GasMolWeightParam");
-    GasRhoCur = RhoEffectiveSellDefault*(curPressure/Gaudi::Units::STP_Pressure)*
-      ( RefTemperature/curTemp );
+    GasMolWeight  = param<double>("GasMolWeightParam");
+    GasRhoCur = ( RhoEffectiveSellDefault*(curPressure/Gaudi::Units::STP_Pressure)*
+                  ( RefTemperature/curTemp ) );
 
   }
   else if ( CF4_SingleTerm == curRadMedium )
   {
 
-    AParam = param<double>("CF4SellMeirAFactor");
-    AMultParam = param<double>("CF4SellMeirAMultiplicationFactor");
-    aWaveZero=  param<double> ("CF4SellMeirLambdaZeroFactor");
+    AParam      = param<double>("CF4SellMeirAFactor");
+    AMultParam  = param<double>("CF4SellMeirAMultiplicationFactor");
+    aWaveZero   = param<double> ("CF4SellMeirLambdaZeroFactor");
     MomConvWave = param<double> ("PhotonMomentumWaveLengthConvFact"  );
     if(aWaveZero > 1.0)  // typical value when exists = 61.9
     {
-      EphyZSq =  ( MomConvWave / aWaveZero ) * ( MomConvWave / aWaveZero );
+      EphyZSq = ( MomConvWave / aWaveZero ) * ( MomConvWave / aWaveZero );
     }
-    GasRhoCur = (curPressure/Gaudi::Units::STP_Pressure)*
-      (Gaudi::Units::STP_Temperature/curTemp);
+    GasRhoCur = ( (curPressure/Gaudi::Units::STP_Pressure)*
+                  (Gaudi::Units::STP_Temperature/curTemp) );
 
   }
   else if ( C3F8_SingleTerm == curRadMedium )
   {
 
-    AParam = param<double>("C3F8SellMeirAFactor");
-    AMultParam = param<double>("C3F8SellMeirAMultiplicationFactor");
-    aWaveZero= param<double> ("C3F8SellMeirLambdaZeroFactor" );
+    AParam      = param<double>("C3F8SellMeirAFactor");
+    AMultParam  = param<double>("C3F8SellMeirAMultiplicationFactor");
+    aWaveZero   = param<double> ("C3F8SellMeirLambdaZeroFactor" );
     MomConvWave = param<double> ("PhotonMomentumWaveLengthConvFact"  );
-    if(aWaveZero > 1.0) //typical value when exists=64.4
+    if ( aWaveZero > 1.0 ) //typical value when exists=64.4
     {
-      EphyZSq =  ( MomConvWave / aWaveZero ) * ( MomConvWave / aWaveZero );
+      EphyZSq = ( MomConvWave / aWaveZero ) * ( MomConvWave / aWaveZero );
     }
-    GasRhoCur = (curPressure/Gaudi::Units::STP_Pressure)*
-      (Gaudi::Units::STP_Temperature/curTemp);
+    GasRhoCur = ( (curPressure/Gaudi::Units::STP_Pressure)*
+                  (Gaudi::Units::STP_Temperature/curTemp) );
   }
   else if ( mixture == curRadMedium )
   {
-    // same as above but need to get the papameters from the CondDB
-    AParamVect = compCond->paramVect<double>("SellMeirAFactors");
-    AMultParamVect = compCond->paramVect<double>("SellMeirAMultiplicationFactors");
-    aWaveZeroVect=  compCond->paramVect<double> ("SellMeirLambdaZeroFactors");
-    MomConvWave = param<double> ("PhotonMomentumWaveLengthConvFact"  );
-    GasRhoCur = (curPressure/Gaudi::Units::STP_Pressure)*
-      (Gaudi::Units::STP_Temperature/curTemp);
+    // same as above but need to get the papameters from the CondDB 
+    if ( compCond )
+    {
+      AParamVect     = compCond->paramVect<double>("SellMeirAFactors");
+      AMultParamVect = compCond->paramVect<double>("SellMeirAMultiplicationFactors");
+      aWaveZeroVect  = compCond->paramVect<double> ("SellMeirLambdaZeroFactors");
+      MomConvWave    = param<double> ("PhotonMomentumWaveLengthConvFact"  );
+      GasRhoCur      = ( (curPressure/Gaudi::Units::STP_Pressure) *
+                         (Gaudi::Units::STP_Temperature/curTemp)  );
+    }
+    else
+    {
+      error() << "NULL pointer to condition RadiatorComposition" << endmsg;
+      return StatusCode::FAILURE;
+    }
   }
   else
   {
@@ -422,8 +434,8 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
     if ( (C4F10_Classic == curRadMedium) || (CF4_Classic == curRadMedium) )
     {
 
-      const double pfe  = (SellF1/( (SellE1* SellE1) - (epho * epho) ) ) +
-        (SellF2/( (SellE2*SellE2) - (epho * epho) ));
+      const double pfe  = ( (SellF1/( (SellE1* SellE1) - (epho * epho) ) ) +
+                            (SellF2/( (SellE2*SellE2)  - (epho * epho) )) );
       const double cpfe = SellLorGasFac * (GasRhoCur / GasMolWeight ) * pfe;
       nMinus1 = scaleFactor * (std::sqrt((1.0+2*cpfe)/(1.0-cpfe)) - 1.0);
 
@@ -439,12 +451,12 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
     {
 
       nMinus1 = 0.0;
-      for (unsigned int gas=0; gas<numOfGases; ++gas)
+      for ( unsigned int gas = 0; gas<numOfGases; ++gas )
       {
 
-        if(aWaveZeroVect[gas] > 1.0)  // typical value when exists = 61.9
+        if ( aWaveZeroVect[gas] > 1.0)  // typical value when exists = 61.9
         {
-          EphyZSq =  ( MomConvWave / aWaveZeroVect[gas] ) * ( MomConvWave / aWaveZeroVect[gas] );
+          EphyZSq = ( MomConvWave / aWaveZeroVect[gas] ) * ( MomConvWave / aWaveZeroVect[gas] );
         }
         nMinus1 += scaleFactor * gasFractions[gas] *
           (AParamVect[gas]*AMultParamVect[gas]*MomConvWave*MomConvWave*GasRhoCur)/(EphyZSq-(epho*epho));
@@ -454,13 +466,11 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
     else
     {
 
-      nMinus1=0.0;
+      nMinus1 = 0.0;
 
     }  // end if on ref index options
 
-    const double curRindex = 1.0+nMinus1;
-
-    aTable.push_back( TabulatedProperty::Entry(epho*Gaudi::Units::eV,curRindex));
+    aTable.push_back( TabulatedProperty::Entry( epho*Gaudi::Units::eV, 1.0+nMinus1 ) );
 
   } // end loop over bins of photon energy.
 
@@ -476,6 +486,7 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
 //=========================================================================
 const Rich::TabulatedProperty1D* DeRichGasRadiator::generateHltRefIndex() const
 {
+  delete m_hltRefIndexTabProp;
   m_hltRefIndexTabProp = new TabulatedProperty("HltRefIndexTabProperty");
 
   DeRichGasRadiator* nonConstSelf = const_cast<DeRichGasRadiator*>(this);
@@ -484,8 +495,9 @@ const Rich::TabulatedProperty1D* DeRichGasRadiator::generateHltRefIndex() const
   if ( m_hltGasParametersCond != m_gasParametersCond )
   {
 
-    updMgrSvc()->registerCondition(nonConstSelf, m_hltGasParametersCond.path(),
-                                   &DeRichGasRadiator::updateHltProperties );
+    updMgrSvc()->registerCondition( nonConstSelf, 
+                                    m_hltGasParametersCond.path(),
+                                    &DeRichGasRadiator::updateHltProperties );
     const StatusCode sc = updMgrSvc()->update(nonConstSelf);
     if ( sc.isFailure() )
     {
@@ -525,15 +537,19 @@ StatusCode DeRichGasRadiator::updateHltProperties ( )
   if ( !sc ) return sc;
 
   // calculate the refractive index and update Tabulated property
-  sc = calcSellmeirRefIndex( photonMomentumVect, 
-                             m_hltRefIndexTabProp, 
+  sc = calcSellmeirRefIndex( photonMomentumVect,
+                             m_hltRefIndexTabProp,
                              m_hltGasParametersCond );
   if ( !sc ) return sc;
 
   if ( !m_hltRefIndex )
-  { m_hltRefIndex = new Rich::TabulatedProperty1D( m_hltRefIndexTabProp ); }
+  { 
+    m_hltRefIndex = new Rich::TabulatedProperty1D( m_hltRefIndexTabProp ); 
+  }
   else
-  { m_hltRefIndex->initInterpolator( m_hltRefIndexTabProp ); }
+  { 
+    m_hltRefIndex->initInterpolator( m_hltRefIndexTabProp ); 
+  }
   if ( !m_hltRefIndex->valid() )
   {
     error() << "Invalid RINDEX Rich::TabulatedProperty1D for "
