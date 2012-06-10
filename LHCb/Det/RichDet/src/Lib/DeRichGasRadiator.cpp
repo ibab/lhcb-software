@@ -69,10 +69,11 @@ StatusCode DeRichGasRadiator::initialize ( )
   // setup gas conditions
   if ( hasCondition("GasParameters") && condition("GasParameters") )
   {
-    m_gasParametersCond = condition( "GasParameters" );
+    m_gasParametersCond = condition("GasParameters");
     //if ( msgLevel(MSG::DEBUG,msg) )
     msg << MSG::INFO << "Using condition <GasParameters>" << endmsg;
-    updMgrSvc()->registerCondition( this, m_gasParametersCond.path(),
+    updMgrSvc()->registerCondition( this, 
+                                    m_gasParametersCond.path(),
                                     &DeRichGasRadiator::updateProperties );
     foundGasConditions = true;
     HltMode = false;
@@ -95,9 +96,9 @@ StatusCode DeRichGasRadiator::initialize ( )
   }
 
   // hlt condition
-  if ( hasCondition( "HltGasParameters" ) && condition( "HltGasParameters" ) )
+  if ( hasCondition("HltGasParameters") && condition("HltGasParameters") )
   {
-    m_hltGasParametersCond = condition( "HltGasParameters" );
+    m_hltGasParametersCond = condition("HltGasParameters");
     //if ( msgLevel(MSG::DEBUG,msg) )
     msg << MSG::INFO << "Found condition <HltGasParameters>" << endmsg;
     foundGasConditions = true;
@@ -120,17 +121,22 @@ StatusCode DeRichGasRadiator::initialize ( )
          << hasCondition( "RefractivityScaleFactor" ) << endmsg;
 
   // scale factor
-  if ( hasCondition( "RefractivityScaleFactor" ) && !HltMode )
+  if ( hasCondition("RefractivityScaleFactor") )
   {
-    m_scaleFactorCond = condition( "RefractivityScaleFactor" );
-    updMgrSvc()->registerCondition( this, m_scaleFactorCond.path(),
-                                    &DeRichGasRadiator::updateProperties );
+    m_scaleFactorCond = condition("RefractivityScaleFactor");
+    if ( !HltMode )
+    {
+      updMgrSvc()->registerCondition( this,
+                                      m_scaleFactorCond.path(),
+                                      &DeRichGasRadiator::updateProperties );
+    }
   }
 
   // composition
-  if ( hasCondition( "RadiatorComposition" ) && !HltMode )
+  if ( !HltMode && hasCondition("RadiatorComposition") )
   {
-    updMgrSvc()->registerCondition( this, condition("RadiatorComposition").path(),
+    updMgrSvc()->registerCondition( this, 
+                                    condition("RadiatorComposition").path(),
                                     &DeRichGasRadiator::updateProperties );
   }
 
@@ -166,21 +172,6 @@ StatusCode DeRichGasRadiator::updateProperties ( )
   const unsigned int    photonEnergyNumBins = param<int>   ("PhotonEnergyNumBins");
   const unsigned int ckvPhotonEnergyNumBins = param<int>   ("CkvPhotonEnergyNumBins");
 
-  if ( m_gasParametersCond )
-  {
-    const double curPressure = ( m_gasParametersCond->param<double>("Pressure") 
-                                 * 0.001*Gaudi::Units::bar ); // convert to bar
-    const double curTemp     = m_gasParametersCond->param<double>("Temperature");
-    const double scaleFactor = ( !m_scaleFactorCond ? 1.0 :
-                                 m_scaleFactorCond->param<double>("CurrentScaleFactor") );
-    if ( !m_scaleFactorCond ) info() << "NULL ScaleFactor condition. Using 1.0" << endmsg;
-    //if ( msgLevel(MSG::DEBUG) )
-    info() << "Refractive index update triggered : Pressure = " << curPressure/Gaudi::Units::bar
-           << " bar : Temperature = " << curTemp << " K"
-           << " : (n-1) Scale = " << scaleFactor
-           << endmsg;
-  }
-
   if ( ( photonEnergyHighLimit   < ckvPhotonEnergyHighLimit ) ||
        ( ckvPhotonEnergyLowLimit < photonEnergyLowLimit     )  )
   {
@@ -196,7 +187,9 @@ StatusCode DeRichGasRadiator::updateProperties ( )
   if ( !sc ) return sc;
 
   // calculate the refractive index and update Tabulated property
-  sc = calcSellmeirRefIndex( photonMomentumVect, m_refIndexTabProp, m_gasParametersCond );
+  sc = calcSellmeirRefIndex( photonMomentumVect, 
+                             m_refIndexTabProp, 
+                             m_gasParametersCond );
   if ( !sc ) return sc;
 
   std::vector<double> ckvPhotonMomentumVect;
@@ -257,9 +250,16 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
   }
 
   // (n-1) scale factor
+  if ( !m_scaleFactorCond ) info() << "NULL ScaleFactor condition. Using 1.0" << endmsg;
   const double scaleFactor = ( !m_scaleFactorCond ? 1.0 :
                                m_scaleFactorCond->param<double>("CurrentScaleFactor") );
 
+  //if ( msgLevel(MSG::DEBUG) )
+  info() << "Refractive index update : Pressure = " << curPressure/Gaudi::Units::bar
+         << " bar : Temperature = " << curTemp << " K"
+         << " : (n-1) Scale = " << scaleFactor
+         << endmsg;
+  
   // reset table
   TabulatedProperty* modTabProp = const_cast<TabulatedProperty*>( tabProp );
   TabulatedProperty::Table& aTable = modTabProp->table();
@@ -525,7 +525,9 @@ StatusCode DeRichGasRadiator::updateHltProperties ( )
   if ( !sc ) return sc;
 
   // calculate the refractive index and update Tabulated property
-  sc = calcSellmeirRefIndex( photonMomentumVect, m_hltRefIndexTabProp, m_hltGasParametersCond );
+  sc = calcSellmeirRefIndex( photonMomentumVect, 
+                             m_hltRefIndexTabProp, 
+                             m_hltGasParametersCond );
   if ( !sc ) return sc;
 
   if ( !m_hltRefIndex )

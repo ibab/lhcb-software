@@ -73,8 +73,8 @@ private:
    */
   virtual const Rich::TabulatedProperty1D* generateHltRefIndex() const;
 
-  /// method for the calculation of the refractive index from the Sellmeir
-  /// coeficients and update of the Tabulated Property
+  /** Method for the calculation of the refractive index from the Sellmeir
+   *  coeficients and update of the Tabulated Property */
   StatusCode calcSellmeirRefIndex ( const std::vector<double>& momVect,
                                     const TabulatedProperty* tabProp,
                                     const SmartRef<Condition>& gasParamCond ) const;
@@ -82,7 +82,7 @@ private:
   /// method to use the old separate temperature and pressure conditions
   StatusCode setupOldGasConditions();
 
-  // data
+private: // data
 
   /// Condition holding the current temperature of radiator
   SmartRef<Condition> m_temperatureCond;
@@ -99,5 +99,7 @@ private:
   /// Condition holding the scale factor for the refractivity
   /// This conditions scales n-1 NOT n
   SmartRef<Condition> m_scaleFactorCond;
+
 };
+
 #endif // RICHDET_DERICHGASRADIATOR_H
