@@ -259,7 +259,7 @@ StatusCode DeVeloLitePhiType::pointToChannel(const Gaudi::XYZPoint& point,
   StatusCode sc = isInActiveArea(localPoint);
   if (!sc.isSuccess()) return sc;
   
-const double radius = localPoint.Rho();
+  const double radius = localPoint.Rho();
   const double phi = localPoint.phi() - phiOffset(radius);
   const unsigned int zone = zoneOfRadius(radius);
 
@@ -341,13 +341,12 @@ StatusCode DeVeloLitePhiType::isInActiveArea(const Gaudi::XYZPoint& point) const
   if (y > 0) endStrip += m_zones[zone].nbStrips - 1;
   const double phiStrip = phiOfStrip(endStrip, 0., radius);
   const double phi = atan2(y, x);
-  const double halfPitch = 0.5 * phiPitch(radius);
   if (y < 0) {
-    if (phiStrip - halfPitch > phi) {
+    if (phiStrip > phi) {
       return StatusCode::FAILURE;
     }
   } else {
-    if (phiStrip + halfPitch < phi) {
+    if (phiStrip < phi) {
       return StatusCode::FAILURE;
     }
   }

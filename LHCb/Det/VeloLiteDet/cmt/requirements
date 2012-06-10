@@ -3,7 +3,7 @@ package           VeloLiteDet
 version           v1r0
 
 # =============== structure ===============================================	
-branches         src cmt VeloLiteDet dict
+branches         src cmt doc VeloLiteDet dict
 
 # =============== used packages ===========================================
 use DetDesc     v*    Det

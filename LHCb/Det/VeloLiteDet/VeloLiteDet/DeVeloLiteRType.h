@@ -109,10 +109,11 @@ public:
   /// Zone number for a given local phi and radius
   unsigned int zoneOfPhiAndR(const double phi, const double r) const {
     unsigned int zone = 0;
-    if (phi < m_zones[0].phiMax && r < m_zones[0].rMax) {
+    if (phi < m_zones[0].phiMax && 
+        r   < m_zones[0].rMax) {
       zone = 0;
-    } else if (phi > m_zones[m_numberOfZones - 1].phiMin &&
-               r < m_zones[m_numberOfZones - 1].rMax) {
+    } else if (phi > m_zones[m_numberOfZones - 1].phiMin &&  
+               r   < m_zones[m_numberOfZones - 1].rMax) {
       zone = m_numberOfZones - 1;
     } else if (phi > m_zones[2].phiMin && phi < m_zones[2].phiMax) {
       zone = 2;
@@ -206,8 +207,8 @@ public:
   virtual double phiMaxStrip(unsigned int strip) const {return m_strips[strip].phiMax;}
  
   /// Return the strip limits for Panoramix
-  StatusCode stripLimits(unsigned int strip, double &radius,
-                         double &phiMin, double &phiMax) const {
+  StatusCode stripLimits(unsigned int strip, double& radius,
+                         double& phiMin, double& phiMax) const {
     radius = rOfStrip(strip);
     phiMin = phiMinStrip(strip);
     phiMax = phiMaxStrip(strip);

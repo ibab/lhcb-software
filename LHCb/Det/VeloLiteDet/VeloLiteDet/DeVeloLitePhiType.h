@@ -121,7 +121,7 @@ public:
 
   /// Phi range [-pi,pi] of a given zone in the global frame.
   virtual const std::pair<double,double>& globalPhiRange(unsigned int zone) const {
-   return m_zonesCache[zone].globalPhiLimits;
+    return m_zonesCache[zone].globalPhiLimits;
   }
   /// Phi range [-pi,pi] of a given zone in the halfbox frame.
   virtual const std::pair<double,double>& halfboxPhiRange(unsigned int zone) const {
