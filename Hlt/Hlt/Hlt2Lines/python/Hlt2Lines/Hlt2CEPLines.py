@@ -67,7 +67,7 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
                   , 'ChiC2HHHH_H_TrkChi2max'  : 3.0
                   , 'ChiC2HHHH_K_PIDKmin'     : 0.0
                   , 'ChiC2HHHH_APTmin'        : 0.0 * MeV
-                  , 'ChiC2HHHH_APTmax'        : 400.0 * MeV
+                  , 'ChiC2HHHH_APTmax'        : 5000.0 * MeV
                   , 'ChiC2HHHH_AMmin'         : 2750.0 * MeV
                   , 'ChiC2HHHH_AMmax'         : 4500.0 * MeV
                   , 'ChiC2HHHH_ADOCAmax'      : 0.7 * mm
@@ -102,9 +102,9 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
         #=== D0 -> KPi ===#
         #
 
-        D2KPi_K_cut      = "(PT > %(D2KPi_H_PTmin)s) & (P > %(D2KPi_H_Pmin)s) & (TRCHI2DOF < %(D2KPi_H_TrkChi2max)s) & (ISLONG) & " \
+        D2KPi_K_cut      = "(PT > %(D2KPi_H_PTmin)s) & (P > %(D2KPi_H_Pmin)s) & (TRCHI2DOF < %(D2KPi_H_TrkChi2max)s) & " \
                            "(PIDK > %(D2KPi_K_PIDKmin)s)" % self.getProps()
-        D2KPi_Pi_cut     = "(PT > %(D2KPi_H_PTmin)s) & (P > %(D2KPi_H_Pmin)s) & (TRCHI2DOF < %(D2KPi_H_TrkChi2max)s) & (ISLONG)" % self.getProps()
+        D2KPi_Pi_cut     = "(PT > %(D2KPi_H_PTmin)s) & (P > %(D2KPi_H_Pmin)s) & (TRCHI2DOF < %(D2KPi_H_TrkChi2max)s)" % self.getProps()
         D2KPi_Daug_cuts  = { "K+"  : D2KPi_K_cut, "K-"  : D2KPi_K_cut, "pi+" : D2KPi_Pi_cut, "pi-" : D2KPi_Pi_cut }
         D2KPi_Comb_cut   = "(APT > %(D2KPi_APTmin)s) & (ADAMASS('D0') < %(D2KPi_ADAMASSmax)s) & (ADOCAMAX('LoKi::DistanceCalculator') < %(D2KPi_ADOCAmax)s) & " \
                            "(AP > %(D2KPi_APmin)s) & (ACHILD(PT, 1) + ACHILD(PT, 2) > %(D2KPi_SSumPTmin)s)" % self.getProps()
@@ -136,9 +136,9 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
         #=== D+ -> KPiPi ===#
         #
 
-        D2KPiPi_K_cut      = "(PT > %(D2KPiPi_H_PTmin)s) & (P > %(D2KPiPi_H_Pmin)s) & (TRCHI2DOF < %(D2KPiPi_H_TrkChi2max)s) & (ISLONG) & " \
+        D2KPiPi_K_cut      = "(PT > %(D2KPiPi_H_PTmin)s) & (P > %(D2KPiPi_H_Pmin)s) & (TRCHI2DOF < %(D2KPiPi_H_TrkChi2max)s) & " \
                              "(PIDK > %(D2KPiPi_K_PIDKmin)s)" % self.getProps()
-        D2KPiPi_Pi_cut     = "(PT > %(D2KPiPi_H_PTmin)s) & (P > %(D2KPiPi_H_Pmin)s) & (TRCHI2DOF < %(D2KPiPi_H_TrkChi2max)s) & (ISLONG)" % self.getProps()
+        D2KPiPi_Pi_cut     = "(PT > %(D2KPiPi_H_PTmin)s) & (P > %(D2KPiPi_H_Pmin)s) & (TRCHI2DOF < %(D2KPiPi_H_TrkChi2max)s)" % self.getProps()
         D2KPiPi_Daug_cuts  = { "K+"  : D2KPiPi_K_cut, "K-"  : D2KPiPi_K_cut, "pi+" : D2KPiPi_Pi_cut, "pi-" : D2KPiPi_Pi_cut }
         D2KPiPi_Comb_cut   = "(APT > %(D2KPiPi_APTmin)s) & (ADAMASS('D+') < %(D2KPiPi_ADAMASSmax)s) & (ADOCAMAX('LoKi::DistanceCalculator') < %(D2KPiPi_ADOCAmax)s) & " \
                              "(AP > %(D2KPiPi_APmin)s) & (ACHILD(PT, 1) + ACHILD(PT, 2) + ACHILD(PT, 3) > %(D2KPiPi_SSumPTmin)s)" % self.getProps()
@@ -171,9 +171,9 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
         #=== D0 -> K3Pi ===#
         #
 
-        D2K3Pi_K_cut      = "(PT > %(D2K3Pi_H_PTmin)s) & (P > %(D2K3Pi_H_Pmin)s) & (TRCHI2DOF < %(D2K3Pi_H_TrkChi2max)s) & (ISLONG) & " \
+        D2K3Pi_K_cut      = "(PT > %(D2K3Pi_H_PTmin)s) & (P > %(D2K3Pi_H_Pmin)s) & (TRCHI2DOF < %(D2K3Pi_H_TrkChi2max)s) & " \
                             "(PIDK > %(D2K3Pi_K_PIDKmin)s)" % self.getProps()
-        D2K3Pi_Pi_cut     = "(PT > %(D2K3Pi_H_PTmin)s) & (P > %(D2K3Pi_H_Pmin)s) & (TRCHI2DOF < %(D2K3Pi_H_TrkChi2max)s) & (ISLONG)" % self.getProps()
+        D2K3Pi_Pi_cut     = "(PT > %(D2K3Pi_H_PTmin)s) & (P > %(D2K3Pi_H_Pmin)s) & (TRCHI2DOF < %(D2K3Pi_H_TrkChi2max)s)" % self.getProps()
         D2K3Pi_Daug_cuts  = { "K+"  : D2K3Pi_K_cut, "K-"  : D2K3Pi_K_cut, "pi+" : D2K3Pi_Pi_cut, "pi-" : D2K3Pi_Pi_cut }
         D2K3Pi_Comb_cut   = "(APT > %(D2K3Pi_APTmin)s) & (ADAMASS('D0') < %(D2K3Pi_ADAMASSmax)s) & (ADOCAMAX('LoKi::DistanceCalculator') < %(D2K3Pi_ADOCAmax)s) & " \
                             "(AP > %(D2K3Pi_APmin)s) & (ACHILD(PT, 1) + ACHILD(PT, 2) + ACHILD(PT, 3) + ACHILD(PT, 4) > %(D2K3Pi_SSumPTmin)s)" % self.getProps()
@@ -207,9 +207,9 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
         #=== 'chi_c' -> KKpipi ===#
         #
 
-        ChiC2HHHH_K_cut      = "(PT > %(ChiC2HHHH_H_PTmin)s) & (P > %(ChiC2HHHH_H_Pmin)s) & (TRCHI2DOF < %(ChiC2HHHH_H_TrkChi2max)s) & (ISLONG) & " \
+        ChiC2HHHH_K_cut      = "(PT > %(ChiC2HHHH_H_PTmin)s) & (P > %(ChiC2HHHH_H_Pmin)s) & (TRCHI2DOF < %(ChiC2HHHH_H_TrkChi2max)s) & " \
                                "(PIDK > %(ChiC2HHHH_K_PIDKmin)s)" % self.getProps()
-        ChiC2HHHH_Pi_cut     = "(PT > %(ChiC2HHHH_H_PTmin)s) & (P > %(ChiC2HHHH_H_Pmin)s) & (TRCHI2DOF < %(ChiC2HHHH_H_TrkChi2max)s) & (ISLONG)" % self.getProps()
+        ChiC2HHHH_Pi_cut     = "(PT > %(ChiC2HHHH_H_PTmin)s) & (P > %(ChiC2HHHH_H_Pmin)s) & (TRCHI2DOF < %(ChiC2HHHH_H_TrkChi2max)s)" % self.getProps()
         ChiC2HHHH_Daug_cuts  = { "K+"  : ChiC2HHHH_K_cut, "K-"  : ChiC2HHHH_K_cut, "pi+" : ChiC2HHHH_Pi_cut, "pi-" : ChiC2HHHH_Pi_cut }
         ChiC2HHHH_Comb_cut   = "(APT > %(ChiC2HHHH_APTmin)s) & (APT < %(ChiC2HHHH_APTmax)s) & (AM > %(ChiC2HHHH_AMmin)s) & (AM < %(ChiC2HHHH_AMmax)s) & " \
                                "(ADOCAMAX('LoKi::DistanceCalculator') < %(ChiC2HHHH_ADOCAmax)s) & " \
