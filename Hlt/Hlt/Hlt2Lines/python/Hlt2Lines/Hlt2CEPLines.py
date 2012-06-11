@@ -68,7 +68,7 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
                   , 'ChiC2HHHH_K_PIDKmin'     : 0.0
                   , 'ChiC2HHHH_APTmin'        : 0.0 * MeV
                   , 'ChiC2HHHH_APTmax'        : 5000.0 * MeV
-                  , 'ChiC2HHHH_AMmin'         : 2750.0 * MeV
+                  , 'ChiC2HHHH_AMmin'         : 2850.0 * MeV
                   , 'ChiC2HHHH_AMmax'         : 4500.0 * MeV
                   , 'ChiC2HHHH_ADOCAmax'      : 0.7 * mm
                   , 'ChiC2HHHH_APmin'         : 1500.0 * MeV
