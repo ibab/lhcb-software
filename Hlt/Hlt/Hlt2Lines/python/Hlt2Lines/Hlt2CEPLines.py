@@ -14,19 +14,19 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
                                  , 'Hlt2LowMultD2KPiPi'   : 1.0
                                  , 'Hlt2LowMultD2K3Pi'    : 1.0
                                  , 'Hlt2LowMultChiC'      : 1.0
-                                 , 'Hlt2LowMultD2KPiWS'   : 1.0
-                                 , 'Hlt2LowMultD2KPiPiWS' : 1.0
-                                 , 'Hlt2LowMultD2K3PiWS'  : 1.0
-                                 , 'Hlt2LowMultChiCWS'    : 1.0
+                                 , 'Hlt2LowMultD2KPiWS'   : 0.1
+                                 , 'Hlt2LowMultD2KPiPiWS' : 0.1
+                                 , 'Hlt2LowMultD2K3PiWS'  : 0.1
+                                 , 'Hlt2LowMultChiCWS'    : 0.1
                                  }
                   , 'Postscale' : { 'Hlt2LowMultD2KPi'       : 1.0
                                     , 'Hlt2LowMultD2KPiPi'   : 1.0
                                     , 'Hlt2LowMultD2K3Pi'    : 1.0
                                     , 'Hlt2LowMultChiC'      : 1.0
-                                    , 'Hlt2LowMultD2KPiWS'   : 0.1
-                                    , 'Hlt2LowMultD2KPiPiWS' : 0.1
-                                    , 'Hlt2LowMultD2K3PiWS'  : 0.1
-                                    , 'Hlt2LowMultChiCWS'    : 0.1
+                                    , 'Hlt2LowMultD2KPiWS'   : 1.0
+                                    , 'Hlt2LowMultD2KPiPiWS' : 1.0
+                                    , 'Hlt2LowMultD2K3PiWS'  : 1.0
+                                    , 'Hlt2LowMultChiCWS'    : 1.0
                                     }
                   # D0 -> KPi
                   , 'D2KPi_H_PTmin'       : 100.0 * MeV
