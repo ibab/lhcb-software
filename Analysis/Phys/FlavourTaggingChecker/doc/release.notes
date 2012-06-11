@@ -11,7 +11,7 @@
  - Changes to /root
   . New polynomials for SS and OS (corresponding to 1invfb)
   . Added ProbNN variable
-  . Added sweights reading
+  . Added sweights reading and reweight
  - Increase to v7r0
 
 !========================= FlavourTaggingChecker v6r9 2012-02-09 =========================
