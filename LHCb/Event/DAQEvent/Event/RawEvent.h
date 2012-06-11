@@ -22,7 +22,9 @@ namespace LHCb
     static const std::string& Default  = "DAQ/RawEvent";
     static const std::string& Emulated = "Emu/RawEvent";
     static const std::string& Copied   = "pRec/RawEvent";
-    static const std::string& Trigger  = "Trigger/RawEvent";
+    static const std::string& Muon     = "Muon/RawEvent";    // copy of Muon banks, for MDST 
+    static const std::string& Trigger  = "Trigger/RawEvent"; // copy of Trigger banks for Stripping and MDST
+    static const std::string& Other    = "Other/RawEvent";   // copy of all banks except Muon and Trigger
   }
 
   /** @class LHCb::RawEvent RawEvent.h

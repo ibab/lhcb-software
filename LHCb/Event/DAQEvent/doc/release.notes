@@ -4,6 +4,9 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !-----------------------------------------------------------------------------
 
+! 2012-06-08 - Marco Cattaneo
+ - Add RawEventLocation::Muon and RawEventLocation::Other
+
 ! 2012-05-14 - Olivier Callot
  - New DAQ bank number for FTCluster.
 
