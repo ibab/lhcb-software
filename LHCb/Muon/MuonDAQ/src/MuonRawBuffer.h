@@ -136,5 +136,9 @@ private:
   LHCb::RawBankReadoutStatus m_status;
   LHCb::RawBankReadoutStatus m_statusFull;
   bool m_statusCreated;
+
+  /// List of locations in the transient store to search the RawEvent object.
+  std::vector<std::string> m_rawEventLocations;
+
 };
 #endif // MUONRAWBUFFER_H

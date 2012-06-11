@@ -4,6 +4,12 @@
 ! Purpose     : Muon System Raw Buffer coding and decoding algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-06-08 - Marco Cattaneo
+ - Add RawEventLocations property to MuonRawBuffer tool, to allow to specify
+   a search list of locations. Default is to look for RawEventLocation::Muon
+   followed by RawEventLocation::Default. 
+ - Undo last change in MuonRec, superseded by this change
+
 !========================= MuonDAQ v4r13 2012-02-28 =========================
 ! 2012-02-22 - Helder Lopes
  - Change MuonRec to look for muon raw event in a location set by options and pass 
