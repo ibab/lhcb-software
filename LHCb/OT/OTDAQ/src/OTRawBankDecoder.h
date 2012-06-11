@@ -1,4 +1,3 @@
-// $Id: OTRawBankDecoder.h,v 1.12 2008-12-01 21:36:20 wouter Exp $
 #ifndef OTRAWBANKDECODER_H
 #define OTRAWBANKDECODER_H 1
 
@@ -28,7 +27,7 @@ namespace OTRawBankDecoderHelpers
 /** @class OTRawBankDecoder OTRawBankDecoder.h
  *
  *  Decodes the OT data for single modules. The output is a list of
- *  OTLiteTimes, which are essnetially just wrappers of an
+ *  OTLiteTimes, which are essentially just wrappers of an
  *  OTChannelId.
  *
  *  Based on old OTTimeCreator by Jacopo Nardulli
@@ -97,7 +96,14 @@ private:
   DeOTDetector* m_otdet  ;                  ///< Pointer to OT geometry
   IOTChannelMapTool* m_channelmaptool ;     ///< Pointer to IOTChannelMapTool
   std::vector<double> m_startReadOutGate;   ///< Start of readout gate
-  std::string m_rawEventLocation;           ///< Location where we get the RawEvent
+
+  /// Location in the transient store of the RawEvent object.
+  /// @warning Obsolete: use m_rawEventLocations
+  std::string m_rawEventLocation;
+
+  /// List of locations in the transient store to search the RawEvent object.
+  std::vector<std::string> m_rawEventLocations;
+
   std::pair<double,double> m_timewindow;    ///< ignore hits outside of this window, only if first < second; if not, use all
   double m_timePerBX;                       ///< Time Per BX
   int  m_countsPerBX;                       ///< Counts per BX

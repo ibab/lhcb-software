@@ -1,7 +1,14 @@
 !------------------------------------------------------------------------------
 ! Package         : OTDAQ
-! Package manager : J.Amoraal
+! Package manager : A.Kozlinskiy
 !------------------------------------------------------------------------------
+
+! 2012-06-08 - Marco Cattaneo
+ - Add RawEventLocations property to OTRawBankDecoder, to allow to specify a 
+   search list of locations. Default is to look for RawEventLocation::Other
+   followed by RawEventLocation::Default.
+ - RawEventLocation property is declared obsolete. If set, it is prepended
+   to RawEventLocations and a warning is printed.
 
 !========================= OTDAQ v7r12 2012-05-02 =========================
 ! 2012-04-19 - Alexandr Kozlinskiy
