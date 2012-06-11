@@ -61,6 +61,10 @@ RawDataFormatTool::RawDataFormatTool( const std::string& type,
   declareProperty( "ActiveRICHes",       m_richIsActive                );
   declareProperty( "PurgeHPDsFailIntegrityTest", m_purgeHPDsFailIntegrity = true );
   declareProperty( "HotPixelsToMask",    m_hotChannels                 );
+  declareProperty( "RawEventLocations",  m_rawEventLocations,
+                   "List of possible locations of the RawEvent object in the"
+                   " transient store. By default it is LHCb::RawEventLocation::Other,"
+                   " LHCb::RawEventLocation::Default.");
 }
 
 // Destructor
@@ -121,6 +125,20 @@ StatusCode RawDataFormatTool::initialize()
       m_hotPixels[channel.pdID()].insert(channel);
       info() << " " << channel << " (" << channel.key() << ")" << endmsg;
     }
+  }
+
+  // Initialise the RawEvent locations
+  bool usingDefaultLocation = m_rawEventLocations.empty();
+
+  if (std::find(m_rawEventLocations.begin(), m_rawEventLocations.end(), LHCb::RawEventLocation::Default)
+      == m_rawEventLocations.end()) {
+    // append the defaults to the search path
+    m_rawEventLocations.push_back(LHCb::RawEventLocation::Other);
+    m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
+  }
+
+  if (!usingDefaultLocation) {
+    info() << "Using '" << m_rawEventLocations << "' as search path for the RawEvent object" << endmsg;
   }
 
   return sc;
@@ -1669,12 +1687,16 @@ LHCb::RawEvent * RawDataFormatTool::rawEvent() const
   LHCb::RawEvent *& raw = m_rawEvent[m_currentTAE];
   if (!raw)
   {
-    const std::string loc = m_currentTAE+LHCb::RawEventLocation::Default;
-    if ( exist<LHCb::RawEvent>(loc) )
-    {
-      raw = get<LHCb::RawEvent>(loc);
+    std::string loc = "";
+    for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
+      loc = m_currentTAE + (*p);
+      if ( exist<LHCb::RawEvent>(loc) )
+      {
+        raw = get<LHCb::RawEvent>(loc);
+        break;
+      }
     }
-    else
+    if( !raw )
     {
       Warning( "No RawEvent at '"+loc+"'" ).ignore();
     }

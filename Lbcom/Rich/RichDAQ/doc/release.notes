@@ -4,6 +4,11 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2012-06-08 - Marco Cattaneo
+ - Add RawEventLocations property to RichRawDataFormatTool, to allow to specify
+   a search list of locations. Default is to look for RawEventLocation::Other
+   followed by RawEventLocation::Default. 
+
 !========================= RichDAQ v3r36 2012-01-31 =========================
 ! 2012-01-06 - Chris Jones
  - Don't throw an exception if an NULL pointer to a RICH bank is retrieved

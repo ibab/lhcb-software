@@ -378,6 +378,9 @@ namespace Rich
       /// Storage of pixels to mask for each HPD
       HPDHotPixels m_hotPixels;
 
+      /// List of locations in the transient store to search the RawEvent object.
+      std::vector<std::string> m_rawEventLocations;
+
     };
 
     inline void RawDataFormatTool::InitEvent()
