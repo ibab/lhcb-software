@@ -4,6 +4,12 @@
 ! Purpose     : Various utilities for manipulating RawEvent
 !-----------------------------------------------------------------------------
 
+! 2012-06-06 - Marco Cattaneo
+ - Add BanksToRemove property to RawEventSelectiveCopy, to allow to copy all
+   banks except these. Only one of BanksToCopy and BanksToRemove must be set
+ - Add RawEventLocations property to bankKiller, previously hard coded
+   (default is RawEventlocation::Default to preserve old behviour)
+
 ! 2012-05-29 - Marco Cattaneo
  - Fix unprotected debugs in RawBankReadoutStatusFilter.cpp
  - Fix trivial icc remark

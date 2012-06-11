@@ -1,4 +1,3 @@
-// $Id: bankKiller.h,v 1.4 2008/08/25 11:05:05 panmanj Exp $
 #ifndef BANKKILLER_H
 #define BANKKILLER_H 1
 
@@ -41,6 +40,9 @@ class bankKiller : public GaudiAlgorithm {
 		      bool warningmsg ); 
   
  private:   
+  /// List of locations to search for the RawEvent where banks to be killed reside.
+  std::vector<std::string> m_rawEventLocations;
+
   std::vector< std::string > m_bankTypes;  ///< List of bank names
   /// Main behaviour switch. If false (default), kill only given banks. If true, kill all BUT given banks.
   bool m_defaultIsKill ;                   

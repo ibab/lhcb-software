@@ -21,7 +21,9 @@ bankKiller::bankKiller( const std::string& name, ISvcLocator* pSvcLocator)
   , m_bankTypes()
   , m_rawEvt(0)
 {
-
+  declareProperty( "RawEventLocations", m_rawEventLocations,
+                   "List of possible locations of the RawEvent object in the"
+                   " transient store. By default it is LHCb::RawEventLocation::Default");
   declareProperty("BankTypes"     , m_bankTypes, "List of bank names"    ) ;
   declareProperty("DefaultIsKill" , m_defaultIsKill = false, 
                   "Main behaviour switch. If false (default), kill only given banks. If true, kill all BUT given banks." ) ;
@@ -57,6 +59,18 @@ StatusCode bankKiller::initialize() {
       always() << "bankKiller : all banks of type '" << *ityp << "' will be removed." <<endmsg;
     }
   }
+
+  // Initialise the RawEvent locations
+  bool usingDefaultLocation = m_rawEventLocations.empty();
+  if (std::find(m_rawEventLocations.begin(), m_rawEventLocations.end(), LHCb::RawEventLocation::Default)
+      == m_rawEventLocations.end()) {
+    // append the default to the search path
+    m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
+  }
+
+  if (!usingDefaultLocation) {
+    info() << "Using '" << m_rawEventLocations << "' as search path for the RawEvent object" << endmsg;
+  }
   
   return StatusCode::SUCCESS;
 }
@@ -66,7 +80,15 @@ StatusCode bankKiller::initialize() {
 //=============================================================================
 StatusCode bankKiller::execute() {
 
-  m_rawEvt = get<LHCb::RawEvent> ( LHCb::RawEventLocation::Default );
+  m_rawEvt = NULL;
+  for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
+    if (exist<LHCb::RawEvent>(*p)){
+      m_rawEvt = get<LHCb::RawEvent>(*p);
+      break;
+    }
+  }
+  if( m_rawEvt == NULL ) return Error("Failed to find raw data");
+
   if( m_defaultIsKill ) {
     for( unsigned int ibank = 0 ; ibank < (unsigned int) LHCb::RawBank::LastType ; ++ibank){
       LHCb::RawBank::BankType bankType = (LHCb::RawBank::BankType) ibank;
