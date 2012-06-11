@@ -47,6 +47,7 @@ public:
   boost::filesystem::path m_q2mapfile ;
 
   std::string m_q2mapfilename ;
+  std::string m_prefix ;
 
   // number of bins in q2
   int m_q2nbins ;
