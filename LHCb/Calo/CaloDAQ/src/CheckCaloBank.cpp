@@ -37,6 +37,11 @@ CheckCaloBank::CheckCaloBank( const std::string& name, ISvcLocator* pSvcLocator)
     m_typ  = "Hcal";  
   }
 
+  declareProperty( "RawEventLocations", m_rawEventLocations,
+                   "List of possible locations of the RawEvent object in the"
+                   " transient store. By default it is LHCb::RawEventLocation::Other,"
+                   " LHCb::RawEventLocation::Default.");
+
 };
 
 //=============================================================================
@@ -59,6 +64,20 @@ StatusCode CheckCaloBank::initialize() {
     info() << " Check the 0-suppressed banks exist for " << m_typ << endmsg;
     info() << " if not (MC) re-create them from packed bank and delete packed " << endmsg;
   }
+
+  // Initialise the RawEvent locations
+  bool usingDefaultLocation = m_rawEventLocations.empty();
+  if (std::find(m_rawEventLocations.begin(), m_rawEventLocations.end(), LHCb::RawEventLocation::Default)
+      == m_rawEventLocations.end()) {
+    // append the defaults to the search path
+    m_rawEventLocations.push_back(LHCb::RawEventLocation::Other);
+    m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
+  }
+
+  if (!usingDefaultLocation) {
+    info() << "Using '" << m_rawEventLocations << "' as search path for the RawEvent object" << endmsg;
+  }
+
   return StatusCode::SUCCESS;
 };
 
@@ -68,9 +87,20 @@ StatusCode CheckCaloBank::initialize() {
 StatusCode CheckCaloBank::execute() {
 
   setFilterPassed(false);
-  if( !exist<LHCb::RawEvent>(  LHCb::RawEventLocation::Default ) )return StatusCode::SUCCESS;
-  LHCb::RawEvent* rawEvt = get<LHCb::RawEvent> ( LHCb::RawEventLocation::Default );
-  
+
+  // Retrieve the RawEvent:
+  LHCb::RawEvent* rawEvt = NULL ;
+  for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
+    if (exist<LHCb::RawEvent>(*p)){
+      rawEvt = get<LHCb::RawEvent>(*p);
+      break;
+    }
+  }
+
+  if( rawEvt == NULL ) {
+    return StatusCode::SUCCESS;
+  }
+
   bool trig = ( 0 == (rawEvt->banks( m_trig )).size() ) ?  false : true ;
   bool bank = ( 0 == (rawEvt->banks( m_bank )).size() ) ?  false : true ;
   

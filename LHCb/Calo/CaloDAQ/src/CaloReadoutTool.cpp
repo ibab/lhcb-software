@@ -37,7 +37,12 @@ CaloReadoutTool::CaloReadoutTool( const std::string& type,
   declareProperty( "PackedIsDefault", m_packedIsDefault = false);
   declareProperty( "DetectorSpecificHeader", m_extraHeader = false);
   declareProperty( "CleanWhenCorruption", m_cleanCorrupted = false);
-  declareProperty( "RawLocation", m_raw = LHCb::RawEventLocation::Default);
+  declareProperty( "RawLocation",  m_rawEventLocation = "", 
+                   "OBSOLETE. Use RawEventLocations instead" );
+  declareProperty( "RawEventLocations", m_rawEventLocations,
+                   "List of possible locations of the RawEvent object in the"
+                   " transient store. By default it is LHCb::RawEventLocation::Other,"
+                   " LHCb::RawEventLocation::Default.");
   m_getRaw = true;
 }
 //=============================================================================
@@ -49,13 +54,33 @@ CaloReadoutTool::~CaloReadoutTool() {}
 //  Get required CaloBanks (short or packed format) - Fill m_banks
 //=========================================================================
 StatusCode CaloReadoutTool::initialize(){
-     StatusCode sc = GaudiTool::initialize();
-     if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-     if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-       debug() << "==> Initialize " << name() << endmsg;
-     IIncidentSvc* inc = incSvc() ;
-     if ( 0 != inc )inc -> addListener  ( this , IncidentType::BeginEvent ) ;
-     return sc;
+
+  StatusCode sc = GaudiTool::initialize();
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "==> Initialize " << name() << endmsg;
+  IIncidentSvc* inc = incSvc() ;
+  if ( 0 != inc )inc -> addListener  ( this , IncidentType::BeginEvent ) ;
+  
+  // Initialise the RawEvent locations
+  bool usingDefaultLocation = m_rawEventLocations.empty() && m_rawEventLocation.empty();
+  if (! m_rawEventLocation.empty()) {
+    warning() << "The RawEventLocation property is obsolete, use RawEventLocations instead" << endmsg;
+    m_rawEventLocations.insert(m_rawEventLocations.begin(), m_rawEventLocation);
+  }
+
+  if (std::find(m_rawEventLocations.begin(), m_rawEventLocations.end(), LHCb::RawEventLocation::Default)
+      == m_rawEventLocations.end()) {
+    // append the defaults to the search path
+    m_rawEventLocations.push_back(LHCb::RawEventLocation::Other);
+    m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
+  }
+
+  if (!usingDefaultLocation) {
+    info() << "Using '" << m_rawEventLocations << "' as search path for the RawEvent object" << endmsg;
+  }
+
+  return sc;
 }
 StatusCode CaloReadoutTool::finalize(){
   IIncidentSvc* inc = incSvc() ;
@@ -70,19 +95,25 @@ bool CaloReadoutTool::getCaloBanksFromRaw( ) {
 
   m_readSources.clear();
   m_banks = NULL;
+
+  // Retrieve the RawEvent:
   LHCb::RawEvent* rawEvt = NULL ;
-  //  m_raw = LHCb::RawEventLocation::Default;
-  if ( msgLevel( MSG::DEBUG) )debug() << "raw location :: " << rootInTES() + m_raw << endmsg;  
-  if( exist<LHCb::RawEvent>( m_raw ) ){
-    rawEvt= get<LHCb::RawEvent>( m_raw );
-  }else  {
-    if(m_first)
-      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-        debug()<<"WARNING : rawEvent not found at location  (message will be suppressed)'" <<rootInTES()<< m_raw <<endmsg;
+  for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
+    if (exist<LHCb::RawEvent>(*p)){
+      rawEvt = get<LHCb::RawEvent>(*p);
+      if ( msgLevel( MSG::DEBUG) )debug() << "raw location :: " << rootInTES() + (*p) << endmsg;  
+      break;
+    }
+  }
+
+  if( rawEvt == NULL ) {
+    if( m_first && msgLevel( MSG::DEBUG ) )
+      debug() << "WARNING : RawEvent not found at locations: " 
+              << m_rawEventLocations << " (message will be suppressed)" << endmsg;
     m_first=false;
     return false;
   }
-      
+
   m_packed =false;
   if( !m_packedIsDefault){
     if ( msgLevel( MSG::DEBUG) )debug() << "Banks of short type are requested as default" << endmsg;
