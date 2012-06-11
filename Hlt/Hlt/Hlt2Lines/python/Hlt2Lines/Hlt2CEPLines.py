@@ -28,11 +28,12 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
                                     , 'Hlt2LowMultD2K3PiWS'  : 1.0
                                     , 'Hlt2LowMultChiCWS'    : 1.0
                                     }
+                  # Final-state particles
+                  , 'H_PTmin'       : 100.0 * MeV
+                  , 'H_Pmin'        : 1000.0 * MeV
+                  , 'H_TrkChi2max'  : 3.0
+                  , 'K_PIDKmin'     : 0.0
                   # D0 -> KPi
-                  , 'D2KPi_H_PTmin'       : 100.0 * MeV
-                  , 'D2KPi_H_Pmin'        : 1000.0 * MeV
-                  , 'D2KPi_H_TrkChi2max'  : 3.0
-                  , 'D2KPi_K_PIDKmin'     : 0.0
                   , 'D2KPi_APTmin'        : 0.0 * MeV
                   , 'D2KPi_ADAMASSmax'    : 80.0 * MeV
                   , 'D2KPi_ADOCAmax'      : 0.5 * mm
@@ -40,10 +41,6 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
                   , 'D2KPi_SSumPTmin'     : 200.0 * MeV
                   , 'D2KPi_VtxChi2DoFmax' : 15.0
                   # D+- -> KPiPi
-                  , 'D2KPiPi_H_PTmin'       : 100.0 * MeV
-                  , 'D2KPiPi_H_Pmin'        : 1000.0 * MeV
-                  , 'D2KPiPi_H_TrkChi2max'  : 3.0
-                  , 'D2KPiPi_K_PIDKmin'     : 0.0
                   , 'D2KPiPi_APTmin'        : 0.0 * MeV
                   , 'D2KPiPi_ADAMASSmax'    : 80.0 * MeV
                   , 'D2KPiPi_ADOCAmax'      : 0.5 * mm
@@ -51,10 +48,6 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
                   , 'D2KPiPi_SSumPTmin'     : 300.0 * MeV
                   , 'D2KPiPi_VtxChi2DoFmax' : 15.0
                   # D0 -> K3Pi
-                  , 'D2K3Pi_H_PTmin'       : 100.0 * MeV
-                  , 'D2K3Pi_H_Pmin'        : 1000.0 * MeV
-                  , 'D2K3Pi_H_TrkChi2max'  : 3.0
-                  , 'D2K3Pi_K_PIDKmin'     : 0.0
                   , 'D2K3Pi_APTmin'        : 0.0 * MeV
                   , 'D2K3Pi_ADAMASSmax'    : 80.0 * MeV
                   , 'D2K3Pi_ADOCAmax'      : 0.7 * mm
@@ -62,10 +55,6 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
                   , 'D2K3Pi_SSumPTmin'     : 400.0 * MeV
                   , 'D2K3Pi_VtxChi2DoFmax' : 15.0
                   # ChiC -> 4H
-                  , 'ChiC2HHHH_H_PTmin'       : 100.0 * MeV
-                  , 'ChiC2HHHH_H_Pmin'        : 1000.0 * MeV
-                  , 'ChiC2HHHH_H_TrkChi2max'  : 3.0
-                  , 'ChiC2HHHH_K_PIDKmin'     : 0.0
                   , 'ChiC2HHHH_APTmin'        : 0.0 * MeV
                   , 'ChiC2HHHH_APTmax'        : 5000.0 * MeV
                   , 'ChiC2HHHH_AMmin'         : 2850.0 * MeV
@@ -99,13 +88,17 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
         Pions = BiKalmanFittedPions
 
         #
+        #=== Final-state particles ===#
+        #
+
+        K_cut  = "(PT > %(H_PTmin)s) & (P > %(H_Pmin)s) & (TRCHI2DOF < %(H_TrkChi2max)s) & (PIDK > %(K_PIDKmin)s)" % self.getProps()
+        Pi_cut = "(PT > %(H_PTmin)s) & (P > %(H_Pmin)s) & (TRCHI2DOF < %(H_TrkChi2max)s)" % self.getProps()
+        Daug_cuts = {"K+" : K_cut, "K-" : K_cut, "pi+" : Pi_cut, "pi-" : Pi_cut}
+        
+        #
         #=== D0 -> KPi ===#
         #
 
-        D2KPi_K_cut      = "(PT > %(D2KPi_H_PTmin)s) & (P > %(D2KPi_H_Pmin)s) & (TRCHI2DOF < %(D2KPi_H_TrkChi2max)s) & " \
-                           "(PIDK > %(D2KPi_K_PIDKmin)s)" % self.getProps()
-        D2KPi_Pi_cut     = "(PT > %(D2KPi_H_PTmin)s) & (P > %(D2KPi_H_Pmin)s) & (TRCHI2DOF < %(D2KPi_H_TrkChi2max)s)" % self.getProps()
-        D2KPi_Daug_cuts  = { "K+"  : D2KPi_K_cut, "K-"  : D2KPi_K_cut, "pi+" : D2KPi_Pi_cut, "pi-" : D2KPi_Pi_cut }
         D2KPi_Comb_cut   = "(APT > %(D2KPi_APTmin)s) & (ADAMASS('D0') < %(D2KPi_ADAMASSmax)s) & (ADOCAMAX('LoKi::DistanceCalculator') < %(D2KPi_ADOCAmax)s) & " \
                            "(AP > %(D2KPi_APmin)s) & (ACHILD(PT, 1) + ACHILD(PT, 2) > %(D2KPi_SSumPTmin)s)" % self.getProps()
         D2KPi_Mother_cut = "(VFASPF(VCHI2PDOF) < %(D2KPi_VtxChi2DoFmax)s)" % self.getProps()
@@ -113,7 +106,7 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
         CombineD2KPi = Hlt2Member(CombineParticles
                                   , "Combine"
                                   , DecayDescriptors = [ "[D0 -> K- pi+]cc" ]
-                                  , DaughtersCuts = D2KPi_Daug_cuts
+                                  , DaughtersCuts = Daug_cuts
                                   , CombinationCut = D2KPi_Comb_cut
                                   , MotherCut = D2KPi_Mother_cut
                                   , Inputs = [ Kaons, Pions ]
@@ -124,7 +117,7 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
         CombineD2KPiWS = Hlt2Member(CombineParticles
                                     , "Combine"
                                     , DecayDescriptors = [ "[D0 -> K+ pi+]cc" ]
-                                    , DaughtersCuts = D2KPi_Daug_cuts
+                                    , DaughtersCuts = Daug_cuts
                                     , CombinationCut = D2KPi_Comb_cut
                                     , MotherCut = D2KPi_Mother_cut
                                     , Inputs = [ Kaons, Pions ]
@@ -136,10 +129,6 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
         #=== D+ -> KPiPi ===#
         #
 
-        D2KPiPi_K_cut      = "(PT > %(D2KPiPi_H_PTmin)s) & (P > %(D2KPiPi_H_Pmin)s) & (TRCHI2DOF < %(D2KPiPi_H_TrkChi2max)s) & " \
-                             "(PIDK > %(D2KPiPi_K_PIDKmin)s)" % self.getProps()
-        D2KPiPi_Pi_cut     = "(PT > %(D2KPiPi_H_PTmin)s) & (P > %(D2KPiPi_H_Pmin)s) & (TRCHI2DOF < %(D2KPiPi_H_TrkChi2max)s)" % self.getProps()
-        D2KPiPi_Daug_cuts  = { "K+"  : D2KPiPi_K_cut, "K-"  : D2KPiPi_K_cut, "pi+" : D2KPiPi_Pi_cut, "pi-" : D2KPiPi_Pi_cut }
         D2KPiPi_Comb_cut   = "(APT > %(D2KPiPi_APTmin)s) & (ADAMASS('D+') < %(D2KPiPi_ADAMASSmax)s) & (ADOCAMAX('LoKi::DistanceCalculator') < %(D2KPiPi_ADOCAmax)s) & " \
                              "(AP > %(D2KPiPi_APmin)s) & (ACHILD(PT, 1) + ACHILD(PT, 2) + ACHILD(PT, 3) > %(D2KPiPi_SSumPTmin)s)" % self.getProps()
         D2KPiPi_Mother_cut = "(VFASPF(VCHI2PDOF) < %(D2KPiPi_VtxChi2DoFmax)s)" % self.getProps()
@@ -148,7 +137,7 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
                                     , "Combine"
                                     , DecayDescriptors = [ "[D+ -> K+ pi+ pi-]cc",
                                                            "[D+ -> K- pi+ pi+]cc" ]
-                                    , DaughtersCuts = D2KPiPi_Daug_cuts
+                                    , DaughtersCuts = Daug_cuts
                                     , CombinationCut = D2KPiPi_Comb_cut
                                     , MotherCut = D2KPiPi_Mother_cut
                                     , Inputs = [ Kaons, Pions ]
@@ -159,7 +148,7 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
         CombineD2KPiPiWS = Hlt2Member(CombineParticles
                                       , "Combine"
                                       , DecayDescriptors = [ "[D+ -> K+ pi+ pi+]cc" ]
-                                      , DaughtersCuts = D2KPiPi_Daug_cuts
+                                      , DaughtersCuts = Daug_cuts
                                       , CombinationCut = D2KPiPi_Comb_cut
                                       , MotherCut = D2KPiPi_Mother_cut
                                       , Inputs = [ Kaons, Pions ]
@@ -171,10 +160,6 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
         #=== D0 -> K3Pi ===#
         #
 
-        D2K3Pi_K_cut      = "(PT > %(D2K3Pi_H_PTmin)s) & (P > %(D2K3Pi_H_Pmin)s) & (TRCHI2DOF < %(D2K3Pi_H_TrkChi2max)s) & " \
-                            "(PIDK > %(D2K3Pi_K_PIDKmin)s)" % self.getProps()
-        D2K3Pi_Pi_cut     = "(PT > %(D2K3Pi_H_PTmin)s) & (P > %(D2K3Pi_H_Pmin)s) & (TRCHI2DOF < %(D2K3Pi_H_TrkChi2max)s)" % self.getProps()
-        D2K3Pi_Daug_cuts  = { "K+"  : D2K3Pi_K_cut, "K-"  : D2K3Pi_K_cut, "pi+" : D2K3Pi_Pi_cut, "pi-" : D2K3Pi_Pi_cut }
         D2K3Pi_Comb_cut   = "(APT > %(D2K3Pi_APTmin)s) & (ADAMASS('D0') < %(D2K3Pi_ADAMASSmax)s) & (ADOCAMAX('LoKi::DistanceCalculator') < %(D2K3Pi_ADOCAmax)s) & " \
                             "(AP > %(D2K3Pi_APmin)s) & (ACHILD(PT, 1) + ACHILD(PT, 2) + ACHILD(PT, 3) + ACHILD(PT, 4) > %(D2K3Pi_SSumPTmin)s)" % self.getProps()
         D2K3Pi_Mother_cut = "(VFASPF(VCHI2PDOF) < %(D2K3Pi_VtxChi2DoFmax)s)" % self.getProps()
@@ -182,7 +167,7 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
         CombineD2K3Pi = Hlt2Member(CombineParticles
                                    , "Combine"
                                    , DecayDescriptors = [ "[D0 -> K- pi+ pi- pi+]cc" ]
-                                   , DaughtersCuts = D2K3Pi_Daug_cuts
+                                   , DaughtersCuts = Daug_cuts
                                    , CombinationCut = D2K3Pi_Comb_cut
                                    , MotherCut = D2K3Pi_Mother_cut
                                    , Inputs = [ Kaons, Pions ]
@@ -195,7 +180,7 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
                                      , DecayDescriptors = [ "[D0 -> K+ pi+ pi+ pi+]cc",
                                                             "[D0 -> K+ pi+ pi+ pi-]cc",
                                                             "[D0 -> K+ pi- pi- pi-]cc" ]
-                                     , DaughtersCuts = D2K3Pi_Daug_cuts
+                                     , DaughtersCuts = Daug_cuts
                                      , CombinationCut = D2K3Pi_Comb_cut
                                      , MotherCut = D2K3Pi_Mother_cut
                                      , Inputs = [ Kaons, Pions ]
@@ -207,10 +192,6 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
         #=== 'chi_c' -> KKpipi ===#
         #
 
-        ChiC2HHHH_K_cut      = "(PT > %(ChiC2HHHH_H_PTmin)s) & (P > %(ChiC2HHHH_H_Pmin)s) & (TRCHI2DOF < %(ChiC2HHHH_H_TrkChi2max)s) & " \
-                               "(PIDK > %(ChiC2HHHH_K_PIDKmin)s)" % self.getProps()
-        ChiC2HHHH_Pi_cut     = "(PT > %(ChiC2HHHH_H_PTmin)s) & (P > %(ChiC2HHHH_H_Pmin)s) & (TRCHI2DOF < %(ChiC2HHHH_H_TrkChi2max)s)" % self.getProps()
-        ChiC2HHHH_Daug_cuts  = { "K+"  : ChiC2HHHH_K_cut, "K-"  : ChiC2HHHH_K_cut, "pi+" : ChiC2HHHH_Pi_cut, "pi-" : ChiC2HHHH_Pi_cut }
         ChiC2HHHH_Comb_cut   = "(APT > %(ChiC2HHHH_APTmin)s) & (APT < %(ChiC2HHHH_APTmax)s) & (AM > %(ChiC2HHHH_AMmin)s) & (AM < %(ChiC2HHHH_AMmax)s) & " \
                                "(ADOCAMAX('LoKi::DistanceCalculator') < %(ChiC2HHHH_ADOCAmax)s) & " \
                                "(AP > %(ChiC2HHHH_APmin)s) & (ACHILD(PT, 1) + ACHILD(PT, 2) + ACHILD(PT, 3) + ACHILD(PT, 4) > %(ChiC2HHHH_SSumPTmin)s)" % self.getProps()
@@ -222,7 +203,7 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
                                                         "chi_c1(1P) -> K+ K- pi+ pi-",
                                                         "chi_c1(1P) -> K+ K+ K- K-",
                                                         "chi_c1(1P) -> pi+ pi+ pi- pi-" ]
-                                 , DaughtersCuts = ChiC2HHHH_Daug_cuts
+                                 , DaughtersCuts = Daug_cuts
                                  , CombinationCut = ChiC2HHHH_Comb_cut
                                  , MotherCut = ChiC2HHHH_Mother_cut
                                  , Inputs = [ Kaons, Pions ]
@@ -239,7 +220,7 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
                                                           "[chi_c1(1P) -> K+ K+ K+ K-]cc",
                                                           "[chi_c1(1P) -> pi+ pi+ pi+ pi+]cc",
                                                           "[chi_c1(1P) -> pi+ pi+ pi+ pi-]cc" ]
-                                   , DaughtersCuts = ChiC2HHHH_Daug_cuts
+                                   , DaughtersCuts = Daug_cuts
                                    , CombinationCut = ChiC2HHHH_Comb_cut
                                    , MotherCut = ChiC2HHHH_Mother_cut
                                    , Inputs = [ Kaons, Pions ]
@@ -252,19 +233,17 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
         #
         
         velotracks = Hlt2BiKalmanFittedForwardTracking().hlt2VeloTracking()
+        VT = velotracks.outputSelection()
         
-        FilterNumVeloTracks = VoidFilter('Hlt2LowMultHadronFilterNumVeloTracks', Code = "CONTAINS('" + velotracks.outputSelection() + "') < 12")
-        
-        FilterNumVeloTracksChiC = VoidFilter('Hlt2LowMultHadronFilterNumVeloTracksChiC', Code = "CONTAINS('" + velotracks.outputSelection() + "') < 8")
-        
-        FilterNumBackTracks = VoidFilter('Hlt2LowMultHadronFilterNumBackTracks', Code = "TrNUM('%s', TrBACKWARD) < 1" % velotracks.outputSelection())
+        FilterNumVeloTracks     = VoidFilter('Hlt2LowMultHadronFilterNumVeloTracks',     Code = "CONTAINS('%s') < 12" % VT)
+        FilterNumVeloTracksChiC = VoidFilter('Hlt2LowMultHadronFilterNumVeloTracksChiC', Code = "CONTAINS('%s') < 8"  % VT)
+        FilterNumBackTracks     = VoidFilter('Hlt2LowMultHadronFilterNumBackTracks',     Code = "TrNUM('%s', TrBACKWARD) < 1" % VT)
 
         #
         #=== Set up lines ===#
         #
 
         HLTreq = "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')"
-
         L0req  = "L0_CHANNEL('DiHadron,lowMult')"
         
         line = Hlt2Line( 'LowMultD2KPi'
