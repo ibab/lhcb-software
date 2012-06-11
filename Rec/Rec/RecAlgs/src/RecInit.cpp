@@ -41,8 +41,12 @@ RecInit::RecInit( const std::string& name,
   , m_memoryTool(0)
   , m_incidentSvc(0)
 {
-  declareProperty( "RawEventLocation"  ,  m_rawEventLocation = LHCb::RawEventLocation::Default, 
-                   "where to find the raw event" );
+  declareProperty( "RawEventLocation",  m_rawEventLocation = "", 
+                   "OBSOLETE. Use RawEventLocations instead" );
+  declareProperty( "RawEventLocations", m_rawEventLocations,
+                   "List of possible locations of the RawEvent object in the"
+                   " transient store. By default it is LHCb::RawEventLocation::Other,"
+                   " LHCb::RawEventLocation::Default.");
   declareProperty( "AbortOnFID"  ,  m_abortOnFID = true, 
                    "If I can't find the raw file ID, do I abort? Default true=yes.");
 }
@@ -67,6 +71,24 @@ StatusCode RecInit::initialize()
 
   // Pointer to IncidentSvc
   m_incidentSvc = svc<IIncidentSvc>("IncidentSvc",true);
+
+  // Initialise the RawEvent locations
+  bool usingDefaultLocation = m_rawEventLocations.empty() && m_rawEventLocation.empty();
+  if (! m_rawEventLocation.empty()) {
+    warning() << "The RawEventLocation property is obsolete, use RawEventLocations instead" << endmsg;
+    m_rawEventLocations.insert(m_rawEventLocations.begin(), m_rawEventLocation);
+  }
+
+  if (std::find(m_rawEventLocations.begin(), m_rawEventLocations.end(), LHCb::RawEventLocation::Default)
+      == m_rawEventLocations.end()) {
+    // append the defaults to the search path
+    m_rawEventLocations.push_back(LHCb::RawEventLocation::Other);
+    m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
+  }
+
+  if (!usingDefaultLocation) {
+    info() << "Using '" << m_rawEventLocations << "' as search path for the RawEvent object" << endmsg;
+  }
 
   return sc;
 }
@@ -111,28 +133,34 @@ StatusCode RecInit::execute()
   
   // get the file ID from the raw event
   std::string event_fname="";
-  if( !exist<LHCb::RawEvent>(m_rawEventLocation) )
-  {
-    if(m_abortOnFID) return Error("RawBank cannot be loaded, fileID cannot be found");
-    Warning("RawBank cannot be loaded, fileID cannot be found",StatusCode::SUCCESS).ignore();
-  } 
-  else 
-  {
-    LHCb::RawEvent* event = get<LHCb::RawEvent>(m_rawEventLocation);
-    IOpaqueAddress* eAddr = event->registry()->address();
+
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "Getting RawEvent" << endmsg;
+  LHCb::RawEvent* rawEvent = NULL;
+  for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
+    if (exist<LHCb::RawEvent>(*p)){
+      rawEvent = get<LHCb::RawEvent>(*p);
+      break;
+    }
+  }
+
+  const std::string rawID=event_fname;
+  if ( !rawEvent ) {
+    if(m_abortOnFID) return Error("RawEvent cannot be loaded, fileID cannot be found");
+    Warning("RawEvent cannot be loaded, fileID cannot be found",StatusCode::SUCCESS).ignore();
+    event_fname = "ERROR, RawEvent not found";
+  }
+  else {
+    IOpaqueAddress* eAddr = rawEvent->registry()->address();
     // obtain the fileID
-    if ( eAddr ) 
-    {
+    if ( eAddr ) {
       event_fname = eAddr->par()[0];
       if ( msgLevel(MSG::DEBUG) ) debug() << "RunInfo record from Event: " << event_fname << endmsg;
     } 
-    else 
-    {
+    else {
       if(m_abortOnFID) return Error("Registry cannot be loaded from Event, fileID cannot be found");
       Warning("Registry cannot be loaded from Event, fileID cannot be found",StatusCode::SUCCESS).ignore();
     }
   }
-  const std::string rawID=event_fname;
   
   // Create the Reconstruction event header
   LHCb::RecHeader* header = new LHCb::RecHeader();
