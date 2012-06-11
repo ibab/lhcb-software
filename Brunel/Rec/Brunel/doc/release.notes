@@ -6,6 +6,7 @@ Purpose: LHCb reconstruction program
 - Changes to configurable
   . HltRecReports now decoded unconditionally on every event
   . L0DU now decoded unconditionally on every physics event
+  . Complete the split RawEvent copy on DST and remove reference to original.
 
 - Changes to references to reflect changes since v42r3p1
   . Reduce the chi^2 range from 0-10 to 0-3, to adapt to tracking changes. Reduce

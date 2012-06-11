@@ -39,12 +39,12 @@ if inputType == "MDF":
     from Configurables import (RawBankToSTClusterAlg, RawBankToSTLiteClusterAlg,
                                DecodeVeloRawBuffer, UpdateManagerSvc )
     DecodeVeloRawBuffer().ForceBankVersion=3
-    DecodeVeloRawBuffer().RawEventLocation='Prev2/DAQ/RawEvent'
-    DecodeVeloRawBuffer('DecodeVeloClusters').RawEventLocation='Prev2/DAQ/RawEvent'
+    DecodeVeloRawBuffer().RawEventLocations= ['Prev2/DAQ/RawEvent']
+    DecodeVeloRawBuffer('DecodeVeloClusters').RawEventLocations=['Prev2/DAQ/RawEvent']
     DecodeVeloRawBuffer('DecodeVeloClusters').ForceBankVersion=3
     UpdateManagerSvc().ConditionsOverride +=  ["Conditions/Online/Velo/MotionSystem := double ResolPosRC =-29. ; double ResolPosLA = 29. ;"]
-    RawBankToSTClusterAlg('CreateTTClusters').rawEventLocation = "/Event/Prev2/DAQ/RawEvent"
-    RawBankToSTLiteClusterAlg('CreateTTLiteClusters').rawEventLocation = "/Event/Prev2/DAQ/RawEvent"
+    RawBankToSTClusterAlg('CreateTTClusters').RawEventLocations = ["/Event/Prev2/DAQ/RawEvent"]
+    RawBankToSTLiteClusterAlg('CreateTTLiteClusters').RawEventLocations = ["/Event/Prev2/DAQ/RawEvent"]
 else:
     print "********************************************************************************"
     print "The 2008-TED-Files.py file requires Brunel be set up to process MDF data"

@@ -212,7 +212,7 @@ class Brunel(LHCbConfigurableUser):
             ApplicationMgr().ExtSvc += [ "DataOnDemandSvc" ]
 
         # ROOT persistency for histograms
-        importOptions('$STDOPTS/RootHist.opts')
+        ApplicationMgr().HistogramPersistency = "ROOT"
         from Configurables import RootHistCnv__PersSvc
         RootHistCnv__PersSvc('RootHistCnv').ForceAlphaIds = True
 
@@ -317,7 +317,6 @@ class Brunel(LHCbConfigurableUser):
         trgSeq.Members += [ l0TrgSeq ]
         physicsSeq.Members += [ trgSeq ]
         L0Conf().L0Sequencer = l0TrgSeq
-        L0Conf().RawEventLocations = ["DAQ/RawEvent"]
         if self.getProp("RecL0Only"):
             # Setup L0 filtering if requested, runs L0 before Reco
             L0Conf().FilterL0FromRaw = True
@@ -359,15 +358,15 @@ class Brunel(LHCbConfigurableUser):
         GaudiSequencer("InitBrunelSeq").Members += [ evtC ]
 
         # kill some RAW banks
-        from Configurables import bankKiller
-        bkKill = bankKiller("BrunelBankKiller")
-        bkKill.OutputLevel = FATAL
+        banksToKill = []
         if self.isPropertySet( "RawBanksToKill" ):
-            bkKill.BankTypes = self.getProp( "RawBanksToKill" )
-        else:
-            if ("2009" == self.getProp("DataType")) and (inputType in ["MDF","SDST"]):
-                bkKill.BankTypes = ["VeloFull", "L0PUFull"]
-        GaudiSequencer("InitBrunelSeq").Members += [ bkKill ]
+            banksToKill  = self.getProp( "RawBanksToKill" )
+        if ("2009" == self.getProp("DataType")) and (inputType in ["MDF","SDST"]):
+            banksToKill += ["VeloFull", "L0PUFull"]
+        if len(banksToKill) > 0 :
+            from Configurables import bankKiller
+            bkKill = bankKiller("BrunelBankKiller")
+            GaudiSequencer("InitBrunelSeq").Members += [ bkKill ]
 
         # Do not print event number at every event (done already by BrunelInit)
         EventSelector().PrintFreq = -1
@@ -412,7 +411,7 @@ class Brunel(LHCbConfigurableUser):
                 InitReprocSeq.Members.append( "TESCheck" )
                 TESCheck().Inputs = ["Link/Rec/Track/Best"]
             InitReprocSeq.Members.append( "EventNodeKiller" )
-            EventNodeKiller().Nodes  = [ "pRec", "Rec", "Raw", "Link/Rec" ]
+            EventNodeKiller().Nodes += [ "pRec", "Rec", "Raw", "Link/Rec" ]
 
         if inputType in [ "SDST" ]:
             # Allow navigation to ancestor file
@@ -457,8 +456,8 @@ class Brunel(LHCbConfigurableUser):
                 # Allow multiple files open at once (SIM,DST,DIGI etc.)
                 IODataManager().AgeLimit += 1
 
-            if dstType == "SDST":
-                # repack certain raw banks for the stripping
+            if dstType in ["SDST","DST","XDST"] and packType not in ["MDF"]:
+                # repack certain raw banks for the stripping.
 
                 # first the Trigger Raw Event
                 from Configurables import RawEventSelectiveCopy
@@ -475,14 +474,39 @@ class Brunel(LHCbConfigurableUser):
                                                    'L0MuonProcCand',
                                                    'L0PU'
                                                    ]
+
                 trigRawBankCopy.OutputRawEventLocation = "Trigger/RawEvent"
                 GaudiSequencer("OutputDSTSeq").Members += [trigRawBankCopy]
-                
+                    
                 # then the Muon Raw Event
                 muonRawBankCopy = RawEventSelectiveCopy('MuonRawBank')
                 muonRawBankCopy.RawBanksToCopy = [ 'Muon' ]
                 muonRawBankCopy.OutputRawEventLocation = "Muon/RawEvent"
                 GaudiSequencer("OutputDSTSeq").Members += [muonRawBankCopy]
+                    
+                # and the rest
+                allOtherRawBankCopy = RawEventSelectiveCopy('OtherRawEvent')
+                allOtherRawBankCopy.RawBanksToRemove = [ 'ODIN',
+                                                         'HltSelReports',
+                                                         'HltDecReports',
+                                                         'HltRoutingBits',
+                                                         'HltVertexReports',
+                                                         'L0Calo',
+                                                         'L0CaloFull',
+                                                         'L0DU',
+                                                         'L0Muon',
+                                                         'L0MuonProcCand',
+                                                         'L0PU',
+                                                         'Muon'
+                                                         ]
+                allOtherRawBankCopy.OutputRawEventLocation = "Other/RawEvent"
+                GaudiSequencer("OutputDSTSeq").Members += [allOtherRawBankCopy]
+                    
+                # Finally, remove knowledge of original RawEvent
+                from Configurables import EventNodeKiller
+                daqKiller = EventNodeKiller("DAQKiller")
+                daqKiller.Nodes += [ "DAQ" ]
+                GaudiSequencer("OutputDSTSeq").Members += [daqKiller]
 
             from Configurables import TrackToDST
 
