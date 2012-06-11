@@ -21,35 +21,37 @@ class DummyWriter(LHCbConfigurableUser):
 class DstConf(LHCbConfigurableUser):
 
     __slots__ = {
-         "DstType"        : "NONE"
-       , "SimType"        : "None"
-       , "EnableUnpack"   : [ ]
+         "DstType"         : "NONE"
+       , "SimType"         : "None"
+       , "EnableUnpack"    : [ ]
        , "EnablePackingChecks" : False
-       , "PackType"       : "TES"
-       , "PackSequencer"  : None
-       , "AlwaysCreate"   : False
-       , "Writer"         : "DstWriter"
-       , "OutputName"     : ""
-       , "SpilloverPaths" : [ "Prev", "PrevPrev", "Next", "NextNext" ]
-       , "DataType"       : ""
-       , "Persistency"    : None
-       , "WriteFSR"       : True
+       , "PackType"        : "TES"
+       , "PackSequencer"   : None
+       , "AlwaysCreate"    : False
+       , "Writer"          : "DstWriter"
+       , "OutputName"      : ""
+       , "SpilloverPaths"  : [ "Prev", "PrevPrev", "Next", "NextNext" ]
+       , "DataType"        : ""
+       , "Persistency"     : None
+       , "WriteFSR"        : True
+       , "KeepDAQRawEvent" : False
          }
 
     _propertyDocDct = {
-        'DstType'       : """ Type of dst, can be ['DST','XDST','SDST'] """
-       ,'SimType'       : """ Type of simulation output, can be ['None','Minimal','Full'] """
-       ,'EnableUnpack'  : """ Flag to set up on demand unpacking of DST containers """
+        'DstType'         : """ Type of dst, can be ['DST','XDST','MDST'] """
+       ,'SimType'         : """ Type of simulation output, can be ['None','Minimal','Full'] """
+       ,'EnableUnpack'    : """ Flag to set up on demand unpacking of DST containers """
        ,'EnablePackingChecks' : """ Flag to turn on the running of various unpacking checks, to test the quality of the data packing """
-       ,'PackType'      : """ Type of packing for the DST, can be ['NONE','TES','MDF'] """
-       ,'PackSequencer' : """ Sequencer in which to run the packing algorithms """
-       ,'AlwaysCreate'  : """ Flags whether to create output packed objects even if input missing """
-       ,'Writer'        : """ Name of OutputStream writing the DST """
-       ,'OutputName'    : """ Name of the output file, for MDF writing """
-       ,'SpilloverPaths': """ Paths to write to XDST if available on input file """
-       ,'DataType'      : """ Flag for backward compatibility with old data """
-       ,'Persistency'   : """ Overwrite the default persistency with something else. """
-       ,'WriteFSR'      : """ Flags whether to write out an FSR """
+       ,'PackType'        : """ Type of packing for the DST, can be ['NONE','TES','MDF'] """
+       ,'PackSequencer'   : """ Sequencer in which to run the packing algorithms """
+       ,'AlwaysCreate'    : """ Flags whether to create output packed objects even if input missing """
+       ,'Writer'          : """ Name of OutputStream writing the DST """
+       ,'OutputName'      : """ Name of the output file, for MDF writing """
+       ,'SpilloverPaths'  : """ Paths to write to XDST if available on input file """
+       ,'DataType'        : """ Flag for backward compatibility with old data """
+       ,'Persistency'     : """ Overwrite the default persistency with something else. """
+       ,'WriteFSR'        : """ Flags whether to write out an FSR """
+       ,'KeepDAQRawEvent' : """ Keep original RawEvent instead of Trigger+Muon+Other split copy """
        }
 
     __used_configurables__ = [
@@ -73,8 +75,8 @@ class DstConf(LHCbConfigurableUser):
         self._defineOutputData( dType, pType, sType, writer )
 
         if pType == 'MDF':
-            if dType == 'DST' or dType == 'XDST' :
-                raise TypeError( "Only SDST is supported with MDF packing" )
+            if sType != 'None' :
+                raise TypeError( "MDF packing not supported for Simulation" )
             self._doWriteMDF( writer.ItemList )
         else:
             self._doWriteROOT( writer.ItemList, writer.OptItemList )
@@ -87,7 +89,6 @@ class DstConf(LHCbConfigurableUser):
 
         # Choose whether to write packed or unpacked objects
         if pType == 'NONE':
-            if dType == 'SDST' : raise TypeError( "SDST should always be in a packed format" )
             recDir = "Rec"
             if sType != "None":
                 DigiConf().setProp("EnablePack", False)
@@ -122,13 +123,20 @@ class DstConf(LHCbConfigurableUser):
                              , "/Event/" + recDir + "/Vertex/Primary"    + depth
                              , "/Event/" + recDir + "/Vertex/V0"         + depth
                              , "/Event/" + recDir + "/Track/Muon"        + depth ]
-
-        # Additional objects not on SDST and not packable as MDF
-        if dType != "SDST" and pType != "MDF":
-            writer.ItemList += [ "/Event/DAQ/RawEvent#1" ]
-
-            # Add selection results if DST commes from stripping ETC
-            writer.OptItemList += [ "/Event/Phys/Selections#1" ]
+        # Additional objects not packable as MDF
+        if pType != "MDF":
+            if self.getProp("KeepDAQRawEvent") :
+            # Keep original RawEvent
+                writer.ItemList += [ "/Event/DAQ/RawEvent#1" ]
+            else :
+            # Keep split copy of RawEvent instead of the original
+                writer.ItemList += [
+                    #Exists from Brunel v41r0 onwards...
+                    "/Event/Trigger/RawEvent#1"
+                  , "/Event/Muon/RawEvent#1"
+                    #Exists from Brunel v44r0 onwards...
+                  , "/Event/Other/RawEvent#1"
+                  ]
 
             # Add the simulation objects if simulation DST
             if sType != "None":
@@ -167,18 +175,10 @@ class DstConf(LHCbConfigurableUser):
                         SimConf().addSubDetSimInfo(writer)
                         DigiConf().addMCHitLinks(writer)
 
-        if dType == "SDST" and pType != "MDF":
-            #From Brunel v41r0 onwards...
-            #Raw events exist for Trigger and Muon
-            writer.OptItemList += [
-                # Links to MCParticles created in Brunel
-                "/Event/Trigger/RawEvent#1",
-                "/Event/Muon/RawEvent#1"
-                ]
 
     def _doWriteROOT( self, items, optItems ):
         """
-        Write a DST (or SDST, XDST) in ROOT format
+        Write a DST (or XDST) in ROOT format
         """
         writer = OutputStream( self.getProp("Writer") )
         writer.Preload = False
@@ -201,7 +201,7 @@ class DstConf(LHCbConfigurableUser):
 
     def _doWriteMDF( self, items ):
         """
-        Write an SDST in MDF format
+        Write an DST in MDF format
         """
         from Configurables import  WritePackedDst, LHCb__MDFWriter
 
@@ -490,6 +490,9 @@ class DstConf(LHCbConfigurableUser):
         dType = self.getProp( "DstType" ).upper()
         if dType not in self.KnownDstTypes:
             raise TypeError( "Unknown DstType '%s'"%dType )
+        if dType == "SDST":
+            log.warning("SDST output type is obsolete, setting it to DST")
+            dtype = "DST"
 
         # Propagate SpilloverPaths and DataType to DigiConf and to SimConf via DigiConf
         self.setOtherProps(DigiConf(),["SpilloverPaths","DataType"])
