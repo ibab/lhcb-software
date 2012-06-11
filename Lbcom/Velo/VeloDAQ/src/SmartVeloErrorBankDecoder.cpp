@@ -37,8 +37,12 @@ SmartVeloErrorBankDecoder::SmartVeloErrorBankDecoder( const std::string& name,
     m_magicPattern ( 0 )
 {
   declareProperty("PrintBankHeader", m_printBankHeader=0);
-  declareProperty("RawEventLocation",
-                  m_rawEventLoc=LHCb::RawEventLocation::Default);
+  declareProperty( "RawEventLocation",  m_rawEventLocation = "", 
+                   "OBSOLETE. Use RawEventLocations instead" );
+  declareProperty( "RawEventLocations", m_rawEventLocations,
+                   "List of possible locations of the RawEvent object in the"
+                   " transient store. By default it is LHCb::RawEventLocation::Other,"
+                   " LHCb::RawEventLocation::Default.");
   declareProperty("ErrorBankLocation",
                   m_errorBankLoc=VeloErrorBankLocation::Default);
 }
@@ -54,7 +58,26 @@ StatusCode SmartVeloErrorBankDecoder::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  m_isDebug=msgLevel(MSG::DEBUG);
+  if(m_isDebug) debug() << "==> Initialize" << endmsg;
+
+  // Initialise the RawEvent locations
+  bool usingDefaultLocation = m_rawEventLocations.empty() && m_rawEventLocation.empty();
+  if (! m_rawEventLocation.empty()) {
+    warning() << "The RawEventLocation property is obsolete, use RawEventLocations instead" << endmsg;
+    m_rawEventLocations.insert(m_rawEventLocations.begin(), m_rawEventLocation);
+  }
+
+  if (std::find(m_rawEventLocations.begin(), m_rawEventLocations.end(), LHCb::RawEventLocation::Default)
+      == m_rawEventLocations.end()) {
+    // append the defaults to the search path
+    m_rawEventLocations.push_back(LHCb::RawEventLocation::Other);
+    m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
+  }
+
+  if (!usingDefaultLocation) {
+    info() << "Using '" << m_rawEventLocations << "' as search path for the RawEvent object" << endmsg;
+  }
 
   return StatusCode::SUCCESS;
 }
@@ -63,7 +86,6 @@ StatusCode SmartVeloErrorBankDecoder::initialize() {
 // Main execution
 //=============================================================================
 StatusCode SmartVeloErrorBankDecoder::execute() {
-  m_isDebug=msgLevel(MSG::DEBUG);
   
   if(m_isDebug) debug() << "==> Execute" << endmsg;
   //
@@ -100,16 +122,25 @@ StatusCode SmartVeloErrorBankDecoder::getRawEvent()
   if(m_isDebug) debug()<< " ==> getRawEvent() " <<endmsg;
   if(m_isDebug) debug()<< "--------------------" <<endmsg;
   //
-  if(!exist<LHCb::RawEvent>(m_rawEventLoc)){
-    error()<< " ==> There is no RawEvent at: "
-           << LHCb::RawEventLocation::Default <<endmsg;
-    return ( StatusCode::FAILURE );
-  }else{  
-    // get the RawEvent from default TES location
-    m_rawEvent=get<LHCb::RawEvent>(m_rawEventLoc);
-    if(m_isDebug) debug()<< " ==> The RawEvent has been read-in from location: "
-           << LHCb::RawEventLocation::Default <<endmsg;  
+
+  // Retrieve the RawEvent:
+  m_rawEvent = NULL;
+  for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
+    if (exist<LHCb::RawEvent>(*p)){
+      m_rawEvent = get<LHCb::RawEvent>(*p);
+      if(m_isDebug) 
+        debug()<< " ==> The RawEvent has been read-in from location: "
+               << (*p) <<endmsg;  
+      break;
+    }
   }
+
+  if( m_rawEvent == NULL ) {
+    error()<< " ==> There is no RawEvent at: " 
+           << m_rawEventLocations <<endmsg;
+    return ( StatusCode::FAILURE );
+  }
+
   //
   return ( StatusCode::SUCCESS );
 }

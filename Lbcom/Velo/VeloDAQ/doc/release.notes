@@ -3,6 +3,13 @@
 ! Responsible : David Hutchcroft, Kurt Rinnert
 !--------------------------------------------------------------------------
 
+! 2012-06-08 - Marco Cattaneo
+ - Add RawEventLocations property to decoders, to allow to specify a 
+   search list of locations. Default is to look for RawEventLocation::Other
+   followed by RawEventLocation::Default.
+ - RawEventLocation property is declared obsolete. If set, it is prepended
+   to RawEventLocations and a warning is printed.
+
 !========================= VeloDAQ v6r6 2011-12-14 =========================
 ! 2011-11-29 - David Hutchcroft
  - Hide warning by default due to problems with TELL1 cluster maker

@@ -30,14 +30,15 @@ DECLARE_ALGORITHM_FACTORY( DecodePileUpData )
 DecodePileUpData::DecodePileUpData( const std::string& name,
     ISvcLocator* pSvcLocator)
 : GaudiAlgorithm ( name , pSvcLocator ), 
-  m_rawEvent(0),
-  m_rawEventLoc(LHCb::RawEventLocation::Default),
-  m_PUClusterLocation("Raw/Velo/PUClusters"),
-  m_PUClusterNZSLocation("Raw/Velo/PUClustersNZS")
-  //m_isNonZeroSupp(1)
+  m_rawEvent(0)
 {
   declareProperty("NonZeroSupp", m_isNonZeroSupp=true);
-  declareProperty("RawEventLocation", m_rawEventLoc=LHCb::RawEventLocation::Default);
+  declareProperty("RawEventLocation",  m_rawEventLocation = "", 
+                  "OBSOLETE. Use RawEventLocations instead" );
+  declareProperty("RawEventLocations", m_rawEventLocations,
+                  "List of possible locations of the RawEvent object in the"
+                  " transient store. By default it is LHCb::RawEventLocation::Other,"
+                  " LHCb::RawEventLocation::Default.");
   declareProperty("PUClusterLocation", m_PUClusterLocation="Raw/Velo/PUClusters");
   declareProperty("PUClusterNZSLocation", m_PUClusterNZSLocation="Raw/Velo/PUClustersNZS");
 }
@@ -55,6 +56,24 @@ StatusCode DecodePileUpData::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   if ( msgLevel(MSG::INFO) ) debug() << "==> Initialize" << endmsg;
+
+  // Initialise the RawEvent locations
+  bool usingDefaultLocation = m_rawEventLocations.empty() && m_rawEventLocation.empty();
+  if (! m_rawEventLocation.empty()) {
+    warning() << "The RawEventLocation property is obsolete, use RawEventLocations instead" << endmsg;
+    m_rawEventLocations.insert(m_rawEventLocations.begin(), m_rawEventLocation);
+  }
+
+  if (std::find(m_rawEventLocations.begin(), m_rawEventLocations.end(), LHCb::RawEventLocation::Default)
+      == m_rawEventLocations.end()) {
+    // append the defaults to the search path
+    m_rawEventLocations.push_back(LHCb::RawEventLocation::Other);
+    m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
+  }
+
+  if (!usingDefaultLocation) {
+    info() << "Using '" << m_rawEventLocations << "' as search path for the RawEvent object" << endmsg;
+  }
 
   inizializePUcontainer( m_PUcontainerBee ) ;
   inizializePUcontainer( m_PUcontainerBee_NZS ) ;
@@ -113,19 +132,22 @@ StatusCode DecodePileUpData::getRawEvent() {
 
   if ( msgLevel(MSG::INFO) ) debug() << "==> getRawEvent()" << endmsg;
 
-  if ( !exist<LHCb::RawEvent>(m_rawEventLoc) )
-  {
-    info() << "==> There is no RawEvent at: " 
-      << m_rawEventLoc   << endmsg;
+  // Retrieve the RawEvent:
+  m_rawEvent = NULL;
+  for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
+    if (exist<LHCb::RawEvent>(*p)){
+      m_rawEvent = get<LHCb::RawEvent>(*p);
+      if( msgLevel( MSG::DEBUG ) )
+        debug() << "==> RawEvent read-in from location: " << *p << endmsg;
+      break;
+    }
+  }
+
+  if( m_rawEvent == NULL ) {
+    error() << "Raw Event not found in " << m_rawEventLocations << endmsg;
     VeloClusters* clusters = new LHCb::VeloClusters();
     put(clusters,m_PUClusterLocation);    
     return ( StatusCode::FAILURE );
-  }
-  else
-  {
-    m_rawEvent = get<LHCb::RawEvent>(m_rawEventLoc);
-    debug() << "==> RawEvent read-in from location: "
-      << m_rawEventLoc   << endmsg;
   }
 
   return ( StatusCode::SUCCESS ); 

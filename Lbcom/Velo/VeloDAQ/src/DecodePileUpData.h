@@ -60,7 +60,14 @@ protected:
 private:
 
   LHCb::RawEvent*       m_rawEvent;    
-  std::string		m_rawEventLoc;   
+
+  /// Location in the transient store of the RawEvent object.
+  /// @warning Obsolete: use m_rawEventLocations
+  std::string m_rawEventLocation;
+
+  /// List of locations in the transient store to search the RawEvent object.
+  std::vector<std::string> m_rawEventLocations;
+
   std::string	m_PUClusterLocation;  
   std::string	m_PUClusterNZSLocation;        
   bool          	m_isNonZeroSupp;

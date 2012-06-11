@@ -41,7 +41,12 @@ DecodeVeloRawBuffer::DecodeVeloRawBuffer( const std::string& name,
   declareProperty("DecodeToVeloLiteClusters",m_decodeToVeloLiteClusters=true);
   declareProperty("DecodeToVeloClusters",m_decodeToVeloClusters=false);
   declareProperty("DumpVeloClusters",m_dumpVeloClusters=false);
-  declareProperty("RawEventLocation",m_rawEventLocation=LHCb::RawEventLocation::Default);
+  declareProperty( "RawEventLocation",  m_rawEventLocation = "", 
+                   "OBSOLETE. Use RawEventLocations instead" );
+  declareProperty( "RawEventLocations", m_rawEventLocations,
+                   "List of possible locations of the RawEvent object in the"
+                   " transient store. By default it is LHCb::RawEventLocation::Other,"
+                   " LHCb::RawEventLocation::Default.");
   declareProperty("VeloLiteClustersLocation",m_veloLiteClusterLocation=LHCb::VeloLiteClusterLocation::Default);
   declareProperty("VeloClusterLocation",m_veloClusterLocation=LHCb::VeloClusterLocation::Default);
   declareProperty("AssumeChipChannelsInRawBuffer",m_assumeChipChannelsInRawBuffer=false);
@@ -89,6 +94,24 @@ StatusCode DecodeVeloRawBuffer::initialize() {
 
   m_velo = getDet<DeVelo>( DeVeloLocation::Default );
 
+  // Initialise the RawEvent locations
+  bool usingDefaultLocation = m_rawEventLocations.empty() && m_rawEventLocation.empty();
+  if (! m_rawEventLocation.empty()) {
+    warning() << "The RawEventLocation property is obsolete, use RawEventLocations instead" << endmsg;
+    m_rawEventLocations.insert(m_rawEventLocations.begin(), m_rawEventLocation);
+  }
+
+  if (std::find(m_rawEventLocations.begin(), m_rawEventLocations.end(), LHCb::RawEventLocation::Default)
+      == m_rawEventLocations.end()) {
+    // append the defaults to the search path
+    m_rawEventLocations.push_back(LHCb::RawEventLocation::Other);
+    m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
+  }
+
+  if (!usingDefaultLocation) {
+    info() << "Using '" << m_rawEventLocations << "' as search path for the RawEvent object" << endmsg;
+  }
+
   return StatusCode::SUCCESS;
 }
 
@@ -106,14 +129,21 @@ StatusCode DecodeVeloRawBuffer::execute() {
     (*si)->tell1EventInfo().reset();
   }
 
-  // fetch raw bank in any case
-  if (!exist<LHCb::RawEvent>(m_rawEventLocation) ) {
+  // Retrieve the RawEvent:
+  LHCb::RawEvent* rawEvent = NULL;
+  for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
+    if (exist<LHCb::RawEvent>(*p)){
+      rawEvent = get<LHCb::RawEvent>(*p);
+      break;
+    }
+  }
+
+  if( rawEvent == NULL ) {
     if( msgLevel( MSG::DEBUG ) )
-      debug() << "Raw Event not found in " << m_rawEventLocation << endmsg;
+      debug() << "Raw Event not found in " << m_rawEventLocations << endmsg;
     createEmptyBanks();
     return StatusCode::SUCCESS;
   }
-  LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>(m_rawEventLocation);
 
   const std::vector<LHCb::RawBank*>& banks = rawEvent->banks(LHCb::RawBank::Velo);
 

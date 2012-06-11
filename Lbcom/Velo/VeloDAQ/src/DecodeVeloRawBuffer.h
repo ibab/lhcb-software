@@ -1,5 +1,3 @@
-// $Id: DecodeVeloRawBuffer.h,v 1.12 2010-04-21 14:59:50 dhcroft Exp $
-
 #ifndef DECODEVELORAWBUFFER_H 
 #define DECODEVELORAWBUFFER_H 1
 
@@ -99,7 +97,13 @@ private:
 
   unsigned int m_forcedBankVersion; ///< user forced bank version
 
+  /// Location in the transient store of the RawEvent object.
+  /// @warning Obsolete: use m_rawEventLocations
   std::string m_rawEventLocation;
+
+  /// List of locations in the transient store to search the RawEvent object.
+  std::vector<std::string> m_rawEventLocations;
+
   std::string m_veloLiteClusterLocation;
   std::string m_veloClusterLocation;
 
