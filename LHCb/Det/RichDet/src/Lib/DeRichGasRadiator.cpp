@@ -68,8 +68,8 @@ StatusCode DeRichGasRadiator::initialize ( )
   if ( hasCondition("GasParameters") && condition("GasParameters") )
   {
     m_gasParametersCond = condition("GasParameters");
-    //if ( msgLevel(MSG::DEBUG,msg) )
-    msg << MSG::INFO << "Using condition <GasParameters>" << endmsg;
+    if ( msgLevel(MSG::DEBUG,msg) )
+      msg << MSG::DEBUG << "Using condition <GasParameters>" << endmsg;
     updMgrSvc()->registerCondition( this,
                                     m_gasParametersCond.path(),
                                     &DeRichGasRadiator::updateProperties );
@@ -81,15 +81,15 @@ StatusCode DeRichGasRadiator::initialize ( )
     sc = setupOldGasConditions();
     if ( sc.isFailure() )
     {
-      //if ( msgLevel(MSG::DEBUG,msg) )
-      msg << MSG::INFO << "Did not find non-HLT gas conditions" << endmsg;
+      if ( msgLevel(MSG::DEBUG,msg) )
+        msg << MSG::DEBUG << "Did not find non-HLT gas conditions" << endmsg;
     }
     else
     {
-      //if ( msgLevel(MSG::DEBUG,msg) )
-      msg << MSG::INFO 
-          << "Using conditions <GasTemperature> and <GasPressure>" 
-          << endmsg;
+      if ( msgLevel(MSG::DEBUG,msg) )
+        msg << MSG::DEBUG 
+            << "Using conditions <GasTemperature> and <GasPressure>" 
+            << endmsg;
       foundGasConditions = true;
       HltMode = false;
     }
@@ -99,15 +99,15 @@ StatusCode DeRichGasRadiator::initialize ( )
   if ( hasCondition("HltGasParameters") && condition("HltGasParameters") )
   {
     m_hltGasParametersCond = condition("HltGasParameters");
-    //if ( msgLevel(MSG::DEBUG,msg) )
-    msg << MSG::INFO << "Found condition <HltGasParameters>" << endmsg;
+    if ( msgLevel(MSG::DEBUG,msg) )
+      msg << MSG::DEBUG << "Found condition <HltGasParameters>" << endmsg;
     foundGasConditions = true;
   }
   else  // use offline conditions for hlt
   {
     m_hltGasParametersCond = m_gasParametersCond;
-    //if ( msgLevel(MSG::DEBUG,msg) )
-    msg << MSG::INFO << "Using offline gas condition for HLT" << endmsg;
+    if ( msgLevel(MSG::DEBUG,msg) )
+      msg << MSG::DEBUG << "Using offline gas condition for HLT" << endmsg;
   }
 
   if ( !foundGasConditions )
@@ -116,13 +116,10 @@ StatusCode DeRichGasRadiator::initialize ( )
     return StatusCode::FAILURE;
   }
 
-  info() << "HltMode = " << HltMode << endmsg;
-  info() << "hasCondition RefractivityScaleFactor = "
-         << hasCondition( "RefractivityScaleFactor" ) << endmsg;
-
   // scale factor
   if ( hasCondition("RefractivityScaleFactor") )
   {
+    // Load scale factor even in HLT mode, so it is always used if available.
     m_scaleFactorCond = condition("RefractivityScaleFactor");
     if ( !HltMode )
     {
@@ -254,15 +251,14 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
   }
 
   // (n-1) scale factor
-  if ( !m_scaleFactorCond ) info() << "NULL ScaleFactor condition. Using 1.0" << endmsg;
   const double scaleFactor = ( !m_scaleFactorCond ? 1.0 :
                                m_scaleFactorCond->param<double>("CurrentScaleFactor") );
 
-  //if ( msgLevel(MSG::DEBUG) )
-  info() << "Refractive index update : Pressure = " << curPressure/Gaudi::Units::bar
-         << " bar : Temperature = " << curTemp << " K"
-         << " : (n-1) Scale = " << scaleFactor
-         << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Refractive index update : Pressure = " << curPressure/Gaudi::Units::bar
+            << " bar : Temperature = " << curTemp << " K"
+            << " : (n-1) Scale = " << scaleFactor
+            << endmsg;
 
   // reset table
   TabulatedProperty* modTabProp = const_cast<TabulatedProperty*>( tabProp );
@@ -458,8 +454,9 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
         {
           EphyZSq = ( MomConvWave / aWaveZeroVect[gas] ) * ( MomConvWave / aWaveZeroVect[gas] );
         }
-        nMinus1 += scaleFactor * gasFractions[gas] *
-          (AParamVect[gas]*AMultParamVect[gas]*MomConvWave*MomConvWave*GasRhoCur)/(EphyZSq-(epho*epho));
+        nMinus1 += ( scaleFactor * gasFractions[gas] *
+                     ( (AParamVect[gas]*AMultParamVect[gas]*MomConvWave*MomConvWave*GasRhoCur) / 
+                       (EphyZSq-(epho*epho)) ) );
       }
 
     }
@@ -484,7 +481,8 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
 //=========================================================================
 //  generateHltRefIndex
 //=========================================================================
-const Rich::TabulatedProperty1D* DeRichGasRadiator::generateHltRefIndex() const
+const Rich::TabulatedProperty1D*
+DeRichGasRadiator::generateHltRefIndex() const
 {
   delete m_hltRefIndexTabProp;
   m_hltRefIndexTabProp = new TabulatedProperty("HltRefIndexTabProperty");
@@ -494,7 +492,6 @@ const Rich::TabulatedProperty1D* DeRichGasRadiator::generateHltRefIndex() const
   // temperature
   if ( m_hltGasParametersCond != m_gasParametersCond )
   {
-
     updMgrSvc()->registerCondition( nonConstSelf, 
                                     m_hltGasParametersCond.path(),
                                     &DeRichGasRadiator::updateHltProperties );
@@ -569,30 +566,32 @@ StatusCode DeRichGasRadiator::setupOldGasConditions ( ) {
 
   // configure refractive index updates
   // temperature
-  if ( hasCondition( "GasTemperature" ) && condition("GasTemperature") )
+  if ( hasCondition("GasTemperature") && condition("GasTemperature") )
   {
-    m_temperatureCond = condition( "GasTemperature" );
-    updMgrSvc()->registerCondition(this, m_temperatureCond.path(),
-                                   &DeRichGasRadiator::updateProperties );
+    m_temperatureCond = condition("GasTemperature");
+    updMgrSvc()->registerCondition( this,
+                                    m_temperatureCond.path(),
+                                    &DeRichGasRadiator::updateProperties );
   }
   else
   {
-    m_temperatureCond = 0;
+    m_temperatureCond = NULL;
     if ( msgLevel(MSG::DEBUG,msg) )
       msg << MSG::DEBUG << "Cannot load Condition GasTemperature" << endmsg;
     return StatusCode::FAILURE;
   }
 
   // pressure
-  if ( hasCondition( "GasPressure" ) && condition("GasPressure") )
+  if ( hasCondition("GasPressure") && condition("GasPressure") )
   {
-    m_pressureCond = condition( "GasPressure" );
-    updMgrSvc()->registerCondition( this, m_pressureCond.path(),
+    m_pressureCond = condition("GasPressure");
+    updMgrSvc()->registerCondition( this, 
+                                    m_pressureCond.path(),
                                     &DeRichGasRadiator::updateProperties );
   }
   else
   {
-    m_pressureCond = 0;
+    m_pressureCond = NULL;
     if ( msgLevel(MSG::DEBUG,msg) )
       msg << MSG::DEBUG << "Cannot load Condition GasPressure" << endmsg;
     return StatusCode::FAILURE;
