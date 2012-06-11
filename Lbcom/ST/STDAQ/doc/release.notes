@@ -4,6 +4,14 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2012-06-08 - Marco Cattaneo
+ - Add RawEventLocations property to STDecodingBaseAlg, to allow to specify a 
+   search list of locations. Default is to look for RawEventLocation::Other
+   followed by RawEventLocation::Default. Used in RawBankToSTClusterAlg and
+   RawBankToSTLiteClusterAlg
+ - rawEventLocation property is declared obsolete. If set, it is prepended
+   to RawEventLocations and a warning is printed.
+
 !========================= STDAQ v3r27 2011-07-27 =========================
 ! 2011-07-27 - Marco Cattaneo
  - Protect unprotected MSG::DEBUG, also using UNLIKELY macro

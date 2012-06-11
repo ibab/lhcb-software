@@ -1,4 +1,3 @@
-// $Id: STDecodingBaseAlg.h,v 1.19 2009-02-26 14:46:21 mneedham Exp $
 #ifndef STDECODINGBASEALG_H 
 #define STDECODINGBASEALG_H 1
 
@@ -87,7 +86,14 @@ protected:
  
  bool m_skipErrors;
  std::string m_bankTypeString;
- std::string m_rawEventLocation;
+
+  /// Location in the transient store of the RawEvent object.
+  /// @warning Obsolete: use m_rawEventLocations
+  std::string m_rawEventLocation;
+
+  /// List of locations in the transient store to search the RawEvent object.
+  std::vector<std::string> m_rawEventLocations;
+
  int m_forcedVersion;
  bool m_checkValidSpill;
  

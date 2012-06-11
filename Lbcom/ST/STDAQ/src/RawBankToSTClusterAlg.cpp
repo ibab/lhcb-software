@@ -71,12 +71,15 @@ StatusCode RawBankToSTClusterAlg::execute() {
     return Warning("Not a valid spill",StatusCode::SUCCESS, 1);
   }
 
-   // Retrieve the RawEvent:
-  if (!exist<RawEvent>(m_rawEventLocation)){
-    return Warning("Failed to find raw data", StatusCode::SUCCESS,1);
+  // Retrieve the RawEvent:
+  LHCb::RawEvent* rawEvt = NULL;
+  for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
+    if (exist<LHCb::RawEvent>(*p)){
+      rawEvt = get<LHCb::RawEvent>(*p);
+      break;
+    }
   }
-  RawEvent* rawEvt = get<RawEvent>(m_rawEventLocation );
-
+  if( rawEvt == NULL ) return Warning("Failed to find raw data", StatusCode::SUCCESS,1);
 
   // decode banks
   StatusCode sc = decodeBanks(rawEvt,clusCont);   

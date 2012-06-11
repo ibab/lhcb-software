@@ -57,7 +57,12 @@ m_bankTypeString(""){
  declareProperty("skipBanksWithErrors", m_skipErrors = false );
  declareProperty("recoverMode", m_recoverMode = true);
  
- declareProperty("rawEventLocation",m_rawEventLocation = RawEventLocation::Default);
+ declareProperty( "rawEventLocation",  m_rawEventLocation = "", 
+                  "OBSOLETE. Use RawEventLocations instead" );
+ declareProperty( "RawEventLocations", m_rawEventLocations,
+                  "List of possible locations of the RawEvent object in the"
+                  " transient store. By default it is LHCb::RawEventLocation::Other,"
+                  " LHCb::RawEventLocation::Default.");
  declareProperty("forcedVersion", m_forcedVersion = STDAQ::inValidVersion);
  declareProperty("checkValidity", m_checkValidSpill = true);
 
@@ -72,11 +77,29 @@ StatusCode STDecodingBaseAlg::initialize() {
 
   // Initialization
   StatusCode sc = ST::AlgBase::initialize();
-  if (sc.isFailure()){
-    return Error("Failed to initialize", sc);
+  if (sc.isFailure()) return sc;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> initialize " << endmsg;
+
+  // Initialise the RawEvent locations
+  bool usingDefaultLocation = m_rawEventLocations.empty() && m_rawEventLocation.empty();
+  if (! m_rawEventLocation.empty()) {
+    warning() << "The rawEventLocation property is obsolete, use RawEventLocations instead" << endmsg;
+    m_rawEventLocations.insert(m_rawEventLocations.begin(), m_rawEventLocation);
   }
 
-  std::string spill = toSpill(m_rawEventLocation);
+  if (std::find(m_rawEventLocations.begin(), m_rawEventLocations.end(), LHCb::RawEventLocation::Default)
+      == m_rawEventLocations.end()) {
+    // append the defaults to the search path
+    m_rawEventLocations.push_back(LHCb::RawEventLocation::Other);
+    m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
+  }
+
+  if (!usingDefaultLocation) {
+    info() << "Using '" << m_rawEventLocations << "' as search path for the RawEvent object" << endmsg;
+  }
+
+  // Assume that is a spillover location is wanted, it has been requested as first location!
+  std::string spill = toSpill(m_rawEventLocations[0]);
   m_spillOffset = spillOffset(spill); 
    
   // bank type
@@ -251,9 +274,16 @@ StatusCode STDecodingBaseAlg::decodeErrors() const{
 
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Execute " << endmsg;
 
- // get the raw event + odin info
- RawEvent* raw = get<RawEvent>(RawEventLocation::Default );
-
+  // get the raw event + odin info
+  LHCb::RawEvent* raw = NULL;
+  for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
+    if (exist<LHCb::RawEvent>(*p)){
+      raw = get<LHCb::RawEvent>(*p);
+      break;
+    }
+  }
+  if( raw == NULL ) return Error("Failed to find raw data");
+  
  // make an empty output vector
  STTELL1BoardErrorBanks* outputErrors = new STTELL1BoardErrorBanks();
  

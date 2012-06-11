@@ -1,6 +1,4 @@
 //
-// This File contains the definition of the OTSmearer -class
-//
 // C++ code for 'LHCb Tracking package(s)'
 //
 //   Author: M. Needham
@@ -25,8 +23,6 @@ using namespace LHCb;
 
 //--------------------------------------------------------------------
 //
-//  ITMCtuner : Check digitization procedure for the outer tracker
-//
 //--------------------------------------------------------------------
 
 STRawBankMonitor::STRawBankMonitor(const std::string& name, 
@@ -34,11 +30,15 @@ STRawBankMonitor::STRawBankMonitor(const std::string& name,
   ST::HistoAlgBase(name, pSvcLocator)
  
 {
-  // constructer
+  // constructor
+  declareProperty( "RawEventLocations", m_rawEventLocations,
+                   "List of possible locations of the RawEvent object in the"
+                   " transient store. By default it is LHCb::RawEventLocation::Other,"
+                   " LHCb::RawEventLocation::Default.");
 }
 
 STRawBankMonitor::~STRawBankMonitor(){
-  // destructer
+  // destructor
 }
 
 StatusCode STRawBankMonitor::initialize(){
@@ -53,6 +53,19 @@ StatusCode STRawBankMonitor::initialize(){
   sc = configureBankType();
   if (sc.isFailure()){
     return Error("unknown bank type", sc);
+  }
+
+  // Initialise the RawEvent locations
+  bool usingDefaultLocation = m_rawEventLocations.empty();
+  if (std::find(m_rawEventLocations.begin(), m_rawEventLocations.end(), LHCb::RawEventLocation::Default)
+      == m_rawEventLocations.end()) {
+    // append the defaults to the search path
+    m_rawEventLocations.push_back(LHCb::RawEventLocation::Other);
+    m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
+  }
+
+  if (!usingDefaultLocation) {
+    info() << "Using '" << m_rawEventLocations << "' as search path for the RawEvent object" << endmsg;
   }
 
   return StatusCode::SUCCESS;
@@ -70,7 +83,15 @@ StatusCode STRawBankMonitor::execute(){
   // get banks and loop
   
   // Retrieve the RawEvent:
-  RawEvent* rawEvt = get<RawEvent>(RawEventLocation::Default);
+  LHCb::RawEvent* rawEvt = NULL;
+  for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
+    if (exist<LHCb::RawEvent>(*p)){
+      rawEvt = get<LHCb::RawEvent>(*p);
+      break;
+    }
+  }
+  if( rawEvt == NULL ) return Error("Failed to find raw data");
+
   const std::vector<RawBank*>& tBanks = rawEvt->banks(m_bankType);
   std::vector<RawBank* >::const_iterator iterBank;
   for (iterBank = tBanks.begin(); iterBank != tBanks.end() ; ++iterBank){

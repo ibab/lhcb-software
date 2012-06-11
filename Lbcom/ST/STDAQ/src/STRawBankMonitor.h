@@ -1,4 +1,3 @@
-//$Id: STRawBankMonitor.h,v 1.2 2008-10-17 14:10:22 mneedham Exp $
 #ifndef _STRawBankMonitor_H
 #define _STRawBankMonitor_H
 
@@ -42,6 +41,9 @@ private:
   StatusCode configureBankType();
  
   LHCb::RawBank::BankType m_bankType;
+
+  /// List of locations in the transient store to search the RawEvent object.
+  std::vector<std::string> m_rawEventLocations;
 
 };
 

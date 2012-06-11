@@ -1,6 +1,3 @@
-// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.35 2008-12-01 16:35:30 mneedham Exp $
-
-
 #include <algorithm>
 #include <vector>
 
@@ -76,8 +73,14 @@ StatusCode RawBankToSTLiteClusterAlg::execute() {
   }
 
   // Retrieve the RawEvent:
-  RawEvent* rawEvt = get<RawEvent>(m_rawEventLocation);
-
+  LHCb::RawEvent* rawEvt = NULL;
+  for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
+    if (exist<LHCb::RawEvent>(*p)){
+      rawEvt = get<LHCb::RawEvent>(*p);
+      break;
+    }
+  }
+  if( rawEvt == NULL ) return Error("Failed to find raw data");
  
   // decode banks
   StatusCode sc = decodeBanks(rawEvt, fCont);   
