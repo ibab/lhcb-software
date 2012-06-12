@@ -28,14 +28,13 @@
 #include "Kernel/IParticleIsolation.h"
 #include "Kernel/IParticleVeto.h"
 #include "Kernel/IBremAdder.h"
-
 // ============================================================================
-/** @file
+/** @file  
  *  Implementation file for class some interfaces from 
  *  Phys/DaVinciInterfaces package 
  *  @date 2009-08-15 
  *  @author Vanya  BELYAEV Ivan.Belyaev
- */
+ */ 
 // ============================================================================
 // virtual & protected desctructor 
 // ============================================================================

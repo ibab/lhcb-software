@@ -6,6 +6,9 @@
 
 
 
+! 2012-06-12 - Olivier Deschamps
+  - IBremAdder : add new interfaced methods
+
 ! 2012-05-14 - Olivier Deschamps
   - change IBremAdder interface
 

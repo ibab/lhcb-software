@@ -10,6 +10,7 @@
 // from LHCb
 #include "Event/Particle.h"
 #include "Event/CaloHypo.h"
+#include "CaloUtils/CaloMomentum.h" 
 
 /** @class IBremAdder IBremAdder.h Kernel/IBremAdder.h
  *  
@@ -21,19 +22,23 @@
 class GAUDI_API IBremAdder : virtual public IAlgTool {
 public: 
 
-  DeclareInterfaceID(IBremAdder, 3, 0);
+  DeclareInterfaceID(IBremAdder, 4, 0);
 
   // Add Brem
-  virtual  bool addBrem( LHCb::Particle* particle , bool force=false) const = 0 ;
+  virtual  bool addBrem( LHCb::Particle* particle , bool force=false) = 0 ;
   // Remove Brem
-  virtual  bool removeBrem( LHCb::Particle* particle , bool force=false) const = 0 ;
-  // get the list of brem candidates
-  virtual const std::vector<const LHCb::CaloHypo*> bremList(const LHCb::Particle* particle)const = 0;
+  virtual  bool removeBrem( LHCb::Particle* particle , bool force=false) = 0 ;
+  // Add Brem on particle pair (removing overlap)
+  virtual  bool addBrem2Pair( LHCb::Particle* p1, LHCb::Particle* p2 , bool force=false) = 0 ;
 
+  // helper methods
+  virtual  bool hasBrem(const LHCb::Particle* particle)=0;
+  virtual const LHCb::CaloMomentum bremMomentum(const LHCb::Particle* particle,std::string flag="")=0;
+  virtual const std::pair<LHCb::CaloMomentum,LHCb::CaloMomentum> bremMomenta(const LHCb::Particle* p1,
+                                                                             const LHCb::Particle*p2,
+                                                                             std::string flag="")=0;
 protected:
   virtual ~IBremAdder() ;               // virtual and protected destructors
-
 private:
-
 };
 #endif // KERNEL_IBREMADDER_H
