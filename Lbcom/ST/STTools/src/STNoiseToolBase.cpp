@@ -147,22 +147,22 @@ StatusCode ST::STNoiseToolBase::initialize() {
 void ST::STNoiseToolBase::resetNoiseCounters( const unsigned int TELL1SourceID ){
 
   info() << "Resetting noise counters for " << TELL1SourceID << endmsg;
-  m_nEvents[TELL1SourceID].resize(3072, 0);
-  m_rawPedestalMap[TELL1SourceID].resize(3072, 0.0);
-  m_rawMeanMap[TELL1SourceID].resize(3072, 0.0);
-  m_rawMeanSqMap[TELL1SourceID].resize(3072, 0.0);
-  m_rawNoiseMap[TELL1SourceID].resize(3072, 0.0);
-  m_rawNEventsPP[TELL1SourceID].resize(4,0);
+  m_nEvents[TELL1SourceID].assign(3072, 0);
+  m_rawPedestalMap[TELL1SourceID].assign(3072, 0.0);
+  m_rawMeanMap[TELL1SourceID].assign(3072, 0.0);
+  m_rawMeanSqMap[TELL1SourceID].assign(3072, 0.0);
+  m_rawNoiseMap[TELL1SourceID].assign(3072, 0.0);
+  m_rawNEventsPP[TELL1SourceID].assign(4,0);
     
-  m_cmsMeanMap[TELL1SourceID].resize(3072, 0.0);
-  m_cmsMeanSqMap[TELL1SourceID].resize(3072, 0.0);
-  m_cmsNoiseMap[TELL1SourceID].resize(3072, 0.0);
-  m_cmsNEventsPP[TELL1SourceID].resize(4,0);
+  m_cmsMeanMap[TELL1SourceID].assign(3072, 0.0);
+  m_cmsMeanSqMap[TELL1SourceID].assign(3072, 0.0);
+  m_cmsNoiseMap[TELL1SourceID].assign(3072, 0.0);
+  m_cmsNEventsPP[TELL1SourceID].assign(4,0);
 
-  m_pedSubMeanMap[TELL1SourceID].resize(3072, 0.0);
-  m_pedSubMeanSqMap[TELL1SourceID].resize(3072, 0.0);
-  m_pedSubNoiseMap[TELL1SourceID].resize(3072, 0.0);
-  m_pedSubNEventsPP[TELL1SourceID].resize(4,0);
+  m_pedSubMeanMap[TELL1SourceID].assign(3072, 0.0);
+  m_pedSubMeanSqMap[TELL1SourceID].assign(3072, 0.0);
+  m_pedSubNoiseMap[TELL1SourceID].assign(3072, 0.0);
+  m_pedSubNEventsPP[TELL1SourceID].assign(4,0);
 
 }
 
@@ -235,7 +235,7 @@ void ST::STNoiseToolBase::readTELL1Parameters(const unsigned int TELL1SourceID) 
       std::vector<int>::iterator itMask = pedestalMasks.begin();
       std::vector<bool>* status = &m_statusMap[TELL1SourceID];
       //      std::vector<bool>::iterator itStatus = status->begin();
-      status->resize(3072,false);
+      status->assign(3072,false);
       std::vector<bool>::iterator itStat = status->begin();
       unsigned int channel = 0;
       STTell1Board* board = readoutTool()->findByBoardID(STTell1ID(TELL1SourceID));
