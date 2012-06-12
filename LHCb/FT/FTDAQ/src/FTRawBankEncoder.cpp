@@ -8,6 +8,7 @@
 
 // local
 #include "FTRawBankEncoder.h"
+#include "FTRawBankParams.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : FTRawBankEncoder
@@ -42,6 +43,14 @@ StatusCode FTRawBankEncoder::initialize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
+  //== These parameters should eventually come from the Detector Element
+  m_nbBanks = 48;
+  m_nbSipmPerTELL40 = 110;
+
+  //== create the vector of vectors of vectors with the proper size...
+  std::vector<std::vector<unsigned int> > temp(m_nbSipmPerTELL40);
+  m_sipmData.resize( m_nbBanks, temp );
+  
   return StatusCode::SUCCESS;
 }
 
@@ -54,107 +63,64 @@ StatusCode FTRawBankEncoder::execute() {
 
   LHCb::FTClusters* clusters = get<LHCb::FTClusters>(LHCb::FTClusterLocation::Default );
   LHCb::RawEvent* event = getOrCreate<LHCb::RawEvent,LHCb::RawEvent>(LHCb::RawEventLocation::Default);
-
-  int m_nbBanks = 48;
-  int m_nbSiPMPerTELL40 = 110;
-  
-  std::vector<std::vector<unsigned int> > bankContent(m_nbBanks);
   
   int codingVersion = 0;
 
-  int prevBankNumber = -1;
-  int prevSiPMNumber = -1;
-  int sizeWord       = -1;
-  int nbCluster      = 0;
+  for ( unsigned int iBank = 0; m_sipmData.size() > iBank; ++iBank ) {
+    for ( unsigned int iPm = 0; m_sipmData[iBank].size() > iPm; ++iPm ) {
+      m_sipmData[iBank][iPm].clear();
+      unsigned int sipmHeader = iPm << FTRawBank::sipmShift;
+      m_sipmData[iBank][iPm].push_back( sipmHeader );
+    }
+  }
+
   for ( LHCb::FTClusters::const_iterator itC = clusters->begin(); clusters->end() != itC; ++itC ) {
     LHCb::FTChannelID id = (*itC)->channelID();
     int bankNumber = id.quarter() + 4 * id.layer();   //== Temp, assumes 1 TELL40 per quarter. Should come from Det.Elem.
-    int siPMNumber = id.sipmId();
-    if ( bankNumber != prevBankNumber ) {
-      if ( bankNumber >= m_nbBanks ) {
-        info() << "*** Bank number invalid: " << bankNumber << " from cluster number " << itC - clusters->begin() 
-               << " layer " << id.layer() << " quarter " << id.quarter() << endmsg;
-        continue;
-      }
-      if ( sizeWord >= 0 ) {
-        bankContent[prevBankNumber][sizeWord] += nbCluster;  // set the last number of clusters
-        debug() << "Bank " << prevBankNumber << " SiPM " << prevSiPMNumber << " nbCluster " << nbCluster << endmsg;
-      }
-      while ( prevBankNumber < bankNumber ) {
-        if ( prevBankNumber >= 0 ) {
-          while( ++prevSiPMNumber < m_nbSiPMPerTELL40 ) {
-            bankContent[prevBankNumber].push_back( prevSiPMNumber << 4 );
-          }
-        }
-        ++prevBankNumber;
-        prevSiPMNumber = -1;
-      }
-      prevBankNumber = bankNumber;
-      prevSiPMNumber = -1;
-      sizeWord = -1;
-      nbCluster = 0;
-    }
-    while( prevSiPMNumber < siPMNumber ) {
-      if ( sizeWord >= 0 ) {
-        bankContent[prevBankNumber][sizeWord] += nbCluster;  // set the last number of clusters
-        debug() << "Bank " << prevBankNumber << " SiPM " << prevSiPMNumber << " nbCluster " << nbCluster << endmsg;
-      }
-      prevSiPMNumber++;
-      bankContent[bankNumber].push_back( prevSiPMNumber << 4 );
-      sizeWord = bankContent[bankNumber].size() - 1;
-      nbCluster = 0;
-    }
-    if ( nbCluster < 15 ) {
+    int sipmNumber = id.sipmId();
+    if ( m_sipmData[bankNumber][sipmNumber].size() <= FTRawBank::nbClusMaximum ) {  // one extra word for sipm number + nbClus
       int frac = int( (*itC)->fraction() * 8 );
       int cell = id.sipmCell();
       int cSize = (*itC)->size();
       int charg = (*itC)->charge() / 8; // one MIP should be around 16 -> coded as 2.
-      if ( 0 > frac ||   7 < frac  ) frac  =   7;
-      if ( 0 > cell || 127 < cell  ) cell  = 127;
-      if ( 0 > cSize||   7 < cSize ) cSize =   7;
-      if ( 0 > charg||   7 < charg ) charg =   7;
-      int coded = frac + (cell << 3) + (cSize << 10) + (charg << 13);
-      bankContent[bankNumber].push_back( coded );
+      if ( 0 > frac || FTRawBank::fractionMaximum < frac  ) frac  = FTRawBank::fractionMaximum;
+      if ( 0 > cell || FTRawBank::cellMaximum     < cell  ) cell  = FTRawBank::cellMaximum;
+      if ( 0 > cSize|| FTRawBank::sizeMaximum     < cSize ) cSize = FTRawBank::sizeMaximum;
+      if ( 0 > charg|| FTRawBank::chargeMaximum   < charg ) charg = FTRawBank::chargeMaximum;
+      int coded = 
+        (frac  << FTRawBank::fractionShift) + 
+        (cell  << FTRawBank::cellShift) + 
+        (cSize << FTRawBank::sizeShift) + 
+        (charg << FTRawBank::chargeShift);
+      m_sipmData[bankNumber][sipmNumber].push_back( coded );
+      m_sipmData[bankNumber][sipmNumber][0] += 1;
       if ( msgLevel( MSG::VERBOSE ) ) {
         verbose() << format( "  cell %4d frac %6.4f charge %5d size %3d code %4.4x",
                              id.sipmCell(), (*itC)->fraction(), (*itC)->charge(), (*itC)->size(), coded ) << endmsg;
       }
-      nbCluster++;
     }
-  }
-  if ( sizeWord >= 0 ) {
-    bankContent[prevBankNumber][sizeWord] += nbCluster;  // set the last number of clusters
-    debug() << "Bank " << prevBankNumber << " SiPM " << prevSiPMNumber << " nbCluster " << nbCluster << endmsg;
-  }
-
-  while ( prevBankNumber < m_nbBanks ) {
-    if ( prevBankNumber >= 0 ) {
-      while( ++prevSiPMNumber < m_nbSiPMPerTELL40 ) {
-        bankContent[prevBankNumber].push_back( prevSiPMNumber << 4 );
-      }
-    }
-    ++prevBankNumber;
-    prevSiPMNumber = -1;
   }
 
   //== Now build the banks: We need to put the 16 bits content into 32 bits words.
 
-  for ( std::vector<std::vector<unsigned int> >::iterator itV = bankContent.begin(); bankContent.end() != itV; ++itV ) {
+  for ( unsigned int iBank = 0; m_sipmData.size() > iBank; ++iBank ) {
+    if( msgLevel( MSG::VERBOSE ) ) verbose() << "*** Bank " << iBank << endmsg;
     std::vector<unsigned int> bank;
-    if( msgLevel( MSG::VERBOSE ) ) verbose() << "*** Bank " << itV - bankContent.begin() << endmsg;
-    bank.reserve( ( (*itV).size()+1 )/2);
-    for ( std::vector<unsigned int>::iterator itI = (*itV).begin(); (*itV).end() != itI; ++itI ) {
-      int temp = (*itI);
-      if ( itI+1 != (*itV).end() ) {
-        ++itI;
-        temp += (*itI)<<16;
-      }
-      bank.push_back( temp );
-      if ( msgLevel( MSG::VERBOSE ) ) {
-        verbose() << format( "    at %5d data %8.8x", bank.size(), temp ) << endmsg;
+    for ( unsigned int iPm = 0; m_sipmData[iBank].size() > iPm; ++iPm ) {
+      for ( std::vector<unsigned int>::iterator itI = m_sipmData[iBank][iPm].begin(); 
+            m_sipmData[iBank][iPm].end() != itI; ++itI ) {
+        int temp = (*itI);
+        if ( itI+1 != m_sipmData[iBank][iPm].end() ) {
+          ++itI;
+          temp += (*itI)<<16;
+        }
+        bank.push_back( temp );
+        if ( msgLevel( MSG::VERBOSE ) ) {
+          verbose() << format( "    at %5d data %8.8x", bank.size(), temp ) << endmsg;
+        }
       }
     }
-    event->addBank( itV-bankContent.begin(), LHCb::RawBank::FTCluster, codingVersion, bank );
+    event->addBank( iBank, LHCb::RawBank::FTCluster, codingVersion, bank );
   }
 
 

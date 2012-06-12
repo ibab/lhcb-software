@@ -4,6 +4,11 @@
 ! Purpose     : Code/Decode the FT raw data
 !-----------------------------------------------------------------------------
 
+! 2012-06-12 - Olivier Callot
+ - Re-implementation of the coder, using Kurt Rinnert's suggestion,
+   with a 3 dimension array.
+ - Define a header file with parameters fo rcoding/decoding.
+
 ! 2012-06-06 - Olivier Callot
  - Fix the decoder, the quarter was wrong!
 

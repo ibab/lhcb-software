@@ -27,6 +27,8 @@ public:
 protected:
 
 private:
-
+  int m_nbBanks;
+  int m_nbSipmPerTELL40;
+  std::vector<std::vector<std::vector<unsigned int> > > m_sipmData;
 };
 #endif // FTRAWBANKENCODER_H
