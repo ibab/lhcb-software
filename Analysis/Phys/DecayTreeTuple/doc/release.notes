@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2012-06-12 -  Olivier Deschamps
+ - TupleToolSubMass : new tool producing the invariant masses for all n-body combinations in N-body decays (n=2,N) 
+    - PID subtitution can be configured
+
 ! 2012-06-06 - Marc Grabalosa
  - TupleToolTagging: 
    . New and consitstent default tag decision and omega (0, 0.5)

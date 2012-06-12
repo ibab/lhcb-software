@@ -27,6 +27,8 @@ use   Boost              v*    LCG_Interfaces
 use   LoKiPhysMC         v*    Phys
 use   LoKiArrayFunctors  v*    Phys
 use   MuonDet            v*    Det
+use   Python             v*    LCG_Interfaces
+use   ROOT               v*    LCG_Interfaces -no_auto_imports
 
 include_path      none
 #============================================================================
@@ -37,6 +39,10 @@ library          DecayTreeTuple    ../src/*.cpp
 #============================================================================
 # define component library link options
 #============================================================================
+private
+macro_append   ROOT_linkopts   " -lMLP -lTMVA -lGraf -lHist -lMatrix -lTreePlayer -lGpad -lGraf3d" \
+               WIN32   " libMLP.lib libTMVA.lib libGraf.lib libHist.lib libMatrix.lib libTreePlayer.lib libGpad.lib libGraf3d.lib"
+end_private
 macro_append DecayTreeTupleGenConfUser_dependencies DecayTreeTupleConfDbMerge
 apply_pattern    component_library library=DecayTreeTuple
 apply_pattern    install_python_modules
