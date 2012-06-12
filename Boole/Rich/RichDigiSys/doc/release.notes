@@ -4,6 +4,9 @@
 ! Purpose     : Configure the RICH digitisation simulation
 !-----------------------------------------------------------------------------
 
+! 2012-06-12 - Marco Cattaneo
+ - In RichDigiSysConf, force DAQ/RawEvent location when using RawDataFormatTool
+
 !========================= RichDigiSys v1r1 2011-12-16 =======================
 ! 2011-11-18 - Chris Jones
  - Small improvements, to allow more sorts of digitisation sequences to 

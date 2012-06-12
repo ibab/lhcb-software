@@ -83,4 +83,6 @@ class RichDigiSysConf(LHCbConfigurableUser):
         # Fill the Raw Event
         rawEvtFill = self.makeComponent(Rich__MC__Digi__MCRichDigitsToRawBufferAlg,"RichFillRawBuffer")
         rawEvtFill.DataVersion = self.getProp("RawDataFormatVersion")
+        from Configurables import Rich__DAQ__RawDataFormatTool
+        Rich__DAQ__RawDataFormatTool("RichRawDataFormatTool").RawEventLocations = ["DAQ/RawEvent"]
         sequence.Members += [rawEvtFill]
