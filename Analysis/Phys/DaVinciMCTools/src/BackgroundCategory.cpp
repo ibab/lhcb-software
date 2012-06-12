@@ -295,7 +295,7 @@ bool BackgroundCategory::isStable(int pid)
   if ( pid < 0 ) pid *= -1;
 
   if ( pid == 11 || //electron
-       pid == 22 || //photon
+       //       pid == 22 || //photon  - removed from the sable particle list : only converted gamma->ee can come here (stable photons have a specific treatment)
        pid == 13 || //muon
        pid == 12 || //neutrinos
        pid == 14 ||

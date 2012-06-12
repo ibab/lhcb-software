@@ -4,6 +4,12 @@
 ! Responsible : J.P. Palacios
 !=============================================================================
 
+
+! 2012-06-12 - O. Deschamps
+ - Background category : protect for gamma->ee MC-matching 
+  - gamma no longer considered as a stable particle (calorimeter-gamma's are treated separately through Calo2MC tool)
+
+
 !========================= DaVinciMCTools v10r4 2012-03-29 =========================
 
 ! 2012-03-15 - P. Koppenburg
