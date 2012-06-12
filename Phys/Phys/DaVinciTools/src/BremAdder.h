@@ -26,13 +26,22 @@ public:
   virtual ~BremAdder( ); ///< Destructor
   virtual StatusCode initialize();
 
-  bool addBrem   ( LHCb::Particle* particle,bool force=false ) const {return brem4particle( particle, "add" ,force  ); };
-  bool removeBrem( LHCb::Particle* particle,bool force=false ) const {return brem4particle( particle, "remove",force); };
-  const std::vector<const LHCb::CaloHypo*> bremList(const LHCb::Particle* particle)const;
+  bool addBrem   ( LHCb::Particle* particle,bool force=false );
+  bool removeBrem( LHCb::Particle* particle,bool force=false );
+  bool addBrem2Pair( LHCb::Particle* p1, LHCb::Particle* p2 , bool force=false);
+  bool hasBrem(const LHCb::Particle* particle);
+  const LHCb::CaloMomentum bremMomentum(const LHCb::Particle* particle,std::string flag="");
+  const std::pair<LHCb::CaloMomentum,LHCb::CaloMomentum> bremMomenta(const LHCb::Particle* p1,
+                                                                     const LHCb::Particle* p2,
+                                                                     std::string flag="");
 
 protected:
-
-  bool brem4particle( LHCb::Particle* particle , std::string what,bool force=false) const;
+  bool brem4particle( LHCb::Particle* particle ,std::string what,const std::vector<const LHCb::CaloHypo*> brems,bool force=false);
+  const std::vector<const LHCb::CaloHypo*> bremList(const LHCb::Particle* particle,std::string flag="");
+  const std::pair<std::vector<const LHCb::CaloHypo*>,
+                  std::vector<const LHCb::CaloHypo*> >bremLists(const LHCb::Particle* p1,
+                                                                const LHCb::Particle* p2,std::string flag="");
+  const std::vector<const LHCb::CaloHypo*> getBrem(const LHCb::Particle* particle);
   const std::pair<Gaudi::XYZPoint,Gaudi::SymMatrix3x3> getPos(const LHCb::ProtoParticle* proto, LHCb::State::Location state
                                                               , double zcalo, double def=0)const;
   const LHCb::State* usedState( const LHCb::Track* track) const;
@@ -50,5 +59,8 @@ private:
   double m_ptg;
   const IParticle2State* m_p2s ;
   int m_method;
-};
+  const LHCb::Particle* m_part;
+  std::vector<const LHCb::CaloHypo*> m_list;
+  double m_z0;
+};  
 #endif // BREMADDER_H

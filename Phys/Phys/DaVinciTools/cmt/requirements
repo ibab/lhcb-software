@@ -19,7 +19,7 @@ use  CaloUtils             v* Calo
 use  LoKiPhys              v* Phys
 use  LoKiArrayFunctors     v* Phys
 use  DecayTreeFitter       v* Phys 
-use HltEvent            v*    Event
+use  HltEvent              v* Event
 
 # Extra language for translating yacc to c++
 # This is used to generate once the necessary files on Linux that are
