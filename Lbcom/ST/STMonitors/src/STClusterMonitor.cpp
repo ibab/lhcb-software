@@ -172,7 +172,7 @@ void ST::STClusterMonitor::monitorClusters() {
   // Check location exists
   if(m_debug) debug() << "monitorClusters" << endmsg;
   if(exist<LHCb::STClusters>(m_clusterLocation)){
-    m_nClustersPerTELL1.resize(m_nTELL1s,0);
+    m_nClustersPerTELL1.assign(m_nTELL1s,0);
     LHCb::STClusters* clusters = get<LHCb::STClusters>(m_clusterLocation);
 
     const unsigned int nClusters = clusters->size();
