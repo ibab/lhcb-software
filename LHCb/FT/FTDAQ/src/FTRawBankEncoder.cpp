@@ -45,7 +45,7 @@ StatusCode FTRawBankEncoder::initialize() {
 
   //== These parameters should eventually come from the Detector Element
   m_nbBanks = 48;
-  m_nbSipmPerTELL40 = 110;
+  m_nbSipmPerTELL40 = 128;
 
   //== create the vector of vectors of vectors with the proper size...
   std::vector<std::vector<unsigned int> > temp(m_nbSipmPerTELL40);
@@ -69,16 +69,26 @@ StatusCode FTRawBankEncoder::execute() {
   for ( unsigned int iBank = 0; m_sipmData.size() > iBank; ++iBank ) {
     for ( unsigned int iPm = 0; m_sipmData[iBank].size() > iPm; ++iPm ) {
       m_sipmData[iBank][iPm].clear();
-      unsigned int sipmHeader = iPm << FTRawBank::sipmShift;
-      m_sipmData[iBank][iPm].push_back( sipmHeader );
     }
   }
 
   for ( LHCb::FTClusters::const_iterator itC = clusters->begin(); clusters->end() != itC; ++itC ) {
     LHCb::FTChannelID id = (*itC)->channelID();
-    int bankNumber = id.quarter() + 4 * id.layer();   //== Temp, assumes 1 TELL40 per quarter. Should come from Det.Elem.
-    int sipmNumber = id.sipmId();
+    unsigned int bankNumber = id.quarter() + 4 * id.layer();   //== Temp, assumes 1 TELL40 per quarter. Should come from Det.Elem.
+    if ( m_sipmData.size() <= bankNumber ) {
+      info() << "*** Invalid bank number " << bankNumber << " channelID " << id << endmsg;
+      return StatusCode::FAILURE;
+    }
+    unsigned int sipmNumber = id.sipmId();
+    if ( m_sipmData[bankNumber].size() <= sipmNumber ) {
+      info() << "Invalid SiPM number " << sipmNumber << " in bank " << bankNumber << " channelID " << id << endmsg;
+      return StatusCode::FAILURE;
+    }
+    
     if ( m_sipmData[bankNumber][sipmNumber].size() <= FTRawBank::nbClusMaximum ) {  // one extra word for sipm number + nbClus
+      if ( 0 ==m_sipmData[bankNumber][sipmNumber].size() ) {
+        m_sipmData[bankNumber][sipmNumber].push_back( sipmNumber << FTRawBank::sipmShift );
+      }
       int frac = int( (*itC)->fraction() * 8 );
       int cell = id.sipmCell();
       int cSize = (*itC)->size();
@@ -92,12 +102,13 @@ StatusCode FTRawBankEncoder::execute() {
         (cell  << FTRawBank::cellShift) + 
         (cSize << FTRawBank::sizeShift) + 
         (charg << FTRawBank::chargeShift);
+      if ( msgLevel( MSG::VERBOSE ) ) {
+        verbose() << format( "Bank%3d sipm%4d cell %4d frac %6.4f charge %5d size %3d code %4.4x",
+                             bankNumber, sipmNumber, id.sipmCell(), (*itC)->fraction(), 
+                             (*itC)->charge(), (*itC)->size(), coded ) << endmsg;
+      }
       m_sipmData[bankNumber][sipmNumber].push_back( coded );
       m_sipmData[bankNumber][sipmNumber][0] += 1;
-      if ( msgLevel( MSG::VERBOSE ) ) {
-        verbose() << format( "  cell %4d frac %6.4f charge %5d size %3d code %4.4x",
-                             id.sipmCell(), (*itC)->fraction(), (*itC)->charge(), (*itC)->size(), coded ) << endmsg;
-      }
     }
   }
 
@@ -106,18 +117,28 @@ StatusCode FTRawBankEncoder::execute() {
   for ( unsigned int iBank = 0; m_sipmData.size() > iBank; ++iBank ) {
     if( msgLevel( MSG::VERBOSE ) ) verbose() << "*** Bank " << iBank << endmsg;
     std::vector<unsigned int> bank;
+    int lowHigh = 0;
+    int temp = 0;
     for ( unsigned int iPm = 0; m_sipmData[iBank].size() > iPm; ++iPm ) {
       for ( std::vector<unsigned int>::iterator itI = m_sipmData[iBank][iPm].begin(); 
             m_sipmData[iBank][iPm].end() != itI; ++itI ) {
-        int temp = (*itI);
-        if ( itI+1 != m_sipmData[iBank][iPm].end() ) {
-          ++itI;
+        if ( 0 == lowHigh ) {
+          temp = (*itI);
+          lowHigh = 1;
+        } else {
           temp += (*itI)<<16;
+          lowHigh = 0;
+          bank.push_back( temp );
+          if ( msgLevel( MSG::VERBOSE ) ) {
+            verbose() << format( "    at %5d data %8.8x", bank.size(), temp ) << endmsg;
+          }
         }
-        bank.push_back( temp );
-        if ( msgLevel( MSG::VERBOSE ) ) {
-          verbose() << format( "    at %5d data %8.8x", bank.size(), temp ) << endmsg;
-        }
+      }
+    }
+    if ( 1 == lowHigh ) {
+      bank.push_back( temp );
+      if ( msgLevel( MSG::VERBOSE ) ) {
+        verbose() << format( "    at %5d data %8.8x", bank.size(), temp ) << endmsg;
       }
     }
     event->addBank( iBank, LHCb::RawBank::FTCluster, codingVersion, bank );
@@ -134,6 +155,13 @@ StatusCode FTRawBankEncoder::finalize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
+  for ( unsigned int iBank = 0; m_sipmData.size() > iBank; ++iBank ) {
+    for ( unsigned int iPm = 0; m_sipmData[iBank].size() > iPm; ++iPm ) {
+      m_sipmData[iBank][iPm].clear();
+    }
+    m_sipmData[iBank].clear();
+  }
+  m_sipmData.clear();
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
