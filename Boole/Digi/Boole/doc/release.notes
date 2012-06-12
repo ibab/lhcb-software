@@ -3,6 +3,10 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+ - Changes to configurable
+   . Force usage of DAQ/RawEvent in any decoding, following introduction of
+     search list including Other/RawEvent location in decoders
+
  - Changes to references to follow changes in underlying packages
    . Adapt boole-2011-latestdb.ref to new local tag velo-20120515
    . Fix gcc43/gcc46 differences in STDigitCreator

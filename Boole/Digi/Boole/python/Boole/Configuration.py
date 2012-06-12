@@ -430,6 +430,16 @@ class Boole(LHCbConfigurableUser):
             L0Conf().L0Sequencer = seq
             L0Conf().SimulateL0  = True
             self.setOtherProps( L0Conf(), ["DataType"] )
+
+            # Force use of DAQ/RawEvent in emulation
+            from Configurables import L0CaloAlg, CaloTriggerAdcsFromRaw, CaloTriggerBitsFromRaw
+            l0Calo = L0CaloAlg("L0Calo")
+            l0Calo.addTool( CaloTriggerAdcsFromRaw, "EcalTriggerAdcTool" )
+            l0Calo.EcalTriggerAdcTool.RawEventLocations = ["DAQ/RawEvent"]
+            l0Calo.addTool( CaloTriggerAdcsFromRaw, "HcalTriggerAdcTool" )
+            l0Calo.HcalTriggerAdcTool.RawEventLocations = ["DAQ/RawEvent"]
+            l0Calo.addTool( CaloTriggerBitsFromRaw, "CaloTriggerBitsFromRaw" )
+            l0Calo.CaloTriggerBitsFromRaw.RawEventLocations = ["DAQ/RawEvent"]
         else:
             raise RuntimeError("TAE not implemented for L0")
                 
@@ -468,6 +478,7 @@ class Boole(LHCbConfigurableUser):
             decodeVelo = DecodeVeloRawBuffer()
             decodeVelo.DecodeToVeloClusters     = True
             decodeVelo.DecodeToVeloLiteClusters = False
+            decodeVelo.RawEventLocations = ["DAQ/RawEvent"]
             seq.Members += [ decodeVelo ]
             seq.Members += [ "VeloCluster2MCHitLinker" ]
             seq.Members += [ "VeloCluster2MCParticleLinker" ]
@@ -510,10 +521,16 @@ class Boole(LHCbConfigurableUser):
             seq.Members += [ "Rich::MC::MCRichDigitSummaryAlg" ]
 
         if "Calo" in linkDets or "Calo" in moniDets:
-            from Configurables import CaloDigitsFromRaw, CaloReCreateMCLinks, CaloDigitMCTruth
+            from Configurables import CaloDigitsFromRaw, CaloEnergyFromRaw, CaloReCreateMCLinks, CaloDigitMCTruth
             seq = GaudiSequencer("LinkCaloSeq")
-            seq.Members += [ CaloDigitsFromRaw("EcalFromRaw") ]
-            seq.Members += [ CaloDigitsFromRaw("HcalFromRaw") ]
+            ecalDecoder = CaloDigitsFromRaw("EcalFromRaw")
+            ecalDecoder.addTool( CaloEnergyFromRaw("EcalFromRawTool" ))
+            ecalDecoder.EcalFromRawTool.RawEventLocations = [ "DAQ/RawEvent" ]
+            seq.Members += [ ecalDecoder ]
+            hcalDecoder = CaloDigitsFromRaw("HcalFromRaw")
+            hcalDecoder.addTool( CaloEnergyFromRaw("HcalFromRawTool" ))
+            hcalDecoder.HcalFromRawTool.RawEventLocations = [ "DAQ/RawEvent" ]
+            seq.Members += [ hcalDecoder ]
             recreateLinks = CaloReCreateMCLinks()
             recreateLinks.Digits   = ["Raw/Ecal/Digits", "Raw/Hcal/Digits" ]
             recreateLinks.MCDigits = ["MC/Ecal/Digits",  "MC/Hcal/Digits" ]
@@ -778,6 +795,8 @@ class Boole(LHCbConfigurableUser):
             from Configurables import MCOTDepositMonitor
             GaudiSequencer("MoniOTSeq").Members += [ MCOTDepositMonitor() ]
             if histOpt == "Expert":
+                from Configurables import OTRawBankDecoder
+                OTRawBankDecoder().RawEventLocations = ["DAQ/RawEvent"]
                 importOptions("$OTMONITORROOT/options/Boole.opts")
 
         if "Rich" in moniDets:

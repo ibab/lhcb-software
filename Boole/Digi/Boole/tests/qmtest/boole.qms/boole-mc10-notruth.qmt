@@ -20,6 +20,7 @@ preprocessor = BoolePreprocessor + \
   LineSkipper(["LinkMuonSeq          INFO Member list:"]) + \
   LineSkipper(["LinkL0Seq            INFO Member list:"]) + \
   LineSkipper(["MoniOTSeq            INFO Member list: MCOTDepositMonitor"]) + \
+  LineSkipper(["ToolSvc.OTRawBa...   INFO Using '[DAQ/RawEvent]' as search path for the RawEvent object"]) + \
   LineSkipper(["ToolSvc.OTRawBa...   INFO  countsPerBX = 64 numberOfBX  = 3 timePerBX = 25 ForceBankVersion = 255"]) + \
   LineSkipper(["PrepareDIGI          INFO Member list: "]) + \
   RegexpReplacer(when = "DigiWriter           INFO Data source: EventDataSvc output: DATAFILE=", orig = r'ev-Minimal.digi', repl = r'ev.digi') + \
