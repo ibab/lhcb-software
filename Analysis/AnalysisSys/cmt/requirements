@@ -31,7 +31,6 @@ use  DisplVerticesMC            v1r4p1   Phys   # Victor Coco
 use  DecayTreeTuple             v3r22    Phys   # Rob Lambert
 use  JetAccessories		v1r4     Phys   # Victor Coco, Cedric Potterat
 use  JetAccessoriesMC		v1r4	 Phys   # Victor Coco, Cedric Potterat
-use  SVJetsAnalysis             v*       Phys   # Oscar Augusto
 
 ####################################################################
 
