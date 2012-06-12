@@ -13,12 +13,12 @@ branches          cmt doc options src
 
 # Used packages. 
 #============================================================================
-use  DaVinciKernel   v*    Phys
-use  TrackInterfaces v*    Tr
-use  RecEvent       v*     Event
-use  CaloUtils      v*     Calo
-use  CaloInterfaces v*     Calo
-
+use  DaVinciKernel   v*     Phys
+use  TrackInterfaces v*     Tr
+use  RecEvent        v*     Event
+use  CaloUtils       v*     Calo
+use  CaloInterfaces  v*     Calo
+use  DaVinciTools    v*     Phys
 # Component library building rule
 #============================================================================
 library          ParticleMaker    ../src/*.cpp

@@ -27,8 +27,7 @@ ParticleMakerBase::ParticleMakerBase( const std::string& name,
   , m_app    ( 0 )
   , m_brem    ( NULL )
 {
-  declareProperty ( "Input"   , m_input = LHCb::ProtoParticleLocation::Charged ) ;
-  
+  declareProperty ( "Input"   , m_input = LHCb::ProtoParticleLocation::Charged ) ; 
   declareProperty ( "Particle" , m_pid = "UNDEFINED" , "Particle to create : pion, kaon, muon..."   ) ;
   declareProperty( "AddBremPhotonTo",  m_addBremPhoton, "particleIDs to be Brem-corrected (default : electrons only)");
   m_addBremPhoton.push_back( "e+" );

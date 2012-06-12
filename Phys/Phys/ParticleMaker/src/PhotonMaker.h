@@ -75,6 +75,12 @@ private:
   bool                               m_converted        ;
   bool                               m_unconverted      ;
   unsigned long  m_count[3];
-  double m_prs;
+  double m_minPrs;
+  std::string m_part;
+  bool m_addHcal;
+  double m_maxHcal;
+  double m_minHcal;
+  double m_maxPrs;
+  double m_mas;
 };
 #endif // PHOTONMAKER_H

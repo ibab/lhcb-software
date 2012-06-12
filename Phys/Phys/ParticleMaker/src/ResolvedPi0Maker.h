@@ -49,5 +49,7 @@ private:
 
   bool m_singlePhotonUse;
   bool m_independantPhotons;
+  double m_maxbal;
+  double m_minbal;
 };
 #endif // RESOLVEDPI0MAKER_H

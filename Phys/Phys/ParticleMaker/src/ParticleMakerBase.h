@@ -90,6 +90,8 @@ protected:
   // list of PIDs for which BremStrahlung correction is activated
   std::vector<std::string> m_addBremPhoton;
 
+  IBremAdder* bremAdder(){return m_brem;}
+
 private:
 
   /// Local ProtoParticle container.

@@ -3,6 +3,11 @@
 ! Responsible : Chris Jones, J. Palacios, Olivier Deschamps
 !==============================================================================
 
+! 2012-06-12 - Olivier Deschamps
+  - DiElectronMaker  : new maker algorithm to produce dielectron with correct bremStrahlung treatment (killing overlap)
+  - ResolvedPi0Maker : add the possibility to cut on the di-gamma energy balance
+  - PhotonMaker      : possibility to create 'Ecal+Hcal' objects
+ 
 !========================= ParticleMaker v6r2 2012-05-03 =========================
 
 ! 2012-04-18 - Wouter Hulsbergen

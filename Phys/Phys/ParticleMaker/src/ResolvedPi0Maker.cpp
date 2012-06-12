@@ -44,7 +44,9 @@ DECLARE_ALGORITHM_FACTORY( ResolvedPi0Maker )
 {
   declareProperty( "SinglePhotonUse"   , m_singlePhotonUse  = false);
   declareProperty( "IndependantPhotons", m_independantPhotons= false);
-  declareProperty ( "PhotonMakerType"  , m_photonMakerType = "PhotonMaker") ;
+  declareProperty( "PhotonMakerType"  , m_photonMakerType = "PhotonMaker") ;
+  declareProperty( "MaxBalance"       , m_maxbal=-1.);
+  declareProperty( "MinBalance"       , m_minbal=-1.);
 }
 // ============================================================================
 
@@ -132,8 +134,9 @@ StatusCode ResolvedPi0Maker::makeParticles (LHCb::Particle::Vector & pi0s )
     if ( m_singlePhotonUse && (*ip1).second )continue;
     for( ip2 = ip1+1 ; ip2 != orderedPhotons.end() ; ++ip2 ) {
       if ( m_singlePhotonUse && (*ip2).second ) continue;
-
       if( !selPi0( (*ip1).first , (*ip2).first) )continue;
+
+
 
       // create pi0
       LHCb::Particle* pi0 = new LHCb::Particle();
@@ -246,10 +249,13 @@ bool ResolvedPi0Maker::selPi0(const LHCb::CaloParticle& g1,
 
   LHCb::CaloParticle pi0(g1.particle() ,m_point ,m_pointErr);
   pi0.addCaloPosition(g2.particle() );
-
-  if (fabs(pi0.mass()-m_Mass) < m_MassWin && pi0.pt() > m_PtCut ) isGood=true;
+  double bal = fabs( (g1.particle()->momentum().e() - g2.particle()->momentum().e())
+                     / (g1.particle()->momentum().e() + g2.particle()->momentum().e() ) );
+  if (fabs(pi0.mass()-m_Mass) < m_MassWin 
+      && pi0.pt() > m_PtCut 
+      && ( m_minbal <0 || bal > m_minbal )
+      && ( m_maxbal <0 || bal < m_maxbal ) ) isGood=true;
   return isGood;
-
 }
 
 
