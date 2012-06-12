@@ -71,7 +71,10 @@ try:
     if os.path.exists( startup ) :
         execfile( startup )
     else :
-        import Bender.Startup        
+        import Bender.Startup
+        
+    logger.info ( 'Define the startup file to be %s' % startup )
+
 except:
     pass
 
@@ -79,16 +82,22 @@ from PyCintex import gbl as cpp
             
 # =============================================================================
 
-## massive imports of everything 
-from LoKiCore.decorators          import *
-from LoKiPhys.decorators          import *
-from LoKiArrayFunctors.decorators import *
-from LoKiAlgo.decorators          import *
-from LoKiCore.functions           import *
+## massive imports of everything-II
+logger.info ( "Massive   import of ``everything''")
+from LoKiCore.decorators           import *
+from LoKiPhys.decorators           import *
+from LoKiArrayFunctors.decorators  import *
+from LoKiAlgo.decorators           import *
+from LoKiCore.functions            import *
 
-#from LoKiTrigger.decorators        import *
-#from LoKiTracks.decorators         import *
-#from LoKiProtoParticles.decorators import *
+
+## massive imports of everything-II
+logger.info ( "Even more imports of ``everything''")
+## from LoKiTrigger.decorators        import *
+from LoKiTracks.decorators         import *
+from LoKiProtoParticles.decorators import *
+from LoKiHlt.decorators            import *
+from LoKiNumbers.decorators        import *
 
 # =============================================================================
 from Gaudi.Configuration import importOptions

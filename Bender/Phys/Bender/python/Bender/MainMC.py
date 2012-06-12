@@ -50,6 +50,7 @@ __version__ = "$Revision$"
 from Bender.Main import *
 
 ## MC :
+logger.info ( "Load simulation stuff")
 from LoKiGen.decorators           import *
 from LoKiGenMC.decorators         import *
 from LoKiMC.decorators            import *

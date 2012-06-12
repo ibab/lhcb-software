@@ -261,7 +261,7 @@ if not hasattr ( _AppMgr , '_disable_Tops_' ) :
         _disabled = []
         for _a in _tops :
             if _a.isEnabled() :
-                _a.setEnable ( False )
+                _a.setEnabled ( False )
                 _disabled += [ _a ]
              
         return _disabled 
@@ -282,7 +282,7 @@ if not hasattr ( _AppMgr , '_disable_All_' ) :
         _disabled = []
         for _a in _tops :
             if _a.isEnabled() :
-                _a.setEnable ( False )
+                _a.setEnabled ( False )
                 _disabled += [ _a ]
              
         return _disabled 
