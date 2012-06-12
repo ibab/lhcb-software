@@ -1,5 +1,5 @@
 // $Id: PostScaler.h,v 1.1 2007-03-02 08:49:27 cattanem Exp $
-#ifndef POSTSCALER_H 
+#ifndef POSTSCALER_H
 #define POSTSCALER_H 1
 
 // Include files
@@ -9,12 +9,12 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/Property.h"
-#include "IEventCounter.h"
+#include "Kernel/IEventCounter.h"
 
 /** @class PostScaler PostScaler.h
  *  Allows to prescale events at a given rate suing a random number (as Prescaler.cpp)
  *  or to force the fraction of accepted events to be as given by options (or both).
- *  
+ *
  *  @author P. Koppenburg
  *  @date   2004-06-15
  */

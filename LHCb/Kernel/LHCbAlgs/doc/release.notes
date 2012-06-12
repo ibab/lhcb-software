@@ -4,6 +4,15 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+  === requires LHCbKernel > v13r10 ===
+
+! 2012-06-12 - Marco Clemencic
+ - Moved IEventCounter to LHCbKernel.
+ - Modified EvtCounter to implement the setEventCounter method and added two
+   properties (UseIncident and InitialCount) useful for special cases and test.
+ - Added test for new features of EvtCounter (with test algorithm
+   TestEventCounter).
+
 ! 2012-06-04 - Patrick Koppenburg
  - OfflienRateLimiter: Remove unused property ConditionRate
 
@@ -19,12 +28,12 @@
  - Fix trivial icc remarks
 
 ! 2012-03-01 - Marco Cattaneo
- - In LHCbApp, do not check DQ flags in case of Simulation 
+ - In LHCbApp, do not check DQ flags in case of Simulation
 
 !========================= LHCbAlgs v2r48 2012-02-28 =========================
 ! 2012-02-24 - Marco Cattaneo
  - Change default DataType in LHCbApp() to 2012 (was 2009)
- - Add slot "IgnoreDQFlags" to LHCbApp(). If False, events with bad DQ are 
+ - Add slot "IgnoreDQFlags" to LHCbApp(). If False, events with bad DQ are
    skipped. Default is True
  - Adapt lhcbalgs.dqfilter.service.basic to use LHCbApp with IgnoreDQFlags=False
  - Clone above test as lhcbalgs.dqfilter.service.disabled to test LHCbApp with

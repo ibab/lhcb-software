@@ -1,8 +1,8 @@
 // $Id: EvtCounter.cpp,v 1.1 2007-10-11 08:47:29 cattanem Exp $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
 
 // local
@@ -25,14 +25,15 @@ DECLARE_TOOL_FACTORY( EvtCounter )
 EvtCounter::EvtCounter( const std::string& type,
                         const std::string& name,
                         const IInterface* parent )
-  : GaudiTool ( type, name , parent ),
+  : base_class ( type, name , parent ),
   m_eventCounter(0){
-  declareInterface<IEventCounter>(this);
-  return;
-  
+  declareProperty("InitialCount", m_initialCount = 1,
+                  "Value to be used for the first event.");
+  declareProperty("UseIncident", m_useIncident = true,
+                  "Whether to increment the counter at every BeginEvent incident.");
 }
 //=============================================================================
-// Initialize method, retrieve necessary services 
+// Initialize method, retrieve necessary services
 //=============================================================================
 StatusCode EvtCounter::initialize() {
 
@@ -40,8 +41,13 @@ StatusCode EvtCounter::initialize() {
   StatusCode sc = GaudiTool::initialize();
   if( sc.isFailure() ) { return sc; }
 
-  // Register to the Incident service to be notified at the begin of one event
-  incSvc()->addListener(this,"BeginEvent",101);
+  m_eventCounter = m_initialCount;
+  if (m_useIncident) {
+    // Register to the Incident service to be notified at the begin of one event
+    incSvc()->addListener(this,"BeginEvent",101);
+    // take into account that the increment will be called once before the first event
+    --m_eventCounter;
+  }
 
   return sc;
 }

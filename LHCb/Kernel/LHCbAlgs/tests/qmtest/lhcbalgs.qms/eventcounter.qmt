@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+<argument name="program"><text>gaudirun.py</text></argument>
+<argument name="args"><set>
+  <text>-v</text>
+</set></argument>
+<argument name="options"><text>
+# Options of the test job
+from Gaudi.Configuration import *
+
+from Configurables import LHCbAlgsTests__TestEventCounter as EC
+from Configurables import EvtCounter
+
+app = ApplicationMgr(EvtSel = 'NONE',
+                     EvtMax = 5)
+
+# counters
+counters = [EvtCounter("NotFromOne", InitialCount=123),
+            EvtCounter("NotIncreasing", UseIncident=False),
+            EvtCounter("Forcing", UseIncident=False)]
+
+# algorithms
+default = EC("Test-Default")
+algs = [default]
+algs += [EC("Test-%s" % cnt.name().replace("ToolSvc.",""), EvtCounter=cnt) for cnt in counters]
+
+app.TopAlg = algs
+
+
+def customLoop(app, nevt):
+    from GaudiPython import gbl
+    from GaudiPython.Bindings import InterfaceCast
+
+    sc = app.initialize()
+
+    # get the right interface of the tool
+    tool = app.tool("ToolSvc.Forcing")
+    cntr = InterfaceCast(gbl.IEventCounter)(tool.getInterface())
+
+    for i in range(5):
+        cntr.setEventCounter(i * 10)
+        sc = app.run(1)
+        if sc.isFailure():
+            break
+
+    return sc
+
+setCustomMainLoop(customLoop)
+</text></argument>
+<argument name="validator"><text>
+findReferenceBlock("""
+ApplicationMgr       INFO Application Manager Started successfully
+Test-Default         INFO Event count = 1
+Test-NotFromOne      INFO Event count = 123
+Test-NotIncreasing   INFO Event count = 1
+Test-Forcing         INFO Event count = 0
+Test-Default         INFO Event count = 2
+Test-NotFromOne      INFO Event count = 124
+Test-NotIncreasing   INFO Event count = 1
+Test-Forcing         INFO Event count = 10
+Test-Default         INFO Event count = 3
+Test-NotFromOne      INFO Event count = 125
+Test-NotIncreasing   INFO Event count = 1
+Test-Forcing         INFO Event count = 20
+Test-Default         INFO Event count = 4
+Test-NotFromOne      INFO Event count = 126
+Test-NotIncreasing   INFO Event count = 1
+Test-Forcing         INFO Event count = 30
+Test-Default         INFO Event count = 5
+Test-NotFromOne      INFO Event count = 127
+Test-NotIncreasing   INFO Event count = 1
+Test-Forcing         INFO Event count = 40
+""")
+
+countErrorLines()
+</text></argument>
+<argument name="use_temp_dir"><enumeral>true</enumeral></argument>
+</extension>
