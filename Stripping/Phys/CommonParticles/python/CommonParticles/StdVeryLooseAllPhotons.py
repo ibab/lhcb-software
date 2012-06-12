@@ -1,40 +1,45 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLooseElectrons.py,v 1.5 2010-06-01 09:41:12 odescham Exp $ 
+# $Id: StdLooseAllPhotons.py,v 1.2 2009-04-22 14:17:39 pkoppenb Exp $ 
 # =============================================================================
-## @file  CommonParticles/StdLooseElectrons.py
-#  configuration file for 'Standard Loose Electrons' 
+## @file  CommonParticles/StdLooseAllPhotons.py
+#  configuration file for 'Standard Loose All Photons' 
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date 2009-01-14
 # =============================================================================
 """
-Configuration file for 'Standard Loose Electrons'
+Configuration file for 'Standard Very Loose All Photons'
 """
-__author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $"
+__author__  = "Olivier Deschamps odescham@in2p3.fr"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 __all__ = (
-    'StdAllLooseElectrons',
+    'StdLooseAllPhotons' ,
     'locations'
     )
 # =============================================================================
 from Gaudi.Configuration import *
-from Configurables       import CombinedParticleMaker 
-from Configurables       import ProtoParticleCALOFilter
+from Configurables       import PhotonMakerAlg 
+from Configurables       import PhotonMaker
+from GaudiKernel.SystemOfUnits import MeV
 from CommonParticles.Utils import *
 
 ## create the algorithm 
-algorithm = CombinedParticleMaker ( 'StdAllLooseElectrons' ,Particle =  'electron'  )
-# configure the track selector
-selector = trackSelector ( algorithm )
-# protoparticle filter:
-fltr = protoFilter ( algorithm , ProtoParticleCALOFilter , 'Electron' )
-fltr.Selection = [ "RequiresDet='CALO' CombDLL(e-pi)>'-2.0'" ]
+algorithm =  PhotonMakerAlg ( 'StdVeryLooseAllPhotons'         ,
+                                DecayDescriptor = 'Gamma' )
+
+# configure desktop&particle maker: 
+algorithm.addTool ( PhotonMaker , name = 'PhotonMaker' )
+photon = algorithm.PhotonMaker
+photon.ConvertedPhotons   = True
+photon.UnconvertedPhotons = True 
+photon.PtCut              = 100 * MeV 
+
 ## configure Data-On-Demand service 
 locations = updateDoD ( algorithm )
 
 ## finally: define the symbol 
-StdAllLooseElectrons = algorithm 
+StdLooseAllPhotons = algorithm 
 
 ## ============================================================================
 if '__main__' == __name__ :

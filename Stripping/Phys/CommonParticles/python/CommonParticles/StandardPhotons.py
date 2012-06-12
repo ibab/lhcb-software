@@ -25,6 +25,16 @@ _locations.update ( locations )
 from CommonParticles.StdLooseAllPhotons import *
 _locations.update ( locations )
 
+from CommonParticles.StdVeryLooseAllPhotons import *
+_locations.update ( locations )
+
+from CommonParticles.StdAllLooseGammaConversion import *
+_locations.update ( locations )
+
+from CommonParticles.StdAllTightGammaConversion import *
+_locations.update ( locations )
+
+
 # redefine the locations 
 locations = _locations
 
