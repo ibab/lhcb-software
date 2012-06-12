@@ -361,11 +361,12 @@ class Brunel(LHCbConfigurableUser):
         banksToKill = []
         if self.isPropertySet( "RawBanksToKill" ):
             banksToKill  = self.getProp( "RawBanksToKill" )
-        if ("2009" == self.getProp("DataType")) and (inputType in ["MDF","SDST"]):
+        if ("2009" == self.getProp("DataType")) and (inputType in ["MDF","SDST"]) and not self.getProp("Simulation") :
             banksToKill += ["VeloFull", "L0PUFull"]
         if len(banksToKill) > 0 :
             from Configurables import bankKiller
             bkKill = bankKiller("BrunelBankKiller")
+            bkKill.BankTypes = banksToKill
             GaudiSequencer("InitBrunelSeq").Members += [ bkKill ]
 
         # Do not print event number at every event (done already by BrunelInit)
