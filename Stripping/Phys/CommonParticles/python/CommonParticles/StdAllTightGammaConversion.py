@@ -39,7 +39,6 @@ locations = updateDoD ( dieLL )
 StdAllTightGammaLL=dieLL
 
 ###--- Downstream pair
-from Configurables import DiElectronMaker,ProtoParticleCALOFilter
 dieDD = DiElectronMaker('StdAllTightGammaDD')
 dieDD.DecayDescriptor = "gamma -> e+ e-"
 selector = trackSelector ( dieDD , trackTypes = [ "Downstream"]) 

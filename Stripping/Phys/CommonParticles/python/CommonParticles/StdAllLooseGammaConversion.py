@@ -33,14 +33,12 @@ dieLL.addTool( ProtoParticleCALOFilter('Electron'))
 dieLL.Electron.Selection = ["RequiresDet='CALO' CombDLL(e-pi)>'-2.0'"]
 dieLL.DeltaY = 3.
 dieLL.DeltaYmax = 200 * mm
-dieLL.DiElectronMassMax = 4000.*MeV
-dieLL.DiElectronMassMin = 2500.*MeV
+dieLL.DiElectronMassMax = 100.*MeV
 dieLL.DiElectronPtMin = 200.*MeV
 locations = updateDoD ( dieLL )
 StdAllLooseGammaLL=dieLL
 
 ###--- Downstream pair
-from Configurables import DiElectronMaker,ProtoParticleCALOFilter
 dieDD = DiElectronMaker('StdAllLooseGammaDD')
 dieDD.DecayDescriptor = "gamma -> e+ e-"
 selector = trackSelector ( dieDD , trackTypes = [ "Downstream"]) 
