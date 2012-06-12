@@ -4,6 +4,9 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2012-06-12 - Marius Bjoernstad
+ - Updated location for raw event
+
 ! 2012-05-16 - Silvia Borghi
  - Minor updates to VeloTrackMonitorNT to fix nightly warning
    

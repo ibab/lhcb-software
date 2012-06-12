@@ -342,9 +342,16 @@ unsigned int Velo::VeloClusterMonitor::getNClustersFromRaw() {
 
   unsigned int nclusters = 0;
 
+  LHCb::RawEvent* rawEvent = NULL;
   // Fetch raw VELO banks
-  if (exist<LHCb::RawEvent>(LHCb::RawEventLocation::Default) ) {
-    LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default);
+  if (exist<LHCb::RawEvent>(LHCb::RawEventLocation::Other) ) {
+    rawEvent = get<LHCb::RawEvent>(LHCb::RawEventLocation::Other);
+  }
+  else if (exist<LHCb::RawEvent>(LHCb::RawEventLocation::Default) ) {
+    rawEvent = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default);
+  }
+  if (rawEvent)
+  {
     const std::vector<LHCb::RawBank*>& banks = rawEvent->banks(LHCb::RawBank::Velo);
   
     std::vector<LHCb::RawBank*>::const_iterator bi;
@@ -361,6 +368,12 @@ unsigned int Velo::VeloClusterMonitor::getNClustersFromRaw() {
     }
     // End of loop: if there was no error, nclusters will contain the number of
     // VELO (+PU) clusters
+  }
+  else
+  {
+    warning() << "Unable to access raw event to monitor events with high "
+              << "cluster multiplicity. If raw event is at a non-standard " 
+              << "location, please update the code." << endmsg;
   }
   return nclusters;
 }
