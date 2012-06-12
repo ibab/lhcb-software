@@ -32,6 +32,7 @@
 #include "Kernel/ICountContainedObjects.h"
 #include "Kernel/IDQFilter.h"
 #include "Kernel/IDQScanner.h"
+#include "Kernel/IEventCounter.h"
 #include "Kernel/IEventTupleTool.h"
 #include "Kernel/IEvtTypeSvc.h"
 #include "Kernel/IInAcceptance.h"

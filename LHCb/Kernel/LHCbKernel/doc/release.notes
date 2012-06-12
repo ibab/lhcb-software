@@ -4,6 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2012-06-12 - Marco Clemencic
+ - Moved IEventCounter from LHCbAlgs and added a setEventCounter method to
+   override the counter value.
+
 !========================= LHCbKernel v13r10 2012-03-26 =========================
 ! 2012-03-22 - Chris Jones
  - Add some additional checks to StandardPacker
@@ -12,7 +16,7 @@
  - Fixed an unprotected debug() in LbAppInit
 
 ! 2012-03-19 - Olivier Callot
- - New header Kernel/DetectorSegment to handle the representation of a detector 
+ - New header Kernel/DetectorSegment to handle the representation of a detector
    segment, a line described as x = a + b * y and z = c + d * y.
    Useful for storing detector parameters for the upgrade.
    All parameters in float to minimize memory access.
@@ -26,8 +30,8 @@
  - Fix an icc compilation warning in previous commit
 
 ! 2012-02-23 - Olivier Callot
- - Create an FTChannelID for the Fibre Tracker of the upgrade. 
-   This is a stripped down version of OTChannelID. 
+ - Create an FTChannelID for the Fibre Tracker of the upgrade.
+   This is a stripped down version of OTChannelID.
    Added it to LHCbID with all usual methods to get, set and test.
 
 ! 2012-02-22 - Chris Jones

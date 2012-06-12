@@ -26,7 +26,7 @@
   <class pattern ="GaudiUtils::VectorMap<*>"/>
 <!--- Next should really be in L0Event, is an L0DUReport return type -->
   <class name ="std::map<std::pair<int,unsigned int>,unsigned int>"/>
-<!--- Add here all interfaces from Kernel directory --> 
+<!--- Add here all interfaces from Kernel directory -->
   <class name = "IAlgorithmCorrelations" />
   <class name = "IBdlTool"             />
   <class name = "IBIntegrator"         />
@@ -34,6 +34,7 @@
   <class name = "ICondDBInfo"          />
   <class name = "IDQFilter"            />
   <class name = "IDQScanner"           />
+  <class name = "IEventCounter"        />
   <class name = "IEventTupleTool"      />
   <class name = "IEvtTypeSvc"          />
   <class name = "IInAcceptance"        />
@@ -87,18 +88,18 @@
   <class name="LHCb::RichSmartID::MaPMT"/>
   <enum  name="LHCb::RichSmartID::IDType"/>
 
-<!-- Counters in TES --> 
+<!-- Counters in TES -->
 
   <class name = "Gaudi::Counter"  id = "00000096-0000-0000-0000-000000000000" />
   <class name = "Gaudi::Counters" id = "00000097-0000-0000-0000-000000000000" />
   <class name = "Gaudi::Numbers"  id = "00000098-0000-0000-0000-000000000000" />
 
   <class name = "std::pair<std::string,double>"     />
-  <class name = "std::pair<std::string,StatEntity>" />  
+  <class name = "std::pair<std::string,StatEntity>" />
   <class name = "std::vector<std::pair<std::string,double> >"      />
   <class name = "std::vector<std::pair<std::string,StatEntity> > " />
-  
-  <!--- These should really be moved to GaudiKernel or Reflex --> 
+
+  <!--- These should really be moved to GaudiKernel or Reflex -->
   <class name="std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint>" />
 
 </lcgdict>
