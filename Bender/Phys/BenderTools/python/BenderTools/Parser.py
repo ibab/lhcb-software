@@ -29,7 +29,7 @@
 #                 by $Author: ibelyaev $
 # =============================================================================
 """
-Trivial Partser for Bender-based scripts
+Trivial Parser for Bender-based scripts
 
 This file is a part of BENDER project:
 

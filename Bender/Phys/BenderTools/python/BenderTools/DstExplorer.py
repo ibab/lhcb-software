@@ -125,6 +125,9 @@ __usage__   = 'dst_explorer [options] file1 [ file2 [ file3 [ file4 ....'
 from Bender.Logger import getLogger 
 logger = getLogger( __name__ )
 # =============================================================================
+from BenderTools.Seek       import * 
+from BenderTools.GoodEvents import * 
+# =============================================================================
 ## configure the application from parser data  
 def configure ( options , arguments ) :
     """
@@ -234,7 +237,7 @@ def configure ( options , arguments ) :
             
     ## prepare to copy good/marked/tagged evenst
     if hasattr ( options, 'OutputFile' ) and options.OutputFile :
-        from Bender.Utils import copyGoodEvents
+        from BenderTools.GoodEvents import copyGoodEvents
         if 0 <= options.OutputFile.find ( '.' ) : 
             copyGoodEvents (             options.OutputFile         ) 
         else :
@@ -271,7 +274,7 @@ if '__main__' == __name__ :
         type    = 'str'          ,
         dest    = 'OutputFile'   ,
         help    = 'The name of output file with selected events' ,
-        default = 'GoodEvents'           
+        default = ''            
         )
     ##
     options , arguments = parser.parse_args()
