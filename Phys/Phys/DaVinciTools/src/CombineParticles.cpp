@@ -500,21 +500,21 @@ CombineParticles::CombineParticles
   , m_decayDescriptors ()  // the decay descriptors
   , m_daughterCuts     ()  // the cuts for daughter particles
   , m_combinationCut   ( "ATRUE" ) // the cut for the combination of daughters
-  , m_motherCut        ( "Configure me!"  ) // the final cut for the mother particle. Must be configured
-  , m_factory  ( "LoKi::Hybrid::Tool/HybridFactory:PUBLIC")
+  , m_motherCut        ( "Configure me!" ) // the final cut for the mother particle. Must be configured
+  , m_factory  ( "LoKi::Hybrid::Tool/HybridFactory:PUBLIC" )
   , m_preambulo () // the preambulo
 //
 // plots:
 //
-  , m_daughtersPlotsName   ( "LoKi::Hybrid::PlotTool/DaughtersPlots"    )
-  , m_combinationPlotsName ( "LoKi::Hybrid::PlotTool/CombinationPlots"  )
-  , m_motherPlotsName      ( "LoKi::Hybrid::PlotTool/MotherPlots"       )
+  , m_daughtersPlotsName   ( "LoKi::Hybrid::PlotTool/DaughtersPlots"   )
+  , m_combinationPlotsName ( "LoKi::Hybrid::PlotTool/CombinationPlots" )
+  , m_motherPlotsName      ( "LoKi::Hybrid::PlotTool/MotherPlots"      )
 //
 // plot paths:
 //
-  , m_daughtersPlotsPath   ( ""  )
-  , m_combinationPlotsPath ( ""  )
-  , m_motherPlotsPath      ( ""  )
+  , m_daughtersPlotsPath   ( "" )
+  , m_combinationPlotsPath ( "" )
+  , m_motherPlotsPath      ( "" )
 //
 // monitoring
 //

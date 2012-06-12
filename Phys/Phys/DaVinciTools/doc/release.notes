@@ -3,13 +3,14 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2012-06-12 - Chris Jones
+ - Fix a gcc 4.6 compilation warning in BremAdder.
 
 ! 2012-06-12 - Olivier Deschamps
   - BremAdder : update BremAdder for di-electron and adapt to new IBremAdder interface
 
 ! 2012-05-14 - Edwige Tournefier & Olivier Deschamps
   - BremAdder : implement new BremAdder method from Edwige
-
 
 !========================= DaVinciTools v22r17 2012-05-08 =========================
 

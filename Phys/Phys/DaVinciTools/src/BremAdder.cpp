@@ -1,8 +1,8 @@
 // $Id$
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h"
 // from LHCb
 #include "CaloUtils/CaloMomentum.h"
 #include "CaloUtils/CaloParticle.h"
@@ -18,10 +18,6 @@
 //
 // 2006-10-25 : Olivier Deschamps
 //-----------------------------------------------------------------------------
-
-// Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( BremAdder );
-
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -45,23 +41,24 @@ BremAdder::BremAdder( const std::string& type,
   // Method 2 :  looking for brem candidate(s) from a photon container  (active if m_bInput is not empty)
   declareProperty("BremInput"   , m_bInput = "/Event/Phys/StdVeryLooseAllPhotons/Particles");
   declareProperty("PhotonID"    , m_bremid = -2);        //  brem photon ID lower threshold
-  declareProperty("PhotonPT"    , m_ptg =100.);  
+  declareProperty("PhotonPT"    , m_ptg =100.);
   declareProperty("ExtrapolatorType" , m_extrapolatorType = "TrackRungeKuttaExtrapolator" ) ;
   declareProperty ("PosTolerance" , m_stol =2.);
 
-  // brem correction method : 
+  // brem correction method :
   //    - 0  : add 4-momenta
   //    - 1  : add 3-momenta and re-evaluate the energy according to the mass
   //    - 2  : keep the electron direction unchanged
   declareProperty("BremCorrectionMethod", m_method=0);
 }
-//============================================================================= 
-// Destructor 
-//=============================================================================
-BremAdder::~BremAdder() {}  
 
 //=============================================================================
-StatusCode BremAdder::initialize() 
+// Destructor
+//=============================================================================
+BremAdder::~BremAdder() {}
+
+//=============================================================================
+StatusCode BremAdder::initialize()
 {
   StatusCode sc = GaudiTool::initialize();
   if (sc.isFailure()) return Error("Failed to initialize", sc);
@@ -75,31 +72,30 @@ StatusCode BremAdder::initialize()
   m_z0 = -Hesse/plane.Normal().Z();
   if (msgLevel(MSG::DEBUG))debug() << "Z0 " << m_z0 << endmsg;
   if (msgLevel(MSG::DEBUG))  debug() << "BremAdder : correction method = " << m_method << endmsg;
-  return StatusCode::SUCCESS;  
+  return sc;
 }
-
-
 
 //============================================================================= INTERFACED METHODS
 // ---- Add brem to particle
-bool BremAdder::addBrem   ( LHCb::Particle* particle,bool force ){
+bool BremAdder::addBrem   ( LHCb::Particle* particle,bool force )
+{
   if( NULL == particle)return false;
   const std::vector<const LHCb::CaloHypo*> brems = bremList((const LHCb::Particle*)particle);
-  return brem4particle( particle, "add" , brems, force  ); 
+  return brem4particle( particle, "add" , brems, force  );
 };
 // ---- Remove brem from particle
 bool BremAdder::removeBrem( LHCb::Particle* particle,bool force ){
   if( NULL == particle)return false;
   const std::vector<const LHCb::CaloHypo*> brems = bremList((const LHCb::Particle*)particle);
-  return brem4particle( particle, "remove",brems,force); 
+  return brem4particle( particle, "remove",brems,force);
 };
 
 //---- Add brem(s) to a pair of particles removing overlaps
 bool BremAdder::addBrem2Pair( LHCb::Particle* p1, LHCb::Particle* p2 , bool force){
   if( NULL == p1 || NULL == p2)return false;
   const std::pair<std::vector<const LHCb::CaloHypo*>,std::vector<const LHCb::CaloHypo*> >pair=bremLists(p1,p2);
-  
-  //                                                                                                      (const LHCb::Particle*)p2);  
+
+  //                                                                                                      (const LHCb::Particle*)p2);
   const std::vector<const LHCb::CaloHypo*> brems1 = pair.first;
   const std::vector<const LHCb::CaloHypo*> brems2 = pair.second;
   bool b1= brem4particle( p1, "add" , brems1,force );
@@ -169,12 +165,15 @@ const std::pair<LHCb::CaloMomentum,LHCb::CaloMomentum> BremAdder::bremMomenta(co
 
 
 //============================================================================= PRIVATE METHODS
-bool BremAdder::brem4particle( LHCb::Particle* particle,std::string what,
-                               const std::vector<const LHCb::CaloHypo*> brems,bool force){
-  // boolean 'force' : force re-adding/re-removing brem 
-  
-  
-  if (msgLevel(MSG::DEBUG))  
+bool BremAdder::brem4particle( LHCb::Particle* particle,
+                               const std::string& what,
+                               const std::vector<const LHCb::CaloHypo*>& brems,
+                               bool force )
+{
+  // boolean 'force' : force re-adding/re-removing brem
+
+
+  if (msgLevel(MSG::DEBUG))
     debug() << what << " BremStrahlung  to/from particle momentum " << particle->momentum() << endmsg ;
 
   //-- consistency checks
@@ -187,7 +186,7 @@ bool BremAdder::brem4particle( LHCb::Particle* particle,std::string what,
     if (msgLevel(MSG::DEBUG))debug() << " No charged track associated to the particle - no brem to be added" << endmsg;
     return false;
   }
-  
+
   //-- check if bremmStrahlung has already been added
   if( hasBrem(particle)  && "add" == what && !force){
     if (msgLevel(MSG::DEBUG))debug() << " The bremstrahlung has already been added - nothing to add"<< endmsg;
@@ -195,7 +194,7 @@ bool BremAdder::brem4particle( LHCb::Particle* particle,std::string what,
   }
   if( !hasBrem(particle) && "remove" == what && !force ){
     if (msgLevel(MSG::DEBUG))debug() << " No bremstrahlung had been added - nothing to remove "<< endmsg;
-    return false;  
+    return false;
   }
 
 
@@ -205,27 +204,27 @@ bool BremAdder::brem4particle( LHCb::Particle* particle,std::string what,
     const LHCb::State*  state = usedState( proto->track() );
     StatusCode sc = m_p2s->state2Particle( *state, *particle );
     if( what == "remove")return sc.isFailure() ? false : true;
-  }  
+  }
   if( "add" != what )return Warning("Don't know what to do with brem ! flag must be 'add' or 'remove'",StatusCode::FAILURE);
 
   // ----- Start bremStrahlung recovery -----
   // brem correction from list of brems
-  if( brems.empty()){ 
+  if( brems.empty()){
     if (msgLevel(MSG::DEBUG))debug() << "Empty brem list" << endmsg;
     return true;
   }
 
   // Brems momentum
-  LHCb::CaloMomentum bremPhoton = LHCb::CaloMomentum();  
+  LHCb::CaloMomentum bremPhoton = LHCb::CaloMomentum();
   for( std::vector<const LHCb::CaloHypo*>::const_iterator ib = brems.begin();brems.end() !=ib ; ib++){
     bremPhoton.addCaloPosition( *ib );
   }
 
   if (msgLevel(MSG::DEBUG)){
-    debug() << "Particle Momentum before Brem correction " << particle->momentum()<< endmsg;  
+    debug() << "Particle Momentum before Brem correction " << particle->momentum()<< endmsg;
     debug() << "Brem correction method = " << m_method << endmsg;
   }
-  
+
   //----- add brem momentum
   Gaudi::LorentzVector& mome = (Gaudi::LorentzVector&) particle->momentum();
   if( m_method == 0 ){
@@ -236,7 +235,7 @@ bool BremAdder::brem4particle( LHCb::Particle* particle,std::string what,
     double py = mome.py() + bremPhoton.momentum().py();
     double pz = mome.pz() + bremPhoton.momentum().pz();
     double mas = mome.mass();
-    double e  = sqrt( mas*mas + px*px + py*py + pz*pz);
+    double e  = std::sqrt( mas*mas + px*px + py*py + pz*pz);
     mome.SetPxPyPzE( px,py,pz,e);
   }else if(m_method == 2){
     // keep momentum direction and particle mass
@@ -248,29 +247,33 @@ bool BremAdder::brem4particle( LHCb::Particle* particle,std::string what,
     double py = mome.py()*fac;
     double pz = mome.pz()*fac;
     double mas = mome.mass();
-    double e  = sqrt( mas*mas + p*p);
+    double e  = std::sqrt( mas*mas + p*p);
     mome.SetPxPyPzE( px,py,pz,e);
   }else
     return Error("Unknown bremStrahlung method" + Gaudi::Utils::toString(m_method), StatusCode::FAILURE);
-  
-  
 
-  // update covariance matrices 
-  (Gaudi::SymMatrix4x4&)particle->momCovMatrix() += bremPhoton.momCovMatrix(); 
-  (Gaudi::Matrix4x3&)particle->posMomCovMatrix() += bremPhoton.momPointCovMatrix();   
-  
 
-  if (msgLevel(MSG::DEBUG)){  
+
+  // update covariance matrices
+  (Gaudi::SymMatrix4x4&)particle->momCovMatrix() += bremPhoton.momCovMatrix();
+  (Gaudi::Matrix4x3&)particle->posMomCovMatrix() += bremPhoton.momPointCovMatrix();
+
+
+  if (msgLevel(MSG::DEBUG)){
     debug() << "Brem momentum : "<< bremPhoton.momentum() << endmsg;
-    debug() << "Particle Momentum after Brem correction " << particle->momentum()<< endmsg;  
-    debug() << "Particle mass after brem correction "<< particle->momentum().M()<<" , "<<particle->measuredMass()<<endmsg; 
-  }  
+    debug() << "Particle Momentum after Brem correction " << particle->momentum()<< endmsg;
+    debug() << "Particle mass after brem correction " << particle->momentum().M()
+            << " , " << particle->measuredMass() << endmsg;
+  }
   return true;
 }
 
-//----                                                                                
-const std::pair<Gaudi::XYZPoint,Gaudi::SymMatrix3x3> BremAdder::getPos(const LHCb::ProtoParticle* proto,LHCb::State::Location lstate
-                                                                       ,double zcalo, double def) const{
+//----
+const std::pair<Gaudi::XYZPoint,Gaudi::SymMatrix3x3>
+BremAdder::getPos(const LHCb::ProtoParticle* proto,
+                  const LHCb::State::Location& lstate,
+                  double zcalo, double def) const
+{
   const LHCb::Track* tr=proto->track();
   LHCb::State nstate;
   //-->ET get first available State instead of ClosestToBeam
@@ -284,9 +287,9 @@ const std::pair<Gaudi::XYZPoint,Gaudi::SymMatrix3x3> BremAdder::getPos(const LHC
       if (msgLevel(MSG::DEBUG))debug()<<"Extrapolating to: "<<def<<endmsg;
       nstate.setLocation(lstate);
       if(sc.isFailure()){
-        Warning("Extrapolator failed").ignore();   
+        Warning("Extrapolator failed").ignore();
         return std::make_pair(Gaudi::XYZPoint(0,0,-1*Gaudi::Units::km),Gaudi::SymMatrix3x3());
-      }    
+      }
     }else if(state==NULL){
       Warning("State points to NULL").ignore();
       return std::make_pair(Gaudi::XYZPoint(0,0,-1*Gaudi::Units::km),Gaudi::SymMatrix3x3());
@@ -308,7 +311,7 @@ const std::pair<Gaudi::XYZPoint,Gaudi::SymMatrix3x3> BremAdder::getPos(const LHC
 
 //===========
 const std::vector<const LHCb::CaloHypo*> BremAdder::getBrem(const LHCb::Particle* particle){
-  // if bremList is already evaluated for the particle 
+  // if bremList is already evaluated for the particle
   if(particle == m_part)return m_list;
   // else re-evaluate the brems
   m_part=particle;
@@ -319,12 +322,12 @@ const std::vector<const LHCb::CaloHypo*> BremAdder::getBrem(const LHCb::Particle
   if( particle==NULL)return bhypos;
   const LHCb::ProtoParticle* proto=particle->proto();
   if( proto==NULL)return bhypos;
-  const SmartRefVector<LHCb::CaloHypo> hypos = proto->calo();
+  const SmartRefVector<LHCb::CaloHypo>& hypos = proto->calo();
 
 
   // look for CaloHypo linked to PP
   const LHCb::CaloHypo* electronHypo = NULL;
-  const LHCb::CaloHypo* photonHypo   = NULL;    
+  const LHCb::CaloHypo* photonHypo   = NULL;
   for(SmartRefVector<LHCb::CaloHypo>::const_iterator ihyp = hypos.begin();ihyp!=hypos.end();++ihyp){
     const LHCb::CaloHypo* hypo = *ihyp;
     if (NULL != hypo){
@@ -333,9 +336,9 @@ const std::vector<const LHCb::CaloHypo*> BremAdder::getBrem(const LHCb::Particle
       if (msgLevel(MSG::DEBUG))debug() << " Hypo " << hypo->hypothesis() << " " << hypo << endmsg;
     }
   }
-  
 
-  
+
+
   if (msgLevel(MSG::DEBUG))debug() << " Input = " << m_bInput << endmsg;
 
   if( m_bInput != "" && exist<LHCb::Particle::Range>( m_bInput )){
@@ -350,48 +353,46 @@ const std::vector<const LHCb::CaloHypo*> BremAdder::getBrem(const LHCb::Particle
     Gaudi::XYZPoint pfromTT = fromT.first;
     Gaudi::SymMatrix3x3 cfromVelo = fromV.second;
     Gaudi::SymMatrix3x3 cfromTT = fromT.second;
-    
-    
-    // Starting from photon particles 
-    LHCb::Particle::Range photons = get<LHCb::Particle::Range>( m_bInput );    
+
+
+    // Starting from photon particles
+    LHCb::Particle::Range photons = get<LHCb::Particle::Range>( m_bInput );
     int nb=0;
     for( LHCb::Particle::Range::const_iterator ip = photons.begin() ; photons.end() != ip ; ++ip ){
       const LHCb::Particle* ph =  *ip;
-      if ( ph->proto() == NULL )continue;      
+      if ( ph->proto() == NULL )continue;
       //-->ET add cut on PT for brem
       if ( ph->pt() < m_ptg) continue;
 
-      if( NULL != electronHypo &&  
+      if( NULL != electronHypo &&
           proto->info(LHCb::ProtoParticle::CaloChargedID , 0) == ph->proto()->info( LHCb::ProtoParticle::CaloNeutralID, 0)){
         if (msgLevel(MSG::DEBUG))debug() << " Electron and Brem candidates are the same calo - nothing to add "<< endmsg;
-        continue;      
+        continue;
       }
-      
-      
+
+
       const LHCb::ProtoParticle* phproto = ph->proto();
       //-->ET add cut on photon ID for brem
       double photID=phproto->info( LHCb::ProtoParticle::PhotonID,-999.);
       if (photID < m_bremid ) continue;
 
 
-      const SmartRefVector<LHCb::CaloHypo>  calovect=phproto->calo();
+      const SmartRefVector<LHCb::CaloHypo>& calovect=phproto->calo();
       if ( calovect.empty())continue;
       if ( 1 != calovect.size() )Warning("Several CaloHypo linked to single photon").ignore();
       SmartRefVector<LHCb::CaloHypo>::const_iterator icalo=calovect.begin();
       const LHCb::CaloHypo* caloph = (*icalo);
       const LHCb::CaloHypo::Position* gpos = caloph->position();
       if ( gpos ==NULL)continue;
-      
+
       double ypos=gpos->y();
       double xpos=gpos->x();
 
-
-      const LHCb::CaloPosition::Spread poscov=gpos->spread();
-      const LHCb::CaloPosition::Covariance cov=gpos->covariance();
+      const LHCb::CaloPosition::Spread& poscov = gpos->spread();
 
       double sprx=poscov(LHCb::CaloPosition::X,LHCb::CaloPosition::X);
-      double errV=sqrt( sprx + cfromVelo(0,0));
-      double errT=sqrt( sprx + cfromTT(0,0));
+      double errV=std::sqrt( sprx + cfromVelo(0,0));
+      double errT=std::sqrt( sprx + cfromTT(0,0));
 
       // select X-FOI
       double dx1= xpos-std::min(pfromVelo.X()-m_stol*errV,pfromTT.X()-m_stol*errT);
@@ -402,7 +403,7 @@ const std::vector<const LHCb::CaloHypo*> BremAdder::getBrem(const LHCb::Particle
       double sprye=cfromTT(1,1);
       double spry=poscov(LHCb::CaloPosition::Y,LHCb::CaloPosition::Y);
       double ye=pfromTT.y();
-      if( fabs(ypos-ye)/sqrt(spry+sprye)>m_stol  )continue;
+      if( fabs(ypos-ye)/std::sqrt(spry+sprye)>m_stol  )continue;
 
       if (msgLevel(MSG::DEBUG)){
         debug()  << " xpos(g)= " << xpos
@@ -410,39 +411,40 @@ const std::vector<const LHCb::CaloHypo*> BremAdder::getBrem(const LHCb::Particle
                  << " TTX= " << pfromTT.X() <<" +- " << errT
                  << " ypos " << ypos
                  << " ye  " << ye
-                 << " spreadY " << sqrt(spry+sprye)
-                 << " VeloY= " << pfromVelo.Y() 
-                 << " TTY= "   << pfromTT.Y() 
-                 <<" ID "<<photID	
+                 << " spreadY " << std::sqrt(spry+sprye)
+                 << " VeloY= " << pfromVelo.Y()
+                 << " TTY= "   << pfromTT.Y()
+                 <<" ID "<<photID
                  <<endmsg;
       }
       nb++;
       bhypos.push_back( caloph );
     }
-    counter("added NewBrem ("+Gaudi::Utils::toString(m_method)+")")+=nb;    
-  }else{    
+    counter("added NewBrem ("+Gaudi::Utils::toString(m_method)+")")+=nb;
+  }else{
     // ======= STANDARD (OLD) BREM RECOVERY : use brem candidate from BremMatch
     if( NULL == photonHypo){
-      if (msgLevel(MSG::DEBUG))debug() << " No photon associated to the particle - nothing to add "<< hypos.size() <<endmsg;
+      if (msgLevel(MSG::DEBUG))debug() << " No photon associated to the particle - nothing to add "
+                                       << hypos.size() << endmsg;
       return bhypos;
     }
-    
-    // Reject if the brem candidate is also the electron cluster candidate    
+
+    // Reject if the brem candidate is also the electron cluster candidate
     const LHCb::CaloPosition* photonPos   = photonHypo->position();
     if(NULL != photonPos ){
       const Gaudi::XYZPoint photonPoint( photonPos->x(),photonPos->y(),photonPos->z() );
-      const LHCb::CaloCellID photonCell   = m_calo->Cell( photonPoint );
+      const LHCb::CaloCellID& photonCell = m_calo->Cell( photonPoint );
       if( NULL != electronHypo &&  proto->info(LHCb::ProtoParticle::CaloChargedID , 0) == photonCell.all() ){
         debug() << " Electron and Brem candidates are the same calo - nothing to add "<< endmsg;
-        return bhypos;      
+        return bhypos;
       }
-    }    
+    }
 
     // Add here the criteria for the identified  brem candidate to be actually added
     if( proto->info(LHCb::ProtoParticle::InAccBrem,0.) == 0.)return bhypos; // no Brem in Acceptance
     if( m_dllBrem  > proto->info(LHCb::ProtoParticle::BremPIDe,-9999. ) )return bhypos;
     if( m_chi2Brem < proto->info(LHCb::ProtoParticle::CaloBremMatch,9999. ) )return bhypos;
-    
+
     const LHCb::CaloHypo::Position* gpos = photonHypo->position();
     if ( gpos ==NULL) return bhypos;
     double xp=gpos->x();
@@ -456,15 +458,15 @@ const std::vector<const LHCb::CaloHypo*> BremAdder::getBrem(const LHCb::Particle
               <<" eph = "<<gpos->e()
               <<" pt = "<<pt
               <<endmsg;
-    }    
+    }
     //-->ET add PT cut for brem
     if (pt <m_ptg) return bhypos;
-    bhypos.push_back( photonHypo );  
+    bhypos.push_back( photonHypo );
     counter("added StdBrem ("+Gaudi::Utils::toString(m_method)+")")+=1;
   }
   m_list=bhypos;
   return bhypos;
-} 
+}
 
 // ============================================================================
 /// Select the appropriate state (as in ChargedParticleMakerBase)
@@ -489,3 +491,5 @@ const LHCb::State* BremAdder::usedState( const LHCb::Track* track) const{
   return uState ;
 }
 
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( BremAdder )
