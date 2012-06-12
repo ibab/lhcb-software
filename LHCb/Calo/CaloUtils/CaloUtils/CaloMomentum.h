@@ -55,6 +55,8 @@ namespace LHCb
     typedef Gaudi::Matrix4x3                               MomPointCovariance ;
     /// vector of CaloPositions
     typedef std::vector<LHCb::CaloPosition>                     CaloPositions ;
+    /// vector of CaloHypos
+    typedef std::vector<const LHCb::CaloHypo*>                      CaloHypos ;
     // ========================================================================
   public:
     // ========================================================================
@@ -209,6 +211,8 @@ namespace LHCb
     // ========================================================================
     /// vector of Calo-positions 
     CaloPositions      m_caloPositions     ;    //     vector of Calo-positions 
+    /// vector of CaloHypos
+    CaloHypos          m_caloHypos         ;    //     vector of CaloHypos
     /// origin point 
     Point              m_point             ;    //                 origin point 
     /// origin point covariance 

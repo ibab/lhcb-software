@@ -5,6 +5,9 @@
 
 
 
+! 2012-06-12 - Olivier Deschamps
+  - CaloParticle/CaloMomentum : store CaloHypo vector
+
 ! 2012-05-14 - Olivier Deschamps
   - CaloMomentum : add constructor from vector<CaloHypo> (useful for bremList() from BremAdder) - New method : multiplicity() returns CaloPositions multiplicity
 

@@ -243,8 +243,7 @@ LHCb::CaloMomentum::CaloMomentum
 // ============================================================================
 // CaloPosition
 // ============================================================================
-void LHCb::CaloMomentum::addCaloPosition 
-( const LHCb::CaloPosition* calopos )
+void LHCb::CaloMomentum::addCaloPosition( const LHCb::CaloPosition* calopos )
 {
   m_flag |= LHCb::CaloMomentum::FromCaloPos;
   if ( 0 == calopos)
@@ -257,8 +256,7 @@ void LHCb::CaloMomentum::addCaloPosition
 // ============================================================================
 // CaloCluster
 // ============================================================================
-void LHCb::CaloMomentum::addCaloPosition 
-( const LHCb::CaloCluster* cluster)
+void LHCb::CaloMomentum::addCaloPosition( const LHCb::CaloCluster* cluster)
 {
   m_flag |= LHCb::CaloMomentum::FromCaloCluster;
   if( 0 == cluster)
@@ -271,8 +269,7 @@ void LHCb::CaloMomentum::addCaloPosition
 // ============================================================================
 // CaloHypo
 // ============================================================================
-void LHCb::CaloMomentum::addCaloPosition
-( const LHCb::CaloHypo* hypo )
+void LHCb::CaloMomentum::addCaloPosition( const LHCb::CaloHypo* hypo )
 {
   m_flag |= LHCb::CaloMomentum::FromCaloHypo;
   
@@ -284,11 +281,11 @@ void LHCb::CaloMomentum::addCaloPosition
   // Check if the hypo has referenced hypos 
   const SmartRefVector<LHCb::CaloHypo>& hypos = hypo->hypos();
   
-  if( hypos.empty() )
-  {
+  if( hypos.empty() ){
     // if no : photon, photonFromMerged, ...
     const LHCb::CaloPosition* calopos = hypo->position();
     this->addCaloPosition(calopos);
+    m_caloHypos.push_back( hypo );
   }
   else
   {
@@ -299,7 +296,8 @@ void LHCb::CaloMomentum::addCaloPosition
       m_flag |= LHCb::CaloMomentum::FromCaloHypo;
       const LHCb::CaloPosition* calopos = (*ihypo)->position();
       this->addCaloPosition(calopos);
-    }
+      m_caloHypos.push_back( *ihypo );
+     }
   }
 }
 // ============================================================================

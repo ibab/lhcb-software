@@ -19,30 +19,25 @@
 // ============================================================================
 namespace LHCb { class Vertex  ; }
 // ============================================================================
-namespace LHCb 
-{
+namespace LHCb{
   // ==========================================================================
   /** @class CaloMomentum CaloUtils/CaloMomentum.h
    *  Helepr class to evalauet the parameters of "Calo"-particles 
    *  @author Olivier Deschamps
    */
-  class CaloParticle : public CaloMomentum
-  {
+  class CaloParticle : public LHCb::CaloMomentum{
     // ========================================================================
   public:
     // ========================================================================
     /// Constructor fom particle 
-    CaloParticle 
-    ( LHCb::Particle*                            part  ) ;
+    CaloParticle( LHCb::Particle*                            part  ) ;
     /// Constructor fom particle & origin vertex     
-    CaloParticle 
-    ( LHCb::Particle*                            part  , 
+    CaloParticle( LHCb::Particle*                            part  , 
       const LHCb::CaloMomentum::Point&           point ) ;
     /// Constructor fom particle & origin vertex & covariance      
-    CaloParticle
-    ( LHCb::Particle*                            part  , 
-      const LHCb::CaloMomentum::Point&           point ,
-      const LHCb::CaloMomentum::PointCovariance& cov   ) ;
+    CaloParticle( LHCb::Particle*                            part  , 
+                  const LHCb::CaloMomentum::Point&           point ,
+                  const LHCb::CaloMomentum::PointCovariance& cov   ) ;
     /// Default Destructor
     virtual ~CaloParticle() ;
     // ========================================================================

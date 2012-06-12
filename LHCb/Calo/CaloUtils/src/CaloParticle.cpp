@@ -24,31 +24,27 @@ LHCb::CaloParticle::~CaloParticle() {}
 // ============================================================================
 // constructor from the particle 
 // ============================================================================
-LHCb::CaloParticle::CaloParticle
-( LHCb::Particle* part ) 
-  : CaloMomentum  ( ) ,
+LHCb::CaloParticle::CaloParticle( LHCb::Particle* part ) 
+  : LHCb::CaloMomentum  ( ) ,
     m_parts       ( ) ,
     m_vert        ( NULL ) ,
     m_isCalo      ( true ) ,
     m_neutral     ( true ) ,
-    m_caloEndTree ( )
-{
+    m_caloEndTree ( ){
   if( NULL == part)m_isCalo = false;
   this -> addCaloPosition( part );
 }
 // ============================================================================
 // constructor from particle & origin point 
 // ============================================================================
-LHCb::CaloParticle::CaloParticle 
-( LHCb::Particle*                  part  , 
-  const LHCb::CaloMomentum::Point& point )
-  : CaloMomentum ()
+LHCb::CaloParticle::CaloParticle( LHCb::Particle*                  part  , 
+                                  const LHCb::CaloMomentum::Point& point )
+  : LHCb::CaloMomentum ()
   , m_parts      () 
   , m_vert       ( NULL )
   , m_isCalo     ( true )
   , m_neutral     ( true ) 
-  ,  m_caloEndTree()
-{
+  ,  m_caloEndTree(){
   if( NULL == part)m_isCalo = false;
   setReferencePoint  ( point ) ;
   this -> addCaloPosition ( part );
@@ -57,17 +53,15 @@ LHCb::CaloParticle::CaloParticle
 // ============================================================================
 // constructor from particle & origin point & covarinace  
 // ============================================================================
-LHCb::CaloParticle::CaloParticle 
-( LHCb::Particle*                            part  ,
-  const LHCb::CaloMomentum::Point&           point , 
-  const LHCb::CaloMomentum::PointCovariance& cov   )
-  : CaloMomentum  ()
+LHCb::CaloParticle::CaloParticle( LHCb::Particle*                            part  ,
+                                  const LHCb::CaloMomentum::Point&           point , 
+                                  const LHCb::CaloMomentum::PointCovariance& cov   )
+  : LHCb::CaloMomentum  ()
   , m_parts       ()
   , m_vert        ( NULL )
   , m_isCalo      ( true )
   , m_neutral     ( true ) 
-  , m_caloEndTree ()
-{
+  , m_caloEndTree (){
   if( NULL == part)m_isCalo = false;
   setReferencePoint ( point , cov ) ;
   this->addCaloPosition( part );
@@ -81,7 +75,7 @@ void LHCb::CaloParticle::addCaloPosition ( LHCb::Particle* part )
 {
   // --- Fill CaloPosition vector from particle
   //  2 configuration : 
-  //    - the particle is basic (e.g. photon, mergedPi0)  : use proto->calo
+  //    - the particle is basic (e.g. photon, mergedPi0)  : use proto->caloggggg
   //    - the particle is composite (e.g. pi0/eta->gg, Ks/B->pi0pi0->gggg, ...) : run along the decay tree
 
   
@@ -126,8 +120,7 @@ void LHCb::CaloParticle::addCaloPosition ( LHCb::Particle* part )
         if( (*icalo)->charge() != 0 )m_neutral = false;
         LHCb::CaloMomentum::addCaloPosition( (* icalo)->proto() );
       }
-    }
-    else{
+    }else{
       //      m_caloEndTree.clear();
       this->addToStatus(LHCb::CaloMomentum::PartIsNotCaloObject);
     }
