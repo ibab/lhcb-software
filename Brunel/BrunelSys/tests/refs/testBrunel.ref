@@ -1,5 +1,5 @@
-# --> Including file '/afs/cern.ch/user/c/cattanem/cmtuser/Brunel_HEAD/BrunelSys/tests/options/testBrunel.py'
-# <-- End of file '/afs/cern.ch/user/c/cattanem/cmtuser/Brunel_HEAD/BrunelSys/tests/options/testBrunel.py'
+# --> Including file '/build/cattanem/Brunel_HEAD/BrunelSys/tests/options/testBrunel.py'
+# <-- End of file '/build/cattanem/Brunel_HEAD/BrunelSys/tests/options/testBrunel.py'
 # applying configuration of Brunel
 # /***** User Brunel/Brunel **************************************************************************
 # |-Persistency         = None
@@ -75,16 +75,16 @@
 # \----- (End of User RecMoniConf/RecMoniConf) -------------------------------------------------------
 # WARNING: ConfiguredMuonIDs: Not available info for DATA=2012,VERSION=def. Loading default
 # ConfiguredMuonIDs: Loaded configuration info M_2011_def
-# DstWriter.ItemList=['/Event/Rec/Header#1', '/Event/Rec/Status#1', '/Event/Rec/Summary#1', '/Event/pRec/Track/Best#1', '/Event/pRec/Rich/PIDs#1', '/Event/pRec/Muon/MuonPID#1', '/Event/pRec/Calo/Electrons#1', '/Event/pRec/Calo/Photons#1', '/Event/pRec/Calo/MergedPi0s#1', '/Event/pRec/Calo/SplitPhotons#1', '/Event/pRec/ProtoP/Charged#1', '/Event/pRec/ProtoP/Neutrals#1', '/Event/pRec/Vertex/Primary#1', '/Event/pRec/Vertex/V0#1', '/Event/pRec/Track/Muon#1', '/Event/Trigger/RawEvent#1', '/Event/Muon/RawEvent#1', '/Event/Other/RawEvent#1']
+# DstWriter.ItemList=['/Event/Rec/Header#1', '/Event/Rec/Status#1', '/Event/Rec/Summary#1', '/Event/pRec/Track/Best#1', '/Event/pRec/Rich/PIDs#1', '/Event/pRec/Muon/MuonPID#1', '/Event/pRec/Calo/Electrons#1', '/Event/pRec/Calo/Photons#1', '/Event/pRec/Calo/MergedPi0s#1', '/Event/pRec/Calo/SplitPhotons#1', '/Event/pRec/ProtoP/Charged#1', '/Event/pRec/ProtoP/Neutrals#1', '/Event/pRec/Vertex/Primary#1', '/Event/pRec/Vertex/V0#1', '/Event/pRec/Track/Muon#1', '/Event/Trigger/RawEvent#1', '/Event/Muon/RawEvent#1', '/Event/Rich/RawEvent#1', '/Event/Other/RawEvent#1']
 # DstWriter.OptItemList=[]
 # No Writer defined for DIGI
 # WARNING: Using default tag head-20120413 for partition DDDB
-# WARNING: Using default tag head-20120420 for partition LHCBCOND
+# WARNING: Using default tag head-20120607 for partition LHCBCOND
 # WARNING: Using default tag dq-20120322 for partition DQFLAGS
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v42r3
-                                          running on lxplus256.cern.ch on Tue Jun 12 16:20:07 2012
+                                          running on lxbuild163.cern.ch on Wed Jun 13 17:29:21 2012
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -93,7 +93,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   0.82 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.97 times the speed of a 2.8 GHz Xeon.
 ChronoStatSvc        INFO  Number of skipped events for MemStat-1
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
@@ -116,7 +116,7 @@ COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
 DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
 DDDB                 INFO Using TAG "head-20120413"
 LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/LHCBCOND.db/LHCBCOND"
-LHCBCOND             INFO Using TAG "head-20120420"
+LHCBCOND             INFO Using TAG "head-20120607"
 LumiBeamCrossin...   INFO Member list: LoKi::ODINFilter/FilterBeamCrossing, HltLumiSummaryDecoder/LumiDecodeBeamCrossing, FilterOnLumiSummary/LumiFilterBeamCrossing, LumiAccounting/LumiCountBeamCrossing, with context 'Offline'
 LumiBeam1Seq         INFO Member list: LoKi::ODINFilter/FilterBeam1, HltLumiSummaryDecoder/LumiDecodeBeam1, FilterOnLumiSummary/LumiFilterBeam1, FilterFillingScheme/FillingBeam1, LumiAccounting/LumiCountBeam1, with context 'Offline'
 ONLINE_2012          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2012.db/ONLINE"
@@ -481,7 +481,7 @@ MoniSTSeq            INFO Member list: ST::STClusterMonitor/TTClusterMonitor, ST
 MoniPROTOSeq         INFO Member list: ChargedProtoParticleMoni/ChargedProtoPMoni, ANNGlobalPID::ChargedProtoANNPIDMoni/ChargedProtoANNPIDMoni, with context 'Offline'
 MoniHltSeq           INFO Member list: HltDecReportsDecoder, HltRateMonitor, HltRateMonitor/HltRateMonitorMB, HltCompositionMonitor, MuMonitor, EventTimeMonitor, with context 'Offline'
 Output               INFO Member list: GaudiSequencer/OutputDSTSeq, with context 'Offline'
-OutputDSTSeq         INFO Member list: RawEventSelectiveCopy/TriggerRawBank, RawEventSelectiveCopy/MuonRawBank, RawEventSelectiveCopy/OtherRawEvent, EventNodeKiller/DAQKiller, TrackToDST/FilterBestTrackStates, TrackToDST/FilterMuonTrackStates, GaudiSequencer/PackDST, with context 'Offline'
+OutputDSTSeq         INFO Member list: RawEventSelectiveCopy/TriggerRawBank, RawEventSelectiveCopy/MuonRawBank, RawEventSelectiveCopy/RichRawBank, RawEventSelectiveCopy/OtherRawEvent, EventNodeKiller/DAQKiller, TrackToDST/FilterBestTrackStates, TrackToDST/FilterMuonTrackStates, GaudiSequencer/PackDST, with context 'Offline'
 PackDST              INFO Member list: PackTrack/PackTracks, DataPacking::Pack<LHCb::RichPIDPacker>/PackRichPIDs, DataPacking::Pack<LHCb::MuonPIDPacker>/PackMuonPIDs, GaudiSequencer/CaloPacking, ChargedProtoParticleRemovePIDInfo/ProtoParticlePIDClean, PackProtoParticle/PackChargedProtos, PackProtoParticle/PackNeutralProtos, PackRecVertex, PackTwoProngVertex, PackTrack/PackMuonTracks, with context 'Offline'
 CaloPacking          INFO Member list: PackCaloHypo/PackPhotons, PackCaloHypo/PackElectrons, PackCaloHypo/PackMergedPi0s, PackCaloHypo/PackSplitPhotons, with context 'Offline'
 EventPersistenc...   INFO Added successfully Conversion service:RootCnvSvc
@@ -670,7 +670,7 @@ ToolSvc.L0DUCon...   INFO --------------- TCK = 0x10000------------------
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   0.82 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.97 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -1038,6 +1038,7 @@ TimingAuditor.T...   INFO   Output                      |     0.000 |     0.000 
 TimingAuditor.T...   INFO    OutputDSTSeq               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     TriggerRawBank            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     MuonRawBank               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO     RichRawBank               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     OtherRawEvent             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     DAQKiller                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     FilterBestTrackStates     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |

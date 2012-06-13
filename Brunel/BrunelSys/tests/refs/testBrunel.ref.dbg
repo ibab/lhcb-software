@@ -75,16 +75,16 @@
 # \----- (End of User RecMoniConf/RecMoniConf) -------------------------------------------------------
 # WARNING: ConfiguredMuonIDs: Not available info for DATA=2012,VERSION=def. Loading default
 # ConfiguredMuonIDs: Loaded configuration info M_2011_def
-# DstWriter.ItemList=['/Event/Rec/Header#1', '/Event/Rec/Status#1', '/Event/Rec/Summary#1', '/Event/pRec/Track/Best#1', '/Event/pRec/Rich/PIDs#1', '/Event/pRec/Muon/MuonPID#1', '/Event/pRec/Calo/Electrons#1', '/Event/pRec/Calo/Photons#1', '/Event/pRec/Calo/MergedPi0s#1', '/Event/pRec/Calo/SplitPhotons#1', '/Event/pRec/ProtoP/Charged#1', '/Event/pRec/ProtoP/Neutrals#1', '/Event/pRec/Vertex/Primary#1', '/Event/pRec/Vertex/V0#1', '/Event/pRec/Track/Muon#1', '/Event/DAQ/RawEvent#1']
-# DstWriter.OptItemList=['/Event/Phys/Selections#1']
+# DstWriter.ItemList=['/Event/Rec/Header#1', '/Event/Rec/Status#1', '/Event/Rec/Summary#1', '/Event/pRec/Track/Best#1', '/Event/pRec/Rich/PIDs#1', '/Event/pRec/Muon/MuonPID#1', '/Event/pRec/Calo/Electrons#1', '/Event/pRec/Calo/Photons#1', '/Event/pRec/Calo/MergedPi0s#1', '/Event/pRec/Calo/SplitPhotons#1', '/Event/pRec/ProtoP/Charged#1', '/Event/pRec/ProtoP/Neutrals#1', '/Event/pRec/Vertex/Primary#1', '/Event/pRec/Vertex/V0#1', '/Event/pRec/Track/Muon#1', '/Event/Trigger/RawEvent#1', '/Event/Muon/RawEvent#1', '/Event/Rich/RawEvent#1', '/Event/Other/RawEvent#1']
+# DstWriter.OptItemList=[]
 # No Writer defined for DIGI
 # WARNING: Using default tag head-20120413 for partition DDDB
-# WARNING: Using default tag head-20120420 for partition LHCBCOND
+# WARNING: Using default tag head-20120607 for partition LHCBCOND
 # WARNING: Using default tag dq-20120322 for partition DQFLAGS
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v42r3
-                                          running on lxbuild163.cern.ch on Tue Jun  5 14:18:27 2012
+                                          running on lxbuild163.cern.ch on Wed Jun 13 17:33:26 2012
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -93,14 +93,14 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   1.54 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.60 times the speed of a 2.8 GHz Xeon.
 ChronoStatSvc        INFO  Number of skipped events for MemStat-1
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
 BrunelSequencer      INFO Member list: ProcessPhase/Init, GaudiSequencer/LumiSeq, GaudiSequencer/NotPhysicsSeq, GaudiSequencer/HltErrorSeq, GaudiSequencer/PhysicsSeq, ProcessPhase/Output, with context 'Offline'
 Init                 INFO Member list: GaudiSequencer/InitReprocSeq, GaudiSequencer/InitBrunelSeq, with context 'Offline'
 InitReprocSeq        INFO Member list: , with context 'Offline'
-InitBrunelSeq        INFO Member list: RecInit/BrunelInit, EventCountHisto/BrunelEventCount, bankKiller/BrunelBankKiller, with context 'Offline'
+InitBrunelSeq        INFO Member list: RecInit/BrunelInit, EventCountHisto/BrunelEventCount, with context 'Offline'
 BrunelInit        SUCCESS ==================================================================
 BrunelInit        SUCCESS Requested to process 0 events
 BrunelInit        SUCCESS ==================================================================
@@ -116,7 +116,7 @@ COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
 DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
 DDDB                 INFO Using TAG "head-20120413"
 LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/LHCBCOND.db/LHCBCOND"
-LHCBCOND             INFO Using TAG "head-20120420"
+LHCBCOND             INFO Using TAG "head-20120607"
 LumiBeamCrossin...   INFO Member list: LoKi::ODINFilter/FilterBeamCrossing, HltLumiSummaryDecoder/LumiDecodeBeamCrossing, FilterOnLumiSummary/LumiFilterBeamCrossing, LumiAccounting/LumiCountBeamCrossing, with context 'Offline'
 LumiBeam1Seq         INFO Member list: LoKi::ODINFilter/FilterBeam1, HltLumiSummaryDecoder/LumiDecodeBeam1, FilterOnLumiSummary/LumiFilterBeam1, FilterFillingScheme/FillingBeam1, LumiAccounting/LumiCountBeam1, with context 'Offline'
 ONLINE_2012          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2012.db/ONLINE"
@@ -167,11 +167,11 @@ RecoTrSeq            INFO Member list: ProcessPhase/Track, with context 'Offline
 Track                INFO Member list: GaudiSequencer/TrackForwardPatSeq, GaudiSequencer/TrackSeedPatSeq, GaudiSequencer/TrackMatchPatSeq, GaudiSequencer/TrackDownstreamPatSeq, GaudiSequencer/TrackVeloTTPatSeq, GaudiSequencer/TrackFitSeq, GaudiSequencer/TrackAddExtraInfoSeq, GaudiSequencer/TrackEraseExtraInformationSeq, with context 'Offline'
 TrackForwardPatSeq   INFO Member list: PatForward, with context 'Offline'
 ToolSvc.OTRawBa...   INFO  countsPerBX = 64 numberOfBX  = 3 timePerBX = 25 ForceBankVersion = 255 require window [-8,56]
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/field101.c1.down.cdf
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/field101.c2.down.cdf
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/field101.c3.down.cdf
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/field101.c4.down.cdf
-MagneticFieldSvc     INFO Map scaled by factor 1 with polarity internally used: -1 signed relative current: -1
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/field101.c1.up.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/field101.c2.up.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/field101.c3.up.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/field101.c4.up.cdf
+MagneticFieldSvc     INFO Map scaled by factor 1 with polarity internally used: 1 signed relative current: 1
 TrackSeedPatSeq      INFO Member list: PatSeeding, with context 'Offline'
 TrackMatchPatSeq     INFO Member list: PatMatch, with context 'Offline'
 TrackDownstream...   INFO Member list: PatDownstream, with context 'Offline'
@@ -191,7 +191,7 @@ PatDownstream        INFO ========================================
 PatDownstream        INFO zMagnetParams 5376.8 -3895.12 309.877 85527.9
 PatDownstream        INFO momentumParams 1148.65 961.786 5326.81
 TrackVeloTTPatSeq    INFO Member list: PatVeloTT, with context 'Offline'
-MagneticFieldSvc     INFO Map scaled by factor 1 with polarity internally used: -1 signed relative current: -1
+MagneticFieldSvc     INFO Map scaled by factor 1 with polarity internally used: 1 signed relative current: 1
 ToolSvc.PatTTMa...   INFO Start generation of VeloTT Bdl LUTs
 ToolSvc.PatTTMa...   INFO Generation of VeloTT Bdl LUTs finished
 ToolSvc.PatTTMa...   INFO Start generation of VeloTT deflection LUTs
@@ -481,7 +481,7 @@ MoniSTSeq            INFO Member list: ST::STClusterMonitor/TTClusterMonitor, ST
 MoniPROTOSeq         INFO Member list: ChargedProtoParticleMoni/ChargedProtoPMoni, ANNGlobalPID::ChargedProtoANNPIDMoni/ChargedProtoANNPIDMoni, with context 'Offline'
 MoniHltSeq           INFO Member list: HltDecReportsDecoder, HltRateMonitor, HltRateMonitor/HltRateMonitorMB, HltCompositionMonitor, MuMonitor, EventTimeMonitor, with context 'Offline'
 Output               INFO Member list: GaudiSequencer/OutputDSTSeq, with context 'Offline'
-OutputDSTSeq         INFO Member list: TrackToDST/FilterBestTrackStates, TrackToDST/FilterMuonTrackStates, GaudiSequencer/PackDST, with context 'Offline'
+OutputDSTSeq         INFO Member list: RawEventSelectiveCopy/TriggerRawBank, RawEventSelectiveCopy/MuonRawBank, RawEventSelectiveCopy/RichRawBank, RawEventSelectiveCopy/OtherRawEvent, EventNodeKiller/DAQKiller, TrackToDST/FilterBestTrackStates, TrackToDST/FilterMuonTrackStates, GaudiSequencer/PackDST, with context 'Offline'
 PackDST              INFO Member list: PackTrack/PackTracks, DataPacking::Pack<LHCb::RichPIDPacker>/PackRichPIDs, DataPacking::Pack<LHCb::MuonPIDPacker>/PackMuonPIDs, GaudiSequencer/CaloPacking, ChargedProtoParticleRemovePIDInfo/ProtoParticlePIDClean, PackProtoParticle/PackChargedProtos, PackProtoParticle/PackNeutralProtos, PackRecVertex, PackTwoProngVertex, PackTrack/PackMuonTracks, with context 'Offline'
 CaloPacking          INFO Member list: PackCaloHypo/PackPhotons, PackCaloHypo/PackElectrons, PackCaloHypo/PackMergedPi0s, PackCaloHypo/PackSplitPhotons, with context 'Offline'
 EventPersistenc...   INFO Added successfully Conversion service:RootCnvSvc
@@ -670,7 +670,7 @@ ToolSvc.L0DUCon...   INFO --------------- TCK = 0x10000------------------
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   1.54 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.60 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -680,7 +680,6 @@ TimingAuditor.T...   INFO    InitReprocSeq              |     0.000 |     0.000 
 TimingAuditor.T...   INFO    InitBrunelSeq              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     BrunelInit                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     BrunelEventCount          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     BrunelBankKiller          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO   LumiSeq                     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO    LumiCounters               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     LumiNoBeamSeq             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -1037,6 +1036,11 @@ TimingAuditor.T...   INFO      MuMonitor                |     0.000 |     0.000 
 TimingAuditor.T...   INFO      EventTimeMonitor         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO   Output                      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO    OutputDSTSeq               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO     TriggerRawBank            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO     MuonRawBank               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO     RichRawBank               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO     OtherRawEvent             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO     DAQKiller                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     FilterBestTrackStates     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     FilterMuonTrackStates     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     PackDST                   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -1086,7 +1090,6 @@ Listing sources of Unprotected and Unseen messages
  BremMatch                                              |   DEBUG |        6
  BremMatchMon                                           |   DEBUG |        1
  BremPIDe                                               |   DEBUG |       18
- BrunelBankKiller                                       | WARNING |        1
  CaloEMuPIDMonHard                                      |   DEBUG |        1
  CaloEMuPIDMonSoft                                      |   DEBUG |        1
  CaloEMuPIDMonUncut                                     |   DEBUG |        1
@@ -1096,7 +1099,7 @@ Listing sources of Unprotected and Unseen messages
  ConfigTarFileAccessSvc                                 |   DEBUG |        1
  DeRichHPDPanel                                         | VERBOSE |        4
  DecodeRawRichOffline                                   |   DEBUG |        1
- DstWriter                                              |   DEBUG |       28
+ DstWriter                                              |   DEBUG |       32
  ENNRingMoniAll                                         |   DEBUG |        1
  ENNRingMoniBest                                        |   DEBUG |        1
  ENNRingMoniIsolated                                    |   DEBUG |        1
@@ -1201,6 +1204,5 @@ Listing sources of Unprotected and Unseen messages
  ToolSvc.Offline_RichRayTracing                         |   DEBUG |        2
  ToolSvc.Offline_RichRecGeometry                        |   DEBUG |        2
  ToolSvc.Offline_RichTrackCreator.TrSegMaker            |   DEBUG |        1
- ToolSvc.RichSmartIDDecoder                             |   DEBUG |        1
  ToolSvc.SequencerTimerTool                             |    INFO |      190
 ==============================================================================
