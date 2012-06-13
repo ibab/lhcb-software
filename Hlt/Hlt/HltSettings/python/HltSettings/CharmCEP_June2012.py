@@ -26,7 +26,7 @@ class CharmCEP_June2012 :
                   , 'Hlt2LowMultD2K3PiWS'  
                   , 'Hlt2LowMultChiC2HHWS'
                   , 'Hlt2LowMultChiC2HHHHWS'
-                  , 'Hlt2DDInc'
+                  , 'Hlt2LowMultDDInc'
                   ]
         
         return lines
