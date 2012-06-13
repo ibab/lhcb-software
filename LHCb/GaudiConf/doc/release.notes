@@ -3,10 +3,13 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2012-06-13 - Marco Cattaneo
+ - Add also Rich/RawEvent
+
 ! 2012-06-07 - Marco Cattaneo
  - Modify SDST, DST, XDST content to always contain [Trigger,Muon,Other]/RawEvent
    instead of DAQ/RawEvent (needs Brunel v43r0 to write, LHCb v35r0 stack to 
-   decode). SDTS and DST are now identical after Brunel, SDST is obsolete
+   decode). SDST and DST are now identical after Brunel, SDST is obsolete
  - Remove obsolete support for input from stripping ETC
 
 !========================= GaudiConf v15r10 2012-05-02 =========================

@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "v15r5"
+__version__ = "v16r0"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 __all__ = [
@@ -135,6 +135,7 @@ class DstConf(LHCbConfigurableUser):
                     "/Event/Trigger/RawEvent#1"
                   , "/Event/Muon/RawEvent#1"
                     #Exists from Brunel v44r0 onwards...
+                  , "/Event/Rich/RawEvent#1"
                   , "/Event/Other/RawEvent#1"
                   ]
 
