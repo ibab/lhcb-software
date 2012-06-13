@@ -52,7 +52,7 @@ StatusCode RawBufferToSmartIDsTool::initialize()
   // cached variables
   m_taeKey = taeKey(m_rawEventLocs);
 
-  debug() << "RawEvent TAEs : " << m_rawEventLocs << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "RawEvent TAEs : " << m_rawEventLocs << endmsg;
 
   return sc;
 }

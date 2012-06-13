@@ -4,6 +4,9 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2012-06-13 - Marco Cattaneo
+ - Fix an unprotected debug()
+
 ! 2012-06-13 - Chris Jones
  - Update the last patch, to search for the RICH RawBanks in 
    LHCb::RawEventLocation::Rich instead of LHCb::RawEventLocation::Other
