@@ -1,4 +1,3 @@
-// $Id: OTMCDepositLinker.cpp,v 1.4 2009-12-01 09:15:26 akozlins Exp $
 // Include files 
 
 // from Gaudi
@@ -17,10 +16,6 @@
 // local
 #include "OTMCDepositLinker.h"
 
-// OTDAQ
-#include "OTDAQ/IOTReadOutWindow.h"
-#include "OTDAQ/IOTRawBankDecoder.h"
-
 //-----------------------------------------------------------------------------
 // Implementation file for class : OTMCDepositLinker
 //
@@ -28,7 +23,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( OTMCDepositLinker );
+DECLARE_ALGORITHM_FACTORY( OTMCDepositLinker )
 
 //=============================================================================
 // Standard constructor, initializes variables

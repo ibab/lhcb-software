@@ -1,4 +1,3 @@
-// $Id: OTMCDepositLinker.h,v 1.4 2009-12-01 09:15:26 akozlins Exp $
 #ifndef OTASSOCIATORS_OTMCDEPOSITLINKER_H 
 #define OTASSOCIATORS_OTMCDEPOSITLINKER_H 1
 
@@ -118,10 +117,6 @@ private:
   
   std::string m_outputLocation; ///< Ouptut location of linker table
   double m_acceptTime;          ///< Delta time window within to accept deposits 
-
-  double m_conversionToTDC;
-  std::vector<double> m_startReadOutGate;
-
 
 };
 

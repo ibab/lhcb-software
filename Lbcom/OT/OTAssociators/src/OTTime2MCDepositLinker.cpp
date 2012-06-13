@@ -25,7 +25,7 @@
  */
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( OTTime2MCDepositLinker );
+DECLARE_ALGORITHM_FACTORY( OTTime2MCDepositLinker )
 
 OTTime2MCDepositLinker::OTTime2MCDepositLinker( const std::string& name,
 						ISvcLocator* pSvcLocator )
@@ -87,7 +87,7 @@ StatusCode OTTime2MCDepositLinker::associateToTruth( const LHCb::OTTime* aTime,
     // link to deposits
     SmartRefVector<LHCb::MCOTDeposit> depCont = mcTime->deposits();
     if ( depCont.empty() ){
-      error() << " Deposits Size" << depCont.size() << endreq;
+      error() << " Deposits Size" << depCont.size() << endmsg;
       return StatusCode::FAILURE;
     } // if depCont.empty()
   

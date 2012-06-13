@@ -1,4 +1,3 @@
-// $Id: OTMCParticleLinker.cpp,v 1.2 2008-03-31 16:31:20 janos Exp $
 // Include files 
 
 // from Gaudi
@@ -28,7 +27,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( OTMCParticleLinker );
+DECLARE_ALGORITHM_FACTORY( OTMCParticleLinker )
 
 //=============================================================================
 // Standard constructor, initializes variables

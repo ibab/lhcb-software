@@ -1,7 +1,14 @@
-! $Id: release.notes,v 1.49 2009-12-08 09:23:21 cattanem Exp $
+!-------------------------------------------------------------------------
 ! Package     : OTAssociators
 ! Responsible : OT software group
 !-------------------------------------------------------------------------
+
+! 2012-06-13 - Marco Cattaneo
+ - Remove obsolete file OTAssociators_dll.cpp
+ - Remove unnecessary OTDAQ includes
+ - Fix trivial icc remarks
+ - Replace endreq by endmsg
+ - Fix UNINIT_CTOR defect
 
 !===================== OTAssociators v4r4 2009-12-08 =====================
 ! 2009-12-01 - Alexandr Kozlinskiy

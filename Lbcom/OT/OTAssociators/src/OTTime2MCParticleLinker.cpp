@@ -21,7 +21,7 @@
  */
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( OTTime2MCParticleLinker );
+DECLARE_ALGORITHM_FACTORY( OTTime2MCParticleLinker )
 
 OTTime2MCParticleLinker::OTTime2MCParticleLinker( const std::string& name,
 						  ISvcLocator* pSvcLocator )
