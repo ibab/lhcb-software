@@ -463,18 +463,19 @@ class Brunel(LHCbConfigurableUser):
                 # first the Trigger Raw Event
                 from Configurables import RawEventSelectiveCopy
                 trigRawBankCopy = RawEventSelectiveCopy('TriggerRawBank')
-                trigRawBankCopy.RawBanksToCopy = [ 'ODIN',
-                                                   'HltSelReports',
-                                                   'HltDecReports',
-                                                   'HltRoutingBits',
-                                                   'HltVertexReports',
-                                                   'L0Calo',
-                                                   'L0CaloFull',
-                                                   'L0DU',
-                                                   'L0Muon',
-                                                   'L0MuonProcCand',
-                                                   'L0PU'
-                                                   ]
+                trigBanks = [ 'ODIN',
+                              'HltSelReports',
+                              'HltDecReports',
+                              'HltRoutingBits',
+                              'HltVertexReports',
+                              'L0Calo',
+                              'L0CaloFull',
+                              'L0DU',
+                              'L0Muon',
+                              'L0MuonProcCand',
+                              'L0PU'
+                              ]
+                trigRawBankCopy.RawBanksToCopy = trigBanks
 
                 trigRawBankCopy.OutputRawEventLocation = "Trigger/RawEvent"
                 GaudiSequencer("OutputDSTSeq").Members += [trigRawBankCopy]
@@ -484,22 +485,16 @@ class Brunel(LHCbConfigurableUser):
                 muonRawBankCopy.RawBanksToCopy = [ 'Muon' ]
                 muonRawBankCopy.OutputRawEventLocation = "Muon/RawEvent"
                 GaudiSequencer("OutputDSTSeq").Members += [muonRawBankCopy]
+
+                # then the Rich Raw Event
+                richRawBankCopy = RawEventSelectiveCopy('RichRawBank')
+                richRawBankCopy.RawBanksToCopy = [ 'Rich' ]
+                richRawBankCopy.OutputRawEventLocation = "Rich/RawEvent"
+                GaudiSequencer("OutputDSTSeq").Members += [richRawBankCopy]
                     
                 # and the rest
                 allOtherRawBankCopy = RawEventSelectiveCopy('OtherRawEvent')
-                allOtherRawBankCopy.RawBanksToRemove = [ 'ODIN',
-                                                         'HltSelReports',
-                                                         'HltDecReports',
-                                                         'HltRoutingBits',
-                                                         'HltVertexReports',
-                                                         'L0Calo',
-                                                         'L0CaloFull',
-                                                         'L0DU',
-                                                         'L0Muon',
-                                                         'L0MuonProcCand',
-                                                         'L0PU',
-                                                         'Muon'
-                                                         ]
+                allOtherRawBankCopy.RawBanksToRemove = trigBanks + ['Muon','Rich']
                 allOtherRawBankCopy.OutputRawEventLocation = "Other/RawEvent"
                 GaudiSequencer("OutputDSTSeq").Members += [allOtherRawBankCopy]
                     
