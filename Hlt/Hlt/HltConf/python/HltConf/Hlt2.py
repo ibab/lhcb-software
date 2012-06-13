@@ -59,6 +59,7 @@ from Hlt2Lines.Hlt2HighPtJetsLines     import Hlt2HighPtJetsLinesConf
 from Hlt2Lines.Hlt2CharmHadLambdaC2LambdaHLines import Hlt2CharmHadLambdaCLambdaHLinesConf
 from Hlt2Lines.Hlt2CharmHadD2KS0KS0Lines import Hlt2CharmHadD2KS0KS0LinesConf
 from Hlt2Lines.Hlt2CharmHadD02HHXDstLines import Hlt2CharmHadD02HHXDstLinesConf
+from Hlt2Lines.Hlt2CEPLines import Hlt2CEPLinesConf
 #
 # The tracking configurations
 #
@@ -68,7 +69,7 @@ from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedDownstreamT
 from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
 from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedLongTracking 
 from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedRichForProtonsForwardTracking
-from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedRichForLowPTProtonsForwardTracking
+from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedRichForLowPTParticlesForwardTracking
 from HltTracking.Hlt2TrackingConfigurations import setDataTypeForTracking
 # Define what categories stand for
 # There are the strings used in HltThresholdSettings
@@ -76,7 +77,7 @@ from HltTracking.Hlt2TrackingConfigurations import setDataTypeForTracking
 
 class Hlt2Conf(LHCbConfigurableUser):
     __used_configurables__ = [ (Hlt2Tracking, "Hlt2BiKalmanFittedRichForProtonsForwardTracking")
-                             , (Hlt2Tracking, "Hlt2BiKalmanFittedRichForLowPTProtonsForwardTracking")
+                             , (Hlt2Tracking, "Hlt2BiKalmanFittedRichForLowPTParticlesForwardTracking")
                              , (Hlt2Tracking, "Hlt2BiKalmanFittedDownstreamTracking") 
                              , (Hlt2Tracking, "Hlt2BiKalmanFittedForwardTracking")
                              #, (Hlt2Tracking, "Hlt2BiKalmanFittedLongTracking")
@@ -126,6 +127,7 @@ class Hlt2Conf(LHCbConfigurableUser):
                              , Hlt2HighPtJetsLinesConf
                              , Hlt2CharmHadD2KS0KS0LinesConf
                              , Hlt2CharmHadD02HHXDstLinesConf
+                             , Hlt2CEPLinesConf
                              ]
 
     __slots__ = { "DataType"                   : '2010'    # datatype is one of 2009, MC09, DC06...
@@ -181,7 +183,7 @@ class Hlt2Conf(LHCbConfigurableUser):
                            , Hlt2BiKalmanFittedForwardTracking()
                            #, Hlt2BiKalmanFittedLongTracking() 
                            , Hlt2BiKalmanFittedRichForProtonsForwardTracking()
-                           , Hlt2BiKalmanFittedRichForLowPTProtonsForwardTracking() ]
+                           , Hlt2BiKalmanFittedRichForLowPTParticlesForwardTracking() ]
 
         # And now we have to, for each of the configurables we just created, 
         # tell it the data type and tell it to use all the Hlt2 lines...
