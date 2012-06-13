@@ -3,6 +3,10 @@
 ! Package manager : A.Kozlinskiy
 !------------------------------------------------------------------------------
 
+! 2012-06-13 - Marco Cattaneo
+ - Fix unprotected debug
+ - Fix UNINIT_CTOR defects
+
 ! 2012-06-08 - Marco Cattaneo
  - Add RawEventLocations property to OTRawBankDecoder, to allow to specify a 
    search list of locations. Default is to look for RawEventLocation::Other

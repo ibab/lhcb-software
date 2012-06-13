@@ -41,8 +41,12 @@ DECLARE_ALGORITHM_FACTORY( OTFillEventFromOTTime )
 OTFillEventFromOTTime::OTFillEventFromOTTime( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
+  //Fixed Numbers of Banks and of Gols
+  , numberOfBanks(48)
+  , numberOfGols(9)
 {
   // Constructor
+
 }
 
 //=============================================================================
@@ -58,10 +62,6 @@ StatusCode OTFillEventFromOTTime::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   
-  //Fixed Numbers of Banks and of Gols
-  numberOfBanks = 48;
-  numberOfGols = 9;
-
   // create a container for the vectors of OTimes
   dataContainer = new mBank(); // bank type
   goldatacontainer = new mGol();
@@ -69,7 +69,7 @@ StatusCode OTFillEventFromOTTime::initialize() {
   // init pointer to global container
   finalBuf = new dataBuffer();
   
-   return StatusCode::SUCCESS;
+  return StatusCode::SUCCESS;
 }
 
 //=============================================================================

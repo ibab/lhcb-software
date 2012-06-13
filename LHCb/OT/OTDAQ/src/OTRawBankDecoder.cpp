@@ -44,7 +44,8 @@ namespace OTRawBankDecoderHelpers
   class Module
   {
   public:
-    Module() : m_detelement(0), m_channelmap(0), m_data(0), m_tdcconversion(0), m_size(0),
+    Module() : m_detelement(0), m_channelmap(0), m_data(0), m_tdcconversion(0),
+               m_station(0), m_layer(0), m_quarter(0), m_module(0), m_size(0),
                m_bankversion(OTBankVersion::UNDEFINED), m_isdecoded(false) 
     { m_ottimes.reserve(16) ; }
     void clearevent() { m_isdecoded=false ; m_size=0; m_data=0 ; m_ottimes.clear() ; m_tdcconversion = 0; }
@@ -334,7 +335,7 @@ OTRawBankDecoder::~OTRawBankDecoder() {}
 StatusCode OTRawBankDecoder::initialize()
 {
   
-  debug()<<"initializing OTRawBankDecoder"<<endmsg;
+  if (msgLevel(MSG::DEBUG)) debug()<<"initializing OTRawBankDecoder"<<endmsg;
   
   StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm

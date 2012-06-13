@@ -39,7 +39,6 @@ private:
   
   // job options
   std::string m_timeLocation;
-  bool m_tofCorrection;                     ///< Time of Flight Correction
   DeOTDetector* m_tracker;                  ///< Pointer to XML geometry 
   ToolHandle<IOTRawBankDecoder> m_decoder;
 };

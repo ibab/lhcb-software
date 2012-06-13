@@ -20,6 +20,7 @@ OTReadOutWindow::OTReadOutWindow(const std::string& type,
                                  const std::string& name, 
                                  const IInterface* parent) : 
   GaudiTool( type, name, parent )
+  , condReadOutGate(NULL)
 {
   m_startReadOutGate.push_back(28.0*Gaudi::Units::ns);
   m_startReadOutGate.push_back(30.0*Gaudi::Units::ns);
