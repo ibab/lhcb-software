@@ -17,7 +17,7 @@ Purpose: LHCb reconstruction program
   . Remove CK theta correction factor for Aerogel, taken care of in calibration
     (RichRecSys)
   . Update L0Filters for Rich monitoring (RichRecQC)
-  . Fix unprotected debug and verbose messages (DAQUtils, L0DU)
+  . Fix unprotected debug and verbose messages (DAQUtils, L0DU, OTDAQ, RichDAQ)
 
 - Changes to tests
   . Add a test for bug #94407 in brunel.2012-crashes
