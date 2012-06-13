@@ -4,6 +4,9 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !-----------------------------------------------------------------------------
 
+! 2012-06-13 - Chris Jones
+ - Add RawEventLocation::Rich to RawEvent locations
+
 ! 2012-06-08 - Marco Cattaneo
  - Add RawEventLocation::Muon and RawEventLocation::Other
 
