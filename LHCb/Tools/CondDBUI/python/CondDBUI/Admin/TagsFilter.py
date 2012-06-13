@@ -17,10 +17,11 @@ from xml.sax import make_parser, SAXException
 from xml.sax.handler import ContentHandler
 
 class ReleaseNotesHandler(ContentHandler):
-    def __init__(self, partition, datatype, search_gts):
+    def __init__(self, partition, datatype, search_gts, search_lts):
         # Variables to store the attributes of each global tag
         self.requested_partition, self.requested_datatype = partition, datatype
         self.search_gts = search_gts
+        self.search_lts = search_lts
         # Flags to indicate the element, content of which should be read.
         self.found_lt, self.found_lt_Name, self.found_lt_Partition, self.found_lt_DataType = False, False, False, False
         self.found_gt, self.found_gt_Name, self.found_gt_Partition, self.found_gt_DataType = False, False, False, False
@@ -85,7 +86,7 @@ class ReleaseNotesHandler(ContentHandler):
                         self.local_tags.append(str(self.lt_Name))
 
         # Global tag entry treating.  Grabbing marked elements values.
-        elif self.found_gt:
+        elif self.found_gt and not self.search_lts:
             if self.found_gt_Name:
                 self.gt_Name = ch
             elif self.found_gt_DataType:
@@ -137,10 +138,10 @@ class ReleaseNotesHandler(ContentHandler):
                 self.gt_Name, self.gt_DataType = None, None
 
 
-def init_finder(partition, datatype, search_gts):
+def init_finder(partition, datatype, search_gts = False, search_lts = False):
     """Initializing SAX handler and parser for the "release_notes.xml" file."""
 
-    handler = ReleaseNotesHandler(partition, datatype, search_gts)
+    handler = ReleaseNotesHandler(partition, datatype, search_gts, search_lts)
     parser = make_parser()
     parser.setContentHandler(handler)
     return parser, handler
@@ -151,7 +152,7 @@ def all_gts(partition, datatype, rel_notes = None):
     The output is in the form of a list. The fist one global tag is the most recent one.
     """
 
-    parser, handler = init_finder(partition, datatype, True)
+    parser, handler = init_finder(partition, datatype, search_gts = True)
     if not rel_notes:
         rel_notes = os.path.join(os.environ["SQLITEDBPATH"], "..", "doc", "release_notes.xml")
     try:
@@ -173,7 +174,7 @@ def all_lts(partition, datatype, rel_notes = None):
     The output is in the form of a list. The fist one global tag is the most recent one.
     """
 
-    parser, handler = init_finder(partition, datatype, False)
+    parser, handler = init_finder(partition, datatype, search_lts = True)
     if not rel_notes:
         rel_notes = os.path.join(os.environ["SQLITEDBPATH"], "..", "doc", "release_notes.xml")
     try:
@@ -200,7 +201,7 @@ def last_gt_lts(partition, datatype, rel_notes = None):
     will be returned, even if local tags were found for the condition.
     """
 
-    parser, handler = init_finder(partition, datatype, False)
+    parser, handler = init_finder(partition, datatype)
     if not rel_notes:
         rel_notes = os.path.join(os.environ["SQLITEDBPATH"], "..", "doc", "release_notes.xml")
     try:
