@@ -4,6 +4,10 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2012-06-13 - V. Gligorov
+ - Add Hlt2 CEP lines
+ - Modify tracking configs lower PT Rich kaons 
+
 !========================= HltConf v9r18 2012-05-16 =========================
 ! 2012-05-10 - Pieter David
  - Add Hlt1VertexDisplVertexTracks to HltANNSvc (removes warning from HltSelReportsMaker)
