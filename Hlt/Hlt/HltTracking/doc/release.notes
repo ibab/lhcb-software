@@ -4,6 +4,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2012-06-13 - V. Gligorov
+ - Add CEP lines to Hlt2Tracking
+ - Modify the LowPT Rich conf to PID pions/kaons/protons > 300 MeV PT
+
 !========================= HltTracking v9r21 2012-05-16 =========================
 ! 2012-05-08 - V. Gligorov
  - Relax Hlt1 tracking P cuts to 3 GeV for both loose and tight forward
