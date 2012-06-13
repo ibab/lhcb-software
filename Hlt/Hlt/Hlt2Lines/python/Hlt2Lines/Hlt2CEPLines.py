@@ -78,13 +78,14 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
     def __apply_configuration__(self) :
         from HltLine.HltLine import Hlt2Line, Hlt2Member, bindMembers
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedKaons, BiKalmanFittedPions, BiKalmanFittedRichKaons
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedRichLowPTKaons 
         from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
         from HltLine.HltDecodeRaw import DecodeL0CALO
         from Configurables import HltANNSvc
         from Configurables import CombineParticles, FilterDesktop
         from Configurables import LoKi__VoidFilter as VoidFilter
 
-        Kaons = BiKalmanFittedRichKaons
+        Kaons = BiKalmanFittedRichLowPTKaons
         Pions = BiKalmanFittedPions
 
         #
