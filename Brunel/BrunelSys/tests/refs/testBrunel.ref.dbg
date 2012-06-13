@@ -84,7 +84,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v42r3
-                                          running on lxbuild163.cern.ch on Wed Jun 13 17:33:26 2012
+                                          running on lxbuild163.cern.ch on Wed Jun 13 17:50:58 2012
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -1184,7 +1184,6 @@ Listing sources of Unprotected and Unseen messages
  SplitPhotonMon                                         |   DEBUG |        1
  TimeSpanFilter                                         |   DEBUG |        1
  ToolSvc.FastVeloHitManager                             |   DEBUG |        1
- ToolSvc.OTRawBankDecoder                               |   DEBUG |        1
  ToolSvc.Offline_GPIDTrackCreator                       |   DEBUG |        1
  ToolSvc.Offline_RichCherenkovAngle                     |   DEBUG |        4
  ToolSvc.Offline_RichCherenkovResolution                |   DEBUG |        2
