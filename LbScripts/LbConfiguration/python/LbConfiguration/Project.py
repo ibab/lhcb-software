@@ -21,7 +21,7 @@ project_names = [ "Gaudi", "LHCb", "Lbcom", "Rec", "Boole", "Brunel" ,
                   "Panoramix", "LbScripts", "Dirac", "LHCbGrid", "Panoptes",
                   "Curie", "Vetra", "VetraTB", "Compat", "VanDerMeer", "Ganga",
                   "LHCbDirac", "Integration", "Erasmus", "Feicim",
-                  "Stripping" ]
+                  "Stripping", "LHCbExternals" ]
 
 afs_volume_short_names = { "Gaudi"      : "GA",
                            "LHCb"       : "LH",
@@ -44,6 +44,7 @@ afs_volume_short_names = { "Gaudi"      : "GA",
                            "Panoramix"  : "PA",
                            "LbScripts"  : "LB",
                            "Dirac"      : "DI",
+                           "LHCbExternals"   : "LE",
                            "LHCbGrid"   : "LG",
                            "Panoptes"   : "PT",
                            "Curie"      : "CI",
