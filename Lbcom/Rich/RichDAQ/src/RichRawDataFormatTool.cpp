@@ -128,17 +128,19 @@ StatusCode RawDataFormatTool::initialize()
   }
 
   // Initialise the RawEvent locations
-  bool usingDefaultLocation = m_rawEventLocations.empty();
-
-  if (std::find(m_rawEventLocations.begin(), m_rawEventLocations.end(), LHCb::RawEventLocation::Default)
-      == m_rawEventLocations.end()) {
+  const bool usingDefaultLocation = m_rawEventLocations.empty();
+  if ( std::find( m_rawEventLocations.begin(), 
+                  m_rawEventLocations.end(), 
+                  LHCb::RawEventLocation::Default ) == m_rawEventLocations.end() )
+  {
     // append the defaults to the search path
-    m_rawEventLocations.push_back(LHCb::RawEventLocation::Other);
-    m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
+    m_rawEventLocations.push_back( LHCb::RawEventLocation::Rich    );
+    m_rawEventLocations.push_back( LHCb::RawEventLocation::Default );
   }
-
-  if (!usingDefaultLocation) {
-    info() << "Using '" << m_rawEventLocations << "' as search path for the RawEvent object" << endmsg;
+  if ( !usingDefaultLocation ) 
+  {
+    info() << "Using " << m_rawEventLocations << " as search path for the RawEvent object"
+           << endmsg;
   }
 
   return sc;
@@ -1688,7 +1690,9 @@ LHCb::RawEvent * RawDataFormatTool::rawEvent() const
   if (!raw)
   {
     std::string loc = "";
-    for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
+    for ( std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); 
+          p != m_rawEventLocations.end(); ++p ) 
+    {
       loc = m_currentTAE + (*p);
       if ( exist<LHCb::RawEvent>(loc) )
       {
@@ -1696,7 +1700,7 @@ LHCb::RawEvent * RawDataFormatTool::rawEvent() const
         break;
       }
     }
-    if( !raw )
+    if ( !raw )
     {
       Warning( "No RawEvent at '"+loc+"'" ).ignore();
     }

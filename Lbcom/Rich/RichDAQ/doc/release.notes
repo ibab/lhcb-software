@@ -4,6 +4,10 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2012-06-13 - Chris Jones
+ - Update the last patch, to search for the RICH RawBanks in 
+   LHCb::RawEventLocation::Rich instead of LHCb::RawEventLocation::Other
+
 ! 2012-06-08 - Marco Cattaneo
  - Add RawEventLocations property to RichRawDataFormatTool, to allow to specify
    a search list of locations. Default is to look for RawEventLocation::Other
