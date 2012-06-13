@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-06-13 - V. Gligorov
+ - Add CharmCEP_June2012 
+
 ! 2012-05-29 - Plamen Hopchev
  - In Physics_June2012.py set explicitely the prescale of the
    Hlt1BeamGasCrossingForcedRecoFullZ Line to 0.001 (before was
