@@ -20,6 +20,7 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
                                  , 'Hlt2LowMultD2K3PiWS'    : 0.1
                                  , 'Hlt2LowMultChiC2HHWS'   : 0.1
                                  , 'Hlt2LowMultChiC2HHHHWS' : 0.1
+                                 , 'Hlt2LowMultDDInc'       : 1.0
                                  }
                   , 'Postscale' : { 'Hlt2LowMultD2KPi'         : 1.0
                                     , 'Hlt2LowMultD2KPiPi'     : 1.0
@@ -31,6 +32,7 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
                                     , 'Hlt2LowMultD2K3PiWS'    : 1.0
                                     , 'Hlt2LowMultChiC2HHWS'   : 1.0
                                     , 'Hlt2LowMultChiC2HHHHWS' : 1.0
+                                    , 'Hlt2LowMultDDInc'       : 1.0
                                     }
                   # Final-state particles
                   , 'H_PTmin'       : 100.0 * MeV
@@ -75,6 +77,8 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
                   , 'ChiC2HHHH_APmin'         : 5000.0 * MeV
                   , 'ChiC2HHHH_SSumPTmin'     : 400.0 * MeV
                   , 'ChiC2HHHH_VtxChi2DoFmax' : 15.0
+                  # DD inclusive
+                  , 'DDInc_ADOCAmin' : 0.5 * mm
                   # ANNSvc IDs
                   , 'HltANNSvcID' : { "D2KPi"         : 50401
                                       , "D2KPiPi"     : 50402
@@ -86,6 +90,7 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
                                       , "D2K3PiWS"    : 50408
                                       , "ChiC2HHWS"   : 50409
                                       , "ChiC2HHHHWS" : 50410
+                                      , "DDInc"       : 50411
                                       }
                   } 
 
@@ -277,6 +282,24 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
         ChiC2HHHHWS = bindMembers("ChiC2HHHHWS", [ Kaons ] + [ Pions ] + [ CombineChiC2HHHHWS ])
 
         #
+        #=== Inclusive DD ===#
+        #
+
+        DDInc_Comb_cut = "(ADOCAMAX('LoKi::DistanceCalculator') > %(DDInc_ADOCAmin)s)" % self.getProps()
+
+        CombineDDInc = Hlt2Member(CombineParticles
+                                  , "Combine"
+                                  , DecayDescriptors = [ "D0 -> K+ K-",
+                                                         "[D0 -> K+ K+]cc" ]
+                                  , DaughtersCuts = Daug_cuts
+                                  , CombinationCut = DDInc_Comb_cut
+                                  , MotherCut = "ALL"
+                                  , Inputs = [ Kaons ]
+                                  )
+        
+        DDInc = bindMembers("DDInc", [ Kaons ] + [ CombineDDInc ])
+        
+        #
         #=== Filtering algorithms ===#
         #
         
@@ -375,6 +398,14 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
                          , postscale = self.postscale
                          )
 
+        line = Hlt2Line( 'LowMultDDInc'
+                         , prescale = self.prescale
+                         , HLT = HLTreq    
+                         , L0DU = L0req
+                         , algos = [ velotracks, FilterNumVeloTracks, FilterNumBackTracks, Kaons, DDInc ]
+                         , postscale = self.postscale
+                         )
+
         #
         #=== Register with ANNSvc ===#
         #
@@ -389,3 +420,4 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultD2K3PiWSDecision"    : self.getProp('HltANNSvcID')['D2K3PiWS'] } )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultChiC2HHWSDecision"   : self.getProp('HltANNSvcID')['ChiC2HHWS'] } )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultChiC2HHHHWSDecision" : self.getProp('HltANNSvcID')['ChiC2HHHHWS'] } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultDDIncDecision"       : self.getProp('HltANNSvcID')['DDInc'] } )
