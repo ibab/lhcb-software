@@ -5,6 +5,9 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+! 2012-06-13 - V. Gligorov
+ - Modify TrackFittedBasicPArticles to enable lower PT Rich kaons 
+
 !========================= Hlt2SharedParticles v6r10 2012-05-16 =========================
 ! 2012-05-15 - V. Gligorov
  - Make Lambda cuts more in line with KS cuts and tighten lifetime cut in LL. 
