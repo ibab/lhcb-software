@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2012-06-13 - V. Gligorov
+ - Modify Hlt2CEPLines to user lower PT Rich kaons  
+
 !========================= Hlt2Lines v8r22 2012-05-21 =========================
 ! 2012-05-21 S.Stahl
  - Added TrackAllL0Tight to TisTosSpecs of Topo and RadiativeTopo.
