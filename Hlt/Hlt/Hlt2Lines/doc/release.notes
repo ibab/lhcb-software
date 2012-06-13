@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2012-06-13 - C. Thomas
+ - Added two further lines to Hlt2CEPLines, tweaked some cuts
+
 ! 2012-06-13 - V. Gligorov
  - Modify Hlt2CEPLines to user lower PT Rich kaons  
 

@@ -10,68 +10,82 @@ from GaudiKernel.SystemOfUnits import MeV, mm
 
 class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
 
-    __slots__ = { 'Prescale' : { 'Hlt2LowMultD2KPi'       : 1.0
-                                 , 'Hlt2LowMultD2KPiPi'   : 1.0
-                                 , 'Hlt2LowMultD2K3Pi'    : 1.0
-                                 , 'Hlt2LowMultChiC'      : 1.0
-                                 , 'Hlt2LowMultD2KPiWS'   : 0.1
-                                 , 'Hlt2LowMultD2KPiPiWS' : 0.1
-                                 , 'Hlt2LowMultD2K3PiWS'  : 0.1
-                                 , 'Hlt2LowMultChiCWS'    : 0.1
+    __slots__ = { 'Prescale' : { 'Hlt2LowMultD2KPi'         : 1.0
+                                 , 'Hlt2LowMultD2KPiPi'     : 1.0
+                                 , 'Hlt2LowMultD2K3Pi'      : 1.0
+                                 , 'Hlt2LowMultChiC2HH'     : 1.0
+                                 , 'Hlt2LowMultChiC2HHHH'   : 1.0
+                                 , 'Hlt2LowMultD2KPiWS'     : 0.1
+                                 , 'Hlt2LowMultD2KPiPiWS'   : 0.1
+                                 , 'Hlt2LowMultD2K3PiWS'    : 0.1
+                                 , 'Hlt2LowMultChiC2HHWS'   : 0.1
+                                 , 'Hlt2LowMultChiC2HHHHWS' : 0.1
                                  }
-                  , 'Postscale' : { 'Hlt2LowMultD2KPi'       : 1.0
-                                    , 'Hlt2LowMultD2KPiPi'   : 1.0
-                                    , 'Hlt2LowMultD2K3Pi'    : 1.0
-                                    , 'Hlt2LowMultChiC'      : 1.0
-                                    , 'Hlt2LowMultD2KPiWS'   : 1.0
-                                    , 'Hlt2LowMultD2KPiPiWS' : 1.0
-                                    , 'Hlt2LowMultD2K3PiWS'  : 1.0
-                                    , 'Hlt2LowMultChiCWS'    : 1.0
+                  , 'Postscale' : { 'Hlt2LowMultD2KPi'         : 1.0
+                                    , 'Hlt2LowMultD2KPiPi'     : 1.0
+                                    , 'Hlt2LowMultD2K3Pi'      : 1.0
+                                    , 'Hlt2LowMultChiC2HH'     : 1.0
+                                    , 'Hlt2LowMultChiC2HHHH'   : 1.0
+                                    , 'Hlt2LowMultD2KPiWS'     : 1.0
+                                    , 'Hlt2LowMultD2KPiPiWS'   : 1.0
+                                    , 'Hlt2LowMultD2K3PiWS'    : 1.0
+                                    , 'Hlt2LowMultChiC2HHWS'   : 1.0
+                                    , 'Hlt2LowMultChiC2HHHHWS' : 1.0
                                     }
                   # Final-state particles
                   , 'H_PTmin'       : 100.0 * MeV
-                  , 'H_Pmin'        : 1000.0 * MeV
+                  , 'H_Pmin'        : 5000.0 * MeV
                   , 'H_TrkChi2max'  : 3.0
                   , 'K_PIDKmin'     : 0.0
                   # D0 -> KPi
                   , 'D2KPi_APTmin'        : 0.0 * MeV
                   , 'D2KPi_ADAMASSmax'    : 80.0 * MeV
                   , 'D2KPi_ADOCAmax'      : 0.5 * mm
-                  , 'D2KPi_APmin'         : 1500.0 * MeV
+                  , 'D2KPi_APmin'         : 5000.0 * MeV
                   , 'D2KPi_SSumPTmin'     : 200.0 * MeV
                   , 'D2KPi_VtxChi2DoFmax' : 15.0
                   # D+- -> KPiPi
                   , 'D2KPiPi_APTmin'        : 0.0 * MeV
                   , 'D2KPiPi_ADAMASSmax'    : 80.0 * MeV
                   , 'D2KPiPi_ADOCAmax'      : 0.5 * mm
-                  , 'D2KPiPi_APmin'         : 1500.0 * MeV
+                  , 'D2KPiPi_APmin'         : 5000.0 * MeV
                   , 'D2KPiPi_SSumPTmin'     : 300.0 * MeV
                   , 'D2KPiPi_VtxChi2DoFmax' : 15.0
                   # D0 -> K3Pi
                   , 'D2K3Pi_APTmin'        : 0.0 * MeV
                   , 'D2K3Pi_ADAMASSmax'    : 80.0 * MeV
                   , 'D2K3Pi_ADOCAmax'      : 0.7 * mm
-                  , 'D2K3Pi_APmin'         : 1500.0 * MeV
+                  , 'D2K3Pi_APmin'         : 5000.0 * MeV
                   , 'D2K3Pi_SSumPTmin'     : 400.0 * MeV
                   , 'D2K3Pi_VtxChi2DoFmax' : 15.0
-                  # ChiC -> 4H
+                  # ChiC -> HH
+                  , 'ChiC2HH_APTmin'        : 0.0 * MeV
+                  , 'ChiC2HH_APTmax'        : 5000.0 * MeV
+                  , 'ChiC2HH_ADAMASSmax'    : 120.0 * MeV
+                  , 'ChiC2HH_ADOCAmax'      : 0.5 * mm
+                  , 'ChiC2HH_APmin'         : 5000.0 * MeV
+                  , 'ChiC2HH_SSumPTmin'     : 200.0 * MeV
+                  , 'ChiC2HH_VtxChi2DoFmax' : 15.0
+                  # ChiC -> HHHH
                   , 'ChiC2HHHH_APTmin'        : 0.0 * MeV
                   , 'ChiC2HHHH_APTmax'        : 5000.0 * MeV
                   , 'ChiC2HHHH_AMmin'         : 2850.0 * MeV
                   , 'ChiC2HHHH_AMmax'         : 4500.0 * MeV
                   , 'ChiC2HHHH_ADOCAmax'      : 0.7 * mm
-                  , 'ChiC2HHHH_APmin'         : 1500.0 * MeV
+                  , 'ChiC2HHHH_APmin'         : 5000.0 * MeV
                   , 'ChiC2HHHH_SSumPTmin'     : 400.0 * MeV
                   , 'ChiC2HHHH_VtxChi2DoFmax' : 15.0
                   # ANNSvc IDs
-                  , 'HltANNSvcID' : { "D2KPi"       : 50401
-                                      , "D2KPiPi"   : 50402
-                                      , "D2K3Pi"    : 50403
-                                      , "ChiC"      : 50404
-                                      , "D2KPiWS"   : 50405
-                                      , "D2KPiPiWS" : 50406
-                                      , "D2K3PiWS"  : 50407
-                                      , "ChiCWS"    : 50408
+                  , 'HltANNSvcID' : { "D2KPi"         : 50401
+                                      , "D2KPiPi"     : 50402
+                                      , "D2K3Pi"      : 50403
+                                      , "ChiC2HH"     : 50404
+                                      , "ChiC2HHHH"   : 50405
+                                      , "D2KPiWS"     : 50406
+                                      , "D2KPiPiWS"   : 50407
+                                      , "D2K3PiWS"    : 50408
+                                      , "ChiC2HHWS"   : 50409
+                                      , "ChiC2HHHHWS" : 50410
                                       }
                   } 
 
@@ -190,6 +204,39 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
         D2K3PiWS = bindMembers ("D2K3PiWS", [ Kaons ] + [ Pions ] + [ CombineD2K3PiWS ])
 
         #
+        #=== 'chi_c' -> KK, pipi ===#
+        #
+
+        ChiC2HH_Comb_cut   = "(APT > %(ChiC2HH_APTmin)s) & (APT < %(ChiC2HH_APTmax)s) & (ADAMASS('chi_c1(1P)') < %(ChiC2HH_ADAMASSmax)s) & " \
+                             "(ADOCAMAX('LoKi::DistanceCalculator') < %(ChiC2HH_ADOCAmax)s) & " \
+                             "(AP > %(ChiC2HH_APmin)s) & (ACHILD(PT, 1) + ACHILD(PT, 2) > %(ChiC2HH_SSumPTmin)s)" % self.getProps()
+        ChiC2HH_Mother_cut = "(VFASPF(VCHI2PDOF) < %(ChiC2HH_VtxChi2DoFmax)s)" % self.getProps()
+        
+        CombineChiC2HH = Hlt2Member(CombineParticles
+                                    , "Combine"
+                                    , DecayDescriptors = [ "chi_c1(1P) -> K+ K-",
+                                                           "chi_c1(1P) -> pi+ pi-" ]
+                                    , DaughtersCuts = Daug_cuts
+                                    , CombinationCut = ChiC2HH_Comb_cut
+                                    , MotherCut = ChiC2HH_Mother_cut
+                                    , Inputs = [ Kaons, Pions ]
+                                    )
+        
+        ChiC2HH = bindMembers("ChiC2HH", [ Kaons ] + [ Pions ] + [ CombineChiC2HH ])
+
+        CombineChiC2HHWS = Hlt2Member(CombineParticles
+                                      , "Combine"
+                                      , DecayDescriptors = [ "[chi_c1(1P) -> K+ K+]cc",
+                                                             "[chi_c1(1P) -> pi+ pi+]cc" ]
+                                      , DaughtersCuts = Daug_cuts
+                                      , CombinationCut = ChiC2HH_Comb_cut
+                                      , MotherCut = ChiC2HH_Mother_cut
+                                      , Inputs = [ Kaons, Pions ]
+                                      )
+        
+        ChiC2HHWS = bindMembers("ChiC2HHWS", [ Kaons ] + [ Pions ] + [ CombineChiC2HHWS ])
+        
+        #
         #=== 'chi_c' -> KKpipi ===#
         #
 
@@ -198,36 +245,36 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
                                "(AP > %(ChiC2HHHH_APmin)s) & (ACHILD(PT, 1) + ACHILD(PT, 2) + ACHILD(PT, 3) + ACHILD(PT, 4) > %(ChiC2HHHH_SSumPTmin)s)" % self.getProps()
         ChiC2HHHH_Mother_cut = "(VFASPF(VCHI2PDOF) < %(ChiC2HHHH_VtxChi2DoFmax)s)" % self.getProps()
         
-        CombineChiC = Hlt2Member(CombineParticles
-                                 , "Combine"
-                                 , DecayDescriptors = [ "[chi_c1(1P) -> K+ K+ pi- pi-]cc",
-                                                        "chi_c1(1P) -> K+ K- pi+ pi-",
-                                                        "chi_c1(1P) -> K+ K+ K- K-",
-                                                        "chi_c1(1P) -> pi+ pi+ pi- pi-" ]
-                                 , DaughtersCuts = Daug_cuts
-                                 , CombinationCut = ChiC2HHHH_Comb_cut
-                                 , MotherCut = ChiC2HHHH_Mother_cut
-                                 , Inputs = [ Kaons, Pions ]
-                                 )
+        CombineChiC2HHHH = Hlt2Member(CombineParticles
+                                      , "Combine"
+                                      , DecayDescriptors = [ "[chi_c1(1P) -> K+ K+ pi- pi-]cc",
+                                                             "chi_c1(1P) -> K+ K- pi+ pi-",
+                                                             "chi_c1(1P) -> K+ K+ K- K-",
+                                                             "chi_c1(1P) -> pi+ pi+ pi- pi-" ]
+                                      , DaughtersCuts = Daug_cuts
+                                      , CombinationCut = ChiC2HHHH_Comb_cut
+                                      , MotherCut = ChiC2HHHH_Mother_cut
+                                      , Inputs = [ Kaons, Pions ]
+                                      )
 
-        ChiC = bindMembers("ChiC", [ Kaons ] + [ Pions ] + [ CombineChiC ])
+        ChiC2HHHH = bindMembers("ChiC2HHHH", [ Kaons ] + [ Pions ] + [ CombineChiC2HHHH ])
 
-        CombineChiCWS = Hlt2Member(CombineParticles
-                                   , "Combine"
-                                   , DecayDescriptors = [ "[chi_c1(1P) -> K+ K+ pi+ pi+]cc",
-                                                          "[chi_c1(1P) -> K+ K+ pi+ pi-]cc",
-                                                          "[chi_c1(1P) -> K+ K- pi+ pi+]cc",
-                                                          "[chi_c1(1P) -> K+ K+ K+ K+]cc",
-                                                          "[chi_c1(1P) -> K+ K+ K+ K-]cc",
-                                                          "[chi_c1(1P) -> pi+ pi+ pi+ pi+]cc",
-                                                          "[chi_c1(1P) -> pi+ pi+ pi+ pi-]cc" ]
-                                   , DaughtersCuts = Daug_cuts
-                                   , CombinationCut = ChiC2HHHH_Comb_cut
-                                   , MotherCut = ChiC2HHHH_Mother_cut
-                                   , Inputs = [ Kaons, Pions ]
-                                   )
+        CombineChiC2HHHHWS = Hlt2Member(CombineParticles
+                                        , "Combine"
+                                        , DecayDescriptors = [ "[chi_c1(1P) -> K+ K+ pi+ pi+]cc",
+                                                               "[chi_c1(1P) -> K+ K+ pi+ pi-]cc",
+                                                               "[chi_c1(1P) -> K+ K- pi+ pi+]cc",
+                                                               "[chi_c1(1P) -> K+ K+ K+ K+]cc",
+                                                               "[chi_c1(1P) -> K+ K+ K+ K-]cc",
+                                                               "[chi_c1(1P) -> pi+ pi+ pi+ pi+]cc",
+                                                               "[chi_c1(1P) -> pi+ pi+ pi+ pi-]cc" ]
+                                        , DaughtersCuts = Daug_cuts
+                                        , CombinationCut = ChiC2HHHH_Comb_cut
+                                        , MotherCut = ChiC2HHHH_Mother_cut
+                                        , Inputs = [ Kaons, Pions ]
+                                        )
         
-        ChiCWS = bindMembers("ChiCWS", [ Kaons ] + [ Pions ] + [ CombineChiCWS ])
+        ChiC2HHHHWS = bindMembers("ChiC2HHHHWS", [ Kaons ] + [ Pions ] + [ CombineChiC2HHHHWS ])
 
         #
         #=== Filtering algorithms ===#
@@ -236,9 +283,10 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
         velotracks = Hlt2BiKalmanFittedForwardTracking().hlt2VeloTracking()
         VT = velotracks.outputSelection()
         
-        FilterNumVeloTracks     = VoidFilter('Hlt2LowMultHadronFilterNumVeloTracks',     Code = "CONTAINS('%s') < 12" % VT)
-        FilterNumVeloTracksChiC = VoidFilter('Hlt2LowMultHadronFilterNumVeloTracksChiC', Code = "CONTAINS('%s') < 8"  % VT)
-        FilterNumBackTracks     = VoidFilter('Hlt2LowMultHadronFilterNumBackTracks',     Code = "TrNUM('%s', TrBACKWARD) < 1" % VT)
+        FilterNumVeloTracks          = VoidFilter('Hlt2LowMultHadronFilterNumVeloTracks',          Code = "CONTAINS('%s') < 12" % VT)
+        FilterNumVeloTracksChiC2HH   = VoidFilter('Hlt2LowMultHadronFilterNumVeloTracksChiC2HH',   Code = "CONTAINS('%s') < 6"  % VT)
+        FilterNumVeloTracksChiC2HHHH = VoidFilter('Hlt2LowMultHadronFilterNumVeloTracksChiC2HHHH', Code = "CONTAINS('%s') < 8"  % VT)
+        FilterNumBackTracks          = VoidFilter('Hlt2LowMultHadronFilterNumBackTracks',          Code = "TrNUM('%s', TrBACKWARD) < 1" % VT)
 
         #
         #=== Set up lines ===#
@@ -271,11 +319,19 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
                          , postscale = self.postscale
                          )
 
-        line = Hlt2Line( 'LowMultChiC'
+        line = Hlt2Line( 'LowMultChiC2HH'
                          , prescale = self.prescale
                          , HLT = HLTreq    
                          , L0DU = L0req
-                         , algos = [ velotracks, FilterNumVeloTracksChiC, FilterNumBackTracks, Kaons, Pions, ChiC ]
+                         , algos = [ velotracks, FilterNumVeloTracksChiC2HH, FilterNumBackTracks, Kaons, Pions, ChiC2HH ]
+                         , postscale = self.postscale
+                         )
+
+        line = Hlt2Line( 'LowMultChiC2HHHH'
+                         , prescale = self.prescale
+                         , HLT = HLTreq    
+                         , L0DU = L0req
+                         , algos = [ velotracks, FilterNumVeloTracksChiC2HHHH, FilterNumBackTracks, Kaons, Pions, ChiC2HHHH ]
                          , postscale = self.postscale
                          )
 
@@ -303,11 +359,19 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
                          , postscale = self.postscale
                          )
 
-        line = Hlt2Line( 'LowMultChiCWS'
+        line = Hlt2Line( 'LowMultChiC2HHWS'
                          , prescale = self.prescale
                          , HLT = HLTreq    
                          , L0DU = L0req
-                         , algos = [ velotracks, FilterNumVeloTracksChiC, FilterNumBackTracks, Kaons, Pions, ChiCWS ]
+                         , algos = [ velotracks, FilterNumVeloTracksChiC2HH, FilterNumBackTracks, Kaons, Pions, ChiC2HHWS ]
+                         , postscale = self.postscale
+                         )
+
+        line = Hlt2Line( 'LowMultChiC2HHHHWS'
+                         , prescale = self.prescale
+                         , HLT = HLTreq    
+                         , L0DU = L0req
+                         , algos = [ velotracks, FilterNumVeloTracksChiC2HHHH, FilterNumBackTracks, Kaons, Pions, ChiC2HHHHWS ]
                          , postscale = self.postscale
                          )
 
@@ -315,11 +379,13 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
         #=== Register with ANNSvc ===#
         #
         
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultD2KPiDecision"     : self.getProp('HltANNSvcID')['D2KPi'] } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultD2KPiPiDecision"   : self.getProp('HltANNSvcID')['D2KPiPi'] } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultD2K3PiDecision"    : self.getProp('HltANNSvcID')['D2K3Pi'] } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultChiCDecision"      : self.getProp('HltANNSvcID')['ChiC'] } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultD2KPiWSDecision"   : self.getProp('HltANNSvcID')['D2KPiWS'] } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultD2KPiPiWSDecision" : self.getProp('HltANNSvcID')['D2KPiPiWS'] } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultD2K3PiWSDecision"  : self.getProp('HltANNSvcID')['D2K3PiWS'] } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultChiCWSDecision"    : self.getProp('HltANNSvcID')['ChiCWS'] } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultD2KPiDecision"       : self.getProp('HltANNSvcID')['D2KPi'] } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultD2KPiPiDecision"     : self.getProp('HltANNSvcID')['D2KPiPi'] } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultD2K3PiDecision"      : self.getProp('HltANNSvcID')['D2K3Pi'] } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultChiC2HHDecision"     : self.getProp('HltANNSvcID')['ChiC2HH'] } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultChiC2HHHHDecision"   : self.getProp('HltANNSvcID')['ChiC2HHHH'] } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultD2KPiWSDecision"     : self.getProp('HltANNSvcID')['D2KPiWS'] } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultD2KPiPiWSDecision"   : self.getProp('HltANNSvcID')['D2KPiPiWS'] } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultD2K3PiWSDecision"    : self.getProp('HltANNSvcID')['D2K3PiWS'] } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultChiC2HHWSDecision"   : self.getProp('HltANNSvcID')['ChiC2HHWS'] } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultChiC2HHHHWSDecision" : self.getProp('HltANNSvcID')['ChiC2HHHHWS'] } )
