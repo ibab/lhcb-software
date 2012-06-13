@@ -4,10 +4,23 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2012-06-12 - Illya Shapoval
+ - Configuration.py:
+   + new property is added. "CondDB().Upgrade = True" will switch the CondDB
+     machinery to talk to the Upgrade database.
+   + three new properties are added:
+     CondDB().LatestGlobalTagByDataType = "DataType0"
+     CondDB().LatestLocalTagsbyDataType = ["DataType1","DataType2",...]
+     CondDB().AllLocalTagsbyDataType = ["DataType1","DataType2",...]
+     Setting this will launch the SAX machinery to fetch and set the latest
+     global tags, latest locals tags, and all local tags, respectively, marked
+     with requested DataType(s). This is an extension to the previous configuration
+     machinery (CondDB().UseLatestTags = ["DataType"]) which is still supported.
+
 !========================= DetCond v12r24 2012-05-02 =========================
 ! 2012-04-26 - Patrick Koppenburg
  - Configuration: add properties allowing to configure from online_RunNumber.xml
-   snapshots. For Online Brunel. This is stolen from Moore. 
+   snapshots. For Online Brunel. This is stolen from Moore.
 
 !========================= DetCond v12r23 2012-02-01 =========================
 ! 2012-02-01 - Marco Clemencic

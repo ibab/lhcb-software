@@ -23,6 +23,7 @@ class CondDB(ConfigurableUser):
     """
     __slots__ = { "Tags"        : {},
                   "Simulation"  : False,
+                  "Upgrade"     : False,
                   "UseOracle"   : False,
                   "LocalTags"   : {},
                   "LogFile"     : "",
@@ -34,6 +35,9 @@ class CondDB(ConfigurableUser):
                   "Online"      : False,
                   "IgnoreHeartBeat": False,
                   "HeartBeatCondition" : "/Conditions/Online/LHCb/Tick",
+                  "LatestGlobalTagByDataType" : "",
+                  "LatestLocalTagsByDataType": [],
+                  "AllLocalTagsByDataType": [],
                   "UseLatestTags" : [],
                   "QueryGranularity" : 0,
                   "UseDBSnapshot"     : False ,
@@ -44,6 +48,7 @@ class CondDB(ConfigurableUser):
     _propertyDocDct = {
                        'Tags' : """ Dictionary of tags (partition:tag) to use for the COOL databases """,
                        'Simulation' : """ Boolean flag to select the simulation or real-data configuration """,
+                       'Upgrade' : """ Boolean flag to select the Upgrade simulation configuration """,
                        'UseOracle' : """ Boolean flag to enable the usage of the CondDB from Oracle servers """,
                        'LocalTags' : """ Dictionary with local tags to use to override the global ones (partition: list of local tags) """,
                        'LogFile' : """ Record the requests to the database the specified file """,
@@ -55,8 +60,11 @@ class CondDB(ConfigurableUser):
                        'Online' : """ Flag to activate configuration options specific for the Online environment """,
                        'IgnoreHeartBeat' : """ Do not set the HeartBeatCondition for the Online partition """,
                        'HeartBeatCondition' : """ Location of the heart-beat condition in the database """,
-                       "UseLatestTags" : """ List of the form [DataType, OnlyGlobalTags = False] to turn on the usage of the latest tags """,
-                       "QueryGranularity": """Granularity of the query in the database (in time units)""",
+                       'LatestGlobalTagByDataType' : """ Use latest CondDB global tag marked with the data type""",
+                       'LatestLocalTagsByDataType' : """ Use all latest CondDB local tags marked with the data type """,
+                       'AllLocalTagsByDataType' : """ Use all CondDB local tags marked with the data type """,
+                       'UseLatestTags' : """ List of the form [DataType, OnlyGlobalTags = False] to turn on the usage of the latest tags """,
+                       'QueryGranularity': """Granularity of the query in the database (in time units)""",
                        }
     LAYER = 0
     ALTERNATIVE = 1
@@ -170,14 +178,13 @@ class CondDB(ConfigurableUser):
     def useLatestTags(self, DataType, OnlyGlobalTags = False):
         self.UseLatestTags = [DataType, OnlyGlobalTags]
 
-    def _useLatestTags(self, DataType, OnlyGlobalTags = False):
+    def _useLatestTags(self, DataTypes, OnlyGlobalTags = False, OnlyLocalTags = False):
         """
         Configure the conditions database to use the latest local tags on top of the latest global tag for a given data type.
         """
         # Check arguments
-        if type(OnlyGlobalTags) is not bool:
-            raise RuntimeError("The value of 'OnlyGlobalTags' flag must be boolean."
-                               " '%s' is not." % DataType)
+        if type(DataTypes) is not list:
+            DataTypes = [DataTypes]
 
         # Check if the latest tags should be set for simulation or not
         if not self.getProp("Simulation"):
@@ -187,15 +194,55 @@ class CondDB(ConfigurableUser):
 
         # Set the latest tags
         from CondDBUI.Admin.TagsFilter import last_gt_lts
+        rel_notes = None
+        if self.getProp('Upgrade'):
+            rel_notes = os.path.join(os.environ['SQLITEUPGRADEDBPATH'], '..', 'doc', 'release_notes.xml')
+
         for partition in partitions:
-            tags = last_gt_lts(partition, DataType)
-            if not tags:
-                raise RuntimeError("Cannot find tags for partition '%s',"
-                                   " data type '%s'" % (partition, DataType))
-            gt, lts = tags
-            self.Tags[partition] = gt
-            if not OnlyGlobalTags:
-                if lts: self.LocalTags[partition] = lts
+            gt, lts = None, []
+            for dt in DataTypes:
+                tags = last_gt_lts(partition, dt, rel_notes)
+                if not tags:
+                    raise RuntimeError("Cannot find tags for partition '%s',"
+                                       " data type '%s'" % (partition, dt))
+                if not gt:
+                    gt = tags[0]
+                lts += tags[1]
+
+            if not OnlyLocalTags:
+                self.Tags[partition] = gt
+            if not OnlyGlobalTags and lts:
+                if partition in self.LocalTags: self.LocalTags[partition] += lts
+                else: self.LocalTags[partition] = lts
+
+    def _useAllLocalTags(self, DataTypes):
+        """
+        Configure the conditions database to use all local tags for a given data type.
+        """
+
+        # Check arguments
+        if type(DataTypes) is not list:
+            DataTypes = [DataTypes]
+
+        # Check if the latest tags should be set for simulation or not
+        if not self.getProp("Simulation"):
+            partitions = ["DDDB", "LHCBCOND"]
+        else:
+            partitions = ["DDDB", "SIMCOND"]
+
+        # Set the latest tags
+        from CondDBUI.Admin.TagsFilter import all_lts
+        rel_notes = None
+        if self.getProp('Upgrade'):
+            rel_notes = os.path.join(os.environ['SQLITEUPGRADEDBPATH'], '..', 'doc', 'release_notes.xml')
+
+        for partition in partitions:
+            local_tags = []
+            for dt in DataTypes:
+                lts = all_lts(partition, dt, rel_notes)
+                if lts: local_tags += lts
+            if partition in self.LocalTags: self.LocalTags[partition] += local_tags
+            else: self.LocalTags[partition] = local_tags
 
     def __make_sqlite_local_copy__(self, accsvc, local_dir = None, force_copy = None):
         if isinstance(accsvc, str):
@@ -272,7 +319,7 @@ class CondDB(ConfigurableUser):
         return newaccsvc
 
     def _configureDBSnapshot(self):
-        
+
         baseloc = self.getProp( "DBSnapshotDirectory" )
         # hack to allow us to change connectionstrings...
         self.UseOracle = True             # needed?
@@ -301,7 +348,7 @@ class CondDB(ConfigurableUser):
         from Configurables import MagneticFieldSvc
         MagneticFieldSvc().UseSetCurrent = True
 
-        if self.getProp('EnableRunChangeHandler') : 
+        if self.getProp('EnableRunChangeHandler') :
             online_xml = '%s/%s/online_%%d.xml' % (baseloc, self.getProp('PartitionName')[0:4] )
             from Configurables import RunChangeHandlerSvc
             rch = RunChangeHandlerSvc()
@@ -321,35 +368,46 @@ class CondDB(ConfigurableUser):
         # special case for online
         if self.getProp('UseDBSnapshot') : self._configureDBSnapshot()
 
-        # Set the usage of the latest global tag and (optionally) all available
-        # local tags which exist on top of it
-        if self.getProp("UseLatestTags"):
-            use_latest = self.getProp("UseLatestTags")
-            useLatestLength = len(use_latest)
-            if self.getProp("Tags") or self.getProp("LocalTags"):
-                # reset tags properties before setting the latest tags
-                self.Tags = {}
-                self.LocalTags = {}
-            if useLatestLength == 1:
-                self._useLatestTags(use_latest[0])
-                log.warning("Default global tags will be overridden with the latest ones"
-                            " available for '%s' data type: %s"
-                            %(use_latest[0], self.getProp("Tags")) )
-                log.warning("Latest unbound local tags of '%s' data type will be"
-                            " put on top of the latest global tags: %s"
-                            %(use_latest[0], self.getProp("LocalTags")))
-            elif useLatestLength == 2:
-                self._useLatestTags(use_latest[0],use_latest[1])
-                log.warning("Default global tags will be overridden with the latest ones"
-                            " available for '%s' data type: %s"
-                            %(use_latest[0], self.getProp("Tags")) )
-                if not use_latest[1]:
-                    log.warning("Latest unbound local tags of '%s' data type will be"
-                                " put on top of the latest global tags: %s"
-                                %(use_latest[0], self.getProp("LocalTags")))
+        # Set the usage of the latest global/local tags
+        old_latest_Tags_prop = self.getProp("UseLatestTags") # it is deprecated
+        latest_GTags_prop = self.getProp("LatestGlobalTagByDataType")
+        latest_LTags_prop = self.getProp("LatestLocalTagsByDataType")
+        all_LTags_prop = self.getProp("AllLocalTagsByDataType")
+
+        if old_latest_Tags_prop:
+            if latest_GTags_prop or latest_LTags_prop:
+                log.warning("The property 'UseLatestTags' is deprecated:"
+                            "'LatestGlobalTagByDataType' and 'LatestLocalTagsByDataType'"
+                            " will be used instead.")
             else:
-                raise RuntimeError("Wrong 'UseLatestTags' property. Should be: "
-                                   "['DataType', OnlyGlobalTag = bool_flag].")
+                latest_GTags_prop = old_latest_Tags_prop[0]
+                if type(old_latest_Tags_prop[-1]) != bool or \
+                   (type(old_latest_Tags_prop[-1]) == bool and not old_latest_Tags_prop[1]):
+                    latest_LTags_prop = old_latest_Tags_prop[0]
+
+        if latest_GTags_prop:
+            datatype = latest_GTags_prop
+            if self.getProp("Tags"):
+                self.Tags = {}
+            self._useLatestTags(datatype, OnlyGlobalTags = True)
+            log.warning("Default global tags will be overridden with the latest ones"
+                        " available for '%s' data type: %s"%(datatype, self.getProp("Tags")) )
+
+        if latest_LTags_prop:
+            datatypes = latest_LTags_prop
+            #if self.getProp("LocalTags"):
+            #    self.LocalTags = {}
+            self._useLatestTags(datatypes, OnlyLocalTags = True)
+            log.warning("Latest unbound local tags on top of the latest global tags"
+                        " of %s data type(s) are added: %s"
+                        %(datatypes, self.getProp("LocalTags")))
+
+        if all_LTags_prop:
+            datatypes = all_LTags_prop
+            self._useAllLocalTags(datatypes)
+            log.warning("ALL local tags of %s data type(s) are added: %s"
+                        %(datatypes, self.getProp("LocalTags")))
+
 
         # Import SQLDDDB specific info
         if self.getProp("UseOracle"):
@@ -381,6 +439,9 @@ class CondDB(ConfigurableUser):
             if p in conns and type(partition[p]) is CondDBAccessSvc:
                 partition[p].ConnectionString = conns[p]
                 del conns[p]
+            # Override connection strings for Upgrade case
+            if self.getProp('Simulation') and self.getProp('Upgrade') and type(partition[p]) is CondDBAccessSvc:
+                partition[p].ConnectionString = os.path.join('sqlite_file:' + os.environ['SQLITEUPGRADEDBPATH'], p + '.db', p)
             # Override tags
             if p in tags and p != "ONLINE":
                 partition[p].DefaultTAG = tags[p]
@@ -621,4 +682,4 @@ def configureOnlineSnapshots(start = None, end = None, connStrFunc = None):
     descr = "'%s':(%d,%d)" % ( accSvc.getFullName(), since, until )
     ONLINE.Readers.append(descr)
 
-    
+
