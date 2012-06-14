@@ -1,22 +1,22 @@
-#ifndef VELOLITE_HIT_MONITOR_H 
-#define VELOLITE_HIT_MONITOR_H 1
+#ifndef VL_HIT_MONITOR_H 
+#define VL_HIT_MONITOR_H 1
 
 #include "GaudiAlg/GaudiTupleAlg.h"
 #include "Event/MCHit.h"
 
-/** @class VeloLiteHitMonitor VeloLiteHitMonitor.h
+/** @class VLHitMonitor VLHitMonitor.h
  *  
  */
 
-class DeVeloLite;
+class DeVL;
 
-class VeloLiteHitMonitor : public GaudiTupleAlg {
+class VLHitMonitor : public GaudiTupleAlg {
 
 public: 
   /// Constructor
-  VeloLiteHitMonitor(const std::string& name, ISvcLocator* pSvcLocator);
+  VLHitMonitor(const std::string& name, ISvcLocator* pSvcLocator);
   /// Destructor
-  virtual ~VeloLiteHitMonitor() {}
+  virtual ~VLHitMonitor() {}
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute();       ///< Algorithm execution
@@ -24,19 +24,16 @@ public:
 
 protected:
 
-  StatusCode monitorHits();
-  StatusCode monitorPuHits();
+  void monitor();
 
 private:
 
-  DeVeloLite* m_det;
+  DeVL* m_det;
   LHCb::MCHits* m_hits;
-  LHCb::MCHits* m_puHits;
+  bool m_detailed;
   bool m_printInfo;
   double m_nHits;
   double m_nHits2;
-  double m_nPuHits;
-  double m_nPuHits2;
   int m_nEvents;
 
 };

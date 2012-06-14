@@ -4,34 +4,32 @@
 #include "GaudiKernel/Vector4DTypes.h"
 // Event/MCEvent
 #include "Event/MCParticle.h"
-// Det/VeloLiteDet
-#include "VeloLiteDet/DeVeloLite.h"
+// Det/VLDet
+#include "VLDet/DeVL.h"
 // Local
-#include "VeloLiteHitMonitor.h"
+#include "VLHitMonitor.h"
 
-/** @file VeloLiteHitMonitor.cpp
+/** @file VLHitMonitor.cpp
  *
- *  Implementation of class : VeloLiteHitMonitor
+ *  Implementation of class : VLHitMonitor
  *
  */
 
-DECLARE_ALGORITHM_FACTORY(VeloLiteHitMonitor);
+DECLARE_ALGORITHM_FACTORY(VLHitMonitor)
 
 //=============================================================================
 /// Standard constructor
 //=============================================================================
-VeloLiteHitMonitor::VeloLiteHitMonitor(const std::string& name,
-                                       ISvcLocator* pSvcLocator) : 
+VLHitMonitor::VLHitMonitor(const std::string& name,
+                           ISvcLocator* pSvcLocator) : 
     GaudiTupleAlg(name, pSvcLocator),
     m_det(0),
     m_hits(),
-    m_puHits(),
     m_nHits(0.),
     m_nHits2(0.),
-    m_nPuHits(0.),
-    m_nPuHits2(0.),
     m_nEvents(0) {
 
+  declareProperty("Detailed",  m_detailed = false);
   declareProperty("PrintInfo", m_printInfo = false);
 
 }
@@ -39,13 +37,13 @@ VeloLiteHitMonitor::VeloLiteHitMonitor(const std::string& name,
 //=============================================================================
 /// Initialization
 //=============================================================================
-StatusCode VeloLiteHitMonitor::initialize() {
+StatusCode VLHitMonitor::initialize() {
 
   StatusCode sc = GaudiAlgorithm::initialize();
   if (sc.isFailure()) return sc;
-  debug() << " ==> initialize()" << endmsg;
-  m_det = getDet<DeVeloLite>(DeVeloLiteLocation::Default);
-  setHistoTopDir("VeloLite/");
+  if (msgLevel(MSG::DEBUG)) debug() << " ==> initialize()"  << endmsg;
+  m_det = getDet<DeVL>(DeVLLocation::Default);
+  setHistoTopDir("VL/");
   return StatusCode::SUCCESS;
 
 }
@@ -53,25 +51,16 @@ StatusCode VeloLiteHitMonitor::initialize() {
 //=============================================================================
 /// Main execution
 //=============================================================================
-StatusCode VeloLiteHitMonitor::execute() {
+StatusCode VLHitMonitor::execute() {
 
-  debug() << " ==> execute()" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << " ==> execute()" << endmsg;
   ++m_nEvents;
-  if (!exist<LHCb::MCHits>(LHCb::MCHitLocation::Velo)) {
-    error() << "There are no MCHits at " << LHCb::MCHitLocation::Velo 
-            << " in TES!" << endmsg;
-  } else {
-    m_hits = get<LHCb::MCHits>(LHCb::MCHitLocation::Velo);
-    monitorHits();
+  if (!exist<LHCb::MCHits>(LHCb::MCHitLocation::VL)) {
+    error() << "There are no MCHits at " << LHCb::MCHitLocation::VL << endmsg;
+    return StatusCode::FAILURE; 
   }
-
-  if (!exist<LHCb::MCHits>(LHCb::MCHitLocation::PuVeto)) {
-    error() << "There are no MCHits at " << LHCb::MCHitLocation::PuVeto 
-            << " in TES!" << endmsg;
-  } else {
-    m_puHits = get<LHCb::MCHits>(LHCb::MCHitLocation::PuVeto);
-    monitorPuHits();
-  }
+  m_hits = get<LHCb::MCHits>(LHCb::MCHitLocation::VL);
+  monitor();
   return StatusCode::SUCCESS;
 
 }
@@ -79,18 +68,15 @@ StatusCode VeloLiteHitMonitor::execute() {
 //=============================================================================
 /// Finalize
 //=============================================================================
-StatusCode VeloLiteHitMonitor::finalize() {
+StatusCode VLHitMonitor::finalize() {
 
-  debug() << " ==> finalize()" << endmsg;  
+  if (msgLevel(MSG::DEBUG)) debug() << " ==> finalize()" << endmsg;  
   m_nHits  /= m_nEvents;
   m_nHits2 /= m_nEvents;
   const double err = sqrt((m_nHits2 - (m_nHits * m_nHits)) / m_nEvents);
-  m_nPuHits  /= m_nEvents;
-  m_nPuHits2 /= m_nEvents;
-  const double errPu = sqrt((m_nPuHits2 - (m_nPuHits * m_nPuHits)) / m_nEvents);
 
   info() << "------------------------------------------------------" << endmsg;
-  info() << "                 - VeloLiteHitMonitor -               " << endmsg;
+  info() << "                      VLHitMonitor                    " << endmsg;
   info() << "------------------------------------------------------" << endmsg;
   if (m_nHits > 0) {
     info() << " Number of MCHits / event:         " << m_nHits << "+/-"
@@ -98,20 +84,14 @@ StatusCode VeloLiteHitMonitor::finalize() {
   } else {
     info() << " ==> No MCHits found! " << endmsg;
   }
-  if (m_nPuHits > 0) {
-    info() << " Number of pile-up MCHits / event: " << m_nPuHits << "+/-"
-           << errPu << endmsg;
-  } else {
-    info() << " ==> No pile-up MCHits found! " << endmsg;
-  }
   info() << "------------------------------------------------------" << endmsg;
   return GaudiAlgorithm::finalize();  
 
 }
 
-StatusCode VeloLiteHitMonitor::monitorHits() {
+void VLHitMonitor::monitor() {
 
-  debug() << " ==> monitorHits()" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << " ==> monitor()" << endmsg;
   const double size = m_hits->size();
   m_nHits += size;
   m_nHits2 += size * size;
@@ -158,7 +138,8 @@ StatusCode VeloLiteHitMonitor::monitorHits() {
     plot((*it)->time() / Gaudi::Units::ns, "TOF",
          "Time Of Flight [ns]", 
          0., 50., 100);
-    const DeVeloLiteSensor* sensor = m_det->sensor((*it)->sensDetID());
+    if (!m_detailed) continue;
+    const DeVLSensor* sensor = m_det->sensor((*it)->sensDetID());
     const double x = (*it)->entry().x() / Gaudi::Units::cm;
     const double y = (*it)->entry().y() / Gaudi::Units::cm;
     const double z = (*it)->entry().z() / Gaudi::Units::cm;
@@ -192,7 +173,7 @@ StatusCode VeloLiteHitMonitor::monitorHits() {
       } else if (sensor->isPhi()) {
         if (sensor->isDownstream()) {
           plot2D(x, y, "entryPDLXY",
-                 "Particle entry point in PhiDR [cm] - XY plane",
+                 "Particle entry point in PhiDL [cm] - XY plane",
                  -5., 5., -5., 5., 50, 50);
         } else {    
           plot2D(x, y, "entryPULXY",
@@ -218,74 +199,6 @@ StatusCode VeloLiteHitMonitor::monitorHits() {
       }
     }
   }
-  return StatusCode::SUCCESS;
-
-}
-
-StatusCode VeloLiteHitMonitor::monitorPuHits() {
-
-  debug() << " ==> monitorPuHits()" << endmsg;
-  const double size = m_puHits->size();
-  m_nPuHits += size;
-  m_nPuHits2 += size * size;
-  plot(size, "nMCPUHits",
-       "Number of pile-up hits per event",
-       0., 3000., 100);
-  LHCb::MCHits::iterator it;
-  for (it = m_puHits->begin(); it != m_puHits->end(); ++it) {
-    if (m_printInfo) {
-      info() << " ==> Pile-Up MCHit " << it - m_puHits->begin() << endmsg;
-      info() << " sensor: " << ((*it)->sensDetID()) << endmsg;
-      info() << " entry (mm): x = " << ((*it)->entry()).x() / Gaudi::Units::mm 
-             << ", y = " << ((*it)->entry()).y() / Gaudi::Units::mm 
-             << ", z = " << ((*it)->entry()).z() / Gaudi::Units::mm << endmsg;
-      info() << " exit (mm): x = " << ((*it)->exit()).x() / Gaudi::Units::mm 
-             << ", y = " << ((*it)->exit()).y() / Gaudi::Units::mm 
-             << ", z = " << ((*it)->exit()).z() / Gaudi::Units::mm << endmsg;
-      info() << " energy: " << ((*it)->energy()) / Gaudi::Units::eV << " eV"
-             << ", TOF: " << ((*it)->time()) / Gaudi::Units::ns << " ns" 
-             << endmsg;
-    }
-    plot((*it)->energy() / Gaudi::Units::eV, "eDepSiPU",
-         "PileUp: Energy deposited in Si [eV]",
-         0., 300000., 100);
-    plot2D((*it)->entry().x() / Gaudi::Units::cm,
-           (*it)->entry().y() / Gaudi::Units::cm, "entryXYPU",
-           "PileUp: Particle entry point in Si [cm] - XY plane",
-           -5., 5., -5., 5., 50, 50);
-    plot2D((*it)->entry().z() / Gaudi::Units::cm,
-           (*it)->entry().x() / Gaudi::Units::cm, "entryXYPU",
-           "PileUp: Particle entry point in Si [cm] - ZX plane",
-           -40., -10., -5., 5., 1000, 50);
-    plot2D((*it)->exit().x() / Gaudi::Units::cm,
-           (*it)->exit().y() / Gaudi::Units::cm, "exitXYPU",
-           "PileUp: Particle exit point in Si [cm] - XY plane",
-           -5., 5., -5., 5., 50, 50);
-    plot2D((*it)->exit().z() / Gaudi::Units::cm,
-           (*it)->exit().x() / Gaudi::Units::cm, "exitZXPU",
-           "PileUp: Particle exit point in Si [cm] - ZX plane",
-           -40., -10., -5., 5., 1000, 50);
-    plot((*it)->time() / Gaudi::Units::ns, "TOFPU",
-         "PileUp: Time Of Flight [ns]",
-         0., 50., 100);
-    // Get the MCParticle which made the hit, and write out 4-mom
-    const LHCb::MCParticle* particle = (*it)->mcParticle();
-    if (0 != particle) {
-      Gaudi::LorentzVector fMom = particle->momentum();
-      plot(fMom.e() / Gaudi::Units::GeV, "eMCPartPU",
-           "Particle energy [GeV]",
-           0., 50., 100);        
-      if (m_printInfo) {
-        info() << " ==> MCParticle four-momentum: " << endmsg;
-        info() << " px = " << fMom.px() / Gaudi::Units::GeV
-               << ", py = " << fMom.py() / Gaudi::Units::GeV
-               << ", pz = " << fMom.pz() / Gaudi::Units::GeV
-               << ", E = " << fMom.e() / Gaudi::Units::GeV
-               << endmsg;
-      }
-    }
-  }
-  return StatusCode::SUCCESS;
 
 }
    

@@ -1,19 +1,19 @@
-package           VeloLiteMoniSim
+package           VLMoniSim
 version           v1r0
 
 branches          cmt doc src
 include_path      none
 
-use  MCEvent        v*       Event
-use  VeloLiteDet    v* 	     Det
-use  GaudiAlg       v*
+use  MCEvent      v*       Event
+use  VLDet        v* 	   Det
+use  GaudiAlg     v*
 
 #============================================================================
 # Component library building rule
 #============================================================================
-library          VeloLiteMoniSim    ../src/*.cpp 
+library          VLMoniSim    ../src/*.cpp 
 
 #============================================================================
 # define component library link options
 #============================================================================
-apply_pattern    component_library library=VeloLiteMoniSim
+apply_pattern    component_library library=VLMoniSim
