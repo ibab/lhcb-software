@@ -1,0 +1,71 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>gaudirun.py</text></argument>
+  <argument name="timeout"><integer>2400</integer></argument>
+  <argument name="args"><set>
+    <text>$APPCONFIGOPTS/Brunel/MonitorExpress.py</text>
+    <text>--option</text>
+    <text>from Brunel.Configuration import *; Brunel().Monitors=["SC","FPE"]; Brunel().DataType="2012"; Brunel().InputType="DST"; from GaudiConf.IOHelper import IOHelper; IOHelper().inputFiles(["brunel2012magdown-200ev.dst"])</text>
+  </set></argument>
+  <argument name="reference"><text>../refs/brunel2012magdown.ref</text></argument>
+  <argument name="validator"><text>
+from Brunel.QMTest.BrunelExclusions import preprocessor as BrunelPreprocessor
+preprocessor = BrunelPreprocessor + \
+  RegexpReplacer(when = "Member list: ProcessPhase/Init", orig = r'GaudiSequencer/LumiSeq, GaudiSequencer/NotPhysicsSeq, ', repl = r'') +\
+  RegexpReplacer(when = "Init                 INFO Member list", orig = r'GaudiSequencer/InitReprocSeq, ', repl = r'') +\
+  RegexpReplacer(when = "RootHistSvc", orig = r'brunel2012magdown-200ev-histos.root', repl = r'Brunel-histos.root') +\
+  RegexpReplacer(when = "Data source: EventDataSvc output", orig = r'brunel2012magdown-200ev.dst', repl = r'Brunel.dst') +\
+  RegexpReplacer(when = "Data source: FileRecordDataSvc output", orig = r'brunel2012magdown-200ev.dst', repl = r'Brunel.dst') +\
+  RegexpReplacer(when = "BrunelEventCount     INFO ", orig = r'200', repl = r'164') +\
+  LineSkipper(['INFO Connected to database "ONLINE"']) + \
+  LineSkipper(["InitReprocSeq        INFO Member list: "]) + \
+  LineSkipper(["BrunelInit"]) + \
+  LineSkipper(["FilterNoBeam"]) + \
+  LineSkipper(["FilterBeam"]) + \
+  LineSkipper(["LumiDecode"]) + \
+  LineSkipper(["LumiCount"]) + \
+  LineSkipper(["EventSelector"]) + \
+  LineSkipper(["HltErrorSeq          INFO OR Member list"]) + \
+  LineSkipper(["HltFilterSeq         INFO Member list"]) + \
+  LineSkipper(["HltErrorProc         INFO Whenever called will add the following to ProcStatus"]) + \
+  LineSkipper(["HltErrorProc         INFO   Algorithm: HltErrorProc"]) + \
+  LineSkipper(["PhysicsSeq           INFO Member list"]) + \
+  LineSkipper(["CaloBanksHandler     INFO Member list"]) + \
+  LineSkipper(["PrsBanksHandler      INFO Member list"]) + \
+  LineSkipper(["PrsCheckBanks        INFO  Check the 0-suppressed banks exist for Prs"]) + \
+  LineSkipper(["PrsCheckBanks        INFO  if not (MC) re-create them from packed bank and delete packed"]) + \
+  LineSkipper(["EventPersistenc...   INFO Added successfully Conversion service:LHCb::RawDataCnvSvc"]) + \
+  RegexpReplacer(when = "HltFilterSeq         INFO Member list: ", orig = r'HltRoutingBitsFilter/PhysFilter, ', repl = r'') +\
+  LineSkipper(["TimeSpanSeq          INFO Member list"]) + \
+  LineSkipper(["NotPhysicsSeq        INFO OR Member list"]) + \
+  LineSkipper(["WARNING RawEventSelectiveCopy"]) + \
+  LineSkipper(["TrackBestTrackC...WARNING TrackMasterFitter:: The WARNING message is suppressed"]) + \
+  LineSkipper(["EventLoopMgr         INFO No more events in event selection"]) + \
+  LineSkipper(["BrunelEventCount     INFO 200 events processed"]) + \
+  LineSkipper(["TimeSpanFilter    SUCCESS Number of counters"]) + \
+  LineSkipper(["TimeSpanAccounting   INFO "]) + \
+  LineSkipper(["EventAccount         INFO Overriding status: VERIFIED with: VERIFIED"]) + \
+  LineSkipper(["PhysFilter        SUCCESS Number of counters"]) + \
+  LineSkipper(["PrsROFilter       SUCCESS Number of counters"]) + \
+  LineSkipper(["PrsSpdFillRawBu...   INFO Average event size"]) + \
+  LineSkipper(["EcalROFilter      SUCCESS Number of counters"]) + \
+  LineSkipper(["EcalFillRawBuffer    INFO Average event size"]) + \
+  LineSkipper(["HcalROFilter      SUCCESS Number of counters"]) + \
+  LineSkipper(["HcalFillRawBuffer    INFO Average event size"]) + \
+  LineSkipper(["HcalTrigFromRaw...SUCCESS Number of counters"]) + \
+  LineSkipper(["HcalADCs.HcalAD...SUCCESS Number of counters"]) + \
+  LineSkipper(["EcalTrigFromRaw...SUCCESS Number of counters"]) + \
+  LineSkipper(["EcalADCs.EcalAD...SUCCESS Number of counters"]) + \
+  LineSkipper(["SpdL0Bit.SpdL0B...SUCCESS Number of counters"]) + \
+  LineSkipper(["PrsL0Bit.PrsL0B...SUCCESS Number of counters"]) + \
+  LineSkipper(["PrsADCs.PrsADCs...SUCCESS Number of counters"]) + \
+  LineSkipper(["TriggerRawBank    SUCCESS "]) + \
+  LineSkipper(["MuonRawBank       SUCCESS "]) + \
+  LineSkipper(["RichRawBank       SUCCESS "]) + \
+  LineSkipper(["OtherRawEvent     SUCCESS "])
+validateWithReference(preproc = preprocessor)
+</text></argument>
+  <argument name="prerequisites"><set>
+    <tuple><text>brunel.brunel2012magdown</text><enumeral>PASS</enumeral></tuple>
+  </set></argument>
+</extension>

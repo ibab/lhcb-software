@@ -6,7 +6,8 @@ Purpose: LHCb reconstruction program
 - Changes to configurable
   . HltRecReports now decoded unconditionally on every event
   . L0DU now decoded unconditionally on every physics event
-  . Complete the split RawEvent copy on DST and remove reference to original.
+  . Complete the split RawEvent copy on DST and remove reference to original
+  . Do not run InitReprocSeq if not reprocessing
 
 - Changes to references to reflect changes since v42r3p1
   . Reduce the chi^2 range from 0-10 to 0-3, to adapt to tracking changes. Reduce
@@ -22,6 +23,8 @@ Purpose: LHCb reconstruction program
 - Changes to tests
   . Add a test for bug #94407 in brunel.2012-crashes
   . Add a test for bug #95019 in brunel.brunel-mc09-notruth
+  . Add brunel.repro2012magdown to test that reprocessing gives identical
+    output to brunel.brunel2012magdown
 
 </PRE><H1><A NAME=v42r3p2>2012-05-09 Brunel v42r3p2</A></H1><PRE>
 This version uses projects LCG 62b, Gaudi v23r2, LHCb v34r3, Lbcom v12r3,

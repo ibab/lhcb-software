@@ -28,7 +28,8 @@ class Brunel(LHCbConfigurableUser):
                                GlobalRecoChecks ]
 
     ## Default init sequences
-    DefaultInitSequence     = ["Reproc", "Brunel"]
+    DefaultInitSequence      = ["Brunel"]
+    DefaultReproInitSequence = ["Reproc"] + DefaultInitSequence
 
     ## Known checking sequences, all run by default
     KnownCheckSubdets       = ["Pat","RICH","MUON"]
@@ -339,7 +340,10 @@ class Brunel(LHCbConfigurableUser):
     def configureInit(self, inputType):
         # Init sequence
         if not self.isPropertySet("InitSequence"):
-            self.setProp( "InitSequence", self.DefaultInitSequence )
+            if self._isReprocessing(inputType):
+                self.setProp( "InitSequence", self.DefaultReproInitSequence )
+            else:
+                self.setProp( "InitSequence", self.DefaultInitSequence )
         from Configurables import ProcessPhase
         ProcessPhase("Init").DetectorList += self.getProp("InitSequence")
 
@@ -403,7 +407,7 @@ class Brunel(LHCbConfigurableUser):
         # Only set to zero if not previously set to something else.
         if not IODataManager().isPropertySet("AgeLimit") : IODataManager().AgeLimit = 0
 
-        if inputType in [ "XDST", "DST", "SDST" ]:
+        if self._isReprocessing(inputType):
             # Kill knowledge of any previous Brunel processing
             from Configurables import ( TESCheck, EventNodeKiller )
             InitReprocSeq = GaudiSequencer( "InitReprocSeq" )
@@ -647,6 +651,9 @@ class Brunel(LHCbConfigurableUser):
                 from Configurables import GaudiSequencer
                 self.setOtherProps(GlobalRecoChecks(),["OutputType"])
                 GlobalRecoChecks().Sequencer = GaudiSequencer("CheckPROTOSeq")
+
+    def _isReprocessing(self, inputType):
+        return inputType in [ "XDST", "DST", "SDST" ]
 
     def _configureDBSnapshot(self):
         """

@@ -65,4 +65,11 @@
     <logical/>
   </File>
 
+  <File ID="BA88A690-74B5-E111-BF37-003048C9CD62">
+    <physical>
+      <pfn filetype="ROOT" name="brunel2012magdown-200ev.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
 </POOLFILECATALOG>
