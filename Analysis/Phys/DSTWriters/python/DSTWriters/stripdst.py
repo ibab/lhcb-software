@@ -38,15 +38,12 @@ def stripDSTElements(pack=True) :
     return elements
 
 def stripDSTStreamConf( pack = True,
-                        saveFullRawEvent = True ) :
-    eItems = [ ]
-    if saveFullRawEvent :
-        eItems += [ '/Event/DAQ/RawEvent#1' ]
+                        vetoItems = [ ] ) :
+    eItems = [ '/Event/DAQ/RawEvent#1' ] # For backwards compatibility with sDSTs
     if pack :
         eItems += [ '/Event/Strip/pPhys/DecReports#1' ]
     else :
         eItems += [ '/Event/Strip/Phys/DecReports#1' ]
-    vItems = [ "/Event/Muon/RawEvent" ]
     return OutputStreamConf( streamType = InputCopyStream,
                              extraItems = eItems,
-                             vetoItems  = vItems )
+                             vetoItems  = vetoItems )

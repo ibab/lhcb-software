@@ -4,6 +4,11 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2012-06-14 - Chris Jones
+ - Clean up the python options a bit, removing old obsolete code
+ - Add support for new input DST format, with RawEvent split up
+ - Remove support PV Weights packing, as these are no longer used.
+
 !========================= DSTWriters v4r6 2012-05-03 =========================
 
 ! 2012-04-01 - Chris Jones

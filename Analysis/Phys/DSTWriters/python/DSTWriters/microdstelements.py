@@ -132,8 +132,8 @@ class ClonePVs(MicroDSTElement) :
     
     def __init__( self,
                   branch          = '',
-                  RecVertexCloner = "RecVertexCloner",
-                  ClonePVWeights  = True ) :
+                  RecVertexCloner = "RecVertexClonerNoTracks",
+                  ClonePVWeights  = False ) :
         MicroDSTElement.__init__(self, branch)
         self.clonerType = RecVertexCloner
         self.clonePVWeights = ClonePVWeights
@@ -143,6 +143,7 @@ class ClonePVs(MicroDSTElement) :
         from Configurables import CopyPrimaryVertices
         clonePV = CopyPrimaryVertices( name = self.personaliseName(sel,'CopyPrimaryVertices'),
                                        ClonerType = self.clonerType )
+        #clonePV.OutputLevel = 1
         self.setOutputPrefix(clonePV)
         algs += [clonePV]
         if self.clonePVWeights :
@@ -210,7 +211,7 @@ class ClonePVRelations(MicroDSTElement) :
                   location,
                   clonePVs = True,
                   branch = '',
-                  RecVertexCloner = "VertexBaseFromRecVertexCloner" ) :
+                  RecVertexCloner = "VertexBaseFromRecVertexClonerNoTracks" ) :
         MicroDSTElement.__init__(self, branch)
         self.location = location
         self.clonePVs = clonePVs
@@ -219,8 +220,8 @@ class ClonePVRelations(MicroDSTElement) :
         from Configurables import CopyParticle2PVRelations
         cloner = CopyParticle2PVRelations(self.personaliseName(sel,"CopyP2PV_"+self.location))
         cloner.InputLocations = self.dataLocations(sel, self.location)
-        #clonerType = cloner.getProp('ClonerType')
         cloner.ClonerType = self.clonerType
+        #cloner.OutputLevel = 1
         if self.clonePVs == False :
             cloner.ClonerType = 'NONE'
             if hasattr(sel,'algorithm') :
@@ -524,11 +525,6 @@ class PackRecObjects(MicroDSTElement) :
                                  #EnableCheck        = testPacking, # To Do
                                  InputName          = self.branch + "/Rec/Vertex/Primary",
                                  OutputName         = self.branch + "/pRec/Vertex/Primary" )
-##                   PackPVWeights( name = self.personaliseName(sel,"PackPVWeights"),
-##                                  AlwaysCreateOutput = False,
-##                                  DeleteInput        = deleteInput,
-##                                  InputName          = self.branch + "/Rec/Vertex/Weights",
-##                                  OutputName         = self.branch + "/pRec/Vertex/Weights" )
                   ]
 
         # Tracks
