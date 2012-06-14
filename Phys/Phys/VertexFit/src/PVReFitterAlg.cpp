@@ -1,5 +1,3 @@
-// $Id: PVReFitterAlg.cpp,v 1.20 2010-08-12 11:59:21 jpalac Exp $
-// Include files
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -23,27 +21,24 @@
 // 2008-06-25 : Juan PALACIOS
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( PVReFitterAlg )
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-  PVReFitterAlg::PVReFitterAlg( const std::string& name,
-                                ISvcLocator* pSvcLocator)
-    : GaudiAlgorithm ( name , pSvcLocator ),
-      m_pvOfflineTool(0),
-      m_pvReFitter(0),
-      m_onOfflineTool(0),
-      m_pvOfflinetoolType("PVOfflineTool"),
-      m_pvReFitterType("AdaptivePVReFitter"),
-      m_useIPVOfflineTool(false),
-      m_useIPVReFitter(true),
-      m_particleInputLocations(),
-      m_PVInputLocation(""),
-      m_particle2VertexRelationsOutputLocation(""),
-      m_vertexOutputLocation(""),
-      m_outputLocation("")
+PVReFitterAlg::PVReFitterAlg( const std::string& name,
+                              ISvcLocator* pSvcLocator)
+  : GaudiAlgorithm ( name , pSvcLocator ),
+    m_pvOfflineTool(0),
+    m_pvReFitter(0),
+    m_onOfflineTool(0),
+    m_pvOfflinetoolType("PVOfflineTool"),
+    m_pvReFitterType("AdaptivePVReFitter"),
+    m_useIPVOfflineTool(false),
+    m_useIPVReFitter(true),
+    m_particleInputLocations(),
+    m_PVInputLocation(""),
+    m_particle2VertexRelationsOutputLocation(""),
+    m_vertexOutputLocation(""),
+    m_outputLocation("")
 {
   declareProperty("IPVOfflineTool", m_pvOfflinetoolType);
   declareProperty("IPVReFitter",    m_pvReFitterType);
@@ -111,9 +106,9 @@ StatusCode PVReFitterAlg::execute()
   if (!exist<LHCb::RecVertex::Range>(m_PVInputLocation) )
   {
     return StatusCode::SUCCESS;
-//     return Warning("No LHCb::RecVertex::Range found at " +
-//                    m_PVInputLocation,
-//                    StatusCode::SUCCESS, 0);
+    //     return Warning("No LHCb::RecVertex::Range found at " +
+    //                    m_PVInputLocation,
+    //                    StatusCode::SUCCESS, 0);
   }
 
   const LHCb::RecVertex::Range vertices =
@@ -122,10 +117,10 @@ StatusCode PVReFitterAlg::execute()
   if (vertices.empty())
   {
     return StatusCode::SUCCESS;
-//     return Warning("No LHCb::RecVertices in LHCb::Particle::Range "+
-//                    m_PVInputLocation,
-//                    StatusCode::SUCCESS,
-//                    0);
+    //     return Warning("No LHCb::RecVertices in LHCb::Particle::Range "+
+    //                    m_PVInputLocation,
+    //                    StatusCode::SUCCESS,
+    //                    0);
   }
 
   for ( std::vector<std::string>::const_iterator iLoc = m_particleInputLocations.begin();
@@ -275,10 +270,9 @@ void PVReFitterAlg::executeForLocation(const std::string& particleLocation,
 
 //=============================================================================
 
-LHCb::RecVertex* PVReFitterAlg::refitVertex(const LHCb::RecVertex* v,
-                                            const LHCb::Particle* p  ) const
+LHCb::RecVertex* PVReFitterAlg::refitVertex( const LHCb::RecVertex* v,
+                                             const LHCb::Particle* p ) const
 {
-
   if ( !v || !p ) return NULL;
 
   LHCb::RecVertex* reFittedVertex(NULL);
@@ -292,9 +286,9 @@ LHCb::RecVertex* PVReFitterAlg::refitVertex(const LHCb::RecVertex* v,
     if ( !tracks.empty() )
     {
       reFittedVertex = new LHCb::RecVertex();
-      sc = m_pvOfflineTool->reDoSinglePV( v->position(),
-                                          tracks,
-                                          *reFittedVertex );
+      //sc = 
+      m_pvOfflineTool->removeTracksAndRecalculatePV( v, tracks,
+                                                     *reFittedVertex );
     }
     else
     {
@@ -307,39 +301,38 @@ LHCb::RecVertex* PVReFitterAlg::refitVertex(const LHCb::RecVertex* v,
     sc = m_pvReFitter->remove( p, reFittedVertex );
   }
 
-  if ( sc.isSuccess() && reFittedVertex )
-  {
-    return reFittedVertex;
-  }
-  else
+  if ( sc.isFailure() )
   {
     delete reFittedVertex;
-    return NULL;
+    reFittedVertex = NULL;
   }
 
+  return reFittedVertex;
 }
 
 //=============================================================================
 
-void PVReFitterAlg::getTracks(const LHCb::Particle* p,
-                              LHCb::Track::ConstVector& tracks) const
+void PVReFitterAlg::getTracks( const LHCb::Particle* p,
+                               LHCb::Track::ConstVector& tracks ) const
 {
   const LHCb::ProtoParticle * proto = p->proto() ;
   if ( proto )
   {
-    const LHCb::Track* track = proto->track();
-    if ( track ) tracks.push_back(track);
+    if ( proto->track() ) { tracks.push_back( proto->track() ); }
   }
   else
   {
-    const SmartRefVector< LHCb::Particle >& Prods = p->daughters();
-    for ( SmartRefVector< LHCb::Particle >::const_iterator iProd = Prods.begin();
-          iProd != Prods.end(); ++iProd )
+    for ( SmartRefVector<LHCb::Particle>::const_iterator iP = p->daughters().begin();
+          iP != p->daughters().end(); ++iP )
     {
-      const LHCb::Particle* daughter = *iProd;
-      getTracks(daughter, tracks);
+      getTracks( *iP, tracks );
     }
   }
 }
+
+//=============================================================================
+
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( PVReFitterAlg )
 
 //=============================================================================

@@ -7,6 +7,8 @@
 ! 2012-05-09 - Chris Jones
  - Remove obsolete "ParticleInputLocation" property from PVReFitterAlg. 
    Use "ParticleInputLocations" instead
+ - Use the method removeTracksAndRecalculatePV instead of reDoSinglePV
+   when using the IPVOfflineTool in PVReFitterAlg
 
 !========================= VertexFit v6r9 2012-05-03 =========================
 
