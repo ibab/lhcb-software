@@ -90,10 +90,10 @@ private: // data
   /// Condition holding the current pressure of radiator
   SmartRef<Condition> m_pressureCond;
 
-  /// Condition holding the current pressure of radiator for use at the HLT
+  /// Condition holding the current pressure of radiator for use Offline
   SmartRef<Condition> m_gasParametersCond;
 
-  /// Condition holding the current pressure of radiator for use at the HLT
+  /// Condition holding the current pressure of radiator for use in the HLT
   SmartRef<Condition> m_hltGasParametersCond;
 
   /// Condition holding the scale factor for the refractivity
