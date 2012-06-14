@@ -34,7 +34,6 @@ namespace Rich
       m_refSD        ( Rich::NRadiatorTypes ),
       m_radOutLimLoc ( Rich::NRadiatorTypes )
   {
-
     declareInterface<IDetParameters>(this);
 
     m_maxPhotEn[Rich::Aerogel]  = 4.0;
@@ -56,7 +55,6 @@ namespace Rich
     m_refSD[Rich::Rich1Gas] = 0.393e-4;
     m_refSD[Rich::Rich2Gas] = 0.123e-4;
     declareProperty( "RefIndexSD", m_refSD );
-
   }
 
   StatusCode DetParameters::initialize()

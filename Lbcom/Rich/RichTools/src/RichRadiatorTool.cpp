@@ -20,31 +20,26 @@
 // Rich Det
 #include "RichDet/DeRich.h"
 
-//-----------------------------------------------------------------------------
-
-DECLARE_NAMESPACE_TOOL_FACTORY( Rich, RadiatorTool )
-
 //=============================================================================
-// Standard constructor, initializes variables
-//=============================================================================
-  Rich::RadiatorTool::RadiatorTool( const std::string& type,
-                                    const std::string& name,
-                                    const IInterface* parent )
-    : Rich::ToolBase ( type, name, parent   ),
-      m_radiators    ( Rich::NRadiatorTypes )
+
+Rich::RadiatorTool::RadiatorTool( const std::string& type,
+                                  const std::string& name,
+                                  const IInterface* parent )
+  : Rich::ToolBase ( type, name, parent   ),
+    m_radiators    ( Rich::NRadiatorTypes )
 {
+  // interface
   declareInterface<IRadiatorTool>(this);
+  // JOs
+  declareProperty( "ExcludedFullTileIDs", m_excludedAeroTiles );
 }
 
 //=============================================================================
-// Destructor
-//=============================================================================
+
 Rich::RadiatorTool::~RadiatorTool() {}
-//=============================================================================
 
 //=============================================================================
-// finalize
-//=============================================================================
+
 StatusCode Rich::RadiatorTool::finalize()
 {
   updMgrSvc()->unregister(this);
@@ -93,6 +88,8 @@ StatusCode Rich::RadiatorTool::updateRich1Gas()
   return StatusCode::SUCCESS;
 }
 
+//=============================================================================
+
 StatusCode Rich::RadiatorTool::updateRich2Gas()
 {
   m_radiators[Rich::Rich2Gas].clear();
@@ -100,9 +97,10 @@ StatusCode Rich::RadiatorTool::updateRich2Gas()
   return StatusCode::SUCCESS;
 }
 
+//=============================================================================
+
 StatusCode Rich::RadiatorTool::updateAerogel()
 {
-  // aerogel
   m_radiators[Rich::Aerogel].clear();
   const DeRichMultiSolidRadiator * aerogel
     = getDet<DeRichMultiSolidRadiator>( DeRichLocations::Aerogel );
@@ -110,7 +108,20 @@ StatusCode Rich::RadiatorTool::updateAerogel()
   for ( DeRichRadiator::Vector::const_iterator dRad = aerogel->radiators().begin();
         dRad != aerogel->radiators().end(); ++dRad )
   {
-    m_radiators[Rich::Aerogel].push_back( *dRad );
+    const DeRichAerogelRadiator* d = dynamic_cast<const DeRichAerogelRadiator*>(*dRad);
+    if (!d) return Error( "Failed to cast to DeRichAerogelRadiator" );
+    if ( std::find( m_excludedAeroTiles.begin(),
+                    m_excludedAeroTiles.end(),
+                    d->primaryTileID() ) == m_excludedAeroTiles.end() )
+    {
+      m_radiators[Rich::Aerogel].push_back( *dRad );
+    }
+    else
+    {
+      std::ostringstream mess;
+      mess << "Ignoring Aerogel tile " << d->primaryTileID();
+      Warning( mess.str(), StatusCode::SUCCESS ).ignore();
+    }
   }
 
   // Sort by distance from beam line
@@ -122,8 +133,7 @@ StatusCode Rich::RadiatorTool::updateAerogel()
 }
 
 //=============================================================================
-// intersections
-//=============================================================================
+
 unsigned int
 Rich::RadiatorTool::intersections( const Gaudi::XYZPoint& globalPoint,
                                    const Gaudi::XYZVector& globalVector,
@@ -135,9 +145,9 @@ Rich::RadiatorTool::intersections( const Gaudi::XYZPoint& globalPoint,
   unsigned int totalIntersections( 0 );
 
   // Make sure radiator is loaded
-  if ( m_radiators[radiator].empty() ) 
+  if ( m_radiators[radiator].empty() )
   {
-    const_cast<Rich::RadiatorTool*>(this)->loadRadiator(radiator); 
+    const_cast<Rich::RadiatorTool*>(this)->loadRadiator(radiator);
   }
 
   // loop over all volumes for given radiator
@@ -184,5 +194,9 @@ Rich::RadiatorTool::intersections( const Gaudi::XYZPoint& globalPoint,
   // return the number of intersections
   return totalIntersections;
 }
+
+//=============================================================================
+
+DECLARE_NAMESPACE_TOOL_FACTORY( Rich, RadiatorTool )
 
 //=============================================================================

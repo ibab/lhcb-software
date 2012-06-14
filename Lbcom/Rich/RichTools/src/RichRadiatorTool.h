@@ -15,6 +15,8 @@
 // STL
 #include <vector>
 #include <functional>
+#include <algorithm>
+#include <sstream>
 
 // base class
 #include "RichKernel/RichToolBase.h"
@@ -32,6 +34,7 @@
 // from RichDet
 #include "RichDet/DeRichRadiator.h"
 #include "RichDet/DeRichMultiSolidRadiator.h"
+#include "RichDet/DeRichAerogelRadiator.h"
 
 namespace Rich
 {
@@ -120,6 +123,9 @@ namespace Rich
     typedef std::vector<const DeRichRadiator*> RichRadiators;
     /// Vector of DeRich radiator volumes for each Radiator type
     std::vector<RichRadiators> m_radiators;
+
+    /// Aerogel full Tile IDs to exclude
+    std::vector<int> m_excludedAeroTiles;
 
   };
 
