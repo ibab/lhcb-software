@@ -165,6 +165,7 @@ def writeEvent ( name = "GoodEvent" ) :
             raise RuntimeError , 'Unable to find writer "%s"' % name
         # run it! 
         return writer.sysExecute()
+
     #
     ## otherwise fire the incident
     #
@@ -230,6 +231,9 @@ def copyGoodEvents ( filename                 ,
     if not AM.OutStream : AM.OutStream =[]
     
     AM.OutStream.append ( seq )
+    
+    logger.info ( "Prepare the file %s to keep ``%s'' incidents" % ( filename ,
+                                                                     incident ) )
     
 
         

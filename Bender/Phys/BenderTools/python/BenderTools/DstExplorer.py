@@ -147,33 +147,38 @@ def configure ( options , arguments ) :
         options.OutputLevel = 4
         logger.info('set OutputLevel to be %s ' % options.OutputLevel )
 
-          
-    if options.Simulation and '2009' == options.DataType :
-        options.DataType = 'MC09'
-        logger.info('set DataType to be MC09')
-        
     #
     ## start the actual action:
     #
     from Configurables       import DaVinci
+
+    #
+    ## get the file type for the file extension
+    #
+    from BenderTools.Parser import dataType
+    dtype, simu, ext = dataType ( arguments ) 
+
+    if dtype and dtype != options.DataType :
+        logger.info ( 'Redefine DataType from  %s to %s ' % ( options.DataType, dtype ) )
+        options.DataType  = dtype
+        
+    if simu and not options.Simulation : 
+        logger.info ( 'Redefine Simulation from  %s to %s ' % ( options.Simulation, simu ) )
+        options.Simulation  = simu 
+        
+    if options.Simulation and '2009' == options.DataType :
+        options.DataType = 'MC09'
+        logger.info('set DataType to be MC09')
+        
     
-    ext = "dst"
-    arguments_ = arguments
-    if 1 < len( arguments_ ) : arguments_ = arguments_[:-1]        
-    for a in arguments_ :
-        p   = a.rfind ( '.' )
-        if 0 <= p : 
-            ext = a[p+1:]
-            break
-
-
     daVinci = DaVinci (
         DataType    = options.DataType    ,
         Simulation  = options.Simulation  ,
-        Lumi        = False              
+        Lumi        = options.Lumi               
         )
     
     if options.MicroDST or 'mdst' == ext or 'MDST' == ext or 'uDST' == ext :
+        logger.info ( 'Define input type as micro-DST' )
         daVinci.InputType = 'MDST'
         
     if options.RootInTES and '/' == options.RootInTES[-1] :
@@ -220,7 +225,9 @@ def configure ( options , arguments ) :
 
             if not seq in allConfigurables : continue 
             cSeq = getConfigurable( seq )
-            if cSeq and hasattr ( cSeq , 'Members' ) : cSeq.Members = []
+            if cSeq and hasattr ( cSeq , 'Members' ) :
+                logger.info ( 'Reset the sequence %s' % cSeq.name() )
+                cSeq.Members = []
 
             ## reset the list of top-level algorithms 
             from Configurables import ApplicationMgr

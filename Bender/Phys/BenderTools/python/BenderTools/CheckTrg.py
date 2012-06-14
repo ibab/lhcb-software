@@ -156,7 +156,7 @@ if '__main__' == __name__ :
 
     print 120*'*'
     if options.Quiet :
-        print ' Trivial Bender-based script to explore the content of (x,mu,s,r,...)DSTs '
+        print ' Trivial Bender-based script to ceck the triggers '
     else :
         print __doc__
 
@@ -173,6 +173,25 @@ if '__main__' == __name__ :
     ## line to be checked
     Line  = arguments [0]
     Files = arguments [1:] 
+    
+    #
+    ## get the file type for the file extension
+    #
+    from BenderTools.Parser import dataType
+    dtype, simu, ext = dataType ( Files  ) 
+    
+    if dtype and dtype != options.DataType :
+        logger.info ( 'Redefine DataType from  %s to %s ' % ( options.DataType, dtype ) )
+        options.DataType  = dtype
+        
+    if simu and not options.Simulation : 
+        logger.info ( 'Redefine Simulation from  %s to %s ' % ( options.Simulation, simu ) )
+        options.Simulation  = simu 
+        
+    if options.Simulation and '2009' == options.DataType :
+        options.DataType = 'MC09'
+        logger.info ( 'set DataType to be MC09' )
+
 
     if options.RootInTES and '/' == options.RootInTES[-1] :
         options.RootInTES = options.RootInTES[:-1]
@@ -196,12 +215,6 @@ if '__main__' == __name__ :
         
     if 0 >= options.Nevents and -1 != options.Nevents : options.Nevents = 1000
     #
-    ## data type for MC 
-    #
-    if options.Simulation and '2009' == options.DataType :
-        options.DataType = 'MC09'
-    if options.Simulation and '2010' == options.DataType :
-        options.DataType = 'MC10'            
 
     #
     ## start the actual action:
@@ -216,33 +229,28 @@ if '__main__' == __name__ :
     from Configurables       import DaVinci
 
     #
-    ## check input type
-    #
-    micro = False
-    for a in arguments :
-        if 0 <= a.find ('.mdst') or \
-           0 <= a.find ('.MDST') or \
-           0 <= a.find ('.uDST') or \
-           0 <= a.find ('.uDst') or \
-           0 <= a.find ('.udst')  : micro = True     
-    InputType = 'MDST' if micro or options.MicroDST else 'DST'
-
-    #
     ## add filters:
     #
     from PhysConf.Filters import LoKi_Filters
     fltrs = LoKi_Filters ( VOID_Code  = " 0.5 < CONTAINS ('%s') " % Line )
-    
+
+  
     daVinci = DaVinci (
         DataType        = options.DataType         ,
         Simulation      = options.Simulation       ,
         EventPreFilters = fltrs.filters('Filters') ,
         InputType       = InputType                ,
-        Lumi            = False          
+        Lumi            = options.Lumi  
         )
+    #
+    ## check input type
+    #
+    if options.MicroDST or 'MDST' == ext : 
+        logger.info ( 'Define input type as micro-DST' )
+        DaVinci.InputType = 'MDST'
     
     if not options.Simulation : 
-        if options.DataType in ( '2010' , '2011' ) :
+        if options.DataType in ( '2010' , '2011' , '2012' ) :
             #
             ## try to use the latest available tags:
             #
@@ -311,7 +319,6 @@ if '__main__' == __name__ :
     #
     mainSeq = gaudi.algorithm ('GaudiSequencer/DaVinciUserSequence', True )
     mainSeq.Members += [ alg.name() ]
-
         
     ## initialize and read the first 1000 event
     gaudi.run( options.Nevents )

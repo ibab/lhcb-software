@@ -105,8 +105,8 @@ def makeParser ( usage = None ,
         )
     ## 
     parser.add_option (
-        '-l'                          ,
-        '--level'                     ,
+        '-p'                          ,
+        '--print'                     ,
         type    = 'int'               , 
         dest    = 'OutputLevel'       ,
         help    = "``OutputLevel'' attribute for ApplicationMgr/MessageSvc [default : %default]" ,
@@ -157,7 +157,55 @@ def makeParser ( usage = None ,
         default = False   
         )
     ##
+    parser.add_option (
+        '-l'                       ,
+        '--lumi'                   ,
+        action  = "store_true"     ,
+        dest    = 'Lumi'           ,
+        help    = "Use Lumi?"      ,
+        default = False   
+        )
+    ##
     return parser
+
+# =============================================================================
+## try to extract the data type, simulation and input type  
+def dataType ( files ) :
+    """
+    extract the data type,
+    simulaton type and input type from file name 
+    """
+    #
+    if isinstance ( files  , str ) : files = [ files ]
+    #
+    dtype = ''
+    simu  = False
+    ext   = '' 
+    for f in files  :
+        if   0 <= f.find ( 'Collision09' ) : dtype = '2009'
+        elif 0 <= f.find ( 'Collision10' ) : dtype = '2010'
+        elif 0 <= f.find ( 'Collision11' ) : dtype = '2011'
+        elif 0 <= f.find ( 'Collision12' ) : dtype = '2012'
+        elif 0 <= f.find ( 'MC09' ) :
+            dtype = '2009'
+            simu  = True 
+        elif 0 <= f.find ( 'MC10' ) :
+            dtype = '2010'
+            simu  = True 
+        elif 0 <= f.find ( 'MC11' ) :
+            dtype = '2011'
+            simu  = True 
+        elif 0 <= f.find ( 'MC12' ) :
+            dtype = '2012'
+            simu = True
+
+        p   = f.rfind ( '.' )
+        if 0 <= p :
+            ## allow up to 5 symbols for exension 
+            if len ( a[p+1:] ) <= 5 : ext = a[p+1:]
+            
+    return  dtype,simu,ext.upper() 
+
 
 # =============================================================================
 if __name__ == '__main__' :
