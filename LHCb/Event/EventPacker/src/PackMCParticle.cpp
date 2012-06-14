@@ -1,5 +1,3 @@
-// $Id: PackMCParticle.cpp,v 1.9 2009-11-26 10:50:49 cattanem Exp $
-// Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -67,7 +65,8 @@ StatusCode PackMCParticle::execute() {
 
   out->reserve( parts->size() );
   for ( LHCb::MCParticles::const_iterator itP = parts->begin();
-        parts->end() != itP; ++itP ) {
+        parts->end() != itP; ++itP )
+  {
     LHCb::MCParticle* part = (*itP);
     LHCb::PackedMCParticle newPart;
     

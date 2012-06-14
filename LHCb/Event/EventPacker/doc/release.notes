@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2012-06-14 - Chris Jones
+ - clean up a little the MCParticle packers
+
 ! 2012-04-27 - Chris Jones
  - Add a little additional debug printout to UnpackRecVertex for when the PV
    weights are updated from th weights vector, for old data.

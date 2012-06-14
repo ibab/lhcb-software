@@ -1,5 +1,3 @@
-// $Id: UnpackMCParticle.cpp,v 1.6 2009-11-07 12:20:39 jonrob Exp $
-// Include files
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -21,14 +19,15 @@ DECLARE_ALGORITHM_FACTORY( UnpackMCParticle )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-UnpackMCParticle::UnpackMCParticle( const std::string& name,
-                                    ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  UnpackMCParticle::UnpackMCParticle( const std::string& name,
+                                      ISvcLocator* pSvcLocator)
+    : GaudiAlgorithm ( name , pSvcLocator )
 {
   declareProperty( "InputName" , m_inputName  = LHCb::PackedMCParticleLocation::Default );
   declareProperty( "OutputName", m_outputName = LHCb::MCParticleLocation::Default );
   declareProperty( "AlwaysCreateOutput",         m_alwaysOutput = false     );
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -37,7 +36,8 @@ UnpackMCParticle::~UnpackMCParticle() {}
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode UnpackMCParticle::execute() {
+StatusCode UnpackMCParticle::execute() 
+{
 
   // CRJ : If packed data does not exist just return. Needed for packing of
   //     : spillover which is not neccessarily available for each event
@@ -68,9 +68,8 @@ StatusCode UnpackMCParticle::execute() {
     const double py = pack.energy( src.py );
     const double pz = pack.energy( src.pz );
     const double mass = src.mass;
-    const double E = std::sqrt( px*px + py*py + pz*pz + mass*mass );
-    const Gaudi::LorentzVector p( px, py, pz , E );
-    part->setMomentum( p );
+    const double E = std::sqrt( (px*px) + (py*py) + (pz*pz) + (mass*mass) );
+    part->setMomentum( Gaudi::LorentzVector( px, py, pz , E ) );
 
     const LHCb::ParticleID PID(src.PID);
     part->setParticleID( PID );
@@ -80,8 +79,8 @@ StatusCode UnpackMCParticle::execute() {
     SmartRef<LHCb::MCVertex> ref( newMCParticles, hintID, key );
     part->setOriginVertex( ref );
 
-    for ( std::vector<int>::const_iterator itI = src.endVertices.begin(); 
-          src.endVertices.end() != itI ; ++itI ) 
+    for ( std::vector<int>::const_iterator itI = src.endVertices.begin();
+          src.endVertices.end() != itI ; ++itI )
     {
       pack.hintAndKey( *itI, dst, newMCParticles, hintID, key );
       SmartRef<LHCb::MCVertex> refV( newMCParticles, hintID, key );
