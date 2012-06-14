@@ -19,7 +19,7 @@
 !========================= RichDAQ v3r36 2012-01-31 =========================
 ! 2012-01-06 - Chris Jones
  - Don't throw an exception if an NULL pointer to a RICH bank is retrieved
-   from the the RawEvent (should never happen). Instead print an error and
+   from the RawEvent (should never happen). Instead print an error and 
    continue.
 
 !========================= RichDAQ v3r35 2011-12-14 =========================
