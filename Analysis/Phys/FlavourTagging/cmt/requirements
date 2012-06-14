@@ -43,4 +43,5 @@ apply_pattern install_python_modules
 # =================== summary application  ==================================
 private
 application       summaryof      ../summary/summaryof.cpp
+macro_append summaryof_use_linkopts "" target-icc " -Wl,--no-as-needed "
 # apply_pattern     application_path

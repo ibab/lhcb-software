@@ -4,6 +4,10 @@
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+! 2012-06-14 - Marco Clemencic
+ - Fixed compilation problem on ICC.
+
 ! 2012-06-06 - Stefania Vecchi
  - OS and SSpi and SSK calibration Strip17
 
