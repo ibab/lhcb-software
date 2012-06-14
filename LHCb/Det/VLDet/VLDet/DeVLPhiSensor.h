@@ -1,17 +1,17 @@
 #ifndef DEVELOLITE_PHITYPE_H 
 #define DEVELOLITE_PHITYPE_H 1
 
-#include "DeVeloLiteSensor.h"
+#include "DeVLSensor.h"
 
 // Unique class identifier
-static const CLID CLID_DeVeloLitePhiType = 1008303 ;
+static const CLID CLID_DeVLPhiSensor = 1008303 ;
 
-/** @class DeVeloLitePhiType DeVeloLitePhiType.h VeloLiteDet/DeVeloLitePhiType.h
+/** @class DeVLPhiSensor DeVLPhiSensor.h VLDet/DeVLPhiSensor.h
  *  
  *
  */
  
-namespace VeloLiteDet {
+namespace VLDet {
   
   struct phiZone {
     unsigned int firstStrip;
@@ -32,16 +32,16 @@ namespace VeloLiteDet {
   
 }
 
-class DeVeloLitePhiType : public DeVeloLiteSensor {
+class DeVLPhiSensor : public DeVLSensor {
 
 public:
   /// Constructor
-  DeVeloLitePhiType(const std::string& name = ""); 
+  DeVLPhiSensor(const std::string& name = ""); 
   /// Destructor
-  virtual ~DeVeloLitePhiType() {} 
+  virtual ~DeVLPhiSensor() {} 
 
   /// Object identification
-  static const CLID& classID() {return CLID_DeVeloLitePhiType;}
+  static const CLID& classID() {return CLID_DeVLPhiSensor;}
   virtual const CLID& clID() const;
 
   /// Initialisation
@@ -49,25 +49,25 @@ public:
 
   /// Calculate the nearest channel to a 3-d point.
   virtual StatusCode pointToChannel(const Gaudi::XYZPoint& point,
-                                    LHCb::VeloLiteChannelID& channel,
+                                    LHCb::VLChannelID& channel,
                                     double& fraction,
                                     double& pitch) const;
   /// Get the nth nearest neighbour for a given channel.
-  virtual StatusCode neighbour(const LHCb::VeloLiteChannelID& start, 
+  virtual StatusCode neighbour(const LHCb::VLChannelID& start, 
                                const int& nOffset, 
-                               LHCb::VeloLiteChannelID& channel) const;
+                               LHCb::VLChannelID& channel) const;
   /// Return a trajectory (for track fit) from strip + offset.
-  virtual std::auto_ptr<LHCb::Trajectory> trajectory(const LHCb::VeloLiteChannelID& id, 
+  virtual std::auto_ptr<LHCb::Trajectory> trajectory(const LHCb::VLChannelID& id, 
                                                      const double offset) const;
 
-  /// Residual of 3-d point to a VeloLiteChannelID
+  /// Residual of 3-d point to a VLChannelID
   virtual StatusCode residual(const Gaudi::XYZPoint& point, 
-                              const LHCb::VeloLiteChannelID& channel,
+                              const LHCb::VLChannelID& channel,
                               double& residual,
                               double& chi2) const;
-  /// Residual of a 3-d point to a VeloLiteChannelID + interstrip fraction
+  /// Residual of a 3-d point to a VLChannelID + interstrip fraction
   virtual StatusCode residual(const Gaudi::XYZPoint& point, 
-                              const LHCb::VeloLiteChannelID& channel,
+                              const LHCb::VLChannelID& channel,
                               const double interStripFraction,
                               double& residual,
                               double& chi2) const;
@@ -293,18 +293,18 @@ public:
   }
 
   /// Pointer to associated R sensor on the same module
-  const DeVeloLiteRType* associatedRSensor() const {return m_associatedRSensor;}
+  const DeVLRSensor* associatedRSensor() const {return m_associatedRSensor;}
   /// Pointer to Phi sensor on the other side of the VELO
-  const DeVeloLitePhiType* otherSidePhiSensor() const {return m_otherSidePhiSensor;}
+  const DeVLPhiSensor* otherSidePhiSensor() const {return m_otherSidePhiSensor;}
   /// Pointer to R sensor on the other side of the VELO
-  const DeVeloLiteRType* otherSideRSensor() const {return m_otherSideRSensor;}
+  const DeVLRSensor* otherSideRSensor() const {return m_otherSideRSensor;}
   
-  /// Set the associated R sensor. To be called by DeVeloLite::initialize().
-  void setAssociatedRSensor(const DeVeloLiteRType* rs) {m_associatedRSensor = rs;}
-  /// Set the Phi sensor on the other side of the VELO. To be called by DeVeloLite::initialize()
-  void setOtherSidePhiSensor(const DeVeloLitePhiType* ps) {m_otherSidePhiSensor = ps;}
-  /// Set the R sensor on the other side of the VELO. To be called by DeVeloLite::initialize()
-  void setOtherSideRSensor(const DeVeloLiteRType* rs) {m_otherSideRSensor = rs;}
+  /// Set the associated R sensor. To be called by DeVL::initialize().
+  void setAssociatedRSensor(const DeVLRSensor* rs) {m_associatedRSensor = rs;}
+  /// Set the Phi sensor on the other side of the VELO. To be called by DeVL::initialize()
+  void setOtherSidePhiSensor(const DeVLPhiSensor* ps) {m_otherSidePhiSensor = ps;}
+  /// Set the R sensor on the other side of the VELO. To be called by DeVL::initialize()
+  void setOtherSideRSensor(const DeVLRSensor* rs) {m_otherSideRSensor = rs;}
 
 private:
 
@@ -360,15 +360,15 @@ private:
   std::vector<phiStripCache> m_stripsCache;
  
   // References to local static members
-  std::vector<VeloLiteDet::phiZone>& m_zones;
-  std::vector<VeloLiteDet::phiStrip>& m_strips;
+  std::vector<VLDet::phiZone>& m_zones;
+  std::vector<VLDet::phiStrip>& m_strips;
 
   /// Pointer to the associated R sensor on the same module
-  const DeVeloLiteRType* m_associatedRSensor;
+  const DeVLRSensor* m_associatedRSensor;
   /// Pointer to the Phi sensor on the other side of the Velo
-  const DeVeloLitePhiType* m_otherSidePhiSensor;
+  const DeVLPhiSensor* m_otherSidePhiSensor;
   /// Pointer to the R sensor on the other side of the Velo
-  const DeVeloLiteRType* m_otherSideRSensor;
+  const DeVLRSensor* m_otherSideRSensor;
 
   /// Output level for message service
   bool m_debug;
@@ -377,8 +377,8 @@ private:
 };
 
 /// Fast cast to Phi sensor, returns 0 for wrong type
-inline const DeVeloLitePhiType* DeVeloLiteSensor::phiType() const { 
-  return (m_isPhi ? static_cast<const DeVeloLitePhiType*>(this) : 0); 
+inline const DeVLPhiSensor* DeVLSensor::phiSensor() const { 
+  return (m_isPhi ? static_cast<const DeVLPhiSensor*>(this) : 0); 
 }
   
 #endif

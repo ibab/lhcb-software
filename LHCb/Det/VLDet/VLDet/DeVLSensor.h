@@ -13,32 +13,32 @@
 #include "Kernel/Trajectory.h"
 
 // Unique class identifier
-static const CLID CLID_DeVeloLiteSensor = 1008301 ;
+static const CLID CLID_DeVLSensor = 1008301 ;
 
 // Forward declarations
-class DeVeloLiteRType;
-class DeVeloLitePhiType;
+class DeVLRSensor;
+class DeVLPhiSensor;
 
 namespace LHCb {
-  class VeloLiteChannelID;
+  class VLChannelID;
 }
 
-/** @class DeVeloLiteSensor DeVeloLiteSensor.h VeloLiteDet/DeVeloLiteSensor.h
+/** @class DeVLSensor DeVLSensor.h VLDet/DeVLSensor.h
  *
- *  VeloLite sensor base class (based on DeVeloSensor)
+ *  VL sensor base class (based on DeVeloSensor)
  *
  */
 
-class DeVeloLiteSensor : public DetectorElement {
+class DeVLSensor : public DetectorElement {
 
 public:
   /// Constructor
-  DeVeloLiteSensor(const std::string& name = "");
+  DeVLSensor(const std::string& name = "");
   /// Destructor
-  virtual ~DeVeloLiteSensor() {}
+  virtual ~DeVLSensor() {}
 
   /// Object identification
-  static const CLID& classID() {return CLID_DeVeloLiteSensor;}
+  static const CLID& classID() {return CLID_DeVLSensor;}
   virtual const CLID& clID() const;
 
   /// Initialisation
@@ -46,37 +46,32 @@ public:
 
   /// Calculate the nearest channel to a 3-d point.
   virtual StatusCode pointToChannel(const Gaudi::XYZPoint& point,
-                                    LHCb::VeloLiteChannelID& channel,
+                                    LHCb::VLChannelID& channel,
                                     double& fraction,
                                     double& pitch) const = 0;
   /// Get the nth nearest neighbour for a given channel.
-  virtual StatusCode neighbour(const LHCb::VeloLiteChannelID& start,
+  virtual StatusCode neighbour(const LHCb::VLChannelID& start,
                                const int& nOffset,
-                               LHCb::VeloLiteChannelID& channel) const = 0;
+                               LHCb::VLChannelID& channel) const = 0;
 
   /// Get the number of channels between two channels
-  virtual StatusCode channelDistance(const LHCb::VeloLiteChannelID& start,
-                                     const LHCb::VeloLiteChannelID& end,
+  virtual StatusCode channelDistance(const LHCb::VLChannelID& start,
+                                     const LHCb::VLChannelID& end,
                                      int& nOffset) const;
 
   /// Return a trajectory (for track fit) from strip + offset.
-  virtual std::auto_ptr<LHCb::Trajectory> trajectory(const LHCb::VeloLiteChannelID& id, 
+  virtual std::auto_ptr<LHCb::Trajectory> trajectory(const LHCb::VLChannelID& id, 
                                                      const double offset) const = 0;
 
-  /** Residual of 3d point to a VeloLiteChannelID
-   *
-   *  This is not a residual in 3d! The supplied 3d point is assumed
-   *  to be in the plane of the sensor and the residual is computed
-   *  in this plane. No check is performed whether the point is 
-   *  actually on the sensor.
-   */
+  /// Calculate the residual of a 3d point to a strip.
+  /// The supplied point is assumed to be in the plane.
   virtual StatusCode residual(const Gaudi::XYZPoint& point,
-                              const LHCb::VeloLiteChannelID& channel,
+                              const LHCb::VLChannelID& channel,
                               double& residual,
                               double& chi2) const = 0;
-  /// Residual of 3d point to a VeloLiteChannelID + interstrip fraction
+  /// Calculate the residual of a 3d point to a strip + interstrip fraction.
   virtual StatusCode residual(const Gaudi::XYZPoint& point,
-                              const LHCb::VeloLiteChannelID& channel,
+                              const LHCb::VLChannelID& channel,
                               const double interStripFraction,
                               double& residual,
                               double& chi2) const = 0;
@@ -163,9 +158,9 @@ public:
   bool isPhi() const {return m_isPhi;}
 
   /// Fast cast to R sensor, returns 0 for wrong type
-  inline const DeVeloLiteRType* rType() const;
+  inline const DeVLRSensor* rSensor() const;
   /// Fast cast to Phi sensor, returns 0 for wrong type
-  inline const DeVeloLitePhiType* phiType() const;
+  inline const DeVLPhiSensor* phiSensor() const;
 
   unsigned int numberOfStrips() const {return m_numberOfStrips;}
   unsigned int numberOfZones() const {return m_numberOfZones;}
@@ -191,17 +186,6 @@ public:
   /// Set/get the sensor number
   void sensorNumber(unsigned int sensor) {m_sensorNumber = sensor;}
   unsigned int sensorNumber() const {return m_sensorNumber;}
-
-  /// Convert routing line to chip channel
-  // This used to be (1234 -> 0213)
-  virtual unsigned int RoutingLineToChipChannel(unsigned int routLine) const {
-    return routLine;
-  }
-  /// Convert chip channel to routing line
-  // This used to be (0213 -> 1234) 
-  virtual unsigned int ChipChannelToRoutingLine(unsigned int chipChan) const {
-    return chipChan;
-  }
 
 protected:
 
@@ -243,7 +227,7 @@ private:
   double m_boundingBoxX;
   double m_boundingBoxY;
 
-  // Output level for message service
+  /// Output level for message service
   bool m_debug;
   bool m_verbose;
 

@@ -1,9 +1,9 @@
 # =========================================================================
-package           VeloLiteDet 
+package           VLDet 
 version           v1r0
 
 # =============== structure ===============================================	
-branches         src cmt doc VeloLiteDet dict
+branches         src cmt doc VLDet dict
 
 # =============== used packages ===========================================
 use DetDesc     v*    Det
@@ -17,25 +17,25 @@ use Boost       v*    LCG_Interfaces
 macro_append Boost_linkopts " $(Boost_linkopts_regex) "
 
 # =============== own includes ============================================
-apply_pattern install_more_includes more=VeloLiteDet
+apply_pattern install_more_includes more=VLDet
 
 # =============== link library (base classes) =============================
-library          VeloLiteDetLib        Lib/*.cpp
+library          VLDetLib        Lib/*.cpp
 
 # =============== component library =======================================
-library          VeloLiteDet           component/*.cpp
+library          VLDet           component/*.cpp
 
 #================ patterns ================================================
-apply_pattern component_library library=VeloLiteDet
-apply_pattern linker_library    library=VeloLiteDetLib
+apply_pattern component_library library=VLDet
+apply_pattern linker_library    library=VLDetLib
 
 # =============== LCG Dictionaries ============================================
-apply_pattern     reflex_dictionary                                 \
-                  dictionary=VeloLiteDet                            \
-                  headerfiles=$(VELOLITEDETROOT)/dict/VeloLiteDetDict.h     \
-                  selectionfile=$(VELOLITEDETROOT)/dict/VeloLiteDetDict.xml \
+apply_pattern     reflex_dictionary                             \
+                  dictionary=VLDet                              \
+                  headerfiles=$(VLDETROOT)/dict/VLDetDict.h     \
+                  selectionfile=$(VLDETROOT)/dict/VLDetDict.xml \
                   options="-U__MINGW32__"
 # Disable some compiler warnings in the automatically generated dict code
-macro_append VeloLiteDetDict_cppflags "" \
-                       target-icc " -wd654"
+macro_append VLDetDict_cppflags "" \
+             target-icc " -wd654"
 

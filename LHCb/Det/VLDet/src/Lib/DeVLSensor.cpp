@@ -8,36 +8,36 @@
 // Det/DetDesc
 #include "DetDesc/Condition.h"
 // Kernel/LHCbKernel
-#include "Kernel/VeloLiteChannelID.h"
+#include "Kernel/VLChannelID.h"
 // Local 
-#include "VeloLiteDet/DeVeloLiteSensor.h"
+#include "VLDet/DeVLSensor.h"
 
-/** @file DeVeloLiteSensor.cpp
+/** @file DeVLSensor.cpp
  *
- *  Implementation of class : DeVeloLiteSensor
+ *  Implementation of class : DeVLSensor
  *
  */
 
 // ============================================================================
 /// Constructor
 // ============================================================================
-DeVeloLiteSensor::DeVeloLiteSensor(const std::string& name) : DetectorElement(name) {
+DeVLSensor::DeVLSensor(const std::string& name) : DetectorElement(name) {
 
 }
 
 // ============================================================================
 /// Object identification
 // ============================================================================
-const CLID& DeVeloLiteSensor::clID() const {
+const CLID& DeVLSensor::clID() const {
 
-  return DeVeloLiteSensor::classID();
+  return DeVLSensor::classID();
   
 }
 
 // ============================================================================
 /// Initialisation method
 // ============================================================================
-StatusCode DeVeloLiteSensor::initialize() {
+StatusCode DeVLSensor::initialize() {
 
   // Set the output level.
   PropertyMgr* pmgr = new PropertyMgr();
@@ -46,18 +46,18 @@ StatusCode DeVeloLiteSensor::initialize() {
   IJobOptionsSvc* jobSvc;
   ISvcLocator* svcLoc = Gaudi::svcLocator();
   StatusCode sc = svcLoc->service("JobOptionsSvc", jobSvc);
-  if (sc.isSuccess()) sc = jobSvc->setMyProperties("DeVeloLiteSensor", pmgr);
+  if (sc.isSuccess()) sc = jobSvc->setMyProperties("DeVLSensor", pmgr);
   if (outputLevel > 0) {
-    msgSvc()->setOutputLevel("DeVeloLiteSensor", outputLevel);
+    msgSvc()->setOutputLevel("DeVLSensor", outputLevel);
   }
   delete pmgr;
   if (!sc) return sc;
-  m_debug   = (msgSvc()->outputLevel("DeVeloLiteSensor") == MSG::DEBUG);
-  m_verbose = (msgSvc()->outputLevel("DeVeloLiteSensor") == MSG::VERBOSE);
+  m_debug   = (msgSvc()->outputLevel("DeVLSensor") == MSG::DEBUG);
+  m_verbose = (msgSvc()->outputLevel("DeVLSensor") == MSG::VERBOSE);
   if (m_verbose) m_debug = true;
-  MsgStream msg(msgSvc(), "DeVeloLiteSensor");
+  MsgStream msg(msgSvc(), "DeVLSensor");
 
-  // Initialise the base class.
+  /// Initialise the base class.
   sc = DetectorElement::initialize();
   if (!sc.isSuccess()) {
     msg << MSG::ERROR << "Failed to initialise DetectorElement" << endmsg;
@@ -66,7 +66,7 @@ StatusCode DeVeloLiteSensor::initialize() {
   /// Initialise the sensor from the XML.
   sc = initSensor();
   if (!sc.isSuccess()) {
-    msg << MSG::ERROR << "Failed to initialise DeVeloLiteSensor." << endmsg;
+    msg << MSG::ERROR << "Failed to initialise DeVLSensor." << endmsg;
     return sc;
   }
   m_geometry = geometry();
@@ -75,8 +75,8 @@ StatusCode DeVeloLiteSensor::initialize() {
     msg << MSG::ERROR << "Failed to cache geometry." << endmsg;
     return sc;
   }
-  // Get parent Velo half box for pattern recognition alignment purposes.
-  // Hierarchy should be sensor -> R/Phi Pair -> Module -> Velo(Left|Right)
+  // Get parent half box for pattern recognition alignment purposes.
+  // Hierarchy should be sensor -> R/Phi Pair -> Module -> VeloLite(Left|Right)
   IDetectorElement* halfBox = 
     this->parentIDetectorElement()->parentIDetectorElement()->parentIDetectorElement();
   if (m_debug) {
@@ -99,9 +99,9 @@ StatusCode DeVeloLiteSensor::initialize() {
 //=============================================================================
 /// Get the number of channels between two channels
 //=============================================================================
-StatusCode DeVeloLiteSensor::channelDistance(const LHCb::VeloLiteChannelID& start,
-                                             const LHCb::VeloLiteChannelID& end,
-                                             int& nOffset) const {
+StatusCode DeVLSensor::channelDistance(const LHCb::VLChannelID& start,
+                                       const LHCb::VLChannelID& end,
+                                       int& nOffset) const {
                                              
   nOffset = 0;
   const unsigned int startStrip = start.strip();
@@ -128,7 +128,7 @@ StatusCode DeVeloLiteSensor::channelDistance(const LHCb::VeloLiteChannelID& star
 // ===========================================================================
 /// Initialisation from XML
 // ===========================================================================
-StatusCode DeVeloLiteSensor::initSensor() {
+StatusCode DeVLSensor::initSensor() {
 
   m_sensorNumber     = param<int>("SensorNumber");
   m_innerRadius      = param<double>("InnerRadius");
@@ -165,15 +165,14 @@ StatusCode DeVeloLiteSensor::initSensor() {
 // ============================================================================
 /// Members related to condition caching
 // ============================================================================
-StatusCode DeVeloLiteSensor::registerConditionCallBacks() {
+StatusCode DeVLSensor::registerConditionCallBacks() {
 
   // Geometry conditions (z position)
-  updMgrSvc()->registerCondition(this, 
-                                 this->m_geometry, 
-                                 &DeVeloLiteSensor::cacheGeometry);
+  updMgrSvc()->registerCondition(this, this->m_geometry, 
+                                 &DeVLSensor::cacheGeometry);
   StatusCode sc = updMgrSvc()->update(this);
   if (!sc.isSuccess()) {
-    MsgStream msg(msgSvc(), "DeVeloLiteSensor");
+    MsgStream msg(msgSvc(), "DeVLSensor");
     msg << MSG::ERROR << "Failed to update sensor conditions." << endmsg;
     return sc;
   }
@@ -184,7 +183,7 @@ StatusCode DeVeloLiteSensor::registerConditionCallBacks() {
 // ============================================================================
 /// Cache geometry parameters
 // ============================================================================
-StatusCode DeVeloLiteSensor::cacheGeometry() {
+StatusCode DeVLSensor::cacheGeometry() {
 
   m_z = m_geometry->toGlobal(Gaudi::XYZPoint(0, 0, 0)).z();
   return StatusCode::SUCCESS;

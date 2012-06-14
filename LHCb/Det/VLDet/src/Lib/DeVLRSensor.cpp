@@ -1,6 +1,3 @@
-#define VELOLITEDET_DEVELOLITERTYPE_CPP 1
-
-#include "gsl/gsl_math.h"
 #include <fstream>
 // Gaudi
 #include "GaudiKernel/Bootstrap.h"
@@ -13,11 +10,11 @@
 #include "LHCbMath/LHCbMath.h"
 // Kernel/LHCbKernel
 #include "Kernel/CircleTraj.h"
-#include "Kernel/VeloLiteChannelID.h"
+#include "Kernel/VLChannelID.h"
 // Local
-#include "VeloLiteDet/DeVeloLiteRType.h"
+#include "VLDet/DeVLRSensor.h"
 
-namespace VeloLiteDet {
+namespace VLDet {
 
   /** These functions simply provide access to local static
    *  data which are used to initialize references in each instance
@@ -29,46 +26,46 @@ namespace VeloLiteDet {
    *
    *  @see DeVeloRType
    */
-  static std::vector<rStrip>& deVeloLiteRTypeStaticRStrips() {
+  static std::vector<rStrip>& deVLRSensorStaticRStrips() {
     static std::vector<rStrip> s_strips;
     return s_strips;
   }
-  static std::vector<rZone>& deVeloLiteRTypeStaticRZones() {
+  static std::vector<rZone>& deVLRSensorStaticRZones() {
     static std::vector<rZone> s_zones;
     return s_zones;
   }
   
 }
 
-/** @file DeVeloLiteRType.cpp
+/** @file DeVLRSensor.cpp
  *
- *  Implementation of class : DeVeloLiteRType
+ *  Implementation of class : DeVLRSensor
  *
  */
 
 //=============================================================================
 /// Standard constructor
 //=============================================================================
-DeVeloLiteRType::DeVeloLiteRType(const std::string& name) : 
-  DeVeloLiteSensor(name),
-  m_zones(VeloLiteDet::deVeloLiteRTypeStaticRZones()),
-  m_strips(VeloLiteDet::deVeloLiteRTypeStaticRStrips()) {
+DeVLRSensor::DeVLRSensor(const std::string& name) : 
+    DeVLSensor(name),
+    m_zones(VLDet::deVLRSensorStaticRZones()),
+    m_strips(VLDet::deVLRSensorStaticRStrips()) {
  
 }
 
 //=============================================================================
 /// Object identification
 //=============================================================================
-const CLID& DeVeloLiteRType::clID() const {
+const CLID& DeVLRSensor::clID() const {
 
-  return DeVeloLiteRType::classID(); 
+  return DeVLRSensor::classID(); 
 
 }
 
 //=============================================================================
 /// Initialisation
 //=============================================================================
-StatusCode DeVeloLiteRType::initialize() {
+StatusCode DeVLRSensor::initialize() {
 
   /// Set the output level.
   PropertyMgr* pmgr = new PropertyMgr();
@@ -77,33 +74,33 @@ StatusCode DeVeloLiteRType::initialize() {
   IJobOptionsSvc* jobSvc;
   ISvcLocator* svcLoc = Gaudi::svcLocator();
   StatusCode sc = svcLoc->service("JobOptionsSvc", jobSvc);
-  if (sc.isSuccess()) sc = jobSvc->setMyProperties("DeVeloLiteRType", pmgr);
+  if (sc.isSuccess()) sc = jobSvc->setMyProperties("DeVLRSensor", pmgr);
   if (outputLevel > 0) {
-    msgSvc()->setOutputLevel("DeVeloLiteRType", outputLevel);
+    msgSvc()->setOutputLevel("DeVLRSensor", outputLevel);
   }
   delete pmgr;
   if (!sc) return sc;
-  m_debug   = (msgSvc()->outputLevel("DeVeloLiteRType") == MSG::DEBUG);
-  m_verbose = (msgSvc()->outputLevel("DeVeloLiteRType") == MSG::VERBOSE);
+  m_debug   = (msgSvc()->outputLevel("DeVLRSensor") == MSG::DEBUG);
+  m_verbose = (msgSvc()->outputLevel("DeVLRSensor") == MSG::VERBOSE);
   if (m_verbose) m_debug = true;
-  MsgStream msg(msgSvc(), "DeVeloLiteRType");
+  MsgStream msg(msgSvc(), "DeVLRSensor");
 
   /// Initialise the base class.
-  sc = DeVeloLiteSensor::initialize();
+  sc = DeVLSensor::initialize();
   if (!sc.isSuccess()) {
-    msg << MSG::ERROR << "Failed to initialise DeVeloLiteSensor." << endmsg;
+    msg << MSG::ERROR << "Failed to initialise DeVLSensor." << endmsg;
     return sc;
   }
   /// Initialise the sensor from the XML.
   sc = initSensor();
   if (!sc.isSuccess()) {
-    msg << MSG::ERROR << "Failed to initialise DeVeloLiteRType." << endmsg;
+    msg << MSG::ERROR << "Failed to initialise DeVLRSensor." << endmsg;
   }
   /// Build up map of strips to routing lines.
   buildRoutingLineMap();
   /// Register geometry conditions, update strip cache.
   updMgrSvc()->registerCondition(this, this->m_geometry,
-                                 &DeVeloLiteRType::updateGeometryCache);
+                                 &DeVLRSensor::updateGeometryCache);
   /// First update
   sc = updMgrSvc()->update(this);
   if (!sc.isSuccess()) {
@@ -117,9 +114,9 @@ StatusCode DeVeloLiteRType::initialize() {
 //=============================================================================
 /// Initialisation from XML
 //=============================================================================
-StatusCode DeVeloLiteRType::initSensor() {
+StatusCode DeVLRSensor::initSensor() {
   
-  MsgStream msg(msgSvc(), "DeVeloLiteRType");
+  MsgStream msg(msgSvc(), "DeVLRSensor");
   /// Number of zones
   m_numberOfZones = param<int>("RNbZones");
   /// Number of strips in each zone
@@ -285,10 +282,10 @@ StatusCode DeVeloLiteRType::initSensor() {
 //=============================================================================
 /// Calculate the nearest channel to a 3-d point.
 //=============================================================================
-StatusCode DeVeloLiteRType::pointToChannel(const Gaudi::XYZPoint& point,
-                                           LHCb::VeloLiteChannelID& channel,
-                                           double& fraction,
-                                           double& pitch) const {
+StatusCode DeVLRSensor::pointToChannel(const Gaudi::XYZPoint& point,
+                                       LHCb::VLChannelID& channel,
+                                       double& fraction,
+                                       double& pitch) const {
                                        
   /// Transform to the local frame.
   Gaudi::XYZPoint localPoint = globalToLocal(point);
@@ -329,14 +326,10 @@ StatusCode DeVeloLiteRType::pointToChannel(const Gaudi::XYZPoint& point,
     closestStrip += m_zones[zone].firstStrip;
   }
   const unsigned int sensor = sensorNumber();
-  // Set the VeloLiteChannelID.
+  /// Set the VLChannelID.
   channel.setSensor(sensor);
   channel.setStrip(closestStrip);
-  if (isR()) {
-    channel.setType(LHCb::VeloLiteChannelID::RType);
-  } else if (isPileUp()) {
-    channel.setType(LHCb::VeloLiteChannelID::PileUpType);
-  }
+  channel.setType(LHCb::VLChannelID::RType);
   /// Calculate the pitch.
   pitch = rPitch(channel.strip());
   return StatusCode::SUCCESS;
@@ -346,15 +339,15 @@ StatusCode DeVeloLiteRType::pointToChannel(const Gaudi::XYZPoint& point,
 //=============================================================================
 /// Get the nth nearest neighbour within a sector for a given channel
 //=============================================================================
-StatusCode DeVeloLiteRType::neighbour(const LHCb::VeloLiteChannelID& start,
-                                      const int& nOffset,
-                                      LHCb::VeloLiteChannelID& channel) const {
+StatusCode DeVLRSensor::neighbour(const LHCb::VLChannelID& start,
+                                  const int& nOffset,
+                                  LHCb::VLChannelID& channel) const {
 
   unsigned int strip = start.strip();
   unsigned int startZone = zoneOfStrip(strip);
   strip += nOffset;
   unsigned int endZone = zoneOfStrip(strip);
-  // Check boundaries.
+  /// Check boundaries.
   if (numberOfStrips() <= strip) return StatusCode::FAILURE;
   if (startZone != endZone) return StatusCode::FAILURE;
   channel = start;
@@ -366,7 +359,7 @@ StatusCode DeVeloLiteRType::neighbour(const LHCb::VeloLiteChannelID& start,
 //=============================================================================
 /// Check if a local point is inside the sensor
 //=============================================================================
-StatusCode DeVeloLiteRType::isInActiveArea(const Gaudi::XYZPoint& point) const {
+StatusCode DeVLRSensor::isInActiveArea(const Gaudi::XYZPoint& point) const {
 
   // Check boundaries.
   const double x = point.x();
@@ -394,7 +387,7 @@ StatusCode DeVeloLiteRType::isInActiveArea(const Gaudi::XYZPoint& point) const {
 //=============================================================================
 /// Return the minimum phi in a zone at given radius
 //=============================================================================
-double DeVeloLiteRType::phiMinZone(unsigned int zone, double radius) const {
+double DeVLRSensor::phiMinZone(unsigned int zone, double radius) const {
 
   double phiMin = phiMinZone(zone);
   if (1 == zone) {
@@ -408,7 +401,7 @@ double DeVeloLiteRType::phiMinZone(unsigned int zone, double radius) const {
 //=============================================================================
 /// Return the maximum phi in a zone at given radius
 //=============================================================================
-double DeVeloLiteRType::phiMaxZone(unsigned int zone, double radius) const {
+double DeVLRSensor::phiMaxZone(unsigned int zone, double radius) const {
 
   double phiMax = phiMaxZone(zone);
   if (m_numberOfZones - 2 == zone) {
@@ -423,21 +416,20 @@ double DeVeloLiteRType::phiMaxZone(unsigned int zone, double radius) const {
 //=============================================================================
 /// Return the length of a strip
 //=============================================================================
-double DeVeloLiteRType::stripLength(const unsigned int strip) const {
+double DeVLRSensor::stripLength(const unsigned int strip) const {
 
-  double phiMin = m_strips[strip].phiMin;
-  double phiMax = m_strips[strip].phiMax;
+  const double phiMin = m_strips[strip].phiMin;
+  const double phiMax = m_strips[strip].phiMax;
   const double radius = m_strips[strip].r;
   return (phiMax - phiMin) * radius;
-  // TODO: in "old" DeVeloRType, this was 2 * (phiMax - phiMin) * radius
 
 }
 
 //=============================================================================
-/// Residual of 3-d point to a VeloLiteChannelID
+/// Residual of 3-d point to a VLChannelID
 //=============================================================================
-StatusCode DeVeloLiteRType::residual(const Gaudi::XYZPoint& point,
-                                     const LHCb::VeloLiteChannelID& channel,
+StatusCode DeVLRSensor::residual(const Gaudi::XYZPoint& point,
+                                     const LHCb::VLChannelID& channel,
                                      double &residual,
                                      double &chi2) const {
 
@@ -445,16 +437,16 @@ StatusCode DeVeloLiteRType::residual(const Gaudi::XYZPoint& point,
 
 }
 //=============================================================================
-///Residual of 3-d point to a VeloLiteChannelID + interstrip fraction
+///Residual of 3-d point to a VLChannelID + interstrip fraction
 //=============================================================================
-StatusCode DeVeloLiteRType::residual(const Gaudi::XYZPoint& point,
-                                     const LHCb::VeloLiteChannelID& channel,
+StatusCode DeVLRSensor::residual(const Gaudi::XYZPoint& point,
+                                     const LHCb::VLChannelID& channel,
                                      const double interStripFraction,
                                      double &residual,
                                      double &chi2) const {
 
   Gaudi::XYZPoint localPoint = globalToLocal(point);
-  // Check boundaries.
+  /// Check boundaries.
   StatusCode sc = isInActiveArea(localPoint);
   if (!sc.isSuccess()) return sc;
 
@@ -465,16 +457,7 @@ StatusCode DeVeloLiteRType::residual(const Gaudi::XYZPoint& point,
   const double rStrip = rOfStrip(strip);
   residual = rStrip + offset - rPoint;
   const double sigma = m_resolution.first * rPitch(strip) - m_resolution.second;
-  chi2 = gsl_pow_2(residual / sigma);
-  if (m_verbose) {
-    MsgStream msg(msgSvc(), "DeVeloLiteRType");
-    msg << MSG::VERBOSE 
-        << "Residual. rPoint = " << rPoint << " strip = " << strip
-        << " rStrip = " << rStrip << " offset = " << offset 
-        << " residual = " << residual
-        << " sigma = "  << sigma
-        << " chi2 = "   << chi2 << endmsg;
-  }
+  chi2 = pow(residual / sigma, 2);
   return StatusCode::SUCCESS;
 
 }
@@ -482,7 +465,7 @@ StatusCode DeVeloLiteRType::residual(const Gaudi::XYZPoint& point,
 //=============================================================================
 /// Build up routing line map
 //=============================================================================
-void DeVeloLiteRType::buildRoutingLineMap() {
+void DeVLRSensor::buildRoutingLineMap() {
 
   // TODO: to be checked and refined
   const int nChannelsPerChip = 128;
@@ -522,7 +505,7 @@ void DeVeloLiteRType::buildRoutingLineMap() {
       m_mapRoutingLineToStrip[pad] = m_zones[zone].firstStrip + strip;
       
       if (m_verbose) {
-        MsgStream msg(msgSvc(), "DeVeloLiteRType");
+        MsgStream msg(msgSvc(), "DeVLRSensor");
         msg << MSG::VERBOSE 
             << "Pad (routing line) " << pad
             << " strip " << strip
@@ -536,7 +519,7 @@ void DeVeloLiteRType::buildRoutingLineMap() {
 //==============================================================================
 /// Return a trajectory (for track fit) from strip + offset
 //==============================================================================
-std::auto_ptr<LHCb::Trajectory> DeVeloLiteRType::trajectory(const LHCb::VeloLiteChannelID& id,
+std::auto_ptr<LHCb::Trajectory> DeVLRSensor::trajectory(const LHCb::VLChannelID& id,
                                                             const double offset) const {
 
   // Trajectory is a circle.
@@ -578,7 +561,7 @@ std::auto_ptr<LHCb::Trajectory> DeVeloLiteRType::trajectory(const LHCb::VeloLite
 
 }
 
-StatusCode DeVeloLiteRType::updateStripCache() {
+StatusCode DeVLRSensor::updateStripCache() {
 
   m_stripsCache.resize(m_numberOfStrips);
   /// Register geometry conditions, update strip cache.
@@ -624,7 +607,7 @@ StatusCode DeVeloLiteRType::updateStripCache() {
 
 }
 
-StatusCode DeVeloLiteRType::updateZoneCache() {
+StatusCode DeVLRSensor::updateZoneCache() {
 
   m_zonesCache.resize(m_numberOfZones);
   for (unsigned int lzone = 0; lzone < m_numberOfZones; ++lzone) {
@@ -705,18 +688,18 @@ StatusCode DeVeloLiteRType::updateZoneCache() {
   
 }
 
-StatusCode DeVeloLiteRType::updateGeometryCache() {
+StatusCode DeVLRSensor::updateGeometryCache() {
 
   StatusCode sc = updateStripCache();
   if (!sc.isSuccess()) {
-    MsgStream msg(msgSvc(), "DeVeloLiteRType");
+    MsgStream msg(msgSvc(), "DeVLRSensor");
     msg << MSG::ERROR << "Failed to update strip cache." << endmsg;
     return sc;
   }
 
   sc = updateZoneCache();
   if (!sc.isSuccess()) {
-    MsgStream msg(msgSvc(), "DeVeloLiteRType");
+    MsgStream msg(msgSvc(), "DeVLRSensor");
     msg << MSG::ERROR << "Failed to update zone limit cache." << endmsg;
     return sc;
   }

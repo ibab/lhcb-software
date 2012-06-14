@@ -1,13 +1,13 @@
 /// GaudiKernel
 #include "GaudiKernel/CnvFactory.h"
-/// DetDesc
+/// Det/DetDesc
 #include "DetDescCnv/XmlUserDetElemCnv.h"
-/// VeloLiteDet 
-#include "VeloLiteDet/DeVeloLiteRType.h"
+/// Det/VLDet 
+#include "VLDet/DeVLPhiSensor.h"
 
 /// =======================================================================
 /// Instantiation of a static factory class used by clients to create
 /// instances of this service
 /// =======================================================================
-typedef XmlUserDetElemCnv<DeVeloLiteRType> XmlDeVeloLiteRTypeCnv;
-DECLARE_CONVERTER_FACTORY( XmlDeVeloLiteRTypeCnv )
+typedef XmlUserDetElemCnv<DeVLPhiSensor> XmlDeVLPhiSensorCnv;
+DECLARE_CONVERTER_FACTORY(XmlDeVLPhiSensorCnv)

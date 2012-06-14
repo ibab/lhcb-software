@@ -1,6 +1,3 @@
-#define VELOLITEDET_DEVELOLITEPHITYPE_CPP 1
-
-#include "gsl/gsl_math.h"
 #include <fstream>
 // Gaudi
 #include "GaudiKernel/Bootstrap.h"
@@ -12,56 +9,57 @@
 #include "GaudiKernel/IUpdateManagerSvc.h"
 // LHCb
 #include "LHCbMath/LHCbMath.h"
+// Kernel/LHCbKernel
 #include "Kernel/LineTraj.h"
-#include "Kernel/VeloLiteChannelID.h"
+#include "Kernel/VLChannelID.h"
 // Local 
-#include "VeloLiteDet/DeVeloLitePhiType.h"
+#include "VLDet/DeVLPhiSensor.h"
 
-namespace VeloLiteDet {
+namespace VLDet {
   /** Access to local static data
    *
-   *  @see DeVeloPhiType
+   *  @see DeVeloPhiSensor
    */
-  static std::vector<phiStrip>& deVeloLitePhiTypeStaticPhiStrips() {
+  static std::vector<phiStrip>& deVLPhiSensorStaticPhiStrips() {
     static std::vector<phiStrip> s_strips;
     return s_strips;
   }
-  static std::vector<phiZone>& deVeloLitePhiTypeStaticPhiZones() {
+  static std::vector<phiZone>& deVLPhiSensorStaticPhiZones() {
     static std::vector<phiZone> s_zones;
     return s_zones;
   }
 
 }
 
-/** @file DeVeloLitePhiType.cpp
+/** @file DeVLPhiSensor.cpp
  *
- *  Implementation of class : DeVeloLitePhiType
+ *  Implementation of class : DeVLPhiSensor
  *
  */
 
 // ============================================================================
 /// Constructor
 // ============================================================================
-DeVeloLitePhiType::DeVeloLitePhiType(const std::string& name) : 
-  DeVeloLiteSensor(name),
-  m_zones(VeloLiteDet::deVeloLitePhiTypeStaticPhiZones()),
-  m_strips(VeloLiteDet::deVeloLitePhiTypeStaticPhiStrips()) {
+DeVLPhiSensor::DeVLPhiSensor(const std::string& name) : 
+    DeVLSensor(name),
+    m_zones(VLDet::deVLPhiSensorStaticPhiZones()),
+    m_strips(VLDet::deVLPhiSensorStaticPhiStrips()) {
   
 }
 
 // ============================================================================
 /// Object identification
 // ============================================================================
-const CLID& DeVeloLitePhiType::clID() const {
+const CLID& DeVLPhiSensor::clID() const {
 
-  return DeVeloLitePhiType::classID();
+  return DeVLPhiSensor::classID();
 
 }
 
 // ============================================================================
 /// Initialisation
 // ============================================================================
-StatusCode DeVeloLitePhiType::initialize() {
+StatusCode DeVLPhiSensor::initialize() {
 
   /// Set the output level.
   PropertyMgr* pmgr = new PropertyMgr();
@@ -70,33 +68,33 @@ StatusCode DeVeloLitePhiType::initialize() {
   IJobOptionsSvc* jobSvc;
   ISvcLocator* svcLoc = Gaudi::svcLocator();
   StatusCode sc = svcLoc->service("JobOptionsSvc", jobSvc);
-  if (sc.isSuccess()) sc = jobSvc->setMyProperties("DeVeloLitePhiType", pmgr);
+  if (sc.isSuccess()) sc = jobSvc->setMyProperties("DeVLPhiSensor", pmgr);
   if (outputLevel > 0) {
-    msgSvc()->setOutputLevel("DeVeloLitePhiType", outputLevel);
+    msgSvc()->setOutputLevel("DeVLPhiSensor", outputLevel);
   }
   delete pmgr;
   if (!sc) return sc;
-  m_debug   = (msgSvc()->outputLevel("DeVeloLitePhiType") == MSG::DEBUG);
-  m_verbose = (msgSvc()->outputLevel("DeVeloLitePhiType") == MSG::VERBOSE);
+  m_debug   = (msgSvc()->outputLevel("DeVLPhiSensor") == MSG::DEBUG);
+  m_verbose = (msgSvc()->outputLevel("DeVLPhiSensor") == MSG::VERBOSE);
   if (m_verbose) m_debug = true;
-  MsgStream msg(msgSvc(), "DeVeloLitePhiType");
+  MsgStream msg(msgSvc(), "DeVLPhiSensor");
 
   /// Initialise the base class.
-  sc = DeVeloLiteSensor::initialize();
+  sc = DeVLSensor::initialize();
   if (!sc.isSuccess()) {
-    msg << MSG::ERROR << "Failed to initialise DeVeloLiteSensor." << endmsg;
+    msg << MSG::ERROR << "Failed to initialise DeVLSensor." << endmsg;
     return sc;
   }
   /// Initialise the sensor from the XML.
   sc = initSensor();
   if (!sc.isSuccess()) {
-    msg << MSG::ERROR << "Failed to initialise DeVeloLitePhiType." << endmsg;
+    msg << MSG::ERROR << "Failed to initialise DeVLPhiSensor." << endmsg;
   }
   /// Build up map of strips to routing lines.
   buildRoutingLineMap();
   /// Register geometry conditions, update strip cache.
   updMgrSvc()->registerCondition(this, this->m_geometry,
-                                 &DeVeloLitePhiType::updateGeometryCache);
+                                 &DeVLPhiSensor::updateGeometryCache);
   /// First update
   sc = updMgrSvc()->update(this);
   if (!sc.isSuccess()) {
@@ -110,9 +108,9 @@ StatusCode DeVeloLitePhiType::initialize() {
 //=============================================================================
 /// Initialisation from XML
 //=============================================================================
-StatusCode DeVeloLitePhiType::initSensor() {
+StatusCode DeVLPhiSensor::initSensor() {
 
-  MsgStream msg(msgSvc(), "DeVeloLitePhiType");
+  MsgStream msg(msgSvc(), "DeVLPhiSensor");
 
   /// Number of zones
   m_numberOfZones = param<int>("PhiNbZones");
@@ -248,10 +246,10 @@ StatusCode DeVeloLitePhiType::initSensor() {
 // ============================================================================
 /// Calculate the nearest channel to a 3-d point.
 // ============================================================================
-StatusCode DeVeloLitePhiType::pointToChannel(const Gaudi::XYZPoint& point,
-                                             LHCb::VeloLiteChannelID& channel,
-                                             double& fraction,
-                                             double& pitch) const {
+StatusCode DeVLPhiSensor::pointToChannel(const Gaudi::XYZPoint& point,
+                                         LHCb::VLChannelID& channel,
+                                         double& fraction,
+                                         double& pitch) const {
 
   // Transform to the local frame.                                         
   Gaudi::XYZPoint localPoint = this->geometry()->toLocal(point);
@@ -270,13 +268,13 @@ StatusCode DeVeloLitePhiType::pointToChannel(const Gaudi::XYZPoint& point,
   pitch = phiPitch(radius);
 
   const unsigned int sensor = sensorNumber();
-  // Set the VeloLiteChannelID.
+  // Set the VLChannelID.
   channel.setSensor(sensor);
   channel.setStrip(closestStrip);
-  channel.setType(LHCb::VeloLiteChannelID::PhiType);
+  channel.setType(LHCb::VLChannelID::PhiType);
 
   if (m_verbose) {
-    MsgStream msg(msgSvc(), "DeVeloLitePhiType");
+    MsgStream msg(msgSvc(), "DeVLPhiSensor");
     msg << MSG::VERBOSE 
         << "pointToChannel; local phi " << localPoint.phi() / Gaudi::Units::degree
         << " radius " << localPoint.Rho()
@@ -293,9 +291,9 @@ StatusCode DeVeloLitePhiType::pointToChannel(const Gaudi::XYZPoint& point,
 // ============================================================================
 /// Get the nth nearest neighbour for a given channel
 // ============================================================================
-StatusCode DeVeloLitePhiType::neighbour(const LHCb::VeloLiteChannelID& start,
-                                        const int& nOffset,
-                                        LHCb::VeloLiteChannelID& channel) const {
+StatusCode DeVLPhiSensor::neighbour(const LHCb::VLChannelID& start,
+                                    const int& nOffset,
+                                    LHCb::VLChannelID& channel) const {
 
   unsigned int strip = start.strip();
   unsigned int startZone = zoneOfStrip(strip);
@@ -314,7 +312,7 @@ StatusCode DeVeloLitePhiType::neighbour(const LHCb::VeloLiteChannelID& start,
 // ============================================================================
 /// Check if a local point is inside the sensor
 // ============================================================================
-StatusCode DeVeloLitePhiType::isInActiveArea(const Gaudi::XYZPoint& point) const {
+StatusCode DeVLPhiSensor::isInActiveArea(const Gaudi::XYZPoint& point) const {
 
   // Check boundaries.
   const double x = point.x();
@@ -355,25 +353,25 @@ StatusCode DeVeloLitePhiType::isInActiveArea(const Gaudi::XYZPoint& point) const
 }
 
 // ============================================================================
-/// Residual of 3-d point to a VeloLiteChannelID
+/// Residual of 3-d point to a VLChannelID
 // ============================================================================
-StatusCode DeVeloLitePhiType::residual(const Gaudi::XYZPoint& point,
-                                       const LHCb::VeloLiteChannelID& channel,
-                                       double &residual,
-                                       double &chi2) const {
+StatusCode DeVLPhiSensor::residual(const Gaudi::XYZPoint& point,
+                                   const LHCb::VLChannelID& channel,
+                                   double &residual,
+                                   double &chi2) const {
 
   return this->residual(point, channel, 0., residual, chi2);
 
 }
 
 // ============================================================================
-/// Residual of 3-d point to a VeloLiteChannelID + interstrip fraction
+/// Residual of 3-d point to a VLChannelID + interstrip fraction
 // ============================================================================
-StatusCode DeVeloLitePhiType::residual(const Gaudi::XYZPoint& point,
-                                       const LHCb::VeloLiteChannelID& channel,
-                                       const double interStripFraction,
-                                       double &residual,
-                                       double &chi2) const {
+StatusCode DeVLPhiSensor::residual(const Gaudi::XYZPoint& point,
+                                   const LHCb::VLChannelID& channel,
+                                   const double interStripFraction,
+                                   double &residual,
+                                   double &chi2) const {
 
   /// Transform to local frame.
   Gaudi::XYZPoint localPoint = this->geometry()->toLocal(point);
@@ -415,20 +413,20 @@ StatusCode DeVeloLitePhiType::residual(const Gaudi::XYZPoint& point,
   xNear /= (1. + gradient * gradient);
   double yNear = gradient * xNear + intercept;
 
-  residual = sqrt(gsl_pow_2(xNear - x) + gsl_pow_2(yNear - y));
+  residual = sqrt(pow(xNear - x, 2) + pow(yNear - y, 2));
 
   // Work out how to calculate the sign!
   Gaudi::XYZPoint localNear(xNear, yNear, 0.);
-  Gaudi::XYZPoint globalNear = DeVeloLiteSensor::localToGlobal(localNear);
+  Gaudi::XYZPoint globalNear = DeVLSensor::localToGlobal(localNear);
   if (point.phi() < globalNear.phi()) residual *= -1.;
 
   const double radius = localPoint.Rho();
   const double sigma = m_resolution.first * phiPitch(radius) - 
                        m_resolution.second;
-  chi2 = gsl_pow_2(residual / sigma);
+  chi2 = pow(residual / sigma, 2);
 
   if (m_verbose) {
-    MsgStream msg(msgSvc(), "DeVeloLitePhiType");
+    MsgStream msg(msgSvc(), "DeVLPhiSensor");
     msg << MSG::VERBOSE << "Residual; sensor " << channel.sensor()
         << " strip " << strip
         << " x " << x << " y " << y << endmsg;
@@ -443,9 +441,9 @@ StatusCode DeVeloLitePhiType::residual(const Gaudi::XYZPoint& point,
 //=============================================================================
 // Build map of strips to routing line and back
 //=============================================================================
-void DeVeloLitePhiType::buildRoutingLineMap() {
+void DeVLPhiSensor::buildRoutingLineMap() {
 
-  MsgStream msg(msgSvc(), "DeVeloLitePhiType");
+  MsgStream msg(msgSvc(), "DeVLPhiSensor");
   if (m_debug) {
     msg << MSG::DEBUG << "Building routing line map for sensor " 
         << sensorNumber() << endmsg;
@@ -503,8 +501,8 @@ void DeVeloLitePhiType::buildRoutingLineMap() {
 // ============================================================================
 /// Return a trajectory (for track fit) from strip + offset
 // ============================================================================
-std::auto_ptr<LHCb::Trajectory> DeVeloLitePhiType::trajectory(const LHCb::VeloLiteChannelID& id,
-                                                              const double offset) const {
+std::auto_ptr<LHCb::Trajectory> DeVLPhiSensor::trajectory(const LHCb::VLChannelID& id,
+                                                          const double offset) const {
 
   // Trajectory is a line.
   const unsigned int strip = id.strip();
@@ -537,7 +535,7 @@ std::auto_ptr<LHCb::Trajectory> DeVeloLitePhiType::trajectory(const LHCb::VeloLi
 
 }
 
-StatusCode DeVeloLitePhiType::updateStripCache() {
+StatusCode DeVLPhiSensor::updateStripCache() {
 
   m_zonesCache.resize(m_numberOfZones);
   m_stripsCache.resize(m_numberOfStrips);
@@ -585,7 +583,7 @@ StatusCode DeVeloLitePhiType::updateStripCache() {
   
 }
 
-StatusCode DeVeloLitePhiType::updateZoneCache() {
+StatusCode DeVLPhiSensor::updateZoneCache() {
 
   for (unsigned int zone = 0; zone < m_numberOfZones; ++zone) {
     const unsigned int minStrip = m_zones[zone].firstStrip;
@@ -686,17 +684,17 @@ StatusCode DeVeloLitePhiType::updateZoneCache() {
   
 }
 
-StatusCode DeVeloLitePhiType::updateGeometryCache() {
+StatusCode DeVLPhiSensor::updateGeometryCache() {
 
   StatusCode sc = updateStripCache();
   if (!sc.isSuccess()) {
-    MsgStream msg(msgSvc(), "DeVeloLitePhiType");
+    MsgStream msg(msgSvc(), "DeVLPhiSensor");
     msg << MSG::ERROR << "Failed to update strip cache." << endmsg;
     return sc;
   }
   sc = updateZoneCache();
   if (!sc.isSuccess()) {
-    MsgStream msg(msgSvc(), "DeVeloLitePhiType");
+    MsgStream msg(msgSvc(), "DeVLPhiSensor");
     msg << MSG::ERROR << "Failed to update zone limit cache." << endmsg;
     return sc;
   }

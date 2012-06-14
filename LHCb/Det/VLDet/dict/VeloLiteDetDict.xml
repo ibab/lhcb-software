@@ -1,6 +1,0 @@
-<lcgdict>
-  <class name="DeVeloLitePhiType" />
-  <class name="DeVeloLiteRType"   />
-  <class name="std::vector<DeVeloLitePhiType*>" />
-  <class name="std::vector<DeVeloLiteRType*>"   />
-</lcgdict>

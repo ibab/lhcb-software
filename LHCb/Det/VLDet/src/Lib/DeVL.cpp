@@ -11,27 +11,27 @@
 // Det/DetDesc 
 #include "DetDesc/Condition.h"
 // Local 
-#include "VeloLiteDet/DeVeloLite.h"
+#include "VLDet/DeVL.h"
 
-/** @file DeVeloLite.cpp
+/** @file DeVL.cpp
  *
- *  Implementation of class : DeVeloLite
+ *  Implementation of class : DeVL
  *
  */
 
 // ============================================================================
 /// Constructor
 // ============================================================================
-DeVeloLite::DeVeloLite(const std::string& name) : DetectorElement(name) {
+DeVL::DeVL(const std::string& name) : DetectorElement(name) {
 
 }
 
 // ============================================================================
 /// Object identification
 // ============================================================================
-const CLID& DeVeloLite::clID() const { 
+const CLID& DeVL::clID() const { 
   
-  return DeVeloLite::classID();
+  return DeVL::classID();
 
 }
 
@@ -39,7 +39,7 @@ const CLID& DeVeloLite::clID() const {
 // ============================================================================
 /// Initialisation method
 // ============================================================================
-StatusCode DeVeloLite::initialize() {
+StatusCode DeVL::initialize() {
 
   // Set the output level.
   PropertyMgr* pmgr = new PropertyMgr();
@@ -48,16 +48,16 @@ StatusCode DeVeloLite::initialize() {
   IJobOptionsSvc* jobSvc;
   ISvcLocator* svcLoc = Gaudi::svcLocator();
   StatusCode sc = svcLoc->service("JobOptionsSvc", jobSvc);
-  if (sc.isSuccess()) sc = jobSvc->setMyProperties("DeVeloLite", pmgr);
+  if (sc.isSuccess()) sc = jobSvc->setMyProperties("DeVL", pmgr);
   if (outputLevel > 0) {
-    msgSvc()->setOutputLevel("DeVeloLite", outputLevel);
+    msgSvc()->setOutputLevel("DeVL", outputLevel);
   }
   delete pmgr;
   if (!sc) return sc;
-  m_debug   = (msgSvc()->outputLevel("DeVeloLite") == MSG::DEBUG);
-  m_verbose = (msgSvc()->outputLevel("DeVeloLite") == MSG::VERBOSE);
+  m_debug   = (msgSvc()->outputLevel("DeVL") == MSG::DEBUG);
+  m_verbose = (msgSvc()->outputLevel("DeVL") == MSG::VERBOSE);
   if (m_verbose) m_debug = true;
-  MsgStream msg(msgSvc(), "DeVeloLite");
+  MsgStream msg(msgSvc(), "DeVL");
   
   // Initialise the base class.
   sc = DetectorElement::initialize();
@@ -66,21 +66,21 @@ StatusCode DeVeloLite::initialize() {
     return sc;
   }
   
-  // Find DeVeloLiteSensor objects in detector element tree.
-  std::vector<DeVeloLiteSensor*> veloSensors;
-  findVeloLiteSensors(this, veloSensors);
+  // Find DeVLSensor objects in detector element tree.
+  std::vector<DeVLSensor*> vlSensors;
+  findSensors(this, vlSensors);
   if (m_debug) {
     msg << MSG::DEBUG
-        << "Found " << veloSensors.size() 
+        << "Found " << vlSensors.size() 
         << " sensors in the XML" << endmsg;
   }
   // Sort sensors by increasing z.
-  std::sort(veloSensors.begin(), veloSensors.end(), less_Z());
+  std::sort(vlSensors.begin(), vlSensors.end(), lessZ());
 
-  // Determine the size of our pseudo map.
+  // Determine the highest sensor number in the list of DeVLSensor objects.
   unsigned int maxSensorNumber = 0;
-  std::vector<DeVeloLiteSensor*>::iterator it;
-  for (it = veloSensors.begin(); it != veloSensors.end(); ++it) {
+  std::vector<DeVLSensor*>::iterator it;
+  for (it = vlSensors.begin(); it != vlSensors.end(); ++it) {
     if (maxSensorNumber < (*it)->sensorNumber()) {
       maxSensorNumber = (*it)->sensorNumber();
     }
@@ -92,7 +92,7 @@ StatusCode DeVeloLite::initialize() {
   m_nLeftRSensors   = m_nRightRSensors   = 0;
   m_nLeftPhiSensors = m_nRightPhiSensors = 0;
   m_nLeftPUSensors  = m_nRightPUSensors  = 0;
-  for (it = veloSensors.begin(); it != veloSensors.end(); ++it) {
+  for (it = vlSensors.begin(); it != vlSensors.end(); ++it) {
     m_vpSensors.push_back(*it);
     ++m_nSensors;
     const unsigned int index = m_vpSensors.size() - 1;
@@ -110,7 +110,7 @@ StatusCode DeVeloLite::initialize() {
     
     // Check if sensor is R type, Phi type or pile-up
     if ((*it)->isR()) {
-      m_vpRSensors.push_back(dynamic_cast<DeVeloLiteRType*>((*it)));
+      m_vpRSensors.push_back(dynamic_cast<DeVLRSensor*>((*it)));
       ++m_nRSensors;
       if (isLeftSensor) {
         m_vpLeftRSensors.push_back(m_vpRSensors.back());
@@ -120,7 +120,7 @@ StatusCode DeVeloLite::initialize() {
         ++m_nRightRSensors;
       }
     } else if ((*it)->isPhi()) {
-      m_vpPhiSensors.push_back(dynamic_cast<DeVeloLitePhiType*>((*it)));
+      m_vpPhiSensors.push_back(dynamic_cast<DeVLPhiSensor*>((*it)));
       ++m_nPhiSensors;
       if (isLeftSensor) {
         m_vpLeftPhiSensors.push_back(m_vpPhiSensors.back());
@@ -130,7 +130,7 @@ StatusCode DeVeloLite::initialize() {
         ++m_nRightPhiSensors;
       }
     } else if ((*it)->isPileUp()) {
-      m_vpPUSensors.push_back(dynamic_cast<DeVeloLiteRType*>((*it)));
+      m_vpPUSensors.push_back(dynamic_cast<DeVLRSensor*>((*it)));
       ++m_nPileUpSensors;
       if (isLeftSensor) {
         m_vpLeftPUSensors.push_back(m_vpPUSensors.back());
@@ -154,16 +154,16 @@ StatusCode DeVeloLite::initialize() {
   }
 
   // Set the associated and other side sensor links.  
-  std::vector<DeVeloLiteRType*>::const_iterator iRS;
-  for (iRS = leftRSensorsBegin(); iRS != leftRSensorsEnd(); ++iRS) {
+  std::vector<DeVLRSensor*>::const_iterator itRS;
+  for (itRS = leftRSensorsBegin(); itRS != leftRSensorsEnd(); ++itRS) {
     // Associated sensors on the left side
-    DeVeloLiteRType*   lRS = *iRS;
-    DeVeloLitePhiType* lPS = const_cast<DeVeloLitePhiType*>(phiSensor(lRS->sensorNumber() + 64));
+    DeVLRSensor*   lRS = *itRS;
+    DeVLPhiSensor* lPS = const_cast<DeVLPhiSensor*>(phiSensor(lRS->sensorNumber() + 64));
     lRS->setAssociatedPhiSensor(lPS);
     if (lPS) lPS->setAssociatedRSensor(lRS);
     // Associated sensors on the right side
-    DeVeloLiteRType*   rRS = const_cast<DeVeloLiteRType*>(rSensor(lRS->sensorNumber() + 1));
-    DeVeloLitePhiType* rPS = const_cast<DeVeloLitePhiType*>(phiSensor(lPS->sensorNumber() + 1));
+    DeVLRSensor*   rRS = const_cast<DeVLRSensor*>(rSensor(lRS->sensorNumber() + 1));
+    DeVLPhiSensor* rPS = const_cast<DeVLPhiSensor*>(phiSensor(lPS->sensorNumber() + 1));
     if (rRS) rRS->setAssociatedPhiSensor(rPS);
     if (rPS) rPS->setAssociatedRSensor(rRS);
     // Other side sensor links
@@ -211,14 +211,14 @@ StatusCode DeVeloLite::initialize() {
 // ============================================================================
 /// Recursive navigation through DeVelo detector element tree
 // ============================================================================
-void DeVeloLite::findVeloLiteSensors(IDetectorElement* detElem,
-                                     std::vector<DeVeloLiteSensor*>& sensors) {
+void DeVL::findSensors(IDetectorElement* detElem,
+                       std::vector<DeVLSensor*>& sensors) {
                                  
-  std::vector<IDetectorElement*> veloSensors = detElem->childIDetectorElements();
-  MsgStream msg(msgSvc(), "DeVeloLite");
+  std::vector<IDetectorElement*> vlSensors = detElem->childIDetectorElements();
+  MsgStream msg(msgSvc(), "DeVL");
   std::vector<IDetectorElement*>::iterator it; 
-  for (it = veloSensors.begin(); it != veloSensors.end(); ++it) {
-    DeVeloLiteSensor* pSensor = dynamic_cast<DeVeloLiteSensor*>((*it));
+  for (it = vlSensors.begin(); it != vlSensors.end(); ++it) {
+    DeVLSensor* pSensor = dynamic_cast<DeVLSensor*>((*it));
     if (pSensor) {
       sensors.push_back(pSensor);
       if (m_debug) {
@@ -226,7 +226,7 @@ void DeVeloLite::findVeloLiteSensors(IDetectorElement* detElem,
             << "Storing detector " << (*it)->name() << endmsg;
       }
     }
-    findVeloLiteSensors(*it, sensors);
+    findSensors(*it, sensors);
   }
   
 }
@@ -234,7 +234,7 @@ void DeVeloLite::findVeloLiteSensors(IDetectorElement* detElem,
 // ============================================================================
 /// Return the sensor number for a point in the global frame. 
 // ============================================================================
-const DeVeloLiteSensor* DeVeloLite::sensor(const Gaudi::XYZPoint& point) const {
+const DeVLSensor* DeVL::sensor(const Gaudi::XYZPoint& point) const {
 
   return sensor(sensitiveVolumeID(point));
 
@@ -243,9 +243,9 @@ const DeVeloLiteSensor* DeVeloLite::sensor(const Gaudi::XYZPoint& point) const {
 // ============================================================================
 /// Return the sensitive volume ID for a point in the global frame.
 // ============================================================================
-int DeVeloLite::sensitiveVolumeID(const Gaudi::XYZPoint& point) const {
+int DeVL::sensitiveVolumeID(const Gaudi::XYZPoint& point) const {
 
-  std::vector<DeVeloLiteSensor*>::const_iterator it; 
+  std::vector<DeVLSensor*>::const_iterator it; 
   for (it = m_vpSensors.begin(); it != m_vpSensors.end(); ++it) {
     Gaudi::XYZPoint localPoint = (*it)->globalToLocal(point);
     const double z = localPoint.z();
@@ -253,7 +253,7 @@ int DeVeloLite::sensitiveVolumeID(const Gaudi::XYZPoint& point) const {
       return ((*it)->sensorNumber());
     }
   }
-  MsgStream msg(msgSvc(), "DeVeloLite");
+  MsgStream msg(msgSvc(), "DeVL");
   msg << MSG::ERROR
       << "No sensitive volume at z = " << point.z() << endmsg;
   return -999;
@@ -263,22 +263,22 @@ int DeVeloLite::sensitiveVolumeID(const Gaudi::XYZPoint& point) const {
 // =========================================================================
 /// Members related to condition caching
 // =========================================================================
-StatusCode DeVeloLite::registerConditionCallBacks() {
+StatusCode DeVL::registerConditionCallBacks() {
   
   // Half box offsets
   if (m_nLeftSensors > 0) {
     updMgrSvc()->registerCondition(this,
                                    (*leftSensorsBegin())->geometry(),
-                                   &DeVeloLite::updateLeftHalfBoxOffset);
+                                   &DeVL::updateLeftHalfBoxOffset);
   }
   if (m_nRightSensors > 0) {
     updMgrSvc()->registerCondition(this,
                                    (*rightSensorsBegin())->geometry(),
-                                   &DeVeloLite::updateRightHalfBoxOffset);
+                                   &DeVL::updateRightHalfBoxOffset);
   }
   StatusCode sc = updMgrSvc()->update(this);
   if (!sc.isSuccess()) {
-    MsgStream msg(msgSvc(), "DeVeloLite");
+    MsgStream msg(msgSvc(), "DeVL");
     msg << MSG::ERROR
         << "Failed to update conditions." << endmsg;
     return sc;
@@ -287,7 +287,7 @@ StatusCode DeVeloLite::registerConditionCallBacks() {
 
 }
 
-StatusCode DeVeloLite::updateLeftHalfBoxOffset() {
+StatusCode DeVL::updateLeftHalfBoxOffset() {
 
   Gaudi::XYZPoint localZero(0., 0., 0.);
   Gaudi::XYZPoint globalZero = (*leftSensorsBegin())->veloHalfBoxToGlobal(localZero);
@@ -296,7 +296,7 @@ StatusCode DeVeloLite::updateLeftHalfBoxOffset() {
 
 }
 
-StatusCode DeVeloLite::updateRightHalfBoxOffset() {
+StatusCode DeVL::updateRightHalfBoxOffset() {
 
   Gaudi::XYZPoint localZero(0., 0., 0.);
   Gaudi::XYZPoint globalZero = (*rightSensorsBegin())->veloHalfBoxToGlobal(localZero);
