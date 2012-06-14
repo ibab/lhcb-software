@@ -12,10 +12,10 @@ std::ostream& LHCb::VertexBase::fillStream(std::ostream& s) const
 {
   s << "{ "
     << "position  : " << m_position << std::endl
-    << "covMatrix :	" << std::endl << m_covMatrix << std::endl
+    << "covMatrix : " << std::endl << m_covMatrix << std::endl
     << "chi2      : " << m_chi2 << std::endl
     << "nDoF      : " << m_nDoF << std::endl
-    << "extraInfo :	[";
+    << "extraInfo : [";
   for ( ExtraInfo::const_iterator i = extraInfo().begin();
         i != extraInfo().end(); ++i )
   {

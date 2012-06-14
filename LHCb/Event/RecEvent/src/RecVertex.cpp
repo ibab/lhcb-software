@@ -124,14 +124,8 @@ std::pair<bool,float> LHCb::RecVertex::trackWeight( const LHCb::Track* track ) c
       // Get the index from the iterator
       const unsigned int index = (unsigned int) ( iTk - m_tracks.begin() );
       // Get the weight
-      if ( m_tracks.size() == m_weights.size() )
-      {
-        weight.second = m_weights[index];
-      }
-      else
-      {
-        weight.second = 1.0;
-      }
+      weight.second = ( m_tracks.size() == m_weights.size() ?
+                        m_weights[index] : 1.0 );
       weight.first  = true;
     }
   }
