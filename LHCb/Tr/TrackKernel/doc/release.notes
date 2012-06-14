@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-06-14 - Wouter Hulsbergen
+ - Added utility class TrajVertex
+
 ! 2012-06-04 - Wouter Hulsbergen
  - Two changes to TrackStateVertex:
    - now copies input states rather than keeping pointers
