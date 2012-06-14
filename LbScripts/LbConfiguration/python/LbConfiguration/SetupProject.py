@@ -55,7 +55,7 @@ log = logging.getLogger(os.path.basename(__file__))
 # Useful constants
 ########################################################################
 lhcb_style_version = re.compile(r'v([0-9]+)r([0-9]+)(?:p([0-9]+))?')
-lcg_style_version = re.compile(r'([0-9]+)([a-z]?)')
+lcg_style_version = re.compile(r'([0-9]+)([a-z]?)$')
 # LHCb standard projects
 import LbConfiguration.Project
 # LHCb projects without container

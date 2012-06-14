@@ -2,6 +2,7 @@
 
 	* python/LbConfiguration/SetupProject.py: added (limited) support for
 	"SetupProject ROOT [version]"
+	prevent the (automatic) use of "rc" versions of LCGCMT
 
 2012-06-13 Ben Couturier <Ben.Couturier@cern.ch>
 
