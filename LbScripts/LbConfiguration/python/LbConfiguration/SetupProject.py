@@ -1503,6 +1503,23 @@ class SetupProject:
         if len(self.args) < 1:
             self._error("You have to specify a project")
             return 1
+
+        if self.args[0].lower() == "root":
+            # ROOT is not a CMT project, instead of
+            #   SetupProject ROOT 5.34.00
+            # we should do
+            #   SetupProject LCGCMT ROOT -v 5.34.00
+            self.project_name = "LCGCMT"
+            # let's see if the user actually passed us a version for ROOT
+            if len(self.args) > 1 and re.match(r"\d+\.\d+\.\d+", self.args[1]):
+                 # yes, so we pretend we got "ROOT -v <version>"
+                 self.opts.ext_versions["ROOT"] = self.args[1]
+                 # and remove the already digested arguments
+                 del self.args[0:2]
+            else:
+                # if the version is not given, we do not need to do anything
+                # special on the arguments, just ensure that the case is correct
+                self.args[0] = "ROOT"
         else:
             self.project_name = FixProjectCase(self.args.pop(0))
 

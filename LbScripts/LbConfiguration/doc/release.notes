@@ -1,6 +1,11 @@
+2012-06-14  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/SetupProject.py: added (limited) support for
+	"SetupProject ROOT [version]"
+
 2012-06-13 Ben Couturier <Ben.Couturier@cern.ch>
 
-	* python/LbConfiguration/Project.py: Added project LHCbExternals 
+	* python/LbConfiguration/Project.py: Added project LHCbExternals
 
 2012-06-06 Ben Couturier <Ben.Couturier@cern.ch>
 
@@ -22,7 +27,7 @@
 2012-04-30  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v6r7p5
-	* LbConfiguration/tests/ConfigurationFactoryTest.py: Fixed so that test can be run from any location. 
+	* LbConfiguration/tests/ConfigurationFactoryTest.py: Fixed so that test can be run from any location.
 
 2012-04-27  Ben Couturier <Ben.Couturier@cern.ch>
 
@@ -31,7 +36,7 @@
 2012-04-13  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* python/LbConfiguration/Package.py: Fixed bug so that dynamic lookup of package list from
-        distarea/conf directory sets project name correctly. 
+        distarea/conf directory sets project name correctly.
 
 2012-04-12  Ben Couturier <Ben.Couturier@cern.ch>
 
@@ -40,7 +45,7 @@
 
 2012-03-14  Ben Couturier <Ben.Couturier@cern.ch>
 
-	* scripts/generateLogin: Set CMTEXTRATAGS to NO_PYTHON_LIBPATH to avoid having the python shared 
+	* scripts/generateLogin: Set CMTEXTRATAGS to NO_PYTHON_LIBPATH to avoid having the python shared
 	library path in cache
 
 2012-03-06  Ben Couturier <Ben.Couturier@cern.ch>
@@ -51,12 +56,12 @@
 
 	* cmt/requirements: release of version v6r7p2
 	* scripts/generateLogin: Change default CMTCONFIG for cache generation (was using slc4_ia32_gcc34...)
-	* scripts/generateLogin: Reset CMTEXTRATAGS before cache generation to allow building with mkproject 
+	* scripts/generateLogin: Reset CMTEXTRATAGS before cache generation to allow building with mkproject
 
 2012-02-22  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v6r7p1
-	* python/LbConfiguration/Package.py: Added new package ProdConf in project DBASE 
+	* python/LbConfiguration/Package.py: Added new package ProdConf in project DBASE
 	* python/LbConfiguration/LbLogin.py: Added alias to invoke development LbLogin when in CMTSITE CERN
 
 2012-02-20  Ben Couturier <Ben.Couturier@cern.ch>
