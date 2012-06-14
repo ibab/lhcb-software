@@ -1,6 +1,9 @@
 from Brunel.Configuration import *
 from Configurables import Brunel, LHCbApp, CondDB
 
+# For L0 filter. To be removed when part of Brunel
+importOptions("$L0TCK/L0DUConfig.opts")
+
 # For 2009 data
 #importOptions("$APPCONFIGOPTS/Brunel/DataType-2009.py")
 #LHCbApp().DDDBtag   = "head-20110303"

@@ -164,11 +164,14 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
     # Custom DB slices for both job types (calibration and verification)
     dbFiles = [ ]
 
-    # Reset Aerogel
-    dbFiles += ["2012AerogelCalibReset-21042012-V2"]
+    # Aerogel
+    #dbFiles += ["2012AerogelCalibReset-21042012-V2"] # Reset to old defaults
+    dbFiles += ["2012AerogelCalib-V1-08062012"] # First 2012 calibration
 
-    # New MDCS RICH1
+    # New MDCS RICH1 for 2012
     dbFiles += ["MDCS-RICH1-28052012"]
+
+    # Mirror alignment
 
     # Only for Calibration jobs only
     if jobType == "RefInCalib" :
