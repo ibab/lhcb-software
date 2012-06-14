@@ -82,19 +82,20 @@ StatusCode TupleToolTISTOS::fillBasic( const LHCb::Particle*
   checkPID = false;
   
   // do nothing because no pid was specified
-  if(m_pidList.size()==0) { if (msgLevel(MSG::WARNING)) warning()<<"size of pidlist is "<<m_pidList.size()<<endmsg; return StatusCode::SUCCESS; }
+  //if(m_pidList.size()==0) { if (msgLevel(MSG::WARNING)) warning()<<"size of pidlist is "<<m_pidList.size()<<endmsg; return StatusCode::SUCCESS; }
   
-  // check if the particle matched any of the PIDs given in list
-  else {
+  // check if the particle matched any of the PIDs given in list IF there is a list
+  if  (m_pidList.size()!=0) {
     for ( std::vector<int>::const_iterator it = m_pidList.begin();   m_pidList.end()!=it ; ++it )
       {
 	
 	if(!checkPID && abs(P->particleID().pid() )==*it ) checkPID = true;
       }
+    
+    if( !checkPID) { return StatusCode::SUCCESS; }
   }
   
-  if(!checkPID){ return StatusCode::SUCCESS; }
-  
+  if( (m_pidList.size()==0) ) { checkPID = true; }
   
   if(checkPID){
     
@@ -274,7 +275,7 @@ std::string TupleToolTISTOS::getName(std::string mystr){
   int found = name.find(".*");
   if(found >= 0){
     name.replace( found, 2, "__");
-    if ( !msgLevel(MSG::VERBOSE)) info() <<"From the function... Replaced   "<<mystr<<"  with  "<<name<<endmsg;
+    if (msgLevel(MSG::VERBOSE)) info() <<"From the function... Replaced   "<<mystr<<"  with  "<<name<<endmsg;
   }
   
   return name;
