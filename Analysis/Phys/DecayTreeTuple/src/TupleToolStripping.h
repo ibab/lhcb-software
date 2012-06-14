@@ -6,7 +6,7 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 
-#include "TupleToolBase.h"
+#include "TupleToolTriggerBase.h"
 #include "Kernel/IEventTupleTool.h"            // Interface
 
 /** @class TupleToolStripping TupleToolStripping.h
@@ -15,7 +15,7 @@
  *  @author Patrick Koppenburg
  *  @date   2010-04-23
  */
-class TupleToolStripping : public TupleToolBase, 
+class TupleToolStripping : public TupleToolTriggerBase, 
                            virtual public IEventTupleTool
 {
 
@@ -28,12 +28,13 @@ public:
 
   virtual ~TupleToolStripping( ); ///< Destructor
 
+  StatusCode initialize();
   virtual StatusCode fill( Tuples::Tuple& );
 
 private:
 
   std::string m_location ; ///< HDR location
-
+  std::vector<std::string> m_strippingList;//property: list of stripping lines to specifically look at
 };
 
 #endif // TUPLETOOLSTRIPPING_H

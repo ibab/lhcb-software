@@ -28,8 +28,8 @@ Tuple.TupleToolSubMass.SetMax = 3  # look to 2- and 3-bodies  (defaut all possib
  * **** Substitution property
  * 
  * - usage : 
- *  TupleTool.Substitution["pi+"]="K+"
- *  TupleTool.Substitution["K+"]="pi+"
+ *  TupleTool.Substitution += ["pi+ => K+"]
+ *  TupleTool.Substitution += ["K+ => pi+"]
  *
  * - produce alternative mass with substituted PID pi<->K (cc is assumed)
  *
@@ -38,8 +38,8 @@ Tuple.TupleToolSubMass.SetMax = 3  # look to 2- and 3-bodies  (defaut all possib
  * **** DoubleSubstitution property
  * 
  * - usage : 
- *  TupleTool.DoubleSubstitution["K+/pi-"]="pi+/K-"
- *  TupleTool.DoubleSubstitution["K+/K-"]="pi+/pi-"
+ *  TupleTool.DoubleSubstitution += ["K+/pi- => pi+/K-"]
+ *  TupleTool.DoubleSubstitution += ["K+/K-" => pi+/pi-"]
  *
  * - change all [K+pi-]cc ([K+K-]cc) pairs to (pi+K-)cc ([pi+pi-]cc)
  * - change only one pair at once in case of several pairs in the decay tree (producing separate output per pair) 
@@ -50,14 +50,20 @@ Tuple.TupleToolSubMass.SetMax = 3  # look to 2- and 3-bodies  (defaut all possib
  */
 
 class SortDaughtersByPID {
-  public:
-  SortDaughtersByPID(const LHCb::Particle* P){
+public:
+  SortDaughtersByPID(const LHCb::Particle* P,LHCb::IParticlePropertySvc* ppsvc){
     m_sign=1;
+    m_ppsvc=ppsvc;
     if ( P )m_sign = ( P->particleID().pid() > 0) ? +1 : -1;
   }
   bool operator()(const LHCb::Particle* c1, const LHCb::Particle* c2) {
-    return m_sign*c1->particleID().pid() > m_sign*c2->particleID().pid();
-  }
+    int p1 = ( property( c1->particleID())->selfcc() ) ? c1->particleID().pid() : m_sign*c1->particleID().pid();
+    int p2 = ( property( c2->particleID())->selfcc() ) ? c2->particleID().pid() : m_sign*c2->particleID().pid();
+    return p1 > p2 ;
+  };
+private :
+  const LHCb::ParticleProperty* property(const LHCb::ParticleID pid){return (m_ppsvc) ? m_ppsvc->find( pid ) : NULL;};  
+  LHCb::IParticlePropertySvc* m_ppsvc;
   int m_sign;
 };
   
@@ -87,10 +93,12 @@ private :
                                              std::string from2="",std::string to2="",int pos2=-1);
   Gaudi::LorentzVector               sMomentum(const LHCb::Particle* part , double sMass);
   std::pair<std::string,std::string> parseID(std::string PID);
+  std::pair<std::string,std::string> parseSubst(std::string subst);
+  
 
   unsigned int m_max;
-  std::map<std::string,std::string> m_subst;
-  std::map<std::string,std::string> m_subst2;
+  std::vector<std::string> m_subst;
+  std::vector<std::string> m_subst2;
   LHCb::IParticlePropertySvc* m_ppsvc;
   const LHCb::ParticleProperty* property(std::string name){return (m_ppsvc) ? m_ppsvc->find( name ) : NULL;};    
   const LHCb::ParticleProperty* property(const LHCb::ParticleID pid){return (m_ppsvc) ? m_ppsvc->find( pid ) : NULL;};    

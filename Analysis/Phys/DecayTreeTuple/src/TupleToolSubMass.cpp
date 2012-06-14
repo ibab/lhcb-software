@@ -42,15 +42,17 @@ StatusCode TupleToolSubMass::initialize()
   m_ppsvc = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc",true) ;
 
   // consistentcy checks
-  for( std::map<std::string,std::string>::const_iterator is = m_subst.begin(); m_subst.end() !=is ; ++is){
-    const std::string from = is->first;
-    const std::string to   = is->second;
+  for( std::vector<std::string>::const_iterator is = m_subst.begin(); m_subst.end() !=is ; ++is){
+    const std::pair<std::string,std::string> fromto=parseSubst(*is);
+    const std::string from = fromto.first;
+    const std::string to   = fromto.second;
     if( NULL ==  property(from) )return Warning("Cannot substitute from unknown particle " + from, StatusCode::FAILURE);
     if( NULL ==  property(to)   )return Warning("Cannot substitute to unknown particle " + to, StatusCode::FAILURE);
   }
-  for( std::map<std::string,std::string>::const_iterator is = m_subst2.begin(); m_subst2.end() !=is ; ++is){
-    const std::string from = is->first;
-    const std::string to   = is->second;
+  for( std::vector<std::string>::const_iterator is = m_subst2.begin(); m_subst2.end() !=is ; ++is){
+    const std::pair<std::string,std::string> fromto=parseSubst(*is);
+    const std::string from = fromto.first;
+    const std::string to   = fromto.second;
     if( parseID(from).first == "NONE" )
       return Warning("Cannot substitute from unknown particles pair " + from, StatusCode::FAILURE);
     if( parseID(to).first == "NONE" )
@@ -77,7 +79,7 @@ StatusCode TupleToolSubMass::fill( const LHCb::Particle*
   std::string decay = property( P->particleID())->name() + " -> [";
   for( unsigned int pos =0; pos < tree.size() ; pos++){
     if( pos >= tree.size())return Warning("Unexpected error",StatusCode::FAILURE);
-    debug() << " Ancestor : " << P->particleID().pid() << " daughter " << pos << " : " << tree[pos]->particleID().pid() << endmsg;
+    if(msgLevel(MSG::DEBUG))debug() << " Ancestor : " << P->particleID().pid() << " daughter " << pos << " : " << tree[pos]->particleID().pid() << endmsg;
     std::string sep = ( pos != 0) ? "," : "";
     decay += sep +  property( tree[pos]->particleID() )->name();
   }
@@ -104,12 +106,14 @@ StatusCode TupleToolSubMass::fill( const LHCb::Particle*
 
         //====  Mass for the current combination (no substition)
         std::pair<std::string,double> fMass = getMass( tree, map );
+
         if( fMass.first != "NONE")fill &= tuple->column( prefix + "_M"+fMass.first, fMass.second  );
 
         //==== Try single substitution when requested
-        for( std::map<std::string,std::string>::const_iterator is = m_subst.begin(); m_subst.end() !=is ; ++is){
-          const std::string from = is->first;
-          const std::string to   = is->second;
+        for( std::vector<std::string>::const_iterator is = m_subst.begin(); m_subst.end() !=is ; ++is){
+          const std::pair<std::string,std::string> fromto=parseSubst(*is);
+          const std::string from = fromto.first;
+          const std::string to   = fromto.second;
           unsigned int fromID = property(from)->pid().abspid() ;
           double toMass = property(to)->mass();
           for( std::vector<int>::const_iterator im = map.begin() ; map.end() != im ; ++im){
@@ -123,9 +127,10 @@ StatusCode TupleToolSubMass::fill( const LHCb::Particle*
           }
         }
         //==== Try double substitutions when requested
-        for( std::map<std::string,std::string>::const_iterator iss = m_subst2.begin(); m_subst2.end() != iss ; ++iss){
-          const std::string from = iss->first;
-          const std::string to   = iss->second;
+        for( std::vector<std::string>::const_iterator iss = m_subst2.begin(); m_subst2.end() != iss ; ++iss){
+          const std::pair<std::string,std::string> fromto=parseSubst(*iss);
+          const std::string from = fromto.first;
+          const std::string to   = fromto.second;
           const std::string from1 = parseID(from).first;
           const std::string from2 = parseID(from).second;
           const std::string to1 = parseID(to).first;
@@ -147,12 +152,14 @@ StatusCode TupleToolSubMass::fill( const LHCb::Particle*
               int apid2 = (part2->charge() == 0 ) ? pid2 : -pid2 ;
               if( ( pid1 == fromID1 && pid2 == fromID2 ) || ( apid1 == fromID1 && apid2 == fromID2 ) ){
                 std::pair<std::string,double> sMass = getMass( tree, map, pos1 , toMass1, pos2, toMass2 );
-                if( sMass.first != "NONE")
+                if( sMass.first != "NONE"){
                   fill &= tuple->column( prefix + "_M"+ sMass.first + "_" + getFlag(from1,to1,pos1,from2,to2,pos2),sMass.second);
+                }
               }else if( ( pid1 == fromID2 && pid2 == fromID1 ) || ( apid2 == fromID1 && apid1 == fromID2 )){
                 std::pair<std::string,double> sMass = getMass( tree, map, pos1 , toMass2, pos2, toMass1 );
-                if( sMass.first != "NONE")
+                if( sMass.first != "NONE"){
                   fill &= tuple->column( prefix + "_M"+ sMass.first + "_" + getFlag(from1,to1,pos1,from2,to2,pos2),sMass.second);
+                } 
               }
             }   
           }
@@ -162,6 +169,16 @@ StatusCode TupleToolSubMass::fill( const LHCb::Particle*
   }  
   return StatusCode(fill); 
 } 
+
+// ------ parse substitution string
+std::pair<std::string,std::string> TupleToolSubMass::parseSubst(std::string subst){
+  int i = subst.find_last_of("=>");
+  std::string from = subst.substr(0,i-1);
+  std::string to   = subst.substr(i+1,std::string::npos);
+  boost::erase_all(from," ");
+  boost::erase_all(to," ");
+  return std::make_pair(from,to);
+}
 
 
 //------- particleID parser for double substitution map
@@ -203,20 +220,20 @@ Gaudi::LorentzVector TupleToolSubMass::sMomentum(const LHCb::Particle* part , do
   Gaudi::LorentzVector momentum = part ->momentum();
   if( isPureNeutralCalo( part ) ){// photon (E is measured) - use-case :  gamma <->pi0 substitution
     if( sMass < momentum.E() ){
-      double P = sqrt( momentum.E()*momentum.E() - sMass*sMass);
-      double px = momentum.px()/momentum.P()*P;
-      double py = momentum.py()/momentum.P()*P;
-      double pz = momentum.pz()/momentum.P()*P;
-      momentum.SetPx(px);
-      momentum.SetPy(py);
-      momentum.SetPz(pz);
+      double P = sqrt( momentum.E()*momentum.E() - sMass*sMass); 
+      double px = momentum.px()/momentum.P()*P; 
+      double py = momentum.py()/momentum.P()*P; 
+      double pz = momentum.pz()/momentum.P()*P; 
+      momentum.SetPx(px); 
+      momentum.SetPy(py); 
+      momentum.SetPz(pz); 
     }
-  }else{// tracks (p is measured)
-    double E = sqrt(momentum.P()*momentum.P() + sMass*sMass);
-    momentum.SetE( E );
+  }else{// tracks (p is measured) 
+    double E = sqrt(momentum.P()*momentum.P() + sMass*sMass); 
+    momentum.SetE( E ); 
   }
-  return momentum;
-}
+  return momentum; 
+} 
 
 //-------- compute the combination mass (possibly with PID substitution(s))
 std::pair<std::string,double> TupleToolSubMass::getMass(std::vector<const LHCb::Particle*> tree, const std::vector<int> map,
@@ -252,7 +269,7 @@ std::vector<const LHCb::Particle*> TupleToolSubMass::getTree( const LHCb::Partic
     tree.push_back( P );
   }else{
     SmartRefVector<LHCb::Particle> daughters = P->daughters(); // local copy to sort
-    std::stable_sort   ( daughters.begin(),daughters.end(),SortDaughtersByPID(m_ancestor));
+    std::stable_sort   ( daughters.begin(),daughters.end(),SortDaughtersByPID(m_ancestor,m_ppsvc));
     for (SmartRefVector<LHCb::Particle>::const_iterator idau = daughters.begin(); idau!= daughters.end();++idau){
       std::vector<const LHCb::Particle*> temp=getTree( *idau );
       for( std::vector<const LHCb::Particle*>::iterator dd=temp.begin();temp.end() !=dd; ++dd){

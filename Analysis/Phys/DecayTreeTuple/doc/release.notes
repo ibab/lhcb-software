@@ -4,6 +4,11 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2012-06-14 -  Olivier Deschamps
+ - TupleToolSubMass   : fix problem with tree ordering for some charged B decays
+ - TupleToolStripping : fix problem with  DecReports structure changing with events 
+  ==> the list of stripping lines must now be set explicitely via the StrippingList property (or equivalently TriggerList inherited from TupleToolTriggerBase)
+
 ! 2012-06-12 -  Olivier Deschamps
  - TupleToolSubMass : new tool producing the invariant masses for all n-body combinations in N-body decays (n=2,N) 
     - PID subtitution can be configured
