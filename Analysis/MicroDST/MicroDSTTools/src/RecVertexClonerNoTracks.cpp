@@ -1,5 +1,3 @@
-// $Id: RecVertexClonerNoTracks.cpp,v 1.8 2010-08-11 12:51:28 jpalac Exp $
-// Include files
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -20,8 +18,8 @@
 // Standard constructor, initializes variables
 //=============================================================================
 RecVertexClonerNoTracks::RecVertexClonerNoTracks( const std::string& type,
-                                  const std::string& name,
-                                  const IInterface* parent )
+                                                  const std::string& name,
+                                                  const IInterface* parent )
   : RecVertexCloner ( type, name , parent ) { }
 
 //=============================================================================

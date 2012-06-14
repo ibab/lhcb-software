@@ -3,8 +3,13 @@
 ! Responsible : Juan Palacios juan.palacios@nikhef.nl
 ! Purpose     : Implementation of cloner MicroDSTTools
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.43 2010-08-20 13:59:22 jpalac Exp $
-!-----------------------------------------------------------------------------
+
+! 2012-06-14 - Chris Jones
+ - Add a method to ObjectClonerBase to get the TES location for an object
+ - Improvements to CaloHypoCloner to print the TES location when it finds a
+   NULL SmartRef in one of the containers to be cloned.
+ - Properly clone the track weights in PVs when the tracks are also cloned.
+ - Add VertexBaseFromRecVertexClonerWithTracks 
 
 !========================= MicroDSTTools v2r7 2012-05-03 =========================
 

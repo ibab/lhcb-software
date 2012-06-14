@@ -11,8 +11,12 @@
 
 // MicroDST
 #include "MicroDST/ICloneCaloCluster.h"
+
 // local
 #include "CaloHypoCloner.h"
+
+// STL
+#include <sstream>
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : CaloHypoCloner
@@ -32,7 +36,7 @@ CaloHypoCloner::CaloHypoCloner( const std::string& type,
   declareProperty( "CloneHypos",    m_cloneHypos    = true  );
   declareProperty( "CloneClusters", m_cloneClusters = true  );
   declareProperty( "CloneDigits",   m_cloneDigits   = false );
-  //setProperty( "OutputLevel", 2 );
+  //setProperty( "OutputLevel", 1 );
 }
 
 //=============================================================================
@@ -97,8 +101,10 @@ LHCb::CaloHypo* CaloHypoCloner::clone(const LHCb::CaloHypo* hypo)
         }
         else
         {
-          Warning( "CaloHypo has null hypo SmartRef -> skipping",
-                   StatusCode::SUCCESS ).ignore();
+          std::ostringstream mess;
+          mess << "CaloHypo in '" << tesLocation(hypo)
+               << "' has null hypo SmartRef -> skipping";
+          Warning( mess.str(), StatusCode::SUCCESS ).ignore();
         }
       }
       clone->setHypos(clonedHypos);
@@ -123,8 +129,10 @@ LHCb::CaloHypo* CaloHypoCloner::clone(const LHCb::CaloHypo* hypo)
         }
         else
         {
-          Warning( "CaloHypo has null digit SmartRef -> skipping",
-                   StatusCode::SUCCESS ).ignore();
+          std::ostringstream mess;
+          mess << "CaloHypo in '" << tesLocation(hypo)
+               << "' has null digit SmartRef -> skipping";
+          Warning( mess.str(), StatusCode::SUCCESS ).ignore();
         }
       }
       clone->setDigits(clonedDigits);
@@ -142,14 +150,16 @@ LHCb::CaloHypo* CaloHypoCloner::clone(const LHCb::CaloHypo* hypo)
             iCalo != clusters.end(); ++iCalo )
       {
         if ( *iCalo )
-        {
+        {   
           LHCb::CaloCluster * _cluster = (*m_caloClusterCloner)(*iCalo);
           if ( _cluster ) { clonedClusters.push_back( _cluster ); }
         }
         else
-        {
-          Warning( "CaloHypo has null cluster SmartRef -> skipping",
-                   StatusCode::SUCCESS ).ignore();
+        {   
+          std::ostringstream mess;
+          mess << "CaloHypo in '" << tesLocation(hypo)
+               << "' has null cluster SmartRef -> skipping";
+          Warning( mess.str(), StatusCode::SUCCESS ).ignore();
         }
       }
       clone->setClusters(clonedClusters);

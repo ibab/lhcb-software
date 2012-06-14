@@ -26,20 +26,29 @@ public:
 
 protected:
 
+  /// Get TES location for an object
+  template<class TYPE>
+  std::string tesLocation( const TYPE * obj ) const
+  {
+    return ( obj && obj->parent() && obj->parent()->registry() ?
+             obj->parent()->registry()->identifier() : "NotInTES" );
+  }
+
   /// Check to see if a given object should be cloned, or is VETO'ed
   template<class TYPE>
   bool isVetoed( const TYPE * obj ) const
   {
+    const std::string tesLoc = tesLocation(obj);
     const bool veto =
       ( obj && obj->parent() &&
         !m_tesVetoList.empty() &&
         m_tesVetoList.end() != std::find( m_tesVetoList.begin(),
                                           m_tesVetoList.end(),
-                                          obj->parent()->registry()->identifier() ) );
+                                          tesLoc ) );
     if ( veto )
     {
       if ( msgLevel(MSG::DEBUG) )
-        debug() << "Object in " << obj->parent()->registry()->identifier()
+        debug() << "Object in " << tesLoc
                 << " is VETO'ed from cloning. Returning original pointer" << endmsg;
     }
     return veto;

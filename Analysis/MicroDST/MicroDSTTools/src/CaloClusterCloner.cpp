@@ -20,6 +20,7 @@ CaloClusterCloner::CaloClusterCloner( const std::string& type,
   : base_class ( type, name , parent )
 {
   declareProperty( "CloneEntries", m_cloneEntries = false );
+  //setProperty( "OutputLevel", 1 );
 }
 
 //=============================================================================
