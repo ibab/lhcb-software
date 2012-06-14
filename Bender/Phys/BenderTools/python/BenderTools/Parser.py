@@ -202,7 +202,7 @@ def dataType ( files ) :
         p   = f.rfind ( '.' )
         if 0 <= p :
             ## allow up to 5 symbols for exension 
-            if len ( a[p+1:] ) <= 5 : ext = a[p+1:]
+            if len ( f[p+1:] ) <= 5 : ext = f[p+1:]
             
     return  dtype,simu,ext.upper() 
 
