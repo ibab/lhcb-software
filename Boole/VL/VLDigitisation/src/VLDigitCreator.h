@@ -1,5 +1,5 @@
-#ifndef VELOLITE_DIGIT_CREATOR_H
-#define VELOLITE_DIGIT_CREATOR_H 1
+#ifndef VL_DIGIT_CREATOR_H
+#define VL_DIGIT_CREATOR_H 1
 
 #include <cmath>
 // STL
@@ -12,26 +12,26 @@
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/Point3DTypes.h"
 // Event/MCEvent
-#include "Event/MCVeloLiteDigit.h"
+#include "Event/MCVLDigit.h"
 
-class DeVeloLite;
+class DeVL;
 class MCHit;
-class VeloLiteChannelID;
+class VLChannelID;
 class ISiAmplifierResponse;
 class IStripNoiseTool;
 
-/** @class VeloLiteDigitCreator VeloLiteDigitCreator.h 
+/** @class VLDigitCreator VLDigitCreator.h 
  *
  * 
  */
 
-class VeloLiteDigitCreator : public GaudiAlgorithm {
+class VLDigitCreator : public GaudiAlgorithm {
 
 public:
   /// Constructor
-  VeloLiteDigitCreator(const std::string& name, ISvcLocator* pSvcLocator);
+  VLDigitCreator(const std::string& name, ISvcLocator* pSvcLocator);
   /// Destructor
-  virtual ~VeloLiteDigitCreator();
+  virtual ~VLDigitCreator() {}
 
   virtual StatusCode initialize(); ///< Algorithm initialization
   virtual StatusCode execute();    ///< Algorithm execution
@@ -70,18 +70,18 @@ private:
   /// Sample noise to add to an otherwise empty strip
   double noiseValueTail(double noiseSigma, double threshold);
   /// Add charge to a digit with link to MCHit 
-  void fill(LHCb::MCVeloLiteDigit* digit, LHCb::MCHit* hit, double charge);
+  void fill(LHCb::MCVLDigit* digit, LHCb::MCHit* hit, double charge);
   /// Add charge to a digit without link to MCHit
-  void fill(LHCb::MCVeloLiteDigit* digit, double charge) {
+  void fill(LHCb::MCVLDigit* digit, double charge) {
     fill(digit, 0, charge);
   }
   /// Find the strip with a given key.
-  LHCb::MCVeloLiteDigit* findOrInsert(LHCb::VeloLiteChannelID& channel);
+  LHCb::MCVLDigit* findOrInsert(LHCb::VLChannelID& channel);
   /// Find the strip with the previous key (or create a new one).
-  LHCb::MCVeloLiteDigit* findOrInsertPrevStrip(LHCb::MCVeloLiteDigits::iterator it, 
+  LHCb::MCVLDigit* findOrInsertPrevStrip(LHCb::MCVLDigits::iterator it, 
                                                bool& valid, bool& create);
   /// Find the strip with the next key (or create a new one).
-  LHCb::MCVeloLiteDigit* findOrInsertNextStrip(LHCb::MCVeloLiteDigits::iterator it, 
+  LHCb::MCVLDigit* findOrInsertNextStrip(LHCb::MCVLDigits::iterator it, 
                                                bool& valid, bool& create);
 
   /// Get the effective charge fraction for this hit 
@@ -117,9 +117,9 @@ private:
   /// MCHit container to make links to
   ObjectContainerBase* m_MCHitContainerToLink; 
   /// Pointer to detector element 
-  DeVeloLite* m_det; 
-  LHCb::MCVeloLiteDigits* m_digits; 
-  LHCb::MCVeloLiteDigits* m_digits_coupling; 
+  DeVL* m_det; 
+  LHCb::MCVLDigits* m_digits; 
+  LHCb::MCVLDigits* m_digitsCoupling; 
 
   /// Flag to simulate unequal charge along track
   bool m_inhomogeneousCharge; 

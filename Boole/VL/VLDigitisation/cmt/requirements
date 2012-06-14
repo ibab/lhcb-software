@@ -1,4 +1,4 @@
-package           VeloLiteDigitisation
+package           VLDigitisation
 version           v1r0
 
 #============================================================================
@@ -12,14 +12,14 @@ include_path      none
 #============================================================================
 use  MCEvent       v* Event
 use  DigiEvent     v* Event
-use  VeloLiteDet   v* Det
+use  VLDet         v* Det
 use  GaudiAlg      v*
 use  GaudiGSL 	   v* 
 #============================================================================
 # Component library building rule
 #============================================================================
-library          VeloLiteDigitisation    ../src/*.cpp -import=AIDA
+library          VLDigitisation    ../src/*.cpp -import=AIDA
 #============================================================================
 # define component library link options
 #============================================================================
-apply_pattern    component_library library=VeloLiteDigitisation
+apply_pattern    component_library library=VLDigitisation

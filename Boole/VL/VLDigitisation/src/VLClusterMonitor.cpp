@@ -1,23 +1,23 @@
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 // Local
-#include "VeloLiteClusterMonitor.h"
+#include "VLClusterMonitor.h"
 
-/** @file VeloLiteClusterMonitor.cpp
+/** @file VLClusterMonitor.cpp
  *
- *  Implementation of class : VeloLiteClusterMonitor
+ *  Implementation of class : VLClusterMonitor
  *
  */
 
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY(VeloLiteClusterMonitor);
+DECLARE_ALGORITHM_FACTORY(VLClusterMonitor)
 
 //=============================================================================
 /// Standard constructor
 //=============================================================================
-VeloLiteClusterMonitor::VeloLiteClusterMonitor(const std::string& name,
-                                               ISvcLocator* pSvcLocator): 
+VLClusterMonitor::VLClusterMonitor(const std::string& name,
+                                   ISvcLocator* pSvcLocator) : 
     GaudiTupleAlg(name, pSvcLocator),
     m_clusters(0),
     m_nClusters(0.),
@@ -28,54 +28,48 @@ VeloLiteClusterMonitor::VeloLiteClusterMonitor(const std::string& name,
     m_nFourStrip(0.),
     m_nEvents(0) {
 
+  declareProperty("Detailed",  m_detailed = false);
   declareProperty("PrintInfo", m_printInfo = false);
-
-}
-
-//=============================================================================
-/// Destructor
-//=============================================================================
-VeloLiteClusterMonitor::~VeloLiteClusterMonitor() {
 
 }
 
 //=============================================================================
 /// Initialization
 //=============================================================================
-StatusCode VeloLiteClusterMonitor::initialize() {
+StatusCode VLClusterMonitor::initialize() {
 
   StatusCode sc = GaudiAlgorithm::initialize();
   if (sc.isFailure()) return sc; 
-  debug() << " ==> initialize()" << endmsg;
-  setHistoTopDir("VeloLite/");
+  if (msgLevel(MSG::DEBUG)) debug() << " ==> initialize()" << endmsg;
+  setHistoTopDir("VL/");
   return StatusCode::SUCCESS;
 
-};
+}
 
 //=============================================================================
 /// Main execution
 //=============================================================================
-StatusCode VeloLiteClusterMonitor::execute() {
+StatusCode VLClusterMonitor::execute() {
 
-  debug() << " ==> execute()" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << " ==> execute()" << endmsg;
   ++m_nEvents;
-  if (!exist<VeloStripClusters>(VeloStripClusterLocation::Default)) {
-    error() << " ==> There are no VeloStripClusters in the TES! " << endmsg;
+  if (!exist<VLClusters>(VLClusterLocation::Default)) {
+    error() << " ==> There are no VLClusters in the TES! " << endmsg;
     return StatusCode::FAILURE;
   } else {
-    m_clusters = get<VeloStripClusters>(VeloStripClusterLocation::Default);
+    m_clusters = get<VLClusters>(VLClusterLocation::Default);
   }
   monitor();
   return StatusCode::SUCCESS;
 
-};
+}
 
 //=============================================================================
 ///  Finalize
 //=============================================================================
-StatusCode VeloLiteClusterMonitor::finalize() {
+StatusCode VLClusterMonitor::finalize() {
 
-  debug() << " ==> finalize()" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << " ==> finalize()" << endmsg;
   double err = 0.;
   if (0 != m_nEvents) {
     m_nClusters /= m_nEvents;
@@ -87,7 +81,7 @@ StatusCode VeloLiteClusterMonitor::finalize() {
     m_nFourStrip /= m_nEvents;
   }
   info() << "------------------------------------------------------" << endmsg;
-  info() << "            - VeloLiteClusterMonitor -                " << endmsg;
+  info() << "                    VLClusterMonitor                  " << endmsg;
   info() << "------------------------------------------------------" << endmsg;
   if (m_nClusters > 0) {
     info() << " Number of clusters / event: " << m_nClusters << " +/- " 
@@ -109,22 +103,22 @@ StatusCode VeloLiteClusterMonitor::finalize() {
            << " (" << (m_nFourStrip / m_nClusters) * 100 << "%)"
            << endmsg;
   } else {
-    info() << " ==> No VeloStripClusters found! " << endmsg;
+    info() << " ==> No VLClusters found! " << endmsg;
   }
   info() << "------------------------------------------------------" << endmsg;
   return GaudiAlgorithm::finalize();
 
 }
 
-StatusCode VeloLiteClusterMonitor::monitor() {
+void VLClusterMonitor::monitor() {
 
-  debug()<< " ==> monitor()" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << " ==> monitor()" << endmsg;
   const int size = m_clusters->size();
   m_nClusters += size;
   m_nClusters2 += size * size;
   plot(size, "nClusters", "Number of clusters / event", 0., 3000., 50);
 
-  VeloStripClusters::iterator it;
+  VLClusters::iterator it;
   for (it = m_clusters->begin(); it != m_clusters->end(); ++it) {
     int nstrips = (*it)->size();
     plot(nstrips, "clusterSize",
@@ -137,15 +131,16 @@ StatusCode VeloLiteClusterMonitor::monitor() {
       case 4: m_nFourStrip += 1.; break;
       default : break;
     }
-    VeloLiteChannelID channel = (*it)->channelID();
+    if (!m_detailed) continue;
+    VLChannelID channel = (*it)->channelID();
     unsigned int sensor = channel.sensor();
-    // Printout some info about the cluster
+    // Print out some info about the cluster
     if (m_printInfo) {
-      info() << " ==> VeloStripCluster: sensor "
+      info() << " ==> VLCluster: sensor "
              << channel.sensor() << ", first strip: "
              << (*it)->strip(0) << endmsg;
       for (int i = 0; i < nstrips; ++i) {
-        info() << " ==> VeloStripCluster: strip: "
+        info() << " ==> VLCluster: strip: "
                 << (*it)->strip(i) << ", signal on strip: "
                 << (*it)->adcValue(i) <<endmsg;
       }
@@ -164,7 +159,6 @@ StatusCode VeloLiteClusterMonitor::monitor() {
            "Sensor and first strip number",
            0., 132., 0., 3000., 132, 50);
   }
-  return StatusCode::SUCCESS;
 
 }
 

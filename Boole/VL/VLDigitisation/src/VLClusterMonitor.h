@@ -1,22 +1,22 @@
-#ifndef VELOLITE_CLUSTER_MONITOR_H 
-#define VELOLITE_CLUSTER_MONITOR_H 1
+#ifndef VL_CLUSTER_MONITOR_H 
+#define VL_CLUSTER_MONITOR_H 1
 
 // Gaudi
 #include "GaudiAlg/GaudiTupleAlg.h"
 // Event/DigiEvent
-#include "Event/VeloStripCluster.h"
+#include "Event/VLCluster.h"
 
-/** @class VeloLiteClusterMonitor VeloLiteClusterMonitor.h
+/** @class VLClusterMonitor VLClusterMonitor.h
  *  
  */
 
-class VeloLiteClusterMonitor : public GaudiTupleAlg {
+class VLClusterMonitor : public GaudiTupleAlg {
 
 public: 
   /// Standard constructor
-  VeloLiteClusterMonitor(const std::string& name, ISvcLocator* pSvcLocator);
+  VLClusterMonitor(const std::string& name, ISvcLocator* pSvcLocator);
   /// Destructor
-  virtual ~VeloLiteClusterMonitor();
+  virtual ~VLClusterMonitor() {}
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute();       ///< Algorithm execution
@@ -24,10 +24,11 @@ public:
 
 private:
 
-  StatusCode monitor();
+  void monitor();
 
+  bool m_detailed;
   bool m_printInfo;
-  LHCb::VeloStripClusters* m_clusters;
+  LHCb::VLClusters* m_clusters;
   double m_nClusters;
   double m_nClusters2;
   double m_nOneStrip;

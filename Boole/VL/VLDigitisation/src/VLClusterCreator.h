@@ -1,31 +1,31 @@
-#ifndef VELOLITE_CLUSTER_CREATOR_H
-#define VELOLITE_CLUSTER_CREATOR_H 1
+#ifndef VL_CLUSTER_CREATOR_H
+#define VL_CLUSTER_CREATOR_H 1
 
 // Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 // Event/MCEvent
-#include "Event/MCVeloLiteDigit.h"
+#include "Event/MCVLDigit.h"
 // Event/DigiEvent
-#include "Event/VeloStripCluster.h"
-// Det/VeloLiteDet
-#include "VeloLiteDet/DeVeloLite.h"
+#include "Event/VLCluster.h"
+// Det/VLDet
+#include "VLDet/DeVL.h"
 // Local
-#include "VeloLiteInternalCluster.h"
+#include "VLInternalCluster.h"
 
-/** @class VeloLiteClusterCreator VeloLiteClusterCreator.h
+/** @class VLClusterCreator VLClusterCreator.h
  *
- * Create VeloStripClusters from MCVeloLiteDigits
+ * Create VLClusters from MCVLDigits
  */
 
 class IStripNoiseTool;
 
-class VeloLiteClusterCreator : public GaudiAlgorithm {
+class VLClusterCreator : public GaudiAlgorithm {
 
 public:
   /// Constructor
-  VeloLiteClusterCreator(const std::string& name, ISvcLocator* pSvcLocator);
+  VLClusterCreator(const std::string& name, ISvcLocator* pSvcLocator);
   /// Destructor
-  virtual ~VeloLiteClusterCreator() {}
+  virtual ~VLClusterCreator() {}
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute();       ///< Algorithm execution
@@ -36,30 +36,30 @@ private:
   void makeClusters();
   StatusCode storeClusters();
 
-  bool makeCluster(LHCb::MCVeloLiteDigit* digit, 
-                   VeloLiteInternalCluster& cluster, double& stn);
-  bool addCentralChannel(VeloLiteInternalCluster& cluster, double& stn, 
-                         LHCb::MCVeloLiteDigit* digit);
-  bool addAdjacentChannel(VeloLiteInternalCluster& cluster, double& stn,
-                          LHCb::MCVeloLiteDigit* digit, int offset);
-  void addChannel(VeloLiteInternalCluster& cluster, double& stn,
-                  LHCb::MCVeloLiteDigit* digit, int offset);
+  bool makeCluster(LHCb::MCVLDigit* digit, 
+                   VLInternalCluster& cluster, double& stn);
+  bool addCentralChannel(VLInternalCluster& cluster, double& stn, 
+                         LHCb::MCVLDigit* digit);
+  bool addAdjacentChannel(VLInternalCluster& cluster, double& stn,
+                          LHCb::MCVLDigit* digit, int offset);
+  void addChannel(VLInternalCluster& cluster, double& stn,
+                  LHCb::MCVLDigit* digit, int offset);
 
   /// Reject a cluster allowing the digits in it to be used in other clusters
-  void unmarkCluster(VeloLiteInternalCluster& cluster);
+  void unmarkCluster(VLInternalCluster& cluster);
 
   void getRangeOfSensor(const unsigned int sensorId,
-                        std::pair<LHCb::MCVeloLiteDigits::iterator, 
-                                  LHCb::MCVeloLiteDigits::iterator>& range);
+                        std::pair<LHCb::MCVLDigits::iterator, 
+                                  LHCb::MCVLDigits::iterator>& range);
 
   /// Get the S/N for this channel 
-  double signalToNoise(LHCb::MCVeloLiteDigit* digit);
+  double signalToNoise(LHCb::MCVLDigit* digit);
   
-  LHCb::MCVeloLiteDigits* m_digits; 
-  LHCb::VeloStripClusters* m_clusters; 
+  LHCb::MCVLDigits* m_digits; 
+  LHCb::VLClusters* m_clusters; 
 
   /// Pointer to detector element
-  DeVeloLite* m_det;
+  DeVL* m_det;
   /// Tag channels of current sensor as used
   std::vector<bool> m_used; 
   /// S/N cut to apply to all detectors

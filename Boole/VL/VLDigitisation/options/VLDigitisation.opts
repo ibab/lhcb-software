@@ -1,19 +1,19 @@
-VeloLiteDigitCreator.OutputLevel = 3; 
-VeloLiteDigitCreator.InputContainers = {"MC/Velo/Hits",
-                                        "Prev/MC/Velo/Hits", 
-                                        "PrevPrev/MC/Velo/Hits", 
-                                        "Next/MC/Velo/Hits"};
-VeloLiteDigitCreator.InputContainerToLink = "MC/Velo/Hits";
-VeloLiteDigitCreator.InputTimeOffsets = {0*ns, -25*ns, -50*ns, 25*ns};
-VeloLiteDigitCreator.OutputContainers = {"MC/VeloLite/Digits"};
-VeloLiteDigitCreator.SimNoisePileUp = false;
-VeloLiteDigitCreator.PulseShapePeakTime = 30.;
-VeloLiteDigitCreator.OffPeakSamplingTime = 4.;
+VLDigitCreator.OutputLevel = 3; 
+VLDigitCreator.InputContainers = {"MC/VL/Hits",
+                                  "Prev/MC/VL/Hits", 
+                                  "PrevPrev/MC/VL/Hits", 
+                                  "Next/MC/VL/Hits"};
+VLDigitCreator.InputContainerToLink = "MC/VL/Hits";
+VLDigitCreator.InputTimeOffsets = {0*ns, -25*ns, -50*ns, 25*ns};
+VLDigitCreator.OutputContainers = {"MC/VL/Digits"};
+VLDigitCreator.SimNoisePileUp = false;
+VLDigitCreator.PulseShapePeakTime = 30.;
+VLDigitCreator.OffPeakSamplingTime = 4.;
 
 // Note times here are relative to the pulse shape peaking time (~44ns)
 // so used time  = 30 + sample time offset + bunch offset - time of flight
 // From Kazu plots provided 5/2/2010 : from TPScan65116.root
-VeloLiteDigitCreator.SiTimeTool.times = {
+VLDigitCreator.SiTimeTool.times = {
     2.0 ,    3.0 ,    4.0 ,    5.0 ,    6.0 ,
     7.0 ,    8.0 ,    9.0 ,   10.0 ,   11.0 ,   12.0 ,   13.0 ,
    14.0 ,   15.0 ,   16.0 ,   17.0 ,   18.0 ,   19.0 ,   20.0 ,
@@ -33,7 +33,7 @@ VeloLiteDigitCreator.SiTimeTool.times = {
 };
 // fraction of signal seen in amplifier for this time offset
 // setup so that if sample time offset = 0 and TOF = |z/c| value = 1.0
-VeloLiteDigitCreator.SiTimeTool.values = {
+VLDigitCreator.SiTimeTool.values = {
   0.000 , -0.001 ,  0.001 ,  0.004 ,  0.011 ,
   0.023 ,  0.041 ,  0.065 ,  0.096 ,  0.136 ,  0.182 ,  0.234 ,
   0.290 ,  0.349 ,  0.411 ,  0.479 ,  0.553 ,  0.628 ,  0.699 ,
@@ -52,23 +52,23 @@ VeloLiteDigitCreator.SiTimeTool.values = {
  -0.004 , -0.003 , -0.001 , -0.001 ,  0.000 
 };
 
-VeloLitePuDigitCreator.InputContainers = {"MC/PuVeto/Hits",
-                                          "Prev/MC/PuVeto/Hits", 
-                                          "PrevPrev/MC/PuVeto/Hits", 
-                                          "Next/MC/PuVeto/Hits"};
-VeloLitePuDigitCreator.InputContainerToLink = "MC/PuVeto/Hits";
-VeloLitePuDigitCreator.InputTimeOffsets = {0*ns, -25*ns, -50*ns, 25*ns};
+VLPuDigitCreator.InputContainers = {"MC/PuVeto/Hits",
+                                    "Prev/MC/PuVeto/Hits", 
+                                    "PrevPrev/MC/PuVeto/Hits", 
+                                    "Next/MC/PuVeto/Hits"};
+VLPuDigitCreator.InputContainerToLink = "MC/PuVeto/Hits";
+VLPuDigitCreator.InputTimeOffsets = {0*ns, -25*ns, -50*ns, 25*ns};
 // PU hits end up in two containers.
-VeloLitePuDigitCreator.OutputContainers = {"MC/VeloLite/Digits", "MC/VeloLite/PuDigits"};
-VeloLitePuDigitCreator.SimNoisePileUp = true;
-VeloLitePuDigitCreator.StripInefficiency = 0.01;
-VeloLitePuDigitCreator.PulseShapePeakTime = 30.;
-VeloLitePuDigitCreator.OffPeakSamplingTime = 4.;
+VLPuDigitCreator.OutputContainers = {"MC/VL/Digits", "MC/VL/PuDigits"};
+VLPuDigitCreator.SimNoisePileUp = true;
+VLPuDigitCreator.StripInefficiency = 0.01;
+VLPuDigitCreator.PulseShapePeakTime = 30.;
+VLPuDigitCreator.OffPeakSamplingTime = 4.;
 
 // Note times here are relative to the pulse shape peaking time (~44ns)
 // so used time  = 30 + sample time offset + bunch offset - time of flight
 // From Kazu plots provided 5/2/2010 : from TPScan65116.root
-VeloLitePuDigitCreator.SiTimeTool.times = {
+VLPuDigitCreator.SiTimeTool.times = {
     2.0 ,    3.0 ,    4.0 ,    5.0 ,    6.0 ,
     7.0 ,    8.0 ,    9.0 ,   10.0 ,   11.0 ,   12.0 ,   13.0 ,
    14.0 ,   15.0 ,   16.0 ,   17.0 ,   18.0 ,   19.0 ,   20.0 ,
@@ -88,7 +88,7 @@ VeloLitePuDigitCreator.SiTimeTool.times = {
 };
 // fraction of signal seen in amplifier for this time offset
 // setup so that if sample time offset = 0 and TOF = |z/c| value = 1.0
-VeloLitePuDigitCreator.SiTimeTool.values = {
+VLPuDigitCreator.SiTimeTool.values = {
   0.000 , -0.001 ,  0.001 ,  0.004 ,  0.011 ,
   0.023 ,  0.041 ,  0.065 ,  0.096 ,  0.136 ,  0.182 ,  0.234 ,
   0.290 ,  0.349 ,  0.411 ,  0.479 ,  0.553 ,  0.628 ,  0.699 ,

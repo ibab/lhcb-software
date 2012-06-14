@@ -1,31 +1,31 @@
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 // Kernel/LHCbKernel
-#include "Kernel/VeloLiteChannelID.h"
-#include "Kernel/VeloLiteDataFunctor.h"
+#include "Kernel/VLChannelID.h"
+#include "Kernel/VLDataFunctor.h"
 // Local
 #include "IStripNoiseTool.h"
-#include "VeloLiteClusterCreator.h"
+#include "VLClusterCreator.h"
 
 using namespace LHCb;
 
-/** @file VeloLiteClusterCreator.cpp
+/** @file VLClusterCreator.cpp
  *
- *  Implementation of class : VeloLiteClusterCreator
+ *  Implementation of class : VLClusterCreator
  *
  */
 
-DECLARE_ALGORITHM_FACTORY(VeloLiteClusterCreator);
+DECLARE_ALGORITHM_FACTORY(VLClusterCreator)
 
 //=============================================================================
 /// Constructor
 //=============================================================================
-VeloLiteClusterCreator::VeloLiteClusterCreator(const std::string& name,
-                                               ISvcLocator* pSvcLocator) : 
-  GaudiAlgorithm(name, pSvcLocator),
-  m_digits(0),
-  m_clusters(0),
-  m_det(0) {
+VLClusterCreator::VLClusterCreator(const std::string& name,
+                                   ISvcLocator* pSvcLocator) : 
+    GaudiAlgorithm(name, pSvcLocator),
+    m_digits(0),
+    m_clusters(0),
+    m_det(0) {
 
   declareProperty("MaxClusters", m_maxClusters = 10000);
   declareProperty("InclusionThreshold", m_inclusionThreshold = 0.1);
@@ -40,13 +40,13 @@ VeloLiteClusterCreator::VeloLiteClusterCreator(const std::string& name,
 //=============================================================================
 /// Initialisation
 //=============================================================================
-StatusCode VeloLiteClusterCreator::initialize() {
+StatusCode VLClusterCreator::initialize() {
 
   StatusCode sc = GaudiAlgorithm::initialize();
   if (sc.isFailure()) return sc;
   debug() << " ==> initialize()" << endmsg;
-  m_det = getDet<DeVeloLite>(DeVeloLiteLocation::Default);
-  m_StripNoiseTool = tool<IStripNoiseTool>("VeloLiteStripNoiseTool",
+  m_det = getDet<DeVL>(DeVLLocation::Default);
+  m_StripNoiseTool = tool<IStripNoiseTool>("VLStripNoiseTool",
                                            "StripNoise", this);
   m_debug   = msgLevel(MSG::DEBUG);
   m_verbose = msgLevel(MSG::VERBOSE);
@@ -57,15 +57,15 @@ StatusCode VeloLiteClusterCreator::initialize() {
 //=========================================================================
 ///  Main execution
 //=========================================================================
-StatusCode VeloLiteClusterCreator::execute() {
+StatusCode VLClusterCreator::execute() {
 
   if (m_debug) debug() << " ==> execute()" << endmsg;
-  m_clusters = new VeloStripClusters;
+  m_clusters = new VLClusters;
   // Retrieve digits. 
-  m_digits = get<MCVeloLiteDigits>(MCVeloLiteDigitLocation::Default);
+  m_digits = get<MCVLDigits>(MCVLDigitLocation::Default);
   if (m_debug) {
     debug() << m_digits->size() << " digits in " 
-            << MCVeloLiteDigitLocation::Default << endmsg;
+            << MCVLDigitLocation::Default << endmsg;
   }
   // Do the clustering.
   makeClusters();
@@ -76,7 +76,7 @@ StatusCode VeloLiteClusterCreator::execute() {
 //=============================================================================
 /// Finalisation 
 //=============================================================================
-StatusCode VeloLiteClusterCreator::finalize() {
+StatusCode VLClusterCreator::finalize() {
 
   return GaudiAlgorithm::finalize();
 
@@ -86,17 +86,17 @@ StatusCode VeloLiteClusterCreator::finalize() {
 //==========================================================================
 /// Clustering procedure
 //==========================================================================
-void VeloLiteClusterCreator::makeClusters() {
+void VLClusterCreator::makeClusters() {
   
   if (m_debug) debug() << " ==> makeClusters()" << endmsg;
-  std::vector<DeVeloLiteSensor*>::const_iterator its; 
+  std::vector<DeVLSensor*>::const_iterator its; 
   for (its = m_det->sensorsBegin(); its != m_det->sensorsEnd(); ++its) {
     const unsigned int sensor = (*its)->sensorNumber();
     // Tag all channels as unused.
     m_used.clear();
     m_used.resize((*its)->numberOfStrips(), false); 
     // Retrieve the range of channels for this sensor.
-    std::pair<MCVeloLiteDigits::iterator, MCVeloLiteDigits::iterator> range;
+    std::pair<MCVLDigits::iterator, MCVLDigits::iterator> range;
     getRangeOfSensor(sensor, range);
     if (m_debug) {
       debug() << "Retrieved " << range.second - range.first 
@@ -104,20 +104,20 @@ void VeloLiteClusterCreator::makeClusters() {
     }
     // Sort by increasing ADC value.         
     std::stable_sort(range.first, range.second,
-                     VeloLiteDataFunctor::Less_by_adc<const MCVeloLiteDigit*>());
+                     VLDataFunctor::LessByAdc<const MCVLDigit*>());
     // Swap to decreasing ADC.
     std::reverse(range.first, range.second);
     // Loop over digits.
-    MCVeloLiteDigits::iterator itd;
+    MCVLDigits::iterator itd;
     for (itd = range.first; itd != range.second; ++itd) {
-      MCVeloLiteDigit* digit = *itd;    
+      MCVLDigit* digit = *itd;    
       if (m_verbose) {
         verbose() << "Digit with ADC " << digit->adc() 
                   << " (sensor " << digit->sensor() << ")" << endmsg;
       }
       // Try to make a cluster from this digit.
       double stn = 0.;
-      VeloLiteInternalCluster cluster;
+      VLInternalCluster cluster;
       cluster.setSensor(sensor);
       if (!makeCluster(digit, cluster, stn)) continue;
       if (m_verbose) {
@@ -149,14 +149,19 @@ void VeloLiteClusterCreator::makeClusters() {
       mean /= sum;
       double fraction = mean - cluster.strip(0); 
       // Set the key.
-      VeloLiteChannelID channelID(cluster.sensor(), cluster.strip(0));
+      VLChannelID channelID(cluster.sensor(), cluster.strip(0), VLChannelID::Null);
+      if (m_det->sensor(cluster.sensor())->isPhi()) {
+        channelID.setType(VLChannelID::PhiType);
+      } else {
+        channelID.setType(VLChannelID::RType);
+      }
       // Make a lite cluster.
-      const VeloStripLiteCluster liteCluster(channelID, 
-                                             fraction,
-                                             cluster.size(),
-                                             cluster.hasHighThreshold());
-      VeloStripCluster* newCluster = new VeloStripCluster(liteCluster, 
-                                                          cluster.stripSignals());
+      const VLLiteCluster liteCluster(channelID, 
+                                      fraction,
+                                      cluster.size(),
+                                      cluster.hasHighThreshold());
+      VLCluster* newCluster = new VLCluster(liteCluster, 
+                                            cluster.stripSignals());
       m_clusters->insert(newCluster, channelID);
       if (m_clusters->size() >= m_maxClusters) {
         // Too many clusters. Cannot add any more after this one.
@@ -174,9 +179,9 @@ void VeloLiteClusterCreator::makeClusters() {
 //==========================================================================
 /// Create cluster from digit
 //==========================================================================
-bool VeloLiteClusterCreator::makeCluster(MCVeloLiteDigit* digit, 
-                                         VeloLiteInternalCluster& cluster, 
-                                         double& stn) {
+bool VLClusterCreator::makeCluster(MCVLDigit* digit, 
+                                   VLInternalCluster& cluster, 
+                                   double& stn) {
   
   if (m_debug) debug() << " ==> makeCluster()" << endmsg;
   // Add the cluster centre
@@ -228,9 +233,9 @@ bool VeloLiteClusterCreator::makeCluster(MCVeloLiteDigit* digit,
 //==========================================================================
 /// Try to make a seed cluster from a given channel 
 //==========================================================================
-bool VeloLiteClusterCreator::addCentralChannel(VeloLiteInternalCluster& cluster,
-                                               double& stn,
-                                               MCVeloLiteDigit* digit) {
+bool VLClusterCreator::addCentralChannel(VLInternalCluster& cluster,
+                                         double& stn,
+                                         MCVLDigit* digit) {
   
   if (m_debug) debug() << " ==> addCentralChannel()" << endmsg;
   // Check if the channel is already used
@@ -248,21 +253,21 @@ bool VeloLiteClusterCreator::addCentralChannel(VeloLiteInternalCluster& cluster,
 //==========================================================================
 /// Try to add a neighbouring channel with given offset to a cluster
 //==========================================================================
-bool VeloLiteClusterCreator::addAdjacentChannel(VeloLiteInternalCluster& cluster,
-                                                double& stn, 
-                                                MCVeloLiteDigit* digit, 
-                                                int offset) {
+bool VLClusterCreator::addAdjacentChannel(VLInternalCluster& cluster,
+                                          double& stn, 
+                                          MCVLDigit* digit, 
+                                          int offset) {
   
   if (m_debug) debug() << " ==> addAdjacentChannel()" << endmsg;
-  const DeVeloLiteSensor* sens = m_det->sensor(digit->key().sensor());
+  const DeVLSensor* sens = m_det->sensor(digit->key().sensor());
   // Get the ID of the neighbour with the given offset (if available). 
-  VeloLiteChannelID nearbyStripId;
+  VLChannelID nearbyStripId;
   StatusCode sc = sens->neighbour(digit->key(), offset, nearbyStripId);
   if (!sc) return false; 
   // Check if the neighbouring channel is already used.
   if (m_used[nearbyStripId.strip()]) return false;  
   // Check if the nearby strip has a hit.
-  MCVeloLiteDigit* nearbyDigit = m_digits->object(nearbyStripId);
+  MCVLDigit* nearbyDigit = m_digits->object(nearbyStripId);
   if (!nearbyDigit) return false;
 
   // if (A or B) {
@@ -297,12 +302,12 @@ bool VeloLiteClusterCreator::addAdjacentChannel(VeloLiteInternalCluster& cluster
     // Get the strip one strip closer to the centre than (offset)
     int innerOffset = (offset < 0) ? offset + 1 : offset - 1;
     // Get the ChannelID for that strip
-    VeloLiteChannelID innerStripId;
+    VLChannelID innerStripId;
     StatusCode sc = sens->neighbour(digit->key(), innerOffset, innerStripId);
     // Check if the channel is valid.
     if (sc.isFailure()) return false; 
     // Get the Digit corresponding to that strip
-    MCVeloLiteDigit* innerDigit = m_digits->object(innerStripId); 
+    MCVLDigit* innerDigit = m_digits->object(innerStripId); 
     if (!innerDigit) {
       Warning("Asking for a +2 Digit where +1 Digit does not exist!").ignore();
       return false;
@@ -339,10 +344,10 @@ bool VeloLiteClusterCreator::addAdjacentChannel(VeloLiteInternalCluster& cluster
 //==========================================================================
 /// Add a strip to an existing cluster
 //==========================================================================
-void VeloLiteClusterCreator::addChannel(VeloLiteInternalCluster& cluster,
-                                      double& stn,
-                                      MCVeloLiteDigit* digit,
-                                      int offset) {
+void VLClusterCreator::addChannel(VLInternalCluster& cluster,
+                                  double& stn,
+                                  MCVLDigit* digit,
+                                  int offset) {
 
   if (m_debug) debug() << " ==> addChannel()" << endmsg;
   std::vector<std::pair<int, unsigned int> > channels = cluster.stripSignals();
@@ -363,7 +368,7 @@ void VeloLiteClusterCreator::addChannel(VeloLiteInternalCluster& cluster,
 //==========================================================================
 /// Re-tag channels as unused
 //==========================================================================
-void VeloLiteClusterCreator::unmarkCluster(VeloLiteInternalCluster& cluster) {
+void VLClusterCreator::unmarkCluster(VLInternalCluster& cluster) {
   
   if (m_debug) debug() << " ==> unmarkCluster()" << endmsg;
   for (unsigned int i = 0; i < cluster.size(); ++i) {
@@ -375,16 +380,16 @@ void VeloLiteClusterCreator::unmarkCluster(VeloLiteInternalCluster& cluster) {
 //=========================================================================
 /// Add clusters to TDS
 //=========================================================================
-StatusCode VeloLiteClusterCreator::storeClusters() {
+StatusCode VLClusterCreator::storeClusters() {
   
   if (m_debug) debug() << " ==> storeClusters()" << endmsg;
   // Sort clusters in order of ascending sensor + strip
   std::stable_sort(m_clusters->begin(), m_clusters->end(),
-                   VeloLiteDataFunctor::Less_by_key<const VeloStripCluster*>());
-  put(m_clusters, VeloStripClusterLocation::Default);  
+                   VLDataFunctor::LessByKey<const VLCluster*>());
+  put(m_clusters, VLClusterLocation::Default);  
   if (m_debug) {
     debug() << "Stored " << m_clusters->size() << " clusters at " 
-            << VeloStripClusterLocation::Default << endmsg;
+            << VLClusterLocation::Default << endmsg;
   }
   return StatusCode::SUCCESS;
 
@@ -393,24 +398,24 @@ StatusCode VeloLiteClusterCreator::storeClusters() {
 //=========================================================================
 /// Get range of digits for the specified sensor
 //=========================================================================
-void VeloLiteClusterCreator::getRangeOfSensor(const unsigned int sensorId,
-    std::pair<MCVeloLiteDigits::iterator, MCVeloLiteDigits::iterator>& range) {
+void VLClusterCreator::getRangeOfSensor(const unsigned int sensorId,
+    std::pair<MCVLDigits::iterator, MCVLDigits::iterator>& range) {
 
   if (m_debug) debug() << " ==> getRangeOfSensor()" << endmsg;
-  MCVeloLiteDigit sel(VeloLiteChannelID(sensorId, 0, VeloLiteChannelID::Null));
+  MCVLDigit sel(VLChannelID(sensorId, 0, VLChannelID::Null));
   // Make sure the digits are sorted by sensor number.
   std::stable_sort(m_digits->begin(), m_digits->end(),
-      VeloLiteDataFunctor::Less_by_sensor<const MCVeloLiteDigit*>());
+      VLDataFunctor::LessBySensor<const MCVLDigit*>());
   // Get range with required sensor number.
   range = std::equal_range(m_digits->begin(), m_digits->end(), &sel,
-      VeloLiteDataFunctor::Less_by_sensor<const MCVeloLiteDigit*>());
+      VLDataFunctor::LessBySensor<const MCVLDigit*>());
 
 }
 
 //=========================================================================
 /// Calculate signal to noise ratio
 //=========================================================================
-double VeloLiteClusterCreator::signalToNoise(MCVeloLiteDigit* digit) {
+double VLClusterCreator::signalToNoise(MCVLDigit* digit) {
 
   double noise = m_StripNoiseTool->noise(digit->sensor(), digit->strip());
   noise /= m_electronsPerADC;

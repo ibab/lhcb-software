@@ -1,24 +1,24 @@
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
-// Det/VeloLiteDet
-#include "VeloLiteDet/DeVeloLite.h"
+// Det/VLDet
+#include "VLDet/DeVL.h"
 // Local
-#include "VeloLiteStripNoiseTool.h"
+#include "VLStripNoiseTool.h"
 
-/** @file VeloLiteStripNoiseTool.cpp
+/** @file VLStripNoiseTool.cpp
  *
- *  Implementation of class : VeloLiteStripNoiseTool
+ *  Implementation of class : VLStripNoiseTool
  *
  */
 
-DECLARE_TOOL_FACTORY(VeloLiteStripNoiseTool);
+DECLARE_TOOL_FACTORY(VLStripNoiseTool)
 
 //=============================================================================
 /// Constructor
 //=============================================================================
-VeloLiteStripNoiseTool::VeloLiteStripNoiseTool(const std::string& type,
-                                               const std::string& name,
-                                               const IInterface* parent) : 
+VLStripNoiseTool::VLStripNoiseTool(const std::string& type,
+                                   const std::string& name,
+                                   const IInterface* parent) : 
     GaudiTool(type, name, parent),
     m_det(0) {
 
@@ -36,11 +36,11 @@ VeloLiteStripNoiseTool::VeloLiteStripNoiseTool(const std::string& type,
 //=============================================================================
 /// Initialization 
 //=============================================================================
-StatusCode VeloLiteStripNoiseTool::initialize() {
+StatusCode VLStripNoiseTool::initialize() {
 
   StatusCode sc = GaudiTool::initialize();
   if (sc.isFailure()) return sc;
-  m_det = getDet<DeVeloLite>(DeVeloLiteLocation::Default);
+  m_det = getDet<DeVL>(DeVLLocation::Default);
   return StatusCode::SUCCESS;
 
 }
@@ -48,9 +48,10 @@ StatusCode VeloLiteStripNoiseTool::initialize() {
 //=============================================================================
 /// Estimate noise in channel 
 //=============================================================================
-double VeloLiteStripNoiseTool::noise(const unsigned int sensor, const unsigned int strip) {
+double VLStripNoiseTool::noise(const unsigned int sensor, 
+                               const unsigned int strip) {
 
-  const DeVeloLiteSensor* sens = m_det->sensor(sensor);
+  const DeVLSensor* sens = m_det->sensor(sensor);
   if (!sens) return 0.;
   const double length = sens->stripLength(strip) / Gaudi::Units::cm;
   const double capacitance = length * m_capacitancePerStripLength;
@@ -62,9 +63,9 @@ double VeloLiteStripNoiseTool::noise(const unsigned int sensor, const unsigned i
 //=============================================================================
 /// Estimate average strip noise of a sensor 
 //=============================================================================
-double VeloLiteStripNoiseTool::averageNoise(const unsigned int sensor) {
+double VLStripNoiseTool::averageNoise(const unsigned int sensor) {
 
-  const DeVeloLiteSensor* sens = m_det->sensor(sensor);
+  const DeVLSensor* sens = m_det->sensor(sensor);
   const unsigned int nStrips = sens->numberOfStrips();
   if (nStrips <= 0) return 0.;
   double sum = 0.;

@@ -1,16 +1,16 @@
-#ifndef VELOLITE_INTERNALCLUSTER_H
-#define VELOLITE_INTERNALCLUSTER_H 1
+#ifndef VL_INTERNAL_CLUSTER_H
+#define VL_INTERNAL_CLUSTER_H 1
 
 #include <vector>
 #include <utility>
 
-class VeloLiteInternalCluster {
+class VLInternalCluster {
 
   public:
     /// Constructor
-    VeloLiteInternalCluster() {}
+    VLInternalCluster() {}
     /// Destructor
-    virtual ~VeloLiteInternalCluster() {}
+    virtual ~VLInternalCluster() {}
     /// Number of strips in cluster
     unsigned int size() const {return m_stripSignals.size();}
     /// ADC value of strips in cluster

@@ -1,5 +1,5 @@
-#ifndef VELOLITE_STRIP_NOISE_TOOL_H
-#define VELOLITE_STRIP_NOISE_TOOL 1
+#ifndef VL_STRIP_NOISE_TOOL_H
+#define VL_STRIP_NOISE_TOOL 1
 
 // Gaudi
 #include "GaudiAlg/GaudiTool.h"
@@ -7,24 +7,24 @@
 // Interface
 #include "IStripNoiseTool.h"
 
-/** @class VeloLiteStripNoiseTool VeloLiteStripNoiseTool.h
+/** @class VLStripNoiseTool VLStripNoiseTool.h
  *
  *  Tool to estimate noise (in electrons) in a silicon strip
  *
  */
 
-class DeVeloLite;
+class DeVL;
 
-class VeloLiteStripNoiseTool : public GaudiTool, 
+class VLStripNoiseTool : public GaudiTool, 
                                virtual public IStripNoiseTool {
   
 public: 
   /// Constructor
-  VeloLiteStripNoiseTool(const std::string& type, 
+  VLStripNoiseTool(const std::string& type, 
                          const std::string& name,
                          const IInterface* parent);
   /// Destructor
-  virtual ~VeloLiteStripNoiseTool() {}
+  virtual ~VLStripNoiseTool() {}
 
   /// Initialization
   virtual StatusCode initialize();
@@ -43,7 +43,7 @@ protected:
   double m_noiseSlope;
 
   /// Pointer to detector element
-  DeVeloLite* m_det;
+  DeVL* m_det;
 
 };
 #endif 

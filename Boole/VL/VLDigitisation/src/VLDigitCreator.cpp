@@ -5,38 +5,38 @@
 #include "GaudiKernel/AlgFactory.h"
 #include "LHCbMath/LHCbMath.h"
 // Kernel/LHCbKernel
-#include "Kernel/VeloLiteDataFunctor.h"
 #include "Kernel/ISiAmplifierResponse.h"
-#include "Kernel/VeloLiteChannelID.h"
+#include "Kernel/VLDataFunctor.h"
+#include "Kernel/VLChannelID.h"
 // Event/MCEvent
 #include "Event/MCHit.h"
 #include "Event/MCParticle.h"
-// Det/VeloLiteDet
-#include "VeloLiteDet/DeVeloLite.h"
+// Det/VLDet
+#include "VLDet/DeVL.h"
 // Local 
-#include "VeloLiteThreshold.h"
+#include "VLThreshold.h"
 #include "IStripNoiseTool.h"
-#include "VeloLiteDigitCreator.h"
+#include "VLDigitCreator.h"
 
-/** @file VeloLiteDigitCreator.cpp
+/** @file VLDigitCreator.cpp
  *
- *  Implementation of class : VeloLiteDigitCreator
+ *  Implementation of class : VLDigitCreator
  *
  */
 
-DECLARE_ALGORITHM_FACTORY(VeloLiteDigitCreator);
+DECLARE_ALGORITHM_FACTORY(VLDigitCreator)
 
 //===========================================================================
 /// Constructor
 //===========================================================================
-VeloLiteDigitCreator::VeloLiteDigitCreator(const std::string& name,
-                                           ISvcLocator* pSvcLocator) : 
-  GaudiAlgorithm(name, pSvcLocator),
-  m_det(0),
-  m_threshold(0.),
-  m_baseDiffuseSigma(0.),
-  m_nDigitsTotal(0),
-  m_nDigitsKilled(0) {
+VLDigitCreator::VLDigitCreator(const std::string& name,
+                               ISvcLocator* pSvcLocator) : 
+    GaudiAlgorithm(name, pSvcLocator),
+    m_det(0),
+    m_threshold(0.),
+    m_baseDiffuseSigma(0.),
+    m_nDigitsTotal(0),
+    m_nDigitsKilled(0) {
   
   declareProperty("InputContainers", m_inputContainers);
   declareProperty("InputContainerToLink", m_MCHitContainerToLinkName);
@@ -73,16 +73,9 @@ VeloLiteDigitCreator::VeloLiteDigitCreator(const std::string& name,
 }
 
 //===========================================================================
-/// Destructor
-//===========================================================================
-VeloLiteDigitCreator::~VeloLiteDigitCreator() {
-
-}
-
-//===========================================================================
 /// Initialisation. Check parameters
 //===========================================================================
-StatusCode VeloLiteDigitCreator::initialize() {
+StatusCode VLDigitCreator::initialize() {
 
   /// Initialise base class.
   StatusCode sc = GaudiAlgorithm::initialize();
@@ -97,7 +90,7 @@ StatusCode VeloLiteDigitCreator::initialize() {
     return StatusCode::FAILURE;
   }
 
-  m_det = getDet<DeVeloLite>(DeVeloLiteLocation::Default);
+  m_det = getDet<DeVL>(DeVLLocation::Default);
   m_baseDiffuseSigma = sqrt(2 * m_kT / m_biasVoltage);
 
   /// Random number initialisation
@@ -118,11 +111,11 @@ StatusCode VeloLiteDigitCreator::initialize() {
   m_SiTimeTool = tool<ISiAmplifierResponse>("SiAmplifierResponse", 
                                             "SiTimeTool", this);
   /// Strip noise tool
-  m_StripNoiseTool = tool<IStripNoiseTool>("VeloLiteStripNoiseTool",
+  m_StripNoiseTool = tool<IStripNoiseTool>("VLStripNoiseTool",
                                            "StripNoise", this);
 
   /// Estimate the number of R strips to add noise to.
-  std::vector<DeVeloLiteRType*>::const_iterator rsens = m_det->rSensorsBegin();
+  std::vector<DeVLRSensor*>::const_iterator rsens = m_det->rSensorsBegin();
   const unsigned int nStripsR = (*rsens)->numberOfStrips();
   m_averageStripNoiseR = m_StripNoiseTool->averageNoise((*rsens)->sensorNumber());
   m_averageStripNoiseR *= m_scaleNoise; 
@@ -135,7 +128,7 @@ StatusCode VeloLiteDigitCreator::initialize() {
   }
 
   /// Estimate the number of Phi strips to add noise to.
-  std::vector<DeVeloLitePhiType*>::const_iterator phisens = m_det->phiSensorsBegin();
+  std::vector<DeVLPhiSensor*>::const_iterator phisens = m_det->phiSensorsBegin();
   const unsigned int nStripsPhi = (*phisens)->numberOfStrips();
   m_averageStripNoisePhi = m_StripNoiseTool->averageNoise((*phisens)->sensorNumber());
   m_averageStripNoisePhi *= m_scaleNoise; 
@@ -153,13 +146,13 @@ StatusCode VeloLiteDigitCreator::initialize() {
 //===========================================================================
 /// Main execution
 //===========================================================================
-StatusCode VeloLiteDigitCreator::execute() {
+StatusCode VLDigitCreator::execute() {
 
   if (m_debug) debug() << " ==> execute()" << endmsg;
   /// Get the container of MCHits to make MC linker table to
   m_MCHitContainerToLink = get<LHCb::MCHits>(m_MCHitContainerToLinkName);
 
-  m_digits = new LHCb::MCVeloLiteDigits();
+  m_digits = new LHCb::MCVLDigits();
   std::vector<std::string>::const_iterator it;
   for (it = m_inputContainers.begin(); it != m_inputContainers.end(); ++it) {
     if (!exist<LHCb::MCHits>(*it)) {
@@ -194,8 +187,7 @@ StatusCode VeloLiteDigitCreator::execute() {
 //=======================================================================
 /// Loop through hits and allocate charge to strips
 //=======================================================================
-void VeloLiteDigitCreator::simulateSignal(LHCb::MCHits* hits,
-                                          double timeOffset) {
+void VLDigitCreator::simulateSignal(LHCb::MCHits* hits, double timeOffset) {
 
   if (m_debug) debug() << " ==> simulateSignal() " << endmsg;
   // Loop over input hits.
@@ -223,15 +215,15 @@ void VeloLiteDigitCreator::simulateSignal(LHCb::MCHits* hits,
 //=======================================================================
 /// Calculate number of points in silicon the simulation will use
 //=======================================================================
-int VeloLiteDigitCreator::numberOfPoints(LHCb::MCHit* hit) {
+int VLDigitCreator::numberOfPoints(LHCb::MCHit* hit) {
 
   if (m_debug) debug() << " ==> numberOfPoints()" << endmsg;
-  const DeVeloLiteSensor* sens = m_det->sensor(hit->sensDetID());
+  const DeVLSensor* sens = m_det->sensor(hit->sensDetID());
   if (!sens) {
     error() << "Invalid sensor" << endmsg;
     return 0;
   }
-  LHCb::VeloLiteChannelID entryChannel, exitChannel;
+  LHCb::VLChannelID entryChannel, exitChannel;
   double entryFraction = 0., exitFraction = 0.;
   double pitch = 0.;
   StatusCode entryValid = 
@@ -272,7 +264,7 @@ int VeloLiteDigitCreator::numberOfPoints(LHCb::MCHit* hit) {
 //=======================================================================
 /// Allocate charge to points
 //=======================================================================
-void VeloLiteDigitCreator::chargePerPoint(LHCb::MCHit* hit,
+void VLDigitCreator::chargePerPoint(LHCb::MCHit* hit,
                                           std::vector<double>& points, 
                                           double timeOffset) {
 
@@ -339,7 +331,7 @@ void VeloLiteDigitCreator::chargePerPoint(LHCb::MCHit* hit,
 //=======================================================================
 /// Allocate remaining charge from delta ray distribution
 //=======================================================================
-void VeloLiteDigitCreator::deltaRayCharge(double total, double equal, 
+void VLDigitCreator::deltaRayCharge(double total, double equal, 
                                           double tol, 
                                           std::vector<double>& points) {
 
@@ -385,14 +377,14 @@ void VeloLiteDigitCreator::deltaRayCharge(double total, double equal,
 //=======================================================================
 /// Allocate the charge to the collection strips
 //=======================================================================
-void VeloLiteDigitCreator::diffusion(LHCb::MCHit* hit, std::vector<double>& points) {
+void VLDigitCreator::diffusion(LHCb::MCHit* hit, std::vector<double>& points) {
 
   if (m_debug) debug()<< " ==> diffusion()" << endmsg;
   // Distance between steps on hit path
   Gaudi::XYZVector step = hit->displacement() / (2. * points.size());
   Gaudi::XYZPoint point = hit->entry() + step;
 
-  const DeVeloLiteSensor* sens = m_det->sensor(hit->sensDetID());
+  const DeVLSensor* sens = m_det->sensor(hit->sensDetID());
   const double thickness = sens->siliconThickness() / Gaudi::Units::micrometer;
   // Assume strips are at opposite side of Si to entry point
   const double dz = thickness / (2. * points.size()); 
@@ -407,7 +399,7 @@ void VeloLiteDigitCreator::diffusion(LHCb::MCHit* hit, std::vector<double>& poin
     }
     // Make sure the point is valid
     double fraction, pitch;
-    LHCb::VeloLiteChannelID entryChan;
+    LHCb::VLChannelID entryChan;
     StatusCode valid = sens->pointToChannel(point, entryChan, fraction, pitch);
     if (!valid) {
       // A point may be invalid, despite entry and exit points being valid,
@@ -459,11 +451,11 @@ void VeloLiteDigitCreator::diffusion(LHCb::MCHit* hit, std::vector<double>& poin
       if (charge > m_threshold * 0.1) {
         // Ignore if below 10% of threshold
         // Calculate index of this strip
-        LHCb::VeloLiteChannelID channel;
+        LHCb::VLChannelID channel;
         valid = sens->neighbour(entryChan, iNg, channel);
         // Update charge and MCHit list
         if (valid) {
-          LHCb::MCVeloLiteDigit* digit = findOrInsert(channel);
+          LHCb::MCVLDigit* digit = findOrInsert(channel);
           if (hit->parent() == m_MCHitContainerToLink) {
             if (m_verbose) verbose() << "MCHit to link" << endreq;
             // Update and add MC link
@@ -485,8 +477,8 @@ void VeloLiteDigitCreator::diffusion(LHCb::MCHit* hit, std::vector<double>& poin
 //=======================================================================
 /// Update signal and list of MCHits
 //=======================================================================
-void VeloLiteDigitCreator::fill(LHCb::MCVeloLiteDigit* digit,
-                                LHCb::MCHit* hit, double charge) {
+void VLDigitCreator::fill(LHCb::MCVLDigit* digit,
+                          LHCb::MCHit* hit, double charge) {
 
   if (m_debug) debug() << " ==> fill()" << endmsg;
   digit->setSignal(digit->signal() + charge);
@@ -530,15 +522,15 @@ void VeloLiteDigitCreator::fill(LHCb::MCVeloLiteDigit* digit,
 /// It is assumed that this is a small fraction and hence it doesn't matter
 /// in what order this procedure is applied to the strip list.
 //=======================================================================
-void VeloLiteDigitCreator::simulateCoupling() {
+void VLDigitCreator::simulateCoupling() {
 
   if (m_debug) debug() << " ==> simulateCoupling()" << endmsg;
   // Sort digits into order of ascending sensor + strip.
   std::stable_sort(m_digits->begin(), m_digits->end(),
-                   VeloLiteDataFunctor::Less_by_key<const LHCb::MCVeloLiteDigit*>());
+                   VLDataFunctor::LessByKey<const LHCb::MCVLDigit*>());
   // Make new container for any added strips.
-  m_digits_coupling = new LHCb::MCVeloLiteDigits();
-  LHCb::MCVeloLiteDigits::iterator itd; 
+  m_digitsCoupling = new LHCb::MCVLDigits();
+  LHCb::MCVLDigits::iterator itd; 
   for (itd = m_digits->begin(); itd != m_digits->end(); ++itd) {
     // Calculate signal to couple to neighbouring strips.
     double coupledSignal = (*itd)->signal() * m_capacitiveCoupling;
@@ -555,20 +547,20 @@ void VeloLiteDigitCreator::simulateCoupling() {
     bool create = (coupledSignal > m_threshold * 0.1);
     bool valid;
     // Add to previous strip (if doesn't exist then create).
-    LHCb::MCVeloLiteDigit* prev = findOrInsertPrevStrip(itd, valid, create);
+    LHCb::MCVLDigit* prev = findOrInsertPrevStrip(itd, valid, create);
     if (valid) fill(prev, coupledSignal);
     // Add to next strip.
-    LHCb::MCVeloLiteDigit* next = findOrInsertNextStrip(itd, valid, create);
+    LHCb::MCVLDigit* next = findOrInsertNextStrip(itd, valid, create);
     if (valid) fill(next, coupledSignal);
   } 
   // Add any newly created digits.
   if (m_debug) {
-    debug() << m_digits_coupling->size() 
+    debug() << m_digitsCoupling->size() 
             << " digits created by coupling routine" << endmsg;
   }
-  LHCb::MCVeloLiteDigits::iterator itc; 
-  for (itc = m_digits_coupling->begin(); itc < m_digits_coupling->end(); ++itc) {
-    LHCb::MCVeloLiteDigit* digit = m_digits->object((*itc)->key());
+  LHCb::MCVLDigits::iterator itc; 
+  for (itc = m_digitsCoupling->begin(); itc < m_digitsCoupling->end(); ++itc) {
+    LHCb::MCVLDigit* digit = m_digits->object((*itc)->key());
     if (0 != digit) {
       digit->setSignal(digit->signal() + (*itc)->signal());
       if (m_verbose) {
@@ -585,8 +577,8 @@ void VeloLiteDigitCreator::simulateCoupling() {
       m_digits->insert(*itc);
     }
   }
-  delete m_digits_coupling;
-  m_digits_coupling = 0;
+  delete m_digitsCoupling;
+  m_digitsCoupling = 0;
   if (m_debug) {
     debug() << "Number of digits after coupling simulation: "
             << m_digits->size() << endmsg;
@@ -598,12 +590,12 @@ void VeloLiteDigitCreator::simulateCoupling() {
 /// From an originally sorted list, find the strip with the previous key,
 /// or create a new one.
 //=======================================================================
-LHCb::MCVeloLiteDigit* VeloLiteDigitCreator::findOrInsertPrevStrip(
-    LHCb::MCVeloLiteDigits::iterator itd, bool& valid, bool& create) {
+LHCb::MCVLDigit* VLDigitCreator::findOrInsertPrevStrip(
+    LHCb::MCVLDigits::iterator itd, bool& valid, bool& create) {
   
   if (m_debug) debug() << " ==> findOrInsertPrevStrip()" << endmsg;
   // Try previous entry in container.
-  LHCb::MCVeloLiteDigit* prevStrip = (*itd);
+  LHCb::MCVLDigit* prevStrip = (*itd);
   if (itd != m_digits->begin()) {
     --itd;
     prevStrip = (*(itd));
@@ -611,14 +603,14 @@ LHCb::MCVeloLiteDigit* VeloLiteDigitCreator::findOrInsertPrevStrip(
   }
   // Check
   int checkDistance;
-  const DeVeloLiteSensor* sens = m_det->sensor((*itd)->key().sensor());
+  const DeVLSensor* sens = m_det->sensor((*itd)->key().sensor());
   StatusCode sc = sens->channelDistance((*itd)->key(), prevStrip->key(),
                                         checkDistance);
   valid = sc.isSuccess();
   if (valid && -1 == checkDistance) return prevStrip;
   // Check if just added this strip in other container
-  if (m_digits_coupling->size() != 0) {
-    LHCb::MCVeloLiteDigits::iterator last = m_digits_coupling->end(); 
+  if (m_digitsCoupling->size() != 0) {
+    LHCb::MCVLDigits::iterator last = m_digitsCoupling->end(); 
     last--;
     prevStrip = (*last);
   }
@@ -630,18 +622,18 @@ LHCb::MCVeloLiteDigit* VeloLiteDigitCreator::findOrInsertPrevStrip(
 
   // Doesn't exist so insert a new strip (if create is true)
   if (create) {
-    LHCb::VeloLiteChannelID channel;
+    LHCb::VLChannelID channel;
     sc = sens->neighbour((*itd)->key(), -1, channel);
     if (sc.isSuccess()) {
       // Protect if key already exists
-      prevStrip = m_digits_coupling->object(channel);
+      prevStrip = m_digitsCoupling->object(channel);
       if (0 != prevStrip) return prevStrip;
       if (m_verbose) {
         verbose() << "Create strip" << channel.strip() 
                   << " (sensor " << channel.sensor() << ")" << endmsg;
       }
-      prevStrip = new LHCb::MCVeloLiteDigit(channel);
-      m_digits_coupling->insert(prevStrip);
+      prevStrip = new LHCb::MCVLDigit(channel);
+      m_digitsCoupling->insert(prevStrip);
       valid = true;
     } else {
       valid = false;
@@ -659,13 +651,13 @@ LHCb::MCVeloLiteDigit* VeloLiteDigitCreator::findOrInsertPrevStrip(
 /// From an originally sorted list, find the strip with the next key,
 /// or create a new one.
 //=======================================================================
-LHCb::MCVeloLiteDigit* VeloLiteDigitCreator::findOrInsertNextStrip(
-    LHCb::MCVeloLiteDigits::iterator itd, bool& valid, bool& create) {
+LHCb::MCVLDigit* VLDigitCreator::findOrInsertNextStrip(
+    LHCb::MCVLDigits::iterator itd, bool& valid, bool& create) {
   
   if (m_debug) debug() << " ==> findOrInsertNextStrip()" << endmsg;
   // Try next entry in container.
-  LHCb::MCVeloLiteDigit* nextStrip = *itd;
-  LHCb::MCVeloLiteDigits::iterator last = m_digits->end(); 
+  LHCb::MCVLDigit* nextStrip = *itd;
+  LHCb::MCVLDigits::iterator last = m_digits->end(); 
   last--;
   if (itd != last) {
     ++itd;
@@ -673,7 +665,7 @@ LHCb::MCVeloLiteDigit* VeloLiteDigitCreator::findOrInsertNextStrip(
     --itd;
   }
   // Check
-  const DeVeloLiteSensor* sens = m_det->sensor((*itd)->key().sensor());
+  const DeVLSensor* sens = m_det->sensor((*itd)->key().sensor());
   int checkDistance;
   StatusCode sc = sens->channelDistance((*itd)->key(), nextStrip->key(),
                                         checkDistance);
@@ -682,18 +674,18 @@ LHCb::MCVeloLiteDigit* VeloLiteDigitCreator::findOrInsertNextStrip(
 
   // Doesn't exist so insert a new strip (if create is true)
   if (create) {
-    LHCb::VeloLiteChannelID channel;
+    LHCb::VLChannelID channel;
     sc = sens->neighbour((*itd)->key(), +1, channel);
     if (sc.isSuccess()) {
      // Protect if key already exists
-      nextStrip = m_digits_coupling->object(channel);
+      nextStrip = m_digitsCoupling->object(channel);
       if (0 != nextStrip) return nextStrip;
       if (m_verbose) {
         verbose() << "Create strip" << channel.strip() 
                   << " (sensor " << channel.sensor() << ")" << endmsg;
       }
-      nextStrip = new LHCb::MCVeloLiteDigit(channel);
-      m_digits_coupling->insert(nextStrip);
+      nextStrip = new LHCb::MCVLDigit(channel);
+      m_digitsCoupling->insert(nextStrip);
       valid = true;
     } else {
       valid = false;
@@ -710,11 +702,11 @@ LHCb::MCVeloLiteDigit* VeloLiteDigitCreator::findOrInsertNextStrip(
 //=======================================================================
 /// Add noise
 //=======================================================================
-void VeloLiteDigitCreator::simulateNoise() {
+void VLDigitCreator::simulateNoise() {
 
   if (m_debug) debug() << " ==> simulateNoise()" << endmsg;
   // Add noise to channels which already have a hit. 
-  LHCb::MCVeloLiteDigits::iterator itd; 
+  LHCb::MCVLDigits::iterator itd; 
   for (itd = m_digits->begin(); itd != m_digits->end(); ++itd) {
     if ((*itd)->noise() == 0) {
       const unsigned int sensor = (*itd)->sensor();
@@ -731,8 +723,8 @@ void VeloLiteDigitCreator::simulateNoise() {
     }
   }
   // Allocate noise to channels which don't have a signal yet.
-  std::vector<DeVeloLiteSensor*>::const_iterator sensBegin;
-  std::vector<DeVeloLiteSensor*>::const_iterator sensEnd;
+  std::vector<DeVLSensor*>::const_iterator sensBegin;
+  std::vector<DeVLSensor*>::const_iterator sensEnd;
   if (!m_simNoisePileUp) { 
     // Main Velo
     sensBegin = m_det->rPhiSensorsBegin();
@@ -742,9 +734,9 @@ void VeloLiteDigitCreator::simulateNoise() {
     sensBegin = m_det->pileUpSensorsBegin();
     sensEnd   = m_det->pileUpSensorsEnd();
   }
-  std::vector<DeVeloLiteSensor*>::const_iterator its; 
+  std::vector<DeVLSensor*>::const_iterator its; 
   for (its = sensBegin; its != sensEnd; ++its) {
-    const DeVeloLiteSensor* sens = *its;
+    const DeVLSensor* sens = *its;
     // Estimate the number of noise hits.
     const int nNoiseHits = sens->isPhi() ? poissonDistPhi() : poissonDistR();
     const int nStrips = sens->numberOfStrips();
@@ -757,8 +749,13 @@ void VeloLiteDigitCreator::simulateNoise() {
       // Choose random strip. 
       int strip = int(LHCb::Math::round(m_uniformDist() * (nStrips - 1)));
       // Find strip in list.
-      LHCb::VeloLiteChannelID channel(sensor, strip);
-      LHCb::MCVeloLiteDigit* digit = findOrInsert(channel);
+      LHCb::VLChannelID channel(sensor, strip, LHCb::VLChannelID::Null);
+      if (sens->isPhi()) {
+        channel.setType(LHCb::VLChannelID::PhiType);
+      } else {
+        channel.setType(LHCb::VLChannelID::RType);
+      }
+      LHCb::MCVLDigit* digit = findOrInsert(channel);
       if (digit->noise() == 0) {
         const double stripNoise = m_StripNoiseTool->noise(sensor, strip);
         if (stripNoise > 0.) {
@@ -773,7 +770,7 @@ void VeloLiteDigitCreator::simulateNoise() {
 //=========================================================================
 /// Generate some noise
 //=========================================================================
-double VeloLiteDigitCreator::noiseValue(double sigma) {
+double VLDigitCreator::noiseValue(double sigma) {
   
   return m_gaussDist() * sigma;
 
@@ -782,7 +779,7 @@ double VeloLiteDigitCreator::noiseValue(double sigma) {
 //=========================================================================
 // Generate some noise from tail of distribution
 //=========================================================================
- double VeloLiteDigitCreator::noiseValueTail(double sigma, double threshold) {
+ double VLDigitCreator::noiseValueTail(double sigma, double threshold) {
   
   double noise = ran_gaussian_tail(threshold, sigma);  
   // Noise negative or positive
@@ -794,10 +791,10 @@ double VeloLiteDigitCreator::noiseValue(double sigma) {
 //=======================================================================
 /// Digitisation 
 //=======================================================================
-void VeloLiteDigitCreator::digitise(){
+void VLDigitCreator::digitise(){
 
   if (m_debug) debug() << " ==> digitise()" << endmsg;
-  LHCb::MCVeloLiteDigits::iterator itd;
+  LHCb::MCVLDigits::iterator itd;
   for (itd = m_digits->begin(); itd != m_digits->end(); ++itd) {
     // Assume linear response for now.
     double digi = (*itd)->charge() / m_electronsPerADC;
@@ -813,10 +810,10 @@ void VeloLiteDigitCreator::digitise(){
 //=======================================================================
 /// Simulate strip inefficiency
 //=======================================================================
-void VeloLiteDigitCreator::simulateInefficiency() {
+void VLDigitCreator::simulateInefficiency() {
   
   if (m_debug) debug()<< " ==> simulateInefficiency()" << endmsg;
-  LHCb::MCVeloLiteDigits::iterator itd;
+  LHCb::MCVLDigits::iterator itd;
   for (itd = m_digits->begin(); itd != m_digits->end(); ++itd) {
     ++m_nDigitsTotal;
     if (m_stripInefficiency > m_uniformDist()) {
@@ -831,13 +828,13 @@ void VeloLiteDigitCreator::simulateInefficiency() {
 //=======================================================================
 /// Find a strip in list, or if it does not currently exist create it
 //=======================================================================
-LHCb::MCVeloLiteDigit* VeloLiteDigitCreator::findOrInsert(LHCb::VeloLiteChannelID& channel) {
+LHCb::MCVLDigit* VLDigitCreator::findOrInsert(LHCb::VLChannelID& channel) {
 
   if (m_debug) debug() << " ==> findOrInsert()" << endmsg;
-  LHCb::MCVeloLiteDigit* digit = m_digits->object(channel);
+  LHCb::MCVLDigit* digit = m_digits->object(channel);
   if (0 == digit) {
     // This strip has not been used before, so create it
-    digit = new LHCb::MCVeloLiteDigit(channel);
+    digit = new LHCb::MCVLDigit(channel);
     if (m_verbose) {
       verbose() << "Add digit (sensor " << channel.sensor() 
                 << ", strip " << channel.strip() << ")" << endmsg;
@@ -851,42 +848,42 @@ LHCb::MCVeloLiteDigit* VeloLiteDigitCreator::findOrInsert(LHCb::VeloLiteChannelI
 //=======================================================================
 /// Remove any digits with charge below abs(threshold)
 //=========================================================================
-void VeloLiteDigitCreator::cleanup() {
+void VLDigitCreator::cleanup() {
   
   if (m_debug) debug() << " ==> cleanup()" << endmsg;
   // Sort container by charge.
   std::sort(m_digits->begin(), m_digits->end(),
-            VeloLiteDataFunctor::Less_by_charge<const LHCb::MCVeloLiteDigit*>());
+            VLDataFunctor::LessByCharge<const LHCb::MCVLDigit*>());
   std::reverse(m_digits->begin(),m_digits->end());
   // Remove digits with ADC below threshold
   const double thr = m_threshold / m_electronsPerADC; 
-  LHCb::MCVeloLiteDigits::iterator it1 = std::find_if(m_digits->begin(), 
-                                                      m_digits->end(),
-                                                      VeloLiteThreshold(thr));
-  LHCb::MCVeloLiteDigits::iterator it2 = m_digits->end();
+  LHCb::MCVLDigits::iterator it1 = std::find_if(m_digits->begin(), 
+                                                m_digits->end(),
+                                                VLThreshold(thr));
+  LHCb::MCVLDigits::iterator it2 = m_digits->end();
   m_digits->erase(it1, it2);
   // Sort container by sensor/strip number.
   std::sort(m_digits->begin(), m_digits->end(),
-            VeloLiteDataFunctor::Less_by_key<const LHCb::MCVeloLiteDigit*>());
+            VLDataFunctor::LessByKey<const LHCb::MCVLDigit*>());
 
 }
 
 //=======================================================================
 /// Store digits
 //=======================================================================
-StatusCode VeloLiteDigitCreator::storeDigits() {
+StatusCode VLDigitCreator::storeDigits() {
   
   if (m_debug) debug() << " ==> storeDigits()" << endmsg;
   std::vector<std::string>::const_iterator itc;
   for (itc = m_outputContainers.begin(); itc != m_outputContainers.end(); ++itc) {
-    if (exist<LHCb::MCVeloLiteDigits>(*itc)) {
-      LHCb::MCVeloLiteDigits* outputCont = get<LHCb::MCVeloLiteDigits>(*itc);
-      LHCb::MCVeloLiteDigits::const_iterator itd;
+    if (exist<LHCb::MCVLDigits>(*itc)) {
+      LHCb::MCVLDigits* outputCont = get<LHCb::MCVLDigits>(*itc);
+      LHCb::MCVLDigits::const_iterator itd;
       for (itd = m_digits->begin(); itd != m_digits->end(); ++itd) {
         outputCont->insert(*itd);
       }
     } else {
-      // Put local container into TES
+      // Put local container into TES.
       put(m_digits, *itc); 
     }
     if (m_debug) {
@@ -905,7 +902,7 @@ StatusCode VeloLiteDigitCreator::storeDigits() {
 // but Tmax bounded by energy left to allocate, so following is
 // not truly correct
 //=======================================================================
-double VeloLiteDigitCreator::ran_inv_E2(double tmin, double tmax) {
+double VLDigitCreator::ran_inv_E2(double tmin, double tmax) {
   
   const double range = (1. / tmin) - (1. / tmax);
   const double offset = 1. / tmax;
@@ -921,7 +918,7 @@ double VeloLiteDigitCreator::ran_inv_E2(double tmin, double tmax) {
 // in autumn 2002, till then need this version here.
 // This code is based on that from the gsl library.
 //=========================================================================
-double VeloLiteDigitCreator::ran_gaussian_tail(const double a, const double sigma) {
+double VLDigitCreator::ran_gaussian_tail(const double a, const double sigma) {
   
   const double s = a / sigma;
   if (s < 1) {
@@ -952,7 +949,7 @@ double VeloLiteDigitCreator::ran_gaussian_tail(const double a, const double sigm
 
 //============================================================================
 //============================================================================
-double VeloLiteDigitCreator::chargeTimeFactor(double tof, double bunchOffset, double z) {
+double VLDigitCreator::chargeTimeFactor(double tof, double bunchOffset, double z) {
 
   if (m_debug) debug() << " ==> chargeTimeFactor()" << endmsg;
   // Correct for z position of sensor.
@@ -969,7 +966,7 @@ double VeloLiteDigitCreator::chargeTimeFactor(double tof, double bunchOffset, do
 
 //============================================================================
 //============================================================================
-StatusCode VeloLiteDigitCreator::finalize() {
+StatusCode VLDigitCreator::finalize() {
  
   if (m_nDigitsTotal > 0) {
     const double fKilled = 100. * static_cast<double>(m_nDigitsKilled) / 
