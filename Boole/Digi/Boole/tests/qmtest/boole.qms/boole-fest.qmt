@@ -6,7 +6,7 @@
     <text>$APPCONFIGROOT/options/Boole/FEST-L0Yes.py</text>
     <text>$BOOLEOPTS/MC10-Files.py</text>
     <text>--option</text>
-    <text>from Boole.Configuration import *; Boole().EvtMax=15; from Configurables import BooleInit; BooleInit().PrintEventTime=True</text>
+    <text>from Boole.Configuration import *; Boole().EvtMax=15; from Configurables import BooleInit; BooleInit().PrintEventTime=True; Boole().EnableL0=True</text>
   </set></argument>
   <argument name="reference"><text>../refs/boole-fest.ref</text></argument>
   <argument name="validator"><text>

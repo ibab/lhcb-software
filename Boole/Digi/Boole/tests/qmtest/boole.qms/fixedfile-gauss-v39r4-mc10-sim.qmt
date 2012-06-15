@@ -6,7 +6,7 @@
     <text>$BOOLEROOT/tests/options/testBoole-defaults.py</text>
     <text>$APPCONFIGOPTS/Boole/DataType-2010.py</text>
     <text>--option</text>
-    <text>from Boole.Configuration import *; from Configurables import LHCbApp, L0Conf; LHCbApp().DDDBtag="head-20101206"; LHCbApp().CondDBtag="sim-20101210-vc-md100"; L0Conf().TCK = '0x002A'; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/g/gcorti/Gauss/2010/v39r4/30000000-100ev-20110902-MC10.sim' TYP='POOL_ROOTTREE' OPT='READ'"];</text>
+    <text>from Boole.Configuration import *; from Configurables import LHCbApp; LHCbApp().DDDBtag="head-20101206"; LHCbApp().CondDBtag="sim-20101210-vc-md100"; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/g/gcorti/Gauss/2010/v39r4/30000000-100ev-20110902-MC10.sim' TYP='POOL_ROOTTREE' OPT='READ'"];</text>
   </set></argument>
   <argument name="reference"><text>../refs/fixedfile-gauss-v39r4-mc10-sim.ref</text></argument>
   <argument name="validator"><text>

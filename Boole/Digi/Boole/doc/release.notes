@@ -6,11 +6,15 @@ Purpose: LHCb Digitization program
  - Changes to configurable
    . Force usage of DAQ/RawEvent in any decoding, following introduction of
      search list including Other/RawEvent location in decoders
+   . Add new Boole().EnableL0 slot. Default is False: L0 emulation is no
+     longer done by default, since it is more consistent to do it in Moore
+   . Do not run a Link or Moni sequence for a sub-detector if that
+     sub-detector is missing from the Digi sequence: now a sub-detector can
+     be entirely switched off by removing it only from the Digi sequence
 
  - Changes to references to follow changes in underlying packages
    . Adapt boole-2011-latestdb.ref to new local tag velo-20120515
    . Fix gcc43/gcc46 differences in STDigitCreator
-   . New deafult L0 setting for 2012 simulation (L0DU)
 
  - Changes to tests
    . Add a test boole.boole-2012-latestdb. Currently using MC11 input sim file

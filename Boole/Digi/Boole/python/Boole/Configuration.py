@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.70 2010-06-20 07:24:02 tskwarni Exp $"
+__version__ = ""
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -41,6 +41,7 @@ class Boole(LHCbConfigurableUser):
        ,"DDDBtag"             : ""
        ,"CondDBtag"           : ""
        ,"VeloTell1Processing" : True
+       ,"EnableL0"            : False
        ,"Monitors"            : []
        ,"MainSequence"        : []
        ,"InitSequence"        : []
@@ -75,6 +76,7 @@ class Boole(LHCbConfigurableUser):
        ,'DDDBtag'      : """ Tag for DDDB """
        ,'CondDBtag'    : """ Tag for CondDB """
        ,'VeloTell1Processing' : """ Use the Tell1 emulation bit perfect code to perform digitization and zero suppression of the simulated Velo data (default True) """
+       ,'EnableL0'     : """ Flag to enable L0 emulation (default False, should be done in Moore step) """
        ,'Monitors'     : """ List of monitors to execute """
        ,'MainSequence' : """ The default main sequence, see self.DefaultSequence """
        ,'InitSequence' : """ List of initialisation sequences, see KnownInitSubdets """
@@ -143,42 +145,65 @@ class Boole(LHCbConfigurableUser):
             tae = False
 
         detListInit = []
-        if 'Data'    in self.getProp('DetectorInit')['DATA'] : detListInit += ['Data']
-        if 'Muon'    in self.getProp('DetectorInit')['MUON'] : detListInit += ['Muon']
         detListDigi = []
-        if 'Velo'    in self.getProp('DetectorDigi')['VELO'] : detListDigi += ['Velo']
-        if 'VeloPix' in self.getProp('DetectorDigi')['VELO'] : detListDigi += ['VeloPix']
-        if 'TT'      in self.getProp('DetectorDigi')['TT']   : detListDigi += ['TT']
-        if 'IT'      in self.getProp('DetectorDigi')['IT']   : detListDigi += ['IT']
-        if 'OT'      in self.getProp('DetectorDigi')['OT']   : detListDigi += ['OT']
-        if 'Rich'    in self.getProp('DetectorDigi')['RICH'] : detListDigi += ['Rich']
-        if 'Calo'    in self.getProp('DetectorDigi')['CALO'] : detListDigi += ['Calo']
-        if 'Muon'    in self.getProp('DetectorDigi')['MUON'] : detListDigi += ['Muon']
-        if 'L0'      in self.getProp('DetectorDigi')['L0']   : detListDigi += ['L0']        
         detListLink = []
-        if 'Velo'    in self.getProp('DetectorLink')['VELO'] : detListLink += ['Velo']
-        if 'VeloPix' in self.getProp('DetectorLink')['VELO'] : detListLink += ['VeloPix']
-        if 'TT'      in self.getProp('DetectorLink')['TT']   : detListLink += ['TT']
-        if 'IT'      in self.getProp('DetectorLink')['IT']   : detListLink += ['IT']
-        if 'OT'      in self.getProp('DetectorLink')['OT']   : detListLink += ['OT']
-        if 'Tr'      in self.getProp('DetectorLink')['TR']   : detListLink += ['Tr']
-        if 'Rich'    in self.getProp('DetectorLink')['RICH'] : detListLink += ['Rich']
-        if 'Calo'    in self.getProp('DetectorLink')['CALO'] : detListLink += ['Calo']
-        if 'Muon'    in self.getProp('DetectorLink')['MUON'] : detListLink += ['Muon']
-        if 'L0'      in self.getProp('DetectorLink')['L0']   : detListLink += ['L0']
-        DigiConf().setProp("Detectors",detListLink)
         detListMoni = []
-        if 'Velo'    in self.getProp('DetectorMoni')['VELO'] : detListMoni += ['Velo']
-        if 'VeloPix' in self.getProp('DetectorMoni')['VELO'] : detListMoni += ['VeloPix']
-        if 'TT'      in self.getProp('DetectorMoni')['TT']   : detListMoni += ['TT']
-        if 'IT'      in self.getProp('DetectorMoni')['IT']   : detListMoni += ['IT']
-        if 'OT'      in self.getProp('DetectorMoni')['OT']   : detListMoni += ['OT']
-        if 'Rich'    in self.getProp('DetectorMoni')['RICH'] : detListMoni += ['Rich']
-        if 'Calo'    in self.getProp('DetectorMoni')['CALO'] : detListMoni += ['Calo']
-        if 'Muon'    in self.getProp('DetectorMoni')['MUON'] : detListMoni += ['Muon']
-        if 'L0'      in self.getProp('DetectorMoni')['L0']   : detListMoni += ['L0']
-        if 'MC'      in self.getProp('DetectorMoni')['MC']   : detListMoni += ['MC']
+
+        if 'Data' in self.getProp('DetectorInit')['DATA'] : detListInit += ['Data']
+
+        if 'Velo' in self.getProp('DetectorDigi')['VELO'] :
+            detListDigi += ['Velo']
+            if 'Velo' in self.getProp('DetectorLink')['VELO'] : detListLink += ['Velo']
+            if 'Velo' in self.getProp('DetectorMoni')['VELO'] : detListMoni += ['Velo']
+            
+        if 'VeloPix' in self.getProp('DetectorDigi')['VELO'] :
+            detListDigi += ['VeloPix']
+            if 'VeloPix' in self.getProp('DetectorLink')['VELO'] : detListLink += ['VeloPix']
+            if 'VeloPix' in self.getProp('DetectorMoni')['VELO'] : detListMoni += ['VeloPix']
+            
+        if 'TT' in self.getProp('DetectorDigi')['TT']   :
+            detListDigi += ['TT']
+            if 'TT' in self.getProp('DetectorLink')['TT'] : detListLink += ['TT']
+            if 'TT' in self.getProp('DetectorMoni')['TT'] : detListMoni += ['TT']
+
+        if 'IT' in self.getProp('DetectorDigi')['IT']   :
+            detListDigi += ['IT']
+            if 'IT'      in self.getProp('DetectorLink')['IT'] : detListLink += ['IT']
+            if 'IT'      in self.getProp('DetectorMoni')['IT'] : detListMoni += ['IT']
+
+        if 'OT' in self.getProp('DetectorDigi')['OT']   :
+            detListDigi += ['OT']
+            if 'OT' in self.getProp('DetectorLink')['OT'] : detListLink += ['OT']
+            if 'OT' in self.getProp('DetectorMoni')['OT'] : detListMoni += ['OT']
+
+        if 'Tr' in self.getProp('DetectorLink')['TR']   : detListLink += ['Tr']
+        
+        if 'Rich' in self.getProp('DetectorDigi')['RICH'] :
+            detListDigi += ['Rich']
+            if 'Rich' in self.getProp('DetectorLink')['RICH'] : detListLink += ['Rich']
+            if 'Rich' in self.getProp('DetectorMoni')['RICH'] : detListMoni += ['Rich']
+
+        if 'Calo' in self.getProp('DetectorDigi')['CALO'] :
+            detListDigi += ['Calo']
+            if 'Calo' in self.getProp('DetectorLink')['CALO'] : detListLink += ['Calo']
+            if 'Calo' in self.getProp('DetectorMoni')['CALO'] : detListMoni += ['Calo']
+
+        if 'Muon' in self.getProp('DetectorInit')['MUON'] : detListInit += ['Muon']
+        if 'Muon' in self.getProp('DetectorDigi')['MUON'] :
+            detListDigi += ['Muon']
+            if 'Muon' in self.getProp('DetectorLink')['MUON'] : detListLink += ['Muon']
+            if 'Muon' in self.getProp('DetectorMoni')['MUON'] : detListMoni += ['Muon']
+
+        if self.getProp("EnableL0"):
+            if 'L0' in self.getProp('DetectorDigi')['L0'] :
+                detListDigi += ['L0']        
+                if 'L0' in self.getProp('DetectorLink')['L0'] : detListLink += ['L0']
+                if 'L0' in self.getProp('DetectorMoni')['L0'] : detListMoni += ['L0']
+
+        if 'MC' in self.getProp('DetectorMoni')['MC'] : detListMoni += ['MC']
                 
+        DigiConf().setProp("Detectors",detListLink)
+
         initDets   = self._setupPhase( "Init",   detListInit )
         digiDets   = self._setupPhase( "Digi",   detListDigi )
         linkDets   = self._setupPhase( "Link",   detListLink )
@@ -456,9 +481,12 @@ class Boole(LHCbConfigurableUser):
         filterSeq = ProcessPhase("Filter", ModeOR = True )
         filterSeq.DetectorList += filterDets
 
-        if "L0" in filterDets: 
-            from Configurables import L0Conf
-            L0Conf().FilterSequencer = GaudiSequencer("FilterL0Seq")
+        if "L0" in filterDets:
+            if self.getProp("EnableL0"):
+                from Configurables import L0Conf
+                L0Conf().FilterSequencer = GaudiSequencer("FilterL0Seq")
+            else:
+                raise RuntimeError("L0 filtering requested but L0 emulation not enabled")
 
         if "ODIN" in filterDets: 
             from Configurables import OdinTypesFilter
