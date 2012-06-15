@@ -4,6 +4,9 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+! 2012-06-15 - Marco Cattaneo
+ - Replace RawEventLocation::Other with RawEventLocation::Calo
+
 ! 2012-06-08 - Marco Cattaneo
  - Add RawEventLocations property to decoder to allow to specify a search 
    list of locations. Default is to look for

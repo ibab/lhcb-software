@@ -39,7 +39,7 @@ CheckCaloBank::CheckCaloBank( const std::string& name, ISvcLocator* pSvcLocator)
 
   declareProperty( "RawEventLocations", m_rawEventLocations,
                    "List of possible locations of the RawEvent object in the"
-                   " transient store. By default it is LHCb::RawEventLocation::Other,"
+                   " transient store. By default it is LHCb::RawEventLocation::Calo,"
                    " LHCb::RawEventLocation::Default.");
 
 };
@@ -70,7 +70,7 @@ StatusCode CheckCaloBank::initialize() {
   if (std::find(m_rawEventLocations.begin(), m_rawEventLocations.end(), LHCb::RawEventLocation::Default)
       == m_rawEventLocations.end()) {
     // append the defaults to the search path
-    m_rawEventLocations.push_back(LHCb::RawEventLocation::Other);
+    m_rawEventLocations.push_back(LHCb::RawEventLocation::Calo);
     m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
   }
 
