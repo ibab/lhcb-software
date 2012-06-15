@@ -178,11 +178,10 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
     LHCb::CaloHypo* ce1 = m_caloElectron->electron();
     if( ce1 != NULL)epos1=ce1->position();    
     // get Y from track linear-extrapolation if no associated cluster
-    double xe1(0),ye1(0),Ee1(0),sprye1(999),errEcalo1(999);
+    double ye1(0),Ee1(0),sprye1(999),errEcalo1(999);
     if ( epos1 ){
       LHCb::CaloPosition::Covariance cov1=epos1->covariance();;
       LHCb::CaloPosition::Spread poscov1=epos1->spread();
-      xe1=epos1->x();
       ye1=epos1->y();
       Ee1=epos1->e();
       sprye1=poscov1(1,1);
@@ -233,11 +232,10 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
       const LHCb::CaloHypo::Position* epos2 = NULL;
       LHCb::CaloHypo* ce2 = m_caloElectron->electron();
       if( ce2 != NULL)epos2=ce2->position();
-      double xe2(0),ye2(0),Ee2(0),sprye2(999),errEcalo2(999);
+      double ye2(0),Ee2(0),sprye2(999),errEcalo2(999);
       if (epos2){
         LHCb::CaloPosition::Covariance cov2=epos2->covariance();
         LHCb::CaloPosition::Spread poscov2=epos2->spread();
-        xe2=epos2->x();
         ye2=epos2->y();
         Ee2=epos2->e();
         sprye2=poscov2(1,1);
@@ -285,15 +283,12 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
       // in case of gamma conversion - Look at Velo Charge
       if( m_pid == "gamma"){
         LHCb::Particle* part1;
-        LHCb::Particle* part2;
         int icas=0;
         if ( (vc1==vc2 && vc1> m_vc) || (vc2 <0 && vc1 > m_vc) ) {
           part1 = ele1;
-          part2 = ele2;
           icas = (vc1==vc2) ? 2 : 1;
         } else if ( vc1<0 && vc2 > m_vc) {
           part1=ele2;
-          part2=ele1;
           icas=1;
         } else {
           icas=0;
