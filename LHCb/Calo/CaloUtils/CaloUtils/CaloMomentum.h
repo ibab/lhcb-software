@@ -176,15 +176,13 @@ namespace LHCb
     { m_caloPositions = value ; }
     void resetCaloPositions() { m_caloPositions.clear() ; }
     //
-    void setReferencePoint 
-    ( const Point&            point  ) ;
-    void setPosCovMatrix   
-    ( const PointCovariance&  cov    ) ; 
-    void setReferencePoint 
-    ( const Point&            point  , 
-      const PointCovariance&  cov    ) ;
-    void setReferencePoint 
-    ( const LHCb::VertexBase* vertex ) ;
+
+    CaloHypos caloHypos();
+    void setReferencePoint( const Point&            point  ) ;
+    void setPosCovMatrix( const PointCovariance&  cov    ) ; 
+    void setReferencePoint( const Point&            point  , 
+                            const PointCovariance&  cov    ) ;
+    void setReferencePoint( const LHCb::VertexBase* vertex ) ;
     //
     void addToStatus ( Status status ) { m_status |= status ; }
     void addToFlag   ( Flag   flag   ) { m_flag   |= flag   ; }
@@ -233,9 +231,12 @@ namespace LHCb
   // ==========================================================================
 } // end of namespace LHCb
 // ============================================================================
-inline void LHCb::CaloMomentum::setReferencePoint
-( const LHCb::CaloMomentum::Point&  point )
-{
+
+inline LHCb::CaloMomentum::CaloHypos LHCb::CaloMomentum::caloHypos(){
+  return m_caloHypos;
+}
+
+inline void LHCb::CaloMomentum::setReferencePoint( const LHCb::CaloMomentum::Point&  point ){
   m_point = point; 
   this -> addToFlag ( LHCb::CaloMomentum::NewReferencePoint ) ;
 } 

@@ -5,6 +5,9 @@
 
 
 
+! 2012-06-15 - Olivier Deschamps
+  - CaloMomentum : add the missing method to return the CaloHypo vector
+
 ! 2012-06-12 - Olivier Deschamps
   - CaloParticle/CaloMomentum : store CaloHypo vector
 
