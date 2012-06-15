@@ -17,9 +17,10 @@ preprocessor = BrunelPreprocessor + \
   RegexpReplacer(when = "Data source: EventDataSvc output", orig = r'brunel2012magdown-200ev.dst', repl = r'Brunel.dst') +\
   RegexpReplacer(when = "Data source: FileRecordDataSvc output", orig = r'brunel2012magdown-200ev.dst', repl = r'Brunel.dst') +\
   RegexpReplacer(when = "BrunelEventCount     INFO ", orig = r'200', repl = r'164') +\
+  RegexpReplacer(when = "BrunelInit        SUCCESS ", orig = r'200 events processed', repl = r'164 events processed') +\
+  RegexpReplacer(when = "BrunelInit        SUCCESS Requested to process ", orig = r'200 events', repl = r'all events on input file(s)') +\
   LineSkipper(['INFO Connected to database "ONLINE"']) + \
   LineSkipper(["InitReprocSeq        INFO Member list: "]) + \
-  LineSkipper(["BrunelInit"]) + \
   LineSkipper(["FilterNoBeam"]) + \
   LineSkipper(["FilterBeam"]) + \
   LineSkipper(["LumiDecode"]) + \
@@ -38,6 +39,9 @@ preprocessor = BrunelPreprocessor + \
   RegexpReplacer(when = "HltFilterSeq         INFO Member list: ", orig = r'HltRoutingBitsFilter/PhysFilter, ', repl = r'') +\
   LineSkipper(["TimeSpanSeq          INFO Member list"]) + \
   LineSkipper(["NotPhysicsSeq        INFO OR Member list"]) + \
+  LineSkipper(["IODataManager       ERROR Referring to existing dataset"]) + \
+  LineSkipper(["IODataManager       ERROR You may not be able to navigate back to the input file"]) + \
+  LineSkipper(["BrunelInit           INFO Evt "]) + \
   LineSkipper(["WARNING RawEventSelectiveCopy"]) + \
   LineSkipper(["TrackBestTrackC...WARNING TrackMasterFitter:: The WARNING message is suppressed"]) + \
   LineSkipper(["EventLoopMgr         INFO No more events in event selection"]) + \
