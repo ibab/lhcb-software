@@ -4,19 +4,29 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2012-06-15 - Chris Jones
+ - Fix a compilation warning in TupleToolVeot + some minor optimsations.
+
 ! 2012-06-15 -  Fatima Soomro
-- Added the functionality in TupleToolTISTOS to specify a list of PIDs, that IF specified will direct the tool to fill trigger info only for those particles, like
-tuple.TupleToolTISTOS.PIDList = [413, 211, 421, 333, 22, 321] 
-If no list is specified the tool behaves as it used to previously, i.e. fill trigger info for all the particles in the decay descriptor
+- Added the functionality in TupleToolTISTOS to specify a list of PIDs, 
+  that IF specified will direct the tool to fill trigger info only for those 
+  particles, like tuple.TupleToolTISTOS.PIDList = [413, 211, 421, 333, 22, 321] 
+  If no list is specified the tool behaves as it used to previously, 
+  i.e. fill trigger info for all the particles in the decay descriptor
 
 ! 2012-06-14 -  Olivier Deschamps
  - TupleToolSubMass   : fix problem with tree ordering for some charged B decays
- - TupleToolStripping : fix problem with  DecReports structure changing with events 
-  ==> the list of stripping lines must now be set explicitely via the StrippingList property (or equivalently TriggerList inherited from TupleToolTriggerBase)
+ - TupleToolStripping : fix problem with DecReports structure changing between 
+                        different events, due to null reports being suppressed
+                        to save space on the (m)DSTs. 
+     ==> the list of stripping lines must now be set explicitely via the
+         StrippingList property (or equivalently TriggerList inherited from
+          TupleToolTriggerBase)
 
 ! 2012-06-12 -  Olivier Deschamps
- - TupleToolSubMass : new tool producing the invariant masses for all n-body combinations in N-body decays (n=2,N) 
-    - PID subtitution can be configured
+ - TupleToolSubMass : new tool producing the invariant masses for all n-body 
+   combinations in N-body decays (n=2,N) 
+  . The PID subtitution can be configured
 
 ! 2012-06-06 - Marc Grabalosa
  - TupleToolTagging: 
