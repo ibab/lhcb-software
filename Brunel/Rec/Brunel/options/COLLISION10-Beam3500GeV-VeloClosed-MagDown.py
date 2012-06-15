@@ -14,5 +14,5 @@ Brunel().DataType = "2010"
 
 # 2188 events from run 81684
 EventSelector().Input = [
-  "DATAFILE='/usera/jonesc/NFS/data/Collision10/LHCb/Raw/81684/081684_0000000335.raw' SVC='LHCb::MDFSelector'"
+  "DATAFILE='mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/81684/081684_0000000335.raw?svcClass=lhcbdisk' SVC='LHCb::MDFSelector'"
     ]
