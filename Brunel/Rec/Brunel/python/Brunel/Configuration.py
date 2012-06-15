@@ -516,7 +516,7 @@ class Brunel(LHCbConfigurableUser):
                     
                 # and the rest
                 allOtherRawBankCopy = RawEventSelectiveCopy('OtherRawEvent')
-                allOtherRawBankCopy.RawBanksToRemove = trigBanks + ['Muon','Rich']
+                allOtherRawBankCopy.RawBanksToRemove = trigBanks + ['Muon','Rich'] + caloBanks
                 allOtherRawBankCopy.OutputRawEventLocation = "Other/RawEvent"
                 GaudiSequencer("OutputDSTSeq").Members += [allOtherRawBankCopy]
                     
