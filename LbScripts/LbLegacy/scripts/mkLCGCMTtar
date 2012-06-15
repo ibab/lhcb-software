@@ -36,8 +36,10 @@ from LbUtils.CMT.Common import CMTCommand as CMT
 
 tmpdir = TempDir(prefix="mkLCGCMTtar")
 
+
 import sys, os, getopt, time, shutil
 import re
+from subprocess import Popen, PIPE
 from LbLegacy.install_project import calculateMD5
 version = '091123'
 
@@ -120,6 +122,8 @@ def get_base_project(native_version):
         Name = 'LCG'
     if NAME == 'LHCBGRID' :
         Name = 'LHCbGrid'
+    if Name == 'Lhcbexternals' :
+        Name = 'LHCbExternals'
     NameSys = Name+'Sys'
     if Name == 'Gaudi':
         NameSys = Name+'Release'
@@ -135,6 +139,7 @@ def get_base_project(native_version):
             sys.exit('No CMTPROJECTPATH')
         print 'CMTPROJECTPATH = ',os.environ['CMTPROJECTPATH']
         os.chdir(os.path.join(os.environ[release_area],NAME,native_version,'cmt'))
+    print "get_base_project %s %s %s %s %s" % (NAME, version, Name, NameSys, release_area)
     return NAME, version, Name, NameSys, release_area
 
 
@@ -290,6 +295,40 @@ def get_native_versions(native_version, binary):
             print "%s has no version. Removing it from the list" % pak
             del packages_versions[pak]
 
+    # Code added to cope with the relocation of some packages from
+    # external to app/releases (2012/06/14)
+
+    # We first lookup the releases and external paths to be able to compare
+    # this is dirty but we have no netter solution for the moment
+    LCG_external = get_macro_value(None, "LCG_external", getCMTExtraTags(binary))
+    LCG_releases = get_macro_value(None, "LCG_releases", getCMTExtraTags(binary))
+
+    # Iterate over package to check whether they should be kept in external
+    # or app/releases. We execute a show macro_value on the package home
+    for pak in packages_versions.keys() :
+        if debug_flag == 1:
+            print "get_native_version - Checking home for package: %s" %  pak
+        macro = pak+ "_home"
+        value = get_macro_value(None, macro, getCMTExtraTags(binary))
+        if debug_flag == 1:
+            print "get_native_version - %s = %s" % ( macro, value)
+
+        pakType = None
+        if value.startswith(LCG_external):
+            pakType = "external"
+        if value.startswith(LCG_releases):
+            pakType = "app/releases"
+
+        l = packages_versions[pak]
+        l.append(pakType)
+        
+        if debug_flag == 1:
+            print "get_native_version - %s = %s" % (pak, pakType)
+            
+        if pakType == None:
+            print "Cannot find if %s is in external or app/releases, ABORTING"
+            sys.exit(1)
+
     if binary.startswith("i686"):
         for pak in packages_versions.keys() :
             content = packages_versions[pak]
@@ -300,8 +339,26 @@ def get_native_versions(native_version, binary):
                 packages_versions[pak] = [content[0], content[1], newbin, newpath]
 
     os.chdir(here)
-
     return packages_versions
+
+
+#  Method added to facilitate the lookup of macro values
+def get_macro_value(cmtdir, macro, extratags):
+    """ Returns the value of a macro """
+    here = os.getcwd()
+    if cmtdir != None:
+        os.chdir(cmtdir)
+    cmd = ["cmt", extratags, "show", "macro_value", macro]
+    if debug_flag == 1:
+        print "get_macro_value - Running: ", " ".join(cmd)
+    # Invoking popen to run the command, result is on stdout first line
+    p = Popen(" ".join(cmd), stdout=PIPE, stderr=PIPE, shell=True)
+    line = p.stdout.readline()[:-1]
+    if debug_flag == 1:
+        print "get_macro_value - %s = %s" % (macro, line)
+    if cmtdir != None:
+        os.chdir(here)
+    return line
 
 #
 #  get LCGCMT tar file names ===============================================
@@ -413,10 +470,24 @@ def get_tar_files(native_version, packages_versions,binary_dir, output_file):
     if not os.path.exists(binary_dir):
         os.mkdir(binary_dir)
     os.chdir(binary_dir)
+
     if  os.path.exists('external'):
         os.system(rmcmd+' external')
     os.mkdir('external')
-    os.chdir('external')
+    # Not needed anymore we chdir on demand...
+    #os.chdir('external')
+
+    # Creating the app/releases subdirectory
+    appreleases = "app/releases"
+    if  os.path.exists(appreleases):
+        os.system(rmcmd + appreleases)
+    os.makedirs(appreleases)
+
+    # Top tar directory
+    toptardir = os.path.join(tmpdir.getName(), main_dir, binary_dir)
+    appreleasesdir = os.path.join(toptardir, "app", "releases")
+    externaldir = os.path.join(toptardir, "external")
+
 
 # if PLUGINS copy $LHCBRELEASES/context/requirements on /tmp/external
     if plugins_flag == 1:
@@ -427,6 +498,23 @@ def get_tar_files(native_version, packages_versions,binary_dir, output_file):
     missing = []
     tarko   = []
     for pack in packages_versions.keys():
+
+        print "======> %s data:" % pack,  packages_versions[pack]
+        # last entry is the package type...
+        packType = packages_versions[pack][-1]
+        if debug_flag == 1: print 'get_tar_file Package %s is in %s' % (pack, packType)
+        
+        # Position to correct directory, and stop is the package type
+        # is not known
+        if packType == "external":
+            os.chdir(externaldir)
+        elif packType == "app/releases":
+            os.chdir(appreleasesdir)
+        else:
+            print "Incorrect packType for %s : %s ABORTING" % (pack, packType)
+            sys.exit(1)
+
+            
         value = packages_versions[pack][0]
         ext_bin_dir = packages_versions[pack][2]
         tar_dir = lcg_tar_dir
@@ -442,6 +530,9 @@ def get_tar_files(native_version, packages_versions,binary_dir, output_file):
             packpath = getPackPrefix(pack, packages_versions)
             if debug_flag == 1: print 'get_tar_file packpath= ',packpath
 
+            # We need to extract in the correct location, either external
+            # or apps releases, so we need to change directory before the extraction"
+            
             str = 'tar --extract --ungzip --file '+Ffile
             rc = os.system(str)
 
@@ -502,7 +593,7 @@ def get_tar_files(native_version, packages_versions,binary_dir, output_file):
         str += ' --exclude "*.rpm" '
         if exclusion_pattern :
             str += ' --exclude "%s" ' % exclusion_pattern
-        str += ' external'
+        str += ' external app'
         print str
         rc = os.system(str)
         if rc == 0:
@@ -629,7 +720,6 @@ if __name__ == "__main__":
 
     debug_flag = 0
     plugins_flag = 0
-
     for key,value in keys:
         if key in ('-d', '--debug'):
             debug_flag = 1
@@ -647,7 +737,7 @@ if __name__ == "__main__":
         if key in ('-p', '--plugins'):
             plugins_flag = 1
             native_version = 'PLUGINS'
-        if key in ('--html-only'):
+        if key in ([ '--html-only']):
             html_only = True
 
     if plugins_flag == 1:
@@ -657,6 +747,7 @@ if __name__ == "__main__":
 
 
     packages_versions = get_native_versions(native_version,binary)
+    
     if debug_flag == 1:
         print ' packages_versions = ', packages_versions
 
