@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2012-06-15 - Albert Bursche
+ - Prevent TupleToolDalitz from running on jets. It leads to segfaults otherwise. 
+
 ! 2012-06-15 - Chris Jones
  - Fix a compilation warning in TupleToolVeto + some minor optimsations.
 
