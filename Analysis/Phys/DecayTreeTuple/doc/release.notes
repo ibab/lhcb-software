@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2012-06-15 - Chris Jones
- - Fix a compilation warning in TupleToolVeot + some minor optimsations.
+ - Fix a compilation warning in TupleToolVeto + some minor optimsations.
 
 ! 2012-06-15 -  Fatima Soomro
 - Added the functionality in TupleToolTISTOS to specify a list of PIDs, 
