@@ -4,6 +4,8 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+!========================= RichDet v16r11 2012-06-15 =========================
+
 ! 2012-06-10 - Chris Jones
  - Fix DeRichGasRadiator to allow the scale factors to be used Online.
 
