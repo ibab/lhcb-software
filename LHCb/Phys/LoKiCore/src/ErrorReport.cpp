@@ -132,10 +132,12 @@ StatusCode LoKi::ErrorReport::Error
   const size_t        mx ) const 
 { 
   st.ignore() ;
-  if ( 0 != m_reporter ) { return m_reporter->Error( msg , st , mx ) ; }
+  if ( 0 != m_reporter ) { return m_reporter->Error ( msg , st , mx ) ; }
   const size_t ne = ++m_errors[msg] ;
-  if ( ne <= mx ) { Print ( msg , st , MSG::ERROR ) ; }
-  if ( ne == mx ) 
+  //
+  const std::size_t mx_ = std::min ( mx , LoKi::IReporter::maxErrorPrint () )  ;
+  if ( ne <= mx_ ) { Print ( msg , st , MSG::ERROR ) ; }
+  if ( ne == mx_ ) 
   { Print ( "The ERROR   message '" + msg + 
             "' is suppressed from now" , st , MSG::ERROR ) ; }
   return st ;
@@ -155,8 +157,10 @@ StatusCode LoKi::ErrorReport::Warning
   st.ignore() ;
   if( 0 != m_reporter ) { return m_reporter->Warning( msg , st , mx ) ; }
   const size_t ne = ++m_warnings[msg] ;
-  if ( ne <= mx ) { Print( msg , st , MSG::WARNING ) ; }
-  if ( ne == mx ) 
+  //
+  const std::size_t mx_ = std::min ( mx , LoKi::IReporter::maxWarningPrint () )  ;
+  if ( ne <= mx_ ) { Print( msg , st , MSG::WARNING ) ; }
+  if ( ne == mx_ ) 
   { Print ( "The WARNING message '" + msg + 
             "' is suppressed from now" , st , MSG::WARNING ) ; }
   return st ; 

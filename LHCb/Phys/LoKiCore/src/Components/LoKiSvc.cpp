@@ -63,8 +63,9 @@
  */
 // ============================================================================
 class LoKiSvc 
-  : public virtual LoKi::ILoKiSvc 
-  , public                Service 
+  : public                Service
+  , public virtual LoKi::ILoKiSvc 
+  , public virtual IIncidentListener 
 {
   // ==========================================================================
   // the friend factory for instantiation 
@@ -95,7 +96,7 @@ public:
    *  (needed for the proper synchronizations checks) 
    *  @return the sequential event number 
    */
-  virtual long                 event       () const { return m_event ; }
+  virtual unsigned long long event       () const { return m_event ; }
   // ==========================================================================
 public:
   // ==========================================================================
@@ -359,7 +360,8 @@ public:
   {
     if ( IncidentType::BeginEvent == inc.type() ) 
     {
-      if   ( m_event < std::numeric_limits<long>::max() ) { ++m_event ; }
+      if   ( m_event < std::numeric_limits<unsigned long long>::max() )
+      { ++m_event ; }
       else { m_event = 1 ; }
     }    
   } 
@@ -694,7 +696,7 @@ private:
   /// the name of the default reporter 
   std::string                   m_reporterName ;        // the name of reporter 
   /// the event marker 
-  long                          m_event        ;            // the event marker
+  unsigned long long            m_event        ;            // the event marker
   /// print welcome message
   bool                          m_welcome      ;       // print welcome message 
   // ==========================================================================

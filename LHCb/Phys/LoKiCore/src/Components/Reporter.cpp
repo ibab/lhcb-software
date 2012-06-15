@@ -44,8 +44,8 @@ namespace LoKi
    *  @date   2003-01-16
    */
   class Reporter 
-    : public virtual LoKi::IReporter 
-    , public               GaudiTool 
+    : public               GaudiTool
+    , public virtual LoKi::IReporter
   {
     // ========================================================================
     /// friend factory for instantiation 
@@ -55,43 +55,49 @@ namespace LoKi
     // ========================================================================
     virtual StatusCode Error     
     ( const std::string& msg , 
-      const StatusCode   st  = StatusCode ( StatusCode::FAILURE , true )  ,
-      const size_t       mx  = 10                  ) const 
-    { return GaudiTool::Error   ( msg , st , mx ) ; }
+      const StatusCode   st  ,
+      const size_t       mx  ) const 
+    {
+      std::size_t mx_ = std::min ( mx , LoKi::IReporter::maxErrorPrint   () )  ;
+      return GaudiTool::Error   ( msg , st , mx_ ) ; 
+    }
     //
     virtual StatusCode Warning   
     ( const std::string& msg , 
-      const StatusCode   st  = StatusCode ( StatusCode::FAILURE , true ) ,
-      const size_t       mx  = 10                  ) const 
-    { return GaudiTool::Warning ( msg , st , mx ) ; }
+      const StatusCode   st  ,
+      const size_t       mx  ) const 
+    { 
+      std::size_t mx_ = std::min ( mx , LoKi::IReporter::maxWarningPrint () )  ;
+      return GaudiTool::Warning ( msg , st , mx ) ; 
+    }
     //
     virtual StatusCode Print     
     ( const std::string& msg , 
-      const StatusCode   st  = StatusCode ( StatusCode::SUCCESS , true ) ,
-      const MSG::Level   lev = MSG::INFO           ) const 
+      const StatusCode   st  ,
+      const MSG::Level   lev ) const 
     { return GaudiTool::Print ( msg , st , lev ) ; }
     //
     virtual void       Assert 
-    ( const bool         ok                            , 
-      const std::string& message = ""                  , 
-      const StatusCode   sc      = StatusCode ( StatusCode::FAILURE , true ) ) const 
+    ( const bool         ok      , 
+      const std::string& message , 
+      const StatusCode   sc      ) const 
     { GaudiTool::Assert ( ok , message , sc ) ; }
     //
     virtual void       Exception 
-    ( const std::string    & msg                        ,  
-      const GaudiException & exc                        , 
-      const StatusCode       sc  = StatusCode ( StatusCode::FAILURE , true ) ) const 
+    ( const std::string    & msg ,  
+      const GaudiException & exc , 
+      const StatusCode       sc  ) const 
     { GaudiTool::Exception ( msg , exc , sc ) ; }
     //
     virtual void       Exception 
-    ( const std::string    & msg                        ,  
-      const std::exception & exc                        , 
-      const StatusCode       sc  = StatusCode ( StatusCode::FAILURE , true ) ) const 
+    ( const std::string    & msg ,  
+      const std::exception & exc , 
+      const StatusCode       sc  ) const 
     { GaudiTool::Exception ( msg , exc , sc ) ; }
     //
     virtual void       Exception 
-    ( const std::string& msg = "no message"        ,  
-      const StatusCode   sc  = StatusCode ( StatusCode::FAILURE , true ) ) const 
+    ( const std::string& msg     ,  
+      const StatusCode   sc      ) const 
     { GaudiTool::Exception ( msg      , sc ) ; }
     //
     // ========================================================================
@@ -164,7 +170,7 @@ namespace LoKi
     /// assignement operator is disabled 
     Reporter& operator= ( const Reporter& ) ;        // no assignement operator
     // ========================================================================
-  };
+  } ;
   // ==========================================================================
 } // end of namespace LoKi 
 // ============================================================================

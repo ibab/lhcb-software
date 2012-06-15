@@ -50,10 +50,7 @@ namespace LoKi
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2006-01-16
    */
-  class ILoKiSvc 
-    : virtual public IInterface       
-    , virtual public IService         
-    , virtual public IIncidentListener 
+  class ILoKiSvc : virtual public IService         
   {
   public:    
     // ========================================================================
@@ -67,7 +64,7 @@ namespace LoKi
      *  (needed for the proper synchronizations checks) 
      *  @return the sequential event number 
      */
-    virtual long                 event       () const = 0 ;
+    virtual unsigned long long   event       () const = 0 ;
     // ========================================================================
   public:
     // ========================================================================

@@ -28,7 +28,7 @@ namespace
   /** @var IID_ILoKiReporter 
    *  unique static identifier of ILoKiReporter interface 
    */
-  const InterfaceID IID_ILoKiReporter ( "LoKi::IReporter" , 3 , 1 ) ;
+  const InterfaceID IID_ILoKiReporter ( "LoKi::IReporter" , 4 , 1 ) ;
   // ==========================================================================
 } 
 // ============================================================================
@@ -45,7 +45,30 @@ const InterfaceID& LoKi::IReporter::interfaceID() { return IID_ILoKiReporter ; }
 // ============================================================================
 LoKi::IReporter::~IReporter() {}
 // ============================================================================
-
+// define maximal number of prints 
+// ============================================================================
+void LoKi::IReporter::setMaxErrorPrint   ( const std::size_t v )// max prints 
+{ s_maxErrorPrint    = v ; }
+// ============================================================================
+// define maximal number of warning prints 
+// ============================================================================
+void LoKi::IReporter::setMaxWarningPrint ( const std::size_t v )// max prints
+{ s_maxWarningPrint  = v ; }
+// ============================================================================
+// maximal number of error   prints 
+// ============================================================================
+std::size_t LoKi::IReporter::maxErrorPrint   () 
+{ return s_maxErrorPrint   ; } 
+// ============================================================================
+// maximal number of warning prints 
+// ============================================================================
+std::size_t LoKi::IReporter::maxWarningPrint () 
+{ return s_maxWarningPrint ; }
+// ============================================================================
+/// define maximal number of prints 
+std::size_t LoKi::IReporter::s_maxErrorPrint   = 10 ;
+/// define maximal number of prints 
+std::size_t LoKi::IReporter::s_maxWarningPrint = 10 ;
 // ============================================================================
 // The END 
 // ============================================================================
