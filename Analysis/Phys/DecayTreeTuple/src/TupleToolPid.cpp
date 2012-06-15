@@ -147,9 +147,13 @@ StatusCode TupleToolPid::fill( const Particle*
         test &= tuple->column( prefix+"_PrsPIDe",
                                proto->info(LHCb::ProtoParticle::PrsPIDe,-10000.));
 
+	test &= tuple->column( prefix+"_CaloPrsE",  proto->info(LHCb::ProtoParticle::CaloPrsE, -999 ));
+	
+
         // SPD
         test &= tuple->column( prefix+"_InAccSpd", proto->info(LHCb::ProtoParticle::InAccSpd,false)>0.5 );
-
+	test &= tuple->column( prefix+"_CaloSpdE",  proto->info(LHCb::ProtoParticle::CaloSpdE, -999 ));
+	
         // BREM
         test &= tuple->column( prefix+"_InAccBrem", proto->info(LHCb::ProtoParticle::InAccBrem,false)>0.5 );
         test &= tuple->column( prefix+"_BremPIDe",

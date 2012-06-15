@@ -13,6 +13,7 @@
   particles, like tuple.TupleToolTISTOS.PIDList = [413, 211, 421, 333, 22, 321] 
   If no list is specified the tool behaves as it used to previously, 
   i.e. fill trigger info for all the particles in the decay descriptor
+- Added _CaloSpdE and _CaloPrsE to TupleToolPid
 
 ! 2012-06-14 -  Olivier Deschamps
  - TupleToolSubMass   : fix problem with tree ordering for some charged B decays
