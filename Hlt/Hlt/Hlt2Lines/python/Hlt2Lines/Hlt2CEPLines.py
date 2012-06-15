@@ -35,37 +35,40 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
                                     , 'Hlt2LowMultDDInc'       : 1.0
                                     }
                   # Final-state particles
-                  , 'H_PTmin'       : 100.0 * MeV
-                  , 'H_Pmin'        : 5000.0 * MeV
-                  , 'H_TrkChi2max'  : 3.0
-                  , 'K_PIDKmin'     : 0.0
+                  , 'H_PTmin'         : 100.0 * MeV
+                  , 'H_Pmin'          : 5000.0 * MeV
+                  , 'H_TrkChi2max'    : 3.0
+                  , 'K_PIDKmin'       : 0.0
+                  , 'DDInc_H_Pmin'    : 10000.0 * MeV
+                  , 'DDInc_K_PIDKmin' : 5.0
                   # D0 -> KPi
                   , 'D2KPi_APTmin'        : 0.0 * MeV
                   , 'D2KPi_ADAMASSmax'    : 80.0 * MeV
                   , 'D2KPi_ADOCAmax'      : 0.5 * mm
-                  , 'D2KPi_APmin'         : 5000.0 * MeV
+                  , 'D2KPi_APmin'         : 10000.0 * MeV
                   , 'D2KPi_SSumPTmin'     : 200.0 * MeV
                   , 'D2KPi_VtxChi2DoFmax' : 15.0
                   # D+- -> KPiPi
                   , 'D2KPiPi_APTmin'        : 0.0 * MeV
                   , 'D2KPiPi_ADAMASSmax'    : 80.0 * MeV
                   , 'D2KPiPi_ADOCAmax'      : 0.5 * mm
-                  , 'D2KPiPi_APmin'         : 5000.0 * MeV
+                  , 'D2KPiPi_APmin'         : 10000.0 * MeV
                   , 'D2KPiPi_SSumPTmin'     : 300.0 * MeV
                   , 'D2KPiPi_VtxChi2DoFmax' : 15.0
                   # D0 -> K3Pi
                   , 'D2K3Pi_APTmin'        : 0.0 * MeV
                   , 'D2K3Pi_ADAMASSmax'    : 80.0 * MeV
                   , 'D2K3Pi_ADOCAmax'      : 0.7 * mm
-                  , 'D2K3Pi_APmin'         : 5000.0 * MeV
+                  , 'D2K3Pi_APmin'         : 10000.0 * MeV
                   , 'D2K3Pi_SSumPTmin'     : 400.0 * MeV
                   , 'D2K3Pi_VtxChi2DoFmax' : 15.0
                   # ChiC -> HH
                   , 'ChiC2HH_APTmin'        : 0.0 * MeV
                   , 'ChiC2HH_APTmax'        : 5000.0 * MeV
-                  , 'ChiC2HH_ADAMASSmax'    : 120.0 * MeV
+                  , 'ChiC2HH_AMmin'         : 3300.0 * MeV
+                  , 'ChiC2HH_AMmax'         : 3600.0 * MeV
                   , 'ChiC2HH_ADOCAmax'      : 0.5 * mm
-                  , 'ChiC2HH_APmin'         : 5000.0 * MeV
+                  , 'ChiC2HH_APmin'         : 10000.0 * MeV
                   , 'ChiC2HH_SSumPTmin'     : 200.0 * MeV
                   , 'ChiC2HH_VtxChi2DoFmax' : 15.0
                   # ChiC -> HHHH
@@ -74,11 +77,9 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
                   , 'ChiC2HHHH_AMmin'         : 2850.0 * MeV
                   , 'ChiC2HHHH_AMmax'         : 4500.0 * MeV
                   , 'ChiC2HHHH_ADOCAmax'      : 0.7 * mm
-                  , 'ChiC2HHHH_APmin'         : 5000.0 * MeV
+                  , 'ChiC2HHHH_APmin'         : 10000.0 * MeV
                   , 'ChiC2HHHH_SSumPTmin'     : 400.0 * MeV
                   , 'ChiC2HHHH_VtxChi2DoFmax' : 15.0
-                  # DD inclusive
-                  , 'DDInc_ADOCAmin' : 0.5 * mm
                   # ANNSvc IDs
                   , 'HltANNSvcID' : { "D2KPi"         : 50401
                                       , "D2KPiPi"     : 50402
@@ -111,9 +112,12 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
         #=== Final-state particles ===#
         #
 
-        K_cut  = "(PT > %(H_PTmin)s) & (P > %(H_Pmin)s) & (TRCHI2DOF < %(H_TrkChi2max)s) & (PIDK > %(K_PIDKmin)s)" % self.getProps()
-        Pi_cut = "(PT > %(H_PTmin)s) & (P > %(H_Pmin)s) & (TRCHI2DOF < %(H_TrkChi2max)s)" % self.getProps()
+        K_cut        = "(PT > %(H_PTmin)s) & (P > %(H_Pmin)s) & (TRCHI2DOF < %(H_TrkChi2max)s) & (PIDK > %(K_PIDKmin)s)" % self.getProps()
+        DDInc_K_cut  = "(PT > %(H_PTmin)s) & (P > %(DDInc_H_Pmin)s) & (TRCHI2DOF < %(H_TrkChi2max)s) & (PIDK > %(DDInc_K_PIDKmin)s)" % self.getProps()
+        Pi_cut       = "(PT > %(H_PTmin)s) & (P > %(H_Pmin)s) & (TRCHI2DOF < %(H_TrkChi2max)s)" % self.getProps()
+
         Daug_cuts = {"K+" : K_cut, "K-" : K_cut, "pi+" : Pi_cut, "pi-" : Pi_cut}
+        DDInc_Daug_cuts = {"K+" : DDInc_K_cut, "K-" : DDInc_K_cut}
         
         #
         #=== D0 -> KPi ===#
@@ -212,7 +216,7 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
         #=== 'chi_c' -> KK, pipi ===#
         #
 
-        ChiC2HH_Comb_cut   = "(APT > %(ChiC2HH_APTmin)s) & (APT < %(ChiC2HH_APTmax)s) & (ADAMASS('chi_c1(1P)') < %(ChiC2HH_ADAMASSmax)s) & " \
+        ChiC2HH_Comb_cut   = "(APT > %(ChiC2HH_APTmin)s) & (APT < %(ChiC2HH_APTmax)s) & (AM > %(ChiC2HH_AMmin)s) & (AM < %(ChiC2HH_AMmax)s) & " \
                              "(ADOCAMAX('LoKi::DistanceCalculator') < %(ChiC2HH_ADOCAmax)s) & " \
                              "(AP > %(ChiC2HH_APmin)s) & (ACHILD(PT, 1) + ACHILD(PT, 2) > %(ChiC2HH_SSumPTmin)s)" % self.getProps()
         ChiC2HH_Mother_cut = "(VFASPF(VCHI2PDOF) < %(ChiC2HH_VtxChi2DoFmax)s)" % self.getProps()
@@ -285,14 +289,11 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
         #=== Inclusive DD ===#
         #
 
-        DDInc_Comb_cut = "(ADOCAMAX('LoKi::DistanceCalculator') > %(DDInc_ADOCAmin)s)" % self.getProps()
-
         CombineDDInc = Hlt2Member(CombineParticles
                                   , "Combine"
                                   , DecayDescriptors = [ "D0 -> K+ K-",
                                                          "[D0 -> K+ K+]cc" ]
-                                  , DaughtersCuts = Daug_cuts
-                                  , CombinationCut = DDInc_Comb_cut
+                                  , DaughtersCuts = DDInc_Daug_cuts
                                   , MotherCut = "ALL"
                                   , Inputs = [ Kaons ]
                                   )

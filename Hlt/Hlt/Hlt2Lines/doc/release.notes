@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2012-06-15 - C. Thomas
+- Tightened some cuts
+
 ! 2012-06-13 - C. Thomas
  - Added two further lines to Hlt2CEPLines, tweaked some cuts
  - Added DD inclusive line
