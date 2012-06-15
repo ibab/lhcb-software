@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2012-06-15 - Marco Cattaneo
+ - Add also Calo/RawEvent
+
 ! 2012-06-13 - Marco Cattaneo
  - Add also Rich/RawEvent
 

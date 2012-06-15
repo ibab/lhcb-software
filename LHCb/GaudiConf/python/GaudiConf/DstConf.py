@@ -135,6 +135,7 @@ class DstConf(LHCbConfigurableUser):
                     "/Event/Trigger/RawEvent#1"
                   , "/Event/Muon/RawEvent#1"
                     #Exists from Brunel v44r0 onwards...
+                  , "/Event/Calo/RawEvent#1"
                   , "/Event/Rich/RawEvent#1"
                   , "/Event/Other/RawEvent#1"
                   ]
