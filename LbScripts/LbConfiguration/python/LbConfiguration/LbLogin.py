@@ -503,10 +503,10 @@ class LbLoginScript(SourceScript):
                 ev["LHCB_USERLOGS"] = os.path.join(ev["LHCBHOME"], "log", "users")
                 ev["DIM_release_area"] = ev["CONTRIBDIR"]
                 ev["XMLRPC_release_area"] = ev["CONTRIBDIR"]
-                ev["LCG_release_area"] = multiPathJoin(opts.mysiteroot, os.path.join("lcg" , "external"))
+                ev["LCG_release_area"] = multiPathJoin(opts.mysiteroot, os.path.join("lcg" , "app", "releases"),
+                                                       exist_check=True)
                 ev["LCG_release_area"] = pathAdd(ev["LCG_release_area"],
-                                                 multiPathJoin(opts.mysiteroot, os.path.join("lcg", "app", "releases")),
-                                                 exist_check=True)
+                                                 multiPathJoin(opts.mysiteroot, os.path.join("lcg", "external")))
                 ev["LCG_external_area"] = multiPathJoin(opts.mysiteroot, os.path.join("lcg" , "external"))
                 ev["LHCBRELEASES"] = multiPathJoin(opts.mysiteroot, "lhcb")
                 ev["GAUDISOFT"] = ev["LHCBRELEASES"]

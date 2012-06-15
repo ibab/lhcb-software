@@ -1,3 +1,8 @@
+2012-06-15  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/LbLogin.py: reverse the order in which app/releases
+	and external are added to the LHCBPROJECTPATH in case of local installations
+
 2012-06-14  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/SetupProject.py: added (limited) support for
