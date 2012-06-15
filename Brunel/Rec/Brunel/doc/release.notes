@@ -25,6 +25,8 @@ Purpose: LHCb reconstruction program
   . Add a test for bug #95019 in brunel.brunel-mc09-notruth
   . Add brunel.repro2012magdown to test that reprocessing gives identical
     output to brunel.brunel2012magdown
+  . Change the name of the output file of brunel.bigevents, used as input to
+    brunel.readdstfsr, so that latter can be executed after any other test
 
 </PRE><H1><A NAME=v42r3p2>2012-05-09 Brunel v42r3p2</A></H1><PRE>
 This version uses projects LCG 62b, Gaudi v23r2, LHCb v34r3, Lbcom v12r3,
