@@ -462,7 +462,7 @@ class Brunel(LHCbConfigurableUser):
                 IODataManager().AgeLimit += 1
 
             if dstType in ["SDST","DST","XDST"] and packType not in ["MDF"]:
-                # repack certain raw banks for the stripping.
+                # Split the Raw Event for the DST
 
                 # first the Trigger Raw Event
                 from Configurables import RawEventSelectiveCopy
@@ -480,9 +480,27 @@ class Brunel(LHCbConfigurableUser):
                               'L0PU'
                               ]
                 trigRawBankCopy.RawBanksToCopy = trigBanks
-
                 trigRawBankCopy.OutputRawEventLocation = "Trigger/RawEvent"
                 GaudiSequencer("OutputDSTSeq").Members += [trigRawBankCopy]
+                    
+                # then the Calo Raw Event
+                caloRawBankCopy = RawEventSelectiveCopy('CaloRawBank')
+                caloBanks = [ 'PrsE',
+                              'EcalE',
+                              'HcalE',
+                              'PrsTrig',
+                              'EcalTrig',
+                              'HcalTrig',
+                              'EcalPacked',
+                              'HcalPacked',
+                              'PrsPacked',
+                              'EcalPackedError',
+                              'HcalPackedError',
+                              'PrsPackedError'
+                              ]
+                caloRawBankCopy.RawBanksToCopy = caloBanks
+                caloRawBankCopy.OutputRawEventLocation = "Calo/RawEvent"
+                GaudiSequencer("OutputDSTSeq").Members += [caloRawBankCopy]
                     
                 # then the Muon Raw Event
                 muonRawBankCopy = RawEventSelectiveCopy('MuonRawBank')

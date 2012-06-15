@@ -64,6 +64,7 @@ preprocessor = BrunelPreprocessor + \
   LineSkipper(["PrsL0Bit.PrsL0B...SUCCESS Number of counters"]) + \
   LineSkipper(["PrsADCs.PrsADCs...SUCCESS Number of counters"]) + \
   LineSkipper(["TriggerRawBank    SUCCESS "]) + \
+  LineSkipper(["CaloRawBank       SUCCESS "]) + \
   LineSkipper(["MuonRawBank       SUCCESS "]) + \
   LineSkipper(["RichRawBank       SUCCESS "]) + \
   LineSkipper(["OtherRawEvent     SUCCESS "])
