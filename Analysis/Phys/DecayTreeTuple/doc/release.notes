@@ -4,6 +4,11 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2012-06-15 -  Fatima Soomro
+- Added the functionality in TupleToolTISTOS to specify a list of PIDs, that IF specified will direct the tool to fill trigger info only for those particles, like
+tuple.TupleToolTISTOS.PIDList = [413, 211, 421, 333, 22, 321] 
+If no list is specified the tool behaves as it used to previously, i.e. fill trigger info for all the particles in the decay descriptor
+
 ! 2012-06-14 -  Olivier Deschamps
  - TupleToolSubMass   : fix problem with tree ordering for some charged B decays
  - TupleToolStripping : fix problem with  DecReports structure changing with events 
