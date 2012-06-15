@@ -45,7 +45,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                  , 'TrackChi2'               :    4
                  , 'ExJPsiMassWindow'        :   80   # MeV
                  , 'ExJPsiTrkChi2'           :    5
-                 , 'ExJPsiVChi2'             :   10
+                 , 'ExJPsiVChi2'             :    7
                  , 'ExJPsiPt'                : 1000   # MeV
                  , 'ExJPsiMuPt'              :  500   # MeV
                  , 'ExJPsiMuIPChi2'          :   25
@@ -169,9 +169,9 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                              , Code = " (ADMASS('J/psi(1S)')<%(ExJPsiMassWindow)s*MeV)"\
                              " & (PT>%(ExJPsiPt)s*MeV)"\
                              " & (VFASPF(VCHI2PDOF)<%(ExJPsiVChi2)s)"\
-                             " & (MINTREE('mu-'==ABSID,MIPCHI2DV(PRIMARY))>%(ExJPsiMuIPChi2)s )"\
-                             " & (MINTREE('mu-'==ABSID,TRCHI2DOF)<%(ExJPsiTrkChi2)s)"\
-                             " & (MINTREE('mu-'==ABSID,PT)>%(ExJPsiMuPt)s*MeV) " %  self.getProps() 
+                             #                             " & (MINTREE('mu-'==ABSID,MIPCHI2DV(PRIMARY))>%(ExJPsiMuIPChi2)s )"\ # we need tracks coming from IP
+                             " & (MAXTREE('mu-'==ABSID,TRCHI2DOF)<%(TrackChi2)s)"\
+                             " & (MINTREE('mu-'==ABSID,PT)>%(ExJPsiMuPt)s*MeV) " % self.getProps()
                              , Inputs  = [ TrackFittedDiMuon ]
                              , PreMonitor  =  Hlt2Monitor( "M","M(#mu#mu)",3097,self.getProp("ExJPsiMassWindow"),'M_in',nbins=101) 
                              , PostMonitor =  Hlt2Monitor( "M","M(#mu#mu)",3097,self.getProp("ExJPsiMassWindow"),'M_out',nbins=101)
