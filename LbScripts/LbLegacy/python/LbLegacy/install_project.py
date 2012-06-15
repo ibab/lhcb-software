@@ -1583,17 +1583,22 @@ def getProjectTar(tar_list, already_present_list=None):
                 log.info('Cleaning up %s' % pack_ver[3])
                 sys.exit("getProjectTar: Exiting ...")
             if pack_ver[0] in LbConfiguration.External.external_projects:
-                # if it is a ext_lhcb project
-                # create a ext_lhcb project/vers/binary directory
-                # to remember which binary tar file has been untar
-                if fname.find('GENSER_v') != -1:
-                # the GENSER project as such does not exist anylonger in LCG
-                    os.chdir(this_lcg_dir)
-                    safeMakeDirs('GENSER')
-                    os.chdir('GENSER')
-                    safeMakeDirs('GENSER_' + pack_ver[1])
-                os.chdir(pack_ver[3])
-                safeMakeDirs(pack_ver[2])
+                try:
+                    # if it is a ext_lhcb project
+                    # create a ext_lhcb project/vers/binary directory
+                    # to remember which binary tar file has been untar
+                    if fname.find('GENSER_v') != -1:
+                        # the GENSER project as such does not exist anylonger in LCG
+                        os.chdir(this_lcg_dir)
+                        safeMakeDirs('GENSER')
+                        os.chdir('GENSER')
+                        safeMakeDirs('GENSER_' + pack_ver[1])
+                    os.chdir(pack_ver[3])
+                    safeMakeDirs(pack_ver[2])
+                except:
+                    # ignore if we do not manage to create the special directory
+                    # ... it does not seem to be needed
+                    pass
 
             if soft_type == "LHCb" :
                 # if binary is requested and InstallArea does not exist : set it

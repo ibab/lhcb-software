@@ -1,14 +1,20 @@
+2012-06-15  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbLegacy/install_project.py: ignore failures when creating the fake
+	binary directory in external projects (LCGCMT etc.), to allow for the new
+	structure in LCGCMT tarballs
+
 2012-06-15 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* scripts/mkLCGCMTtar: Fixed to take into account applications now
-	located in app/releases instead of external 
+	located in app/releases instead of external
 
 2012-06-06 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v4r7p7
-	* python/LbLegacy/install_project.py: release of version v4r7p7 
+	* python/LbLegacy/install_project.py: release of version v4r7p7
 	* scripts/mkMCGentar: Fixed to take tarball from correct directory.
-	(i.e. the one called MCGenerators_hepmcXXXX, not MCGenerators) 
+	(i.e. the one called MCGenerators_hepmcXXXX, not MCGenerators)
 
 2012-05-08 Ben Couturier <Ben.Couturier@cern.ch>
 
@@ -30,7 +36,7 @@
 2012-03-06 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v4r7p3
-	* python/LbLegacy/install_project.py: remove call to updateConf 
+	* python/LbLegacy/install_project.py: remove call to updateConf
 
 2012-02-24 Ben Couturier <Ben.Couturier@cern.ch>
 
