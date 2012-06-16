@@ -278,15 +278,15 @@ namespace LoKi
        *  @param tuple the tuple itself 
        *  @param name the column name 
        *  @param TisTosTob-infomration
-       *  @param full use full information
+       *  @param verbose use full information
        *  @return status code 
        *  @see ITisTos::TisTosTob 
        */
       static StatusCode column 
-      ( const Tuples::Tuple&      tuple        , 
-        const std::string&        name         , 
-        const ITisTos::TisTosTob& ttt          , 
-        const bool                value = true ) ;
+      ( const Tuples::Tuple&      tuple           , 
+        const std::string&        name            , 
+        const ITisTos::TisTosTob& ttt             , 
+        const bool                verbose = false ) ;
       // ======================================================================
         /** add "time" into n-tuple 
        *  @param tuple the reference to the -tuple 

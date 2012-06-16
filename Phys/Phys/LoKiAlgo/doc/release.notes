@@ -5,6 +5,9 @@
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
 
+! 2012-06-16 - Vanya Belyaev
+ - improve tupling of TisTosTob
+
 ! 2012-06-09 - Vanya Belyaev
  - improve tupling of TisTosTob
 

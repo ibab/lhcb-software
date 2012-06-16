@@ -521,22 +521,23 @@ StatusCode LoKi::Dicts::TupleAux::column
 /*  add Tis/Tos/Tobbing information 
  *  @param tuple the tuple itself 
  *  @param name the column name 
- *  @param ttt 
+ *  @param TisTosTob-infomration
+ *  @param verbose use full information
  *  @return status code 
  *  @see ITisTos::TisTosTob 
  */
 // ===========================================================================
 StatusCode LoKi::Dicts::TupleAux::column
-( const Tuples::Tuple&      tuple  , 
-  const std::string&        name   , 
-  const ITisTos::TisTosTob& ttt    ,
-  const bool                value  )
+( const Tuples::Tuple&      tuple   , 
+  const std::string&        name    , 
+  const ITisTos::TisTosTob& ttt     ,
+  const bool                verbose ) 
 {
   if ( !tuple.valid() ) { return StatusCode::FAILURE ; }  
   //
   StatusCode sc = tuple -> column ( name , ttt.value () , 0u , 15u ) ;
   //
-  if ( value || sc.isFailure() ) { return sc ; }             // RETURN 
+  if ( !verbose || sc.isFailure() ) { return sc ; }          // RETURN 
   //
   sc = tuple -> column ( name + "_tos" , ttt.tos      () ) ;
   if ( sc.isFailure() )          { return sc ; }             // RETURN 
