@@ -14,6 +14,9 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2012-06-16 - Vanya Belyaev
+ - imporove treatment of children 
+
 ! 2012-05-24 - Vanya Belyaev
  - imporove streamers, 
    make dictionaries lighter 

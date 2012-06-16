@@ -213,6 +213,46 @@ namespace LoKi
     mother 
     ( const LHCb::MCParticle* particle  ) ;
     // ========================================================================
+    /// forward decalration
+    class Selector ;                                     // forward decalration
+    // ========================================================================
+    /** Trivial accessor to the daughter particles for the given particle.
+     *  @param  particle (const) pointer to mother particle 
+     *  @param  selector the selector 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2010-05-29
+     */
+    GAUDI_API 
+    const LHCb::MCParticle* child 
+    ( const LHCb::MCParticle*        particle , 
+      const LoKi::MCChild::Selector& selector ) ;
+    // ========================================================================
+    /** accessor to certain children particles for the given particle 
+     *  @param  particle (INPUT) pointer to mother particle 
+     *  @param  selector (INPUT) the selector 
+     *  @param  result   (OUTPUT) the container of found particles
+     *  @return number of found particles 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2010-05-29
+     */
+    GAUDI_API 
+    unsigned int children 
+    ( const LHCb::MCParticle*        particle , 
+      const LoKi::MCChild::Selector& selector , 
+      LHCb::MCParticle::ConstVector& result   ) ;
+    /** accessor to certain children particles for the given particle 
+     *  @param  particle (INPUT) pointer to mother particle 
+     *  @param  selector (INPUT) the selector 
+     *  @return the container of found particles
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2010-05-29
+     */
+    GAUDI_API 
+    LHCb::MCParticle::ConstVector
+    children 
+    ( const LHCb::MCParticle*        particle , 
+      const LoKi::MCChild::Selector& selector ) ;
+    // ========================================================================
   } //                                           end of namespace LoKi::MCChild
   // ==========================================================================
   namespace Child

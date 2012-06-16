@@ -66,10 +66,8 @@ def decayVertex ( mcp ) :
 
 decayVertex . __doc__  +=  "\n\n" + LoKi.MCVertices.decayVertex    . __doc__ 
 
-if not hasattr ( LHCb.MCParticle ,     'decayVertex'    ) :
-    LHCb.MCParticle  .   decayVertex      = decayVertex 
-if not hasattr ( LHCb.MCParticle ,   '__decayVertex__'  ) :
-    LHCb.MCParticle  . __decayVertex__    = decayVertex 
+LHCb.MCParticle  .   decayVertex      = decayVertex 
+LHCb.MCParticle  . __decayVertex__    = decayVertex 
 
 
 # =============================================================================
@@ -85,14 +83,10 @@ def nChildren ( p ) :
 
 nChildren . __doc__  +=  "\n\n" + LoKi.MCChild.nChildren    . __doc__ 
 
-if not hasattr ( LHCb.MCParticle ,     'nChildren'    ) :
-    LHCb.MCParticle  . nChildren      = nChildren
-if not hasattr ( LHCb.MCParticle ,     'nDaughters'   ) :
-    LHCb.MCParticle  . nDaughters     = nChildren
-if not hasattr ( LHCb.MCParticle ,   '__nChildren__'  ) :
-    LHCb.MCParticle  . __nChildren__  = nChildren
-if not hasattr ( LHCb.MCParticle ,   '__nDaughters__' ) :
-    LHCb.MCParticle  . __nDaughters__ = nChildren
+LHCb.MCParticle  . nChildren      = nChildren
+LHCb.MCParticle  . nDaughters     = nChildren
+LHCb.MCParticle  . __nChildren__  = nChildren
+LHCb.MCParticle  . __nDaughters__ = nChildren
 
 # =============================================================================
 ## get the child 
@@ -103,7 +97,7 @@ def child ( p , *a ) :
     >>> p = ...
     >>> d1  = child ( p , 1 ) 
     >>> d12 = child ( p , 1 , 2 )
-    
+
     ATTTENTION: indices start from 1.
     Index 0 corresponds to the particle itself.
     """
@@ -111,17 +105,13 @@ def child ( p , *a ) :
 
 child . __doc__  +=  "\n\n" + LoKi.MCChild.child    . __doc__ 
 
-if not hasattr ( LHCb.MCParticle ,   'child'      ) :
-    LHCb.MCParticle  .   child      = child 
-if not hasattr ( LHCb.MCParticle , '__child__'    ) :
-    LHCb.MCParticle  . __child__    = child 
-if not hasattr ( LHCb.MCParticle ,   'daughter'   ) :
-    LHCb.MCParticle  .   daughter   = child 
-if not hasattr ( LHCb.MCParticle , '__daughter__' ) :
-    LHCb.MCParticle  . __daughter__ = child 
+LHCb.MCParticle  .   child      = child 
+LHCb.MCParticle  . __child__    = child 
+LHCb.MCParticle  .   daughter   = child 
+LHCb.MCParticle  . __daughter__ = child 
 
-LHCb.MCParticle.__call__    = child
-LHCb.MCParticle.__getitem__ = child
+LHCb.MCParticle  . __call__     = child
+LHCb.MCParticle  . __getitem__  = child
 
 # =============================================================================
 ## Get all children from the given LHCb::MCParticle 
@@ -138,10 +128,10 @@ def children ( o , *a ) :
 
 children . __doc__ += "\n\n" + LoKi.MCChild.children . __doc__  
 
-if not hasattr ( LHCb.MCParticle ,   'children'    ) : LHCb.MCParticle .   children    =  children
-if not hasattr ( LHCb.MCParticle , '__children__'  ) : LHCb.MCParticle . __children__  =  children
-if not hasattr ( LHCb.MCParticle ,   'daughters'   ) : LHCb.MCParticle .   daughters   =  children
-if not hasattr ( LHCb.MCParticle , '__daughters__' ) : LHCb.MCParticle . __daughters__ =  children
+LHCb.MCParticle .   children    =  children
+LHCb.MCParticle . __children__  =  children
+LHCb.MCParticle .   daughters   =  children
+LHCb.MCParticle . __daughters__ =  children
 
 
 # =============================================================================
@@ -159,10 +149,8 @@ def descendants ( o , *a ) :
 
 descendants . __doc__ += "\n\n" + LoKi.MCChild.descendants . __doc__  
 
-if not hasattr ( LHCb.MCParticle ,   'descendants'   ) :
-    LHCb.MCParticle .   descendants    =  descendants
-if not hasattr ( LHCb.MCParticle , '__descendants__' ) :
-    LHCb.MCParticle . __descendants__  =  descendants
+LHCb.MCParticle .   descendants    =  descendants
+LHCb.MCParticle . __descendants__  =  descendants
 
 # =============================================================================
 ## Get all ancestors from the given LHCb::MCParticle 
@@ -179,10 +167,8 @@ def ancestors ( o ) :
 
 ancestors . __doc__ += "\n\n" + LoKi.MCChild.ancestors . __doc__  
 
-if not hasattr ( LHCb.MCParticle ,   'ancestors'   ) :
-    LHCb.MCParticle .   ancestors    =  ancestors
-if not hasattr ( LHCb.MCParticle , '__ancestors__' ) :
-    LHCb.MCParticle . __ancestors__  =  ancestors
+LHCb.MCParticle .   ancestors    =  ancestors
+LHCb.MCParticle . __ancestors__  =  ancestors
 
 # =============================================================================
 ## Get all (0 or 1) parents  from the given LHCb::MCParticle 
@@ -199,8 +185,8 @@ def parents ( o ) :
 
 parents . __doc__ += "\n\n" + LoKi.MCChild.parents . __doc__  
 
-if not hasattr ( LHCb.MCParticle ,   'parents'   ) : LHCb.MCParticle .   parents    = parents
-if not hasattr ( LHCb.MCParticle , '__parents__' ) : LHCb.MCParticle . __parents__  = parents
+LHCb.MCParticle .   parents    = parents
+LHCb.MCParticle . __parents__  = parents
 
 # =============================================================================
 ## Get the mother particle:
@@ -430,15 +416,11 @@ for _t in ( LHCb.MCParticle ,
     _tt.__iter__ = _LCF._iter_SRV_
 
     
-if not hasattr ( LHCb.MCParticle , 'ConstVector' ) :
-    LHCb.MCParticle.ConstVector = cpp.std.vector ('const LHCb::MCParticle*')
-if not hasattr ( LHCb.MCVertex   , 'ConstVector' ) :
-    LHCb.MCVertex.ConstVector   = cpp.std.vector ('const LHCb::MCVertex*'  )
+LHCb.MCParticle.ConstVector = cpp.std.vector ('const LHCb::MCParticle*')
+LHCb.MCVertex.ConstVector   = cpp.std.vector ('const LHCb::MCVertex*'  )
     
-if not hasattr ( LHCb.MCParticle , 'Range'       ) :
-    LHCb.MCParticle.Range = cpp.Gaudi.NamedRange_ ( LHCb.MCParticle.ConstVector ) 
-if not hasattr ( LHCb.MCVertex   , 'Range'       ) :
-    LHCb.MCVertex.Range   = cpp.Gaudi.NamedRange_ ( LHCb.MCVertex.ConstVector   )
+LHCb.MCParticle.Range = cpp.Gaudi.NamedRange_ ( LHCb.MCParticle.ConstVector ) 
+LHCb.MCVertex.Range   = cpp.Gaudi.NamedRange_ ( LHCb.MCVertex.ConstVector   )
 
 for r in ( LHCb.MCParticle.Range ,
            LHCb.MCVertex.Range   ,
@@ -452,8 +434,8 @@ for r in ( LHCb.MCParticle.Range ,
     r.__getitem__  =    r . __call__ 
     r.__setitem__  =          None
     
-if not hasattr ( LHCb.MCParticle , 'Container' ) :
-    LHCb.MCParticle.Container = cpp.KeyedContainer(LHCb.MCParticle,'Containers::KeyedObjectManager<Containers::hashmap>')
+
+LHCb.MCParticle.Container = cpp.KeyedContainer(LHCb.MCParticle,'Containers::KeyedObjectManager<Containers::hashmap>')
 
 # =============================================================================
 ## define various printers 
