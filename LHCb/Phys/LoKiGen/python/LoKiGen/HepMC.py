@@ -96,14 +96,10 @@ def nChildren ( p ) :
 
 nChildren . __doc__  +=  "\n\n" + LoKi.GenChild.nChildren    . __doc__ 
 
-if not hasattr ( HepMC.GenParticle , 'nChildren'      ) :
-    HepMC.GenParticle  . nChildren      = nChildren
-if not hasattr ( HepMC.GenParticle , 'nDaughters'     ) :
-    HepMC.GenParticle  . nDaughters     = nChildren
-if not hasattr ( HepMC.GenParticle , '__nChildren__'  ) :
-    HepMC.GenParticle  . __nChildren__  = nChildren
-if not hasattr ( HepMC.GenParticle , '__nDaughters__' ) :
-    HepMC.GenParticle  . __nDaughters__ = nChildren
+HepMC.GenParticle  . nChildren      = nChildren
+HepMC.GenParticle  . nDaughters     = nChildren
+HepMC.GenParticle  . __nChildren__  = nChildren
+HepMC.GenParticle  . __nDaughters__ = nChildren
 
 # =============================================================================
 ## get the child 
@@ -122,18 +118,14 @@ def child ( p , *a ) :
 
 child . __doc__  +=  "\n\n" + LoKi.GenChild.child    . __doc__ 
 
-if not hasattr ( HepMC.GenParticle , 'child'         ) :
-    HepMC.GenParticle  . child         = child 
-if not hasattr ( HepMC.GenParticle , 'daughter'      ) :
-    HepMC.GenParticle  . daughter      = child 
-if not hasattr ( HepMC.GenParticle , '__child__'     ) :
-    HepMC.GenParticle  . __child__     = child 
-if not hasattr ( HepMC.GenParticle , '__daughter__'  ) :
-    HepMC.GenParticle  . __daughter__  = child 
+HepMC.GenParticle  . child         = child 
+HepMC.GenParticle  . daughter      = child 
+HepMC.GenParticle  . __child__     = child 
+HepMC.GenParticle  . __daughter__  = child 
 
 
-HepMC.GenParticle. __call__    = child
-HepMC.GenParticle. __getitem__ = child
+HepMC.GenParticle  . __call__    = child
+HepMC.GenParticle  . __getitem__ = child
 
 # =============================================================================
 ## Get all 'in'-particles for the given HepMC::Vertex
@@ -150,11 +142,9 @@ def particles_in ( v ) :
 
 particles_in . __doc__ += "\n\n" + LoKi.GenChild.particles_in . __doc__  
 
-if not hasattr ( HepMC.GenVertex , 'particles_in'      ) :
-    HepMC.GenVertex  . particles_in      =  particles_in
-if not hasattr ( HepMC.GenVertex , '__particles_in__'  ) :
-    HepMC.GenVertex  . __particles_in__  =  particles_in
-    
+HepMC.GenVertex  . particles_in      =  particles_in
+HepMC.GenVertex  . __particles_in__  =  particles_in
+
 
 # =============================================================================
 ## Get all 'out'-particles for the given HepMC::Vertex
@@ -171,10 +161,8 @@ def particles_out ( v ) :
 
 particles_out . __doc__ += "\n\n" + LoKi.GenChild.particles_out . __doc__  
 
-if not hasattr ( HepMC.GenVertex , 'particles_out'      ) :
-    HepMC.GenVertex  . particles_out      =  particles_out
-if not hasattr ( HepMC.GenVertex , '__particles_out__'  ) :
-    HepMC.GenVertex  . __particles_out__  =  particles_out
+HepMC.GenVertex  . particles_out      =  particles_out
+HepMC.GenVertex  . __particles_out__  =  particles_out
     
 
 # =============================================================================
@@ -192,10 +180,8 @@ def particles_all ( e ) :
 
 particles_all . __doc__ += "\n\n" + LoKi.GenChild.particles_all . __doc__  
 
-if not hasattr ( HepMC.GenEvent , 'particles_all'      ) :
-    HepMC.GenEvent  . particles_all      =  particles_all
-if not hasattr ( HepMC.GenVertex , '__particles_all__'  ) :
-    HepMC.GenEvent  . __particles_all__  =  particles_all
+HepMC.GenEvent  . particles_all      =  particles_all
+HepMC.GenEvent  . __particles_all__  =  particles_all
 
 
 # =============================================================================
@@ -213,10 +199,8 @@ def vertices_all ( e ) :
 
 vertices_all . __doc__ += "\n\n" + LoKi.GenChild.vertices_all . __doc__  
 
-if not hasattr ( HepMC.GenEvent , 'vertices_all'      ) :
-    HepMC.GenEvent  . vertices_all      =  vertices_all
-if not hasattr ( HepMC.GenEvent , '__vertices_all__'  ) :
-    HepMC.GenEvent  . __vertices_all__  =  vertices_all
+HepMC.GenEvent  . vertices_all      =  vertices_all
+HepMC.GenEvent  . __vertices_all__  =  vertices_all
 
 
 # =============================================================================
@@ -234,10 +218,8 @@ def parents ( v ) :
 
 parents . __doc__ += "\n\n" + LoKi.GenChild.parents . __doc__  
 
-if not hasattr ( HepMC.GenVertex , 'parents'      ) :
-    HepMC.GenVertex . parents        =  parents
-if not hasattr ( HepMC.GenVertex , '__parents__'  ) :
-    HepMC.GenVertex . __parents__    =  parents
+HepMC.GenVertex . parents        =  parents
+HepMC.GenVertex . __parents__    =  parents
 
 
 # =============================================================================
@@ -255,23 +237,15 @@ def children ( o ) :
 
 children . __doc__ += "\n\n" + LoKi.GenChild.children . __doc__  
 
-if not hasattr ( HepMC.GenVertex   ,   'children'      ) :
-    HepMC.GenVertex .   children     =  children
-if not hasattr ( HepMC.GenVertex   , '__children__'    ) :
-    HepMC.GenVertex . __children__   =  children
-if not hasattr ( HepMC.GenVertex   ,   'daughters'     ) :
-    HepMC.GenVertex .   daughters    =  children
-if not hasattr ( HepMC.GenVertex   , '__daughters__'   ) :
-    HepMC.GenVertex . __daughters__  =  children
+HepMC.GenVertex .   children     =  children
+HepMC.GenVertex . __children__   =  children
+HepMC.GenVertex .   daughters    =  children
+HepMC.GenVertex . __daughters__  =  children
 
-if not hasattr ( HepMC.GenParticle ,   'children'      ) :
-    HepMC.GenParticle .  children    =  children
-if not hasattr ( HepMC.GenParticle , '__children__'    ) :
-    HepMC.GenParticle. __children__  =  children
-if not hasattr ( HepMC.GenParticle ,   'daughters'     ) :
-    HepMC.GenParticle .  daughters   =  children
-if not hasattr ( HepMC.GenParticle , '__daughters__'   ) :
-    HepMC.GenParticle. __daughters__ =  children
+HepMC.GenParticle .  children    =  children
+HepMC.GenParticle. __children__  =  children
+HepMC.GenParticle .  daughters   =  children
+HepMC.GenParticle. __daughters__ =  children
 
 
 # =============================================================================
@@ -289,10 +263,8 @@ def family ( v ) :
 
 family . __doc__ += "\n\n" + LoKi.GenChild.family . __doc__  
 
-if not hasattr ( HepMC.GenVertex ,    'family'      ) :
-    HepMC.GenVertex .   family      =  family
-if not hasattr ( HepMC.GenVertex ,  '__family__'    ) :
-    HepMC.GenVertex . __family__    =  family
+HepMC.GenVertex .   family      =  family
+HepMC.GenVertex . __family__    =  family
 
 
 # =============================================================================
@@ -310,15 +282,12 @@ def ancestors ( o ) :
 
 ancestors . __doc__ += "\n\n" + LoKi.GenChild.ancestors . __doc__  
 
-if not hasattr ( HepMC.GenVertex   ,   'ancestors'      ) :
-    HepMC.GenVertex .   ancestors    =  ancestors
-if not hasattr ( HepMC.GenVertex   , '__ancestors__'    ) :
-    HepMC.GenVertex . __ancestors__  =  ancestors
+HepMC.GenVertex .   ancestors    =  ancestors
+HepMC.GenVertex . __ancestors__  =  ancestors
 
-if not hasattr ( HepMC.GenParticle ,   'ancestors'      ) :
-    HepMC.GenParticle .  ancestors   =  ancestors
-if not hasattr ( HepMC.GenParticle , '__ancestors__'    ) :
-    HepMC.GenParticle. __ancestors__ =  ancestors
+
+HepMC.GenParticle .  ancestors   =  ancestors
+HepMC.GenParticle. __ancestors__ =  ancestors
 
 
 # =============================================================================
@@ -336,15 +305,11 @@ def descendants ( o ) :
 
 descendants . __doc__ += "\n\n" + LoKi.GenChild.descendants . __doc__  
 
-if not hasattr ( HepMC.GenVertex   ,     'descendants'      ) :
-    HepMC.GenVertex .   descendants    =  descendants
-if not hasattr ( HepMC.GenVertex   ,   '__descendants__'    ) :
-    HepMC.GenVertex . __descendants__  =  descendants
+HepMC.GenVertex .   descendants    =  descendants
+HepMC.GenVertex . __descendants__  =  descendants
 
-if not hasattr ( HepMC.GenParticle ,     'descendants'      ) :
-    HepMC.GenParticle .  descendants   =  descendants
-if not hasattr ( HepMC.GenParticle ,   '__descendants__'    ) :
-    HepMC.GenParticle. __descendants__ =  descendants
+HepMC.GenParticle .  descendants   =  descendants
+HepMC.GenParticle. __descendants__ =  descendants
 
 
 # =============================================================================
@@ -362,10 +327,8 @@ def relatives ( v ) :
 
 relatives . __doc__ += "\n\n" + LoKi.GenChild.relatives . __doc__  
 
-if not hasattr ( HepMC.GenVertex ,    'relatives'      ) :
-    HepMC.GenVertex .   relatives   =  relatives
-if not hasattr ( HepMC.GenVertex ,  '__relatives__'    ) :
-    HepMC.GenVertex . __relatives__ =  relatives
+HepMC.GenVertex .   relatives   =  relatives
+HepMC.GenVertex . __relatives__ =  relatives
 
 
 # =============================================================================

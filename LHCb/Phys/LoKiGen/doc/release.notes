@@ -13,6 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2012-06-16 - Vanya Belyaev
+ - improge child selection 
+
 ! 2012-05-24 - Vanya Belyaev
  - more improvements for decorators 
 
