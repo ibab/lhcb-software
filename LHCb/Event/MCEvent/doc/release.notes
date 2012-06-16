@@ -6,6 +6,9 @@
 ! 2012-06-04 - Olivier Callot
  - Define a location fo rthe FT MCHits.
 
+! 2012-06-13 - Heinrich Schindler
+ - Add MCVLDigit.xml, define location for VL MCHits.
+
 !========================= MCEvent v2r21 2011-07-25 =========================
 ! 2011-06-17 - Sajan Easo
 - Added the bit flags for Aerogel Subtiles in MCRichHit. 

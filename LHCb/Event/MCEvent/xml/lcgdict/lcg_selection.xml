@@ -11,6 +11,7 @@
     <class name = "KeyedObject<LHCb::STChannelID>" />
     <class name = "KeyedObject<LHCb::VeloChannelID>" />
     <class name = "KeyedObject<LHCb::VeloPixChannelID>" />
+    <class name = "KeyedObject<LHCb::VLChannelID>" />
   </exclusion>
 
 </lcgdict>

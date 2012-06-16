@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name = 'MCEvent'>
+  <class name = 'MCVLDigit' 
+         id = '4301'
+         author = 'H. Schindler' 
+         desc = 'Representation of the signal created in a front-end channel'
+         location = 'MC/VL/Digits'>
+    <template name = 'KeyedObjectDict' t1 = 'LHCb::VLChannelID'/>
+    <location name = 'MCVLDigitLocation'   place = 'MC/VL/Digits'/>
+    <location name = 'MCPuVLDigitLocation' place = 'MC/VL/PuDigits'/>
+    <base name = 'KeyedObject&lt;LHCb::VLChannelID&gt;'/>
+    &KeyedContainer;
+    <import name = 'GaudiKernel/SmartRef'/>
+    <import name = 'Kernel/VLChannelID'/>
+    <import name = 'Event/MCHit'/>
+    <import name = 'vector' std = 'TRUE'/>
+
+    <constructor desc = 'Constructor with key' 
+                 initList = 'KeyedObject&lt;LHCb::VLChannelID&gt;(key),
+                             m_signal(0.0),
+                             m_pedestal(0.0),
+                             m_noise(0.0),
+                             m_cmnoise(0.0)'>
+      <arg type = 'LHCb::VLChannelID' name = 'key' const = 'TRUE'/>
+      <code/>                 
+    </constructor> 
+
+    <method name = 'channelID' 
+            type = 'LHCb::VLChannelID' 
+            desc = 'combined sensor and strip number ID' 
+            const = 'TRUE'>
+      <code>
+        return key();
+      </code>
+    </method>
+
+    <method name = 'sensor' 
+            type = 'long' 
+            desc = 'sensor number' 
+            const = 'TRUE'>
+      <code>
+        return key().sensor();
+      </code>
+    </method>
+
+    <method name = 'strip' 
+            type = 'long' 
+            desc = 'strip number' 
+            const = 'TRUE'>
+      <code>
+        return key().strip();
+      </code>
+    </method>
+
+    <attribute name = 'signal' 
+               type = 'double' 
+               desc = 'signal in electrons'/>
+    <attribute name = 'pedestal' 
+               type = 'double' 
+               desc = 'pedestal in electrons'/>
+    <attribute name = 'noise' 
+               type = 'double' 
+               desc = 'noise in electrons'/>
+    <attribute name = 'cmnoise' 
+               type = 'double' 
+               desc = 'common mode noise in electrons'/>
+    <attribute name = 'adc'
+               type = 'int'
+               desc = 'ADC value'/>
+
+    <relation name = 'MCHits' 
+              type = 'LHCb::MCHit' 
+              desc = 'references to MC hits contributing to this digit' 
+              multiplicity = 'm'/>
+ 
+    <method name = 'mcHit' 
+            type = 'SmartRef&lt;LHCb::MCHit&gt;' 
+            argList = 'long num' 
+            desc = 'retrieve MCHit reference' 
+            const = 'TRUE'>
+      <code>
+       return m_MCHits[num];
+      </code>
+    </method>
+
+    <method name = 'numberOfMCHits' 
+            type = 'long' 
+            desc = 'number of hits contributing to this digit'
+            const = 'TRUE'>
+      <code>
+        return mcHits().size();
+      </code>
+    </method>
+
+    <attribute name = "MCHitsCharge"
+               type = "std::vector&lt;double&gt;"
+               desc = 'charge deposits from hits contributing to this digit'/>
+
+    <method name = 'addToMCHits'
+            type = 'void'
+            argList = 'SmartRef&lt;LHCb::MCHit&gt; hit, double c'
+            desc = 'Add MCHit and charge deposit'>
+      <code>
+        m_MCHits.push_back(hit);
+        m_MCHitsCharge.push_back(c);
+      </code>
+    </method>
+ 
+    <method name = 'mcHitCharge' 
+            type = 'double'
+            argList = 'long num' 
+            desc = 'retrieve charge deposit from MCHit' 
+            const = 'TRUE'>
+      <code>
+       return m_MCHitsCharge[num];
+      </code>
+    </method>
+
+    <method name = 'setMCHitCharge' 
+            type = 'void' 
+            argList = 'long num, double c' 
+            desc = 'set charge deposited from MCHit'>
+      <code>
+        m_MCHitsCharge[num] = c;
+      </code>
+    </method>
+
+    <method name = 'charge' 
+            type = 'double' 
+            desc = 'total charge in electrons'
+            const = 'TRUE'>
+      <code>
+        return signal() + noise() + pedestal() + cmnoise();
+      </code>
+    </method> 
+
+  </class>
+  </package>
+</gdd>
