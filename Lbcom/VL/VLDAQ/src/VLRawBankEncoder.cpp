@@ -1,29 +1,27 @@
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 // Kernel/LHCbKernel
-#include "Kernel/VeloLiteDataFunctor.h"
+#include "Kernel/VLDataFunctor.h"
 // Event/DAQEvent
 #include "Event/RawEvent.h"
-// Det/VeloLiteDet
-#include "VeloLiteDet/DeVeloLite.h"
-// Si/SiDAQ
-#include "SiDAQ/SiHeaderWord.h"
-#include "SiDAQ/SiClusterWord.h"
-#include "SiDAQ/SiADCWord.h"
+// Det/VLDet
+#include "VLDet/DeVL.h"
 // Local
-#include "VeloLiteClusterWord.h"
-#include "VeloLiteRawWordSizes.h"
-#include "PrepareVeloLiteRawBank.h"
+#include "VLHeaderWord.h"
+#include "VLClusterWord.h"
+#include "VLADCWord.h"
+#include "VLRawBankConstants.h"
+#include "VLRawBankEncoder.h"
 
-DECLARE_ALGORITHM_FACTORY(PrepareVeloLiteRawBank);
+DECLARE_ALGORITHM_FACTORY(VLRawBankEncoder)
 
 using namespace LHCb;
 
 //=============================================================================
 /// Constructor
 //=============================================================================
-PrepareVeloLiteRawBank::PrepareVeloLiteRawBank(const std::string& name,
-                                               ISvcLocator* pSvcLocator) : 
+VLRawBankEncoder::VLRawBankEncoder(const std::string& name,
+                                   ISvcLocator* pSvcLocator) : 
     GaudiAlgorithm(name, pSvcLocator),
     m_bankVersion(1),
     m_det(0) {
@@ -33,17 +31,16 @@ PrepareVeloLiteRawBank::PrepareVeloLiteRawBank(const std::string& name,
 //=============================================================================
 /// Initialisation. Check parameters
 //=============================================================================
-StatusCode PrepareVeloLiteRawBank::initialize() {
+StatusCode VLRawBankEncoder::initialize() {
 
   StatusCode sc = GaudiAlgorithm::initialize(); 
   if (sc.isFailure()) return sc;
-
-  debug() << " ==> initialize()" << endmsg;
-  m_debug = msgLevel(MSG::DEBUG);
+  m_debug   = msgLevel(MSG::DEBUG);
   m_verbose = msgLevel(MSG::VERBOSE);
-  m_det = getDet<DeVeloLite>(DeVeloLiteLocation::Default);
+  if (m_debug) debug() << " ==> initialize()" << endmsg;
+  m_det = getDet<DeVL>(DeVLLocation::Default);
   // Get a list of sensor numbers to identify empty sensors.
-  std::vector<DeVeloLiteSensor*>::const_iterator it;
+  std::vector<DeVLSensor*>::const_iterator it;
   for (it = m_det->sensorsBegin(); it != m_det->sensorsEnd(); ++it) {
     m_sensorNumbers.push_back((*it)->sensorNumber());
   }
@@ -55,34 +52,27 @@ StatusCode PrepareVeloLiteRawBank::initialize() {
 //=============================================================================
 /// Main execution
 //=============================================================================
-StatusCode PrepareVeloLiteRawBank::execute() {
+StatusCode VLRawBankEncoder::execute() {
 
   if (m_debug) debug() << " ==> execute()" << endmsg;
   // Get the clusters from the input container.
-  if (!exist<VeloStripClusters>(VeloStripClusterLocation::Default)) {
-    return Error("There are no VeloStripClusters in the TES!");
+  if (!exist<VLClusters>(VLClusterLocation::Default)) {
+    error() << "Cannot retrieve VLClusters from " 
+            << VLClusterLocation::Default << endmsg;
+    return StatusCode::FAILURE;
   } 
-  VeloStripClusters* clusters = get<VeloStripClusters>(VeloStripClusterLocation::Default);
+  VLClusters* clusters = get<VLClusters>(VLClusterLocation::Default);
   m_sortedClusters.clear();
   m_sortedClusters.resize(clusters->size());
   std::copy(clusters->begin(), clusters->end(), m_sortedClusters.begin());
   // Sort the clusters by sensor and strip number.
   std::sort(m_sortedClusters.begin(), m_sortedClusters.end(), 
-            VeloLiteDataFunctor::Less_by_strip<const VeloStripCluster*>());
-
-  RawEvent* rawEvent;
-  // See whether the raw event exists.
-  if (exist<RawEvent>(RawEventLocation::Default)) {
-    rawEvent = get<RawEvent>(RawEventLocation::Default);
-  } else {
-    // Raw event doesn't exist. We need to create it.
-    rawEvent = new RawEvent();
-    eventSvc()->registerObject(RawEventLocation::Default, rawEvent);
-  } 
+            VLDataFunctor::LessByStrip<const VLCluster*>());
+  RawEvent* rawEvent = getOrCreate<RawEvent, RawEvent>(RawEventLocation::Default);
 
   /// Loop over all clusters and write one bank per sensor.
-  VeloStripClusters::const_iterator first = m_sortedClusters.begin();
-  VeloStripClusters::const_iterator last = first;
+  VLClusters::const_iterator first = m_sortedClusters.begin();
+  VLClusters::const_iterator last = first;
   unsigned int sensorNumber; 
   // Index of current sensor in the list
   unsigned int sensorIndex = 0; 
@@ -126,32 +116,22 @@ StatusCode PrepareVeloLiteRawBank::execute() {
 //=============================================================================
 /// Finalisation 
 //=============================================================================
-StatusCode PrepareVeloLiteRawBank::finalize() {
+StatusCode VLRawBankEncoder::finalize() {
 
   return GaudiAlgorithm::finalize();
 
 }
 
 
-void PrepareVeloLiteRawBank::storeBank(int sensor,
-                                       VeloStripClusters::const_iterator begin, 
-                                       VeloStripClusters::const_iterator end,
-                                       RawEvent* rawEvent) {
+void VLRawBankEncoder::storeBank(int sensor,
+                                 VLClusters::const_iterator begin, 
+                                 VLClusters::const_iterator end,
+                                 RawEvent* rawEvent) {
 
   // Create raw bank in raw data cache.
   makeBank(begin, end);
-  // Check if the sensor has a TELL40 number.
-  unsigned int tellId;
-  if (!m_det->tell40IdBySensorNumber(sensor, tellId)) {
-    warning() << "Sensor " << sensor 
-              << " has no TELL40 ID. No raw bank created." << endmsg; 
-    return;
-  }
-  if (m_debug) {
-    debug() << "Sensor " << sensor << ", TELL40 ID " << tellId << endmsg;
-  }
-  RawBank* newBank = rawEvent->createBank(static_cast<SiDAQ::buffer_word>(tellId),
-                                          RawBank::VeloLite,
+  RawBank* newBank = rawEvent->createBank(static_cast<VLDAQ::bufferWord>(sensor),
+                                          RawBank::VL,
                                           m_bankVersion,
                                           m_bankSizeInBytes, 
                                           &(m_rawData[0]));
@@ -160,8 +140,8 @@ void PrepareVeloLiteRawBank::storeBank(int sensor,
 
 }
 
-unsigned int PrepareVeloLiteRawBank::makeBank(VeloStripClusters::const_iterator begin,
-                                              VeloStripClusters::const_iterator end) {
+unsigned int VLRawBankEncoder::makeBank(VLClusters::const_iterator begin,
+                                        VLClusters::const_iterator end) {
 
 
   if (m_debug) debug() << " ==> makeBank()" << endmsg;
@@ -171,23 +151,24 @@ unsigned int PrepareVeloLiteRawBank::makeBank(VeloStripClusters::const_iterator 
   // Header
   //   number of clusters on this sensor (first 16 bits)
   //   PCN (next 8 bits), set to zero here (no errors in simulation)
-  SiHeaderWord hw(end - begin, 0, 0); 
-  SiDAQ::buffer_word pcnAndNumClu = hw.value();
+  VLHeaderWord hw(end - begin, 0, 0); 
+  VLDAQ::bufferWord pcnAndNumClu = hw.value();
 
   // Clear temporary buffers
   m_clusterPosBuffer.clear();
-  m_clusterADCBuffer.clear();
+  m_clusterAdcBuffer.clear();
   // 32 bit 'rows' of adc values and cluster positions
-  SiDAQ::buffer_word rowData = 0x0; 
-  SiDAQ::buffer_word cluRowData = 0x0;
+  VLDAQ::bufferWord rowData = 0x0; 
+  VLDAQ::bufferWord cluRowData = 0x0;
 
   // Cluster counter
   unsigned int nClu = 0;  
   // ADC word counter (to determine number of padding bytes at end of raw bank)
   unsigned int nAdc = 0;  
-  // Loop over clusters in range defined by iterators 
-  for (VeloStripClusters::const_iterator it = begin; it != end; ++it) {
-    const VeloStripCluster* clu = *it;
+  // Loop over clusters in range defined by iterators
+  VLClusters::const_iterator it;
+  for (it = begin; it != end; ++it) {
+    const VLCluster* clu = *it;
     const unsigned int nStrips = clu->size();
     const bool highThreshold = clu->highThreshold();
     if (m_verbose) {
@@ -196,24 +177,24 @@ unsigned int PrepareVeloLiteRawBank::makeBank(VeloStripClusters::const_iterator 
                 << nStrips << " strips." << endmsg;
     }
 
-    SiDAQ::buffer_word packedCluster;
+    VLDAQ::bufferWord packedCluster;
     if (1 == nStrips) {
       // Single strip cluster
       unsigned int adc = clu->adcValue(0);
       if (adc > 127) adc = 127;
-      VeloLiteClusterWord vcw(clu->strip(0), 0., 1, highThreshold);
-      packedCluster = static_cast<SiDAQ::buffer_word>(vcw.value());
+      VLClusterWord vcw(clu->strip(0), 0., 1, highThreshold);
+      packedCluster = static_cast<VLDAQ::bufferWord>(vcw.value());
       if (m_verbose) {
         verbose() << "Strip: " << clu->strip(0) 
                   << ", ADC: " << adc << endmsg;
       }
       const bool endOfCluster = true;
-      SiADCWord aw(adc, endOfCluster);
-      rowData |= (aw.value() << ((nAdc % VeloLiteDAQ::adc_per_buffer) 
-                             << VeloLiteDAQ::adc_shift));
+      VLADCWord aw(adc, endOfCluster);
+      rowData |= (aw.value() << ((nAdc % VLDAQ::adcsPerBuffer) 
+                             << VLDAQ::adcShift));
       ++nAdc;
-      if (nAdc % VeloLiteDAQ::adc_per_buffer == 0) {
-        m_clusterADCBuffer.push_back(rowData);
+      if (0 == nAdc % VLDAQ::adcsPerBuffer) {
+        m_clusterAdcBuffer.push_back(rowData);
         // Reset rowData
         rowData = 0x0;
       }
@@ -221,27 +202,26 @@ unsigned int PrepareVeloLiteRawBank::makeBank(VeloStripClusters::const_iterator 
       // Multiple strip cluster. Loop over strips.
       for (unsigned int i = 0; i < clu->size(); ++i) {
         unsigned int adc = clu->adcValue(i);
-        if (adc > 127) adc = 127;
         if (m_verbose) {
           verbose() << "Strip: " << clu->strip(i) 
                     << ", ADC: " << adc << endmsg;
         }
         const bool endOfCluster = (clu->size() == i + 1);
         // Create new ADC word
-        SiADCWord aw(adc, endOfCluster);
-        rowData |= (aw.value() << ((nAdc % VeloLiteDAQ::adc_per_buffer) 
-                               << VeloLiteDAQ::adc_shift));
+        VLADCWord aw(adc, endOfCluster);
+        rowData |= (aw.value() << ((nAdc % VLDAQ::adcsPerBuffer) 
+                               << VLDAQ::adcShift));
         ++nAdc;
-        if (nAdc % VeloLiteDAQ::adc_per_buffer == 0) {
-          m_clusterADCBuffer.push_back(rowData);
+        if (nAdc % VLDAQ::adcsPerBuffer == 0) {
+          m_clusterAdcBuffer.push_back(rowData);
           // Reset rowData
           rowData = 0x0;
         }
       } 
       unsigned int channel = clu->strip(0);
       double fraction = clu->interStripFraction();
-      VeloLiteClusterWord vcw(channel, fraction, nStrips, highThreshold);
-      packedCluster = static_cast<SiDAQ::buffer_word>(vcw.value());
+      VLClusterWord vcw(channel, fraction, nStrips, highThreshold);
+      packedCluster = static_cast<VLDAQ::bufferWord>(vcw.value());
       if (m_verbose) {
         verbose() << "Cluster word "  
                   << format("%8X", packedCluster) << endmsg;
@@ -249,22 +229,22 @@ unsigned int PrepareVeloLiteRawBank::makeBank(VeloStripClusters::const_iterator 
     }
 
     // Store the cluster position
-    cluRowData |= (packedCluster << ((nClu % VeloLiteDAQ::clu_per_buffer) 
-                                 << VeloLiteDAQ::clu_shift));
+    cluRowData |= (packedCluster << ((nClu % VLDAQ::clustersPerBuffer) 
+                                 << VLDAQ::clusterShift));
     ++nClu;
-    if (nClu % VeloLiteDAQ::clu_per_buffer == 0) {
+    if (nClu % VLDAQ::clustersPerBuffer == 0) {
       m_clusterPosBuffer.push_back(cluRowData);
       // Clear the cluster buffer 
       cluRowData = 0x0; 
     }
   }
-  // If there were an odd number of clusters, store the last cluster row
-  if (0 != (nClu % VeloLiteDAQ::clu_per_buffer)) {
+  // If there were an odd number of clusters, store the last cluster row.
+  if (0 != (nClu % VLDAQ::clustersPerBuffer)) {
     m_clusterPosBuffer.push_back(cluRowData);
   }
-  // Check row data is not empty, store remaining adcs
-  if (0 != (nAdc % VeloLiteDAQ::adc_per_buffer)) {
-    m_clusterADCBuffer.push_back(rowData);
+  // Check row data is not empty, store remaining adcs.
+  if (0 != (nAdc % VLDAQ::adcsPerBuffer)) {
+    m_clusterAdcBuffer.push_back(rowData);
   }
 
   if (m_verbose) {
@@ -275,7 +255,7 @@ unsigned int PrepareVeloLiteRawBank::makeBank(VeloStripClusters::const_iterator 
   // Add header 
   m_rawData.push_back(pcnAndNumClu);
   // Add cluster positions  
-  std::vector<SiDAQ::buffer_word>::iterator itc;
+  std::vector<VLDAQ::bufferWord>::iterator itc;
   for (itc = m_clusterPosBuffer.begin(); 
        itc != m_clusterPosBuffer.end(); ++itc) {      
     if (m_verbose) {
@@ -284,9 +264,9 @@ unsigned int PrepareVeloLiteRawBank::makeBank(VeloStripClusters::const_iterator 
     m_rawData.push_back(*itc);
   }
   // Add ADC values 
-  std::vector<SiDAQ::buffer_word>::iterator ita;
-  for (ita = m_clusterADCBuffer.begin(); 
-       ita != m_clusterADCBuffer.end(); ++ita) {
+  std::vector<VLDAQ::bufferWord>::iterator ita;
+  for (ita = m_clusterAdcBuffer.begin(); 
+       ita != m_clusterAdcBuffer.end(); ++ita) {
     if (m_verbose) {
       verbose() << "Adc row[" << format("%10X", *ita) << "]" << endmsg;
     }
@@ -298,11 +278,11 @@ unsigned int PrepareVeloLiteRawBank::makeBank(VeloStripClusters::const_iterator 
   // *without* the padding bytes at the end. 
   // The number of padding bytes is completely determined by
   // the number of ADC words in the raw bank.
-  int adcRemainder = nAdc % VeloLiteDAQ::adc_per_buffer;
-  m_bankSizeInBytes = sizeof(SiDAQ::buffer_word) * m_rawData.size();
+  int adcRemainder = nAdc % VLDAQ::adcsPerBuffer;
+  m_bankSizeInBytes = sizeof(VLDAQ::bufferWord) * m_rawData.size();
   if (adcRemainder) {
-    m_bankSizeInBytes -= sizeof(SiDAQ::buffer_word) - 
-                         adcRemainder * VeloLiteDAQ::adc_word_size;
+    m_bankSizeInBytes -= sizeof(VLDAQ::bufferWord) - 
+                         adcRemainder * VLDAQ::adcWordSize;
   }
   return nClu;
 

@@ -1,4 +1,4 @@
-package           VeloLiteDAQ
+package           VLDAQ
 version           v1r0
 
 # Structure, i.e. directories to process. 
@@ -8,15 +8,14 @@ include_path none
 
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================
-use  VeloLiteDet  v*  Det
+use  VLDet        v*  Det
 use  DAQEvent     v*  Event
 use  DigiEvent    v*  Event	-no_auto_imports
-use  SiDAQ        v*  Si	-no_auto_imports
 use  RecEvent     v*  Event
 
 # Component library building rule
 #============================================================================
-library          VeloLiteDAQ    ../src/*.cpp
+library          VLDAQ    ../src/*.cpp
 
-apply_pattern component_library library=VeloLiteDAQ
+apply_pattern component_library library=VLDAQ
 apply_pattern install_python_modules
