@@ -4,6 +4,9 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+! 2012-06-13 Heinrich Schindler
+ - Add VLCluster.xml and VLLiteCluster.xml
+
 !========================= DigiEvent v2r20 2011-11-07 =========================
 ! 2011-10-10 M Needham
  - Remove unused variable in STCluster class overlap method

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" [
+<!ENTITY liteClusterName "VLLiteCluster">
+<!ENTITY channelID "VLChannelID">
+<!ENTITY VLClusterClass SYSTEM "SiCluster.ent">
+]>
+<gdd>
+  <package name = "DigiEvent">
+    <class name = "VLCluster"
+           id = "4302"
+           author = "H. Schindler"
+           desc = "Cluster with full ADC information."
+           serializers = "FALSE">
+
+      <import name = "vector"  std = "TRUE"/> 
+      <import name = "utility" std = "TRUE"/> 
+
+      <location name = "Default"
+                place = "Raw/VL/Clusters"/>
+
+      <constructor desc = "Constructor" 
+                   argList = '&liteClusterName; lCluster, 
+                              ADCVector strips'
+                   initList = 'm_liteCluster(lCluster), m_stripValues(strips)'>
+      </constructor>
+     
+      &VLClusterClass;
+  
+      <constructor desc = 'copy constructor'
+                   initList = 'KeyedObject&lt;LHCb::VLChannelID&gt;(), 
+                               m_liteCluster(lCluster.m_liteCluster), 
+                               m_stripValues(lCluster.m_stripValues)'> 
+        <arg const = 'TRUE' name="lCluster" type="LHCb::VLCluster"/>
+      </constructor>
+  
+      <method name = 'clone'
+	      type = "LHCb::VLCluster*"
+              desc = 'clone method'
+              const = 'TRUE'
+	      access = "PUBLIC">
+      <code>
+        return new LHCb::VLCluster(*this);
+      </code>
+    </method>
+  
+    <method name = "firstChannel"
+            type = "LHCb::VLChannelID"
+            desc = "channel ID of first strip"
+            const = "TRUE">
+      <code>
+        return VLChannelID(channelID().sensor(), 
+                           stripValues().front().first, 
+                           channelID().type());
+      </code>
+    </method>
+
+    <method name = "lastChannel"
+            type = "LHCb::VLChannelID"
+            desc = "channel ID of last strip"
+            const = "TRUE">
+      <code>
+        return VLChannelID(channelID().sensor(), 
+                           stripValues().back().first, 
+                           channelID().type());    
+      </code>
+    </method>
+
+    <method name = "channels"
+            type = "std::vector&lt;LHCb::VLChannelID&gt;"
+            desc = "channel IDs"
+            const = "TRUE">
+      <code>
+        std::vector&lt;LHCb::VLChannelID&gt; chanCont;
+        VLChannelID first = firstChannel();
+        for (unsigned int i = 0; i &lt; size(); ++i) {
+          VLChannelID aChan(first.sensor(), first.strip() + i, first.type());
+          chanCont.push_back(aChan);
+        }
+        return chanCont;
+      </code>
+    </method>
+
+    <method name = "isRType"
+            type = "bool"
+            desc = "check if R type"
+            const = "TRUE" >
+      <code>
+        return m_liteCluster.channelID().isRType();
+      </code> 
+    </method>
+
+    <method name = "isPhiType"
+            type = "bool"
+            desc = "check if Phi type"
+            const = "TRUE" >
+      <code>
+        return m_liteCluster.channelID().isPhiType();
+      </code> 
+    </method>
+
+  </class>
+</package>
+</gdd>

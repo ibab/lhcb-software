@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" [
+<!ENTITY channelIDName "VLChannelID">
+<!ENTITY className "VLLiteCluster">
+<!ENTITY posBits "3">
+<!ENTITY VLLiteClusterClass SYSTEM "SiLiteCluster.ent">
+]>
+<gdd>
+
+<package name = "DigiEvent">
+  <class name = "&className;" 
+         author = "H. Schindler" 
+         desc = "Cluster without full ADC information"
+         location = "Raw/VL/LiteClusters"
+         serializers = "FALSE">
+
+    &VLLiteClusterClass;
+
+    <method name = "isRType"
+            type = "bool"
+            desc = "check if R type"
+            const = "TRUE">
+      <code>
+        return channelID().isRType();
+      </code>
+    </method>
+
+    <method name = "isPhiType"
+            type = "bool"
+            desc = "check if Phi type"
+            const = "TRUE">
+      <code>
+        return channelID().isPhiType();
+      </code>
+    </method>
+ 
+  </class>
+</package>
+</gdd>
+
