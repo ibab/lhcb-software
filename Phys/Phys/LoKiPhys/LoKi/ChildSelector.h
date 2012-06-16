@@ -117,43 +117,6 @@ namespace LoKi
       // ======================================================================
     };
     // ========================================================================
-    /** Trivial accessor to the daughter particles for the given particle.
-     *  @param  particle (const) pointer to mother particle 
-     *  @param  selector the selector 
-     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date   2010-05-29
-     */
-    GAUDI_API 
-    const LHCb::Particle* child 
-    ( const LHCb::Particle*        particle , 
-      const LoKi::Child::Selector& selector ) ;
-    // ========================================================================
-    /** accessor to certain children particles for the given particle 
-     *  @param  particle (INPUT) pointer to mother particle 
-     *  @param  selector (INPUT) the selector 
-     *  @param  result   (OUTPUT) the container of found particles
-     *  @return number of found particles 
-     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date   2010-05-29
-     */
-    GAUDI_API 
-    unsigned int children 
-    ( const LHCb::Particle*        particle , 
-      const LoKi::Child::Selector& selector , 
-      LHCb::Particle::ConstVector& result   ) ;
-    /** accessor to certain children particles for the given particle 
-     *  @param  particle (INPUT) pointer to mother particle 
-     *  @param  selector (INPUT) the selector 
-     *  @return the container of found particles
-     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date   2010-05-29
-     */
-    GAUDI_API 
-    LHCb::Particle::ConstVector
-    children 
-    ( const LHCb::Particle*        particle , 
-      const LoKi::Child::Selector& selector ) ;
-    // ========================================================================
   } //                                             end of namespace LoKi::Child
   // ==========================================================================
 } //                                                      end of namespace LoKi

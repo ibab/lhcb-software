@@ -5,6 +5,9 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2012-06-16 - Vanya Belyaev
+ - extend a bit the the method "child" 
+
 ! 2012-06-08 - Vanya Belyaev
  - remove legacy stuff 
 

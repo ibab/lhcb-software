@@ -51,14 +51,11 @@ def nChildren ( p ) :
     """
     return p.daughters().size()
 
-if not hasattr ( LHCb.Particle ,   'nChildren'    ) :
-    LHCb.Particle .   nChildren    = nChildren
-if not hasattr ( LHCb.Particle ,   'nDaughters'   ) :
-    LHCb.Particle .   nDaughters   = nChildren
-if not hasattr ( LHCb.Particle , '__nChildren__'  ) :
-    LHCb.Particle . __nChildren__  = nChildren
-if not hasattr ( LHCb.Particle , '__nDaughters__' ) :
-    LHCb.Particle . __nDaughters__ = nChildren
+
+LHCb.Particle .   nChildren    = nChildren
+LHCb.Particle .   nDaughters   = nChildren
+LHCb.Particle . __nChildren__  = nChildren
+LHCb.Particle . __nDaughters__ = nChildren
 
 _childSelector  = LoKi.Child.Selector 
 # =============================================================================
@@ -74,14 +71,12 @@ def children ( o , *a ) :
     """
     return LoKi.Child.children ( o , *a )
 
-if not hasattr ( LHCb.Particle ,   'children'    ) :
-    LHCb.Particle .   children    =  children
-if not hasattr ( LHCb.Particle , '__children__'  ) :
-    LHCb.Particle . __children__  =  children
-if not hasattr ( LHCb.Particle ,   'daughters'   ) :
-    LHCb.Particle .   daughters   =  children
-if not hasattr ( LHCb.Particle , '__daughters__' ) :
-    LHCb.Particle . __daughters__ =  children
+children . __doc__ += '\n' + LoKi.Child.children . __doc__
+
+LHCb.Particle .   children    =  children
+LHCb.Particle . __children__  =  children
+LHCb.Particle .   daughters   =  children
+LHCb.Particle . __daughters__ =  children
 
 # =============================================================================
 ## get the child 
@@ -100,15 +95,10 @@ def child ( p , *a ) :
 
 child . __doc__  +=  "\n\n" + LoKi.Child.child    . __doc__ 
 
-if not hasattr ( LHCb.Particle ,   'child'      ) :
-    LHCb.Particle  .   child      = child 
-if not hasattr ( LHCb.Particle , '__child__'    ) :
-    LHCb.Particle  . __child__    = child 
-if not hasattr ( LHCb.Particle ,   'daughter'   ) :
-    LHCb.Particle  .   daughter   = child 
-if not hasattr ( LHCb.Particle , '__daughter__' ) :
-    LHCb.Particle  . __daughter__ = child 
-
+LHCb.Particle  .   child      = child 
+LHCb.Particle  . __child__    = child 
+LHCb.Particle  .   daughter   = child 
+LHCb.Particle  . __daughter__ = child 
 
 LHCb . Particle . __call__    = child  
 LHCb . Particle . __getitem__ = child  
@@ -129,11 +119,8 @@ def descendants ( o ) :
 
 descendants . __doc__ += "\n\n" + LoKi.Child.descendants . __doc__  
 
-if not hasattr ( LHCb.Particle ,   'descendants'   ) :
-    LHCb.Particle .   descendants    =  descendants
-if not hasattr ( LHCb.Particle , '__descendants__' ) :
-    LHCb.Particle . __descendants__  =  descendants
-
+LHCb.Particle .   descendants    =  descendants
+LHCb.Particle . __descendants__  =  descendants
 
 # =============================================================================
 ## Get the particles from the decay tree, which satisfy certain criteria
@@ -154,23 +141,14 @@ particles . __doc__ += "\n\n" + LoKi.Dicts.Extract.particles . __doc__
 getParticles = particles
 extract      = particles
 
-if not hasattr ( LHCb.Particle ,   'particles'      ) :
-    LHCb.Particle .   particles       = particles 
-if not hasattr ( LHCb.Particle , '__particles__'    ) :
-    LHCb.Particle . __particles__     =  particles 
-if not hasattr ( LHCb.Particle ,   'getParticles'   ) :
-    LHCb.Particle . __getParticles   = particles 
-if not hasattr ( LHCb.Particle , '__getParticles__' ) :
-    LHCb.Particle . __getParticles__ =  particles 
-if not hasattr ( LHCb.Particle ,   'extract'        ) :
-    LHCb.Particle .   extract        = particles 
-if not hasattr ( LHCb.Particle ,   '__extract__'    ) :
-    LHCb.Particle . __extract__      =  particles 
-if not hasattr ( LHCb.Particle ,   'vertex'         ) :
-    LHCb.Particle .   vertex         =  LHCb.Particle . endVertex   
-if not hasattr ( LHCb.Particle ,   'decayVertex'    ) :
-    LHCb.Particle .   decayVertex    =  LHCb.Particle . endVertex   
-
+LHCb.Particle .   particles      = particles 
+LHCb.Particle . __particles__    =  particles 
+LHCb.Particle . __getParticles   = particles 
+LHCb.Particle . __getParticles__ =  particles 
+LHCb.Particle .   extract        = particles 
+LHCb.Particle . __extract__      =  particles 
+LHCb.Particle .   vertex         =  LHCb.Particle . endVertex   
+LHCb.Particle .   decayVertex    =  LHCb.Particle . endVertex   
 
 # =============================================================================
 ## Count number of 'interesting' elements in the decay tree or container,
@@ -274,34 +252,20 @@ max_element. __doc__ += "\n\n" + LoKi.Dicts.Algs.max_element . __doc__
 
 # =============================================================================
 
-if not hasattr ( LHCb.Particle ,   'count_if'      ) :
-    LHCb.Particle .   count_if      = count_if
-if not hasattr ( LHCb.Particle , '__count_if__'    ) :
-    LHCb.Particle . __count_if__    = count_if  
-if not hasattr ( LHCb.Particle ,   'found'         ) :
-    LHCb.Particle .   found         = found
-if not hasattr ( LHCb.Particle , '__found__'       ) :
-    LHCb.Particle . __found__       = found 
-if not hasattr ( LHCb.Particle ,   'min_value'     ) :
-    LHCb.Particle .   min_value     = min_value 
-if not hasattr ( LHCb.Particle , '__min_value__'   ) :
-    LHCb.Particle . __min_value__   = min_value 
-if not hasattr ( LHCb.Particle ,   'max_value'     ) :
-    LHCb.Particle .   max_value     = max_value 
-if not hasattr ( LHCb.Particle , '__max_value__'   ) :
-    LHCb.Particle . __max_value__   = max_value  
-if not hasattr ( LHCb.Particle ,   'min_element'   ) :
-    LHCb.Particle .   min_element   = min_element 
-if not hasattr ( LHCb.Particle , '__min_element__' ) :
-    LHCb.Particle . __min_element__ = min_element
-if not hasattr ( LHCb.Particle ,   'max_element'   ) :
-    LHCb.Particle .   max_element   = max_element 
-if not hasattr ( LHCb.Particle , '__max_element__' ) :
-    LHCb.Particle . __max_element__ = max_element
-if not hasattr ( LHCb.Particle ,   'accumulate'    ) :
-    LHCb.Particle .   accumulate    = accumulate 
-if not hasattr ( LHCb.Particle , '__accumulate__'  ) :
-    LHCb.Particle . __accumulate__  = accumulate 
+LHCb.Particle .   count_if      = count_if
+LHCb.Particle . __count_if__    = count_if  
+LHCb.Particle .   found         = found
+LHCb.Particle . __found__       = found 
+LHCb.Particle .   min_value     = min_value 
+LHCb.Particle . __min_value__   = min_value 
+LHCb.Particle .   max_value     = max_value 
+LHCb.Particle . __max_value__   = max_value  
+LHCb.Particle .   min_element   = min_element 
+LHCb.Particle . __min_element__ = min_element
+LHCb.Particle .   max_element   = max_element 
+LHCb.Particle . __max_element__ = max_element
+LHCb.Particle .   accumulate    = accumulate 
+LHCb.Particle . __accumulate__  = accumulate 
 
 # =============================================================================
 ## print the decay  
@@ -317,12 +281,10 @@ def printDecay ( s , *a ) :
 
 printDecay. __doc__ += "\n\n" + LoKi.PrintPhys.printDecay . __doc__  
 
-if not hasattr ( LHCb.Particle ,     'printDecay'   ) :
-    LHCb.Particle .  printDecay   =   printDecay
-    LHCb.Particle .       decay   =   printDecay
-if not hasattr ( LHCb.Particle ,   '__printDecay__' ) :
-    LHCb.Particle. __printDecay__ =   printDecay
-    LHCb.Particle.      __decay__ =   printDecay
+LHCb.Particle .  printDecay   =   printDecay
+LHCb.Particle .       decay   =   printDecay
+LHCb.Particle. __printDecay__ =   printDecay
+LHCb.Particle.      __decay__ =   printDecay
 
 
 import LoKiCore.functions  as _LCF 
@@ -363,21 +325,14 @@ for _t in ( LHCb.Particle    ,
     _tt.__iter__ = _LCF._iter_SRV_
 
     
-if not hasattr ( LHCb.Particle , 'ConstVector' ) :
-    LHCb.Particle.ConstVector = cpp.std.vector ('const LHCb::Particle*')
-if not hasattr ( LHCb.Particle , 'Range'       ) :
-    LHCb.Particle.Range       = cpp.Gaudi.NamedRange_ ( LHCb.Particle.ConstVector )
+LHCb.Particle.ConstVector = cpp.std.vector ('const LHCb::Particle*')
+LHCb.Particle.Range       = cpp.Gaudi.NamedRange_ ( LHCb.Particle.ConstVector )
 
-if not hasattr ( LHCb.Vertex     , 'ConstVector' ) :
-    LHCb.Vertex.ConstVector = cpp.std.vector ('const LHCb::VertexBase*')
-if not hasattr ( LHCb.Vertex     , 'Range'       ) :
-    LHCb.Vertex.Range       = cpp.Gaudi.NamedRange_ ( LHCb.Vertex.ConstVector )
+LHCb.Vertex.ConstVector = cpp.std.vector ('const LHCb::VertexBase*')
+LHCb.Vertex.Range       = cpp.Gaudi.NamedRange_ ( LHCb.Vertex.ConstVector )
 
-if not hasattr ( LHCb.VertexBase , 'ConstVector' ) :
-    LHCb.VertexBase.ConstVector = cpp.std.vector ('const LHCb::VertexBase*')
-if not hasattr ( LHCb.VertexBase , 'Range'       ) :
-    LHCb.VertexBase.Range       = cpp.Gaudi.NamedRange_ ( LHCb.VertexBase.ConstVector )
-
+LHCb.VertexBase.ConstVector = cpp.std.vector ('const LHCb::VertexBase*')
+LHCb.VertexBase.Range       = cpp.Gaudi.NamedRange_ ( LHCb.VertexBase.ConstVector )
 
 for r in ( LHCb.Particle.Range     ,
            LHCb.VertexBase.Range   ,
