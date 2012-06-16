@@ -4,6 +4,9 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !-----------------------------------------------------------------------------
 
+! 2012-06-16 - Heinrich Schindler
+ - Add VL to RawBank types 
+
 ! 2012-06-15 - Marco Cattaneo
  - Add RawEventLocation::Calo to RawEvent locations
 

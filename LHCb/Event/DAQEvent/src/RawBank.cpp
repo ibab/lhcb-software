@@ -75,7 +75,8 @@ std::string LHCb::RawBank::typeName(LHCb::RawBank::BankType e){
   case LHCb::RawBank::DstData         : return  "DstData";
   case LHCb::RawBank::DstAddress      : return  "DstAddress";    
   case LHCb::RawBank::FileID          : return  "FileID";
-  case LHCb::RawBank::VeloPix         : return  "VeloPix";  
+  case LHCb::RawBank::VeloPix         : return  "VeloPix";
+  case LHCb::RawBank::VL              : return  "VL"; 
   case LHCb::RawBank::FTCluster       : return  "FTCluster";  
   default                             : return  "Undefined name";
   };
