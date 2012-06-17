@@ -153,44 +153,6 @@ namespace LoKi
       // ======================================================================
     };
     // ========================================================================
-    /** Trivial accessor to the daughter particles for the given particle.
-     *  @param  particle (const) pointer to mother particle 
-     *  @param  selector the selector 
-     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-     *  @date   2012-01-26
-     */
-    GAUDI_API 
-    const HepMC::GenParticle* child 
-    ( const HepMC::GenParticle*        particle , 
-      const LoKi::GenChild::Selector& selector ) ;
-    // ========================================================================
-    /** accessor to certain children particles for the given particle 
-     *  @param  particle (INPUT) pointer to mother particle 
-     *  @param  selector (INPUT) the selector 
-     *  @param  result   (OUTPUT) the container of found particles
-     *  @return number of found particles 
-     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-     *  @date   2012-01-26
-     */
-    GAUDI_API 
-    unsigned int children 
-    ( const HepMC::GenParticle*       particle  , 
-      const LoKi::GenChild::Selector& selector  , 
-      LoKi::GenTypes::ConstVector&    daughters ) ;
-    // ========================================================================
-    /** accessor to certain children particles for the given particle 
-     *  @param  particle (INPUT) pointer to mother particle 
-     *  @param  selector (INPUT) the selector 
-     *  @return the container of found particles
-     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-     *  @date   2010-05-29
-     */
-    GAUDI_API 
-    LoKi::GenTypes::ConstVector
-    children 
-    ( const HepMC::GenParticle*        particle , 
-      const LoKi::GenChild::Selector& selector ) ;
-    // ========================================================================
   } //                                          end of namespace LoKi::GenChild
   // ==========================================================================
 } //                                                      end of namespace LoKi
