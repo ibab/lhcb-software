@@ -44,6 +44,10 @@ namespace Gaudi
       // ======================================================================
     public:
       // ======================================================================
+      typedef std::vector<ValueWithError>                          Vector     ;
+      // ======================================================================
+    public:
+      // ======================================================================
       /// constructor from the value and covariance 
       ValueWithError ( const double value      = 0 , 
                        const double covariance = 0 ) ;
@@ -143,6 +147,10 @@ namespace Gaudi
        *  defined as  signed \f$\sqrt \chi^2 \f$
        */
       double residual ( const double          right ) const ;
+      /** get Kullback-Liebler divergency 
+       *  @return KL-divergency for valid arguments, -1 otherwise
+       */
+      double kullback ( const ValueWithError& right ) const ;
       // ======================================================================
     public:
       // ======================================================================
@@ -254,7 +262,7 @@ namespace Gaudi
       /// the associated covariance
       double m_cov2 ;                              // the associated covariance
       // ======================================================================
-    };
+    } ;
     // ========================================================================
     /// addition 
     inline ValueWithError 
@@ -330,6 +338,13 @@ namespace Gaudi
     ( const double          b ,
       const ValueWithError& a ) { return a.chi2 ( b ) ; }
     // ========================================================================
+    /** get Kullback-Liebler divergency 
+     *  return the divergency for valid arguments, -1 otherwise
+     */
+    inline double kullback 
+    ( const ValueWithError& a , 
+      const ValueWithError& b ) { return a.kullback ( b ) ; }
+    // ========================================================================
     /// evaluate the "fraction"  a/(a+b)
     inline ValueWithError frac 
     ( const ValueWithError& a , 
@@ -399,7 +414,7 @@ namespace Gaudi
      *  @param a (INPUT) the base 
      *  @param b (INPUT) the exponent 
      *  @return the <c>a</c> raised to power <c>b</b> 
-     *  @warning invalid and small covarinaces are ignored 
+     *  @warning invalid and small covariances are ignored 
      */
     GAUDI_API
     ValueWithError pow 
@@ -626,7 +641,6 @@ namespace Gaudi
   } //                                            end of namespace Gaudi::Utils 
   // ==========================================================================
 } //                                                     end of namespace Gaudi
-// ============================================================================
 // ============================================================================
 // The END 
 // ============================================================================

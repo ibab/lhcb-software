@@ -327,6 +327,22 @@ double Gaudi::Math::ValueWithError::chi2 ( const double b ) const
   return diff*diff/cov2() ;
 }
 // =============================================================================
+/*  get Kullback-Liebler divergency 
+ *  return the divergency for valid arguments, -1 otherwise
+ */
+// =============================================================================
+double Gaudi::Math::ValueWithError::kullback
+( const Gaudi::Math::ValueWithError& b ) const
+{
+  //
+  if ( 0 >= cov2() || b.cov2 () >= 0 ) { return -1 ; }
+  //
+  const double c1 =   cov2 () ;
+  const double c2 = b.cov2 () ;
+  //
+  return ( c1 - c2 ) * ( 1.0 / c2 - 1.0 / c1 ) + chi2 ( b ) ;  
+}
+// =============================================================================
 // evaluate residual: signed sqrt(chi2)
 // =============================================================================
 double Gaudi::Math::ValueWithError::residual
