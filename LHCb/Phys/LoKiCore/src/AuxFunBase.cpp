@@ -88,7 +88,7 @@ bool LoKi::AuxFunBase::setLoKiSvc
 // constructor from LoKi Service
 // ============================================================================
 LoKi::AuxFunBase::AuxFunBase () 
-  : m_event   ( -1  )
+  : m_event   ( 0 )
 {
 #ifdef LOKI_DEBUG
   // increment the instance counter
@@ -187,6 +187,12 @@ std::string LoKi::AuxFunBase::printOut() const
   return s.str() ;
 }
 // ============================================================================
+/*  (virtual) printout in form of std::string 
+ *  @return outptut string 
+ */
+// ============================================================================
+std::string LoKi::AuxFunBase::toString () const { return printOut() ; }
+// ============================================================================
 // the actual object type 
 // ============================================================================
 std::string LoKi::AuxFunBase::objType () const 
@@ -196,30 +202,6 @@ std::string LoKi::AuxFunBase::objType () const
 // ============================================================================
 std::size_t LoKi::AuxFunBase::id () const 
 { return LoKi::genericID ( *this ) ; }
-// ============================================================================
-/*  output operator of function objects to std::ostream 
- *  @param stream refeence to the stream
- *  @param obj    object to be printed 
- *  @return reference to the stream
- */
-// ============================================================================
-std::ostream& operator<<( std::ostream&           stream , 
-                          const LoKi::AuxFunBase& obj    ) 
-{ return obj.fillStream ( stream ) ; } 
-// ============================================================================
-/*  output operator of function objects to MsgStream
- *  @param stream refeence to the stream
- *  @param obj    object to be printed 
- *  @return reference to the stream
- */
-// ============================================================================
-MsgStream&    operator<<
-  ( MsgStream&              stream , 
-    const LoKi::AuxFunBase& obj    ) 
-{ 
-  if ( stream.isActive() ) { obj.fillStream( stream.stream() ) ; }
-  return stream ;
-}
 // ============================================================================
 /*  simple fuction to generate the default generic 
  *  (hopefully unique?) ID for the functor 
@@ -239,26 +221,61 @@ std::size_t LoKi::genericID ( const LoKi::AuxFunBase& o )
 void LoKi::AuxFunBase::setEvent (          ) const 
 {
   LoKi::ILoKiSvc* svc = lokiSvc() ;
-  setEvent ( -1 ) ;
+  setEvent ( 0 ) ;
   //
   if ( 0 != svc ) { m_event = svc->event() ; }
-  else { Error ( "setEvent(): invalid pointer to LoKi::ILoKiSvc, set -1") ; }
+  else { Error ( "setEvent(): invalid pointer to LoKi::ILoKiSvc, set 0") ; }
 }
 // ============================================================================
 // check the data for the same event 
 // ============================================================================
 bool LoKi::AuxFunBase::sameEvent () const 
 {
-  if ( 0 > m_event ) { return  false ; }                    // RETURN 
+  if ( 0 == m_event ) { return  false ; }                    // RETURN 
   // get the service 
   LoKi::ILoKiSvc* svc = lokiSvc() ;
   if ( 0 == svc ) 
   {
-    Warning( "sameEvent(): could not check the event, return false ") ;
+    Warning ( "sameEvent(): could not check the event, return false ") ;
     return false ;                                          // RETURN 
   }
   return svc->event() == m_event ;  
 }
+// ============================================================================
+/*  output operator of function objects to std::ostream 
+ *  @param stream reference to the stream
+ *  @param obj object to be printed 
+ *  @return reference to the stream
+ */
+// ============================================================================
+std::ostream& operator<< 
+  ( std::ostream&           stream , 
+    const LoKi::AuxFunBase& obj    ) { return obj.fillStream ( stream ) ; }
+// ============================================================================
+/*  output operator of function objects to std::ostream 
+ *  @param stream reference to the stream
+ *  @param obj object to be printed 
+ *  @return reference to the stream
+ */
+// ============================================================================
+MsgStream& operator<< 
+  ( MsgStream&              stream , 
+    const LoKi::AuxFunBase& obj    ) 
+{
+  if ( stream.isActive() ) { obj.fillStream( stream.stream() ) ; }
+  return stream ;
+}
+// ============================================================================
+// print it!
+// ============================================================================
+std::string Gaudi::Utils::toString ( const LoKi::AuxFunBase& o ) 
+{ return o.toString () ; }
+// ============================================================================
+// print it!
+// ============================================================================
+std::ostream& Gaudi::Utils::toStream
+( const LoKi::AuxFunBase& o ,
+  std::ostream&           s ) { return o.fillStream( s ) ; }
 // ============================================================================
 // The END 
 // ============================================================================

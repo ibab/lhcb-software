@@ -13,6 +13,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2012-06-17 - Vanya Belyaev
+
+ - minor tweak for event type in AuxFunBase 
+
 ! 2012-06-15 - Vanya Belyaev
 
  - minor tweak to make Clara, Beat and Markus  happy 

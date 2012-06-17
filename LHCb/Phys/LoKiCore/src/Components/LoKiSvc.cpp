@@ -628,7 +628,7 @@ protected:
     //
     , m_reporter     (  0 )
     , m_reporterName ( "LoKi::Reporter/REPORT")
-    , m_event        ( -1 )
+    , m_event        (  0 )
     , m_welcome      ( true )
     //
   {
