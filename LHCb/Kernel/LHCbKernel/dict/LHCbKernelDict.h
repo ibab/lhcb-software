@@ -10,6 +10,7 @@
 #include "GaudiKernel/VectorMap.h"
 #include "Kernel/VeloChannelID.h"
 #include "Kernel/VeloPixChannelID.h"
+#include "Kernel/VLChannelID.h"
 #include "Kernel/STChannelID.h"
 #include "Kernel/OTChannelID.h"
 #include "Kernel/CaloCellID.h"
@@ -66,12 +67,14 @@ namespace {
     GaudiUtils::VectorMap<int,double>                   m_vector_map_int_double;
     std::pair<LHCb::VeloChannelID,int>                  m_std_pair_VeloChannelID_int;
     std::pair<LHCb::VeloPixChannelID,int>               m_std_pair_VeloPixChannelID_int;
+    std::pair<LHCb::VLChannelID,int>                    m_std_pair_VLChannelID_int;
     std::pair<LHCb::STChannelID,int>                    m_std_pair_STChannelID_int;
     std::pair<LHCb::OTChannelID,int>                    m_std_pair_OTChannelID_int;
     std::pair<double,LHCb::CaloCellID>                  m_std_pair_double_CaloCellID;
     std::pair<LHCb::MuonTileID,int>                     m_std_pair_MuonTileID_int;
     std::vector<std::pair<LHCb::VeloChannelID,int> >    m_std_vector_std_pair_VeloChannelID_int;
     std::vector<std::pair<LHCb::VeloPixChannelID,int> > m_std_vector_std_pair_VeloPixChannelID_int;
+    std::vector<std::pair<LHCb::VLChannelID,int> >      m_std_vector_std_pair_VLChannelID_int;
     std::vector<std::pair<LHCb::STChannelID,int> >      m_std_vector_std_pair_STChannelID_int;
     std::vector<std::pair<LHCb::OTChannelID,int> >      m_std_vector_std_pair_OTChannelID_int;
     std::vector<std::pair<double,LHCb::CaloCellID> >    m_std_vector_std_pair_double_CaloCellID;
@@ -83,6 +86,7 @@ namespace {
     std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint>          m_std_pair_XYZPoint_XYZPoint;
     std::vector<LHCb::VeloChannelID>                    m_std_vector_VeloChannelID;
     std::vector<LHCb::VeloPixChannelID>                 m_std_vector_VeloPixChannelID;
+    std::vector<LHCb::VLChannelID>                      m_std_vector_VLChannelID;
     std::vector<LHCb::LHCbID>::const_iterator           m_std_vector_LHCbID_const_iterator;
     std::map<std::pair<int,unsigned int>,unsigned int>  m_L0DUReport_Summaries;
     Rich::Radiators                                     m_RICH_Radiators;

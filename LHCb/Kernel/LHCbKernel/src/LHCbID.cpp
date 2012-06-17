@@ -10,6 +10,7 @@ std::ostream& LHCb::LHCbID::fillStream(std::ostream& s) const
 {
   s << "{ LHCbID : ";
   if (isVelo()) { s << veloID(); }
+  if (isVL())   { s << vlID();   }
   if (isST())   { s << stID();   }
   if (isOT())   { s << otID();   }
   if (isRich()) { s << richID(); }

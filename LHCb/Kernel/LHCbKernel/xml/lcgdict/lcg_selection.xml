@@ -6,6 +6,9 @@
   <class name="std::vector<LHCb::VeloPixChannelID>"/>
   <class name="std::vector<std::pair<LHCb::VeloPixChannelID,int> >"/>
   <class name="std::pair<LHCb::VeloPixChannelID,int>"/>
+  <class name="std::vector<LHCb::VLChannelID>"/>
+  <class name="std::vector<std::pair<LHCb::VLChannelID,int> >"/>
+  <class name="std::pair<LHCb::VLChannelID,int>"/>
   <class name="std::vector<std::pair<LHCb::STChannelID,int> >"/>
   <class name="std::pair<LHCb::STChannelID,int>"/>
   <class name="std::vector<std::pair<LHCb::OTChannelID,int> >"/>

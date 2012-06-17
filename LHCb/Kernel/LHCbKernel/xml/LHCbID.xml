@@ -16,6 +16,7 @@
        <import name="Kernel/CaloCellID"/>
        <import name="Kernel/MuonTileID"/>
        <import name="Kernel/VeloPixChannelID"/>
+       <import name="Kernel/VLChannelID"/>
        <import name="Kernel/FTChannelID"/>
 
        &StlVector;
@@ -23,7 +24,7 @@
        <enum
           desc   = "types of sub-detector channel ID"
           name   = "channelIDype"
-          value  = "Velo=1, TT, IT, OT, Rich, Calo, Muon, VeloPix, FT"
+          value  = "Velo=1, TT, IT, OT, Rich, Calo, Muon, VeloPix, VL, FT"
           access = 'PUBLIC'
        />
 
@@ -170,6 +171,49 @@
          desc  = "return the VeloPixChannelID">
 	 <code>
   return ( isVeloPix() ? LHCb::VeloPixChannelID(m_lhcbID &amp; IDMask) : LHCb::VeloPixChannelID(0xF0000000));
+         </code>
+       </method>
+
+       <constructor desc = "Constructor from VLChannelID">
+          <arg const = "TRUE" name = "chanID" type = "VLChannelID"/>
+          <code>
+  m_lhcbID = (VL &lt;&lt; detectorTypeBits) + chanID;
+          </code>
+       </constructor>
+
+       <method type  = 'bool'
+               name  = 'isVL'
+               const = 'TRUE'
+               desc  = 'return true if this is a VeloLite identifier'>
+         <code>
+  return (VL == detectorType());
+         </code>
+       </method>
+
+       <method type  = 'bool'
+               name  = 'isVLR'
+               const = 'TRUE'
+               desc  = 'return true if this is a VeloLite R identifier'>
+         <code>
+  return (isVL() ? vlID().isRType(): false);
+         </code>
+       </method>
+       
+       <method type  = 'bool'
+               name  = 'isVLPhi'
+               const = 'TRUE'
+               desc  = 'return true if this is a VeloLite Phi identifier'>
+         <code>
+  return (isVL() ? vlID().isPhiType(): false);
+         </code>
+       </method>
+
+       <method type  = 'LHCb::VLChannelID'
+               name  = 'vlID'
+               const = 'TRUE'
+               desc  = 'return the VLChannelID'>
+	 <code>
+  return (isVL() ? LHCb::VLChannelID(m_lhcbID &amp; IDMask) : LHCb::VLChannelID(0xF0000000));
          </code>
        </method>
 
@@ -391,6 +435,7 @@
         desc    = "General ID: returns detector ID = internal unsigned int">
         <code>
   if (isVeloPix()) return velopixID().channelID();
+  if (isVL())      return vlID().channelID();
   if (isVelo())    return veloID().channelID();
   if (isST())      return stID().channelID();
   if (isOT())      return otID().channelID();
