@@ -63,10 +63,16 @@ DaVinci (
     Simulation = False
     )
 
-importOptions('$STRIPPINGSELECTIONSROOT/tests/data/Reco11aNewRoot_Run97120_SDSTs.py')
+## job configuration
+inputdata = [
+    '/lhcb/LHCb/Collision11/MINIBIAS.DST/00011900/0000/00011900_000000%02d_1.minibias.dst' % i for i in range(5,25)
+    ]
 
 ## get or create application manager 
 gaudi = appMgr() 
+
+evtSel = gaudi.evtSel()
+evtSel.open ( inputdata )
 
 ## run 10 events:
 run(10)

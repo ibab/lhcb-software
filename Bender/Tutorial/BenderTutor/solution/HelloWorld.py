@@ -82,7 +82,7 @@ class HelloWorld(Algo):
 
 # =============================================================================
 ## The configuration of the job
-def configure ( inputdata , catalogs = [] ) :
+def configure ( inputdata , catalogs = [] , castor = False ) :
     
     
     from Configurables import DaVinci
@@ -93,7 +93,7 @@ def configure ( inputdata , catalogs = [] ) :
     gaudi = appMgr() 
 
     ## define the input data
-    setData  ( inputdata , catalogs )
+    setData  ( inputdata , catalogs , castor )
     
     # modify/update the configuration:
     
@@ -120,10 +120,10 @@ if __name__ == '__main__' :
         
     ## job configuration
     inputdata = [
-        '/castor/cern.ch/grid/lhcb/LHCb/Collision11/MINIBIAS.DST/00011900/0000/00011900_000000%02d_1.minibias.dst' % i for i in range(1,25)
+        '/lhcb/LHCb/Collision11/MINIBIAS.DST/00011900/0000/00011900_000000%02d_1.minibias.dst' % i for i in range(5,25)
         ]
     
-    configure( inputdata )
+    configure( inputdata , castor = True )
     
     ## event loop 
     run(50)

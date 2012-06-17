@@ -58,7 +58,7 @@ __version__ = " Version $Revision: 1.13 $ "
 from Bender.Main import *
 # =============================================================================
 ## Job configuration:
-def configure ( inputdata , catalogs = [] ) :
+def configure ( inputdata , catalogs = [] , castor = False ) :
     """
     This is the configuration method for module Minimalistic_1.py
 
@@ -70,7 +70,7 @@ def configure ( inputdata , catalogs = [] ) :
     
     DaVinci ( DataType   = '2011' )
     
-    setData ( inputdata , catalogs )
+    setData ( inputdata , catalogs , castor )
     
     ## get/create application manager
     gaudi = appMgr() 
@@ -92,11 +92,11 @@ if __name__ == '__main__' :
     
     ## job configuration
     inputdata = [
-        '/castor/cern.ch/grid/lhcb/LHCb/Collision11/MINIBIAS.DST/00011900/0000/00011900_000000%02d_1.minibias.dst' % i for i in range(1,25)
+        '/lhcb/LHCb/Collision11/MINIBIAS.DST/00011900/0000/00011900_000000%02d_1.minibias.dst' % i for i in range(5,25)
         ]
 
     
-    configure( inputdata )
+    configure( inputdata , castor = True )
     
     ## event loop 
     run ( 10 )
