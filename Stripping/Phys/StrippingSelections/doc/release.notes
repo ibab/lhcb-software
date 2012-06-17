@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-06-17 - Vanya Belyaev
+ - add the lines for studies of charm + W+ associative production
+
 ! 2012-06-04 - Marcin Kucharczyk
  - Change particle container in StrippingInclbJets.py
 

@@ -14,21 +14,28 @@
 #    - dimuon + ( dimuon + gamma ) [ mimic   Chi_(b,c) + dimuon  ] 
 #    -       2x ( dimuon + gamma ) [ mimic 2xChi_(b,c)           ] 
 #
-#  The performance with Reco09-Stripping13_SDSTs.py
-#  +-----------------------------------------+----------------+
-#  |    Stripping Line                       |  Rate, [%]     |
-#  +-----------------------------------------+----------------+
-#  | StrippingDoubleDiMuonForPromptCharm     | 0.0305+-0.0115 |        
-#  | StrippingDiMuonAndGammaForPromptCharm   | 0.1785+-0.0278 | 
-#  +-----------------------------------------+----------------+
-#  | Total                                   | 0.2568+-0.0334 | 
-#  +-----------------------------------------+----------------+
-#  | Unique with respect to FullDSTDiMuon    | 0.1350+-0.0242 |
-#  +-----------------------------------------+----------------+
+#   Accociative W+ production:
+#    - dimuon             & W+  
+#    - ( dimuon + gamma ) & W+      [ mimic Chi_(b,c)] 
 #
-#  Note that only (0.1350+-0.0242)% of rate are unique 
-#  with respect to FullDSTDiMion lines,
-#  that corresponds to 2.6% (relative) increment of FullDSTDiMuon lines 
+#
+# +-------------------------------------+--------+------+-------+
+# | StrippingReport   INFO Event 276300, Good event 276300      |
+# +-------------------------------------+--------+------+-------+
+# |    Decision name                    | Rate,% | Acc. | ms/evt|
+# +-------------------------------------+--------+------+-------+
+# |                     double charm                            |
+# +-------------------------------------+--------+------+-------+
+# | <>DiMuonAndGammaForCharmAssociative | 0.0467 | 129  | 0.668 |
+# | <>DoubleDiMuonForCharmAssociative   | 0.0405 | 112  | 0.037 |
+# | <>ChiAndDiMuonForCharmAssociative   | 0.0405 | 112  | 0.037 |
+# | <>DiChiForCharmAssociative          | 0.0405 | 112  | 0.037 |
+# +-------------------------------------+--------+------+-------+
+# |                     charm & W+                              |
+# +-------------------------------------+--------+------+-------+
+# | <>DiMuonAndWForCharmAssociative     | 0.0076 |  21  | 0.060 |
+# | <>ChiAndWForCharmAssociative        | 0.0054 |  15  | 0.033 |
+# +-------------------------------------+--------+------+-------+
 #
 # @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 # @date   2011-05-26
@@ -38,32 +45,42 @@
 #                by $Author$
 # =============================================================================
 """
-The attempt for coherent stripping of various ``charm''? associative production
-
-    - dimuon + dimuon 
-    - dimuon + high-pt gamma 
-    - dimuon + ( dimuon + gamma ) [ mimic   Chi_(b,c) + dimuon  ] 
-    -       2x ( dimuon + gamma ) [ mimic 2xChi_(b,c)           ] 
-
-  The performance with Reco09-Stripping13_SDSTs.py
-  +-----------------------------------------+----------------+
-  |    Stripping Line                       |  Rate, [%]     |
-  +-----------------------------------------+----------------+
-  | StrippingDiMuonAndCharmForPromptCharm   | 0.0305+-0.0115 | 
-  | StrippingDoubleDiMuonForPromptCharm     | 0.0305+-0.0115 |        
-  +-----------------------------------------+----------------+
-  | Total                                   | 0.3787+-0.0405 |
-  +-----------------------------------------+----------------+
-  | Unique with respect to FullDSTDiMuon    | 0.1350+-0.0242 |
-  +-----------------------------------------+----------------+
-
-  Note that only (0.1350+-0.0242)% of rate are unique
-  with respect to FullDSTDiMion lines,
-  that corresponds to 2.6% (relative) increment of FullDSTDiMuon lines 
+   The attempt for stripping of associative ``onium'' production
+ 
+     - dimuon + dimuon 
+     - dimuon + high-pt gamma
+ 
+    Parasitic:
+ 
+     - dimuon + ( dimuon + gamma ) [ mimic   Chi_(b,c) + dimuon  ] 
+     -       2x ( dimuon + gamma ) [ mimic 2xChi_(b,c)           ] 
+ 
+    Accociative W+ production:
+     - dimuon             & W+  
+     - ( dimuon + gamma ) & W+      [ mimic Chi_(b,c)] 
+ 
+ 
+  +-------------------------------------+--------+------+-------+
+  | StrippingReport   INFO Event 276300, Good event 276300      |
+  +-------------------------------------+--------+------+-------+
+  |    Decision name                    | Rate,% | Acc. | ms/evt|
+  +-------------------------------------+--------+------+-------+
+  |                     double charm                            |
+  +-------------------------------------+--------+------+-------+
+  | <>DiMuonAndGammaForCharmAssociative | 0.0467 | 129  | 0.668 |
+  | <>DoubleDiMuonForCharmAssociative   | 0.0405 | 112  | 0.037 |
+  | <>ChiAndDiMuonForCharmAssociative   | 0.0405 | 112  | 0.037 |
+  | <>DiChiForCharmAssociative          | 0.0405 | 112  | 0.037 |
+  +-------------------------------------+--------+------+-------+
+  |                     charm & W+                              |
+  +-------------------------------------+--------+------+-------+
+  | <>DiMuonAndWForCharmAssociative     | 0.0076 |  21  | 0.060 |
+  | <>ChiAndWForCharmAssociative        | 0.0054 |  15  | 0.033 |
+  +-------------------------------------+--------+------+-------+
 
 """
 # =============================================================================
-__author__  = 'Vanya BELYAEV Ivan.Belyaev@cern.nl'
+__author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = '2011-05-26'
 __version__ = '$Revision$'
 # =============================================================================
@@ -102,11 +119,19 @@ _default_configuration_ = {
     ## Selection of basic particles 
     #
     'PhotonCuts'      : ' PT > 4.0 * GeV  '                                 , 
-    'MuonCuts'        : ' ISMUON & ( PT > 650 * MeV ) & ( TRCHI2DOF < 5 ) ' , 
+    'MuonCuts'        : ' ISMUON & ( PT > 650 * MeV ) & ( TRCHI2DOF < 5 ) ' ,
+    #
+    ## photons from chi_(c,b)
+    #
+    'GammaChi'        : ' ( PT > 450 * MeV ) & ( CL > 0.05 ) ' , 
+    #
+    ## W+- selection
+    #
+    'WCuts'           : " ( 'mu+'== ABSID ) & ( PT > 15 * GeV )" ,
     #
     ## Global Event cuts 
     #
-    'PrimaryVertices' : True , 
+    'CheckPV'         : True , 
     #
     ## Technicalities:
     #
@@ -136,7 +161,9 @@ _default_configuration_ = {
     'DiMuonAndGammaPrescale' : 1.0 ,
     'DoubleDiMuonPrescale'   : 1.0 ,
     'ChiAndDiMuonPrescale'   : 1.0 ,
-    'DiChiPrescale'          : 1.0
+    'DiChiPrescale'          : 1.0 ,
+    'DiMuonAndWPrescale'     : 1.0 , 
+    'ChiAndWPrescale'        : 1.0
     # =========================================================================
     }
 # =============================================================================
@@ -209,23 +236,21 @@ class StrippingCharmAssociativeConf(LineBuilder) :
             if val != _default_configuration_ [ key ] : 
                 logger.warning ('new configuration: %-16s : %s ' % ( key , _config[key] ) )
 
-        self._name         = name
+        keys = _config.keys()
+        for key in keys :
+            
+            if not key in _default_configuration_ :
+                raise KeyError("Invalid key is specified: '%s'" % key )
+            
+            val = _config[key]
+            if val != _default_configuration_ [ key ] : 
+                logger.warning ('new configuration: %-16s : %s ' % ( key , _config[key] ) )
 
-        self._photoncuts   = _config.pop ( 'PhotonCuts'   , _default_configuration_ [ 'PhotonCuts' ] )        
-        self._muoncuts     = _config.pop ( 'MuonCuts'     , _default_configuration_ [ 'MuonCuts'   ] )
-
-        self._checkPV      = _config.pop ( 'PrimaryVertices' , _default_configuration_ [ 'PrimaryVertices' ] )
-        
-        self.DiMuonAndGammaPrescale = _config.pop ( 'DiMuonAndGammaPrescale' , _default_configuration_ [ 'DiMuonAndGammaPrescale' ] )
-        self.DoubleDiMuonPrescale   = _config.pop ( 'DoubleDiMuonPrescale'   , _default_configuration_ [ 'DoubleDiMuonPrescale'   ] )
-        self.ChiAndDiMuonPrescale   = _config.pop ( 'ChiAndDiMuonPrescale'   , _default_configuration_ [ 'ChiAndDiMuonPrescale'   ] )
-        self.DiChiPrescale          = _config.pop ( 'DiChiPrescale'          , _default_configuration_ [ 'DiChiPrescale'          ] )
-        
-        self._Preambulo    = _config.pop ( 'Preambulo'       , _default_configuration_ [ 'Preambulo'       ] )
-        self._monitor      = _config.pop ( 'Monitor'         , _default_configuration_ [ 'Monitor'         ] )
-        
-        if _config :
-            raise KeyError ( 'Invalid keys are specified for configuration: %s ' % _config.keys() )
+        ## cehck for prescales 
+        for keys in self.keys() :
+            if 0 > key.find('Prescale') and 0 > key.find('prescale') :  continue
+            if 1 != self[key] : logger.warning ( '%s is %s' % ( key , self[key] ) ) 
+            
 
         for line in self._lines_associative_onia () :
             self.registerLine(line)
@@ -233,13 +258,13 @@ class StrippingCharmAssociativeConf(LineBuilder) :
                         
 
     ## get the common preambulo: 
-    def preambulo    ( self ) : return self._Preambulo
+    def preambulo    ( self ) : return self [ 'Preambulo' ] 
 
     ## get photon cuts 
-    def photonCuts   ( self ) : return self._photoncuts
+    def photonCuts   ( self ) : return self [ 'PhotonCuts' ] 
     
     ## get muon cuts 
-    def muonCuts     ( self ) : return self._muoncuts 
+    def muonCuts     ( self ) : return self [ 'MuonCuts' ] 
 
     ## get the dimuons 
     def DiMuon ( self ) :
@@ -360,7 +385,7 @@ class StrippingCharmAssociativeConf(LineBuilder) :
             DecayDescriptor =  "chi_b2(1P)  -> J/psi(1S) J/psi(1S) gamma " ,
             ##
             DaughtersCuts = {
-            'gamma'     : '( PT > 500 * MeV ) & ( CL > 0.05 )'
+            'gamma'     :  self['GammaChi']
             } ,
             ## mimic chi_(c,b):
             CombinationCut   = """
@@ -409,7 +434,7 @@ class StrippingCharmAssociativeConf(LineBuilder) :
             DecayDescriptor =  "chi_b2(1P)  -> J/psi(1S) J/psi(1S) gamma gamma" ,
             ##
             DaughtersCuts = {
-            'gamma' : '( PT > 500 * MeV ) & ( CL > 0.05 )'
+            'gamma' :  self [ 'GammaChi' ]
             } ,
             ## mimic 2xchi_(c,b):
             CombinationCut   = """
@@ -443,6 +468,105 @@ class StrippingCharmAssociativeConf(LineBuilder) :
         
         return self._add_selection ( 'DiChi_Selection' , sel )    
 
+    ## W+- selection 
+    def W ( self )  :
+        """
+        Get simple  W+-selection 
+        """
+        
+        sel = self._selection ( 'W_Selection' )
+        if sel : return sel 
+        
+        _Filter = FilterDesktop ( Code = self [ 'WCuts'] )
+        
+        sel = Selection  (
+            "SelWFor" + self._name  ,
+            Algorithm = _Filter ,
+            RequiredSelections = [
+            StdAllLooseMuons  ,     ## ATTENTION! prompt muons are here!
+            ]
+            )
+        
+        return self._add_selection ( 'W_Selection' , sel )    
+    
+    ## select dimuon + W 
+    def DiMuonAndW ( self ) :
+        """
+        select dimuon + W+
+        """
+        sel = self._selection ( 'DiMuW_Selection' )
+        if sel : return sel 
+        
+        ## almost fake selection 
+        alg = CombineParticles (
+            ##
+            DecayDescriptor =  "[chi_b2(2P)  -> J/psi(1S) mu+]cc" ,
+            ##
+            ## combination cut : accept all 
+            CombinationCut  = " AALL " ,
+            ## mother      cut : accept all 
+            MotherCut       = "  ALL " 
+            )
+        
+        sel = Selection  (
+            "SelDiMuAndWFor"   + self._name         ,
+            Algorithm          = alg                ,
+            RequiredSelections = [ self . W      () ,
+                                   self . DiMuon () ] 
+            )
+        
+        return self._add_selection ( 'DiMuW_Selection' , sel )    
+
+
+    ## select chi + W 
+    def ChiAndW ( self ) :
+        """
+        select dimuon + W+
+        """
+        sel = self._selection ( 'ChiW_Selection' )
+        if sel : return sel 
+
+        _alg = CombineParticles (
+            ##
+            DecayDescriptor =  "[chi_b2(2P)  -> J/psi(1S) gamma mu+]cc" ,
+            ##
+            DaughtersCuts = {
+            "J/psi(1S)" : " ( M  < 3.21 * GeV ) | in_range ( 8.5 * GeV , M , 12.0 * GeV ) " ,  
+            'gamma'     :  self['GammaChi']
+            } ,
+            ## mimic chi_(c,b):
+            CombinationCut   = """
+            ( AM12 - AM1 < 1.05 * GeV ) | 
+            ( AM12 - AM1 < 1.05 * GeV )  
+            """ ,
+            MotherCut        = "  ALL " 
+            )
+        
+        _sel = Selection  (
+            "SelPreChiAndWFor" + self._name  ,
+            Algorithm          = _alg        ,
+            RequiredSelections = [ self . DiMuonAndW () , ## fake!
+                                   self . W          () ,
+                                   self . DiMuon     () ,
+                                   StdLooseAllPhotons   ] 
+            )
+        
+        ## apply pi0-veto-tagger ! 
+        from GaudiConfUtils.ConfigurableGenerators import Pi0Veto__Tagger 
+        _tag = Pi0Veto__Tagger (
+            MassWindow     = 25 * MeV  ,
+            MassChi2       = -1        ,
+            ExtraInfoIndex = 25013     ## unique ! 
+            )
+        
+        sel = Selection  (
+            "SelChiAndWFor"    + self._name  ,
+            Algorithm          =   _tag ,
+            RequiredSelections = [ _sel ]
+            )
+        
+        return self._add_selection ( 'ChiW_Selection' , sel )    
+
 
     ## get all dicharm lines 
     def _lines_associative_onia ( self ) :
@@ -453,32 +577,47 @@ class StrippingCharmAssociativeConf(LineBuilder) :
         sel = [
             ##
             StrippingLine (
-            "DiMuonAndGammaFor" + self._name ,
-            prescale = self.DiMuonAndGammaPrescale  , ## ATTENTION! Prescale here !!              
-            checkPV  = self._checkPV         ,
-            algos    = [ self.DiMuonAndGamma () ]            
+            "DiMuonAndGammaFor" + self._name            ,
+            prescale = self [ 'DiMuonAndGammaPrescale' ] , ## ATTENTION! Prescale here !!              
+            checkPV  = self [ 'CheckPV']                 ,
+            algos    = [ self . DiMuonAndGamma () ]            
             ) ,
             ##
             StrippingLine (
-            "DoubleDiMuonFor" + self._name ,
-            prescale = self.DoubleDiMuonPrescale  , ## ATTENTION! Prescale here !!              
-            checkPV  = self._checkPV         ,
-            algos    = [ self.DoubleDiMuon () ]            
+            "DoubleDiMuonFor" + self._name             ,
+            prescale = self [ 'DoubleDiMuonPrescale' ] , ## ATTENTION! Prescale here !!              
+            checkPV  = self [ 'CheckPV' ]              ,
+            algos    = [ self . DoubleDiMuon () ]            
             ) ,
             ##
             StrippingLine (
-            "ChiAndDiMuonFor" + self._name   ,
-            prescale = self.ChiAndDiMuonPrescale  , ## ATTENTION! Prescale here !!              
-            checkPV  = self._checkPV         ,
-            algos    = [ self.ChiAndDiMuon () ]            
+            "ChiAndDiMuonFor" + self._name             ,
+            prescale = self [ 'ChiAndDiMuonPrescale' ] , ## ATTENTION! Prescale here !!              
+            checkPV  = self [ 'CheckPV' ]              ,
+            algos    = [ self . ChiAndDiMuon () ]            
             ) ,
             ## 
             StrippingLine (
-            "DiChiFor" + self._name          ,
-            prescale = self.DiChiPrescale    , ## ATTENTION! Prescale here !!              
-            checkPV  = self._checkPV         ,
-            algos    = [ self.DiChi       () ]            
-            ) 
+            "DiChiFor" + self._name             ,
+            prescale = self [ 'DiChiPrescale' ] , ## ATTENTION! Prescale here !!              
+            checkPV  = self [ 'CheckPV']        ,
+            algos    = [ self . DiChi       () ]            
+            ) ,
+            ##
+            StrippingLine (
+            "DiMuonAndWFor" + self._name             ,
+            prescale = self [ 'DiMuonAndWPrescale' ] , ## ATTENTION! Prescale here !!              
+            checkPV  = self [ 'CheckPV'  ]           ,
+            algos    = [ self . DiMuonAndW ()  ]             
+            ) ,
+            ##
+            StrippingLine (
+            "ChiAndWFor" + self._name             ,
+            prescale = self [ 'ChiAndWPrescale' ] , ## ATTENTION! Prescale here !!              
+            checkPV  = self [ 'CheckPV'  ]           ,
+            algos    = [ self . ChiAndW ()  ]             
+            ) ,
+            ##
             ]
         #
         return self._add_selection ( 'OniaAndXLines' , sel ) 
@@ -513,11 +652,12 @@ class StrippingCharmAssociativeConf(LineBuilder) :
 # =============================================================================
 default_config = {
     #
-    'DiMuonAndGammaPrescale' : 1.00 ,
-    'DoubleDiMuonPrescale'   : 1.00 , 
-    #
-    'PhotonCuts'    : ' PT > 4.0 * GeV  ' , 
-    'MuonCuts'      : ' ISMUON & ( PT > 650 * MeV ) & ( TRCHI2DOF < 5 ) ' 
+    'DiMuonAndGammaPrescale' : 1.0 ,
+    'DoubleDiMuonPrescale'   : 1.0 ,
+    'ChiAndDiMuonPrescale'   : 1.0 ,
+    'DiChiPrescale'          : 1.0 ,
+    'DiMuonAndWPrescale'     : 1.0 , 
+    'ChiAndWPrescale'        : 1.0
     }    
 # =============================================================================
 if '__main__' == __name__ :

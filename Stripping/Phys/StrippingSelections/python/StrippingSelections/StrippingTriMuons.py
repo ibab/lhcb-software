@@ -2,8 +2,6 @@
 # =============================================================================
 # $Id$
 # =============================================================================
-# $URL$
-# =============================================================================
 ## @file
 # 
 #  Strip "three-muon events" : 
@@ -40,8 +38,6 @@
 #   The Global Event Selection:
 #
 #    - each line requres at least one primary vertex
-#    - the Hlt-requirements: MicroBias or Muon-trigger
-#         HLT_PASS_RE('Hlt.*(MicroBias|Muon).*Decision')
 #
 #  Test wuth RUN_79647_RealData+Reco06-Stripping10_90000000_SDST.py
 #  100k input events events, 63350 ``physics''-triggers
@@ -105,8 +101,6 @@ Strip three-muon events:
    The Global Event Selection:
 
     - each line requres at least one primary vertex
-    - the Hlt-requirements: MicroBias or Muon-trigger
-         HLT_PASS_RE('Hlt.*(MicroBias|Muon).*Decision')
 
 
     Test wuth RUN_79647_RealData+Reco06-Stripping10_90000000_SDST.py
@@ -135,16 +129,14 @@ __author__  = 'Vanya BELYAEV Ivan.Belyaev@nikhef.nl'
 __date__    = '2010-08-08'
 __version__ = '$Revision$'
 # =============================================================================
-
-
-from Gaudi.Configuration import *
-from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
-from PhysSelPython.Wrappers import Selection, VoidEventSelection
-from StrippingConf.StrippingLine import StrippingLine
-from StrippingUtils.Utils import LineBuilder
+from   Gaudi.Configuration                   import *
+from   GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
+from   PhysSelPython.Wrappers                import Selection, VoidEventSelection
+from   StrippingConf.StrippingLine           import StrippingLine
+from   StrippingUtils.Utils                  import LineBuilder
 import GaudiKernel.SystemOfUnits as units
-from Configurables import LoKi__VoidFilter
-from StandardParticles import StdLooseMuons
+from   Configurables                         import LoKi__VoidFilter
+from   StandardParticles                     import StdLooseMuons
 
 
 __all__ = ('StrippingTriMuonsConf',
@@ -524,3 +516,15 @@ class StrippingTriMuonsConf(LineBuilder) :
 
     
 
+# =============================================================================
+if '__main__' == __name__ :
+    
+    print 80*'*'
+    print __doc__
+    print ' Author :  %s' % __author__
+    print ' Date   :  %s' % __date__
+    print 80*'*'
+        
+# =============================================================================
+# The END 
+# =============================================================================
