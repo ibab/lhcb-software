@@ -12,6 +12,7 @@ include_path      none
 #============================================================================
 use  MCEvent       v* Event
 use  DigiEvent     v* Event
+use  LinkerEvent   v* Event
 use  VLDet         v* Det
 use  GaudiAlg      v*
 use  GaudiGSL 	   v* 

@@ -1,22 +1,23 @@
 #ifndef VL_CLUSTER_CREATOR_H
 #define VL_CLUSTER_CREATOR_H 1
 
+// STL
+#include <vector>
 // Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 // Event/MCEvent
 #include "Event/MCVLDigit.h"
 // Event/DigiEvent
 #include "Event/VLCluster.h"
-// Det/VLDet
-#include "VLDet/DeVL.h"
-// Local
-#include "VLInternalCluster.h"
+// Event/LinkerEvent
+#include "Linker/LinkerWithKey.h"
 
 /** @class VLClusterCreator VLClusterCreator.h
  *
  * Create VLClusters from MCVLDigits
  */
 
+class DeVL;
 class IStripNoiseTool;
 
 class VLClusterCreator : public GaudiAlgorithm {
@@ -34,44 +35,36 @@ public:
 private:
 
   void makeClusters();
-  StatusCode storeClusters();
-
-  bool makeCluster(LHCb::MCVLDigit* digit, 
-                   VLInternalCluster& cluster, double& stn);
-  bool addCentralChannel(VLInternalCluster& cluster, double& stn, 
-                         LHCb::MCVLDigit* digit);
-  bool addAdjacentChannel(VLInternalCluster& cluster, double& stn,
-                          LHCb::MCVLDigit* digit, int offset);
-  void addChannel(VLInternalCluster& cluster, double& stn,
-                  LHCb::MCVLDigit* digit, int offset);
-
-  /// Reject a cluster allowing the digits in it to be used in other clusters
-  void unmarkCluster(VLInternalCluster& cluster);
-
-  void getRangeOfSensor(const unsigned int sensorId,
-                        std::pair<LHCb::MCVLDigits::iterator, 
-                                  LHCb::MCVLDigits::iterator>& range);
-
-  /// Get the S/N for this channel 
+  /// Try to create a cluster from a given digit.
+  bool makeCluster(LHCb::MCVLDigit* digit);
+  /// Try to add a digit to an existing cluster candidate.
+  bool addChannel(LHCb::MCVLDigit* digit, int offset);
+  /// Get iterators to the first and last digit on a given sensor.
+  void getRange(const unsigned int sensor,
+                std::pair<LHCb::MCVLDigits::iterator,
+                          LHCb::MCVLDigits::iterator>& range);
+  /// Calculate the S/N ratio for a given digit.
   double signalToNoise(LHCb::MCVLDigit* digit);
-  
-  LHCb::MCVLDigits* m_digits; 
-  LHCb::VLClusters* m_clusters; 
+  /// Link a cluster to the underlying MC hits and particles
+  void linkCluster(LHCb::VLCluster* cluster,     
+                   LinkerWithKey<LHCb::MCHit, LHCb::VLCluster>& hl,
+                   LinkerWithKey<LHCb::MCParticle, LHCb::VLCluster>& pl);
 
+  LHCb::MCVLDigits* m_digits; 
+  LHCb::VLClusters* m_clusters;
   /// Pointer to detector element
   DeVL* m_det;
-  /// Tag channels of current sensor as used
-  std::vector<bool> m_used; 
-  /// S/N cut to apply to all detectors
-  double m_signalToNoiseCut;
-  /// S/N cut for clusters to apply to all detectors
-  double m_clusterSignalToNoiseCut;
-  ///  Absolute ADC cut for clusters to apply to all detectors
-  double m_clusterAbsoluteADCCut;
+  /// Digits forming a cluster candidate 
+  std::vector<LHCb::MCVLDigit*> m_candidate;
+  /// Channels of current sensor already used for clusters.
+  std::vector<bool> m_used;
+
+  /// S/N threshold for a seed digit
+  double m_seedSignalToNoiseCut;
+  /// S/N threshold for adding digits to an existing cluster
+  double m_lowSignalToNoiseCut;
   /// Maximum number of clusters to make per event
   unsigned int m_maxClusters; 
-  /// Threshold for adding strips to a cluster
-  double m_inclusionThreshold; 
   /// Spillover threshold 
   double m_highThreshold; 
 

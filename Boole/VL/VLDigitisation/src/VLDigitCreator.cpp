@@ -151,7 +151,6 @@ StatusCode VLDigitCreator::execute() {
   if (m_debug) debug() << " ==> execute()" << endmsg;
   /// Get the container of MCHits to make MC linker table to
   m_MCHitContainerToLink = get<LHCb::MCHits>(m_MCHitContainerToLinkName);
-
   m_digits = new LHCb::MCVLDigits();
   std::vector<std::string>::const_iterator it;
   for (it = m_inputContainers.begin(); it != m_inputContainers.end(); ++it) {
