@@ -4,6 +4,17 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
+! 2012-06-18 - Pieter David
+ - Cleanup of most of the code for displaced vertex Hlt2 lines
+   . more configuration options for VeloWithIP (IPChi2 instead of IP,
+     option for a global cut on number of input/output tracks etc.)
+   . Hlt2PreSelDV rewritten (significant speed improvement)
+     - key-based map replaced by LHCbID comparison
+     - candidates created as late as possible (only if accepted by the preselection)
+     - functors are created at initialisation
+   . Hlt2SelDV replaced by FilterDesktop (for single lines) and
+     CombineParticles (for double lines), see also Hlt2Lines.Hlt2DisplVerticesLines
+
 !========================= HltDisplVertices v3r10 2012-05-16 =========================
 ! 2012-05-04 - Victor Coco
  - fix x86_64-slc5-gcc46 warnings.
