@@ -20,15 +20,15 @@
 
 using namespace LHCb;
 
-DECLARE_TOOL_FACTORY( ITReadoutTool );
+DECLARE_TOOL_FACTORY( ITReadoutTool )
 
 ITReadoutTool::ITReadoutTool(const std::string& type,
                             const std::string& name,
-                            const IInterface* parent):
-  STReadoutTool( type, name, parent )
-  // m_detType("IT")
+                            const IInterface* parent)
+  : STReadoutTool( type, name, parent )
+  , m_firstStation(512)
 {
-  // constructer
+  // constructor
 
   declareProperty( "conditionLocation", 
                    m_conditionLocation  = "/dd/Conditions/ReadoutConf/IT/ReadoutMap" );

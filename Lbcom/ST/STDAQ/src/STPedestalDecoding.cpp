@@ -1,5 +1,3 @@
-// $Id: STPedestalDecoding.cpp,v 1.3 2009-07-06 17:40:52 akeune Exp $
-
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
@@ -29,7 +27,7 @@ using namespace STDAQ;
 
 // ----------------------------------------------------------------------------
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( STPedestalDecoding );
+DECLARE_ALGORITHM_FACTORY( STPedestalDecoding )
 
 //=============================================================================
 // Standard constructor, initializes variables

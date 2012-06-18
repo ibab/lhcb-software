@@ -1,4 +1,3 @@
-// $Id: STFullDecoding.cpp,v 1.4 2010-04-12 13:21:28 mtobin Exp $
 // Include files
 
 // from Gaudi
@@ -33,7 +32,7 @@ using namespace STDAQ;
 
 // ----------------------------------------------------------------------------
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( STFullDecoding );
+DECLARE_ALGORITHM_FACTORY( STFullDecoding )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -103,8 +102,8 @@ StatusCode STFullDecoding::execute()
     // Create an empty tell1 data object 
     STTELL1Data::Data tell1Data;
     tell1Data.resize(noptlinks);
-    STTELL1Data::Data::iterator i=tell1Data.begin();
-    for( ; i!=tell1Data.end(); ++i) {  
+    for( STTELL1Data::Data::iterator i =tell1Data.begin();
+                                     i!=tell1Data.end(); ++i) {  
       i->resize(nports*nstrips, 0);
     }
  

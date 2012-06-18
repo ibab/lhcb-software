@@ -17,7 +17,7 @@
 #include "Kernel/STRawBankMap.h"
 #include "Kernel/ISTReadoutTool.h"
 
-DECLARE_ALGORITHM_FACTORY( STRawBankMonitor );
+DECLARE_ALGORITHM_FACTORY( STRawBankMonitor )
 
 using namespace LHCb;
 
@@ -26,8 +26,9 @@ using namespace LHCb;
 //--------------------------------------------------------------------
 
 STRawBankMonitor::STRawBankMonitor(const std::string& name, 
-                              ISvcLocator* pSvcLocator) :
-  ST::HistoAlgBase(name, pSvcLocator)
+                              ISvcLocator* pSvcLocator)
+  : ST::HistoAlgBase(name, pSvcLocator)
+  , m_bankType(LHCb::RawBank::LastType)
  
 {
   // constructor

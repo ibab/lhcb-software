@@ -1,4 +1,3 @@
-// $Id: RawBankToSTLiteClusterAlg.h,v 1.11 2008-12-01 16:35:30 mneedham Exp $
 #ifndef RAWBANKTOSTLITECLUSTERALG_H 
 #define RAWBANKTOSTLITECLUSTERALG_H 1
 
@@ -29,7 +28,7 @@ class STTell1Board;
 namespace LHCb{
  class STChannelID;
  class STLiteCluster;
-};
+}
 
 class RawBankToSTLiteClusterAlg : public STDecodingBaseAlg {
 

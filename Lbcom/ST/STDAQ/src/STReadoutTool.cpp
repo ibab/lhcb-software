@@ -39,7 +39,8 @@ STReadoutTool::STReadoutTool(const std::string& type,
                             const std::string& name,
                             const IInterface* parent):
   GaudiTool( type, name, parent ),
-  m_nBoard(0)
+  m_nBoard(0),
+  m_tracker(NULL)
 {
   // constructer
   declareProperty("printMapping", m_printMapping = false );

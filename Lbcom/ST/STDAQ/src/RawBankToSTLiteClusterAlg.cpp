@@ -35,7 +35,7 @@ using namespace LHCb;
 // 2004-01-07 : Matthew Needham   
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( RawBankToSTLiteClusterAlg );
+DECLARE_ALGORITHM_FACTORY( RawBankToSTLiteClusterAlg )
 
 RawBankToSTLiteClusterAlg::RawBankToSTLiteClusterAlg( const std::string& name,
                                            ISvcLocator* pSvcLocator ):
@@ -106,7 +106,7 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt,STLiteCluster
 
 
   const unsigned int pcn = pcnVote(tBanks);
-  debug() << "PCN was voted to be " << pcn << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "PCN was voted to be " << pcn << endmsg;
   if (pcn == STDAQ::inValidPcn) {
     counter("skipped Banks") += tBanks.size();
     return Warning("PCN vote failed", StatusCode::SUCCESS,2);
@@ -169,8 +169,9 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt,STLiteCluster
       if (pcn != bankpcn && !m_skipErrors){
         std::string errorBankMsg = "PCNs out of sync sourceID "+
 	boost::lexical_cast<std::string>((*iterBank)->sourceID());
-        debug() << "Expected " << pcn << " found " << bankpcn << endmsg;
-        Warning(errorBankMsg, StatusCode::SUCCESS,2);
+        if ( msgLevel(MSG::DEBUG) ) 
+          debug() << "Expected " << pcn << " found " << bankpcn << endmsg;
+        Warning(errorBankMsg, StatusCode::SUCCESS,2).ignore();
         ++counter("skipped Banks");
         continue; 
       }

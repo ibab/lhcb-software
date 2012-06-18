@@ -71,7 +71,7 @@ m_bankTypeString(""){
 
 STDecodingBaseAlg::~STDecodingBaseAlg() {
   // Destructor
-};
+}
 
 StatusCode STDecodingBaseAlg::initialize() {
 

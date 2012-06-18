@@ -1,5 +1,3 @@
-// $Id: STDigitsToSTTELL1Data.cpp,v 1.1 2008-10-17 15:13:24 mneedham Exp $
-
 #include <algorithm>
 
 // from Gaudi
@@ -30,7 +28,7 @@ using namespace LHCb;
 // 2004-01-07 : Matthew Needham   
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( STDigitsToSTTELL1Data );
+DECLARE_ALGORITHM_FACTORY( STDigitsToSTTELL1Data )
 
 STDigitsToSTTELL1Data::STDigitsToSTTELL1Data( const std::string& name,
                                            ISvcLocator* pSvcLocator ):
@@ -57,10 +55,12 @@ StatusCode STDigitsToSTTELL1Data::execute() {
   
   StatusCode sc = createTell1Data(digitCont,outCont);
   
-  if (sc.isFailure()) return Warning("Problems creating Tell1 data", StatusCode::FAILURE, 1);
+  if (sc.isFailure()) {
+    delete outCont;
+    return Warning("Problems creating Tell1 data", StatusCode::FAILURE, 1);
+  }
+  
   put(outCont, m_outputLocation);
-
-
   return StatusCode::SUCCESS;
 }
 
@@ -73,11 +73,11 @@ StatusCode STDigitsToSTTELL1Data::createTell1Data(const STDigits* digits, STTELL
 
   // make correct number of output containers
   for (unsigned int i = 0; i < readoutTool()->nBoard(); ++i){
-   STTell1Board* board = readoutTool()->findByOrder(i);
-   STTELL1Data::Data dataVec;
-   dataVec.resize(STDAQ::noptlinks);
-   for(STTELL1Data::Data::iterator i=dataVec.begin(); i!= dataVec.end(); ++i)
-     i->resize(LHCbConstants::nStripsInBeetle);
+    STTell1Board* board = readoutTool()->findByOrder(i);
+    STTELL1Data::Data dataVec;
+    dataVec.resize(STDAQ::noptlinks);
+    for(STTELL1Data::Data::iterator j=dataVec.begin(); j!= dataVec.end(); ++j)
+      j->resize(LHCbConstants::nStripsInBeetle);
     STTELL1Data* tell1Data = new STTELL1Data(dataVec);
     int key = (int)board->boardID().id();
     outCont->insert(tell1Data,key);

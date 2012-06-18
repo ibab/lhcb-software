@@ -1,5 +1,3 @@
-// $Id: STClustersToRawBankAlg.cpp,v 1.11 2009-03-14 09:17:34 mneedham Exp $
-
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
@@ -39,7 +37,7 @@ using namespace LHCb;
 // 2004-08-01 : M. Needham
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( STClustersToRawBankAlg );
+DECLARE_ALGORITHM_FACTORY( STClustersToRawBankAlg )
 
 STClustersToRawBankAlg::STClustersToRawBankAlg( const std::string& name,
                                                       ISvcLocator* pSvcLocator )
@@ -91,7 +89,7 @@ StatusCode STClustersToRawBankAlg::initialize() {
 
   // banktype
   if (configureBankType().isFailure()){
-    fatal() << "unknown bank type" << endreq;
+    fatal() << "unknown bank type" << endmsg;
     return StatusCode::FAILURE;
   }
 

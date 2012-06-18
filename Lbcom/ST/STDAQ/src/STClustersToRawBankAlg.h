@@ -1,4 +1,3 @@
-// $Id: STClustersToRawBankAlg.h,v 1.5 2008-10-17 14:10:22 mneedham Exp $
 #ifndef STClustersToRawBankAlg_H
 #define STClustersToRawBankAlg_H 1
 
@@ -30,7 +29,7 @@ class STTell1ID;
 class ISTDAQDataSvc;
 
 class STBoardToBankMap;
-namespace LHCb {class RawBank;};
+namespace LHCb {class RawBank;}
 
 class ISTReadoutTool;
 

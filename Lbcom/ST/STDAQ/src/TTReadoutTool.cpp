@@ -1,5 +1,3 @@
-// $Id: TTReadoutTool.cpp,v 1.17 2009-10-30 12:54:19 mtobin Exp $
-
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
 
@@ -19,14 +17,16 @@
 
 using namespace LHCb;
 
-DECLARE_TOOL_FACTORY( TTReadoutTool );
+DECLARE_TOOL_FACTORY( TTReadoutTool )
 
 TTReadoutTool::TTReadoutTool(const std::string& type,
                             const std::string& name,
-                            const IInterface* parent):
-  STReadoutTool( type, name, parent) 
+                            const IInterface* parent)
+  : STReadoutTool( type, name, parent)
+  , m_nRegionA(512)
+  , m_firstStation(512)
 {
-  // constructer
+  // constructor
 
   declareProperty( "conditionLocation", 
                     m_conditionLocation  = "/dd/Conditions/ReadoutConf/TT/ReadoutMap");

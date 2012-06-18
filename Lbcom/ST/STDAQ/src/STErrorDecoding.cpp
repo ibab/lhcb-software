@@ -21,7 +21,7 @@ using namespace LHCb;
 
 // ----------------------------------------------------------------------------
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( STErrorDecoding );
+DECLARE_ALGORITHM_FACTORY( STErrorDecoding )
 
 //=============================================================================
 // Standard constructor, initializes variables
