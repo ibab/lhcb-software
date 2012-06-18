@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2012-06-18 - P. David
+ - New displaced vertices tuning
+
 ! 2012-06-18 - V. Gligorov
  - Add CharmCEP_June2012 to Physics_June2012
 

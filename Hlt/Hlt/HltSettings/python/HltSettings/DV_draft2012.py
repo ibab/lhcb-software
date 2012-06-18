@@ -1,14 +1,14 @@
 class DV_draft2012 :
     """
-    Threshold settings for Hlt2 displaced vertex lines lines: draft for 2012
-    
-    @author V. Coco
-    @date 2011-02-12
+    Threshold settings for Hlt2 displaced vertex lines lines: June 2012 settings
+
+    @author V. Coco, P. David
+    @date 2012-06-18
     """
-    
+
     __all__ = ( 'ActiveHlt2Lines' )
-    
-    
+
+
     def ActiveHlt2Lines(self) :
         """
         Returns a list of active lines
@@ -16,128 +16,126 @@ class DV_draft2012 :
 
         lines = [
             # The topological
+            'Hlt2DisplVerticesSingleVeryHighFD',
+            'Hlt2DisplVerticesSingleHighFD',
             'Hlt2DisplVerticesSingle',
-            'Hlt2DisplVerticesDouble', 
-            'Hlt2DisplVerticesHighMassSingle',
-            'Hlt2DisplVerticesHighFDSingle',
-            'Hlt2DisplVerticesSinglePostScaled',
+            'Hlt2DisplVerticesSingleHighMass',
+            'Hlt2DisplVerticesSinglePS',
+            'Hlt2DisplVerticesSingleLoosePS',
+            'Hlt2DisplVerticesDouble',
             'Hlt2DisplVerticesSingleDown',
-            'Hlt2DisplVerticesDoublePostScaled',
-            'Hlt2DisplVerticesSingleHighMassPostScaled',
-            'Hlt2DisplVerticesSingleHighFDPostScaled',
-            'Hlt2DisplVerticesSingleMVPostScaled'
+            'Hlt2DisplVerticesDoublePS',
             ]
 
         return lines
 
-    def Thresholds(self) : 
-       
-        d = { }
-        ##########################################################################
-        #
-        # For tuning:
-        # Prescale only the PS lines:
-        # Hlt2SinglePSLonglived
-        # Hlt2DoublePSLonglived
-        # Hlt2SinglePSLonglivedHighMass(PS of 0.02 give 0.1 Hz)
-        # Hlt2SinglePSLonglivedHighFD (PS of 0.02 give 0.1 Hz)
-        # Hlt2SinglePSLonglivedMV
-        ##########################################################################
-        
-        from Hlt2Lines.Hlt2DisplVerticesLines  import Hlt2DisplVerticesLinesConf
-        d.update( { Hlt2DisplVerticesLinesConf : {
-            "FilterVelo" : True ,
-            "VeloIP" : 0.1 ,
-            "UseVeloTracks": False,
-            "FracE1Track": 0.9,
-            "FracTrackBefV": 0.49,
-            "MaxChi2Long": 5.,
-            "MaxChi2Down": 10.,
-            "MinNbTracks"  : { 'Hlt2RV2P' : 4
-                               , 'Hlt2SingleLonglived' : 4
-                               , 'Hlt2SingleDown' : 4
-                               , 'Hlt2PreSelSingleDown' : 5
-                               , 'Hlt2SingleLonglivedHighFD' :  6
-                               , 'Hlt2SingleLonglivedHighMass' : 6
-                               , 'Hlt2DoubleLonglived' : 4
-                               , 'Hlt2SinglePSLonglived' : 4
-                               , 'Hlt2DoublePSLonglived' : 4
-                               , 'Hlt2SinglePSLonglivedHighMass' : 5
-                               , 'Hlt2SinglePSLonglivedHighFD' : 5
-                               , 'Hlt2SinglePSLonglivedMV' : 4
-                               }
-            ,  "RMin"         : {   'Hlt2RV2P' : 0.4
-                                    , 'Hlt2SingleLonglived' : 1.7
-                                    , 'Hlt2SingleDown' : 2. 
-                                    , 'Hlt2PreSelSingleDown' : 0.4
-                                    , 'Hlt2SingleLonglivedHighFD' : 4.
-                                    , 'Hlt2SingleLonglivedHighMass' : 0.5
-                                    , 'Hlt2DoubleLonglived' : 0.4 
-                                    , 'Hlt2SinglePSLonglived' : 0.4
-                                    , 'Hlt2DoublePSLonglived' : 0.4
-                                    , 'Hlt2SinglePSLonglivedHighMass' : 0.5
-                                    , 'Hlt2SinglePSLonglivedHighFD' : 3.0
-                                    , 'Hlt2SinglePSLonglivedMV' : 0.4  
-                                  }
-            ,  "MinMass"      : {   'Hlt2RV2P' : 0.
-                                    , 'Hlt2SingleLonglived' : 5500.
-                                    , 'Hlt2SingleDown' : 3000
-                                    , 'Hlt2PreSelSingleDown' : 2800.
-                                    , 'Hlt2SingleLonglivedHighFD' : 3200.
-                                    , 'Hlt2SingleLonglivedHighMass' : 8000.
-                                    , 'Hlt2DoubleLonglived' : 2000.
-                                    , 'Hlt2SinglePSLonglived' : 0.
-                                    , 'Hlt2DoublePSLonglived' : 2000.
-                                    , 'Hlt2SinglePSLonglivedHighMass' : 8000.
-                                    , 'Hlt2SinglePSLonglivedHighFD' : 3200.
-                                    , 'Hlt2SinglePSLonglivedMV' :0.
+    def Thresholds(self) :
 
-                                  }
-            ,  "HighestMass"  : {   'Hlt2DoubleLonglived' : 2800.
-                                    ,'Hlt2DoublePSLonglived' : 2000.
-                                    }
-            ,  "MinSumpt"     :{ 'Hlt2RV2P' : 0.
-                                 , 'Hlt2SingleLonglived' : 1000.
-                                 , 'Hlt2SingleDown' : 1000.
-                                 , 'Hlt2PreSelSingleDown' : 1000.
-                                 , 'Hlt2SingleLonglivedHighFD' : 1000.
-                                 , 'Hlt2SingleLonglivedHighMass' : 1000
-                                 , 'Hlt2DoubleLonglived' : 1000.
-                                 , 'Hlt2SinglePSLonglived' : 0.
-                                 , 'Hlt2DoublePSLonglived' : 0.
-                                 , 'Hlt2SinglePSLonglivedHighMass' : 1000.
-                                 , 'Hlt2SinglePSLonglivedHighFD' : 1000.
-                                 , 'Hlt2SinglePSLonglivedMV' :0.
-                                 }
-            
-            ,  "ComputeMatterVeto" : { 'Hlt2RV2P' : True
-                                 , 'Hlt2SingleLonglived' : 5
-                                 , 'Hlt2SingleLonglivedHighFD' : 5
-                                 , 'Hlt2SingleLonglivedHighMass' : 5
-                                 , 'Hlt2DoubleLonglived' : 5
-                                 , 'Hlt2SingleDown' : 0
-                                 , 'Hlt2SinglePSLonglived' : 0
-                                 , 'Hlt2DoublePSLonglived' : 0
-                                 , 'Hlt2SinglePSLonglivedHighMass' : 5
-                                 , 'Hlt2SinglePSLonglivedHighFD' : 5
-                                 , 'Hlt2SinglePSLonglivedMV' : 5
-                                   }
-            ,  "AllOutDet"  : {  'Hlt2DoubleLonglived' : False
-                                 }
-            , "PostScale" : { 'Hlt2RV2P' : 1.
-                              , 'Hlt2SingleLonglived' : 1.
-                              , 'Hlt2SingleDown' : 1.
-                              , 'Hlt2SingleLonglivedHighFD' : 1.
-                              , 'Hlt2SingleLonglivedHighMass' : 1.
-                              , 'Hlt2DoubleLonglived' : 1.
-                              , 'Hlt2SinglePSLonglived' : 0.0005
-                              , 'Hlt2DoublePSLonglived' : 0.01
-                              , 'Hlt2SinglePSLonglivedHighMass' : 1.
-                              , 'Hlt2SinglePSLonglivedHighFD' : 1.
-                              , 'Hlt2SinglePSLonglivedMV' : 0.001
-                              }  
-            }}   
-                  )
+        import GaudiKernel.SystemOfUnits as units
+
+        d = { }
+
+        from Hlt2Lines.Hlt2DisplVerticesLines import Hlt2DisplVerticesLinesConf
+
+        d.update( { Hlt2DisplVerticesLinesConf :  {
+            ## Velo tracks filter
+              "FilterVelo"                : True
+            , "VeloIP"                    : 0.100*units.mm
+            , "VeloIPChi2"                : -1.0
+            , "VeloRejectSplash"          : False
+            , "VeloRejectBackward"        : True
+            , "VeloMinNumTracks"          : 4
+            , "VeloMaxNumInput"           : -1
+            , "VeloMaxNumOutput"          : -1
+
+            #========== DEFAULT CUT VALUES, fallback if no other specified ==========#
+            , "DefaultLLP"                : { "PreScale"             : 1.0
+                                            , "MinNumTracks"         : 4
+                                            , "MinRho"               : 0.4   *units.mm
+                                            , "MinMass"              : 3200.0*units.MeV
+                                            , "MinSumPT"             : 1000.0*units.MeV ## TODO: check
+                                            , "MaxFractE1Track"      : 0.9
+                                            , "MaxFractTrwHitBefore" : 0.49
+                                            , "ApplyMatterVeto"      : True
+                                            }
+            ## Velo reconstruction
+            , "RV2PVelo"                  : { "MinSumPT"             : 0.0   *units.MeV
+                                            , "MinMass"              : 0.0   *units.MeV
+                                            , "ApplyMatterVeto"      : False
+                                            ## Reco only
+                                            , "MaxChi2NonVeloOnly"   : 5.0
+                                            , "UseVeloTracks"        : False
+                                            , "ComputeMatterVeto"    : True
+                                            }
+            ## Single LLP lines
+            , "SingleVeryHighFDSelection" : { "MinNumTracks"         : 4     # 2-3 Hz
+                                            , "MinRho"               : 5.0   *units.mm
+                                            , "MinMass"              : 2000.0*units.MeV
+                                            }
+            , "SingleHighFDSelection"     : { "MinNumTracks"         : 5     # 4-5 Hz
+                                            , "MinRho"               : 3.0   *units.mm
+                                            , "MinMass"              : 2800.0*units.MeV
+                                            }
+            , "SingleSelection"           : { "MinNumTracks"         : 4     # 4 Hz
+                                            , "MinRho"               : 1.5   *units.mm
+                                            , "MinMass"              : 5000.0*units.MeV
+                                            }
+            , "SingleHighMassSelection"   : { "MinNumTracks"         : 5     # 5 Hz
+                                            , "MinRho"               : 0.5   *units.mm
+                                            , "MinMass"              : 8000.0*units.MeV
+                                            }
+            # prescaled
+            , "SinglePSSelection"         : { "PreScale"             : 0.01  # 1 Hz
+                                            , "MinNumTracks"         : 4
+                                            , "MinRho"               : 1.5   *units.mm
+                                            , "MinMass"              : 2500.0*units.MeV
+                                            , "MinSumPT"             :    0.0*units.MeV
+                                            }
+            , "SingleLoosePSSelection"    : { "PreScale"             : 0.001 # 1-2 Hz
+                                            , "MinNumTracks"         : 4
+                                            , "MinRho"               : 0.4   *units.mm
+                                            , "MinMass"              : 0.0   *units.MeV
+                                            , "MinSumPT"             : 0.0   *units.MeV
+                                            , "ApplyMatterVeto"      : False
+                                            }
+
+            ## Double LLP line
+            , "DoubleSelection"           : { "ApplyMatterVeto"      : False
+                                            , "MinMass"              : 2000.0*units.MeV
+                                            ## Double only
+                                            , "MinHighestMass"       : 2800.0*units.MeV
+                                            , "ApplyMatterVetoOne"   : True
+                                            }
+            , "DoublePSSelection"         : { "PreScale"             : 0.01
+                                            , "ApplyMatterVeto"      : False
+                                            , "MinMass"              : 2000.0*units.MeV
+                                            , "MinSumPT"             :    0.0*units.MeV
+                                            ## Double only
+                                            , "MinHighestMass"       : 2000.0*units.MeV
+                                            , "ApplyMatterVetoOne"   : False
+                                            }
+
+
+            ## Downstream preselection
+            , "PreSelDown"                : { "MinNumTracks"         : 5
+                                            , "MinRho"               : 0.4   *units.mm
+                                            , "MinMass"              : 2800.0*units.MeV
+                                            }
+            ## Downstream reconstruction
+            , "RV2PDown"                  : { "MinNumTracks"         : 5
+                                            , "MinMass"              : 2800.0*units.MeV
+                                            , "ApplyMatterVeto"      : False
+                                            ## Reco only
+                                            , "MaxChi2NonVeloOnly"   : 5.0
+                                            , "UseVeloTracks"        : False
+                                            , "ComputeMatterVeto"    : False
+                                            }
+            ## Single downstream line
+            , "SingleDownSelection"       : { "MinNumTracks"         : 5
+                                            , "MinRho"               : 2.0   *units.mm
+                                            , "MinMass"              : 3000.0*units.MeV
+                                            , "ApplyMatterVeto"      : False
+                                            }
+        } } )
 
         return d
-    
