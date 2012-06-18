@@ -4,9 +4,9 @@
 !==============================================================================
 
 ! 2012-06-18 - Patrick Koppenburg
- - DiElectronMaker  : Allow user to change mother ID of 'photon'. Typically
-
-
+ - DiElectronMaker  : Allow user to change mother ID of 'photon'. Typically J/psi(1S)
+     -> Use Particle property
+  
 ! 2012-06-15 - Olivier Deschamps
   - DiElectronMaker : fix gcc46 warnings
 

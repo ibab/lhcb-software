@@ -46,7 +46,7 @@ DiElectronMaker::DiElectronMaker( const std::string& name,
   declareProperty("DeltaYmax"              , m_deltaYmax=-1);
   declareProperty("UseEcalEnergy"          , m_ecalE=40*Gaudi::Units::GeV);
   declareProperty("VeloCnvThreshold"       , m_vc=1.5);
-  declareProperty( "MotherID", m_pid = "gamma", "Mother ID" );
+  m_pid = "gamma" ; /// Change with Particle property from ParticleMakerBase
 }
 //=============================================================================
 // Destructor
