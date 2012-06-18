@@ -1,5 +1,5 @@
-#ifndef ENCODE_VL_RAWBANK_H 
-#define ENCODE_VL_RAWBANK_H 1
+#ifndef VL_RAWBANK_ENCODER_H 
+#define VL_RAWBANK_ENCODER_H 1
 
 // STL
 #include <vector>
@@ -9,6 +9,8 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 // Event/DigiEvent
 #include "Event/VLCluster.h"
+// Local
+#include "VLRawBankConstants.h"
 
 class DeVL;
 
@@ -35,22 +37,16 @@ public:
 
 private:
   
-  unsigned int makeBank(LHCb::VLClusters::const_iterator begin, 
-                        LHCb::VLClusters::const_iterator end);
+  void addBank(int sensor,
+               LHCb::VLClusters::const_iterator begin, 
+               LHCb::VLClusters::const_iterator end,
+               LHCb::RawEvent* rawEvent);
 
-  void storeBank(int sensor,
-                 LHCb::VLClusters::const_iterator begin,
-                 LHCb::VLClusters::const_iterator end,
-                 LHCb::RawEvent* rawEvent);
+  LHCb::VLClusters* m_clusters; 
+  std::vector<VLDAQ::row> m_rawData;
+  std::vector<VLDAQ::row> m_adcRows;
+  std::vector<VLDAQ::row> m_clusterRows;
 
-  std::vector<LHCb::VLCluster*> m_sortedClusters; 
-  std::vector<VLDAQ::bufferWord> m_rawData;
-  std::vector<VLDAQ::bufferWord> m_clusterAdcBuffer;
-  std::vector<VLDAQ::bufferWord> m_clusterPosBuffer;
-
-  /// Size of raw bank in bytes, including the 4 byte header but
-  /// *without* the padding bytes at the end
-  unsigned int m_bankSizeInBytes;
   /// Version number of the raw data format
   unsigned int m_bankVersion;
   /// Pointer to the detector element

@@ -4,7 +4,6 @@
 /** @class VLADCWord
  *
  *  Decoding/encoding of VeloLite ADC words
- *  (based on SiADCWord)
  *
  */
 
@@ -25,8 +24,8 @@ public:
   ~VLADCWord() {}
 
   unsigned char value() const {return m_value;}
-  double adc() const {
-    return double((m_value & adcMask) >> adcBits);
+  unsigned int adc() const {
+    return (m_value & adcMask) >> adcBits;
   }
   bool endCluster() const {
     return ((m_value & endMask) >> endBits != 0u) ? true : false;

@@ -4,7 +4,6 @@
 /** @class VLClusterWord
  *
  *  Decoding/encoding of VeloLite cluster words
- *  (based on SiClusterWord)
  *
  */
 
