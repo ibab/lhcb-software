@@ -5,6 +5,7 @@
 // Local
 // =============================================================================
 #include "LoKi/GenParticles4.h"
+#include "LoKi/GenChildSelector.h"
 // =============================================================================
 // GaudiKernel
 // =============================================================================
@@ -157,16 +158,23 @@ std::ostream& LoKi::GenParticles::FourMomentum::print_
   //
   if ( m_children.empty() ) { return s << n2 ; } // RETURN 
   //
+  typedef  LoKi::GenChild::Selector::Vector::const_iterator CI ;
+  //
   if ( 4 < m_children.size() )
   {
-    // s << n1 ;
-    // Gaudi::Utils::toStream ( m_children , s ) ; 
-    // return s <<  ")" ;                                 // REUTRN
+    s << n1 << "([ "  ;
+    //
+    for (  CI ii =m_children.begin() ; m_children.end() != ii ; ++ii ) 
+    {
+      if ( m_children.begin() != ii ) { s << "," ; }
+      s << (*ii) ;
+    }
+    //
+    return s <<  " ]) " ;                                 // REUTRN
   }
   //
   s << n1 << "(" ;
-  for (  LoKi::GenChild::Selector::Vector::const_iterator ii = m_children.begin() ; 
-         m_children.end() != ii ; ++ii ) 
+  for (  CI ii = m_children.begin() ; m_children.end() != ii ; ++ii ) 
   {
     if ( m_children.begin() != ii ) { s << "," ; }
     s << (*ii) ;
