@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2012-06-18 - Patrick Koppenburg
+ - StdLooseDiElectron : Make a DiElectron for B->eeK(*) using DiElectronMaker
+                        called `StdDiElectronFromTracks'
 
 ! 2012-06-12 - Olivier Deschamps
   - StdAllLoose(Tight)GammaConversion.py : produce gamma->ee particle (based on DiElectronMaker)
