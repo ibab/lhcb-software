@@ -58,7 +58,7 @@ namespace LoKi
       const StatusCode   st  ,
       const size_t       mx  ) const 
     {
-      std::size_t mx_ = std::min ( mx , LoKi::IReporter::maxErrorPrint   () )  ;
+      const std::size_t mx_ = std::min ( mx , LoKi::IReporter::maxErrorPrint   () )  ;
       return GaudiTool::Error   ( msg , st , mx_ ) ; 
     }
     //
@@ -67,8 +67,8 @@ namespace LoKi
       const StatusCode   st  ,
       const size_t       mx  ) const 
     { 
-      std::size_t mx_ = std::min ( mx , LoKi::IReporter::maxWarningPrint () )  ;
-      return GaudiTool::Warning ( msg , st , mx ) ; 
+      const std::size_t mx_ = std::min ( mx , LoKi::IReporter::maxWarningPrint () )  ;
+      return GaudiTool::Warning ( msg , st , mx_ ) ; 
     }
     //
     virtual StatusCode Print     
