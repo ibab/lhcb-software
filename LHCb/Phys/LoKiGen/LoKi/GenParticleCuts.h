@@ -15,6 +15,7 @@
 #include "LoKi/GenSources.h"
 #include "LoKi/GenParticles2.h"
 #include "LoKi/GenParticles3.h"
+#include "LoKi/GenParticles4.h"
 // ============================================================================
 /** @file
  *
@@ -390,132 +391,6 @@ namespace LoKi
      */
     typedef LoKi::GenParticles::DecTree                              GDECTREE ;
     // ========================================================================
-    /** @typedef GDELTAR2 
-     *  simple evaluator of "delta eta" of the particle momenta
-     * 
-     *  @code 
-     *
-     *   double et
-     * 
-     *   // create the function: 
-     *  GFun r2 = GDELTAR2( v ) ;
-     * 
-     *  const HepMC::GenParticle* p = ... ;
-     *
-     *  // use the function 
-     *  const double result = r2 ( p ) ;
-     *
-     *  @endcode 
-     *
-     *  @see LoKi::GenParticless::DeltaR2  
-     *  @see LoKi::GenParticless::DeltaEta
-     *  @see LoKi::GenParticless::DeltaPhi
-     *  @see LoKi::Cuts::GDR2 
-     *
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2007-03-03 
-     */
-    typedef LoKi::GenParticles::DeltaR2                              GDELTAR2 ;
-    // ========================================================================
-    /** @typedef GDETA
-     *  simple evaluator of "delta eta" of the particle momenta
-     * 
-     *  @code 
-     *
-     *   double eta = ... ;
-     * 
-     *   // create the function: 
-     *  GFun deta = GDETA(eta) ;
-     * 
-     *  const HepMC::GenParticle* p = ... ;
-     *
-     *  // use the function 
-     *  const double result = deta ( p ) ;
-     *
-     *  @endcode 
-     *
-     *  @see LoKi::GenParticless::DeltaEta 
-     *  @see LoKi::GenParticless::Eta
-     *
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2007-03-03 
-     */
-    typedef LoKi::GenParticles::DeltaEta                                GDETA ;
-    // ========================================================================
-    /** @typedef GDPHI
-     *  simple evaluator of "delta phi" of the particle momenta
-     * 
-     *  @code 
-     *
-     *   double phi = ... ;
-     * 
-     *   // create the function: 
-     *  GFun dphi = GDPHI(phi) ;
-     * 
-     *  const HepMC::GenParticle* p = ... ;
-     *
-     *  // use the function 
-     *  const double result = dphi ( p ) ;
-     *
-     *  @endcode 
-     *
-     *  @see LoKi::GenParticless::DeltaPhi 
-     *  @see LoKi::GenParticless::Phi
-     *
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2007-03-03 
-     */
-    typedef LoKi::GenParticles::DeltaPhi                                GDPHI ;
-    // ========================================================================
-    /** @typedef GDR2 
-     *  simple evaluator of "delta R2" of the particle momenta
-     * 
-     *  @code 
-     *
-     *   double et
-     * 
-     *   // create the function: 
-     *  GFun r2 = GDR2( v ) ;
-     * 
-     *  const HepMC::GenParticle* p = ... ;
-     *
-     *  // use the function 
-     *  const double result = r2 ( p ) ;
-     *
-     *  @endcode 
-     *
-     *  @see LoKi::GenParticless::DeltaR2  
-     *  @see LoKi::GenParticless::DeltaEta
-     *  @see LoKi::GenParticless::DeltaPhi
-     *  @see LoKi::Cuts::GDELTAR2 
-     *
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2007-03-03 
-     */
-    typedef LoKi::GenParticles::DeltaR2                                  GDR2 ;
-    // ========================================================================
-    /** @var GE
-     *  evaluator of particle energy (in HepMC units)
-     *
-     *
-     *  @see LoKi::GenParticles::Energy
-     *
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-01-18
-     */
-    const LoKi::GenParticles::Energy                                       GE ;
-    // ========================================================================
-    /** @var GETA
-     *  trivial evaluator of pseudorapitidy for HepMC::GenParticle
-     *
-     *  @see HepMC::GenParticle
-     *  @see LoKi::GenParticles::PseudoRapidity
-     * 
-     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
-     *  @date 2005-03-26
-     */
-    const   LoKi::GenParticles::PseudoRapidity                           GETA ;
-    // ========================================================================    
     /** @var GFALSE
      *  primitive predicate, "always false"
      *  @see LoKi::BooleanConstant
@@ -702,42 +577,6 @@ namespace LoKi
      *  @date 2006-01-18
      */
     const  LoKi::GenParticles::IsLepton                               GLEPTON ;
-    // ========================================================================
-    /** @var GM
-     *  evaluator of particle mass (in HepMC units)
-     *
-     *  @see LoKi::Cuts::GM0
-     *  @see LoKi::Cuts::GMASS
-     *  @see LoKi::GenParticles::Mass
-     *
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-01-18
-     */
-    const LoKi::GenParticles::Mass                                         GM ;
-    // ========================================================================
-    /** @var GM0
-     *  evaluator of particle mass (in HepMC units)
-     *
-     *  @see LoKi::Cuts::GM
-     *  @see LoKi::Cuts::GMASS
-     *  @see LoKi::GenParticles::Mass
-     *
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-01-18
-     */
-    const LoKi::GenParticles::Mass                                        GM0 ;
-    // ========================================================================
-    /** @var GMASS
-     *  evaluator of particle mass (in HepMC units)
-     *
-     *  @see LoKi::Cuts::GM
-     *  @see LoKi::Cuts::GM0
-     *  @see LoKi::GenParticles::Mass
-     *
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-01-18
-     */
-    const LoKi::GenParticles::Mass                                      GMASS ;
     // ========================================================================
     /** @var GMESON  
      *  Check for particle type   
@@ -978,39 +817,6 @@ namespace LoKi
      */
     const LoKi::GenParticles::Oscillated2                        GOSCILLATED2 ;
     // ========================================================================    
-    /** @var GP 
-     *  evaluator of particle momentum (in HepMC units)
-     *
-     *  @see LoKi::Cuts::GP0
-     *  @see LoKi::GenParticles::Momentum
-     *
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-01-18
-     */
-    const LoKi::GenParticles::Momentum                                     GP ;
-    // ========================================================================
-    /** @var GP0
-     *  evaluator of particle momentum (in HepMC units)
-     *
-     *  @see LoKi::Cuts::GP
-     *  @see LoKi::GenParticles::Momentum
-     *
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-01-18
-     */
-    const LoKi::GenParticles::Momentum                                    GP0 ;
-    // ========================================================================
-    /** @var GPHI
-     *  trivial evaluator of 'phi' for HepMC::GenParticle
-     *
-     *  @see HepMC::GenParticle
-     *  @see LoKi::GenParticles::Phi
-     * 
-     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
-     *  @date 2005-03-26
-     */
-    const   LoKi::GenParticles::Phi                                      GPHI ;
-    // ========================================================================
     /** @typedef GPLOT
      *  Simple monitoring histogram for the functions
      *
@@ -1074,28 +880,6 @@ namespace LoKi
      */        
     typedef LoKi::Monitoring::Plot<const HepMC::GenParticle*,double> GPLOT ;
     // ========================================================================
-    /** @var GPT 
-     *  evaluator of particle transverse momentum (in HepMC units)
-     *
-     *  @see LoKi::Cuts::GPT0
-     *  @see LoKi::GenParticles::TransverseMomentum
-     *
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-01-18
-     */
-    const LoKi::GenParticles::TransverseMomentum                          GPT ;
-    // ========================================================================
-    /** @var GPT0
-     *  evaluator of particle transverse momentum (in HepMC units)
-     *
-     *  @see LoKi::Cuts::GPT
-     *  @see LoKi::GenParticles::TransverseMomentum
-     *
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-01-18
-     */
-    const LoKi::GenParticles::TransverseMomentum                         GPT0 ;
-    // ========================================================================
     /** @typedef GPTDIR 
      *  simple evaluator of transverse momentum 
      *  relative to some 3-vector (e.g. jet axis) 
@@ -1155,36 +939,6 @@ namespace LoKi
      */
     typedef LoKi::GenParticles::TransverseMomentumRel                  GPTREL ;
     // ========================================================================    
-    /** @var GPX 
-     *  evaluator of particle momentum (in HepMC units)
-     *
-     *  @see LoKi::GenParticles::MomentumX
-     *
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-01-18
-     */
-    const LoKi::GenParticles::MomentumX                                   GPX ;
-    // ========================================================================
-    /** @var GPY
-     *  evaluator of particle momentum (in HepMC units)
-     *
-     *  @see LoKi::GenParticles::MomentumY
-     *
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-01-18
-     */
-    const LoKi::GenParticles::MomentumY                                   GPY ;
-    // ========================================================================
-    /** @var GPZ
-     *  evaluator of particle momentum (in HepMC units)
-     *
-     *  @see LoKi::GenParticles::MomentumZ
-     *
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2006-01-18
-     */
-    const LoKi::GenParticles::MomentumZ                                   GPZ ;
-    // ========================================================================
     /** @typedef GQUARK 
      *  quark content 
      * 
@@ -1361,17 +1115,6 @@ namespace LoKi
      */
     typedef LoKi::Switch<const HepMC::GenParticle*>                   GSWITCH ;
     // ========================================================================
-    /** @var GTHETA
-     *  trivial evaluator of 'theta' for HepMC::GenParticle
-     *
-     *  @see HepMC::GenParticle
-     *  @see LoKi::GenParticles::Theta
-     * 
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2005-03-26
-     */
-    const   LoKi::GenParticles::Theta                                  GTHETA ;
-    // ========================================================================
     /** @var GTIME 
      *  evaluator of particle proper lifetime c*tau (in HepMC units)
      *
@@ -1439,28 +1182,6 @@ namespace LoKi
      *  @date 2005-03-26
      */
     const   LoKi::GenParticles::ValidEndVertex                           GVEV ;
-    // ========================================================================
-    /** @var GY 
-     *  Evaluator of rapidity of the particle 
-     *  \f$ y = \frac{1}{2}\log \frac{ E - p_z }{ E + p_z } \f$ 
-     *  @see LoKi::GenParticles::Rapidity
-     *  @see LoKi::Cuts::GETA
-     *  @see LoKi::Cuts::GY0
-     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date 2010-02-10
-     */
-    const LoKi::GenParticles::Rapidity                                     GY ;
-    // ========================================================================
-    /** @var GY0 
-     *  Evaluator of rapidity of the particle 
-     *  \f$ y_0 = \frac{1}{2}\log \frac{ E - p }{ E + p } \f$ 
-     *  @see LoKi::GenParticles::Rapidity0
-     *  @see LoKi::Cuts::GETA
-     *  @see LoKi::Cuts::GY
-     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date 2010-02-10
-     */
-    const LoKi::GenParticles::Rapidity0                                   GY0 ;
     // ========================================================================
     /** @var GZERO
      *  primitive function, "always 0"

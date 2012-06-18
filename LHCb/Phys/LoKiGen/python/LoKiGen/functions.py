@@ -141,11 +141,7 @@ GDETA     = LoKi.GenParticles.DeltaEta
 ## @see LoKi::Cuts::GDPHI
 GDPHI     = LoKi.GenParticles.DeltaPhi  
 ## @see LoKi::Cuts::GDR2
-GDR2      = LoKi.GenParticles.DeltaR2   
-## @see LoKi::Cuts::GE
-GE        = LoKi.GenParticles.Energy  ()
-## @see LoKi::Cuts::GETA
-GETA      = LoKi.GenParticles.PseudoRapidity ()
+GDR2      = LoKi.GenParticles.DeltaR2
 ## @see LoKi::Cuts::GFALSE
 GFALSE    = LoKi.Constant( _GP + ',bool' )(False)
 ## @see LoKi::Cuts::GFAEVX
@@ -162,12 +158,6 @@ GID      = LoKi.GenParticles.Identifier ()
 GINTREE  = LoKi.GenParticles.InTree
 ## @see LoKi::Cuts::GLEPTON
 GLEPTON   = LoKi.GenParticles.IsLepton  () 
-## @see LoKi::Cuts::GM
-GM       = LoKi.GenParticles.Mass       () 
-## @see LoKi::Cuts::GM0
-GM0      = LoKi.GenParticles.Mass       () 
-## @see LoKi::Cuts::GMASS
-GMASS    = LoKi.GenParticles.Mass       () 
 ## @see LoKi::Cuts::GMESON
 GMESON   = LoKi.GenParticles.IsMeson    () 
 ## @see LoKi::Cuts::GMOMDIST
@@ -190,24 +180,12 @@ GOSCILLATED = LoKi.GenParticles.Oscillated()
 GOSCILLATED1 = LoKi.GenParticles.Oscillated1() 
 ## @see LoKi::Cust::GOSCILLATED2
 GOSCILLATED2 = LoKi.GenParticles.Oscillated2() 
-## @see LoKi::Cuts::GP
-GP       = LoKi.GenParticles.Momentum () 
-## @see LoKi::Cuts::GPHI
-GPHI      = LoKi.GenParticles.Phi     ()
-## @see LoKi::Cuts::GPT
-GPT      = LoKi.GenParticles.TransverseMomentum     () 
 ## @see LoKi::Cuts::GPT0
 GPT0     = LoKi.GenParticles.TransverseMomentum     () 
 ## @see LoKi::Cuts::GPTDIR
 GPTDIR    = LoKi.GenParticles.TransverseMomentumRel
 ## @see LoKi::Cuts::GPTREL
 GPTREL    = LoKi.GenParticles.TransverseMomentumRel
-## @see LoKi::Cuts::GPX
-GPX      = LoKi.GenParticles.MomentumX () 
-## @see LoKi::Cuts::GPY
-GPY      = LoKi.GenParticles.MomentumY () 
-## @see LoKi::Cuts::GPZ
-GPZ      = LoKi.GenParticles.MomentumZ () 
 ## @see LoKi::Cuts::GQUARK
 GQUARK    = LoKi.GenParticles.HasQuark
 ## @see LoKi::Cuts::GSAME
@@ -217,8 +195,6 @@ GSTATUS   = LoKi.GenParticles.Status ( )
 ## @see LoKi::Cuts::GSTRANGE
 ## GSTRANGE  = LoKi.GenParticles.HasQuark ( LHCb.ParticleID.strange )
 GSTRANGE  = LoKi.GenParticles.HasQuark ( 3 )
-## @see LoKi::Cuts::GTHETA
-GTHETA    = LoKi.GenParticles.Theta ()
 ## @see LoKi::Cuts::GTIME
 GTIME    = LoKi.GenParticles.ProperLifeTime () 
 ## @see LoKi::Cuts::GTOP
@@ -233,10 +209,70 @@ GVEV     = LoKi.GenParticles.ValidEndVertex()
 ## @see LoKi::Cuts::GZERO
 GZERO    = LoKi.Constant       ( _GP + ',double' )( 0.0 )    
 
-## @see LoKi::Cuts::GY 
-GY       = LoKi.GenParticles.Rapidity  ()
-## @see LoKi::Cuts::GY0 
-GY0      = LoKi.GenParticles.Rapidity0 ()
+
+
+## @see LoKi::Cuts::GM
+GM        = LoKi.GenParticles.Mass       () 
+## @see LoKi::Cuts::GMASS
+GMASS     = LoKi.GenParticles.Mass      
+
+## @see LoKi::Cuts::GE
+GE        = LoKi.GenParticles.Energy  ()
+## @see L oKi::Cuts::GENERGY
+GENERGY   = LoKi.GenParticles.Energy  
+
+## @see LoKi::Cuts::GP
+GP        = LoKi.GenParticles.Momentum () 
+## @see LoKi::Cuts::GMOMENTUM
+GMOMENTUM = LoKi.GenParticles.Momentum 
+
+## @see LoKi::Cuts::GPX
+GPX       = LoKi.GenParticles.MomentumX () 
+## @see LoKi::Cuts::GMOMX
+GMOMX     = LoKi.GenParticles.MomentumX 
+
+## @see LoKi::Cuts::GPY
+GPY       = LoKi.GenParticles.MomentumY () 
+## @see LoKi::Cuts::GMOMY
+GMOMY     = LoKi.GenParticles.MomentumY
+
+## @see LoKi::Cuts::GPZ
+GPZ       = LoKi.GenParticles.MomentumZ () 
+## @see LoKi::Cuts::GMOMENTUM
+GMOMZ     = LoKi.GenParticles.MomentumZ 
+
+## @see LoKi::Cuts::GPT
+GPT       = LoKi.GenParticles.TransverseMomentum () 
+## @see LoKi::Cuts::GMOMENTUM
+GMOMT     = LoKi.GenParticles.TransverseMomentum
+
+
+## @see LoKi::Cuts::GETA
+GETA      = LoKi.GenParticles.PseudoRapidity ()
+## @see LoKi::Cuts::GPSEUDORAPIDITY
+GPSEUDORAPIDITY = LoKi.GenParticles.PseudoRapidity 
+
+## @see LoKi::Cuts::GY
+GY        = LoKi.GenParticles.Rapidity ()
+## @see LoKi::Cuts::GRAPIDITY
+GRAPIDITY = LoKi.GenParticles.Rapidity
+
+## @see LoKi::Cuts::GY0
+GY         = LoKi.GenParticles.Rapidity0 ()
+## @see LoKi::Cuts::GRAPIDITY0
+GRAPIDITY0 = LoKi.GenParticles.Rapidity0
+
+## @see LoKi::Cuts::GPHI
+GPHI      = LoKi.GenParticles.Phi     ()
+## @see LoKi::Cuts::GASYMUTH
+GASYMUTH  = LoKi.GenParticles.Phi
+
+## @see LoKi::Cuts::GTHETA
+GTHETA    = LoKi.GenParticles.Theta  ()
+## @see LoKi::Cuts::GASYMUTH
+GPOLAR    = LoKi.GenParticles.Theta
+
+
 
 ## @see LoKi::Cuts::GCOUNT
 GCOUNT    = LoKi.GenParticles.Count
@@ -270,6 +306,7 @@ GVTIME     = LoKi.GenVertices.PositionT()
 GVCOUNT    = LoKi.GenVertices.CountIF
 ## @see LoKi::Cuts::GVSUM
 GVSUM      = LoKi.GenVertices.SumIF
+
 
 ## @see LoKi::Cuts::GVX 
 GVX        = LoKi.GenVertices.PositionX () 

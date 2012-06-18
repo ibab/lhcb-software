@@ -13,6 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2012-06-18 - Vanya Belyaev
+ - redesign kinematical functors 
+
 ! 2012-06-16 - Vanya Belyaev
  - improge child selection 
 

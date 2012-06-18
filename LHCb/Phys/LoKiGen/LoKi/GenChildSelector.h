@@ -72,6 +72,11 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// the vector of selectors 
+      typedef std::vector<LoKi::GenChild::Selector>                    Vector ;
+      // ======================================================================
+    public:
+      // ======================================================================
       /// constructor from the index
       Selector ( const unsigned int   i  ) ;
       /// constructor from the indices 
@@ -136,7 +141,7 @@ namespace LoKi
       // ======================================================================
     private:
       // ======================================================================
-      /// build the decay tree form teh descriptor 
+      /// build the decay tree form the descriptor 
       StatusCode buildTree ( const std::string& descriptor , 
                              const std::string& factory    ) ;
       // ======================================================================
