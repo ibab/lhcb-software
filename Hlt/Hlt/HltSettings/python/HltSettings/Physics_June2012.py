@@ -278,6 +278,9 @@ class Physics_June2012( object ):
 
         from CharmLeptonic_draft2012 import CharmLeptonic_draft2012
         hlt2.extend( CharmLeptonic_draft2012().ActiveHlt2Lines() )
+
+        from CharmCEP_June2012 import CharmCEP_June2012
+        hlt2.extend( CharmCEP_June2012().ActiveHlt2Lines() )
  
         return hlt2
        
@@ -292,7 +295,7 @@ class Physics_June2012( object ):
                  , 'Hlt1SingleElectronNoIP'
                  , 'Hlt1DiMuonLowMass', 'Hlt1DiMuonHighMass'
                  , 'Hlt1DiProtonLowMult', 'Hlt1DiProton'
-                 , 'Hlt1L0HighSumETJet'
+                 , 'Hlt1L0HighSumETJet','Hlt1NoPVPassThrough'
               
                 ]
 
