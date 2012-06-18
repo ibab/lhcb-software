@@ -4,6 +4,9 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+! 2012-06-18 - Chris Jones
+ - Make default network tuning for 2010, 2011 and 2012 "MC11aTuneV3"
+
 ! 2012-05-02 - Chris Jones
  - Remove context() specific input track locations in 
    ChargedProtoANNPIDCommonBase. Default is now the offline location.
