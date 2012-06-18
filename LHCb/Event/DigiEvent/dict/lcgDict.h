@@ -8,6 +8,7 @@
 #include "Kernel/FastClusterContainer.h"
 #include "Event/VeloLiteCluster.h"
 #include "Event/VeloPixLiteCluster.h"
+#include "Event/VLLiteCluster.h"
 #include "Event/STLiteCluster.h"
 
 // end include files
@@ -18,6 +19,7 @@ namespace {
     FastClusterContainer<LHCb::VeloLiteCluster, int> _i1;
     FastClusterContainer<LHCb::STLiteCluster, int>   _i2;
     FastClusterContainer<LHCb::VeloPixLiteCluster, ulonglong> _i3;
+    FastClusterContainer<LHCb::VLLiteCluster, int> _i3;
     // end instantiations
   };
 }
