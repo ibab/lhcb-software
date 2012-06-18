@@ -1,0 +1,8 @@
+!-----------------------------------------------------------------------------
+! Package     : Pr/PrKernel
+! Responsible : Olivier Callot
+! Purpose     : Basic tools for Pattern for the Upgrade
+!-----------------------------------------------------------------------------
+
+! 2012-03-13 - Olivier Callot
+ - Classes PrHit, PrHitLayer and PrHitManager
