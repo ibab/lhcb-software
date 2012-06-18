@@ -1,0 +1,8 @@
+!-----------------------------------------------------------------------------
+! Package     : Pr/PrAlgorithms
+! Responsible : Olivier Callot
+! Purpose     : Pattern reconstruction for the upgrade
+!-----------------------------------------------------------------------------
+
+! 2012-06-18 - Olivier Callot
+ - Initial creation, first version of the Forward tracking
