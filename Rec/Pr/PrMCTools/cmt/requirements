@@ -1,0 +1,30 @@
+#============================================================================
+# Created    : 2012-03-22
+# Maintainer : Olivier Callot
+#============================================================================
+package           PrMCTools
+version           v1r0
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+use   GaudiAlg          v*
+use   MCEvent           v*   Event
+use   FTEvent           v*   Event
+use   LinkerEvent       v*   Event
+use   PrKernel          v*   Pr
+
+include_path      none
+#============================================================================
+# Component library building rule
+#============================================================================
+library          PrMCTools    ../src/*.cpp 
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=PrMCTools

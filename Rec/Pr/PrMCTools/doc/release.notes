@@ -1,0 +1,8 @@
+!-----------------------------------------------------------------------------
+! Package     : Pr/PrMCTools
+! Responsible : Olivier Callot
+! Purpose     : MC tools for pattern recognition for the Upgrade
+!-----------------------------------------------------------------------------
+
+! 2012-04-04 - Olivier Callot
+ - Initial adaptation of LHCbID2MCParticle, TrackAssociator and PatChecker
