@@ -12,6 +12,7 @@
 
 /** @class DiElectronMaker DiElectronMaker.h
  *  
+ *  maker algorithm to produce dielectron with correct bremsstrahlung treatment (killing overlap)
  *
  *  @author Olivier Deschamps
  *  @date   2011-02-25

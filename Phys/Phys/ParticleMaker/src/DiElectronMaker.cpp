@@ -46,7 +46,7 @@ DiElectronMaker::DiElectronMaker( const std::string& name,
   declareProperty("DeltaYmax"              , m_deltaYmax=-1);
   declareProperty("UseEcalEnergy"          , m_ecalE=40*Gaudi::Units::GeV);
   declareProperty("VeloCnvThreshold"       , m_vc=1.5);
-  m_pid = "gamma";
+  declareProperty( "MotherID", m_pid = "gamma", "Mother ID" );
 }
 //=============================================================================
 // Destructor
@@ -294,7 +294,8 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
           icas=0;
         }
         
-        if ( 1 == icas){     // DL pairs with double Velo charge for L: keep momentum direction of Long track and set dielectron mass to 0
+        // DL pairs with double Velo charge for L: keep momentum direction of Long track and set dielectron mass to 0
+        if ( 1 == icas){    
           Gaudi::LorentzVector& mome = (Gaudi::LorentzVector&) mother.momentum();
           Gaudi::XYZPoint pos;
           Gaudi::SymMatrix3x3 errpos;
