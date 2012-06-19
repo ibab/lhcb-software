@@ -5,6 +5,9 @@
 ! ----------------------------------------------------------------------------- 
 
 ! 2012-06-19 - Patrick Koppenburg
+ - StrippingB2JpsiXforBeta_s: new line to use V0 from Brunel: Comment it out for the time being.
+
+! 2012-06-19 - Patrick Koppenburg
  - StrippingBu2LLK: New line Bu2LLK_eeLine2 that uses the new DiElectronMaker for testing
    on the July data. For the reprocessing only one of Bu2LLK_eeLine and Bu2LLK_eeLine2
    will be used.

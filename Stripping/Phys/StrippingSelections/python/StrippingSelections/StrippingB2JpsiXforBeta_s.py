@@ -153,7 +153,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         self.makeBd2JpsiKstar()  
         self.makeBd2JpsiKs   ()
         self.makeBd2JpsiKsLD ()
-        self.makeBd2JpsiKsFromV0 ()
+#        self.makeBd2JpsiKsFromV0 ()
         self.makeBs2Jpsif0   ()
         self.makeBs2JpsiKstar()
         self.makeLambdab2JpsiLambda() 
