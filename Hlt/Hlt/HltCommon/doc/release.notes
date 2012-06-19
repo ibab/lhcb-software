@@ -5,6 +5,7 @@
 !----------------------------------------------------------------------------
 
 
+!========================= HltCommon v8r6 2012-06-19 =========================
 ! 2012-06-04 - Olivier Deschamps :
  - HltL0CaloCandidates :remove CaloCandidate Et-sorting (done by the candidate producer)
 
