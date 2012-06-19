@@ -5,6 +5,7 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+!========================= Hlt1Lines v6r25 2012-06-19 =========================
 ! 2012-05-24 - P. Hopchev
  - In Hlt1BeamGasLines, add a veto on ODIN Lumi events in the
    Hlt1BeamGasCrossingForcedRecoFullZ line
