@@ -10,10 +10,10 @@ L0Conf().TCK = '0x002A'
 LHCbApp().DDDBtag   = "MC11-20111102"
 LHCbApp().CondDBtag = "sim-20111111-vc-md100"
 
-#DDDBConf().DbRoot = "/afs/cern.ch/user/o/ogruenbe/public/FT_upgrade/myDDDB-LHCb-Feb2012/lhcb.xml"
-DDDBConf().DbRoot = "/afs/cern.ch/user/p/phopchev/public/FT/DDDBSlice_FT_v4/lhcb.xml"
+DDDBConf().DbRoot = "/afs/cern.ch/user/o/ogruenbe/public/FT_upgrade/static_DDDB_FT_v3/lhcb.xml"
+#DDDBConf().DbRoot = "/afs/cern.ch/user/p/phopchev/public/FT/DDDBSlice_FT_v4/lhcb.xml"
 
-EventSelector().Input = ["DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/o/ogruenbe/Bs_mumu.sim?svcClass=default' TYP='POOL_ROOTTREE' OPT='READ'"]
+EventSelector().Input = ["DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/o/ogruenbe/Bs_mumu_v3.sim?svcClass=default' TYP='POOL_ROOTTREE' OPT='READ'"]
 Boole().DatasetName = "FTTest"
 Boole().DetectorDigi = {'VELO':[], 'MUON':[], 'RICH':[], 'TT':[], 'IT':[], 'L0':[], 'CALO':[], 'OT':[]}
 Boole().LinkSequence = ['FT' ]
@@ -21,19 +21,19 @@ Boole().DetectorMoni = {'VELO':[], 'MUON':[], 'RICH':[], 'TT':[], 'IT':[], 'L0':
 Boole().Outputs = []
 
 myAlgDeposit = MCFTDepositCreator()
-myAlgDeposit.OutputLevel = DEBUG
-#myAlgDeposit.InputLocation = "MC/FT/Hits"
+#myAlgDeposit.OutputLevel = DEBUG
+
 
 myAlgDigit = MCFTDigitCreator()
 myAlgDigit.OutputLevel = DEBUG
-#myAlgDigit.InputLocation = "MC/FT/Deposits"
+
 
 myAlgCluster = FTClusterCreator()
 myAlgCluster.OutputLevel = DEBUG
-myAlgCluster.ClusterMaxWidth = 8
-#myAlgCluster.ClusterMinCharge = 2
-#myAlgCluster.ClusterMaxCharge = 8
-#myAlgCluster.InputLocation = "MC/FT/Digits"
+myAlgCluster.ClusterMaxWidth = 1000
+myAlgCluster.ClusterMinCharge = 1
+myAlgCluster.ClusterMaxCharge = 1000
+
 
 #myAlgEncoder = FTRawBankEncoder()
 #myAlgEncoder.OutputLevel = DEBUG
@@ -43,7 +43,7 @@ myAlgCluster.ClusterMaxWidth = 8
 #myAlgEncoder.InputLocation = "MC/FT/Digits"
 
 #GaudiSequencer("LinkFTSeq").Members = [myAlgDeposit,myAlgDigit,myAlgCluster,myAlgEncoder,myAlgDecoder]
-GaudiSequencer("LinkFTSeq").Members = [myAlgDeposit,myAlgDigit,myAlgCluster]
-#mySeq["MCFTDigitCreator"].OutputLevel = DEBUG
-#mySeq["MCFTDigitCreator"].InputLocation = "MC/FT/Hits"
+GaudiSequencer("LinkFTSeq").Members = [myAlgDeposit,myAlgDigit]
+
+
 Boole().EvtMax = 1

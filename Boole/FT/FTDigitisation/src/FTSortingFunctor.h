@@ -1,24 +1,25 @@
 // $Id$
-#ifndef FTDATAFUNCTOR_H 
-#define FTDATAFUNCTOR_H 1
+#ifndef FTSORTINGFUNCTOR_H 
+#define FTSORTINGFUNCTOR_H 1
 
 
  // from Event
 #include "Event/MCFTDigit.h"
 
 
-/** @class FTDataFunctor FTDataFunctor.h
+/** @FTSortingFunctor
  *  
  *
  *  @author Eric Cogneras
  *  @date   2012-05-22
  */
 
-namespace FTDataFunctor {
+namespace LHCb {
  
+  namespace FTSortingFunctor {
 //  // functors
   template <class TYPE1, class TYPE2 = TYPE1 >
-    class Less_by_Channel
+    class LessByChannel
       : public std::binary_function<TYPE1,TYPE2,bool>
     {
     public:
@@ -30,10 +31,8 @@ namespace FTDataFunctor {
           ( !obj2 ) ? false : obj1->channelID() < obj2->channelID() ;
       }
     };
+  }
+  
 }
 
-
-struct less_Chan : public std::binary_function<LHCb::MCFTDigit*, LHCb::MCFTDigit*, bool>{
- bool operator()(LHCb::MCFTDigit* x, LHCb::MCFTDigit* y)const {return x->channelID() < y->channelID();}
-};
 #endif // FTDATAFUNCTOR_H

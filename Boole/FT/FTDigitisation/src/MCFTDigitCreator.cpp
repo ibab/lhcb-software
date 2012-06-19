@@ -1,27 +1,23 @@
-// $Id$
+//-----------------------------------------------------------------------------
+// Implementation file for class : MCFTDigitCreator
+//
+// 2012-04-04 : COGNERAS Eric
+//-----------------------------------------------------------------------------
 // Include files
-
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
 // from FTEvent
 #include "Event/MCFTDeposit.h"
 #include "Event/MCFTDigit.h"
-//#include "Event/MCParticle.h"
-
-
 
 // local
 #include "MCFTDigitCreator.h"
-#include "FTDataFunctor.h"
+#include "FTSortingFunctor.h"
 
 using namespace LHCb;
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : MCFTDigitCreator
-//
-// 2012-04-04 : COGNERAS Eric
-//-----------------------------------------------------------------------------
+
 
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( MCFTDigitCreator );
@@ -51,10 +47,12 @@ MCFTDigitCreator::~MCFTDigitCreator() {}
 StatusCode MCFTDigitCreator::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-
-  debug() << "==> Initialize" << endmsg;
-  debug() << ": InputLocation is " <<m_inputLocation << endmsg;
-  debug() << ": OutputLocation is " <<m_outputLocation << endmsg;
+  if ( msgLevel( MSG::DEBUG) ) {
+    debug() << "==> Initialize" << endmsg;
+    debug() << ": InputLocation is " <<m_inputLocation << endmsg;
+    debug() << ": OutputLocation is " <<m_outputLocation << endmsg;
+  }
+  
   return StatusCode::SUCCESS;
 }
 
@@ -77,48 +75,63 @@ StatusCode MCFTDigitCreator::execute() {
   // Register MCFTDigits in the transient data store
   put(digitCont, m_outputLocation);
 
-  // Converts all deposits in FTChannelID in ADC Count
+  // For each FTchannel, converts the deposited energy in ADC count
   MCFTDeposits::const_iterator iterDeposit = mcDepositsCont->begin();
   for (; iterDeposit!=mcDepositsCont->end();++iterDeposit){
-    MCFTDeposit* aDeposit = *iterDeposit;
-
-    debug() <<"Channel ="<<aDeposit->channelID()<< " : " << endmsg;
-    std::map<const LHCb::MCParticle*, double> aMCParticleMap;
-
-    std::vector<std::pair <LHCb::MCHit*,double> >::const_iterator vecIter=aDeposit->mcHitVec().begin();
-    for(;vecIter != aDeposit->mcHitVec().end(); ++vecIter){
-      debug() <<" \t aHit->midPoint().x()="<<vecIter->first->midPoint().x()<< " \tE= " <<vecIter->second
-              << " \tfrom PDGId= " <<vecIter->first->mcParticle()->particleID()
-              << endmsg;
-      aMCParticleMap[vecIter->first->mcParticle()] += vecIter->second;
+    MCFTDeposit* mcDeposit = *iterDeposit;
+    if ( msgLevel( MSG::DEBUG) ) {
+      debug() <<"Channel ="<<mcDeposit->channelID()<< " : " << endmsg;
     }
 
-    MCFTDigit *aDigit = new MCFTDigit(aDeposit->channelID(),deposit2ADC(aDeposit),aMCParticleMap);
-    digitCont->insert(aDigit);
+    // Fill map linking the deposited energy to the MCParticle which deposited it.
+    std::map<const LHCb::MCParticle*, double> mcParticleMap;
+    std::vector<std::pair <LHCb::MCHit*,double> >::const_iterator vecIter=mcDeposit->mcHitVec().begin();
+    for(;vecIter != mcDeposit->mcHitVec().end(); ++vecIter){
+      if ( msgLevel( MSG::DEBUG) ) {
+        debug() <<" \t aHit->midPoint().x()="<<vecIter->first->midPoint().x()<< " \tE= " <<vecIter->second
+                << " \tfrom PDGId= " <<vecIter->first->mcParticle()->particleID()
+                << endmsg;
+      }
+      mcParticleMap[vecIter->first->mcParticle()] += vecIter->second;
+    }
+
+    // Define & store digit
+    // The deposited energy to ADC conversion is made by the deposit2ADC method
+    MCFTDigit *mcDigit = new MCFTDigit(mcDeposit->channelID(),deposit2ADC(mcDeposit),mcParticleMap);
+    digitCont->insert(mcDigit);
   }
 
 
-  // sort Digits
+
   // TEST : print Digit content before sorting
   for (MCFTDigits::const_iterator iterDigit = digitCont->begin(); iterDigit!=digitCont->end();++iterDigit){
-    MCFTDigit* aDigit = *iterDigit;
-    debug() <<"Channel ="<<aDigit->channelID()<< " : " <<"\t ADC ="<<aDigit->adcCount() << endmsg;
-    if(iterDigit > digitCont->begin()){
-      debug() <<"Previous Channel " << (aDigit-1)->channelID()<<" is "
-              << (((aDigit-1)->channelID() < aDigit->channelID()) ? "lower" : "greater")
-              <<" than current channel "<< aDigit->channelID()<< endmsg;
+    MCFTDigit* mcDigit = *iterDigit;
+    if ( msgLevel( MSG::DEBUG) ) {
+      debug() <<"Channel ="<<mcDigit->channelID()<< " : " <<"\t ADC ="<<mcDigit->adcCount() << endmsg;
+      if(iterDigit > digitCont->begin()){
+        debug() <<"Previous Channel " << (mcDigit-1)->channelID()<<" is "
+                << (((mcDigit-1)->channelID() < mcDigit->channelID()) ? "lower" : "greater")
+                <<" than current channel "<< mcDigit->channelID()<< endmsg;
+        debug() <<"and  " 
+                << (((*(mcDigit-1)) < *mcDigit) ? "lower" : "greater")
+                << endmsg;
+      }
     }
+    
   }
 
-  std::stable_sort(digitCont->begin(),digitCont->end(),FTDataFunctor::Less_by_Channel<MCFTDigit*>());
+  // Digits are sorted according to there ChannelID to prepare the clusterisation stage
+  // done at this point, before final writing in transient data store
+  std::stable_sort( digitCont->begin(), digitCont->end(), LHCb::FTSortingFunctor::LessByChannel<MCFTDigit*>());
+
+  // TEST : print Digit content after sorting
   for (MCFTDigits::const_iterator iterDigit = digitCont->begin(); iterDigit!=digitCont->end();++iterDigit){
-    MCFTDigit* aDigit = *iterDigit;
-    debug() <<"Channel ="<<aDigit->channelID()<< " : " <<"\t ADC ="<<aDigit->adcCount() << endmsg;
+    MCFTDigit* mcDigit = *iterDigit;
+    if ( msgLevel( MSG::DEBUG) ) {
+      debug() <<"Channel ="<<mcDigit->channelID()<< " : " 
+              <<"\t ADC ="<<mcDigit->adcCount() << endmsg;
+    } 
   }
-
-
-
-
   return StatusCode::SUCCESS;
 }
 
