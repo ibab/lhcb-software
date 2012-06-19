@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2012-06-19 - E. van Herwijnen
+ - Add routing bit 89 for Hlt2PassThrough
+ 
 !========================= HltConf v9r19 2012-06-19 =========================
 ! 2012-06-13 - V. Gligorov
  - Add Hlt2 CEP lines
