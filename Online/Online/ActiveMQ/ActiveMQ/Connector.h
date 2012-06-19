@@ -1,4 +1,4 @@
-// $Id: Connector.h,v 1.1 2010-11-01 17:20:21 frankb Exp $
+// $Id: Connector.h,v 1.1 2010/11/01 17:20:21 frankb Exp $
 //====================================================================
 //  ActiveMQ
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ActiveMQ/ActiveMQ/Connector.h,v 1.1 2010-11-01 17:20:21 frankb Exp $
+// $Header: /local/reps/lhcb/Online/ActiveMQ/ActiveMQ/Connector.h,v 1.1 2010/11/01 17:20:21 frankb Exp $
 #ifndef ACTIVEMQ_CONNECTOR_H
 #define ACTIVEMQ_CONNECTOR_H 1
 

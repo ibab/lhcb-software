@@ -1,4 +1,4 @@
-// $Id: ActiveMQHandler.cpp,v 1.1 2010-11-01 17:20:22 frankb Exp $
+// $Id: ActiveMQHandler.cpp,v 1.1 2010/11/01 17:20:22 frankb Exp $
 //====================================================================
 //  Comet
 //--------------------------------------------------------------------
@@ -11,12 +11,11 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ActiveMQ/src/ActiveMQHandler.cpp,v 1.1 2010-11-01 17:20:22 frankb Exp $
+// $Header: /local/reps/lhcb/Online/ActiveMQ/src/ActiveMQHandler.cpp,v 1.1 2010/11/01 17:20:22 frankb Exp $
 #include "ActiveMQ/ActiveMQHandler.h"
 #include "ActiveMQ/ActiveMQSensor.h"
 #include "ActiveMQ/Connector.h"
 #include "ActiveMQ/Commands.h"
-#include "ActiveMQ/Log.h"
 #include "RTL/Base64.h"
 #include "CPP/Event.h"
 
@@ -30,8 +29,10 @@ void ActiveMQHandler::handle(const Event& ev)  {
   if ( ev.eventtype == IocEvent )  {
     switch(ev.type)  {
     case CMD_DATA:  {
-      Connector* c = ev.iocPtr<Connector>();
-      const Data& d = c->data();
+      //Connector* c = ev.iocPtr<Connector>();
+      //const Data& d = c->data();
+      auto_ptr<Data> data(ev.iocPtr<Data>());
+      const Data& d = *data.get();
       if ( m_protocol == PROTO_XML ) {
 	size_t len_max=1024+d.value.length()+d.tag.length();
 	std::auto_ptr<char> text(new char[len_max]);

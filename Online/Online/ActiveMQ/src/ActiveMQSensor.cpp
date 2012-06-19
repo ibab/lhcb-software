@@ -1,4 +1,4 @@
-// $Id: ActiveMQSensor.cpp,v 1.1 2010-11-01 17:20:22 frankb Exp $
+// $Id: ActiveMQSensor.cpp,v 1.1 2010/11/01 17:20:22 frankb Exp $
 //====================================================================
 //  Comet
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ActiveMQ/src/ActiveMQSensor.cpp,v 1.1 2010-11-01 17:20:22 frankb Exp $
+// $Header: /local/reps/lhcb/Online/ActiveMQ/src/ActiveMQSensor.cpp,v 1.1 2010/11/01 17:20:22 frankb Exp $
 
 #include "ActiveMQ/ActiveMQSensor.h"
 #include "WT/wt_facilities.h"

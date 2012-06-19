@@ -1,4 +1,4 @@
-// $Id: AMQSensor.h,v 1.1 2010-11-01 17:20:21 frankb Exp $
+// $Id: AMQSensor.h,v 1.1 2010/11/01 17:20:21 frankb Exp $
 //====================================================================
 //  Comet
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ActiveMQ/ActiveMQ/AMQSensor.h,v 1.1 2010-11-01 17:20:21 frankb Exp $
+// $Header: /local/reps/lhcb/Online/ActiveMQ/ActiveMQ/AMQSensor.h,v 1.1 2010/11/01 17:20:21 frankb Exp $
 #ifndef ACTIVEMQ_STOMSERVICE_H
 #define ACTIVEMQ_STOMSERVICE_H
 
@@ -60,7 +60,7 @@ namespace ActiveMQ  {
     public activemq::transport::DefaultTransportListener
     {
   public:
-
+      enum TransportStatus { DEAD = 0, ALIVE = 1 };
   protected:
     typedef std::map<std::string,std::pair<cms::Destination*,cms::MessageConsumer*> > Consumers;
     typedef std::map<std::string,std::pair<cms::Destination*,cms::MessageProducer*> > Producers;
@@ -73,7 +73,7 @@ namespace ActiveMQ  {
     cms::Connection* m_connection;
     Consumers        m_consumers;
     Producers        m_producers;
-
+    TransportStatus  m_transport;
 
     /// Send command to stomp server
     int _command(const std::string& cmd, const std::string& channel, const void* body, int len);
@@ -89,6 +89,7 @@ namespace ActiveMQ  {
 
     /// Connect to stomp server
     int connectServer();
+
     /// Disconnect from stomp server
     int disconnectServer();
 

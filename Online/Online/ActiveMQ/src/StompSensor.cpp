@@ -1,4 +1,4 @@
-// $Id: StompSensor.cpp,v 1.1 2010-11-01 17:20:22 frankb Exp $
+// $Id: StompSensor.cpp,v 1.1 2010/11/01 17:20:22 frankb Exp $
 //====================================================================
 //  Comet
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ActiveMQ/src/StompSensor.cpp,v 1.1 2010-11-01 17:20:22 frankb Exp $
+// $Header: /local/reps/lhcb/Online/ActiveMQ/src/StompSensor.cpp,v 1.1 2010/11/01 17:20:22 frankb Exp $
 
 //#include <cstdint>
 #define INT64_C(c)      c ## L
@@ -21,7 +21,6 @@
 #include "ActiveMQ/StompSensor.h"
 #include "CPP/Event.h"
 #include "WT/wtdef.h"
-#include "ActiveMQ/Log.h"
 #include "CPP/IocSensor.h"
 #include <cstring>
 #include <iostream>

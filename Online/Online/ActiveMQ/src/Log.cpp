@@ -4,7 +4,9 @@
 static size_t amq_rtl_print(void* param,int lvl,const char* fmt,va_list args) {
   if ( lvl >= long(param) ) {
     size_t result;
-    std::string format = fmt;
+    std::string format = ::lib_rtl_timestr();
+    format += " ";
+    format += fmt;
     format += "\n";
     result = ::vfprintf(stdout, format.c_str(), args);
     ::fflush(stdout);

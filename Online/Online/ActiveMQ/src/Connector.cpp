@@ -1,4 +1,4 @@
-// $Id: Connector.cpp,v 1.1 2010-11-01 17:20:22 frankb Exp $
+// $Id: Connector.cpp,v 1.1 2010/11/01 17:20:22 frankb Exp $
 //====================================================================
 //  ActiveMQ
 //--------------------------------------------------------------------
@@ -11,12 +11,12 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ActiveMQ/src/Connector.cpp,v 1.1 2010-11-01 17:20:22 frankb Exp $
+// $Header: /local/reps/lhcb/Online/ActiveMQ/src/Connector.cpp,v 1.1 2010/11/01 17:20:22 frankb Exp $
 
 #include "ActiveMQ/Commands.h"
 #include "ActiveMQ/Connector.h"
-#include "ActiveMQ/Log.h"
 #include "CPP/IocSensor.h"
+#include "RTL/rtl.h"
 
 extern "C" {
 #include "dic.h"
@@ -39,7 +39,7 @@ Connector::Connector(const std::string& tag, bool may_remove, Interactor* target
   //  if ( t[i] == '.' ) t[i] = '/';
   m_id = ::dic_info_service((char*)t.c_str(),MONITORED,0,0,0,infoHandler,(long)this,(void*)DEAD_TAG,5);
   m_id2 = 0;//::dic_info_service((char*)t.c_str(),MONITORED,0,0,0,infoHandler,(long)this,(void*)DEAD_TAG,5);
-  log() << "Mapping data tag " << tag << " to DIM service " << t << endl;
+  ::lib_rtl_output(LIB_RTL_INFO,"Mapping data tag %s to DIM service %s",tag.c_str(),t.c_str());
 }
 
 /// Standard destructor
@@ -94,14 +94,15 @@ void Connector::set(int typ, const char* ptr, size_t /* siz */)   {
 /// Publish data item
 void Connector::publish()    {
   //if ( m_haveData )  {
-  IocSensor::instance().send(m_target,CMD_DATA,this);
+  // IOC must match ActiveMQHandler::handle(const Event& ev)!
+  //IocSensor::instance().send(m_target,CMD_DATA,this);
+  IocSensor::instance().send(m_target,CMD_DATA,new Data(m_data));
   //}
 }
 
 /// DimInfo overload to process messages
 void Connector::infoHandler(void* tag, void* address, int* size)  {
   Connector* h = *(Connector**)tag;
-  //::printf("00---Dim data ready:%s %p %d\n",h->m_data.tag.c_str(),address,*size);
   if ( address && size && *size>0 ) {
     char *msg = (char*)address;
     if ( *(int*)msg == *(int*)DEAD_TAG )  {

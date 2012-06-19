@@ -1,4 +1,4 @@
-// $Id: Log.h,v 1.1 2010-11-01 17:20:22 frankb Exp $
+// $Id: Log.h,v 1.1 2010/11/01 17:20:22 frankb Exp $
 //====================================================================
 //  Stomp
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ActiveMQ/ActiveMQ/Log.h,v 1.1 2010-11-01 17:20:22 frankb Exp $
+// $Header: /local/reps/lhcb/Online/ActiveMQ/ActiveMQ/Log.h,v 1.1 2010/11/01 17:20:22 frankb Exp $
 #ifndef STOMP_LOG_H
 #define STOMP_LOG_H 1
 

@@ -1,4 +1,4 @@
-// $Id: AMQSensor.cpp,v 1.1 2010-11-01 17:20:22 frankb Exp $
+// $Id: AMQSensor.cpp,v 1.1 2010/11/01 17:20:22 frankb Exp $
 //====================================================================
 //  Comet
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ActiveMQ/src/AMQSensor.cpp,v 1.1 2010-11-01 17:20:22 frankb Exp $
+// $Header: /local/reps/lhcb/Online/ActiveMQ/src/AMQSensor.cpp,v 1.1 2010/11/01 17:20:22 frankb Exp $
 
 #include "ActiveMQ/ActiveMQSensor.h"
 namespace ActiveMQ {
@@ -26,6 +26,7 @@ namespace ActiveMQ {
 #else
 
 #include "ActiveMQ/AMQSensor.h"
+
 #include "CPP/Event.h"
 #include "CPP/Interactor.h"
 #include "CPP/IocSensor.h"
@@ -70,7 +71,7 @@ namespace ActiveMQ {
 
 /// Initializing constructor
 AMQSensor::AMQSensor(const string& nam, const string& host)
-  : ActiveMQSensor(nam,host,0), m_clientAck(false), m_useTopic(true)
+  : ActiveMQSensor(nam,host,0), m_clientAck(false), m_useTopic(true), m_transport(DEAD)
 {
   activemq::library::ActiveMQCPP::initializeLibrary();
   connectServer();
@@ -181,37 +182,40 @@ int AMQSensor::unsubscribe(const string& channel)   {
 
 /// Send data to the stomp service (push)
 int AMQSensor::send(const string& channel, const string& data)  {
-  try {
-    Producers::iterator i = m_producers.find(channel);
-    if ( i == m_producers.end() )  {
-      // Create a MessageProducer from the Session to the Topic or Queue
-      Destination* d = m_useTopic 
-	? (Destination*)m_session->createTopic(channel) 
-	: (Destination*)m_session->createQueue(channel);
-      MessageProducer* p = m_session->createProducer(d);
-      p->setDeliveryMode(DeliveryMode::NON_PERSISTENT);
-      m_producers.insert(make_pair(channel,make_pair(d,p)));
-      i = m_producers.find(channel);
+  if ( m_transport == ALIVE ) {
+    try {
+      Producers::iterator i = m_producers.find(channel);
+      if ( i == m_producers.end() )  {
+	// Create a MessageProducer from the Session to the Topic or Queue
+	Destination* d = m_useTopic 
+	  ? (Destination*)m_session->createTopic(channel) 
+	  : (Destination*)m_session->createQueue(channel);
+	MessageProducer* p = m_session->createProducer(d);
+	p->setDeliveryMode(DeliveryMode::NON_PERSISTENT);
+	m_producers.insert(make_pair(channel,make_pair(d,p)));
+	i = m_producers.find(channel);
+      }
+      if ( i != m_producers.end() )  {
+	::lib_rtl_output(LIB_RTL_DEBUG,"AMQ> Send message: %s",channel.c_str());
+	::lib_rtl_output(LIB_RTL_VERBOSE,"AMQ>  -> %s",data.c_str());
+	auto_ptr<TextMessage> m(m_session->createTextMessage(data));
+	(*i).second.second->send(m.get());
+	return 1;
+      }
     }
-    if ( i != m_producers.end() )  {
-      ::lib_rtl_output(LIB_RTL_DEBUG,"AMQ> Send message: %s",channel.c_str());
-      ::lib_rtl_output(LIB_RTL_VERBOSE,"AMQ>  -> %s",data.c_str());
-      auto_ptr<TextMessage> m(m_session->createTextMessage(data));
-      (*i).second.second->send(m.get());
-      return 1;
+    catch ( CMSException& e ) {
+      e.printStackTrace();
     }
+    ::lib_rtl_output(LIB_RTL_ERROR,"AMQSensor> Failed to send message to:%s",channel.c_str());
+    ::lib_rtl_output(LIB_RTL_ERROR,"AMQSensor> Thsi is FATAL and the process will exit in 10 seconds.");
+    ::lib_rtl_sleep(10);
+    ::exit(0);
   }
-  catch ( CMSException& e ) {
-    e.printStackTrace();
-  }
-  ::lib_rtl_output(LIB_RTL_ERROR,"AMQSensor> Failed to send message to:%s",channel.c_str());
   return 0;
 }
 
 /// Sensor overload: Dispatch AMQ message to clients
 void AMQSensor::dispatch(void* arg)  {
-  //auto_ptr<cms::Message> msg_holder((cms::Message*)arg);
-  //cms::Message* msg = msg_holder.get();
   cms::Message* msg = (cms::Message*)arg;
   cmsEntry d(msg->getCMSDestination());
   if ( d.dst ) {
@@ -254,8 +258,6 @@ void AMQSensor::dispatch(void* arg)  {
 	::memcpy(buff.get(),b->getBodyBytes(),b->getBodyLength());
 	buff.get()[b->getBodyLength()] = 0;
 	txt = buff.get();
-	//b->getBodyBytes()[b->getBodyLength()] = 0;
-	//txt = (char*)b->getBodyBytes();
       }
       if ( !txt.empty() ) {
 	for(Clients::iterator j=cl.begin(); j!=cl.end(); ++j)  {
@@ -283,11 +285,13 @@ void AMQSensor::onException( const CMSException& ex AMQCPP_UNUSED ) {
 /// Callback when the transport layer is broken
 void AMQSensor::transportInterrupted() {
   ::lib_rtl_output(LIB_RTL_ERROR,"AMQSensor> The Connection's Transport has been Interrupted.");
+  m_transport = DEAD;
 }
 
 /// Callback when the transport layer has beeen restored
 void AMQSensor::transportResumed() {
   ::lib_rtl_output(LIB_RTL_ERROR,"AMQSensor> The Connection's Transport has been Restored.");
+  m_transport = ALIVE;
 }
 
 /// Called from the consumer since this class is a registered MessageListener.

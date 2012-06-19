@@ -1,4 +1,4 @@
-// $Id: ActiveMQHandler.h,v 1.1 2010-11-01 17:20:21 frankb Exp $
+// $Id: ActiveMQHandler.h,v 1.1 2010/11/01 17:20:21 frankb Exp $
 //====================================================================
 //  Comet
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ActiveMQ/ActiveMQ/ActiveMQHandler.h,v 1.1 2010-11-01 17:20:21 frankb Exp $
+// $Header: /local/reps/lhcb/Online/ActiveMQ/ActiveMQ/ActiveMQHandler.h,v 1.1 2010/11/01 17:20:21 frankb Exp $
 #ifndef ACTIVEMQ_ActiveMQHANDLER_H
 #define ACTIVEMQ_ActiveMQHANDLER_H 1
 
