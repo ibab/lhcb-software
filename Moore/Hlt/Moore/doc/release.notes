@@ -2,6 +2,11 @@ Package     : Hlt/Moore
 Package Coordinator : Eric van Herwijnen
 Purpose     : LHCb HLT application
 
+
+! 2012-06-19 - Eric van Herwijnen
+ - Change CreateRunMooreOnline_EFF.py and ConfigureFromCheckpoint.py to fix
+ a bug with checkpointing 
+ 
 !========================= Moore v14r4 2012-05-16 =========================
 ! 2012-05-09 - Patrick Koppenburg
  - Use DB snapshot configuration from DetCond v12r24 released in LHCb v34r3.

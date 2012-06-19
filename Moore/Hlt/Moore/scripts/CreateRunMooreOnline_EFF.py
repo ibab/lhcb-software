@@ -96,7 +96,7 @@ export LOGFIFO=/tmp/logGaudi.fifo
 # pick up partition specific OnlineEnv module
 export PYTHONPATH=/group/online/dataflow/options/${PARTNAME}/HLT:${PYTHONPATH}
 # and go for it!
-renice 19 -p $$
+renice 19 -p $$>>/dev/null
 
 # define the task
 export gaudi_exe="exec -a ${UTGID} ${GAUDIONLINEROOT}/${CMTCONFIG}/Gaudi.exe"
@@ -144,11 +144,11 @@ elif test "${APP_STARTUP_OPTS}" = "-restore";      ## RunInfo flag=2
 	    echo "== File:  ${CHECKPOINT_FILE}";
 	    echo "== Testing CHECKPOINT file......Please be patient.";
 	    echo "=============================================================================";
-	    eval `python ${MOOREROOT}/python/Moore/ConfigureFromCheckpoint.py`;
+	    python ${MOOREROOT}/python/Moore/ConfigureFromCheckpoint.py;
 	    echo exec -a ${UTGID} ${CHECKPOINT_BIN}/restore.exe -p 4 -e -l /dev/shm/checkpoint -i ${CHECKPOINT_FILE};
 	    echo "=============================================================================";
 	fi;
-	eval `python ${MOOREROOT}/python/Moore/ConfigureFromCheckpoint.py` | \\
+	python ${MOOREROOT}/python/Moore/ConfigureFromCheckpoint.py | \\
         exec -a ${UTGID} ${CHECKPOINT_BIN}/restore.exe -p 4 -e -l /dev/shm/checkpoint -i ${CHECKPOINT_FILE};
     else
 	echo " [FATAL] =============================================================================";
