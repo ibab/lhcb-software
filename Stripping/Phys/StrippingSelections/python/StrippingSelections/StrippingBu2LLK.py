@@ -41,6 +41,7 @@ class Bu2LLKConf(LineBuilder) :
 
     mmLine = None
     eeLine = None
+    eeLine2 = None
     
     __configuration_keys__ = ( # now just define keys. Default values are fixed later
         'BFlightCHI2'        
@@ -73,9 +74,13 @@ class Bu2LLKConf(LineBuilder) :
                              , KaonPT = config['KaonPT'])
         # 2 : Dileptons
         Electrons = DataOnDemand(Location = "Phys/StdLooseDiElectron/Particles")
+        Electrons2 = DataOnDemand(Location = "Phys/StdDiElectronFromTracks/Particles") # TEST
         Muons = DataOnDemand(Location = "Phys/StdLooseDiMuon/Particles")
         selDiElectron = self._makeDiLepton(name='Dilepton_For'+eeLine_name,
                                            leptonSel = Electrons,
+                                           config=config)
+        selDiElectron2 = self._makeDiLepton(name='Dilepton2_For'+eeLine_name, # TEST
+                                           leptonSel = Electrons2,
                                            config=config)
         selDiMuon = self._makeDiLepton(name='Dilepton_For'+mmLine_name,
                                        leptonSel = Muons,
@@ -83,6 +88,11 @@ class Bu2LLKConf(LineBuilder) :
         # 3 : Combine
         selBu2LLK_ee = self._makeBu2LLK(name=eeLine_name,
                                         dileptonSel = selDiElectron,
+                                        kaonSel = selKaons,
+                                        config=config)
+        
+        selBu2LLK_ee2 = self._makeBu2LLK(name=eeLine_name+"2",
+                                        dileptonSel = selDiElectron2,
                                         kaonSel = selKaons,
                                         config=config)
         
@@ -97,6 +107,11 @@ class Bu2LLKConf(LineBuilder) :
                                     postscale = config['Bu2eeKLinePostscale'],
                                     selection = selBu2LLK_ee
                                     )
+        self.eeLine2 = StrippingLine(eeLine_name+"Line2",
+                                    prescale = config['Bu2eeKLinePrescale'],
+                                    postscale = config['Bu2eeKLinePostscale'],
+                                    selection = selBu2LLK_ee2
+                                    )
         self.mmLine = StrippingLine(mmLine_name+"Line",
                                     prescale = config['Bu2mmKLinePrescale'],
                                     postscale = config['Bu2mmKLinePostscale'],
@@ -104,6 +119,7 @@ class Bu2LLKConf(LineBuilder) :
                                     )
         # 5 : register Line
         self.registerLine( self.eeLine )
+        self.registerLine( self.eeLine2 )
         self.registerLine( self.mmLine )
         
 #####################################################

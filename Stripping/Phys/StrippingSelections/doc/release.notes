@@ -5,6 +5,11 @@
 ! ----------------------------------------------------------------------------- 
 
 ! 2012-06-19 - Patrick Koppenburg
+ - StrippingBu2LLK: New line Bu2LLK_eeLine2 that uses the new DiElectronMaker for testing
+   on the July data. For the reprocessing only one of Bu2LLK_eeLine and Bu2LLK_eeLine2
+   will be used.
+
+! 2012-06-19 - Patrick Koppenburg
  - StrippingB2JpsiXforBeta_s: allow to pass ReFitPvs explicitly to 
    createCombinationSel and createCombinationsSel (note the spelling difference). 
    Until now the default was different for the 2 methods. That's a purely 
