@@ -3,6 +3,7 @@ Package Coordinator : Eric van Herwijnen
 Purpose     : LHCb HLT application
 
 
+!========================= Moore v14r5 2012-06-19 =========================
 ! 2012-06-19 - Eric van Herwijnen
  - Change CreateRunMooreOnline_EFF.py and ConfigureFromCheckpoint.py to fix
  a bug with checkpointing 
