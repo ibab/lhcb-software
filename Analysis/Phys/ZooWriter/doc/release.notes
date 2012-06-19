@@ -4,6 +4,10 @@
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
 
+! 2012-06-19 - Paul Seyfert
+ - don't ask for ghost classification of trackless basic particles (i.e.
+   photons)
+
 ! 2012-03-26 - Paul Seyfert
  - addition to previous commit
 

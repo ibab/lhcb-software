@@ -976,7 +976,8 @@ ZooP *ZooWriter::GetSaved(const LHCb::Particle* const p)
 	
 	ZooGhostCategory * ghostCat = zp->AddInfo<ZooGhostCategory>(*objman());
 	ghostCat->m_ghostCategory = 0;
-	if ( p->isBasicParticle() && !zmcp){
+  // don't ask for ghost classification in case of neutral particle
+	if ( p->isBasicParticle() && !zmcp && p->proto() && p->track()){
 	    LHCb::GhostTrackInfo gInfo;
 	    m_ghostClassification->info(*(p->proto()->track()),gInfo);
 	    ghostCat->m_ghostCategory = (gInfo.classification());
