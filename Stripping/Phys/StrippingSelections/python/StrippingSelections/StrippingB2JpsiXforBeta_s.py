@@ -90,6 +90,10 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                 RequiredSelections = [DataOnDemand(Location = "Phys/StdLooseKsDD/Particles"),
                                                     DataOnDemand(Location = "Phys/StdLooseKsLL/Particles")] )
 
+        self.KsFromV0ListLoose = MergedSelection("StdKsFromV0MergedForBetaS" + self.name,
+                                                 RequiredSelections = [DataOnDemand(Location = "Phys/StdKs2PiPiLL/Particles"),
+                                                                       DataOnDemand(Location = "Phys/StdKs2PiPiDD/Particles")] )
+
 
         self.KsList = self.createSubSel(OutputList = "KsForBetaS" + self.name,
                                     InputList = self.KsListLoose,
@@ -101,10 +105,11 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                           InputList = DataOnDemand(Location = "Phys/StdLooseKsLD/Particles"),
                                           Cuts = "(VFASPF(VCHI2)<20) & (BPVDLS>5)")
         
-                                         
+
+        self.KsFromV0List = self.createSubSel( OutputList =  "KsFromV0ForBetaS" + self.name,
+                                               InputList =  self.KsFromV0ListLoose ,
+                                               Cuts = "(VFASPF(VCHI2)<20) & (BPVDLS>5)" )        
            
-        ## should add the new KsList here
-        
 
         self.DetachedKstarList = self.createSubSel(OutputList = "DetachedKstarListForBetaS" + self.name,
                                                  InputList = DataOnDemand(Location = "Phys/StdVeryLooseDetachedKst2Kpi/Particles"),
@@ -120,7 +125,8 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                DaughterCuts = { "pi+" : " (MIPCHI2DV(PRIMARY)>9) & (TRCHI2DOF < %(TRCHI2DOF)s)" % self.config,
                                                 "K+"  : " (MIPCHI2DV(PRIMARY)>9) & (TRCHI2DOF < %(TRCHI2DOF)s)" % self.config },
                                PreVertexCuts = "(ACHILD(PT,1)+ACHILD(PT,2) > 900.*MeV) & (AM < 2700 *MeV) & (ADOCACHI2CUT(20., ''))",
-                               PostVertexCuts = "(VFASPF(VCHI2) < 16)" )
+                               PostVertexCuts = "(VFASPF(VCHI2) < 16)",
+                               ReFitPVs = False ) # Note that this is false to save CPU time
 
 
         self.LambdaListLoose = MergedSelection("StdLooseLambdaMergedForBetaS" + self.name,
@@ -147,6 +153,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         self.makeBd2JpsiKstar()  
         self.makeBd2JpsiKs   ()
         self.makeBd2JpsiKsLD ()
+        self.makeBd2JpsiKsFromV0 ()
         self.makeBs2Jpsif0   ()
         self.makeBs2JpsiKstar()
         self.makeLambdab2JpsiLambda() 
@@ -167,13 +174,14 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                           DaughterLists,
                           DaughterCuts = {} ,
                           PreVertexCuts = "ALL",
-                          PostVertexCuts = "ALL" ) :
+                          PostVertexCuts = "ALL",
+                          ReFitPVs = True ) :
         '''create a selection using a ParticleCombiner with a single decay descriptor'''
         combiner = CombineParticles( DecayDescriptor = DecayDescriptor,
                                     DaughtersCuts = DaughterCuts,
                                     MotherCut = PostVertexCuts,
                                     CombinationCut = PreVertexCuts,
-                                    ReFitPVs = True)
+                                    ReFitPVs = ReFitPVs)
         return Selection ( OutputList,
                            Algorithm = combiner,
                            RequiredSelections = DaughterLists)
@@ -183,13 +191,14 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                           DaughterLists,
                           DaughterCuts = {} ,
                           PreVertexCuts = "ALL",
-                          PostVertexCuts = "ALL" ) :
+                          PostVertexCuts = "ALL",
+                          ReFitPVs = True ) :
         '''For taking in multiple decay descriptors'''
         combiner = CombineParticles( DecayDescriptors = DecayDescriptors,
                                  DaughtersCuts = DaughterCuts,
                                  MotherCut = PostVertexCuts,
                                  CombinationCut = PreVertexCuts,
-                                 ReFitPVs = False)
+                                 ReFitPVs = ReFitPVs)
         return Selection ( OutputList,
                        Algorithm = combiner,
                        RequiredSelections = DaughterLists)
@@ -337,9 +346,24 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         Bd2JpsiKsLDDetachedLine = StrippingLine( self.name + "Bd2JpsiKsLDDetachedLine",
                                                  algos = [ Bd2JpsiKsLDDetached ] )
 
-
-        
         self.registerLine(Bd2JpsiKsLDDetachedLine)
+
+    def makeBd2JpsiKsFromV0( self ):
+        Bd2JpsiKsFromV0 = self.createCombinationSel( OutputList = "Bd2JpsiKSFromV0" + self.name,
+                                  DecayDescriptor = "B0 -> J/psi(1S) KS0",
+                                  DaughterLists  = [ self.JpsiList, self.KsFromV0List ],
+                                  PreVertexCuts = "in_range(5000,AM,5650)",
+                                  PostVertexCuts = "in_range(5150,M,5550) & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s)" % self.config
+                                  )
+        
+
+        Bd2JpsiKsFromV0Detached = self.createSubSel( InputList = Bd2JpsiKsFromV0,
+                                    OutputList = Bd2JpsiKsFromV0.name() + "Detached" + self.name,
+                                                 Cuts = "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config)
+        Bd2JpsiKsFromV0DetachedLine = StrippingLine( self.name + "Bd2JpsiKsFromV0DetachedLine",
+                                                 algos = [ Bd2JpsiKsFromV0Detached ] )
+
+        self.registerLine(Bd2JpsiKsFromV0DetachedLine)
        
 
     def makeBs2Jpsif0( self ):

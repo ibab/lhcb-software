@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-06-19 - Patrick Koppenburg
+ - StrippingB2JpsiXforBeta_s: allow to pass ReFitPvs explicitly to 
+   createCombinationSel and createCombinationsSel (note the spelling difference). 
+   Until now the default was different for the 2 methods. That's a purely 
+   estaetic change, there's no change in behaviour.
+
 ! 2012-06-18 - Markward Britsch
  - add the lines for Bs->KSKS, track types LLLL, LLDD, DDDD
 
