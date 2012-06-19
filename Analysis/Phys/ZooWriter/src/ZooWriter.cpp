@@ -963,7 +963,7 @@ ZooP *ZooWriter::GetSaved(const LHCb::Particle* const p)
 	const LHCb::MCParticle* mcp =
 	    p->isBasicParticle() ? m_mcLink->firstMCP(p) : m_bkg->origin(p);
 	ZooMCP* zmcp = (0 == mcp)?reinterpret_cast<ZooMCP*>(0):
-	    objman()->getMappingFor<ZooMCP>(mcp);
+	    GetSaved(mcp);
 	if (zmcp)
 	    zp->AssignInfo(zmcp);
 
@@ -977,7 +977,7 @@ ZooP *ZooWriter::GetSaved(const LHCb::Particle* const p)
 	ZooGhostCategory * ghostCat = zp->AddInfo<ZooGhostCategory>(*objman());
 	ghostCat->m_ghostCategory = 0;
   // don't ask for ghost classification in case of neutral particle
-	if ( p->isBasicParticle() && !zmcp && p->proto() && p->track()){
+	if ( p->isBasicParticle() && !zmcp && p->proto() && p->proto()->track()){
 	    LHCb::GhostTrackInfo gInfo;
 	    m_ghostClassification->info(*(p->proto()->track()),gInfo);
 	    ghostCat->m_ghostCategory = (gInfo.classification());
