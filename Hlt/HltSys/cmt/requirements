@@ -10,7 +10,7 @@ use Hlt2SharedParticles v6r11   Hlt   # Patrick Koppenburg, Gerhard Raven
 use HltBase             v12r3   Hlt   # Gerhard Raven
 use HltBeamGasAlley     v3r0    Hlt   # Plamen Hopchev
 use HltCommon           v8r6    Hlt   # Gerhard Raven
-use HltConf             v9r19   Hlt   # Vanya Belyaev, Gerhard Raven
+use HltConf             v9r20   Hlt   # Vanya Belyaev, Gerhard Raven
 use HltCosmics          v1r0p2  Hlt   # Stephan Nies
 use HltDisplVertices    v3r11   Hlt   # Neil Gauvin, Victor Coco
 use HltGlobalMonitor    v3r9    Hlt   # Bruno de Paula
