@@ -7,9 +7,9 @@
 <gdd>
   <package name="FTEvent">
     <class name   = "FTCluster"
-           id     = "14001"
-           author = "Olivier Callot"
-           desc   = "A cluster as produced by the TELL40"
+           id     = "14003"
+           author = "Olivier Callot,Eric Cogneras"
+           desc   = "This class represents the clusters made of consecutive FTChannels"
            serializers="FALSE">
       <import   name = "Kernel/FTChannelID" />
       <location name = "Default"   place="Raw/FT/Clusters"   />

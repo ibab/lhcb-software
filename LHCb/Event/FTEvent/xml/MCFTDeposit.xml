@@ -7,9 +7,9 @@
 <gdd>
   <package name="FTEvent">
     <class name   = "MCFTDeposit"
-           id     = "14002"
+           id     = "14001"
            author = "Eric Cogneras"
-           desc   = " Energy deposited by MCHit in ChannelID"
+           desc   = "This class represents the total energy deposited in each FTChannelID by the crossing MCHits"
            serializers="FALSE">
       <import   name = "Kernel/FTChannelID" />
       <import   name = "Event/MCHit" />

@@ -7,9 +7,9 @@
 <gdd>
   <package name="FTEvent">
     <class name   = "MCFTDigit"
-           id     = "14004"
+           id     = "14002"
            author = "Eric Cogneras"
-           desc   = "ADC count in ChannelID"
+           desc   = "This class represents the ADC charge collected per FTChannelID"
            serializers="FALSE">
       <import   name = "Kernel/FTChannelID" />
       <import   name = "Event/MCParticle.h" />
@@ -36,6 +36,15 @@
         <code> return key(); </code>
       </method>
 
+      <method    name   = "operator&lt;"
+                 desc   = "Define operator &lt; on FTChannelID"
+                 argList= "const LHCb::MCFTDigit x"
+                 type   = "bool"
+                 access = "PUBLIC">
+        <code> std::cout &lt;&lt; "key() &lt; x.key()="&lt;&lt;(key() &lt; x.key())&lt;&lt; std::endl; return ( key() &lt; x.key() ); </code>
+      </method>
+
+
       <attribute name   = "adcCount"
                  desc   = "ADC Count for ChannelID"
                  type   = "int"
@@ -44,7 +53,7 @@
       <attribute name   = "mcParticleMap"
                  desc   = "map of MCParticle involved in the digit and deposited energy"
                  type   = "std::map&lt; const LHCb::MCParticle*, double&gt;"
-
+                 setMeth = "FALSE"
                  access = "PRIVATE"/>
     </class>
   </package>
