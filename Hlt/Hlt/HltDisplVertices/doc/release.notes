@@ -4,6 +4,7 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
+!========================= HltDisplVertices v3r11 2012-06-19 =========================
 ! 2012-06-18 - Pieter David
  - Cleanup of most of the code for displaced vertex Hlt2 lines
    . more configuration options for VeloWithIP (IPChi2 instead of IP,
