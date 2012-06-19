@@ -82,8 +82,8 @@ void MonSubSys::start()
   if (!start_done)
   {
     //DimServer::start(m_name.c_str());
-    printf("%s %s: Starting Update Timer\n",m_pname.c_str(),m_name.c_str());
-    ::fflush(stdout);
+//    printf("%s %s: Starting Update Timer\n",m_pname.c_str(),m_name.c_str());
+//    ::fflush(stdout);
     m_updateTimer->Start();
     start_done = true;
   }
@@ -93,8 +93,8 @@ void MonSubSys::stop()
   if (start_done)
   {
     //DimServer::start(m_name.c_str());
-    printf("%s %s: Stopping Update Timer\n",m_pname.c_str(),m_name.c_str());
-    ::fflush(stdout);
+//    printf("%s %s: Stopping Update Timer\n",m_pname.c_str(),m_name.c_str());
+//    ::fflush(stdout);
     m_updateTimer->Stop();
     start_done = false;
   }
