@@ -19,7 +19,7 @@ namespace {
     FastClusterContainer<LHCb::VeloLiteCluster, int> _i1;
     FastClusterContainer<LHCb::STLiteCluster, int>   _i2;
     FastClusterContainer<LHCb::VeloPixLiteCluster, ulonglong> _i3;
-    FastClusterContainer<LHCb::VLLiteCluster, int> _i3;
+    FastClusterContainer<LHCb::VLLiteCluster, int> _i4;
     // end instantiations
   };
 }
