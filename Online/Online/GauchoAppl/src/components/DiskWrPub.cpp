@@ -131,6 +131,7 @@ DiskWrPub::DiskWrPub(const std::string& name, ISvcLocator* sl)
   m_NoFiles = 0.0;
   m_NoMEPs = 0.0;
   m_NoBytesSvc = m_NoFilesSvc = m_NoMEPsSvc = 0;
+  m_trender = 0;
 }
 
 DiskWrPub::~DiskWrPub()
