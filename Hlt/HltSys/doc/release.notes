@@ -4,6 +4,9 @@ Package Coordinator: P. Koppenburg, Gerhard Raven
 Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger
+
+</PRE><H1><A NAME=v15r2>2012-06-19 HltSys v15r2</A></H1><PRE>
+Version for july 2012 datataking.
 	 
 </PRE><H1><A NAME=v15r1>2012-04-26 HltSys v15r1</A></H1><PRE>
 Version for may 2012 datataking with tuned p/pt/chi2 cuts.
