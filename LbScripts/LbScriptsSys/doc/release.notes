@@ -1,4 +1,25 @@
-2012-05-08 Ben Couturier <Ben.Couturier@cern.ch>
+2012-06-20 Ben Couturier <Ben.Couturier@cern.ch>
+	
+	* cmt/requirements: release of version v7r0
+	
+	Lblegacy
+	* scripts/mkLCGCMTtar: Fixed to handle the case of packages taken
+	from the system (/user) not in external or app/releases.
+	* python/LbLegacy/install_project.py: ignore failures when creating the fake
+	binary directory in external projects (LCGCMT etc.), to allow for the new
+	structure in LCGCMT tarballs
+	* scripts/mkLCGCMTtar: Fixed to take into account applications now
+	located in app/releases instead of external
+	
+	LbConfiguration
+	* python/LbConfiguration/LbLogin.py: reverse the order in which app/releases
+	and external are added to the LHCBPROJECTPATH in case of local installations
+	* python/LbConfiguration/SetupProject.py: added (limited) support for
+	"SetupProject ROOT [version]"
+	prevent the (automatic) use of "rc" versions of LCGCMT
+	* python/LbConfiguration/Project.py: Added project LHCbExternals
+
+2012-06-06 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v6r7p7
 
