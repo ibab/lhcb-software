@@ -1,12 +1,12 @@
 
 __author__ = 'Paul Schaack'
 __date__ = '12/02/2011'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
-__all__ = ( 'B2XMuMuNewConf' )
+__all__ = ( 'B2XMuMuConf' )
 
 """
-Stripping selection for B_{s,d} channels
+Stripping selection for nearly all electroweak penguin analyses. Includes same-sign combinations.
 """
 
 from Gaudi.Configuration import *
@@ -27,27 +27,17 @@ from Configurables import SubstitutePID
 
 
 defaultConfig = {
-    'BVXCHI2NDOF'        : 8         # dimensionless
-    , 'BIPCHI2'            : 9.0           # dimensionless
-    , 'BDIRA'              : 0.999968      # dimensionless
-    , 'BFDCHI2'            : 100.0         # dimensionless
-    , 'KpiMINIPCHI2'       : 9.0           # dimensionless
-    , 'KpiTRACKCHI2'       : 3.0           # dimensionless    
-    , 'KpiVXCHI2NDOF'      : 9.0           # dimensionless
-    , 'MuonMINIPCHI2'      : 16.0           # dimensionless
-    , 'MuonTRACKCHI2'      : 4.0           # dimensionless
-    , 'MuonPID'            : 0.0           # dimensionless
-    , 'DimuonVXCHI2NDOF'   : 9.0           # dimensionless
-    , 'DimuonUPPERMASS'    : 5050.0        # MeV
+      'KpiVXCHI2NDOF'      : 9.0           # dimensionless
+    , 'MuonPID'            : -3.0           # dimensionless
+    , 'DimuonUPPERMASS'    : 7100.0        # MeV
     , 'Pi0MINPT'           : 800.0         # MeV
     , 'DplusLOWERMASS'     : 1600.0        # MeV
     , 'DplusUPPERMASS'     : 2300.0        # MeV      
     , 'KstarplusWINDOW'    : 300.0         # MeV      
     , 'KsWINDOW'           : 30.0          # MeV     
     , 'LambdaWINDOW'       : 30.0          # MeV    
-    , 'LongLivedPT'        : 500.0          # MeV  
+    , 'LongLivedPT'        : 0.0          # MeV , used to be 500.0 MeV 
     , 'LongLivedTau'        : 2          # ps
-    #    , 'UseNoPIDsHadrons'          : True,
     
     # K1 cuts
     , 'K1_Comb_MassLow'  :  720.0
@@ -57,7 +47,54 @@ defaultConfig = {
     , 'K1_MinIPCHI2'     :    4.0
     , 'K1_FlightChi2'    :   25.0
     , 'K1_Dau_MaxIPCHI2' : 9.0
+    # From Bd2KstarMuMu line 
+    ,'UseNoPIDsHadrons'          : True,
     
+    # B cuts
+    'B_Comb_MassLow'      : 4800.0,
+    'B_Comb_MassHigh'     : 7100.0,
+    'B_MassLow'           : 4900.0,
+    'B_MassHigh'          : 7000.0,
+    'B_VertexCHI2'        :    8.0,
+    'B_IPCHI2'            :   16.0,
+    'B_DIRA'              :    0.9999,
+    'B_FlightCHI2'        :  121.0,
+    'B_Dau_MaxIPCHI2'     : 9.0,
+    
+    # Daughter cuts
+    'Dau_VertexCHI2'      :   12.0,
+    'Dau_DIRA'            :   -0.9,
+    
+    # Kstar cuts
+    'Kstar_Comb_MassLow'  :  0.0,
+    'Kstar_Comb_MassHigh' : 6200.0,
+    'Kstar_MassLow'       :  0.0,
+    'Kstar_MassHigh'      : 6200.0,
+    'Kstar_MinIPCHI2'     :    0.0,
+    'Kstar_FlightChi2'    :    9.0,
+    'Kstar_Dau_MaxIPCHI2' : 9.0,
+    
+    # JPsi (dimu) cuts
+    'Dimu_FlightChi2'     :   9.0,
+    'Dimu_Dau_MaxIPCHI2'  :   9.0,
+    
+    # Track cuts
+    'Track_CHI2nDOF'      :    5.0,
+ 
+    # Hadron cuts
+    'Hadron_MinIPCHI2'    :    9.0,
+
+    # Muon cuts
+    'Muon_MinIPCHI2'      :    9.0,
+    'Muon_IsMuon'         :    True,
+    'MuonNoPIDs_PIDmu'    :    0.0,
+
+    # Wrong sign combinations
+    'DimuonWS'            :   True,
+    'HadronWS'            :   True,
+
+    # GEC
+    'SpdMult'             :  600
     }
 
 
@@ -67,39 +104,14 @@ defaultConfig = {
 #
 #################
 
-defaultName = "B2XMuMuNew"
-
-## Change decay descriptor and re-fit decay tree
-def subPID(name, input, mother, plusD, minusD):
-    ddChangeAlg = SubstitutePID( name+"SubPIDAlg",
-                                 Code = "DECTREE('rho(770)0 -> pi+ pi-')",
-                                 Substitutions = { ' rho(770)0 -> ^pi+  X- ' : plusD,
-                                                   ' rho(770)0 ->  X+   X- ' : mother},
-                                 MaxChi2PerDoF = -666 )    
-    
-    newDDescr =  Selection( name+"SubPIDSel",
-                            Algorithm = ddChangeAlg,
-                            RequiredSelections = [input])
-
-    return Selection(name+"pickDecay",
-                     Algorithm = FilterDesktop( Code = "DECTREE('%s -> %s %s')" % (mother, plusD, minusD) ),
-                     RequiredSelections = [newDDescr])
+defaultName = "B2XMuMu"
 
 
 class B2XMuMuConf(LineBuilder) :
 
     __configuration_keys__ = (
-        'BVXCHI2NDOF'
-        , 'BIPCHI2'
-        , 'BDIRA'
-        , 'BFDCHI2'
-        , 'KpiMINIPCHI2'
-        , 'KpiTRACKCHI2'
-        , 'KpiVXCHI2NDOF'
-        , 'MuonMINIPCHI2'
-        , 'MuonTRACKCHI2'
+          'KpiVXCHI2NDOF'
         , 'MuonPID'
-        , 'DimuonVXCHI2NDOF'
         , 'DimuonUPPERMASS'
         , 'Pi0MINPT'
         , 'DplusLOWERMASS'
@@ -119,8 +131,56 @@ class B2XMuMuConf(LineBuilder) :
         , 'K1_MassHigh'
         , 'K1_MinIPCHI2'
         , 'K1_FlightChi2'
-        , 'K1_Dau_MaxIPCHI2'
+        , 'K1_Dau_MaxIPCHI2',
+        # Keys taken over from Bd2KstarMuMu line
+        # Need to make sure there is no overlap with already existing ones
+        'UseNoPIDsHadrons',
+        
+        # B cuts
+        'B_Comb_MassLow',
+        'B_Comb_MassHigh',
+        'B_MassLow',
+        'B_MassHigh',
+        'B_VertexCHI2',
+        'B_IPCHI2',
+        'B_DIRA',
+        'B_FlightCHI2',
+        'B_Dau_MaxIPCHI2',
+        
+        # Daughter cuts
+        'Dau_VertexCHI2',
+        'Dau_DIRA',
+        
+        # Kstar cuts
+        'Kstar_Comb_MassLow',
+        'Kstar_Comb_MassHigh',
+        'Kstar_MassLow',
+        'Kstar_MassHigh',
+        'Kstar_MinIPCHI2',
+        'Kstar_FlightChi2',
+        'Kstar_Dau_MaxIPCHI2',
 
+        # JPsi (dimu) cuts
+        'Dimu_FlightChi2',
+        'Dimu_Dau_MaxIPCHI2',
+        
+        # Track cuts
+        'Track_CHI2nDOF',
+        
+        # Hadron cuts
+        'Hadron_MinIPCHI2',
+        
+        # Muon cuts
+        'Muon_MinIPCHI2',
+        'Muon_IsMuon',
+        'MuonNoPIDs_PIDmu',
+
+        # Choose WS combinations
+        'DimuonWS',
+        'HadronWS',
+
+        #GEC
+        'SpdMult'
        )
     
     def __init__(self, name, config) :
@@ -130,16 +190,52 @@ class B2XMuMuConf(LineBuilder) :
 
         self.name = name
         
-        self.Muons = self.__Muons__(config)
-        self.Dimuon = self.__Dimuon__(self.Muons, config)        
-        self.PIDProtons = self.__Protons__(config)
-        self.PIDKaons = self.__Kaons__(config)
-        self.PIDPions = self.__Pions__(config)
-        self.Protons = self.__NoPIDProtons__(config)
-        self.Kaons = self.__NoPIDKaons__(config)
-        self.Pions = self.__NoPIDPions__(config)       
+        # Bd2KstartMuMu cuts definitions
+        self.BdCombCut = "(AM > %(B_Comb_MassLow)s * MeV) & (AM < %(B_Comb_MassHigh)s * MeV)" %config
+
+        self.BdCut = "(M > %(B_MassLow)s * MeV) & " \
+                     "(M < %(B_MassHigh)s * MeV) & " \
+                     "(VFASPF(VCHI2/VDOF) < %(B_VertexCHI2)s) & " \
+                     "(BPVIPCHI2() < %(B_IPCHI2)s) & " \
+                     "(BPVDIRA> %(B_DIRA)s) & " \
+                     "(BPVVDCHI2 > %(B_FlightCHI2)s) & " \
+                     "(MAXTREE(ISBASIC,MIPCHI2DV(PRIMARY))> %(B_Dau_MaxIPCHI2)s )" %config
+
+        DaughterCuts = "(VFASPF(VCHI2/VDOF) < %(Dau_VertexCHI2)s) & " \
+                       "(BPVDIRA> %(Dau_DIRA)s)" %config
+        
+        self.KstarCombCut = "(AM > %(Kstar_Comb_MassLow)s * MeV) & " \
+                            "(AM < %(Kstar_Comb_MassHigh)s * MeV) & " \
+                            "(ADOCACHI2CUT(20.,''))" %config
+
+        self.KstarCut = DaughterCuts + " & (M > %(Kstar_MassLow)s * MeV) & " \
+                        "(M < %(Kstar_MassHigh)s * MeV) & " \
+                        "(BPVVDCHI2 > %(Kstar_FlightChi2)s) & " \
+                        "(MIPCHI2DV(PRIMARY) > %(Kstar_MinIPCHI2)s) & " \
+                        "(MAXTREE(ISBASIC,MIPCHI2DV(PRIMARY))> %(Kstar_Dau_MaxIPCHI2)s )" %config
+        
+        self.DiMuonCombCut = "(AM < %(DimuonUPPERMASS)s *MeV)" %config 
+        self.DiMuonCut = DaughterCuts + " & (BPVVDCHI2 > %(Dimu_FlightChi2)s) & " \
+                         "(MAXTREE(ISBASIC,MIPCHI2DV(PRIMARY))> %(Dimu_Dau_MaxIPCHI2)s )" %config
+
+        self.TrackCuts = "(TRCHI2DOF < %(Track_CHI2nDOF)s)" %config
+
+        self.HadronCuts = "(MIPCHI2DV(PRIMARY) > %(Hadron_MinIPCHI2)s) & (HASRICH) & (~ISMUON)" %config
+        
+        self.KaonCut = self.TrackCuts + " & " + self.HadronCuts
+        self.PionCut = self.TrackCuts + " & " + self.HadronCuts
+        
+        self.MuonCut = self.TrackCuts + " & (MIPCHI2DV(PRIMARY) > %(Muon_MinIPCHI2)s) & (PIDmu> %(MuonPID)s)" %config
+
+        self.KstarFilterCut  = self.KstarCut + " & (INTREE(ABSID=='K+') & " + self.KaonCut + ") & (INTREE(ABSID=='pi+') & " + self.PionCut + ")"
+
+        self.Dimuon = self.__Dimuon__(config)        
+        self.Protons = self.__Protons__(config)
+        self.Kaons = self.__Kaons__(config)
+        self.Pions = self.__Pions__(config)       
         self.Kshort = self.__Kshort__(config)
         self.Dplus = self.__Dplus__(config)
+        self.Dzero = self.__Dzero__(config)
         self.Lambda = self.__Lambda__(config)
         self.Pi0 = self.__Pi0__(config)
         self.Rho = self.__Rho__(self.Pions, config)
@@ -149,101 +245,71 @@ class B2XMuMuConf(LineBuilder) :
         self.Lambdastar = self.__Lambdastar__(self.Rho, config)
         self.Kstar2KsPi = self.__Kstar2KsPi__(self.Kshort, self.Pions, config)
         self.Kstar2KPi0 = self.__Kstar2KPi0__(self.Kaons, self.Pi0, config)
+        self.Dstar = self.__Dstar__(config)
 
-        self.Bs = self.__Bs__(self.Dimuon, self.Protons, self.Kaons, self.Pions,
+        self.Bs = self.__Bs__(self.Dimuon, self.Protons, self.Kaons, self.Pions, self.Pi0,
                               self.Kshort, self.Lambda, self.Phi, self.Rho, self.Dplus,
                               self.Kstar, self.K1, self.Lambdastar, self.Kstar2KsPi,
                               self.Kstar2KPi0, config)
 
+#        self.line = None
+
+#        if ( config['SpdMult'] > 0 ):
         self.line = StrippingLine(self.name+"_Line",
                                   prescale = 1,
+                                   FILTER = {
+                                   'Code' : " ( recSummary(LHCb.RecSummary.nSPDhits,'Raw/Spd/Digits') < %(SpdMult)s )" %config ,
+                                   'Preambulo' : [ "from LoKiNumbers.decorators import *", "from LoKiCore.basic import LHCb" ]
+                                   },
                                   algos=[self.Bs]
                                   )
+#        else:
+#        self.line = StrippingLine(self.name+"_Line",
+#                                  prescale = 1,
+#                                  algos=[self.Bs]
+#                                  )
         
         self.registerLine(self.line)
 
 
         
-    def __DimuonCuts__(self, conf):
-        """
-        Returns the Dimuon cut string
-        """
-        _DimuonCuts = """
-        (VFASPF(VCHI2/VDOF)< %(DimuonVXCHI2NDOF)s )
-        """ % conf
-        return _DimuonCuts
+    def __Dimuon__(self, conf):
+        '''
+        Create a new dimuon from scratch
+        '''
+        wsCombinations=conf['DimuonWS']
+        from  GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        CombineDiMuon = CombineParticles()
+        if wsCombinations == True:
+            CombineDiMuon.DecayDescriptors = ["J/psi(1S) -> mu- mu+", "J/psi(1S) -> mu+ mu+", " J/psi(1S) -> mu- mu-"]
+        else:
+            CombineDiMuon.DecayDescriptors = ["J/psi(1S) -> mu- mu+"]
+        CombineDiMuon.DaughtersCuts = { "mu+" : self.MuonCut, "mu-" : self.MuonCut }
+        CombineDiMuon.CombinationCut = self.DiMuonCombCut 
+        CombineDiMuon.MotherCut     = self.DiMuonCut
 
-
-    def __MuonCuts__(self, conf):
-        """
-        Returns the Muon cut string
-        """
-        _MuonCuts = """
-        (PIDmu> %(MuonPID)s ) &
-        (TRCHI2DOF < %(MuonTRACKCHI2)s ) &
-        (MIPCHI2DV(PRIMARY) > %(MuonMINIPCHI2)s )
-        """ % conf
-        return _MuonCuts
-
-
-    def __Muons__(self, conf):
-        """
-        Filter muons from StdAllLooseMuons
-        """  
-        _muons = AutomaticData(Location = 'Phys/StdAllLooseMuons/Particles')
-        _filter = FilterDesktop( Code = self.__MuonCuts__(conf) ) 
-        _sel = Selection("Selection_"+self.name+"_Muons",
-                         RequiredSelections = [ _muons ] ,
-                         Algorithm = _filter)
-        return _sel
-
-
-    def __Dimuon__(self, Muons, conf):
-        """
-        Make and return a Dimuon
-        """      
-        _dimuon2mumu = CombineParticles()
-        _dimuon2mumu.DecayDescriptors = ["J/psi(1S) -> mu+ mu-"]
-        # removed same charge modes for timing reasons
-        #, " J/psi(1S) -> mu+ mu+", " J/psi(1S) -> mu- mu-"]
-        _dimuon2mumu.CombinationCut = "(AM < %(DimuonUPPERMASS)s *MeV)" % conf
-        _dimuon2mumu.MotherCut = self.__DimuonCuts__(conf)
+        IsMuonFlag = conf['Muon_IsMuon'] 
+        from StandardParticles import StdAllLooseMuons, StdAllVeryLooseMuons
+        Muons = StdAllLooseMuons if IsMuonFlag else StdAllVeryLooseMuons
+         
+        from PhysSelPython.Wrappers import Selection
+        SelDiMuon = Selection("Sel_" + self.name + "_DiMuon", Algorithm = CombineDiMuon, RequiredSelections = [ Muons ] )
+        return SelDiMuon
         
-        _selDIMUON2MUMU = Selection( "Selection_"+self.name+"_Dimuon",
-                                    Algorithm = _dimuon2mumu,
-                                    RequiredSelections = [ Muons ] )
-        return _selDIMUON2MUMU
     
-
-
-    def __TrackCuts__(self, conf):
-        """
-        Returns the KaonPion cut string
-        """
-        _TrackCuts = """
-        (TRCHI2DOF < %(KpiTRACKCHI2)s ) &
-        (MIPCHI2DV(PRIMARY) > %(KpiMINIPCHI2)s )
-        """ % conf
-        return _TrackCuts
-
-
     def __Kaons__(self, conf):
         """
-        Filter kaons from StdAllLooseKaons
+        Filter kaons from StdAllNoPIDsKaons or StdAllLooseKaons
         """  
-        _kaons = AutomaticData(Location = 'Phys/StdAllLooseKaons/Particles')
-        _filter = FilterDesktop(Code = self.__TrackCuts__(conf))
-        _sel = Selection("Selection_"+self.name+"_StdAllLooseKaons",
-                         RequiredSelections = [ _kaons ] ,
-                         Algorithm = _filter)
-        return _sel
 
-    def __NoPIDKaons__(self, conf):
-        """
-        Filter kaons from StdAllNoPIDsKaons
-        """  
-        _kaons = AutomaticData(Location = 'Phys/StdAllNoPIDsKaons/Particles')
-        _filter = FilterDesktop(Code = self.__TrackCuts__(conf))
+        _kaons = None
+        UseNoPIDsHadrons=conf['UseNoPIDsHadrons']
+        if (UseNoPIDsHadrons == True):
+            _kaons = AutomaticData(Location = 'Phys/StdAllNoPIDsKaons/Particles')
+        else:
+            _kaons = AutomaticData(Location = 'Phys/StdAllLooseKaons/Particles')
+
+        _filter = FilterDesktop(Code = self.TrackCuts+" & "+self.HadronCuts)
         _sel = Selection("Selection_"+self.name+"_StdAllNoPIDsKaons",
                          RequiredSelections = [ _kaons ] ,
                          Algorithm = _filter)
@@ -251,21 +317,16 @@ class B2XMuMuConf(LineBuilder) :
 
     def __Protons__(self, conf):
         """
-        Filter protons from StdAllLooseProtons
+        Filter protons from StdAllLooseProtons or StdAllLooseProtons
         """  
-        _protons = AutomaticData(Location = 'Phys/StdAllLooseProtons/Particles')
-        _filter = FilterDesktop(Code = self.__TrackCuts__(conf))
-        _sel = Selection("Selection_"+self.name+"_StdAllLooseProtons",
-                         RequiredSelections = [ _protons ] ,
-                         Algorithm = _filter)
-        return _sel
 
-    def __NoPIDProtons__(self, conf):
-        """
-        Filter protons from StdAllLooseProtons
-        """  
-        _protons = AutomaticData(Location = 'Phys/StdAllNoPIDsProtons/Particles')
-        _filter = FilterDesktop(Code = self.__TrackCuts__(conf))
+        _protons = None
+        UseNoPIDsHadrons=conf['UseNoPIDsHadrons']
+        if (UseNoPIDsHadrons == True):
+            _protons = AutomaticData(Location = 'Phys/StdAllNoPIDsProtons/Particles')
+        else:
+            _protons = AutomaticData(Location = 'Phys/StdAllLooseProtons/Particles')
+        _filter = FilterDesktop(Code = self.TrackCuts+" & "+self.HadronCuts)
         _sel = Selection("Selection_"+self.name+"_StdAllNoPIDsProtons",
                          RequiredSelections = [ _protons ] ,
                          Algorithm = _filter)
@@ -275,21 +336,16 @@ class B2XMuMuConf(LineBuilder) :
 
     def __Pions__(self, conf):
         """
-        Filter pions from StdAllLoosePions
+        Filter pions from StdAllNoPIDsPions or StdAllLoosePions
         """  
-        _pions = AutomaticData(Location = 'Phys/StdAllLoosePions/Particles')
-        _filter = FilterDesktop(Code = self.__TrackCuts__(conf))
-        _sel = Selection("Selection_"+self.name+"_StdAllLoosePions",
-                         RequiredSelections = [ _pions ] ,
-                         Algorithm = _filter)
-        return _sel
 
-    def __NoPIDPions__(self, conf):
-        """
-        Filter pions from StdAllNoPIDsPions
-        """  
-        _pions = AutomaticData(Location = 'Phys/StdAllNoPIDsPions/Particles')
-        _filter = FilterDesktop(Code = self.__TrackCuts__(conf))
+        _pions = None
+        UseNoPIDsHadrons=conf['UseNoPIDsHadrons']
+        if (UseNoPIDsHadrons == True):
+            _pions = AutomaticData(Location = 'Phys/StdAllNoPIDsPions/Particles')
+        else:
+            _pions = AutomaticData(Location = 'Phys/StdAllLoosePions/Particles')
+        _filter = FilterDesktop(Code = self.TrackCuts+" & "+self.HadronCuts)
         _sel = Selection("Selection_"+self.name+"_StdAllNoPIDsPions",
                          RequiredSelections = [ _pions ] ,
                          Algorithm = _filter)
@@ -312,8 +368,7 @@ class B2XMuMuConf(LineBuilder) :
         _K1Cut = "(M > %(K1_MassLow)s * MeV) &"\
         "(M < %(K1_MassHigh)s * MeV) & "\
         "(BPVVDCHI2 > %(K1_FlightChi2)s) & "\
-        "(MIPCHI2DV(PRIMARY) > %(K1_MinIPCHI2)s) " %conf #& "\
-        #"(MAXTREE(ISBASIC,MIPCHI2DV(PRIMARY))> %(K1_Dau_MaxIPCHI2)s )" %conf
+        "(MIPCHI2DV(PRIMARY) > %(K1_MinIPCHI2)s) " %conf 
         return _K1Cut
         
 
@@ -393,12 +448,17 @@ class B2XMuMuConf(LineBuilder) :
         Filter Pi0 from Std Pi0
         """  
         _pi0resolved = AutomaticData(Location = 'Phys/StdLooseResolvedPi0/Particles')
+        _pi0merged = AutomaticData(Location = 'Phys/StdLooseMergedPi0/Particles')
         _filter_pi0resolved = FilterDesktop(Code = self.__Pi0Cuts__(conf))
-        
-
-        _sel = Selection("Selection_"+self.name+"_pi0resolved",
-                              RequiredSelections = [ _pi0resolved ] ,
-                              Algorithm = _filter_pi0resolved)
+        _filter_pi0merged = FilterDesktop(Code = self.__Pi0Cuts__(conf))        
+        _selpi0resolved = Selection("Selection_"+self.name+"_pi0resolved",
+                             RequiredSelections = [ _pi0resolved ] ,
+                             Algorithm = _filter_pi0resolved)
+        _selpi0merged = Selection("Selection_"+self.name+"_pi0merged",
+                             RequiredSelections = [ _pi0merged ] ,
+                             Algorithm = _filter_pi0merged)
+        _sel = MergedSelection("Selection_"+self.name+"_pi0",
+                              RequiredSelections = [ _selpi0resolved,_selpi0merged ])
         return _sel
 
 
@@ -430,18 +490,6 @@ class B2XMuMuConf(LineBuilder) :
         """ % conf
         return _KpiCuts
 
-    def __pKCuts__(self, conf):
-        """
-        Returns the pK cut string
-        """
-        _pKCuts = """
-        (VFASPF(VCHI2PDOF)< %(KpiVXCHI2NDOF)s )
-        """ % conf
-        return _pKCuts
-
-
-
-
 
     def __DplusCuts__(self, conf):
         """
@@ -460,7 +508,8 @@ class B2XMuMuConf(LineBuilder) :
         """      
         _kstar2kspi = CombineParticles()
         _kstar2kspi.DecayDescriptor = "[K*(892)+ -> KS0 pi+]cc"
-        _kstar2kspi.MotherCut = self.__KpiCuts__(conf)
+        _kstar2kspi.CombinationCut = self.KstarCombCut
+        _kstar2kspi.MotherCut = self.KstarCut
 
         _selKSTAR2KSPI = Selection( "Selection_"+self.name+"_Kstar2kspi",
                                      Algorithm = _kstar2kspi,
@@ -468,173 +517,92 @@ class B2XMuMuConf(LineBuilder) :
         return _selKSTAR2KSPI
 
 
-
-#    def __Phi__(self, Kaons, conf):
     def __Phi__(self, Rho, conf):
         """
         Make a phi
         """      
-#        _phi2kk = CombineParticles()
-#        _phi2kk.DecayDescriptors = [ "phi(1020) -> K+ K-", "phi(1020) -> K+ K+", "phi(1020) -> K- K-" ]
-#        _phi2kk.MotherCut = self.__KpiCuts__(conf)
-#
-#        _selPHI2KK = Selection( "Selection_"+self.name+"_Phi",
-#                                     Algorithm = _phi2kk,
-#                                     RequiredSelections = [ Kaons ] )
-        ddksrsChangeAlg = SubstitutePID( self.name+"PhirsSubPIDAlg",
-                                     Code = "DECTREE('X0 -> X+ X-')",
+        phiChangeAlg1 = SubstitutePID( self.name+"phiChangeAlg",
+                                     Code = "(DECTREE('X0 -> X+ X-')) | (DECTREE('X0 -> X+ X+')) | (DECTREE('X0 -> X- X-')) ",
                                      Substitutions = { ' X0 -> ^X+ X- ' : 'K+' ,
-                                                       ' X0 -> X+ ^X- ' : 'K-' , 
-                                                       ' X0 -> X+ X- ' : 'phi(1020)'}, 
+                                                       ' X0 -> X+ ^X- ' : 'K-' ,
+                                                       ' X0 -> X+ X- ' : 'phi(1020)',
+                                                       ' X0 -> ^X+ X+ ' : 'K+',
+                                                       ' X0 -> X+ ^X+ ' : 'K+',
+                                                       ' X0 -> X+ X+ ' : 'phi(1020)',
+                                                       ' X0 -> ^X- X- ' : 'K-',
+                                                       ' X0 -> X- ^X- ' : 'K-',
+                                                       ' X0 -> X- X- ' : 'phi(1020)' }, 
+                                     MaxParticles = 20000,
                                      MaxChi2PerDoF = -666 )
-    
-        newDksrsDescr =  Selection( self.name+"_Phi_rsSubPIDSel",
-                                Algorithm = ddksrsChangeAlg,
+
+        phiDescr1 =  Selection( self.name+"_Phi_SubPIDAlg",
+                                Algorithm = phiChangeAlg1,
                                 RequiredSelections = [Rho])
-
-        srsPick = Selection(self.name+"_Phi_rsPickDecay",
-                     Algorithm = FilterDesktop( Code = "DECTREE('phi(1020) -> K+ K-')" ),
-                     RequiredSelections = [newDksrsDescr])
-
-        ddkswsChangeAlg = SubstitutePID( self.name+"PhiwsSubPIDAlg",
-                                     Code = "DECTREE('X0 -> X+ X+')",
-                                     Substitutions = { ' X0 -> ^X+ X+ ' : 'K+' ,
-                                                       ' X0 -> X+ ^X+ ' : 'K+' ,
-                                                       ' X0 -> X+ X+ ' : 'phi(1020)'}, 
-                                     MaxChi2PerDoF = -666 )
     
-        newDkswsDescr =  Selection( self.name+"_Phi_wsSubPIDSel",
-                                Algorithm = ddkswsChangeAlg,
-                                RequiredSelections = [Rho])
-
-        swsPick = Selection(self.name+"_Phi_wsPickDecay",
-                     Algorithm = FilterDesktop( Code = "DECTREE('phi(1020) -> K+ K+')" ),
-                     RequiredSelections = [newDkswsDescr])
-
-        ddakswsChangeAlg = SubstitutePID( self.name+"PhiawsSubPIDAlg",
-                                     Code = "DECTREE('X0 -> X- X-')",
-                                     Substitutions = { ' X0 -> X- ^X- ' : 'K-' ,
-                                                       ' X0 -> ^X- X- ' : 'K-' ,
-                                                       ' X0 -> X- X- ' : 'phi(1020)'}, 
-                                     MaxChi2PerDoF = -666 )
+        pick = Selection(self.name+"_Phi_PickDecay",
+                     Algorithm = FilterDesktop( Code = "(DECTREE('phi(1020) -> K+ K-')) | (DECTREE('phi(1020) -> K+ K+')) | (DECTREE('phi(1020) -> K- K-'))" ),
+                     RequiredSelections = [phiDescr1])
     
-        newDakswsDescr =  Selection( self.name+"_Phi_awsSubPIDSel",
-                                Algorithm = ddakswsChangeAlg,
-                                RequiredSelections = [Rho])
+        return pick
 
-        aswsPick = Selection(self.name+"_Phi_awsPickDecay",
-                     Algorithm = FilterDesktop( Code = "DECTREE('phi(1020) -> K- K-')" ),
-                     RequiredSelections = [newDakswsDescr])
-
-
-        _selPHI2KK = MergedSelection("Selection_"+self.name+"_Phi",
-                                         RequiredSelections = [srsPick, swsPick, aswsPick])
-
-
-        return _selPHI2KK
-    
     def __Rho__(self, Pions, conf):
         """
         Make a rho
         """      
+        wsCombinations=conf['HadronWS']
         _rho2pipi = CombineParticles()
-        _rho2pipi.DecayDescriptors = [ "rho(770)0 -> pi+ pi-" ]
-        # removed same charge modes for timing reasons
-        # , "rho(770)0 -> pi+ pi+" , "rho(770)0 -> pi- pi-" ]
-        _rho2pipi.MotherCut = self.__KpiCuts__(conf)
+        if wsCombinations == True:
+            _rho2pipi.DecayDescriptors = [ "rho(770)0 -> pi+ pi-", "rho(770)0 -> pi+ pi+" , "rho(770)0 -> pi- pi-" ]
+        else:
+            _rho2pipi.DecayDescriptors = [ "rho(770)0 -> pi+ pi-"]
+        _rho2pipi.CombinationCut = self.KstarCombCut
+        _rho2pipi.MotherCut = self.KstarCut
 
         _selRHO2PIPI = Selection( "Selection_"+self.name+"_Rho",
                                      Algorithm = _rho2pipi,
                                      RequiredSelections = [ Pions ] )
         return _selRHO2PIPI
 
+
     def __Kstar__(self, Rho, conf):
         """
         Make a kstar
         """      
-        ddksrsChangeAlg = SubstitutePID( self.name+"rsSubPIDAlg",
-                                     Code = "DECTREE('X0 -> X+ X-')",
+        kstarChangeAlg1 = SubstitutePID( self.name+"kstarChangeAlg1",
+                                     Code = "(DECTREE('X0 -> X+ X-')) | (DECTREE('X0 -> X+ X+')) | (DECTREE('X0 -> X- X-')) ",
                                      Substitutions = { ' X0 -> ^X+ X- ' : 'K+' ,
-                                                       ' X0 -> X+ X- ' : 'K*(892)0'}, 
+                                                       ' X0 -> X+ X- ' : 'K*(892)0',
+                                                       ' X0 -> ^X+ X+ ' : 'K+',
+                                                       ' X0 -> X+ X+ ' : 'K*(892)0',
+                                                       ' X0 -> ^X- X- ' : 'K-',
+                                                       ' X0 -> X- X- ' : 'K*(892)~0' }, 
+                                     MaxParticles = 20000,
                                      MaxChi2PerDoF = -666 )
-    
-        newDksrsDescr =  Selection( self.name+"_Kstar_rsSubPIDSel",
-                                Algorithm = ddksrsChangeAlg,
-                                RequiredSelections = [Rho])
 
-        srsPick = Selection(self.name+"_Kstar_rsPickDecay",
-                     Algorithm = FilterDesktop( Code = "DECTREE('K*(892)0 -> K+ pi-')" ),
-                     RequiredSelections = [newDksrsDescr])
-
-        ddaksrsChangeAlg = SubstitutePID( self.name+"arsSubPIDAlg",
-                                     Code = "DECTREE('X0 -> X+ X-')",
+        kstarChangeAlg2 = SubstitutePID( self.name+"kstarChangeAlg2",
+                                     Code = "(DECTREE('X0 -> X+ X-')) | (DECTREE('X0 -> X+ X+')) | (DECTREE('X0 -> X- X-')) ",
                                      Substitutions = { ' X0 -> X+ ^X- ' : 'K-' ,
-                                                       ' X0 -> X+ X- ' : 'K*(892)~0'}, 
+                                                       ' X0 -> X+ X- ' : 'K*(892)~0',
+                                                       ' X0 -> X+ ^X+ ' : 'K+',
+                                                       ' X0 -> X+ X+ ' : 'K*(892)0',
+                                                       ' X0 -> X- ^X- ' : 'K-',
+                                                       ' X0 -> X- X- ' : 'K*(892)~0' }, 
+                                     MaxParticles = 20000,
                                      MaxChi2PerDoF = -666 )
-    
-        newDaksrsDescr =  Selection( self.name+"_aKstar_rsSubPIDSel",
-                                Algorithm = ddaksrsChangeAlg,
+
+        ksDescr1 =  Selection( self.name+"_Kstar_SubPIDAlg1",
+                                Algorithm = kstarChangeAlg1,
                                 RequiredSelections = [Rho])
-
-        asrsPick = Selection(self.name+"_Kstar_arsPickDecay",
-                     Algorithm = FilterDesktop( Code = "DECTREE('K*(892)~0 -> K- pi+')" ),
-                     RequiredSelections = [newDaksrsDescr])
-
-        ddkswsChangeAlg = SubstitutePID( self.name+"wsSubPIDAlg",
-                                     Code = "DECTREE('X0 -> X+ X+')",
-                                     Substitutions = { ' X0 -> ^X+ X+ ' : 'K+' ,
-                                                       ' X0 -> X+ X+ ' : 'K*(892)0'}, 
-                                     MaxChi2PerDoF = -666 )
     
-        newDkswsDescr =  Selection( self.name+"_Kstar_wsSubPIDSel",
-                                Algorithm = ddkswsChangeAlg,
+        ksDescr2 =  Selection( self.name+"_Kstar_SubPIDAlg2",
+                                Algorithm = kstarChangeAlg2,
                                 RequiredSelections = [Rho])
-
-        dd2kswsChangeAlg = SubstitutePID( self.name+"ws2SubPIDAlg",
-                                     Code = "DECTREE('X0 -> X+ X+')",
-                                     Substitutions = { ' X0 -> X+ ^X+ ' : 'K+' ,
-                                                       ' X0 -> X+ X+ ' : 'K*(892)0'}, 
-                                     MaxChi2PerDoF = -666 )
     
-        newD2kswsDescr =  Selection( self.name+"_Kstar_ws2SubPIDSel",
-                                Algorithm = dd2kswsChangeAlg,
-                                RequiredSelections = [Rho])
-
-        swsPick = Selection(self.name+"_Kstar_wsPickDecay",
-                     Algorithm = FilterDesktop( Code = "DECTREE('K*(892)0 -> K+ pi+')" ),
-                     RequiredSelections = [newDkswsDescr, newD2kswsDescr])
-
-        ddakswsChangeAlg = SubstitutePID( self.name+"awsSubPIDAlg",
-                                     Code = "DECTREE('X0 -> X- X-')",
-                                     Substitutions = { ' X0 -> ^X- X- ' : 'K-' ,
-                                                       ' X0 -> X- X- ' : 'K*(892)~0'}, 
-                                     MaxChi2PerDoF = -666 )
+        pick = Selection(self.name+"_Kstar_PickDecay",
+                     Algorithm = FilterDesktop( Code = "(DECTREE('K*(892)0 -> K+ pi-')) | (DECTREE('K*(892)~0 -> K- pi+')) | (DECTREE('K*(892)0 -> K+ pi+')) | (DECTREE('K*(892)~0 -> K- pi-'))" ),
+                     RequiredSelections = [ksDescr1, ksDescr2])
     
-        newDakswsDescr =  Selection( self.name+"_aKstar_wsSubPIDSel",
-                                Algorithm = ddakswsChangeAlg,
-                                RequiredSelections = [Rho])
-
-        dd2akswsChangeAlg = SubstitutePID( self.name+"aws2SubPIDAlg",
-                                     Code = "DECTREE('X0 -> X- X-')",
-                                     Substitutions = { ' X0 -> X- ^X- ' : 'K-' ,
-                                                       ' X0 -> X- X- ' : 'K*(892)~0'}, 
-                                     MaxChi2PerDoF = -666 )
-    
-        newD2akswsDescr =  Selection( self.name+"_aKstar_ws2SubPIDSel",
-                                Algorithm = dd2akswsChangeAlg,
-                                RequiredSelections = [Rho])
-
-        aswsPick = Selection(self.name+"_Kstar_awsPickDecay",
-                     Algorithm = FilterDesktop( Code = "DECTREE('K*(892)~0 -> K- pi-')" ),
-                     RequiredSelections = [newDakswsDescr, newD2akswsDescr])
-
-
-        _selKSTAR2KPI = MergedSelection("Selection_"+self.name+"_Kstar",
-                                         RequiredSelections = [srsPick, asrsPick, swsPick, aswsPick])
-
-#        _kstar2kpi.DecayDescriptors = [ "[K*(892)0 -> K+ pi-]cc", "[K*(892)0 -> K+ pi+]cc" ]
-#
-        return _selKSTAR2KPI
+        return pick
 
 
     def __K1__(self, Kaons, Pions, conf):
@@ -652,99 +620,51 @@ class B2XMuMuConf(LineBuilder) :
         return _selK12KPIPI
 
     
-
     def __Lambdastar__(self, Rho, conf):
         """
-        Make a Lambda* 
-        """
-        
-        ddksrsChangeAlg = SubstitutePID( self.name+"LSrsSubPIDAlg",
-                                     Code = "DECTREE('X0 -> X+ X-')",
+        Make a Lambdastar
+        """      
+        lstarChangeAlg1 = SubstitutePID( self.name+"lstarChangeAlg1",
+                                     Code = "(DECTREE('X0 -> X+ X-')) | (DECTREE('X0 -> X+ X+')) | (DECTREE('X0 -> X- X-')) ",
                                      Substitutions = { ' X0 -> ^X+ X- ' : 'p+' ,
-                                                       ' X0 -> X+ ^X- ' : 'K-' , 
-                                                       ' X0 -> X+ X- ' : 'Lambda(1520)0'}, 
+                                                       ' X0 -> X+ ^X- ' : 'K-' ,
+                                                       ' X0 -> X+ X- ' : 'Lambda(1520)0',
+                                                       ' X0 -> ^X+ X+ ' : 'p+',
+                                                       ' X0 -> X+ ^X+ ' : 'K+',
+                                                       ' X0 -> X+ X+ ' : 'Lambda(1520)0',
+                                                       ' X0 -> ^X- X- ' : 'p~-',
+                                                       ' X0 -> X- ^X- ' : 'K-',
+                                                       ' X0 -> X- X- ' : 'Lambda(1520)~0' }, 
+                                     MaxParticles = 20000,
                                      MaxChi2PerDoF = -666 )
-    
-        newDksrsDescr =  Selection( self.name+"_Lambdastar_rsSubPIDSel",
-                                Algorithm = ddksrsChangeAlg,
-                                RequiredSelections = [Rho])
 
-        srsPick = Selection(self.name+"_Lambdastar_rsPickDecay",
-                     Algorithm = FilterDesktop( Code = "DECTREE('Lambda(1520)0 -> p+ K-')" ),
-                     RequiredSelections = [newDksrsDescr])
-
-        ddaksrsChangeAlg = SubstitutePID( self.name+"LSarsSubPIDAlg",
-                                     Code = "DECTREE('X0 -> X+ X-')",
+        lstarChangeAlg2 = SubstitutePID( self.name+"lstarChangeAlg2",
+                                     Code = "(DECTREE('X0 -> X+ X-')) | (DECTREE('X0 -> X+ X+')) | (DECTREE('X0 -> X- X-')) ",
                                      Substitutions = { ' X0 -> X+ ^X- ' : 'p~-' ,
-                                                       ' X0 -> ^X+ X- ' : 'K+' , 
-                                                       ' X0 -> X+ X- ' : 'Lambda(1520)~0'}, 
+                                                       ' X0 -> ^X+ X- ' : 'K+' ,
+                                                       ' X0 -> X+ X- ' : 'Lambda(1520)~0',
+                                                       ' X0 -> ^X+ X+ ' : 'K+',
+                                                       ' X0 -> X+ ^X+ ' : 'p+',
+                                                       ' X0 -> X+ X+ ' : 'Lambda(1520)0',
+                                                       ' X0 -> ^X- X- ' : 'K-',
+                                                       ' X0 -> X- ^X- ' : 'p~-',
+                                                       ' X0 -> X- X- ' : 'Lambda(1520)~0' }, 
+                                     MaxParticles = 20000,
                                      MaxChi2PerDoF = -666 )
-    
-        newDaksrsDescr =  Selection( self.name+"_aLambdastar_rsSubPIDSel",
-                                Algorithm = ddaksrsChangeAlg,
+
+        lsDescr1 =  Selection( self.name+"_Lambdastar_SubPIDAlg1",
+                                Algorithm = lstarChangeAlg1,
                                 RequiredSelections = [Rho])
-
-        asrsPick = Selection(self.name+"_Lambdastar_arsPickDecay",
-                     Algorithm = FilterDesktop( Code = "DECTREE('Lambda(1520)~0 -> p~- K+')" ),
-                     RequiredSelections = [newDaksrsDescr])
-
-        ddkswsChangeAlg = SubstitutePID( self.name+"LSwsSubPIDAlg",
-                                     Code = "DECTREE('X0 -> X+ X+')",
-                                     Substitutions = { ' X0 -> ^X+ X+ ' : 'p+' ,
-                                                       ' X0 -> X+ ^X+ ' : 'K+' , 
-                                                       ' X0 -> X+ X+ ' : 'Lambda(1520)0'}, 
-                                     MaxChi2PerDoF = -666 )
     
-        newDkswsDescr =  Selection( self.name+"_Lambdastar_wsSubPIDSel",
-                                Algorithm = ddkswsChangeAlg,
+        lsDescr2 =  Selection( self.name+"_Lambdastar_SubPIDAlg2",
+                                Algorithm = lstarChangeAlg2,
                                 RequiredSelections = [Rho])
-
-        dd2kswsChangeAlg = SubstitutePID( self.name+"LSws2SubPIDAlg",
-                                     Code = "DECTREE('X0 -> X+ X+')",
-                                     Substitutions = { ' X0 -> X+ ^X+ ' : 'p+' ,
-                                                       ' X0 -> ^X+ X+ ' : 'K+' , 
-                                                       ' X0 -> X+ X+ ' : 'Lambda(1520)0'}, 
-                                     MaxChi2PerDoF = -666 )
     
-        newD2kswsDescr =  Selection( self.name+"_Lambdastar_ws2SubPIDSel",
-                                Algorithm = dd2kswsChangeAlg,
-                                RequiredSelections = [Rho])
-
-        swsPick = Selection(self.name+"_Lambdastar_wsPickDecay",
-                     Algorithm = FilterDesktop( Code = "DECTREE('Lambda(1520)0 -> p+ K+')" ),
-                     RequiredSelections = [newDkswsDescr, newD2kswsDescr])
-
-        ddakswsChangeAlg = SubstitutePID( self.name+"LSawsSubPIDAlg",
-                                     Code = "DECTREE('X0 -> X- X-')",
-                                     Substitutions = { ' X0 -> ^X- X- ' : 'p~-' ,
-                                                       ' X0 -> X- ^X- ' : 'K-' , 
-                                                       ' X0 -> X- X- ' : 'Lambda(1520)~0'}, 
-                                     MaxChi2PerDoF = -666 )
+        pick = Selection(self.name+"_Lambdastar_PickDecay",
+                     Algorithm = FilterDesktop( Code = "(DECTREE('Lambda(1520)0 -> p+ K-')) | (DECTREE('Lambda(1520)~0 -> p~- K+')) | (DECTREE('Lambda(1520)0 -> p+ K+')) | (DECTREE('Lambda(1520)~0 -> p~- K-'))" ),
+                     RequiredSelections = [lsDescr1, lsDescr2])
     
-        newDakswsDescr =  Selection( self.name+"_Lambdastar_awsSubPIDSel",
-                                Algorithm = ddakswsChangeAlg,
-                                RequiredSelections = [Rho])
-
-        dd2akswsChangeAlg = SubstitutePID( self.name+"LSaws2SubPIDAlg",
-                                     Code = "DECTREE('X0 -> X- X-')",
-                                     Substitutions = { ' X0 -> X- ^X- ' : 'p~-' ,
-                                                       ' X0 -> ^X- X- ' : 'K-' , 
-                                                       ' X0 -> X- X- ' : 'Lambda(1520)~0'}, 
-                                     MaxChi2PerDoF = -666 )
-    
-        newD2akswsDescr =  Selection( self.name+"_Lambdastar_aws2SubPIDSel",
-                                Algorithm = dd2akswsChangeAlg,
-                                RequiredSelections = [Rho])
-
-        aswsPick = Selection(self.name+"_Lambdastar_awsPickDecay",
-                     Algorithm = FilterDesktop( Code = "DECTREE('Lambda(1520)~0 -> p~- K-')" ),
-                     RequiredSelections = [newDakswsDescr, newD2akswsDescr])
-
-
-        _selLAMBDASTAR2PK = MergedSelection("Selection_"+self.name+"_Lambdastar",
-                                         RequiredSelections = [srsPick, asrsPick, swsPick, aswsPick])
-
-        return _selLAMBDASTAR2PK
+        return pick
 
     def __Dplus__(self, conf):
         """
@@ -757,27 +677,29 @@ class B2XMuMuConf(LineBuilder) :
                              Algorithm = _filter_dplus)
         return _seldplus
 
-
-
-    def __BsCuts__(self, conf):
+    def __Dzero__(self, conf):
         """
-        Returns the Bs cut string
+        Make a D0, the D0->Kpi should cover all the D we need (no PID requirement)
         """
-        _BsCuts = """
-        (VFASPF(VCHI2/VDOF)< %(BVXCHI2NDOF)s ) &
-        (BPVVDCHI2 > %(BFDCHI2)s ) &
-        (BPVDIRA > %(BDIRA)s ) &
-        (BPVIPCHI2()< %(BIPCHI2)s )
-        """ % conf
-        return _BsCuts
+        _dzero = AutomaticData(Location = 'Phys/StdLooseD02KPi/Particles') 
+        _filter_dzero = FilterDesktop(Code = self.KstarCut +" & "+ self.__DplusCuts__(conf))      
+        _seldzero = Selection("Selection_"+self.name+"_dzero",
+                             RequiredSelections = [ _dzero] ,
+                             Algorithm = _filter_dzero)
+        return _seldzero
 
+    def __Dstar__(self, conf):
+        """
+        Get D*+
+        """
+        _dstar = AutomaticData(Location = 'Phys/StdLooseDstarWithD02KPi/Particles')
 
- 
-  
+        return _dstar
+
 
 
     
-    def __Bs__(self, Dimuon, Protons, Kaons, Pions, Kshort, Lambda, Phi, Rho, Dplus, Kstar, K1, Lambdastar, Kstar2KsPi, Kstar2KPi0, conf):
+    def __Bs__(self, Dimuon, Protons, Kaons, Pions, Pi0, Kshort, Lambda, Phi, Rho, Dplus, Kstar, K1, Lambdastar, Kstar2KsPi, Kstar2KPi0, conf):
         """
         Make and return a Bs selection
         """      
@@ -787,46 +709,28 @@ class B2XMuMuConf(LineBuilder) :
                                       "[B0 -> J/psi(1S) K*(892)0]cc",
                                       "B0 -> J/psi(1S) rho(770)0",
                                       "B0 -> J/psi(1S) KS0",
+                                      "[B0 -> J/psi(1S) D~0]cc",
                                       "[B+ -> J/psi(1S) K+]cc",
                                       "[B+ -> J/psi(1S) pi+]cc",
                                       "[B+ -> J/psi(1S) K*(892)+]cc",
                                       "[B+ -> J/psi(1S) D+]cc",
+                                      "[B+ -> J/psi(1S) D*(2010)+]cc",
                                       "[Lambda_b0 -> J/psi(1S) Lambda0]cc",
-                                      "[Lambda_b0 -> J/psi(1S) Lambda(1520)0]cc"]
-
+                                      "[Lambda_b0 -> J/psi(1S) Lambda(1520)0]cc",
+                                      "B0 -> J/psi(1S) pi0"]
         # "[B+ -> J/psi(1S) K_1(1270)+]cc",
         # removed K1 for timing reasons
         
-        _b2xmumu.CombinationCut = "(AM > 4900.0 *MeV) & (AM < 7000.0 *MeV)"
-        _b2xmumu.MotherCut = self.__BsCuts__(conf)
+        _b2xmumu.CombinationCut = self.BdCombCut 
+        _b2xmumu.MotherCut = self.BdCut
         
         _sel_Daughters = MergedSelection("Selection_"+self.name+"_daughters",
-                                         RequiredSelections = [Protons, Kaons, Pions, Kshort, Lambda,
-                                                               Rho, Phi, Dplus, Kstar, Lambdastar,
-                                                               Kstar2KsPi, Kstar2KPi0])
+                                         RequiredSelections = [ Kaons, Pions, Kshort, Lambda, 
+                                                               Rho, Phi, Lambdastar, Kstar,
+                                                               self.Dzero, Dplus, self.Dstar,
+                                                               Kstar2KsPi, Kstar2KPi0, Pi0])
         sel = Selection( "Selection_"+self.name+"_bs2xmumu",
                          Algorithm = _b2xmumu,
                          RequiredSelections = [ Dimuon, _sel_Daughters ])
         return sel
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
