@@ -99,13 +99,27 @@ StatusCode DeFTLayer::initialize(){
   m_layerID = this->params()->param<int>("layerID");
 
   /// Get geometrical limits of the layer
+  /// Note that the following approach is not robust in the sense that every
+  /// time a 'structural' modification is made to the layer geometry (xml DDDB)
+  /// we need to revisit the way we obtain the layer geometrical limits
   const SolidSubtraction* subtrObject = dynamic_cast<const SolidSubtraction*>( this->geometry()->lvolume()->solid() );
-  const SolidBox*   outerBox = dynamic_cast<const SolidBox*>( subtrObject->coverTop() );
+  if ( 0 == subtrObject ) {
+    fatal() << "Can't acquire layer geometry (SolidSubtraction)" << endmsg;
+    return StatusCode::FAILURE;
+  }
+  const SolidBox* outerBox = dynamic_cast<const SolidBox*>( subtrObject->coverTop() );
+  if ( 0 == outerBox ) {
+    fatal() << "Can't acquire layer geometry (SolidBox)" << endmsg;
+    return StatusCode::FAILURE;
+  }
   const SolidChild* tmpChild = dynamic_cast<const SolidChild*>( (*subtrObject)[0] );
+  if ( 0 == tmpChild ) {
+    fatal() << "Can't acquire layer geometry (SolidChild)" << endmsg;
+    return StatusCode::FAILURE;
+  }
   const SolidCons* innerCons = dynamic_cast<const SolidCons*>( tmpChild->solid() );
-
-  if ( 0 == subtrObject || 0 == outerBox || 0 == innerCons ) {
-    fatal() << "Can't acquire FT layer geometrical properties. Break ..." << endmsg;
+  if ( 0 == innerCons ) {
+    fatal() << "Can't acquire layer geometry (SolidCons)" << endmsg;
     return StatusCode::FAILURE;
   }
   
@@ -141,7 +155,7 @@ StatusCode DeFTLayer::initialize(){
           << "\n\tLayer min X: " << m_layerMinX
           << "\n\tLayer max X: " << m_layerMaxX << endmsg;
 
-  ///fill in the vectors holding the x starting positions (outermost SiPMs)
+  ///fill in the vectors holding the SiPM x origin and step in each quarter
   double xOrigin, xStep;
   unsigned int iQ;
   for (iQ=0; iQ<4; ++iQ) {
@@ -176,8 +190,8 @@ StatusCode DeFTLayer::finalize(){
 // path in the relevant cell". 'fraction' varies between -0.5 and 0.5.
 //=============================================================================
 StatusCode DeFTLayer::calculateHits(const Gaudi::XYZPoint& globalPointEntry,
-                              const Gaudi::XYZPoint& globalPointExit,
-                              FTPair& vectChanAndFrac) const
+                                    const Gaudi::XYZPoint& globalPointExit,
+				    VectFTPairs&           vectChanAndFrac) const
 {
   Gaudi::XYZPoint enP = this->geometry()->toLocal(globalPointEntry);
   Gaudi::XYZPoint exP = this->geometry()->toLocal(globalPointExit);
@@ -233,10 +247,10 @@ StatusCode DeFTLayer::calculateHits(const Gaudi::XYZPoint& globalPointEntry,
   }
 
   int quarter = enPQuarter;
-  unsigned int enPSipmID, enPCellID, netCellID;
+  unsigned int enPSipmID, enPCellID;
   unsigned int exPSipmID, exPCellID;
   double enPFraction, exPFraction;
-  FTChannelID aChan;
+  FTChannelID channel;
 
   cellIDCoordinates( enPU, enPQuarter, enPSipmID, enPCellID, enPFraction );
   cellIDCoordinates( exPU, exPQuarter, exPSipmID, exPCellID, exPFraction );
@@ -258,19 +272,10 @@ StatusCode DeFTLayer::calculateHits(const Gaudi::XYZPoint& globalPointEntry,
     double frac = (enPFraction + exPFraction)/2;
     debug() << "Average fract dist to cell center: " << frac << endmsg;
 
-    // Convert the grossCellID to netCellID
-    netCellID = this->netCellID(enPCellID);
+    /// Create and push-back the pair (FTChannelID, fraction)
+    channel = createChannel( hitLayer, quarter, enPSipmID, enPCellID );
+    vectChanAndFrac.push_back( std::make_pair(channel, frac) );
 
-    /// Create and push_back the corresponding FT pair
-    if ( netCellID > (m_sipmNChannels-1) ) {
-      debug() << "Gross cellID " << enPCellID << " corresponds to insensitive cell."
-	      << " Creating invalid FT channel (the signature is: layerID=15)." << endmsg;
-      aChan = FTChannelID( 15, 0, 0, 0 );
-    }
-    else {
-      aChan = FTChannelID( hitLayer, quarter, enPSipmID, netCellID );
-    }
-    vectChanAndFrac.push_back( std::make_pair(aChan, frac) );
   } //end single cell
 
   /// Case where entry and exit points are in different cells
@@ -327,19 +332,9 @@ StatusCode DeFTLayer::calculateHits(const Gaudi::XYZPoint& globalPointEntry,
     debug() << "Entry Point, SC = " << sc << " Intersection point: " << pIntersect << endmsg;
     debug() << "Entry Point, Frac = " << fracPosFirstCell << endmsg;
 
-    // Convert the grossCellID to netCellID
-    netCellID = this->netCellID(enPCellID);
-
-    /// Create and push_back the corresponding FT pair
-    if ( netCellID > (m_sipmNChannels-1) ) {
-      debug() << "Gross cellID " << enPCellID << " (entryCell) corresponds to insensitive cell."
-	      << " Creating invalid FT channel (the signature is: layerID=15)." << endmsg;
-      aChan = FTChannelID( 15, 0, 0, 0 );
-    }
-    else {
-      aChan = FTChannelID( hitLayer, quarter, enPSipmID, netCellID );
-    }
-    vectChanAndFrac.push_back( std::make_pair(aChan, fracPosFirstCell) );
+    /// Create and push-back the pair (FTChannelID, fraction)
+    channel = createChannel( hitLayer, quarter, enPSipmID, enPCellID );
+    vectChanAndFrac.push_back( std::make_pair(channel, fracPosFirstCell) );
     
     /// The middle cells
     double eps = 1.e-3; /// add this distance when determining the number of middle cells
@@ -352,18 +347,9 @@ StatusCode DeFTLayer::calculateHits(const Gaudi::XYZPoint& globalPointEntry,
       debug() << "\tMid Cell " << i << " midCellCenterU = " << midCellCenterU << endmsg;
       cellIDCoordinates( midCellCenterU, quarter, midCellSipmID, midCellID, midCellFraction );
 
-      // Convert the grossCellID to netCellID
-      netCellID = this->netCellID(midCellID);
-
-      if ( netCellID > (m_sipmNChannels-1) ) {
-        debug() << "Gross cellID " << midCellID << " (midCell) corresponds to insensitive cell."
-		<< " Creating invalid FT channel (the signature is: layerID=15)." << endmsg;
-        aChan = FTChannelID( 15, 0, 0, 0 );
-      }
-      else {
-        aChan = FTChannelID( hitLayer, quarter, midCellSipmID, netCellID );
-      }
-      vectChanAndFrac.push_back( std::make_pair(aChan, midCellFraction) );
+      /// Create and push-back the pair (FTChannelID, fraction)
+      channel = createChannel( hitLayer, quarter, midCellSipmID, midCellID );
+      vectChanAndFrac.push_back( std::make_pair(channel, midCellFraction) );
     }// end loop over mid cells
     
     /// The cell of the exit point
@@ -383,26 +369,16 @@ StatusCode DeFTLayer::calculateHits(const Gaudi::XYZPoint& globalPointEntry,
     debug() << "Exit Point, SC = " << sc << " Intersection point: " << pIntersect << endmsg;
     debug() << "Exit Point, Frac = " << fracPosLastCell << endmsg;
 
-    // Convert the grossCellID to netCellID
-    netCellID = this->netCellID(exPCellID);
-
-    /// Create and push_back the corresponding FT pair
-    if ( netCellID > (m_sipmNChannels-1) ) {
-      debug() << "Gross cellID " << exPCellID << " (exitCell) corresponds to insensitive cell."
-	      << " Creating invalid FT channel (the signature is: layerID=15)." << endmsg;
-      aChan = FTChannelID( 15, 0, 0, 0 );
-    }
-    else {
-      aChan = FTChannelID( hitLayer, quarter, exPSipmID, netCellID );
-    }
-    vectChanAndFrac.push_back( std::make_pair(aChan, fracPosLastCell) );
+    /// Create and push-back the pair (FTChannelID, fraction)
+    channel = createChannel( hitLayer, quarter, exPSipmID, exPCellID );
+    vectChanAndFrac.push_back( std::make_pair(channel, fracPosLastCell) );
   }//end more than 1 hit cells
   
   debug() << "Finished creating FTPairs\n" << endmsg;
   
   /// Prinout the vector of FT pairs
   debug() << "Size of vector of FT pairs: " << vectChanAndFrac.size() << endmsg;
-  FTPair::const_iterator itPair;
+  VectFTPairs::const_iterator itPair;
   DetectorSegment tmpDetSeg;
   for (itPair = vectChanAndFrac.begin(); itPair != vectChanAndFrac.end(); ++itPair) {
     debug() << itPair->first << ", FractPos: " << itPair->second << endmsg;
@@ -420,6 +396,30 @@ StatusCode DeFTLayer::calculateHits(const Gaudi::XYZPoint& globalPointEntry,
   }
 
   return StatusCode::SUCCESS;
+}
+
+//=============================================================================
+// Function encapsulating the creation of FTChannelIDs
+//=============================================================================
+FTChannelID DeFTLayer::createChannel(unsigned int hitLayer,
+				     int          quarter,
+				     unsigned int sipmID,
+				     unsigned int grossCellID) const
+{
+  FTChannelID channel;
+  // Convert the grossCellID to netCellID
+  unsigned int netCellID = this->netCellID(grossCellID);
+
+  /// Create and push_back the corresponding FT pair
+  if ( netCellID > (m_sipmNChannels-1) ) {
+    debug() << "Gross cellID " << grossCellID << " corresponds to insensitive cell."
+	    << " Creating invalid FT channel (the signature is: layerID=15)." << endmsg;
+    channel = FTChannelID( 15, 0, 0, 0 );
+  }
+  else {
+    channel = FTChannelID( hitLayer, quarter, sipmID, netCellID );
+  }
+  return channel;
 }
 
 unsigned int DeFTLayer::netCellID(const unsigned int grossID) const {
@@ -443,26 +443,26 @@ unsigned int DeFTLayer::grossCellID(const unsigned int netID) const {
 // Make sure that the changes in one of these two functions are reflected in
 // the conjugate function as well.
 //=============================================================================
-double DeFTLayer::cellUCoordinate(const LHCb::FTChannelID aChan) const {
+double DeFTLayer::cellUCoordinate(const FTChannelID& channel) const {
   double uCoord;
 
   // check if it is a valid channel or one that corresponds to non-sensitive cell
-  if ( aChan.layer() == 15u ) {
+  if ( channel.layer() == 15u ) {
     debug() << "Function cellUCoordinate: cannot determine uCoord for "
-	    << " non-valid channel " << aChan << endmsg;
+	    << " non-valid channel " << channel << endmsg;
     uCoord = 99999.;
   }
   else {
-    int quarter = aChan.quarter();
+    int quarter = channel.quarter();
     /// First get the SiPM right edge, then add the cell offset 
-    double sipmREdge = m_sipmOriginX[quarter] + aChan.sipmId()*m_sipmStepX[quarter];
+    double sipmREdge = m_sipmOriginX[quarter] + channel.sipmId()*m_sipmStepX[quarter];
     // for u < 0 need additional offset of 1 SiPM
     debug() << "quarter, sipmREdge = " << quarter << ", " << sipmREdge << endmsg;
     if ( !(quarter%2) ) sipmREdge += m_sipmStepX[quarter];
     debug() << "sipmREdge after corr = " << sipmREdge << endmsg;
 
     // Determine gross cellID
-    unsigned int grossID = grossCellID(aChan.sipmCell());
+    unsigned int grossID = grossCellID(channel.sipmCell());
     // offset of the cell center wrt SiPM right edge (cellID always increases from right to left)
     double cellOffset = (grossID + 0.5) * m_cellSizeX;
   
@@ -578,11 +578,11 @@ StatusCode DeFTLayer::cellCrossingPoint(const double cellEdgeU,
 // Function to create a DetectorSegment (straight line representing an FT channel)
 // from a FTChannelID
 //=============================================================================
-DetectorSegment DeFTLayer::createDetSegment(const LHCb::FTChannelID& aChan,
+DetectorSegment DeFTLayer::createDetSegment(const FTChannelID& channel,
                                             double fracPos) const {
 
   /// Determine the x coordinate at y=0 of the det. segment
-  double cellCenter = cellUCoordinate(aChan);
+  double cellCenter = cellUCoordinate(channel);
   double segmentU = cellCenter + fracPos*m_cellSizeX;
 
   /// Determine the upper and lower boundaries of the det. segment
@@ -590,7 +590,7 @@ DetectorSegment DeFTLayer::createDetSegment(const LHCb::FTChannelID& aChan,
   /// the fibres are shorter
   
   double ds_yMin, ds_yMax;
-  if ( aChan.quarter()>1 ) {
+  if ( channel.quarter()>1 ) {
     ds_yMin = 0.;
     ds_yMax = m_layerMaxY;
   }
@@ -600,6 +600,18 @@ DetectorSegment DeFTLayer::createDetSegment(const LHCb::FTChannelID& aChan,
   }
 
   return DetectorSegment( segmentU, m_layerPosZ, m_tanAngle, m_dzDy, ds_yMin, ds_yMax );
+}
+
+//=============================================================================
+// Function to determine the x coordinate at the top/bottom of the layer
+// by extrapolating the initial (x0,y0) along the fibres
+//=============================================================================
+double DeFTLayer::xAtVerticalBorder(double x0, double y0) const {
+  if (std::abs(m_angle)<1.e-4) return x0;
+  else {
+    double yAtBorder = (y0>0) ? m_layerMaxY : m_layerMinY;
+    return x0 + (yAtBorder-y0)*m_tanAngle;
+  }
 }
 
 //=============================================================================
@@ -638,20 +650,10 @@ StatusCode DeFTLayer::beamPipeYCoord(const double x0, const int ySign, double& y
 // an observer sitting at (0,0,0) and looking downstream (+z)). The cell
 // numbering convention is that the cellID always increases with x, i.e. to the left.
 //=============================================================================
-LHCb::FTChannelID DeFTLayer::nextChannelLeft(const LHCb::FTChannelID& aChan) const {
-  unsigned int grossCellID = this->grossCellID(aChan.sipmCell());
+FTChannelID DeFTLayer::nextChannelLeft(const FTChannelID& channel) const {
+  unsigned int grossCellID = this->grossCellID(channel.sipmCell());
   unsigned int grossIDLeftCell = grossCellID + 1u;
-  unsigned int netIDLeftCell = this->netCellID(grossIDLeftCell);
-  LHCb::FTChannelID aChanLeft;
-  if ( netIDLeftCell > (m_sipmNChannels-1) ) {
-    debug() << "Gross cellID " << grossIDLeftCell << " corresponds to insensitive cell."
-	    << " Creating invalid FT channel (the signature is: layerID=15)." << endmsg;
-    aChanLeft = FTChannelID( 15, 0, 0, 0 );
-  }
-  else {
-    aChanLeft = FTChannelID( aChan.layer(), aChan.quarter(), aChan.sipmId(), netIDLeftCell );
-  }
-  return aChanLeft;
+  return createChannel( channel.layer(), channel.quarter(), channel.sipmId(), grossIDLeftCell );
 }
 
 //=============================================================================
@@ -659,18 +661,8 @@ LHCb::FTChannelID DeFTLayer::nextChannelLeft(const LHCb::FTChannelID& aChan) con
 // an observer sitting at (0,0,0) and looking downstream (+z)). The cell
 // numbering convention is that the cellID always increases with x, i.e. to the left.
 //=============================================================================
-LHCb::FTChannelID DeFTLayer::nextChannelRight(const LHCb::FTChannelID& aChan) const {
-  unsigned int grossCellID = this->grossCellID(aChan.sipmCell());
+FTChannelID DeFTLayer::nextChannelRight(const FTChannelID& channel) const {
+  unsigned int grossCellID = this->grossCellID(channel.sipmCell());
   unsigned int grossIDRightCell = grossCellID - 1u;
-  unsigned int netIDRightCell = this->netCellID(grossIDRightCell);
-  LHCb::FTChannelID aChanRight;
-  if ( netIDRightCell > (m_sipmNChannels-1) ) {
-    debug() << "Gross cellID " << grossIDRightCell << " corresponds to insensitive cell."
-	    << " Creating invalid FT channel (the signature is: layerID=15)." << endmsg;
-    aChanRight = FTChannelID( 15, 0, 0, 0 );
-  }
-  else {
-    aChanRight = FTChannelID( aChan.layer(), aChan.quarter(), aChan.sipmId(), netIDRightCell );
-  }
-  return aChanRight;
+  return createChannel( channel.layer(), channel.quarter(), channel.sipmId(), grossIDRightCell );
 }

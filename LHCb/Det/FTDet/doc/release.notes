@@ -4,6 +4,38 @@
 ! Responsible : Plamen Hopchev
 !--------------------------------------------------------------------------
 
+
+
+! 2012-06-19 P. Hopchev
+  >>> Modifications addressing the suggestions received from the code review. For details see:
+  >>> https://indico.cern.ch/getFile.py/access?contribId=3&sessionId=1&resId=0&materialId=slides&confId=190537
+
+  - In all four det.element .h files change the classID values. Now
+    they are 8601 (Detector), 8602 (Station), 8603 (BiLayer) and 8604 (Layer).
+    Consequently "this" version of Det/FTDet should be used with Oliver's
+    'static_DDDB_FT_v4' or later.
+  - In DeFTLayer.h added one sentence to the comments clarifying the
+    concept of 'net' cellID
+  - In DeFTLayer: pass the argument of method cellUCoordinate by reference
+    instead of by value
+  - In DeFTLayer: modification of typedef namings to make the code more readable
+  - In DeFTLayer.cpp make proper checks for NULL pointers when obtaining the
+    layer geometrical limit. Also, added a warning comment that the way we obtain the
+    layer geometrical limits is not robust against structural changes in the
+    layer xml DDDB 
+  - Move the (non-trivial) implementation of the method xAtVerticalBorder from the
+    class definition in DeFTLayer.h to DeFTLayer.cpp
+  - In DeFTDetector.cpp improve the readability of the methods
+    'find{Stations,BiLayer,Layer}' by using a simple 'for' loop instead of
+    std::find_if and boost::lambda
+  - Change variable names in DeFTDetector and DeFTLayer: aPoint -> point,
+    aChan -> channel
+  - In DeFTLayer created a simple private method 'createChannel' which encapsulates
+    the creation of FTChannelIDs and avoids the repetion of the same code in various
+    places. Notably, the method 'calculateHits' becomes 30 lines shorter. 
+ 
+!============ Upgrade detectors code review (2012-06-12) ==================
+
 ! 2012-06-06 P. Hopchev
   - Removed the prototype of the method createDetSegment(XYZPoint) from
     the Layer header file (ommission in the previous commit).

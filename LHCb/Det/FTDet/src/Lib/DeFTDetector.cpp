@@ -6,8 +6,6 @@
 // Gaudi Kernel
 #include "GaudiKernel/SystemOfUnits.h"
 
-// Boost
-#include <boost/lambda/bind.hpp>
 
 /** @file DeFTDetector.cpp
  *
@@ -16,8 +14,6 @@
  *  @author Plamen Hopchev
  *  @date   2012-04-25
  */
-
-using namespace boost::lambda;
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -86,11 +82,10 @@ StatusCode DeFTDetector::initialize(){
 
 
   ///>>> print the layer properties <<<///
-  typedef std::vector<DeFTLayer*>::const_iterator LIter;
   if ( m_msg->level() <= MSG::DEBUG ) {
 
     ///loop over layers
-    LIter iL;
+    Layers::const_iterator iL;
     for (iL = layers().begin(); iL != layers().end(); ++iL) {
       DeFTLayer* layer = dynamic_cast<DeFTLayer*>(*iL);
       if ( layer != 0 ) {
@@ -131,32 +126,37 @@ StatusCode DeFTDetector::finalize(){
 //=============================================================================
 
 /// XYZ point -> Station
-const DeFTStation* DeFTDetector::findStation(const Gaudi::XYZPoint& aPoint) const {
-  if ( !isInside(aPoint) ) { return 0; }
+const DeFTStation* DeFTDetector::findStation(const Gaudi::XYZPoint& point) const {
+  if ( !isInside(point) ) { return 0; }
   else {
-    Stations::const_iterator iS = std::find_if( m_stations.begin(), m_stations.end(),
-                                                bind(&DetectorElement::isInside, _1, aPoint) );
+    Stations::const_iterator iS;
+    for (iS = m_stations.begin(); iS != m_stations.end(); ++iS) {
+      if ( (*iS)->isInside(point) ) break;
+    }
     return (iS != m_stations.end() ? (*iS) : 0);
   }
 }
 
 /// XYZ point -> BiLayer
-const DeFTBiLayer* DeFTDetector::findBiLayer(const Gaudi::XYZPoint& aPoint) const {
-  if ( !isInside(aPoint) ) { return 0; }
+const DeFTBiLayer* DeFTDetector::findBiLayer(const Gaudi::XYZPoint& point) const {
+  if ( !isInside(point) ) { return 0; }
   else {
-    BiLayers::const_iterator iBL = std::find_if( m_bilayers.begin(), m_bilayers.end(),
-                                                 bind(&DetectorElement::isInside, _1, aPoint) );
+    BiLayers::const_iterator iBL;
+    for (iBL = m_bilayers.begin(); iBL != m_bilayers.end(); ++iBL) {
+      if ( (*iBL)->isInside(point) ) break;
+    }
     return (iBL != m_bilayers.end() ? (*iBL) : 0);
   }
 }
 
 /// XYZ point -> Layer
-const DeFTLayer* DeFTDetector::findLayer(const Gaudi::XYZPoint& aPoint) const {
-  if ( !isInside(aPoint) ) { return 0; }
+const DeFTLayer* DeFTDetector::findLayer(const Gaudi::XYZPoint& point) const {
+  if ( !isInside(point) ) { return 0; }
   else {
-    Layers::const_iterator iL = std::find_if( m_layers.begin(), m_layers.end(),
-                                              bind(&DetectorElement::isInside, _1, aPoint) );
+    Layers::const_iterator iL;
+    for (iL = m_layers.begin(); iL != m_layers.end(); ++iL) {
+      if ( (*iL)->isInside(point) ) break;
+    }
     return (iL != m_layers.end() ? (*iL) : 0);
   }
 }
-

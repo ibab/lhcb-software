@@ -31,7 +31,7 @@ namespace DeFTDetectorLocation{
   static const std::string& Default = "/dd/Structure/LHCb/AfterMagnetRegion/T/FT";
 }
 
-static const CLID CLID_DeFTDetector = 18001;
+static const CLID CLID_DeFTDetector = 8601;
 
 class DeFTDetector : public DetectorElement {
 
@@ -80,17 +80,17 @@ public:
   /** Find the FT Station where a global point is
    *  @return Pointer to the relevant Station
    */
-  const DeFTStation* findStation(const Gaudi::XYZPoint& aPoint) const;
+  const DeFTStation* findStation(const Gaudi::XYZPoint& point) const;
 
   /** Find the FT BiLayer where a global point is
    *  @return Pointer to the relevant BiLayer
    */
-  const DeFTBiLayer* findBiLayer(const Gaudi::XYZPoint& aPoint) const;
+  const DeFTBiLayer* findBiLayer(const Gaudi::XYZPoint& point) const;
 
   /** Find the FT Layer where a global point is
    *  @return Pointer to the relevant Layer
    */
-  const DeFTLayer* findLayer(const Gaudi::XYZPoint& aPoint) const;
+  const DeFTLayer* findLayer(const Gaudi::XYZPoint& point) const;
 
   //TO-DO (when needed): Similar functions to find S/B/L where an FTChannelID is
 

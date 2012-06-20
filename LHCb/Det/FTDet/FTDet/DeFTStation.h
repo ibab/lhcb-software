@@ -17,7 +17,7 @@
  *  @date   2012-04-25
  */
 
-static const CLID CLID_DeFTStation = 18002;
+static const CLID CLID_DeFTStation = 8602;
 
 class DeFTStation : public DetectorElement {
 

@@ -68,14 +68,16 @@ SiPM ID: | nSiPM-1  <-----------  0 # 0  ----------->  nSiPM-1 |     |
  *  is the right(left) inactive edge of the SiPM. The cell with ID 65 is
  *  the inner inactive gap in the SiPM. Functions are used for converting
  *  between these 'gross' cellIDs and the sensitive ('net') cellIDs.
+ *  Consequently, the 'net' cellID can have values in [0, 127].
  * 
  *  @author Plamen Hopchev
  *  @date   2012-04-25
  */
 
-static const CLID CLID_DeFTLayer = 18004;
+static const CLID CLID_DeFTLayer = 8604;
 
-typedef std::vector< std::pair<LHCb::FTChannelID, double> > FTPair;
+typedef std::pair<LHCb::FTChannelID, double> FTPair;
+typedef std::vector< FTPair > VectFTPairs;
 
 class DeFTLayer : public DetectorElement {
 
@@ -117,7 +119,7 @@ public:
    */
   StatusCode calculateHits(const Gaudi::XYZPoint&  globalPointEntry,
                            const Gaudi::XYZPoint&  globalPointExit,
-                           FTPair&                 vectChanAndFrac) const;
+                           VectFTPairs&            vectChanAndFrac) const;
 
   /// Get the layer ID
   unsigned int layerID() const { return m_layerID; }
@@ -132,7 +134,7 @@ public:
   double slopeDzDy() const { return m_dzDy; }
 
   /// Get the u-coordinate of the cell center
-  double cellUCoordinate(const LHCb::FTChannelID aChan) const;
+  double cellUCoordinate(const LHCb::FTChannelID& channel) const;
 
   /// Accessor to the minimal x-position of the layer area covered with fibres
   double layerMinX() const { return m_layerMinX; }
@@ -158,16 +160,16 @@ public:
   /// Accessor to the layer beam-pipe radius
   double layerInnerHoleRadius() const { return m_innerHoleRadius; }
 
-  /** Get the FTChannelID of the cell located on the left of the given cell. */
-  LHCb::FTChannelID nextChannelLeft(const LHCb::FTChannelID& aChan) const;
+  /// Get the FTChannelID of the cell located on the left of the given cell
+  LHCb::FTChannelID nextChannelLeft(const LHCb::FTChannelID& channel) const;
 
-  /** Get the FTChannelID of the cell located on the right of the given cell. */
-  LHCb::FTChannelID nextChannelRight(const LHCb::FTChannelID& aChan) const;
+  /// Get the FTChannelID of the cell located on the right of the given cell
+  LHCb::FTChannelID nextChannelRight(const LHCb::FTChannelID& channel) const;
 
   /** Create a DetectorSegment (straight line representing an FT cell)
    *  from an FTChannelID and fractional position within the relevant cell
    */
-  DetectorSegment createDetSegment(const LHCb::FTChannelID& aChan, double fracPos) const;
+  DetectorSegment createDetSegment(const LHCb::FTChannelID& channel, double fracPos) const;
 
   /// Make the Test algo a friend so that it can call private methods
   friend class DeFTTestAlg;
@@ -183,13 +185,7 @@ private: // private member functions
    *  It is assumed that the stereo angle is positive when the angle between
    *  x and y' is > 90 deg (and therefore dx/dy is < 0).
    */
-  double xAtVerticalBorder(double x0, double y0) const {
-    if (std::abs(m_angle)<1.e-4) return x0;
-    else {
-      double yAtBorder = (y0>0) ? m_layerMaxY : m_layerMinY;
-      return x0 + (yAtBorder-y0)*m_tanAngle;
-    }
-  }
+  double xAtVerticalBorder(double x0, double y0) const;
 
   /** Get the x-position at y=0 by extrapolating along the fibres the initial
    *  @param x0 x-position
@@ -230,6 +226,18 @@ private: // private member functions
    *  @return Gross cellID
    */
   unsigned int grossCellID(const unsigned int netID) const;
+
+  /** Function encapsulating the creation of FTChannelIDs.
+   *  @param hitLayer FT layer ID of the channel
+   *  @param quarter FT quarter of the channel
+   *  @param simpID SiPM ID of the channel
+   *  @param grossCellID Used to determine the CellID of the channel
+   *  @return FTChannelID
+   */
+  LHCb::FTChannelID createChannel(unsigned int hitLayer,
+				  int          quarter,
+				  unsigned int sipmID,
+				  unsigned int grossCellID) const;
 
   /** Determine the XYZ crossing point of a straight line determined by
    *  @param gpEntry Global entry point

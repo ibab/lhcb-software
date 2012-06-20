@@ -17,7 +17,7 @@
  *  @date   2012-04-25
  */
 
-static const CLID CLID_DeFTBiLayer = 18003;
+static const CLID CLID_DeFTBiLayer = 8603;
 
 class DeFTBiLayer : public DetectorElement {
 
