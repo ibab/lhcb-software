@@ -2,6 +2,9 @@
 ! Responsible : P. Koppenburg, J.P. Palacios
 !----------------------------------------------------------------------------
 
+! 2012-06-20 - Anton Poluektov 
+ - Add enums for cone variables to Particle.xml
+
 !========================= PhysEvent v11r16 2012-05-02 =========================
 ! 2012-04-26 - Chris Jones
  - Provide a custom fillStream method for the Particle and Vertex class, 
