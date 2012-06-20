@@ -7,6 +7,7 @@
 // LHCb
 #include "GaudiKernel/GenericMatrixTypes.h"
 #include "LHCbMath/MatrixManip.h"
+#include "LHCbMath/MatrixTransforms.h"
 
 // local
 #include "Particle2State.h"
@@ -48,53 +49,27 @@ Particle2State::~Particle2State() {}
 StatusCode Particle2State::state2Particle( const LHCb::State& state,
                                            LHCb::Particle& particle ) const 
 {
-
-  if (0 == particle.charge()) {
-    return Error("Neutral particle given as input to state2Particle");
-  }
-
-  if ( msgLevel(MSG::VERBOSE) )
-    verbose() << "New particle " << particle.particleID().pid() << endmsg ;
-
   // point on the track and error
   particle.setReferencePoint( state.position() ) ;
-  if ( msgLevel(MSG::VERBOSE) )
-    verbose() << "    Ref Point is " << particle.referencePoint() << endmsg ;
 
   // momentum
-  const Gaudi::XYZVector & mom = state.momentum();
+  const Gaudi::XYZVector mom = state.momentum();
   const double mass = particle.measuredMass();
-  const double e = std::sqrt( state.p()*state.p()+mass*mass );
+  const double p = mom.R() ;
+  const double e = std::sqrt( p*p + mass*mass );
   particle.setMomentum( Gaudi::XYZTVector(mom.X(),mom.Y(),mom.Z(),e) ) ;
-  if ( msgLevel(MSG::VERBOSE) )
-    verbose() << "    Momentum is " << particle.momentum() << endmsg ;
 
-  // error
-  Gaudi::Matrix5x5 Jacob;
-  stateJacobian(particle.charge(),mom,Jacob);
-  if (!Jacob.Invert())
-  {
-    err() << "Could not invert jacobian \n" << Jacob
-          << "\n for particle " << particle.particleID().pid() << endmsg;
-    return StatusCode::FAILURE;
-  }
+  // get the jacobian for dp4/d(tx,ty,qop)
+  Gaudi::Matrix4x3 dP4dMom;
+  Gaudi::Math::JacobdP4dMom(state.stateVector().Sub<Gaudi::Vector3>(2),mass,dP4dMom);
 
-  ROOT::Math::SMatrix<double,7,5> Jacob7;
-  Jacob7.Place_at(Jacob.Sub<Matrix2x5>( 0, 0 ), 0, 0 );
-  Jacob7.Place_at(Jacob.Sub<Matrix3x5>( 2, 0 ), 3, 0 );
-  const double q2p = state.qOverP();
-  Jacob7(6,4) = -1./e/q2p/q2p/q2p;
+  // now fill the total jacobia, but only nonzero elements
+  ROOT::Math::SMatrix<double,7,5> Jacob ;
+  Jacob(0,0) = Jacob(1,1) = 1 ; 
+  Jacob.Place_at(dP4dMom,3,2) ;
 
   const Gaudi::SymMatrix7x7 cov =
-    ROOT::Math::Similarity<double,7,5>( Jacob7, state.covariance() );
-
-  if ( msgLevel(MSG::VERBOSE) )
-  {
-    verbose() << "    E=  " << e << " q/P = " << q2p << endmsg ;
-    verbose() << "    Jacob 7 is : \n" << Jacob7 << endmsg ;
-    verbose() << "    state.covariance() is \n" << state.covariance() << endmsg ;
-    verbose() << "    Gets cov \n" << cov << endmsg ;
-  } 
+    ROOT::Math::Similarity<double,7,5>( Jacob, state.covariance() );
 
   // CRJ : const casts used here to allow direct manipulation of the Particle matrices
   //       avoiding the need for local temporaries. Ugly but speeds up the HLT so close
@@ -113,7 +88,14 @@ StatusCode Particle2State::state2Particle( const LHCb::State& state,
   errPosMom.Place_at(cov.Sub<Gaudi::Matrix4x3>( 3, 0 ), 0, 0 );
 
   if ( msgLevel(MSG::VERBOSE) )
-  {
+  { 
+    verbose() << "New particle " << particle.particleID().pid() << endmsg ;
+    verbose() << "    Ref Point is " << particle.referencePoint() << endmsg ;  
+    verbose() << "    Momentum is " << particle.momentum() << endmsg ;
+    verbose() << "    E=  " << e << " q/P = " << state.qOverP() << endmsg ;
+    verbose() << "    Jacob 7 is : \n" << Jacob << endmsg ;
+    verbose() << "    state.covariance() is \n" << state.covariance() << endmsg ;
+    verbose() << "    Gets cov \n" << cov << endmsg ;
     verbose() << "    Position Covariance Matrix is \n"
               << particle.posCovMatrix() << endmsg ;
     verbose() << "    Momentum Covariance Marix is \n"
