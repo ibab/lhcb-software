@@ -694,33 +694,35 @@ int ConeVariablesForEW::getNumberOfParameters(void) {
   return 23; // This tool returns 23 parameters
 }
 
-void ConeVariablesForEW::getInfo(int index, double & value, std::string & name) {
+int ConeVariablesForEW::getInfo(int index, double & value, std::string & name) {
 
   switch( index - getFirstIndex() ) {
-  case 0  : value = m_coneAngle; name = "angle"; return;
-  case 1  : value = (double)m_mult; name = "mult"; return;
-  case 2  : value = m_px; name = "px"; return;
-  case 3  : value = m_py; name = "py"; return;
-  case 4  : value = m_pz; name = "pz"; return;
-  case 5  : value = m_vp;  name = "vp" ; return;
-  case 6  : value = m_vpt; name = "vpt"; return;
-  case 7  : value = m_sp;  name = "sp" ; return;
-  case 8  : value = m_spt; name = "spt"; return;
-  case 9  : value = m_tp;  name = "tp" ; return;
-  case 10  : value = m_tpt; name = "tpt"; return;
-  case 11  : value = m_minpte; name = "minpte"; return;
-  case 12  : value = m_maxpte; name = "maxpte"; return;
-  case 13  : value = m_minptmu; name = "minptmu"; return;
-  case 14  : value = m_maxptmu; name = "maxptmu"; return;
-  case 15  : value = (double)m_nmult; name = "nmult"; return;
-  case 16  : value = m_npx; name = "npx"; return;
-  case 17  : value = m_npy; name = "npy"; return;
-  case 18  : value = m_npz; name = "npz"; return;
-  case 19  : value = m_nvp;  name = "nvp" ; return;
-  case 20  : value = m_nvpt; name = "nvpt"; return;
-  case 21  : value = m_nsp;  name = "nsp" ; return;
-  case 22  : value = m_nspt; name = "nspt"; return;
-  default: return;
+  case 0  : value = m_coneAngle; name = "angle"; break;
+  case 1  : value = (double)m_mult; name = "mult"; break;
+  case 2  : value = m_px; name = "px"; break;
+  case 3  : value = m_py; name = "py"; break;
+  case 4  : value = m_pz; name = "pz"; break;
+  case 5  : value = m_vp;  name = "vp" ; break;
+  case 6  : value = m_vpt; name = "vpt"; break;
+  case 7  : value = m_sp;  name = "sp" ; break;
+  case 8  : value = m_spt; name = "spt"; break;
+  case 9  : value = m_tp;  name = "tp" ; break;
+  case 10  : value = m_tpt; name = "tpt"; break;
+  case 11  : value = m_minpte; name = "minpte"; break;
+  case 12  : value = m_maxpte; name = "maxpte"; break;
+  case 13  : value = m_minptmu; name = "minptmu"; break;
+  case 14  : value = m_maxptmu; name = "maxptmu"; break;
+  case 15  : value = (double)m_nmult; name = "nmult"; break;
+  case 16  : value = m_npx; name = "npx"; break;
+  case 17  : value = m_npy; name = "npy"; break;
+  case 18  : value = m_npz; name = "npz"; break;
+  case 19  : value = m_nvp;  name = "nvp" ; break;
+  case 20  : value = m_nvpt; name = "nvpt"; break;
+  case 21  : value = m_nsp;  name = "nsp" ; break;
+  case 22  : value = m_nspt; name = "nspt"; break;
+  default: break;
   }
+  
+  return 1;
 
 }

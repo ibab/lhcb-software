@@ -3,6 +3,10 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2012-06-20 - Anton Poluektov 
+ - Modify cone variables tools and AddExtraInfo algorithm to allow storing the 
+   subset of parameters. 
+
 ! 2012-06-12 - Chris Jones
  - Fix a gcc 4.6 compilation warning in BremAdder.
 

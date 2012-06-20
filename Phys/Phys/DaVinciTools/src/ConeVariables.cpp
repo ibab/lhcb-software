@@ -30,7 +30,18 @@ DECLARE_TOOL_FACTORY( ConeVariables )
                    "Set the deltaR of the cone (default = 1.0), in radians");
   declareProperty( "TrackType", m_trackType = 3,
                    "Set the type of tracks which are considered inside the cone (default = 3)");
+  declareProperty( "Variables", m_variables, 
+                   "List of variables to store (store all if empty)");
 
+  if (m_variables.empty() ) {
+    info() << "Will store all variables" << endmsg;
+  } else {
+
+    std::vector<std::string>::const_iterator iVar = m_variables.begin();
+    for ( ; iVar != m_variables.end(); iVar++) {
+      info() << "Will store variable " << (*iVar) << endmsg;
+    }
+  }
 }
 
 //=============================================================================
@@ -249,11 +260,11 @@ bool ConeVariables::isTrackInDecay(const LHCb::Track* track){
 
 int ConeVariables::getFirstIndex(void) {
   switch(m_coneNumber) {
-  case 1: return LHCb::Particle::Cone1Index;
-  case 2: return LHCb::Particle::Cone2Index;
-  case 3: return LHCb::Particle::Cone3Index;
-  case 4: return LHCb::Particle::Cone4Index;
-  default: return LHCb::Particle::Cone1Index;
+  case 1: return LHCb::Particle::Cone1Angle;
+  case 2: return LHCb::Particle::Cone2Angle;
+  case 3: return LHCb::Particle::Cone3Angle;
+  case 4: return LHCb::Particle::Cone4Angle;
+  default: return LHCb::Particle::Cone1Angle;
   }
 }
 
@@ -261,24 +272,30 @@ int ConeVariables::getNumberOfParameters(void) {
   return 14; // This tool returns 13 parameters
 }
 
-void ConeVariables::getInfo(int index, double & value, std::string & name) {
+int ConeVariables::getInfo(int index, double & value, std::string & name) {
+
+  if (!m_variables.empty()) {
+    if (std::find(m_variables.begin(), m_variables.end(), name) == m_variables.end() ) return 0;
+  }
 
   switch( index - getFirstIndex() ) {
-  case 0  : value = m_coneAngle; name = "angle"; return;
-  case 1  : value = (double)m_mult; name = "mult"; return;
-  case 2  : value = m_px; name = "px"; return;
-  case 3  : value = m_py; name = "py"; return;
-  case 4  : value = m_pz; name = "pz"; return;
-  case 5  : value = m_p;  name = "p" ; return;
-  case 6  : value = m_pt; name = "pt"; return;
-  case 7  : value = m_pxasy; name = "pxasy"; return;
-  case 8  : value = m_pyasy; name = "pyasy"; return;
-  case 9  : value = m_pzasy; name = "pzasy"; return;
-  case 10 : value = m_pasy;  name = "pasy"; return;
-  case 11 : value = m_ptasy; name = "ptasy"; return;
-  case 12 : value = m_deltaEta; name = "deltaEta"; return;
-  case 13 : value = m_deltaPhi; name = "deltaPhi"; return;
-  default: return;
+  case 0  : value = m_coneAngle; name = "angle"; break;
+  case 1  : value = (double)m_mult; name = "mult"; break;
+  case 2  : value = m_px; name = "px"; break;
+  case 3  : value = m_py; name = "py"; break;
+  case 4  : value = m_pz; name = "pz"; break;
+  case 5  : value = m_p;  name = "p" ; break;
+  case 6  : value = m_pt; name = "pt"; break;
+  case 7  : value = m_pxasy; name = "pxasy"; break;
+  case 8  : value = m_pyasy; name = "pyasy"; break;
+  case 9  : value = m_pzasy; name = "pzasy"; break;
+  case 10 : value = m_pasy;  name = "pasy";  break;
+  case 11 : value = m_ptasy; name = "ptasy"; break;
+  case 12 : value = m_deltaEta; name = "deltaEta"; break;
+  case 13 : value = m_deltaPhi; name = "deltaPhi"; break;
+  default: break;
   }
+
+  return 1;
 
 }

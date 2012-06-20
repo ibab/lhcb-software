@@ -62,7 +62,7 @@ public:
 
   virtual int getNumberOfParameters(void);
 
-  virtual void getInfo(int index, double & value, std::string & name);
+  virtual int getInfo(int index, double & value, std::string & name);
 
   virtual ~ConeVariables( ); ///< Destructor
 
@@ -73,6 +73,7 @@ private:
   double m_coneAngle;
   int m_trackType;
   int m_coneNumber;
+  std::vector<std::string> m_variables;
 
   int m_mult;
   double m_px;

@@ -101,11 +101,13 @@ StatusCode AddExtraInfo::execute() {
           std::string name;
           double value;
 
-          (*iTool)->getInfo(index+i, value, name);
+          int result = (*iTool)->getInfo(index+i, value, name);
 
-          c->addInfo( index+i, value);
+          if (result) { 
+            c->addInfo( index+i, value);
+            if (msgLevel(MSG::VERBOSE)) verbose() << "Added extra info: " << name << "=" << value << endreq;
+          }
 
-          if (msgLevel(MSG::VERBOSE)) verbose() << "Added extra info: " << name << "=" << value << endreq;
         }
 
       }

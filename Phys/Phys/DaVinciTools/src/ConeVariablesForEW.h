@@ -34,7 +34,7 @@ public:
 
   virtual int getNumberOfParameters(void);
 
-  virtual void getInfo(int index, double & value, std::string & name);
+  virtual int getInfo(int index, double & value, std::string & name);
 
   virtual ~ConeVariablesForEW( ); ///< Destructor
 
