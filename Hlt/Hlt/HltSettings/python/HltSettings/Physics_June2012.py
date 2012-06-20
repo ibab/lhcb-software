@@ -41,7 +41,7 @@ class Physics_June2012( object ):
             raise RuntimeError( 'Must update HltType when modifying ActiveHlt.Lines()' )
         
     def L0TCK(self) :
-        return '0x003D'
+        return '0x0042'
 
     def HltType(self) :
         self.verifyType( Physics_June2012 ) 
