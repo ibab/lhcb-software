@@ -8,7 +8,7 @@
 
 // Forward declarations
 class DimService;
-class ISimpleTrendWriter;
+//class ISimpleTrendWriter;
 
 class OvrPub : public PubSvc
 {
@@ -32,6 +32,6 @@ public:
   float m_NoFiles;
   float m_NoMEPs;
   double m_MEPRate;
-  ISimpleTrendWriter* m_trender;
+//  ISimpleTrendWriter* m_trender;
 };
 #endif // ONLINE_GAUCHO_OVRPUB_H

@@ -361,7 +361,7 @@ template <typename T> void DetMap_T<T>::divide(DetMap_T<double> &b, long long l)
 //typedef std::map<std::string,long long> DetData_T;
 typedef std::map<int,TellDesc> TellMap_T;
 //typedef std::map<std::string,DetData_T> DetMap_T;
-class ISimpleTrendWriter;
+//class ISimpleTrendWriter;
 class MEPSvc : public PubSvc
 {
 public:
@@ -396,6 +396,6 @@ public:
   StatusCode finalize();
   std::vector<std::string> m_tell1List;
   unsigned long long m_prevupdate;
-  ISimpleTrendWriter* m_trender;
+//  ISimpleTrendWriter* m_trender;
 };
 #endif // ONLINE_GAUCHO_MEPSVC_H

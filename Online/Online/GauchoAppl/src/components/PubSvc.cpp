@@ -54,6 +54,7 @@ PubSvc::PubSvc(const std::string& name, ISvcLocator* sl) : Service(name,sl),m_in
   m_pMonitorSvc = 0;
 //  m_phistsvc    = 0;
   m_arrhist     = 0;
+  m_trender = 0;
 
 }
 

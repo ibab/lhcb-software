@@ -8,7 +8,7 @@
 
 // Forward declarations
 class DimService;
-class ISimpleTrendWriter;
+//class ISimpleTrendWriter;
 
 class BusyPub : public PubSvc
 {
@@ -25,6 +25,6 @@ public:
   bool m_enableTrending;
   DimService *m_FarmLoad;
   float m_fLoad;
-  ISimpleTrendWriter* m_trender;
+//  ISimpleTrendWriter* m_trender;
 };
 #endif // ONLINE_GAUCHO_BUSYPUB_H

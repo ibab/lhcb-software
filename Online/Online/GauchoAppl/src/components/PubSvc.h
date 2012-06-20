@@ -14,6 +14,7 @@ class MyErrh;
 class IIncidentSvc;
 class IGauchoMonitorSvc;
 class IHistogramSvc;
+class ISimpleTrendWriter;
 class PubSvc : public Service, virtual public IIncidentListener
 {
 public:
@@ -49,5 +50,7 @@ public:
   bool m_started;
   std::string m_prefix;
   unsigned long long m_prevupdate;
+  ISimpleTrendWriter* m_trender;
+
 };
 #endif // ONLINE_GAUCHO_PUBSVC_H
