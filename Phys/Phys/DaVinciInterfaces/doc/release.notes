@@ -4,7 +4,8 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
-
+! 2012-06-20 - Anton Poluektov 
+  - Modify IExtraInfoTool.h to allow it to store a subset of parameters
 
 ! 2012-06-12 - Olivier Deschamps
   - IBremAdder : add new interfaced methods

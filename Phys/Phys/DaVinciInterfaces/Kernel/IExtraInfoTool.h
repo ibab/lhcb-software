@@ -34,7 +34,7 @@ public:
   virtual int getNumberOfParameters(void) = 0;
   
   /// Get the value of calculated parameter and its name (e.g. for the tuple tool) for the given ID
-  virtual void getInfo(int index, double& value, std::string& name) = 0;
+  virtual int getInfo(int index, double& value, std::string& name) = 0;
 
 protected:
 
