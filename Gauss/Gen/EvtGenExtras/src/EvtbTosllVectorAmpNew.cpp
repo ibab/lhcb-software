@@ -643,6 +643,8 @@ double EvtbTosllVectorAmpNew::CalcMaxProb(EvtId parnum, EvtId mesnum,
      // Now find the probability at this q2 and cos theta lepton point
      maxfoundprob = rho.normalizedProb(amp.getSpinDensity());
 
+     delete scalar_part;
+
   } // if(res_swch==0)
   
   if(res_swch==1){
@@ -833,6 +835,8 @@ double EvtbTosllVectorAmpNew::CalcMaxProb(EvtId parnum, EvtId mesnum,
                  << "\n k =" << katmax
                  << std::endl;
        }
+
+       delete scalar_part;
 
     } // for(k=0; k<=1000; k++)
 

@@ -451,7 +451,7 @@ double EvtbTosllScalarAmpNewExt::CalcMaxProb(EvtId parnum, EvtId mesnum,
 
      // The maximum probability calculation
      // from s_min to s_max
-     for(j=0; j<=max_j; j++){ 
+     for(j=0; j<max_j; j++){ 
 
         s = s_min +ds*((double)j);
 
@@ -486,7 +486,7 @@ double EvtbTosllScalarAmpNewExt::CalcMaxProb(EvtId parnum, EvtId mesnum,
         }
 
         // from t_minus to t_plus
-        for(k=0; k<=max_k; k++){ 
+        for(k=0; k<max_k; k++){ 
 
           t_for_s = t_minus + dt*((double) k);
 
@@ -660,6 +660,8 @@ double EvtbTosllScalarAmpNewExt::CalcMaxProb(EvtId parnum, EvtId mesnum,
 //                    << std::endl;
           }
 
+          delete scalar_part;
+
         } // for(k=0; k<=max_k; k++)
      } // for(j=0; j<=max_j; j++)
     
@@ -688,7 +690,7 @@ double EvtbTosllScalarAmpNewExt::CalcMaxProb(EvtId parnum, EvtId mesnum,
      dt = (t_plus-t_minus)/1000.0;
 
      // The maximum probability calculation
-     for(k=0; k<=1000; k++){ 
+     for(k=0; k<1000; k++){ 
 
        t_for_s = t_minus + dt*((double) k);
 
@@ -855,6 +857,8 @@ double EvtbTosllScalarAmpNewExt::CalcMaxProb(EvtId parnum, EvtId mesnum,
 //                 << "\n k =" << k
 //                 << std::endl;
        }
+
+       delete scalar_part;
 
     } // for(k=0; k<=1000; k++)
 

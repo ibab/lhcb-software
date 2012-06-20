@@ -36,8 +36,12 @@
 
 
 EvtbTosllMS::~EvtbTosllMS() {
-  delete _msffmodel ;
-  if ( _calcamp ) delete _calcamp ;
+//  if ( _wilscoeff ) delete _wilscoeff;
+//  if ( _msffmodel ) delete _msffmodel;
+//  if ( _calcamp )   delete _calcamp ;
+  delete _wilscoeff;
+  delete _msffmodel;
+  delete _calcamp;
 }
 
 
