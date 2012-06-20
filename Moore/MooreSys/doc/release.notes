@@ -3,6 +3,9 @@ Package     : MooreSys
 Package Coordinator : E. van Herwijnen
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v14r5>2012-06-20 Moore v14r5</A></H1><PRE>
+For use with higher deferral rate (using new disks in the pit)
+
 </PRE><H1><A NAME=v14r4>2012-05-16 Moore v14r4</A></H1><PRE>
 Final tuned version for 2012 datataking
 
