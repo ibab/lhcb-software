@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+
+! 2012-06-20 -  E. van Herwijnen
+ - Physics_June2012.py to use L0 42
+ 
 !========================= HltSettings v5r38 2012-06-19 =========================
 ! 2012-06-18 - P. David
  - New displaced vertices tuning
