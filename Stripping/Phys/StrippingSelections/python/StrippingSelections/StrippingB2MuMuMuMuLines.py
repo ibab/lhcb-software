@@ -82,14 +82,9 @@ class B2MuMuMuMuLinesConf(LineBuilder) :
         self.selDefault = makeDefault(default_name,
 						inputSel = [ self.inMuons ])
 
-        self.selDimuon = makeDimuon(Dimuon_name,
+        self.selD2MuMuMuMu = makeD2MuMuMuMu(D_name,
 						inputSel = [ self.inMuons ])
 
-        self.selD2MuMuMuMu = makeD2MuMuMuMu(D_name,
-						inputSel = [ self.selDimuon ])
-
-        self.selDstar2D2MuMuMuMu = makeDstar2D2MuMuMuMu(Dst_name,
-						inputSel = [ self.inPions, self.selD2MuMuMuMu ])
 
 
         self.defaultLine = StrippingLine(default_name+"Line",
@@ -101,7 +96,7 @@ class B2MuMuMuMuLinesConf(LineBuilder) :
         self.D2MuMuMuMuLine = StrippingLine(D_name+"Line",
                                             prescale = config['D2MuMuMuMuLinePrescale'],
                                             postscale = config['D2MuMuMuMuLinePostscale'],
-                                            algos = [ self.selDstar2D2MuMuMuMu ]
+                                            algos = [ self.selD2MuMuMuMu ]
                                             )
         
       
@@ -140,32 +135,6 @@ def makeDefault(name,inputSel) :
                       Algorithm = Detached4mu,
                       RequiredSelections = inputSel)
 
-def makeDimuon(name,inputSel) :
-    """
-    dimuon selection
-    """
-    from Configurables import OfflineVertexFitter
-    Dimuon = CombineParticles("Combine"+name)
-    Dimuon.DecayDescriptor = "[J/psi(1S) -> mu+ mu-]cc"
-    Dimuon.addTool( OfflineVertexFitter() )
-    Dimuon.VertexFitters.update( { "" : "OfflineVertexFitter"} )
-
-    Dimuon.DaughtersCuts = { "mu+" : "(TRCHI2DOF < 2.0 ) "\
-                                  " & (MIPCHI2DV(PRIMARY)> 4.)"\
-                                  " & (P> 3000.*MeV)"}
-
-    Dimuon.CombinationCut =   " (AMAXDOCA('')<0.3*mm) "
-
-
- 
-    Dimuon.MotherCut = "(VFASPF(VCHI2/VDOF)<12.) "\
-			"& (BPVVDZ > 0.) " \
-                         "& (M < 2500.)"
-
-
-    return Selection (name,
-                      Algorithm = Dimuon,
-                      RequiredSelections = inputSel)
 
 
 def makeD2MuMuMuMu(name,inputSel) :
@@ -174,40 +143,24 @@ def makeD2MuMuMuMu(name,inputSel) :
     """
     from Configurables import OfflineVertexFitter
     D2MuMuMuMu = CombineParticles("Combine"+name)
-    D2MuMuMuMu.DecayDescriptor = "[D0 -> J/psi(1S) J/psi(1S)]cc"
+
+    D2MuMuMuMu.DecayDescriptor = "D0 -> mu+ mu- mu+ mu-"
     D2MuMuMuMu.addTool( OfflineVertexFitter() )
     D2MuMuMuMu.VertexFitters.update( { "" : "OfflineVertexFitter"} )
 
+    D2MuMuMuMu.DaughtersCuts = { "mu+" : "(TRCHI2DOF < 3.0 ) "\
+                                  " & (MIPCHI2DV(PRIMARY)> 4.)"\
+                                  " & (P> 3000.*MeV)"}
 
-    D2MuMuMuMu.CombinationCut =  "(ADAMASS('D0')<500*MeV) "\
-                                 "& (AMAXDOCA('')<0.3*mm) "
+    D2MuMuMuMu.CombinationCut =  "(ADAMASS('D0')<200*MeV) "\
+                                 "& (AMAXDOCA('')<0.4*mm) "
 
  
     D2MuMuMuMu.MotherCut = "(VFASPF(VCHI2/VDOF)<12.) "\
+			      "& (BPVVDZ > 0.) " \
 			      "& (MIPCHI2DV(PRIMARY) < 25. )"
 
     return Selection (name,
                       Algorithm = D2MuMuMuMu,
                       RequiredSelections = inputSel)
 
-def makeDstar2D2MuMuMuMu(name,inputSel) :
-    from Configurables import OfflineVertexFitter
-    """
-    D* --> pi (D0 --> 4 mu) selection
-    """
-
-    Dstar2Dpi = CombineParticles("CombineDstar"+name)
-    Dstar2Dpi.DecayDescriptor = "[D*(2010)+ -> D0 pi+]cc"
-    Dstar2Dpi.addTool( OfflineVertexFitter() )
-    Dstar2Dpi.VertexFitters.update( { "" : "OfflineVertexFitter"} )
-    Dstar2Dpi.DaughtersCuts = { "pi+" : "(TRCHI2DOF < 2.0 ) "\
-				" & (MIPCHI2DV(PRIMARY) < 25.)"}
-    Dstar2Dpi.CombinationCut =  "(ADAMASS('D*(2010)+')<500.*MeV) "\
-				" & ( AMAXDOCA('')< 0.3*mm)"
-    Dstar2Dpi.MotherCut   =     "(VFASPF(VCHI2/VDOF) < 12.)"\
-				" & (MM - CHILD(MM,1) > 120.*MeV) & (MM - CHILD(MM,1) < 174.*MeV)"
-
-
-    return Selection (name,
-                      Algorithm = Dstar2Dpi,
-                      RequiredSelections = inputSel)
