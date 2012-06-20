@@ -1,5 +1,7 @@
-2012-06-cw2015 Ben Couturier <Ben.Couturier@cern.ch>
+2012-06-2015 Ben Couturier <Ben.Couturier@cern.ch>
 
+	* cmt/requirements: release of version v5r0
+	* python/LbLegacy/install_project.py:  release of version v5r0
 	* scripts/mkLCGCMTtar: Fixed to handle the case of packages taken 
 	from the system (/user) not in external or app/releases.
 
