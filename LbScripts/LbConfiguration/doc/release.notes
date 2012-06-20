@@ -1,3 +1,7 @@
+2012-06-13 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v7r0
+
 2012-06-15  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/LbLogin.py: reverse the order in which app/releases
