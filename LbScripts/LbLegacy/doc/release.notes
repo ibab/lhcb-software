@@ -1,3 +1,8 @@
+2012-06-cw2015 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* scripts/mkLCGCMTtar: Fixed to handle the case of packages taken 
+	from the system (/user) not in external or app/releases.
+
 2012-06-15  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbLegacy/install_project.py: ignore failures when creating the fake

@@ -303,6 +303,7 @@ def get_native_versions(native_version, binary):
     LCG_external = get_macro_value(None, "LCG_external", getCMTExtraTags(binary))
     LCG_releases = get_macro_value(None, "LCG_releases", getCMTExtraTags(binary))
 
+
     # Iterate over package to check whether they should be kept in external
     # or app/releases. We execute a show macro_value on the package home
     for pak in packages_versions.keys() :
@@ -321,13 +322,15 @@ def get_native_versions(native_version, binary):
 
         l = packages_versions[pak]
         l.append(pakType)
-        
         if debug_flag == 1:
             print "get_native_version - %s = %s" % (pak, pakType)
-            
         if pakType == None:
-            print "Cannot find if %s is in external or app/releases, ABORTING"
-            sys.exit(1)
+            if value.startswith("/usr"):
+                print "get_native_version - %s home is %s, IGNORING package from system" % (pak, value)
+                del packages_versions[pak]
+            else:
+                print "get_native_version - %s home is %s, not in external or app/releases, ABORTING" % (pak, value)
+                sys.exit(1)
 
     if binary.startswith("i686"):
         for pak in packages_versions.keys() :
@@ -503,7 +506,7 @@ def get_tar_files(native_version, packages_versions,binary_dir, output_file):
         # last entry is the package type...
         packType = packages_versions[pack][-1]
         if debug_flag == 1: print 'get_tar_file Package %s is in %s' % (pack, packType)
-        
+
         # Position to correct directory, and stop is the package type
         # is not known
         if packType == "external":
@@ -514,7 +517,7 @@ def get_tar_files(native_version, packages_versions,binary_dir, output_file):
             print "Incorrect packType for %s : %s ABORTING" % (pack, packType)
             sys.exit(1)
 
-            
+
         value = packages_versions[pack][0]
         ext_bin_dir = packages_versions[pack][2]
         tar_dir = lcg_tar_dir
@@ -532,7 +535,7 @@ def get_tar_files(native_version, packages_versions,binary_dir, output_file):
 
             # We need to extract in the correct location, either external
             # or apps releases, so we need to change directory before the extraction"
-            
+
             str = 'tar --extract --ungzip --file '+Ffile
             rc = os.system(str)
 
@@ -747,7 +750,7 @@ if __name__ == "__main__":
 
 
     packages_versions = get_native_versions(native_version,binary)
-    
+
     if debug_flag == 1:
         print ' packages_versions = ', packages_versions
 
