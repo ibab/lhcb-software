@@ -37,6 +37,8 @@ private:
   double veloCh(LHCb::Particle* p1);
   std::pair<double,double> getY(const LHCb::ProtoParticle* proto, double zcalo);
   Gaudi::XYZPoint getPoCA(LHCb::Particle* particle, const Gaudi::XYZPoint PVpos);
+  void clear(LHCb::Particle::Vector & vector);
+  
   IProtoParticleFilter* m_pFilter;
   IProtoParticleFilter* m_photFilter;
   ICaloElectron* m_caloElectron;
@@ -69,5 +71,6 @@ private:
   double m_eidmin;
   double m_gid;
   double m_zcalo;
+  bool m_addBrem;
 };
 #endif // DIELECTRONMAKER_H

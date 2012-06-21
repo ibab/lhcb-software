@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones, J. Palacios, Olivier Deschamps
 !==============================================================================
 
+! 2012-06-21 - Olivier Deschamps
+  - DiElectronMaker : speed-up processing
+
 ! 2012-06-20 - Wouter Hulsbergen
  - fixed Particle2State::state2Particle such that it doesn't rely on the pid (charge)
    of the mother particle (and made it a bit faster as well)
