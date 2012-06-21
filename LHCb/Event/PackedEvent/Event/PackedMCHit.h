@@ -58,6 +58,7 @@ namespace LHCb
     static const std::string& Velo    = "pSim/Velo/Hits";
     static const std::string& PuVeto  = "pSim/PuVeto/Hits";
     static const std::string& VeloPix = "pSim/VeloPix/Hits";
+    static const std::string& VL      = "pSim/VL/Hits";
     static const std::string& TT      = "pSim/TT/Hits";
     static const std::string& IT      = "pSim/IT/Hits";
     static const std::string& OT      = "pSim/OT/Hits";
@@ -253,6 +254,24 @@ namespace LHCb
     static const std::string unpackedLocation() { return LHCb::MCHitLocation::VeloPix;       }
   };
 
+  /** @class MCVLHitPacker Event/PackedMCHit.h
+   *
+   *  Utility class to handle the packing and unpacking of the MC VL Hits
+   *
+   *  @author Christopher Rob Jones
+   *  @date   2009-10-13
+   */
+  class MCVLHitPacker : public MCHitPacker
+  {
+  public:
+    MCVLHitPacker( GaudiAlgorithm & parent ) : MCHitPacker(parent)
+    {
+      m_dispScale = 1.0e2;
+      m_enScale   = 5.0e3;
+    }
+    static const std::string packedLocation()   { return LHCb::PackedMCHitLocation::VL; }
+    static const std::string unpackedLocation() { return LHCb::MCHitLocation::VL;       }
+  };
 
   /** @class MCTTHitPacker Event/PackedMCHit.h
    *
