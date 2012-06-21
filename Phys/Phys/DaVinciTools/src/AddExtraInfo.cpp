@@ -66,7 +66,7 @@ StatusCode AddExtraInfo::execute() {
     std::string location = (*iLoc) + "/Particles";
 
     if(!exist<LHCb::Particle::Range>(location) ) {
-      debug()<<("No selection found in "+ location)<<endreq;
+      if (msgLevel(MSG::VERBOSE)) verbose()<<("No selection found in "+ location)<<endreq;
       continue;
     }
 
@@ -105,7 +105,7 @@ StatusCode AddExtraInfo::execute() {
 
           if (result) { 
             c->addInfo( index+i, value);
-            if (msgLevel(MSG::VERBOSE)) verbose() << "Added extra info: " << name << "=" << value << endreq;
+            if (msgLevel(MSG::DEBUG)) debug() << "Added extra info: " << name << "=" << value << endreq;
           }
 
         }

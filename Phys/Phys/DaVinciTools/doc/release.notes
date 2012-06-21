@@ -3,6 +3,10 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2012-06-21 - Anton Poluektov 
+ - Fix ConeVariables.cpp handling the list of variables to store
+ - Modify verbosity levels in AddExtraInfo.cpp
+
 ! 2012-06-20 - Anton Poluektov 
  - Modify cone variables tools and AddExtraInfo algorithm to allow storing the 
    subset of parameters. 

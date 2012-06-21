@@ -32,16 +32,6 @@ DECLARE_TOOL_FACTORY( ConeVariables )
                    "Set the type of tracks which are considered inside the cone (default = 3)");
   declareProperty( "Variables", m_variables, 
                    "List of variables to store (store all if empty)");
-
-  if (m_variables.empty() ) {
-    info() << "Will store all variables" << endmsg;
-  } else {
-
-    std::vector<std::string>::const_iterator iVar = m_variables.begin();
-    for ( ; iVar != m_variables.end(); iVar++) {
-      info() << "Will store variable " << (*iVar) << endmsg;
-    }
-  }
 }
 
 //=============================================================================
@@ -274,10 +264,6 @@ int ConeVariables::getNumberOfParameters(void) {
 
 int ConeVariables::getInfo(int index, double & value, std::string & name) {
 
-  if (!m_variables.empty()) {
-    if (std::find(m_variables.begin(), m_variables.end(), name) == m_variables.end() ) return 0;
-  }
-
   switch( index - getFirstIndex() ) {
   case 0  : value = m_coneAngle; name = "angle"; break;
   case 1  : value = (double)m_mult; name = "mult"; break;
@@ -294,6 +280,10 @@ int ConeVariables::getInfo(int index, double & value, std::string & name) {
   case 12 : value = m_deltaEta; name = "deltaEta"; break;
   case 13 : value = m_deltaPhi; name = "deltaPhi"; break;
   default: break;
+  }
+
+  if (!m_variables.empty()) {
+    if (std::find(m_variables.begin(), m_variables.end(), name) == m_variables.end() ) return 0;
   }
 
   return 1;
