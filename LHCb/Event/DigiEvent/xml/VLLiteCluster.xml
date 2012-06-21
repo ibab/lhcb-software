@@ -1,21 +1,93 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <!DOCTYPE gdd SYSTEM "gdd.dtd" [
-<!ENTITY channelIDName "VLChannelID">
-<!ENTITY className "VLLiteCluster">
-<!ENTITY posBits "3">
-<!ENTITY VLLiteClusterClass SYSTEM "SiLiteCluster.ent">
 ]>
 <gdd>
 
 <package name = "DigiEvent">
-  <class name = "&className;" 
+  <class name = "VLLiteCluster" 
          author = "H. Schindler" 
          desc = "Cluster without full ADC information"
          location = "Raw/VL/LiteClusters"
          serializers = "FALSE">
 
-    &VLLiteClusterClass;
+    <import name = "Kernel/VLChannelID"/>
+    <import name = "Kernel/FastClusterContainer"/>
+    <import name = "Kernel/SiDataFunctor"/>
+    <import name = "LHCbMath/LHCbMath"/>
+                 
+    <typedef desc = "channelID type"
+             type =  "LHCb::VLChannelID"
+             def = "chan_type"
+             access = "PUBLIC"/>
+
+    <typedef desc = "fast container for lite clusters"
+             type = "FastClusterContainer &lt; LHCb::VLLiteCluster, int &gt;"
+             def = "VLLiteClusters"
+             access = "PUBLIC"/>
+       
+    <typedef desc = "finding policy"
+             type = "SiDataFunctor::CompareByChannel &lt; LHCb::VLLiteCluster&gt;"
+             def = "findPolicy"
+             access = "PUBLIC"/>
+     
+    <constructor desc = "constructor"
+                 argList = 'VLChannelID &amp; chan, double fracStrip, 
+                            bool secondThres'>
+      <code>
+        unsigned int tFrac = LHCb::Math::round(fracStrip * (1&lt;&lt;(highThresholdBits - interStripFractionBits)));
+        unsigned int tThres;
+        secondThres == true ? tThres = 1: tThres = 0;
+        m_liteCluster = (chan &lt;&lt; channelIDBits) +
+                        (tFrac &lt;&lt; interStripFractionBits) +
+                        (tThres &lt;&lt; highThresholdBits);
+      </code>
+    </constructor>
+
+    <destructor desc = "destructor">
+      <code>
+      </code>
+    </destructor>
+
+    <method type = 'LHCb::VLLiteCluster &amp;'
+            name = 'operator ='
+            argList = 'const VLLiteCluster &amp; c'
+            const = 'FALSE'
+            desc = 'equal'>
+      <code>
+        m_liteCluster = c.m_liteCluster;
+        return *this; 
+      </code>
+    </method>
+
+    <method name = "interStripFraction"
+            type = "double"
+            desc = "position within a strip of cluster centre"
+            const = "TRUE">
+      <code>
+        return (fractionUnits() / 
+               double(1&lt;&lt;(highThresholdBits - interStripFractionBits)));
+      </code>
+    </method>
+
+    <method access = "PRIVATE"
+            name = "fractionUnits"
+            type = "int"
+            desc = "number between 0 and 7 /8ths of a strip"
+            const = "TRUE">
+      <code> 
+        return ((m_liteCluster &amp; interStripFractionMask) &gt;&gt; interStripFractionBits);
+      </code>
+    </method>
+
+    <method access = "PUBLIC"
+            name = "channelID"
+            type = "LHCb::VLChannelID"
+            desc = "channel ID of cluster centre"
+            const = "TRUE">
+      <code> 
+        return VLChannelID((m_liteCluster &amp; channelIDMask) &gt;&gt; channelIDBits);
+      </code>
+    </method>
 
     <method name = "isRType"
             type = "bool"
@@ -34,6 +106,20 @@
         return channelID().isPhiType();
       </code>
     </method>
+
+    <attribute type = 'bitfield' 
+               name = 'liteCluster' desc = 'lite Cluster' 
+               setMeth = "FALSE" getMeth = "FALSE">
+      <bitfield name = 'channelID' length = '24' 
+                desc = 'channelID'
+                setMeth = "FALSE" getMeth = "FALSE"/>
+      <bitfield name = 'interStripFraction' length = '3' 
+                desc = 'inter strip fractional position'
+                setMeth = "FALSE" getMeth = "FALSE"/>
+      <bitfield name = 'highThreshold' length = '1' 
+                desc = 'high threshold'
+                setMeth = "FALSE" getMeth = "TRUE"/>
+    </attribute>
  
   </class>
 </package>
