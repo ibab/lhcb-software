@@ -709,11 +709,11 @@ double EvtbTosllScalarAmpNew::CalcMaxProb(EvtId parnum, EvtId mesnum,
              maxfoundprob=nikmax;
              s_at_max = s;
              t_at_max = t_for_s;
-             report(NOTICE,"EvtGen")
-                    << "\n maxfoundprob ( s =" << s << ",  t = " << t_for_s << " ) = " 
-                    << maxfoundprob
-                    << "\n k =" << k
-                    << std::endl;
+//             report(NOTICE,"EvtGen")
+//                    << "\n maxfoundprob ( s =" << s << ",  t = " << t_for_s << " ) = " 
+//                    << maxfoundprob
+//                    << "\n k =" << k
+//                    << std::endl;
           }
 
           delete scalar_part;

@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2012-06-20 - Nikolai Nikitin
+ - cout deleting
+
+! 2012-06-20 - Nikolai Nikitin
  - Optimization of memory allocation in the matrix element calculation.
 
 ! 2012-05-22 - Nikolai Nikitin

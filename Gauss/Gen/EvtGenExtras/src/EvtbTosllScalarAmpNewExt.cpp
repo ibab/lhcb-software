@@ -451,7 +451,7 @@ double EvtbTosllScalarAmpNewExt::CalcMaxProb(EvtId parnum, EvtId mesnum,
 
      // The maximum probability calculation
      // from s_min to s_max
-     for(j=0; j<max_j; j++){ 
+     for(j=max_j/2; j<max_j; j++){ 
 
         s = s_min +ds*((double)j);
 
