@@ -2,6 +2,10 @@
 ! Responsible : P. Koppenburg, J.P. Palacios
 !----------------------------------------------------------------------------
 
+
+! 2012-06-21 - Olivier Deschamps
+  - Add enum 'HasBremAdded' to Particle.xml to flag particle with brem-corrected momentum
+
 ! 2012-06-20 - Anton Poluektov 
  - Add enums for cone variables to Particle.xml
 
