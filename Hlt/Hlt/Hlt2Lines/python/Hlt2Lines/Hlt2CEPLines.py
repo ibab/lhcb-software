@@ -20,7 +20,8 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
                                  , 'Hlt2LowMultD2K3PiWS'    : 0.1
                                  , 'Hlt2LowMultChiC2HHWS'   : 0.1
                                  , 'Hlt2LowMultChiC2HHHHWS' : 0.1
-                                 , 'Hlt2LowMultDDInc'       : 1.0
+                                 , 'Hlt2LowMultDDIncCP'     : 1.0
+                                 , 'Hlt2LowMultDDIncVF'     : 1.0
                                  }
                   , 'Postscale' : { 'Hlt2LowMultD2KPi'         : 1.0
                                     , 'Hlt2LowMultD2KPiPi'     : 1.0
@@ -32,7 +33,8 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
                                     , 'Hlt2LowMultD2K3PiWS'    : 1.0
                                     , 'Hlt2LowMultChiC2HHWS'   : 1.0
                                     , 'Hlt2LowMultChiC2HHHHWS' : 1.0
-                                    , 'Hlt2LowMultDDInc'       : 1.0
+                                    , 'Hlt2LowMultDDIncCP'     : 1.0
+                                    , 'Hlt2LowMultDDIncVF'     : 1.0
                                     }
                   # Final-state particles
                   , 'H_PTmin'         : 100.0 * MeV
@@ -91,7 +93,8 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
                                       , "D2K3PiWS"    : 50408
                                       , "ChiC2HHWS"   : 50409
                                       , "ChiC2HHHHWS" : 50410
-                                      , "DDInc"       : 50411
+                                      , "DDIncCP"     : 50411
+                                      , "DDIncVF"     : 50412
                                       }
                   } 
 
@@ -286,19 +289,56 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
         ChiC2HHHHWS = bindMembers("ChiC2HHHHWS", [ Kaons ] + [ Pions ] + [ CombineChiC2HHHHWS ])
 
         #
-        #=== Inclusive DD ===#
+        #=== Inclusive DD using CombineParticles ===#
         #
 
-        CombineDDInc = Hlt2Member(CombineParticles
-                                  , "Combine"
-                                  , DecayDescriptors = [ "D0 -> K+ K-",
-                                                         "[D0 -> K+ K+]cc" ]
-                                  , DaughtersCuts = DDInc_Daug_cuts
-                                  , MotherCut = "ALL"
-                                  , Inputs = [ Kaons ]
-                                  )
+        CombineDDIncCP = Hlt2Member(CombineParticles
+                                    , "Combine"
+                                    , DecayDescriptors = [ "D0 -> K+ K-",
+                                                           "[D0 -> K+ K+]cc" ]
+                                    , DaughtersCuts = DDInc_Daug_cuts
+                                    , MotherCut = "ALL"
+                                    , Inputs = [ Kaons ]
+                                    )
+
+        DDIncCP = bindMembers("DDIncCP", [ Kaons ] + [ CombineDDIncCP ])
         
-        DDInc = bindMembers("DDInc", [ Kaons ] + [ CombineDDInc ])
+        #
+        #=== Inclusive DD using VoidFilter ===#
+        #
+        
+        FilterDDIncVF = Hlt2Member(FilterDesktop
+                                   , "Filter"
+                                   , Inputs = [ Kaons ]
+                                   , Code = DDInc_K_cut
+                                   )
+        
+        bindDDIncVF = bindMembers("bindDDIncVF", [ Kaons ] + [ FilterDDIncVF ])
+        vfcode = "CONTAINS('" + bindDDIncVF.outputSelection() + "') > 1"
+        KCount = VoidFilter("Hlt2CEPKCount", Code = vfcode)
+        
+        DDIncVF = bindMembers("DDIncVF", [ Kaons ] + [ bindDDIncVF ] + [ KCount ])
+
+        #Alternative version requiring >= 1 K+, >=1 K-
+        #DDInc_K_cut_Qp = DDInc_K_cut + " & (Q == +1)"
+        #FilterDDInc_Qp = Hlt2Member(FilterDesktop
+        #                            , "Filter"
+        #                            , Inputs = [ Kaons ]
+        #                            , Code = DDInc_K_cut_Qp
+        #                            )
+        #bindDDInc_Qp = bindMembers("bindDDInc_Qp", [ Kaons ] + [ FilterDDInc_Qp ])
+        #vfcode_Qp = "CONTAINS('" + bindDDInc_Qp.outputSelection() + "') > 0"
+        #KCount_Qp = VoidFilter("Hlt2CEPKCount_Qp", Code = vfcode_Qp)
+        #DDInc_K_cut_Qm = DDInc_K_cut + " & (Q == -1)"
+        #FilterDDInc_Qm = Hlt2Member(FilterDesktop
+        #                            , "Filter"
+        #                            , Inputs = [ Kaons ]
+        #                            , Code = DDInc_K_cut_Qm
+        #                            )
+        #bindDDInc_Qm = bindMembers("bindDDInc_Qm", [ Kaons ] + [ FilterDDInc_Qm ])
+        #vfcode_Qm = "CONTAINS('" + bindDDInc_Qm.outputSelection() + "') > 0"
+        #KCount_Qm = VoidFilter("Hlt2CEPKCount_Qm", Code = vfcode_Qm)
+        #DDIncVF = bindMembers("DDIncVF", [ Kaons ] + [ bindDDInc_Qp ] + [ KCount_Qp ] + [ bindDDInc_Qm ] + [ KCount_Qm ])
         
         #
         #=== Filtering algorithms ===#
@@ -310,6 +350,7 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
         FilterNumVeloTracks          = VoidFilter('Hlt2LowMultHadronFilterNumVeloTracks',          Code = "CONTAINS('%s') < 12" % VT)
         FilterNumVeloTracksChiC2HH   = VoidFilter('Hlt2LowMultHadronFilterNumVeloTracksChiC2HH',   Code = "CONTAINS('%s') < 6"  % VT)
         FilterNumVeloTracksChiC2HHHH = VoidFilter('Hlt2LowMultHadronFilterNumVeloTracksChiC2HHHH', Code = "CONTAINS('%s') < 8"  % VT)
+        FilterNumVeloTracksDDInc     = VoidFilter('Hlt2LowMultHadronFilterNumVeloTracksDDInc',     Code = "CONTAINS('%s') < 11" % VT)
         FilterNumBackTracks          = VoidFilter('Hlt2LowMultHadronFilterNumBackTracks',          Code = "TrNUM('%s', TrBACKWARD) < 1" % VT)
 
         #
@@ -399,11 +440,19 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
                          , postscale = self.postscale
                          )
 
-        line = Hlt2Line( 'LowMultDDInc'
+        line = Hlt2Line( 'LowMultDDIncCP'
                          , prescale = self.prescale
                          , HLT = HLTreq    
                          , L0DU = L0req
-                         , algos = [ velotracks, FilterNumVeloTracks, FilterNumBackTracks, Kaons, DDInc ]
+                         , algos = [ velotracks, FilterNumVeloTracksDDInc, FilterNumBackTracks, Kaons, DDIncCP ]
+                         , postscale = self.postscale
+                         )
+
+        line = Hlt2Line( 'LowMultDDIncVF'
+                         , prescale = self.prescale
+                         , HLT = HLTreq    
+                         , L0DU = L0req
+                         , algos = [ velotracks, FilterNumVeloTracksDDInc, FilterNumBackTracks, Kaons, DDIncVF ]
                          , postscale = self.postscale
                          )
 
@@ -421,4 +470,6 @@ class Hlt2CEPLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultD2K3PiWSDecision"    : self.getProp('HltANNSvcID')['D2K3PiWS'] } )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultChiC2HHWSDecision"   : self.getProp('HltANNSvcID')['ChiC2HHWS'] } )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultChiC2HHHHWSDecision" : self.getProp('HltANNSvcID')['ChiC2HHHHWS'] } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultDDIncDecision"       : self.getProp('HltANNSvcID')['DDInc'] } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultDDIncCPDecision"     : self.getProp('HltANNSvcID')['DDIncCP'] } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultDDIncVFDecision"     : self.getProp('HltANNSvcID')['DDIncVF'] } )
+
