@@ -12,6 +12,9 @@
  - StdLooseDiElectron : Make a DiElectron for B->eeK(*) using DiElectronMaker
                         called `StdDiElectronFromTracks'
 
+! 2012-06-12 - Olivier Deschamps for Edwige Tournefier
+  - add StdAllTightSymGammaConversion.py : combinatorial gamma->ee from symmetrized e pT
+
 ! 2012-06-12 - Olivier Deschamps
   - StdAllLoose(Tight)GammaConversion.py : produce gamma->ee particle (based on DiElectronMaker)
 

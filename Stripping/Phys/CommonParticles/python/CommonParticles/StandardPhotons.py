@@ -34,6 +34,9 @@ _locations.update ( locations )
 from CommonParticles.StdAllTightGammaConversion import *
 _locations.update ( locations )
 
+from CommonParticles.StdAllTightSymGammaConversion import *
+_locations.update ( locations )
+
 
 # redefine the locations 
 locations = _locations
