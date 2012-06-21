@@ -2,6 +2,7 @@ Package     : Hlt/Moore
 Package Coordinator : Eric van Herwijnen
 Purpose     : LHCb HLT application
 
+!========================= Moore v14r5p1 2012-06-21 =========================
 ! 2012-06-21 - Eric van Herwijnen
  - Patch release with Hlt v15r2p1
 
