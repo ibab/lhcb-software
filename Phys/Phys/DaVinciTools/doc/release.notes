@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2012-06-19 - Olivier Deschamps
+  - BremAdder : speed-up processing
+
 ! 2012-06-21 - Anton Poluektov 
  - Fix ConeVariables.cpp handling the list of variables to store
  - Modify verbosity levels in AddExtraInfo.cpp

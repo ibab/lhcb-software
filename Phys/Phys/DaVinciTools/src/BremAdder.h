@@ -9,6 +9,9 @@
 #include "Kernel/IBremAdder.h"            // Interface
 #include "CaloDet/DeCalorimeter.h"
 #include "Kernel/IParticle2State.h"
+#include "GaudiKernel/IIncidentListener.h"
+#include "GaudiKernel/IIncidentSvc.h" 
+#include "GaudiKernel/Incident.h" 
 
 /** @class BremAdder BremAdder.h
  *
@@ -17,7 +20,7 @@
  *  @author Olivier Deschamps
  *  @date   2006-10-25
  */
-class BremAdder : public GaudiTool, virtual public IBremAdder {
+class BremAdder : public GaudiTool, virtual public IBremAdder, virtual public IIncidentListener  {
 public:
   /// Standard constructor
   BremAdder( const std::string& type,
@@ -26,6 +29,15 @@ public:
 
   virtual ~BremAdder( ); ///< Destructor
   virtual StatusCode initialize();
+  virtual StatusCode finalize();
+  // paranoid cleaning - reset all caches at each event
+  virtual void handle(const Incident&  ) { 
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )debug() << "IIncident Svc reset" << endmsg; 
+    m_list.clear();
+    m_list2.clear();
+    m_key=NULL;
+    m_key2=NULL;
+  }
 
   bool addBrem   ( LHCb::Particle* particle,bool force=false );
   bool removeBrem( LHCb::Particle* particle,bool force=false );
@@ -46,9 +58,9 @@ protected:
                                                     std::string flag="");
 
   const std::pair<std::vector<const LHCb::CaloHypo*>,
-                  std::vector<const LHCb::CaloHypo*> >bremLists(const LHCb::Particle* p1,
-                                                                const LHCb::Particle* p2,
-                                                                std::string flag="");
+                  std::vector<const LHCb::CaloHypo*> > bremLists(const LHCb::Particle* p1,
+                                                                 const LHCb::Particle* p2,
+                                                                 std::string flag="");
 
   const std::vector<const LHCb::CaloHypo*> getBrem(const LHCb::Particle* particle);
 
@@ -73,8 +85,10 @@ private:
   double m_ptg;
   const IParticle2State* m_p2s ;
   int m_method;
-  const LHCb::Particle* m_part;
+  const LHCb::Particle* m_key;
+  const LHCb::Particle* m_key2;
   std::vector<const LHCb::CaloHypo*> m_list;
+  std::vector<const LHCb::CaloHypo*> m_list2;
   double m_z0;
 
 };
