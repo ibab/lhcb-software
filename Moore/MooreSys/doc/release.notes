@@ -3,6 +3,9 @@ Package     : MooreSys
 Package Coordinator : E. van Herwijnen
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v14r5p1>2012-06-21 Moore v14r5p1</A></H1><PRE>
+For patched Hlt v15r2p1
+
 </PRE><H1><A NAME=v14r5>2012-06-20 Moore v14r5</A></H1><PRE>
 For use with higher deferral rate (using new disks in the pit)
 
