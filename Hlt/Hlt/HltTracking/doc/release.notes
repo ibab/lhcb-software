@@ -4,6 +4,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+!========================= HltTracking v9r23 2012-06-21 =========================
+! 2012-06-21 - V. Gligorov
+ - Fix bug with Rich tracking
+
 !========================= HltTracking v9r22 2012-06-19 =========================
 ! 2012-06-18 - S. Stahl
  - Lowered pt threshold for LooseForward to 300
