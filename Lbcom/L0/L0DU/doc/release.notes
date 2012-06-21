@@ -3,6 +3,10 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+! 2012-06-21 - Julien Cogan
+ - L0Conf : add default setting (LUT version) for L0Muon emulation for 
+  DataType 2012
+
 ! 2012-06-05 - Marco Cattaneo
  - Protect all unprotected debug() and verbose() messages
  - Fix UNINIT_CTOR defects

@@ -40,6 +40,7 @@ class L0Conf(LHCbConfigurableUser) :
         ,"L0MuonUseTCKFromData"     : None
         ,"L0DecodingContext"        : None
         ,"L0EmulatorContext"        : None
+        ,"L0MuonForceLUTVersion"    : None
         ,"verbose"        : False 
         # Sequencers 
         ,"L0Sequencer"    : None 
@@ -74,6 +75,7 @@ class L0Conf(LHCbConfigurableUser) :
         ,"L0MuonUseTCKFromData"     : """ If True, the L0Muon emulator will use the event TCK to get the FOI values.""" 
         ,"L0DecodingContext"        : """ String appended to the default TES location where the results of the decoding are stored.""" 
         ,"L0EmulatorContext"        : """ String appended to the default TES location where the results of the emulation are stored.""" 
+        ,"L0MuonForceLUTVersion"    : """ LUT version to enforce for the L0Muon emulation."""
         ,"verbose"        : """Obsolete"""
         # Sequencers 
         ,"L0Sequencer"    : """ Sequencer filled according to the L0Conf properties."""
@@ -415,6 +417,10 @@ class L0Conf(LHCbConfigurableUser) :
             emulateL0Muon().L0Context = l0context
             emulateL0DU().L0Context   = l0context
 
+        if self.isPropertySet("L0MuonForceLUTVersion"):
+            lutversion = self.getProp("L0MuonForceLUTVersion")
+            emulateL0Muon().LUTVersion = lutversion
+
         # Set electron emulation and Hcal threshold depending on data type
         if self.isPropertySet("DataType"):
             datatype = self.getProp("DataType")
@@ -428,6 +434,12 @@ class L0Conf(LHCbConfigurableUser) :
                 emulateL0Calo().UseNewElectron = False
             else:
                 emulateL0Calo().UseNewElectron = True
+
+            if not self.isPropertySet("L0MuonForceLUTVersion"):
+                if datatype == "2009" or datatype == "2010" or datatype == "2011":
+                    emulateL0Muon().LUTVersion = "V1"
+                elif datatype == "2012":
+                    emulateL0Muon().LUTVersion = "V3"
 
     def _dataOnDemand(self,rootintes):
         """Configure the DataOnDemand service for L0."""
