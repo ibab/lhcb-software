@@ -37,10 +37,10 @@ public:
 
 private:
   
-  void addBank(int sensor,
-               LHCb::VLClusters::const_iterator begin, 
-               LHCb::VLClusters::const_iterator end,
-               LHCb::RawEvent* rawEvent);
+  void encode(int sensor,
+              LHCb::VLClusters::const_iterator begin, 
+              LHCb::VLClusters::const_iterator end,
+              LHCb::RawEvent* rawEvent);
 
   LHCb::VLClusters* m_clusters; 
   std::vector<VLDAQ::row> m_rawData;

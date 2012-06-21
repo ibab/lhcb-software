@@ -11,13 +11,12 @@ class VLADCWord {
 
 public:
   /// Constructors
-  VLADCWord(double adc, bool endCluster) {
-    unsigned int bEnd = (unsigned int)(endCluster); 
-    unsigned char tAdc = char(adc);
-    if (adc > ((1 << adcPrecision) - 1)) {
-      tAdc = (1 << adcPrecision) - 1;
-    }
-    m_value = (tAdc << adcBits) + (bEnd << endBits);
+  VLADCWord(unsigned int adc, bool centralStrip, bool endCluster) {
+    unsigned int centre = (unsigned int)(centralStrip); 
+    unsigned int end = (unsigned int)(endCluster); 
+    const unsigned int adcMax = (1 << adcPrecision) - 1; 
+    if (adc > adcMax) adc = adcMax;
+    m_value = (adc << adcBits) + (centre << centreBits) + (end << endBits);
   }
   explicit VLADCWord(unsigned int value) : m_value(value) {}
   /// Destructor
@@ -27,8 +26,11 @@ public:
   unsigned int adc() const {
     return (m_value & adcMask) >> adcBits;
   }
+  bool centralStrip() const {
+    return ((m_value & centreMask) >> centreBits != 0) ? true : false;
+  }
   bool endCluster() const {
-    return ((m_value & endMask) >> endBits != 0u) ? true : false;
+    return ((m_value & endMask) >> endBits != 0) ? true : false;
   }
  
 private:
@@ -37,13 +39,15 @@ private:
 
   enum bits {
     adcBits      =  0,
+    centreBits   =  6,
     endBits      =  7,
-    adcPrecision =  7 
+    adcPrecision =  6 
   };
   
   enum mask {
-    adcMask = 0x7f,
-    endMask = 0x80
+    adcMask    = 0x3f,
+    centreMask = 0x40,
+    endMask    = 0x80
   };
 
 };

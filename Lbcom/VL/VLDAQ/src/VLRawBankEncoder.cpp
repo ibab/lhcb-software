@@ -30,7 +30,7 @@ VLRawBankEncoder::VLRawBankEncoder(const std::string& name,
 }
 
 //=============================================================================
-/// Initialisation. Check parameters
+/// Initialisation
 //=============================================================================
 StatusCode VLRawBankEncoder::initialize() {
 
@@ -56,21 +56,21 @@ StatusCode VLRawBankEncoder::initialize() {
 StatusCode VLRawBankEncoder::execute() {
 
   if (m_debug) debug() << " ==> execute()" << endmsg;
-  /// Get the clusters.
+  // Get the clusters.
   if (!exist<VLClusters>(VLClusterLocation::Default)) {
     error() << "Cannot retrieve VLClusters from " 
             << VLClusterLocation::Default << endmsg;
     return StatusCode::FAILURE;
   } 
   m_clusters = get<VLClusters>(VLClusterLocation::Default);
-  /// Sort the clusters by sensor and strip number.
+  // Sort the clusters by ascending sensor and strip number.
   std::sort(m_clusters->begin(), m_clusters->end(), 
             VLDataFunctor::LessByStrip<const VLCluster*>());
             
-  /// Get the raw event.
+  // Get the raw event.
   RawEvent* rawEvent = getOrCreate<RawEvent, RawEvent>(RawEventLocation::Default);
 
-  /// Loop over the clusters and write one bank per sensor.
+  // Loop over the clusters and write one bank per sensor.
   VLClusters::const_iterator it = m_clusters->begin();
   unsigned int sensorIndex = 0; 
   while (it != m_clusters->end()) {
@@ -78,29 +78,29 @@ StatusCode VLRawBankEncoder::execute() {
     // Check for missing sensor numbers.
     while (sensorNumber != m_sensorNumbers[sensorIndex]) {
       // Create an empty bank.
-      addBank(m_sensorNumbers[sensorIndex], it, it, rawEvent); 
+      encode(m_sensorNumbers[sensorIndex], it, it, rawEvent); 
       if (m_debug) {
         debug() << "Added empty bank for sensor " 
                 << m_sensorNumbers[sensorIndex] << endmsg;
       }
-      // Move to next on list and try again.
+      // Move to the next sensor on the list and try again.
       ++sensorIndex;
     }
-    /// Get the last cluster on this sensor.
+    // Get the last cluster on this sensor.
     VLClusters::const_iterator last = it;
     while (last != m_clusters->end() && 
            (*last)->channelID().sensor() == sensorNumber) {
       ++last;
     }
-    /// Create a bank for this sensor.
-    addBank(sensorNumber, it, last, rawEvent);
-    /// Move to the next sensor.
+    // Create a bank for this sensor.
+    encode(sensorNumber, it, last, rawEvent);
+    // Move to the next sensor.
     it = last;
     ++sensorIndex; 
   }
-  /// Create empty banks for remaining sensors (if any).
+  // Create empty banks for remaining sensors (if any).
   while (sensorIndex < m_sensorNumbers.size()) {
-    addBank(m_sensorNumbers[sensorIndex], it, it, rawEvent); 
+    encode(m_sensorNumbers[sensorIndex], it, it, rawEvent); 
     if (m_debug) {
       debug() << "Added empty bank for sensor " 
               << m_sensorNumbers[sensorIndex] << endmsg;
@@ -121,20 +121,22 @@ StatusCode VLRawBankEncoder::finalize() {
 }
 
 
-void VLRawBankEncoder::addBank(int sensor,
-                               VLClusters::const_iterator begin, 
-                               VLClusters::const_iterator end,
-                               RawEvent* rawEvent) {
+//=============================================================================
+/// Encode the clusters on a given sensor in raw data format 
+//=============================================================================
+void VLRawBankEncoder::encode(int sensor,
+                              VLClusters::const_iterator begin, 
+                              VLClusters::const_iterator end,
+                              RawEvent* rawEvent) {
 
 
-  if (m_debug) debug() << " ==> addBank()" << endmsg;
+  if (m_debug) debug() << " ==> encode()" << endmsg;
   // Clear the raw data store.
   m_rawData.clear();
 
   // Create a header and add it to the raw bank.
-  // It comprises the number of clusters on this sensor (first 16 bits),
-  // PCN (next 8 bits), 
-  // and an error flag (which is always false in the simulation).
+  // It comprises the number of clusters on this sensor (16 bits),
+  // PCN (8 bits), and an error flag (set to false in the simulation).
   VLHeaderWord hw(end - begin, 0, false); 
   if (m_verbose) {
     verbose() << "Header:" << endmsg;
@@ -155,31 +157,34 @@ void VLRawBankEncoder::addBank(int sensor,
   VLClusters::const_iterator itc;
   for (itc = begin; itc != end; ++itc) {
     const VLCluster* cluster = *itc;
-    const unsigned int nStrips = cluster->size();
-    const bool highThreshold = cluster->highThreshold();
-    const unsigned int firstStrip = cluster->strip(0);
-    const double fraction = cluster->interStripFraction();
+    const bool high = cluster->highThreshold();
+    const unsigned int channel = cluster->channelID().strip();
+    const double isp = cluster->interStripFraction();
     // Create a cluster word and add it to the cluster row.
-    VLClusterWord cw(firstStrip, fraction, nStrips, highThreshold);
+    // It comprises the central channel (12 bits), 
+    // the interstrip position (3 bits) and a high ADC flag.
+    VLClusterWord cw(channel, isp, high);
     clusterRow |= static_cast<VLDAQ::row>(cw.value()) 
-                  << ((nClusters % VLDAQ::clustersPerRow) 
-                  << VLDAQ::clusterShift);
+        << ((nClusters % VLDAQ::clustersPerRow) << VLDAQ::clusterShift);
     ++nClusters;
-    // If the cluster row is full, add it to the list.
+    // Check if the cluster row is full.
     if (0 == nClusters % VLDAQ::clustersPerRow) {
       m_clusterRows.push_back(clusterRow);
       clusterRow = 0x0; 
     }
     // Store the ADC values.
+    const unsigned int nStrips = cluster->size();
     for (unsigned int i = 0; i < nStrips; ++i) {
+      const unsigned int strip = cluster->strip(i);
       const unsigned int adc = cluster->adcValue(i);
+      const bool centralStrip = (strip == channel);
       const bool endOfCluster = (nStrips == i + 1);
       // Create an ADC word and add it to the ADC row.
-      VLADCWord aw(adc, endOfCluster);
+      VLADCWord aw(adc, centralStrip, endOfCluster);
       adcRow |= (aw.value() 
-                << ((nADCs % VLDAQ::adcsPerRow) << VLDAQ::adcShift));
+          << ((nADCs % VLDAQ::adcsPerRow) << VLDAQ::adcShift));
       ++nADCs;
-      // If the ADC row is full, add it to the list.
+      // Check if the ADC row is full.
       if (0 == nADCs % VLDAQ::adcsPerRow) {
         m_adcRows.push_back(adcRow);
         adcRow = 0x0;

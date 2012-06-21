@@ -11,43 +11,26 @@ class VLClusterWord {
 
 public:
   /// Constructors
-  VLClusterWord(unsigned int channel, double isp,
-                unsigned int clusterSize, bool highThreshold) {
-
+  VLClusterWord(unsigned int channel, double isp, bool highAdc) {
     unsigned int position = (unsigned int)(isp * (1 << interStripPrecision));
-    unsigned int sBit = clusterSize > 2 ? 1 : 0;
-    unsigned int tBit = (unsigned int)(highThreshold);
-    m_value = (position << positionBits) + (channel  << channelBits) +
-              (sBit << sizeBits)+ (tBit << thresBits);
+    unsigned int threshold = (unsigned int)(highAdc);
+    m_value = (position << positionBits) + (channel << channelBits) + 
+              (threshold << thresholdBits);
   }
   explicit VLClusterWord(unsigned int value) : m_value(value) {}
   /// Destructor
   ~VLClusterWord() {}
 
   unsigned int value() const {return m_value;}
-  unsigned int fracStripBits() const {
-    return (m_value & positionMask) >> positionBits;
-  }
-  unsigned int pseudoSizeBits() const {
-    return (m_value & sizeMask) >> sizeBits;
-  }
   double interStripPosition() const {
-    return fracStripBits() / double(1 << interStripPrecision);
+    unsigned int position = (m_value & positionMask) >> positionBits;
+    return position / double(1 << interStripPrecision);
   }
   unsigned int channel() const {
     return (m_value & channelMask) >> channelBits;
   }
-  unsigned int pseudoSize() const {
-    unsigned int cSize = 1 + ((m_value & sizeMask) >> sizeBits);
-    if (cSize == 1) {
-      if (fracStripBits() > 0) cSize = 2;
-    } else {
-      cSize = 3;
-    }
-    return cSize;
-  }
-  bool hasHighThreshold() const {
-    return ((m_value & thresMask) >> thresBits != 0) ? true : false;
+  bool highAdc() const {
+    return ((m_value & thresholdMask) >> thresholdBits != 0) ? true : false;
   }
  
 private:
@@ -56,17 +39,15 @@ private:
 
   enum bits {
     positionBits        =  0,
-    channelBits         =  2,
-    sizeBits            = 14,
-    thresBits           = 15,
-    interStripPrecision =  2
+    channelBits         =  3,
+    thresholdBits       = 15,
+    interStripPrecision =  3 
   };
   
   enum mask {
-    positionMask = 0x0007,
-    channelMask  = 0x3ffc,
-    sizeMask     = 0x4000,
-    thresMask    = 0x8000
+    positionMask  = 0x0007,
+    channelMask   = 0x7ff8,
+    thresholdMask = 0x8000
   };
 
 };

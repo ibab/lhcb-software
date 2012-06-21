@@ -1,8 +1,14 @@
 #ifndef VL_RAWBANK_DECODER_H 
 #define VL_RAWBANK_DECODER_H 1
 
+// STL
 #include <string>
+// Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
+// Event/DigitEvent
+#include "Event/VLCluster.h"
+#include "Event/VLLiteCluster.h"
+// Local
 #include "VLRawBankConstants.h"
 
 namespace LHCb {
@@ -37,7 +43,7 @@ public:
 private:
 
   /// Decode raw bank to clusters and lite clusters. 
-  void decode(const std::vector<LHCb::RawBank*>& banks);
+  void decode(const LHCb::RawBank* rb);
 
   bool m_decodeToLiteClusters;
   bool m_decodeToClusters;
@@ -46,7 +52,7 @@ private:
   std::string m_liteClusterLocation;
   std::string m_clusterLocation;
 
-  LHCb::VLLiteCluster::FastContainer* m_liteClusters;
+  LHCb::VLLiteCluster::VLLiteClusters* m_liteClusters;
   LHCb::VLClusters* m_clusters;
   const DeVL* m_det;
 

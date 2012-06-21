@@ -52,7 +52,7 @@ VLRawBankDecoder::VLRawBankDecoder(const std::string& name,
 }
 
 //=============================================================================
-/// Initialisation. Check parameters
+/// Initialisation
 //=============================================================================
 StatusCode VLRawBankDecoder::initialize() {
 
@@ -70,27 +70,43 @@ StatusCode VLRawBankDecoder::initialize() {
 //=============================================================================
 StatusCode VLRawBankDecoder::execute() {
 
+  if (m_decodeToLiteClusters) {
+    m_liteClusters = new VLLiteCluster::VLLiteClusters();
+    m_liteClusters->reserve(4096); 
+  }
+  if (m_decodeToClusters) {
+    m_clusters = new VLClusters();
+  }
   // Get the raw event.
   if (!exist<RawEvent>(m_rawEventLocation)) {
     if (msgLevel(MSG::DEBUG)) {
-      debug() << "Raw event not found." << endmsg;
+      debug() << "No raw event in " << m_rawEventLocation << endmsg;
     }
-    // Create empty containers.
+    // Store empty containers.
     if (m_decodeToLiteClusters) {
-      m_liteClusters = new VLLiteCluster::FastContainer();
       put(m_liteClusters, m_liteClusterLocation);
     }
     if (m_decodeToClusters) {
-      m_clusters = new VLClusters();
       put(m_clusters, m_clusterLocation);
     }
     return StatusCode::SUCCESS;
-  }
+  } 
   RawEvent* rawEvent = get<RawEvent>(m_rawEventLocation);
   // Get the VL raw banks.
   const std::vector<RawBank*>& banks = rawEvent->banks(RawBank::VL);
-  // Do the decoding.
-  decode(banks);
+  std::vector<RawBank*>::const_iterator it;
+  for (it = banks.begin(); it != banks.end(); ++it) {
+    // Do the decoding.
+    decode(*it);
+  }
+  if (m_decodeToLiteClusters) {
+    std::sort(m_liteClusters->begin(), m_liteClusters->end(),
+              VLDataFunctor::LessByChannel<VLLiteCluster>());
+    put(m_liteClusters, m_liteClusterLocation);
+  }
+  if (m_decodeToClusters) {
+    put(m_clusters, m_clusterLocation);
+  }
   return StatusCode::SUCCESS;
 
 }
@@ -104,109 +120,97 @@ StatusCode VLRawBankDecoder::finalize() {
 
 }
 
-void VLRawBankDecoder::decode(const std::vector<RawBank*>& banks) {
 
-  if (m_decodeToLiteClusters) {
-    m_liteClusters = new VLLiteCluster::FastContainer();
-    m_liteClusters->reserve(4096); 
-  }
-  if (m_decodeToClusters) {
-    m_clusters = new VLClusters();
-  }
+//=============================================================================
+/// Decode raw data format to clusters and lite clusters 
+//=============================================================================
+void VLRawBankDecoder::decode(const RawBank* rb) {
 
   ProcStatus* pst;
-  std::vector<RawBank*>::const_iterator itb;
-  for (itb = banks.begin(); itb != banks.end(); ++itb) {
-    const RawBank* rb = *itb;
-    // Get the number of bytes in the bank 
-    // (including the header but without the padding bytes at the end)
-    int byteCount = rb->size();
-    // Protect against corrupted banks.
-    if (RawBank::MagicPattern != rb->magic()) {
-      // Set ProcStat for this event to failed.
-      pst = getOrCreate<ProcStatus, ProcStatus>(ProcStatusLocation::Default);
-      pst->addAlgorithmStatus("VLRawBankDecoder", "VL", 
-                              "CorruptBuffer", CorruptBuffer, false);
-      error() << "Bad magic pattern (source ID " 
-              << rb->sourceID() << ")" << endmsg;
-      continue;
-    }
-    // Check if the source ID corresponds to a valid sensor number.
-    unsigned int sensorNumber = static_cast<unsigned int>(rb->sourceID());
-    const DeVLSensor* sensor = m_det->sensor(sensorNumber);
-    if (!sensor) {
-      // Set ProcStat for this event to failed.
-      pst = getOrCreate<ProcStatus, ProcStatus>(ProcStatusLocation::Default);
-      pst->addAlgorithmStatus("VLRawBankDecoder", "VL", 
-                              "BadSensorNumber", BadSensorNumber, false);
-      error() << "Invalid sensor number (source ID "
-              << rb->sourceID() << ")" << endmsg;
-      continue;
-    }
-    const unsigned int bankVersion = rb->version();
-    const VLDAQ::row* data = static_cast<const VLDAQ::row*>(rb->data());
-    VLHeaderWord hw(data[0]);
-    // Check if the error bit in the header has been set.
-    if (hw.hasError()) {
-      // Set ProcStat for this event to failed.
-      pst = getOrCreate<ProcStatus, ProcStatus>(ProcStatusLocation::Default);
-      pst->addAlgorithmStatus("VLRawBankDecoder", "VL", 
-                              "HeaderErrorBit", HeaderErrorBit, false);
-      error() << "Header error bit set (source ID "
-              << rb->sourceID() << ")" << endmsg;
-      continue;
-    }
-    unsigned int nClusters = hw.nClusters();
-    m_clusters->reserve(m_clusters->size() + nClusters);
-    const unsigned int offset = 1 + nClusters / 2 + nClusters % 2;
-    VLDAQ::row adcdata = data[offset];
-    // Keep track of the number of ADC words read.
-    unsigned int nADCs = 0;
-    for (unsigned int i = 0; i < nClusters; ++i) {
-      // Get the cluster word.
-      VLClusterWord cw((data[1 + i / 2] >> ((i % 2) << 4)) & 0x0000FFFF);
-      // Decode the cluster word.
-      unsigned int stripNumber = cw.channel();
-      const double isp = cw.interStripPosition();
-      const unsigned int pseudoSize = cw.pseudoSize();
-      const bool highThreshold = cw.hasHighThreshold();
-      // Set the channel ID.
-      VLChannelID channelID(sensorNumber, stripNumber, VLChannelID::Null);
-      if (sensor->isPhi()) {
-        channelID.setType(VLChannelID::PhiType);
-      } else {
-        channelID.setType(VLChannelID::RType);
-      }
-      // Create a lite cluster.
-      VLLiteCluster liteCluster(channelID, isp, pseudoSize, highThreshold);
-      m_liteClusters->push_back(liteCluster);
-      if (!m_decodeToClusters) continue;
-      std::vector<std::pair<int, unsigned int> > strips;
-      // Get the ADC words.
-      bool endCluster = false;
-      while (!endCluster) {
-        // After having read 4 ADC words, move to a new row.
-        if (0 == nADCs % 4) adcdata = data[offset + nADCs / 4];
-        VLADCWord aw((adcdata >> ((nADCs % 4) << 3)) & 0x000000FF);
-        // Decode the ADC word.
-        endCluster = aw.endCluster();
-        const unsigned int adc = aw.adc();
-        strips.push_back(std::make_pair<int, unsigned int>(stripNumber, adc)); 
-        ++nADCs;
-        ++stripNumber;
-      }
-      // Create a cluster.
-      VLCluster* cluster = new VLCluster(liteCluster, strips);
-      m_clusters->insert(cluster, channelID);
-    }
+  // Protect against corrupted banks.
+  if (RawBank::MagicPattern != rb->magic()) {
+    // Set ProcStat for this event to failed.
+    pst = getOrCreate<ProcStatus, ProcStatus>(ProcStatusLocation::Default);
+    pst->addAlgorithmStatus("VLRawBankDecoder", "VL", 
+                            "CorruptBuffer", CorruptBuffer, false);
+    error() << "Bad magic pattern (source ID " 
+            << rb->sourceID() << ")" << endmsg;
+    return;
   }
-  if (m_decodeToLiteClusters) {
-    std::sort(m_liteClusters->begin(), m_liteClusters->end(),
-              VLDataFunctor::LessByChannel<VLLiteCluster>());
-    put(m_liteClusters, m_liteClusterLocation);
+  // Check if the source ID corresponds to a valid sensor number.
+  const unsigned int sensorNumber = static_cast<unsigned int>(rb->sourceID());
+  const DeVLSensor* sensor = m_det->sensor(sensorNumber);
+  if (!sensor) {
+    // Set ProcStat for this event to failed.
+    pst = getOrCreate<ProcStatus, ProcStatus>(ProcStatusLocation::Default);
+    pst->addAlgorithmStatus("VLRawBankDecoder", "VL", 
+                            "BadSensorNumber", BadSensorNumber, false);
+    error() << "Invalid sensor number (source ID "
+            << rb->sourceID() << ")" << endmsg;
+    return;
   }
-  if (m_decodeToClusters) {
-    put(m_clusters, m_clusterLocation);
+  const VLDAQ::row* data = static_cast<const VLDAQ::row*>(rb->data());
+  VLHeaderWord hw(data[0]);
+  // Check if the error bit in the header has been set.
+  if (hw.hasError()) {
+    // Set ProcStat for this event to failed.
+    pst = getOrCreate<ProcStatus, ProcStatus>(ProcStatusLocation::Default);
+    pst->addAlgorithmStatus("VLRawBankDecoder", "VL", 
+                            "HeaderErrorBit", HeaderErrorBit, false);
+    error() << "Header error bit set (source ID "
+            << rb->sourceID() << ")" << endmsg;
+    return;
+  }
+  unsigned int nClusters = hw.nClusters();
+  m_clusters->reserve(m_clusters->size() + nClusters);
+  const unsigned int offset = 1 + nClusters / 2 + nClusters % 2;
+  VLDAQ::row adcrow = data[offset];
+  // Keep track of the number of ADC words read.
+  unsigned int nADCs = 0;
+  for (unsigned int i = 0; i < nClusters; ++i) {
+    // Get the cluster word.
+    VLClusterWord cw((data[1 + i / 2] >> ((i % 2) << 4)) & 0x0000FFFF);
+    // Decode the cluster word.
+    const unsigned int stripNumber = cw.channel();
+    const double isp = cw.interStripPosition();
+    const bool high = cw.highAdc();
+    // Set the channel ID.
+    VLChannelID channelID(sensorNumber, stripNumber, VLChannelID::Null);
+    if (sensor->isPhi()) {
+      channelID.setType(VLChannelID::PhiType);
+    } else {
+      channelID.setType(VLChannelID::RType);
+    }
+    // Create a lite cluster.
+    // Set the pseudo-size to 1 for now.
+    VLLiteCluster liteCluster(channelID, isp, high);
+    m_liteClusters->push_back(liteCluster);
+    if (!m_decodeToClusters) return;
+    std::vector<std::pair<int, unsigned int> > strips;
+    // Get the ADC words.
+    bool endCluster = false;
+    unsigned int nStrips = 0;
+    unsigned int firstStrip = 0;
+    while (!endCluster) {
+      // After having read 4 ADC words, move to a new row.
+      if (0 == nADCs % 4) adcrow = data[offset + nADCs / 4];
+      VLADCWord aw((adcrow >> ((nADCs % 4) << 3)) & 0x000000FF);
+      // Decode the ADC word.
+      endCluster = aw.endCluster();
+      // Check if this is the strip used in the lite cluster. 
+      if (aw.centralStrip()) firstStrip = stripNumber - nStrips;
+      const unsigned int adc = aw.adc();
+      strips.push_back(std::make_pair<int, unsigned int>(nStrips, adc)); 
+      ++nADCs;
+      ++nStrips;
+    }
+    // Set the strip indices.
+    for (unsigned int j = 0; j < nStrips; ++j) {
+      strips[j].first = firstStrip + j;
+    }
+    // Create a cluster.
+    VLCluster* cluster = new VLCluster(liteCluster, strips);
+    m_clusters->insert(cluster, channelID);
   }
 
 }
