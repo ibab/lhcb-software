@@ -339,7 +339,7 @@ def get_native_versions(native_version, binary):
                 print "Replacing binary for %s" % pak
                 newbin = content[2].replace("x86_64", "i686")
                 newpath = content[3].replace("x86_64", "i686")
-                packages_versions[pak] = [content[0], content[1], newbin, newpath]
+                packages_versions[pak] = [content[0], content[1], newbin, newpath, content[4]]
 
     os.chdir(here)
     return packages_versions
@@ -583,7 +583,7 @@ def get_tar_files(native_version, packages_versions,binary_dir, output_file):
         rc = clean_clhep_dir(packages_versions['LCGCMT'][0],packages_versions['CLHEP'][0],ext_bin_dir)
 
     fixDPMRFIO()
-
+    print "=======> Now going to make the tar file... %d %d" % (len(missing), len(tarko))
 # make the final tar file from /tmp/main_dir/binary_dir
     if len(missing) == 0 and len(tarko) == 0:
         os.chdir(os.path.join(tmpdir.getName(), main_dir, binary_dir))
@@ -602,17 +602,23 @@ def get_tar_files(native_version, packages_versions,binary_dir, output_file):
         if rc == 0:
             str = rmcmd+os.path.join(tmpdir.getName() ,main_dir, binary_dir)
             os.system(str)
-            logfile.write('%s tar file has been built for %s and relevant /tmp directory removed'%(main_dir,binary_dir)+'\n')
+            #logfile.write('%s tar file has been built for %s and relevant /tmp directory removed'%(main_dir,binary_dir)+'\n')
+            print '%s tar file has been built for %s and relevant /tmp directory removed'%(main_dir,binary_dir)
             if md5file :
                 md5sum = calculateMD5(tarfile)
                 mdf = open(md5file,"w")
                 mdf.write("%s  %s" % (md5sum,os.path.basename(tarfile)))
-                logfile.write('%s md5 file has been built for %s'%(main_dir,binary_dir)+'\n')
+                #logfile.write('%s md5 file has been built for %s'%(main_dir,binary_dir)+'\n')
     else:
-        logfile.write('%s tar file has not been built for %s because some tar files are missing or wrong '%(main_dir,binary_dir)+'\n')
+        #logfile.write('%s tar file has not been built for %s because some tar files are missing or wrong '%(main_dir,binary_dir)+'\n')
+        #logfile.write('missing tar files= %s'%(missing)+'\n')
+        #logfile.write('wrong tar files = %s'%(tarko)+'\n')
+        print '%s tar file has not been built for %s because some tar files are missing or wrong '%(main_dir,binary_dir)
+        print 'missing tar files= %s'%(missing)
+        print 'wrong tar files = %s'%(tarko)
 
-        logfile.write('missing tar files= %s'%(missing)+'\n')
-        logfile.write('wrong tar files = %s'%(tarko)+'\n')
+
+
     os.chdir(here)
 
 def genHTMLfile(native_version, packages_versions,binary_dir, output_file):
@@ -688,9 +694,10 @@ if __name__ == "__main__":
 
     logname = os.path.join(here,'mkLCGCMTtar.log')
     if os.path.exists(logname): os.remove(logname)
-    logfile = open(logname,'w')
+    #logfile = open(logname,'w')
     str = " =========== "+time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())+"\n"
-    logfile.write(str)
+    #logfile.write(str)
+    print str
 
     if (sys.platform == 'win32') or (sys.platform == 'win64'):
         rmcmd = 'rmdir /s/q '
@@ -744,9 +751,11 @@ if __name__ == "__main__":
             html_only = True
 
     if plugins_flag == 1:
-        logfile.write( 'debug_flag %s, binary %s from $LHCBRELEASES/context/requirements '%(debug_flag,binary)+'\n')
+        #logfile.write( 'debug_flag %s, binary %s from $LHCBRELEASES/context/requirements '%(debug_flag,binary)+'\n')
+        print 'debug_flag %s, binary %s from $LHCBRELEASES/context/requirements '%(debug_flag,binary)
     else:
-        logfile.write( 'debug_flag %s, binary %s from %s '%(debug_flag,binary,native_version)+'\n')
+        #logfile.write( 'debug_flag %s, binary %s from %s '%(debug_flag,binary,native_version)+'\n')
+        print 'debug_flag %s, binary %s from %s '%(debug_flag,binary,native_version)
 
 
     packages_versions = get_native_versions(native_version,binary)
