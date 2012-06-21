@@ -60,6 +60,7 @@ def Hlt2BiKalmanFittedRichForProtonsForwardTracking() :
                          DoSeeding              = True,
                          DoCloneKilling         = True,
                          RichHypos              = ["pion","proton","kaon"],
+                         ExtraRichName          = "highPT",
                          RichTrackCuts          = {"Forward":{ "Chi2Cut" : [0,3], "PCut" : [2,100], "PtCut" : [1.9,100], "Likelihood" : [-999999,999999] } , "Match":{ "Chi2Cut" : [0,3], "PCut" : [2,100], "PtCut" : [1.9,100], "Likelihood" : [-999999,999999] } }
                          )
 
@@ -75,6 +76,7 @@ def Hlt2BiKalmanFittedRichForLowPTParticlesForwardTracking() :
                          DoSeeding              = True,
                          DoCloneKilling         = True,
                          RichHypos              = ["pion","proton","kaon"],
+                         ExtraRichName          = "lowPT",
                          RichTrackCuts          = {"Forward":{ "Chi2Cut" : [0,3], "PCut" : [2,100], "PtCut" : [0.3,100], "Likelihood" : [-999999,999999] }, "Match" : { "Chi2Cut" : [0,3], "PCut" : [2,100], "PtCut" : [0.3,100], "Likelihood" : [-999999,999999] }  }
                          )
 

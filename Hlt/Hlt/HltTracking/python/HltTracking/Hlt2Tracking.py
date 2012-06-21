@@ -164,6 +164,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
                 , "RichHypos"                       : HltRichDefaultHypos
                 , "RichRadiators"                   : HltRichDefaultRadiators
                 , "RichTrackCuts"                   : HltRichDefaultTrackCuts
+                , "ExtraRichName"                   : ""
                 , "TrackCuts"                       : HltDefaultTrackCuts
                 , "Hlt2ForwardMaxVelo"              : 0
                 # TODO : make these variables, not slots 
@@ -580,7 +581,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         return self.__hltBasePIDLocation() + "/" + HltRICHIDSuffix + "/" + self.__richIDSuffix()
     #
     def __richIDSuffix(self) :
-        baseSuffix = ""
+        baseSuffix = self.getProp("ExtraRichName")
         for hypo in self.getProp("RichHypos") :
             baseSuffix += hypo
         baseSuffix += "/"
