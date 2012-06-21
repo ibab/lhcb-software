@@ -63,6 +63,9 @@ namespace LHCb
     /// fit until converged
     FitStatus fit( double maxdchisq=0.01, size_t maxiterations=10) ;
 
+    /// adapative fit. downweight tracks with chi2 contribution larger than maxtrkchi2
+    FitStatus fitAdaptive( double maxtrkchi2, double maxdchisq=0.01, size_t maxiterations=10) ;
+
     /// return the fit status
     FitStatus fitStatus() const { return m_fitStatus ; }
 
@@ -126,6 +129,10 @@ namespace LHCb
     /// the biased chisquare contribution of a single track. (the
     /// unbiased one I still need to compute)
     double biasedChi2( size_t i ) const ;
+
+    /// get the weight of a track after the adaptive fit
+    double weight( size_t i ) const ;
+
   private:
     size_t symIndex( size_t i, size_t j ) const { return i*(i+1)/2 + j ; }
     const Gaudi::Matrix3x3& computeMomMomCov(size_t i, size_t j) const ;

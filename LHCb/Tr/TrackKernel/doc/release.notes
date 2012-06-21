@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-06-21 - Wouter Hulsbergen
+ - Added adaptive fit to TrackStateVertex
+
 ! 2012-06-14 - Wouter Hulsbergen
  - Added utility class TrajVertex
 

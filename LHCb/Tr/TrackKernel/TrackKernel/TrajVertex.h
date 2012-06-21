@@ -11,12 +11,22 @@ namespace LHCb {
   {
   public:
     TrajVertex( const std::vector<const LHCb::ZTrajectory*>& trajectories,
-		double zseed, double maxdchisq=0.01, size_t maxiterations=10 ) ;
+		double zseed, 
+		double ztolerance = 10, // mm
+		double maxdchisq=0.01, size_t maxiterations=10 ) ;
     ~TrajVertex() ;
     
     typedef std::vector<const LHCb::ZTrajectory*> Trajectories ;
     const Trajectories& trajectories() const { return m_trajectories ; }
     
+       /// fit until converged
+    FitStatus fit( double ztolerance = 10, double maxdchisq=0.01, size_t maxiterations=10) ;
+
+    /// adapative fit. downweight tracks with chi2 contribution larger than maxtrkchi2
+    FitStatus fitAdaptive( double maxtrkchi2, double ztolerance = 10, double maxdchisq=0.01, size_t maxiterations=10) ;
+
+  private:
+    void updateStates( double z ) ;
   private:
     Trajectories m_trajectories ;
   } ;

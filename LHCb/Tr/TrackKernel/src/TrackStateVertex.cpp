@@ -54,11 +54,17 @@ namespace LHCb
 	return m_momposcov.first ? m_momposcov.second : computeMomPosCov() ;
       }
       
-      /// chisquare
+      /// chisquare (ignores the weight)
       double chisq(const ROOT::Math::SVector<double,3>& pos) const {
 	return ROOT::Math::Similarity(residual(pos),m_G) ;
       }
 
+      /// set the weight
+      void setweight(double w) { m_weight = w ; }
+
+      /// retrieve the weight
+      double weight() const { return m_weight ; }
+ 
       /// update momentum for given change in position
       void updateSlopes( const ROOT::Math::SVector<double,3>& pos ) { 
 	m_q += m_WBG * residual(pos) ; 
@@ -112,7 +118,8 @@ namespace LHCb
     private:
       LHCb::State m_state ;
       const PositionCovariance& m_poscov ;
-      
+      double m_weight ;
+
       // In fruhwirth's notation
       Gaudi::SymMatrix5x5 m_G ;               // weight matrix of state p=(x,y,tz,ty)
       ROOT::Math::SMatrix<double,5,3> m_A ;   // projection matrix for vertex position
@@ -126,7 +133,7 @@ namespace LHCb
     } ;
   
     VertexTrack::VertexTrack(const LHCb::State& state, const PositionCovariance& poscov)
-      : m_state(state), m_poscov(poscov)
+      : m_state(state), m_poscov(poscov), m_weight(1.0)
     {
       // reset cache of variables that we calculate only on demand
       m_WBGA.first = m_momcov.first = m_momposcov.first = false ;
@@ -183,6 +190,13 @@ namespace LHCb
       m_W = ROOT::Math::Similarity( Transpose(m_B), m_G ) ;
       Gaudi::Math::invertPosDefSymMatrix( m_W ) ;
 
+      // now we need to be careful with the track weight. in
+      // principle, we just reweight m_G. However, if the weight is
+      // close to zero, then the matrix inversion of m_W fails. The
+      // weight has no effect on m_WBG. In the end, by ignoring the
+      // weight until the derivatives, all we do wrong are the track
+      // momenta (which would get infinite error for zero weight).
+      
       // momentum gain matrix
       m_WBG  = m_W * Transpose(m_B) * m_G ;
       
@@ -190,8 +204,8 @@ namespace LHCb
       Gaudi::SymMatrix5x5 GB = m_G - ROOT::Math::Similarity( m_G*m_B, m_W) ;
       
       // Add to chisquare plus derivatives
-      halfDChisqDX += -ROOT::Math::Transpose(m_A) * GB * residual(pos) ;
-      halfD2ChisqDX2 +=  ROOT::Math::Similarity(ROOT::Math::Transpose(m_A),GB) ;
+      halfDChisqDX += - m_weight * ROOT::Math::Transpose(m_A) * GB * residual(pos) ;
+      halfD2ChisqDX2 += m_weight * ROOT::Math::Similarity(ROOT::Math::Transpose(m_A),GB) ;
       // reset cache of variables that we calculate only on demand
       m_WBGA.first = m_momcov.first = m_momposcov.first = false ;
     }
@@ -346,6 +360,11 @@ namespace LHCb
   {
     return m_tracks[i]->chisq(m_pos) ;
   }
+  
+  double TrackStateVertex::weight(size_t i) const
+  {
+    return m_tracks[i]->weight() ;
+  }
 
   TrackStateVertex::FitStatus TrackStateVertex::fit( double maxdchisq, size_t maxnumiter)
   {
@@ -360,6 +379,45 @@ namespace LHCb
     return m_fitStatus ;
   }
 
+  TrackStateVertex::FitStatus TrackStateVertex::fitAdaptive( double maxtrkchi2,
+							     double maxdchisq, size_t maxnumiter)
+  {
+    bool finished(false) ;
+    double prevtotalchi2(-1) ;
+    size_t N = m_tracks.size() ;
+    // since we don't compute unbiased chi2, we need to rescale
+    const double scaledmaxtrkchi2 = maxtrkchi2 * (2*N - 3 ) / (2*N) ;
+    size_t niter(0) ;
+    std::vector<double> trkchi2s(N,0) ;
+    while( !finished ) {
+      fit( maxdchisq, maxnumiter) ;
+      ++niter ; //niter += m_nIter ;
+      // compute the total chi2, cache contribution of each track
+      m_chi2 = ROOT::Math::Similarity(m_refweight,(m_pos - m_refpos)) ;
+      for(size_t i=0; i<N; ++i) {
+        double trkchi2 = m_tracks[i]->chisq(m_pos) ;
+        m_chi2 += m_tracks[i]->weight() * trkchi2 ;
+	trkchi2s[i] = trkchi2 ;
+      }
+      if( niter>1 && prevtotalchi2 - m_chi2 < maxdchisq ) {
+        finished = true ;
+      } else if ( niter >= maxnumiter ) {
+	finished = true ;
+	m_fitStatus = FitFailure ;
+      } else {
+        prevtotalchi2 = m_chi2 ;
+        double sumw(0) ;
+        for(size_t i=0; i<N; ++i) {
+	  double weight = trkchi2s[i] < scaledmaxtrkchi2 ? 1 : scaledmaxtrkchi2 / trkchi2s[i] ;
+	  m_tracks[i]->setweight(weight) ;
+          sumw += weight ;
+        }
+      }
+    }
+    //m_nIter = niter ;
+    return m_fitStatus ;
+  }
+  
   const TrackStateVertex::MomentumParameters& TrackStateVertex::mom( size_t i ) const
   {
     return m_tracks[i]->mom() ;
