@@ -1,5 +1,5 @@
-#ifndef DEVELOLITE_H
-#define DEVELOLITE_H 1
+#ifndef DEVL_H
+#define DEVL_H 1
 
 // Kernel/LHCbKernel
 #include "Kernel/VLChannelID.h"
@@ -239,16 +239,6 @@ public:
   /// Return half box offset vectors (depends on geometry condition)
   const Gaudi::XYZPoint& halfBoxOffset(unsigned int half) {
     return m_halfBoxOffsets[half];
-  }
-
-  // For now: sensor number = Tell40 ID 
-  virtual const DeVLSensor* sensorByTell40Id(unsigned int tell40Id) const {
-    return m_sensors[tell40Id];
-  }
-  virtual bool tell40IdBySensorNumber(unsigned int sensorNumber,
-                                     unsigned int& tell40Id) const {
-    tell40Id = sensorNumber;
-    return true;
   }
 
   // Public condition related methods 
