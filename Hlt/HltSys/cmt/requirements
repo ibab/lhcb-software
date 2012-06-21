@@ -1,5 +1,5 @@
 package HltSys
-version           v15r2
+version           v15r2p1
 
 branches cmt doc
 
@@ -23,7 +23,7 @@ use HltRecChecker       v1r14   Hlt   # Jose Angel Hernando-Morata
 use HltSelChecker       v12r1p1 Hlt   # Patrick Koppenburg
 use HltSettings         v5r39   Hlt   # Parick Koppenburg, Gerhard Raven
 use HltTisTosTobbing    v1r1    Hlt   # Tomasz Skwarnicki
-use HltTracking         v9r22   Hlt   # Johannes Albrecht, Vava Gligorov
+use HltTracking         v9r23   Hlt   # Johannes Albrecht, Vava Gligorov
 use TCKUtils            v1r11   Hlt   # Gerhard Raven
 use LoKiTrigger         v12r8   Phys  # Vanya Belyaev
 
