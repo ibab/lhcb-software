@@ -187,12 +187,6 @@ std::string LoKi::AuxFunBase::printOut() const
   return s.str() ;
 }
 // ============================================================================
-/*  (virtual) printout in form of std::string 
- *  @return outptut string 
- */
-// ============================================================================
-std::string LoKi::AuxFunBase::toString () const { return printOut() ; }
-// ============================================================================
 // the actual object type 
 // ============================================================================
 std::string LoKi::AuxFunBase::objType () const 
@@ -269,7 +263,7 @@ MsgStream& operator<<
 // print it!
 // ============================================================================
 std::string Gaudi::Utils::toString ( const LoKi::AuxFunBase& o ) 
-{ return o.toString () ; }
+{ return o.printOut () ; }
 // ============================================================================
 // print it!
 // ============================================================================

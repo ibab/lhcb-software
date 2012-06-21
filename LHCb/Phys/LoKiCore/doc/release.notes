@@ -13,6 +13,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2012-06-21 - Vanya Belyaev
+ - fix ICC compiler warning
+ 
+
 ! 2012-06-18 - Vanya Belyaev
  - fix compiler warning
 

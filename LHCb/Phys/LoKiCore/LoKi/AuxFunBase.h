@@ -124,10 +124,6 @@ namespace LoKi
      *  @return string representation (based on fillStream)   
      */
     virtual std::string   printOut  () const ;
-    /** (virtual) printout in form of std::string 
-     *  @return string representation (based on fillStream)   
-     */    
-    virtual std::string   toString  () const ;
     /// the actual object type 
     virtual std::string   objType   () const ;
     /// unique function ID (hash); see LoKi::genericID 
