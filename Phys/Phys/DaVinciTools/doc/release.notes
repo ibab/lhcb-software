@@ -3,11 +3,14 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2012-06-22 - Chris Jones
+ - Update CombineParticles to use the new DaVinciAlgorithm base class
+
 ! 2012-06-22 - Murilo Rangel
-  - Added HighPtTopoTool.cpp 
+ - Added HighPtTopoTool.cpp 
 
 ! 2012-06-19 - Olivier Deschamps
-  - BremAdder : speed-up processing
+ - BremAdder : speed-up processing
 
 ! 2012-06-21 - Anton Poluektov 
  - Fix ConeVariables.cpp handling the list of variables to store
@@ -21,10 +24,10 @@
  - Fix a gcc 4.6 compilation warning in BremAdder.
 
 ! 2012-06-12 - Olivier Deschamps
-  - BremAdder : update BremAdder for di-electron and adapt to new IBremAdder interface
+ - BremAdder : update BremAdder for di-electron and adapt to new IBremAdder interface
 
 ! 2012-05-14 - Edwige Tournefier & Olivier Deschamps
-  - BremAdder : implement new BremAdder method from Edwige
+ - BremAdder : implement new BremAdder method from Edwige
 
 !========================= DaVinciTools v22r17 2012-05-08 =========================
 

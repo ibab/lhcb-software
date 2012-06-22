@@ -7,8 +7,8 @@
 // local
 #include "ConeVariablesForEW.h"
 //#include "Event/RecVertex.h"
-//#include <Kernel/GetDVAlgorithm.h>
-//#include <Kernel/DVAlgorithm.h>
+//#include <Kernel/GetIDVAlgorithm.h>
+//#include <Kernel/IDVAlgorithm.h>
 //#include <Kernel/IDistanceCalculator.h>
 //#include "TrackInterfaces/IPVOfflineTool.h"
 
@@ -404,7 +404,7 @@ StatusCode ConeVariablesForEW::ChargedCone( const LHCb::Particle *seed,
   if ( msgLevel(MSG::WARNING) )
   Warning( "Could not retrieve vertices" );
 
-  DVAlgorithm *dva = Gaudi::Utils::getDVAlgorithm( contextSvc() ) ;
+  IDVAlgorithm *dva = Gaudi::Utils::getIDVAlgorithm( contextSvc() ) ;
   if ( !dva )
   if ( msgLevel(MSG::WARNING) )
   Warning( "Could not retrieve DV utilities" );
