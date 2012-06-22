@@ -67,7 +67,7 @@ private:
   bool set(const LHCb::Particle* p) const;
 
   const IDistanceCalculator* m_dist;
-  DVAlgorithm *m_dva;
+  IDVAlgorithm *m_dva;
   TMVA::Reader *m_BDTReader;
 
   unsigned int m_nVars;  

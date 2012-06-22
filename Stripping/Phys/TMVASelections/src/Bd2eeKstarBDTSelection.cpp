@@ -2,8 +2,8 @@
 // Include files
 #include "LoKi/IHybridFactory.h"
 
-#include <Kernel/DVAlgorithm.h>
-#include <Kernel/GetDVAlgorithm.h>
+#include <Kernel/IDVAlgorithm.h>
+#include <Kernel/GetIDVAlgorithm.h>
 
 // local
 #include "Bd2eeKstarBDTSelection.h"
@@ -58,7 +58,7 @@ StatusCode Bd2eeKstarBDTSelection::initialize() {
   //====================================================================
   // Initialize DVAlg, etc
   //====================================================================
-  m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
+  m_dva = Gaudi::Utils::getIDVAlgorithm ( contextSvc() ) ;
   if (0==m_dva) return Error("Couldn't get parent DVAlgorithm",
                              StatusCode::FAILURE);
   
@@ -153,7 +153,7 @@ bool Bd2eeKstarBDTSelection::set (const LHCb::Particle* p) const{
 
   
   // BPV, just use the one of the mother for simplicity 
-  const LHCb::VertexBase* BPV = m_dva->bestPV(p);
+  const LHCb::VertexBase* BPV = m_dva->bestVertex(p);
 
   // IPCHI2
   m_BPVIPCHI2.setTool(m_dist);

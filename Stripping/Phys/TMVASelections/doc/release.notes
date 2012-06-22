@@ -4,6 +4,10 @@
 ! Purpose     : To accommodate all TMVA based selections used in stripping
 !-----------------------------------------------------------------------------
 
+! 2012-06-22 - Chris Jones
+ - Use getIDVAlgorithm instead of getDVAlgorithm, in preparation for a future
+   change in the DaVInci base classes.
+
 !========================= TMVASelections v1r1 2012-05-03 =========================
 ! 2012-05-03 - Jibo He
  - src/Bd2eeKstarBDTSelection.cpp
