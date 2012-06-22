@@ -39,7 +39,7 @@ use RichDet               v16r10  Det     # Chris Jones
 use STDet                 v4r27   Det     # J. van Tilburg
 use VeloDet               v13r18p1 Det    # Mark Tobin, Kurt Rinnert
 use VeloPixDet            v1r10   Det     # Victor Coco
-
+use VLDet                 v1r0    Det     # Heinrich Schindler
 # Event data model
 use DAQEvent              v9r7    Event   # Marco Cattaneo, Markus Frank
 use EventSys              v25r0   Event   # Marco Cattaneo
