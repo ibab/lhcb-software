@@ -152,7 +152,7 @@ def makeD2MuMuMuMu(name,inputSel) :
                                   " & (MIPCHI2DV(PRIMARY)> 4.)"\
                                   " & (P> 3000.*MeV)"}
 
-    D2MuMuMuMu.CombinationCut =  "(ADAMASS('D0')<200*MeV) "\
+    D2MuMuMuMu.CombinationCut =  "(ADAMASS('D0')<300*MeV) "\
                                  "& (AMAXDOCA('')<0.4*mm) "
 
  
