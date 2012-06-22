@@ -56,6 +56,10 @@ template class DataPacking::Unpack<LHCb::MCVeloPixHitPacker>;
 typedef DataPacking::Unpack<LHCb::MCVeloPixHitPacker> Fp;
 DECLARE_ALGORITHM_FACTORY( Fp )
 
+template class DataPacking::Unpack<LHCb::MCVLHitPacker>;
+typedef DataPacking::Unpack<LHCb::MCVLHitPacker> Fl;
+DECLARE_ALGORITHM_FACTORY( Fl )
+
 template class DataPacking::Unpack<LHCb::MCPuVetoHitPacker>;
 typedef DataPacking::Unpack<LHCb::MCPuVetoHitPacker> G;
 DECLARE_ALGORITHM_FACTORY( G )

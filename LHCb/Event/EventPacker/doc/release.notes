@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2012-06-22 - Heinrich Schindler 
+ - Add VL to Packers, Unpackers, Checkers 
+
 ! 2012-06-14 - Chris Jones
  - clean up a little the MCParticle packers
 
