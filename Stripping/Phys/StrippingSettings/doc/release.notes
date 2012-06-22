@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-06-22 - Thomas Blake
+ - First commit of RD lines for 19b 
+
+
 !======================= StrippingSettings v2r13p1 2012-05-03 ===================
 ! 2012-05-03 - Jibo He
  - Stripping19a/LineConfigDictionaries_Charm.py

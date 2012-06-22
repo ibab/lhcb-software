@@ -5,103 +5,435 @@
 
 from GaudiKernel.SystemOfUnits import *
 
-Bd2KstarMuMu = {
-    'BUILDERTYPE' : 'StrippingBdToKstarMuMuConf',
-    'CONFIG' : { 
+####################################################################
+#
+# Lines for rare EW penguin sub-group 
+#
+####################################################################
+
+# Main line builer for B+ / Bd / Bs / Lambdab / Bc -> mu mu + X 
+# M. Kreps, P. Owen, T. Blake
+
+B2XMuMu =  {
+    'BUILDERTYPE' : 'B2XMuMuConf',
+    'CONFIG' : {
+      'KpiVXCHI2NDOF'	   : 9.0           # dimensionless
+    , 'MuonPID'            : -3.0           # dimensionless
+    , 'DimuonUPPERMASS'    : 7100.0        # MeV
+    , 'Pi0MINPT'           : 800.0         # MeV
+    , 'DplusLOWERMASS'     : 1600.0        # MeV
+    , 'DplusUPPERMASS'     : 2300.0        # MeV
+    , 'KstarplusWINDOW'    : 300.0         # MeV
+    , 'KsWINDOW'           : 30.0          # MeV
+    , 'LambdaWINDOW'	   : 30.0          # MeV
+    , 'LongLivedPT'        : 0.0          # MeV , used to be 500.0 MeV
+    , 'LongLivedTau'        : 2          # ps
+
+    , 'K1_Comb_MassLow'  :  720.0
+    , 'K1_Comb_MassHigh' : 2450.0
+    , 'K1_MassLow'	 :  750.0
+    , 'K1_MassHigh'	 : 2400.0
+    , 'K1_MinIPCHI2'     :    4.0
+    , 'K1_FlightChi2'    :   25.0
+    , 'K1_Dau_MaxIPCHI2' : 9.0
+    
+    ,'UseNoPIDsHadrons'          : True,
+
+    # B cuts
+    'B_Comb_MassLow'	  : 4800.0,
+    'B_Comb_MassHigh'     : 7100.0,
+    'B_MassLow'           : 4900.0,
+    'B_MassHigh'          : 7000.0,
+    'B_VertexCHI2'        :    8.0,
+    'B_IPCHI2'            :   16.0,
+    'B_DIRA'              :    0.9999,
+    'B_FlightCHI2'        :  121.0,
+   'B_Dau_MaxIPCHI2'     : 9.0,
+
+    # Daughter cuts
+    'Dau_VertexCHI2'	  :   12.0,
+    'Dau_DIRA'            :   -0.9,
+
+    # Kstar cuts
+    'Kstar_Comb_MassLow'  :  0.0,
+    'Kstar_Comb_MassHigh' : 6200.0,
+    'Kstar_MassLow'	  :  0.0,
+    'Kstar_MassHigh'	  : 6200.0,
+    'Kstar_MinIPCHI2'     :    0.0,
+    'Kstar_FlightChi2'    :    9.0,
+    'Kstar_Dau_MaxIPCHI2' : 9.0,
+
+    # JPsi (dimu) cuts
+    'Dimu_FlightChi2'     :   9.0,
+    'Dimu_Dau_MaxIPCHI2'  :   9.0,
+
+    # Track cuts
+    'Track_CHI2nDOF'	  :    5.0,
+
+    # Hadron cuts
+    'Hadron_MinIPCHI2'    :    9.0,
+
+    # Muon cuts
+    'Muon_MinIPCHI2'	  :    9.0,
+    'Muon_IsMuon'         :    True,
+    'MuonNoPIDs_PIDmu'    :    0.0,
+
+    # Wrong sign combinations
+    'DimuonWS'            :   True,
+    'HadronWS'            :   True,
+
+    # GEC
+    'SpdMult'             :  600
+    },
+    'WGs' : [ 'RD' ],
+    'STREAMS' : [ 'Dimuon' ]
+    }
+
+# Bu2LLK ( B+ -> ee K and mu mu K )
+# P. Koppenburg
+
+Bu2LLK = {
+    'BUILDERTYPE'         : 'Bu2LLKConf',
+    'CONFIG'              : {
+    'BFlightCHI2'         : 100       # adimentional 
+    ,  'BDIRA'               : 0.9995     # adimentional    TIGHTENED
+    ,  'BIPCHI2'             : 25        # adimentional  
+    ,  'BVertexCHI2'         : 16        # adimentional
+    ,  'DiLeptonPT'          : 0         # MeV (not used)
+    ,  'DiLeptonFDCHI2'      : 16        # adimentional
+    ,  'DiLeptonIPCHI2'      : 9         # adimentional
+    ,  'LeptonIPCHI2'        : 16        # adimentional      TIGHTENED
+    ,  'LeptonPT'            : 800       # MeV               
+    ,  'KaonIPCHI2'          : 16        # adimentional      TIGHTENED
+    ,  'KaonPT'              : 800       # MeV               LOOSENED
+    ,  'UpperMass'           : 5500      # MeV (Higher bound of signal box)
+    ,  'Bu2eeKLinePrescale'  : 1
+    ,  'Bu2eeKLinePostscale' : 1
+    ,  'Bu2mmKLinePrescale'  : 1
+    ,  'Bu2mmKLinePostscale' : 1
+     },
+    'WGs'    : [ 'RD' ] ,
+    'STREAMS' : ['Dimuon']
+    #{ 'Dimuon' : [ 'StrippingBu2LLK_mmLine' ] , 'Dielectron' : [ 'StrippingBu2LLK_eeLine' ]  }
+    }
+
+# B+ -> K1 mu mu
+# E. Gersabeck
+
+BuToK1MuMu = {
+    'BUILDERTYPE' : 'StrippingBuToK1MuMuConf' ,
+    'STREAMS'     : [ 'Dimuon' ],
+    'WGs'         : [ 'RD' ],
+    'CONFIG'      : {
     'UseNoPIDsHadrons'          : True,
-    'Prescale_BdToKstarMuMu'    : 1.0,
-    'Postscale_BdToKstarMuMu'   : 1.0,
-    'Prescale_BdToKstarMuMuSS'  : 1.0,
-    'Postscale_BdToKstarMuMuSS' : 1.0,
-    'Prescale_BuToKMuMu'        : 1.0,
-    'Postscale_BuToKMuMu'       : 1.0,
-    'Prescale_BuToKMuMuSS'      : 1.0,
-    'Postscale_BuToKMuMuSS'     : 1.0,
+    'Prescale_BuToK1MuMu'    : 1.0,
+    'Postscale_BuToK1MuMu'   : 1.0,
+    'Prescale_BuToK1MuMuSS'  : 1.0,
+    'Postscale_BuToK1MuMuSS' : 1.0,
     'B_Comb_MassLow'      : 4600.0,
     'B_Comb_MassHigh'     : 6000.0,
     'B_MassLow'           : 4850.0,
     'B_MassHigh'          : 5780.0,
     'B_VertexCHI2'        :    6.0,
     'B_IPCHI2'            :   16.0,
-    'B_DIRA'              :   0.9999,
+    'B_DIRA'              :    0.014,
     'B_FlightCHI2'        :  121.0,
-    'B_Dau_MaxIPCHI2'     : 9.0, 
+    'B_Dau_MaxIPCHI2'     : 9.0,
     'Dau_VertexCHI2'      :   12.0,
     'Dau_DIRA'            :   -0.9,
-    'Kstar_Comb_MassLow'  :  550.0,
-    'Kstar_Comb_MassHigh' : 2200.0,
-    'Kstar_MassLow'       :  600.0,
-    'Kstar_MassHigh'      : 2000.0,
-    'Kstar_MinIPCHI2'     :    0.0,
-    'Kstar_FlightChi2'    :   9.0, 
-    'Kstar_Dau_MaxIPCHI2' : 9.0, 
-    'Dimu_FlightChi2'     :   9.0, 
-    'Dimu_Dau_MaxIPCHI2'  : 9.0, 
-    'Track_CHI2nDOF'      :    5.0,
-    'Hadron_MinIPCHI2'    :    9.0, 
-    'Muon_MinIPCHI2'      :    9.0,
+    'K1_Comb_MassLow'  :  720.0,
+    'K1_Comb_MassHigh' : 2450.0,
+    'K1_MassLow'       :  750.0,
+    'K1_MassHigh'      : 2400.0,
+    'K1_MinIPCHI2'     :    4.0,
+    'K1_FlightChi2'    :   25.0,
+    'K1_Dau_MaxIPCHI2' : 9.0,
+    'Dimu_FlightChi2'     :   81.0,
+    'Dimu_Dau_MaxIPCHI2'  : 9.0,
+    'Track_CHI2nDOF'      :    2.5,
+    'Hadron_MinIPCHI2'    :    16.0,
+    'Hadron_PT'           :    500,
+    'K_PIDK_min'          :      0,
+    'pi_PIDK_max'        :      5,
+    'Muon_MinIPCHI2'      :    16.0,
     'Muon_IsMuon'         :   False,
     'MuonNoPIDs_PIDmu'    :    0.0
-    },
-    'WGs' : [ 'RD' ] ,
-    'STREAMS' : [ 'Dimuon' ]
+    }
     }
 
 
 
-# Updated XMuMu line to disable contributions from K1
-# and remove same-sign combiantorics
+### Lines for Bd2eeKstar analysis and control channels with Bd2mumuKstar
 
-B2XMuMu =  {
-    'BUILDERTYPE' : 'B2XMuMuConf',
-    'CONFIG' : {
-    'BVXCHI2NDOF'          : 8             # dimensionless
-    , 'BIPCHI2'            : 9.0           # dimensionless
-    , 'BDIRA'              : 0.999968      # dimensionless
-    , 'BFDCHI2'            : 100.0         # dimensionless
-    , 'KpiMINIPCHI2'       : 9.0           # dimensionless
-    , 'KpiTRACKCHI2'       : 4.0           # dimensionless    
-    , 'KpiVXCHI2NDOF'      : 9.0           # dimensionless
-    , 'MuonMINIPCHI2'      : 16.0          # dimensionless
-    , 'MuonTRACKCHI2'      : 4.0           # dimensionless
-    , 'MuonPID'            : 0.0           # dimensionless
-    , 'DimuonVXCHI2NDOF'   : 9.0           # dimensionless
-    , 'DimuonUPPERMASS'    : 5050.0        # MeV
-    , 'Pi0MINPT'           : 800.0         # MeV
-    , 'DplusLOWERMASS'     : 1600.0        # MeV
-    , 'DplusUPPERMASS'     : 2300.0        # MeV      
-    , 'KstarplusWINDOW'    : 300.0         # MeV      
-    , 'KsWINDOW'           : 30.0          # MeV     
-    , 'LambdaWINDOW'       : 30.0          # MeV    
-    , 'LongLivedPT'        : 250.0         # MeV  
-    , 'LongLivedTau'        : 2            # ps 
-    , 'K1_Comb_MassLow'  :  720.0
-    , 'K1_Comb_MassHigh' : 2450.0
-    , 'K1_MassLow'       :  750.0
-    , 'K1_MassHigh'      : 2400.0
-    , 'K1_MinIPCHI2'     :    4.0
-    , 'K1_FlightChi2'    :   25.0
-    , 'K1_Dau_MaxIPCHI2' : 9.0,
+Bd2eeKstarBDT = {
+    'BUILDERTYPE'             : 'Bd2eeKstarBDTConf',
+    'CONFIG'                  : {
+        'LinePrescale'            :    1.   ,
+        'LinePostscale'           :    1.   ,
+        #
+        'ElectronPT'              :  200.   ,  # MeV
+        'ElectronTrackCHI2pNDOF'  :    5.   ,
+        'ElectronIPCHI2'          :    1.   ,
+        'ElectronPIDepi'          :   -2.   ,          
+        #
+        'eeVertexCHI2'            :   16.   ,  
+        'eeMinMass'               :   20.   ,  # MeV 
+        'eeMaxMass'               : 1500.   ,  # MeV
+        #
+        'KaonPT'                  :  400.   ,  # MeV 
+        'KaonP'                   : 3000.   ,  # MeV  
+        'KaonTrackCHI2pNDOF'      :    5.   , 
+        'KaonIPCHI2'              :    4.   , 
+        'KaonPIDKpi'              :   -5.   , 
+        #
+        'PionPT'                  :  250.   ,  # MeV
+        'PionP'                   : 2000.   ,  # MeV 
+        'PionTrackCHI2pNDOF'      :    5.   , 
+        'PionIPCHI2'              :    4.   , 
+        'PionPIDpiK'              :   10.   ,  # PIDpi-PIDK > -5, i.e., PIDK<5 
+        #
+        'KstarVertexCHI2'         :   16.   , 
+        'KstarMassW'              :  150.   ,  # MeV
+        #
+        'BComMassW'               : 1200.   ,  # MeV
+        'BVertexCHI2'             :   16.   ,  # /ndf
+        'BMassW'                  : 1000.   ,  # MeV  
+        'BDIRA'                   :    0.999,
+        'BDTCutValue'             :   -0.98 ,
+        'BDTWeightsFile'          : '$TMVAWEIGHTSROOT/data/Bd2eeKstar_BDTG_v1r0.xml'    
     },
-    'WGs' : [ 'RD' ],
+    'WGs'    : [ 'RD' ],
+    'STREAMS' : [ 'Radiative' ]
+    }
+
+Bd2eeKstar = {
+    'BUILDERTYPE'             : 'Bd2eeKstarConf',
+    'CONFIG'                  : {
+        'LinePrescale'            :    1.   ,
+        'LinePostscale'           :    1.   ,
+        #
+        'ElectronPT'              :  300.   ,  # MeV
+        'ElectronTrackCHI2pNDOF'  :    5.   ,
+        'ElectronIPCHI2'          :    2.25 ,
+        'ElectronPIDepi'          :   -2.   ,          
+        #
+        'eeVertexCHI2'            :   16.   ,  
+        'eeMinMass'               :   20.   ,  # MeV 
+        'eeMaxMass'               : 1500.   ,  # MeV
+        'eeFD'                    :    1.   ,  # mm
+        #
+        'KaonPT'                  :  400.   ,  # MeV 
+        'KaonP'                   : 3000.   ,  # MeV  
+        'KaonTrackCHI2pNDOF'      :    5.   , 
+        'KaonIPCHI2'              :    4.   , 
+        'KaonPIDKpi'              :   -5.   , 
+        #
+        'PionPT'                  :  300.   ,  # MeV
+        'PionP'                   : 3000.   ,  # MeV 
+        'PionTrackCHI2pNDOF'      :    5.   , 
+        'PionIPCHI2'              :    4.   , 
+        'PionPIDpiK'              :   10.   ,  # PIDpi-PIDK > -5, i.e., PIDK<5 
+        #
+        'KstarVertexCHI2'         :   16.   , 
+        'KstarMassW'              :  130.   ,  # MeV
+        'KstarIPCHI2'             :    1.   , 
+        'KstarFDCHI2'             :    1.   , 
+        #
+        'BComMassW'               : 1200.   ,  # MeV
+        'BVertexCHI2'             :    9.   ,  # /ndf
+        'BMassW'                  : 1000.   ,  # MeV  
+        'BIPCHI2'                 :   64.   ,  # pointing
+        'BFDCHI2'                 :    9.   , 
+        'BDIRA'                   :    0.999, 
+        'SumIPSCut'               : " & (SUMTREE(((ABSID=='K+') | (ABSID=='pi-') | (ID=='e+') | (ID=='e-')),sqrt(BPVIPCHI2()))>15)" 
+           },
+    'WGs'    : [ 'RD' ],
+    'STREAMS' : [ 'Radiative' ]
+    }
+
+Bd2MuMuKstarBDT = {
+    'BUILDERTYPE'             : 'Bd2MuMuKstarBDTConf',
+    'CONFIG'                  : {
+        'LinePrescale'            :    1.   ,
+        'LinePostscale'           :    1.   ,
+        #
+        'ElectronPT'              :  200.   ,  # MeV
+        'ElectronTrackCHI2pNDOF'  :    5.   ,
+        'ElectronIPCHI2'          :    1.   ,
+        'ElectronPIDepi'          :   -5.   ,          
+        #
+        'eeVertexCHI2'            :   16.   ,  
+        'eeMinMass'               :   20.   ,  # MeV 
+        'eeMaxMass'               : 5200.   ,  # MeV
+        #
+        'KaonPT'                  :  400.   ,  # MeV 
+        'KaonP'                   : 3000.   ,  # MeV  
+        'KaonTrackCHI2pNDOF'      :    5.   , 
+        'KaonIPCHI2'              :    4.   , 
+        'KaonPIDKpi'              :   -5.   , 
+        #
+        'PionPT'                  :  250.   ,  # MeV
+        'PionP'                   : 2000.   ,  # MeV 
+        'PionTrackCHI2pNDOF'      :    5.   , 
+        'PionIPCHI2'              :    4.   , 
+        'PionPIDpiK'              :   10.   ,  # PIDpi-PIDK>-10, i.e., PIDK<10 
+        #
+        'KstarVertexCHI2'         :   16.   , 
+        'KstarMassW'              :  150.   ,  # MeV
+        #
+        'BComMassW'               : 1200.   ,  # MeV
+        'BVertexCHI2'             :   16.   ,  # /ndf
+        'BMassW'                  : 1000.   ,  # MeV  
+        'BDIRA'                   :    0.999,
+        'BDTCutValue'             :   -0.98 ,
+        'BDTWeightsFile'          : '$TMVAWEIGHTSROOT/data/Bd2eeKstar_BDTG_v1r0.xml'
+    },
+    'WGs'    : [ 'RD' ],
     'STREAMS' : [ 'Dimuon' ]
     }
 
-# Bs2MuMuPhi
-# P. Schaak
-Bs2MuMuPhi = {
-    'BUILDERTYPE'          : 'Bs2MuMuPhiConf' ,
-    'CONFIG'               : {
-    'BsIPCHI2'             : 9.0           # dimensionless
-    , 'BsLT'               : 0.0002        # ns
-    , 'BsVertexCHI2'       : 40.0          # dimensionless
-    , 'KaonPIDK'           : 0             # dimensionless
-    , 'KaonMINIPCHI2'      : 9.0           # dimensionless
-    , 'MuonMINIPCHI2'      : 9.0           # dimensionless
+Bd2MuMuKPiBDT = {
+    'BUILDERTYPE'             : 'Bd2MuMuKstarBDTConf',
+    'CONFIG'                  : {
+        'LinePrescale'            :    1.   ,
+        'LinePostscale'           :    1.   ,
+        #
+        'ElectronPT'              :  200.   ,  # MeV
+        'ElectronTrackCHI2pNDOF'  :    5.   ,
+        'ElectronIPCHI2'          :    1.   ,
+        'ElectronPIDepi'          :   -5.   ,          
+        #
+        'eeVertexCHI2'            :   16.   ,  
+        'eeMinMass'               :   20.   ,  # MeV 
+        'eeMaxMass'               : 5200.   ,  # MeV
+        #
+        'KaonPT'                  :  400.   ,  # MeV 
+        'KaonP'                   : 3000.   ,  # MeV  
+        'KaonTrackCHI2pNDOF'      :    5.   , 
+        'KaonIPCHI2'              :    4.   , 
+        'KaonPIDKpi'              :   -5.   , 
+        #
+        'PionPT'                  :  250.   ,  # MeV
+        'PionP'                   : 2000.   ,  # MeV 
+        'PionTrackCHI2pNDOF'      :    5.   , 
+        'PionIPCHI2'              :    4.   , 
+        'PionPIDpiK'              :   10.   ,  # PIDpi-PIDK>-10, i.e., PIDK<10 
+        #
+        'KstarVertexCHI2'         :   16.   , 
+        'KstarMassW'              :  1400.  ,  # MeV
+        #
+        'BComMassW'               :  550.   ,  # MeV
+        'BVertexCHI2'             :   16.   ,  # /ndf
+        'BMassW'                  :  500.   ,  # MeV  
+        'BDIRA'                   :    0.999,
+        'BDTCutValue'             :   -0.97 ,
+        'BDTWeightsFile'          : '$TMVAWEIGHTSROOT/data/Bd2eeKstar_BDTG_v1r0.xml'
     },
-    'WGs' : [ 'RD' ] ,
+    'WGs'    : [ 'RD' ],
     'STREAMS' : [ 'Dimuon' ]
     }
+
+
+Bd2JpsieeKstar = {
+    'BUILDERTYPE'             : 'Bd2eeKstarConf',
+    'CONFIG'                  : {
+        'LinePrescale'            :    1.   ,
+        'LinePostscale'           :    1.   ,
+        #
+        'ElectronPT'              :  300.   ,  # MeV
+        'ElectronTrackCHI2pNDOF'  :    5.   ,
+        'ElectronIPCHI2'          :    2.25 ,
+        'ElectronPIDepi'          :   -2.   ,          
+        #
+        'eeVertexCHI2'            :   16.   ,  
+        'eeMinMass'               : 2200.   ,  # MeV 
+        'eeMaxMass'               : 4200.   ,  # MeV
+        'eeFD'                    :    1.   ,  # mm
+        #
+        'KaonPT'                  :  400.   ,  # MeV 
+        'KaonP'                   : 3000.   ,  # MeV  
+        'KaonTrackCHI2pNDOF'      :    5.   , 
+        'KaonIPCHI2'              :    4.   , 
+        'KaonPIDKpi'              :   -5.   , 
+        #
+        'PionPT'                  :  300.   ,  # MeV
+        'PionP'                   : 3000.   ,  # MeV 
+        'PionTrackCHI2pNDOF'      :    5.   , 
+        'PionIPCHI2'              :    4.   , 
+        'PionPIDpiK'              :   10.   ,  # PIDpi-PIDK > -5, i.e., PIDK<5 
+        #
+        'KstarVertexCHI2'         :   16.   , 
+        'KstarMassW'              :  130.   ,  # MeV
+        'KstarIPCHI2'             :    1.   , 
+        'KstarFDCHI2'             :    1.   , 
+        #
+        'BComMassW'               : 1200.   ,  # MeV
+        'BVertexCHI2'             :    9.   ,  # /ndf
+        'BMassW'                  : 1000.   ,  # MeV  
+        'BIPCHI2'                 :   64.   ,  # pointing
+        'BFDCHI2'                 :    9.   , 
+        'BDIRA'                   :    0.999, 
+        'SumIPSCut'               : " & (SUMTREE(((ABSID=='K+') | (ABSID=='pi-') | (ID=='e+') | (ID=='e-')),sqrt(BPVIPCHI2()))>15)" 
+           },
+    'WGs'    : [ 'RD' ],
+    'STREAMS' : [ 'Radiative' ]
+    }
+
+
+Bd2JpsieeKstarBDT = {
+    'BUILDERTYPE'             : 'Bd2eeKstarBDTConf',
+    'CONFIG'                  : {
+        'LinePrescale'            :    1.   ,
+        'LinePostscale'           :    1.   ,
+        #
+        'ElectronPT'              :  200.   ,  # MeV
+        'ElectronTrackCHI2pNDOF'  :    5.   ,
+        'ElectronIPCHI2'          :    1.   ,
+        'ElectronPIDepi'          :   -2.   ,          
+        #
+        'eeVertexCHI2'            :   16.   ,  
+        'eeMinMass'               : 2200.   ,  # MeV 
+        'eeMaxMass'               : 4200.   ,  # MeV
+        #
+        'KaonPT'                  :  400.   ,  # MeV 
+        'KaonP'                   : 3000.   ,  # MeV  
+        'KaonTrackCHI2pNDOF'      :    5.   , 
+        'KaonIPCHI2'              :    4.   , 
+        'KaonPIDKpi'              :   -5.   , 
+        #
+        'PionPT'                  :  250.   ,  # MeV
+        'PionP'                   : 2000.   ,  # MeV 
+        'PionTrackCHI2pNDOF'      :    5.   , 
+        'PionIPCHI2'              :    4.   , 
+        'PionPIDpiK'              :   10.   ,  # PIDpi-PIDK > -5, i.e., PIDK<5 
+        #
+        'KstarVertexCHI2'         :   16.   , 
+        'KstarMassW'              :  150.   ,  # MeV
+        #
+        'BComMassW'               : 1200.   ,  # MeV
+        'BVertexCHI2'             :   16.   ,  # /ndf
+        'BMassW'                  : 1000.   ,  # MeV  
+        'BDIRA'                   :    0.999,
+        'BDTCutValue'             :   -0.98 ,
+        'BDTWeightsFile'          : '$TMVAWEIGHTSROOT/data/Bd2eeKstar_BDTG_v1r0.xml'    
+            },
+    'WGs'    : [ 'RD' ],
+    'STREAMS' : [ 'Radiative' ]
+    }
+
+
+
+
+
+
+
+
+####################################################################
+#
+# Lines for very rare decay sub-group 
+#
+####################################################################
+
 
 
 # Same-sign searches
@@ -188,47 +520,6 @@ HyperCP = {
     'STREAMS' : [ 'Dimuon' ]
     }
 
-# Same-sign searches
-# Wenbin - removed for Stripping 19
-
-#B2SameChargeMuon = {
-#    'BUILDERTYPE'  : 'StrippingB2SameChargeMuonConf',
-#    'CONFIG'  : {
-#    'LinePrescale'        :    1.   ,
-#    'LinePostscale'       :    1.
-#    },
-#    'WGs' : [ 'RD' ],
-#    'STREAMS' : [ 'Dimuon' ]
-#    }
-
-
-# Bu2LLK ( B+ -> ee K and mu mu K )
-# P. Koppenburg
-
-Bu2LLK = {
-    'BUILDERTYPE'         : 'Bu2LLKConf',
-    'CONFIG'              : {
-    'BFlightCHI2'         : 100       # adimentional
-    ,  'BDIRA'               : 0.9995     # adimentional    TIGHTENED
-    ,  'BIPCHI2'             : 25        # adimentional  
-    ,  'BVertexCHI2'         : 16        # adimentional
-    ,  'DiLeptonPT'          : 0         # MeV (not used)
-    ,  'DiLeptonFDCHI2'      : 16        # adimentional
-    ,  'DiLeptonIPCHI2'      : 9         # adimentional
-    ,  'LeptonIPCHI2'        : 16        # adimentional      TIGHTENED
-    ,  'LeptonPT'            : 800       # MeV              
-    ,  'KaonIPCHI2'          : 16        # adimentional      TIGHTENED
-    ,  'KaonPT'              : 800       # MeV               LOOSENED
-    ,  'UpperMass'           : 5500      # MeV (Higher bound of signal box)
-    ,  'Bu2eeKLinePrescale'  : 1
-    ,  'Bu2eeKLinePostscale' : 1
-    ,  'Bu2mmKLinePrescale'  : 1
-    ,  'Bu2mmKLinePostscale' : 1
-    },
-    'WGs'    : [ 'RD' ] ,
-    'STREAMS' : ['Dimuon']
-    #{ 'Dimuon' : [ 'StrippingBu2LLK_mmLine' ] , 'Dielectron' : [ 'StrippingBu2LLK_eeLine' ]  }
-    }
 
 # B2MuMuMuMuLines
 # J. Albrecht
@@ -281,34 +572,6 @@ TriMuon = {
     'STREAMS' : [ 'Dimuon' ]
     }
 
-
-
-# Lines for phi mu mu / f0 mu mu
-# Liming Zhang
-
-Bs2PhiMuMu = {
-    'BUILDERTYPE' : 'Bs2PhiMuMuLinesConf',
-    'WGs'         : ['RD'],
-    'STREAMS'     : ['Dimuon'],
-    'CONFIG'      : {
-    "MINIPCHI2"      : 4.00   # adimensiional
-    ,"TRCHI2"        : 10.0   # adimensiional
-    ,"KaonPIDK"      : 1e-10  # adimensiional
-    ,"PhiPT"         : 100    # MeV
-    ,"MuonMINIPCHI2" : 2.25   # adimensiional
-    ,"MuonPIDmu"     : -5.0  # adimensiional
-    ,"MuonTRCHI2"    : 10.0   # adimensiional
-    ,"BsMassWin"     : 250.0  # MeV
-    ,"BsVCHI2DOF"    : 8.0   # adimensiional
-    ,"BsDIRA"        : 0.9993  # adimensiional
-    ,"BsFDCHI2"      : 25.0   # adimensiional
-    ,"PionPIDK"      : 10.0   # adimensiional
-    ,"f0MassWin"     : 200.0  # MeV
-    ,"VCHI2"         : 10.0   # adimensiional
-    ,"BsIPCHI2"      : 36.0  # adimensiional
-    ,"DocaChi2Max"   : 20  #mm
-    }
-    }
 
 
 Bs2MuMuLines = {
@@ -452,46 +715,7 @@ Inflaton2MuMu = {
     }
 
 
-BuToK1MuMu = {
-    'BUILDERTYPE' : 'StrippingBuToK1MuMuConf' ,
-    'STREAMS'     : [ 'Dimuon' ],
-    'WGs'         : [ 'RD' ],
-    'CONFIG'      : {
-    'UseNoPIDsHadrons'          : True,
-    'Prescale_BuToK1MuMu'    : 1.0,
-    'Postscale_BuToK1MuMu'   : 1.0,
-    'Prescale_BuToK1MuMuSS'  : 1.0,
-    'Postscale_BuToK1MuMuSS' : 1.0,
-    'B_Comb_MassLow'      : 4600.0,
-    'B_Comb_MassHigh'     : 6000.0,
-    'B_MassLow'           : 4850.0,
-    'B_MassHigh'          : 5780.0,
-    'B_VertexCHI2'        :    6.0,
-    'B_IPCHI2'            :   16.0,
-    'B_DIRA'              :    0.014,
-    'B_FlightCHI2'        :  121.0,
-    'B_Dau_MaxIPCHI2'     : 9.0,
-    'Dau_VertexCHI2'      :   12.0,
-    'Dau_DIRA'            :   -0.9,
-    'K1_Comb_MassLow'  :  720.0,
-    'K1_Comb_MassHigh' : 2450.0,
-    'K1_MassLow'       :  750.0,
-    'K1_MassHigh'      : 2400.0,
-    'K1_MinIPCHI2'     :    4.0,
-    'K1_FlightChi2'    :   25.0,
-    'K1_Dau_MaxIPCHI2' : 9.0,
-    'Dimu_FlightChi2'     :   81.0,
-    'Dimu_Dau_MaxIPCHI2'  : 9.0,
-    'Track_CHI2nDOF'      :    2.5,
-    'Hadron_MinIPCHI2'    :    16.0,
-    'Hadron_PT'           :    500,
-    'K_PIDK_min'          :      0,
-    'pi_PIDK_max'        :      5,
-    'Muon_MinIPCHI2'      :    16.0,
-    'Muon_IsMuon'         :   False,
-    'MuonNoPIDs_PIDmu'    :    0.0
-    }
-    }
+
 
 
 Z02TauTauProng = {
@@ -621,88 +845,6 @@ B2MuMuX = {
     }
 
 
-Bd2MuMuKstarBDT = {
-    'BUILDERTYPE'             : 'Bd2MuMuKstarBDTConf',
-    'CONFIG'                  : {
-        'LinePrescale'            :    1.   ,
-        'LinePostscale'           :    1.   ,
-        #
-        'ElectronPT'              :  200.   ,  # MeV
-        'ElectronTrackCHI2pNDOF'  :    5.   ,
-        'ElectronIPCHI2'          :    1.   ,
-        'ElectronPIDepi'          :   -5.   ,          
-        #
-        'eeVertexCHI2'            :   16.   ,  
-        'eeMinMass'               :   20.   ,  # MeV 
-        'eeMaxMass'               : 5200.   ,  # MeV
-        #
-        'KaonPT'                  :  400.   ,  # MeV 
-        'KaonP'                   : 3000.   ,  # MeV  
-        'KaonTrackCHI2pNDOF'      :    5.   , 
-        'KaonIPCHI2'              :    4.   , 
-        'KaonPIDKpi'              :   -5.   , 
-        #
-        'PionPT'                  :  250.   ,  # MeV
-        'PionP'                   : 2000.   ,  # MeV 
-        'PionTrackCHI2pNDOF'      :    5.   , 
-        'PionIPCHI2'              :    4.   , 
-        'PionPIDpiK'              :   10.   ,  # PIDpi-PIDK>-10, i.e., PIDK<10 
-        #
-        'KstarVertexCHI2'         :   16.   , 
-        'KstarMassW'              :  150.   ,  # MeV
-        #
-        'BComMassW'               : 1200.   ,  # MeV
-        'BVertexCHI2'             :   16.   ,  # /ndf
-        'BMassW'                  : 1000.   ,  # MeV  
-        'BDIRA'                   :    0.999,
-        'BDTCutValue'             :   -0.98 ,
-        'BDTWeightsFile'          : '$TMVAWEIGHTSROOT/data/Bd2eeKstar_BDTG_v1r0.xml'
-    },
-    'WGs'    : [ 'RD' ],
-    'STREAMS' : [ 'Dimuon' ]
-    }
-
-Bd2MuMuKPiBDT = {
-    'BUILDERTYPE'             : 'Bd2MuMuKstarBDTConf',
-    'CONFIG'                  : {
-        'LinePrescale'            :    1.   ,
-        'LinePostscale'           :    1.   ,
-        #
-        'ElectronPT'              :  200.   ,  # MeV
-        'ElectronTrackCHI2pNDOF'  :    5.   ,
-        'ElectronIPCHI2'          :    1.   ,
-        'ElectronPIDepi'          :   -5.   ,          
-        #
-        'eeVertexCHI2'            :   16.   ,  
-        'eeMinMass'               :   20.   ,  # MeV 
-        'eeMaxMass'               : 5200.   ,  # MeV
-        #
-        'KaonPT'                  :  400.   ,  # MeV 
-        'KaonP'                   : 3000.   ,  # MeV  
-        'KaonTrackCHI2pNDOF'      :    5.   , 
-        'KaonIPCHI2'              :    4.   , 
-        'KaonPIDKpi'              :   -5.   , 
-        #
-        'PionPT'                  :  250.   ,  # MeV
-        'PionP'                   : 2000.   ,  # MeV 
-        'PionTrackCHI2pNDOF'      :    5.   , 
-        'PionIPCHI2'              :    4.   , 
-        'PionPIDpiK'              :   10.   ,  # PIDpi-PIDK>-10, i.e., PIDK<10 
-        #
-        'KstarVertexCHI2'         :   16.   , 
-        'KstarMassW'              :  1400.  ,  # MeV
-        #
-        'BComMassW'               :  550.   ,  # MeV
-        'BVertexCHI2'             :   16.   ,  # /ndf
-        'BMassW'                  :  500.   ,  # MeV  
-        'BDIRA'                   :    0.999,
-        'BDTCutValue'             :   -0.97 ,
-        'BDTWeightsFile'          : '$TMVAWEIGHTSROOT/data/Bd2eeKstar_BDTG_v1r0.xml'
-    },
-    'WGs'    : [ 'RD' ],
-    'STREAMS' : [ 'Dimuon' ]
-    }
-
 
 #
 # Rare Decay Lines
@@ -774,13 +916,14 @@ B2XTau = {
     }
     }
 
-# 
-# Rare Decay Lines 
-#
-# Radiative stream
 
+
+
+####################################################################
 #
-# b -> X gamma 
+# Lines for radiative decay sub-WG
+#
+####################################################################
 
 
 
@@ -836,181 +979,3 @@ Beauty2XGamma = {
     'STREAMS' : [ 'Radiative' ] 
     }
 
-
-#
-# Dielectron
-
-Bd2JpsieeKstarBDT = {
-    'BUILDERTYPE'             : 'Bd2eeKstarBDTConf',
-    'CONFIG'                  : {
-        'LinePrescale'            :    1.   ,
-        'LinePostscale'           :    1.   ,
-        #
-        'ElectronPT'              :  200.   ,  # MeV
-        'ElectronTrackCHI2pNDOF'  :    5.   ,
-        'ElectronIPCHI2'          :    1.   ,
-        'ElectronPIDepi'          :   -2.   ,          
-        #
-        'eeVertexCHI2'            :   16.   ,  
-        'eeMinMass'               : 2200.   ,  # MeV 
-        'eeMaxMass'               : 4200.   ,  # MeV
-        #
-        'KaonPT'                  :  400.   ,  # MeV 
-        'KaonP'                   : 3000.   ,  # MeV  
-        'KaonTrackCHI2pNDOF'      :    5.   , 
-        'KaonIPCHI2'              :    4.   , 
-        'KaonPIDKpi'              :   -5.   , 
-        #
-        'PionPT'                  :  250.   ,  # MeV
-        'PionP'                   : 2000.   ,  # MeV 
-        'PionTrackCHI2pNDOF'      :    5.   , 
-        'PionIPCHI2'              :    4.   , 
-        'PionPIDpiK'              :   10.   ,  # PIDpi-PIDK > -5, i.e., PIDK<5 
-        #
-        'KstarVertexCHI2'         :   16.   , 
-        'KstarMassW'              :  150.   ,  # MeV
-        #
-        'BComMassW'               : 1200.   ,  # MeV
-        'BVertexCHI2'             :   16.   ,  # /ndf
-        'BMassW'                  : 1000.   ,  # MeV  
-        'BDIRA'                   :    0.999,
-        'BDTCutValue'             :   -0.98 ,
-        'BDTWeightsFile'          : '$TMVAWEIGHTSROOT/data/Bd2eeKstar_BDTG_v1r0.xml'    
-            },
-    'WGs'    : [ 'RD' ],
-    'STREAMS' : [ 'Radiative' ]
-    }
-
-
-
-Bd2JpsieeKstar = {
-    'BUILDERTYPE'             : 'Bd2eeKstarConf',
-    'CONFIG'                  : {
-        'LinePrescale'            :    1.   ,
-        'LinePostscale'           :    1.   ,
-        #
-        'ElectronPT'              :  300.   ,  # MeV
-        'ElectronTrackCHI2pNDOF'  :    5.   ,
-        'ElectronIPCHI2'          :    2.25 ,
-        'ElectronPIDepi'          :   -2.   ,          
-        #
-        'eeVertexCHI2'            :   16.   ,  
-        'eeMinMass'               : 2200.   ,  # MeV 
-        'eeMaxMass'               : 4200.   ,  # MeV
-        'eeFD'                    :    1.   ,  # mm
-        #
-        'KaonPT'                  :  400.   ,  # MeV 
-        'KaonP'                   : 3000.   ,  # MeV  
-        'KaonTrackCHI2pNDOF'      :    5.   , 
-        'KaonIPCHI2'              :    4.   , 
-        'KaonPIDKpi'              :   -5.   , 
-        #
-        'PionPT'                  :  300.   ,  # MeV
-        'PionP'                   : 3000.   ,  # MeV 
-        'PionTrackCHI2pNDOF'      :    5.   , 
-        'PionIPCHI2'              :    4.   , 
-        'PionPIDpiK'              :   10.   ,  # PIDpi-PIDK > -5, i.e., PIDK<5 
-        #
-        'KstarVertexCHI2'         :   16.   , 
-        'KstarMassW'              :  130.   ,  # MeV
-        'KstarIPCHI2'             :    1.   , 
-        'KstarFDCHI2'             :    1.   , 
-        #
-        'BComMassW'               : 1200.   ,  # MeV
-        'BVertexCHI2'             :    9.   ,  # /ndf
-        'BMassW'                  : 1000.   ,  # MeV  
-        'BIPCHI2'                 :   64.   ,  # pointing
-        'BFDCHI2'                 :    9.   , 
-        'BDIRA'                   :    0.999, 
-        'SumIPSCut'               : " & (SUMTREE(((ABSID=='K+') | (ABSID=='pi-') | (ID=='e+') | (ID=='e-')),sqrt(BPVIPCHI2()))>15)" 
-           },
-    'WGs'    : [ 'RD' ],
-    'STREAMS' : [ 'Radiative' ]
-    }
-
-
-Bd2eeKstarBDT = {
-    'BUILDERTYPE'             : 'Bd2eeKstarBDTConf',
-    'CONFIG'                  : {
-        'LinePrescale'            :    1.   ,
-        'LinePostscale'           :    1.   ,
-        #
-        'ElectronPT'              :  200.   ,  # MeV
-        'ElectronTrackCHI2pNDOF'  :    5.   ,
-        'ElectronIPCHI2'          :    1.   ,
-        'ElectronPIDepi'          :   -2.   ,          
-        #
-        'eeVertexCHI2'            :   16.   ,  
-        'eeMinMass'               :   20.   ,  # MeV 
-        'eeMaxMass'               : 1500.   ,  # MeV
-        #
-        'KaonPT'                  :  400.   ,  # MeV 
-        'KaonP'                   : 3000.   ,  # MeV  
-        'KaonTrackCHI2pNDOF'      :    5.   , 
-        'KaonIPCHI2'              :    4.   , 
-        'KaonPIDKpi'              :   -5.   , 
-        #
-        'PionPT'                  :  250.   ,  # MeV
-        'PionP'                   : 2000.   ,  # MeV 
-        'PionTrackCHI2pNDOF'      :    5.   , 
-        'PionIPCHI2'              :    4.   , 
-        'PionPIDpiK'              :   10.   ,  # PIDpi-PIDK > -5, i.e., PIDK<5 
-        #
-        'KstarVertexCHI2'         :   16.   , 
-        'KstarMassW'              :  150.   ,  # MeV
-        #
-        'BComMassW'               : 1200.   ,  # MeV
-        'BVertexCHI2'             :   16.   ,  # /ndf
-        'BMassW'                  : 1000.   ,  # MeV  
-        'BDIRA'                   :    0.999,
-        'BDTCutValue'             :   -0.98 ,
-        'BDTWeightsFile'          : '$TMVAWEIGHTSROOT/data/Bd2eeKstar_BDTG_v1r0.xml'    
-    },
-    'WGs'    : [ 'RD' ],
-    'STREAMS' : [ 'Radiative' ]
-    }
-
-Bd2eeKstar = {
-    'BUILDERTYPE'             : 'Bd2eeKstarConf',
-    'CONFIG'                  : {
-        'LinePrescale'            :    1.   ,
-        'LinePostscale'           :    1.   ,
-        #
-        'ElectronPT'              :  300.   ,  # MeV
-        'ElectronTrackCHI2pNDOF'  :    5.   ,
-        'ElectronIPCHI2'          :    2.25 ,
-        'ElectronPIDepi'          :   -2.   ,          
-        #
-        'eeVertexCHI2'            :   16.   ,  
-        'eeMinMass'               :   20.   ,  # MeV 
-        'eeMaxMass'               : 1500.   ,  # MeV
-        'eeFD'                    :    1.   ,  # mm
-        #
-        'KaonPT'                  :  400.   ,  # MeV 
-        'KaonP'                   : 3000.   ,  # MeV  
-        'KaonTrackCHI2pNDOF'      :    5.   , 
-        'KaonIPCHI2'              :    4.   , 
-        'KaonPIDKpi'              :   -5.   , 
-        #
-        'PionPT'                  :  300.   ,  # MeV
-        'PionP'                   : 3000.   ,  # MeV 
-        'PionTrackCHI2pNDOF'      :    5.   , 
-        'PionIPCHI2'              :    4.   , 
-        'PionPIDpiK'              :   10.   ,  # PIDpi-PIDK > -5, i.e., PIDK<5 
-        #
-        'KstarVertexCHI2'         :   16.   , 
-        'KstarMassW'              :  130.   ,  # MeV
-        'KstarIPCHI2'             :    1.   , 
-        'KstarFDCHI2'             :    1.   , 
-        #
-        'BComMassW'               : 1200.   ,  # MeV
-        'BVertexCHI2'             :    9.   ,  # /ndf
-        'BMassW'                  : 1000.   ,  # MeV  
-        'BIPCHI2'                 :   64.   ,  # pointing
-        'BFDCHI2'                 :    9.   , 
-        'BDIRA'                   :    0.999, 
-        'SumIPSCut'               : " & (SUMTREE(((ABSID=='K+') | (ABSID=='pi-') | (ID=='e+') | (ID=='e-')),sqrt(BPVIPCHI2()))>15)" 
-           },
-    'WGs'    : [ 'RD' ],
-    'STREAMS' : [ 'Radiative' ]
-    }
