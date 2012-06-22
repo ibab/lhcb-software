@@ -21,9 +21,7 @@ ApplicationMgr.ExtSvc               += {
 //ApplicationMgr.ExtSvc               += {
 //					"OvrPub"
 //                                       };
-//ApplicationMgr.ExtSvc               += {
-//					"StrandedServices/strand"
-//					};
+
 ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
 ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
 ApplicationMgr.HistogramPersistency  = "NONE";
@@ -93,5 +91,3 @@ DiskWrPub.TrendingOn          = true;
 //OvrPub.InDNS               = "mona08";
 //OvrPub.TrendingOn          = true;
 
-//strand.PartitionName = @OnlineEnv.PartitionName;
-//strans.SubFarms = @OnlineEnv.SubFarms;
