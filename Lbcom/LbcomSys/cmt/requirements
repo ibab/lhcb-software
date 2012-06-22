@@ -63,6 +63,8 @@ use VeloTools         v4r1p1  Velo      # Tomasz Szumlak
 use VeloPixDAQ        v1r4    VeloPix   # Marcin Kucharczyk
 use VeloPixTools      v1r0p1  VeloPix   # Victor Coco
 
+# VeloLite
+use VLDAQ             v1r0    VL        # Heinrich Schindler
 # Declare this as a container package
 apply_pattern container_package
 
