@@ -4,6 +4,12 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2012-06-22 - Gloria Corti
+ - Put const in getEventCounter method of IEventCounter
+ - Introduce use of IEventCounter in LbAppInit base class. The change is made
+   to that the count (and so random seeds in Gauss) can be controlled in 
+   GaudiMP 
+
 ! 2012-06-17 - Heinrich Schindler
  - Added VLChannelID and VLDataFunctor
 

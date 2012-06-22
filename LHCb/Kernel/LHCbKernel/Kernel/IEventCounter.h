@@ -22,7 +22,7 @@ public:
   DeclareInterfaceID(IEventCounter, 2, 0);
   virtual ~IEventCounter() {}
 
-  virtual long getEventCounter() = 0;   ///< Get Event Counter
+  virtual long getEventCounter() const = 0;   ///< Get Event Counter
 
   virtual void incrementEventCounter() = 0;   ///< Increment Event Counter
 

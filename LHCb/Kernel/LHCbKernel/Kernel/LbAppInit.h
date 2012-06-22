@@ -11,6 +11,7 @@
 
 // from LHCbKernel
 #include "Kernel/ICondDBInfo.h"
+#include "Kernel/IEventCounter.h"
 
 // Forward declarations
 class IRndmEngine;
@@ -40,10 +41,7 @@ public:
 protected:
 
   /// Return number of events processed
-  int  eventCounter() const
-  {
-    return m_eventCounter;
-  }
+  long  eventCounter() const;
 
   /// Return name of application being run
   const std::string& appName() const
@@ -95,7 +93,7 @@ protected:
    */
   inline bool okToPrint() const
   {
-    return ( m_printFreq > 0 && 0 == (m_eventCounter-1)%m_printFreq );
+    return ( m_printFreq > 0 && 0 == (m_evtCounter->getEventCounter()-1)%m_printFreq );
   }
 
 private:
@@ -122,10 +120,12 @@ private:
   IRndmEngine*  m_engine;       ///< Pointer to random number engine
   IRndmGenSvc*  m_randSvc;      ///< Pointer to random number service
   ICondDBInfo*  m_condDBInfo;   ///< Pointer to Info interface of CondDB service
-  int  m_eventCounter;          ///< Number of events processed
+  IEventCounter* m_evtCounter;  ///< Pointer to EventCounter interface
+  std::string   m_evtCounterName;  ///< Name of EventCounter tool
   int  m_eventMax;     ///< Number of events requested (ApplicationMgr.EvtMax)
   std::string   m_appName;      ///< Application Name
   std::string   m_appVersion;   ///< Application Version
+  
 };
 
 #endif // LBAPPINIT_H

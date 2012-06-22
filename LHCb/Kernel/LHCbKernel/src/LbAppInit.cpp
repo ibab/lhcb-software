@@ -32,7 +32,7 @@ LbAppInit::LbAppInit( const std::string& name,
     m_engine(0),
     m_randSvc(0),
     m_condDBInfo(0),
-    m_eventCounter(0),
+    m_evtCounter(0),
     m_eventMax(0),
     m_appName(""),
     m_appVersion("")
@@ -42,6 +42,7 @@ LbAppInit::LbAppInit( const std::string& name,
   declareProperty( "PreloadGeometry", m_preload    = false );
   declareProperty( "PrintFreq",       m_printFreq  = 1     );
   declareProperty( "PrintEventTime",  m_printTime  = false );
+  declareProperty( "EvtCounter", m_evtCounterName = "EvtCounter" );
 }
 //=============================================================================
 // Destructor
@@ -99,6 +100,9 @@ StatusCode LbAppInit::initialize() {
 
   m_condDBInfo = svc<ICondDBInfo>("CondDBCnvSvc", true );
 
+  // Retrieve event counter tool
+  m_evtCounter = tool<IEventCounter>(m_evtCounterName);
+
   return StatusCode::SUCCESS;
 }
 
@@ -108,7 +112,6 @@ StatusCode LbAppInit::initialize() {
 StatusCode LbAppInit::execute() {
 
   if(msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
-  ++m_eventCounter;
 
   return StatusCode::SUCCESS;
 }
@@ -121,17 +124,25 @@ StatusCode LbAppInit::finalize() {
   always()
     << "=================================================================="
     << endmsg;;
-  always() << m_eventCounter << " events processed" << endmsg;
+  always() << eventCounter() << " events processed" << endmsg;
   always()
     << "=================================================================="
     << endmsg;
 
-  if( (-1 != m_eventMax) && (m_eventMax != m_eventCounter) ) {
+  if( (-1 != m_eventMax) && (m_eventMax != eventCounter()) ) {
     warning()
       << "Should have processed " << m_eventMax << " events" << endmsg;
     warning()
       << "=================================================================="
       << endmsg;
+  }
+
+  StatusCode sc = release(m_evtCounter);
+  m_evtCounter = 0;
+  if( sc.isFailure() ) {
+    error()
+      << "Failure in release tool " << m_evtCounterName << endmsg;
+    return sc;
   }
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
@@ -148,7 +159,7 @@ void LbAppInit::printEventRun( longlong event, int run,
     if( m_printTime ) info() << ", UTC time "
                              << time.format(false,"%Y-%m-%d %H:%M:%S")
                              << "." << time.nanoformat(6);
-    info() << ",  Nr. in job = " << m_eventCounter;
+    info() << ",  Nr. in job = " << eventCounter();
     if( 0 != seeds ) info() << " with seeds " << *seeds;
     info() << endmsg;
   }
@@ -244,4 +255,11 @@ const std::vector<LHCb::CondDBNameTagPair> LbAppInit::condDBTags() {
   std::vector<LHCb::CondDBNameTagPair> tmp;
   m_condDBInfo->defaultTags(tmp);
   return tmp;
+}
+
+//=============================================================================
+// Return number of the current event 
+//=============================================================================
+long LbAppInit::eventCounter() const {
+  return m_evtCounter->getEventCounter();
 }
