@@ -20,6 +20,25 @@ __all__=('StrippingBs2KstKstConf',
          'makeKst2Kpi',
          'makeJPsi2mumu')
 
+__config_default__ = { 
+     "KaonPT"		: 500.0 # MeV
+     ,	"KaonIPCHI2"		: 9. 	# adimensional
+     ,  "PionPT"                : 500.0 # MeV
+     ,  "PionIPCHI2"            : 9.	# adimensional
+     ,  "PionPIDK"              :10. #adimensional
+     ,	"KstarVCHI2"		: 9.0   # adimensional
+     ,	"KstarPT"		: 900.0 # MeV
+     ,	"KaonPIDK"              : -5.0  # adimensional
+     ,	"KstarMassWin"		: 150.0 # MeV
+     ,	"BMassWin"		: 500.0 # MeV
+     ,	"BVCHI2"		: 15.0	# adimensional
+     ,	"BDOCA"                 : 0.3   # mm
+     ,  "BIPCHI2"               : 25    # adimensional
+     }
+
+
+
+
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from CommonParticles.Utils import *
@@ -80,22 +99,7 @@ class StrippingBs2KstKstConf(LineBuilder):
           "BIPCHI2")
 
 
-     __config_default__ = { 
-          "KaonPT"		: 500.0 # MeV
-          ,	"KaonIPCHI2"		: 9. 	# adimensional
-          ,  "PionPT"                : 500.0 # MeV
-          ,  "PionIPCHI2"            : 9.	# adimensional
-          ,  "PionPIDK"              :10. #adimensional
-          ,	"KstarVCHI2"		: 9.0   # adimensional
-          ,	"KstarPT"		: 900.0 # MeV
-          ,	"KaonPIDK"              : -5.0  # adimensional
-          ,	"KstarMassWin"		: 150.0 # MeV
-          ,	"BMassWin"		: 500.0 # MeV
-          ,	"BVCHI2"		: 15.0	# adimensional
-          ,	"BDOCA"                 : 0.3   # mm
-          ,  "BIPCHI2"               : 25    # adimensional
-          }
-     
+    
 
 
      def __init__(self, name, config) :

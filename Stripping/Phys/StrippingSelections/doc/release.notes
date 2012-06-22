@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-06-22 - Paula Alvarez
+ - Fixing typos in StrippingBs2Kst0Kst0 and StrippingBs2Kst_0Kst_0
+
+
 ! 2012-06-19 - Patrick Koppenburg
  - StrippingB2JpsiXforBeta_s: new line to use V0 from Brunel: Comment it out for the time being.
 

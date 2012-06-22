@@ -15,6 +15,29 @@ __all__=('StrippingBs2Kst_0Kst_0Conf',
          'makeBs2Kst_0Kst_0',
          'makeKst_02Kpi')
 
+
+__config_default__ = { 
+     "KaonPT"		: 500.0 # MeV
+     ,  "KaonIPCHI2"	: 9. 	# adimensional
+     ,  "PionPT"           : 500.0 # MeV
+     ,  "PionIPCHI2"       : 9.	# adimensional
+     ,  "PionPIDK"         : 0. #adimensional
+     ,  "KstarVCHI2"	: 9.0   # adimensional
+     ,  "KstarPT"		: 900.0 # MeV
+     ,  "KaonPIDK"         : 2.0  # adimensional
+     ,  "KstarMassWin"     : 680.0 # MeV 
+     ,  "KstarAPT"         : 800.0 # MeV
+     ,  "BMassWin"		: 500.0 # MeV
+     ,  "BVCHI2"		: 15.0	# adimensional
+     ,  "BDOCA"            : 0.3   # mm
+     ,  "BIPCHI2"          : 25.   # adimensional
+     ,  "BFDistanceCHI2"   : 81.   # adimensional
+     ,  "SumPT"            : 5000  # MeV
+     }
+
+
+
+
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from CommonParticles.Utils import *
@@ -71,24 +94,6 @@ class StrippingBs2Kst_0Kst_0Conf(LineBuilder):
           "SumPT")
 
 
-     __config_default__ = { 
-             "KaonPT"		: 500.0 # MeV
-          ,  "KaonIPCHI2"	: 9. 	# adimensional
-          ,  "PionPT"           : 500.0 # MeV
-          ,  "PionIPCHI2"       : 9.	# adimensional
-          ,  "PionPIDK"         : 0. #adimensional
-          ,  "KstarVCHI2"	: 9.0   # adimensional
-          ,  "KstarPT"		: 900.0 # MeV
-          ,  "KaonPIDK"         : 2.0  # adimensional
-          ,  "KstarMassWin"     : 680.0 # MeV 
-          ,  "KstarAPT"         : 800.0 # MeV
-          ,  "BMassWin"		: 500.0 # MeV
-          ,  "BVCHI2"		: 15.0	# adimensional
-          ,  "BDOCA"            : 0.3   # mm
-          ,  "BIPCHI2"          : 25.   # adimensional
-          ,  "BFDistanceCHI2"   : 81.   # adimensional
-          ,  "SumPT"            : 5000  # MeV
-             }
      
 
 
