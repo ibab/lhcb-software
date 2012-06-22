@@ -31,6 +31,7 @@ class IParticleReFitter   ;
 class IParticleCombiner   ;
 class IPVReFitter         ;
 class GaudiAlgorithm      ;
+class IBTaggingTool       ;
 // ============================================================================
 /** @class IDVAlgorithm Kernel/IDVAlgorithm.h
  *  
@@ -78,6 +79,8 @@ public: // tools
   /// Accessor for primary vertex re-fitter tool
   virtual const IPVReFitter* 
   primaryVertexReFitter ( const std::string& nickname = "" ) const = 0 ;
+  /// Access the Flavour tagging tool
+  virtual IBTaggingTool* flavourTagging() const = 0;
   // ==========================================================================
 public: // implementation 
   // ==========================================================================
