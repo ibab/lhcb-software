@@ -61,6 +61,7 @@ private:
   double m_eOpMin;
   double m_aFactor;
   double m_ptmin;
+  double m_eptmin;
   int m_method;
   int m_addopt;
   double m_deltaY;

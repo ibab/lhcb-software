@@ -35,6 +35,7 @@ DiElectronMaker::DiElectronMaker( const std::string& name,
   declareProperty("ElectronCLcut"      , m_ecl = -1.);        //  electron CL lower threshold
   declareProperty("DiElectronCLcut"    , m_gcl = -1.);        //  di-electron CL lower threshold
   declareProperty("DiElectronPtMin"    , m_ptmin = 500.0);   //  min Pt of pair range
+  declareProperty("ElectronPtMin"      , m_eptmin = 100.0);   //  min Pt of electrons
   declareProperty("DiElectronMassMax"  , m_mmax = 200.0);    //  Upper mass range
   declareProperty("DiElectronMassMin"  , m_mmin =  0.0);    //  Lower mass range 
   declareProperty("ADAMASSFactor"      , m_aFactor = 1.5); 
@@ -96,29 +97,29 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
     for(LHCb::ProtoParticles::const_iterator ipp = pps->begin();pps->end() != ipp ; ++ipp){
       // apply filter and produce electrons particles
       const LHCb::ProtoParticle* proto = *ipp;
-      if( m_pFilter->isSatisfied( proto )){
-        const int pID = m_ePps->particleID().pid() * (int)(proto->charge());
-        LHCb::Particle* electron = new LHCb::Particle(  (LHCb::ParticleID)pID );
-        electron->setMeasuredMass(m_ePps->mass());
-        electron->setMeasuredMassErr(0.);
-        electron->setProto( proto );
-        const LHCb::Track* track = proto->track() ;
-        if ( !trSel()->accept(*track) ){delete electron; continue;}
-        const LHCb::State* state = usedState( track );
-        p2s()->state2Particle( *state, *electron ).ignore();// status code        
-        double cl = ConfLevel( electron );
-        double pid= ePID( electron );
-        if( m_ecl > 0 &&  cl  < m_ecl ){delete electron; continue;}
-        if( pid < m_eidmin){delete electron; continue;}
-        //--- e/p selection : require Ecal acceptance implicitely
-        bool ok=  m_caloElectron->set( electron );
-        if((m_eOpMax > 0 || m_eOpMin>0) && !ok ){delete electron;continue;}
-        double eOp=m_caloElectron->eOverP();
-        if( m_eOpMax > 0 && eOp > m_eOpMax){delete electron;continue;}
-        if( m_eOpMin >=0 && eOp < m_eOpMin){delete electron;continue;}
+      if( !m_pFilter->isSatisfied( proto ))continue;
+      const int pID = m_ePps->particleID().pid() * (int)(proto->charge());
+      LHCb::Particle* electron = new LHCb::Particle(  (LHCb::ParticleID)pID );
+      electron->setMeasuredMass(m_ePps->mass());
+      electron->setMeasuredMassErr(0.);
+      electron->setProto( proto );
+      const LHCb::Track* track = proto->track() ;
+      if ( !trSel()->accept(*track) ){delete electron; continue;}
+      const LHCb::State* state = usedState( track );
+      p2s()->state2Particle( *state, *electron ).ignore();// status code        
+      if( electron->pt() < m_eptmin){delete electron;continue;}
+      double cl = ConfLevel( electron );
+      double pid= ePID( electron );
+      if( m_ecl > 0 &&  cl  < m_ecl ){delete electron; continue;}
+      if( pid < m_eidmin){delete electron; continue;}
+      //--- e/p selection : require Ecal acceptance implicitely
+      bool ok=  m_caloElectron->set( electron );
+      if((m_eOpMax > 0 || m_eOpMin>0) && !ok ){delete electron;continue;}
+      double eOp=m_caloElectron->eOverP();
+      if( m_eOpMax > 0 && eOp > m_eOpMax){delete electron;continue;}
+      if( m_eOpMin >=0 && eOp < m_eOpMin){delete electron;continue;}
         //
-        electrons.push_back( electron );  
-      }
+      electrons.push_back( electron );
     }
   }else if( !m_eleinputs.empty() ){
     unsigned int ninputs=0;
@@ -132,28 +133,29 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
       LHCb::Particle::Range iElectrons = get<LHCb::Particle::Range>( eleinput );
       ninputs+=iElectrons.size();
       for(LHCb::Particle::Range::iterator ip = iElectrons.begin(); iElectrons.end() != ip ; ++ip){
-        LHCb::Particle* p = (*ip)->clone(); // clone input electrons before removing brem
-        double cl = ConfLevel( p );
-        double pid= ePID( p );
-        if( p->proto() == NULL || p->proto()->track() == NULL){
-          delete p;
+        LHCb::Particle* pp = (LHCb::Particle*) *ip;
+        if( pp->pt() < m_eptmin)continue;
+        double cl = ConfLevel( pp );
+        double pid= ePID( pp );
+        if( pp->proto() == NULL || pp->proto()->track() == NULL)
           return Warning("input particle MUST be basic electrons",StatusCode::FAILURE);
-        }
-        const LHCb::Track* track = p->proto()->track() ;
-        if ( !trSel()->accept(*track) ){delete p; continue;}
+        const LHCb::Track* track = pp->proto()->track() ;
+        if ( !trSel()->accept(*track) )continue;
         //if ( !m_pFilter->isSatisfied( p->proto() )){delete p;continue;} // no proto filtering when using particle as input
-        if( cl  < m_ecl ){delete p; continue;} 
-        if( pid < m_eidmin){delete p;continue;} 
+        if( m_ecl > 0 && cl  < m_ecl )continue; 
+        if( pid < m_eidmin)continue; 
         //--- e/p selection : require Ecal acceptance implicitely
-        bool ok=  m_caloElectron->set( p );
-        if((m_eOpMax > 0 || m_eOpMin>0) && !ok ){delete p;continue;}
+        bool ok=  m_caloElectron->set( pp );
+        if((m_eOpMax > 0 || m_eOpMin>0) && !ok )continue;
         double eOp=m_caloElectron->eOverP();
-        if( m_eOpMax > 0 && eOp > m_eOpMax){delete p;continue;}
-        if( m_eOpMin >=0 && eOp < m_eOpMin){delete p;continue;}
+        if( m_eOpMax > 0 && eOp > m_eOpMax)continue;
+        if( m_eOpMin >=0 && eOp < m_eOpMin)continue;
         // remove BremStrahlung if any
+        LHCb::Particle* p = pp->clone(); // clone input electrons before removing brem
         if( bremAdder()->removeBrem( p ) ) counter("BremStrahlung removal") += 1.; 
+
         electrons.push_back( p ); 
-      }   
+      }  
       counter("Input electrons from "+ eleinput) += iElectrons.size(); 
     }     
     if (msgLevel(MSG::DEBUG))debug() << " Starting from " << ninputs << " electrons " << endmsg;
@@ -306,6 +308,7 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
       }
       
       
+      
       if (mother.p()>0.){
         if (m_symgamma) {
           Gaudi::LorentzVector mom = mother.momentum();
@@ -329,8 +332,8 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
           mother.setMomCovMatrix(momcov);
           mother.setPosMomCovMatrix(posmomcov);
         }
-
         
+        // Mass window
         Gaudi::LorentzVector mothermom = mother.momentum();
         double Mgamma=mothermom.M();
         if( Mgamma > m_mmax || Mgamma < m_mmin)continue;

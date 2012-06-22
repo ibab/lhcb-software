@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones, J. Palacios, Olivier Deschamps
 !==============================================================================
 
+! 2012-06-22 - Olivier Deschamps
+  - DiElectronMaker : optimize processing
+
 ! 2012-06-21 - Olivier Deschamps
   - DiElectronMaker : speed-up processing
 
