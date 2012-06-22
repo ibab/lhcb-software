@@ -4149,6 +4149,8 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
                                  m_runDb->currentStartTime().c_str() ,
                                  m_runDb->currentRunDuration().c_str() ) ;
             }
+            std::cout << "Set time for run, start " << m_runDb->currentStartTime() 
+                      << " end " << m_runDb->currentRunDuration() << std::endl;
             m_presenterInfo.setTimeC( m_runDb->currentStartTime(),  m_runDb->currentRunDuration(), true );
           } else {
             bannerText = Form( "Run %d to %d",
@@ -4166,11 +4168,16 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
             m_presenterInfo.setTimeC( startTime, endTime );
           }
         } else {
-          bannerText = Form("From %s for %s",
-                           m_intervalPickerData->startTimeString(),
-                           m_intervalPickerData->durationString());
-          m_presenterInfo.setTimeC( m_intervalPickerData->startTimeString(),
-                                    m_intervalPickerData->durationString(), true );
+          std::string startTime =  m_intervalPickerData->startTimeString();
+          if ( startTime != "0-00-00 00:00" ) {  
+            bannerText = Form("From %s for %s",
+                              m_intervalPickerData->startTimeString(),
+                              m_intervalPickerData->durationString());
+            std::cout << "Set time from " << m_intervalPickerData->startTimeString() << " end " 
+                      << m_intervalPickerData->durationString() << endmsg;
+            m_presenterInfo.setTimeC( m_intervalPickerData->startTimeString(),
+                                      m_intervalPickerData->durationString(), true );
+          }
         }
       }
       if (m_verbosity >= pres::Verbose)

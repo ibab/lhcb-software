@@ -4,6 +4,11 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+!=============================== 2012-06-22 v3r5 =============================
+! 2012-04-26 - Olivier Callot
+ - When creating a page, put more row than columns by default.
+   One shoudl try to provide the user with a choice, like number of row, with a default.
+
 !=============================== 2012-04-05 v3r4 =============================
 ! 2012-03-30 - Olivier Callot
  - Documentation: If not http, then this is a tool of IPresenterDoc interface

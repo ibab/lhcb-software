@@ -818,10 +818,10 @@ void PresenterPage::simpleDisplay (  TCanvas* editorCanvas ) {
   for ( std::vector<TrendingFile>::iterator itF = m_trends.begin(); m_trends.end() != itF; ++itF ) {
     nbPlots += (*itF).histos.size();
   }
-  int nCol = 1;
-  while ( nCol < nbPlots/nCol ) nCol += 1;
-  int nRow = nbPlots / nCol;
-  if ( nRow * nCol < nbPlots ) nRow++;
+  int nRow = 1;
+  while ( nRow < nbPlots/nRow ) nRow += 1;
+  int nCol = nbPlots / nRow;
+  if ( nRow * nCol < nbPlots ) nCol++;
 
   std::cout << "For " << nbPlots << " plots, nCol " << nCol << " nRow " << nRow << std::endl;
 
