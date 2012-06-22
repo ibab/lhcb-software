@@ -1,0 +1,57 @@
+// Job options file. Simple Online monitoring example
+//==============================================================
+#include "$INFOOPTIONS"
+
+ApplicationMgr.ExtSvc               += {"MonitorSvc",
+					"AdderSvc/RecvSendEvt",
+					"AdderSvc/RecvSendLumi",
+					"AdderSvc/StrmWrtEvt",
+					"AdderSvc/StrmWrtLumi"
+					};
+// ApplicationMgr.ExtSvc               += {"MemTrnd" };
+
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+Runable.Wait                         = 3;  // 1 of running as daemon
+
+//MessageSvc.fifoPath                  = "$LOGFIFO";
+//MessageSvc.LoggerOnly                = true;  // Set to false for stdout
+//MessageSvc.OutputLevel               = 3;//@OnlineEnv.OutputLevel;
+//HistogramPersistencySvc.Warnings     = false;
+
+RecvSendEvt.MyName                   = "<part>_RecvEvt";
+RecvSendEvt.PartitionName               = @OnlineEnv.PartitionName;
+RecvSendEvt.TaskPattern                 = "<part>_storerecv[0-9][0-9]_SNDEvents_[0-9][0-9]";
+RecvSendEvt.ServicePattern              = "MON_<part>_storerecv[0-9][0-9]_sndevents_[0-9][0-9]/counter/";
+RecvSendEvt.AdderClass                  = "Counter";
+RecvSendEvt.InDNS                       = "storectl01";
+
+RecvSendLumi.MyName                   = "<part>_RecvLumi";
+RecvSendLumi.PartitionName               = @OnlineEnv.PartitionName;
+RecvSendLumi.TaskPattern                 = "<part>_storerecv[0-9][0-9]_SNDlumi_[0-9][0-9]";
+RecvSendLumi.ServicePattern              = "MON_<part>_storerecv[0-9][0-9]_sndlumi_[0-9][0-9]/counter/";
+RecvSendLumi.AdderClass                  = "Counter";
+RecvSendLumi.InDNS                       = "storectl01";
+
+StrmWrtEvt.MyName                   = "<part>_WrtEvt";
+StrmWrtEvt.PartitionName               = @OnlineEnv.PartitionName;
+StrmWrtEvt.TaskPattern                 = "<part>_STORESTRM[0-9][0-9]_WRTEvents_[0-9][0-9]";
+StrmWrtEvt.ServicePattern              = "MON_<part>_STORESTRM[0-9][0-9]_wrtevents_[0-9][0-9]/counter/";
+StrmWrtEvt.AdderClass                  = "Counter";
+StrmWrtEvt.InDNS                       = "storectl01";
+
+StrmWrtLumi.MyName                   = "<part>_WrtLumi";
+StrmWrtLumi.PartitionName               = @OnlineEnv.PartitionName;
+StrmWrtLumi.TaskPattern                 = "<part>_storestrm[0-9][0-9]_WRTLumi_[0-9][0-9]";
+StrmWrtLumi.ServicePattern              = "MON_<part>_storestrm[0-9][0-9]_wrtlumi_[0-9][0-9]/counter/";
+StrmWrtLumi.AdderClass                  = "Counter";
+StrmWrtLumi.InDNS                       = "storectl01";
+
+
+
+RecvSendEvt.ReceiveTimeout     = 3;
+RecvSendLumi.ReceiveTimeout     = 3;
+StrmWrtEvt.ReceiveTimeout    = 3;
+StrmWrtLumi.ReceiveTimeout      = 3;
