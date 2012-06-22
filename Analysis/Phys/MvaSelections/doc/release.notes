@@ -3,6 +3,11 @@
 ! Responsible : Sajan EASO
 ! Purpose     : Selection of events using multivariate methods
 !-----------------------------------------------------------------------------
+
+! 2012-06-22 - Chris Jones
+ - Use getIDVAlgorithm instead of getDVAlgorithm, in preparation for a future
+   change in the DaVInci base classes.
+
 !============================== v1r0 07-09-2010 ==============================
 
 ! 2010-09-07 - Diego Martinez Santos

@@ -12,7 +12,6 @@ branches src cmt doc
 #############################################################
 use DaVinciKernel      v*  Phys
 use PhysDict           v*  Phys
-use DaVinci            v*  Phys
 use MCEvent            v*  Event
 use PhysEvent          v*  Event
 use LinkerEvent        v*  Event

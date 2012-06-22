@@ -3,9 +3,9 @@
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
-#include <Kernel/DVAlgorithm.h>
-#include  <Kernel/GetDVAlgorithm.h>
-#include  <Kernel/IDistanceCalculator.h>
+#include <Kernel/IDVAlgorithm.h>
+#include <Kernel/GetIDVAlgorithm.h>
+#include <Kernel/IDistanceCalculator.h>
 
 // local
 #include "B2DHSelectionParamTool.h"
@@ -17,8 +17,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( B2DHSelectionParamTool );
-
+DECLARE_TOOL_FACTORY( B2DHSelectionParamTool )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -93,7 +92,7 @@ B2DHSelectionParamTool::~B2DHSelectionParamTool() {
 StatusCode B2DHSelectionParamTool::initialize() {
   StatusCode sc = StatusCode::SUCCESS;
 
-  m_dva=Gaudi::Utils::getDVAlgorithm(contextSvc());
+  m_dva=Gaudi::Utils::getIDVAlgorithm(contextSvc());
   if (0 == m_dva) {
    return Error("B2DHSelectionParamTool initialize could not get parent DValgorithm",
                      StatusCode::FAILURE);
