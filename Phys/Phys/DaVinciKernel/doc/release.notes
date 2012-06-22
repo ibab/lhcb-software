@@ -4,6 +4,17 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2012-06-22 - Chris Jones
+ - Add new base class based on the old DVAlgorithm, with the same 'DaVinci'
+   functionaility, but with varying degress of support of histogramming and
+   ntupling :-
+   + DaVinciAlgorithm      : No histogramming or tupling
+   + DaVinciHistoAlgorithm : Histogramming only
+   + DaVinciTupleAlgorithm : Histogramming and tupling
+  DVAlgorithm is kept (using DaVinciTupleAlgorithm) for backwards compatibility
+ - The method getDVAlgorithm has been removed, as it is not compatible with
+   the above changes. getIDVAlgorithm should be used instead.
+
 !========================= DaVinciKernel v10r5 2012-03-01 =========================
 
 ! 2012-02-24 - Chris Jones

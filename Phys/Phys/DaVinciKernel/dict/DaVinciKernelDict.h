@@ -16,11 +16,11 @@
 // ============================================================================
 #include "Kernel/TransporterFunctions.h"
 #include "Kernel/ParticleFilters.h"
-//#include "Kernel/HashIDs.h"
-//#include "Kernel/DaVinciStringUtils.h"
-#include "Kernel/DVAlgorithm.h" // Has to be last for compilation on Windows
+#include "Kernel/DaVinciAlgorithm.h"
+#include "Kernel/DaVinciHistoAlgorithm.h"
+#include "Kernel/DaVinciTupleAlgorithm.h"
 // ============================================================================
-// The END 
+// The END
 // ============================================================================
 #endif // DICT_DAVINCIKERNELDICT_H
 // ============================================================================

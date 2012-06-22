@@ -2,8 +2,9 @@
 
 <!-- DaVinciKernel -->
 
-<class name = "DVAlgorithm" />
-<class name = "extends1<GaudiTupleAlg,IDVAlgorithm>" />
+<class name = "DaVinciAlgorithm" />
+<class name = "DaVinciHistoAlgorithm" />
+<class name = "DaVinciTupleAlgorithm" />
 
 <function name    = "DaVinci::Utils::setInput"/>
 <function name    = "DaVinci::filter"         />

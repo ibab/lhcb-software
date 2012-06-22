@@ -3,8 +3,8 @@
 #define KERNEL_BESTPV_H 1
 
 // Include files
-#include "Kernel/DVAlgorithm.h"
-#include "Kernel/GetDVAlgorithm.h"
+#include "Kernel/IDVAlgorithm.h"
+#include "Kernel/GetIDVAlgorithm.h"
 
 /** @namespace DaVinci BestPV.h
  *  
@@ -83,14 +83,14 @@ namespace DaVinci {
     operator()(const LHCb::Particle* particle) const 
     {
       if (!m_dvAlg) {
-        m_dvAlg = Gaudi::Utils::getDVAlgorithm(m_parent.contextSvc());
+        m_dvAlg = Gaudi::Utils::getIDVAlgorithm(m_parent.contextSvc());
       }
-      return (m_dvAlg) ? m_dvAlg->bestPV(particle) : 0; 
+      return (m_dvAlg) ? m_dvAlg->bestVertex(particle) : 0; 
     }
 
   private :
     const T& m_parent;
-    mutable DVAlgorithm* m_dvAlg;
+    mutable IDVAlgorithm* m_dvAlg;
   private :
     _BestPV() { }
 

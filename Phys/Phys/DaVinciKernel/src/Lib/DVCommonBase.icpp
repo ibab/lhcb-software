@@ -1,4 +1,7 @@
-// $Id: DVAlgorithm.cpp,v 1.84 2010-08-27 13:48:25 jpalac Exp $
+
+#ifndef KERNEL_DVCOMMONBASE_ICPP
+#define KERNEL_DVCOMMONBASE_ICPP 1
+
 // ============================================================================
 // Include
 // ============================================================================
@@ -10,54 +13,51 @@
 // ============================================================================
 // DaVinci
 // ============================================================================
-#include "Kernel/DVAlgorithm.h"
 #include "Kernel/DaVinciStringUtils.h"
 #include "DaVinciUtils/Functions.h"
 #include "Kernel/TreeCloners.h"
 // ============================================================================
-/** @file
- *  The implementation for class DVAlgorithm
- */
+
 // ============================================================================
 // Standard constructor
 // ============================================================================
-DVAlgorithm::DVAlgorithm
-( const std::string& name,
-  ISvcLocator* pSvcLocator )
-  : base_class    ( name , pSvcLocator )
-//
+template <class PBASE>
+DVCommonBase<PBASE>::DVCommonBase( const std::string& name,
+                                   ISvcLocator* pSvcLocator )
+  : PBASE( name , pSvcLocator )
+                                 //
   , m_particleOutputLocation("")
   , m_vertexFitNames        ()
   , m_vertexFits            ()
-//
+                                 //
   , m_filterNames           ()
   , m_filters               ()
-//
+                                 //
   , m_particleCombinerNames ()
   , m_particleCombiners     ()
-//
+                                 //
   , m_particleReFitterNames ()
   , m_particleReFitters     ()
-//
+                                 //
   , m_pvReFitterNames       ()
   , m_pvReFitters           ()
   , m_defaultPVReFitter     (NULL)
-//
+                                 //
   , m_decayTreeFitterNames  ()
   , m_decayTreeFitters      ()
-//
+                                 //
   , m_massFitterNames       ()
   , m_massFitters           ()
-//
+                                 //
   , m_lifetimeFitterNames   ()
   , m_lifetimeFitters       ()
-//
+                                 //
   , m_directionFitterNames  ()
   , m_directionFitters      ()
-//
+                                 //
   , m_distanceCalculatorNames  ()
   , m_distanceCalculators      ()
-//
+                                 //
   , m_checkOverlapName      ( "CheckOverlap" )
   , m_checkOverlap          ( NULL  )
   , m_taggingToolName       ( "BTaggingTool" )
@@ -77,33 +77,33 @@ DVAlgorithm::DVAlgorithm
   , m_PVLocation            ( ""    )
   , m_noPVs                 ( false )
 {
-  declareProperty( "Output",
-                   m_particleOutputLocation,
-                   "Output Location of Particles" );
+  this->declareProperty( "Output",
+                         m_particleOutputLocation,
+                         "Output Location of Particles" );
 
   m_inputLocations.clear() ;
-  declareProperty( "Inputs",
-                   m_inputLocations,
-                   "Input Locations forwarded of Particles" );
+  this->declareProperty( "Inputs",
+                         m_inputLocations,
+                         "Input Locations forwarded of Particles" );
 
   m_p2PVInputLocations.clear() ;
-  declareProperty( "P2PVInputLocations",
-                   m_p2PVInputLocations,
-                   "Particle -> PV Relations Input Locations" );
+  this->declareProperty( "P2PVInputLocations",
+                         m_p2PVInputLocations,
+                         "Particle -> PV Relations Input Locations" );
 
-  declareProperty( "InputPrimaryVertices", m_PVLocation );
+  this->declareProperty( "InputPrimaryVertices", m_PVLocation );
 
-  declareProperty("UseP2PVRelations", m_useP2PV,
-                  "Use P->PV relations internally. Forced to true if re-fitting PVs. Otherwise disabled for single PV events. Default: true.");
+  this->declareProperty("UseP2PVRelations", m_useP2PV,
+                        "Use P->PV relations internally. Forced to true if re-fitting PVs. Otherwise disabled for single PV events. Default: true.");
 
-  declareProperty("WriteP2PVRelations", m_writeP2PV,
-                  "Write out P->PV relations table to TES. Default: true");
+  this->declareProperty("WriteP2PVRelations", m_writeP2PV,
+                        "Write out P->PV relations table to TES. Default: true");
 
-  declareProperty("ForceP2PVBuild", m_forceP2PVBuild,
-                  "Force construction of P->PV relations table. Default: false");
+  this->declareProperty("ForceP2PVBuild", m_forceP2PVBuild,
+                        "Force construction of P->PV relations table. Default: false");
 
 
-  declareProperty( "IgnoreP2PVFromInputLocations", m_ignoreP2PVFromInputLocations);
+  this->declareProperty( "IgnoreP2PVFromInputLocations", m_ignoreP2PVFromInputLocations);
 
 
   //
@@ -114,18 +114,18 @@ DVAlgorithm::DVAlgorithm
   m_vertexFitNames [ "ParticleAdder" ] = "ParticleAdder"           ;
   m_vertexFitNames [ "LoKiFast"      ] = "LoKi::FastVertexFitter"  ;
   m_vertexFitNames [ "FastLoKi"      ] = "LoKi::FastVertexFitter"  ;
-  declareProperty ( "VertexFitters"     , m_vertexFitNames, "Names of vertex fitters" ) ;
+  this->declareProperty ( "VertexFitters"     , m_vertexFitNames, "Names of vertex fitters" ) ;
   //
-  declareProperty ( "CheckOverlapTool"  , m_checkOverlapName, "Name of Overlap Tool"  ) ;
+  this->declareProperty ( "CheckOverlapTool"  , m_checkOverlapName, "Name of Overlap Tool"  ) ;
   //
   m_filterNames    [ ""       ] = "LoKi::Hybrid::FilterCriterion" ;
   m_filterNames    [ "LoKi"   ] = "LoKi::Hybrid::FilterCriterion" ;
   m_filterNames    [ "Hybrid" ] = "LoKi::Hybrid::FilterCriterion" ;
-  declareProperty ( "ParticleFilters"            ,
-                    m_filterNames                ,
-                    "Names of ParticleFilters"   ) ;
+  this->declareProperty ( "ParticleFilters"            ,
+                          m_filterNames                ,
+                          "Names of ParticleFilters"   ) ;
   //
-  declareProperty ( "ReFitPVs"    , m_refitPVs, "Refit PV"     ) ;
+  this->declareProperty ( "ReFitPVs"    , m_refitPVs, "Refit PV"     ) ;
 
   // ==========================================================================
   // Note: there is no default value!
@@ -142,7 +142,7 @@ DVAlgorithm::DVAlgorithm
   m_particleCombinerNames [ "Momenta"          ] = "MomentumCombiner"            ;
   m_particleCombinerNames [ "LoKiFast"         ] = "LoKi::FastVertexFitter"      ;
   m_particleCombinerNames [ "FastLoKi"         ] = "LoKi::FastVertexFitter"      ;
-  declareProperty
+  this->declareProperty
     ( "ParticleCombiners"     ,
       m_particleCombinerNames ,
       "Names of particle combiners, the basic tools for creation of composed particles" ) ;
@@ -158,39 +158,39 @@ DVAlgorithm::DVAlgorithm
   m_particleReFitterNames [ "Adder"         ] = "ParticleAdder"          ;
   m_particleReFitterNames [ "LoKiFast"      ] = "LoKi::FastVertexFitter" ;
   m_particleReFitterNames [ "FastLoKi"      ] = "LoKi::FastVertexFitter" ;
-  declareProperty  ( "ParticleReFitters" , m_particleReFitterNames, "Names of particle refitters" ) ;
+  this->declareProperty  ( "ParticleReFitters" , m_particleReFitterNames, "Names of particle refitters" ) ;
   //
   m_pvReFitterNames [ ""           ] = "AdaptivePVReFitter" ;
   m_pvReFitterNames [ "PVReFitter" ] = "PVReFitter"         ;
   m_pvReFitterNames [ "Adaptive"   ] = "AdaptivePVReFitter" ;
   m_pvReFitterNames [ "Cheated"    ] = "CheatedPVReFitter"  ;
-  declareProperty  ( "PVReFitters" , m_pvReFitterNames, "Names of PV refitters" ) ;
+  this->declareProperty  ( "PVReFitters" , m_pvReFitterNames, "Names of PV refitters" ) ;
   //
 
   m_decayTreeFitterNames [ ""     ] = "LoKi::DecayTreeFit" ;
   m_decayTreeFitterNames [ "LoKi" ] = "LoKi::DecayTreeFit" ;
-  declareProperty
+  this->declareProperty
     ( "DecayTreeFitters"       ,
       m_decayTreeFitterNames   ,
       "The mapping of nick/name/type for IDecaytreeFitFit tools" ) ;
   //
   m_massFitterNames [ ""     ] = "LoKi::MassFitter" ;
   m_massFitterNames [ "LoKi" ] = "LoKi::MassFitter" ;
-  declareProperty
+  this->declareProperty
     ( "MassFitters"            ,
       m_massFitterNames        ,
       "The mapping of nick/name/type for IMassFit tools"        ) ;
   //
   m_lifetimeFitterNames  [ ""     ] = "PropertimeFitter"     ;
   m_lifetimeFitterNames  [ "LoKi" ] = "LoKi::LifetimeFitter" ;
-  declareProperty
+  this->declareProperty
     ( "LifetimeFitters"     ,
       m_lifetimeFitterNames ,
       "The mapping of nick/name/type for ILifetimeFitter tools" ) ;
   //
   m_directionFitterNames [ ""     ] = "DirectionFitter" ;
   m_directionFitterNames [ "LoKi" ] = "LoKi::DirectionFitter" ;
-  declareProperty
+  this->declareProperty
     ( "DirectionFitters"     ,
       m_directionFitterNames ,
       "The mapping of nick/name/type for IDirectionFit tools"   ) ;
@@ -201,49 +201,54 @@ DVAlgorithm::DVAlgorithm
   m_distanceCalculatorNames [ "Hlt"     ] = "LoKi::TrgDistanceCalculator" ;
   m_distanceCalculatorNames [ "Trigger" ] = "LoKi::TrgDistanceCalculator" ;
   m_distanceCalculatorNames [ "Fast"    ] = "LoKi::TrgDistanceCalculator" ;
-  declareProperty
+  this->declareProperty
     ( "DistanceCalculators"     ,
       m_distanceCalculatorNames ,
       "The mapping of nick/name/type for IDistanceCalculator tools"   ) ;
   //
-  declareProperty ( "DecayDescriptor"   , m_decayDescriptor   = "", "Describes the decay" ) ;
-  declareProperty ( "ForceOutput" , m_forceOutput  = true , "If true TES location is written" ) ;
-  declareProperty ( "PreloadTools"      , m_preloadTools      = true, "If true all tools are pre-loaded in initialize" ) ;
+  this->declareProperty ( "DecayDescriptor"   , m_decayDescriptor   = "",
+                          "Describes the decay" ) ;
+  this->declareProperty ( "ForceOutput"       , m_forceOutput       = true,
+                          "If true TES location is written" ) ;
+  this->declareProperty ( "PreloadTools"      , m_preloadTools      = true,
+                          "If true all tools are pre-loaded in initialize" ) ;
   //
   // enforce the registration for algorithm context service
-  setProperty ( "RegisterForContextService" , true ).ignore() ;
+  this->setProperty ( "RegisterForContextService" , true ).ignore() ;
 }
+
 // ============================================================================
 // Initialize the thing
 // ============================================================================
-StatusCode DVAlgorithm::initialize ()
+template <class PBASE>
+StatusCode DVCommonBase<PBASE>::initialize ()
 {
 
   // register for the algorithm context service
   IAlgContextSvc* ctx = 0 ;
-  if ( registerContext() ) { ctx = contextSvc() ; }
+  if ( this->registerContext() ) { ctx = this->contextSvc() ; }
   // setup sentry/guard
   Gaudi::Utils::AlgContext sentry ( ctx , this ) ;
 
   // initialize the base
-  StatusCode sc = GaudiTupleAlg::initialize();
-  if ( sc.isFailure() ) { return sc; } 
+  StatusCode sc = PBASE::initialize();
+  if ( sc.isFailure() ) { return sc; }
 
-  if ( !registerContext() || !contextSvc() )
+  if ( !this->registerContext() || !this->contextSvc() )
   {
-    Warning( "Registration for Algorithm Context Service is disabled. Some tools/utilities could have problems." ).ignore();
+    this->Warning( "Registration for Algorithm Context Service is disabled. Some tools/utilities could have problems." ).ignore();
   }
 
-  // Load tools very
+  // Load tools
   sc = loadTools() ;
-  if ( sc.isFailure() ) { return Error("Unable to load tools",sc); }
+  if ( sc.isFailure() ) { return this->Error("Unable to load tools",sc); }
 
-  if (msgLevel(MSG::DEBUG))
+  if ( this->msgLevel(MSG::DEBUG) )
   {
     if ( m_decayDescriptor.empty() )
-    { debug() << "Decay Descriptor string not specified"   << endmsg; }
+    { this->debug() << "Decay Descriptor string not specified"   << endmsg; }
     else
-    { debug() << "Decay Descriptor: " << m_decayDescriptor << endmsg; }
+    { this->debug() << "Decay Descriptor: " << m_decayDescriptor << endmsg; }
   }
 
   if ( m_PVLocation.empty() )
@@ -263,31 +268,34 @@ StatusCode DVAlgorithm::initialize ()
     {
       if (!defaultPVReFitter())
       {
-        return Error("Default IPVReFitter could not be loaded");
+        return this->Error("Default IPVReFitter could not be loaded");
       }
     }
 
     if (!relatedPVFinder())
     {
-      return Error("IRelatedPVFinder could not be loaded");
+      return this->Error("IRelatedPVFinder could not be loaded");
     }
   }
 
-  if (msgLevel(MSG::DEBUG))
+  if (this->msgLevel(MSG::DEBUG))
   {
-    debug() << "End of DVAlgorithm::initialize with " << sc << endmsg;
+    this->debug() << "End of DVCommonBase::initialize with " << sc << endmsg;
   }
 
   return sc;
 }
+
 // ============================================================================
-void DVAlgorithm::initializeLocations()
+
+template <class PBASE>
+void DVCommonBase<PBASE>::initializeLocations()
 {
 
-  if ( msgLevel(MSG::DEBUG) )
+  if ( this->msgLevel(MSG::DEBUG) )
   {
-    debug() << ">>> Initialised locations " << m_inputLocations
-            << endmsg;
+    this->debug() << ">>> Initialised locations " << m_inputLocations
+                  << endmsg;
   }
 
   for ( std::vector<std::string>::iterator iloc = m_inputLocations.begin();
@@ -306,10 +314,10 @@ void DVAlgorithm::initializeLocations()
     }
   }
 
-  if ( msgLevel(MSG::DEBUG) )
+  if ( this->msgLevel(MSG::DEBUG) )
   {
-    debug() << ">>> Initialised P->PV locations "
-            << m_p2PVInputLocations << endmsg;
+    this->debug() << ">>> Initialised P->PV locations "
+                  << m_p2PVInputLocations << endmsg;
   }
 
   if ( m_particleOutputLocation.empty() )
@@ -333,15 +341,16 @@ void DVAlgorithm::initializeLocations()
 // ============================================================================
 // Load standard tools
 // ============================================================================
-StatusCode DVAlgorithm::loadTools()
+template <class PBASE>
+StatusCode DVCommonBase<PBASE>::loadTools()
 {
 
   if ( !m_preloadTools )
   {
-    return Warning( "Not preloading tools", StatusCode::SUCCESS ) ;
+    return this->Warning( "Not preloading tools", StatusCode::SUCCESS ) ;
   }
 
-  if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading tools" << endmsg;
+  if (this->msgLevel(MSG::DEBUG)) this->debug() << ">>> Preloading tools" << endmsg;
   // vertex fitter
 
   if ( m_particleCombinerNames.end() == m_particleCombinerNames.find("") )
@@ -354,8 +363,8 @@ StatusCode DVAlgorithm::loadTools()
     m_vertexFitNames[""] = onOffline()->vertexFitterType() ;
   }
 
-  if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading "
-                                    << m_vertexFitNames[""] << " as IVertexFit " << endmsg;
+  if (this->msgLevel(MSG::DEBUG)) this->debug() << ">>> Preloading "
+                                                << m_vertexFitNames[""] << " as IVertexFit " << endmsg;
   vertexFitter() ;
 
   // geometry THIS IS OBSOLETE
@@ -365,46 +374,48 @@ StatusCode DVAlgorithm::loadTools()
   }
 
   // distance geometry
-  if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading "
-                                    << m_distanceCalculatorNames[""]
-                                    << " as IDistanceCalculator" << endmsg;
+  if (this->msgLevel(MSG::DEBUG)) this->debug() << ">>> Preloading "
+                                                << m_distanceCalculatorNames[""]
+                                                << " as IDistanceCalculator" << endmsg;
   distanceCalculator();
 
-  if (msgLevel(MSG::DEBUG))
+  if (this->msgLevel(MSG::DEBUG))
   {
-    debug() << ">>> Preloading CheckOverlap Tool" << endmsg;
+    this->debug() << ">>> Preloading CheckOverlap Tool" << endmsg;
   }
   checkOverlap();
 
-  if (msgLevel(MSG::DEBUG))
+  if (this->msgLevel(MSG::DEBUG))
   {
-    debug() << ">>> Preloading LHCb::ParticlePropertySvc" << endmsg;
+    this->debug() << ">>> Preloading LHCb::ParticlePropertySvc" << endmsg;
   }
   ppSvc() ;
 
   return StatusCode::SUCCESS;
 }
+
 // ============================================================================
 // Execute
 // ============================================================================
-StatusCode DVAlgorithm::sysExecute ()
+template <class PBASE>
+StatusCode DVCommonBase<PBASE>::sysExecute ()
 {
   // register for the algorithm context service
   IAlgContextSvc* ctx = NULL;
-  if ( registerContext() ) { ctx = contextSvc() ; }
+  if ( this->registerContext() ) { ctx = this->contextSvc() ; }
   // setup sentry/guard
   Gaudi::Utils::AlgContext sentry ( ctx , this ) ;
 
   // Make sure particles, secondary vertices, primary vertices and relations
   // tables are cleared each event.
-  DVAlgorithmGuard guard(m_inputParts,
-                         m_parts,
-                         m_secVerts,
-                         m_refittedPVs,
-                         m_p2PVMap);
+  DVAlgGuard guard(m_inputParts,
+                   m_parts,
+                   m_secVerts,
+                   m_refittedPVs,
+                   m_p2PVMap);
 
   StatusCode sc = loadEventInput();
-  if ( sc.isFailure() ) return Error ( "Not able to load event input" , sc ) ;
+  if ( sc.isFailure() ) return this->Error ( "Not able to load event input" , sc ) ;
 
   // execute the algorithm
   sc = this->Algorithm::sysExecute();
@@ -412,13 +423,13 @@ StatusCode DVAlgorithm::sysExecute ()
 
   if ( !m_setFilterCalled )
   {
-    Warning ( "SetFilterPassed not called for this event!" ).ignore() ;
+    this->Warning ( "SetFilterPassed not called for this event!" ).ignore() ;
   }
 
   // count number of "effective filters"
-  counter("#accept") += filterPassed() ;
+  this->counter("#accept") += this->filterPassed() ;
 
-  if ( filterPassed() )
+  if ( this->filterPassed() )
   {
     sc = saveInTES();
   }
@@ -432,26 +443,35 @@ StatusCode DVAlgorithm::sysExecute ()
 
   return sc ;
 }
+
 // ============================================================================
-void DVAlgorithm::setFilterPassed( bool state )
+
+template <class PBASE>
+void DVCommonBase<PBASE>::setFilterPassed( bool state )
 {
   this->Algorithm::setFilterPassed(state);
   m_setFilterCalled = true;
 }
+
 // ============================================================================
-void DVAlgorithm::writeEmptyTESContainers()
+
+template <class PBASE>
+void DVCommonBase<PBASE>::writeEmptyTESContainers()
 {
   LHCb::Particle::Container* container = new LHCb::Particle::Container();
   put(container, particleOutputLocation());
 
 }
+
 //=============================================================================
-StatusCode DVAlgorithm::loadEventInput() 
+
+template <class PBASE>
+StatusCode DVCommonBase<PBASE>::loadEventInput()
 {
 
-  if (msgLevel(MSG::VERBOSE))
+  if (this->msgLevel(MSG::VERBOSE))
   {
-    verbose() << ">>> loadEventInput " << endmsg;
+    this->verbose() << ">>> loadEventInput " << endmsg;
   }
 
   // Retrieve Particles & Vertices from all previous processing
@@ -466,20 +486,24 @@ StatusCode DVAlgorithm::loadEventInput()
 
   return sc;
 }
+
 //=============================================================================
-StatusCode DVAlgorithm::loadParticle2PVRelations()
+
+template <class PBASE>
+StatusCode DVCommonBase<PBASE>::loadParticle2PVRelations()
 {
   for( std::vector<std::string>::const_iterator iLoc = m_p2PVInputLocations.begin();
        iLoc != m_p2PVInputLocations.end(); ++iLoc )
   {
-    if (exist<Particle2Vertex::Table>( *iLoc ))
+    if ( this -> template exist<Particle2Vertex::Table>(*iLoc) )
     {
-      if (msgLevel(MSG::DEBUG))
+      if (this->msgLevel(MSG::DEBUG))
       {
-        debug() << "Reading table from " << (*iLoc) << endmsg ;
+        this->debug() << "Reading table from " << (*iLoc) << endmsg ;
       }
 
-      const Particle2Vertex::Table * table = get<Particle2Vertex::Table>(*iLoc);
+      const Particle2Vertex::Table * table = 
+        this -> template get<Particle2Vertex::Table>(*iLoc);
       const Particle2Vertex::Table::Range& relations = table->relations();
       loadRelations( relations );
 
@@ -487,7 +511,7 @@ StatusCode DVAlgorithm::loadParticle2PVRelations()
     else
     {
       Info ( "No P->PV table at " + (*iLoc)  +
-             ( rootInTES().empty() ? "" :  (" under "+rootInTES() ) ),
+             ( this->rootInTES().empty() ? "" :  (" under "+this->rootInTES() ) ),
              StatusCode::SUCCESS, 0).ignore() ;
     }
 
@@ -495,35 +519,41 @@ StatusCode DVAlgorithm::loadParticle2PVRelations()
 
   return StatusCode::SUCCESS ; // could be sc
 }
+
 //=============================================================================
-void DVAlgorithm::loadRelations(const Particle2Vertex::Table::Range& relations)
+
+template <class PBASE>
+void DVCommonBase<PBASE>::loadRelations(const Particle2Vertex::Table::Range& relations)
 {
   if (relations.empty()) return;
 
-  if (msgLevel(MSG::VERBOSE))
+  if (this->msgLevel(MSG::VERBOSE))
   {
-    verbose() << "loadRelations reading " << relations.size()
-              << " P->PV relations" << endmsg;
+    this->verbose() << "loadRelations reading " << relations.size()
+                    << " P->PV relations" << endmsg;
   }
 
   for ( Particle2Vertex::Table::Range::const_iterator i = relations.begin();
         i != relations.end(); ++i )
   {
     relate(i->from(), i->to());
-    if (msgLevel(MSG::VERBOSE))
+    if (this->msgLevel(MSG::VERBOSE))
     {
-      verbose() << "Reading a " << i->from()->particleID().pid()
-                << " related to " <<  i->to()->position() << endmsg ;
+      this->verbose() << "Reading a " << i->from()->particleID().pid()
+                      << " related to " <<  i->to()->position() << endmsg ;
     }
   }
 }
+
 //=============================================================================
-StatusCode DVAlgorithm::loadParticles()
+
+template <class PBASE>
+StatusCode DVCommonBase<PBASE>::loadParticles()
 {
-  if (msgLevel(MSG::DEBUG))
+  if (this->msgLevel(MSG::DEBUG))
   {
-    debug() << "Looking for particles in " << m_inputLocations.size()
-            << " places" << endmsg ;
+    this->debug() << "Looking for particles in " << m_inputLocations.size()
+                  << " places" << endmsg ;
   }
 
   for( std::vector<std::string>::iterator iloc = m_inputLocations.begin();
@@ -531,23 +561,23 @@ StatusCode DVAlgorithm::loadParticles()
   {
     // Retrieve the particles:
     const std::string location = (*iloc)+"/Particles";
-    if ( ! exist<LHCb::Particle::Range>( location ) )
+    if ( ! this -> template exist<LHCb::Particle::Range>(location) )
     {
       Info ( "Non-existing location "+(*iloc) +
-             ( rootInTES().empty() ?  "" : (" under " + rootInTES() ) ),
+             ( this->rootInTES().empty() ?  "" : (" under " + this->rootInTES() ) ),
              StatusCode::SUCCESS, 0).ignore() ;
       continue ;
     }
-    LHCb::Particle::Range parts = get<LHCb::Particle::Range>( location );
+    LHCb::Particle::Range parts = this -> template get<LHCb::Particle::Range>(location);
 
     // statistics:
-    counter ( "# " + (*iloc) ) += parts.size() ;
+    this->counter ( "# " + (*iloc) ) += parts.size() ;
 
     // Msg number of Particles retrieved
-    if (msgLevel(MSG::VERBOSE))
+    if (this->msgLevel(MSG::VERBOSE))
     {
-      verbose() << "    Number of Particles retrieved from "
-                << location << " = " << parts.size() << endmsg;
+      this->verbose() << "    Number of Particles retrieved from "
+                      << location << " = " << parts.size() << endmsg;
     }
 
     m_inputParts    .reserve ( m_inputParts    .size () + parts.size() ) ;
@@ -558,29 +588,33 @@ StatusCode DVAlgorithm::loadParticles()
       m_inputParts.push_back(*icand);
     }
 
-    if (msgLevel(MSG::VERBOSE))
+    if (this->msgLevel(MSG::VERBOSE))
     {
-      verbose() << "Number of Particles after adding "
-                << *iloc << " = " << m_parts.size() << endmsg;
+      this->verbose() << "Number of Particles after adding "
+                      << *iloc << " = " << m_parts.size() << endmsg;
     }
 
   }
 
-  if (msgLevel(MSG::VERBOSE))
+  if (this->msgLevel(MSG::VERBOSE))
   {
-    verbose() << "    Total number of particles " << m_parts.size() << endmsg;
+    this->verbose() << "    Total number of particles " << m_parts.size() << endmsg;
   }
 
   // statistics:
-  counter ("# input particles" ) += m_inputParts.size() ;
+  this->counter ("# input particles" ) += m_inputParts.size() ;
 
   return StatusCode::SUCCESS;
 }
+
 // ============================================================================
-const LHCb::Particle* DVAlgorithm::markTree(const LHCb::Particle* particle)
+
+template <class PBASE>
+const LHCb::Particle*
+DVCommonBase<PBASE>::markTree(const LHCb::Particle* particle)
 {
-  Assert ( NULL != particle ,
-           "mark: Attempt to mark invalid particle for saving" );
+  this->Assert ( NULL != particle ,
+                 "mark: Attempt to mark invalid particle for saving" );
 
   if ( DaVinci::Utils::inTES ( particle ) ) { return particle ; }
 
@@ -596,24 +630,32 @@ const LHCb::Particle* DVAlgorithm::markTree(const LHCb::Particle* particle)
 
   return newp;
 }
+
 //=============================================================================
-const LHCb::Particle* DVAlgorithm::cloneAndMarkTree(const LHCb::Particle* particle)
+
+template <class PBASE>
+const LHCb::Particle*
+DVCommonBase<PBASE>::cloneAndMarkTree(const LHCb::Particle* particle)
 {
   return markTree(particle->clone());
 }
+
 //=============================================================================
-const LHCb::RecVertex* DVAlgorithm::mark( const LHCb::RecVertex* keptV )const
+
+template <class PBASE>
+const LHCb::RecVertex*
+DVCommonBase<PBASE>::mark( const LHCb::RecVertex* keptV )const
 {
   if ( !keptV )
   {
-    Exception("DVAlgorithm::mark: Attempt to mark NULL Vertex for saving") ;
+    this->Exception("DVCommonBase::mark: Attempt to mark NULL Vertex for saving") ;
     return 0;
   }
 
   // Input vertex is given check if it already exist in the TES
   if( DaVinci::Utils::inTES(keptV) )
   {
-    if (msgLevel(MSG::VERBOSE)) verbose() << " Vertex is in TES" << endmsg;
+    if (this->msgLevel(MSG::VERBOSE)) this->verbose() << " Vertex is in TES" << endmsg;
     return keptV;
   }
 
@@ -622,24 +664,27 @@ const LHCb::RecVertex* DVAlgorithm::mark( const LHCb::RecVertex* keptV )const
   // Put in the local container
   m_refittedPVs.push_back(newV);
 
-  if (msgLevel(MSG::VERBOSE)) verbose() << "   -> Create new and keep " << endmsg ;
+  if (this->msgLevel(MSG::VERBOSE)) this->verbose() << "   -> Create new and keep " << endmsg ;
 
   return newV;
 }
+
 //=============================================================================
-StatusCode DVAlgorithm::saveP2PVRelations() const 
+
+template <class PBASE>
+StatusCode DVCommonBase<PBASE>::saveP2PVRelations() const
 {
 
   if ( !saveP2PV() )
   {
-    return Info("Not saving P2PV", StatusCode::SUCCESS, 0);
+    return this->Info("Not saving P2PV", StatusCode::SUCCESS, 0);
   }
 
   if ( primaryVertices().empty() )
   {
-    if ( msgLevel ( MSG::DEBUG ) )
+    if ( this->msgLevel ( MSG::DEBUG ) )
     {
-      debug() <<"Skip saveP2PVRelations: No Primary Vertices" << endmsg;
+      this->debug() <<"Skip saveP2PVRelations: No Primary Vertices" << endmsg;
     }
     return StatusCode::SUCCESS;
   }
@@ -648,9 +693,9 @@ StatusCode DVAlgorithm::saveP2PVRelations() const
 
   if ( m_p2PVMap.empty() )
   {
-    if ( msgLevel ( MSG::DEBUG ) )
+    if ( this->msgLevel ( MSG::DEBUG ) )
     {
-      debug() <<"Skip saveP2PVRelations: No relations" << endmsg;
+      this->debug() <<"Skip saveP2PVRelations: No relations" << endmsg;
     }
     return StatusCode::SUCCESS;
   }
@@ -680,7 +725,7 @@ StatusCode DVAlgorithm::saveP2PVRelations() const
         }
         else
         {
-          return Error("VertexBase to RecVertex dynamic cast FAILED");
+          return this->Error("VertexBase to RecVertex dynamic cast FAILED");
         }
       }
     }
@@ -688,17 +733,20 @@ StatusCode DVAlgorithm::saveP2PVRelations() const
 
   saveRefittedPVs(verticesToSave);
 
-  if ( msgLevel(MSG::DEBUG) )
+  if ( this->msgLevel(MSG::DEBUG) )
   {
-    debug() << "Saved table to "
-            << m_outputLocation+"/Particle2VertexRelations"
-            << endmsg ;
+    this->debug() << "Saved table to "
+                  << m_outputLocation+"/Particle2VertexRelations"
+                  << endmsg ;
   }
 
   return StatusCode::SUCCESS;
 }
+
 //=============================================================================
-void DVAlgorithm::buildP2PVMap() const
+
+template <class PBASE>
+void DVCommonBase<PBASE>::buildP2PVMap() const
 {
 
   if (m_parts.empty()) return;
@@ -720,8 +768,12 @@ void DVAlgorithm::buildP2PVMap() const
     if (DaVinci::Utils::inTES(*iPart) ) bestPV(*iPart);
   }
 }
+
 //=============================================================================
-void DVAlgorithm::saveRefittedPVs(const LHCb::RecVertex::ConstVector& vToSave) const
+
+template <class PBASE>
+void
+DVCommonBase<PBASE>::saveRefittedPVs(const LHCb::RecVertex::ConstVector& vToSave) const
 {
   if ( vToSave.empty() ) return;
 
@@ -729,7 +781,7 @@ void DVAlgorithm::saveRefittedPVs(const LHCb::RecVertex::ConstVector& vToSave) c
 
   const std::string location(m_outputLocation+"/_RefitPVs");
 
-  put( verticesToSave, location );
+  this->put( verticesToSave, location );
 
   for( LHCb::RecVertex::ConstVector::const_iterator iPV = vToSave.begin();
        iPV != vToSave.end(); ++iPV )
@@ -741,21 +793,24 @@ void DVAlgorithm::saveRefittedPVs(const LHCb::RecVertex::ConstVector& vToSave) c
     }
   }
 
-  if ( msgLevel(MSG::VERBOSE) )
+  if ( this->msgLevel(MSG::VERBOSE) )
   {
-    verbose() << "Saved " << verticesToSave->size()
-              << " new re-fitted PVs in " << location
-              << " from " << vToSave.size()
-              << " vertices in local storage " << endmsg;
+    this->verbose() << "Saved " << verticesToSave->size()
+                    << " new re-fitted PVs in " << location
+                    << " from " << vToSave.size()
+                    << " vertices in local storage " << endmsg;
   }
 
 }
+
 // ============================================================================
-StatusCode DVAlgorithm::_saveInTES()
+
+template <class PBASE>
+StatusCode DVCommonBase<PBASE>::_saveInTES()
 {
-  if ( msgLevel(MSG::VERBOSE) )
+  if ( this->msgLevel(MSG::VERBOSE) )
   {
-    verbose() << "DVAlgorithm::_saveInTES "<< m_parts.size() << " Particles" << endmsg;
+    this->verbose() << "DVCommonBase::_saveInTES "<< m_parts.size() << " Particles" << endmsg;
   }
 
   LHCb::Particle::Container* p_tes = new LHCb::Particle::Container () ;
@@ -764,15 +819,15 @@ StatusCode DVAlgorithm::_saveInTES()
   {
     delete p_tes;
     delete v_tes;
-    return Error("Could not open output TES containers");
+    return this->Error("Could not open output TES containers");
   }
   put ( p_tes , particleOutputLocation()    ) ;
   put ( v_tes , decayVertexOutputLocation() ) ;
 
-  if ( msgLevel(MSG::VERBOSE) )
+  if ( this->msgLevel(MSG::VERBOSE) )
   {
-    verbose() << "Going to save "
-              << m_parts.size() << " particles" << endmsg;
+    this->verbose() << "Going to save "
+                    << m_parts.size() << " particles" << endmsg;
   }
 
   for ( LHCb::Particle::ConstVector::const_iterator iParticle = m_parts.begin();
@@ -781,9 +836,9 @@ StatusCode DVAlgorithm::_saveInTES()
     // Check if this was already in a Gaudi container (hence in TES)
     if ( !DaVinci::Utils::inTES(*iParticle) )
     {
-      if ( msgLevel(MSG::VERBOSE) )
+      if ( this->msgLevel(MSG::VERBOSE) )
       {
-        verbose() << "  Saving " <<  *iParticle << endmsg;
+        this->verbose() << "  Saving " <<  *iParticle << endmsg;
       }
       if (*iParticle)
       {
@@ -797,9 +852,9 @@ StatusCode DVAlgorithm::_saveInTES()
     }
     else
     {
-      if ( msgLevel(MSG::VERBOSE) )
+      if ( this->msgLevel(MSG::VERBOSE) )
       {
-        verbose() << "Skipping " << *iParticle << endmsg;
+        this->verbose() << "Skipping " << *iParticle << endmsg;
       }
     }
   }
@@ -810,52 +865,57 @@ StatusCode DVAlgorithm::_saveInTES()
   {
     if ( ! DaVinci::Utils::decayTreeInTES(*iParticle) )
     {
-      return Error("Element of saved decay tree not in TES. Likely memory leak!");
+      return this->Error("Element of saved decay tree not in TES. Likely memory leak!");
     }
   }
 
-  if ( msgLevel(MSG::VERBOSE) )
+  if ( this->msgLevel(MSG::VERBOSE) )
   {
-    verbose() << "Saved " << p_tes->size()
-              << " new particles in " << particleOutputLocation()
-              << " from " << m_parts.size()
-              << " total particles in local storage" << endmsg;
+    this->verbose() << "Saved " << p_tes->size()
+                    << " new particles in " << particleOutputLocation()
+                    << " from " << m_parts.size()
+                    << " total particles in local storage" << endmsg;
   }
 
   return StatusCode::SUCCESS;
 }
 
 // ============================================================================
-StatusCode DVAlgorithm::saveInTES()
+
+template <class PBASE>
+StatusCode DVCommonBase<PBASE>::saveInTES()
 {
-  if ( msgLevel(MSG::VERBOSE) )
+  if ( this->msgLevel(MSG::VERBOSE) )
   {
-    verbose() << "saveInTES "<< m_parts.size() << " Particles" << endmsg;
+    this->verbose() << "saveInTES "<< m_parts.size() << " Particles" << endmsg;
   }
 
   StatusCode sc = _saveInTES();
   if (sc.isFailure()) return sc;
 
   // now save relations table
-  if ( msgLevel(MSG::VERBOSE) ) verbose() << "Save P->PV relations" << endmsg;
+  if ( this->msgLevel(MSG::VERBOSE) ) this->verbose() << "Save P->PV relations" << endmsg;
 
   return saveP2PVRelations();
 }
+
 // ============================================================================
-const LHCb::VertexBase* 
-DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p) const
+
+template <class PBASE>
+const LHCb::VertexBase*
+DVCommonBase<PBASE>::calculateRelatedPV(const LHCb::Particle* p) const
 {
-  if ( msgLevel(MSG::VERBOSE) ) 
+  if ( this->msgLevel(MSG::VERBOSE) )
   {
-    verbose() << "DVAlgorithm::calculateRelatedPV" << endmsg;
+    this->verbose() << "DVCommonBase::calculateRelatedPV" << endmsg;
   }
 
   const LHCb::RecVertex::Range PVs = this->primaryVertices();
 
-  if (PVs.empty()) 
+  if (PVs.empty())
   {
-    Error("calculateRelatedPV: Empty primary vertex container",
-          StatusCode::FAILURE, 0 ).ignore();
+    this->Error("calculateRelatedPV: Empty primary vertex container",
+                StatusCode::FAILURE, 0 ).ignore();
     return NULL;
   }
 
@@ -877,23 +937,23 @@ DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p) const
 
   if ( !refitPVs() )
   { // no PV re-fit
-    if (msgLevel(MSG::VERBOSE))
+    if (this->msgLevel(MSG::VERBOSE))
     {
-      verbose() << "Getting related PV from finder" << endmsg;
+      this->verbose() << "Getting related PV from finder" << endmsg;
     }
 
     const LHCb::VertexBase* pv = finder->relatedPV(p, PVs);
 
-    if (msgLevel(MSG::VERBOSE))
+    if (this->msgLevel(MSG::VERBOSE))
     {
       if (pv)
       {
-        verbose() << "Returning related vertex\n"
-                  << pv << endmsg;
+        this->verbose() << "Returning related vertex\n"
+                        << pv << endmsg;
       }
       else
       {
-        verbose() << "no related PV found" << endmsg;
+        this->verbose() << "no related PV found" << endmsg;
       }
     }
     return pv;
@@ -901,9 +961,9 @@ DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p) const
   else
   {
     // re-fit vertices, then look for the best one.
-    if (msgLevel(MSG::VERBOSE))
+    if (this->msgLevel(MSG::VERBOSE))
     {
-      verbose() << "Re-fitting " << PVs.size() << " PVs"<< endmsg;
+      this->verbose() << "Re-fitting " << PVs.size() << " PVs"<< endmsg;
     }
 
     LHCb::RecVertex::ConstVector reFittedPVs;
@@ -919,30 +979,30 @@ DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p) const
       else
       {
         delete reFittedPV;
-        Error("PV re-fit failed", StatusCode::FAILURE, 1 ).ignore() ;
+        this->Error("PV re-fit failed", StatusCode::FAILURE, 1 ).ignore() ;
       }
     }
     if ( reFittedPVs.empty() )
     {
 
-      Warning( "Failed to create refitted PV list for event with " +
-               boost::lexical_cast<std::string>(PVs.size())+ " PVs",
-               StatusCode::FAILURE, 0 ).ignore();
+      this->Warning( "Failed to create refitted PV list for event with " +
+                     boost::lexical_cast<std::string>(PVs.size())+ " PVs",
+                     StatusCode::FAILURE, 0 ).ignore();
       return NULL;
     }
 
-    if (msgLevel(MSG::VERBOSE))
+    if (this->msgLevel(MSG::VERBOSE))
     {
-      verbose() << "have " << reFittedPVs.size()
-                << " re-fitted PVs" << endmsg;
+      this->verbose() << "have " << reFittedPVs.size()
+                      << " re-fitted PVs" << endmsg;
     }
 
     const LHCb::VertexBase* vb = finder->relatedPV(p, reFittedPVs);
 
     if (!vb)
     {
-      Warning("IRelatedPVFinder found no best vertex",
-              StatusCode::FAILURE, 0).ignore();
+      this->Warning("IRelatedPVFinder found no best vertex",
+                    StatusCode::FAILURE, 0).ignore();
       return NULL;
     }
 
@@ -950,8 +1010,8 @@ DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p) const
 
     if (!pv)
     {
-      Warning("VertexBase -> RecVertex dynamic cast failed",
-              StatusCode::FAILURE, 0).ignore();
+      this->Warning("VertexBase -> RecVertex dynamic cast failed",
+                    StatusCode::FAILURE, 0).ignore();
       return NULL;
     }
     else
@@ -961,37 +1021,43 @@ DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p) const
   }
 
 }
+
 // ============================================================================
-const LHCb::VertexBase* DVAlgorithm::getRelatedPV(const LHCb::Particle* part) const
+
+template <class PBASE>
+const LHCb::VertexBase*
+DVCommonBase<PBASE>::getRelatedPV(const LHCb::Particle* part) const
 {
 
-  if (msgLevel(MSG::VERBOSE)) verbose() << "getRelatedPV! Getting range" << endmsg;
+  if (this->msgLevel(MSG::VERBOSE)) 
+    this->verbose() << "getRelatedPV! Getting range" << endmsg;
+
   if (!part)
   {
-    error() << "input particle is NULL" << endmsg;
+    this->Error( "Input particle is NULL" ).ignore();
     return NULL;
   }
 
   if ( !hasStoredRelatedPV(part) )
   {
-    if (msgLevel(MSG::VERBOSE))
+    if (this->msgLevel(MSG::VERBOSE))
     {
-      verbose() << "particle2Vertices empty. Calling calculateRelatedPV"
-                << endmsg;
+      this->verbose() << "particle2Vertices empty. Calling calculateRelatedPV"
+                      << endmsg;
     }
     const LHCb::VertexBase* pv = calculateRelatedPV(part);
     if (pv)
     {
-      if (msgLevel(MSG::VERBOSE))
+      if (this->msgLevel(MSG::VERBOSE))
       {
-        verbose() << "Found related vertex. Relating it" << endmsg;
+        this->verbose() << "Found related vertex. Relating it" << endmsg;
       }
       relate( part, pv );
       return pv;
     }
     else
     {
-      Warning("Found no related vertex", StatusCode::FAILURE, 0).ignore();
+      this->Warning("Found no related vertex", StatusCode::FAILURE, 0).ignore();
       return NULL;
     }
   }
@@ -1004,18 +1070,20 @@ const LHCb::VertexBase* DVAlgorithm::getRelatedPV(const LHCb::Particle* part) co
 // ============================================================================
 // Finalize the algorithm + post-actions
 // ============================================================================
-StatusCode DVAlgorithm::finalize ()
+template <class PBASE>
+StatusCode DVCommonBase<PBASE>::finalize ()
 {
   // register for the algorithm context service
   IAlgContextSvc* ctx = NULL ;
-  if ( registerContext() ) { ctx = contextSvc() ; }
+  if ( this->registerContext() ) { ctx = this->contextSvc() ; }
 
   // setup sentry/guard
   Gaudi::Utils::AlgContext sentry ( ctx , this ) ;
 
-  // finalize GaudiTupleAlg base class
-  return GaudiTupleAlg::finalize();
+  // finalize base class
+  return PBASE::finalize();
 }
+
 // ============================================================================
-// The END
+#endif // KERNEL_DVCOMMONBASE_ICPP
 // ============================================================================
