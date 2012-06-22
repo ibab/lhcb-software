@@ -348,8 +348,11 @@ void CtrlFarmClusterLine::updateContent(XML::TaskSupervisorParser& ts) {
   ::scrc_put_chars(dis,pvss_status>1?"ERROR":"   OK",pvss_status>1?COL_ALARM:GREEN,line,53,0);    
 
   col = NORMAL|BOLD;
-
-  if ( pvss_status>1 )
+  struct tm tm;
+  ::strptime(c.time.c_str(),"%Y-%m-%d %H:%M:%S",&tm);
+  if ( ::time(0)-::mktime(&tm) > UPDATE_TIME_MAX )
+    err = " No update information present ", col = COL_ALARM;
+  else if ( pvss_status>1 )
     err = " PVSS environment looks funny.", col = COL_ALARM;    
   else if ( !cl_good && c.status == "DEAD" )
     err = " Nodes down - Check.", col = COL_WARNING;    
@@ -963,7 +966,7 @@ void HltDeferLine::display() {
   typedef HLTStats::Nodes Nodes;
   typedef HLTStats::Runs Runs;
   char txt[256];
-  size_t pos = 66, numNodes = 0, numRuns = 0, numFiles = 0;
+  size_t pos = 66, last_pos = pos, numNodes = 0, numRuns = 0, numFiles = 0;
   Display*       dis = m_parent->display();
   const HLTStats*  s = data<HLTStats>();
   const Runs&   runs = s->runs;
@@ -999,7 +1002,9 @@ void HltDeferLine::display() {
   pos += val.length();
   ::scrc_put_chars(dis,"  ",NORMAL,line,pos,0);
   pos += 2;
-  if ( nodes->size() > 0 ) {
+  ::scrc_put_chars(dis," ",INVERSE|BOLD|YELLOW,line,pos,1);
+  last_pos = pos;
+  if ( nodes->size() > 0 ) {    
     for (Nodes::const_iterator ni=nodes->begin(); ni!=nodes->end(); ni=nodes->next(ni))  {
       const DeferredHLTStats& n = *ni;
       string nn = n.name;
@@ -1010,13 +1015,15 @@ void HltDeferLine::display() {
 	if ( excl )  {
 	  col = INVERSE|(col==COL_WARNING ? MAGENTA : BLUE);
 	}
-	val = " "+nn.substr(nn.length()-2);
-	::scrc_put_chars(dis,val.c_str(),col,line,pos,0);
-	pos += val.length();
+	nn = nn.substr(nn.length()-2);
+	int n_pos = ::atoi(nn.c_str())-1;
+	val = " "+nn;
+	::scrc_put_chars(dis,val.c_str(),col,line,pos+n_pos*3,0);
+	if ( last_pos < pos+(1+n_pos)*3 ) last_pos = pos+(1+n_pos)*3;
       }
     }
   }
-  ::scrc_put_chars(dis," ",COL_OK,line,pos,1);
+  ::scrc_put_chars(dis," ",COL_OK,line,last_pos,1);
   end_update();
   IocSensor::instance().send(m_parent,CMD_SHOWDEFERREDRUNS,this);
 }

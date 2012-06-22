@@ -99,7 +99,7 @@ void HltSummaryDisplay::update(const void* ptr) {
     _R::const_iterator ri;
     for(SubDisplays::const_iterator i=sd.begin(); i!=sd.end(); ++i) {
       const ClusterLine* l = (*i).second;
-      const _S*    s = l->data<_S>();
+      const _S* s = l->data<_S>();
       if ( s )  {
 	const _R& runs  = s->runs;
 	const _N* nodes = s->nodes();
@@ -107,7 +107,10 @@ void HltSummaryDisplay::update(const void* ptr) {
 	  int run = (*ri).first;
 	  int files = (*ri).second;
 	  run_files[run] += files;
-	  run_nodes[run] = set<string>();
+	  map<int,set<string> >::iterator i = run_nodes.find(run);
+	  if ( i == run_nodes.end() ) {
+	    run_nodes[run] = set<string>();
+	  }
 	}
 	if ( nodes->size() > 0 ) {
 	  for (_N::const_iterator ni=nodes->begin(); ni!=nodes->end(); ni=nodes->next(ni))  {

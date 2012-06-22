@@ -172,6 +172,8 @@ FarmLineDisplay::FarmLineDisplay(int argc, char** argv)
     ::scrc_put_chars(m_display,": Done,ready",NORMAL,1,82,0);
     ::scrc_put_chars(m_display,"nn",RED|INVERSE|BOLD,1,110,0);
     ::scrc_put_chars(m_display,": Files to be processed",NORMAL,1,112,0);
+    ::scrc_put_chars(m_display,"  ",YELLOW|INVERSE|BOLD,1,140,0);
+    ::scrc_put_chars(m_display,": No information",NORMAL,1,142,0);
     ::scrc_put_chars(m_display,"nn",BLUE|INVERSE,2,80,0);
     ::scrc_put_chars(m_display,": Done/Excluded",NORMAL,2,82,0);
     ::scrc_put_chars(m_display,"nn",MAGENTA|INVERSE,2,110,0);
@@ -187,14 +189,16 @@ FarmLineDisplay::FarmLineDisplay(int argc, char** argv)
   else if ( m_mode == TORRENT_MODE ) {
     ::scrc_put_chars(m_display,txt,NORMAL|BOLD,1,2,0);
     ::scrc_put_chars(m_display,"<CTRL-H for Help>, <CTRL-E to exit>",NORMAL|BOLD,2,40,0);
-    ::scrc_put_chars(m_display," nn ",GREEN|INVERSE,1,80,0);
-    ::scrc_put_chars(m_display,": OK, TorrentInfo present",NORMAL,1,85,0);
-    ::scrc_put_chars(m_display," nn ",BLUE|INVERSE,2,80,0);
-    ::scrc_put_chars(m_display,": Excluded from HLT",NORMAL,2,85,0);
-    ::scrc_put_chars(m_display," nn ",RED|INVERSE|BOLD,1,120,0);
-    ::scrc_put_chars(m_display,": Not OK, No torrent info",NORMAL,1,125,0);
-    ::scrc_put_chars(m_display," nn ",BG_BLACK|FG_YELLOW|BOLD,2,120,0);
-    ::scrc_put_chars(m_display,": Executing",NORMAL,2,125,0);
+    ::scrc_put_chars(m_display," nn ",GREEN|INVERSE,1,78,0);
+    ::scrc_put_chars(m_display,": OK, TorrentInfo present",NORMAL,1,82,0);
+    ::scrc_put_chars(m_display," nn ",BLUE|INVERSE,2,78,0);
+    ::scrc_put_chars(m_display,": Excluded from HLT",NORMAL,2,82,0);
+    ::scrc_put_chars(m_display," nn ",RED|INVERSE|BOLD,1,110,0);
+    ::scrc_put_chars(m_display,": Not OK, No torrent info",NORMAL,1,114,0);
+    ::scrc_put_chars(m_display," nn ",BG_BLACK|FG_YELLOW|BOLD,2,110,0);
+    ::scrc_put_chars(m_display,": Executing",NORMAL,2,114,0);
+    ::scrc_put_chars(m_display,"    ",MAGENTA|INVERSE|BOLD,2,138,0);
+    ::scrc_put_chars(m_display,": No information",NORMAL,2,142,0);
     ::sprintf(txt," %-10s %8s %6s %6s %6s %6s     %-9s %8s %8s      %s",
 	      "","Last","No.of","Pro","No.of","No.of","Pieces","Download","Upload",
 	      "< -------- Subfarm Information ------- >");

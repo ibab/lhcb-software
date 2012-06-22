@@ -106,7 +106,6 @@ void CtrlFarmSubDisplay::init(bool) {
 void CtrlFarmSubDisplay::update(const void* address) {
   const char* data = (const char*)address;
   try {
-    m_lastUpdate = time(0);
     XML::TaskSupervisorParser ts;
     if ( ts.parseBuffer(m_name, data,::strlen(data)+1) ) {
       updateContent(ts);
@@ -184,8 +183,12 @@ void CtrlFarmSubDisplay::updateContent(XML::TaskSupervisorParser& ts) {
   ::sprintf(txt," - %s",c.time.c_str());
   border = m_title + " - " + c.status + " - " + c.time;
   col = NORMAL|BOLD;
-
-  if ( pvss_status>1 ) {
+  struct tm tm;
+  ::strptime(c.time.c_str(),"%Y-%m-%d %H:%M:%S",&tm);
+  if ( ::time(0)-(m_lastUpdate=::mktime(&tm)) > UPDATE_TIME_MAX ) {
+    setTimeoutError();
+  }
+  else if ( pvss_status>1 ) {
     ::scrc_put_chars(m_display,"PVSS environment looks funny - Please Check.",COL_ALARM,m_height,1,1);    
     ::scrc_set_border(m_display,border.c_str(),COL_WARNING);
   }

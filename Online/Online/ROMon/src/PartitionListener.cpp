@@ -17,7 +17,7 @@ using namespace ROMon;
 typedef vector<string> StringV;
 
 /// Standard constructor with object setup through parameters
-PartitionListener::PartitionListener(Interactor* par, const string& nam, const std::string& match)
+PartitionListener::PartitionListener(Interactor* par, const string& nam, const string& match)
   : m_parent(par), m_name(nam), m_match(match), m_subFarmDP(0), m_partIdDP(0), m_runStateDP(0)
 {
   for(size_t j=0; j<m_match.length(); ++j)

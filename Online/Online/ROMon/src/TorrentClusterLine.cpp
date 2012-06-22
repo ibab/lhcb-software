@@ -178,7 +178,7 @@ void TorrentClusterLine::display() {
 
   char txt[256];
   string nam, val, torrent;
-  size_t pos, line = position();
+  size_t pos, line = position(), n_pos, last_pos;
   Display*     dis = m_parent->display();
   const SubfarmTorrentStatus* sf = data<SubfarmTorrentStatus>();
   TorrentStatus sum;
@@ -192,6 +192,8 @@ void TorrentClusterLine::display() {
   ::memset(&sum,0,sizeof(sum));
   pos = 85+CLUSTERLINE_START;
   torrent = torrent_file(*sf);
+  ::scrc_put_chars(dis," ",INVERSE|BOLD|MAGENTA,line,pos,1);
+  last_pos = pos;
   for(Sessions::const_iterator i=sf->sessions.begin(); i!=sf->sessions.end(); i=sf->sessions.next(i)) {
     int col = COL_ALARM;
     const SessionStatus& s = *i;
@@ -242,10 +244,11 @@ void TorrentClusterLine::display() {
     if ( excl ) col = INVERSE|BLUE;
     nam = s.name;
     val = (nam == m_name ? " "+nam : " "+nam.substr(nam.length()-2));
-    ::scrc_put_chars(dis,val.c_str(),col,line,pos,0);
-    pos += val.length();
+    n_pos = (nam == m_name) ? 0 : ::atoi(val.c_str()+1)-1;
+    ::scrc_put_chars(dis,val.c_str(),col,line,pos + 3*n_pos,0);
+    if ( last_pos < pos+(1+n_pos)*3 ) last_pos = pos+(1+n_pos)*3;
   }
-  ::scrc_put_chars(dis," ",GREEN|INVERSE,line,pos,1);
+  ::scrc_put_chars(dis," ",GREEN|INVERSE,line,last_pos,1);
 
   ::sprintf(txt,"%6d",int(num_session));
   ::scrc_put_chars(dis,txt,NORMAL,line,33,0);

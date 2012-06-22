@@ -189,14 +189,14 @@ int NodeStatsCollector::monitorHLT() {
 
   /// Now load data into object
   ro_gettime(&h->time,&h->millitm);
-  ::lib_rtl_diskspace("/localdisk",&blk_size,&total_blk,&availible_blk);
-  h->localdisk.blockSize  = blk_size;
-  h->localdisk.numBlocks  = total_blk;
-  h->localdisk.freeBlocks = availible_blk;
   map<int,int> files;
   DIR* dir = ::opendir("/localdisk/overflow");
   if ( dir ) {
     struct dirent *entry;
+    ::lib_rtl_diskspace("/localdisk/overflow",&blk_size,&total_blk,&availible_blk);
+    h->localdisk.blockSize  = blk_size;
+    h->localdisk.numBlocks  = total_blk;
+    h->localdisk.freeBlocks = availible_blk;
     while ( (entry=::readdir(dir)) != 0 ) {
       int run=0,date,time;
       int ret = ::sscanf(entry->d_name,"Run_%07d_%8d-%d.MEP",&run,&date,&time);
@@ -213,6 +213,7 @@ int NodeStatsCollector::monitorHLT() {
     ::closedir(dir);
   }
   else { // If the overflow directory does not exist, the disk-space is void!
+    h->localdisk.blockSize  = 4096;
     h->localdisk.freeBlocks = 0;
     h->localdisk.numBlocks  = 0;
   }
