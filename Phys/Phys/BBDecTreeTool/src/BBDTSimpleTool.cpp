@@ -2,6 +2,7 @@
 // ============================================================================
 #include "BBDTSimpleTool.h"
 #include "LoKi/IHybridFactory.h"
+#include <Kernel/GetIDVAlgorithm.h>
 // ============================================================================
 BBDTSimpleTool::BBDTSimpleTool(const std::string& type,
                                const std::string& name,
@@ -20,7 +21,7 @@ StatusCode BBDTSimpleTool::initialize() {
   // get tools and algs
   IDistanceCalculator* dist
     = tool<IDistanceCalculator>("LoKi::DistanceCalculator",this);
-  const DVAlgorithm* dva = Gaudi::Utils::getDVAlgorithm(contextSvc());
+  const IDVAlgorithm* dva = Gaudi::Utils::getIDVAlgorithm(contextSvc());
   if (0 == dva)
     return Error("Couldn't get parent DVAlgorithm", StatusCode::FAILURE);
   m_vars = new BBDTVarHandler(dva, dist);

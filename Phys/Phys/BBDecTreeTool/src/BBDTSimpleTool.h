@@ -23,7 +23,7 @@ namespace Gaudi {
  *  
  *  The tool can be used with LoKi/Bender functors :
  *
- *  @code 
+ *  @code #include <Kernel/GetIDVAlgorithm.h>
  *     xxx.Code = " ... & FILTER('BBDTSimpleTool') "
  *  @endcode
  *

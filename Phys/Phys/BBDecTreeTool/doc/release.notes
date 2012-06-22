@@ -4,6 +4,10 @@
 ! Purpose     : Decision Tree classifier for Hlt2 topological trigger
 ! -----------------------------------------------------------------------------
 
+! 2012-06-22 - Chris Jones
+ - Use getIDVAlgorithm instead of getDVAlgorithm, in preparation for a future
+   change in the DaVInci base classes.
+
 !========================= BBDecTreeTool v1r4p1 2012-03-01 =========================
 
 ! 2012-02-08 - Chris Jones

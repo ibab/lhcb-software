@@ -8,8 +8,7 @@
 #include "Event/RecVertex.h"
 #include "Event/Particle.h"
 #include "Kernel/IParticleFilter.h"
-#include "Kernel/DVAlgorithm.h"
-#include "Kernel/GetDVAlgorithm.h"
+#include "Kernel/IDVAlgorithm.h"
 #include "Kernel/IDistanceCalculator.h"
 #include "LoKi/ParticleCuts.h"
 #include "LoKi/AParticleCuts.h"
@@ -28,7 +27,7 @@
 class BBDTVarHandler {
 
 public:
-  BBDTVarHandler(const DVAlgorithm* dva, const IDistanceCalculator* dist);
+  BBDTVarHandler(const IDVAlgorithm* dva, const IDistanceCalculator* dist);
   virtual ~BBDTVarHandler(){}
   void setPIDs(const LoKi::PhysTypes::Cut &cut);
   StatusCode initialize(const std::vector<std::string> &vars);
@@ -59,7 +58,7 @@ private:
 
   const IDistanceCalculator* m_dist; ///< LoKi::DistanceCalculator
   const LoKi::Vertices::ImpactParamTool m_ipTool;
-  const DVAlgorithm* m_dva; ///< DVAlgorithm (to get BPV)
+  const IDVAlgorithm* m_dva; ///< IDVAlgorithm (to get BPV)
 
   std::vector<double> m_values; ///< variables
   std::vector<bool> m_use; ///< use this variable?

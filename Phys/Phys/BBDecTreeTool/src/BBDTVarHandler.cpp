@@ -35,7 +35,7 @@ double totHeavyVChi2Dof(const LHCb::Particle *p){
   else return 0;
 }
 // ============================================================================
-BBDTVarHandler::BBDTVarHandler(const DVAlgorithm* dva, const IDistanceCalculator* dist):
+BBDTVarHandler::BBDTVarHandler(const IDVAlgorithm* dva, const IDistanceCalculator* dist):
   m_dist(dist), m_ipTool(dist), m_dva(dva), m_values(9),m_use(9,false),
   m_SUMPT(LoKi::Cuts::SUMTREE(LoKi::Cuts::PT,LoKi::Cuts::ISBASIC,0.0)),
   m_MINPT(LoKi::Cuts::MINTREE(LoKi::Cuts::ISBASIC,LoKi::Cuts::PT)),
@@ -88,7 +88,7 @@ bool BBDTVarHandler::set(const LHCb::Particle* p) {
   if(0 == p) return false;
 
   // get variables we need
-  const LHCb::VertexBase* bpv = m_dva->bestPV(p);
+  const LHCb::VertexBase* bpv = m_dva->bestVertex(p);
   if(m_use[0]) m_values[0] = m_SUMPT(p)/Gaudi::Units::MeV; 
   if(m_use[1]) m_values[1] = p->measuredMass()/Gaudi::Units::MeV; 
   if(m_use[2]) m_values[2] = docaMax(p,m_dist)/Gaudi::Units::mm;

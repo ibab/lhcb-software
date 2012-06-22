@@ -3,6 +3,7 @@
 #include "boost/filesystem/path.hpp"
 #include "boost/filesystem.hpp"
 #include "LoKi/IHybridFactory.h"
+#include <Kernel/GetIDVAlgorithm.h>
 // ============================================================================
 std::string SubstituteEnvVarInPath(const std::string& in) {
   /* cp'd directly from $L0MUONROOT/src/component/SubstituteEnvVarInPath.cpp */
@@ -46,7 +47,7 @@ StatusCode BBDecTreeTool::initialize() {
   // get tools and algs
   IDistanceCalculator* dist
     = tool<IDistanceCalculator>("LoKi::DistanceCalculator",this);
-  const DVAlgorithm* dva = Gaudi::Utils::getDVAlgorithm(contextSvc());
+  const IDVAlgorithm* dva = Gaudi::Utils::getIDVAlgorithm(contextSvc());
   if (0 == dva) {
     return Error("Couldn't get parent DVAlgorithm", StatusCode::FAILURE);
   }
