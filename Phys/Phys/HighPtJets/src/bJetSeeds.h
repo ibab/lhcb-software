@@ -2,8 +2,8 @@
 #define USER_bJetSeeds_H 1
 // Include files:
 // from Gaudi
-#include "Kernel/DVAlgorithm.h"
-#include <Kernel/GetDVAlgorithm.h>
+#include "Kernel/IDVAlgorithm.h"
+#include <Kernel/GetIDVAlgorithm.h>
 #include <Kernel/IDistanceCalculator.h>
 // from Event
 #include "Event/Track.h"
@@ -53,7 +53,7 @@ private:
   double m_dZSVPV;
   double m_sumMomSV;
   double m_vtxChi2;
-  DVAlgorithm* m_DaVinciAlg;
+  IDVAlgorithm* m_DaVinciAlg;
   const IDistanceCalculator* m_DOCA;
   
 };

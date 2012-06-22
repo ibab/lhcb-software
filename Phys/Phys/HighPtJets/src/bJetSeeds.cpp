@@ -66,7 +66,7 @@ StatusCode bJetSeeds::initialize() {
   if (!sc) return sc;
   if(msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
   // Parent DVAlgorithm
-  m_DaVinciAlg = Gaudi::Utils::getDVAlgorithm(contextSvc());
+  m_DaVinciAlg = Gaudi::Utils::getIDVAlgorithm(contextSvc());
   if(!m_DaVinciAlg) {
     error() << "Couldn't get parent DVAlgorithm" << endreq;
     return StatusCode::FAILURE;
@@ -90,7 +90,8 @@ StatusCode bJetSeeds::initialize() {
 //=============================================================================
 // Execution
 //=============================================================================
-StatusCode bJetSeeds::execute() {
+StatusCode bJetSeeds::execute()
+{
   if(msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
   setFilterPassed(false);
   if(!exist<RecVertices>(m_inputPVsName)) return StatusCode::SUCCESS;
