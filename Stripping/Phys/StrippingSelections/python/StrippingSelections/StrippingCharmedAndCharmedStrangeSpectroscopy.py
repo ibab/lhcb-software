@@ -32,6 +32,7 @@ __all__     = ('CharmedAndCharmedStrangeSpectroscopyConf',
                'makeDs2KKPiList',
                'makeD02K3Pi',
                'makeDstarD02K3Pi',
+               'makeDstar0D0pi0',
                'makePromptTracks',
                'makeNoPromptTracks',
                'makePromptSoftTracks'
@@ -44,10 +45,16 @@ config_params = { 'DpKs_prescale'            : 1,
                   'D0Pip_prescale'           : 1,
                   'DstarpPim_prescale'       : 1,
                   'DzP_prescale'             : 1,
+                  'DzPWS_prescale'           : 1,
                   'DpP_prescale'             : 1,
+                  'DpPp_prescale'             : 1,
                   'DsKs_prescale'            : 1,
                   'DsKm_prescale'            : 1,
-                  'DstarD02K3PiKs_prescale'  : 1
+                  'DstarD02K3PiKs_prescale'  : 1,
+                  'Dstar0K_prescale'         : 1,
+                  'Dstar0P_prescale'         : 1,
+                  'Dstar0KWS_prescale'       : 1,
+                  'Dstar0PWS_prescale'       : 1
                   } 
 
 from Gaudi.Configuration import *
@@ -94,10 +101,16 @@ class CharmedAndCharmedStrangeSpectroscopyConf( LineBuilder ):
                               'D0Pip_prescale',
                               'DstarpPim_prescale', 
                               'DzP_prescale', 
+                              'DzPWS_prescale', 
                               'DpP_prescale',
+                              'DpPp_prescale',
                               'DsKs_prescale',
                               'DsKm_prescale',
-                              'DstarD02K3PiKs_prescale'
+                              'DstarD02K3PiKs_prescale',
+                              'Dstar0K_prescale',
+                              'Dstar0P_prescale',
+                              'Dstar0KWS_prescale',
+                              'Dstar0PWS_prescale' 
                               )
 
     def __init__( self, name, config ) :
@@ -116,32 +129,42 @@ class CharmedAndCharmedStrangeSpectroscopyConf( LineBuilder ):
         name_D0Pip_line            = name + '_D0Pip'
         name_DstarpPim_line        = name + '_DstarpPim'
         name_DzP_line              = name + '_DzP'
-        name_DpP_line              = name + '_DpP'
+        name_DpP_line              = name + '_DpPm'
+        name_DpPp_line              = name + '_DpPp'
         name_DsKm_line             = name + '_DsKm'
         name_DsKs_line             = name + '_DsKs'
         name_Ds_line               = name + '_Ds'
-
+        name_DzPWS_line            = name + '_DzPWS'
+        name_Dstar0K_line          = name + '_Dstar0K'
+        name_Dstar0P_line          = name + '_Dstar0P'
+        name_Dstar0KWS_line        = name + '_Dstar0KWS'
+        name_Dstar0PWS_line        = name + '_Dstar0PWS'
 
         '''
         make particles
         '''
+        from StandardParticles import StdLooseMergedPi0, StdLooseResolvedPi0
 
-        self.sel_Dp2KmPipPip = makeDp2KmPipPip( name+"Dplus" )
-        self.sel_KS02LL = makeKS02LL( name+"KSLongLong" )
-        self.sel_KS02DD = makeKS02DD( name+"KSDownDown" )
-        self.sel_KS0 = MergedSelection( name+"KS0", RequiredSelections = [ self.sel_KS02LL, self.sel_KS02DD ] )
-        self.sel_Dstarp = makeDstar2D0pi( name+"Dstar" )
-        self.sel_D0 = makePromptD02KPi( name+"D0" )
-        self.sel_K = makePromptTracks( name+"K", "Phys/StdTightKaons/Particles")
-        self.sel_Pi = makePromptTracks( name+"Pi", "Phys/StdTightPions/Particles")
-        self.sel_P  = makePromptTracks( name+"P", "Phys/StdTightProtons/Particles")
-        self.sel_LoosePi  = makeNoPromptTracks( name+"LoosePi", "Phys/StdLoosePions/Particles")
-        self.sel_LooseK   = makeNoPromptTracks( name+"LooseK", "Phys/StdLooseKaons/Particles")
-        self.sel_Ds = makeDs2KKPi( name+"Ds", self.sel_LoosePi, self.sel_LooseK )
+        self.sel_ResPi0        = StdLooseResolvedPi0
+        self.sel_MerPi0        = StdLooseMergedPi0
+        self.sel_Dp2KmPipPip   = makeDp2KmPipPip( name+"Dplus" )
+        self.sel_KS02LL        = makeKS02LL( name+"KSLongLong" )
+        self.sel_KS02DD        = makeKS02DD( name+"KSDownDown" )
+        self.sel_KS0           = MergedSelection( name+"KS0", RequiredSelections = [ self.sel_KS02LL, self.sel_KS02DD ] )
+        self.sel_pi0           = MergedSelection( name+"pi0", RequiredSelections = [ self.sel_ResPi0, self.sel_MerPi0 ] )
+        self.sel_Dstarp        = makeDstar2D0pi( name+"Dstar" )
+        self.sel_D0            = makePromptD02KPi( name+"D0" )
+        self.sel_K             = makePromptTracks( name+"K", "Phys/StdTightKaons/Particles")
+        self.sel_Pi            = makePromptTracks( name+"Pi", "Phys/StdTightPions/Particles")
+        self.sel_P             = makePromptTracks( name+"P", "Phys/StdTightProtons/Particles")
+        self.sel_LoosePi       = makeNoPromptTracks( name+"LoosePi", "Phys/StdLoosePions/Particles")
+        self.sel_LooseK        = makeNoPromptTracks( name+"LooseK", "Phys/StdLooseKaons/Particles")
+        self.sel_Ds            = makeDs2KKPi( name+"Ds", self.sel_LoosePi, self.sel_LooseK )
         self.sel_LoosePromptPi = makePromptSoftTracks( name+"LoosePromptPi", "Phys/StdAllLoosePions/Particles")
-        self.sel_D02K3Pi = makeD02K3Pi( name+"D02K3Pi", self.sel_LoosePi, self.sel_LooseK )
-        self.sel_DstarD02K3Pi = makeDstarD02K3Pi( name+"DstarD02K3Pi", self.sel_D02K3Pi, self.sel_LoosePromptPi )
-        self.sel_DsList = makeDs2KKPiList( name+"DsList" )
+        self.sel_D02K3Pi       = makeD02K3Pi( name+"D02K3Pi", self.sel_LoosePi, self.sel_LooseK )
+        self.sel_DstarD02K3Pi  = makeDstarD02K3Pi( name+"DstarD02K3Pi", self.sel_D02K3Pi, self.sel_LoosePromptPi )
+        self.sel_DsList        = makeDs2KKPiList( name+"DsList" )
+        self.sel_Dstar0D0pi0   = makeDstar0D0pi0( name+"Dstar0D0pi0", self.sel_D0, self.sel_pi0 )
 
 
         '''
@@ -156,9 +179,15 @@ class CharmedAndCharmedStrangeSpectroscopyConf( LineBuilder ):
         self.D0Pip           = CombineDandTrack( name+"Dj2D0Pip"    , "[D*_2(2460)+ -> D0 pi+]cc", self.sel_D0, self.sel_Pi )
         self.DstarpPim       = CombineDandTrack( name+"Dj2DstarpPim", "[D*_2(2460)0 -> D*(2010)+ pi-]cc", self.sel_Dstarp, self.sel_Pi )
         self.DzP             = CombineDandTrack( name+"Lam2DzP"     , "[Lambda_c(2625)+ -> D0 p+]cc", self.sel_D0, self.sel_P )
+        self.DzPWS           = CombineDandTrack( name+"Lam2DzPWS"   , "[Lambda_c(2625)+ -> D0 p~-]cc", self.sel_D0, self.sel_P )
         self.DpP             = CombineDandTrack( name+"Lam2DpP"     , "[Lambda_c(2625)+ -> D+ p~-]cc", self.sel_Dp2KmPipPip, self.sel_P )
+        self.DpPp            = CombineDandTrack( name+"Lam2DpPp"     , "[Lambda_c(2625)+ -> D+ p+]cc", self.sel_Dp2KmPipPip, self.sel_P )
         self.DsKs            = CombineDandTrack( name+"D2DsKs"      , "[D*_2(2460)+ -> D_s+ KS0]cc", self.sel_Ds, self.sel_KS0 )
         self.DsKm            = CombineDandTrack( name+"D2DsKm"      , "[D*_2(2460)0 -> D_s+ K-]cc", self.sel_Ds, self.sel_K )
+        self.Dstar0K         = CombineDandTrack( name+"Ds2Dstar0K"     , "[D_s1(2536)+ -> D*(2007)0 K+]cc", self.sel_Dstar0D0pi0, self.sel_K )
+        self.Dstar0P         = CombineDandTrack( name+"Lam2Dstar0P"     , "[Lambda_c(2625)+ -> D*(2007)0 p+]cc", self.sel_Dstar0D0pi0, self.sel_P )
+        self.Dstar0KWS       = CombineDandTrack( name+"Ds2Dstar0KWS"     , "[D_s1(2536)+ -> D*(2007)0 K-]cc", self.sel_Dstar0D0pi0, self.sel_K )
+        self.Dstar0PWS       = CombineDandTrack( name+"Lam2Dstar0PWS"     , "[Lambda_c(2625)+ -> D*(2007)0 p~-]cc", self.sel_Dstar0D0pi0, self.sel_P )
 
         '''
         Here we construct the stripping lines
@@ -171,27 +200,38 @@ class CharmedAndCharmedStrangeSpectroscopyConf( LineBuilder ):
         self.DstarpPim_line = StrippingLine( name_DstarpPim_line, prescale = config[ 'DstarpPim_prescale' ], selection = self.DstarpPim )
         self.DzP_line       = StrippingLine( name_DzP_line      , prescale = config[ 'DzP_prescale' ]      , selection = self.DzP       )
         self.DpP_line       = StrippingLine( name_DpP_line      , prescale = config[ 'DpP_prescale' ]      , selection = self.DpP       )
+        self.DpPp_line       = StrippingLine( name_DpPp_line      , prescale = config[ 'DpPp_prescale' ]      , selection = self.DpPp       )
         self.DsKs_line      = StrippingLine( name_DsKs_line     , prescale = config[ 'DsKs_prescale' ]     , selection = self.DsKs      )
         self.DsKm_line      = StrippingLine( name_DsKm_line     , prescale = config[ 'DsKm_prescale' ]     , selection = self.DsKm      )
         self.DstarD02K3PiKs_line = StrippingLine( name_DstarD02K3PiKs_line , prescale = config[ 'DstarD02K3PiKs_prescale' ] , selection = self.DstarD02K3PiKs  )
         self.Ds_line        = StrippingLine( name_Ds_line     , prescale = 1     , selection = self.sel_DsList     ) 
-
+        self.DzPWS_line     = StrippingLine( name_DzPWS_line  , prescale = config[ 'DzPWS_prescale' ]      , selection = self.DzPWS       )
+        self.Dstar0K_line     = StrippingLine( name_Dstar0K_line  , prescale = config[ 'Dstar0K_prescale' ]      , selection = self.Dstar0K       )
+        self.Dstar0P_line     = StrippingLine( name_Dstar0P_line  , prescale = config[ 'Dstar0P_prescale' ]      , selection = self.Dstar0P       )
+        self.Dstar0KWS_line     = StrippingLine( name_Dstar0KWS_line  , prescale = config[ 'Dstar0KWS_prescale' ]      , selection = self.Dstar0KWS       )
+        self.Dstar0PWS_line     = StrippingLine( name_Dstar0PWS_line  , prescale = config[ 'Dstar0PWS_prescale' ]      , selection = self.Dstar0PWS       )
         '''
         register stripping lines
         '''
-        self.registerLine( self.DpKs_line )
+        #self.registerLine( self.DpKs_line )
         self.registerLine( self.DstarpKs_line )
-        self.registerLine( self.D0K_line )
-        self.registerLine( self.DpPim_line )
-        self.registerLine( self.D0Pip_line )
-        self.registerLine( self.DstarpPim_line )
+        #self.registerLine( self.D0K_line )
+        #self.registerLine( self.DpPim_line )
+        #self.registerLine( self.D0Pip_line )
+        #self.registerLine( self.DstarpPim_line )
         self.registerLine( self.DzP_line )
+        self.registerLine( self.DzPWS_line )
         self.registerLine( self.DpP_line )
-        #self.registerLine( self.Ds_line ) #for testing only
-        self.registerLine( self.DsKm_line )
-        self.registerLine( self.DsKs_line )
-        self.registerLine( self.DstarD02K3PiKs_line )
+        self.registerLine( self.DpPp_line )
 
+        #self.registerLine( self.Ds_line ) #for testing only
+        #self.registerLine( self.DsKm_line )
+        #self.registerLine( self.DsKs_line )
+        self.registerLine( self.DstarD02K3PiKs_line )
+        self.registerLine( self.Dstar0K_line )
+        self.registerLine( self.Dstar0P_line )
+        self.registerLine( self.Dstar0KWS_line )
+        self.registerLine( self.Dstar0PWS_line )
 
 
 '''
@@ -205,24 +245,25 @@ def CombineDandTrack( name,
                       KPiSel ):
 
     basic_cut = '(M > 0.0*GeV) & ~INTREE( (HASTRACK)&(THASINFO( LHCb.Track.CloneDist )) )'
-
-    #Cut_Ds  = '(M > 0.0*GeV) & (M<3.5*GeV) & ~INTREE( (HASTRACK)&(THASINFO( LHCb.Track.CloneDist )) )'
-    #Cut_Lam = '(M > 0.0*GeV) & (M<4*GeV) & ~INTREE( (HASTRACK)&(THASINFO( LHCb.Track.CloneDist )) ) & (LV02>0.0)'
-
     if ( name.endswith( "Ds2D0K" ) or name.endswith( "Dj2DstarpPim" ) or name.endswith( "Dj2D0Pip" ) or name.endswith( "Dj2DpPim" ) ) :
         basic_cut += ' & (LV02>0.0) & (M<3.5*GeV)'
     if ( name.endswith( "Dj2DstarpPim" )  ) :
-        basic_cut += ' & (PT>5*GeV) & (M<3.2*GeV)'
+        basic_cut += ' & (M<3.5*GeV)'
     if ( name.endswith( "Dj2DpPim" ) or name.endswith( "Dj2D0Pip" )  ) :
         basic_cut += ' & (PT>6*GeV) & (M<3.2*GeV)'
     if ( name.endswith( "Ds2D0K" )  ) :
         basic_cut += ' & (PT>4.5*GeV)'    
-    if ( name.endswith( "Lam2DzP" ) or name.endswith( "Lam2DpP" ) ) : 
+    if ( name.endswith( "Lam2DzP" ) or name.endswith( "Lam2DpPp" ) or name.endswith( "Lam2DpP" ) or name.endswith( "Lam2DzPWS" ) ) : 
         basic_cut += ' & (LV02>0.0) & (M<4*GeV)'    
     if ( name.endswith( "D2DsKm" ) ) : 
         basic_cut += ' & (LV02>-0.5) & (M<3.8*GeV)'    
     if ( name.endswith( "D2DsKs" ) ) : 
         basic_cut += ' & (M<3.8*GeV)'    
+    if ( name.endswith( "Ds2Dstar0K" ) or name.endswith( "Ds2Dstar0KWS" ) ) :
+        basic_cut += ' & (M<3.5*GeV)'
+    if( name.endswith( "Lam2Dstar0P" ) or name.endswith( "Lam2Dstar0PWS" ) ):
+        basic_cut += ' & (M<4*GeV)'
+
 
     D = CombineParticles( DecayDescriptor = decay, MotherCut = basic_cut )
     return Selection( name,
@@ -329,7 +370,26 @@ def makeDstarD02K3Pi( name, D0, pions ):
                                     )
    return Selection( name,
                      Algorithm = DstarFilter,
+                     RequiredSelections = [ pions, D0 ] )
+
+
+def makeDstar0D0pi0( name, D0, pions ):
+   combinationCuts = "(AALL)" 
+   motherCuts = "(M-MAXTREE('D0'==ABSID,M)<180*MeV)"
+   #DstarFilter = CombineParticles ( ParticleCombiners = { '' : 'ParticleAdder' },
+   DstarFilter = CombineParticles ( ParticleCombiners = { '' : 'LoKi::VertexFitter' },
+                                    DecayDescriptor = "[D*(2007)0 -> D0 pi0]cc",
+                                    CombinationCut  = combinationCuts,
+                                    MotherCut       = motherCuts,
+                                    DaughtersCuts   = {"D0": "ALL", "pi0" : "ALL" }
+                                    )
+
+   return Selection( name,
+                     Algorithm = DstarFilter,
                      RequiredSelections = [  pions, D0 ] )
+
+
+
 
 def makePromptTracks( name, particle ):
     cuts = "(ISLONG) & (PT>500*MeV) & (P>3*GeV) & (MIPCHI2DV(PRIMARY)<16.0) & (TRPCHI2>0.0001) & (HASRICH)"
