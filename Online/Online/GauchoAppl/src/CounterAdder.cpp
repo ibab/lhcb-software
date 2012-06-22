@@ -42,7 +42,7 @@ void CounterAdder::addBuffer(void *buff, int siz, MonInfo *)
     if (nlen == limit)
     {
       strncpy(pnam,nam,limit-1);
-      pnam[sizeof(pnam)] = 0;
+      pnam[sizeof(pnam)-1] = 0;
       printf("+++ Counter Adder: Very large name string. First 2048 characters %s out of %d. Skipping record...\n",pnam,pp->namelen);
       break;
     }
