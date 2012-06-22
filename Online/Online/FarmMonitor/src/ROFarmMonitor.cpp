@@ -37,6 +37,7 @@ typedef ROMon::Node::Tasks         Tasks;
 #define RES_BUFFER   'R'
 #define EVT_BUFFER   'E'
 #define SND_BUFFER   'S'
+#define OVF_BUFFER   'O'
 
 #define MAXLINE 61
 #define MAXTASK 60
@@ -118,20 +119,32 @@ void ROFarmMonitor::initialize ( ) {
     std::string myService( service );
     std::string part = myService.substr(  myService.find( "/" )+1 );
     part = part.substr( 0, part.find("/") );
-    if ( "LHCb" != part /* && "FEST" != part */ ) continue;
+    if ( 1 < m_print ) std::cout << "...found RunInfo for " << part << std::endl;
+    if ( "LHCb"  != part && 
+         "FEST"  != part  ) continue;
 
     PartitionDesc* myPart = new PartitionDesc( part );
+    m_partitions.push_back( myPart );
 
-    if ( 1 < m_print ) std::cout << "Connect to service " << service << std::endl;
+    std::cout << "Connect to service " << service << std::endl;
     myPart->dimPartitionID = new DimInfo( service, 0, this );
 
     myService = "RunInfo/"+part+"/HLTnodeList";
-    if ( 1 < m_print ) std::cout << "Connect to service " << myService << std::endl;
+    std::cout << "Connect to service " << myService << std::endl;
     myPart->dimHltNodes = new DimInfo( myService.c_str(), 0, this );
 
     myService = "RunInfo/"+part+"/CALIBnodeList";
-    if ( 1 < m_print ) std::cout << "Connect to service " << myService << std::endl;
+    std::cout << "Connect to service " << myService << std::endl;
     myPart->dimCalibNodes = new DimInfo( myService.c_str(), 0, this );
+
+    myService = "RunInfo/"+part+"/MEPPackingFactor";
+    std::cout << "Connect to service " << myService << std::endl;
+    myPart->dimPackingFactor = new DimInfo( myService.c_str(), 0, this );
+    myPart->packingFactor = 0;
+
+    myService = "RunInfo/"+part+"1/HLTnodeList";
+    std::cout << "Connect to service " << myService << std::endl;
+    myPart->dimDefNodes = new DimInfo( myService.c_str(), 0, this );
 
     if ( 0 == m_test ) {
 
@@ -198,7 +211,6 @@ void ROFarmMonitor::initialize ( ) {
       thresholds.push_back( 0.5    );   // integer
       myPart->trendWriter->setThresholds( thresholds );
     }
-    m_partitions.push_back( myPart );
   }
   
   if ( 0 == m_test ) {
@@ -225,7 +237,7 @@ void ROFarmMonitor::initialize ( ) {
 //  Handles the update of the DimInfo services, i.e. partition informations
 //=========================================================================
 void ROFarmMonitor::infoHandler ( ) {
-  if (1 < m_print ) std::cout << "infoHandler called" << std::endl;
+  std::cout << "infoHandler called" << std::endl;
   DimInfo* curr = getInfo();
   for ( std::vector<PartitionDesc*>::iterator itP = m_partitions.begin(); m_partitions.end() != itP; ++itP ) {
     if ( (*itP)->dimPartitionID == curr ) {
@@ -249,6 +261,22 @@ void ROFarmMonitor::infoHandler ( ) {
         nodeList += ll;
         totL -= ll;
       }
+    } else if ( (*itP)->dimDefNodes == curr ) {
+      std::cout << "Update DefNodes for " << (*itP)->name << std::endl;
+      // Update the list of nodes
+      char* nodeList;
+      (*itP)->defNodes.clear();
+      nodeList = curr->getString();
+      int totL = curr->getSize();
+      while ( 0 < totL ) {
+        std::string address = nodeNameFromAddress( nodeList );
+        std::cout << "DEF node " << nodeList << " is " << address << std::endl;
+        (*itP)->defNodes.push_back( address );
+
+        int ll = strlen( nodeList ) + 1;
+        nodeList += ll;
+        totL -= ll;
+      }
     } else if ( (*itP)->dimCalibNodes == curr ) {
       std::cout << "Found CalibNodes for " << (*itP)->name << std::endl;
       // Update the list of nodes
@@ -265,6 +293,9 @@ void ROFarmMonitor::infoHandler ( ) {
         nodeList += ll;
         totL -= ll;
       }
+    } else if ( (*itP)->dimPackingFactor == curr ) {
+      (*itP)->packingFactor = curr->getInt();
+      std::cout << "Found packing factor for " << (*itP)->name << " = " << (*itP)->packingFactor << std::endl;
     }
   }
 }
@@ -334,13 +365,14 @@ void ROFarmMonitor::update( )   {
 
   std::cout << "Time " << tagTime <<  "  dt " << dt << std::endl;
 
-  const char* fmt = " %-12s   Mep%10d Evt%10d (Con%10d) Snd%10d (Acc%10d) Tsk%5d \n";
+  const char* fmt = " %-12s   Mep%10d Ovf%10d (Con%10d) Snd%10d (Acc%10d) Tsk%5d \n";
 
   for ( std::vector<PartitionDesc*>::iterator itP = m_partitions.begin();
         m_partitions.end() != itP; ++itP ) {
     int myPartID = (*itP)->partitionID;
     std::vector<std::string>& hltNodes = (*itP)->hltNodes;
     std::vector<std::string>& calNodes = (*itP)->calibNodes;
+    std::vector<std::string>& defNodes = (*itP)->defNodes;
     std::vector<std::string>& monNodes = (*itP)->moniNodes;
     std::vector<std::string>& recNodes = (*itP)->recoNodes;
     std::vector<const ROMon::FSMTask*> notReadyTasks;
@@ -351,15 +383,18 @@ void ROFarmMonitor::update( )   {
     std::vector<const ROMon::FSMTask*> otherTasks;
     std::string partName = (*itP)->name + "_";
     std::string eventBuffer = "Events_" + (*itP)->name;
+    int packingFactor = (*itP)->packingFactor;
 
     if ( 2 < m_print ) std::cout << "Starting part = " << (*itP)->name << std::endl;
 
     RONodeCounter sumHlt( "Total HLT" );
     RONodeCounter sumCal( "Calibration" );
+    RONodeCounter sumDef( "Deferred tot" );
     RONodeCounter sumMon( "Total Monit" );
     RONodeCounter sumRec( "Total Reco" );
     std::vector<RONodeCounter> hltCounters;
     std::vector<RONodeCounter> calCounters;
+    std::vector<RONodeCounter> defCounters;
     std::vector<RONodeCounter> monCounters;
     std::vector<RONodeCounter> recCounters;
 
@@ -409,21 +444,24 @@ void ROFarmMonitor::update( )   {
           //== is this node in the partition's list ?
           bool isHlt = false;
           bool isCalib = false;
+          bool isDef = false;
           bool isMoni  = false;
           bool isReco  = false;
           if ( hltNodes.end() != std::find( hltNodes.begin(), hltNodes.end(), (*n).name ) ) isHlt   = true;
           if ( calNodes.end() != std::find( calNodes.begin(), calNodes.end(), (*n).name ) ) isCalib = true;
+          if ( defNodes.end() != std::find( defNodes.begin(), defNodes.end(), (*n).name ) ) isDef   = true;
           if ( monNodes.end() != std::find( monNodes.begin(), monNodes.end(), (*n).name ) ) isMoni  = true;
           if ( recNodes.end() != std::find( recNodes.begin(), recNodes.end(), (*n).name ) ) isReco  = true;
-          if ( !isHlt && !isCalib && !isMoni && ! isReco ) continue;
+          if ( !isHlt && !isCalib && !isDef && !isMoni && ! isReco ) continue;
           if ( 1 < m_print ) std::cout << "Part " << (*itP)->name << " node " << (*n).name << std::endl;
 
           double newTime = double( (*n).time - m_offsetTime ) + double( (*n).millitm ) * 0.001;
           if ( 2 < m_print ) std::cout << "   Update time " << newTime << std::endl;
 
-          if ( isHlt || isCalib ) {
+          if ( isHlt || isCalib || isDef ) {
             if ( isHlt ) nbHltNodes++;
-            
+            int pf = packingFactor;
+            if ( isCalib ) pf = 1;
             RONodeCounter cntr( (*n).name );
             const Buffers& buffs = *(*n).buffers();
             for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
@@ -433,17 +471,17 @@ void ROFarmMonitor::update( )   {
               if ( 1 < m_print ) std::cout << "  Buffer " << (*ib).name << " prod " << (*ib).ctrl.tot_produced << std::endl;
 
               switch (b) {
-              case MEP_BUFFER : cntr.updateMep( (*ib).ctrl.tot_produced );  break;
-              case EVT_BUFFER : cntr.updateEvt( (*ib).ctrl.tot_produced );  break;
+              case OVF_BUFFER : cntr.updateOvf( pf * (*ib).ctrl.tot_produced );  break;
+              case EVT_BUFFER : cntr.updateMep( pf * (*ib).ctrl.tot_produced );  break;
               case SND_BUFFER : cntr.updateSnd( (*ib).ctrl.tot_produced );  break;
               default: break;
               }
               for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
                 int  pID = (*ic).partitionID;
-                if ( myPartID != pID ) continue;
+                if ( myPartID != pID && 0 != pID ) continue;
                 if ( 1 < m_print ) {
-                  printf( "   Node %s  Buffer %s  Task %s Events %d  Part %4x\n",
-                          (*n).name, (*ib).name, (*ic).name, (*ic).events, pID );
+                  printf( "   Node %s  Buffer %s  Task %s Events %d  Part %4x Hlt%2d cal%2d Def%2d\n",
+                          (*n).name, (*ib).name, (*ic).name, (*ic).events, pID, isHlt, isCalib, isDef );
                 }
                 const char* p = strchr((*ic).name,'_');
                 if ( p ) {
@@ -454,7 +492,7 @@ void ROFarmMonitor::update( )   {
                   case MOORE_TASK:
                     if( b == EVT_BUFFER ||
                         b == MEP_BUFFER) {
-                      cntr.updateCon( (*ic).events );
+                      cntr.updateCon( pf * (*ic).events );
                       cntr.updateTsk( 1 );
                     }
                     break;
@@ -466,7 +504,7 @@ void ROFarmMonitor::update( )   {
             }
             if ( 0 < cntr.tsk() ) {
               if ( 0 < m_print ) {
-                printf( fmt, (*n).name,  cntr.mep(), cntr.evt(), cntr.con(), cntr.snd(), cntr.acc(), cntr.tsk() );
+                printf( fmt, (*n).name,  cntr.mep(), cntr.ovf(), cntr.con(), cntr.snd(), cntr.acc(), cntr.tsk() );
               }
               //== Compute rates
               std::vector<RONodeCounter>::iterator itN;
@@ -488,7 +526,10 @@ void ROFarmMonitor::update( )   {
               } else if ( isCalib ) {
                 sumCal.sum( cntr );
                 calCounters.push_back( cntr );
-              }
+              } else if ( isDef ) {
+                sumDef.sum( cntr );
+                defCounters.push_back( cntr );
+              } 
             }
           } else {
             const Buffers& buffs = *(*n).buffers();
@@ -550,6 +591,8 @@ void ROFarmMonitor::update( )   {
               stoppedTasks.push_back( &(*it) );
             } else if ( 'E' == (*it).state ) {
               errorTasks.push_back( &(*it) );
+            } else if ( 'P' == (*it).state ) {  // MEPRX in deffered with no data
+              runningTasks.push_back( &(*it) );
             } else {
               otherTasks.push_back( &(*it) );
               std::cout << "UNKNOWN task on Node " << (*n).name << " task '" << (*it).name
@@ -562,10 +605,14 @@ void ROFarmMonitor::update( )   {
 
     if ( 0 < m_print ) {
       std::string title = "Total "+ (*itP)->name;
-      printf( fmt, title.c_str(), sumHlt.mep(), sumHlt.evt(), sumHlt.con(), sumHlt.snd(), sumHlt.acc(), sumHlt.tsk() );
+      printf( fmt, title.c_str(), sumHlt.mep(), sumHlt.ovf(), sumHlt.con(), sumHlt.snd(), sumHlt.acc(), sumHlt.tsk() );
       if ( 0 < sumCal.tsk() ) {
         title = "Calib "+ (*itP)->name;
-        printf( fmt, title.c_str(), sumCal.mep(), sumCal.evt(), sumCal.con(), sumCal.snd(), sumCal.acc(), sumCal.tsk() );
+        printf( fmt, title.c_str(), sumCal.mep(), sumCal.ovf(), sumCal.con(), sumCal.snd(), sumCal.acc(), sumCal.tsk() );
+      }
+      if ( 0 < sumDef.tsk() ) {
+        title = "Def.  "+ (*itP)->name;
+        printf( fmt, title.c_str(), sumDef.mep(), sumDef.ovf(), sumDef.con(), sumDef.snd(), sumDef.acc(), sumDef.tsk() );
       }
       std::cout << "            FSM : " << notReadyTasks.size() << " NOT_READY, " << readyTasks.size() << " READY "
                 << runningTasks.size() << " RUNNING, " << stoppedTasks.size() << " STOPPED, "
@@ -578,6 +625,7 @@ void ROFarmMonitor::update( )   {
     //=============================================================
     (*itP)->prevCounters = hltCounters;  //== save current counters for next iteration.
     (*itP)->prevCounters.insert( (*itP)->prevCounters.end(), calCounters.begin(), calCounters.end() );
+    (*itP)->prevCounters.insert( (*itP)->prevCounters.end(), defCounters.begin(), defCounters.end() );
     (*itP)->prevCounters.insert( (*itP)->prevCounters.end(), monCounters.begin(), monCounters.end() );
     (*itP)->prevCounters.insert( (*itP)->prevCounters.end(), recCounters.begin(), recCounters.end() );
 
@@ -586,7 +634,7 @@ void ROFarmMonitor::update( )   {
       //== Fill the trend plot
       std::vector<float> trend;
       trend.push_back( sumHlt.mepRate() );
-      trend.push_back( sumHlt.evtRate() );
+      trend.push_back( sumHlt.ovfRate() );
       trend.push_back( sumHlt.accRate() );
       trend.push_back( float( sumHlt.tsk() ) );
       (*itP)->trendWriter->write( trend );
@@ -613,13 +661,13 @@ void ROFarmMonitor::update( )   {
 
       //== Detect nodes with bad counters: tasks, event rate, send rate.
 
-      int minEventRate = 0.1 * sumHlt.evtRate() / nbHltNodes;
+      int minEventRate = 0.1 * sumHlt.mepRate() / nbHltNodes;
       if ( minEventRate < 20 ) minEventRate = 0;  // low rate -> some farms without MEP!
       int minMooreTask = 7;
       
       for ( itN = hltCounters.begin(); hltCounters.end() != itN; ++itN ) {
         std::string badName = "";
-        if ( (*itN).evtRate() < minEventRate ) badName = badName + "+";
+        if ( (*itN).mepRate() < minEventRate ) badName = badName + "+";
         if ( (*itN).tsk()     < minMooreTask ) badName = badName + "-";
         if ( "" != badName ) {
           badName = badName + (*itN).name();
@@ -631,6 +679,17 @@ void ROFarmMonitor::update( )   {
       
       hltCounters = badCounters;
       
+      //== Remove deffered nodes with 0 rate 
+      std::vector<RONodeCounter> farmCounters;
+      for ( itN = defCounters.begin(); defCounters.end() != itN; ++itN ) {
+        if ( 0 != (*itN).mepRate() ) {
+          RONodeCounter nonZero( (*itN).name().c_str() );
+          nonZero.sum( *itN );
+          farmCounters.push_back( nonZero );
+        }
+      }
+      defCounters = farmCounters;
+
       //== If too many lines, compress: sum nodes in sub-farms.
       if ( MAXLINE-2 < hltCounters.size() ) {
         if ( 2 < m_print ) std::cout << "Compress by farm " << std::endl;
@@ -651,6 +710,24 @@ void ROFarmMonitor::update( )   {
         hltCounters = farmCounters;
       }
       
+      //== If too many lines, compress: sum nodes in sub-farms.
+      if ( MAXLINE-2 < hltCounters.size() + defCounters.size() ) {
+        if ( 2 < m_print ) std::cout << "Compress by farm " << std::endl;
+        std::vector<RONodeCounter> farmCounters;
+        std::string farmName = "";
+        for ( itN = defCounters.begin(); defCounters.end() != itN; ++itN ) {
+          std::string myName =  (*itN).name();
+          int ll = 6;
+          if ( myName.substr(0,ll) != farmName ) {
+            farmName = (*itN).name().substr(0,ll);
+            RONodeCounter farm( farmName.c_str() );
+            farmCounters.push_back( farm );
+          }
+          farmCounters.back().sum( *itN);
+        }
+        defCounters = farmCounters;
+      }
+      
       if ( 2 < m_print ) std::cout << "Update services " << std::endl;
 
       for ( itN = hltCounters.begin(); hltCounters.end() != itN; ++itN ) {
@@ -659,6 +736,13 @@ void ROFarmMonitor::update( )   {
       if ( 0 < sumCal.tsk() ) {
         if ( (*itP)->lineServices.end() != itS ) (*itS++)->update( blank );
         for ( itN = calCounters.begin(); calCounters.end() != itN; ++itN ) {
+          if ( (*itP)->lineServices.end() != itS ) (*itS++)->update( *itN );
+        }
+      }
+      if ( 0 < sumDef.tsk() ) {
+        if ( (*itP)->lineServices.end() != itS ) (*itS++)->update( blank );
+        if ( (*itP)->lineServices.end() != itS ) (*itS++)->update( sumDef );
+        for ( itN = defCounters.begin(); defCounters.end() != itN; ++itN ) {
           if ( (*itP)->lineServices.end() != itS ) (*itS++)->update( *itN );
         }
       }
@@ -820,7 +904,7 @@ void ROFarmMonitor::update( )   {
                                      << " for task " << (*itT)->name
                                      << std::endl;
         if ( itF != (*itP)->fsmServices.end() ) {
-          (*itF++)->update( 5, m_stateName[0], std::string( (*itT)->name ) + " state " + (*itT)->state );
+          (*itF++)->update( 5, m_stateName[0], std::string( (*itT)->name ) + " state " + (*itT)->state + " ?? " );
         }
       }
       while ( (*itP)->fsmServices.end() != itF ) (*itF++)->update( 0, "", "" );

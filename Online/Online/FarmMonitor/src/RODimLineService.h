@@ -33,13 +33,13 @@ private:
     int number;
     char name[24];
     int mep;
-    int evt;
+    int ovf;
     int con;
     int snd;
     int acc;
     int tsk;
     int mepRate;
-    int evtRate;
+    int ovfRate;
     int conRate;
     int sndRate;
     int accRate;

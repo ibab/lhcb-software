@@ -4,6 +4,11 @@
 ! Purpose     : Monitor the tasks in the online farm
 !-----------------------------------------------------------------------------
 
+!============================== 2012-06-22 v2r10 ==============================
+! 2012-06-22 - Olivier Callot
+ - Adaptation to the deferred processing. Counters of deferred rate, and 
+   monitoring of the deferred processing.
+
 !============================== 2012-01-10 v2r9 ==============================
 ! 2012-01-10 - Olivier Callot
  - Use the "SLIMOS Shutdown" as shift leadr if no SL.

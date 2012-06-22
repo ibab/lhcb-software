@@ -37,13 +37,13 @@ void RODimLineService::update ( RONodeCounter& counter) {
   }
   strcpy( m_dimBuffer.name, counter.name().c_str() );
   m_dimBuffer.mep = counter.mep();
-  m_dimBuffer.evt = counter.evt();
+  m_dimBuffer.ovf = counter.ovf();
   m_dimBuffer.snd = counter.snd();
   m_dimBuffer.con = counter.con();
   m_dimBuffer.acc = counter.acc();
   m_dimBuffer.tsk = counter.tsk();
   m_dimBuffer.mepRate = int(counter.mepRate());
-  m_dimBuffer.evtRate = int(counter.evtRate());
+  m_dimBuffer.ovfRate = int(counter.ovfRate());
   m_dimBuffer.sndRate = int(counter.sndRate());
   m_dimBuffer.conRate = int(counter.conRate());
   m_dimBuffer.accRate = int(counter.accRate());

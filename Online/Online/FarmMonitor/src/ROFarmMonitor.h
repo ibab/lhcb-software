@@ -46,9 +46,13 @@ public:
     std::vector<std::string> calibNodes;
     std::vector<std::string> moniNodes;
     std::vector<std::string> recoNodes;
+    std::vector<std::string> defNodes;
+    int packingFactor;
     DimInfo*    dimPartitionID;
     DimInfo*    dimHltNodes;
     DimInfo*    dimCalibNodes;
+    DimInfo*    dimPackingFactor;
+    DimInfo*    dimDefNodes;
     std::vector<RODimLineService*> lineServices;
     std::vector<RODimLineService*> moniServices;
     std::vector<RODimFsmService*>  fsmServices;
