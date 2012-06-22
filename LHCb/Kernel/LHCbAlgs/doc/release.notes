@@ -6,6 +6,9 @@
 
   === requires LHCbKernel > v13r10 ===
 
+! 2012-06-22 - Gloria Corti
+ - Adapt EvtCounter.h to change in IEventCounter interface
+
 ! 2012-06-12 - Marco Clemencic
  - Moved IEventCounter to LHCbKernel.
  - Modified EvtCounter to implement the setEventCounter method and added two

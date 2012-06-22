@@ -35,7 +35,7 @@ public:
   StatusCode finalize(){return StatusCode::SUCCESS;};
 
   /// Get Event counter
-  long getEventCounter() { return m_eventCounter; }
+  long getEventCounter() const { return m_eventCounter; }
 
   /// Increment Event counter
   void incrementEventCounter() { ++m_eventCounter; }
