@@ -16,7 +16,7 @@ public:
   /// Destructor
   virtual ~VLThreshold() {} 
   bool operator()(LHCb::MCVLDigit* digit) {
-    return (digit->adc() < m_threshold);
+    return (digit->charge() < m_threshold);
   }
 
 private:

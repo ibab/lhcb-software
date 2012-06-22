@@ -45,10 +45,9 @@ private:
                           LHCb::MCVLDigits::iterator>& range);
   /// Calculate the S/N ratio for a given digit.
   double signalToNoise(LHCb::MCVLDigit* digit);
-  /// Link a cluster to the underlying MC hits and particles
-  void linkCluster(LHCb::VLCluster* cluster,     
-                   LinkerWithKey<LHCb::MCHit, LHCb::VLCluster>& hl,
-                   LinkerWithKey<LHCb::MCParticle, LHCb::VLCluster>& pl);
+  /// Link clusters to the underlying MC hits and particles
+  void linkClustersToHits();
+  void linkClustersToParticles();
 
   LHCb::MCVLDigits* m_digits; 
   LHCb::VLClusters* m_clusters;
@@ -59,15 +58,27 @@ private:
   /// Channels of current sensor already used for clusters.
   std::vector<bool> m_used;
 
+  std::string m_digitLocation;
+  std::string m_clusterLocation;
+
+  // Truth tables
+  std::vector<std::pair<LHCb::VLCluster*, 
+                        std::map<LHCb::MCHit*, double> > > m_hitTruthTable;
+  std::vector<std::pair<LHCb::VLCluster*, 
+                        std::map<const LHCb::MCParticle*, 
+                                 double> > > m_particleTruthTable;
   /// S/N threshold for a seed digit
   double m_seedSignalToNoiseCut;
   /// S/N threshold for adding digits to an existing cluster
   double m_lowSignalToNoiseCut;
-  /// Maximum number of clusters to make per event
+  /// Maximum number of clusters to create per event
   unsigned int m_maxClusters; 
-  /// Spillover threshold 
+  /// High ADC threshold 
   double m_highThreshold; 
 
+  /// Flag to enable or disable MC truth association
+  bool m_truth;
+ 
   /// Tool for estimating strip noise
   IStripNoiseTool* m_StripNoiseTool;
   /// Number of electrons per ADC count

@@ -9,7 +9,8 @@
 #include "VLDet/DeVL.h"
 
 /** @class VLDigitMonitor VLDigitMonitor.h
- *  
+ *
+ *    
  */
 
 class VLDigitMonitor : public GaudiTupleAlg {

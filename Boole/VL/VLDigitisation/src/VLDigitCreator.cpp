@@ -1,8 +1,10 @@
-// STL
-#include <vector>
+// GSL
+#include "gsl/gsl_sf_erf.h"
 // Gaudi
 #include "GaudiKernel/Vector3DTypes.h"
 #include "GaudiKernel/AlgFactory.h"
+// Kernel/LHCbMath
+#include "Kernel/FPEGuard.h"
 #include "LHCbMath/LHCbMath.h"
 // Kernel/LHCbKernel
 #include "Kernel/ISiAmplifierResponse.h"
@@ -17,6 +19,8 @@
 #include "VLThreshold.h"
 #include "IStripNoiseTool.h"
 #include "VLDigitCreator.h"
+
+using namespace LHCb;
 
 /** @file VLDigitCreator.cpp
  *
@@ -34,41 +38,38 @@ VLDigitCreator::VLDigitCreator(const std::string& name,
     GaudiAlgorithm(name, pSvcLocator),
     m_det(0),
     m_threshold(0.),
-    m_baseDiffuseSigma(0.),
-    m_nDigitsTotal(0),
-    m_nDigitsKilled(0) {
+    m_baseDiffuseSigma(0.) {
   
-  declareProperty("InputContainers", m_inputContainers);
+  declareProperty("HitLocations", m_hitLocations);
+  declareProperty("TimeOffsets", m_timeOffsets);
   declareProperty("InputContainerToLink", m_MCHitContainerToLinkName);
-  declareProperty("InputTimeOffsets", m_inputTimeOffsets);
-  declareProperty("OutputContainers", m_outputContainers);
+  declareProperty("DigitLocation", 
+                  m_digitLocation = MCVLDigitLocation::Default); 
 
-  declareProperty("SimNoisePileUp", m_simNoisePileUp = false);
   declareProperty("InhomogeneousCharge", m_inhomogeneousCharge = true);
-  declareProperty("Coupling", m_coupling = true);
-  declareProperty("NoiseSim", m_noiseSim = true);
+  declareProperty("NoiseSim", m_noise = true);
+  declareProperty("CapacitiveCoupling", m_coupling = 0.01);
+  declareProperty("StripInefficiency", m_inefficiency = 0.0);
 
   declareProperty("Threshold", m_threshold = 2400.); 
   declareProperty("kT", m_kT = 0.025);
   declareProperty("BiasVoltage", m_biasVoltage = 150.);
   declareProperty("eVPerElectron", m_eVPerElectron = 3.6);
-  declareProperty("SimulationPointsPerStrip", m_simulationPointsPerStrip = 3);
+  declareProperty("PointsPerStrip", m_pointsPerStrip = 3);
   declareProperty("ChargeUniform", m_chargeUniform = 70.);
   declareProperty("DeltaRayMinEnergy", m_deltaRayMinEnergy = 1000.);
-  declareProperty("CapacitiveCoupling", m_capacitiveCoupling = 0.01);
+
   declareProperty("NoiseScale", m_scaleNoise = 1.);
   declareProperty("FluctuationsScale", m_scaleFluctuations = 1.);
-  declareProperty("StripInefficiency", m_stripInefficiency = 0.0);
 
-  declareProperty("PulseShapePeakTime", m_pulseShapePeakTime = 30.7848);
+  declareProperty("PulseShapePeakTime", m_peakTime = 30.7848);
   declareProperty("OffPeakSamplingTime", m_offPeakSamplingTime = 0.);
 
-  declareProperty("ElectronsPerADC", m_electronsPerADC = 600.);
-  declareProperty("MaxADCOutput", m_maxADCOutput =  127); 
-  declareProperty("MinADCOutput", m_minADCOutput = -127);
+  declareProperty("ElectronsPerADC", m_electronsPerAdc = 1200.);
+  declareProperty("ADCRange", m_adcRange = 64); 
 
-  Rndm::Numbers m_gaussDist;
-  Rndm::Numbers m_uniformDist;
+  Rndm::Numbers m_gauss;
+  Rndm::Numbers m_uniform;
 
 }
 
@@ -77,66 +78,60 @@ VLDigitCreator::VLDigitCreator(const std::string& name,
 //===========================================================================
 StatusCode VLDigitCreator::initialize() {
 
-  /// Initialise base class.
   StatusCode sc = GaudiAlgorithm::initialize();
   if (sc.isFailure()) return sc;
   m_debug   = msgLevel(MSG::DEBUG);
   m_verbose = msgLevel(MSG::VERBOSE);
   if (m_debug) debug() << " ==> initialize()" << endmsg;
 
-  if (m_inputContainers.size() != m_inputTimeOffsets.size()) {
-    error() << "Sizes of InputContainers and InputTimeOffsets do not match" 
-            << endmsg;
+  if (m_hitLocations.size() != m_timeOffsets.size()) {
+    error() << "Sizes of HitLocations and TimeOffsets do not match" << endmsg;
     return StatusCode::FAILURE;
   }
 
+  // Get the detector element.
   m_det = getDet<DeVL>(DeVLLocation::Default);
   m_baseDiffuseSigma = sqrt(2 * m_kT / m_biasVoltage);
 
-  /// Random number initialisation
-  sc = m_gaussDist.initialize(randSvc(), Rndm::Gauss(0., 1.));
-  if (!sc) {
-    error() << "Failed to initialise Gaussian random number generator" 
-            << endmsg;
-    return StatusCode::FAILURE;
-  }
-  sc = m_uniformDist.initialize(randSvc(), Rndm::Flat(0., 1.));
-  if (!sc) {
-    error() << "Failed to initialise uniform random number generator" 
-            << endmsg;
-    return StatusCode::FAILURE;
-  }
-
-  /// Front end time tool
+  // Get the front end time tool.
   m_SiTimeTool = tool<ISiAmplifierResponse>("SiAmplifierResponse", 
                                             "SiTimeTool", this);
-  /// Strip noise tool
+  // Get the strip noise tool.
   m_StripNoiseTool = tool<IStripNoiseTool>("VLStripNoiseTool",
                                            "StripNoise", this);
 
-  /// Estimate the number of R strips to add noise to.
-  std::vector<DeVLRSensor*>::const_iterator rsens = m_det->rSensorsBegin();
-  const unsigned int nStripsR = (*rsens)->numberOfStrips();
-  m_averageStripNoiseR = m_StripNoiseTool->averageNoise((*rsens)->sensorNumber());
-  m_averageStripNoiseR *= m_scaleNoise; 
-  const double probR = safe_gsl_sf_erf_Q(m_threshold / m_averageStripNoiseR);
-  const double averageNoiseHitsR = 2. * probR * nStripsR;
-  sc = m_poissonDistR.initialize(randSvc(), Rndm::Poisson(averageNoiseHitsR));
+  // Initialise the random number generators. 
+  sc = m_gauss.initialize(randSvc(), Rndm::Gauss(0., 1.));
   if (!sc) {
-    error() << "Failed to initialise Poisson random number generator" << endmsg;
+    error() << "Cannot initialise Gaussian random number generator" << endmsg;
     return sc;
   }
-
-  /// Estimate the number of Phi strips to add noise to.
-  std::vector<DeVLPhiSensor*>::const_iterator phisens = m_det->phiSensorsBegin();
-  const unsigned int nStripsPhi = (*phisens)->numberOfStrips();
-  m_averageStripNoisePhi = m_StripNoiseTool->averageNoise((*phisens)->sensorNumber());
-  m_averageStripNoisePhi *= m_scaleNoise; 
-  const double probPhi = safe_gsl_sf_erf_Q(m_threshold / m_averageStripNoisePhi);
-  const double averageNoiseHitsPhi = 2. * probPhi * nStripsPhi;
-  sc = m_poissonDistPhi.initialize(randSvc(), Rndm::Poisson(averageNoiseHitsPhi));
+  sc = m_uniform.initialize(randSvc(), Rndm::Flat(0., 1.));
   if (!sc) {
-    error() << "Failed to initialise Poisson random number generator" << endmsg;
+    error() << "Cannot initialise uniform random number generator" << endmsg;
+    return sc;
+  }
+  // Estimate the number of R strips to add noise to.
+  std::vector<DeVLRSensor*>::const_iterator itr = m_det->rSensorsBegin();
+  const unsigned int nStripsR = (*itr)->numberOfStrips();
+  // Calculate the average strip noise.
+  double noiseR = m_StripNoiseTool->averageNoise((*itr)->sensorNumber());
+  noiseR *= m_scaleNoise; 
+  double noiseHitsR = 2. * erfcSafe(m_threshold / noiseR) * nStripsR;
+  sc = m_poissonR.initialize(randSvc(), Rndm::Poisson(noiseHitsR));
+  if (!sc) {
+    error() << "Cannot initialise Poisson random number generator" << endmsg;
+    return sc;
+  }
+  // Estimate the number of Phi strips to add noise to.
+  std::vector<DeVLPhiSensor*>::const_iterator itp = m_det->phiSensorsBegin();
+  const unsigned int nStripsPhi = (*itp)->numberOfStrips();
+  double noisePhi = m_StripNoiseTool->averageNoise((*itp)->sensorNumber());
+  noisePhi *= m_scaleNoise; 
+  double noiseHitsPhi = 2. * erfcSafe(m_threshold / noisePhi) * nStripsPhi;
+  sc = m_poissonPhi.initialize(randSvc(), Rndm::Poisson(noiseHitsPhi));
+  if (!sc) {
+    error() << "Cannot initialise Poisson random number generator" << endmsg;
     return sc;
   }
   return StatusCode::SUCCESS;
@@ -149,80 +144,88 @@ StatusCode VLDigitCreator::initialize() {
 StatusCode VLDigitCreator::execute() {
 
   if (m_debug) debug() << " ==> execute()" << endmsg;
-  /// Get the container of MCHits to make MC linker table to
-  m_MCHitContainerToLink = get<LHCb::MCHits>(m_MCHitContainerToLinkName);
-  m_digits = new LHCb::MCVLDigits();
+  // Get the container of MCHits to make MC linker table to.
+  m_MCHitContainerToLink = get<MCHits>(m_MCHitContainerToLinkName);
+  m_digits = new MCVLDigits();
   std::vector<std::string>::const_iterator it;
-  for (it = m_inputContainers.begin(); it != m_inputContainers.end(); ++it) {
-    if (!exist<LHCb::MCHits>(*it)) {
-      if (m_debug) {
-        debug() << "Could not find container " << *it << endmsg;
-      }
+  for (it = m_hitLocations.begin(); it != m_hitLocations.end(); ++it) {
+    if (!exist<MCHits>(*it)) {
+      if (m_debug) debug() << "No MCHits in " << *it << endmsg;
       continue;
     }
-    /// Retrieve hits.
-    LHCb::MCHits* hits = get<LHCb::MCHits>(*it);
+    // Retrieve the MC hits.
+    MCHits* hits = get<MCHits>(*it);
     if (m_debug) debug() << hits->size() << " hits in " << *it << endmsg;
-    const unsigned int timeIndex = it - m_inputContainers.begin();
-    const double timeOffset = m_inputTimeOffsets[timeIndex];
-    /// Simulate signals in strips from MCHits.
+    const unsigned int timeIndex = it - m_hitLocations.begin();
+    const double timeOffset = m_timeOffsets[timeIndex];
+    // Simulate signals in strips due to MC hits.
     simulateSignal(hits, timeOffset);
-    /// Simulate charge sharing due to capacitive coupling.
-    // if (m_coupling) simulateCoupling();
-    /// Add noise.
-    if (m_noiseSim) simulateNoise();
-    /// Convert charge to ADC counts.
+    // Simulate charge sharing due to capacitive coupling.
+    if (m_coupling > 0.) simulateCoupling();
+    // Add noise.
+    if (m_noise) simulateNoise();
+    // Convert charges to ADC counts.
     digitise();
     // Simulate signal loss due to dead strips.
-    if (m_stripInefficiency > 0.) simulateInefficiency();
-    /// Remove digits below threshold and sort.
+    if (m_inefficiency > 0.) simulateInefficiency();
+    // Remove digits below threshold.
     cleanup();
   }
-  StatusCode sc = storeDigits(); 
-  return sc;
+  // Store the digits.
+  if (exist<MCVLDigits>(m_digitLocation)) {
+    MCVLDigits* outputContainer = get<MCVLDigits>(m_digitLocation);
+    MCVLDigits::const_iterator itd;
+    for (itd = m_digits->begin(); itd != m_digits->end(); ++itd) {
+      outputContainer->insert(*itd);
+    }
+  } else {
+    put(m_digits, m_digitLocation);
+  }
+  if (m_debug) {
+    debug() << "Created " << m_digits->size() << " digits" << endmsg;
+  } 
+  return StatusCode::SUCCESS;
 
 }
 
 //=======================================================================
 /// Loop through hits and allocate charge to strips
 //=======================================================================
-void VLDigitCreator::simulateSignal(LHCb::MCHits* hits, double timeOffset) {
+void VLDigitCreator::simulateSignal(MCHits* hits, double bunchOffset) {
 
-  if (m_debug) debug() << " ==> simulateSignal() " << endmsg;
-  // Loop over input hits.
-  LHCb::MCHits::const_iterator it; 
+  if (m_debug) debug() << " ==> simulateSignal()" << endmsg;
+  std::vector<double> points;
+  // Loop over the hits.
+  MCHits::const_iterator it;
   for (it = hits->begin(); it != hits->end(); ++it) {
-    LHCb::MCHit* hit = (*it);
-    // Calculate number of points to which the charge is assigned.
-    const int nPoints = numberOfPoints(hit);
-    if (m_verbose) {
-      verbose() << "Simulating " << nPoints << " points in Si" << endmsg;
-    }
-    if (nPoints <= 0) continue; 
-    // Calculate charge to assign to each point.
-    std::vector<double> points(nPoints);
-    chargePerPoint(*it, points, timeOffset);
-    // Diffuse charge from points to strips.
-    diffusion(*it, points);
-  }
-  if (m_debug) {
-    debug() << "Created " << m_digits->size() << " digits" << endmsg;
+    MCHit* hit = (*it);
+    // Get the effective charge fraction for this hit.
+    double tof = hit->time() - fabs(hit->entry().z() / Gaudi::Units::c_light); 
+    const double t = m_peakTime + m_offPeakSamplingTime + bunchOffset - tof;
+    const double fraction = m_SiTimeTool->response(t);
+    // Calculate the deposited charge and distribute it 
+    // to points along the hit path.
+    points.clear();
+    if (!deposit(hit, points, fraction)) continue;
+    // Diffuse charges from points to strips.
+    drift(hit, points);
   }
 
 }
 
 //=======================================================================
-/// Calculate number of points in silicon the simulation will use
+/// Assign the deposited charge to points in the silicon.
 //=======================================================================
-int VLDigitCreator::numberOfPoints(LHCb::MCHit* hit) {
+bool VLDigitCreator::deposit(MCHit* hit, std::vector<double>& points,
+                             double fraction) {
 
-  if (m_debug) debug() << " ==> numberOfPoints()" << endmsg;
+  if (m_debug) debug() << " ==> deposit()" << endmsg;
   const DeVLSensor* sens = m_det->sensor(hit->sensDetID());
   if (!sens) {
     error() << "Invalid sensor" << endmsg;
-    return 0;
+    return false;
   }
-  LHCb::VLChannelID entryChannel, exitChannel;
+  VLChannelID entryChannel, exitChannel;
   double entryFraction = 0., exitFraction = 0.;
   double pitch = 0.;
   StatusCode entryValid = 
@@ -240,34 +243,19 @@ int VLDigitCreator::numberOfPoints(LHCb::MCHit* hit) {
     if (!entryValid) verbose() << "Invalid entry point" << endmsg;
     if (!exitValid)  verbose() << "Invalid exit point"  << endmsg;
   }
-  // Ignore hits with invalid entry or exit.
-  if (!entryValid || !exitValid) return 0;
-  // Calculate how many full strips entry and exit are apart.
+  // Skip hits with invalid entry or exit.
+  if (!entryValid || !exitValid) return false;
+  // Calculate how many full strips entry and exit points are apart.
   int nNeighb;
   StatusCode sc = sens->channelDistance(entryChannel, exitChannel, nNeighb);
   if (!sc) {
-    if (m_verbose) {
-      verbose() << "Entry and exit strips are not in same sector" << endmsg;
-    }
-    return 0;
+    // Entry and exit strips are not in the same sector.
+    return false;
   }
-  double nPoints = fabs(float(nNeighb) - (entryFraction - exitFraction));
-  if (m_verbose) {
-    verbose() << "Entry and exit are " << nPoints << " (integer: "
-              << nNeighb << ") strips apart" << endmsg;
-  }
-  return static_cast<int>(ceil(nPoints) * m_simulationPointsPerStrip);
+  double distance = fabs(nNeighb - (entryFraction - exitFraction));
+  unsigned int nPoints = static_cast<int>(ceil(distance) * m_pointsPerStrip);
+  points.resize(nPoints);
 
-}
-
-//=======================================================================
-/// Allocate charge to points
-//=======================================================================
-void VLDigitCreator::chargePerPoint(LHCb::MCHit* hit,
-                                          std::vector<double>& points, 
-                                          double timeOffset) {
-
-  if (m_debug) debug() << " ==> chargePerPoint()" << endmsg;
   // Calculate the total charge in electrons.
   double charge = (hit->energy() / Gaudi::Units::eV) / m_eVPerElectron;
   if (m_verbose) {
@@ -276,17 +264,15 @@ void VLDigitCreator::chargePerPoint(LHCb::MCHit* hit,
     verbose() << "Deposited charge: " << charge << " electrons" << endmsg;
   }
   // Apply time correction.
-  charge *= chargeTimeFactor(hit->time(), timeOffset, hit->entry().z());
-  if (m_verbose) {
-    verbose() << "Charge after time correction of " 
-              << timeOffset << ": " << charge << endmsg;
-  }
+  charge *= fraction;
+  if (m_verbose) verbose() << "Collected charge: " << charge << endmsg; 
   // Amount of charge to divide equally
   double chargeEqual = charge;
   if (m_inhomogeneousCharge) {
     double thickness = m_det->sensor(hit->sensDetID())->siliconThickness();
     chargeEqual = m_chargeUniform * thickness / Gaudi::Units::micrometer;
-    chargeEqual *= chargeTimeFactor(hit->time(), timeOffset, hit->entry().z());
+    // Apply time correction.
+    chargeEqual *= fraction;
     if (chargeEqual > charge) chargeEqual = charge;
   } 
   if (m_verbose) {
@@ -300,7 +286,7 @@ void VLDigitCreator::chargePerPoint(LHCb::MCHit* hit,
     *itp = chargeDiv;
     if (m_inhomogeneousCharge) {
       // Gaussian fluctuations
-      *itp += m_gaussDist() * sqrtChargeDiv * m_scaleFluctuations;
+      *itp += m_gauss() * sqrtChargeDiv * m_scaleFluctuations;
     }
     if (m_verbose) {
       verbose() << "Charge on point" << itp - points.begin() 
@@ -324,15 +310,15 @@ void VLDigitCreator::chargePerPoint(LHCb::MCHit* hit,
       debug() << "Deposited charge: " << charge << endmsg;
     }
   }
+  return true;
 
 }
 
-//=======================================================================
+//============================================================================
 /// Allocate remaining charge from delta ray distribution
-//=======================================================================
-void VLDigitCreator::deltaRayCharge(double total, double equal, 
-                                          double tol, 
-                                          std::vector<double>& points) {
+//============================================================================
+void VLDigitCreator::deltaRayCharge(double total, double equal, double tol, 
+                                    std::vector<double>& points) {
 
   if (m_debug) debug() << " ==> deltaRayCharge() " << endmsg;
   // Upper limit on charge from delta ray
@@ -347,9 +333,9 @@ void VLDigitCreator::deltaRayCharge(double total, double equal,
     // E(r)=1/r, where r is uniform in range 1 / tmin < r < 1 / tmax
     // but tmax bounded by energy left to allocate, so following is
     // not truly correct
-    double charge = ran_inv_E2(tmin, tmax);
+    double charge = ranInvSquare(tmin, tmax);
     // Choose point at random to add delta ray
-    int i = static_cast<int>(LHCb::Math::round(m_uniformDist() * (points.size() - 1)));
+    int i = static_cast<int>(Math::round(m_uniform() * (points.size() - 1)));
     if (m_verbose) {
       verbose() << "Delta ray charge added to point " << i
                 << "/" << points.size() << endmsg;
@@ -373,12 +359,12 @@ void VLDigitCreator::deltaRayCharge(double total, double equal,
 
 }
 
-//=======================================================================
+//============================================================================
 /// Allocate the charge to the collection strips
-//=======================================================================
-void VLDigitCreator::diffusion(LHCb::MCHit* hit, std::vector<double>& points) {
+//============================================================================
+void VLDigitCreator::drift(MCHit* hit, std::vector<double>& points) {
 
-  if (m_debug) debug()<< " ==> diffusion()" << endmsg;
+  if (m_debug) debug()<< " ==> drift()" << endmsg;
   // Distance between steps on hit path
   Gaudi::XYZVector step = hit->displacement() / (2. * points.size());
   Gaudi::XYZPoint point = hit->entry() + step;
@@ -398,7 +384,7 @@ void VLDigitCreator::diffusion(LHCb::MCHit* hit, std::vector<double>& points) {
     }
     // Make sure the point is valid
     double fraction, pitch;
-    LHCb::VLChannelID entryChan;
+    VLChannelID entryChan;
     StatusCode valid = sens->pointToChannel(point, entryChan, fraction, pitch);
     if (!valid) {
       // A point may be invalid, despite entry and exit points being valid,
@@ -424,8 +410,8 @@ void VLDigitCreator::diffusion(LHCb::MCHit* hit, std::vector<double>& points) {
     for (int iNg = -nNeighbs; iNg <= +nNeighbs; ++iNg) {
       double d1 = ((iNg - 0.5) - fraction) * pitch / Gaudi::Units::micrometer;
       double d2 = ((iNg + 0.5) - fraction) * pitch/ Gaudi::Units::micrometer;
-      const double p1 = safe_gsl_sf_erf_Q(d1 / sigma);
-      const double p2 = safe_gsl_sf_erf_Q(d2 / sigma);
+      const double p1 = erfcSafe(d1 / sigma);
+      const double p2 = erfcSafe(d2 / sigma);
       if (m_verbose) {
         verbose() << "d1 " << d1 << "  " << "d2 " << d2 << "  "
                   << "p1 " << p1 << "  " << "p2 " << p2 << endmsg;
@@ -450,19 +436,19 @@ void VLDigitCreator::diffusion(LHCb::MCHit* hit, std::vector<double>& points) {
       if (charge > m_threshold * 0.1) {
         // Ignore if below 10% of threshold
         // Calculate index of this strip
-        LHCb::VLChannelID channel;
+        VLChannelID channel;
         valid = sens->neighbour(entryChan, iNg, channel);
         // Update charge and MCHit list
         if (valid) {
-          LHCb::MCVLDigit* digit = findOrInsert(channel);
+          MCVLDigit* digit = getDigit(channel, true);
           if (hit->parent() == m_MCHitContainerToLink) {
             if (m_verbose) verbose() << "MCHit to link" << endreq;
             // Update and add MC link
-            fill(digit, hit, charge);
+            addSignal(digit, hit, charge);
           } else {
             if (m_verbose) verbose() << "Non-linked MCHit" << endreq;
             // Update an unlinked digit
-            fill(digit, charge);
+            addSignal(digit, 0, charge);
           }
         }
       }
@@ -473,93 +459,70 @@ void VLDigitCreator::diffusion(LHCb::MCHit* hit, std::vector<double>& points) {
   }
 
 }
-//=======================================================================
-/// Update signal and list of MCHits
-//=======================================================================
-void VLDigitCreator::fill(LHCb::MCVLDigit* digit,
-                          LHCb::MCHit* hit, double charge) {
 
-  if (m_debug) debug() << " ==> fill()" << endmsg;
+//============================================================================
+/// Update signal and list of MCHits
+//============================================================================
+void VLDigitCreator::addSignal(MCVLDigit* digit, MCHit* hit, double charge) {
+
+  if (m_debug) debug() << " ==> addSignal()" << endmsg;
   digit->setSignal(digit->signal() + charge);
-  if (m_verbose) {
-    verbose() << "Strip signal after update: " << digit->signal() << endmsg;
-  }
-  if (hit) {
-    // Add link to MC hit / update with weight
-    if (m_verbose) verbose() << "Key: " << digit->key() << endmsg;
-    int size = digit->numberOfMCHits();
-    int i = 0;
-    LHCb::MCHit* hitChk = NULL;
-    while (hit != hitChk && i < size) {
-      if (m_verbose) {
-        verbose() << "Hit number " << i << "/" << size
-                  << " charge " << charge << " hit " << hit->index() << endmsg;
-      }
-      hitChk = digit->mcHit(i);
-      ++i;
-    };
-    i--;
-    if (hit == hitChk) {
-      double sig = digit->mcHitCharge(i);
-      if (m_verbose) verbose() << "Hit exists, has signal " << sig << endmsg;
-      sig += charge;
-      digit->setMCHitCharge(i, sig);
-      if (m_verbose) {
-        verbose() << "New signal value " << sig << " for hit "
-                  << hit->index() << " hit check " << hitChk->index() << endmsg;
-      }
-    } else {
-      if (m_verbose) verbose() << "Hit added" << endmsg;
-      digit->addToMCHits(hit, charge);
+  if (!hit) return;
+  // Add the MC hit and charge deposit.
+  const unsigned int nHits = digit->numberOfMCHits();
+  bool foundHit = false;
+  for (unsigned int i = 0; i < nHits; ++i) {
+    MCHit* ref = digit->mcHit(i);
+    if (ref == hit) {
+      // Hit exists. Update the charge.
+      digit->setMCHitCharge(i, digit->mcHitCharge(i) + charge);
+      foundHit = true;
+      break;
     }
   }
+  if (!foundHit) digit->addToMCHits(hit, charge);
 
 }
-
-//=======================================================================
+//============================================================================
 /// Add a fraction of signal in strip to the two neighbouring strips.
 /// It is assumed that this is a small fraction and hence it doesn't matter
 /// in what order this procedure is applied to the strip list.
-//=======================================================================
+//============================================================================
 void VLDigitCreator::simulateCoupling() {
 
   if (m_debug) debug() << " ==> simulateCoupling()" << endmsg;
   // Sort digits into order of ascending sensor + strip.
   std::stable_sort(m_digits->begin(), m_digits->end(),
-                   VLDataFunctor::LessByKey<const LHCb::MCVLDigit*>());
-  // Make new container for any added strips.
-  m_digitsCoupling = new LHCb::MCVLDigits();
-  LHCb::MCVLDigits::iterator itd; 
+                   VLDataFunctor::LessByKey<const MCVLDigit*>());
+  // Make a new container for any added strips.
+  m_digitsCoupling = new MCVLDigits();
+  MCVLDigits::iterator itd; 
   for (itd = m_digits->begin(); itd != m_digits->end(); ++itd) {
     // Calculate signal to couple to neighbouring strips.
-    double coupledSignal = (*itd)->signal() * m_capacitiveCoupling;
-    if (m_verbose) {
-      verbose() << "Original signal: " << (*itd)->signal() << endmsg;
-      verbose() << "Coupled signal: " << coupledSignal << endmsg;
-    }
-    // Subtract coupled signal from this strip.
+    double coupledSignal = (*itd)->signal() * m_coupling;
+    // Subtract the coupled signal from this strip.
     (*itd)->setSignal((*itd)->signal() - 2. * coupledSignal);
     if (m_verbose) {
       verbose() << "Signal after subtraction: " << (*itd)->signal() << endmsg;
     }
-    // Set flag whether the coupled signals is worth creating.
+    // Set flag whether the coupled signal is worth creating.
     bool create = (coupledSignal > m_threshold * 0.1);
     bool valid;
     // Add to previous strip (if doesn't exist then create).
-    LHCb::MCVLDigit* prev = findOrInsertPrevStrip(itd, valid, create);
-    if (valid) fill(prev, coupledSignal);
+    MCVLDigit* prev = getDigitPrev(itd, valid, create);
+    if (valid) addSignal(prev, 0, coupledSignal);
     // Add to next strip.
-    LHCb::MCVLDigit* next = findOrInsertNextStrip(itd, valid, create);
-    if (valid) fill(next, coupledSignal);
+    MCVLDigit* next = getDigitNext(itd, valid, create);
+    if (valid) addSignal(next, 0, coupledSignal);
   } 
   // Add any newly created digits.
   if (m_debug) {
     debug() << m_digitsCoupling->size() 
             << " digits created by coupling routine" << endmsg;
   }
-  LHCb::MCVLDigits::iterator itc; 
+  MCVLDigits::iterator itc; 
   for (itc = m_digitsCoupling->begin(); itc < m_digitsCoupling->end(); ++itc) {
-    LHCb::MCVLDigit* digit = m_digits->object((*itc)->key());
+    MCVLDigit* digit = m_digits->object((*itc)->key());
     if (0 != digit) {
       digit->setSignal(digit->signal() + (*itc)->signal());
       if (m_verbose) {
@@ -585,78 +548,76 @@ void VLDigitCreator::simulateCoupling() {
 
 }
 
-//=======================================================================
+//============================================================================
 /// From an originally sorted list, find the strip with the previous key,
 /// or create a new one.
-//=======================================================================
-LHCb::MCVLDigit* VLDigitCreator::findOrInsertPrevStrip(
-    LHCb::MCVLDigits::iterator itd, bool& valid, bool& create) {
+//============================================================================
+MCVLDigit* VLDigitCreator::getDigitPrev(MCVLDigits::iterator itd, 
+                                        bool& valid, bool& create) {
   
-  if (m_debug) debug() << " ==> findOrInsertPrevStrip()" << endmsg;
-  // Try previous entry in container.
-  LHCb::MCVLDigit* prevStrip = (*itd);
+  if (m_debug) debug() << " ==> getDigitPrev()" << endmsg;
+  // Try the previous entry in the same container.
+  MCVLDigit* prev = (*itd);
   if (itd != m_digits->begin()) {
     --itd;
-    prevStrip = (*(itd));
+    prev = (*(itd));
     ++itd;
   }
   // Check
-  int checkDistance;
+  int distance = 0;
   const DeVLSensor* sens = m_det->sensor((*itd)->key().sensor());
-  StatusCode sc = sens->channelDistance((*itd)->key(), prevStrip->key(),
-                                        checkDistance);
+  StatusCode sc = sens->channelDistance((*itd)->key(), prev->key(), distance);
   valid = sc.isSuccess();
-  if (valid && -1 == checkDistance) return prevStrip;
+  if (valid && -1 == distance) return prev;
   // Check if just added this strip in other container
   if (m_digitsCoupling->size() != 0) {
-    LHCb::MCVLDigits::iterator last = m_digitsCoupling->end(); 
+    MCVLDigits::iterator last = m_digitsCoupling->end(); 
     last--;
-    prevStrip = (*last);
+    prev = (*last);
   }
   // Check
-  sc = sens->channelDistance((*itd)->key(), prevStrip->key(),
-                             checkDistance);
+  sc = sens->channelDistance((*itd)->key(), prev->key(), distance);
   valid = sc.isSuccess();
-  if (valid && -1 == checkDistance) return prevStrip;
+  if (valid && -1 == distance) return prev;
 
   // Doesn't exist so insert a new strip (if create is true)
   if (create) {
-    LHCb::VLChannelID channel;
+    VLChannelID channel;
     sc = sens->neighbour((*itd)->key(), -1, channel);
     if (sc.isSuccess()) {
       // Protect if key already exists
-      prevStrip = m_digitsCoupling->object(channel);
-      if (0 != prevStrip) return prevStrip;
+      prev = m_digitsCoupling->object(channel);
+      if (0 != prev) return prev;
       if (m_verbose) {
         verbose() << "Create strip" << channel.strip() 
                   << " (sensor " << channel.sensor() << ")" << endmsg;
       }
-      prevStrip = new LHCb::MCVLDigit(channel);
-      m_digitsCoupling->insert(prevStrip);
+      prev = new MCVLDigit(channel);
+      m_digitsCoupling->insert(prev);
       valid = true;
     } else {
       valid = false;
-      prevStrip = NULL;
+      prev = 0;
     }
   } else {
     valid = false;
-    prevStrip = NULL;
+    prev = 0;
   }
-  return prevStrip;
+  return prev;
 
 }
 
-//=======================================================================
+//============================================================================
 /// From an originally sorted list, find the strip with the next key,
 /// or create a new one.
-//=======================================================================
-LHCb::MCVLDigit* VLDigitCreator::findOrInsertNextStrip(
-    LHCb::MCVLDigits::iterator itd, bool& valid, bool& create) {
+//============================================================================
+MCVLDigit* VLDigitCreator::getDigitNext(
+    MCVLDigits::iterator itd, bool& valid, bool& create) {
   
-  if (m_debug) debug() << " ==> findOrInsertNextStrip()" << endmsg;
+  if (m_debug) debug() << " ==> getDigitNext()" << endmsg;
   // Try next entry in container.
-  LHCb::MCVLDigit* nextStrip = *itd;
-  LHCb::MCVLDigits::iterator last = m_digits->end(); 
+  MCVLDigit* nextStrip = *itd;
+  MCVLDigits::iterator last = m_digits->end(); 
   last--;
   if (itd != last) {
     ++itd;
@@ -673,7 +634,7 @@ LHCb::MCVLDigit* VLDigitCreator::findOrInsertNextStrip(
 
   // Doesn't exist so insert a new strip (if create is true)
   if (create) {
-    LHCb::VLChannelID channel;
+    VLChannelID channel;
     sc = sens->neighbour((*itd)->key(), +1, channel);
     if (sc.isSuccess()) {
      // Protect if key already exists
@@ -683,36 +644,36 @@ LHCb::MCVLDigit* VLDigitCreator::findOrInsertNextStrip(
         verbose() << "Create strip" << channel.strip() 
                   << " (sensor " << channel.sensor() << ")" << endmsg;
       }
-      nextStrip = new LHCb::MCVLDigit(channel);
+      nextStrip = new MCVLDigit(channel);
       m_digitsCoupling->insert(nextStrip);
       valid = true;
     } else {
       valid = false;
-      nextStrip = NULL;
+      nextStrip = 0;
     }
   } else {
     valid = false;
-    nextStrip = NULL;
+    nextStrip = 0;
   }
   return nextStrip;
 
 }
 
-//=======================================================================
+//============================================================================
 /// Add noise
-//=======================================================================
+//============================================================================
 void VLDigitCreator::simulateNoise() {
 
   if (m_debug) debug() << " ==> simulateNoise()" << endmsg;
   // Add noise to channels which already have a hit. 
-  LHCb::MCVLDigits::iterator itd; 
+  MCVLDigits::iterator itd; 
   for (itd = m_digits->begin(); itd != m_digits->end(); ++itd) {
     if ((*itd)->noise() == 0) {
       const unsigned int sensor = (*itd)->sensor();
       const unsigned int strip = (*itd)->strip();
       const double stripNoise = m_StripNoiseTool->noise(sensor, strip);
       if (stripNoise > 0.) {
-        (*itd)->setNoise(noiseValue(stripNoise)); 
+        (*itd)->setNoise(m_gauss() * stripNoise);
         if (m_verbose) {
           verbose() << "Noise added to strip " << strip 
                     << " (sensor " << sensor << "): " 
@@ -721,23 +682,19 @@ void VLDigitCreator::simulateNoise() {
       } 
     }
   }
-  // Allocate noise to channels which don't have a signal yet.
-  std::vector<DeVLSensor*>::const_iterator sensBegin;
-  std::vector<DeVLSensor*>::const_iterator sensEnd;
-  if (!m_simNoisePileUp) { 
-    // Main Velo
-    sensBegin = m_det->rPhiSensorsBegin();
-    sensEnd   = m_det->rPhiSensorsEnd();
-  } else {
-    // Pile-up sensors 
-    sensBegin = m_det->pileUpSensorsBegin();
-    sensEnd   = m_det->pileUpSensorsEnd();
-  }
+  // Allocate noise to channels which don't have a hit.
   std::vector<DeVLSensor*>::const_iterator its; 
-  for (its = sensBegin; its != sensEnd; ++its) {
+  for (its = m_det->rPhiSensorsBegin(); its != m_det->rPhiSensorsEnd(); ++its) {
     const DeVLSensor* sens = *its;
     // Estimate the number of noise hits.
-    const int nNoiseHits = sens->isPhi() ? poissonDistPhi() : poissonDistR();
+    int nNoiseHits = 0;
+    // Turn off FPEs
+    FPE::Guard allFPE(FPE::Guard::mask("AllExcept"), true);
+    if (sens->isPhi()) {
+      nNoiseHits = int(m_poissonPhi());
+    } else {
+      nNoiseHits = int(m_poissonR());
+    }
     const int nStrips = sens->numberOfStrips();
     const unsigned int sensor = sens->sensorNumber();
     if (m_verbose) {
@@ -745,95 +702,75 @@ void VLDigitCreator::simulateNoise() {
                 << " strips of sensor " << sensor << endmsg;
     }
     for (int i = 0; i < nNoiseHits; ++i) {
-      // Choose random strip. 
-      int strip = int(LHCb::Math::round(m_uniformDist() * (nStrips - 1)));
-      // Find strip in list.
-      LHCb::VLChannelID channel(sensor, strip, LHCb::VLChannelID::Null);
+      // Choose a random strip. 
+      int strip = int(Math::round(m_uniform() * (nStrips - 1)));
+      VLChannelID channel(sensor, strip, VLChannelID::Null);
       if (sens->isPhi()) {
-        channel.setType(LHCb::VLChannelID::PhiType);
+        channel.setType(VLChannelID::PhiType);
       } else {
-        channel.setType(LHCb::VLChannelID::RType);
+        channel.setType(VLChannelID::RType);
       }
-      LHCb::MCVLDigit* digit = findOrInsert(channel);
+      MCVLDigit* digit = getDigit(channel, true);
       if (digit->noise() == 0) {
-        const double stripNoise = m_StripNoiseTool->noise(sensor, strip);
+        double stripNoise = m_StripNoiseTool->noise(sensor, strip);
         if (stripNoise > 0.) {
-          digit->setNoise(noiseValueTail(stripNoise, m_threshold)); 
-        }   
+          stripNoise = ranGaussianTail(m_threshold, stripNoise);
+          if (m_uniform() > 0.5) stripNoise *= -1.;
+          digit->setNoise(stripNoise);
+        } 
       }
     }
   }
 
 }
 
-//=========================================================================
-/// Generate some noise
-//=========================================================================
-double VLDigitCreator::noiseValue(double sigma) {
-  
-  return m_gaussDist() * sigma;
-
-}
-
-//=========================================================================
-// Generate some noise from tail of distribution
-//=========================================================================
- double VLDigitCreator::noiseValueTail(double sigma, double threshold) {
-  
-  double noise = ran_gaussian_tail(threshold, sigma);  
-  // Noise negative or positive
-  if (m_uniformDist() > 0.5) noise *= -1.; 
-  return noise;
-
-}
-
-//=======================================================================
-/// Digitisation 
-//=======================================================================
+//============================================================================
+/// Convert number of electrons to ADC counts 
+//============================================================================
 void VLDigitCreator::digitise(){
 
   if (m_debug) debug() << " ==> digitise()" << endmsg;
-  LHCb::MCVLDigits::iterator itd;
+  MCVLDigits::iterator itd;
   for (itd = m_digits->begin(); itd != m_digits->end(); ++itd) {
     // Assume linear response for now.
-    double digi = (*itd)->charge() / m_electronsPerADC;
-    int adc = static_cast<int>(LHCb::Math::round(digi));
-    if (adc > m_maxADCOutput) adc = m_maxADCOutput;
-    if (adc < m_minADCOutput) adc = m_minADCOutput;
+    double digi = (*itd)->charge() / m_electronsPerAdc;
+    int adc = static_cast<int>(Math::round(digi));
+    if (adc >= m_adcRange) {
+      adc = m_adcRange - 1;
+    } else if (adc < 0) {
+      adc = 0;
+    }
     (*itd)->setAdc(adc); 
   }
 
 }
 
-
-//=======================================================================
+//============================================================================
 /// Simulate strip inefficiency
-//=======================================================================
+//============================================================================
 void VLDigitCreator::simulateInefficiency() {
   
   if (m_debug) debug()<< " ==> simulateInefficiency()" << endmsg;
-  LHCb::MCVLDigits::iterator itd;
+  MCVLDigits::iterator itd;
   for (itd = m_digits->begin(); itd != m_digits->end(); ++itd) {
-    ++m_nDigitsTotal;
-    if (m_stripInefficiency > m_uniformDist()) {
-      ++m_nDigitsKilled;
-      // Set signal to zero (channel will be removed by cut in final process)
+    if (m_inefficiency > m_uniform()) {
+      // Set signal to zero (channel will be removed by cut in final process).
       (*itd)->setSignal(0.);
     }
   }
 
 }
 
-//=======================================================================
+//============================================================================
 /// Find a strip in list, or if it does not currently exist create it
-//=======================================================================
-LHCb::MCVLDigit* VLDigitCreator::findOrInsert(LHCb::VLChannelID& channel) {
+//============================================================================
+MCVLDigit* VLDigitCreator::getDigit(VLChannelID& channel, const bool create) {
 
-  if (m_debug) debug() << " ==> findOrInsert()" << endmsg;
-  LHCb::MCVLDigit* digit = m_digits->object(channel);
-  if (0 == digit) {
-    // This strip has not been used before, so create it
-    digit = new LHCb::MCVLDigit(channel);
+  if (m_debug) debug() << " ==> getDigit()" << endmsg;
+  MCVLDigit* digit = m_digits->object(channel);
+  if (0 == digit && create) {
+    // This strip has not been used before, so create it.
+    digit = new MCVLDigit(channel);
     if (m_verbose) {
       verbose() << "Add digit (sensor " << channel.sensor() 
                 << ", strip " << channel.strip() << ")" << endmsg;
@@ -844,80 +781,42 @@ LHCb::MCVLDigit* VLDigitCreator::findOrInsert(LHCb::VLChannelID& channel) {
 
 }
 
-//=======================================================================
-/// Remove any digits with charge below abs(threshold)
-//=========================================================================
+//============================================================================
+/// Remove any digits with charge below threshold
+//============================================================================
 void VLDigitCreator::cleanup() {
   
   if (m_debug) debug() << " ==> cleanup()" << endmsg;
-  // Sort container by charge.
+  // Sort the digits by charge.
   std::sort(m_digits->begin(), m_digits->end(),
-            VLDataFunctor::LessByCharge<const LHCb::MCVLDigit*>());
+            VLDataFunctor::LessByCharge<const MCVLDigit*>());
   std::reverse(m_digits->begin(),m_digits->end());
-  // Remove digits with ADC below threshold
-  const double thr = m_threshold / m_electronsPerADC; 
-  LHCb::MCVLDigits::iterator it1 = std::find_if(m_digits->begin(), 
-                                                m_digits->end(),
-                                                VLThreshold(thr));
-  LHCb::MCVLDigits::iterator it2 = m_digits->end();
-  m_digits->erase(it1, it2);
-  // Sort container by sensor/strip number.
+  // Remove digits with charge below threshold.
+  MCVLDigits::iterator it = std::find_if(m_digits->begin(), m_digits->end(),
+                                         VLThreshold(m_threshold));
+  m_digits->erase(it, m_digits->end());
+  // Sort the digits by sensor and strip number.
   std::sort(m_digits->begin(), m_digits->end(),
-            VLDataFunctor::LessByKey<const LHCb::MCVLDigit*>());
+            VLDataFunctor::LessByKey<const MCVLDigit*>());
 
 }
 
-//=======================================================================
-/// Store digits
-//=======================================================================
-StatusCode VLDigitCreator::storeDigits() {
-  
-  if (m_debug) debug() << " ==> storeDigits()" << endmsg;
-  std::vector<std::string>::const_iterator itc;
-  for (itc = m_outputContainers.begin(); itc != m_outputContainers.end(); ++itc) {
-    if (exist<LHCb::MCVLDigits>(*itc)) {
-      LHCb::MCVLDigits* outputCont = get<LHCb::MCVLDigits>(*itc);
-      LHCb::MCVLDigits::const_iterator itd;
-      for (itd = m_digits->begin(); itd != m_digits->end(); ++itd) {
-        outputCont->insert(*itd);
-      }
-    } else {
-      // Put local container into TES.
-      put(m_digits, *itc); 
-    }
-    if (m_debug) {
-      debug() << "Stored " << m_digits->size() 
-              << " digits at " << *itc << endmsg;
-    }
-  }
-  return StatusCode::SUCCESS;
-
-}
-
-//=======================================================================
-// Delta ray tail random numbers
-// dN/DE=k*1/E^2 for relativistic incident particle
-// E(r)=1/r, where r is uniform in range 1/Tmin < r < 1/Tmax
-// but Tmax bounded by energy left to allocate, so following is
-// not truly correct
-//=======================================================================
-double VLDigitCreator::ran_inv_E2(double tmin, double tmax) {
+//============================================================================
+/// Draw random number from delta ray energy distribution 
+//============================================================================
+double VLDigitCreator::ranInvSquare(const double tmin, const double tmax) {
   
   const double range = (1. / tmin) - (1. / tmax);
   const double offset = 1. / tmax;
-  const double uniform = m_uniformDist() * range + offset;
+  const double uniform = m_uniform() * range + offset;
   return 1. / uniform;
 
 }
 
-//=========================================================================
-// Returns a gaussian random variable larger than a
-// This implementation does one-sided upper-tailed deviates.
-// Markus has promised to add this in the next release of the core Gaudi code
-// in autumn 2002, till then need this version here.
-// This code is based on that from the gsl library.
-//=========================================================================
-double VLDigitCreator::ran_gaussian_tail(const double a, const double sigma) {
+//============================================================================
+/// Draw random number from upper tail of a Gaussian distribution
+//============================================================================
+double VLDigitCreator::ranGaussianTail(const double a, const double sigma) {
   
   const double s = a / sigma;
   if (s < 1) {
@@ -925,7 +824,7 @@ double VLDigitCreator::ran_gaussian_tail(const double a, const double sigma) {
     // The limit s < 1 can be adjusted to optimise the overall efficiency
     double x;
     do {
-      x = m_gaussDist();
+      x = m_gauss();
     } while (x < s);
     return x * sigma;
   } 
@@ -936,9 +835,9 @@ double VLDigitCreator::ran_gaussian_tail(const double a, const double sigma) {
   // and the solution, p586.)
   double u, v, x;
   do {
-    u = m_uniformDist();
+    u = m_uniform();
     do {
-      v = m_uniformDist();
+      v = m_uniform();
     } while (v == 0.0);
     x = sqrt(s * s - 2 * log(v));
   } while (x * u > s);
@@ -947,31 +846,23 @@ double VLDigitCreator::ran_gaussian_tail(const double a, const double sigma) {
 }
 
 //============================================================================
+/// Complementary error function protected against floating point exceptions
 //============================================================================
-double VLDigitCreator::chargeTimeFactor(double tof, double bunchOffset, double z) {
+double VLDigitCreator::erfcSafe(const double arg) {
 
-  if (m_debug) debug() << " ==> chargeTimeFactor()" << endmsg;
-  // Correct for z position of sensor.
-  tof -= fabs(z / Gaudi::Units::c_light); 
-  const double t = m_pulseShapePeakTime + m_offPeakSamplingTime + bunchOffset - tof;
-  const double fraction = m_SiTimeTool->response(t);
-  if (m_debug) {
-    debug() << "Fraction: " << fraction << " (time " << time 
-            << ", bunch offset " << bunchOffset << ")" << endmsg;
-  }
-  return fraction;
+  if (arg < -10.) return 1.;
+  if (arg >  10.) return 0.;
+  // Turn off the inexact FPE.
+  FPE::Guard reducedFPE(FPE::Guard::mask("Inexact"), true);
+  return gsl_sf_erf_Q(arg);
 
 }
 
 //============================================================================
+/// Finalization
 //============================================================================
 StatusCode VLDigitCreator::finalize() {
  
-  if (m_nDigitsTotal > 0) {
-    const double fKilled = 100. * static_cast<double>(m_nDigitsKilled) / 
-                                  static_cast<double>(m_nDigitsTotal);
-    info() << format("Removed %5.2f%% of digits", fKilled) << endmsg;    
-  }
   return GaudiAlgorithm::finalize(); 
 
 }

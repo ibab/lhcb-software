@@ -61,7 +61,8 @@ StatusCode VLDigitMonitor::execute() {
   if (msgLevel(MSG::DEBUG)) debug() << " ==> execute()" << endmsg;
   ++m_nEvents;
   if (!exist<LHCb::MCVLDigits>(LHCb::MCVLDigitLocation::Default)) {
-    error() << "There are no MCVLDigits in the TES!" << endmsg;
+    error() << "No MCVLDigits at " 
+            << LHCb::MCVLDigitLocation::Default << endmsg;
     return StatusCode::FAILURE;
   }
   m_digits = get<LHCb::MCVLDigits>(LHCb::MCVLDigitLocation::Default);
@@ -111,10 +112,11 @@ void VLDigitMonitor::monitor() {
   m_nDigits += size;
   m_nDigits2 += size * size;
   plot(size, "nDigits", "Number of MCVLDigits / event", 0., 10000., 50);
-  // Loop over the digits in the container
+  // Loop over the digits in the container.
   LHCb::MCVLDigits::iterator it;
   for (it = m_digits->begin(); it != m_digits->end(); ++it) {
     LHCb::MCVLDigit* digit = (*it);
+    // Check if the digit is signal or noise dominated.
     bool signal = false, noise = false, other = false;
     if (fabs(digit->noise()) > 0. && (digit->signal() == 0.0)) {
       noise = true;
@@ -126,18 +128,13 @@ void VLDigitMonitor::monitor() {
       other = true;
       ++m_nOther;
     }
-    // Print some info if asked
+    // Print some info if asked to.
     if (m_printInfo) {
-      info() << " ==> MCVLDigit: "
-             << " ChannelID: " << digit->channelID()
-             << ", sensor number: " << digit->sensor()
-             << ", strip number: " << digit->strip()
-             << "\n \t\t" << " Added noise: " << digit->noise()
-             << ", added CM noise: " << digit->cmnoise()
-             << ", added pedestal: " << digit->pedestal()
-             << "\n \t\t" << " Added signal: " << digit->signal()
-             << ", charge: " << digit->charge()
-             << endmsg;
+      info() << " ==> MCVLDigit " << it - m_digits->begin()
+             << " (sensor " << digit->sensor()
+             << ", strip " << digit->strip() << endmsg;
+      info() << "    noise:  " << digit->noise() << endmsg;
+      info() << "    signal: " << digit->signal() << endmsg;
     }
     plot(digit->charge(), "charge", 
          "Charge in Si strip (electrons)",
@@ -202,13 +199,9 @@ void VLDigitMonitor::monitor() {
              "Other dominated - sensor and strip number",
              0., 100., 0., 3000., 100, 50);
     }
-    // Get the MCHits from which MCVLDigit was made, store energy
+    // Get the MCHits from which the MCVLDigit was made and their weights.
     SmartRefVector<LHCb::MCHit> mcHits = digit->mcHits();
     std::vector<double> mcHitsCharge = digit->mcHitsCharge();
-
-    if (m_printInfo) { 
-      info() << "Test MCVLDigit: " << mcHits.size() << " MC hits" << endmsg;
-    }
     plot(mcHits.size(), "hitsPerDigit",
          "Number of MC hits / MCVLDigit",
          -0.5, 5.5, 6);
@@ -216,11 +209,6 @@ void VLDigitMonitor::monitor() {
     std::vector<double>::iterator itch = mcHitsCharge.begin();
     SmartRefVector<LHCb::MCHit>::iterator ith;
     for (ith = mcHits.begin(); ith != mcHits.end(); ++ith) {
-      if (m_printInfo) {
-        info() << "Test MCVLDigit: MC hit, "
-               << "charge in current strip (electrons)" << (*itch)
-               << ", energy (eV)" << (*ith)->energy() / eV << endmsg;
-      }
       totalSignal += (*itch);
       plot((*itch), "mcHitSignal",
            "MC hit signal deposited in MCVLDigit",
@@ -259,14 +247,6 @@ void VLDigitMonitor::monitor() {
         const DeVLRSensor* rSens = dynamic_cast<const DeVLRSensor*>(sens);
         const double radius = rSens->rOfStrip(channel.strip());
         const unsigned int zone = rSens->zoneOfStrip(channel.strip());
-        if (m_printInfo) {
-          info() << "Sensor: " << channel.sensor()
-                 << ", strip: " << channel.strip()
-                 << ", zone: " << zone
-                 << ", sensorZ: " << sensorZ
-                 << ", radius: " << radius
-                 << ", radius/cm: " << radius / cm << endmsg;
-        }
         if (0 == zone) {
           plot2D(sensorZ, radius / cm, "rz0",
                  "MCVLDigit R position vs. Z (cm), Zone 0",
@@ -294,14 +274,6 @@ void VLDigitMonitor::monitor() {
         const DeVLPhiSensor* phiSens = dynamic_cast<const DeVLPhiSensor*>(sens);
         const double radius = phiSens->rMin(zone);
         const double phi = phiSens->globalPhi(strip, 0., radius);
-        if (m_printInfo) {
-          info() << "Sensor: " << channel.sensor()
-                 << ", type: " << (sens->type())
-                 << ", strip: " << channel.strip()
-                 << ", sensorZ: " << sensorZ
-                 << ", phi: " << phi / degree
-                 << endmsg;
-        }
         if (0 == zone) {
           plot2D(sensorZ, phi / degree, "phiz0",
                  "MCVLDigit Phi position vs. Z (cm), Zone 0",

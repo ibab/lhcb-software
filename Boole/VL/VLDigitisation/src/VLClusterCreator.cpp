@@ -29,12 +29,19 @@ VLClusterCreator::VLClusterCreator(const std::string& name,
     m_clusters(0),
     m_det(0) {
 
+  declareProperty("DigitLocation", 
+                  m_digitLocation = MCVLDigitLocation::Default);
+  declareProperty("ClusterLocation",
+                  m_clusterLocation = VLClusterLocation::Default);
+
   declareProperty("SeedSignalToNoiseCut", m_seedSignalToNoiseCut = 4.5);
-  declareProperty("LowSignalToNoiseCut",  m_lowSignalToNoiseCut = 1.5);
+  declareProperty("LowSignalToNoiseCut", m_lowSignalToNoiseCut = 1.5);
 
   declareProperty("MaxClusters", m_maxClusters = 10000);
   declareProperty("HighThreshold", m_highThreshold = 30.0);
-  declareProperty("ElectronsPerADC", m_electronsPerADC = 600.);
+  declareProperty("ElectronsPerADC", m_electronsPerADC = 1200.);
+
+  declareProperty("MCTruth", m_truth = true);
 
 }
 
@@ -45,12 +52,12 @@ StatusCode VLClusterCreator::initialize() {
 
   StatusCode sc = GaudiAlgorithm::initialize();
   if (sc.isFailure()) return sc;
-  if (msgLevel(MSG::DEBUG)) debug() << " ==> initialize()" << endmsg;
+  m_debug   = msgLevel(MSG::DEBUG);
+  m_verbose = msgLevel(MSG::VERBOSE);
+  if (m_debug) debug() << " ==> initialize()" << endmsg;
   m_det = getDet<DeVL>(DeVLLocation::Default);
   m_StripNoiseTool = tool<IStripNoiseTool>("VLStripNoiseTool",
                                            "StripNoise", this);
-  m_debug   = msgLevel(MSG::DEBUG);
-  m_verbose = msgLevel(MSG::VERBOSE);
   return StatusCode::SUCCESS;
 
 }
@@ -63,10 +70,10 @@ StatusCode VLClusterCreator::execute() {
   if (m_debug) debug() << " ==> execute()" << endmsg;
   m_clusters = new VLClusters;
   // Retrieve digits. 
-  m_digits = get<MCVLDigits>(MCVLDigitLocation::Default);
+  m_digits = get<MCVLDigits>(m_digitLocation);
   if (m_debug) {
     debug() << m_digits->size() << " digits in " 
-            << MCVLDigitLocation::Default << endmsg;
+            << m_digitLocation << endmsg;
   }
   // Do the clustering.
   makeClusters();
@@ -74,7 +81,10 @@ StatusCode VLClusterCreator::execute() {
   std::stable_sort(m_clusters->begin(), m_clusters->end(),
                    VLDataFunctor::LessByKey<const VLCluster*>());
   // Store the clusters on the TES.
-  put(m_clusters, VLClusterLocation::Default); 
+  put(m_clusters, m_clusterLocation);
+  // Do the MC truth association.
+  linkClustersToHits();
+  linkClustersToParticles();
   return StatusCode::SUCCESS;
 
 }
@@ -95,12 +105,8 @@ StatusCode VLClusterCreator::finalize() {
 void VLClusterCreator::makeClusters() {
   
   if (m_debug) debug() << " ==> makeClusters()" << endmsg;
-  // Create a linker for associating clusters with MC hits.
-  LinkerWithKey<MCHit, VLCluster> hitLinker(evtSvc(), msgSvc(),
-      VLClusterLocation::Default + "2MCHits");
-  // Create a linker for associating clusters with MC particles.
-  LinkerWithKey<MCParticle, VLCluster> particleLinker(evtSvc(), msgSvc(),
-      VLClusterLocation::Default + "2MCParticles");
+  m_hitTruthTable.clear();
+  m_particleTruthTable.clear();
   // Sort the digits by sensor number.
   std::stable_sort(m_digits->begin(), m_digits->end(),
                    VLDataFunctor::LessBySensor<const MCVLDigit*>());
@@ -129,7 +135,7 @@ void VLClusterCreator::makeClusters() {
       m_candidate.clear();
       // Try to make a cluster from this digit.
       if (!makeCluster(digit)) continue;
-      // Calculate the interstrip fraction. 
+      // Calculate the cluster centre and interstrip fraction. 
       double sum = 0.;
       double mean = 0.;
       std::vector<std::pair<int, unsigned int> > strips;
@@ -141,9 +147,11 @@ void VLClusterCreator::makeClusters() {
         mean += strip * adc;
       }
       mean /= sum;
-      double centre = mean - m_candidate[0]->strip();
+      std::sort(strips.begin(), strips.begin());
+      unsigned int centre = static_cast<unsigned int>(floor(mean));
+      const double isp = mean - centre;
       // Set the key.
-      VLChannelID channelID(sensor, m_candidate[0]->strip(), VLChannelID::Null);
+      VLChannelID channelID(sensor, centre, VLChannelID::Null);
       if ((*its)->isPhi()) {
         channelID.setType(VLChannelID::PhiType);
       } else {
@@ -153,20 +161,33 @@ void VLClusterCreator::makeClusters() {
       bool highThreshold = false;
       if (sum > m_highThreshold) highThreshold = true; 
       // Make a lite cluster.
-      const VLLiteCluster liteCluster(channelID, centre, m_candidate.size(),
-                                      m_highThreshold);
-      // Make a cluster and add it to the list.
+      const VLLiteCluster liteCluster(channelID, isp, highThreshold);
+      // Make a cluster and add it to the container.
       VLCluster* cluster = new VLCluster(liteCluster, strips);
       m_clusters->insert(cluster, channelID);
+      if (m_truth) {
+        // Get the underlying MCHits.
+        std::map<MCHit*, double> hitMap;
+        std::map<const MCParticle*, double> particleMap;
+        for (unsigned int i = 0; i < m_candidate.size(); ++i) {
+          SmartRefVector<MCHit> hits = m_candidate[i]->mcHits();
+          std::vector<double> weights = m_candidate[i]->mcHitsCharge();
+          for (unsigned int j = 0; j < hits.size(); ++j) {
+            hitMap[hits[j]] += weights[j];
+            particleMap[hits[j]->mcParticle()] += weights[j];
+          }
+        }
+        m_hitTruthTable.push_back(std::make_pair(cluster, hitMap));
+        m_particleTruthTable.push_back(std::make_pair(cluster, particleMap));
+      }
       if (m_clusters->size() >= m_maxClusters) {
-        // Too many clusters. Cannot add any more after this one.
+        // Too many clusters. Stop clustering after this one.
         Warning("Too many clusters in this event. Processing incomplete.").ignore();
         info() << "Processing limit is " << m_maxClusters << " clusters." << endmsg;
         info() << "Stopping clusterization while processing sensor " 
                << sensor << endmsg;
         return;
       }
-      linkCluster(cluster, hitLinker, particleLinker);
     }
     if (m_debug) {
       // Count the unused digits.
@@ -290,31 +311,43 @@ double VLClusterCreator::signalToNoise(MCVLDigit* digit) {
 }
 
 //=========================================================================
-/// Link a cluster to the underlying MC hits and particles
+/// Link the clusters to the underlying MC hits
 //=========================================================================
-void VLClusterCreator::linkCluster(VLCluster* cluster,
-    LinkerWithKey<MCHit, VLCluster>& hitLinker,
-    LinkerWithKey<MCParticle, VLCluster>& particleLinker) {
+void VLClusterCreator::linkClustersToHits() {
 
-  // Link the cluster to the underlying MCHits.
-  std::map<MCHit*, double> hitMap;
-  std::map<const MCParticle*, double> particleMap;
-  for (unsigned int i = 0; i < m_candidate.size(); ++i) {
-    SmartRefVector<MCHit> hits = m_candidate[i]->mcHits();
-    std::vector<double> weights = m_candidate[i]->mcHitsCharge();
-    for (unsigned int j = 0; j < hits.size(); ++j) {
-      hitMap[hits[j]] += weights[j];
-      particleMap[hits[j]->mcParticle()] += weights[j];
+  if (m_debug) debug() << " ==> linkClustersToHits()" << endmsg;
+  const std::string location = m_clusterLocation + "2MCHits";
+  // Create a linker for associating clusters with MC hits.
+  LinkerWithKey<MCHit, VLCluster> linker(evtSvc(), msgSvc(), location);
+  std::vector<std::pair<VLCluster*, std::map<MCHit*, double> > >::iterator it;
+  for (it = m_hitTruthTable.begin(); it != m_hitTruthTable.end(); ++it) {
+    VLCluster* cluster = (*it).first;
+    std::map<MCHit*, double>::iterator ith;
+    for (ith = (*it).second.begin(); ith != (*it).second.end(); ++ith) {
+      linker.link(cluster, (*ith).first, (*ith).second);
     }
   }
+
+}
+
+//=========================================================================
+/// Link the clusters to the underlying MC hits
+//=========================================================================
+void VLClusterCreator::linkClustersToParticles() {
+
+  if (m_debug) debug() << " ==> linkClustersToParticles()" << endmsg;
+  const std::string location = m_clusterLocation + "2MCParticles";
+  // Create a linker for associating clusters with MC particles.
+  LinkerWithKey<MCParticle, VLCluster> linker(evtSvc(), msgSvc(), location);
   // TODO: merging of hits created by delta electrons with parent particle hit
-  std::map<MCHit*, double>::iterator ith;
-  for (ith = hitMap.begin(); ith != hitMap.end(); ++ith) {
-    hitLinker.link(cluster, (*ith).first, (*ith).second);
-  }
-  std::map<const MCParticle*, double>::iterator itp;
-  for (itp = particleMap.begin(); itp != particleMap.end(); ++itp) {
-    particleLinker.link(cluster, (*itp).first, (*itp).second);
+  std::vector<std::pair<VLCluster*, std::map<const MCParticle*, 
+                                             double> > >::iterator it;
+  for (it = m_particleTruthTable.begin(); it != m_particleTruthTable.end(); ++it) {
+    VLCluster* cluster = (*it).first;
+    std::map<const MCParticle*, double>::iterator itp;
+    for (itp = (*it).second.begin(); itp != (*it).second.end(); ++itp) {
+      linker.link(cluster, (*itp).first, (*itp).second);
+    }
   }
 
 }
