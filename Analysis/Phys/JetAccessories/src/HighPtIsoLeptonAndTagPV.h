@@ -37,12 +37,7 @@
 #include "TrackInterfaces/IMeasurementProvider.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 
-
-class DVAlgorithm;
 class IDistanceCalculator;
-
-
-
 
 class  HighPtIsoLeptonAndTagPV : public DVAlgorithm {
 
@@ -194,7 +189,6 @@ class  HighPtIsoLeptonAndTagPV : public DVAlgorithm {
   std::string m_typeVertexFit; 
 
   const IDistanceCalculator* distanceCalculator;
-  DVAlgorithm* m_dva;
 
   const IDistanceCalculator* m_dist;
 

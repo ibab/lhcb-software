@@ -18,10 +18,6 @@
 #include "Kernel/IParticleTransporter.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "Event/ODIN.h"
-#include "Kernel/IDVAlgorithm.h"
-#include <Kernel/GetDVAlgorithm.h>
-
-
 
 // ============================================================================
 // ============================================================================
@@ -37,7 +33,7 @@
 // ============================================================================
 
 
-DECLARE_ALGORITHM_FACTORY( HighPtIsoLeptonAndTagPV );
+DECLARE_ALGORITHM_FACTORY( HighPtIsoLeptonAndTagPV )
 
 
 
@@ -56,13 +52,7 @@ StatusCode HighPtIsoLeptonAndTagPV::initialize ()
   if ( 0 == m_transporter ) 
     m_transporter = tool<IParticleTransporter> ( m_transporterName , this ) ; 
 
-  
-  m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
-  if (0==m_dva) return Error("Couldn't get parent DVAlgorithm", 
-			     StatusCode::FAILURE);
-  
-
-
+ 
   m_dist       = tool<IDistanceCalculator>("LoKi::DistanceCalculator",this);
   if ( !m_dist ) {
     err() << "Unable to Retrieve LoKi::DistanceCalculator" << endreq;

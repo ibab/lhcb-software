@@ -7,6 +7,9 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2012-06-22 - Chris Jones
+ - Remove unneccessary use of getDVAlgorithm.
+
 ! 2012-05-11 - Victor Coco
  - Remove potential memory leak in UpdateJetsWithVtx.cpp (coverity defect 29332)
    Remove obsolete code:  JetsUtilsCaloPart.cpp
