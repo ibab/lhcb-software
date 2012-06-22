@@ -209,6 +209,27 @@ class Beauty2CharmConf(LineBuilder):
         sline = StrippingLine('DoubleTopoLine',1.0,selection=sel,HLT=hlt)
         self.registerLine(sline)
 
+        # High pT Topo line
+        from Configurables import HighPtTopoTool as HighpTDT
+        code = "ACCEPT('HighPtTopoTool/HighPtTopoLine_DT_40000')"
+        alg = LoKi__VoidFilter('HighPtTopoLineFilter_40000',Code=code)
+        sel = EventSelection('HighPtTopoEventSel_40000',Algorithm=alg)
+        dt = HighpTDT('HighPtTopoLine_DT_40000')
+        dt.minpT = 40000
+        hlt = "HLT_PASS_RE('Hlt2Topo.*Decision')"
+        sline = StrippingLine('HighPtTopoLine_40000',1.0,selection=sel,HLT=hlt)
+        self.registerLine(sline)
+
+        from Configurables import HighPtTopoTool as HighpTDT
+        code = "ACCEPT('HighPtTopoTool/HighPtTopoLine_DT_20000')"
+        alg = LoKi__VoidFilter('HighPtTopoLineFilter_20000',Code=code)
+        sel = EventSelection('HighPtTopoEventSel_20000',Algorithm=alg)
+        dt = HighpTDT('HighPtTopoLine_DT_20000')
+        dt.minpT = 20000
+        hlt = "HLT_PASS_RE('Hlt2Topo.*Decision')"
+        sline = StrippingLine('HighPtTopoLine_20000',0.1,selection=sel,HLT=hlt)
+        self.registerLine(sline)
+
     def _makeLine(self,protoLine,config):
         tag = 'B2CBBDTBeauty2CharmFilter'
         default = config['Prescales']['RUN_BY_DEFAULT']
