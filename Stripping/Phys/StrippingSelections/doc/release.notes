@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+
+! 2012-06-22 Olivier Deschamps for Régis Lefèvre
+	- update B2HHPi0.py & D02KPiPi0.py
+
 ! 2012-06-22 - Murilo Rangel
  - added HighPtTopo line in StrippingBeauty2Charm.py
 
