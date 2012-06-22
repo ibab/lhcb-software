@@ -307,30 +307,41 @@ def get_native_versions(native_version, binary):
     # Iterate over package to check whether they should be kept in external
     # or app/releases. We execute a show macro_value on the package home
     for pak in packages_versions.keys() :
-        if debug_flag == 1:
-            print "get_native_version - Checking home for package: %s" %  pak
+        print "get_native_version - Checking home for package: %s" %  pak
         macro = pak+ "_home"
         value = get_macro_value(None, macro, getCMTExtraTags(binary))
         if debug_flag == 1:
             print "get_native_version - %s = %s" % ( macro, value)
 
+	# Performing the actual check between LCG_external and LCG_releases and the home of the
+        # package
+        # BEWARE: LCGCMT_home is set by CMT itself and can be incorrect ! 
         pakType = None
         if value.startswith(LCG_external):
             pakType = "external"
         if value.startswith(LCG_releases):
             pakType = "app/releases"
 
-        l = packages_versions[pak]
-        l.append(pakType)
-        if debug_flag == 1:
-            print "get_native_version - %s = %s" % (pak, pakType)
-        if pakType == None:
+        # Compatibility check for OLD packages
+        # Force external in this case 
+        if LCG_external == LCG_releases:
+            print "get_native_version - *** Compatibility mode for OLD packages: setting the type to external ***"
+            pakType = "external"
+        
+        if pakType is None:
+	    # Ignoring packages from the system
+            print "packType IS None" 
             if value.startswith("/usr"):
                 print "get_native_version - %s home is %s, IGNORING package from system" % (pak, value)
                 del packages_versions[pak]
             else:
                 print "get_native_version - %s home is %s, not in external or app/releases, ABORTING" % (pak, value)
                 sys.exit(1)
+        
+        # Adding the pakType to the attribute of the package in the map
+        l = packages_versions[pak]
+        l.append(pakType)
+        print "get_native_version - Package %s is %s" % (pak, pakType)
 
     if binary.startswith("i686"):
         for pak in packages_versions.keys() :
@@ -484,7 +495,6 @@ def get_tar_files(native_version, packages_versions,binary_dir, output_file):
     appreleases = "app/releases"
     if  os.path.exists(appreleases):
         os.system(rmcmd + appreleases)
-    os.makedirs(appreleases)
 
     # Top tar directory
     toptardir = os.path.join(tmpdir.getName(), main_dir, binary_dir)
@@ -512,6 +522,8 @@ def get_tar_files(native_version, packages_versions,binary_dir, output_file):
         if packType == "external":
             os.chdir(externaldir)
         elif packType == "app/releases":
+            if not os.path.exists(appreleasesdir):
+                os.makedirs(appreleasesdir) 
             os.chdir(appreleasesdir)
         else:
             print "Incorrect packType for %s : %s ABORTING" % (pack, packType)

@@ -1,5 +1,10 @@
 2012-06-21 Ben Couturier <Ben.Couturier@cern.ch>
 
+	* scripts/mkLCGCMTtar: Implemented backwards compatibility feature for LCGCMT
+	versions prior to 63 
+
+2012-06-21 Ben Couturier <Ben.Couturier@cern.ch>
+
 	* scripts/mkLCGCMTtar: Fixed bug for building i686 tar
 
 2012-06-20 Ben Couturier <Ben.Couturier@cern.ch>
