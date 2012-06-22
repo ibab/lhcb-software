@@ -22,6 +22,10 @@ apply_pattern linker_library   library=ROMon
 apply_pattern install_python_modules
 macro_append  ROMon_cppflags "" target-vc9 " -wd4996 -wd4503 "
 
+application HLTFileEqualizer ../src/HLTFileEqualizer.cpp
+macro_append  HLTFileEqualizer_dependencies    " ROMon "
+
+
 #
 #
 set ROMONDATA ${ROMONROOT}/xml
