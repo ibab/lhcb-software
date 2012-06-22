@@ -248,7 +248,7 @@ static void load(int org_argc, char** org_argv, const char* file_name, const cha
   }
   *func = sys.startRestore;
 }
-
+#if 0
 extern "C" int __libc_start_main (int (*main) (int, char **, char **),
 				  int argc, char **argv,
 				  void (* /*init */) (void), void (* /*fini */) (void),
@@ -260,8 +260,8 @@ extern "C" int __libc_start_main (int (*main) (int, char **, char **),
   mtcp_sys_exit(result);
   return result;
 }
-
-
+#endif
+#if 0
 extern "C" void
 __libc_csu_init (int /* argc */, char ** /* argv */, char ** /*envp */)
 {
@@ -274,6 +274,7 @@ __libc_csu_init (int /* argc */, char ** /* argv */, char ** /*envp */)
 extern "C" void __libc_csu_fini (void)
 {
 }
+#endif
 
 static int usage() {
   mtcp_output(MTCP_ERROR,"Usage: restore -p(rint) <print-level> -i(nput) <file-name> \n"
@@ -287,11 +288,11 @@ static int usage() {
 }
 
 /// Print data content
-extern "C" char**environ;
+extern "C" char** environ;
 int main(int argc, char** argv, char** envp) {
   mtcp_sys_personality(ADDR_NO_RANDOMIZE|mtcp_sys_personality(0xFFFFFFFFUL));
   SysInfo::start_restore_t func = 0;
-  environ = envp;
+  //environ = envp;
   if ( argc > 1 ) {
     int prt = MTCP_WARNING, opts=0;
     const char* libs_dir = 0;

@@ -91,10 +91,13 @@ int test_thread_checkpoint(int flag) {
       }
       int rc;
       FILE* fd = ::fopen("/proc/self/maps","r");
-      char* buff = 0;
+      char* buff = 0, *p, *ptr;
       size_t len=0;
       while( (rc=::getline(&buff,&len,fd)) > 0 ) {
-	char* ptr = strchr(buff,'/');
+	ptr = buff;
+	if ( 0 == (ptr=strstr(ptr,"/tmp/")) ) {
+	  for(p=ptr=strchr(buff,'/'); p; ptr=p+1, p=strchr(ptr,'/'));
+	}
 	if ( ptr ) mtcp_output(MTCP_ALWAYS,"Linked image: %s",ptr);
       }
       if ( buff ) ::free(buff);
@@ -126,6 +129,7 @@ int test_Process_restore();
 
 int test_thread_checkpoint();
 int test_set_environment(int flag);
+extern "C" char** environ;
 
 extern "C" int chkpt_tests(int argc, char** argv) {
   int opt = *(int*)"None";
@@ -141,7 +145,7 @@ extern "C" int chkpt_tests(int argc, char** argv) {
   ::fprintf(stdout,"Checkpointing_test: print level:%d flag:%d tst function:%s [%c%c%c%c]\n",
 	    prt,flag,q,p[0],p[1],p[2],p[3]);
   mtcp_set_debug_level(prt);
-  checkpointing_initialize_parent(argc,argv,0);
+  checkpointing_initialize_parent(argc,argv,environ);
   if      ( opt == *(int*)"m_write"   ) test_MemMaps_write();
   else if ( opt == *(int*)"m_read"    ) test_MemMaps_read();
   else if ( opt == *(int*)"m_share"   ) test_MemMaps_sharable();

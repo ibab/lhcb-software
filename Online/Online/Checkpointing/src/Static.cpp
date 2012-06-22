@@ -105,11 +105,13 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_restore_start(int argc, 
     mtcp_output(MTCP_FATAL,"restore: Failed [%d] to seek back to beginning of the checkpoint file\n",mtcp_sys_errno);
   }
   chkpt_sys.restart_flags = flags;
+  mtcp_output(MTCP_INFO,"restore: restore stack.\n");
   checkpointing_sys_init_restore_stack(&chkpt_sys,argc,argv,env);
   if ( libs_dir )
     m_strcpy(chkpt_sys.checkpointLibs,libs_dir);
   else
     chkpt_sys.checkpointLibs[0] = 0;
+  mtcp_output(MTCP_INFO,"restore: restore stack.....done\n");
   checkpointing_sys_print(&chkpt_sys);
 
   // Now we move the process to the temporary stack allocated in this image
@@ -324,12 +326,12 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_init_restore_stack(SysIn
   sys->restore_argc   = argc;
   sys->restore_arg0   = mem_address_t(argv[0]);
   sys->restore_arglen = mem_address_t(argv[argc-1])+m_strlen(argv[argc-1])-sys->restore_arg0+1;
-  if ( ee ) {
-    for(char* ep=*ee; *ep && *ee; ep=*(++ee)) {
-      if ( ep ) {
+  if ( ee )   {
+    for(char* ep=*ee; *ep && *ee; ++ee, ep=*ee ) {
+      if ( ep )    {
 	if ( 0 == m_strncmp(ep,"UTGID=",6) ) {
 	  char* ptr = ep + 6;
-	  sys->restore_utgid = mem_address_t(ptr);
+	  sys->restore_utgid    = mem_address_t(ptr);
 	  sys->restore_utgidLen = m_strlen(ptr);
 	  break;
 	}
@@ -343,12 +345,12 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_init_restore_stack(SysIn
 STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_init_stack(SysInfo* sys, int argc, char** argv, char** envp)  {
   char** ee = envp;
   const char* arg0 = argv[0];
-  sys->utgid    = 0;
-  sys->utgidLen = 0;
-  sys->argv     = argv;
-  sys->argc     = argc;
-  sys->envp     = envp;
-  sys->arg0     = mem_address_t(argv[0]);
+  sys->utgid       = 0;
+  sys->utgidLen    = 0;
+  sys->argv        = argv;
+  sys->argc        = argc;
+  sys->envp        = envp;
+  sys->arg0        = mem_address_t(argv[0]);
   m_memcpy(sys->arg0String,argv[0],m_strlen(argv[0])+1);
   if ( ee ) {
     for(char* ep=*ee; *ep && *ee; ep=*(++ee)) {
