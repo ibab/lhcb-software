@@ -30,7 +30,7 @@ TaggingUtilsChecker::~TaggingUtilsChecker() {};
 //=====================================================================
 StatusCode TaggingUtilsChecker::initialize() { 
 
-  m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
+  m_dva = Gaudi::Utils::getIDVAlgorithm ( contextSvc() ) ;
   if (0==m_dva) return Error("Couldn't get parent DVAlgorithm", 
                              StatusCode::FAILURE);  
 

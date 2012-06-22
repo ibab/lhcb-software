@@ -7,8 +7,9 @@
 // from Event
 #include "MCInterfaces/IPrintMCDecayTreeTool.h"
 #include "ITaggingUtilsChecker.h"
-#include <Kernel/DVAlgorithm.h>
-#include <Kernel/GetDVAlgorithm.h>
+#include <Kernel/IDistanceCalculator.h>
+#include <Kernel/IDVAlgorithm.h>
+#include <Kernel/GetIDVAlgorithm.h>
 
 /** @class TaggingUtilsChecker TaggingUtilsChecker.h 
  *
@@ -67,7 +68,7 @@ private:
 
   IPrintMCDecayTreeTool* m_debug;
   const IDistanceCalculator *m_Dist;
-  DVAlgorithm* m_dva;
+  IDVAlgorithm* m_dva;
 
 };
 
