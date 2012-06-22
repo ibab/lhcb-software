@@ -4,6 +4,10 @@
 ! Purpose     : cut tools for Gauss
 !-----------------------------------------------------------------------------
 
+! 2012-06-22 - Marc Olivier Bettler
+ - With Alessio Sarti, modified DiLeptonInAcceptance.cpp to allow for cut on 
+   DOCA of leptons and cut on product of leptons' pT.
+
 ! 2012-06-03 - Chris Thomas
 - DaughtersInLHCbAndCutsForDACP: generator-level cuts on:
    . (Dst p, D0 pT) plane

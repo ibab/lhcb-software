@@ -117,6 +117,14 @@ class DiLeptonInAcceptance : public GaudiTool ,
   /// Only allow decays with same sign leptons. Opposite sign leptons take precedence. 
   bool m_sameSign;
   
+  /// Preselects the events applying a cut on the doca of the two tracks
+  bool   m_PreselDoca;
+  double m_docaCut;
+
+  /// Preselect the events applying a cut on the product of the two transv. momenta
+  bool m_PreselPtProd;
+  double m_ptprodMinCut;
+  double m_ptprodMaxCut;
   
 };
 
