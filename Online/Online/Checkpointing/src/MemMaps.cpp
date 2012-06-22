@@ -185,11 +185,15 @@ int AreaWriteHandler::handle(int, const Area& a)    {
     return 0;
   }
   else if ( m_strcmp(a.name,"/usr/lib/locale/locale-archive") == 0 ) {
-    checkpointing_area_print(&a,MTCP_INFO,"*** WARNING: LOCALE ARCHIVE:");
+    checkpointing_area_print(&a,MTCP_INFO,"*** WARNING: Skip locale-archive:");
     return 0;
   }
   else if ( m_strcmp(a.name,"/usr/lib64/gconv/gconv-modules.cache") == 0 ) {
-    checkpointing_area_print(&a,MTCP_INFO,"*** WARNING: LOCALE ARCHIVE:");
+    checkpointing_area_print(&a,MTCP_INFO,"*** WARNING: Skip  gconv-modules.cache:");
+    return 0;
+  }
+  else if ( m_strcmp(a.name,"/var/db/nscd/passwd") == 0 ) {
+    checkpointing_area_print(&a,MTCP_INFO,"*** WARNING: Skip  /var/db/nscd/passwd:");
     return 0;
   }
   rc = a.write(m_fd);

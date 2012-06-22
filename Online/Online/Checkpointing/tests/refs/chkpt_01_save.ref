@@ -1,41 +1,8 @@
 Checkpointing_test: print level:131 flag:2 tst function:t_checkpoint [t_ch]
-Chr[1]......resume after writing checkpoint file:proc.dat with 0x02C99DF5 bytes
+Chr[1]......resume after writing checkpoint file:proc.dat with 0x02C88EB5 bytes
 ...restoring main thread. rc=2...
 ...Child out of select:-1 errno:4 [Interrupted system call]
 Chr[2]...
 ...main thread cancelled ...
 ...wait for Child thread to exit...
-mtcp  ALWAYS  Linked image: gentest.exe
-mtcp  ALWAYS  Linked image: gentest.exe
-mtcp  ALWAYS  Linked image: ld-2.5.so
-mtcp  ALWAYS  Linked image: ld-2.5.so
-mtcp  ALWAYS  Linked image: ld-2.5.so
-mtcp  ALWAYS  Linked image: libCheckpointing.so
-mtcp  ALWAYS  Linked image: libCheckpointing.so
-mtcp  ALWAYS  Linked image: libCheckpointing.so
-mtcp  ALWAYS  Linked image: snoopy.so
-mtcp  ALWAYS  Linked image: snoopy.so
-mtcp  ALWAYS  Linked image: snoopy.so
-mtcp  ALWAYS  Linked image: libdl-2.5.so
-mtcp  ALWAYS  Linked image: libdl-2.5.so
-mtcp  ALWAYS  Linked image: libdl-2.5.so
-mtcp  ALWAYS  Linked image: libdl-2.5.so
-mtcp  ALWAYS  Linked image: libstdc++.so.6.0.10
-mtcp  ALWAYS  Linked image: libstdc++.so.6.0.10
-mtcp  ALWAYS  Linked image: libstdc++.so.6.0.10
-mtcp  ALWAYS  Linked image: libgcc_s.so.1
-mtcp  ALWAYS  Linked image: libgcc_s.so.1
-mtcp  ALWAYS  Linked image: libgcc_s.so.1
-mtcp  ALWAYS  Linked image: libc-2.5.so
-mtcp  ALWAYS  Linked image: libc-2.5.so
-mtcp  ALWAYS  Linked image: libc-2.5.so
-mtcp  ALWAYS  Linked image: libc-2.5.so
-mtcp  ALWAYS  Linked image: libm-2.5.so
-mtcp  ALWAYS  Linked image: libm-2.5.so
-mtcp  ALWAYS  Linked image: libm-2.5.so
-mtcp  ALWAYS  Linked image: libm-2.5.so
-mtcp  ALWAYS  Linked image: libpthread-2.5.so
-mtcp  ALWAYS  Linked image: libpthread-2.5.so
-mtcp  ALWAYS  Linked image: libpthread-2.5.so
-mtcp  ALWAYS  Linked image: libpthread-2.5.so
 ...Child ended...exit...

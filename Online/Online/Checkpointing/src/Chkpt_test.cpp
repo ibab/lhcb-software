@@ -98,7 +98,8 @@ int test_thread_checkpoint(int flag) {
 	if ( 0 == (ptr=strstr(ptr,"/tmp/")) ) {
 	  for(p=ptr=strchr(buff,'/'); p; ptr=p+1, p=strchr(ptr,'/'));
 	}
-	if ( ptr ) mtcp_output(MTCP_ALWAYS,"Linked image: %s",ptr);
+	// No printout. This confuses QMTest completely
+	// if ( ptr ) mtcp_output(MTCP_ALWAYS,"Linked image: %s",ptr);
       }
       if ( buff ) ::free(buff);
       ::fclose(fd);

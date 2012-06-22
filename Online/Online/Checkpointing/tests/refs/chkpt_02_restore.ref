@@ -7,36 +7,4 @@ Chr[2]...
 Chr[3]...
 ...main thread cancelled ...
 ...wait for Child thread to exit...
-mtcp  ALWAYS  Linked image: gentest.exe
-mtcp  ALWAYS  Linked image: restore.exe
-mtcp  ALWAYS  Linked image: gentest.exe
-mtcp  ALWAYS  Linked image: restore.exe
-mtcp  ALWAYS  Linked image: ld-2.5.so
-mtcp  ALWAYS  Linked image: ld-2.5.so
-mtcp  ALWAYS  Linked image: ld-2.5.so
-mtcp  ALWAYS  Linked image: snoopy.so
-mtcp  ALWAYS  Linked image: snoopy.so
-mtcp  ALWAYS  Linked image: snoopy.so
-mtcp  ALWAYS  Linked image: libdl-2.5.so
-mtcp  ALWAYS  Linked image: libdl-2.5.so
-mtcp  ALWAYS  Linked image: libdl-2.5.so
-mtcp  ALWAYS  Linked image: libdl-2.5.so
-mtcp  ALWAYS  Linked image: libstdc++.so.6.0.10
-mtcp  ALWAYS  Linked image: libstdc++.so.6.0.10
-mtcp  ALWAYS  Linked image: libstdc++.so.6.0.10
-mtcp  ALWAYS  Linked image: libgcc_s.so.1
-mtcp  ALWAYS  Linked image: libgcc_s.so.1
-mtcp  ALWAYS  Linked image: libgcc_s.so.1
-mtcp  ALWAYS  Linked image: libc-2.5.so
-mtcp  ALWAYS  Linked image: libc-2.5.so
-mtcp  ALWAYS  Linked image: libc-2.5.so
-mtcp  ALWAYS  Linked image: libc-2.5.so
-mtcp  ALWAYS  Linked image: libm-2.5.so
-mtcp  ALWAYS  Linked image: libm-2.5.so
-mtcp  ALWAYS  Linked image: libm-2.5.so
-mtcp  ALWAYS  Linked image: libm-2.5.so
-mtcp  ALWAYS  Linked image: libpthread-2.5.so
-mtcp  ALWAYS  Linked image: libpthread-2.5.so
-mtcp  ALWAYS  Linked image: libpthread-2.5.so
-mtcp  ALWAYS  Linked image: libpthread-2.5.so
 ...Child ended...exit...
