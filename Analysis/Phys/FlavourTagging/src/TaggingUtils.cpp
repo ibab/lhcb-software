@@ -1,7 +1,7 @@
 // Include files 
 #include "TaggingUtils.h"
-#include <Kernel/DVAlgorithm.h>
-#include <Kernel/GetDVAlgorithm.h>
+#include <Kernel/IDVAlgorithm.h>
+#include <Kernel/GetIDVAlgorithm.h>
 #include <Kernel/IDistanceCalculator.h>
 #include "Kernel/IPVReFitter.h"
 
@@ -33,7 +33,7 @@ TaggingUtils::~TaggingUtils() {};
 //=====================================================================
 StatusCode TaggingUtils::initialize() { 
 
-  m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
+  m_dva = Gaudi::Utils::getIDVAlgorithm ( contextSvc() ) ;
   if (0==m_dva) return Error("Couldn't get parent DVAlgorithm", 
                              StatusCode::FAILURE);  
 

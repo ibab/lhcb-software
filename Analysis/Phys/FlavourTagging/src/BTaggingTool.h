@@ -23,8 +23,8 @@
 
 #include "ITaggingUtils.h"
 //
-#include <Kernel/DVAlgorithm.h>
-#include <Kernel/GetDVAlgorithm.h>
+#include <Kernel/IDVAlgorithm.h>
+#include <Kernel/GetIDVAlgorithm.h>
 class DVAlgorithm;
 
 /** @class BTaggingTool BTaggingTool.h 
@@ -79,7 +79,7 @@ private:
   ICombineTaggersTool *m_combine;
   IPVReFitter* m_pvReFitter;
 
-  DVAlgorithm* m_dva;
+  IDVAlgorithm* m_dva;
 
   //  IRelatedPVFinder* m_pFinder;
 

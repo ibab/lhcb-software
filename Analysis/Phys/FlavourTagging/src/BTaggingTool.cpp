@@ -116,7 +116,7 @@ StatusCode BTaggingTool::initialize() {
     }
   }
   else debug() << "BTaggingTool: ReFitPV NOT selected " << endreq;
-  m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
+  m_dva = Gaudi::Utils::getIDVAlgorithm ( contextSvc() ) ;
   if (0==m_dva) return Error("Couldn't get parent DVAlgorithm", 
                              StatusCode::FAILURE); 
 
@@ -289,7 +289,7 @@ BTaggingTool::choosePrimary(const Particle* AXB,
       RefitRecVert = newPV;
     }
   } else if (m_ChoosePV == "bestPV") { //choose bestPV according IRelatedPVFinder
-    RecVert = (const RecVertex*) m_dva->bestPV(AXB);
+    RecVert = (const RecVertex*) m_dva->bestVertex(AXB);
     if(RecVert)
       debug()<<"Will use the bestPV criteria found z="<<RecVert->position().z()<<endreq;    
     else {      

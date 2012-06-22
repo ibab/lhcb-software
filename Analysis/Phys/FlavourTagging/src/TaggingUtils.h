@@ -8,7 +8,7 @@
 
 class IDistanceCalculator;
 class IPVReFitter;
-class DVAlgorithm;
+class IDVAlgorithm;
 
 #include "ITaggingUtils.h"
 
@@ -55,7 +55,7 @@ private:
 
   std::string m_ChoosePV ;
   const IDistanceCalculator *m_Dist;
-  DVAlgorithm* m_dva;
+  IDVAlgorithm* m_dva;
   const IPVReFitter* m_pvReFitter;
 
 };
