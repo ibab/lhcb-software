@@ -40,6 +40,9 @@ use STDigiAlgorithms    v2r1    ST       # Jeroen van Tilburg
 use VeloPixAlgorithms   v2r1    VeloPix  # Marcin Kucharczyk
 use VeloPixAssociators  v1r2    VeloPix  # Marcin Kucharczyk
 
+# VeloLite
+use VLDigitisation      v1r0    VL       # Heinrich Schindler
+
 # Allow the generation of the SAM QMTest
 apply_pattern QMTest
 
