@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2012-06-22 - Murilo Rangel
+  - Added HighPtTopoTool.cpp 
+
 ! 2012-06-19 - Olivier Deschamps
   - BremAdder : speed-up processing
 
