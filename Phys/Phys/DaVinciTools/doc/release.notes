@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2012-06-22 - Olivier Deschamps
+  - BremAdder : optimize processing + add new correction method (for expert check)
+
 ! 2012-06-22 - Chris Jones
  - Update CombineParticles to use the new DaVinciAlgorithm base class
 

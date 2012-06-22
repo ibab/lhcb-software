@@ -100,7 +100,7 @@ bool BremAdder::addBrem   ( LHCb::Particle* particle,bool force )
 // ---- Remove brem from particle
 bool BremAdder::removeBrem( LHCb::Particle* particle,bool force ){
   if( NULL == particle)return false;
-  const std::vector<const LHCb::CaloHypo*>& brems = bremList((const LHCb::Particle*)particle);
+  const std::vector<const LHCb::CaloHypo*> brems;
   return brem4particle( particle, "remove",brems,force);
 };
 
@@ -110,8 +110,10 @@ bool BremAdder::addBrem2Pair( LHCb::Particle* p1, LHCb::Particle* p2 , bool forc
   const std::pair<std::vector<const LHCb::CaloHypo*>,std::vector<const LHCb::CaloHypo*> >&pair=bremLists(p1,p2);
   const std::vector<const LHCb::CaloHypo*>& brems1 = pair.first;
   const std::vector<const LHCb::CaloHypo*>& brems2 = pair.second;
+  //info() << "---- Pair " << p1<<" , " << p2 << endmsg;
   bool b1= brem4particle( p1, "add" , brems1,force );
   bool b2= brem4particle( p2, "add" , brems2,force );
+  //info() << "---- Added -----"<<b1<<" " <<b2<<endmsg;
   return (b1 && b2);
 }
 
@@ -187,15 +189,10 @@ bool BremAdder::brem4particle( LHCb::Particle* particle,
 {
   // boolean 'force' : force re-adding/re-removing brem
 
-
   if (msgLevel(MSG::DEBUG))
     debug() << what << " BremStrahlung  to/from particle momentum " << particle->momentum() << endmsg ;
 
-  //
-  if( brems.empty()){
-    if (msgLevel(MSG::DEBUG))debug() << "Empty brem list" << endmsg;
-    return true;
-  }
+
 
   //-- consistency checks
   const LHCb::ProtoParticle* proto = particle ->proto();
@@ -224,12 +221,20 @@ bool BremAdder::brem4particle( LHCb::Particle* particle,
     counter("Revert brem correction")+=1;
     const LHCb::State*  state = usedState( proto->track() );
     StatusCode sc = m_p2s->state2Particle( *state, *particle );
+    particle->eraseInfo(LHCb::Particle::HasBremAdded);
     particle->addInfo(LHCb::Particle::HasBremAdded,0.); // reset flag
     if( what == "remove")return sc.isFailure() ? false : true;
   }
   if( "add" != what )return Warning("Don't know what to do with brem ! flag must be 'add' or 'remove'",StatusCode::FAILURE);
 
   // ----- Start bremStrahlung recovery -----
+  particle->eraseInfo(LHCb::Particle::HasBremAdded);
+  particle->addInfo(LHCb::Particle::HasBremAdded,0.); // reset flag
+  if( brems.empty()){
+    if (msgLevel(MSG::DEBUG))debug() << "Empty brem list" << endmsg;
+    return true;
+  }
+
   // Brems momentum
   LHCb::CaloMomentum bremPhoton = LHCb::CaloMomentum(brems);
 
@@ -262,14 +267,17 @@ bool BremAdder::brem4particle( LHCb::Particle* particle,
     double mas = mome.mass();
     double e  = std::sqrt( mas*mas + p*p);
     mome.SetPxPyPzE( px,py,pz,e);
+  }else if(m_method == 3){
+    // determine brem origin using slope-matching
+    bremMatcher(brems,particle);
   }else
     return Error("Unknown bremStrahlung method" + Gaudi::Utils::toString(m_method), StatusCode::FAILURE);
 
 
   // add flag
+  particle->eraseInfo(LHCb::Particle::HasBremAdded);
   particle->addInfo(LHCb::Particle::HasBremAdded,1.);
-
-
+  
   // update covariance matrices
   (Gaudi::SymMatrix4x4&)particle->momCovMatrix() += bremPhoton.momCovMatrix();
   (Gaudi::Matrix4x3&)particle->posMomCovMatrix() += bremPhoton.momPointCovMatrix();
@@ -493,6 +501,63 @@ const std::vector<const LHCb::CaloHypo*> BremAdder::getBrem(const LHCb::Particle
   m_list=bhypos;
   return bhypos;
 }
+
+
+//=== bremMatcher ==================================================================================================
+Gaudi::XYZPoint BremAdder::bremMatcher(const std::vector<const LHCb::CaloHypo*>& brems,
+                                            const LHCb::Particle* particle,
+                                            const LHCb::State* uState){
+
+
+  //info()<<"BremMatcher"<<endmsg;
+  const LHCb::Track* track = particle->proto()->track();
+  //info() << "----- P " << particle->momentum()<< " mass =" <<particle->momentum().M()<<  endmsg;
+  Gaudi::XYZVector trackP = track->momentum();
+  if( NULL==uState)uState=usedState(track);
+  double fromZ = ( LHCb::Track::Downstream == track->type())?  (double)StateParameters::ZEndVelo : uState->z()-100;
+  double toZ   = (double) StateParameters::ZEndTT;
+  double step = 50.;
+  double z=fromZ;
+  double mass=particle->momentum().mass();
+
+  Gaudi::XYZPoint mPoint = Gaudi::XYZPoint();
+  double p = trackP.R();
+  for(std::vector<const LHCb::CaloHypo*>::const_iterator ib=brems.begin();brems.end()!=ib;++ib){
+    const LHCb::CaloHypo* brem = *ib;
+    double deltamin=999.;
+    Gaudi::XYZVector pp;
+    while( z < toZ ){
+      LHCb::State pState = LHCb::State();
+      if( m_extrapolator->propagate ( *track, z , pState ,  LHCb::ParticleID(11)  ).isFailure()){
+        counter("extrapolation failure")+=1;
+        continue;
+      }
+      double ttx=pState.tx();
+      //double tty=pState.ty();
+      LHCb::CaloMomentum b = LHCb::CaloMomentum( brem ,pState.position() );
+      double btx=b.px()/b.pz();
+      //double bty=b.py()/b.pz();
+      double delta = fabs(btx-ttx);
+      if( delta < deltamin){
+        deltamin = delta;
+        pp = p*pState.slopes()/pState.slopes().R()  + b.momentum().Vect();
+        mPoint=pState.position();
+      }
+      z+=step;
+    }
+    //info() << "----- brem " << LHCb::CaloMomentum( brem,mPoint ).momentum()<<" at " << mPoint<<endmsg;
+    p  = pp.R();
+  }
+  Gaudi::XYZVector newp=uState->slopes()*p/uState->slopes().R();
+  Gaudi::LorentzVector& pP = (Gaudi::LorentzVector&)particle->momentum();
+  pP.SetPx( newp.X() );
+  pP.SetPy( newp.Y() );
+  pP.SetPz( newp.Z() );
+  pP.SetE( std::sqrt(newp.R()*newp.R() + mass*mass));
+  //info() << "----- newP " << pP<< " mass " << pP.M()<<endmsg;
+  return mPoint;
+}
+
 
 // ============================================================================
 /// Select the appropriate state (as in ChargedParticleMakerBase)

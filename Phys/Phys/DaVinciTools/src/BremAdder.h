@@ -53,23 +53,21 @@ protected:
                       const std::string& what,
                       const std::vector<const LHCb::CaloHypo*>& brems,
                       bool force=false);
-
   const std::vector<const LHCb::CaloHypo*> bremList(const LHCb::Particle* particle,
                                                     std::string flag="");
-
   const std::pair<std::vector<const LHCb::CaloHypo*>,
                   std::vector<const LHCb::CaloHypo*> > bremLists(const LHCb::Particle* p1,
                                                                  const LHCb::Particle* p2,
                                                                  std::string flag="");
-
   const std::vector<const LHCb::CaloHypo*> getBrem(const LHCb::Particle* particle);
-
   const std::pair<Gaudi::XYZPoint,Gaudi::SymMatrix3x3> 
   getPos(const LHCb::ProtoParticle* proto,
          const LHCb::State::Location& state,
          double zcalo, double def=0 ) const;
-
   const LHCb::State* usedState( const LHCb::Track* track) const;
+  Gaudi::XYZPoint bremMatcher(const std::vector<const LHCb::CaloHypo*>& brems,
+                                   const LHCb::Particle* particle,
+                                   const LHCb::State* uState=NULL);
 
 private:
 
