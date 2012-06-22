@@ -5,9 +5,10 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SmartIF.h"
 
-#include <Kernel/GetDVAlgorithm.h>
-#include <Kernel/DVAlgorithm.h>
+#include <Kernel/GetIDVAlgorithm.h>
+#include <Kernel/IDVAlgorithm.h>
 #include <Kernel/ILifetimeFitter.h>
+#include "Kernel/IVertexFit.h"
 
 // local
 #include "TupleToolParticleReFit.h"
@@ -55,7 +56,7 @@ StatusCode TupleToolParticleReFit::initialize()
   const StatusCode sc = TupleToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
-  m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
+  m_dva = Gaudi::Utils::getIDVAlgorithm ( contextSvc() ) ;
   if (0==m_dva) return Error("Couldn't get parent DVAlgorithm",
                              StatusCode::FAILURE);
 
@@ -96,7 +97,7 @@ StatusCode TupleToolParticleReFit::fill( const Particle* mother
   if( P != mother ) return StatusCode::SUCCESS;
 
 
-  const VertexBase* originVtx = m_dva->bestPV( mother );
+  const VertexBase* originVtx = m_dva->bestVertex( mother );
 
   if( originVtx ){} // I'm happy
   else {

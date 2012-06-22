@@ -20,7 +20,7 @@
 class IParticle2MCAssociator;
 class IParticleCombiner;
 //class IDistanceCalculator;
-class DVAlgorithm;
+class IDVAlgorithm;
 
 
 //#include "IIsolation.h"            // Interface
@@ -181,7 +181,7 @@ private:
   bool m_isMC;
   IParticle2MCAssociator* m_p2mcAssoc;
   IParticleCombiner* m_combiner;
-  DVAlgorithm* m_dva;
+  IDVAlgorithm* m_dva;
 
   std::string m_p2mcAssocType;
 };

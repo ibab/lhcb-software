@@ -6,7 +6,7 @@
 #include "TupleToolBase.h"
 #include "Kernel/IParticleTupleTool.h"            // Interface
 
-class DVAlgorithm;
+class IDVAlgorithm;
 class ILifetimeFitter;
 class IVertexFit;
 
@@ -67,13 +67,15 @@ public:
 
   virtual StatusCode initialize();
 
-  virtual StatusCode fill( const LHCb::Particle*, const LHCb::Particle*
-                           , const std::string&, Tuples::Tuple& );
+  virtual StatusCode fill( const LHCb::Particle*,
+                           const LHCb::Particle*,
+                           const std::string&, 
+                           Tuples::Tuple& );
 
 
 private:
 
-  DVAlgorithm* m_dva;
+  IDVAlgorithm* m_dva;
   ILifetimeFitter* m_timefitter;
   IVertexFit* m_vtxfitter;
 

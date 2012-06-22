@@ -5,10 +5,9 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SmartIF.h"
 
-#include <Kernel/GetDVAlgorithm.h>
+#include <Kernel/GetIDVAlgorithm.h>
 #include <Kernel/IBTaggingTool.h>
-#include <Kernel/DVAlgorithm.h>
-
+#include <Kernel/IDVAlgorithm.h>
 
 // local
 #include "TupleToolTagging.h"
@@ -90,7 +89,7 @@ TupleToolTagging::TupleToolTagging( const std::string& type,
 StatusCode TupleToolTagging::initialize() {
   if( ! TupleToolBase::initialize() ) return StatusCode::FAILURE;
 
-  m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
+  m_dva = Gaudi::Utils::getIDVAlgorithm ( contextSvc() ) ;
   //if (m_dva==NULL) return Error("Couldn't get parent DVAlgorithm",
   //                           StatusCode::FAILURE);
 
@@ -125,7 +124,7 @@ StatusCode TupleToolTagging::fill( const Particle* mother
   // nothing to tag on something which is not a B
   if( !P->particleID().hasBottom() ) return StatusCode::SUCCESS;
 
-  const VertexBase* v = m_dva->bestPV ( mother );
+  const VertexBase* v = m_dva->bestVertex( mother );
   const RecVertex* vtx = dynamic_cast<const RecVertex*>(v);
 
   FlavourTag theTag;
@@ -221,33 +220,34 @@ StatusCode TupleToolTagging::fill( const Particle* mother
 
 }
 
-const DVAlgorithm* TupleToolTagging::getParent() const {
+// CRJ : Not used
+// const DVAlgorithm* TupleToolTagging::getParent() const {
 
-  // look for desktop
-  const IAlgTool* atool = this ;
-  // get last tool in chain
-  debug() << "Looking for parents of " << atool->name() << endmsg ;
-  while ( NULL!=dynamic_cast<const IAlgTool*>(atool->parent())){
-    atool = dynamic_cast<const IAlgTool*>(atool->parent());
-    debug() << "... tool is owned by tool " << atool->name() << endmsg ;
-  }
-  // check it's not the ToolSvc
-  const IToolSvc* tsvc = dynamic_cast<const IToolSvc*>( atool->parent() );
-  if ( NULL!=tsvc ){
-    warning() << "Parent of " << atool->name() << " is the ToolSvc." << endmsg ;
-    return NULL;
-  }
+//   // look for desktop
+//   const IAlgTool* atool = this ;
+//   // get last tool in chain
+//   debug() << "Looking for parents of " << atool->name() << endmsg ;
+//   while ( NULL!=dynamic_cast<const IAlgTool*>(atool->parent())){
+//     atool = dynamic_cast<const IAlgTool*>(atool->parent());
+//     debug() << "... tool is owned by tool " << atool->name() << endmsg ;
+//   }
+//   // check it's not the ToolSvc
+//   const IToolSvc* tsvc = dynamic_cast<const IToolSvc*>( atool->parent() );
+//   if ( NULL!=tsvc ){
+//     warning() << "Parent of " << atool->name() << " is the ToolSvc." << endmsg ;
+//     return NULL;
+//   }
 
-  // check if it is an algorithm
-  const DVAlgorithm* dvalgo = dynamic_cast<const DVAlgorithm*>( atool->parent() );
-  if ( NULL==dvalgo ){
-    warning() << "Parent of " << atool->name() << " is not a DVAlgorithm." << endmsg ;
-    return NULL;
-  }
+//   // check if it is an algorithm
+//   const DVAlgorithm* dvalgo = dynamic_cast<const DVAlgorithm*>( atool->parent() );
+//   if ( NULL==dvalgo ){
+//     warning() << "Parent of " << atool->name() << " is not a DVAlgorithm." << endmsg ;
+//     return NULL;
+//   }
 
-  debug() << atool->name() << " is owned by " << dvalgo->name() << endmsg ;
-  return dvalgo;
-}
+//   debug() << atool->name() << " is owned by " << dvalgo->name() << endmsg ;
+//   return dvalgo;
+// }
 
 // std::string TupleToolTagging::getCatName( const LHCb::Tagger& tag ) const{
 //   std::string tts;

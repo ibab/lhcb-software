@@ -7,7 +7,7 @@
 #include "TupleToolBase.h"
 #include "Kernel/IParticleTupleTool.h"            // Interface
 
-class DVAlgorithm;
+class IDVAlgorithm;
 class IBTaggingTool;
 
 /** @class TupleToolTagging TupleToolTagging.h jborel/TupleToolTagging.h
@@ -69,10 +69,9 @@ public:
 
 
 private:
-  const DVAlgorithm* getParent() const;
 
   std::string m_inputLocation, m_toolName;
-  DVAlgorithm* m_dva;
+  IDVAlgorithm* m_dva;
   IBTaggingTool* m_tagging;
   
   std::map<int, std::string> m_tagger_map; ///<map of enum to string

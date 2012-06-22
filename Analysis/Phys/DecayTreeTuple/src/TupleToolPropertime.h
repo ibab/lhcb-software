@@ -7,7 +7,7 @@
 #include "TupleToolBase.h"
 #include "Kernel/IParticleTupleTool.h"            // Interface
 
-class DVAlgorithm;
+class IDVAlgorithm;
 class ILifetimeFitter;
 
 namespace LHCb
@@ -49,7 +49,7 @@ public:
 
 private:
 
-  DVAlgorithm* m_dva;
+  IDVAlgorithm* m_dva;
   ILifetimeFitter* m_fit;
 
   const LHCb::Vertex* originVertex( const  LHCb::Particle*

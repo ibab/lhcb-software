@@ -101,7 +101,7 @@ namespace DecayTreeFitter{
 }
 typedef std::map< std::string, std::vector<double> > TupleMap ; ///< temporary storage of tuple data
 
-class DVAlgorithm;
+class IDVAlgorithm;
 /** @class TupleToolDecayTreeFitter TupleToolDecayTreeFitter.h
  *  
  * Yasmine Amhis and Matt Needham 
@@ -179,7 +179,7 @@ public:
   
   std::string m_pvLocation ; ///<  PV location to be used. If empty, take context-dependent default
 
-  DVAlgorithm* m_dva;
+  IDVAlgorithm* m_dva;
  
   std::vector<std::string> m_massConstraints; 
   std::vector<LHCb::ParticleID> m_massConstraintsPids;

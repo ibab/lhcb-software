@@ -7,8 +7,6 @@
 #include "GaudiKernel/PhysicalConstants.h"
 #include "Kernel/IParticle2MCAssociator.h"
 //#include "Kernel/Particle2MCLinker.h"
-#include <Kernel/DVAlgorithm.h>
-#include <Kernel/GetDVAlgorithm.h>
 #include <Kernel/IDistanceCalculator.h>
 #include "Kernel/IPVReFitter.h"
 #include "Kernel/IOnOffline.h"
@@ -44,7 +42,6 @@ TupleToolMuonIDCalib::TupleToolMuonIDCalib( const std::string& type,
                                             const std::string& name,
                                             const IInterface* parent)
   : TupleToolBase ( type, name , parent )
-  , m_dva(0)
 {
   declareInterface<IParticleTupleTool>(this);
   declareProperty ( "NFoi"          ,m_NFoi  = 2 ) ;
@@ -67,14 +64,8 @@ TupleToolMuonIDCalib::~TupleToolMuonIDCalib() {}
 //=============================================================================
 StatusCode TupleToolMuonIDCalib::initialize()
 {
-  StatusCode sc = TupleToolBase::initialize();
+  const StatusCode sc = TupleToolBase::initialize();
   if ( sc.isFailure() ) return sc;
-
-  //std::cout<<"Fatima: initialize TupleToolMuIDCalib"<<std::endl;
-
-  m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
-  if (0==m_dva) return Error("Couldn't get parent DVAlgorithm",
-                             StatusCode::FAILURE);
 
   return sc;
 }

@@ -17,8 +17,8 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
-#include <Kernel/DVAlgorithm.h>
-#include <Kernel/GetDVAlgorithm.h>
+#include <Kernel/IDVAlgorithm.h>
+#include <Kernel/GetIDVAlgorithm.h>
 #include "TMath.h"
 // local
 #include "TupleToolIsolationTwoBody.h"
@@ -118,7 +118,7 @@ StatusCode TupleToolIsolationTwoBody::initialize()
     return StatusCode::FAILURE;
   }
 
-  m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
+  m_dva = Gaudi::Utils::getIDVAlgorithm ( contextSvc() ) ;
   if (0==m_dva){ return Error("Couldn't get parent DVAlgorithm",
                               StatusCode::FAILURE);
   }
@@ -260,7 +260,7 @@ StatusCode TupleToolIsolationTwoBody::getIso(const LHCb::Particle *P,
   float chi2iso[2]; 
   //int iso[2];
   debug() <<"the floats "<< endreq;
-  const LHCb::VertexBase *PV = m_dva->bestPV(P);
+  const LHCb::VertexBase *PV = m_dva->bestVertex(P);
   const LHCb::VertexBase *SV = P->endVertex();
   debug() <<" PV and SV "<< endreq;
 

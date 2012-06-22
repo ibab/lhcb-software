@@ -6,7 +6,6 @@
 #include "Kernel/IParticleTupleTool.h"
 #include "TupleToolBase.h"
 
-#include "Kernel/DVAlgorithm.h"
 #include "Event/MuonCoord.h"
 #include "Kernel/LHCbID.h"
 #include "Kernel/MuonTileID.h"
@@ -48,8 +47,6 @@ public:
 
 
 private:
-
-  DVAlgorithm* m_dva;
 
   int             m_NFoi;         // look for hits winhin m_NFoi*Foi */
   std::string     m_particlesPath;

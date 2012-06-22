@@ -6,8 +6,8 @@
 // local
 #include "TupleToolVtxIsoln.h"
 
-#include <Kernel/GetDVAlgorithm.h>
-#include <Kernel/DVAlgorithm.h>
+#include <Kernel/GetIDVAlgorithm.h>
+#include <Kernel/IDVAlgorithm.h>
 #include <Kernel/IDistanceCalculator.h>
 #include <Kernel/IVertexFit.h>
 #include "GaudiAlg/Tuple.h"
@@ -56,7 +56,7 @@ StatusCode TupleToolVtxIsoln::initialize()
   const StatusCode sc = TupleToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
-  m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
+  m_dva = Gaudi::Utils::getIDVAlgorithm ( contextSvc() ) ;
   if (!m_dva) return Error("Couldn't get parent DVAlgorithm",
                            StatusCode::FAILURE);
 

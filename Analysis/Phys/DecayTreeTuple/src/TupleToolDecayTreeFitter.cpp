@@ -5,8 +5,8 @@
 #include "GaudiKernel/ToolFactory.h"
 // local
 #include "TupleToolDecayTreeFitter.h"
-#include <Kernel/GetDVAlgorithm.h>
-#include <Kernel/DVAlgorithm.h>
+#include "Kernel/GetIDVAlgorithm.h"
+#include "Kernel/IDVAlgorithm.h"
 #include "GaudiAlg/Tuple.h"
 #include "GaudiAlg/TupleObj.h"
 #include "Event/RecVertex.h"
@@ -17,7 +17,7 @@
 #include "DecayTreeFitter/Fitter.h"
 #include "Kernel/IParticlePropertySvc.h"
 #include "LoKi/ParticleProperties.h"
-// ============================================================================
+// boost
 #include <boost/foreach.hpp>
 
 using namespace LHCb;
@@ -34,15 +34,15 @@ DECLARE_TOOL_FACTORY( TupleToolDecayTreeFitter )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TupleToolDecayTreeFitter::TupleToolDecayTreeFitter( const std::string& type,
-                                                    const std::string& name,
-                                                    const IInterface* parent )
-  : TupleToolBase ( type, name , parent )
-  , m_dva()
-  , m_ppSvc()
-  , m_particleDescendants()
-  , m_map ()
-  , m_substitute()
+  TupleToolDecayTreeFitter::TupleToolDecayTreeFitter( const std::string& type,
+                                                      const std::string& name,
+                                                      const IInterface* parent )
+    : TupleToolBase ( type, name , parent )
+    , m_dva(NULL)
+    , m_ppSvc()
+    , m_particleDescendants()
+    , m_map ()
+    , m_substitute()
 
 {
   declareProperty("daughtersToConstrain", m_massConstraints , "List of particles to contrain to mass");
@@ -69,8 +69,8 @@ StatusCode TupleToolDecayTreeFitter::initialize()
     m_massConstraintsPids.push_back(prop->pdgID());
   } // iterS
 
-  m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
-  if (0==m_dva) return Error("Couldn't get parent DVAlgorithm", StatusCode::FAILURE);
+  m_dva = Gaudi::Utils::getIDVAlgorithm ( contextSvc() ) ;
+  if (0==m_dva) return Error("Couldn't get parent IDVAlgorithm", StatusCode::FAILURE);
 
   m_particleDescendants = tool<IParticleDescendants> ( "ParticleDescendants");
 
@@ -321,14 +321,15 @@ StatusCode TupleToolDecayTreeFitter::fillTuple(const TupleMap& tMap, Tuples::Tup
 //=============================================================================
 // get origin vertex
 //=============================================================================
-std::vector<const VertexBase*> TupleToolDecayTreeFitter::originVertex( const Particle* mother, const Particle* P ) const {
+std::vector<const VertexBase*>
+TupleToolDecayTreeFitter::originVertex( const Particle* mother, const Particle* P ) const {
   std::vector<const VertexBase*> oriVx;
   if (mother == P){// the origin vertex is the primary.
-    const VertexBase* bpv = m_dva->bestPV( P );
+    const VertexBase* bpv = m_dva->bestVertex( P );
     if (bpv) {
       oriVx.push_back(bpv);
-      if (UNLIKELY(MSG::VERBOSE)) verbose() << "Pushed back bpv " << bpv << " from " 
-                                            << bpv->parent()->registry()->identifier() << " at " 
+      if (UNLIKELY(MSG::VERBOSE)) verbose() << "Pushed back bpv " << bpv << " from "
+                                            << bpv->parent()->registry()->identifier() << " at "
                                             << bpv->position() << endmsg ;
     }
     else if ( m_constrainToOriginVertex){
@@ -340,10 +341,10 @@ std::vector<const VertexBase*> TupleToolDecayTreeFitter::originVertex( const Par
          pv!=m_dva->primaryVertices().end() ; ++pv){
       if ( *pv != bpv ) {
         oriVx.push_back(*pv);
-        if (UNLIKELY(MSG::VERBOSE)) verbose() << "Pushed back  pv " << *pv << " from " 
-                                              << (*pv)->parent()->registry()->identifier() << " at " 
+        if (UNLIKELY(MSG::VERBOSE)) verbose() << "Pushed back  pv " << *pv << " from "
+                                              << (*pv)->parent()->registry()->identifier() << " at "
                                               << (*pv)->position() << endmsg ;
-      }     
+      }
       if (oriVx.size()>=m_maxPV){
         Warning("Truncated number of PVs",0,StatusCode::FAILURE).ignore();
         break ;

@@ -8,7 +8,7 @@
 #include "Kernel/IParticleTupleTool.h"            // Interface
 
 class IDistanceCalculator;
-class DVAlgorithm;
+class IDVAlgorithm;
 
 class IPVReFitter;
 
@@ -116,7 +116,7 @@ private:
 
   //bool m_fillMother;
 
-  DVAlgorithm* m_dva;
+  IDVAlgorithm* m_dva;
 
   IPVReFitter* m_pvReFitter;
 };

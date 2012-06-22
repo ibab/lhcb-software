@@ -5,8 +5,8 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SmartIF.h"
 
-#include <Kernel/GetDVAlgorithm.h>
-#include <Kernel/DVAlgorithm.h>
+#include <Kernel/GetIDVAlgorithm.h>
+#include <Kernel/IDVAlgorithm.h>
 #include <Kernel/ILifetimeFitter.h>
 
 // local
@@ -53,7 +53,7 @@ StatusCode TupleToolPropertime::initialize()
 {
   if( ! TupleToolBase::initialize() ) return StatusCode::FAILURE;
 
-  m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
+  m_dva = Gaudi::Utils::getIDVAlgorithm ( contextSvc() ) ;
   if (0==m_dva) return Error("Couldn't get parent DVAlgorithm",
                              StatusCode::FAILURE);
 
@@ -84,14 +84,14 @@ StatusCode TupleToolPropertime::fill( const Particle* mother
 
   const VertexBase* originVtx = NULL;
   if( m_fitToPV ){
-    originVtx = m_dva->bestPV( P );
+    originVtx = m_dva->bestVertex( P );
   }
   else {
     if( mother != P ){
       originVtx = originVertex( mother, P ); // the origin vertex is
                                              // somewhere in the decay
     } else { // the origin vertex is the primary.
-      originVtx = m_dva->bestPV( mother );
+      originVtx = m_dva->bestVertex( mother );
     }
   }
 

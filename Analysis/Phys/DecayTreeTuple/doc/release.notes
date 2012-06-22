@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2012-06-22 - Chris Jones
+ - Use getIDVAlgorithm instead of getDVAlgorithm, in preparation of a future
+   change to the DaVinci base classes.
+
 ! 2012-06-15 - Albert Bursche
  - Prevent TupleToolDalitz from running on jets. It leads to segfaults otherwise. 
 

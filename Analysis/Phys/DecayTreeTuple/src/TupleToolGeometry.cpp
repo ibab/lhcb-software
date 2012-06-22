@@ -7,8 +7,8 @@
 // local
 #include "TupleToolGeometry.h"
 
-#include <Kernel/DVAlgorithm.h>
-#include <Kernel/GetDVAlgorithm.h>
+#include "Kernel/IDVAlgorithm.h"
+#include <Kernel/GetIDVAlgorithm.h>
 #include <Kernel/IDistanceCalculator.h>
 #include "Kernel/IPVReFitter.h"
 
@@ -57,7 +57,7 @@ StatusCode TupleToolGeometry::initialize()
   const StatusCode sc = TupleToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
-  m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
+  m_dva = Gaudi::Utils::getIDVAlgorithm ( contextSvc() ) ;
   if (0==m_dva) return Error("Couldn't get parent DVAlgorithm",
                              StatusCode::FAILURE);
 
@@ -139,7 +139,7 @@ StatusCode TupleToolGeometry::fill( const Particle* mother
   //=========================================================================
   if ( true )
   {
-    aPV = m_dva->bestPV ( P );
+    aPV = m_dva->bestVertex ( P );
     if(aPV && msgLevel(MSG::VERBOSE)) verbose() << "Got best PV of particle : " << *aPV  << endmsg  ;
     sc = fillVertexFull(aPV,P,prefix,"_OWNPV",tuple);
     if (!sc){
@@ -152,7 +152,7 @@ StatusCode TupleToolGeometry::fill( const Particle* mother
   //=========================================================================
   if ( mother && isVerbose() )
   {
-    aPV = m_dva->bestPV ( mother );
+    aPV = m_dva->bestVertex ( mother );
     if(aPV && msgLevel(MSG::VERBOSE)) verbose() << "Got best PV of mother : " << *aPV  << endmsg  ;
     sc = fillVertexFull(aPV,P,prefix,"_TOPPV",tuple);
     if (!sc) {

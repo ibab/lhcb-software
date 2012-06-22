@@ -76,7 +76,7 @@ namespace LHCb
   class VertexBase;
   class Particle;
 }
-class DVAlgorithm;
+class IDVAlgorithm;
 
 class TupleToolNeutrinoReco : public TupleToolBase,
                               virtual public IParticleTupleTool
@@ -118,7 +118,7 @@ public:
 
 private:
 
-  DVAlgorithm* m_dva;
+  IDVAlgorithm* m_dva;
   double m_motherMass;
 
 };

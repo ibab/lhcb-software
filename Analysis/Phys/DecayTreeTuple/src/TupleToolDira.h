@@ -7,7 +7,7 @@
 #include "Kernel/IParticleTupleTool.h"            // Interface
 #include "Math/SMatrix.h"
 
-#include <Kernel/GetDVAlgorithm.h>
+#include <Kernel/GetIDVAlgorithm.h>
 #include <Kernel/IDistanceCalculator.h>
 
 class IDVAlgorithm;
@@ -50,7 +50,7 @@ private:
   void calculateDIRAError( const LHCb::Particle*, const LHCb::VertexBase*, double&, double&) const ;
 
   //  IContextTool* m_context;
-  DVAlgorithm* m_context;
+  IDVAlgorithm* m_context;
 
 };
 

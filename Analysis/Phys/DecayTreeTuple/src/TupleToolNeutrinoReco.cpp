@@ -7,8 +7,8 @@
 #include "GaudiAlg/Tuple.h"
 #include "GaudiAlg/TupleObj.h"
 
-#include <Kernel/DVAlgorithm.h>
-#include <Kernel/GetDVAlgorithm.h>
+#include <Kernel/IDVAlgorithm.h>
+#include <Kernel/GetIDVAlgorithm.h>
 
 // local
 #include "TupleToolNeutrinoReco.h"
@@ -45,7 +45,7 @@ StatusCode TupleToolNeutrinoReco::initialize()
 {
   if( ! TupleToolBase::initialize() ) return StatusCode::FAILURE;
 
-  m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
+  m_dva = Gaudi::Utils::getIDVAlgorithm ( contextSvc() ) ;
 
   if (!m_dva) return Error("Couldn't get parent DVAlgorithm",
                            StatusCode::FAILURE);
@@ -65,7 +65,7 @@ StatusCode TupleToolNeutrinoReco::fill( const LHCb::Particle*
   bool test = true;
   if( P )
   {
-    const LHCb::VertexBase* aPV = m_dva->bestPV ( P );
+    const LHCb::VertexBase* aPV = m_dva->bestVertex( P );
     // Parallel and Perpendicular Momentum of the particle
     // releative to the flight direction
     double Nu_Parl = MomentumParallel(aPV,P,&P->momentum());

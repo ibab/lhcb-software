@@ -36,7 +36,7 @@ DECLARE_TOOL_FACTORY( TupleToolDira )
                                 const std::string& name,
                                 const IInterface* parent )
     : TupleToolBase ( type, name , parent )
-
+    
 {
   declareInterface<IParticleTupleTool>(this);
 }
@@ -48,7 +48,7 @@ StatusCode TupleToolDira::initialize()
   const StatusCode sc = TupleToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
-  m_context = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
+  m_context = Gaudi::Utils::getIDVAlgorithm ( contextSvc() ) ;
   if (0==m_context) return Error("Couldn't get parent DVAlgorithm",
                                  StatusCode::FAILURE);
 
