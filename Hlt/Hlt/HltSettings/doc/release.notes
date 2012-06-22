@@ -1,9 +1,14 @@
-!-----------------------------------------------------------------------------
+\!-----------------------------------------------------------------------------
 ! Package     : Hlt/HltSettings
 ! Responsible : Patrick Koppenburg, Gerhard Raven
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+
+! 2012-06-22 - Johannes Albrecht
+- Physics_June2012.py 
+   o adapt 1TrackTightL0 to 1.7GeV, chi2<1.5 
+   o switch TT validation off for 1TrackMuon
 
 !========================= HltSettings v5r39 2012-06-20 =========================
 ! 2012-06-20 -  E. van Herwijnen

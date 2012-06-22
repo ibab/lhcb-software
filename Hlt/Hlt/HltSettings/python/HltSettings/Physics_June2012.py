@@ -65,11 +65,11 @@ class Physics_June2012( object ):
         from Hlt2Lines.Hlt2InclusiveDiProtonLines import Hlt2InclusiveDiProtonLinesConf
         from Hlt2Lines.Hlt2DisplVerticesLines  import Hlt2DisplVerticesLinesConf
 
-        thresholds = { Hlt1TrackLinesConf :    { 'AllL0Tight_PT'         :  1800
+        thresholds = { Hlt1TrackLinesConf :    { 'AllL0Tight_PT'         :  1700
                                                , 'AllL0Tight_P'          :  3000
                                                , 'AllL0Tight_IP'         :  0.100
                                                , 'AllL0Tight_IPChi2'     :  16  
-                                               , 'AllL0Tight_TrChi2'     :  2.0 
+                                               , 'AllL0Tight_TrChi2'     :  1.5 
                                                , 'AllL0Tight_GEC'        : 'Loose'
                                                , 'AllL0Tight_Velo_NHits' : 9 
                                                , 'AllL0Tight_Velo_Qcut'  : 3   
@@ -89,7 +89,7 @@ class Physics_June2012( object ):
                                                , 'Muon_IPChi2'   :    16
                                                , 'Muon_TrChi2'   :     2.5  
                                                , 'Muon_GEC'      : 'Loose'
-                                               , 'Muon_ValidateTT' : True
+                                               , 'Muon_ValidateTT' : False
                                                , 'Muon_L0Channels' : 'Muon,DiMuon,MuonNoSPD,DiMuonNoSPD' 
                                                , 'Photon_PT'     :  1200
                                                , 'Photon_P'      :  3000
