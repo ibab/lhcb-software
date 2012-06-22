@@ -1,60 +1,56 @@
-JobOptionsSvc        INFO
-//GP:================================================================================
-//GP: include "/afs/cern.ch/user/f/frankb/scratch0/ONLINE/ONLINE_HEAD/Online/GaudiOnline/options/TimeoutAlg.opts" (0,0)
-ApplicationMgr.HistogramPersistency = "NONE";                           //GP: (1,1)
-ApplicationMgr.EvtSel = "NONE";                                         //GP: (1,1)
-EventDataSvc.RootCLID = 1;                                              //GP: (1,1)
-ApplicationMgr.TopAlg =  [ "LHCb::DelaySleepAlg/Delay" , "StoreExplorerAlg/Explorer" , "LHCb::TimeoutAlg/Timeout" ] ;//GP: (1,1)
-Delay.DelayTime = 5000;                                                 //GP: (1,1)
-Delay.ErrorMax = 10;                                                    //GP: (1,1)
-Timeout.Timeout = 1000;                                                 //GP: (1,1)
-Timeout.PrintTrace = 0;                                                 //GP: (1,1)
-Timeout.ExitTimeout = 0;                                                //GP: (1,1)
-Explorer.Load = 0;                                                      //GP: (1,1)
-Explorer.PrintFreq = 1;                                                 //GP: (1,1)
-MessageSvc.OutputLevel = 4;                                             //GP: (1,1)
-ExceptionSvc.Catch = "NONE";                                            //GP: (1,1)
-ChronoStatSvc.ChronoPrintOutTable = 0;                                  //GP: (1,1)
-CounterSvc.PrintStat = 0;                                               //GP: (1,1)
-ApplicationMgr.AppName = "";                                            //GP: (1,1)
-//GP: end  "/afs/cern.ch/user/f/frankb/scratch0/ONLINE/ONLINE_HEAD/Online/GaudiOnline/options/TimeoutAlg.opts" (17,1)
-//GP:================================================================================
-
-JobOptionsSvc        INFO Job options successfully read in from /afs/cern.ch/user/f/frankb/scratch0/ONLINE/ONLINE_HEAD/Online/GaudiOnline/options/TimeoutAlg.opts
+JobOptionsSvc        INFO # =======> /afs/cern.ch/user/f/frankb/scratch0/Online_v4r64/Online/GaudiOnline/options/TimeoutAlg.opts)
+JobOptionsSvc        INFO # (1,1): ApplicationMgr.HistogramPersistency = "NONE"
+JobOptionsSvc        INFO # (2,1): ApplicationMgr.EvtSel = "NONE"
+JobOptionsSvc        INFO # (3,1): EventDataSvc.RootCLID = 1
+JobOptionsSvc        INFO # (4,1): ApplicationMgr.TopAlg = ["LHCb::DelaySleepAlg/Delay", "StoreExplorerAlg/Explorer", "LHCb::TimeoutAlg/Timeout"]
+JobOptionsSvc        INFO # (5,1): Delay.DelayTime = 5000
+JobOptionsSvc        INFO # (6,1): Delay.ErrorMax = 10
+JobOptionsSvc        INFO # (7,1): Timeout.Timeout = 1000
+JobOptionsSvc        INFO # (8,1): Timeout.PrintTrace = 0
+JobOptionsSvc        INFO # (9,1): Timeout.ExitTimeout = 0
+JobOptionsSvc        INFO # (10,1): Explorer.Load = 0
+JobOptionsSvc        INFO # (11,1): Explorer.PrintFreq = 1.0
+JobOptionsSvc        INFO # (12,1): MessageSvc.OutputLevel = 4
+JobOptionsSvc        INFO # (13,1): ExceptionSvc.Catch = "NONE"
+JobOptionsSvc        INFO # (14,1): ChronoStatSvc.ChronoPrintOutTable = 0
+JobOptionsSvc        INFO # (15,1): CounterSvc.PrintStat = 0
+JobOptionsSvc        INFO # (16,1): ApplicationMgr.AppName = ""
+JobOptionsSvc        INFO Job options successfully read in from /afs/cern.ch/user/f/frankb/scratch0/Online_v4r64/Online/GaudiOnline/options/TimeoutAlg.opts
 EventLoopMgr      WARNING Unable to locate service "EventSelector"
 EventLoopMgr      WARNING No events will be processed from external input.
 HistogramPersis...WARNING Histograms saving not required.
-Delay               FATAL  Standard std::exception is caught
-Delay               ERROR TIMEOUT during event processing after 1000 milliseconds
+Delay               FATAL  Exception with tag=DAQ_TIMEOUT is caught
+Delay               ERROR DAQ_TIMEOUT	TIMEOUT during event processing after 1000 milliseconds	 StatusCode=FAILURE
 Delay             WARNING Continuing from error (cnt=1, max=10)
-Delay               FATAL  Standard std::exception is caught
-Delay               ERROR TIMEOUT during event processing after 1000 milliseconds
+Delay               FATAL  Exception with tag=DAQ_TIMEOUT is caught
+Delay               ERROR DAQ_TIMEOUT	TIMEOUT during event processing after 1000 milliseconds	 StatusCode=FAILURE
 Delay             WARNING Continuing from error (cnt=2, max=10)
-Delay               FATAL  Standard std::exception is caught
-Delay               ERROR TIMEOUT during event processing after 1000 milliseconds
+Delay               FATAL  Exception with tag=DAQ_TIMEOUT is caught
+Delay               ERROR DAQ_TIMEOUT	TIMEOUT during event processing after 1000 milliseconds	 StatusCode=FAILURE
 Delay             WARNING Continuing from error (cnt=3, max=10)
-Delay               FATAL  Standard std::exception is caught
-Delay               ERROR TIMEOUT during event processing after 1000 milliseconds
+Delay               FATAL  Exception with tag=DAQ_TIMEOUT is caught
+Delay               ERROR DAQ_TIMEOUT	TIMEOUT during event processing after 1000 milliseconds	 StatusCode=FAILURE
 Delay             WARNING Continuing from error (cnt=4, max=10)
-Delay               FATAL  Standard std::exception is caught
-Delay               ERROR TIMEOUT during event processing after 1000 milliseconds
+Delay               FATAL  Exception with tag=DAQ_TIMEOUT is caught
+Delay               ERROR DAQ_TIMEOUT	TIMEOUT during event processing after 1000 milliseconds	 StatusCode=FAILURE
 Delay             WARNING Continuing from error (cnt=5, max=10)
-Delay               FATAL  Standard std::exception is caught
-Delay               ERROR TIMEOUT during event processing after 1000 milliseconds
+Delay               FATAL  Exception with tag=DAQ_TIMEOUT is caught
+Delay               ERROR DAQ_TIMEOUT	TIMEOUT during event processing after 1000 milliseconds	 StatusCode=FAILURE
 Delay             WARNING Continuing from error (cnt=6, max=10)
-Delay               FATAL  Standard std::exception is caught
-Delay               ERROR TIMEOUT during event processing after 1000 milliseconds
+Delay               FATAL  Exception with tag=DAQ_TIMEOUT is caught
+Delay               ERROR DAQ_TIMEOUT	TIMEOUT during event processing after 1000 milliseconds	 StatusCode=FAILURE
 Delay             WARNING Continuing from error (cnt=7, max=10)
-Delay               FATAL  Standard std::exception is caught
-Delay               ERROR TIMEOUT during event processing after 1000 milliseconds
+Delay               FATAL  Exception with tag=DAQ_TIMEOUT is caught
+Delay               ERROR DAQ_TIMEOUT	TIMEOUT during event processing after 1000 milliseconds	 StatusCode=FAILURE
 Delay             WARNING Continuing from error (cnt=8, max=10)
-Delay               FATAL  Standard std::exception is caught
-Delay               ERROR TIMEOUT during event processing after 1000 milliseconds
+Delay               FATAL  Exception with tag=DAQ_TIMEOUT is caught
+Delay               ERROR DAQ_TIMEOUT	TIMEOUT during event processing after 1000 milliseconds	 StatusCode=FAILURE
 Delay             WARNING Continuing from error (cnt=9, max=10)
-Delay               FATAL  Standard std::exception is caught
-Delay               ERROR TIMEOUT during event processing after 1000 milliseconds
+Delay               FATAL  Exception with tag=DAQ_TIMEOUT is caught
+Delay               ERROR DAQ_TIMEOUT	TIMEOUT during event processing after 1000 milliseconds	 StatusCode=FAILURE
 EventLoopMgr      WARNING Execution of algorithm Delay failed
 EventLoopMgr        ERROR Error processing event loop.
 EventLoopMgr        ERROR Terminating event processing loop due to errors
 EventLoopMgr        ERROR Terminating event processing loop due to errors
 ApplicationMgr      FATAL Application execution failed. Ending the job.
+ApplicationMgr      ERROR Application Manager Terminated with error code 3
