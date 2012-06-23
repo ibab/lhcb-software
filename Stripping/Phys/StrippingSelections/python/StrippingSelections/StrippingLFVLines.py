@@ -17,6 +17,7 @@ __all__ = ('LFVLinesConf',
            'makeB2ee',
            'makeB2hemu'
            'makeB2pMu',
+           'makeBu',
            )
 
 from Gaudi.Configuration import *
@@ -41,6 +42,7 @@ class LFVLinesConf(LineBuilder) :
                                   'B2eePrescale',                                  
                                   'B2heMuPrescale',
                                   'B2pMuPrescale',
+                                  'Bu2KJpsieePrescale',
                                   )
     
     #### This is the dictionary of all tunable cuts ########
@@ -52,6 +54,7 @@ class LFVLinesConf(LineBuilder) :
         'B2eePrescale'        :1,
         'B2heMuPrescale'      :1,
         'B2pMuPrescale'       :1,
+        'Bu2KJpsieePrescale'  :1,
         }                
     
     
@@ -67,6 +70,7 @@ class LFVLinesConf(LineBuilder) :
         ee_name=name+'B2ee'
         hemu_name=name+'B2heMu'
         pmu_name=name+'B2pMu'
+        bu_name=name+'Bu2KJPsiee'
 
         self.selTau2PhiMu = makeTau2PhiMu(tau_name)
         self.selTau2eMuMu = makeTau2eMuMu(mme_name)
@@ -74,6 +78,7 @@ class LFVLinesConf(LineBuilder) :
         self.selB2ee = makeB2ee(ee_name)
         self.selB2heMu = makeB2heMu(hemu_name)
         self.selB2pMu = makeB2pMu(pmu_name)
+        self.selBu = makeBu(bu_name)
                 
         self.tau2PhiMuLine = StrippingLine(tau_name+"Line",
                                      prescale = config['TauPrescale'],
@@ -111,6 +116,12 @@ class LFVLinesConf(LineBuilder) :
                                      postscale = config['Postscale'],
                                      algos = [ self.selB2pMu ]
                                      )
+
+        self.buLine = StrippingLine(bu_name+"Line",
+                                    prescale = config['Bu2KJPsieePrescale'],
+                                    postscale = config['Postscale'],
+                                    algos = [ self.selBu ]
+                                    )
               
         self.registerLine(self.tau2PhiMuLine)
         self.registerLine(self.tau2eMuMuLine)
@@ -118,6 +129,7 @@ class LFVLinesConf(LineBuilder) :
         self.registerLine(self.b2eeLine)
         self.registerLine(self.b2heMuLine)
         self.registerLine(self.b2pMuLine)
+        self.registerLine(self.buLine)        
 
 def makeTau2PhiMu(name):
     """
@@ -208,11 +220,11 @@ def makeB2eMu(name):
     Bs2eMu.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 4 )",
                              "e+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 4 )"}
 
-    Bs2eMu.CombinationCut = "(ADAMASS('B_s0')<600*MeV)"\
+    Bs2eMu.CombinationCut = "(ADAMASS('B_s0')<1200*MeV)"\
                             "& (AMAXDOCA('')<0.3*mm)"
 
     Bs2eMu.MotherCut = "(VFASPF(VCHI2/VDOF)<9) "\
-                              "& (ADMASS('B_s0') < 600*MeV )"\
+                              "& (ADMASS('B_s0') < 1200*MeV )"\
                               "& (BPVDIRA > 0) "\
                               "& (BPVVDCHI2> 225)"\
                               "& (BPVIPCHI2()< 25) "
@@ -244,11 +256,11 @@ def makeB2ee(name):
     #Bs2ee.ReFitPVs = True
     Bs2ee.DaughtersCuts = { "e+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 4 )"}
 
-    Bs2ee.CombinationCut = "(ADAMASS('B_s0')<600*MeV)"\
+    Bs2ee.CombinationCut = "(ADAMASS('B_s0')<1200*MeV)"\
                             "& (AMAXDOCA('')<0.3*mm)"
 
     Bs2ee.MotherCut = "(VFASPF(VCHI2/VDOF)<9) "\
-                              "& (ADMASS('B_s0') < 600*MeV )"\
+                              "& (ADMASS('B_s0') < 1200*MeV )"\
                               "& (BPVDIRA > 0) "\
                               "& (BPVVDCHI2> 225)"\
                               "& (BPVIPCHI2()< 25) "
@@ -319,7 +331,7 @@ def makeB2pMu(name):
     #Bs2pMu.OfflineVertexFitter.useResonanceVertex = False
     #Bs2pMu.ReFitPVs = True
     Bs2pMu.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 4 )",
-                             "e+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 4 )"}
+                             "p+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 4 )"}
 
     Bs2pMu.CombinationCut = "(ADAMASS('B_s0')<600*MeV)"\
                             "& (AMAXDOCA('')<0.3*mm)"
@@ -336,4 +348,72 @@ def makeB2pMu(name):
     return Selection (name,
                       Algorithm = Bs2pMu,
                       RequiredSelections = [ _stdLooseMuons,_stdLooseProtons])
+
+
+def makeBu(name) :
+    """
+    detached Bu-->JPsiK selection.
+
+    Please contact Flavio Archilli if you think of prescaling this line!
+
+    Arguments:
+    name        : name of the Selection.
+    """
+
+    
+    from Configurables import OfflineVertexFitter
+   
+    SelDJPsi = makeDetachedJPsi(name)
+
+    PreselBu2JPsiKCommon = CombineParticles("PreselBu2JPsiKCommon")
+    PreselBu2JPsiKCommon.DecayDescriptor =  " [B+ -> J/psi(1S) K+]cc ";
+    PreselBu2JPsiKCommon.addTool( OfflineVertexFitter() )
+    PreselBu2JPsiKCommon.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+    PreselBu2JPsiKCommon.OfflineVertexFitter.useResonanceVertex = False
+    PreselBu2JPsiKCommon.ReFitPVs = True
+    PreselBu2JPsiKCommon.DaughtersCuts = { "K+" : "(ISLONG) & (TRCHI2DOF < 5 ) &(MIPCHI2DV(PRIMARY)>25)& (PT>250*MeV) "}
+    PreselBu2JPsiKCommon.CombinationCut = "(ADAMASS('B+') < 600*MeV)"
+    PreselBu2JPsiKCommon.MotherCut = "(BPVIPCHI2()< 25)& (VFASPF(VCHI2)<45) "
+
+    _kaons = DataOnDemand(Location='Phys/StdNoPIDsKaons/Particles')
+
+    return Selection( "SelBu2KJPsiee",
+                         Algorithm = PreselBu2JPsiKCommon,
+                         RequiredSelections=[SelDJPsi,_kaons] )
+
+
+def makeDetachedJPsi(name) :
+    """
+    detached JPsi selection for B--> JPsi X calibration and
+    normalization channels. 
+
+    Please contact Flavio Archilli if you think of prescaling this line!
+
+    Arguments:
+    name        : name of the Selection.
+    """
+    from Configurables import OfflineVertexFitter
+    DetachedJPsi = CombineParticles("Combine"+name)
+    DetachedJPsi.DecayDescriptor = "J/psi(1S) -> e+ e-"
+    DetachedJPsi.addTool( OfflineVertexFitter() )
+    DetachedJPsi.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+    DetachedJPsi.OfflineVertexFitter.useResonanceVertex = False
+    DetachedJPsi.ReFitPVs = True
+    DetachedJPsi.DaughtersCuts = { "e+" : "(TRCHI2DOF < 4 ) "\
+                                   "& (MIPCHI2DV(PRIMARY)> 25.) "\
+                                   "& (PIDe > 2) "}
+                                 
+    DetachedJPsi.CombinationCut = "(ADAMASS('J/psi(1S)')<1000*MeV) "\
+                                   "& (AMAXDOCA('')<0.3*mm)"
+
+    DetachedJPsi.MotherCut = "(VFASPF(VCHI2)<9) "\
+                             "& (ADMASS('J/psi(1S)') < 1000*MeV )"\
+                             "& (BPVDIRA > 0) "\
+                             "& (BPVVDCHI2>169)"
+
+    _stdLooseElectrons = DataOnDemand(Location = "Phys/StdLooseElectrons/Particles")
+
+    return Selection (name,
+                      Algorithm = DetachedJPsi,
+                      RequiredSelections = [ _stdLooseElectrons ])
 

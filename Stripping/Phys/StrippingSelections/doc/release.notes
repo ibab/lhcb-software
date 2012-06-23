@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-06-23 Flavio Archilli
+  - StrippingLFVLines.py: updated the B2eMu and B2ee lines, corrected a typo in 
+    B2pMu line, added new line Bu2KJPsiee for the Bs->ee and Bs->emu analyses.  
 
 ! 2012-06-22 Olivier Deschamps for Régis Lefèvre
 	- update B2HHPi0.py & D02KPiPi0.py
