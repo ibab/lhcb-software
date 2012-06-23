@@ -33,7 +33,7 @@ algorithm.addTool ( PhotonMaker , name = 'PhotonMaker' )
 photon = algorithm.PhotonMaker
 photon.ConvertedPhotons   = True
 photon.UnconvertedPhotons = True 
-photon.PtCut              = 100 * MeV 
+photon.PtCut              = 75 * MeV 
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( algorithm )

@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2012-05-23 - Olivier Deschamps
+ - StdVeryLooseAllPhotons.py:  decrease photon pT cut to 75MeV (for bremStrahlung)
+
 ! 2012-06-18 - Patrick Koppenburg
  - StdLooseDiElectron : Make a DiElectron for B->eeK(*) using DiElectronMaker
                         called `StdDiElectronFromTracks'
