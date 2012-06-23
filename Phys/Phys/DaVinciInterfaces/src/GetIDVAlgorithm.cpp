@@ -41,41 +41,23 @@ namespace
     /// the only one essential method:
     virtual bool operator() ( const IAlgorithm* alg ) const 
     {
-      if ( 0 == alg ) { return false ; } 
+      if ( !alg ) { return false ; } 
       IAlgorithm* _alg = const_cast<IAlgorithm*> ( alg );
       SmartIF<IDVAlgorithm> idv ( _alg );
       return idv.isValid() ;
     }
-    virtual ~IDVSelector(){};
+    virtual ~IDVSelector() { }
     // ========================================================================
   };
   // ==========================================================================
 }
 // ============================================================================
-/* get the pointer to the "current" IDVAlgorithm
- *
- *  @code
- * 
- *   // get the context service:
- *   IAlgContextSvc* svc = ... ;
- * 
- *   // get IDVAlgorithm from it:
- *   IDVAgorithm* alg = Gaudi::Utils::getIDVAlgorithm ( svc ) ;
- *
- *  @endcode
- *
- *  @see IDVAlgorithm
- *  @see IAlgContextSvc 
- *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
- *  @date 2007-12-04
- */
-// ============================================================================
 IDVAlgorithm* Gaudi::Utils::getIDVAlgorithm ( const IAlgContextSvc* svc ) 
 {
-  if ( 0 == svc ) { return 0 ; }                                // RETURN
+  if ( !svc ) { return NULL ; }                                    // RETURN
   // use context service:
   IAlgorithm* alg = Gaudi::Utils::getAlgorithm ( svc , IDVSelector() ) ;
-  if ( 0 == alg ) { return 0 ; }                                // RETURN 
+  if ( !alg ) { return NULL ; }                                    // RETURN 
   return SmartIF<IDVAlgorithm> ( alg ) ;
 }
 // ============================================================================
