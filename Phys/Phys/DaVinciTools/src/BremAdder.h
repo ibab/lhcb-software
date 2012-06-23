@@ -59,15 +59,16 @@ protected:
                   std::vector<const LHCb::CaloHypo*> > bremLists(const LHCb::Particle* p1,
                                                                  const LHCb::Particle* p2,
                                                                  std::string flag="");
-  const std::vector<const LHCb::CaloHypo*> getBrem(const LHCb::Particle* particle);
-  const std::pair<Gaudi::XYZPoint,Gaudi::SymMatrix3x3> 
-  getPos(const LHCb::ProtoParticle* proto,
-         const LHCb::State::Location& state,
-         double zcalo, double def=0 ) const;
-  const LHCb::State* usedState( const LHCb::Track* track) const;
-  Gaudi::XYZPoint bremMatcher(const std::vector<const LHCb::CaloHypo*>& brems,
-                                   const LHCb::Particle* particle,
-                                   const LHCb::State* uState=NULL);
+  const std::vector<const LHCb::CaloHypo*>             getBrem(const LHCb::Particle* particle);
+  const std::pair<Gaudi::XYZPoint,Gaudi::SymMatrix3x3> getPos (const LHCb::ProtoParticle* proto,
+                                                              const LHCb::State::Location& state,
+                                                              double zcalo, double def=0 ) const;
+  const LHCb::State*    usedState  ( const LHCb::Track* track) const;
+  void bremMatcher(const std::vector<const LHCb::CaloHypo*>& brems,const LHCb::Particle* particle);
+  const Gaudi::XYZPoint bremOrigin (const LHCb::CaloHypo* brem,const LHCb::Track*    track);
+  const Gaudi::XYZPoint firstOrigin( const std::vector<const LHCb::CaloHypo*>& brems ,const LHCb::Particle* particle);
+  
+  
 
 private:
 
@@ -88,7 +89,6 @@ private:
   std::vector<const LHCb::CaloHypo*> m_list;
   std::vector<const LHCb::CaloHypo*> m_list2;
   double m_z0;
-
 };
 
 #endif // BREMADDER_H

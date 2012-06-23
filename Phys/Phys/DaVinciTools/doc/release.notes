@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2012-06-23 - Olivier Deschamps
+  - BremAdder : Final optimization (new correction method with brem origin determined from track slope is now the default)
+
 ! 2012-06-22 - Olivier Deschamps
   - BremAdder : optimize processing + add new correction method (for expert check)
 
