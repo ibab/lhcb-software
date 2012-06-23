@@ -38,18 +38,18 @@ public:
   bool setDet(std::string det);
   void getOffsetMap(std::string det);
   int getMask(std::string det);
-  double getOffset(LHCb::CaloCellID id, int scale);
+  double getOffset(LHCb::CaloCellID id, int scale,bool spd=false);
   void setMaskMap(std::map<std::string,int> maskMap);
   int getScale();
-  bool cleanDigits(std::string det, bool substr=true, bool mask = true);
+  bool cleanDigits(std::string det, bool substr=true, bool mask = true,bool spd=false);
   int method(std::string det){
     if( det != m_caloName)setDet( det );
     return m_scalingMethod;
   }
   unsigned int nVertices();
   unsigned int nSpd();
-  double offset(LHCb::CaloCellID id);    
-  double offsetRMS(LHCb::CaloCellID id);    
+  double offset(LHCb::CaloCellID id,bool spd=false);    
+  double offsetRMS(LHCb::CaloCellID id,bool spd=false);    
     
   virtual void handle(const Incident& /* inc */ ) { 
     if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
@@ -58,13 +58,15 @@ public:
   } 
 
 protected:
-  void cleanDigit(LHCb::CaloDigit* digit, bool substr=true,int scale = -1, bool mask=true);
+  void cleanDigit(LHCb::CaloDigit* digit, bool substr=true,int scale = -1, bool mask=true,bool spd=false);
 
 private:
   std::map<std::string,int> m_maskMap;
   int m_mask;
   std::map<LHCb::CaloCellID,double> m_offsets;
   std::map<LHCb::CaloCellID,double> m_offsetsRMS;
+  std::map<LHCb::CaloCellID,double> m_offsetsSPD;
+  std::map<LHCb::CaloCellID,double> m_offsetsSPDRMS;
   LHCb::CaloDigits* m_digits;
   DeCalorimeter* m_calo;
   std::string m_caloName;
@@ -78,6 +80,14 @@ private:
   std::map<LHCb::CaloCellID,double> m_ecalOffsetRMS;
   std::map<LHCb::CaloCellID,double> m_hcalOffsetRMS;
   std::map<LHCb::CaloCellID,double> m_prsOffsetRMS;
+
+  std::map<LHCb::CaloCellID,double> m_ecalOffsetSPD;
+  std::map<LHCb::CaloCellID,double> m_hcalOffsetSPD;
+  std::map<LHCb::CaloCellID,double> m_prsOffsetSPD;
+
+  std::map<LHCb::CaloCellID,double> m_ecalOffsetSPDRMS;
+  std::map<LHCb::CaloCellID,double> m_hcalOffsetSPDRMS;
+  std::map<LHCb::CaloCellID,double> m_prsOffsetSPDRMS;
 
   int    m_scalingBin;
   double m_scalingMin;

@@ -10,7 +10,7 @@
 #include "Event/CaloDigit.h"
 #include "GaudiKernel/IAlgTool.h"
 
-static const InterfaceID IID_ICaloDigitFilterTool ( "ICaloDigitFilterTool", 1, 0 );
+static const InterfaceID IID_ICaloDigitFilterTool ( "ICaloDigitFilterTool", 2, 0 );
 
 /** @class ICaloDigitFilterTool ICaloDigitFilterTool.h
  *  
@@ -25,10 +25,10 @@ public:
   static const InterfaceID& interfaceID() { return IID_ICaloDigitFilterTool; }
 
   virtual int getScale()=0;
-  virtual bool cleanDigits(std::string det, bool substr=true, bool mask = true)=0;
+  virtual bool cleanDigits(std::string det, bool substr=true, bool mask = true,bool spd=false)=0;
   virtual int method(std::string det)=0;
-  virtual double offset(LHCb::CaloCellID id)=0;    
-  virtual double offsetRMS(LHCb::CaloCellID id)=0;    
+  virtual double offset(LHCb::CaloCellID id,bool spd=false)=0;    
+  virtual double offsetRMS(LHCb::CaloCellID id,bool spd=false)=0;    
 
 
 protected:

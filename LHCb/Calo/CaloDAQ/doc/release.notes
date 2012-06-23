@@ -4,6 +4,9 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+! 2012-06-23 - Deschamps Olivier 
+   - CaloDigitFilterTool : prepare for spd-dependent pile-up subtraction
+
 ! 2012-06-15 - Marco Cattaneo
  - Replace RawEventLocation::Other with RawEventLocation::Calo
 

@@ -26,6 +26,8 @@ CaloDigitFilterTool::CaloDigitFilterTool( const std::string& type,
     m_mask( 0 ),
     m_offsets(),
     m_offsetsRMS(),
+    m_offsetsSPD(),
+    m_offsetsSPDRMS(),
     m_digits(NULL),
     m_calo(NULL),
     m_caloName("None"),
@@ -45,6 +47,12 @@ CaloDigitFilterTool::CaloDigitFilterTool( const std::string& type,
   declareProperty("EcalOffsetRMS", m_ecalOffsetRMS);
   declareProperty("HcalOffsetRMS", m_hcalOffsetRMS);
   declareProperty("PrsOffsetRMS" , m_prsOffsetRMS);
+  declareProperty("EcalOffsetSPD", m_ecalOffsetSPD);
+  declareProperty("HcalOffsetSPD", m_hcalOffsetSPD);
+  declareProperty("PrsOffsetSPD" , m_prsOffsetSPD);
+  declareProperty("EcalOffsetSPDRMS", m_ecalOffsetSPDRMS);
+  declareProperty("HcalOffsetSPDRMS", m_hcalOffsetSPDRMS);
+  declareProperty("PrsOffsetSPDRMS" , m_prsOffsetSPDRMS);
   declareProperty("ScalingMethod" , m_scalingMethod=0); // 0 : SpdMult ; 1 = nPV  (+10 for clusters)
   declareProperty("ScalingBin"    , m_scalingBin=50);
   declareProperty("ScalingMin"    , m_scalingMin=150.);
@@ -96,6 +104,8 @@ bool CaloDigitFilterTool::setDet(std::string det){
 void CaloDigitFilterTool::getOffsetMap(std::string det){
   m_offsets.clear();
   m_offsetsRMS.clear();
+  m_offsetsSPD.clear();
+  m_offsetsSPDRMS.clear();
   if( m_useCondDB ){ 
     m_scalingMethod=m_calo->pileUpSubstractionMethod();
     m_scalingMin = m_calo->pileUpSubstractionMin();
@@ -107,27 +117,37 @@ void CaloDigitFilterTool::getOffsetMap(std::string det){
       if( !m_calo->valid( id ) || id.isPin() )continue;
       m_offsets[id] = ic->pileUpOffset();  
       m_offsetsRMS[id] = ic->pileUpOffsetRMS();  
+      m_offsetsSPD[id] = ic->pileUpOffsetSPD();  
+      m_offsetsSPDRMS[id] = ic->pileUpOffsetSPDRMS();  
     }
    }else{
     if( det == "Ecal" ){
       m_offsets = m_ecalOffset;
       m_offsetsRMS = m_ecalOffsetRMS;
+      m_offsetsSPD = m_ecalOffsetSPD;
+      m_offsetsSPDRMS = m_ecalOffsetSPDRMS;
     }
     else if( det == "Hcal" ){
       m_offsets = m_hcalOffset;
       m_offsetsRMS = m_hcalOffsetRMS;
+      m_offsetsSPD = m_hcalOffsetSPD;
+      m_offsetsSPDRMS = m_hcalOffsetSPDRMS;
     }
     else if( det == "Prs" ){
       m_offsets = m_prsOffset;
       m_offsetsRMS = m_prsOffsetRMS;
+      m_offsetsSPD = m_prsOffsetSPD;
+      m_offsetsSPDRMS = m_prsOffsetSPDRMS;
     }    
   }
 }
 
 //-----------------------
-double CaloDigitFilterTool::getOffset(LHCb::CaloCellID id, int scale){
-  std::map<LHCb::CaloCellID,double>::iterator  it = m_offsets.find( id );
-  if( it == m_offsets.end() )return 0.;
+double CaloDigitFilterTool::getOffset(LHCb::CaloCellID id, int scale,bool spd){
+
+  const std::map<LHCb::CaloCellID,double>& table = (spd) ? m_offsets : m_offsetsSPD;
+  std::map<LHCb::CaloCellID,double>::const_iterator  it = table.find( id );
+  if( it == table.end() )return 0.;
   double ref =  it->second;
   if( 0 == scale)return 0;
   if( scale <= m_scalingMin)return 0;
@@ -175,21 +195,21 @@ int CaloDigitFilterTool::getScale(){
   return m_scale;
 }
 
-double CaloDigitFilterTool::offset(LHCb::CaloCellID id){
+double CaloDigitFilterTool::offset(LHCb::CaloCellID id,bool spd){
   if( id.caloName() != m_caloName)setDet( id.caloName() );
   int scale = getScale();
-  return getOffset( id , scale);
+  return getOffset( id , scale,spd);
 }
 
-double CaloDigitFilterTool::offsetRMS(LHCb::CaloCellID id){
-  offset(id);
+double CaloDigitFilterTool::offsetRMS(LHCb::CaloCellID id,bool spd){
+  offset(id,spd);
   return m_offsetRMS;
 }
 
 
 
 //-----------------------
-bool CaloDigitFilterTool::cleanDigits(std::string det, bool substr, bool mask){
+bool CaloDigitFilterTool::cleanDigits(std::string det, bool substr, bool mask,bool spd){
   if( !setDet( det ) )return false;
   
   m_digits = NULL;
@@ -205,7 +225,7 @@ bool CaloDigitFilterTool::cleanDigits(std::string det, bool substr, bool mask){
   int nOffs = 0;
   for(LHCb::CaloDigits::iterator it = m_digits->begin() ; m_digits->end()!=it ; ++it){
     LHCb::CaloDigit* digit = *it;
-    if(NULL != digit)cleanDigit( digit , substr, scale , mask);
+    if(NULL != digit)cleanDigit( digit , substr, scale , mask,spd);
     nOffs++;
   }
 
@@ -217,7 +237,7 @@ bool CaloDigitFilterTool::cleanDigits(std::string det, bool substr, bool mask){
 }
 
 //-----------------------
-void CaloDigitFilterTool::cleanDigit(LHCb::CaloDigit* digit, bool substr , int scale , bool mask){
+void CaloDigitFilterTool::cleanDigit(LHCb::CaloDigit* digit, bool substr , int scale , bool mask,bool spd){
   if(NULL == digit)return;
   LHCb::CaloCellID id = digit->cellID();
 
@@ -231,7 +251,7 @@ void CaloDigitFilterTool::cleanDigit(LHCb::CaloDigit* digit, bool substr , int s
   if(m_scalingMethod < 10 && substr && m_offsets.size() != 0){
     if( m_caloName == "Spd" )return;
     if( scale < 0)scale = getScale();
-    double offset = getOffset( id, scale );
+    double offset = getOffset( id, scale,spd );
     if( 0. != offset ){
       double e = digit->e() - offset;
       if(  e < 0. ) e=0.;
