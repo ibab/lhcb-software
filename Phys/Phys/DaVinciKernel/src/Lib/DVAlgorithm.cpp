@@ -21,10 +21,9 @@
 // ============================================================================
 // Standard constructor
 // ============================================================================
-DVAlgorithm::DVAlgorithm
-( const std::string& name,
-  ISvcLocator* pSvcLocator )
-  : base_class    ( name , pSvcLocator )
+DVAlgorithm::DVAlgorithm( const std::string& name,
+                          ISvcLocator* pSvcLocator )
+  : base_class( name , pSvcLocator )
 //
   , m_particleOutputLocation("")
   , m_vertexFitNames        ()
@@ -227,7 +226,7 @@ StatusCode DVAlgorithm::initialize ()
 
   // initialize the base
   StatusCode sc = GaudiTupleAlg::initialize();
-  if ( sc.isFailure() ) { return sc; } 
+  if ( sc.isFailure() ) { return sc; }
 
   if ( !registerContext() || !contextSvc() )
   {
@@ -446,7 +445,7 @@ void DVAlgorithm::writeEmptyTESContainers()
 
 }
 //=============================================================================
-StatusCode DVAlgorithm::loadEventInput() 
+StatusCode DVAlgorithm::loadEventInput()
 {
 
   if (msgLevel(MSG::VERBOSE))
@@ -627,7 +626,7 @@ const LHCb::RecVertex* DVAlgorithm::mark( const LHCb::RecVertex* keptV )const
   return newV;
 }
 //=============================================================================
-StatusCode DVAlgorithm::saveP2PVRelations() const 
+StatusCode DVAlgorithm::saveP2PVRelations() const
 {
 
   if ( !saveP2PV() )
@@ -842,17 +841,17 @@ StatusCode DVAlgorithm::saveInTES()
   return saveP2PVRelations();
 }
 // ============================================================================
-const LHCb::VertexBase* 
+const LHCb::VertexBase*
 DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p) const
 {
-  if ( msgLevel(MSG::VERBOSE) ) 
+  if ( msgLevel(MSG::VERBOSE) )
   {
     verbose() << "DVAlgorithm::calculateRelatedPV" << endmsg;
   }
 
   const LHCb::RecVertex::Range PVs = this->primaryVertices();
 
-  if (PVs.empty()) 
+  if (PVs.empty())
   {
     Error("calculateRelatedPV: Empty primary vertex container",
           StatusCode::FAILURE, 0 ).ignore();
