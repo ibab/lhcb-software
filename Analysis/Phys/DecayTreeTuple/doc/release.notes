@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+
+! 2012-06-23 -  Olivier Deschamps
+ - Add new tool TupleToolBremInfo : provide multiplicity/momentum/origin of brem for electron particles
+
 ! 2012-06-22 - Chris Jones
  - Use getIDVAlgorithm instead of getDVAlgorithm, in preparation of a future
    change to the DaVinci base classes.
