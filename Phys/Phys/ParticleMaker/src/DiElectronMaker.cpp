@@ -341,21 +341,17 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
         //--- CREATE THE DIELECTRON
         const LHCb::Particle* dielectron = this->cloneAndMarkTree( &mother );
         dielectrons.push_back( (LHCb::Particle*) dielectron );     
-        bremAdder()->bremMomenta(ele1,ele2,"Dielectron"); // for statistics output
       }else{ 
-        if (msgLevel(MSG::DEBUG))debug()<<"DiElectron fit failed: "<<da.px()<<" , " 
-                                        <<da.py()<<" , "<<da.E()<<" , "<<da.M()<<endmsg; 
+        if (msgLevel(MSG::DEBUG))
+          debug()<<"DiElectron fit failed: "<<da.px()<<" , "<<da.py()<<" , "<<da.E()<<" , "<<da.M()<<endmsg; 
       }      
     } 
-  } 
-  
+  }
   if (msgLevel(MSG::DEBUG))debug() << "Created " << dielectrons.size() << " " << m_pid << "->ee" << endmsg; 
-  counter("Created "+m_pid+"->ee") += dielectrons.size();         
-
+  counter("Created "+m_pid+"->ee") += dielectrons.size();
   // cleaning
   clear(electrons);
   clear(trash);
-  
   //====================
   setFilterPassed(true);  // Mandatory. Set to true if event is accepted. 
   return StatusCode::SUCCESS; 
