@@ -5,7 +5,7 @@ branches cmt doc
 
 use Hlt1Lines           v6r25   Hlt   # Gerhard Raven, Vava Gligorov, Johannes Albrecht, Roel Aaij
 use Hlt1Muons           v1r5    Hlt   # Roel Aaij
-use Hlt2Lines           v8r24   Hlt   # Vava Gligorov, Johannes Albrecht, Gerhard Raven
+use Hlt2Lines           v8r23   Hlt   # Vava Gligorov, Johannes Albrecht, Gerhard Raven
 use Hlt2SharedParticles v6r11   Hlt   # Patrick Koppenburg, Gerhard Raven
 use HltBase             v12r3   Hlt   # Gerhard Raven
 use HltBeamGasAlley     v3r0    Hlt   # Plamen Hopchev
