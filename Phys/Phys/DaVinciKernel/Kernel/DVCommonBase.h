@@ -124,11 +124,8 @@
  *  @date   2012-06-22
  */
 
-//class DVCommonBase : public extends1< PBASE , IDVAlgorithm >
-
 template <class PBASE>
-class DVCommonBase : public PBASE,
-                     virtual public IDVAlgorithm
+class DVCommonBase : public extends1<PBASE,IDVAlgorithm>
 {
 
 public:
