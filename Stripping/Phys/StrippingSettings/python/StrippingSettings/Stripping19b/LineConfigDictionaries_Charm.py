@@ -684,32 +684,35 @@ DstarD02xx = {
 ## Philip Xing and Joerg Marks
 ## Modified from Strippinb13b
 ## Test:  Yes
-DstarPromptWithD02HH = { 
-    'BUILDERTYPE' : 'StrippingDstarPromptWithD02HHConf',
-    'CONFIG'      : {
-        'DaugPt'            :  0.9   * GeV,
-        'DaugP'             :  5.    * GeV,
-        'DaugTrkChi2'       :  5.,         ## unitless
-        'D0Pt'              :  3.3   * GeV,
-        'D0MassWindowCentre':  1.865 * GeV,
-        'D0MassWindowWidth' :  0.075 * GeV,
-        'D0VtxChi2Ndof'     : 13,          ## unitless
-        'D0PVDisp'          :  0.9   * mm,
-        'SlowPiPt'          :  0.260 * GeV,
-        'DstarPt'           :  3.6   * GeV,
-        'DstarVtxChi2Ndof'  : 13,          ## unitless
-        'Pi_negPIDK_MIN'    :  5.0,        ## unitless
-        'K_PIDK_MIN'        :  8.0,        ## unitless
-        'RSLinePrescale'    :  1.,         ## unitless
-        'RSLinePostscale'   :  1.,         ## unitless
-        'WSLinePrescale'    :  1.,         ## unitless
-        'WSLinePostscale'   :  1.,         ## unitless
-        'HHLinePrescale'    :  1.,         ## unitless
-        'HHLinePostscale'   :  1.,         ## unitless
-    },
-    'WGs' : [ 'Charm' ],
-    'STREAMS' : [ 'Charm' ]
-    }
+##
+## Removed in Stripping19b by Mat, since these lines are
+## redundant with Marco's and are no longer in use.
+#DstarPromptWithD02HH = { 
+#    'BUILDERTYPE' : 'StrippingDstarPromptWithD02HHConf',
+#    'CONFIG'      : {
+#        'DaugPt'            :  0.9   * GeV,
+#        'DaugP'             :  5.    * GeV,
+#        'DaugTrkChi2'       :  5.,         ## unitless
+#        'D0Pt'              :  3.3   * GeV,
+#        'D0MassWindowCentre':  1.865 * GeV,
+#        'D0MassWindowWidth' :  0.075 * GeV,
+#        'D0VtxChi2Ndof'     : 13,          ## unitless
+#        'D0PVDisp'          :  0.9   * mm,
+#        'SlowPiPt'          :  0.260 * GeV,
+#        'DstarPt'           :  3.6   * GeV,
+#        'DstarVtxChi2Ndof'  : 13,          ## unitless
+#        'Pi_negPIDK_MIN'    :  5.0,        ## unitless
+#        'K_PIDK_MIN'        :  8.0,        ## unitless
+#        'RSLinePrescale'    :  1.,         ## unitless
+#        'RSLinePostscale'   :  1.,         ## unitless
+#        'WSLinePrescale'    :  1.,         ## unitless
+#        'WSLinePostscale'   :  1.,         ## unitless
+#        'HHLinePrescale'    :  1.,         ## unitless
+#        'HHLinePostscale'   :  1.,         ## unitless
+#    },
+#    'WGs' : [ 'Charm' ],
+#    'STREAMS' : [ 'Charm' ]
+#    }
 
 
 ## Full-DST, Mat Charles + Patrick Spradlin

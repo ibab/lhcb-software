@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-06-23 - Mat Charles
+ - Removed one set of redundant Charm lines in 19b (DstarPromptWithD02HH)
+
 ! 2012-06-22 - Thomas Blake
  - First commit of RD lines for 19b 
 
