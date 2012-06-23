@@ -15,7 +15,7 @@
 // ============================================================================
 // DaVinciKernel
 // ============================================================================
-#include "Kernel/DaVinciAlgorithm.h"
+#include "Kernel/DVAlgorithm.h"
 #include "Kernel/IDecodeSimpleDecayString.h"
 #include "Kernel/GetDecay.h"
 #include "Kernel/GetParticlesForDecay.h"
@@ -78,7 +78,7 @@ namespace
      *  @param particle the particle
      */
     PV_Sentry
-    ( DaVinciAlgorithm*     parent,
+    ( DVAlgorithm*          parent,
       const LHCb::Particle* particle )
       : m_parent   ( parent   )
       , m_particle ( particle )
@@ -96,10 +96,10 @@ namespace
     // ========================================================================
   private:
     // ========================================================================
-    /// the parent
-    DaVinciAlgorithm* m_parent ;             
+    /// the relation table (REFERENCE!)
+    DVAlgorithm* m_parent ;                         // the relation table (REFERENCE!)
     /// the temporary particle
-    const LHCb::Particle* m_particle ;  
+    const LHCb::Particle* m_particle ;                // the temporary particle
     // ========================================================================
   };
   // ==========================================================================
@@ -110,7 +110,7 @@ namespace
  *  Gerhard Raven, Patrick Koppenburg and Juan Palacios.
  *
  *  The major propertes of the algorithm (in addition to the
- *   properties of class DaVinciAlgorithm) are:
+ *   properties of class DValgorithm) are:
  *    - <c>"Factory"</c>:   the type/name of hybrid (LoKi/Bender) C++/Python factory
  *    - <c>"Preambulo"</c>: the preambulo to be used for Bender/Python script
  *    - <c>"DecayDescriptors"</c>: the list of decay descriptors
@@ -239,7 +239,7 @@ namespace
  *  @date 2008-04-01
  */
 class CombineParticles
-  : public extends2<DaVinciAlgorithm,ISetInputParticles,IIncidentListener>
+  : public extends2<DVAlgorithm,ISetInputParticles,IIncidentListener>
 {
   // ==========================================================================
   // the friend factory, needed for instantiation
@@ -407,8 +407,6 @@ private:   // properties
   std::string  m_combinationPlotsPath  ; // the path for "Combination Plots" tool
   /// "MotherPlots" path
   std::string  m_motherPlotsPath       ; // the path for "Mother Plots" tool
-  /// Turn on/off histograms
-  bool m_produceHistos;
   // ==========================================================================
 private:
   // ==========================================================================
@@ -652,12 +650,13 @@ CombineParticles::CombineParticles
       m_motherMonitorCode ,
       "The monitoring functor for mother particles after all cuts" )
     -> declareUpdateHandler ( &CombineParticles::propertyHandler1 , this ) ;
-  // Histogramming
-  declareProperty
-    ( "HistoProduce"          ,
-      m_produceHistos = false ,
-      "Switch on/off the production of histograms"   ) 
-    -> declareUpdateHandler ( &CombineParticles::propertyHandler2 , this ) ;
+  //
+  setProperty ( "HistoProduce" , false ) ;
+  {
+    Property* p = Gaudi::Utils::getProperty ( this , "HistoProduce" ) ;
+    if ( 0 != p && 0 == p->updateCallBack() )
+    { p -> declareUpdateHandler ( &CombineParticles::propertyHandler2 , this ) ; }
+  }
   //
   declareProperty
     ( "MaxCombinations" ,
@@ -774,7 +773,7 @@ StatusCode CombineParticles::decodeAllCuts()
 // ============================================================================
 StatusCode CombineParticles::initialize ()  // standard initialization
 {
-  StatusCode sc = DaVinciAlgorithm::initialize () ;
+  StatusCode sc = DVAlgorithm::initialize () ;
   if ( sc.isFailure() ) { return sc ; }
 
   // check for LoKi service
@@ -1232,7 +1231,7 @@ StatusCode CombineParticles::updateHistos ()
   if ( m_motherPlots      )
   { releaseTool ( m_motherPlots      ) ; m_motherPlots      = 0 ; }
   // ==========================================================================
-  if ( m_produceHistos )
+  if ( produceHistos() )
   {
     StatusCode sc = getHistoTool( m_daughtersPlots, m_daughtersPlotsName, m_daughtersPlotsPath );
     if (sc) sc = getHistoTool( m_combinationPlots, m_combinationPlotsName, m_combinationPlotsPath );
@@ -1248,7 +1247,7 @@ StatusCode CombineParticles::updateHistos ()
 // ============================================================================
 // the standard finalization of the algorithm
 // ============================================================================
-StatusCode CombineParticles::finalize   ()           //  standard  finalization
+StatusCode CombineParticles::finalize   ()          //  standard  finalization
 {
   m_incSvc = 0 ;
   // reset functors:
@@ -1260,7 +1259,7 @@ StatusCode CombineParticles::finalize   ()           //  standard  finalization
   m_to_be_updated1     = true ;
 
   // finalize the base class
-  return DaVinciAlgorithm::finalize () ;              // finalize the base class
+  return DVAlgorithm::finalize () ;                 // finalize the base class
 }
 // ============================================================================
 /// The factory (needed for the proper instantiation)
