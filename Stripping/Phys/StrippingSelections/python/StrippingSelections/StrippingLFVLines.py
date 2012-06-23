@@ -42,7 +42,7 @@ class LFVLinesConf(LineBuilder) :
                                   'B2eePrescale',                                  
                                   'B2heMuPrescale',
                                   'B2pMuPrescale',
-                                  'Bu2KJpsieePrescale',
+                                  'Bu2KJPsieePrescale',
                                   )
     
     #### This is the dictionary of all tunable cuts ########
@@ -54,7 +54,7 @@ class LFVLinesConf(LineBuilder) :
         'B2eePrescale'        :1,
         'B2heMuPrescale'      :1,
         'B2pMuPrescale'       :1,
-        'Bu2KJpsieePrescale'  :1,
+        'Bu2KJPsieePrescale'  :1,
         }                
     
     
