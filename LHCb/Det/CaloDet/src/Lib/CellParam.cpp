@@ -46,8 +46,10 @@ CellParam::CellParam( const LHCb::CaloCellID& id )
   , m_ledDataRMS    (  0.0    )
   , m_ledMoniRMS    (  0.0    )
   , m_nGain         (  0      )
-  ,m_offset         (  0.0    )
-  ,m_eoffset        (  0.0    )
+  , m_offset         (  0.0    )
+  , m_eoffset        (  0.0    )
+  , m_offsetSPD      (  0.0    )
+  , m_eoffsetSPD     (  0.0    )
 {
   m_pins.clear();
   m_leds.clear();

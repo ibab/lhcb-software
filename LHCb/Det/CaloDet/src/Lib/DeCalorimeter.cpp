@@ -1065,6 +1065,7 @@ StatusCode DeCalorimeter::getPileUpOffset( )  {
     id.setCalo( CaloCellCode::CaloNumFromName( name() ));
     if( m_cells[id].valid() ){
       m_cells[id].setPileUpOffset( offs,eoffs );
+      m_cells[id].setPileUpOffsetSPD( offs,eoffs ); // set the same offset for SPD-tag/-untag cluster by default
       if( UNLIKELY( msg.level() <= MSG::VERBOSE ) )
         msg << MSG::VERBOSE << "Added pileup offset for channel " << id 
             << " : <offset> = " << offs << " ( RMS = " << eoffs << " )" << endmsg;
@@ -1072,8 +1073,31 @@ StatusCode DeCalorimeter::getPileUpOffset( )  {
       msg << MSG::WARNING << "Trying to add pileup offset on non-valid channel : " << id << endmsg;
     count++;
   } 
+
+  // alternative map for SPD-tagged clusters (FACULTATIVE)
+  int ccount = 0;
+  if( m_pileUp->exists("dataSPD") ){
+    std::vector<double> dataSPD = m_pileUp->paramAsDoubleVect( "dataSPD" );
+    for ( unsigned int kk = 0; data.size()/size > kk  ; ++kk ) {
+      int ll = size*kk;
+      double cell   = data[ll];
+      double offs   = data[ll+1];
+      double eoffs  = (size>2) ? data[ll+2] : 0;
+      LHCb::CaloCellID id = LHCb::CaloCellID( (int) cell );
+      id.setCalo( CaloCellCode::CaloNumFromName( name() ));
+      if( m_cells[id].valid() ){
+        m_cells[id].setPileUpOffsetSPD( offs,eoffs );
+        if( UNLIKELY( msg.level() <= MSG::VERBOSE ) )
+          msg << MSG::VERBOSE << "Added pileup (SPD-tag) offset for channel " << id 
+              << " : <offset> = " << offs << " ( RMS = " << eoffs << " )" << endmsg;
+      }else
+        msg << MSG::WARNING << "Trying to add pileup offset on non-valid channel : " << id << endmsg;
+      ccount++;
+    } 
+  }
   if( UNLIKELY( msg.level() <= MSG::DEBUG ) ) 
     msg << MSG::DEBUG << "Pileup offset added for " << count << " channel(s) " << endmsg;
+    msg << MSG::DEBUG << "Alternative Pileup offset added for " << ccount << " channel(s) " << endmsg;
   return StatusCode::SUCCESS;
 }  
 

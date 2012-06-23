@@ -3,6 +3,9 @@
 ! Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+! 2012-06-23 - Olivier Deschamps
+  - DeCalorimeter/CellParam : allow spd-dependent PileUp parameters
+
 !========================= CaloDet v10r13 2012-01-31 ==========================
 ! 2012-01-27 - Olivier Deschamps
  - DeCalorimeter & CellParam :  reset CellParam members to default value before

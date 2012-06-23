@@ -96,7 +96,9 @@ public:
   double                gain          () const { return nominalGain() * calibration() / gainShift() ;}  
   int                   numericGain   () const { return m_nGain         ; }  // for Prs only
   double                pileUpOffset  () const { return m_offset;}
+  double                pileUpOffsetSPD() const { return m_offsetSPD;}
   double                pileUpOffsetRMS() const { return m_eoffset;}
+  double                pileUpOffsetSPDRMS() const { return m_eoffsetSPD;}
   
     
 
@@ -161,6 +163,10 @@ public:
     m_offset = off;
     m_eoffset = eoff;
   }  
+  void setPileUpOffsetSPD( double off, double eoff=0){
+    m_offsetSPD = off;
+    m_eoffsetSPD = eoff;
+  }  
 
   std::string cellStatus(){
     if( (CaloCellQuality::Flag) m_quality == CaloCellQuality::OK )return CaloCellQuality::qName(CaloCellQuality::OK);
@@ -209,6 +215,8 @@ private:
   int    m_nGain; // numeric gains (for Prs only)
   double m_offset;
   double m_eoffset;
+  double m_offsetSPD;
+  double m_eoffsetSPD;
 };
 
 // ============================================================================
