@@ -4,9 +4,12 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+! 2012-06-23 - Olivier Deschamps
+  - CaloMergedPi0Alg : add covariance matrix for SplitClusters & SplitPhotons (assume no correlation)
+  - CaloECorrection  : allow spd-dependent PileUp subtraction 
+
 ! 2011-12-10 - Olivier Deschamps
   - Configurable CaloLine : add ClusterizationLevel tag for L0Calo2Calo (set to 2 by default)
-
 
 !========================= CaloReco v5r14 2012-02-28 =========================
 ! 2012-02-27 - Marco Cattaneo

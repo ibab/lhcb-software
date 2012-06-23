@@ -32,12 +32,9 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/NTuple.h"
 #include "CaloCorrectionBase.h"
-
-// ============================================================================
-// forward declarations
-// ============================================================================
-namespace LHCb {class   CaloCluster    ;}
-class   ICaloHypoTool  ;
+#include "CaloInterfaces/ICaloClusterTool.h"
+#include "CaloInterfaces/ICaloHypoTool.h"
+#include "Event/CaloCluster.h"
 // ============================================================================
 
 /** @class CaloMergedPi0Alg CaloMergedPi0Alg.h
@@ -140,6 +137,8 @@ private:
   Names        m_pi0toolTypeNames               ;
   Tools        m_pi0tools                       ;
   
+
+
   // Input Parameters
   bool m_createClusterOnly;
   unsigned long m_pi0s;
@@ -151,6 +150,15 @@ private:
   double m_eT_Cut  ;
   int    m_mX_Iter ;
   DeCalorimeter* m_det;
+  ICaloClusterTool*    m_cov         ; ///< tool 
+  ICaloClusterTool*    m_spread      ;  ///< tool 
+
+  /// configuration of covarinace tool 
+  double               m_a           ; ///< calorimeter resolution
+  double               m_gainErr     ; ///< error in gain 
+  double               m_noiseIn     ; ///< incoherent noise 
+  double               m_noiseCo     ; ///< coherent noise
+
 };
 // ============================================================================
 #endif // CaloMergedPi0Alg_H

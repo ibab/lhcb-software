@@ -13,12 +13,9 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
 // ============================================================================
-#include "CaloInterfaces/ICaloClusterTool.h"
-#include "CaloInterfaces/ICaloHypoTool.h"
 // ============================================================================
 #include "CaloDet/DeCalorimeter.h"
 // ============================================================================
-#include "Event/CaloCluster.h"
 #include "Event/CaloHypo.h"
 #include "Event/CaloPosition.h"
 #include "CaloUtils/CaloDataFunctor.h"
@@ -71,7 +68,11 @@ DECLARE_ALGORITHM_FACTORY( CaloMergedPi0Alg )
     , m_pi0tools               ()
     , m_eT_Cut  ( -100 * Gaudi::Units::GeV )
     , m_mX_Iter ( 16         )
-{
+    , m_a                  ( 0.10                          )
+    , m_gainErr            ( 0.01                          )
+    , m_noiseIn            ( 1.30                          ) 
+    , m_noiseCo            ( 0.30                          )
+ {
   m_toolTypeNames.push_back( "CaloExtraDigits/SpdExtraG" ) ;
   m_toolTypeNames.push_back( "CaloExtraDigits/PrsExtraG" ) ;
   /// NTuple directory
@@ -90,6 +91,13 @@ DECLARE_ALGORITHM_FACTORY( CaloMergedPi0Alg )
   declareProperty ( "OutputData"        , m_outputData   ) ;
   declareProperty ( "Detector"          , m_detData      ) ;
   declareProperty ( "CreateSplitClustersOnly"    , m_createClusterOnly = false) ;
+
+  // covariance parameters
+  declareProperty( "Resolution"       , m_a            ) ;
+  declareProperty( "GainError"        , m_gainErr      ) ;
+  declareProperty( "NoiseIncoherent"  , m_noiseIn      ) ;
+  declareProperty( "NoiseCoherent"    , m_noiseCo      ) ;
+
 
   // default context-dependent locations
   m_inputData  = LHCb::CaloAlgUtils::CaloClusterLocation( "Ecal" , context()  );
@@ -128,8 +136,14 @@ StatusCode CaloMergedPi0Alg::initialize()
   m_det = getDet<DeCalorimeter>( m_detData ) ;
   if( !m_det ){ return Error("could not locate calorimeter '"+m_detData+"'");}
 
+  // cluster tools :  locate the tool for covariance matrix calculations 
+  m_cov    = tool<ICaloClusterTool>(    "ClusterCovarianceMatrixTool" , "Covariance" , this ) ;  
+  m_spread = tool<ICaloClusterTool>(    "ClusterSpreadTool"           , "Spread"     , this ) ;
 
-  // locate tools
+
+
+
+  // locate hypo tools
   for ( Names::const_iterator it = m_toolTypeNames.begin() ;m_toolTypeNames.end() != it ; ++it ){
     ICaloHypoTool* t = tool<ICaloHypoTool>( *it , this );
     if( 0 == t ) { return StatusCode::FAILURE ; }
@@ -206,11 +220,9 @@ double CaloMergedPi0Alg::TrShape
   const double          D3D     ){
   double Frac = 0;
   LHCb::CaloCellID cellID(2,area,0,0); //fake cell
-  //info() << area << " " << SpdHit << " " << D3D << endmsg;
   Frac = (SpdHit == 0) ?
     m_trSh->getCorrection( CaloCorrection::profile      , cellID , D3D ) :
     m_trSh->getCorrection( CaloCorrection::profileC     , cellID , D3D ) ;
-  //info() << " D3D " << D3D << " Frac " << Frac << endmsg;
   if( 0. > Frac ) { Frac=0.; }
   if( 1. < Frac ) { Frac=1.; }
   //counter("Shower fraction") += Frac;
@@ -811,14 +823,8 @@ StatusCode CaloMergedPi0Alg::execute()
     /*
       Fill CaloHypos and SubClusters if "good" MergePi0
     */
-    if ( msgLevel ( MSG::DEBUG ) ){
-      debug() << "Keep MergedPi0 ? " << KeepPi0 << endmsg;
-    }
 
     if( 1 == KeepPi0){
-      if ( msgLevel ( MSG::DEBUG ) ){
-        debug() << " Store Merged Pi0 " << endmsg;
-      }
       //Defined new Calo SubCluster pointed by PhotonFromMergedPi0 CaloHypos
       LHCb::CaloCluster* cl1 = new LHCb::CaloCluster();
       LHCb::CaloCluster* cl2 = new LHCb::CaloCluster();
@@ -826,9 +832,6 @@ StatusCode CaloMergedPi0Alg::execute()
       LHCb::CaloCellID seed2;
       // Init the 2 new CaloClusters
       // with the original cluster digits, owned-status'ed and  0-weighted
-      if ( msgLevel ( MSG::DEBUG ) ){
-        debug() << "Loop over cluster entries " << cluster->entries().size() << endmsg;
-      }
 
       for( LHCb::CaloCluster::Digits::const_iterator it3 = cluster->entries().begin() ;
            cluster->entries().end() != it3 ; ++it3 ){
@@ -879,51 +882,28 @@ StatusCode CaloMergedPi0Alg::execute()
             }
           }
         }
-        if ( msgLevel ( MSG::DEBUG ) ){
-          debug() << "Logging cluster entry " << w1 << "/" << w2 << endmsg;
-        }
         LHCb::CaloClusterEntry entry1( d , s1 , w1 );
         cl1->entries().push_back( entry1 );
         LHCb::CaloClusterEntry entry2( d , s2 , w2 );
         cl2->entries().push_back( entry2 );
-        if ( msgLevel ( MSG::DEBUG ) ){
-          debug() << " s1 after loop =  " <<s1<< endmsg;
-        }
       }
 
-      if ( msgLevel ( MSG::DEBUG ) ){
-        debug() << "Set seed " << endmsg;
-      }
 
       cl1->setSeed( seed1 );
       cl2->setSeed( seed2 );
 
-      if ( msgLevel ( MSG::DEBUG ) ){
-        debug() << "Calculate position " << endmsg;
-      }
-
-      // OD calculate position for cluster
+      // 
       LHCb::CaloPosition pp1 ;
-      pp1.parameters()( LHCb::CaloPosition::X ) = PosX[0];
-      pp1.parameters()( LHCb::CaloPosition::Y ) = PosY[0];
       pp1.setZ( SubZ[0] ) ;
-      pp1.parameters()( LHCb::CaloPosition::E ) = ep1    ;
-      pp1.center()( LHCb::CaloPosition::X ) = PosX[0];
-      pp1.center()( LHCb::CaloPosition::Y ) = PosY[0];
       cl1->setPosition( pp1 );
-
+      if( (m_cov-> process( cl1 )).isFailure())counter("Fails to set covariance (1)")+=1;
+      if( (m_spread-> process( cl1 )).isFailure())counter("Fails to set spread (1)")+=1;
       LHCb::CaloPosition pp2;
-      pp2.parameters()( LHCb::CaloPosition::X ) = PosX[1];
-      pp2.parameters()( LHCb::CaloPosition::Y ) = PosY[1];
       pp2.setZ( SubZ[1] ) ;
-      pp2.parameters()( LHCb::CaloPosition::E ) = ep2    ;
-      pp2.center()( LHCb::CaloPosition::X ) = PosX[1];
-      pp2.center()( LHCb::CaloPosition::Y ) = PosY[1];
       cl2 -> setPosition( pp2 );
-
-      if ( msgLevel ( MSG::DEBUG ) ){
-        debug() << "Store clusters " << endmsg;
-      }
+      if( (m_cov->process( cl2 )).isFailure())counter("Fails to set covariance (2)")+=1;
+      if( (m_spread-> process( cl2 )).isFailure())counter("Fails to set spread (2)")+=1;
+      
 
       if( doSplitC ){
         clusts->insert( cl1 ) ;
@@ -932,9 +912,6 @@ StatusCode CaloMergedPi0Alg::execute()
 
 
       if(!m_createClusterOnly){
-        if ( msgLevel ( MSG::DEBUG ) ){
-          debug() << "Store Pi0 CaloHypo" << endmsg;
-        }
 
         // new CaloHypo for pi0
         LHCb::CaloHypo* pi0 = new LHCb::CaloHypo();
@@ -942,50 +919,26 @@ StatusCode CaloMergedPi0Alg::execute()
         pi0 -> addToClusters( *icluster );
 
         // new CaloHypo for gamma's
-        if ( msgLevel ( MSG::DEBUG ) ){
-          debug() << "Store gamma1 CaloHypo" << endmsg;
-        }
 
         LHCb::CaloHypo* g1   = new LHCb::CaloHypo() ;
         g1 -> setHypothesis( LHCb::CaloHypo::PhotonFromMergedPi0 ) ;
         g1 -> addToClusters( *icluster )                ;
         g1 -> addToClusters( cl1       )                ;
-        LHCb::CaloPosition* p1 = new LHCb::CaloPosition(pp1);//@todo use previously define pp1
-        /*
-          p1 ->parameters()( LHCb::CaloPosition::X ) = PosX[0];
-          p1 ->parameters()( LHCb::CaloPosition::Y ) = PosY[0];
-          p1 ->setZ( SubZ[0] ) ;
-          p1 ->parameters()( LHCb::CaloPosition::E ) = ep1    ;
-
-          p1 ->center()( LHCb::CaloPosition::X ) = PosX[0];
-          p1 ->center()( LHCb::CaloPosition::Y ) = PosY[0];
-        */
-        g1 -> setPosition( p1);
+        g1 -> setPosition( new LHCb::CaloPosition( cl1->position()) );
         pi0 -> addToHypos ( g1 );
 
-        if ( msgLevel ( MSG::DEBUG ) ){
-          debug() << "Store gamma2 CaloHypo" << endmsg;
-        }
+
 
         LHCb::CaloHypo* g2   = new LHCb::CaloHypo() ;
         g2 -> setHypothesis( LHCb::CaloHypo::PhotonFromMergedPi0 ) ;
         g2 -> addToClusters( *icluster )                ;
         g2 -> addToClusters( cl2       )                ;
-        LHCb::CaloPosition* p2 = new LHCb::CaloPosition(pp2);//@todo use previously define pp2
-        /*
-          p2 ->parameters()( LHCb::CaloPosition::X ) = PosX[1];
-          p2 ->parameters()( LHCb::CaloPosition::Y ) = PosY[1];
-          p2 ->setZ( SubZ[1] ) ;
-          p2 ->parameters()( LHCb::CaloPosition::E ) = ep2    ;
-
-          p2 ->center()( LHCb::CaloPosition::X ) = PosX[1];
-          p2 ->center()( LHCb::CaloPosition::Y ) = PosY[1];
-        */
-        g2 -> setPosition( p2);
+        g2 -> setPosition( new LHCb::CaloPosition( cl2->position() ) );
         pi0 -> addToHypos ( g2 );
         pi0s -> insert( pi0 ) ;
         phots ->insert( g1  ) ;
         phots ->insert( g2  ) ;
+
 
         { // Apply the tool
           if ( msgLevel ( MSG::DEBUG ) ){
