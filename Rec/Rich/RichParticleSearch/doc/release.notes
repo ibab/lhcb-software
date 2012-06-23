@@ -3,6 +3,8 @@
 ! Responsible : Matt Coombes
 ! Purpose     : Find exotic particles with the RICHes. Get Nobel price.
 !-----------------------------------------------------------------------------
+! 2012-06-23
+ - Changed example options file for latest running. 
 
 !========================= RichParticleSearch v1r7 2012-05-02 =========================
 ! 2012-04-27 - Chris Jones

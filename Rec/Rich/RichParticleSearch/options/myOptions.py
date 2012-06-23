@@ -4,7 +4,7 @@
 #   gaudirun.py myOptions.py
 #
 from GaudiKernel.ProcessJobOptions import importOptions
-importOptions("$APPCONFIGOPTS/Brunel/DataType-2010.py")
+importOptions("$APPCONFIGOPTS/Brunel/DataType-2011.py")
 
 
 from Gaudi.Configuration import *
@@ -18,22 +18,22 @@ DstConf().EnableUnpack = ["Reconstruction"]
 from Configurables import RichRecSysConf
 rConf = RichRecSysConf("RichOfflineRec")
 
-#faster photon reconstruction
+##faster photon reconstruction
 rConf.richTools().photonReco().FindUnambiguousPhotons = [False,False,False]
-
-rConf.richTools().PhotonRecoType = "EstiFromRadius"#use for faster photon reconstruction!!
+#
+#rConf.richTools().PhotonRecoType = "EstiFromRadius"#use for faster photon reconstruction!!
 
 #Brunel options
 Brunel().DataType = "2010"
-Brunel().EvtMax = 10
+Brunel().EvtMax = -1
 Brunel().PrintFreq = 1
 Brunel().OutputType = "None"
 Brunel().InitSequence      = ["Brunel"]
 Brunel().RecoSequence      = ["RICH"]
 Brunel().Histograms = "OfflineExpress"
 #tags
-LHCbApp().DDDBtag = "head-20101206"
-LHCbApp().CondDBtag= "head-20101112"
+LHCbApp().DDDBtag = "head-20110914"
+LHCbApp().CondDBtag= "head-20111111"
 
 
 from Configurables import RecMoniConf
@@ -41,12 +41,12 @@ RecMoniConf ().MoniSequence = ["RICH"]
 
 
 from Configurables import HistogramPersistencySvc
-HistogramPersistencySvc().OutputFile = "Histos-2010-Collisions.root"
+HistogramPersistencySvc().OutputFile = "Histos-2011-Collisions.root"
 
 from Configurables import RichRecSysConf
 # disable PID
 RichRecSysConf ("RichOfflineRec").photonConfig().SelectionMode = "ParticleSearch"
-RichRecSysConf ("RichOfflineRec").setProp("PidConfig", "None")
+#RichRecSysConf ("RichOfflineRec").setProp("PidConfig", "None")
 
 from Configurables import RichParticleSearchConf
 PtConf = RichParticleSearchConf
@@ -55,14 +55,17 @@ PtConf.R2NTupleProduce = True
 PtConf.NTupleProduce = True
 PtConf.R1NTupleProduce = True
 PtConf.Radiators = ["Aerogel","Rich1Gas","Rich2Gas"]
-PtConf.Histograms = "Online"
-PtConf.MinIsolationCut = [150,150,150]
+#PtConf.Histograms = "Online"
+PtConf.MinIsolationCut = [100,50,50]
+#PtConf.MinIsolationCut = [150,150,150]
 
+#PtConf.MaxCK_Sig = [3.0,3.0,3.0]
 PtConf.MaxCK_Sig = [3.0,3.0,3.0]
-PtConf.CKDevCut = [0.2,0.0,0.5]
+
+PtConf.CKDevCut = [0.2,0.1,0.5]
 PtConf.MaxRichRecTracks = 200
 PtConf.UseMuonInfo = True
-PtConf.PlotPhotons = False
+PtConf.PlotPhotons = True
 
 
 from Configurables import RichRecQCConf
@@ -99,6 +102,8 @@ RichRecQCConf ("OfflineRichMoni").removeMonitor("RichDataObjectChecks"   )
 RichRecQCConf ("OfflineRichMoni").removeMonitor("RichRecoTiming"         )
 RichRecQCConf ("OfflineRichMoni").removeMonitor("DataDecodingErrors"     )
 RichRecQCConf ("OfflineRichMoni").removeMonitor("HPDImageShifts"         )
+#RichRecQCConf ("OfflineRichMoni").removeMonitor("ParticleSearch"         )
+#RichRecQCConf ("OfflineRichMoni").removeMonitor("HPDImageShifts"         )
 
 
 NTupleSvc().Output = ["RICHTUPLE1 DATAFILE='Ntuple_2010-Collisions.root' TYP='ROOT' OPT='NEW'"]

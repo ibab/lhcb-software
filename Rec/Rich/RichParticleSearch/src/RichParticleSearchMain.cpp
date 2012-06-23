@@ -480,7 +480,6 @@ StatusCode RichParticleSearchMain::execute() {
 								double beta = 1.0/(cos(thetaRec)*refIndx);
 								// Mass from photon track pair
 								double mass = momentum * std::sqrt((1/(std::pow(beta,2)))-1.0);
-
 								if (thetaRec < maxCK && thetaRec > minCK && beta > 1.0/refIndx && thetaRec > m_minCK)
 								{ // Make sure these are same cuts as in first photon loop
 
@@ -495,6 +494,7 @@ StatusCode RichParticleSearchMain::execute() {
 									{
 										if ( produceNTuples())
 										{
+
 											Tuple photonTuple = nTuple( "massTuplePhoton", "Rich Alignment" );
 											photonTuple->column( "tkNum",trackCounter);
 											photonTuple->column( "mass"          , mass           );
