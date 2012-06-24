@@ -5,6 +5,9 @@
 
 
 
+! 2012-06-24 - Olivier Deschamps
+  - Calo2MC.h : add Hypo->MC table typedef
+
 ! 2012-06-15 - Olivier Deschamps
   - CaloMomentum : add the missing method to return the CaloHypo vector
 

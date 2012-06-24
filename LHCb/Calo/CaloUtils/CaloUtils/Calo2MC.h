@@ -31,6 +31,9 @@ namespace LHCb {
     typedef LinkerWithKey<LHCb::MCParticle,LHCb::CaloDigit>                   DigitLink ;
     typedef LinkedTo<LHCb::MCParticle,LHCb::CaloDigit>                        DigitLinkTo;
 
+    typedef LinkerWithKey<LHCb::MCParticle,LHCb::CaloHypo>                   HypoLink ;
+    typedef LinkedTo<LHCb::MCParticle,LHCb::CaloHypo>                        HypoLinkTo;
+
     //    typedef RelationWeighted1D<TrgCaloCluster,MCParticle,float> TrgClusterTable ;
     
   }
