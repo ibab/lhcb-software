@@ -133,6 +133,9 @@ public:
   double        L0EtGain         ()     const { return m_l0Et          ; };
   double        coherentNoise    ()     const { return m_cNoise        ; };
   double        incoherentNoise  ()     const { return m_iNoise        ; };
+  double        stochasticTerm   ()     const { return m_gainE         ; };
+  double        gainError        ()     const { return m_stoch         ; };
+
   // for simulation only
   int           zSupMethod       ()     const { return (int) m_zSupMeth; };
   double        zSupThreshold    ()     const { return m_zSup          ; };
@@ -311,6 +314,8 @@ private:
   double   m_pinPedShift;
   double   m_l0Et;
   double   m_activeToTotal;
+  double   m_stoch;
+  double   m_gainE;
   double   m_cNoise;
   double   m_iNoise;
   double   m_zSupMeth;

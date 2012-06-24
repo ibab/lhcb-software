@@ -3,6 +3,9 @@
 ! Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+! 2012-06-24 - Olivier Deschamps
+  - DeCalorimeter : get covariance parameters from Gain condition
+
 ! 2012-06-23 - Olivier Deschamps
   - DeCalorimeter/CellParam : allow spd-dependent PileUp parameters
 

@@ -1572,8 +1572,11 @@ StatusCode DeCalorimeter::updGain(){
   m_pinPedShift   = m_gain->exists( "PinPedShift"  ) ? m_gain->paramAsDouble( "PinPedShift"   ) : 0. ;
   m_l0Et          = m_gain->exists( "L0EtBin"      ) ? m_gain->paramAsDouble( "L0EtBin"       ) : 0. ;
 
-  m_cNoise   = m_gain->exists( "CoherentNoise") ? m_gain->paramAsDouble( "CoherentNoise" )    : 0. ;
-  m_iNoise   = m_gain->exists( "IncoherentNoise") ? m_gain->paramAsDouble("IncoherentNoise" ) : 0. ;
+  m_gainE    = m_gain->exists( "GainError")       ? m_gain->paramAsDouble("GainError")        : -1. ;
+  m_stoch    = m_gain->exists( "StochasticTerm")  ? m_gain->paramAsDouble("StochasticTerm")   : -1. ;
+  m_cNoise   = m_gain->exists( "CoherentNoise")   ? m_gain->paramAsDouble("CoherentNoise" )   : -1. ;
+  m_iNoise   = m_gain->exists( "IncoherentNoise") ? m_gain->paramAsDouble("IncoherentNoise" ) : -1. ;
+
   m_zSupMeth = m_gain->exists( "ZeroSupMethod") ? m_gain->paramAsDouble( "ZeroSupMethod" ) : 1. ; // 1D 0-sup per default
   m_zSup     = m_gain->exists( "ZeroSup") ? m_gain->paramAsDouble( "ZeroSup" ) : 0.5 ; // zero suppression
   // Needed in simulation only
