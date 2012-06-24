@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-06-24 Chris Thomas
+  - StrippingLowMult.py : added lines to select CEP events.
+  Selects D decays to HH, 3H and 4H; charmonium decays to HH and 4H; various prescaled same-sign lines.
+  Requires a hadronic LowMult decision to have been made at HLT2 (anticipating new HLT2 CEP lines).
+
 ! 2012-06-24 Mika Vesterinen
   - StrippingCharmFromBSemi.py: Fix to D0->KsKs lines (DD+DD and DD+LL were the same as LL+LL). 
   Also added same sign hadron versions of the D0->KKpi0 and D0->pipipi0. Only for the resolved pi0
