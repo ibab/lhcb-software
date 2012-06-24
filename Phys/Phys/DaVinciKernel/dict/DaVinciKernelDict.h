@@ -20,13 +20,6 @@
 #include "Kernel/DaVinciHistoAlgorithm.h"
 #include "Kernel/DaVinciTupleAlgorithm.h"
 #include "Kernel/DVAlgorithm.h"
-// namespace
-// {
-//   struct Instances
-//   {
-//     DVCommonBase<GaudiAlgorithm> a;
-//   };
-// }
 // ============================================================================
 // The END
 // ============================================================================
