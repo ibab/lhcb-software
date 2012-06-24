@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-06-24 Sean Benson
+  - StrippingBs2PhiPhi.py: Moved configuration parameters to the top of the file
+
 ! 2012-06-23 Flavio Archilli
   - StrippingLFVLines.py: updated the B2eMu and B2ee lines, corrected a typo in 
     B2pMu line, added new line Bu2KJPsiee for the Bs->ee and Bs->emu analyses.  
