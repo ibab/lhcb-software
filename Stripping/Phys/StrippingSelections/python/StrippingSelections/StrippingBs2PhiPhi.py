@@ -35,6 +35,19 @@ else:
   from StandardParticles import StdLooseKaons as MyLooseKaons
   #print "importing StdLooseKaons as MyLooseKaons"
 
+config_params = {
+                  'KaonPT'              : 450      # MeV/c
+                , 'KaonIPCHI2'          : 3.5      # adimensional
+                , 'PhiPT'               : 0        # MeV/c
+                , 'PhiPTsq'             : 2.0      # GeV*GeV/cc
+                , 'PhiVertexCHI2pDOF'   : 25       # adimensional
+                , 'PhiMassWindow'       : 25       # MeV/cc
+                , 'PhiMassMax'          : 1090     # MeV/cc
+                , 'BsVertexCHI2pDOF'    : 25       # adimensional
+                , 'BsMassWindow'        : 300      # MeV/cc
+                , 'WidePrescale'        : 0.05     # adimensional
+}
+
 class StrippingBs2PhiPhiConf(LineBuilder):
 
     __configuration_keys__ = (
@@ -49,20 +62,6 @@ class StrippingBs2PhiPhiConf(LineBuilder):
                 , 'BsMassWindow'              # MeV/cc
                 , 'WidePrescale'              # adimensional
                 )
-
-    config_default = {
-                  'KaonPT'              : 450      # MeV/c
-                , 'KaonIPCHI2'          : 3.5      # adimensional
-                , 'PhiPT'               : 0        # MeV/c
-                , 'PhiPTsq'             : 2.0      # GeV*GeV/cc
-                , 'PhiVertexCHI2pDOF'   : 25       # adimensional
-                , 'PhiMassWindow'       : 25       # MeV/cc
-                , 'PhiMassMax'          : 1090     # MeV/cc
-                , 'BsVertexCHI2pDOF'    : 25       # adimensional
-                , 'BsMassWindow'        : 300      # MeV/cc
-                , 'WidePrescale'        : 0.05     # adimensional
-                }
-
 
     def __init__(self, name, config) :
       LineBuilder.__init__(self, name, config)
