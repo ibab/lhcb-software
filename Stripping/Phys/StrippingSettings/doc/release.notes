@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-06-24 - Flavio Archilli
+ - Stripping19b: Updated LFVLines in LineConfigDictionaries_RD
+
 ! 2012-06-23 - Mat Charles
  - Removed one set of redundant Charm lines in 19b (DstarPromptWithD02HH)
 

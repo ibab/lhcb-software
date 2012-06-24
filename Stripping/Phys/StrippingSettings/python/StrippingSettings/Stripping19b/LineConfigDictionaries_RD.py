@@ -679,6 +679,7 @@ LFVLines = {
     'B2eePrescale'        :1,
     'B2heMuPrescale'      :1,
     'B2pMuPrescale'       :1,
+    'Bu2KJPsieePrescale'  :1,
     }
     }
 
