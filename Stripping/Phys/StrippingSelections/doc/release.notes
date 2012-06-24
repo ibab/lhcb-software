@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-06-24 -- Patrick Spradlin
+  - StrippingXicc.py :  Added lines to select charge-violating combinations
+    for background studies.
+
 ! 2012-06-24 Chris Thomas
   - StrippingLowMult.py : added lines to select CEP events.
   Selects D decays to HH, 3H and 4H; charmonium decays to HH and 4H; various prescaled same-sign lines.

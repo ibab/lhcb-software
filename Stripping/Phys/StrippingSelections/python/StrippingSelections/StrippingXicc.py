@@ -65,11 +65,16 @@ default_config = {
     , 'controlPrescaleD0' : 0.01
     , 'controlPrescaleDsp' : 0.01
     , 'signalPrescaleViaLc' : 1.0
+    , 'signalPrescaleViaLcWC' : 1.0
+    , 'signalPrescaleViaLcDCS' : 1.0
     , 'signalPrescaleViaXic' : 1.0
+    , 'signalPrescaleViaXicWC' : 1.0
     , 'signalPrescaleViaDp'  : 1.0
-    , 'signalPrescaleViaDsp' : 1.0
+    , 'signalPrescaleViaDpWC': 1.0
     , 'signalPrescaleViaD0'  : 1.0
-    , 'Hlt2TisTosSpec' : { 'Hlt2CharmHad.*Decision%TOS' : 0, 'Hlt1TrackAllL0Decision%TOS' : 0, 'Hlt2Global%TIS' : 0 }
+    , 'signalPrescaleViaD0WC'  : 1.0
+    , 'signalPrescaleViaD0DCS'  : 1.0
+    , 'Hlt2TisTosSpec' : { 'Hlt2CharmHad.*Decision%TOS' : 0, 'Hlt2Global%TIS' : 0 }
 }
 
 
@@ -91,7 +96,7 @@ _my_immutable_config = {
         , 'Lc_Daug_1of3_MIPCHI2DV_Min'  :   4.0
         , 'Lc_K_PIDKPIDpi_Min'          :   5.0
         , 'Lc_Pi_PIDpiPIDK_Min'         :   0.0
-        , 'Lc_P_PIDpPIDpi_Min'          :   5.0
+        , 'Lc_P_PIDpPIDpi_Min'          :   7.5
         , 'Lc_P_PIDpPIDK_Min'           :   0.0
         , 'Lc_ADMASS_HalfWin'           :  75.0*MeV
         , 'Lc_APT_Min'                  :   1.0*GeV
@@ -131,8 +136,8 @@ _my_immutable_config = {
         , 'Xicc_Daug_PT_Min'            : 250.0*MeV
         , 'Xicc_Daug_MIPCHI2DV_Min'     :  -1.0
         , 'Xicc_Pi_PIDpiPIDK_Min'       :   0.0
-        , 'Xicc_K_PIDKPIDpi_Min'        :   5.0
-        , 'Xicc_P_PIDpPIDpi_Min'        :   5.0
+        , 'Xicc_K_PIDKPIDpi_Min'        :   7.5
+        , 'Xicc_P_PIDpPIDpi_Min'        :   7.5
         , 'Xicc_P_PIDpPIDK_Min'         :   0.0
         , 'Xicc_APT_Min'                :   1.0*GeV
         , 'Xicc_ADOCAMAX_Max'           :   0.5*mm
@@ -160,10 +165,15 @@ class XiccBuilder(LineBuilder) :
                                , 'controlPrescaleD0'
                                , 'controlPrescaleDsp'
                                , 'signalPrescaleViaLc'
+                               , 'signalPrescaleViaLcWC'
+                               , 'signalPrescaleViaLcDCS'
                                , 'signalPrescaleViaXic'
+                               , 'signalPrescaleViaXicWC'
                                , 'signalPrescaleViaDp'
-                               , 'signalPrescaleViaDsp'
+                               , 'signalPrescaleViaDpWC'
                                , 'signalPrescaleViaD0'
+                               , 'signalPrescaleViaD0WC'
+                               , 'signalPrescaleViaD0DCS'
                                , 'Hlt2TisTosSpec')
 
     def __init__(self, name, config) :
@@ -229,24 +239,50 @@ class XiccBuilder(LineBuilder) :
         # Combine Lc+ with a K and a pi to make a Xicc+ or Xicc++:
         self.combineXicc1 = makeXicc(name+'CombineXicc1', [ self.filterLc, self.dauPi, self.dauK ], '[Xi_cc+ -> Lambda_c+ K- pi+]cc', _strCutComb, _strCutMoth3)
         self.combineXicc2 = makeXicc(name+'CombineXicc2', [ self.filterLc, self.dauPi, self.dauK ], '[Xi_cc++ -> Lambda_c+ K- pi+ pi+]cc', _strCutComb, _strCutMoth4)
+        ## Construct charge violating combinations.
+        self.combineXicc1WC = makeXicc(name+'CombineXicc1WC', [ self.filterLc, self.dauPi, self.dauK ], '[Xi_cc+ -> Lambda_c+ K- pi-]cc', _strCutComb, _strCutMoth3)
+        self.combineXicc2WC = makeXicc(name+'CombineXicc2WC', [ self.filterLc, self.dauPi, self.dauK ], '[Xi_cc++ -> Lambda_c+ K- pi+ pi-]cc', _strCutComb, _strCutMoth4)
+
+        ## Construct DCS combinations (background modelling check)
+        self.combineXicc1DCS = makeXicc(name+'CombineXicc1DCS', [ self.filterLc, self.dauPi, self.dauK ], '[Xi_cc+ -> Lambda_c+ K+ pi-]cc', _strCutComb, _strCutMoth3)
+        self.combineXicc2DCS = makeXicc(name+'CombineXicc2DCS', [ self.filterLc, self.dauPi, self.dauK ], '[Xi_cc++ -> Lambda_c+ K+ pi- pi+]cc', _strCutComb, _strCutMoth4)
+
 
         # Combine D+ with a K and a p to make a Xicc+ or Xicc++:
         self.combineXicc1a = makeXicc(name+'CombineXicc1a', [ self.dplus, self.dauP, self.dauK ], '[Xi_cc+ -> D+ p+ K-]cc', _strCutComb, _strCutMoth3)
         self.combineXicc2a = makeXicc(name+'CombineXicc2a', [ self.dplus, self.dauP, self.dauK, self.dauPi ], '[Xi_cc++ -> D+ p+ K- pi+]cc', _strCutComb, _strCutMoth4)
 
-        # Combine Ds+ with a pi and a p to make a Xicc+ or Xicc++:
-        self.combineXicc1b = makeXicc(name+'CombineXicc1b', [ self.dsplus, self.dauP, self.dauPi ], '[Xi_cc+ -> D_s+ p+ pi-]cc', _strCutComb, _strCutMoth3)
-        self.combineXicc2b = makeXicc(name+'CombineXicc2b', [ self.dsplus, self.dauP, self.dauPi ], '[Xi_cc++ -> D_s+ p+]cc', _strCutComb, _strCutMoth4)
+        ## Construct charge violating combinations.
+        self.combineXicc1aWC = makeXicc(name+'CombineXicc1aWC', [ self.dplus, self.dauP, self.dauK ], '[Xi_cc+ -> D+ p+ K+]cc', _strCutComb, _strCutMoth3)
+        self.combineXicc2aWC = makeXicc(name+'CombineXicc2aWC', [ self.dplus, self.dauP, self.dauK, self.dauPi ], '[Xi_cc++ -> D+ p+ K+ pi+]cc', _strCutComb, _strCutMoth4)
+        self.combineXicc2aWC0 = makeXicc(name+'CombineXicc2aWC0', [ self.dplus, self.dauP, self.dauK, self.dauPi ], '[Xi_cc++ -> D+ p+ K- pi-]cc', _strCutComb, _strCutMoth4)
+
 
         # Combine D0 with a K, a p and a pi to make a Xicc+ or Xicc++:
         self.combineXicc7 = makeXicc(name+'CombineXicc7', [ self.dzero, self.dauP, self.dauK, self.dauPi ], '[Xi_cc+ -> D0 p+ K- pi+]cc', _strCutComb, _strCutMoth4)
         self.combineXicc8 = makeXicc(name+'CombineXicc8', [ self.dzero, self.dauP, self.dauK, self.dauPi ], '[Xi_cc++ -> D0 p+ K- pi+ pi+]cc', _strCutComb, _strCutMoth4)
+
+        ## Construct charge violating combinations.
+        self.combineXicc7WC = makeXicc(name+'CombineXicc7WC', [ self.dzero, self.dauP, self.dauK, self.dauPi ], '[Xi_cc+ -> D0 p+ K- pi-]cc', _strCutComb, _strCutMoth4)
+        self.combineXicc8WC = makeXicc(name+'CombineXicc8WC', [ self.dzero, self.dauP, self.dauK, self.dauPi ], '[Xi_cc++ -> D0 p+ K- pi+ pi-]cc', _strCutComb, _strCutMoth4)
+
+        ## Construct DCS combinations (background modelling check)
+        self.combineXicc7DCS = makeXicc(name+'CombineXicc7DCS', [ self.dzero, self.dauP, self.dauK, self.dauPi ], '[Xi_cc+ -> D0 p+ K+ pi-]cc', _strCutComb, _strCutMoth4)
+        self.combineXicc8DCS = makeXicc(name+'CombineXicc8DCS', [ self.dzero, self.dauP, self.dauK, self.dauPi ], '[Xi_cc++ -> D0 p+ K+ pi+ pi-]cc', _strCutComb, _strCutMoth4)
+
 
         # Combine Xic0/+ with pion(s) to make Xicc+, Xicc++
         self.combineXicc3 = makeXicc(name+'CombineXicc3', [ self.combineXicZero, self.dauPi ], '[Xi_cc+ -> Xi_c0 pi+]cc', _strCutComb, _strCutMoth2)
         self.combineXicc4 = makeXicc(name+'CombineXicc4', [ self.combineXicZero, self.dauPi ], '[Xi_cc++ -> Xi_c0 pi+ pi+]cc', _strCutComb, _strCutMoth3)
         self.combineXicc5 = makeXicc(name+'CombineXicc5', [ self.combineXicPlus, self.dauPi ], '[Xi_cc+ -> Xi_c+ pi+ pi-]cc', _strCutComb, _strCutMoth3)
         self.combineXicc6 = makeXicc(name+'CombineXicc6', [ self.combineXicPlus, self.dauPi ], '[Xi_cc++ -> Xi_c+ pi+]cc', _strCutComb, _strCutMoth2)
+
+        ## Construct charge violating combinations.
+        self.combineXicc3WC = makeXicc(name+'CombineXicc3WC', [ self.combineXicZero, self.dauPi ], '[Xi_cc+ -> Xi_c0 pi-]cc', _strCutComb, _strCutMoth2)
+        self.combineXicc4WC = makeXicc(name+'CombineXicc4WC', [ self.combineXicZero, self.dauPi ], '[Xi_cc++ -> Xi_c0 pi+ pi-]cc', _strCutComb, _strCutMoth3)
+        self.combineXicc5WC = makeXicc(name+'CombineXicc5WC', [ self.combineXicPlus, self.dauPi ], '[Xi_cc+ -> Xi_c+ pi+ pi-]cc', _strCutComb, _strCutMoth3)
+        self.combineXicc6WC = makeXicc(name+'CombineXicc6WC', [ self.combineXicPlus, self.dauPi ], '[Xi_cc++ -> Xi_c+ pi-]cc', _strCutComb, _strCutMoth2)
+
 
 
         # Control lines (to be prescaled!)
@@ -263,17 +299,32 @@ class XiccBuilder(LineBuilder) :
         self.selXicc2 = makeTisTos(name+'SelXiccPlusPlusToLcKPiPi'
                                    , selection = self.combineXicc2
                                    , hltTisTosSpec = config['Hlt2TisTosSpec'])
+        self.selXicc1WC = makeTisTos(name+'SelXiccPlusToLcKPiWC'
+                                   , selection = self.combineXicc1WC
+                                   , hltTisTosSpec = config['Hlt2TisTosSpec'])
+        self.selXicc2WC = makeTisTos(name+'SelXiccPlusPlusToLcKPiPiWC'
+                                   , selection = self.combineXicc2WC
+                                   , hltTisTosSpec = config['Hlt2TisTosSpec'])
+        self.selXicc1DCS = makeTisTos(name+'SelXiccPlusToLcKPiDCS'
+                                   , selection = self.combineXicc1DCS
+                                   , hltTisTosSpec = config['Hlt2TisTosSpec'])
+        self.selXicc2DCS = makeTisTos(name+'SelXiccPlusPlusToLcKPiPiDCS'
+                                   , selection = self.combineXicc2DCS
+                                   , hltTisTosSpec = config['Hlt2TisTosSpec'])
         self.selXicc1a = makeTisTos(name+'SelXiccPlusToDpPK'
                                     , selection = self.combineXicc1a
                                     , hltTisTosSpec = config['Hlt2TisTosSpec'])
         self.selXicc2a = makeTisTos(name+'SelXiccPlusPlusToDpPKPi'
                                     , selection = self.combineXicc2a
                                     , hltTisTosSpec = config['Hlt2TisTosSpec'])
-        self.selXicc1b = makeTisTos(name+'SelXiccPlusToDspPPi'
-                                    , selection = self.combineXicc1b
+        self.selXicc1aWC = makeTisTos(name+'SelXiccPlusToDpPKWC'
+                                    , selection = self.combineXicc1aWC
                                     , hltTisTosSpec = config['Hlt2TisTosSpec'])
-        self.selXicc2b = makeTisTos(name+'SelXiccPlusPlusToDspPPiPi'
-                                    , selection = self.combineXicc2b
+        self.selXicc2aWC = makeTisTos(name+'SelXiccPlusPlusToDpPKPiWC'
+                                    , selection = self.combineXicc2aWC
+                                    , hltTisTosSpec = config['Hlt2TisTosSpec'])
+        self.selXicc2aWC0 = makeTisTos(name+'SelXiccPlusPlusToDpPKPiWC0'
+                                    , selection = self.combineXicc2aWC0
                                     , hltTisTosSpec = config['Hlt2TisTosSpec'])
         self.selXicc3 = makeTisTos(name+'SelXiccPlusToXicZeroPi'
                                    , selection = self.combineXicc3
@@ -287,13 +338,36 @@ class XiccBuilder(LineBuilder) :
         self.selXicc6 = makeTisTos(name+'SelXiccPlusPlusToXicPlusPi'
                                    , selection = self.combineXicc6
                                    , hltTisTosSpec = config['Hlt2TisTosSpec'])
+        self.selXicc3WC = makeTisTos(name+'SelXiccPlusToXicZeroPiWC'
+                                   , selection = self.combineXicc3WC
+                                   , hltTisTosSpec = config['Hlt2TisTosSpec'])
+        self.selXicc4WC = makeTisTos(name+'SelXiccPlusPlusToXicZeroPiPiWC'
+                                   , selection = self.combineXicc4WC
+                                   , hltTisTosSpec = config['Hlt2TisTosSpec'])
+        self.selXicc5WC = makeTisTos(name+'SelXiccPlusToXicPlusPiPiWC'
+                                   , selection = self.combineXicc5WC
+                                   , hltTisTosSpec = config['Hlt2TisTosSpec'])
+        self.selXicc6WC = makeTisTos(name+'SelXiccPlusPlusToXicPlusPiWC'
+                                   , selection = self.combineXicc6WC
+                                   , hltTisTosSpec = config['Hlt2TisTosSpec'])
         self.selXicc7 = makeTisTos(name+'SelXiccPlusToD0PKPi'
                                    , selection = self.combineXicc7
                                    , hltTisTosSpec = config['Hlt2TisTosSpec'])
         self.selXicc8 = makeTisTos(name+'SelXiccPlusPlusToD0PKPiPi'
                                    , selection = self.combineXicc8
                                    , hltTisTosSpec = config['Hlt2TisTosSpec'])
-
+        self.selXicc7WC = makeTisTos(name+'SelXiccPlusToD0PKPiWC'
+                                   , selection = self.combineXicc7WC
+                                   , hltTisTosSpec = config['Hlt2TisTosSpec'])
+        self.selXicc8WC = makeTisTos(name+'SelXiccPlusPlusToD0PKPiPiWC'
+                                   , selection = self.combineXicc8WC
+                                   , hltTisTosSpec = config['Hlt2TisTosSpec'])
+        self.selXicc7DCS = makeTisTos(name+'SelXiccPlusToD0PKPiDCS'
+                                   , selection = self.combineXicc7DCS
+                                   , hltTisTosSpec = config['Hlt2TisTosSpec'])
+        self.selXicc8DCS = makeTisTos(name+'SelXiccPlusPlusToD0PKPiPiDCS'
+                                   , selection = self.combineXicc8DCS
+                                   , hltTisTosSpec = config['Hlt2TisTosSpec'])
 
 
 
@@ -342,6 +416,26 @@ class XiccBuilder(LineBuilder) :
                                       postscale = 1.0,
                                       FILTER = _globalEventCuts,
                                       selection = self.selXicc2)
+        self.lineXicc1WC = StrippingLine(name+'XiccPlusToLcKPiWC',
+                                      prescale = config['signalPrescaleViaLcWC'],
+                                      postscale = 1.0,
+                                      FILTER = _globalEventCuts,
+                                      selection = self.selXicc1WC)
+        self.lineXicc2WC = StrippingLine(name+'XiccPlusPlusToLcKPiPiWC',
+                                      prescale = config['signalPrescaleViaLcWC'],
+                                      postscale = 1.0,
+                                      FILTER = _globalEventCuts,
+                                      selection = self.selXicc2WC)
+        self.lineXicc1DCS = StrippingLine(name+'XiccPlusToLcKPiDCS',
+                                      prescale = config['signalPrescaleViaLcDCS'],
+                                      postscale = 1.0,
+                                      FILTER = _globalEventCuts,
+                                      selection = self.selXicc1DCS)
+        self.lineXicc2DCS = StrippingLine(name+'XiccPlusPlusToLcKPiPiDCS',
+                                      prescale = config['signalPrescaleViaLcDCS'],
+                                      postscale = 1.0,
+                                      FILTER = _globalEventCuts,
+                                      selection = self.selXicc2DCS)
         self.lineXicc1a = StrippingLine(name+'XiccPlusToDpPK',
                                       prescale = config['signalPrescaleViaDp'],
                                       postscale = 1.0,
@@ -352,16 +446,21 @@ class XiccBuilder(LineBuilder) :
                                       postscale = 1.0,
                                       FILTER = _globalEventCuts,
                                       selection = self.selXicc2a)
-        self.lineXicc1b = StrippingLine(name+'XiccPlusToDspPPi',
-                                      prescale = config['signalPrescaleViaDsp'],
+        self.lineXicc1aWC = StrippingLine(name+'XiccPlusToDpPKWC',
+                                      prescale = config['signalPrescaleViaDpWC'],
                                       postscale = 1.0,
                                       FILTER = _globalEventCuts,
-                                      selection = self.selXicc1b)
-        self.lineXicc2b = StrippingLine(name+'XiccPlusPlusToDspP',
-                                      prescale = config['signalPrescaleViaDsp'],
+                                      selection = self.selXicc1aWC)
+        self.lineXicc2aWC = StrippingLine(name+'XiccPlusPlusToDpPKPiWC',
+                                      prescale = config['signalPrescaleViaDpWC'],
                                       postscale = 1.0,
                                       FILTER = _globalEventCuts,
-                                      selection = self.selXicc2b)
+                                      selection = self.selXicc2aWC)
+        self.lineXicc2aWC0 = StrippingLine(name+'XiccPlusPlusToDpPKPiWC0',
+                                      prescale = config['signalPrescaleViaDpWC'],
+                                      postscale = 1.0,
+                                      FILTER = _globalEventCuts,
+                                      selection = self.selXicc2aWC0)
         self.lineXicc3 = StrippingLine(name+'XiccPlusToXicZeroPi',
                                       prescale = config['signalPrescaleViaXic'],
                                       postscale = 1.0,
@@ -382,6 +481,26 @@ class XiccBuilder(LineBuilder) :
                                       postscale = 1.0,
                                       FILTER = _globalEventCuts,
                                       selection = self.selXicc6)
+        self.lineXicc3WC = StrippingLine(name+'XiccPlusToXicZeroPiWC',
+                                      prescale = config['signalPrescaleViaXicWC'],
+                                      postscale = 1.0,
+                                      FILTER = _globalEventCuts,
+                                      selection = self.selXicc3WC)
+        self.lineXicc4WC = StrippingLine(name+'XiccPlusPlusToXicZeroPiPiWC',
+                                      prescale = config['signalPrescaleViaXicWC'],
+                                      postscale = 1.0,
+                                      FILTER = _globalEventCuts,
+                                      selection = self.selXicc4WC)
+        self.lineXicc5WC = StrippingLine(name+'XiccPlusToXicPlusPiPiWC',
+                                      prescale = config['signalPrescaleViaXicWC'],
+                                      postscale = 1.0,
+                                      FILTER = _globalEventCuts,
+                                      selection = self.selXicc5WC)
+        self.lineXicc6WC = StrippingLine(name+'XiccPlusPlusToXicPlusPiWC',
+                                      prescale = config['signalPrescaleViaXicWC'],
+                                      postscale = 1.0,
+                                      FILTER = _globalEventCuts,
+                                      selection = self.selXicc6WC)
         self.lineXicc7 = StrippingLine(name+'XiccPlusToD0PKPi',
                                       prescale = config['signalPrescaleViaD0'],
                                       postscale = 1.0,
@@ -392,6 +511,26 @@ class XiccBuilder(LineBuilder) :
                                       postscale = 1.0,
                                       FILTER = _globalEventCuts,
                                       selection = self.selXicc8)
+        self.lineXicc7WC = StrippingLine(name+'XiccPlusToD0PKPiWC',
+                                      prescale = config['signalPrescaleViaD0WC'],
+                                      postscale = 1.0,
+                                      FILTER = _globalEventCuts,
+                                      selection = self.selXicc7WC)
+        self.lineXicc8WC = StrippingLine(name+'XiccPlusPlusToD0PKPiPiWC',
+                                      prescale = config['signalPrescaleViaD0WC'],
+                                      postscale = 1.0,
+                                      FILTER = _globalEventCuts,
+                                      selection = self.selXicc8WC)
+        self.lineXicc7DCS = StrippingLine(name+'XiccPlusToD0PKPiDCS',
+                                      prescale = config['signalPrescaleViaD0DCS'],
+                                      postscale = 1.0,
+                                      FILTER = _globalEventCuts,
+                                      selection = self.selXicc7DCS)
+        self.lineXicc8DCS = StrippingLine(name+'XiccPlusPlusToD0PKPiPiDCS',
+                                      prescale = config['signalPrescaleViaD0DCS'],
+                                      postscale = 1.0,
+                                      FILTER = _globalEventCuts,
+                                      selection = self.selXicc8DCS)
 
         self.registerLine(self.lineControl1)
         self.registerLine(self.lineControl2)
@@ -401,16 +540,29 @@ class XiccBuilder(LineBuilder) :
         self.registerLine(self.lineControl6)
         self.registerLine(self.lineXicc1)
         self.registerLine(self.lineXicc2)
+        self.registerLine(self.lineXicc1WC)
+        self.registerLine(self.lineXicc2WC)
+        self.registerLine(self.lineXicc1DCS)
+        self.registerLine(self.lineXicc2DCS)
         self.registerLine(self.lineXicc1a)
         self.registerLine(self.lineXicc2a)
-        self.registerLine(self.lineXicc1b)
-        self.registerLine(self.lineXicc2b)
+        self.registerLine(self.lineXicc1aWC)
+        self.registerLine(self.lineXicc2aWC)
+        self.registerLine(self.lineXicc2aWC0)
         self.registerLine(self.lineXicc3)
         self.registerLine(self.lineXicc4)
         self.registerLine(self.lineXicc5)
         self.registerLine(self.lineXicc6)
+        self.registerLine(self.lineXicc3WC)
+        self.registerLine(self.lineXicc4WC)
+        self.registerLine(self.lineXicc5WC)
+        self.registerLine(self.lineXicc6WC)
         self.registerLine(self.lineXicc7)
         self.registerLine(self.lineXicc8)
+        self.registerLine(self.lineXicc7WC)
+        self.registerLine(self.lineXicc8WC)
+        self.registerLine(self.lineXicc7DCS)
+        self.registerLine(self.lineXicc8DCS)
 
 def mergeLists(localName, inputSelections) :
     return MergedSelection ( localName,
