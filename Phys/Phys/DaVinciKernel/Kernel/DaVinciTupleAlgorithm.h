@@ -1,5 +1,5 @@
-#ifndef KERNEL_DAVINCIALGORITHM_H 
-#define KERNEL_DAVINCIALGORITHM_H 1
+#ifndef KERNEL_DaVinciTupleAlgorithm_H 
+#define KERNEL_DaVinciTupleAlgorithm_H 1
 
 // Local base class
 #include "Kernel/DVCommonBase.h"
@@ -26,4 +26,4 @@ public:
   
 };
 
-#endif // KERNEL_DAVINCIALGORITHM_H
+#endif // KERNEL_DaVinciTupleAlgorithm_H
