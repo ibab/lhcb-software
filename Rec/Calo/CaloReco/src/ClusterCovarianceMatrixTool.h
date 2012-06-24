@@ -128,7 +128,7 @@ private:
   ///
   std::string m_detData;
   const DeCalorimeter* m_det;
-  
+  bool m_useDB;
   }; ///< end of class ClusterCovarianceMatrixTool
 // ============================================================================
 #endif // CLUSTERCOVARIANCEMATRIXTOOL_H

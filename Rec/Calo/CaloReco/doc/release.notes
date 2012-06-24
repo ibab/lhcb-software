@@ -4,6 +4,9 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+! 2012-06-24 - Olivier Deschamps
+  - ClusterCovarianceMatrixTool : get covariance parameters from condDB when available
+
 ! 2012-06-23 - Olivier Deschamps
   - CaloMergedPi0Alg : add covariance matrix for SplitClusters & SplitPhotons (assume no correlation)
   - CaloECorrection  : allow spd-dependent PileUp subtraction 

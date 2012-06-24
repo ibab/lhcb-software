@@ -35,13 +35,14 @@ ClusterCovarianceMatrixTool::ClusterCovarianceMatrixTool
   const std::string& name   ,
   const IInterface*  parent )
   : GaudiTool( type , name , parent )
-    , m_estimator (      ) 
-    , m_a         ( "", 0.09 )
-    , m_gainErr   ( "", 0    )
-    , m_noiseIn   ( "", 0    ) 
-    , m_noiseCo   ( "", 0    )
-    , m_detData   ( DeCalorimeterLocation::Ecal )
-    , m_det(0)
+  , m_estimator (      ) 
+  , m_a         ( "", 0.09 )
+  , m_gainErr   ( "", 0    )
+  , m_noiseIn   ( "", 0    ) 
+  , m_noiseCo   ( "", 0    )
+  , m_detData   ( DeCalorimeterLocation::Ecal )
+  , m_det(0)
+  , m_useDB(true)
 {
   // interface!
   declareInterface<ICaloClusterTool> (this);
@@ -78,7 +79,8 @@ ClusterCovarianceMatrixTool::ClusterCovarianceMatrixTool
   declareProperty( "GainError"        , m_gainErr );
   declareProperty( "NoiseIncoherent"  , m_noiseIn );
   declareProperty( "NoiseCoherent"    , m_noiseCo );
-  declareProperty( "Detector"        , m_detData  );
+  declareProperty( "Detector"         , m_detData  );
+  declareProperty( "UseDBParameters"  , m_useDB=true);
 }
 // ============================================================================
 /// destructor, virtual and protected 
@@ -90,15 +92,34 @@ ClusterCovarianceMatrixTool::~ClusterCovarianceMatrixTool() {}
  *  @return status code 
  */
 // ============================================================================
-StatusCode ClusterCovarianceMatrixTool::initialize ()
-{
+
+
+StatusCode ClusterCovarianceMatrixTool::initialize (){
   StatusCode sc = GaudiTool::initialize ();
   /// 
   if( sc.isFailure() ) 
     { return Error("Could not initialize the base class!") ; }
   ///
   m_det = getDet<DeCalorimeter>( m_detData) ;
+
+  std::string fa=std::string(" from options");
+  std::string fg=std::string(" from options");
+  std::string fc=std::string(" from options");
+  std::string fi=std::string(" from options");  
+  // get parameters from DB if available
+  if( m_useDB ){
+    double a = m_det->stochasticTerm();
+    double gE = m_det->gainError();
+    double In = m_det->incoherentNoise();
+    double cN = m_det->coherentNoise();
+    
+    if( a  > 0){m_a = a        ;fa=std::string(" from DB");}
+    if( gE > 0){m_gainErr = gE ;fg=std::string(" from DB");}   
+    if( In > 0){m_noiseIn  = In;fi=std::string(" from DB");}   
+    if( cN > 0){m_noiseCo  = cN;fc=std::string(" from DB");}
+  }
   
+
   m_estimator.setDetector( m_det     ) ;
   m_estimator.setA       ( m_a       ) ;
   m_estimator.setGainS   ( m_gainErr ) ;
@@ -107,10 +128,10 @@ StatusCode ClusterCovarianceMatrixTool::initialize ()
   
   info()      << " Has initialized with parameters: "              << endmsg 
               << " \t 'Detector'         = '" << m_detData << "'"  << endmsg 
-              << " \t 'Resolution'       = '" << m_a       << "'"  << endmsg 
-              << " \t 'GainError'        = '" << m_gainErr << "'"  << endmsg 
-              << " \t 'NoiseIncoherent'  = '" << m_noiseIn << "'"  << endmsg 
-              << " \t 'NoiseCoherent'    = '" << m_noiseCo << "'"  << endmsg 
+              << " \t 'Resolution'       = '" << m_a       << "'"  << fa << endmsg 
+              << " \t 'GainError'        = '" << m_gainErr << "'"  << fg << endmsg 
+              << " \t 'NoiseIncoherent'  = '" << m_noiseIn << "'"  << fi << endmsg 
+              << " \t 'NoiseCoherent'    = '" << m_noiseCo << "'"  << fc << endmsg 
               << " \t Estimator is          " << m_estimator       << endmsg ;
   return StatusCode::SUCCESS ;
 }

@@ -46,7 +46,7 @@ CaloClusterCovarianceAlg::CaloClusterCovarianceAlg
     , m_copy               ( false                         )
     , m_a                  ( 0.10                          )
     , m_gainErr            ( 0.01                          )
-    , m_noiseIn            ( 1.30                          ) 
+    , m_noiseIn            ( 1.20                          ) 
     , m_noiseCo            ( 0.30                          )
     , m_taggerType         ( "SubClusterSelector3x3"       )
     , m_taggerName         ( ""                            )

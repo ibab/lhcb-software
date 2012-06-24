@@ -28,6 +28,7 @@
 // local
 // ============================================================================
 #include "CaloMergedPi0Alg.h"
+#include "CaloUtils/CaloMomentum.h"
 // ============================================================================
 
 // ============================================================================
@@ -70,7 +71,7 @@ DECLARE_ALGORITHM_FACTORY( CaloMergedPi0Alg )
     , m_mX_Iter ( 16         )
     , m_a                  ( 0.10                          )
     , m_gainErr            ( 0.01                          )
-    , m_noiseIn            ( 1.30                          ) 
+    , m_noiseIn            ( 1.20                          ) 
     , m_noiseCo            ( 0.30                          )
  {
   m_toolTypeNames.push_back( "CaloExtraDigits/SpdExtraG" ) ;
@@ -939,6 +940,7 @@ StatusCode CaloMergedPi0Alg::execute()
         phots ->insert( g1  ) ;
         phots ->insert( g2  ) ;
 
+        
 
         { // Apply the tool
           if ( msgLevel ( MSG::DEBUG ) ){
@@ -968,9 +970,6 @@ StatusCode CaloMergedPi0Alg::execute()
             sc                    = (*t) ( pi0 ) ;
             if( sc.isFailure() )Error("Error from 'Tool' for pi0 " , sc ).ignore() ;
           }
-
-
-
         }
       }
     } //End of "good" MergedPi0 condition
