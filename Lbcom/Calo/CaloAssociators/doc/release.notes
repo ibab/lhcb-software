@@ -6,13 +6,17 @@
 !               Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+
+! 2012-11-03 - Olivier  Deschamps
+   - new algo : CaloHypoMCTruth : produce Linker tables for Hypo->MC
+
 !===================== CaloAssociators v6r10p1 2010-06-21 =====================
 ! 2010-06-10 - Marco Cattaneo
  - Fix Windows compilation warnings
 
 !===================== CaloAssociators v6r10 2009-11-13 =======================
 ! 2009-11-03 - Olivier  Deschamps
-   - MCTruthOnDeman.py : fix typo
+   - MCTruthOnDemand.py : fix typo
 
 ! 2009-10-27 - Vanya Belyaev
 
