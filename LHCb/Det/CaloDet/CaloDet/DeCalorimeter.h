@@ -133,8 +133,8 @@ public:
   double        L0EtGain         ()     const { return m_l0Et          ; };
   double        coherentNoise    ()     const { return m_cNoise        ; };
   double        incoherentNoise  ()     const { return m_iNoise        ; };
-  double        stochasticTerm   ()     const { return m_gainE         ; };
-  double        gainError        ()     const { return m_stoch         ; };
+  double        stochasticTerm   ()     const { return m_stoch         ; };
+  double        gainError        ()     const { return m_gainE         ; };
 
   // for simulation only
   int           zSupMethod       ()     const { return (int) m_zSupMeth; };
