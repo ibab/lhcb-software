@@ -3,42 +3,20 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-- Changes to configurable
-  . HltRecReports now decoded unconditionally on every event
-  . L0DU now decoded unconditionally on every physics event
-  . Complete the split RawEvent copy on DST and remove reference to original
-  . Do not run InitReprocSeq if not reprocessing
-
-- Changes to references to reflect changes since v42r3p1
-  . Reduce the chi^2 range from 0-10 to 0-3, to adapt to tracking changes. Reduce
-    the 'tight' track monitoring selection to chi^2 < 2 (RichRecQC)
-  . Improve FastVelo clone rejection (FastVelo)
-  . Bug fix in FastVelo beam splash handling (FastVelo)
-  . Enable by default the resolution plots per PD column (RichRecQC)
-  . Remove CK theta correction factor for Aerogel, taken care of in calibration
-    (RichRecSys)
-  . Update L0Filters for Rich monitoring (RichRecQC)
-  . Fix unprotected debug and verbose messages (DAQUtils, L0DU, OTDAQ, RichDAQ)
-
-- Changes to tests
-  . Add a test for bug #94407 in brunel.2012-crashes
-  . Add a test for bug #95019 in brunel.brunel-mc09-notruth
-  . Add brunel.repro2012magdown to test that reprocessing gives identical
-    output to brunel.brunel2012magdown
-  . Change the name of the output file of brunel.bigevents, used as input to
-    brunel.readdstfsr, so that latter can be executed after any other test
+- Changes to Configurable
+  . Add 'Calo' to the MCLinksSequence
 
 </PRE><H1><A NAME=v42r3p2>2012-05-09 Brunel v42r3p2</A></H1><PRE>
 This version uses projects LCG 62b, Gaudi v23r2, LHCb v34r3, Lbcom v12r3,
  Rec v13r3 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
 
-Production version for 2012 data taking and simulation (v42r3b branch)
+Production version for 2012 data taking and simulation
 
 </PRE><H1><A NAME=v42r3p1>2012-05-08 Brunel v42r3p1</A></H1><PRE>
 This version uses projects LCG 62b, Gaudi v23r2, LHCb v34r3, Lbcom v12r3,
  Rec v13r3 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
 
-Production version for 2012 simulation (v42r3b branch)
+Production version for 2012 simulation
 
 - Changes to Configurable
   . Propagate "Simulation" slot to TrackSys()

@@ -67,7 +67,7 @@ class Brunel(LHCbConfigurableUser):
        ,"InitSequence"    : None
        ,"RecoSequence"    : None
        ,"MCCheckSequence" : None
-       ,"MCLinksSequence" : ["L0", "Unpack", "Tr"]
+       ,"MCLinksSequence" : ["L0", "Unpack", "Tr","Calo"]
        ,"Monitors"        : []
        ,"SpecialData"     : []
        ,"Context"         : "Offline"
@@ -204,6 +204,8 @@ class Brunel(LHCbConfigurableUser):
             GaudiSequencer("MCLinksUnpackSeq").Members += [ "UnpackMCParticle",
                                                             "UnpackMCVertex" ]
             GaudiSequencer("MCLinksTrSeq").Members += [ "TrackAssociator" ]
+            GaudiSequencer("MCLinksCaloSeq").Members += [ "CaloDigit2MCLinks2Table", "CaloClusterMCTruth", "CaloHypoMCTruth" ]
+
 
             # activate all configured checking (uses MC truth)
             self.configureCheck( histOpt == "Expert" )
