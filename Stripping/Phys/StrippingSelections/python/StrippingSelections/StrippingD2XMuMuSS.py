@@ -1,6 +1,6 @@
 
 __author__ = ['Malcolm John', 'B. Viaud', 'O. Kochebina']
-__date__ = '26/4/2012'
+__date__ = '25/6/2012'
 __version__ = '$Revision: 1.7 $'
 
 '''
@@ -51,6 +51,8 @@ config_params =  {'MuonP'         : 3000. ,    #MeV
                   'D02KKMuMuLinePostscale'  : 1 ,
                   'D02PiPiMuMuLinePrescale'   : 1 ,
                   'D02PiPiMuMuLinePostscale'  : 1,
+                  'D02KPiMuMuLinePrescale'   : 1 ,
+                  'D02KPiMuMuLinePostscale'  : 1,
                   'D02KKPiPiLinePrescale'   : 0.01 ,
                   'D02KKPiPiLinePostscale'  : 1,
                   'D02K3PiLinePrescale'   : 0.01 ,
@@ -61,7 +63,7 @@ config_params =  {'MuonP'         : 3000. ,    #MeV
                   'D22KPiLinePostscale'  : 1
                   }
 
-__all__ = ('D2XMuMuConf', 'makeD2PiPiPi', 'makeD2PiMuMuOS', 'makeD2PiMuMuSS', 'makeD2KMuMuOS', 'makeD2KMuMuSS', 'makeD02KKMuMu', 'makeD02PiPiMuMu', 'makeD02KKPiPi', 'makeD02K3Pi', 'makeD2K2Pi', 'makeD22KPi' )
+__all__ = ('D2XMuMuConf', 'makeD2PiPiPi', 'makeD2PiMuMuOS', 'makeD2PiMuMuSS', 'makeD2KMuMuOS', 'makeD2KMuMuSS', 'makeD02KKMuMu', 'makeD02PiPiMuMu', 'makeD02KPiMuMu', 'makeD02KKPiPi', 'makeD02K3Pi', 'makeD2K2Pi', 'makeD22KPi' )
 
 
 from Gaudi.Configuration import *
@@ -86,6 +88,7 @@ class D2XMuMuConf(LineBuilder) :
     KSSLine = None
     KKLine = None
     PiPiLine = None
+    KPiLine = None
     KKPiPiLine = None
     K3PiLine = None
     K2PiLine = None
@@ -136,6 +139,8 @@ class D2XMuMuConf(LineBuilder) :
                                 , 'D02KKMuMuLinePostscale'
                                 , 'D02PiPiMuMuLinePrescale'
                                 , 'D02PiPiMuMuLinePostscale'
+                                , 'D02KPiMuMuLinePrescale'
+                                , 'D02KPiMuMuLinePostscale'
                                 , 'D02KKPiPiLinePrescale'
                                 , 'D02KKPiPiLinePostscale'
                                 , 'D02K3PiLinePrescale'
@@ -156,6 +161,7 @@ class D2XMuMuConf(LineBuilder) :
         KSSLine_name = name+"_KSS"
         KKLine_name = name+"_KK"
         PiPiLine_name = name+"_PiPi"
+        KPiLine_name = name+"_KPi"
         KKPiPiLine_name = name+"_KKPiPi"
         K3PiLine_name = name+"_K3Pi"
         K2PiLine_name = name+"_K2Pi"
@@ -267,6 +273,12 @@ class D2XMuMuConf(LineBuilder) :
                                            muonSel = selMuonsForhhmumu,
                                            config = config)
         
+        selD02KPiMuMu = self._makeD02KPiMuMu(name=KPiLine_name,
+                                             kaonSel = selKaonsForhhmumu,
+                                             pionSel = selPionsForhhmumu,
+                                             muonSel = selMuonsForhhmumu,
+                                             config = config)
+        
         selD02KKPiPi = self._makeD02KKPiPi(name=KKPiPiLine_name,
                                            kaonSel = selKaonsForCS,
                                            pionSel = selPionsForCS,
@@ -330,7 +342,13 @@ class D2XMuMuConf(LineBuilder) :
                                     postscale = config['D02PiPiMuMuLinePostscale'],
                                     selection = selD02PiPiMuMu
                                     )
-
+        
+        self.KPiLine = StrippingLine(KPiLine_name+"Line",
+                                     prescale = config['D02KPiMuMuLinePrescale'],
+                                     postscale = config['D02KPiMuMuLinePostscale'],
+                                     selection = selD02KPiMuMu
+                                     )
+        
         self.KKPiPiLine = StrippingLine(KKPiPiLine_name+"Line",
                                     prescale = config['D02KKPiPiLinePrescale'],
                                     postscale = config['D02KKPiPiLinePostscale'],
@@ -366,6 +384,7 @@ class D2XMuMuConf(LineBuilder) :
         self.registerLine( self.PiCalLine )
         self.registerLine( self.KKLine )
         self.registerLine( self.PiPiLine )
+        self.registerLine( self.KPiLine )
         self.registerLine( self.KKPiPiLine )
         self.registerLine( self.K3PiLine )
         self.registerLine( self.K2PiLine )
@@ -488,6 +507,25 @@ class D2XMuMuConf(LineBuilder) :
                              , DMassLow = config['DMassLow']
                              , DimuonMass = config['DimuonMass'])
 
+#####################################################
+    def _makeD02KPiMuMu(self, name, kaonSel, pionSel, muonSel, config):
+        """
+        Handy interface for D0KPiMuMu
+        """
+        return makeD02KPiMuMu(name
+                              , kaonSel
+                              , pionSel
+                              , muonSel
+                              , DMAXDOCA = config['DMAXDOCA']
+                              , DdauMAXIPCHI2= config['DdauMAXIPCHI2']
+                              , DFDCHI2= config['DFDCHI2']
+                              , DVCHI2DOF = config['DVCHI2DOF']
+                              , DDIRA = config['DDIRA']
+                              , DIPCHI2 = config['DIPCHI2']
+                              , DMassWin = config['DMassWin_CS_hhmumu']
+                              , DMassLow = config['DMassLow']
+                              , DimuonMass = config['DimuonMass'])
+    
 #####################################################
     def _makeD02KKPiPi(self, name, kaonSel, pionSel, config):
         """
@@ -739,6 +777,33 @@ def makeD02PiPiMuMu(name, pionSel, muonSel, DMAXDOCA, DdauMAXIPCHI2, DFDCHI2, DV
     return Selection(name,
                      Algorithm = _Combine,
                      RequiredSelections = [ muonSel, pionSel] )
+
+#####################################################
+def makeD02KPiMuMu(name, kaonSel, pionSel, muonSel, DMAXDOCA, DdauMAXIPCHI2, DFDCHI2, DVCHI2DOF, DDIRA, DIPCHI2, DMassWin, DMassLow, DimuonMass):
+    
+    """
+    Makes the D0 -> K- pi+ mu+ mu-
+    """
+    
+    _combcut = "(ADAMASS('D0') < %(DMassWin)s *MeV) & "\
+               "(AMAXDOCA('')<%(DMAXDOCA)s) & " \
+               "(AM > %(DMassLow)s *MeV) &"\
+               "(AM34 > %(DimuonMass)s *MeV) &"\
+               "(AHASCHILD( (MIPCHI2DV(PRIMARY)>%(DdauMAXIPCHI2)s)  )   )" %locals()
+
+
+    
+    _bcut   = "(VFASPF(VCHI2/VDOF) < %(DVCHI2DOF)s) & "\
+              "(BPVVDCHI2>%(DFDCHI2)s) & (BPVIPCHI2()< %(DIPCHI2)s) & "\
+              "(BPVDIRA > %(DDIRA)s)" % locals()
+    
+    _Combine = CombineParticles(DecayDescriptor = "D0 -> K- pi+ mu+ mu-",
+                                CombinationCut = _combcut,
+                                MotherCut = _bcut)
+    _Combine.ReFitPVs = True
+    return Selection(name,
+                     Algorithm = _Combine,
+                     RequiredSelections = [ muonSel, kaonSel, pionSel] )
 
 
 #####################################################

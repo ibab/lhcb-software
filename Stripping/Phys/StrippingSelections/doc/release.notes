@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-06-24 Benoit Viaud
+  -StrippingD2XMuMuSS.py: Add a line for D0->K- pi+ mu+ mu-.
+
 ! 2012-06-24 Sean Benson
   - StrippingBs2PhiPhi.py: Moved configuration parameters to the top of the file
 
