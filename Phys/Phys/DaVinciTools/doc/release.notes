@@ -4,13 +4,12 @@
 !============================================================================
 
 ! 2012-06-23 - Olivier Deschamps
-  - BremAdder : Final optimization (new correction method with brem origin determined from track slope is now the default)
+ - BremAdder : Final optimization (new correction method with brem origin 
+               determined from track slope is now the default)
 
 ! 2012-06-22 - Olivier Deschamps
-  - BremAdder : optimize processing + add new correction method (for expert check)
-
-! 2012-06-22 - Chris Jones
- - Update CombineParticles to use the new DaVinciAlgorithm base class
+ - BremAdder : optimize processing + add new correction method 
+               (for expert check)
 
 ! 2012-06-22 - Murilo Rangel
  - Added HighPtTopoTool.cpp 
@@ -30,7 +29,8 @@
  - Fix a gcc 4.6 compilation warning in BremAdder.
 
 ! 2012-06-12 - Olivier Deschamps
- - BremAdder : update BremAdder for di-electron and adapt to new IBremAdder interface
+ - BremAdder : update BremAdder for di-electron and adapt to new 
+               IBremAdder interface
 
 ! 2012-05-14 - Edwige Tournefier & Olivier Deschamps
  - BremAdder : implement new BremAdder method from Edwige
