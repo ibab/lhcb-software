@@ -155,7 +155,11 @@ class DstConf(LHCbConfigurableUser):
 
                     writer.ItemList += [
                         # Links to MCParticles created in Brunel
-                        "/Event/Link/Rec/Track/Best#1"
+                        "/Event/Link/Rec/Track/Best#1",
+                        "/Event/Link/Rec/Calo/Photons#1",
+                        "/Event/Link/Rec/Calo/Electrons#1",
+                        "/Event/Link/Rec/Calo/MergedPi0s#1",
+                        "/Event/Link/Rec/Calo/SplitPhotons#1"
                         ]
 
                     # Objects propagated from Gauss

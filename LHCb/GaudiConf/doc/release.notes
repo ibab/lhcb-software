@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2012-06-24 - Olivier Deschamps
+ - DstConf : add CaloHypo->MC linkers to the writer list
+
 ! 2012-06-15 - Marco Cattaneo
  - Add also Calo/RawEvent
 
