@@ -1,0 +1,7 @@
+# DO NOT DELETE
+
+ChainTuples.o: ChainTuples.h ReadFile.h
+ReadFile.o: ReadFile.h
+RichParticle.o: RichParticle.h
+RichParticleFinder.o: RichParticleFinder.h ChainTuples.h ReadFile.h
+main.o: ChainTuples.h ReadFile.h

@@ -1,0 +1,207 @@
+# DO NOT DELETE
+
+ChainTuples.o: ChainTuples.h
+ChainTuples.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TChain.h
+ChainTuples.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TTree.h
+ChainTuples.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TBranch.h
+ChainTuples.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TNamed.h
+ChainTuples.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TObject.h
+ChainTuples.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/Rtypes.h
+ChainTuples.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/RConfig.h
+ChainTuples.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/RVersion.h
+ChainTuples.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/DllImport.h
+ChainTuples.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/Rtypeinfo.h
+ChainTuples.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
+ChainTuples.o: /usr/include/sys/_symbol_aliasing.h
+ChainTuples.o: /usr/include/sys/_posix_availability.h
+ChainTuples.o: /usr/include/Availability.h
+ChainTuples.o: /usr/include/AvailabilityInternal.h /usr/include/_types.h
+ChainTuples.o: /usr/include/sys/_types.h /usr/include/machine/_types.h
+ChainTuples.o: /usr/include/i386/_types.h /usr/include/secure/_stdio.h
+ChainTuples.o: /usr/include/secure/_common.h /usr/include/string.h
+ChainTuples.o: /usr/include/strings.h /usr/include/secure/_string.h
+ChainTuples.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/snprintf.h
+ChainTuples.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/strlcpy.h
+ChainTuples.o: /usr/include/unistd.h /usr/include/sys/unistd.h
+ChainTuples.o: /usr/include/sys/select.h /usr/include/sys/appleapiopts.h
+ChainTuples.o: /usr/include/sys/_structs.h /usr/include/sys/_select.h
+ChainTuples.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TGenericClassInfo.h
+ChainTuples.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TSchemaHelper.h
+ChainTuples.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TStorage.h
+ChainTuples.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TVersionCheck.h
+ChainTuples.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/Riosfwd.h
+ChainTuples.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TBuffer.h
+ChainTuples.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TString.h
+ChainTuples.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TMathBase.h
+ChainTuples.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TObjArray.h
+ChainTuples.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TSeqCollection.h
+ChainTuples.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TCollection.h
+ChainTuples.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TIterator.h
+ChainTuples.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TAttFill.h
+ChainTuples.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TDataType.h
+ChainTuples.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TDictionary.h
+ChainTuples.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/Property.h
+ChainTuples.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TAttLine.h
+ChainTuples.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TAttMarker.h
+ChainTuples.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TArrayD.h
+ChainTuples.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TArray.h
+ChainTuples.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TArrayI.h
+ChainTuples.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TClass.h
+ChainTuples.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TObjString.h
+ChainTuples.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TVirtualTreePlayer.h
+ChainTuples.o: ReadFile.h
+ReadFile.o: ReadFile.h
+RichParticle.o: RichParticle.h
+RichParticleFinder.o: RichParticleFinder.h ChainTuples.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TChain.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TTree.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TBranch.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TNamed.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TObject.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/Rtypes.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/RConfig.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/RVersion.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/DllImport.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/Rtypeinfo.h
+RichParticleFinder.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
+RichParticleFinder.o: /usr/include/sys/_symbol_aliasing.h
+RichParticleFinder.o: /usr/include/sys/_posix_availability.h
+RichParticleFinder.o: /usr/include/Availability.h
+RichParticleFinder.o: /usr/include/AvailabilityInternal.h
+RichParticleFinder.o: /usr/include/_types.h /usr/include/sys/_types.h
+RichParticleFinder.o: /usr/include/machine/_types.h
+RichParticleFinder.o: /usr/include/i386/_types.h /usr/include/secure/_stdio.h
+RichParticleFinder.o: /usr/include/secure/_common.h /usr/include/string.h
+RichParticleFinder.o: /usr/include/strings.h /usr/include/secure/_string.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/snprintf.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/strlcpy.h
+RichParticleFinder.o: /usr/include/unistd.h /usr/include/sys/unistd.h
+RichParticleFinder.o: /usr/include/sys/select.h
+RichParticleFinder.o: /usr/include/sys/appleapiopts.h
+RichParticleFinder.o: /usr/include/sys/_structs.h /usr/include/sys/_select.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TGenericClassInfo.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TSchemaHelper.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TStorage.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TVersionCheck.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/Riosfwd.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TBuffer.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TString.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TMathBase.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TObjArray.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TSeqCollection.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TCollection.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TIterator.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TAttFill.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TDataType.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TDictionary.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/Property.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TAttLine.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TAttMarker.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TArrayD.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TArray.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TArrayI.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TClass.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TObjString.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TVirtualTreePlayer.h
+RichParticleFinder.o: ReadFile.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TFile.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TDirectoryFile.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TDirectory.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TList.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TDatime.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TUUID.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TUrl.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TMap.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/THashTable.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TH1F.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TH1.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TAxis.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TAttAxis.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TArrayC.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TArrayS.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TArrayF.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/Foption.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TVectorFfwd.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TVectorDfwd.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TFitResultPtr.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TH2F.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TH2.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TMatrixFBasefwd.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TMatrixDBasefwd.h
+RichParticleFinder.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TEntryList.h
+RichParticleFinder.o: RichParticle.h
+main.o: ChainTuples.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TChain.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TTree.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TBranch.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TNamed.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TObject.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/Rtypes.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/RConfig.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/RVersion.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/DllImport.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/Rtypeinfo.h
+main.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
+main.o: /usr/include/sys/_symbol_aliasing.h
+main.o: /usr/include/sys/_posix_availability.h /usr/include/Availability.h
+main.o: /usr/include/AvailabilityInternal.h /usr/include/_types.h
+main.o: /usr/include/sys/_types.h /usr/include/machine/_types.h
+main.o: /usr/include/i386/_types.h /usr/include/secure/_stdio.h
+main.o: /usr/include/secure/_common.h /usr/include/string.h
+main.o: /usr/include/strings.h /usr/include/secure/_string.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/snprintf.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/strlcpy.h
+main.o: /usr/include/unistd.h /usr/include/sys/unistd.h
+main.o: /usr/include/sys/select.h /usr/include/sys/appleapiopts.h
+main.o: /usr/include/sys/_structs.h /usr/include/sys/_select.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TGenericClassInfo.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TSchemaHelper.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TStorage.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TVersionCheck.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/Riosfwd.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TBuffer.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TString.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TMathBase.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TObjArray.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TSeqCollection.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TCollection.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TIterator.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TAttFill.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TDataType.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TDictionary.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/Property.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TAttLine.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TAttMarker.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TArrayD.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TArray.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TArrayI.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TClass.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TObjString.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TVirtualTreePlayer.h
+main.o: ReadFile.h RichParticleFinder.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TFile.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TDirectoryFile.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TDirectory.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TList.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TDatime.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TUUID.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TUrl.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TMap.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/THashTable.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TH1F.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TH1.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TAxis.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TAttAxis.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TArrayC.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TArrayS.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TArrayF.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/Foption.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TVectorFfwd.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TVectorDfwd.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TFitResultPtr.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TH2F.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TH2.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TMatrixFBasefwd.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TMatrixDBasefwd.h
+main.o: /Users/mcoombes/Documents/ComputerWork/root/root_v5r32/include/TEntryList.h
+main.o: RichParticle.h
