@@ -36,7 +36,7 @@ public:
 	void SetBranchAddress();
 	void SetOutputBranchAddress(TTree* outTree);
 
-	void CreateNtuple(const char* outputFileName, const char* tupleName);
+	void CreateNtuple(const char* outputFileName);
 
 	void SetVariables(std::string fileOfVars);
 
@@ -49,7 +49,7 @@ public:
 	void WriteHistograms(const char* histFileName);
 
 private:
-	bool CreateNewTuple();
+	bool CreateNewTuple(const char* outputFileName);
 	std::map<std::string,double> vars;
 	std::map<std::string,TH1F*> TH1Hist;
 	std::map<std::string,TH2F*> TH2Hist;

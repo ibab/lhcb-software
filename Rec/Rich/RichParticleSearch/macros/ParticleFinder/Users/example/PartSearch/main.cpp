@@ -32,8 +32,8 @@ int main(int argc, char** argv)
 	PartFind.SetVariables(argv[2]);
 	PartFind.SetHistoLevel(2);
 	PartFind.SetBranchAddress();
-	PartFind.CreateNtuple("output.root","TrackTuple");
-	PartFind.WriteHistograms("RichParticleHistos.root");
+	PartFind.CreateNtuple("Rich1ParticleTuple.root");
+	PartFind.WriteHistograms("Rich1ParticleHistos.root");
 
 	return 0;
 	

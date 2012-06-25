@@ -4,6 +4,9 @@
 ! Purpose     : Find exotic particles with the RICHes. Get Nobel price.
 !-----------------------------------------------------------------------------
 
+! 2012-06-25 - Matt Coombes
+ - Minor changes to RichParticleFinder to produce single NTuple after cuts selection. 
+ - Changes to /macros/ParticleFinder/ParticleFinder/src/RichParticleFinder.cpp{.h}
 !========================= RichParticleSearch v1r8 2012-06-24 =========================
 ! 2012-06-24 - Matt Coombes
  - Added macros/ParticleFinder to analyse the output NTuple from RichParticleSearchMain

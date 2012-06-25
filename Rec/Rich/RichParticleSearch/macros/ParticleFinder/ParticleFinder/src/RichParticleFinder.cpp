@@ -30,7 +30,7 @@ RichParticleFinder::RichParticleFinder(const char* cuts, ChainTuples* ct)
 }
 
 
-bool RichParticleFinder::CreateNewTuple()
+bool RichParticleFinder::CreateNewTuple(const char* outputFileName)
 {
 	TEntryList* elist=0;
 	_oldTree->SetBranchStatus("*",1);
@@ -54,14 +54,15 @@ bool RichParticleFinder::CreateNewTuple()
 	}
 
 	// Creat new file for tuple with _cuts
-	std::string newFilename = "TestFile";
-	_file0 = TFile::Open(newFilename.c_str(), "RECREATE");
+//	std::string newFilename = "UpdatedTree.root";
+	_file0 = TFile::Open(outputFileName, "RECREATE");
 
 	if(0 == _file0) return false;
 	_file0->cd();
 	std::cout << "Applying _cuts: " << _cuts << std::endl;
 	_tree = _oldTree->CopyTree(_cuts, "");
-
+	int NewEntries = _tree->GetEntries();
+	std::cout << "Entries after cuts " << NewEntries << std::endl;
 	_tree->Write();
 	return true;
 }
@@ -103,28 +104,19 @@ void RichParticleFinder::SetVariables(std::string fileOfVars)
 	}
 }
 
-void RichParticleFinder::CreateNtuple(const char* outputFileName, const char* tupleName)
+void RichParticleFinder::CreateNtuple(const char* outputFileName)
 {
-	CreateNewTuple();
+	CreateNewTuple(outputFileName);
 	std::map<std::string, double>::iterator it;
 
-	TTree *outTree = new TTree(tupleName,tupleName);
-
-	SetOutputBranchAddress(outTree);
 	int NEntries = _tree->GetEntries();
 
 	Histograms();
 	for (int i=0; i<=NEntries; i++)
 	{
 		_tree->GetEntry(i); // Get Entry
-		outTree->Fill();
 		FillHistograms();
 	}
-	TFile* outputFile = new TFile(outputFileName,"RECREATE");
-
-	outTree->Write();
-//	WriteHistograms("Test.root");
-	delete outputFile;
 }
 
 void RichParticleFinder::SetHistoLevel(int histoLevel)
