@@ -4,6 +4,7 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+!========================= STMonitors v3r10 2012-06-25 =========================
 ! 2012-06-12 - Mark Tobin
  - Fix bug in resizing of counters.
 
