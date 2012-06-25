@@ -4,6 +4,7 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+!========================= CaloDAQ v4r28 2012-06-25 =========================
 ! 2012-06-23 - Deschamps Olivier 
    - CaloDigitFilterTool : prepare for spd-dependent pile-up subtraction
 
