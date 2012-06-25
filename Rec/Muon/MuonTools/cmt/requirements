@@ -1,6 +1,6 @@
 # ==========================================================================
 package            MuonTools
-version           v5r2p2
+version           v5r3
 
 # ================ structure =================================================
 branches           cmt doc src options MuonTools
