@@ -3,6 +3,7 @@
 ! Package manager : A.Kozlinskiy
 !------------------------------------------------------------------------------
 
+!========================= OTDAQ v7r13 2012-06-25 =========================
 ! 2012-06-13 - Marco Cattaneo
  - Fix unprotected debug
  - Fix UNINIT_CTOR defects
