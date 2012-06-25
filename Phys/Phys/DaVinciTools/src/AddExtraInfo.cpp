@@ -21,7 +21,7 @@ DECLARE_ALGORITHM_FACTORY( AddExtraInfo )
 //=======================================================================
   AddExtraInfo::AddExtraInfo(const std::string& name,
                              ISvcLocator* pSvcLocator):
-    DVAlgorithm(name, pSvcLocator)
+    DaVinciAlgorithm(name, pSvcLocator)
 {
   declareProperty("Tools", m_toolNames, "Names of ExtraInfoTools" );
 }
@@ -29,7 +29,7 @@ DECLARE_ALGORITHM_FACTORY( AddExtraInfo )
 //=======================================================================
 StatusCode AddExtraInfo::initialize()
 {
-  const StatusCode sc = DVAlgorithm::initialize();
+  const StatusCode sc = DaVinciAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
 
   m_tools.clear();
@@ -54,16 +54,16 @@ AddExtraInfo::~AddExtraInfo() {}
 //=======================================================================
 // Main executio
 //=======================================================================
-StatusCode AddExtraInfo::execute() {
-
+StatusCode AddExtraInfo::execute()
+{
   setFilterPassed( true ); // Filter always passes
 
   // Loop over input locations
   std::vector<std::string>::const_iterator iLoc = inputLocations().begin();
   std::vector<std::string>::const_iterator endLoc = inputLocations().end();
-  for ( ; iLoc != endLoc; ++iLoc) {
-
-    std::string location = (*iLoc) + "/Particles";
+  for ( ; iLoc != endLoc; ++iLoc) 
+  {
+    const std::string location = (*iLoc) + "/Particles";
 
     if(!exist<LHCb::Particle::Range>(location) ) {
       if (msgLevel(MSG::VERBOSE)) verbose()<<("No selection found in "+ location)<<endreq;
@@ -103,7 +103,7 @@ StatusCode AddExtraInfo::execute() {
 
           int result = (*iTool)->getInfo(index+i, value, name);
 
-          if (result) { 
+          if (result) {
             c->addInfo( index+i, value);
             if (msgLevel(MSG::DEBUG)) debug() << "Added extra info: " << name << "=" << value << endreq;
           }

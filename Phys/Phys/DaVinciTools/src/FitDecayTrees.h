@@ -102,7 +102,7 @@ public:
 protected:
   // ==========================================================================
   /** standard constructor 
-   *  @see DVAlgorithm
+   *  @see DaVinciAlgorithm
    *  @see GaudiTupleAlg
    *  @see GaudiHistoAlg
    *  @see GaudiAlgorithm
@@ -131,9 +131,9 @@ public:
   // ==========================================================================
 public:
   // ==========================================================================
-  /// attention:restore the original action by DVAlgorithm
+  /// attention:restore the original action by DaVinciAlgorithm
   virtual StatusCode _saveInTES () ; 
-  /// attention:restore the original action by DVAlgorithm
+  /// attention:restore the original action by DaVinciAlgorithm
   virtual void       writeEmptyTESContainers() ;
   // ==========================================================================
   void updateConstraints ( Property& /* p */ ) ;      // update the constraints 

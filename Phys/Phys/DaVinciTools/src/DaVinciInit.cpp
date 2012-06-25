@@ -106,11 +106,12 @@ StatusCode DaVinciInit::execute()
              << " (" << memDiff << "KB, " << 100.*memDiff/m_lastMem << "%)"
              << " in last " << m_increment << " events" << endmsg ;
     }
-//     if ( mem > m_memPurgeLimit )
-//     {
-//       info() << "Memory exceeds " << m_memPurgeLimit << " KB -> Purging pools" << endmsg;
-//       releaseMemoryPools();
-//     }
+    if ( mem > m_memPurgeLimit )
+    {
+      info() << " -> Exceeds limit " << m_memPurgeLimit 
+             << " KB -> Purging pools" << endmsg;
+      releaseMemoryPools();
+    }
     m_lastMem = mem;
   }
 
@@ -121,7 +122,7 @@ StatusCode DaVinciInit::execute()
 
 StatusCode DaVinciInit::finalize()
 {
-  //releaseMemoryPools();
+  releaseMemoryPools();
   return LbAppInit::finalize();
 }
 
@@ -131,8 +132,10 @@ void DaVinciInit::releaseMemoryPools() const
 {
 #ifndef GOD_NOALLOC
   using namespace LHCb;
-  boost::singleton_pool<Particle,sizeof(Particle)>::release_memory();
-  boost::singleton_pool<Vertex,  sizeof(Vertex)  >::release_memory();
+  boost::singleton_pool<Particle,     sizeof(Particle)     >::release_memory();
+  boost::singleton_pool<Vertex,       sizeof(Vertex)       >::release_memory();
+  boost::singleton_pool<ProtoParticle,sizeof(ProtoParticle)>::release_memory();
+  boost::singleton_pool<Track,        sizeof(Track)        >::release_memory();
 #endif
 }
 

@@ -1,8 +1,8 @@
 // $Id$
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h"
 
 // local
 #include "ConjugateNeutralPID.h"
@@ -20,26 +20,26 @@ DECLARE_ALGORITHM_FACTORY( ConjugateNeutralPID )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-ConjugateNeutralPID::ConjugateNeutralPID( const std::string& name,
-                                          ISvcLocator* pSvcLocator)
-  : DVAlgorithm ( name , pSvcLocator )
-  , m_changePIDTool(0)
-  , m_nEvents(0)
-  , m_nAccepted(0)
-  , m_nCandidates(0)
+  ConjugateNeutralPID::ConjugateNeutralPID( const std::string& name,
+                                            ISvcLocator* pSvcLocator)
+    : DaVinciAlgorithm ( name , pSvcLocator )
+    , m_changePIDTool(0)
+    , m_nEvents(0)
+    , m_nAccepted(0)
+    , m_nCandidates(0)
 { }
 
 //=============================================================================
 // Destructor
 //=============================================================================
-ConjugateNeutralPID::~ConjugateNeutralPID() {} 
+ConjugateNeutralPID::~ConjugateNeutralPID() {}
 
 //=============================================================================
 // Initialization
 //=============================================================================
 StatusCode ConjugateNeutralPID::initialize()
 {
-  const StatusCode sc = DVAlgorithm::initialize(); 
+  const StatusCode sc = DaVinciAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
 
   debug() << "==> Initialize" << endmsg;
@@ -56,10 +56,10 @@ StatusCode ConjugateNeutralPID::execute()
 {
 
   debug() << "==> Execute" << endmsg;
-  ++m_nEvents;		// Increment event counter
+  ++m_nEvents;  // Increment event counter
 
   setFilterPassed( false );
-  
+
   const LHCb::Particle::ConstVector& inparts = this->i_particles();
   verbose() << "Retrieved " << inparts.size() << " particles from local storage" << endmsg;
 
@@ -81,15 +81,16 @@ StatusCode ConjugateNeutralPID::execute()
   if( !outparts.empty() )
   {
     setFilterPassed( true );
-    ++m_nAccepted;			// Increment accepted event counter
-    m_nCandidates += outparts.size();		// Increment candidate counter
+    ++m_nAccepted;   // Increment accepted event counter
+    m_nCandidates += outparts.size();  // Increment candidate counter
 
-    debug() << "Saved " << outparts.size() << " from " << inparts.size() 
-    	    << " candidates" << endmsg;   
+    debug() << "Saved " << outparts.size() << " from " << inparts.size()
+            << " candidates" << endmsg;
   }
   else
+  {
     debug() << "Writing nothing to output" << endmsg;
-
+  }
 
   return StatusCode::SUCCESS ;
 }
@@ -99,15 +100,10 @@ StatusCode ConjugateNeutralPID::execute()
 //=============================================================================
 StatusCode ConjugateNeutralPID::finalize()
 {
-
-  debug() << "==> Finalize" << endmsg;
-
-  info() << "Passed " << m_nCandidates << " candidates in " 
-	 << m_nAccepted << " accepted events among "
+  info() << "Passed " << m_nCandidates << " candidates in "
+         << m_nAccepted << " accepted events among "
          << m_nEvents << " events" << endmsg ;
-
-
-  return DVAlgorithm::finalize(); //=== For DC04, return StatusCode::SUCCESS;
+  return DaVinciAlgorithm::finalize();
 }
 
 //=============================================================================

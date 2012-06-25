@@ -1,15 +1,15 @@
 // $Id$
-#ifndef CONJUGATENEUTRALPID_H 
+#ifndef CONJUGATENEUTRALPID_H
 #define CONJUGATENEUTRALPID_H 1
 
 // Include files
 // from DaVinci, this is a specialized GaudiAlgorithm
-#include "Kernel/DVAlgorithm.h"
+#include "Kernel/DaVinciAlgorithm.h"
 #include "Kernel/IChangePIDTool.h"
 
 
 /** @class ConjugateNeutralPID ConjugateNeutralPID.h
- * 
+ *
  * Very simple algorithm that takes all particles on the local storage
  * and *CLONES* them with the conjugate PID.
  *
@@ -18,12 +18,15 @@
  *
  * It is just an algorithm wrapper for the tool NeutralCCChangePIDTool that
  * performs the cloning and renaming.
- * 
+ *
  *  @author Patrick Spradlin
  *  @date   2006-12-15
  */
-class ConjugateNeutralPID : public DVAlgorithm {
-public: 
+class ConjugateNeutralPID : public DaVinciAlgorithm
+{
+
+public:
+
   /// Standard constructor
   ConjugateNeutralPID( const std::string& name, ISvcLocator* pSvcLocator );
 

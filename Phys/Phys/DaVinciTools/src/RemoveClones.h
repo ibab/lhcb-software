@@ -4,7 +4,7 @@
 
 // Include files
 // from DaVinci, this is a specialized GaudiAlgorithm
-#include "Kernel/DVAlgorithm.h"
+#include "Kernel/DaVinciAlgorithm.h"
 
 /** @class RemoveClones RemoveClones.h
  *  
@@ -18,7 +18,7 @@
 class ICheckOverlap;
 
 //===========================================================================
-///A public DVAlgorithm using the FindCloneTool. Removes particle clones from the local storage.
+///A public DaVinciAlgorithm using the FindCloneTool. Removes particle clones from the local storage.
 /** RemoveClones is a useful tool to be called after FilterDesktop
  * It filters the local particle storage into just those particles 
  * which are unique.
@@ -29,7 +29,8 @@ class ICheckOverlap;
  */
 //===========================================================================
 
-class RemoveClones : public DVAlgorithm {
+class RemoveClones : public DaVinciAlgorithm
+{
 
 public: 
   /// Standard constructor
