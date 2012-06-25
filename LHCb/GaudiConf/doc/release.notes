@@ -3,6 +3,7 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+!========================= GaudiConf v16r0 2012-06-25 =========================
 ! 2012-06-24 - Olivier Deschamps
  - DstConf : add CaloHypo->MC linkers to the writer list
 
