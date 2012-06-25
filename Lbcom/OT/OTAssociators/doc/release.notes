@@ -3,6 +3,7 @@
 ! Responsible : OT software group
 !-------------------------------------------------------------------------
 
+!========================= OTAssociators v4r5 2012-06-25 =========================
 ! 2012-06-13 - Marco Cattaneo
  - Remove obsolete file OTAssociators_dll.cpp
  - Remove unnecessary OTDAQ includes
