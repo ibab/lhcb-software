@@ -1,5 +1,5 @@
 package           STDAQ
-version           v3r27
+version           v3r28
 
 branches cmt doc src options
 include_path none
