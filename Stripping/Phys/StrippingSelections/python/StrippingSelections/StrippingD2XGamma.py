@@ -46,10 +46,11 @@ default_name = 'D2XGamma'
                     
 ##                     }
 default_confdict = {
-    'TrChi2'              : 5.
+    'TrChi2'              : 2.5
     ,'TrIPchi2Phi'        : 25.
     ,'TrPTPhi'            : 500.
     ,'kDLL'               : 2.0
+    ,'PhiMassWinL'        : 1000.
     ,'PhiMassWin'         : 50.
     ,'PhiVCHI2'           : 16.
     ,'D0MassWin'          : 200.
@@ -58,6 +59,7 @@ default_confdict = {
     ,'photonPT'           : 1700.
     ,'DstVCHI2'           : 25.
     ,'deltaMass'          : 160.0
+    ,'deltaMassL'         : 130.0
     ,'pvRefit'             : False
     ,'D02PhiGammaPreScale'               : 1.0
     ,'D02PhiGammaPostScale'              : 1.0
@@ -113,6 +115,7 @@ class StrippingD2XGammaConf(LineBuilder):
                               ,'TrIPchi2Phi'
                               ,'TrPTPhi'
                               ,'kDLL'
+                              ,'PhiMassWinL'
                               ,'PhiMassWin'
                               ,'PhiVCHI2'
                               ,'D0MassWin'
@@ -121,6 +124,7 @@ class StrippingD2XGammaConf(LineBuilder):
                               ,'photonPT'
                               ,'DstVCHI2'
                               ,'deltaMass'
+                              ,'deltaMassL'
                               ,'pvRefit'
                               # Pre- and postscales
                               ,'D02PhiGammaPreScale'
@@ -139,12 +143,12 @@ class StrippingD2XGammaConf(LineBuilder):
                                     config['TrChi2'],
                                     config['kDLL'],
                                     config['TrPTPhi'],
+                                    config['PhiMassWinL'],
                                     config['PhiMassWin'],
                                     config['PhiVCHI2'],
                                     config['PhiLocation'])
 
         self.selSlowPion= makeSlowPi('SlowPiFor%s' % name,
-                                     config['TrChi2'],
                                      config['PionLocation'])
 
         self.selD0 = makeD02PhiGamma('D02PhiGammaFor%s' % name,
@@ -159,6 +163,7 @@ class StrippingD2XGammaConf(LineBuilder):
                                         self.selSlowPion,
                                         self.selD0,
                                         config['deltaMass'],
+                                        config['deltaMassL'],
                                         config['DstVCHI2'],
                                         config['pvRefit'])
         
@@ -192,14 +197,14 @@ def makePhoton(name, photonPT):
     _stdGamma = StdLooseAllPhotons
     return Selection(name, Algorithm=_gammaFilter, RequiredSelections=[_stdGamma])
 
-def makePhi2KK(name, TrIPchi2Phi, TrChi2, kDLL, TrPTPhi, PhiMassWin, PhiVCHI2, PhiLocation) :
+def makePhi2KK(name, TrIPchi2Phi, TrChi2, kDLL, TrPTPhi, PhiMassWinL, PhiMassWin, PhiVCHI2, PhiLocation) :
     """
     Create and return a Phi->KK Selection object, starting from DataOnDemand 'Phys/StdLoosePhi2KK'.
     
     @arg name: name of the Selection.
     @arg TrIPchi2Phi: minimum IP chi2 of the K+ tracks
     @arg TrChi2: minimum chi2 of the K+ tracks
-    @arg PhiMassWin: selected Phi mass window
+    @arg PhiMassWinL and PhiMassWin: lower bound on KK mass and the Phi mass window
     @arg PhiVCHI2: vertex chi2 of the Phi
     @arg kDLL: PIDK-PIDpi
     
@@ -208,24 +213,24 @@ def makePhi2KK(name, TrIPchi2Phi, TrChi2, kDLL, TrPTPhi, PhiMassWin, PhiVCHI2, P
     """
     
     goodKaon = '( ((PIDK-PIDpi)>%(kDLL)s) & (MIPCHI2DV(PRIMARY) > %(TrIPchi2Phi)s) & (TRCHI2DOF < %(TrChi2)s) & (PT > %(TrPTPhi)s))' % locals()
-    goodPhi  = "( (VFASPF(VCHI2/VDOF) < %(PhiVCHI2)s) & (ADMASS('phi(1020)') < %(PhiMassWin)s*MeV) )" % locals()
+    goodPhi  = "( (VFASPF(VCHI2/VDOF) < %(PhiVCHI2)s) & (ADMASS('phi(1020)') < %(PhiMassWin)s*MeV) & (MM > %(PhiMassWinL)s*MeV) )" % locals()
+    #goodPhi  = "( (VFASPF(VCHI2/VDOF) < %(PhiVCHI2)s) & (2010.0 - MM < %(PhiMassWinL)s*MeV) & (2010.0 - MM < %(PhiMassWinL)s*MeV) )" % locals()
     _code = goodPhi+" & CHILDCUT( " + goodKaon + ", 1 ) & CHILDCUT( " + goodKaon + ", 2 )"
     _phiFilter = FilterDesktop(Code=_code)
     _stdPhi2KK = DataOnDemand(Location=PhiLocation)
     print 'making phi:', _code
     return Selection(name, Algorithm=_phiFilter, RequiredSelections=[_stdPhi2KK])
 
-def makeSlowPi(name, TrChi2, PionLocation) :
+def makeSlowPi(name, PionLocation) :
     """
     Create Photons from DataOnDemand 'Phys/StdLoosePions'.
     
     @arg name: name of the Selection.
-    @arg TrChi2: minimum chi2 of the tracks
-    
+       
     @return: Selection object
     
     """
-    _code = '(TRCHI2DOF < %(TrChi2)s)'% locals()
+    _code = '(TRCHI2DOF < 5)'
     print 'making slowPion:', _code
     _slowpiFilter = FilterDesktop(Code=_code)
     _slowPi = DataOnDemand(Location=PionLocation)
@@ -277,7 +282,7 @@ def makeD02PhiGamma(name, phiSel, gammaSel,  D_BPVLTIME,  D0_PT, D0MassWin, pvRe
     return Selection(name, Algorithm=_D0, RequiredSelections=[phiSel, gammaSel])
     
 
-def makeDst2D0Pi(name, D0Sel, slowPionSel, deltaMass, DstVCHI2, pvRefit):
+def makeDst2D0Pi(name, D0Sel, slowPionSel, deltaMass, deltaMassL, DstVCHI2, pvRefit):
     """
     Create and return a Dst-> D0 (-> Phi Gamma) Pi Selection object, starting with the daughters' selections.
   
@@ -286,12 +291,13 @@ def makeDst2D0Pi(name, D0Sel, slowPionSel, deltaMass, DstVCHI2, pvRefit):
     @arg slowPionSel: slow pion selection
     @arg D0MassWin: Dst mass window
     @arg deltaMass: delta(D*-D0)
+    @arg deltaMassL: lower bound on delta(D*-D0)
     @arg DstVCHI2: vertex chi2
     @return: Selection object
     
     """
     _combinationCut = "((AM - AM1) < 1.1*%(deltaMass)s*MeV)"  % locals()
-    _motherCut =   "(VFASPF(VCHI2/VDOF) < %(DstVCHI2)s) & ((M - M1) < %(deltaMass)s*MeV)" % locals()
+    _motherCut =   "( (VFASPF(VCHI2/VDOF) < %(DstVCHI2)s) & ((M - M1) < %(deltaMass)s*MeV) & ((M - M1) > %(deltaMassL)s*MeV) )" % locals()
     print 'making Dstar:',  _combinationCut,'&', _motherCut, 'pvRefit =', pvRefit
     
     _Dst = CombineParticles(DecayDescriptors=[ 'D*(2010)+ -> D0 pi+', 'D*(2010)- -> D0 pi-'], # "[D*(2010)+ -> D0 pi+]cc",
