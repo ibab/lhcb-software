@@ -5,6 +5,213 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v35r0>2012-06-26 LHCbSys v35r0</A></H1><PRE>
+This version uses Gaudi v23r3 and LCG_64
+Production version for 2012 data taking
+
+- Packages modified: Calo/CaloDAQ v4r28, Calo/CaloInterfaces v8r4,
+    Calo/CaloUtils v9r4, DAQ/DAQUtils v1r8, DAQ/MDF v3r33, DAQ/MDF_ROOT v1r7,
+    Det/CaloDet v10r14, Det/DDDB v1r55, Det/DetCond v12r25,
+    Det/DetDescCnv v4r15, Det/RichDet v16r11, Event/DAQEvent v9r8,
+    Event/DigiEvent v2r21, Event/EventPacker v2r17, Event/L0Event v19r6,
+    Event/MCEvent v2r22, Event/PackedEvent v4r11, Event/PhysEvent v11r17,
+    GaudiConf v16r0, GaudiObjDesc v11r14, Kernel/LHCbAlgs v2r50,
+    Kernel/LHCbKernel v13r11, Kernel/LHCbMath v3r33, Muon/MuonDAQ v4r14,
+    OT/OTDAQ v7r13, Phys/LoKiCore v11r9, Phys/LoKiGen v10r8,
+    Phys/LoKiHlt v3r10, Phys/LoKiMC v10r6, Rich/RichRecBase v4r13,
+    Tools/CondDBUI v3r15, Tools/FileStager v1r8, Tr/TrackKernel v1r10
+
+- In CaloDAQ v4r28
+  . CaloDigitFilterTool : prepare for spd-dependent pile-up subtraction
+  . Add RawEventLocations property to decoder to allow to specify a search
+    list of locations. Default is to look for
+    RawEventLocation::Calo followed by RawEventLocation::Default.
+  . RawLocation property is declared obsolete. If set, it is prepended
+    to RawEventLocations and a warning is printed.
+
+- In CaloInterfaces v8r4
+  . IGammaPi0SeparationTool  : update interface for tool update
+
+- In CaloUtils v9r4
+  . Calo2MC.h : add Hypo->MC table typedef
+  . CaloMomentum : 
+    o add the missing method to return the CaloHypo vector
+    o add constructor from vector<CaloHypo>
+      (useful for bremList() from BremAdder)
+    o New method : multiplicity() returns CaloPositions multiplicity
+  . CaloParticle/CaloMomentum : store CaloHypo vector
+
+- In DAQUtils v1r8
+  . Add BanksToRemove property to RawEventSelectiveCopy, to allow to copy all
+    banks except these. Only one of BanksToCopy and BanksToRemove must be set
+  . Add RawEventLocations property to bankKiller, previously hard coded
+    (default is RawEventlocation::Default to preserve old behviour)
+  . Fix unprotected debugs in RawBankReadoutStatusFilter.cpp
+  . Fix trivial icc remark
+
+- In MDF v3r33, MDF_ROOT v1r7
+  . Adjustment of 'includes' to work on systems with native gcc 4.6.
+
+- In CaloDet v10r14
+  . DeCalorimeter : get covariance parameters from Gain condition
+  . DeCalorimeter/CellParam : allow spd-dependent PileUp parameters
+
+- In DDDB v1r55
+  . Update database tags for latest global tags:
+    o LHCBCOND, 2011, 2012: head-20120607
+
+- In DetCond v12r25
+  . Configuration.py:
+    o new property is added. "CondDB().Upgrade = True" will switch the CondDB
+      machinery to talk to the Upgrade database.
+    o three new properties are added:
+      CondDB().LatestGlobalTagByDataType = "DataType0"
+      CondDB().LatestLocalTagsbyDataType = ["DataType1","DataType2",...]
+      CondDB().AllLocalTagsbyDataType = ["DataType1","DataType2",...]
+      Setting this will launch the SAX machinery to fetch and set the latest
+      global tags, latest locals tags, and all local tags, respectively, marked
+      with requested DataType(s). This is an extension to the previous
+      configuration machinery (CondDB().UseLatestTags = ["DataType"]) which is
+      still supported.
+
+- In DetDescCnv v4r15
+  . Modification of XmlConverter for RICH upgrade DB
+
+- In RichDet v16r11
+  . Fix DeRichGasRadiator to allow the scale factors to be used Online.
+
+- In DAQEvent v9r8
+  . Add VL and FTCluster to RawBank types
+  . Add RawEventLocation::Calo, RawEventLocation::Rich,
+        RawEventLocation::Muon, RawEventLocation::Other to RawEvent locations
+
+- In DigiEvent v2r21
+  . Add VLCluster.xml and VLLiteCluster.xml
+
+- In EventPacker v2r17
+  . Add VL to Packers, Unpackers, Checkers
+  . Clean up a little the MCParticle packers
+  . Add a little additional debug printout to UnpackRecVertex for when the PV
+    weights are updated from th weights vector, for old data.
+
+- In L0Event v19r6
+  . L0DUReport : change method preDecisionValueFromSummary : return the full
+                 'int' value instead of the short bool (value !=0)
+
+- In MCEvent v2r22
+  . Define a location for the FT MCHits.
+  . Add MCVLDigit.xml, define location for VL MCHits.
+
+- In PackedEvent v4r11
+  . Added MCVLHitPacker class
+
+- In PhysEvent v11r17
+  . Add enum 'HasBremAdded' to Particle.xml to flag particle with
+    brem-corrected momentum
+  . Add enums for cone variables to Particle.xml
+
+- In GaudiConf v16r0
+  . DstConf :
+    o Add CaloHypo->MC linkers to the writer list
+    o Modify SDST, DST, XDST content to always contain
+      [Calo,Muon,Rich,Trigger,Other]/RawEvent instead of DAQ/RawEvent
+      (needs Brunel v43r0 to write, LHCb v35r0 stack to decode). SDST and DST
+      are now identical after Brunel, SDST is obsolete
+    o Remove obsolete support for input from stripping ETC
+
+- In GaudiObjDesc v11r14
+  . Corrected indentation of Python files (with reindent.py).
+  . Reorganized the package to conform to the standard structure for python
+    modules and scripts.
+  . Modified the main script to accept the path to the DTD file as option.
+  . Modified the fragments to pass the DTD to the script instead of copying it
+    in the packages.
+  . Removed unused fragment (godify).
+
+- In LHCbAlgs v2r50
+  . Remove do nothing method EvtCounter::finalize, which in fact was buggy
+    because it was not calling the base class
+  . Adapt EvtCounter.h to change in IEventCounter interface
+  . Moved IEventCounter to LHCbKernel.
+  . Modified EvtCounter to implement the setEventCounter method and added two
+    properties (UseIncident and InitialCount) useful for special cases and test
+  . Added test for new features of EvtCounter (with test algorithm
+    TestEventCounter).
+  . OfflineRateLimiter: Remove unused property ConditionRate
+  . Bug https://savannah.cern.ch/bugs/?94262
+    o New tool RateFromCondDB that gets the NoBias rate from conditions DB
+    o OfflineRateLimiter : use it
+
+- In LHCbKernel v13r11
+  . Put const in getEventCounter method of IEventCounter
+  . Introduce use of IEventCounter in LbAppInit base class. The change is made
+    to that the count (and so random seeds in Gauss) can be controlled in
+    GaudiMP
+  . Moved IEventCounter from LHCbAlgs and added a setEventCounter method to
+    override the counter value.
+  . Added VLChannelID and VLDataFunctor
+
+- In LHCbMath v3r31, v3r32, v3r33
+  . Add the code for hfits
+  . Add Flatte's function properly corrected for phase space factors
+  . Add Bugg' function for low mass S-wave dipion system ("sigma")
+  . Add Needham function for J/psi
+
+- In MuonDAQ v4r14
+  . Add RawEventLocations property to MuonRawBuffer tool, to allow to specify
+    a search list of locations. Default is to look for RawEventLocation::Muon
+    followed by RawEventLocation::Default.
+  . Undo last change in MuonRec, superseded by this change
+
+- In OTDAQ v7r13
+  . Fix unprotected debug
+  . Fix UNINIT_CTOR defects
+  . Add RawEventLocations property to OTRawBankDecoder, to allow to specify a
+    search list of locations. Default is to look for RawEventLocation::Other
+    followed by RawEventLocation::Default.
+  . RawEventLocation property is declared obsolete. If set, it is prepended
+    to RawEventLocations and a warning is printed.
+
+- In LoKiCore v11r8, v11r9
+  . Minor tweak for event type in AuxFunBase
+  . Minor tweak to avoid verbosity in ONLINE
+  . Improve decorators
+
+- In LoKiGen v10r7, v10r8
+  . Redesign kinematical functors
+  . Improve child selection
+  . More improvements for decorators
+  . Add more rrshift/calls decorators
+
+- In LoKiHlt v3r10
+  . Minor improvement in treatment of event numbers
+
+- In LoKiMC v10r5, v10r6
+  . Improve treatment of children
+  . Improve streamers, make dictionaries lighter
+  . Add more rrshift/call decorators
+
+- In RichRecBase v4r13
+  . Update a few histogram limits
+
+- In CondDBUI v3r15
+  . TagsFilter.py: A method added to Release Notes Handler to get all local
+    tags for specific data type and partition.
+
+- In FileStager v1r8
+  . Support '+' in filenames
+  . Delay check for remote file existence until the staging gets to a file.
+  . Return an instance of the FileStagerSvc configurable from the configuration
+    function.
+
+- In TrackKernel v1r10
+  . TrackStateVertex:
+    o Added adaptive fit to TrackStateVertex
+    o now copies input states rather than keeping pointers
+    o particles with negative masshypo will be ignored for p4
+  . Added utility class TrajVertex
+
+
 </PRE><H1><A NAME=v34r3>2012-05-03 LHCbSys v34r3</A></H1><PRE>
 This version uses Gaudi v23r2 and LCG_62b
 Production version for 2012 data taking
