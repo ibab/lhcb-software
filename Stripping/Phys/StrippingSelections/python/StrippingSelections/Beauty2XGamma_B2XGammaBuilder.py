@@ -11,7 +11,7 @@ from Beauty2XGamma_Utils import *
 class B2XGammaBuilder(object):
     '''Makes all B->XGamma decays for the Beauty2XGamma module.'''
 
-    def __init__(self, gamma, topoPions, topoKaons, ks, pi0, hh, hhh, config):
+    def __init__(self, gamma, gammaConv, topoPions, topoKaons, ks, pi0, hh, hhh, config):
         self.config = config
         self.topoPions = [topoPions]
         self.topoKaons = [topoKaons]
@@ -19,6 +19,7 @@ class B2XGammaBuilder(object):
         self.hhh = hhh
         self.ks = ks
         self.pi0 = pi0
+        self.gammaConv = gammaConv if isinstance(gammaConv, list) else [gammaConv] ## gamma from converted photons before the magnet
         self.gamma = gamma if isinstance(gamma, list) else [gamma]
         self.lines = []        
         # B -> V gamma
@@ -30,19 +31,23 @@ class B2XGammaBuilder(object):
 
     def _makeB2VGamma(self, name):
         """Makes B -> V gamma"""
-        decays = { 'B2KstarGamma'    : ['[B0 -> K*(892)0 gamma]cc'],
-                   'B2PhiGamma'      : ['B_s0 -> phi(1020) gamma'],
-                   'B2RhoGamma'      : ['B0 -> rho(770)0 gamma'],
-                   'B2OmegaGammaHH'  : ['B0 -> omega(782) gamma'],
-                   'B2OmegaGammaHHH' : ['B0 -> omega(782) gamma'],
-                   'B2KstarIsoGamma' : ['[B+ -> K*(892)+ gamma]cc'],
+        decays = { 'B2KstarGamma'      : ['[B0 -> K*(892)0 gamma]cc'],
+                   'B2PhiGamma'        : ['B_s0 -> phi(1020) gamma'],
+                   'B2RhoGamma'        : ['B0 -> rho(770)0 gamma'],
+                   'B2OmegaGammaHH'    : ['B0 -> omega(782) gamma'],
+                   'B2OmegaGammaHHH'   : ['B0 -> omega(782) gamma'],
+                   'B2KstarIsoGamma'   : ['[B+ -> K*(892)+ gamma]cc'],
+                   'B2K1Gamma'         : ['[B+ -> K_1(1270)+ gamma]cc'],
+                   'B2KstarGammaConv'  : ['[B0 -> K*(892)0 gamma]cc'],
                    }
-        inputs = { 'B2KstarGamma'    : self.gamma + self.hh.kstar0,
-                   'B2PhiGamma'      : self.gamma + self.hh.phi,
-                   'B2RhoGamma'      : self.gamma + self.hh.rho0,
-                   'B2OmegaGammaHH'  : self.gamma + self.hh.omega,
-                   'B2OmegaGammaHHH' : self.gamma + self.hhh.omega,
-                   'B2KstarIsoGamma' : self.gamma + self.hh.kspi,
+        inputs = { 'B2KstarGamma'      : self.gamma     + self.hh.kstar0,
+                   'B2PhiGamma'        : self.gamma     + self.hh.phi,
+                   'B2RhoGamma'        : self.gamma     + self.hh.rho0,
+                   'B2OmegaGammaHH'    : self.gamma     + self.hh.omega,
+                   'B2OmegaGammaHHH'   : self.gamma     + self.hhh.omega,
+                   'B2KstarIsoGamma'   : self.gamma     + self.hh.kspi,
+                   'B2K1Gamma'         : self.gamma     + self.hhh.k1,
+                   'B2KstarGammaConv'  : self.gammaConv + self.hh.kstar0,
                    }
         b2vgamma = makeB2XSels(decays, name, inputs, self.config)
         self.lines.append(ProtoLine(b2vgamma, 1.0))

@@ -18,8 +18,9 @@ from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 # Standard Particles
-from StandardParticles import StdLooseResolvedPi0, StdLooseMergedPi0, StdLooseAllPhotons
+from StandardParticles import StdLooseResolvedPi0, StdLooseMergedPi0, StdLooseAllPhotons, StdAllLooseElectrons #, StdAllLooseGammaConversion 
 from StandardParticles import StdAllNoPIDsPions, StdAllNoPIDsKaons, StdAllNoPIDsProtons
+
 # Builders
 from Beauty2XGamma_HHBuilder import HHBuilder as HHBuilder
 from Beauty2XGamma_HHHBuilder import HHHBuilder as HHHBuilder 
@@ -38,6 +39,10 @@ config = { # Cuts made on all charged input particles in all lines
            "GAMMA" : { 'PT_MIN'       : '2500*MeV',
                        'CL_MIN'       : 0.25 
                      },
+           # Cuts made on the converted photon
+           "GAMMACONV" : { 'AM_MAX'        : '50*MeV',
+                           'VCHI2DOF_MAX'  : 9  ,
+                        },   
            # Cuts made on all K shorts
            "KS0" : { 'PT_MIN'        : '1000*MeV',
                      'BPVVDCHI2_MIN' : 81 ,
@@ -46,7 +51,7 @@ config = { # Cuts made on all charged input particles in all lines
                      'MM_MIN'        : '480.*MeV',
                      'MM_MAX'        : '515.*MeV' },
            # Cuts made on all pi0's
-           "Pi0" : { 'PT_MIN'        : '1000*MeV',
+           "Pi0" : { 'PT_MIN'        : '1200*MeV',
                      'P_MIN'         : '4000*MeV',
                      'CHILDCL1_MIN'  : 0.25,
                      'CHILDCL2_MIN'  : 0.25 },
@@ -63,7 +68,7 @@ config = { # Cuts made on all charged input particles in all lines
            # Cuts for rho, K*, phi, omega
            "HH": { 'MASS_WINDOW'      : {'KST':'150*MeV','RHO':'250*MeV','PHI':'15*MeV','OMEGA':'30*MeV'}, 
                    'DAUGHTERS'        : {'PT_MIN':'500*MeV','P_MIN':'3000*MeV'},
-                   'piLAMBDADAUGHTERS': {'PT_MIN':'300*MeV','P_MIN':'3000*MeV','PIDK_MAX':'5'},   # only for pH
+                   'piLAMBDADAUGHTERS': {'PT_MIN':'300*MeV','P_MIN':'3000*MeV','PIDK_MAX':'2'},   # only for pH
                    'pLAMBDADAUGHTERS' : {'PT_MIN':'1200*MeV','P_MIN':'10000*MeV','PIDp_MIN':'5'}, # only for pH
                    'kLAMBDADAUGHTERS' : {'PT_MIN':'300*MeV','P_MIN':'3000*MeV','PIDK_MIN':'0'},    # only for pH
                    #'AMAXDOCA_MAX'  : '0.5*mm',
@@ -74,7 +79,7 @@ config = { # Cuts made on all charged input particles in all lines
                    #'pP_MIN'        : '10000*MeV' # for pH only (obviously)
                  },
            # Cuts for omega -> 3 body decay
-           "HHH": { 'MASS_WINDOW'   : {'OMEGA': '150*MeV'},
+           "HHH": { 'MASS_WINDOW'   : {'OMEGA': '150*MeV', 'K1': '200*MeV'},
                     'DAUGHTERS'     : {'PT_MIN':'300*MeV','P_MIN':'2000*MeV'},
                     #'AMAXDOCA_MAX'  : '0.40*mm',
                     'VCHI2DOF_MAX'  : 9,
@@ -98,6 +103,7 @@ class Beauty2XGamma(LineBuilder):
     __configuration_keys__ = ('ALL',
                               'B2X',
                               'GAMMA',
+                              'GAMMACONV',  
                               'GECNTrkMax',
                               'HH',
                               'HHH',
@@ -125,6 +131,7 @@ class Beauty2XGamma(LineBuilder):
         ks = {"DD": [ks_dd], "LL": [ks_ll]}
         # Prefilter photons
         photons = filterPhotons([StdLooseAllPhotons], config['GAMMA'])
+        photonsConv = filterPhotonsConv([StdAllLooseElectrons],config['GAMMACONV'])
         # Prefilter pi0
         pi0_merged   = filterPi0s('Merged', [StdLooseMergedPi0], config['Pi0'])
         pi0_resolved = filterPi0s('Resolved', [StdLooseResolvedPi0], config['Pi0'])
@@ -144,7 +151,8 @@ class Beauty2XGamma(LineBuilder):
         ###########################################################################
         # B -> X Gamma
         ###########################################################################
-        b2xgamma = B2XGammaBuilder(photons, topoPions, topoKaons, ks, pi0, hh, hhh, config['B2X'])
+        b2xgamma = B2XGammaBuilder(photons, photonsConv, topoPions, topoKaons, ks, pi0, hh, hhh, config['B2X'])
+        #b2xgamma = B2XGammaBuilder(photons, topoPions, topoKaons, ks, pi0, hh, hhh, config['B2X'])
         self._makeLines(b2xgamma.lines, config)
         ###########################################################################
         # Lb -> X Gamma

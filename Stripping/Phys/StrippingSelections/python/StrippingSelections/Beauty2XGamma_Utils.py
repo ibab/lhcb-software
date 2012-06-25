@@ -59,6 +59,25 @@ def filterPhotons(inputs, config):
     code = LoKiCuts.combine(["ABSID==22",LoKiCuts(cuts,config).code()])
     return filterSelection("Gamma", code, inputs)
 
+#def filterPhotonsConv(inputs, config):
+#    ''' New version to make the converted photons'''
+#    posElec = LoKiCuts.combine(["ID==11",LoKiCuts(cuts,config).code()])
+#    negElec = LoKiCuts.combine(["ID==-11",LoKiCuts(cuts,config).code()])
+#    elec = LoKiCuts.combine(["ABSID==11",LoKiCuts(cuts,config).code()])
+
+def filterPhotonsConv(inputs,config):
+    ''' Makes converted photons before the magnet '''
+    cuts = ['AM']
+    #code = LoKiCuts(cuts,config).code()
+    #return filterSelection("GammaConv", code, inputs)
+    comboCuts = LoKiCuts(cuts,config).code()
+    momCuts = LoKiCuts(['VCHI2DOF'],config).code()
+    decay = ['gamma -> e+ e-']
+    comb = CombineParticles(CombinationCut=comboCuts, MotherCut=momCuts, DecayDescriptors=decay)
+    return Selection('GammaConv', Algorithm=comb, RequiredSelections = inputs)
+    #code = LoKiCuts.combine(["ABSID==11",LoKiCuts(cuts,config).code()])
+    #return filterSelection("GammaConv", code, inputs)
+
 def topoInputsCuts(): # Don't need IP chi2 cut b/c is in 1st filter
     return "(TRCHI2DOF<3) & (PT > 500*MeV) & (P > 5000*MeV)"
 
@@ -142,7 +161,7 @@ def makeB2X(name, decay, inputs, config, useIP=True, resVert=False, usePi0=False
         b2x.OfflineVertexFitter.useResonanceVertex = False
     return Selection(name, Algorithm=b2x, RequiredSelections=inputs)
 
-def makeLambda2X(name, decay, inputs, config):
+def makeLambda2X(name, decay, inputs, config, hasLambdaPion=False):
     '''Makes all Lambda -> X selections.'''
     from copy import deepcopy
     comboCuts = LoKiCuts(['SUMPT','AM'],config).code()
@@ -157,19 +176,26 @@ def makeLambda2X(name, decay, inputs, config):
     b2x = CombineParticles(DecayDescriptors=decay,
                            CombinationCut=comboCuts,
                            MotherCut=momCuts)
-    b2x.ParticleCombiners = { '' : 'LoKi::VertexFitter' }
+    if hasLambdaPion:
+        b2x.ParticleCombiners = { '' : 'LoKi::VertexFitter' }
     return Selection(name, Algorithm=b2x, RequiredSelections=inputs)
 
 
-def makeB2XSels(decays, xtag, inputs, config, useIP=True, resVert=True, usePi0=False):
+def makeB2XSels(decays, xtag, inputs, config, useIP=True, resVert=True, usePi0=False, hasLambdaPion=False):
     '''Returns a list of the Hb->X selections.'''
     sels = []
     for tag, decay in decays.iteritems():
         #sname = tag + xtag + 'Beauty2XGamma'
         sname = tag + xtag
         ## we only want the std vertexing when there are no neutrals in the resonances 
-        if tag == 'Lb2PHGamma': 
-            sel = makeLambda2X(sname, decay, inputs[tag], config)
+        #if tag == 'Lb2PHGamma':
+        #    sel = makeLambda2X(sname, decay, inputs[tag], config, hasLambdaPion)
+        if tag == 'Lb2PPiGamma':
+            sel = makeLambda2X(sname, decay, inputs[tag], config, hasLambdaPion=True)
+        elif tag == 'Lb2PKGamma':
+            sel = makeLambda2X(sname, decay, inputs[tag], config, hasLambdaPion)    
+        #if tag in lambdaTags : 
+        #    sel = makeLambda2X(sname, decay, inputs[tag], config, hasLambdaPion)
             #sel = tisTosSelection(sel)
             #sel = filterSelection(sname + '_B2CBBDT',
             #sel = filterSelection(sname, 
