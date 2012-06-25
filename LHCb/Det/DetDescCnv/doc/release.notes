@@ -4,6 +4,10 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !------------------------------------------------------------------------------
 
+!========================= DetDescCnv v4r15 2012-06-25 =========================
+! 2012-05-13 - Sajan Easo
+ - Modification of XmlConverter for RICH upgrade DB
+
 !========================= DetDescCnv v4r14 2011-07-25 =========================
 ! 2011-06-24 - Sajan Easo
   - Modified XmlLVolumeCnv.cpp to be able to use the string '-KEY-' in material names
