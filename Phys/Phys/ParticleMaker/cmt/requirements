@@ -6,7 +6,7 @@ version           v6r2
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc options src
+branches          cmt doc src
 
 # Exported header files
 #============================================================================

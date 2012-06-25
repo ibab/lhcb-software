@@ -2,12 +2,11 @@
 #ifndef PARTICLEMAKERBASE_H 
 #define PARTICLEMAKERBASE_H 1
 
-// Include files
 // from STL
 #include <string>
 
 // from DaVinci
-#include "Kernel/DVAlgorithm.h"
+#include "Kernel/DaVinciAlgorithm.h"
 // PartProp
 #include "Kernel/ParticleProperty.h" 
 // Brem adder
@@ -30,8 +29,11 @@ namespace
   }
 }
 
-class ParticleMakerBase : public DVAlgorithm {
+class ParticleMakerBase : public DaVinciAlgorithm
+{
+
 public:
+
   /// Standard constructor
   ParticleMakerBase( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -40,14 +42,15 @@ public:
   virtual StatusCode execute();    ///< Algorithm execution
 
   virtual StatusCode initialize() ; ///< Finalize
-  virtual StatusCode finalize(){return DVAlgorithm::finalize();} ; ///< Finalize
 
 protected:
+
   /// The method that each implementation should implement
   virtual StatusCode makeParticles(LHCb::Particle::Vector& ) = 0 ;
 
   /// protoparticles
-  const LHCb::ProtoParticle::ConstVector& protos() const {
+  const LHCb::ProtoParticle::ConstVector& protos() const
+  {
     return m_protos;
   }
   

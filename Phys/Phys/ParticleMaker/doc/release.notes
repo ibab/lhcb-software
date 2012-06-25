@@ -3,25 +3,30 @@
 ! Responsible : Chris Jones, J. Palacios, Olivier Deschamps
 !==============================================================================
 
+! 2012-06-25 - Chris Jones
+ - Use DaVinciAlgorithm instead of DVAlgorithm as bass class.
+
 ! 2012-06-22 - Olivier Deschamps
-  - DiElectronMaker : optimize processing
+ - DiElectronMaker : optimize processing
 
 ! 2012-06-21 - Olivier Deschamps
-  - DiElectronMaker : speed-up processing
+ - DiElectronMaker : speed-up processing
 
 ! 2012-06-20 - Wouter Hulsbergen
- - fixed Particle2State::state2Particle such that it doesn't rely on the pid (charge)
-   of the mother particle (and made it a bit faster as well)
+ - fixed Particle2State::state2Particle such that it doesn't rely on the 
+   pid (charge) of the mother particle (and made it a bit faster as well)
 
 ! 2012-06-18 - Patrick Koppenburg
- - DiElectronMaker  : Allow user to change mother ID of 'photon'. Typically J/psi(1S)
+ - DiElectronMaker  : Allow user to change mother ID of 'photon'. 
+                      Typically J/psi(1S)
      -> Use Particle property
   
 ! 2012-06-15 - Olivier Deschamps
   - DiElectronMaker : fix gcc46 warnings
 
 ! 2012-06-12 - Olivier Deschamps
-  - DiElectronMaker  : new maker algorithm to produce dielectron with correct bremsstrahlung treatment (killing overlap)
+  - DiElectronMaker  : new maker algorithm to produce dielectron with correct 
+    bremsstrahlung treatment (killing overlap)
   - ResolvedPi0Maker : add the possibility to cut on the di-gamma energy balance
   - PhotonMaker      : possibility to create 'Ecal+Hcal' objects
  

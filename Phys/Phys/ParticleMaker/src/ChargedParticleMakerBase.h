@@ -19,17 +19,20 @@
  *  @date   2009-04-21
  */
 
-class ChargedParticleMakerBase : public ParticleMakerBase {
+class ChargedParticleMakerBase : public ParticleMakerBase
+{
+
 public:
+
   /// Standard constructor
   ChargedParticleMakerBase( const std::string& name, ISvcLocator* pSvcLocator );
 
   virtual ~ChargedParticleMakerBase( ); ///< Destructor
 
   virtual StatusCode initialize() ; ///< Finalize
-  virtual StatusCode finalize(){return DVAlgorithm::finalize();} ; ///< Finalize
 
 protected:
+
   // The method that each implementation should implement
   //  virtual StatusCode makeParticles(LHCb::Particle::Vector& ) = 0 ;
   ///  Particle to state convertion tool
@@ -42,11 +45,11 @@ protected:
   const LHCb::State* usedState( const LHCb::Track* track)const ;
 
 private:
+
   /// Particle to state convertion tool
   const IParticle2State* m_p2s ;
   /// Track selector tool
   const ITrackSelector * m_trSel;
-
 
 };
 #endif // CHARGEDPARTICLEMAKERBASE
