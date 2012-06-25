@@ -4,6 +4,7 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+!========================= PackedEvent v4r11 2012-06-25 =========================
 ! 2012-06-21 - Heinrich Schindler
  - Added MCVLHitPacker class 
 
