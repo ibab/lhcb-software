@@ -192,9 +192,8 @@ class Ccbar2PhiPhiConf(LineBuilder):
                                                           DaughterLists = [ self.DetachedPhiForJpsiList,
                                                                             self.PionForCcbar
                                                                             ], 
-                                                          DaughterCuts  = { "phi(1020)": """
-                                                                          (PT>0.5*GeV) 
-                                                                          & (INTREE( (ID=='K+') & (PT>500*MeV) & (TRCHI2DOF<5) & (MIPCHI2DV(PRIMARY)>25.) & (PIDK>5)))
+                                                          DaughterCuts  = { "phi(1020)": """                                                                          
+                                                                            (INTREE( (ID=='K+') & (PT>500*MeV) & (TRCHI2DOF<5) & (MIPCHI2DV(PRIMARY)>25.) & (PIDK>5)))
                                                                           & (INTREE( (ID=='K-') & (PT>500*MeV) & (TRCHI2DOF<5) & (MIPCHI2DV(PRIMARY)>25.) & (PIDK>5)))
                                                                           """},
                                                           PreVertexCuts = "AM>2.65*GeV",
