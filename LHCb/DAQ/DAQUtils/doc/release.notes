@@ -4,6 +4,7 @@
 ! Purpose     : Various utilities for manipulating RawEvent
 !-----------------------------------------------------------------------------
 
+!========================= DAQUtils v1r8 2012-06-25 =========================
 ! 2012-06-06 - Marco Cattaneo
  - Add BanksToRemove property to RawEventSelectiveCopy, to allow to copy all
    banks except these. Only one of BanksToCopy and BanksToRemove must be set
