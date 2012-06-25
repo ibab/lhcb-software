@@ -149,7 +149,7 @@ def makeTau2PhiMu(name):
     
     _kaons = DataOnDemand(Location='Phys/StdLooseKaons/Particles')
     
-    makePhi.CombinationCut =  "(ADAMASS('phi(1020)')<20*MeV)"
+    makePhi.CombinationCut =  "(ADAMASS('phi(1020)')<10*MeV)"
     makePhi.MotherCut = " (MIPCHI2DV(PRIMARY)> 25.)"
     
     SelPhi = Selection( name+"SelPhi",                       Algorithm= makePhi,

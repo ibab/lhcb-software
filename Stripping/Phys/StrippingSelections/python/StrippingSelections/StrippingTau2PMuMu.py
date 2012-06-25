@@ -50,8 +50,8 @@ confdict = {
     #
     # Selection of basic muons and protons 
     #
-    'GoodMuons' : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 3 ) & ( PIDmu > -5 ) & ( (PIDmu - PIDK) > 0 )" ,
-    'GoodProtons' : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 3 )" ,
+    'GoodMuons' : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 3 ) & ( PIDmu > -5 ) & ( (PIDmu - PIDK) > 0 ) & ( BPVIPCHI2 () >  9 )" ,
+    'GoodProtons' : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 3 )& ( BPVIPCHI2 () >  9 )" ,
     #
     # Prescale 
     #
@@ -210,13 +210,13 @@ class StrippingTau2PMuMuConf(LineBuilder) :
             Preambulo        = self.__confdict__['Preambulo'] , 
             ## 
             CombinationCut  = """
-            ( ADAMASS('tau+') < 250 * MeV ) & ( APT > 4 * GeV )
+            ( ADAMASS('tau+') < 250 * MeV ) 
             """ , 
             ##
             MotherCut       = """
-            ( chi2vx < 20 ) &
-            ( ctau   > 50 * micrometer ) &
-            ( BPVDIRA > 0.999 )
+            ( chi2vx < 15 ) &
+            ( ctau   > 100 * micrometer ) &
+            ( BPVIPCHI2() < 225 )
             """ 
             )
         
@@ -248,13 +248,13 @@ class StrippingTau2PMuMuConf(LineBuilder) :
             Preambulo        = self.__confdict__['Preambulo'] , 
             ## 
             CombinationCut  = """
-            ( ADAMASS('tau+') < 250 * MeV ) & ( APT > 4 * GeV )
+            ( ADAMASS('tau+') < 250 * MeV )
             """ , 
             ##
             MotherCut       = """
-            ( chi2vx < 20 ) &
-            ( ctau   > 50 * micrometer ) &
-            ( BPVDIRA > 0.999 )
+              ( chi2vx < 15 ) &
+            ( ctau   > 100 * micrometer ) &
+            ( BPVIPCHI2() < 225 )
             """ 
             )
 	

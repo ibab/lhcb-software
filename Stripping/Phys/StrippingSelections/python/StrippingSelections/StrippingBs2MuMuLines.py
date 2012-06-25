@@ -368,7 +368,7 @@ def makeBs(name) :
     
     _kaons = DataOnDemand(Location='Phys/StdNoPIDsKaons/Particles')
 
-    makePhi.CombinationCut =  "(ADAMASS('phi(1020)')<10*MeV)"
+    makePhi.CombinationCut =  "(ADAMASS('phi(1020)')<20*MeV)"
     makePhi.MotherCut = " (MIPCHI2DV(PRIMARY)> 25.)"
     SelPhi = Selection( "SelPhi",                       Algorithm= makePhi,
                         RequiredSelections=[_kaons] )

@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-06-25 - Johannes Albrecht
+ - StrippingBs2MuMuLines.py: minimal enlargement of Phi sidebands for systematics
+ - StrippingLFVLines.py: small tweaking of tau2PhiMu to reduce rate
+ - StrippingTau2PMuMu.py: syncronize line with tau23mu
+
 ! 2012-06-25 - Francesca Dordei
  - StrippingB2JpsiXForBeta_s.py: removed Bs2JpsiEtaPrescaledLine, Bs2JpsiEtaDetachedLine
 
