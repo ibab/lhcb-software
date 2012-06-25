@@ -111,6 +111,7 @@ import StrippingMiniBias
 
 import StrippingNoPIDDstarWithD02RSKPi
 
+import StrippingJPsiForSL
 import StrippingCharmForVub
 import StrippingDstarD02KMuNu
 import StrippingD02MuMu

@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-06-25 - Mika Vesterinen
+ - StrippingJPsiForSL.py: new stripping line for semi-inclusive psi->mumu 
+   for measuring detection asymmetries.
+
 ! 2012-06-25 - Chris Jones
  - Do not set the property 'HistoPrint' in StrippingNoPIDDstarWithD02RSKPi or
    StrippingV0ForPID
