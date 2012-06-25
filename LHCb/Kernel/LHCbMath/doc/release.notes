@@ -6,6 +6,7 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+!========================= LHCbMath v3r33 2012-06-25 =========================
 ! 2012-06-07 - Vanya Belyaev
  - minor fix 
 
@@ -13,18 +14,13 @@
  - fix ICC warnings/remarks
    fix some Coverity reports 
 
-
 ! 2012-05-28 - Vanya Belyaev
  - add hfit 
 
 ! 2012-05-28 - Vanya Belyaev
-
  - add the code for hfits
 
 !========================= LHCbMath v3r32 2012-05-24 =========================
-
-
-
 ! 2012-05-24 - Vanya Belyaev
  - add Flatte's function properly corrected for phase space factors 
 
