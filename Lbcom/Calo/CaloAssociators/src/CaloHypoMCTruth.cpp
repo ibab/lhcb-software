@@ -61,7 +61,7 @@ StatusCode CaloHypoMCTruth::execute    (){
       counter("No container " + container)+=1;
       continue;
     }
-    const LHCb::CaloHypos* hypos = hypos=get<LHCb::CaloHypos>(container);
+    const LHCb::CaloHypos* hypos = get<LHCb::CaloHypos>(container);
     if( hypos == NULL )continue;
     for( LHCb::CaloHypos::const_iterator h = hypos->begin() ;hypos->end()!=h ; ++h){
       const LHCb::CaloHypo* hypo = *h;
