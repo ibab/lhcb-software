@@ -1,4 +1,3 @@
-# $Id: requirements,v 1.39 2010-06-10 07:44:30 cattanem Exp $
 # =============================================================================
 # Package which contains the essential ingredients to build/store/retrieve 
 # basic relations/associations between calorimter objects 
@@ -6,7 +5,7 @@
 # Package manager: Vanya BELYAEV Ivan.Belyaev@itep.ru 
 # =============================================================================
 package           CaloAssociators
-version           v6r10p1
+version           v6r11
         
 # =============== structure =================================================== 
 branches          src cmt doc options python

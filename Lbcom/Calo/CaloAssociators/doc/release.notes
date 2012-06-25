@@ -1,4 +1,3 @@
-! $Id: release.notes,v 1.69 2010-06-10 07:44:30 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloAssociators
 ! =============================================================================
@@ -6,7 +5,7 @@
 !               Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
-
+!========================= CaloAssociators v6r11 2012-06-25 ===================
 ! 2012-11-03 - Olivier  Deschamps
    - new algo : CaloHypoMCTruth : produce Linker tables for Hypo->MC
 
