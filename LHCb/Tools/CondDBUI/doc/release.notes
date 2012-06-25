@@ -3,6 +3,7 @@
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+!========================= CondDBUI v3r15 2012-06-25 =========================
 ! 2012-06-12 - Illya Shapoval
  - TagsFilter.py: A method added to Release Notes Handler to get all local tags
    for specific data type and partition.
