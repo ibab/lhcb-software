@@ -13,28 +13,21 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiCore v11r9 2012-06-25 =========================
 ! 2012-06-21 - Vanya Belyaev
  - fix ICC compiler warning
  
-
 ! 2012-06-18 - Vanya Belyaev
  - fix compiler warning
 
 ! 2012-06-17 - Vanya Belyaev
-
  - minor tweak for event type in AuxFunBase 
 
 ! 2012-06-15 - Vanya Belyaev
-
  - minor tweak to make Clara, Beat and Markus  happy 
 
-
 !========================= LoKiCore v11r8 2012-05-24 =========================
-
-
-
 ! 2012-05-20 - Vanya Belyaev
-
  - improve decorators 
 
 !========================= LoKiCore v11r7 2012-02-28 =========================
