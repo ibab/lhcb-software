@@ -1085,11 +1085,19 @@ CharmAssociative = {
     'BUILDERTYPE'  :'StrippingCharmAssociativeConf',
     'CONFIG'  : {
     'PhotonCuts'      : ' PT > 4.0 * GeV  '                                 , 
-    'MuonCuts'        : ' ISMUON & ( PT > 650 * MeV ) & ( TRCHI2DOF < 5 ) ' , 
+    'MuonCuts'        : ' ISMUON & ( PT > 650 * MeV ) & ( TRCHI2DOF < 5 ) ' ,
+    #
+    ## photons from chi_(c,b)
+    #
+    'GammaChi'        : ' ( PT > 450 * MeV ) & ( CL > 0.05 ) ' , 
+    #
+    ## W+- selection
+    #
+    'WCuts'           : " ( 'mu+'== ABSID ) & ( PT > 15 * GeV )" ,
     #
     ## Global Event cuts 
     #
-    'PrimaryVertices' : True , 
+    'CheckPV'         : True , 
     #
     ## Technicalities:
     #
@@ -1100,23 +1108,27 @@ CharmAssociative = {
     #
     ## shortcut for the c*tau
     "from GaudiKernel.PhysicalConstants import c_light" , 
-    "ctau   = BPVLTIME ( 9 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<9
     #
     ## dimuons:
-    "psi             = ADAMASS ( 'J/psi(1S)' ) < 150 * MeV"         ,
-    "psi_prime       = ADAMASS (   'psi(2S)' ) < 150 * MeV"         ,
-    "psi_tight       =  ADMASS ( 'J/psi(1S)' ) < 100 * MeV "        ,
-    "psi_prime_tight =  ADMASS (   'psi(2S)' ) < 100 * MeV "        ,
-    "dimuon_heavy    = M > 4.8 * GeV "                              ,
+    "psi             = ADAMASS ( 'J/psi(1S)'  ) < 125 * MeV"         ,
+    "psi_prime       = ADAMASS (   'psi(2S)'  ) < 125 * MeV"         ,
+    "mu2_tight       = ( chi2vx < 10    ) & ( MINTREE ( 'mu+' == ABSID , PT ) > 900 * MeV ) " ,
+    "dimu_tight      = ( PT > 3.0 * GeV ) & mu2_tight " ,
+    "psi_tight       = ( ADMASS ( 'J/psi(1S)' ) < 100 * MeV ) & dimu_tight " ,
+    "psi_prime_tight = ( ADMASS (   'psi(2S)' ) < 100 * MeV ) & dimu_tight " ,
+    "dimuon_heavy    = ( M > 4.9 * GeV ) & dimu_tight "                      ,
     "dimuon_tight    = psi_tight | psi_prime_tight | dimuon_heavy " ,
     ] ,
-    #
     ## monitoring ?
     'Monitor'     : False ,
     #
     ## pescales 
     'DiMuonAndGammaPrescale' : 1.0 ,
-    'DoubleDiMuonPrescale'   : 1.0
+    'DoubleDiMuonPrescale'   : 1.0 ,
+    'ChiAndDiMuonPrescale'   : 1.0 ,
+    'DiChiPrescale'          : 1.0 ,
+    'DiMuonAndWPrescale'     : 1.0 , 
+    'ChiAndWPrescale'        : 1.0
     },
     'STREAMS' : [ 'Leptonic' ] ,
     'WGs'     : [ 'BandQ'    ]
