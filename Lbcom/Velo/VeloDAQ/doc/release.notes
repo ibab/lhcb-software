@@ -3,6 +3,7 @@
 ! Responsible : David Hutchcroft, Kurt Rinnert
 !--------------------------------------------------------------------------
 
+!========================= VeloDAQ v6r7 2012-06-25 =========================
 ! 2012-06-08 - Marco Cattaneo
  - Add RawEventLocations property to decoders, to allow to specify a 
    search list of locations. Default is to look for RawEventLocation::Other

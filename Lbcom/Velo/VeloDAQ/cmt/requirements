@@ -2,7 +2,7 @@
 # Maintainer : David Hutchcroft, Kurt Rinnert
 #
 package           VeloDAQ
-version           v6r6
+version           v6r7
 
 # Structure, i.e. directories to process. 
 #===========================================================================
