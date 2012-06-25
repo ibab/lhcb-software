@@ -14,6 +14,7 @@
    . Removed Hlt2TIS req. and tightened cuts of unbiased line 
    . Tightend cuts of Detached DiPhi line
    . Added detached PhiKK(pipi) and Bs->3Phi lines
+   . Removed PT cuts on Phi
 
 ! 2012-06-25 - Edwige Tournefier
  - StrippingChiCJPsiGammaConv.py: created stripping for chi_c and chi_b with converted photons

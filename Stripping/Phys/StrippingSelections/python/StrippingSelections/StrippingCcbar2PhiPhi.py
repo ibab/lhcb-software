@@ -76,10 +76,10 @@ class Ccbar2PhiPhiConf(LineBuilder):
                                                  " & (INTREE( ('K+'==ID) & (PT> %(KaonPT)s*MeV) & (TRCHI2DOF < %(TRCHI2DOF)s) & (PIDK> %(KaonPIDK)s) ))"\
                                                  " & (INTREE( ('K-'==ID) & (PT> %(KaonPT)s*MeV) & (TRCHI2DOF < %(TRCHI2DOF)s) & (PIDK> %(KaonPIDK)s) ))" % self.config )
 
-        self.TisPhiForJpsiList = filterTisTos( "TisPhiFor" + self.name ,
-                                               PhiInput = self.PhiForJpsiList,
-                                               myTisTosSpecs = config['Phi_TisTosSpecs']
-                                               )        
+        self.TisPhiForJpsiList = self.filterTisTos( "TisPhiFor" + self.name ,
+                                                    PhiInput = self.PhiForJpsiList,
+                                                    myTisTosSpecs = config['Phi_TisTosSpecs']
+                                                    )        
         
         
         """
@@ -146,7 +146,6 @@ class Ccbar2PhiPhiConf(LineBuilder):
         Jpsi2PhiPhi = self.createCombinationSel( OutputList = "Jpsi2PhiPhi" + self.name,
                                                  DecayDescriptor = " J/psi(1S) -> phi(1020) phi(1020)", 
                                                  DaughterLists = [ self.TisPhiForJpsiList ], 
-                                                 DaughterCuts  = { "phi(1020)": "(PT>0.5*GeV)" },
                                                  PreVertexCuts = "(in_range( %(CombMinMass)s *MeV, AM, %(CombMaxMass)s *MeV))" % self.config,
                                                  PostVertexCuts = "(in_range( %(MinMass)s *MeV, MM, %(MaxMass)s *MeV)) & (VFASPF(VCHI2PDOF) < 16 )" %self.config )
         
@@ -159,8 +158,7 @@ class Ccbar2PhiPhiConf(LineBuilder):
     def makeDetachedJpsi2PhiPhi(self):
         DetachedJpsi2PhiPhi = self.createCombinationSel( OutputList = "DetachedJpsi2PhiPhi" + self.name,
                                                          DecayDescriptor = " J/psi(1S) -> phi(1020) phi(1020)", 
-                                                         DaughterLists = [ self.DetachedPhiForJpsiList ], 
-                                                         DaughterCuts  = { "phi(1020)": "(PT>0.5*GeV)" },
+                                                         DaughterLists = [ self.DetachedPhiForJpsiList ],                                                          
                                                          PreVertexCuts = "AM>2.65*GeV",
                                                          PostVertexCuts = "(MM>2.7*GeV) & (VFASPF(VCHI2PDOF)<16) & (BPVDLS>10)" %self.config )
         
@@ -176,8 +174,7 @@ class Ccbar2PhiPhiConf(LineBuilder):
                                                                           self.KaonForCcbar
                                                                           ], 
                                                         DaughterCuts  = { "phi(1020)": """
-                                                                          (PT>0.5*GeV) 
-                                                                          & (INTREE( (ID=='K+') & (PT>500*MeV) & (TRCHI2DOF<5) & (MIPCHI2DV(PRIMARY)>25.) & (PIDK>5)))
+                                                                            (INTREE( (ID=='K+') & (PT>500*MeV) & (TRCHI2DOF<5) & (MIPCHI2DV(PRIMARY)>25.) & (PIDK>5)))
                                                                           & (INTREE( (ID=='K-') & (PT>500*MeV) & (TRCHI2DOF<5) & (MIPCHI2DV(PRIMARY)>25.) & (PIDK>5)))
                                                                           """ },
                                                         PreVertexCuts = "AM>2.65*GeV",
@@ -213,7 +210,6 @@ class Ccbar2PhiPhiConf(LineBuilder):
         Bs2TriPhi = self.createCombinationSel( OutputList = "Bs2TriPhi" + self.name,
                                                DecayDescriptor = " B_s0 -> phi(1020) phi(1020) phi(1020)", 
                                                DaughterLists = [ self.DetachedPhiForJpsiList ], 
-                                               DaughterCuts  = { "phi(1020)": "(PT>0.5*GeV)" },
                                                PreVertexCuts = "AM>2.65*GeV",
                                                PostVertexCuts = "(MM>2.7*GeV) & (VFASPF(VCHI2PDOF)<16)" %self.config )
         
@@ -224,7 +220,7 @@ class Ccbar2PhiPhiConf(LineBuilder):
         
 
 
-def filterTisTos(name,
+    def filterTisTos(self, name,
                      PhiInput,
                      myTisTosSpecs ) :
         from Configurables import TisTosParticleTagger
