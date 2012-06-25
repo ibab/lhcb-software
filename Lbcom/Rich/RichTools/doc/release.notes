@@ -4,6 +4,7 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+!========================= RichTools v2r40 2012-06-25 =========================
 ! 2012-06-14 - Chris Jones
  - Add an option to RichRadiatorTool to allow certain Aerogel tile IDs to
    be ignored.
