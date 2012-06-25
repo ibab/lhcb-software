@@ -5,6 +5,7 @@
 ! Package manager: Stefan Roiser
 !--------------------------------------------------------------------------------
 
+!========================= GaudiObjDesc v11r14 2012-06-25 =========================
 ! 2012-06-04 - Marco Clemencic
  - Corrected indentation of Python files (with reindent.py).
  - Fixed a minor mistake in the new godII.py script.
