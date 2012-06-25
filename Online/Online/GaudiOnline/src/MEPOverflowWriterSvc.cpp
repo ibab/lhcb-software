@@ -301,7 +301,7 @@ void MEPOverflowWriterSvc::handleFileWriteError()
     node[i] = toupper(node[i]);
   }
   std::string cmdname=node+"_MEPRx_01/setOverflow";
-  DimClient::sendCommand(cmdname.c_str(),0);
+  DimClient::sendCommand(cmdname.c_str(),2);
 }
 
 ssize_t MEPOverflowWriterSvc::Write(int fd, const void *buf, size_t n)

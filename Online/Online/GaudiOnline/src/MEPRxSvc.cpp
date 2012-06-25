@@ -1541,7 +1541,7 @@ StatusCode MEPRxSvc::initialize()
         " - disabling overflow"));
     m_overflow = false;
   }
-  m_overflowStatSvc = NULL; //new OverflowStatSvc(this, msgSvc(), RTL::processName());
+  m_overflowStatSvc = new OverflowStatSvc(this, msgSvc(), RTL::processName());
   m_ebState = READY;
   return StatusCode::SUCCESS;
 }
