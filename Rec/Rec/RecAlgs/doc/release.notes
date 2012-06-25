@@ -4,6 +4,7 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!========================= RecAlgs v2r9 2012-06-25 =========================
 ! 2012-06-08 - Marco Cattaneo
  - In RecInit, replace RawEventLocation by RawEventLocations, and look for
    RawEvent also in RawEventLocation::Other
