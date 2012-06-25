@@ -4,6 +4,7 @@
 ! Purpose     : Create local copies of files from the grid at runtime.
 !-----------------------------------------------------------------------------
 
+!========================= FileStager v1r8 2012-06-25 =========================
 ! 2012-03-28 - Roel Aaij
  - Support '+' in filenames
  - Delay check for remote file existence until the staging gets to a file.
