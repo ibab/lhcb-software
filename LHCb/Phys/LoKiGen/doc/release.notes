@@ -13,6 +13,7 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiGen v10r8 2012-06-25 =========================
 ! 2012-06-18 - Vanya Belyaev
  - redesign kinematical functors 
 
@@ -23,10 +24,7 @@
  - more improvements for decorators 
 
 !========================= LoKiGen v10r7 2012-05-24 =========================
-
-
 ! 2012-05-19 - Vanya Belyaev
-
  - add more rrshift/calls decorators 
 
 !========================= LoKiGen v10r6 2012-02-28 =========================
