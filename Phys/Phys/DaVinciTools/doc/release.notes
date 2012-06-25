@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2012-06-25 - Chris Jones
+ - Use DaVinciAlgorithm base class for FilterDesktop and CombineParticles
+
 ! 2012-06-23 - Olivier Deschamps
  - BremAdder : Final optimization (new correction method with brem origin 
                determined from track slope is now the default)

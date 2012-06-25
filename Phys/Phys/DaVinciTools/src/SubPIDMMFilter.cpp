@@ -171,10 +171,14 @@ bool SubPIDMMFilter::substitute(LHCb::Particle* p,int which){
   return true;
 }
 
-StatusCode SubPIDMMFilter::_saveInTES () { return DVAlgorithm::_saveInTES() ; }
+StatusCode SubPIDMMFilter::_saveInTES () 
+{
+  return FilterDesktop::BaseClass::_saveInTES() ;
+}
 
-void SubPIDMMFilter::writeEmptyTESContainers() {
-  DVAlgorithm::writeEmptyTESContainers() ;
+void SubPIDMMFilter::writeEmptyTESContainers() 
+{
+  FilterDesktop::BaseClass::writeEmptyTESContainers() ;
 }
 
 // ============================================================================

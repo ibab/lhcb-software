@@ -17,7 +17,7 @@
 // ============================================================================
 // DaVinci Kernel
 // ============================================================================
-#include "Kernel/DVAlgorithm.h"
+#include "Kernel/DaVinciAlgorithm.h"
 #include "Kernel/IPlotTool.h"
 // ============================================================================
 /** @class FilterDesktop 
@@ -38,12 +38,12 @@
  *    - "OutputPlotsTool"  : the type/name of PlotTool for 'output' particles 
  *    - "OutputPlotsPath"  : THS path for 'output' plots 
  *
- *  The important counters (in addition to counters form DVAlgorithm)
+ *  The important counters (in addition to counters form DaVinciAlgorithm)
  *    - "#inputs"    : number of input particles 
  *    - "#passed"    : number of particles, which passed criteria
  *    - "efficiency" : the selection efficiency (per particle) 
  *
- *  @see DVAlgorithm 
+ *  @see DaVinciAlgorithm 
  *  @see CombineParticles 
  *  @see IHybridFactory
  * 
@@ -95,11 +95,16 @@
  *  Last modification $Date$
  *                 by $Author$ 
  */
-class FilterDesktop : public DVAlgorithm
+class FilterDesktop : public DaVinciAlgorithm
 {
   // ==========================================================================
   /// friend factory for instantiation 
   friend class AlgFactory<FilterDesktop> ;
+  // ==========================================================================
+protected:
+  // ==========================================================================
+  /// Base class type
+  typedef DaVinciAlgorithm BaseClass;
   // ==========================================================================
 public:
   // ==========================================================================
@@ -113,7 +118,7 @@ public:
 protected:
   // ==========================================================================
   /** standard constructor 
-   *  @see DVAlgorithm
+   *  @see DaVinciAlgorithm
    *  @see GaudiTupleAlg
    *  @see GaudiHistoAlg
    *  @see GaudiAlgorithm
@@ -218,7 +223,7 @@ private:
   /// save (clone if needed) selected particles in TES 
   /// Success if number of saved particles == number saved
   /// to TES.
-  /// Overwritten from DVAlgorithm. Is called automatically.
+  /// Overwritten from DaVinciAlgorithm. Is called automatically.
   virtual StatusCode _saveInTES () ;
   /// Write empty containers if selection fails.
   virtual void writeEmptyTESContainers() ;
@@ -287,6 +292,12 @@ private:
   /// CloneFilteredParticles ? 
   bool m_cloneFilteredParticles;                    // CloneFilteredParticles ? 
   // ==========================================================================
+private:
+  /// Turn on/off histograms
+  bool m_produceHistos;
+protected:
+  /// Access the histogramming flag
+  inline bool produceHistos() const { return m_produceHistos; }
 };
 // ============================================================================
 

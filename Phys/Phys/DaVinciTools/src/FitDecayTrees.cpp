@@ -261,16 +261,20 @@ StatusCode FitDecayTrees::decodeConstraints ()    // decode constraints
 // ===========================================================================
 // attention:restore the original action by DVAlgorithm
 // ===========================================================================
-StatusCode FitDecayTrees::_saveInTES () { return DVAlgorithm::_saveInTES() ; }
+StatusCode FitDecayTrees::_saveInTES ()
+{
+  return FilterDesktop::BaseClass::_saveInTES() ;
+}
 // ===========================================================================
 // attention:restore the original action by DVAlgorithm
 // ===========================================================================
 void FitDecayTrees::writeEmptyTESContainers()
-{ DVAlgorithm::writeEmptyTESContainers() ; }
+{ 
+  FilterDesktop::BaseClass::writeEmptyTESContainers() ; 
+}
 // ===========================================================================
 /// the factory
 DECLARE_ALGORITHM_FACTORY(FitDecayTrees)
 // ============================================================================
 // The END
 // ============================================================================
-

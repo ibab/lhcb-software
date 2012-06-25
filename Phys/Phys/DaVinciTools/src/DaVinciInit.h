@@ -2,12 +2,14 @@
 #ifndef DAVINCIINIT_H 
 #define DAVINCIINIT_H 1
 
-// Include files
 // from LHCbKernel
 #include "Kernel/LbAppInit.h"
 
+// Event model
+#include "Event/Particle.h"
+#include "Event/Vertex.h"
+
 class IGenericTool;
-class IIncidentSvc;
 
 /** @class DaVinciInit DaVinciInit.h
  *
@@ -28,14 +30,20 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
+  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
 
-  IGenericTool* m_memoryTool;   ///< Pointer to (private) memory histogram tool
-  IIncidentSvc* m_incidentSvc;  ///< Pointer to the incident service.
-  bool m_print ;                ///< Print event and run
-  unsigned long m_increment ;   ///< Number of events to measure memory on
-  unsigned long m_lastMem ;     ///< Last memory
+  /// Release memory pools
+  void releaseMemoryPools() const;
+
+private:
+
+  IGenericTool* m_memoryTool;     ///< Pointer to (private) memory histogram tool
+  bool m_print ;                  ///< Print event and run
+  unsigned long long m_increment; ///< Number of events to measure memory on
+  unsigned long long m_lastMem;   ///< Last memory
+  unsigned long long m_memPurgeLimit; ///< Memory limit to trigger a purge of the pools
 
 };
 

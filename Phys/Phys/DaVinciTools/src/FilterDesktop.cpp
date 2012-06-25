@@ -56,7 +56,7 @@ namespace
 StatusCode FilterDesktop::initialize ()             // the specific initialization
 {
   // initialize the base class
-  StatusCode sc = DVAlgorithm::initialize () ;
+  StatusCode sc = DaVinciAlgorithm::initialize () ;
   if ( sc.isFailure () ) { return sc ; }                          // RETURN
   // ensure the proper initialization of LoKi service
   svc<IService> ( "LoKiSvc" ) ;
@@ -92,11 +92,11 @@ StatusCode FilterDesktop::finalize   ()
   m_postMonitor = _CBOOL ( false ) ;
   m_to_be_updated1 = true ;
   // finalize the base
-  return DVAlgorithm::finalize () ;
+  return DaVinciAlgorithm::finalize () ;
 }
 // ============================================================================
 /* standard constructor
- *  @see DVAlgorithm
+ *  @see DaVinciAlgorithm
  *  @see GaudiTupleAlg
  *  @see GaudiHistoAlg
  *  @see GaudiAlgorithm
@@ -110,7 +110,7 @@ StatusCode FilterDesktop::finalize   ()
 FilterDesktop::FilterDesktop                  // standard contructor
 ( const std::string& name ,                   // the algorithm instance name
   ISvcLocator*       pSvc )                   // pointer to Service Locator
-  : DVAlgorithm ( name , pSvc )
+  : DaVinciAlgorithm ( name , pSvc )
 // LoKi/Bender "hybrid" factory name
   , m_factory ( "LoKi::Hybrid::Tool/HybridFactory:PUBLIC" )
 // the preambulo
@@ -207,14 +207,12 @@ FilterDesktop::FilterDesktop                  // standard contructor
     ( "CloneFilteredParticles" ,
       m_cloneFilteredParticles ,
       "Clone filtered particles and end-vertices into KeyedContainers" ) ;
-  //
-  StatusCode sc = setProperty ( "HistoProduce" , false ) ;
-  Assert ( sc.isSuccess() , "Could not reset property HistoProduce" ) ;
-  {
-    Property* p = Gaudi::Utils::getProperty ( this , "HistoProduce" ) ;
-    if ( 0 != p && 0 == p->updateCallBack() )
-    { p -> declareUpdateHandler ( &FilterDesktop::updateHandler2 , this ) ; }
-  }
+  // Histogramming
+  declareProperty
+    ( "HistoProduce"          ,
+      m_produceHistos = false ,
+      "Switch on/off the production of histograms" ) 
+    -> declareUpdateHandler ( &FilterDesktop::updateHandler2 , this ) ;
 }
 // ============================================================================
 // virtual & protected destructor
@@ -371,7 +369,7 @@ StatusCode FilterDesktop::execute ()       // the most interesting method
   // Filter particles!!  - the most important line :-)
   StatusCode sc = filter ( particles , m_accepted ) ;
 
-  // store particles in DVAlgorithm local container
+  // store particles in DaVinciAlgorithm local container
   // this section has been moved into "filter"-method
   // this -> markParticles ( m_accepted ) ;
   // this -> markTrees     ( m_accepted ) ;
@@ -412,7 +410,7 @@ StatusCode FilterDesktop::filter
                  input.end   () ,
                  std::back_inserter ( filtered ) , m_cut ) ;
   //
-  // mark & store filtered particles in DVAlgorithm local container
+  // mark & store filtered particles in DaVinciAlgorithm local container
   markParticles ( filtered ) ;
   //
   // some countings
