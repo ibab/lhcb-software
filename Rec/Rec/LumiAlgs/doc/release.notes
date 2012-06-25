@@ -4,6 +4,7 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+!========================= LumiAlgs v7r7 2012-06-25 =========================
 ! 2012-05-31 - Jaap Panman
  - Allow mu calculation for counter different from lumi calculation
 
