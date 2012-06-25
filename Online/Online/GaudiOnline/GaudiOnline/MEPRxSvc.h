@@ -5,7 +5,7 @@
 //
 //	Package   : GaudiOnline
 //
-//	Author    : Niko Neufeld 
+//	Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
 //	===========================================================
@@ -54,7 +54,7 @@ namespace LHCb {
   class UpMonCommand;
   class SetOverflowCmd;
   class OverflowStatSvc;
-  struct DAQErrorEntry {    
+  struct DAQErrorEntry {
     /* LHCb Bankheader */
     u_int16_t m_magic;
     u_int16_t m_length;
@@ -63,12 +63,12 @@ namespace LHCb {
     u_int16_t m_sourceID;
     int m_srcID;
     u_int32_t m_srcIPAddr;
-    DAQErrorType m_errorType; 
+    DAQErrorType m_errorType;
     void *m_pktData;
   };
-  class MEPRxSvc : public Service, 
+  class MEPRxSvc : public Service,
   virtual public IRunable,
-  virtual public IIncidentListener 
+  virtual public IIncidentListener
   {
     public:
       typedef std::vector<LHCb::MEPRx *> Workers;
@@ -85,24 +85,24 @@ namespace LHCb {
       EvtBuilderState             m_ebState;
       bool                        m_forceStop;
       bool                        m_dynamicMEPRequest;
-      bool                        m_dropIncompleteEvents;	
+      bool                        m_dropIncompleteEvents;
       bool                        m_checkPartitionID;
       bool                        m_expectOdin;
       bool                        m_createDAQErrorMEP;
       bool                        m_createODINMEP; // fake ODIN MEP for timepix testbeam only!
       bool                        m_resetCounterOnRunChange;
       bool                        m_alwaysSendMEPReq; // send a MEP request for every event (complete or not)
-      bool                        m_overflow;
+      int                        m_overflow;
       bool                        m_overflowActive;
-      int                         m_MEPBuffers; 
+      int                         m_MEPBuffers;
       int                         m_maxMsForGetSpace;
-      int                         m_pktSamplingCount; 
+      int                         m_pktSamplingCount;
       int                         m_nSrc;
       int                         m_sockBuf;
       int                         m_IPProtoIn;
       int                         m_refCount;
       int                         m_nCrh;
-      int                         m_MEPBufSize;     
+      int                         m_MEPBufSize;
       int                         m_ethInterface;
       int                         m_initialMEPReq;	/* Number of initial MEPReqs to send.*/
       int                         m_MEPsPerMEPReq;      /* Number of MEPs requested per MEPReq.*/
@@ -118,7 +118,7 @@ namespace LHCb {
       std::string                 m_IPNameOdin;
       std::string                 m_bufName;
       std::string                 m_overflowPath;        // the path to the overflow directory in the local FS
-      int                         m_quotaCheckInterval;  // after how many events the quota is re-checked  
+      int                         m_quotaCheckInterval;  // after how many events the quota is re-checked
       int                         m_nAllocMEPBuf;        // how many times m_MEPBufSize is allocated from the BM (default = 1)
       std::vector<std::string>    m_IPSrc;
       float                       m_maxBadPktRatio;
@@ -128,8 +128,8 @@ namespace LHCb {
       std::vector<int>            m_srcFlags;
       Workers                     m_freeDsc;
       Workers                     m_workDsc;
-      Workers                     m_usedDsc; 
-      LHCb::MEPRx                *m_ovflBuf; 
+      Workers                     m_usedDsc;
+      LHCb::MEPRx                *m_ovflBuf;
       lib_rtl_lock_t              m_freeDscLock;
       lib_rtl_lock_t              m_usedDscLock;
       MEPRQCommand                *m_mepRQCommand;
@@ -138,17 +138,17 @@ namespace LHCb {
       SetOverflowCmd              *m_setOverflowCmd;
       OverflowStatSvc             *m_overflowStatSvc;
       //SourceStatService           *m_statService;
-      IIncidentSvc*               m_incidentSvc; 
+      IIncidentSvc*               m_incidentSvc;
       IMonitorSvc*                m_monSvc;
       IHistogramSvc*              m_histSvc;
       int                         m_sourceID;
       u_int32_t                   m_ownAddress;
-      /* Counters per source */ 
+      /* Counters per source */
       std::vector<int64_t>        m_rxOct;
       std::vector<int64_t>        m_rxPkt;
       std::vector<int64_t>        m_rxEvt;
       std::vector<int64_t>        m_rxMEP;
-      std::vector<int>	          m_noShow; 
+      std::vector<int>	          m_noShow;
       /* Global counters */
       int64_t 			              m_numMEPRecvTimeouts;
       int64_t			                m_numMEPReq;			//This seem to not be used?
@@ -179,13 +179,13 @@ namespace LHCb {
       u_int64_t                   m_tLastAdded;   // time of last added fragment in us
       u_int64_t                   m_tLastComp;    // time of last completed event in us
       u_int64_t                   m_tLastRx;      // time of last received frament in us
-      u_int64_t                   m_tzero;        // time of first (since process-start) received fragment in us 
+      u_int64_t                   m_tzero;        // time of first (since process-start) received fragment in us
       /// Standard Constructor
       MEPRxSvc(const std::string& name, ISvcLocator* svc);
       /// Standard Destructor
       virtual ~MEPRxSvc();
       /// IInterface implementation: Query interface
-      virtual StatusCode queryInterface(const InterfaceID& riid, 
+      virtual StatusCode queryInterface(const InterfaceID& riid,
           void** ppvInterface);
       /// Service overload: initialize()
       virtual StatusCode initialize();
@@ -211,7 +211,7 @@ namespace LHCb {
       int getSrcID(u_int32_t);
       StatusCode checkProperties();
       StatusCode error(const std::string& msg);
-      StatusCode info(const std::string &msg);	
+      StatusCode info(const std::string &msg);
       StatusCode allocRx();
       StatusCode releaseRx();
       int openSocket(int protocol);
@@ -220,7 +220,7 @@ namespace LHCb {
       int setupCounters();
       void publishCounters(void);
       void publishHists(void);
-      void handle(const Incident&); 
+      void handle(const Incident&);
       void checkTimeOut(void);
       void truncatedPkt(struct RTL::IPHeader *);
       IMonitorSvc* getMonSvc() {return m_monSvc;}
@@ -278,7 +278,7 @@ namespace LHCb {
     MEPRxSvc *m_mepRxObj;
     IMessageSvc* m_msgSvc;
     public:
-    MEPRQCommand(MEPRxSvc *mepRxObj, IMessageSvc *log, const std::string& cmd_name) 
+    MEPRQCommand(MEPRxSvc *mepRxObj, IMessageSvc *log, const std::string& cmd_name)
       : DimCommand(std::string(cmd_name + "/sendMEPRQ").c_str(), (char*)"I"),
       m_mepRxObj(mepRxObj),m_msgSvc(log) {
       }
@@ -292,9 +292,10 @@ namespace LHCb {
     MEPRxSvc *m_mepRxObj;
     IMessageSvc* m_msgSvc;
     public:
+    bool m_permDisable;
     SetOverflowCmd(MEPRxSvc *mepRxObj, IMessageSvc *log, const std::string& cmd_name)
       : DimCommand(std::string(cmd_name + "/setOverflow").c_str(), (char *)"I"),
-      m_mepRxObj(mepRxObj), m_msgSvc(log) {
+      m_mepRxObj(mepRxObj), m_msgSvc(log), m_permDisable(false) {
       }
     virtual ~SetOverflowCmd() {}
     virtual void commandHandler(void);
@@ -315,4 +316,4 @@ namespace LHCb {
 
 #endif //  GAUDIONLINE_MEPRXSVC_H
 
- 
+

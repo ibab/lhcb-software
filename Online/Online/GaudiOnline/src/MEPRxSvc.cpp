@@ -654,11 +654,18 @@ void SetOverflowCmd::commandHandler(void)
 {
   MsgStream log(m_msgSvc, getName());
   int what = getInt();
-  if (what)
-    m_mepRxObj->m_overflow = true;
-  else m_mepRxObj->m_overflow = false;
-  log << MSG::INFO << (what ? "en" : "dis") << "abled overflow buffer"
-      << endmsg;
+  if (m_permDisable)
+  {
+    return;
+  }
+  if (what == 2)
+  {
+    log << MSG::INFO << "Overflow buffer permanently disabled"  << endmsg;
+    m_permDisable = true;
+    m_mepRxObj->m_overflow = false;
+  }
+  m_mepRxObj->m_overflow = (what == 1);
+  log << MSG::INFO << (m_mepRxObj->m_overflow ? "en" : "dis") << "abled overflow buffer" << endmsg;
 }
 
 void UpMonCommand::commandHandler(void)
