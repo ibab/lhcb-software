@@ -3,6 +3,7 @@
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 !-----------------------------------------------------------------------------
 
+!========================= MCEvent v2r22 2012-06-25 =========================
 ! 2012-06-04 - Olivier Callot
  - Define a location fo rthe FT MCHits.
 
