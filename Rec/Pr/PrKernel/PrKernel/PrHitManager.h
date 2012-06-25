@@ -8,7 +8,7 @@
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "PrKernel/PrHit.h"
-#include "PrKernel/PrHitLayer.h"
+#include "PrKernel/PrHitZone.h"
 
 static const InterfaceID IID_PrHitManager ( "PrHitManager", 1, 0 );
 
@@ -37,12 +37,12 @@ public:
   virtual void buildGeometry() {};
   virtual void decodeData()    {};
   
-  /// Clear the layers, and reset the hit pointer. Store the maximum size.
+  /// Clear the zones, and reset the hit pointer. Store the maximum size.
   void clearHits() {
     int lastSize = m_nextInPool - m_pool.begin();
     if ( lastSize > m_maxSize ) m_maxSize = lastSize;
     
-    for ( PrHitLayers::iterator itS = m_layers.begin(); m_layers.end() != itS; ++itS ) {
+    for ( PrHitZones::iterator itS = m_zones.begin(); m_zones.end() != itS; ++itS ) {
       if ( 0 != *itS) (*itS)->reset();
     }
     m_nextInPool = m_pool.begin();
@@ -69,34 +69,34 @@ public:
     return *(m_nextInPool++);
   }
 
-  /// Return a new hit assigned to the specified layer
-  PrHit* newHitInLayer( int lay ) {
+  /// Return a new hit assigned to the specified zone
+  PrHit* newHitInZone( int lay ) {
     PrHit* tmp = newHit();
-    layer(lay)->hits().push_back( tmp );
+    zone(lay)->hits().push_back( tmp );
     return tmp;
   }
   
-  /// Shortcut to access the hits of a given layer.
-  PrHits& hits( unsigned int layer ) { return m_layers[layer]->hits(); }
+  /// Shortcut to access the hits of a given zone.
+  PrHits& hits( unsigned int zone ) { return m_zones[zone]->hits(); }
 
-  /// Access a layer. Create it if needed...
-  PrHitLayer* layer( unsigned int n ) { 
-    while( m_layers.size() <= n ) {
-      PrHitLayer* tmp = new PrHitLayer( m_layers.size() );
-      m_layers.push_back( tmp );
+  /// Access a zone. Create it if needed...
+  PrHitZone* zone( unsigned int n ) { 
+    while( m_zones.size() <= n ) {
+      PrHitZone* tmp = new PrHitZone( m_zones.size() );
+      m_zones.push_back( tmp );
     }
-    return m_layers[n]; 
+    return m_zones[n]; 
   }
 
-  /// Return the current number of layers
-  unsigned int nbLayers()   const { return m_layers.size();   }
+  /// Return the current number of zones
+  unsigned int nbZones()   const { return m_zones.size();   }
 
 protected:
 
 private:
   PrHits           m_pool;
   PrHits::iterator m_nextInPool;
-  PrHitLayers      m_layers;
+  PrHitZones       m_zones;
   int              m_maxSize;
   bool             m_eventReady;
 };

@@ -4,5 +4,8 @@
 ! Purpose     : Basic tools for Pattern for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2012-06-25 - Olivier Callot
+ - rename PrHitLayer to PrHitZone as this is a better description of its purpose.
+
 ! 2012-03-13 - Olivier Callot
  - Classes PrHit, PrHitLayer and PrHitManager

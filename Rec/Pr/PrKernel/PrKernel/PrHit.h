@@ -67,6 +67,10 @@ public:
     bool operator() (const PrHit* lhs, const PrHit* rhs ) const { return lhs->coord() < rhs->coord(); }
   };
 
+  struct LowerByZ {
+    bool operator() (const PrHit* lhs, const PrHit* rhs ) const { return lhs->z() < rhs->z(); }
+  };
+
 protected:
 
 private:

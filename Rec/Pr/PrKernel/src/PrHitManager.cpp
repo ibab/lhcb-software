@@ -59,7 +59,7 @@ StatusCode PrHitManager::initialize(){
 //=============================================================================
 StatusCode PrHitManager::finalize() {
   info() << "Maximum number of hits " << m_maxSize << endmsg;
-  for ( PrHitLayers::iterator itS = m_layers.begin(); m_layers.end() != itS; ++itS ) {
+  for ( PrHitZones::iterator itS = m_zones.begin(); m_zones.end() != itS; ++itS ) {
     if ( NULL != *itS ) delete *itS;
   }
   return GaudiTool::finalize();

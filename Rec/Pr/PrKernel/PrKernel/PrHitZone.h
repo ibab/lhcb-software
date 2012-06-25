@@ -1,30 +1,35 @@
 // $Id: $
-#ifndef PRKERNEL_PRHITLAYER_H 
-#define PRKERNEL_PRHITLAYER_H 1
+#ifndef PRKERNEL_PRHITZONE_H 
+#define PRKERNEL_PRHITZONE_H 1
 
 // Include files
 #include "PrKernel/PrHit.h"
 #include "Kernel/DetectorSegment.h"
 
-/** @class PrHitLayer PrHitLayer.h PrKernel/PrHitLayer.h
- *  Store the information of a layer in the T stations
+/** @class PrHitZone PrHitZone.h PrKernel/PrHitZone.h
+ *  Store the information of a zone in the T stations
+ *  A zone is a part of a layer with boundaries, so that all hits are measuring
+ *  one coordinate in this zone. 
+ *  For FT, this is the top or bottom parts of each layer.
+ *  The zone has a number, a plane code, slopes (dxDy, dzDy) and boundaries
  *
  *  @author Olivier Callot
  *  @date   2012-03-13
  */
-class PrHitLayer {
+class PrHitZone {
 public: 
   /// Standard constructor
-  PrHitLayer( int number) {
-    m_number = number;
-    m_z      =  1.e9;
-    m_xMin   = -1.e9;
-    m_xMax   =  1.e9;
-    m_yMin   = -1.e9;
-    m_yMax   =  1.e9;
+  PrHitZone( unsigned int number ) {
+    m_number    = number;
+    m_planeCode = number/2;  // two zones per plane
+    m_z         =  1.e9;
+    m_xMin      = -1.e9;
+    m_xMax      =  1.e9;
+    m_yMin      = -1.e9;
+    m_yMax      =  1.e9;
   }
 
-  virtual ~PrHitLayer( ) {}; ///< Destructor
+  virtual ~PrHitZone( ) {}; ///< Destructor
 
   void setGeometry( DetectorSegment& seg ) { 
     m_z      = seg.z( 0. );
@@ -35,7 +40,8 @@ public:
 
   PrHits&  hits( )                { return m_hits;   }
 
-  unsigned int number()     const { return m_number; }
+  unsigned int number()     const { return m_number;    }
+  unsigned int planeCode()  const { return m_planeCode; }
   float z( float y = 0.)          { return m_z + m_dzDy * y; }
   float dxDy()              const { return m_dxDy; }
   float dzDy()              const { return m_dzDy; }
@@ -62,10 +68,13 @@ public:
     return true;
   }
 
+  float dxOnAFibre() { return ( m_yMax - m_yMin ) * m_dxDy; }
+
 protected:
 
 private:
   unsigned int  m_number;
+  unsigned int  m_planeCode;
   float         m_z;
   float         m_dxDy;
   float         m_dzDy;
@@ -76,5 +85,5 @@ private:
   float         m_yMax;
   PrHits        m_hits;
 };
-typedef std::vector<PrHitLayer*> PrHitLayers;
-#endif // PRKERNEL_PRHITLAYER_H
+typedef std::vector<PrHitZone*> PrHitZones;
+#endif // PRKERNEL_PRHITZONE_H
