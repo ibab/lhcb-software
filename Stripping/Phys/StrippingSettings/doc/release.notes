@@ -4,6 +4,8 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-06-25 - Mika Vesterinen
+ - Updated LineConfigDictionaries_Semileptonic for 19b (added semi-inclusive J/psi line)
 
 ! 2012-06-25 - Thomas Blake
  - Updated radiative decay dict. 

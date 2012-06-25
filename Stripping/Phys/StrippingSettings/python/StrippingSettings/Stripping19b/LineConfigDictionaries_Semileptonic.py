@@ -1,3 +1,35 @@
+JPsiForSL = {
+    'BUILDERTYPE' : 'JPsiForSLAllLinesConf',
+    'CONFIG' :  {
+    "PrescaleSemiIncJpsi2mumu"    : 1.0
+    ,"MuonPT" : 1200.
+    ,"MuonP" : 6000.
+    ,"MuonChi2" : 3.
+    ,"MuonIPChi2" : 4. 
+    ,"TrackPT" : 500.
+    ,"TrackP" : 3000.
+    ,"TrackChi2" : 3.
+    ,"TrackIPChi2" : 5.
+    ,"PsiMasswinPreFit" : 150
+    ,"PsiDocaChi2Max" : 10
+    ,"PsiVChi2NdofMax" : 10
+    ,"PsiMasswin" : 140
+    ,"PsiPT" : 500
+    ,"PsiFDChi2Min" : 100
+    ,"PsiDIRAMin" : 0.99
+    ,"BCombMassMin" : 3400
+    ,"BCombMassMax" : 6000
+    ,"BDocaChi2Max" : 10.
+    ,"BVChi2NdofMax" : 3.
+    ,"BPTMin" : 800.
+    ,"BFDChi2Min" : 200.
+    ,"BDIRAMin" : 0.9995
+    ,"nLongTrackMax" : 250
+    },
+    'STREAMS' : ['Semileptonic'] ,
+    'WGs'    : ['Semileptonic']
+    }
+
 
 CharmFromBSemi = {
     'BUILDERTYPE' : 'CharmFromBSemiAllLinesConf',
