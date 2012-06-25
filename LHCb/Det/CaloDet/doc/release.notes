@@ -3,6 +3,7 @@
 ! Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+!========================= CaloDet v10r14 2012-06-25 =========================
 ! 2012-06-24 - Olivier Deschamps
   - DeCalorimeter : get covariance parameters from Gain condition
 
