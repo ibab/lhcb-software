@@ -6,10 +6,6 @@ branches doc cmt
 use  DaVinci             v30r4p1   Phys
 use  DaVinciTests        v2r13p1
 
-# Temporary
-use DaVinciTools   v22r17  Phys
-use DecayTreeTuple v3r22p1 Phys
-
 # Declare this as a container package
 apply_pattern container_package
 
