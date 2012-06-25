@@ -5,6 +5,9 @@
 ! ----------------------------------------------------------------------------- 
 
 ! 2012-06-25 -- Ricardo Vazquez Gomez
+  - StrippingBeauty2XGamma.py :  Added the Bs->phiGamma(ee) with converted photons
+
+! 2012-06-25 -- Ricardo Vazquez Gomez
   - StrippingBeauty2XGamma.py :  Added B+->K1+gamma line and Bd->K*gamma with converted photons.
     Tighten the PID cut for pions to reduce the retention and increase the pT cut of pi0. Retention reduced by ~40%.  
 
