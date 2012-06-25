@@ -4,6 +4,7 @@
 ! Purpose     : ROOT plugin to read MDF files.
 !-----------------------------------------------------------------------------
 
+!========================= MDF_ROOT v1r7 2012-06-25 =========================
 ! 2012-05-31 - Marco Clemencic
  - Adjustment of 'includes' to work on systems with native gcc 4.6.
 
