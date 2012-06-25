@@ -4,10 +4,12 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+!========================= FastVelo v1r10 2012-06-25 =========================
 ! 2012-05-09 - Olivier Callot
  - Rewrite mergesPaceClone() to improve clone rejection
  - Fix a bug in beamSpalshSpaceMerge, nLong and nShort were on teh same track!
- - Reject faster wrong combination in findUnusedPhi, when two phi were diametraly opposed.
+ - Reject faster wrong combination in findUnusedPhi, when two phi were 
+   diametraly opposed.
 
 !========================= FastVelo v1r9p1 2012-05-07 =========================
 ! 2012-05-04 - David Hutchcroft
