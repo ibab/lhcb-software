@@ -4,5 +4,8 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2012-06-25 - Olivier Callot
+ - Adapt PrDebugTrackingLosses to debug seeeding too.
+
 ! 2012-04-04 - Olivier Callot
  - Initial adaptation of LHCbID2MCParticle, TrackAssociator and PatChecker

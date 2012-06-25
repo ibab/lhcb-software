@@ -37,6 +37,7 @@ private:
   bool m_velo;
   bool m_veloPix;
   bool m_forward;
+  bool m_seed;
   bool m_clone;
   bool m_ghost;
   bool m_fromStrange;

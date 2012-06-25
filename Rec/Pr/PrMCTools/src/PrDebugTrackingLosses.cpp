@@ -39,6 +39,7 @@ PrDebugTrackingLosses::PrDebugTrackingLosses( const std::string& name,
   declareProperty( "Velo",        m_velo        = false );
   declareProperty( "VeloPix",     m_veloPix     = false );
   declareProperty( "Forward",     m_forward     = false );
+  declareProperty( "Seed",        m_seed        = false );
   declareProperty( "Ghost",       m_ghost       = false );
   declareProperty( "Clone",       m_clone       = false );
   declareProperty( "FromStrange", m_fromStrange = false );
@@ -71,7 +72,7 @@ StatusCode PrDebugTrackingLosses::initialize() {
 StatusCode PrDebugTrackingLosses::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-  if ( !m_velo && !m_veloPix && !m_forward ) return StatusCode::SUCCESS;
+  if ( !m_velo && !m_veloPix && !m_forward && !m_seed ) return StatusCode::SUCCESS;
 
   ++m_eventNumber;
 
@@ -94,7 +95,11 @@ StatusCode PrDebugTrackingLosses::execute() {
   for (; itP != partCont->end(); ++itP){
     LHCb::MCParticle* part = *itP;
     if ( 0 == trackInfo.fullInfo( part ) ) continue;
-    if ( ! trackInfo.hasVeloAndT( part ) ) continue;
+    if ( m_seed ) {
+      if ( !trackInfo.hasT( part ) ) continue;
+    } else {
+      if ( !trackInfo.hasVeloAndT( part ) ) continue;
+    }
     if ( abs( part->particleID().pid() ) == 11 ) continue; // reject electron
     if ( m_fromStrange || m_fromBeauty ) {
       bool isStrange = false;
@@ -141,19 +146,40 @@ StatusCode PrDebugTrackingLosses::execute() {
         printMCParticle( part );
       }
     }
+  
+
+    if ( m_seed ) {
+      LinkedFrom<LHCb::Track,LHCb::MCParticle> seedLinker( evtSvc(), msgSvc(), LHCb::TrackLocation::Seed );
+      if ( seedLinker.first(part) == NULL && !m_clone && !m_ghost ) {
+        info() << "Missed Seed for MCParticle " << part->key() << " ";
+        printMCParticle( part );
+        if ( m_saveList ) {
+          std::vector<int> ref;
+          ref.push_back( m_eventNumber );
+          ref.push_back( 0 );
+          ref.push_back( part->key() );
+          m_badGuys.push_back( ref );
+        }
+      } else if ( m_clone && seedLinker.next( ) != NULL ) {
+        info() << "Seed clone for MCParticle " << part->key() << " ";
+        printMCParticle( part );
+      }
+    }
   }
+    
 
   if ( m_ghost ) {
     LinkedTo<LHCb::MCParticle>     vTrLink( evtSvc(), msgSvc(), veloTrack );
     LinkedTo<LHCb::MCParticle>       vLink( evtSvc(), msgSvc(), LHCb::VeloClusterLocation::Default );
-    LinkedTo<LHCb::MCParticle>      pxLink( evtSvc(), msgSvc(), LHCb::VeloPixClusterLocation::VeloPixClusterLocation );
+    //LinkedTo<LHCb::MCParticle>      pxLink( evtSvc(), msgSvc(), LHCb::VeloPixClusterLocation::VeloPixClusterLocation );
     LinkedTo<LHCb::MCParticle>      ttLink( evtSvc(), msgSvc(), LHCb::STClusterLocation::TTClusters);
-    LinkedTo<LHCb::MCParticle>      itLink( evtSvc(), msgSvc(), LHCb::STClusterLocation::ITClusters);
-    LinkedTo<LHCb::MCParticle>      otLink( evtSvc(), msgSvc(), LHCb::OTTimeLocation::Default);
+    //LinkedTo<LHCb::MCParticle>      itLink( evtSvc(), msgSvc(), LHCb::STClusterLocation::ITClusters);
+    //LinkedTo<LHCb::MCParticle>      otLink( evtSvc(), msgSvc(), LHCb::OTTimeLocation::Default);
     LinkedTo<LHCb::MCParticle>      ftLink( evtSvc(), msgSvc(), LHCb::FTClusterLocation::Default);
 
     std::string   location = LHCb::TrackLocation::Forward;
     if ( m_velo || m_veloPix ) location = veloTrack;
+    if ( m_seed ) location = LHCb::TrackLocation::Seed;
     LinkedTo<LHCb::MCParticle> trackLinker( evtSvc(), msgSvc(), location );
 
     LHCb::Tracks* tracks = get<LHCb::Tracks>( location );
@@ -190,6 +216,7 @@ StatusCode PrDebugTrackingLosses::execute() {
               part = vLink.next();
             }
             info() << endmsg;
+            /*
           } else if ( (*itId).isVeloPix() ) {
             LHCb::VeloPixChannelID idV = (*itId).velopixID();
             info() << format( "   Velo Sensor %3d chip%3d pixel %4d ", idV.sensor(), idV.chip(), idV.pixel() );
@@ -200,6 +227,7 @@ StatusCode PrDebugTrackingLosses::execute() {
               part = vLink.next();
             }
             info() << endmsg;
+            */
           } else if ( (*itId).isTT() ) {
             LHCb::STChannelID stID = (*itId).stID();
             info() << format( "    TT St%2d La%2d Se%2d Str%4d    ",
@@ -208,9 +236,10 @@ StatusCode PrDebugTrackingLosses::execute() {
             while ( 0 != part ) {
               info() << " " << part->key();
               listKeys[part] += 1;
-              part = itLink.next();
+              part = ttLink.next();
             }
             info() << endmsg;
+            /*
           } else if ( (*itId).isIT() ) {
             LHCb::STChannelID stID = (*itId).stID();
             info() << format( "    IT St%2d La%2d Se%2d Str%4d    ",
@@ -222,6 +251,7 @@ StatusCode PrDebugTrackingLosses::execute() {
               part = itLink.next();
             }
             info() << endmsg;
+            */
           } else if ( (*itId).isFT() ) {
             LHCb::FTChannelID ftID = (*itId).ftID();
             info() << format( "    FT St%2d La%2d Pm%2d Cel%4d    ",
@@ -233,6 +263,7 @@ StatusCode PrDebugTrackingLosses::execute() {
               part = ftLink.next();
             }
             info() << endmsg;
+            /*
           } else if ( (*itId).isOT() ) {
             LHCb::OTChannelID otID = (*itId).otID();
             info() << format( "    OT St%2d La%2d mo%2d Str%4d    ",
@@ -244,6 +275,7 @@ StatusCode PrDebugTrackingLosses::execute() {
               part = otLink.next();
             }
             info() << endmsg;
+            */
           }
         }
         for ( std::map<LHCb::MCParticle*,int>::iterator itM = listKeys.begin(); listKeys.end() != itM; ++itM ) {
