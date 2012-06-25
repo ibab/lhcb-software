@@ -4,6 +4,7 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !-----------------------------------------------------------------------------
 
+!========================= DAQEvent v9r8 2012-06-25 =========================
 ! 2012-06-16 - Heinrich Schindler
  - Add VL to RawBank types 
 
