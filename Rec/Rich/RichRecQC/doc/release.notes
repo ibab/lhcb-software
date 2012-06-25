@@ -4,6 +4,7 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!========================= RichRecQC v2r58 2012-06-25 =========================
 ! 2012-06-04 - Marco Cattaneo
  - Remove L0DUFromRawAlg and HltDecReportsDecoder from L0 Filter, now done in 
    Brunel main sequence
