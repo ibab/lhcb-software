@@ -4,12 +4,12 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!========================= RichRecSys v4r6 2012-06-25 =========================
 ! 2012-06-03 - Chris Jones
  - Remove the CK theta correction factor for Aerogel. Will be taken into
    account in an incoming recalibration.
 
 !========================= RichRecSys v4r5 2012-04-30 =========================
-
 ! 2012-04-30 - Chris Jones
  - Make the default list of tracks used in the HLT the same as offline.
  - Update offline track chi^2 cut from 0->10 to 0->5. Tracking now applies
