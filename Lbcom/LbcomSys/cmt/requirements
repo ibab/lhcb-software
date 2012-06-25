@@ -1,5 +1,5 @@
 package           LbcomSys
-version           v12r3
+version           v13r0
 
 branches doc cmt tests
 
@@ -8,63 +8,64 @@ branches doc cmt tests
 #===============================================================
 
 # Common
-use Associators       v3r7    Associators # Matt Needham
+use Associators       v3r7     Associators # Matt Needham
 
 # Calorimeter
-use CaloAssociators   v6r10p1 Calo      # Olivier Deschamps
-use CaloTools         v6r3p1  Calo      # Olivier Deschamps
+use CaloAssociators   v6r11    Calo      # Olivier Deschamps
+use CaloTools         v6r4     Calo      # Olivier Deschamps
 
 # DAQ
-use DAQMonitors       v1r5     DAQ       # Olivier Deschamps
+use DAQMonitors       v1r6     DAQ       # Olivier Deschamps
 
 # HLT
-use HltDAQ            v2r14p1  Hlt       # Tomasz Skwarnicki
+use HltDAQ            v2r15    Hlt       # Tomasz Skwarnicki
 
 # L0 trigger simulation
-use L0Calo            v11r7    L0        # Patrick Robbe
-use L0DU              v10r20   L0        # Olivier Deschamps   
+use L0Calo            v11r8    L0        # Patrick Robbe
+use L0DU              v10r21   L0        # Olivier Deschamps   
 use L0Muon            v9r10    L0        # Julien Cogan
 use L0MuonMonitor     v2r2p1   L0        # Julien Cogan
 use PuVeto            v7r7p1   L0        # Serena Oggero
 
 # Muon
-use MuonAssociators   v3r3    Muon      # Alessia Satta
+use MuonAssociators   v3r3     Muon      # Alessia Satta
 
 # Outer tracker
-use OTAssociators     v4r4    OT        # Alexandr Kozlinskiy
-use OTMonitor         v3r3p1  OT        # Wouter Hulsbergen
+use OTAssociators     v4r5     OT        # Alexandr Kozlinskiy
+use OTMonitor         v3r3p1   OT        # Wouter Hulsbergen
 
 # Rich
-use RichAlgorithms    v1r4    Rich      # Chris Jones
-use RichDAQ           v3r36   Rich      # Chris Jones
-use RichMCMonitors    v1r9    Rich      # Chris Jones
-use RichMCTools       v3r17   Rich      # Chris Jones
-use RichTools         v2r39   Rich      # Chris Jones
+use RichAlgorithms    v1r4     Rich      # Chris Jones
+use RichDAQ           v3r37    Rich      # Chris Jones
+use RichMCMonitors    v1r9     Rich      # Chris Jones
+use RichMCTools       v3r17    Rich      # Chris Jones
+use RichTools         v2r40    Rich      # Chris Jones
 
 # Silicon detectors
-use SiTools           v1r8    Si        # Matt Needham
+use SiTools           v1r8     Si        # Matt Needham
 
 # Silicon Tracker
-use STAlgorithms      v4r4    ST        # Jeroen van Tilburg, Matt Needham
-use STAssociators     v1r6    ST        # Jeroen van Tilburg, Matt Needham
-use STCheckers        v3r4    ST        # Jeroen van Tilburg, Matt Needham
-use STDAQ             v3r27   ST        # Jeroen van Tilburg, Matt Needham
-use STMonitors        v3r9    ST        # Mark Tobin
-use STTools           v4r12   ST        # Jeroen van Tilburg, Matt Needham
+use STAlgorithms      v4r4     ST        # Jeroen van Tilburg, Matt Needham
+use STAssociators     v1r6     ST        # Jeroen van Tilburg, Matt Needham
+use STCheckers        v3r4     ST        # Jeroen van Tilburg, Matt Needham
+use STDAQ             v3r28    ST        # Jeroen van Tilburg, Matt Needham
+use STMonitors        v3r10    ST        # Mark Tobin
+use STTools           v4r13    ST        # Jeroen van Tilburg, Matt Needham
 
 # Velo
-use VeloAlgorithms    v5r6    Velo      # Tomasz Szumlak
-use VeloAssociators   v2r4p1  Velo      # Tomasz Szumlak
-use VeloDAQ           v6r6    Velo      # Kurt Rinnert
-use VeloSimulation    v3r12   Velo      # Tomasz Szumlak
-use VeloTools         v4r1p1  Velo      # Tomasz Szumlak
+use VeloAlgorithms    v5r6     Velo      # Tomasz Szumlak
+use VeloAssociators   v2r4p1   Velo      # Tomasz Szumlak
+use VeloDAQ           v6r7     Velo      # Kurt Rinnert
+use VeloSimulation    v3r12    Velo      # Tomasz Szumlak
+use VeloTools         v4r1p1   Velo      # Tomasz Szumlak
 
 # VeloPix
-use VeloPixDAQ        v1r4    VeloPix   # Marcin Kucharczyk
-use VeloPixTools      v1r0p1  VeloPix   # Victor Coco
+use VeloPixDAQ        v1r4     VeloPix   # Marcin Kucharczyk
+use VeloPixTools      v1r0p1   VeloPix   # Victor Coco
 
 # VeloLite
-use VLDAQ             v1r0    VL        # Heinrich Schindler
+use VLDAQ             v1r0     VL        # Heinrich Schindler
+
 # Declare this as a container package
 apply_pattern container_package
 

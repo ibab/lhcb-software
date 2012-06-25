@@ -6,6 +6,98 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v13r0>2012-06-26 LbcomSys v13r0</A></H1><PRE>
+This version uses Gaudi v23r3 and LHCb v35r0
+
+- Production release for 2012 data taking
+
+- Packages added:   VLDAQ v1r0 - RawEvent encoders/decoders for VeloLite detector
+
+- Packages updated: Calo/CaloAssociators v6r11, Calo/CaloTools v6r4,
+    DAQ/DAQMonitors v1r6, Hlt/HltDAQ v2r15, L0/L0Calo v11r8, L0/L0DU v10r21,
+    OT/OTAssociators v4r5, Rich/RichDAQ v3r37, Rich/RichTools v2r40,
+    ST/STDAQ v3r28, ST/STMonitors v3r10, ST/STTools v4r13, Velo/VeloDAQ v6r7,
+    VLDAQ v1r0
+
+- In CaloAssociators v6r11
+  . New algo : CaloHypoMCTruth : produce Linker tables for Hypo->MC
+
+- In CaloTools v6r4
+  . GammaPi0SeparationTool  : new version of the tool (incl. Prs info)
+  . New algorithm : CheckCaloHypoRef - check CaloHypo->CaloCluster* smart
+                                       reference backward compatibility
+  . L0Calo2Calo tool : default clusterization level set to 2
+                       (5x5 area for merged pi0)
+
+- In DAQMonitors v1r6
+  . RawBankSizeMonitor: Convert banksize in Bytes (was wrong in previous release)
+
+- In HltDAQ v2r15
+  . Specify access mode when creating lockfile
+  . Add low-level locking protocol to avoid multiple writers in different
+    processes to ConfigTarFileAccessSvc
+
+- In L0Calo v11r8
+  . L0CaloCandidatesFromRawBank.cpp: sort the L0CaloCandidates containers
+    according to their Et before storing them in the data store.
+
+- In L0DU v10r21
+  . L0Conf : 
+    o add default setting (LUT version) for L0Muon emulation for DataType 2012
+    o add new property to be used by Moore : ForceSingleL0Configuration
+      (makes all L0 algorithms request the same type of L0 config provider)
+    o set default settings for L0 emulation with DataType 2012
+
+- In OTAssociators v4r5
+  . Remove obsolete file OTAssociators_dll.cpp
+  . Remove unnecessary OTDAQ includes
+
+- In RichDAQ v3r37
+  . Add RawEventLocations property to RichRawDataFormatTool, to allow to specify
+    a search list of locations. Default is to look for RawEventLocation::Rich
+    followed by RawEventLocation::Default.
+
+- In RichTools v2r40
+  . Add an option to RichRadiatorTool to allow certain Aerogel tile IDs to
+    be ignored.
+
+- In STDAQ v3r28
+  . Fix RESOURCE_LEAK Coverity defect
+  . Add RawEventLocations property to STDecodingBaseAlg, to allow to specify a
+    search list of locations. Default is to look for RawEventLocation::Other
+    followed by RawEventLocation::Default. Used in RawBankToSTClusterAlg and
+    RawBankToSTLiteClusterAlg
+  . rawEventLocation property is declared obsolete. If set, it is prepended
+    to RawEventLocations and a warning is printed.
+
+- In STMonitors v3r10
+  . Fix bug in resizing of counters.
+
+- In STTools v4r13
+  . Fix bug in resetting of noise counters.
+  . Add option to reset noise counters after a run change
+  . Bug fix in removal of clusters from noise calculation
+
+- In VeloDAQ v6r7
+  . Add RawEventLocations property to decoders, to allow to specify a
+    search list of locations. Default is to look for RawEventLocation::Other
+    followed by RawEventLocation::Default.
+  . RawEventLocation property is declared obsolete. If set, it is prepended
+    to RawEventLocations and a warning is printed.
+
+
+- In L0DU v10r21, RichDAQ v3r37, STDAQ v3r28
+  . Protect unprotected debug() and verbose() messages
+
+- In CaloTools v6r4, L0DU v10r21, OTAssociators v4r5, STDAQ v3r28
+  . Fix UNINIT_CTOR defects
+
+- In OTAssociators v4r5, STDAQ v3r28
+  . Replace endreq by endmsg
+
+- In L0DU v10r21, OTAssociators v4r5, STDAQ v3r28
+  . Fix trivial icc remarks
+
 </PRE><H1><A NAME=v12r3>2012-05-03 LbcomSys v12r3</A></H1><PRE>
 This version uses Gaudi v23r2 and LHCb v34r3
 
