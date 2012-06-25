@@ -43,7 +43,7 @@ config_detached =  {
     'LinePostscale'       :    1.   ,
     
     'MuonTRCHI2DOF'       :    5.   ,  # adimentional 
-    'MuonPT'              :  900.   ,  # MeV
+    'MuonPT'              :  500.   ,  # MeV
     'MuonP'               :   -5.   ,  # MeV, not applied now
     'MuMuParticleName'    : "'J/psi(1S)'", # Particle Name, like "'psi(2S)'"
     'MuMuMassWindow'      :  100.   ,  # MeV, 10 sigma, may decreased to 150
@@ -51,13 +51,13 @@ config_detached =  {
     'MuMuPT'              :  -10.   ,  # MeV, not applied 
     
     'PionTRCHI2DOF'       :    5.   ,  # adimentional     
-    'PionPT'              : 1400.   ,  # MeV
+    'PionPT'              : 1000.   ,  # MeV
     'PionP'               :   -5.   ,  # MeV, not applied now
     'BcMassWindow'        :  400.   ,  # MeV, mass window
     'BcVtxCHI2'           :    9.   ,  # adimentional
-    'BcPT'                : 4000.   ,  # MeV, May incrase up to 5000 MeV if needed       
+    'BcPT'                :    0.   ,  # MeV, May incrase up to 5000 MeV if needed       
 
-    'LifetimeCut'         : " & (BPVLTIME()>0.1*ps)"
+    'LifetimeCut'         : " & (BPVLTIME()>0.2*ps) & (INTREE( (ABSID=='pi+') & (BPVIPCHI2()>9)))"
     }
 
 

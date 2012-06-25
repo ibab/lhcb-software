@@ -25,9 +25,7 @@ defaulSettings =  {
         'ElectronIPCHI2'          :    1.   ,
         'ElectronPIDepi'          :   -2.   ,          
         #
-        'eeVertexCHI2'            :   16.   ,  
-        'eeMinMass'               :   20.   ,  # MeV 
-        'eeMaxMass'               : 1500.   ,  # MeV
+        'eeCuts'                  : "(VFASPF(VCHI2)<16) & (((MM>20*MeV) & (MM<1.5*GeV)) | ((MM>2.2*GeV) & (MM<4.2*GeV)))",
         #
         'KaonPT'                  :  400.   ,  # MeV 
         'KaonP'                   : 3000.   ,  # MeV  
@@ -49,45 +47,8 @@ defaulSettings =  {
         'BMassW'                  : 1000.   ,  # MeV  
         'BDIRA'                   :    0.999,
         'BDTCutValue'             :   -0.98 ,
-        'BDTWeightsFile'          : '$TMVASELECTIONSROOT/weights/Bd2eeKstar_BDTG.weights.xml'
+        'BDTWeightsFile'          : '$TMVAWEIGHTSROOT/data/Bd2eeKstar_BDTG_v1r0.xml'
         }
-
-Bd2JpsieeKstarSettings =  {
-        'LinePrescale'            :    1.   ,
-        'LinePostscale'           :    1.   ,
-        #
-        'ElectronPT'              :  200.   ,  # MeV
-        'ElectronTrackCHI2pNDOF'  :    5.   ,
-        'ElectronIPCHI2'          :    1.   ,
-        'ElectronPIDepi'          :   -2.   ,          
-        #
-        'eeVertexCHI2'            :   16.   ,  
-        'eeMinMass'               : 2200.   ,  # MeV 
-        'eeMaxMass'               : 4200.   ,  # MeV
-        #
-        'KaonPT'                  :  400.   ,  # MeV 
-        'KaonP'                   : 3000.   ,  # MeV  
-        'KaonTrackCHI2pNDOF'      :    5.   , 
-        'KaonIPCHI2'              :    4.   , 
-        'KaonPIDKpi'              :   -5.   , 
-        #
-        'PionPT'                  :  250.   ,  # MeV
-        'PionP'                   : 2000.   ,  # MeV 
-        'PionTrackCHI2pNDOF'      :    5.   , 
-        'PionIPCHI2'              :    4.   , 
-        'PionPIDpiK'              :   10.   ,  # PIDpi-PIDK > -5, i.e., PIDK<5 
-        #
-        'KstarVertexCHI2'         :   16.   , 
-        'KstarMassW'              :  150.   ,  # MeV
-        #
-        'BComMassW'               : 1200.   ,  # MeV
-        'BVertexCHI2'             :   16.   ,  # /ndf
-        'BMassW'                  : 1000.   ,  # MeV  
-        'BDIRA'                   :    0.999,
-        'BDTCutValue'             :   -0.98 ,
-        'BDTWeightsFile'          : '$TMVASELECTIONSROOT/weights/Bd2eeKstar_BDTG.weights.xml'
-        }
-    
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
@@ -106,9 +67,7 @@ class Bd2eeKstarBDTConf(LineBuilder):
         'ElectronIPCHI2',
         'ElectronPIDepi',
         #
-        'eeVertexCHI2',
-        'eeMinMass',
-        'eeMaxMass',
+        'eeCuts',
         #
         'KaonPT',
         'KaonP',
@@ -147,9 +106,7 @@ class Bd2eeKstarBDTConf(LineBuilder):
                              ElectronIPCHI2 = config['ElectronIPCHI2'],
                              ElectronPIDepi = config['ElectronPIDepi'],
                              #
-                             eeVertexCHI2 = config['eeVertexCHI2'],
-                             eeMinMass = config['eeMinMass'],
-                             eeMaxMass = config['eeMaxMass']
+                             eeCuts = config['eeCuts']
                              )
         
         self.SelKstar = makeKstar('KstarFor'+Bd2eeKstarBDTName,
@@ -192,6 +149,41 @@ class Bd2eeKstarBDTConf(LineBuilder):
                                    )
         
         self.registerLine(self.line)
+
+        # new line with new Brem cor 
+        self.FilterEE = filterEE( 'filterEEFor'+Bd2eeKstarBDTName,
+                                  ElectronPT = config['ElectronPT'],
+                                  ElectronTrackCHI2pNDOF = config['ElectronTrackCHI2pNDOF'],
+                                  ElectronIPCHI2 = config['ElectronIPCHI2'],
+                                  ElectronPIDepi = config['ElectronPIDepi'],
+                                  #
+                                  eeCuts = config['eeCuts']
+                                  )
+        
+         
+        self.SelBd2DieeKstar = makeBd2eeKstar( "Sel2_"+Bd2eeKstarBDTName,
+                                               SelEE = self.FilterEE,
+                                               SelKstar = self.SelKstar,
+                                               BComMassW = config['BComMassW'],
+                                               BVertexCHI2 = config['BVertexCHI2'],
+                                               BMassW = config['BMassW'],
+                                               BDIRA = config['BDIRA']
+                                               )
+
+        self.CutBDTBd2eeKstar2  = applyBDT( "CutBDT2_" + Bd2eeKstarBDTName,
+                                            LineName  = Bd2eeKstarBDTLineName+"2",
+                                            SelBd2eeKstar = self.SelBd2DieeKstar,
+                                            BDTCutValue = config['BDTCutValue'],
+                                            BDTWeightsFile = config['BDTWeightsFile']
+                                            )
+        
+        self.line2 = StrippingLine( Bd2eeKstarBDTLineName+"2",
+                                    prescale = config['LinePrescale'],
+                                    postscale = config['LinePostscale'],
+                                    selection = self.CutBDTBd2eeKstar2
+                                    )
+        
+        self.registerLine(self.line2) 
        
 
 def makeEE( name,
@@ -201,9 +193,7 @@ def makeEE( name,
             ElectronIPCHI2,
             ElectronPIDepi,
             #
-            eeVertexCHI2,
-            eeMinMass,
-            eeMaxMass
+            eeCuts
             ):
 
     _StdLooseDetachedDiElectron = DataOnDemand(Location = "Phys/StdLooseDetachedDiElectron/Particles" )
@@ -212,9 +202,30 @@ def makeEE( name,
 
     ElectronMCut = "(INTREE( (ID=='e-') & (PT> %(ElectronPT)s *MeV) & (TRCHI2DOF < %(ElectronTrackCHI2pNDOF)s) & (BPVIPCHI2() > %(ElectronIPCHI2)s) & (PIDe>%(ElectronPIDepi)s) ))" % locals()
     
-    EEMomCut = "(VFASPF(VCHI2)< %(eeVertexCHI2)s) & (%(eeMinMass)s *MeV < MM) & (MM< %(eeMaxMass)s *MeV)" % locals()
+    _EE = FilterDesktop( Code = eeCuts + " & " + ElectronPCut + " & " + ElectronMCut )
     
-    _EE = FilterDesktop( Code = EEMomCut + " & " + ElectronPCut + " & " + ElectronMCut )
+    return Selection( name,
+                      Algorithm = _EE,
+                      RequiredSelections = [ _StdLooseDetachedDiElectron ]
+                      )
+
+def filterEE( name,
+              #
+              ElectronPT,
+              ElectronTrackCHI2pNDOF,
+              ElectronIPCHI2,
+              ElectronPIDepi,
+              #
+              eeCuts
+              ):
+    
+    _StdLooseDetachedDiElectron = DataOnDemand(Location = "Phys/StdDiElectronFromTracks/Particles" )
+    
+    ElectronPCut = "(INTREE( (ID=='e+') & (PT> %(ElectronPT)s *MeV) & (TRCHI2DOF < %(ElectronTrackCHI2pNDOF)s) & (BPVIPCHI2() > %(ElectronIPCHI2)s) & (PIDe>%(ElectronPIDepi)s) ))" % locals()
+
+    ElectronMCut = "(INTREE( (ID=='e-') & (PT> %(ElectronPT)s *MeV) & (TRCHI2DOF < %(ElectronTrackCHI2pNDOF)s) & (BPVIPCHI2() > %(ElectronIPCHI2)s) & (PIDe>%(ElectronPIDepi)s) ))" % locals()
+    
+    _EE = FilterDesktop( Code = eeCuts + " & " + ElectronPCut + " & " + ElectronMCut )
     
     return Selection( name,
                       Algorithm = _EE,

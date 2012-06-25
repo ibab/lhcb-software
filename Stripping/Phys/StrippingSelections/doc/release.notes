@@ -4,6 +4,17 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-06-25 - Jibo He
+ - StrippingBd2eeKstarBDT
+   . Merged Bd->Jpsi(ee)Kstar to one line 
+   . Added a new line using the DiElectronMaker, just for this round.
+ - StrippingBc2JpsiHNew
+   . Removed the PT cut on Bc
+
+! 2012-06-25 - Edwige Tournefier
+ - StrippingChiCJPsiGammaConv.py: created stripping for chi_c and chi_b with converted photons
+   based on the new BremAdder and DiElectronMaker. Plus 2 stripping lines for chi_c and chi_b background studies
+
 ! 2012-06-25 - Johannes Albrecht
  - StrippingBs2MuMuLines.py: minimal enlargement of Phi sidebands for systematics
  - StrippingLFVLines.py: small tweaking of tau2PhiMu to reduce rate
