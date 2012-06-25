@@ -137,14 +137,6 @@ StatusCode LbAppInit::finalize() {
       << endmsg;
   }
 
-  StatusCode sc = release(m_evtCounter);
-  m_evtCounter = 0;
-  if( sc.isFailure() ) {
-    error()
-      << "Failure in release tool " << m_evtCounterName << endmsg;
-    return sc;
-  }
-
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
