@@ -3,6 +3,7 @@
 ! Package Manager : Patrick Robbe & M-H. Schune
 !----------------------------------------------------------------------------
 
+!========================= L0Calo v11r8 2012-06-25 =========================
 ! 2012-05-29 - Patrick Robbe
  - L0CaloCandidatesFromRawBank.cpp: sort the L0CaloCandidates containers 
    according to their Et before storing them in the data store.
