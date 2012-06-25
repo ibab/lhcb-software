@@ -20,15 +20,17 @@ __all__ = (
 
 config_default =  {
         'TRCHI2DOF'        :     5.  ,
-        'KaonPIDK'         :     2.  ,
-        'KaonPT'           :   500.  , # MeV
+        'KaonPIDK'         :     5.  ,
+        'KaonPT'           :   650.  , # MeV
         'PhiVtxChi2'       :    16.  ,
         'PhiMassW'         :    12.  , 
         'CombMaxMass'      :  4100.  , # MeV, before Vtx fit
         'CombMinMass'      :  2750.  , # MeV, before Vtx fit
         'MaxMass'          :  4000.  , # MeV, after Vtx fit
         'MinMass'          :  2800.  , # MeV, after Vtx fit
-        'Phi_TisTosSpecs'  : { "Hlt1Global%TIS" : 0, "Hlt2Global%TIS" : 0 }
+        'Phi_TisTosSpecs'  : { "Hlt1Global%TIS" : 0 },
+        'PionCuts'         :  "(PT>0.7*GeV) & (TRCHI2DOF<5) & (MIPCHI2DV(PRIMARY)>36.) & (PIDK<10)" ,
+        'KaonCuts'         :  "(PT>0.5*GeV) & (TRCHI2DOF<5) & (MIPCHI2DV(PRIMARY)>25.) & (PIDK>5)" 
         }
 
 from Gaudi.Configuration import *
@@ -51,7 +53,9 @@ class Ccbar2PhiPhiConf(LineBuilder):
         'CombMinMass',
         'MaxMass',
         'MinMass',
-        'Phi_TisTosSpecs'
+        'Phi_TisTosSpecs',
+        'PionCuts',
+        'KaonCuts'
         )
 
     
@@ -88,10 +92,30 @@ class Ccbar2PhiPhiConf(LineBuilder):
                                                          " & (MAXTREE('K+'==ABSID, TRCHI2DOF) < %(TRCHI2DOF)s )" \
                                                          " & (MINTREE('K+'==ABSID, PIDK)>0)" % self.config)
 
+        """
+        Pion 
+        """
+        self.PionForCcbar = self.createSubSel( OutputList = "PionFor" + self.name,
+                                               InputList =  DataOnDemand( Location = 'Phys/StdLoosePions/Particles' ), 
+                                               Cuts = config['PionCuts'] 
+                                               )
+
+        """
+        Kaon
+        """
+        self.KaonForCcbar = self.createSubSel( OutputList = "KaonFor" + self.name,
+                                               InputList =  DataOnDemand( Location = 'Phys/StdLooseKaons/Particles' ), 
+                                               Cuts = config['KaonCuts'] 
+                                               )
+                                                 
+
+
 
         self.makeJpsi2PhiPhi()
         self.makeDetachedJpsi2PhiPhi()
-        
+        self.makeDetachedJpsi2PhiKK()
+        self.makeDetachedJpsi2PhiPiPi()
+        self.makeBs2TriPhi()
         
     def createSubSel( self, OutputList, InputList, Cuts ) :
         '''create a selection using a FilterDesktop'''
@@ -126,7 +150,7 @@ class Ccbar2PhiPhiConf(LineBuilder):
                                                  PreVertexCuts = "(in_range( %(CombMinMass)s *MeV, AM, %(CombMaxMass)s *MeV))" % self.config,
                                                  PostVertexCuts = "(in_range( %(MinMass)s *MeV, MM, %(MaxMass)s *MeV)) & (VFASPF(VCHI2PDOF) < 16 )" %self.config )
         
-        Jpsi2PhiPhiLine = StrippingLine( self.name + "Line",
+        Jpsi2PhiPhiLine = StrippingLine( self.name + "PhiLine",
                                          algos = [ Jpsi2PhiPhi ] )
         
         self.registerLine(Jpsi2PhiPhiLine)
@@ -138,12 +162,65 @@ class Ccbar2PhiPhiConf(LineBuilder):
                                                          DaughterLists = [ self.DetachedPhiForJpsiList ], 
                                                          DaughterCuts  = { "phi(1020)": "(PT>0.5*GeV)" },
                                                          PreVertexCuts = "AM>2.65*GeV",
-                                                         PostVertexCuts = "(MM>2.7*GeV) & (VFASPF(VCHI2PDOF)<16)" %self.config )
+                                                         PostVertexCuts = "(MM>2.7*GeV) & (VFASPF(VCHI2PDOF)<16) & (BPVDLS>10)" %self.config )
         
-        DetachedJpsi2PhiPhiLine = StrippingLine( self.name + "DetachedLine",
+        DetachedJpsi2PhiPhiLine = StrippingLine( self.name + "PhiDetachedLine",
                                                  algos = [ DetachedJpsi2PhiPhi ] )
         
         self.registerLine(DetachedJpsi2PhiPhiLine)
+
+    def makeDetachedJpsi2PhiKK(self):
+        DetachedJpsi2PhiKK = self.createCombinationSel( OutputList = "DetachedJpsi2PhiKK" + self.name,
+                                                        DecayDescriptor = " J/psi(1S) -> phi(1020) K+ K-", 
+                                                        DaughterLists = [ self.DetachedPhiForJpsiList,
+                                                                          self.KaonForCcbar
+                                                                          ], 
+                                                        DaughterCuts  = { "phi(1020)": """
+                                                                          (PT>0.5*GeV) 
+                                                                          & (INTREE( (ID=='K+') & (PT>500*MeV) & (TRCHI2DOF<5) & (MIPCHI2DV(PRIMARY)>25.) & (PIDK>5)))
+                                                                          & (INTREE( (ID=='K-') & (PT>500*MeV) & (TRCHI2DOF<5) & (MIPCHI2DV(PRIMARY)>25.) & (PIDK>5)))
+                                                                          """ },
+                                                        PreVertexCuts = "AM>2.65*GeV",
+                                                        PostVertexCuts = "(MM>2.7*GeV) & (VFASPF(VCHI2PDOF)<16) & (BPVDLS>10)" %self.config )
+        
+        DetachedJpsi2PhiKKLine = StrippingLine( self.name + "KKDetachedLine",
+                                                 algos = [ DetachedJpsi2PhiKK ] )
+        
+        self.registerLine(DetachedJpsi2PhiKKLine)     
+
+
+    def makeDetachedJpsi2PhiPiPi(self):
+        DetachedJpsi2PhiPiPi = self.createCombinationSel( OutputList = "DetachedJpsi2PhiPiPi" + self.name,
+                                                          DecayDescriptor = " J/psi(1S) -> phi(1020) pi+ pi-", 
+                                                          DaughterLists = [ self.DetachedPhiForJpsiList,
+                                                                            self.PionForCcbar
+                                                                            ], 
+                                                          DaughterCuts  = { "phi(1020)": """
+                                                                          (PT>0.5*GeV) 
+                                                                          & (INTREE( (ID=='K+') & (PT>500*MeV) & (TRCHI2DOF<5) & (MIPCHI2DV(PRIMARY)>25.) & (PIDK>5)))
+                                                                          & (INTREE( (ID=='K-') & (PT>500*MeV) & (TRCHI2DOF<5) & (MIPCHI2DV(PRIMARY)>25.) & (PIDK>5)))
+                                                                          """},
+                                                          PreVertexCuts = "AM>2.65*GeV",
+                                                          PostVertexCuts = "(MM>2.7*GeV) & (VFASPF(VCHI2PDOF)<16) & (BPVDLS>10)" %self.config )
+        
+        DetachedJpsi2PhiPiPiLine = StrippingLine( self.name + "PiPiDetachedLine",
+                                                  algos = [ DetachedJpsi2PhiPiPi ] )
+        
+        self.registerLine(DetachedJpsi2PhiPiPiLine)     
+
+        
+    def makeBs2TriPhi(self):
+        Bs2TriPhi = self.createCombinationSel( OutputList = "Bs2TriPhi" + self.name,
+                                               DecayDescriptor = " B_s0 -> phi(1020) phi(1020) phi(1020)", 
+                                               DaughterLists = [ self.DetachedPhiForJpsiList ], 
+                                               DaughterCuts  = { "phi(1020)": "(PT>0.5*GeV)" },
+                                               PreVertexCuts = "AM>2.65*GeV",
+                                               PostVertexCuts = "(MM>2.7*GeV) & (VFASPF(VCHI2PDOF)<16)" %self.config )
+        
+        Bs2TriPhiLine = StrippingLine( self.name + "Bs2TriPhiLine",
+                                       algos = [ Bs2TriPhi ] )
+        
+        self.registerLine( Bs2TriPhiLine )        
         
 
 

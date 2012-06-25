@@ -10,6 +10,10 @@
    . Added a new line using the DiElectronMaker, just for this round.
  - StrippingBc2JpsiHNew
    . Removed the PT cut on Bc
+ - StrippingCcbar2PhiPhi
+   . Removed Hlt2TIS req. and tightened cuts of unbiased line 
+   . Tightend cuts of Detached DiPhi line
+   . Added detached PhiKK(pipi) and Bs->3Phi lines
 
 ! 2012-06-25 - Edwige Tournefier
  - StrippingChiCJPsiGammaConv.py: created stripping for chi_c and chi_b with converted photons
