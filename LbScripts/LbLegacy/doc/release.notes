@@ -1,7 +1,12 @@
+2012-06-25 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v5r1
+	* python/LbLegacy/install_project.py:  release of version v5r1
+
 2012-06-21 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* scripts/mkLCGCMTtar: Implemented backwards compatibility feature for LCGCMT
-	versions prior to 63 
+	versions prior to 63
 
 2012-06-21 Ben Couturier <Ben.Couturier@cern.ch>
 
