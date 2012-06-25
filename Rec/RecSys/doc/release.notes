@@ -5,6 +5,98 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+</PRE><H1><A NAME=v14r0>2012-06-26 RecSys v14r0</A></H1><PRE>
+This version uses Gaudi v23r3 and LHCb v35r0
+
+- Production release for 2012 data taking
+
+- Packages updated: Calo/CaloMoniDst v5r12,  Calo/CaloReco v5r15,
+    Muon/MuonTools v5r3, Rec/ChargedProtoANNPID v1r7, Rec/LumiAlgs v7r7,
+    Rec/RecAlgs v2r9, Rich/RichParticleSearch v1r9, Rich/RichRecQC v2r58,
+    Rich/RichRecSys v4r6, Tf/FastVelo v1r10, Tf/TrackSys v7r4, 
+    Tr/PatChecker v3r12, Tr/TrackMonitors v1r38p1, Tr/TrackUtils v1r47,
+    VeloRecMonitors v2r19
+
+- In CaloMoniDst v5r12
+  . Fix CaloAlignmentNtp
+  . Update L0CaloScale
+
+- In CaloReco v5r15
+  . ClusterCovarianceMatrixTool : get covariance parameters from condDB when
+                                  available
+  . CaloMergedPi0Alg : add covariance matrix for SplitClusters & SplitPhotons
+                       (assume no correlation)
+  . CaloECorrection  : allow spd-dependent PileUp subtraction
+  . Configurable CaloLine : add ClusterizationLevel tag for L0Calo2Calo
+                            (set to 2 by default)
+
+- In MuonTools v5r3
+  . Downgrade info message to debug (for stripping).
+
+- In ChargedProtoANNPID v1r7
+  . Make default network tuning for 2010, 2011 and 2012 "MC11aTuneV3"
+  . Remove context() specific input track locations in
+    ChargedProtoANNPIDCommonBase. Default is now the offline location.
+
+- In LumiAlgs v7r7
+  . Allow mu calculation for counter different from lumi calculation
+  . Correct DB interpretation of random lumi rate for 2012 data
+
+- In RecAlgs v2r9
+  . In RecInit, replace RawEventLocation by RawEventLocations, and look for
+    RawEvent also in RawEventLocation::Other
+
+- In RichParticleSearch v1r8, v1r9
+  . Minor changes to RichParticleFinder to produce single NTuple after cuts
+    selection.
+  . Added macros/ParticleFinder to analyse the output NTuple from
+    RichParticleSearchMain
+  . Changed example options file for latest running.
+
+- In RichRecQC v2r58
+  . Remove L0DUFromRawAlg and HltDecReportsDecoder from L0 Filter, now done in
+    Brunel main sequence
+  . L0 Filter returns and empty list for 2008 and 2009 data
+  . Various small improvements to the HPDHitsMoni
+  . Enable by default the resolution plots per PD column in RecoQC.
+    Useful for spotting issues like column timing problems.
+  . Reduce the chi^2 range from 0-10 to 0-3, to adapt to tracking changes.
+  . Reduce the 'tight' track monitoring selection to chi^2 < 2
+
+- In RichRecSys v4r6
+  . Remove the CK theta correction factor for Aerogel. Will be taken into
+    account in an incoming recalibration.
+
+- In FastVelo v1r9p1, v1r10
+  . Rewrite mergesPaceClone() to improve clone rejection
+  . Fix a bug in beamSpalshSpaceMerge, nLong and nShort were on teh same track!
+  . Reject faster wrong combination in findUnusedPhi, when two phi were
+    diametraly opposed.
+  . Added a protection against FPE (divide by zero) in FastVeloTrack::solve
+
+- In TrackSys v7r4
+  . Fix bug #95019 (missing import in case of OldCloneKiller+Simulation)
+    introduced by previous release
+
+- In PatChecker v3r12
+  . In PrimaryVertexChecker, fix more missing initialisations in RecPVInfo and
+    MCPVInfo causing FPE on i686 architecture.
+  . Fix Coverity UNINIT_CTOR defects
+
+- In TrackMonitors v1r38p1
+  . Fixed small memory leak in TrackITOverlapMonitor
+
+- In TrackUtils v1r47
+  . TrackBestTrackCreator: Changed to dynamic array (vector) for the size of the
+    LHCbIDs in the internal track container. Fixes bug #94407
+
+- In VeloRecMonitors v2r19
+  . Updated location for raw event
+  . Updated the "VeloTrackMonitorNT" algorithm:
+    o Add new ntuple for all clusters (not only the ones associated to a track)
+    o Add several variables to all the ntuples
+		 (per evt, per track, per cluster on track)
+
 </PRE><H1><A NAME=v13r3>2012-05-03 RecSys v13r3</A></H1><PRE>
 This version uses Gaudi v23r2 and LHCb v34r3
 
