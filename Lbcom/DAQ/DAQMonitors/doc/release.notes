@@ -4,7 +4,7 @@
 ! Purpose     : Monitors for DAQ event objects
 !-----------------------------------------------------------------------------
 
-
+!========================= DAQMonitors v1r6 2012-06-25 =========================
 ! 2012-05-10 - Olivier Deschamps 
  - RawBankSizeMonitor : Convert banksize in Bytes (was wrong in previous release)
 
