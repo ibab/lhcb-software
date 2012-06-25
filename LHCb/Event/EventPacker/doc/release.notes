@@ -4,6 +4,7 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+!========================= EventPacker v2r17 2012-06-25 =========================
 ! 2012-06-22 - Heinrich Schindler 
  - Add VL to Packers, Unpackers, Checkers 
 
