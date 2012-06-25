@@ -5,6 +5,9 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2012-06-24 - Vanya Belyaev
+ - fix "diff"-function 
+
 ! 2012-06-09 - Vanya Belyaev
  - add rebin-functions 
 

@@ -1418,14 +1418,14 @@ def _h1_asym_ ( h1 , h2 ) :
 #  @date   2011-06-07
 def _h1_diff_ ( h1 , h2 ) :
     """
-    ``Difference'' the histogram 0.5*(h1-h2)/(h1+h2)
+    ``Difference'' the histogram 2*(h1-h2)/(h1+h2)
     
     >>> h1     = ...
     >>> h2     = ...
     >>> result = h1.diff ( h2 ) 
     
     """
-    return _h1_oper_ ( h1 , h2 , lambda x,y : 0.5*x.asym(y) ) 
+    return _h1_oper_ ( h1 , h2 , lambda x,y : 2*x.asym(y) ) 
 # =============================================================================
 ##  ``Chi2-tension'' of the histograms 
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
@@ -2108,13 +2108,13 @@ def _h2_asym_ ( h1 , h2 ) :
 #  @date   2012-06-03
 def _h2_diff_ ( h1 , h2 ) :
     """
-    ``Difference'' the histogram 0.5*(h1-h2)/(h1+h2)
+    ``Difference'' the histogram 2*(h1-h2)/(h1+h2)
     
     >>> h1     = ...
     >>> h2     = ...
     >>> diff   = h1.diff ( h2 )
     """
-    return _h2_oper_ ( h1 , h2 , lambda x,y : 0.5*x.asym(y) ) 
+    return _h2_oper_ ( h1 , h2 , lambda x,y : 2*x.asym(y) ) 
 # =============================================================================
 ##  ``Chi2-tension'' the histograms 
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
