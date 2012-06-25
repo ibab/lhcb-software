@@ -4,6 +4,7 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+!========================= RichDAQ v3r37 2012-06-25 =========================
 ! 2012-06-13 - Marco Cattaneo
  - Fix an unprotected debug()
 
