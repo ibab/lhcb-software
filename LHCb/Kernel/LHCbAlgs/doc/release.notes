@@ -4,6 +4,7 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!========================= LHCbAlgs v2r50 2012-06-25 =========================
 ! 2012-06-25 - Marco Cattaneo
  - Remove do nothing method EvtCounter::finalize, which in fact was buggy
    because it was not calling the base class
