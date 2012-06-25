@@ -2,9 +2,10 @@
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
 
+!========================= L0Event v19r6 2012-06-25 =========================
 ! 2012-06-01 - Olivier Deschamps
- - L0DUReport : change methode preDecisionValueFromSummary : return the full 'int' value instead of the short bool (value !=0)
-
+ - L0DUReport : change methode preDecisionValueFromSummary : return the full 'int'
+   value instead of the short bool (value !=0)
 
 !========================= L0Event v19r5 2012-05-02 =========================
 ! 2012-04-25 - Julien Cogan
