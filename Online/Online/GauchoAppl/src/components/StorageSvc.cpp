@@ -84,7 +84,7 @@ void StorageSvc::analyze(void *, int, MonMap* mmap)
   j = mmap->find("R_Runable/EvtCount");
   if (j == mmap->end())
     return;
-  double evreq, evcount, evout, bout;
+  double evcount;
   //  double RMeps;
   evcount = ((CntrDescr*) MonCounter::de_serialize((*j).second))->d_data;
 
