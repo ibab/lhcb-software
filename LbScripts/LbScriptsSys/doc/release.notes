@@ -1,3 +1,10 @@
+2012-06-25 Ben Couturier <Ben.Couturier@cern.ch>
+	
+	* cmt/requirements: release of version v7r1
+	
+	Lblegacy
+	* scripts/mkLCGCMTtar: bugfix to pakage pre-LCGCMT63 packaging correctly
+
 2012-06-20 Ben Couturier <Ben.Couturier@cern.ch>
 	
 	* cmt/requirements: release of version v7r0
