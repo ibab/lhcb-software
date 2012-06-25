@@ -598,7 +598,7 @@ class genClasses(genSrcUtils.genSrcUtils):
         static void* operator new ( size_t size )
         {
           return ( sizeof(%(classname)s) == size ?
-                   boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::malloc() :
+                   boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::ordered_malloc() :
                    ::operator new(size) );
         }
 
@@ -634,7 +634,7 @@ class genClasses(genSrcUtils.genSrcUtils):
         static void* operator new ( size_t size )
         {
           return ( sizeof(%(classname)s) == size ?
-                   boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::malloc() :
+                   boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::ordered_malloc() :
                    ::operator new(size) );
         }
 
@@ -668,7 +668,7 @@ class genClasses(genSrcUtils.genSrcUtils):
         static void* operator new ( size_t size )
         {
           void *ptr = sizeof(%(classname)s) == size ?
-            boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::malloc() :
+            boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::ordered_malloc() :
             ::operator new(size);
           std::cout << "%(classname)s::new() -> " << ptr << std::endl;
           return ( ptr );

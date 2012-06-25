@@ -5,6 +5,9 @@
 ! Package manager: Stefan Roiser
 !--------------------------------------------------------------------------------
 
+! 2012-06-25 - Chris Jones
+ - Use ordered_malloc() instead of malloc() in boost pool allocations.
+
 !========================= GaudiObjDesc v11r14 2012-06-25 =========================
 ! 2012-06-04 - Marco Clemencic
  - Corrected indentation of Python files (with reindent.py).
