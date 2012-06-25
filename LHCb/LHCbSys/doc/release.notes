@@ -9,6 +9,8 @@
 This version uses Gaudi v23r3 and LCG_64
 Production version for 2012 data taking
 
+- Packages added:    Det/VLDet v1r0 - Detector elements for VeloLite detector
+
 - Packages modified: Calo/CaloDAQ v4r28, Calo/CaloInterfaces v8r4,
     Calo/CaloUtils v9r4, DAQ/DAQUtils v1r8, DAQ/MDF v3r33, DAQ/MDF_ROOT v1r7,
     Det/CaloDet v10r14, Det/DDDB v1r55, Det/DetCond v12r25,
