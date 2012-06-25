@@ -4,13 +4,13 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+!========================= VeloRecMonitors v2r19 2012-06-25 =========================
 ! 2012-06-12 - Marius Bjoernstad
  - Updated location for raw event
 
 ! 2012-05-16 - Silvia Borghi
  - Minor updates to VeloTrackMonitorNT to fix nightly warning
-   
-add several variables to all the ntuples (per evt, per track, per cluster on track)
+   add several variables to all the ntuples (per evt, per track, per cluster on track)
    add new ntuple for all clusters (not only the ones associated to a track)
 
 ! 2012-05-15 - Silvia Borghi
