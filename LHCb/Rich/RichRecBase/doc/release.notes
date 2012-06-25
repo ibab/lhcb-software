@@ -4,6 +4,7 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!========================= RichRecBase v4r13 2012-06-25 =========================
 ! 2012-06-03 - Chris Jones
  - Update a few histogram limits
 
