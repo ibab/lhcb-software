@@ -96,7 +96,7 @@ _my_immutable_config = {
         , 'Lc_Daug_1of3_MIPCHI2DV_Min'  :   4.0
         , 'Lc_K_PIDKPIDpi_Min'          :   5.0
         , 'Lc_Pi_PIDpiPIDK_Min'         :   0.0
-        , 'Lc_P_PIDpPIDpi_Min'          :   7.5
+        , 'Lc_P_PIDpPIDpi_Min'          :   5.0
         , 'Lc_P_PIDpPIDK_Min'           :   0.0
         , 'Lc_ADMASS_HalfWin'           :  75.0*MeV
         , 'Lc_APT_Min'                  :   1.0*GeV
@@ -136,8 +136,8 @@ _my_immutable_config = {
         , 'Xicc_Daug_PT_Min'            : 250.0*MeV
         , 'Xicc_Daug_MIPCHI2DV_Min'     :  -1.0
         , 'Xicc_Pi_PIDpiPIDK_Min'       :   0.0
-        , 'Xicc_K_PIDKPIDpi_Min'        :   7.5
-        , 'Xicc_P_PIDpPIDpi_Min'        :   7.5
+        , 'Xicc_K_PIDKPIDpi_Min'        :   5.0
+        , 'Xicc_P_PIDpPIDpi_Min'        :   5.0
         , 'Xicc_P_PIDpPIDK_Min'         :   0.0
         , 'Xicc_APT_Min'                :   1.0*GeV
         , 'Xicc_ADOCAMAX_Max'           :   0.5*mm
@@ -183,7 +183,8 @@ class XiccBuilder(LineBuilder) :
         # Set up global event cuts.
         # Conceptually these come first, although the place where they're
         # inserted into the line is at the bottom of the code.
-        _globalEventCuts = "(recSummary (LHCb.RecSummary.nLongTracks, 'Rec/Track/Long') < %(LongTrackGEC)s )" % config
+        _globalEventCutsCode = "(recSummary (LHCb.RecSummary.nLongTracks, 'Rec/Track/Long') < %(LongTrackGEC)s )" % config
+        _globalEventCuts = { 'Code' : _globalEventCutsCode, 'Preambulo' : ["from LoKiTracks.decorators import *"]}
 
         # Pick up standard kaons, pions
         # Filter them for use as daughter particles:

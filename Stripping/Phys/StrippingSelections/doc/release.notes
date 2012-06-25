@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-06-25 - Mat Charles
+ - StrippingXicc.py: Patch fixing ntracks global event cut, reverting previous PID changes
+
 ! 2012-06-25 - Will Barter
  - StrippingWMu.py: Update to include single muon control lines (prescaled to ensure low rate).
 
