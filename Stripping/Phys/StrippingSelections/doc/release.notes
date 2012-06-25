@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-06-25 - Francesca Dordei
+ - StrippingB2JpsiXForBeta_s.py: removed Bs2JpsiEtaPrescaledLine, Bs2JpsiEtaDetachedLine
+
 ! 2012-06-25 - Konstantinos A. Petridis
  - StrippingB2MuMuX.py: commented out MuMuGamma related lines:
    StrippingB2MuMuGammaLine

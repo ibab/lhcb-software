@@ -421,8 +421,8 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                             algos = [ self.createSubSel( InputList = Bs2JpsiEta,
                                                                OutputList = Bs2JpsiEta.name() + "Unbiased" + self.name,
                                                                Cuts = "(PT > 3.*GeV) & (MINTREE('eta'==ABSID, PT) > 2000.*MeV)" ) ] )
-        self.registerLine(Bs2JpsiEtaPrescaledLine)
-        self.registerLine(Bs2JpsiEtaDetachedLine)
+        #self.registerLine(Bs2JpsiEtaPrescaledLine)
+        #self.registerLine(Bs2JpsiEtaDetachedLine)
         #self.registerLine(Bs2JpsiEtaUnbiasedLine)
 
     def makeBd2JpsiPi0( self ):
