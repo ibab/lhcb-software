@@ -6,7 +6,8 @@
 !--------------------------------------------------------------------------------
 
 ! 2012-06-25 - Chris Jones
- - Use ordered_malloc() instead of malloc() in boost pool allocations.
+ - Use ordered_malloc() instead of malloc() and ordered_free(p) instead of 
+   free(p) in boost pool allocations and de-allocations.
 
 !========================= GaudiObjDesc v11r14 2012-06-25 =========================
 ! 2012-06-04 - Marco Clemencic
