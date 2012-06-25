@@ -24,6 +24,7 @@ class HHHBuilder(object):
         #self.ppbark = [self._makeppbarK()]
         #self.pipipi0 = [self._makePiPiPi0()]
         self.omega = self._makeOmegaHHH()
+        self.k1 = self._makeK1()
 
     def _massWindow(self,which,name):
         return "ADAMASS('%s') < %s" % (name,self.config['MASS_WINDOW'][which])
@@ -76,5 +77,11 @@ class HHHBuilder(object):
         mass = self._massWindow('OMEGA','omega(782)').replace('ADAMASS','ADMASS')
         presel = MergedSelection('Omega2PiPiPi0Beauty2XGamma',RequiredSelections=[r,m])
         return [filterSelection('Omega2PiPiPi0',mass,[presel])]
+
+    def _makeK1(self):
+        '''Makes the K1+ -> K+ pi+ pi- +cc '''
+        k1 = self._makeX2HHH('K1_2Kpipi',['[K_1(1270)+ -> K+ pi- pi+]cc'],'(AM<1800*MeV)',self.config,[self.pions,self.kaons])
+        mass = self._massWindow('K1','K_1(1270)+').replace('ADAMASS','ADMASS')
+        return [filterSelection('K1_2Kpipi',mass,[k1])]
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
