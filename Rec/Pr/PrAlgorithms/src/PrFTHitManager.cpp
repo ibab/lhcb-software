@@ -34,7 +34,7 @@ PrFTHitManager::PrFTHitManager( const std::string& type,
 PrFTHitManager::~PrFTHitManager() {}
 
 //=========================================================================
-//  Create the layers in the hit manager, 'layer' is a method of the base class
+//  Create the zones in the hit manager, 'zone' is a method of the base class
 //=========================================================================
 void PrFTHitManager::buildGeometry ( ) {
   m_ftDet = getDet<DeFTDetector>( DeFTDetectorLocation::Default );
@@ -43,11 +43,11 @@ void PrFTHitManager::buildGeometry ( ) {
     int id = (*itL)->layerID();
     LHCb::FTChannelID tmp( id, 0, 0, 0 );
     DetectorSegment seg = (*itL)->createDetSegment( tmp, 0. );
-    layer( 2*id   )->setGeometry( seg );
-    layer( 2*id+1 )->setGeometry( seg );
-    layer( 2*id   )->setBoundaries( -4090., 4090., -3030., 50. );
-    layer( 2*id+1 )->setBoundaries( -4090., 4090., -50., 3030. );    
-    debug() << "Layer " << id << " z " << layer(2*id)->z() << " angle " << layer(2*id)->dxDy() << endmsg;
+    zone( 2*id   )->setGeometry( seg );
+    zone( 2*id+1 )->setGeometry( seg );
+    zone( 2*id   )->setBoundaries( -4090., 4090., -3030., 50. );
+    zone( 2*id+1 )->setBoundaries( -4090., 4090., -50., 3030. );    
+    debug() << "Zone " << id << " z " << zone(2*id)->z() << " angle " << zone(2*id)->dxDy() << endmsg;
   }
 }
 
@@ -78,14 +78,14 @@ void PrFTHitManager::decodeData ( ) {
     int lay  = (*itC).channelID().layer();
     int zone = ( (*itC).channelID().quarter() > 1 ) ? 1 : 0;
     int code = 2*lay + zone;
-    PrHit* aHit = newHitInLayer( code );
+    PrHit* aHit = newHitInZone( code );
     float errX = 0.1;
     if ( 4 < (*itC).size() ) errX = 0.2;
     aHit->setHit( LHCb::LHCbID( (*itC).channelID() ), (*itC).size(), (*itC).charge(), seg, errX , zone, lay );
     debug() << " .. hit " << (*itC).channelID() << " zone " << zone << " x " << seg.x(0.) << endmsg;
   }
-  for ( unsigned int lay = 0; nbLayers() > lay ; ++lay ) {
-    std::sort( layer(lay)->hits().begin(), layer(lay)->hits().end(), PrHit::LowerByCoord() );
+  for ( unsigned int lay = 0; nbZones() > lay ; ++lay ) {
+    std::sort( zone(lay)->hits().begin(), zone(lay)->hits().end(), PrHit::LowerByCoord() );
   }
 }
 //=============================================================================

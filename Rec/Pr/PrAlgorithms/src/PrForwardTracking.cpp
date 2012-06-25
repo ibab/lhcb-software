@@ -93,9 +93,9 @@ StatusCode PrForwardTracking::execute() {
   //== If needed, debug the cluster associated to the requested MC particle.
   if ( 0 <= m_wantedKey ) {
     info() << "--- Looking for MCParticle " << m_wantedKey << endmsg;
-    for ( unsigned int lay = 0; m_hitManager->nbLayers() > lay; ++lay ) {
-      for ( PrHits::const_iterator itH = m_hitManager->hits( lay ).begin();
-            m_hitManager->hits( lay ).end() != itH; ++itH ) {
+    for ( unsigned int zone = 0; m_hitManager->nbZones() > zone; ++zone ) {
+      for ( PrHits::const_iterator itH = m_hitManager->hits( zone ).begin();
+            m_hitManager->hits( zone ).end() != itH; ++itH ) {
         if ( m_forwardTool->matchKey( *itH ) ) m_forwardTool->printHit( *itH, " " );
       }
     }

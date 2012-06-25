@@ -4,5 +4,9 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+! 2012-06-25 - Olivier Callot
+ - Add the seeding algorithm, and related auxilliary classes.
+ - Modify the geometry tool to give momentum for seed tracks too.
+
 ! 2012-06-18 - Olivier Callot
  - Initial creation, first version of the Forward tracking

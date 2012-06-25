@@ -68,13 +68,13 @@ void PrForwardTool::extendTrack ( LHCb::Track* velo, LHCb::Tracks* result ) {
   PrForwardTrack track( velo, m_geoTool->zReference() );
 
   m_trackCandidates.clear();
-  for ( unsigned int zone = 0 ; 2 > zone ; ++zone ) {
+  for ( unsigned int side = 0 ; 2 > side ; ++side ) {
   
     //== Collect all hits and project them
-    collectAllXHits( track, zone );
+    collectAllXHits( track, side );
     if ( m_debug ) {
       float xWindow = m_maxXWindow + track.slope2() * m_maxXWindowSlope;
-      info() << "**** Processing Velo track " << velo->key() << " zone " << zone 
+      info() << "**** Processing Velo track " << velo->key() << " zone " << side 
              << " Selected " << m_allXHits.size() << " hits, window size " << xWindow << endmsg;
       for ( PrHits::const_iterator itH = m_allXHits.begin(); m_allXHits.end() != itH; ++itH ) {
         if ( matchKey( *itH ) ) printHit( *itH, " " );
@@ -200,45 +200,45 @@ void PrForwardTool::extendTrack ( LHCb::Track* velo, LHCb::Tracks* result ) {
 //  Ask for the presence of a stereo hit in the same biLayer compatible.
 //  This reduces the efficiency. X-alone hits to be re-added later in the processing
 //=========================================================================
-void PrForwardTool::collectAllXHits ( PrForwardTrack& track, unsigned int zone ) {
+void PrForwardTool::collectAllXHits ( PrForwardTrack& track, unsigned int side ) {
   m_allXHits.clear();
   float openingAngle = 1300. * sqrt( track.slX2() + track.slY2() ) / m_minPt;
   float zMag = m_geoTool->zMagnet( track );
   
-  for ( unsigned int lay = zone; m_hitManager->nbLayers() > lay; lay+=2 ) {    
-    PrHitLayer* layer = m_hitManager->layer(lay);
-    if ( !layer->isX() ) continue;  // only X layers
-    float zLayer = layer->z();
-    unsigned int layUv = lay + 2;  // two zones per 'layer'
-    if ( 4 < layer->number()%8 ) layUv = lay - 2;
-    PrHitLayer* layerUv = m_hitManager->layer(layUv);
-    float xInLayer = track.xFromVelo( zLayer );    
-    float yInLayer = track.yFromVelo( zLayer );
-    if ( !layer->isInside( xInLayer, yInLayer ) ) continue;
-    float xTol  = openingAngle * ( zLayer - zMag );
-    float xMin  = xInLayer - xTol;
-    float xMax  = xInLayer + xTol;
-    float dx    = yInLayer * layerUv->dxDy();
-    PrHits::const_iterator itUv = m_hitManager->hits( layUv ).begin();
-    float zRatio = ( layerUv->z() - zMag ) / ( zLayer - zMag );
+  for ( unsigned int zoneNumber = side; m_hitManager->nbZones() > zoneNumber; zoneNumber+=2 ) {    
+    PrHitZone* zone = m_hitManager->zone(zoneNumber);
+    if ( !zone->isX() ) continue;  // only X layers
+    float zZone = zone->z();
+    unsigned int uvZoneNumber = zoneNumber + 2;  // two zones per 'layer'
+    if ( 4 < zone->number()%8 ) uvZoneNumber = zoneNumber - 2;
+    PrHitZone* zoneUv = m_hitManager->zone(uvZoneNumber);
+    float xInZone = track.xFromVelo( zZone );    
+    float yInZone = track.yFromVelo( zZone );
+    if ( !zone->isInside( xInZone, yInZone ) ) continue;
+    float xTol  = openingAngle * ( zZone - zMag );
+    float xMin  = xInZone - xTol;
+    float xMax  = xInZone + xTol;
+    float dx    = yInZone * zoneUv->dxDy();
+    PrHits::const_iterator itUv = m_hitManager->hits( uvZoneNumber ).begin();
+    float zRatio = ( zoneUv->z() - zMag ) / ( zZone - zMag );
 
     float maxDx = 2 * m_maxDxForY + 0.02 * fabs( dx );  // tolerance for scattering...
 
-    for ( PrHits::const_iterator itH = m_hitManager->hits( lay ).begin();
-          m_hitManager->hits( lay ).end() != itH; ++itH ) {
+    for ( PrHits::const_iterator itH = m_hitManager->hits( zoneNumber ).begin();
+          m_hitManager->hits( zoneNumber ).end() != itH; ++itH ) {
       (*itH)->setUsed( false );
       if ( (*itH)->x() < xMin ) continue;
       if ( (*itH)->x() > xMax ) break;
-      float xPredUv = xInLayer + ( (*itH)->x() - xInLayer) * zRatio - dx;
+      float xPredUv = xInZone + ( (*itH)->x() - xInZone) * zRatio - dx;
       while ( (*itUv)->x() < xPredUv - maxDx ) {
-        if ( itUv == m_hitManager->hits( layUv ).end()-1 ) break;
+        if ( itUv == m_hitManager->hits( uvZoneNumber ).end()-1 ) break;
         ++itUv;
       }
       if ( m_debug && matchKey( *itH ) ) {
         info() << format( "UV delta %7.3f / %7.3f ", (*itUv)->x() - xPredUv, maxDx );
         m_geoTool->xAtReferencePlane( track, *itH );
         printHit( *itH, " " );
-        info() << format( "  y %8.1f  dx %7.2f   ", yInLayer, dx );
+        info() << format( "  y %8.1f  dx %7.2f   ", yInZone, dx );
         printHit( *itUv, " " );
       }
       if ( (*itUv)->x() < xPredUv - maxDx ) continue;
@@ -276,7 +276,7 @@ void PrForwardTool::selectXCandidates( PrForwardTrack& track ) {
       ++it2;
     }
     if ( planeCount.nbDifferent() >= m_minXHits ) {
-      //== Add next hits until a large enough gap. or no hit in empty layer
+      //== Add next hits until a large enough gap. or no hit in empty zone
       float lastCoord = (*(it2-1))->coord();
       while( it2 < m_allXHits.end() &&
              ( (*it2)->coord() < lastCoord + m_maxXGap ||
@@ -518,17 +518,17 @@ bool PrForwardTool::addHitsOnEmptyXLayers ( PrForwardTrack& track ) {
   planeCount.set( track.hits().begin(), track.hits().end() );
   bool added = false;
   float xWindow = m_maxXWindow + track.slope2() * m_maxXWindowSlope;
-  for ( unsigned int lay = track.zone(); m_hitManager->nbLayers() > lay; lay+=2 ) {
-    PrHitLayer* layer = m_hitManager->layer(lay);
-    if ( !layer->isX() ) continue;  // only X layers
-    if ( planeCount.nbInPlane( lay/2 ) != 0 ) continue;
-    float zLayer = layer->z();
-    float xPred  = track.x( zLayer );
+  for ( unsigned int zoneNumber = track.zone(); m_hitManager->nbZones() > zoneNumber; zoneNumber+=2 ) {
+    PrHitZone* zone = m_hitManager->zone(zoneNumber);
+    if ( !zone->isX() ) continue;  // only X zones
+    if ( planeCount.nbInPlane( zoneNumber/2 ) != 0 ) continue;
+    float zZone = zone->z();
+    float xPred  = track.x( zZone );
     PrHit* best = NULL;
     float bestChi2 = m_maxChi2ToAddExtraXHits;
     float minX = xPred - xWindow;
     float maxX = xPred + xWindow;
-    for ( PrHits::iterator itH = layer->hits().begin(); layer->hits().end() != itH; ++itH ) {
+    for ( PrHits::iterator itH = zone->hits().begin(); zone->hits().end() != itH; ++itH ) {
       if ( (*itH)->x() < minX ) continue;
       if ( (*itH)->x() > maxX ) break;
       float chi2 = track.chi2( *itH );
@@ -555,25 +555,25 @@ bool PrForwardTool::addHitsOnEmptyXLayers ( PrForwardTrack& track ) {
 void PrForwardTool::collectStereoHits ( PrForwardTrack& track ) {
   if ( m_debug ) info() << "== Collecte stereo hits. wanted ones: " << endmsg;
   PrHits stereoHits;
-  for ( unsigned int lay = track.zone(); m_hitManager->nbLayers() > lay; lay += 2 ) {
-    PrHitLayer* layer = m_hitManager->layer(lay);
-    if ( layer->isX() ) continue;  // exclude X layers
-    if ( layer->hits().empty()) continue;
-    float zLayer = layer->z();
-    float yLayer = track.yFromVelo( zLayer );  // Should be track.y( zLAyer ) but this one works better!
-    zLayer = layer->z( yLayer );  // Correct for dzDy
-    float xPred  = track.x( zLayer );
+  for ( unsigned int zoneNumber = track.zone(); m_hitManager->nbZones() > zoneNumber; zoneNumber += 2 ) {
+    PrHitZone* zone = m_hitManager->zone(zoneNumber);
+    if ( zone->isX() ) continue;  // exclude X zones
+    if ( zone->hits().empty()) continue;
+    float zZone = zone->z();
+    float yZone = track.yFromVelo( zZone );  // Should be track.y( zZone ) but this one works better!
+    zZone = zone->z( yZone );  // Correct for dzDy
+    float xPred  = track.x( zZone );
     if ( m_debug ) {
-      for ( PrHits::iterator itH = layer->hits().begin(); layer->hits().end() != itH; ++itH ) {
-        float dx = (*itH)->x( yLayer ) - xPred;
+      for ( PrHits::iterator itH = zone->hits().begin(); zone->hits().end() != itH; ++itH ) {
+        float dx = (*itH)->x( yZone ) - xPred;
         (*itH)->setCoord( dx );
         if ( matchKey( *itH ) ) printHit( *itH, "-- " );
       }
     }
-    float dxTol = m_maxDxForY + 0.02 * fabs( yLayer * layer->dxDy() );  // adhoc increase in tolerance
+    float dxTol = m_maxDxForY + 0.02 * fabs( yZone * zone->dxDy() );  // adhoc increase in tolerance
     
-    for ( PrHits::iterator itH = layer->hits().begin(); layer->hits().end() != itH; ++itH ) {
-      float dx = (*itH)->x( yLayer ) - xPred ;
+    for ( PrHits::iterator itH = zone->hits().begin(); zone->hits().end() != itH; ++itH ) {
+      float dx = (*itH)->x( yZone ) - xPred ;
       (*itH)->setCoord( fabs(dx) );
       if ( dx < - dxTol ) continue;
       if ( dx >   dxTol ) break;
@@ -583,7 +583,7 @@ void PrForwardTool::collectStereoHits ( PrForwardTrack& track ) {
   }
   std::sort( stereoHits.begin(), stereoHits.end(), PrHit::LowerByCoord() );
   //====================================================================
-  //== Keep only at most 2 hits per layer
+  //== Keep only at most 2 hits per zone
   //====================================================================
   m_stereoHits.clear();
   PrPlaneCounter pc;
@@ -686,12 +686,12 @@ void PrForwardTool::makeLHCbTracks ( LHCb::Tracks* result ) {
     tmp->setType( LHCb::Track::Long );
     tmp->setHistory( LHCb::Track::PatForward );
     tmp->addToAncestors( (*itT).track() );
-    double qOverP = m_geoTool->qOverP( *itT );
-    double errQop2 = 0.012 * 0.012 * qOverP * qOverP;
+    double qOverP  = m_geoTool->qOverP( *itT );
+    double errQop2 = 0.1 * 0.1 * qOverP * qOverP;
 
     for ( std::vector<LHCb::State*>::const_iterator iState = tmp->states().begin();
           iState != tmp->states().end() ; ++iState ){
-      (*iState)->setQOverP(qOverP);
+      (*iState)->setQOverP( qOverP );
       (*iState)->setErrQOverP2( errQop2 );
     }
 
@@ -702,13 +702,7 @@ void PrForwardTool::makeLHCbTracks ( LHCb::Tracks* result ) {
       
     //== overestimated covariance matrix, as input to the Kalman fit  
 
-    Gaudi::TrackSymMatrix cov;
-    cov(0,0) = 4.0;         // 2 mm
-    cov(1,1) = 400.;        // 20 mm
-    cov(2,2) = 4.e-5;       // 2 mrad
-    cov(3,3) = 1.e-4;       // 10 mrad
-    cov(4,4) = errQop2;
-    tState.setCovariance( cov );
+    tState.setCovariance( m_geoTool->covariance( qOverP ) );
     tmp->addToStates( tState );
 
     //== LHCb ids.
