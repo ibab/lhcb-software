@@ -1,4 +1,3 @@
-// $Id: EvtCounter.h,v 1.1 2007-10-11 08:47:29 cattanem Exp $
 #ifndef EVTCOUNTER_H
 #define EVTCOUNTER_H 1
 
@@ -30,9 +29,6 @@ public:
 
   /// Initialize method
   StatusCode initialize();
-
-  /// Finalize method
-  StatusCode finalize(){return StatusCode::SUCCESS;};
 
   /// Get Event counter
   long getEventCounter() const { return m_eventCounter; }
