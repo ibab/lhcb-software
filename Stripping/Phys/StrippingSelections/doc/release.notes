@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-06-25 - Chris Jones
+ - Do not set the property 'HistoPrint' in StrippingNoPIDDstarWithD02RSKPi or
+   StrippingV0ForPID
+
 ! 2012-06-25 - Mat Charles
  - StrippingXicc.py: Patch fixing ntracks global event cut, reverting previous PID changes
 
