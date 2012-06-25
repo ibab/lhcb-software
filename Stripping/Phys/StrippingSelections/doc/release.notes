@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-06-25 - Will Barter
+ - StrippingWMu.py: Update to include single muon control lines (prescaled to ensure low rate).
+
 ! 2012-06-25 -- Ricardo Vazquez Gomez
   - StrippingBeauty2XGamma.py :  Added the Bs->phiGamma(ee) with converted photons
 
