@@ -3,7 +3,7 @@
 # Maintainer : Eduardo Rodrigues
 #============================================================================
 package           TrackSys
-version           v7r3
+version           v7r4
 
 # Structure, i.e. directories to process. 
 #============================================================================
