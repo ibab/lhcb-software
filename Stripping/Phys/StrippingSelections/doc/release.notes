@@ -4,6 +4,13 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-06-25 - Konstantinos A. Petridis
+ - StrippingB2MuMuX.py: commented out MuMuGamma related lines:
+   StrippingB2MuMuGammaLine
+   StrippingB2MuMuGammaLowMassLine
+   StrippingB2MuMuGammaHighMassLine
+   StrippingB2MuMuGamma_ssLine
+
 ! 2012-06-25 - Mika Vesterinen
  - StrippingJPsiForSL.py: new stripping line for semi-inclusive psi->mumu 
    for measuring detection asymmetries.

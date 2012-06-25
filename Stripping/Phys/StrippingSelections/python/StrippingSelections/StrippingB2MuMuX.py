@@ -1,5 +1,8 @@
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 '''
+As of 25-06-2012 the mumugamma related
+lines have been removed
+
 B->mumugamma,mumumumu,v0mu 
 
 Author: M. Williams
@@ -326,19 +329,22 @@ class B2MuMuXConf(LineBuilder):
         b2mumug = makeB2X('B2MuMuGamma',['B0 -> J/psi(1S) gamma'],
                           [dimuons_nofly_loose,photons],
                           config['B2X3BODY'],False)
-        self._makeLine(b2mumug,config)
+        # removed for stripping above 19
+        #self._makeLine(b2mumug,config)
 
         # Jpsi (from B) to Mu Mu Gamma
         j2mumug = makeJ2X('B2MuMuGammaLowMass',['B0 -> J/psi(1S) gamma'],
                           [dimuons_nofly_loose_lowm,photons],
                           config['B2X3BODYLOWM'],False)
-        self._makeLine(j2mumug,config)
+        # removed for stripping above 19
+        #self._makeLine(j2mumug,config)
 
         # Y to Mu Mu Gamma
         y2mumug = makeY2X('B2MuMuGammaHighMass',['B0 -> J/psi(1S) gamma'],
                           [dimuons_nofly_loose_highm,photons],
                           config['B2X3BODYHIGHM'],False)
-        self._makeLine(y2mumug,config)
+        # removed for stripping above 19
+        #self._makeLine(y2mumug,config)
 
 
         # B to Mu Mu Mu Mu
@@ -369,7 +375,9 @@ class B2MuMuXConf(LineBuilder):
         b2mumug_ss = makeB2X('B2MuMuGamma_ss',['B0 -> J/psi(1S) gamma'],
                              [dimuons_nofly_loose_ss,photons],
                              config['B2X3BODY'],False)
-        self._makeLine(b2mumug_ss,config)
+        # removed for stripping above 19
+        #self._makeLine(b2mumug_ss,config)
+
         #rho ss
         b2rhomumu_ss = makeB2X('B2RhoMuMu_B2MuMuX_ss',['B0 -> KS0 rho(770)0' ],
                                [dimuons_fly_loose_ss,rhos],
