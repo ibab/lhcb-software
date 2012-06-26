@@ -33,7 +33,7 @@ use GaudiSerialize      v0r10    Online
 use GaudiUPI            v1r14    Online
 #use Hugin              v1r6     Online
 #Obsolete: use HPDMonitor        v1r6     Online
-use HistDBPython        v1r6     Online
+use HistDBPython        v1r7     Online
 use InsertDB            v1r9     Online
 use MBMDump             v1r15    Online
 use OMAlib              v4r2     Online
