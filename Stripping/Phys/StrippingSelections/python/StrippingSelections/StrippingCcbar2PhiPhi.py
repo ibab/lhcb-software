@@ -30,7 +30,8 @@ config_default =  {
         'MinMass'          :  2800.  , # MeV, after Vtx fit
         'Phi_TisTosSpecs'  : { "Hlt1Global%TIS" : 0 },
         'PionCuts'         :  "(PT>0.7*GeV) & (TRCHI2DOF<5) & (MIPCHI2DV(PRIMARY)>36.) & (PIDK<10)" ,
-        'KaonCuts'         :  "(PT>0.5*GeV) & (TRCHI2DOF<5) & (MIPCHI2DV(PRIMARY)>25.) & (PIDK>5)" 
+        'KaonCuts'         :  "(PT>0.5*GeV) & (TRCHI2DOF<5) & (MIPCHI2DV(PRIMARY)>25.) & (PIDK>5)",
+        'LooseKaonCuts'    :  "(PT>0.5*GeV) & (TRCHI2DOF<5) & (MIPCHI2DV(PRIMARY)>9.)"
         }
 
 from Gaudi.Configuration import *
@@ -55,7 +56,8 @@ class Ccbar2PhiPhiConf(LineBuilder):
         'MinMass',
         'Phi_TisTosSpecs',
         'PionCuts',
-        'KaonCuts'
+        'KaonCuts',
+        'LooseKaonCuts'
         )
 
     
@@ -107,6 +109,14 @@ class Ccbar2PhiPhiConf(LineBuilder):
                                                InputList =  DataOnDemand( Location = 'Phys/StdLooseKaons/Particles' ), 
                                                Cuts = config['KaonCuts'] 
                                                )
+
+        """
+        Loose Kaon
+        """
+        self.LooseKaonForCcbar = self.createSubSel( OutputList = "LooseKaonFor" + self.name,
+                                                    InputList =  DataOnDemand( Location = 'Phys/StdLooseKaons/Particles' ),
+                                                    Cuts = config['LooseKaonCuts'] 
+                                                    )        
                                                  
 
 
@@ -128,7 +138,7 @@ class Ccbar2PhiPhiConf(LineBuilder):
                               DecayDescriptor,
                               DaughterLists,
                               DaughterCuts = {} ,
-                              PreVertexCuts = "ALL",
+                              PreVertexCuts = "AALL",
                               PostVertexCuts = "ALL" ) :
         '''create a selection using a ParticleCombiner with a single decay descriptor'''
         combiner = CombineParticles( DecayDescriptor = DecayDescriptor,
@@ -183,7 +193,36 @@ class Ccbar2PhiPhiConf(LineBuilder):
         DetachedJpsi2PhiKKLine = StrippingLine( self.name + "KKDetachedLine",
                                                  algos = [ DetachedJpsi2PhiKK ] )
         
-        self.registerLine(DetachedJpsi2PhiKKLine)     
+        self.registerLine(DetachedJpsi2PhiKKLine)
+
+        """
+        Bs->Jpsi Phi
+        """
+        Bs2JpsiPhi = self.createCombinationSel( OutputList = "Bs2JpsiPhi" + self.name,
+                                                DecayDescriptor = " B_s0 -> J/psi(1S) phi(1020)", 
+                                                DaughterLists = [ DetachedJpsi2PhiKK, 
+                                                                  self.DetachedPhiForJpsiList ], 
+                                                PostVertexCuts = "(VFASPF(VCHI2PDOF)<16)" %self.config )
+
+        Bs2JpsiPhiLine = StrippingLine( self.name + "Bs2JpsiPhiLine",
+                                        algos = [ Bs2JpsiPhi ] )
+        
+        self.registerLine( Bs2JpsiPhiLine )
+
+        """
+        B2JpsiK
+        """
+        B2JpsiK = self.createCombinationSel( OutputList = "B2JpsiK" + self.name,
+                                             DecayDescriptor = " [ B+ -> J/psi(1S) K+ ]cc", 
+                                             DaughterLists = [ DetachedJpsi2PhiKK, 
+                                                               self.LooseKaonForCcbar ], 
+                                             PostVertexCuts = "(VFASPF(VCHI2PDOF)<16)" %self.config )
+
+        B2JpsiKLine = StrippingLine( self.name + "B2JpsiKLine",
+                                        algos = [ B2JpsiK ] )
+        
+        self.registerLine( B2JpsiKLine )        
+        
 
 
     def makeDetachedJpsi2PhiPiPi(self):
@@ -216,7 +255,6 @@ class Ccbar2PhiPhiConf(LineBuilder):
                                        algos = [ Bs2TriPhi ] )
         
         self.registerLine( Bs2TriPhiLine )        
-        
 
 
     def filterTisTos(self, name,
