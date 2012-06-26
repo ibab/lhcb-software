@@ -11,12 +11,20 @@ Copy example user area /Users/example to /Users/yourName
 Use and modify example main script to produce histograms and NTuple outputs
 after a given string of cuts. 
 
-To run you have to give two arguements to the main function
+A Makefile exists so you should just be able to type make 
+to compile 
+
+To run you have to give two arguments to the main function
 1. A file which lists the NTuples you wish to run over
 2. A txt file with a list of variables you need for 
 	histograms or would like in the output Ntuple. These
 	variable names must match those in the original NTuple.
-	
+
+so 
+
+./main ../data/DiMuonEvents.txt ../data/vars.txt
+
+should run the program
 	
 ------------------------------------------------------------------------------
 ---------------------------- Release Notes -----------------------------------
