@@ -98,7 +98,7 @@ Beauty2Charm = {
     'B02D0D0Beauty2CharmLine'   : 1.0,
     'B02DDWSBeauty2CharmLine'   : 1.0
     },
-    'GECNTrkMax'   : 500
+    'GECNTrkMax'   : 250
   }, 
   'STREAMS' : { 
     'BhadronCompleteEvent' : [
