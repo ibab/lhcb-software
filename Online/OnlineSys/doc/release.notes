@@ -6,7 +6,12 @@
 !-----------------------------------------------------------------------------
 </PRE>
 
-<H1><A NAME=v4r64>2012-06-26 OnlineSys v4r65</A></H1>
+<H1><A NAME=v4r66>2012-06-26 OnlineSys v4r66</A></H1>
+<PRE>
+   Like v4r65, but based in Gaudi v23r3.
+</PRE>
+
+<H1><A NAME=v4r65>2012-06-26 OnlineSys v4r65</A></H1>
 <PRE>
    Based in Gaudi v23r2.
    Updated packages are:
