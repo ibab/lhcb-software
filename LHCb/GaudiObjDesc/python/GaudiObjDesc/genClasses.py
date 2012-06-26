@@ -598,7 +598,7 @@ class genClasses(genSrcUtils.genSrcUtils):
         static void* operator new ( size_t size )
         {
           return ( sizeof(%(classname)s) == size ?
-                   boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::ordered_malloc() :
+                   boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::malloc() :
                    ::operator new(size) );
         }
 
@@ -614,7 +614,7 @@ class genClasses(genSrcUtils.genSrcUtils):
         static void operator delete ( void* p )
         {
           boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::is_from(p) ?
-          boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::ordered_free(p) :
+          boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::free(p) :
           ::operator delete(p);
         }
 
@@ -634,7 +634,7 @@ class genClasses(genSrcUtils.genSrcUtils):
         static void* operator new ( size_t size )
         {
           return ( sizeof(%(classname)s) == size ?
-                   boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::ordered_malloc() :
+                   boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::malloc() :
                    ::operator new(size) );
         }
 
@@ -649,7 +649,7 @@ class genClasses(genSrcUtils.genSrcUtils):
         /// operator delete
         static void operator delete ( void* p )
         {
-          boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::ordered_free(p);
+          boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::free(p);
         }
 
         /// placement operator delete
@@ -668,7 +668,7 @@ class genClasses(genSrcUtils.genSrcUtils):
         static void* operator new ( size_t size )
         {
           void *ptr = sizeof(%(classname)s) == size ?
-            boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::ordered_malloc() :
+            boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::malloc() :
             ::operator new(size);
           std::cout << "%(classname)s::new() -> " << ptr << std::endl;
           return ( ptr );
@@ -690,7 +690,7 @@ class genClasses(genSrcUtils.genSrcUtils):
                     << boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::is_from(p)
                     << std::endl;
           boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::is_from(p) ?
-          boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::ordered_free(p) :
+          boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::free(p) :
           ::operator delete(p);
         }
 
