@@ -138,7 +138,6 @@ StatusCode ParticleMakerBase::loadEventInput()
     }
   }
 
-
   return StatusCode::SUCCESS;
 }
 //=============================================================================

@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones, J. Palacios, Olivier Deschamps
 !==============================================================================
 
+! 2012-06-26 - Chris Jones
+ - Fix compilation warnings on gcc 4.6 ...
+
 ! 2012-06-25 - Chris Jones
  - Use DaVinciAlgorithm instead of DVAlgorithm as bass class.
 
