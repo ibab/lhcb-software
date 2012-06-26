@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-06-26 - Jibo He
+ - Updated dbase of Stripping19b to include updates of B2OC.
+
 ! 2012-06-26 - Anton Poluektov 
  - Stripping19b/LineConfigDictionaries_B2OC.py
   . Tighten GEC from 500 to 250 long lines
