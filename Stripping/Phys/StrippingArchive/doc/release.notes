@@ -4,6 +4,10 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-06-26 - Chris Jones
+ - Remove all usage of 'HistoPrint' from old stripping versions, to be compatible
+   with the new base classes in the latest DV releases.
+
 !========================= StrippingArchive v1r11 2012-05-03 ========================
 ! 2012-05-03 - Jibo He
  - python/StrippingArchive/__init__.py

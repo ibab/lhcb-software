@@ -155,7 +155,6 @@ def D0 ( name,
             ]
         _D0.Monitor       = True
         _D0.HistoProduce  = True
-        _D0.HistoPrint    = True
         _D0.MotherMonitor = """ process ( mass )
         >> process ( pT )
         >> process ( y )
@@ -206,7 +205,6 @@ def Dstar ( name,
             ]
         _DSt.Monitor       = True
         _DSt.HistoProduce  = True
-        _DSt.HistoPrint    = True
         _DSt.MotherMonitor = """ process ( mass )
         >> process ( deltaM )
         >> process ( pT )

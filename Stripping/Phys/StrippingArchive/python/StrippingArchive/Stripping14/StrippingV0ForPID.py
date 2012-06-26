@@ -374,7 +374,6 @@ class StrippingV0ForPIDConf(LineBuilder) :
             MotherCut       = self._k0s_motherCut() ,        
             Monitor         = self._monitor , 
             HistoProduce    = self._monitor ,
-            HistoPrint      = self._monitor ,
             MotherMonitor = """ process ( switch ( LL , massLL , massDD ) )
             >> process ( switch ( LL , pTLL , pTDD ) )
             >> process ( switch ( LL , yLL , yDD ) )
@@ -408,7 +407,6 @@ class StrippingV0ForPIDConf(LineBuilder) :
             MotherCut       = self._k0s_motherCut() ,    
             Monitor         = self._monitor ,
             HistoProduce    = self._monitor ,
-            HistoPrint      = self._monitor ,
             MotherMonitor = """ process ( switch ( LL , massLL , massDD ) )
             >> process ( switch ( LL , pTLL , pTDD ) )
             >> process ( switch ( LL , yLL , yDD ) )
@@ -442,7 +440,6 @@ class StrippingV0ForPIDConf(LineBuilder) :
             MotherCut       = self._lam0_motherCut() ,        
             Monitor         = self._monitor ,
             HistoProduce    = self._monitor ,
-            HistoPrint      = self._monitor ,
             MotherMonitor = """ process ( switch ( LL , massLL , massDD ) )
             >> process ( switch ( LL , pTLL , pTDD ) )
             >> process ( switch ( LL , yLL , yDD ) )
@@ -476,7 +473,6 @@ class StrippingV0ForPIDConf(LineBuilder) :
             MotherCut       = self._lam0_motherCut() ,        
             Monitor       = self._monitor ,
             HistoProduce  = self._monitor ,
-            HistoPrint    = self._monitor ,
             MotherMonitor = """ process ( switch ( LL , massLL , massDD ) )
             >> process ( switch ( LL , pTLL , pTDD ) )
             >> process ( switch ( LL , yLL , yDD ) )

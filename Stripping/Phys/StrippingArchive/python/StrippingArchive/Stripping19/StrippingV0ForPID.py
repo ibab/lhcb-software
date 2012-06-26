@@ -314,7 +314,6 @@ class StrippingV0ForPIDConf(LineBuilder) :
                 ]
             _K0S.Monitor         = True ,
             _K0S.HistoProduce    = True ,
-            _K0S.HistoPrint      = True ,
             _K0S.MotherMonitor = """ process ( massLL )
             >> process ( p1LL )
             >> process ( p2LL )
@@ -356,7 +355,6 @@ class StrippingV0ForPIDConf(LineBuilder) :
                 ]
             _K0SDD.Monitor         = True ,
             _K0SDD.HistoProduce    = True ,
-            _K0SDD.HistoPrint      = True ,
             _K0SDD.MotherMonitor = """ process ( massDD )
             >> process ( p1DD )
             >> process ( p2DD )
@@ -398,7 +396,6 @@ class StrippingV0ForPIDConf(LineBuilder) :
                 ]
             _Lam0.Monitor         = True ,
             _Lam0.HistoProduce    = True ,
-            _Lam0.HistoPrint      = True ,
             _Lam0.MotherMonitor = """ process ( massLL )
             >> process ( p1LL )
             >> process ( p2LL )
@@ -441,7 +438,6 @@ class StrippingV0ForPIDConf(LineBuilder) :
                 ]
             _Lam0DD.Monitor         = True ,
             _Lam0DD.HistoProduce    = True ,
-            _Lam0DD.HistoPrint      = True ,
             _Lam0DD.MotherMonitor = """ process ( massDD )
             >> process ( p1DD )
             >> process ( p2DD )
