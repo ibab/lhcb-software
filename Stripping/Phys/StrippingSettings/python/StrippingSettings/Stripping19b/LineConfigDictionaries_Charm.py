@@ -46,24 +46,6 @@ DstarD02KMuNu = {
     }
 
 
-## Micro-DST, Alexandr Kozlinskiy
-## Test:  Yes
-D02MuMu = {
-    'BUILDERTYPE' : 'D02MuMuConf',
-    'CONFIG'      : {
-    'MinDauPT'                 : 1.0, # GeV
-    'MinDauIPCHI2'             : 1.0,
-    'MinD0LT'                  : 0.1, # ps
-    'D02MuMuPrescale'          : 1.0,
-    'DstD02MuMuPrescale'       : 1.0,
-    'D02PiPiPrescale'          : 0.1,
-    'DstD02PiPiPrescale'       : 0.1
-    },
-    'WGs' : [ 'Charm' ],
-    'STREAMS' : [ 'Charm' ]
-    }
-
-
 ## Micro-DST, Vanya BELYAEV
 ## Test:  Yes
 PromptCharm = {
@@ -391,17 +373,23 @@ D2KS0H = {
 CharmedAndCharmedStrangeSpectroscopy = {
     'BUILDERTYPE' : 'CharmedAndCharmedStrangeSpectroscopyConf' ,
     'CONFIG'      : {
-    'DpKs_prescale'           : 0,
-    'DstarpKs_prescale'       : 1,
-    'D0K_prescale'            : 0,
-    'DpPim_prescale'          : 0,
-    'D0Pip_prescale'          : 0,
-    'DstarpPim_prescale'      : 0,
-    'DzP_prescale'            : 1,
-    'DpP_prescale'            : 1,
-    'DsKs_prescale'           : 1,
-    'DsKm_prescale'           : 1,
-    'DstarD02K3PiKs_prescale' : 1
+      'DpKs_prescale'            : 1,
+      'DstarpKs_prescale'        : 1,
+      'D0K_prescale'             : 1,
+      'DpPim_prescale'           : 1,
+      'D0Pip_prescale'           : 1,
+      'DstarpPim_prescale'       : 1,
+      'DzP_prescale'             : 1,
+      'DzPWS_prescale'           : 1,
+      'DpP_prescale'             : 1,
+      'DpPp_prescale'            : 1,
+      'DsKs_prescale'            : 1,
+      'DsKm_prescale'            : 1,
+      'DstarD02K3PiKs_prescale'  : 1,
+      'Dstar0K_prescale'         : 1,
+      'Dstar0P_prescale'         : 1,
+      'Dstar0KWS_prescale'       : 1,
+      'Dstar0PWS_prescale'       : 1
     },
     'WGs' : [ 'Charm' ],
     'STREAMS' : [ 'Charm' ]
@@ -516,47 +504,49 @@ D2hhhControl = {
 ## Full DST needed for isolation cuts.
 ## Test:  Yes
 D2XMuMu = {
-    'BUILDERTYPE' : 'D2XMuMuConf',
+   'BUILDERTYPE' : 'D2XMuMuConf',
     'CONFIG' : {
-    'MuonP'                     : 3000.,        # MeV
-    'MuonPT'                    :  500.,        # MeV
-    'MuonMINIPCHI2'             :    6.,        # adminensional
-    'MuonTRCHI2'                :    3.,        # adminensional
-    'PionP'                     : 2000.,        # MeV
-    'PionPT'                    :  300.,        # MeV
-    'PionMINIPCHI2'             :    6.,        # adminensional
-    'PionTRCHI2'                :  2.5,         # adminensional
-    'KaonP'                     : 2000.,        # MeV
-    'KaonPT'                    :  300.,        # MeV
-    'KaonPIDK'                  :   -1.,        # adimensional
-    'KaonMINIPCHI2'             :    6.,        # adminensional
-    'KaonTRCHI2'                :   2.5,        # adminensional
-    'MINIPCHI2_CS_hhmumu'       :    6.,        # adminensional
-    'PT_CS_hhmumu'              :  400.,        # MeV
-    'DimuonMass'                :  250.,        # MeV
-    'DVCHI2DOF'                 :    5.,        # adminensional
-    'DMAXDOCA'                  :  0.15,        # mm
-    'DdauMAXIPCHI2'             :   20.,        # adimensinal
-    'DFDCHI2'                   :    9.,        # adimensional
-    'DDIRA'                     :    0.9999,    # adimensional
-    'DIPCHI2'                   :   30.,        # adimensional
-    'DMassWin'                  :  200.,        # MeV, mass window
-    'DMassWin_CS_hhmumu'        :  100.,        # MeV, mass window
-    'DMassLow'                  : 1763.,        # MeV, low-mass veto
-    'D2PiMuMuOSLinePrescale'    :    1,
-    'D2PiMuMuOSLinePostscale'   :    1,
-    'D2PiMuMuSSLinePrescale'    :    1,
-    'D2PiMuMuSSLinePostscale'   :    1,
-    'D2KMuMuOSLinePrescale'     :    1,
-    'D2KMuMuOSLinePostscale'    :    1,
-    'D2KMuMuSSLinePrescale'     :    1,
-    'D2KMuMuSSLinePostscale'    :    1,
-    'D2PiPiPiCalLinePrescale'   :    0.01,
-    'D2PiPiPiCalLinePostscale'  :    1,   
-    'D02KKMuMuLinePrescale'     :    1,
-    'D02KKMuMuLinePostscale'    :    1,
-    'D02PiPiMuMuLinePrescale'   :    1,
-    'D02PiPiMuMuLinePostscale'  :    1,
+    'MuonP'         : 3000. ,    #MeV
+    'MuonPT'        : 500.  ,    #MeV
+    'MuonMINIPCHI2' : 6  ,    #adimensional
+    'MuonTRCHI2'    : 8     ,    #adimensional
+    'PionP'         : 2000. ,    #MeV
+    'PionPT'        : 300.  ,    #MeV
+    'PionMINIPCHI2' : 6     ,    #adminensional
+    'PionTRCHI2'    : 8  ,    #adminensional
+    'KaonP'         : 2000. ,    #MeV
+    'KaonPT'        : 300.  ,    #MeV
+    'KaonPIDK'      : -1.   ,    #adimensional
+    'KaonMINIPCHI2' : 6     ,    #adimensional
+    'KaonTRCHI2'    : 8     ,    #adimensional
+    'MINIPCHI2_CS_hhmumu' : 6. , #adimensional
+    'PT_CS_hhmumu' : 400 , #MeV
+    'DimuonMass'    : 250.  ,    #MeV
+    'DVCHI2DOF'     : 5     ,    #adimeensional
+    'DMAXDOCA'      : 0.15  ,    #mm
+    'DdauMAXIPCHI2' : 20    ,    #adimensinal
+    'DFDCHI2'       : 9     ,    #adimensional
+    'DDIRA'         : 0.9999,    #adimensional
+    'DIPCHI2'       : 30    ,    #adimensional
+    'DMassWin'      : 200.  ,    #MeV, mass window
+    'DMassWin_CS_hhmumu'  : 100.  ,    #MeV, mass window
+    'DMassLow'      :1763.  ,    #MeV, low-mass veto
+    'D2PiMuMuOSLinePrescale'  : 1 ,
+    'D2PiMuMuOSLinePostscale' : 1 ,
+    'D2PiMuMuSSLinePrescale'  : 1 ,
+    'D2PiMuMuSSLinePostscale' : 1 ,
+    'D2KMuMuOSLinePrescale'   : 1 ,
+    'D2KMuMuOSLinePostscale'  : 1 ,
+    'D2KMuMuSSLinePrescale'   : 1 ,
+    'D2KMuMuSSLinePostscale'  : 1 ,
+    'D2PiPiPiCalLinePrescale' : 0.01 ,
+    'D2PiPiPiCalLinePostscale': 1 ,
+    'D02KKMuMuLinePrescale'   : 1 ,
+    'D02KKMuMuLinePostscale'  : 1 ,
+    'D02PiPiMuMuLinePrescale'   : 1 ,
+    'D02PiPiMuMuLinePostscale'  : 1,
+    'D02KPiMuMuLinePrescale'   : 1 ,
+    'D02KPiMuMuLinePostscale'  : 1,
     'D02KKPiPiLinePrescale'     :    0,
     'D02KKPiPiLinePostscale'    :    0,
     'D02K3PiLinePrescale'       :    0,
@@ -565,33 +555,32 @@ D2XMuMu = {
     'D2K2PiLinePostscale'       :    0,
     'D22KPiLinePrescale'        :    0,
     'D22KPiLinePostscale'       :    1
-    } ,
-    'WGs' : [ 'Charm' ],
-    'STREAMS' : [ 'CharmCompleteEvent' ]
-    }
-
+  } ,
+  'WGs' : [ 'Charm' ],
+  'STREAMS' : [ 'CharmCompleteEvent' ]
+  }
 ## Micro-DST, Ibid
 ## New in Stripping15
 D2XMuMuMicro = {
     'BUILDERTYPE' : 'D2XMuMuConf',
     'CONFIG' : {
-    'MuonP'                     : 3000.,        # MeV
-    'MuonPT'                    :  500.,        # MeV
-    'MuonMINIPCHI2'             :    6.,        # adminensional
-    'MuonTRCHI2'                :    3.,        # adminensional
-    'PionP'                     : 2000.,        # MeV
-    'PionPT'                    :  300.,        # MeV
-    'PionMINIPCHI2'             :    6.,        # adminensional
-    'PionTRCHI2'                :  2.5,         # adminensional
-    'KaonP'                     : 2000.,        # MeV
-    'KaonPT'                    :  300.,        # MeV
-    'KaonPIDK'                  :   -1.,        # adimensional
-    'KaonMINIPCHI2'             :    6.,        # adminensional
-    'KaonTRCHI2'                :   2.5,        # adminensional
-    'MINIPCHI2_CS_hhmumu'       :    6.,        # adminensional
-    'PT_CS_hhmumu'              :  400.,        # MeV
+    'MuonP'         : 3000. ,    #MeV
+    'MuonPT'        : 500.  ,    #MeV
+    'MuonMINIPCHI2' : 6  ,    #adimensional
+    'MuonTRCHI2'    : 8     ,    #adimensional
+    'PionP'         : 2000. ,    #MeV
+    'PionPT'        : 300.  ,    #MeV
+    'PionMINIPCHI2' : 6     ,    #adimensional
+    'PionTRCHI2'    : 8  ,    #adminensional
+    'KaonP'         : 2000. ,    #MeV
+    'KaonPT'        : 300.  ,    #MeV
+    'KaonPIDK'      : -1.   ,    #adimensional
+    'KaonMINIPCHI2' : 6     ,    #adimensional
+    'KaonTRCHI2'    : 8     ,    #adimensional
+    'MINIPCHI2_CS_hhmumu' : 6. , #adimensional
+    'PT_CS_hhmumu' : 400 , #MeV
     'DimuonMass'                :  250.,        # MeV
-    'DVCHI2DOF'                 :    5.,        # adminensional
+    'DVCHI2DOF'                 :    5.,        # adimensional
     'DMAXDOCA'                  :  0.15,        # mm
     'DdauMAXIPCHI2'             :   20.,        # adimensinal
     'DFDCHI2'                   :    9.,        # adimensional
@@ -609,11 +598,13 @@ D2XMuMuMicro = {
     'D2KMuMuSSLinePrescale'     :    0,
     'D2KMuMuSSLinePostscale'    :    0,
     'D2PiPiPiCalLinePrescale'   :    0,
-    'D2PiPiPiCalLinePostscale'  :    0,   
+    'D2PiPiPiCalLinePostscale'  :    0,
     'D02KKMuMuLinePrescale'     :    0,
     'D02KKMuMuLinePostscale'    :    0,
-    'D02PiPiMuMuLinePrescale'   :    0,
-    'D02PiPiMuMuLinePostscale'  :    0,
+    'D02PiPiMuMuLinePrescale'   : 0 ,
+    'D02PiPiMuMuLinePostscale'  : 0,
+    'D02KPiMuMuLinePrescale'   :    0,
+    'D02KPiMuMuLinePostscale'  :    0,
     'D02KKPiPiLinePrescale'     :    0.01,
     'D02KKPiPiLinePostscale'    :    1,
     'D02K3PiLinePrescale'       :    0.01,
@@ -622,11 +613,10 @@ D2XMuMuMicro = {
     'D2K2PiLinePostscale'       :    1,
     'D22KPiLinePrescale'        :    0.01,
     'D22KPiLinePostscale'       :    1
-    } ,
+ } ,
     'WGs' : [ 'Charm' ],
     'STREAMS' : [ 'Charm' ]
     }
-
 
 ## Walter Bonivento and Francesco Dettori
 ## Modified from Strippinb13b
@@ -635,46 +625,46 @@ D2XMuMuMicro = {
 DstarD02xx = {
     'BUILDERTYPE' : 'StrippingDstarD02xxConf',
     'CONFIG':  {
-                   'PrescalepipiBox'     : 1.
-                 , 'PrescalemumuBox'     : 1.
-                 , 'PrescaleKpiBox'    : 1.
-                 , 'PrescaleemuBox'    : 1.
-                 , 'PrescaleeKBox'    : 1.
-                 , 'PrescaleepiBox'    : 1.
-                 , 'PrescalepimuBox'    : 1.
-                 , 'PrescaleKmuBox'    : 1.
-                 , 'Prescalepipi_untagged_Box'     : 0.2
-                 , 'Prescalemumu_untagged_Box'     : 1.
-                 , 'PrescaleKpi_untagged_Box'    : 0.2
-                 , 'Prescalepimu_untagged_Box'    : 1.
-                 , 'PrescaleKmu_untagged_Box'    : 0.2
-                 , 'PrescaleKpi_untagged_BoxMB' : 1
-                 , 'Prescalepipi_untagged_BoxMB':1
-                 , 'PrescaleKpi_untagged_BoxMBTrEff' : 1
-                 ,'DMassWin'           : 70.       # MeV
-                 ,'DMassWinMuMuLow'    : -150.       #MeV
-                 ,'DMassWinMuMuHigh'   : 300       #MeV
-                 ,'DMassWinEMu'        : 300
-                 ,'doca'               : 0.1        # mm
-                 ,'XminPT'             : 750.       # MeV
-                 ,'XmaxPT'             : 1100.      # MeV
-                 ,'XminP'              : 4000.      # MeV
-                 ,'XTrackChi2'         : 5.        # adimensional
-                 ,'XTrackChi2Pi'         : 7.        # adimensional
-                 ,'XminIPChi2'         : 3        # adimensional
-                 ,'XmaxIPChi2'         : 8        # adimensional
-                 ,'DMinFlightChi2'    :  20.
-                 ,'DDira'              : 0.9997     # adimensional
-                 ,'D0MinPT'            : 1800.      # MeV
-                 ,'DMaxIPChi2'        :15.
-                 ,'DVChi2'            :10. 
-                 ,'PiMinPT'            : 110.       # MeV
-                 ,'PiMaxIPCHI2'        : 10.         # adimensional
-                 ,'DstMassWin'         : 300.       # MeV
-                 ,'DstD0DMWin'         : 10.        # MeV
-                 ,'DstD0DMWinMuMu'      : 30.        # MeV  
-                 ,'RequireHlt'         : 1          # 
-                 ,'prefix'         : '' 
+      'PrescalepipiBox'     : 1.
+    , 'PrescalemumuBox'     : 1.
+    , 'PrescaleKpiBox'    : 1.
+    , 'PrescaleemuBox'    : 1.
+    , 'PrescaleeKBox'    : 1.
+    , 'PrescaleepiBox'    : 1.
+    , 'PrescalepimuBox'    : 1.
+    , 'PrescaleKmuBox'    : 1.
+    , 'Prescalepipi_untagged_Box'     : 0.2
+    , 'Prescalemumu_untagged_Box'     : 1.
+    , 'PrescaleKpi_untagged_Box'    : 0.2
+    , 'Prescalepimu_untagged_Box'    : 1.
+    , 'PrescaleKmu_untagged_Box'    : 0.2
+    , 'PrescaleKpi_untagged_BoxMB' : 1
+    , 'Prescalepipi_untagged_BoxMB':1
+    , 'PrescaleKpi_untagged_BoxMBTrEff' : 1
+    ,'DMassWin'           : 70.       # MeV
+    ,'DMassWinMuMuLow'    : -150.       #MeV
+    ,'DMassWinMuMuHigh'   : 300       #MeV
+    ,'DMassWinEMu'        : 300
+    ,'doca'               : 0.1        # mm
+    ,'XminPT'             : 750.       # MeV
+    ,'XmaxPT'             : 1100.      # MeV
+    ,'XminP'              : 4000.      # MeV
+    ,'XTrackChi2'         : 5.        # adimensional
+    ,'XTrackChi2Pi'         : 7.        # adimensional
+    ,'XminIPChi2'         : 3        # adimensional
+    ,'XmaxIPChi2'         : 8        # adimensional
+    ,'DMinFlightChi2'    :  20.
+    ,'DDira'              : 0.9997     # adimensional
+    ,'D0MinPT'            : 1800.      # MeV
+    ,'DMaxIPChi2'        :15.
+    ,'DVChi2'            :10. 
+    ,'PiMinPT'            : 110.       # MeV
+    ,'PiMaxIPCHI2'        : 10.         # adimensional
+    ,'DstMassWin'         : 300.       # MeV
+    ,'DstD0DMWin'         : 10.        # MeV
+    ,'DstD0DMWinMuMu'      : 30.        # MeV  
+    ,'RequireHlt'         : 1          # 
+    ,'prefix'         : '' 
                    },
     'WGs' : [ 'Charm' ],
     'STREAMS' : [ 'CharmCompleteEvent' ]
@@ -715,28 +705,59 @@ DstarD02xx = {
 #    }
 
 
-## Full-DST, Mat Charles + Patrick Spradlin
+## muDST, Mat Charles + Patrick Spradlin
 ## Test:  Yes.
 Xicc = {
     'BUILDERTYPE' : 'XiccBuilder',
     'CONFIG'      : {
-     'LongTrackGEC' : 150
-    ,'controlPrescaleLc' : 0.05
-    ,'controlPrescaleXic' : 0.3
-    , 'controlPrescaleDp' : 0.001
-    , 'controlPrescaleD0' : 0.001
-    , 'controlPrescaleDsp' : 0.00
-    , 'signalPrescaleViaLc' : 1.0
-    , 'signalPrescaleViaXic' : 1.0
-    , 'signalPrescaleViaDp'  : 1.0
-    , 'signalPrescaleViaDsp' : 0.0
-    , 'signalPrescaleViaD0'  : 1.0
-    , 'Hlt2TisTosSpec' : { 'Hlt2CharmHad.*Decision%TOS' : 0, 'Hlt1TrackAllL0Decision%TOS' : 0, 'Hlt2Global%TIS' : 0 }
+     'LongTrackGEC'            : 150
+    ,'controlPrescaleLc'       : 0.05
+    ,'controlPrescaleXic'      : 0.3
+    , 'controlPrescaleDp'      : 0.001
+    , 'controlPrescaleD0'      : 0.001
+    , 'controlPrescaleDsp'     : 0.00
+    , 'signalPrescaleViaLc'    : 1.0
+    , 'signalPrescaleViaXic'   : 1.0
+    , 'signalPrescaleViaDp'    : 1.0
+    , 'signalPrescaleViaD0'    : 1.0
+    , 'signalPrescaleViaLcWC'  : 1.0
+    , 'signalPrescaleViaLcDCS' : 1.0
+    , 'signalPrescaleViaXicWC' : 1.0
+    , 'signalPrescaleViaDpWC'  : 1.0
+    , 'signalPrescaleViaD0WC'  : 1.0
+    , 'signalPrescaleViaD0DCS' : 1.0
+    , 'Hlt2TisTosSpec' : { 'Hlt2CharmHad.*Decision%TOS' : 0 }
     },
     'WGs' : [ 'Charm' ],
     'STREAMS' : [ 'Charm' ]
     }
 
+## muDST, Mat Charles + Patrick Spradlin
+## added in Stripping19b
+XiccTIS = {
+    'BUILDERTYPE' : 'XiccBuilder',
+    'CONFIG'      : {
+     'LongTrackGEC'            : 150
+    ,'controlPrescaleLc'       : 0.0
+    ,'controlPrescaleXic'      : 0.0
+    , 'controlPrescaleDp'      : 0.0
+    , 'controlPrescaleD0'      : 0.0
+    , 'controlPrescaleDsp'     : 0.0
+    , 'signalPrescaleViaLc'    : 0.10
+    , 'signalPrescaleViaXic'   : 0.10
+    , 'signalPrescaleViaDp'    : 0.10
+    , 'signalPrescaleViaD0'    : 0.10
+    , 'signalPrescaleViaLcWC'  : 0.0
+    , 'signalPrescaleViaLcDCS' : 0.0
+    , 'signalPrescaleViaXicWC' : 0.0
+    , 'signalPrescaleViaDpWC'  : 0.0
+    , 'signalPrescaleViaD0WC'  : 0.0
+    , 'signalPrescaleViaD0DCS' : 0.0
+    , 'Hlt2TisTosSpec' : { 'Hlt2Global%TIS' : 0 }
+    },
+    'WGs' : [ 'Charm' ],
+    'STREAMS' : [ 'Charm' ]
+    }
 
 ## Micro-DST, Philip Hunt and Benoit Viaud
 ## Modified from Strippinb13b
@@ -1028,41 +1049,46 @@ JpsiMuMuforD0MuMu = {
 # New in S17b.
 CharmForVub = {
     'BUILDERTYPE' : 'CharmForVubConf',
-    'CONFIG'     :  {
-    'TRACK_Chi2' : 3.,
-    'KAON_PIDK' : 5.,
+    'CONFIG'     :  {'TRACK_Chi2' : 3.,
+    'TRACK_MINIPCHI2' : 6,
+    'KAON_PIDK' : 3.,
     'KAON_MinPT' : 600.,
     'Kstar_MinPT' : 600.,
-    'Kstar_MassMax' : 992.,
-    'Kstar_MassMin' : 792.,
+    'Kstar_MassMax' : 1020.,
+    'Kstar_MassMin' : 770.,
     'Rho_MinPT' : 600.,
-    'Rho_MassMax' : 970,
-    'Rho_MassMin' : 570.,
+    'Rho_MassMax' : 990,
+    'Rho_MassMin' : 550.,
     'MUON_MinPT' : 800.,
     'MUON_PIDmu' : 0,
     'PION_MinPT' : 600.,
     'PION_PIDmu' : -1.,
-    'PION_PIDK' : -3,
+    'PION_PIDK' : 0,
     'PAIR_SumPTMin' : 2800.,
     'D_MassMax' : 1950.,
     'D_DIRA' : 0.9994,
     'D_DOCA' : 0.07,
     'D_MinP' : 20000.,
     'D0_FD'  :  4.0,
-    'Dplus_FD'  :  8.0,
+    'Dplus_FD'  :  4.0,
     'D_MCORR_MIN'  : 1400.,
     'D_MCORR_MAX'  : 2700.,
     'D_BPVVDZ' : 0.,
     'D_VtxChi2' : 9.,
+    'BtoD_DeltaMass_MIN' : 2700.,
+    'BtoD_DeltaMass_MAX' : 3700.,
+    'B_DIRA' : 0.9994,
+    'B_FDCHI2' : 100,
     'Dstar_MassMin' : 300.,
     'Dstar_DOCA' : 0.4,
     'Dstar_VtxChi2' : 9.,
     'Dstar_DeltaMass' : 200.,
-    'PrescaledKstarLinePrescale' : 0.25,
+    'HLT_FILTER' : "(HLT_PASS_RE('Hlt2CharmSemilepD02HMuNu_.*Decision') | HLT_PASS_RE('Hlt2Topo.*Decision'))",
+    'HLT_FILTER_PiMuNu' : "HLT_PASS_RE('Hlt2CharmSemilepD02HMuNu_.*Decision')",
+    #Pre and postscale
+    'PrescaledKstarLinePrescale' : 1.0,
     'PrescaledRhoLinePrescale' : 1.0,
-    'PrescaledPiLinePrescale' : 0.5,
-    'PrescaledLinePostscale' : 1.0
-          },
+    'PrescaledPiLinePrescale' : 1.0},
   'WGs' : [ 'Charm' ],
   'STREAMS' : [ 'Charm']
 }
@@ -1092,7 +1118,7 @@ Lambdac2PHH = {
                   , 'Lambdac_BPVLTIME_MAX'  :    0.0012 * ns
                   , 'Lambdac_BPVLTIME_MIN'  :    0.0 * ns
                   , 'HltFilter'          : "HLT_PASS_RE('Hlt2Global.*')"
-                  , 'Hlt2TisTosSpec'     : { 'Hlt2Global%TIS' : 0 }
+                  , 'Hlt2TisTosSpec'     : { 'Hlt2Global%TIS' : 0,  'Hlt2CharmHad.*Decision%TOS' : 0 }
                   , 'PrescaleLambdac2PKPi'  :    1.0
                   , 'PostscaleLambdac2PKPi' :    1.0
                   , 'PrescaleLambdac2PKK'      : 1.0
@@ -1106,6 +1132,44 @@ Lambdac2PHH = {
     'STREAMS'      : [ 'Charm' ]
     }
 
+# Lambdac -> p h+ h-. Responsible: Patrick Spradlin
+#Prescaled full dst
+# New in S19b
+Lambdac2PHHPrescFull = {
+    'BUILDERTYPE' : 'StrippingLambdac2PKPiForXSecConf',
+    'CONFIG'      : {
+                  'Daug_All_PT_MIN'       :  400.0 * MeV
+                  , 'Daug_1of3_PT_MIN'      : 1200.0 * MeV
+                  , 'Daug_P_MIN'            : 3200.0 * MeV
+                  , 'Daug_TRCHI2DOF_MAX'    :   5.0
+                  , 'Daug_BPVIPCHI2_MIN'    :    4.0
+                  , 'Daug_1of3_BPVIPCHI2_MIN'   : 8.0
+                  , 'Proton_PIDp_MIN'       :   5.0
+                  , 'Pi_PIDK_MAX'           :    0.0
+                  , 'K_PIDK_MIN'            :   5.0
+                  , 'Comb_ADAMASS_WIN'      :   90.0 * MeV
+                  , 'Comb_ADOCAMAX_MAX'     :    0.1 * mm
+                  , 'Lambdac_PT_MIN'        :    0.0 * MeV
+                  , 'Lambdac_VCHI2VDOF_MAX' :   20.0
+                  , 'Lambdac_BPVVDCHI2_MIN' :    16.0
+                  , 'Lambdac_BPVDIRA_MIN'   :    0.9999
+                  , 'Lambdac_BPVLTIME_MAX'  :    0.0012 * ns
+                  , 'Lambdac_BPVLTIME_MIN'  :    0.0 * ns
+                  , 'HltFilter'          : "HLT_PASS_RE('Hlt2Global.*')"
+                  , 'Hlt2TisTosSpec'     : { 'Hlt2Global%TIS' : 0,  'Hlt2CharmHad.*Decision%TOS' : 0 }
+                  , 'PrescaleLambdac2PKPi'  :    0.1
+                  , 'PostscaleLambdac2PKPi' :    1.0
+                  , 'PrescaleLambdac2PKK'      : 0.1
+                  , 'PostscaleLambdac2PKK'     : 1.0
+                  , 'PrescaleLambdac2PPiPi'    : 0.1
+                  , 'PostscaleLambdac2PPiPi'   : 1.0
+                  , 'PrescaleLambdac2PPiKWS'   : 0.1
+                  , 'PostscaleLambdac2PPiKWS'  : 1.0
+    },
+    'WGs'          : ['Charm'],
+    'STREAMS'      : [ 'CharmCompleteEvent' ]
+    }
+
 # D0 -> phi gamma
 # Responsible: Fatima Soomro
 # Added: Stripping19
@@ -1113,19 +1177,21 @@ Lambdac2PHH = {
 D2XGamma = {
     'BUILDERTYPE' : 'StrippingD2XGammaConf',
     'CONFIG' : {
-    'TrChi2'              : 5.
-    ,'TrIPchi2Phi'         : 25.
-    ,'TrPTPhi'              : 500.
-    ,'kDLL'                 : 2.0
+    'TrChi2'            : 2.5
+    ,'TrIPchi2Phi'      : 25.
+    ,'TrPTPhi'          : 500.
+    ,'kDLL'             : 2.0
+    ,'PhiMassWinL'      : 1000.
     ,'PhiMassWin'       : 50.
-    ,'PhiVCHI2'           : 16.
+    ,'PhiVCHI2'         : 16.
     ,'D0MassWin'        : 200.
-    ,'D_BPVLTIME'     : 0.2 * picosecond ## not used ATM
-    ,'D0_PT'               : 1000.
-    ,'photonPT'           : 1700.
-    ,'DstVCHI2'           : 25.
-    ,'deltaMass'          : 160.0
-    ,'pvRefit'             : False
+    ,'D_BPVLTIME'       : 0.2 * picosecond ## not used ATM
+    ,'D0_PT'            : 1000.
+    ,'photonPT'         : 1700.
+    ,'DstVCHI2'         : 25.
+    ,'deltaMass'        : 160.0
+    ,'deltaMassL'       : 130.0
+    ,'pvRefit'          : False
     ,'D02PhiGammaPreScale'               : 1.0
     ,'D02PhiGammaPostScale'              : 1.0
     ,'PionLocation'   : "Phys/StdAllNoPIDsPions/Particles"

@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-06-26 - Jibo He for Andrea Contu
+ - Stripping19b/LineConfigDictionaries_Charm.py
+  . Updated for Stripping19b
+
 ! 2012-06-25 - Jibo He
  - Stripping19b/LineConfigDictionaries_BandQ.py
   . Updated conf dict for CharmAssociative 
