@@ -21,7 +21,7 @@ import StrippingBs2PhiMuMu
 import StrippingBs2JpsiPhiPrescaledAndDetatched
 import StrippingB2hhLTUnbiased
 import StrippingNeuroBayesMuMu
-import StrippingChiCJPsiGammaConversion
+import StrippingChiCJPsiGammaConv
 import StrippingB2nbody
 import StrippingTwoBody_prompt
 import StrippingHb2Charged2Body
@@ -90,6 +90,7 @@ import StrippingPsiX0
 import StrippingPsiXForBandQ
 import StrippingX2psiPiPi
 import StrippingX2psiGamma
+import StrippingBetac2PhiP
 
 import StrippingZ02MuMu
 import StrippingZ02ee
@@ -146,6 +147,8 @@ import StrippingB2TwoBaryons
 import StrippingB2FourKHigh
 import StrippingBs2KKhh
 import StrippingBs2KSKS
+import StrippingB2XEta
+import StrippingBu2KSh
 
 import StrippingB2SameChargeMuon
 import StrippingHyperCPX
