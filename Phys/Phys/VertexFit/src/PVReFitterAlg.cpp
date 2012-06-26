@@ -106,9 +106,6 @@ StatusCode PVReFitterAlg::execute()
   if (!exist<LHCb::RecVertex::Range>(m_PVInputLocation) )
   {
     return StatusCode::SUCCESS;
-    //     return Warning("No LHCb::RecVertex::Range found at " +
-    //                    m_PVInputLocation,
-    //                    StatusCode::SUCCESS, 0);
   }
 
   const LHCb::RecVertex::Range vertices =
@@ -117,10 +114,6 @@ StatusCode PVReFitterAlg::execute()
   if (vertices.empty())
   {
     return StatusCode::SUCCESS;
-    //     return Warning("No LHCb::RecVertices in LHCb::Particle::Range "+
-    //                    m_PVInputLocation,
-    //                    StatusCode::SUCCESS,
-    //                    0);
   }
 
   for ( std::vector<std::string>::const_iterator iLoc = m_particleInputLocations.begin();
@@ -142,10 +135,6 @@ void PVReFitterAlg::executeForLocation(const std::string& particleLocation,
 
   if (!exist<LHCb::Particle::Range>(particleLocation) )
   {
-    Warning("No LHCb::Particle::Range found at " +
-            particleLocation,
-            StatusCode::SUCCESS,
-            0).ignore();
     return;
   }
 
@@ -154,10 +143,6 @@ void PVReFitterAlg::executeForLocation(const std::string& particleLocation,
 
   if (particles.empty())
   {
-    Warning("No LHCb::Particles in LHCb::Particle::Range " +
-            particleLocation,
-            StatusCode::SUCCESS,
-            0).ignore();
     return;
   }
 

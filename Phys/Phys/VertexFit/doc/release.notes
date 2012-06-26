@@ -4,6 +4,10 @@
 ! Responsible : Yuehong Xie
 !===========================================================================
 
+! 2012-06-26 - Chris Jones
+ - Suppress warnings in PVReFitterAlg about missing or empty Particle 
+   locations in the TES. Can happen in the stripping.
+
 ! 2012-05-09 - Chris Jones
  - Remove obsolete "ParticleInputLocation" property from PVReFitterAlg. 
    Use "ParticleInputLocations" instead
