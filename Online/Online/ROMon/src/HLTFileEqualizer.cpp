@@ -98,7 +98,7 @@ void HLTFileEqualizer::Analyze()
   }
   m_nnodes = 0;
   m_nfiles = 0;
-  char *olddns = DimClient::getDnsNode();
+//  char *olddns = DimClient::getDnsNode();
   printf("Analysis Summary:\n");
   myActionMap::iterator fit;
   for (fit = Actions.begin();fit!=Actions.end();fit++)
@@ -136,7 +136,7 @@ DefHltInfoHandler::DefHltInfoHandler(HLTFileEqualizer *e)
 void DefHltInfoHandler::infoHandler()
 {
   int siz;
-  int status;
+//  int status;
   siz = this->itsService->getSize();
 //      gettimeofday()
   if (siz == sizeof(int)) return;
@@ -170,12 +170,12 @@ void DefHltInfoHandler::infoHandler()
       m_Equalizer->m_nnodes++;
     }
   }
-  status =1;
+//  status =1;
   return;
 }
 
 
-int main(int argc, char **argv)
+int main(int , char **)
 {
   HLTFileEqualizer elz;
   int m_DefState = 0;
