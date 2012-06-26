@@ -469,13 +469,6 @@ public:
     return this->getTool<ICheckOverlap>(m_checkOverlapName,m_checkOverlap);
   }
 
-  /* @todo move to this signature when maps in job options become available
- /// Accessor for CheckOverlap Tool
- inline ICheckOverlap* checkOverlap(const std::string& name="") const{
- return getTool<ICheckOverlap>(m_checkOverlapName,m_checkOverlap);
- }
-  */
-
   /// Descendants
   inline IParticleDescendants* descendants() const
   {
@@ -564,7 +557,11 @@ private:
                   TYPE*& t,
                   const IInterface* ptr = NULL ) const
   {
-    if ( !t ) { t = this -> template tool<TYPE>( name, ptr ); }
+    if ( !t ) 
+    { 
+      //this->info() << "Loading tool '" << name << "'" << endmsg;
+      t = this -> template tool<TYPE>( name, ptr ); 
+    }
     return t;
   }
 
@@ -622,8 +619,8 @@ private:
         if ( iname != defaultMap.end() ) { toolType = iname->second; }
       }
       // locate the tool
-      this->info() << "Loading tool type='" << toolType 
-                   << "' nickname='" << nickName << "'" << endmsg;
+      //this->info() << "Loading tool type='" << toolType 
+      //             << "' nickname='" << nickName << "'" << endmsg;
       t = this -> template tool<TYPE> ( toolType , parent ) ;
       // add the located tool into the container
       typename STORAGE::value_type value( nickName , t ) ;
