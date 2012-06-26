@@ -261,7 +261,7 @@ size_t HltBufferedIOReader::scanFiles()   {
     bool take_all = (m_allowedRuns.size() > 0 && m_allowedRuns[0]=="*");
     while ((entry = ::readdir(dir)) != 0)    {
       //cout << "File:" << entry->d_name << endl;
-      if ( *(int*)(entry->d_name) != *(int*)"Run_" ) {
+      if ( 0 != ::strncmp(entry->d_name,"Run_",4) ) {
 	continue;
       }
       else if ( !take_all )  {
