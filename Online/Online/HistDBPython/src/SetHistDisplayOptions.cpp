@@ -33,7 +33,9 @@ SetHistDisplayOptions::SetHistDisplayOptions(const std::string& name, ISvcLocato
 StatusCode SetHistDisplayOptions::initialize() 
 {  
   m_statusCode = GaudiHistoAlg::initialize(); // must be executed first
-  bool initOk = true;
+  // MF: ../src/SetHistDisplayOptions.cpp:36:8: 
+  // MF: warning: variable ¡initOk¢ set but not used [-Wunused-but-set-variable]
+  //bool initOk = true;
 
 /// get password from file
   FILE *pFile;
@@ -64,7 +66,7 @@ StatusCode SetHistDisplayOptions::initialize()
     info() << "------------------------------------------------------------------" << endmsg;
   } else {
     info() << "initalizing HistDB failed!" << endmsg;
-    initOk = false;
+    //initOk = false;
   }
 
   
