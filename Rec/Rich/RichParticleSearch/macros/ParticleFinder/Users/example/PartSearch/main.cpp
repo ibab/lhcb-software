@@ -2,7 +2,8 @@
 #include "ChainTuples.h"
 #include "RichParticleFinder.h"
 #include <utility>
-
+#include "RichHist1D.h"
+#include "RichHist2D.h"
 
 
 
@@ -26,11 +27,15 @@ int main(int argc, char** argv)
 //	const char* cuts =  "(MinimumTrackSeperation > 150) && (PhotonsPerTrack < 30)";
 	const char* cuts =  "(PhotonsPerTrack < 30) && (MinimumTrackSeperation > 150 )";
 
+
+	RichHist* massHisto = new RichHist1D("Mass_Per_Track_2","averageTrackMass",160,0,1000);
+
 	cout << files << endl;
 	ChainTuples* ChainT = new ChainTuples(files, "RICH/RichParticleSearchR1Gas/TrackTuple");
 	MPC::RichParticleFinder PartFind(cuts,ChainT);
 	PartFind.SetVariables(argv[2]);
 	PartFind.SetHistoLevel(2);
+	PartFind.CreateHist(massHisto);
 	PartFind.SetBranchAddress();
 	PartFind.CreateNtuple("Rich1ParticleTuple.root");
 	PartFind.WriteHistograms("Rich1ParticleHistos.root");

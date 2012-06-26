@@ -14,6 +14,8 @@
 #include "TEntryList.h"
 #include "ReadFile.h"
 #include "RichParticle.h"
+#include "RichHist1D.h"
+#include "RichHist2D.h"
 
 namespace MPC
 {
@@ -48,6 +50,9 @@ public:
 
 	void WriteHistograms(const char* histFileName);
 
+	void CreateHist(IRichHist* hist);
+
+
 private:
 	bool CreateNewTuple(const char* outputFileName);
 	std::map<std::string,double> vars;
@@ -61,6 +66,8 @@ private:
 	int _histoLevel;
 
 	std::string Rich;
+
+	std::vector<IRichHist*> richHist;
 };
 
 
