@@ -716,8 +716,8 @@ StatusCode CaloMergedPi0Alg::execute()
 
     // energy
     double Ene3x3[2];
-    double PosX[2];
-    double PosY[2];
+    //    double PosX[2];
+    //    double PosY[2];
 
     for(int is=0;is<2;++is){
       const LHCb::CaloDigit* digit   = SubClus[is][1][1];;
@@ -739,12 +739,12 @@ StatusCode CaloMergedPi0Alg::execute()
       SubX[is]=SubX[is]-BarXY(1,area,Etemp)*SubSize[is];
       SubY[is]=SubY[is]-BarXY(2,area,Etemp)*SubSize[is];
       SubZ[is]=BarZ(Ene3x3[is],PrsDep,area,SubX[is],SubY[is],SubZ[is]);
-      PosX[is]=m_det->cellX( SubClus[is][1][1]->cellID() )
-        -SubSize[is]*(+ Etemp[0][0] + Etemp[1][0] + Etemp[2][0]
-                      - Etemp[0][2] - Etemp[1][2] - Etemp[2][2])/Ene3x3[is];
-      PosY[is]=m_det->cellY( SubClus[is][1][1]->cellID() )
-        -SubSize[is]*(+ Etemp[0][0] + Etemp[0][1] + Etemp[0][2]
-                      - Etemp[2][0] - Etemp[2][1] - Etemp[2][2])/Ene3x3[is];
+      //      PosX[is]=m_det->cellX( SubClus[is][1][1]->cellID() )
+      //        -SubSize[is]*(+ Etemp[0][0] + Etemp[1][0] + Etemp[2][0]
+      //                      - Etemp[0][2] - Etemp[1][2] - Etemp[2][2])/Ene3x3[is];
+      //      PosY[is]=m_det->cellY( SubClus[is][1][1]->cellID() )
+      //        -SubSize[is]*(+ Etemp[0][0] + Etemp[0][1] + Etemp[0][2]
+      //                      - Etemp[2][0] - Etemp[2][1] - Etemp[2][2])/Ene3x3[is];
     }
 
     double ep1=0;
