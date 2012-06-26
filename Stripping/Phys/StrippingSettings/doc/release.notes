@@ -4,6 +4,15 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-06-26 - Jibo He
+ - Stripping19b/LineConfigDictionaries_RD.py
+  . Updated conf dict of Bd->eeKstar BDT line
+ - Stripping19b/LineConfigDictionaries_BandQ.py
+  . Updated conf dicts of ChiCJPsiGammaConv, Bc2JpsiHDetached, Ccbar2Phi
+  . Added Betac2PhiP
+ - dbase/stripping19b
+  . First version of working dbase 
+
 ! 2012-06-26 - Will Barter
  - Stripping19b/LineConfidDictionaries_QEE.py
 	. Updated for Stripping19b

@@ -30,30 +30,36 @@ MicroDSTNeuroBayesMuMu = {
     'WGs'    : [ 'BandQ' ]
     }
 
-
-ChiCJPsiGammaConversion = {
-    'BUILDERTYPE'  : 'StrippingChiCJPsiGammaConversionConf',
-    'CONFIG'       : {    'trackChi2'               :    5.0
-                          , 'JPsiMassMin'           :    3.04 # GeV
-                          , 'JPsiMassMax'           :    3.14 # GeV
-                          , 'JPsiVertexChi2'        :   25.0
-                          , 'NBCutJPsi'             :    0.7
-                          , 'ExpertiseJPsi'         : 'Muon/mumu_net_noip.nb'
-                          , 'NBVersionJPsi'         : "TuneSep2010"
-                          , 'eDLLe'                 :  -5.0
-                          , 'GammaEEMass'           :   7.0 #MeV
-                          , 'GammaEEChi2'           :   2.0
-                          , 'GammaEETau'            :   5.0  #ps
-                          , 'mMinChiCRaw'           :   2.9 #GeV
-                          , 'mMaxChiCRaw'           :   4.1 #GeV
-                          , 'mMinChiCFit'           :   3.0 #GeV
-                          , 'mMaxChiCFit'           :   4.0 #GeV
-                          , 'PrescaleChiC'          :   1.0
-                          , 'PostscaleChiC'         :   1.0
-                          , 'PrescaleChiCWS'        :   0.5
-                          , 'PostscaleChiCWS'       :   1.0
-                          },
-    'STREAMS' : [ 'Leptonic' ],
+ChiCJPsiGammaConv = {
+    'BUILDERTYPE'  : 'StrippingChiCJPsiGammaConvConf',
+    'CONFIG'       : {
+    'trackChi2'               :    3.0
+    , 'MuPTMin'               :    300 #MeV
+    , 'JPsiMassMin'           :    3.0 # GeV
+    , 'JPsiMassMax'           :    3.2 # GeV
+    , 'JPsiPTMin'           :     1.9 # GeV
+    , 'JPsi_PIDmu'           :    0. 
+    , 'JPsiVertexChi2'        :   25.0
+    , 'UpsilonMassMin'        :    9.0  #GeV
+    , 'UpsilonMassMax'        :    12.9 #GeV
+    , 'UpsilonVertexChi2'     :   25.0
+    , 'UpsilonPTMin'          :    0.9 # GeV
+    , 'Upsilon_PIDmu'         :    0. 
+    , 'eDLLe'                 :   0.0
+    , 'GammaEEMass'           :   100.0 #MeV
+    , 'GammaEEPt'             :   400.0 #MeV
+    , 'mMinChiCRaw'           :   2.9 #GeV
+    , 'mMaxChiCRaw'           :   4.8 #GeV
+    , 'mMinChiCFit'           :   3.0 #GeV
+    , 'mMaxChiCFit'           :   4.7 ##GeV
+    , 'mMinChiBRaw'           :   9.4 #GeV
+    , 'mMaxChiBRaw'           :   13.2 #GeV
+    , 'mMinChiBFit'           :   9.5 #GeV
+    , 'mMaxChiBFit'           :   13.0  #GeV
+    , 'PrescaleChi'          :   1.0
+    , 'PostscaleChi'         :   1.0
+    },
+    'STREAMS' : [ 'Dimuon' ],
     'WGs'    : [ 'BandQ' ]
     }
 
@@ -640,23 +646,23 @@ Bc2JpsiHDetached = {
     'CONFIG'    : {
     'LinePrescale'        :    1.   ,
     'LinePostscale'       :    1.   ,
-   
-    'MuonTRCHI2DOF'       :    5.   ,  # adimentional
-    'MuonPT'              :  900.   ,  # MeV
+    
+    'MuonTRCHI2DOF'       :    5.   ,  # adimentional 
+    'MuonPT'              :  500.   ,  # MeV
     'MuonP'               :   -5.   ,  # MeV, not applied now
     'MuMuParticleName'    : "'J/psi(1S)'", # Particle Name, like "'psi(2S)'"
     'MuMuMassWindow'      :  100.   ,  # MeV, 10 sigma, may decreased to 150
     'MuMuVtxCHI2'         :    9.   ,  # adimentional
-    'MuMuPT'              :  -10.   ,  # MeV, not applied
-   
-    'PionTRCHI2DOF'       :    5.   ,  # adimentional    
-    'PionPT'              : 1400.   ,  # MeV
+    'MuMuPT'              :  -10.   ,  # MeV, not applied 
+    
+    'PionTRCHI2DOF'       :    5.   ,  # adimentional     
+    'PionPT'              : 1000.   ,  # MeV
     'PionP'               :   -5.   ,  # MeV, not applied now
     'BcMassWindow'        :  400.   ,  # MeV, mass window
     'BcVtxCHI2'           :    9.   ,  # adimentional
-    'BcPT'                : 4000.   ,  # MeV, May incrase up to 5000 MeV if needed      
+    'BcPT'                :    0.   ,  # MeV, May incrase up to 5000 MeV if needed       
 
-    'LifetimeCut'         : " & (BPVLTIME()>0.1*ps)"
+    'LifetimeCut'         : " & (BPVLTIME()>0.2*ps) & (INTREE( (ABSID=='pi+') & (BPVIPCHI2()>9)))"
     },
     'STREAMS'   : [ 'Dimuon' ],
     'WGs'    : [ 'BandQ' ]
@@ -1050,19 +1056,22 @@ Ccbar2PpbarDetached = {
     'WGs'    : [ 'BandQ' ]
     }
 
-Ccbar2PhiPhi = {
+Ccbar2Phi = {
     'BUILDERTYPE'       : 'Ccbar2PhiPhiConf',
     'CONFIG'    : {
         'TRCHI2DOF'        :     5.  ,
-        'KaonPIDK'         :     2.  ,
-        'KaonPT'           :   500.  , # MeV
+        'KaonPIDK'         :     5.  ,
+        'KaonPT'           :   650.  , # MeV
         'PhiVtxChi2'       :    16.  ,
         'PhiMassW'         :    12.  , 
         'CombMaxMass'      :  4100.  , # MeV, before Vtx fit
         'CombMinMass'      :  2750.  , # MeV, before Vtx fit
         'MaxMass'          :  4000.  , # MeV, after Vtx fit
         'MinMass'          :  2800.  , # MeV, after Vtx fit
-        'Phi_TisTosSpecs'  : { "Hlt1Global%TIS" : 0, "Hlt2Global%TIS" : 0 }
+        'Phi_TisTosSpecs'  : { "Hlt1Global%TIS" : 0 },
+        'PionCuts'         :  "(PT>0.7*GeV) & (TRCHI2DOF<5) & (MIPCHI2DV(PRIMARY)>36.) & (PIDK<10)" ,
+        'KaonCuts'         :  "(PT>0.5*GeV) & (TRCHI2DOF<5) & (MIPCHI2DV(PRIMARY)>25.) & (PIDK>5)",
+        'LooseKaonCuts'    :  "(PT>0.5*GeV) & (TRCHI2DOF<5) & (MIPCHI2DV(PRIMARY)>9.)"
         },
     'STREAMS' : [ 'Charm' ] ,
     'WGs'    : [ 'BandQ' ]
@@ -1213,5 +1222,31 @@ Xibc = {
                         , 'LongTrackGEC'                      : 150 
                           },
     'STREAMS' : [ 'Dimuon' ],
+    'WGs'    : ['BandQ']
+    }
+
+
+Betac2PhiP = {
+    'BUILDERTYPE'  : 'StrippingBetac2PhiPConf',
+    'CONFIG'       : {
+                    'Daug_TRCHI2DOF_MAX'        : 10.     
+                  , 'Daug_P_MIN'                : 1200.0*MeV 
+                  , 'Daug_PT_MIN'               : 400.0*MeV
+                  , 'Daug_MIPDV'                : 0.05      # mm
+                  , 'Proton_PIDpi_MIN'          : 5.0
+                  , 'Proton_PIDK_MIN'           : 5.0 
+                  , 'Phi_WIN'                   : 20.0 * MeV
+                  , 'Phi_PT'                    : 1700.0*MeV         
+                  , 'Betac_AM_MIN'              : 1950.0 * MeV 
+                  , 'Betac_AM_MAX'              : 2800.0 * MeV 
+                  , 'Betac_BPVDIRA_MIN'         : 0.9999    
+                  , 'Betac_VCHI2VDOF_MAX'       : 25.0   
+                  , 'Betac_BPVLTIME_MIN'        : 0.0 * ns
+                  , 'Betac_BPVLTIME_MAX'        : 0.0012 * ns
+                  , 'Hlt2IncPhiDecision'        : "HLT_PASS('Hlt2IncPhiDecision')"
+                  , 'PrescaleBetac2PhiP'        : 1.0
+                  , 'PostscaleBetac2PhiP'       : 1.0
+                    },
+    'STREAMS' : [ 'CharmCompleteEvent' ],
     'WGs'    : ['BandQ']
     }
