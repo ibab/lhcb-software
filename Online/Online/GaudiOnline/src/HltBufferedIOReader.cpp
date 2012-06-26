@@ -109,6 +109,7 @@ namespace LHCb
 #include "RTL/rtl.h"
 #include "RTL/readdir.h"
 #include <fcntl.h>
+#include <cerrno>
 #ifdef _WIN32
 #include <io.h>
 #else
@@ -259,10 +260,9 @@ size_t HltBufferedIOReader::scanFiles()   {
     struct dirent *entry;
     bool take_all = (m_allowedRuns.size() > 0 && m_allowedRuns[0]=="*");
     while ((entry = ::readdir(dir)) != 0)    {
-      string fname = entry->d_name;
-      //cout << "File:" << fname << endl;
-      if (fname == "." || fname == "..")      {
-        continue;
+      //cout << "File:" << entry->d_name << endl;
+      if ( *(int*)(entry->d_name) != *(int*)"Run_" ) {
+	continue;
       }
       else if ( !take_all )  {
 	bool take_run = false;
@@ -295,7 +295,7 @@ int HltBufferedIOReader::openFile()   {
         int sc = ::unlink(fname.c_str());
         if (sc != 0)        {
           error("CANNOT UNLINK file: " + fname + ": " + RTL::errorString());
-          ::exit(0);
+          ::exit(EBADF);
         }
       }
       m_current = fname;
