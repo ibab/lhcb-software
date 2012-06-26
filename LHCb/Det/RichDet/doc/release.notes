@@ -4,6 +4,10 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2012-06-26 - Chris Jones
+ - Fix a small bug in DeRichPMTPanel, where a null pointer was not properly 
+   protected against being dereferenced.
+
 !========================= RichDet v16r11 2012-06-15 =========================
 
 ! 2012-06-10 - Chris Jones
