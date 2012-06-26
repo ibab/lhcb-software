@@ -3,6 +3,72 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v43r0>2012-06-27 Brunel v43r0</A></H1><PRE>
+This version uses projects LCG 64, Gaudi v23r3, LHCb v35r0, Lbcom v13r0,
+ Rec v14r0 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+Production version for 2012 data taking
+
+- Changes to configurable
+  . HltRecReports now decoded unconditionally on every event
+  . L0DU now decoded unconditionally on every physics event
+  . Do not run InitReprocSeq if not reprocessing
+
+- Persistency changes
+  . (S)DST now contains a complete copy of RawEvent, split into groups of banks:
+    {Calo,Muon,Rich,Trigger,Other}/RawEvent
+		o Access to original DAQ/RawEvent is removed.
+    o Since SDST content is now identical to DST, SDST format is declared 
+      obsolete (but still supported as an output type)
+    (CaloDAQ v4r28, DAQUtils v1r8, DAQEvent v9r8, GaudiConf v16r0, MuonDAQ v4r14,
+     OTDAQ v7r13, RichDAQ v3r37, STDAQ v3r28, VeloDAQ v6r7, RecAlgs v2r9)
+  . Add CaloHypo->MC linkers to MC DSTs (GaudiConf v16r0)
+
+- New tuning
+  . Use LHCBCOND tags head-20120607 by default for 2011 and 2012 data:
+    o New module t0 database based on run 114318 of 2012 (DDDB v1r55)
+  . Get Calo Cluster covariance parameters from DetCond Gain condition.
+    Incoherent noise now 1.2 ADC for both data and MC (was 1.3 for data)
+    (CaloDet v10r14, CaloReco v5r15)
+  . Add covariance matrix for SplitClusters and SplitPhotons
+    (CaloReco v5r15, CaloInterfaces v8r4, CaloUtils v9r4, CaloTools v6r4)
+  . Allow spd-dependent PileUp subtraction (CaloDet v10r14, CaloReco v5r15)
+  . Make default network tuning for 2010, 2011 and 2012 "MC11aTuneV3"
+    (ChargedProtoANNPID v1r7)
+  . Remove CK theta correction factor for Aerogel, taken care of in calibration
+    (RichRecSys v4r6)
+  . Improve FastVelo clone rejection (FastVelo v1r10)
+  . Reject faster wrong combination in findUnusedPhi, when two phi were
+    diametrically opposite (FastVelo v1r10) 
+
+- Functionality changes
+  . Fix DeRichGasRadiator to allow the scale factors to be used Online
+    (RichDet v16r11)
+  . Add 'Calo' to the MCLinksSequence and run CaloHypo2MCTruth
+    (CaloAssociators v6r11)
+
+- Bug fixes
+  . Bug fix in FastVelo beam splash handling (FastVelo v1r10)
+  . Fix unprotected debug and verbose messages
+    (GaudiCommonSvc v1r2, DAQUtils v1r8, OTDAQ v7r13, RichDAQ v3r37)
+  . Fix bug #95019 (missing import in case of OldCloneKiller+Simulation)
+    introduced in v42r3p1 (TrackSys v7r4)
+
+- Monitoring changes
+  . Reduce the chi^2 range from 0-10 to 0-3, to adapt to tracking changes. Reduce
+    the 'tight' track monitoring selection to chi^2 < 2 (RichRecQC v2r58)
+  . Update L0Filters for Rich monitoring (RichRecQC v2r58)
+  . Enable by default the resolution plots per PD column (RichRecQC v2r58)
+
+- Changes to tests
+  . Add a test for bug #94407 in brunel.2012-crashes
+  . Add a test for bug #95019 in brunel.brunel-mc09-notruth
+  . Add brunel.repro2012magdown to test that reprocessing gives identical
+    output to brunel.brunel2012magdown
+  . Change the name of the output file of brunel.bigevents, used as input to
+    brunel.readdstfsr, so that latter can be executed after any other test
+
+
 </PRE><H1><A NAME=v42r3p2>2012-05-09 Brunel v42r3p2</A></H1><PRE>
 This version uses projects LCG 62b, Gaudi v23r2, LHCb v34r3, Lbcom v12r3,
  Rec v13r3 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
