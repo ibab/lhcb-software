@@ -3,10 +3,15 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2012-06-26 - Chris Jones
+ - Impliment a check in DaVinciInit on the total virtual memory usage, and
+   trigger a purge of the main memory pools if it goes over a certain limit.
+   Also purge the pools during finalize(). Temporary hack, until a better 
+   solution is found (via an Auditor or similar).
+
 ! 2012-06-25 - Chris Jones
  - Use DaVinciAlgorithm base class for FilterDesktop, CombineParticles,
    AddExtraInfo, ConjugateNeutralPID and RemoveClones
- - Add some test code to DaVinciInit to purge memory pools.
 
 ! 2012-06-23 - Olivier Deschamps
  - BremAdder : Final optimization (new correction method with brem origin 

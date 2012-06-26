@@ -6,21 +6,15 @@
 #include "GaudiAlg/IGenericTool.h"
 #include "GaudiKernel/Memory.h"
 
-// from EventBase
+// Event model
 #include "Event/ProcessHeader.h"
-
 #include "Event/ODIN.h"
-
-// from RecEvent
 #include "Event/RecHeader.h"
 #include "Event/ProcStatus.h"
-
 #include "Event/Particle.h"
 #include "Event/Vertex.h"
-#include "Event/ProtoParticle.h"
 #include "Event/Track.h"
-#include "Event/State.h"
-#include "Event/CaloHypo.h"
+#include "Event/ProtoParticle.h"
 
 // local
 #include "DaVinciInit.h"
@@ -39,10 +33,10 @@ DaVinciInit::DaVinciInit( const std::string& name,
     m_memoryTool ( NULL               ),
     m_lastMem    ( 0                  )
 {
-  declareProperty("PrintEvent", m_print =  false, "Print Event and Run Number");
+  declareProperty("PrintEvent", m_print = false, "Print Event and Run Number");
   declareProperty("Increment", m_increment = 100,
                   "Number of events to measure memory. This is aligned with PrintFreq in DaVinci");
-  declareProperty("MemoryPurgeLimit", m_memPurgeLimit = 1000 * 1000 ); // 2GB
+  declareProperty("MemoryPurgeLimit", m_memPurgeLimit = 3300 * 1000 ); // 3.3GB
 }
 
 //=============================================================================
@@ -105,12 +99,12 @@ StatusCode DaVinciInit::execute()
       info() << "Memory has changed from " << m_lastMem << " to " << mem << " KB"
              << " (" << memDiff << "KB, " << 100.*memDiff/m_lastMem << "%)"
              << " in last " << m_increment << " events" << endmsg ;
-    }
-    if ( mem > m_memPurgeLimit )
-    {
-      info() << " -> Exceeds limit " << m_memPurgeLimit 
-             << " KB -> Purging pools" << endmsg;
-      releaseMemoryPools();
+      if ( mem > m_memPurgeLimit )
+      {
+        info() << "Memory exceeds limit " << m_memPurgeLimit 
+               << " KB -> Purging pools" << endmsg;
+        releaseMemoryPools();
+      }
     }
     m_lastMem = mem;
   }
@@ -132,10 +126,26 @@ void DaVinciInit::releaseMemoryPools() const
 {
 #ifndef GOD_NOALLOC
   using namespace LHCb;
-  boost::singleton_pool<Particle,     sizeof(Particle)     >::release_memory();
-  boost::singleton_pool<Vertex,       sizeof(Vertex)       >::release_memory();
-  boost::singleton_pool<ProtoParticle,sizeof(ProtoParticle)>::release_memory();
-  boost::singleton_pool<Track,        sizeof(Track)        >::release_memory();
+
+  const unsigned long long vmem_b = System::virtualMemory();
+
+  if ( boost::singleton_pool<Particle,     sizeof(Particle)     >::release_memory() )
+    debug() << "Particle released memory" << endmsg;
+  if ( boost::singleton_pool<Vertex,       sizeof(Vertex)       >::release_memory() )
+    debug() << "Vertex released memory" << endmsg;
+  if ( boost::singleton_pool<ProtoParticle,sizeof(ProtoParticle)>::release_memory() )
+    debug() << "ProtoParticle released memory" << endmsg;
+  if ( boost::singleton_pool<Track,        sizeof(Track)        >::release_memory() )
+    debug() << "Track released memory" << endmsg;
+
+  const unsigned long long vmem_a = System::virtualMemory();
+
+  if ( vmem_b != vmem_a )
+  {
+    info() << "Memory changed after pool release = " 
+           << (long long)(vmem_a-vmem_b) << " KB" << endmsg;
+  }
+
 #endif
 }
 
