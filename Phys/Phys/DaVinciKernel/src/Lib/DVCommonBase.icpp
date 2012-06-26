@@ -154,7 +154,7 @@ DVCommonBase<PBASE>::DVCommonBase( const std::string& name,
                           "Describes the decay" ) ;
   this->declareProperty ( "ForceOutput"       , m_forceOutput       = true,
                           "If true TES location is written" ) ;
-  this->declareProperty ( "PreloadTools"      , m_preloadTools      = false,
+  this->declareProperty ( "PreloadTools"      , m_preloadTools      = true,
                           "If true all tools are pre-loaded in initialize" ) ;
   //
   // enforce the registration for algorithm context service
