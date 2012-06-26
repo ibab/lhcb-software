@@ -3,6 +3,12 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v43r0>2012-06-27 Brunel v43r0</A></H1><PRE>
+This version uses projects LCG 64, Gaudi v23r3, LHCb v35r0, Lbcom v13r0,
+ Rec v14r0 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+Production version for 2012 data taking
+
 - Changes to configurable
   . HltRecReports now decoded unconditionally on every event
   . L0DU now decoded unconditionally on every physics event
