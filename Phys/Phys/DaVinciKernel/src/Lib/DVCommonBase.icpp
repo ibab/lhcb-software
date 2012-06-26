@@ -155,7 +155,7 @@ DVCommonBase<PBASE>::DVCommonBase( const std::string& name,
                           "Describes the decay" ) ;
   this->declareProperty ( "ForceOutput"       , m_forceOutput       = true,
                           "If true TES location is written" ) ;
-  this->declareProperty ( "PreloadTools"      , m_preloadTools      = true,
+  this->declareProperty ( "PreloadTools"      , m_preloadTools      = false,
                           "If true all tools are pre-loaded in initialize" ) ;
   //
   // enforce the registration for algorithm context service
@@ -345,23 +345,23 @@ StatusCode DVCommonBase<PBASE>::initialize ()
 
   // load PV processing tools.
 
-  if (!m_noPVs)
+  if ( !m_noPVs )
   {
-    if (refitPVs())
+    if ( refitPVs() )
     {
-      if (!defaultPVReFitter())
+      if ( !defaultPVReFitter() )
       {
         return this->Error("Default IPVReFitter could not be loaded");
       }
     }
 
-    if (!relatedPVFinder())
+    if ( !relatedPVFinder() )
     {
       return this->Error("IRelatedPVFinder could not be loaded");
     }
   }
 
-  if (this->msgLevel(MSG::DEBUG))
+  if ( this->msgLevel(MSG::DEBUG) )
   {
     this->debug() << "End of DVCommonBase::initialize with " << sc << endmsg;
   }

@@ -388,11 +388,10 @@ public:
    **/
   inline const IPVReFitter* defaultPVReFitter() const
   {
-    return ( m_defaultPVReFitter ? m_defaultPVReFitter :
-             this->getTool<IPVReFitter>( "",
-                                         m_pvReFitterNames ,
-                                         this->defaultPVReFittersNames() ,
-                                         m_pvReFitters     , this ) );
+    return this->getTool<IPVReFitter>( "",
+                                       m_pvReFitterNames ,
+                                       this->defaultPVReFittersNames() ,
+                                       m_pvReFitters     , this );
   }
 
   /**
@@ -554,12 +553,12 @@ private:
    */
   template<class TYPE>
   TYPE* getTool ( const std::string& name,
-                  TYPE*& t,
+                  TYPE *& t,
                   const IInterface* ptr = NULL ) const
   {
     if ( !t ) 
     { 
-      //this->info() << "Loading tool '" << name << "'" << endmsg;
+      this->info() << "Loading tool '" << name << "'" << endmsg;
       t = this -> template tool<TYPE>( name, ptr ); 
     }
     return t;
@@ -619,8 +618,8 @@ private:
         if ( iname != defaultMap.end() ) { toolType = iname->second; }
       }
       // locate the tool
-      //this->info() << "Loading tool type='" << toolType 
-      //             << "' nickname='" << nickName << "'" << endmsg;
+      this->info() << "Loading tool type='" << toolType 
+                   << "' nickname='" << nickName << "'" << endmsg;
       t = this -> template tool<TYPE> ( toolType , parent ) ;
       // add the located tool into the container
       typename STORAGE::value_type value( nickName , t ) ;
@@ -976,9 +975,6 @@ protected:
   ToolMap                                             m_pvReFitterNames ;
   /// The actual map of "nickname -> tool" for Particle Refitters
   mutable GaudiUtils::VectorMap<std::string,IPVReFitter*> m_pvReFitters ;
-
-  /// keep the default PV re-fitter.
-  mutable IPVReFitter* m_defaultPVReFitter;
 
   /// Mapping of "nickname ->type/name" for Decay Tree Fitters
   ToolMap                                                   m_decayTreeFitterNames  ;
