@@ -51,6 +51,46 @@ B2PPbar = {
 
 
 ##
+## StrippingBu2KSh
+##
+Bu2KSh = {
+    'WGs'         : ['Charmless'],
+    'BUILDERTYPE' : 'Bu2KShConf',
+    'CONFIG'      : {'Trk_Chi2'                : 3.0,
+                  'KS_DD_MassWindow'        : 30.0,
+                  'KS_LL_MassWindow'        : 15.0,
+                  'KS_DD_VtxChi2'           : 10.0,
+                  'KS_LL_VtxChi2'           : 10.0,
+                  'KS_DD_FDChi2'            : 50.0,
+                  'KS_LL_FDChi2'            : 100.0,
+                  'KS_DD_Pmin'              : 8000.0,
+                  'KS_LL_Pmin'              : 8000.0,
+                  'KS_DD_Ptmin'             : 1000.0,
+                  'KS_LL_Ptmin'             : 800.0,
+                  'Bach_Ptmin'              : 1000.0,
+                  'BDaug_MaxPT_IP'          : 0.05,
+                  'BDaug_DD_PTsum'          : 4000.0,
+                  'BDaug_LL_PTsum'          : 4000.0,
+                  'B_Mlow'                  : 500.0,
+                  'B_Mhigh'                 : 500.0,
+                  'B_Pmin'                  : 25000.0,
+                  'B_LL_VtxChi2'            : 6.0,
+                  'B_DD_VtxChi2'            : 6.0,
+                  'B_Dira'                  : 0.9995,
+                  'B_DD_IPCHI2wrtPV'        : 10.0,
+                  'B_LL_IPCHI2wrtPV'        : 10.0,
+                  'B_FDwrtPV'               : 1.0,
+                  'B_DD_FDChi2'             : 50,
+                  'B_LL_FDChi2'             : 50,
+                  'GEC_MaxTracks'           : 250,
+                  'Prescale'                : 1.0,
+                  'Postscale'               : 1.0
+                 },
+    'STREAMS'     : [ 'Bhadron' ]
+    }
+
+
+##
 ## StrippingB2hhLTUnbiased
 ##
 B2hhLTUnbiased = {
@@ -252,23 +292,23 @@ B2KPhiPhi = {
     'Postscale'               : 1.0 ,
 
     #K parameters
-    'K_PT'                    : 300.,
-    'K_IPCHI2'                : 6.,
-    'K_TRCHI2'                : 5.0,
+    'K_PT'                    : 400.,
+    'K_IPCHI2'                : 6.25,
+    'K_TRCHI2'                : 3.3,
 
     #phi parameters         
     'phi_VDZ'                 : 0.,
     'phi_PT'                  : 300.,
     'phi_IPCHI2'              : 6.,
-    'phi_VCHI2_VDOF'          : 25.,
-    'phi_MM_max'              : 1070.,
+    'phi_VCHI2_VDOF'          : 16.,
+    'phi_MM_max'              : 1060.,
     'phi_MM_min'              : 980.,
 
     #B parameters
     'B_ADAMASS'              : 500.,
     'B_DIRA'                 : 0.999,
     'B_IPCHI2'               : 12.25,
-    'B_VCHI2_VDOF'           : 25.,
+    'B_VCHI2_VDOF'           : 16.,
     'B_LTCHI2'               : 64.,
     'B_VDZ'                  : 0.
     },
@@ -455,27 +495,86 @@ BetaSBs2PhiPhi  = {
 Bs2KSKS = {
     'WGs'         : ['Charmless'],
     'BUILDERTYPE' : 'Bs2KSKSConf',
-    'CONFIG'      : {'Trk_Chi2'          : 10.0,
-                     'KS_LL_MassWindowP' : 50.0,
-                     'KS_LL_MassWindow'  : 30.0,
-                     'KS_LL_VtxChi2'     : 100.0,
-                     'KS_LL_FDChi2'      : 80.0,
-                     'pi_L_MIPDV'        : 20.0,
-                     'pi_L_Pmin'         : 2000.0,
-                     'KS_LL_CombMPI'     : 30,
-                     'KS_LL_DOCA'        :0.5,
-                     'KS_LL_DOCA_ERR'    : 0.3,
-                     'KS_LL_nu'          : (-2.0),
-                     'KS_LL_pT'          : 600,
-                     'B_MassWindowP'     : 150.0,
-                     'B_DOCA'            : 2.5,
-                     'B_IPCHI2'          : 10,
-                     'B_IP'              : 0.4,
-                     'B_VtxChi2'         : 20,
-                     'B_BPVVDCHI2'       : 43.5,
-                     'GEC_MaxTracks'     : 250,
-                     'Prescale'          : 1.0,
-                     'Postscale'         : 1.0
+    'CONFIG'      : {'MVA_LL_PROBABILITY_CUT_BCC'         : 0.5, # MVA probability cut, BsLL combination cut, the MVA is optimized for 0.5 !
+                     'MVA_LL_PROBABILITY_CUT_BCu'         : 0.5, # MVA probability cut, BsLL mother cut, the MVA is optimized for 0.5 !
+                     'MVA_LD_PROBABILITY_CUT_BCC'         : 0.5, # MVA probability cut, BsLD combination cut, the MVA is optimized for 0.5 !
+                     'MVA_LD_PROBABILITY_CUT_BCu'         : 0.5, # MVA probability cut, BsLD mother cut, the MVA is optimized for 0.5 !
+                     'MVA_DD_PROBABILITY_CUT_BCu'         : 0.5, # MVA probability cut, BsDD mother cut, the MVA is optimized for 0.5 !
+                     'KS_LL_MASS'                  :50.0,           # KSLL mass window cut in MeV
+                     'KS_DD_MASS'                  :100.0,           # KSDD mass window cut in MeV
+                     'KS_LL_DOCA'                  :1.0,           # DoCA cut in mm
+                     'KS_DD_DOCA'                  :4.0,           # DoCA cut in mm
+##################################################
+                     'B_MassWindow'                  : 600.0, # B mass window cut in MeV _this_is_where_we_can_reduce_the_retention_rate_ if needed 
+                     'B_DOCA_LL'                      : 1.0, # DOCA cut in mm for Bs->KSLL KSLL
+                     'B_DOCA_DD'                      : 4.0, # DOCA cut in mm for Bs->KSLL KSDD and Bs->KSDD KSDD
+                     'Prescale'                : 1.0,
+                     'Postscale'               : 1.0
                     },
     'STREAMS'     : ['BhadronCompleteEvent']
     }
+
+##
+## StrippingB2XEta
+##
+B2XEta = {
+    'WGs'         : ['Charmless'],
+    'BUILDERTYPE' : 'B2XEtaConf',
+    'CONFIG'      : {'Trk_Chi2'                : 3.0,
+                  'Trk_PT'                  : 250.0,
+                  'Trk_IPChi2'              : 10.0,
+                  'KS_DD_MassWindow'        : 25.0,
+                  'KS_DD_VtxChi2'           : 10.0,
+                  'KS_DD_FDChi2'            : 400.0,
+                  'KS_DD_PTmin'             : 2500.0,
+                  'KS_DD_Dira'              : 0.9998,
+                  'KS_LL_MassWindow'        : 15.0,
+                  'KS_LL_VtxChi2'           : 10.0,
+                  'KS_LL_FDChi2'            : 20.0,
+                  'KS_LL_Dira'              : 0.9998,
+                  'KS_LL_PTmin'             : 1500.0,
+                  'L_DD_MassWindow'         : 20.0,
+                  'L_DD_VtxChi2'            : 10.0,
+                  'L_DD_FDChi2'             : 100.0,
+                  'L_DD_PTmin'              : 2500.0,
+                  'L_DD_Dira'               : 0.9998,
+                  'L_LL_MassWindow'         : 15.0,
+                  'L_LL_VtxChi2'            : 10.0,
+                  'L_LL_FDChi2'             : 15.0,
+                  'L_LL_Dira'               : 0.9998,
+                  'L_LL_PTmin'              : 1500.0,
+                  'rho_MassWindow'          : 200.0,
+                  'rho_PT'                  : 600.0,
+                  'rho_DOCA'                : 10.0,
+                  'rho_deltaZ'              : 0.0,
+                  'rho_IPChi2'              : 50.0,
+                  'rho_vtxChi2'             : 10.0,
+                  'eta_prime_MassWindow'    : 45.0,
+                  'eta_prime_PT'            : 1500.0,
+                  'eta_prime_vtxChi2'       : 10.0,
+                  'eta_prime_DOCA'          : 8.0,
+                  'B_MassWindow'            : 500.0,
+                  'B_PTmin'                 : 600.0,
+                  'BDaug_DD_maxDocaChi2'    : 20.0,
+                  'BDaug_LL_maxDocaChi2'    : 20.0,
+                  'B_VtxChi2'               : 12.0,
+                  'B_Dira'                  : 0.999,
+                  'B_DD_IPCHI2wrtPV'        : 20.0,
+                  'B_LL_IPCHI2wrtPV'        : 20.0,
+                  'B_DD_FDChi2'             : 20.0,
+                  'B_LL_FDChi2'             : 20.0,
+                  'Lb_MassWindow'           : 500.0,
+                  'Lb_Pmin'                 : 5000.0,
+                  'LbDaug_DD_maxDocaChi2'   : 15.0,
+                  'LbDaug_LL_maxDocaChi2'   : 15.0,
+                  'Lb_VtxChi2'              : 12.0,
+                  'Lb_Dira'                 : 0.999,
+                  'Lb_DD_IPCHI2wrtPV'       : 20.0,
+                  'Lb_LL_IPCHI2wrtPV'       : 20.0,
+                  'GEC_MaxTracks'           : 300,
+                  'Prescale'                : 1.0,
+                  'Postscale'               : 1.0
+                 },
+    'STREAMS'     : ['BhadronCompleteEvent']
+    }
+

@@ -12,6 +12,10 @@
  - Stripping19b/LineConfigDictionaries_B2CC.py
   . Updated for Stripping19b
 
+! 2012-06-26 - Stefano Perazzini
+ - Stripping19b/LineConfigDictionaries_Charmless.py
+  . Updated for Stripping19b
+
 ! 2012-06-26 - Jibo He for Andrea Contu
  - Stripping19b/LineConfigDictionaries_Charm.py
   . Updated for Stripping19b
