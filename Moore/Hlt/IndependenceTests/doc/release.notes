@@ -2,6 +2,9 @@ Package     : Hlt/IndepenceTests
 Package Coordinator : Eric van Herwijnen
 Purpose     : HLT application to test indepence of Hlt lines
 
+! 2012-06-26 - Mika Vesterinen
+ - Change treatment of technical lines
+
 !========================= IndependenceTests v1r3 2012-05-16 =========================
 ! 2012-05-11 - Mika Vesterinen
  - Remove unnecessary GaudiConf imports, and minor fixes to find_mismatches.py

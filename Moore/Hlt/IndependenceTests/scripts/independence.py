@@ -141,13 +141,17 @@ def main( options, args ):
     # Remove global, ratelimited and technical lines
     def remove( lines ):
         remove = []
-        bad = set( [ 'Hlt1ErrorEvent', 'Hlt1ODINTechnical', 'Hlt1Tell1Error', 'Hlt1Incident',
-                     'Hlt1Global', 'Hlt2Global', 'Hlt1Lumi', 'Hlt1VeloClosingMicroBias',
-                     'Hlt1MBNoBias', 'Hlt1LumiMidBeamCrossing', 'Hlt1CharmCalibrationNoBias' ] )
         for line in lines:
             if line.find( 'RateLimited' ) != -1: remove.append( line )
-            elif line in bad: remove.append( line )
-        for line in remove: lines.remove( line )
+            if line.find( 'Global' ) != -1: remove.append( line )
+            if not options.Technicals:
+                if line.find( 'Lumi' ) != -1: remove.append( line )
+                if line.find( 'Bias' ) != -1: remove.append( line )
+                if line.find( 'Error' ) != -1: remove.append( line )
+                if line.find( 'Incident' ) != -1: remove.append( line )
+                if line.find( 'Beam' ) != -1: remove.append( line )
+        for line in remove: lines.remove(line)
+            
     remove( availableHlt1Lines )
     remove( availableHlt2Lines )
 
@@ -354,6 +358,8 @@ if __name__ == "__main__":
                        default = False, help = "Accept slow events" )
     parser.add_option( "--nosubmit", action = "store_false", dest = "Submit",
                        default = True, help = "Submit created jobs" )
+    parser.add_option( "--technicals", action = "store_false", dest = "Technicals",
+                       default = True, help = "include technicals" )
     parser.add_option( "--backend", action = "store", type = "string",
                        dest = "Backend", default = "Stoomboot",
                        help = "submission backend" )
