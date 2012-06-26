@@ -27,6 +27,21 @@ template <class T> int default_handle(const AreaHandler* p,int which, const Area
   return ((T*)p)->handle(which,a);
 }
 
+static int checkpointing_area_skip(const Area& a) {
+  if ( m_strcmp(a.name,"/usr/lib/locale/locale-archive") == 0 ) {
+    checkpointing_area_print(&a,MTCP_INFO,"*** WARNING: Skip locale-archive:");
+    return 1;
+  }
+  else if ( m_strcmp(a.name,"/usr/lib64/gconv/gconv-modules.cache") == 0 ) {
+    checkpointing_area_print(&a,MTCP_INFO,"*** WARNING: Skip  gconv-modules.cache:");
+    return 1;
+  }
+  else if ( m_strcmp(a.name,"/var/db/nscd/passwd") == 0 ) {
+    checkpointing_area_print(&a,MTCP_INFO,"*** WARNING: Skip  /var/db/nscd/passwd:");
+    return 1;
+  }
+  return 0;
+}
 
 AreaBaseHandler::AreaBaseHandler() : m_bytes(0), m_count(0)   {
   f_map     = default_map<AreaBaseHandler>;
@@ -84,6 +99,9 @@ int AreaLibHandler::handle(int, const Area& a)    {
     if ( m_libs[i] && m_strcmp(m_libs[i],a.name) == 0 )   {
       return 0;
     }
+  }
+  if ( checkpointing_area_skip(a) ) {
+    return 0;
   }
   // This one we now save!
   int bytes = checkpointing_library_fwrite(m_fd, &a);
@@ -184,16 +202,7 @@ int AreaWriteHandler::handle(int, const Area& a)    {
     checkpointing_area_print(&a,MTCP_INFO,"*** WARNING: SKIP [vsyscall] area:");
     return 0;
   }
-  else if ( m_strcmp(a.name,"/usr/lib/locale/locale-archive") == 0 ) {
-    checkpointing_area_print(&a,MTCP_INFO,"*** WARNING: Skip locale-archive:");
-    return 0;
-  }
-  else if ( m_strcmp(a.name,"/usr/lib64/gconv/gconv-modules.cache") == 0 ) {
-    checkpointing_area_print(&a,MTCP_INFO,"*** WARNING: Skip  gconv-modules.cache:");
-    return 0;
-  }
-  else if ( m_strcmp(a.name,"/var/db/nscd/passwd") == 0 ) {
-    checkpointing_area_print(&a,MTCP_INFO,"*** WARNING: Skip  /var/db/nscd/passwd:");
+  else if ( checkpointing_area_skip(a) ) {
     return 0;
   }
   rc = a.write(m_fd);
