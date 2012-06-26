@@ -42,7 +42,6 @@ DVCommonBase<PBASE>::DVCommonBase( const std::string& name,
                                  //
   , m_pvReFitterNames       ()
   , m_pvReFitters           ()
-  , m_defaultPVReFitter     (NULL)
                                  //
   , m_decayTreeFitterNames  ()
   , m_decayTreeFitters      ()

@@ -1004,6 +1004,7 @@ protected:
 
   /// Concrete type of CheckOverlap tool
   std::string m_checkOverlapName;
+
   /// Reference to CheckOverlap
   mutable ICheckOverlap* m_checkOverlap;
 
