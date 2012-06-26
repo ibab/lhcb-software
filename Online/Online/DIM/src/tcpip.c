@@ -1311,6 +1311,14 @@ int tcpip_write_nowait( int conn_id, char *buffer, int size )
 #else
 	ret = WSAGetLastError();
 #endif
+/*
+	if((wrote == -1) && (!tcpip_would_block(ret)))
+	{
+	dna_report_error(conn_id, 0,
+			"Writing (non-blocking) to", DIM_ERROR, DIMTCPWRRTY);
+printf("Writing %d, ret = %d\n", size, ret);
+	}
+*/
 	set_blocking(Net_conns[conn_id].channel);
 	if(wrote == -1)
 	{
@@ -1326,12 +1334,20 @@ int tcpip_write_nowait( int conn_id, char *buffer, int size )
 				wrote = writesock( Net_conns[conn_id].channel, buffer, size, 0 );
 				if( wrote == -1 ) 
 				{
+/*
+		dna_report_error(conn_id, 0,
+			"Writing to", DIM_ERROR, DIMTCPWRRTY);
+*/
 					return(0);
 				}
 			}
 		}
 		else
 		{
+/*
+dna_report_error(conn_id, 0,
+			"Writing (non-blocking) to", DIM_ERROR, DIMTCPWRRTY);
+*/
 			return(0);
 		}
 	}

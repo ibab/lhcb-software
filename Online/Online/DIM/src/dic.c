@@ -556,7 +556,10 @@ printf("In service tmout %s\n", servp->serv_name);
 	once_only = 0;
 	if(servp->type == ONCE_ONLY)
 		once_only = 1;
+/*
 	if( servp->fill_address )
+*/
+	if( servp->fill_size >= 0 )
 	{
 		size = servp->fill_size;
 		if( servp->serv_address )
@@ -751,9 +754,14 @@ int request_command(char *serv_name, void *serv_address, int serv_size,
 		{
 			if( (conn_id = servp->conn_id) ) 
 			{
-				free( servp->fill_address );
-				fillp = (int *)malloc(serv_size);
-				memcpy( (char *)fillp, (char *)serv_address, serv_size );
+				if(servp->fill_size > 0)
+					free( servp->fill_address );
+				fillp = 0;
+				if(serv_size > 0)
+				{
+					fillp = (int *)malloc(serv_size);
+					memcpy( (char *)fillp, (char *)serv_address, serv_size );
+				}
 				servp->fill_address = fillp;
 				servp->fill_size = serv_size;
 /*
@@ -805,8 +813,12 @@ DIC_SERVICE *insert_service( int type, int timeout, char *name, int *address, in
 	newp->serv_size = size;
 	newp->user_routine = routine;
 	newp->tag = tag;
-	fillp = (int *)malloc(fill_size);
-	memcpy( (char *) fillp, (char *) fill_addr, fill_size );
+	fillp = 0;
+	if(fill_size > 0)
+	{
+		fillp = (int *)malloc(fill_size);
+		memcpy( (char *) fillp, (char *) fill_addr, fill_size );
+	}
 	newp->fill_address = fillp;
 	newp->fill_size = fill_size;
 	newp->conn_id = 0;
@@ -870,9 +882,14 @@ void modify_service( DIC_SERVICE *servp, int timeout, int *address, int size, vo
 	servp->serv_size = size;
 	servp->user_routine = routine;
 	servp->tag = tag;
-	free( servp->fill_address );
-	fillp = (int *)malloc(fill_size);
-	memcpy( (char *) fillp, (char *) fill_addr, fill_size );
+	if(servp->fill_size > 0)
+		free( servp->fill_address );
+	fillp = 0;
+	if(fill_size > 0)
+	{
+		fillp = (int *)malloc(fill_size);
+		memcpy( (char *) fillp, (char *) fill_addr, fill_size );
+	}
 	servp->fill_address = fillp;
 	servp->fill_size = fill_size;
 	servp->stamped = stamped;
@@ -1085,7 +1102,8 @@ int release_service( DIC_SERVICE *servicep )
 /*
 	if(servicep->type != COMMAND)
 */
-	free( servicep->fill_address );
+	if(servicep->fill_size > 0)
+		free( servicep->fill_address );
 	if(strstr(servicep->serv_name,"/RpcOut"))
 	{
 		strcpy(name, servicep->serv_name);
@@ -1580,6 +1598,9 @@ void move_to_ok_service( DIC_SERVICE *servp, int conn_id )
 	if(Dic_conns[conn_id].service_head)
 	{
 		DISABLE_AST
+/*
+printf("move_to_ok %s\n",servp->serv_name);
+*/
 		servp->pending = NOT_PENDING;
 		servp->tmout_done = 0;
 		dll_remove( (DLL *) servp );
@@ -1592,6 +1613,9 @@ void move_to_ok_service( DIC_SERVICE *servp, int conn_id )
 void move_to_bad_service( DIC_SERVICE *servp, DIC_BAD_CONNECTION *bad_connp)
 {
 	DISABLE_AST
+/*
+printf("move_to_bad %s\n",servp->serv_name);
+*/
 	servp->pending = WAITING_DNS_UP;
 	dll_remove( (DLL *) servp );
 	dll_insert_queue( (DLL *) bad_connp->conn.service_head, (DLL *) servp );
@@ -1604,6 +1628,9 @@ void move_to_cmnd_service( DIC_SERVICE *servp )
 	if(servp->pending != WAITING_CMND_ANSWER)
 */
 	DISABLE_AST
+/*
+printf("move_to_cmnd %s\n",servp->serv_name);
+*/
 	servp->pending = NOT_PENDING;
 	servp->tmout_done = 0;
 	dll_remove( (DLL *) servp );
@@ -1614,6 +1641,9 @@ void move_to_cmnd_service( DIC_SERVICE *servp )
 void move_to_notok_service(DIC_SERVICE *servp )
 {
 	DISABLE_AST
+/*
+printf("move_to_notok %s\n",servp->serv_name);
+*/
 	servp->pending = WAITING_DNS_UP;
 	servp->conn_id = 0;
 	dll_remove( (DLL *) servp );
@@ -1823,6 +1853,23 @@ int send_service_command(DIC_SERVICE *servp)
 			else
 				move_to_ok_service( servp, conn_id );
 		}
+		else
+		{
+			if( servp->type == ONCE_ONLY ) 
+			{
+				servp->pending = WAITING_DNS_UP;
+				dic_release_service( servp->serv_id );
+			}
+			else
+			{
+				servp->pending = WAITING_DNS_UP;
+				servp->conn_id = 0;
+/*
+				release_conn(conn_id);
+*/
+				request_dns_info(0);
+			}
+		}
 	}
 	return(ret);
 }	
@@ -1851,8 +1898,8 @@ int send_service(int conn_id, DIC_SERVICE *servp)
 	if(!ret)
 	{
 		dim_print_date_time();
-		printf(" Client Sending Service Request: Couldn't write to Conn %3d : Server %s@%s\n",
-			conn_id, Net_conns[conn_id].task, Net_conns[conn_id].node);
+		printf(" Client Sending Service Request: Couldn't write to Conn %3d : Server %s@%s service %s\n",
+			conn_id, Net_conns[conn_id].task, Net_conns[conn_id].node, servp->serv_name);
 		fflush(stdout);
 	}
 	return(ret);
@@ -1901,6 +1948,9 @@ int send_command(int conn_id, DIC_SERVICE *servp)
 	CMNDCB_ITEM *itemp;
 
 	size = servp->fill_size;
+
+	if(size < 0)
+		return(1);
 
 	if( !cmnd_packet_size ) {
 		dic_packet = (DIC_PACKET *)malloc(DIC_HEADER + size);

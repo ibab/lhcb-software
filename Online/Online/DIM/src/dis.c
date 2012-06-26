@@ -252,7 +252,7 @@ static unsigned do_dis_add_service_dns( char *name, char *type, void *address, i
 	{
 		strcpy(str,"Service name too long: ");
 		strcat(str,name);
-		error_handler(0, DIM_ERROR, DIMSVCTOOLG, str);
+		error_handler(0, DIM_ERROR, DIMSVCTOOLG, str, -1);
 		ENABLE_AST
 		return((unsigned) 0);
 	}
@@ -260,7 +260,7 @@ static unsigned do_dis_add_service_dns( char *name, char *type, void *address, i
 	{
 		strcpy(str,"Duplicate Service: ");
 		strcat(str,name);
-		error_handler(0, DIM_ERROR, DIMSVCDUPLC, str);
+		error_handler(0, DIM_ERROR, DIMSVCDUPLC, str, -1);
 		ENABLE_AST
 		return((unsigned) 0);
 	}
@@ -272,7 +272,7 @@ static unsigned do_dis_add_service_dns( char *name, char *type, void *address, i
 		{
 			strcpy(str,"Format String Too Long: ");
 			strcat(str,name);
-			error_handler(0, DIM_ERROR, DIMSVCFORMT, str);
+			error_handler(0, DIM_ERROR, DIMSVCFORMT, str, -1);
 			free(new_serv);
 			ENABLE_AST
 			return((unsigned) 0);
@@ -281,7 +281,7 @@ static unsigned do_dis_add_service_dns( char *name, char *type, void *address, i
 		{
 			strcpy(str,"Bad Format String: ");
 			strcat(str,name);
-			error_handler(0, DIM_ERROR, DIMSVCFORMT, str);
+			error_handler(0, DIM_ERROR, DIMSVCFORMT, str, -1);
 			free(new_serv);
 			ENABLE_AST
 			return((unsigned) 0);
@@ -430,7 +430,7 @@ static unsigned do_dis_add_cmnd_dns( char *name, char *type, void (*user_routine
 	{
 		strcpy(str,"Command name too long: ");
 		strcat(str,name);
-		error_handler(0, DIM_ERROR, DIMSVCTOOLG, str);
+		error_handler(0, DIM_ERROR, DIMSVCTOOLG, str, -1);
 		ENABLE_AST
 		return((unsigned) 0);
 	}
@@ -647,6 +647,7 @@ void recv_dns_dis_rout( int conn_id, DNS_DIS_PACKET *packet, int size, int statu
 	extern void do_register_services(DIS_DNS_CONN *);
 	extern void do_dis_stop_serving_dns(DIS_DNS_CONN *);
 	DIS_DNS_CONN *dnsp;
+	int type, exit_code;
 
 	if(size){}
 	dnsp = find_dns_by_conn_id(conn_id);
@@ -671,7 +672,7 @@ void recv_dns_dis_rout( int conn_id, DNS_DIS_PACKET *packet, int size, int statu
 			dnsp->dns_dis_conn_id = open_dns(dnsp->dnsid, recv_dns_dis_rout, error_handler,
 					DIS_DNS_TMOUT_MIN, DIS_DNS_TMOUT_MAX, SRC_DIS );
 			if(dnsp->dns_dis_conn_id == -2)
-				error_handler(0, DIM_FATAL, DIMDNSUNDEF, "DIM_DNS_NODE undefined");
+				error_handler(0, DIM_FATAL, DIMDNSUNDEF, "DIM_DNS_NODE undefined", -1);
 		}
 		break;
 	case STA_CONN:		/* connection received */
@@ -693,13 +694,16 @@ void recv_dns_dis_rout( int conn_id, DNS_DIS_PACKET *packet, int size, int statu
 	default :	   /* normal packet */
 		if(vtohl(packet->size) != DNS_DIS_HEADER)
 			break;
-		switch( vtohl(packet->type) )
+		type = vtohl(packet->type);
+		exit_code = (type >> 16) & 0xFFFF;
+		type &= 0xFFFF;
+		switch(type)
 		{
 		case DNS_DIS_REGISTER :
 			sprintf(str, 
 				"%s: Watchdog Timeout, DNS requests registration",
 				dnsp->task_name);
-			error_handler(0, DIM_WARNING, DIMDNSTMOUT, str);
+			error_handler(0, DIM_WARNING, DIMDNSTMOUT, str, -1);
 			register_services(dnsp, ALL, 0);
 			break;
 		case DNS_DIS_KILL :
@@ -710,7 +714,7 @@ void recv_dns_dis_rout( int conn_id, DNS_DIS_PACKET *packet, int size, int statu
 			exit(2);
 			*/
 			Serving = -1;
-			error_handler(0, DIM_FATAL, DIMDNSDUPLC, str);
+			error_handler(0, DIM_FATAL, DIMDNSDUPLC, str, -1);
 			/*
 			do_dis_stop_serving_dns(dnsp);
 			dis_stop_serving();
@@ -729,7 +733,7 @@ void recv_dns_dis_rout( int conn_id, DNS_DIS_PACKET *packet, int size, int statu
 			exit(2);
 */
 			Serving = -1;
-			error_handler(0, DIM_FATAL, DIMDNSREFUS, str);
+			error_handler(0, DIM_FATAL, DIMDNSREFUS, str, -1);
 			/*
 			do_dis_stop_serving_dns(dnsp);
 			dis_stop_serving();
@@ -747,7 +751,15 @@ void recv_dns_dis_rout( int conn_id, DNS_DIS_PACKET *packet, int size, int statu
 /*
 			Serving = -1;
 */
-			error_handler(0, DIM_FATAL, DIMDNSEXIT, str);
+			error_handler(0, DIM_FATAL, DIMDNSEXIT, str, -1);
+			break;
+		case DNS_DIS_SOFT_EXIT :
+			sprintf(str, 
+				"%s: DNS requests Exit(%d)",dnsp->task_name, exit_code);
+/*
+			Serving = -1;
+*/
+			error_handler(0, DIM_FATAL, DIMDNSEXIT, str, exit_code);
 			break;
 		}
 		break;
@@ -1206,7 +1218,7 @@ dim_print_date_time();
 			dnsp->dns_dis_conn_id = open_dns(dnsid, recv_dns_dis_rout, error_handler,
 					DIS_DNS_TMOUT_MIN, DIS_DNS_TMOUT_MAX, SRC_DIS );
 			if(dnsp->dns_dis_conn_id == -2)
-				error_handler(0, DIM_FATAL, DIMDNSUNDEF, "DIM_DNS_NODE undefined");
+				error_handler(0, DIM_FATAL, DIMDNSUNDEF, "DIM_DNS_NODE undefined", -1);
 		}
 	}
 	else
@@ -1559,7 +1571,11 @@ void remove_service( int req_id )
 	service_id = (reqp->service_id | 0x80000000);
 	dis_packet->service_id = htovl(service_id);
 	dis_packet->size = htovl(DIS_HEADER);
+/*
 	if( !dna_write_nowait(reqp->conn_id, dis_packet, DIS_HEADER) ) 
+Has to be dna_write otherwise the client gets the message much before the DNS
+*/
+	if( !dna_write(reqp->conn_id, dis_packet, DIS_HEADER) ) 
 	{
 		dim_print_date_time();
 		printf(" Server Removing Service: Couldn't write to Conn %3d : Client %s@%s\n",
@@ -1715,7 +1731,7 @@ int do_update_service(unsigned service_id, int *client_ids)
 	if(!service_id)
 	{
 		sprintf(str, "Update Service - Invalid service id");
-		error_handler(0, DIM_ERROR, DIMSVCINVAL, str);
+		error_handler(0, DIM_ERROR, DIMSVCINVAL, str, -1);
 		ENABLE_AST
 		return(found);
 	}
@@ -1856,7 +1872,7 @@ int dis_get_n_clients(unsigned service_id)
 	if(!service_id)
 	{
 		sprintf(str, "Service Has Clients- Invalid service id");
-		error_handler(0, DIM_ERROR, DIMSVCINVAL, str);
+		error_handler(0, DIM_ERROR, DIMSVCINVAL, str, -1);
 		ENABLE_AST
 		return(found);
 	}
@@ -1890,7 +1906,7 @@ int dis_get_timeout(unsigned service_id, int client_id)
 	if(!service_id)
 	{
 		sprintf(str,"Get Timeout - Invalid service id");
-		error_handler(0, DIM_ERROR, DIMSVCINVAL, str);
+		error_handler(0, DIM_ERROR, DIMSVCINVAL, str, -1);
 		return(-1);
 	}
 	servp = (SERVICE *)id_get_ptr(service_id, SRC_DIS);
@@ -1917,7 +1933,7 @@ void dis_set_quality( unsigned serv_id, int quality )
 	if(!serv_id)
 	{
 		sprintf(str,"Set Quality - Invalid service id");
-		error_handler(0, DIM_ERROR, DIMSVCINVAL, str);
+		error_handler(0, DIM_ERROR, DIMSVCINVAL, str, -1);
 	    ENABLE_AST
 		return;
 	}
@@ -1951,7 +1967,7 @@ int dis_set_timestamp( unsigned serv_id, int secs, int millisecs )
 	if(!serv_id)
 	{
 		sprintf(str,"Set Timestamp - Invalid service id");
-		error_handler(0, DIM_ERROR, DIMSVCINVAL, str);
+		error_handler(0, DIM_ERROR, DIMSVCINVAL, str, -1);
 	    ENABLE_AST
 		return(0);
 	}
@@ -2002,7 +2018,7 @@ int dis_get_timestamp( unsigned serv_id, int *secs, int *millisecs )
 	if(!serv_id)
 	{
 		sprintf(str,"Get Timestamp - Invalid service id");
-		error_handler(0, DIM_ERROR, DIMSVCINVAL, str);
+		error_handler(0, DIM_ERROR, DIMSVCINVAL, str, -1);
 	    ENABLE_AST
 		return(0);
 	}
@@ -2045,7 +2061,7 @@ void dis_send_service(unsigned service_id, int *buffer, int size)
 	DISABLE_AST
 	if( !service_id ) {
 		sprintf(str,"Send Service - Invalid service id");
-		error_handler(0, DIM_ERROR, DIMSVCINVAL, str);
+		error_handler(0, DIM_ERROR, DIMSVCINVAL, str, -1);
 		ENABLE_AST
 		return;
 	}
@@ -2109,7 +2125,7 @@ int dis_remove_service(unsigned service_id)
 	if(!service_id)
 	{
 		sprintf(str,"Remove Service - Invalid service id");
-		error_handler(0, DIM_ERROR, DIMSVCINVAL, str);
+		error_handler(0, DIM_ERROR, DIMSVCINVAL, str, -1);
 		ENABLE_AST
 		return(found);
 	}
@@ -3179,7 +3195,7 @@ static void exit_handler(int *tag, int *bufp, int *size)
 	}
 }
 
-static void error_handler(int conn_id, int severity, int errcode, char *reason)
+static void error_handler(int conn_id, int severity, int errcode, char *reason, int exit)
 {
 	int exit_tag, exit_code, exit_size;
 	int last_conn_id;
@@ -3200,7 +3216,10 @@ static void error_handler(int conn_id, int severity, int errcode, char *reason)
 	if(severity == DIM_FATAL)
 	{
 		exit_tag = 0;
-		exit_code = errcode;
+		if(exit == -1)
+			exit_code = errcode;
+		else
+			exit_code = exit;
 		exit_size = sizeof(int);
 		exit_handler(&exit_tag, &exit_code, &exit_size);
 	}

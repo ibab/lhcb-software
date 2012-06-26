@@ -1843,13 +1843,13 @@ void show_servers();
 		XtFree(str);
 		return;
 	}
-        if ((tag == DID_SEL_NODE) || (tag == DID_SEL_SERVICE)) 
+    if ((tag == DID_SEL_NODE) || (tag == DID_SEL_SERVICE)) 
 	{
 		strcpy(Curr_view_opt_par, str);
 		show_servers();
 		XtFree(str);
 	}
-        if(tag == DID_SERVICES)
+    if(tag == DID_SERVICES)
 	{
 	  pstr = strchr(str,' ');
 	  if(!pstr)
@@ -1907,7 +1907,7 @@ void show_servers();
 	    }
 	  XtFree(str);
 	}
-        if(tag == DID_COMMAND)
+    if(tag == DID_COMMAND)
 	{
 	  did_prepare_command(str);
 	  XtFree(str);

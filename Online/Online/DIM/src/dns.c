@@ -1454,7 +1454,7 @@ int main(int argc, char **argv)
 	dis_add_cmnd( "DIS_DNS/PRINT_STATS", 0, print_stats, 0 );
 	dis_add_cmnd( "DIS_DNS/DEBUG_ON", 0, set_debug_on, 0 );
 	dis_add_cmnd( "DIS_DNS/DEBUG_OFF", 0, set_debug_off, 0 );
-	dis_add_cmnd( "DIS_DNS/KILL_SERVERS", 0, kill_servers, 0 );
+	dis_add_cmnd( "DIS_DNS/KILL_SERVERS", "I", kill_servers, 0 );
 	dis_add_cmnd( "DIS_DNS/PRINT_HASH_TABLE", 0, print_hash_table, 0 );
 	dis_add_cmnd( "DIS_DNS/SERVICE_INFO/RpcIn", "C", set_rpc_info, 0 );
 	Rpc_id = dis_add_service( "DIS_DNS/SERVICE_INFO/RpcOut", "C", 0, 0, 
@@ -1562,22 +1562,44 @@ void set_debug_off()
 }
 
 
-void kill_servers()
+void kill_servers(int *tag, int *code, int *size)
 {
 	int i;
 	DNS_DIS_PACKET dis_packet;
-
+	int soft_code = 0, soft_size = 0;
+	int type;
+	
+	if(size)
+	{
+		soft_size = *size;
+		if(code)
+		{
+			soft_code = *code;
+		}
+	}
 	for(i = 0; i< Curr_N_Conns; i++)
 	{
 		if(Dns_conns[i].src_type == SRC_DIS)
 		{
 			if(!strcmp(Dns_conns[i].task_name,"DIS_DNS"))
 				continue;
-			dim_print_date_time();
-			printf(" Killing server %s@%s\n",
-				Dns_conns[i].task_name, Dns_conns[i].node_name);
 			fflush(stdout);
-			dis_packet.type = htovl(DNS_DIS_EXIT);
+			type = DNS_DIS_EXIT;
+			if(soft_size)
+			{
+				type = DNS_DIS_SOFT_EXIT;
+				type |= (soft_code << 16) & 0xFFFF0000;
+				dim_print_date_time();
+				printf(" Killing server %s@%s with exit code %d\n",
+					Dns_conns[i].task_name, Dns_conns[i].node_name, soft_code);
+			}
+			else
+			{
+				dim_print_date_time();
+				printf(" Killing server %s@%s\n",
+					Dns_conns[i].task_name, Dns_conns[i].node_name);
+			}
+			dis_packet.type = htovl(type);
 			dis_packet.size = htovl(DNS_DIS_HEADER);
 			if( !dna_write_nowait(i, &dis_packet, DNS_DIS_HEADER) )
 			{

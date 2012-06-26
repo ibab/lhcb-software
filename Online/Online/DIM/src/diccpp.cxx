@@ -141,17 +141,26 @@ void DimInfo::subscribe(char *name, int time, void *nolink, int nolinksize,
 	DimInfoHandler *handler)
 {
 	itsId = 0;
-//	itsTagId = 0;
 	itsData = 0;
 	itsFormat = 0;
 	itsHandler = handler;
-	itsName = new char[strlen(name)+1];
-	strcpy(itsName,name);
 	itsDataSize = 0;
 	itsSize = 0;
-	itsNolinkBuf = new char[nolinksize];
-	itsNolinkSize = nolinksize;
-	memcpy(itsNolinkBuf, nolink, nolinksize);
+	itsNolinkBuf = 0;
+	itsNolinkSize = 0;
+	itsName = 0;
+	if(!name)
+	{
+		return;
+	}
+	itsName = new char[strlen(name)+1];
+	strcpy(itsName,name);
+	if(nolinksize > 0)
+	{
+		itsNolinkBuf = new char[nolinksize];
+		itsNolinkSize = nolinksize;
+		memcpy(itsNolinkBuf, nolink, nolinksize);
+	}
 	if(!time)
 	{
 		itsType = MONITORED;
@@ -175,11 +184,14 @@ DimInfo::~DimInfo()
 {
 //	if(itsTagId)
 //		id_free(itsTagId, SRC_DIC);
-	dic_release_service(itsId);
-	delete[] (char *)itsNolinkBuf;
+	if(itsId)
+		dic_release_service(itsId);
+	if(itsNolinkSize)
+		delete[] (char *)itsNolinkBuf;
 	if(itsDataSize)
 		delete[] (char *)itsData;
-	delete[] itsName;
+	if(itsName)
+		delete[] itsName;
 	if(itsFormat)
 		delete[] itsFormat;
 }
@@ -214,14 +226,26 @@ void DimStampedInfo::subscribe(char *name, int time, void *nolink, int nolinksiz
 	DimInfoHandler *handler)
 {
 	itsId = 0;
+	itsData = 0;
 	itsFormat = 0;
 	itsHandler = handler;
+	itsDataSize = 0;
+	itsSize = 0;
+	itsNolinkBuf = 0;
+	itsNolinkSize = 0;
+	itsName = 0;
+	if(!name)
+	{
+		return;
+	}
 	itsName = new char[strlen(name)+1];
 	strcpy(itsName,name);
-	itsDataSize = 0;
-	itsNolinkBuf = new char[nolinksize];
-	itsNolinkSize = nolinksize;
-	memcpy(itsNolinkBuf, nolink, nolinksize);
+	if(nolinksize > 0)
+	{
+		itsNolinkBuf = new char[nolinksize];
+		itsNolinkSize = nolinksize;
+		memcpy(itsNolinkBuf, nolink, nolinksize);
+	}
 	if(!time)
 	{
 		itsType = MONITORED;
@@ -260,14 +284,26 @@ void DimUpdatedInfo::subscribe(char *name, int time, void *nolink, int nolinksiz
 	DimInfoHandler *handler)
 {
 	itsId = 0;
+	itsData = 0;
 	itsFormat = 0;
 	itsHandler = handler;
+	itsDataSize = 0;
+	itsSize = 0;
+	itsNolinkBuf = 0;
+	itsNolinkSize = 0;
+	itsName = 0;
+	if(!name)
+	{
+		return;
+	}
 	itsName = new char[strlen(name)+1];
 	strcpy(itsName,name);
-	itsDataSize = 0;
-	itsNolinkBuf = new char[nolinksize];
-	itsNolinkSize = nolinksize;
-	memcpy(itsNolinkBuf, nolink, nolinksize);
+	if(nolinksize > 0)
+	{
+		itsNolinkBuf = new char[nolinksize];
+		itsNolinkSize = nolinksize;
+		memcpy(itsNolinkBuf, nolink, nolinksize);
+	}
 	if(!time)
 	{
 		itsType = MONIT_ONLY;
@@ -324,16 +360,31 @@ void DimCurrentInfo::subscribe(char *name, int time, void *nolink, int nolinksiz
 	int timeout;
 
 //	itsTagId = 0;
+//	itsId = 0;
+	itsData = 0;
+//	itsFormat = 0;
+//	itsHandler = handler;
+	itsDataSize = 0;
+	itsSize = 0;
+	itsNolinkBuf = 0;
+	itsNolinkSize = 0;
+	itsName = 0;
+	if(!name)
+	{
+		return;
+	}
+	itsName = new char[strlen(name)+1];
+	strcpy(itsName,name);
+	if(nolinksize > 0)
+	{
+		itsNolinkBuf = new char[nolinksize];
+		itsNolinkSize = nolinksize;
+		memcpy(itsNolinkBuf, nolink, nolinksize);
+	}
 	if(!time)
 		timeout = 10;
 	else
 		timeout = time;
-	itsName = new char[strlen(name)+1];
-	strcpy(itsName,name);
-	itsDataSize = 0;
-	itsNolinkBuf = new char[nolinksize];
-	itsNolinkSize = nolinksize;
-	memcpy(itsNolinkBuf, nolink, nolinksize);
 	wakeUp = 0;
 //	itsTagId = id_get((void *)this, SRC_DIC);
 	dic_info_service(itsName,ONCE_ONLY,timeout, 0, 0,
@@ -344,6 +395,17 @@ void DimCurrentInfo::subscribe(char *name, int time, void *nolink, int nolinksiz
 
 DimCurrentInfo::~DimCurrentInfo()
 {
+//	if(itsId)
+//		dic_release_service(itsId);
+	if(itsNolinkSize)
+		delete[] (char *)itsNolinkBuf;
+	if(itsDataSize)
+		delete[] (char *)itsData;
+	if(itsName)
+		delete[] itsName;
+//	if(itsFormat)
+//		delete[] itsFormat;
+/*
 	delete[] (char *)itsNolinkBuf;
 
 //	if(itsTagId)
@@ -351,6 +413,7 @@ DimCurrentInfo::~DimCurrentInfo()
 	if(itsDataSize)
 		delete[] (char *)itsData;
 	delete[] itsName;
+*/
 }
 
 void *DimCurrentInfo::getData()

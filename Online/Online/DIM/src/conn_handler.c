@@ -187,7 +187,7 @@ void *id_get_ptr(int id, SRC_TYPES type)
 	void *ptr;
 	DISABLE_AST
 
-	if(id >= Curr_N_Ids)
+	if((id >= Curr_N_Ids) || (id <= 0))
 	{
 		ENABLE_AST
 		return(0);

@@ -33,7 +33,8 @@ class DllExp DimInfo : public DimInfoHandler, public DimTimer{
 public :
 	DimInfoHandler *itsHandler;
 
-	DimInfo(){};
+	DimInfo()
+		{ subscribe((char *)0, 0, (void *)0, 0, 0); };
 	DimInfo(const char *name, int nolink) 
 		{ subscribe((char *)name, 0, &nolink, sizeof(int), 0); };
 	DimInfo(const char *name, int time, int nolink) 
@@ -115,13 +116,16 @@ public :
 	int getTimestamp();
 	int getTimestampMillisecs();
 	char *getFormat();
+	void subscribe(char *name, void *nolink, int nolinksize, int time, 
+		DimInfoHandler *handler) 
+		{ subscribe((char *)name, time, nolink, nolinksize, handler); };
 
 protected :
 	char *itsName;
 	int itsId;
 	int itsTime;
 	int itsType;
-	int itsTagId;
+//	int itsTagId;
 	char *itsFormat;
 	void *itsNolinkBuf;
 	int itsNolinkSize;
@@ -191,6 +195,9 @@ public :
 	{ subscribe((char *)name, time, nolink, nolinksize, handler); };
 
 	virtual ~DimStampedInfo();
+	void subscribe(char *name, void *nolink, int nolinksize, int time, 
+		DimInfoHandler *handler) 
+		{ subscribe((char *)name, time, nolink, nolinksize, handler); };
 private :
 	void doIt();
 	void subscribe(char *name, int time, void *nolink, int nolinksize,
@@ -260,6 +267,10 @@ public :
 	{ subscribe((char *)name, time, nolink, nolinksize, handler); };
 
 	virtual ~DimUpdatedInfo();
+	void subscribe(char *name, void *nolink, int nolinksize, int time, 
+		DimInfoHandler *handler) 
+		{ subscribe((char *)name, time, nolink, nolinksize, handler); };
+
 private :
 	void doIt();
 	void subscribe(char *name, int time, void *nolink, int nolinksize,
@@ -282,9 +293,11 @@ public :
 	void *itsData;
 	int itsDataSize;
 	int itsSize;
-	int itsTagId;
+//	int itsTagId;
 	int wakeUp;
 
+	DimCurrentInfo(){
+		subscribe((char *)0, 0, (void *)0, 0); };
 	DimCurrentInfo(const char *name, int nolink) { 
 		subscribe((char *)name, 0, &nolink, sizeof(int)); };
 	DimCurrentInfo(const char *name, float nolink) { 
@@ -325,6 +338,8 @@ public :
 	short getShort() { return *(short *)getData(); } ;
 	char *getString()  { return (char *)getData(); } ;
 	int getSize()  { getData(); return itsSize; } ;
+	void subscribe(char *name, void *nolink, int nolinksize, int time) 
+		{ subscribe((char *)name, time, nolink, nolinksize); };
 
 private :
 	char *itsName;
@@ -336,7 +351,7 @@ private :
 class DllExp DimRpcInfo : public DimTimer {
 public :
 	int itsId;
-	int itsTagId;
+//	int itsTagId;
 	int itsInit;
 	void *itsData;
 	int itsDataSize;
