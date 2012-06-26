@@ -143,14 +143,17 @@ def main( options, args ):
         remove = []
         for line in lines:
             if line.find( 'RateLimited' ) != -1: remove.append( line )
-            if line.find( 'Global' ) != -1: remove.append( line )
-            if not options.Technicals:
+            elif line.find( 'Global' ) != -1: remove.append( line )
+        for line in remove: lines.remove( line )
+        remove = []
+        if not options.Technicals:
+            for line in lines:
                 if line.find( 'Lumi' ) != -1: remove.append( line )
-                if line.find( 'Bias' ) != -1: remove.append( line )
-                if line.find( 'Error' ) != -1: remove.append( line )
-                if line.find( 'Incident' ) != -1: remove.append( line )
-                if line.find( 'Beam' ) != -1: remove.append( line )
-        for line in remove: lines.remove(line)
+                elif line.find( 'Bias' ) != -1: remove.append( line )
+                elif line.find( 'Error' ) != -1: remove.append( line )
+                elif line.find( 'Incident' ) != -1: remove.append( line )
+                elif line.find( 'Beam' ) != -1: remove.append( line )
+        for line in remove: lines.remove( line )
             
     remove( availableHlt1Lines )
     remove( availableHlt2Lines )
