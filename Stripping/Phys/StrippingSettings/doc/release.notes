@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-06-26 - Will Barter
+ - Stripping19b/LineConfidDictionaries_QEE.py
+	. Updated for Stripping19b
+
 ! 2012-06-26 - Jibo He for Francesca Dordei
  - Stripping19b/LineConfigDictionaries_B2CC.py
   . Updated for Stripping19b
