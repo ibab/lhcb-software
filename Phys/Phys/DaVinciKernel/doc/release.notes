@@ -4,6 +4,11 @@
 ! Responsible : C.R. Jones
 !============================================================================
 
+! 2012-06-26 - Chris Jones
+ - Reduce a bit the memory footprint of the base classes by making the 
+   default tool maps static data, instead of each instance having its
+   own copy...
+
 ! 2012-06-22 - Chris Jones
  - Add new base class based on the old DVAlgorithm, with the same 'DaVinci'
    functionaility, but with varying degress of support of histogramming and

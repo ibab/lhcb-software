@@ -131,7 +131,7 @@ class DVCommonBase : public extends1<PBASE,IDVAlgorithm>
 public:
 
   /// Standard constructor
-  DVCommonBase( const std::string& name, 
+  DVCommonBase( const std::string& name,
                 ISvcLocator* pSvcLocator );
 
   /// Destructor
@@ -180,6 +180,7 @@ public:
     return this->getTool<IDistanceCalculator>
       ( name ,
         m_distanceCalculatorNames ,
+        this->defaultDistanceCalculatorsNames() ,
         m_distanceCalculators     , this ) ;
   }
 
@@ -194,6 +195,7 @@ public:
     return this->getTool<ILifetimeFitter>
       ( name                  ,
         m_lifetimeFitterNames ,
+        this->defaultLifetimeFittersNames() ,
         m_lifetimeFitters     , this ) ;
   }
 
@@ -208,6 +210,7 @@ public:
     return this->getTool<IVertexFit>
       ( name ,
         m_vertexFitNames ,
+        this->defaultVertexFittersNames() ,
         m_vertexFits     , this ) ;
   }
 
@@ -222,6 +225,7 @@ public:
     return this->getTool<IParticleReFitter>
       ( name ,
         m_particleReFitterNames ,
+        this->defaultParticleReFittersNames() ,
         m_particleReFitters     , this ) ;
   }
 
@@ -236,6 +240,7 @@ public:
     return this->getTool<IDecayTreeFit>
       ( name ,
         m_decayTreeFitterNames ,
+        this->defaultDecayTreeFittersNames() ,
         m_decayTreeFitters     , this ) ;
   }
 
@@ -250,6 +255,7 @@ public:
     return this->getTool<IParticleCombiner>
       ( name ,
         m_particleCombinerNames ,
+        this->defaultParticleCombinersNames() ,
         m_particleCombiners     , this ) ;
   }
 
@@ -264,6 +270,7 @@ public:
     return this->getTool<IMassFit>
       ( name              ,
         m_massFitterNames ,
+        this->defaultMassFittersNames() ,
         m_massFitters     , this ) ;
   }
 
@@ -278,6 +285,7 @@ public:
     return this->getTool<IDirectionFit>
       ( name                   ,
         m_directionFitterNames ,
+        this->defaultDirectionFittersNames() ,
         m_directionFitters     , this ) ;
   }
 
@@ -292,6 +300,7 @@ public:
     return this->getTool<IPVReFitter>
       ( name ,
         m_pvReFitterNames ,
+        this->defaultPVReFittersNames() ,
         m_pvReFitters     , this ) ;
   }
 
@@ -306,15 +315,16 @@ public:
     return this->getTool<IParticleFilter>
       ( name          ,
         m_filterNames ,
+        this->defaultParticleFiltersNames() ,
         m_filters     , this ) ;
   }
 
   /// Tagging Tool
   IBTaggingTool* flavourTagging() const
   {
-    return this->getTool<IBTaggingTool>(m_taggingToolName,
-                                        m_taggingTool,
-                                        this );
+    return this->getTool<IBTaggingTool>( m_taggingToolName,
+                                         m_taggingTool,
+                                         this );
   }
 
   // ==========================================================================
@@ -333,6 +343,10 @@ public:
   // Overridden from Gaudi Algorithm
   virtual StatusCode finalize ();
 
+  // ==========================================================================
+public:
+  // ==========================================================================
+
   // Get decay descriptor
   const std::string& getDecayDescriptor()const
   {
@@ -348,7 +362,9 @@ public:
   /// accessor for IOnOffline tool
   inline IOnOffline* onOffline() const
   {
-    return this->getTool<IOnOffline>("OnOfflineTool", m_onOffline, this) ;
+    return this->getTool<IOnOffline>( "OnOfflineTool",
+                                      m_onOffline,
+                                      this ) ;
   }
 
   /**
@@ -361,11 +377,12 @@ public:
   {
     return ( m_pvRelator ? m_pvRelator :
              this->getTool<IRelatedPVFinder>( onOffline()->relatedPVFinderType(),
-                                              m_pvRelator, this ) );
+                                              m_pvRelator,
+                                              this ) );
   }
 
   /**
-   * Cached access to defauld IPVReFitter tool.
+   * Cached access to default IPVReFitter tool.
    *
    * @author Juan Palacios palacios@physik.uzh.ch
    **/
@@ -374,6 +391,7 @@ public:
     return ( m_defaultPVReFitter ? m_defaultPVReFitter :
              this->getTool<IPVReFitter>( "",
                                          m_pvReFitterNames ,
+                                         this->defaultPVReFittersNames() ,
                                          m_pvReFitters     , this ) );
   }
 
@@ -457,12 +475,12 @@ public:
  return getTool<ICheckOverlap>(m_checkOverlapName,m_checkOverlap);
  }
   */
-  
+
   /// Descendants
   inline IParticleDescendants* descendants() const
   {
-    return this->getTool<IParticleDescendants>(m_descendantsName,
-                                               m_descendants);
+    return this->getTool<IParticleDescendants>( m_descendantsName,
+                                                m_descendants );
   }
 
   // ==========================================================================
@@ -475,8 +493,8 @@ public:
   {
     if ( !m_ppSvc )
     {
-      m_ppSvc = 
-        this -> template svc<LHCb::IParticlePropertySvc> ( "LHCb::ParticlePropertySvc" , 
+      m_ppSvc =
+        this -> template svc<LHCb::IParticlePropertySvc> ( "LHCb::ParticlePropertySvc" ,
                                                            true ) ;
     }
     return m_ppSvc;
@@ -499,8 +517,8 @@ public:
   {
     const LHCb::ParticleProperty* pp = ppSvc()->find( name ) ;
     if ( !pp )
-    { 
-      this->Error ( "pid('" + name + "') : invalid LHCb::ParticleProperty!" ).ignore(); 
+    {
+      this->Error ( "pid('" + name + "') : invalid LHCb::ParticleProperty!" ).ignore();
     }
     return pp ;
   }
@@ -525,15 +543,15 @@ public:
   {
     const LHCb::ParticleProperty* pp = ppSvc()->find ( id ) ;
     if ( !pp )
-    { 
-      this->Error ( "pid() : invalid LHCb::ParticleProperty!" ).ignore(); 
+    {
+      this->Error ( "pid() : invalid LHCb::ParticleProperty!" ).ignore();
     }
     return pp ;
   }
 
   //===========================================================================
 
-protected:
+private:
 
   /** helper protected function to load the tool on-demand
    *  @param name name of tool
@@ -544,11 +562,79 @@ protected:
   template<class TYPE>
   TYPE* getTool ( const std::string& name,
                   TYPE*& t,
-                  const IInterface* ptr=NULL ) const
+                  const IInterface* ptr = NULL ) const
   {
     if ( !t ) { t = this -> template tool<TYPE>( name, ptr ); }
     return t;
   }
+
+  /// the actual tyep for mapping "tool nickname -> the actual type/name"
+  typedef std::map<std::string,std::string> ToolMap;
+
+  /** helper method to locate the tool by nickname
+   *
+   *  @attention it is for internal usage ONLY,
+   *             used for implementation of
+   *             concrete accessor functions
+   *
+   *  It is assumed that the map "nickname -> type/name" is performed
+   *  through the algorithm properties
+   *
+   *  @param nickName the nickname for the tool
+   *  @param nameMap  the actual mapping "nickname -> type/name"
+   *                 (to be specified through the properties)
+   *  @param toolMap  the actual storage of located tool, e.g.
+   *         std::map<std::string,TYPE*> or
+   *         Gaudi::Utils::VectorMap<std::string,TYPE*>
+   *  @param parent the parent of the tools
+   *  @return the located tool
+   */
+  template <class TYPE, class STORAGE>
+  TYPE* getTool ( const std::string& nickName      ,
+                  const ToolMap&     customMap     ,
+                  const ToolMap&     defaultMap    ,
+                  STORAGE&           toolMap       ,
+                  const IInterface*  parent = NULL )  const
+  {
+    TYPE* t = NULL;
+    // look within the local list of already located tools of given type
+    typename STORAGE::iterator ifind = toolMap.find ( nickName ) ;
+    // tool is in the list?
+    if ( toolMap.end() != ifind )
+    {
+      t = ifind->second ;
+      if ( !t )
+      { this->Exception ( "getTool<" + System::typeinfoName( typeid ( TYPE ) )
+                          + ">('" + nickName + "'): tool points to NULL" ) ; }
+    }
+    else
+    {
+      // get the actual tool type
+      std::string toolType = nickName;
+      ToolMap::const_iterator iname = customMap.find ( nickName ) ;
+      if ( iname != customMap.end() )
+      {
+        toolType = iname->second;
+      }
+      else
+      {
+        iname = defaultMap.find ( nickName ) ;
+        if ( iname != defaultMap.end() ) { toolType = iname->second; }
+      }
+      // locate the tool
+      this->info() << "Loading tool type='" << toolType 
+                   << "' nickname='" << nickName << "'" << endmsg;
+      t = this -> template tool<TYPE> ( toolType , parent ) ;
+      // add the located tool into the container
+      typename STORAGE::value_type value( nickName , t ) ;
+      toolMap.insert( value ) ;
+    }
+    return t ;                                               // RETURN
+  }
+
+  //===========================================================================
+
+protected:
 
   /**
    * Access to the list of TES input locations given by the Inputs
@@ -571,59 +657,6 @@ protected:
   {
     return m_inputLocations;
   }
-
-  /// the actual tyep for mapping "tool nickname -> the actual type/name"
-  typedef std::map<std::string,std::string> ToolMap;
-
-  /** helper method to locate the tool by nickname
-   *
-   *  @attention it is for internal usage ONLY,
-   *             used for implementation of
-   *             concrete accessor functions
-   *
-   *  It is assumed that the map "nickname -> type/name" is performed
-   *  through the algoithm properties
-   *
-   *  @param nickName the nickname for the tool
-   *  @param nameMap  the actual mapping "nickname -> type/name"
-   *                 (to be specified through the properties)
-   *  @param toolMap  the actual storage of located tool, e.g.
-   *         std::map<std::string,TYPE*> or
-   *         Gaudi::Utils::VectorMap<std::string,TYPE*>
-   *  @param parent the parent of the tools
-   *  @return the located tool
-   */
-  template <class TYPE, class STORAGE>
-  TYPE* getTool ( const std::string& nickName      ,
-                  const ToolMap&     nameMap       ,
-                  STORAGE&           toolMap       ,
-                  const IInterface*  parent = NULL )  const
-  {
-    TYPE* t = NULL;
-    // look within the local list of already located tools of given type
-    typename STORAGE::iterator ifind = toolMap.find ( nickName ) ;
-    // tool is in the list?
-    if ( toolMap.end() != ifind )
-    {
-      t = ifind->second ;
-      if ( !t )
-      { this->Exception ( "getTool<" + System::typeinfoName( typeid ( TYPE ) )
-                          + ">('" + nickName + "'): tool points to NULL" ) ; }
-    }
-    else
-    {
-      // get the actual tool type
-      ToolMap::const_iterator iname = nameMap.find ( nickName ) ;
-      // locate the tool
-      t = this -> template tool<TYPE>
-        ( nameMap.end() != iname ? iname->second : nickName , parent ) ;
-      // add the located tool into the container
-      typename STORAGE::value_type value( nickName , t ) ;
-      toolMap.insert( value ) ;
-    }
-    return t ;                                               // RETURN
-  }
-
 
   /// Marks a single particle for saving, ignoring it's decay tree.
   /// Particle must be on the heap, either already in the TES or
@@ -868,7 +901,7 @@ private:
           iHead != heads.end(); ++iHead )
     {
       DaVinci::Utils::findDecayTree( *iHead, m_parts, m_secVerts, &m_inTES);
-    }    
+    }
   }
 
   /// Save local re-fitted PVs related to saved particles.
@@ -988,10 +1021,10 @@ protected:
 
   /// Reference to ParticleDescendants
   mutable IParticleDescendants* m_descendants;
-  /// Concrete Type of ParticleDescendants  tool
+  /// Concrete Type of ParticleDescendants tool
   std::string m_descendantsName;
 
-  /// OnOffline tool (whatever that does....)
+  /// OnOffline tool
   mutable IOnOffline* m_onOffline;
 
   /// Find the related PV
@@ -1035,7 +1068,7 @@ private:
    *  User-defined ones are kept. */
   bool m_ignoreP2PVFromInputLocations;
 
-  /** Switch PreloadTools to false no to preload any tools.
+  /** Switch PreloadTools to false to not preload any tools.
    *  This will have the effect that they will be loaded on demand, when needed,
    *  at any event. This option is thus only recommended for use of DV Algorithm
    *  to do something unrelated to physics analysis.
@@ -1057,7 +1090,7 @@ private:
   /// Functor determining if LHCb::Particle is in TES.
   DaVinci::Utils::ParticleInTES m_inTES;
 
-private:
+private: // classes
 
   /** @class DVAlgGuard
    *
@@ -1098,6 +1131,38 @@ private:
     P2PVMap& m_table;
 
   };
+
+private:
+
+  /// Default nickname mapping for VertexFitters
+  const ToolMap & defaultVertexFittersNames() const;
+
+  /// Default nickname mapping for ParticleFilters
+  const ToolMap & defaultParticleFiltersNames() const;
+
+  /// Default nickname mapping for ParticleCombiners
+  const ToolMap & defaultParticleCombinersNames() const;
+
+  /// Default nickname mapping for ParticleReFitters
+  const ToolMap & defaultParticleReFittersNames() const;
+
+  /// Default nickname mapping for PVReFitters
+  const ToolMap & defaultPVReFittersNames() const;
+
+  /// Default nickname mapping for DecayTreeFitters
+  const ToolMap & defaultDecayTreeFittersNames() const;
+
+  /// Default nickname mapping for MassFitters
+  const ToolMap & defaultMassFittersNames() const;
+
+  /// Default nickname mapping for LifetimeFitters
+  const ToolMap & defaultLifetimeFittersNames() const;
+
+  /// Default nickname mapping for DirectionFitters
+  const ToolMap & defaultDirectionFittersNames() const;
+
+  /// Default nickname mapping for DistanceCalculators
+  const ToolMap & defaultDistanceCalculatorsNames() const;
 
 };
 

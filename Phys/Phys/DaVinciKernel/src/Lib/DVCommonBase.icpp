@@ -5,7 +5,8 @@
 // ============================================================================
 // Include
 // ============================================================================
-#include <boost/lexical_cast.hpp>
+#include "boost/lexical_cast.hpp"
+#include "boost/assign/list_of.hpp"
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -105,100 +106,46 @@ DVCommonBase<PBASE>::DVCommonBase( const std::string& name,
   this->declareProperty( "IgnoreP2PVFromInputLocations", m_ignoreP2PVFromInputLocations);
 
   //
-  m_vertexFitNames [ "Offline"       ] = "OfflineVertexFitter"     ;
-  m_vertexFitNames [ "Trigger"       ] = "TrgVertexFitter"         ;
-  m_vertexFitNames [ "LoKi"          ] = "LoKi::VertexFitter"      ;
-  m_vertexFitNames [ "Kalman"        ] = "LoKi::VertexFitter"      ;
-  m_vertexFitNames [ "ParticleAdder" ] = "ParticleAdder"           ;
-  m_vertexFitNames [ "LoKiFast"      ] = "LoKi::FastVertexFitter"  ;
-  m_vertexFitNames [ "FastLoKi"      ] = "LoKi::FastVertexFitter"  ;
   this->declareProperty ( "VertexFitters"   , m_vertexFitNames, "Names of vertex fitters" ) ;
   //
   this->declareProperty ( "CheckOverlapTool", m_checkOverlapName, "Name of Overlap Tool"  ) ;
   //
-  m_filterNames    [ ""       ] = "LoKi::Hybrid::FilterCriterion" ;
-  m_filterNames    [ "LoKi"   ] = "LoKi::Hybrid::FilterCriterion" ;
-  m_filterNames    [ "Hybrid" ] = "LoKi::Hybrid::FilterCriterion" ;
   this->declareProperty ( "ParticleFilters"            ,
                           m_filterNames                ,
                           "Names of ParticleFilters"   ) ;
   //
   this->declareProperty ( "ReFitPVs"    , m_refitPVs, "Refit PV"     ) ;
 
-  // ==========================================================================
-  // Note: there is no default value!
-  // ==========================================================================
-  m_particleCombinerNames [ "Offline"          ] = "OfflineVertexFitter"         ;
-  m_particleCombinerNames [ "Trigger"          ] = "TrgVertexFitter"             ;
-  m_particleCombinerNames [ "Kalman"           ] = "LoKi::VertexFitter"          ;
-  m_particleCombinerNames [ "LoKi"             ] = "LoKi::VertexFitter"          ;
-  m_particleCombinerNames [ "Smart"            ] = "LoKi::SmartParticleCombiner" ;
-  m_particleCombinerNames [ "ParticleAdder"    ] = "ParticleAdder"               ;
-  m_particleCombinerNames [ "Adder"            ] = "ParticleAdder"               ;
-  m_particleCombinerNames [ "Combiner"         ] = "MomentumCombiner"            ;
-  m_particleCombinerNames [ "MomentumCombiner" ] = "MomentumCombiner"            ;
-  m_particleCombinerNames [ "Momenta"          ] = "MomentumCombiner"            ;
-  m_particleCombinerNames [ "LoKiFast"         ] = "LoKi::FastVertexFitter"      ;
-  m_particleCombinerNames [ "FastLoKi"         ] = "LoKi::FastVertexFitter"      ;
   this->declareProperty
     ( "ParticleCombiners"     ,
       m_particleCombinerNames ,
       "Names of particle combiners, the basic tools for creation of composed particles" ) ;
   //
-  m_particleReFitterNames [ ""              ] = "OfflineVertexFitter"    ;
-  m_particleReFitterNames [ "Offline"       ] = "OfflineVertexFitter"    ;
-  m_particleReFitterNames [ "Vertex"        ] = "OfflineVertexFitter"    ;
-  m_particleReFitterNames [ "Kalman"        ] = "LoKi::VertexFitter"     ;
-  m_particleReFitterNames [ "LoKi"          ] = "LoKi::VertexFitter"     ;
-  m_particleReFitterNames [ "Mass"          ] = "LoKi::MassFitter"       ;
-  m_particleReFitterNames [ "Direction"     ] = "LoKi::DirectionFitter"  ;
-  m_particleReFitterNames [ "ParticleAdder" ] = "ParticleAdder"          ;
-  m_particleReFitterNames [ "Adder"         ] = "ParticleAdder"          ;
-  m_particleReFitterNames [ "LoKiFast"      ] = "LoKi::FastVertexFitter" ;
-  m_particleReFitterNames [ "FastLoKi"      ] = "LoKi::FastVertexFitter" ;
-  this->declareProperty  ( "ParticleReFitters" , m_particleReFitterNames, "Names of particle refitters" ) ;
+  this->declareProperty  ( "ParticleReFitters" , m_particleReFitterNames,
+                           "Names of particle refitters" ) ;
   //
-  m_pvReFitterNames [ ""           ] = "AdaptivePVReFitter" ;
-  m_pvReFitterNames [ "PVReFitter" ] = "PVReFitter"         ;
-  m_pvReFitterNames [ "Adaptive"   ] = "AdaptivePVReFitter" ;
-  m_pvReFitterNames [ "Cheated"    ] = "CheatedPVReFitter"  ;
   this->declareProperty  ( "PVReFitters" , m_pvReFitterNames, "Names of PV refitters" ) ;
   //
-
-  m_decayTreeFitterNames [ ""     ] = "LoKi::DecayTreeFit" ;
-  m_decayTreeFitterNames [ "LoKi" ] = "LoKi::DecayTreeFit" ;
   this->declareProperty
     ( "DecayTreeFitters"       ,
       m_decayTreeFitterNames   ,
       "The mapping of nick/name/type for IDecaytreeFitFit tools" ) ;
   //
-  m_massFitterNames [ ""     ] = "LoKi::MassFitter" ;
-  m_massFitterNames [ "LoKi" ] = "LoKi::MassFitter" ;
   this->declareProperty
     ( "MassFitters"            ,
       m_massFitterNames        ,
       "The mapping of nick/name/type for IMassFit tools"        ) ;
   //
-  m_lifetimeFitterNames  [ ""     ] = "PropertimeFitter"     ;
-  m_lifetimeFitterNames  [ "LoKi" ] = "LoKi::LifetimeFitter" ;
   this->declareProperty
     ( "LifetimeFitters"     ,
       m_lifetimeFitterNames ,
       "The mapping of nick/name/type for ILifetimeFitter tools" ) ;
   //
-  m_directionFitterNames [ ""     ] = "DirectionFitter" ;
-  m_directionFitterNames [ "LoKi" ] = "LoKi::DirectionFitter" ;
   this->declareProperty
     ( "DirectionFitters"     ,
       m_directionFitterNames ,
       "The mapping of nick/name/type for IDirectionFit tools"   ) ;
   //
-  m_distanceCalculatorNames [ ""        ] = "LoKi::DistanceCalculator"    ;
-  m_distanceCalculatorNames [ "LoKi"    ] = "LoKi::DistanceCalculator"    ;
-  m_distanceCalculatorNames [ "Trg"     ] = "LoKi::TrgDistanceCalculator" ;
-  m_distanceCalculatorNames [ "Hlt"     ] = "LoKi::TrgDistanceCalculator" ;
-  m_distanceCalculatorNames [ "Trigger" ] = "LoKi::TrgDistanceCalculator" ;
-  m_distanceCalculatorNames [ "Fast"    ] = "LoKi::TrgDistanceCalculator" ;
   this->declareProperty
     ( "DistanceCalculators"     ,
       m_distanceCalculatorNames ,
@@ -216,7 +163,145 @@ DVCommonBase<PBASE>::DVCommonBase( const std::string& name,
 }
 
 // ============================================================================
-// Initialize the thing
+// Default maps
+// ============================================================================
+template <class PBASE>
+const typename DVCommonBase<PBASE>::ToolMap &
+DVCommonBase<PBASE>::defaultVertexFittersNames() const
+{
+  static const ToolMap m = boost::assign::map_list_of
+    ( "Offline"       , "OfflineVertexFitter"    )
+    ( "Trigger"       , "TrgVertexFitter"        )
+    ( "LoKi"          , "LoKi::VertexFitter"     )
+    ( "Kalman"        , "LoKi::VertexFitter"     )
+    ( "ParticleAdder" , "ParticleAdder"          )
+    ( "LoKiFast"      , "LoKi::FastVertexFitter" )
+    ( "FastLoKi"      , "LoKi::FastVertexFitter" )
+    ;
+  return m;
+}
+template <class PBASE>
+const typename DVCommonBase<PBASE>::ToolMap &
+DVCommonBase<PBASE>::defaultParticleFiltersNames() const
+{
+  static const ToolMap m = boost::assign::map_list_of
+    ( ""       , "LoKi::Hybrid::FilterCriterion" )
+    ( "LoKi"   , "LoKi::Hybrid::FilterCriterion" )
+    ( "Hybrid" , "LoKi::Hybrid::FilterCriterion" )
+    ;
+  return m;
+}
+template <class PBASE>
+const typename DVCommonBase<PBASE>::ToolMap &
+DVCommonBase<PBASE>::defaultParticleCombinersNames() const
+{
+  // ==========================================================================
+  // Note: there is no default value!
+  // ==========================================================================
+  static const ToolMap m = boost::assign::map_list_of
+    ( "Offline"          , "OfflineVertexFitter"         )
+    ( "Trigger"          , "TrgVertexFitter"             )
+    ( "Kalman"           , "LoKi::VertexFitter"          )
+    ( "LoKi"             , "LoKi::VertexFitter"          )
+    ( "Smart"            , "LoKi::SmartParticleCombiner" )
+    ( "ParticleAdder"    , "ParticleAdder"               )
+    ( "Adder"            , "ParticleAdder"               )
+    ( "Combiner"         , "MomentumCombiner"            )
+    ( "MomentumCombiner" , "MomentumCombiner"            )
+    ( "Momenta"          , "MomentumCombiner"            )
+    ( "LoKiFast"         , "LoKi::FastVertexFitter"      )
+    ( "FastLoKi"         , "LoKi::FastVertexFitter"      )
+    ;
+  return m;
+}
+template <class PBASE>
+const typename DVCommonBase<PBASE>::ToolMap &
+DVCommonBase<PBASE>::defaultParticleReFittersNames() const
+{
+  static const ToolMap m = boost::assign::map_list_of
+    ( ""              , "OfflineVertexFitter"    )
+    ( "Offline"       , "OfflineVertexFitter"    )
+    ( "Vertex"        , "OfflineVertexFitter"    )
+    ( "Kalman"        , "LoKi::VertexFitter"     )
+    ( "LoKi"          , "LoKi::VertexFitter"     )
+    ( "Mass"          , "LoKi::MassFitter"       )
+    ( "Direction"     , "LoKi::DirectionFitter"  )
+    ( "ParticleAdder" , "ParticleAdder"          )
+    ( "Adder"         , "ParticleAdder"          )
+    ( "LoKiFast"      , "LoKi::FastVertexFitter" )
+    ( "FastLoKi"      , "LoKi::FastVertexFitter" )
+    ;
+  return m;
+}
+template <class PBASE>
+const typename DVCommonBase<PBASE>::ToolMap &
+DVCommonBase<PBASE>::defaultPVReFittersNames() const
+{
+  static const ToolMap m = boost::assign::map_list_of
+    ( ""           , "AdaptivePVReFitter" )
+    ( "PVReFitter" , "PVReFitter"         )
+    ( "Adaptive"   , "AdaptivePVReFitter" )
+    ( "Cheated"    , "CheatedPVReFitter"  )
+    ;
+  return m;
+}
+template <class PBASE>
+const typename DVCommonBase<PBASE>::ToolMap &
+DVCommonBase<PBASE>::defaultDecayTreeFittersNames() const
+{
+  static const ToolMap m = boost::assign::map_list_of
+    (  ""     , "LoKi::DecayTreeFit" )
+    (  "LoKi" , "LoKi::DecayTreeFit" )
+    ;
+  return m;
+}
+template <class PBASE>
+const typename DVCommonBase<PBASE>::ToolMap &
+DVCommonBase<PBASE>::defaultMassFittersNames() const
+{
+  static const ToolMap m = boost::assign::map_list_of
+    ( ""     , "LoKi::MassFitter" )
+    ( "LoKi" , "LoKi::MassFitter" )
+    ;
+  return m;
+}
+template <class PBASE>
+const typename DVCommonBase<PBASE>::ToolMap &
+DVCommonBase<PBASE>::defaultLifetimeFittersNames() const
+{
+  static const ToolMap m = boost::assign::map_list_of
+    ( ""     , "PropertimeFitter"     )
+    ( "LoKi" , "LoKi::LifetimeFitter" )
+    ;
+  return m;
+}
+template <class PBASE>
+const typename DVCommonBase<PBASE>::ToolMap &
+DVCommonBase<PBASE>::defaultDirectionFittersNames() const
+{
+  static const ToolMap m = boost::assign::map_list_of
+    ( ""     , "DirectionFitter"       )
+    ( "LoKi" , "LoKi::DirectionFitter" )
+    ;
+  return m;
+}
+template <class PBASE>
+const typename DVCommonBase<PBASE>::ToolMap &
+DVCommonBase<PBASE>::defaultDistanceCalculatorsNames() const
+{
+  static const ToolMap m = boost::assign::map_list_of
+    ( ""        , "LoKi::DistanceCalculator"    )
+    ( "LoKi"    , "LoKi::DistanceCalculator"    )
+    ( "Trg"     , "LoKi::TrgDistanceCalculator" )
+    ( "Hlt"     , "LoKi::TrgDistanceCalculator" )
+    ( "Trigger" , "LoKi::TrgDistanceCalculator" )
+    ( "Fast"    , "LoKi::TrgDistanceCalculator" )
+    ;
+  return m;
+}
+
+// ============================================================================
+// Initialize the monster ...
 // ============================================================================
 template <class PBASE>
 StatusCode DVCommonBase<PBASE>::initialize ()
@@ -342,52 +427,28 @@ void DVCommonBase<PBASE>::initializeLocations()
 template <class PBASE>
 StatusCode DVCommonBase<PBASE>::loadTools()
 {
-
-  if ( !m_preloadTools )
-  {
-    return this->Warning( "Not preloading tools", StatusCode::SUCCESS ) ;
-  }
-
-  if (this->msgLevel(MSG::DEBUG)) this->debug() << ">>> Preloading tools" << endmsg;
-  // vertex fitter
-
+  // Set default names
   if ( m_particleCombinerNames.end() == m_particleCombinerNames.find("") )
   {
     m_particleCombinerNames[""] = onOffline()->particleCombinerType() ;
   }
-
   if ( m_vertexFitNames.end() == m_vertexFitNames.find("") )
   {
     m_vertexFitNames[""] = onOffline()->vertexFitterType() ;
   }
-
-  if (this->msgLevel(MSG::DEBUG)) this->debug() << ">>> Preloading "
-                                                << m_vertexFitNames[""] << " as IVertexFit " << endmsg;
-  vertexFitter() ;
-
-  // geometry THIS IS OBSOLETE
   if ( m_distanceCalculatorNames.end() == m_distanceCalculatorNames.find("") )
   {
     m_distanceCalculatorNames[""] = onOffline()->distanceCalculatorType() ;
   }
 
-  // distance geometry
-  if (this->msgLevel(MSG::DEBUG)) this->debug() << ">>> Preloading "
-                                                << m_distanceCalculatorNames[""]
-                                                << " as IDistanceCalculator" << endmsg;
-  distanceCalculator();
-
-  if (this->msgLevel(MSG::DEBUG))
+  if ( m_preloadTools )
   {
-    this->debug() << ">>> Preloading CheckOverlap Tool" << endmsg;
+    vertexFitter();
+    particleCombiner();
+    distanceCalculator();
+    checkOverlap();
+    ppSvc();
   }
-  checkOverlap();
-
-  if (this->msgLevel(MSG::DEBUG))
-  {
-    this->debug() << ">>> Preloading LHCb::ParticlePropertySvc" << endmsg;
-  }
-  ppSvc() ;
 
   return StatusCode::SUCCESS;
 }
@@ -500,7 +561,7 @@ StatusCode DVCommonBase<PBASE>::loadParticle2PVRelations()
         this->debug() << "Reading table from " << (*iLoc) << endmsg ;
       }
 
-      const Particle2Vertex::Table * table = 
+      const Particle2Vertex::Table * table =
         this -> template get<Particle2Vertex::Table>(*iLoc);
       const Particle2Vertex::Table::Range& relations = table->relations();
       loadRelations( relations );
@@ -523,7 +584,7 @@ StatusCode DVCommonBase<PBASE>::loadParticle2PVRelations()
 template <class PBASE>
 void DVCommonBase<PBASE>::loadRelations(const Particle2Vertex::Table::Range& relations)
 {
-  if (relations.empty()) return;
+  if ( relations.empty() ) return;
 
   if (this->msgLevel(MSG::VERBOSE))
   {
@@ -535,7 +596,7 @@ void DVCommonBase<PBASE>::loadRelations(const Particle2Vertex::Table::Range& rel
         i != relations.end(); ++i )
   {
     relate(i->from(), i->to());
-    if (this->msgLevel(MSG::VERBOSE))
+    if ( this->msgLevel(MSG::VERBOSE) )
     {
       this->verbose() << "Reading a " << i->from()->particleID().pid()
                       << " related to " <<  i->to()->position() << endmsg ;
@@ -548,7 +609,7 @@ void DVCommonBase<PBASE>::loadRelations(const Particle2Vertex::Table::Range& rel
 template <class PBASE>
 StatusCode DVCommonBase<PBASE>::loadParticles()
 {
-  if (this->msgLevel(MSG::DEBUG))
+  if ( this->msgLevel(MSG::DEBUG) )
   {
     this->debug() << "Looking for particles in " << m_inputLocations.size()
                   << " places" << endmsg ;
@@ -578,15 +639,15 @@ StatusCode DVCommonBase<PBASE>::loadParticles()
                       << location << " = " << parts.size() << endmsg;
     }
 
-    m_inputParts    .reserve ( m_inputParts    .size () + parts.size() ) ;
+    m_inputParts.reserve ( m_inputParts.size() + parts.size() ) ;
 
-    for( LHCb::Particle::Range::const_iterator icand = parts.begin();
-         icand != parts.end(); icand++ )
+    for ( LHCb::Particle::Range::const_iterator icand = parts.begin();
+          icand != parts.end(); ++icand )
     {
       m_inputParts.push_back(*icand);
     }
 
-    if (this->msgLevel(MSG::VERBOSE))
+    if ( this->msgLevel(MSG::VERBOSE) )
     {
       this->verbose() << "Number of Particles after adding "
                       << *iloc << " = " << m_parts.size() << endmsg;
@@ -594,7 +655,7 @@ StatusCode DVCommonBase<PBASE>::loadParticles()
 
   }
 
-  if (this->msgLevel(MSG::VERBOSE))
+  if ( this->msgLevel(MSG::VERBOSE) )
   {
     this->verbose() << "    Total number of particles " << m_parts.size() << endmsg;
   }
@@ -651,9 +712,10 @@ DVCommonBase<PBASE>::mark( const LHCb::RecVertex* keptV )const
   }
 
   // Input vertex is given check if it already exist in the TES
-  if( DaVinci::Utils::inTES(keptV) )
+  if ( DaVinci::Utils::inTES(keptV) )
   {
-    if (this->msgLevel(MSG::VERBOSE)) this->verbose() << " Vertex is in TES" << endmsg;
+    if ( this->msgLevel(MSG::VERBOSE) )
+      this->verbose() << " Vertex is in TES" << endmsg;
     return keptV;
   }
 
@@ -662,7 +724,8 @@ DVCommonBase<PBASE>::mark( const LHCb::RecVertex* keptV )const
   // Put in the local container
   m_refittedPVs.push_back(newV);
 
-  if (this->msgLevel(MSG::VERBOSE)) this->verbose() << "   -> Create new and keep " << endmsg ;
+  if ( this->msgLevel(MSG::VERBOSE) )
+    this->verbose() << "   -> Create new and keep " << endmsg ;
 
   return newV;
 }
@@ -758,12 +821,12 @@ void DVCommonBase<PBASE>::buildP2PVMap() const
     DaVinci::Utils::findDecayTree( *iPart, particles, vertices);
   }
 
-  if (particles.empty()) return;
+  if ( particles.empty() ) return;
 
   for ( LHCb::Particle::ConstVector::const_iterator iPart = particles.begin();
         iPart != particles.end() ; ++iPart )
   {
-    if (DaVinci::Utils::inTES(*iPart) ) bestPV(*iPart);
+    if ( DaVinci::Utils::inTES(*iPart) ) bestPV(*iPart);
   }
 }
 
@@ -785,7 +848,7 @@ DVCommonBase<PBASE>::saveRefittedPVs(const LHCb::RecVertex::ConstVector& vToSave
        iPV != vToSave.end(); ++iPV )
   {
     // Check if this was already in a Gaudi container (hence in TES)
-    if( !DaVinci::Utils::inTES(*iPV) )
+    if ( !DaVinci::Utils::inTES(*iPV) )
     {
       verticesToSave->insert(const_cast<LHCb::RecVertex*>(*iPV));
     }
@@ -798,7 +861,6 @@ DVCommonBase<PBASE>::saveRefittedPVs(const LHCb::RecVertex::ConstVector& vToSave
                     << " from " << vToSave.size()
                     << " vertices in local storage " << endmsg;
   }
-
 }
 
 // ============================================================================
@@ -888,8 +950,8 @@ StatusCode DVCommonBase<PBASE>::saveInTES()
     this->verbose() << "saveInTES "<< m_parts.size() << " Particles" << endmsg;
   }
 
-  StatusCode sc = _saveInTES();
-  if (sc.isFailure()) return sc;
+  const StatusCode sc = _saveInTES();
+  if ( sc.isFailure() ) return sc;
 
   // now save relations table
   if ( this->msgLevel(MSG::VERBOSE) ) this->verbose() << "Save P->PV relations" << endmsg;
@@ -910,7 +972,7 @@ DVCommonBase<PBASE>::calculateRelatedPV(const LHCb::Particle* p) const
 
   const LHCb::RecVertex::Range PVs = this->primaryVertices();
 
-  if (PVs.empty())
+  if ( PVs.empty() )
   {
     this->Error("calculateRelatedPV: Empty primary vertex container",
                 StatusCode::FAILURE, 0 ).ignore();
@@ -1027,10 +1089,10 @@ const LHCb::VertexBase*
 DVCommonBase<PBASE>::getRelatedPV(const LHCb::Particle* part) const
 {
 
-  if (this->msgLevel(MSG::VERBOSE)) 
+  if ( this->msgLevel(MSG::VERBOSE) )
     this->verbose() << "getRelatedPV! Getting range" << endmsg;
 
-  if (!part)
+  if ( !part )
   {
     this->Error( "Input particle is NULL" ).ignore();
     return NULL;
@@ -1038,15 +1100,15 @@ DVCommonBase<PBASE>::getRelatedPV(const LHCb::Particle* part) const
 
   if ( !hasStoredRelatedPV(part) )
   {
-    if (this->msgLevel(MSG::VERBOSE))
+    if ( this->msgLevel(MSG::VERBOSE) )
     {
       this->verbose() << "particle2Vertices empty. Calling calculateRelatedPV"
                       << endmsg;
     }
     const LHCb::VertexBase* pv = calculateRelatedPV(part);
-    if (pv)
+    if ( pv )
     {
-      if (this->msgLevel(MSG::VERBOSE))
+      if ( this->msgLevel(MSG::VERBOSE) )
       {
         this->verbose() << "Found related vertex. Relating it" << endmsg;
       }
@@ -1069,7 +1131,7 @@ DVCommonBase<PBASE>::getRelatedPV(const LHCb::Particle* part) const
 // Finalize the algorithm + post-actions
 // ============================================================================
 template <class PBASE>
-StatusCode DVCommonBase<PBASE>::finalize ()
+StatusCode DVCommonBase<PBASE>::finalize()
 {
   // register for the algorithm context service
   IAlgContextSvc* ctx = NULL ;
