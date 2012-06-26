@@ -23,7 +23,8 @@
                              m_signal(0.0),
                              m_pedestal(0.0),
                              m_noise(0.0),
-                             m_cmnoise(0.0)'>
+                             m_cmnoise(0.0),
+                             m_adc(0)'>
       <arg type = 'LHCb::VLChannelID' name = 'key' const = 'TRUE'/>
       <code/>                 
     </constructor> 
@@ -122,7 +123,7 @@
     <method name = 'setMCHitCharge' 
             type = 'void' 
             argList = 'long num, double c' 
-            desc = 'set charge deposited from MCHit'>
+            desc = 'set charge deposit from MCHit'>
       <code>
         m_MCHitsCharge[num] = c;
       </code>
