@@ -5,6 +5,8 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2012-06-26 - Maurizio Martinelli
+ - Updated MatterVeto tool with a flag to use its enlarged version.
 
 !========================= DisplVertices v7r8 2012-02-10 =========================
 ! 2011-11-25 - Chris Jones

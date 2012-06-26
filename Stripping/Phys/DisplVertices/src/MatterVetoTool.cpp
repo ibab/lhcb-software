@@ -42,14 +42,18 @@ public:
   StatusCode initialize() ;
   StatusCode finalize() { return GaudiTool::finalize ();};
   bool isInMatter( const  Gaudi::XYZPoint &point ) const ;
+  void useEnlargedMatterVeto() {m_useEnlargedMatterVeto = true;}
+
 protected:
   // ========================================================================
   /// standard constructor
   MatterVetoTool 
   ( const std::string& type   , ///< tool type ??? 
     const std::string& name   , ///< tool name 
-    const IInterface*  parent ) 
+    const IInterface*  parent,
+    bool enlargedMatterVeto=false ) 
     : GaudiTool ( type, name , parent )
+    , m_useEnlargedMatterVeto(enlargedMatterVeto)
   {
     //
     declareInterface<IMatterVeto>(this);
@@ -62,6 +66,8 @@ protected:
   virtual ~MatterVetoTool() {} 
   // ========================================================================
 private:
+  // flag to enable the enlarged matter veto
+  bool m_useEnlargedMatterVeto;
   // ========================================================================
   // default constructor is disabled 
   MatterVetoTool () ;
@@ -131,6 +137,7 @@ bool MatterVetoTool::isInMatter( const Gaudi::XYZPoint & point ) const {
     posloc = m_toVeloLFrame * point;
     inMat = inMat || IsInMaterialBoxLeft(posloc);
   }
+  if (inMat) return inMat;
   return inMat;
 }
 
@@ -261,10 +268,23 @@ bool MatterVetoTool::IsInMaterialBoxLeft(const Gaudi::XYZPoint& point)const{
   
   if(fabs(point.x()-m_LeftSensorsCenter[regModIndex].x())<8.5 && 
      point.z()>440.){ 
-
     return true;  
   }
   
+  if (m_useEnlargedMatterVeto) {
+    // two modules
+    if ( ( (446. < point.z() && point.z() < 453.) ||
+	   (348. < point.z() && point.z() < 351.) ) && 
+	 ( 5. < r && r < 44. ) )
+      return true;
+    // RFoil
+    if ( ( 300. < point.z() && point.z() < 600.) && 
+	 ( 4. < point.x() && point.x() < 8.) && 
+	 ( ( -13. < point.y() && point.y() < -10. ) ||
+	   ( 10. < point.y() && point.y() < -13. ) ) )
+      return true;
+  }
+
   return false;
 
 
@@ -320,6 +340,22 @@ bool MatterVetoTool::IsInMaterialBoxRight(const Gaudi::XYZPoint& point) const{
   if (r<12.5 && point.z()<450. ) return true;
   if (point.z()<450. && fabs(point.x()-m_RightSensorsCenter[regModIndex].x())<5.5)return true;
   if (fabs(point.x()-m_RightSensorsCenter[regModIndex].x())<8.5 && point.z()>450.) return true;  
+
+  // enlarged MatterVeto
+  if (m_useEnlargedMatterVeto) {
+    // one module
+    if ( ( 431. < point.z() && point.z() < 439.) && 
+	 ( 5. < r && r < 44. ) )
+      return true;
+    // RFoil
+    if ( ( 300. < point.z() && point.z() < 600.) && 
+	 ( 4. < point.x() && point.x() < 8.) && 
+	 ( ( -13. < point.y() && point.y() < -10. ) ||
+	   ( 10. < point.y() && point.y() < -13. ) ) )
+      return true;
+  }
+  
+
   return false;
 }
 
