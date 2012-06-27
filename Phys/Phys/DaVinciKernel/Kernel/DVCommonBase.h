@@ -563,7 +563,7 @@ private:
   {
     if ( !t )
     {
-      this->info() << "Loading tool '" << name << "'" << endmsg;
+      //this->info() << "Loading tool '" << name << "'" << endmsg;
       t = this -> template tool<TYPE>( name, ptr );
     }
     return t;
@@ -622,8 +622,8 @@ private:
         if ( iname != defaultMap.end() ) { toolType = iname->second; }
       }
       // locate the tool
-      this->info() << "Loading tool type='" << toolType
-                   << "' nickname='" << nickName << "'" << endmsg;
+      //this->info() << "Loading tool type='" << toolType
+      //             << "' nickname='" << nickName << "'" << endmsg;
       t = this -> template tool<TYPE> ( toolType , parent );
       // add the located tool into the container
       typename STORAGE::value_type value( nickName , t );
