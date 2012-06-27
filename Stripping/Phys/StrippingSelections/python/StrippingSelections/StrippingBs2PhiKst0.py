@@ -160,7 +160,6 @@ def makePhi2KK( name,
             "& (ADMASS('phi(1020)') < %(PhiMassWin)s *MeV)" \
             "& (PT > %(PhiPT)s *MeV)" \
             "& (VFASPF(VCHI2/VDOF) < %(PhiVCHI2)s)" % _params
-    print 'makeJpsiPhi2KK Code =', _code
     StdLoosePhi2KK = DataOnDemand(Location = "Phys/StdLoosePhi2KK/Particles")
     _phiFilter = FilterDesktop("PhiFilterForBs2JpsiPhi",
                                Code = _code)
