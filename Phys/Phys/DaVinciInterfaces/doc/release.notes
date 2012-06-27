@@ -4,6 +4,10 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2012-06-27 - Chris Jones
+ - Add new getIDVAlgorithm method that includes a safety check on if the tool
+   is private or not. To be used if pointer is cached during initialize().
+
 ! 2012-06-22 - Chris Jones
  - Add some new methods to IDVAlgorithm
 

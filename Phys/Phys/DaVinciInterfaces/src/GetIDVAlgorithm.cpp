@@ -7,6 +7,9 @@
 #include "GaudiKernel/IAlgContextSvc.h"
 #include "GaudiKernel/IAlgorithm.h"
 #include "GaudiKernel/SmartIF.h"
+#include "GaudiKernel/GaudiException.h"
+#include "GaudiKernel/IAlgTool.h"
+#include "GaudiKernel/IToolSvc.h"
 // ============================================================================
 // GaudiAlg 
 // ============================================================================
@@ -59,6 +62,20 @@ IDVAlgorithm* Gaudi::Utils::getIDVAlgorithm ( const IAlgContextSvc* svc )
   IAlgorithm* alg = Gaudi::Utils::getAlgorithm ( svc , IDVSelector() ) ;
   if ( !alg ) { return NULL ; }                                    // RETURN 
   return SmartIF<IDVAlgorithm> ( alg ) ;
+}
+// ============================================================================
+IDVAlgorithm* Gaudi::Utils::getIDVAlgorithm ( const IAlgContextSvc* svc,
+                                              const IAlgTool * tool ) 
+{
+  if ( !tool ) return NULL;
+  const IToolSvc* parent = dynamic_cast<const IToolSvc*>( tool->parent() );
+  if ( parent )
+  {
+    throw GaudiException( "Cannot safely be used with public tools",
+                          "Gaudi::Utils::getIDVAlgorithm",
+                          StatusCode::FAILURE  );
+  }
+  return getIDVAlgorithm( svc );
 }
 // ============================================================================
 // The END 
