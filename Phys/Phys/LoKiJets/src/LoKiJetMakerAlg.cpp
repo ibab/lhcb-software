@@ -186,7 +186,9 @@ StatusCode LoKi::JetMaker::analyse   ()
   if ( m_associate2Vertex ){
     
     // A cut to get the x position of the bestPV of input particles (would be better to code a VKEY functor)
-    LoKi::Types::Fun bestVertexKey = BPV(VX);
+    LoKi::Types::Fun bestVertexVX = BPV(VX);
+    LoKi::Types::Fun bestVertexVY = BPV(VY);
+    LoKi::Types::Fun bestVertexVZ = BPV(VZ);
 
     // A cut to check that a jet contains information able to link it to a PV
     LoKi::Types::Cut withPVPointingInfo = NINTREE(( ABSID == 310 || ABSID == 3122 )
@@ -205,7 +207,9 @@ StatusCode LoKi::JetMaker::analyse   ()
           // Take all neutrals exept V0s
           if ( ABSID(*i_p) != 310 && ABSID(*i_p) != 3122 ) inputs.push_back(*i_p) ;
           // Keep only the V0s that match to the vertex
-          else if ( bestVertexKey(*i_p) == VX( *i_pv) ) inputs.push_back(*i_p) ;
+          else if ( bestVertexVX(*i_p) == VX( *i_pv) &&
+		    bestVertexVY(*i_p) == VY( *i_pv) &&
+		    bestVertexVZ(*i_p) == VZ( *i_pv)  ) inputs.push_back(*i_p) ;
           else continue ;
         }
         // Charged inputs
@@ -213,7 +217,9 @@ StatusCode LoKi::JetMaker::analyse   ()
           // Take all downstream tracks
           if ( LHCb::Track::Downstream == TRTYPE(*i_p) ) inputs.push_back(*i_p) ;
           // Keep only the tracks with velo segment that match to the vertex
-          else if ( bestVertexKey(*i_p) == VX( *i_pv) ) inputs.push_back(*i_p) ;
+          else if ( bestVertexVX(*i_p) == VX( *i_pv) &&
+		    bestVertexVY(*i_p) == VY( *i_pv) &&
+		    bestVertexVZ(*i_p) == VZ( *i_pv)  ) inputs.push_back(*i_p);
           else continue ;
         }
       }
