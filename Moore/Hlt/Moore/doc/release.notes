@@ -3,6 +3,7 @@ Package Coordinator : Eric van Herwijnen
 Purpose     : LHCb HLT application
 
 
+!========================= Moore v14r5p3 2012-06-27 =========================
 ! 2012-06-27 - Eric van Herwijnen
  - With tuned settings for better timing
  
