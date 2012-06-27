@@ -1,9 +1,7 @@
 // $Id: DaVinciFun.h,v 1.9 2009-11-05 10:19:04 jpalac Exp $
-#ifndef KERNEL_DAVINCIFUN_H 
+#ifndef KERNEL_DAVINCIFUN_H
 #define KERNEL_DAVINCIFUN_H 1
 
-// Include files
-// from ROOT
 #include "Math/Boost.h"
 #include "Kernel/Particle2Vertex.h"
 #include "Event/Particle.h"
@@ -11,20 +9,18 @@
 #include "Event/RecVertex.h"
 #include "DaVinciUtils/Functions.h"
 #include "Kernel/ParticlePredicates.h"
+
 /** @namespace DaVinci Kernel/DaVinciFun.h
- *  
- * Collection of free functions used widely in DVAlgorithm 
- * and PhysDesktop
  *
+ * Collection of free functions used widely in DVAlgorithm
  *
  *  @author Juan PALACIOS
  *  @date   2009-02-27
  */
-namespace DaVinci {
-
+namespace DaVinci
+{
 
   /**
-   *
    * delete contents of container of newed pointers unless they are
    * also in the TES.
    * T must be a const_iterator defined, begin(), end() and clear() methods,
@@ -38,7 +34,7 @@ namespace DaVinci {
    *
    **/
   template <class T>
-  unsigned int safeContainerClear(T& container) 
+  unsigned int safeContainerClear(T& container)
   {
     if ( container.empty() ) return 0;
     int iCount(0);
@@ -49,7 +45,7 @@ namespace DaVinci {
       } else {
         delete *iObj;
       }
-      
+
     }
     container.clear();
     return iCount;
@@ -67,17 +63,17 @@ namespace DaVinci {
     // ========================================================================
     /** set the input particles for some component
      *  @param component the component inself
-     *  @param input the intut data 
-     *  @return status code 
-     * 
-     *  - 300 : invalid component 
-     *  - 301 : no valid ISetInputParticles interface 
-     * 
+     *  @param input the intut data
+     *  @return status code
+     *
+     *  - 300 : invalid component
+     *  - 301 : no valid ISetInputParticles interface
+     *
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date   2008-07-11
      */
-    StatusCode setInput 
-    ( IInterface*                        component , 
+    StatusCode setInput
+    ( IInterface*                        component ,
       const LHCb::Particle::ConstVector& input     ) ;
 
     // ========================================================================
@@ -90,16 +86,16 @@ namespace DaVinci {
     /// @param particles (UPDATE) Add particles in the decay.
     /// @param vertices  (UPDATE) Add Vertices in the decay.
     /// @param truncate           Predicate that decides where to stop recursion. If true, do not follow decay branch.
-    void findDecayTree(const LHCb::Particle*        head,
-                       LHCb::Particle::ConstVector& particles,
-                       LHCb::Vertex::ConstVector&   vertices,
-                       DaVinci::Utils::IParticlePredicate* truncate = 0 );
+    void findDecayTree( const LHCb::Particle*        head,
+                        LHCb::Particle::ConstVector& particles,
+                        LHCb::Vertex::ConstVector&   vertices,
+                        DaVinci::Utils::IParticlePredicate* truncate = 0 );
 
     // ========================================================================
 
-    bool decayTreeInTES(const LHCb::Particle* head);
+    bool decayTreeInTES( const LHCb::Particle* head );
 
-  } // namespace Utils 
+  } // namespace Utils
 
 } // namespace DaVinci
 

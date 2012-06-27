@@ -553,7 +553,7 @@ StatusCode DVCommonBase<PBASE>::loadParticle2PVRelations()
   {
     if ( this -> template exist<Particle2Vertex::Table>(*iLoc) )
     {
-      if (this->msgLevel(MSG::DEBUG))
+      if ( this->msgLevel(MSG::DEBUG) )
       {
         this->debug() << "Reading table from " << (*iLoc) << endmsg ;
       }
