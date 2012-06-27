@@ -4,7 +4,7 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
-! 2012-06-27 - E. van Herwijnen
+!========================= HltTracking v9r24 2012-06-27 =========================! 2012-06-27 - E. van Herwijnen
  - Configure LooseForward min pt to 500 (from 300)
 
 !========================= HltTracking v9r23 2012-06-21 =========================
@@ -883,3 +883,4 @@ the reconstructed tracks in an output Hlt::TrackContainer.
     algorithm to steer the VeloTT reconstruction
     modes of operation (via option) = "selected","rest","all"
     track the seed Tracks that has been "selected", the one not-selected, or all
+
