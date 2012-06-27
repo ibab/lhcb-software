@@ -27,6 +27,7 @@ library           LbAlpGen    Lib/*.cpp Lib/*.F
 application       AlpGenFragm Read/AlpGenFragm.cpp \
                               Read/upevnt.F        \
                               Read/upinit.F        \
+                              Main/dummy.F         \
                               Main/pyr.F 
 application       AlpGen4Q    Main/AlpGen.cpp      \
                               Main/alpgen_main.F   \
