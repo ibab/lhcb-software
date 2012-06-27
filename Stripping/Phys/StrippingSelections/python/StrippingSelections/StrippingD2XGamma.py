@@ -192,7 +192,6 @@ def makePhoton(name, photonPT):
 ##     clust.CaloClusterizationTool.withET = True
     # Prepare selection
     _code = "(PT> %(photonPT)s*MeV)" % locals()
-    print 'making the photons: ', _code
     _gammaFilter = FilterDesktop(Code=_code)
     _stdGamma = StdLooseAllPhotons
     return Selection(name, Algorithm=_gammaFilter, RequiredSelections=[_stdGamma])
@@ -218,7 +217,6 @@ def makePhi2KK(name, TrIPchi2Phi, TrChi2, kDLL, TrPTPhi, PhiMassWinL, PhiMassWin
     _code = goodPhi+" & CHILDCUT( " + goodKaon + ", 1 ) & CHILDCUT( " + goodKaon + ", 2 )"
     _phiFilter = FilterDesktop(Code=_code)
     _stdPhi2KK = DataOnDemand(Location=PhiLocation)
-    print 'making phi:', _code
     return Selection(name, Algorithm=_phiFilter, RequiredSelections=[_stdPhi2KK])
 
 def makeSlowPi(name, PionLocation) :
@@ -231,7 +229,6 @@ def makeSlowPi(name, PionLocation) :
     
     """
     _code = '(TRCHI2DOF < 5)'
-    print 'making slowPion:', _code
     _slowpiFilter = FilterDesktop(Code=_code)
     _slowPi = DataOnDemand(Location=PionLocation)
     return Selection(name, Algorithm=_slowpiFilter, RequiredSelections=[_slowPi])
@@ -272,7 +269,6 @@ def makeD02PhiGamma(name, phiSel, gammaSel,  D_BPVLTIME,  D0_PT, D0MassWin, pvRe
     """  
     _motherCut = "( (ADMASS('D0')<%(D0MassWin)s*MeV) & (PT> %(D0_PT)s) )" % locals() #(BPVIPCHI2() < %(D0PVIPchi2)s) & (BPVLTIME() > %(D_BPVLTIME)s) 
     _combinationCut = "(ADAMASS('D0')<1.1*%(D0MassWin)s*MeV)"  % locals()
-    print 'making D0:',  _combinationCut,'&', _motherCut, 'pvRefit = ', pvRefit
     
     _D0 = CombineParticles(DecayDescriptor= "D0 -> phi(1020) gamma",
                            CombinationCut=_combinationCut,
@@ -298,8 +294,7 @@ def makeDst2D0Pi(name, D0Sel, slowPionSel, deltaMass, deltaMassL, DstVCHI2, pvRe
     """
     _combinationCut = "((AM - AM1) < 1.1*%(deltaMass)s*MeV)"  % locals()
     _motherCut =   "( (VFASPF(VCHI2/VDOF) < %(DstVCHI2)s) & ((M - M1) < %(deltaMass)s*MeV) & ((M - M1) > %(deltaMassL)s*MeV) )" % locals()
-    print 'making Dstar:',  _combinationCut,'&', _motherCut, 'pvRefit =', pvRefit
-    
+
     _Dst = CombineParticles(DecayDescriptors=[ 'D*(2010)+ -> D0 pi+', 'D*(2010)- -> D0 pi-'], # "[D*(2010)+ -> D0 pi+]cc",
                             CombinationCut =  _combinationCut, 
                             MotherCut = _motherCut ,
