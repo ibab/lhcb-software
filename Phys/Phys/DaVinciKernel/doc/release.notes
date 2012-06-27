@@ -4,6 +4,9 @@
 ! Responsible : C.R. Jones
 !============================================================================
 
+! 2012-06-27 - Chris Jones
+ - Fix icc11 compilation
+
 ! 2012-06-26 - Chris Jones
  - Reduce a bit the memory footprint of the base classes by making the 
    default tool maps static data, instead of each instance having its
@@ -17,17 +20,18 @@
    + DaVinciAlgorithm      : No histogramming or tupling
    + DaVinciHistoAlgorithm : Histogramming only
    + DaVinciTupleAlgorithm : Histogramming and tupling
-  DVAlgorithm is kept (using DaVinciTupleAlgorithm) for backwards compatibility
+  DVAlgorithm is kept (using DaVinciTupleAlgorithm) for backwards 
+  compatibility
  - The method getDVAlgorithm has been removed, as it is not compatible with
    the above changes. getIDVAlgorithm should be used instead.
 
-!========================= DaVinciKernel v10r5 2012-03-01 =========================
+!======================= DaVinciKernel v10r5 2012-03-01 =====================
 
 ! 2012-02-24 - Chris Jones
  - Remove the long depreciated option InputLocations in DVAlgorithm
  - Make i_bestVertex private
 
-!========================= DaVinciKernel v10r4 2012-02-03 =========================
+!======================= DaVinciKernel v10r4 2012-02-03 =====================
 
 ! 2012-01-18 - Vanya Belyaev
  - Move Gaudi::HashIDs into DaVinciTypes 

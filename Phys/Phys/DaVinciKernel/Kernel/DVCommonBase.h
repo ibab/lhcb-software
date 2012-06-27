@@ -348,7 +348,7 @@ public:
   // ==========================================================================
 
   // Get decay descriptor
-  const std::string& getDecayDescriptor()const
+  const std::string& getDecayDescriptor() const
   {
     return m_decayDescriptor;
   }
@@ -362,9 +362,8 @@ public:
   /// accessor for IOnOffline tool
   inline IOnOffline* onOffline() const
   {
-    return this->getTool<IOnOffline>( "OnOfflineTool",
-                                      m_onOffline,
-                                      this ) ;
+    return this->getTool<IOnOffline>( "OnOfflineTool:PUBLIC",
+                                      m_onOffline, this );
   }
 
   /**
@@ -375,10 +374,9 @@ public:
    **/
   inline const IRelatedPVFinder* relatedPVFinder() const
   {
-    return ( m_pvRelator ? m_pvRelator :
-             this->getTool<IRelatedPVFinder>( onOffline()->relatedPVFinderType(),
-                                              m_pvRelator,
-                                              this ) );
+    return this->getTool<IRelatedPVFinder>( onOffline()->relatedPVFinderType(),
+                                            m_pvRelator,
+                                            this );
   }
 
   /**
@@ -543,6 +541,13 @@ public:
 
   //===========================================================================
 
+protected:
+
+  /// the actual tyep for mapping "tool nickname -> the actual type/name"
+  typedef std::map<std::string,std::string> ToolMap;
+
+  //===========================================================================
+
 private:
 
   /** helper protected function to load the tool on-demand
@@ -556,16 +561,13 @@ private:
                   TYPE *& t,
                   const IInterface* ptr = NULL ) const
   {
-    if ( !t ) 
-    { 
-      //this->info() << "Loading tool '" << name << "'" << endmsg;
-      t = this -> template tool<TYPE>( name, ptr ); 
+    if ( !t )
+    {
+      this->info() << "Loading tool '" << name << "'" << endmsg;
+      t = this -> template tool<TYPE>( name, ptr );
     }
     return t;
   }
-
-  /// the actual tyep for mapping "tool nickname -> the actual type/name"
-  typedef std::map<std::string,std::string> ToolMap;
 
   /** helper method to locate the tool by nickname
    *
@@ -594,38 +596,40 @@ private:
   {
     TYPE* t = NULL;
     // look within the local list of already located tools of given type
-    typename STORAGE::iterator ifind = toolMap.find ( nickName ) ;
+    typename STORAGE::iterator ifind = toolMap.find ( nickName );
     // tool is in the list?
     if ( toolMap.end() != ifind )
     {
-      t = ifind->second ;
+      t = ifind->second;
       if ( !t )
-      { this->Exception ( "getTool<" + System::typeinfoName( typeid ( TYPE ) )
-                          + ">('" + nickName + "'): tool points to NULL" ) ; }
+      {
+        this->Exception ( "getTool<" + System::typeinfoName( typeid ( TYPE ) )
+                          + ">('" + nickName + "'): tool points to NULL" ) ;
+      }
     }
     else
     {
       // get the actual tool type
       std::string toolType = nickName;
-      ToolMap::const_iterator iname = customMap.find ( nickName ) ;
+      ToolMap::const_iterator iname = customMap.find ( nickName );
       if ( iname != customMap.end() )
       {
         toolType = iname->second;
       }
       else
       {
-        iname = defaultMap.find ( nickName ) ;
+        iname = defaultMap.find ( nickName );
         if ( iname != defaultMap.end() ) { toolType = iname->second; }
       }
       // locate the tool
-      //this->info() << "Loading tool type='" << toolType 
-      //             << "' nickname='" << nickName << "'" << endmsg;
-      t = this -> template tool<TYPE> ( toolType , parent ) ;
+      this->info() << "Loading tool type='" << toolType
+                   << "' nickname='" << nickName << "'" << endmsg;
+      t = this -> template tool<TYPE> ( toolType , parent );
       // add the located tool into the container
-      typename STORAGE::value_type value( nickName , t ) ;
-      toolMap.insert( value ) ;
+      typename STORAGE::value_type value( nickName , t );
+      toolMap.insert( value );
     }
-    return t ;                                               // RETURN
+    return t;                                               // RETURN
   }
 
   //===========================================================================

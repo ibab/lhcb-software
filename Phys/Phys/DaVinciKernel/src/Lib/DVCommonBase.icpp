@@ -429,7 +429,7 @@ StatusCode DVCommonBase<PBASE>::loadTools()
   // Set default names
   if ( m_particleCombinerNames.end() == m_particleCombinerNames.find("") )
   {
-    m_particleCombinerNames[""] = onOffline()->particleCombinerType() ;
+    m_particleCombinerNames[""] = onOffline()->particleCombinerType();
   }
   if ( m_vertexFitNames.end() == m_vertexFitNames.find("") )
   {
@@ -437,7 +437,7 @@ StatusCode DVCommonBase<PBASE>::loadTools()
   }
   if ( m_distanceCalculatorNames.end() == m_distanceCalculatorNames.find("") )
   {
-    m_distanceCalculatorNames[""] = onOffline()->distanceCalculatorType() ;
+    m_distanceCalculatorNames[""] = onOffline()->distanceCalculatorType();
   }
 
   if ( m_preloadTools )
@@ -517,8 +517,7 @@ template <class PBASE>
 void DVCommonBase<PBASE>::writeEmptyTESContainers()
 {
   LHCb::Particle::Container* container = new LHCb::Particle::Container();
-  put(container, particleOutputLocation());
-
+  this->put( container, particleOutputLocation() );
 }
 
 //=============================================================================
@@ -526,8 +525,7 @@ void DVCommonBase<PBASE>::writeEmptyTESContainers()
 template <class PBASE>
 StatusCode DVCommonBase<PBASE>::loadEventInput()
 {
-
-  if (this->msgLevel(MSG::VERBOSE))
+  if ( this->msgLevel(MSG::VERBOSE) )
   {
     this->verbose() << ">>> loadEventInput " << endmsg;
   }
@@ -537,7 +535,7 @@ StatusCode DVCommonBase<PBASE>::loadEventInput()
 
   StatusCode sc = StatusCode::SUCCESS;
 
-  if (!m_inputLocations.empty())
+  if ( !m_inputLocations.empty() )
   {
     sc = loadParticles() && loadParticle2PVRelations();
   }
@@ -765,7 +763,7 @@ StatusCode DVCommonBase<PBASE>::saveP2PVRelations() const
 
   Particle2Vertex::Table* table = new Particle2Vertex::Table(m_p2PVMap.size());
 
-  put( table, tableOutputLocation() );
+  this -> put( table, tableOutputLocation() );
 
   for ( P2PVMap::const_iterator iRelation = m_p2PVMap.begin();
         iRelation != m_p2PVMap.end(); ++iRelation )
@@ -841,7 +839,7 @@ DVCommonBase<PBASE>::saveRefittedPVs(const LHCb::RecVertex::ConstVector& vToSave
 
   const std::string location(m_outputLocation+"/_RefitPVs");
 
-  this->put( verticesToSave, location );
+  this -> put( verticesToSave, location );
 
   for( LHCb::RecVertex::ConstVector::const_iterator iPV = vToSave.begin();
        iPV != vToSave.end(); ++iPV )
@@ -880,8 +878,8 @@ StatusCode DVCommonBase<PBASE>::_saveInTES()
     delete v_tes;
     return this->Error("Could not open output TES containers");
   }
-  put ( p_tes , particleOutputLocation()    ) ;
-  put ( v_tes , decayVertexOutputLocation() ) ;
+  this -> put ( p_tes , particleOutputLocation()    ) ;
+  this -> put ( v_tes , decayVertexOutputLocation() ) ;
 
   if ( this->msgLevel(MSG::VERBOSE) )
   {
