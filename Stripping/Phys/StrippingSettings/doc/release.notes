@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2012-06-27 - Mika Vesterinen
+ - Previous commit was to StrippingDev only. Now updated Stripping19b.
+
+! 2012-06-27 - Mika Vesterinen
  - Prescaled semi-inclusive J/psi line and moved from SL to dimuon stream
 
 ! 2012-06-26 - Jibo He
