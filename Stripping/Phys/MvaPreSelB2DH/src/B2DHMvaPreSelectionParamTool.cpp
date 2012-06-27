@@ -93,7 +93,7 @@ B2DHMvaPreSelectionParamTool::~B2DHMvaPreSelectionParamTool() {
 StatusCode B2DHMvaPreSelectionParamTool::initialize() {
   StatusCode sc = StatusCode::SUCCESS;
 
-  m_dva=Gaudi::Utils::getIDVAlgorithm(contextSvc());
+  m_dva=Gaudi::Utils::getIDVAlgorithm(contextSvc(),this);
   if (0 == m_dva) {
     return Error(" B2DHMvaPreSelectionParamTool  initialize could not get parent DValgorithm",
                  StatusCode::FAILURE);
