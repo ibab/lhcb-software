@@ -34,8 +34,9 @@
    . Removed PT cuts on Phi
 
 ! 2012-06-25 - Edwige Tournefier
- - StrippingChiCJPsiGammaConv.py: created stripping for chi_c and chi_b with converted photons
-   based on the new BremAdder and DiElectronMaker. Plus 2 stripping lines for chi_c and chi_b background studies
+ - StrippingChiCJPsiGammaConv.py: created stripping for chi_c and chi_b with 
+   converted photons based on the new BremAdder and DiElectronMaker. 
+   Plus 2 stripping lines for chi_c and chi_b background studies
 
 ! 2012-06-25 - Johannes Albrecht
  - StrippingBs2MuMuLines.py: minimal enlargement of Phi sidebands for systematics
@@ -43,7 +44,8 @@
  - StrippingTau2PMuMu.py: syncronize line with tau23mu
 
 ! 2012-06-25 - Francesca Dordei
- - StrippingB2JpsiXForBeta_s.py: removed Bs2JpsiEtaPrescaledLine, Bs2JpsiEtaDetachedLine
+ - StrippingB2JpsiXForBeta_s.py: removed Bs2JpsiEtaPrescaledLine, 
+   Bs2JpsiEtaDetachedLine
 
 ! 2012-06-25 - Konstantinos A. Petridis
  - StrippingB2MuMuX.py: commented out MuMuGamma related lines:
@@ -73,8 +75,10 @@
   - StrippingBeauty2XGamma.py :  Added the Bs->phiGamma(ee) with converted photons
 
 ! 2012-06-25 -- Ricardo Vazquez Gomez
-  - StrippingBeauty2XGamma.py :  Added B+->K1+gamma line and Bd->K*gamma with converted photons.
-    Tighten the PID cut for pions to reduce the retention and increase the pT cut of pi0. Retention reduced by ~40%.  
+  - StrippingBeauty2XGamma.py :  Added B+->K1+gamma line and Bd->K*gamma with 
+    converted photons.
+    Tighten the PID cut for pions to reduce the retention and increase the pT 
+    cut of pi0. Retention reduced by ~40%.  
 
 ! 2012-06-24 -- Patrick Spradlin
   - StrippingXicc.py :  Added lines to select charge-violating combinations
@@ -82,13 +86,15 @@
 
 ! 2012-06-24 Chris Thomas
   - StrippingLowMult.py : added lines to select CEP events.
-  Selects D decays to HH, 3H and 4H; charmonium decays to HH and 4H; various prescaled same-sign lines.
-  Requires a hadronic LowMult decision to have been made at HLT2 (anticipating new HLT2 CEP lines).
+    Selects D decays to HH, 3H and 4H; charmonium decays to HH and 4H; various 
+    prescaled same-sign lines.
+    Requires a hadronic LowMult decision to have been made at HLT2 
+    (anticipating new HLT2 CEP lines).
 
 ! 2012-06-24 Mika Vesterinen
-  - StrippingCharmFromBSemi.py: Fix to D0->KsKs lines (DD+DD and DD+LL were the same as LL+LL). 
-  Also added same sign hadron versions of the D0->KKpi0 and D0->pipipi0. Only for the resolved pi0
-  versions for now.
+  - StrippingCharmFromBSemi.py: Fix to D0->KsKs lines (DD+DD and DD+LL were 
+    the same as LL+LL). Also added same sign hadron versions of the D0->KKpi0 
+    and D0->pipipi0. Only for the resolved pi0 versions for now.
 
 ! 2012-06-24 Benoit Viaud
   -StrippingD2XMuMuSS.py: Add a line for D0->K- pi+ mu+ mu-.
@@ -114,7 +120,8 @@
 
 
 ! 2012-06-19 - Patrick Koppenburg
- - StrippingB2JpsiXforBeta_s: new line to use V0 from Brunel: Comment it out for the time being.
+ - StrippingB2JpsiXforBeta_s: new line to use V0 from Brunel: 
+   Comment it out for the time being.
 
 ! 2012-06-19 - Patrick Koppenburg
  - StrippingBu2LLK: New line Bu2LLK_eeLine2 that uses the new DiElectronMaker for testing
@@ -149,7 +156,8 @@
  e Use Rate limiter from cond DB in No Bias line https://savannah.cern.ch/bugs/?94262
 
 ! 2012-05-02 - Stefania Vecchi
- - removed ReFitPV=true in python/StrippingSelections/StrippingBd2DstarMuNu.py to match the time requirements
+ - removed ReFitPV=true in python/StrippingSelections/StrippingBd2DstarMuNu.py to 
+   match the time requirements
 
 !========================= StrippingSelections v3r13 2012-04-27 =========================
 ! 2012-04-26 - Anton Poluektov 
