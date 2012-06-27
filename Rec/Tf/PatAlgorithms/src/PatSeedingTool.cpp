@@ -40,7 +40,7 @@ DECLARE_TOOL_FACTORY( PatSeedingTool )
 PatSeedingTool::PatSeedingTool(  const std::string& type,
                                  const std::string& name,
                                  const IInterface* parent)
-  : GaudiTool ( type, name , parent )
+  : GaudiTool ( type, name , parent ), m_online(false)
 {
 
   declareInterface<IPatSeedingTool>(this);
@@ -190,6 +190,7 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
 
   declareProperty( "OnlyGood",          m_onlyGood              = false  );
   declareProperty( "DiscardChi2"         , m_discardChi2    = 1.5      ); 
+  declareProperty( "ActivateHltPropertyHack", m_activateHLTPropertyHack = true ); 
 }
 //=============================================================================
 // Destructor
@@ -207,18 +208,66 @@ StatusCode PatSeedingTool::initialize() {
 
   m_magFieldSvc = svc<ILHCbMagnetSvc>( "MagneticFieldSvc", true );
 
+  m_online = false;
+  if (context() == "HLT" || context() == "Hlt") {
+    if (msgLevel(MSG::DEBUG)) {
+      debug() << "Running in HLT context: Online = true" << endmsg;
+    }
+    m_online = true;
+  } else if (context() != "" && context() != "Offline") {
+    Warning( "Unexpected context '" + context() +
+	"'. Assuming offline mode, please check !" ).ignore();
+  }
+
+  const bool activateHLTPropertyHack = m_online && m_activateHLTPropertyHack;
+  if (activateHLTPropertyHack) {
+    char buf[8192];
+    debug() << "HLT property hack about to be activated" << endmsg <<
+      "dumping values of potentially affected properties before hack:" << endmsg;
+    std::snprintf(buf, 8191, "\nInitialArrow % 24.17e\n"
+	"MomentumScale % 24.17e\n"
+	"dRatio % 24.17e\n"
+	"zMagnet % 24.17e\n"
+	"yCorrection % 24.17e\n",
+	m_initialArrow, m_momentumScale, m_dRatio, m_zMagnet, m_yCorrection);
+    buf[8191] = 0;
+    debug() << buf << endmsg << "applying HLT property hack" << endmsg;
+  }
   if (m_magFieldSvc->useRealMap()) {
-    if (-1e42 == m_initialArrow) m_initialArrow  = 4.25307e-09;
-    if (-1e42 == m_momentumScale) m_momentumScale = 35.31328;
-    if (-1e42 == m_dRatio) m_dRatio = -3.2265e-4;
-    if (-1e42 == m_zMagnet) m_zMagnet = 5383.17 * Gaudi::Units::mm;
-    if (-1e42 == m_yCorrection) m_yCorrection = 4.73385e-15;
+    if (activateHLTPropertyHack || -1e42 == m_initialArrow)
+      m_initialArrow  = 4.25307e-09;
+    if (activateHLTPropertyHack || -1e42 == m_momentumScale)
+      m_momentumScale = 35.31328;
+    if (activateHLTPropertyHack || -1e42 == m_dRatio)
+      m_dRatio = -3.2265e-4;
+    if (activateHLTPropertyHack || -1e42 == m_zMagnet)
+      m_zMagnet = 5383.17 * Gaudi::Units::mm;
+    if (activateHLTPropertyHack || -1e42 == m_yCorrection)
+      m_yCorrection = 4.73385e-15;
   } else {
-    if (-1e42 == m_initialArrow) m_initialArrow = 4.21826e-09;
-    if (-1e42 == m_momentumScale) m_momentumScale = 40.3751;
-    if (-1e42 == m_dRatio) m_dRatio = -3.81831e-4;
-    if (-1e42 == m_zMagnet) m_zMagnet = 5372.1 * Gaudi::Units::mm;
-    if (-1e42 == m_yCorrection) m_yCorrection = 8.6746e-15;
+    if (activateHLTPropertyHack || -1e42 == m_initialArrow)
+      m_initialArrow = 4.21826e-09;
+    if (activateHLTPropertyHack || -1e42 == m_momentumScale)
+      m_momentumScale = 40.3751;
+    if (activateHLTPropertyHack || -1e42 == m_dRatio)
+      m_dRatio = -3.81831e-4;
+    if (activateHLTPropertyHack || -1e42 == m_zMagnet)
+      m_zMagnet = 5372.1 * Gaudi::Units::mm;
+    if (activateHLTPropertyHack || -1e42 == m_yCorrection)
+      m_yCorrection = 8.6746e-15;
+  }
+  if (activateHLTPropertyHack) {
+    char buf[8192];
+    debug() << "HLT property hack has been activated" << endmsg <<
+      "dumping values of potentially affected properties after hack:" << endmsg;
+    std::snprintf(buf, 8191, "\nInitialArrow % 24.17e\n"
+	"MomentumScale % 24.17e\n"
+	"dRatio % 24.17e\n"
+	"zMagnet % 24.17e\n"
+	"yCorrection % 24.17e\n",
+	m_initialArrow, m_momentumScale, m_dRatio, m_zMagnet, m_yCorrection);
+    buf[8191] = 0;
+    debug() << buf << endmsg << "end of HLT property hack handling" << endmsg;
   }
 
   m_seedTool = tool<PatSeedTool>( "PatSeedTool" );

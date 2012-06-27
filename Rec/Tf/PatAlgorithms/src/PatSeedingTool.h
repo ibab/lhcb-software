@@ -338,6 +338,19 @@ class PatSeedingTool : public GaudiTool,  virtual public IPatSeedingTool,
     /// min. total number of stereo hits during per-region search (OT)
     int m_minTotStHitsOT;
 
+    /// are we running in an online (HLT) or offline context (set in initialize)
+    bool m_online;
+    /// are we to activate the HLT property hack?
+    /** this activates a workaround for certain problematic properties which
+     * get their values set wrong when being extracted from a TCK because the
+     * precision to which the numerical values of these properties is saved in
+     * the TCK is insufficient
+     *
+     * workaround is to overwrite these properties with default values if
+     * PatSeedingTool is run in an HLT context
+     */
+    bool m_activateHLTPropertyHack;
+
     static const unsigned int m_nSta = Tf::RegionID::OTIndex::kNStations;
     static const unsigned int m_nLay = Tf::RegionID::OTIndex::kNLayers;
     static const unsigned int m_nReg = Tf::RegionID::OTIndex::kNRegions +

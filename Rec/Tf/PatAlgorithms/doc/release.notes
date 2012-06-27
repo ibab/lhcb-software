@@ -5,6 +5,23 @@
 !-----------------------------------------------------------------------------
 
 
+! 2012-06-27 - Manuel Tobias Schiller
+ - add a flag to activate a workaround for certain problematic properties in
+   PatSeedingTool which get their values set wrong when being extracted from
+   a TCK because the precision to which the numerical values of these
+   properties is saved in the TCK is insufficient
+   
+   the workaround is to overwrite these properties with default values if
+   PatSeedingTool is run in an HLT context
+
+   there is a property (ActivateHltPropertyHack) which can disable this hack
+   in the future once it's no longer needed; for now, the default is to
+   activate the hack in HLT contexts, other applications like Brunel and
+   DaVinci should remain unaffected, since they're not running with HLT
+   context (and they set the default values anyway, unless the pattern reco
+   expert running the job has explicitly decreed otherwise in his/her job
+   options)
+
 !========================= PatAlgorithms v4r23 2012-04-24 =========================
 ! 2012-04-24 - Sascha Stahl
  - PatMatchTool : Momentum estimate now protected against failure.
@@ -35,25 +52,25 @@ zTTField in the chi2 fit.
 !========================= PatAlgorithms v4r19 2012-03-07 =========================
 ! 2012-02-23 - Sascha Stahl
  - PatForwardTool: Bug fix in PatForward in part which uses momentum estimate.
-	                 Variable was shadowed, resulting in wrong behaviour of 
-	                 the algorithm.
+                    Variable was shadowed, resulting in wrong behaviour of 
+                    the algorithm.
 
 !========================= PatAlgorithms v4r18 2012-02-28 =========================
 ! 2012-02-23 - Sascha Stahl
- - PatForwardTool: Bug fix in PatForward in part which uses momentum estimate.	
+ - PatForwardTool: Bug fix in PatForward in part which uses momentum estimate.   
 
 ! 2012-02-14 - Sascha Stahl
  - PatDownstream: make sure we copy all three states in T to help the fast fit
    in HLT
  - PatForwardTool: Changed parametrisation of first search window in x. Required 
-	 to add property "MagnetKickParams" to PatForwardTool. 
+    to add property "MagnetKickParams" to PatForwardTool. 
  - PatForwardTool, PatFwdTool: Fixed part which uses momentum estimate. 
    This part of the code was not used anywhere or if it was used it could not 
    work.
    Removed property "RangeErrorFraction" and changed default value of "MinRange".
-	 To make sure that the user knows that a momentum estimate is used, 
+    To make sure that the user knows that a momentum estimate is used, 
    added property "UseMomentumEstimate" which is false by default.
-	
+   
 ! 2012-02-09 - Manuel Tobias Schiller
  - change calls to std::sort where hits were sorted by a potentially unstable
    sorting criterium to use std::stable_sort; the reason is that there is a
