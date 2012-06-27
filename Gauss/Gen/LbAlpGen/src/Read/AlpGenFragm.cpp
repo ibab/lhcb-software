@@ -11,7 +11,7 @@
 // ============================================================================
 #include "HepMC/PythiaWrapper.h"
 #include "HepMC/IO_HEPEVT.h"
-#include "HepMC/IO_Ascii.h"
+#include "HepMC/IO_GenEvent.h"
 #include "HepMC/GenEvent.h"
 // ============================================================================
 // Gen/Generators
@@ -168,9 +168,9 @@ int main( int argc , char* argv[] )
   hepevtio.set_print_inconsistency_errors( false ) ;
   
   // Instantiate an IO strategy to write the data to file
-  HepMC::IO_Ascii* ascii_io = 0 ;
+  HepMC::IO_GenEvent* ascii_io = 0 ;
   if ( !oFile.empty() ) 
-  { ascii_io = new HepMC::IO_Ascii ( oFile.c_str() ,std::ios::out) ; }
+  { ascii_io = new HepMC::IO_GenEvent ( oFile.c_str() ,std::ios::out) ; }
   
 
   
