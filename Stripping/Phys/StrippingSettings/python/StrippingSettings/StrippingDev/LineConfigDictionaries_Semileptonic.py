@@ -2,7 +2,7 @@
 JPsiForSL = {
     'BUILDERTYPE' : 'JPsiForSLAllLinesConf',
     'CONFIG' :  {
-    "PrescaleSemiIncJpsi2mumu"    : 1.0
+    "PrescaleSemiIncJpsi2mumu"    : 0.5
     ,"MuonPT" : 1200.
     ,"MuonP" : 6000.
     ,"MuonChi2" : 3.
@@ -27,7 +27,7 @@ JPsiForSL = {
     ,"BDIRAMin" : 0.9995
     ,"nLongTrackMax" : 250
     },
-    'STREAMS' : ['Semileptonic'] ,
+    'STREAMS' : ['Dimuon'] ,
     'WGs'    : ['Semileptonic']
     }
 

@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-06-27 - Mika Vesterinen
+ - Prescaled semi-inclusive J/psi line and moved from SL to dimuon stream
+
 ! 2012-06-26 - Jibo He
  - Updated dbase of Stripping19b to include updates of B2OC.
 
