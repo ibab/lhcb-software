@@ -1,14 +1,17 @@
 package MooreSys
-version v14r5p2
+version v14r5p3
 branches doc cmt
 
 #=======================================================
 # Don't forget the applications
 #=======================================================
 
-use  Moore               v14r5p2     Hlt
+use  Moore               v14r5p3     Hlt
 use  IndependenceTests   v1r3        Hlt
 
+# tuned settings
+use  HltTracking         v9r24       Hlt
+use  HltSettings         v5r41       Hlt
 
 # Bug fixes on top of LHCb v34r3 release stack
 use  RichDet             v16r11      Det
