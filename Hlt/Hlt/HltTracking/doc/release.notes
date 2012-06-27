@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2012-06-27 - E. van Herwijnen
+ - Configure LooseForward min pt to 500 (from 300)
+
 !========================= HltTracking v9r23 2012-06-21 =========================
 ! 2012-06-21 - V. Gligorov
  - Fix bug with Rich tracking
