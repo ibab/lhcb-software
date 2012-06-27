@@ -5,16 +5,21 @@
 #include "LoKi/IHybridFactory.h"
 #include <Kernel/GetIDVAlgorithm.h>
 // ============================================================================
-std::string SubstituteEnvVarInPath(const std::string& in) {
+std::string SubstituteEnvVarInPath(const std::string& in)
+{
   /* cp'd directly from $L0MUONROOT/src/component/SubstituteEnvVarInPath.cpp */
   boost::filesystem::path path(in);
   boost::filesystem::path::iterator i = path.begin();
   boost::filesystem::path out;
-  while (i != path.end()) {
-    if ( *(i->c_str())=='$' ) {
+  while (i != path.end()) 
+  {
+    if ( *(i->c_str())=='$' ) 
+    {
       std::string x = System::getEnv( i->c_str()+1 );
       out /= x.empty() ? *i : x ;
-    } else {
+    }
+    else
+    {
       out /= *i;
     }
     ++i;
@@ -24,8 +29,12 @@ std::string SubstituteEnvVarInPath(const std::string& in) {
 // ============================================================================
 BBDecTreeTool::BBDecTreeTool(const std::string& type, const std::string& name,
                              const IInterface* parent)
-  : base_class(type,name,parent), m_threshold(-1.0), m_key(-1), m_ntrees(-1),
-    m_vars(0){
+  : base_class(type,name,parent), 
+    m_threshold(-1.0), 
+    m_key(-1), 
+    m_ntrees(-1),
+    m_vars(0)
+{
   // declare configurable properties
   declareProperty("Threshold", m_threshold, "response threshold (cut)");
   declareProperty("ParamFile", m_paramFile, "parameter file (full path)");
@@ -33,32 +42,38 @@ BBDecTreeTool::BBDecTreeTool(const std::string& type, const std::string& name,
   declareProperty("PIDs",m_pids, "PID names for daughter PT variables");
 }
 // ============================================================================
-StatusCode BBDecTreeTool::readError(const std::string &msg) const {
-  Error("Problem with file " + m_paramFile + ": " + msg + ".");
-  return StatusCode::FAILURE;
+StatusCode BBDecTreeTool::readError(const std::string &msg) const 
+{
+  return Error("Problem with file " + m_paramFile + " : '" + msg + "'");
 }
 // ===========================================================================
-StatusCode BBDecTreeTool::initialize() {
-
+StatusCode BBDecTreeTool::initialize() 
+{
   // initialize the base class  (the first action)
   StatusCode sc = GaudiTool::initialize();
-  if(sc.isFailure()) return sc;
+  if ( sc.isFailure() ) return sc;
 
-  // get tools and algs
-  IDistanceCalculator* dist
+  // get tools
+  IDistanceCalculator * dist
     = tool<IDistanceCalculator>("LoKi::DistanceCalculator",this);
-  const IDVAlgorithm* dva = Gaudi::Utils::getIDVAlgorithm(contextSvc());
-  if (0 == dva) {
+
+  // Get DV Alg. *must* be private to do this
+  const IDVAlgorithm* dva = Gaudi::Utils::getIDVAlgorithm(contextSvc(),this);
+  if ( !dva ) 
+  {
     return Error("Couldn't get parent DVAlgorithm", StatusCode::FAILURE);
   }
   m_vars = new BBDTVarHandler(dva, dist);
 
   // configure the BBDT var handler to use specified PIDs
-  int size = m_pids.size();
-  if(size > 0){
+  const unsigned int size = m_pids.size();
+  if ( size > 0 )
+  {
     LoKi::PhysTypes::Cut cut(LoKi::Cuts::ABSID == m_pids[0]);
-    for(int i = 1; i < size; i++)
+    for ( unsigned int i = 1; i < size; ++i )
+    {
       cut = (cut || (LoKi::Cuts::ABSID == m_pids[i]));
+    }
     m_vars->setPIDs(cut);
   }
 
@@ -77,7 +92,8 @@ StatusCode BBDecTreeTool::initialize() {
   m_splits.resize(nvar);
 
   // variable names
-  for(unsigned int v = 0; v < nvar; v++){
+  for ( unsigned int v = 0; v < nvar; ++v )
+  {
     if(!(inFile >> var_names[v]))
       return this->readError("error reading in variable names");
   }
@@ -86,16 +102,19 @@ StatusCode BBDecTreeTool::initialize() {
 
   // number of splits for each variable
   unsigned int numSplits = 1;
-  for(unsigned int v = 0; v < nvar; v++) {
+  for ( unsigned int v = 0; v < nvar; ++v )
+  {
     if(!(inFile >> value))
       return this->readError("error reading no. of splits");
     m_splits[v].resize(value);
     numSplits *= value;
   }
   // split values for each variable
-  for(unsigned int v = 0; v < nvar; v++) {
-    unsigned int size = m_splits[v].size();
-    for(unsigned int s = 0; s < size; s++){
+  for ( unsigned int v = 0; v < nvar; ++v ) 
+  {
+    const unsigned int size = m_splits[v].size();
+    for ( unsigned int s = 0; s < size; ++s )
+    {
       if(!(inFile >> dvalue)) return this->readError("error reading splits");
       m_splits[v][s] = dvalue;
     }
@@ -105,7 +124,8 @@ StatusCode BBDecTreeTool::initialize() {
     return this->readError("error reading no. of trees");
   // actual values
   m_values.resize(numSplits);
-  while(inFile >> index >> value){
+  while(inFile >> index >> value)
+  {
     if(index > numSplits) return this->readError("error reading values");
     m_values[index] = (unsigned short int)value;
   }
@@ -117,7 +137,7 @@ StatusCode BBDecTreeTool::initialize() {
             << m_paramFile << " -> " << fnam  << " (" << m_ntrees << " trees,"
             << nvar << " vars," << numSplits << " splits)." << endmsg;
 
-  return StatusCode::SUCCESS ;
+  return sc;
 }
 // ===========================================================================
 StatusCode BBDecTreeTool::finalize() {

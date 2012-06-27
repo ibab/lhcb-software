@@ -2,18 +2,19 @@
 // ============================================================================
 #include "BBDTSimpleTool.h"
 #include "LoKi/IHybridFactory.h"
-#include <Kernel/GetIDVAlgorithm.h>
+#include "Kernel/GetIDVAlgorithm.h"
 // ============================================================================
 BBDTSimpleTool::BBDTSimpleTool(const std::string& type,
                                const std::string& name,
                                const IInterface* parent)
-  : base_class(type,name,parent), m_vars(0){
+  : base_class(type,name,parent), m_vars(0)
+{
   // declare configurable properties
   declareProperty("Cuts", m_cuts, "Simple tree of cuts");
 }
 // ===========================================================================
-StatusCode BBDTSimpleTool::initialize() {
-
+StatusCode BBDTSimpleTool::initialize() 
+{
   // initialize the base class  (the first action)
   StatusCode sc = GaudiTool::initialize();
   if(sc.isFailure()) return sc;
@@ -21,8 +22,8 @@ StatusCode BBDTSimpleTool::initialize() {
   // get tools and algs
   IDistanceCalculator* dist
     = tool<IDistanceCalculator>("LoKi::DistanceCalculator",this);
-  const IDVAlgorithm* dva = Gaudi::Utils::getIDVAlgorithm(contextSvc());
-  if (0 == dva)
+  const IDVAlgorithm* dva = Gaudi::Utils::getIDVAlgorithm(contextSvc(),this);
+  if ( !dva )
     return Error("Couldn't get parent DVAlgorithm", StatusCode::FAILURE);
   m_vars = new BBDTVarHandler(dva, dist);
 
@@ -58,7 +59,7 @@ StatusCode BBDTSimpleTool::initialize() {
     if(iter != m_cuts.end()) debug() << "|";
   }
   debug() << "]" << endmsg;
-  return StatusCode::SUCCESS;
+  return sc;
 }
 // ===========================================================================
 StatusCode BBDTSimpleTool::finalize() {
