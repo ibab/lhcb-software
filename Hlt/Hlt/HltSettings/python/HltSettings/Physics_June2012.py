@@ -74,7 +74,7 @@ class Physics_June2012( object ):
                                                , 'AllL0Tight_Velo_NHits' : 9 
                                                , 'AllL0Tight_Velo_Qcut'  : 3   
                                                , 'AllL0Tight_ValidateTT' : True
-                                               , 'AllL0_PT'         :  1500
+                                               , 'AllL0_PT'         :  1600
                                                , 'AllL0_P'          :  3000
                                                , 'AllL0_IP'         :  0.100
                                                , 'AllL0_IPChi2'     :  16
