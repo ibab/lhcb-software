@@ -4,6 +4,15 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-06-27 - Jibo He
+ - Stripping19b/LineConfigDictionaries_Calib.py
+  . Included TriggerValidation line
+ - Stripping19b/LineConfigDictionaries_MiniBias.py
+  . Updated conf dict to the one in the selection file
+ - Stripping19b/LineConfigDictionaries_BandQ.py
+  . Updated DLS cut of Detached psi(2S) to be consistent with trigger
+ - Updated dbase of Stripping19b, and copied to strippingdev
+
 ! 2012-06-27 - Mika Vesterinen
  - Previous commit was to StrippingDev only. Now updated Stripping19b.
 

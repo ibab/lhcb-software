@@ -221,7 +221,7 @@ FullDSTDiMuon = {
         'Psi2MuMuDetached_MassWindow'                      :   100.   ,  # MeV
         'Psi2MuMuDetached_VCHI2PDOF'                       :    20.   ,
         'Psi2MuMuDetached_PT'                              : -1000.   ,   # MeV, no cut now
-        'Psi2MuMuDetached_LTCuts'                          :  " & (BPVDLS>5) & (MINTREE('mu+'==ABSID,BPVIPCHI2())>4)"
+        'Psi2MuMuDetached_LTCuts'                          :  " & (BPVDLS>3) & (MINTREE('mu+'==ABSID,BPVIPCHI2())>4)"
         },
     'STREAMS' : [ 'Dimuon' ],
     'WGs'    : [ 'BandQ' ]
