@@ -53,7 +53,6 @@ private:
   double m_dZSVPV;
   double m_sumMomSV;
   double m_vtxChi2;
-  IDVAlgorithm* m_DaVinciAlg;
   const IDistanceCalculator* m_DOCA;
   
 };

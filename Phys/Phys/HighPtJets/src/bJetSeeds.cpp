@@ -49,7 +49,6 @@ bJetSeeds::bJetSeeds(const std::string& name,
   declareProperty("DZSVPV",         m_dZSVPV    = 1.0);
   declareProperty("SumMomSV",       m_sumMomSV  = 1.0);
   declareProperty("VtxChi2",        m_vtxChi2   = 30.0);
-  m_DaVinciAlg = 0;
   m_DOCA = 0;
 }
 
@@ -61,25 +60,21 @@ bJetSeeds::~bJetSeeds() {};
 //=============================================================================
 // Initialisation
 //=============================================================================
-StatusCode bJetSeeds::initialize() {
+StatusCode bJetSeeds::initialize() 
+{
   StatusCode sc = DVAlgorithm::initialize();
   if (!sc) return sc;
   if(msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
-  // Parent DVAlgorithm
-  m_DaVinciAlg = Gaudi::Utils::getIDVAlgorithm(contextSvc());
-  if(!m_DaVinciAlg) {
-    error() << "Couldn't get parent DVAlgorithm" << endreq;
-    return StatusCode::FAILURE;
-  }
   // DOCA distance calculator
-  m_DOCA = m_DaVinciAlg->distanceCalculator();
+  m_DOCA = distanceCalculator();
   if(!m_DOCA) {
     error() << "Unable to retrieve DistanceCalculator tool" << endreq;
     return StatusCode::FAILURE;
   }
   // Vertex fitter
   fitterSV = tool<IVertexFit>(m_VrtxFitterName,this);
-  if(!fitterSV) {
+  if(!fitterSV)
+  {
     error() << "Unable to retrieve VertexFitter tool" << endreq;
     return StatusCode::FAILURE;
   } 
