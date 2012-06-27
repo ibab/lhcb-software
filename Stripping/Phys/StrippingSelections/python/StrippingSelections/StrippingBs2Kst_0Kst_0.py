@@ -35,9 +35,6 @@ __config_default__ = {
      ,  "SumPT"            : 5000  # MeV
      }
 
-
-
-
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from CommonParticles.Utils import *
@@ -225,7 +222,7 @@ def makeBs2Kst_0Kst_0(name,
 
        _Bs.ReFitPVs = True
 
-       _Bs.addTool( OfflineVertexFitter() )
+       _Bs.addTool( OfflineVertexFitter )
        _Bs.VertexFitters.update( { "" : "OfflineVertexFitter"} )
        _Bs.OfflineVertexFitter.useResonanceVertex = False
 

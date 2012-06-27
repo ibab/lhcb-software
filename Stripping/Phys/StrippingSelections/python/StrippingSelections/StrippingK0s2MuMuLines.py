@@ -107,7 +107,7 @@ def makeNoMuID(name) :
     K0s2MuMuNoMuID = CombineParticles("Comine"+name)
     K0s2MuMuNoMuID.DecayDescriptor = "KS0 -> pi+ pi-"
     # Set the OfflineVertexFitter to keep the 4 tracks and not the J/Psi Kstar:
-    K0s2MuMuNoMuID.addTool( OfflineVertexFitter() )
+    K0s2MuMuNoMuID.addTool( OfflineVertexFitter )
     K0s2MuMuNoMuID.VertexFitters.update( { "" : "OfflineVertexFitter"} )
     K0s2MuMuNoMuID.OfflineVertexFitter.useResonanceVertex = False
     K0s2MuMuNoMuID.ReFitPVs = True
@@ -139,7 +139,7 @@ def makeK0s2mm(name) :
     from Configurables import OfflineVertexFitter
     K0s2MuMu = CombineParticles("Combine"+name)
     K0s2MuMu.DecayDescriptor = "KS0 -> mu+ mu-"
-    K0s2MuMu.addTool( OfflineVertexFitter() )
+    K0s2MuMu.addTool( OfflineVertexFitter )
     K0s2MuMu.VertexFitters.update( { "" : "OfflineVertexFitter"} )
     K0s2MuMu.OfflineVertexFitter.useResonanceVertex = False
     K0s2MuMu.ReFitPVs = True

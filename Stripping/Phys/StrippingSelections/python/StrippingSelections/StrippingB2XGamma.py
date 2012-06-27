@@ -329,7 +329,7 @@ def makeBs2PhiGamma(name, phiSel, gammaSel, BsDirAngle, BsPVIPchi2, BsMassWin):
                            CombinationCut=_combinationCut,
                            MotherCut=_motherCut,
                            ReFitPVs=False)#True)
-    #_Bs.addTool(OfflineVertexFitter())
+    #_Bs.addTool(OfflineVertexFitter)
     return Selection(name, Algorithm=_Bs, RequiredSelections=[gammaSel, phiSel])
 
 def makeBd2KstGamma(name, kstSel, gammaSel, B0DirAngle, B0PVIPchi2, B0MassWin):
@@ -352,7 +352,7 @@ def makeBd2KstGamma(name, kstSel, gammaSel, B0DirAngle, B0PVIPchi2, B0MassWin):
                            CombinationCut=_combinationCut,
                            MotherCut=_motherCut,
                            ReFitPVs=False)#True)
-    #_Bd.addTool(OfflineVertexFitter())
+    #_Bd.addTool(OfflineVertexFitter)
     #_Bd.VertexFitters.update({"": "OfflineVertexFitter"})
     #return Selection(name, Algorithm=_Bd, RequiredSelections=[kstSel, gammaSel])
     return Selection(name, Algorithm=_Bd, RequiredSelections=[gammaSel, kstSel])

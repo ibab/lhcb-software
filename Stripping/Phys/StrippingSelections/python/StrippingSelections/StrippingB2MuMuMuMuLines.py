@@ -105,7 +105,6 @@ class B2MuMuMuMuLinesConf(LineBuilder) :
         self.registerLine( self.D2MuMuMuMuLine )
 
 
-
 def makeDefault(name,inputSel) :
     """
     B --> 4 mu selection
@@ -115,7 +114,7 @@ def makeDefault(name,inputSel) :
     Detached4mu = CombineParticles("Combine"+name)
     Detached4mu.DecayDescriptor = "B_s0 -> mu+ mu- mu+ mu-"
     # Set the OfflineVertexFitter to keep the 4 tracks and not the J/Psi Kstar:
-    Detached4mu.addTool( OfflineVertexFitter() )
+    Detached4mu.addTool( OfflineVertexFitter )
     Detached4mu.VertexFitters.update( { "" : "OfflineVertexFitter"} )
     Detached4mu.OfflineVertexFitter.useResonanceVertex = False
     Detached4mu.ReFitPVs = True
@@ -145,7 +144,7 @@ def makeD2MuMuMuMu(name,inputSel) :
     D2MuMuMuMu = CombineParticles("Combine"+name)
 
     D2MuMuMuMu.DecayDescriptor = "D0 -> mu+ mu- mu+ mu-"
-    D2MuMuMuMu.addTool( OfflineVertexFitter() )
+    D2MuMuMuMu.addTool( OfflineVertexFitter )
     D2MuMuMuMu.VertexFitters.update( { "" : "OfflineVertexFitter"} )
 
     D2MuMuMuMu.DaughtersCuts = { "mu+" : "(TRCHI2DOF < 3.0 ) "\

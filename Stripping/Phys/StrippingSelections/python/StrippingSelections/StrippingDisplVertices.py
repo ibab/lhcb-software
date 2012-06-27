@@ -260,9 +260,9 @@ class DisplVerticeLinesConf(LineBuilder) :
         _veloVertices.PVOfflineTool.PVsChi2Separation = 0
         _veloVertices.PVOfflineTool.PVsChi2SeparationLowMult = 0
         _veloVertices.PVOfflineTool.PVSeedingName = "PVSeed3DTool"
-        _veloVertices.PVOfflineTool.addTool(PVSeed3DTool())
+        _veloVertices.PVOfflineTool.addTool(PVSeed3DTool)
         _veloVertices.PVOfflineTool.PVSeed3DTool.MinCloseTracks = 3
-        _veloVertices.PVOfflineTool.addTool( LSAdaptPV3DFitter())
+        _veloVertices.PVOfflineTool.addTool( LSAdaptPV3DFitter )
         _veloVertices.PVOfflineTool.PVFitterName = "LSAdaptPV3DFitter"
         _veloVertices.PVOfflineTool.LSAdaptPV3DFitter.maxIP2PV = 2*mm
         _veloVertices.PVOfflineTool.LSAdaptPV3DFitter.MinTracks = 4
@@ -290,17 +290,17 @@ class DisplVerticeLinesConf(LineBuilder) :
         _downVertices = PatPV3D(name+'DownDV3DAlg')
         _downVertices.OutputVerticesName = 'Rec/'+name+'DownDV3D/RecVertices'
         _downVertices.addTool(PVOfflineTool)
-        _downVertices.PVOfflineTool.addTool( LSAdaptPVFitter())
+        _downVertices.PVOfflineTool.addTool( LSAdaptPVFitter )
         _downVertices.PVOfflineTool.InputTracks = ['Rec/'+name+'DownstreamTr/Tracks']
         _downVertices.PVOfflineTool.RequireVelo = False
         _downVertices.PVOfflineTool.PVsChi2Separation = 0
         _downVertices.PVOfflineTool.PVsChi2SeparationLowMult = 0
-        _downVertices.PVOfflineTool.addTool(PVSeed3DTool())
+        _downVertices.PVOfflineTool.addTool(PVSeed3DTool )
         _downVertices.PVOfflineTool.PVSeedingName = "PVSeed3DTool"
         _downVertices.PVOfflineTool.PVSeed3DTool.MinCloseTracks = 4
         _downVertices.PVOfflineTool.PVSeed3DTool.TrackPairMaxDistance = 2*mm
         _downVertices.PVOfflineTool.PVSeed3DTool.zMaxSpread = 20*mm
-        _downVertices.PVOfflineTool.addTool( LSAdaptPVFitter())
+        _downVertices.PVOfflineTool.addTool( LSAdaptPVFitter )
         _downVertices.PVOfflineTool.PVFitterName = "LSAdaptPVFitter"
         _downVertices.PVOfflineTool.LSAdaptPVFitter.MinTracks = 4
         _downVertices.PVOfflineTool.LSAdaptPVFitter.maxChi2 = 400.0

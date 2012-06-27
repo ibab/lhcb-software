@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-06-27 - Chris Jones
+ - Do not 'addTool' with the unsafe () operator
+
 !========================= StrippingSelections v3r14 2012-06-27 =========================
 ! 2012-06-27 - Jibo He
  - __init__.py

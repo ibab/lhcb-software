@@ -240,7 +240,7 @@ def makeBs2PhiKst(name,
 
        _Bs.ReFitPVs = True
 
-       _Bs.addTool( OfflineVertexFitter() )
+       _Bs.addTool( OfflineVertexFitter )
        _Bs.VertexFitters.update( { "" : "OfflineVertexFitter"} )
        _Bs.OfflineVertexFitter.useResonanceVertex = False
 

@@ -36,9 +36,6 @@ __config_default__ = {
      ,  "BIPCHI2"               : 25    # adimensional
      }
 
-
-
-
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from CommonParticles.Utils import *
@@ -47,9 +44,7 @@ from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 
-
 default_name = "Bs2KstKst"
-
 
 class StrippingBs2KstKstConf(LineBuilder):
      """
@@ -293,7 +288,7 @@ def makeBs2KstKst(name,
 
        _Bs.ReFitPVs = True
 
-       _Bs.addTool( OfflineVertexFitter() )
+       _Bs.addTool( OfflineVertexFitter )
        _Bs.VertexFitters.update( { "" : "OfflineVertexFitter"} )
        _Bs.OfflineVertexFitter.useResonanceVertex = False
 
@@ -332,7 +327,7 @@ def makeBs2KstKstSameCharge(name,
 
        _Bs.ReFitPVs = True
 
-       _Bs.addTool( OfflineVertexFitter() )
+       _Bs.addTool( OfflineVertexFitter )
        _Bs.VertexFitters.update( { "" : "OfflineVertexFitter"} )
        _Bs.OfflineVertexFitter.useResonanceVertex = False
 
@@ -372,7 +367,7 @@ def makeBd2JPsiKst(name,
 
        _Bd.ReFitPVs = True
 
-       _Bd.addTool( OfflineVertexFitter() )
+       _Bd.addTool( OfflineVertexFitter )
        _Bd.VertexFitters.update( { "" : "OfflineVertexFitter"} )
        _Bd.OfflineVertexFitter.useResonanceVertex = False
 

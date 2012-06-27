@@ -322,7 +322,7 @@ def makeDst2D0Pi(name, D0Sel, slowPionSel, deltaMass, deltaMassL, DstVCHI2, pvRe
 ##                            CombinationCut=_combinationCut,
 ##                            MotherCut=_motherCut,
 ##                            ReFitPVs=False)#True)
-##     #_Bd.addTool(OfflineVertexFitter())
+##     #_Bd.addTool(OfflineVertexFitter)
 ##     #_Bd.VertexFitters.update({"": "OfflineVertexFitter"})
 ##     #return Selection(name, Algorithm=_Bd, RequiredSelections=[kstSel, gammaSel])
 ##     return Selection(name, Algorithm=_Bd, RequiredSelections=[gammaSel, kstSel])

@@ -152,7 +152,7 @@ def makeBs2XMuMu(name,
                     "& (BPVVDCHI2 > %(BsFDCHI2)s)" % locals()
     #        _Bs.ReFitPVs = True
     # Set the OfflineVertexFitter to keep the 4 tracks
-    _Bs.addTool( OfflineVertexFitter() )
+    _Bs.addTool( OfflineVertexFitter )
     _Bs.VertexFitters.update( { "" : "OfflineVertexFitter"} )
     _Bs.OfflineVertexFitter.useResonanceVertex = False
     return Selection(name, 
