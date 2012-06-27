@@ -1,9 +1,10 @@
-\!-----------------------------------------------------------------------------
+!-----------------------------------------------------------------------------
 ! Package     : Hlt/HltSettings
 ! Responsible : Patrick Koppenburg, Gerhard Raven
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================= HltSettings v5r41 2012-06-27 =========================
 ! 2012-06-27 - E. van Herwijnen
   - In Physics_June2012.py : AllL0_PT 1600 (was 1500), AllL0_TrChi2 1.5 
   (was 2.0), Photon_TrChi2 stays 2.0 (doesn't exist in Tight)
