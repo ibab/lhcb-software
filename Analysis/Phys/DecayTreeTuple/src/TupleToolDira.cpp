@@ -48,7 +48,7 @@ StatusCode TupleToolDira::initialize()
   const StatusCode sc = TupleToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
-  m_context = Gaudi::Utils::getIDVAlgorithm ( contextSvc() ) ;
+  m_context = Gaudi::Utils::getIDVAlgorithm ( contextSvc(), this ) ;
   if (0==m_context) return Error("Couldn't get parent DVAlgorithm",
                                  StatusCode::FAILURE);
 

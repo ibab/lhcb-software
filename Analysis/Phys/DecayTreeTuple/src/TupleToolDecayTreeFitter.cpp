@@ -69,7 +69,7 @@ StatusCode TupleToolDecayTreeFitter::initialize()
     m_massConstraintsPids.push_back(prop->pdgID());
   } // iterS
 
-  m_dva = Gaudi::Utils::getIDVAlgorithm ( contextSvc() ) ;
+  m_dva = Gaudi::Utils::getIDVAlgorithm ( contextSvc(), this ) ;
   if (0==m_dva) return Error("Couldn't get parent IDVAlgorithm", StatusCode::FAILURE);
 
   m_particleDescendants = tool<IParticleDescendants> ( "ParticleDescendants");

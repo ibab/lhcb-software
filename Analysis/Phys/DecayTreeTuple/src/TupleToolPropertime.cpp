@@ -53,7 +53,7 @@ StatusCode TupleToolPropertime::initialize()
 {
   if( ! TupleToolBase::initialize() ) return StatusCode::FAILURE;
 
-  m_dva = Gaudi::Utils::getIDVAlgorithm ( contextSvc() ) ;
+  m_dva = Gaudi::Utils::getIDVAlgorithm ( contextSvc(), this ) ;
   if (0==m_dva) return Error("Couldn't get parent DVAlgorithm",
                              StatusCode::FAILURE);
 

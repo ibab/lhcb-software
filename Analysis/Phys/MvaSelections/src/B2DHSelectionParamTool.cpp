@@ -89,10 +89,11 @@ B2DHSelectionParamTool::~B2DHSelectionParamTool() {
 //=============================================================================
 
 
-StatusCode B2DHSelectionParamTool::initialize() {
+StatusCode B2DHSelectionParamTool::initialize()
+{
   StatusCode sc = StatusCode::SUCCESS;
 
-  m_dva=Gaudi::Utils::getIDVAlgorithm(contextSvc());
+  m_dva=Gaudi::Utils::getIDVAlgorithm(contextSvc(),this);
   if (0 == m_dva) {
    return Error("B2DHSelectionParamTool initialize could not get parent DValgorithm",
                      StatusCode::FAILURE);
