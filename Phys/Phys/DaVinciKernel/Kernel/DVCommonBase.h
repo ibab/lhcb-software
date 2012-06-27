@@ -362,7 +362,7 @@ public:
   /// accessor for IOnOffline tool
   inline IOnOffline* onOffline() const
   {
-    return this->getTool<IOnOffline>( "OnOfflineTool:PUBLIC",
+    return this->getTool<IOnOffline>( "OnOfflineTool",
                                       m_onOffline, this );
   }
 
@@ -592,11 +592,11 @@ private:
                   const ToolMap&     customMap     ,
                   const ToolMap&     defaultMap    ,
                   STORAGE&           toolMap       ,
-                  const IInterface*  parent = NULL )  const
+                  const IInterface*  parent = NULL ) const
   {
     TYPE* t = NULL;
     // look within the local list of already located tools of given type
-    typename STORAGE::iterator ifind = toolMap.find ( nickName );
+    typename STORAGE::const_iterator ifind = toolMap.find ( nickName );
     // tool is in the list?
     if ( toolMap.end() != ifind )
     {
