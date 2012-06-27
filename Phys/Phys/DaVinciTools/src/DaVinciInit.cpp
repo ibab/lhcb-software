@@ -36,7 +36,7 @@ DaVinciInit::DaVinciInit( const std::string& name,
   declareProperty("PrintEvent", m_print = false, "Print Event and Run Number");
   declareProperty("Increment", m_increment = 100,
                   "Number of events to measure memory. This is aligned with PrintFreq in DaVinci");
-  declareProperty("MemoryPurgeLimit", m_memPurgeLimit = 3300 * 1000 ); // 3.3GB
+  declareProperty("MemoryPurgeLimit", m_memPurgeLimit = 3600 * 1000 ); // 3.6GB
 }
 
 //=============================================================================
@@ -99,12 +99,12 @@ StatusCode DaVinciInit::execute()
       info() << "Memory has changed from " << m_lastMem << " to " << mem << " KB"
              << " (" << memDiff << "KB, " << 100.*memDiff/m_lastMem << "%)"
              << " in last " << m_increment << " events" << endmsg ;
-      if ( mem > m_memPurgeLimit )
-      {
-        info() << "Memory exceeds limit " << m_memPurgeLimit 
-               << " KB -> Purging pools" << endmsg;
-        releaseMemoryPools();
-      }
+//       if ( mem > m_memPurgeLimit )
+//       {
+//         info() << "Memory exceeds limit " << m_memPurgeLimit 
+//                << " KB -> Purging pools" << endmsg;
+//         releaseMemoryPools();
+//       }
     }
     m_lastMem = mem;
   }
@@ -116,7 +116,7 @@ StatusCode DaVinciInit::execute()
 
 StatusCode DaVinciInit::finalize()
 {
-  releaseMemoryPools();
+  //releaseMemoryPools();
   return LbAppInit::finalize();
 }
 
@@ -142,7 +142,7 @@ void DaVinciInit::releaseMemoryPools() const
 
   if ( vmem_b != vmem_a )
   {
-    info() << "Memory changed after pool release = " 
+    info() << "Memory change after pool release = " 
            << (long long)(vmem_a-vmem_b) << " KB" << endmsg;
   }
 

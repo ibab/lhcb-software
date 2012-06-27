@@ -28,17 +28,24 @@ DECLARE_TOOL_FACTORY( OnOfflineTool )
                                 const std::string& name,
                                 const IInterface* parent )
     : GaudiTool ( type, name , parent )
+
+    , m_online(false)
+
     , m_onlinePVLocation(LHCb::RecVertexLocation::Velo3D)
     , m_offlinePVLocation(LHCb::RecVertexLocation::Primary)
-    , m_online(false)
+
     , m_offlineDistTool("LoKi::DistanceCalculator")
     , m_onlineDistTool("LoKi::TrgDistanceCalculator")
+
     , m_offlineVertexFitter("OfflineVertexFitter" )
     , m_onlineVertexFitter("LoKi::FastVertexFitter")
+
     , m_offlineCombiner("OfflineVertexFitter" )
     , m_onlineCombiner("LoKi::FastVertexFitter")
+
     , m_offlinePVRelatorName("GenericParticle2PVRelator__p2PVWithIPChi2_OfflineDistanceCalculatorName_/P2PVWithIPChi2")
     , m_onlinePVRelatorName("GenericParticle2PVRelator__p2PVWithIPChi2_OnlineDistanceCalculatorName_/OnlineP2PVWithIPChi2")
+
     , m_offlineTESTrunk("Phys")
     , m_onlineTESTrunk("Hlt2")
 {
@@ -109,10 +116,12 @@ StatusCode OnOfflineTool::initialize()
              "'. Assuming offline mode, please check !" ).ignore();
   }
 
-  // check it is not global
+  //check it is not global
   const IToolSvc* par = dynamic_cast<const IToolSvc*>( this->parent() );
   if ( 0 != par )
-  { return Error ( "Parent of OnOfflineTool is ToolSvc. OnOfflineTool *must* be private" ) ; }
+  {
+    return Error ( "Parent of OnOfflineTool is ToolSvc. OnOfflineTool *must* be private" ) ;
+  }
 
   return sc;
 }

@@ -20,9 +20,12 @@
  *  @author Patrick KOPPENBURG
  *  @date   2005-06-08
  */
-class OnOfflineTool : public GaudiTool, virtual public IOnOffline 
+class OnOfflineTool : public GaudiTool, 
+                      virtual public IOnOffline 
 {
+
 public: 
+
   /// Standard constructor
   OnOfflineTool( const std::string& type, 
                  const std::string& name,
@@ -31,6 +34,8 @@ public:
   virtual ~OnOfflineTool( ); ///< Destructor
   
   StatusCode initialize();
+
+public:
   
   virtual bool online() const {return m_online;} ;
   
@@ -47,13 +52,14 @@ public:
   virtual const std::string& trunkOnTES             () const  ;
   
 private:
+
   // ==========================================================================
+  /// On or Offline?
+  bool        m_online               ;          //               On or Offline?
   /// PV location 
   std::string m_onlinePVLocation     ;          //                  PV location
   /// PV location 
   std::string m_offlinePVLocation    ;          //                  PV location
-  /// On or Offline?
-  bool        m_online               ;          //               On or Offline?
   /// Offline distance  tool
   std::string m_offlineDistTool      ;          //        offline distance tool
   /// Online distance  tool

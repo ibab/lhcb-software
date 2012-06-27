@@ -404,7 +404,7 @@ StatusCode ConeVariablesForEW::ChargedCone( const LHCb::Particle *seed,
   if ( msgLevel(MSG::WARNING) )
   Warning( "Could not retrieve vertices" );
 
-  IDVAlgorithm *dva = Gaudi::Utils::getIDVAlgorithm( contextSvc() ) ;
+  IDVAlgorithm *dva = Gaudi::Utils::getIDVAlgorithm( contextSvc(), this ) ;
   if ( !dva )
   if ( msgLevel(MSG::WARNING) )
   Warning( "Could not retrieve DV utilities" );
