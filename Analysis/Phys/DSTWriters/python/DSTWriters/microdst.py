@@ -47,7 +47,7 @@ def stripMicroDSTElements(pack=True,saveTrackClusters=True) :
         ClonePVRelations( location = "Particle2VertexRelations",
                           clonePVs = True,
                           RecVertexCloner = "VertexBaseFromRecVertexClonerNoTracks" ),
-        ReFitAndClonePVs(RecVertexCloner = "VertexBaseFromRecVertexClonerNoTracks")
+        ReFitAndClonePVs( RecVertexCloner = "VertexBaseFromRecVertexClonerNoTracks" )
         ]
     if pack :
         elements += [ PackStrippingReports() ]

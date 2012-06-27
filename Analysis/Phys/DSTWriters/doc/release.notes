@@ -4,6 +4,9 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2012-06-27 - Chris Jones
+ - Disable packing checks, for release.
+
 ! 2012-06-14 - Chris Jones
  - Clean up the python options a bit, removing old obsolete code
  - Add support for new input DST format, with RawEvent split up
