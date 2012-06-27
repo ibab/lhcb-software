@@ -163,6 +163,7 @@ import StrippingTrackEffMuonTT
 import StrippingMuIDCalib
 import StrippingD02KPiPi0
 import StrippingBeamGas
+import StrippingForTriggerValidation
 
 import StrippingD2HHLTUnbiased
 import StrippingBu2hhh

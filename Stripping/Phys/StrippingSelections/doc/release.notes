@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+!========================= StrippingSelections v3r14 2012-06-27 =========================
+! 2012-06-27 - Jibo He
+ - __init__.py
+   . Added StrippingForTriggerValidation
+
 ! 2012-06-26 - Jibo He for Yury Shcheglov
  - Added Stripping line for Betac -> phi p
 
