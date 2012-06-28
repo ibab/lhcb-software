@@ -18,7 +18,7 @@
 #include <linux/personality.h>
 
 using namespace Checkpointing;
-static void* mtcp_global_stack_end = 0;
+//static void* mtcp_global_stack_end = 0;
 static int checkMarker(int fd, Marker should) {
   Marker got;
   mtcp_sys_read(fd,&got,sizeof(got));
@@ -289,7 +289,7 @@ static int usage() {
 
 /// Print data content
 extern "C" char** environ;
-int main(int argc, char** argv, char** envp) {
+int main(int argc, char** argv, char** /* envp */) {
   mtcp_sys_personality(ADDR_NO_RANDOMIZE|mtcp_sys_personality(0xFFFFFFFFUL));
   SysInfo::start_restore_t func = 0;
   //environ = envp;
