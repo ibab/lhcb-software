@@ -4,6 +4,8 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+!========================= DSTWriters v4r7 2012-06-28 =========================
+
 ! 2012-06-27 - Chris Jones
  - Disable packing checks, for release.
 
