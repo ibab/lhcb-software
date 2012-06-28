@@ -92,19 +92,6 @@ Purpose             : LHCb physics packages
  . The method getDVAlgorithm has been removed, as it is not compatible with
    the above changes. getIDVAlgorithm should be used instead.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 </PRE><H1><A NAME=v14r3>2012-05-03 Phys v14r3 </A></H1><PRE>
 - Based on LHCb v34r3, REC v13r3 and Gaudi v23r2
 
