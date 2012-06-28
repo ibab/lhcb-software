@@ -3,6 +3,8 @@
 ! Responsible : Marcin Kucharczyk
 !-----------------------------------------------------------------------------
 
+!========================= HighPtJets v1r7p1 2012-06-28 =========================
+
 ! 2012-06-27 - Chris Jones
  - Remove unneccessary use of getIDVAlgorithm in an algorithm !!
 
