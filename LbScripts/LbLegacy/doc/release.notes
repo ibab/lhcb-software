@@ -1,3 +1,8 @@
+2012-06-28 Ben Couturier <Ben.Couturier@cern.ch>
+	
+	* scripts/mkLCGCMTtar: Fix code to only include the list of effectively
+	used top directories in the tar command. 
+
 2012-06-25 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v5r1

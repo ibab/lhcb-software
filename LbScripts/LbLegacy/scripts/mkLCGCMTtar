@@ -509,6 +509,8 @@ def get_tar_files(native_version, packages_versions,binary_dir, output_file):
 # loop over external packages
     missing = []
     tarko   = []
+    # List of the top directories, that should be packaged in the tarball
+    topdirlist = [ 'external']
     for pack in packages_versions.keys():
 
         print "======> %s data:" % pack,  packages_versions[pack]
@@ -523,6 +525,7 @@ def get_tar_files(native_version, packages_versions,binary_dir, output_file):
         elif packType == "app/releases":
             if not os.path.exists(appreleasesdir):
                 os.makedirs(appreleasesdir)
+                topdirlist.append("app")
             os.chdir(appreleasesdir)
         else:
             print "Incorrect packType for %s : %s ABORTING" % (pack, packType)
@@ -607,7 +610,7 @@ def get_tar_files(native_version, packages_versions,binary_dir, output_file):
         str += ' --exclude "*.rpm" '
         if exclusion_pattern :
             str += ' --exclude "%s" ' % exclusion_pattern
-        str += ' external app'
+        str += " " + " ".join(topdirlist)
         print str
         rc = os.system(str)
         if rc == 0:
