@@ -3,14 +3,10 @@
 ! Responsible : Chris Jones
 !============================================================================
 
-! 2012-06-26 - Chris Jones
- - Impliment a check in DaVinciInit on the total virtual memory usage, and
-   trigger a purge of the main memory pools if it goes over a certain limit.
-   Also purge the pools during finalize(). Temporary hack, until a better 
-   solution is found (via an Auditor or similar).
+!========================= DaVinciTools v23r0 2012-06-28 =========================
 
 ! 2012-06-25 - Chris Jones
- - Use DaVinciAlgorithm base class for FilterDesktop, CombineParticles,
+ - Use new DaVinciAlgorithm base class for FilterDesktop, CombineParticles,
    AddExtraInfo, ConjugateNeutralPID and RemoveClones
 
 ! 2012-06-23 - Olivier Deschamps
