@@ -5,10 +5,11 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+!========================= PhysConf v1r16 2012-06-28 =========================
 
 ! 2012-05-15 - Olivier Deschamps 
- - Configuration.py : add CaloReProcessing slot that triggers the full Calo re-reconstruction in the init sequence (default False)
-
+ - Configuration.py : add CaloReProcessing slot that triggers the full Calo re-reconstruction
+    in the init sequence (default False)
 
 !========================= PhysConf v1r15 2012-03-01 =========================
 
