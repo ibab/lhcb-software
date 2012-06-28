@@ -88,7 +88,7 @@ Purpose             : LHCb physics packages
    + DaVinciHistoAlgorithm : Histogramming only
    + DaVinciTupleAlgorithm : Histogramming and tupling
    DVAlgorithm is kept (using DaVinciTupleAlgorithm) for backwards 
-   compatibility
+   compatibility. Please use the new base classes.
  . The method getDVAlgorithm has been removed, as it is not compatible with
    the above changes. getIDVAlgorithm should be used instead.
 
