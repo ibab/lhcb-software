@@ -20,7 +20,7 @@ In JetAccessories :
  . Remove potential memory leak in UpdateJetsWithVtx.cpp (coverity defect 29332)
  . Remove obsolete code:  JetsUtilsCaloPart.cpp
                           TagJetsWithSeedFinder.h
-                          TagJetsWithSeedFinder.cpp (was causing coverity defect 24495)
+                          TagJetsWithSeedFinder.cpp (coverity defect 24495)
  . Modification to ParticleFlow4Jets.cpp to allow neutral recovery behind tracks
  . Update of ParticleFlow_Config.py to follow the modification of ParticleFlow4Jets
  . Update of UpdateJetsWithVtx.cpp to compute correct weights
@@ -35,7 +35,7 @@ In FlavourTaggingChecker :
 
 In FlavourTagging :
  . Use getIDVAlgorithm instead of getDVAlgorithm.
- . OS and SSpi and SSK calibration Strip17
+ . OS and SSpi and SSK calibration for Strip17
 
 In DecayTreeTuple :
  . Add new tool TupleToolBremInfo : provide multiplicity/momentum/origin of brem 
@@ -56,7 +56,7 @@ In DecayTreeTuple :
                         to save space on the (m)DSTs. 
      ==> the list of stripping lines must now be set explicitely via the
          StrippingList property (or equivalently TriggerList inherited from
-          TupleToolTriggerBase)
+         TupleToolTriggerBase)
  . TupleToolSubMass : new tool producing the invariant masses for all n-body 
    combinations in N-body decays (n=2,N). The PID subtitution can be configured.
  . TupleToolTagging : New and consitstent default tag decision and omega (0, 0.5)
@@ -77,7 +77,7 @@ In DaVinciMCTools :
 In DSTWriters :
  . Clean up the python options a bit, removing old obsolete code
  . Add support for new input DST format, with RawEvent split up
- . Remove support PV Weights packing, as these are no longer used.
+ . Remove support for PV Weights packing, as these are no longer used.
 
 In AnalysisPython :
  . Various improvements and additions. See package release notes.
