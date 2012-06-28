@@ -4,6 +4,8 @@
 ! Purpose     : Decision Tree classifier for Hlt2 topological trigger
 ! -----------------------------------------------------------------------------
 
+!========================= BBDecTreeTool v1r5 2012-06-28 =========================
+
 ! 2012-06-27 - Chris Jones
  - Use a new getIDVAlgorithm that includes a check to make sure the tool is
    a private instance, not opublic.
