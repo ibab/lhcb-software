@@ -4,6 +4,8 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+!======================= StrippingSettings v2r14 2012-06-28 ===================
+
 ! 2012-06-27 - Jibo He
  - Stripping19b/LineConfigDictionaries_Calib.py
   . Included TriggerValidation line

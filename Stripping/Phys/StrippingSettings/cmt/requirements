@@ -2,7 +2,7 @@
 # Maintainer : Stripping coordinators
 
 package           StrippingSettings
-version           v2r13p1
+version           v2r14
 
 # Structure, i.e. directories to process. 
 #============================================================================
