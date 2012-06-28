@@ -7,6 +7,12 @@
 ! Purpose     : Jet finding algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+
+! 2012-06-27 - potterat
+ - correct the the jet 2 pv association. 
+
+
+
 !========================= LoKiJets v6r5 2012-05-03 =========================
 
 ! 2012-04-27 - rangel
