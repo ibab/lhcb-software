@@ -4,9 +4,11 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+!========================= DecayTreeTuple v3r23 2012-06-28 =========================
 
 ! 2012-06-23 -  Olivier Deschamps
- - Add new tool TupleToolBremInfo : provide multiplicity/momentum/origin of brem for electron particles
+ - Add new tool TupleToolBremInfo : provide multiplicity/momentum/origin of brem 
+   for electron particles
 
 ! 2012-06-22 - Chris Jones
  - Use getIDVAlgorithm instead of getDVAlgorithm, in preparation of a future
@@ -20,10 +22,10 @@
 
 ! 2012-06-15 -  Fatima Soomro
 - Added the functionality in TupleToolTISTOS to specify a list of PIDs, 
-  that IF specified will direct the tool to fill trigger info only for those 
-  particles, like tuple.TupleToolTISTOS.PIDList = [413, 211, 421, 333, 22, 321] 
-  If no list is specified the tool behaves as it used to previously, 
-  i.e. fill trigger info for all the particles in the decay descriptor
+   that IF specified will direct the tool to fill trigger info only for those 
+   particles, like tuple.TupleToolTISTOS.PIDList = [413, 211, 421, 333, 22, 321] 
+   If no list is specified the tool behaves as it used to previously, 
+   i.e. fill trigger info for all the particles in the decay descriptor
 - Added _CaloSpdE and _CaloPrsE to TupleToolPid
 
 ! 2012-06-14 -  Olivier Deschamps
