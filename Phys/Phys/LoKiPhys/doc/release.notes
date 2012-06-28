@@ -5,22 +5,23 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiPhys v10r11 2012-06-28 =========================
+
 ! 2012-06-16 - Vanya Belyaev
- - extend a bit the the method "child" 
+ - Extend a bit the the method "child" 
 
 ! 2012-06-08 - Vanya Belyaev
- - remove legacy stuff 
+ - Remove legacy stuff 
 
 ! 2012-06-08 - Vanya Belyaev  
- - add the functors for easy (but inefficient) dealing with Tis/Tos-tools 
+ - Add the functors for easy (but inefficient) dealing with Tis/Tos-tools 
 
 ! 2012-05-29 - Vanya Belyaev
- - add VCOV2 functor to access the vertex covariance matrix 
+ - Add VCOV2 functor to access the vertex covariance matrix 
 
 ! 2012-05-24 - Vanya Belyaev
-
- - improve interatcive decorators 
- - fix typo for M24 
+ - Improve interactive decorators 
+ - Fix typo for M24 
 
 !========================= LoKiPhys v10r10 2012-05-24 =========================
 
