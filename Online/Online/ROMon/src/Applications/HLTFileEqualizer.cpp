@@ -1,4 +1,4 @@
-#include "ROMon/HLTFileEqualizer.h"
+#include "HLTFileEqualizer.h"
 
 HLTFileEqualizer::HLTFileEqualizer()
 {
@@ -110,6 +110,9 @@ void HLTFileEqualizer::Analyze()
     }
     printf("On Farm %s:\n",(*fit).first.c_str());
     std::list<std::pair<std::string,int> >::iterator i;
+    std::string sf_mesg = "";
+    std::string endisSvc;
+    endisSvc = (*fit).first+"_HLTDefBridge/EnDisCommand";
     for (i =(*fit).second.begin();i != (*fit).second.end();i++)
     {
       std::string svcname;
@@ -118,10 +121,15 @@ void HLTFileEqualizer::Analyze()
       svcname = node+"_MEPRx_01/setOverflow";
 //      DimClient::sendCommand(svcname.c_str(), (*i).second);
       char cmd[1024];
-      sprintf(cmd,"dim_send_command.exe %s %d -dns %s -s -i&",svcname.c_str(),(*i).second,(*fit).first.c_str());
-      ::system(cmd);
-      printf("\tMEPRX on Node %s (%s) value %d\n",(*i).first.c_str(),svcname.c_str(),(*i).second);
+//      sprintf(cmd,"dim_send_command.exe %s %d -dns %s -s -i&",svcname.c_str(),(*i).second,(*fit).first.c_str());
+      sprintf(cmd,"%s %d|",svcname.c_str(),(*i).second);
+      sf_mesg.append(cmd);
+
+//      ::system(cmd);
+//      printf("\tMEPRX on Node %s (%s) value %d\n",(*i).first.c_str(),svcname.c_str(),(*i).second);
     }
+    DimClient::sendCommandNB(endisSvc.c_str(),(void*)(sf_mesg.c_str()),sf_mesg.size());
+    printf("message to Subfarm %s:\n%s\n",(*fit).first.c_str(),sf_mesg.c_str());
   }
 //  DimClient::setDnsNode(olddns);
   printf ("==================\n");
@@ -174,12 +182,39 @@ void DefHltInfoHandler::infoHandler()
   return;
 }
 
+class ExitCommand : public DimCommand
+{
+public:
+  myNodeMap *m_nodemap;
+  ExitCommand(const char *name, char *format, myNodeMap *nodm):  DimCommand(name, format)
+  {
+    m_nodemap = nodm;
+  }
+  virtual void commandHandler()
+  {
+    myNodeMap::iterator nit;
+    for (nit = m_nodemap->begin();nit != m_nodemap->end();nit++)
+    {
+      std::string svcname;
+      std::string node = (*nit).first;
+      toUpperCase(node);
+      svcname = node+"_MEPRx_01/setOverflow";
+//      DimClient::sendCommand(svcname.c_str(), (*i).second);
+      char cmd[1024];
+      sprintf(cmd,"dim_send_command.exe %s %d -dns %s -s -i&",svcname.c_str(),1,(*nit).second->m_subfarm.c_str());
+      ::system(cmd);
+    }
+    ::sleep(5);
+    ::exit(0);
+  }
+};
 
 int main(int , char **)
 {
   HLTFileEqualizer elz;
   int m_DefState = 0;
   DimInfo defstate("RunInfo/LHCb/DeferHLT",m_DefState);
+  ExitCommand EnableandExit("HLTFileEqualizer/EnableAndExit",(char*)"I",&elz.m_Nodes);
   while (1)
   {
     sleep (60);

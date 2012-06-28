@@ -8,12 +8,11 @@
 #ifndef HLTFILEEQUALIZER_H_
 #define HLTFILEEQUALIZER_H_
 #include <map>
-//#include <pair>
 #include <string>
 #include <list>
 #include <set>
-//#include <pair>
 #include "dim/dic.hxx"
+#include "dim/dis.hxx"
 #include "ROMon/CPUMon.h"
 #include "stdio.h"
 #include "time.h"
@@ -27,6 +26,7 @@ class myNode
 {
   public:
     std::string m_name;
+    std::string m_subfarm;
     int m_nofiles;
     int m_state;
     myNode(std::string n)
@@ -34,6 +34,7 @@ class myNode
       m_name = n;
       m_state = 1;
       m_nofiles = 0;
+      m_subfarm = m_name.substr(0,6);
     };
 };
 class SFarm

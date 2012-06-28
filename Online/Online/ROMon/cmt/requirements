@@ -11,6 +11,7 @@ use OnlineKernel  v* Online
 use DIM           v* Online         -no_auto_imports
 use XercesC       v* LCG_Interfaces -no_auto_imports
 use oracle        v* LCG_Interfaces -no_auto_imports
+use Gaucho        v* Online
 apply_pattern install_more_includes more=ROMon
 
 # ==================== component libraries ==================================
@@ -22,10 +23,11 @@ apply_pattern linker_library   library=ROMon
 apply_pattern install_python_modules
 macro_append  ROMon_cppflags "" target-vc9 " -wd4996 -wd4503 "
 
-application HLTFileEqualizer ../src/HLTFileEqualizer.cpp
+application HLTFileEqualizer ../src/Applications/HLTFileEqualizer.cpp
 macro_append  HLTFileEqualizer_dependencies    " ROMon "
 
-
+application HLTDefBridge ../src/Applications/HLTDefBridge.cpp
+macro_append  HLTDefBridge_dependencies
 #
 #
 set ROMONDATA ${ROMONROOT}/xml
