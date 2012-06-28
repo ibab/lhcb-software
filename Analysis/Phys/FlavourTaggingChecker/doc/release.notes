@@ -6,9 +6,10 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+!========================= FlavourTaggingChecker v6r10 2012-06-28 =========================
+
 ! 2012-06-22 - Chris Jones
- - Use getIDVAlgorithm instead of getDVAlgorithm, in preparation for a future
-   change in the DaVInci base classes.
+ - Use getIDVAlgorithm instead of getDVAlgorithm.
 
 ! 2012-06-06 - Marc Grabalosa
  - Added ProbNN variables in BTaggingAnalysis
@@ -16,7 +17,6 @@
   . New polynomials for SS and OS (corresponding to 1invfb)
   . Added ProbNN variable
   . Added sweights reading and reweight
- - Increase to v7r0
 
 !========================= FlavourTaggingChecker v6r9 2012-02-09 =========================
 
