@@ -3,6 +3,92 @@ Package     : AnalysisSys
 Package Coordinator : Chris Jones
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v9r0>2012-06-28 Analysis v9r0 </A></H1><PRE>
+
+Based on Phys v15r0
+
+Updated Packages : MicroDSTAlgorithm, MicroDSTTools, AnalysisPython,
+                   DSTWriters, DaVinciMCTools, DecayTreeTuple,
+                   FlavourTagging, FlavourTaggingChecker, JetAccessories,
+                   LoKiAlgoMC, TrackSmearing
+
+In TrackSmearing :
+ . Fix various bugs in previous version.
+
+In JetAccessories :
+ . Remove unneccessary use of getDVAlgorithm.
+ . Remove potential memory leak in UpdateJetsWithVtx.cpp (coverity defect 29332)
+ . Remove obsolete code:  JetsUtilsCaloPart.cpp
+                          TagJetsWithSeedFinder.h
+                          TagJetsWithSeedFinder.cpp (was causing coverity defect 24495)
+ . Modification to ParticleFlow4Jets.cpp to allow neutral recovery behind tracks
+ . Update of ParticleFlow_Config.py to follow the modification of ParticleFlow4Jets
+ . Update of UpdateJetsWithVtx.cpp to compute correct weights
+
+In FlavourTaggingChecker :
+ . Use getIDVAlgorithm instead of getDVAlgorithm.
+ . Added ProbNN variables in BTaggingAnalysis
+ . Changes to /root
+  . New polynomials for SS and OS (corresponding to 1invfb)
+  . Added ProbNN variable
+  . Added sweights reading and reweight
+
+In FlavourTagging :
+ . Use getIDVAlgorithm instead of getDVAlgorithm.
+ . OS and SSpi and SSK calibration Strip17
+
+In DecayTreeTuple :
+ . Add new tool TupleToolBremInfo : provide multiplicity/momentum/origin of brem 
+   for electron particles
+ . Use getIDVAlgorithm instead of getDVAlgorithm, in preparation of a future
+   change to the DaVinci base classes.
+ . Prevent TupleToolDalitz from running on jets. It leads to segfaults otherwise. 
+ . Fix a compilation warning in TupleToolVeto + some minor optimsations.
+ . Added the functionality in TupleToolTISTOS to specify a list of PIDs, 
+   that IF specified will direct the tool to fill trigger info only for those 
+   particles, like tuple.TupleToolTISTOS.PIDList = [413, 211, 421, 333, 22, 321] 
+   If no list is specified the tool behaves as it used to previously, 
+   i.e. fill trigger info for all the particles in the decay descriptor
+ . Added _CaloSpdE and _CaloPrsE to TupleToolPid
+ . TupleToolSubMass   : fix problem with tree ordering for some charged B decays
+ . TupleToolStripping : fix problem with DecReports structure changing between 
+                        different events, due to null reports being suppressed
+                        to save space on the (m)DSTs. 
+     ==> the list of stripping lines must now be set explicitely via the
+         StrippingList property (or equivalently TriggerList inherited from
+          TupleToolTriggerBase)
+ . TupleToolSubMass : new tool producing the invariant masses for all n-body 
+   combinations in N-body decays (n=2,N). The PID subtitution can be configured.
+ . TupleToolTagging : New and consitstent default tag decision and omega (0, 0.5)
+ . TupleToolTrackInfo: 
+   . Add Track likelihood
+   . Move Match chi2 to non verbose mode as this is the suggested chi2 to cut on
+   . Buglet in VELO_UTID
+ . Add some verbose printout in TupelToolDecayTreeFitter to link to bug
+   . https://savannah.cern.ch/bugs/?89749
+ . throw NameError in addBranches if the branch name contains whitespace
+   . fixes bug #94449
+
+In DaVinciMCTools :
+ . Background category : protect for gamma->ee MC-matching 
+ . gamma no longer considered as a stable particle (calorimeter-gamma's are treated 
+   separately through Calo2MC tool)
+
+In DSTWriters :
+ . Clean up the python options a bit, removing old obsolete code
+ . Add support for new input DST format, with RawEvent split up
+ . Remove support PV Weights packing, as these are no longer used.
+
+In AnalysisPython :
+ . Various improvements and additions. See package release notes.
+
+In MicroDSTTools :
+ . Add a method to ObjectClonerBase to get the TES location for an object
+ . Improvements to CaloHypoCloner to print the TES location when it finds a
+   NULL SmartRef in one of the containers to be cloned.
+ . Properly clone the track weights in PVs when the tracks are also cloned.
+ . Add VertexBaseFromRecVertexClonerWithTracks 
+
 </PRE><H1><A NAME=v8r3>2012-05-03 Analysis v8r3 </A></H1><PRE>
 
 Based on Phys v14r3
