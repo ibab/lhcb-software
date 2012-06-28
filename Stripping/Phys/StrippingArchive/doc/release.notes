@@ -4,6 +4,8 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingArchive v1r12 2012-06-28 ========================
+
 ! 2012-06-28 - Anton Poluektov 
  - Add Stripping19b
  - Remove Stripping19a from the list of known strippings (since it is a copy of Stripping19)
