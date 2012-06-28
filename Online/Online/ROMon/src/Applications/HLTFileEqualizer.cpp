@@ -128,7 +128,7 @@ void HLTFileEqualizer::Analyze()
 //      ::system(cmd);
 //      printf("\tMEPRX on Node %s (%s) value %d\n",(*i).first.c_str(),svcname.c_str(),(*i).second);
     }
-    DimClient::sendCommandNB(endisSvc.c_str(),(void*)(sf_mesg.c_str()),sf_mesg.size());
+//    DimClient::sendCommandNB(endisSvc.c_str(),(void*)(sf_mesg.c_str()),sf_mesg.size());
     printf("message to Subfarm %s:\n%s\n",(*fit).first.c_str(),sf_mesg.c_str());
   }
 //  DimClient::setDnsNode(olddns);
@@ -192,17 +192,48 @@ public:
   }
   virtual void commandHandler()
   {
+    myActionMap Actions;
+    myActionMap::iterator fit;
     myNodeMap::iterator nit;
     for (nit = m_nodemap->begin();nit != m_nodemap->end();nit++)
     {
-      std::string svcname;
-      std::string node = (*nit).first;
-      toUpperCase(node);
-      svcname = node+"_MEPRx_01/setOverflow";
-//      DimClient::sendCommand(svcname.c_str(), (*i).second);
-      char cmd[1024];
-      sprintf(cmd,"dim_send_command.exe %s %d -dns %s -s -i&",svcname.c_str(),1,(*nit).second->m_subfarm.c_str());
-      ::system(cmd);
+      Actions[(*nit).second->m_subfarm].push_back(std::make_pair((*nit).first,1));
+//      std::string svcname;
+//      std::string node = (*nit).first;
+//      toUpperCase(node);
+//      svcname = node+"_MEPRx_01/setOverflow";
+////      DimClient::sendCommand(svcname.c_str(), (*i).second);
+//      char cmd[1024];
+//      sprintf(cmd,"dim_send_command.exe %s %d -dns %s -s -i&",svcname.c_str(),1,(*nit).second->m_subfarm.c_str());
+//      ::system(cmd);
+    }
+    for (fit = Actions.begin();fit!=Actions.end();fit++)
+    {
+//      if (!m_enabledFarm.empty() && (m_enabledFarm.find((*fit).first) == m_enabledFarm.end()))
+//      {
+//        continue;
+//      }
+      std::list<std::pair<std::string,int> >::iterator i;
+      std::string sf_mesg = "";
+      std::string endisSvc;
+      endisSvc = (*fit).first+"_HLTDefBridge/EnDisCommand";
+      for (i =(*fit).second.begin();i != (*fit).second.end();i++)
+      {
+        std::string svcname;
+        std::string node = (*i).first;
+        toUpperCase(node);
+        svcname = node+"_MEPRx_01/setOverflow";
+  //      DimClient::sendCommand(svcname.c_str(), (*i).second);
+        char cmd[1024];
+  //      sprintf(cmd,"dim_send_command.exe %s %d -dns %s -s -i&",svcname.c_str(),(*i).second,(*fit).first.c_str());
+        sprintf(cmd,"%s %d|",svcname.c_str(),(*i).second);
+        sf_mesg.append(cmd);
+
+  //      ::system(cmd);
+  //      printf("\tMEPRX on Node %s (%s) value %d\n",(*i).first.c_str(),svcname.c_str(),(*i).second);
+      }
+//      DimClient::sendCommandNB(endisSvc.c_str(),(void*)(sf_mesg.c_str()),sf_mesg.size());
+      printf("message to Subfarm %s:\n%s\n",(*fit).first.c_str(),sf_mesg.c_str());
     }
     ::sleep(5);
     ::exit(0);
@@ -211,6 +242,7 @@ public:
 
 int main(int , char **)
 {
+  DimClient::setDnsNode("ecs03");
   HLTFileEqualizer elz;
   int m_DefState = 0;
   DimInfo defstate("RunInfo/LHCb/DeferHLT",m_DefState);
