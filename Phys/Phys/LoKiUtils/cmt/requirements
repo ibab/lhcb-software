@@ -4,7 +4,7 @@
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 # =============================================================================
 package            LoKiUtils
-version           v1r2
+version           v1r3
 
 # ================ structure ==================================================
 branches           cmt doc src dict python LoKi tests

@@ -5,9 +5,10 @@
 ! Purpose     : colleciton of utils for LoKi
 ! -----------------------------------------------------------------------------
 
-! 2012-06-08 - Vanya Belyaev
+!========================= LoKiUtils v1r3 2012-06-28 =========================
 
- - add accessor to TisTos tool 
+! 2012-06-08 - Vanya Belyaev
+ - Add accessor to TisTos tool 
 
 !========================= LoKiUtils v1r2 2012-04-17 =========================
 ! 2012-03-30 - Vanya Belyaev
