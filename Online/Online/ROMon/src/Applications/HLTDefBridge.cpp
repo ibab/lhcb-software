@@ -8,7 +8,7 @@
 #include "dim/dic.hxx"
 #include "dim/dis.hxx"
 #include <string>
-#include "Gaucho/Utilities.h"
+#include "ROMon/Utilities.h"
 #include "stdio.h"
 #include "RTL/rtl.h"
 class DefHltcommand : public DimCommand
@@ -43,8 +43,9 @@ int main(int , char **)
   toLowerCase(myHost);
   DimClient::setDnsNode(myHost.c_str());
   DimServer::setDnsNode("ecs03");
+  DimServer::autoStartOn();
+  DimServer::start((myHost+"_HLTDefBridge").c_str());
   DefHltcommand m_DefHltcommand((myHost+"_HLTDefBridge/EnDisCommand").c_str(),(char*)"C");
-  DimServer::start(new DimServerDns("ecs03"),(myHost+"_HLTDefBridge").c_str());
   while (1)
   {
     sleep (60);
