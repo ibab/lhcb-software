@@ -5,6 +5,8 @@
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiAlgo v9r7 2012-06-28 =========================
+
 ! 2012-06-16 - Vanya Belyaev
  - improve tupling of TisTosTob
 
@@ -21,7 +23,6 @@
  - improve decorators 
 
 !========================= LoKiAlgo v9r6 2012-05-24 =========================
-
 
 ! 2012-05-20 - Vanya Belyaev
  - improve dictionaries 
