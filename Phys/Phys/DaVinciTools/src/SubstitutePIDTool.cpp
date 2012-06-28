@@ -70,7 +70,7 @@ StatusCode SubstitutePIDTool::initialize(  ){
 // ============================================================================
 // decode the code
 // ============================================================================
-StatusCode SubstitutePIDTool::decodeCode( SubstitutionMap newMap )
+StatusCode SubstitutePIDTool::decodeCode( const SubstitutionMap& newMap )
 {
   //
   // decode "substitutions"

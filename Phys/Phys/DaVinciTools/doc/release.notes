@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2012-06-28 - Chris Jones
+ - Pass the map by const reference in SubstitutePIDTool::decodeCode
+
 !========================= DaVinciTools v23r0 2012-06-28 =========================
 
 ! 2012-06-25 - Chris Jones

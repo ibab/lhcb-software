@@ -22,8 +22,12 @@
  *  @author  Vanya BELYAEV   Ivan.Belyaev@cern.ch
  *  @date 2011-05-22
  */
-class SubstitutePIDTool : public GaudiTool, virtual public ISubstitutePID {
+class SubstitutePIDTool : public GaudiTool, 
+                          virtual public ISubstitutePID 
+{
+
 public: 
+
   /// Standard constructor
   SubstitutePIDTool( const std::string& type, 
                      const std::string& name,
@@ -31,9 +35,8 @@ public:
 
   virtual ~SubstitutePIDTool( ); ///< Destructor
 
-protected:
-
 private:
+
   // ==========================================================================
   struct  Substitution
   {
@@ -68,10 +71,10 @@ public:
   /// initialize
   StatusCode initialize(  ) ;
   /// decode the substitution code 
-  StatusCode decodeCode( SubstitutionMap newMap ) ;
+  StatusCode decodeCode( const SubstitutionMap& newMap ) ;
   /// loop over particles
-  StatusCode substitute(const LHCb::Particle::ConstVector& input,
-                        LHCb::Particle::ConstVector& output);
+  StatusCode substitute( const LHCb::Particle::ConstVector& input,
+                         LHCb::Particle::ConstVector& output );
   void updateHandler ( Property& p ); ///< update properties
   /// perform the actual substitution 
   unsigned int substitute ( LHCb::Particle* p );
