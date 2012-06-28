@@ -1,5 +1,5 @@
 package HltSys
-version           v15r2p2
+version           v15r3
 
 branches cmt doc
 
@@ -21,13 +21,14 @@ use HltMonitor          v1r1    Hlt   # Roel Aaij
 use HltRawData          v2r11   Hlt   # Tomasz Skwarnicki
 use HltRecChecker       v1r14   Hlt   # Jose Angel Hernando-Morata
 use HltSelChecker       v12r1p1 Hlt   # Patrick Koppenburg
-use HltSettings         v5r40   Hlt   # Parick Koppenburg, Gerhard Raven
+use HltSettings         v5r41   Hlt   # Parick Koppenburg, Gerhard Raven
 use HltTisTosTobbing    v1r1    Hlt   # Tomasz Skwarnicki
-use HltTracking         v9r23   Hlt   # Johannes Albrecht, Vava Gligorov
+use HltTracking         v9r24   Hlt   # Johannes Albrecht, Vava Gligorov
 use TCKUtils            v1r11   Hlt   # Gerhard Raven
 use LoKiTrigger         v12r8   Phys  # Vanya Belyaev
 
 #temporary
+use PatAlgorithms       v4r24   Tf    # Stephanie Hansmann-Menzemer
 
 # Declare this as a container package
 apply_pattern container_package
