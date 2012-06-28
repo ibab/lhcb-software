@@ -8,6 +8,8 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================= CommonParticles v8r9 2012-06-28 =========================
+
 ! 2012-05-23 - Olivier Deschamps
  - StdVeryLooseAllPhotons.py:  decrease photon pT cut to 75MeV (for bremStrahlung)
 
