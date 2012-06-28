@@ -3,7 +3,7 @@
 # Maintainer : Stephanie Hansmann-Menzemer
 #============================================================================
 package           PatAlgorithms
-version           v4r23
+version           v4r24
 
 #============================================================================
 # Structure, i.e. directories to process. 

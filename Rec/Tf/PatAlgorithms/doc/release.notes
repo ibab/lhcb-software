@@ -5,6 +5,7 @@
 !-----------------------------------------------------------------------------
 
 
+!========================= PatAlgorithms v4r24 2012-06-28 =========================
 ! 2012-06-27 - Manuel Tobias Schiller
  - add a flag to activate a workaround for certain problematic properties in
    PatSeedingTool which get their values set wrong when being extracted from
