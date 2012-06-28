@@ -3,7 +3,7 @@ Package     : StrippingSys
 Package Coordinator : Jibo He, Anton Poluektov
 Purpose     : LHCb stripping packages
 
-!======================= StrippingSys v4r4 2012-06-28 =========================
+!======================= StrippingSys v5r0 2012-06-28 =========================
 
 ! 2012-06-28 - Anton Poluektov 
   Release for Stripping19b. 
