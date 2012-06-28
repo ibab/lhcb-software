@@ -1,10 +1,10 @@
 // $Id: ParticleTisTos.cpp,v 1.2 2010-07-23 20:51:48 tskwarni Exp $
-// Include files 
+// Include files
 #include <algorithm>
 #include <vector>
 #include <sstream>
 
-// from Gaudi    
+// from Gaudi
 #include "GaudiKernel/StatusCode.h"
 //#include "GaudiKernel/ToolFactory.h"
 
@@ -23,10 +23,6 @@ using namespace LHCb;
 // 2010-07-08 : Tomasz Skwarnicki
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-//DECLARE_TOOL_FACTORY( ParticleTisTos );
-
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -37,92 +33,89 @@ ParticleTisTos::ParticleTisTos( const std::string& type,
   , m_track2calo(0)
   , m_hcalDeCal(0)
   , m_ecalDeCal(0)
+  , m_reportDepth(0)
 {
-   declareInterface<IParticleTisTos>(this);
-   
-   declareProperty("ProjectTracksToCalo", m_projectTracksToCalo=true );  
-   declareProperty("CaloClustForCharged", m_caloClustForCharged=true );
-   declareProperty("CaloClustForNeutral", m_caloClustForNeutral=true );
-   
-   declareProperty("CompositeTPSviaPartialTOSonly", m_compositeTPSviaPartialTOSonly=false );
-   declareProperty("FullAnalysisReport", m_fullAnalysisReport=true );
+  declareInterface<IParticleTisTos>(this);
 
-   m_reportDepth=0;   
+  declareProperty("ProjectTracksToCalo", m_projectTracksToCalo=true );
+  declareProperty("CaloClustForCharged", m_caloClustForCharged=true );
+  declareProperty("CaloClustForNeutral", m_caloClustForNeutral=true );
+
+  declareProperty("CompositeTPSviaPartialTOSonly", m_compositeTPSviaPartialTOSonly=false );
+  declareProperty("FullAnalysisReport", m_fullAnalysisReport=true );
 }
-
 
 //=============================================================================
 // Destructor
 //=============================================================================
-ParticleTisTos::~ParticleTisTos() {} 
+ParticleTisTos::~ParticleTisTos() {}
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode ParticleTisTos::initialize() {
-  StatusCode sc = TisTos::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+StatusCode ParticleTisTos::initialize()
+{
+  const StatusCode sc = TisTos::initialize();
+  if ( sc.isFailure() ) return sc;
 
   debug() << "==> Initialize" << endmsg;
 
-  m_track2calo = tool<ITrack2Calo>( "Track2Calo","Track2Calo",this);
-   
- 
-  return StatusCode::SUCCESS;
+  m_track2calo = tool<ITrack2Calo>( "Track2Calo", "Track2CaloForTisTos" );
 
+  return sc;
 }
- 
+
 std::vector<LHCb::LHCbID> ParticleTisTos::projectTrack(const Track& track )
-{  
+{
   std::vector<LHCb::LHCbID>  cells3x3;
   if( !m_projectTracksToCalo )return cells3x3;
   // ------------------ add expected Hcal hits (3x3 group around cell crossed at shower max) ------------
-  // do it only if needed 
+  // do it only if needed
   if(  m_TOSFrac[kHcal] > 0.0 ){
     if ( msgLevel(MSG::VERBOSE) ) verbose() << " projectTrack PROJECT TO HCAL " << endmsg;
     if( m_track2calo != 0 ){
       if( m_hcalDeCal==0 ){ m_hcalDeCal = getDet<DeCalorimeter>( DeCalorimeterLocation::Hcal ); }
       if( m_hcalDeCal != 0 ){
 
-        // do not project through the magnet 
+        // do not project through the magnet
         if( track.closestState( m_hcalDeCal->plane( CaloPlane::ShowerMax ) ).z() > 5000.0 ){
-          if( m_track2calo->match( &track, DeCalorimeterLocation::Hcal) ){ 
+          if( m_track2calo->match( &track, DeCalorimeterLocation::Hcal) ){
             if( m_track2calo->isValid() ){ // is matched cellid valid
-              LHCb::CaloCellID centerCell  = m_track2calo->caloCellID();
+              const LHCb::CaloCellID centerCell  = m_track2calo->caloCellID();
               cells3x3.push_back(centerCell);
               BOOST_FOREACH( LHCb::CaloCellID cell, m_hcalDeCal->neighborCells( centerCell ) )
-                { 
-                  cells3x3.push_back(cell);
-                };
+              {
+                cells3x3.push_back(cell);
+              };
             }
           }
         }
-        
+
       }
     }
   }
   // ------------------ add expected Ecal hits (3x3 group around cell crossed at shower max) ------------
-  // do it only if needed 
+  // do it only if needed
   if( m_TOSFrac[kEcal] > 0.0 ){
     if ( msgLevel(MSG::VERBOSE) ) verbose() << " addToSignal with Track PROJECT TO ECAL " << endmsg;
     if( m_track2calo != 0 ){
       if( m_ecalDeCal==0 ){ m_ecalDeCal = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal ); }
       if( m_ecalDeCal != 0 ){
 
-        // do not project through the magnet 
+        // do not project through the magnet
         if( track.closestState( m_ecalDeCal->plane( CaloPlane::ShowerMax ) ).z() > 5000.0 ){
           if( m_track2calo->match( &track, DeCalorimeterLocation::Ecal) ){ // play with 3rd parameter?
             if( m_track2calo->isValid() ){ // is matched cellid valid
-              LHCb::CaloCellID centerCell  = m_track2calo->caloCellID();
+              const LHCb::CaloCellID centerCell  = m_track2calo->caloCellID();
               cells3x3.push_back(centerCell);
               BOOST_FOREACH( LHCb::CaloCellID cell, m_ecalDeCal->neighborCells( centerCell ) )
-                { 
-                  cells3x3.push_back(cell);
-                };
+              {
+                cells3x3.push_back(cell);
+              };
             }
           }
         }
-        
+
       }
     }
   }
@@ -131,7 +124,7 @@ std::vector<LHCb::LHCbID> ParticleTisTos::projectTrack(const Track& track )
 
 
 // Coolect hits from protoparticle (used both for signal and trigger parts)
-//   extend=true: project tracks to Calo to get Calo hits and extend CaloClust hits to 3x3 
+//   extend=true: project tracks to Calo to get Calo hits and extend CaloClust hits to 3x3
 //          (use for Signal, don't use for Trigger object)
 std::vector<LHCb::LHCbID> ParticleTisTos::protoParticleHits(const ProtoParticle & pp, bool extend )
 {
@@ -140,7 +133,7 @@ std::vector<LHCb::LHCbID> ParticleTisTos::protoParticleHits(const ProtoParticle 
   std::vector< LHCbID > hits;
   const Track* onit=pp.track();
   if( 0!=onit ){
-    hits.insert(hits.end(),onit->lhcbIDs().begin(),onit->lhcbIDs().end());    
+    hits.insert(hits.end(),onit->lhcbIDs().begin(),onit->lhcbIDs().end());
     if ( msgLevel(MSG::VERBOSE) ) verbose() << " protoParticleHits copied track hits " << endmsg;
     if( extend && m_projectTracksToCalo ){
       const std::vector<LHCbID> caloHits = projectTrack( *onit );
@@ -172,76 +165,76 @@ std::vector<LHCb::LHCbID> ParticleTisTos::protoParticleHits(const ProtoParticle 
     }
     // deb caloCell = LHCb::CaloCellID( LHCb::CaloCellID::ContentType(0) );
     if( caloCell.all() != 0 ){
-      caloOK = true;      
-      hits.push_back(caloCell);      
-      if( extend ){        
+      caloOK = true;
+      hits.push_back(caloCell);
+      if( extend ){
         if( m_ecalDeCal==0 ){
           m_ecalDeCal = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal );
-        }        
+        }
         BOOST_FOREACH( LHCb::CaloCellID cell,m_ecalDeCal->neighborCells(caloCell))
         {
           hits.push_back(cell);
         }
       }
-    // ExtraInfo failed: dig into CaloHypo and Clusters only in case of neutrals when requsted
-    } else if( 0==onit && m_caloClustForNeutral ) {  
-      
+      // ExtraInfo failed: dig into CaloHypo and Clusters only in case of neutrals when requsted
+    } else if( 0==onit && m_caloClustForNeutral ) {
+
       //deb info() << " trying calo hypos" << endmsg;
 
       const SmartRefVector< LHCb::CaloHypo > &caloVec = pp.calo();
       if( caloVec.size() > 0 ){
         const LHCb::CaloHypo*   hypo  = *(caloVec.begin());
-        if( hypo ){                
+        if( hypo ){
           //deb info() << " inside hypo" << endmsg;
-          if( hypo->clusters().size() > 0 ){          
+          if( hypo->clusters().size() > 0 ){
             //deb info() << " inside hypo passed clusters " << endmsg;
-            LHCb::CaloCellID centerCell,centerCell1,dummyCell;      
+            LHCb::CaloCellID centerCell,centerCell1,dummyCell;
             //       next if always false: left in for historical reasons
             if( 0!=onit && m_caloClustForCharged ){
               if( LHCb::CaloHypo::EmCharged == hypo->hypothesis() ){
                 //deb info() << " charged hypo " << endmsg;
                 if ( msgLevel(MSG::VERBOSE) ) verbose() << " protoParticleHits EmCharged " << endmsg;
-                if( (hypo->clusters().begin())->target() ){    
+                if( (hypo->clusters().begin())->target() ){
                   centerCell  = (*(hypo->clusters().begin()))->seed();
                   //deb info() << " charged hypo ok " << endmsg;
-                }                    
+                }
               }
             } else if( m_caloClustForNeutral ){
               if( LHCb::CaloHypo::Photon == hypo->hypothesis() ){
                 if ( msgLevel(MSG::VERBOSE) ) verbose() << " protoParticleHits Photon " << endmsg;
-                if( (hypo->clusters().begin())->target() ){              
+                if( (hypo->clusters().begin())->target() ){
                   centerCell  = (*(hypo->clusters().begin()))->seed();
                   //deb info() << " gamma hypo ok " << endmsg;
-                }                    
+                }
               } else if (  LHCb::CaloHypo::Pi0Merged == hypo->hypothesis() ){
                 if ( msgLevel(MSG::VERBOSE) ) verbose() << " protoParticleHits Pi0Merged " << endmsg;
                 // Split Photons
                 const SmartRefVector<LHCb::CaloHypo>& hypos = hypo->hypos();
                 if( hypos.size()>1 ){
                   const LHCb::CaloHypo* g1 = *(hypos.begin() );
-                  if( g1 ){              
+                  if( g1 ){
                     if( (g1->clusters().begin())->target() ){
                       centerCell  = (*(g1->clusters().begin()))->seed();
                       //deb info() << " piomareged hypo ok " << endmsg;
-                    }         
+                    }
                   }
                   const LHCb::CaloHypo* g2 = *(hypos.begin()+1 );
                   if( g2 ){
-                    if( (g2->clusters().begin())->target() )              
+                    if( (g2->clusters().begin())->target() )
                       centerCell1 = (*(g2->clusters().begin()))->seed();
                   }
-                }    
+                }
               } else {
-                caloOK = true; // not a photon nor pi0 ; don't expect calo            
+                caloOK = true; // not a photon nor pi0 ; don't expect calo
               }
-          
+
             } else {
               caloOK = true; // do not want calo even for neutrals
             }
-        
+
             if( !(centerCell == dummyCell) ){
               //deb info() << " CALOOK " << endmsg;
-              caloOK = true;          
+              caloOK = true;
               hits.push_back(centerCell);
               if( extend ){
                 if( m_ecalDeCal==0 ){ m_ecalDeCal = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal ); }
@@ -249,7 +242,7 @@ std::vector<LHCb::LHCbID> ParticleTisTos::protoParticleHits(const ProtoParticle 
                 {
                   hits.push_back(cell);
                 }
-              }          
+              }
               if( !(centerCell1 == dummyCell) ){
                 hits.push_back(centerCell1);
                 if( extend ){
@@ -258,7 +251,7 @@ std::vector<LHCb::LHCbID> ParticleTisTos::protoParticleHits(const ProtoParticle 
                   {
                     hits.push_back(cell);
                   }
-                }                  
+                }
               }
             }
           }
@@ -267,15 +260,15 @@ std::vector<LHCb::LHCbID> ParticleTisTos::protoParticleHits(const ProtoParticle 
     } else {
       caloOK = true; // OK not to find calo info for charged tracks
     }
-    
+
     if( caloOK == false )
       Error( "No Calo info found: TisTos of photons and pi0s will be defunct", StatusCode::SUCCESS, 1 ).setChecked();
-    
-  }
-  
-  
 
-  // add muon hits only if needed 
+  }
+
+
+
+  // add muon hits only if needed
   if(  ( m_TOSFrac[kMuon] > 0.0 ) && (0!=onit)  ){
     if ( msgLevel(MSG::VERBOSE) ) verbose() << " protoParticleHits fs trying for muons " << endmsg;
     const LHCb::MuonPID* muid = pp.muonPID();
@@ -284,17 +277,17 @@ std::vector<LHCb::LHCbID> ParticleTisTos::protoParticleHits(const ProtoParticle 
       if( muid->IsMuon() ){
         if ( msgLevel(MSG::VERBOSE) ) verbose() << " protoParticleHits fs mu " << endmsg;
         const LHCb::Track*  mu=muid->muonTrack();
-        if( mu!=0 ){                                                                   
+        if( mu!=0 ){
           hits.insert(hits.end(),mu->lhcbIDs().begin(),mu->lhcbIDs().end());
           if ( msgLevel(MSG::VERBOSE) ) verbose() << " protoParticleHits fs muon hits inserted " << endmsg;
         } else {
-          Error( "No Muon Tracks found: TisTos of muon triggers may be defunct", StatusCode::SUCCESS, 1 ).setChecked();          
+          Error( "No Muon Tracks found: TisTos of muon triggers may be defunct", StatusCode::SUCCESS, 1 ).setChecked();
         }
       }
     }
   }
-  
-  return sortedHits(hits);  
+
+  return sortedHits(hits);
 }
 
 
@@ -306,14 +299,14 @@ std::vector<LHCb::LHCbID> ParticleTisTos::protoParticleHits(const ProtoParticle 
 bool ParticleTisTos::addToSignal( const LHCb::Track & track )
 {
   if ( msgLevel(MSG::VERBOSE) ) verbose() << " addToSignal with Track ENTER " << endmsg;
-  
+
   //   add hits saved directly on the track ------------------------------------------------------------
   bool sigModified = addSortedHitsToSignal( track.lhcbIDs() );
   if( addSortedHitsToSignal( projectTrack( track ) ) )sigModified = true;
-   
+
   if ( msgLevel(MSG::VERBOSE) ) verbose() << " addToSignal with Track END " << endmsg;
- 
-  return sigModified;  
+
+  return sigModified;
 }
 
 //    Proto-particle input -----------------------------------------------------------------------
@@ -322,22 +315,22 @@ bool ParticleTisTos::addToSignal( const LHCb::ProtoParticle & protoParticle )
   if ( msgLevel(MSG::VERBOSE) ) verbose() << " addToSignal with ProtoParticle ENTER " << endmsg;
 
   return addSortedHitsToSignal( protoParticleHits( protoParticle, true ) );
- 
+
 }
 
 //    Particle input; for composite particles loop over daughters will be executed ------------------------------
 bool ParticleTisTos::addToSignal( const LHCb::Particle & particle )
 {
   bool sigModified(false);
-  
+
   if ( msgLevel(MSG::VERBOSE) ) verbose() << " addToSignal with Particle ENTER " << endmsg;
-  std::vector<const LHCb::Particle*> daughters = particle.daughtersVector(); 
+  std::vector<const LHCb::Particle*> daughters = particle.daughtersVector();
   if( daughters.size() >0 ){
     for(std::vector<const LHCb::Particle*>::const_iterator p = daughters.begin(); p!=daughters.end(); ++p){
       if ( msgLevel(MSG::VERBOSE) ) verbose() << " addToSignal with Particle DAUGHTER " << endmsg;
       if(*p){
-          const LHCb::Particle & part = *(*p);
-          if( addToSignal(part) )sigModified=true;        
+        const LHCb::Particle & part = *(*p);
+        if( addToSignal(part) )sigModified=true;
       }
     }
   } else {
@@ -345,21 +338,21 @@ bool ParticleTisTos::addToSignal( const LHCb::Particle & particle )
     if( 0!=pp ){
       if ( msgLevel(MSG::VERBOSE) ) verbose() << " addToSignal with Particle PROTOPARTICLE " << endmsg;
       //deb info() << particle << endmsg;
-      if( addToSignal(*pp) )sigModified=true;  
+      if( addToSignal(*pp) )sigModified=true;
     } else {
-        Error("Particle passed as signal has no daughters and ProtoParticle is not accessible; TisTossing is not possible",
-              StatusCode::SUCCESS, 10 ).setChecked();
-    }    
+      Error("Particle passed as signal has no daughters and ProtoParticle is not accessible; TisTossing is not possible",
+            StatusCode::SUCCESS, 10 ).setChecked();
+    }
   }
   if ( msgLevel(MSG::VERBOSE) ) verbose() << " addToSignal with Particle EXIT " << endmsg;
 
   return sigModified;
-  
+
 }
 
-//=============================================================================  
-// outputs: classified trigger track 
-//=============================================================================  
+//=============================================================================
+// outputs: classified trigger track
+//=============================================================================
 unsigned int ParticleTisTos::tisTos(const Track & track)
 {
   return tisTosSortedHits( track.lhcbIDs() );
@@ -377,38 +370,38 @@ bool  ParticleTisTos::tus(const Track & track)
   return tusSortedHits(  track.lhcbIDs() );
 }
 
-std::string ParticleTisTos::analysisReport(const LHCb::Track & track ) 
-{  
- return (offset()+" Track "+analysisReportSortedHits( track.lhcbIDs() ));
+std::string ParticleTisTos::analysisReport(const LHCb::Track & track )
+{
+  return (offset()+" Track "+analysisReportSortedHits( track.lhcbIDs() ));
 }
-  
 
-//=============================================================================  
+
+//=============================================================================
 // outputs: classified RecVertex
-//=============================================================================  
+//=============================================================================
 unsigned int ParticleTisTos::tisTos(const RecVertex & vtx)
 {
   unsigned int resultTISTOS=kTOSandTIS;
   unsigned int resultTPS=0;
-  bool empty(true);  
+  bool empty(true);
   const SmartRefVector<LHCb::Track> & ontracks=vtx.tracks();
   for (SmartRefVector<LHCb::Track>::const_iterator onit = ontracks.begin();onit != ontracks.end(); ++onit) {
     if( onit->target() ){
       const Track& ontrack = *(*onit);
       unsigned int result = tisTos( ontrack );
       if( !result )continue;
-      empty=false;      
+      empty=false;
       //  every Track in vertex must be TOS (TIS) for vertex to be TOS (TIS)
       resultTISTOS &= result;
       // set TPS unless done already
-      if( !resultTPS ){        
-          if( m_compositeTPSviaPartialTOSonly ){
-            if( result & kTOS ){
-              resultTPS = kTPS;
-            }
-          } else {            
-            resultTPS = result & kTPS;
+      if( !resultTPS ){
+        if( m_compositeTPSviaPartialTOSonly ){
+          if( result & kTOS ){
+            resultTPS = kTPS;
           }
+        } else {
+          resultTPS = result & kTPS;
+        }
       }
       //  see if can quite already
       if( ! (resultTISTOS & kTOSandTIS) ){
@@ -418,7 +411,7 @@ unsigned int ParticleTisTos::tisTos(const RecVertex & vtx)
       }
     }
   }
-  if( empty )return 0;  
+  if( empty )return 0;
   return (resultTISTOS|resultTPS);
 }
 
@@ -427,29 +420,29 @@ std::string ParticleTisTos::analysisReport(const RecVertex & vtx)
   std::ostringstream report;
   unsigned int resultTISTOS=kTOSandTIS;
   unsigned int resultTPS=0;
-  bool empty(true);  
+  bool empty(true);
   const SmartRefVector<LHCb::Track> & ontracks=vtx.tracks();
-  report << offset() << " RecVertex #-of-Tracks " << ontracks.size() << std::endl;  
+  report << offset() << " RecVertex #-of-Tracks " << ontracks.size() << std::endl;
   for (SmartRefVector<LHCb::Track>::const_iterator onit = ontracks.begin();onit != ontracks.end(); ++onit) {
     if( onit->target() ){
       const Track& ontrack = *(*onit);
       unsigned int result = tisTos( ontrack );
-      ++m_reportDepth;  
-      report << analysisReport(ontrack) << std::endl;      
-      --m_reportDepth;      
+      ++m_reportDepth;
+      report << analysisReport(ontrack) << std::endl;
+      --m_reportDepth;
       if( !result )continue;
-      empty=false;      
+      empty=false;
       //  every Track in vertex must be TOS (TIS) for vertex to be TOS (TIS)
       resultTISTOS &= result;
       // set TPS unless done already
-      if( !resultTPS ){        
-          if( m_compositeTPSviaPartialTOSonly ){
-            if( result & kTOS ){
-              resultTPS = kTPS;
-            }
-          } else {            
-            resultTPS = result & kTPS;
+      if( !resultTPS ){
+        if( m_compositeTPSviaPartialTOSonly ){
+          if( result & kTOS ){
+            resultTPS = kTPS;
           }
+        } else {
+          resultTPS = result & kTPS;
+        }
       }
       //  see if can quite already
       if( ! (resultTISTOS & kTOSandTIS) ){
@@ -459,7 +452,7 @@ std::string ParticleTisTos::analysisReport(const RecVertex & vtx)
       }
     }
   }
-  unsigned int result;  
+  unsigned int result;
   if( empty ){
     result =0;
   } else {
@@ -467,19 +460,19 @@ std::string ParticleTisTos::analysisReport(const RecVertex & vtx)
   }
   TisTosTob res( result );
   report << offset() << " RecVertex TIS= " << res.tis() << " TOS= " << res.tos() << " TPS= " << res.tps() << std::endl;
-  return report.str();  
+  return report.str();
 }
 
 bool  ParticleTisTos::tos(const RecVertex & vtx)
 {
-  bool empty(true);  
+  bool empty(true);
   const SmartRefVector<LHCb::Track> & ontracks=vtx.tracks();
   for (SmartRefVector<LHCb::Track>::const_iterator onit = ontracks.begin();onit != ontracks.end(); ++onit) {
     if( onit->target() ){
       const Track& ontrack = *(*onit);
       //  every Track in vertex must be TOS (TIS) for vertex to be TOS (TIS)
       if( !tos( ontrack ) )return false;
-      empty = false;      
+      empty = false;
     }
   }
   if( empty )return false;
@@ -488,14 +481,14 @@ bool  ParticleTisTos::tos(const RecVertex & vtx)
 
 bool  ParticleTisTos::tis(const RecVertex & vtx)
 {
-  bool empty(true);  
+  bool empty(true);
   const SmartRefVector<LHCb::Track> & ontracks=vtx.tracks();
   for (SmartRefVector<LHCb::Track>::const_iterator onit = ontracks.begin();onit != ontracks.end(); ++onit) {
     if( onit->target() ){
       const Track& ontrack = *(*onit);
       //  every Track in vertex must be TOS (TIS) for vertex to be TOS (TIS)
       if( !tis( ontrack ) )return false;
-      empty = false;      
+      empty = false;
     }
   }
   if( empty )return false;
@@ -519,50 +512,50 @@ bool  ParticleTisTos::tus(const RecVertex & vtx)
   return false;
 }
 
-//=============================================================================  
+//=============================================================================
 // outputs: classified Particle
-//=============================================================================  
+//=============================================================================
 unsigned int ParticleTisTos::tisTos(const LHCb::Particle & particle)
 {
 
-  std::vector<const LHCb::Particle*> daughters = particle.daughtersVector();  
+  std::vector<const LHCb::Particle*> daughters = particle.daughtersVector();
   if ( msgLevel(MSG::VERBOSE) ) verbose() << " tisTos Partcile daughters size " << daughters.size() << endmsg;
   if( daughters.size() >0 ){
     unsigned int resultTISTOS=kTOSandTIS;
     unsigned int resultTPS=0;
     bool empty(true);
     for( std::vector<const LHCb::Particle*>::const_iterator p = daughters.begin(); p!=daughters.end(); ++p){
-      if(!(*p))continue;       
+      if(!(*p))continue;
       const LHCb::Particle & daug = *(*p);
       unsigned int result = tisTos( daug );
       if( m_compositeTPSviaPartialTOSonly ){
         // no way to tell that it wasn't analyzed
-        empty=false;      
+        empty=false;
         //  every daughter of the Parent must be TOS (TIS) for Parent to be TOS (TIS)
         resultTISTOS &= result;
         // set TPS unless done already
-        if( !resultTPS ){        
+        if( !resultTPS ){
           if( result & kTOS ){
             // daughter TOS sets parent TPS
             resultTPS = kTPS;
-          } else if( result & kTPS ){            
+          } else if( result & kTPS ){
             if( daug.daughtersVector().size()>1 ){
-              // non-trivially-composite daughter TPS sets parent TPS 
+              // non-trivially-composite daughter TPS sets parent TPS
               resultTPS= kTPS;
             } else if ( daughters.size()==1 ){
               // non-composite or trivially composite daughter propagates its TPS to parent with only daughter
               resultTPS= kTPS;
-            }            
+            }
           }
         }
         // see if can quit already
         if( ! (resultTISTOS & kTOSandTIS) && resultTPS ){
           break;
-        }        
+        }
       } else {
         //   no info? skip
         if( !result )continue;
-        empty=false;      
+        empty=false;
         //  every daughter of the Partcile must be TOS (TIS) for Partcile to be TOS (TIS)
         resultTISTOS &= result;
         //  any TPS daughter is fine for TPS
@@ -574,8 +567,8 @@ unsigned int ParticleTisTos::tisTos(const LHCb::Particle & particle)
           break;
         }
       }
-    }    
-    if( empty )return 0;  
+    }
+    if( empty )return 0;
     return (resultTISTOS|resultTPS);
   } else {
     // non-composite daughter
@@ -584,54 +577,54 @@ unsigned int ParticleTisTos::tisTos(const LHCb::Particle & particle)
       return tisTosSortedHits( protoParticleHits(*pp) );
     }
   }
-  return 0;  
+  return 0;
 }
 
 std::string ParticleTisTos::analysisReport(const LHCb::Particle & particle)
 {
   std::ostringstream report;
-  std::vector<const LHCb::Particle*> daughters = particle.daughtersVector();  
+  std::vector<const LHCb::Particle*> daughters = particle.daughtersVector();
   report << offset() << " Particle #-of-daughters " << daughters.size() << std::endl;
   if( daughters.size() >0 ){
     unsigned int resultTISTOS=kTOSandTIS;
     unsigned int resultTPS=0;
     bool empty(true);
     for( std::vector<const LHCb::Particle*>::const_iterator p = daughters.begin(); p!=daughters.end(); ++p){
-      if(!(*p))continue;        
+      if(!(*p))continue;
       const LHCb::Particle & daug = *(*p);
       unsigned int result = tisTos( daug );
       //      report << offset() << " Daughter ";
       ++m_reportDepth;
       report << analysisReport(daug );
-      --m_reportDepth; 
+      --m_reportDepth;
       if( m_compositeTPSviaPartialTOSonly ){
         // no way to tell that it wasn't analyzed
-        empty=false;      
+        empty=false;
         //  every daughter of the Parent must be TOS (TIS) for Parent to be TOS (TIS)
         resultTISTOS &= result;
         // set TPS unless done already
-        if( !resultTPS ){        
+        if( !resultTPS ){
           if( result & kTOS ){
             // daughter TOS sets parent TPS
             resultTPS = kTPS;
-          } else if( result & kTPS ){            
+          } else if( result & kTPS ){
             if( daug.daughtersVector().size()>1 ){
-              // non-trivially-composite daughter TPS sets parent TPS 
+              // non-trivially-composite daughter TPS sets parent TPS
               resultTPS= kTPS;
             } else if ( daughters.size()==1 ){
               // non-composite or trivially composite daughter propagates its TPS to parent with only daughter
               resultTPS= kTPS;
-            }            
+            }
           }
         }
         // see if can quit already
         if( ! (resultTISTOS & kTOSandTIS) && resultTPS ){
-          if( !m_fullAnalysisReport )break;          
-        }        
+          if( !m_fullAnalysisReport )break;
+        }
       } else {
         //   no info? skip
         if( !result )continue;
-        empty=false;      
+        empty=false;
         //  every daughter of the Partcile must be TOS (TIS) for Partcile to be TOS (TIS)
         resultTISTOS &= result;
         //  any TPS daughter is fine for TPS
@@ -643,163 +636,163 @@ std::string ParticleTisTos::analysisReport(const LHCb::Particle & particle)
           if( !m_fullAnalysisReport )break;
         }
       }
-    }    
-    unsigned int result;  
+    }
+    unsigned int result;
     if( empty ){
       result =0;
     } else {
       result =(resultTISTOS|resultTPS);
     }
     TisTosTob res( result );
-    report << offset() 
+    report << offset()
            << " Particle TIS= " << res.tis() << " TOS= " << res.tos() << " TPS= " << res.tps() << std::endl;
-    return report.str();  
+    return report.str();
   } else {
     // non-composite daughter
     const ProtoParticle* pp = particle.proto();
     if( 0!=pp ){
       report << offset() <<" ProtoParticle "
              << analysisReportSortedHits( protoParticleHits(*pp) ) << std::endl;
-      return report.str(); 
+      return report.str();
     }
   }
-  return report.str(); 
+  return report.str();
 }
 
 
 bool ParticleTisTos::tos(const LHCb::Particle & particle)
 {
 
-  std::vector<const LHCb::Particle*> daughters = particle.daughtersVector();  
+  std::vector<const LHCb::Particle*> daughters = particle.daughtersVector();
   if ( msgLevel(MSG::VERBOSE) ) verbose() << " tos Partcile daughters size " << daughters.size() << endmsg;
   if( daughters.size() >0 ){
     bool empty(true);
     for( std::vector<const LHCb::Particle*>::const_iterator p = daughters.begin(); p!=daughters.end(); ++p){
-      if(!(*p))continue;        
+      if(!(*p))continue;
       const LHCb::Particle & daug = *(*p);
       if( !tos( daug ) )return false;
-      empty=false;      
+      empty=false;
     }
-    if( empty )return false;  
+    if( empty )return false;
     return true;
   } else {
-   const ProtoParticle* pp = particle.proto();
-   if( 0!=pp ){
-     return tosSortedHits( protoParticleHits(*pp) );     
-   }
+    const ProtoParticle* pp = particle.proto();
+    if( 0!=pp ){
+      return tosSortedHits( protoParticleHits(*pp) );
+    }
   }
   return false;
-  
+
 }
 
 
 bool ParticleTisTos::tis(const LHCb::Particle & particle)
 {
 
-  std::vector<const LHCb::Particle*> daughters = particle.daughtersVector();  
+  std::vector<const LHCb::Particle*> daughters = particle.daughtersVector();
   if ( msgLevel(MSG::VERBOSE) ) verbose() << " tos Partcile daughters size " << daughters.size() << endmsg;
   if( daughters.size() >0 ){
     bool empty(true);
     for( std::vector<const LHCb::Particle*>::const_iterator p = daughters.begin(); p!=daughters.end(); ++p){
-      if(!(*p))continue;        
+      if(!(*p))continue;
       const LHCb::Particle & daug = *(*p);
       if( !tis( daug ) )return false;
-      empty=false;      
+      empty=false;
     }
-    if( empty )return false;  
+    if( empty )return false;
     return true;
   } else {
-   const ProtoParticle* pp = particle.proto();
-   if( 0!=pp ){
-     return tisSortedHits( protoParticleHits(*pp) );     
-   }
+    const ProtoParticle* pp = particle.proto();
+    if( 0!=pp ){
+      return tisSortedHits( protoParticleHits(*pp) );
+    }
   }
   return false;
-  
+
 }
 
 bool ParticleTisTos::tus(const LHCb::Particle & particle)
 {
 
-  std::vector<const LHCb::Particle*> daughters = particle.daughtersVector();  
+  std::vector<const LHCb::Particle*> daughters = particle.daughtersVector();
   if ( msgLevel(MSG::VERBOSE) ) verbose() << " tos Partcile daughters size " << daughters.size() << endmsg;
   if( daughters.size() >0 ){
     for( std::vector<const LHCb::Particle*>::const_iterator p = daughters.begin(); p!=daughters.end(); ++p){
-      if(!(*p))continue;        
+      if(!(*p))continue;
       const LHCb::Particle & daug = *(*p);
       if( tus( daug ) )return true;
     }
     return false;
   } else {
-   const ProtoParticle* pp = particle.proto();
-   if( 0!=pp ){
-     if( m_compositeTPSviaPartialTOSonly ){
-       return tosSortedHits( protoParticleHits(*pp) );     
-     } else {
-       return tusSortedHits( protoParticleHits(*pp) );     
-     }
-   }
+    const ProtoParticle* pp = particle.proto();
+    if( 0!=pp ){
+      if( m_compositeTPSviaPartialTOSonly ){
+        return tosSortedHits( protoParticleHits(*pp) );
+      } else {
+        return tusSortedHits( protoParticleHits(*pp) );
+      }
+    }
   }
   return false;
-  
+
 }
 
-//=============================================================================  
+//=============================================================================
 // outputs: classified HltObjectSummary
-//=============================================================================  
+//=============================================================================
 unsigned int ParticleTisTos::tisTos(const LHCb::HltObjectSummary & hos)
 {
 
   const SmartRefVector< LHCb::HltObjectSummary > & sub = hos.substructure();
   if ( msgLevel(MSG::VERBOSE) ) verbose() << " tisTos HltObjectSummary substr size " << sub.size() << endmsg;
-  
+
   if( hos.summarizedObjectCLID() == 1 ){
     // this is Selection summary: take OR between candidates
     unsigned int result=0;
     for( SmartRefVector< LHCb::HltObjectSummary >::const_iterator ihos=sub.begin();ihos!=sub.end();++ihos){
-      if(!(ihos->target()))continue;        
-      const LHCb::HltObjectSummary &  daug = *(ihos->target());      
+      if(!(ihos->target()))continue;
+      const LHCb::HltObjectSummary &  daug = *(ihos->target());
       result |= tisTos( daug );
       if( (result & kTOS) && (result & kTIS) && (result & kTPS ) )break;
     }
-    return result;    
+    return result;
   } else if( sub.size() >0 ){
     // object with substructure
     unsigned int resultTISTOS=kTOSandTIS;
     unsigned int resultTPS=0;
     bool empty(true);
     for( SmartRefVector< LHCb::HltObjectSummary >::const_iterator ihos=sub.begin();ihos!=sub.end();++ihos){
-      if(!(ihos->target()))continue;        
-      const LHCb::HltObjectSummary &  daug = *(ihos->target());      
+      if(!(ihos->target()))continue;
+      const LHCb::HltObjectSummary &  daug = *(ihos->target());
       unsigned int result = tisTos( daug );
       if( m_compositeTPSviaPartialTOSonly ){
         // no way to tell that it wasn't analyzed
-        empty=false;      
+        empty=false;
         //  every daughter of the Parent must be TOS (TIS) for Parent to be TOS (TIS)
         resultTISTOS &= result;
         // set TPS unless done already
-        if( !resultTPS ){        
+        if( !resultTPS ){
           if( result & kTOS ){
             // daughter TOS sets parent TPS
             resultTPS = kTPS;
-          } else if( result & kTPS ){            
+          } else if( result & kTPS ){
             if( daug.substructure().size()>1 ){
-              // non-trivially-composite daughter TPS sets parent TPS 
+              // non-trivially-composite daughter TPS sets parent TPS
               resultTPS= kTPS;
             } else if ( sub.size()==1 ){
               // non-composite or trivially composite daughter propagates its TPS to parent with only daughter
               resultTPS= kTPS;
-            }            
+            }
           }
         }
         // see if can quit already
         if( ! (resultTISTOS & kTOSandTIS) && resultTPS ){
           break;
-        }        
+        }
       } else {
         //   no info? skip
         if( !result )continue;
-        empty=false;      
+        empty=false;
         //  every daughter of the Parent must be TOS (TIS) for Parent to be TOS (TIS)
         resultTISTOS &= result;
         //  any TPS daughter is fine for TPS
@@ -809,83 +802,83 @@ unsigned int ParticleTisTos::tisTos(const LHCb::HltObjectSummary & hos)
           // neither TIS nor TOS already: by definition TPS
           resultTPS=kTPS;
           break;
-        }        
+        }
       }
     }
-    if( empty )return 0;  
+    if( empty )return 0;
     return (resultTISTOS|resultTPS);
   } else {
     // object with hits
     return tisTosSortedHits( sortedHits(hos.lhcbIDs()) );
   }
-  return 0;  
+  return 0;
 }
 
 std::string ParticleTisTos::analysisReport(const LHCb::HltObjectSummary & hos)
 {
   std::ostringstream report;
-  report << offset() << " HltObjectSummary CLID " << hos.summarizedObjectCLID();  
+  report << offset() << " HltObjectSummary CLID " << hos.summarizedObjectCLID();
   const SmartRefVector< LHCb::HltObjectSummary > & sub = hos.substructure();
   if( hos.summarizedObjectCLID() == 1 ){
     // this is Selection summary: take OR between candidates
-    report << " Selection #-of-candidates " << sub.size() << std::endl;  
+    report << " Selection #-of-candidates " << sub.size() << std::endl;
     unsigned int result=0;
     for( SmartRefVector< LHCb::HltObjectSummary >::const_iterator ihos=sub.begin();ihos!=sub.end();++ihos){
-      if(!(ihos->target()))continue;        
-      const LHCb::HltObjectSummary &  daug = *(ihos->target());      
+      if(!(ihos->target()))continue;
+      const LHCb::HltObjectSummary &  daug = *(ihos->target());
       result |= tisTos( daug );
       // report << offset() << " Selection Candidates ";
-      ++m_reportDepth;  
-      report << analysisReport( daug ); // << std::endl;      
-      --m_reportDepth;      
-     if( (result & kTOS) && (result & kTIS) && (result & kTPS ) )break;
+      ++m_reportDepth;
+      report << analysisReport( daug ); // << std::endl;
+      --m_reportDepth;
+      if( (result & kTOS) && (result & kTIS) && (result & kTPS ) )break;
     }
     TisTosTob res( result );
     report << offset()
            << " HltObjectSummary Selection TIS= " << res.tis() << " TOS= " << res.tos() << " TPS= " << res.tps() << std::endl;
-    return report.str();  
+    return report.str();
   } else if( sub.size() >0 ){
-    report << " Substructure size " << sub.size() << std::endl;  
+    report << " Substructure size " << sub.size() << std::endl;
     // object with substructure
     unsigned int resultTISTOS=kTOSandTIS;
     unsigned int resultTPS=0;
     bool empty(true);
     for( SmartRefVector< LHCb::HltObjectSummary >::const_iterator ihos=sub.begin();ihos!=sub.end();++ihos){
-      if(!(ihos->target()))continue;        
-      const LHCb::HltObjectSummary &  daug = *(ihos->target());      
+      if(!(ihos->target()))continue;
+      const LHCb::HltObjectSummary &  daug = *(ihos->target());
       unsigned int result = tisTos( daug );
       // report << offset() << " Subobject ";
-      ++m_reportDepth;  
+      ++m_reportDepth;
       report << analysisReport( daug );
-      --m_reportDepth;          
+      --m_reportDepth;
       if( m_compositeTPSviaPartialTOSonly ){
         // no way to tell that it wasn't analyzed
-        empty=false;      
+        empty=false;
         //  every daughter of the Parent must be TOS (TIS) for Parent to be TOS (TIS)
         resultTISTOS &= result;
         // set TPS unless done already
-        if( !resultTPS ){        
+        if( !resultTPS ){
           if( result & kTOS ){
             // daughter TOS sets parent TPS
             resultTPS = kTPS;
-          } else if( result & kTPS ){            
+          } else if( result & kTPS ){
             if( daug.substructure().size()>1 ){
-              // non-trivially-composite daughter TPS sets parent TPS 
+              // non-trivially-composite daughter TPS sets parent TPS
               resultTPS= kTPS;
             } else if ( sub.size()==1 ){
               // non-composite or trivially composite daughter propagates its TPS to parent with only daughter
               resultTPS= kTPS;
-            }            
+            }
           }
         }
         // see if can quit already
         if( ! (resultTISTOS & kTOSandTIS) && resultTPS ){
           if( !m_fullAnalysisReport )break;
-        }        
+        }
       } else {
         //   no info? skip
         if( !result )continue;
-        empty=false;      
+        empty=false;
         //  every daughter of the Parent must be TOS (TIS) for Parent to be TOS (TIS)
         resultTISTOS &= result;
         //  any TPS daughter is fine for TPS
@@ -895,10 +888,10 @@ std::string ParticleTisTos::analysisReport(const LHCb::HltObjectSummary & hos)
           // neither TIS nor TOS already: by definition TPS
           resultTPS=kTPS;
           if( !m_fullAnalysisReport )break;
-        }        
+        }
       }
     }
-    unsigned int result;  
+    unsigned int result;
     if( empty ){
       result =0;
     } else {
@@ -907,13 +900,13 @@ std::string ParticleTisTos::analysisReport(const LHCb::HltObjectSummary & hos)
     TisTosTob res( result );
     report << offset()
            << " HltObjectSummary Composite TIS= " << res.tis() << " TOS= " << res.tos() << " TPS= " << res.tps() << std::endl;
-    return report.str();  
+    return report.str();
   } else {
     // object with hits
     report << " " + analysisReportSortedHits( sortedHits(hos.lhcbIDs()) ) << std::endl;
-    return report.str();  
+    return report.str();
   }
-  return report.str();  
+  return report.str();
 }
 
 
@@ -927,23 +920,23 @@ bool ParticleTisTos::tos(const LHCb::HltObjectSummary & hos)
 
     // this is Selection summary: take OR between candidates
     for( SmartRefVector< LHCb::HltObjectSummary >::const_iterator ihos=sub.begin();ihos!=sub.end();++ihos){
-      if(!(ihos->target()))continue;        
+      if(!(ihos->target()))continue;
       const LHCb::HltObjectSummary &  daug = *(ihos->target());
       if( tos( daug ) )return true;
     }
     return false;
-    
-  } else if( sub.size() ) {    
-    
-     // this is object with substructure: take AND between parts
+
+  } else if( sub.size() ) {
+
+    // this is object with substructure: take AND between parts
     bool empty(true);
     for( SmartRefVector< LHCb::HltObjectSummary >::const_iterator ihos=sub.begin();ihos!=sub.end();++ihos){
-      if(!(ihos->target()))continue;        
+      if(!(ihos->target()))continue;
       const LHCb::HltObjectSummary &  daug = *(ihos->target());
       if( !tos( daug ) )return false;
-      empty=false;      
+      empty=false;
     }
-    if( empty )return false;  
+    if( empty )return false;
     return true;
 
   } else {
@@ -962,23 +955,23 @@ bool ParticleTisTos::tis(const LHCb::HltObjectSummary & hos)
 
     // this is Selection summary: take OR between candidates
     for( SmartRefVector< LHCb::HltObjectSummary >::const_iterator ihos=sub.begin();ihos!=sub.end();++ihos){
-      if(!(ihos->target()))continue;        
+      if(!(ihos->target()))continue;
       const LHCb::HltObjectSummary &  daug = *(ihos->target());
       if( tis( daug ) )return true;
     }
     return false;
-    
-  } else if( sub.size() ) {    
-    
-     // this is object with substructure: take AND between parts
+
+  } else if( sub.size() ) {
+
+    // this is object with substructure: take AND between parts
     bool empty(true);
     for( SmartRefVector< LHCb::HltObjectSummary >::const_iterator ihos=sub.begin();ihos!=sub.end();++ihos){
-      if(!(ihos->target()))continue;        
+      if(!(ihos->target()))continue;
       const LHCb::HltObjectSummary &  daug = *(ihos->target());
       if( !tis( daug ) )return false;
-      empty=false;      
+      empty=false;
     }
-    if( empty )return false;  
+    if( empty )return false;
     return true;
 
   } else {
@@ -997,17 +990,17 @@ bool ParticleTisTos::tus(const LHCb::HltObjectSummary & hos)
 
     // this is Selection summary: take OR between candidates
     for( SmartRefVector< LHCb::HltObjectSummary >::const_iterator ihos=sub.begin();ihos!=sub.end();++ihos){
-      if(!(ihos->target()))continue;        
+      if(!(ihos->target()))continue;
       const LHCb::HltObjectSummary &  daug = *(ihos->target());
       if( tus( daug ) )return true;
     }
     return false;
-    
-  } else if( sub.size() ) {    
-    
-     // this is object with substructure
+
+  } else if( sub.size() ) {
+
+    // this is object with substructure
     for( SmartRefVector< LHCb::HltObjectSummary >::const_iterator ihos=sub.begin();ihos!=sub.end();++ihos){
-      if(!(ihos->target()))continue;        
+      if(!(ihos->target()))continue;
       const LHCb::HltObjectSummary &  daug = *(ihos->target());
       if( m_compositeTPSviaPartialTOSonly ){
         if( daug.substructure().size() > 1 ){
@@ -1027,37 +1020,37 @@ bool ParticleTisTos::tus(const LHCb::HltObjectSummary & hos)
       return tosSortedHits( sortedHits(hos.lhcbIDs()) );
     } else {
       return tusSortedHits( sortedHits(hos.lhcbIDs()) );
-    }    
+    }
   }
-  
+
 }
 
-//=============================================================================  
+//=============================================================================
 // outputs: classified Vertex
-//=============================================================================  
+//=============================================================================
 unsigned int ParticleTisTos::tisTos(const Vertex & onvertex)
 {
   unsigned int resultTISTOS=kTOSandTIS;
   unsigned int resultTPS=0;
-  bool empty(true);  
+  bool empty(true);
   const SmartRefVector<LHCb::Particle> & ontracks=onvertex.outgoingParticles();
   for (SmartRefVector<LHCb::Particle>::const_iterator onit = ontracks.begin();onit != ontracks.end(); ++onit) {
     if( onit->target() ){
       const Particle& ontrack = *(*onit);
       unsigned int result = tisTos( ontrack );
       if( !result )continue;
-      empty=false;      
+      empty=false;
       //  every Track in vertex must be TOS (TIS) for vertex to be TOS (TIS)
       resultTISTOS &= result;
       // set TPS unless done already
-      if( !resultTPS ){        
-          if( m_compositeTPSviaPartialTOSonly ){
-            if( result & kTOS ){
-              resultTPS = kTPS;
-            }
-          } else {            
-            resultTPS = result & kTPS;
+      if( !resultTPS ){
+        if( m_compositeTPSviaPartialTOSonly ){
+          if( result & kTOS ){
+            resultTPS = kTPS;
           }
+        } else {
+          resultTPS = result & kTPS;
+        }
       }
       //  see if can quite already
       if( ! (resultTISTOS & kTOSandTIS) ){
@@ -1067,7 +1060,7 @@ unsigned int ParticleTisTos::tisTos(const Vertex & onvertex)
       }
     }
   }
-  if( empty )return 0;  
+  if( empty )return 0;
   return (resultTISTOS|resultTPS);
 }
 
@@ -1076,29 +1069,29 @@ std::string ParticleTisTos::analysisReport(const Vertex & onvertex)
   std::ostringstream report;
   unsigned int resultTISTOS=kTOSandTIS;
   unsigned int resultTPS=0;
-  bool empty(true);  
+  bool empty(true);
   const SmartRefVector<LHCb::Particle> & ontracks=onvertex.outgoingParticles();
-  report << offset() << " Vertex #-of-Particles " << ontracks.size() << std::endl;  
+  report << offset() << " Vertex #-of-Particles " << ontracks.size() << std::endl;
   for (SmartRefVector<LHCb::Particle>::const_iterator onit = ontracks.begin();onit != ontracks.end(); ++onit) {
     if( onit->target() ){
       const Particle& ontrack = *(*onit);
       unsigned int result = tisTos( ontrack );
-      ++m_reportDepth;  
-      report << analysisReport(ontrack) << std::endl;      
-      --m_reportDepth;      
+      ++m_reportDepth;
+      report << analysisReport(ontrack) << std::endl;
+      --m_reportDepth;
       if( !result )continue;
-      empty=false;      
+      empty=false;
       //  every Track in vertex must be TOS (TIS) for vertex to be TOS (TIS)
       resultTISTOS &= result;
       // set TPS unless done already
-      if( !resultTPS ){        
-          if( m_compositeTPSviaPartialTOSonly ){
-            if( result & kTOS ){
-              resultTPS = kTPS;
-            }
-          } else {            
-            resultTPS = result & kTPS;
+      if( !resultTPS ){
+        if( m_compositeTPSviaPartialTOSonly ){
+          if( result & kTOS ){
+            resultTPS = kTPS;
           }
+        } else {
+          resultTPS = result & kTPS;
+        }
       }
       //  see if can quite already
       if( ! (resultTISTOS & kTOSandTIS) ){
@@ -1108,7 +1101,7 @@ std::string ParticleTisTos::analysisReport(const Vertex & onvertex)
       }
     }
   }
-  unsigned int result;  
+  unsigned int result;
   if( empty ){
     result =0;
   } else {
@@ -1116,19 +1109,19 @@ std::string ParticleTisTos::analysisReport(const Vertex & onvertex)
   }
   TisTosTob res( result );
   report << offset() << " Vertex TIS= " << res.tis() << " TOS= " << res.tos() << " TPS= " << res.tps() << std::endl;
-  return report.str();  
+  return report.str();
 }
 
 bool  ParticleTisTos::tos(const Vertex & onvertex)
 {
-  bool empty(true);  
+  bool empty(true);
   const SmartRefVector<LHCb::Particle> & ontracks=onvertex.outgoingParticles();
   for (SmartRefVector<LHCb::Particle>::const_iterator onit = ontracks.begin();onit != ontracks.end(); ++onit) {
     if( onit->target() ){
       const Particle& ontrack = *(*onit);
       //  every Track in vertex must be TOS (TIS) for vertex to be TOS (TIS)
       if( !tos( ontrack ) )return false;
-      empty = false;      
+      empty = false;
     }
   }
   if( empty )return false;
@@ -1137,14 +1130,14 @@ bool  ParticleTisTos::tos(const Vertex & onvertex)
 
 bool  ParticleTisTos::tis(const Vertex & onvertex)
 {
-  bool empty(true);  
+  bool empty(true);
   const SmartRefVector<LHCb::Particle> & ontracks=onvertex.outgoingParticles();
   for (SmartRefVector<LHCb::Particle>::const_iterator onit = ontracks.begin();onit != ontracks.end(); ++onit) {
     if( onit->target() ){
       const Particle& ontrack = *(*onit);
       //  every Track in vertex must be TOS (TIS) for vertex to be TOS (TIS)
       if( !tis( ontrack ) )return false;
-      empty = false;      
+      empty = false;
     }
   }
   if( empty )return false;

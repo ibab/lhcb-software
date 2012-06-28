@@ -1,5 +1,5 @@
 // $Id: ParticleTisTos.h,v 1.1 2010-07-21 21:22:16 tskwarni Exp $
-#ifndef PARTICLETISTOS_H 
+#ifndef PARTICLETISTOS_H
 #define PARTICLETISTOS_H 1
 
 // Include files
@@ -19,18 +19,18 @@
 #include "Event/HltObjectSummary.h"
 
 /** @class ParticleTisTos ParticleTisTos.h
- *  
+ *
  *  @author Tomasz Skwarnicki
  *  @date   2010-07-08
  *
- *  Default implementation of @c IParticleTisTos tool
+ *  Default implementation of IParticleTisTos tool
  */
-class ParticleTisTos :  public TisTos, 
+class ParticleTisTos :  public TisTos,
                         virtual public IParticleTisTos {
-public: 
+public:
 
   /// Standard constructor
-  ParticleTisTos( const std::string& type, 
+  ParticleTisTos( const std::string& type,
                   const std::string& name,
                   const IInterface* parent);
 
@@ -38,37 +38,37 @@ public:
 
 
   virtual StatusCode         initialize();
- 
+
   // ------------  various ways to define Signal (off-line input) -------------------------
 
   /// Particle input; for composite particles loop over daughters will be executed (true if Signal changed)
-  bool addToSignal( const LHCb::Particle & particle );  
+  bool addToSignal( const LHCb::Particle & particle );
 
   /// Proto-particle input
-  bool addToSignal( const LHCb::ProtoParticle & protoParticle );  
-  
+  bool addToSignal( const LHCb::ProtoParticle & protoParticle );
+
   /// Track input
-  bool addToSignal( const LHCb::Track & track );  
+  bool addToSignal( const LHCb::Track & track );
 
   /// Hits input
   bool addToSignal( const std::vector<LHCb::LHCbID> & hits )  { return addHitsToSignal(hits); }
-   
-                    
+
+
   // -------------------------------------------------
   // ------------ outputs
   // -------------------------------------------------
 
-  /// completely classify the Trigger object with respect to the previouly defined Signal 
+  /// completely classify the Trigger object with respect to the previouly defined Signal
   unsigned int tisTos(const LHCb::Particle & particle)  ;
   unsigned int tisTos(const LHCb::RecVertex & recVertex )  ;
   unsigned int tisTos(const LHCb::Vertex & vertex )  ;
   unsigned int tisTos(const LHCb::Track & track ) ;
   unsigned int tisTos(const std::vector<LHCb::LHCbID> & hits ){  return tisTosSortedHits( sortedHits(hits) );  }
   unsigned int tisTos(const LHCb::HltObjectSummary & hos );
-  
- 
+
+
   /// check for TOS  - may be faster than using tisTos()
-  bool tos(const LHCb::Particle & particle) ;  
+  bool tos(const LHCb::Particle & particle) ;
   bool tos(const LHCb::RecVertex & recVertex) ;
   bool tos(const LHCb::Vertex & vertex) ;
   bool tos(const LHCb::Track & track ) ;
@@ -102,16 +102,16 @@ public:
   // --------------------- control calls -------------------------
 
   void setProjectTracksToCalo(bool onOff){ m_projectTracksToCalo=onOff;  }
-  void setCaloClustForCharged(bool onOff){ m_caloClustForCharged=onOff;  }  
-  void setCaloClustForNeutral(bool onOff){ m_caloClustForNeutral=onOff;  } 
-  void setCompositeTPSviaPartialTOSonly(bool onOff){ m_compositeTPSviaPartialTOSonly=onOff;  } 
-  void setFullAnalysisReport(bool onOff){ m_fullAnalysisReport=onOff;  } 
-  
+  void setCaloClustForCharged(bool onOff){ m_caloClustForCharged=onOff;  }
+  void setCaloClustForNeutral(bool onOff){ m_caloClustForNeutral=onOff;  }
+  void setCompositeTPSviaPartialTOSonly(bool onOff){ m_compositeTPSviaPartialTOSonly=onOff;  }
+  void setFullAnalysisReport(bool onOff){ m_fullAnalysisReport=onOff;  }
+
   bool getProjectTracksToCalo()const { return m_projectTracksToCalo;  }
   bool getCaloClustForCharged()const { return m_caloClustForCharged;  }
   bool getCaloClustForNeutral()const { return m_caloClustForNeutral;  }
-  bool getCompositeTPSviaPartialTOSonly()const { return m_compositeTPSviaPartialTOSonly;  } 
-  bool getFullAnalysisReport()const { return m_fullAnalysisReport;  } 
+  bool getCompositeTPSviaPartialTOSonly()const { return m_compositeTPSviaPartialTOSonly;  }
+  bool getFullAnalysisReport()const { return m_fullAnalysisReport;  }
 
   // --------------------- utilities ------------------------
 
@@ -120,11 +120,9 @@ public:
   /// get calo Hits by projecting into eCal and Hcal (3x3 cells)
   std::vector<LHCb::LHCbID> projectTrack(const LHCb::Track& track );
 
-  
-
 protected:
 
-  /// Tool for projecting track into Hcal and Ecal 
+  /// Tool for projecting track into Hcal and Ecal
   ITrack2Calo*  m_track2calo;
   /// Hcal detector geometry
   DeCalorimeter* m_hcalDeCal;
@@ -133,26 +131,27 @@ protected:
 
   /// true if signal Tracks are projected to Ecal and Hcal to claim calo cells
   bool m_projectTracksToCalo;
-  /// true if signal ProtoParticle built on Track should collect hits from linked CaloCluster 
-  bool m_caloClustForCharged;  
-  /// true if signal ProtoParticle built on CaloCluster should collect hits from linked CaloClusters 
+  /// true if signal ProtoParticle built on Track should collect hits from linked CaloCluster
+  bool m_caloClustForCharged;
+  /// true if signal ProtoParticle built on CaloCluster should collect hits from linked CaloClusters
   bool m_caloClustForNeutral;
   /// true if composite Trigger object should acquire TPS status only if at least one non-composite sub-object is TOS
   bool m_compositeTPSviaPartialTOSonly;
 
   /// true if full analysis report should be given in analysisReport(), instead of following tisTos() loop breaking
-  bool m_fullAnalysisReport;  
+  bool m_fullAnalysisReport;
 
   /// to offset analysisReport printout
   unsigned int m_reportDepth;
+
+protected:
+
   std::string offset()
   {
     std::string rep;
     for(unsigned int i=0;i<m_reportDepth;++i){ rep += "   "; }
     return rep;
   }
-
-private:  
 
 };
 #endif // PARTICLETISTOS_H

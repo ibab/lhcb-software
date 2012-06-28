@@ -1,5 +1,5 @@
 // $Id: TisTos.h,v 1.1 2010-07-21 21:22:17 tskwarni Exp $
-#ifndef TISTOS_H 
+#ifndef TISTOS_H
 #define TISTOS_H 1
 
 // Include files
@@ -8,7 +8,7 @@
 #include "Kernel/ITisTos.h"            // Interface
 
 /** @class TisTos TisTos.h
- *  
+ *
  *  @author Tomasz Skwarnicki
  *  @date   2010-07-07
  *
@@ -16,19 +16,19 @@
  *  @sa  ITisTos docs for more info.
  *  This interface also defines some inlined shortcuts for typical calls.
  */
-class TisTos : public GaudiTool, 
+class TisTos : public GaudiTool,
                virtual public ITisTos {
-public: 
+public:
 
 
-  /// hits are split into @c HitType categories for matching in each category 
+  /// hits are split into @c HitType categories for matching in each category
   enum HitType {kVelo=0,kAllHits=kVelo,kOTIT,kTT,kMuon,kEcal,kHcal,nHitTypes,kNotUsed=nHitTypes};
 
   /// search condition input parameter in analyze method (analyze quits once the condition is determined)
   enum SearchCond {kSearchNone=0, kSearchForAll, kSearchForTOS, kSearchForTUS, kSearchForTIS};
 
   /// Standard constructor
-  TisTos( const std::string& type, 
+  TisTos( const std::string& type,
           const std::string& name,
           const IInterface* parent);
 
@@ -37,8 +37,8 @@ public:
 
   virtual StatusCode         initialize();
 
-  // ----------------- signal input ----------------------  
-  
+  // ----------------- signal input ----------------------
+
   /// erase signal definition (returns true if erased non-empty signal)
   bool setSignal();
 
@@ -52,10 +52,10 @@ public:
   std::vector<LHCb::LHCbID> signal() const;
 
   // ---------------- classification methods ----------------------
-  
+
   /// completely classify the Trigger hit sequence with respect to the Signal hit sequence
   unsigned int tisTosSortedHits(const std::vector<LHCb::LHCbID> & triggerHits) const;
-  
+
   /// check for TOS - may be faster than using tisTos()
   bool tosSortedHits(const std::vector<LHCb::LHCbID> & triggerHits) const;
 
@@ -67,42 +67,42 @@ public:
 
   // extras for diagnostics -------------
 
-  /// hit analysis: number of trigger hits and fraction found in the signal for each hit type  
+  /// hit analysis: number of trigger hits and fraction found in the signal for each hit type
   unsigned int analyzeSortedHits(const std::vector<LHCb::LHCbID> & triggerHits,
-                   std::vector<unsigned int> & nTrigger ,
-                   std::vector<double> & fractionInSignal ) const;
-  
-  /// analysis report 
+                                 std::vector<unsigned int> & nTrigger ,
+                                 std::vector<double> & fractionInSignal ) const;
+
+  /// analysis report
   std::string analysisReportSortedHits(const std::vector<LHCb::LHCbID> & triggerHits) const;
-  
+
 
   // Control calls ------------------------------
 
   /// set using hit types on or off (returns true if call resulted in a change of the value of this switch)
   bool setNoHitTypes(bool onOff);
-  
+
 
   // following calls return false is hitType was illegal
 
   /// set minimal fraction of trigger hits to be found on signal for TOS - see @c HitType for hit types (<=0 don't use this type)
-   bool setTOSFrac(unsigned int hitType,double tosFrac);
-  
+  bool setTOSFrac(unsigned int hitType,double tosFrac);
+
   /// set maximal fraction of trigger hits to be found on signal for TIS - (should be below TOSFrac except when TOSFrac<=0)
-   bool setTISFrac(unsigned int hitType,double tisFrac);
+  bool setTISFrac(unsigned int hitType,double tisFrac);
 
   /// set minimal fractions of trigger hits to be found on signal for TOS - see @c HitType for hit types (<=0 don't use this type)
-   bool setTOSFrac(std::vector<double> tosFrac);
-  
+  bool setTOSFrac(std::vector<double> tosFrac);
+
   /// set maximal fractions of trigger hits to be found on signal for TIS - (should be below TOSFrac except when TOSFrac<=0)
-   bool setTISFrac(std::vector<double> tisFrac);
-  
+  bool setTISFrac(std::vector<double> tisFrac);
+
   // access to values used --------------------------
 
-  /// actual number of hit types used 
+  /// actual number of hit types used
   unsigned int numberOfHitTypes() const  { return m_nHitTypes;  }
 
   /// Names if the hit types
-  std::string hitTypeName(unsigned int hitType) const 
+  std::string hitTypeName(unsigned int hitType) const
   {
     switch(hitType)
     {
@@ -114,19 +114,19 @@ public:
     case kHcal: return "Hcal";
     default: return "NotUsed";
     };
-  } 
+  }
 
-  /// get minimal fraction of trigger hits to be found on signal for TOS - see @c HitType for hit types 
-   double getTOSFrac(unsigned int hitType) const;
-  
-  /// get maximal fraction of trigger hits to be found on signal for TIS 
-   double getTISFrac(unsigned int hitType) const;
+  /// get minimal fraction of trigger hits to be found on signal for TOS - see @c HitType for hit types
+  double getTOSFrac(unsigned int hitType) const;
 
-  /// get minimal fractions of trigger hits to be found on signal for TOS 
-   std::vector<double> getTOSFrac() const;
-  
-  /// get maximal fraction of trigger hits to be found on signal for TIS 
-   std::vector<double> getTISFrac() const;
+  /// get maximal fraction of trigger hits to be found on signal for TIS
+  double getTISFrac(unsigned int hitType) const;
+
+  /// get minimal fractions of trigger hits to be found on signal for TOS
+  std::vector<double> getTOSFrac() const;
+
+  /// get maximal fraction of trigger hits to be found on signal for TIS
+  std::vector<double> getTISFrac() const;
 
 
 
@@ -137,14 +137,14 @@ public:
   std::vector<LHCb::LHCbID> sortedHits(const std::vector<LHCb::LHCbID> & hitlist) const
   {
     std::vector<LHCb::LHCbID> copied;
-    copied.insert(copied.end(),hitlist.begin(),hitlist.end());      
+    copied.insert(copied.end(),hitlist.begin(),hitlist.end());
     // sort hits
     std::sort( copied.begin(), copied.end() ) ;
     // eliminate duplicates
     copied.erase( std::unique( copied.begin(), copied.end() ), copied.end() ) ;
     return copied;
   }
-  
+
 
 
   /// classify hit into @c HitType
@@ -159,13 +159,13 @@ public:
 protected:
 
   /// maximum fraction of matching hits allowed for TIS (<=)
-  double m_TISFrac[nHitTypes]; 
+  double m_TISFrac[nHitTypes];
   /// minimum fraction of matching hits required for TOS (>=)
   double m_TOSFrac[nHitTypes];
-  
-  /// actual number of hitTypes used 
+
+  /// actual number of hitTypes used
   unsigned int m_nHitTypes;
-  
+
   /// true if hits are not split into separate categories
   bool m_noHitTypes;
 
