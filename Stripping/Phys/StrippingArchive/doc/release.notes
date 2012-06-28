@@ -4,6 +4,11 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-06-28 - Anton Poluektov 
+ - Add Stripping19b
+ - Remove Stripping19a from the list of known strippings (since it is a copy of Stripping19)
+ - Update test reference
+
 ! 2012-06-26 - Chris Jones
  - Remove all usage of 'HistoPrint' from old stripping versions, to be compatible
    with the new base classes in the latest DV releases.

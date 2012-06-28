@@ -11,98 +11,7 @@ Trying to import module StrippingArchive.Stripping17b
 Trying to import module StrippingArchive.PreStripping18
 Trying to import module StrippingArchive.Stripping18
 Trying to import module StrippingArchive.Stripping19
-Trying to import module StrippingArchive.Stripping19a
-StrippingArchive.Stripping19a  cannot be loaded with this version of DaVinci
-=============================================
-Stripping17b :
-=============================================
-Trying to import module StrippingArchive.Stripping13
-StrippingArchive.Stripping13  cannot be loaded with this version of DaVinci
-Trying to import module StrippingArchive.Stripping14
-StrippingArchive.Stripping14  cannot be loaded with this version of DaVinci
-Trying to import module StrippingArchive.Stripping15
-StrippingArchive.Stripping15  cannot be loaded with this version of DaVinci
-Trying to import module StrippingArchive.Stripping16
-StrippingArchive.Stripping16  cannot be loaded with this version of DaVinci
-Trying to import module StrippingArchive.Stripping17
-Trying to import module StrippingArchive.Stripping17b
-Trying to import module StrippingArchive.PreStripping18
-Trying to import module StrippingArchive.Stripping18
-Trying to import module StrippingArchive.Stripping19
-Trying to import module StrippingArchive.Stripping19a
-StrippingArchive.Stripping19a  cannot be loaded with this version of DaVinci
-Hadron_Z02TauTauProng
-{'pP_MIN': '10000*MeV', 'BPVDIRA_MIN': 0.0, 'ASUMPT_MIN': '1000*MeV', 'MASS_WINDOW': {'KST': '150*MeV', 'PHI': '15*MeV', 'OMEGA': '30*MeV', 'RHO': '250*MeV'}, 'BPVVDCHI2_MIN': 16, 'AMAXDOCA_MAX': '0.5*mm', 'LAMBDADAUGHTERS': {'P_MIN': '2500*MeV', 'PT_MIN': '300*MeV'}, 'VCHI2DOF_MAX': 16, 'DAUGHTERS': {'P_MIN': '2000*MeV', 'PT_MIN': '100*MeV'}}
-self.name BetaSPsi2SMuMu
-inclusiveline BetaSPsi2SMuMu_InclPsi2SToMuMu
-Created lines
-
--------------------------------------------
--- B+ -> K X3872 etc stripping line cuts --
--------------------------------------------
-
-  --> B+ -> K X3872 line
-  --> Bu cut:                 (ADMASS('B+') < 400.0 * MeV) & (VFASPF(VCHI2/VDOF) < 4.0) & (BPVIPCHI2() < 15.0) & (BPVDIRA> 0.9995) & (BPVVDCHI2 > 40.0)
-  --> Bu combination cut:     (ADAMASS('B+') < 450.0 * MeV)
-  --> X3872 cut:              (ADMASS('X_1(3872)') < 150.0 * MeV) & (VFASPF(VCHI2/VDOF) < 8.0)
-  --> X3872 combination cut:  (ADAMASS('X_1(3872)') < 180.0 * MeV)
-  --> JPsi cuts:              (ADMASS('J/psi(1S)') < 70.0 * MeV) & (VFASPF(VCHI2/VDOF) < 10.0) & (2 == NINTREE((ABSID=='mu-') & (TRCHI2DOF < 4.0) & (MIPCHI2DV(PRIMARY) > 3.0) & (PT > 500.0 * MeV) & (ISMUON)))
-  --> Pion cut:               (TRCHI2DOF < 4.0) & (MIPCHI2DV(PRIMARY) > 6.0)
-  --> Kaon cut:               (TRCHI2DOF < 4.0) & (PT > 200.0 * MeV) & (MIPCHI2DV(PRIMARY) > 6.0)
-
-  --> B+ -> K X3872 loose line
-  --> Bu cut:                 (ADMASS('B+') < 400.0 * MeV) & (VFASPF(VCHI2/VDOF) < 5.0) & (BPVIPCHI2() < 20.0) & (BPVDIRA> 0.9995) & (BPVVDCHI2 > 30.0)
-  --> Bu combination cut:     (ADAMASS('B+') < 500.0 * MeV)
-  --> X3872 cut:              (ADMASS('X_1(3872)') < 190.0 * MeV) & (VFASPF(VCHI2/VDOF) < 10.0)
-  --> X3872 combination cut:  (ADAMASS('X_1(3872)') < 220.0 * MeV)
-  --> JPsi cuts:              (ADMASS('J/psi(1S)') < 70.0 * MeV) & (VFASPF(VCHI2/VDOF) < 10.0) & (2 == NINTREE((ABSID=='mu-') & (TRCHI2DOF < 4.0) & (MIPCHI2DV(PRIMARY) > 2.0) & (PT > 500.0 * MeV) & (ISMUON)))
-  --> Pion cut:               (TRCHI2DOF < 4.0) & (MIPCHI2DV(PRIMARY) > 5.0)
-  --> Kaon cut:               (TRCHI2DOF < 4.0)  & (PT > 150.0 * MeV) & (MIPCHI2DV(PRIMARY) > 5.0)
-
-  --> B+ -> K Psi(2S) line
-  --> Bu cut:                 (ADMASS('B+') < 400.0 * MeV) & (VFASPF(VCHI2/VDOF) < 4.0) & (BPVIPCHI2() < 15.0) & (BPVDIRA> 0.9995) & (BPVVDCHI2 > 40.0)
-  --> Bu combination cut:     (ADAMASS('B+') < 450.0 * MeV)
-  --> X3872 cut:              (ADMASS('psi(2S)') < 150.0 * MeV) & (VFASPF(VCHI2/VDOF) < 8.0)
-  --> X3872 combination cut:  (ADAMASS('psi(2S)') < 180.0 * MeV)
-  --> JPsi cuts:              (ADMASS('J/psi(1S)') < 70.0 * MeV) & (VFASPF(VCHI2/VDOF) < 10.0) & (2 == NINTREE((ABSID=='mu-') & (TRCHI2DOF < 4.0) & (MIPCHI2DV(PRIMARY) > 3.0) & (PT > 500.0 * MeV) & (ISMUON)))
-  --> Pion cut:               (TRCHI2DOF < 4.0) & (MIPCHI2DV(PRIMARY) > 6.0)
-  --> Kaon cut:               (TRCHI2DOF < 4.0) & (PT > 200.0 * MeV) & (MIPCHI2DV(PRIMARY) > 6.0)
-
-  --> B+ -> K Psi(2S) loose line
-  --> Bu cut:                 (ADMASS('B+') < 400.0 * MeV) & (VFASPF(VCHI2/VDOF) < 5.0) & (BPVIPCHI2() < 20.0) & (BPVDIRA> 0.9995) & (BPVVDCHI2 > 30.0)
-  --> Bu combination cut:     (ADAMASS('B+') < 500.0 * MeV)
-  --> X3872 cut:              (ADMASS('psi(2S)') < 190.0 * MeV) & (VFASPF(VCHI2/VDOF) < 10.0)
-  --> X3872 combination cut:  (ADAMASS('psi(2S)') < 220.0 * MeV)
-  --> JPsi cuts:              (ADMASS('J/psi(1S)') < 70.0 * MeV) & (VFASPF(VCHI2/VDOF) < 10.0) & (2 == NINTREE((ABSID=='mu-') & (TRCHI2DOF < 4.0) & (MIPCHI2DV(PRIMARY) > 2.0) & (PT > 500.0 * MeV) & (ISMUON)))
-  --> Pion cut:               (TRCHI2DOF < 4.0) & (MIPCHI2DV(PRIMARY) > 5.0)
-  --> Kaon cut:               (TRCHI2DOF < 4.0)  & (PT > 150.0 * MeV) & (MIPCHI2DV(PRIMARY) > 5.0)
------------------------------------------
---  Bd -> K* mu mu stripping line cuts --
------------------------------------------
-
-Bd cut:                 (M > 4850.0 * MeV) & (M < 5780.0 * MeV) & (VFASPF(VCHI2/VDOF) < 6.0) & (BPVIPCHI2() < 16.0) & (BPVDIRA> 0.9999) & (BPVVDCHI2 > 121.0) & (MAXTREE(ISBASIC,MIPCHI2DV(PRIMARY))> 9.0 )
-Bd combination cut:     (AM > 4600.0 * MeV) & (AM < 6000.0 * MeV)
-Kstar cut:              (VFASPF(VCHI2/VDOF) < 12.0) & (BPVDIRA> -0.9) & (M > 600.0 * MeV) & (M < 2000.0 * MeV) & (BPVVDCHI2 > 9.0) & (MIPCHI2DV(PRIMARY) > 0.0) & (MAXTREE(ISBASIC,MIPCHI2DV(PRIMARY))> 9.0 )
-Kstar combination cut:  (AM > 550.0 * MeV) & (AM < 2200.0 * MeV) & (ADOCACHI2CUT(20.,''))
-DiMuon cut:             (VFASPF(VCHI2/VDOF) < 12.0) & (BPVDIRA> -0.9) & (BPVVDCHI2 > 9.0) & (MAXTREE(ISBASIC,MIPCHI2DV(PRIMARY))> 9.0 )
-Kaon cut:               (TRCHI2DOF < 5.0) & (MIPCHI2DV(PRIMARY) > 9.0)
-Pion cut:               (TRCHI2DOF < 5.0) & (MIPCHI2DV(PRIMARY) > 9.0)
-Muon cut:               (TRCHI2DOF < 5.0) & (MIPCHI2DV(PRIMARY) > 9.0)
-
------------------------------------------------------------
--- the cuts below should be compiled from the ones above --
------------------------------------------------------------
-
-KstarFilter cut:     (VFASPF(VCHI2/VDOF) < 12.0) & (BPVDIRA> -0.9) & (M > 600.0 * MeV) & (M < 2000.0 * MeV) & (BPVVDCHI2 > 9.0) & (MIPCHI2DV(PRIMARY) > 0.0) & (MAXTREE(ISBASIC,MIPCHI2DV(PRIMARY))> 9.0 ) & (INTREE(ABSID=='K+') & (TRCHI2DOF < 5.0) & (MIPCHI2DV(PRIMARY) > 9.0)) & (INTREE(ABSID=='pi+') & (TRCHI2DOF < 5.0) & (MIPCHI2DV(PRIMARY) > 9.0))
-Created lines
-Creating Bhadron stream with 101 lines
-Creating Semileptonic stream with 52 lines
-Creating PID stream with 12 lines
-Creating Dimuon stream with 131 lines
-Creating Radiative stream with 22 lines
-Creating Charm stream with 39 lines
-Creating EW stream with 4 lines
-Creating CharmCompleteEvent stream with 34 lines
+Trying to import module StrippingArchive.Stripping19b
 =============================================
 Stripping17 :
 =============================================
@@ -119,8 +28,7 @@ Trying to import module StrippingArchive.Stripping17b
 Trying to import module StrippingArchive.PreStripping18
 Trying to import module StrippingArchive.Stripping18
 Trying to import module StrippingArchive.Stripping19
-Trying to import module StrippingArchive.Stripping19a
-StrippingArchive.Stripping19a  cannot be loaded with this version of DaVinci
+Trying to import module StrippingArchive.Stripping19b
 B2threebody: 445 channels
 Hadron_Z02TauTauProng
 Hadron_Z02TauTauProng_SameSign
@@ -211,7 +119,7 @@ Creating Charm stream with 54 lines
 Creating EW stream with 58 lines
 Creating MiniBias stream with 16 lines
 =============================================
-PreStripping18 :
+Stripping19b :
 =============================================
 Trying to import module StrippingArchive.Stripping13
 StrippingArchive.Stripping13  cannot be loaded with this version of DaVinci
@@ -226,36 +134,36 @@ Trying to import module StrippingArchive.Stripping17b
 Trying to import module StrippingArchive.PreStripping18
 Trying to import module StrippingArchive.Stripping18
 Trying to import module StrippingArchive.Stripping19
-Trying to import module StrippingArchive.Stripping19a
-StrippingArchive.Stripping19a  cannot be loaded with this version of DaVinci
-B2threebody: 445 channels
-# WARNING: new configuration: Preambulo        : ['chi2vx = VFASPF(VCHI2) ', 'from GaudiKernel.PhysicalConstants import c_light', 'ctau   = BPVLTIME ( 9 ) * c_light ', "psi             = ADAMASS ( 'J/psi(1S)' ) < 150 * MeV", "psi_prime       = ADAMASS (   'psi(2S)' ) < 150 * MeV", "psi_tight       =  ADMASS ( 'J/psi(1S)' ) < 100 * MeV ", "psi_prime_tight =  ADMASS (   'psi(2S)' ) < 100 * MeV ", 'dimuon_heavy    = M > 4.8 * GeV ', 'dimuon_tight    = psi_tight | psi_prime_tight | dimuon_heavy ']
+Trying to import module StrippingArchive.Stripping19b
+{'kLAMBDADAUGHTERS': {'P_MIN': '3000*MeV', 'PIDK_MIN': '0', 'PT_MIN': '300*MeV'}, 'MASS_WINDOW': {'KST': '150*MeV', 'PHI': '15*MeV', 'OMEGA': '30*MeV', 'RHO': '250*MeV'}, 'BPVVDCHI2_MIN': 81, 'ASUMPT_MIN': '1500*MeV', 'VCHI2DOF_MAX': 9, 'piLAMBDADAUGHTERS': {'P_MIN': '3000*MeV', 'PIDK_MAX': '2', 'PT_MIN': '300*MeV'}, 'pLAMBDADAUGHTERS': {'P_MIN': '10000*MeV', 'PIDp_MIN': '5', 'PT_MIN': '1200*MeV'}, 'DAUGHTERS': {'P_MIN': '3000*MeV', 'PT_MIN': '500*MeV'}}
 # Register line: StrippingDiMuonAndGammaForCharmAssociative
 # Register line: StrippingDoubleDiMuonForCharmAssociative
 # Register line: StrippingChiAndDiMuonForCharmAssociative
 # Register line: StrippingDiChiForCharmAssociative
-# WARNING: lineMBNoBias uses plain Gaudi configurable MBNoBiasORL. Consider using Selection instead!
-# WARNING: lineHlt1L0Any uses plain Gaudi configurable Hlt1L0AnyORL. Consider using Selection instead!
+# Register line: StrippingDiMuonAndWForCharmAssociative
+# Register line: StrippingChiAndWForCharmAssociative
 B2fourbody: 1084 channels
 # WARNING: The non-default name is specified "B2psiX0"
 # WARNING: lineB2hhh_KKK_inclLine uses plain Gaudi configurable B2hhhGlobalEventCutFilter. Consider using Selection instead!
 # WARNING: lineB2hhh_pph_inclLine uses plain Gaudi configurable B2hhhGlobalEventCutFilter. Consider using Selection instead!
-makeJpsiPhi2KK Code =  (MINTREE('K+'==ABSID,PIDK)> 0.0)& (MINTREE(ABSID=='K+',PT)> 500.0 *MeV)& (MINTREE(ABSID=='K+',MIPCHI2DV(PRIMARY))> 9.0)& (ADMASS('phi(1020)') < 25.0 *MeV)& (PT > 900.0 *MeV)& (VFASPF(VCHI2/VDOF) < 9.0)
 # WARNING: The non-default name is specified "B2psiX"
 B2twobody: 69 channels
+B2threebody: 445 channels
+# WARNING: lineMBNoBias uses plain Gaudi configurable MBNoBiasORL. Consider using Selection instead!
+# WARNING: lineHlt1L0Any uses plain Gaudi configurable Hlt1L0AnyORL. Consider using Selection instead!
 Creating CharmToBeSwum stream with 14 lines
-Creating Bhadron stream with 196 lines
-Creating Semileptonic stream with 52 lines
-Creating BhadronCompleteEvent stream with 42 lines
+Creating Bhadron stream with 205 lines
+Creating Semileptonic stream with 25 lines
+Creating BhadronCompleteEvent stream with 48 lines
+Creating Leptonic stream with 48 lines
+Creating PID stream with 15 lines
+Creating Dimuon stream with 106 lines
 Creating Calibration stream with 15 lines
-Creating PID stream with 23 lines
-Creating Dimuon stream with 120 lines
-Creating Radiative stream with 29 lines
-Creating CharmCompleteEvent stream with 36 lines
-Creating Charm stream with 95 lines
-Creating EW stream with 52 lines
-Creating MiniBias stream with 4 lines
-Creating Leptonic stream with 57 lines
+Creating Radiative stream with 36 lines
+Creating Charm stream with 209 lines
+Creating EW stream with 72 lines
+Creating MiniBias stream with 2 lines
+Creating CharmCompleteEvent stream with 74 lines
 =============================================
 Stripping18b :
 =============================================
@@ -272,8 +180,7 @@ Trying to import module StrippingArchive.Stripping17b
 Trying to import module StrippingArchive.PreStripping18
 Trying to import module StrippingArchive.Stripping18
 Trying to import module StrippingArchive.Stripping19
-Trying to import module StrippingArchive.Stripping19a
-StrippingArchive.Stripping19a  cannot be loaded with this version of DaVinci
+Trying to import module StrippingArchive.Stripping19b
 B2threebody: 445 channels
 {'kLAMBDADAUGHTERS': {'P_MIN': '3000*MeV', 'PIDK_MIN': '0', 'PT_MIN': '300*MeV'}, 'MASS_WINDOW': {'KST': '150*MeV', 'PHI': '15*MeV', 'OMEGA': '30*MeV', 'RHO': '250*MeV'}, 'BPVVDCHI2_MIN': 81, 'ASUMPT_MIN': '1500*MeV', 'VCHI2DOF_MAX': 9, 'piLAMBDADAUGHTERS': {'P_MIN': '3000*MeV', 'PIDK_MAX': '5', 'PT_MIN': '300*MeV'}, 'pLAMBDADAUGHTERS': {'P_MIN': '10000*MeV', 'PIDp_MIN': '5', 'PT_MIN': '1200*MeV'}, 'DAUGHTERS': {'P_MIN': '3000*MeV', 'PT_MIN': '300*MeV'}}
 # WARNING: new configuration: Preambulo        : ['chi2vx = VFASPF(VCHI2) ', 'from GaudiKernel.PhysicalConstants import c_light', 'ctau   = BPVLTIME ( 9 ) * c_light ', "psi             = ADAMASS ( 'J/psi(1S)' ) < 150 * MeV", "psi_prime       = ADAMASS (   'psi(2S)' ) < 150 * MeV", "psi_tight       =  ADMASS ( 'J/psi(1S)' ) < 100 * MeV ", "psi_prime_tight =  ADMASS (   'psi(2S)' ) < 100 * MeV ", 'dimuon_heavy    = M > 4.8 * GeV ', 'dimuon_tight    = psi_tight | psi_prime_tight | dimuon_heavy ']
@@ -310,64 +217,6 @@ Creating EW stream with 55 lines
 Creating MiniBias stream with 2 lines
 Creating Leptonic stream with 48 lines
 =============================================
-Stripping19a :
-=============================================
-Trying to import module StrippingArchive.Stripping13
-StrippingArchive.Stripping13  cannot be loaded with this version of DaVinci
-Trying to import module StrippingArchive.Stripping14
-StrippingArchive.Stripping14  cannot be loaded with this version of DaVinci
-Trying to import module StrippingArchive.Stripping15
-StrippingArchive.Stripping15  cannot be loaded with this version of DaVinci
-Trying to import module StrippingArchive.Stripping16
-StrippingArchive.Stripping16  cannot be loaded with this version of DaVinci
-Trying to import module StrippingArchive.Stripping17
-Trying to import module StrippingArchive.Stripping17b
-Trying to import module StrippingArchive.PreStripping18
-Trying to import module StrippingArchive.Stripping18
-Trying to import module StrippingArchive.Stripping19
-Trying to import module StrippingArchive.Stripping19a
-StrippingArchive.Stripping19a  cannot be loaded with this version of DaVinci
-B2threebody: 445 channels
-{'kLAMBDADAUGHTERS': {'P_MIN': '3000*MeV', 'PIDK_MIN': '0', 'PT_MIN': '300*MeV'}, 'MASS_WINDOW': {'KST': '150*MeV', 'PHI': '15*MeV', 'OMEGA': '30*MeV', 'RHO': '250*MeV'}, 'BPVVDCHI2_MIN': 81, 'ASUMPT_MIN': '1500*MeV', 'VCHI2DOF_MAX': 9, 'piLAMBDADAUGHTERS': {'P_MIN': '3000*MeV', 'PIDK_MAX': '5', 'PT_MIN': '300*MeV'}, 'pLAMBDADAUGHTERS': {'P_MIN': '10000*MeV', 'PIDp_MIN': '5', 'PT_MIN': '1200*MeV'}, 'DAUGHTERS': {'P_MIN': '3000*MeV', 'PT_MIN': '500*MeV'}}
-# WARNING: new configuration: Preambulo        : ['chi2vx = VFASPF(VCHI2) ', 'from GaudiKernel.PhysicalConstants import c_light', 'ctau   = BPVLTIME ( 9 ) * c_light ', "psi             = ADAMASS ( 'J/psi(1S)' ) < 150 * MeV", "psi_prime       = ADAMASS (   'psi(2S)' ) < 150 * MeV", "psi_tight       =  ADMASS ( 'J/psi(1S)' ) < 100 * MeV ", "psi_prime_tight =  ADMASS (   'psi(2S)' ) < 100 * MeV ", 'dimuon_heavy    = M > 4.8 * GeV ', 'dimuon_tight    = psi_tight | psi_prime_tight | dimuon_heavy ']
-# Register line: StrippingDiMuonAndGammaForCharmAssociative
-# Register line: StrippingDoubleDiMuonForCharmAssociative
-# Register line: StrippingChiAndDiMuonForCharmAssociative
-# Register line: StrippingDiChiForCharmAssociative
-# WARNING: lineMBNoBias uses plain Gaudi configurable MBNoBiasORL. Consider using Selection instead!
-# WARNING: lineHlt1L0Any uses plain Gaudi configurable Hlt1L0AnyORL. Consider using Selection instead!
-B2fourbody: 1084 channels
-# WARNING: The non-default name is specified "B2psiX0"
-# WARNING: lineB2hhh_KKK_inclLine uses plain Gaudi configurable B2hhhGlobalEventCutFilter. Consider using Selection instead!
-# WARNING: lineB2hhh_pph_inclLine uses plain Gaudi configurable B2hhhGlobalEventCutFilter. Consider using Selection instead!
-making the photons:  (PT> 1700.0*MeV)
-making phi: ( (VFASPF(VCHI2/VDOF) < 16.0) & (ADMASS('phi(1020)') < 50.0*MeV) ) & CHILDCUT( ( ((PIDK-PIDpi)>2.0) & (MIPCHI2DV(PRIMARY) > 25.0) & (TRCHI2DOF < 5.0) & (PT > 500.0)), 1 ) & CHILDCUT( ( ((PIDK-PIDpi)>2.0) & (MIPCHI2DV(PRIMARY) > 25.0) & (TRCHI2DOF < 5.0) & (PT > 500.0)), 2 )
-making slowPion: (TRCHI2DOF < 5.0)
-making D0: (ADAMASS('D0')<1.1*200.0*MeV) & ( (ADMASS('D0')<200.0*MeV) & (PT> 1000.0) ) pvRefit =  False
-making Dstar: ((AM - AM1) < 1.1*160.0*MeV) & (VFASPF(VCHI2/VDOF) < 25.0) & ((M - M1) < 160.0*MeV) pvRefit = False
-B2twobody: 69 channels
-makeJpsiPhi2KK Code =  (MINTREE('K+'==ABSID,PIDK)> 0.0)& (MINTREE(ABSID=='K+',PT)> 500.0 *MeV)& (MINTREE(ABSID=='K+',MIPCHI2DV(PRIMARY))> 9.0)& (ADMASS('phi(1020)') < 25.0 *MeV)& (PT > 900.0 *MeV)& (VFASPF(VCHI2/VDOF) < 9.0)
-KS pipCuts:  (P>2000.0*MeV)&(MIPDV(PRIMARY)<20.0*mm)
-KS pimCuts:  (P>2000.0*MeV)&(MIPDV(PRIMARY)<20.0*mm)
-KS CombinationCuts:  (ADAMASS('KS0')<50.0*MeV)&(ACUTDOCA(0.5*mm,''))
-KS MotherCuts:  (ADMASS('KS0')<30.0*MeV)&(VFASPF(VCHI2)<100.0)&( sqrt( CHILD( MIPCHI2DV(PRIMARY) , 1 ) * CHILD( MIPCHI2DV(PRIMARY) , 1 ) +  CHILD( MIPCHI2DV(PRIMARY) , 2 ) * CHILD( MIPCHI2DV(PRIMARY ) , 2 ) )>30 )&(DOCA(1,2)/(sqrt( DOCACHI2(1,2) ))<0.3*mm)&(log( CHILD( MIPDV(PRIMARY) , 1 )* CHILD( MIPDV(PRIMARY) , 2 )/ MIPDV( PRIMARY) ) > -2.0 )&((CHILD ( PT , 1 )+CHILD ( PT , 2 ))>600*MeV)&(BPVVDCHI2>80.0)
-B combCuts:  (ADAMASS('B_s0')<150.0*MeV)&ACUTDOCA(2.5*mm,'')
-B motherCuts:  (MIPCHI2DV(PRIMARY)<10)&(MIPDV(PRIMARY)<0.4)&(VFASPF(VCHI2)<20)&(BPVVDCHI2>43.5)
-# WARNING: The non-default name is specified "B2psiX"
-Creating CharmToBeSwum stream with 14 lines
-Creating Bhadron stream with 209 lines
-Creating Semileptonic stream with 24 lines
-Creating BhadronCompleteEvent stream with 42 lines
-Creating Leptonic stream with 48 lines
-Creating PID stream with 15 lines
-Creating Dimuon stream with 119 lines
-Creating Calibration stream with 15 lines
-Creating Radiative stream with 35 lines
-Creating Charm stream with 161 lines
-Creating EW stream with 55 lines
-Creating MiniBias stream with 2 lines
-Creating CharmCompleteEvent stream with 68 lines
-=============================================
 Stripping18 :
 =============================================
 Trying to import module StrippingArchive.Stripping13
@@ -383,8 +232,7 @@ Trying to import module StrippingArchive.Stripping17b
 Trying to import module StrippingArchive.PreStripping18
 Trying to import module StrippingArchive.Stripping18
 Trying to import module StrippingArchive.Stripping19
-Trying to import module StrippingArchive.Stripping19a
-StrippingArchive.Stripping19a  cannot be loaded with this version of DaVinci
+Trying to import module StrippingArchive.Stripping19b
 B2threebody: 445 channels
 {'kLAMBDADAUGHTERS': {'P_MIN': '3000*MeV', 'PIDK_MIN': '0', 'PT_MIN': '300*MeV'}, 'MASS_WINDOW': {'KST': '150*MeV', 'PHI': '15*MeV', 'OMEGA': '30*MeV', 'RHO': '250*MeV'}, 'BPVVDCHI2_MIN': 81, 'ASUMPT_MIN': '1500*MeV', 'VCHI2DOF_MAX': 9, 'piLAMBDADAUGHTERS': {'P_MIN': '3000*MeV', 'PIDK_MAX': '5', 'PT_MIN': '300*MeV'}, 'pLAMBDADAUGHTERS': {'P_MIN': '10000*MeV', 'PIDp_MIN': '5', 'PT_MIN': '1200*MeV'}, 'DAUGHTERS': {'P_MIN': '3000*MeV', 'PT_MIN': '300*MeV'}}
 # WARNING: new configuration: Preambulo        : ['chi2vx = VFASPF(VCHI2) ', 'from GaudiKernel.PhysicalConstants import c_light', 'ctau   = BPVLTIME ( 9 ) * c_light ', "psi             = ADAMASS ( 'J/psi(1S)' ) < 150 * MeV", "psi_prime       = ADAMASS (   'psi(2S)' ) < 150 * MeV", "psi_tight       =  ADMASS ( 'J/psi(1S)' ) < 100 * MeV ", "psi_prime_tight =  ADMASS (   'psi(2S)' ) < 100 * MeV ", 'dimuon_heavy    = M > 4.8 * GeV ', 'dimuon_tight    = psi_tight | psi_prime_tight | dimuon_heavy ']
@@ -437,8 +285,7 @@ Trying to import module StrippingArchive.Stripping17b
 Trying to import module StrippingArchive.PreStripping18
 Trying to import module StrippingArchive.Stripping18
 Trying to import module StrippingArchive.Stripping19
-Trying to import module StrippingArchive.Stripping19a
-StrippingArchive.Stripping19a  cannot be loaded with this version of DaVinci
+Trying to import module StrippingArchive.Stripping19b
 B2threebody: 445 channels
 {'kLAMBDADAUGHTERS': {'P_MIN': '3000*MeV', 'PIDK_MIN': '0', 'PT_MIN': '300*MeV'}, 'MASS_WINDOW': {'KST': '150*MeV', 'PHI': '15*MeV', 'OMEGA': '30*MeV', 'RHO': '250*MeV'}, 'BPVVDCHI2_MIN': 81, 'ASUMPT_MIN': '1500*MeV', 'VCHI2DOF_MAX': 9, 'piLAMBDADAUGHTERS': {'P_MIN': '3000*MeV', 'PIDK_MAX': '5', 'PT_MIN': '300*MeV'}, 'pLAMBDADAUGHTERS': {'P_MIN': '10000*MeV', 'PIDp_MIN': '5', 'PT_MIN': '1200*MeV'}, 'DAUGHTERS': {'P_MIN': '3000*MeV', 'PT_MIN': '500*MeV'}}
 # WARNING: new configuration: Preambulo        : ['chi2vx = VFASPF(VCHI2) ', 'from GaudiKernel.PhysicalConstants import c_light', 'ctau   = BPVLTIME ( 9 ) * c_light ', "psi             = ADAMASS ( 'J/psi(1S)' ) < 150 * MeV", "psi_prime       = ADAMASS (   'psi(2S)' ) < 150 * MeV", "psi_tight       =  ADMASS ( 'J/psi(1S)' ) < 100 * MeV ", "psi_prime_tight =  ADMASS (   'psi(2S)' ) < 100 * MeV ", 'dimuon_heavy    = M > 4.8 * GeV ', 'dimuon_tight    = psi_tight | psi_prime_tight | dimuon_heavy ']
@@ -479,3 +326,194 @@ Creating Charm stream with 161 lines
 Creating EW stream with 55 lines
 Creating MiniBias stream with 2 lines
 Creating CharmCompleteEvent stream with 68 lines
+=============================================
+Stripping17b :
+=============================================
+Trying to import module StrippingArchive.Stripping13
+StrippingArchive.Stripping13  cannot be loaded with this version of DaVinci
+Trying to import module StrippingArchive.Stripping14
+StrippingArchive.Stripping14  cannot be loaded with this version of DaVinci
+Trying to import module StrippingArchive.Stripping15
+StrippingArchive.Stripping15  cannot be loaded with this version of DaVinci
+Trying to import module StrippingArchive.Stripping16
+StrippingArchive.Stripping16  cannot be loaded with this version of DaVinci
+Trying to import module StrippingArchive.Stripping17
+Trying to import module StrippingArchive.Stripping17b
+Trying to import module StrippingArchive.PreStripping18
+Trying to import module StrippingArchive.Stripping18
+Trying to import module StrippingArchive.Stripping19
+Trying to import module StrippingArchive.Stripping19b
+Hadron_Z02TauTauProng
+{'pP_MIN': '10000*MeV', 'BPVDIRA_MIN': 0.0, 'ASUMPT_MIN': '1000*MeV', 'MASS_WINDOW': {'KST': '150*MeV', 'PHI': '15*MeV', 'OMEGA': '30*MeV', 'RHO': '250*MeV'}, 'BPVVDCHI2_MIN': 16, 'AMAXDOCA_MAX': '0.5*mm', 'LAMBDADAUGHTERS': {'P_MIN': '2500*MeV', 'PT_MIN': '300*MeV'}, 'VCHI2DOF_MAX': 16, 'DAUGHTERS': {'P_MIN': '2000*MeV', 'PT_MIN': '100*MeV'}}
+self.name BetaSPsi2SMuMu
+inclusiveline BetaSPsi2SMuMu_InclPsi2SToMuMu
+Created lines
+
+-------------------------------------------
+-- B+ -> K X3872 etc stripping line cuts --
+-------------------------------------------
+
+  --> B+ -> K X3872 line
+  --> Bu cut:                 (ADMASS('B+') < 400.0 * MeV) & (VFASPF(VCHI2/VDOF) < 4.0) & (BPVIPCHI2() < 15.0) & (BPVDIRA> 0.9995) & (BPVVDCHI2 > 40.0)
+  --> Bu combination cut:     (ADAMASS('B+') < 450.0 * MeV)
+  --> X3872 cut:              (ADMASS('X_1(3872)') < 150.0 * MeV) & (VFASPF(VCHI2/VDOF) < 8.0)
+  --> X3872 combination cut:  (ADAMASS('X_1(3872)') < 180.0 * MeV)
+  --> JPsi cuts:              (ADMASS('J/psi(1S)') < 70.0 * MeV) & (VFASPF(VCHI2/VDOF) < 10.0) & (2 == NINTREE((ABSID=='mu-') & (TRCHI2DOF < 4.0) & (MIPCHI2DV(PRIMARY) > 3.0) & (PT > 500.0 * MeV) & (ISMUON)))
+  --> Pion cut:               (TRCHI2DOF < 4.0) & (MIPCHI2DV(PRIMARY) > 6.0)
+  --> Kaon cut:               (TRCHI2DOF < 4.0) & (PT > 200.0 * MeV) & (MIPCHI2DV(PRIMARY) > 6.0)
+
+  --> B+ -> K X3872 loose line
+  --> Bu cut:                 (ADMASS('B+') < 400.0 * MeV) & (VFASPF(VCHI2/VDOF) < 5.0) & (BPVIPCHI2() < 20.0) & (BPVDIRA> 0.9995) & (BPVVDCHI2 > 30.0)
+  --> Bu combination cut:     (ADAMASS('B+') < 500.0 * MeV)
+  --> X3872 cut:              (ADMASS('X_1(3872)') < 190.0 * MeV) & (VFASPF(VCHI2/VDOF) < 10.0)
+  --> X3872 combination cut:  (ADAMASS('X_1(3872)') < 220.0 * MeV)
+  --> JPsi cuts:              (ADMASS('J/psi(1S)') < 70.0 * MeV) & (VFASPF(VCHI2/VDOF) < 10.0) & (2 == NINTREE((ABSID=='mu-') & (TRCHI2DOF < 4.0) & (MIPCHI2DV(PRIMARY) > 2.0) & (PT > 500.0 * MeV) & (ISMUON)))
+  --> Pion cut:               (TRCHI2DOF < 4.0) & (MIPCHI2DV(PRIMARY) > 5.0)
+  --> Kaon cut:               (TRCHI2DOF < 4.0)  & (PT > 150.0 * MeV) & (MIPCHI2DV(PRIMARY) > 5.0)
+
+  --> B+ -> K Psi(2S) line
+  --> Bu cut:                 (ADMASS('B+') < 400.0 * MeV) & (VFASPF(VCHI2/VDOF) < 4.0) & (BPVIPCHI2() < 15.0) & (BPVDIRA> 0.9995) & (BPVVDCHI2 > 40.0)
+  --> Bu combination cut:     (ADAMASS('B+') < 450.0 * MeV)
+  --> X3872 cut:              (ADMASS('psi(2S)') < 150.0 * MeV) & (VFASPF(VCHI2/VDOF) < 8.0)
+  --> X3872 combination cut:  (ADAMASS('psi(2S)') < 180.0 * MeV)
+  --> JPsi cuts:              (ADMASS('J/psi(1S)') < 70.0 * MeV) & (VFASPF(VCHI2/VDOF) < 10.0) & (2 == NINTREE((ABSID=='mu-') & (TRCHI2DOF < 4.0) & (MIPCHI2DV(PRIMARY) > 3.0) & (PT > 500.0 * MeV) & (ISMUON)))
+  --> Pion cut:               (TRCHI2DOF < 4.0) & (MIPCHI2DV(PRIMARY) > 6.0)
+  --> Kaon cut:               (TRCHI2DOF < 4.0) & (PT > 200.0 * MeV) & (MIPCHI2DV(PRIMARY) > 6.0)
+
+  --> B+ -> K Psi(2S) loose line
+  --> Bu cut:                 (ADMASS('B+') < 400.0 * MeV) & (VFASPF(VCHI2/VDOF) < 5.0) & (BPVIPCHI2() < 20.0) & (BPVDIRA> 0.9995) & (BPVVDCHI2 > 30.0)
+  --> Bu combination cut:     (ADAMASS('B+') < 500.0 * MeV)
+  --> X3872 cut:              (ADMASS('psi(2S)') < 190.0 * MeV) & (VFASPF(VCHI2/VDOF) < 10.0)
+  --> X3872 combination cut:  (ADAMASS('psi(2S)') < 220.0 * MeV)
+  --> JPsi cuts:              (ADMASS('J/psi(1S)') < 70.0 * MeV) & (VFASPF(VCHI2/VDOF) < 10.0) & (2 == NINTREE((ABSID=='mu-') & (TRCHI2DOF < 4.0) & (MIPCHI2DV(PRIMARY) > 2.0) & (PT > 500.0 * MeV) & (ISMUON)))
+  --> Pion cut:               (TRCHI2DOF < 4.0) & (MIPCHI2DV(PRIMARY) > 5.0)
+  --> Kaon cut:               (TRCHI2DOF < 4.0)  & (PT > 150.0 * MeV) & (MIPCHI2DV(PRIMARY) > 5.0)
+-----------------------------------------
+--  Bd -> K* mu mu stripping line cuts --
+-----------------------------------------
+
+Bd cut:                 (M > 4850.0 * MeV) & (M < 5780.0 * MeV) & (VFASPF(VCHI2/VDOF) < 6.0) & (BPVIPCHI2() < 16.0) & (BPVDIRA> 0.9999) & (BPVVDCHI2 > 121.0) & (MAXTREE(ISBASIC,MIPCHI2DV(PRIMARY))> 9.0 )
+Bd combination cut:     (AM > 4600.0 * MeV) & (AM < 6000.0 * MeV)
+Kstar cut:              (VFASPF(VCHI2/VDOF) < 12.0) & (BPVDIRA> -0.9) & (M > 600.0 * MeV) & (M < 2000.0 * MeV) & (BPVVDCHI2 > 9.0) & (MIPCHI2DV(PRIMARY) > 0.0) & (MAXTREE(ISBASIC,MIPCHI2DV(PRIMARY))> 9.0 )
+Kstar combination cut:  (AM > 550.0 * MeV) & (AM < 2200.0 * MeV) & (ADOCACHI2CUT(20.,''))
+DiMuon cut:             (VFASPF(VCHI2/VDOF) < 12.0) & (BPVDIRA> -0.9) & (BPVVDCHI2 > 9.0) & (MAXTREE(ISBASIC,MIPCHI2DV(PRIMARY))> 9.0 )
+Kaon cut:               (TRCHI2DOF < 5.0) & (MIPCHI2DV(PRIMARY) > 9.0)
+Pion cut:               (TRCHI2DOF < 5.0) & (MIPCHI2DV(PRIMARY) > 9.0)
+Muon cut:               (TRCHI2DOF < 5.0) & (MIPCHI2DV(PRIMARY) > 9.0)
+
+-----------------------------------------------------------
+-- the cuts below should be compiled from the ones above --
+-----------------------------------------------------------
+
+KstarFilter cut:     (VFASPF(VCHI2/VDOF) < 12.0) & (BPVDIRA> -0.9) & (M > 600.0 * MeV) & (M < 2000.0 * MeV) & (BPVVDCHI2 > 9.0) & (MIPCHI2DV(PRIMARY) > 0.0) & (MAXTREE(ISBASIC,MIPCHI2DV(PRIMARY))> 9.0 ) & (INTREE(ABSID=='K+') & (TRCHI2DOF < 5.0) & (MIPCHI2DV(PRIMARY) > 9.0)) & (INTREE(ABSID=='pi+') & (TRCHI2DOF < 5.0) & (MIPCHI2DV(PRIMARY) > 9.0))
+Created lines
+Creating Bhadron stream with 101 lines
+Creating Semileptonic stream with 52 lines
+Creating PID stream with 12 lines
+Creating Dimuon stream with 131 lines
+Creating Radiative stream with 22 lines
+Creating Charm stream with 39 lines
+Creating EW stream with 4 lines
+Creating CharmCompleteEvent stream with 34 lines
+=============================================
+Stripping19a :
+=============================================
+Trying to import module StrippingArchive.Stripping13
+StrippingArchive.Stripping13  cannot be loaded with this version of DaVinci
+Trying to import module StrippingArchive.Stripping14
+StrippingArchive.Stripping14  cannot be loaded with this version of DaVinci
+Trying to import module StrippingArchive.Stripping15
+StrippingArchive.Stripping15  cannot be loaded with this version of DaVinci
+Trying to import module StrippingArchive.Stripping16
+StrippingArchive.Stripping16  cannot be loaded with this version of DaVinci
+Trying to import module StrippingArchive.Stripping17
+Trying to import module StrippingArchive.Stripping17b
+Trying to import module StrippingArchive.PreStripping18
+Trying to import module StrippingArchive.Stripping18
+Trying to import module StrippingArchive.Stripping19
+Trying to import module StrippingArchive.Stripping19b
+B2threebody: 445 channels
+{'kLAMBDADAUGHTERS': {'P_MIN': '3000*MeV', 'PIDK_MIN': '0', 'PT_MIN': '300*MeV'}, 'MASS_WINDOW': {'KST': '150*MeV', 'PHI': '15*MeV', 'OMEGA': '30*MeV', 'RHO': '250*MeV'}, 'BPVVDCHI2_MIN': 81, 'ASUMPT_MIN': '1500*MeV', 'VCHI2DOF_MAX': 9, 'piLAMBDADAUGHTERS': {'P_MIN': '3000*MeV', 'PIDK_MAX': '5', 'PT_MIN': '300*MeV'}, 'pLAMBDADAUGHTERS': {'P_MIN': '10000*MeV', 'PIDp_MIN': '5', 'PT_MIN': '1200*MeV'}, 'DAUGHTERS': {'P_MIN': '3000*MeV', 'PT_MIN': '500*MeV'}}
+# WARNING: new configuration: Preambulo        : ['chi2vx = VFASPF(VCHI2) ', 'from GaudiKernel.PhysicalConstants import c_light', 'ctau   = BPVLTIME ( 9 ) * c_light ', "psi             = ADAMASS ( 'J/psi(1S)' ) < 150 * MeV", "psi_prime       = ADAMASS (   'psi(2S)' ) < 150 * MeV", "psi_tight       =  ADMASS ( 'J/psi(1S)' ) < 100 * MeV ", "psi_prime_tight =  ADMASS (   'psi(2S)' ) < 100 * MeV ", 'dimuon_heavy    = M > 4.8 * GeV ', 'dimuon_tight    = psi_tight | psi_prime_tight | dimuon_heavy ']
+# Register line: StrippingDiMuonAndGammaForCharmAssociative
+# Register line: StrippingDoubleDiMuonForCharmAssociative
+# Register line: StrippingChiAndDiMuonForCharmAssociative
+# Register line: StrippingDiChiForCharmAssociative
+# WARNING: lineMBNoBias uses plain Gaudi configurable MBNoBiasORL. Consider using Selection instead!
+# WARNING: lineHlt1L0Any uses plain Gaudi configurable Hlt1L0AnyORL. Consider using Selection instead!
+B2fourbody: 1084 channels
+# WARNING: The non-default name is specified "B2psiX0"
+# WARNING: lineB2hhh_KKK_inclLine uses plain Gaudi configurable B2hhhGlobalEventCutFilter. Consider using Selection instead!
+# WARNING: lineB2hhh_pph_inclLine uses plain Gaudi configurable B2hhhGlobalEventCutFilter. Consider using Selection instead!
+making the photons:  (PT> 1700.0*MeV)
+making phi: ( (VFASPF(VCHI2/VDOF) < 16.0) & (ADMASS('phi(1020)') < 50.0*MeV) ) & CHILDCUT( ( ((PIDK-PIDpi)>2.0) & (MIPCHI2DV(PRIMARY) > 25.0) & (TRCHI2DOF < 5.0) & (PT > 500.0)), 1 ) & CHILDCUT( ( ((PIDK-PIDpi)>2.0) & (MIPCHI2DV(PRIMARY) > 25.0) & (TRCHI2DOF < 5.0) & (PT > 500.0)), 2 )
+making slowPion: (TRCHI2DOF < 5.0)
+making D0: (ADAMASS('D0')<1.1*200.0*MeV) & ( (ADMASS('D0')<200.0*MeV) & (PT> 1000.0) ) pvRefit =  False
+making Dstar: ((AM - AM1) < 1.1*160.0*MeV) & (VFASPF(VCHI2/VDOF) < 25.0) & ((M - M1) < 160.0*MeV) pvRefit = False
+B2twobody: 69 channels
+makeJpsiPhi2KK Code =  (MINTREE('K+'==ABSID,PIDK)> 0.0)& (MINTREE(ABSID=='K+',PT)> 500.0 *MeV)& (MINTREE(ABSID=='K+',MIPCHI2DV(PRIMARY))> 9.0)& (ADMASS('phi(1020)') < 25.0 *MeV)& (PT > 900.0 *MeV)& (VFASPF(VCHI2/VDOF) < 9.0)
+KS pipCuts:  (P>2000.0*MeV)&(MIPDV(PRIMARY)<20.0*mm)
+KS pimCuts:  (P>2000.0*MeV)&(MIPDV(PRIMARY)<20.0*mm)
+KS CombinationCuts:  (ADAMASS('KS0')<50.0*MeV)&(ACUTDOCA(0.5*mm,''))
+KS MotherCuts:  (ADMASS('KS0')<30.0*MeV)&(VFASPF(VCHI2)<100.0)&( sqrt( CHILD( MIPCHI2DV(PRIMARY) , 1 ) * CHILD( MIPCHI2DV(PRIMARY) , 1 ) +  CHILD( MIPCHI2DV(PRIMARY) , 2 ) * CHILD( MIPCHI2DV(PRIMARY ) , 2 ) )>30 )&(DOCA(1,2)/(sqrt( DOCACHI2(1,2) ))<0.3*mm)&(log( CHILD( MIPDV(PRIMARY) , 1 )* CHILD( MIPDV(PRIMARY) , 2 )/ MIPDV( PRIMARY) ) > -2.0 )&((CHILD ( PT , 1 )+CHILD ( PT , 2 ))>600*MeV)&(BPVVDCHI2>80.0)
+B combCuts:  (ADAMASS('B_s0')<150.0*MeV)&ACUTDOCA(2.5*mm,'')
+B motherCuts:  (MIPCHI2DV(PRIMARY)<10)&(MIPDV(PRIMARY)<0.4)&(VFASPF(VCHI2)<20)&(BPVVDCHI2>43.5)
+# WARNING: The non-default name is specified "B2psiX"
+Creating CharmToBeSwum stream with 14 lines
+Creating Bhadron stream with 209 lines
+Creating Semileptonic stream with 24 lines
+Creating BhadronCompleteEvent stream with 42 lines
+Creating Leptonic stream with 48 lines
+Creating PID stream with 15 lines
+Creating Dimuon stream with 119 lines
+Creating Calibration stream with 15 lines
+Creating Radiative stream with 35 lines
+Creating Charm stream with 161 lines
+Creating EW stream with 55 lines
+Creating MiniBias stream with 2 lines
+Creating CharmCompleteEvent stream with 68 lines
+=============================================
+PreStripping18 :
+=============================================
+Trying to import module StrippingArchive.Stripping13
+StrippingArchive.Stripping13  cannot be loaded with this version of DaVinci
+Trying to import module StrippingArchive.Stripping14
+StrippingArchive.Stripping14  cannot be loaded with this version of DaVinci
+Trying to import module StrippingArchive.Stripping15
+StrippingArchive.Stripping15  cannot be loaded with this version of DaVinci
+Trying to import module StrippingArchive.Stripping16
+StrippingArchive.Stripping16  cannot be loaded with this version of DaVinci
+Trying to import module StrippingArchive.Stripping17
+Trying to import module StrippingArchive.Stripping17b
+Trying to import module StrippingArchive.PreStripping18
+Trying to import module StrippingArchive.Stripping18
+Trying to import module StrippingArchive.Stripping19
+Trying to import module StrippingArchive.Stripping19b
+B2threebody: 445 channels
+# WARNING: new configuration: Preambulo        : ['chi2vx = VFASPF(VCHI2) ', 'from GaudiKernel.PhysicalConstants import c_light', 'ctau   = BPVLTIME ( 9 ) * c_light ', "psi             = ADAMASS ( 'J/psi(1S)' ) < 150 * MeV", "psi_prime       = ADAMASS (   'psi(2S)' ) < 150 * MeV", "psi_tight       =  ADMASS ( 'J/psi(1S)' ) < 100 * MeV ", "psi_prime_tight =  ADMASS (   'psi(2S)' ) < 100 * MeV ", 'dimuon_heavy    = M > 4.8 * GeV ', 'dimuon_tight    = psi_tight | psi_prime_tight | dimuon_heavy ']
+# Register line: StrippingDiMuonAndGammaForCharmAssociative
+# Register line: StrippingDoubleDiMuonForCharmAssociative
+# Register line: StrippingChiAndDiMuonForCharmAssociative
+# Register line: StrippingDiChiForCharmAssociative
+# WARNING: lineMBNoBias uses plain Gaudi configurable MBNoBiasORL. Consider using Selection instead!
+# WARNING: lineHlt1L0Any uses plain Gaudi configurable Hlt1L0AnyORL. Consider using Selection instead!
+B2fourbody: 1084 channels
+# WARNING: The non-default name is specified "B2psiX0"
+# WARNING: lineB2hhh_KKK_inclLine uses plain Gaudi configurable B2hhhGlobalEventCutFilter. Consider using Selection instead!
+# WARNING: lineB2hhh_pph_inclLine uses plain Gaudi configurable B2hhhGlobalEventCutFilter. Consider using Selection instead!
+makeJpsiPhi2KK Code =  (MINTREE('K+'==ABSID,PIDK)> 0.0)& (MINTREE(ABSID=='K+',PT)> 500.0 *MeV)& (MINTREE(ABSID=='K+',MIPCHI2DV(PRIMARY))> 9.0)& (ADMASS('phi(1020)') < 25.0 *MeV)& (PT > 900.0 *MeV)& (VFASPF(VCHI2/VDOF) < 9.0)
+# WARNING: The non-default name is specified "B2psiX"
+B2twobody: 69 channels
+Creating CharmToBeSwum stream with 14 lines
+Creating Bhadron stream with 196 lines
+Creating Semileptonic stream with 52 lines
+Creating BhadronCompleteEvent stream with 42 lines
+Creating Calibration stream with 15 lines
+Creating PID stream with 23 lines
+Creating Dimuon stream with 120 lines
+Creating Radiative stream with 29 lines
+Creating CharmCompleteEvent stream with 36 lines
+Creating Charm stream with 95 lines
+Creating EW stream with 52 lines
+Creating MiniBias stream with 4 lines
+Creating Leptonic stream with 57 lines
