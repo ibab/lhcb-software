@@ -4,6 +4,8 @@
 ! Purpose     : Implementation of cloner MicroDSTTools
 !-----------------------------------------------------------------------------
 
+!========================= MicroDSTTools v2r8 2012-06-28 =========================
+
 ! 2012-06-14 - Chris Jones
  - Add a method to ObjectClonerBase to get the TES location for an object
  - Improvements to CaloHypoCloner to print the TES location when it finds a
