@@ -5,7 +5,9 @@
 ! Purpose     : track-related functors for LoKi-framework 
 ! -----------------------------------------------------------------------------
 
-!========================= LoKiTracks v2r7 2012-06-28 =========================
+!========================= LoKiTracks v2r8 2012-06-28 =========================
+
+( Missing entry for tag v2r7)
 
 ! 2012-05-24 - Vanya Belyaev
  - improve decorators 
@@ -16,11 +18,9 @@
    FastDOCAToBeamLine functor
 
 ! 2012-04-09 - Vanya Belyaev
-
  - remove track-cloning for beam-line functios 
 
 ! 2012-03-30 - Vanya Belyaev
-
  - add beam-line functor
 
 !========================= LoKiTracks v2r5 2012-03-17 =========================
