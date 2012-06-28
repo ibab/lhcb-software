@@ -3,6 +3,35 @@ Package     : StrippingSys
 Package Coordinator : Jibo He, Anton Poluektov
 Purpose     : LHCb stripping packages
 
+!======================= StrippingSys v4r4 2012-06-28 =========================
+
+! 2012-06-28 - Anton Poluektov 
+  Release for Stripping19b. 
+  - Phys/CommonParticles v8r9
+    . Updated StdVeryLooseAllPhotons, StdLooseDiElectron
+    . New StdKsFromV0, StdAllLoose(Tight)GammaConversion.py, StdAllTightSymGammaConversion.py
+  - Phys/DisplVertices v7r9
+    . Updated MatterVeto tool
+  - Phys/MvaPreSelB2DH v1r3
+    . Use getIDVAlgorithm instead of getDVAlgorithm
+  - Phys/StrippingArchive v1r12
+    . Add Stripping19b
+  - Phys/StrippingSelections v3r14
+    . New selections: 
+      * StrippingForTriggerValidation
+      * Betac -> phi p
+      * StrippingB2XEta, StrippingBu2KSh, StrippingBetac2PhiP
+      * line using the DiElectronMaker
+      * StrippingJPsiForSL
+      * Bs->KSKS
+      * studies of charm + W+ associative production
+    . Many fixes in existing lines. 
+    . Updated test samples. 
+   - Phys/StrippingSettings v2r14
+    . Dictionary for Stripping19b
+   - Phys/TMVASelections v1r2 
+    . Use getIDVAlgorithm instead of getDVAlgorithm
+
 !======================= StrippingSys v4r3p1 2012-05-03 =========================
 ! 2012-05-03 - Jibo He
  - StrippingSettings v2r13p1
