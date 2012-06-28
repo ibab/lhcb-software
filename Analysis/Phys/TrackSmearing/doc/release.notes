@@ -4,6 +4,8 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= TrackSmearing v1r3 2012-06-28 =========================
+
 ! 2012-05-23
  - Realized that I screwed up the commit in March. I had committed an old version.
    This is now undone including but the latest fixes are included.
