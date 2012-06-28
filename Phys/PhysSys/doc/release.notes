@@ -3,6 +3,108 @@ Package             : PhysSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v15r0>2012-06-28 Phys v15r0 </A></H1><PRE>
+- Based on LHCb v35r0, REC v14r0 and Gaudi v23r3
+
+- Packages updated : BBDecTreeTool, DaVinciInterfaces, DaVinciKernel,
+                     DaVinciTools, DecayTreeFitter, HighPtJets,
+                     LoKiAlgo, LoKiJets, LoKiPhys, LoKiProtoParticles,
+                     LoKiTracks, LoKiUtils, ParticleMaker, PhysConf,
+                     VertexFit
+
+- In VertexFit :
+ . Suppress warnings in PVReFitterAlg about missing or empty Particle 
+   locations in the TES. Can happen in the stripping.
+ . Remove obsolete "ParticleInputLocation" property from PVReFitterAlg. 
+   Use "ParticleInputLocations" instead
+ . Use the method removeTracksAndRecalculatePV instead of reDoSinglePV
+   when using the IPVOfflineTool in PVReFitterAlg
+
+- In PhysConf :
+ . Configuration.py : add CaloReProcessing slot that triggers the full 
+   Calo re-reconstruction in the init sequence (default False)
+
+- In ParticleMaker :
+ . Use DaVinciAlgorithm instead of DVAlgorithm as bass class.
+ . Fixed Particle2State::state2Particle such that it doesn't rely on the 
+   pid (charge) of the mother particle (and made it a bit faster as well)
+ . DiElectronMaker  : Allow user to change mother ID of 'photon'. 
+                      Typically J/psi(1S)
+     -> Use Particle property
+ . DiElectronMaker  : new maker algorithm to produce dielectron with correct 
+    bremsstrahlung treatment (killing overlap)
+ . ResolvedPi0Maker : add the possibility to cut on the di-gamma energy balance
+ . PhotonMaker      : possibility to create 'Ecal+Hcal' objects
+
+- In LoKiUtils :
+ . Add accessor to TisTos tool 
+
+- In LoKiPhys :
+ . Extend a bit the the method "child" 
+ . Add the functors for easy (but inefficient) dealing with Tis/Tos-tools 
+ . Add VCOV2 functor to access the vertex covariance matrix 
+ . Improve interactive decorators 
+ . Fix typo for M24 
+
+- In LoKiAlgo :
+ . Various TisTos improvements
+
+- In DecayTreeFitter :
+ . Fix for Brem correction
+
+- In DaVinciTools :
+ . Use new DaVinciAlgorithm base class for FilterDesktop, CombineParticles,
+   AddExtraInfo, ConjugateNeutralPID and RemoveClones
+ . Added HighPtTopoTool.cpp 
+ . Fix ConeVariables.cpp handling the list of variables to store
+ . Modify cone variables tools and AddExtraInfo algorithm to allow storing the 
+   subset of parameters. 
+ . BremAdder : Final optimization (new correction method with brem origin 
+               determined from track slope is now the default)
+ . BremAdder : update BremAdder for di-electron and adapt to new 
+               IBremAdder interface
+ . BremAdder : implement new BremAdder method from Edwige
+
+
+- In BBDecTreeTool :
+ . Improvements in the use of the 'getIDVAlgorithm' method.
+
+- In DaVinciInterfaces :
+ . Add new getIDVAlgorithm method that includes a safety check on if the tool
+   is private or not. To be used if pointer is cached during initialize().
+ . Add a new method to IDVAlgorithm to access the flavour tagging tool
+ . Modify IExtraInfoTool.h to allow it to store a subset of parameters
+ . IBremAdder : add new interface methods
+
+- In DaVinciKernel :
+ . Reduce a bit the memory footprint of the base classes by making the 
+   default tool maps static data, instead of each instance having its
+   own copy...
+ . Remove unused data member (default PV refitter).
+ . Add new base class based on the old DVAlgorithm, with the same 'DaVinci'
+   functionaility, but with varying degress of support of histogramming and
+   ntupling :-
+   + DaVinciAlgorithm      : No histogramming or tupling
+   + DaVinciHistoAlgorithm : Histogramming only
+   + DaVinciTupleAlgorithm : Histogramming and tupling
+   DVAlgorithm is kept (using DaVinciTupleAlgorithm) for backwards 
+   compatibility
+ . The method getDVAlgorithm has been removed, as it is not compatible with
+   the above changes. getIDVAlgorithm should be used instead.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </PRE><H1><A NAME=v14r3>2012-05-03 Phys v14r3 </A></H1><PRE>
 - Based on LHCb v34r3, REC v13r3 and Gaudi v23r2
 
