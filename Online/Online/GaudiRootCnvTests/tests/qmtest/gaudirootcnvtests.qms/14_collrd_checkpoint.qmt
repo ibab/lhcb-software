@@ -3,6 +3,10 @@
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>../checkpoint.sh</text></argument>
   <argument name="args"><set><text>../../options/CRD.checkpoint.opts</text></set></argument>
-  <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
+  <argument name="unsupported_platforms"><set>
+		<text>i686.*</text>
+		<text>win.*</text>
+		<text>slc4_ia32.*</text>
+  </set></argument>
   <argument name="reference"><text>../refs/14_collrd_checkpoint.ref</text></argument>
 </extension>
