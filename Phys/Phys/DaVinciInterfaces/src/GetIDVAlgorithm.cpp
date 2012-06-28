@@ -67,7 +67,7 @@ IDVAlgorithm* Gaudi::Utils::getIDVAlgorithm ( const IAlgContextSvc* svc )
 IDVAlgorithm* Gaudi::Utils::getIDVAlgorithm ( const IAlgContextSvc* svc,
                                               const IAlgTool * tool ) 
 {
-  if ( !tool ) return NULL;
+  if ( !tool ) { return NULL; }
   const IToolSvc* parent = dynamic_cast<const IToolSvc*>( tool->parent() );
   if ( parent )
   {

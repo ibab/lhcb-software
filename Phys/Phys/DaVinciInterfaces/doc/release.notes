@@ -4,6 +4,9 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2012-06-28 - Chris Jones
+ - Pass the map by const reference in ISubstitutePID::decodeCode
+
 !========================= DaVinciInterfaces v2r15 2012-06-28 =========================
 
 ! 2012-06-27 - Chris Jones

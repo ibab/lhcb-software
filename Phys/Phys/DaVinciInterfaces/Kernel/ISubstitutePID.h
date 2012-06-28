@@ -2,7 +2,6 @@
 #ifndef KERNEL_ISUBSTITUTEPID_H 
 #define KERNEL_ISUBSTITUTEPID_H 1
 
-// Include files
 // from STL
 #include <string>
 
@@ -23,26 +22,27 @@ static const InterfaceID IID_ISubstitutePID ( "ISubstitutePID", 1, 0 );
  *  @author Patrick Koppenburg
  *  @date   2011-12-07
  */
-class ISubstitutePID : virtual public IAlgTool {
-public: 
-  typedef std::map<std::string,std::string>  SubstitutionMap ;
+class ISubstitutePID : virtual public IAlgTool
+{
 
-  // Return the interface ID
+public: 
+
+  /// Type for the subsitution map
+  typedef std::map<std::string,std::string> SubstitutionMap ;
+
+  /// Return the interface ID
   static const InterfaceID& interfaceID() { return IID_ISubstitutePID; }
   
   /// substitute PID for particles
-  virtual StatusCode substitute(const LHCb::Particle::ConstVector& input,
-                                LHCb::Particle::ConstVector& output) = 0 ;
+  virtual StatusCode substitute( const LHCb::Particle::ConstVector& input,
+                                 LHCb::Particle::ConstVector& output ) = 0 ;
 
   /// perform the actual substitution 
-  virtual unsigned int substitute ( LHCb::Particle* p ) = 0;
+  virtual unsigned int substitute( LHCb::Particle* p ) = 0;
   
   /// decode the substitution code
-  virtual StatusCode decodeCode( SubstitutionMap newMap ) = 0;
-
-protected:
-
-private:
+  virtual StatusCode decodeCode( const SubstitutionMap& newMap ) = 0;
 
 };
+
 #endif // KERNEL_ISUBSTITUTEPID_H
