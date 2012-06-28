@@ -3,6 +3,11 @@
 ! Responsible : Juan Palacios
 !==============================================================================
 
+!========================= MicroDSTAlgorithm v5r6p2 2012-06-28 =========================
+
+! 2012-06-28 - Chris Jones
+ - Fix package name in requirements file
+
 !========================= MicroDSTAlgorithm v5r6p1 2012-05-03 =========================
 
 ! 2012-04-14 - Chris Jones
