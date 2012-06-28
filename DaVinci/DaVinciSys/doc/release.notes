@@ -3,6 +3,45 @@ Package             : DaVinciSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v31r0>2012-06-28 DaVinci v31r0</A></H1><PRE>
+
+New Major release, on top of LHCb v31r0 stack. 
+Uses Gaudi v23r3 with ROOT v5.34.00.
+
+Executive Summary :-
+
+- Core DaVinci Changes
+ . Reduce a bit the memory footprint of the base classes by making the 
+   default tool maps static data, instead of each instance having its
+   own copy...
+ . Add new base class based on the old DVAlgorithm, with the same 'DaVinci'
+   functionaility, but with varying degress of support of histogramming and
+   ntupling :-
+   + DaVinciAlgorithm      : No histogramming or tupling
+   + DaVinciHistoAlgorithm : Histogramming only
+   + DaVinciTupleAlgorithm : Histogramming and tupling
+   DVAlgorithm is kept (using DaVinciTupleAlgorithm) for backwards 
+   compatibility. Please use one of the new three classes instead.
+ . The method getDVAlgorithm has been removed, as it is not compatible with
+   the above changes. getIDVAlgorithm should be used instead.
+ . Add new getIDVAlgorithm method that includes a safety check on if the tool
+   is private or not. To be used if pointer is cached during initialize().
+ . New version of the Brem correction tool
+
+- Configuration Changes
+ . Configuration.py : add CaloReProcessing slot that triggers the full 
+   Calo re-reconstruction in the init sequence (default False)
+
+- Flavour Tagging
+ . OS and SSpi and SSK calibration for Strip17
+
+- DecayTreeTupe
+ . Numerous improvements. See Analysis v9r0 release notes.
+
+- Persistency
+ . Add support for new input DST format, with RawEvent split up
+ . Remove support for PV Weights packing, as these are no longer used.
+
 </PRE><H1><A NAME=v30r4p1>2012-05-08 DaVinci v30r4p1</A></H1><PRE>
 
 New patch release on top of DaVinci v30r4
