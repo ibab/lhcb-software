@@ -27,8 +27,9 @@ std::string SubstituteEnvVarInPath(const std::string& in)
   return out.string();
 }
 // ============================================================================
-BBDecTreeTool::BBDecTreeTool(const std::string& type, const std::string& name,
-                             const IInterface* parent)
+BBDecTreeTool::BBDecTreeTool( const std::string& type, 
+                              const std::string& name,
+                              const IInterface* parent )
   : base_class(type,name,parent), 
     m_threshold(-1.0), 
     m_key(-1), 
@@ -53,17 +54,17 @@ StatusCode BBDecTreeTool::initialize()
   StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;
 
-  // get tools
-  IDistanceCalculator * dist
-    = tool<IDistanceCalculator>("LoKi::DistanceCalculator",this);
-
   // Get DV Alg. *must* be private to do this
   const IDVAlgorithm* dva = Gaudi::Utils::getIDVAlgorithm(contextSvc(),this);
   if ( !dva ) 
   {
     return Error("Couldn't get parent DVAlgorithm", StatusCode::FAILURE);
   }
-  m_vars = new BBDTVarHandler(dva, dist);
+
+  // get tools
+  const IDistanceCalculator * dist = dva->distanceCalculator(); 
+
+  m_vars = new BBDTVarHandler( dva, dist );
 
   // configure the BBDT var handler to use specified PIDs
   const unsigned int size = m_pids.size();
@@ -83,8 +84,8 @@ StatusCode BBDecTreeTool::initialize()
   std::string fnam = SubstituteEnvVarInPath(m_paramFile);
   std::ifstream inFile(fnam.c_str());
   if(!inFile.is_open()) return this->readError("failed to open file");
-  unsigned int nvar,index, value;
-  double dvalue;
+  unsigned int nvar(0),index(0),value(0);
+  double dvalue(0);
   std::vector<std::string> var_names;
   // number of variables
   inFile >> nvar;

@@ -4,11 +4,15 @@
 ! Purpose     : Decision Tree classifier for Hlt2 topological trigger
 ! -----------------------------------------------------------------------------
 
+! 2012-06-29 - Chris Jones
+ - Load the distance calculator tools in BBDTSimpleTool and BBDecTreeTool via
+   the IDVAlgorithm interface, instead of creating their own private versions.
+
 !========================= BBDecTreeTool v1r5 2012-06-28 =========================
 
 ! 2012-06-27 - Chris Jones
  - Use a new getIDVAlgorithm that includes a check to make sure the tool is
-   a private instance, not opublic.
+   a private instance, not public.
 
 ! 2012-06-22 - Chris Jones
  - Use getIDVAlgorithm instead of getDVAlgorithm, in preparation for a future

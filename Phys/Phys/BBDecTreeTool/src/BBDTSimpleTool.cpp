@@ -13,18 +13,22 @@ BBDTSimpleTool::BBDTSimpleTool(const std::string& type,
   declareProperty("Cuts", m_cuts, "Simple tree of cuts");
 }
 // ===========================================================================
-StatusCode BBDTSimpleTool::initialize() 
+StatusCode BBDTSimpleTool::initialize()
 {
   // initialize the base class  (the first action)
-  StatusCode sc = GaudiTool::initialize();
-  if(sc.isFailure()) return sc;
+  const StatusCode sc = GaudiTool::initialize();
+  if ( sc.isFailure() ) return sc;
 
-  // get tools and algs
-  IDistanceCalculator* dist
-    = tool<IDistanceCalculator>("LoKi::DistanceCalculator",this);
+  // Get DV Alg
   const IDVAlgorithm* dva = Gaudi::Utils::getIDVAlgorithm(contextSvc(),this);
   if ( !dva )
+  {
     return Error("Couldn't get parent DVAlgorithm", StatusCode::FAILURE);
+  }
+
+  // get tools
+  const IDistanceCalculator * dist = dva->distanceCalculator();
+
   m_vars = new BBDTVarHandler(dva, dist);
 
   // configure the BBDT var handler to use only K+
