@@ -20,6 +20,7 @@ public:
   virtual void commandHandler()
   {
     char * input = this->getString();
+    ::printf("%s: Got Input %s\n",RTL::processName().c_str(),input);
     dyn_string *MEPlist;
     MEPlist = Strsplit(input,"|");
 
