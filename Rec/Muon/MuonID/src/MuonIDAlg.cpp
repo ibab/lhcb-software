@@ -2444,7 +2444,10 @@ int MuonIDAlg::GetPbin(double p, int region){
 double MuonIDAlg::calc_ProbMu_tanh(const double& tanhdist0, int pBin, int region){
   int nDistBins = (*(*m_tanhCumulHistoMuon[region])[pBin]).size();
   int itanhdist=int(tanhdist0*nDistBins);
-  if(itanhdist>nDistBins)itanhdist--;
+
+  //if(itanhdist>nDistBins)itanhdist--;
+  if(itanhdist>=nDistBins) itanhdist=nDistBins-1;
+
   if (msgLevel(MSG::DEBUG) ) debug() << "calc_ProbMu_tanh: region " << region << " pBin " << pBin << " tanh(dist) " << tanhdist0
           << " itanhdist " << itanhdist << " ProbMu " << (*((*(m_tanhCumulHistoMuon[region]))[pBin]))[itanhdist] << endmsg;
   return (*((*(m_tanhCumulHistoMuon[region]))[pBin]))[itanhdist];
@@ -2454,7 +2457,8 @@ double MuonIDAlg::calc_ProbMu_tanh(const double& tanhdist0, int pBin, int region
 double MuonIDAlg::calc_ProbNonMu_tanh(const double& tanhdist0, int pBin, int region){
   int nDistBins = (*(*m_tanhCumulHistoNonMuon[region])[pBin]).size();
   int itanhdist=int(tanhdist0*nDistBins);
-  if(itanhdist>nDistBins)itanhdist--;
+  //if(itanhdist>nDistBins)itanhdist--;
+  if(itanhdist>=nDistBins) itanhdist=nDistBins-1;
   if (msgLevel(MSG::DEBUG) ) debug() << "calc_ProbNonMu_tanh: region " << region << " pBin " << pBin << " tanh(dist) " 
                                      << tanhdist0 << " itanhdist " << itanhdist << " ProbNonMu " 
                                      << (*((*(m_tanhCumulHistoNonMuon[region]))[pBin]))[itanhdist] << endmsg;
