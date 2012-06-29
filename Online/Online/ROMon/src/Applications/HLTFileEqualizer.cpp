@@ -128,7 +128,7 @@ void HLTFileEqualizer::Analyze()
 //      ::system(cmd);
 //      printf("\tMEPRX on Node %s (%s) value %d\n",(*i).first.c_str(),svcname.c_str(),(*i).second);
     }
-//    DimClient::sendCommandNB(endisSvc.c_str(),(void*)(sf_mesg.c_str()),sf_mesg.size());
+    DimClient::sendCommandNB(endisSvc.c_str(),(void*)(sf_mesg.c_str()),sf_mesg.size());
     printf("message to Subfarm %s:\n%s\n",(*fit).first.c_str(),sf_mesg.c_str());
   }
 //  DimClient::setDnsNode(olddns);
@@ -232,7 +232,7 @@ public:
   //      ::system(cmd);
   //      printf("\tMEPRX on Node %s (%s) value %d\n",(*i).first.c_str(),svcname.c_str(),(*i).second);
       }
-//      DimClient::sendCommandNB(endisSvc.c_str(),(void*)(sf_mesg.c_str()),sf_mesg.size());
+      DimClient::sendCommandNB(endisSvc.c_str(),(void*)(sf_mesg.c_str()),sf_mesg.size());
       printf("message to Subfarm %s:\n%s\n",(*fit).first.c_str(),sf_mesg.c_str());
     }
     ::sleep(5);
@@ -243,8 +243,11 @@ public:
 int main(int , char **)
 {
   DimClient::setDnsNode("ecs03");
+  DimServer::setDnsNode("ecs03");
   HLTFileEqualizer elz;
   int m_DefState = 0;
+  DimServer::start("HLTFileEqualizer");
+  DimServer::autoStartOn();
   DimInfo defstate("RunInfo/LHCb/DeferHLT",m_DefState);
   ExitCommand EnableandExit("HLTFileEqualizer/EnableAndExit",(char*)"I",&elz.m_Nodes);
   while (1)
