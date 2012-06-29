@@ -27,7 +27,7 @@ StatusCode LoKi::VVSeedFinder::initialize ()
 
   svc<LoKi::ILoKiSvc>( "LoKiSvc" , true ) ;
 
-  m_dist       = tool<IDistanceCalculator>("LoKi::DistanceCalculator",this);
+  m_dist       = tool<IDistanceCalculator>("LoKi::DistanceCalculator");
   if ( !m_dist ) {
     err() << "Unable to Retrieve LoKi::DistanceCalculator" << endreq;
     return StatusCode::FAILURE;

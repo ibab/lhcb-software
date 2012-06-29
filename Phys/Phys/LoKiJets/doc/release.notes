@@ -7,6 +7,9 @@
 ! Purpose     : Jet finding algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2012-06-29 - Chris Jones
+ - Use a public instance of LoKi::DistanceCalculator
+
 !========================= LoKiJets v6r6 2012-06-28 =========================
 
 ! 2012-06-27 - potterat
