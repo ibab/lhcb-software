@@ -22,30 +22,25 @@
 // 2011-12-07 : Patrick Koppenburg
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( SubstitutePIDTool )
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-  SubstitutePIDTool::SubstitutePIDTool( const std::string& type,
-                                        const std::string& name,
-                                        const IInterface* parent )
-    : GaudiTool ( type, name , parent )
-                                      // mapping : { 'decay-component' : "new-pid" } (property)
-    , m_map  ()
-                                      // the actual substitution engine
-    , m_subs ()
-    , m_to_be_updated1   ( false )
-    , m_initialized( false )
+SubstitutePIDTool::SubstitutePIDTool( const std::string& type,
+                                      const std::string& name,
+                                      const IInterface* parent )
+  : GaudiTool ( type, name , parent )
+  , m_map  ()
+  , m_subs ()
+  , m_to_be_updated1( false )
+  , m_initialized( false )
 {
   declareInterface<ISubstitutePID>(this);
-  SubstitutePIDTool* _this = this ;
+  //SubstitutePIDTool* _this = this ;
   declareProperty
     ( "Substitutions" ,
       m_map           ,
       "PID-substitutions :  { ' decay-component' : 'new-pid' }" )
-    -> declareUpdateHandler ( &SubstitutePIDTool::updateHandler , _this ) ;
+    -> declareUpdateHandler ( &SubstitutePIDTool::updateHandler , this ) ;
 }
 
 //=============================================================================
@@ -56,17 +51,20 @@ SubstitutePIDTool::~SubstitutePIDTool() {}
 //=============================================================================
 // Initialize
 //=============================================================================
-StatusCode SubstitutePIDTool::initialize(  ){
+StatusCode SubstitutePIDTool::initialize()
+{
   StatusCode sc = GaudiTool::initialize();
-  if (!sc) return sc;
+  if ( sc.isFailure() ) return sc;
   if (msgLevel(MSG::DEBUG)) debug() << "Initialize" << endmsg;
-  if ( "ToolSvc.SubstitutePIDTool" == name()){
+  if ( "ToolSvc.SubstitutePIDTool" == name() )
+  {
     return Error("Running this tool as a public tool without defining an instance name is dangerous. Quitting.") ;
   }
-  sc = decodeCode(m_map) ; /// try if it'n non empty
+  sc = decodeCode(m_map) ; /// try if it's non empty
   m_initialized = true ;
   return sc;
 }
+
 // ============================================================================
 // decode the code
 // ============================================================================
@@ -75,28 +73,40 @@ StatusCode SubstitutePIDTool::decodeCode( const SubstitutionMap& newMap )
   //
   // decode "substitutions"
   //
-  if (msgLevel(MSG::DEBUG)) debug() << "decodeCode newMap " << newMap << endmsg ;
+  if (msgLevel(MSG::DEBUG)) 
+    debug() << "decodeCode newMap " << newMap << endmsg ;
   if ( newMap.empty() ){
-    if (msgLevel(MSG::DEBUG)) debug() << "passed an empty map. decodeCode will do nothing" << endmsg ;
-    if ( m_map.empty() && m_initialized ) { return Error ( "Empty 'Substitute' map passed to decodeCode" ) ;}
+    if (msgLevel(MSG::DEBUG))
+      debug() << "passed an empty map. decodeCode will do nothing" << endmsg ;
+    if ( m_map.empty() && m_initialized ) 
+    { 
+      return Error ( "Empty 'Substitute' map passed to decodeCode" );
+    }
     else return StatusCode::SUCCESS ;
   } else {
-    if (msgLevel(MSG::DEBUG)) debug() << "passed a non empty map. decodeCode will update." << endmsg ;
+    if (msgLevel(MSG::DEBUG)) 
+      debug() << "passed a non empty map. decodeCode will update." << endmsg ;
     m_map = newMap ;
   }
-  if ( m_map.empty() ) { return Error ( "Empty 'Substitute' map" ) ; } // could happen if tool is configured directly
+  if ( m_map.empty() ) 
+  {
+    // could happen if tool is configured directly
+    return Error ( "Empty 'Substitute' map" ) ; 
+  } 
   //
   if (msgLevel(MSG::DEBUG)) debug() << "decodeCode map " << m_map << endmsg ;
-  /// get the factory
-  Decays::IDecay* factory = tool<Decays::IDecay>( "LoKi::Decay" , this ) ;
-  ///
+  // get the factory
+  Decays::IDecay* factory = tool<Decays::IDecay>( "LoKi::Decay" );
+  //
   m_subs.clear() ;
-  LHCb::IParticlePropertySvc* ppSvc = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc", true);
+  LHCb::IParticlePropertySvc* ppSvc = 
+    svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc", true);
   for ( SubstitutionMap::const_iterator item = m_map.begin() ;
         m_map.end() != item ; ++item )
   {
     /// construct the tree
-    if (msgLevel(MSG::DEBUG)) debug() << "* -> Map: " << item->first << " : " << item->second << endmsg ;
+    if (msgLevel(MSG::DEBUG)) 
+      debug() << "* -> Map: " << item->first << " : " << item->second << endmsg ;
     Decays::IDecay::Tree tree = factory->tree ( item->first ) ;
     if ( !tree  )
     {
@@ -110,14 +120,13 @@ StatusCode SubstitutePIDTool::decodeCode( const SubstitutionMap& newMap )
     }
     // get ParticleID
     const LHCb::ParticleProperty* pp = ppSvc->find ( item->second ) ;
-    if ( 0 == pp )
+    if ( !pp )
     { return Error ( "Unable to find ParticleID for '" + item->second + "'" ) ; }
     //
     if (msgLevel(MSG::DEBUG)) debug() << "* -> Inserting " << tree
                                       << " in map for PID " <<  pp->particleID() << endmsg ;
-    Substitution sub ( tree , pp->particleID() ) ;
     //
-    m_subs.push_back ( sub ) ;
+    m_subs.push_back ( Substitution( tree , pp->particleID() ) ) ;
   }
   //
   if ( m_subs.size() != m_map.size() )
@@ -131,8 +140,11 @@ StatusCode SubstitutePIDTool::decodeCode( const SubstitutionMap& newMap )
   }
   //
   m_to_be_updated1 = false ;
+  // release service
+  release(ppSvc);
   return StatusCode::SUCCESS ;
 }
+
 // ============================================================================
 // loop over particles
 // ============================================================================
@@ -201,6 +213,7 @@ unsigned int SubstitutePIDTool::substitute ( LHCb::Particle* p )
   return substituted ;
   //
 }
+
 // ============================================================================
 // perform the recursive 4-momentum correction
 // ============================================================================
@@ -249,6 +262,7 @@ unsigned int SubstitutePIDTool::correctP4 ( LHCb::Particle* p )
   //
   return num ;
 }
+
 //=============================================================================
 void SubstitutePIDTool::updateHandler ( Property& p )
 {
@@ -259,5 +273,11 @@ void SubstitutePIDTool::updateHandler ( Property& p )
   Warning ( "The structural property '" + p.name() +
             "' is updated. It will take effect at the next call" ,
             StatusCode( StatusCode::SUCCESS, true ) ) ;
-  debug () << "The updated property is: " << p << endreq ;
+  if ( msgLevel(MSG::DEBUG) )
+    debug () << "The updated property is: " << p << endreq ;
 }
+
+//=============================================================================
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( SubstitutePIDTool )
+//=============================================================================

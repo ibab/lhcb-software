@@ -3,6 +3,15 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2012-06-29 - Chris Jones
+ - Use a public instance of LoKi::Decays in SubstitutePIDTool and FilterDecays
+ - Implement a check on the memory usage in DaVinciInit which if exceeded 
+   triggers a release on the memory used by various boost pools. 
+   Default limit is set at 3.4GB
+   The release is also done automatically during finalize, so the pools are
+   emptied before any finalization tasks that require a lot of memory (such
+   as the FSRs) are run.
+
 ! 2012-06-28 - Chris Jones
  - Pass the map by const reference in SubstitutePIDTool::decodeCode
 

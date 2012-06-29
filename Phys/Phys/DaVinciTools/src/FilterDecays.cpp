@@ -81,7 +81,7 @@ StatusCode FilterDecays::filter
 StatusCode FilterDecays::decodeCode () 
 {
   /// get the factory
-  Decays::IDecay* factory = tool<Decays::IDecay>( "LoKi::Decay" , this ) ;
+  Decays::IDecay* factory = tool<Decays::IDecay>( "LoKi::Decay" ) ;
   
   /// construct the tree 
   Decays::IDecay::Tree tree = factory->tree ( code () ) ;
