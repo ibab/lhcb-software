@@ -5,6 +5,9 @@
 !               the NeuroBayes neural network package
 !-----------------------------------------------------------------------------
 
+! 2012-06-29 - Chris Jones
+ - Load a public instance of LoKi::DistanceCalculator
+
 ! ====================== Phys/NeuroBayesTool v1r1p1 2011-03-09 ===============
 
 ! 2011-03-03 - Ulrich Kerzle

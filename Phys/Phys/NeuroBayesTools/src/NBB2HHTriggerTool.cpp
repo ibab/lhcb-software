@@ -56,7 +56,7 @@ StatusCode NBB2HHTriggerTool::initialize() {
   if(sc.isFailure()) return sc;
 
   // get tools and algs
-  m_DistCalc   = tool<IDistanceCalculator>("LoKi::DistanceCalculator",this);
+  m_DistCalc   = tool<IDistanceCalculator>("LoKi::DistanceCalculator");
   if (!m_DistCalc) {
     return Error("Could not get DistanceCalculator");
   }
