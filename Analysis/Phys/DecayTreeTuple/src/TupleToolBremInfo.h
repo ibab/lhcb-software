@@ -14,20 +14,27 @@
 //============================================================================
 class TupleToolBremInfo : public TupleToolBase, virtual public IParticleTupleTool {
 //==========================================================================
+
 public:
- // Standard constructor
+
+  // Standard constructor
   TupleToolBremInfo( const std::string& type,
-		    const std::string& name,
-		    const IInterface* parent);
+                     const std::string& name,
+                     const IInterface* parent);
 
   StatusCode initialize();
-  virtual ~TupleToolBremInfo( ){}; ///< Destructor
-  
-  virtual StatusCode fill(const LHCb::Particle*, const LHCb::Particle* 
-			  ,  const std::string& ,Tuples::Tuple& );
-private: 
+  virtual ~TupleToolBremInfo( ) {}; ///< Destructor
+
+  virtual StatusCode fill( const LHCb::Particle*, 
+                           const LHCb::Particle*,
+                           const std::string&,
+                           Tuples::Tuple& );
+private:
+
   IBremAdder* m_adder;
   std::vector<std::string> m_parts;
-  std::vector<long> m_pids;
+  std::vector<unsigned int> m_pids;
+
 };
+
 #endif // _TUPLETOOLBREMINFO_H

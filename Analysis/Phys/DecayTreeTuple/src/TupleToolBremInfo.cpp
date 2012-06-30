@@ -6,7 +6,7 @@
 // local
 #include "TupleToolBremInfo.h"
 #include "GaudiAlg/Tuple.h"
-#include "GaudiAlg/TupleObj.h" 
+#include "GaudiAlg/TupleObj.h"
 #include "Event/Particle.h"
 #include "GaudiKernel/IRegistry.h" //
 #include "Kernel/IParticlePropertySvc.h"
@@ -27,50 +27,63 @@ DECLARE_TOOL_FACTORY( TupleToolBremInfo );
 // Standard constructor, initializes variables
 //=============================================================================
 TupleToolBremInfo::TupleToolBremInfo( const std::string& type,
-                                    const std::string& name,
-                                    const IInterface* parent )
+                                      const std::string& name,
+                                      const IInterface* parent )
   : TupleToolBase ( type, name , parent ),
     m_parts(),
-    m_pids(){ 
-  declareInterface<IParticleTupleTool>(this); 
+    m_pids()
+{
+  declareInterface<IParticleTupleTool>(this);
   declareProperty("Particle",m_parts);
   m_parts.push_back("e+");
 }
 
-
-StatusCode TupleToolBremInfo::initialize(){
+StatusCode TupleToolBremInfo::initialize()
+{
   const StatusCode sc = TupleToolBase::initialize();
   if ( sc.isFailure() ) return sc;
+
   m_adder = tool<IBremAdder>("BremAdder","BremAdder" ,this );
-  LHCb::IParticlePropertySvc* ppsvc = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc",true) ;
-  if( !m_parts.empty() ){ 
-    for(std::vector<std::string>::iterator p=m_parts.begin();m_parts.end()!=p;++p){
+  
+  if ( !m_parts.empty() )
+  {
+    LHCb::IParticlePropertySvc* ppsvc = 
+      svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc",true) ;
+    for ( std::vector<std::string>::const_iterator p = m_parts.begin();
+          m_parts.end() != p; ++p )
+    {
       const LHCb::ParticleProperty* pp = ppsvc->find( *p );
-      if(pp)m_pids.push_back( pp->pdgID().abspid() );
+      if (pp) { m_pids.push_back( pp->pdgID().abspid() ); }
     }
   }
+
   return sc;
 }
 
-
-
 //=============================================================================
-StatusCode TupleToolBremInfo::fill(const Particle* , const Particle* P 
-                                   ,const std::string& head
-                                   ,Tuples::Tuple& tuple ){
-  const std::string prefix=fullName(head);
-  if( !P )return StatusCode::SUCCESS;
+StatusCode TupleToolBremInfo::fill(const Particle*, 
+                                   const Particle* P,
+                                   const std::string& head,
+                                   Tuples::Tuple& tuple )
+{
+  if( !P ) return StatusCode::SUCCESS;
+
+  const std::string prefix = fullName(head);
+
   bool ok=false;
-  for(std::vector<long>::iterator pid=m_pids.begin();m_pids.end()!=pid;++pid){
-    if(  P->particleID().abspid() == *pid ){ok=true;break;}
+  for ( std::vector<unsigned int>::const_iterator pid = m_pids.begin(); 
+        m_pids.end() != pid; ++pid ) 
+  {
+    if (  P->particleID().abspid() == *pid ) { ok=true; break; }
   }
-  if( !ok)return StatusCode::SUCCESS;
-  LHCb::CaloMomentum brem = m_adder->bremMomentum( P,Gaudi::Utils::toString( P->particleID().pid() ) );
+  if ( !ok ) return StatusCode::SUCCESS;
+
+  LHCb::CaloMomentum brem = 
+    m_adder->bremMomentum( P, Gaudi::Utils::toString(P->particleID().pid()) );
+
   bool filltuple = true;
   filltuple &= tuple->column( prefix+"_BremMultiplicity", brem.multiplicity() );
   filltuple &= tuple->column( prefix+"_BremP"           , brem.momentum());
   filltuple &= tuple->column( prefix+"_BremOrigin"      , brem.referencePoint());
   return StatusCode(filltuple);
 }
-
-

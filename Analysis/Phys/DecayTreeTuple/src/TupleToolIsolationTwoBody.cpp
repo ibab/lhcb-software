@@ -112,7 +112,7 @@ StatusCode TupleToolIsolationTwoBody::initialize()
                                              this);
   m_combiner = tool<IParticleCombiner>("LoKi::VertexFitter");
 
-  m_Geom = tool<IDistanceCalculator> ("LoKi::DistanceCalculator", this);
+  m_Geom = tool<IDistanceCalculator> ("LoKi::DistanceCalculator");
   if ( ! m_Geom ) {
     fatal() << "DistanceCalculator could not be found" << endreq;
     return StatusCode::FAILURE;
