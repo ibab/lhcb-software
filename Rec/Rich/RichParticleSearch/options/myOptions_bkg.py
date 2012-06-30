@@ -24,7 +24,7 @@ rConf.richTools().photonReco().FindUnambiguousPhotons = [False,False,False]
 #rConf.richTools().PhotonRecoType = "EstiFromRadius"#use for faster photon reconstruction!!
 
 #Brunel options
-Brunel().DataType = "2010"
+Brunel().DataType = "2011"
 Brunel().EvtMax = -1
 Brunel().PrintFreq = 1
 Brunel().OutputType = "None"
