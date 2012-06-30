@@ -58,7 +58,7 @@ DVCommonBase<PBASE>::DVCommonBase( const std::string& name,
   , m_distanceCalculatorNames  ()
   , m_distanceCalculators      ()
                                  //
-  , m_checkOverlapName      ( "CheckOverlap" )
+  , m_checkOverlapName      ( "CheckOverlap:PUBLIC" )
   , m_checkOverlap          ( NULL  )
   , m_taggingToolName       ( "BTaggingTool" )
   , m_taggingTool           ( NULL  )
@@ -93,37 +93,45 @@ DVCommonBase<PBASE>::DVCommonBase( const std::string& name,
 
   this->declareProperty( "InputPrimaryVertices", m_PVLocation );
 
-  this->declareProperty("UseP2PVRelations", m_useP2PV,
+  this->declareProperty( "UseP2PVRelations", m_useP2PV,
                         "Use P->PV relations internally. Forced to true if re-fitting PVs. Otherwise disabled for single PV events. Default: true.");
 
-  this->declareProperty("WriteP2PVRelations", m_writeP2PV,
+  this->declareProperty( "WriteP2PVRelations", m_writeP2PV,
                         "Write out P->PV relations table to TES. Default: true");
 
-  this->declareProperty("ForceP2PVBuild", m_forceP2PVBuild,
+  this->declareProperty( "ForceP2PVBuild", m_forceP2PVBuild,
                         "Force construction of P->PV relations table. Default: false");
 
-  this->declareProperty( "IgnoreP2PVFromInputLocations", m_ignoreP2PVFromInputLocations);
+  this->declareProperty( "IgnoreP2PVFromInputLocations", m_ignoreP2PVFromInputLocations );
+  
+  this->declareProperty( "ReFitPVs", m_refitPVs, "Refit PV" );
 
+  this->declareProperty( "CheckOverlapTool", m_checkOverlapName, "Name of Overlap Tool"  );
   //
-  this->declareProperty ( "VertexFitters"   , m_vertexFitNames, "Names of vertex fitters" ) ;
+  this->declareProperty 
+    ( "VertexFitters", 
+      m_vertexFitNames, 
+      "Names of vertex fitters" ) ;
   //
-  this->declareProperty ( "CheckOverlapTool", m_checkOverlapName, "Name of Overlap Tool"  ) ;
+  this->declareProperty 
+    ( "ParticleFilters",
+      m_filterNames,
+      "Names of ParticleFilters" ) ;
   //
-  this->declareProperty ( "ParticleFilters"            ,
-                          m_filterNames                ,
-                          "Names of ParticleFilters"   ) ;
-  //
-  this->declareProperty ( "ReFitPVs"    , m_refitPVs, "Refit PV"     ) ;
-
   this->declareProperty
     ( "ParticleCombiners"     ,
       m_particleCombinerNames ,
       "Names of particle combiners, the basic tools for creation of composed particles" ) ;
   //
-  this->declareProperty  ( "ParticleReFitters" , m_particleReFitterNames,
-                           "Names of particle refitters" ) ;
+  this->declareProperty  
+    ( "ParticleReFitters",
+      m_particleReFitterNames,
+      "Names of particle refitters" ) ;
   //
-  this->declareProperty  ( "PVReFitters" , m_pvReFitterNames, "Names of PV refitters" ) ;
+  this->declareProperty  
+    ( "PVReFitters",
+      m_pvReFitterNames, 
+      "Names of Primary Vertex refitters" ) ;
   //
   this->declareProperty
     ( "DecayTreeFitters"       ,
@@ -133,7 +141,7 @@ DVCommonBase<PBASE>::DVCommonBase( const std::string& name,
   this->declareProperty
     ( "MassFitters"            ,
       m_massFitterNames        ,
-      "The mapping of nick/name/type for IMassFit tools"        ) ;
+      "The mapping of nick/name/type for IMassFit tools" ) ;
   //
   this->declareProperty
     ( "LifetimeFitters"     ,
@@ -143,22 +151,22 @@ DVCommonBase<PBASE>::DVCommonBase( const std::string& name,
   this->declareProperty
     ( "DirectionFitters"     ,
       m_directionFitterNames ,
-      "The mapping of nick/name/type for IDirectionFit tools"   ) ;
+      "The mapping of nick/name/type for IDirectionFit tools" ) ;
   //
   this->declareProperty
     ( "DistanceCalculators"     ,
       m_distanceCalculatorNames ,
-      "The mapping of nick/name/type for IDistanceCalculator tools"   ) ;
+      "The mapping of nick/name/type for IDistanceCalculator tools" ) ;
   //
-  this->declareProperty ( "DecayDescriptor"   , m_decayDescriptor   = "",
-                          "Describes the decay" ) ;
-  this->declareProperty ( "ForceOutput"       , m_forceOutput       = true,
-                          "If true TES location is written" ) ;
-  this->declareProperty ( "PreloadTools"      , m_preloadTools      = true,
-                          "If true all tools are pre-loaded in initialize" ) ;
+  this->declareProperty( "DecayDescriptor"   , m_decayDescriptor   = "",
+                         "Describes the decay" ) ;
+  this->declareProperty( "ForceOutput"       , m_forceOutput       = true,
+                         "If true TES location is written" ) ;
+  this->declareProperty( "PreloadTools"      , m_preloadTools      = false,
+                         "If true all tools are pre-loaded in initialize" ) ;
   //
   // enforce the registration for algorithm context service
-  this->setProperty ( "RegisterForContextService" , true ).ignore() ;
+  this->setProperty( "RegisterForContextService" , true ).ignore() ;
 }
 
 // ============================================================================
@@ -169,13 +177,13 @@ const typename DVCommonBase<PBASE>::ToolMap &
 DVCommonBase<PBASE>::defaultVertexFittersNames() const
 {
   static const ToolMap m = boost::assign::map_list_of
-    ( "Offline"       , "OfflineVertexFitter"    )
+    ( "Offline"       , "OfflineVertexFitter:PUBLIC"    )
     ( "Trigger"       , "TrgVertexFitter"        )
-    ( "LoKi"          , "LoKi::VertexFitter"     )
-    ( "Kalman"        , "LoKi::VertexFitter"     )
+    ( "LoKi"          , "LoKi::VertexFitter:PUBLIC"     )
+    ( "Kalman"        , "LoKi::VertexFitter:PUBLIC"     )
     ( "ParticleAdder" , "ParticleAdder"          )
-    ( "LoKiFast"      , "LoKi::FastVertexFitter" )
-    ( "FastLoKi"      , "LoKi::FastVertexFitter" )
+    ( "LoKiFast"      , "LoKi::FastVertexFitter:PUBLIC" )
+    ( "FastLoKi"      , "LoKi::FastVertexFitter:PUBLIC" )
     ;
   return m;
 }
@@ -198,18 +206,18 @@ DVCommonBase<PBASE>::defaultParticleCombinersNames() const
   // Note: there is no default value!
   // ==========================================================================
   static const ToolMap m = boost::assign::map_list_of
-    ( "Offline"          , "OfflineVertexFitter"         )
+    ( "Offline"          , "OfflineVertexFitter:PUBLIC"         )
     ( "Trigger"          , "TrgVertexFitter"             )
-    ( "Kalman"           , "LoKi::VertexFitter"          )
-    ( "LoKi"             , "LoKi::VertexFitter"          )
+    ( "Kalman"           , "LoKi::VertexFitter:PUBLIC"          )
+    ( "LoKi"             , "LoKi::VertexFitter:PUBLIC"          )
     ( "Smart"            , "LoKi::SmartParticleCombiner" )
     ( "ParticleAdder"    , "ParticleAdder"               )
     ( "Adder"            , "ParticleAdder"               )
     ( "Combiner"         , "MomentumCombiner"            )
     ( "MomentumCombiner" , "MomentumCombiner"            )
     ( "Momenta"          , "MomentumCombiner"            )
-    ( "LoKiFast"         , "LoKi::FastVertexFitter"      )
-    ( "FastLoKi"         , "LoKi::FastVertexFitter"      )
+    ( "LoKiFast"         , "LoKi::FastVertexFitter:PUBLIC"      )
+    ( "FastLoKi"         , "LoKi::FastVertexFitter:PUBLIC"      )
     ;
   return m;
 }
@@ -218,17 +226,17 @@ const typename DVCommonBase<PBASE>::ToolMap &
 DVCommonBase<PBASE>::defaultParticleReFittersNames() const
 {
   static const ToolMap m = boost::assign::map_list_of
-    ( ""              , "OfflineVertexFitter"    )
-    ( "Offline"       , "OfflineVertexFitter"    )
-    ( "Vertex"        , "OfflineVertexFitter"    )
-    ( "Kalman"        , "LoKi::VertexFitter"     )
-    ( "LoKi"          , "LoKi::VertexFitter"     )
+    ( ""              , "OfflineVertexFitter:PUBLIC"    )
+    ( "Offline"       , "OfflineVertexFitter:PUBLIC"    )
+    ( "Vertex"        , "OfflineVertexFitter:PUBLIC"    )
+    ( "Kalman"        , "LoKi::VertexFitter:PUBLIC"     )
+    ( "LoKi"          , "LoKi::VertexFitter:PUBLIC"     )
     ( "Mass"          , "LoKi::MassFitter"       )
     ( "Direction"     , "LoKi::DirectionFitter"  )
     ( "ParticleAdder" , "ParticleAdder"          )
     ( "Adder"         , "ParticleAdder"          )
-    ( "LoKiFast"      , "LoKi::FastVertexFitter" )
-    ( "FastLoKi"      , "LoKi::FastVertexFitter" )
+    ( "LoKiFast"      , "LoKi::FastVertexFitter:PUBLIC" )
+    ( "FastLoKi"      , "LoKi::FastVertexFitter:PUBLIC" )
     ;
   return m;
 }
@@ -237,9 +245,9 @@ const typename DVCommonBase<PBASE>::ToolMap &
 DVCommonBase<PBASE>::defaultPVReFittersNames() const
 {
   static const ToolMap m = boost::assign::map_list_of
-    ( ""           , "AdaptivePVReFitter" )
+    ( ""           , "AdaptivePVReFitter:PUBLIC" )
     ( "PVReFitter" , "PVReFitter"         )
-    ( "Adaptive"   , "AdaptivePVReFitter" )
+    ( "Adaptive"   , "AdaptivePVReFitter:PUBLIC" )
     ( "Cheated"    , "CheatedPVReFitter"  )
     ;
   return m;
@@ -289,12 +297,13 @@ const typename DVCommonBase<PBASE>::ToolMap &
 DVCommonBase<PBASE>::defaultDistanceCalculatorsNames() const
 {
   static const ToolMap m = boost::assign::map_list_of
-    ( ""        , "LoKi::DistanceCalculator"    )
-    ( "LoKi"    , "LoKi::DistanceCalculator"    )
-    ( "Trg"     , "LoKi::TrgDistanceCalculator" )
-    ( "Hlt"     , "LoKi::TrgDistanceCalculator" )
-    ( "Trigger" , "LoKi::TrgDistanceCalculator" )
-    ( "Fast"    , "LoKi::TrgDistanceCalculator" )
+    ( ""                         , "LoKi::DistanceCalculator:PUBLIC"    )
+    ( "LoKi"                     , "LoKi::DistanceCalculator:PUBLIC"    )
+    ( "LoKi::DistanceCalculator" , "LoKi::DistanceCalculator:PUBLIC"    )
+    ( "Trg"                      , "LoKi::TrgDistanceCalculator:PUBLIC" )
+    ( "Hlt"                      , "LoKi::TrgDistanceCalculator:PUBLIC" )
+    ( "Trigger"                  , "LoKi::TrgDistanceCalculator:PUBLIC" )
+    ( "Fast"                     , "LoKi::TrgDistanceCalculator:PUBLIC" )
     ;
   return m;
 }

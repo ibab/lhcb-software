@@ -4,6 +4,16 @@
 ! Responsible : C.R. Jones
 !============================================================================
 
+! 2012-06-30 - Chris Jones
+ - Make the default versions of the follow tools public in the DV common 
+   base class :-
+    LoKi::DistanceCalculator, LoKi::TrgDistanceCalculator, AdaptivePVReFitter,
+    LoKi::FastVertexFitter, OfflineVertexFitter, LoKi::VertexFitter
+
+! 2012-06-29 - Chris Jones
+ - Make the default OnOffline Tool in the DaVinci base classes public
+ - Make the default distance calculators public tools
+
 !========================= DaVinciKernel v10r6 2012-06-28 =========================
 
 ! 2012-06-27 - Chris Jones

@@ -149,7 +149,7 @@ public:
   virtual const LHCb::VertexBase*
   bestVertex( const LHCb::Particle* particle ) const
   {
-    return i_bestVertex(particle);
+    return bestPV(particle);
   }
 
   /// get all loaded input particles
@@ -362,47 +362,47 @@ public:
   /// accessor for IOnOffline tool
   inline IOnOffline* onOffline() const
   {
-    return this->getTool<IOnOffline>( "OnOfflineTool",
+    return this->getTool<IOnOffline>( "OnOfflineTool:PUBLIC",
                                       m_onOffline, this );
   }
 
   /**
-   * direct const access to the tool that calculates the Particle->PV
+   * Direct const access to the tool that calculates the Particle->PV
    * weighted relations
    *
    * @author Juan Palacios juan.palacios@nikhef.nl
    **/
   inline const IRelatedPVFinder* relatedPVFinder() const
   {
-    return this->getTool<IRelatedPVFinder>( onOffline()->relatedPVFinderType(),
-                                            m_pvRelator,
-                                            this );
+    return this->getTool<IRelatedPVFinder>
+      ( onOffline()->relatedPVFinderType(),
+        m_pvRelator,
+        this );
   }
 
   /**
    * Cached access to default IPVReFitter tool.
    *
    * @author Juan Palacios palacios@physik.uzh.ch
+   *
+   * @attention TO be removed. Use primaryVertexReFitter() instead.
    **/
   inline const IPVReFitter* defaultPVReFitter() const
   {
-    return this->getTool<IPVReFitter>( "",
-                                       m_pvReFitterNames ,
-                                       this->defaultPVReFittersNames() ,
-                                       m_pvReFitters     , this );
+    return this->primaryVertexReFitter();
   }
 
   /**
    * Inline access to best PV for a given particle.
    *
    **/
-  inline const LHCb::VertexBase* bestPV(const LHCb::Particle* p) const
+  inline const LHCb::VertexBase*
+  bestPV(const LHCb::Particle* particle) const
   {
-    return i_bestVertex(p);
+    return i_bestVertex(particle);
   }
 
   /**
-   *
    * Calculate the best related PV for a particle and return it to the user
    * If property "ReFitPVs" is set to true, this triggers a re-fit of the PVs
    * after removing tracks coming from the particle in question. If not, then
@@ -414,7 +414,6 @@ public:
    * @param p LHCb::Particle to be related
    * @return newed pointer to related vertex. TES or DV Algorithm in charge of
    * memory management.
-   *
    **/
   const LHCb::VertexBase* calculateRelatedPV(const LHCb::Particle* p) const;
 
@@ -425,7 +424,6 @@ public:
    *
    * @author Juan Palacios juan.palacios@nikhef.nl
    * @date 10/02/2009
-   *
    **/
   const LHCb::VertexBase* getRelatedPV(const LHCb::Particle* p) const;
 
@@ -433,11 +431,11 @@ public:
    * Relate a VertexBase to a Particle.
    * Overwrites existing relation to that particle.
    *
-   * @param part (INPUT) LHCb::Particle to which an LHCb::VertexBase will be related
+   * @param part (INPUT) LHCb::Particle to which an LHCb::VertexBase 
+   *                     will be related
    * @param vert (INPUT) LHCb::VertexBase that will be related to part.
    *
    * @author Juan Palacios palacios@physik.uzh.ch
-   *
    **/
   inline void relate(const LHCb::Particle*   particle,
                      const LHCb::VertexBase* vertex) const
@@ -451,7 +449,6 @@ public:
    *
    * @param particle
    * @author Juan Palacios palacios@physik.uzh.ch
-   *
    **/
   inline void unRelatePV(const LHCb::Particle* particle) const
   {
@@ -543,7 +540,7 @@ public:
 
 protected:
 
-  /// the actual tyep for mapping "tool nickname -> the actual type/name"
+  /// the actual type for mapping "tool nickname -> the actual type/name"
   typedef std::map<std::string,std::string> ToolMap;
 
   //===========================================================================
@@ -563,8 +560,8 @@ private:
   {
     if ( !t )
     {
-      //this->info() << "Loading tool '" << name << "'" << endmsg;
       t = this -> template tool<TYPE>( name, ptr );
+      this->info() << "Loaded tool '" << name << "' " << t << endmsg;
     }
     return t;
   }
@@ -603,8 +600,10 @@ private:
       t = ifind->second;
       if ( !t )
       {
-        this->Exception ( "getTool<" + System::typeinfoName( typeid ( TYPE ) )
-                          + ">('" + nickName + "'): tool points to NULL" ) ;
+        this->Exception ( "getTool<" + 
+                          System::typeinfoName( typeid ( TYPE ) )
+                          + ">('" + nickName + 
+                          "'): tool points to NULL" ) ;
       }
     }
     else
@@ -622,9 +621,9 @@ private:
         if ( iname != defaultMap.end() ) { toolType = iname->second; }
       }
       // locate the tool
-      //this->info() << "Loading tool type='" << toolType
-      //             << "' nickname='" << nickName << "'" << endmsg;
       t = this -> template tool<TYPE> ( toolType , parent );
+      this->info() << "Loaded tool type='" << toolType
+                   << "' nickname='" << nickName << "' " << t << endmsg;
       // add the located tool into the container
       typename STORAGE::value_type value( nickName , t );
       toolMap.insert( value );
@@ -670,14 +669,12 @@ protected:
   /// @attention if <b>particle</b> is on the TES they will not be saved
   /// by default, special action is required via over-writing of _saveInTES.
   ///
-  inline void markParticle(const LHCb::Particle* particle)
+  inline void markParticle( const LHCb::Particle* particle )
   {
     if ( m_parts.end() == std::find ( m_parts.begin() ,
                                       m_parts.end()   ,
-                                      particle )        )
-    {
-      m_parts.push_back(particle);
-    }
+                                      particle        ) )
+    { m_parts.push_back(particle); }
   }
 
   /// Mark particles for saving, ignoring it's decay tree.
@@ -693,7 +690,7 @@ protected:
   /// by default, special action is required via over-writing of _saveInTES.
   ///
   template<class PARTICLES>
-  inline void markParticles(const PARTICLES& particles)
+  inline void markParticles( const PARTICLES& particles )
   {
     for ( typename PARTICLES::const_iterator iPart = particles.begin();
           iPart != particles.end(); ++iPart ) { markParticle(*iPart); }
@@ -857,13 +854,13 @@ private:
   /// relations table?
   inline bool hasStoredRelatedPV(const LHCb::Particle* particle) const
   {
-    return m_p2PVMap.find(particle) != m_p2PVMap.end();
+    return ( m_p2PVMap.find(particle) != m_p2PVMap.end() );
   }
 
   /// Does the event have more than 1 primary vertex?
   inline bool multiPV() const
   {
-    return this->primaryVertices().size() > 1;
+    return ( this->primaryVertices().size() > 1 );
   }
 
   /// Should PVs be re-fitted when bestVertex is asked for?
@@ -875,13 +872,13 @@ private:
   /// Should Particle->PV relations table be used?
   inline bool useP2PV() const
   {
-    return m_refitPVs ? true : m_useP2PV;
+    return ( refitPVs() ? true : m_useP2PV );
   }
 
   /// Should Particle->PV relations be stored in the TES?
   inline bool saveP2PV() const
   {
-    return m_writeP2PV && !m_noPVs ;
+    return ( m_writeP2PV && !m_noPVs );
   }
 
   /// Save the local Particle->Vertex relations table to the TES
@@ -900,7 +897,8 @@ private:
     for ( typename PARTICLES::const_iterator iHead = heads.begin();
           iHead != heads.end(); ++iHead )
     {
-      DaVinci::Utils::findDecayTree( *iHead, m_parts, m_secVerts, &m_inTES);
+      DaVinci::Utils::findDecayTree( *iHead, m_parts, 
+                                     m_secVerts, &m_inTES );
     }
   }
 
