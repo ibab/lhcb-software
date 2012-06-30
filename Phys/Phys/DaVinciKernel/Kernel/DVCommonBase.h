@@ -561,7 +561,6 @@ private:
     if ( !t )
     {
       t = this -> template tool<TYPE>( name, ptr );
-      this->info() << "Loaded tool '" << name << "' " << t << endmsg;
     }
     return t;
   }
@@ -622,8 +621,6 @@ private:
       }
       // locate the tool
       t = this -> template tool<TYPE> ( toolType , parent );
-      this->info() << "Loaded tool type='" << toolType
-                   << "' nickname='" << nickName << "' " << t << endmsg;
       // add the located tool into the container
       typename STORAGE::value_type value( nickName , t );
       toolMap.insert( value );
