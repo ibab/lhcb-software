@@ -4,6 +4,10 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2012-06-30 - Chris Jones
+ - Improve the public tool detection in getIDVAlgorithm, to detect cases where
+   the tool is a private tool of a public tool (recursively).
+
 ! 2012-06-28 - Chris Jones
  - Pass the map by const reference in ISubstitutePID::decodeCode
 

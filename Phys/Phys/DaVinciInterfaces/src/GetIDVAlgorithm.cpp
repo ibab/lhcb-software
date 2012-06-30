@@ -68,13 +68,23 @@ IDVAlgorithm* Gaudi::Utils::getIDVAlgorithm ( const IAlgContextSvc* svc,
                                               const IAlgTool * tool ) 
 {
   if ( !tool ) { return NULL; }
-  const IToolSvc* parent = dynamic_cast<const IToolSvc*>( tool->parent() );
-  if ( parent )
+  // Recurse down the ownership tree, to see with we ever end up at the ToolSvc
+  bool ownedByToolSvc = false;
+  unsigned int sanityCheck(0);
+  while ( tool && ++sanityCheck < 9999 )
+  {
+    ownedByToolSvc = ( NULL != dynamic_cast<const IToolSvc*>(tool->parent()) );
+    if ( ownedByToolSvc ) { break; }
+    // if parent is also a tool, try again
+    tool = dynamic_cast<const IAlgTool*>(tool->parent());
+  }
+  if ( ownedByToolSvc )
   {
     throw GaudiException( "Cannot safely be used with public tools",
                           "Gaudi::Utils::getIDVAlgorithm",
                           StatusCode::FAILURE  );
   }
+  // No, so OK to return the IDVAlgorithm interface
   return getIDVAlgorithm( svc );
 }
 // ============================================================================
