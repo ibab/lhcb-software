@@ -45,10 +45,6 @@ FilterDecays::FilterDecays                               // standard contructor
 // ============================================================================  
 FilterDecays::~FilterDecays () {}                             
 // ============================================================================  
-// intialize the algorithm 
-// ============================================================================  
-StatusCode FilterDecays::initialize ()  { return FilterDesktop::initialize () ; }
-// ============================================================================  
 // finalize the algorithm 
 // ============================================================================  
 StatusCode FilterDecays::finalize  () 

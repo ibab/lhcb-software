@@ -53,8 +53,6 @@ class FilterDecays : public FilterDesktop
   // ==========================================================================
  public:
   // ==========================================================================
-  /// intialize the algorithm 
-  virtual StatusCode initialize () ; 
   /// finalize  the algorithm 
   virtual StatusCode finalize   () ; 
   // ==========================================================================

@@ -34,8 +34,12 @@ class IDistanceCalculator;
  *  @date   2008-10-15
  */
 template <typename BestLogic, typename DistCalcName>
-class GenericParticle2PVRelator : public GaudiTool, virtual public IRelatedPVFinder {
+class GenericParticle2PVRelator : public GaudiTool, 
+                                  virtual public IRelatedPVFinder 
+{
+
 public: 
+
   /// Standard constructor
   GenericParticle2PVRelator( const std::string& type, 
                              const std::string& name,
@@ -52,7 +56,8 @@ public:
   {
     
     StatusCode sc( GaudiTool::initialize() );
-    if (sc.isSuccess()) {
+    if (sc.isSuccess()) 
+    {
       m_distCalculator = tool<IDistanceCalculator>(DistCalcName::value, this);
     }
     return sc;

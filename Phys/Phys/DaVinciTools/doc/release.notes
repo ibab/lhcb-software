@@ -3,6 +3,10 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2012-06-30 - Chris Jones
+ - Make the default Offline versions of the tools returned from the
+   OnOfflineTool tool public
+
 ! 2012-06-29 - Chris Jones
  - Use a public instance of LoKi::Decays in SubstitutePIDTool and FilterDecays
  - Implement a check on the memory usage in DaVinciInit which if exceeded 
@@ -11,6 +15,7 @@
    The release is also done automatically during finalize, so the pools are
    emptied before any finalization tasks that require a lot of memory (such
    as the FSRs) are run.
+ - Remove a check OnOfflineTool that prevents it from being a public tool
 
 ! 2012-06-28 - Chris Jones
  - Pass the map by const reference in SubstitutePIDTool::decodeCode

@@ -1,5 +1,3 @@
-// $Id$
-// Include files
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -18,38 +16,34 @@
 // 2005-06-08 : Patrick KOPPENBURG
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( OnOfflineTool )
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-  OnOfflineTool::OnOfflineTool( const std::string& type,
-                                const std::string& name,
-                                const IInterface* parent )
-    : GaudiTool ( type, name , parent )
+OnOfflineTool::OnOfflineTool( const std::string& type,
+                              const std::string& name,
+                              const IInterface* parent )
+  : GaudiTool ( type, name, parent )
 
-    , m_online(false)
+  , m_online(false)
 
-    , m_onlinePVLocation(LHCb::RecVertexLocation::Velo3D)
-    , m_offlinePVLocation(LHCb::RecVertexLocation::Primary)
+  , m_onlinePVLocation(LHCb::RecVertexLocation::Velo3D)
+  , m_offlinePVLocation(LHCb::RecVertexLocation::Primary)
 
-    , m_offlineDistTool("LoKi::DistanceCalculator")
-    , m_onlineDistTool("LoKi::TrgDistanceCalculator")
+  , m_offlineDistTool("LoKi::DistanceCalculator:PUBLIC")
+  , m_onlineDistTool("LoKi::TrgDistanceCalculator")
 
-    , m_offlineVertexFitter("OfflineVertexFitter" )
-    , m_onlineVertexFitter("LoKi::FastVertexFitter")
+  , m_offlineVertexFitter("OfflineVertexFitter:PUBLIC")
+  , m_onlineVertexFitter("LoKi::FastVertexFitter")
 
-    , m_offlineCombiner("OfflineVertexFitter" )
-    , m_onlineCombiner("LoKi::FastVertexFitter")
+  , m_offlineCombiner("OfflineVertexFitter:PUBLIC")
+  , m_onlineCombiner("LoKi::FastVertexFitter")
 
-    , m_offlinePVRelatorName("GenericParticle2PVRelator__p2PVWithIPChi2_OfflineDistanceCalculatorName_/P2PVWithIPChi2")
-    , m_onlinePVRelatorName("GenericParticle2PVRelator__p2PVWithIPChi2_OnlineDistanceCalculatorName_/OnlineP2PVWithIPChi2")
+  , m_offlinePVRelatorName("GenericParticle2PVRelator__p2PVWithIPChi2_OfflineDistanceCalculatorName_/P2PVWithIPChi2:PUBLIC")
+  , m_onlinePVRelatorName("GenericParticle2PVRelator__p2PVWithIPChi2_OnlineDistanceCalculatorName_/OnlineP2PVWithIPChi2")
 
-    , m_offlineTESTrunk("Phys")
-    , m_onlineTESTrunk("Hlt2")
+  , m_offlineTESTrunk("Phys")
+  , m_onlineTESTrunk("Hlt2")
 {
-
   declareInterface<IOnOffline>(this);
 
   declareProperty( "OfflinePVLocation",    m_offlinePVLocation    );
@@ -88,7 +82,6 @@ DECLARE_TOOL_FACTORY( OnOfflineTool )
 
   declareProperty( "OfflineTrunkOnTES", m_offlineTESTrunk );
   declareProperty( "OnlineTrunkOnTES",  m_onlineTESTrunk  );
-
 }
 
 //=============================================================================
@@ -102,8 +95,8 @@ OnOfflineTool::~OnOfflineTool() {}
 StatusCode OnOfflineTool::initialize()
 {
   const StatusCode sc = GaudiTool::initialize();
-  if (!sc) return sc ;
-
+  if ( sc.isFailure() ) return sc ;
+  
   if ( context() == "HLT" || context() == "Hlt" )
   {
     if (msgLevel(MSG::DEBUG))
@@ -114,13 +107,6 @@ StatusCode OnOfflineTool::initialize()
   {
     Warning( "Unexpected context '" + context() +
              "'. Assuming offline mode, please check !" ).ignore();
-  }
-
-  //check it is not global
-  const IToolSvc* par = dynamic_cast<const IToolSvc*>( this->parent() );
-  if ( 0 != par )
-  {
-    return Error ( "Parent of OnOfflineTool is ToolSvc. OnOfflineTool *must* be private" ) ;
   }
 
   return sc;
@@ -144,6 +130,13 @@ const std::string& OnOfflineTool::vertexFitterType() const
 // ============================================================================
 const std::string& OnOfflineTool::trunkOnTES() const
 { return online() ? m_onlineTESTrunk : m_offlineTESTrunk ; }
+// ============================================================================
+
+// ============================================================================
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( OnOfflineTool )
+// ============================================================================
+
 // ============================================================================
 // The END
 // ============================================================================

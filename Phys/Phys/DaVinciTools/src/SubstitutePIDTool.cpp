@@ -35,7 +35,6 @@ SubstitutePIDTool::SubstitutePIDTool( const std::string& type,
   , m_initialized( false )
 {
   declareInterface<ISubstitutePID>(this);
-  //SubstitutePIDTool* _this = this ;
   declareProperty
     ( "Substitutions" ,
       m_map           ,
@@ -123,19 +122,23 @@ StatusCode SubstitutePIDTool::decodeCode( const SubstitutionMap& newMap )
     if ( !pp )
     { return Error ( "Unable to find ParticleID for '" + item->second + "'" ) ; }
     //
-    if (msgLevel(MSG::DEBUG)) debug() << "* -> Inserting " << tree
-                                      << " in map for PID " <<  pp->particleID() << endmsg ;
+    if (msgLevel(MSG::DEBUG)) 
+      debug() << "* -> Inserting " << tree
+              << " in map for PID " <<  pp->particleID() << endmsg ;
     //
     m_subs.push_back ( Substitution( tree , pp->particleID() ) ) ;
   }
   //
   if ( m_subs.size() != m_map.size() )
   { return Error("Mismatch in decoded substitution container") ; }
-  if (msgLevel(MSG::DEBUG)) {
+  if (msgLevel(MSG::DEBUG)) 
+  {
     debug() << "ISub Size: " << m_subs.size() << " " << m_map.size() << endmsg ;
     for ( Substitutions::iterator isub = m_subs.begin() ;
-          m_subs.end() != isub ; ++isub ) {
-      debug() << "* -> ISub: " << isub -> m_pid << " Size: " << m_subs.size() << endmsg ;
+          m_subs.end() != isub ; ++isub ) 
+    {
+      debug() << "* -> ISub: " << isub -> m_pid 
+              << " Size: " << m_subs.size() << endmsg ;
     }
   }
   //
@@ -148,8 +151,9 @@ StatusCode SubstitutePIDTool::decodeCode( const SubstitutionMap& newMap )
 // ============================================================================
 // loop over particles
 // ============================================================================
-StatusCode SubstitutePIDTool::substitute(const LHCb::Particle::ConstVector& input,
-                                         LHCb::Particle::ConstVector& output)
+StatusCode 
+SubstitutePIDTool::substitute( const LHCb::Particle::ConstVector& input,
+                               LHCb::Particle::ConstVector& output )
 {
   //
   // substitute
