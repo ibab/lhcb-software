@@ -14,10 +14,23 @@
  */
 class DVAlgorithm : public DaVinciTupleAlgorithm
 {
+
 public:
+
   DVAlgorithm( const std::string& name,
                ISvcLocator* pSvcLocator )
     : DaVinciTupleAlgorithm ( name, pSvcLocator ) { }
+  
+  virtual StatusCode initialize ()
+  {
+    const StatusCode sc = DaVinciTupleAlgorithm::initialize();
+    warning() << "'" << System::typeinfoName(typeid(*this)) << "'"
+              << " is using the depreciated DVAlgorithm base class. "
+              << "Please move to DaVinciAlgorithm, DaVinciHistoAlgorithm or DaVinciTupleAlgorithm."
+              << endmsg;
+    return sc;
+  }
+
 };
 
 #endif // DAVINCIKERNEL_DVALGORITHM_H

@@ -4,6 +4,9 @@
 ! Responsible : C.R. Jones
 !============================================================================
 
+! 2012-07-01 - Chris Jones
+ - Add a depreciation warning to DVAlgorithm::initialize()
+
 ! 2012-06-30 - Chris Jones
  - Make the default versions of the follow tools public in the DV common 
    base class :-
