@@ -1,8 +1,8 @@
 // $Id: TisTosParticleTagger.cpp,v 1.2 2010-08-09 14:17:47 tskwarni Exp $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 
 // local
 #include "TisTosParticleTagger.h"
@@ -27,28 +27,28 @@ using namespace LHCb;
 //=============================================================================
 TisTosParticleTagger::TisTosParticleTagger( const std::string& name,
                                             ISvcLocator* pSvcLocator)
-  : DVAlgorithm ( name , pSvcLocator )
+  : DaVinciAlgorithm ( name , pSvcLocator )
 {
   declareProperty("TisTosSpecs",m_tistosSpecs);
   declareProperty("PassOnAll",m_passOnAll=false);
   declareProperty("NoRegex",m_noRegex=false);
-  declareProperty("TriggerTisTosName",m_TriggerTisTosName="");  
+  declareProperty("TriggerTisTosName",m_TriggerTisTosName="");
 
   declareProperty("HltDecReportsInputLocation", m_decReportsLocation = "" );
   declareProperty("HltSelReportsInputLocation", m_selReportsLocation = "" );
 
   // pass these to the TisTos tool
-  declareProperty("ProjectTracksToCalo", m_projectTracksToCalo=true );  
+  declareProperty("ProjectTracksToCalo", m_projectTracksToCalo=true );
   declareProperty("CaloClustForCharged", m_caloClustForCharged=true );
   declareProperty("CaloClustForNeutral", m_caloClustForNeutral=true );
-   
+
   declareProperty("CompositeTPSviaPartialTOSonly", m_compositeTPSviaPartialTOSonly=false );
 
   declareProperty("NoHitTypes", m_noHitTypes = false);
   // if empty use defaults (vector of pairs <kHitType,value>) type 0=Velo,1=T,2=TT,3=Mu,4=Ecal,5=Hcal
   declareProperty("TOSFrac",m_TOSFrac);
   declareProperty("TISFrac",m_TISFrac);
-  
+
   // this will affect execution only in non-zero tag-keys are used
   declareProperty("SatisfiedOnFirstSpec",m_SatisfiedOnFirstSpec =false);
 
@@ -56,24 +56,25 @@ TisTosParticleTagger::TisTosParticleTagger( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-TisTosParticleTagger::~TisTosParticleTagger() {} 
+TisTosParticleTagger::~TisTosParticleTagger() {}
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode TisTosParticleTagger::initialize() {
-  StatusCode sc = DVAlgorithm::initialize(); 
+StatusCode TisTosParticleTagger::initialize() 
+{
+  const StatusCode sc = DaVinciAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
   if( m_TriggerTisTosName != "" ){
-    // Specific TriggerTisTos tool 
+    // Specific TriggerTisTos tool
     verbose() << " Allocating TriggerTisTos tool specified by user=" << m_TriggerTisTosName << endmsg;
-    m_tistostool = tool<ITriggerTisTos>(  m_TriggerTisTosName, m_TriggerTisTosName+"Tool" ,this); 
-    if( m_TriggerTisTosName.find("TES") == 0 ){      
+    m_tistostool = tool<ITriggerTisTos>(  m_TriggerTisTosName, m_TriggerTisTosName+"Tool" ,this);
+    if( m_TriggerTisTosName.find("TES") == 0 ){
       m_checkDecReport=false;
-      m_checkSelReport=false;  
+      m_checkSelReport=false;
     } else {
       m_checkDecReport=true;
       if( m_TriggerTisTosName.find("L0") == 0 ){
@@ -91,13 +92,13 @@ StatusCode TisTosParticleTagger::initialize() {
       m_tistostool = tool<ITriggerTisTos>(  "TriggerTisTosInHlt" , "TriggerTisTosInHltTool" ,this);
       m_checkDecReport=true;
       m_decReportLoc=HltDecReportsLocation::Default;
-      m_checkSelReport=false;  
+      m_checkSelReport=false;
     } else {
       verbose() << " Allocating TriggerTisTos tool " << endmsg;
       m_tistostool = tool<ITriggerTisTos>(  "TriggerTisTos" , "TriggerTisTosTool" ,this);
       m_checkDecReport=true;
       m_decReportLoc=HltDecReportsLocation::Default;
-      m_checkSelReport=true;  
+      m_checkSelReport=true;
       m_selReportLoc=HltSelReportsLocation::Default;
     }
   } else {
@@ -105,10 +106,10 @@ StatusCode TisTosParticleTagger::initialize() {
     m_tistostool = tool<ITriggerTisTos>(  "TriggerTisTos" , "TriggerTisTosTool" ,this);
     m_checkDecReport=true;
     m_decReportLoc=HltDecReportsLocation::Default;
-    m_checkSelReport=true;  
+    m_checkSelReport=true;
     m_selReportLoc=HltSelReportsLocation::Default;
   }
-  if( !m_tistostool )return Error("Could not allocate TriggerTisTos tool", StatusCode::FAILURE);  
+  if( !m_tistostool )return Error("Could not allocate TriggerTisTos tool", StatusCode::FAILURE);
 
 
   if( m_decReportsLocation != "" ){
@@ -127,37 +128,41 @@ StatusCode TisTosParticleTagger::initialize() {
       m_selReportLoc=m_selReportsLocation;
     }
   }
-  
 
-  for( unsigned int iTriggerStage = (unsigned int)(defaultTriggerStage);iTriggerStage<NTriggerStages;++iTriggerStage ){    
+
+  for( unsigned int iTriggerStage = (unsigned int)(defaultTriggerStage);
+       iTriggerStage < NTriggerStages; ++iTriggerStage )
+  {
     m_tusSpecs[iTriggerStage].clear();
     m_tosSpecs[iTriggerStage].clear();
-    m_tisSpecs[iTriggerStage].clear();  
+    m_tisSpecs[iTriggerStage].clear();
   }
-  
+
   // pass trigger stage on first satisfied trigger spec
   m_fast = true;
-  
+
 
   if( m_tistosSpecs.empty() ){
     error() <<
-    "TisTosSpecs not set - example: = { 'L0.*Decision%TIS':12345 , 'Hlt1.*Hadron.*Decision%TUS':12346, 'Hlt2.*Decision%TOS':12347 }"
+      "TisTosSpecs not set - example: = { 'L0.*Decision%TIS':12345 , 'Hlt1.*Hadron.*Decision%TUS':12346, 'Hlt2.*Decision%TOS':12347 }"
             << endmsg;
     return StatusCode::FAILURE;
   } else {
-    for ( std::map<std::string,int>::const_iterator entry = m_tistosSpecs.begin(); entry != m_tistosSpecs.end(); ++entry ) {
+    for ( std::map<std::string,int>::const_iterator entry = m_tistosSpecs.begin(); 
+          entry != m_tistosSpecs.end(); ++entry )
+    {
       const std::string& spec = entry->first  ;
       if( entry->second != 0 ){
         Warning( "Non-zero trigger spec tag-key is used. This is permitted only in private analysis."
-                     ,StatusCode::SUCCESS, 1 ).setChecked();       
+                 ,StatusCode::SUCCESS, 1 ).setChecked();
         if( !m_SatisfiedOnFirstSpec ){
           m_fast=false;
         } else {
           Warning(" All specs will always be evaluated unless you set SatisfiedOnFirstSpec=True."
-                  ,StatusCode::SUCCESS, 1 ).setChecked();       
-        }        
-      }      
-      std::size_t i = spec.find("%");      
+                  ,StatusCode::SUCCESS, 1 ).setChecked();
+        }
+      }
+      std::size_t i = spec.find("%");
       if( i == std::string::npos )
       {
         error() << " TisTosSpec contains no InputTrigger-spec separator" << spec << endmsg;
@@ -165,16 +170,16 @@ StatusCode TisTosParticleTagger::initialize() {
       } else {
         std::string triggerInput = spec.substr(0,i);
         // unrecognizable trigger stage defaults to HLT1 (also used for TES selections)
-        unsigned int iTriggerStage = (unsigned int)(defaultTriggerStage);        
+        unsigned int iTriggerStage = (unsigned int)(defaultTriggerStage);
         if( triggerInput.find("Hlt2")==0 ){
           iTriggerStage = (unsigned int)(HLT2);
         } else if( triggerInput.find("L0")==0 ){
-          iTriggerStage = (unsigned int)(L0);         
-        }   
+          iTriggerStage = (unsigned int)(L0);
+        }
         if( m_noRegex ){
           if( triggerInput.find(".*") != std::string::npos ){
             m_noRegex = false;
-            Warning( "Regex characters found in trigger specs. NoRegex=True cannot be used; reset to False" 
+            Warning( "Regex characters found in trigger specs. NoRegex=True cannot be used; reset to False"
                      ,StatusCode::SUCCESS, 10 ).setChecked();
           }
         }
@@ -192,11 +197,13 @@ StatusCode TisTosParticleTagger::initialize() {
       }
     }
   }
-  for( unsigned int iTriggerStage = (unsigned int)(defaultTriggerStage);iTriggerStage<NTriggerStages;++iTriggerStage ){    
-    m_NoSpecs[iTriggerStage] = 
+  for( unsigned int iTriggerStage = (unsigned int)(defaultTriggerStage);
+       iTriggerStage<NTriggerStages; ++iTriggerStage )
+  {
+    m_NoSpecs[iTriggerStage] =
       m_tusSpecs[iTriggerStage].empty() && m_tosSpecs[iTriggerStage].empty() && m_tisSpecs[iTriggerStage].empty();
   }
-  if( m_NoSpecs[HLT1] && m_NoSpecs[HLT2] && m_NoSpecs[L0] ){    
+  if( m_NoSpecs[HLT1] && m_NoSpecs[HLT2] && m_NoSpecs[L0] ){
     error() << "No TisTos specs definied " << endmsg;
     return StatusCode::FAILURE;
   }
@@ -204,22 +211,22 @@ StatusCode TisTosParticleTagger::initialize() {
 
   if( !m_NoSpecs[L0] ) {
     m_tistostoolL0 = tool<ITriggerTisTos>(  "L0TriggerTisTos" , "L0TriggerTisTosTool" ,this);
-    if( !m_tistostoolL0 )return Error("Could not allocate L0TriggerTisTos tool", StatusCode::FAILURE);  
+    if( !m_tistostoolL0 )return Error("Could not allocate L0TriggerTisTos tool", StatusCode::FAILURE);
   } else {
     m_tistostoolL0 = 0;
   }
   m_tistostoolStage[HLT1] = m_tistostool;
   m_tistostoolStage[HLT2] = m_tistostool;
   m_tistostoolStage[L0]   = m_tistostoolL0;
-  
 
-  // configure TisTos tool  
+
+  // configure TisTos tool
   m_tistostool->setProjectTracksToCalo(m_projectTracksToCalo);
   m_tistostool->setCaloClustForCharged(m_caloClustForCharged);
   m_tistostool->setCaloClustForNeutral(m_caloClustForNeutral);
   m_tistostool->setCompositeTPSviaPartialTOSonly(m_compositeTPSviaPartialTOSonly);
   m_tistostool->setNoHitTypes(m_noHitTypes);
-  if( m_tistostoolL0 ){  m_tistostoolL0->setNoHitTypes(m_noHitTypes);  }  
+  if( m_tistostoolL0 ){  m_tistostoolL0->setNoHitTypes(m_noHitTypes);  }
   for( std::map<int,double>::const_iterator entry=m_TOSFrac.begin();entry!=m_TOSFrac.end();++entry){
     m_tistostool->setTOSFrac( entry->first, entry->second );
     if( m_tistostoolL0 ){  m_tistostoolL0->setTOSFrac( entry->first, entry->second ); }
@@ -232,11 +239,12 @@ StatusCode TisTosParticleTagger::initialize() {
   if ( msgLevel(MSG::DEBUG) ) {
     if( m_noRegex ){
       debug() << "No regex expressions in trigger names allowed - regex patterns will be ignored " << endmsg;
-    }    
+    }
     if( m_fast ){
       debug() << "Pass a trigger stage on first satisfied trigger spec - do not evaluate others." << endmsg;
-    }    
-    for( unsigned int iTriggerStage = (unsigned int)(defaultTriggerStage);iTriggerStage<NTriggerStages;++iTriggerStage ){    
+    }
+    for( unsigned int iTriggerStage = (unsigned int)(defaultTriggerStage);
+         iTriggerStage<NTriggerStages;++iTriggerStage ){
       if( iTriggerStage==HLT1 ){
         debug() << " =========== HLT1 or undefined trigger stage ============== " << endmsg;
       } else if( iTriggerStage==HLT2 ){
@@ -244,25 +252,25 @@ StatusCode TisTosParticleTagger::initialize() {
       } else if( iTriggerStage==L0 ){
         debug() << " =========== L0 ============== " << endmsg;
       }
-      debug() << " Registered TUS conditions size=" << m_tusSpecs[iTriggerStage].size() ;    
+      debug() << " Registered TUS conditions size=" << m_tusSpecs[iTriggerStage].size() ;
       for ( std::map<std::string,int>::const_iterator entry=m_tusSpecs[iTriggerStage].begin();
             entry!= m_tusSpecs[iTriggerStage].end();++entry){
         debug() << " , " << entry->first << " " << entry->second ;
       }
       debug() << endmsg;
-      debug() << " Registered TOS conditions size=" << m_tosSpecs[iTriggerStage].size() ;    
+      debug() << " Registered TOS conditions size=" << m_tosSpecs[iTriggerStage].size() ;
       for ( std::map<std::string,int>::const_iterator entry=m_tosSpecs[iTriggerStage].begin();
             entry!= m_tosSpecs[iTriggerStage].end();++entry){
         debug() << " , " << entry->first << " " << entry->second ;
       }
       debug() << endmsg;
-      debug() << " Registered TIS conditions size=" << m_tisSpecs[iTriggerStage].size() ;    
+      debug() << " Registered TIS conditions size=" << m_tisSpecs[iTriggerStage].size() ;
       for ( std::map<std::string,int>::const_iterator entry=m_tisSpecs[iTriggerStage].begin();
             entry!= m_tisSpecs[iTriggerStage].end();++entry){
         debug() << " , " << entry->first << " " << entry->second ;
-      }     
+      }
       debug() << endmsg;
-    }    
+    }
     if( m_passOnAll ){
       debug() << " always setFilterPassed(true); pass all input particles to output " << endmsg;
     } else {
@@ -270,20 +278,18 @@ StatusCode TisTosParticleTagger::initialize() {
       debug() << " setFilterPassed(true) only if at least one particle saved to output. " << endmsg;
     }
     if( m_checkDecReport ) debug() << " We will check for presence of HltDecReports at " + m_decReportLoc << endmsg;
-    if( m_checkSelReport ) debug() << " We will check for presence of HltSelReports at " + m_selReportLoc << endmsg;    
+    if( m_checkSelReport ) debug() << " We will check for presence of HltSelReports at " + m_selReportLoc << endmsg;
   }
-  
 
-  return StatusCode::SUCCESS;
-
+  return sc;
 }
 
 
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode TisTosParticleTagger::execute() {
-
+StatusCode TisTosParticleTagger::execute() 
+{
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   //Get the particles from the local storage
@@ -293,34 +299,36 @@ StatusCode TisTosParticleTagger::execute() {
   // Useful for MC: check if necessary reports exists
   if( m_checkDecReport ){
     if( !exist<LHCb::HltDecReports>(m_decReportLoc) ){
-      setFilterPassed(m_passOnAll);  // Mandatory. Set to true if event is accepted. 
-      if ( msgLevel(MSG::DEBUG) ) debug() << " No HltDecReport at " << m_decReportLoc << endmsg;      
+      setFilterPassed(m_passOnAll);  // Mandatory. Set to true if event is accepted.
+      if ( msgLevel(MSG::DEBUG) ) debug() << " No HltDecReport at " << m_decReportLoc << endmsg;
       return StatusCode::SUCCESS;
     }
   }
   if( m_checkSelReport ){
     if( !exist<LHCb::HltSelReports>(m_selReportLoc) ){
-      setFilterPassed(m_passOnAll);  // Mandatory. Set to true if event is accepted. 
-      if ( msgLevel(MSG::DEBUG) ) debug() << " No HltSelReport at " << m_selReportLoc << endmsg;      
+      setFilterPassed(m_passOnAll);  // Mandatory. Set to true if event is accepted.
+      if ( msgLevel(MSG::DEBUG) ) debug() << " No HltSelReport at " << m_selReportLoc << endmsg;
       return StatusCode::SUCCESS;
     }
   }
 
 
   std::vector<LHCb::Particle> outparts;
- 
+
   bool passed(m_passOnAll);
 
-  bool firstL0(true); 
-  bool skipL0(false);  
+  bool firstL0(true);
+  bool skipL0(false);
 
-  for (LHCb::Particle::ConstVector::const_iterator particle = particles.begin(); particle != particles.end(); ++particle) {
+  for (LHCb::Particle::ConstVector::const_iterator particle = particles.begin();
+       particle != particles.end(); ++particle) 
+  {
     if( !particleOK(*particle) ){
-      if ( msgLevel(MSG::DEBUG) ) debug() << " Particle failed integrity check key = " << (*particle)->key() << endmsg;      
-      continue;          
-    }    
+      if ( msgLevel(MSG::DEBUG) ) debug() << " Particle failed integrity check key = " << (*particle)->key() << endmsg;
+      continue;
+    }
 
-    Particle* candi = const_cast<Particle*>(*particle);    
+    Particle* candi = const_cast<Particle*>(*particle);
 
     // This is a slow part of TisTos tool - do it only once
     m_tistostool->setOfflineInput(*candi);
@@ -328,11 +336,12 @@ StatusCode TisTosParticleTagger::execute() {
     if( m_tistostoolL0 ){
       m_tistostoolL0->setOfflineInput( m_tistostool->offlineLHCbIDs() );
     }
-    
-    bool acceptStage[NTriggerStages] = { false, false, false };
-    
 
-    for(unsigned int iTriggerStage = (unsigned int)(defaultTriggerStage); iTriggerStage < NTriggerStages; ++iTriggerStage){
+    bool acceptStage[NTriggerStages] = { false, false, false };
+
+
+    for(unsigned int iTriggerStage = (unsigned int)(defaultTriggerStage);
+        iTriggerStage < NTriggerStages; ++iTriggerStage){
       // if stage no present in specs it will be set to passed
       acceptStage[iTriggerStage] = m_NoSpecs[iTriggerStage];
 
@@ -344,116 +353,119 @@ StatusCode TisTosParticleTagger::execute() {
         } else if( iTriggerStage==L0 ){
           debug() << " =========== L0 ================ " << endmsg;
         }
-        if( m_NoSpecs[iTriggerStage] ) debug() << " No trigger specs " << endmsg;        
+        if( m_NoSpecs[iTriggerStage] ) debug() << " No trigger specs " << endmsg;
       }
 
       if( m_fast && acceptStage[iTriggerStage] )continue;
 
       if( iTriggerStage == L0 ){
-        if( skipL0 )continue;        
+        if( skipL0 )continue;
         if( firstL0 ){
           firstL0 = false;
           // Useful for MC: check if necessary reports exists
           if( !exist<LHCb::HltDecReports>("HltLikeL0/DecReports") ){
-            if ( msgLevel(MSG::DEBUG) ) debug() << " No HltDecReport at " << "HltLikeL0/DecReports" << endmsg;      
+            if ( msgLevel(MSG::DEBUG) ) debug() << " No HltDecReport at " << "HltLikeL0/DecReports" << endmsg;
             skipL0 = true;
-            continue;            
+            continue;
           }
           if( !exist<LHCb::HltSelReports>("HltLikeL0/SelReports") ){
-            if ( msgLevel(MSG::DEBUG) ) debug() << " No HltSelReport at " << "HltLikeL0/SelReports" << endmsg;      
+            if ( msgLevel(MSG::DEBUG) ) debug() << " No HltSelReport at " << "HltLikeL0/SelReports" << endmsg;
             skipL0 = true;
-            continue;            
+            continue;
           }
         }
       }
 
-      for ( std::map<std::string,int>::const_iterator entry = m_tusSpecs[iTriggerStage].begin(); 
+      for ( std::map<std::string,int>::const_iterator entry = m_tusSpecs[iTriggerStage].begin();
             entry != m_tusSpecs[iTriggerStage].end(); ++entry ) {
         const std::string& triggerInput = entry->first  ;
-        const int          index    = entry->second ;      
-        bool acc;      
+        const int          index    = entry->second ;
+        bool acc;
         if( m_noRegex) {
           acc = m_tistostoolStage[iTriggerStage]->tusSelection( triggerInput );
         } else {
           m_tistostoolStage[iTriggerStage]->setTriggerInput(triggerInput);
           acc=m_tistostoolStage[iTriggerStage]->tusTrigger();
         }
-        if ( msgLevel(MSG::DEBUG) ) debug() << triggerInput + " TUS " << acc << endmsg;      
+        if ( msgLevel(MSG::DEBUG) ) debug() << triggerInput + " TUS " << acc << endmsg;
         if( index )if( !storeTag(candi,index,acc) ){
           std::ostringstream mess;
           mess << triggerInput + " TUS index=" << index << " used for other types or illegal " << endmsg;
           Warning( mess.str(),StatusCode::SUCCESS, 10 ).setChecked();
         }
         if( acc ){
-          acceptStage[iTriggerStage] =true; 
-          if( m_fast )break;          
+          acceptStage[iTriggerStage] =true;
+          if( m_fast )break;
         }
       }
 
-     if( m_fast && acceptStage[iTriggerStage] )continue;
-     for ( std::map<std::string,int>::const_iterator entry = m_tosSpecs[iTriggerStage].begin(); 
-           entry != m_tosSpecs[iTriggerStage].end(); ++entry ) {
-       const std::string& triggerInput = entry->first  ;
-       const int          index    = entry->second ; 
-       bool acc;      
-       if( m_noRegex) {
-         acc = m_tistostoolStage[iTriggerStage]->tosSelection( triggerInput );
-       } else {
-         m_tistostoolStage[iTriggerStage]->setTriggerInput(triggerInput);
-         acc=m_tistostoolStage[iTriggerStage]->tosTrigger();
-       }
-       if ( msgLevel(MSG::DEBUG) ) debug() << triggerInput + " TOS " << acc << endmsg;      
-       if( index )if( !storeTag(candi,index,acc) ){
-         std::ostringstream mess;
-         mess << triggerInput + " TOS index=" << index << " used for other types or illegal " << endmsg;
-         Warning( mess.str(),StatusCode::SUCCESS, 10 ).setChecked();
-       }
-       if( acc ){
-         acceptStage[iTriggerStage] =true;         
-         if( m_fast )break;   
-       }
-     }
+      if( m_fast && acceptStage[iTriggerStage] )continue;
+      for ( std::map<std::string,int>::const_iterator entry = m_tosSpecs[iTriggerStage].begin();
+            entry != m_tosSpecs[iTriggerStage].end(); ++entry ) {
+        const std::string& triggerInput = entry->first  ;
+        const int          index    = entry->second ;
+        bool acc;
+        if( m_noRegex) {
+          acc = m_tistostoolStage[iTriggerStage]->tosSelection( triggerInput );
+        } else {
+          m_tistostoolStage[iTriggerStage]->setTriggerInput(triggerInput);
+          acc=m_tistostoolStage[iTriggerStage]->tosTrigger();
+        }
+        if ( msgLevel(MSG::DEBUG) ) debug() << triggerInput + " TOS " << acc << endmsg;
+        if( index )if( !storeTag(candi,index,acc) ){
+          std::ostringstream mess;
+          mess << triggerInput + " TOS index=" << index << " used for other types or illegal " << endmsg;
+          Warning( mess.str(),StatusCode::SUCCESS, 10 ).setChecked();
+        }
+        if( acc ){
+          acceptStage[iTriggerStage] =true;
+          if( m_fast )break;
+        }
+      }
 
-     if( m_fast && acceptStage[iTriggerStage] )continue;
-     for ( std::map<std::string,int>::const_iterator entry = m_tisSpecs[iTriggerStage].begin(); 
-           entry != m_tisSpecs[iTriggerStage].end(); ++entry ) {
-       const std::string& triggerInput = entry->first  ;
-       const int          index    = entry->second ; 
-       bool acc;      
-       if( m_noRegex) {
-         acc = m_tistostoolStage[iTriggerStage]->tisSelection( triggerInput );
-       } else {
-         m_tistostoolStage[iTriggerStage]->setTriggerInput(triggerInput);
-         acc=m_tistostoolStage[iTriggerStage]->tisTrigger();
-       }
-       if ( msgLevel(MSG::DEBUG) ) debug() << triggerInput + " TIS " << acc << endmsg;      
-       if( index )if( !storeTag(candi,index,acc) ){
-         std::ostringstream mess;
-         mess << triggerInput + " TIS index=" << index << " used for other types or illegal " << endmsg;
-         Warning( mess.str(),StatusCode::SUCCESS, 10 ).setChecked();
-       }
-       if( acc ){
-         acceptStage[iTriggerStage] =true;         
-         if( m_fast )break;  
-       }
-     }
+      if( m_fast && acceptStage[iTriggerStage] )continue;
+      for ( std::map<std::string,int>::const_iterator entry = m_tisSpecs[iTriggerStage].begin();
+            entry != m_tisSpecs[iTriggerStage].end(); ++entry ) {
+        const std::string& triggerInput = entry->first  ;
+        const int          index    = entry->second ;
+        bool acc;
+        if( m_noRegex) {
+          acc = m_tistostoolStage[iTriggerStage]->tisSelection( triggerInput );
+        } else {
+          m_tistostoolStage[iTriggerStage]->setTriggerInput(triggerInput);
+          acc=m_tistostoolStage[iTriggerStage]->tisTrigger();
+        }
+        if ( msgLevel(MSG::DEBUG) ) debug() << triggerInput + " TIS " << acc << endmsg;
+        if( index )if( !storeTag(candi,index,acc) ){
+          std::ostringstream mess;
+          mess << triggerInput + " TIS index=" << index << " used for other types or illegal " << endmsg;
+          Warning( mess.str(),StatusCode::SUCCESS, 10 ).setChecked();
+        }
+        if( acc ){
+          acceptStage[iTriggerStage] =true;
+          if( m_fast )break;
+        }
+      }
 
-     if( m_fast ){
-       // advance to next stage only if satisifed this one
-       if( acceptStage[iTriggerStage] )continue;
-       // otherwise stop right away
-       break;
-     }
+      if( m_fast ){
+        // advance to next stage only if satisifed this one
+        if( acceptStage[iTriggerStage] )continue;
+        // otherwise stop right away
+        break;
+      }
     }
 
-    if ( msgLevel(MSG::DEBUG) ){
-      for(unsigned int iTriggerStage = (unsigned int)(defaultTriggerStage); iTriggerStage < NTriggerStages; ++iTriggerStage){
+    if ( msgLevel(MSG::DEBUG) )
+    {
+      for(unsigned int iTriggerStage = (unsigned int)(defaultTriggerStage); 
+          iTriggerStage < NTriggerStages; ++iTriggerStage)
+      {
         if( iTriggerStage==HLT1 ){
           debug() << " ==== HLT1 or undefined ======== ";
         } else if( iTriggerStage==HLT2 ){
           debug() << " =========== HLT2 ============== ";
         } else if( iTriggerStage==L0 ){
-          debug() << " =========== L0 ================ ";          
+          debug() << " =========== L0 ================ ";
         }
         if( m_NoSpecs[iTriggerStage] ){
           debug() << " No Specs " << endmsg;
@@ -465,83 +477,73 @@ StatusCode TisTosParticleTagger::execute() {
       }
     }
 
-    bool accept(false);    
+    bool accept(false);
     if( m_passOnAll ){
       accept=true;
     } else {
       accept = acceptStage[HLT1] && acceptStage[HLT2] && acceptStage[L0];
     }
-    
+
     if( accept  ){
       outparts.push_back(*candi);
-      passed = true;      
-      if ( msgLevel(MSG::DEBUG) ) debug() << " Particle saved  key= " << candi->key() << endmsg;      
-    }     
+      passed = true;
+      if ( msgLevel(MSG::DEBUG) ) debug() << " Particle saved  key= " << candi->key() << endmsg;
+    }
   }
 
-  for( std::vector<LHCb::Particle>::iterator i = outparts.begin(); i != outparts.end(); i++ ) this->markTree( &(*i) );
-   
-  if ( msgLevel(MSG::DEBUG) ) debug() << " Filter passed = " << passed << endmsg;      
-  setFilterPassed(passed);  // Mandatory. Set to true if event is accepted. 
+  for( std::vector<LHCb::Particle>::iterator i = outparts.begin(); 
+       i != outparts.end(); ++i ) { this->markTree( &(*i) ); }
+
+  if ( msgLevel(MSG::DEBUG) ) debug() << " Filter passed = " << passed << endmsg;
+  setFilterPassed(passed);  // Mandatory. Set to true if event is accepted.
 
   return StatusCode::SUCCESS;
 }
 
 
-bool TisTosParticleTagger::particleOK(const Particle* po) 
+bool TisTosParticleTagger::particleOK(const Particle* po)
 {
-   if( !po )return false;
-   const Particle & p = *po;   
-   //if( !(p.endVertex()) )return false;
-   const SmartRefVector<Particle> daughters = p.daughters();
-   if( daughters.size() ){
-     for( SmartRefVector<Particle>::const_iterator pp=daughters.begin(); pp!=daughters.end(); ++pp){
-       if( !(pp->target()) )return false;
-       const Particle* ppp= pp->target();
-       if( !ppp )return false;
-       if( !particleOK(ppp) )return false;
-     }
-   } else {
-     if( !(p.proto()) )return false;
-   }
-   return true;   
-   
+  if( !po )return false;
+  const Particle & p = *po;
+  //if( !(p.endVertex()) )return false;
+  const SmartRefVector<Particle>& daughters = p.daughters();
+  if ( !daughters.empty() )
+  {
+    for( SmartRefVector<Particle>::const_iterator pp=daughters.begin();
+         pp != daughters.end(); ++pp )
+    {
+      if( !(pp->target()) )return false;
+      const Particle* ppp= pp->target();
+      if( !ppp )return false;
+      if( !particleOK(ppp) )return false;
+    }
+  } else {
+    if( !(p.proto()) )return false;
+  }
+  return true;
 }
 
-bool TisTosParticleTagger::storeTag(Particle* po, int index,bool passedCondition) 
+bool TisTosParticleTagger::storeTag(Particle* po, int index,bool passedCondition)
 {
-   if( !po )return false;
-   double value = (passedCondition ? 1.0: 0.0);
-   double svalue = po->info(index,-1.0);   
-   if( svalue == -1.0 ){
-     return po->addInfo(index,value);
-   } else if( passedCondition ){
-     if( svalue == 0.0 ){
-       po->eraseInfo(index);
-       return po->addInfo(index,value);
-     } else if( svalue == value ){
-       return true;
-     } else {
-       return false;
-     }
-   } else if(  svalue == value ){
-       return true;
-     } else {
-       return false;
-   }
-}
-
-
-
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode TisTosParticleTagger::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return DVAlgorithm::finalize();
+  if( !po )return false;
+  double value = (passedCondition ? 1.0: 0.0);
+  double svalue = po->info(index,-1.0);
+  if( svalue == -1.0 ){
+    return po->addInfo(index,value);
+  } else if( passedCondition ){
+    if( svalue == 0.0 ){
+      po->eraseInfo(index);
+      return po->addInfo(index,value);
+    } else if( svalue == value ){
+      return true;
+    } else {
+      return false;
+    }
+  } else if(  svalue == value ){
+    return true;
+  } else {
+    return false;
+  }
 }
 
 //=============================================================================

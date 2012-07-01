@@ -3,6 +3,10 @@
 ! Purpose     : TisTosTobbing of the trigger 
 ! =============================================================================
 
+! 2012-07-01 - Chris Jones
+ - Use DaVinciAlgorithm instead of DVAlgorithm in TisTosParticleTagger, to
+   reduce memory footprint.
+
 ! 2012-06-28 - Chris Jones
  - Make the Track2Calo tool loaded by ParticleTisTos public, to reduce the number
    of identical private tools loaded by the stripping.
