@@ -92,7 +92,7 @@ LoKi::Algo* LoKi::Algo::setCurrentAlgo ( LoKi::Algo* value )
 LoKi::Algo::Algo 
 ( const std::string& name , 
   ISvcLocator*       pSvc ) 
-  : DVAlgorithm ( name , pSvc )
+  : DaVinciTupleAlgorithm ( name , pSvc )
 // local storage of selected particles 
   , m_selected  ( ) 
 // local storage of selected paricles 
@@ -156,7 +156,7 @@ LoKi::Algo::select
 } 
 // ============================================================================
 /* 'Select' the vertices to be used in local storage
- *  - Vertices are selected from DVAlgorithm local storage.
+ *  - Vertices are selected from DaVinciTupleAlgorithm local storage.
  *  @param name name/tag assigned to the selected vertices
  *  @param cut  cut to be applied
  *  @return selected range of vertices
@@ -712,7 +712,7 @@ StatusCode LoKi::Algo::clear()
 // ============================================================================
 StatusCode LoKi::Algo::initialize () 
 {
-  StatusCode sc = DVAlgorithm::initialize() ;
+  const StatusCode sc = DaVinciTupleAlgorithm::initialize() ;
   if ( sc.isFailure() ) { return sc ; }
   /// locate LoKi service 
   svc<LoKi::ILoKiSvc>( "LoKiSvc" ) ;
@@ -723,7 +723,7 @@ StatusCode LoKi::Algo::initialize ()
     m_reporters[""] = rep ;
   }
   //
-  return StatusCode::SUCCESS ;
+  return sc ;
 } 
 // ============================================================================
 // make the execution of the algorithm 
@@ -734,7 +734,7 @@ StatusCode LoKi::Algo::execute ()
   Lock lock ( this ) ;
   // reset the filter indicator  
   setFilterPassed ( false );
-  // DONE in DVAlgorithm::sysExecute:
+  // DONE in DaVinciTupleAlgorithm::sysExecute:
   // desktop ()->getEventInput();
   // clear all LoKi storages 
   clear().ignore() ;
@@ -770,7 +770,7 @@ StatusCode LoKi::Algo::finalize ()
   //
   m_decay.release() ;
   //
-  return DVAlgorithm::finalize () ;
+  return DaVinciTupleAlgorithm::finalize () ;
 }
 // ============================================================================
 // get the helper "geometry" object

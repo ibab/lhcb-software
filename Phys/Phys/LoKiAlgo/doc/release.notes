@@ -5,6 +5,9 @@
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
 
+! 2012-07-01 - Chris Jones
+ - Replace DVAlgorithm with DaVinciTupleAlgorithm
+
 !========================= LoKiAlgo v9r7 2012-06-28 =========================
 
 ! 2012-06-16 - Vanya Belyaev

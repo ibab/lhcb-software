@@ -19,7 +19,7 @@
 // ============================================================================
 // DaVinciKernel
 // ============================================================================
-#include "Kernel/DVAlgorithm.h"
+#include "Kernel/DaVinciTupleAlgorithm.h"
 // ============================================================================
 // LoKiCore 
 // ============================================================================
@@ -68,11 +68,11 @@ namespace LoKi
   // ==========================================================================
   /** @class Algo LoKi/Algo.h
    *  The basic "working horse" of the whole LoKi project
-   *  @see DVAlgorithm
+   *  @see DaVinciTupleAlgorithm
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2006-03-14
    */
-  class GAUDI_API Algo : public DVAlgorithm
+  class GAUDI_API Algo : public DaVinciTupleAlgorithm
   {
     // ========================================================================
   public:    
