@@ -8,7 +8,6 @@
 #include <Event/Track.h>
 #include "Kernel/IPVReFitter.h"
 #include "Kernel/ILifetimeFitter.h"
-#include "Kernel/IOnOffline.h"
 #include "TrackInterfaces/IPVOfflineTool.h"
 //
 #include "Kernel/DaVinciStringUtils.h"
@@ -29,13 +28,11 @@ PVReFitterAlg::PVReFitterAlg( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator ),
     m_pvOfflineTool(0),
     m_pvReFitter(0),
-    m_onOfflineTool(0),
     m_pvOfflinetoolType("PVOfflineTool"),
     m_pvReFitterType("AdaptivePVReFitter"),
     m_useIPVOfflineTool(false),
     m_useIPVReFitter(true),
     m_particleInputLocations(),
-    m_PVInputLocation(""),
     m_particle2VertexRelationsOutputLocation(""),
     m_vertexOutputLocation(""),
     m_outputLocation("")
@@ -45,7 +42,8 @@ PVReFitterAlg::PVReFitterAlg( const std::string& name,
   declareProperty("UseIPVOfflineTool", m_useIPVOfflineTool);
   declareProperty("UseIPVReFitter",    m_useIPVReFitter);
   declareProperty("ParticleInputLocations",  m_particleInputLocations);
-  declareProperty("PrimaryVertexInputLocation",  m_PVInputLocation);
+  declareProperty("PrimaryVertexInputLocation", 
+                  m_PVInputLocation = LHCb::RecVertexLocation::Velo3D );
 }
 
 //=============================================================================
@@ -79,18 +77,6 @@ StatusCode PVReFitterAlg::initialize()
   {
     return Error("At least one of UseIPVOfflineTool and UseIPVReFitter must be true!",
                  StatusCode::FAILURE);
-  }
-
-  m_onOfflineTool = tool<IOnOffline>("OnOfflineTool", this);
-
-  if (!m_onOfflineTool)
-  {
-    return Error("Could not get OnOfflineTool");
-  }
-
-  if (m_PVInputLocation.empty())
-  {
-    m_PVInputLocation = m_onOfflineTool->primaryVertexLocation();
   }
 
   return sc;
@@ -148,10 +134,9 @@ void PVReFitterAlg::executeForLocation(const std::string& particleLocation,
 
   std::string outputLocation = particleLocation;
 
-  DaVinci::StringUtils::removeEnding(outputLocation, "/Particles");
+  DaVinci::StringUtils::removeEnding(outputLocation,"/Particles");
 
-  DaVinci::StringUtils::expandLocation(outputLocation,
-                                       m_onOfflineTool->trunkOnTES());
+  DaVinci::StringUtils::expandLocation(outputLocation,"Phys");
 
   const std::string& instanceName = this->name();
   const std::string vertexOutputLocation = outputLocation + "/"+instanceName+"_PVs";

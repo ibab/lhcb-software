@@ -12,7 +12,6 @@
 class IPVReffitter;
 class IPVOfflineTool;
 class ILifetimeFitter;
-class IOnOffline;
 
 /** @class PVReFitterAlg PVReFitterAlg.h
  *
@@ -34,7 +33,7 @@ class IOnOffline;
  * <b>ParticleInputLocations</b>: Vector of TES locations of the particles who's related primary vertices will be re-fitted. Default "".
  *
  * <b>PrimaryVertexInputLocation</b>: TES location of the LHCb::RecVertices to be
- * re-fitted. Default "". By default, location is obtained from an IOnOffline tol.
+ * re-fitted.
  *
  * The algorithm iterates over the LHCb::Particles in each of the ParticleInputLocations,
  * and the LHCb::RecVertices in PrimaryVertexLocation, re-fits clones of the
@@ -87,8 +86,6 @@ private:
 
   IPVOfflineTool* m_pvOfflineTool;
   IPVReFitter* m_pvReFitter;
-
-  IOnOffline* m_onOfflineTool;
 
   std::string m_pvOfflinetoolType;
   std::string m_pvReFitterType;

@@ -4,6 +4,9 @@
 ! Responsible : Yuehong Xie
 !===========================================================================
 
+! 2012-07-02 - Chris Jones
+ - Remove usage of the (depreciated) OnOfflineTool
+
 !========================= VertexFit v6r10 2012-06-28 =========================
 
 ! 2012-06-26 - Chris Jones
