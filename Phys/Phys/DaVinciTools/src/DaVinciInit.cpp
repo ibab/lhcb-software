@@ -70,14 +70,14 @@ StatusCode DaVinciInit::execute()
   // Get the run and event number from the ODIN bank
   if ( m_print )
   {
-    if ( exist<LHCb::ODIN> ( LHCb::ODINLocation::Default ))
+    if ( exist<LHCb::ODIN>(LHCb::ODINLocation::Default) )
     {
       const LHCb::ODIN * odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
       this->printEventRun( odin->eventNumber(), odin->runNumber() );
     }
     else
     {
-      Warning("No ODIN bank",StatusCode::SUCCESS,1);
+      Warning("No ODIN bank",StatusCode::SUCCESS,1).ignore();
     }
   }
 

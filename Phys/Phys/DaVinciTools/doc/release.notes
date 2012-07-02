@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2012-07-02 - Chris Jones
+ - Remove all usage of the (depreciated) OnOfflineTool
+
 ! 2012-06-30 - Chris Jones
  - Make the default Offline versions of the tools returned from the
    OnOfflineTool tool public

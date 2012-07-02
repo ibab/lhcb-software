@@ -794,6 +794,23 @@ StatusCode CombineParticles::initialize ()  // standard initialization
   // deal with the histograms:
   sc = updateHistos () ;
 
+//   // CRJ : Temporary configuration check to see if VertexFitters has been incorrectly set
+//   if ( !m_vertexFitNames.empty() )
+//   {
+//     warning() << "===============================================================================" 
+//               << endmsg;
+//     warning() << " The property 'VertexFitters' has been set for an instance of CombineParticles"
+//               << endmsg;
+//     warning() << " CombineParticles does not use this option so it will have no affect." << endmsg;
+//     warning() << " You should configure 'ParticleCombiners' instead." << endmsg;
+//     warning() << "===============================================================================" 
+//               << endmsg;
+//   }
+//   else
+//   {
+//     info() << "Moooooooooooooooooooooooooooooooooooooooooooooooooooooo" << endmsg;
+//   }
+
   // return
   return sc ;
 }

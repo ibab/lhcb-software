@@ -142,8 +142,8 @@ protected:
 public:
 
   virtual StatusCode initialize();
-  virtual StatusCode finalize() {return GaudiTool::finalize();}
   bool accept() const;
+
 };
 // =============================================================================
 

@@ -1,18 +1,6 @@
 // $Id$
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-// from LHCb
-#include "Kernel/IOnOffline.h"
-#include "Kernel/IRelatedPVFinder.h"
-#include "Event/RecVertex.h"
-#include "Event/Particle.h"
-#include "Kernel/Particle2Vertex.h"
-#include "Relations/Get.h"
-// DaVinci
-#include "Kernel/DaVinciStringUtils.h"
-// local
 #include "BestPVAlg.h"
 
 //-----------------------------------------------------------------------------
@@ -23,7 +11,6 @@
 
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( BestPVAlg )
-
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -36,14 +23,15 @@ BestPVAlg::BestPVAlg( const std::string& name,
   m_particleInputLocations(),
   m_P2PVInputLocations(),
   m_useTables(false),
-  m_OnOffline(0),
   m_pvRelator(0)
 {
   declareProperty("PrimaryVertexInputLocation",  m_PVInputLocation);
   declareProperty("ParticleInputLocations",  m_particleInputLocations);
   declareProperty("P2PVRelationsInputLocations",  m_P2PVInputLocations);
-  
+  declareProperty("PVRelatorName", 
+                  m_pvRelatorName = DaVinci::DefaultTools::PVRelator );
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -52,32 +40,27 @@ BestPVAlg::~BestPVAlg() {}
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode BestPVAlg::initialize() {
-
+StatusCode BestPVAlg::initialize() 
+{
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
   if (!m_P2PVInputLocations.empty()) m_useTables=true;
   
-  if ( m_useTables ) { 
+  if ( m_useTables ) 
+  { 
     if ( (!m_particleInputLocations.empty()) ||
-         (m_PVInputLocation!=LHCb::RecVertexLocation::Primary) )  {
+         (m_PVInputLocation!=LHCb::RecVertexLocation::Primary) ) 
+    {
       return Error("You have set P2PVRelationsLocations and one of ParticleInputLocations and PrimaryVertexInputLocation.",
                    StatusCode::FAILURE);
     }
   }
   
-  m_OnOffline = tool<IOnOffline>("OnOfflineTool",this);
+  m_pvRelator = tool<IRelatedPVFinder>( m_pvRelatorName, this );
 
-  if (0==m_OnOffline) return Error("Failed to get IOnOffline tool");
-  
-  m_pvRelator = tool<IRelatedPVFinder>(m_OnOffline->relatedPVFinderType(), 
-                                       this);
- 
-  if (0==m_pvRelator) return Error("Failed to get IRelatedPVFinder tool");
-
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 //=============================================================================

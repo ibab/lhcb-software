@@ -1,16 +1,22 @@
 // $Id$
+
 #ifndef PVRELATORALG_H
 #define PVRELATORALG_H 1
 
-// Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
-class IOnOffline;
-class IRelatedPVFinder;
+// from Gaudi
+#include "GaudiKernel/AlgFactory.h"
+// from LHCb
+#include "Kernel/IRelatedPVFinder.h"
+#include "Event/RecVertex.h"
+#include "Event/Particle.h"
+#include "Kernel/Particle2Vertex.h"
+#include "Relations/Get.h"
+#include "Kernel/DefaultDVToolTypes.h"
 
 /** @class PVRelatorAlg PVRelatorAlg.h
- *
  *
  *  A simple GaudiAlgorithm that takes as input the TES location of some
  *  LHCb::Particles, plus the TES location of some LHCb::RecVertices <b>or</b>
@@ -19,7 +25,7 @@ class IRelatedPVFinder;
  *  Particle->PV relations or to re-sort the input relations if a relations table
  *  has given as input.
  *  The sorting is done according to the logic of the implementation of the
- *  IRelatedPVFinder, which is determined by an IOnOfflineTool.
+ *  IRelatedPVFinder.
  *
  *  <b>Properties</b>
  *
@@ -102,7 +108,7 @@ private:
   std::string m_P2PVInputLocation;
   std::string m_P2PVOutputLocation;
   bool m_useTable;
-  IOnOffline* m_OnOffline ; ///< context switch tool. To be deprecated.
+  std::string m_pvRelatorName;    ///< The name of the PV relator to use
   IRelatedPVFinder* m_pvRelator ; ///< Tool that relates the Particle to a PV
 
 };

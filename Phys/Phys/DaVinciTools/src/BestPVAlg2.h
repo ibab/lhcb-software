@@ -9,8 +9,17 @@
 // from DaVinci
 #include "Kernel/Particle2VertexBase.h"
 
-class IOnOffline;
-class IRelatedPVFinder;
+// from Gaudi
+#include "GaudiKernel/AlgFactory.h" 
+// from LHCb
+#include "Kernel/IRelatedPVFinder.h"
+#include "Event/RecVertex.h"
+#include "Event/Particle.h"
+#include "Kernel/Particle2Vertex.h"
+#include "Relations/Get.h"
+// DaVinci
+#include "Kernel/DaVinciStringUtils.h"
+#include "Kernel/DefaultDVToolTypes.h"
 
 /** @class BestPVAlg2 BestPVAlg2.h
  *  
@@ -19,8 +28,11 @@ class IRelatedPVFinder;
  *  @author Juan Palacios
  *  @date   2010-08-25
  */
-class BestPVAlg2 : public GaudiAlgorithm {
+class BestPVAlg2 : public GaudiAlgorithm 
+{
+
 public: 
+
   /// Standard constructor
   BestPVAlg2( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -56,7 +68,7 @@ private:
   std::vector<std::string> m_particleInputLocations;
   std::vector<std::string> m_P2PVInputLocations;
   bool m_useTables;
-  IOnOffline* m_OnOffline ; ///< context switch tool. To be deprecated.
+  std::string m_pvRelatorName;   ///< The name of the PV relator to use
   IRelatedPVFinder* m_pvRelator ; ///< Tool that relates the Particle to a PV
 
 

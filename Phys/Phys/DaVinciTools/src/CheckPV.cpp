@@ -4,7 +4,6 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
-#include "Kernel/IOnOffline.h"
 #include "Event/RecVertex.h"
 // local
 
@@ -25,13 +24,13 @@ DECLARE_ALGORITHM_FACTORY( CheckPV )
   CheckPV::CheckPV( const std::string& name,
                     ISvcLocator* pSvcLocator)
     : GaudiAlgorithm ( name , pSvcLocator )
-    , m_onOfflineTool()
 {
   declareProperty( "MinPVs", m_minPV = 1  , "Minimum nuber of PVs required");
   declareProperty( "MaxPVs", m_maxPV = -1 , "Maximum nuber of PVs required. -1 : no cut.");
   declareProperty( "Print", m_print = false , "Print number of PVs");
-
+  declareProperty( "PVLocation", m_PVContainer = LHCb::RecVertexLocation::Velo3D );
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -44,8 +43,6 @@ StatusCode CheckPV::initialize()
 {
   const StatusCode sc = GaudiAlgorithm::initialize(); 
   if ( sc.isFailure() ) return sc;
-
-  m_onOfflineTool = tool<IOnOffline>("OnOfflineTool", this);
 
   if ( m_minPV > 0 && m_maxPV > 0 ){
     if (msgLevel(MSG::DEBUG)) debug() << "will select events with between " << m_minPV << " and " << m_maxPV
@@ -68,9 +65,8 @@ StatusCode CheckPV::execute()
 
   if (msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
 
-  const std::string& m_PVContainer = m_onOfflineTool->primaryVertexLocation() ;
   int n = 0 ;
-  bool ok = 0 ;
+  bool ok = false ;
 
   if (msgLevel(MSG::VERBOSE)) verbose() << "Getting PV from " << m_PVContainer << endreq ;
   if ( !exist<LHCb::RecVertices>(m_PVContainer)){

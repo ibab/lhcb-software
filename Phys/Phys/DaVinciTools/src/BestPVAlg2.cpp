@@ -1,17 +1,6 @@
 // $Id$
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-// from LHCb
-#include "Kernel/IOnOffline.h"
-#include "Kernel/IRelatedPVFinder.h"
-#include "Event/RecVertex.h"
-#include "Event/Particle.h"
-#include "Kernel/Particle2Vertex.h"
-#include "Relations/Get.h"
-// DaVinci
-#include "Kernel/DaVinciStringUtils.h"
 // local
 #include "BestPVAlg2.h"
 
@@ -24,7 +13,6 @@
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( BestPVAlg2 )
 
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -36,14 +24,15 @@ BestPVAlg2::BestPVAlg2( const std::string& name,
   m_particleInputLocations(),
   m_P2PVInputLocations(),
   m_useTables(false),
-  m_OnOffline(0),
   m_pvRelator(0)
 {
   declareProperty("PrimaryVertexInputLocation",  m_PVInputLocation);
   declareProperty("ParticleInputLocations",  m_particleInputLocations);
   declareProperty("P2PVRelationsInputLocations",  m_P2PVInputLocations);
-  
+  declareProperty("PVRelatorName", 
+                  m_pvRelatorName = DaVinci::DefaultTools::PVRelator );
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -68,16 +57,9 @@ StatusCode BestPVAlg2::initialize() {
     }
   }
   
-  m_OnOffline = tool<IOnOffline>("OnOfflineTool",this);
-
-  if (0==m_OnOffline) return Error("Failed to get IOnOffline tool");
-  
-  m_pvRelator = tool<IRelatedPVFinder>(m_OnOffline->relatedPVFinderType(), 
-                                       this);
+  m_pvRelator = tool<IRelatedPVFinder>( m_pvRelatorName, this );
  
-  if (0==m_pvRelator) return Error("Failed to get IRelatedPVFinder tool");
-
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 //=============================================================================

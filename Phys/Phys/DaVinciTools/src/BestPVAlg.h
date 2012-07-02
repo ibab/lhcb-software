@@ -2,15 +2,19 @@
 #ifndef BESTPVALG_H 
 #define BESTPVALG_H 1
 
-// Include files
-// from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
-class IOnOffline;
-class IRelatedPVFinder;
+#include "GaudiKernel/AlgFactory.h" 
+
+#include "Kernel/IRelatedPVFinder.h"
+#include "Event/RecVertex.h"
+#include "Event/Particle.h"
+#include "Kernel/Particle2Vertex.h"
+#include "Relations/Get.h"
+#include "Kernel/DaVinciStringUtils.h"
+#include "Kernel/DefaultDVToolTypes.h"
 
 /** @class BestPVAlg BestPVAlg.h
- *  
  *
  *  A simple GaudiAlgorithm that takes as input the TES location of some
  *  LHCb::Particles, plus the TES location of some LHCb::RecVertices <b>or</b>
@@ -19,7 +23,7 @@ class IRelatedPVFinder;
  *  Particle->PV relations table relating each particle to the "best" PV only.
  *
  *  The best PV is found according to the logic of the implementation of the
- *  IRelatedPVFinder, which is determined by an IOnOfflineTool.
+ *  IRelatedPVFinder.
  *
  *  <b>Properties</b>
  *
@@ -60,8 +64,11 @@ class IRelatedPVFinder;
  *  @author Juan Palacios
  *  @date   2009-05-23
  */
-class BestPVAlg : public GaudiAlgorithm {
+class BestPVAlg : public GaudiAlgorithm
+{
+
 public: 
+
   /// Standard constructor
   BestPVAlg( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -95,7 +102,7 @@ private:
   std::vector<std::string> m_particleInputLocations;
   std::vector<std::string> m_P2PVInputLocations;
   bool m_useTables;
-  IOnOffline* m_OnOffline ; ///< context switch tool. To be deprecated.
+  std::string m_pvRelatorName;    ///< The name of the PV relator to use
   IRelatedPVFinder* m_pvRelator ; ///< Tool that relates the Particle to a PV
 
 

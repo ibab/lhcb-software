@@ -35,10 +35,10 @@ public:
 
 private:
 
-  IOnOffline* m_onOfflineTool ;   ///< OnOfflineTool Tool
   int m_minPV ;  ///< minimal number of reconstructed PVs required
   int m_maxPV ;  ///< maximal number of reconstructed PVs required. -1 means no requirement.
   bool m_print ; ///< Print the number of PVs
+  std::string m_PVContainer; ///< PV location
 
 };
 #endif // CHECKPV_H

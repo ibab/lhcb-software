@@ -1,15 +1,5 @@
 // $Id$
-// Include files
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-// from LHCb
-#include "Kernel/IOnOffline.h"
-#include "Kernel/IRelatedPVFinder.h"
-#include "Event/RecVertex.h"
-#include "Event/Particle.h"
-#include "Kernel/Particle2Vertex.h"
-#include "Relations/Get.h"
 // local
 #include "PVRelatorAlg.h"
 
@@ -34,13 +24,14 @@ DECLARE_ALGORITHM_FACTORY( PVRelatorAlg )
     m_P2PVInputLocation(""),
     m_P2PVOutputLocation(""),
     m_useTable(false),
-    m_OnOffline(0),
     m_pvRelator(0)
 {
   declareProperty("ParticleInputLocation",  m_particleInputLocation);
   declareProperty("PrimaryVertexInputLocation",  m_PVInputLocation);
   declareProperty("P2PVRelationsInputLocation",  m_P2PVInputLocation);
   declareProperty("P2PVRelationsOutputLocation",  m_P2PVOutputLocation);
+  declareProperty("PVRelatorName", 
+                  m_pvRelatorName = DaVinci::DefaultTools::PVRelator );
 
 }
 //=============================================================================
@@ -72,14 +63,7 @@ StatusCode PVRelatorAlg::initialize()
 
   if (""==m_P2PVOutputLocation) return Error("P2PVRelationsOutputLocation not set");
 
-  m_OnOffline = tool<IOnOffline>("OnOfflineTool",this);
-
-  if (0==m_OnOffline) return Error("Failed to get IOnOffline tool");
-
-  m_pvRelator = tool<IRelatedPVFinder>(m_OnOffline->relatedPVFinderType(),
-                                       this);
-
-  if (0==m_pvRelator) return Error("Failed to get IRelatedPVFinder tool");
+  m_pvRelator = tool<IRelatedPVFinder>( m_pvRelatorName, this );
 
   return sc;
 }
