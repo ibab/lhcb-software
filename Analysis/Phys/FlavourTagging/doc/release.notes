@@ -5,6 +5,9 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2012-07-01 - Marc Grabalosa
+ - Fix ProbMin vtx
+
 !========================= FlavourTagging v12r9 2012-06-28 =========================
 
 ! 2012-06-22 - Chris Jones

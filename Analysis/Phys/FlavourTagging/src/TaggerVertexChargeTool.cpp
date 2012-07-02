@@ -195,7 +195,7 @@ Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
 
   if( omega < 0 || omega > 1 ) return tVch;  
   if( 1-omega < m_ProbMin_vtx ) return tVch;
-  if(   omega > m_ProbMin_vtx ) return tVch;
+  //  if(   omega > m_ProbMin_vtx ) return tVch;
 
   verbose()<<"Vtx passed"<<endreq;
  

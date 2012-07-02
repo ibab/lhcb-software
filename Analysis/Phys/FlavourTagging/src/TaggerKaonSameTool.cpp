@@ -196,7 +196,7 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     verbose()<<" KaonS pn inputs="<<NNinputs<<endreq;
     verbose()<<" KaonS pn ="<<pn<<endreq;
 
-    //Calibration (w=1-pn) w' = p0 + p1(w-eta)                                  
+    //Calibration (w=1-pn) w' = p0 + p1(w-eta)
     pn = 1 - m_P0_Cal_kaonS - m_P1_Cal_kaonS * ( (1-pn)-m_Eta_Cal_kaonS);
     debug() << " SS Kaon pn="<< pn <<" w="<<1-pn<<endmsg;
 
