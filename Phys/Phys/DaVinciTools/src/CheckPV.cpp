@@ -28,7 +28,7 @@ DECLARE_ALGORITHM_FACTORY( CheckPV )
   declareProperty( "MinPVs", m_minPV = 1  , "Minimum nuber of PVs required");
   declareProperty( "MaxPVs", m_maxPV = -1 , "Maximum nuber of PVs required. -1 : no cut.");
   declareProperty( "Print", m_print = false , "Print number of PVs");
-  declareProperty( "PVLocation", m_PVContainer = LHCb::RecVertexLocation::Velo3D );
+  declareProperty( "PVLocation", m_PVContainer = LHCb::RecVertexLocation::Primary );
 }
 
 //=============================================================================

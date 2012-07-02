@@ -43,7 +43,7 @@ PVReFitterAlg::PVReFitterAlg( const std::string& name,
   declareProperty("UseIPVReFitter",    m_useIPVReFitter);
   declareProperty("ParticleInputLocations",  m_particleInputLocations);
   declareProperty("PrimaryVertexInputLocation", 
-                  m_PVInputLocation = LHCb::RecVertexLocation::Velo3D );
+                  m_PVInputLocation = LHCb::RecVertexLocation::Primary );
 }
 
 //=============================================================================
