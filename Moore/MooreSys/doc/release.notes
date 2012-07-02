@@ -3,6 +3,10 @@ Package     : MooreSys
 Package Coordinator : E. van Herwijnen
 Purpose     : LHCb HLT application
 
+
+</PRE><H1><A NAME=v14r6p1>2012-07-2 Moore v14r6p1</A></H1><PRE>
+Uses Hlt v15r3p1 with fix in Gaudi to problem below
+
 </PRE><H1><A NAME=v14r6>2012-06-28 Moore v14r6</A></H1><PRE>
 Uses Hlt v15r3 with fix to PatSeeding small numbers rounded in TCK problem
 
