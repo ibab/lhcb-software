@@ -4,6 +4,9 @@
 ! Responsible : C.R. Jones
 !============================================================================
 
+! 2012-07-02 - Chris Jones
+ - Remove usage of the (depreciated) OnOfflineTool
+
 ! 2012-07-01 - Chris Jones
  - Add a depreciation warning to DVAlgorithm::initialize()
 

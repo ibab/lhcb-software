@@ -17,6 +17,7 @@
 #include "Kernel/DaVinciStringUtils.h"
 #include "DaVinciUtils/Functions.h"
 #include "Kernel/TreeCloners.h"
+#include "Kernel/DefaultDVToolTypes.h"
 // ============================================================================
 
 // ============================================================================
@@ -64,7 +65,6 @@ DVCommonBase<PBASE>::DVCommonBase( const std::string& name,
   , m_taggingTool           ( NULL  )
   , m_descendants           ( NULL  )
   , m_descendantsName       ("ParticleDescendants")
-  , m_onOffline             ( NULL  )
   , m_pvRelator             ( NULL  )
   , m_ppSvc                 ( NULL  )
   , m_setFilterCalled       ( false )
@@ -74,7 +74,6 @@ DVCommonBase<PBASE>::DVCommonBase( const std::string& name,
   , m_writeP2PV             ( true  )
   , m_forceP2PVBuild        ( true  )
   , m_ignoreP2PVFromInputLocations (false)
-  , m_PVLocation            ( ""    )
   , m_noPVs                 ( false )
 {
   this->declareProperty( "Output",
@@ -91,7 +90,8 @@ DVCommonBase<PBASE>::DVCommonBase( const std::string& name,
                          m_p2PVInputLocations,
                          "Particle -> PV Relations Input Locations" );
 
-  this->declareProperty( "InputPrimaryVertices", m_PVLocation );
+  this->declareProperty( "InputPrimaryVertices", 
+                         m_PVLocation = LHCb::RecVertexLocation::Primary );
 
   this->declareProperty( "UseP2PVRelations", m_useP2PV,
                         "Use P->PV relations internally. Forced to true if re-fitting PVs. Otherwise disabled for single PV events. Default: true.");
@@ -158,6 +158,9 @@ DVCommonBase<PBASE>::DVCommonBase( const std::string& name,
       m_distanceCalculatorNames ,
       "The mapping of nick/name/type for IDistanceCalculator tools" ) ;
   //
+  this->declareProperty( "PrimaryVertexRelator", 
+                         m_pvRelatorName = DaVinci::DefaultTools::PVRelator );
+  //
   this->declareProperty( "DecayDescriptor"   , m_decayDescriptor   = "",
                          "Describes the decay" ) ;
   this->declareProperty( "ForceOutput"       , m_forceOutput       = true,
@@ -177,6 +180,7 @@ const typename DVCommonBase<PBASE>::ToolMap &
 DVCommonBase<PBASE>::defaultVertexFittersNames() const
 {
   static const ToolMap m = boost::assign::map_list_of
+    ( ""              , DaVinci::DefaultTools::VertexFitter )
     ( "Offline"       , "OfflineVertexFitter:PUBLIC"    )
     ( "Trigger"       , "TrgVertexFitter"        )
     ( "LoKi"          , "LoKi::VertexFitter:PUBLIC"     )
@@ -202,10 +206,8 @@ template <class PBASE>
 const typename DVCommonBase<PBASE>::ToolMap &
 DVCommonBase<PBASE>::defaultParticleCombinersNames() const
 {
-  // ==========================================================================
-  // Note: there is no default value!
-  // ==========================================================================
   static const ToolMap m = boost::assign::map_list_of
+    ( ""                 , DaVinci::DefaultTools::ParticleCombiner )
     ( "Offline"          , "OfflineVertexFitter:PUBLIC"         )
     ( "Trigger"          , "TrgVertexFitter"             )
     ( "Kalman"           , "LoKi::VertexFitter:PUBLIC"          )
@@ -342,11 +344,6 @@ StatusCode DVCommonBase<PBASE>::initialize ()
     { this->debug() << "Decay Descriptor: " << m_decayDescriptor << endmsg; }
   }
 
-  if ( m_PVLocation.empty() )
-  {
-    m_PVLocation = onOffline()->primaryVertexLocation();
-  }
-
   m_noPVs = ( m_PVLocation.empty() || m_PVLocation == "None" );
 
   initializeLocations();
@@ -435,20 +432,6 @@ void DVCommonBase<PBASE>::initializeLocations()
 template <class PBASE>
 StatusCode DVCommonBase<PBASE>::loadTools()
 {
-  // Set default names
-  if ( m_particleCombinerNames.end() == m_particleCombinerNames.find("") )
-  {
-    m_particleCombinerNames[""] = onOffline()->particleCombinerType();
-  }
-  if ( m_vertexFitNames.end() == m_vertexFitNames.find("") )
-  {
-    m_vertexFitNames[""] = onOffline()->vertexFitterType() ;
-  }
-  if ( m_distanceCalculatorNames.end() == m_distanceCalculatorNames.find("") )
-  {
-    m_distanceCalculatorNames[""] = onOffline()->distanceCalculatorType();
-  }
-
   if ( m_preloadTools )
   {
     vertexFitter();
@@ -457,7 +440,6 @@ StatusCode DVCommonBase<PBASE>::loadTools()
     checkOverlap();
     ppSvc();
   }
-
   return StatusCode::SUCCESS;
 }
 
@@ -1072,7 +1054,7 @@ DVCommonBase<PBASE>::calculateRelatedPV(const LHCb::Particle* p) const
       return NULL;
     }
 
-    const LHCb::RecVertex*  pv = dynamic_cast<const LHCb::RecVertex*>(vb) ;
+    const LHCb::RecVertex* pv = dynamic_cast<const LHCb::RecVertex*>(vb);
 
     if (!pv)
     {

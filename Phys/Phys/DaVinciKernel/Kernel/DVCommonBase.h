@@ -24,7 +24,6 @@
 // from DaVinciInterfaces
 // ============================================================================
 #include "Kernel/IDVAlgorithm.h"
-#include "Kernel/IOnOffline.h"
 #include "Kernel/IVertexFit.h"
 #include "Kernel/IParticleFilter.h"
 #include "Kernel/ICheckOverlap.h"
@@ -70,13 +69,9 @@
  *                              "Trigger" : "TrgVertexFitter" ,
  *                              "special" : "MySpecialVertexFitter" } ;
  *   @endcode
- *   Note: if the type/name of default fitter (<c>""</c>)  is not specified
- *   it is picked up from IOnOfflineTool.
  *
  *   - <b>Distance Tools</b>  : the map of possible geometry tools
  *   @see IDistanceCalculator
- *   Note: if the type/name of default tool (<c>""</c>)  is not specified
- *   it is picked up from IOnOfflineTool
  *
  *  - <b>ParticleFilters</b> : the map for possible particle filters
  *     @see IParticleFilter
@@ -359,13 +354,6 @@ public:
     m_decayDescriptor = dd;
   }
 
-  /// accessor for IOnOffline tool
-  inline IOnOffline* onOffline() const
-  {
-    return this->getTool<IOnOffline>( "OnOfflineTool:PUBLIC",
-                                      m_onOffline, this );
-  }
-
   /**
    * Direct const access to the tool that calculates the Particle->PV
    * weighted relations
@@ -374,10 +362,8 @@ public:
    **/
   inline const IRelatedPVFinder* relatedPVFinder() const
   {
-    return this->getTool<IRelatedPVFinder>
-      ( onOffline()->relatedPVFinderType(),
-        m_pvRelator,
-        this );
+    return this->getTool<IRelatedPVFinder>( m_pvRelatorName, 
+                                            m_pvRelator, this );
   }
 
   /**
@@ -945,6 +931,9 @@ private:
 
   mutable P2PVMap m_p2PVMap; ///< Local store of Particle->PV relations.
 
+  /// Related PV finder type
+  std::string m_pvRelatorName;
+
 protected:
 
   /// Mapping of "nickname -> type/name" for Vertex Fitters:
@@ -1016,9 +1005,6 @@ protected:
   mutable IParticleDescendants* m_descendants;
   /// Concrete Type of ParticleDescendants tool
   std::string m_descendantsName;
-
-  /// OnOffline tool
-  mutable IOnOffline* m_onOffline;
 
   /// Find the related PV
   mutable IRelatedPVFinder* m_pvRelator;
