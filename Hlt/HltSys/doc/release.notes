@@ -5,6 +5,9 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger
 
+</PRE><H1><A NAME=v15r3p1>2012-07-2 HltSys v15r3p1</A></H1><PRE>
+Uses the stack based on Gaudi v23r2p1 with a fix to the bug below.
+
 </PRE><H1><A NAME=v15r3>2012-06-28 HltSys v15r3</A></H1><PRE>
 Uses Tf/PatAlgorithms with fix to PatSeeding small numbers not kept in TCK bug.
 
