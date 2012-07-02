@@ -5,6 +5,9 @@
 
 ! 2012-07-02 - Chris Jones
  - Remove all usage of the (depreciated) OnOfflineTool
+ - Add a temporary check to CombineParticles to try and detect cases where
+   users are incorrectly configuring the tool via the m_vertexFitNames
+   property and issues a warning if this is found.
 
 ! 2012-06-30 - Chris Jones
  - Make the default Offline versions of the tools returned from the
