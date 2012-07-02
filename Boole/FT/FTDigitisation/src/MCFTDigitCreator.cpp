@@ -6,6 +6,7 @@
 // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/RndmGenerators.h"
 
 // from FTEvent
 #include "Event/MCFTDeposit.h"
@@ -33,7 +34,7 @@ MCFTDigitCreator::MCFTDigitCreator( const std::string& name,
   declareProperty("InputLocation" , m_inputLocation = LHCb::MCFTDepositLocation::Default, "Path to input MCDeposits");
   declareProperty("OutputLocation" , m_outputLocation = LHCb::MCFTDigitLocation::Default, "Path to output MCDigits");
   declareProperty("MeanPhotoElectronPerMeV",m_meanPhotoElectronPerMeV=20,"Poisson Law Exp. Value for photoelectron production");
-
+  declareProperty("SiPMGain",m_sipmGain = 1,"Gain of SiPM");
 
 }
 //=============================================================================
@@ -53,6 +54,14 @@ StatusCode MCFTDigitCreator::initialize() {
     debug() << ": OutputLocation is " <<m_outputLocation << endmsg;
   }
   
+
+  StatusCode sc3 = m_pePoissonDist.initialize(randSvc(), 
+                                             Rndm::Poisson(m_meanPhotoElectronPerMeV));
+   if(!sc3){
+     error() << "Random number init failure" << endmsg;
+     return sc3;
+   }
+
   return StatusCode::SUCCESS;
 }
 
@@ -88,7 +97,7 @@ StatusCode MCFTDigitCreator::execute() {
     std::vector<std::pair <LHCb::MCHit*,double> >::const_iterator vecIter=mcDeposit->mcHitVec().begin();
     for(;vecIter != mcDeposit->mcHitVec().end(); ++vecIter){
       if ( msgLevel( MSG::DEBUG) ) {
-        debug() <<" \t aHit->midPoint().x()="<<vecIter->first->midPoint().x()<< " \tE= " <<vecIter->second
+        debug() <<" aHit->midPoint().x()="<<vecIter->first->midPoint().x()<< " \tE= " <<vecIter->second
                 << " \tfrom PDGId= " <<vecIter->first->mcParticle()->particleID()
                 << endmsg;
       }
@@ -149,6 +158,9 @@ StatusCode MCFTDigitCreator::finalize() {
 int MCFTDigitCreator::deposit2ADC(LHCb::MCFTDeposit* ftdeposit)
 {
   /// Compute energy sum
+  // TODO :
+  // - attenuation of the signal along the fibre
+  // - add noise 
   double energySum = 0;
   std::vector<std::pair <LHCb::MCHit*,double> >::const_iterator vecIter= ftdeposit->mcHitVec().begin();
   for(;vecIter != ftdeposit->mcHitVec().end(); ++vecIter){
@@ -156,8 +168,13 @@ int MCFTDigitCreator::deposit2ADC(LHCb::MCFTDeposit* ftdeposit)
   }
 
   // Convert energy sum in adc count
-  // Test : trivial : adc = (int) 100 * energySum
-  int adcCount = (int) 100 * energySum;
-  return adcCount;
+  // First implementation for pe to ADC according to poisson Law
+  int randPE = m_pePoissonDist();
+  int adcCount = int(randPE * energySum * m_sipmGain);
+  if( msgLevel( MSG::DEBUG) ){
+    debug() <<format("deposit2ADC() : energySum=%5f; randPE=%4i; Gain=%4i; adcCount = %4i",energySum,randPE,m_sipmGain,adcCount)
+            << endmsg;
+  }
 
+  return adcCount;
 }

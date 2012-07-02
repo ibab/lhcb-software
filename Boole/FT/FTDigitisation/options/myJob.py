@@ -10,10 +10,10 @@ L0Conf().TCK = '0x002A'
 LHCbApp().DDDBtag   = "MC11-20111102"
 LHCbApp().CondDBtag = "sim-20111111-vc-md100"
 
-DDDBConf().DbRoot = "/afs/cern.ch/user/o/ogruenbe/public/FT_upgrade/static_DDDB_FT_v3/lhcb.xml"
+DDDBConf().DbRoot = "/afs/cern.ch/user/o/ogruenbe/public/FT_upgrade/static_DDDB_FT_v4/lhcb.xml"
 #DDDBConf().DbRoot = "/afs/cern.ch/user/p/phopchev/public/FT/DDDBSlice_FT_v4/lhcb.xml"
 
-EventSelector().Input = ["DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/o/ogruenbe/Bs_mumu_v3.sim?svcClass=default' TYP='POOL_ROOTTREE' OPT='READ'"]
+EventSelector().Input = ["DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/o/ogruenbe/Bs_mumu_v4_nu20.sim?svcClass=default' TYP='POOL_ROOTTREE' OPT='READ'"]
 Boole().DatasetName = "FTTest"
 Boole().DetectorDigi = {'VELO':[], 'MUON':[], 'RICH':[], 'TT':[], 'IT':[], 'L0':[], 'CALO':[], 'OT':[]}
 Boole().LinkSequence = ['FT' ]
