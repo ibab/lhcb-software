@@ -6,6 +6,9 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+! 2012-07-01 - Marc Grabalosa
+ - Add sweight training and probminVtx fixed.
+
 !========================= FlavourTaggingChecker v6r10 2012-06-28 =========================
 
 ! 2012-06-22 - Chris Jones
