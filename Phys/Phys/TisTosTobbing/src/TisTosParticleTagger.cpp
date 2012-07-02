@@ -68,7 +68,8 @@ StatusCode TisTosParticleTagger::initialize()
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
-  if( m_TriggerTisTosName != "" ){
+  if( m_TriggerTisTosName != "" )
+  {
     // Specific TriggerTisTos tool
     verbose() << " Allocating TriggerTisTos tool specified by user=" << m_TriggerTisTosName << endmsg;
     m_tistostool = tool<ITriggerTisTos>(  m_TriggerTisTosName, m_TriggerTisTosName+"Tool" ,this);
@@ -86,22 +87,27 @@ StatusCode TisTosParticleTagger::initialize()
         m_checkSelReport=false;
       }
     }
-  } else if( onOffline() ){
-    if( onOffline()->online() ){
-      verbose() << " Allocating TriggerTisTosInHlt tool " << endmsg;
-      m_tistostool = tool<ITriggerTisTos>(  "TriggerTisTosInHlt" , "TriggerTisTosInHltTool" ,this);
-      m_checkDecReport=true;
-      m_decReportLoc=HltDecReportsLocation::Default;
-      m_checkSelReport=false;
-    } else {
-      verbose() << " Allocating TriggerTisTos tool " << endmsg;
-      m_tistostool = tool<ITriggerTisTos>(  "TriggerTisTos" , "TriggerTisTosTool" ,this);
-      m_checkDecReport=true;
-      m_decReportLoc=HltDecReportsLocation::Default;
-      m_checkSelReport=true;
-      m_selReportLoc=HltSelReportsLocation::Default;
-    }
-  } else {
+  } 
+//   else if( onOffline() )
+//   {
+//     if ( onOffline()->online() )
+//     {
+//       verbose() << " Allocating TriggerTisTosInHlt tool " << endmsg;
+//       m_tistostool = tool<ITriggerTisTos>(  "TriggerTisTosInHlt" , "TriggerTisTosInHltTool" ,this);
+//       m_checkDecReport=true;
+//       m_decReportLoc=HltDecReportsLocation::Default;
+//       m_checkSelReport=false;
+//     } else {
+//       verbose() << " Allocating TriggerTisTos tool " << endmsg;
+//       m_tistostool = tool<ITriggerTisTos>(  "TriggerTisTos" , "TriggerTisTosTool" ,this);
+//       m_checkDecReport=true;
+//       m_decReportLoc=HltDecReportsLocation::Default;
+//       m_checkSelReport=true;
+//       m_selReportLoc=HltSelReportsLocation::Default;
+//     }
+//   } 
+  else 
+  {
     verbose() << " Allocating TriggerTisTos tool " << endmsg;
     m_tistostool = tool<ITriggerTisTos>(  "TriggerTisTos" , "TriggerTisTosTool" ,this);
     m_checkDecReport=true;
@@ -110,7 +116,6 @@ StatusCode TisTosParticleTagger::initialize()
     m_selReportLoc=HltSelReportsLocation::Default;
   }
   if( !m_tistostool )return Error("Could not allocate TriggerTisTos tool", StatusCode::FAILURE);
-
 
   if( m_decReportsLocation != "" ){
     if( m_decReportsLocation == "None" ){
@@ -129,7 +134,6 @@ StatusCode TisTosParticleTagger::initialize()
     }
   }
 
-
   for( unsigned int iTriggerStage = (unsigned int)(defaultTriggerStage);
        iTriggerStage < NTriggerStages; ++iTriggerStage )
   {
@@ -140,7 +144,6 @@ StatusCode TisTosParticleTagger::initialize()
 
   // pass trigger stage on first satisfied trigger spec
   m_fast = true;
-
 
   if( m_tistosSpecs.empty() ){
     error() <<

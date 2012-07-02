@@ -3,6 +3,9 @@
 ! Purpose     : TisTosTobbing of the trigger 
 ! =============================================================================
 
+! 2012-07-02 - Chris Jones
+ - Remove usage of the (depreciated) OnOfflineTool
+
 ! 2012-07-01 - Chris Jones
  - Use DaVinciAlgorithm instead of DVAlgorithm in TisTosParticleTagger, to
    reduce memory footprint.
