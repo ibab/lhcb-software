@@ -51,7 +51,6 @@ private:
 
   std::string m_ExpertiseName;
   std::string m_netVersion;
-  std::string m_pvLocation;
 
 };
 

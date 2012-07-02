@@ -6,7 +6,7 @@ i!-----------------------------------------------------------------------------
 
 ! 2012-07-02 - Chris Jones
  - Use DaVinciHistoAlgorithm instead of DVAlgorithm as base class
- - Use onOffline() instead of loading own private OnOfflineTool instance
+ - Remove use of depreciated OnOfflineTool
 
 !======================= StrippingNeuroBayes v1r5 2012-03-01 =================
 ! 2012-02-24 - Chris Jones

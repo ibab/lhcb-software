@@ -30,7 +30,6 @@ StrippingNBMuMu::StrippingNBMuMu( const std::string& name,
     m_PlotMassMax(  3.2   ),
     m_PlotNBins  (120     )
 {
-
     declareProperty( "Expertise"     , m_ExpertiseName                );
     declareProperty( "NetworkVersion", m_netVersion  = "TuneSep2010"  );
     declareProperty( "NetworkCut"    , m_NetworkCut  =  -1            );
@@ -38,9 +37,10 @@ StrippingNBMuMu::StrippingNBMuMu( const std::string& name,
     declareProperty( "PlotMassMin"   , m_PlotMassMin =   2.9          );
     declareProperty( "PlotMassMax"   , m_PlotMassMax =   3.2          );
     declareProperty( "PlotNBins"     , m_PlotNBins   = 120            );
-
-
+    declareProperty( "PVLocation"    ,
+                     m_pvLocation = LHCb::RecVertexLocation::Primary );
 } // constructor
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -68,14 +68,6 @@ StatusCode StrippingNBMuMu::initialize()
     debug() <<  "PlotMassMax    " <<  m_PlotMassMax   << endmsg;
     debug() <<  "PlotNBins      " <<  m_PlotNBins     << endmsg;
   }
-
-  //
-  // get location of primary vertices
-  //
-  m_pvLocation = onOffline()->primaryVertexLocation();
-  if ( msgLevel(MSG::DEBUG) )
-    debug() << "Will be looking for PVs at " << m_pvLocation << endmsg ;
-
 
   //
   // setup NeuroBayes
@@ -323,7 +315,8 @@ StatusCode  StrippingNBMuMu::getInputVar(const LHCb::Particle& particle) {
 
   double jPsiDira                      = -999;
   const LHCb::RecVertex::Container* PV =    0;
-  if (exist<LHCb::RecVertex::Container>(m_pvLocation)) {
+  if (exist<LHCb::RecVertex::Container>(m_pvLocation)) 
+  {
     PV = get<LHCb::RecVertex::Container>(m_pvLocation);
     if (PV != NULL && PV->size() >0) {
       const LHCb::VertexBase *relatedPV = this->bestVertex(&particle);

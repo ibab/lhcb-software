@@ -38,7 +38,6 @@ DECLARE_ALGORITHM_FACTORY( StrippingNBBhh )
       m_PlotMassMax(  5.6   ),
       m_PlotNBins  (120     )
 {
-
   declareProperty( "Expertise"     , m_ExpertiseName                );
   declareProperty( "NetworkVersion", m_netVersion  = "TuneMC10"     );
   declareProperty( "NetworkCut"    , m_NetworkCut  =  -1            );
@@ -46,9 +45,8 @@ DECLARE_ALGORITHM_FACTORY( StrippingNBBhh )
   declareProperty( "PlotMassMin"   , m_PlotMassMin =   5.0          );
   declareProperty( "PlotMassMax"   , m_PlotMassMax =   5.6          );
   declareProperty( "PlotNBins"     , m_PlotNBins   = 120            );
-
-
 } // constructor
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -76,13 +74,6 @@ StatusCode StrippingNBBhh::initialize()
     debug() <<  "PlotMassMax    " <<  m_PlotMassMax   << endmsg;
     debug() <<  "PlotNBins      " <<  m_PlotNBins     << endmsg;
   }
-
-  //
-  // get location of primary vertices
-  //
-  m_pvLocation = onOffline()->primaryVertexLocation();
-  if ( msgLevel(MSG::DEBUG) )
-    debug() << "Will be looking for PVs at " << m_pvLocation << endmsg ;
 
   //
   // setup NeuroBayes
