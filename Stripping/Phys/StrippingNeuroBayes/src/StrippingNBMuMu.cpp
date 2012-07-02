@@ -23,7 +23,7 @@ DECLARE_ALGORITHM_FACTORY( StrippingNBMuMu )
 //=============================================================================
 StrippingNBMuMu::StrippingNBMuMu( const std::string& name,
                                   ISvcLocator* pSvcLocator)
-  : DVAlgorithm  ( name , pSvcLocator ),
+  : DaVinciHistoAlgorithm  ( name , pSvcLocator ),
     m_NetworkCut ( -1 ),
     m_PlotHisto  ( false ),
     m_PlotMassMin(  2.9   ),
@@ -51,7 +51,7 @@ StrippingNBMuMu::~StrippingNBMuMu() {}
 //=============================================================================
 StatusCode StrippingNBMuMu::initialize()
 {
-  StatusCode sc = DVAlgorithm::initialize(); 
+  StatusCode sc = DaVinciHistoAlgorithm::initialize(); 
   if ( sc.isFailure() ) return sc;
 
   //
@@ -72,8 +72,7 @@ StatusCode StrippingNBMuMu::initialize()
   //
   // get location of primary vertices
   //
-  const IOnOffline* oo = tool<IOnOffline>("OnOfflineTool",this);
-  m_pvLocation = oo->primaryVertexLocation();
+  m_pvLocation = onOffline()->primaryVertexLocation();
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Will be looking for PVs at " << m_pvLocation << endmsg ;
 
@@ -212,7 +211,7 @@ StatusCode StrippingNBMuMu::finalize() {
     delete[] m_inArray;
 #endif 
 
-  return DVAlgorithm::finalize();
+  return DaVinciHistoAlgorithm::finalize();
 }
 
 //=============================================================================

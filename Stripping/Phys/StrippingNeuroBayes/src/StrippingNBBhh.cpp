@@ -24,20 +24,19 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( StrippingNBBhh );
-
+DECLARE_ALGORITHM_FACTORY( StrippingNBBhh )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-StrippingNBBhh::StrippingNBBhh( const std::string& name,
-                                ISvcLocator* pSvcLocator)
-  : DVAlgorithm  ( name , pSvcLocator ),
-    m_NetworkCut ( -1 ),
-    m_PlotHisto  ( false ),
-    m_PlotMassMin(  5.0   ),
-    m_PlotMassMax(  5.6   ),
-    m_PlotNBins  (120     )
+  StrippingNBBhh::StrippingNBBhh( const std::string& name,
+                                  ISvcLocator* pSvcLocator )
+    : DaVinciHistoAlgorithm  ( name , pSvcLocator ),
+      m_NetworkCut ( -1 ),
+      m_PlotHisto  ( false ),
+      m_PlotMassMin(  5.0   ),
+      m_PlotMassMax(  5.6   ),
+      m_PlotNBins  (120     )
 {
 
   declareProperty( "Expertise"     , m_ExpertiseName                );
@@ -58,9 +57,9 @@ StrippingNBBhh::~StrippingNBBhh() {}
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode StrippingNBBhh::initialize() 
+StatusCode StrippingNBBhh::initialize()
 {
-  StatusCode sc = DVAlgorithm::initialize();
+  StatusCode sc = DaVinciHistoAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
 
   //
@@ -81,8 +80,7 @@ StatusCode StrippingNBBhh::initialize()
   //
   // get location of primary vertices
   //
-  const IOnOffline* oo = tool<IOnOffline>("OnOfflineTool",this);
-  m_pvLocation = oo->primaryVertexLocation();
+  m_pvLocation = onOffline()->primaryVertexLocation();
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Will be looking for PVs at " << m_pvLocation << endmsg ;
 
@@ -221,7 +219,7 @@ StatusCode StrippingNBBhh::finalize() {
     delete[] m_inArray;
 #endif
 
-  return DVAlgorithm::finalize();
+  return DaVinciHistoAlgorithm::finalize();
 }
 
 //=============================================================================

@@ -4,6 +4,10 @@ i!-----------------------------------------------------------------------------
 ! Purpose     : Stripping algorithms based on the NeuroBayes neural network
 !-----------------------------------------------------------------------------
 
+! 2012-07-02 - Chris Jones
+ - Use DaVinciHistoAlgorithm instead of DVAlgorithm as base class
+ - Use onOffline() instead of loading own private OnOfflineTool instance
+
 !======================= StrippingNeuroBayes v1r5 2012-03-01 =================
 ! 2012-02-24 - Chris Jones
  - use bestVertex not i_bestVertex
@@ -13,7 +17,7 @@ i!-----------------------------------------------------------------------------
  - Suppress info() messages during initialize to debug()
 
 ! 2011-11-25 - Chris Jones
- - Fix gcc 44.6 warnings
+ - Fix gcc 4.6 warnings
 
 !======================= StrippingNeuroBayes v1r3 2011-03-10 =================
 

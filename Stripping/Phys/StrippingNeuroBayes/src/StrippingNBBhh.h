@@ -2,9 +2,7 @@
 #ifndef STRIPPINGNBBHH_H 
 #define STRIPPINGNBBHH_H 1
 
-// Include files
-// from DaVinci, this is a specialized GaudiAlgorithm
-#include "Kernel/DVAlgorithm.h"
+#include "Kernel/DaVinciHistoAlgorithm.h"
 #include "Kernel/FPEGuard.h"
 
 #include <string>
@@ -15,15 +13,17 @@
 #include "nb_param.hh"
 #endif
 
-
 /** @class StrippingNBBhh.cpp StrippingNBBhh.h
  *   
  *
  *  @author Ulrich Kerzel
  *  @date   2011-01-25
  */
-class StrippingNBBhh : public DVAlgorithm {
+class StrippingNBBhh : public DaVinciHistoAlgorithm
+{
+
 public: 
+
   /// Standard constructor
   StrippingNBBhh( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -32,8 +32,6 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
-
-protected:
 
 private:
 
@@ -51,10 +49,10 @@ private:
   float*   m_inArray; 
 #endif
 
-
   std::string m_ExpertiseName;
   std::string m_netVersion;
   std::string m_pvLocation;
 
 };
+
 #endif // STRIPPINGNBBHH_H

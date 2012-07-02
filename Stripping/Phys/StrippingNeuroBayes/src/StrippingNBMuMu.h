@@ -2,9 +2,7 @@
 #ifndef STRIPPINGNBMUMU_H 
 #define STRIPPINGNBMUMU_H 1
 
-// Include files
-// from DaVinci, this is a specialized GaudiAlgorithm
-#include "Kernel/DVAlgorithm.h"
+#include "Kernel/DaVinciHistoAlgorithm.h"
 #include "Kernel/FPEGuard.h"
 
 #include <string>
@@ -22,8 +20,11 @@
  *  @author Ulrich Kerzel
  *  @date   2010-10-15
  */
-class StrippingNBMuMu : public DVAlgorithm {
+class StrippingNBMuMu : public DaVinciHistoAlgorithm 
+{
+
 public: 
+
   /// Standard constructor
   StrippingNBMuMu( const std::string& name, ISvcLocator* pSvcLocator );
 
