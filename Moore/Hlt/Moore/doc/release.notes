@@ -3,6 +3,9 @@ Package Coordinator : Eric van Herwijnen
 Purpose     : LHCb HLT application
 
 
+! 2012-07-2 - Eric van Herwijnen
+ - With Hlt v15r3p1 with fix to Gaudi & TCK problem
+
 !========================= Moore v14r6 2012-06-28 =========================
 !========================= Moore v14r5p3 2012-06-27 =========================
 ! 2012-06-27 - Eric van Herwijnen
