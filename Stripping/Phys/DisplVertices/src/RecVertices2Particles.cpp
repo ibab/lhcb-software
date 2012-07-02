@@ -36,7 +36,7 @@ DECLARE_ALGORITHM_FACTORY( RecVertices2Particles );
 //=============================================================================
 RecVertices2Particles::RecVertices2Particles( const std::string& name,
                                               ISvcLocator* pSvcLocator)
-  : DVAlgorithm ( name , pSvcLocator )
+  : DaVinciHistoAlgorithm ( name , pSvcLocator )
   , pi(3.1415926)
   , m_FromBL(false)
   , m_FromUpPV(false)
@@ -72,7 +72,7 @@ RecVertices2Particles::~RecVertices2Particles() {}
 //=============================================================================
 StatusCode RecVertices2Particles::initialize() {
 
-  StatusCode sc = DVAlgorithm::initialize();
+  StatusCode sc = DaVinciHistoAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
 
   debug() << "==> Initialize the RecVertices2Particles algorithm" << endmsg;
@@ -326,7 +326,7 @@ StatusCode RecVertices2Particles::finalize() {
   delete m_BeamLine;
 
   debug() << "==> Finalize" << endmsg;
-  return DVAlgorithm::finalize();
+  return DaVinciHistoAlgorithm::finalize();
 }
 
 //============================================================================

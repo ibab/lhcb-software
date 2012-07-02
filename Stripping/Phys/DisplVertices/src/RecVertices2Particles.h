@@ -3,7 +3,7 @@
 
 // Include files
 // from DaVinci, this is a specialized GaudiAlgorithm
-#include "Kernel/DVAlgorithm.h"
+#include "Kernel/DaVinciHistoAlgorithm.h"
 
 // from Gaudi
 #include "GaudiKernel/VectorMap.h"
@@ -31,7 +31,7 @@
  *  @date   12 janvier 2010
  */
 
-class RecVertices2Particles : public DVAlgorithm {
+class RecVertices2Particles : public DaVinciHistoAlgorithm {
 public: 
   /// Standard constructor
   RecVertices2Particles( const std::string& name, ISvcLocator* pSvcLocator );
@@ -41,8 +41,6 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
-
-protected:
 
 private:
 

@@ -1,5 +1,5 @@
 // $Id: $
-// Include files 
+// Include files
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -43,48 +43,48 @@ DECLARE_ALGORITHM_FACTORY( DisplVertices )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-DisplVertices::DisplVertices( const std::string& name,
-                              ISvcLocator* pSvcLocator)
-  : DVAlgorithm ( name , pSvcLocator )
-  , pi(3.1415926)
-  , PV(0)
-  , m_PreyID(0)
-  , m_MotherPreyID(0){
-  declareProperty("SaveTuple", m_SaveTuple = false );//save prey infos in Tuple
-  //declareProperty("SaveTrigInfos", m_SaveTrigInfos = false );
-  declareProperty("Prey", m_Prey = "~chi_10" );
-  declareProperty("MotherPrey", m_MotherPrey = "H_10" );
-  //>6.286GeV=Bc+ Mass
-  declareProperty("MinNBCands", m_NbCands = 1 );
-  declareProperty("PreyMinMass", m_PreyMinMass = 6.3*GeV );
-  declareProperty("PreyMinMass2", m_PreyMinMass2 = 6.3*GeV );
-  //Unlimited
-  declareProperty("PreyMaxMass", m_PreyMaxMass = 14.*TeV );
-  declareProperty("PreyMinSumpt", m_SumPt = 0.*GeV );
-  declareProperty("PreyMinSumpt", m_PreyMaxSumPt = 14.*TeV );
-  declareProperty("RMin", m_RMin = 0.3*mm );//0.06 in K
-  declareProperty("RMax", m_RMax = 10.*m );
-  declareProperty("DistMax", m_DistMax = 10.* m );//Check value.
-  declareProperty("MaxChi2OvNDoF", m_MaxChi2OvNDoF = 1000. );
-  declareProperty("MuonpT", m_MuonpT = -1*GeV );
-  declareProperty("NbTracks", m_nTracks = 1 );//~ nb B meson max # of tracks 5
-  declareProperty("SigmaZ", m_SigmaZ = 1000. );
-  declareProperty("SigmaR", m_SigmaR = 1000. );
-  declareProperty("RCutMethod", m_RCut = "FromPreyInfo" );
-  declareProperty("RemVtxFromDet", m_RemVtxFromDet = 0  );
-  declareProperty("DetDist", m_DetDist = 1*mm );
-  declareProperty("RemFromRFFoil", m_RemFromRFFoil = false );
-  declareProperty("MinX", m_MinX = -10.*m );
-  declareProperty("MaxX", m_MaxX = 10.*m );
-  declareProperty("MinY", m_MinY = -10.*m );
-  declareProperty("MaxY", m_MaxY = 10.*m );
-  declareProperty("MinZ", m_MinZ = -10.*m );
-  declareProperty("MaxZ", m_MaxZ = 100*m );
-  declareProperty("PVnbtrks", m_PVnbtrks = 5 ); //corr. to 'tight' PV reco
-  declareProperty("BeamLineLocation", 
-                  m_BLLoc = "HLT/Hlt2LineDisplVertices/BeamLine");
-  declareProperty("Backtoback", m_Backtoback = -1 );
-}
+  DisplVertices::DisplVertices( const std::string& name,
+                                ISvcLocator* pSvcLocator)
+    : DaVinciTupleAlgorithm ( name , pSvcLocator )
+    , pi(3.1415926)
+    , PV(0)
+    , m_PreyID(0)
+    , m_MotherPreyID(0){
+    declareProperty("SaveTuple", m_SaveTuple = false );//save prey infos in Tuple
+    //declareProperty("SaveTrigInfos", m_SaveTrigInfos = false );
+    declareProperty("Prey", m_Prey = "~chi_10" );
+    declareProperty("MotherPrey", m_MotherPrey = "H_10" );
+    //>6.286GeV=Bc+ Mass
+    declareProperty("MinNBCands", m_NbCands = 1 );
+    declareProperty("PreyMinMass", m_PreyMinMass = 6.3*GeV );
+    declareProperty("PreyMinMass2", m_PreyMinMass2 = 6.3*GeV );
+    //Unlimited
+    declareProperty("PreyMaxMass", m_PreyMaxMass = 14.*TeV );
+    declareProperty("PreyMinSumpt", m_SumPt = 0.*GeV );
+    declareProperty("PreyMinSumpt", m_PreyMaxSumPt = 14.*TeV );
+    declareProperty("RMin", m_RMin = 0.3*mm );//0.06 in K
+    declareProperty("RMax", m_RMax = 10.*m );
+    declareProperty("DistMax", m_DistMax = 10.* m );//Check value.
+    declareProperty("MaxChi2OvNDoF", m_MaxChi2OvNDoF = 1000. );
+    declareProperty("MuonpT", m_MuonpT = -1*GeV );
+    declareProperty("NbTracks", m_nTracks = 1 );//~ nb B meson max # of tracks 5
+    declareProperty("SigmaZ", m_SigmaZ = 1000. );
+    declareProperty("SigmaR", m_SigmaR = 1000. );
+    declareProperty("RCutMethod", m_RCut = "FromPreyInfo" );
+    declareProperty("RemVtxFromDet", m_RemVtxFromDet = 0  );
+    declareProperty("DetDist", m_DetDist = 1*mm );
+    declareProperty("RemFromRFFoil", m_RemFromRFFoil = false );
+    declareProperty("MinX", m_MinX = -10.*m );
+    declareProperty("MaxX", m_MaxX = 10.*m );
+    declareProperty("MinY", m_MinY = -10.*m );
+    declareProperty("MaxY", m_MaxY = 10.*m );
+    declareProperty("MinZ", m_MinZ = -10.*m );
+    declareProperty("MaxZ", m_MaxZ = 100*m );
+    declareProperty("PVnbtrks", m_PVnbtrks = 5 ); //corr. to 'tight' PV reco
+    declareProperty("BeamLineLocation",
+                    m_BLLoc = "HLT/Hlt2LineDisplVertices/BeamLine");
+    declareProperty("Backtoback", m_Backtoback = -1 );
+  }
 
 //=============================================================================
 // Destructor
@@ -95,7 +95,7 @@ DisplVertices::~DisplVertices() {}
 // Initialization
 //=============================================================================
 StatusCode DisplVertices::initialize() {
-  StatusCode sc = DVAlgorithm::initialize(); 
+  StatusCode sc = DaVinciTupleAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
 
   if( msgLevel( MSG::DEBUG ) )
@@ -103,7 +103,7 @@ StatusCode DisplVertices::initialize() {
 
   /*if( m_SaveTrigInfos ){
     m_tisTos = tool<ITriggerTisTos>("TriggerTisTos",this);
-    m_l0BankDecoder = tool<IL0DUFromRawTool>("L0DUFromRawTool");    
+    m_l0BankDecoder = tool<IL0DUFromRawTool>("L0DUFromRawTool");
     }*/
 
   if( m_RemVtxFromDet != 0 || m_SaveTuple ){
@@ -114,7 +114,7 @@ StatusCode DisplVertices::initialize() {
 
     // Get Transport Service
     m_transSvc = svc<ITransportSvc>( "TransportSvc", true  );
-  }  
+  }
 
   const ParticleProperty* Prey = ppSvc()->find( m_Prey );
   if ( !Prey ) { //
@@ -147,13 +147,13 @@ StatusCode DisplVertices::initialize() {
 
   if( context() == "Info" ){
     info()<<"--------------------------------------------------------"<<endmsg;
-    info() << "DisplVertices will select " << m_Prey 
+    info() << "DisplVertices will select " << m_Prey
            << " candidates (ID=" << m_PreyID.pid() <<") ";
     info() << ". Selection Cuts are : " << endmsg;
     info() << "Min nb of desired candidates : "<< m_NbCands<< endmsg;
-    info() << m_Prey <<" minimum mass " 
+    info() << m_Prey <<" minimum mass "
            << m_PreyMinMass/Gaudi::Units::GeV <<" GeV" << endmsg;
-    info() << m_Prey <<" maximum mass " 
+    info() << m_Prey <<" maximum mass "
            << m_PreyMaxMass/Gaudi::Units::GeV <<" GeV" << endmsg;
     info() << "Minimum number of tracks at the reconstructed vertex of "
            << m_nTracks <<" tracks."<< endmsg ;
@@ -172,10 +172,10 @@ StatusCode DisplVertices::initialize() {
     if( m_RemVtxFromDet == 1 )
       info()<<"Not in detector material"<< endmsg;
     if( m_RemVtxFromDet == 2 )
-      info()<<"Not closer than " << m_DetDist 
+      info()<<"Not closer than " << m_DetDist
             <<"mm from detector material along momentum"<< endmsg;
     if( m_RemVtxFromDet == 3 || m_RemVtxFromDet == 4 )
-      info()<<"Not closer than " << m_DetDist 
+      info()<<"Not closer than " << m_DetDist
             <<"*PosCovMatric from detector material"<< endmsg;
     if( m_RemVtxFromDet == 4 )
       info()<<"("<< m_DetDist+3 <<" when in RF-Foil region)"<< endmsg;
@@ -185,26 +185,26 @@ StatusCode DisplVertices::initialize() {
       info()<< "Min nb of tracks on the upPV candidate : "
             << m_PVnbtrks << endmsg;
     } else if( m_RCut == "FromBeamLine" ){
-      info() << "computed with respect to the beam line given at " 
+      info() << "computed with respect to the beam line given at "
              << m_BLLoc << endmsg;
     }else if( m_RCut == "FromPreyInfo" ){
       info() << "obtained from previous calculation"  << endmsg;
     } else {
-      info() << "computed with respect to (0,0,z) in the global LHCb frame" 
+      info() << "computed with respect to (0,0,z) in the global LHCb frame"
              << endmsg;
-      info()<< "THIS OPTION SHOULD NOT BE USED ON REAL DATA !!" 
+      info()<< "THIS OPTION SHOULD NOT BE USED ON REAL DATA !!"
             << endmsg;
     }
     info() <<"Min R    : " << m_RMin/mm <<" mm"<< endmsg ;
     info() <<"Max R    : " << m_RMax/mm <<" mm"<< endmsg ;
     if( m_Backtoback > 0 ){
-      info() << "MCDisplVertices will also try to reconstruct "<< m_MotherPrey 
+      info() << "MCDisplVertices will also try to reconstruct "<< m_MotherPrey
              <<" from two "<< m_Prey <<" decaying back to back with |dphi| "
              << m_Backtoback <<" angle wrst the upstream PVs"<< endmsg;
     }
     info()<<"--------------------------------------------------------"<<endmsg;
   }
-  
+
 
   //Initialize the beam line
   m_BeamLine = new Particle();
@@ -213,13 +213,13 @@ StatusCode DisplVertices::initialize() {
   if( m_RCut=="" ){
     m_BeamLine->setReferencePoint( Gaudi::XYZPoint( 0., 0., 0. ) );
     m_BeamLine->setMomentum( Gaudi::LorentzVector( 0., 0., 1., 0. ) );
-  } 
+  }
 
   if( m_RemFromRFFoil || m_RemVtxFromDet == 4 || m_SaveTuple ){
     //get the Velo geometry
     string velo = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo/Velo";
     const IDetectorElement* lefthalv = getDet<IDetectorElement>( velo+"Left" );
-    const IDetectorElement* righthalv = 
+    const IDetectorElement* righthalv =
       getDet<IDetectorElement>( velo + "Right" );
     const IGeometryInfo* halflgeominfo = lefthalv->geometry();
     const IGeometryInfo* halfrgeominfo = righthalv->geometry();
@@ -252,23 +252,23 @@ StatusCode DisplVertices::execute(){
   //Clear stuff
   PVs.clear();
   //always()<<"Entering"<<endreq;
-  //---------------------------------------------  
+  //---------------------------------------------
   /*if( m_SaveTrigInfos && !m_SaveTuple ){
     Tuple tuple = nTuple("Trigger");
-    if( fillHeader( tuple ).isFailure() || 
+    if( fillHeader( tuple ).isFailure() ||
     SaveTrigInfinTuple( tuple ).isFailure() )
     Warning("Not being able to save trigger infos in tuple !");
     if( !(tuple->write()) ) return StatusCode::FAILURE;
     }*/
   double minMass2 = 0.;
-  
+
   //always()<<"tag1"<<endreq;
   if( m_SaveTuple || m_RCut != "FromPreyInfo"){
 
     //------------------Set the beam line------------------
     if( m_RCut=="FromBeamLine" || (m_SaveTuple&&m_RCut=="FromPreyInfo") ){
       if( exist<Particle::Range>( m_BLLoc ) ){
-        const Particle::Range BL = get<Particle::Range>( m_BLLoc );      
+        const Particle::Range BL = get<Particle::Range>( m_BLLoc );
         const Particle* tmp = *(BL.begin());
         m_BeamLine->setReferencePoint( tmp->referencePoint() );
         m_BeamLine->setMomentum( tmp->momentum() );
@@ -281,7 +281,7 @@ StatusCode DisplVertices::execute(){
       }
     } else if( m_RCut=="FromUpstreamPV" ){
       //------------------Get the upstream Primary Vertex-----
-      GetUpstreamPV();      
+      GetUpstreamPV();
       if(PV == NULL) return StatusCode::SUCCESS;
       m_BeamLine->setReferencePoint( PV->position() );
       m_BeamLine->setMomentum( Gaudi::LorentzVector( 0., 0., 1., 0. ) );
@@ -290,7 +290,7 @@ StatusCode DisplVertices::execute(){
       //StudyDgtsIP( PV ); //Study the IP to PV of the daughters
       //Study resolution of the reconstructed PV
       //if(false) Resolution();
-    }    
+    }
   }
 
   //------------------The Code---------------------------
@@ -309,13 +309,13 @@ StatusCode DisplVertices::execute(){
     debug()<<"--------Reconstructed Displ. Vertices --------------"<< endmsg;
   Particle::ConstVector Cands;
   Particle::ConstVector::const_iterator iend = preys.end();
-  for( Particle::ConstVector::const_iterator is = preys.begin(); 
+  for( Particle::ConstVector::const_iterator is = preys.begin();
        is < iend; ++is ){
     const Particle * p = (*is);
 
     //Get rid of non-reconstructed particles, i.e. with no daughters.
-    if( p->isBasicParticle() ){ 
-      debug()<<"Basic particle !" << endmsg; 
+    if( p->isBasicParticle() ){
+      debug()<<"Basic particle !" << endmsg;
       continue;
     }
 
@@ -326,7 +326,7 @@ StatusCode DisplVertices::execute(){
     const Gaudi::XYZPoint & pos = p->endVertex()->position();
     double rho = p->info(52,-1000.);//(m_RCut=="FromPreyInfo")?p->info(52,-1000.):GetRFromBL(pos);
     //always()<<"R "<<rho<<" "<<endreq;
-    
+
     double zpos = pos.z();
     Gaudi::LorentzVector mom = p->momentum();
     double muon = HasMuons(p);
@@ -338,8 +338,8 @@ StatusCode DisplVertices::execute(){
 
     //Let's go for Prey hunting
     if( msgLevel( MSG::DEBUG ) ){
-      debug()<< m_Prey <<" candidate with mass "<< mass/Gaudi::Units::GeV 
-             <<" GeV, nb of tracks " << nbtrks << ", Chi2/ndof " 
+      debug()<< m_Prey <<" candidate with mass "<< mass/Gaudi::Units::GeV
+             <<" GeV, nb of tracks " << nbtrks << ", Chi2/ndof "
              << chi <<", R "<< rho <<", pos of end vtx "<< pos <<", sigmaX "
              << sqrt(err(0,0))<<", sigmaY "<< sqrt(err(1,1)) <<", sigmaZ "
              << sqrt(err(2,2)) <<", sigmaR "<< errr <<", rec charge "<< recq ;
@@ -353,23 +353,23 @@ StatusCode DisplVertices::execute(){
     if( m_RemVtxFromDet== 5 && p->info(51,-1000.)>-900) continue;
     if( m_RemVtxFromDet== -5 && p->info(51,-1000.)<-900) oneisOut = true;
 
-      
+
     //Is the particle decay vertex in the RF-foil ?
     if( m_RemFromRFFoil && IsInRFFoil( pos ) ){
       if( msgLevel( MSG::DEBUG ) )
-        debug()<<"Decay vertex in the RF-foil, particle disguarded"<< endmsg; 
-      continue; 
+        debug()<<"Decay vertex in the RF-foil, particle disguarded"<< endmsg;
+      continue;
     }
 
-    if( mass < m_PreyMinMass || ( mass > m_PreyMaxMass ) || 
-        nbtrks < m_nTracks || rho <  m_RMin || rho > m_RMax || 
-        sumpt < m_SumPt || chi > m_MaxChi2OvNDoF || muon < m_MuonpT || 
-        pos.x() < m_MinX || pos.x() > m_MaxX || pos.y() < m_MinY || 
+    if( mass < m_PreyMinMass || ( mass > m_PreyMaxMass ) ||
+        nbtrks < m_nTracks || rho <  m_RMin || rho > m_RMax ||
+        sumpt < m_SumPt || chi > m_MaxChi2OvNDoF || muon < m_MuonpT ||
+        pos.x() < m_MinX || pos.x() > m_MaxX || pos.y() < m_MinY ||
         pos.y() > m_MaxY ||( pos.z() < m_MinZ )|| pos.z() > m_MaxZ ||
-        errr > m_SigmaR || sqrt(err(2,2)) > m_SigmaZ ){ 
+        errr > m_SigmaR || sqrt(err(2,2)) > m_SigmaZ ){
       if( msgLevel( MSG::DEBUG ) )
-        debug()<<"Particle do not pass the cuts"<< endmsg; 
-      continue; 
+        debug()<<"Particle do not pass the cuts"<< endmsg;
+      continue;
     }
 
     //Save infos in tuple !
@@ -389,7 +389,7 @@ StatusCode DisplVertices::execute(){
       if( IsAPointInDet( p, 3, 2 ) ) indet += 10;
       if( IsAPointInDet( p, 4, 2 ) ) indet += 100;
       if( p->info(51,-1000.)>-900 ) indet += 1000;
-      indets.push_back( indet ); 
+      indets.push_back( indet );
       if(true){
         double mlong = 0.; int nbtlong = 0;
         GetMassFromLongTracks( p, mlong, nbtlong );
@@ -401,7 +401,7 @@ StatusCode DisplVertices::execute(){
     clone.setParticleID( m_PreyID );
     Cands.push_back( this->markTree(&clone) );
   }//  <--- end of Prey loop
-  
+
   if( Cands.size() < m_NbCands ){
     if( msgLevel( MSG::DEBUG ) )
       debug() << "Insufficent number of candidates !"<< endmsg;
@@ -410,22 +410,22 @@ StatusCode DisplVertices::execute(){
   if( m_RemVtxFromDet== -5 && oneisOut == false ){
     if( msgLevel( MSG::DEBUG ) )
       debug() << "Not even one outside detector !"<< endmsg;
-    return StatusCode::SUCCESS; 
+    return StatusCode::SUCCESS;
   }
   if( m_RemVtxFromDet== -5 && minMass2 < m_PreyMinMass2 ){
     if( msgLevel( MSG::DEBUG ) )
       debug() << "Highest mass too low !"<< endmsg;
-    return StatusCode::SUCCESS; 
+    return StatusCode::SUCCESS;
   }
-  
+
   //always()<<"There should be candidate"<<endreq;
-  setFilterPassed(true); 
+  setFilterPassed(true);
   counter("Nb of candidates") += Cands.size();
 
   if( msgLevel( MSG::DEBUG ) )
     debug() << "Nb of " << m_Prey <<" candidates "<< Cands.size() << endmsg;
 
-  
+
   //Save nTuples
   if( m_SaveTuple ){
     Tuple tuple = nTuple("DisplVertices");
@@ -444,7 +444,7 @@ StatusCode DisplVertices::execute(){
     tuple->farray( "PreyerrX", errx.begin(), errx.end(), "NbPrey", NbPreyMax );
     tuple->farray( "PreyerrY", erry.begin(), erry.end(), "NbPrey", NbPreyMax );
     tuple->farray( "PreyerrZ", errz.begin(), errz.end(), "NbPrey", NbPreyMax );
-    tuple->farray( "PreySumPt", sumpts.begin(), sumpts.end(), 
+    tuple->farray( "PreySumPt", sumpts.begin(), sumpts.end(),
                    "NbPrey", NbPreyMax );
     tuple->farray( "PreyQ", recqs.begin(), recqs.end(), "NbPrey", NbPreyMax );
     tuple->farray( "InDet", indets.begin(),indets.end(), "NbPrey", NbPreyMax );
@@ -454,9 +454,9 @@ StatusCode DisplVertices::execute(){
     tuple->farray( "PreyChindof", chindof.begin(), chindof.end(),
                    "NbPrey", NbPreyMax );
     if( massls.size() != 0 ){
-      tuple->farray( "PreyMLongs", massls.begin(), massls.end(), 
+      tuple->farray( "PreyMLongs", massls.begin(), massls.end(),
                      "NbPrey", NbPreyMax );
-      tuple->farray( "PreyNbofLongTracks", nboftracksl.begin(), 
+      tuple->farray( "PreyNbofLongTracks", nboftracksl.begin(),
                      nboftracksl.end(), "NbPrey", NbPreyMax );
     }
     tuple->column( "BLX", m_BeamLine->referencePoint().x() );
@@ -464,7 +464,7 @@ StatusCode DisplVertices::execute(){
     tuple->column( "BLZ", m_BeamLine->referencePoint().z() );
     if( !SavePVs( tuple )  ) return StatusCode::FAILURE;
     tuple->column( "NbVelo", GetNbVeloTracks() );
-    //if( m_SaveTrigInfos && !SaveTrigInfinTuple( tuple ) ) 
+    //if( m_SaveTrigInfos && !SaveTrigInfinTuple( tuple ) )
     // return StatusCode::FAILURE;
     if( !(tuple->write()) ) return StatusCode::FAILURE;
   }
@@ -473,7 +473,7 @@ StatusCode DisplVertices::execute(){
   //if( m_SaveonTES ) desktop()->saveDesktop();
 
 
-  //--------------Mother Reconstruction------------------  
+  //--------------Mother Reconstruction------------------
   if( m_Backtoback > 0 && Cands.size() >= 2 ){
     if( BackToBack( Cands ).isFailure() )
       Warning("Reconstruction process for mother"+ m_MotherPrey +" failed !");
@@ -490,19 +490,19 @@ StatusCode DisplVertices::finalize() {
 
   if( m_RCut !="FromBeamLine" ) delete m_BeamLine;
 
-  if( context() == "HLT" ) return DVAlgorithm::finalize(); 
+  if ( context() != "HLT" )
+  {
+    info()<<"-------------------------------------------------------"<< endreq;
+    info()<<"              DisplVertices Statistics                 "<< endreq;
+    info()<<"-------------------------------------------------------"<< endreq;
+    info()<<"Number of reconstructed "<< m_Prey <<"               : "
+          << counter("Nb of candidates").flag() << endreq;
+    info()<<"Number of reconstructed "<<  m_MotherPrey <<"                 : "
+          << counter("Nb of mothers").flag() << endreq;
+    info()<<"-------------------------------------------------------"<< endreq;
+  }
 
-
-  info()<<"-------------------------------------------------------"<< endreq;
-  info()<<"              DisplVertices Statistics                 "<< endreq;
-  info()<<"-------------------------------------------------------"<< endreq;
-  info()<<"Number of reconstructed "<< m_Prey <<"               : " 
-        << counter("Nb of candidates").flag() << endreq;
-  info()<<"Number of reconstructed "<<  m_MotherPrey <<"                 : " 
-        << counter("Nb of mothers").flag() << endreq;
-  info()<<"-------------------------------------------------------"<< endreq;
-
-  return DVAlgorithm::finalize();
+  return DaVinciTupleAlgorithm::finalize();
 }
 
 //============================================================================
@@ -512,7 +512,7 @@ unsigned int DisplVertices::GetNbVeloTracks(){
 
   unsigned int nbv = 0;
   const Track::Range Trks = get<Track::Range>( TrackLocation::Default );
-  for(Track::Range::const_iterator itr = Trks.begin(); 
+  for(Track::Range::const_iterator itr = Trks.begin();
       Trks.end() != itr; ++itr) {
     if( (*itr)->hasVelo() ) ++nbv;
   }
@@ -524,10 +524,10 @@ unsigned int DisplVertices::GetNbVeloTracks(){
 //
 // mode = 0  : disabled
 // mode = 1  : remove reco vtx if in detector material
-// mode = 2  : remove reco vtx if rad length along momentum 
-//                           from (decay pos - range) to 
+// mode = 2  : remove reco vtx if rad length along momentum
+//                           from (decay pos - range) to
 //                           (decay pos + range)  is > threshold
-// mode = 3 : remove reco vtx if rad length along 
+// mode = 3 : remove reco vtx if rad length along
 //                             +- range * PositionCovMatrix
 // mode = 4 : 3 but range+3 if in RF foil.
 //
@@ -536,15 +536,15 @@ bool DisplVertices::IsAPointInDet( const Gaudi::XYZPoint & pos ){
 
   IGeometryInfo* start = 0;
   ILVolume::PVolumePath path ;
-  
+
   //Get the physical volume, if any.
   StatusCode sc = m_lhcbGeo->fullGeoInfoForPoint
     ( pos, 1000, start, path ) ;
-  if ( sc.isFailure() ) { 
+  if ( sc.isFailure() ) {
     warning()<<"Impossible to get any physical volume related to point "
              << pos <<endmsg;
-    return false; 
-  } 
+    return false;
+  }
   int size = path.size();
   if( context() == "Info" ) plot( size, "NbofDetV", 0, 5 );
   if( msgLevel(MSG::DEBUG) )
@@ -553,24 +553,24 @@ bool DisplVertices::IsAPointInDet( const Gaudi::XYZPoint & pos ){
 
   const IPVolume* pvlast = 0;
   if ( !path.empty() ) { pvlast = path.back(); }
-  
+
   const ILVolume * lvlast = 0;
   if ( 0 != pvlast ) { lvlast = pvlast->lvolume(); }
-  
+
   const Material* matlast = 0 ;
   if ( 0 != lvlast ) { matlast = lvlast->material(); }
-  
-  if ( 0 != matlast )  { 
+
+  if ( 0 != matlast )  {
     if( msgLevel(MSG::DEBUG) ){
       debug()<<"Physical volume related to point "<< pos <<endmsg;
       debug()<< matlast << endl;
     }
     return true;
-  }  
+  }
   if( msgLevel(MSG::DEBUG) )
     debug()<<"There is no physical volume related to point "<< pos <<endmsg;
   return false;
-  
+
 }
 
 
@@ -592,7 +592,7 @@ bool DisplVertices::IsAPointInDet( const Particle* P, int mode, double range ){
     const Gaudi::XYZPoint end = Plus( pos, nvec );
 
     //Compute the radiation length
-    if( m_lhcbGeo == 0 ){ 
+    if( m_lhcbGeo == 0 ){
       warning()<<"IGeometryInfo* m_lhcbGeo is broken"<< endmsg; return true; }
 
     IGeometryInfo* dum = 0;
@@ -602,7 +602,7 @@ bool DisplVertices::IsAPointInDet( const Particle* P, int mode, double range ){
     if( context() == "Info" ) plot( radlength, "RVRadLength", 0, 0.01);
     if( msgLevel(MSG::DEBUG) )
       debug()<<"Radiation length from "<< start <<" to "
-             << end <<" : "<< radlength 
+             << end <<" : "<< radlength
              <<" [mm]" << endmsg;
 
     if( radlength > threshold ){
@@ -611,7 +611,7 @@ bool DisplVertices::IsAPointInDet( const Particle* P, int mode, double range ){
                << endmsg;
       return true;
     }
-    
+
 
   } //end of 2 condition
   else if( mode == 3 || mode == 4 ){
@@ -635,7 +635,7 @@ bool DisplVertices::IsAPointInDet( const Particle* P, int mode, double range ){
         radlength = m_transSvc->distanceInRadUnits( start, end );
         if(msgLevel(MSG::DEBUG))
           debug()<<"Radiation length from "<< start <<" to "
-                 << end <<" : "<< radlength 
+                 << end <<" : "<< radlength
                  <<" [mm]" << endmsg;
         if( radlength > threshold ){
           if(msgLevel(MSG::DEBUG))
@@ -646,7 +646,7 @@ bool DisplVertices::IsAPointInDet( const Particle* P, int mode, double range ){
       }
     }
   } // end of 3 cond
-  
+
   return false;
 }
 
@@ -654,7 +654,7 @@ bool DisplVertices::IsAPointInDet( const Particle* P, int mode, double range ){
 // Is the point in the RF-Foil ?
 //=============================================================================
 bool DisplVertices::IsInRFFoil( const Gaudi::XYZPoint & pos){
-  
+
   //debug()<<"Probing pos "<< pos;
   Gaudi::XYZPoint posloc;
   //move to local Velo half frame
@@ -665,9 +665,9 @@ bool DisplVertices::IsInRFFoil( const Gaudi::XYZPoint & pos){
     //remove cylinder
     double r = posloc.rho();
     if( r > 5.5*mm && r < 12*mm ) return true;
- 
+
     //then remove the boxes
-    if( abs(posloc.y()) > 5.5*mm && posloc.x() < -5*mm && posloc.x() > 4*mm ) 
+    if( abs(posloc.y()) > 5.5*mm && posloc.x() < -5*mm && posloc.x() > 4*mm )
       return true;
   } else { //left part
     posloc = m_toVeloLFrame * pos;
@@ -676,9 +676,9 @@ bool DisplVertices::IsInRFFoil( const Gaudi::XYZPoint & pos){
     //remove cylinder
     double r = posloc.rho();
     if( r > 5.5*mm && r < 12*mm ) return true;
-    
+
     //then remove the boxes
-    if( abs(posloc.y()) > 5.5*mm && posloc.x() < 5*mm && posloc.x() > -4*mm ) 
+    if( abs(posloc.y()) > 5.5*mm && posloc.x() < 5*mm && posloc.x() > -4*mm )
       return true;
   }
   return false;
@@ -735,13 +735,13 @@ double DisplVertices::HasMuons( const Particle * p ){
   double muonpt = 0;
   //loop on daughters
   SmartRefVector<Particle>::const_iterator iend = p->daughters().end();
-  for( SmartRefVector<Particle>::const_iterator i = 
+  for( SmartRefVector<Particle>::const_iterator i =
          p->daughters().begin(); i != iend; ++i ){
     //check if tracks could be a muon
     if( (*i)->proto() == NULL ) continue;
     if( (*i)->proto()->muonPID() == NULL ) continue;
     if( !( (*i)->proto()->muonPID()->IsMuonLoose() ) ) continue;
-    double pt = p->pt();    
+    double pt = p->pt();
     if( pt > muonpt ) muonpt = pt;
   }
 
@@ -759,46 +759,46 @@ Gaudi::XYZPoint DisplVertices::Normed( const Gaudi::LorentzVector & P,
 
 
 double DisplVertices::Norm( const Gaudi::LorentzVector & P ){
-  return sqrt( pow(P.x(),2) + pow(P.y(),2) + 
+  return sqrt( pow(P.x(),2) + pow(P.y(),2) +
                pow(P.z(),2) );
 }
 
 double DisplVertices::Norm( const Gaudi::XYZPoint & P ){
-  return sqrt( pow(P.x(),2) + pow(P.y(),2) + 
+  return sqrt( pow(P.x(),2) + pow(P.y(),2) +
                pow(P.z(),2) );
 }
 
 double DisplVertices::Norm( const Gaudi::XYZVector & P ){
-  return sqrt( pow(P.x(),2) + pow(P.y(),2) + 
+  return sqrt( pow(P.x(),2) + pow(P.y(),2) +
                pow(P.z(),2) );
 }
 
-double DisplVertices::Mult( const Gaudi::XYZPoint & p1, 
+double DisplVertices::Mult( const Gaudi::XYZPoint & p1,
                             const Gaudi::XYZPoint & p2 ){
 
   return p1.x()*p2.x() + p1.y()*p2.y() + p1.z()*p2.z();
 }
 
-double DisplVertices::Mult(  const Gaudi::LorentzVector & p1, 
+double DisplVertices::Mult(  const Gaudi::LorentzVector & p1,
                              const Gaudi::LorentzVector & p2 ){
 
   return p1.x()*p2.x() + p1.y()*p2.y() + p1.z()*p2.z();
 }
 
-Gaudi::XYZPoint DisplVertices::Plus( const Gaudi::XYZPoint & p1, 
+Gaudi::XYZPoint DisplVertices::Plus( const Gaudi::XYZPoint & p1,
                                      const Gaudi::XYZPoint & p2 ){
   return Gaudi::XYZPoint( p1.x()+p2.x(), p1.y()+p2.y(), p1.z()+p2.z() );
 }
 
-Gaudi::XYZPoint DisplVertices::Minus( const Gaudi::XYZPoint& p1, 
+Gaudi::XYZPoint DisplVertices::Minus( const Gaudi::XYZPoint& p1,
                                       const Gaudi::XYZPoint & p2 ){
   return Gaudi::XYZPoint( p1.x()-p2.x(), p1.y()-p2.y(), p1.z()-p2.z() );
 }
 
 //============================================================================
 // Compute distance between two vertices
-//============================================================================ 
-double DisplVertices::VertDistance( const Gaudi::XYZPoint & v1, 
+//============================================================================
+double DisplVertices::VertDistance( const Gaudi::XYZPoint & v1,
                                     const Gaudi::XYZPoint & v2){
   return sqrt(pow(v1.x()-v2.x(),2)+pow(v1.y()-v2.y(),2)+pow(v1.z()-v2.z(),2));
 }
@@ -806,12 +806,12 @@ double DisplVertices::VertDistance( const Gaudi::XYZPoint & v1,
 //============================================================================
 // Angle between two tracks   :   tracks are supposed to be straight lines
 //============================================================================
-double DisplVertices::Angle( const Gaudi::LorentzVector & a, 
+double DisplVertices::Angle( const Gaudi::LorentzVector & a,
                              const Gaudi::LorentzVector & b ){
-  return Angle( a.Vect(), b.Vect() );  
+  return Angle( a.Vect(), b.Vect() );
 };
 
-double DisplVertices::Angle( const Gaudi::XYZVector & a, 
+double DisplVertices::Angle( const Gaudi::XYZVector & a,
                              const Gaudi::XYZVector & b ){
   return acos( a.Dot(b) / sqrt( a.Mag2() * b.Mag2() ) );
 }
@@ -819,25 +819,25 @@ double DisplVertices::Angle( const Gaudi::XYZVector & a,
 //============================================================================
 // Compute the impact parameter of a Particle to a Vertex
 //============================================================================
-double DisplVertices::ImpactParam( const Gaudi::XYZPoint & V, 
-                                   const Gaudi::LorentzVector & P,  
+double DisplVertices::ImpactParam( const Gaudi::XYZPoint & V,
+                                   const Gaudi::LorentzVector & P,
                                    const Gaudi::XYZPoint & V0 ){
   return ImpactParam( V, Gaudi::XYZVector( P.x(),P.y(),P.z() ), V0 );
 }
 
-double DisplVertices::ImpactParam( const Gaudi::XYZPoint & V, 
-                                   const Gaudi::XYZVector & P,  
+double DisplVertices::ImpactParam( const Gaudi::XYZPoint & V,
+                                   const Gaudi::XYZVector & P,
                                    const Gaudi::XYZPoint & V0 ){
-  
+
   //A line is v + lambda*Pn, with v a point on it.
   //double norm = Norm( static_cast<const Gaudi::XYZVector>(P) );
   double norm = Norm( P );
-  const Gaudi::XYZPoint Pn = Gaudi::XYZPoint( P.x()/norm, P.y()/norm, 
+  const Gaudi::XYZPoint Pn = Gaudi::XYZPoint( P.x()/norm, P.y()/norm,
                                               P.z()/norm );
   double lambda = -( Mult(Pn,V) - Mult(Pn,V0) );
 
   Gaudi::XYZPoint dist = Minus( Plus(lambda*Pn, V), V0);
-  //debug() <<"Impact parameter " << dist.R() << endmsg; 
+  //debug() <<"Impact parameter " << dist.R() << endmsg;
 
   return dist.R();
 
@@ -846,14 +846,14 @@ double DisplVertices::ImpactParam( const Gaudi::XYZPoint & V,
 //============================================================================
 // Compute mass and nb of tracks from Long tracks only
 //============================================================================
-void DisplVertices::GetMassFromLongTracks( const Particle * p, 
+void DisplVertices::GetMassFromLongTracks( const Particle * p,
                                            double & mlong, int & nbtlong ){
-  
+
   Gaudi::LorentzVector mom;
-  
-  //Loop on the daughters.  
+
+  //Loop on the daughters.
   SmartRefVector<Particle>::const_iterator iend = p->daughters().end();
-  for( SmartRefVector<Particle>::const_iterator i = 
+  for( SmartRefVector<Particle>::const_iterator i =
          p->daughters().begin(); i != iend; ++i ){
     const Particle * d = (*i);
     if( d->proto() == NULL ) continue;
@@ -874,19 +874,19 @@ double DisplVertices::GetRecMass( const Particle::ConstVector & RecParts ){
   Gaudi::LorentzVector mom;
 
   Particle::ConstVector::const_iterator iend = RecParts.end();
-  for( Particle::ConstVector::const_iterator i = RecParts.begin(); 
+  for( Particle::ConstVector::const_iterator i = RecParts.begin();
        i != iend; ++i ){
     mom += (*i)->momentum();
   }
   return mom.M();
 }
 
-double DisplVertices::GetRecMass( const Particle::ConstVector & RecParts, 
+double DisplVertices::GetRecMass( const Particle::ConstVector & RecParts,
                                   double & recpt ){
 
   Gaudi::LorentzVector mom;
   Particle::ConstVector::const_iterator iend = RecParts.end();
-  for( Particle::ConstVector::const_iterator i = RecParts.begin(); 
+  for( Particle::ConstVector::const_iterator i = RecParts.begin();
        i != iend; ++i ){
     mom += (*i)->momentum();
   }
@@ -897,9 +897,9 @@ double DisplVertices::GetRecMass( const Particle::ConstVector & RecParts,
 //=============================================================================
 // Compute azimuthal angle between the 2 candidates
 //=============================================================================
-double DisplVertices::GetDeltaPhi( const Gaudi::XYZPoint & v1, 
+double DisplVertices::GetDeltaPhi( const Gaudi::XYZPoint & v1,
                                    const Gaudi::XYZPoint & v2 ){
-  
+
   double dphi = v1.Phi() - v2.Phi();
   if( dphi >= pi ) dphi -= 2*pi;
   if( dphi < -pi ) dphi += 2*pi;
@@ -911,7 +911,7 @@ double DisplVertices::GetDeltaPhi( const Gaudi::XYZPoint & v1,
 //=============================================================================
 void DisplVertices::GetQPt( const Vertex * v, double & sumpt, double & sumq,
                             bool weight ){
-  
+
   double sumqpt = 0.;
   SmartRefVector<Particle>::const_iterator ip = v->outgoingParticles().begin();
   for( ; ip < v->outgoingParticles().end(); ++ip ){
@@ -923,11 +923,11 @@ void DisplVertices::GetQPt( const Vertex * v, double & sumpt, double & sumq,
     sumpt += t->pt();
     sumqpt += t->pt()*t->charge();
   }
-  
+
   if( weight ){
     if( sumpt == 0. ) ++sumpt;
     sumq = sumqpt/sumpt;
-  }  
+  }
 }
 
 
@@ -935,7 +935,7 @@ void DisplVertices::GetQPt( const Vertex * v, double & sumpt, double & sumq,
 // Compute charge of a vertex, possibly weighted by the momentum
 //=============================================================================
 double DisplVertices::GetCharge( const Vertex * v, bool weight ){
-  
+
   double sumqpt = 0.;
   double sumq = 0.;
   double sumpt = 0.;
@@ -963,7 +963,7 @@ double DisplVertices::GetSumPt( const Particle * p ){
 
   double sumpt = 0;
   SmartRefVector<Particle>::const_iterator iend = p->daughters().end();
-  for( SmartRefVector<Particle>::const_iterator i = 
+  for( SmartRefVector<Particle>::const_iterator i =
          p->daughters().begin(); i != iend; ++i ){
     sumpt += i->target()->pt();
   }
@@ -977,7 +977,7 @@ double DisplVertices::GetPt( const RecVertex* RV ){
 
   Gaudi::XYZVector mom;
   SmartRefVector<Track>::const_iterator iend = RV->tracks().end();
-  for( SmartRefVector<Track>::const_iterator i = 
+  for( SmartRefVector<Track>::const_iterator i =
          RV->tracks().begin(); i != iend; ++i ){
     mom += i->target()->momentum();
   }
@@ -987,7 +987,7 @@ double DisplVertices::GetPt( const RecVertex* RV ){
 //=============================================================================
 // Compute pT of a daughter particle relativ to its mother particle
 //=============================================================================
-double DisplVertices::GetPt( const Gaudi::LorentzVector & d, 
+double DisplVertices::GetPt( const Gaudi::LorentzVector & d,
                              const Gaudi::LorentzVector & m ){
   double norm = Norm( m );
   const Gaudi::LorentzVector mn = m/norm;
@@ -1001,7 +1001,7 @@ double DisplVertices::GetPt( const Gaudi::LorentzVector & d,
 //============================================================================
 // get the delta R between two particles
 //============================================================================
-double DisplVertices::GetDeltaR( const LHCb::Particle * p1, 
+double DisplVertices::GetDeltaR( const LHCb::Particle * p1,
                                  const LHCb::Particle * p2 ){
 
   double Deta = fabs( p1->momentum().eta() - p2->momentum().eta() );
@@ -1022,19 +1022,19 @@ double DisplVertices::GetR( const Gaudi::XYZPoint & p){
 // Get radial distance to Beam Line
 //=============================================================================
 double DisplVertices::GetRFromBL( const Gaudi::XYZPoint& p ){
-  
-  //intersection of the beam line with the XY plane, 
+
+  //intersection of the beam line with the XY plane,
   //find the lambda parameter of the line.
   double lambda = (p.z() - m_BeamLine->referencePoint().z()) /
     m_BeamLine->momentum().z();
 
   //find x and y of intersection point
-  double x = m_BeamLine->referencePoint().x() 
+  double x = m_BeamLine->referencePoint().x()
     + lambda * m_BeamLine->momentum().x();
-  double y = m_BeamLine->referencePoint().y() 
+  double y = m_BeamLine->referencePoint().y()
     + lambda * m_BeamLine->momentum().y();
-  
-  //return distance to the intersection point 
+
+  //return distance to the intersection point
   x -= p.x(); y -= p.y();
   return sqrt( x*x + y*y );
 }
@@ -1047,16 +1047,16 @@ void DisplVertices::GetPVs(){
   //The PVs container is emptied at the begining of the execution
   if( !PVs.empty() ) return;
   const RecVertex::Range & PVCs = this->primaryVertices();
-  if( PVCs.empty() ) return;  
+  if( PVCs.empty() ) return;
 
-  for ( RecVertex::Range::const_iterator i = PVCs.begin(); 
+  for ( RecVertex::Range::const_iterator i = PVCs.begin();
         i != PVCs.end() ; ++i ){
     const RecVertex* pv = *i;
     //Apply some cuts
     if(m_RCut=="FromBeamLine" || (m_RCut=="FromPreyInfo" && m_SaveTuple)){
-      double rho = GetRFromBL( pv->position() );        
+      double rho = GetRFromBL( pv->position() );
       if( context() == "Info" ) plot( rho, "PVr", 0., 1.5*mm, 50 );
-      if( rho > m_RMin ) continue;         
+      if( rho > m_RMin ) continue;
     }
     else if( abs(pv->position().x()>1.5*mm) || abs(pv->position().y()>1.5*mm)){
       continue;}
@@ -1086,8 +1086,8 @@ void DisplVertices::GetUpstreamPV(){
 //=============================================================================
 // Get Particles related to a RecVertex
 //=============================================================================
-void DisplVertices::GetPartsFromRecVtx(const RecVertex* dVtx, 
-                                       const Particle::ConstVector & inputParts, 
+void DisplVertices::GetPartsFromRecVtx(const RecVertex* dVtx,
+                                       const Particle::ConstVector & inputParts,
                                        Particle::ConstVector & RecParts){
 
 
@@ -1099,14 +1099,14 @@ void DisplVertices::GetPartsFromRecVtx(const RecVertex* dVtx,
   Particle::ConstVector::const_iterator jend = inputParts.end();
   for ( Particle::ConstVector::const_iterator j = inputParts.begin();
         j != jend;++j) {
-      
+
     if( (*j)->proto()->track() == NULL ) continue;
     const Track * tk = (*j)->proto()->track();
     while( ((*iVtx)->key() < tk->key()) && (*iVtx)->key() != endkey ){
       ++iVtx;
     }
-    if( (*iVtx)->key() == tk->key() ){ 
-      if( (*iVtx)->key() != endkey ) ++iVtx; 
+    if( (*iVtx)->key() == tk->key() ){
+      if( (*iVtx)->key() != endkey ) ++iVtx;
       RecParts.push_back( *j );
       continue;
     }
@@ -1118,12 +1118,12 @@ void DisplVertices::GetPartsFromRecVtx(const RecVertex* dVtx,
 //============================================================================
 StatusCode DisplVertices::SaveCaloInfos( Tuple& tuple ){
   double E = 0; double Et = 0.;
-  StatusCode sc = GetCaloInfos( "Ecal", E, Et ) && 
+  StatusCode sc = GetCaloInfos( "Ecal", E, Et ) &&
     GetCaloInfos( "Hcal", E, Et ) &&
     //GetCaloInfos( "Prs", E, Et ) && GetCaloInfos( "Spd", E, Et ) &&
     GetCaloInfos( "Muon", E, Et );
   tuple->column( "TotEt", Et );
-  return sc;  
+  return sc;
 }
 
 StatusCode DisplVertices::GetCaloInfos( string CaloType, double& En, double& Et ){
@@ -1132,20 +1132,20 @@ StatusCode DisplVertices::GetCaloInfos( string CaloType, double& En, double& Et 
   if( CaloType == "Muon" ){
 
     const MuonPIDs* pMU = get<MuonPIDs>( MuonPIDLocation::Default );
-    for(  MuonPIDs::const_iterator imu = pMU->begin() ; 
+    for(  MuonPIDs::const_iterator imu = pMU->begin() ;
           imu !=  pMU->end() ; ++imu ){
       const MuonPID* myMu = *imu;
       const LHCb::Track* myTrk = myMu->idTrack();
       double Q = myTrk->charge();
-      double CloneDist = myTrk->info(LHCb::Track::CloneDist,9999.); 
+      double CloneDist = myTrk->info(LHCb::Track::CloneDist,9999.);
       if (Q==0.) { continue; }
       if (CloneDist!=9999.) { continue; }
-      
+
       double myP = myTrk->p();
       double mE = sqrt((myP*myP) + 105.66*105.66)/ GeV;
       double mET = mE*sqrt(myTrk->position().Perp2()/myTrk->position().Mag2());
-      //       debug() << "P (GeV) : " << myP / Gaudi::Units::GeV  
-      // 	      << " is muon=" << (*imu)->IsMuon() << endmsg;
+      //       debug() << "P (GeV) : " << myP / Gaudi::Units::GeV
+      //        << " is muon=" << (*imu)->IsMuon() << endmsg;
       EC += mE;
       EtC += mET;
 
@@ -1164,8 +1164,8 @@ StatusCode DisplVertices::GetCaloInfos( string CaloType, double& En, double& Et 
     const DeCalorimeter*  Dcalo = getDet<DeCalorimeter>
       ( "/dd/Structure/LHCb/DownstreamRegion/"+CaloType );
 
-    for ( CaloDigits::const_iterator idigit=digitsCalo->begin(); 
-          digitsCalo->end()!=idigit ; ++idigit ){  
+    for ( CaloDigits::const_iterator idigit=digitsCalo->begin();
+          digitsCalo->end()!=idigit ; ++idigit ){
       const CaloDigit* digit = *idigit ;
       if ( 0 == digit ) { continue ; }
       // get unique calorimeter cell identifier
@@ -1184,9 +1184,9 @@ StatusCode DisplVertices::GetCaloInfos( string CaloType, double& En, double& Et 
   }
 
   if( msgLevel( MSG::DEBUG ) )
-    debug() << CaloType <<" : Total Energy "<< EC <<" GeV, total Et "<< EtC 
+    debug() << CaloType <<" : Total Energy "<< EC <<" GeV, total Et "<< EtC
             << endmsg;
-  
+
   En += EC;
   Et += EtC;
   return StatusCode::SUCCESS;
@@ -1202,19 +1202,19 @@ StatusCode DisplVertices::GetCaloClusterInfos( string CaloType, Tuple & tuple,
   if( CaloType == "Muon" ){
 
     const MuonPIDs* pMU = get<MuonPIDs>( MuonPIDLocation::Default );
-    for(  MuonPIDs::const_iterator imu = pMU->begin() ; 
+    for(  MuonPIDs::const_iterator imu = pMU->begin() ;
           imu !=  pMU->end() ; ++imu ){
       const MuonPID* myMu = *imu;
       const LHCb::Track* myTrk = myMu->idTrack();
       double Q = myTrk->charge();
-      double CloneDist = myTrk->info(LHCb::Track::CloneDist,9999.); 
+      double CloneDist = myTrk->info(LHCb::Track::CloneDist,9999.);
       if (Q==0.) { continue; }
       if (CloneDist!=9999.) { continue; }
-      
+
       double myP = myTrk->p();
       double mE = sqrt((myP*myP) + 105.66*105.66)/ GeV;
       double mET = mE*sqrt(myTrk->position().Perp2()/myTrk->position().Mag2());
-      debug() << "P (GeV) : " << myP / Gaudi::Units::GeV  
+      debug() << "P (GeV) : " << myP / Gaudi::Units::GeV
               << " is muon=" << (*imu)->IsMuon() << endmsg;
       En += mE;
       Et += mET;
@@ -1227,8 +1227,8 @@ StatusCode DisplVertices::GetCaloClusterInfos( string CaloType, Tuple & tuple,
     const DeCalorimeter*  Dcalo = getDet<DeCalorimeter>
       ( "/dd/Structure/LHCb/DownstreamRegion/"+CaloType );
 
-    for ( CaloDigits::const_iterator idigit=digitsCalo->begin(); 
-          digitsCalo->end()!=idigit ; ++idigit ){  
+    for ( CaloDigits::const_iterator idigit=digitsCalo->begin();
+          digitsCalo->end()!=idigit ; ++idigit ){
       const CaloDigit* digit = *idigit ;
       if ( 0 == digit ) { continue ; }
       // get unique calorimeter cell identifier
@@ -1282,9 +1282,9 @@ StatusCode DisplVertices::GetCaloClusterInfos( string CaloType, Tuple & tuple,
 //   tuple->column( "L0", L0dec );
 
 //   //fill the HLT global : Hlt2 : 77,Hlt1 :  46
-//   vector<unsigned int> m_routingBits;   
+//   vector<unsigned int> m_routingBits;
 //   m_routingBits.push_back( 46 );
-//   m_routingBits.push_back( 77 );  
+//   m_routingBits.push_back( 77 );
 //   //   for ( unsigned int i = 32 ; i < 96 ; i++){m_routingBits.push_back(i);}
 //   bool Hlt1Globdec = false;
 //   bool Hlt2Globdec = false;
@@ -1300,7 +1300,7 @@ StatusCode DisplVertices::GetCaloClusterInfos( string CaloType, Tuple & tuple,
 //       debug()<<"Hlt1 Global decision         : " << Hlt1Globdec << endmsg;
 //       debug()<<"Hlt2 Global decision         : " << Hlt2Globdec << endmsg;
 //     }
-//   } 
+//   }
 //   tuple->column( "Hlt1", Hlt1Globdec );
 //   tuple->column( "Hlt2", Hlt2Globdec);
 
@@ -1310,13 +1310,13 @@ StatusCode DisplVertices::GetCaloClusterInfos( string CaloType, Tuple & tuple,
 //   if (!exist<HltDecReports>( HltDecReportsLocation::Default ) ){
 //     return true;
 //     warning()<<"No HltDecReports at "
-// 	     << HltDecReportsLocation::Default << endmsg;
+//       << HltDecReportsLocation::Default << endmsg;
 //   }
 //   const HltDecReports* decReports = get<HltDecReports>
 //     ( HltDecReportsLocation::Default );
 
-//   int DVdec = 0; 
-//   const LHCb::HltDecReport * decrep = 
+//   int DVdec = 0;
+//   const LHCb::HltDecReport * decrep =
 //     decReports->decReport("Hlt2DisplVerticesSingleDecision");
 //   if( decrep != NULL && decrep->decision() ) DVdec += 1;
 //   decrep = decReports->decReport("Hlt2DisplVerticesDoubleDecision");
@@ -1336,7 +1336,7 @@ StatusCode DisplVertices::GetCaloClusterInfos( string CaloType, Tuple & tuple,
 
 //   //////////////////////////////////////////////////////////////////
 //   //Do not use HltDecReport for Hlt1Global and Hlt2Global decisions...
-//   // Offline, all the rate limited stuff, including the Lumi/MinBias, 
+//   // Offline, all the rate limited stuff, including the Lumi/MinBias,
 //   // doesn't work properly as you don't have the "counter" to limit it,
 //   // so the Global //always goes to 1...
 //   //   bool Hlt1Globdec = false;
@@ -1345,18 +1345,18 @@ StatusCode DisplVertices::GetCaloClusterInfos( string CaloType, Tuple & tuple,
 //   //   if( msgLevel(MSG::DEBUG) )
 //   //     debug()<<"Hlt1 Global decision         : " << Hlt1Globdec << endmsg;
 //   //   tuple->column( "Hlt1", Hlt1Globdec );
-  
+
 //   //   decrep = decReports->decReport("Hlt2Global");
 //   //   bool Hlt2Globdec = false;
-//   //   if( decrep != NULL ) Hlt2Globdec = decrep->decision();	      
+//   //   if( decrep != NULL ) Hlt2Globdec = decrep->decision();
 //   //   if( msgLevel(MSG::DEBUG) )
 //   //     debug()<<"Hlt2 Global decision         : " << Hlt2Globdec << endreq;
 //   //   tuple->column( "Hlt2", Hlt2Globdec);
-  
+
 //   //To print entire report container :
 //   //vector<string> allConfiguredTrgLines = decReports->decisionNames();
 //   //debug() << *decReports << endmsg;
-  
+
 //   return SaveL0RawInfos(tuple);
 // }
 
@@ -1373,7 +1373,7 @@ Error("unable to get the L0DUFromRawTool");
 m_l0BankDecoder->fillDataMap();
 bool l0BankDecoderOK = m_l0BankDecoder->decodeBank();
 if(!l0BankDecoderOK ){
-Error("Readout error : unable to monitor the L0DU rawBank", 
+Error("Readout error : unable to monitor the L0DU rawBank",
 StatusCode::SUCCESS,StatusCode::SUCCESS).ignore();
 } else {
 nSpd = m_l0BankDecoder->data("Spd(Mult)");
@@ -1388,10 +1388,10 @@ return StatusCode::SUCCESS ;
 // Save in Tuple the PV candidates
 //============================================================================
 StatusCode  DisplVertices::SavePVs( Tuple & tuple ){
-  
+
   GetPVs();
   vector<double> x,y,z;
-  for ( vector<const RecVertex*>::const_iterator i = PVs.begin(); 
+  for ( vector<const RecVertex*>::const_iterator i = PVs.begin();
         i != PVs.end() ; ++i ){
     const RecVertex* pv = *i;
     x.push_back( pv->position().x() );
@@ -1407,20 +1407,20 @@ StatusCode  DisplVertices::SavePVs( Tuple & tuple ){
 }
 
 //============================================================================
-//  Event number 
+//  Event number
 //============================================================================
 StatusCode DisplVertices::fillHeader( Tuple& tuple ){
-  const LHCb::RecHeader* header = 
-    get<LHCb::RecHeader>(LHCb::RecHeaderLocation::Default);  
+  const LHCb::RecHeader* header =
+    get<LHCb::RecHeader>(LHCb::RecHeaderLocation::Default);
   //debug() << "Filling Tuple Event " << header->evtNumber() << endmsg ;
   tuple->column("Event", (int)header->evtNumber());
   tuple->column("Run", (int)header->runNumber());
 
-  
+
   LHCb::ODIN * odin = get<LHCb::ODIN>( LHCb::ODINLocation::Default );
   if( odin ){
     //NoBeam = 0, Beam1 = 1, Beam2 = 2, BeamCrossing = 3
-    tuple->column("BXType", 
+    tuple->column("BXType",
                   static_cast<unsigned int>( odin->bunchCrossingType()  ) );
     //     //tuple->column("Event", odin->eventNumber()); //ulonglong !
     //     tuple->column("Run", odin->runNumber());
@@ -1429,16 +1429,16 @@ StatusCode DisplVertices::fillHeader( Tuple& tuple ){
     //     //tuple->column("GpsTime", (double)odin->gpsTime()); //ulonglong !
     //     //tuple->column("EventTime", odin->eventTime() );
     //     tuple->column("OrbitNumber", odin->orbitNumber());
-  
+
     if( msgLevel( MSG::DEBUG ) && false )
-      debug() <<"Reading of ODIN banks : Event nb "<< odin->eventNumber() 
-              <<" Run nb "<< odin->runNumber() <<" BunchID "<< odin->bunchId() 
+      debug() <<"Reading of ODIN banks : Event nb "<< odin->eventNumber()
+              <<" Run nb "<< odin->runNumber() <<" BunchID "<< odin->bunchId()
               <<" BunchCurrent "<< odin->bunchCurrent() <<" GpsTime "
-              << odin->gpsTime() <<" EventTime " << odin->eventTime() 
-              <<" OrbitNumber "<< odin->orbitNumber() <<" Bunch Crossing Type " 
+              << odin->gpsTime() <<" EventTime " << odin->eventTime()
+              <<" OrbitNumber "<< odin->orbitNumber() <<" Bunch Crossing Type "
               << odin->bunchCrossingType() << endmsg;
-  
-  
+
+
   } else {
     Warning("Can't get LHCb::ODINLocation::Default");
   }
@@ -1452,13 +1452,13 @@ StatusCode DisplVertices::fillHeader( Tuple& tuple ){
 //============================================================================
 StatusCode DisplVertices::BackToBack( Particle::ConstVector & Cands ){
 
-  setFilterPassed(false);   
+  setFilterPassed(false);
   GetPVs();
   if( PVs.empty() ) return StatusCode::SUCCESS ;
 
   //Loop on candidates
   Particle::ConstVector::const_iterator iend = Cands.end();
-  for( Particle::ConstVector::const_iterator i1 = Cands.begin(); 
+  for( Particle::ConstVector::const_iterator i1 = Cands.begin();
        i1 < iend; ++i1 ){
     const Particle * p1 = (*i1);
     Particle::ConstVector::const_iterator i2 = i1; ++i2;
@@ -1466,7 +1466,7 @@ StatusCode DisplVertices::BackToBack( Particle::ConstVector & Cands ){
       const Particle * p2 = (*i2);
 
       //Loop on PVs
-      for ( RecVertex::Range::const_iterator i = PVs.begin(); 
+      for ( RecVertex::Range::const_iterator i = PVs.begin();
             i != PVs.end() ; ++i ){
         const RecVertex* pv = *i;
         //check that no candidate comes before the pv.
@@ -1474,18 +1474,18 @@ StatusCode DisplVertices::BackToBack( Particle::ConstVector & Cands ){
         const Gaudi::XYZPoint & pos1 = p1->endVertex()->position();
         const Gaudi::XYZPoint & pos2 = p2->endVertex()->position();
         if( pos1.z() < pospv.z() || pos2.z() < pospv.z() ) break;
-        
+
         Gaudi::XYZPoint v1 = Minus( pos1, pospv);
         Gaudi::XYZPoint v2 = Minus( pos2, pospv);
         //compute azimuthal angle between the 2 candidates
         double dphi = GetDeltaPhi( v1, v2 );
         if( dphi > m_Backtoback ){
           ++counter("Nb of mothers");
-          setFilterPassed(true);  
+          setFilterPassed(true);
           return StatusCode::SUCCESS;
-        }        
+        }
       }
-    }    
+    }
   }
   return StatusCode::SUCCESS;
 }

@@ -1,10 +1,10 @@
 // $Id: $
-#ifndef DISPLVERTICES_H 
+#ifndef DISPLVERTICES_H
 #define DISPLVERTICES_H 1
 
 // Include files
 // from DaVinci, this is a specialized GaudiAlgorithm
-#include "Kernel/DVAlgorithm.h"
+#include "Kernel/DaVinciTupleAlgorithm.h"
 
 //To decode L0DU raw infos
 //#include "L0Interfaces/IL0DUFromRawTool.h"
@@ -21,19 +21,24 @@
 #include "DetDesc/ITransportSvc.h"
 
 /** @class DisplVertices DisplVertices.h
- *  
+ *
  *  @brief Apply a set of cuts on given Particles.
  *  @author Neal Gauvin
  *  @date  30 june 2009
  */
 
-//A list is a sequence container that support rapide insertion or deletion
-//at any position but does not support random access.
-typedef std::vector<LHCb::Particle> VecPart;
-typedef std::vector<LHCb::Vertex> VecVert;
+class DisplVertices : public DaVinciTupleAlgorithm
+{
 
-class DisplVertices : public DVAlgorithm {
-public: 
+private:
+
+  //A list is a sequence container that support rapide insertion or deletion
+  //at any position but does not support random access.
+  typedef std::vector<LHCb::Particle> VecPart;
+  typedef std::vector<LHCb::Vertex> VecVert;
+
+public:
+
   /// Standard constructor
   DisplVertices( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -42,8 +47,6 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
-
-protected:
 
 private:
 
@@ -78,14 +81,14 @@ private:
   double VertDistance( const Gaudi::XYZPoint &, const Gaudi::XYZPoint &);
   double Angle( const Gaudi::LorentzVector &, const Gaudi::LorentzVector & );
   double Angle( const Gaudi::XYZVector &, const Gaudi::XYZVector & );
-  double ImpactParam( const Gaudi::XYZPoint &, const Gaudi::LorentzVector &, 
-		      const Gaudi::XYZPoint & );
-  double ImpactParam( const Gaudi::XYZPoint &, const Gaudi::XYZVector&, 
-		      const Gaudi::XYZPoint &);
+  double ImpactParam( const Gaudi::XYZPoint &, const Gaudi::LorentzVector &,
+                      const Gaudi::XYZPoint & );
+  double ImpactParam( const Gaudi::XYZPoint &, const Gaudi::XYZVector&,
+                      const Gaudi::XYZPoint &);
 
   unsigned int GetNbVeloTracks();
   double GetSumPt( const LHCb::Particle * );
-  void   GetQPt( const LHCb::Vertex * v, double & sumpt, double & sumq, 
+  void   GetQPt( const LHCb::Vertex * v, double & sumpt, double & sumq,
                  bool weight = false );
   double GetCharge( const LHCb::Vertex * v, bool weight = false );
   double GetRecMass( const LHCb::Particle::ConstVector & );
@@ -95,13 +98,13 @@ private:
   double GetDeltaPhi( const Gaudi::XYZPoint &, const Gaudi::XYZPoint & );
   double GetDeltaR( const LHCb::Particle *, const LHCb::Particle * );
   double GetR( const Gaudi::XYZPoint & );
-  double GetRFromBL( const Gaudi::XYZPoint& );  
+  double GetRFromBL( const Gaudi::XYZPoint& );
   void GetMassFromLongTracks( const LHCb::Particle *, double &, int & );
   void GetUpstreamPV(); ///< Get the Upstream PV
   void GetPVs(); ///< Get the PV candidates
-  void GetPartsFromRecVtx(const LHCb::RecVertex*, 
-			  const LHCb::Particle::ConstVector &, 
-			  LHCb::Particle::ConstVector & );
+  void GetPartsFromRecVtx(const LHCb::RecVertex*,
+                          const LHCb::Particle::ConstVector &,
+                          LHCb::Particle::ConstVector & );
   StatusCode SaveCaloInfos( Tuple & );
   StatusCode GetCaloInfos( std::string, double &, double & );
   StatusCode GetCaloClusterInfos( std::string, Tuple &, double &, double & );
@@ -112,27 +115,27 @@ private:
   StatusCode BackToBack( LHCb::Particle::ConstVector & );
 
   /***************************************************************//**
-   * the type of radial (R) cut to be applied 
-   * ""                   : cut with respect to (0,0,z)
-   * "FromUpstreamPV"     : cut with respect to the upstream PV (PV3D)
-   * "FromBeamLine"       : cut with respect to given beam line
-   ******************************************************************/
-  std::string m_RCut;         
+                                                                    * the type of radial (R) cut to be applied
+                                                                    * ""                   : cut with respect to (0,0,z)
+                                                                    * "FromUpstreamPV"     : cut with respect to the upstream PV (PV3D)
+                                                                    * "FromBeamLine"       : cut with respect to given beam line
+                                                                    ******************************************************************/
+  std::string m_RCut;
   std::string m_BLLoc;        ///< Location in TES of Beam line
   LHCb::Particle * m_BeamLine;
-  bool   m_SaveTuple;         ///<Save prey properties in a tuple 
+  bool   m_SaveTuple;         ///<Save prey properties in a tuple
   bool   m_SaveTrigInfos ;    ///<Save trigger infos in a tuple
   bool   m_SaveonTES;         ///<Save Event on TES if fires
   int    m_nEvents ;          // number of events
   const double pi ;
   // cuts
-  
+
   double m_PreyMinMass ;      ///< Minimum reconstructed mass
   double m_PreyMinMass2 ;      ///< Minimum reconstructed mass
   double m_PreyMaxMass ;      ///< Maximum reconstructed mass
   double m_PreyMaxSumPt ;     ///< Maximum sumpt
   double m_SumPt ;            ///< Sumpt of all daughters tracks
-  double m_DistMax;           ///< Max distance of the vertices 
+  double m_DistMax;           ///< Max distance of the vertices
   double m_RMin;              ///< Min dist to the z axis
   double m_RMax;              ///< Max dist to the z axis
   double m_MaxChi2OvNDoF;     ///< Max chi2 of a vertex
@@ -143,25 +146,25 @@ private:
   int    m_nTracks ;          ///< Min # of tracks at reconstructed vertex
   double m_SigmaZ;            ///< Max on error Z
   double m_SigmaR;            ///< Max on error R
-  double m_MinX;              ///< Min X position     
-  double m_MaxX;              ///< Max X position     
-  double m_MinY;              ///< Min Y position     
-  double m_MaxY;              ///< Max Y position     
-  double m_MinZ;              ///< Min Z position     
+  double m_MinX;              ///< Min X position
+  double m_MaxX;              ///< Max X position
+  double m_MinY;              ///< Min Y position
+  double m_MaxY;              ///< Max Y position
+  double m_MinZ;              ///< Min Z position
   double m_MaxZ;              ///< Max Z position
-  
+
   /***************************************************************//**
-   * Remove vtx if in detector material ?
-   * if = 0  : disabled
-   * if = 1  : remove reco vtx if in detector material
-   * if = 2  : remove reco vtx if rad length from decay pos - DetDist 
-   *           to decay pos + DetDist along momentum is > threshold
-   * if = 3 : remove reco vtx if rad length along 
-   *                             +- DetDist * PositionCovMatrix
-   * if = 4 : 3 but range+3 if in RF foil.
-   ******************************************************************/
-  int m_RemVtxFromDet ;    
-  double m_DetDist;           ///< Min distance to det material 
+                                                                    * Remove vtx if in detector material ?
+                                                                    * if = 0  : disabled
+                                                                    * if = 1  : remove reco vtx if in detector material
+                                                                    * if = 2  : remove reco vtx if rad length from decay pos - DetDist
+                                                                    *           to decay pos + DetDist along momentum is > threshold
+                                                                    * if = 3 : remove reco vtx if rad length along
+                                                                    *                             +- DetDist * PositionCovMatrix
+                                                                    * if = 4 : 3 but range+3 if in RF foil.
+                                                                    ******************************************************************/
+  int m_RemVtxFromDet ;
+  double m_DetDist;           ///< Min distance to det material
   ///<Remove vtx if found in RF-Foil area, based on geometric cuts
   bool   m_RemFromRFFoil;
   double m_Backtoback;
@@ -179,18 +182,18 @@ private:
   LHCb::ParticleID m_MotherPreyID;  // PDG ID of this particle
 
   struct sortPVdz {
-    double refz; 
-    bool operator() ( const LHCb::RecVertex* first, 
-		      const LHCb::RecVertex* second ) { 
-      
-      return std::abs( first->position().z() - refz ) < 
-	std::abs( second->position().z() - refz );
+    double refz;
+    bool operator() ( const LHCb::RecVertex* first,
+                      const LHCb::RecVertex* second ) {
+
+      return std::abs( first->position().z() - refz ) <
+        std::abs( second->position().z() - refz );
     }
   } SortPVdz;
-  ///To sort PVs with ascending z position 
+  ///To sort PVs with ascending z position
   struct sortPVz {
-    bool operator() ( const LHCb::RecVertex* first, 
-		      const LHCb::RecVertex* second ) { 
+    bool operator() ( const LHCb::RecVertex* first,
+                      const LHCb::RecVertex* second ) {
       return first->position().z() < second->position().z();
     }
   } SortPVz;

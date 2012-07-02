@@ -5,6 +5,9 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2012-07-02 - Chris Jones
+ - Use new DV base classes instead of depreciated DVAlgorithm
+
 !========================= DisplVertices v7r9 2012-06-28 =========================
 
 ! 2012-06-26 - Maurizio Martinelli
