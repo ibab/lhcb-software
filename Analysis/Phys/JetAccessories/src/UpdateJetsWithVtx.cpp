@@ -9,14 +9,12 @@
 #include "LoKi/CoreCuts.h"
 #include "Event/Particle.h"
 #include "Kernel/IJets2Jets.h"
-#include "Kernel/IOnOffline.h"
 #include "Kernel/IRelatedPVFinder.h"
 #include "Event/RecVertex.h"
 #include "Event/Particle.h"
 #include "Kernel/Particle2Vertex.h"
+#include "Kernel/DefaultDVToolTypes.h"
 
-
-class IOnOffline;
 class IRelatedPVFinder;
 
 // ============================================================================
@@ -38,12 +36,13 @@ protected:
   ( const std::string& name ,
     ISvcLocator*       pSvc )
     : GaudiAlgorithm ( name , pSvc ),
-      m_OnOffline(0),
       m_pvRelator(0)
   { 
     declareProperty ( "InputJetsLocation"   ,  m_inputJetsLocation   , "Location of jets to be updated") ;
     declareProperty ( "InputVertexLocation" ,  m_inputVertexLocation , "Location of vertices to be updated") ; 
     // declareProperty ( "UpdatedJetsLocation" ,  m_updatedJetsLocation , "Location of the updated jets") ; 
+    declareProperty("PVRelatorName", 
+                    m_pvRelatorName = DaVinci::DefaultTools::PVRelator );
   }
   
   /// destructor
@@ -57,30 +56,17 @@ public:
    */
   virtual StatusCode initialize () 
   {  
-    
     StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
     if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
     
     if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
     
-    m_OnOffline = tool<IOnOffline>("OnOfflineTool",this);
+    m_pvRelator = tool<IRelatedPVFinder>(m_pvRelatorName,this);
     
-    if (0==m_OnOffline) return Error("Failed to get IOnOffline tool");
-    
-    m_pvRelator = tool<IRelatedPVFinder>(m_OnOffline->relatedPVFinderType(), 
-                                         this);
-    
-    if (0==m_pvRelator) return Error("Failed to get IRelatedPVFinder tool");
-    
-    return StatusCode::SUCCESS;
-  }
-  virtual StatusCode finalize () 
-  {  
-    return GaudiAlgorithm::finalize () ;
+    return sc;
   }
   
   virtual StatusCode execute() ;
-
   
   // ========================================================================    
 private:
@@ -95,11 +81,9 @@ private:
 private:  
   std::string m_inputJetsLocation ;
   std::string m_inputVertexLocation ;
-  //std::string m_updatedJetsLocation ;
-
-  IOnOffline* m_OnOffline ; 
+  //std::string m_updatedJetsLocation ; 
   IRelatedPVFinder* m_pvRelator ; 
-
+  std::string m_pvRelatorName;   ///< The name of the PV relator to use
 };
 
 DECLARE_ALGORITHM_FACTORY( UpdateJetsWithVtx );

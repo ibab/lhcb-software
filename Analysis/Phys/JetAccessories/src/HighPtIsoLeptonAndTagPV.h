@@ -30,7 +30,6 @@
 #include "Kernel/IParticleTransporter.h"
 #include "Kernel/IVertexFit.h"
 //#include "Kernel/IGeomDispCalculator.h"
-#include "Kernel/IOnOffline.h" 
 #include "Kernel/DVAlgorithm.h"
 #include "MuonDAQ/IMuonRawBuffer.h"
 //To recreate track measurements
@@ -60,7 +59,6 @@ class  HighPtIsoLeptonAndTagPV : public DVAlgorithm {
     ,   m_LeptSignif       ( 1.    )
 
     ,   m_LeptjetMomRaw    ( false ) 
-    ,   m_onOffline (0) 
     ,   m_ipTool (0) 
     ,   m_pVertexFit (0) 
  
@@ -167,10 +165,6 @@ class  HighPtIsoLeptonAndTagPV : public DVAlgorithm {
   double   m_LeptSignif    ;
   bool  m_LeptjetMomRaw;
 
-
-  //  IContextTool* m_context;
-  
-  const IOnOffline*     m_onOffline ;
   IMeasurementProvider * m_measProvider;
   ITupleTool* m_tuple;
   const IDistanceCalculator* m_ipTool; 

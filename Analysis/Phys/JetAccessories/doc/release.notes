@@ -7,6 +7,12 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2012-07-02 - Chris Jones
+ - Remove usage of the depreciated OnOfflineTool
+
+! 2012-06-29 - Chris Jones
+ - Use a public instance of LoKi::DistanceCalculator in HighPtIsoLeptonAndTagPV
+
 !========================= JetAccessories v1r5 2012-06-28 =========================
 
 ! 2012-06-22 - Chris Jones
