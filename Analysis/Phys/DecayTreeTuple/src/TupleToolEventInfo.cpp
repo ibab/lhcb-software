@@ -14,7 +14,6 @@
 
 #include "GaudiAlg/Tuple.h"
 #include "GaudiAlg/ITupleTool.h"
-#include "Kernel/IOnOffline.h"
 #include "Event/RecVertex.h"
 #include "Event/VertexBase.h"
 #include "Event/Track.h"
@@ -42,7 +41,8 @@ DECLARE_TOOL_FACTORY( TupleToolEventInfo )
     : TupleToolBase ( type, name , parent )
 {
   declareInterface<IEventTupleTool>(this);
-  declareProperty("InputLocation", m_pvLocation = "" ,
+  declareProperty("InputLocation", 
+                  m_pvLocation = LHCb::RecVertexLocation::Primary,
                   "PV location to be used. If empty, take default");
   declareProperty("Mu", m_mu);
 }
@@ -79,13 +79,8 @@ StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple )
 
   // Number PVs
   unsigned int nPVs = 0 ;
-  if ( m_pvLocation.empty() )
-  {
-    const IOnOffline* oo = tool<IOnOffline>("OnOfflineTool",this);
-    m_pvLocation = oo->primaryVertexLocation();
-    if (msgLevel(MSG::DEBUG)) debug() << "Will be looking for PVs at " << m_pvLocation << endmsg ;
-  }
-  if (exist<RecVertex::Container>(m_pvLocation)) nPVs = (get<RecVertex::Container>(m_pvLocation))->size();
+  if (exist<RecVertex::Container>(m_pvLocation)) 
+    nPVs = (get<RecVertex::Container>(m_pvLocation))->size();
 
   LHCb::L0DUReport* report = NULL;
   if(exist<L0DUReport>( LHCb::L0DUReportLocation::Default) )

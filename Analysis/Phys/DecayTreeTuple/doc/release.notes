@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2012-07-02 - Chris Jones
+ - Remove all usage of the OnOfflineTool
+
 ! 2012-06-30 - Chris Jones
  - Fix 32bit compilation warnings from TupleToolBremInfo
 

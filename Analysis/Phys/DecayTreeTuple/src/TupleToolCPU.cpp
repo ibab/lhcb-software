@@ -9,14 +9,8 @@
 
 #include "GaudiAlg/Tuple.h"
 #include "GaudiAlg/ITupleTool.h"
-#include "Kernel/IOnOffline.h"
 #include "GaudiKernel/Memory.h"
 #include "GaudiAlg/ISequencerTimerTool.h"
-
-
-//#include "GaudiAlg/TupleObj.h"
-// #include "GaudiAlg/GaudiTupleAlg.h"
-
 
 #include "GaudiKernel/IRegistry.h" // IOpaqueAddress
 

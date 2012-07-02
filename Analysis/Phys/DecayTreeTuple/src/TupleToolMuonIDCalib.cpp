@@ -9,7 +9,6 @@
 //#include "Kernel/Particle2MCLinker.h"
 #include <Kernel/IDistanceCalculator.h>
 #include "Kernel/IPVReFitter.h"
-#include "Kernel/IOnOffline.h"
 // MC stuff
 #include "Event/GenHeader.h"
 #include "Event/MCHeader.h"

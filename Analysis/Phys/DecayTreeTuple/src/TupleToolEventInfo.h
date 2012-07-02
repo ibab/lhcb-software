@@ -29,8 +29,12 @@ class ILHCbMagnetSvc;
  *  @author Jeremie Borel
  *  @date   2007-11-07
  */
-class TupleToolEventInfo : public TupleToolBase, virtual public IEventTupleTool {
+class TupleToolEventInfo : public TupleToolBase,
+                           virtual public IEventTupleTool 
+{
+
 public:
+
   /// Standard constructor
   TupleToolEventInfo( const std::string& type,
 		      const std::string& name,
@@ -42,8 +46,10 @@ public:
   StatusCode fill( Tuples::Tuple& );
 
 private :
+
   std::string m_pvLocation ;
   std::map<int,double> m_mu ;
   ILHCbMagnetSvc* m_magSvc ;
+
 };
 #endif // JBOREL_TUPLETOOLEVENTINFO_H

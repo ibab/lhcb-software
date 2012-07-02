@@ -11,7 +11,6 @@
 #include "GaudiAlg/TupleObj.h"
 #include "Event/VertexBase.h"
 #include "Event/Track.h"
-#include "Kernel/IOnOffline.h"
 
 using namespace LHCb;
 
@@ -31,11 +30,11 @@ DECLARE_TOOL_FACTORY( TupleToolPrimaries )
   TupleToolPrimaries::TupleToolPrimaries( const std::string& type,
                                           const std::string& name,
                                           const IInterface* parent )
-    : TupleToolBase ( type, name , parent )
+    : TupleToolBase ( type, name, parent )
 {
   declareInterface<IEventTupleTool>(this);
-  declareProperty("InputLocation", m_pvLocation = "" ,
-                  "PV location to be used. If empty, take default");
+  declareProperty("InputLocation", m_pvLocation = LHCb::RecVertexLocation::Primary,
+                  "PV location to be used.");
 }
 
 //=============================================================================
@@ -45,13 +44,8 @@ StatusCode TupleToolPrimaries::initialize()
 {
   const StatusCode sc = TupleToolBase::initialize();
   if ( sc.isFailure() ) return sc;
-
-  if ( m_pvLocation.empty() )
-  {
-    const IOnOffline* oo = tool<IOnOffline>("OnOfflineTool",this);
-    m_pvLocation = oo->primaryVertexLocation();
-    debug() << "Will be looking for PVs at " << m_pvLocation << endmsg ;
-  }
+  
+  debug() << "Will be looking for PVs at " << m_pvLocation << endmsg ;
 
   return sc;
 }
