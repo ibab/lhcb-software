@@ -29,7 +29,6 @@
 #include "Kernel/IJetMaker.h"
 #include "Kernel/ILifetimeFitter.h"
 #include "Kernel/IMassFit.h"
-#include "Kernel/IOnOffline.h"
 #include "Kernel/IP2VVAngleCalculator.h"
 #include "Kernel/IP2VVPartAngleCalculator.h"
 #include "Kernel/IParticleArrayFilter.h"

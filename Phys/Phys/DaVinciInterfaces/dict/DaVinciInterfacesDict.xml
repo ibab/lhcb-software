@@ -18,7 +18,6 @@
   <class name = "IJetMaker"/>
   <class name = "ILifetimeFitter"/>
   <class name = "IMassFit"/>
-  <class name = "IOnOffline"/>
   <class name = "IP2VVAngleCalculator"/>
   <class name = "IP2VVPartAngleCalculator"/>
   <class name = "IParticleArrayFilter"/>

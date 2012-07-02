@@ -4,6 +4,9 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2012-07-02 - Chris Jones
+ - Remove the interface IOnOffline.h
+
 ! 2012-06-30 - Chris Jones
  - Improve the public tool detection in getIDVAlgorithm, to detect cases where
    the tool is a private tool of a public tool (recursively).
