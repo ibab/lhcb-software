@@ -351,15 +351,14 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
   return StatusCode::SUCCESS;
 }
 
-
-void DiElectronMaker::clear(LHCb::Particle::Vector & vector){
+void DiElectronMaker::clear(LHCb::Particle::Vector & vector)
+{
   for(LHCb::Particle::Vector::iterator v=vector.begin();vector.end()!=v;++v){
     if( NULL == *v)continue;
-    *v = NULL;
     delete *v;
+    *v = NULL;
   }
 }
-
 
 double DiElectronMaker::veloCnv(LHCb::Particle* p1, LHCb::Particle* p2){
   const LHCb::ProtoParticle* pp1 = p1->proto();
@@ -371,8 +370,6 @@ double DiElectronMaker::veloCnv(LHCb::Particle* p1, LHCb::Particle* p2){
   double eps = 10.e-3;
   return  (fabs(vc1-vc2) > eps) ? -1.0 : vc1 ;
 }
-
-
 
 double DiElectronMaker::veloCh(LHCb::Particle* p1){
   const LHCb::ProtoParticle* pp1 = p1->proto();
@@ -421,13 +418,6 @@ Gaudi::XYZPoint DiElectronMaker::getPoCA(LHCb::Particle* particle, const Gaudi::
   double y=pref.Y()+mom.py()*scal;
   double z=pref.Z()+mom.pz()*scal;
   return Gaudi::XYZPoint(x,y,z);
-}
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode DiElectronMaker::finalize() {
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-  return ChargedParticleMakerBase::finalize();
 }
 
 //=============================================================================

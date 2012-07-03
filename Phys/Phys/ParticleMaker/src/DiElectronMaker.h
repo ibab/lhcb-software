@@ -17,19 +17,19 @@
  *  @author Olivier Deschamps
  *  @date   2011-02-25
  */
-class DiElectronMaker : public ChargedParticleMakerBase {
+class DiElectronMaker : public ChargedParticleMakerBase 
+{
+
 public: 
+
   /// Standard constructor
   DiElectronMaker( const std::string& name, ISvcLocator* pSvcLocator );  
   virtual ~DiElectronMaker( ); ///< Destructor
   virtual StatusCode makeParticles (LHCb::Particle::Vector & particles ) ; 
   virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
-
-protected:
   
 private:
-  const ITrackSelector * m_trSel;
+
   const ITrackSelector * trSel()const{return m_trSel;}
   double ConfLevel(LHCb::Particle* electron);
   double ePID(LHCb::Particle* electron);
@@ -38,7 +38,10 @@ private:
   std::pair<double,double> getY(const LHCb::ProtoParticle* proto, double zcalo);
   Gaudi::XYZPoint getPoCA(LHCb::Particle* particle, const Gaudi::XYZPoint PVpos);
   void clear(LHCb::Particle::Vector & vector);
+
+private:
   
+  const ITrackSelector * m_trSel;
   IProtoParticleFilter* m_pFilter;
   IProtoParticleFilter* m_photFilter;
   ICaloElectron* m_caloElectron;
@@ -73,5 +76,7 @@ private:
   double m_gid;
   double m_zcalo;
   bool m_addBrem;
+
 };
+
 #endif // DIELECTRONMAKER_H
