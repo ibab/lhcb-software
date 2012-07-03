@@ -274,7 +274,7 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
       if( m_pid == "gamma"){
         vc1 = veloCh(ele1);
         vc2 = veloCh(p2);
-        LHCb::Particle* part1;
+        LHCb::Particle* part1(NULL);
         int icas=0;
         if ( (vc1==vc2 && vc1> m_vc) || (vc2 <0 && vc1 > m_vc) ) {
           part1 = ele1;
