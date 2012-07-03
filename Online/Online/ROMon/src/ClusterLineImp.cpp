@@ -210,6 +210,7 @@ typedef vector<string>               StringV;
 
 #define UPDATE_TIME_MAX        15
 #define CLUSTERLINE_START      2
+#define COL_ATTENTION       (RED)
 #define COL_WARNING         (RED|BOLD)
 #define COL_ALARM           (RED|BOLD|INVERSE)
 #define COL_OK              (GREEN|INVERSE)
@@ -1011,10 +1012,11 @@ void HltDeferLine::display() {
       if ( nn.length() > 0 && nn != s->name ) {
 	const Runs& nr = n.runs;
 	bool excl = m_excluded.find(nn) != m_excluded.end();
-	col = nr.size()==0 ? COL_OK : COL_WARNING;
-	if ( excl )  {
+	col = nr.size()==0 ? COL_OK : COL_ATTENTION;
+	if ( excl )
 	  col = INVERSE|(col==COL_WARNING ? MAGENTA : BLUE);
-	}
+	else if ( n.overflowState == 'Y' && nr.size()>0 )
+	  col = COL_WARNING;
 	nn = nn.substr(nn.length()-2);
 	int n_pos = ::atoi(nn.c_str())-1;
 	val = " "+nn;

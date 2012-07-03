@@ -51,7 +51,8 @@ namespace ROMon  {
     int               m_hltSvc;
     size_t            m_hltSize;
     char*             m_hltBuffer;
-
+    int               m_overflow;
+    int               m_overflowSvc;
     ROMonServer       m_mbm;
     RODimFSMListener  m_fsm;
 
@@ -74,6 +75,8 @@ namespace ROMon  {
     static void feedStats(void* tag, void** buf, int* size, int* first);
     static void feedMBM(void* tag, void** buf, int* size, int* first);
     static void feedHLT(void* tag, void** buf, int* size, int* first);
+    /// Dim callback to retrieve the overflow status
+    static void overflowHandler(void* tag, void* address, int* size);
   };
 }      // End namespace ROMon
 #endif /* ROMON_NODESTATSCOLLECTOR_H */

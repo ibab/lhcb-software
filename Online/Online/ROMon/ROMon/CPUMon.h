@@ -469,6 +469,8 @@ namespace ROMon {
     int          time;
     /// Time stamp of the monitor snapshot [milli seconds]
     unsigned int millitm;
+    /// MEPRx Deferred state
+    int          overflowState;
     /// Disk space info
     Diskspace    localdisk;
     /// Variable size array of node items

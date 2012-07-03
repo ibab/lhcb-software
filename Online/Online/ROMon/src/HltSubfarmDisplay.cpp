@@ -86,7 +86,7 @@ void HltSubfarmDisplay::showNodes()  {
   const _N& nodes = *(stats->nodes());
   const char* fmt = " %-11s%5ld%5d  %-90s %s";
   MonitorDisplay* disp = m_nodes;
-  char text[512];
+  char text[512], txt[64];
   string val;
 
   disp->draw_line_normal("");
@@ -125,7 +125,8 @@ void HltSubfarmDisplay::showNodes()  {
     float tot = gb*disk.numBlocks;
     ::sprintf(text,"%7d/%-3d   %5.0f %5.0f  %5.1f %%", 
 	      exc_runs, exc_files, fr, tot,tot < 1e-10 ? 100. : 100.f*(1.f-fr/tot));
-    disp->draw_line_normal(fmt,(*n).name, runs.size(), numFiles, val.c_str(), text);
+    ::sprintf(txt,"%s/%c",(*n).name, char((*n).overflowState));
+    disp->draw_line_normal(fmt, txt , runs.size(), numFiles, val.c_str(), text);
   }
   disp->draw_line_normal("");
   disp->draw_line_bold(fmt, "Total:", tot_runs.size(), tot_files, "", "");

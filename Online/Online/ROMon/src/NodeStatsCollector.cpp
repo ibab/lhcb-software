@@ -60,7 +60,10 @@ NodeStatsCollector::NodeStatsCollector(int argc, char** argv)
   m_mbmBuffer   = new char[m_mbmSize];
   m_hltSize    *= 1024;
   m_hltBuffer   = new char[m_hltSize];
-
+  nam = strupper(RTL::nodeNameShort())+"_MEPRx_01/OverflowStatus";
+  //log() << "MEPRx service:" << nam << endl;
+  m_overflow    = '?';
+  m_overflowSvc = ::dic_info_service((char*)nam.c_str(),MONITORED,0,0,0,overflowHandler,(long)this,0,0);
   CPUMonData cpu(m_statBuffer);
   cpu.node->reset();
   ROMonData mbm(m_mbmBuffer);
@@ -89,9 +92,32 @@ NodeStatsCollector::NodeStatsCollector(int argc, char** argv)
 
 /// Default destructor
 NodeStatsCollector::~NodeStatsCollector() {
+  ::dic_release_service(m_overflowSvc);
   ::dis_remove_service(m_statSvc);
   if ( 0 != m_mbmSvc ) ::dis_remove_service(m_mbmSvc);
   if ( 0 != m_hltSvc ) ::dis_remove_service(m_hltSvc);
+}
+
+/// Dim callback to retrieve the overflow status
+void NodeStatsCollector::overflowHandler(void* tag, void* address, int* size) {
+  if ( tag ) {
+    NodeStatsCollector* it = *(NodeStatsCollector**)tag;
+    try {
+      it->m_overflow = '?';
+      if ( address && size && *size>0 ) {
+	if ( strstr((char*)address,"disabled") > 0 )
+	  it->m_overflow = 'N';
+	else if ( strstr((char*)address,"enabled") > 0 )
+	  it->m_overflow = 'Y';
+      }
+    }
+    catch(const exception& e) {
+      cout << "Exception in DIM callback processing:" << e.what() << endl;
+    }
+    catch(...) {
+      cout << "UNKNOWN exception in DIM callback processing." << endl;
+    }
+  }
 }
 
 /// Help printout in case of -h /? or wrong arguments
@@ -189,6 +215,7 @@ int NodeStatsCollector::monitorHLT() {
 
   /// Now load data into object
   ro_gettime(&h->time,&h->millitm);
+  h->overflowState = m_overflow;
   map<int,int> files;
   DIR* dir = ::opendir("/localdisk/overflow");
   if ( dir ) {
@@ -207,7 +234,7 @@ int NodeStatsCollector::monitorHLT() {
 	++count;
       }
       else if( !(0==::strcmp(entry->d_name,".") || 0==::strcmp(entry->d_name,"..")) ) {
-	log() << "Strange file name for HLT deferred processing:" << entry->d_name << endl;
+	// log() << "Strange file name for HLT deferred processing:" << entry->d_name << endl;
       }
     }
     ::closedir(dir);
