@@ -72,12 +72,14 @@ StatusCode ParticleMakerBase::execute()
   LHCb::Particle::Vector newParts ;
 
   StatusCode sc = makeParticles(newParts);
-  if (!sc) return sc;
+  if ( sc.isFailure() ) return sc;
 
   LHCb::Particle::ConstVector constParts ; /// @todo this is a hack due to CaloParticle...
   constParts.reserve(newParts.size());
 
-  for (LHCb::Particle::Vector::const_iterator i = newParts.begin() ; i!= newParts.end() ; ++i) {
+  for (LHCb::Particle::Vector::const_iterator i = newParts.begin() ; 
+       i != newParts.end() ; ++i ) 
+  {
     constParts.push_back(*i);
     addBrem( *i );
   }
@@ -99,7 +101,7 @@ StatusCode ParticleMakerBase::execute()
     else { debug() << "No primary vertices" << endmsg; }
   }
 
-  setFilterPassed((!newParts.empty()));
+  setFilterPassed( !newParts.empty() );
 
   return sc;
 }

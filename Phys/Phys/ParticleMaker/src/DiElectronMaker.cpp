@@ -315,7 +315,6 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
           const LHCb::VertexBase* bestPV = this->calculateRelatedPV(&mother);
           if (bestPV) {
             const Gaudi::XYZPoint& PVpos=bestPV->position();
-
             mother.setReferencePoint( getPoCA(&mother,PVpos) );
           }
           mother.setMomentum(symmom);
@@ -343,7 +342,6 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
   clear(electrons);
   clear(trash);
   //====================
-  setFilterPassed(true);  // Mandatory. Set to true if event is accepted.
   return StatusCode::SUCCESS;
 }
 
@@ -352,7 +350,6 @@ void DiElectronMaker::clear(LHCb::Particle::Vector & vector)
   for ( LHCb::Particle::Vector::iterator v = vector.begin();
         vector.end() != v; ++v ) 
   {
-
     delete *v;
     *v = NULL;
   }
