@@ -18,9 +18,10 @@
 // Standard constructor, initializes variables
 //=============================================================================
 DiElectronMaker::DiElectronMaker( const std::string& name,
-                                  ISvcLocator* pSvcLocator)
+                                  ISvcLocator* pSvcLocator )
   : ChargedParticleMakerBase ( name , pSvcLocator ),
-    m_trSel   ( NULL ){
+    m_trSel   ( NULL )
+{
   declareProperty("ProtoFilter"        , m_toolType = "ProtoParticleCALOFilter");
   declareProperty("ProtoFilterName"    , m_toolName = "Electron"); // Electron PID filter is the default (for ProtoP Input only)
   declareProperty("OppositeSign"       , m_oppSign = true);
@@ -55,7 +56,7 @@ DiElectronMaker::~DiElectronMaker() {}
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode DiElectronMaker::initialize() 
+StatusCode DiElectronMaker::initialize()
 {
   const StatusCode sc = ChargedParticleMakerBase::initialize();
   if ( sc.isFailure() ) return sc;
@@ -67,8 +68,8 @@ StatusCode DiElectronMaker::initialize()
   m_trSel       = tool<ITrackSelector>( "TrackSelector", "TrackSelector", this );
   m_calo        = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal ) ;
 
-  //get zcalo
-  Gaudi::Plane3D plane = m_calo->plane(CaloPlane::ShowerMax);
+  // get zcalo
+  const Gaudi::Plane3D plane = m_calo->plane(CaloPlane::ShowerMax);
   double Hesse = plane.HesseDistance();
   m_zcalo = -Hesse/plane.Normal().Z();
 
@@ -90,14 +91,17 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
   if( m_eleinputs.empty() && exist<LHCb::ProtoParticles>( m_input ) ){
     //============== Starting from protoparticles
     const LHCb::ProtoParticles* pps = get<LHCb::ProtoParticles>( m_input );
-    if (msgLevel(MSG::DEBUG))debug() << " Starting from " << pps->size() << " protoParticles " << endmsg;
+    if (msgLevel(MSG::DEBUG))
+      debug() << " Starting from " << pps->size() << " protoParticles " << endmsg;
     counter("Input protoP from "+m_input) += pps->size();
-    for(LHCb::ProtoParticles::const_iterator ipp = pps->begin();pps->end() != ipp ; ++ipp){
+    for ( LHCb::ProtoParticles::const_iterator ipp = pps->begin();
+          pps->end() != ipp ; ++ipp ) 
+    {
       // apply filter and produce electrons particles
       const LHCb::ProtoParticle* proto = *ipp;
       if( !m_pFilter->isSatisfied( proto ))continue;
       const int pID = m_ePps->particleID().pid() * (int)(proto->charge());
-      LHCb::Particle* electron = new LHCb::Particle(  (LHCb::ParticleID)pID );
+      LHCb::Particle* electron = new LHCb::Particle( LHCb::ParticleID(pID) );
       electron->setMeasuredMass(m_ePps->mass());
       electron->setMeasuredMassErr(0.);
       electron->setProto( proto );
@@ -106,14 +110,14 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
       const LHCb::State* state = usedState( track );
       p2s()->state2Particle( *state, *electron ).ignore();// status code
       if( electron->pt() < m_eptmin){delete electron;continue;}
-      double cl = ConfLevel( electron );
-      double pid= ePID( electron );
+      const double cl = ConfLevel( electron );
+      const double pid= ePID( electron );
       if( m_ecl > 0 &&  cl  < m_ecl ){delete electron; continue;}
       if( pid < m_eidmin){delete electron; continue;}
       //--- e/p selection : require Ecal acceptance implicitely
-      bool ok=  m_caloElectron->set( electron );
+      const bool ok=  m_caloElectron->set( electron );
       if((m_eOpMax > 0 || m_eOpMin>0) && !ok ){delete electron;continue;}
-      double eOp=m_caloElectron->eOverP();
+      const double eOp=m_caloElectron->eOverP();
       if( m_eOpMax > 0 && eOp > m_eOpMax){delete electron;continue;}
       if( m_eOpMin >=0 && eOp < m_eOpMin){delete electron;continue;}
       //
@@ -133,8 +137,8 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
       for(LHCb::Particle::Range::iterator ip = iElectrons.begin(); iElectrons.end() != ip ; ++ip){
         LHCb::Particle* pp = (LHCb::Particle*) *ip;
         if( pp->pt() < m_eptmin)continue;
-        double cl = ConfLevel( pp );
-        double pid= ePID( pp );
+        const double cl = ConfLevel( pp );
+        const double pid= ePID( pp );
         if( pp->proto() == NULL || pp->proto()->track() == NULL)
           return Warning("input particle MUST be basic electrons",StatusCode::FAILURE);
         const LHCb::Track* track = pp->proto()->track() ;
@@ -143,9 +147,9 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
         if( m_ecl > 0 && cl  < m_ecl )continue;
         if( pid < m_eidmin)continue;
         //--- e/p selection : require Ecal acceptance implicitely
-        bool ok=  m_caloElectron->set( pp );
+        const bool ok=  m_caloElectron->set( pp );
         if((m_eOpMax > 0 || m_eOpMin>0) && !ok )continue;
-        double eOp=m_caloElectron->eOverP();
+        const double eOp=m_caloElectron->eOverP();
         if( m_eOpMax > 0 && eOp > m_eOpMax)continue;
         if( m_eOpMin >=0 && eOp < m_eOpMin)continue;
         // remove BremStrahlung if any
@@ -204,15 +208,15 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
       else if( !m_oppSign && p1->charge() != p2->charge() )continue;
 
       //--- Apply PID
-      double pid2= ePID(p2);
-      double gPID = pid1+pid2;
+      const double pid2= ePID(p2);
+      const double gPID = pid1+pid2;
       // check CL & PID
       if( pid1 < m_eidmax && pid2 < m_eidmax)continue; // at least one electron with pid > m_eidmax
       if( pid1 < m_eidmin || pid2 < m_eidmin)continue; // both electrons with pid > m_eidmin
       if( gPID < m_gid)continue;
       // diElectron CL is the product of electrons CL
-      double cl2 = ConfLevel(p2);
-      double gCL  = cl1*cl2;
+      const double cl2 = ConfLevel(p2);
+      const double gCL  = cl1*cl2;
       if( m_gcl > 0 && gCL<m_gcl  ) continue;
 
       //get electron ECAL Hypo info
@@ -242,11 +246,11 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
       //clone 2nd electron
       LHCb::Particle* ele2=p2->clone();
       trash.push_back(ele2);
-      bool b = (m_addBrem) ? bremAdder()->addBrem2Pair(ele1,ele2) : false;
+      const bool b = ( m_addBrem ? bremAdder()->addBrem2Pair(ele1,ele2) : false );
       counter("Applying Brem-correction to dielectron")+=(int) b;
 
       //---- mass window pre-cut &  pt cut (kinematical cuts after brem correction )
-      Gaudi::LorentzVector da=ele1->momentum()+ele2->momentum();
+      const Gaudi::LorentzVector da = ele1->momentum()+ele2->momentum();
       if( da.M() > m_mmax*m_aFactor || da.M() < m_mmin/m_aFactor)continue;
       if( da.pt() < m_ptmin) continue;
 
@@ -256,8 +260,13 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
       epair.push_back( ele1 );
       epair.push_back( ele2 );
       LHCb::Vertex vertex;
-      particleCombiner()->combine( epair, mother, vertex );
-      double Mgamma_comb=mother.momentum().M();
+      const StatusCode combSc = particleCombiner()->combine( epair, mother, vertex );
+      if ( combSc.isFailure() )
+      {
+        Warning( "ParticleCombiner returned failure" ).ignore();
+        continue;
+      }
+      const double Mgamma_comb = mother.momentum().M();
       mother.setMeasuredMass(Mgamma_comb);
       mother.setConfLevel( gCL );
 
@@ -287,14 +296,14 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
           tr->position(pos,errpos);
           mother.setReferencePoint(pos);
           mother.setPosCovMatrix(errpos);
-          double pm  = mome.P();
-          double pp1  = part1->p();
-          double fac = pm/pp1;
-          double px = part1->momentum().px()*fac;
-          double py = part1->momentum().py()*fac;
-          double pz = part1->momentum().pz()*fac;
-          double mas = 0;//mome.mass();
-          double e  = std::sqrt( mas*mas + px*px + py*py+ pz*pz);
+          const double pm = mome.P();
+          const double pp1 = part1->p();
+          const double fac = pm/pp1;
+          const double px = part1->momentum().px()*fac;
+          const double py = part1->momentum().py()*fac;
+          const double pz = part1->momentum().pz()*fac;
+          const double mas = 0;//mome.mass();
+          const double e = std::sqrt( mas*mas + px*px + py*py+ pz*pz);
           mome.SetPxPyPzE( px,py,pz,e);
         }
       }
@@ -330,13 +339,18 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
         //--- CREATE THE DIELECTRON
         const LHCb::Particle* dielectron = this->cloneAndMarkTree( &mother );
         dielectrons.push_back( (LHCb::Particle*) dielectron );
-      }else{
+
+      }
+      else
+      {
         if (msgLevel(MSG::DEBUG))
-          debug()<<"DiElectron fit failed: "<<da.px()<<" , "<<da.py()<<" , "<<da.E()<<" , "<<da.M()<<endmsg;
+          debug() << "DiElectron fit failed: "<<da.px()<<" , "<<da.py()<<" , "
+                  << da.E()<<" , "<<da.M()<<endmsg;
       }
     }
   }
-  if (msgLevel(MSG::DEBUG))debug() << "Created " << dielectrons.size() << " " << m_pid << "->ee" << endmsg;
+  if (msgLevel(MSG::DEBUG))
+    debug() << "Created " << dielectrons.size() << " " << m_pid << "->ee" << endmsg;
   counter("Created "+m_pid+"->ee") += dielectrons.size();
   // cleaning
   clear(electrons);
@@ -348,41 +362,40 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
 void DiElectronMaker::clear(LHCb::Particle::Vector & vector)
 {
   for ( LHCb::Particle::Vector::iterator v = vector.begin();
-        vector.end() != v; ++v ) 
+        vector.end() != v; ++v )
   {
     delete *v;
     *v = NULL;
   }
+  vector.clear();
 }
 
 double DiElectronMaker::veloCnv(LHCb::Particle* p1, LHCb::Particle* p2)
 {
   const LHCb::ProtoParticle* pp1 = p1->proto();
   const LHCb::ProtoParticle* pp2 = p2->proto();
-  if( NULL == pp1 && NULL == pp2 )return -1.;
-  double vc1 = pp1->info( LHCb::ProtoParticle::VeloCharge,  0.0 );
-  double vc2 = pp2->info( LHCb::ProtoParticle::VeloCharge,  0.0 );
-  if(vc1*vc2 == 0.0)return -1.0;
-  double eps = 10.e-3;
-  return  (fabs(vc1-vc2) > eps) ? -1.0 : vc1 ;
+  if ( !pp1 && !pp2 ) return -1.;
+  const double vc1 = pp1->info( LHCb::ProtoParticle::VeloCharge, 0.0 );
+  const double vc2 = pp2->info( LHCb::ProtoParticle::VeloCharge, 0.0 );
+  if ( vc1*vc2 == 0.0 ) return -1.0;
+  const double eps = 10.e-3;
+  return ( (fabs(vc1-vc2) > eps) ? -1.0 : vc1 );
 }
 
-double DiElectronMaker::veloCh(LHCb::Particle* p1){
+double DiElectronMaker::veloCh(LHCb::Particle* p1)
+{
   const LHCb::ProtoParticle* pp1 = p1->proto();
-  if( !pp1 )return -1.;
-  const double vc1 = pp1->info( LHCb::ProtoParticle::VeloCharge,  -1. );
-  return  vc1 ;
+  return ( pp1 ? pp1->info( LHCb::ProtoParticle::VeloCharge, -1. ) : -1. );
 }
 
-
-double DiElectronMaker::ePID( LHCb::Particle* electron){
+double DiElectronMaker::ePID( LHCb::Particle* electron)
+{
   const LHCb::ProtoParticle* proto = electron->proto();
-  if( NULL == proto )return 0.;
-  return proto->info( LHCb::ProtoParticle::CombDLLe,  -999.0 );
+  return ( proto ? proto->info( LHCb::ProtoParticle::CombDLLe, -999.0 ) : 0. );
 }
 
-
-double DiElectronMaker::ConfLevel( LHCb::Particle* electron){
+double DiElectronMaker::ConfLevel( LHCb::Particle* electron)
+{
   // à redefinir
   const LHCb::ProtoParticle* proto = electron->proto();
   if( NULL == proto )return 0.;
@@ -391,7 +404,7 @@ double DiElectronMaker::ConfLevel( LHCb::Particle* electron){
   const double vk  = proto->info( LHCb::ProtoParticle::CombDLLk,  -999.0 );
   const double vp  = proto->info( LHCb::ProtoParticle::CombDLLp,  -999.0 );
   const double estimator = (4*ve-vmu-vk-vp)/2.;
-  const double confLevel = 0.5*(tanh(estimator)+1);
+  const double confLevel = 0.5*(std::tanh(estimator)+1);
   return confLevel;
 }
 
@@ -400,7 +413,7 @@ std::pair<double,double> DiElectronMaker::getY(const LHCb::ProtoParticle* proto,
   const LHCb::State& nstate = tr->firstState();
   const double ty=nstate.ty();
   const double y=nstate.y()+ty*(m_zcalo - nstate.z());
-  Gaudi::SymMatrix3x3 cov = ( nstate.errPosition() + 
+  Gaudi::SymMatrix3x3 cov = ( nstate.errPosition() +
                               (m_zcalo - nstate.z())*(m_zcalo - nstate.z())*nstate.errSlopes() );
   double covy=cov(1,1);
   return std::make_pair(y,covy);

@@ -1,10 +1,11 @@
 ! $Id: release.notes,v 1.122 2010-09-01 14:54:00 odescham Exp $ 
 ! Package     : ParticleMaker
-! Responsible : Chris Jones, J. Palacios, Olivier Deschamps
+! Responsible : Chris Jones, Olivier Deschamps
 !==============================================================================
 
 ! 2012-07-03 - Chris Jones
  - Fix memory leaks in DiElectronMaker
+ - Properly check the returned StatusCode by ParticleCombiner in DiElectronMaker
 
 !========================= ParticleMaker v6r3 2012-06-28 =========================
 
