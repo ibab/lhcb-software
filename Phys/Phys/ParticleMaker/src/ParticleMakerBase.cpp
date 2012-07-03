@@ -77,16 +77,14 @@ StatusCode ParticleMakerBase::execute()
   LHCb::Particle::ConstVector constParts ; /// @todo this is a hack due to CaloParticle...
   constParts.reserve(newParts.size());
 
-  for (LHCb::Particle::Vector::const_iterator i = newParts.begin() ; 
-       i != newParts.end() ; ++i ) 
+  for ( LHCb::Particle::Vector::const_iterator i = newParts.begin() ; 
+        i != newParts.end() ; ++i ) 
   {
     constParts.push_back(*i);
     addBrem( *i );
   }
 
   this->markNewTrees(constParts);
-
-  if ( sc.isFailure() ){ return Error( "Not able to save particles" );}
 
   if ( msgLevel(MSG::DEBUG) )
   {
