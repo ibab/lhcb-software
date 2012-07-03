@@ -14,42 +14,39 @@
 // 2011-02-25 : Olivier Deschamps - Edwige Tournefier
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( DiElectronMaker )
-
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-  DiElectronMaker::DiElectronMaker( const std::string& name,
-                                    ISvcLocator* pSvcLocator)
-    : ChargedParticleMakerBase ( name , pSvcLocator ),
-      m_trSel   ( NULL ){
-    declareProperty("ProtoFilter"        , m_toolType = "ProtoParticleCALOFilter");
-    declareProperty("ProtoFilterName"    , m_toolName = "Electron"); // Electron PID filter is the default (for ProtoP Input only)
-    declareProperty("OppositeSign"       , m_oppSign = true);
-    declareProperty("SymetricPair"       , m_symgamma = false);
-    declareProperty("ElectronMaxPIDcut"  , m_eidmax=-99999.);
-    declareProperty("ElectronPIDcut"     , m_eidmin=-99999.);
-    declareProperty("DiElectronPIDcut"   , m_gid=-99999.);
-    declareProperty("ElectronCLcut"      , m_ecl = -1.);        //  electron CL lower threshold
-    declareProperty("DiElectronCLcut"    , m_gcl = -1.);        //  di-electron CL lower threshold
-    declareProperty("DiElectronPtMin"    , m_ptmin = 500.0);   //  min Pt of pair range
-    declareProperty("ElectronPtMin"      , m_eptmin = 100.0);   //  min Pt of electrons
-    declareProperty("DiElectronMassMax"  , m_mmax = 200.0);    //  Upper mass range
-    declareProperty("DiElectronMassMin"  , m_mmin =  0.0);    //  Lower mass range
-    declareProperty("ADAMASSFactor"      , m_aFactor = 1.5);
-    declareProperty("eOpMax"             , m_eOpMax=-1.);
-    declareProperty("eOpMin"             , m_eOpMin=-1.);
-    declareProperty("ElectronInputs"     ,  m_eleinputs  );// start from protoParticles if no Std electron input
-    declareProperty("BremCorrectionMethod"   , m_method=0);
-    declareProperty("DeltaY"                 , m_deltaY=-1);
-    declareProperty("DeltaYmax"              , m_deltaYmax=-1);
-    declareProperty("UseEcalEnergy"          , m_ecalE=40*Gaudi::Units::GeV);
-    declareProperty("VeloCnvThreshold"       , m_vc=1.5);
-    declareProperty("AddBrem"                , m_addBrem=true);
-    m_pid = "gamma";
-  }
+DiElectronMaker::DiElectronMaker( const std::string& name,
+                                  ISvcLocator* pSvcLocator)
+  : ChargedParticleMakerBase ( name , pSvcLocator ),
+    m_trSel   ( NULL ){
+  declareProperty("ProtoFilter"        , m_toolType = "ProtoParticleCALOFilter");
+  declareProperty("ProtoFilterName"    , m_toolName = "Electron"); // Electron PID filter is the default (for ProtoP Input only)
+  declareProperty("OppositeSign"       , m_oppSign = true);
+  declareProperty("SymetricPair"       , m_symgamma = false);
+  declareProperty("ElectronMaxPIDcut"  , m_eidmax=-99999.);
+  declareProperty("ElectronPIDcut"     , m_eidmin=-99999.);
+  declareProperty("DiElectronPIDcut"   , m_gid=-99999.);
+  declareProperty("ElectronCLcut"      , m_ecl = -1.);        //  electron CL lower threshold
+  declareProperty("DiElectronCLcut"    , m_gcl = -1.);        //  di-electron CL lower threshold
+  declareProperty("DiElectronPtMin"    , m_ptmin = 500.0);   //  min Pt of pair range
+  declareProperty("ElectronPtMin"      , m_eptmin = 100.0);   //  min Pt of electrons
+  declareProperty("DiElectronMassMax"  , m_mmax = 200.0);    //  Upper mass range
+  declareProperty("DiElectronMassMin"  , m_mmin =  0.0);    //  Lower mass range
+  declareProperty("ADAMASSFactor"      , m_aFactor = 1.5);
+  declareProperty("eOpMax"             , m_eOpMax=-1.);
+  declareProperty("eOpMin"             , m_eOpMin=-1.);
+  declareProperty("ElectronInputs"     ,  m_eleinputs  );// start from protoParticles if no Std electron input
+  declareProperty("BremCorrectionMethod"   , m_method=0);
+  declareProperty("DeltaY"                 , m_deltaY=-1);
+  declareProperty("DeltaYmax"              , m_deltaYmax=-1);
+  declareProperty("UseEcalEnergy"          , m_ecalE=40*Gaudi::Units::GeV);
+  declareProperty("VeloCnvThreshold"       , m_vc=1.5);
+  declareProperty("AddBrem"                , m_addBrem=true);
+  m_pid = "gamma";
+}
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -58,8 +55,9 @@ DiElectronMaker::~DiElectronMaker() {}
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode DiElectronMaker::initialize() {
-  StatusCode sc = ChargedParticleMakerBase::initialize();
+StatusCode DiElectronMaker::initialize() 
+{
+  const StatusCode sc = ChargedParticleMakerBase::initialize();
   if ( sc.isFailure() ) return sc;
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
@@ -74,18 +72,18 @@ StatusCode DiElectronMaker::initialize() {
   double Hesse = plane.HesseDistance();
   m_zcalo = -Hesse/plane.Normal().Z();
 
-
   // ParticleProperty
   m_ePps  = ppSvc()->find( "e+" ); // daughters = electron pair
   m_gPps  = ppSvc()->find( m_pid );// mother particle - default = (conversion) gamma
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons ){
+StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons )
+{
 
   //------------ select electron input
   LHCb::Particle::Vector electrons;
@@ -235,7 +233,7 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
 
       // check that the 2 electrons have the same Y within 3 sigma and maximum within 20cm (gamma conversion only)
       if(m_pid == "gamma"){
-        if( m_deltaY> 0 && fabs(ye1-ye2) > m_deltaY*sqrt(sprye1+sprye2))continue;
+        if( m_deltaY> 0 && fabs(ye1-ye2) > m_deltaY*std::sqrt(sprye1+sprye2))continue;
         if( m_deltaYmax > 0 &&  fabs(ye1-ye2)>m_deltaYmax)continue;
       }
 
@@ -258,7 +256,7 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
       epair.push_back( ele1 );
       epair.push_back( ele2 );
       LHCb::Vertex vertex;
-      particleCombiner()->combine( epair , mother , vertex);
+      particleCombiner()->combine( epair, mother, vertex );
       double Mgamma_comb=mother.momentum().M();
       mother.setMeasuredMass(Mgamma_comb);
       mother.setConfLevel( gCL );
@@ -296,16 +294,14 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
           double py = part1->momentum().py()*fac;
           double pz = part1->momentum().pz()*fac;
           double mas = 0;//mome.mass();
-          double e  = sqrt( mas*mas + px*px + py*py+ pz*pz);
+          double e  = std::sqrt( mas*mas + px*px + py*py+ pz*pz);
           mome.SetPxPyPzE( px,py,pz,e);
         }
       }
 
-
-
       if (mother.p()>0.){
         if (m_symgamma) {
-          Gaudi::LorentzVector mom = mother.momentum();
+          const Gaudi::LorentzVector& mom = mother.momentum();
           Gaudi::LorentzVector symmom(-mom.Px(),-mom.Py(),mom.Pz(),mom.E());
           Gaudi::SymMatrix4x4 momcov= mother.momCovMatrix();
           momcov(0,2)*=-1; momcov(2,0)*=-1;
@@ -313,14 +309,14 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
           momcov(1,2)*=-1; momcov(2,1)*=-1;
           momcov(1,3)*=-1; momcov(3,1)*=-1;
           Gaudi::Matrix4x3 posmomcov= mother.posMomCovMatrix();
-          posmomcov(0,0)*=-1; posmomcov(0,1)*=-1;posmomcov(0,2)*=-1;
+          posmomcov(0,0)*=-1; posmomcov(0,1)*=-1; posmomcov(0,2)*=-1;
           posmomcov(1,0)*=-1; posmomcov(1,1)*=-1; posmomcov(1,2)*=-1;
 
           const LHCb::VertexBase* bestPV = this->calculateRelatedPV(&mother);
           if (bestPV) {
-            const Gaudi::XYZPoint PVpos=bestPV->position();
-            Gaudi::XYZPoint PoCA=getPoCA(&mother,PVpos);
-            mother.setReferencePoint(PoCA);
+            const Gaudi::XYZPoint& PVpos=bestPV->position();
+
+            mother.setReferencePoint( getPoCA(&mother,PVpos) );
           }
           mother.setMomentum(symmom);
           mother.setMomCovMatrix(momcov);
@@ -328,8 +324,8 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
         }
 
         // Mass window
-        Gaudi::LorentzVector mothermom = mother.momentum();
-        double Mgamma=mothermom.M();
+        const Gaudi::LorentzVector& mothermom = mother.momentum();
+        const double Mgamma = mothermom.M();
         if( Mgamma > m_mmax || Mgamma < m_mmin)continue;
 
         //--- CREATE THE DIELECTRON
@@ -353,14 +349,17 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
 
 void DiElectronMaker::clear(LHCb::Particle::Vector & vector)
 {
-  for(LHCb::Particle::Vector::iterator v=vector.begin();vector.end()!=v;++v){
-    if( NULL == *v)continue;
+  for ( LHCb::Particle::Vector::iterator v = vector.begin();
+        vector.end() != v; ++v ) 
+  {
+
     delete *v;
     *v = NULL;
   }
 }
 
-double DiElectronMaker::veloCnv(LHCb::Particle* p1, LHCb::Particle* p2){
+double DiElectronMaker::veloCnv(LHCb::Particle* p1, LHCb::Particle* p2)
+{
   const LHCb::ProtoParticle* pp1 = p1->proto();
   const LHCb::ProtoParticle* pp2 = p2->proto();
   if( NULL == pp1 && NULL == pp2 )return -1.;
@@ -373,8 +372,8 @@ double DiElectronMaker::veloCnv(LHCb::Particle* p1, LHCb::Particle* p2){
 
 double DiElectronMaker::veloCh(LHCb::Particle* p1){
   const LHCb::ProtoParticle* pp1 = p1->proto();
-  if( NULL == pp1 )return -1.;
-  double vc1 = pp1->info( LHCb::ProtoParticle::VeloCharge,  -1. );
+  if( !pp1 )return -1.;
+  const double vc1 = pp1->info( LHCb::ProtoParticle::VeloCharge,  -1. );
   return  vc1 ;
 }
 
@@ -395,29 +394,35 @@ double DiElectronMaker::ConfLevel( LHCb::Particle* electron){
   const double vk  = proto->info( LHCb::ProtoParticle::CombDLLk,  -999.0 );
   const double vp  = proto->info( LHCb::ProtoParticle::CombDLLp,  -999.0 );
   const double estimator = (4*ve-vmu-vk-vp)/2.;
-  double confLevel = 0.5*(tanh(estimator)+1);
+  const double confLevel = 0.5*(tanh(estimator)+1);
   return confLevel;
 }
 
 std::pair<double,double> DiElectronMaker::getY(const LHCb::ProtoParticle* proto, double m_zcalo) {
-  const LHCb::Track* tr=proto->track();
-  LHCb::State nstate = tr->firstState();
-  double ty=nstate.ty();
-  double y=nstate.y()+ty*(m_zcalo - nstate.z());
-  Gaudi::SymMatrix3x3 cov   = nstate.errPosition() + (m_zcalo - nstate.z())*(m_zcalo - nstate.z())*nstate.errSlopes();
+  const LHCb::Track* tr = proto->track();
+  const LHCb::State& nstate = tr->firstState();
+  const double ty=nstate.ty();
+  const double y=nstate.y()+ty*(m_zcalo - nstate.z());
+  Gaudi::SymMatrix3x3 cov = ( nstate.errPosition() + 
+                              (m_zcalo - nstate.z())*(m_zcalo - nstate.z())*nstate.errSlopes() );
   double covy=cov(1,1);
   return std::make_pair(y,covy);
 }
 
 Gaudi::XYZPoint DiElectronMaker::getPoCA(LHCb::Particle* particle, const Gaudi::XYZPoint PVpos){
-  const Gaudi::XYZPoint pref = particle->referencePoint();
-  const Gaudi::LorentzVector mom = particle->momentum();
-  double mom2=particle->p()*particle->p();
-  double scal=((PVpos.X()-pref.X())*mom.px()+(PVpos.Y()-pref.Y())*mom.py()+(PVpos.Z()-pref.Z())*mom.pz())/mom2;
-  double x=pref.X()+mom.px()*scal;
-  double y=pref.Y()+mom.py()*scal;
-  double z=pref.Z()+mom.pz()*scal;
+  const Gaudi::XYZPoint& pref = particle->referencePoint();
+  const Gaudi::LorentzVector& mom = particle->momentum();
+  const double mom2=particle->p()*particle->p();
+  const double scal=((PVpos.X()-pref.X())*mom.px()+(PVpos.Y()-pref.Y())*mom.py()+(PVpos.Z()-pref.Z())*mom.pz())/mom2;
+  const double x=pref.X()+mom.px()*scal;
+  const double y=pref.Y()+mom.py()*scal;
+  const double z=pref.Z()+mom.pz()*scal;
   return Gaudi::XYZPoint(x,y,z);
 }
+
+//=============================================================================
+
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( DiElectronMaker )
 
 //=============================================================================
