@@ -30,8 +30,11 @@ public:
       if (MEPlist->at(i).size() == 0) break;
       dyn_string *MEP = Strsplit(MEPlist->at(i).c_str()," ");
       int val;
-      ::sscanf(MEP->at(1).c_str(),"%d",&val);
-      DimClient::sendCommandNB(MEP->at(0).c_str(),val);
+      if (MEP->size()>1)
+      {
+        ::sscanf(MEP->at(1).c_str(),"%d",&val);
+        DimClient::sendCommandNB(MEP->at(0).c_str(),val);
+      }
       delete (MEP);
     }
     delete (MEPlist);

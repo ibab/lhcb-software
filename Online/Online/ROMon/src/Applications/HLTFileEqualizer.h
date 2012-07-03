@@ -52,6 +52,7 @@ class HLTFileEqualizer
   public:
     std::map<std::string,SFarm *> m_Farms;
     myNodeMap m_Nodes;
+    myNodeMap m_AllNodes;
     std::map<std::string,DimUpdatedInfo*> m_infoMap;
     DefHltInfoHandler *m_InfoHandler;
     int m_nnodes;

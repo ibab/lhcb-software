@@ -157,6 +157,14 @@ void DefHltInfoHandler::infoHandler()
     const _R& runs = (*i).runs;
     std::string nname;
     nname = (*i).name;
+    myNodeMap::iterator nit;
+    myNodeMap::iterator anit;
+    anit = m_Equalizer->m_AllNodes.find(nname);
+    if (anit == m_Equalizer->m_AllNodes.end())
+    {
+      myNode* nod = new myNode(nname);
+      m_Equalizer->m_AllNodes.insert(std::make_pair(nname,nod));
+    }
 //    printf("%s: ",(*i).name);
     int nfiles=0;
     for (_R::const_iterator j = runs.begin();j!= runs.end();j=runs.next(j))
@@ -164,14 +172,24 @@ void DefHltInfoHandler::infoHandler()
       nfiles += (*j).second;
     }
 //    printf("%d Files\n",nfiles);
-    myNodeMap::iterator nit;
     if (nfiles>0)
     {
       nit = m_Equalizer->m_Nodes.find(nname);
       if (nit == m_Equalizer->m_Nodes.end())
       {
-        myNode* nod = new myNode(nname);
-        m_Equalizer->m_Nodes.insert(std::make_pair(nname,nod));
+        anit = m_Equalizer->m_AllNodes.find(nname);
+        myNode* nod;
+        if (anit == m_Equalizer->m_AllNodes.end())
+        {
+          nod = new myNode(nname);
+          m_Equalizer->m_AllNodes.insert(std::make_pair(nname,nod));
+          m_Equalizer->m_Nodes.insert(std::make_pair(nname,nod));
+        }
+        else
+        {
+          nod = (*anit).second;
+          m_Equalizer->m_Nodes.insert(std::make_pair(nname,nod));
+        }
       }
       m_Equalizer->m_Nodes[nname]->m_nofiles = nfiles;
       m_Equalizer->m_nfiles += nfiles;
@@ -190,14 +208,14 @@ public:
   {
     m_nodemap = nodm;
   }
-  virtual void commandHandler()
+  void ableAll(int StateValue)
   {
-    myActionMap Actions;
-    myActionMap::iterator fit;
-    myNodeMap::iterator nit;
-    for (nit = m_nodemap->begin();nit != m_nodemap->end();nit++)
-    {
-      Actions[(*nit).second->m_subfarm].push_back(std::make_pair((*nit).first,1));
+  myActionMap Actions;
+  myActionMap::iterator fit;
+  myNodeMap::iterator nit;
+  for (nit = m_nodemap->begin();nit != m_nodemap->end();nit++)
+  {
+    Actions[(*nit).second->m_subfarm].push_back(std::make_pair((*nit).first,StateValue));
 //      std::string svcname;
 //      std::string node = (*nit).first;
 //      toUpperCase(node);
@@ -206,37 +224,68 @@ public:
 //      char cmd[1024];
 //      sprintf(cmd,"dim_send_command.exe %s %d -dns %s -s -i&",svcname.c_str(),1,(*nit).second->m_subfarm.c_str());
 //      ::system(cmd);
-    }
-    for (fit = Actions.begin();fit!=Actions.end();fit++)
-    {
+  }
+  for (fit = Actions.begin();fit!=Actions.end();fit++)
+  {
 //      if (!m_enabledFarm.empty() && (m_enabledFarm.find((*fit).first) == m_enabledFarm.end()))
 //      {
 //        continue;
 //      }
-      std::list<std::pair<std::string,int> >::iterator i;
-      std::string sf_mesg = "";
-      std::string endisSvc;
-      endisSvc = (*fit).first+"_HLTDefBridge/EnDisCommand";
-      for (i =(*fit).second.begin();i != (*fit).second.end();i++)
-      {
-        std::string svcname;
-        std::string node = (*i).first;
-        toUpperCase(node);
-        svcname = node+"_MEPRx_01/setOverflow";
-  //      DimClient::sendCommand(svcname.c_str(), (*i).second);
-        char cmd[1024];
-  //      sprintf(cmd,"dim_send_command.exe %s %d -dns %s -s -i&",svcname.c_str(),(*i).second,(*fit).first.c_str());
-        sprintf(cmd,"%s %d|",svcname.c_str(),(*i).second);
-        sf_mesg.append(cmd);
+    std::list<std::pair<std::string,int> >::iterator i;
+    std::string sf_mesg = "";
+    std::string endisSvc;
+    endisSvc = (*fit).first+"_HLTDefBridge/EnDisCommand";
+    for (i =(*fit).second.begin();i != (*fit).second.end();i++)
+    {
+      std::string svcname;
+      std::string node = (*i).first;
+      toUpperCase(node);
+      svcname = node+"_MEPRx_01/setOverflow";
+//      DimClient::sendCommand(svcname.c_str(), (*i).second);
+      char cmd[1024];
+//      sprintf(cmd,"dim_send_command.exe %s %d -dns %s -s -i&",svcname.c_str(),(*i).second,(*fit).first.c_str());
+      sprintf(cmd,"%s %d|",svcname.c_str(),StateValue);
+      sf_mesg.append(cmd);
 
-  //      ::system(cmd);
-  //      printf("\tMEPRX on Node %s (%s) value %d\n",(*i).first.c_str(),svcname.c_str(),(*i).second);
-      }
-      DimClient::sendCommandNB(endisSvc.c_str(),(void*)(sf_mesg.c_str()),sf_mesg.size());
-      printf("message to Subfarm %s:\n%s\n",(*fit).first.c_str(),sf_mesg.c_str());
+//      ::system(cmd);
+//      printf("\tMEPRX on Node %s (%s) value %d\n",(*i).first.c_str(),svcname.c_str(),(*i).second);
     }
-    ::sleep(5);
-    ::exit(0);
+    DimClient::sendCommandNB(endisSvc.c_str(),(void*)(sf_mesg.c_str()),sf_mesg.size());
+    printf("message to Subfarm %s:\n%s\n",(*fit).first.c_str(),sf_mesg.c_str());
+  }
+//  ::sleep(5);
+//  ::exit(0);
+}
+
+  void enableAll()
+  {
+    ableAll(1);
+  }
+  void disableAll()
+  {
+    ableAll(0);
+  }
+  virtual void commandHandler()
+  {
+    int command = getInt();
+    switch (command)
+    {
+      case 0:
+      {
+        ableAll(0);
+        break;
+      }
+      case 1:
+      {
+        ableAll(1);
+        break;
+      }
+      case 2:
+      {
+        ::exit(0);
+      }
+
+    }
   }
 };
 
@@ -249,7 +298,7 @@ int main(int , char **)
   DimServer::start("HLTFileEqualizer");
   DimServer::autoStartOn();
   DimInfo defstate("RunInfo/LHCb/DeferHLT",m_DefState);
-  ExitCommand EnableandExit("HLTFileEqualizer/EnableAndExit",(char*)"I",&elz.m_Nodes);
+  ExitCommand EnableandExit("HLTFileEqualizer/EnableAndExit",(char*)"I",&elz.m_AllNodes);
   while (1)
   {
     sleep (60);
