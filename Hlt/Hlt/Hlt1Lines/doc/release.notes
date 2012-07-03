@@ -5,6 +5,12 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2012-07-03 - Rosen Matev
+ - In Hlt1BeamGasLines, add setting slot 'FullZVetoLumiTriggers' (boolean),
+   which specifies whether to add a veto on ODIN Lumi events in the
+   Hlt1BeamGasCrossingForcedRecoFullZ line. Default is True, so no change with
+   respect to previous default lines.
+
 !========================= Hlt1Lines v6r25 2012-06-19 =========================
 ! 2012-05-24 - P. Hopchev
  - In Hlt1BeamGasLines, add a veto on ODIN Lumi events in the

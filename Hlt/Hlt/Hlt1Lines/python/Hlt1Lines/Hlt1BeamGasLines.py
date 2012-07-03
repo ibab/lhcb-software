@@ -48,6 +48,9 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
                                        , 'HighRhoNonBB' : 'SCALE(1.0)'
                                        }
 
+                ### Whether to veto lumi triggers for ForcedRecoFullZ line
+                , 'FullZVetoLumiTriggers' : True
+
                 ### L0DU requirements
                 , 'L0Filter' : { 'NoBeamBeam1'   : "L0_CHANNEL('B1gas')"
                                , 'NoBeamBeam2'   : "L0_CHANNEL('B2gas')"
@@ -269,7 +272,8 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
             l0du = self.getProp('L0Filter')['BB']
             odin = '(ODIN_BXTYP == LHCb.ODIN.BeamCrossing)'
             #reject lumi events for the FullZ line
-            if whichBeam=='FullZ': odin += ' & (ODIN_TRGTYP != LHCb.ODIN.LumiTrigger)'
+            if whichBeam == 'FullZ' and self.getProp('FullZVetoLumiTriggers'):
+                odin += ' & (ODIN_TRGTYP != LHCb.ODIN.LumiTrigger)'
         elif 'HighRho' in nameParts[1]:
             l0du = self.getProp('L0Filter')['BB']
             reqBB    = '(ODIN_BXTYP == LHCb.ODIN.BeamCrossing)'
