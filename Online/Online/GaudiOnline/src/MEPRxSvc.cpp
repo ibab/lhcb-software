@@ -1540,6 +1540,7 @@ StatusCode MEPRxSvc::initialize()
     info(std::string("Cannot write to ") + m_overflowPath + std::string(
         " - disabling overflow"));
     m_overflow = false;
+    m_setOverflowCmd->m_permDisable = true;
   }
   m_overflowStatSvc = new OverflowStatSvc(this, msgSvc(), RTL::processName());
   m_ebState = READY;
