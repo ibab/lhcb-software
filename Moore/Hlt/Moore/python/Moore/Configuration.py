@@ -119,7 +119,7 @@ class Moore(LHCbConfigurableUser):
         MonitorSvc().disableDimPropServer      = 1
         MonitorSvc().disableDimCmdServer       = 1
         MonitorSvc().disableMonRate            = 0
-        MonitorSvc().CounterUpdateInterval     = 5
+        MonitorSvc().CounterUpdateInterval     = 15
         
         app=ApplicationMgr()
         

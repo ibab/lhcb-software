@@ -3,6 +3,10 @@ Package Coordinator : Eric van Herwijnen
 Purpose     : LHCb HLT application
 
 
+! 2012-07-4 - Eric van Herwijnen
+ - Set MonitorSvc.CounterUpdateInterval = 15 in Configuration.py to prevent
+ rate trendplots from being 0
+
 !========================= Moore v14r6p1 2012-07-02 =========================
 ! 2012-07-2 - Eric van Herwijnen
  - With Hlt v15r3p1 with fix to Gaudi & TCK problem
