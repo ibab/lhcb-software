@@ -128,7 +128,7 @@ void HLTFileEqualizer::Analyze()
 //      ::system(cmd);
 //      printf("\tMEPRX on Node %s (%s) value %d\n",(*i).first.c_str(),svcname.c_str(),(*i).second);
     }
-    DimClient::sendCommandNB(endisSvc.c_str(),(void*)(sf_mesg.c_str()),sf_mesg.size());
+    DimClient::sendCommandNB(endisSvc.c_str(),(char*)sf_mesg.c_str());
     printf("message to Subfarm %s:\n%s\n",(*fit).first.c_str(),sf_mesg.c_str());
   }
 //  DimClient::setDnsNode(olddns);
