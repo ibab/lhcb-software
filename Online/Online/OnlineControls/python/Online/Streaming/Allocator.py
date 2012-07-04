@@ -489,6 +489,7 @@ class RoundRobinSlotPolicy(SlotPolicy):
         if node != last_node:
           last_node = node
           if not alloc_slots.has_key(node): alloc_slots[node] = []
+          print 'Debug:',node,slots
           alloc_slots[node].append(slots.pop())
           num = num + 1
           break

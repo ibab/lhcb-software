@@ -84,6 +84,7 @@ class Control(PVSS.PyDeviceListener):
     self.writer  = manager.devWriter()
     self.control = self.objects[0].get('Command')
     self.state   = self.objects[0].get('State')
+    Online.Utils.openFMC()
     PVSS.info(name+': Listen to '+self.control.name(),timestamp=1,type=PVSS.CONNECTED)
     PVSS.info(name+': Answer to '+self.state.name(),timestamp=1,type=PVSS.CONNECTED)
     self.sensor = PVSS.DeviceSensor(manager,self.control)
@@ -93,7 +94,7 @@ class Control(PVSS.PyDeviceListener):
   def makeAnswer(self,status,msg):
     "Create answer object from status."
     print 'Answer message:',status,msg
-    PVSS.error('Result ('+msg+')',timestamp=1,type=PVSS.UNEXPECTEDSTATE)
+    PVSS.info('Result ('+msg+')',timestamp=1,type=PVSS.UNEXPECTEDSTATE)
     m = status + msg
     print 'Answer message:',m
     print 'DP:',self.state.name()
@@ -171,7 +172,7 @@ class Control(PVSS.PyDeviceListener):
         partition = itms[2]
         partID    = itms[3]
         runDpName = itms[4]
-
+        Online.Utils.setPartition(partition)
         answer = '/'+itms[1]+'/'+partition+"/"+str(partID)
         result = None
         if storage == self.name:
@@ -223,7 +224,7 @@ class Control(PVSS.PyDeviceListener):
                 return self.makeAnswer(command,answer+'/'+result)
             elif command == "DEALLOCATE":
               result = self.doExecute('free',runDpName,partition)
-              PVSS.error('Result ('+command+')',timestamp=1,type=PVSS.UNEXPECTEDSTATE)
+              PVSS.info('Result ('+command+')',timestamp=1,type=PVSS.UNEXPECTEDSTATE)
               if result == "WAS_NOT_ALLOCATED":
                 msg = '[WAS_NOT_ALLOCATED] Ignore Error on deallocate on request from Clara'
                 PVSS.error(msg,timestamp=1,type=PVSS.UNEXPECTEDSTATE)

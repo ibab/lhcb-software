@@ -1,12 +1,14 @@
-V 10
+V 11
 1
 LANG:1 19 LHCb Stream Control
 PANEL,-1 -1 480 980 N "_3DFace" 0
 "main()  {
   addSymbol(myModuleName(),myPanelName(),\"StreamControl/StreamControl.pnl\",\"StorageAlloc\",
-            makeDynString(\"$1:DataStorage\"),0,20,0,0,0);
+            makeDynString(\"$1:DataStorage\",\"$2:embedded\"),0,5,0,0,0);
   addSymbol(myModuleName(),myPanelName(),\"StreamControl/StreamControl.pnl\",\"MonitoringAlloc\",
-            makeDynString(\"$1:DataMonitoring\"),0,400,0,0,0);
+            makeDynString(\"$1:DataMonitoring\",\"$2:embedded\"),0,355,0,0,0);
+  addSymbol(myModuleName(),myPanelName(),\"StreamControl/StreamControl.pnl\",\"ReconstructionAlloc\",
+            makeDynString(\"$1:DataReconstruction\",\"$2:embedded\"),0,720,0,0,0);
 }" 0
  E E E E 1 -1 -1 0  -1 -1
 ""0  1

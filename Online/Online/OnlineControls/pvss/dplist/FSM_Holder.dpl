@@ -6,8 +6,8 @@ fwOT_FSM_Holder	_FwFsmObjectType	175458
 
 # DpValue
 ElementName	TypeName	_original.._value	_original.._status64	_original.._stime
-fwOT_FSM_Holder.panel	_FwFsmObjectType	"StreamControl/FSM_Holder.pnl"	0x101	02.03.2009 06:52:45.047
-fwOT_FSM_Holder.states	_FwFsmObjectType	"READY", "FwStateOKPhysics", "", "", ""	0x101	08.06.2010 09:14:50.201
+fwOT_FSM_Holder.panel	_FwFsmObjectType	"StreamControl/FSM_Holder.pnl"	0x101	02.03.2009 07:10:48.691
+fwOT_FSM_Holder.states	_FwFsmObjectType	"READY", "FwStateOKPhysics", "", "", ""	0x101	26.05.2011 12:05:11.876
 fwOT_FSM_Holder.actions	_FwFsmObjectType	"READY/Reset", "", "1", "do Reset $ALL$FwCHILDREN
 if ( $ALL$FwCHILDREN in_state READY )  then
   MOVE_TO READY
@@ -16,4 +16,4 @@ MOVE_TO READY", "0", "READY/Recover", "", "1", "do Recover $ALL$FwCHILDREN", "0"
 if ( $ALL$FwCHILDREN in_state READY )  then
   MOVE_TO READY
 endif
-MOVE_TO READY", "0"	0x101	08.06.2010 09:14:50.200
+MOVE_TO READY", "0"	0x101	26.05.2011 12:05:11.876

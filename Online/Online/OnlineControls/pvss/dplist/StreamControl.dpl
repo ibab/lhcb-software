@@ -6,7 +6,7 @@ fwOT_StreamControl	_FwFsmObjectType	52828
 
 # DpValue
 ElementName	TypeName	_original.._value	_original.._status64	_original.._stime
-fwOT_StreamControl.panel	_FwFsmObjectType	"StreamControl/StreamControl.pnl"	0x101	24.02.2009 09:27:44.804
+fwOT_StreamControl.panel	_FwFsmObjectType	"StreamControl/StreamControl.pnl"	0x101	02.03.2009 07:10:49.851
 fwOT_StreamControl.components	_FwFsmObjectType	"string State
 ", "", "#uses \"fwExternalAlertHandler/fwExternalAlertHandlerUser.ctl\"
 
@@ -63,8 +63,8 @@ StreamControl_initialize(string domain, string device)
   DebugN(device,cmd);
   dpSet(device+\".Command\",cmd);
 }
-"	0x101	24.02.2009 09:28:00.357
-fwOT_StreamControl.states	_FwFsmObjectType	"READY", "FwStateOKPhysics", "", "", "", "ERROR", "FwStateAttention3", "", "", ""	0x101	24.02.2009 09:28:00.354
+"	0x101	26.05.2011 12:05:10.583
+fwOT_StreamControl.states	_FwFsmObjectType	"READY", "FwStateOKPhysics", "", "", "", "ERROR", "FwStateAttention3", "", "", ""	0x101	26.05.2011 12:05:10.578
 fwOT_StreamControl.actions	_FwFsmObjectType	"READY/ALLOCATE", "int PART_ID = 0
 string PART_NAME = \"LHCb\"
 string RUN_INFO_DP = \"ECS:LHCb_RunInfo\"
@@ -77,5 +77,5 @@ string RUN_INFO_DP = \"ECS:LHCb_RunInfo\"
 ", "1", "", "0", "ERROR/RECOVER", "int PART_ID = 0
 string PART_NAME = \"LHCb\"
 string RUN_INFO_DP = \"ECS:LHCb_RunInfo\"
-", "1", "", "0"	0x101	24.02.2009 09:28:00.354
-fwOT_StreamControl.parameters	_FwFsmObjectType	"int CURRPARTID = 0", "string CURRPARTNAME = \"0\""	0x101	23.02.2009 17:22:09.904
+", "1", "", "0"	0x101	26.05.2011 12:05:10.577
+fwOT_StreamControl.parameters	_FwFsmObjectType	"int CURRPARTID = 0", "string CURRPARTNAME = \"0\""	0x101	02.03.2009 07:10:49.861

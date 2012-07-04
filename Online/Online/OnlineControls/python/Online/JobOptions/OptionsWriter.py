@@ -256,7 +256,8 @@ class OptionsWriter(Control.AllocatorClient):
     opts.add('MonFarm.monMultiplicity',       [i for i in self.run.monMult.data])
     opts.add('MonFarm.monInfrastructure',     [i for i in self.run.monInfra.data])
     opts.add('MonFarm.relayInfrastructure',   [i for i in self.run.relayInfra.data])
-    opts.add('SubDetectors.tell1List',        [i for i in self.run.tell1Boards.data])
+    if partition != 'LHCb1':
+      opts.add('SubDetectors.tell1List',        [i for i in self.run.tell1Boards.data])
     #print opts.value
     return self.writeOptionsFile(self.run.name, self.run.name+'_RunInfo', opts.value)
   
@@ -264,6 +265,16 @@ class OptionsWriter(Control.AllocatorClient):
   def addTriggerInfo(self,opts):
     import math
     opts.comment('---------------- Trigger parameters:    ')
+    if self.run.DeferHLT is not None:
+      opts.add('DeferHLT',     self.run.DeferHLT.data)
+    else:
+      opts.add('DeferHLT',     0)
+
+    if self.run.passThroughDelay is not None:
+      opts.add('passThroughDelay',int(self.run.passThroughDelay.data))
+    else:
+      opts.add('passThroughDelay',0)
+
     if self.run.acceptRate() is None:
       print 'Rate is None!!!!!'
     opts.add('AcceptRate',     float('%.7f'%(self.run.acceptRate(),)))
@@ -549,7 +560,11 @@ class OptionsWriter(Control.AllocatorClient):
           opts.add(task.options.data)
         else: opts.comment('---------------- NO task specific information')
         if task.defaults.data:
-          opts.add('MessageSvc.OutputLevel     = @OnlineEnv.OutputLevel;')
+          if task.name[:3] == 'WRT':
+            opts.add('OnlineEnv.OutputLevel   = 3;')
+            opts.add('MessageSvc.OutputLevel   = 3;')
+          else:
+            opts.add('MessageSvc.OutputLevel   = @OnlineEnv.OutputLevel;')
           opts.add('MessageSvc.fifoPath        = @OnlineEnv.LogFifoName;')
         if not self.writeOptions(opts,activity,task):
           return None
@@ -609,7 +624,9 @@ class HLTOptionsWriter(OptionsWriter):
       num = len(farms)
       run_type = self.run.runType()
       farm_names = []
-      hdr='//  Auto generated options for partition:'+partition+' activity:'+run_type+'  '+time.ctime()
+      hdr='//  Auto generated options for partition:'+partition+' activity:'+run_type+'  '+time.ctime()+'\n'+\
+          '//  Number of subfarms:'+str(len(farms))
+      
       for i in xrange(num):
         node = slots[i].split(':')[0]
         name = '%s_%s_SF%02d_HLT'%(partition,node,i)
@@ -629,12 +646,20 @@ class HLTOptionsWriter(OptionsWriter):
       opts = self._getOnlineEnv(partition)
       opts.comment('---------------- HLT patrameters:   ')
       opts.add('SubFarms',       farm_names)
+
+      # For the HLT info add the list of deferred runs
+      if self.run.deferredRuns is not None and len(self.run.deferredRuns.data)>0:
+        opts.add('DeferredRuns', ["%s"%i for i in self.run.deferredRuns.data])
+      else:
+        opts.add('DeferredRuns', ["*"])
+      
       if self.writeOptionsFile(partition, partition+'_Info', opts.value) is None:
         return None
 
-      opts = self._getTell1Boards(partition,hdr)
-      if self.writeOptionsFile(partition, partition+'_Tell1Boards', opts.value) is None:
-        return None
+      if partition != 'LHCb1':
+        opts = self._getTell1Boards(partition,hdr)
+        if self.writeOptionsFile(partition, partition+'_Tell1Boards', opts.value) is None:
+          return None
       self._makeRunInfo(partition)
       return self.run
     return None
@@ -681,11 +706,22 @@ class HLTOptionsWriter(OptionsWriter):
       opts.comment('---------------- HLT patrameters:   ')
       opts.add('SubFarms',       farm_names)
 
+      # For the HLT info add the list of deferred runs -- NOT NEEDED FOR THE TIME BEING!
+      #if self.run.deferredRuns is not None and len(self.run.deferredRuns.data)>0:
+      #  opts.add('DeferredRuns', ["%s"%i for i in self.run.deferredRuns.data])
+      #else:
+      #  opts.add('DeferredRuns', ["*"])
+
       self.addTriggerInfo(opts)
 
       if self.writePythonFile(partition, partition+'_Info', subdir='HLT', opts=opts.value) is None:
         return None
 
+      # Do not write Tell1 board content for LHCb1 (HLT reprocessing)
+      if partition == 'LHCb1':
+        self._makeRunInfo(partition)
+        return self.run
+        
       opts = Options('#  Auto generated options for partition:'+partition+' activity:'+run_type+'  '+time.ctime())
       opts.comment().comment('---------------- Tell1 board information:  ')
       opts.add('Tell1Boards         = [')

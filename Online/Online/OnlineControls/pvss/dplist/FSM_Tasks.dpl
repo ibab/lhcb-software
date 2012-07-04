@@ -6,17 +6,17 @@ fwOT_FSM_Tasks	_FwFsmObjectType	168586
 
 # DpValue
 ElementName	TypeName	_original.._value	_original.._status64	_original.._stime
-fwOT_FSM_Tasks.panel	_FwFsmObjectType	"StreamControl/FSM_Tasks.pnl"	0x101	15.06.2010 21:16:21.024
-fwOT_FSM_Tasks.components	_FwFsmObjectType		0x101	03.06.2009 15:16:50.628
+fwOT_FSM_Tasks.panel	_FwFsmObjectType	"StreamControl/FSM_Tasks.pnl"	0x101	02.05.2011 17:14:43.538
+fwOT_FSM_Tasks.components	_FwFsmObjectType		0x101	02.05.2011 17:14:43.536
 fwOT_FSM_Tasks.states	_FwFsmObjectType	"NOT_READY", "FwStateAttention1", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
 |when ( $ALL$FwCHILDREN in_state {NOT_READY,READY,RUNNING} )  move_to CONFIGURED
 |when ( $ALL$FwCHILDREN in_state STOPPED )  move_to STOPPED
 |", "", "", "CONFIGURED", "FwStateAttention1", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
-|when ( $ALL$FwCHILDREN in_state {NOT_READY,READY,RUNNING} ) move_to CREATED
+|when ( $ALL$FwCHILDREN in_state {NOT_READY,READY,RUNNING,STOPPED} ) move_to CREATED
 |when ( $ALL$FwCHILDREN in_state STOPPED )  move_to STOPPED
 |", "", "", "CREATED", "FwStateAttention1", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
 |when ( $ANY$FwCHILDREN in_state OFFLINE )  move_to CONFIGURED
-|when ( $ALL$FwCHILDREN in_state {READY,RUNNING} )  move_to READY
+|when ( $ALL$FwCHILDREN in_state {READY,RUNNING,STOPPED} )  move_to READY
 |", "", "", "READY", "FwStateOKNotPhysics", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
 |when ( $ALL$FwCHILDREN in_state RUNNING )  move_to RUNNING
 |when ( $ALL$FwCHILDREN in_state OFFLINE )  move_to CONFIGURED
@@ -27,6 +27,7 @@ fwOT_FSM_Tasks.states	_FwFsmObjectType	"NOT_READY", "FwStateAttention1", "when (
 |when ( $ALL$FwCHILDREN in_state CREATED )  move_to CREATED
 |when ( $ALL$FwCHILDREN in_state RUNNING )  move_to RUNNING
 |when ( $ALL$FwCHILDREN in_state {OFFLINE,NOT_READY} )  move_to FINALIZED
+|when ( $ANY$FwCHILDREN not_in_state {READY,RUNNING,STOPPED} )  move_to ERROR
 |", "", "", "FINALIZED", "FwStateAttention1", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
 |when ( $ALL$FwCHILDREN in_state OFFLINE )  move_to NOT_READY
 |when ( $ANY$FwCHILDREN in_state {RUNNING,READY,STOPPED} ) move_to STOPPED
@@ -36,7 +37,7 @@ fwOT_FSM_Tasks.states	_FwFsmObjectType	"NOT_READY", "FwStateAttention1", "when (
 |when ( $ALL$FwCHILDREN in_state FINALIZED )  move_to FINALIZED
 |when ( $ALL$FwCHILDREN in_state STOPPED )  move_to STOPPED
 |when ( $ALL$FwCHILDREN in_state {OFFLINE,NOT_READY} )  move_to NOT_READY
-|", "", ""	0x101	15.06.2010 21:22:59.618
+|", "", ""	0x101	26.05.2011 12:05:13.390
 fwOT_FSM_Tasks.actions	_FwFsmObjectType	"NOT_READY/Configure", "", "1", "move_to CONFIGURED
 ", "0", "NOT_READY/Unload", "", "1", "do Unload $ALL$FwCHILDREN
 if ( $ALL$FwCHILDREN in_state OFFLINE )  then
@@ -184,7 +185,10 @@ move_to NOT_READY
 if ( $ALL$FwCHILDREN in_state {OFFLINE,NOT_READY} )  then
    move_to FINALIZED
 endif
-", "0", "STOPPED/Start", "", "1", "do Start $ALL$FwCHILDREN
+", "0", "STOPPED/Start", "", "1", "if ( $ANY$FwCHILDREN not_in_state {READY,RUNNING,STOPPED} )  then
+   move_to ERROR
+endif
+do Start $ALL$FwCHILDREN
 if ( $ALL$FwCHILDREN in_state RUNNING )  then
    move_to RUNNING
 endif
@@ -211,6 +215,7 @@ endif
 if ( $ANY$FwCHILDREN not_in_state OFFLINE )  then
   do Kill $ALL$FwCHILDREN
 endif
+do Kill $ALL$FwCHILDREN
 if ( $ALL$FwCHILDREN in_state OFFLINE )  then
    move_to NOT_READY
 endif
@@ -264,5 +269,5 @@ endif
 if ( $ALL$FwCHILDREN in_state OFFLINE )  then
    move_to NOT_READY
 endif
-", "0"	0x101	15.06.2010 21:22:59.615
-fwOT_FSM_Tasks.parameters	_FwFsmObjectType		0x101	14.06.2010 21:10:04.976
+", "0"	0x101	26.05.2011 12:05:13.388
+fwOT_FSM_Tasks.parameters	_FwFsmObjectType		0x101	02.05.2011 17:14:43.541

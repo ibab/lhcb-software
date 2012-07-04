@@ -229,7 +229,6 @@ void Checkpoint_showdbTags()  {
 dyn_string Checkpoint_dbTags(string prefix)   {
   dyn_string tags;
   string dir = "g:\\online\\hlt\\conditions";
-  
   if(_UNIX)  {
     dir = "/group/online/hlt/conditions";
   }
@@ -284,7 +283,7 @@ void Checkpoint_waitTest(string utgid)  {
     ChildPanelOnReturn("visionUtils/ErrorBox","Kill child",
                        makeDynString("$1:"+msg,"$2:Ok"),
                        150,550,ds,df);
-    dpSet("STORESTRM02_StreamTaskCreator.Kill","-s 9 "+utgid);
+    dpSet("STORAGE:STORESTRM02_StreamTaskCreator.Kill","-s 9 "+utgid);
     m_messages.append(">>>> Process "+utgid+" killed.....");
     m_result.text = "  >>> Checkpoint action completed.";
     Checkpoint_enableCommands(true);
@@ -307,7 +306,7 @@ void Checkpoint_createZip()  {
   args = args + " /group/online/dataflow/cmtuser/checkpoints/cmds/zip_checkpoint.sh";
   DebugN(args);
   m_messages.text = "";
-  dpSet("STORESTRM02_StreamTaskCreator.Start",args);
+  dpSet("STORAGE:STORESTRM02_StreamTaskCreator.Start",args);
   Checkpoint_waitTest(utgid);
 }
 
@@ -318,6 +317,7 @@ void Checkpoint_createZip()  {
 // @version 1.0
 //=============================================================================
 void MooreCheckpoint_init(string partition, string triggerConf)   {
+  string dir = "/group/online/dataflow/cmtuser/checkpoints";
   Checkpoint_Partition = partition;
   m_close.text         = "Close";
   m_close.toolTipText  = "Close panel.";
@@ -327,10 +327,10 @@ void MooreCheckpoint_init(string partition, string triggerConf)   {
   m_result.foreCol     = "_WindowText";
   m_scan.visible       = false;
   
-  m_outdir.text              = "/group/online/dataflow/cmtuser/checkpoints";  
   if ( _WIN32 ) {
     strreplace(Checkpoint_SwPath,"/group/","G:/");
   }
+  m_outdir.text              = dir;
   m_partSelector.toolTipText = "Select partition name.";
   m_partSelectorLabel.toolTipText = m_partSelector.toolTipText;
   m_triggerConf.toolTipText  = "Select trigger configuration by nick name.";
@@ -760,10 +760,11 @@ int MooreCheckpoint_readCmtFile()    {
 //=============================================================================
 string MooreCheckpoint_createOptions(int mode=0)  {
   int    pos;
-  string fname = Checkpoint_directory() + ((_UNIX) ? "/" : "\\");
+  string fname = Checkpoint_directory() + "/";
   string text, lumi_param, tckhex, pyopts;
   bool res = mkdir(Checkpoint_directory(),"777");
   
+  if ( _WIN32 ) strreplace(fname,"/group/","G:/");
   for(int i=1; i<=dynlen(Checkpoint_LumiPars); ++i)  {
     lumi_param = lumi_param + Checkpoint_LumiPars[i];
     if ( i<dynlen(Checkpoint_LumiPars) ) lumi_param = lumi_param + ",";
@@ -776,13 +777,15 @@ string MooreCheckpoint_createOptions(int mode=0)  {
       "OnlineEnv.PartitionID      = 1;\n" +
       "OnlineEnv.PartitionIDName  = \"0001\";\n"  +
       "OnlineEnv.PartitionName    = \""+Checkpoint_Partition+"\";\n"  +
-      "OnlineEnv.Activity         = \"Physics\";\n"  +
+      "OnlineEnv.Activity         = \"COLLISION\";\n"  +
       "OnlineEnv.TAE              = 0;\n"  +
       "OnlineEnv.OutputLevel      = 4;\n"  +
       "// ---------------- Trigger parameters:    \n"  +
-      "OnlineEnv.MooreStartupMode = "+mode+";\n" +
+      "OnlineEnv.DeferHLT         = 0;\n"  +
+      "OnlineEnv.passThroughDelay = 0;\n"  +
       "OnlineEnv.AcceptRate       = 1.0;\n"  +
       "OnlineEnv.InitialTCK       = \""+tckhex+"\";\n"  +
+      "OnlineEnv.MooreStartupMode = "+mode+";\n" +
       "OnlineEnv.CondDBTag        = \""+m_condDB.text+"\";\n"  +
       "OnlineEnv.DDDBTag          = \""+m_ddDB.text+"\";\n"  +
       "OnlineEnv.LumiTrigger      = "+Checkpoint_LumiEnabled+";\n"  +
@@ -814,9 +817,11 @@ string MooreCheckpoint_createOptions(int mode=0)  {
 // @author  M.Frank
 // @version 1.0
 //=============================================================================
-void MooreCheckpoint_submitCreateCheckpoint(string tck)  {
+string MooreCheckpoint_submitCreateCheckpoint(string tck)  {
   string tag = m_condDB.text + "_" + m_ddDB.text;
   string utgid = m_app.text+"_"+tag+"_"+tck+"_create";
+  string part = m_partSelector.text;
+  string hlt = m_hltType.text;
   string args = "-E /tmp/logGaudi.fifo -O /tmp/logGaudi.fifo";
   args = args + " -n online";
   args = args + " -u "+utgid;
@@ -824,10 +829,10 @@ void MooreCheckpoint_submitCreateCheckpoint(string tck)  {
   args = args + " -D CREATE_CHECKPOINT=1";
   args = args + " -D CHECKPOINT_FILE="+Checkpoint_directory()+"/Checkpoint.data";
   args = args + " -D CHECKPOINT_DIR="+Checkpoint_directory();
-  args = args + " /group/online/dataflow/cmtuser/TEST/Moore_checkpoint.sh ";
-  args = args + m_app.text + " storectl01 LHCb Physics";
+  args = args + " /group/online/dataflow/cmtuser/checkpoints/cmds/Moore_checkpoint.sh ";
+  args = args + m_app.text + " storectl01 " + part + " 1 " + hlt;
   DebugN(args);
-  dpSet("STORESTRM02_StreamTaskCreator.Start",args);
+  dpSet("STORAGE:STORESTRM02_StreamTaskCreator.Start",args);
   return utgid;
 }
 
@@ -839,6 +844,8 @@ void MooreCheckpoint_submitCreateCheckpoint(string tck)  {
 string MooreCheckpoint_submitTestCheckpoint()  {
   string tag = m_condDB.text + "_" + m_ddDB.text;
   string tckhex = m_tck.text, utgid;
+  string part = m_partSelector.text;
+  string hlt = m_hltType.text;
   int    pos = strpos(tckhex,"(")+1;
   tckhex = substr(tckhex,pos,strpos(tckhex,")")-pos);
   utgid = m_app.text+"_"+tag+"_"+tckhex+"_test";
@@ -849,10 +856,10 @@ string MooreCheckpoint_submitTestCheckpoint()  {
   args = args + " -D TEST_CHECKPOINT=1";
   args = args + " -D CHECKPOINT_FILE="+Checkpoint_directory()+"/Checkpoint.data";
   args = args + " -D CHECKPOINT_DIR="+Checkpoint_directory();
-  args = args + " /group/online/dataflow/cmtuser/TEST/Moore_checkpoint.sh ";
-  args = args + m_app.text + " storectl01 LHCb Physics";
+  args = args + " /group/online/dataflow/cmtuser/checkpoints/cmds/Moore_checkpoint.sh ";
+  args = args + m_app.text + " storectl01 " + part + " 1 " + hlt;
   DebugN(args);
-  dpSet("STORESTRM02_StreamTaskCreator.Start",args);
+  dpSet("STORAGE:STORESTRM02_StreamTaskCreator.Start",args);
   return utgid;
 }
 
@@ -888,6 +895,7 @@ void MooreCheckpoint_testCheckpoint()  {
 // @version 1.0
 //=============================================================================
 void BrunelCheckpoint_init()   {
+  string dir = "/group/online/dataflow/cmtuser/checkpoints";  
   m_close.text         = "Close";
   m_close.toolTipText  = "Close panel.";
   m_messages.wordWrap  = "NoWrap";
@@ -895,10 +903,10 @@ void BrunelCheckpoint_init()   {
   m_result.backCol     = "_Transparent";
   m_result.foreCol     = "_WindowText";
   
-  m_outdir.text              = "/group/online/dataflow/cmtuser/checkpoints";  
   if ( _WIN32 ) {
     strreplace(Checkpoint_SwPath,"/group/","G:/");
   }
+  m_outdir.text              = dir;
   m_online.editable          = false;
   m_brunel.editable          = false;
   m_condDBLabel.toolTipText  = "Select the conditions database tag to create the BrunelCheckpoint.";
@@ -1099,9 +1107,7 @@ int BrunelCheckpoint_readCmtFile()    {
 void BrunelCheckpoint_createOptions()  {
   string text, fname = Checkpoint_directory() + "/";
   bool res = mkdir(Checkpoint_directory(),"777");
-  if ( _WIN32) strreplace(fname,"/group/","G:\\");
-  if ( _WIN32) strreplace(fname,"/","\\");
-  
+  if ( _WIN32 ) strreplace(fname,"/group/","G:/");
   text = 
       "// ---------------- General partition information:  \n" +
       "OnlineEnv.PartitionID      = 1;\n" +
@@ -1147,7 +1153,7 @@ void BrunelCheckpoint_submitCreateCheckpoint()  {
   args = args + " /group/online/dataflow/cmtuser/"+m_app.text+"/OnlineBrunelSys/scripts/runBrunel.sh ";
   args = args + m_app.text + " Class1 RecBrunel storectl01";
   DebugN(args);
-  dpSet("STORESTRM02_StreamTaskCreator.Start",args);
+  dpSet("STORAGE:STORESTRM02_StreamTaskCreator.Start",args);
 }
 
 //=============================================================================
@@ -1170,7 +1176,7 @@ string BrunelCheckpoint_submitTestCheckpoint()  {
   args = args + m_app.text + " Class1 RecBrunel storectl01";
   DebugN(args);
   m_messages.text = "";
-  dpSet("STORESTRM02_StreamTaskCreator.Start",args);
+  dpSet("STORAGE:STORESTRM02_StreamTaskCreator.Start",args);
   return utgid;
 }
 

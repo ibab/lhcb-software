@@ -71,8 +71,8 @@ class RunDB:
         self.lumi.append(self.dp1('LHCCOM/LHC.LHCb.Internal.Luminosity.LumiInst_BRAN_4R8'))
         self.lumi.append(self.dp1('LHCCOM/LHC.LHCb.Internal.Luminosity.LumiInst_Ideal'))
         self.lumi.append(self.dp1('LHCCOM/LHC.LHCb.Internal.Luminosity.LumiInst_GP'))
-        self.lumi.append(self.dp1('LHCCOM/LHC.LHCb.Internal.Luminosity.LumiIntRec_annual_3500'))
-        self.lumi.append(self.dp1('LHCCOM/LHC.LHCb.Internal.Luminosity.LumiIntDel_annual_3500'))
+        self.lumi.append(self.dp1('LHCCOM/LHC.LHCb.Internal.Luminosity.LumiIntRec_annual_4000'))
+        self.lumi.append(self.dp1('LHCCOM/LHC.LHCb.Internal.Luminosity.LumiIntDel_annual_4000'))
         self.lumi.append(self.dp1('LHCCOM/LHC.LHCb.Internal.Luminosity.LumiIntRec_GP'))
         self.lumi.append(self.dp1('LHCCOM/LHC.LHCb.Internal.Luminosity.LumiIntDel_GP'))
         self.lumi.append(self.dp1('LHCCOM/LHC.LHCb.Internal.TriggerRates.TrgRateLumi_GP'))
@@ -257,7 +257,7 @@ class RunDB:
         else:
           for i in xrange(tmp.size()):
             if self.fillHistory[i] != tmp[i]:
-              log('Saving history...')
+              #log('Saving history...')
               self.fillHistory = tmp
               self.fillHistoryDp.data = tmp
               self.writer.add(self.fillHistoryDp)

@@ -6,10 +6,10 @@ fwOT_StreamCluster	_FwFsmObjectType	168580
 
 # DpValue
 ElementName	TypeName	_original.._value	_original.._status64	_original.._stime
-fwOT_StreamCluster.panel	_FwFsmObjectType	"StreamControl/StreamControl.pnl"	0x101	23.02.2009 17:22:10.047
+fwOT_StreamCluster.panel	_FwFsmObjectType	"StreamControl/StreamControl.pnl"	0x101	02.03.2009 07:10:50.981
 fwOT_StreamCluster.states	_FwFsmObjectType	"READY", "FwStateOKPhysics", "when ( $ANY$FwCHILDREN in_state ERROR )  move_to ERROR
 |", "", "", "ERROR", "FwStateAttention3", "when ( $ALL$FwCHILDREN not_in_state ERROR )  move_to READY
-|", "", ""	0x101	24.02.2009 09:28:03.132
+|", "", ""	0x101	26.05.2011 12:05:18.320
 fwOT_StreamCluster.actions	_FwFsmObjectType	"READY/ALLOCATE", "int PART_ID = 0
 string PART_NAME = \"LHCb\"
 string RUN_INFO_DP = \"ECS:LHCb_RunInfo\"
@@ -44,5 +44,5 @@ endif
 set CURRPARTNAME = $StreamControl.CURRPARTNAME
 set CURRPARTID = $StreamControl.CURRPARTID
 move_to READY
-", "0"	0x101	24.02.2009 09:28:03.131
-fwOT_StreamCluster.parameters	_FwFsmObjectType	"int CURRPARTID = 0", "string CURRPARTNAME = \"\""	0x101	23.02.2009 17:22:10.053
+", "0"	0x101	26.05.2011 12:05:18.318
+fwOT_StreamCluster.parameters	_FwFsmObjectType	"int CURRPARTID = 0", "string CURRPARTNAME = \"\""	0x101	02.03.2009 07:10:50.987

@@ -59,7 +59,7 @@ class Installer(InstallerBase):
         Utils.error("Errors occurred during device creation.")
         return
     self.set('Command','unload')
-    self.set('State','UNKNOWN')
+    self.set('State','NOT_READY')
     self.set('PartitionDesc',partitions)
     self.set('InUse',std.vector('int')(16,0))
     self.set('ActivePartitions',std.vector('std::string')())

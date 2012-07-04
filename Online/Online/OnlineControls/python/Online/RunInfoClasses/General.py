@@ -108,6 +108,7 @@ class General:
     self.monSlice        = None
     self.mooreStartup    = None
     self.tck             = None
+    self.DeferHLT        = None
     self.L0Type          = None
     self.hltType         = None
     self.condDBtag       = None
@@ -119,7 +120,9 @@ class General:
     self.lumiTrigger     = None
     self.lumiPars        = None
     self.beamgasTrigger  = None
-
+    self.passThroughDelay= None
+    self.deferredRuns    = None
+    
     dpn = self.manager.name()+':'+self.name+postfix+'.general.outputLevel'
     if self.devMgr.exists(dpn):
       self.outputLvl = self.dp('general.outputLevel')
@@ -137,6 +140,11 @@ class General:
     dpn = self.manager.name()+':'+self.name+postfix+'.MonFarm.monSlice'
     if self.devMgr.exists(dpn):
       self.monSlice = self.dp('MonFarm.monSlice')
+    dpn = self.manager.name()+':'+self.name+self.postfix+'.general.passThroughDelay'
+    if self.devMgr.exists(dpn):
+      self.passThroughDelay = self.dp('general.passThroughDelay')
+    else:
+      print 'No datapoint present:',dpn
 
     if complete:
       self.addBasic()
@@ -162,8 +170,9 @@ class General:
       self.reader.add(self.acceptFrac)
     if self.tae is not None:
       self.reader.add(self.tae)
+    if self.passThroughDelay is not None:
+      self.reader.add(self.passThroughDelay)
 
-    
   # ===========================================================================
   def addHLT(self):
     "Add HLT information to availible information."
@@ -175,59 +184,83 @@ class General:
   # ===========================================================================
   def addTrigger(self):
     "Add Trigger information to availible information."
+
+    dpn = self.manager.name()+':'+self.name+self.postfix+'.Trigger.DeferHLT'
+    if self.devMgr.exists(dpn):
+      self.DeferHLT = self.dp('Trigger.DeferHLT')
+      self.reader.add(self.DeferHLT)
+
     dpn = self.manager.name()+':'+self.name+self.postfix+'.HLTFarm.mooreStartupMode'
     if self.devMgr.exists(dpn):
       self.mooreStartup = self.dp('HLTFarm.mooreStartupMode')
       self.reader.add(self.mooreStartup)
+
     dpn = self.manager.name()+':'+self.name+self.postfix+'.Trigger.TCK'
     if self.devMgr.exists(dpn):
       self.tck = self.dp('Trigger.TCK')
       self.reader.add(self.tck)
+
     dpn = self.manager.name()+':'+self.name+self.postfix+'.Trigger.L0Type'
     if self.devMgr.exists(dpn):
       self.L0Type = self.dp('Trigger.L0Type')
       self.reader.add(self.L0Type)
+
     # Software versions
     dpn = self.manager.name()+':'+self.name+self.postfix+'.Trigger.HLTType'
     if self.devMgr.exists(dpn):
       self.hltType = self.dp('Trigger.HLTType')
       self.reader.add(self.hltType)
+
     dpn = self.manager.name()+':'+self.name+self.postfix+'.Trigger.gaudiVersion'
     if self.devMgr.exists(dpn):
       self.gaudiVersion = self.dp('Trigger.gaudiVersion')
       self.reader.add(self.gaudiVersion)
+
     dpn = self.manager.name()+':'+self.name+self.postfix+'.Trigger.mooreVersion'
     if self.devMgr.exists(dpn):
       self.mooreVersion = self.dp('Trigger.mooreVersion')
       self.reader.add(self.mooreVersion)
+
     dpn = self.manager.name()+':'+self.name+self.postfix+'.Trigger.onlineVersion'
     if self.devMgr.exists(dpn):
       self.onlineVersion = self.dp('Trigger.onlineVersion')
       self.reader.add(self.onlineVersion)
+
     dpn = self.manager.name()+':'+self.name+self.postfix+'.Trigger.dataflowVersion'
     if self.devMgr.exists(dpn):
       self.dataflowVersion = self.dp('Trigger.dataflowVersion')
       self.reader.add(self.dataflowVersion)
+
     dpn = self.manager.name()+':'+self.name+self.postfix+'.Trigger.condDBTag'
     if self.devMgr.exists(dpn):
       self.condDBtag = self.dp('Trigger.condDBTag')
       self.reader.add(self.condDBtag)
+
     dpn = self.manager.name()+':'+self.name+self.postfix+'.Trigger.DDDBTag'
     if self.devMgr.exists(dpn):
       self.DDDBtag = self.dp('Trigger.DDDBTag')
       self.reader.add(self.DDDBtag)
+
     dpn = self.manager.name()+':'+self.name+self.postfix+'.Trigger.LumiTrigger'
     if self.devMgr.exists(dpn):
       self.lumiTrigger = self.dp('Trigger.LumiTrigger')
       self.reader.add(self.lumiTrigger)
+
     dpn = self.manager.name()+':'+self.name+self.postfix+'.Trigger.LumiPars'
     if self.devMgr.exists(dpn):
       self.lumiPars = self.dp('Trigger.LumiPars')
       self.reader.add(self.lumiPars)
+
     dpn = self.manager.name()+':'+self.name+self.postfix+'.Trigger.BeamGasTrigger'
     if self.devMgr.exists(dpn):
       self.beamgasTrigger = self.dp('Trigger.BeamGasTrigger')
       self.reader.add(self.beamgasTrigger)
+
+    dpn = self.manager.name()+':'+self.name+self.postfix+'.Trigger.DeferredRuns'
+    if self.devMgr.exists(dpn):
+      self.deferredRuns = self.dp('Trigger.DeferredRuns')
+      self.reader.add(self.deferredRuns)
+
     return self
 
   # ===========================================================================
@@ -447,6 +480,8 @@ class General:
       log(' %-32s  %s'%('Lumi parameters',str(['%7.3f'%i for i in self.lumiPars.data]).replace('\'',''),))
     if self.beamgasTrigger is not None:
       log(' %-32s  %s'%('Beam gas trigger',str(self.beamgasTrigger.data),))
+    if self.deferredRuns is not None:
+      log(' %-32s  %s'%('Deferred Runs',str(['%s '%i for i in self.deferredRuns.data]),))
     return self
 
   # ===========================================================================

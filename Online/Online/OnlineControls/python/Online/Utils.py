@@ -9,9 +9,36 @@ Dictionary.loadDict(lib_prefix+'STLRflx')
 
 gbl  = Dictionary.makeNamespace('')
 std  = gbl.std
+fifo = None
+partition = ''
+
+def setPartition(name):
+  global partition
+  partition = name
+  
+def openFMC(fifo_name='/tmp/logPVSSConfig.fifo'):
+  global fifo
+  if fifo:
+    fifo.close()
+  fifo = open(fifo_name,'a')
+  
+def closeFMC():
+  global fifo
+  if fifo:
+    fifo.close()
+    fifo = None
 
 def makePrint(msg):
   print msg
+
+def printFMC(severity, msg):
+  if fifo:
+    global partition
+    import socket
+    n = time.strftime('%b%d-%H%M%S['+severity+'] ') + socket.gethostname() + ': PVSS(' + partition + '): ' + msg + '\n'
+    fifo.write(n)
+    fifo.flush()
+
 logPrefix     = ''
 logHeader     = '+----------------------------------------------------------------------------------------------------'
 logTrailer    = logHeader
@@ -45,14 +72,19 @@ def log(msg, with_header=None, with_trailer=None,timestamp=0):
   if timestamp:        stamp = timeStamp() + ' '
   if ( with_header ):
     makePrint(stamp + logHeader)
+    printFMC('INFO',logHeader)
   if msg.__class__ == str().__class__:
     makePrint(stamp + '|  ' + msg)
+    printFMC('INFO','|  ' + msg)
   else:
     for line in msg:
       makePrint(stamp + '|  ' + line)
+      printFMC('INFO','|  ' + line)
   if ( with_trailer ):
     makePrint(stamp + logTrailer)
+    printFMC('INFO','|  ' + logTrailer)
   sys.stdout.flush()
+
 # =============================================================================
 def error(msg, with_header=0, with_trailer=0, timestamp=0):
   """

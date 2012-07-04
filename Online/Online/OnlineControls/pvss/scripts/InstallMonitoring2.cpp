@@ -16,7 +16,7 @@ main()   {
   string storage_sys   = "STORAGE:Storage";
   ctrlUtils_stopAllTree();
   if ( ctrl_node == "MONA09" ) {
-    num_worker_tasks = 17;
+    num_worker_tasks = 20;
     stream = "Reconstruction";
     StreamTaskMgr_installStream(stream);
     if ( ctrl_node == "MONA09" ) {
@@ -34,7 +34,8 @@ main()   {
       stream = "Monitoring2";
     }
     else if ( ctrl_node == "MONA08" ) {
-      num_worker_tasks = 12;
+      num_worker_tasks = 24;
+      num_relay_tasks  = 15;
     }
     StreamTaskMgr_installStream(stream);
     StreamTaskMgr_createAllTree(stream,num_relay_tasks,num_worker_tasks,storage_sys,num_sender_tasks);  

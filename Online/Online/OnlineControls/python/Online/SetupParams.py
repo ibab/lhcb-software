@@ -122,9 +122,9 @@ elif node_name == "MONA09":
   # Monitoring system parameters
   monitor_system_name      = 'RECONSTRUCTION'
   monitor_type             = 'Reconstruction'
-  monitor_num_nodes        = 20
-  monitor_streams_per_node =  4
-  monitor_workers_per_node = 12
+  monitor_num_nodes        =  9
+  monitor_streams_per_node =  8 # 4 partitions + 4 optional streams
+  monitor_workers_per_node = 24
 
 else:
   ##### if node_name == "MONA08":
@@ -132,8 +132,8 @@ else:
   # Monitoring system parameters
   monitor_system_name      = 'MONITORING'
   monitor_type             = 'Monitoring'
-  monitor_num_nodes        = 10
-  monitor_streams_per_node = 11
+  monitor_num_nodes        =  5
+  monitor_streams_per_node = 20 # 16 partitions + 4 optional streams
   monitor_workers_per_node = 16
 
 # Same for all monitoring systems

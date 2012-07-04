@@ -6,8 +6,8 @@ fwOT_FSM_Slice	_FwFsmObjectType	168583
 
 # DpValue
 ElementName	TypeName	_original.._value	_original.._status64	_original.._stime
-fwOT_FSM_Slice.panel	_FwFsmObjectType	"StreamControl/StreamEditor.pnl"	0x101	15.06.2010 21:20:55.875
-fwOT_FSM_Slice.components	_FwFsmObjectType		0x101	03.06.2009 15:17:04.155
+fwOT_FSM_Slice.panel	_FwFsmObjectType	"StreamControl/StreamEditor.pnl"	0x101	02.05.2011 17:14:34.291
+fwOT_FSM_Slice.components	_FwFsmObjectType		0x101	02.05.2011 17:14:34.289
 fwOT_FSM_Slice.states	_FwFsmObjectType	"NOT_READY", "FwStateAttention1", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
 |when ( $ALL$FwCHILDREN in_state {CONFIGURED,CREATED,READY,RUNNING} )  move_to CONFIGURED
 |", "", "", "ERROR", "FwStateAttention3", "when ( ( $ANY$FwCHILDREN in_state NOT_READY ) and ( $ALL$FwCHILDREN not_in_state ERROR ) )  move_to NOT_READY
@@ -20,10 +20,10 @@ fwOT_FSM_Slice.states	_FwFsmObjectType	"NOT_READY", "FwStateAttention1", "when (
 |when ( $ALL$FwCHILDREN in_state NOT_READY )  move_to NOT_READY
 |", "", "", "CONFIGURED", "FwStateAttention1", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
 |when ( $ANY$FwCHILDREN in_state NOT_READY ) move_to NOT_READY
-|when ( $ALL$FwCHILDREN in_state {CREATED,READY,RUNNING} )  move_to CREATED
+|when ( $ALL$FwCHILDREN in_state {CREATED,READY,RUNNING,STOPPED} )  move_to CREATED
 |", "", "", "CREATED", "FwStateAttention1", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
 |when ( $ANY$FwCHILDREN in_state {NOT_READY,CONFIGURED} ) move_to CONFIGURED
-|when ( $ALL$FwCHILDREN in_state {READY,RUNNING} )  move_to READY
+|when ( $ALL$FwCHILDREN in_state {READY,RUNNING,STOPPED} )  move_to READY
 |", "", "", "READY", "FwStateOKNotPhysics", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
 |when ( $ALL$FwCHILDREN in_state CONFIGURED )  move_to CONFIGURED
 |when ( $ANY$FwCHILDREN in_state {NOT_READY,CONFIGURED,CREATED} )  move_to CREATED
@@ -39,13 +39,13 @@ fwOT_FSM_Slice.states	_FwFsmObjectType	"NOT_READY", "FwStateAttention1", "when (
 |", "", "", "FINALIZED", "FwStateAttention1", "when ( $ANY$FwCHILDREN in_state ERROR )  move_to ERROR
 |when ( $ALL$FwCHILDREN in_state NOT_READY )  move_to NOT_READY
 |when ( $ALL$FwCHILDREN in_state {STOPPED,READY} )  move_to STOPPED
-|", "", ""	0x101	15.06.2010 21:22:58.916
+|", "", ""	0x101	26.05.2011 12:05:12.729
 fwOT_FSM_Slice.actions	_FwFsmObjectType	"NOT_READY/Configure", "", "1", "do Configure $ALL$StreamConfigurator
-if ( $ALL$StreamConfigurator not_in_state {CONFIGURED,CREATED,READY,RUNNING} )  then
+if ( $ALL$StreamConfigurator not_in_state {CONFIGURED,CREATED,READY,RUNNING,STOPPED} )  then
         move_to NOT_READY
 endif
 do Configure $ALL$FSM_Tasks
-if ( $ALL$FSM_Tasks in_state {CONFIGURED,CREATED,READY,RUNNING} )  then
+if ( $ALL$FSM_Tasks in_state {CONFIGURED,CREATED,READY,RUNNING,STOPPED} )  then
         move_to CONFIGURED
 endif
 ", "0", "NOT_READY/Kill", "", "1", "do Kill $ALL$FwCHILDREN
@@ -132,7 +132,7 @@ if ( $ALL$FwCHILDREN in_state {FINALIZED,NOT_READY} ) then
   move_to FINALIZED
 endif
 ", "0", "CONFIGURED/Create", "", "1", "do Create $ALL$FwCHILDREN
-if ( $ALL$FwCHILDREN in_state {CREATED,READY,RUNNING} )  then
+if ( $ALL$FwCHILDREN in_state {CREATED,READY,RUNNING,STOPPED} )  then
         move_to CREATED
 endif
 ", "0", "CONFIGURED/Unload", "", "1", "do Unload $ALL$FwCHILDREN
@@ -162,7 +162,7 @@ if ( $ALL$FwCHILDREN in_state NOT_READY )  then
   move_to NOT_READY 
 endif
 ", "0", "CREATED/Initialize", "", "1", "do Initialize $ALL$FwCHILDREN
-if ( $ALL$FwCHILDREN in_state {READY,RUNNING} ) then
+if ( $ALL$FwCHILDREN in_state {READY,RUNNING,STOPPED} ) then
         move_to READY
 endif
 ", "0", "CREATED/Unload", "", "1", "do Unload $ALL$FwCHILDREN
@@ -196,6 +196,10 @@ if ( $ALL$FwCHILDREN in_state RUNNING )  then
   move_to RUNNING
 endif
 ", "0", "READY/Reset", "", "1", "do Reset $ALL$FSM_Tasks
+if ( $ALL$FSM_Tasks in_state {NOT_READY} ) then
+  do Reset $ALL$StreamConfigurator
+endif
+do Kill $ALL$FSM_Tasks
 if ( $ALL$FSM_Tasks in_state {NOT_READY} ) then
   do Reset $ALL$StreamConfigurator
 endif
@@ -328,5 +332,5 @@ endif
 if ( $ALL$FwCHILDREN in_state NOT_READY )  then
    move_to NOT_READY
 endif
-", "0"	0x101	15.06.2010 21:22:58.913
-fwOT_FSM_Slice.parameters	_FwFsmObjectType		0x101	14.06.2010 21:09:41.360
+", "0"	0x101	26.05.2011 12:05:12.726
+fwOT_FSM_Slice.parameters	_FwFsmObjectType		0x101	02.05.2011 17:14:34.293
