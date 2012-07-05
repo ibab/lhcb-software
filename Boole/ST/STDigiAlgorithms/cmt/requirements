@@ -1,5 +1,5 @@
-package STDigiAlgorithms
-version v2r1
+package           STDigiAlgorithms
+version           v2r2
 
 branches cmt doc src options
 
