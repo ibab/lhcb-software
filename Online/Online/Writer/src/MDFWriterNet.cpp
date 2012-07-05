@@ -1,3 +1,11 @@
+/*
+ * MDFWriterNet.cpp
+ *
+ * Author:  Sai Suman Cherukuwada
+ * 			Jean-Christophe Garnier
+* 			Vijay Kartik (vijay.kartik@cern.ch)
+ */
+
 #ifdef BUILD_WRITER
 
 #include <string>
@@ -220,8 +228,7 @@ void MDFWriterNet::constructNet()
 	declareProperty("FileExtension", m_fileExtension = "raw");
 	declareProperty("StreamID", m_streamID = "NONE");
 	declareProperty("RunFileTimeoutSeconds", m_runFileTimeoutSeconds = 10);
-	declareProperty("RunFileTimeoutSecondsLHCb1", m_runFileTimeoutSecondsLHCb1
-			= 300);
+	declareProperty("RunFileTimeoutSecondsLHCb1", m_runFileTimeoutSecondsLHCb1 = 300);
 	declareProperty("MaxQueueSizeBytes", m_maxQueueSizeBytes = 1073741824);
 	declareProperty("EnableMD5", m_enableMD5 = false);
 	declareProperty("UpdatePeriod", m_UpdatePeriod = 2); //0 is no update
@@ -339,8 +346,7 @@ StatusCode MDFWriterNet::initialize(void)
 	if (utgid.find("LHCb1_") != std::string::npos)
 	{
 		m_runFileTimeoutSeconds = m_runFileTimeoutSecondsLHCb1;
-		*m_log << MSG::INFO << WHERE
-				<< "Changed File Timeout to LHCb1 Timeout of: "
+		*m_log << MSG::INFO << WHERE << "Changed File Timeout to LHCb1 Timeout of: "
 				<< m_runFileTimeoutSecondsLHCb1 << " seconds" << endmsg;
 	}
 	if (pthread_mutex_init(&m_SyncFileList, NULL))

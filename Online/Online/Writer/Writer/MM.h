@@ -1,8 +1,8 @@
 /*
  * MM.h
  *
- * Author:  Sai Suman
- * 			Vijay Kartik
+ * Author:  Sai Suman Cherukuwada
+ * 			Vijay Kartik (vijay.kartik@cern.ch)
  */
 
 #ifndef MM_H
@@ -92,12 +92,17 @@ public:
 
 /** @class MM
  * Manages the memory structures and the command queues on a per-run basis.
+ * MM is a map with entries of the form (<Run number>, <Command queue for this run>)
  */
 class MM
 {
 private:
 
+	/// Single STL map for all runs being processed by the MDFWriterNet at the moment.
 	std::map<unsigned int, MMQueue*> m_runMap;
+
+	/// Map iterator for moveSendPointer() and to ensure commands from all runs are
+	/// served fairly (in a round-robin fashion).
 	std::map<unsigned int, MMQueue*>::iterator m_runMapIter;
 
 	/// A lock to protect the map
@@ -105,6 +110,8 @@ private:
 
 	/// For convenience - file to write out debug printfs and such.
 	/// Activate with the #define at the top.
+	/// NB: Could also log to the MsgStream class for debugging.
+	/// But TODO or not TODO, that is the question.
 #if WITHDEBUG
 	FILE *fd;
 #endif
@@ -112,10 +119,11 @@ private:
 	///A lock to protect the allocator.
 	pthread_mutex_t m_allocLock;
 
-	/// The number of elements in the queue.
+	/// The number of elements in the entire map.
+	/// This is inclusive of ALL commands from ALL runs in the map
 	unsigned int m_queueLength;
 
-	/// The maximum size of the queue
+	/// The maximum size of the map (in bytes).
 	size_t m_maxQueueSize;
 
 	/// The total number of bytes allocated so far by the MM object.
@@ -163,11 +171,13 @@ public:
 	int getQueueLength(void) { return m_queueLength; };
 
 
-	/// Note: These two variable below are static members now
-	/// to ensure smooth later use/changes. If it is later decided
-	/// to change the command enqueuing/moving procedures, then these
-	/// variables should be the only ones needed to be handled and monitored
-	/// by different independent routines/threads.
+	/* Note: These two variable below are static members now
+	 * to ensure smooth later use/changes. If it is later decided
+	 * to change the command enqueuing/moving procedures, then these
+	 * variables should be the only ones needed to be handled and monitored
+	 * by different independent routines/threads (provided we still maintain
+	 * one command queue per run).
+	 */
 
 
 	/// A condition variable to enable the sender thread to sleep on.

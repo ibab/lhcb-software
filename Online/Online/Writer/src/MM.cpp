@@ -1,8 +1,8 @@
 /*
  * MM.cpp
  *
- * Author:  Sai Suman
- * 			Vijay Kartik
+ * Author:  Sai Suman Cherukuwada
+ * 			Vijay Kartik (vijay.kartik@cern.ch)
  */
 
 #ifdef BUILD_WRITER
@@ -109,7 +109,7 @@ void MMQueue::enqueueCommand(struct cmd_header *cmd)
 	pthread_mutex_unlock(&m_listLock);
 
 	/* Let the sender thread know that the list isn't empty. */
-	/* using a static member of MM here, so that MM is notified when any
+	/* using a static member of MM here, so that MM is notified when _any_
 	   one of the run-queues has a command to be sent. */
 	pthread_cond_broadcast(&(MM::m_emptyCondition));
 }
@@ -160,6 +160,8 @@ void MMQueue::resetSendPointer(void)
  * Removes a command from the queue.
  * @param sequenceNum The sequence number of the command to be
  * dequeued.
+ * @param run_no The run number of the command to be
+ * dequeued.
  */
 struct cmd_header* MMQueue::dequeueCommand(unsigned int sequenceNum, unsigned int run_no)
 {
@@ -206,19 +208,18 @@ struct cmd_header* MMQueue::dequeueCommand(unsigned int sequenceNum, unsigned in
 	return NULL;
 }
 
+/**
+ * Constructor.
+ * Initialises the map mutex, the 'empty' condition and corresponding mutex.
+ * Note that the maxQueueSize is the total number of bytes allowed for
+ * the entire map (i.e., including all commands in all run-queues).
+ */
 MM::MM(size_t maxQueueSize)
 {
-	//to have enough time to attach the debugger in Eclipse.
-	//TODO this MUST be removed before deploying the MDFWriterNet
-//	sleep(60);
-
 	pthread_mutex_init(&(MM::m_emptyLock), NULL);
 	pthread_cond_init(&(MM::m_emptyCondition), NULL);
-
 	pthread_mutex_init(&m_mapLock, NULL);
-//	pthread_mutex_init(&m_emptyLockMap, NULL);
 	pthread_mutex_init(&m_allocLock, NULL);
-//	pthread_cond_init(&m_emptyConditionMap, NULL);
 	m_maxQueueSize = maxQueueSize;
 	m_runMap.clear();
 	m_queueLength = 0;
@@ -232,6 +233,9 @@ MM::MM(size_t maxQueueSize)
 #endif
 }
 
+/**
+ * Destructor.
+ */
 MM::~MM()
 {
 	m_runMap.clear();
@@ -294,7 +298,7 @@ struct cmd_header* MM::allocAndCopyCommand(struct cmd_header *header,
 /** Frees a command header and any associated data.
  * @param cmd A pointer to the command header to be freed. If
  * the command is of type WRITE_CHUNK, then any associated
- * data is also freed. NB: cmd should have been dequeued first.
+ * data is also freed. NB: Command should have been dequeued first.
  */
 void MM::freeCommand(struct cmd_header *cmd)
 {
@@ -325,6 +329,11 @@ void MM::freeCommand(struct cmd_header *cmd)
 
 }
 
+/**
+ * Adds a command to the queue for the appropriate run that the command is for.
+ * @param cmd A pointer to the command header of the command to
+ * be added to the queue.
+ */
 void MM::enqueueCommand(struct cmd_header *cmd)
 {
 	if (cmd == NULL)
@@ -353,19 +362,20 @@ void MM::enqueueCommand(struct cmd_header *cmd)
 struct cmd_header* MM::moveSendPointer(void)
 {
 	/*
-	 * The queue could possibly even be empty. If this happens, we want
-	 * this thread to be put to sleep, waiting for something to come in.
-	 * A semaphore would have been great for this, but we don't
-	 * use a semaphore here is because semaphores cannot be "upped"
-	 * beyond 32768 on i386. So if we have more than those many
-	 * elements in the queue, the whole semaphore thing breaks down.
-	 * That's why we have this somewhat complicated mix of pthread mutexes
-	 * and condwaits. The gist is that there's m_listLock for protecting
-	 * the list, and m_emptyCondition for sleeping till something is inserted
-	 * in the list. m_emptyLock is just for protecting m_emptyCondition.
+	 * The entire map of runs could be empty, or the map could have entries but
+	 * any number of run queues could also be empty. If ALL run queues are empty,
+	 * we want this thread to be put to sleep, waiting for something to come in.
+	 * This is done with a conditional wait, which waits for LOCK_TIMEOUT seconds.
+	 * We don't care about the return value of  pthread_cond_timedwait() because the
+	 * wait is just to avoid endless repetitive checking to see if a new command has
+	 * been enqueued. pthread_cond_timedwait() would return immediately if m_emptyCondition
+	 * is broadcast (by MMQueue::enqueueCommand()), and moveSendPointer() would continue.
+	 *
+	 * We iterate over the entire run map until we find a non-empty queue
+	 * corresponding to a run that has a command to send. The moveSendPointer()
+	 * of this non-empty queue is then called.
 	 */
 
-		/*Let's try to get the list lock and see if the list is empty.*/
 	std::map<unsigned int, MMQueue*>::iterator old_runMapIter;
 	struct cmd_header* retCmd;
 	struct timespec tSpec;
@@ -397,17 +407,17 @@ struct cmd_header* MM::moveSendPointer(void)
 		pthread_mutex_lock(&(MM::m_emptyLock));
 
 		pthread_cond_timedwait(&(MM::m_emptyCondition), &(MM::m_emptyLock), &tSpec);
-//		if (ret != 0)
-//		{
-//			/* Timed out. Nothing in the list yet. Just exit.*/
-//			pthread_mutex_unlock(&(MM::m_emptyLock));
-//			return NULL;
-//		}
+
 		pthread_mutex_unlock(&(MM::m_emptyLock));
 		return NULL;
 }
 
-
+/**
+ * Moves the send pointer of each run queue in the MM map to the first element.
+ * This would normally be required only during failover,
+ * where all the queue elements would need to be
+ * sent again over the network.
+ */
 void MM::resetSendPointer(void)
 {
 	pthread_mutex_lock(&m_mapLock);
@@ -419,6 +429,11 @@ void MM::resetSendPointer(void)
 	pthread_mutex_unlock(&m_mapLock);
 }
 
+/**
+ * Removes a command from the appropriate run queue in the MM map.
+ * @param sequenceNum The sequence number of the command to be dequeued.
+ * @param run_no The run number of the command to be dequeued.
+ */
 struct cmd_header* MM::dequeueCommand(unsigned int sequenceNum,	unsigned int run_no)
 {
 	struct cmd_header* retCmd;

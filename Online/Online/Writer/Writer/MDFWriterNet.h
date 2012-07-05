@@ -1,3 +1,11 @@
+/*
+ * MDFWriterNet.h
+ *
+ * Author:  Sai Suman Cherukuwada
+ * 			Jean-Christophe Garnier
+ * 			Vijay Kartik (vijay.kartik@cern.ch)
+ */
+
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/IRunable.h"
