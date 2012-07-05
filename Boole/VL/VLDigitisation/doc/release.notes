@@ -1,2 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : VL/VLDigitisation
+! Responsible : Heinrich Schindler
+! Purpose     : Algorithms for VL Digitization
+!-----------------------------------------------------------------------------
+
+!========================= VLDigitisation v1r0 2012-07-05 ====================
 ! 2012-06-14 - Heinrich Schindler
  - initial import
