@@ -63,7 +63,8 @@ if [ $DBG = 1 ]; then
 else
 
     while [ $NBWRITER -gt 0 ] ; do
-        $MINITERM Writer@${HOST} -e "export UTGID=${NODENAME}/Writer${NBWRITER}; LD_PRELOAD="/home/jc//usr/lib/libprofiler.so" CPUPROFILE=/tmp/writer.prof  exec -a \${UTGID} $Class1_task -opt=./WRT.opts"&
+        $MINITERM Writer@${HOST} -e "export UTGID=${NODENAME}/Writer${NBWRITER}; exec -a \${UTGID} $Class1_task -opt=./WRT.opts"&
+#        $MINITERM Writer@${HOST} -e "export UTGID=${NODENAME}/Writer${NBWRITER}; exec -a \${UTGID} /usr/bin/valgrind --tool=callgrind --log-file=valgrind.log $Class1_task -opt=./WRT.opts"&
         NBWRITER=$(($NBWRITER - 1))
     done  
 fi

@@ -161,7 +161,7 @@ namespace LHCb {
       int getState() { return m_state; }
 
       /// Stops retrying to send a command when the buffer is full.
-      /// Used to stop the infitie Retry-Loop when a run shall
+      /// Used to stop the infinite Retry-Loop when a run shall
       /// be stopped.
       void stopRetrying();
 
@@ -176,7 +176,7 @@ namespace LHCb {
       /// Constructor
       Connection(std::string serverAddr, int serverPort, int sndRcvSizes,
           MsgStream * log, INotifyClient *nClient, size_t maxQueueSize);
- 
+
   };
 
   /** @class An interface that can be used to register for notifications.

@@ -130,7 +130,7 @@ int SendThread::processSends(void)
     if(ret == totalSize) {
       // *m_log << MSG::INFO << "send was successful" << endmsg;
 
-//      dbg_CountAgain=0;       
+//      dbg_CountAgain=0;
 
       delete bif;
       bif = NULL;
@@ -149,16 +149,16 @@ int SendThread::processSends(void)
         continue;
       }
     } else if(ret == BIF::AGAIN) {
-          //*m_log << MSG::INFO << "send returned EAGAIN: " << ++dbg_CountAgain  << endmsg;
+          //*m_log << MSG::INFO << "send returned AGAIN: " << ++dbg_CountAgain  << endmsg;
           nanosleep(&iSleep, NULL);
           if(iSleep.tv_sec < 1) {
-              if(iSleep.tv_nsec >= 900000000) { 
+              if(iSleep.tv_nsec >= 900000000) {
                   iSleep.tv_sec=1;
-                  iSleep.tv_nsec = 1; 
+                  iSleep.tv_nsec = 1;
               }
-              else 
-                  iSleep.tv_nsec += 1000; 
-          }   
+              else
+                  iSleep.tv_nsec += 1000;
+          }
           continue; // try to send again
       }
       else {

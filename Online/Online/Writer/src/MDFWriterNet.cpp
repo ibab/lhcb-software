@@ -43,7 +43,8 @@ extern "C"
 
 #include "Writer/defs.h"
 
-DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,MDFWriterNet);
+DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,MDFWriterNet)
+;
 
 using namespace LHCb;
 
@@ -96,16 +97,16 @@ using namespace LHCb;
 
 void File::feedMonitor(void* tag, void** buf, int* size, int* first)
 {
-  static const char* empty = "";
-  Monitor* h = *(Monitor**)tag;
-  if ( !(*first) )
-  {
-    *buf = h;
-    *size = sizeof(Monitor);
-    return;
-  }
-  *size = 0;
-  *buf = (void*)empty;
+	static const char* empty = "";
+	Monitor* h = *(Monitor**) tag;
+	if (!(*first))
+	{
+		*buf = h;
+		*size = sizeof(Monitor);
+		return;
+	}
+	*size = 0;
+	*buf = (void*) empty;
 }
 
 void File::feedMessageQueue(mqd_t /* mq */)
@@ -113,239 +114,250 @@ void File::feedMessageQueue(mqd_t /* mq */)
 }
 
 /// New constructor with stream id
-File::File(const std::string& fileName, unsigned int runNumber, const std::string& streamID, bool enableMD5)
+File::File(const std::string& fileName, unsigned int runNumber,
+		const std::string& streamID, bool enableMD5)
 {
-  init(fileName, runNumber, enableMD5);
-  m_streamID = streamID;
+	init(fileName, runNumber, enableMD5);
+	m_streamID = streamID;
 }
 
 /// Constructor
 File::File(const std::string& fileName, unsigned int runNumber, bool enableMD5)
 {
-  init(fileName, runNumber, enableMD5);
+	init(fileName, runNumber, enableMD5);
 }
 
 /// Constructor
-void File::init(const std::string& fileName, unsigned int runNumber, bool enableMD5)
+void File::init(const std::string& fileName, unsigned int runNumber,
+		bool enableMD5)
 {
-  static int s_seqNo = 0;
-  char txt[32];
-  bzero(txt,32);
-  m_mon = &m_monBuffer;
-  m_mon->m_seqNum = 0;
-  m_mon->m_runNumber = runNumber;
-  ::strncpy(m_mon->m_name,fileName.c_str(),sizeof(m_mon->m_name));
-  m_mon->m_name[sizeof(m_mon->m_name)-1]=0;
-  m_mon->m_adler32 = adler32Checksum(0, NULL, 0);
-  m_mon->m_lastUpdated = time(NULL);
-  m_mon->m_fileOpen = false;
-  m_mon->m_bytesWritten = 0;
-  m_mon->m_events = 0;
-  m_mon->m_physStat = 0;
-  m_fileName = fileName;
-  m_md5 = new TMD5();
-  m_streamID = "FULL";
-  m_prev = NULL;
-  m_next = NULL;
-  sprintf(txt,"/File#%02d",s_seqNo++);
-  std::string svc = RTL::processName()+txt;
+	static int s_seqNo = 0;
+	char txt[32];
+	bzero(txt, 32);
+	m_mon = &m_monBuffer;
+	m_mon->m_seqNum = 0;
+	m_mon->m_runNumber = runNumber;
+	::strncpy(m_mon->m_name, fileName.c_str(), sizeof(m_mon->m_name));
+	m_mon->m_name[sizeof(m_mon->m_name) - 1] = 0;
+	m_mon->m_adler32 = adler32Checksum(0, NULL, 0);
+	m_mon->m_lastUpdated = time(NULL);
+	m_mon->m_fileOpen = false;
+	m_mon->m_bytesWritten = 0;
+	m_mon->m_events = 0;
+	m_mon->m_physStat = 0;
+	m_fileName = fileName;
+	m_md5 = new TMD5();
+	m_streamID = "FULL";
+	m_prev = NULL;
+	m_next = NULL;
+	sprintf(txt, "/File#%02d", s_seqNo++);
+	std::string svc = RTL::processName() + txt;
 
-  m_enableMD5 = enableMD5;
+	m_enableMD5 = enableMD5;
 
-  memset(m_mon->m_trgEvents, 0, MAX_TRIGGER_TYPES*sizeof(unsigned int));
-  memset(m_mon->m_statEvents, 0, MAX_STAT_TYPES*sizeof(unsigned int));
+	memset(m_mon->m_trgEvents, 0, MAX_TRIGGER_TYPES * sizeof(unsigned int));
+	memset(m_mon->m_statEvents, 0, MAX_STAT_TYPES * sizeof(unsigned int));
 
-  m_mon->m_svcID = ::dis_add_service((char *) svc.c_str(),(char *) "C",0,0,feedMonitor,(long)m_mon);
+	m_mon->m_svcID = ::dis_add_service((char *) svc.c_str(), (char *) "C", 0,
+			0, feedMonitor, (long) m_mon);
 
 }
 
 /// Destructor.
 File::~File()
 {
-  delete m_md5;
-  ::dis_remove_service(m_mon->m_svcID);
+	delete m_md5;
+	::dis_remove_service(m_mon->m_svcID);
 }
 
 size_t File::updateWrite(const void *data, size_t len)
 {
-  if(m_enableMD5)
-  {
-    m_md5->Update((UChar_t*)data, (UInt_t)len);
-  }
-  m_mon->m_adler32 = adler32Checksum(m_mon->m_adler32, (const char*)data, len);
-  m_mon->m_bytesWritten += len;
-  m_mon->m_lastUpdated = time(NULL);
-  return m_mon->m_bytesWritten;
+	if (m_enableMD5)
+	{
+		m_md5->Update((UChar_t*) data, (UInt_t) len);
+	}
+	m_mon->m_adler32 = adler32Checksum(m_mon->m_adler32, (const char*) data,
+			len);
+	m_mon->m_bytesWritten += len;
+	m_mon->m_lastUpdated = time(NULL);
+	return m_mon->m_bytesWritten;
 }
 
 /// Extended algorithm constructor
-MDFWriterNet::MDFWriterNet(MDFIO::Writer_t typ, const std::string& nam, ISvcLocator* pSvc) : MDFWriter(typ, nam, pSvc)
+MDFWriterNet::MDFWriterNet(MDFIO::Writer_t typ, const std::string& nam,
+		ISvcLocator* pSvc) :
+	MDFWriter(typ, nam, pSvc)
 {
-  constructNet();
+	constructNet();
 }
 
 /// Standard algorithm constructor
-MDFWriterNet::MDFWriterNet(const std::string& nam, ISvcLocator* pSvc) : MDFWriter(nam, pSvc), m_incidentSvc(0)
+MDFWriterNet::MDFWriterNet(const std::string& nam, ISvcLocator* pSvc) :
+	MDFWriter(nam, pSvc), m_incidentSvc(0)
 {
-  constructNet();
+	constructNet();
 }
 
 /// Algorithm::execute() override, delegates to MDFWriter::execute().
 StatusCode MDFWriterNet::execute()
 {
-  return MDFWriter::execute();
+	return MDFWriter::execute();
 }
 
 /// Read job options.
 void MDFWriterNet::constructNet()
 {
-  //This should ideally be provided as a name and not an
-  //IP address, so that the round-robin DNS can kick in.
-  declareProperty("StorageServerAddr", m_serverAddr="");
-  declareProperty("StorageServerPort", m_serverPort=45247);
-  declareProperty("RunDBServiceURL", m_runDBURL="");
-  declareProperty("MaxFileSizeMB", m_maxFileSizeMB=2000);
-  declareProperty("MaxEventInFile", m_maxEventInFile=0);
-  declareProperty("SndRcvSizes", m_sndRcvSizes=6553600);
-  declareProperty("FilePrefix", m_filePrefix="MDFWriterNet_File_");
-  declareProperty("Directory", m_directory=".");
-  declareProperty("FileExtension", m_fileExtension="raw");
-  declareProperty("StreamID", m_streamID="NONE");
-  declareProperty("RunFileTimeoutSeconds", m_runFileTimeoutSeconds=10);
-  declareProperty("RunFileTimeoutSecondsLHCb1", m_runFileTimeoutSecondsLHCb1=300);
-  declareProperty("MaxQueueSizeBytes", m_maxQueueSizeBytes=1073741824);
-  declareProperty("EnableMD5", m_enableMD5=false);
-  declareProperty("UpdatePeriod", m_UpdatePeriod=2); //0 is no update
-  declareProperty("MaxRetry", m_MaxRetry=5); //0 is no retry, but try once
-  m_log = new MsgStream(msgSvc(), name());
+	//This should ideally be provided as a name and not an
+	//IP address, so that the round-robin DNS can kick in.
+	declareProperty("StorageServerAddr", m_serverAddr = "");
+	declareProperty("StorageServerPort", m_serverPort = 45247);
+	declareProperty("RunDBServiceURL", m_runDBURL = "");
+	declareProperty("MaxFileSizeMB", m_maxFileSizeMB = 2000);
+	declareProperty("MaxEventInFile", m_maxEventInFile = 0);
+	declareProperty("SndRcvSizes", m_sndRcvSizes = 6553600);
+	declareProperty("FilePrefix", m_filePrefix = "MDFWriterNet_File_");
+	declareProperty("Directory", m_directory = ".");
+	declareProperty("FileExtension", m_fileExtension = "raw");
+	declareProperty("StreamID", m_streamID = "NONE");
+	declareProperty("RunFileTimeoutSeconds", m_runFileTimeoutSeconds = 10);
+	declareProperty("RunFileTimeoutSecondsLHCb1", m_runFileTimeoutSecondsLHCb1
+			= 300);
+	declareProperty("MaxQueueSizeBytes", m_maxQueueSizeBytes = 1073741824);
+	declareProperty("EnableMD5", m_enableMD5 = false);
+	declareProperty("UpdatePeriod", m_UpdatePeriod = 2); //0 is no update
+	declareProperty("MaxRetry", m_MaxRetry = 5); //0 is no retry, but try once
+	m_log = new MsgStream(msgSvc(), name());
 }
 
 /** Overrides MDFWriter::initialize(). Initialises the Connection object.
  */
 StatusCode MDFWriterNet::initialize(void)
 {
-  *m_log << MSG::INFO << " Writer " << getpid() <<
-  " Initializing." << endmsg;
+	*m_log << MSG::INFO << " Writer " << getpid() << " Initializing." << endmsg;
 
-  if (m_enableMD5) *m_log << MSG::INFO << "MD5 sum on-the-fly computing enabled." << endmsg;
-  else *m_log << MSG::INFO << "MD5 sum on-the-fly computing disabled." << endmsg;
+	if (m_enableMD5)
+		*m_log << MSG::INFO << "MD5 sum on-the-fly computing enabled."
+				<< endmsg;
+	else
+		*m_log << MSG::INFO << "MD5 sum on-the-fly computing disabled."
+				<< endmsg;
 
-  gettimeofday(&m_prevUpdate, NULL);
-  gettimeofday(&m_prevMsgQueue, NULL);
+	gettimeofday(&m_prevUpdate, NULL);
+	gettimeofday(&m_prevMsgQueue, NULL);
 
-  m_currFile = NULL;
-  m_closedRuns.clear();
-  m_srvConnection = new Connection(m_serverAddr, m_serverPort,
-      m_sndRcvSizes, m_log, this, m_maxQueueSizeBytes);
-  m_rpcObj = new RPCComm(m_runDBURL.c_str());
-  *m_log << MSG::INFO << "rundb url: " << m_runDBURL.c_str() <<endmsg;
-  try
-  {
-    m_srvConnection->initialize();
-  }
-  catch(const std::exception& e)
-  {
-    *m_log << MSG::ERROR << "Caught Exception:" << e.what() << endmsg;
-    return StatusCode::FAILURE;
-  }
-  if(m_streamID == "NONE")
-  {
-    *m_log << MSG::ERROR << "Exception: No stream identifier provided." << endmsg;
-    return StatusCode::FAILURE;
-  }
-  else
-  {
-    *m_log << MSG::INFO << "streamID: " << m_streamID << endmsg;
-  }
-  // initialize named message queue
-  // The message queue is shared between several MDFWriterNet (one per partition ID in activity)
-  if((m_mq = mq_open("/writerqueue", O_RDWR | O_NONBLOCK, S_IRUSR|S_IWUSR, NULL)) == (mqd_t) -1)
-  {
-    *m_log << MSG::WARNING
-    << "Could not establish connection to message queue: "
-    << errno
-    << ". No monitoring available. "
-    << endmsg;
+	m_currFile = NULL;
+	m_closedRuns.clear();
+	m_srvConnection = new Connection(m_serverAddr, m_serverPort, m_sndRcvSizes,
+			m_log, this, m_maxQueueSizeBytes);
+	m_rpcObj = new RPCComm(m_runDBURL.c_str());
+	*m_log << MSG::INFO << "rundb url: " << m_runDBURL.c_str() << endmsg;
+	try
+	{
+		m_srvConnection->initialize();
+	} catch (const std::exception& e)
+	{
+		*m_log << MSG::ERROR << "Caught Exception:" << e.what() << endmsg;
+		return StatusCode::FAILURE;
+	}
+	if (m_streamID == "NONE")
+	{
+		*m_log << MSG::ERROR << "Exception: No stream identifier provided."
+				<< endmsg;
+		return StatusCode::FAILURE;
+	}
+	else
+	{
+		*m_log << MSG::INFO << "streamID: " << m_streamID << endmsg;
+	}
+	// initialize named message queue
+	// The message queue is shared between several MDFWriterNet (one per partition ID in activity)
+	if ((m_mq = mq_open("/writerqueue", O_RDWR | O_NONBLOCK, S_IRUSR | S_IWUSR,
+			NULL)) == (mqd_t) -1)
+	{
+		*m_log << MSG::WARNING
+				<< "Could not establish connection to message queue: " << errno
+				<< ". No monitoring available. " << endmsg;
 
-    m_mq_available = false;
+		m_mq_available = false;
 
-  }
-  else
-  {
-    *m_log << MSG::INFO
-    << "Established connection to message queue. "
-    << "Delimiter is " << DELIMITER
-    << endmsg;
-    m_mq_available = true;
-    // send message that this writer now exists
+	}
+	else
+	{
+		*m_log << MSG::INFO << "Established connection to message queue. "
+				<< "Delimiter is " << DELIMITER << endmsg;
+		m_mq_available = true;
+		// send message that this writer now exists
 
-    size_t msg_size = snprintf(NULL, 0, "start%c%i", DELIMITER, getpid()) + 1;
-    char* msg = (char*) malloc(msg_size);
-    snprintf(msg, msg_size, "start%c%i", DELIMITER, getpid());
-    if(mq_send(m_mq, msg, msg_size, 0) < 0)
-    {
-      if(errno != EAGAIN)
-      {
-        *m_log << MSG::WARNING
-        << "Could not send message, errno=" << errno
-        << ". Closing queue"
-        << endmsg;
-        m_mq_available = false; // prevent from further trying to protect writer
-      }
-    }
-    free(msg);
-    msg = NULL;
+		size_t msg_size = snprintf(NULL, 0, "start%c%i", DELIMITER, getpid())
+				+ 1;
+		char* msg = (char*) malloc(msg_size);
+		snprintf(msg, msg_size, "start%c%i", DELIMITER, getpid());
+		if (mq_send(m_mq, msg, msg_size, 0) < 0)
+		{
+			if (errno != EAGAIN)
+			{
+				*m_log << MSG::WARNING << "Could not send message, errno="
+						<< errno << ". Closing queue" << endmsg;
+				m_mq_available = false; // prevent from further trying to protect writer
+			}
+		}
+		free(msg);
+		msg = NULL;
 
-  }
-  if (!service("IncidentSvc", m_incidentSvc).isSuccess())
-  {
-    *m_log << MSG::ERROR << "Could not start incident service." << endmsg;
-    return StatusCode::FAILURE;
-  }
-  else
-  {
-    m_incidentSvc->addListener(this, "DAQ_CANCEL");
-    //        m_incidentSvc->addListener(this, "DAQ_ERROR");
-  }
+	}
+	if (!service("IncidentSvc", m_incidentSvc).isSuccess())
+	{
+		*m_log << MSG::ERROR << "Could not start incident service." << endmsg;
+		return StatusCode::FAILURE;
+	}
+	else
+	{
+		m_incidentSvc->addListener(this, "DAQ_CANCEL");
+		//        m_incidentSvc->addListener(this, "DAQ_ERROR");
+	}
 
-  m_TotEvts=0;
+	m_TotEvts = 0;
 
-  if (!service("MonitorSvc", m_MonitorSvc).isSuccess())
-  {
-    *m_log << MSG::ERROR << "Could not start monitor service." << endmsg;
-    return StatusCode::FAILURE;
-  }
-  else
-  {
-    m_MonitorSvc->declareInfo("TotEvts", m_TotEvts, "Total events seen", this);
-  }
+	if (!service("MonitorSvc", m_MonitorSvc).isSuccess())
+	{
+		*m_log << MSG::ERROR << "Could not start monitor service." << endmsg;
+		return StatusCode::FAILURE;
+	}
+	else
+	{
+		m_MonitorSvc->declareInfo("TotEvts", m_TotEvts, "Total events seen",
+				this);
+	}
 
-  //  m_discardCurrentRun = false;
-  m_currentRunNumber = 0;
-  m_CleanUpStop = false;
-  m_Finalized = false;
-  m_StopRetry = false;
-  std::string utgid;
-  utgid = RTL::processName();
-  if (utgid.find("LHCb1_") != std::string::npos)
-  {
-    m_runFileTimeoutSeconds = m_runFileTimeoutSecondsLHCb1;
-    *m_log << MSG::INFO << WHERE << "Changed File Timeout to LHCb1 Timeout of: " << m_runFileTimeoutSecondsLHCb1 <<" seconds" <<endmsg;
-  }
-  if (pthread_mutex_init(&m_SyncFileList, NULL))
-  {
-    *m_log << MSG::ERROR << WHERE << "Failed to initialize mutex" << endmsg;
-    return StatusCode::FAILURE;
-  }
-  /// Starts thread.
-  if(pthread_create(&m_ThreadFileCleanUp, NULL, FileCleanUpStartup, this))
-  {
-    *m_log << MSG::ERROR << WHERE << "Failed to start File Clean Up Thread " << endmsg;
-    return StatusCode::FAILURE;
-  }
+	//  m_discardCurrentRun = false;
+	m_currentRunNumber = 0;
+	m_CleanUpStop = false;
+	m_Finalized = false;
+	m_StopRetry = false;
+	std::string utgid;
+	utgid = RTL::processName();
+	if (utgid.find("LHCb1_") != std::string::npos)
+	{
+		m_runFileTimeoutSeconds = m_runFileTimeoutSecondsLHCb1;
+		*m_log << MSG::INFO << WHERE
+				<< "Changed File Timeout to LHCb1 Timeout of: "
+				<< m_runFileTimeoutSecondsLHCb1 << " seconds" << endmsg;
+	}
+	if (pthread_mutex_init(&m_SyncFileList, NULL))
+	{
+		*m_log << MSG::ERROR << WHERE << "Failed to initialize mutex" << endmsg;
+		return StatusCode::FAILURE;
+	}
+	/// Starts thread.
+	if (pthread_create(&m_ThreadFileCleanUp, NULL, FileCleanUpStartup, this))
+	{
+		*m_log << MSG::ERROR << WHERE
+				<< "Failed to start File Clean Up Thread " << endmsg;
+		return StatusCode::FAILURE;
+	}
 
-  *m_log << MSG::INFO << " Writer " << getpid() << " Initialized." << endmsg;
-  return StatusCode::SUCCESS;
+	*m_log << MSG::INFO << " Writer " << getpid() << " Initialized." << endmsg;
+	return StatusCode::SUCCESS;
 }
 
 /** Overrides MDFWriter::finalize().
@@ -354,102 +366,98 @@ StatusCode MDFWriterNet::initialize(void)
  */
 StatusCode MDFWriterNet::finalize(void)
 {
-  *m_log << MSG::INFO << " Writer " << getpid()
-  << " Finalizing." << endmsg;
+	*m_log << MSG::INFO << " Writer " << getpid() << " Finalizing." << endmsg;
 
-  m_CleanUpStop = true;
-  m_StopRetry = true;
-  m_Finalized = true;
+	m_CleanUpStop = true;
+	m_StopRetry = true;
+	m_Finalized = true;
 
-  File *tmpFile;
-  tmpFile = m_openFiles.getFirstFile();
+	File *tmpFile;
+	tmpFile = m_openFiles.getFirstFile();
 
-  while(tmpFile)
-  {
-    if(tmpFile->isOpen())
-    {
-      *m_log << MSG:: INFO << WHERE
-      << "Closing file " << *(tmpFile->getFileName())
-      << " with run number " << tmpFile->getRunNumber() << endmsg;
-      closeFile(tmpFile);
-      File *toDelete = tmpFile;
-      tmpFile = m_openFiles.removeFile(tmpFile);
-      delete toDelete;
-      continue;
-    }
-    tmpFile = tmpFile->getNext();
-  }
+	while (tmpFile)
+	{
+		if (tmpFile->isOpen())
+		{
+			*m_log << MSG::INFO << WHERE << "Closing file "
+					<< *(tmpFile->getFileName()) << " with run number "
+					<< tmpFile->getRunNumber() << endmsg;
+			closeFile(tmpFile);
+			File *toDelete = tmpFile;
+			tmpFile = m_openFiles.removeFile(tmpFile);
+			delete toDelete;
+			continue;
+		}
+		tmpFile = tmpFile->getNext();
+	}
 
-  // closeConnection() blocks till everything is flushed.
-  m_srvConnection->closeConnection();
-  delete m_srvConnection;
-  delete m_rpcObj;
+	// closeConnection() blocks till everything is flushed.
+	m_srvConnection->closeConnection();
+	delete m_srvConnection;
+	delete m_rpcObj;
 
-  m_currFile = NULL;
-  m_srvConnection = NULL;
-  m_rpcObj = NULL;
+	m_currFile = NULL;
+	m_srvConnection = NULL;
+	m_rpcObj = NULL;
 
-  *m_log << MSG::INFO << WHERE
-  << " Writer process finalized"
-  << endmsg;
-  // log the termination of this instance of WriterNet
+	*m_log << MSG::INFO << WHERE << " Writer process finalized" << endmsg;
+	// log the termination of this instance of WriterNet
 
-  if(m_mq_available)
-  {
-    size_t msg_size = snprintf(NULL, 0, "stop%c%i", DELIMITER, getpid() ) + 1;
-    char* msg = (char*) malloc(msg_size);
-    snprintf(msg, msg_size, "stop%c%i", DELIMITER, getpid() );
-    if(mq_send(m_mq, msg, msg_size, 0) < 0)
-    {
-      if(errno != EAGAIN)
-      {
-        *m_log << MSG::WARNING
-        << "Could not send message, errno=" << errno
-        << ". Closing queue"
-        << endmsg;
-        m_mq_available = false;
-      }
-    }
-    free(msg);
-    msg = NULL;
-  }
+	if (m_mq_available)
+	{
+		size_t msg_size = snprintf(NULL, 0, "stop%c%i", DELIMITER, getpid())
+				+ 1;
+		char* msg = (char*) malloc(msg_size);
+		snprintf(msg, msg_size, "stop%c%i", DELIMITER, getpid());
+		if (mq_send(m_mq, msg, msg_size, 0) < 0)
+		{
+			if (errno != EAGAIN)
+			{
+				*m_log << MSG::WARNING << "Could not send message, errno="
+						<< errno << ". Closing queue" << endmsg;
+				m_mq_available = false;
+			}
+		}
+		free(msg);
+		msg = NULL;
+	}
 
-  // close message queue
+	// close message queue
 
-  if(m_mq_available)
-  {
-    // no error handling here: a not closed connection to
-    // a message queue is nothing to worry about
-    if(mq_close(m_mq) == -1)
-    {
-      // error closing
-    }
-    m_mq_available = false;
-  }
+	if (m_mq_available)
+	{
+		// no error handling here: a not closed connection to
+		// a message queue is nothing to worry about
+		if (mq_close(m_mq) == -1)
+		{
+			// error closing
+		}
+		m_mq_available = false;
+	}
 
-  if(pthread_join(m_ThreadFileCleanUp, NULL))
-  {
-    *m_log << MSG::ERROR << WHERE << "File CleanUP Thread join" << endmsg;
-    return StatusCode::FAILURE;
-  }
+	if (pthread_join(m_ThreadFileCleanUp, NULL))
+	{
+		*m_log << MSG::ERROR << WHERE << "File CleanUP Thread join" << endmsg;
+		return StatusCode::FAILURE;
+	}
 
-  m_TotEvts = 0;
+	m_TotEvts = 0;
 
-  if (m_incidentSvc)
-  {
-    m_incidentSvc->removeListener(this);
-    m_incidentSvc->release();
-    m_incidentSvc = 0;
-  }
+	if (m_incidentSvc)
+	{
+		m_incidentSvc->removeListener(this);
+		m_incidentSvc->release();
+		m_incidentSvc = 0;
+	}
 
-  if (m_MonitorSvc)
-  {
-    m_MonitorSvc->undeclareAll(this);
-    m_MonitorSvc->release();
-    m_MonitorSvc = 0;
-  }
+	if (m_MonitorSvc)
+	{
+		m_MonitorSvc->undeclareAll(this);
+		m_MonitorSvc->release();
+		m_MonitorSvc = 0;
+	}
 
-  return StatusCode::SUCCESS;
+	return StatusCode::SUCCESS;
 }
 
 /**
@@ -457,10 +465,11 @@ StatusCode MDFWriterNet::finalize(void)
  */
 std::string MDFWriterNet::createNewFile(unsigned int runNumber)
 {
-  // override this if the m_rpcObj looks different
-  *m_log << MSG::INFO << "createNewFile: " << m_streamID << "runNumber: " << runNumber << endmsg;
-  std::string identifier( getenv("UTGID") );
-  return m_rpcObj->createNewFile(runNumber, m_streamID, identifier);
+	// override this if the m_rpcObj looks different
+	*m_log << MSG::INFO << "createNewFile: " << m_streamID << "runNumber: "
+			<< runNumber << endmsg;
+	std::string identifier(getenv("UTGID"));
+	return m_rpcObj->createNewFile(runNumber, m_streamID, identifier);
 }
 
 /**
@@ -468,65 +477,61 @@ std::string MDFWriterNet::createNewFile(unsigned int runNumber)
  */
 File* MDFWriterNet::createAndOpenFile(unsigned int runNumber)
 {
-  *m_log << MSG::INFO << "createAndOpenFile start" << endmsg;
-  File *currFile = 0;
-  struct cmd_header header;
-  memset(&header, 0, sizeof(struct cmd_header));
+	*m_log << MSG::INFO << "createAndOpenFile start" << endmsg;
+	File *currFile = 0;
+	struct cmd_header header;
+	memset(&header, 0, sizeof(struct cmd_header));
 
-  /* trying to get an 'official'file name from the RunDatabase
-   * If there is any kinf of error generate one locally
-   */
-  *m_log << MSG::INFO << "Getting a new file name for run "
-  << runNumber << " ..." << endmsg;
-  std::string f = this->createNewFile(runNumber);
-  *m_log << MSG::INFO << "new filename: " << f << endmsg;
-  currFile = new File(f, runNumber, m_streamID, m_enableMD5);
+	/* trying to get an 'official'file name from the RunDatabase
+	 * If there is any kinf of error generate one locally
+	 */
+	*m_log << MSG::INFO << "Getting a new file name for run " << runNumber
+			<< " ..." << endmsg;
+	std::string f = this->createNewFile(runNumber);
+	*m_log << MSG::INFO << "new filename: " << f << endmsg;
+	currFile = new File(f, runNumber, m_streamID, m_enableMD5);
 
-  if(currFile == NULL)
-  {
-    throw FailureException("Unknown error creating a file, pointer dereferenced, aborting.");
-  }
+	if (currFile == NULL)
+	{
+		throw FailureException(
+				"Unknown error creating a file, pointer dereferenced, aborting.");
+	}
 
-  INIT_OPEN_COMMAND(&header, currFile->getFileName()->c_str(),
-      currFile->getSeqNum(), runNumber);
-  m_srvConnection->sendCommand(&header);
-  currFile->open();
-  currFile->incSeqNum();
+	INIT_OPEN_COMMAND(&header, currFile->getFileName()->c_str(),
+			currFile->getSeqNum(), runNumber);
+	m_srvConnection->sendCommand(&header);
+	currFile->open();
+	currFile->incSeqNum();
 
-  // log opening of file
-  if(m_mq_available)
-  {
+	// log opening of file
+	if (m_mq_available)
+	{
 
-    struct timeval tv;
-    gettimeofday(&tv, NULL);
+		struct timeval tv;
+		gettimeofday(&tv, NULL);
 
-    size_t msg_size = snprintf(NULL, 0, "openfile%c%i%c%s%c%u%c%d",
-        DELIMITER, getpid(),
-        DELIMITER, currFile->getMonitor()->m_name,
-        DELIMITER, (unsigned int) tv.tv_sec,
-        DELIMITER, (int) tv.tv_usec) + 1;
-    char* msg = (char*) malloc(msg_size);
-    snprintf(msg, msg_size, "openfile%c%i%c%s%c%u%c%d",
-        DELIMITER, getpid(),
-        DELIMITER, currFile->getMonitor()->m_name,
-        DELIMITER, (unsigned int) tv.tv_sec,
-        DELIMITER, (int) tv.tv_usec);
-    if(mq_send(m_mq, msg, msg_size, 0) < 0)
-    {
-      if(errno != EAGAIN)
-      {
-        *m_log << MSG::WARNING
-        << "Could not send message, errno=" << errno
-        << ". Closing queue"
-        << endmsg;
-        m_mq_available = false;
-      }
-    }
-    free(msg);
-    msg = NULL;
-  }
-  *m_log << MSG::INFO << "createAndOpenFile end" << endmsg;
-  return currFile;
+		size_t msg_size = snprintf(NULL, 0, "openfile%c%i%c%s%c%u%c%d",
+				DELIMITER, getpid(), DELIMITER, currFile->getMonitor()->m_name,
+				DELIMITER, (unsigned int) tv.tv_sec, DELIMITER,
+				(int) tv.tv_usec) + 1;
+		char* msg = (char*) malloc(msg_size);
+		snprintf(msg, msg_size, "openfile%c%i%c%s%c%u%c%d", DELIMITER,
+				getpid(), DELIMITER, currFile->getMonitor()->m_name, DELIMITER,
+				(unsigned int) tv.tv_sec, DELIMITER, (int) tv.tv_usec);
+		if (mq_send(m_mq, msg, msg_size, 0) < 0)
+		{
+			if (errno != EAGAIN)
+			{
+				*m_log << MSG::WARNING << "Could not send message, errno="
+						<< errno << ". Closing queue" << endmsg;
+				m_mq_available = false;
+			}
+		}
+		free(msg);
+		msg = NULL;
+	}
+	*m_log << MSG::INFO << "createAndOpenFile end" << endmsg;
+	return currFile;
 }
 
 /**
@@ -534,139 +539,147 @@ File* MDFWriterNet::createAndOpenFile(unsigned int runNumber)
  */
 void MDFWriterNet::closeFile(File *currFile)
 {
-  struct cmd_header header;
-  struct cmd_stop_pdu pdu;
-  ::memset(&header, 0, sizeof(struct cmd_header));
-  ::memset(&pdu, 0, sizeof(struct cmd_stop_pdu));
+	struct cmd_header header;
+	struct cmd_stop_pdu pdu;
+	::memset(&header, 0, sizeof(struct cmd_header));
+	::memset(&pdu, 0, sizeof(struct cmd_stop_pdu));
 
-  unsigned int trgEvents[MAX_TRIGGER_TYPES];
-  if(currFile->getTrgEvents(trgEvents, MAX_TRIGGER_TYPES) != 0)
-  {
-    *m_log << MSG::ERROR << WHERE << "Error getting the triggered event statistics" << endmsg;
-  }
+	unsigned int trgEvents[MAX_TRIGGER_TYPES];
 
-  unsigned int statEvents[MAX_STAT_TYPES];
-  if(currFile->getStatEvents(statEvents, MAX_STAT_TYPES) != 0)
-  {
-    *m_log << MSG::ERROR << WHERE << "Error getting the routed event statistics" << endmsg;
-  }
+	//////////////////
+	//Printing to check if the close command is queued
+//	*m_log << MSG::INFO << WHERE << "Close command queued" << endmsg;
+	//////////////////
 
-  INIT_CLOSE_COMMAND(&header,
-      currFile->getFileName()->c_str(),
-      currFile->getSeqNum(),
-      currFile->getRunNumber(),
-      currFile->getBytesWritten());
+	if (currFile->getTrgEvents(trgEvents, MAX_TRIGGER_TYPES) != 0)
+	{
+		*m_log << MSG::ERROR << WHERE
+				<< "Error getting the triggered event statistics" << endmsg;
+	}
 
-  INIT_CLOSE_PDU(&pdu,
-      currFile->getAdlerChecksum(),
-      currFile->getMD5Checksum(),
-      currFile->getEvents(),
-      currFile->getPhysStat(),
-      trgEvents,
-      statEvents
-  );
+	unsigned int statEvents[MAX_STAT_TYPES];
+	if (currFile->getStatEvents(statEvents, MAX_STAT_TYPES) != 0)
+	{
+		*m_log << MSG::ERROR << WHERE
+				<< "Error getting the routed event statistics" << endmsg;
+	}
 
-  *m_log << MSG::INFO << " Command: " << header.cmd << " "
-  << "Filename: " << header.file_name << " "
-  << "RunNumber: " << header.run_no << " "
-  << "Seq Nr: " << header.data.chunk_data.seq_num << " "
-  << "Size: " << header.data.stop_data.size << " "
-  << "Adler32: " << pdu.adler32_sum << " "
-  << "MD5: " << pdu.md5_sum << " "
-  << "Events: " << pdu.events << " "
-  << "Phys:  " << pdu.physStat << " "
-  << "Trg0 : " << pdu.trgEvents[0] << " "
-  << "Trg1 : " << pdu.trgEvents[1] << " "
-  << "Trg2 : " << pdu.trgEvents[2] << " "
-  << "Trg3 : " << pdu.trgEvents[3] << " "
-  << "Trg4 : " << pdu.trgEvents[4] << " "
-  << "Trg5 : " << pdu.trgEvents[5] << " "
-  << "Trg6 : " << pdu.trgEvents[6] << " "
-  << "Trg7 : " << pdu.trgEvents[7] << " "
-  << "PHYSIN : " << pdu.statEvents[PHYSIN] << " "
-  << "MBIASIN : " << pdu.statEvents[MBIASIN] << " "
-  << "BEAMGASIN : " << pdu.statEvents[BEAMGASIN] << " "
-  << "LUMIIN : " << pdu.statEvents[LUMIIN] << " "
-  << "RANDIN : " << pdu.statEvents[RANDIN] << " "
-  << "PHYSEX : " << pdu.statEvents[PHYSEX] << " "
-  << "MBIASEX : " << pdu.statEvents[MBIASEX] << " "
-  << "BEAMGASEX : " << pdu.statEvents[BEAMGASEX] << " "
-  << "LUMIEX : " << pdu.statEvents[LUMIEX] << " "
-  << "RANDEX : " << pdu.statEvents[RANDEX] << " "
-  << "LOWLUMI : " << pdu.statEvents[LOWLUMI] << " "
-  << "MIDLUMI : " << pdu.statEvents[MIDLUMI] << " "
-  << "HLT1IN : " << pdu.statEvents[HLT1IN] << " "
-  << "HLT1EX : " << pdu.statEvents[HLT1EX] << " "
-  << "Command size is: " << sizeof(header) + sizeof(pdu)
-  << endmsg;
+	INIT_CLOSE_COMMAND(&header,
+			currFile->getFileName()->c_str(),
+			currFile->getSeqNum(),
+			currFile->getRunNumber(),
+			currFile->getBytesWritten());
 
-  m_srvConnection->sendCommand(&header, &pdu);
+	INIT_CLOSE_PDU(&pdu,
+			currFile->getAdlerChecksum(),
+			currFile->getMD5Checksum(),
+			currFile->getEvents(),
+			currFile->getPhysStat(),
+			trgEvents,
+			statEvents
+	);
 
-  // log closing of file
-  if(m_mq_available)
-  {
+	*m_log << MSG::INFO << " Command: " << header.cmd << " " << "Filename: "
+			<< header.file_name << " " << "RunNumber: " << header.run_no << " "
+			<< "Seq Nr: " << header.data.chunk_data.seq_num << " " << "Size: "
+			<< header.data.stop_data.size << " " << "Adler32: "
+			<< pdu.adler32_sum << " " << "MD5: " << pdu.md5_sum << " "
+			<< "Events: " << pdu.events << " " << "Phys:  " << pdu.physStat
+			<< " " << "Trg0 : " << pdu.trgEvents[0] << " " << "Trg1 : "
+			<< pdu.trgEvents[1] << " " << "Trg2 : " << pdu.trgEvents[2] << " "
+			<< "Trg3 : " << pdu.trgEvents[3] << " " << "Trg4 : "
+			<< pdu.trgEvents[4] << " " << "Trg5 : " << pdu.trgEvents[5] << " "
+			<< "Trg6 : " << pdu.trgEvents[6] << " " << "Trg7 : "
+			<< pdu.trgEvents[7] << " " << "PHYSIN : " << pdu.statEvents[PHYSIN]
+			<< " " << "MBIASIN : " << pdu.statEvents[MBIASIN] << " "
+			<< "BEAMGASIN : " << pdu.statEvents[BEAMGASIN] << " "
+			<< "LUMIIN : " << pdu.statEvents[LUMIIN] << " " << "RANDIN : "
+			<< pdu.statEvents[RANDIN] << " " << "PHYSEX : "
+			<< pdu.statEvents[PHYSEX] << " " << "MBIASEX : "
+			<< pdu.statEvents[MBIASEX] << " " << "BEAMGASEX : "
+			<< pdu.statEvents[BEAMGASEX] << " " << "LUMIEX : "
+			<< pdu.statEvents[LUMIEX] << " " << "RANDEX : "
+			<< pdu.statEvents[RANDEX] << " " << "LOWLUMI : "
+			<< pdu.statEvents[LOWLUMI] << " " << "MIDLUMI : "
+			<< pdu.statEvents[MIDLUMI] << " " << "HLT1IN : "
+			<< pdu.statEvents[HLT1IN] << " " << "HLT1EX : "
+			<< pdu.statEvents[HLT1EX] << " " << "Command size is: "
+			<< sizeof(header) + sizeof(pdu) << endmsg;
 
-    unsigned int statEvents[MAX_STAT_TYPES];
-    if(currFile->getStatEvents(statEvents, MAX_STAT_TYPES) != 0)
-    {
-      *m_log << MSG::ERROR << WHERE << "Error getting the routed event statistics" << endmsg;
-    }
+	m_srvConnection->sendCommand(&header, &pdu);
 
-    size_t stats_size = snprintf(NULL, 0, "PHYSIN:%d;MBIASIN:%d;LUMIIN:%d;BEAMGASIN:%d;RANDIN:%d;PHYSEX:%d;MBIASEX:%d;LUMIEX:%d;BEAMGASEX:%d;RANDEX:%d;LOWLUMI:%d;MIDLUMI:%d;HLT1IN:%d;HLT1EX:%d",
-        statEvents[PHYSIN], statEvents[MBIASIN], statEvents[LUMIIN], statEvents[BEAMGASIN],
-        statEvents[RANDEX], statEvents[PHYSEX], statEvents[MBIASEX], statEvents[LUMIEX],
-        statEvents[BEAMGASEX], statEvents[RANDEX], statEvents[LOWLUMI], statEvents[MIDLUMI],
-        statEvents[HLT1IN], statEvents[HLT1EX]) +1;
+	// log closing of file
+	if (m_mq_available)
+	{
 
-    char *stats_msg = (char *) malloc(stats_size);
-    snprintf(stats_msg, stats_size,"PHYSIN:%d;MBIASIN:%d;LUMIIN:%d;BEAMGASIN:%d;RANDIN:%d;PHYSEX:%d;MBIASEX:%d;LUMIEX:%d;BEAMGASEX:%d;RANDEX:%d;LOWLUMI:%d;MIDLUMI:%d;HLT1IN:%d;HLT1EX:%d",
-        statEvents[PHYSIN], statEvents[MBIASIN], statEvents[LUMIIN], statEvents[BEAMGASIN],
-        statEvents[RANDEX], statEvents[PHYSEX], statEvents[MBIASEX], statEvents[LUMIEX],
-        statEvents[BEAMGASEX], statEvents[RANDEX], statEvents[LOWLUMI], statEvents[MIDLUMI],
-        statEvents[HLT1IN], statEvents[HLT1EX]);
+		unsigned int statEvents[MAX_STAT_TYPES];
+		if (currFile->getStatEvents(statEvents, MAX_STAT_TYPES) != 0)
+		{
+			*m_log << MSG::ERROR << WHERE
+					<< "Error getting the routed event statistics" << endmsg;
+		}
 
-    struct timeval tv;
-    gettimeofday(&tv, NULL);
+		size_t
+				stats_size =
+						snprintf(
+								NULL,
+								0,
+								"PHYSIN:%d;MBIASIN:%d;LUMIIN:%d;BEAMGASIN:%d;RANDIN:%d;PHYSEX:%d;MBIASEX:%d;LUMIEX:%d;BEAMGASEX:%d;RANDEX:%d;LOWLUMI:%d;MIDLUMI:%d;HLT1IN:%d;HLT1EX:%d",
+								statEvents[PHYSIN], statEvents[MBIASIN],
+								statEvents[LUMIIN], statEvents[BEAMGASIN],
+								statEvents[RANDEX], statEvents[PHYSEX],
+								statEvents[MBIASEX], statEvents[LUMIEX],
+								statEvents[BEAMGASEX], statEvents[RANDEX],
+								statEvents[LOWLUMI], statEvents[MIDLUMI],
+								statEvents[HLT1IN], statEvents[HLT1EX]) + 1;
 
-    //      size_t msg_size = snprintf(NULL, 0, "closefile%c%i%c%s",  DELIMITER, getpid(), DELIMITER, currFile->getMonitor()->m_name) + 1;
-    size_t msg_size = snprintf(NULL, 0, "closefile%c%i%c%s%c%s%zu%c%s%u%c%s%u%c%u%c%d%c%s",
-        DELIMITER, getpid(),
-        DELIMITER, currFile->getMonitor()->m_name,
-        DELIMITER, "bytesWritten=", currFile->getBytesWritten(),
-        DELIMITER, "events=", currFile->getEvents(),
-        DELIMITER, "physEvents=", currFile->getPhysStat(),
-        DELIMITER, (unsigned int) tv.tv_sec,
-        DELIMITER, (int) tv.tv_usec,
-        DELIMITER, stats_msg) + 1; //XXX Change physEvents to physStat, see with Rainer
+		char *stats_msg = (char *) malloc(stats_size);
+		snprintf(
+				stats_msg,
+				stats_size,
+				"PHYSIN:%d;MBIASIN:%d;LUMIIN:%d;BEAMGASIN:%d;RANDIN:%d;PHYSEX:%d;MBIASEX:%d;LUMIEX:%d;BEAMGASEX:%d;RANDEX:%d;LOWLUMI:%d;MIDLUMI:%d;HLT1IN:%d;HLT1EX:%d",
+				statEvents[PHYSIN], statEvents[MBIASIN], statEvents[LUMIIN],
+				statEvents[BEAMGASIN], statEvents[RANDEX], statEvents[PHYSEX],
+				statEvents[MBIASEX], statEvents[LUMIEX], statEvents[BEAMGASEX],
+				statEvents[RANDEX], statEvents[LOWLUMI], statEvents[MIDLUMI],
+				statEvents[HLT1IN], statEvents[HLT1EX]);
 
-    char* msg = (char*) malloc(msg_size);
-    //      snprintf(msg, msg_size, "closefile%c%i%c%s", DELIMITER, getpid(), DELIMITER, currFile->getMonitor()->m_name);
-    snprintf(msg, msg_size, "closefile%c%i%c%s%c%s%zu%c%s%u%c%s%u%c%u%c%d%c%s",
-        DELIMITER, getpid(),
-        DELIMITER, currFile->getMonitor()->m_name,
-        DELIMITER, "bytesWritten=", currFile->getBytesWritten(),
-        DELIMITER, "events=", currFile->getEvents(),
-        DELIMITER, "physEvents=", currFile->getPhysStat(),
-        DELIMITER, (unsigned int) tv.tv_sec,
-        DELIMITER, (int) tv.tv_usec,
-        DELIMITER, stats_msg);
-    if(mq_send(m_mq, msg, msg_size, 0) < 0)
-    {
-      if(errno != EAGAIN)
-      {
-        *m_log << MSG::WARNING
-        << "Could not send message, errno=" << errno
-        << ". Closing queue"
-        << endmsg;
-        m_mq_available = false;
-      }
-    }
-    free(msg);
-    free(stats_msg);
-    msg = NULL;
-    stats_msg = NULL;
-  }
-  *m_log << MSG::INFO << WHERE << endmsg;
+		struct timeval tv;
+		gettimeofday(&tv, NULL);
+
+		//      size_t msg_size = snprintf(NULL, 0, "closefile%c%i%c%s",  DELIMITER, getpid(), DELIMITER, currFile->getMonitor()->m_name) + 1;
+		size_t msg_size = snprintf(NULL, 0,
+				"closefile%c%i%c%s%c%s%zu%c%s%u%c%s%u%c%u%c%d%c%s", DELIMITER,
+				getpid(), DELIMITER, currFile->getMonitor()->m_name, DELIMITER,
+				"bytesWritten=", currFile->getBytesWritten(), DELIMITER,
+				"events=", currFile->getEvents(), DELIMITER, "physEvents=",
+				currFile->getPhysStat(), DELIMITER, (unsigned int) tv.tv_sec,
+				DELIMITER, (int) tv.tv_usec, DELIMITER, stats_msg) + 1; //XXX Change physEvents to physStat, see with Rainer
+
+		char* msg = (char*) malloc(msg_size);
+		//      snprintf(msg, msg_size, "closefile%c%i%c%s", DELIMITER, getpid(), DELIMITER, currFile->getMonitor()->m_name);
+		snprintf(msg, msg_size,
+				"closefile%c%i%c%s%c%s%zu%c%s%u%c%s%u%c%u%c%d%c%s", DELIMITER,
+				getpid(), DELIMITER, currFile->getMonitor()->m_name, DELIMITER,
+				"bytesWritten=", currFile->getBytesWritten(), DELIMITER,
+				"events=", currFile->getEvents(), DELIMITER, "physEvents=",
+				currFile->getPhysStat(), DELIMITER, (unsigned int) tv.tv_sec,
+				DELIMITER, (int) tv.tv_usec, DELIMITER, stats_msg);
+		if (mq_send(m_mq, msg, msg_size, 0) < 0)
+		{
+			if (errno != EAGAIN)
+			{
+				*m_log << MSG::WARNING << "Could not send message, errno="
+						<< errno << ". Closing queue" << endmsg;
+				m_mq_available = false;
+			}
+		}
+		free(msg);
+		free(stats_msg);
+		msg = NULL;
+		stats_msg = NULL;
+	}
+	*m_log << MSG::INFO << WHERE << endmsg;
 }
 
 /* Implements a method from the incident listener
@@ -675,19 +688,20 @@ void MDFWriterNet::closeFile(File *currFile)
  */
 void MDFWriterNet::handle(const Incident& inc)
 {
-  *m_log << MSG::INFO << "Got incident:" << inc.source() << " of type " << inc.type() << endmsg;
-  if (inc.type() == "DAQ_CANCEL" /*||  inc.type() == "DAQ_ERROR"*/)
-  {
-    this->stopRetrying();
-    m_srvConnection->stopRetrying();
-  }
+	*m_log << MSG::INFO << "Got incident:" << inc.source() << " of type "
+			<< inc.type() << endmsg;
+	if (inc.type() == "DAQ_CANCEL" /*||  inc.type() == "DAQ_ERROR"*/)
+	{
+		this->stopRetrying();
+		m_srvConnection->stopRetrying();
+	}
 }
 /*
  * Stop the endless retries on XML RPC call failures.
  */
 void MDFWriterNet::stopRetrying()
 {
-  m_StopRetry = true;
+	m_StopRetry = true;
 }
 
 /* Writes out the buffer to the socket through the Connection object.
@@ -697,360 +711,365 @@ void MDFWriterNet::stopRetrying()
  * the maximum size limit, then a RunDB call is executed, to which the
  * file name, MD5 sum, and the Adler32 sum are supplied.
  */
-StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_t len)
+StatusCode MDFWriterNet::writeBuffer(void * const /*fd*/, const void *data,
+		size_t len)
 {
-  struct cmd_header header;
+	struct cmd_header header;
 
-  MDFHeader *mHeader;
-  RawBank* b = (RawBank*)data;
-  if ( b->magic() == RawBank::MagicPattern )
-  {
-    mHeader = b->begin<MDFHeader>();
-  }
-  else
-  mHeader = (MDFHeader*)data;
+	MDFHeader *mHeader;
+	RawBank* b = (RawBank*) data;
+	if (b->magic() == RawBank::MagicPattern)
+	{
+		mHeader = b->begin<MDFHeader> ();
+	}
+	else
+		mHeader = (MDFHeader*) data;
 
-  /*DEBUGGING ONLY - To inject run numbers into the events by reading the run number
-   * off a file.
-   */
-  /*FILE *fil;
-   *int myRun;
-   *fil = fopen("/tmp/runno", "r");
-   *if(fil)
-   *fscanf(fil, "%d", &myRun);
-   *fclose(fil);
-   *((MDFHeader*)data)->subHeader().H1->m_runNumber = myRun;
-   */
+	/*DEBUGGING ONLY - To inject run numbers into the events by reading the run number
+	 * off a file.
+	 */
+	/*FILE *fil;
+	 *int myRun;
+	 *fil = fopen("/tmp/runno", "r");
+	 *if(fil)
+	 *fscanf(fil, "%d", &myRun);
+	 *fclose(fil);
+	 *((MDFHeader*)data)->subHeader().H1->m_runNumber = myRun;
+	 */
 
-  if (pthread_mutex_lock(&m_SyncFileList))
-  {
-    *m_log << MSG::ERROR << WHERE << " Locking mutex" << endmsg;
-    return StatusCode::FAILURE;
-  }
+	if (pthread_mutex_lock(&m_SyncFileList))
+	{
+		*m_log << MSG::ERROR << WHERE << " Locking mutex" << endmsg;
+		return StatusCode::FAILURE;
+	}
 
-  if ( len < 10 )
-  {
-    *m_log << MSG::FATAL << WHERE
-    << "Very small message received, not forwarding. Length is: " << len
-    << endmsg;
-    return StatusCode::SUCCESS;
-  }
+	if (len < 10)
+	{
+		*m_log << MSG::FATAL << WHERE
+				<< "Very small message received, not forwarding. Length is: "
+				<< len << endmsg;
+		return StatusCode::SUCCESS;
+	}
 
-  //  static int nbLate=0;
-  unsigned int runNumber = getRunNumber(mHeader, len);
-  if ((int)runNumber == -1)
-  {
-    *m_log << MSG::FATAL << WHERE
-    << "Event with runnumber == -1 received. Not forwarding."
-    << endmsg;
-    return StatusCode::SUCCESS;
-  }
+	//  static int nbLate=0;
+	unsigned int runNumber = getRunNumber(mHeader, len);
+	if ((int) runNumber == -1)
+	{
+		*m_log << MSG::FATAL << WHERE
+				<< "Event with runnumber == -1 received. Not forwarding."
+				<< endmsg;
+		return StatusCode::SUCCESS;
+	}
 
-  // If we get a newer run number, start a timeout on the open files of the previous runs.
-  if(m_currentRunNumber < runNumber)
-  {
+	// If we get a newer run number, start a timeout on the open files of the previous runs.
+	if (m_currentRunNumber < runNumber)
+	{
 #if 0
-    if(nbLate != 0)
-    *m_log << MSG::WARNING << WHERE << nbLate << " events were lost, for run number <= " << m_currentRunNumber << endmsg;
-    nbLate = 0;
+		if(nbLate != 0)
+		*m_log << MSG::WARNING << WHERE << nbLate << " events were lost, for run number <= " << m_currentRunNumber << endmsg;
+		nbLate = 0;
 #endif
-    m_currentRunNumber = runNumber;
-    //      m_discardCurrentRun = false;
-    m_TotEvts = 0;
-  }
+		m_currentRunNumber = runNumber;
+		//      m_discardCurrentRun = false;
+		m_TotEvts = 0;
+	}
 
-  if (m_currFile == NULL || runNumber != m_currFile->getRunNumber())
-  {
-    m_currFile = m_openFiles.getFile(runNumber);
-    // Do not accept event from previous runs if no file is open anymore
-    if (!m_currFile && (m_closedRuns.find(runNumber) != m_closedRuns.end()))
-    {
-      m_discardedEvents[runNumber]++;
-      if (!(m_discardedEvents[runNumber] % 10000)) *m_log << MSG::WARNING << WHERE << " Discarded " << m_discardedEvents[runNumber] <<
-      " events belonging to run# " << runNumber << endmsg;
+	if (m_currFile == NULL || runNumber != m_currFile->getRunNumber())
+	{
+		m_currFile = m_openFiles.getFile(runNumber);
+		// Do not accept event from previous runs if no file is open anymore
+		if (!m_currFile && (m_closedRuns.find(runNumber) != m_closedRuns.end()))
+		{
+			m_discardedEvents[runNumber]++;
+			if (!(m_discardedEvents[runNumber] % 10000))
+				*m_log << MSG::WARNING << WHERE << " Discarded "
+						<< m_discardedEvents[runNumber]
+						<< " events belonging to run# " << runNumber << endmsg;
 
-      if (pthread_mutex_unlock(&m_SyncFileList))
-      {
-        *m_log << MSG::ERROR << WHERE << " Unlocking mutex" << endmsg;
-        return StatusCode::FAILURE;
-      }
-      return StatusCode::SUCCESS;
-    }
-    if(!m_currFile)
-    {
-      // In a loop, catch recoverable first, if so, continue, else catch failure and manage
-      do
-      {
-        /* The RunDb generates file names now */
-        try
-        {
-          m_currFile = createAndOpenFile(runNumber);
-        }
-        catch (RetryException &e)
-        {
-          m_currFile = NULL;
-          *m_log << MSG::ERROR << " Could not get new file name for run "
-          << runNumber
-          << ". Retrying ... "
-          << " ! Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
-          << endmsg;
-          *m_log << MSG::ERROR
-          << " Exception: "
-          << e.what() << endmsg;
-          continue;
-        }
-        catch (DiscardException &e)
-        {
-          m_currFile = NULL;
-          *m_log << MSG::ERROR << " Run "
-          << runNumber
-          << " closed, and no file to be written. All subsequent events will be discarded."
-          << endmsg;
-          *m_log << MSG::ERROR
-          << " Exception: "
-          << e.what() << endmsg;
-          m_closedRuns.insert(runNumber);
-          m_discardedEvents[runNumber] = 0;
-          if (pthread_mutex_unlock(&m_SyncFileList))
-          {
-            *m_log << MSG::ERROR << WHERE << " Unlocking mutex" << endmsg;
-            return StatusCode::FAILURE;
-          }
-          return StatusCode::SUCCESS;
-        }
-        catch (FailureException &e)
-        {
-          m_currFile = NULL;
-          *m_log << MSG::ERROR << " Could not get new file name for run "
-          << runNumber
-          << " because of an unmanaged error"
-          << " ! Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
-          << " Retrying until you stop run ..."
-          << endmsg;
-          *m_log << MSG::ERROR
-          << " Exception: "
-          << e.what() << endmsg;
-          continue;
-        }
-        catch (std::exception &e)
-        {
-          m_currFile = NULL;
-          *m_log << MSG::ERROR << " Could not get new file name for run "
-          << runNumber
-          << " because of an unmanaged error"
-          << " ! Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
-          << " Retrying until you stop run ..."
-          << endmsg;
-          *m_log << MSG::ERROR
-          << " Exception: "
-          << e.what() << endmsg;
+			if (pthread_mutex_unlock(&m_SyncFileList))
+			{
+				*m_log << MSG::ERROR << WHERE << " Unlocking mutex" << endmsg;
+				return StatusCode::FAILURE;
+			}
+			return StatusCode::SUCCESS;
+		}
+		if (!m_currFile)
+		{
+			// In a loop, catch recoverable first, if so, continue, else catch failure and manage
+			do
+			{
+				/* The RunDb generates file names now */
+				try
+				{
+					m_currFile = createAndOpenFile(runNumber);
+				} catch (RetryException &e)
+				{
+					m_currFile = NULL;
+					*m_log << MSG::ERROR
+							<< " Could not get new file name for run "
+							<< runNumber << ". Retrying ... "
+							<< " ! Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
+							<< endmsg;
+					*m_log << MSG::ERROR << " Exception: " << e.what()
+							<< endmsg;
+					continue;
+				} catch (DiscardException &e)
+				{
+					m_currFile = NULL;
+					*m_log << MSG::ERROR << " Run " << runNumber
+							<< " closed, and no file to be written. All subsequent events will be discarded."
+							<< endmsg;
+					*m_log << MSG::ERROR << " Exception: " << e.what()
+							<< endmsg;
+					m_closedRuns.insert(runNumber);
+					m_discardedEvents[runNumber] = 0;
+					if (pthread_mutex_unlock(&m_SyncFileList))
+					{
+						*m_log << MSG::ERROR << WHERE << " Unlocking mutex"
+								<< endmsg;
+						return StatusCode::FAILURE;
+					}
+					return StatusCode::SUCCESS;
+				} catch (FailureException &e)
+				{
+					m_currFile = NULL;
+					*m_log << MSG::ERROR
+							<< " Could not get new file name for run "
+							<< runNumber << " because of an unmanaged error"
+							<< " ! Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
+							<< " Retrying until you stop run ..." << endmsg;
+					*m_log << MSG::ERROR << " Exception: " << e.what()
+							<< endmsg;
+					continue;
+				} catch (std::exception &e)
+				{
+					m_currFile = NULL;
+					*m_log << MSG::ERROR
+							<< " Could not get new file name for run "
+							<< runNumber << " because of an unmanaged error"
+							<< " ! Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
+							<< " Retrying until you stop run ..." << endmsg;
+					*m_log << MSG::ERROR << " Exception: " << e.what()
+							<< endmsg;
 
-          if (pthread_mutex_unlock(&m_SyncFileList))
-          {
-            *m_log << MSG::ERROR << WHERE << " Unlocking mutex" << endmsg;
-            return StatusCode::FAILURE;
-          }
-          break;
-        }
-      }
-      while(!m_StopRetry && (m_currFile == NULL));
-      if(m_currFile == NULL)
-      {
-        *m_log << MSG::ERROR << "Giving up to get new file name for run " << runNumber << ". You should stop the run." << endmsg;
-        if (pthread_mutex_unlock(&m_SyncFileList))
-        {
-          *m_log << MSG::ERROR << WHERE << " Unlocking mutex" << endmsg;
-          return StatusCode::FAILURE;
-        }
-        // Error managed by the user, we get here only on a DAQ_CANCEL
-        return StatusCode::SUCCESS;
-      }
-      m_openFiles.addFile(m_currFile);
-    }
+					if (pthread_mutex_unlock(&m_SyncFileList))
+					{
+						*m_log << MSG::ERROR << WHERE << " Unlocking mutex"
+								<< endmsg;
+						return StatusCode::FAILURE;
+					}
+					break;
+				}
+			} while (!m_StopRetry && (m_currFile == NULL));
+			if (m_currFile == NULL)
+			{
+				*m_log << MSG::ERROR
+						<< "Giving up to get new file name for run "
+						<< runNumber << ". You should stop the run." << endmsg;
+				if (pthread_mutex_unlock(&m_SyncFileList))
+				{
+					*m_log << MSG::ERROR << WHERE << " Unlocking mutex"
+							<< endmsg;
+					return StatusCode::FAILURE;
+				}
+				// Error managed by the user, we get here only on a DAQ_CANCEL
+				return StatusCode::SUCCESS;
+			}
+			m_openFiles.addFile(m_currFile);
+		}
 
-    // This block is entered in 2 cases:
-    // 1- An event from a previous run
-    // appears after a run has started. This should be relatively infrequent,
-    // and therefore, a good place to check if there are files that have been
-    // lying open since a very long time.
-    // 2- Fast run change
+		// This block is entered in 2 cases:
+		// 1- An event from a previous run
+		// appears after a run has started. This should be relatively infrequent,
+		// and therefore, a good place to check if there are files that have been
+		// lying open since a very long time.
+		// 2- Fast run change
 
-    File *tmpFile = m_openFiles.getFirstFile();
-    // Loop over all the files except the one for whom the event just came in.
-    while(tmpFile)
-    {
-      if(tmpFile->getRunNumber() != runNumber &&
-          tmpFile->getTimeSinceLastWrite() > m_runFileTimeoutSeconds)
-      {
-        // This file hasn't been written to in a loong time. Close it.
-        *m_log << MSG::INFO << WHERE
-        << "Closing a file that did not get events for a long time now."
-        << endmsg;
-        File *toDelete = tmpFile;
-        closeFile(tmpFile);
-        // removeFile() returns the next element after the removed one.
-        tmpFile = m_openFiles.removeFile(tmpFile);
-        delete toDelete;
-        continue;
-      }
-      tmpFile = tmpFile->getNext();
-    }
+		File *tmpFile = m_openFiles.getFirstFile();
+		// Loop over all the files except the one for whom the event just came in.
+		while (tmpFile)
+		{
+			if (tmpFile->getRunNumber() != runNumber
+					&& tmpFile->getTimeSinceLastWrite()
+							> m_runFileTimeoutSeconds)
+			{
+				// This file hasn't been written to in a loong time. Close it.
+				*m_log << MSG::INFO << WHERE
+						<< "Closing a file that did not get events for a long time now."
+						<< endmsg;
+				File *toDelete = tmpFile;
+				closeFile(tmpFile);
+				// removeFile() returns the next element after the removed one.
+				tmpFile = m_openFiles.removeFile(tmpFile);
+				delete toDelete;
+				continue;
+			}
+			tmpFile = tmpFile->getNext();
+		}
 
-  }
+	}
 
-  INIT_WRITE_COMMAND(&header, len,
-      m_currFile->getBytesWritten(),
-      m_currFile->getFileName()->c_str(),
-      m_currFile->getSeqNum(),
-      runNumber);
-  m_srvConnection->sendCommand(&header, (void*)data);
-  // *m_log << MSG::INFO << WHERE << "elements in the queue: " << m_srvConnection->getQueueLength() << endmsg;
-  size_t totalBytesWritten = m_currFile->updateWrite(data, len);
-  m_currFile->incSeqNum();
+	INIT_WRITE_COMMAND(&header, len,
+			m_currFile->getBytesWritten(),
+			m_currFile->getFileName()->c_str(),
+			m_currFile->getSeqNum(),
+			runNumber);
+	m_srvConnection->sendCommand(&header, (void*) data);
+	// *m_log << MSG::INFO << WHERE << "elements in the queue: " << m_srvConnection->getQueueLength() << endmsg;
+	size_t totalBytesWritten = m_currFile->updateWrite(data, len);
+	m_currFile->incSeqNum();
 
-  // count event
-  m_currFile->incEvents();
-  ++m_TotEvts;
+	// count event
+	m_currFile->incEvents();
+	++m_TotEvts;
 
-  // If we can interpret the header, we perform all statistic computing.
-  // Else we just go to the next event.
-  // Note that this is after that the event was written, so statistic information is always right.
-  // The aim here is not to check data integrity or not, just if we can decode the header, if its
-  // version is correct.
-  if( checkHeader(mHeader, len))
-  {
-    // check type of event
-    if( checkForPhysStat(mHeader, len))
-    {
-      m_currFile->incPhysStat();
-    }
-    countRouteStat(mHeader, len);
-  }
-  else
-  {
-    return StatusCode::SUCCESS;
-  }
+	// If we can interpret the header, we perform all statistic computing.
+	// Else we just go to the next event.
+	// Note that this is after that the event was written, so statistic information is always right.
+	// The aim here is not to check data integrity or not, just if we can decode the header, if its
+	// version is correct.
+	if (checkHeader(mHeader, len))
+	{
+		// check type of event
+		if (checkForPhysStat(mHeader, len))
+		{
+			m_currFile->incPhysStat();
+		}
+		countRouteStat(mHeader, len);
+	}
+	else
+	{
+		return StatusCode::SUCCESS;
+	}
 
-  struct timeval tv;
-  gettimeofday(&tv, NULL);
-  if(m_UpdatePeriod > 0 && tv.tv_sec - m_prevUpdate.tv_sec > m_UpdatePeriod )
-  {
-    //update rundb stats ...
+	struct timeval tv;
+	gettimeofday(&tv, NULL);
+	if (m_UpdatePeriod > 0 && tv.tv_sec - m_prevUpdate.tv_sec > m_UpdatePeriod)
+	{
+		//update rundb stats ...
 
-    unsigned int trgEvents[MAX_TRIGGER_TYPES];
-    if(m_currFile->getTrgEvents(trgEvents, MAX_TRIGGER_TYPES) != 0)
-    {
-      *m_log << MSG::ERROR << WHERE << "Error getting the triggered event statistics" << endmsg;
-    }
+		unsigned int trgEvents[MAX_TRIGGER_TYPES];
+		if (m_currFile->getTrgEvents(trgEvents, MAX_TRIGGER_TYPES) != 0)
+		{
+			*m_log << MSG::ERROR << WHERE
+					<< "Error getting the triggered event statistics" << endmsg;
+		}
 
-    unsigned int statEvents[MAX_STAT_TYPES];
-    if(m_currFile->getStatEvents(statEvents, MAX_STAT_TYPES) != 0)
-    {
-      *m_log << MSG::ERROR << WHERE << "Error getting the routed event statistics" << endmsg;
-    }
+		unsigned int statEvents[MAX_STAT_TYPES];
+		if (m_currFile->getStatEvents(statEvents, MAX_STAT_TYPES) != 0)
+		{
+			*m_log << MSG::ERROR << WHERE
+					<< "Error getting the routed event statistics" << endmsg;
+		}
 
-    try
-    {
-      m_rpcObj->updateFile((char *)m_currFile->getFileName()->c_str(),
-          trgEvents,
-          statEvents);
-    }
-    catch(std::exception& e)
-    {
-      // Not important error, as update in the middle of the run, so not processed
-      *m_log << MSG::WARNING
-      << " Exception: "
-      << e.what() << endmsg;
-      *m_log << MSG::WARNING << " Could not update Run Database Record. Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log";
-      *m_log << " Record is: FileName=" << *(m_currFile->getFileName());
-      *m_log << " Run Number=" << m_currentRunNumber << endmsg;
-    }
-    m_prevUpdate.tv_sec = tv.tv_sec;
-    m_prevUpdate.tv_usec = tv.tv_usec;
-  }
+		try
+		{
+			m_rpcObj->updateFile((char *) m_currFile->getFileName()->c_str(),
+					trgEvents, statEvents);
+		} catch (std::exception& e)
+		{
+			// Not important error, as update in the middle of the run, so not processed
+			*m_log << MSG::WARNING << " Exception: " << e.what() << endmsg;
+			*m_log << MSG::WARNING
+					<< " Could not update Run Database Record. Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log";
+			*m_log << " Record is: FileName=" << *(m_currFile->getFileName());
+			*m_log << " Run Number=" << m_currentRunNumber << endmsg;
+		}
+		m_prevUpdate.tv_sec = tv.tv_sec;
+		m_prevUpdate.tv_usec = tv.tv_usec;
+	}
 
-  // after every MB send statistics
-  if (m_mq_available && (totalBytesWritten % (30*1048576) < len || tv.tv_sec - m_prevMsgQueue.tv_sec > 0.5))
-  {
-    unsigned int statEvents[MAX_STAT_TYPES];
-    if(m_currFile->getStatEvents(statEvents, MAX_STAT_TYPES) != 0)
-    {
-      *m_log << MSG::ERROR << WHERE << "Error getting the routed event statistics" << endmsg;
-    }
+	// after every MB send statistics
+	if (m_mq_available && (totalBytesWritten % (30 * 1048576) < len
+			|| tv.tv_sec - m_prevMsgQueue.tv_sec > 0.5))
+	{
+		unsigned int statEvents[MAX_STAT_TYPES];
+		if (m_currFile->getStatEvents(statEvents, MAX_STAT_TYPES) != 0)
+		{
+			*m_log << MSG::ERROR << WHERE
+					<< "Error getting the routed event statistics" << endmsg;
+		}
 
-    size_t stats_size = snprintf(NULL, 0, "PHYSIN:%d;MBIASIN:%d;LUMIIN:%d;BEAMGASIN:%d;RANDIN:%d;PHYSEX:%d;MBIASEX:%d;LUMIEX:%d;BEAMGASEX:%d;RANDEX:%d;LOWLUMI:%d;MIDLUMI:%d;HLT1IN:%d;HLT1EX:%d",
-        statEvents[PHYSIN], statEvents[MBIASIN], statEvents[LUMIIN], statEvents[BEAMGASIN],
-        statEvents[RANDEX], statEvents[PHYSEX], statEvents[MBIASEX], statEvents[LUMIEX],
-        statEvents[BEAMGASEX], statEvents[RANDEX], statEvents[LOWLUMI], statEvents[MIDLUMI],
-        statEvents[HLT1IN], statEvents[HLT1EX]) +1;
+		size_t
+				stats_size =
+						snprintf(
+								NULL,
+								0,
+								"PHYSIN:%d;MBIASIN:%d;LUMIIN:%d;BEAMGASIN:%d;RANDIN:%d;PHYSEX:%d;MBIASEX:%d;LUMIEX:%d;BEAMGASEX:%d;RANDEX:%d;LOWLUMI:%d;MIDLUMI:%d;HLT1IN:%d;HLT1EX:%d",
+								statEvents[PHYSIN], statEvents[MBIASIN],
+								statEvents[LUMIIN], statEvents[BEAMGASIN],
+								statEvents[RANDEX], statEvents[PHYSEX],
+								statEvents[MBIASEX], statEvents[LUMIEX],
+								statEvents[BEAMGASEX], statEvents[RANDEX],
+								statEvents[LOWLUMI], statEvents[MIDLUMI],
+								statEvents[HLT1IN], statEvents[HLT1EX]) + 1;
 
-    char *stats_msg = (char *) malloc(stats_size);
-    snprintf(stats_msg, stats_size,"PHYSIN:%d;MBIASIN:%d;LUMIIN:%d;BEAMGASIN:%d;RANDIN:%d;PHYSEX:%d;MBIASEX:%d;LUMIEX:%d;BEAMGASEX:%d;RANDEX:%d;LOWLUMI:%d;MIDLUMI:%d;HLT1IN:%d;HLT1EX:%d",
-        statEvents[PHYSIN], statEvents[MBIASIN], statEvents[LUMIIN], statEvents[BEAMGASIN],
-        statEvents[RANDEX], statEvents[PHYSEX], statEvents[MBIASEX], statEvents[LUMIEX],
-        statEvents[BEAMGASEX], statEvents[RANDEX], statEvents[LOWLUMI], statEvents[MIDLUMI],
-        statEvents[HLT1IN], statEvents[HLT1EX]);
+		char *stats_msg = (char *) malloc(stats_size);
+		snprintf(
+				stats_msg,
+				stats_size,
+				"PHYSIN:%d;MBIASIN:%d;LUMIIN:%d;BEAMGASIN:%d;RANDIN:%d;PHYSEX:%d;MBIASEX:%d;LUMIEX:%d;BEAMGASEX:%d;RANDEX:%d;LOWLUMI:%d;MIDLUMI:%d;HLT1IN:%d;HLT1EX:%d",
+				statEvents[PHYSIN], statEvents[MBIASIN], statEvents[LUMIIN],
+				statEvents[BEAMGASIN], statEvents[RANDEX], statEvents[PHYSEX],
+				statEvents[MBIASEX], statEvents[LUMIEX], statEvents[BEAMGASEX],
+				statEvents[RANDEX], statEvents[LOWLUMI], statEvents[MIDLUMI],
+				statEvents[HLT1IN], statEvents[HLT1EX]);
 
-    size_t msg_size = snprintf(NULL, 0, "log%c%i%c%s%c%s%zu%c%s%u%c%s%u%c%u%c%d%c%s",
-        DELIMITER, getpid(),
-        DELIMITER, m_currFile->getMonitor()->m_name,
-        DELIMITER, "bytesWritten=", totalBytesWritten,
-        DELIMITER, "events=", m_currFile->getEvents(),
-        DELIMITER, "physEvents=", m_currFile->getPhysStat(),
-        DELIMITER, (unsigned int) tv.tv_sec,
-        DELIMITER, (int) tv.tv_usec,
-        DELIMITER, stats_msg ) + 1;
-    char* msg = (char*) malloc(msg_size);
-    snprintf(msg, msg_size, "log%c%i%c%s%c%s%zu%c%s%u%c%s%u%c%u%c%d%c%s",
-        DELIMITER, getpid(),
-        DELIMITER, m_currFile->getMonitor()->m_name,
-        DELIMITER, "bytesWritten=", totalBytesWritten,
-        DELIMITER, "events=", m_currFile->getEvents(),
-        DELIMITER, "physEvents=", m_currFile->getPhysStat(),
-        DELIMITER, (unsigned int) tv.tv_sec,
-        DELIMITER, (int) tv.tv_usec,
-        DELIMITER, stats_msg );
+		size_t msg_size = snprintf(NULL, 0,
+				"log%c%i%c%s%c%s%zu%c%s%u%c%s%u%c%u%c%d%c%s", DELIMITER,
+				getpid(), DELIMITER, m_currFile->getMonitor()->m_name,
+				DELIMITER, "bytesWritten=", totalBytesWritten, DELIMITER,
+				"events=", m_currFile->getEvents(), DELIMITER, "physEvents=",
+				m_currFile->getPhysStat(), DELIMITER, (unsigned int) tv.tv_sec,
+				DELIMITER, (int) tv.tv_usec, DELIMITER, stats_msg) + 1;
+		char* msg = (char*) malloc(msg_size);
+		snprintf(msg, msg_size, "log%c%i%c%s%c%s%zu%c%s%u%c%s%u%c%u%c%d%c%s",
+				DELIMITER, getpid(), DELIMITER,
+				m_currFile->getMonitor()->m_name, DELIMITER, "bytesWritten=",
+				totalBytesWritten, DELIMITER, "events=",
+				m_currFile->getEvents(), DELIMITER, "physEvents=",
+				m_currFile->getPhysStat(), DELIMITER, (unsigned int) tv.tv_sec,
+				DELIMITER, (int) tv.tv_usec, DELIMITER, stats_msg);
 
-    if(mq_send(m_mq, msg, msg_size, 0) < 0)
-    {
-      if(errno != EAGAIN)
-      {
-        *m_log << MSG::WARNING
-        << "Could not send message, errno=" << errno
-        << ". Closing queue"
-        << endmsg;
-        m_mq_available = false;
-      }
-    }
-    free(msg);
-    free(stats_msg);
-    msg = NULL;
-    stats_msg = NULL;
+		if (mq_send(m_mq, msg, msg_size, 0) < 0)
+		{
+			if (errno != EAGAIN)
+			{
+				*m_log << MSG::WARNING << "Could not send message, errno="
+						<< errno << ". Closing queue" << endmsg;
+				m_mq_available = false;
+			}
+		}
+		free(msg);
+		free(stats_msg);
+		msg = NULL;
+		stats_msg = NULL;
 
-    m_prevMsgQueue.tv_sec = tv.tv_sec;
-    m_prevMsgQueue.tv_usec = tv.tv_usec;
-  }
+		m_prevMsgQueue.tv_sec = tv.tv_sec;
+		m_prevMsgQueue.tv_usec = tv.tv_usec;
+	}
 
-  //How much have we written?
-  if (totalBytesWritten > (m_maxFileSizeMB << 20) || (m_maxEventInFile != 0 && m_maxEventInFile <= m_currFile->getEvents() ))
-  {
-    closeFile(m_currFile);
-    m_openFiles.removeFile(m_currFile);
-    delete(m_currFile);
-    m_currFile = NULL;
-  }
+	//How much have we written?
+	if (totalBytesWritten > (m_maxFileSizeMB << 20) || (m_maxEventInFile != 0
+			&& m_maxEventInFile <= m_currFile->getEvents()))
+	{
+		closeFile(m_currFile);
+		m_openFiles.removeFile(m_currFile);
+		delete (m_currFile);
+		m_currFile = NULL;
+	}
 
-  // WARNING: m_currFile might be NULL after the totalBytesWritten check above!
-  // -> segmentation fault
+	// WARNING: m_currFile might be NULL after the totalBytesWritten check above!
+	// -> segmentation fault
 
-  if (pthread_mutex_unlock(&m_SyncFileList))
-  {
-    *m_log << MSG::ERROR << WHERE << " Unlocking mutex" << endmsg;
-    return StatusCode::FAILURE;
-  }
+	if (pthread_mutex_unlock(&m_SyncFileList))
+	{
+		*m_log << MSG::ERROR << WHERE << " Unlocking mutex" << endmsg;
+		return StatusCode::FAILURE;
+	}
 
-  //Close it, reset counter.
-  return StatusCode::SUCCESS;
+	//Close it, reset counter.
+	return StatusCode::SUCCESS;
 }
 
 /** Obtains the run number from the MDF header.
@@ -1060,15 +1079,15 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
  */
 inline unsigned int MDFWriterNet::getRunNumber(MDFHeader *mHeader, size_t /*len*/)
 {
-  /*
-   MDFHeader *mHeader;
-   RawBank* b = (RawBank*)data;
-   if ( b->magic() == RawBank::MagicPattern )
-   mHeader = b->begin<MDFHeader>();
-   else
-   mHeader = (MDFHeader*)data;
-   */
-  return mHeader->subHeader().H1->m_runNumber;
+	/*
+	 MDFHeader *mHeader;
+	 RawBank* b = (RawBank*)data;
+	 if ( b->magic() == RawBank::MagicPattern )
+	 mHeader = b->begin<MDFHeader>();
+	 else
+	 mHeader = (MDFHeader*)data;
+	 */
+	return mHeader->subHeader().H1->m_runNumber;
 }
 
 /**
@@ -1083,43 +1102,56 @@ inline unsigned int MDFWriterNet::getRunNumber(MDFHeader *mHeader, size_t /*len*
  */
 inline void MDFWriterNet::countRouteStat(MDFHeader *mHeader, size_t)
 {
-  static const unsigned int bit77 =0x2000;
-  static const unsigned int bit46 =0x4000;
-  //  static const unsigned int bit11 =0x800;
-  static const unsigned int bit33 =0x2;
-  static const unsigned int bit47 =0x8000;
-  static const unsigned int bit49 =0x20000;
-  static const unsigned int bit50 =0x40000;
-  static const unsigned int bit51 =0x80000;
+	static const unsigned int bit77 = 0x2000;
+	static const unsigned int bit46 = 0x4000;
+	//  static const unsigned int bit11 =0x800;
+	static const unsigned int bit33 = 0x2;
+	static const unsigned int bit47 = 0x8000;
+	static const unsigned int bit49 = 0x20000;
+	static const unsigned int bit50 = 0x40000;
+	static const unsigned int bit51 = 0x80000;
 
-  //  unsigned int routeBitMask0 = mHeader->subHeader().H1->m_trMask[0];
-  unsigned int routeBitMask1 = mHeader->subHeader().H1->m_trMask[1];
-  unsigned int routeBitMask2 = mHeader->subHeader().H1->m_trMask[2];
-  //  unsigned int routeBitMask3 = mHeader->subHeader().H1->m_trMask[3];
+	//  unsigned int routeBitMask0 = mHeader->subHeader().H1->m_trMask[0];
+	unsigned int routeBitMask1 = mHeader->subHeader().H1->m_trMask[1];
+	unsigned int routeBitMask2 = mHeader->subHeader().H1->m_trMask[2];
+	//  unsigned int routeBitMask3 = mHeader->subHeader().H1->m_trMask[3];
 
-  bool isPhysHlt2 = false, isPhysHlt1 = false, isMBias = false, isLumi = false, isBeamGas = false;
+	bool isPhysHlt2 = false, isPhysHlt1 = false, isMBias = false, isLumi =
+			false, isBeamGas = false;
 
-  isPhysHlt1 = (routeBitMask1 & bit46);
-  isPhysHlt2 = (routeBitMask2 & bit77);
-  isMBias = (routeBitMask1 & bit47);
-  isLumi = (routeBitMask1 & bit33);
-  isBeamGas = (routeBitMask1 & bit49);
+	isPhysHlt1 = (routeBitMask1 & bit46);
+	isPhysHlt2 = (routeBitMask2 & bit77);
+	isMBias = (routeBitMask1 & bit47);
+	isLumi = (routeBitMask1 & bit33);
+	isBeamGas = (routeBitMask1 & bit49);
 
-  //  if(isPhysHlt1) m_currFile->incPhysEventsIn();
-  if(isPhysHlt2) m_currFile->incPhysEventsIn();
-  if(isMBias) m_currFile->incMBiasEventsIn();
-  if(isLumi) m_currFile->incLumiEventsIn();
-  if(isBeamGas) m_currFile->incBeamGasEventsIn();
-  if(isPhysHlt1) m_currFile->incHlt1EventsIn();
+	//  if(isPhysHlt1) m_currFile->incPhysEventsIn();
+	if (isPhysHlt2)
+		m_currFile->incPhysEventsIn();
+	if (isMBias)
+		m_currFile->incMBiasEventsIn();
+	if (isLumi)
+		m_currFile->incLumiEventsIn();
+	if (isBeamGas)
+		m_currFile->incBeamGasEventsIn();
+	if (isPhysHlt1)
+		m_currFile->incHlt1EventsIn();
 
-  if(routeBitMask1 & bit50) m_currFile->incLowLumi();
-  if(routeBitMask1 & bit51) m_currFile->incMidLumi();
+	if (routeBitMask1 & bit50)
+		m_currFile->incLowLumi();
+	if (routeBitMask1 & bit51)
+		m_currFile->incMidLumi();
 
-  if(!isPhysHlt2 && !isMBias && !isLumi && !isBeamGas) m_currFile->incRandEventsEx();
-  if(isPhysHlt2 && !isMBias && !isLumi && !isBeamGas) m_currFile->incPhysEventsEx();
-  if(!isPhysHlt2 && isMBias && !isLumi && !isBeamGas) m_currFile->incMBiasEventsEx();
-  if(!isPhysHlt2 && !isMBias && isLumi && !isBeamGas) m_currFile->incLumiEventsEx();
-  if(!isPhysHlt2 && !isMBias && !isLumi && isBeamGas) m_currFile->incBeamGasEventsEx();
+	if (!isPhysHlt2 && !isMBias && !isLumi && !isBeamGas)
+		m_currFile->incRandEventsEx();
+	if (isPhysHlt2 && !isMBias && !isLumi && !isBeamGas)
+		m_currFile->incPhysEventsEx();
+	if (!isPhysHlt2 && isMBias && !isLumi && !isBeamGas)
+		m_currFile->incMBiasEventsEx();
+	if (!isPhysHlt2 && !isMBias && isLumi && !isBeamGas)
+		m_currFile->incLumiEventsEx();
+	if (!isPhysHlt2 && !isMBias && !isLumi && isBeamGas)
+		m_currFile->incBeamGasEventsEx();
 
 }
 /*
@@ -1190,30 +1222,34 @@ inline void MDFWriterNet::countRouteStat(MDFHeader *mHeader, size_t)
  */
 inline bool MDFWriterNet::incTriggerType(const MDFHeader *mHeader, size_t)
 {
-  RawBank *rBanks = (RawBank *) mHeader->data();
-  char *ccur = (char*) mHeader->data();
+	RawBank *rBanks = (RawBank *) mHeader->data();
+	char *ccur = (char*) mHeader->data();
 
-  while(rBanks->magic() == 0xCBCB && rBanks->type() != RawBank::ODIN)
-  {
-    ccur=ccur + (rBanks->totalSize());
-    rBanks=(RawBank*)ccur;
-  }
+	while (rBanks->magic() == 0xCBCB && rBanks->type() != RawBank::ODIN)
+	{
+		ccur = ccur + (rBanks->totalSize());
+		rBanks = (RawBank*) ccur;
+	}
 
-  if(rBanks->magic() == 0xCBCB && rBanks->type()==RawBank::ODIN)
-  {
-    OnlineRunInfo *ori = (OnlineRunInfo *) rBanks->data();
-    if(!m_currFile->incTriggerType(ori->triggerType))
-    {
-      *m_log << MSG::ERROR << WHERE << "No counter increment for event triggered by " << ori->triggerType << "." << endmsg;
-    }
-  }
-  else
-  {
-    *m_log << MSG::ERROR << WHERE << "No Odin bank in the event, no trigger type incremented." << endmsg;
-    return false;
-  }
+	if (rBanks->magic() == 0xCBCB && rBanks->type() == RawBank::ODIN)
+	{
+		OnlineRunInfo *ori = (OnlineRunInfo *) rBanks->data();
+		if (!m_currFile->incTriggerType(ori->triggerType))
+		{
+			*m_log << MSG::ERROR << WHERE
+					<< "No counter increment for event triggered by "
+					<< ori->triggerType << "." << endmsg;
+		}
+	}
+	else
+	{
+		*m_log << MSG::ERROR << WHERE
+				<< "No Odin bank in the event, no trigger type incremented."
+				<< endmsg;
+		return false;
+	}
 
-  return true;
+	return true;
 }
 
 /**
@@ -1222,24 +1258,27 @@ inline bool MDFWriterNet::incTriggerType(const MDFHeader *mHeader, size_t)
 inline bool MDFWriterNet::checkHeader(const MDFHeader *mHeader, size_t)
 {
 
-  if( !( (mHeader->size0() == mHeader->size1()) && (mHeader->size0() == mHeader->size2()) ) )
-  {
-    *m_log << MSG::ERROR << WHERE << "MDFHeader corrupted, aborting!" << endmsg;
-    //      Incident incident(name(),"DAQ_ERROR");
-    //      m_incidentSvc->fireIncident(incident);
-    return false;
-  }
+	if (!((mHeader->size0() == mHeader->size1()) && (mHeader->size0()
+			== mHeader->size2())))
+	{
+		*m_log << MSG::ERROR << WHERE << "MDFHeader corrupted, aborting!"
+				<< endmsg;
+		//      Incident incident(name(),"DAQ_ERROR");
+		//      m_incidentSvc->fireIncident(incident);
+		return false;
+	}
 
-  // Expect a version 3 only, to apply header1 later :)
-  if(mHeader->headerVersion() != 3)
-  {
-    *m_log << MSG::ERROR << WHERE << "Unknown MDFHeader version " << mHeader->headerVersion() << ", aborting!" << endmsg;
-    //      Incident incident(name(),"DAQ_ERROR");
-    //      m_incidentSvc->fireIncident(incident);
-    return false;
-  }
+	// Expect a version 3 only, to apply header1 later :)
+	if (mHeader->headerVersion() != 3)
+	{
+		*m_log << MSG::ERROR << WHERE << "Unknown MDFHeader version "
+				<< mHeader->headerVersion() << ", aborting!" << endmsg;
+		//      Incident incident(name(),"DAQ_ERROR");
+		//      m_incidentSvc->fireIncident(incident);
+		return false;
+	}
 
-  return true;
+	return true;
 }
 
 /** Checks if it is a phys event (which means that bit 34 is set).
@@ -1249,24 +1288,24 @@ inline bool MDFWriterNet::checkHeader(const MDFHeader *mHeader, size_t)
  */
 inline bool MDFWriterNet::checkForPhysStat(MDFHeader *mHeader, size_t)
 {
-  /*
-   MDFHeader *mHeader;
-   RawBank* b = (RawBank*)data;
-   if ( b->magic() == RawBank::MagicPattern )
-   mHeader = b->begin<MDFHeader>();
-   else
-   mHeader = (MDFHeader*)data;
-   */
-  unsigned int physBitMask = mHeader->subHeader().H1->m_trMask[1];
+	/*
+	 MDFHeader *mHeader;
+	 RawBank* b = (RawBank*)data;
+	 if ( b->magic() == RawBank::MagicPattern )
+	 mHeader = b->begin<MDFHeader>();
+	 else
+	 mHeader = (MDFHeader*)data;
+	 */
+	unsigned int physBitMask = mHeader->subHeader().H1->m_trMask[1];
 
-  if(physBitMask & (unsigned int) 4)
-  {
-    return true;
-  }
-  else
-  {
-    return false;
-  }
+	if (physBitMask & (unsigned int) 4)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 /** Generates a new file name from the MDF information.
@@ -1274,17 +1313,14 @@ inline bool MDFWriterNet::checkForPhysStat(MDFHeader *mHeader, size_t)
  */
 std::string MDFWriterNet::getNewFileName(unsigned int runNumber)
 {
-  char buf[MAX_FILE_NAME];
-  bzero(buf,MAX_FILE_NAME);
-  static unsigned long random = 0;
-  random++;
-  sprintf(buf, "/daqarea/lhcb/data/2008/RAW/TEST/%s/%u/%s%09u.%02u%06lu.%s",
-      m_directory.c_str(),runNumber,
-      m_filePrefix.c_str(),
-      runNumber,0,// random,
-      time(NULL)&0xFFFF,
-      m_fileExtension.c_str());
-  return std::string(buf);
+	char buf[MAX_FILE_NAME];
+	bzero(buf, MAX_FILE_NAME);
+	static unsigned long random = 0;
+	random++;
+	sprintf(buf, "/daqarea/lhcb/data/2008/RAW/TEST/%s/%u/%s%09u.%02u%06lu.%s",
+			m_directory.c_str(), runNumber, m_filePrefix.c_str(), runNumber, 0,// random,
+			time(NULL) & 0xFFFF, m_fileExtension.c_str());
+	return std::string(buf);
 }
 
 /** Destructor.
@@ -1292,315 +1328,285 @@ std::string MDFWriterNet::getNewFileName(unsigned int runNumber)
  */
 MDFWriterNet::~MDFWriterNet()
 {
-  if(m_srvConnection)
-  {
-    *m_log << MSG::WARNING << "Destructor called before finalize. Normal?" << endmsg;
-    finalize();
-  }
-  delete m_log;
+	if (m_srvConnection)
+	{
+		*m_log << MSG::WARNING << "Destructor called before finalize. Normal?"
+				<< endmsg;
+		finalize();
+	}
+	delete m_log;
 }
 
 /** A notify listener callback, which is executed when an open command is acked.
  */
 void MDFWriterNet::notifyOpen(struct cmd_header *cmd)
 {
-  // In a loop, catch recoverable first, if so, continue, else catch failure and manage
-  while(!m_StopRetry)
-  {
-    /* The RunDb generates file names now */
-    try
-    {
-      m_rpcObj->createFile(cmd->file_name, cmd->run_no);
-    }
-    catch(RetryException &e)
-    {
-      *m_log << MSG::ERROR << " Could not create Run Database Record."
-      << " Retrying."
-      << " Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
-      << " Record is: FileName=" << cmd->file_name
-      << " Run Number=" << cmd->run_no << endmsg;
-      *m_log << MSG::ERROR
-      << " Exception: "
-      << e.what() << endmsg;
-      continue;
-    }
-    catch (FailureException &e)
-    {
-      m_currFile = NULL;
-      *m_log << MSG::ERROR << " Could not create Run Database Record"
-      << " because of a failure! Retrying."
-      << " Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
-      << " Retrying until you stop run ..."
-      << " Record is: FileName=" << cmd->file_name
-      << " Run Number=" << cmd->run_no << endmsg
-      << endmsg;
-      *m_log << MSG::ERROR
-      << " Exception: "
-      << e.what() << endmsg;
-      continue;
-    }
-    catch (std::exception &e)
-    {
-      *m_log << MSG::ERROR << " Could not create Run Database Record"
-      << " because of an unmanaged exception!"
-      << " Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
-      << " Record is: FileName=" << cmd->file_name
-      << " Run Number=" << cmd->run_no << endmsg;
-      *m_log << MSG::ERROR
-      << " Exception: "
-      << e.what() << endmsg;
-    }
-    break;
-  }
+	// In a loop, catch recoverable first, if so, continue, else catch failure and manage
+	while (!m_StopRetry)
+	{
+		/* The RunDb generates file names now */
+		try
+		{
+			m_rpcObj->createFile(cmd->file_name, cmd->run_no);
+		} catch (RetryException &e)
+		{
+			*m_log << MSG::ERROR << " Could not create Run Database Record."
+					<< " Retrying."
+					<< " Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
+					<< " Record is: FileName=" << cmd->file_name
+					<< " Run Number=" << cmd->run_no << endmsg;
+			*m_log << MSG::ERROR << " Exception: " << e.what() << endmsg;
+			continue;
+		} catch (FailureException &e)
+		{
+			m_currFile = NULL;
+			*m_log << MSG::ERROR << " Could not create Run Database Record"
+					<< " because of a failure! Retrying."
+					<< " Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
+					<< " Retrying until you stop run ..."
+					<< " Record is: FileName=" << cmd->file_name
+					<< " Run Number=" << cmd->run_no << endmsg << endmsg;
+			*m_log << MSG::ERROR << " Exception: " << e.what() << endmsg;
+			continue;
+		} catch (std::exception &e)
+		{
+			*m_log << MSG::ERROR << " Could not create Run Database Record"
+					<< " because of an unmanaged exception!"
+					<< " Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
+					<< " Record is: FileName=" << cmd->file_name
+					<< " Run Number=" << cmd->run_no << endmsg;
+			*m_log << MSG::ERROR << " Exception: " << e.what() << endmsg;
+		}
+		break;
+	}
 }
 
 /** A notify listener callback, which is executed  when a close command is acked.
  */
 void MDFWriterNet::notifyClose(struct cmd_header *cmd)
 {
-  struct cmd_stop_pdu *pdu=(struct cmd_stop_pdu *) ((char*)cmd + sizeof(struct cmd_header));
-  *m_log << MSG::INFO << WHERE << " notifyClose start" << endmsg;
+	struct cmd_stop_pdu *pdu = (struct cmd_stop_pdu *) ((char*) cmd
+			+ sizeof(struct cmd_header));
+	*m_log << MSG::INFO << WHERE << " notifyClose start" << endmsg;
 
-  unsigned int i=0;
+	unsigned int i = 0;
 
-  // In a loop, catch recoverable first, if so, continue, else catch failure and manage
-  while( !m_StopRetry || (m_Finalized && i++ <= m_MaxRetry))
-  {
-    /* The RunDb generates file names now */
-    try
-    {
-      m_rpcObj->updateFile(cmd->file_name,
-          pdu->trgEvents,
-          pdu->statEvents);
-    }
-    catch(RetryException &e)
-    {
-      char md5buf[33];
-      bzero(md5buf,33);
-      unsigned char *md5sum = pdu->md5_sum;
-      sprintf(md5buf, "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
-          md5sum[0],md5sum[1],md5sum[2],md5sum[3],
-          md5sum[4],md5sum[5],md5sum[6],md5sum[7],
-          md5sum[8],md5sum[9],md5sum[10],md5sum[11],
-          md5sum[12],md5sum[13],md5sum[14],md5sum[15]);
-      *m_log << MSG::ERROR << " Could not update Run Database Record"
-      << ". Retrying."
-      << " Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
-      << " Record is: FileName=" << cmd->file_name
-      << " Adler32 Sum=" << pdu->adler32_sum
-      << " MD5 Sum=" << md5buf << endmsg;
-      *m_log << MSG::ERROR
-      << " Exception: "
-      << e.what() << endmsg;
-      continue;
-    }
-    catch (FailureException &e)
-    {
-      m_currFile = NULL;
-      *m_log << MSG::ERROR << " Could not update Run Database Record"
-      << " because of a failure. Retrying."
-      << " Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
-      << " Record is: FileName=" << cmd->file_name
-      << " Run Number=" << cmd->run_no << endmsg
-      << endmsg;
-      *m_log << MSG::ERROR
-      << " Exception: "
-      << e.what() << endmsg;
-      continue;
-    }
-    catch (std::exception &e)
-    {
-      char md5buf[33];
-      bzero(md5buf,33);
-      unsigned char *md5sum = pdu->md5_sum;
-      sprintf(md5buf, "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
-          md5sum[0],md5sum[1],md5sum[2],md5sum[3],
-          md5sum[4],md5sum[5],md5sum[6],md5sum[7],
-          md5sum[8],md5sum[9],md5sum[10],md5sum[11],
-          md5sum[12],md5sum[13],md5sum[14],md5sum[15]);
-      *m_log << MSG::ERROR << " Could not update Run Database Record"
-      << " because of an unmanaged error!"
-      << " Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
-      << " Record is: FileName=" << cmd->file_name
-      << " Adler32 Sum=" << pdu->adler32_sum
-      << " MD5 Sum=" << md5buf << endmsg;
-      *m_log << MSG::ERROR
-      << " Exception: "
-      << e.what() << endmsg;
-    }
-    break;
-  }
+	// In a loop, catch recoverable first, if so, continue, else catch failure and manage
+	while (!m_StopRetry || (m_Finalized && i++ <= m_MaxRetry))
+	{
+		/* The RunDb generates file names now */
+		try
+		{
+			m_rpcObj->updateFile(cmd->file_name, pdu->trgEvents,
+					pdu->statEvents);
+		} catch (RetryException &e)
+		{
+			char md5buf[33];
+			bzero(md5buf, 33);
+			unsigned char *md5sum = pdu->md5_sum;
+			sprintf(
+					md5buf,
+					"%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
+					md5sum[0], md5sum[1], md5sum[2], md5sum[3], md5sum[4],
+					md5sum[5], md5sum[6], md5sum[7], md5sum[8], md5sum[9],
+					md5sum[10], md5sum[11], md5sum[12], md5sum[13], md5sum[14],
+					md5sum[15]);
+			*m_log << MSG::ERROR << " Could not update Run Database Record"
+					<< ". Retrying."
+					<< " Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
+					<< " Record is: FileName=" << cmd->file_name
+					<< " Adler32 Sum=" << pdu->adler32_sum << " MD5 Sum="
+					<< md5buf << endmsg;
+			*m_log << MSG::ERROR << " Exception: " << e.what() << endmsg;
+			continue;
+		} catch (FailureException &e)
+		{
+			m_currFile = NULL;
+			*m_log << MSG::ERROR << " Could not update Run Database Record"
+					<< " because of a failure. Retrying."
+					<< " Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
+					<< " Record is: FileName=" << cmd->file_name
+					<< " Run Number=" << cmd->run_no << endmsg << endmsg;
+			*m_log << MSG::ERROR << " Exception: " << e.what() << endmsg;
+			continue;
+		} catch (std::exception &e)
+		{
+			char md5buf[33];
+			bzero(md5buf, 33);
+			unsigned char *md5sum = pdu->md5_sum;
+			sprintf(
+					md5buf,
+					"%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
+					md5sum[0], md5sum[1], md5sum[2], md5sum[3], md5sum[4],
+					md5sum[5], md5sum[6], md5sum[7], md5sum[8], md5sum[9],
+					md5sum[10], md5sum[11], md5sum[12], md5sum[13], md5sum[14],
+					md5sum[15]);
+			*m_log << MSG::ERROR << " Could not update Run Database Record"
+					<< " because of an unmanaged error!"
+					<< " Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
+					<< " Record is: FileName=" << cmd->file_name
+					<< " Adler32 Sum=" << pdu->adler32_sum << " MD5 Sum="
+					<< md5buf << endmsg;
+			*m_log << MSG::ERROR << " Exception: " << e.what() << endmsg;
+		}
+		break;
+	}
 
-  i=0;
-  // In a loop, catch recoverable first, if so, continue, else catch failure and manage
-  while( !m_StopRetry || (i++ <= m_MaxRetry))
-  {
-    /* The RunDb generates file names now */
-    try
-    {
-      m_rpcObj->confirmFile(cmd->file_name,
-          pdu->adler32_sum,
-          pdu->md5_sum,
-          cmd->data.stop_data.size,
-          pdu->events,
-          pdu->physStat);
-    }
-    catch(RetryException &e)
-    {
-      char md5buf[33];
-      bzero(md5buf,33);
-      unsigned char *md5sum = pdu->md5_sum;
-      sprintf(md5buf, "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
-          md5sum[0],md5sum[1],md5sum[2],md5sum[3],
-          md5sum[4],md5sum[5],md5sum[6],md5sum[7],
-          md5sum[8],md5sum[9],md5sum[10],md5sum[11],
-          md5sum[12],md5sum[13],md5sum[14],md5sum[15]);
-      *m_log << MSG::ERROR << " Could not confirm Run Database Record"
-      << ". Retrying."
-      << " Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
-      << " Record is: FileName=" << cmd->file_name
-      << " Adler32 Sum=" << pdu->adler32_sum
-      << " MD5 Sum=" << md5buf << endmsg;
-      *m_log << MSG::ERROR
-      << " Exception: "
-      << e.what() << endmsg;
-      continue;
-    }
-    catch (FailureException &e)
-    {
-      m_currFile = NULL;
-      *m_log << MSG::ERROR << " Could not get new file name "
-      << " because of a failure. Retrying."
-      << " Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
-      << " Record is: FileName=" << cmd->file_name
-      << " Run Number=" << cmd->run_no << endmsg
-      << endmsg;
-      *m_log << MSG::ERROR
-      << " Exception: "
-      << e.what() << endmsg;
-      continue;
-    }
-    catch (std::exception &e)
-    {
-      char md5buf[33];
-      bzero(md5buf,33);
-      unsigned char *md5sum = pdu->md5_sum;
-      sprintf(md5buf, "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
-          md5sum[0],md5sum[1],md5sum[2],md5sum[3],
-          md5sum[4],md5sum[5],md5sum[6],md5sum[7],
-          md5sum[8],md5sum[9],md5sum[10],md5sum[11],
-          md5sum[12],md5sum[13],md5sum[14],md5sum[15]);
-      *m_log << MSG::ERROR << " Could not update Run Database Record"
-      << " because of an unmanaged error!"
-      << " Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
-      << " Record is: FileName=" << cmd->file_name
-      << " Adler32 Sum=" << pdu->adler32_sum
-      << " MD5 Sum=" << md5buf << endmsg;
-      *m_log << MSG::ERROR
-      << " Exception: "
-      << e.what() << endmsg;
-    }
-    *m_log << MSG::INFO << "Confirmed file " << cmd->file_name
-    << "RunNumber: " << cmd->run_no << " "
-    << "Adler32: " << pdu->adler32_sum << " "
-    << "MD5: " << pdu->md5_sum << " "
-    << "Seq Nr: " << cmd->data.stop_data.seq_num << " "
-    << "Size: " << cmd->data.stop_data.size << " "
-    << "Events: " << pdu->events << " "
-    << "Phys:  " << pdu->physStat << " "
-    << "Trg0 : " << pdu->trgEvents[0] << " "
-    << "Trg1 : " << pdu->trgEvents[1] << " "
-    << "Trg2 : " << pdu->trgEvents[2] << " "
-    << "Trg3 : " << pdu->trgEvents[3] << " "
-    << "Trg4 : " << pdu->trgEvents[4] << " "
-    << "Trg5 : " << pdu->trgEvents[5] << " "
-    << "Trg6 : " << pdu->trgEvents[6] << " "
-    << "Trg7 : " << pdu->trgEvents[7] << " "
-    << "PHYSIN : " << pdu->statEvents[PHYSIN] << " "
-    << "MBIASIN : " << pdu->statEvents[MBIASIN] << " "
-    << "BEAMGASIN : " << pdu->statEvents[BEAMGASIN] << " "
-    << "LUMIIN : " << pdu->statEvents[LUMIIN] << " "
-    << "RANDIN : " << pdu->statEvents[RANDIN] << " "
-    << "PHYSEX : " << pdu->statEvents[PHYSEX] << " "
-    << "MBIASEX : " << pdu->statEvents[MBIASEX] << " "
-    << "BEAMGASEX : " << pdu->statEvents[BEAMGASEX] << " "
-    << "LUMIEX : " << pdu->statEvents[LUMIEX] << " "
-    << "RANDEX : " << pdu->statEvents[RANDEX] << " "
-    << "LOWLUMI : " << pdu->statEvents[LOWLUMI] << " "
-    << "MIDLUMI : " << pdu->statEvents[MIDLUMI] << " "
-    << "HLT1IN : " << pdu->statEvents[HLT1IN] << " "
-    << "HLT1EX : " << pdu->statEvents[HLT1EX] << " "
-    << endmsg;
-    break;
-  }
+	i = 0;
+	// In a loop, catch recoverable first, if so, continue, else catch failure and manage
+	while (!m_StopRetry || (i++ <= m_MaxRetry))
+	{
+		/* The RunDb generates file names now */
+		try
+		{
+			m_rpcObj->confirmFile(cmd->file_name, pdu->adler32_sum,
+					pdu->md5_sum, cmd->data.stop_data.size, pdu->events,
+					pdu->physStat);
+		} catch (RetryException &e)
+		{
+			char md5buf[33];
+			bzero(md5buf, 33);
+			unsigned char *md5sum = pdu->md5_sum;
+			sprintf(
+					md5buf,
+					"%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
+					md5sum[0], md5sum[1], md5sum[2], md5sum[3], md5sum[4],
+					md5sum[5], md5sum[6], md5sum[7], md5sum[8], md5sum[9],
+					md5sum[10], md5sum[11], md5sum[12], md5sum[13], md5sum[14],
+					md5sum[15]);
+			*m_log << MSG::ERROR << " Could not confirm Run Database Record"
+					<< ". Retrying."
+					<< " Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
+					<< " Record is: FileName=" << cmd->file_name
+					<< " Adler32 Sum=" << pdu->adler32_sum << " MD5 Sum="
+					<< md5buf << endmsg;
+			*m_log << MSG::ERROR << " Exception: " << e.what() << endmsg;
+			continue;
+		} catch (FailureException &e)
+		{
+			m_currFile = NULL;
+			*m_log << MSG::ERROR << " Could not get new file name "
+					<< " because of a failure. Retrying."
+					<< " Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
+					<< " Record is: FileName=" << cmd->file_name
+					<< " Run Number=" << cmd->run_no << endmsg << endmsg;
+			*m_log << MSG::ERROR << " Exception: " << e.what() << endmsg;
+			continue;
+		} catch (std::exception &e)
+		{
+			char md5buf[33];
+			bzero(md5buf, 33);
+			unsigned char *md5sum = pdu->md5_sum;
+			sprintf(
+					md5buf,
+					"%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
+					md5sum[0], md5sum[1], md5sum[2], md5sum[3], md5sum[4],
+					md5sum[5], md5sum[6], md5sum[7], md5sum[8], md5sum[9],
+					md5sum[10], md5sum[11], md5sum[12], md5sum[13], md5sum[14],
+					md5sum[15]);
+			*m_log << MSG::ERROR << " Could not update Run Database Record"
+					<< " because of an unmanaged error!"
+					<< " Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
+					<< " Record is: FileName=" << cmd->file_name
+					<< " Adler32 Sum=" << pdu->adler32_sum << " MD5 Sum="
+					<< md5buf << endmsg;
+			*m_log << MSG::ERROR << " Exception: " << e.what() << endmsg;
+		}
+		*m_log << MSG::INFO << "Confirmed file " << cmd->file_name
+				<< "RunNumber: " << cmd->run_no << " " << "Adler32: "
+				<< pdu->adler32_sum << " " << "MD5: " << pdu->md5_sum << " "
+				<< "Seq Nr: " << cmd->data.stop_data.seq_num << " " << "Size: "
+				<< cmd->data.stop_data.size << " " << "Events: " << pdu->events
+				<< " " << "Phys:  " << pdu->physStat << " " << "Trg0 : "
+				<< pdu->trgEvents[0] << " " << "Trg1 : " << pdu->trgEvents[1]
+				<< " " << "Trg2 : " << pdu->trgEvents[2] << " " << "Trg3 : "
+				<< pdu->trgEvents[3] << " " << "Trg4 : " << pdu->trgEvents[4]
+				<< " " << "Trg5 : " << pdu->trgEvents[5] << " " << "Trg6 : "
+				<< pdu->trgEvents[6] << " " << "Trg7 : " << pdu->trgEvents[7]
+				<< " " << "PHYSIN : " << pdu->statEvents[PHYSIN] << " "
+				<< "MBIASIN : " << pdu->statEvents[MBIASIN] << " "
+				<< "BEAMGASIN : " << pdu->statEvents[BEAMGASIN] << " "
+				<< "LUMIIN : " << pdu->statEvents[LUMIIN] << " " << "RANDIN : "
+				<< pdu->statEvents[RANDIN] << " " << "PHYSEX : "
+				<< pdu->statEvents[PHYSEX] << " " << "MBIASEX : "
+				<< pdu->statEvents[MBIASEX] << " " << "BEAMGASEX : "
+				<< pdu->statEvents[BEAMGASEX] << " " << "LUMIEX : "
+				<< pdu->statEvents[LUMIEX] << " " << "RANDEX : "
+				<< pdu->statEvents[RANDEX] << " " << "LOWLUMI : "
+				<< pdu->statEvents[LOWLUMI] << " " << "MIDLUMI : "
+				<< pdu->statEvents[MIDLUMI] << " " << "HLT1IN : "
+				<< pdu->statEvents[HLT1IN] << " " << "HLT1EX : "
+				<< pdu->statEvents[HLT1EX] << " " << endmsg;
+		break;
+	}
 
-  *m_log << MSG::INFO << WHERE << " notifyClose end" << endmsg;
+	*m_log << MSG::INFO << WHERE << " notifyClose end" << endmsg;
 }
 
 /** A notify listener callback, which is executed  when an error occurs.
  */
 void MDFWriterNet::notifyError(struct cmd_header* /*cmd*/, int /*errno*/)
 {
-  /* Not Used Yet. */
+	/* Not Used Yet. */
 }
 
 StatusCode MDFWriterNet::CleanUpFiles()
 {
 
-  MsgStream *log = new MsgStream(*m_log);
-  *log << MSG::INFO << WHERE << " Clean up routine started" << endmsg;
-  while (!m_CleanUpStop)
-  {
-    sleep(1);
+	MsgStream *log = new MsgStream(*m_log);
+	*log << MSG::INFO << WHERE << " Clean up routine started" << endmsg;
+	while (!m_CleanUpStop)
+	{
+		sleep(1);
 
-    if (pthread_mutex_lock(&m_SyncFileList))
-    {
-      *log << MSG::ERROR << WHERE << " Locking mutex" << endmsg;
-      return StatusCode::FAILURE;
-    }
-    File *tmpFile = m_openFiles.getFirstFile();
-    // Loop over all the files except the one for whom the event just came in.
-    while(tmpFile)
-    {
-      if(tmpFile->getRunNumber() != m_currentRunNumber &&
-          tmpFile->getTimeSinceLastWrite() > m_runFileTimeoutSeconds)
-      {
-        // This file hasn't been written to in a loong time. Close it.
-        *log << MSG::INFO << WHERE
-        << "Closing file " << tmpFile->getMonitor()->m_name << " after time out."
-        << endmsg;
-        File *toDelete = tmpFile;
-        closeFile(tmpFile);
-        // removeFile() returns the next element after the removed one.
-        tmpFile = m_openFiles.removeFile(tmpFile);
-        delete toDelete;
-        continue;
-      }
-      tmpFile = tmpFile->getNext();
-    }
-    if (pthread_mutex_unlock(&m_SyncFileList))
-    {
-      *log << MSG::ERROR << WHERE << " Unlocking mutex" << endmsg;
-      return StatusCode::FAILURE;
-    }
-  }
-  *log << MSG::INFO << WHERE << " Clean up routine ended" << endmsg;
-  return StatusCode::SUCCESS;
+		if (pthread_mutex_lock(&m_SyncFileList))
+		{
+			*log << MSG::ERROR << WHERE << " Locking mutex" << endmsg;
+			return StatusCode::FAILURE;
+		}
+		File *tmpFile = m_openFiles.getFirstFile();
+		// Loop over all the files except the one for whom the event just came in.
+		while (tmpFile)
+		{
+//			if (tmpFile->getRunNumber() != m_currentRunNumber && tmpFile->getTimeSinceLastWrite()	> m_runFileTimeoutSeconds)
+			if (tmpFile->getTimeSinceLastWrite() > m_runFileTimeoutSeconds)
+			{
+				// This file hasn't been written to in a loong time. Close it.
+				*log << MSG::INFO << WHERE << "Closing file "
+						<< tmpFile->getMonitor()->m_name << " after time out."
+						<< endmsg;
+				File *toDelete = tmpFile;
+				closeFile(tmpFile);
+				// removeFile() returns the next element after the removed one.
+				tmpFile = m_openFiles.removeFile(tmpFile);
+				delete toDelete;
+				continue;
+			}
+			tmpFile = tmpFile->getNext();
+		}
+		if (pthread_mutex_unlock(&m_SyncFileList))
+		{
+			*log << MSG::ERROR << WHERE << " Unlocking mutex" << endmsg;
+			return StatusCode::FAILURE;
+		}
+	}
+	*log << MSG::INFO << WHERE << " Clean up routine ended" << endmsg;
+	return StatusCode::SUCCESS;
 }
 
 /** pthread startup function to manage Odin MEP.
  */
 void *FileCleanUpStartup(void *object)
 {
-  MDFWriterNet *writer = (MDFWriterNet *) object;
+	MDFWriterNet *writer = (MDFWriterNet *) object;
 
-  StatusCode sc = writer->CleanUpFiles();
-  //printf("Deleting object\n");
-  //delete tgtObject;
-  if (sc.isFailure())
-  return (void *) -1;
-  else
-  return (void *) 0;
+	StatusCode sc = writer->CleanUpFiles();
+	//printf("Deleting object\n");
+	//delete tgtObject;
+	if (sc.isFailure())
+		return (void *) -1;
+	else
+		return (void *) 0;
 }
 
 #endif /* _WIN32 */
