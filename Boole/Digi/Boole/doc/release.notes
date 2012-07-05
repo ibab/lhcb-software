@@ -3,6 +3,12 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v25r0>2012-07-06 Boole v25r0</A></H1><PRE>
+This version uses projects LCGCMT 64, Gaudi v23r3, LHCb v35r0, Lbcom v13r0
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
+
+ - Production release for MC/2012 simulation.
+
  - Changes to configurable
    . Force usage of DAQ/RawEvent in any decoding, following introduction of
      search list including Other/RawEvent location in decoders
