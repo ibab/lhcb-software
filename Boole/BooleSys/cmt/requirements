@@ -1,5 +1,5 @@
 package BooleSys
-version v24r0
+version v25r0
 
 branches cmt doc
  
@@ -8,7 +8,7 @@ branches cmt doc
 #=======================================================
 
 # Boole application                      # Maintainer  
-use Boole               v24r0   Digi     # Marco Cattaneo
+use Boole               v25r0   Digi     # Marco Cattaneo
 use BooleUMC            v1r3    Digi     # Tomasz Skwarnicki
 use DigiAlg             v4r21   Digi     # Marco Cattaneo
 
@@ -29,12 +29,12 @@ use OTSimulation        v5r2    OT       # Alexandr Kozlinskiy
 
 # Rich
 use RichDigiQC          v3r13   Rich     # Chris Jones
-use RichDigiSys         v1r1    Rich     # Chris Jones
+use RichDigiSys         v1r2    Rich     # Chris Jones
 use RichMCAssociators   v2r8    Rich     # Chris Jones
 use RichReadout         v2r14   Rich     # Chris Jones
 
 # Silicon Tracker
-use STDigiAlgorithms    v2r1    ST       # Jeroen van Tilburg
+use STDigiAlgorithms    v2r2    ST       # Jeroen van Tilburg
 
 # VeloPix
 use VeloPixAlgorithms   v2r1    VeloPix  # Marcin Kucharczyk

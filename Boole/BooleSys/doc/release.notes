@@ -3,6 +3,44 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v25r0>2012-07-06 Boole v25r0</A></H1><PRE>
+This version uses projects LCGCMT 64, Gaudi v23r3, LHCb v35r0, Lbcom v13r0
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
+
+ - Production release for MC/2012 simulation.
+
+ - External dependencies changes
+   . Uses LCGCMT v64. Relevant change is ROOT 5.34.00
+
+ - New functionality
+   . Added support for VL digitisation 
+     (VLDigitisation v1r0, DAQEvent v9r8, DigiEvent v2r21, EventPacker v2r17,
+      MCEvent v2r22, PackedEvent v4r11, LHCbKernel v13r11)
+
+ - Configuration changes
+   . Add new Boole().EnableL0 slot. Default is False: L0 emulation is no
+     longer done by default, since it is more consistent to do it in Moore
+   . Do not run a Link or Moni sequence for a sub-detector if that
+     sub-detector is missing from the Digi sequence: now a sub-detector can
+     be entirely switched off by removing it only from the Digi sequence
+
+ - Persistency change
+   . RawEvent simulated by Boole no longer contains L0 banks by default, should
+     be done in Moore step (Boole v25r0, RichDigiSys v1r2)
+
+ - New tuning
+   . Force usage of DAQ/RawEvent in any decoding, following introduction of
+     search list including Other/RawEvent location in decoders
+
+ - Bug fixes
+   . Fix gcc43/gcc46 differences in STDigitCreator (STDigiAlgorithms v2r2)
+   . Fix unprotected debug() and verbose() messages
+     (STDigiAlgorithms v2r2, GaudiCommonSvc v1r2)
+
+ - Changes to tests
+   . Add a test boole.boole-2012-latestdb. Currently using MC11 input sim file
+   . Adapt boole-2011-latestdb.ref to new local tag velo-20120515
+
 </PRE><H1><A NAME=v24r0>2012-05-04 Boole v24r0</A></H1><PRE>
 This version uses projects LCGCMT 62b, Gaudi v23r2, LHCb v34r3, Lbcom v12r3
  and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
