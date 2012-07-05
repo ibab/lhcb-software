@@ -20,6 +20,7 @@ class MonSys;
 class MonSubSys;
 class CntrMgr;
 class RateMgr;
+class StatusService;
 
 namespace AIDA { class IBaseHistogram; }
 
@@ -130,6 +131,7 @@ public:
 
 private:
   bool m_started;
+  StatusService *m_StatusService;
   bool m_expandCounterServices;
   bool m_saveInter;
   MonSys *m_MonSys;
@@ -213,6 +215,7 @@ public:
 
   int m_updateInterval;
   int m_runno;
+  bool m_i_startState;
 
 };
 

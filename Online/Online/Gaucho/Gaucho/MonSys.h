@@ -26,5 +26,6 @@ public:
   void List();
   void stop();
   void setRunNo(int runo);
+  std::vector<MonSubSys*> *getSubsyslist(){return Subsyslist;};
 };
 #endif

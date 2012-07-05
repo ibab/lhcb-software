@@ -1,5 +1,4 @@
 // Include files
-#include "MonitorSvc.h"
 
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IAlgorithm.h"
@@ -23,6 +22,8 @@
 #include "TH2D.h"
 #include "Gaucho/MonRate.h"
 #include "Gaucho/RateMgr.h"
+#include "Gaucho/StatusService.h"
+#include "MonitorSvc.h"
 
 using namespace std;
 
@@ -62,6 +63,7 @@ MonitorSvc::MonitorSvc(const string& name, ISvcLocator* sl)
   m_CntrSubSys = 0;
   m_CntrMgr = 0;
   m_RateMgr = 0;
+  m_StatusService = 0;
   declareProperty("UniqueServiceNames", m_uniqueServiceNames = 0);
   declareProperty("disableMonRate", m_disableMonRate = 0);
   declareProperty("disableDimPropServer", m_disableDimPropServer = 0);
@@ -89,7 +91,7 @@ MonitorSvc::MonitorSvc(const string& name, ISvcLocator* sl)
   declareProperty("CounterUpdateInterval", m_CounterInterval =0);
   declareProperty("ExpandCounterServices",m_expandCounterServices=0);
   declareProperty("ExpandNameInfix",m_expandInfix="");
-  declareProperty("PartitionName",m_partname="LHcb");
+  declareProperty("PartitionName",m_partname="LHCb");
   declareProperty("ProcessName",m_ProcName="");
   declareProperty("ProgramName",m_ProgName="");
   declareProperty("DontResetCountersonRunChange",m_DontResetCountersonRunChange=false);
@@ -252,6 +254,8 @@ void MonitorSvc::undeclareAll( const IInterface*  owner)
 
 StatusCode MonitorSvc::start()
 {
+  if (m_StatusService == 0)m_StatusService = new StatusService(this);
+
   return Service::start();
 }
 
@@ -259,6 +263,7 @@ StatusCode MonitorSvc::i_start()
 {
 //  CALLGRIND_START_INSTRUMENTATION
   MsgStream msg(msgSvc(),"MonitorSvc");
+  m_i_startState = true;
   msg << MSG::DEBUG << "======== MonitorSvc start() called ============= " << endmsg;
 //  setProperties();
 //  dis_set_debug_on();
@@ -325,6 +330,7 @@ StatusCode MonitorSvc::i_start()
 StatusCode MonitorSvc::i_stop()
 {
 //  DimLock l;
+  m_i_startState = false;
   if (m_CntrMgr != 0)
   {
     m_CntrMgr->open();
@@ -371,6 +377,7 @@ StatusCode MonitorSvc::finalize()
   deletePtr(m_RateMgr);
   deletePtr(m_CntrMgr);
   deletePtr(m_savetimer);
+  deletePtr(m_StatusService);
   msg << MSG::DEBUG << "finalized successfully" << endmsg;
 
   //printf("MonitorSvc: UNLocking DIM\n");
