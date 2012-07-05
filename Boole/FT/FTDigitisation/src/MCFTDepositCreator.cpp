@@ -37,10 +37,6 @@ MCFTDepositCreator::MCFTDepositCreator( const std::string& name,
 {
   declareProperty("InputLocation" , m_inputLocation = LHCb::MCHitLocation::FT, "Path to input MCHits");
   declareProperty("OutputLocation" , m_outputLocation =  LHCb::MCFTDepositLocation::Default, "Path to output MCDeposits");
-
-
-  //declareProperty("NeighbourEnergyFraction" , m_neighbourFrac = 0.05, "Fraction of energy deposit lost in neighbour fibres");
-  //declareProperty("EnergySharingMode" , m_energySharingMode = "Linear", "Energy sharing between consecutive fibres");
 }
 //=============================================================================
 // Destructor
@@ -53,6 +49,7 @@ MCFTDepositCreator::~MCFTDepositCreator() {}
 StatusCode MCFTDepositCreator::initialize() {
 
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   if ( msgLevel( MSG::DEBUG) ) {
     debug() << "==> Initialize" << endmsg;
@@ -114,6 +111,9 @@ StatusCode MCFTDepositCreator::execute() {
     }
     ++debugloopCounter;
 
+
+
+
     // Get the list of fired FTChannel from the (x,y,z) position of the hit, with, for each FTChannel, 
     // the relative distance to the middle of the cell of the barycentre of the (entry point, endpoint) system : 
     // ( call of calculateHits method) 
@@ -128,7 +128,10 @@ StatusCode MCFTDepositCreator::execute() {
               << vectCF.size() << endmsg;
     }
     
-
+    //plot(vectCF.size(),"DepNbChannel", 
+    //     "Number of fired channels per Hit; Number of fired channels; Number of hits" , 
+    //     0 , 100);
+ 
     // Definition of the FTDoublePairs whose double-value corresponds to the energy fraction deposited in the FTChannel
     FTDoublePairs vectCE;
 
@@ -140,7 +143,11 @@ StatusCode MCFTDepositCreator::execute() {
         if ( msgLevel( MSG::DEBUG) ){
           debug()  << "FTChannel = " << vecIter->first << " EnergyHitFraction = " << vecIter->second << endmsg;
         }
-        
+        //plot((double)vecIter->first, "DepFiredChannel","Fired Channel; ChannelID" , 0. , 1000000., 10000);
+        //plot(ftHit->energy()*vecIter->second,
+        //     "DepEnergyPerChannel",
+        //     "Energy deposited [Channel level];Energy [MeV];Number of SiPM channels", 
+        //     0, 10);
         // if reference to the channelID already exists, just add (hit energy * energy fraction)
         if( depositCont->object(vecIter->first) != 0 ){
           (depositCont->object(vecIter->first))->addMCHit(ftHit,ftHit->energy()*vecIter->second);
@@ -163,7 +170,6 @@ StatusCode MCFTDepositCreator::execute() {
 StatusCode MCFTDepositCreator::finalize() {
 
   debug() << "==> Finalize" << endmsg;
-
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 

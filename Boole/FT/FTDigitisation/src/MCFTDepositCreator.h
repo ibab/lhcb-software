@@ -16,7 +16,7 @@
 #define MCFTDEPOSITCREATOR_H 1
 
 // Include files
-// from Gaudi
+/// from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
 // LHCbKernel
@@ -52,10 +52,9 @@ private:
   DeFTDetector* m_deFT; ///< pointer to FT detector description
   
 
-  //double m_neighbourFrac;
-  //std::string m_energySharingMode;
 
-  /// Conversion from 
+
+  /// Conversion from relative X-position Fraction To Energy Fraction
   StatusCode relativeXFractionToEnergyFraction(const FTDoublePairs& positionPair, FTDoublePairs& energyPair);
   
 };

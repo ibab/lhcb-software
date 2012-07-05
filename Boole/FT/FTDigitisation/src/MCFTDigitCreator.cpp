@@ -54,13 +54,13 @@ StatusCode MCFTDigitCreator::initialize() {
     debug() << ": OutputLocation is " <<m_outputLocation << endmsg;
   }
   
-
+  // Random Service definition : call Poisson distribution
   StatusCode sc3 = m_pePoissonDist.initialize(randSvc(), 
-                                             Rndm::Poisson(m_meanPhotoElectronPerMeV));
-   if(!sc3){
-     error() << "Random number init failure" << endmsg;
-     return sc3;
-   }
+                                              Rndm::Poisson(m_meanPhotoElectronPerMeV));
+  if(!sc3){
+    error() << "Random number init failure" << endmsg;
+    return sc3;
+  }
 
   return StatusCode::SUCCESS;
 }
@@ -95,6 +95,7 @@ StatusCode MCFTDigitCreator::execute() {
     // Fill map linking the deposited energy to the MCParticle which deposited it.
     std::map<const LHCb::MCParticle*, double> mcParticleMap;
     std::vector<std::pair <LHCb::MCHit*,double> >::const_iterator vecIter=mcDeposit->mcHitVec().begin();
+    double EnergySum = 0;
     for(;vecIter != mcDeposit->mcHitVec().end(); ++vecIter){
       if ( msgLevel( MSG::DEBUG) ) {
         debug() <<" aHit->midPoint().x()="<<vecIter->first->midPoint().x()<< " \tE= " <<vecIter->second
@@ -102,10 +103,12 @@ StatusCode MCFTDigitCreator::execute() {
                 << endmsg;
       }
       mcParticleMap[vecIter->first->mcParticle()] += vecIter->second;
+      EnergySum += vecIter->second;
     }
 
     // Define & store digit
     // The deposited energy to ADC conversion is made by the deposit2ADC method
+
     MCFTDigit *mcDigit = new MCFTDigit(mcDeposit->channelID(),deposit2ADC(mcDeposit),mcParticleMap);
     digitCont->insert(mcDigit);
   }
@@ -150,12 +153,11 @@ StatusCode MCFTDigitCreator::execute() {
 StatusCode MCFTDigitCreator::finalize() {
 
   debug() << "==> Finalize" << endmsg;
-
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=============================================================================
-int MCFTDigitCreator::deposit2ADC(LHCb::MCFTDeposit* ftdeposit)
+int MCFTDigitCreator::deposit2ADC(const LHCb::MCFTDeposit* ftdeposit)
 {
   /// Compute energy sum
   // TODO :

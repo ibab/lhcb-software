@@ -7,7 +7,6 @@
  *  Created digits are put in transient data store.
  *
  *  TO DO :
- *  - Poisson distribution
  *  - add noise
  *
  *  THINK ABOUT :
@@ -39,7 +38,7 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-  int deposit2ADC(LHCb::MCFTDeposit* ftdeposit); ///< This function converts deposited energy in ADC Count
+  int deposit2ADC(const LHCb::MCFTDeposit* ftdeposit); ///< This function converts deposited energy in ADC Count
   
 protected:
 

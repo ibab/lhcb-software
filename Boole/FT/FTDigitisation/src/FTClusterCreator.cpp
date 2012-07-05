@@ -85,7 +85,7 @@ StatusCode FTClusterCreator::execute() {
   // Create a link between the FTCluster and the MCParticle which leave a track
   LinkerWithKey<LHCb::MCParticle,LHCb::FTCluster> myLink( evtSvc(), msgSvc(), LHCb::FTClusterLocation::Default);
 
-  // TEST : print Digit content : should be sorted
+  // DEBUG : print Digit content : should be sorted
   if(msgLevel(MSG::DEBUG)){
     for (MCFTDigits::const_iterator iterDigit = mcDigitsCont->begin(); iterDigit!=mcDigitsCont->end();++iterDigit){
       MCFTDigit* mcDigit = *iterDigit;
@@ -106,10 +106,15 @@ StatusCode FTClusterCreator::execute() {
   while(seedDigitIter != mcDigitsCont->end()){ // loop over digits
     MCFTDigit* seedDigit = *seedDigitIter;
 
-    if(seedDigit->adcCount() > m_adcThreshold){ // ADC count in  digit is over threshold
+    if(seedDigit->adcCount() > m_adcThreshold){ // ADC count in  digit is over threshold : start cluster
+
+      // vector of ADC count of each cell from the cluster
       std::vector<int> clusterADCDistribution;
 
+      // total energy from MC
       double totalEnergyFromMC = 0;
+
+      // map of contributing MCParticles with their relative energy deposit
       std::map< const LHCb::MCParticle*, double> mcContributionMap;
       if ( msgLevel( MSG::DEBUG) ) {
         debug() <<"++ Starts clustering with Channel "<<seedDigit->channelID()
@@ -141,7 +146,7 @@ StatusCode FTClusterCreator::execute() {
       
 
       // Compute total ADC counts and cluster barycenter position in ChannelID unit
-      int totalCharge = 0;
+      unsigned int totalCharge = 0;
       double meanPosition = 0;
       
       for(std::vector<int>::const_iterator i = clusterADCDistribution.begin();i != clusterADCDistribution.end(); ++i){
@@ -164,31 +169,32 @@ StatusCode FTClusterCreator::execute() {
         double fractionChanPosition = (meanPosition-std::floor(meanPosition));
 
         // Define Cluster(channelID, fraction, width, charge)  and save it
-        FTCluster *aCluster = new FTCluster(meanChanPosition,fractionChanPosition,(lastDigitIter-seedDigitIter),totalCharge);
+        FTCluster *newCluster = new FTCluster(meanChanPosition,fractionChanPosition,(lastDigitIter-seedDigitIter),totalCharge);
 
-        clusterCont->insert(aCluster);
+        clusterCont->insert(newCluster);
+
 
         // Define second member of mcContributionMap as the fraction of energy corresponding to each involved MCParticle
         for(std::map<const LHCb::MCParticle*,double>::iterator i = mcContributionMap.begin(); i != mcContributionMap.end(); ++i){
-          myLink.link(aCluster, (i->first), (i->second)/totalEnergyFromMC ) ;
+          myLink.link(newCluster, (i->first), (i->second)/totalEnergyFromMC ) ;
           if ( msgLevel( MSG::DEBUG) ) {
-            debug() << "SHOULD CREATE LINKER WITH : ClusterChannel=" << aCluster->channelID()
+            debug() << "SHOULD CREATE LINKER WITH : ClusterChannel=" << newCluster->channelID()
                     << " MCIndex="<<i->first->index()
                     <<" EnergyFraction=" << (i->second)/totalEnergyFromMC
                     << endmsg;
           }
         }
 
-        // TEST
+        // DEBUG
         if ( msgLevel( MSG::DEBUG) ) {
           debug() <<"+ Finish clustering from : "<<(*seedDigitIter)->channelID()
                   <<" (ADC = "<<(*seedDigitIter)->adcCount() <<" ) to "<<(*(lastDigitIter-1))->channelID()
                   <<" (ADC = "<<(*(lastDigitIter-1))->adcCount() <<")"<< endmsg;
 
-          debug() <<"= Cluster is : "<<aCluster->channelID()
-                  <<" Charge = "<<aCluster->charge()
-                  << " Width = " << aCluster->size()
-                  << " Fraction = " <<aCluster->fraction()
+          debug() <<"= Cluster is : "<<newCluster->channelID()
+                  <<" Charge = "<<newCluster->charge()
+                  << " Width = " << newCluster->size()
+                  << " Fraction = " <<newCluster->fraction()
                   << endmsg;
         }
 

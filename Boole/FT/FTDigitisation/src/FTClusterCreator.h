@@ -33,8 +33,6 @@ public:
 
   bool keepAdding(LHCb::MCFTDigits::const_iterator clusCandIter);///< Check conditions before adding another digit to the cluster
 
-protected:
-
 private:
 
   std::string m_inputLocation;       ///< MCFTDigit input Container
