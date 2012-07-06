@@ -102,8 +102,6 @@ class RecSysConf(LHCbConfigurableUser):
                                                     "Rec/Track/PreparedVelo" ]
             trackV0Finder = TrackV0Finder()
             GaudiSequencer("RecoVertexSeq").Members += [ trackV0Finder ]
-            # the TrackV0Finder use simplified material for extra/interpolation
-            trackV0Finder.Interpolator.Extrapolator.MaterialLocator='SimplifiedMaterialLocator'
 
         ## Upgrade type?
         if self.getProp("DataType") == 'Upgrade' :

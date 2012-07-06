@@ -4,6 +4,9 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+! 2012-07-06 - Wouter Hulsbergen
+ - Adapt to change in TrackV0Finder
+
 !========================= RecConf v2r6 2012-04-13 =========================
 ! 2012-04-10 - Alessia Satta
  - Add options in the Muon configuration phase to convert the 
