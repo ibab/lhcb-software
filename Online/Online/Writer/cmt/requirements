@@ -1,5 +1,5 @@
 package Writer
-version v1r40
+version v1r41
 #============================================================================
 
 branches          cmt src Writer
@@ -27,8 +27,5 @@ macro_append lib_Writer_cppflags " -DBUILD_WRITER=1"\
  slc3-ia32&gcc323                ""
 
 macro_append Writer_shlibflags      " -lrt " WIN32 ""
-##Rainer: Try this one here for the profiler:
-#macro_append Writer_shlibflags      " -lprofiler -L/sw/lib/lcg/external/tcmalloc/1.7p1/x86_64-slc5-gcc43-opt/lib -lrt " WIN32 ""
-
 
 ##macro_append monitorreaderdlinkopts " -lrt " WIN32 ""

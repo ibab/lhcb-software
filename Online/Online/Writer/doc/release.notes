@@ -1,3 +1,19 @@
+
+|---------------------------------------------------
+| 2012-07-05: Vijay Kartik
+|    
+|    Version: v1r41
+|        
+|    Changed the internal memory management,
+|    Commands are queued on a per-run basis in an STL map.
+|    New version released to be able to handle LUMI streams
+|    (very small event size) with multiple runs processed
+|    in parallel (during deferred HLT, for instance).
+|    Old MDFWriterNet could not run for LUMI streams due to
+|    there being a single queue for all commands from all runs.
+|    
+|    Tested commit for handling multiple runs (~20) in parallel
+|    with LUMI stream. Closes file for a run after a timeout.
 |---------------------------------------------------
 | 2007-10-28 : Suman
 |    Working, tested commit for handling multiple runs
