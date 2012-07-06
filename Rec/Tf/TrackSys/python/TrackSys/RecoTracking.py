@@ -174,11 +174,11 @@ def RecoTracking(exclude=[]):
          track.DetectorList += [ "SeedFit" ]
          ## Seed fit initialization
          from Configurables import TrackStateInitAlg, TrackStateInitTool
-         GaudiSequencer("TrackSeedFitSeq").Members += [TrackStateInitAlg("InitSeedFit")]
-         TrackStateInitAlg("InitSeedFit").TrackLocation = "Rec/Track/Seed"
+         initSeedFit = TrackStateInitAlg("InitSeedFit",
+                                         TrackLocation = "Rec/Track/Seed")
+         GaudiSequencer("TrackSeedFitSeq").Members += [initSeedFit]
          if "FastVelo" in trackAlgs :
-            TrackStateInitAlg("InitSeedFit").addTool( TrackStateInitTool("TrackStateInitTool" ) )
-            TrackStateInitTool( "TrackStateInitTool" ).VeloFitterName = "FastVeloFitLHCbIDs"
+            initSeedFit.StateInitTool.VeloFitterName = "FastVeloFitLHCbIDs"
          # Use small ErrorQoP fitter, needed for Match
          GaudiSequencer("TrackSeedFitSeq").Members += [ConfiguredFitSeed()]
             
@@ -278,14 +278,11 @@ def RecoTracking(exclude=[]):
       if TrackSys().getProp("OldCloneKiller"):
          from Configurables import TrackEventFitter, TrackMasterFitter
          fitBest = TrackEventFitter("FitBest")
-         fitBest.addTool(TrackMasterFitter("Fitter"))
-         fitBest.Fitter.addTool(DetailedMaterialLocator(), name="MaterialLocator")
          fitBest.Fitter.MaterialLocator.addTool(StateDetailedBetheBlochEnergyCorrectionTool("GeneralDedxTool"))
          fitBest.Fitter.MaterialLocator.GeneralDedxTool.EnergyLossFactor = 0.86
       else:
          from Configurables import TrackBestTrackCreator
          fitter = TrackBestTrackCreator().Fitter
-         fitter.addTool(DetailedMaterialLocator(), name="MaterialLocator")
          fitter.MaterialLocator.addTool(StateDetailedBetheBlochEnergyCorrectionTool("GeneralDedxTool"))
          fitter.MaterialLocator.GeneralDedxTool.EnergyLossFactor = 0.86
       

@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2012-07-06 - Wouter Hulsbergen
+ - Make sure default instance of StateInitTool is not modified
+
 !========================= TrackSys v7r4 2012-06-25 =========================
 ! 2012-06-01 - Marco Cattaneo
  - Fix bug #95019 (missing import in case of OldCloneKiller+Simulation)
