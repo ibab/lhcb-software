@@ -69,11 +69,11 @@ StatusCode FastVeloFitLHCbIDs::fit( LHCb::Track & track, LHCb::ParticleID) {
         ++nLeft;
       }
       FastVeloHit* hit = m_hitManager->hitByLHCbID( *iID );
-      if ( hit->z() > zMax ) zMax = hit->z();
-      if ( hit->z() < zMin ) zMin = hit->z();
       if ( 0 == hit ) {
-        info() << "*** Hit not found, id " << *iID << endmsg;
-      } else {
+        error() << "*** Hit not found, id " << *iID << endmsg;
+     } else {
+	if ( hit->z() > zMax ) zMax = hit->z();
+	if ( hit->z() < zMin ) zMin = hit->z();
         if ( iID->isVeloR() ) {
           ++byZone[ hit->zone() ];
           fastTrack.addRHit( hit );
