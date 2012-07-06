@@ -4,6 +4,9 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !-----------------------------------------------------------------------------
 
+! 2012-07-06 - Olivier Callot
+ - Put VL after the previous last entry, FTCLuster.
+
 !========================= DAQEvent v9r8 2012-06-25 =========================
 ! 2012-06-16 - Heinrich Schindler
  - Add VL to RawBank types 
