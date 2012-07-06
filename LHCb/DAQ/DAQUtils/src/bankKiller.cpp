@@ -82,10 +82,8 @@ StatusCode bankKiller::execute() {
 
   m_rawEvt = NULL;
   for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
-    if (exist<LHCb::RawEvent>(*p)){
-      m_rawEvt = get<LHCb::RawEvent>(*p);
-      break;
-    }
+    m_rawEvt = getIfExists<LHCb::RawEvent>(*p);
+    if( m_rawEvt != NULL ) break;
   }
   if( m_rawEvt == NULL ) return Error("Failed to find raw data");
 

@@ -51,7 +51,7 @@ StatusCode OdinTypesFilter::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
   // check properties
   if(m_log != "AND" && m_log != "OR"){
@@ -181,7 +181,7 @@ StatusCode OdinTypesFilter::initialize() {
 //=============================================================================
 StatusCode OdinTypesFilter::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   m_all++;
 
@@ -208,13 +208,9 @@ StatusCode OdinTypesFilter::execute() {
   
 
   // get ODIN
-  LHCb::ODIN* odin;
-  if( exist<LHCb::ODIN>(LHCb::ODINLocation::Default) ){
-    odin = get<LHCb::ODIN> (LHCb::ODINLocation::Default);
-  }else{
+  LHCb::ODIN* odin = getIfExists<LHCb::ODIN>(LHCb::ODINLocation::Default);
+  if( odin == NULL )
     return Error("ODIN cannot be loaded - FilterPassed = false",StatusCode::SUCCESS);
-  }
-
   
   std::stringstream clType("");
   std::stringstream bxType("");
@@ -226,7 +222,8 @@ StatusCode OdinTypesFilter::execute() {
   roType << (LHCb::ODIN::ReadoutTypes) odin->readoutType();
 
 
-  debug() << " Trigger Type : " << trType.str() << " BXType : " << bxType.str() << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) 
+    debug() << " Trigger Type : " << trType.str() << " BXType : " << bxType.str() << endmsg;
 
   bool clPass =  false;
   for(std::vector<std::string>::iterator icl = m_cls.begin(); icl != m_cls.end() ; ++icl){
@@ -279,7 +276,7 @@ StatusCode OdinTypesFilter::execute() {
 //=============================================================================
 StatusCode OdinTypesFilter::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
 
   info() << "Accepted BXTypes : " << m_bxs << endmsg;

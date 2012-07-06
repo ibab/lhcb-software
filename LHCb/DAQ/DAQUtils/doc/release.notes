@@ -4,6 +4,10 @@
 ! Purpose     : Various utilities for manipulating RawEvent
 !-----------------------------------------------------------------------------
 
+! 2012-07-06 - Marco Cattaneo
+ - Use new TES getIfExists function instead of separate exist and get calls
+ - Fix unprotected debugss
+
 !========================= DAQUtils v1r8 2012-06-25 =========================
 ! 2012-06-06 - Marco Cattaneo
  - Add BanksToRemove property to RawEventSelectiveCopy, to allow to copy all

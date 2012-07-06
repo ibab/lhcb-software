@@ -162,10 +162,10 @@ StatusCode RawEventSelectiveCopy::execute() {
   }
 
   // get input RawEvent
-  if( !exist<RawEvent>(m_inputLocation.value()) ){    
+  RawEvent* rawEvent = getIfExists<RawEvent>(m_inputLocation.value());
+  if( rawEvent == NULL ){    
     return Error(" No RawEvent at " + m_inputLocation.value(),StatusCode::SUCCESS, 20 );
   }  
-  RawEvent* rawEvent = get<RawEvent>(m_inputLocation.value());
 
 
   // create empty output RawEvent

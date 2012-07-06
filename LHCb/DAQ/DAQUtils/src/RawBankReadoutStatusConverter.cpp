@@ -1,4 +1,3 @@
-// $Id: $
 // Include files 
 
 // from Gaudi
@@ -74,10 +73,8 @@ StatusCode RawBankReadoutStatusConverter::execute() {
   if(m_types.empty())return StatusCode::SUCCESS;
   
   // Access RawBankReadoutStatus
-  LHCb::RawBankReadoutStatuss*  rStats = NULL;
-  if( exist<LHCb::RawBankReadoutStatuss>(LHCb::RawBankReadoutStatusLocation::Default) )
-    rStats = get<LHCb::RawBankReadoutStatuss>(LHCb::RawBankReadoutStatusLocation::Default);
-  if( rStats ==NULL || rStats->empty() )return StatusCode::SUCCESS;  
+  LHCb::RawBankReadoutStatuss* rStats = getIfExists<LHCb::RawBankReadoutStatuss>(LHCb::RawBankReadoutStatusLocation::Default);
+  if( rStats == NULL || rStats->empty() ) return StatusCode::SUCCESS;  
   
   // Access procStatus
   LHCb::ProcStatus* pStat = getOrCreate<LHCb::ProcStatus,LHCb::ProcStatus>(LHCb::ProcStatusLocation::Default);

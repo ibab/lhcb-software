@@ -65,7 +65,7 @@ StatusCode ODINTimeFilter::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
   criteriaPrintOut();  
   return StatusCode::SUCCESS;
@@ -76,16 +76,13 @@ StatusCode ODINTimeFilter::initialize() {
 //=============================================================================
 StatusCode ODINTimeFilter::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
 
   // get ODIN
-  LHCb::ODIN* odin;
-  if( exist<LHCb::ODIN>(LHCb::ODINLocation::Default) ){
-    odin = get<LHCb::ODIN> (LHCb::ODINLocation::Default);
-  }else{
-    return Error("ODIN cannot be loaded");
-  }
+  LHCb::ODIN* odin = getIfExists<LHCb::ODIN>(LHCb::ODINLocation::Default);
+  if( odin == NULL ) return Error("ODIN cannot be loaded");
+
   // get time & eventID 
   Gaudi::Time time = odin->eventTime();
   ulonglong event  = odin->eventNumber();
@@ -212,7 +209,7 @@ bool ODINTimeFilter::check(int val, std::pair<int,int> range){
 //=============================================================================
 StatusCode ODINTimeFilter::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
   criteriaPrintOut();
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }

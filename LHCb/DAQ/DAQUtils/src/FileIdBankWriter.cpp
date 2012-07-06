@@ -64,12 +64,11 @@ StatusCode FileIdBankWriter::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   // registry from raw data - only correct if file catalogue used 
-  LHCb::RawEvent* event;
   std::string event_fname;
-  if( !exist<LHCb::RawEvent>(m_rawEventLocation) ){
+  LHCb::RawEvent* event = getIfExists<LHCb::RawEvent>(m_rawEventLocation);
+  if( event == NULL ){
     return Warning("RawBank cannot be loaded", StatusCode::SUCCESS);
   } else {
-    event = get<LHCb::RawEvent>(m_rawEventLocation);
     IOpaqueAddress* eAddr = event->registry()->address();
     // obtain the fileID
     if ( eAddr ) {

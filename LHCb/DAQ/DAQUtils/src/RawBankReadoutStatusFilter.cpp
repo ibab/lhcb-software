@@ -62,10 +62,7 @@ StatusCode RawBankReadoutStatusFilter::execute() {
   
 
   LHCb::RawBankReadoutStatus* status = NULL;
-  LHCb::RawBankReadoutStatuss*  statuss = NULL;
-
-  if( exist<LHCb::RawBankReadoutStatuss>(LHCb::RawBankReadoutStatusLocation::Default) )
-    statuss = get<LHCb::RawBankReadoutStatuss>(LHCb::RawBankReadoutStatusLocation::Default);
+  LHCb::RawBankReadoutStatuss* statuss = getIfExists<LHCb::RawBankReadoutStatuss>(LHCb::RawBankReadoutStatusLocation::Default);
   if(NULL != statuss){
     status = statuss->object( LHCb::RawBank::BankType(m_type) );  
   } else {

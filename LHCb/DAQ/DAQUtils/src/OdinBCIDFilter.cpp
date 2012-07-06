@@ -41,7 +41,7 @@ StatusCode OdinBCIDFilter::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
   //
   if( m_comparator != "=" && m_comparator != "==" && m_comparator != "!=" &&
@@ -66,7 +66,7 @@ StatusCode OdinBCIDFilter::initialize() {
 //=============================================================================
 StatusCode OdinBCIDFilter::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   m_all++;
 
@@ -74,17 +74,13 @@ StatusCode OdinBCIDFilter::execute() {
   setFilterPassed(false);  
 
   // get ODIN
-  LHCb::ODIN* odin;
-  if( exist<LHCb::ODIN>(LHCb::ODINLocation::Default) ){
-    odin = get<LHCb::ODIN> (LHCb::ODINLocation::Default);
-  }else{
-    StatusCode sc = Error("ODIN cannot be loaded",StatusCode::FAILURE);
-    return sc;
-  }
+  LHCb::ODIN* odin = getIfExists<LHCb::ODIN>(LHCb::ODINLocation::Default);
+  if( odin == NULL ) return Error("ODIN cannot be loaded",StatusCode::FAILURE);
+
   long bx = odin->bunchId();
 
   bool decision = (m_revert) ? !rule(bx) : rule(bx);
-  debug() << "Accept event : " << bx << " : " << decision << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "Accept event : " << bx << " : " << decision << endmsg;
   setFilterPassed( decision );
   if(decision)m_acc++;
 
@@ -108,8 +104,7 @@ bool OdinBCIDFilter::rule(long bx){
 //=============================================================================
 StatusCode OdinBCIDFilter::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
-
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
   if( m_revert )
     info() << " Filtering criteria : ![(BXID & " << m_mask <<")" << m_comparator << " " << m_value << "]" << endmsg;
