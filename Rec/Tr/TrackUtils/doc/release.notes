@@ -4,6 +4,10 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-07-06 - Wouter Hulsbergen
+- Loosened cuts in TrackV0Finder to make it much more efficient for Ks
+from B. Minimized use of extrapolator.
+ 
 !========================= TrackUtils v1r47 2012-05-08 =========================
 ! 2012-05-08 - Jeroen Van Tilburg
  - TrackBestTrackCreator: Changed to dynamic array (vector) for the size of the
