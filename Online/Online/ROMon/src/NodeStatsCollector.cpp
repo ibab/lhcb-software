@@ -63,7 +63,7 @@ NodeStatsCollector::NodeStatsCollector(int argc, char** argv)
   nam = strupper(RTL::nodeNameShort())+"_MEPRx_01/OverflowStatus";
   //log() << "MEPRx service:" << nam << endl;
   m_overflow    = '?';
-  m_overflowSvc = ::dic_info_service((char*)nam.c_str(),MONITORED,0,0,0,overflowHandler,(long)this,0,0);
+  m_overflowSvc = ::dic_info_service((char*)nam.c_str(),MONITORED,5,0,0,overflowHandler,(long)this,0,0);
   CPUMonData cpu(m_statBuffer);
   cpu.node->reset();
   ROMonData mbm(m_mbmBuffer);
@@ -105,9 +105,11 @@ void NodeStatsCollector::overflowHandler(void* tag, void* address, int* size) {
     try {
       it->m_overflow = '?';
       if ( address && size && *size>0 ) {
-	if ( strstr((char*)address,"disabled") > 0 )
+	if ( ::strncmp((char*)address,"Overflow disabled",16)==0 )
 	  it->m_overflow = 'N';
-	else if ( strstr((char*)address,"enabled") > 0 )
+	else if ( ::strncmp((char*)address,"Overflow enabled",16)==0 )
+	  it->m_overflow = 'Y';
+	else if ( ::strncmp((char*)address,"Overflow active",15)==0 )
 	  it->m_overflow = 'Y';
       }
     }

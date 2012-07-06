@@ -170,14 +170,20 @@ FarmLineDisplay::FarmLineDisplay(int argc, char** argv)
     ::scrc_put_chars(m_display,"<CTRL-H for Help>, <CTRL-E to exit>",NORMAL|BOLD,2,40,0);
     ::scrc_put_chars(m_display,"nn",GREEN|INVERSE,1,80,0);
     ::scrc_put_chars(m_display,": Done,ready",NORMAL,1,82,0);
-    ::scrc_put_chars(m_display,"nn",RED|INVERSE|BOLD,1,110,0);
+    ::scrc_put_chars(m_display,"nn",RED|INVERSE,1,110,0);
     ::scrc_put_chars(m_display,": Files to be processed",NORMAL,1,112,0);
     ::scrc_put_chars(m_display,"  ",YELLOW|INVERSE|BOLD,1,140,0);
     ::scrc_put_chars(m_display,": No information",NORMAL,1,142,0);
+    ::scrc_put_chars(m_display,"nn",GREEN|INVERSE|BOLD,1,160,0);
+    ::scrc_put_chars(m_display,": Done / overflow ON",NORMAL,1,162,0);
+
     ::scrc_put_chars(m_display,"nn",BLUE|INVERSE,2,80,0);
     ::scrc_put_chars(m_display,": Done/Excluded",NORMAL,2,82,0);
     ::scrc_put_chars(m_display,"nn",MAGENTA|INVERSE,2,110,0);
-    ::scrc_put_chars(m_display,": Files to be processed/Excluded",NORMAL,2,112,1);
+    ::scrc_put_chars(m_display,": Files present / Excluded",NORMAL,2,112,1);
+    ::scrc_put_chars(m_display,"nn",RED|INVERSE|BOLD,2,160,0);
+    ::scrc_put_chars(m_display,": Files present / overflow ON",NORMAL,2,162,0);
+
     ::sprintf(txt," %-10s %-8s %6s %6s %6s         %s",
 	      "","Last","No.of","No.of","No.of","Subfarm");
     ::scrc_put_chars(m_display,txt,BG_BLUE|FG_WHITE|BOLD,CLUSTERLINE_FIRSTPOS-2,1,1);

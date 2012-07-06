@@ -993,8 +993,10 @@ void HltDeferLine::display() {
   begin_update(txt);
 
   if ( numNodes != 0 ) m_lastUpdate = t1;
-
-  if ( numRuns>0 )
+  bool valid_data = (time(0) - t1) < 60;
+  if ( !valid_data )
+    ::scrc_put_chars(dis,"  No update > 60s ",COL_ALARM  ,line,46,0);
+  else if ( numRuns>0 )
     ::scrc_put_chars(dis,"  Processing HLT  ",COL_WARNING,line,46,0);
   else
     ::scrc_put_chars(dis,"       DONE       ",COL_OK,line,46,0);
@@ -1005,7 +1007,7 @@ void HltDeferLine::display() {
   pos += 2;
   ::scrc_put_chars(dis," ",INVERSE|BOLD|YELLOW,line,pos,1);
   last_pos = pos;
-  if ( nodes->size() > 0 ) {    
+  if ( valid_data && nodes->size() > 0 ) {    
     for (Nodes::const_iterator ni=nodes->begin(); ni!=nodes->end(); ni=nodes->next(ni))  {
       const DeferredHLTStats& n = *ni;
       string nn = n.name;
@@ -1014,9 +1016,11 @@ void HltDeferLine::display() {
 	bool excl = m_excluded.find(nn) != m_excluded.end();
 	col = nr.size()==0 ? COL_OK : COL_ATTENTION;
 	if ( excl )
-	  col = INVERSE|(col==COL_WARNING ? MAGENTA : BLUE);
+	  col = INVERSE|(col != COL_OK ? MAGENTA : BLUE);
 	else if ( n.overflowState == 'Y' && nr.size()>0 )
 	  col = COL_WARNING;
+	else if ( n.overflowState == 'Y' )
+	  col = COL_OK|BOLD;
 	nn = nn.substr(nn.length()-2);
 	int n_pos = ::atoi(nn.c_str())-1;
 	val = " "+nn;
