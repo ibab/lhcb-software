@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : Event/FTEvent
+! Responsible : Eric Cogneras, Olivier Callot
+! Purpose     : Event model for FT digitisation and reconstruction
+!-----------------------------------------------------------------------------
+
+! 2012-07-06 - Olivier Callot
+ - Add these release notes
+ - Add FTRawCluster for data decoding in Brunel
