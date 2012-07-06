@@ -1,4 +1,6 @@
 #include "HLTFileEqualizer.h"
+#include <math.h>
+#include <time.h>
 
 HLTFileEqualizer::HLTFileEqualizer()
 {
@@ -9,6 +11,9 @@ HLTFileEqualizer::HLTFileEqualizer()
   char row;
   m_nnodes = 0;
   m_nfiles = 0;
+  m_nfiles2 = 0;
+  m_low = -5;
+  m_high = 50;
   m_enabledFarm.clear();
   for (row='b';row<='e';row++)
   {
@@ -55,9 +60,19 @@ void HLTFileEqualizer::Analyze()
   myActionMap Actions;
   dim_lock();
   float av_files;
+  float rms;
   if (0 != m_nnodes)
   {
     av_files = float(this->m_nfiles)/this->m_nnodes;
+    rms = float(m_nfiles2)/m_nnodes-av_files*av_files;
+    if (0.0<rms)
+    {
+      rms = sqrt(rms);
+    }
+    else
+    {
+      rms = 0.0;
+    }
   }
   else
   {
@@ -69,69 +84,122 @@ void HLTFileEqualizer::Analyze()
     {
       av_files = 0.0;
     }
+    rms = float(m_nfiles2)/m_nnodes-av_files*av_files;
+    if (0.0<rms)
+    {
+      rms = ::sqrt(rms);
+    }
+    else
+    {
+      rms = 0.0;
+    }
   }
-  printf("Analyzer: Average number of files per node: %f\n",av_files);
+  printf("Analysis Summary based on %d nodes: ",m_nnodes);
+  {
+    time_t rawtime;
+    time(&rawtime);
+//    struct tm *ttt;
+//    ttt = localtime(&rawtime);
+    printf("%s",asctime(localtime(&rawtime)));
+  }
+  int n_ena = 0;
+  int n_dis = 0;
+  int nfiles = 0;
+  int nfiles2 = 0;
+  int nnodes = 0;
+  bool act = (m_DefStateInfo->getInt() == 1);
+  printf("Analyzer: First round of analysis Average number of files per node: %f +/- %f\n",av_files,rms);
   for (myNodeMap::iterator nit=m_Nodes.begin();nit != m_Nodes.end();nit++)
   {
     myNode *nod = (*nit).second;
-    if (nod->m_nofiles > av_files+20)
+    if ((nod->m_nofiles > av_files+5.0*rms) || (nod->m_nofiles <av_files-5.0*rms))
+    {
+      continue;
+    }
+    nfiles += nod->m_nofiles;
+    nfiles2 += nod->m_nofiles*nod->m_nofiles;
+    nnodes++;
+  }
+  if (nnodes >0)
+  {
+    av_files = float(nfiles)/nnodes;
+    rms = float(nfiles2)/nnodes - av_files*av_files;
+    if (rms>0)
+    {
+      rms = ::sqrt(rms);
+    }
+    else
+    {
+      rms = 0.0;
+    }
+  }
+  else
+  {
+    av_files = 0;
+    rms = 0.0;
+  }
+  for (myNodeMap::iterator nit=m_Nodes.begin();nit != m_Nodes.end();nit++)
+  {
+    myNode *nod = (*nit).second;
+    if (nod->m_nofiles > av_files+m_high)
     {
       if (nod->m_state == 1)
       {
         std::string farm;
         farm = nod->m_name.substr(0,6);
         Actions[farm].push_back(std::make_pair(nod->m_name,0));
-//        printf("Would DISable deferring on node %s. Av. number of files %f. Node file count %d\n",nod->m_name.c_str(),av_files,nod->m_nofiles);
         nod->m_state = 0;
       }
+      n_dis++;
     }
-    else if (nod->m_nofiles < av_files-5)
+    else if (nod->m_nofiles < av_files+m_low)
     {
       std::string farm;
       farm = nod->m_name.substr(0, 6);
-//      printf(
-//          "Would ENable deferring on node %s. Av. number of files %f. Node file count %d\n",
-//          nod->m_name.c_str(), av_files, nod->m_nofiles);
       nod->m_state = 1;
       Actions[farm].push_back(std::make_pair(nod->m_name,1));
     }
+    n_ena++;
   }
+  printf("Analyzer: Second round (within +/- 5 sigma) of analysis Average number of files per node: %f +/- %f\n",av_files,rms);
+  printf("%d Nodes enabled; %d Nodes disabled\n",n_ena,n_dis);
   m_nnodes = 0;
   m_nfiles = 0;
-//  char *olddns = DimClient::getDnsNode();
-  printf("Analysis Summary:\n");
-  myActionMap::iterator fit;
-  for (fit = Actions.begin();fit!=Actions.end();fit++)
+  m_nfiles2 = 0;
+  if (act)
   {
-//    DimClient::setDnsNode((*fit).first.c_str());
-    if (!m_enabledFarm.empty() && (m_enabledFarm.find((*fit).first) == m_enabledFarm.end()))
+    myActionMap::iterator fit;
+    for (fit = Actions.begin(); fit != Actions.end(); fit++)
     {
-      continue;
-    }
-    printf("On Farm %s:\n",(*fit).first.c_str());
-    std::list<std::pair<std::string,int> >::iterator i;
-    std::string sf_mesg = "";
-    std::string endisSvc;
-    endisSvc = (*fit).first+"_HLTDefBridge/EnDisCommand";
-    for (i =(*fit).second.begin();i != (*fit).second.end();i++)
-    {
-      std::string svcname;
-      std::string node = (*i).first;
-      toUpperCase(node);
-      svcname = node+"_MEPRx_01/setOverflow";
-//      DimClient::sendCommand(svcname.c_str(), (*i).second);
-      char cmd[1024];
-//      sprintf(cmd,"dim_send_command.exe %s %d -dns %s -s -i&",svcname.c_str(),(*i).second,(*fit).first.c_str());
-      sprintf(cmd,"%s %d|",svcname.c_str(),(*i).second);
-      sf_mesg.append(cmd);
+      //    DimClient::setDnsNode((*fit).first.c_str());
+      if (!m_enabledFarm.empty() && (m_enabledFarm.find((*fit).first)
+          == m_enabledFarm.end()))
+      {
+        continue;
+      }
+      //    printf("On Farm %s:\n",(*fit).first.c_str());
+      std::list<std::pair<std::string, int> >::iterator i;
+      std::string sf_mesg = "";
+      std::string endisSvc;
+      endisSvc = (*fit).first + "_HLTDefBridge/EnDisCommand";
+      for (i = (*fit).second.begin(); i != (*fit).second.end(); i++)
+      {
+        std::string svcname;
+        std::string node = (*i).first;
+        toUpperCase(node);
+        svcname = node + "_MEPRx_01/setOverflow";
+        char cmd[1024];
+        sprintf(cmd, "%s %d|", svcname.c_str(), (*i).second);
+        sf_mesg.append(cmd);
 
-//      ::system(cmd);
-//      printf("\tMEPRX on Node %s (%s) value %d\n",(*i).first.c_str(),svcname.c_str(),(*i).second);
+      }
+      DimClient::sendCommandNB(endisSvc.c_str(), (char*) sf_mesg.c_str());
     }
-    DimClient::sendCommandNB(endisSvc.c_str(),(char*)sf_mesg.c_str());
-    printf("message to Subfarm %s:\n%s\n",(*fit).first.c_str(),sf_mesg.c_str());
   }
-//  DimClient::setDnsNode(olddns);
+  else
+  {
+    printf("Defered HLT disabled. Not acting...\n");
+  }
   printf ("==================\n");
   dim_unlock();
 }
@@ -192,7 +260,9 @@ void DefHltInfoHandler::infoHandler()
         }
       }
       m_Equalizer->m_Nodes[nname]->m_nofiles = nfiles;
+//      m_Equalizer->m_Nodes[nname]->m_state *= (*i).overflowState;
       m_Equalizer->m_nfiles += nfiles;
+      m_Equalizer->m_nfiles2 += nfiles*nfiles;
       m_Equalizer->m_nnodes++;
     }
   }
@@ -282,6 +352,7 @@ public:
       }
       case 2:
       {
+        ableAll(1);
         ::exit(0);
       }
 
@@ -289,23 +360,29 @@ public:
   }
 };
 
-int main(int , char **)
+int main(int argc, char **argv)
 {
   DimClient::setDnsNode("ecs03");
   DimServer::setDnsNode("ecs03");
   HLTFileEqualizer elz;
-  int m_DefState = 0;
+  int m_DefState = -1;
   DimServer::start("HLTFileEqualizer");
   DimServer::autoStartOn();
-  DimInfo defstate("RunInfo/LHCb/DeferHLT",m_DefState);
+  int low,high;
+  if (argc == 3)
+  {
+    sscanf(argv[1],"%d",&low);
+    sscanf(argv[2],"%d",&high);
+    elz.m_low = low;
+    elz.m_high = high;
+  }
+  DimInfo *defstate=new DimInfo("RunInfo/LHCb/DeferHLT",m_DefState);
+  elz.m_DefStateInfo = defstate;
   ExitCommand EnableandExit("HLTFileEqualizer/EnableAndExit",(char*)"I",&elz.m_AllNodes);
   while (1)
   {
     sleep (60);
-    if (m_DefState != 1)
-    {
-      elz.Analyze();
-    }
+    elz.Analyze();
   }
   return 0;
 }
