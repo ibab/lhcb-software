@@ -314,7 +314,7 @@ def ConfigureDaVinci():
     allLines = mylineconf(config.getProp('StrippingLine'), mylinedict).lines()
     lines = []
     for l in allLines:
-        lineName = config.getProp('StripCands').split('/')[-1]
+        lineName = config.getProp('StrippingLine')
         if l.outputLocation().find(lineName) != -1:
             lines.append(l)
     stream.appendLines(lines)

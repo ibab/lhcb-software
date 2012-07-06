@@ -5,6 +5,10 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+!========================= Swimming v2r7 2012-07-06 =========================
+! 2012-07-06 - Nick Torr
+ - Fixed bug that caused problems swimming the KShh stripping lines
+
 !========================= Swimming v2r6 2012-03-29 =========================
 
 ! 2012-03-20 - Roel Aaij
