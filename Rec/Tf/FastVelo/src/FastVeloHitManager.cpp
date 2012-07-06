@@ -266,6 +266,7 @@ void FastVeloHitManager::buildFastHits ( ) {
 //=========================================================================
 FastVeloHit* FastVeloHitManager::hitByLHCbID ( LHCb::LHCbID id) {
   if ( !id.isVelo() ) return 0;
+  if( !m_eventReady ) buildFastHits() ;
   int sensor = id.veloID().sensor();
   int maxZone = 2;
   if ( id.isVeloR() ) maxZone = 4;

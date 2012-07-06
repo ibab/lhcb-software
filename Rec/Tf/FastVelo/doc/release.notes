@@ -4,6 +4,9 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+! 2012-07-06 - Wouter Hulsbergen
+ - fix problem with FastVeloFitLHCbIDs in case pattern reco is not running
+
 !========================= FastVelo v1r10 2012-06-25 =========================
 ! 2012-05-09 - Olivier Callot
  - Rewrite mergesPaceClone() to improve clone rejection
