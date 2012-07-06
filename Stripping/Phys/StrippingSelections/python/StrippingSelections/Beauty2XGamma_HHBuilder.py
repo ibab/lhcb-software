@@ -39,7 +39,6 @@ class HHBuilder(object):
     '''Produces all HH quasi-particles for the Beauty2xGamma module.'''
 
     def __init__(self,pions,kaons,protons,ks,pi0,config,config_pid):
-        print config
         self.pions = filterInputs("HHPions",[pions],config['DAUGHTERS'])
         self.kaons = filterInputs("HHKaons",[kaons],config['DAUGHTERS'])
         self.protons = filterInputs("HHProtons",[protons],config['pLAMBDADAUGHTERS'])

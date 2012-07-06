@@ -515,9 +515,7 @@ def makeB2nbody(name,PiSel,KSel,pSel,KsSel,LmSel,DzSel,DpSel,DsSel,LcSel,PhSel,K
         if not CP:descriptor="["+descriptor+"]cc"
         descriptors.append(descriptor)
 
-    print "%s: %d channels"%(name,len(descriptors))
     #for descriptor in descriptors: print "DESCRIPTOR:",descriptor
-
 
     #make a merge of the input selections
     AllSel=[]
