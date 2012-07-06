@@ -201,6 +201,7 @@ void HLTFileEqualizer::Analyze()
     printf("Defered HLT disabled. Not acting...\n");
   }
   printf ("==================\n");
+  fflush(stdout);
   dim_unlock();
 }
 
