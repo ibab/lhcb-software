@@ -57,7 +57,7 @@ class HLTFileEqualizer
     DefHltInfoHandler *m_InfoHandler;
     int m_nnodes;
     int m_nfiles;
-    int m_nfiles2;
+    long m_nfiles2;
     int m_low;
     int m_high;
     DimInfo *m_DefStateInfo;
