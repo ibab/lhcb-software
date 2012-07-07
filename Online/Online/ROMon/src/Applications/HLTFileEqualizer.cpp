@@ -64,7 +64,7 @@ void HLTFileEqualizer::Analyze()
   if (0 != m_nnodes)
   {
     av_files = float(this->m_nfiles)/this->m_nnodes;
-    rms = float(m_nfiles2)/m_nnodes-av_files*av_files;
+    rms = double(m_nfiles2)/m_nnodes-double(av_files)*double(av_files);
     if (0.0<rms)
     {
       rms = sqrt(rms);
@@ -84,7 +84,7 @@ void HLTFileEqualizer::Analyze()
     {
       av_files = 0.0;
     }
-    rms = float(m_nfiles2)/m_nnodes-av_files*av_files;
+    rms = double(m_nfiles2)/m_nnodes-double(av_files)*double(av_files);
     if (0.0<rms)
     {
       rms = ::sqrt(rms);
@@ -105,7 +105,7 @@ void HLTFileEqualizer::Analyze()
   int n_ena = 0;
   int n_dis = 0;
   int nfiles = 0;
-  int nfiles2 = 0;
+  long nfiles2 = 0;
   int nnodes = 0;
   bool act = (m_DefStateInfo->getInt() == 1);
   printf("Analyzer: First round of analysis Average number of files per node: %f +/- %f\n",av_files,rms);
@@ -123,7 +123,7 @@ void HLTFileEqualizer::Analyze()
   if (nnodes >0)
   {
     av_files = float(nfiles)/nnodes;
-    rms = float(nfiles2)/nnodes - av_files*av_files;
+    rms = double(nfiles2)/nnodes - double(av_files*av_files);
     if (rms>0)
     {
       rms = ::sqrt(rms);
