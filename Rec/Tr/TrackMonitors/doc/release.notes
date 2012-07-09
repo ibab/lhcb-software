@@ -4,6 +4,13 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-07-06 - Rosen Matev
+ - Add PVSplit algorithm. It splits tracks belonging to found vertices,
+   fits them and writes split vertices to TES. Algorithm is used for resolution
+   studies needed for beam-gas imaging (BGI) and beam-beam imaging methods for
+   absolute luminosity calibration. Also, added a configurable BGIRecoConf, which
+   modifies reconstruction sequences for BGI processing
+
 !========================= TrackMonitors v1r38p1 2012-05-08 =======================
 ! 2012-05-08 - Wouter Hulsbergen
  - Fixed small memory leak in TrackITOverlapMonitor
