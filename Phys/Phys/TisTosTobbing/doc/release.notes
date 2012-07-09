@@ -3,6 +3,8 @@
 ! Purpose     : TisTosTobbing of the trigger 
 ! =============================================================================
 
+!========================= TisTosTobbing v7r7 2012-07-09 =========================
+
 ! 2012-07-06 - Tomasz Skwarnicki
  - Restore previous OnOfflineTool functionality via use of context() == "HLT"
 
