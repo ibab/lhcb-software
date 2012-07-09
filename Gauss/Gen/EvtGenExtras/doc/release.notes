@@ -4,6 +4,9 @@
 ! Purpose     : Repository of EvtGen models with external linkages
 !-----------------------------------------------------------------------------
 
+! 2012-07-09 - Nikolai Nikitin
+ - Added new model for Bq -> 4 leptons decay (BQTOLLLLHYPERCP) with light sgoldstino
+
 ! 2012-06-20 - Nikolai Nikitin
  - cout deleting
 
