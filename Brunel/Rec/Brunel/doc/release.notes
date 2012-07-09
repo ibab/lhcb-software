@@ -5,6 +5,8 @@ Purpose: LHCb reconstruction program
 
 - Changes to references to reflect changes since v43r0
   . New default tuning for 2012 data from tag cond-20120628
+  . Loosened cuts in TrackV0Finder to make it much more efficient for Ks from B.
+    (TrackUtils, RecConf)
 
 - Changes to tests
   . Change brunel.brunel2010magdown timeout to 2400 seconds
