@@ -93,18 +93,10 @@ private:
   CaloVector<LHCb::CaloAdc>    m_adcs;
   CaloVector<LHCb::CaloDigit> m_digits;
   DeCalorimeter*   m_calo;
-  unsigned int m_tell1s;
   //
   std::string  m_detectorName;
-  bool m_packedIsDefault; 
   const std::vector<LHCb::RawBank*>* m_banks;
-  LHCb::RawBank::BankType m_packedType;
-  LHCb::RawBank::BankType m_shortType;
-  LHCb::RawBank::BankType m_errorType;
   std::string m_raw;
-  bool m_extraHeader;
-  bool m_packed;
-  bool m_cleanCorrupted;
   std::string m_data;
   std::string m_adcLoc;
   std::string m_digLoc;

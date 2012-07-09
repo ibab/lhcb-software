@@ -99,8 +99,8 @@ bool CaloReadoutTool::getCaloBanksFromRaw( ) {
   // Retrieve the RawEvent:
   LHCb::RawEvent* rawEvt = NULL ;
   for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
-    if (exist<LHCb::RawEvent>(*p)){
-      rawEvt = get<LHCb::RawEvent>(*p);
+    rawEvt = getIfExists<LHCb::RawEvent>(evtSvc(),*p);
+    if ( NULL != rawEvt ){
       if ( msgLevel( MSG::DEBUG) )debug() << "raw location :: " << rootInTES() + (*p) << endmsg;  
       break;
     }

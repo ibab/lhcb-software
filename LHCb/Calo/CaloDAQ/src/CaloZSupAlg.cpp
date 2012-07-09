@@ -21,6 +21,8 @@ DECLARE_ALGORITHM_FACTORY( CaloZSupAlg )
 //=============================================================================
 CaloZSupAlg::CaloZSupAlg( const std::string& name, ISvcLocator* pSvcLocator)
   : GaudiAlgorithm       ( name , pSvcLocator            )
+  , m_calo(NULL)
+  , m_adcTool(NULL)
 {
   //** Declare the algorithm's properties which can be set at run time and
   //** their default values

@@ -22,6 +22,7 @@ DECLARE_ALGORITHM_FACTORY( CaloFillRawBuffer );
 CaloFillRawBuffer::CaloFillRawBuffer( const std::string& name,
                                       ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
+  , m_calo(NULL)
 {
   //=== Default values according to the name of the algorithm !
   if ( "Ecal" == name.substr( 0, 4 ) ) {

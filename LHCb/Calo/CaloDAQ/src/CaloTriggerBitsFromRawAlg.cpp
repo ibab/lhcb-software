@@ -31,12 +31,12 @@ CaloTriggerBitsFromRawAlg::CaloTriggerBitsFromRawAlg( const std::string& name,
 
   m_toolType  = "CaloTriggerBitsFromRaw";
   m_toolName = name + "Tool";
+  m_isPrs = false;
   if ( "Prs" == name.substr( 0 , 3 ) ) {
     m_outputData = LHCb::L0PrsSpdHitLocation::Prs + m_extension;
     m_isPrs = true;
   } else if ( "Spd" == name.substr( 0 , 3 ) ) {
     m_outputData = LHCb::L0PrsSpdHitLocation::Spd + m_extension;
-    m_isPrs = false;
   }
 
 }

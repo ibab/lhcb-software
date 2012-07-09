@@ -4,6 +4,10 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+! 2012-07-09 - Marco Cattaneo
+ - Use new TES getIfExists function instead of separate exist and get calls
+ - Fix UNINIT_CTOR defects
+
 !========================= CaloDAQ v4r28 2012-06-25 =========================
 ! 2012-06-23 - Deschamps Olivier 
    - CaloDigitFilterTool : prepare for spd-dependent pile-up subtraction

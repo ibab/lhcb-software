@@ -126,15 +126,15 @@ bool CaloDataProviderFromTES::getBanks( ) {
   m_getRaw = false;
   counter("Call for ADC containers") += 1;
   if( fromDigit() ){
-    if( exist<LHCb::CaloDigits>(m_loc) ){
+    m_digCont = getIfExists<LHCb::CaloDigits>(evtSvc(),m_loc);
+    if( NULL != m_digCont ){
       m_ok = true;
-      m_digCont = get<LHCb::CaloDigits>(m_loc);
       if ( msgLevel( MSG::DEBUG) )debug() << "Found container " << m_loc << " Content size " << m_digCont->size() << endmsg;
     }else m_ok = false;
   }else if( fromAdc() ){
-    if( exist<LHCb::CaloAdcs>(m_loc) ){
+    m_adcCont = getIfExists<LHCb::CaloAdcs>(evtSvc(),m_loc);
+    if( NULL != m_adcCont ){
       m_ok = true;
-      m_adcCont = get<LHCb::CaloAdcs>(m_loc);
       if ( msgLevel( MSG::DEBUG) )debug() << "Found container " << m_loc << " Content size " << m_adcCont->size() << endmsg;
     }else m_ok = false;
   }

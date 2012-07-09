@@ -212,9 +212,8 @@ double CaloDigitFilterTool::offsetRMS(LHCb::CaloCellID id,bool spd){
 bool CaloDigitFilterTool::cleanDigits(std::string det, bool substr, bool mask,bool spd){
   if( !setDet( det ) )return false;
   
-  m_digits = NULL;
   std::string container =  LHCb::CaloAlgUtils::CaloDigitLocation( det );
-  if( exist<LHCb::CaloDigits>( container ) )m_digits = get<LHCb::CaloDigits>( container );
+  m_digits = getIfExists<LHCb::CaloDigits>( evtSvc(), container );
   if( NULL == m_digits )return false;
   
   //
@@ -267,12 +266,10 @@ void CaloDigitFilterTool::cleanDigit(LHCb::CaloDigit* digit, bool substr , int s
 unsigned int CaloDigitFilterTool::nVertices(){
   int nVert = 0;
   if( !m_usePV3D){
-    if( exist<LHCb::RecVertices>(m_vertLoc) ){
-      LHCb::RecVertices* verts= get<LHCb::RecVertices>(m_vertLoc);
-      if( NULL != verts){
-        nVert = verts->size();   
-        return nVert;
-      }
+    LHCb::RecVertices* verts= getIfExists<LHCb::RecVertices>(evtSvc(),m_vertLoc);
+    if( NULL != verts){
+      nVert = verts->size();   
+      return nVert;
     }
   }
   // try PV3D if explicitely requested or if RecVertices not found
@@ -285,8 +282,7 @@ unsigned int CaloDigitFilterTool::nVertices(){
 }
 unsigned int CaloDigitFilterTool::nSpd(){
   std::string loc =   LHCb::CaloAlgUtils::CaloDigitLocation( "SPD" );
-  if( !exist<LHCb::CaloDigits>(loc) )return 0;
-  const LHCb::CaloDigits* digits = get<LHCb::CaloDigits> (loc );
+  const LHCb::CaloDigits* digits = getIfExists<LHCb::CaloDigits> (evtSvc(),loc );
   return (NULL != digits) ? digits->size() : 0;
 };
 

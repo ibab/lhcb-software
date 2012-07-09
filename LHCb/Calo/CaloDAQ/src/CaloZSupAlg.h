@@ -1,4 +1,3 @@
-// $Id: CaloZSupAlg.h,v 1.6 2008-07-23 10:42:03 odescham Exp $ 
 #ifndef   CALODIGIT_CALOZSUPALG_H
 #define   CALODIGIT_CALOZSUPALG_H 1
 

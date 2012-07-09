@@ -91,7 +91,8 @@ StatusCode CheckCaloBank::execute() {
   // Retrieve the RawEvent:
   LHCb::RawEvent* rawEvt = NULL ;
   for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
-    if (exist<LHCb::RawEvent>(*p)){
+    rawEvt = getIfExists<LHCb::RawEvent>(*p);
+    if ( NULL != rawEvt ){
       rawEvt = get<LHCb::RawEvent>(*p);
       break;
     }
