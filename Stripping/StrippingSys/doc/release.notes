@@ -3,6 +3,16 @@ Package     : StrippingSys
 Package Coordinator : Jibo He, Anton Poluektov
 Purpose     : LHCb stripping packages
 
+!======================= StrippingSys v6r0 2012-07-09 =========================
+
+! 2012-07-09 - Chris Jones
+ Development release.
+ - DisplVertices
+   . Use new DV base classes instead of depreciated DVAlgorithm
+ - StrippingNeuroBayes
+   . Use DaVinciHistoAlgorithm instead of DVAlgorithm as base class
+   . Remove use of depreciated OnOfflineTool
+
 !======================= StrippingSys v5r0 2012-06-28 =========================
 
 ! 2012-06-28 - Anton Poluektov 
