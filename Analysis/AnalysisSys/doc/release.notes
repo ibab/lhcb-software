@@ -3,6 +3,21 @@ Package     : AnalysisSys
 Package Coordinator : Chris Jones
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v10r0>2012-07-09 Analysis v10r0 </A></H1><PRE>
+
+New development release
+
+Updated Packages : DecayTreeTuple, FlavourTagging, 
+                   FlavourTaggingChecker, JetAccessories
+
+- In JetAccessories :
+ . Remove usage of the depreciated OnOfflineTool
+ . Use a public instance of LoKi::DistanceCalculator in HighPtIsoLeptonAndTagPV
+
+- In DecayTreeTuple :
+ . Remove all usage of the OnOfflineTool
+ . Use a public instance of LoKi::DistanceCalculator in TupleToolIsolationTwoBody
+
 </PRE><H1><A NAME=v9r0>2012-06-28 Analysis v9r0 </A></H1><PRE>
 
 Based on Phys v15r0
