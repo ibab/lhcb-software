@@ -2,7 +2,7 @@
  * MM.h
  *
  * Author:  Sai Suman Cherukuwada
- * 			Vijay Kartik (vijay.kartik@cern.ch)
+ *			Vijay Kartik (vijay.kartik@cern.ch)
  */
 
 #ifndef MM_H
@@ -98,9 +98,6 @@ class MM
 {
 private:
 
-	/// Single STL map for all runs being processed by the MDFWriterNet at the moment.
-	std::map<unsigned int, MMQueue*> m_runMap;
-
 	/// Map iterator for moveSendPointer() and to ensure commands from all runs are
 	/// served fairly (in a round-robin fashion).
 	std::map<unsigned int, MMQueue*>::iterator m_runMapIter;
@@ -113,6 +110,7 @@ private:
 	/// NB: Could also log to the MsgStream class for debugging.
 	/// But TODO or not TODO, that is the question.
 #if WITHDEBUG
+
 	FILE *fd;
 #endif
 
@@ -133,6 +131,9 @@ private:
 	size_t m_allocCmdCount;
 
 public:
+
+	/// Single STL map for all runs being processed by the MDFWriterNet at the moment.
+	std::map<unsigned int, MMQueue*> m_runMap;
 
 	/// Constructor.
 	MM(size_t maxQueueSize);

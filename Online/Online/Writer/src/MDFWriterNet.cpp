@@ -2,8 +2,8 @@
  * MDFWriterNet.cpp
  *
  * Author:  Sai Suman Cherukuwada
- * 			Jean-Christophe Garnier
-* 			Vijay Kartik (vijay.kartik@cern.ch)
+ *			Jean-Christophe Garnier
+ *			Vijay Kartik (vijay.kartik@cern.ch)
  */
 
 #ifdef BUILD_WRITER
@@ -378,11 +378,20 @@ StatusCode MDFWriterNet::finalize(void)
 	m_StopRetry = true;
 	m_Finalized = true;
 
+
+	if (pthread_mutex_lock(&m_SyncFileList))
+	{
+		*m_log << MSG::ERROR << WHERE << " Locking mutex" << endmsg;
+		return StatusCode::FAILURE;
+	}
+
 	File *tmpFile;
 	tmpFile = m_openFiles.getFirstFile();
 
 	while (tmpFile)
 	{
+		*m_log << MSG::INFO << WHERE << "Checking file: " << *(tmpFile->getFileName()) << endmsg;
+
 		if (tmpFile->isOpen())
 		{
 			*m_log << MSG::INFO << WHERE << "Closing file "
@@ -395,6 +404,12 @@ StatusCode MDFWriterNet::finalize(void)
 			continue;
 		}
 		tmpFile = tmpFile->getNext();
+	}
+
+	if (pthread_mutex_unlock(&m_SyncFileList))
+	{
+		*m_log << MSG::ERROR << WHERE << " Unlocking mutex" << endmsg;
+		return StatusCode::FAILURE;
 	}
 
 	// closeConnection() blocks till everything is flushed.
@@ -554,7 +569,7 @@ void MDFWriterNet::closeFile(File *currFile)
 
 	//////////////////
 	//Printing to check if the close command is queued
-//	*m_log << MSG::INFO << WHERE << "Close command queued" << endmsg;
+	*m_log << MSG::INFO << WHERE << "Close command queued" << endmsg;
 	//////////////////
 
 	if (currFile->getTrgEvents(trgEvents, MAX_TRIGGER_TYPES) != 0)

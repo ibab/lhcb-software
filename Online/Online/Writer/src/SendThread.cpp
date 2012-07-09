@@ -120,6 +120,8 @@ int SendThread::processSends(void)
       totalSize = sizeof(struct cmd_header);
       if(cmd_to_send->cmd == CMD_WRITE_CHUNK)
         totalSize += cmd_to_send->data.chunk_data.size;
+      if(cmd_to_send->cmd == CMD_CLOSE_FILE)
+    	  *m_log << MSG::INFO <<  WHERE << "Close command for file: " << cmd_to_send->file_name << endmsg;
       ptr = (char *)cmd_to_send;
       bif = new BIF(m_sockFd, ptr, totalSize);
     }
@@ -128,7 +130,8 @@ int SendThread::processSends(void)
 
     ret = bif->nbSend();
     if(ret == totalSize) {
-      // *m_log << MSG::INFO << "send was successful" << endmsg;
+    	if ( cmd_to_send->cmd == CMD_CLOSE_FILE)
+    		 *m_log << MSG::INFO << "CLOSE CMD Send was successful" << endmsg;
 
 //      dbg_CountAgain=0;
 

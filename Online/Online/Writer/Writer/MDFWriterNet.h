@@ -3,7 +3,7 @@
  *
  * Author:  Sai Suman Cherukuwada
  * 			Jean-Christophe Garnier
- * 			Vijay Kartik (vijay.kartik@cern.ch)
+ *			Vijay Kartik (vijay.kartik@cern.ch)
  */
 
 #include "GaudiKernel/StreamBuffer.h"

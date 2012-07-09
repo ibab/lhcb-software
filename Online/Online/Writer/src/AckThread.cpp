@@ -122,7 +122,7 @@ start:
 
   /*While either you don't need to stop, or you need to stop after purging entries.*/
   while( (m_stopUrgently == false && m_stopAfterFinish == false) ||
-      (m_stopAfterFinish == true && m_mmObj->getQueueLength() > 0))
+      (m_stopUrgently == false && m_stopAfterFinish == true && m_mmObj->getQueueLength() > 0))
   {
     if(!bif) {
       bif = new BIF(m_sockFd, &ackHeaderBuf, sizeof(struct ack_header));
@@ -158,7 +158,7 @@ start:
       struct cmd_header *cmd;
       if((cmd = m_mmObj->dequeueCommand(seqNum, ackHeaderBuf.run_no)) == NULL) {
         *m_log << MSG::ERROR << "DANGER: Received an unsolicited ack, run = "
-           << ackHeaderBuf.run_no 
+           << ackHeaderBuf.run_no
            << endmsg;
       } else {
         notify(cmd);

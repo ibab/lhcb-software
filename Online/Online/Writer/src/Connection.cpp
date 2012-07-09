@@ -25,6 +25,7 @@ extern "C" {
 
 #include "GaudiKernel/MsgStream.h"
 
+#include <map>
 #define POLL_INTERVAL         5000   /*<< The interval for poll() calls in millis.*/
 #define FAILOVER_RETRY_SLEEP  20     /*<< Number of seconds between  retries.*/
 
@@ -103,7 +104,7 @@ void Connection::connect() {
  */
 void Connection::closeConnection()
 {
-  *m_log << MSG::INFO << WHERE << " Closing connection."
+  *m_log << MSG::INFO << WHERE << " Closing connection with platypus."
          << endmsg;
 
   m_sendThread->stopAfterFinish();  /*Stop after all messages are sent.*/
@@ -114,21 +115,37 @@ void Connection::closeConnection()
    * shut down almost immediately afterwards. getQueueLength() is locked,
    * so no harm in calling it often.
    */
+
+  // Vijay: BEGIN: join send and ack threads
+
+//  m_sendThread->stop();
+//  m_ackThread->stop();
+//  sleep(2);
+
+  // Vijay: END: join send and ack threads
+
   int ret;
-  while((ret = m_mmObj.getQueueLength()) > 0) {
-    *m_log << MSG::INFO << WHERE << "Waiting for queuelength to be zero. "
+  int retry = 5;
+  while((ret = m_mmObj.getQueueLength()) > 0 && retry-- > 0) {
+    *m_log << MSG::INFO << WHERE << "Waiting for queue length to be zero. "
            << "Queue size is: " << ret
            << endmsg;
+    for (std::map<unsigned int, MMQueue*>::iterator queueIter = (m_mmObj.m_runMap).begin(); queueIter != (m_mmObj.m_runMap).end(); queueIter++)
+    {
+    	*m_log << MSG::INFO << WHERE << "Run number: " << queueIter->first << " Queue Length: " << (queueIter->second)->getQueueLength() << endmsg;
+    }
     sleep(2);
   }
 
-  sleep(2);
+//  sleep(2);
 
   /* By this time, the threads have all exited, except for the failover
    * monitor. We simply stop this one as well, and just exit.
    */
 
   m_failoverMonitor->stopUrgently();
+  m_sendThread->stopUrgently();
+  m_ackThread->stopUrgently();
   delete m_sendThread;
   delete m_ackThread;
   delete m_failoverMonitor;
@@ -253,7 +270,7 @@ void Connection::sendCommand(struct cmd_header *header, void *data)
 {
   static int failureCnt=0;
   MsgStream l_log(*m_log);
- 
+
   struct cmd_header *newHeader;
   int totalSize = 0;
   switch(header->cmd) {
@@ -271,7 +288,7 @@ void Connection::sendCommand(struct cmd_header *header, void *data)
       newHeader = m_mmObj.allocAndCopyCommand(header, data);  /* Will always succeed. */
       if(newHeader == NULL) {
           if(failureCnt%60==0 && failureCnt!=0) {
-//              *m_log << MSG::FATAL << "Buffer is full!, allocated bytes=" <<m_mmObj.getAllocByteCount() << ", MaxQueueSizeBytes=" << m_maxQueueSize 
+//              *m_log << MSG::FATAL << "Buffer is full!, allocated bytes=" <<m_mmObj.getAllocByteCount() << ", MaxQueueSizeBytes=" << m_maxQueueSize
               l_log << MSG::WARNING << "Writing an event was delayed due to back pressure from the writerd. Performance drop -> /clusterlogs/services/writerd.log" << endmsg;
           }
           failureCnt ++;
@@ -285,11 +302,11 @@ void Connection::sendCommand(struct cmd_header *header, void *data)
       l_log << MSG::FATAL << m_mmObj.getAllocByteCount() << " Bytes are lost." << endmsg;
       return;
   }
-  if(newHeader != NULL) { 
+  if(newHeader != NULL) {
       m_mmObj.enqueueCommand(newHeader);
       if(failureCnt >= 30) {
           l_log << MSG::WARNING << "Event written after " << failureCnt << " second(s)." << endmsg;
-      } 
+      }
       failureCnt=0;
   } else {
         // Should normally never happen

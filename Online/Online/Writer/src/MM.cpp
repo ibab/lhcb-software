@@ -2,7 +2,7 @@
  * MM.cpp
  *
  * Author:  Sai Suman Cherukuwada
- * 			Vijay Kartik (vijay.kartik@cern.ch)
+ *			Vijay Kartik (vijay.kartik@cern.ch)
  */
 
 #ifdef BUILD_WRITER
@@ -14,6 +14,7 @@
 #include <stdexcept>
 
 #include <unistd.h>
+#include <limits.h>
 #include "Writer/MM.h"
 #include "Writer/chunk_headers.h"
 
@@ -445,7 +446,8 @@ struct cmd_header* MM::dequeueCommand(unsigned int sequenceNum,	unsigned int run
 		pthread_mutex_unlock(&m_mapLock);
 		return NULL;
 		}
-
+	if (--m_queueLength == INT_MAX)
+		m_queueLength = 0;
 	pthread_mutex_unlock(&m_mapLock);
 	return retCmd;
 }
