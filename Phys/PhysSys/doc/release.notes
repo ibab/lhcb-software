@@ -3,6 +3,67 @@ Package             : PhysSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v16r0>2012-07-09 Phys v16r0 </A></H1><PRE>
+Development release with major changes to DaVinci base classes,
+to minimise the number of private tools, and thus memory usage.
+
+- Packages updated : BBDecTreeTool, DaVinciInterfaces, DaVinciKernel,
+                     DaVinciTools, LoKiAlgo, LoKiJets, NeuroBayesTools,
+                     ParticleMaker, TisTosTobbing, VertexFit
+
+- In VertexFit :
+ . Remove usage of the (depreciated) OnOfflineTool
+
+- In TisTosTobbing :
+ . Remove usage of the (depreciated) OnOfflineTool. Restore previous 
+   OnOfflineTool functionality via use of context() == "HLT"
+ . Use DaVinciAlgorithm instead of DVAlgorithm in TisTosParticleTagger, to
+   reduce memory footprint.
+ . Make the Track2Calo tool loaded by ParticleTisTos public, to reduce the number
+   of identical private tools loaded by the stripping.
+
+- ParticleMaker :
+ . Fix memory leaks in DiElectronMaker (not fully fixed)
+ . Properly check the returned StatusCode by ParticleCombiner in DiElectronMaker
+
+- In LoKiJets, NeuroBayesTools :
+ . Use a public instance of LoKi::DistanceCalculator
+
+- In DaVinciTools :
+ . Remove all usage of the (depreciated) OnOfflineTool
+ . Add a temporary check to CombineParticles to try and detect cases where
+   users are incorrectly configuring the tool via the m_vertexFitNames
+   property and issues a warning if this is found.
+ . Use a public instance of LoKi::Decays in SubstitutePIDTool and FilterDecays
+ . Implement a check on the memory usage in DaVinciInit which if exceeded 
+   triggers a release on the memory used by various boost pools. 
+   Default limit is set at 3.4GB
+   The release is also done automatically during finalize, so the pools are
+   emptied before any finalization tasks that require a lot of memory (such
+   as the FSRs) are run.
+ . Remove a check OnOfflineTool that prevents it from being a public tool
+ . Pass the map by const reference in SubstitutePIDTool::decodeCode
+
+- In DaVinciKernel :
+ . Remove usage of the (depreciated) OnOfflineTool
+ . Add a depreciation warning to DVAlgorithm::initialize()
+ . Make the default versions of the follow tools public in the DV common 
+   base class :-
+    LoKi::DistanceCalculator, LoKi::TrgDistanceCalculator, AdaptivePVReFitter,
+    LoKi::FastVertexFitter, OfflineVertexFitter, LoKi::VertexFitter
+ . Make the default distance calculators public tools
+
+- In DaVinciInterfaces :
+ . Remove the interface IOnOffline.h
+ . Improve the public tool detection in getIDVAlgorithm, to detect cases where
+   the tool is a private tool of a public tool (recursively).
+ . Pass the map by const reference in ISubstitutePID::decodeCode
+
+- In BBDecTreeTool :
+ . Load the distance calculator tools in BBDTSimpleTool and 
+   BBDecTreeTool via the IDVAlgorithm interface, instead of 
+   creating their own private versions.
+
 </PRE><H1><A NAME=v15r0>2012-06-28 Phys v15r0 </A></H1><PRE>
 - Based on LHCb v35r0, REC v14r0 and Gaudi v23r3
 
