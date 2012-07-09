@@ -731,7 +731,7 @@ protected:
   void cloneAndMarkTrees(const PARTICLES& heads)
   {
     for ( typename PARTICLES::const_iterator iHead = heads.begin();
-          iHead != heads.end(); ++iHead) { cloneAndMarkTree(*iHead); }
+          iHead != heads.end(); ++iHead ) { cloneAndMarkTree(*iHead); }
   }
 
   ///
