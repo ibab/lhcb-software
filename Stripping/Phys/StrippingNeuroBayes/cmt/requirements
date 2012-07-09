@@ -3,24 +3,18 @@
 # Maintainer : Ulrich Kerzel
 #============================================================================
 package           StrippingNeuroBayes
-version           v1r5
+version           v1r6
 
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc src python
 
-
 #============================================================================
-# Used packages. Specify the version, * at the end specifies 'any revision'
-#    Put as many lines as needed, with all packages, without the '#'
+# Used packages
 #============================================================================
-# use   Package          v1r*    Hat
-
-
 use DaVinciKernel      v*       Phys
 use DaVinciTools       v*       Phys
-
 # NeuroBayes
 # NB is currently only supported on linux GCC (WIN32 libs in preparation)
 macro use_NB_expert "neurobayes_expert v* LCG_Interfaces" WIN32 ""

@@ -4,6 +4,8 @@ i!-----------------------------------------------------------------------------
 ! Purpose     : Stripping algorithms based on the NeuroBayes neural network
 !-----------------------------------------------------------------------------
 
+!========================= StrippingNeuroBayes v1r6 2012-07-09 =========================
+
 ! 2012-07-02 - Chris Jones
  - Use DaVinciHistoAlgorithm instead of DVAlgorithm as base class
  - Remove use of depreciated OnOfflineTool
