@@ -120,7 +120,7 @@ int SendThread::processSends(void)
       totalSize = sizeof(struct cmd_header);
       if(cmd_to_send->cmd == CMD_WRITE_CHUNK)
         totalSize += cmd_to_send->data.chunk_data.size;
-      if(cmd_to_send->cmd == CMD_CLOSE_FILE)
+      if(cmd_to_send->cmd == CMD_CLOSE_FILE)	// For debugging and expert logging
     	  *m_log << MSG::INFO <<  WHERE << "Close command for file: " << cmd_to_send->file_name << endmsg;
       ptr = (char *)cmd_to_send;
       bif = new BIF(m_sockFd, ptr, totalSize);

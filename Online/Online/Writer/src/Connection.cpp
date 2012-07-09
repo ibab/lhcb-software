@@ -110,19 +110,12 @@ void Connection::closeConnection()
   m_sendThread->stopAfterFinish();  /*Stop after all messages are sent.*/
   m_ackThread->stopAfterFinish();  /*Stop after all acks have been received.*/
 
-  /* stopAfterFinish() doesn't do a thread join. So we just wait till
+  /* stopAfterFinish() doesn't do a thread join. So we wait till
    * the queue is empty. If the queue is empty, then the threads will
    * shut down almost immediately afterwards. getQueueLength() is locked,
-   * so no harm in calling it often.
+   * so no harm in calling it often. After five retries (10 seconds) join the
+   * threads anyway by calling stopUrgently
    */
-
-  // Vijay: BEGIN: join send and ack threads
-
-//  m_sendThread->stop();
-//  m_ackThread->stop();
-//  sleep(2);
-
-  // Vijay: END: join send and ack threads
 
   int ret;
   int retry = 5;
@@ -137,10 +130,13 @@ void Connection::closeConnection()
     sleep(2);
   }
 
+  /* commented this out, because this was doing the job of
+   * ensuring that the threads are not deleted (below) before the queue
+   * is empty. this is now replaced with an explicit joining of the threads.
+  */
 //  sleep(2);
 
-  /* By this time, the threads have all exited, except for the failover
-   * monitor. We simply stop this one as well, and just exit.
+  /* The failover monitor is directly stopped using stopUrgently().
    */
 
   m_failoverMonitor->stopUrgently();

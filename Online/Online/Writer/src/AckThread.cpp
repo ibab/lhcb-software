@@ -120,7 +120,8 @@ int AckThread::processAcks(void)
 start:
   memset(&ackHeaderBuf, 0, sizeof(struct ack_header));
 
-  /*While either you don't need to stop, or you need to stop after purging entries.*/
+  /* While either you don't need to stop, or you need to stop after purging entries. */
+  /* Exit immediately if we need to stop urgently */
   while( (m_stopUrgently == false && m_stopAfterFinish == false) ||
       (m_stopUrgently == false && m_stopAfterFinish == true && m_mmObj->getQueueLength() > 0))
   {
