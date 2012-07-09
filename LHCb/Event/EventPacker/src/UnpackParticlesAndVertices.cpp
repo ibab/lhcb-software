@@ -1,4 +1,3 @@
-// $Id: $
 // Include files
 
 // from Gaudi
@@ -46,10 +45,11 @@ StatusCode UnpackParticlesAndVertices::execute()
   //=================================================================
   LHCb::Particles* parts = NULL;
   const LHCb::ParticlePacker pPacker(*dynamic_cast<GaudiAlgorithm*>(this));
-  if ( exist<LHCb::PackedParticles>(m_inputStream+LHCb::PackedParticleLocation::InStream) )
+
+  LHCb::PackedParticles* pparts =
+    getIfExists<LHCb::PackedParticles>( m_inputStream + LHCb::PackedParticleLocation::InStream );
+  if ( NULL != pparts )
   {
-    LHCb::PackedParticles* pparts =
-      get<LHCb::PackedParticles>( m_inputStream + LHCb::PackedParticleLocation::InStream );
     for ( std::vector<LHCb::PackedParticle>::iterator itP = pparts->data().begin();
           pparts->data().end() != itP; ++itP )
     {
@@ -92,10 +92,10 @@ StatusCode UnpackParticlesAndVertices::execute()
   prevLink = -1;
   LHCb::Vertices* verts = NULL;
   const LHCb::VertexPacker vPacker(*dynamic_cast<GaudiAlgorithm*>(this));
-  if ( exist<LHCb::PackedVertices>( m_inputStream + LHCb::PackedVertexLocation::InStream ) )
+  LHCb::PackedVertices* pverts =
+    getIfExists<LHCb::PackedVertices>( m_inputStream + LHCb::PackedVertexLocation::InStream );
+  if ( NULL != pverts )
   {
-    LHCb::PackedVertices* pverts =
-      get<LHCb::PackedVertices>( m_inputStream + LHCb::PackedVertexLocation::InStream );
     for ( std::vector<LHCb::PackedVertex>::iterator itV = pverts->data().begin();
           pverts->data().end() != itV; ++itV )
     {
@@ -128,10 +128,10 @@ StatusCode UnpackParticlesAndVertices::execute()
   prevLink = -1;
   LHCb::RecVertices* recVerts = NULL;
   const LHCb::RecVertexPacker rvPacker(*dynamic_cast<GaudiAlgorithm*>(this));
-  if ( exist<LHCb::PackedRecVertices>( m_inputStream + LHCb::PackedRecVertexLocation::InStream ) )
+  LHCb::PackedRecVertices* pRecVerts =
+    getIfExists<LHCb::PackedRecVertices>( m_inputStream + LHCb::PackedRecVertexLocation::InStream );
+  if ( NULL != pRecVerts )
   {
-    LHCb::PackedRecVertices* pRecVerts =
-      get<LHCb::PackedRecVertices>( m_inputStream + LHCb::PackedRecVertexLocation::InStream );
     for ( std::vector<LHCb::PackedRecVertex>::iterator itV = pRecVerts->vertices().begin();
           pRecVerts->vertices().end() != itV; ++itV )
     {
@@ -163,7 +163,9 @@ StatusCode UnpackParticlesAndVertices::execute()
   int nbRelContainer = 0;
   int nbRel = 0;
   RELATION* rels = NULL;
-  if ( exist<LHCb::PackedRelations>( m_inputStream + LHCb::PackedRelationsLocation::InStream ) )
+  LHCb::PackedRelations* prels =
+    getIfExists<LHCb::PackedRelations>( m_inputStream + LHCb::PackedRelationsLocation::InStream );
+  if ( NULL != prels )
   {
     LHCb::PackedRelations* prels =
       get<LHCb::PackedRelations>( m_inputStream + LHCb::PackedRelationsLocation::InStream );
@@ -219,11 +221,11 @@ StatusCode UnpackParticlesAndVertices::execute()
   DaVinci::Map::Particle2LHCbIDs* partIds = NULL;
   LHCb::Particles* partContainer = NULL;
   int prevPartLink = -1;
-  if ( exist<LHCb::PackedParticle2Ints>( m_inputStream + LHCb::PackedParticle2IntsLocation::InStream ) )
+  LHCb::PackedParticle2Ints* pPartIds =
+    getIfExists<LHCb::PackedParticle2Ints>( m_inputStream +
+                                            LHCb::PackedParticle2IntsLocation::InStream );
+  if ( NULL != pPartIds )
   {
-    LHCb::PackedParticle2Ints* pPartIds =
-      get<LHCb::PackedParticle2Ints>( m_inputStream +
-                                      LHCb::PackedParticle2IntsLocation::InStream );
     for ( std::vector<LHCb::PackedParticle2Int>::iterator itL = pPartIds->relations().begin();
           pPartIds->relations().end() != itL; ++itL )
     {

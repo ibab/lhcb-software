@@ -79,7 +79,7 @@ StatusCode CompareMCParticle::execute()
     }
 
     if ( !isOK || MSG::VERBOSE >= msgLevel() ) {
-      if( !isOK ) Warning( "Packed MCParticle info truncated. Set DEBUG OutputLevel for details" ).ignore();
+      if( !isOK ) Warning( "Packed MCParticle info truncated. Set VERBOSE OutputLevel for details" ).ignore();
       debug() << "=== MCParticle key " << oPart->key() << endmsg;
       debug() << format( "  old momentum %12.3f %12.3f %12.3f %12.4f",
                          oPart->momentum().px(), oPart->momentum().py(),

@@ -25,16 +25,14 @@ Check<PACKER>::~Check() { }
 template < class PACKER >
 StatusCode Check<PACKER>::execute()
 {
-  // Check data exists at both locations
-  if ( this->exist<typename PACKER::DataVector>(m_dataA) &&
-       this->exist<typename PACKER::DataVector>(m_dataB) )
-  {
+  // Check data exists at both locations and load it
+  typename PACKER::DataVector * dataA =
+    this->getIfExists<typename PACKER::DataVector>(m_dataA);
+  typename PACKER::DataVector * dataB =
+    this->getIfExists<typename PACKER::DataVector>(m_dataB);
 
-    // Load the input data
-    typename PACKER::DataVector * dataA =
-      this->get<typename PACKER::DataVector>(m_dataA);
-    typename PACKER::DataVector * dataB =
-      this->get<typename PACKER::DataVector>(m_dataB);
+  if ( (NULL != dataA) && (NULL != dataB) )
+  {
 
     // Compare versions
     if ( dataA->version() != dataB->version() )

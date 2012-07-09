@@ -123,10 +123,10 @@ void ParticlesAndVerticesMapper::updateNodeTypeMap( const std::string & path )
     int key(0),linkID(0);
 
     // Load the packed Particles
-    if ( exist<LHCb::PackedParticles>(streamR+LHCb::PackedParticleLocation::InStream) )
+    LHCb::PackedParticles* pparts =
+      getIfExists<LHCb::PackedParticles>(evtSvc(),streamR+LHCb::PackedParticleLocation::InStream);
+    if ( NULL != pparts )
     {
-      LHCb::PackedParticles* pparts =
-        get<LHCb::PackedParticles>(streamR+LHCb::PackedParticleLocation::InStream);
       for ( std::vector<LHCb::PackedParticle>::iterator itP = pparts->data().begin();
             pparts->data().end() != itP; ++itP )
       {
@@ -136,10 +136,10 @@ void ParticlesAndVerticesMapper::updateNodeTypeMap( const std::string & path )
     }
 
     // Load the vertices
-    if ( exist<LHCb::PackedVertices>(streamR+LHCb::PackedVertexLocation::InStream) )
+    LHCb::PackedVertices* pverts =
+      getIfExists<LHCb::PackedVertices>(evtSvc(),streamR+LHCb::PackedVertexLocation::InStream);
+    if ( NULL != pverts )
     {
-      LHCb::PackedVertices* pverts =
-        get<LHCb::PackedVertices>(streamR+LHCb::PackedVertexLocation::InStream);
       for ( std::vector<LHCb::PackedVertex>::iterator itV = pverts->data().begin();
             pverts->data().end() != itV; ++itV )
       {
@@ -149,10 +149,10 @@ void ParticlesAndVerticesMapper::updateNodeTypeMap( const std::string & path )
     }
 
     // Load the Rec vertices
-    if ( exist<LHCb::PackedRecVertices>(streamR+LHCb::PackedRecVertexLocation::InStream) )
+    LHCb::PackedRecVertices* pRecVerts =
+      getIfExists<LHCb::PackedRecVertices>(evtSvc(),streamR+LHCb::PackedRecVertexLocation::InStream);
+    if ( NULL != pRecVerts )
     {
-      LHCb::PackedRecVertices* pRecVerts =
-        get<LHCb::PackedRecVertices>(streamR+LHCb::PackedRecVertexLocation::InStream);
       for ( std::vector<LHCb::PackedRecVertex>::iterator itV = pRecVerts->vertices().begin();
             pRecVerts->vertices().end() != itV; ++itV )
       {
@@ -162,10 +162,10 @@ void ParticlesAndVerticesMapper::updateNodeTypeMap( const std::string & path )
     }
 
     // relations
-    if ( exist<LHCb::PackedRelations>(streamR+LHCb::PackedRelationsLocation::InStream) )
+    LHCb::PackedRelations* prels =
+      getIfExists<LHCb::PackedRelations>(evtSvc(),streamR+LHCb::PackedRelationsLocation::InStream);
+    if ( NULL != prels )
     {
-      LHCb::PackedRelations* prels =
-        get<LHCb::PackedRelations>(streamR+LHCb::PackedRelationsLocation::InStream);
       for ( std::vector<LHCb::PackedRelation>::iterator itR = prels->relations().begin();
             prels->relations().end() != itR; ++itR )
       {
@@ -175,10 +175,10 @@ void ParticlesAndVerticesMapper::updateNodeTypeMap( const std::string & path )
     }
 
     // Particle2LHCbID
-    if ( exist<LHCb::PackedParticle2Ints>(streamR+LHCb::PackedParticle2IntsLocation::InStream) )
+    LHCb::PackedParticle2Ints* pPartIds =
+      getIfExists<LHCb::PackedParticle2Ints>(evtSvc(),streamR+LHCb::PackedParticle2IntsLocation::InStream);
+    if ( NULL != pPartIds )
     {
-      LHCb::PackedParticle2Ints* pPartIds =
-        get<LHCb::PackedParticle2Ints>(streamR+LHCb::PackedParticle2IntsLocation::InStream);
       for ( std::vector<LHCb::PackedParticle2Int>::iterator itL = pPartIds->relations().begin();
             pPartIds->relations().end() != itL; ++itL )
       {

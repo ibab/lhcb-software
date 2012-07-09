@@ -85,10 +85,10 @@ ConversionDODMapper::candidate(const std::string &path) const
   DataObject * obj(NULL);
   if ( !path.empty() )
   {
-    if ( exist<DataObject>(path) )
+    obj = getIfExists<DataObject>(evtSvc(),path);
+    if ( NULL != obj )
     {
       // ... get the source object...
-      obj = get<DataObject>(path);
       LOG_VERBOSE
         << "  -> Found object of type "<< System::typeinfoName(typeid(*obj))
         << ", classID " << obj->clID()

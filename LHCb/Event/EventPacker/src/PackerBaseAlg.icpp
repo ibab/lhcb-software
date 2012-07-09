@@ -129,11 +129,11 @@ StatusCode Pack<PACKER>::execute()
         data->registry()->setAddress( 0 );
       }
 
-      // Count packed output
-      if ( inputOK || m_alwaysOutput )
-        counter("# PackedData") += pdata->data().size();
-
     } // input OK
+
+    // Count packed output
+    if ( inputOK || m_alwaysOutput )
+      counter("# PackedData") += pdata->data().size();
 
   } // output OK
 
