@@ -3,8 +3,10 @@
 ! Responsible : Chris Jones, Olivier Deschamps
 !==============================================================================
 
+!========================= ParticleMaker v6r4 2012-07-09 =========================
+
 ! 2012-07-03 - Chris Jones
- - Fix memory leaks in DiElectronMaker
+ - Fix memory leaks in DiElectronMaker (not fully fixed)
  - Properly check the returned StatusCode by ParticleCombiner in DiElectronMaker
 
 !========================= ParticleMaker v6r3 2012-06-28 =========================
