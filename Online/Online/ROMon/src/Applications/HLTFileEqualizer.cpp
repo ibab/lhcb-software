@@ -2,6 +2,7 @@
 #include <math.h>
 #include <time.h>
 
+static FILE *outf;
 HLTFileEqualizer::HLTFileEqualizer()
 {
   DimUpdatedInfo *sfinfo;
@@ -23,7 +24,7 @@ HLTFileEqualizer::HLTFileEqualizer()
       sprintf(sf,"/RO/hlt%c%02d/ROpublish/HLTDefer",row,rack);
       sfinfo = new DimUpdatedInfo(sf,(void*)&NoLink,sizeof(int),m_InfoHandler);
       m_infoMap.insert(std::make_pair(std::string(sf),sfinfo));
-      printf ("%s\n",sf);
+      fprintf(outf,"%s\n",sf);
     }
   }
   row = 'f';
@@ -33,7 +34,7 @@ HLTFileEqualizer::HLTFileEqualizer()
     sprintf(sf,"/RO/hlt%c%02d/ROpublish/HLTDefer",row,rack);
     sfinfo = new DimUpdatedInfo(sf,(void*)&NoLink,sizeof(int),m_InfoHandler);
     m_infoMap.insert(std::make_pair(std::string(sf),sfinfo));
-    printf ("%s\n",sf);
+    fprintf(outf,"%s\n",sf);
   }
 //  m_enabledFarm.insert(std::string("hltb01"));
 //  m_enabledFarm.insert(std::string("hltb02"));
@@ -94,13 +95,11 @@ void HLTFileEqualizer::Analyze()
       rms = 0.0;
     }
   }
-  printf("Analysis Summary based on %d nodes: ",m_nnodes);
+  fprintf(outf,"Analysis Summary based on %d nodes: ",m_nnodes);
   {
     time_t rawtime;
     time(&rawtime);
-//    struct tm *ttt;
-//    ttt = localtime(&rawtime);
-    printf("%s",asctime(localtime(&rawtime)));
+    fprintf(outf,"%s",asctime(localtime(&rawtime)));
   }
   int n_ena = 0;
   int n_dis = 0;
@@ -108,7 +107,7 @@ void HLTFileEqualizer::Analyze()
   long nfiles2 = 0;
   int nnodes = 0;
   bool act = (m_DefStateInfo->getInt() == 1);
-  printf("Analyzer: First round of analysis Average number of files per node: %f +/- %f\n",av_files,rms);
+  fprintf(outf,"Analyzer: First round of analysis Average number of files per node: %f +/- %f\n",av_files,rms);
   for (myNodeMap::iterator nit=m_Nodes.begin();nit != m_Nodes.end();nit++)
   {
     myNode *nod = (*nit).second;
@@ -161,8 +160,8 @@ void HLTFileEqualizer::Analyze()
     }
     n_ena++;
   }
-  printf("Analyzer: Second round (within +/- 5 sigma) of analysis Average number of files per node: %f +/- %f\n",av_files,rms);
-  printf("%d Nodes enabled; %d Nodes disabled\n",n_ena,n_dis);
+  fprintf(outf,"Analyzer: Second round (within +/- 5 sigma) of analysis Average number of files per node: %f +/- %f\n",av_files,rms);
+  fprintf(outf,"%d Nodes enabled; %d Nodes disabled\n",n_ena,n_dis);
   m_nnodes = 0;
   m_nfiles = 0;
   m_nfiles2 = 0;
@@ -177,7 +176,7 @@ void HLTFileEqualizer::Analyze()
       {
         continue;
       }
-      //    printf("On Farm %s:\n",(*fit).first.c_str());
+      //    fprintf(outf,"On Farm %s:\n",(*fit).first.c_str());
       std::list<std::pair<std::string, int> >::iterator i;
       std::string sf_mesg = "";
       std::string endisSvc;
@@ -198,10 +197,10 @@ void HLTFileEqualizer::Analyze()
   }
   else
   {
-    printf("Defered HLT disabled. Not acting...\n");
+    fprintf(outf,"Defered HLT disabled. Not acting...\n");
   }
-  printf ("==================\n");
-  fflush(stdout);
+  fprintf(outf,"==================\n");
+  fflush(outf);
   dim_unlock();
 }
 
@@ -234,13 +233,13 @@ void DefHltInfoHandler::infoHandler()
       myNode* nod = new myNode(nname);
       m_Equalizer->m_AllNodes.insert(std::make_pair(nname,nod));
     }
-//    printf("%s: ",(*i).name);
+//    fprintf(outf,"%s: ",(*i).name);
     int nfiles=0;
     for (_R::const_iterator j = runs.begin();j!= runs.end();j=runs.next(j))
     {
       nfiles += (*j).second;
     }
-//    printf("%d Files\n",nfiles);
+//    fprintf(outf,"%d Files\n",nfiles);
     if (nfiles>0)
     {
       nit = m_Equalizer->m_Nodes.find(nname);
@@ -319,10 +318,10 @@ public:
       sf_mesg.append(cmd);
 
 //      ::system(cmd);
-//      printf("\tMEPRX on Node %s (%s) value %d\n",(*i).first.c_str(),svcname.c_str(),(*i).second);
+//      fprintf(outf,"\tMEPRX on Node %s (%s) value %d\n",(*i).first.c_str(),svcname.c_str(),(*i).second);
     }
     DimClient::sendCommandNB(endisSvc.c_str(),(void*)(sf_mesg.c_str()),sf_mesg.size());
-    printf("message to Subfarm %s:\n%s\n",(*fit).first.c_str(),sf_mesg.c_str());
+//    printf("message to Subfarm %s:\n%s\n",(*fit).first.c_str(),sf_mesg.c_str());
   }
 //  ::sleep(5);
 //  ::exit(0);
@@ -354,6 +353,7 @@ public:
       case 2:
       {
         ableAll(1);
+        ::sleep(5);
         ::exit(0);
       }
 
@@ -363,6 +363,14 @@ public:
 
 int main(int argc, char **argv)
 {
+  outf = fopen("/group/online/HLTFileEqualizer.log","a+");
+  fprintf(outf,"HLTFileEqualizer starting at...");
+  {
+    time_t rawtime;
+    time(&rawtime);
+    fprintf(outf,"%s",asctime(localtime(&rawtime)));
+  }
+
   DimClient::setDnsNode("ecs03");
   DimServer::setDnsNode("ecs03");
   HLTFileEqualizer elz;
@@ -380,6 +388,7 @@ int main(int argc, char **argv)
   DimInfo *defstate=new DimInfo("RunInfo/LHCb/DeferHLT",m_DefState);
   elz.m_DefStateInfo = defstate;
   ExitCommand EnableandExit("HLTFileEqualizer/EnableAndExit",(char*)"I",&elz.m_AllNodes);
+  fflush(outf);
   while (1)
   {
     sleep (60);
