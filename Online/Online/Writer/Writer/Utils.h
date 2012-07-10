@@ -31,9 +31,9 @@ namespace LHCb {
         m_bytesRead = 0;
       }
       int getBytesRead() { return m_bytesRead; }
-      int nbRecv();
+      int nbRecv(MsgStream *log);
       int nbRecvTimeout();
-      int nbSend();
+      int nbSend(MsgStream *log);
       int nbSendTimeout();
   };
 

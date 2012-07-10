@@ -55,8 +55,8 @@ void SendThread::start()
     *m_log << MSG::FATAL << "Could not create send thread " << errno << endmsg;
     return;
   }
-  *m_log << MSG::INFO << " Writer " << getpid()
-         <<" Send thread stared" << endmsg;
+  *m_log << MSG::INFO << "Writer " << getpid()
+         <<" Send thread started" << endmsg;
 }
 
 /**
@@ -89,7 +89,7 @@ void SendThread::stop(void) {
     return;
   }
   *m_log << MSG::INFO << " Writer " << getpid()
-         << "Send thread stopped " << endmsg;
+         << " Send thread stopped." << endmsg;
 }
 
 /** Processes elements from the send queue.
@@ -128,7 +128,7 @@ int SendThread::processSends(void)
 
 //    static unsigned int dbg_CountAgain =0; //XXX
 
-    ret = bif->nbSend();
+    ret = bif->nbSend(m_log);
     if(ret == totalSize) {
     	if ( cmd_to_send->cmd == CMD_CLOSE_FILE)
     		 *m_log << MSG::INFO << "CLOSE CMD Send was successful" << endmsg;

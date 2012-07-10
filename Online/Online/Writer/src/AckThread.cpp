@@ -54,7 +54,7 @@ void AckThread::start()
     return;
   }
   *m_log << MSG::INFO << "Writer " << getpid()
-         << "Started Ack Thread." << endmsg;
+         << " Ack Thread started." << endmsg;
 }
 
 /**
@@ -86,7 +86,7 @@ void AckThread::stop(void)
     return;
   }
   *m_log << MSG::INFO << "Writer " << getpid()
-         << "Stopped Ack Thread." << endmsg;
+         << " Ack Thread stopped." << endmsg;
 }
 
 
@@ -129,7 +129,7 @@ start:
       bif = new BIF(m_sockFd, &ackHeaderBuf, sizeof(struct ack_header));
     }
 
-    ret = bif->nbRecv();
+    ret = bif->nbRecv(m_log);
     if(ret == BIF::AGAIN) {
       continue;
     } else if(ret == BIF::DISCONNECTED) {

@@ -86,7 +86,7 @@ int Utils::connectToAddress(struct sockaddr_in *destAddr,
 
   if(ret != 0) {
     std::stringstream str;
-    str << "Failed to open socket to adr: "
+    str << "Failed to open socket to adrr: "
 	<< std::hex << ntohl(destAddr->sin_addr.s_addr)
 	<< " Errno is: " << std::dec << errno << strerror(errno)  <<std::endl;
     throw std::runtime_error(str.str());
@@ -105,9 +105,10 @@ int Utils::closeSocket(int *sock, MsgStream * /*log*/) {
 /**
  * Receives data into the buffer and sleeps till pol
  */
-int BIF::nbRecv()
+int BIF::nbRecv(MsgStream *log)
 {
   int ret;
+//  std::stringstream str;
 
   struct pollfd fds[1];
   fds[0].fd = m_sockFd;
@@ -115,17 +116,23 @@ int BIF::nbRecv()
   fds[0].revents = 0;
 
   ret = poll(fds, 1, POLL_TIMEOUT_MSEC);
+  int errout = (int)errno;
   if(ret == 0) {
     return AGAIN;
   } else if(ret < 0 && (errno == EAGAIN || errno == EINTR || errno == ENOENT)) {
     return AGAIN;
   }else if(ret < 0) {
+	  *log << MSG::WARNING << "ret <=0 on poll(), ERRNO is: "<< errout << endmsg;
+//	  	  str << "ret <=0 on poll(), ERRNO is: "<< errout <<std::endl;
     return DISCONNECTED;
   } else if(fds[0].revents & POLLIN) {
     ret = ::recv(m_sockFd, m_data+m_bytesRead, m_bufLen-m_bytesRead, MSG_DONTWAIT);
     if(ret < 0 && (errno == EAGAIN || errno == EINTR || errno == ENOENT)) {
       return AGAIN;
     } else if(ret == 0 || ret < 0) {
+    	errout = (int)errno;
+    	*log << MSG::WARNING << " ret = " << ret <<" m_bufLen = " << m_bufLen << " m_bytesRead = " << m_bytesRead << " on recv(), ERRNO is: "<< errout << endmsg;
+//    	str << "ret <=0 on recv(), ERRNO is: "<< errout <<std::endl;
       return DISCONNECTED;
     } else {
       m_bytesRead += ret;
@@ -177,13 +184,20 @@ int BIF::nbSendTimeout()
  * Sends data from the buffer and returns only when the data is completely
  * sent, except in case the thread is stopped.
  */
-int BIF::nbSend()
+int BIF::nbSend(MsgStream *log)
 {
   int ret = ::send(m_sockFd, m_data+m_bytesRead, m_bufLen-m_bytesRead, MSG_DONTWAIT);
+  int errout = (int)errno;
   if(ret < 0 && (errno == EAGAIN || errno == EINTR))
     return AGAIN;
   else if(ret <= 0)
+  {
+//	  std::stringstream str;
+//	  str << "ret <=0 on send(), ERRNO is: "<< errout <<std::endl;
+	  *log << MSG::WARNING << "ret <=0 on send(), ERRNO is: "<< errout << endmsg;
+//	*log << MSG::WARNING << "ret <=0, ERRNO is: " << errno << endmsg;
     return DISCONNECTED;
+  }
   else
     m_bytesRead += ret;
 

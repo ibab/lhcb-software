@@ -1,5 +1,6 @@
 #ifdef BUILD_WRITER
 
+#include <netdb.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <sys/poll.h>
@@ -58,10 +59,10 @@ FailoverMonitor::FailoverMonitor(std::string &serverAddr, int serverPort,
 }
 
 FailoverMonitor::~FailoverMonitor() {
-    delete m_log; 
+    delete m_log;
     shutdown(m_sockFd, SHUT_RDWR);
     close(m_sockFd);
-    
+
 }
 
 /**
@@ -106,6 +107,7 @@ void FailoverMonitor::connectToAlternative(void)
     }
 
     m_currState++;
+//    *m_log << MSG::INFO << "m_currState address: " << m_currState->state.n_ipaddr << endmsg;
     if(m_currState == m_nodeStates.end())
       m_currState = m_nodeStates.begin();
 
@@ -171,6 +173,7 @@ int FailoverMonitor::getAddressList(std::list<NodeState*> &nodeStates)
       std::list<NodeState*>::iterator ni;
       for(ni = nodeStates.begin(); ni != nodeStates.end(); ni++) {
         NodeState *ns = *ni;
+        *m_log << MSG::INFO << "node list address: " << IP((*ni)->state.n_ipaddr) << endmsg;
         delete ns;
       }
       delete nState;
@@ -213,7 +216,7 @@ void FailoverMonitor::start(void)
     throw std::runtime_error("Could not start the failover service thread.");
   }
   *m_log << MSG::INFO << WHERE
-         << "Started Failover thread."
+         << " Failover thread started."
          << endmsg;
 }
 
@@ -228,7 +231,7 @@ void FailoverMonitor::listenForUpdates(void)
      * indicate that a server has either joined or left.
      */
     BIF recvBif(m_sockFd, &fmsg, sizeof(struct failover_msg));
-    ret = recvBif.nbRecv();
+    ret = recvBif.nbRecv(m_log);
     if(ret == BIF::DISCONNECTED) {
       if(m_conn->failover(FAILOVER_THREAD) == KILL_THREAD)
         break;
