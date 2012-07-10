@@ -268,6 +268,10 @@ StatusCode MonitorSvc::i_start()
 //  setProperties();
 //  dis_set_debug_on();
   DimServer::autoStartOff();
+  if (m_MonSys != &MonSys::m_instance())
+  {
+    m_MonSys = &MonSys::m_instance();
+  }
   if (m_CntrMgr != 0)
   {
 //    //printf("In STARTS Method... Counter Manager present... Closing it...\n");
