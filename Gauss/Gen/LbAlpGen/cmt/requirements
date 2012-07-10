@@ -40,7 +40,7 @@ application       AlpGenZbb   Main/AlpGen.cpp      \
                               Main/alpgen_main.F   \
                               Main/pyr.F           \
                               Main/dummy.F         \
-                              $(alpgen_author_dir)/zqqwork/zqqusr.f \
+                              zqq/*.F \
                               $(alpgen_author_dir)/zqqlib/zqq.f
 
 # =============== standard patterns ===========================================
@@ -58,11 +58,11 @@ path_append PATH ${LBALPGENROOT}/scripts
 private           
 macro_append  AlpGenFragmlinkopts  $(Boost_linkopts_program_options)
 macro_prepend LbAlpGen_linkopts " -Wl,--no-as-needed "
-end_private
 
-private 
 macro_prepend fincludes $(ppcmd)"$(alpgen_author_dir)"
 
+end_private
 # =============================================================================
+
 # The END 
 # =============================================================================

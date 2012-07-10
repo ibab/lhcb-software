@@ -5,6 +5,9 @@
 ! Purpose     : read ALPGEN-generated partonic level events 
 ! -----------------------------------------------------------------------------
 
+! 2012-07-10 - Stephane Tourneur
+ - Add the condition njets>1 to execute the aleana function in zqqusr.F (This fixes the bug of AlpGen crashing for Z+QQ + 0 or 1 jet) 
+
 ! 2011-10-14 - Gloria Corti
  - Use alpgen from LCG_GeneratorsInterfaces
 
