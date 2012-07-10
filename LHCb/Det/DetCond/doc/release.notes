@@ -4,6 +4,12 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2012-07-10 - Patrick Koppenburg
+ - Bug: https://savannah.cern.ch/bugs/?94454
+   . Allow _configureDBSnapshot to work without UseOracle = True statement
+   . Remove MagneticFieldSvc().UseSetCurrent = True that should be set
+     in the application's configuration.
+
 !========================= DetCond v12r25 2012-06-25 =========================
 ! 2012-06-12 - Illya Shapoval
  - Configuration.py:

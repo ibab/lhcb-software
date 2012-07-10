@@ -321,8 +321,6 @@ class CondDB(ConfigurableUser):
     def _configureDBSnapshot(self):
 
         baseloc = self.getProp( "DBSnapshotDirectory" )
-        # hack to allow us to change connectionstrings...
-        self.UseOracle = True             # needed?
         self.DisableLFC = True
 
         # Set alternative connection strings and tags
@@ -345,9 +343,6 @@ class CondDB(ConfigurableUser):
             self.Tags[part] = tag[part]
 
         # Set the location of the Online conditions
-        from Configurables import MagneticFieldSvc
-        MagneticFieldSvc().UseSetCurrent = True
-
         if self.getProp('EnableRunChangeHandler') :
             online_xml = '%s/%s/online_%%d.xml' % (baseloc, self.getProp('PartitionName')[0:4] )
             from Configurables import RunChangeHandlerSvc
@@ -410,7 +405,7 @@ class CondDB(ConfigurableUser):
 
 
         # Import SQLDDDB specific info
-        if self.getProp("UseOracle"):
+        if self.getProp("UseOracle") or self.getProp("UseDBSnapshot"):
             importOptions("$SQLDDDBROOT/options/SQLDDDB-Oracle.py")
             if self.getProp("DisableLFC"):
                 COOLConfSvc(UseLFCReplicaSvc = False)
