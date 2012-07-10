@@ -685,6 +685,10 @@ class Brunel(LHCbConfigurableUser):
                 , "ONLINE"  : 'fake'
                 }
 
+        # https://savannah.cern.ch/bugs/?94454#comment12
+        from Configurables import MagneticFieldSvc
+        MagneticFieldSvc().UseSetCurrent = True
+
         cdb = CondDB()
         cdb.Tags = tag
         cdb.setProp('IgnoreHeartBeat', True)
