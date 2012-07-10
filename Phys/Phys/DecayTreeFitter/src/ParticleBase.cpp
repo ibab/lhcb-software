@@ -11,6 +11,7 @@
 #include "RecoTrack.h"
 #include "RecoPhoton.h"
 #include "Resonance.h"
+#include "MissingParticle.h"
 #include "FitParams.h"
 #include "Configuration.h"
 
@@ -131,10 +132,13 @@ namespace DecayTreeFitter
         rc = new RecoTrack(particle,mother) ;  // reconstructed track
       else if( hascalo )
         rc = new RecoPhoton(particle,mother) ; // reconstructed photon
-      else if( isresonance )
-        rc = new RecoResonance(particle,mother) ;
-      else
-        rc = new RecoComposite(particle,mother) ;
+      else if( validfit ) {  // fitted composites w/o daughters?
+        if( isresonance )
+          rc = new RecoResonance(particle,mother) ;
+        else
+          rc = new RecoComposite(particle,mother) ;
+      } else // missing particle! 
+        rc = new MissingParticle(particle,mother) ;
     } else { // 'internal' particles
       if( validfit /*|| isconversion*/ ) {  // fitted composites
         if( isresonance )

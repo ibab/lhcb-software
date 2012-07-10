@@ -117,6 +117,11 @@ namespace DecayTreeFitter
       std::swap(add,m_hasMassConstraint) ;
       return add != m_hasMassConstraint ;
     }
+    // set the mass of the mass constraint (use with care!)
+    void setMassConstraint( double mass ) {
+      m_hasMassConstraint = true ;
+      m_pdtMass = mass ;
+    }
 
     ChiSquare chiSquare( const FitParams& params ) const ;
 
