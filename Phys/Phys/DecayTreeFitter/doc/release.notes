@@ -8,6 +8,10 @@
 ! http://www.slac.stanford.edu/spires/find/hep/www?eprint=physics/0503191
 !-----------------------------------------------------------------------------
 
+! 2012-07-10 - Wouter Hulsbergen
+- revive functionality to fit with missing particles
+- add option to constrain mass to something else than pdg mass
+
 !========================= DecayTreeFitter v1r12p1 2012-06-28 =========================
 
 ! 2012-05-24 - Wouter Hulsbergen
