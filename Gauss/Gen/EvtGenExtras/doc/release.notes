@@ -4,6 +4,10 @@
 ! Purpose     : Repository of EvtGen models with external linkages
 !-----------------------------------------------------------------------------
 
+! 2012-07-10 - Aurelien Martens
+ - Added new model for 3body decays to be generated flat on the so-called
+   square Dalitz plot (see PRD72 052002 (2005))
+
 ! 2012-07-09 - Nikolai Nikitin
  - Added new model for Bq -> 4 leptons decay (BQTOLLLLHYPERCP) with light sgoldstino
 
