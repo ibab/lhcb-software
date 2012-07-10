@@ -64,6 +64,7 @@ MonitorSvc::MonitorSvc(const string& name, ISvcLocator* sl)
   m_CntrMgr = 0;
   m_RateMgr = 0;
   m_StatusService = 0;
+  m_monsysrecover = 0;
   declareProperty("UniqueServiceNames", m_uniqueServiceNames = 0);
   declareProperty("disableMonRate", m_disableMonRate = 0);
   declareProperty("disableDimPropServer", m_disableDimPropServer = 0);
@@ -271,6 +272,7 @@ StatusCode MonitorSvc::i_start()
   if (m_MonSys != &MonSys::m_instance())
   {
     m_MonSys = &MonSys::m_instance();
+    m_monsysrecover++;
   }
   if (m_CntrMgr != 0)
   {

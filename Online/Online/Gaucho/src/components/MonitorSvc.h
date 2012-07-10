@@ -173,6 +173,7 @@ public:
   int m_disableDimPropServer;
   int m_disableDimCmdServer;
   bool m_started;
+  int m_monsysrecover;
   //int m_disableDimRcpGaucho;
 
   int m_disableMonObjectsForBool;

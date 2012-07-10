@@ -72,6 +72,10 @@ void StatusService::serviceHandler()
   {
     statusline.append("Monitor Service m_started FALSE ");
   }
+  int msysrec = m_monitorSvc->m_monsysrecover;
+  char str[255];
+  sprintf(str,"Monitor System Pointer recovered %d times ",msysrec);
+  statusline.append(str);
   switch (msvc_state)
   {
     case Gaudi::StateMachine::OFFLINE:
