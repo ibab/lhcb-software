@@ -3,6 +3,13 @@ Package Coordinator : Eric van Herwijnen
 Purpose     : LHCb HLT application
 
 
+! 2012-07-10 - Patrick Koppenburg
+ - Bug: https://savannah.cern.ch/bugs/?94454
+   . Allow _configureDBSnapshot to work without UseOracle = True statement
+   . Remove MagneticFieldSvc().UseSetCurrent = True that should be set
+     in the application's configuration.
+   This requires Det/DetCond 142544
+
 ! 2012-07-4 - Eric van Herwijnen
  - Set MonitorSvc.CounterUpdateInterval = 15 in Configuration.py to prevent
  rate trendplots from being 0

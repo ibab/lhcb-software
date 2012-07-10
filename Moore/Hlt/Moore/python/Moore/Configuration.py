@@ -246,14 +246,15 @@ class Moore(LHCbConfigurableUser):
         conddb = CondDB()
         conddb.Tags = tag
         # hack to allow us to chance connectionstrings...
-        conddb.UseOracle = True
-        conddb.DisableLFC = True
         conddb.setProp('IgnoreHeartBeat',self.getProp('IgnoreDBHeartBeat')  )
         self.setOtherProps( conddb, [ 'UseDBSnapshot',
                                       'DBSnapshotDirectory',
                                       'PartitionName',
                                       'EnableRunChangeHandler'])
                 
+        # https://savannah.cern.ch/bugs/?94454#comment12
+        from Configurables import MagneticFieldSvc
+        MagneticFieldSvc().UseSetCurrent = True
 
     def _configureInput(self):
         files = self.getProp('inputFiles')
