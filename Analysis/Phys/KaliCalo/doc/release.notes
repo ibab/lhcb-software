@@ -4,6 +4,9 @@
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
 
+! 2012-07-10 - Daria Savrina
+ - removed post-configuration from KaliPi0Conf
+
 !========================= KaliCalo v4r12p2 2012-04-12 =========================
 
 ! 2012-04-12 - Daria Savrina

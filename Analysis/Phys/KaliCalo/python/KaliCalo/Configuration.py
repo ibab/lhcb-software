@@ -724,6 +724,11 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         #dod = DataOnDemandSvc  ( Dump = True )
         dod = DataOnDemandSvc  ( Dump = False )
 
+        ## 10. postConfig
+        if not self.getProp('FirstPass'):
+            appendPostConfigAction ( action )
+
+
 
 ## =============================================================================
 ## define "typical" first pass configuration  
@@ -806,10 +811,6 @@ def  action ( ) :
         if iseq and hasattr ( iseq , 'Members' ) :
             iseq.Members = []
             _log.warning ( 'KaliPi0Conf: Sequence %s is cleared ' % seq )
-            
-# =============================================================================
-## Important: use Post Config action! 
-appendPostConfigAction ( action )
 
 ## temporary solve the problem with atexit/__del__ for AppMgr 
 def _KaliAtExit_ () :
