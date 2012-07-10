@@ -6,6 +6,9 @@
 
 !========================= StrippingSelections v3r14 2012-06-27 =========================
 
+! 2012-07-10 - Mika Vesterinen
+ - fix duplication of some D0 lines in StrippingCharmFromBSemi. Merge many D filters into single functions.
+
 ! 2012-06-27 - Chris Jones
  - Do not 'addTool' with the unsafe () operator
 
