@@ -64,6 +64,14 @@ void StatusService::serviceHandler()
   {
     statusline.append("Monitor Service i_stop called ");
   }
+  if (m_monitorSvc->m_started)
+  {
+    statusline.append("Monitor Service m_started TRUE ");
+  }
+  else
+  {
+    statusline.append("Monitor Service m_started FALSE ");
+  }
   switch (msvc_state)
   {
     case Gaudi::StateMachine::OFFLINE:

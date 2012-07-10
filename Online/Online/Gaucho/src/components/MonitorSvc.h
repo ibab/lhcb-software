@@ -130,7 +130,6 @@ public:
   //void resetHistos(bool saveHistos);
 
 private:
-  bool m_started;
   StatusService *m_StatusService;
   bool m_expandCounterServices;
   bool m_saveInter;
@@ -173,6 +172,7 @@ public:
   int m_disableMonRate;
   int m_disableDimPropServer;
   int m_disableDimCmdServer;
+  bool m_started;
   //int m_disableDimRcpGaucho;
 
   int m_disableMonObjectsForBool;
