@@ -80,6 +80,8 @@ namespace DecayTreeFitter
     // ========================================================================
     /// Add or remove a mass constraint
     void setMassConstraint ( const LHCb::Particle&   cand , bool add = true ) ;
+    /// Add a constraint to a mass different from the property table mass
+    void setMassConstraint ( const LHCb::Particle&   cand , double mass ) ;
     /// Add or remove a mass constraintfor a certain ParticleID
     void setMassConstraint ( const LHCb::ParticleID& pid  , bool add = true ) ;
     /// Fit the decay tree

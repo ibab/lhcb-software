@@ -43,6 +43,7 @@ namespace DecayTreeFitter
   void
   DecayChain::initConstraintList()
   {
+    if( m_dim==0 ) m_mother->updateIndex(m_dim) ;
     m_constraintlist.clear() ;
     m_mother->addToConstraintList(m_constraintlist,0) ;
 
@@ -62,7 +63,8 @@ namespace DecayTreeFitter
 	m_mergedconstraintlist.push_back(&m_mergedconstraint) ;
     }
     if(vtxverbose>=2) {
-      std::cout << "DecayChain::initConstraintList(): " << m_constraintlist.size() << " " << m_mergedconstraintlist.size()<< std::endl ;
+      std::cout << "DecayChain::initConstraintList(): " << m_constraintlist.size() << " " 
+		<< m_mergedconstraintlist.size()<< std::endl ;
       printConstraints() ;
     }
   }
@@ -71,6 +73,9 @@ namespace DecayTreeFitter
   DecayChain::init(FitParams& par) 
   {
     ErrCode status ;
+
+    if( m_dim==0 ) m_mother->updateIndex(m_dim) ;
+    if( par.dim() != m_dim ) par = FitParams(m_dim) ;
 
     // set everything to 0
     par.resetPar() ;
@@ -152,8 +157,21 @@ namespace DecayTreeFitter
   DecayChain::setMassConstraint( const LHCb::Particle& bc, bool add)
   {
     ParticleBase* part = const_cast<ParticleBase*>(locate(bc)) ;
-    if(part && part->setMassConstraint(add))
+    if(part && part->setMassConstraint(add)) {
+      m_dim = 0 ;
       m_constraintlist.clear() ;
+    }
+  }
+
+  void
+  DecayChain::setMassConstraint( const LHCb::Particle& bc, double mass)
+  {
+    ParticleBase* part = const_cast<ParticleBase*>(locate(bc)) ;
+    if(part) { 
+      part->setMassConstraint(mass) ;
+      m_dim = 0 ;
+      m_constraintlist.clear() ;
+    }
   }
   
   void
@@ -166,7 +184,10 @@ namespace DecayTreeFitter
         it != particles.end() ; ++it)
     { changed |= (*it)->setMassConstraint(add) ; }
     //
-    if (changed) { m_constraintlist.clear() ; }
+    if (changed) { 
+      m_dim = 0 ;
+      m_constraintlist.clear() ; 
+    }
   }
   
   int 
