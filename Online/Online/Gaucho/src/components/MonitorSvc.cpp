@@ -112,6 +112,7 @@ MonitorSvc::~MonitorSvc()
 
 StatusCode MonitorSvc::initialize()
 {
+  m_StatusService = 0;
   MsgStream msg(msgSvc(),"MonitorSvc");
   StatusCode sc = Service::initialize();
   if (m_CounterInterval == 0) m_CounterInterval = m_updateInterval;
