@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2012-07-10 - Chris Jones
+ - Revert a small change to the histograms IDs used in HPDHitsMoni, as it 
+   unintentionally made things complicated in the run-by-run calibration.
+
 !========================= RichRecQC v2r58 2012-06-25 =========================
 ! 2012-06-04 - Marco Cattaneo
  - Remove L0DUFromRawAlg and HltDecReportsDecoder from L0 Filter, now done in 

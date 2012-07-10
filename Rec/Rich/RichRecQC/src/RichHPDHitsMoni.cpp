@@ -127,8 +127,7 @@ StatusCode HPDHitsMoni::execute()
         {
           std::ostringstream HPD1,hpd1;
           HPD1 << "# hits " << hpd << " " << detInfo.str();
-          hpd1 << "PDs/NumHits/pd-" << hpd.rich() << "-" << Rich::text(hpd.rich(),hpd.panel())
-               << "-Col" << hpd.pdCol() << "_" << hpd.pdNumInCol();
+          hpd1 << "PDs/NumHits/CopyNum-" << copyN;
           richHisto1D( HID(hpd1.str()), HPD1.str(),
                        -0.5,100.5,101 ) -> fill( (double)rawIDs.size() );
         }
@@ -141,8 +140,7 @@ StatusCode HPDHitsMoni::execute()
         {
           std::ostringstream HPD2,hpd2;
           HPD2 << "Hit Map "   << hpd << " " << detInfo.str();
-          hpd2 << "PDs/HitMap/" << hpd.rich() << "-" << Rich::text(hpd.rich(),hpd.panel())
-               << "-Col" << hpd.pdCol() << "_" << hpd.pdNumInCol();
+          hpd2 << "PDs/HitMap/CopyNum-" << copyN;
           for ( LHCb::RichSmartID::Vector::const_iterator iR = rawIDs.begin();
                 iR != rawIDs.end(); ++iR )
           {
