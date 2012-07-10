@@ -68,6 +68,7 @@ use VeloGauss           v2r4      Velo
 use MuonMoniSim         v2r6      Muon
 use BcmMoniSim          v1r2      Bcm
 use BlsMoniSim          v1r1      Bls
+use VLMoniSim           v1r0      VL
 
 # GMDL
 #use GDML                v1r240p0  Sim
