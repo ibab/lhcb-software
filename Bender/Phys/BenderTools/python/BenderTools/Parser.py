@@ -206,6 +206,19 @@ def dataType ( files ) :
             
     return  dtype,simu,ext.upper() 
 
+# =============================================================================
+## try to extract more information from file names 
+def hasInFile ( files , pattern ) :
+    """
+    extract the data type,
+    simulaton type and input type from file name 
+    """
+    #
+    if isinstance ( files  , str ) : files = [ files ]
+    #
+    for f in files  :
+        if   0 <= f.find ( pattern ) : return True
+    return False
 
 # =============================================================================
 if __name__ == '__main__' :

@@ -98,7 +98,7 @@ markEvent = fireIncident
 #  #
 #  ##Configurables:
 #  #
-#  from Bender.Utils import copyGoodEvents
+#  from BenderTools.GoodEvents import copyGoodEvents
 #  copyGoodEvents ( filename = 'SelectedEvents' )
 #
 #  ...
@@ -131,7 +131,7 @@ def writeEvent ( name = "GoodEvent" ) :
     #
     ##Configurables:
     #
-    from Bender.Utils import copyGoodEvents
+    from BenderTools.GoodEvents import copyGoodEvents
     copyGoodEvents ( filename = 'SelectedEvents' )
     
     ...
@@ -185,7 +185,7 @@ def writeEvent ( name = "GoodEvent" ) :
 #  #
 #  ##Configurables:
 #  #
-#  from Bender.Utils import copyGoodEvents
+#  from BenderTools.GoodEvents import copyGoodEvents
 #  copyGoodEvents ( filename = 'SelectedEvents' )
 #
 #  @endcode 

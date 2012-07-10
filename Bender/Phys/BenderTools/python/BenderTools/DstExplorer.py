@@ -156,7 +156,8 @@ def configure ( options , arguments ) :
     ## get the file type for the file extension
     #
     from BenderTools.Parser import dataType
-    dtype, simu, ext = dataType ( arguments ) 
+    files = arguments 
+    dtype, simu, ext = dataType ( files ) 
 
     if dtype and dtype != options.DataType :
         logger.info ( 'Redefine DataType from  %s to %s ' % ( options.DataType, dtype ) )
@@ -180,13 +181,35 @@ def configure ( options , arguments ) :
     if options.MicroDST or 'mdst' == ext or 'MDST' == ext or 'uDST' == ext :
         logger.info ( 'Define input type as micro-DST' )
         daVinci.InputType = 'MDST'
+
+    #
+    ## try to guess RootInTES
+    #
+    from BenderTools.Parser import hasInFile 
+    if   hasInFile ( files , 'CHARM.MDST'    ) and not options.RootInTES :
+        options.RootInTES = '/Event/Charm'
+        logger.info ('RootInTES is set according to CHARM.MDST')
+        DaVinci.InputType = 'MDST'        
+    elif hasInFile ( files , 'LEPTONIC.MDST' ) and not options.RootInTES :
+        options.RootInTES = '/Event/Leptonic'
+        logger.info ('RootInTES is set according to LEPTONIC.MDST')
+        DaVinci.InputType = 'MDST'
+    elif hasInFile ( files , 'BHADRON.MDST'  ) and not options.RootInTES :
+        options.RootInTES = '/Event/Bhadron'
+        logger.info ('RootInTES is set according to BHADRON.MDST')
+        DaVinci.InputType = 'MDST'
+    elif hasInFile ( files , 'PID.MDST'  ) and not options.RootInTES :
+        options.RootInTES = '/Event/PID'
+        logger.info ('RootInTES is set according to PID.MDST')
+        DaVinci.InputType = 'MDST'
+
+    if options.RootInTES and  0  != options.RootInTES.find ( '/Event' ) :
+        options.RootInTES = '/Event/' + options.RootInTES
         
     if options.RootInTES and '/' == options.RootInTES[-1] :
         options.RootInTES = options.RootInTES[:-1]
-    if options.RootInTES and  0  != options.RootInTES.find ( '/Event/' ) :
-        options.RootInTES = '/Event/' + options.RootInTES
-        
-    if options.RootInTES :
+
+    if options.RootInTES and '/Event' != options.RootInTES  : 
         from BenderTools.MicroDST import uDstConf 
         uDstConf(options.RootInTES)
    

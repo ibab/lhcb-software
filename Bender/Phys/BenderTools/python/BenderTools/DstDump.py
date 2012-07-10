@@ -97,7 +97,7 @@ if '__main__' == __name__ :
         )
 
     parser.add_option (
-        '-p'                         ,
+        '-z'                         ,
         '--summary'                  ,
         dest    = 'SummaryFile'      ,
         help    = "Output file with dst-summary" ,
@@ -166,12 +166,7 @@ if '__main__' == __name__ :
     
     if options.Simulation : from Bender.MainMC   import *
     else                  : from Bender.Main     import *
-
     
-    if options.RootInTES and 0 != options.RootInTES.find ( '/Event/' ) :
-        options.RootInTES = '/Event/' + options.RootInTES 
-
-
     #
     ## instantiate the application manager
     #
