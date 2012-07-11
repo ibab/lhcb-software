@@ -6,6 +6,9 @@
 
 !========================= StrippingSelections v3r14 2012-06-27 =========================
 
+! 2012-07-11 - Ricardo Vazquez Gomez
+ - change VertexFitter to ParticleCombiners in the Beauty2XGamma Stripping following savanah bug 31438
+
 ! 2012-07-10 - Mika Vesterinen
  - fix duplication of some D0 lines in StrippingCharmFromBSemi. Merge many D filters into single functions.
 
