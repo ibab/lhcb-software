@@ -4,6 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+
+! 2012-07-11 - Paul Szczypka
+  - Rewrite of python/Gauss/Configurable.py in order to more easily replace
+    detectors with upgrade versions.
+
 ! 2012-06-06 - Gloria Corti
  - Introduce new script by Emmanouil Kiagias to make qmtest files from a 
    template. The script is added as a make action so that they will be made
