@@ -65,8 +65,6 @@ void EvtFlatSqDalitz::init(){
   //check there are 3 daughters
   checkNDaug(3);
 
-  //We expect B decays
-  checkSpinParent(EvtSpinType::SCALAR);
 }
 
 

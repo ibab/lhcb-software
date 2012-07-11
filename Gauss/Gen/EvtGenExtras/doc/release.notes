@@ -4,6 +4,9 @@
 ! Purpose     : Repository of EvtGen models with external linkages
 !-----------------------------------------------------------------------------
 
+! 2012-07-11 - Aurelien Martens
+ - remove spin checking for EvtFlatSqDalitz
+
 ! 2012-07-10 - Aurelien Martens
  - Added new model for 3body decays to be generated flat on the so-called
    square Dalitz plot (see PRD72 052002 (2005))
