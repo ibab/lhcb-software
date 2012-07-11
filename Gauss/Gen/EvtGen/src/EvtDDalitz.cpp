@@ -138,6 +138,13 @@ void EvtDDalitz::init(){
     if ( d2==K0 && d3==KP && d1==KM ) {_flag=5;_d1=1;_d2=0;_d3=2;}
     if ( d3==K0 && d1==KP && d2==KM ) {_flag=5;_d1=2;_d2=1;_d3=0;}
     if ( d3==K0 && d2==KP && d1==KM ) {_flag=5;_d1=2;_d2=0;_d3=1;}   
+
+    if ( d1==PIM && d2==PIP && d3==PI0 ) { _flag=12;_d1=0;_d2=1;_d3=2;}
+    if ( d1==PIM && d3==PIP && d2==PI0 ) { _flag=12;_d1=0;_d2=2;_d3=1;}
+    if ( d2==PIM && d1==PIP && d3==PI0 ) { _flag=12;_d1=1;_d2=0;_d3=2;}
+    if ( d2==PIM && d3==PIP && d1==PI0 ) { _flag=12;_d1=1;_d2=2;_d3=0;}
+    if ( d3==PIM && d1==PIP && d2==PI0 ) { _flag=12;_d1=2;_d2=0;_d3=1;}
+    if ( d3==PIM && d2==PIP && d1==PI0 ) { _flag=12;_d1=2;_d2=1;_d3=0;}
   }
   if ( parnum == D0B ) {
     //look for either a K+ pi- pi0 or K0 pi+ pi-
@@ -189,7 +196,13 @@ void EvtDDalitz::init(){
     if ( d2==K0 && d3==KP && d1==KM ) {_flag=5;_d1=1;_d2=2;_d3=0;}
     if ( d3==K0 && d1==KP && d2==KM ) {_flag=5;_d1=2;_d2=0;_d3=1;}
     if ( d3==K0 && d2==KP && d1==KM ) {_flag=5;_d1=2;_d2=1;_d3=0;}
-    
+
+    if ( d1==PIP && d2==PIM && d3==PI0 ) { _flag=12;_d1=1;_d2=0;_d3=2;}
+    if ( d1==PIP && d3==PIM && d2==PI0 ) { _flag=12;_d1=2;_d2=0;_d3=1;}
+    if ( d2==PIP && d1==PIM && d3==PI0 ) { _flag=12;_d1=0;_d2=1;_d3=2;}
+    if ( d2==PIP && d3==PIM && d1==PI0 ) { _flag=12;_d1=2;_d2=1;_d3=0;}
+    if ( d3==PIP && d1==PIM && d2==PI0 ) { _flag=12;_d1=0;_d2=2;_d3=1;}
+    if ( d3==PIP && d2==PIM && d1==PI0 ) { _flag=12;_d1=1;_d2=2;_d3=0;}    
   }
 
   if ( parnum == DP ) {
@@ -366,6 +379,7 @@ void EvtDDalitz::initProbMax() {
   if ( _flag==9 ) {setProbMax(1700.0);}
   if ( _flag==10 ) {setProbMax(1300.0);}
   if ( _flag==11 ) {setProbMax(2200.0);}
+  if ( _flag==12 ) {setProbMax(1000.0);}
 
 }
 
@@ -721,6 +735,36 @@ void EvtDDalitz::decay( EvtParticle *p){
         +  (DspipipiRes21.resAmpl() + DspipipiRes22.resAmpl()) + (DspipipiRes31.resAmpl() + DspipipiRes32.resAmpl())
         +  (DspipipiRes41.resAmpl() + DspipipiRes42.resAmpl())
         +  (DspipipiRes51.resAmpl() - DspipipiRes52.resAmpl());  //spin1
+  } 
+  
+  //D0 -> pi+pi-pi0
+  //PRL 99, 251801 (2007)
+  //arXiv:hep-ex/0703037
+  if(_flag==12) {
+    EvtResonance2 DpipipiRes1p(p4_p, moms2, moms3, 1.0, 0.0, 0.149, 0.775, 1, true);//rho+(770)
+    EvtResonance2 DpipipiRes1(p4_p, moms1, moms2, 0.588, 16.2, 0.149, 0.775, 1, true);//rho0(770)
+    EvtResonance2 DpipipiRes1m(p4_p, moms3, moms1, 0.714, -2.0, 0.149, 0.775, 1, true);//rho-(770)
+    EvtResonance2 DpipipiRes2p(p4_p, moms2, moms3, 0.21, -146.0, 0.400, 1.465, 1, true);//rho+(1450)
+    EvtResonance2 DpipipiRes2(p4_p, moms1, moms2, 0.33, 10.0, 0.400, 1.465, 1, true);//rho0(1450)
+    EvtResonance2 DpipipiRes2m(p4_p, moms3, moms1, 0.82, 16.0, 0.400, 1.465, 1, true);//rho-(1450)
+    EvtResonance2 DpipipiRes3p(p4_p, moms2, moms3, 2.25, -17.0, 0.250, 1.720, 1, true);//rho+(1700)
+    EvtResonance2 DpipipiRes3(p4_p, moms1, moms2, 2.51, -17.0, 0.250, 1.720, 1, true);//rho0(1700)
+    EvtResonance2 DpipipiRes3m(p4_p, moms3, moms1, 2.00, -50.0, 0.250, 1.720, 1, true);//rho-(1700)
+    EvtResonance2 DpipipiRes4(p4_p, moms1, moms2, 0.015, -59.0, 0.07, 0.980, 0);//f0(980)
+    EvtResonance2 DpipipiRes5(p4_p, moms1, moms2, 0.063, 156.0, 0.350, 1.370, 0);//f0(1370)
+    EvtResonance2 DpipipiRes6(p4_p, moms1, moms2, 0.058, 12.0, 0.109, 1.505, 0);//f0(1500)
+    EvtResonance2 DpipipiRes7(p4_p, moms1, moms2, 0.112, 51.0, 0.135, 1.720, 0);//f0(1720)
+    EvtResonance2 DpipipiRes8(p4_p, moms1, moms2, 1.04, -171.0, 0.185, 1.275, 2, true);//f2(1270)
+    EvtResonance2 DpipipiRes9(p4_p, moms1, moms2, 0.069, 8.0, 0.600, 0.400, 0);//sigma(400)
+    
+    double pi180inv = 1.0/EvtConst::radToDegrees;  
+    amp = EvtComplex(0.57*cos(-11*pi180inv),0.57*sin(-11*pi180inv))
+      + DpipipiRes1p.resAmpl() + DpipipiRes1.resAmpl() + DpipipiRes1m.resAmpl()
+      + DpipipiRes2p.resAmpl() + DpipipiRes2.resAmpl() + DpipipiRes2m.resAmpl()
+      + DpipipiRes3p.resAmpl() + DpipipiRes3.resAmpl() + DpipipiRes3m.resAmpl()
+      + DpipipiRes4.resAmpl() + DpipipiRes5.resAmpl() + DpipipiRes6.resAmpl()
+      + DpipipiRes7.resAmpl() + DpipipiRes8.resAmpl() + DpipipiRes9.resAmpl();
+    
   } 
   
   vertex(amp);

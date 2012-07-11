@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-07-11 - Frederic Dreyer and Marco Gersabeck
+ - Updated EvtDDalitz to contain Dalitz model for D0-->pi-pi+pi0.
+
 ! 2012-05-15 - John Back
  - Updated EvtD0gammaDalitz to deal with D mesons from neutral B->DK, 
    from Daniel Craik.
