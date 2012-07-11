@@ -62,6 +62,17 @@ void HLTFileEqualizer::Analyze()
   dim_lock();
   float av_files;
   float rms;
+  m_nnodes = 0;
+  m_nfiles = 0;
+  m_nfiles2 = 0;
+
+  for (myNodeMap::iterator nit=m_Nodes.begin();nit != m_Nodes.end();nit++)
+  {
+    myNode *nod = (*nit).second;
+    m_nfiles += nod->m_nofiles;
+    m_nfiles2 += nod->m_nofiles*nod->m_nofiles;
+    m_nnodes++;
+  }
   if (0 != m_nnodes)
   {
     av_files = float(this->m_nfiles)/this->m_nnodes;
