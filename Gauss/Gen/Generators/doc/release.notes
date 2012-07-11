@@ -5,7 +5,11 @@ $! $Id: release.notes,v 1.167 2010-09-19 09:03:47 robbep Exp $
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
-! 201206-06-11 - Alex Shires
+! 2012-07-22 - Gloria Corti
+ - Fix bug in FlatZSmearVertex where the location where to take the beam
+   parameters was empty. (merge from v11r4b)
+
+! 2012-06-11 - Alex Shires
  - update EvtGenInPhSpDecay to allow a configurable input file name
 
 ! 2012-05-27 - Patrick Robbe

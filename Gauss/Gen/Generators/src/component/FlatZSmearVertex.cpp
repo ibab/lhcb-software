@@ -41,6 +41,8 @@ FlatZSmearVertex::FlatZSmearVertex( const std::string& type,
 
     declareProperty( "BeamDirection", m_zDir = 1 );
 
+    declareProperty( "BeamParameters" ,
+                     m_beamParameters = LHCb::BeamParametersLocation::Default ) ;
 }
 
 //=============================================================================
