@@ -240,9 +240,12 @@ class XibcBuilder(LineBuilder) :
         # Set up global event cuts.
         # Conceptually these come first, although the place where they're
         # inserted into the line is at the bottom of the code.
-        _globalEventCuts = (
-          "(recSummary (LHCb.RecSummary.nLongTracks, 'Rec/Track/Long') < %(LongTrackGEC)s )"
-                                                                                  ) % config
+        _globalEventCuts = {
+					'Code' :
+          ("(recSummary (LHCb.RecSummary.nLongTracks, 'Rec/Track/Long') < %(LongTrackGEC)s )"
+                                                                                  ) % config,
+					'Preambulo' : ["from LoKiTracks.decorators import *"]
+				}
 
 
         ####################################### Common Jpsi  #########################################
