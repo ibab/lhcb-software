@@ -758,7 +758,7 @@ void EvtDDalitz::decay( EvtParticle *p){
     EvtResonance2 DpipipiRes9(p4_p, moms1, moms2, 0.069, 8.0, 0.600, 0.400, 0);//sigma(400)
     
     double pi180inv = 1.0/EvtConst::radToDegrees;  
-    amp = EvtComplex(0.57*cos(-11*pi180inv),0.57*sin(-11*pi180inv))
+    amp = EvtComplex(0.57*cos(-11.0*pi180inv),0.57*sin(-11.0*pi180inv))
       + DpipipiRes1p.resAmpl() + DpipipiRes1.resAmpl() + DpipipiRes1m.resAmpl()
       + DpipipiRes2p.resAmpl() + DpipipiRes2.resAmpl() + DpipipiRes2m.resAmpl()
       + DpipipiRes3p.resAmpl() + DpipipiRes3.resAmpl() + DpipipiRes3m.resAmpl()
