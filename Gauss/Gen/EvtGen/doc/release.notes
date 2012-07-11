@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-07-11 - John Back
+ - Added new decay models/classes from Alexey Luchinsky:
+   EvtBcVMuNu, EvtTVP, EvtWnPi, EvtSVP, EvtXPsiGamma, EvtBcVNpi
+
 ! 2012-07-11 - Frederic Dreyer and Marco Gersabeck
  - Updated EvtDDalitz to contain Dalitz model for D0-->pi-pi+pi0.
 
