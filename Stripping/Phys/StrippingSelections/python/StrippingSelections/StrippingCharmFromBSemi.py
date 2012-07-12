@@ -14,10 +14,11 @@ Dstar methods closely copied from StrippingDstarD2KShh.py by Mat Charles.
 """
 __author__ = ['Mika Vesterinen']
 __date__ = '08/03/2012'
-__version__ = '$Revision: 0.5 $'
+__version__ = '$Revision: 0.6 $'
 
 from Gaudi.Configuration import *
-from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles, OfflineVertexFitter
+#from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles, OfflineVertexFitter
+from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
@@ -174,57 +175,63 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         
         ############### MUON SELECTIONS ###################
         
-        self.selmuon = Selection( "Mufor" + name,
-                                  Algorithm = self._muonFilter(),
+        self.selmuon = Selection( "SelMufor" + name,
+                                  Algorithm = self._muonFilter("Mufor"+name),
                                   RequiredSelections = [StdLooseMuons])
         
-        self.selmuonhighPT = Selection( "MuhighPTfor" + name,
-                                        Algorithm = FilterDesktop(Code = "(TRCHI2DOF < %(TRCHI2)s) & (PT>1.2*GeV) & (MIPCHI2DV(PRIMARY)> 9.0)" % self.__confdict__ ),
+        self.selmuonhighPT = Selection( "SelMuhighPTfor" + name,
+                                        Algorithm = FilterDesktop(name = "MuhighPTfor"+name,
+                                                                  Code = "(TRCHI2DOF < %(TRCHI2)s)"\
+                                                                  "& (PT>1.2*GeV) & (MIPCHI2DV(PRIMARY)> 9.0)" % self.__confdict__ ),
                                         RequiredSelections = [self.selmuon])
         
-        self.selmuontight = Selection( "Mutightfor" + name,
-                                       Algorithm = FilterDesktop( Code = "(MIPCHI2DV(PRIMARY)> 100)" ),
+        self.selmuontight = Selection( "SelMutightfor" + name,
+                                       Algorithm = FilterDesktop( name = "Mutightfor"+name,
+                                                                  Code = "(MIPCHI2DV(PRIMARY)> 100)" ),
                                        RequiredSelections = [self.selmuonhighPT])
         
-        self.selmuonnew = Selection( "Munewfor" + name,
-                                     Algorithm = FilterDesktop( Code = "(MIPCHI2DV(PRIMARY)> 9.0) & (TRCHI2DOF < %(TRCHI2)s)" % self.__confdict__ ),
+        self.selmuonnew = Selection( "SelMunewfor" + name,
+                                     Algorithm = FilterDesktop( name = "Munewfor"+name,
+                                                                Code = "(MIPCHI2DV(PRIMARY)> 9.0)"\
+                                                                "& (TRCHI2DOF < %(TRCHI2)s)" % self.__confdict__ ),
                                      RequiredSelections = [self.selmuon])
         
-        self.selmuonTOS = TOSFilter( "MuTOS" + name,
+        self.selmuonTOS = TOSFilter( "SelMuTOS" + name,
                                      self.selmuontight,
                                      "Hlt2SingleMuonDecision")
         
         ############### KAON AND PION SELECTIONS ################
         
-        self.selKaon = Selection( "Kfor" + name,
-                                  Algorithm = self._kaonFilter(),
+        self.selKaon = Selection( "SelKfor" + name,
+                                  Algorithm = self._kaonFilter("Kfor"+name),
                                   RequiredSelections = [StdLooseKaons])
         
-        self.selPion = Selection( "Pifor" + name,
-                                  Algorithm = self._pionFilter(),
+        self.selPion = Selection( "SelPifor" + name,
+                                  Algorithm = self._pionFilter("Pifor"+name),
                                   RequiredSelections = [StdLoosePions])
         
-        self.selPionTight = Selection( "PiTightfor" + name,
-                                       Algorithm = FilterDesktop( Code = "(TRCHI2DOF < %(TRCHI2)s) & (P>2.0*GeV) & (PT > %(KPiPT)s *MeV)"\
+        self.selPionTight = Selection( "SelPiTightfor" + name,
+                                       Algorithm = FilterDesktop( name = "PiTightFor"+name,
+                                                                  Code = "(TRCHI2DOF < %(TRCHI2)s) & (P>2.0*GeV) & (PT > %(KPiPT)s *MeV)"\
                                                                   "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s) &  (PIDK< %(PionPIDKTight)s)" % self.__confdict__ ),
                                        RequiredSelections = [StdLoosePions])
         
-        self.selPionloose = Selection( "Piloosefor" + name,
-                                       Algorithm = self._pionlooseFilter(),
+        self.selPionloose = Selection( "SelPiloosefor" + name,
+                                       Algorithm = self._pionlooseFilter("Piloosefor"+name),
                                        RequiredSelections = [StdNoPIDsPions])
         
-        self.selKaonloose = Selection( "Kloosefor" + name,
-                                       Algorithm = self._kaonlooseFilter(),
+        self.selKaonloose = Selection( "SelKloosefor" + name,
+                                       Algorithm = self._kaonlooseFilter("Kloosefor"+name),
                                        RequiredSelections = [StdLooseKaons])
         
         ############## PI0 SELECTIONS ############################
         
-        self.selPi0Resolved = Selection( "Pi0Resolvedfor" + name,
-                                         Algorithm = self._Pi0ResolvedFilter(),
+        self.selPi0Resolved = Selection( "SelPi0Resolvedfor" + name,
+                                         Algorithm = self._Pi0ResolvedFilter("Pi0Resolvedfor"+name),
                                          RequiredSelections = [StdLooseResolvedPi0])
         
-        self.selPi0Merged = Selection( "Pi0Mergedfor" + name,
-                                         Algorithm = self._Pi0MergedFilter(),
+        self.selPi0Merged = Selection( "SelPi0Mergedfor" + name,
+                                         Algorithm = self._Pi0MergedFilter("PiMergedfor"+name),
                                          RequiredSelections = [StdLooseMergedPi0])
 
         ############## KS0 SELECTIONS ##############################
@@ -232,12 +239,12 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         _stdLooseKsLL = DataOnDemand("Phys/StdLooseKsLL/Particles")
         _stdLooseKsDD = DataOnDemand("Phys/StdLooseKsDD/Particles")
         
-        self.selKSLL = Selection("KsLLfor"+name,
-                                 Algorithm = self._KsLLFilter(),
+        self.selKSLL = Selection("SelKsLLfor"+name,
+                                 Algorithm = self._KsLLFilter("KsLLfor"+name),
                                  RequiredSelections = [_stdLooseKsLL])
 
-        self.selKSDD = Selection("KsDDfor"+name,
-                                 Algorithm = self._KsDDFilter(),
+        self.selKSDD = Selection("SelKsDDfor"+name,
+                                 Algorithm = self._KsDDFilter("KsDDfor"+name),
                                  RequiredSelections = [_stdLooseKsDD])
 
         ############# LAMBDA0 SELECTIONS ##########################
@@ -245,16 +252,16 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         _stdLooseLambdaLL = DataOnDemand("Phys/StdLooseLambdaLL/Particles")
         _stdLooseLambdaDD = DataOnDemand("Phys/StdLooseLambdaDD/Particles")
 
-        self.selLambdaLL = Selection("LambdaLLfor"+name,
-                                 Algorithm = self._LambdaLLFilter(),
+        self.selLambdaLL = Selection("SelLambdaLLfor"+name,
+                                 Algorithm = self._LambdaLLFilter("LambdaLLfor"+name),
                                  RequiredSelections = [_stdLooseLambdaLL])
 
-        self.selLambdaDD = Selection("LambdaDDfor"+name,
-                                 Algorithm = self._LambdaDDFilter(),
+        self.selLambdaDD = Selection("SelLambdaDDfor"+name,
+                                 Algorithm = self._LambdaDDFilter("LambdaDDfor"+name),
                                  RequiredSelections = [_stdLooseLambdaDD])
 
         ################ D0 -> KsKs SELECTION #############################
-
+        
         Dstar_cuts = {
             "Dstar_preFitMassCut" : config["Dstar_preFitMassCut"],
             "Dstar_Chi2" : config["Dstar_Chi2"],
@@ -264,24 +271,24 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
             "Dstar_wideDMCutUpper" : config["Dstar_wideDMCutUpper"],
             }
 
-        self.sel_D0_to_KsKs_LLLL = Selection("D02KsKsLLLLfor"+name,
-                                             Algorithm = self._D02KsKsFilter(["D0 -> KS0 KS0"]),
+        self.sel_D0_to_KsKs_LLLL = Selection('SelD02KsKsLLLLfor'+name,
+                                             Algorithm = self._D02KsKsFilter(['D0 -> KS0 KS0'],'D02KsKsLLLLfor'+name),
                                              RequiredSelections = [self.selKSLL])
         self.selD0Conj_KsKs_LLLL = Selection('SelConjugate_KsKs_LLLLFor'+name,
                                              Algorithm = ConjugateNeutralPID('Conjugate_KsKs_LLLLFor'+name),
                                              RequiredSelections = [self.sel_D0_to_KsKs_LLLL])
         self.sel_Dstar_to_KsKs_LLLL = makeDstar('Dstar_KsKs_LLLLFor'+name, [self.sel_D0_to_KsKs_LLLL , self.selD0Conj_KsKs_LLLL],Dstar_cuts)
         
-        self.sel_D0_to_KsKs_DDDD = Selection("D02KsKsDDDDfor"+name,
-                                             Algorithm = self._D02KsKsFilter(["D0 -> KS0 KS0"]),
+        self.sel_D0_to_KsKs_DDDD = Selection('SelD02KsKsDDDDfor'+name,
+                                             Algorithm = self._D02KsKsFilter(['D0 -> KS0 KS0'],'D02KsKsDDDDfor'+name),
                                              RequiredSelections = [self.selKSDD])
         self.selD0Conj_KsKs_DDDD = Selection('SelConjugate_KsKs_DDDDFor'+name,
                                              Algorithm = ConjugateNeutralPID('Conjugate_KsKs_DDDDFor'+name),
                                              RequiredSelections = [self.sel_D0_to_KsKs_DDDD])
         self.sel_Dstar_to_KsKs_DDDD = makeDstar('Dstar_KsKs_DDDDFor'+name, [self.sel_D0_to_KsKs_DDDD , self.selD0Conj_KsKs_DDDD],Dstar_cuts)
 
-        self.sel_D0_to_KsKs_DDLL = Selection("D02KsKsDDLLfor"+name,
-                                             Algorithm = self._D02KsKsFilter(["D0 -> KS0 KS0"]),
+        self.sel_D0_to_KsKs_DDLL = Selection('SelD02KsKsDDLLfor'+name,
+                                             Algorithm = self._D02KsKsFilter(['D0 -> KS0 KS0'],'D02KsKsDDLLfor'+name),
                                              RequiredSelections = [self.selKSLL,self.selKSDD])
         self.selD0Conj_KsKs_DDLL = Selection('SelConjugate_KsKs_DDLLFor'+name,
                                              Algorithm = ConjugateNeutralPID('Conjugate_KsKs_DDLLFor'+name),
@@ -299,7 +306,8 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
             "Dstar_wideDMCutUpper" : config["Dstar_wideDMCutUpper"],
             }
 
-        self.sel_D0_to_4Pi = Selection( "D0_to_4Pi_for" + name,Algorithm = self._D02HHHHFilter(["D0 -> pi- pi+ pi- pi+"]),
+        self.sel_D0_to_4Pi = Selection( 'Sel_D0_to_4Pi_for' + name,
+                                        Algorithm = self._D02HHHHFilter(['D0 -> pi- pi+ pi- pi+'],'D0_to_4Pi_for' + name),
                                         RequiredSelections = [self.selPionTight] )        
         self.selD0Conj_4Pi = Selection('SelConjugate_4PiFor'+name,
                                        Algorithm = ConjugateNeutralPID('Conjugate_4PiFor'+name),
@@ -307,7 +315,8 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         self.selDstar_to_4Pi = makeDstar('Dstar_4PiFor'+name, [self.sel_D0_to_4Pi , self.selD0Conj_4Pi],Dstar_cuts)
 
 
-        self.sel_D0_to_K3Pi = Selection( "D0_to_K3Pi_for" + name,Algorithm = self._D02HHHHFilter(["[D0 -> K- pi+ pi- pi+]cc"]),
+        self.sel_D0_to_K3Pi = Selection( 'Sel_D0_to_K3Pi_for' + name,
+                                         Algorithm = self._D02HHHHFilter(['[D0 -> K- pi+ pi- pi+]cc'],'D0_to_K3Pi_for' + name),
                                          RequiredSelections = [self.selPionTight,self.selKaon] )        
         self.selD0Conj_K3Pi = Selection('SelConjugate_K3PiFor'+name,
                                         Algorithm = ConjugateNeutralPID('Conjugate_K3PiFor'+name),
@@ -315,7 +324,8 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         self.selDstar_to_K3Pi = makeDstar('Dstar_K3PiFor'+name, [self.sel_D0_to_K3Pi , self.selD0Conj_K3Pi],Dstar_cuts)
 
 
-        self.sel_D0_to_2K2Pi = Selection( "D0_to_2K2Pi_for" + name,Algorithm = self._D02HHHHFilter(["D0 -> K- K+ pi- pi+"]),
+        self.sel_D0_to_2K2Pi = Selection( 'Sel_D0_to_2K2Pi_for' + name,
+                                          Algorithm = self._D02HHHHFilter(['D0 -> K- K+ pi- pi+'],'D0_to_2K2Pi_for' + name),
                                           RequiredSelections = [self.selPionTight,self.selKaon] )        
         self.selD0Conj_2K2Pi = Selection('SelConjugate_2K2PiFor'+name,
                                        Algorithm = ConjugateNeutralPID('Conjugate_2K2PiFor'+name),
@@ -323,13 +333,13 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         self.selDstar_to_2K2Pi = makeDstar('Dstar_2K2PiFor'+name, [self.sel_D0_to_2K2Pi , self.selD0Conj_2K2Pi],Dstar_cuts)
         
 
-        self.sel_D0_to_3KPi = Selection( "D0_to_3KPi_for" + name,Algorithm = self._D02HHHHFilter(["[D0 -> K+ K- K- pi+]cc"]),
+        self.sel_D0_to_3KPi = Selection( 'Sel_D0_to_3KPi_for' + name,
+                                         Algorithm = self._D02HHHHFilter(['[D0 -> K+ K- K- pi+]cc'],'D0_to_3KPi_for' + name),
                                          RequiredSelections = [self.selPionTight,self.selKaon] )        
         self.selD0Conj_3KPi = Selection('SelConjugate_3KPiFor'+name,
                                        Algorithm = ConjugateNeutralPID('Conjugate_3KPiFor'+name),
                                         RequiredSelections = [self.sel_D0_to_3KPi])
         self.selDstar_to_3KPi = makeDstar('Dstar_3KPiFor'+name, [self.sel_D0_to_3KPi , self.selD0Conj_3KPi],Dstar_cuts)
-        
         
         ################## D0 -> Ks HH SELECTIONS ##############################
 
@@ -343,16 +353,16 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
             }
 
         ### ks Pi Pi 
-        self.seld02KsPiPiLL = Selection( "D02KsPiPiLLfor" + name,
-                                         Algorithm = self._D02KsHHFilter(["D0 -> KS0 pi+ pi-"]),
+        self.seld02KsPiPiLL = Selection( 'SelD02KsPiPiLLfor' + name,
+                                         Algorithm = self._D02KsHHFilter(['D0 -> KS0 pi+ pi-'],'D02KsPiPiLLfor' + name),
                                          RequiredSelections = [self.selKSLL,self.selPionloose] )           
         self.selD0Conj2KsPiPiLL = Selection('SelConjugateD02KsPiPiLLFor'+name,
                                             Algorithm = ConjugateNeutralPID('ConjugateD02KsPiPiLLFor'+name),
                                             RequiredSelections = [self.seld02KsPiPiLL])
         self.selDstar_2KsPiPiLL = makeDstar('DstarPiPiLLFor'+name, [self.seld02KsPiPiLL , self.selD0Conj2KsPiPiLL],Dstar_cuts)
 
-        self.seld02KsPiPiDD = Selection( "D02KsPiPiDDfor" + name,
-                                         Algorithm = self._D02KsHHFilter(["D0 -> KS0 pi+ pi-"]),
+        self.seld02KsPiPiDD = Selection( 'SelD02KsPiPiDDfor' + name,
+                                         Algorithm = self._D02KsHHFilter(['D0 -> KS0 pi+ pi-'],'D02KsPiPiDDfor' + name),
                                          RequiredSelections = [self.selKSDD,self.selPionloose] )           
         self.selD0Conj2KsPiPiDD = Selection('SelConjugateD02KsPiPiDDFor'+name,
                                             Algorithm = ConjugateNeutralPID('ConjugateD02KsPiPiDDFor'+name),
@@ -360,16 +370,16 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         self.selDstar_2KsPiPiDD = makeDstar('DstarPiPiDDFor'+name, [self.seld02KsPiPiDD , self.selD0Conj2KsPiPiDD],Dstar_cuts)
 
         ### ks K K 
-        self.seld02KsKKLL = Selection( "D02KsKKLLfor" + name,
-                                       Algorithm = self._D02KsHHFilter(["D0 -> KS0 K+ K-"]),
+        self.seld02KsKKLL = Selection( 'SelD02KsKKLLfor' + name,
+                                       Algorithm = self._D02KsHHFilter(['D0 -> KS0 K+ K-'],'D02KsKKLLfor' + name),
                                        RequiredSelections = [self.selKSLL,self.selKaonloose] )           
         self.selD0Conj2KsKKLL = Selection('SelConjugateD02KsKKLLFor'+name,
                                           Algorithm = ConjugateNeutralPID('ConjugateD02KsKKLLFor'+name),
                                           RequiredSelections = [self.seld02KsKKLL])
         self.selDstar_2KsKKLL = makeDstar('DstarKKLLFor'+name, [self.seld02KsKKLL , self.selD0Conj2KsKKLL],Dstar_cuts)
 
-        self.seld02KsKKDD = Selection( "D02KsKKDDfor" + name,
-                                       Algorithm = self._D02KsHHFilter(["D0 -> KS0 K+ K-"]),
+        self.seld02KsKKDD = Selection( 'SelD02KsKKDDfor' + name,
+                                       Algorithm = self._D02KsHHFilter(['D0 -> KS0 K+ K-'],'D02KsKKDDfor' + name),
                                        RequiredSelections = [self.selKSDD,self.selKaonloose] )           
         self.selD0Conj2KsKKDD = Selection('SelConjugateD02KsKKDDFor'+name,
                                           Algorithm = ConjugateNeutralPID('ConjugateD02KsKKDDFor'+name),
@@ -377,24 +387,24 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         self.selDstar_2KsKKDD = makeDstar('DstarKKDDFor'+name, [self.seld02KsKKDD , self.selD0Conj2KsKKDD],Dstar_cuts)
 
         ### ks K Pi 
-        self.seld02KsKPiLL = Selection( "D02KsKPiLLfor" + name,
-                                        Algorithm = self._D02KsHHFilter(["[D0 -> KS0 K- pi+]cc"]),
+        self.seld02KsKPiLL = Selection( 'SelD02KsKPiLLfor' + name,
+                                        Algorithm = self._D02KsHHFilter(['[D0 -> KS0 K- pi+]cc'],'D02KsKPiLLfor' + name),
                                         RequiredSelections = [self.selKSLL,self.selPionloose,self.selKaonloose] )           
         self.selD0Conj2KsKPiLL = Selection('SelConjugateD02KsKPiLLFor'+name,
                                            Algorithm = ConjugateNeutralPID('ConjugateD02KsKPiLLFor'+name),
                                            RequiredSelections = [self.seld02KsKPiLL])
         self.selDstar_2KsKPiLL = makeDstar('DstarKPiLLFor'+name, [self.seld02KsKPiLL , self.selD0Conj2KsKPiLL],Dstar_cuts)
         
-        self.seld02KsKPiDD = Selection( "D02KsKPiDDfor" + name,
-                                        Algorithm = self._D02KsHHFilter(["[D0 -> KS0 K- pi+]cc"]),
+        self.seld02KsKPiDD = Selection( 'SelD02KsKPiDDfor' + name,
+                                        Algorithm = self._D02KsHHFilter(['[D0 -> KS0 K- pi+]cc'],'D02KsKPiDDfor' + name),
                                         RequiredSelections = [self.selKSDD,self.selPionloose,self.selKaonloose] )           
         self.selD0Conj2KsKPiDD = Selection('SelConjugateD02KsKPiDDFor'+name,
                                            Algorithm = ConjugateNeutralPID('ConjugateD02KsKPiDDFor'+name),
                                            RequiredSelections = [self.seld02KsKPiDD])
         self.selDstar_2KsKPiDD = makeDstar('DstarKPiDDFor'+name, [self.seld02KsKPiDD , self.selD0Conj2KsKPiDD],Dstar_cuts)
-        
+
         ################## D0 -> HHPi0 WITH MERGED PI0 #######################
-        
+
         Dstar_cuts = {
            ## wider mass window than other channels
             "Dstar_preFitMassCut" : config["Dstar_preFitMassCut_HHPi0"],
@@ -405,30 +415,30 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
             "Dstar_wideDMCutUpper" : config["Dstar_wideDMCutUpper"],
             }
 
-        self.seld02KPiPi0Merged = Selection( "D02KPiPi0Mergedfor" + name,
-                                             Algorithm = self._D02HHPi0Filter(["[D0 -> K- pi+ pi0]cc"]),
+        self.seld02KPiPi0Merged = Selection( 'SelD02KPiPi0Mergedfor' + name,
+                                             Algorithm = self._D02HHPi0Filter(['[D0 -> K- pi+ pi0]cc'],'D02KPiPi0Mergedfor' + name),
                                              RequiredSelections = [self.selKaon,self.selPionTight,self.selPi0Merged])
         self.selD0Conj2KPiPi0Merged = Selection('SelConjugateKPiPi0MergedFor'+name,
                                                   Algorithm = ConjugateNeutralPID('ConjugateKPiPi0MergedFor'+name),
                                                   RequiredSelections = [self.seld02KPiPi0Merged])
         self.selDstar_2KPiPi0Merged = makeDstar('DstarKPiPi0MergedFor'+name, [self.seld02KPiPi0Merged , self.selD0Conj2KPiPi0Merged],Dstar_cuts)
 
-        self.seld02KKPi0Merged = Selection( "D02KKPi0Mergedfor" + name,
-                                            Algorithm = self._D02HHPi0Filter(["D0 -> K- K+ pi0"]),
+        self.seld02KKPi0Merged = Selection( 'SelD02KKPi0Mergedfor' + name,
+                                            Algorithm = self._D02HHPi0Filter(['D0 -> K- K+ pi0'],'D02KKPi0Mergedfor' + name),
                                             RequiredSelections = [self.selKaon,self.selPi0Merged])
         self.selD0Conj2KKPi0Merged = Selection('SelConjugateKKPi0MergedFor'+name,
                                                   Algorithm = ConjugateNeutralPID('ConjugateKKPi0MergedFor'+name),
                                                   RequiredSelections = [self.seld02KKPi0Merged])
         self.selDstar_2KKPi0Merged = makeDstar('DstarKKPi0MergedFor'+name, [self.seld02KKPi0Merged , self.selD0Conj2KKPi0Merged],Dstar_cuts)
         
-        self.seld02PiPiPi0Merged = Selection( "D02PiPiPi0Mergedfor" + name,
-                                              Algorithm = self._D02HHPi0Filter(["D0 -> pi- pi+ pi0"]),
+        self.seld02PiPiPi0Merged = Selection( 'SelD02PiPiPi0Mergedfor' + name,
+                                              Algorithm = self._D02HHPi0Filter(['D0 -> pi- pi+ pi0'],'D02PiPiPi0Mergedfor' + name),
                                              RequiredSelections = [self.selPionTight,self.selPi0Merged])
         self.selD0Conj2PiPiPi0Merged = Selection('SelConjugatePiPiPi0MergedFor'+name,
                                                   Algorithm = ConjugateNeutralPID('ConjugatePiPiPi0MergedFor'+name),
                                                   RequiredSelections = [self.seld02PiPiPi0Merged])
         self.selDstar_2PiPiPi0Merged = makeDstar('DstarPiPiPi0MergedFor'+name, [self.seld02PiPiPi0Merged , self.selD0Conj2PiPiPi0Merged],Dstar_cuts)
-        
+
         ################## D0 -> HHPi0 WITH RESOLVED PI0 #######################
 
         Dstar_cuts = {
@@ -440,8 +450,8 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
             "Dstar_wideDMCutUpper" : config["Dstar_wideDMCutUpper"],
             }
         
-        self.seld02KPiPi0Resolved = Selection( "D02KPiPi0Resolvedfor" + name,
-                                               Algorithm = self._D02HHPi0Filter(["[D0 -> K- pi+ pi0]cc"]),
+        self.seld02KPiPi0Resolved = Selection( "SelD02KPiPi0Resolvedfor" + name,
+                                               Algorithm = self._D02HHPi0Filter(["[D0 -> K- pi+ pi0]cc"],"D02KPiPi0Resolvedfor"+name),
                                                RequiredSelections = [self.selKaon,self.selPionTight,self.selPi0Resolved])
         self.selD0Conj2KPiPi0Resolved = Selection('SelConjugateKPiPi0ResolvedFor'+name,
                                                   Algorithm = ConjugateNeutralPID('ConjugateKPiPi0ResolvedFor'+name),
@@ -449,103 +459,101 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         self.selDstar_2KPiPi0Resolved = makeDstar('DstarKPiPi0ResolvedFor'+name, [self.seld02KPiPi0Resolved , self.selD0Conj2KPiPi0Resolved],Dstar_cuts)
         
 
-        self.seld02KKPi0Resolved = Selection( "D02KKPi0Resolvedfor" + name,
-                                              Algorithm = self._D02HHPi0Filter(["D0 -> K- K+ pi0"]),
+        self.seld02KKPi0Resolved = Selection( 'SelD02KKPi0Resolvedfor' + name,
+                                              Algorithm = self._D02HHPi0Filter(['D0 -> K- K+ pi0'],'D02KKPi0Resolvedfor' + name),
                                               RequiredSelections = [self.selKaon,self.selPi0Resolved])
         self.selD0Conj2KKPi0Resolved = Selection('SelConjugateKKPi0ResolvedFor'+name,
                                                  Algorithm = ConjugateNeutralPID('ConjugateKKPi0ResolvedFor'+name),
                                                  RequiredSelections = [self.seld02KKPi0Resolved])
         self.selDstar_2KKPi0Resolved = makeDstar('DstarKKPi0ResolvedFor'+name, [self.seld02KKPi0Resolved , self.selD0Conj2KKPi0Resolved],Dstar_cuts)
 
-        self.seld02KKPi0SSResolved = Selection( "D02KKPi0SSResolvedfor" + name,
-                                                Algorithm = self._D02HHPi0Filter(["[D0 -> K+ K+ pi0]cc"]),
+        self.seld02KKPi0SSResolved = Selection( 'SelD02KKPi0SSResolvedfor' + name,
+                                                Algorithm = self._D02HHPi0Filter(['[D0 -> K+ K+ pi0]cc'],'D02KKPi0SSResolvedfor' + name),
                                                 RequiredSelections = [self.selKaon,self.selPi0Resolved])
         self.selD0Conj2KKPi0SSResolved = Selection('SelConjugateKKPi0SSResolvedFor'+name,
                                                  Algorithm = ConjugateNeutralPID('ConjugateKKPi0SSResolvedFor'+name),
                                                  RequiredSelections = [self.seld02KKPi0SSResolved])
         self.selDstar_2KKPi0SSResolved = makeDstar('DstarKKPi0SSResolvedFor'+name, [self.seld02KKPi0SSResolved , self.selD0Conj2KKPi0SSResolved],Dstar_cuts)
         
-        self.seld02PiPiPi0Resolved = Selection( "D02PiPiPi0Resolvedfor" + name,
-                                                Algorithm = self._D02HHPi0Filter(["D0 -> pi- pi+ pi0"]),
+        self.seld02PiPiPi0Resolved = Selection( 'SelD02PiPiPi0Resolvedfor' + name,
+                                                Algorithm = self._D02HHPi0Filter(['D0 -> pi- pi+ pi0'],'D02PiPiPi0Resolvedfor' + name),
                                                 RequiredSelections = [self.selPionTight,self.selPi0Resolved])
         self.selD0Conj2PiPiPi0Resolved = Selection('SelConjugatePiPiPi0ResolvedFor'+name,
                                                    Algorithm = ConjugateNeutralPID('ConjugatePiPiPi0ResolvedFor'+name),
                                                    RequiredSelections = [self.seld02PiPiPi0Resolved])
         self.selDstar_2PiPiPi0Resolved = makeDstar('DstarPiPiPi0ResolvedFor'+name, [self.seld02PiPiPi0Resolved , self.selD0Conj2PiPiPi0Resolved],Dstar_cuts)
 
-        self.seld02PiPiPi0SSResolved = Selection( "D02PiPiPi0SSResolvedfor" + name,
-                                                Algorithm = self._D02HHPi0Filter(["[D0 -> pi+ pi+ pi0]cc"]),
+        self.seld02PiPiPi0SSResolved = Selection('SelD02PiPiPi0SSResolvedfor' + name,
+                                                 Algorithm = self._D02HHPi0Filter(['[D0 -> pi+ pi+ pi0]cc'],'D02PiPiPi0SSResolvedfor' + name),
                                                 RequiredSelections = [self.selPionTight,self.selPi0Resolved])
         self.selD0Conj2PiPiPi0SSResolved = Selection('SelConjugatePiPiPi0SSResolvedFor'+name,
                                                    Algorithm = ConjugateNeutralPID('ConjugatePiPiPi0SSResolvedFor'+name),
                                                    RequiredSelections = [self.seld02PiPiPi0SSResolved])
         self.selDstar_2PiPiPi0SSResolved = makeDstar('DstarPiPiPi0SSResolvedFor'+name, [self.seld02PiPiPi0SSResolved , self.selD0Conj2PiPiPi0SSResolved],Dstar_cuts)
         
-        
         ################### D+/Ds+ -> Ks H SELECTIONS ######################
-        
-        self.selds2KsLLK = Selection( "Ds2KsLLKfor" + name,
-                                      Algorithm = self._Ds2KsHFilter(['[D+ -> KS0 K+]cc']),
+
+        self.selds2KsLLK = Selection( 'SelDs2KsLLKfor' + name,
+                                      Algorithm = self._Ds2KsHFilter(['[D+ -> KS0 K+]cc'],'Ds2KsLLKfor' + name),
                                       RequiredSelections = [self.selKaon, self.selKSLL] )
 
-        self.selds2KsDDK = Selection( "Ds2KsDDKfor" + name,
-                                      Algorithm = self._Ds2KsHFilter(['[D+ -> KS0 K+]cc']),
+        self.selds2KsDDK = Selection( 'SelDs2KsDDKfor' + name,
+                                      Algorithm = self._Ds2KsHFilter(['[D+ -> KS0 K+]cc'],'Ds2KsDDKfor' + name),
                                       RequiredSelections = [self.selKaon, self.selKSDD] )
 
-        self.selds2KsLLPi = Selection( "Ds2KsLLPifor" + name,
-                                       Algorithm = self._Ds2KsHFilter(['[D+ -> KS0 pi+]cc']),
+        self.selds2KsLLPi = Selection( 'SelDs2KsLLPifor' + name,
+                                       Algorithm = self._Ds2KsHFilter(['[D+ -> KS0 pi+]cc'],'Ds2KsLLPifor' + name),
                                        RequiredSelections = [self.selPion, self.selKSLL] )
         
-        self.selds2KsDDPi = Selection( "Ds2KsDDPifor" + name,
-                                       Algorithm = self._Ds2KsHFilter(['[D+ -> KS0 pi+]cc']),
-                                       RequiredSelections = [self.selPion, self.selKSDD] )
-
+        self.selds2KsDDPi = Selection( 'SelDs2KsDDPifor' + name,
+                                       Algorithm = self._Ds2KsHFilter(['[D+ -> KS0 pi+]cc'],'Ds2KsDDPifor' + name),
+                                       RequiredSelections = [self.selPion, self.selKSDD])
 
         ################## D+/Ds+ -> H mu mu SELECTIONS ########################
 
-        self.selds2pimumu = Selection( "Ds2PiMuMufor" + name,
-                                       Algorithm = self._Ds2HMuMuFilter([ '[D+ -> pi+ mu+ mu-]cc' ]),
+        self.selds2pimumu = Selection( 'SelDs2PiMuMufor' + name,
+                                       Algorithm = self._Ds2HMuMuFilter([ '[D+ -> pi+ mu+ mu-]cc' ],'Ds2PiMuMufor' + name),
                                        RequiredSelections = [self.selPion,self.selmuon] )
         
-        self.selds2kmumu = Selection( "Ds2KMuMufor" + name,
-                                      Algorithm = self._Ds2HMuMuFilter([ '[D+ -> K+ mu+ mu-]cc' ]),
+        self.selds2kmumu = Selection( 'SelDs2KMuMufor' + name,
+                                      Algorithm = self._Ds2HMuMuFilter([ '[D+ -> K+ mu+ mu-]cc' ],'Ds2KMuMufor' + name),
                                       RequiredSelections = [self.selKaon,self.selmuon] )
-        
+
         #################### Lambda_c+ -> X SELECTIONS #########################
-        
-        self.selLc2L0Pi_DD = Selection( "Lc2LambdaDDPifor" + name,
-                                        Algorithm = self._Lc2L0HFilter([ '[Lambda_c+ -> Lambda0 pi+]cc' ]),
+
+        self.selLc2L0Pi_DD = Selection( 'SelLc2LambdaDDPifor' + name,
+                                        Algorithm = self._Lc2L0HFilter([ '[Lambda_c+ -> Lambda0 pi+]cc' ],'Lc2LambdaDDPifor' + name),
                                         RequiredSelections = [self.selPionTight, self.selLambdaDD])
         
-        self.selLc2L0Pi_LL = Selection( "Lc2LambdaLLPifor" + name,
-                                        Algorithm = self._Lc2L0HFilter([ '[Lambda_c+ -> Lambda0 pi+]cc' ]),
+        self.selLc2L0Pi_LL = Selection( 'SelLc2LambdaLLPifor' + name,
+                                        Algorithm = self._Lc2L0HFilter([ '[Lambda_c+ -> Lambda0 pi+]cc' ],'Lc2LambdaLLPifor' + name),
                                         RequiredSelections = [self.selPionTight, self.selLambdaLL])
         
-        self.selLc2L0K_DD = Selection( "Lc2LambdaDDKfor" + name,
-                                       Algorithm = self._Lc2L0HFilter([ '[Lambda_c+ -> Lambda0 K+]cc' ]),
+        self.selLc2L0K_DD = Selection( 'SelLc2LambdaDDKfor' + name,
+                                       Algorithm = self._Lc2L0HFilter([ '[Lambda_c+ -> Lambda0 K+]cc' ],'Lc2LambdaDDKfor' + name),
                                         RequiredSelections = [self.selKaon, self.selLambdaDD])
         
-        self.selLc2L0K_LL = Selection( "Lc2LambdaLLKfor" + name,
-                                       Algorithm = self._Lc2L0HFilter([ '[Lambda_c+ -> Lambda0 K+]cc' ]),
+        self.selLc2L0K_LL = Selection( 'SelLc2LambdaLLKfor' + name,
+                                       Algorithm = self._Lc2L0HFilter([ '[Lambda_c+ -> Lambda0 K+]cc' ],'Lc2LambdaLLKfor' + name),
                                         RequiredSelections = [self.selKaon, self.selLambdaLL])
 
-        self.selLc2pKK = Selection( "Lc2pKKfor" + name,
-                                    Algorithm = self._Lc2pHHFilter([ '[Lambda_c+ -> p+ K- K+]cc' ]),
+        self.selLc2pKK = Selection( 'SelLc2pKKfor' + name,
+                                    Algorithm = self._Lc2pHHFilter([ '[Lambda_c+ -> p+ K- K+]cc' ],'Lc2pKKfor' + name),
                                     RequiredSelections = [self.selKaon, StdLooseProtons])
 
-        self.selLc2pPiPi = Selection( "Lc2pPiPifor" + name,
-                                      Algorithm = self._Lc2pHHFilter([ '[Lambda_c+ -> p+ pi- pi+]cc' ]),
+        self.selLc2pPiPi = Selection( 'SelLc2pPiPifor' + name,
+                                      Algorithm = self._Lc2pHHFilter([ '[Lambda_c+ -> p+ pi- pi+]cc' ],'Lc2pPiPifor' + name),
                                       RequiredSelections = [self.selPionTight, StdLooseProtons])## tighter pion PID needed here to reduce retention
         
-        self.sellambdac = Selection( "Lc2PKPifor" + name,
-                                     Algorithm = self._Lc2pHHFilter([ '[Lambda_c+ -> K- p+ pi+]cc' ]),
+        self.sellambdac = Selection( 'SelLc2PKPifor' + name,
+                                     Algorithm = self._Lc2pHHFilter([ '[Lambda_c+ -> K- p+ pi+]cc' ],'Lc2PKPifor' + name),
                                      RequiredSelections = [self.selKaon, self.selPion, StdLooseProtons ] )
         
-        self.sellambdacDCS = Selection( "Lc2PKPiDCSfor" + name,
-                                        Algorithm = self._Lc2pHHFilter([ '[Lambda_c+ -> K+ p+ pi-]cc' ]),
+        self.sellambdacDCS = Selection( 'SelLc2PKPiDCSfor' + name,
+                                        Algorithm = self._Lc2pHHFilter([ '[Lambda_c+ -> K+ p+ pi-]cc' ],'Lc2PKPiDCSfor' + name),
                                         RequiredSelections = [self.selKaon, self.selPion, StdLooseProtons ] )
 
-        
+
         #################### MAKE THE "B" CANDIDATES ##############################
         
         ####### D0 -> hhhh
@@ -726,7 +734,7 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         self.registerLine( StrippingLine('b2D0MuXKsKKDD'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2D0MuXKsKKDD) )
         self.registerLine( StrippingLine('b2D0MuXKsKPiLL'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2D0MuXKsKPiLL) )
         self.registerLine( StrippingLine('b2D0MuXKsKPiDD'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2D0MuXKsKPiDD) )
-
+        
         ########### D0 -> HHPi0 
         self.registerLine( StrippingLine('b2D0MuXKPiPi0Resolved'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2D0MuXKPiPi0Resolved) )
         self.registerLine( StrippingLine('b2D0MuXKKPi0Resolved'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2D0MuXKKPi0Resolved) )
@@ -770,161 +778,156 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         
 
         
-    def _muonFilter( self ):
+    def _muonFilter( self , _name):
         _code = "(PT > %(MuonPT)s *MeV) & (P> 3.0*GeV)"\
                 "& (TRCHI2DOF< %(TRCHI2Loose)s) & (MIPCHI2DV(PRIMARY)> %(MuonIPCHI2)s)"\
                 "& (PIDmu > %(PIDmu)s)" % self.__confdict__
-        _mu = FilterDesktop( Code = _code )
+        _mu = FilterDesktop( name = _name, Code = _code )
         return _mu        
 
-    def _pionFilter( self ):
+    def _pionFilter( self , _name):
         _code = "  (TRCHI2DOF < %(TRCHI2)s) & (P>2.0*GeV) & (PT > %(KPiPT)s *MeV)"\
                    "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s) &  (PIDK< %(PionPIDK)s)" % self.__confdict__
-        _pi = FilterDesktop( Code = _code )
+        _pi = FilterDesktop( name = _name, Code = _code )
         return _pi
 
-    def _kaonFilter( self ):
+    def _kaonFilter( self , _name ):
         _code = "  (TRCHI2DOF < %(TRCHI2)s) & (P>2.0*GeV) & (PT > %(KPiPT)s *MeV)"\
                    "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s) &  (PIDK> %(KaonPIDK)s)" % self.__confdict__
-        _ka = FilterDesktop( Code = _code )
+        _ka = FilterDesktop( name = _name, Code = _code )
         return _ka 
   
-    def _kaonlooseFilter( self ):
+    def _kaonlooseFilter( self, _name ):
         _code = "  (TRCHI2DOF < %(TRCHI2)s) & (P>2.0*GeV) & (PT > %(KPiPT)s *MeV)"\
                 "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2Loose)s) &  (PIDK> %(KaonPIDKloose)s)" % self.__confdict__
-        _kal = FilterDesktop( Code = _code )
+        _kal = FilterDesktop( name = _name, Code = _code )
         return _kal 
     
-    def _pionlooseFilter( self ):
+    def _pionlooseFilter( self , _name):
         _code = "  (TRCHI2DOF < %(TRCHI2)s) & (P>2.0*GeV) & (PT > %(KPiPT)s *MeV)"\
                 "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2Loose)s)" % self.__confdict__
-        _pil = FilterDesktop( Code = _code )
+        _pil = FilterDesktop( name = _name, Code = _code )
         return _pil
     
     
-    def _Pi0ResolvedFilter( self):
+    def _Pi0ResolvedFilter( self, _name):
         _code = "(PT> %(Pi0PtMin)s *MeV) & (P> %(Pi0PMin)s *MeV)"\
                 "& (CHILD(CL,1)> %(PhotonCL)s) & (CHILD(CL,2)> %(PhotonCL)s)" % self.__confdict__
-        _pil = FilterDesktop( Code = _code )
+        _pil = FilterDesktop( name = _name, Code = _code )
         return _pil
 
-    def _Pi0MergedFilter( self):
+    def _Pi0MergedFilter( self, _name):
         _code = "(PT> %(Pi0PtMin)s *MeV) & (P> %(Pi0PMin)s *MeV)" % self.__confdict__
-        _pil = FilterDesktop( Code = _code )
+        _pil = FilterDesktop( name = _name, Code = _code )
         return _pil
 
-    def _KsDDFilter( self):
+    def _KsDDFilter( self, _name):
         _code = " (P> %(KSDDPMin)s *MeV) & (PT> %(KSDDPTMin)s *MeV)" \
                 " & (ADMASS('KS0') < %(KSDDCutMass)s *MeV) & (BPVVDCHI2> %(KSDDCutFDChi2)s)" \
                 " & CHILDCUT((TRCHI2DOF < %(KSDaugTrackChi2)s),1)" \
                 " & CHILDCUT((TRCHI2DOF < %(KSDaugTrackChi2)s),2)" \
                 " & (VFASPF(VCHI2PDOF) < %(KSVertexChi2)s)" \
                 " & (BPVDIRA > %(KSCutDIRA)s )" % self.__confdict__
-        _pil = FilterDesktop( Code = _code)
+        _pil = FilterDesktop( name = _name, Code = _code)
         return _pil
 
-    def _KsLLFilter( self):
+    def _KsLLFilter( self, _name):
         _code = " (P> %(KSLLPMin)s *MeV) & (PT> %(KSLLPTMin)s *MeV)" \
                 " & (ADMASS('KS0') < %(KSLLCutMass)s *MeV) & (BPVVDCHI2> %(KSLLCutFDChi2)s)" \
                 " & CHILDCUT((TRCHI2DOF < %(KSDaugTrackChi2)s),1)" \
                 " & CHILDCUT((TRCHI2DOF < %(KSDaugTrackChi2)s),2)" \
                 " & (VFASPF(VCHI2PDOF) < %(KSVertexChi2)s)" \
                 " & (BPVDIRA > %(KSCutDIRA)s )" % self.__confdict__
-        _pil = FilterDesktop( Code = _code)
+        _pil = FilterDesktop( name = _name, Code = _code)
         return _pil
     
-    def _LambdaLLFilter( self):
+    def _LambdaLLFilter( self, _name):
         _code = " (P> %(LambdaLLPMin)s *MeV) & (PT> %(LambdaLLPTMin)s *MeV)" \
                 " & (ADMASS('Lambda0') < %(LambdaLLCutMass)s *MeV) & (BPVVDCHI2> %(LambdaLLCutFDChi2)s)" \
                 " & CHILDCUT((TRCHI2DOF < %(LambdaDaugTrackChi2)s),1)" \
                 " & CHILDCUT((TRCHI2DOF < %(LambdaDaugTrackChi2)s),2)" \
                 " & (VFASPF(VCHI2PDOF) < %(LambdaVertexChi2)s)" \
                 " & (BPVDIRA > %(LambdaCutDIRA)s )" % self.__confdict__
-        _pil = FilterDesktop( Code = _code)
+        _pil = FilterDesktop( name = _name, Code = _code)
         return _pil
 
-    def _LambdaDDFilter( self):
+    def _LambdaDDFilter( self , _name):
         _code = " (P> %(LambdaDDPMin)s *MeV) & (PT> %(LambdaDDPTMin)s *MeV)" \
                 " & (ADMASS('Lambda0') < %(LambdaDDCutMass)s *MeV) & (BPVVDCHI2> %(LambdaDDCutFDChi2)s)" \
                 " & CHILDCUT((TRCHI2DOF < %(LambdaDaugTrackChi2)s),1)" \
                 " & CHILDCUT((TRCHI2DOF < %(LambdaDaugTrackChi2)s),2)" \
                 " & (VFASPF(VCHI2PDOF) < %(LambdaVertexChi2)s)" \
                 " & (BPVDIRA > %(LambdaCutDIRA)s )" % self.__confdict__
-        _pil = FilterDesktop( Code = _code)
+        _pil = FilterDesktop( name = _name, Code = _code)
         return _pil
 
-    def _D02HHFilter( self , _decayDescriptors ):
-        _combinationCut = "(ADAMASS('D0') < %(DsAMassWin)s *MeV) & (ACHILD(PT,1)+ACHILD(PT,2) > 1400.*MeV)"\
-                          "& (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
-        _motherCut = "(SUMTREE( PT,  ISBASIC )>1400.*MeV) &(ADMASS('D0') < %(DsMassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
-                            "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s)"  % self.__confdict__
-        _d02HH = CombineParticles( DecayDescriptors = _decayDescriptors,
-                                   CombinationCut = _combinationCut,
-                                   MotherCut = _motherCut)                            
-        return _d0HH
-  
-    def _D02HHHHFilter( self , _decayDescriptors):
+    def _D02HHHHFilter( self , _decayDescriptors,_name):
         _combinationCut = "(ADAMASS('D0') < %(Dto4h_AMassWin)s *MeV) & (APT > 1500.*MeV) & (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
         _daughtersCuts = { "pi+" : "  (PT > 250 *MeV) & (P>2.0*GeV)"\
                            "& (TRCHI2DOF < %(TRCHI2)s)" % self.__confdict__}
         _motherCut = " (ADMASS('D0') < %(Dto4h_MassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
                      "& (INTREE((ABSID=='pi+')& (PT > %(KPiPT)s *MeV) &(MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s)))" \
                      "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s)"  % self.__confdict__
-        _d02hhhh = CombineParticles( DecayDescriptors = _decayDescriptors,
+        _d02hhhh = CombineParticles( name = _name,
+                                     DecayDescriptors = _decayDescriptors,
                                      DaughtersCuts = _daughtersCuts,
                                      CombinationCut = _combinationCut,
                                      MotherCut = _motherCut)                            
         return _d02hhhh
 
 
-    def _Ds2HMuMuFilter( self , _decayDescriptors):
+    def _Ds2HMuMuFilter( self , _decayDescriptors, _name):
         _combinationCut = "(DAMASS('D_s+') < %(DsAMassWin)s *MeV) & (DAMASS('D+')> -%(DsAMassWin)s *MeV)"\
                           "& (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > 1800.*MeV) & (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
         _motherCut = "(SUMTREE( PT,  ISBASIC )>1800.*MeV) &(DMASS('D_s+') < %(DsMassWin)s *MeV) & (DMASS('D+') > -%(DsMassWin)s *MeV)"\
                      "& (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
                      "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s)"  % self.__confdict__
-        _ds2hmumu = CombineParticles( DecayDescriptors = _decayDescriptors,
+        _ds2hmumu = CombineParticles( name = _name,
+                                      DecayDescriptors = _decayDescriptors,
                                       CombinationCut = _combinationCut,
                                       MotherCut = _motherCut)                             
         return _ds2hmumu
     
-    def _Ds2KsHFilter( self , _decayDescriptors):
+    def _Ds2KsHFilter( self , _decayDescriptors, _name):
         _combinationCut = "(DAMASS('D_s+') < %(DsAMassWin)s *MeV) & (DAMASS('D+')> -%(DsAMassWin)s *MeV)"\
                           "& (ACHILD(PT,1)+ACHILD(PT,2) > 1500.*MeV)" \
                           "& (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
         _motherCut = "(SUMTREE( PT,  ISBASIC )>1500.*MeV) &(DMASS('D_s+') < %(DsMassWin)s *MeV) & (DMASS('D+') > -%(DsMassWin)s *MeV)"\
                      "& (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
                      "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s)"  % self.__confdict__
-        _ds2ksh = CombineParticles( DecayDescriptors = _decayDescriptors,
+        _ds2ksh = CombineParticles( name = _name,
+                                    DecayDescriptors = _decayDescriptors,
                                     CombinationCut = _combinationCut,
                                     MotherCut = _motherCut)                             
         return _ds2ksh
 
     
-    def _D02KsHHFilter( self , _decayDescriptors):
+    def _D02KsHHFilter( self , _decayDescriptors, _name):
         _combinationCut = "(ADAMASS('D0') < %(DsAMassWin)s *MeV) & (ACHILD(PT,1)+ACHILD(PT,2) > 1800.*MeV)"\
                           "& (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
         _motherCut = "(SUMTREE( PT,  ISBASIC )>1800.*MeV) &(ADMASS('D0') < %(DsMassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
                      "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s)"  % self.__confdict__
-        _d02KsHH = CombineParticles( DecayDescriptors = _decayDescriptors,
+        _d02KsHH = CombineParticles( name = _name,
+                                     DecayDescriptors = _decayDescriptors,
                                      CombinationCut = _combinationCut,
                                      MotherCut = _motherCut)                            
         return _d02KsHH
 
 
-    def _D02KsKsFilter( self , _decayDescriptors):
+    def _D02KsKsFilter( self , _decayDescriptors, _name):
         
         _combinationCut = "(ADAMASS('D0') < %(DsAMassWin)s *MeV) & (ACHILD(PT,1)+ACHILD(PT,2) > 1800.*MeV)"\
                           "& (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
         _motherCut = "(SUMTREE( PT,  ISBASIC )>1800.*MeV) &(ADMASS('D0') < %(DsMassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
                      "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s)"  % self.__confdict__
-        _d02KsKs = CombineParticles( DecayDescriptors = _decayDescriptors,
+        _d02KsKs = CombineParticles( name = _name,
+                                     DecayDescriptors = _decayDescriptors,
                                      CombinationCut = _combinationCut,
                                      MotherCut = _motherCut)                            
         return _d02KsKs
     
-
-    def _D02HHPi0Filter( self , _decayDescriptors):
+    
+    def _D02HHPi0Filter( self , _decayDescriptors, _name):
         _combinationCut = "(ADAMASS('D0') < %(D02HHPi0AMassWin)s *MeV) " \
                           " & (APT> %(D02HHPi0PtCut)s *MeV)" \
                           " & (ADOCA(1,2) < %(D02HHPi0DocaCut)s)" % self.__confdict__
@@ -932,12 +935,31 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
                      "& (SUMTREE( PT,  ISBASIC )> %(D02HHPi0PtCut)s *MeV) " \
                      "& (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
                      "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s)"  % self.__confdict__
-        _d02HHPi0 = CombineParticles( DecayDescriptors = _decayDescriptors,
-                                       CombinationCut = _combinationCut,
-                                       MotherCut = _motherCut)
+        _d02HHPi0 = CombineParticles( name = _name,
+                                      DecayDescriptors = _decayDescriptors,
+                                      CombinationCut = _combinationCut,
+                                      MotherCut = _motherCut)
         return _d02HHPi0
 
-    def _Lc2L0HFilter( self , _decayDescriptors):
+    def _D02HHPi0FilterFIT( self , _decayDescriptors,_name):
+        _combinationCut = "(ADAMASS('D0') < %(D02HHPi0AMassWin)s *MeV) " \
+                          " & (APT> %(D02HHPi0PtCut)s *MeV)" \
+                          " & (ADOCA(1,2) < %(D02HHPi0DocaCut)s)" % self.__confdict__
+        _motherCut = "(ADMASS('D0') < %(D02HHPi0MassWin)s *MeV) " \
+                     "& (SUMTREE( PT,  ISBASIC )> %(D02HHPi0PtCut)s *MeV) " \
+                     "& (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
+                     "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s)"  % self.__confdict__
+        _d02HHPi0 = CombineParticles( name = _name,
+                                      DecayDescriptors = _decayDescriptors,
+                                      CombinationCut = _combinationCut,
+                                      MotherCut = _motherCut)
+        _d02HHPi0.addTool( OfflineVertexFitter )
+        _d02HHPi0.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+        _d02HHPi0.OfflineVertexFitter.useResonanceVertex = False
+        _d02HHPi0.ReFitPVs = True
+        return _d02HHPi0
+
+    def _Lc2L0HFilter( self , _decayDescriptors, _name):
         _combinationCut = "(ADAMASS('Lambda_c+') < %(DsAMassWin)s *MeV) " \
                           " & (ADOCACHI2CUT( %(DDocaChi2Max)s, '')) " \
                           " & (ACHILD(PT,1)+ACHILD(PT,2) > 1800.*MeV)" % self.__confdict__
@@ -945,26 +967,28 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
                      " & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
                      " & (SUMTREE( PT,  ISBASIC )>1800.*MeV) " \
                      " & (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s)"  % self.__confdict__
-        _lambdac = CombineParticles( DecayDescriptors = _decayDescriptors,
+        _lambdac = CombineParticles( name = _name,
+                                     DecayDescriptors = _decayDescriptors,
                                      CombinationCut = _combinationCut,
                                      MotherCut = _motherCut)                                                         
         return _lambdac
 
 
-    def  _Lc2pHHFilter( self , _decayDescriptors):
+    def  _Lc2pHHFilter( self , _decayDescriptors, _name):
         _daughtersCuts = {  "p+" :  "(TRCHI2DOF < %(TRCHI2)s) & (PT > %(KPiPT)s *MeV) & (P>2.0*GeV)"\
                             "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s)  &  (PIDp> %(KaonPIDK)s) & (PIDp-PIDK>1.0e-10)" % self.__confdict__ }
         _combinationCut = "(ADAMASS('Lambda_c+') < %(DsAMassWin)s *MeV) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > 1800.*MeV)"\
                           "& (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
         _motherCut = "(ADMASS('Lambda_c+') < %(DsMassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
                      "& (BPVVDCHI2 > %(DsFDCHI2)s) & (SUMTREE( PT,  ISBASIC )>1800.*MeV) & (BPVDIRA> %(DsDIRA)s)"  % self.__confdict__
-        _lambdac = CombineParticles( DecayDescriptors = _decayDescriptors,
+        _lambdac = CombineParticles( name = _name,
+                                     DecayDescriptors = _decayDescriptors,
                                      DaughtersCuts = _daughtersCuts,
                                      CombinationCut = _combinationCut,
                                      MotherCut = _motherCut)                                                         
         return _lambdac
     
-def makeDstar(name, inputD0,Dstar_cuts) : 
+def makeDstar(_name, inputD0,Dstar_cuts) : 
     """
     Given a list of D0, try to make D*+ -> D0 pi+
     """
@@ -974,14 +998,15 @@ def makeDstar(name, inputD0,Dstar_cuts) :
     _cutsDstarMoth_base = '(PT > %(Dstar_SoftPion_PT)s * MeV) & (VFASPF(VCHI2/VDOF) < %(Dstar_Chi2)s )' % Dstar_cuts
     _cutsDstarMoth_DM = '(MM - CHILD(MM,1) - CHILD(MM,2) > %(Dstar_wideDMCutLower)s *MeV) & (MM - CHILD(MM,1) - CHILD(MM,2) < %(Dstar_wideDMCutUpper)s *MeV)' % Dstar_cuts
     _cutsDstarMoth = '(' + _cutsDstarMoth_base + ' & ' + _cutsDstarMoth_DM + ')'
-    _Dstar = CombineParticles( DecayDescriptor = "[D*(2010)+ -> D0 pi+]cc",
+    _Dstar = CombineParticles( name = _name,
+                               DecayDescriptor = "[D*(2010)+ -> D0 pi+]cc",
                                DaughtersCuts = { "pi+" : _cutsSoftPi },
                                CombinationCut = _cutsDstarComb,
                                MotherCut = _cutsDstarMoth)
-    return Selection ( name,Algorithm = _Dstar,RequiredSelections = inputD0 + [_softPi])
+    return Selection (name = "Sel"+_name,Algorithm = _Dstar,RequiredSelections = inputD0 + [_softPi])
 
     
-def makeb2DMuX(name,
+def makeb2DMuX(_name,
                DecayDescriptors,
                MuSel,
                DSel,
@@ -989,10 +1014,10 @@ def makeb2DMuX(name,
     _combinationCut = "(AM<6.2*GeV)"
     _motherCut = "  (MM<6.0*GeV) & (MM>2.5*GeV) & (VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRA)s)  " \
                    "& (MINTREE(((ABSID=='D+') | (ABSID=='D0') | (ABSID=='Lambda_c+')) , VFASPF(VZ))-VFASPF(VZ) > %(DZ)s *mm ) "  % BCuts
-    _B = CombineParticles(DecayDescriptors = DecayDescriptors,
+    _B = CombineParticles(name = _name,DecayDescriptors = DecayDescriptors,
                           CombinationCut = _combinationCut,
                           MotherCut = _motherCut)
-    return Selection (name,
+    return Selection (name = "Sel"+_name,
                       Algorithm = _B,
                       RequiredSelections = [MuSel, DSel])
 

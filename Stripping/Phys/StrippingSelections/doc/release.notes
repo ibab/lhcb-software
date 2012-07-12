@@ -6,6 +6,9 @@
 
 !========================= StrippingSelections v3r14 2012-06-27 =========================
 
+! 2012-07-12 - Mika Vesterinen
+ - StrippingCharmFromBSemi.py - Added possibility for pi0 mass constraint. Added names to all of the algorithms/configurables.
+
 ! 2012-07-11 - Lucio Anderlini
  - StrippingXibc.py
    _globalEventCuts changed to include the required filter Preambulo, 
