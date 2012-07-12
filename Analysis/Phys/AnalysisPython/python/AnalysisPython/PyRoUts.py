@@ -925,7 +925,58 @@ def _a_iteritems_ ( axis ) :
         yield i,l,c,u
 
 ROOT.TAxis. iteritems     = _a_iteritems_
-        
+
+# =============================================================================
+# soem minor decoration for 2D-histos 
+# =============================================================================
+
+# =============================================================================
+## transpose 2D-ihstogram 
+def _h2_transpose_ ( h2 ) :
+    """
+    Transpose 2D-histogram
+
+    >>> h2 = ...
+    >>> ht = h2.T()
+    
+    """
+    if hasattr ( h2 , 'GetSumw2' ) and not h2.GetSumw2() : h2.Sumw2()
+    #
+    xa = h2.GetXaxis()
+    ya = h2.GetYaxis()
+    #
+    hn = h2_axes ( ya , xa )  
+    ##
+    for i in h2 :
+        hn[ (i[1],i[0]) ] = h2[ i ] 
+
+    return hn
+
+
+ROOT.TH2F.T         = _h2_transpose_
+ROOT.TH2D.T         = _h2_transpose_
+ROOT.TH2F.Transpose = _h2_transpose_
+ROOT.TH2D.Transpone = _h2_transpose_
+ROOT.TH2F.transpose = _h2_transpose_
+ROOT.TH2D.transpone = _h2_transpose_
+
+# =============================================================================
+## Draw 2D-histogram as 'colz'
+def _h2_colz_ ( h2 , opts = '' ) :
+    """
+    Draw 2D-histogram as 'colz'
+    
+    >>> h2.colz()
+    
+    """
+    return h2.Draw ( 'colz ' + opts )
+
+
+ROOT.TH2F . colz = _h2_colz_
+ROOT.TH2D . colz = _h2_colz_
+ROOT.TH2F . Colz = _h2_colz_
+ROOT.TH2D . Colz = _h2_colz_
+
 # =============================================================================
 # Decorate fit results 
 # =============================================================================

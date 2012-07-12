@@ -5,6 +5,11 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2012-07-12 - Vanya Belyaev
+
+ - add transpose operation for 2D-histos 
+
+
 !========================= AnalysisPython v2r14 2012-06-28 =========================
 
 ! 2012-06-24 - Vanya Belyaev
