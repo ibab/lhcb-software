@@ -4,6 +4,11 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2012-07-12 - Vanya Belyaev
+
+ - IDecayTreeFit:
+   add one more option to constrain mass to something else than pdg mass
+
 !========================= DaVinciInterfaces v2r16 2012-07-09 =========================
 
 ! 2012-07-02 - Chris Jones

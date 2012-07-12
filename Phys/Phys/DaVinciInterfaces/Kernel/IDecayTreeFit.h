@@ -27,16 +27,20 @@ namespace LHCb  { class DecayTree  ; }                     // Phys/DaVinciTypes
  *  the nice utility for globl fits of decay trees, 
  *  coded by Wouter Hulsbergen
  *
- *  @see DEcayTreeFitter::Fitter
+ *  @see DecayTreeFitter::Fitter
  *  @author Vanya Belyaev
  *  @date   2010-05-24
+ * 
+ *                    $Revision$
+ *  Last modification $Date$
+ *  by                $Author$
  */
 class GAUDI_API IDecayTreeFit : public virtual IAlgTool 
 {
 public: 
   // ==========================================================================
   /// interface machinery 
-  DeclareInterfaceID ( IDecayTreeFit , 2 , 0 ) ;
+  DeclareInterfaceID ( IDecayTreeFit , 3 , 0 ) ;
   // ==========================================================================
 public: 
   // ==========================================================================
@@ -83,6 +87,7 @@ public:
   virtual StatusCode fit 
   ( const LHCb::Particle*   decay      , 
     const LHCb::VertexBase* origin = 0 ) const = 0 ;
+  // ==========================================================================
   /** get the fitted parameters for the particle 
    *
    *  @code 
@@ -243,6 +248,34 @@ public:
    *  @param pid (INPUT) particle-ID to be constrained
    */
   virtual void addConstraint ( const LHCb::ParticleID& pid ) = 0 ;
+  // ==========================================================================  
+  /** add the constraint 
+   *
+   *  @code 
+   * 
+   *   IDecayTreeFitter*       fitter = ...;  // get the fitter 
+   *   const LHCb::Particle*   p      = ... ; // get the particle 
+   *
+   *   const double mass1 = ... ;
+   *   const double mass2 = ... ;
+   *
+   *   // apply mass-constrainst for charm for the next fit 
+   *   fitter -> addConstraint ( LHCb::ParticleID( 240  )  , mass1 ) ;  
+   *   fitter -> addConstraint ( LHCb::ParticleID( 140  )  , mass2 ) ;  
+   *
+   *   // fit it !
+   *   StatusCode sc = fitter -> fit ( p ) ;  // fit it!!  
+   *   if ( sc.isFailure() ) { ... }          
+   *
+   *  @endcode 
+   *
+   * @attention Mass-constraints is active only for the next call 
+   *            of IDecayTreeFit::fit
+   *  
+   *  @param pid (INPUT) particle-ID to be constrained
+   */
+  virtual void addConstraint ( const LHCb::ParticleID& pid  , 
+                               const double            mass ) = 0 ;
   // ==========================================================================  
 protected:
   // ==========================================================================
