@@ -84,6 +84,8 @@ namespace DecayTreeFitter
     void setMassConstraint ( const LHCb::Particle&   cand , double mass ) ;
     /// Add or remove a mass constraintfor a certain ParticleID
     void setMassConstraint ( const LHCb::ParticleID& pid  , bool add = true ) ;
+    /// Add a constraint to a mass different from the property table mass
+    void setMassConstraint ( const LHCb::ParticleID& pid  , double mass ) ;
     /// Fit the decay tree
     void fit ( int     maxNumberOfIterations  = 10   , 
                double deltaChisquareConverged = 0.01 ) ;

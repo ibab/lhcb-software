@@ -189,6 +189,23 @@ namespace DecayTreeFitter
       m_constraintlist.clear() ; 
     }
   }
+
+  void
+  DecayChain::setMassConstraint( const LHCb::ParticleID& pid , double mass ) 
+  {
+    ParticleBase::ParticleContainer particles ;
+    m_mother->locate( pid, particles ) ;
+    bool changed(false) ;
+    for(ParticleBase::ParticleContainer::iterator it = particles.begin() ;
+        it != particles.end() ; ++it)
+    { (*it)->setMassConstraint(mass) ;  changed = true ; }
+    //
+    if (changed) { 
+      m_dim = 0 ;
+      m_constraintlist.clear() ; 
+    }
+  }
+
   
   int 
   DecayChain::index(const LHCb::Particle& bc) const {

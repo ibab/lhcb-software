@@ -8,6 +8,10 @@
 ! http://www.slac.stanford.edu/spires/find/hep/www?eprint=physics/0503191
 !-----------------------------------------------------------------------------
 
+! 2012-07-12 - Vanya Belyaev
+
+- add one more option to constrain mass to something else than pdg mass
+
 ! 2012-07-10 - Wouter Hulsbergen
 - revive functionality to fit with missing particles
 - add option to constrain mass to something else than pdg mass

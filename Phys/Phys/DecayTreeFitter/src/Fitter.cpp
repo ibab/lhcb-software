@@ -344,6 +344,11 @@ namespace DecayTreeFitter
     m_decaychain->setMassConstraint(pid,add) ;
     m_status = UnFitted ;
   }
+  void Fitter::setMassConstraint( const LHCb::ParticleID& pid, double mass)
+  {
+    m_decaychain->setMassConstraint(pid,mass) ;
+    m_status = UnFitted ;
+  }
 
   void Fitter::updateIndex()
   {

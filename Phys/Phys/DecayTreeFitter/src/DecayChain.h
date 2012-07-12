@@ -49,6 +49,7 @@ namespace DecayTreeFitter {
     void setMassConstraint( const LHCb::Particle& bc, bool add=true) ;
     void setMassConstraint( const LHCb::Particle& bc, double mass) ;
     void setMassConstraint( const LHCb::ParticleID& pid, bool add=true) ;
+    void setMassConstraint( const LHCb::ParticleID& pid, double mass) ;
     
     ChiSquare chiSquare( const LHCb::Particle& bc, const FitParams& fitpars ) const ;
   private:
