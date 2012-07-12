@@ -275,7 +275,6 @@ StatusCode MonitorSvc::i_start()
     m_MonSys = &MonSys::m_instance();
     m_monsysrecover++;
   }
-  m_MonSSysSize = m_MonSys->Subsyslist->size();
   if (m_CntrMgr != 0)
   {
 //    //printf("In STARTS Method... Counter Manager present... Closing it...\n");
@@ -283,6 +282,7 @@ StatusCode MonitorSvc::i_start()
   }
   if (m_started)
   {
+    m_MonSSysSize = m_MonSys->Subsyslist->size();
     m_MonSys->start();
     DimServer::autoStartOn();
 //    DimServer::start();
@@ -330,6 +330,7 @@ StatusCode MonitorSvc::i_start()
   }
   DimServer::autoStartOn();
   DimServer::start();
+  m_MonSSysSize = m_MonSys->Subsyslist->size();
   m_MonSys->start();
   m_started = true;
   return StatusCode::SUCCESS;
