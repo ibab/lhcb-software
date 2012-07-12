@@ -70,6 +70,9 @@ use BcmMoniSim          v1r2      Bcm
 use BlsMoniSim          v1r1      Bls
 use VLMoniSim           v1r0      VL
 
+# Packages for MC generator tuning
+use GenTune             v*        Gen
+
 # GMDL
 #use GDML                v1r240p0  Sim
 #use GDMLG4Writer        v2r0      Sim
