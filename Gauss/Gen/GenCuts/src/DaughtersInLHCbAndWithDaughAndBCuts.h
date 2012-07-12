@@ -49,12 +49,12 @@ class DaughtersInLHCbAndWithDaughAndBCuts : public GaudiTool, virtual public IGe
   /** Momentum Cut function
    *
    */
-  bool momentumCut( const HepMC::GenParticle *p, const double pMin, double sumP = 0) const ;  
+  bool momentumCut( const HepMC::GenParticle *p, const double pMin, double& sumP) const ;  
 
   /** Transverse Momentum Cut function
    *
    */
-  bool transverseMomentumCut( const HepMC::GenParticle *p, const double pTMin, double sumPt = 0) const ;
+  bool transverseMomentumCut( const HepMC::GenParticle *p, const double pTMin, double& sumPt) const ;
 
   // Minimum value of angle around z-axis for charged daughters
   double m_chargedThetaMin ;

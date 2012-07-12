@@ -90,12 +90,13 @@ bool DaughtersInLHCbAndWithDaughAndBCuts::passCuts( const HepMC::GenParticle * t
   HepMC::GenVertex * EV = theSignal -> end_vertex() ;
   if ( 0 == EV ) return true ;
 
+double fakeSum(0.);
   //B signal cuts
   bool pass = flightCut(theSignal, m_minBFD );
   if (!pass) return false;
-  pass = momentumCut(theSignal, m_minBP );
+  pass = momentumCut(theSignal, m_minBP,fakeSum );
   if (!pass) return false;
-  pass = transverseMomentumCut(theSignal, m_minBPT );
+  pass = transverseMomentumCut(theSignal, m_minBPT,fakeSum );
   if (!pass) return false;
   
   typedef std::vector< HepMC::GenParticle * > Particles ;
@@ -163,11 +164,11 @@ bool DaughtersInLHCbAndWithDaughAndBCuts::passCuts( const HepMC::GenParticle * t
     if ( 3122 == abs( theParent -> pdg_id() ) || 310 == theParent -> pdg_id() ) {
 
     // momentum cut
-    bool pass = momentumCut((*it), m_minLongLivedDaughP );
+    bool pass = momentumCut((*it), m_minLongLivedDaughP, fakeSum );
     if (!pass) return false;
   
     //transerve momentum cut
-    pass = transverseMomentumCut((*it), m_minLongLivedDaughPT );
+    pass = transverseMomentumCut((*it), m_minLongLivedDaughPT,fakeSum );
     if (!pass) return false;
 
     continue;
@@ -210,10 +211,12 @@ bool DaughtersInLHCbAndWithDaughAndBCuts::passCuts( const HepMC::GenParticle * t
     else   pass = transverseMomentumCut((*it), m_minTrackPT, sumPt );
     if (!pass) return false;
 
-    if (sumP < m_minSumP) return false;
-    if (sumPt < m_minSumPT) return false;
-    
   }
+
+debug() << sumP << " vs " << m_minSumP << " " << sumPt << " " << m_minSumPT << endmsg;
+
+  if (sumP < m_minSumP) return false;
+  if (sumPt < m_minSumPT) return false;
   
   debug() << "Event passed !" << endmsg ;
   
@@ -222,7 +225,7 @@ bool DaughtersInLHCbAndWithDaughAndBCuts::passCuts( const HepMC::GenParticle * t
 
 bool DaughtersInLHCbAndWithDaughAndBCuts::transverseMomentumCut( const HepMC::GenParticle *p,
                                                                  const double pTmin,
-                                                                 double sumPt ) const
+                                                                 double& sumPt ) const
 {
   bool pass(true);
   double px, py, pz, pt;
@@ -246,7 +249,7 @@ bool DaughtersInLHCbAndWithDaughAndBCuts::transverseMomentumCut( const HepMC::Ge
 
 bool DaughtersInLHCbAndWithDaughAndBCuts::momentumCut( const HepMC::GenParticle *p, 
                                                        const double pmin,
-                                                       double sumP ) const 
+                                                       double& sumP ) const 
 {
   bool pass(true);  
   double px, py, pz, pp;

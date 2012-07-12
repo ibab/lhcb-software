@@ -7,6 +7,7 @@
 ! 2012-07-12 - Aurelien Martens
  - Added a new class to allow to cut both on KS/Lambda's, the other daughters of a Hb and the Hb itself,
    mainly for BnoC decays
+ - Added a bug fix also
 
 ! 2012-06-22 - Marc Olivier Bettler
  - With Alessio Sarti, modified DiLeptonInAcceptance.cpp to allow for cut on 
