@@ -310,6 +310,37 @@ namespace LoKi
      */
     virtual void addConstraint ( const LHCb::ParticleID& pid ) ;
     // ========================================================================
+    /** add the constraint 
+     *
+     *  @code 
+     * 
+     *   IDecayTreeFit*       fitter = ...;  // get the fitter 
+     *   const LHCb::Particle*   p      = ... ; // get the particle 
+     *
+     *   const double mass1 = ... ;
+     *   const double mass2 = ... ;
+     *
+     *   // apply mass-constrainst for charm for the next fit 
+     *   fitter -> addConstraint ( LHCb::ParticleID( 240  )  , mass1 ) ;  
+     *   fitter -> addConstraint ( LHCb::ParticleID( 140  )  , mass2 ) ;  
+     *
+     *   // fit it !
+     *   StatusCode sc = fitter -> fit ( p ) ;  // fit it!!  
+     *   if ( sc.isFailure() ) { ... }          
+     *
+     *  @endcode 
+     *
+     * @attention Mass-constraints is active only for the next call 
+     *            of IDecayTreeFit::fit
+     *  
+     *  @param pid (INPUT) particle-ID to be constrained
+     *
+     *  @see IDecayTreeFit
+     *  @see IDecayTreeFit::addConstraint
+     */
+    virtual void addConstraint ( const LHCb::ParticleID& pid  , 
+                                 const double            mass ) ;
+    // ========================================================================
   public:  // IParticleReFitter 
     // ========================================================================
     /** The basic method for "refit" of the particle
@@ -360,9 +391,12 @@ namespace LoKi
     //
       , m_global_pids      (   ) 
       , m_locals_pids      (   )
+      , m_global_mass      (   ) 
+      , m_locals_mass      (   )
     //
       , m_extrapolatorName (   )
       , m_constraints      (   ) 
+      , m_masses           (   ) 
     {
       //
       declareProperty 
@@ -377,7 +411,14 @@ namespace LoKi
           m_constraints                              , 
           "List of particles to be mass-constrained" ) 
         -> declareUpdateHandler 
-        ( &LoKi::DecayTreeFit::updateConstraints   , this ) ;  
+        ( &LoKi::DecayTreeFit::updateConstraints1  , this ) ;  
+      //
+      declareProperty
+        ( "Masses"                                   , 
+          m_masses                                   , 
+          "Non-default masses of particles to be usef for mass-constraints" ) 
+        -> declareUpdateHandler 
+        ( &LoKi::DecayTreeFit::updateConstraints2  , this ) ;  
       //
     }
     /// virtual and protected destructor 
@@ -409,18 +450,31 @@ namespace LoKi
     }
     // ========================================================================
     /// update-handler for the property "MassConstraints"
-    void updateConstraints ( Property& /* p */ )      // update the constraints 
+    void updateConstraints1 ( Property& /* p */ )      // update the constraints 
     {
       // no action if not yet initialized 
       if ( Gaudi::StateMachine::INITIALIZED > FSMState() ) { return ; }
       // 
-      StatusCode sc = decodeConstraints () ;
-      Assert ( sc.isSuccess() , "Unable to decode Mass-Constraints" , sc ) ;
+      StatusCode sc = decodeConstraints1 () ;
+      Assert ( sc.isSuccess() , "Unable to decode MassConstraints" , sc ) ;
+      //
+    }
+    // ========================================================================
+    /// update-handler for the property "Masses"
+    void updateConstraints2 ( Property& /* p */ )      // update the constraints 
+    {
+      // no action if not yet initialized 
+      if ( Gaudi::StateMachine::INITIALIZED > FSMState() ) { return ; }
+      // 
+      StatusCode sc = decodeConstraints2 () ;
+      Assert ( sc.isSuccess() , "Unable to decode Masses" , sc ) ;
       //
     }
     // ========================================================================
     /// decode vector of mass-consstraints 
-    StatusCode decodeConstraints () ;      // decode vector of mass-constraints
+    StatusCode decodeConstraints1 () ;      // decode vector of mass-constraints
+    /// decode map of mass-consstraints 
+    StatusCode decodeConstraints2 () ;      // decode map of mass-constraints
     // ========================================================================
   protected:
     // ========================================================================
@@ -447,12 +501,18 @@ namespace LoKi
     /// list of mass-constrains (local) 
     mutable PIDs m_locals_pids ;            //  list of mass-constrains (local) 
     // ========================================================================
+    typedef std::map<LHCb::ParticleID,double>  MASS ;
+    MASS         m_global_mass ; // map { PID : mass }
+    mutable MASS m_locals_mass ; // map { PID : mass }
+    // ========================================================================
     // properties 
     // ========================================================================
     /// the name of extrapolator 
     std::string               m_extrapolatorName ; //  the name of extrapolator 
     /// the list of mass-constraints
     std::vector<std::string>  m_constraints ;  // the list of mass-constraints
+    /// the map of non-standard masses 
+    std::map<std::string,double> m_masses   ; // the map of non-standard masses 
     // ========================================================================
   };  
   // ==========================================================================
@@ -473,8 +533,10 @@ StatusCode LoKi::DecayTreeFit::initialize ()          // initialize the tool
     log << endreq ;  
   } // 
   //
-  sc = decodeConstraints () ;
-  if ( sc.isFailure() ) { return Error ( "Unable to decode Constaints" , sc ) ; }
+  sc = decodeConstraints1 () ;
+  if ( sc.isFailure() ) { return Error ( "Unable to decode MassConstaints" , sc ) ; }
+  sc = decodeConstraints2 () ;
+  if ( sc.isFailure() ) { return Error ( "Unable to decode Masses"         , sc ) ; }
   //
   svc<LoKi::ILoKiSvc> ("LoKiSvc" , true ) ;
   //
@@ -514,19 +576,30 @@ StatusCode LoKi::DecayTreeFit::fit                     // fit the decay tree
     ( 0 == origin ? 
       new Fitter ( *decay           ) : 
       new Fitter ( *decay , *origin ) ) ;
+  //
   // apply "global" constraints (if needed)
+  //
   for ( PIDs::const_iterator ipid = m_global_pids.begin() ; 
         m_global_pids.end() != ipid ; ++ipid ) 
   { m_fitter -> setMassConstraint ( *ipid ) ; }
-  // apply "global" constraints (if needed)
+  for ( MASS::const_iterator imass = m_global_mass.begin() ; 
+        m_global_mass.end() != imass ; ++imass ) 
+  { m_fitter -> setMassConstraint ( imass->first , imass->second ) ; }
+  //
+  // apply "local" constraints (if needed)
+  //
   for ( PIDs::const_iterator ipid = m_locals_pids.begin() ; 
         m_locals_pids.end() != ipid ; ++ipid )
   { m_fitter -> setMassConstraint ( *ipid ) ; }
+  for ( MASS::const_iterator imass = m_locals_mass.begin() ; 
+        m_locals_mass.end() != imass ; ++imass ) 
+  { m_fitter -> setMassConstraint ( imass->first , imass->second ) ; }
   // fit!
   m_fitter->fit() ;
   //
-  { // clear local container of local constraints
+  { // clear local containers of local constraints
     m_locals_pids.clear () ;
+    m_locals_mass.clear () ;
   }
   // get the status
   Fitter::FitStatus status = m_fitter->status() ;
@@ -707,11 +780,31 @@ void LoKi::DecayTreeFit::addConstraint ( const LHCb::ParticleID& pid )
   //
   if ( parent() == toolSvc() ) 
   {
-    Error ("Mass Constraint can't be added to PUBLIC tool! ignore!").ignore() ;
+    Error ( "Mass Constraint can't be added to PUBLIC tool! ignore!").ignore() ;
     return ;
   }
   //
   m_locals_pids.push_back ( LHCb::ParticleID ( pid.abspid() ) ) ;
+}
+// ============================================================================
+/*  add the constraint 
+ *  @param pid  (INPUT) particle-ID to be constrained
+ *  @param mass (INPUT) the target mass 
+ *  @see IDecayTreeFit
+ *  @see IDecayTreeFit::addConstraint
+ */
+// ============================================================================
+void LoKi::DecayTreeFit::addConstraint ( const LHCb::ParticleID& pid  ,
+                                         const double            mass ) 
+{
+  //
+  if ( parent() == toolSvc() ) 
+  {
+    Error ( "Mass Constraint can't be added to PUBLIC tool! ignore!").ignore() ;
+    return ;
+  }
+  //
+  m_locals_mass [ pid ] = mass ;
 }
 // ============================================================================
 /*  The basic method for "refit" of the particle
@@ -757,7 +850,7 @@ StatusCode LoKi::DecayTreeFit::reFit ( LHCb::Particle& particle ) const
 // ============================================================================
 // decode vector of mass-consstraints 
 // ============================================================================
-StatusCode LoKi::DecayTreeFit::decodeConstraints ()    // decode constraints
+StatusCode LoKi::DecayTreeFit::decodeConstraints1 ()    // decode constraints
 {
   m_global_pids.clear() ;
   //
@@ -778,7 +871,7 @@ StatusCode LoKi::DecayTreeFit::decodeConstraints ()    // decode constraints
     const LHCb::ParticleProperty* pp = ppsvc->find ( *ic ) ;
     if ( 0 == pp ) { return Error ( "Unable to find particle '" + (*ic) + "'") ; }
     pids.insert ( LHCb::ParticleID ( pp->pid().abspid() ) ) ;
-  }  
+  }
   //
   m_global_pids.insert ( m_global_pids.end() , pids.begin() , pids.end() ) ;
   //
@@ -790,6 +883,49 @@ StatusCode LoKi::DecayTreeFit::decodeConstraints ()    // decode constraints
     const LHCb::ParticleProperty* pp = ppsvc->find ( *ipid ) ;
     if ( 0 != pp ) { parts.insert ( pp->particle () ) ; }
   }
+  //
+  log << " Mass Constraints will be applied for : " <<
+    Gaudi::Utils::toString ( parts ) << endreq ;
+  //
+  release ( ppsvc ) ;
+  //
+  return StatusCode::SUCCESS ;
+}
+// ============================================================================
+// decode vector of mass-consstraints 
+// ============================================================================
+StatusCode LoKi::DecayTreeFit::decodeConstraints2 ()    // decode constraints
+{
+  m_global_mass.clear() ;
+  //
+  if ( m_masses.empty() ) 
+  {
+    MsgStream& log = debug() ;
+    log << " No Mass-Constraints will be applied " << endreq ;
+    return StatusCode::SUCCESS ;
+  }
+  ///
+  const LHCb::IParticlePropertySvc* ppsvc = 
+    svc<LHCb::IParticlePropertySvc>( "LHCb::ParticlePropertySvc" ) ;
+  //
+  for ( std::map<std::string,double>::const_iterator im = m_masses.begin() ;
+        m_masses.end() != im ; ++im ) 
+  {
+    const LHCb::ParticleProperty* pp = ppsvc->find ( im->first ) ;
+    if ( 0 == pp ) { return Error ( "Unable to find particle '" + (im->first ) + "'") ; }
+    m_global_mass [ pp->particleID() ] = im->second ;
+  }
+  //
+  MsgStream& log = info() ;
+  std::set<std::string> parts ;
+  //
+  for ( MASS::const_iterator imas = m_global_mass.begin() ;
+        m_global_mass.end() != imas ; ++imas ) 
+  {
+    const LHCb::ParticleProperty* pp = ppsvc->find ( imas->first ) ;
+    if ( 0 != pp ) { parts.insert ( pp->particle () ) ; }
+  }
+  //
   log << " Mass Constraints will be applied for : " <<
     Gaudi::Utils::toString ( parts ) << endreq ;
   //

@@ -5,6 +5,11 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2012-07-12 - Vanya Belyaev
+
+ - LoKi::DecayTreeFit
+   add options to constrain mass to something else than pdg mass
+
 !========================= LoKiFitters v4r2p1 2012-05-03 =======================
 
 ! 2012-05-03 - Chris Jones
