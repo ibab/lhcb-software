@@ -15,7 +15,7 @@ private:
   bool m_periodic;
   bool m_synched;
   bool m_ForceExit;
-protected:
+public:
   void *m_arg;
   unsigned long long  m_period;
   unsigned long long m_dueTime;

@@ -25,6 +25,7 @@ void StatusService::serviceHandler()
   m_MonSys = &MonSys::m_instance();
   std::vector<MonSubSys*> *ssyslist;
   ssyslist = m_MonSys->getSubsyslist();
+  char str[255];
   if(ssyslist != 0)
   {
     for (size_t i = 0; i < ssyslist->size(); i++)
@@ -41,6 +42,8 @@ void StatusService::serviceHandler()
         {
           statusline.append("Histogram Subsystem stopped ");
         }
+        sprintf(str,"Hist Timer Thread ID %llx ",(long long unsigned int)(ssys->m_updateTimer->m_thread));
+        statusline.append(str);
       }
       else if (ssys->m_type == MONSUBSYS_Counter)
       {
@@ -52,6 +55,8 @@ void StatusService::serviceHandler()
         {
           statusline.append("Counter Subsystem stopped ");
         }
+        sprintf(str,"Counter Timer Thread ID %llx ",(long long unsigned int)(ssys->m_updateTimer->m_thread));
+        statusline.append(str);
       }
     }
   }
@@ -73,7 +78,6 @@ void StatusService::serviceHandler()
     statusline.append("Monitor Service m_started FALSE ");
   }
   int msysrec = m_monitorSvc->m_monsysrecover;
-  char str[255];
   sprintf(str,"Monitor System Pointer recovered %d times ",msysrec);
   statusline.append(str);
   switch (msvc_state)
