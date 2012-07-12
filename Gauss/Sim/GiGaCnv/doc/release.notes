@@ -4,6 +4,10 @@
 ! Purpose     : Hold converters between LHCb and Geant4
 !-----------------------------------------------------------------------------
 
+! 2012-07-12 - Gloria Corti from Heinrich Schindler and Matt Reid
+ - Use of new GDMLReader tool to be able to read files from CAD -> GDML -> G4.
+   This allows test of geometry at the simulation level
+
 !========================= GiGaCnv v19r0 2012-05-14 ==========================
 ! 2012-05-10 - Gloria Corti
  - Fix run time problem with finding of ParticlePropertySvc that in Gaudi

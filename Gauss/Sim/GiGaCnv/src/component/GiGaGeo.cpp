@@ -58,6 +58,7 @@
 #include "GiGaCnv/GiGaAssembly.h"
 #include "GiGaCnv/GiGaAssemblyStore.h"
 #include "GiGaCnv/GiGaVolumeUtils.h"
+#include "GiGa/IGDMLReader.h"
 
 // local 
 #include "GiGaGeo.h"
@@ -107,6 +108,8 @@ GiGaGeo::GiGaGeo( const std::string& serviceName,
   declareProperty ( "AlignAllDetectors", m_alignAll = false );
   m_alignDets.clear();
   declareProperty ( "AlignDetectors",    m_alignDets );
+
+  declareProperty( "GdmlReaders", m_gdmlReaderNames );
 
 };
 
@@ -461,7 +464,21 @@ StatusCode GiGaGeo::initialize()
   // check for special run with  material budget counters:
   if( !m_budget.empty() )
     { Warning(" Special run for material budget calculation! " ) ; }
-  // 
+ 
+  // retrieve GDMLReader tools
+  m_gdmlReaders.clear();
+  std::vector<std::string>::iterator it;
+  for (it = m_gdmlReaderNames.begin(); it != m_gdmlReaderNames.end(); ++it) {
+    if ("" == (*it)) continue;
+    IGDMLReader* gdmlTool = 0;
+    sc = toolSvc()->retrieveTool("GDMLReader/" + (*it), gdmlTool, this);
+    if (!sc.isSuccess()) return sc;
+    if (gdmlTool) m_gdmlReaders.push_back(gdmlTool);
+  }
+  if (!m_gdmlReaders.empty()) {
+    info() << "Retrieved " << m_gdmlReaders.size() 
+           << " GDMLReader tools" << endmsg; 
+  }
   return StatusCode::SUCCESS;
 };
 
@@ -565,6 +582,13 @@ G4VPhysicalVolume* GiGaGeo::world ()
   m_worldPV           = 
     new G4PVPlacement( 0 , Hep3Vector() , m_worldNamePV , LV , 0 , false , 0 );
   ///
+
+  /// import GDML geometries (if any)
+  std::vector<IGDMLReader*>::iterator it;
+  for (it = m_gdmlReaders.begin(); it != m_gdmlReaders.end(); ++it) {
+    (*it)->import(m_worldPV);
+  } 
+
   // create the magnetic field for world volume
   if( !m_worldMagField.empty() )
     {

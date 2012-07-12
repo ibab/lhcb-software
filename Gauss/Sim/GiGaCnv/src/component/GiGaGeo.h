@@ -23,6 +23,8 @@ class IGiGaSensDet;
 class IGiGaMagField;
 class IGiGaFieldMgr;
 
+class IGDMLReader;
+
 template <class SERVICE> 
 class SvcFactory;
 
@@ -306,6 +308,10 @@ private:
   float m_worldZ;       ///< world volume parameters (Box) - Size in Z
   
   std::string m_worldMagField;   ///< global magnetic field 
+
+  /// GDML readers to be called when creating world volume
+  std::vector<std::string> m_gdmlReaderNames;
+  std::vector<IGDMLReader*> m_gdmlReaders;
  
   /// special sensitive detector for estimation of material budget 
   std::string m_budget;
