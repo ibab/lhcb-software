@@ -5,6 +5,7 @@ MonSys::MonSys()
 {
   Subsyslist = new std::vector<MonSubSys*>;
   Subsyslist->clear();
+  m_state = "Constructed";
 }
 MonSys::~MonSys()
 {
@@ -36,6 +37,7 @@ void MonSys::start()
     ss = *Iter;
     ss->start();
   }
+  m_state = "Started";
 }
 void MonSys::stop()
 {
@@ -47,6 +49,8 @@ void MonSys::stop()
     ss = *Iter;
     ss->stop();
   }
+  m_state = "Stopped";
+
 }
 void MonSys::remSubSys(MonSubSys *ss)
 {
@@ -108,6 +112,7 @@ MonSys *MonSys::setup(char *n)
   {
     m_name  = std::string(n);
   }
+  m_state = "Set-up";
   return this;
 }
 void MonSys::Clear()

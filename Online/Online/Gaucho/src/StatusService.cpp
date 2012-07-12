@@ -26,6 +26,8 @@ void StatusService::serviceHandler()
   std::vector<MonSubSys*> *ssyslist;
   ssyslist = m_MonSys->getSubsyslist();
   char str[255];
+  statusline.append("Monitor System State: ");
+  statusline.append(m_MonSys->m_state+" ");
   if(ssyslist != 0)
   {
     for (size_t i = 0; i < ssyslist->size(); i++)
@@ -61,6 +63,7 @@ void StatusService::serviceHandler()
     }
   }
   msvc_state = m_monitorSvc->FSMState();
+  sprintf(str,"Number of Monitor Subsystems at i_start %d ",m_monitorSvc->m_MonSSysSize);
   if (m_monitorSvc->m_i_startState)
   {
     statusline.append("Monitor Service i_start called ");
@@ -69,6 +72,7 @@ void StatusService::serviceHandler()
   {
     statusline.append("Monitor Service i_stop called ");
   }
+  statusline.append(str);
   if (m_monitorSvc->m_started)
   {
     statusline.append("Monitor Service m_started TRUE ");

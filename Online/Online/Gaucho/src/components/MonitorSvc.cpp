@@ -275,6 +275,7 @@ StatusCode MonitorSvc::i_start()
     m_MonSys = &MonSys::m_instance();
     m_monsysrecover++;
   }
+  m_MonSSysSize = m_MonSys->Subsyslist->size();
   if (m_CntrMgr != 0)
   {
 //    //printf("In STARTS Method... Counter Manager present... Closing it...\n");

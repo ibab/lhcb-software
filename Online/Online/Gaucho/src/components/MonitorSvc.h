@@ -217,6 +217,7 @@ public:
   int m_updateInterval;
   int m_runno;
   bool m_i_startState;
+  int m_MonSSysSize;
 
 };
 

@@ -7,7 +7,7 @@
 class MonSubSys;
 class MonSys
 {
-protected:
+public:
   std::string m_name;
 //  BRTLLock m_lockid;
   std::vector<MonSubSys*> *Subsyslist;
@@ -26,6 +26,7 @@ public:
   void List();
   void stop();
   void setRunNo(int runo);
+  std::string m_state;
   std::vector<MonSubSys*> *getSubsyslist(){return Subsyslist;};
 };
 #endif
