@@ -1,7 +1,7 @@
 package DetSys
 version v17r0
 
-branches cmt doc dict
+branches cmt doc
 
 use BcmDet              v* Det
 use CaloDet             v* Det

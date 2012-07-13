@@ -4,6 +4,9 @@
 ! Purpose     : collect Det packages and build corresponding dictionaries
 !-----------------------------------------------------------------------------
 
+! 2012-07-13 - Marco Clemencic
+ - Minor fix in the requirements branches.
+
 !========================= DetSys v17r0 2009-01-12 ===========================
 ! 2009-01-12 - Marco Cattaneo
  - Remove explicit versions from requirements
@@ -51,7 +54,7 @@
 
 !========================= DetSys v11r4 2008-04-17 ===========================
 ! 2008-04-17 - Marco Cattaneo
- - Use CaloDet v8r6, DetDesc v18r4p1, MuonDet v8r0, RichDet v10r11, 
+ - Use CaloDet v8r6, DetDesc v18r4p1, MuonDet v8r0, RichDet v10r11,
        VeloDet v13r0, XmlTools v5r2
  - Add BcmDet v1r1
  - Add also DDDB and DetCond, logically part of detector description
@@ -67,7 +70,7 @@
 
 !========================= DetSys v11r1 2007-12-07 ===========================
 ! 2007-12-07 - Marco Cattaneo
- - Use CaloDet v8r5, DetDesc v18r2, DetDescCnv v4r4, DetDescSvc v1r15, 
+ - Use CaloDet v8r5, DetDesc v18r2, DetDescCnv v4r4, DetDescSvc v1r15,
        MuonDet v7r1, OTDet v7r7, RichDet v10r8, STDet v3r8
 
 !========================= DetSys v11r0 2007-11-06 ===========================
@@ -137,7 +140,7 @@
 
 ! 2006-12-07 - Florence RANJARD
  - use CaloDet v8r0, CaloDetXmlCnv v3r0, DetDesc v17r0, DetDescCnv v4r0,
-   XmlTools v4r0, VeloDet v11r0, OTDet v7r0, MuonDet v6r0, RichDet v10r0, 
+   XmlTools v4r0, VeloDet v11r0, OTDet v7r0, MuonDet v6r0, RichDet v10r0,
    STDet v3r0, DetDescSvc v1r9
  - Remove duplicate dictionaries already done in GaudiKernel
 
@@ -223,7 +226,7 @@
 
 ! 2006-01-26 - Vanya BELYAEV
  - dict/DetDict.h
-   remove unnesessary "casting" helpers *::Interface<*> 
+   remove unnesessary "casting" helpers *::Interface<*>
 
 ! 2006-01-25 - Marco Cattaneo
  - Major new version for backards incompatible DC06 changes
@@ -259,8 +262,8 @@
  - Use DetDesc v15r4, DetDescCnv v2r9, Magnet v2r9, XmlTools v3r7
 
 ! 2005-08-17 - Juan Palacios
- - Add GaudiKernel/IDetDataSvc.h to dict/DetDict.h includes and 
-   GaudiPython::Interface<IDetDataSvc> to __Instantiations struct in 
+ - Add GaudiKernel/IDetDataSvc.h to dict/DetDict.h includes and
+   GaudiPython::Interface<IDetDataSvc> to __Instantiations struct in
    dict/DetDict.h for use in CondDB browser
  - Add class IDetDataSvc to dict/DetDict.xml
 
@@ -268,7 +271,7 @@
  - Use STDet v1r5
 
 ! 2005-07-28 - Juan Palacios
- - Add SmartRef<Condition> to __Instantiations struct in dict/DetDict.h to 
+ - Add SmartRef<Condition> to __Instantiations struct in dict/DetDict.h to
    allow to retrieve conditions from detector elements.
 
 !========================= DetSys v7r3 2005-07-22 =========================
@@ -280,13 +283,13 @@
 
 ! 2005-07-14 - Juan Palacios
  - Added AlignmentCondition to DetDict
- - Make DetDictLib a components library in cmt/requirements for dictionary 
+ - Make DetDictLib a components library in cmt/requirements for dictionary
    loading in Linux.
 
 ! 2005-07-14 - Marco Cattaneo
  - Use DetDesc v15r3, DetDescCnv v2r8, VeloDet v9r8, MuonDet v4r8,
        CaloDet v6r9p1, OTDet v5r6, XmlTools v3r6
- - Add dict/DetDict.h, DetDict.xml and adapt requirements to build lcg 
+ - Add dict/DetDict.h, DetDict.xml and adapt requirements to build lcg
    dictionaries of detector description classes for use with Python
 
 !========================= DetSys v7r2 2005-06-28 =========================
@@ -386,7 +389,7 @@
 
 !========================= DetSys v4r0 2003-12-08 =========================
 ! 2003-12-08 - Marco Cattaneo
- - use DetDesc v14r0, XmlTools v3r0, DetDescCnv v2r2, 
+ - use DetDesc v14r0, XmlTools v3r0, DetDescCnv v2r2,
        ITDet v1r8, OTDet v5r1, RichDet v6r4, VeloDet v8r7, CaloDet v6r7
 
 !========================= DetSys v3r3 2003-12-04 =========================
