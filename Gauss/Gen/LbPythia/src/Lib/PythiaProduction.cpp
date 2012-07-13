@@ -42,6 +42,7 @@
  */
 //-----------------------------------------------------------------------------
 
+DECLARE_TOOL_FACTORY( PythiaProduction );
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -490,7 +491,7 @@ StatusCode PythiaProduction::initializeGenerator( ) {
 
   // Reset the "updated particles" to their defaults
   if ( m_updatedParticles.size() != 0 ) {
-    LHCb::IParticlePropertySvc* ppSvc = svc< LHCb::IParticlePropertySvc>("Gaudi::ParticlePropertySvc" , true);
+    LHCb::IParticlePropertySvc* ppSvc = svc< LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc" , true);
     for ( std::vector<int>::const_iterator it = m_updatedParticles.begin(); it != m_updatedParticles.end(); ++it ) {
       updateParticleProperties(ppSvc->find( LHCb::ParticleID( *it ) ));
     }

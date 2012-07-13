@@ -4,6 +4,9 @@
 ! Purpose     : Package for Pythia 6 in Gauss
 !-----------------------------------------------------------------------------
 
+! 2012-07-13 - Patrick Robbe
+ - Fix ParticlePropertySvc name
+
 ! 2012-07-12 - Patrick Robbe
  - Clean obsolete files
 
