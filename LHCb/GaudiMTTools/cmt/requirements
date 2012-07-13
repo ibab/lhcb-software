@@ -28,6 +28,6 @@ library GaudiMTTools -import=Boost -no_static *.cpp
 apply_pattern component_library library=GaudiMTTools
 
 private
-macro_append Boost_linkopts ' $(Boost_linkopts_thread) '
+macro_append Boost_linkopts ' $(Boost_linkopts_thread) $(Boost_linkopts_system) '
 end_private
 

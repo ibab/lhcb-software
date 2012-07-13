@@ -33,13 +33,13 @@ namespace boost { namespace threadpool
   *
   * \see boost function library
   *
-  */ 
+  */
   typedef function0<void> task_func;
 
 
 
 
-  /*! \brief Prioritized task function object. 
+  /*! \brief Prioritized task function object.
   *
   * This function object wraps a task_func object and binds a priority to it.
   * prio_task_funcs can be compared using the operator < which realises a partial ordering.
@@ -47,7 +47,7 @@ namespace boost { namespace threadpool
   *
   * \see prio_scheduler
   *
-  */ 
+  */
   class prio_task_func
   {
   private:
@@ -84,33 +84,36 @@ namespace boost { namespace threadpool
     */
     bool operator< (const prio_task_func& rhs) const
     {
-      return m_priority < rhs.m_priority; 
+      return m_priority < rhs.m_priority;
     }
 
   };  // prio_task_func
 
 
 
- 
 
 
 
 
-  /*! \brief Looped task function object. 
+
+  /*! \brief Looped task function object.
   *
   * This function object wraps a boolean thread function object.
-  * The wrapped task function is invoked by calling the operator () and it is executed in regular 
+  * The wrapped task function is invoked by calling the operator () and it is executed in regular
   * time intervals until false is returned. The interval length may be zero.
   * Please note that a pool's thread is engaged as long as the task is looped.
   *
-  */ 
+  */
   class looped_task_func
   {
   private:
     function0<bool> m_function;   //!< The task's function.
+#if BOOST_VERSION >= 15000
+    boost::chrono::milliseconds m_break; //!< Duration of breaks in milliseconds.
+#else
     unsigned int m_break_s;              //!< Duration of breaks in seconds.
     unsigned int m_break_ns;             //!< Duration of breaks in nano seconds.
-
+#endif
   public:
     typedef void result_type; //!< Indicates the functor's result type.
 
@@ -121,9 +124,14 @@ namespace boost { namespace threadpool
     */
     looped_task_func(function0<bool> const & function, unsigned int const interval = 0)
       : m_function(function)
+#if BOOST_VERSION >= 15000
+      , m_break(interval)
+#endif
     {
+#if BOOST_VERSION < 15000
       m_break_s  = interval / 1000;
       m_break_ns = (interval - m_break_s * 1000) * 1000 * 1000;
+#endif
     }
 
     /*! Executes the task function.
@@ -132,25 +140,35 @@ namespace boost { namespace threadpool
     {
       if(m_function)
       {
+#if BOOST_VERSION >= 15000
+        if(m_break > boost::chrono::milliseconds(0))
+          boost::this_thread::sleep_for(m_break);
+#else
         if(m_break_s > 0 || m_break_ns > 0)
-        { // Sleep some time before first execution
+        {
+          // Sleep some time before first execution
           xtime xt;
           xtime_get(&xt, TIME_UTC);
           xt.nsec += m_break_ns;
           xt.sec += m_break_s;
-          thread::sleep(xt); 
+          thread::sleep(xt);
         }
-
+#endif
         while(m_function())
         {
+#if BOOST_VERSION >= 15000
+          if(m_break > boost::chrono::milliseconds(0))
+            boost::this_thread::sleep_for(m_break);
+#else
           if(m_break_s > 0 || m_break_ns > 0)
           {
             xtime xt;
             xtime_get(&xt, TIME_UTC);
             xt.nsec += m_break_ns;
             xt.sec += m_break_s;
-            thread::sleep(xt); 
+            thread::sleep(xt);
           }
+#endif
           else
           {
             thread::yield(); // Be fair to other threads
