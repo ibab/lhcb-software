@@ -1,6 +1,7 @@
 #ifdef BUILD_WRITER
 
 #include <netdb.h>
+#include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <sys/poll.h>
@@ -12,7 +13,7 @@
 #include "Writer/Connection.h"
 #include "Writer/Utils.h"
 
-
+#define MODFAILOVER 0
 #define NUM_NAME_RETRIES 10
 
 using namespace LHCb;
@@ -156,6 +157,71 @@ int FailoverMonitor::getAddressList(std::list<NodeState*> &nodeStates)
   int ret;
   unsigned int i;
   int numHosts = 0;
+
+#if MODFAILOVER
+  /* BEGIN: Modifications to Failover*/
+  unsigned int *storenodeIP = NULL;
+  int numstorenodeIPs = 0;
+  struct hostent *storenodelist;
+  int gethosterrno = 0;
+  const char *storenodesname = "storewrt";
+  do
+  {
+	  *m_log << MSG::INFO << WHERE << "Getting IP addresses for storewrt.lbdaq.cern.ch " << endmsg;
+
+	  storenodelist = gethostbyname(storenodesname);
+	  if (storenodelist == NULL)
+	  {
+		  gethosterrno = (int)h_errno;
+		  switch (gethosterrno)
+		  {
+		  case HOST_NOT_FOUND:
+			  *m_log << MSG::ERROR << "Unknown host: storewrt.lbdaq.cern.ch" << endmsg;
+			  break;
+//		  case NO_ADDRESS:
+		  case NO_DATA:
+			  *m_log << MSG::ERROR << "storewrt.lbdaq.cern.ch does not have an IP address" << endmsg;
+			  break;
+		  case NO_RECOVERY:
+			  *m_log << MSG::ERROR << "Non-recoverable nameserver error" << endmsg;
+			  break;
+		  case TRY_AGAIN:
+			  *m_log << MSG::ERROR << "Temporary nameserver error: Will retry" << endmsg;
+			  break;
+		  default:
+			  break;
+		  }
+	  }
+  } while (storenodelist == NULL && gethosterrno == TRY_AGAIN);
+
+  if(storenodelist == NULL)
+	  return 0;
+
+
+  while ((storenodeIP = (unsigned int *)storenodelist->h_addr_list[numstorenodeIPs++]) != NULL)
+	  {
+	  NodeState *nState = new NodeState();
+
+	  *m_log << MSG::INFO << WHERE << "Index " << numstorenodeIPs << " Store node IP: " << *storenodeIP << endmsg;
+
+//	  inet_aton(storenodeIP, (in_addr *)(&(nState->state.n_ipaddr)));
+	  nState->state.n_ipaddr = *storenodeIP;
+	  nState->state.n_id = numstorenodeIPs;
+	  nState->state.n_last_ka = 0xFFFF;
+	  nState->state.n_load.l_connections = 0xFFFF;
+
+	  *m_log << MSG::INFO << WHERE << "Store node IP: " <<  IP(nState->state.n_ipaddr) << endmsg;
+
+	  if(nState->state.n_ipaddr == m_currAddr.sin_addr.s_addr)
+		  nodeStates.push_front(nState);
+	  else
+		  nodeStates.push_back(nState);
+  }
+
+  return (numstorenodeIPs -1);
+
+  /* END: Modifications to Failover*/
+#endif MODFAILOVER
 
   BIF recvBif(m_sockFd, &fmsg, sizeof(struct failover_msg));
   ret = recvBif.nbRecvTimeout();

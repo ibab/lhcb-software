@@ -228,7 +228,8 @@ void MDFWriterNet::constructNet()
 	declareProperty("FileExtension", m_fileExtension = "raw");
 	declareProperty("StreamID", m_streamID = "NONE");
 	declareProperty("RunFileTimeoutSeconds", m_runFileTimeoutSeconds = 10);
-	declareProperty("RunFileTimeoutSecondsLHCb1", m_runFileTimeoutSecondsLHCb1 = 300);
+	declareProperty("RunFileTimeoutSecondsLHCb1", m_runFileTimeoutSecondsLHCb1
+			= 300);
 	declareProperty("MaxQueueSizeBytes", m_maxQueueSizeBytes = 1073741824);
 	declareProperty("EnableMD5", m_enableMD5 = false);
 	declareProperty("UpdatePeriod", m_UpdatePeriod = 2); //0 is no update
@@ -346,7 +347,8 @@ StatusCode MDFWriterNet::initialize(void)
 	if (utgid.find("LHCb1_") != std::string::npos)
 	{
 		m_runFileTimeoutSeconds = m_runFileTimeoutSecondsLHCb1;
-		*m_log << MSG::INFO << WHERE << "Changed File Timeout to LHCb1 Timeout of: "
+		*m_log << MSG::INFO << WHERE
+				<< "Changed File Timeout to LHCb1 Timeout of: "
 				<< m_runFileTimeoutSecondsLHCb1 << " seconds" << endmsg;
 	}
 	if (pthread_mutex_init(&m_SyncFileList, NULL))
@@ -378,7 +380,6 @@ StatusCode MDFWriterNet::finalize(void)
 	m_StopRetry = true;
 	m_Finalized = true;
 
-
 	if (pthread_mutex_lock(&m_SyncFileList))
 	{
 		*m_log << MSG::ERROR << WHERE << " Locking mutex" << endmsg;
@@ -390,7 +391,8 @@ StatusCode MDFWriterNet::finalize(void)
 
 	while (tmpFile)
 	{
-		*m_log << MSG::INFO << WHERE << "Checking file: " << *(tmpFile->getFileName()) << endmsg;
+		*m_log << MSG::INFO << WHERE << "Checking file: "
+				<< *(tmpFile->getFileName()) << endmsg;
 
 		if (tmpFile->isOpen())
 		{
@@ -908,12 +910,10 @@ StatusCode MDFWriterNet::writeBuffer(void * const /*fd*/, const void *data,
 
 		File *tmpFile = m_openFiles.getFirstFile();
 		// Loop over all the files except the one for whom the event just came in.
-		while (tmpFile)
-		{
+		while (tmpFile) {
 			if (tmpFile->getRunNumber() != runNumber
 					&& tmpFile->getTimeSinceLastWrite()
-							> m_runFileTimeoutSeconds)
-			{
+							> m_runFileTimeoutSeconds) {
 				// This file hasn't been written to in a loong time. Close it.
 				*m_log << MSG::INFO << WHERE
 						<< "Closing a file that did not get events for a long time now."
@@ -1589,8 +1589,8 @@ StatusCode MDFWriterNet::CleanUpFiles()
 		// Loop over all the files except the one for whom the event just came in.
 		while (tmpFile)
 		{
-//			if (tmpFile->getRunNumber() != m_currentRunNumber && tmpFile->getTimeSinceLastWrite()	> m_runFileTimeoutSeconds)
-			if (tmpFile->getTimeSinceLastWrite() > m_runFileTimeoutSeconds)
+			//			if (tmpFile->getRunNumber() != m_currentRunNumber && tmpFile->getTimeSinceLastWrite()	> m_runFileTimeoutSeconds)
+			if (tmpFile->getTimeSinceLastWrite() > 5 * m_runFileTimeoutSeconds)
 			{
 				// This file hasn't been written to in a loong time. Close it.
 				*log << MSG::INFO << WHERE << "Closing file "

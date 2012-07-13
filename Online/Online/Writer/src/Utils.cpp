@@ -108,7 +108,6 @@ int Utils::closeSocket(int *sock, MsgStream * /*log*/) {
 int BIF::nbRecv(MsgStream *log)
 {
   int ret;
-//  std::stringstream str;
 
   struct pollfd fds[1];
   fds[0].fd = m_sockFd;
@@ -122,8 +121,7 @@ int BIF::nbRecv(MsgStream *log)
   } else if(ret < 0 && (errno == EAGAIN || errno == EINTR || errno == ENOENT)) {
     return AGAIN;
   }else if(ret < 0) {
-	  *log << MSG::WARNING << "ret <=0 on poll(), ERRNO is: "<< errout << endmsg;
-//	  	  str << "ret <=0 on poll(), ERRNO is: "<< errout <<std::endl;
+	  *log << MSG::WARNING << "ret <0 on poll(), ERRNO is: "<< errout << endmsg;
     return DISCONNECTED;
   } else if(fds[0].revents & POLLIN) {
     ret = ::recv(m_sockFd, m_data+m_bytesRead, m_bufLen-m_bytesRead, MSG_DONTWAIT);
@@ -131,8 +129,7 @@ int BIF::nbRecv(MsgStream *log)
       return AGAIN;
     } else if(ret == 0 || ret < 0) {
     	errout = (int)errno;
-    	*log << MSG::WARNING << " ret = " << ret <<" m_bufLen = " << m_bufLen << " m_bytesRead = " << m_bytesRead << " on recv(), ERRNO is: "<< errout << endmsg;
-//    	str << "ret <=0 on recv(), ERRNO is: "<< errout <<std::endl;
+    	*log << MSG::WARNING << " ret = " << ret <<" on recv(), m_bufLen = " << m_bufLen << " m_bytesRead = " << m_bytesRead << " , ERRNO is: "<< errout << endmsg;
       return DISCONNECTED;
     } else {
       m_bytesRead += ret;
