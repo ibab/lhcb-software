@@ -5,8 +5,12 @@
 ! Package manager: Stefan Roiser
 !--------------------------------------------------------------------------------
 
+! 2012-07-13 - Marco Clemencic
+ - Restored corrected indentation in generated headers after the re-indentation
+   of Python modules.
+
 ! 2012-06-25 - Chris Jones
- - Use ordered_malloc() instead of malloc() and ordered_free(p) instead of 
+ - Use ordered_malloc() instead of malloc() and ordered_free(p) instead of
    free(p) in boost pool allocations and de-allocations.
 
 !========================= GaudiObjDesc v11r14 2012-06-25 =========================
@@ -24,7 +28,7 @@
 
 !========================= GaudiObjDesc v11r13 2012-02-28 =======================
 ! 2012-02-28 - Marco Cattaneo
- - Fix requirements to set -DGOD_NOALLOC when tag 'target-dbg' is set, previuosly
+ - Fix requirements to set -DGOD_NOALLOC when tag 'target-dbg' is set, previously
    used tag 'debug' that no longer exists
 
 !========================= GaudiObjDesc v11r12 2011-02-22 =======================

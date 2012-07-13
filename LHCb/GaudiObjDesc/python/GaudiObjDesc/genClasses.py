@@ -593,115 +593,115 @@ class genClasses(genSrcUtils.genSrcUtils):
 
         if allocatorType == 'BOOST': # Boost allocator with check on delete
             s ="""
-      #ifndef GOD_NOALLOC
-        /// operator new
-        static void* operator new ( size_t size )
-        {
-          return ( sizeof(%(classname)s) == size ?
-                   boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::ordered_malloc() :
-                   ::operator new(size) );
-        }
+#ifndef GOD_NOALLOC
+  /// operator new
+  static void* operator new ( size_t size )
+  {
+    return ( sizeof(%(classname)s) == size ?
+             boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::ordered_malloc() :
+             ::operator new(size) );
+  }
 
-        /// placement operator new
-        /// it is needed by libstdc++ 3.2.3 (e.g. in std::vector)
-        /// it is not needed in libstdc++ >= 3.4
-        static void* operator new ( size_t size, void* pObj )
-        {
-          return ::operator new (size,pObj);
-        }
+  /// placement operator new
+  /// it is needed by libstdc++ 3.2.3 (e.g. in std::vector)
+  /// it is not needed in libstdc++ >= 3.4
+  static void* operator new ( size_t size, void* pObj )
+  {
+    return ::operator new (size,pObj);
+  }
 
-        /// operator delete
-        static void operator delete ( void* p )
-        {
-          boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::is_from(p) ?
-          boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::ordered_free(p) :
-          ::operator delete(p);
-        }
+  /// operator delete
+  static void operator delete ( void* p )
+  {
+    boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::is_from(p) ?
+    boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::ordered_free(p) :
+    ::operator delete(p);
+  }
 
-        /// placement operator delete
-        /// not sure if really needed, but it does not harm
-        static void operator delete ( void* p, void* pObj )
-        {
-          ::operator delete (p, pObj);
-        }
-      #endif"""%data
+  /// placement operator delete
+  /// not sure if really needed, but it does not harm
+  static void operator delete ( void* p, void* pObj )
+  {
+    ::operator delete (p, pObj);
+  }
+#endif"""%data
             self.include.append("GaudiKernel/boost_allocator.h")
 
         elif allocatorType == 'BOOST2': # Boost allocator without check on delete
             s ="""
-      #ifndef GOD_NOALLOC
-        /// operator new
-        static void* operator new ( size_t size )
-        {
-          return ( sizeof(%(classname)s) == size ?
-                   boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::ordered_malloc() :
-                   ::operator new(size) );
-        }
+#ifndef GOD_NOALLOC
+  /// operator new
+  static void* operator new ( size_t size )
+  {
+    return ( sizeof(%(classname)s) == size ?
+             boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::ordered_malloc() :
+             ::operator new(size) );
+  }
 
-        /// placement operator new
-        /// it is needed by libstdc++ 3.2.3 (e.g. in std::vector)
-        /// it is not needed in libstdc++ >= 3.4
-        static void* operator new ( size_t size, void* pObj )
-        {
-          return ::operator new (size,pObj);
-        }
+  /// placement operator new
+  /// it is needed by libstdc++ 3.2.3 (e.g. in std::vector)
+  /// it is not needed in libstdc++ >= 3.4
+  static void* operator new ( size_t size, void* pObj )
+  {
+    return ::operator new (size,pObj);
+  }
 
-        /// operator delete
-        static void operator delete ( void* p )
-        {
-          boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::ordered_free(p);
-        }
+  /// operator delete
+  static void operator delete ( void* p )
+  {
+    boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::ordered_free(p);
+  }
 
-        /// placement operator delete
-        /// not sure if really needed, but it does not harm
-        static void operator delete ( void* p, void* pObj )
-        {
-          ::operator delete (p, pObj);
-        }
-      #endif"""%data
+  /// placement operator delete
+  /// not sure if really needed, but it does not harm
+  static void operator delete ( void* p, void* pObj )
+  {
+    ::operator delete (p, pObj);
+  }
+#endif"""%data
             self.include.append("GaudiKernel/boost_allocator.h")
 
         elif allocatorType == 'DEBUG': # Boost allocator with check on delete and debug print-out
             s = """
-      #ifndef GOD_NOALLOC
-        /// operator new
-        static void* operator new ( size_t size )
-        {
-          void *ptr = sizeof(%(classname)s) == size ?
-            boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::ordered_malloc() :
-            ::operator new(size);
-          std::cout << "%(classname)s::new() -> " << ptr << std::endl;
-          return ( ptr );
-        }
+#ifndef GOD_NOALLOC
+  /// operator new
+  static void* operator new ( size_t size )
+  {
+    void *ptr = sizeof(%(classname)s) == size ?
+      boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::ordered_malloc() :
+      ::operator new(size);
+    std::cout << "%(classname)s::new() -> " << ptr << std::endl;
+    return ( ptr );
+  }
 
-        /// placement operator new
-        /// it is needed by libstdc++ 3.2.3 (e.g. in std::vector)
-        /// it is not needed in libstdc++ >= 3.4
-        static void* operator new ( size_t size, void* pObj )
-        {
-          std::cout << "%(classname)s::new(" << pObj << ")" << std::endl;
-          return ::operator new (size,pObj);
-        }
+  /// placement operator new
+  /// it is needed by libstdc++ 3.2.3 (e.g. in std::vector)
+  /// it is not needed in libstdc++ >= 3.4
+  static void* operator new ( size_t size, void* pObj )
+  {
+    std::cout << "%(classname)s::new(" << pObj << ")" << std::endl;
+    return ::operator new (size,pObj);
+  }
 
-        /// operator delete
-        static void operator delete ( void* p )
-        {
-          std::cout << "%(classname)s::delete(" << p << ") "
-                    << boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::is_from(p)
-                    << std::endl;
-          boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::is_from(p) ?
-          boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::ordered_free(p) :
-          ::operator delete(p);
-        }
+  /// operator delete
+  static void operator delete ( void* p )
+  {
+    std::cout << "%(classname)s::delete(" << p << ") "
+              << boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::is_from(p)
+              << std::endl;
+    boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::is_from(p) ?
+    boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::ordered_free(p) :
+    ::operator delete(p);
+  }
 
-        /// placement operator delete
-        /// not sure if really needed, but it does not harm
-        static void operator delete ( void* p, void* pObj )
-        {
-          std::cout << "%(classname)s::delete(" << p << "," << pObj << ") " << std::endl;
-          ::operator delete (p, pObj);
-        }
-      #endif"""%data
+  /// placement operator delete
+  /// not sure if really needed, but it does not harm
+  static void operator delete ( void* p, void* pObj )
+  {
+    std::cout << "%(classname)s::delete(" << p << "," << pObj << ") " << std::endl;
+    ::operator delete (p, pObj);
+  }
+#endif"""%data
             self.include.append("GaudiKernel/boost_allocator.h")
             self.addInclude('iostream',1)
 
