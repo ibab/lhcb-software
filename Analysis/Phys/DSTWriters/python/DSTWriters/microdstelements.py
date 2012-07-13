@@ -427,7 +427,7 @@ class PackParticlesAndVertices(MicroDSTElement) :
         packer = PackPsVs( name = self.personaliseName(sel,"PackPsAndVs"),
                            InputStream        = self.branch,
                            DeleteInput        = True,
-                           EnableCheck        = False,
+                           EnableCheck        = True,
                            AlwaysCreateOutput = False,
                            VetoedContainers = ["/Event/"+self.branch+"/Rec/Vertex/Primary"] )
         return [packer]
@@ -452,7 +452,7 @@ class PackRecObjects(MicroDSTElement) :
 
         deleteInput = True
 
-        testPacking = False
+        testPacking = True
 
         algs = [ ]
 
