@@ -4,6 +4,9 @@ $! $Id: release.notes,v 1.167 2010-09-19 09:03:47 robbep Exp $
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+! 2012-07-13 - Patrick Robbe
+ - Use LHCb::ParticlePropertySvc for the new particle property service
+   name
 
 ! 2012-07-22 - Gloria Corti
  - Fix bug in FlatZSmearVertex where the location where to take the beam
