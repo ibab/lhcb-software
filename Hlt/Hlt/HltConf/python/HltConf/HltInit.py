@@ -102,6 +102,7 @@ HltANNSvc().Hlt1SelectionID = {
     "Hlt1DiHadronDecision"                  :  201,
     "Hlt1DiHadronLTUnbiasedDecision"        :  202,
     "Hlt1TrackAllL0Decision"                :  203,
+    "Hlt1TrackAllL0TightDecision"           :  206,
     "Hlt1TrackMuonDecision"                 :  204,
     "Hlt1TrackPhotonDecision"               :  205,  
     # PH
@@ -169,6 +170,7 @@ HltANNSvc().Hlt1SelectionID = {
     'RZVeloBW'                              :10106,
     'VeloCandidatesDiMuon'                  :10107,
     'VeloCandidatesTrackAllL0'              :10108,
+    'VeloCandidatesTrackAllL0Tight'         :10126,
     'VeloCandidatesTrackMuon'               :10109,
     'VeloCandidatesTrackPhoton'             :10110,
     'VeloCandidatesDiMuonHighMass'          :10111,

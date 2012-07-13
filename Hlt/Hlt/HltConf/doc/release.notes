@@ -3,6 +3,8 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+! 2012-07-13 - Sascha Stahl
+ - Added TrackAllL0Tight in to ANNSvc.
 
 !========================= HltConf v9r20 2012-06-19 =========================
 ! 2012-06-19 - E. van Herwijnen
