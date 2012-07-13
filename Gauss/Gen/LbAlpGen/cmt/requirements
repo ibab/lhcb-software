@@ -23,7 +23,8 @@ use               Boost        v* LCG_Interfaces
 macro alpgen_author_dir $(alpgen_path)/share/alpgen-author
 
 # =============== constituents ================================================
-library           LbAlpGen    Lib/*.cpp Lib/*.F  
+library           LbAlpGen       component/*.cpp
+library           LbAlpGenLib    Lib/*.cpp Lib/*.F  
 application       AlpGenFragm Read/AlpGenFragm.cpp \
                               Read/upevnt.F        \
                               Read/upinit.F        \
@@ -44,7 +45,9 @@ application       AlpGenZbb   Main/AlpGen.cpp      \
                               $(alpgen_author_dir)/zqqlib/zqq.f
 
 # =============== standard patterns ===========================================
-apply_pattern     linker_library    library=LbAlpGen
+apply_pattern     component_library library=LbAlpGen
+apply_pattern     linker_library    library=LbAlpGenLib
+apply_pattern     library_stamps    library=LbAlpGenLib
 apply_pattern     application_path 
 
 
