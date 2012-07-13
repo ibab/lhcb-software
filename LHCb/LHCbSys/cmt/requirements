@@ -1,7 +1,7 @@
 package LHCbSys
 version           v35r0
 
-branches doc cmt test
+branches doc cmt tests
 
 #===============================================================
 # LHCb packages visible to all applications
@@ -45,7 +45,7 @@ use VLDet                 v1r0    Det     # Heinrich Schindler
 use DAQEvent              v9r8    Event   # Marco Cattaneo, Markus Frank
 use EventSys              v25r0   Event   # Marco Cattaneo
 use DigiEvent             v2r21   Event   # Marco Cattaneo and sub-det experts
-use EventAssoc            v5r1    Event   # 
+use EventAssoc            v5r1    Event   #
 use EventBase             v3r0    Event   # Marco Cattaneo, Gloria Corti
 use EventPacker           v2r17   Event   # Olivier Callot
 use GenEvent              v6r3    Event   # Gloria Corti
@@ -87,14 +87,14 @@ use GaudiObjDesc          v11r14
 #use HepMCBack             v1r1    Gen     # Obsolete, was for DC06
 
 # Kernel packages
-use HistoStrings          v1r3    Kernel  # Vanya Belyaev 
+use HistoStrings          v1r3    Kernel  # Vanya Belyaev
 use HltInterfaces         v4r6    Kernel  # Patrick Koppenburg
 use KernelSys             v12r1   Kernel  # Marco Cattaneo
 use LHCbAlgs              v2r50   Kernel  # Marco Cattaneo
 use LHCbKernel            v13r11  Kernel  # Marco Cattaneo
 use LHCbMath              v3r33   Kernel  # Vanya Belyaev
 use MCInterfaces          v1r15   Kernel  # Marco Cattaneo et al.
-use PartProp              v1r13   Kernel  # Vanya Belyaev 
+use PartProp              v1r13   Kernel  # Vanya Belyaev
 use Relations             v6r0p2  Kernel  # Ivan Belyaev
 use XMLSummaryBase        v1r2    Kernel  # Rob Lambert
 use XMLSummaryKernel      v1r6    Kernel  # Rob Lambert
@@ -143,7 +143,7 @@ use TrackKernel           v1r10   Tr      # Wouter Hulsbergen
 # Declare this as a container package
 apply_pattern container_package
 
-# Allow the generation of QMTest summary 
+# Allow the generation of QMTest summary
 apply_pattern QMTestSummarize
 
 # Allow the generation of QMTests
