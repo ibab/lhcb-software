@@ -36,7 +36,7 @@ public:
 
   virtual ~PVOfflineRecalculate( ); ///< Destructor
 
-  void RecalculateVertex(const LHCb::RecVertex* pvin,
+  StatusCode RecalculateVertex(const LHCb::RecVertex* pvin,
                          const std::vector<const LHCb::Track*>& tracks2remove,
                          LHCb::RecVertex& pvout);
 

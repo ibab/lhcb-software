@@ -6,6 +6,10 @@
 
 
 ! 2012-07-13 - Mariusz Witek
+ - return StatusCode from PVOfflineRecalculate->RecalculateVertex to allow
+   users to decide what to do in case of failure.
+
+! 2012-07-13 - Mariusz Witek
  - modification suggested by Pieter David to make PVSeed3DTool faster
    The whole 3D PV reconstruction time (seed+fit) reduced by 35 %
 

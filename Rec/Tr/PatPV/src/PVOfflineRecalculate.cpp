@@ -80,7 +80,7 @@ StatusCode PVOfflineRecalculate::initialize()
 
 
 //=============================================================================
-void PVOfflineRecalculate::RecalculateVertex(const LHCb::RecVertex* pvin,
+StatusCode PVOfflineRecalculate::RecalculateVertex(const LHCb::RecVertex* pvin,
                                              const std::vector<const LHCb::Track*>& tracks2remove,
                                              LHCb::RecVertex& vtx) 
 { 
@@ -105,7 +105,7 @@ void PVOfflineRecalculate::RecalculateVertex(const LHCb::RecVertex* pvin,
   if ( trin.size() < 1 ) {
     // nothing to do if no tracks to removed
     m_counter_count[4] += 1; 
-    return; // success
+    return StatusCode::SUCCESS; // success
   }
 
   // remove track
@@ -116,7 +116,7 @@ void PVOfflineRecalculate::RecalculateVertex(const LHCb::RecVertex* pvin,
   if (0 != fail) {
     debug() << "Error inverting hessian matrix" << endmsg;
     m_counter_count[5] += 1; 
-    return;
+    return StatusCode::FAILURE;
   } else {
     hess.Invert();
   }
@@ -138,7 +138,7 @@ void PVOfflineRecalculate::RecalculateVertex(const LHCb::RecVertex* pvin,
     if ( (pvin->nDoF() - 2 *ntr_removed ) < 7 ) {
       // Number of PV tracks after removal too low
       m_counter_count[6] += 1;
-      return;
+      return StatusCode::FAILURE;
     }    
 
   }
@@ -147,7 +147,7 @@ void PVOfflineRecalculate::RecalculateVertex(const LHCb::RecVertex* pvin,
   if (  ntr_removed < 1 ) {
     // No tracks to be removed from PV
     m_counter_count[7] += 1;
-    return; // success
+    return StatusCode::SUCCESS; // success
   }
   
   // calculate new vertex
@@ -155,7 +155,7 @@ void PVOfflineRecalculate::RecalculateVertex(const LHCb::RecVertex* pvin,
   if (0 != fail) {
     debug() << "Error inverting hessian matrix" << endmsg;
     m_counter_count[5] += 1;
-    return;
+    return StatusCode::FAILURE;
   } else {
     hess.Invert();
   }
@@ -202,7 +202,7 @@ void PVOfflineRecalculate::RecalculateVertex(const LHCb::RecVertex* pvin,
 
   m_counter_count[8] += 1;
   
-  return; // success
+  return StatusCode::SUCCESS; // success
 
 }
 
