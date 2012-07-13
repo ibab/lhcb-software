@@ -278,7 +278,7 @@ StatusCode AlignmentMonitor::execute()
       // humber readable ID
       const int humID = Rich::DAQ::HPDIdentifier(gPhoton.smartID()).number();
 
-      // Veot'ed HPD ?
+      // Veto'ed HPD ?
       const bool hpdIsVetoed = ( !m_hpdVetoList.empty() &&
                                  std::find( m_hpdVetoList.begin(),
                                             m_hpdVetoList.end(),
