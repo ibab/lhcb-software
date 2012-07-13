@@ -26,7 +26,7 @@ next steps.
 
 ( Note, if you have it, use the lhcb_calibration role
 
-> lhcb-proxy-init -g lhcb_calibration
+> lhcb-proxy-init -g lhcb_calibration -v 120:00
 
 as this give you priority over 'average' grid users. If you are working on a
 calibration task, and don't have this role, drop me an email ) 
@@ -81,8 +81,7 @@ step. It needs to run under a particular environment
  > lhcb-proxy-init -g lhcb_calibration
  > ./CreateCondDBLayer.py
 
-(you may need to give an explicit LHCb version. I know v31r5 works as it was the
-last one I used, probably later ones are OK as well). 
+(you may need to give an explicit LHCb version). 
 
 The above script takes one argument, which is the name of the calibration files
 you want to use. This is a little different frm the name above, in that it alsom

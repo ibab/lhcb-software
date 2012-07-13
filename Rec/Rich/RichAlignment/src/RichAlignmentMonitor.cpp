@@ -43,6 +43,7 @@ DECLARE_ALGORITHM_FACTORY( AlignmentMonitor )
   declareProperty( "Radiator",             m_radTemp = 2 ); // default is Rich2
   declareProperty( "HistoOutputLevel",     m_histoOutputLevel = 0 );
   declareProperty( "HPDList",              m_HPDList );
+  declareProperty( "VetoedHPDs",           m_hpdVetoList );
 }
 
 //=============================================================================
@@ -274,6 +275,15 @@ StatusCode AlignmentMonitor::execute()
       // get the geometrical photon
       const LHCb::RichGeomPhoton & gPhoton = photon->geomPhoton();
 
+      // humber readable ID
+      const int humID = Rich::DAQ::HPDIdentifier(gPhoton.smartID()).number();
+
+      // Veot'ed HPD ?
+      const bool hpdIsVetoed = ( !m_hpdVetoList.empty() &&
+                                 std::find( m_hpdVetoList.begin(),
+                                            m_hpdVetoList.end(),
+                                            humID ) != m_hpdVetoList.end() );
+
       // Cherenkov angles
       const double thetaRec = gPhoton.CherenkovTheta();
       const double phiRec   = gPhoton.CherenkovPhi();
@@ -285,7 +295,7 @@ StatusCode AlignmentMonitor::execute()
       const MirrorNumber sphMirNum  = gPhoton.primaryMirror()->mirrorNumber();
       const MirrorNumber flatMirNum = gPhoton.secondaryMirror()->mirrorNumber();
 
-      double delTheta = thetaRec - thetaExpected;
+      const double delTheta = thetaRec - thetaExpected;
       if ( fabs(delTheta) > m_deltaThetaRange ) continue;
 
       double delThetaTrue(0.0);
@@ -301,7 +311,7 @@ StatusCode AlignmentMonitor::execute()
       if ( m_histoOutputLevel > 0 )
         richHisto1D(HID("Un_Amb"))->fill( static_cast<int>(unAmbiguousPhoton) );
 
-      if (m_useMCTruth && trueParent ) 
+      if ( m_useMCTruth && trueParent && !hpdIsVetoed ) 
       {
         richHisto1D( HID("deltaThetaTrueAll"), "Ch angle error MC ALL",
                      -m_deltaThetaHistoRange, m_deltaThetaHistoRange, nBins1D() )->fill(delThetaTrue);
@@ -320,13 +330,15 @@ StatusCode AlignmentMonitor::execute()
         }
       }
 
-      if ( !unAmbiguousPhoton )
+      if ( !hpdIsVetoed ) 
       {
-        if ( m_histoOutputLevel > 0 ) richHisto1D(HID("deltaThetaAmb"))->fill(delTheta);
-        continue;
+        if ( !unAmbiguousPhoton )
+        {
+          if ( m_histoOutputLevel > 0 ) richHisto1D(HID("deltaThetaAmb"))->fill(delTheta);
+          continue;
+        }
+        if ( m_histoOutputLevel > 0 ) richHisto1D(HID("deltaThetaUnamb"))->fill(delTheta);
       }
-
-      if ( m_histoOutputLevel > 0 ) richHisto1D(HID("deltaThetaUnamb"))->fill(delTheta);
 
       int side, side2, quarter;
 
@@ -452,8 +464,7 @@ StatusCode AlignmentMonitor::execute()
 
         if ( m_histoOutputLevel > 2 )
         {
-          const int hpd = ( m_plotAllHPDs ? Rich::DAQ::HPDIdentifier( gPhoton.smartID() ).number()
-                            : makePlotForHPD(gPhoton.smartID()) );
+          const int hpd = ( m_plotAllHPDs ? humID : makePlotForHPD(gPhoton.smartID()) );
 
           if ( hpd != 0 )
           {
@@ -474,7 +485,7 @@ StatusCode AlignmentMonitor::execute()
           myTuple->column( "deltaTheta", delTheta   );
           myTuple->column( "sphMirror" , sphMirNum  );
           myTuple->column( "secMirror" , flatMirNum );
-          myTuple->column( "hpd"       , Rich::DAQ::HPDIdentifier(gPhoton.smartID()).number() );
+          myTuple->column( "hpd"       , humID      );
           myTuple->column( "quarter"   , quarter    );
           myTuple->column( "momentum"  , std::sqrt(segment->trackSegment().bestMomentum().Mag2())/Gaudi::Units::GeV );
           myTuple->write();

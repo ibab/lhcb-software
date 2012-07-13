@@ -133,6 +133,8 @@ namespace Rich
         std::vector<AIDA::IHistogram2D*> m_quarterHistos;
         std::vector<AIDA::IHistogram2D*> m_sideIsolatedHistos;
 
+        std::vector<int> m_hpdVetoList;
+
       };
 
     }

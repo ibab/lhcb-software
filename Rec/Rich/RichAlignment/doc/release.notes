@@ -4,6 +4,9 @@
 ! Purpose     : Algorithms and scripts related to RICH alignment
 !-----------------------------------------------------------------------------
 
+! 2012-07-13 - Chris Jones
+ - Add a HPD veto list to AlignmentMonitor
+
 !========================= RichAlignment v1r6 2011-12-15 =========================
 ! 2011-12-02 - Chris Jones
  - Use long long instead of long

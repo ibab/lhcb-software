@@ -52,7 +52,7 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck.bz2"):
                 print "(n-1) Scale Rich1 =",r1,"Rich2",r2
             
                 # Make a job object
-                j = Job( application = Brunel( version = 'v42r3p2' ) )
+                j = Job( application = Brunel( version = 'v43r0' ) )
 
                 # name
                 j.name = "RefInControl"
@@ -101,11 +101,11 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck.bz2"):
                 j.submit()
 
 ## Submits DB calibration jobs
-def submitCalibrationJobs(name="",BrunelVer="v42r3p2",pickledRunsList=[]):
+def submitCalibrationJobs(name="",BrunelVer="v43r0",pickledRunsList=[]):
     submitRecoJobs(name,BrunelVer,pickledRunsList,"RefInCalib")
 
 ## Submit DB Verification Jobs
-def submitVerificationJobs(name="",BrunelVer="v42r3p2",pickledRunsList=[]):
+def submitVerificationJobs(name="",BrunelVer="v43r0",pickledRunsList=[]):
     submitRecoJobs(name,BrunelVer,pickledRunsList,"RefInVerify")
 
 ## Real underlying method
@@ -166,10 +166,11 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
 
     # Aerogel
     #dbFiles += ["2012AerogelCalibReset-21042012-V2"] # Reset to old defaults
-    dbFiles += ["2012AerogelCalib-V1-08062012"] # First 2012 calibration
+    dbFiles += ["2012AerogelCalib-V2-19062012"] # First 2012 calibration
 
     # New MDCS RICH1 for 2012
-    dbFiles += ["MDCS-RICH1-28052012"]
+    #dbFiles += ["MDCS-RICH1-28052012"]
+    dbFiles += ["MDCS-RICH1-04072012"]
 
     # Mirror alignment
 
@@ -875,15 +876,15 @@ def getListOfJobs(tag,name,BrunelVer,statuscodes,MinRun=0,MaxRun=99999999,desc="
     for d in sorted(dict.keys()) : cJobs += [dict[d]]
     return cJobs
 
-def getCalibrationJobList(name="",BrunelVer="v42r3p2",statuscodes=['completed'],
+def getCalibrationJobList(name="",BrunelVer="v43r0",statuscodes=['completed'],
                           MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInCalib',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
-def getVerificationJobList(name="",BrunelVer="v42r3p2",statuscodes=['completed'],
+def getVerificationJobList(name="",BrunelVer="v43r0",statuscodes=['completed'],
                            MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInVerify',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
-def getControlJobList(name="",BrunelVer="v42r3p2",statuscodes=['completed'],
+def getControlJobList(name="",BrunelVer="v43r0",statuscodes=['completed'],
                       MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInControl',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
@@ -1347,7 +1348,7 @@ def filesPerJob(nFiles):
 ##     if nFiles < 100 : return 6
     return 10
 
-def removeCalibrationDataSet(name,BrunelVer="v42r3p2"):
+def removeCalibrationDataSet(name,BrunelVer="v43r0"):
     from Ganga.GPI import jobtree
     js = getCalibrationJobList(name,BrunelVer,
                                statuscodes=['completed','running','submitted','failed'])
@@ -1356,7 +1357,7 @@ def removeCalibrationDataSet(name,BrunelVer="v42r3p2"):
     if jobtree.exists(path) : jobtree.rm(path)
     jobtree.cd('/RichCalibration')
 
-def removeVerificationDataSet(name,BrunelVer="v42r3p2"):
+def removeVerificationDataSet(name,BrunelVer="v43r0"):
     from Ganga.GPI import jobtree
     js = getVerificationJobList(name,BrunelVer,
                                statuscodes=['completed','running','submitted','failed'])

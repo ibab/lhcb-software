@@ -149,8 +149,8 @@ def run(rootFile="2012.root"):
 
     # primary tile IDs to use the full sub tile calibration for
     #fullCalibTiles = [ ]
-    #fullCalibTiles = [ 2, 4, 10, 12 ]
-    fullCalibTiles = [ 2 ]
+    fullCalibTiles = [ 2, 3, 6, 11, 13 ]
+    #fullCalibTiles = [ 2 ]
     #fullCalibTiles = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ]
 
     # Loop over the (all) tiles

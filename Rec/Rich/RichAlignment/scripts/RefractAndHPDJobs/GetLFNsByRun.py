@@ -108,7 +108,7 @@ else:
         resultB = database.getFilesWithGivenDataSets(bkDict)
 
         if not resultB['OK']:
-          print resultB['Message']
+          print "Error querying BK with", bkDict, resultB['Message']
           allOK = False
         else:
           tmpLFNList = [ ]
@@ -121,6 +121,8 @@ else:
             if run not in RunLFNs.keys() : RunLFNs[run] = [ ]
             RunLFNs[run] += tmpLFNList
 
+      if not allOK : break
+            
       nLFNs = 0
       if run in RunLFNs.keys() : nLFNs = len(RunLFNs[run])
       if nLFNs > 0 :
