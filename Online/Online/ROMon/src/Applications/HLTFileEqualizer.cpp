@@ -276,6 +276,16 @@ void DefHltInfoHandler::infoHandler()
       m_Equalizer->m_nfiles2 += nfiles*nfiles;
       m_Equalizer->m_nnodes++;
     }
+    else
+    {
+      nit = m_Equalizer->m_Nodes.find(nname);
+      if (nit != m_Equalizer->m_Nodes.end())
+      {
+        myNode* nod;
+        nod = (*nit).second;
+        m_Equalizer->m_Nodes.erase(nit);
+      }
+    }
   }
 //  status =1;
   return;
