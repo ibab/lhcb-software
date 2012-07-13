@@ -54,6 +54,9 @@ macro_append LHCbKernel_cppflags "" \
 macro_append LHCbKernel_dictionary_dict_pp_cppflags "" \
                                          target-icc " -wd177 -wd654"
 
+# Link statement required for Boost 1.50
+macro_append Boost_linkopts " $(Boost_linkopts_system) "
+
 # RichSmartID Debug Application
 #============================================================================
 application RichSmartIDTest ../tests/RichSmartIDTest/*.cpp
