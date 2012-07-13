@@ -44,7 +44,7 @@ StatusCode StandAloneDecayTool::initialize() {
   debug() << "==> Initialize" << endmsg;
 
   LHCb::IParticlePropertySvc * ppSvc = 
-    svc< LHCb::IParticlePropertySvc >( "ParticlePropertySvc" ) ;
+    svc< LHCb::IParticlePropertySvc >( "LHCb::ParticlePropertySvc" ) ;
   const LHCb::ParticleProperty * prop = ppSvc -> find( LHCb::ParticleID( *m_pids.begin() ) ) ;
   m_signalMass = prop -> mass() ;
 

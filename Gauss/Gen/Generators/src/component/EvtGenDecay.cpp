@@ -152,6 +152,8 @@ StatusCode EvtGenDecay::initialize( ) {
   if ( boost::filesystem::exists( evtPdlFile ) ) 
     boost::filesystem::remove( evtPdlFile ) ;
   sc = createTemporaryEvtFile( evtPdlFile ) ;
+  if ( m_keepTempEvtFile ) 
+    always() << "Keep the file: " << evtPdlFile << endmsg ;
   if ( ! sc.isSuccess() ) return sc ;
 
   // create random engine for EvtGen
@@ -229,7 +231,7 @@ StatusCode EvtGenDecay::initialize( ) {
   // update the particle properties of Pythia
   LHCb::IParticlePropertySvc * ppSvc( 0 ) ;
   try { ppSvc = 
-      svc< LHCb::IParticlePropertySvc > ( "ParticlePropertySvc" , true ) ; }
+      svc< LHCb::IParticlePropertySvc > ( "LHCb::ParticlePropertySvc" , true ) ; }
   catch ( const GaudiException & exc ) {
     Exception( "Cannot open ParticlePropertySvc" , exc ) ;
   }
@@ -508,7 +510,7 @@ StatusCode EvtGenDecay::createTemporaryEvtFile( const boost::filesystem::path &
   // retrieve Gaudi particle property service  
   LHCb::IParticlePropertySvc * ppSvc( 0 ) ;
   try { ppSvc = 
-      svc< LHCb::IParticlePropertySvc > ( "ParticlePropertySvc" , true ) ; }
+      svc< LHCb::IParticlePropertySvc > ( "LHCb::ParticlePropertySvc" , true ) ; }
   catch ( const GaudiException & exc ) {
     Exception( "Cannot open ParticlePropertySvc to fill EvtGen" , exc ) ;
   }
@@ -531,7 +533,7 @@ StatusCode EvtGenDecay::createTemporaryEvtFile( const boost::filesystem::path &
     // Particle Name (EvtGen Name)
     g << std::setw( 22 ) << std::left << (*i) -> evtGenName ( ) << " " ;
     // PDG Id
-    g << std::right << std::setw( 13 ) << (*i) -> pythiaID() << " " ;
+    g << std::right << std::setw( 13 ) << (*i) -> pid().pid() << " " ;
     // Mass in GeV 
     mass   = (*i) -> mass() / Gaudi::Units::GeV ;
     // ctau in mm 
@@ -561,7 +563,7 @@ StatusCode EvtGenDecay::createTemporaryEvtFile( const boost::filesystem::path &
     charge = (int) floor( 3 * (*i) -> charge( ) + 0.5 ) ;
     g << std::setw( 5 ) << charge << " " ;
     // 2 times particle spin
-    LHCb::ParticleID pid ( (*i) -> pythiaID() ) ;
+    LHCb::ParticleID pid ( (*i) -> pid() ) ;
     if ( pid.jSpin() > 0 ) spin2 = pid.jSpin() - 1 ;
     else spin2 = getParticleSpin( pid ) - 1 ;
     g << std::setw( 5 ) << spin2 << " " ;

@@ -77,7 +77,7 @@ StatusCode ExternalGenerator::initialize( ) {
     return Error( "Unable to read LHAPDF commands" , sc ) ;
 
   // retrieve the particle property service
-  m_ppSvc = svc< LHCb::IParticlePropertySvc >( "ParticlePropertySvc" , true ) ;
+  m_ppSvc = svc< LHCb::IParticlePropertySvc >( "LHCb::ParticlePropertySvc" , true ) ;
 
   // obtain the Decay Tool 
   // (ATTENTION: it has to be initialized before the production tool)

@@ -74,7 +74,7 @@ StatusCode Inclusive::initialize( ) {
         it != m_pidVector.end() ; ++it ) m_pids.insert( *it ) ;
   
   LHCb::IParticlePropertySvc * ppSvc =
-    svc< LHCb::IParticlePropertySvc >( "ParticlePropertySvc" ) ;
+    svc< LHCb::IParticlePropertySvc >( "LHCb::ParticlePropertySvc" ) ;
   
   info() << "Generating Inclusive events of " ;
   PIDs::const_iterator it ;
