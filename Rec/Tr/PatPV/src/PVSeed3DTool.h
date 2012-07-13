@@ -11,17 +11,6 @@
 // From Event
 #include "Event/Track.h"
 
-using namespace ROOT::Math;
-using namespace Gaudi;
-using namespace LHCb;
-using namespace std;
-
-typedef Gaudi::XYZVector EVector;
-typedef Gaudi::XYZPoint EPoint;
-
-class seedPoint;
-class closeNode;
-class seedTrack;
 
 /** @class PVSeed3DTool PVSeed3DTool.h newtool/PVSeed3DTool.h
  *  
@@ -39,6 +28,8 @@ public:
 
   virtual ~PVSeed3DTool( ); ///< Destructor
 
+  StatusCode initialize();
+
   void getSeeds(std::vector<const LHCb::Track*>& inputTracks, 
 		const Gaudi::XYZPoint& beamspot,
 		std::vector<Gaudi::XYZPoint>& seeds);
@@ -47,15 +38,34 @@ protected:
 
 private:
 
-  bool closestPoints(const EPoint& ori1, const EVector& dir1,
-		     const EPoint& ori2, const EVector& dir2,
-		     EPoint& close1, EPoint& close2);
+typedef Gaudi::XYZVector EVector;
+typedef Gaudi::XYZPoint EPoint;
 
-  double thetaTracks(const Track& track1, 
-                     const Track& track2);
+  // helper types
+  struct seedPoint {
+    EPoint position;
+    EPoint error;
+    int multiplicity;
+  };
 
-  bool xPointParameters(const Track& track1, const Track& track2,
-                        double & distance, EPoint & closestPoint);
+  static bool seedcomp( const seedPoint& first, const seedPoint& second );
+
+  struct seedTrack {
+    const LHCb::Track* lbtrack;
+    bool used;
+  };
+
+  struct closeNode {
+    seedTrack* seed_track;
+    EPoint closest_point;
+    bool take;
+  };
+
+
+  double cos2Theta( const EVector& v1, const EVector& v2 );
+
+  bool xPointParameters(const LHCb::Track* track1, const LHCb::Track* track2,
+                        double & distance2, double & cos2th, EPoint & closestPoint);
 
   bool simpleMean(std::vector<closeNode> & close_nodes, seedPoint & pseed);
 
@@ -65,6 +75,11 @@ private:
   int    m_MinCloseTracks;
 
   double m_zMaxSpread;  // for truncated mean
+
+  // suqared variables to gain in speed
+  double m_TrackPairMaxDistanceSq;
+  double m_zMaxSpreadSq;
+  double m_TrackPairMaxCos2Theta;
 };
 
 #endif // NEWTOOL_PVSEED3DTOOL_H

@@ -15,44 +15,6 @@
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( PVSeed3DTool )
 
-
-class seedPoint 
-{
-public:
-  EPoint position;
-  EPoint error;
-  int multiplicity;
-  
-  seedPoint():position(),error(),multiplicity(0) {};
-  
-  
-};
-
-class seedTrack 
-{
-public:
-  const Track* lbtrack;
-  bool used;
-  
-  seedTrack():lbtrack(0),used(0) {};
-};
-
-class closeNode 
-{
-public:
-  seedTrack* seed_track;
-  double distance;
-  EPoint closest_point;
-  bool take;
-  
-  closeNode():seed_track(0),distance(0.),closest_point(),take(0){};
-};
-
-bool  seedcomp( const seedPoint &first, const seedPoint &second ) {
-    return first.multiplicity > second.multiplicity;
-}
-
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -62,7 +24,11 @@ PVSeed3DTool::PVSeed3DTool( const std::string& type,
   : GaudiTool ( type, name , parent ),
     m_TrackPairMaxDistance(0.),
     m_MinCloseTracks(0),
-    m_zMaxSpread(0.)
+    m_zMaxSpread(0.),
+    m_TrackPairMaxDistanceSq(0.),
+    m_zMaxSpreadSq(0.),
+    m_TrackPairMaxCos2Theta(0.999*0.999)
+
 {
   declareInterface<IPVSeeding>(this);
   declareProperty("TrackPairMaxDistance", m_TrackPairMaxDistance = 0.3 * Gaudi::Units::mm );
@@ -75,6 +41,25 @@ PVSeed3DTool::PVSeed3DTool( const std::string& type,
 //=============================================================================
 PVSeed3DTool::~PVSeed3DTool() {} 
 
+//=============================================================================
+// Initialize
+//=============================================================================
+StatusCode PVSeed3DTool::initialize()
+{
+  StatusCode sc = GaudiTool::initialize();
+  if ( ! sc.isSuccess() ) { return sc; }
+
+  m_zMaxSpreadSq = m_zMaxSpread*m_zMaxSpread;
+  m_TrackPairMaxDistanceSq = m_TrackPairMaxDistance*m_TrackPairMaxDistance;
+
+  return StatusCode::SUCCESS;
+}
+
+//=============================================================================
+// seedcomp
+//=============================================================================
+bool PVSeed3DTool::seedcomp( const seedPoint& first, const seedPoint& second )
+{ return ( first.multiplicity > second.multiplicity ); }
 
 //=============================================================================
 // getSeeds
@@ -120,17 +105,18 @@ void PVSeed3DTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks,
         if ( ! its2->used  && its1 != its2 ) {
           
           EPoint closest_point;
-          double distance;
-          const Track* lbtr1 = its1->lbtrack;
-          const Track* lbtr2 = its2->lbtrack;
-          bool ok = xPointParameters(*lbtr1, *lbtr2, distance, closest_point);
-          double costh = thetaTracks(*lbtr1, *lbtr2);
-          if (ok && distance < m_TrackPairMaxDistance && costh<0.999) {
-      			closeTracksNumber ++;
+          double distance2;
+          double cos2th;
+          const LHCb::Track* lbtr1 = its1->lbtrack;
+          const LHCb::Track* lbtr2 = its2->lbtrack;
+          if (xPointParameters(lbtr1, lbtr2, distance2, cos2th, closest_point)
+              && distance2 <  m_TrackPairMaxDistanceSq
+	      && cos2th < m_TrackPairMaxCos2Theta) {
+	    
+      	    closeTracksNumber++;
             closeNode closetr; 
             closetr.take           = true;
             closetr.seed_track    =  &(*its2); 
-            closetr.distance      = distance;
             closetr.closest_point = closest_point;
             close_nodes.push_back( closetr );
           }
@@ -145,9 +131,9 @@ void PVSeed3DTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks,
         debug() << " close nodes (pairs of tracks wrt one track): " << endmsg;
         std::vector<closeNode>::iterator itd;
         for ( itd = close_nodes.begin(); itd != close_nodes.end(); itd++ ) { 
-          debug() << format(" xyz %7.3f %7.3f %7.3f distance %7.3f ",
-  			  itd->closest_point.X(),  itd->closest_point.Y(), itd->closest_point.Z(),
-                            itd->distance) << endmsg;           
+          debug() << format(" xyz %7.3f %7.3f %7.3f ",
+			    itd->closest_point.X(),  itd->closest_point.Y(), itd->closest_point.Z() )
+                  << endmsg;           
         }
       }
 
@@ -194,93 +180,50 @@ void PVSeed3DTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks,
 
   
 
+
 //=============================================================================
-// closestPoints
+// closestPointParameters
 //=============================================================================
-bool PVSeed3DTool::closestPoints(const EPoint& ori1, const EVector& dir1,
-                             const EPoint& ori2, const EVector& dir2,
-                             EPoint& close1, EPoint& close2) {
-  
-  // Calculate the point between two tracks
-  // (closest distance to both tracks)
-  // code from Paul Bourke, 
-  // http://astronomy.swin.edu.au/~pbourke/geometry/lineline3d/
- 
-  double eps(1.e-6);
-  
-  close1 = EPoint(0.,0.,0.);
-  close2 = EPoint(0.,0.,0.);
-  
-  EVector udir1 = dir1.unit();
-  EVector udir2 = dir2.unit();
-  
-  EPoint t1b = ori1;
-  EPoint t2b = ori2;
-  
-  EVector v0 = ori1 - ori2;
-  EVector v1 = udir1;
-  if (fabs(v1.x())  < eps && fabs(v1.y())  < eps && fabs(v1.z())  < eps)
-    return false;
-  EVector v2 = udir2;
-  if (fabs(v2.x())  < eps && fabs(v2.y())  < eps && fabs(v2.z())  < eps)
-    return false;
-  
-  double d02 = v0.Dot(v2);
-  double d21 = v2.Dot(v1);
-  double d01 = v0.Dot(v1);
-  double d22 = v2.Dot(v2);
+bool PVSeed3DTool::xPointParameters
+    ( const LHCb::Track* track1, const LHCb::Track* track2,
+      double& distanceSq,
+      double& cos2Theta,
+      EPoint& closestPoint )
+{
+  EPoint o1 = track1->position();
+  EPoint o2 = track2->position();
+  EVector v1 = track1->slopes();
+  EVector v2 = track2->slopes();
+  EVector v0 = o1 - o2;
+
   double d11 = v1.Dot(v1);
-  
-  double denom = d11 * d22 - d21 * d21;
-  if (fabs(denom) < eps) return false;
-  double numer = d02 * d21 - d01 * d22;
-  
-  double mu1 = numer / denom;
-  double mu2 = (d02 + d21 * mu1) / d22;
-  
-  close1 = t1b + mu1 * v1;  
-  close2 = t2b + mu2 * v2;
-  
+  double d12 = v1.Dot(v2);
+  double d22 = v2.Dot(v2);
+  double d10 = v1.Dot(v0);
+  double d20 = v2.Dot(v0);
+
+  double det = d11 * d22 - d12 * d12;
+  double l1=0;
+  double l2=0;
+  if ( fabs(det) > 1.0e-6 ) {
+    l1 = ( d12 * d20 - d22 * d10 ) / det;
+    l2 = ( d20 + d12 * l1 ) / d22;
+  } else {
+    return false; // reject parallel track pairs
+  }
+  EPoint close1 = o1 + l1 * v1;
+  EPoint close2 = o2 + l2 * v2;
+
+  cos2Theta = d12 * d12 / d11 / d22;
+
+  distanceSq = (close1-close2).Mag2(); // could also be evaluated as distancesq = v0.Mag2() + l1 * d10 - l2 * d20;
+
+  closestPoint.SetCoordinates( 0.5 * ( close1.x() + close2.x() ),
+                               0.5 * ( close1.y() + close2.y() ),
+                               0.5 * ( close1.z() + close2.z() ) );
   return true;
 }
 
-//=============================================================================
-// thetaTracks
-//=============================================================================
-double PVSeed3DTool::thetaTracks(const Track& track1, 
-                                 const Track& track2) {
-  const State& state1 = track1.firstState();
-  const State& state2 = track2.firstState();
-  EVector dir1(state1.tx(),state1.ty(),1.);
-  EVector dir2(state2.tx(),state2.ty(),1.);
-  EVector udir1 = dir1.unit();
-  EVector udir2 = dir2.unit();
-  double ct = udir1.Dot(udir2);
-  return ct;  
-}
-
-//=============================================================================
-// closestDistance
-//=============================================================================
-bool PVSeed3DTool::xPointParameters(const Track& track1, const Track& track2,
-                       double & distance, EPoint & closestPoint) {
-
-  distance = 1.e10;
-  const State& state1 = track1.firstState();
-  const State& state2 = track2.firstState();
-  EVector dis(0.,0.,1.e6);
-  EPoint pos1(0.,0.,0.);
-  EPoint pos2(0.,0.,0.);
-  EVector dir1(state1.tx(),state1.ty(),1.);
-  EVector dir2(state2.tx(),state2.ty(),1.);
-  EPoint  ori1(state1.x(),state1.y(),state1.z());
-  EPoint  ori2(state2.x(),state2.y(),state2.z());
-  bool ok = closestPoints(ori1,dir1,ori2,dir2,pos1,pos2);
-  if (!ok) return ok;
-  closestPoint.SetXYZ(0.5*(pos1.x()+pos2.x()), 0.5*(pos1.y()+pos2.y()), 0.5*(pos1.z()+pos2.z()));
-  distance = sqrt((pos1 - pos2).Mag2());
-  return ok;;
-}
 
 //=============================================================================
 // weighedMean
@@ -305,10 +248,9 @@ void PVSeed3DTool::wMean(std::vector<closeNode> & close_nodes, seedTrack* base_t
      if ( it->take == 0 ) continue;
 
      double errxy2 = 0.1*0.1;
-     const Track* lbtr1 = base_track->lbtrack;
-     const Track* lbtr2 = it->seed_track->lbtrack;
-     double costh = thetaTracks(*lbtr1, *lbtr2);
-     double c2 = costh*costh;
+
+     double c2 = cos2Theta( base_track->lbtrack->firstState().slopes(),
+			    it->seed_track->lbtrack->firstState().slopes() );
      double ctanth2 = c2/(1.-c2);
      double errz2 = 2.*ctanth2*errxy2;
 
@@ -414,4 +356,9 @@ bool PVSeed3DTool::simpleMean(std::vector<closeNode> & close_nodes, seedPoint & 
    return true;
 }
 	
+double PVSeed3DTool::cos2Theta( const EVector& v1, const EVector& v2 ) {
+  return v1.Dot(v2) * v1.Dot(v2) / v1.Mag2() / v2.Mag2();
+}
+
+
 //=============================================================================

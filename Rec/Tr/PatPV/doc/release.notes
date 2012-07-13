@@ -4,6 +4,11 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+
+! 2012-07-13 - Mariusz Witek
+ - modification suggested by Pieter David to make PVSeed3DTool faster
+   The whole 3D PV reconstruction time (seed+fit) reduced by 35 %
+
 !========================= PatPV v3r23 2012-03-27 =========================
 ! 2012-03-08 - Marco Cattaneo
  - Replace std::sort by std::stable_sort to fix diffs between gcc43 and gcc46
