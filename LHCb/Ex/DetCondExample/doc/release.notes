@@ -1,9 +1,10 @@
 ! =============================================================================
-! $Id: release.notes,v 1.115 2009-06-03 07:55:40 marcocle Exp $
-! =============================================================================
 ! package Ex/DetCondExample
 ! package manager : Marco Clemencic
 ! =============================================================================
+
+! 2012-07-13 - Marco Clemencic
+ - Minor fix in the requirements branches.
 
 !========================= DetCondExample v11r10 2011-01-31 =========================
 ! 2011-01-17 - Marco Cattaneo
@@ -47,7 +48,7 @@
  - cmt/requirements
    . Increase version to v11r2
  - src/CondDBTestAlgorithm.cpp, src/MultiDBTest.cpp
-   . Adapt to changes in AlignmentCondition interface. 
+   . Adapt to changes in AlignmentCondition interface.
      AlignmentCondition::matrix() is now AlignmentCondition::toNominalMatrix().
      But replace by inverse, AlignmentCondition::offNominalMatrix().
 
@@ -357,12 +358,12 @@ Modify CMT requirements to allow for runtime choice between Oracle and MySQL.
   > the setup_RedHat72.csh script is not needed anymore:
     /afs/cern.ch/lhcb/scripts/CMT.csh already sets the RH7 environment
   > no need for a special README.RedHat72 file anymore
-  > no changes to GaudiPolicy are necessary anymore on RH7: 
+  > no changes to GaudiPolicy are necessary anymore on RH7:
     in v5r7, the CMT tags rh73_gcc2952* are already defined
   > no changes to ExternalLibs are necessary anymore on RH7:
     in  v4r0p1, PLATARCH for rh73_gcc2952 is already defined
   > no changes to HTL are necessary anymore on RH7:
-    GaudiSvc v10 already uses HTL 1.3.2.1 
+    GaudiSvc v10 already uses HTL 1.3.2.1
   > no changes to XERCES are necessary anymore on RH7:
     release 1.6.0 already contains libraries for rh73_gcc2952
     (although they are symblic links to rh61_gcc2952)
@@ -522,7 +523,7 @@ Use the new DetectorDataSvc in GaudiSvc.
 ==============================================================================
 !20011129 - Andrea Valassi
 - Remove the IConditionsDBDataSvc special interface
-- BootDetectorStore bootstraps the detector data store 
+- BootDetectorStore bootstraps the detector data store
   > the association between folder names and path names is done here
   > objects are registered using standard methods (need ForceLeaves=true)
 - TestSmartDataPtr needs not call the IConditionsDBDataSvc to boot the store
@@ -536,7 +537,7 @@ Use the new DetectorDataSvc in GaudiSvc.
 
 ==============================================================================
 !20011127 - Andrea Valassi
-- Move interface IDetDataSvc (formerly IConditionDataSvc) to GaudiKernel 
+- Move interface IDetDataSvc (formerly IConditionDataSvc) to GaudiKernel
 
 ==============================================================================
 !20011126 - Andrea Valassi

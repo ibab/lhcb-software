@@ -2,8 +2,8 @@
 package DetCondExample
 version           v11r10
 
-branches doc src job options cmt XMLDDDB python logs
-ignore_pattern package_stamps 
+branches doc src options cmt XMLDDDB python logs
+ignore_pattern package_stamps
 
 # Main program and standard job options
 use GaudiConf v*
