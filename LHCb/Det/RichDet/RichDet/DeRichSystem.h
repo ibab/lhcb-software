@@ -237,6 +237,12 @@ public:
   /// Returns a list of all valid Level1 board hardware IDs
   const Rich::DAQ::Level1HardwareIDs & level1HardwareIDs() const;
 
+  /// Returns the number of PDs in the given RICH detector
+  unsigned int nPDs( const Rich::DetectorType rich ) const;
+
+  /// Returns the total number of PDs
+  unsigned int nPDs() const;
+
 public:
 
   /**
@@ -475,6 +481,14 @@ inline const Rich::DAQ::L1ToHardIDs& DeRichSystem::l1PDHardIDs() const
 inline const Rich::DAQ::Level1HardwareIDs& DeRichSystem::level1HardwareIDs() const
 {
   return m_l1IDs;
+}
+
+//=========================================================================
+// Number HPDs
+//=========================================================================
+inline unsigned int DeRichSystem::nPDs() const
+{
+  return allPDRichSmartIDs().size();
 }
 
 #endif    // RICHDET_DERICHSYSTEM_H

@@ -4,6 +4,9 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2012-07-15 - Chris Jones
+ - Add methods to DeRichSystem to return the number of PDs for each RICH
+
 ! 2012-06-26 - Chris Jones
  - Fix a small bug in DeRichPMTPanel, where a null pointer was not properly 
    protected against being dereferenced.

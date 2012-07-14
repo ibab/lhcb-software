@@ -940,3 +940,18 @@ DeRichSystem::level1LogicalID( const LHCb::RichSmartID smartID ) const
 {
   return level1LogicalID( level1HardwareID(smartID) );
 }
+
+//===========================================================================
+
+unsigned int DeRichSystem::nPDs( const Rich::DetectorType rich ) const
+{
+  unsigned int nPDs = 0;
+  for ( LHCb::RichSmartID::Vector::const_iterator iPD = allPDRichSmartIDs().begin();
+        iPD != allPDRichSmartIDs().end(); ++iPD )
+  {
+    if ( (*iPD).rich() == rich ) { ++nPDs; }
+  }
+  return nPDs;
+}
+
+//===========================================================================
