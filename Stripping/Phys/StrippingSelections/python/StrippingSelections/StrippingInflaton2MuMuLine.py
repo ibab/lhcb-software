@@ -131,7 +131,8 @@ def makeLong(name, vertexDistChi2, vertexDist) :
     Detached2mu = CombineParticles("Combine"+name)
     Detached2mu.DecayDescriptor = "KS0 -> mu+ mu-"
     Detached2mu.addTool( OfflineVertexFitter )
-    Detached2mu.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+    #Detached2mu.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+    Detached2mu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     Detached2mu.OfflineVertexFitter.useResonanceVertex = False
     Detached2mu.ReFitPVs = True
     Detached2mu.DaughtersCuts = { "mu+" : "(TRCHI2DOF < 4 ) "\
@@ -166,7 +167,8 @@ def makeDownstream(name) :
     Detached2mu = CombineParticles("Combine"+name)
     Detached2mu.DecayDescriptor = "KS0 -> mu+ mu-"
     Detached2mu.addTool( OfflineVertexFitter )
-    Detached2mu.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+    #Detached2mu.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+    Detached2mu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     Detached2mu.OfflineVertexFitter.useResonanceVertex = False
     Detached2mu.ReFitPVs = True
     Detached2mu.DaughtersCuts = { "mu+" : "(TRCHI2DOF < 4 ) "\
@@ -208,7 +210,8 @@ def makeBu2InflatonK(name, SelInflatonLong) :
     Bu2InflatonK = CombineParticles("Combine"+name)
     Bu2InflatonK.DecayDescriptor =  " [B+ -> KS0 K+]cc ";
     Bu2InflatonK.addTool( OfflineVertexFitter )
-    Bu2InflatonK.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+    #Bu2InflatonK.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+    Bu2InflatonK.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     Bu2InflatonK.OfflineVertexFitter.useResonanceVertex = False
     Bu2InflatonK.ReFitPVs = True
     Bu2InflatonK.DaughtersCuts = { "K+" : "(ISLONG) & (TRCHI2DOF < 5 ) &(MIPCHI2DV(PRIMARY)>25)& (PT>250*MeV) "}
@@ -238,7 +241,8 @@ def makeBs2InflatonPhi(name, SelInflatonLong) :
     Bs2InflatonPhi = CombineParticles("Combine"+name)
     Bs2InflatonPhi.DecayDescriptor = "B_s0 -> KS0 phi(1020)"
     Bs2InflatonPhi.addTool( OfflineVertexFitter )
-    Bs2InflatonPhi.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+    #Bs2InflatonPhi.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+    Bs2InflatonPhi.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     Bs2InflatonPhi.OfflineVertexFitter.useResonanceVertex = False
     Bs2InflatonPhi.ReFitPVs = True
     Bs2InflatonPhi.DaughtersCuts = {"phi(1020)" : "MIPCHI2DV(PRIMARY)> 25."}
@@ -268,7 +272,8 @@ def makeBd2InflatonKst(name, SelInflatonLong) :
     Bd2InflatonKst = CombineParticles("Combine"+name)
     Bd2InflatonKst.DecayDescriptor = "[B0 -> KS0 K*(892)0]cc"
     Bd2InflatonKst.addTool( OfflineVertexFitter )
-    Bd2InflatonKst.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+    #Bd2InflatonKst.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+    Bd2InflatonKst.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     Bd2InflatonKst.OfflineVertexFitter.useResonanceVertex = False
     Bd2InflatonKst.ReFitPVs = True
     Bd2InflatonKst.DaughtersCuts = { "K*(892)0" : "MIPCHI2DV(PRIMARY)> 25."}

@@ -3,6 +3,9 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
+! 2012-07-13 - Michel De Cian
+ - Replaced "VertexFitters.update( { "" : "OfflineVertexFitter"} )" with "ParticleCombiners.update( { "" : "OfflineVertexFitter"} )" in InflatonStripping2MuMu
+
 
 !========================= StrippingSelections v3r14 2012-06-27 =========================
 
