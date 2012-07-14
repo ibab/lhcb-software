@@ -20,23 +20,23 @@ using namespace Rich::Rec::MC;
 
 //-------------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( RecoQC )
-
 // Standard constructor, initializes variables
-  RecoQC::RecoQC( const std::string& name,
-                  ISvcLocator* pSvcLocator )
-    : HistoAlgBase        ( name, pSvcLocator ),
-      m_richPartProp      ( NULL ),
-      m_ckAngle           ( NULL ),
-      m_ckRes             ( NULL ),
-      m_richRecMCTruth    ( NULL ),
-      m_trSelector        ( NULL ),
-      m_isoTrack          ( NULL ),
-      m_fitter            ( NULL ),
-      m_minBeta           ( Rich::NRadiatorTypes, 0.9999 ),
-      m_maxBeta           ( Rich::NRadiatorTypes, 999.99 ),
-      m_truePhotCount     ( Rich::NRadiatorTypes, 0 ),
-      m_nSegs             ( Rich::NRadiatorTypes, 0 )
+RecoQC::RecoQC( const std::string& name,
+                ISvcLocator* pSvcLocator )
+  : HistoAlgBase        ( name, pSvcLocator ),
+    m_richPartProp      ( NULL ),
+    m_ckAngle           ( NULL ),
+    m_ckRes             ( NULL ),
+    m_richRecMCTruth    ( NULL ),
+    m_trSelector        ( NULL ),
+    m_isoTrack          ( NULL ),
+    m_fitter            ( NULL ),
+    m_RichSys           ( NULL ),
+    m_minBeta           ( Rich::NRadiatorTypes, 0.9999 ),
+    m_maxBeta           ( Rich::NRadiatorTypes, 999.99 ),
+    m_truePhotCount     ( Rich::NRadiatorTypes, 0 ),
+    m_nSegs             ( Rich::NRadiatorTypes, 0 ),
+    m_nEvts             ( 0    )
 {
   using namespace boost::assign;
 
@@ -62,9 +62,12 @@ DECLARE_ALGORITHM_FACTORY( RecoQC )
   declareProperty( "EnableAerogelTilePlots", m_aeroTilePlots = false );
 
   declareProperty( "EnablePerPDPlots",    m_pdResPlots    = false );
-  declareProperty( "EnablePerPDColPlots", m_pdColResPlots = true  );
+  declareProperty( "EnablePerPDColPlots", m_pdColResPlots = false );
+
+  declareProperty( "HistoFitFreq", m_histFitFreq = -1 );
 
   setProperty( "NBins2DHistos", 100 );
+  setProperty( "HistoPrint", false );
 }
 
 // Destructor
@@ -85,11 +88,20 @@ StatusCode RecoQC::initialize()
   acquireTool( "RichIsolatedTrack",       m_isoTrack     );
   acquireTool( "RichParticleProperties",  m_richPartProp );
 
+  // RichDet
+  m_RichSys = getDet<DeRichSystem>( DeRichLocations::RichSystem );
+
   return sc;
 }
 
 StatusCode RecoQC::prebookHistograms()
 {
+  // List of HPDs
+  const LHCb::RichSmartID::Vector& hpds = m_RichSys->allPDRichSmartIDs();
+
+  // Number of HPDs
+  const unsigned int nHPDsR1 = m_RichSys->nPDs(Rich::Rich1);
+  const unsigned int nHPDsR2 = m_RichSys->nPDs(Rich::Rich2);
 
   // Get aerogel tiles, if active
   std::vector<const DeRichAerogelRadiator*> tiles;
@@ -116,6 +128,10 @@ StatusCode RecoQC::prebookHistograms()
   {
     if ( m_rads[*rad] )
     {
+      // Which RICH ?
+      const Rich::DetectorType rich = ( *rad == Rich::Rich2Gas ?
+                                        Rich::Rich2 : Rich::Rich1 );
+
       richHisto1D( HID("ckResAllStereoRefit",*rad),
                    "Rec-Exp Cktheta | All photons | Stereographic Refit",
                    -m_ckResRange[*rad], m_ckResRange[*rad], nBins1D(),
@@ -203,6 +219,49 @@ StatusCode RecoQC::prebookHistograms()
 
         }
       }
+
+      // Resolution per HPD
+      if ( m_pdResPlots )
+      {
+        // Loop over PDs
+        for ( LHCb::RichSmartID::Vector::const_iterator iPD = hpds.begin();
+              iPD != hpds.end(); ++iPD )
+        {
+          if ( (*iPD).rich() != rich ) continue;
+          std::ostringstream title;
+          title << "Rec-Exp Cktheta | All photons | " << *iPD;
+          richHisto1D( HID(pdResPlotID(*iPD),*rad), title.str(),
+                       -m_ckResRange[*rad], m_ckResRange[*rad], nBins1D(),
+                       "delta(Cherenkov theta) / rad" );
+        }
+
+        const unsigned int min = ( *rad == Rich::Rich2Gas ? nHPDsR1           : 0         );
+        const unsigned int max = ( *rad == Rich::Rich2Gas ? nHPDsR1+nHPDsR2-1 : nHPDsR1-1 );
+        richProfile1D( HID("ckResVPDCopyNum",*rad),
+                       "CKtheta Resolution Versus PD Copy Number",
+                       min-0.5, max+0.5, max-min+1,
+                       "PD Copy Number", "Cherenkov Theta Resolution / rad" );
+      }
+
+      // Resolutions per PD column
+      if ( m_pdColResPlots )
+      {
+        // Loop over PDs
+        for ( LHCb::RichSmartID::Vector::const_iterator iPD = hpds.begin();
+              iPD != hpds.end(); ++iPD )
+        {
+          if ( (*iPD).rich() != rich ) continue;
+          std::ostringstream id,title,col;
+          col << (*iPD).rich() << "-" << Rich::text((*iPD).rich(),(*iPD).panel())
+              << "-Col" << (*iPD).pdCol();
+          id << "PDCols/" << col.str();
+          title << "Rec-Exp Cktheta | All photons | " << col.str();
+          richHisto1D( HID(id.str(),*rad), title.str(),
+                       -m_ckResRange[*rad], m_ckResRange[*rad], nBins1D(),
+                       "delta(Cherenkov theta) / rad" );
+        }
+      }
+
     }
   }
 
@@ -243,6 +302,9 @@ StatusCode RecoQC::execute()
     if ( !m_trSelector->trackSelected((*iSeg)->richRecTrack()) ) continue;
     ++segsPerRad[(*iSeg)->trackSegment().radiator()];
   }
+
+  // Count events
+  ++m_nEvts;
 
   // Count photons per radiator
   Rich::Map<Rich::RadiatorType,unsigned int> photsPerRad;
@@ -412,30 +474,22 @@ StatusCode RecoQC::execute()
       } // MC is available
 
       // Plots per PD
-      if ( UNLIKELY ( m_pdResPlots ) )
+      if ( m_pdResPlots )
       {
         const LHCb::RichSmartID hpdID = photon->geomPhoton().smartID().pdID();
-        const Rich::DAQ::HPDIdentifier hid(hpdID);
-        std::ostringstream id,title;
-        id << "PDs/pd-" << hid.number();
-        title << "Rec-Exp Cktheta | All photons | " << hpdID;
-        richHisto1D( HID(id.str(),rad), title.str(), 
-                     -m_ckResRange[rad], m_ckResRange[rad], nBins1D(),
-                     "delta(Cherenkov theta) / rad" ) -> fill( deltaTheta );
+        richHisto1D( HID(pdResPlotID(hpdID),rad) ) -> fill( deltaTheta );
       }
-      if ( UNLIKELY ( m_pdColResPlots ) )
+      // Plots per PD column
+      if ( m_pdColResPlots )
       {
         const LHCb::RichSmartID hpdID = photon->geomPhoton().smartID().pdID();
-        std::ostringstream id,title,col;
+        std::ostringstream id,col;
         col << hpdID.rich() << "-" << Rich::text(hpdID.rich(),hpdID.panel())
             << "-Col" << hpdID.pdCol();
         id << "PDCols/" << col.str();
-        title << "Rec-Exp Cktheta | All photons | " << col.str();
-        richHisto1D( HID(id.str(),rad), title.str(), 
-                     -m_ckResRange[rad], m_ckResRange[rad], nBins1D(),
-                     "delta(Cherenkov theta) / rad" ) -> fill( deltaTheta );
+        richHisto1D( HID(id.str(),rad) ) -> fill( deltaTheta );
       }
-      
+
     } // photon loop
 
     richHisto1D(HID("totalPhotonsPerSeg",rad))->fill((double)segment->richRecPhotons().size());
@@ -469,12 +523,22 @@ StatusCode RecoQC::execute()
     }
   }
 
+  // Fit resolution plots ?
+  if ( UNLIKELY ( m_pdResPlots && m_nEvts>0 && 
+                  m_histFitFreq>0 && m_nEvts%m_histFitFreq == 0 ) )
+  {
+    fitResolutionHistos();
+  }
+
   return StatusCode::SUCCESS;
 }
 
 //  Finalize
 StatusCode RecoQC::finalize()
 {
+
+  // Fit resolution plots ?
+  if ( m_pdResPlots ) { fitResolutionHistos(); }
 
   if ( m_truePhotCount[Rich::Aerogel]  > 0 ||
        m_truePhotCount[Rich::Rich1Gas] > 0 ||
@@ -514,3 +578,171 @@ StatusCode RecoQC::finalize()
   // Execute base class method
   return HistoAlgBase::finalize();
 }
+
+//-------------------------------------------------------------------------------
+
+void RecoQC::fitResolutionHistos()
+{
+  using namespace Gaudi::Utils;
+
+  info() << "Fitting PD Resolution Plots" << endmsg;
+
+  // List of HPDs
+  const LHCb::RichSmartID::Vector& hpds = m_RichSys->allPDRichSmartIDs();
+
+  // Loop over radiators
+  for ( Rich::Radiators::const_iterator rad = Rich::radiators().begin();
+        rad != Rich::radiators().end(); ++rad )
+  {
+    if ( !m_rads[*rad] ) continue;
+
+    // Which RICH ?
+    const Rich::DetectorType rich = ( *rad == Rich::Rich2Gas ?
+                                      Rich::Rich2 : Rich::Rich1 );
+
+    // Get the profile and reset to refill
+    TProfile * p = Aida2ROOT::aida2root( richProfile1D(HID("ckResVPDCopyNum",*rad)) );
+    if ( p ) p->Reset();
+
+    // Loop over PDs
+    for ( LHCb::RichSmartID::Vector::const_iterator iPD = hpds.begin();
+          iPD != hpds.end(); ++iPD )
+    {
+      if ( rich != (*iPD).rich() ) continue;
+
+      // Get the resolution plot for this HPD
+      TH1D * h(NULL);
+      try { h = Aida2ROOT::aida2root( richHisto1D(HID(pdResPlotID(*iPD),*rad)) ); }
+      catch ( const GaudiException& ) { }
+
+      // Fill the profile
+      if ( p ) 
+      {        
+        // PD Copy Number
+        const Rich::DAQ::HPDCopyNumber copyN = m_RichSys->copyNumber( *iPD );
+
+        // fit the histogram
+        const FitResult res = fit(h,*rad);
+
+        if ( res.OK ) 
+        {
+          // Get the profile bin for this HPD and directly set the contents and error
+          const int bin = p->FindBin( copyN.data() );
+          p->SetBinContent( bin, res.resolution );
+          p->SetBinError  ( bin, res.reserror   );
+          p->SetBinEntries( bin, 1              );
+          //p->Fill( copyN.data(), res.resolution );
+        }
+      }
+
+    }
+  }
+
+}
+
+//-------------------------------------------------------------------------------
+
+RecoQC::FitResult RecoQC::fit( TH1D * hist,
+                               const Rich::RadiatorType rad  )
+{
+  using namespace boost::assign;
+
+  // Various hardcoded parameters. Could maybe become JOs ...
+  typedef std::vector<double> VD;
+  const VD preFitDelta   = list_of(0.01)(0.00105)(0.0025);
+  const VD initPreFitRes = list_of(0.01)(0.0015)(0.0007); 
+  const VD maxRes        = list_of(0.01)(0.004)(0.002);
+  const double maxErrorForOK = 1e-3;
+  const unsigned int nPolFull = 3;
+  const unsigned int minHistEntries = 5000;
+
+  // The final fit result to return
+  FitResult res;
+
+  // Skip aerogel ...
+  if ( rad == Rich::Aerogel ) return res;
+
+  if ( hist )
+  {
+    // Min entries
+    if ( hist->GetEntries() >= minHistEntries )
+    {
+      // Get x position of max bin
+      const double xPeak = hist->GetBinCenter(hist->GetMaximumBin());
+
+      // Fit funcs to clean up at the end
+      std::vector<TF1*> trash;
+
+      // Pre fit
+      const std::string preFitFType = "gaus";
+      const std::string preFitName  = Rich::text(rad) + "PreFitF";
+      TF1 * preFitF = new TF1( preFitName.c_str(), preFitFType.c_str(), 
+                               xPeak-preFitDelta[rad], xPeak+preFitDelta[rad] );
+      trash.push_back(preFitF);
+      preFitF->SetParameter(1,0);
+      preFitF->SetParameter(2,initPreFitRes[rad]);
+      hist->Fit(preFitF,"QRS0");
+
+      TF1 * lastFitF = preFitF;
+      for ( unsigned int nPol = 1; nPol <= nPolFull+1; ++nPol )
+      {
+        // Fit function
+        std::ostringstream fFuncType, fitName;
+        fFuncType << "gaus(0)+pol" << nPol << "(3)";
+        fitName << rad + "FitF" << nPol;
+        TF1 * fFitF = new TF1( fitName.str().c_str(), fFuncType.str().c_str(),
+                               -m_ckResRange[rad], m_ckResRange[rad] );
+        trash.push_back(fFitF);
+
+        // Set parameter names
+        fFitF->SetParName(0,"Gaus Constant");
+        fFitF->SetParName(1,"Gaus Mean");
+        fFitF->SetParName(2,"Gaus Sigma");
+
+        // Initialise parameters from last fit
+        const unsigned int nParamsToSet = ( nPol > 1 ? 3+nPol : 3 );
+        for ( unsigned int p = 0; p <= nParamsToSet; ++p )
+        {
+          fFitF->SetParameter(p,lastFitF->GetParameter(p));
+        }
+
+        // Run the fit
+        hist->Fit(fFitF,"QRS0");
+
+        // save last fit
+        lastFitF = fFitF;
+
+        // Fit OK ?
+        const bool fitOK = ( fFitF->GetParError(1)  < maxErrorForOK &&
+                             fFitF->GetParameter(2) < maxRes[rad]   );
+        if ( fitOK )
+        {
+          res.OK         = true;
+          res.resolution = fFitF->GetParameter(2);
+          res.reserror   = fFitF->GetParError(2);
+          res.mean       = fFitF->GetParameter(1);
+          res.meanerror  = fFitF->GetParError(1);
+        }
+        else { break; }
+
+      }
+
+      info() << "Fitted " << res.resolution << " +- " << res.reserror << endmsg;
+
+      // Clean up
+      for ( std::vector<TF1*>::iterator iF = trash.begin(); iF != trash.end(); ++iF )
+      { delete *iF; }
+
+    }
+
+  }
+
+  // return the final fit result
+  return res;
+}
+
+//-------------------------------------------------------------------------------
+
+DECLARE_ALGORITHM_FACTORY( RecoQC )
+
+//-------------------------------------------------------------------------------

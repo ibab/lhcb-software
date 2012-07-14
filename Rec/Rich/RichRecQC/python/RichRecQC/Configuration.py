@@ -578,8 +578,16 @@ class RichRecQCConf(RichConfigurableUser):
             # Radiators
             mon.Radiators = self.usedRadiators()
 
-            # Make aerogel tile plots for long tracks only
+            # Make aerogel tile plots only for Long monitor
             if tkShortName == "Long" : mon.EnableAerogelTilePlots = True
+
+            # Enable PD and PD Col plots only for Long monitor
+            if tkShortName == "Long" :
+                mon.EnablePerPDPlots    = True
+                mon.EnablePerPDColPlots = True
+                # If online, enable periodic histogram fitting
+                if self.getProp("Histograms") == "Online" :
+                    mon.HistoFitFreq = 100
 
             # Histogram ranges
             ckRange = self.getProp("CKThetaResRange")

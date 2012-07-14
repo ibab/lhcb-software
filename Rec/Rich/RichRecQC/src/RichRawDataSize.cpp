@@ -63,7 +63,7 @@ StatusCode RawDataSize::initialize()
 StatusCode RawDataSize::prebookHistograms()
 {
   const unsigned int nL1sMax = m_RichSys->level1HardwareIDs().size();
-  const unsigned int nHPDs   = m_RichSys->allPDRichSmartIDs().size();
+  const unsigned int nHPDs   = m_RichSys->nPDs();
 
   // Size per L1 board
   richProfile1D( HID("L1s/SizeVL1CopyNumber"),

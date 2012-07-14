@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2012-07-15 - Chris Jones
+ - Add a plot giving the fitted CK theta resolution per PD
+
 ! 2012-07-10 - Chris Jones
  - Revert a small change to the histograms IDs used in HPDHitsMoni, as it 
    unintentionally made things complicated in the run-by-run calibration.

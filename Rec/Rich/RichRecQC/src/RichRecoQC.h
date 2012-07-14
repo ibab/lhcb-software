@@ -36,9 +36,18 @@
 // RichDet
 #include "RichDet/DeRichMultiSolidRadiator.h"
 #include "RichDet/DeRichAerogelRadiator.h"
+#include "RichDet/DeRichSystem.h"
 
 // boost
 #include "boost/assign/list_of.hpp"
+
+// Gaudi
+#include "GaudiUtils/Aida2ROOT.h"
+
+// ROOT
+#include "TProfile.h"
+#include "TH1D.h"
+#include "TF1.h"
 
 namespace Rich
 {
@@ -76,6 +85,26 @@ namespace Rich
         /// Pre-Book all (non-MC) histograms
         virtual StatusCode prebookHistograms();
 
+      private:
+
+        /// Fit result
+        class FitResult
+        {
+        public:
+          /// Constructor
+          FitResult() 
+            : OK(false),
+              resolution(0),reserror(0),
+              mean(0),meanerror(0)
+          { }
+        public:
+          bool   OK;         ///< Fit status
+          double resolution; ///< CK resolution
+          double reserror;   ///< CK resolution error
+          double mean;       ///< Mean
+          double meanerror;  ///< Mean error
+        };
+
       private: // methods
 
         /// access RichRecMCTruthTool tool on demand
@@ -85,18 +114,29 @@ namespace Rich
           return m_richRecMCTruth;
         }
 
+        /// Fit the resolution histograms
+        void fitResolutionHistos();
+
+        /// Get the per PD resolution histogram ID
+        std::string pdResPlotID( const LHCb::RichSmartID hpd ) const;
+
+        /// Fit the given histogram to extract the resolution
+        FitResult fit( TH1D * hist,
+                       const Rich::RadiatorType rad );
+
       private: // data
 
         // Pointers to tool instances
         const IParticleProperties * m_richPartProp; ///< Rich Particle properties
-        const ICherenkovAngle * m_ckAngle;  ///< Pointer to RichCherenkovAngle tool
-        const ICherenkovResolution * m_ckRes; ///< Cherenkov angle resolution tool
+        const ICherenkovAngle * m_ckAngle;          ///< Pointer to RichCherenkovAngle tool
+        const ICherenkovResolution * m_ckRes;       ///< Cherenkov angle resolution tool
         mutable const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth;  ///< Pointer to RichRecMCTruthTool interface
-        const ITrackSelector * m_trSelector;  ///< Track selector
-        const IIsolatedTrack * m_isoTrack;
+        const ITrackSelector * m_trSelector;        ///< Track selector
+        const IIsolatedTrack * m_isoTrack;          ///< Isolated track tool
+        const IStereoFitter * m_fitter;             ///< Stereographic refitting tool
 
-        /// Pointer to the Stereographic refitting tool
-        const IStereoFitter * m_fitter;
+        /// Pointer to RICH system detector element
+        const DeRichSystem * m_RichSys;
 
         // job options selection cuts
         std::vector<double> m_minBeta; ///< minimum beta value for tracks
@@ -113,6 +153,9 @@ namespace Rich
         std::vector<unsigned int> m_minRadSegs; ///< Minimum segments per radiator
         std::vector<unsigned int> m_maxRadSegs; ///< Maximum segments per radiator
 
+        /// Histogram fitting event frequency
+        unsigned long long m_histFitFreq;
+
         /// Histogram ranges for CK resolution plots
         std::vector<double> m_ckResRange;
 
@@ -125,7 +168,22 @@ namespace Rich
         /// Enable per PD column resolution plots
         bool m_pdColResPlots;
 
+        /// Event count
+        unsigned long long m_nEvts;
+
       };
+
+      //-------------------------------------------------------------------------------
+
+      inline std::string RecoQC::pdResPlotID( const LHCb::RichSmartID hpd ) const
+      {
+        const Rich::DAQ::HPDIdentifier hid(hpd);
+        std::ostringstream id;
+        id << "PDs/pd-" << hid.number();
+        return id.str();
+      }
+
+      //-------------------------------------------------------------------------------
 
     }
   }
