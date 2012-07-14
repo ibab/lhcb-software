@@ -4,6 +4,8 @@
 // local
 #include "GeneratorFullMonitor.h"
 
+#include <iostream>
+
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 
@@ -159,16 +161,21 @@ StatusCode GeneratorFullMonitor::execute() {
              ( *pVertex )->particles_out_const_begin( );
            ( *pVertex )->particles_out_const_end( ) != pParticle;
            ++pParticle ) {
+        
         if( ( (*pParticle)->status( ) == 1 ) ||
             ( (*pParticle)->status( ) == 2 ) ||
             ( (*pParticle)->status( ) == 888 ) ||
             ( (*pParticle)->status( ) == 889 ) ||
             ( (*pParticle)->status( ) == 998 ) ) {
+              
           if( ! (*pParticle)->production_vertex() ) {
+            
             FillNtuple( (*pParticle), 0, 0 );
-          } else {              
+          } else {
+            
             if( (*pParticle)->production_vertex()->particles_in_size() 
                 == 1 ) {
+              
               LHCb::ParticleID pidM ( (*(*pParticle)->production_vertex()
                                        ->particles_in_const_begin())
                                        ->pdg_id() );
@@ -178,20 +185,26 @@ StatusCode GeneratorFullMonitor::execute() {
                       ( ! pidM.isNucleus( ) ) &&
                       ( pidM.abspid() != 22 ) ) ||
                     ( (*(*pParticle)->production_vertex()
-                       ->particles_in_const_begin())->status() == 3 ) ) && 
+                       ->particles_in_const_begin())->status() == 3 ) ) /*&& 
                   ( ( pid.isHadron( ) ) ||
                     ( pid.isLepton( ) ) ||
                     ( pid.isNucleus( ) ) ||
-                    ( pid.abspid() == 22 ) ) )
-                  FillNtuple( (*pParticle) , 0 , 0 );
+                   ( pid.abspid() == 22 ) )*/ ){
+                    FillNtuple( (*pParticle) , 0 , 0 );
+                  }
+                  
             }
             else {
+              
               LHCb::ParticleID pid( (*pParticle)->pdg_id( ) );
               if( ( pid.isHadron( ) ) ||
                   ( pid.isLepton( ) ) ||
                   ( pid.isNucleus( ) ) ||
-                  ( pid.abspid() == 22 ) ) 
+                 ( pid.abspid() == 22 ) ){
+                
                 FillNtuple( (*pParticle), 0, 0 );
+              }
+                
             }
           }                
         }
