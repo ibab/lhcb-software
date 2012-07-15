@@ -585,8 +585,6 @@ void RecoQC::fitResolutionHistos()
 {
   using namespace Gaudi::Utils;
 
-  info() << "Fitting PD Resolution Plots" << endmsg;
-
   // List of HPDs
   const LHCb::RichSmartID::Vector& hpds = m_RichSys->allPDRichSmartIDs();
 
@@ -726,8 +724,6 @@ RecoQC::FitResult RecoQC::fit( TH1D * hist,
         else { break; }
 
       }
-
-      info() << "Fitted " << res.resolution << " +- " << res.reserror << endmsg;
 
       // Clean up
       for ( std::vector<TF1*>::iterator iF = trash.begin(); iF != trash.end(); ++iF )
