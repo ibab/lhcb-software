@@ -60,7 +60,7 @@ StatusCode AlpGenProduction::initialize( ) {
   // For Jet Parton Matching MSTP(143) = 1
   Pythia::pypars().mstp( 143 ) = 1 ;
 
- //Change the parameter to 2, for AlpGen,....
+ //Change the parameter to 5, for AlpGen,....
   m_userProcess = 5 ;
 
   // User process
@@ -68,8 +68,23 @@ StatusCode AlpGenProduction::initialize( ) {
   m_beam = "p+";
   m_target = "p+" ;
 
+  // SET Filename
+  boost::filesystem::path alpfile( std::tmpnam( NULL ) ) ;
+  if ( boost::filesystem::exists( alpfile ) ) 
+    boost::filesystem::remove( alpfile ) ;
+  
+  std::ofstream g( alpfile.string().c_str() ) ;
+  g << "zbb3" << std::endl ;    // label of the output files
+  g.close() ;
+
+  F77Utils::open( 89 , alpfile.string() , false ) ;  
+
   //Initialize of Pythia done here
   StatusCode sc = PythiaProduction::initialize( ) ;
+
+  F77Utils::close( 89 ) ;
+  boost::filesystem::remove( alpfile ) ;
+
   if ( sc.isFailure() ) return sc ;
 
   return sc ;
