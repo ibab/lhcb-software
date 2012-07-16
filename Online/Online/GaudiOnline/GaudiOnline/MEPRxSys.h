@@ -45,9 +45,10 @@ namespace MEPRxSys {
   int rx_poll(int sockfd, int msec);
   int open_sock_udp(std::string &errmsg, int port);
   int send_udp(int udp_socket, u_int16_t port, u_int32_t dstAddr, void* buf, int len);
- 
+  bool is_in_file_no_case(const std::string &str, const std::string &filename, std::string &error);
+  void gethostname_short(std::string &hostname);
 	
-//MSF: usleep is a (unprotected!!!!!) define by DIM !!!!
+//Msf: usleep is a (unprotected!!!!!) define by DIM !!!!
   void microsleep(int us);
   unsigned long ms2k();
 
