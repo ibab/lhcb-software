@@ -251,38 +251,6 @@ def createTauProng_SameSign(name,hadcut,taucut,combcut,config):
                    RequiredSelections = [ StdAllLoosePions ]
                    )
 
-
-### CREATING PRONG 
-#def _createHadProng(self, name, config) :
-#  """
-#  Hadron selection Prong
-#  """
-#  selectionCuts   = "(PT > " + config['PT_HAD_MIN'] +"*MeV) & "\
-#  "(TRCHI2DOF < " + config['TRACKCHI2_HAD_MAX'] + ") & "\
-#  "~(ISMUON)"
-#  
-#  _filter         = FilterDesktop(Code = selectionCuts )
-#  
-#  return Selection(name+"_HadProng",
-#                   Algorithm            = _filter,
-#                   RequiredSelections   = [ StdAllLoosePions ])
-    
-    
-    
-#    ### KINEMATIC CUTS FOR TAU
-#    def _hadIntermediateKinematicCutsProng(self,config):
-#        _combcode = "(APT > "                + config['PT_TAU_MIN'] +"*MeV)"
-#        _ptvxcode = "(VFASPF(VCHI2PDOF) < "  + config['VCHI2_TAU_MAX'] +")"
-#        return [_combcode,_ptvxcode]
-#    
-#    ### KINEMATIC CUTS FOR PRONG
-#    def _hadFinalStateKinematicCutsProng(self,config):
-#        _code     = "(PT > " + config['PT_HAD_MIN'] +"*MeV) & "\
-#            "(TRCHI2DOF < "  + config['TRACKCHI2_HAD_MAX'] + ") & "\
-#            "~(ISMUON)"
-#        return _code 
-
-
 ### END OF FILE ###
 
 
