@@ -37,7 +37,7 @@ DaVinciInit::DaVinciInit( const std::string& name,
   declareProperty("Increment", m_increment = 100,
                   "Number of events to measure memory. Aligned with PrintFreq in DaVinci");
   declareProperty("MemoryPurgeLimit", m_memPurgeLimit = 3400 * 1000, // 3.4GB
-                  "The memory threshold at which to trigger a purge of the boost pools"); 
+                  "The memory threshold at which to trigger a purge of the boost pools");
 }
 
 //=============================================================================
@@ -85,7 +85,7 @@ StatusCode DaVinciInit::execute()
 
   const unsigned long long nev = counter("Events").nEntries();
   const unsigned long long mem = System::virtualMemory();
-  if ( msgLevel(MSG::DEBUG) ) 
+  if ( msgLevel(MSG::DEBUG) )
     debug() << nev << " memory: " << mem << " KB" << endmsg ;
 
   if ( 0 == m_lastMem )
@@ -102,7 +102,7 @@ StatusCode DaVinciInit::execute()
              << " in last " << m_increment << " events" << endmsg ;
       if ( mem > m_memPurgeLimit )
       {
-        info() << "Memory exceeds limit " << m_memPurgeLimit 
+        info() << "Memory exceeds limit " << m_memPurgeLimit
                << " KB -> Purging pools" << endmsg;
         releaseMemoryPools();
       }
@@ -130,22 +130,17 @@ void DaVinciInit::releaseMemoryPools() const
 
   const unsigned long long vmem_b = System::virtualMemory();
 
-  if ( boost::singleton_pool<Particle,     sizeof(Particle)     >::release_memory() )
-  { if (msgLevel(MSG::DEBUG)) debug() << " -> Particle released memory" << endmsg; }
-  if ( boost::singleton_pool<Vertex,       sizeof(Vertex)       >::release_memory() )
-  { if (msgLevel(MSG::DEBUG)) debug() << " -> Vertex released memory" << endmsg; }
-  if ( boost::singleton_pool<ProtoParticle,sizeof(ProtoParticle)>::release_memory() )
-  { if (msgLevel(MSG::DEBUG)) debug() << " -> ProtoParticle released memory" << endmsg; }
-  if ( boost::singleton_pool<Track,        sizeof(Track)        >::release_memory() )
-  { if (msgLevel(MSG::DEBUG)) debug() << " -> Track released memory" << endmsg; }
-  if ( boost::singleton_pool<State,        sizeof(State)        >::release_memory() )
-  { if (msgLevel(MSG::DEBUG)) debug() << " -> State released memory" << endmsg; }
+  if (msgLevel(MSG::DEBUG)) {
+    LHCb::MemoryPoolAllocatorReleaser::releaseMemory(debug());
+  } else {
+    LHCb::MemoryPoolAllocatorReleaser::releaseMemory();
+  }
 
   const unsigned long long vmem_a = System::virtualMemory();
 
   if ( vmem_b != vmem_a )
   {
-    info() << "Memory change after pool release = " 
+    info() << "Memory change after pool release = "
            << (long long)(vmem_a-vmem_b) << " KB" << endmsg;
   }
 

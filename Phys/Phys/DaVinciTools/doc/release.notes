@@ -3,6 +3,10 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+    === requires Kernel/LHCbKernel > v13r11 and GaudiObjDesc > v11r14 ===
+! 2012-07-16 - Marco Clemencic
+ - Use the new mechanism to release all the memory pools in one call.
+
 !========================= DaVinciTools v23r1 2012-07-09 =========================
 
 ! 2012-07-02 - Chris Jones
@@ -17,8 +21,8 @@
 
 ! 2012-06-29 - Chris Jones
  - Use a public instance of LoKi::Decays in SubstitutePIDTool and FilterDecays
- - Implement a check on the memory usage in DaVinciInit which if exceeded 
-   triggers a release on the memory used by various boost pools. 
+ - Implement a check on the memory usage in DaVinciInit which if exceeded
+   triggers a release on the memory used by various boost pools.
    Default limit is set at 3.4GB
    The release is also done automatically during finalize, so the pools are
    emptied before any finalization tasks that require a lot of memory (such
@@ -35,32 +39,32 @@
    AddExtraInfo, ConjugateNeutralPID and RemoveClones
 
 ! 2012-06-23 - Olivier Deschamps
- - BremAdder : Final optimization (new correction method with brem origin 
+ - BremAdder : Final optimization (new correction method with brem origin
                determined from track slope is now the default)
 
 ! 2012-06-22 - Olivier Deschamps
- - BremAdder : optimize processing + add new correction method 
+ - BremAdder : optimize processing + add new correction method
                (for expert check)
 
 ! 2012-06-22 - Murilo Rangel
- - Added HighPtTopoTool.cpp 
+ - Added HighPtTopoTool.cpp
 
 ! 2012-06-19 - Olivier Deschamps
  - BremAdder : speed-up processing
 
-! 2012-06-21 - Anton Poluektov 
+! 2012-06-21 - Anton Poluektov
  - Fix ConeVariables.cpp handling the list of variables to store
  - Modify verbosity levels in AddExtraInfo.cpp
 
-! 2012-06-20 - Anton Poluektov 
- - Modify cone variables tools and AddExtraInfo algorithm to allow storing the 
-   subset of parameters. 
+! 2012-06-20 - Anton Poluektov
+ - Modify cone variables tools and AddExtraInfo algorithm to allow storing the
+   subset of parameters.
 
 ! 2012-06-12 - Chris Jones
  - Fix a gcc 4.6 compilation warning in BremAdder.
 
 ! 2012-06-12 - Olivier Deschamps
- - BremAdder : update BremAdder for di-electron and adapt to new 
+ - BremAdder : update BremAdder for di-electron and adapt to new
                IBremAdder interface
 
 ! 2012-05-14 - Edwige Tournefier & Olivier Deschamps
@@ -78,16 +82,16 @@
 !========================= DaVinciTools v22r16 2012-05-03 =========================
 
 ! 2012-04-27 - Olivier Deschamps
- - Add a new tool ParticleVeto that checks if a particle is already used to 
+ - Add a new tool ParticleVeto that checks if a particle is already used to
    build another particle in a given container
 
 !========================= DaVinciTools v22r15 2012-04-27 =========================
 
-! 2012-04-24 - Anton Poluektov 
+! 2012-04-24 - Anton Poluektov
  - Fix AddExtraInfo.cpp so that it never returns FAILURE in execute()
 
 ! 2012-04-24 - Dmitry Golubkov
- - BremAdder: correct minor bug in testing if the track has been 
+ - BremAdder: correct minor bug in testing if the track has been
               bremsstrahlung corrected
 
 ! 2012-04-02 - Chris Jones
@@ -96,16 +100,16 @@
 !========================= DaVinciTools v22r14 2012-03-29 =========================
 
 ! 2012-03-28 - Vanya Belyaev
- - Pi0Veto: reduce the warning messages. Now warning are issued 
+ - Pi0Veto: reduce the warning messages. Now warning are issued
    only in case of self-contradiction decision
 
-! 2012-03-23 - Anton Poluektov 
+! 2012-03-23 - Anton Poluektov
   - Fix compilation warnings in src/ConeVariablesForEW.cpp
-  - Remove excessive warning messages in src/AddExtraInfo.cpp 
+  - Remove excessive warning messages in src/AddExtraInfo.cpp
 
 !========================= DaVinciTools v22r13 2012-03-01 =========================
 
-! 2012-02-29 - Anton Poluektov 
+! 2012-02-29 - Anton Poluektov
  - Update ConeVariables and ConeVariablesForEW to be able to store up to 4 cones
 
 ! 2012-02-29 - Chris Jones
@@ -124,20 +128,20 @@
  - Add a new tool StandardParticleProvider that returns a pointer to the
    'standard' Particle for a given ProtoParticle and PID hypothesis
 
-! 2012-02-24 - Anton Poluektov 
+! 2012-02-24 - Anton Poluektov
  - Add ConeVariablesForEW tool for isolation information used in EW group
 
 ! 2012-02-22 - Chris Jones
  - Make sure AddExtraInfo initialising its base class before doing anything
 
-! 2012-02-22 - Anton Poluektov 
+! 2012-02-22 - Anton Poluektov
  - Small modification of AddExtraInfo.cpp
 
-! 2012-02-20 - Anton Poluektov 
- - Add ConeVariables.h,cpp - tool to calculate cone isolation variables as in 
+! 2012-02-20 - Anton Poluektov
+ - Add ConeVariables.h,cpp - tool to calculate cone isolation variables as in
    TupleToolTrackIsolation
- - Add AddExtraInfo.h,cpp - DVAlgorithm to store extra information 
-   (e.g. cone variables) into Particle extraInfo. 
+ - Add AddExtraInfo.h,cpp - DVAlgorithm to store extra information
+   (e.g. cone variables) into Particle extraInfo.
 
 ! 2012-02-08 - Marco Cattaneo
  - Add missing dependency for QMTest, following GaudiConf reorganisation
@@ -151,19 +155,19 @@
  - Fix bug https://savannah.cern.ch/bugs/index.php?90742 in SubstitutePID
 
 ! 2012-01-19 - Chris Jones
- - Temporarily remove the last commit, for IsolationTwoBody, as it has 
+ - Temporarily remove the last commit, for IsolationTwoBody, as it has
    compilation issues.
 
 ! 2012-01-18 - Giampiero Mancinelli
- - Implementation for a "Particle Isolation" tool for particles from twobody 
-   decays. Currently it returns the numbers of non-isolating particles 
+ - Implementation for a "Particle Isolation" tool for particles from twobody
+   decays. Currently it returns the numbers of non-isolating particles
    associated with each of the input particles.
 
 ! 2012-01-17 - Vanya Belyaev
- - fix Doxygen comments 
+ - fix Doxygen comments
 
 ! 2012-01-06 - Vanya Belyaev
- - Pi0Veto: fix typo in default name of photon container 
+ - Pi0Veto: fix typo in default name of photon container
 
 !========================= DaVinciTools v22r11 2011-12-15 =========================
 
@@ -172,13 +176,13 @@
    . New Tool SubstitutePIDTool containing the functionality of SubstitutePID
    . SubstitutePID: Move functionality into new tool
    . FilterDesktop : Improve english in messages
-   These changes need Phys/DaVinciInterfaces r132662 
+   These changes need Phys/DaVinciInterfaces r132662
 
 ! 2011-11-29 - Chris Jones
  - Fix icc warning
 
 ! 2011-11-25 - Vanya Belyaev
- - tiny improvement in SubstitutePID 
+ - tiny improvement in SubstitutePID
 
 ! 2011-11-23 - V. Gligorov
  - Switch to using IP chi2 PV relator online
@@ -190,50 +194,50 @@
 
  - add three related components for pi0-veto
     - trivial filter
-    - trivial photon tagger 
-    - di-photon tagger 
+    - trivial photon tagger
+    - di-photon tagger
 
 !========================= DaVinciTools v22r10 2011-11-10 =========================
 ! 2011-10-30 - Vanya Belyaev
  - add new algorithm, FilterStream, that is a small variation of
    FilterDesktop but acts on the whole stream , and in this way
-   allows e.g. to select the best candidate 
+   allows e.g. to select the best candidate
 
-  * 
-  *   myAlg = FilterStream ( ... ) 
-  * 
+  *
+  *   myAlg = FilterStream ( ... )
+  *
   *   myAlg.Code = """
-  *       select      ( PT > 5 * GeV           )  >> 
-  *       min_element ( DTF_CHI2NDOF (  True ) ) 
+  *       select      ( PT > 5 * GeV           )  >>
+  *       min_element ( DTF_CHI2NDOF (  True ) )
   *       """
 
 ! 2011-10-07 - Chris Jones
  - Update last fix to avoid if statement and two print blocks
 
-! 2011-09-16  T. Blake 
- - Fix memory print out from DaVinciInit when memory decreases. 
+! 2011-09-16  T. Blake
+ - Fix memory print out from DaVinciInit when memory decreases.
 
 !========================= DaVinciTools v22r9 2011-07-25 =========================
 ! 2011-07-25 - Mike Williams
- - Added SubPIDMMFilter algorithm and modified interface. 
-   This allows a list of PIDs to be used without the need to revertex 
-   (it then make a MM cut). 
+ - Added SubPIDMMFilter algorithm and modified interface.
+   This allows a list of PIDs to be used without the need to revertex
+   (it then make a MM cut).
 
 !========================= DaVinciTools v22r8 2011-06-16 =========================
 ! 2011-05-22 - Vanya Belyaev
 
- - add new algorithm SubstitutePID 
+ - add new algorithm SubstitutePID
 
- *  alg = SubstitutePID ( 
- *        'MakeUpsilon'  , 
+ *  alg = SubstitutePID (
+ *        'MakeUpsilon'  ,
  *        Code = " DECTREE('Jpsi(1S) -> mu+ mu-') & ( M > 9 * GeV ) " ,
  *        Substitute = {
  *            'J/psi(1S) -> mu+ mu-' : "Upsilon(1S)"
  *         }
  *        )
 
- *  alg = SubstitutePID ( 
- *        'MakeDsK'  , 
+ *  alg = SubstitutePID (
+ *        'MakeDsK'  ,
  *        Code = " DECTREE('[Beauty -> D+ X-]CC') " ,
  *        Substitute = {
  *            ' Beauty -> ^( Charm & X+ ) X- '    : 'D_s+'  ,
@@ -241,27 +245,27 @@
  *            ' Beauty ->  Charm ^pi-'            : 'K-'    ,
  *            ' Beauty ->  Charm ^pi+'            : 'K+'    ,
  *            ' B0     ->  Charm  X-'             : 'B_s0'  ,
- *            ' Beauty ->  Charm  X+'             : 'B_s~0'  
+ *            ' Beauty ->  Charm  X+'             : 'B_s~0'
  *         }
  *        )
 
- - reshuffle  a bit (to minimize the code) the dependencies  
-   between variosu algorithms, derived from FilterDesktop 
+ - reshuffle  a bit (to minimize the code) the dependencies
+   between variosu algorithms, derived from FilterDesktop
 
     FilterDesktop
-    FilterInTrees 
-    FilterDecays 
-    FitDecayTrees 
-    SubstitutePIDs 
+    FilterInTrees
+    FilterDecays
+    FitDecayTrees
+    SubstitutePIDs
 
  - the meaning of "Code" property forFitDecayTrees algorithm is changed
    not it is any "Particle"-functor instead of decay deascriptor
    the adapration of existing algorithms is trivial:
 
-      " Code = 'A -> B C' "  ===> " Code = DECTREE(' A -> B C') "  
-   
+      " Code = 'A -> B C' "  ===> " Code = DECTREE(' A -> B C') "
 
- - version increment to v22r7 
+
+ - version increment to v22r7
 
 ! 2011-05-18 - Marco Cattaneo
  - Change dependency from Phys/DaVinciMaps to Event/MicroDst. Needs LHCB >= v32r4
@@ -273,33 +277,33 @@
 
    New algorithm to filter decays and(or) decay components:
 
-   from Configurables import FilterDecays 
- 
-   myAlg1 = FilterDecays ( 
-      ...                                                 , 
-      Code          = " [B_s0 -> J/psi(1S) phi(1020)]CC"  , 
+   from Configurables import FilterDecays
+
+   myAlg1 = FilterDecays (
+      ...                                                 ,
+      Code          = " [B_s0 -> J/psi(1S) phi(1020)]CC"  ,
       ...                                                 ,
       Inputs        = ...
-      ) 
-     
-   myAlg2 = FilterDecays ( 
-      ...                                                 , 
-      Code          = " [B_s0 -> ^J/psi(1S) phi(1020)]CC" , 
+      )
+
+   myAlg2 = FilterDecays (
+      ...                                                 ,
+      Code          = " [B_s0 -> ^J/psi(1S) phi(1020)]CC" ,
       ...                                                 ,
       Inputs        = ...
-      ) 
-     
+      )
+
 
 ! 2011-05-13 - Vanya Belyaev
 
  - FitDecayTrees.cpp
-   Fix the signature of virtual method 
+   Fix the signature of virtual method
 
 ! 2011-05-01 - Vanya Belyaev
 
  - FilterDesktop.cpp
-   change the formal decision of the algorothm. It does not 
-   affect FilterDesktop itself, bu tit is much suitabel for FilterInTrees algorithm 
+   change the formal decision of the algorothm. It does not
+   affect FilterDesktop itself, bu tit is much suitabel for FilterInTrees algorithm
 
 ! 2011-04-27 - Patrick Koppenburg
  - DaVinciInit: adapt to bug fix #80947 (unsigned long memory)
@@ -339,28 +343,28 @@
  - Remove LoKi::CounterAlg
 
 ! 2011-02-27 - Vanya Belyaev
-  
+
  - DVFilter1
 
-   new algorithm that allows to filter events based on some 
-   properties of input particles 
+   new algorithm that allows to filter events based on some
+   properties of input particles
    It is an extention of Void-filter
    The "Code" property ahas a signature of "CutVal" :
-          vector<const LHCb::Particle*>  -> bool 
-   Output container is always empty, the filtering result 
-   is a result of CutVal-evaluation 
+          vector<const LHCb::Particle*>  -> bool
+   Output container is always empty, the filtering result
+   is a result of CutVal-evaluation
 
  - DVFilter2
 
-   new algorithm that allows to filter particles based on some 
-   properties of input particles 
+   new algorithm that allows to filter particles based on some
+   properties of input particles
    It is an extention of Void-filter
    The "Code" property ahas a signature of "Pipe" :
-          vector<const LHCb::Particle*>  -> 
-                  vector<const LHCb::Particle*> 
-   The filtering result is defined as non-empty selection 
+          vector<const LHCb::Particle*>  ->
+                  vector<const LHCb::Particle*>
+   The filtering result is defined as non-empty selection
 
-   Both are useful as "event-selection" 
+   Both are useful as "event-selection"
 
 !========================== DaVinciTools v22r3 2011-02-20 ===================
 
@@ -393,7 +397,7 @@
 ! 2011-01-13 - Juan Palacios
  - FilterDesktop
   . Now use DVAlgorithm::markParticles to pass on filtered particles to
-    DVAlgorithm base class. DVAlgorithm handles the Particle->PV relations, 
+    DVAlgorithm base class. DVAlgorithm handles the Particle->PV relations,
     filterDesktop handles saging via overwritten _saveinTES virtual method.
   . Remove all direct dealings with relaitons tables.
 
@@ -422,7 +426,7 @@
  - REQUIRES Phys/DaVinciKernel v9r0 OR HIGHER!!!
 
  - Added MockPhysDesktop, an IPhysDesktop that prints or returns useful
-   errors when its methods are invoked. 
+   errors when its methods are invoked.
 
 ! 2011-01-04 - Juan Palacios
  - Remove all calls to DVAlgorithm::desktop().
@@ -459,7 +463,7 @@
 !========================== DaVinciTools v21r5 2010-08-19 ===================
 
 ! 2010-08-12 - Juan Palacios
- - PhysDekstop: 
+ - PhysDekstop:
   . Remove Info method
   . Move empty input P->PV locations message from WARNING to INFO level.
 
@@ -492,26 +496,26 @@
 
 ! 2010-07-10 - Vanya Belyaev
 
- - new algorthm FitDecayTrees to perform the massive 
+ - new algorthm FitDecayTrees to perform the massive
    refit of decay trees using brillinat utility DecayTreeFitter::Fitter
-   by Wouter Hulsbergen. 
+   by Wouter Hulsbergen.
 
-   @code 
- 
-    myAlg = FitDecayTrees ( 
-       ...                                                  , 
-       Code            = " [B_s0 -> J/psi(1S) phi(1020)]CC" , 
-       MaxChi2PerDoF   = 10                                 ,
-       UsePVConstraint = True                               , 
-       MassConstraints = [ 'J/psi(1S)' ]                    , 
+   @code
+
+    myAlg = FitDecayTrees (
        ...                                                  ,
-       ) 
+       Code            = " [B_s0 -> J/psi(1S) phi(1020)]CC" ,
+       MaxChi2PerDoF   = 10                                 ,
+       UsePVConstraint = True                               ,
+       MassConstraints = [ 'J/psi(1S)' ]                    ,
+       ...                                                  ,
+       )
 
-   @endcode 
+   @endcode
 
- - cmt/requirements 
+ - cmt/requirements
 
-   version increment to v21r4 
+   version increment to v21r4
 
 !========================== DaVinciTools v21r3p2 2010-07-20 =================
 
@@ -537,21 +541,21 @@
 ! 2010-06-13 - Vanya Belyaev
 
  - PhysDesktop:
-     add the counter for the input particles per location 
+     add the counter for the input particles per location
 
 ! 2010-06-09 - Vanya Belyaev
 
  - fix the problem with clogings inside "keep"-methods
-  
+
       keep ( Vertex ) is disabled: exception..
- 
+
 
 ! 2010-06-03 - Juan Palacios
  - src/FilterDesktop.cpp, src/PhysDesktop.cpp
   . Check for Particle::Range, as it has been fixed in Gaudi.
 
 ! 2010-06-01 - Patrick Koppenburg
- - Remove access to SelResult from CheckSelResult and CheckSelResultTool 
+ - Remove access to SelResult from CheckSelResult and CheckSelResultTool
 	(they are still useful!)
 
 ! 2010-05-31 - Juan Palacios
@@ -567,8 +571,8 @@
 
  - CommonParticles
 
-    cange a bit inheritance scheme 
-    fix for bew signature of some tool accessors 
+    cange a bit inheritance scheme
+    fix for bew signature of some tool accessors
 
 ! 2010-05-14 - Juan Palacios
  - PhysDesktop
@@ -615,7 +619,7 @@
       fix the problem with the range for temporary vectors
 
  2. FilterInTrees:
-      new algorithm, just a small varination of FilterDesktop, 
+      new algorithm, just a small varination of FilterDesktop,
       but it scans the input trees, and filter "good" particles in decay trees.
 
 ! 2010-04-04 - Gerhard Raven
@@ -624,7 +628,7 @@
 !========================== DaVinciTools v21r0 2010-03-27 ===================
 ! 2010-03-22 - Juan Palacios
  - src/FilterDesktop.cpp
-  . Add property CloneFilteredParticles (default false). Swutches between 
+  . Add property CloneFilteredParticles (default false). Swutches between
     writing KeyedObjectContainers with shallow clones of Particles and their
     end vertices, and SharedObjectContainers with copied pionters.
 
@@ -688,15 +692,15 @@
  - src/GenericParticle2PVRelator.h
   . Use LHCb::RecVertex::Range
  - src/FilterDekstop.cpp
-  . Make FilterDesktop write out end vertices to LHCb::Vertex::Selection in 
+  . Make FilterDesktop write out end vertices to LHCb::Vertex::Selection in
     AlgoName+"/Vertices", mimicking previous behaviour.
 
 ! 2010-03-02 - Juan Palacios
  - src/PhysDekstop.cpp
-  . Fix writeEmptyContainerIfNeeded for flawed logic and to allow to handle 
+  . Fix writeEmptyContainerIfNeeded for flawed logic and to allow to handle
     T:Selection containers.
  - src/FilterDesktop.cpp
-  . Remove all Clone* properties. Filtered particles are no longer cloned, 
+  . Remove all Clone* properties. Filtered particles are no longer cloned,
     pointers are put in LHCb::Particles::Selection container in AlgName+"/Particles"
  - src/PVRelatorAlg.h
   . i_get now checks existence of T::Container OR T::Range.
@@ -746,9 +750,9 @@
  - Restore DecodeSimpleDecayString
 
 ! 2010-01-13 - Patrick Koppenburg
- - task #12929: 
+ - task #12929:
    . Remove some obsolete tools: ContextTool, DecodeSimpleDecayString,
-   . Modify GeomDispCalculator : now always returns StatusCode failure  
+   . Modify GeomDispCalculator : now always returns StatusCode failure
      -> replace with IDistanceCalculator
  - v20r0
 
@@ -757,18 +761,18 @@
  . WARNING: this goes together with a change in DVAlgorithm, i.e. in Phys/DaVinciKernel
 
 ! 2010-01-06 - Patrick Koppenburg
- - New algorithm CountParticles. Does waht is says. 
- - Remove _dll file  
+ - New algorithm CountParticles. Does waht is says.
+ - Remove _dll file
 
 ! 2009-12-18 - Vanya BELYAEV
- - CombineParticles & FilterDesktop 
+ - CombineParticles & FilterDesktop
 
-    reset all functors in finalization... (may be vital in the case of 
+    reset all functors in finalization... (may be vital in the case of
      highly nontrivial functors)
 
- - cmt/requirements 
+ - cmt/requirements
 
-     version increment to v19r7 
+     version increment to v19r7
 
 
 !========================== DaVinciTools v19r6 2009-11-30 ===================
@@ -784,29 +788,29 @@
 
  - CombineParticles.cpp
 
-    - add few missing lines for decoding of monitor functors 
+    - add few missing lines for decoding of monitor functors
 
 
 ! 2009-11-20 - Vanya Belyaev
  - Add "Embedded" monitoring for FiltrerDesctor & CombineParticles
-  
-  ATTENTION: it require new Phys/LoKiPhys & Phys/LoKiArrayFunctors  packages 
+
+  ATTENTION: it require new Phys/LoKiPhys & Phys/LoKiArrayFunctors  packages
   ( at least LHCb v28r3 )
-  
-  The algorithm get possibility to execute "monitoring" functors 
-  that *DOES NOT AFFECT* the selection/processing. [ Well, they affect the 
-  procession only indirectly.. E.g. is one has 'illegal' functor, the 
+
+  The algorithm get possibility to execute "monitoring" functors
+  that *DOES NOT AFFECT* the selection/processing. [ Well, they affect the
+  procession only indirectly.. E.g. is one has 'illegal' functor, the
   processing stops ]
 
-  Both algorithm gets the general (boolean) flag Monitor 
-  ( the default value is "false") to activate the execution of 
+  Both algorithm gets the general (boolean) flag Monitor
+  ( the default value is "false") to activate the execution of
   monitoring functors.
 
-  Each monitoring functor has a stignature 
+  Each monitoring functor has a stignature
 
     LHCb::Particle::ConstVector -> bool
 
-  (This signature corresponds to interal LoKi type LoKi::Types::CutVal) 
+  (This signature corresponds to interal LoKi type LoKi::Types::CutVal)
 
 
   The specific properties:
@@ -817,56 +821,56 @@
   - "PreMonitor"   : monitor functor for input particles (before cuts)
   - "PostMonitor"  : monitor functor for output particles (after all cuts)
 
-  Examples: 
+  Examples:
 
-    myAlg = FilterDesktop ( ... ) 
-  
-    myAlg.Monitor     = True 
+    myAlg = FilterDesktop ( ... )
+
+    myAlg.Monitor     = True
     myAlg.PreMonitor  = "  monitor ( SIZE , ... )   > -1 "
     myAlg.PostMonitor = """
- 
+
         tee     ( monitor ( SIZE                  ,  ... ) ) >>
         tee     ( monitor ( max_value( PT )       ,  ... ) ) >>
         process ( monitor (            PT         ,  ... ) ) >>
-        tee     ( monitor ( count ( PT > 1*GeV )  ,  ... ) ) >> 
-        EMPTY 
-     """ 
- 
+        tee     ( monitor ( count ( PT > 1*GeV )  ,  ... ) ) >>
+        EMPTY
+     """
+
 
    CombineParticles:
    -----------------
 
-     - "DaughterMonitors"   : 
+     - "DaughterMonitors"   :
             map of monitor functors for daughetr particles (after selection)
-     - "CombinationMonitor" : 
+     - "CombinationMonitor" :
             monitor functor for combinations particles (before cuts)
-     - "MotherMonitor"      : 
+     - "MotherMonitor"      :
             monitor functor for mother particles (after all cuts)
- 
 
- Examples: 
 
-   
-     myAlg = CombibneParticles ( ....  ) 
-   
-     myAlg.Monitor = True 
-     myAlg.MotherMonitor = """   
+ Examples:
+
+
+     myAlg = CombibneParticles ( ....  )
+
+     myAlg.Monitor = True
+     myAlg.MotherMonitor = """
          tee     ( monitor ( SIZE                  ,  ... ) ) >>
         tee     ( monitor ( max_value( PT )       ,  ... ) ) >>
         process ( monitor (            PT         ,  ... ) ) >>
-        tee     ( monitor ( count ( PT > 1*GeV )  ,  ... ) ) >> 
-        EMPTY 
+        tee     ( monitor ( count ( PT > 1*GeV )  ,  ... ) ) >>
+        EMPTY
     """
- 
+
    myAlg.DaughterMonitors = {
     'K+'  : " monitor ( SIZE             , ... ) > 0 " ,
     'pi-' : " monitor ( min_value( PT )  , ... ) > 0 " ,
    }
 
 
- - cmt/requirements 
+ - cmt/requirements
 
-    verison increment to v19r5   
+    verison increment to v19r5
 
 !========================== DaVinciTools v19r4 2009-11-16 ===================
 
@@ -948,7 +952,7 @@
   . Some more optimisations to saving or related PVs and saving of P->PV relaitons.
 
 ! 2009-09-06 - Greig Cowan
- - Minor fixes to Bs2JpsiPhiAngleCalculator to check pointers before 
+ - Minor fixes to Bs2JpsiPhiAngleCalculator to check pointers before
    dereferencing.
 
 ! 2009-09-03 - Juan PALACIOS
@@ -957,7 +961,7 @@
 
 ! 2009-09-03 - Vanya BELYAEV
 
- - CombineParticles & FilterDesktop 
+ - CombineParticles & FilterDesktop
 
    add missing context lock for initialize method
 
@@ -985,7 +989,7 @@
 
  - DecayFinder.h/cpp :
 
-     replace IParticlePropertySvc -> LHCb::IParticlePropertySvc 
+     replace IParticlePropertySvc -> LHCb::IParticlePropertySvc
      replace  ParticleProperty    -> LHCb:: ParticleProperty
 
 
@@ -1007,21 +1011,21 @@
 
  - CombineParticles.cpp
 
-   make use of IParticleCombiner instead IVertexFit for creation 
+   make use of IParticleCombiner instead IVertexFit for creation
    of composed particles.
 
-   the type of default IParticleCombiner tool ( if not specified through 
-   XXXX.ParticleCombiners proeprty explicitly) is picked up by base class 
+   the type of default IParticleCombiner tool ( if not specified through
+   XXXX.ParticleCombiners proeprty explicitly) is picked up by base class
    DVAlgorithm from IOnOffline tool.
-  
-   Therefore for usage of "non-standard" particle creators 
-   ( e.g. "ParticleAdder" or "MomentumCombiner") one needs to specify these 
+
+   Therefore for usage of "non-standard" particle creators
+   ( e.g. "ParticleAdder" or "MomentumCombiner") one needs to specify these
    "non-standard" creators through "ParticleCombiners" property instead of
-    "VertexFitters". 
+    "VertexFitters".
 
     XXX.ParticleCombiners += { "" : "MomentumCombiner" }
 
-      or 
+      or
 
     XXX.ParticleCombiners += { "" : "ParticleAdder" }
 
