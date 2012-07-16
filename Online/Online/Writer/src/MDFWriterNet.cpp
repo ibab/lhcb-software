@@ -922,6 +922,9 @@ StatusCode MDFWriterNet::writeBuffer(void * const /*fd*/, const void *data,
 				closeFile(tmpFile);
 				// removeFile() returns the next element after the removed one.
 				tmpFile = m_openFiles.removeFile(tmpFile);
+				if (m_currFile == toDelete)
+					m_currFile = NULL;
+//					m_currFile = tmpFile; // NOT a good idea to set it to next file in the list
 				delete toDelete;
 				continue;
 			}
@@ -1590,7 +1593,7 @@ StatusCode MDFWriterNet::CleanUpFiles()
 		while (tmpFile)
 		{
 			//			if (tmpFile->getRunNumber() != m_currentRunNumber && tmpFile->getTimeSinceLastWrite()	> m_runFileTimeoutSeconds)
-			if (tmpFile->getTimeSinceLastWrite() > 5 * m_runFileTimeoutSeconds)
+			if (tmpFile->getTimeSinceLastWrite() > 3 * m_runFileTimeoutSeconds)
 			{
 				// This file hasn't been written to in a loong time. Close it.
 				*log << MSG::INFO << WHERE << "Closing file "
@@ -1600,6 +1603,9 @@ StatusCode MDFWriterNet::CleanUpFiles()
 				closeFile(tmpFile);
 				// removeFile() returns the next element after the removed one.
 				tmpFile = m_openFiles.removeFile(tmpFile);
+				if (m_currFile == toDelete)
+					m_currFile = NULL;
+//					m_currFile = tmpFile; // NOT a good idea to set it to next file in the list
 				delete toDelete;
 				continue;
 			}

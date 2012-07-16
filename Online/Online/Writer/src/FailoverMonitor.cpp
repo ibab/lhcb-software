@@ -221,7 +221,7 @@ int FailoverMonitor::getAddressList(std::list<NodeState*> &nodeStates)
   return (numstorenodeIPs -1);
 
   /* END: Modifications to Failover*/
-#endif MODFAILOVER
+#endif
 
   BIF recvBif(m_sockFd, &fmsg, sizeof(struct failover_msg));
   ret = recvBif.nbRecvTimeout();
