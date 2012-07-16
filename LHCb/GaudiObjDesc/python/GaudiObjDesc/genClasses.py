@@ -626,9 +626,9 @@ class genClasses(genSrcUtils.genSrcUtils):
   }
 
   /// release memory pool
-  static void release_pool ()
+  static bool release_pool ()
   {
-    boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::release_memory();
+    return boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::release_memory();
   }
 #endif"""%data
             self.include.append("GaudiKernel/boost_allocator.h")
@@ -666,9 +666,9 @@ class genClasses(genSrcUtils.genSrcUtils):
   }
 
   /// release memory pool
-  static void release_pool ()
+  static bool release_pool ()
   {
-    boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::release_memory();
+    return boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::release_memory();
   }
 #endif"""%data
             self.include.append("GaudiKernel/boost_allocator.h")
@@ -715,10 +715,10 @@ class genClasses(genSrcUtils.genSrcUtils):
   }
 
   /// release memory pool
-  static void release_pool ()
+  static bool release_pool ()
   {
     std::cout << "%(classname)s::release_pool()" << std::endl;
-    boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::release_memory();
+    return boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::release_memory();
   }
 #endif"""%data
             self.include.append("GaudiKernel/boost_allocator.h")

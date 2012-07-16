@@ -47,7 +47,7 @@ namespace LHCb {
     static MemoryPoolAllocatorReleaser& instance();
 
     /// Prototype of the release functions: <code>void f()</code>.
-    typedef void (*ReleaseFunctionType) ();
+    typedef bool (*ReleaseFunctionType) ();
     /// Typedef for the collection of release functions.
     typedef std::map<ReleaseFunctionType, std::string> ReleaseFuncCollType;
 

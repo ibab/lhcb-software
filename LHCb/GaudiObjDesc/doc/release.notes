@@ -12,6 +12,8 @@
    allow the release of all the pools.
  - Added dependency on Kernel/LHCbKernel to ensure that every user of G.O.D. can
    find the required headers.
+ - Modified the "release_pool" method to use the return value of the release
+   methods of the Boost singleton_pool.
 
 ! 2012-07-13 - Marco Clemencic
  - Restored corrected indentation in generated headers after the re-indentation

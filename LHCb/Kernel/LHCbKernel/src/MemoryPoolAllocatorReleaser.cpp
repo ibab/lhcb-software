@@ -22,7 +22,8 @@ void LHCb::MemoryPoolAllocatorReleaser::releaseMemory(MsgStream &log) {
   const MSG::Level lvl = log.level();
   log << "Released " << funcMap.size() << " memory pools:" << endmsg;
   BOOST_FOREACH(ReleaseFuncCollType::value_type entry, funcMap) {
-    entry.first();
-    log << lvl << "  - " << entry.second << endmsg;
+    log << lvl << "  - " << entry.second
+    << ((entry.first()) ? " (freed)" : "")
+    << endmsg;
   }
 }

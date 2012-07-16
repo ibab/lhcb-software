@@ -20,9 +20,10 @@
 class EventModelClass {
 public:
   /// Method required by the BoostAllocatorReleaser protocol.
-  static void release_pool() {
+  static bool release_pool() {
     // increase the counter of calls to this method
     ++call_count;
+    return true;
   }
   /// Counter for the calls to the release_pool method.
   static int call_count;
@@ -33,9 +34,10 @@ int EventModelClass::call_count = 0;
 class AnotherClass {
 public:
   /// Method required by the BoostAllocatorReleaser protocol.
-  static void release_pool() {
+  static bool release_pool() {
     // increase the counter of calls to this method
     ++call_count;
+    return false;
   }
   /// Counter for the calls to the release_pool method.
   static int call_count;
