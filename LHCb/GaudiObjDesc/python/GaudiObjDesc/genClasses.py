@@ -624,6 +624,12 @@ class genClasses(genSrcUtils.genSrcUtils):
   {
     ::operator delete (p, pObj);
   }
+
+  /// release memory pool
+  static void release_pool ()
+  {
+    boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::release_memory();
+  }
 #endif"""%data
             self.include.append("GaudiKernel/boost_allocator.h")
 
@@ -657,6 +663,12 @@ class genClasses(genSrcUtils.genSrcUtils):
   static void operator delete ( void* p, void* pObj )
   {
     ::operator delete (p, pObj);
+  }
+
+  /// release memory pool
+  static void release_pool ()
+  {
+    boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::release_memory();
   }
 #endif"""%data
             self.include.append("GaudiKernel/boost_allocator.h")
@@ -698,14 +710,46 @@ class genClasses(genSrcUtils.genSrcUtils):
   /// not sure if really needed, but it does not harm
   static void operator delete ( void* p, void* pObj )
   {
-    std::cout << "%(classname)s::delete(" << p << "," << pObj << ") " << std::endl;
+    std::cout << "%(classname)s::delete(" << p << "," << pObj << ")" << std::endl;
     ::operator delete (p, pObj);
+  }
+
+  /// release memory pool
+  static void release_pool ()
+  {
+    std::cout << "%(classname)s::release_pool()" << std::endl;
+    boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::release_memory();
   }
 #endif"""%data
             self.include.append("GaudiKernel/boost_allocator.h")
             self.addInclude('iostream',1)
 
         return s
+    def genAllocatorReleaser(self, godClass, allocatorType):
+        s = ''
+        if allocatorType == "FROMXML":
+            allocatorType = godClass['attrs']['allocator']
+
+        if allocatorType == 'DEFAULT' :
+            # set the default allocator type
+            allocatorType = 'BOOST'
+
+        data = {}
+        data['classname'] = godClass['attrs']['name']
+        data['namespace'] = godClass['attrs']['namespace']
+
+        if allocatorType in ['BOOST', 'BOOST2', 'DEBUG'] : # Boost allocator with or without check on delete
+            s ="""
+#ifndef GOD_NOALLOC
+#include "Kernel/MemoryPoolAllocatorReleaser.h"
+namespace {
+  // Register the class to the memory pool allocator releaser.
+  static LHCb::RegisterReleaseFunction<%(namespace)s::%(classname)s> __%(classname)s;
+}
+#endif"""%data
+
+        return s
+
 ##--------------------------------------------------------------------------------
     def doit(self,package,godClasses,outputDir,lname,allocatorType = 'FROMXML'):
 
@@ -769,6 +813,7 @@ class genClasses(genSrcUtils.genSrcUtils):
             classDict['forwardDeclsGlob']             = self.genForwardDeclsGlob()
             classDict['forwardDeclsLHCb']             = self.genForwardDeclsLHCb()
             classDict['forwardIncludes']              = self.genForwardIncludes(classname)
+            classDict['registerAllocatorReleaser']    = self.genAllocatorReleaser(godClass, allocatorType)
 
             g = gparser.gparser()
             g.parse(self.godRoot+'templates/header.tpl',classDict)

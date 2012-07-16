@@ -5,6 +5,14 @@
 ! Package manager: Stefan Roiser
 !--------------------------------------------------------------------------------
 
+   ======== requires Kernel/LHCbKernel > v13r11 ========
+! 2012-07-16 - Marco Clemencic
+ - Modified the generation of the code using boost pool allocators to add a
+   "release_pool" method and to register the class to the static object that
+   allow the release of all the pools.
+ - Added dependency on Kernel/LHCbKernel to ensure that every user of G.O.D. can
+   find the required headers.
+
 ! 2012-07-13 - Marco Clemencic
  - Restored corrected indentation in generated headers after the re-indentation
    of Python modules.

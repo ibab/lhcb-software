@@ -25,6 +25,7 @@ pattern god_headers \
 
 use Python v* LCG_Interfaces
 use GaudiPolicy v*
+use LHCbKernel v* Kernel
 
 # Always switch off GaudiObjDesc custom allocators with debug or WIN32
 macro_append cppflags "" \
