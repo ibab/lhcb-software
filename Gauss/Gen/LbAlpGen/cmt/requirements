@@ -18,13 +18,13 @@ set               LBALPGENOPTS $(LBALPGENROOT)/options
 # =============== dependencies ================================================
 use               alpgen       v* LCG_GeneratorsInterfaces
 use               LbPythia     v* Gen 
-use               Boost        v* LCG_Interfaces 
+use               Boost        v* LCG_Interfaces -no_auto_import
 
 macro alpgen_author_dir $(alpgen_path)/share/alpgen-author
 
 # =============== constituents ================================================
 library           LbAlpGen       component/*.cpp
-library           LbAlpGenLib    Lib/*.cpp Lib/*.F  
+library           LbAlpGenLib    Lib/*.cpp Lib/*.F $(alpgen_author_dir)/zqqlib/zqq.f zqq/*.F
 application       AlpGenFragm Read/AlpGenFragm.cpp \
                               Read/upevnt.F        \
                               Read/upinit.F        \
@@ -60,6 +60,7 @@ path_append PATH ${LBALPGENROOT}/scripts
 # =============================================================================
 private           
 macro_append  AlpGenFragmlinkopts  $(Boost_linkopts_program_options)
+macro_append Boost_linkopts " $(Boost_linkopts_filesystem) $(Boost_linkopts_system) "
 macro_prepend LbAlpGen_linkopts " -Wl,--no-as-needed "
 
 macro_prepend fincludes $(ppcmd)"$(alpgen_author_dir)"
