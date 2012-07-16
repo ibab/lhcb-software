@@ -260,29 +260,11 @@ class Gauss(LHCbConfigurableUser):
     ##
     def veloMisAlignGeometry( self, VeloPostMC09 ):
 
-        print "\n\n"
-        print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
-        print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
-        print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
-        print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
-        print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
-
-        print "veloMisAlignGeometry: %s" %(VeloPostMC09)
-
-        print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
-        print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
-        print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
-        print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
-        print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
-        print "\n\n"
-
         """
         File containing the list of detector element to explicitely set
         to have misalignement in the VELO.
         """
         Geo = GiGaInputStream('Geo')
-
-        print "Geo.StreamItems: %s" %(Geo.StreamItems)
 
         if "/dd/Structure/LHCb/BeforeMagnetRegion/Velo" in Geo.StreamItems:
             Geo.StreamItems.remove("/dd/Structure/LHCb/BeforeMagnetRegion/Velo")
@@ -291,8 +273,6 @@ class Gauss(LHCbConfigurableUser):
         Geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/ModulePU02")
         Geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/ModulePU01")
         Geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/ModulePU03")
-
-        print "Geo.StreamItems: %s" %(Geo.StreamItems)
 
         txt = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/ModuleXX"
         import math
@@ -337,8 +317,7 @@ class Gauss(LHCbConfigurableUser):
     def defineVeloGeo( self , basePieces , detPieces ):
         # Alter in place BasePieces
         # check if the new velo geometry is required with the chosen DDDB tags
-        print "&&&&&&&&&&&&&&&&&&& basePieces['BeforeMagnetRegion']:\n%s" %(basePieces['BeforeMagnetRegion'])
-        
+                
         VeloP = self.checkVeloDDDB()
         print "VeloP: %s" %(VeloP)
         if (VeloP==1 or VeloP==2):
@@ -2735,12 +2714,8 @@ class Gauss(LHCbConfigurableUser):
     ## Apply the configuration
     def __apply_configuration__(self):
 
-        print "\n\nPAUL's CONF\n\n"
-        
-        #GaudiKernel.ProcessJobOptions.PrintOff()
-        GaudiKernel.ProcessJobOptions.PrintOn()
-
-        print "\n\nPAUL's CONF\n\n"
+        GaudiKernel.ProcessJobOptions.PrintOff()
+        #GaudiKernel.ProcessJobOptions.PrintOn()
 
         #defineDB() in Boole and
         self.configureRndmEngine()
