@@ -4,6 +4,11 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-07-17 - Rosen Matev
+ - Add SplitMethod configurable to PVSplit algorithm. Now, we can choose between
+   splitting randomly and splitting by VELO half. Added a corresponding slot to
+   BGIRecoConf with the same name.
+
 ! 2012-07-06 - Rosen Matev
  - Add PVSplit algorithm. It splits tracks belonging to found vertices,
    fits them and writes split vertices to TES. Algorithm is used for resolution

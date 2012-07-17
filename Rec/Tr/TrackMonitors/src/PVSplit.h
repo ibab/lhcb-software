@@ -11,25 +11,33 @@
 #include "Event/Track.h"
 #include "Event/RecVertex.h"
 
+class DeVelo;
+
 /** @class PVSplit PVSplit.h
  *  Algorithm to split tracks belonging to found vertices, fit them and
  *  write split vertices to TES.
  *
  *  For each vertex in m_inputVerticesLocation, the following is executed.
- *  The track container is randomly split into two halves with equal number
- *  of tracks if total number of tracks is even. Otherwise, (if total number of
- *  tracks is odd), one of the split containers (randomly chosen) has one track
- *  more. Afterwards, the two track containers are fitted with 
- *  PVOfflineTool::reconstructSinglePVFromTracks(). 
- *  Fitted vertices are written to a TES location. Each split vertex is 'tagged'
- *  with the parent vertex' index. Additionally, for each split vertex,
- *  the sum of the weights (from the parent vertex) of all constituting tracks
- *  is stored. To extract parent vertex index and sum of weights do:
- *    int index = (int)vertex.info(PVSplit::ParentVertexIndex, -1);
- *    double wsum = vertex.info(PVSplit::SumOfParentWeights, 0.);
+ *  1) The track container is split into two parts according to split method:
+ *     a) Random - randomly split into two halves with equal number of tracks
+ *        if total number of tracks is even. Otherwise, (if total number of
+ *        tracks is odd), one of the split containers (randomly chosen) has
+ *        one track more.
+ *     b) VeloHalf - a track is put in first (second) container if number of
+ *        hit left (right) sensors is larger. If number of left and right hits
+ *        are the same, container is randomly chosen.
+ *  2) The two track containers are fitted with 
+ *     PVOfflineTool::reconstructSinglePVFromTracks().
+ *  3) Fitted vertices are written to a TES location. Each split vertex is
+ *    'tagged' with the parent vertex' index. Additionally, for each split
+ *    vertex, the sum of the weights (from the parent vertex) of all
+ *    constituting tracks is stored. To extract parent vertex index and sum of
+ *    weights do:
+ *      int index = (int)vertex.info(PVSplit::ParentVertexIndex, -1);
+ *      double wsum = vertex.info(PVSplit::SumOfParentWeights, 0.);
  *
  *  @author Colin Barschel, Rosen Matev
- *  @date   2012-07-05
+ *  @date   2012-07-17
  */
 
 //-----------------------------------------------------------------------------
@@ -39,7 +47,6 @@ public:
                       SumOfParentWeights = 1000002
     };
   
-
   PVSplit(const std::string& name, ISvcLocator* pSvcLocator);
 
   virtual ~PVSplit();    ///< Destructor
@@ -49,16 +56,27 @@ public:
   virtual StatusCode finalize();      ///< Algorithm finalization
 
 private:
-  void random_shuffle_tracks();
-  void split_tracks();
+  enum SplitMethod { Unknown = 0,
+                     Random,
+                     VeloHalf
+    };
 
-  void debug_vertex(const LHCb::RecVertex* vx) const;
+  void randomShuffleTracks();
+  void splitTracksByMiddle();
+  void splitTracksByVeloHalf();
+
+  void countVeloLhcbIDs(const LHCb::Track* track, int& left, int& right);
+
+  void debugVertex(const LHCb::RecVertex* vx) const;
 
   std::string m_inputVerticesLocation;  ///< Location of input vertices
   std::string m_outputVerticesLocation; ///< Location of split vertices
-
+  std::string m_splitMethodStr; ///< How to split track container (see enum SplitMethod for possible values)
+  
+  SplitMethod m_splitMethod;
   IPVOfflineTool* m_pvsfit;
   Rndm::Numbers m_rndm;
+  DeVelo* m_velo;
   std::vector<const LHCb::Track*> m_tracks;
   std::vector<double> m_weights;
   std::vector< std::vector<const LHCb::Track*> > m_splitTracks;

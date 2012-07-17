@@ -6,6 +6,7 @@ class BGIRecoConf(LHCbConfigurableUser):
   __slots__ = {
       "RecoVELOSeq"     : None                # The sequencer to modify      
     , "RecoVertexSeq"   : None                # The sequencer to modify
+    , "SplitMethod"     : "Random"            # How to split track container
     , "PV3DTuning"      : False               # custom parameters for PVSeed3DTool and LSAdaptPV3DFitter
     , "PVAlgorithm"     : "PatPV3D"           # PatPVOffline (def) or PatPV3D - no difference at all, but PatPVOffline is preconfigured with BeamSpotCut
     , "PVSeedTool"      : "PVSeed3DTool"      # PVSeed3DTool (def) (fixed for the moment)    
@@ -95,6 +96,7 @@ class BGIRecoConf(LHCbConfigurableUser):
     pvSplitAlg = Configurables.PVSplit("MyPVSplit")
     pvSplitAlg.InputVerticesLocation = self.getProp('PrimaryVertices')
     pvSplitAlg.OutputVerticesLocation = self.getProp('SplitVertices')
+    pvSplitAlg.SplitMethod = self.getProp('SplitMethod')
     self._configure_pvalg(pvSplitAlg)
 #    pvSplitAlg.OutputLevel = DEBUG
 #    pvSplitAlg.PVOfflineTool.OutputLevel = INFO
