@@ -65,7 +65,7 @@ class RichRecQCConf(RichConfigurableUser):
     ## Steering options
     __slots__ = {
         "Context"  : "Offline"  # The context within which to run
-       ,"DataType" : "2011"     # Data type, can be ['2008',2009','2010','2011']
+       ,"DataType" : "2012"     # Data type, can be ['2008',2009','2010','2011','2012']
        ,"MoniSequencer" : None  # The sequencer to add the RICH monitoring algorithms to
        ,"Monitors" : { "Expert"         : [ "DBConsistencyCheck", "L1SizeMonitoring",
                                             "DataDecodingErrors", "ODIN",

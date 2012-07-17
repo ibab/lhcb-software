@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2012-07-15 - Chris Jones
+ - Initialise default HPD count map in RawDataSize using allPDRichSmartIDs()
+   not just activePDRichSmartIDs()
+
+! 2012-07-15 - Chris Jones
  - Add a plot giving the fitted CK theta resolution per PD
 
 ! 2012-07-10 - Chris Jones

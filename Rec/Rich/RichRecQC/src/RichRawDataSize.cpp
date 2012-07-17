@@ -87,8 +87,8 @@ void RawDataSize::initHPDMap( HPDWordMap & hpdMap )
 {
   // clear the map
   hpdMap.clear();
-  // get list of all active HPDs
-  const LHCb::RichSmartID::Vector & hpds = m_RichSys->activePDRichSmartIDs();
+  // get list of all HPDs
+  const LHCb::RichSmartID::Vector & hpds = m_RichSys->allPDRichSmartIDs();
   // Loop over all HPDs and (re)set count to zero
   for ( LHCb::RichSmartID::Vector::const_iterator iHPD = hpds.begin();
         iHPD != hpds.end(); ++iHPD )
@@ -146,7 +146,7 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
 
     // HPD word counts
     HPDWordMap hpdWordMap;
-    // initialise for all active HPDs and L1 to 0
+    // initialise for all HPDs and L1 to 0
     initHPDMap(hpdWordMap);
 
     // loop over decoded data
