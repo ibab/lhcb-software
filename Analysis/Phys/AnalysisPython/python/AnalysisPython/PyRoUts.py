@@ -3775,13 +3775,17 @@ for t in ( ROOT.TH1D       ,
 #  y is the measured quantity
 # +stat and -stat are the positive and negative statistical errors (could also be +-stat)
 # +sysn and -sysn are any number of positive and negative systematic errors (again could be +-sysn)
+# @endcode 
 # 
 # =============================================================================
-def _h1_hepdata_ ( h1 , fmt = " %13.6g %-13.6g   %13.6g +-%-12.5g \n" ) : 
-    """
-    Dump histogram in HepData -compatible format
-    
+def _h1_hepdata_ ( h1 , fmt = " %13.6g %-13.6g   %13.6g +-%-12.5g \n" ) :
     '''
+    Dump 1D-histogram in HepData -compatible format
+    
+    >>> h = ... # the histogram
+    >>> data = h.toHepDATA ()
+    
+    """
     The format we accept data in is very wide and generally we require only
     a flat file containing the numerical values.
     Postscript and pdf figures are not suitable.
@@ -3789,22 +3793,19 @@ def _h1_hepdata_ ( h1 , fmt = " %13.6g %-13.6g   %13.6g +-%-12.5g \n" ) :
     Ideally the format should be:
     
     xlow xhigh y +stat -stat +sys1 -sys1 +sys2 -sys2 ......
+    
     where:
     xlow and xhigh are the xbin edges
     y is the measured quantity
     +stat and -stat are the positive and negative statistical errors (could also be +-stat)
     +sysn and -sysn are any number of positive and negative systematic errors (again could be +-sysn)
-    '''
-    
-    >>> h = ... # the histogram
-    >>> data = h.toHepDATA ()
-    
     """
+    '''    
     data = ''
-    for  i in h1.iteritems () :
+    for  ibin in h1.iteritems () :
         
-        x = i[1]
-        y = i[2]
+        x = ibin[1]
+        y = ibin[2]
         
         x_low  = x.value() - x.error()
         x_high = x.value() + x.error()
@@ -3816,11 +3817,50 @@ def _h1_hepdata_ ( h1 , fmt = " %13.6g %-13.6g   %13.6g +-%-12.5g \n" ) :
         
     return data
 
+# ================================================================================================
+def _h2_hepdata_ ( h2 ,
+                   fmt = " %13.6g %-13.6g  %13.6g %-13.6g  %13.6g +-%-12.5g \n" )  : 
+    """
+    Dump 2D-histogram in HepData -compatible format
+    
+    >>> h = ... # the histogram
+    >>> data = h.toHepDATA ()
+    
+    """
+    data = ''
+    for  ibin in h2.iteritems () :
+
+        x = ibin[2]
+        y = ibin[3]
+        z = ibin[4]
+        
+        x_low  = x.value () - x.error ()
+        x_high = x.value () + x.error ()
+        y_low  = y.value () - y.error ()
+        y_high = y.value () + y.error ()
+        
+        data += fmt  % ( x_low      ,
+                         x_high     ,
+                         y_low      ,
+                         y_high     ,
+                         z.value () ,
+                         z.error () )
+        
+        
+    return data
+    
+    
 for t in ( ROOT.TH1D ,
            ROOT.TH1F ) :
     
     t . toHepDATA = _h1_hepdata_
     t . toHepData = _h1_hepdata_
+    
+for t in ( ROOT.TH2D ,
+           ROOT.TH2F ) :
+    
+    t . toHepDATA = _h2_hepdata_
+    t . toHepData = _h2_hepdata_
     
 # =============================================================================
 if '__main__' == __name__ :
