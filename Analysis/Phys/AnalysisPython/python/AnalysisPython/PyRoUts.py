@@ -3816,10 +3816,11 @@ def _h1_hepdata_ ( h1 , fmt = " %13.6g %-13.6g   %13.6g +-%-12.5g \n" ) :
         
     return data
 
-
-ROOT.TH1D.toHepDATA = _h1_hepdata_
-ROOT.TH1D.toHepData = _h1_hepdata_
-
+for t in ( ROOT.TH1D ,
+           ROOT.TH1F ) :
+    
+    t . toHepDATA = _h1_hepdata_
+    t . toHepData = _h1_hepdata_
     
 # =============================================================================
 if '__main__' == __name__ :
