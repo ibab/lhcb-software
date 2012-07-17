@@ -3807,7 +3807,7 @@ def _h1_hepdata_ ( h1 , fmt = " %13.6g %-13.6g   %13.6g +-%-12.5g \n" ) :
         y = i[2]
         
         x_low  = x.value() - x.error()
-        x_high = x.value() - x.error()
+        x_high = x.value() + x.error()
         
         data += fmt  % ( x_low      ,
                          x_high     ,
