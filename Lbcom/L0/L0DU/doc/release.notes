@@ -3,6 +3,9 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+! 2012-07-18 - Olivier Deschamps
+  - adapt L0DUFromRaw(HLT1)Tool, L0DUBankMonitor & L0DUFastFilter to scan the possible rawEvent locations.
+
 !========================= L0DU v10r21 2012-06-25 =========================
 ! 2012-06-21 - Julien Cogan
  - L0Conf : add default setting (LUT version) for L0Muon emulation for 

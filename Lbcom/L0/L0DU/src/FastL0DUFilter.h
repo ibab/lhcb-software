@@ -4,7 +4,7 @@
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "L0Base/L0FromRawBase.h" 
 #include "Event/RawEvent.h"
 
 
@@ -14,7 +14,7 @@
  *  @author Olivier Deschamps
  *  @date   2008-11-12
  */
-class FastL0DUFilter : public GaudiAlgorithm {
+class FastL0DUFilter : public L0FromRawBase {
 public: 
   /// Standard constructor
   FastL0DUFilter( const std::string& name, ISvcLocator* pSvcLocator );
@@ -28,7 +28,6 @@ public:
 protected:
 
 private:
-  std::string m_rawLocation;
   int m_source;
   bool m_noMuonSup;
   long m_sumCut;

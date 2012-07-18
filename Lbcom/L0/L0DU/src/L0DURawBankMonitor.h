@@ -86,5 +86,6 @@ private:
   bool m_first;
   int m_mask;
   bool m_bcidDet;
+  std::vector<std::string> m_rawLocations;
 };
 #endif // L0DURAWBANKMONITOR_H

@@ -39,7 +39,7 @@ L0DUFromRawTool::L0DUFromRawTool( const std::string& type,
 {
   declareInterface<IL0DUFromRawTool>(this);
   
-  declareProperty( "RawLocation"             , m_rawLocation = LHCb::RawEventLocation::Default   );
+  declareProperty( "RawLocations"           , m_rawLocations  );
   declareProperty( "EmulatorTool"            , m_emulatorType="L0DUEmulatorTool");
   declareProperty( "L0DUConfigProviderName"  , m_configName="L0DUConfig");
   declareProperty( "L0DUConfigProviderType"  , m_configType="L0DUMultiConfigProvider");
@@ -54,6 +54,9 @@ L0DUFromRawTool::L0DUFromRawTool( const std::string& type,
   declareProperty( "DumpBank"                , m_dumping = -1);   // EXPERT USAGE
   declareProperty( "UseRootInTES"            , m_useRootInTES = true);
   
+  m_rawLocations.push_back( LHCb::RawEventLocation::Trigger );
+  m_rawLocations.push_back( LHCb::RawEventLocation::Default );
+
 }
 //=============================================================================
 // Destructor
@@ -143,14 +146,16 @@ bool L0DUFromRawTool::getL0DUBanksFromRaw( ){
 
   m_roStatus = LHCb::RawBankReadoutStatus( LHCb::RawBank::L0DU );
   m_roStatus.addStatus( 0, LHCb::RawBankReadoutStatus::OK);
-
   std::string loc = "";
-  if( exist<LHCb::RawEvent>( m_rawLocation , m_useRootInTES) ) // get rawEvent from user-defined location
-    loc = m_rawLocation;
-
-  // if not : complain
+  for (std::vector<std::string>::iterator it = m_rawLocations.begin(); it < m_rawLocations.end();++it) {
+    if( exist<LHCb::RawEvent>( *it , m_useRootInTES) ){
+      loc = *it;
+      break;
+    }
+  }
+  // if not existing complain
   if( "" == loc){
-    Warning("rawEvent not found in  '" + m_rawLocation +"' (use RootInTES ? "+Gaudi::Utils::toString(m_useRootInTES)+")",
+    Warning("rawEvent not found in  '" + Gaudi::Utils::toString(m_rawLocations) +"' locations (use RootInTES ? "+Gaudi::Utils::toString(m_useRootInTES)+")",
             StatusCode::SUCCESS).ignore();
     m_roStatus.addStatus( 0 , LHCb::RawBankReadoutStatus::Missing);
     return false;

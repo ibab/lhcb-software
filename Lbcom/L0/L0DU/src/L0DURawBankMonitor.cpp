@@ -32,6 +32,7 @@ L0DURawBankMonitor::L0DURawBankMonitor( const std::string& name,
   , m_spd(NULL)
   , m_first(true)
 {
+  declareProperty( "RawLocations"           , m_rawLocations  );
   declareProperty( "L0DUFromRawTool"   , m_fromRawTool = "L0DUFromRawTool" );  
   declareProperty( "EmulatorTool"      , m_emulatorTool= "L0DUEmulatorTool");
   declareProperty( "Convert"           , m_conv = false);
@@ -49,6 +50,8 @@ L0DURawBankMonitor::L0DURawBankMonitor( const std::string& name,
   declareProperty( "CaloReadoutTool"   ,  m_caloTool  = "CaloDataProvider" );
   declareProperty( "ErrorFilterMask"   ,  m_mask = 0x0);
   declareProperty( "BxDecisionDetail"  ,  m_bcidDet =true);
+  m_rawLocations.push_back( LHCb::RawEventLocation::Trigger );
+  m_rawLocations.push_back( LHCb::RawEventLocation::Default );
 
   setHistoDir( name );
 }
@@ -104,10 +107,19 @@ StatusCode L0DURawBankMonitor::execute() {
   bool mOk = false;
   bool cOk = false;
   bool pOk = false;
-  if( !exist<LHCb::RawEvent>(  LHCb::RawEventLocation::Default  ) ){
-    Warning("rawEvent not found at location '",StatusCode::SUCCESS).ignore();
+
+  std::string loc = "";
+  for (std::vector<std::string>::iterator it = m_rawLocations.begin(); it < m_rawLocations.end();++it) {
+    if( exist<LHCb::RawEvent>( *it ) ){
+      loc = *it;
+      break;
+    }
+  }
+
+  if( "" == loc  ) {
+  Warning("rawEvent not found at locations " + Gaudi::Utils::toString(m_rawLocations),StatusCode::SUCCESS).ignore();
   } else {
-    LHCb::RawEvent* rawEvt= get<LHCb::RawEvent>(   LHCb::RawEventLocation::Default );
+    LHCb::RawEvent* rawEvt= get<LHCb::RawEvent>(   loc );
     if( NULL == rawEvt )return Warning("rawEvent points to NULL",StatusCode::SUCCESS);
     const std::vector<LHCb::RawBank*>* mBanks = &rawEvt->banks(   LHCb::RawBank::L0Muon );
     const std::vector<LHCb::RawBank*>* cBanks = &rawEvt->banks(   LHCb::RawBank::L0Calo );

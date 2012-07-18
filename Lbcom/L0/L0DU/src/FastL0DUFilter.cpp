@@ -22,11 +22,10 @@ DECLARE_ALGORITHM_FACTORY( FastL0DUFilter )
 //=============================================================================
 FastL0DUFilter::FastL0DUFilter( const std::string& name,
                                 ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : L0FromRawBase ( name , pSvcLocator )
     ,m_count(0)
     ,m_sel(0)
 {
-  declareProperty( "RawLocation"             , m_rawLocation = LHCb::RawEventLocation::Default   );
   declareProperty( "SourceID"                , m_source = 0 );
   declareProperty( "ForceNonZeroSupMuons"    , m_noMuonSup = false );
   declareProperty( "SumEtThreshold"          , m_sumCut   = 0 );
@@ -65,11 +64,12 @@ StatusCode FastL0DUFilter::execute() {
   m_count++;
 
   LHCb::RawEvent* rawEvt = NULL ;
-  if( !exist<LHCb::RawEvent>( m_rawLocation ) ){
-    Warning( "rawEvent not found at location '" + rootInTES() + m_rawLocation).ignore();
+  std::string rawLoc="";
+  if( selectRawEventLocation(rawLoc).isFailure()){
+    counter("RawEvent is missing")+=1;
     return StatusCode::SUCCESS;
-  }     
-  rawEvt= get<LHCb::RawEvent>( m_rawLocation );
+  }
+  rawEvt= get<LHCb::RawEvent>( rawLoc );
   for( std::vector<LHCb::RawBank*>::const_iterator itB = (&rawEvt->banks(   LHCb::RawBank::L0DU ))->begin();
        itB != (&rawEvt->banks(   LHCb::RawBank::L0DU ))->end() ; itB++){
     

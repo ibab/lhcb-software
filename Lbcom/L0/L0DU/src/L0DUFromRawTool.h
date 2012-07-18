@@ -66,7 +66,7 @@ private:
   inline bool nextData();
   void putStatusOnTES();
   //
-  std::string m_rawLocation;
+  std::vector<std::string> m_rawLocations;
   std::string m_emulatorType;
   std::string m_configName;
   std::string m_configType;

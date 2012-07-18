@@ -82,5 +82,6 @@ private:
   int m_caloScale;
   int m_muonScale;
   LHCb::L0DUConfig* m_config;
+  std::vector<std::string> m_rawLocations;
 };
 #endif // L0DUFROMRAWHLT1TOOL_H

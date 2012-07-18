@@ -75,10 +75,7 @@ StatusCode L0DUFromRawAlg::execute() {
   if ( !m_hlt1 ) {
     
     // decode the bank
-    std::string rawEventLocation;
-    if ( selectRawEventLocation(rawEventLocation).isFailure() )
-      return Error("No valid raw event location found",StatusCode::SUCCESS,50);
-    if ( m_fromRaw->_setProperty("RawLocation",rawEventLocation ).isFailure() )
+    if ( m_fromRaw->_setProperty("RawLocations",Gaudi::Utils::toString(rawEventLocations()) ).isFailure() )
       return Error("Unable to set RawLocation in L0DUFromRawTool",StatusCode::SUCCESS,50);
     if ( m_fromRaw->_setProperty("StatusOnTES",Gaudi::Utils::toString(m_statusOnTES)).isFailure() )
       return Error("Unable to set StatusOnTES in L0DUFromRawTool",StatusCode::SUCCESS,50);

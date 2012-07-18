@@ -29,8 +29,11 @@ L0DUFromRawHlt1Tool::L0DUFromRawHlt1Tool( const std::string& type,
   , m_config(NULL)
 {
   declareInterface<IL0DUFromRawTool>(this);
+  declareProperty( "RawLocations"           , m_rawLocations  );
   declareProperty( "L0DUConfigProviderName"  , m_configName="L0DUConfig");
   declareProperty( "L0DUConfigProviderType"  , m_configType="L0DUMultiConfigProvider");
+  m_rawLocations.push_back( LHCb::RawEventLocation::Trigger );
+  m_rawLocations.push_back( LHCb::RawEventLocation::Default );
  
 }
 //=============================================================================
@@ -85,7 +88,20 @@ bool L0DUFromRawHlt1Tool::decodeBank( int iBank ) {
   m_roStatus = LHCb::RawBankReadoutStatus( LHCb::RawBank::L0DU );
   m_roStatus.addStatus( 0, LHCb::RawBankReadoutStatus::OK);
 
-  LHCb::RawEvent* raw = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
+
+  std::string loc = "";
+  for (std::vector<std::string>::iterator it = m_rawLocations.begin(); it < m_rawLocations.end();++it) {
+    if( exist<LHCb::RawEvent>( *it) ){
+      loc = *it;
+      break;
+    }
+  }
+  if( "" == loc){
+    Warning("rawEvent not found in  " + Gaudi::Utils::toString(m_rawLocations) +" locations ",StatusCode::SUCCESS).ignore();
+    return false;
+  }
+  
+  LHCb::RawEvent* raw = get<LHCb::RawEvent>( loc );
 
   //== Any error bank?
   if ( raw->banks( LHCb::RawBank::L0DUError ).size() != 0 ) {
