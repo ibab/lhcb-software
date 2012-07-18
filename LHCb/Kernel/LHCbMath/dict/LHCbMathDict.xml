@@ -59,12 +59,8 @@
   <class name    = "Gaudi::Math::WorkSpace"        >
     <field name = "m_workspace" transient = "true"/>      
   </class>
-  <class name    = "Gaudi::Math::Positive1"        />
-  <class name    = "Gaudi::Math::Positive2"        />
-  <class name    = "Gaudi::Math::PositiveN1"       />
-  <class name    = "Gaudi::Math::PositiveN2"       />
-  <class name    = "Gaudi::Math::PositiveN"        />
-  <class name    = "Gaudi::Math::Voigt"            />
+  <class name    = "Gaudi::Math::Positive"        />
+  <class name    = "Gaudi::Math::Bernstein"       />
   
   <class name    = "std::vector<ROOT::Math::SVector<double,2> >" />
   <class name    = "std::vector<ROOT::Math::SVector<double,3> >" />

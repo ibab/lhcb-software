@@ -282,275 +282,134 @@ namespace Gaudi
       // ======================================================================
     } ;
     // ========================================================================
-    /** @class Positive1 
-     *
-     *  The trivial linear function for building of "positive polinomials": 
-     *  the polinomials that have no zeros within the specified interval 
-     *
-     *  Using the normalization \f$ f(0)=1 \f$, for n=1 the definition 
-     *  of such polinom for interval \f$ \left[ -1, 1 \right]\f$ is trivial:  
-     *  \f$ f(x) = 1 + \beta x \f$, where \f$ \left| \beta \right <1 \f$
-     *  We are using \f$ \beta = \frac{\alpha}{\sqrt{1+\alpha^2}}\f$
-     *
-     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
-     *  @date 2011-12-04
+    /** @class Bernstein
+     *  The Bernstein's polynomial of order N 
      */
-    class GAUDI_API Positive1 : public std::unary_function<double,double>
+    class GAUDI_API Bernstein : public std::unary_function<double,double>
     {
       // ======================================================================
     public:
       // ======================================================================
-      /// constructor from parameter "alpha" and the interval 
-      Positive1 ( const double alpha =  0 , 
-                  const double xmin  = -1 ,
-                  const double xmax  =  1 ) ;            
+      /// constructor from the order 
+      Bernstein ( const unsigned short       N          ,   
+                  const double               xmin  =  0 ,
+                  const double               xmax  =  1 ) ;            
+      // ======================================================================
+      /// constructor from N+1 coefficients 
+      Bernstein ( const std::vector<double>& pars       , 
+                  const double               xmin  =  0 ,
+                  const double               xmax  =  1 ) ;            
       // ======================================================================
     public:
       // ======================================================================
       /// get the value 
-      double operator() ( const double x ) const ;
+      double operator () ( const double x ) const ;
       // ======================================================================
     public:
       // ======================================================================
-      /// set parameter alpha 
-      bool setAlpha  ( const double x )  ;
+      /// get number of parameters 
+      std::size_t npars () const { return m_pars.size() ; }  
+      /// set k-parameter
+      bool setPar       ( const unsigned short k , const double value ) ;
+      /// set k-parameter
+      bool setParameter ( const unsigned short k , const double value ) 
+      { return setPar   ( k , value ) ; }
+      /// get the parameter value 
+      double  par       ( const unsigned short k ) const 
+      { return ( k < m_pars.size() ) ? m_pars[k] : 0.0 ; }
+      /// get the parameter value 
+      double  parameter ( const unsigned short k ) const { return par ( k ) ; }
+      /// get lower edge 
+      double xmin () const { return m_xmin ; }
+      /// get upper edge 
+      double xmax () const { return m_xmax ; }      
+      // ======================================================================
+    public:
+      // ======================================================================
+      double x ( const double t ) const
+      { return       m_xmin   + ( m_xmax - m_xmin ) * t ; }
+      double t ( const double x ) const 
+      { return ( x - m_xmin ) / ( m_xmax - m_xmin )     ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the integral between xmin and xmax  
+      double integral () const ;
       // ======================================================================
     private:
       // ======================================================================
-      /// the actual slope  ( |slope|<=1 !)  
-      double m_slope ; // the actual slope  ( |slope|<=1 !)  
-      // ======================================================================
+      /// the list of parameters 
+      std::vector<double>  m_pars ;                // the list of parameters 
       /// the left edge of interval 
       double m_xmin  ;                             // the left edge of interval 
       /// the right edge of interval 
       double m_xmax  ;                             // the right edge of interval 
       // ======================================================================
-    } ;  
+    } ;
     // ========================================================================
-    /** @class Positive2 
-     *
-     *  The trivial quadratic function for building of "positive polinomials": 
-     *  the polinomials that have no zeros within the specified interval
-     *
-     *  Using the normalization \f$ f(0)=1 \f$, for n=2 there are two 
-     *  series of 2nd order polinom for interval \f$ \left[ -1, 1 \right]\f$:
-     *   - the product of linear polinoms of form 
-     *  \f$ f(x) =  ( 1 + \beta_1 x ) \times ( 1 + \beta_1 x ) \f$, 
-     *   where \f$ \left| \beta_{1,2} \right <1 \f$ 
-     *   - the polinom that has no real roots at all:
-     *  \f$ f(x) =  \alpha^2\x^2-2\alpha^2x \x_0 + 1 \f$, where 
-     *    \f$ \left| \alpha \x_0\right| < 1 \f$, or :
-     *  \f$ f(x) =  \alpha^2\x^2-2\alpha \beta + 1 \f$, where
-     *    \f$\left| \beta \right| < 1 \f$, and we use 
-     *    \f$ \beta = \frac{\alpha_2}{\sqrt{1 + \alpha_2^2}}< 1 \f$
-     *
-     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
-     *  @date 2011-12-04
+    /** @class Positive
+     *  The "positive" polynomial of order N 
      */
-    class GAUDI_API Positive2 : public std::unary_function<double,double>
+    class GAUDI_API Positive : public std::unary_function<double,double>
     {
       // ======================================================================
     public:
       // ======================================================================
-      /// constructor from parameter "alpha" and the interval 
-      Positive2 ( const double alpha1 =  0 , 
-                  const double alpha2 =  0 , 
-                  const double xmin   = -1 ,
-                  const double xmax   =  1 ) ;            
+      /// constructor from the order 
+      Positive ( const unsigned short       N          ,   
+                 const double               xmin  =  0 ,
+                 const double               xmax  =  1 ) ;            
+      // ======================================================================
+      /// constructor from N+1 coefficients
+      Positive ( const std::vector<double>& pars       , 
+                 const double               xmin  =  0 ,
+                 const double               xmax  =  1 ) ;  
+      /// constructor for Bernstein polynomials 
+      Positive ( const Gaudi::Math::Bernstein& b ) ;
       // ======================================================================
     public:
       // ======================================================================
       /// get the value 
-      double operator() ( const double x ) const ;
+      double operator () ( const double x ) const { return m_bernstein ( x ) ; }
       // ======================================================================
     public:
       // ======================================================================
-      /// set parameter alpha_1 
-      bool setAlpha1 ( const double x )  ;
-      /// set parameter alpha_2 
-      bool setAlpha2 ( const double x )  ;
+      /// get number of parameters 
+      std::size_t npars () const { return m_bernstein.npars () ; }  
+      /** set k-parameter
+       *  @attention coefficients are non-negative 
+       */
+      bool setPar       ( const unsigned short k , const double value ) 
+      { return m_bernstein.setPar ( k , std::abs (  value ) ) ; }
+      /// set k-parameter
+      bool setParameter ( const unsigned short k , const double value ) 
+      { return setPar   ( k , value ) ; }
+      //// get the parameter value 
+      double  par       ( const unsigned short k ) const 
+      { return m_bernstein.par ( k ) ; }
+      //// get the parameter value 
+      double  parameter ( const unsigned short k ) const { return par ( k ) ; }
+      /// get lower edge 
+      double xmin () const { return m_bernstein.xmin () ; }
+      /// get upper edge 
+      double xmax () const { return m_bernstein.xmax () ; }      
+      // ======================================================================
+    public:
+      // ======================================================================
+      double x ( const double t ) const { return m_bernstein. x ( t )  ; }
+      double t ( const double x ) const { return m_bernstein. t ( x )  ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the integral between xmin and xmax  
+      double integral () const { return m_bernstein.integral() ; }
       // ======================================================================
     private:
       // ======================================================================
-      /// the actual quadratic parameter 
-      double m_alpha  ; /// the actual quadractic  parameter 
-      /// the second parameter 
-      double m_beta   ; /// the second parameter 
+      /// the actual bernstein polynomial 
+      Gaudi::Math::Bernstein m_bernstein ; // the actual bernstein polynomial 
       // ======================================================================
-      /// the left edge of interval 
-      double m_xmin  ;                             // the left edge of interval 
-      /// the right edge of interval 
-      double m_xmax  ;                             // the right edge of interval 
-      // ======================================================================
-    } ;  
-    // ========================================================================
-    /** @class PositiveN1 
-     *
-     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
-     *  @date 2011-12-04
-     */
-    class GAUDI_API PositiveN1 : public std::unary_function<double,double>
-    {
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// constructor from parameter "alpha" and the interval 
-      PositiveN1 ( const std::vector<double>& alphas      , 
-                   const double               xmin   = -1 ,
-                   const double               xmax   =  1 ) ;
-      /// constructor from parameter "alpha" and the interval 
-      PositiveN1 ( const unsigned short       N1          , 
-                   const double               xmin   = -1 ,
-                   const double               xmax   =  1 ) ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// get the value 
-      double operator() ( const double x ) const ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// set parameter alpha_i
-      bool setAlpha ( const unsigned int i , const double x )  ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// get the order 
-      unsigned int n1 () const { return m_alphas.size() ; }
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the default constructor is disabled 
-      PositiveN1 () ;                    // the default constructor is disabled 
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the actual quadratic parameter 
-      std::vector<double> m_alphas ;
-      // ======================================================================
-      /// the left edge of interval 
-      double m_xmin  ;                             // the left edge of interval 
-      /// the right edge of interval 
-      double m_xmax  ;                             // the right edge of interval 
-      // ======================================================================
-    } ;  
-    // ========================================================================
-    /** @class PositiveN2 
-     *
-     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
-     *  @date 2011-12-04
-     */
-    class GAUDI_API PositiveN2 : public std::unary_function<double,double>
-    {
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// constructor from order and interval 
-      PositiveN2 ( const unsigned short N2          ,  
-                   const double         xmin   = -1 ,
-                   const double         xmax   =  1 ) ;
-      /// constructor from parameter "alpha" and the interval 
-      PositiveN2 ( const std::vector<std::pair<double,double> >& alphas      ,  
-                   const double                                  xmin   = -1 ,
-                   const double                                  xmax   =  1 ) ;
-      /// constructor from parameter "alpha" and the interval 
-      PositiveN2 ( const std::vector<double>&                    alpha1      ,
-                   const std::vector<double>&                    alpha2      ,  
-                   const double                                  xmin   = -1 ,
-                   const double                                  xmax   =  1 ) ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// get the value 
-      double operator() ( const double x ) const ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// set parameter alpha_i
-      bool setAlpha  ( const unsigned int i , const double x )  ;
-      bool setAlpha1 ( const unsigned int i , const double x )  ;
-      bool setAlpha2 ( const unsigned int i , const double x )  ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// get the 2*order 
-      unsigned int n2 () const { return m_alphas.size() ; }
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the default constructor is disabled 
-      PositiveN2 () ;                    // the default constructor is disabled 
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the actual quadratic parameter 
-      std::vector<std::pair<double,double> > m_alphas ;
-      // ======================================================================
-      /// the left edge of interval 
-      double m_xmin  ;                             // the left edge of interval 
-      /// the right edge of interval 
-      double m_xmax  ;                             // the right edge of interval 
-      // ======================================================================
-    } ;  
-    // ========================================================================
-    /** @class PositiveN 
-     *
-     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
-     *  @date 2011-12-04
-     */
-    class GAUDI_API PositiveN : public std::unary_function<double,double>
-    {
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// constructor from parameter "alpha" and the interval 
-      PositiveN ( const std::vector<double>& alphas      ,
-                  const unsigned short       roots       , 
-                  const double               xmin   = -1 ,
-                  const double               xmax   =  1 ) ;
-      // ======================================================================
-      /// constructor from order ans roots 
-      PositiveN ( const unsigned short       N           ,
-                  const unsigned short       roots       , 
-                  const double               xmin   = -1 ,
-                  const double               xmax   =  1 ) ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// get the value 
-      double operator() ( const double x ) const ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// set parameter alpha_i
-      bool setAlpha  ( const unsigned int i , const double x )  ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      const Gaudi::Math::PositiveN1& posN1 () const { return m_n1       ; }
-      const Gaudi::Math::PositiveN2& posN2 () const { return m_n2       ; }
-      // ======================================================================
-      double  vN1          ( const double x ) const { return m_n1 ( x ) ; }
-      double  vN2          ( const double x ) const { return m_n2 ( x ) ; }
-      // ======================================================================
-      /// get the 1*order 
-      unsigned int n1 () const { return m_n1.n1() ; }
-      /// get the 2*order 
-      unsigned int n2 () const { return m_n2.n2() ; }
-      /// get the order 
-      unsigned int n  () const { return n1() + 2 * n2() ; }
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the default constructor is disabled 
-      PositiveN () ;                     // the default constructor is disabled 
-      // ======================================================================
-    private:
-      // ======================================================================
-      Gaudi::Math::PositiveN1 m_n1 ;
-      Gaudi::Math::PositiveN2 m_n2 ;
-      // ======================================================================
-    } ;  
+    } ;
     // ========================================================================
     /** @class BifurcatedGauss 
      *  @date 2011-04-19

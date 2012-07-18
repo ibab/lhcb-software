@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2012-07-18 - Vanya Belyaev
+ - add Bernstein & positive polynomials 
+
 !========================= LHCbMath v3r33 2012-06-25 =========================
 ! 2012-06-07 - Vanya Belyaev
  - minor fix 
