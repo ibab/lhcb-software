@@ -128,6 +128,11 @@ namespace Rich
         /// make plots for all HPDs ignoring the list
         bool m_plotAllHPDs;
 
+        /// when writing NTuples limit the number of photons per HPD
+        int m_photonLimitPerHPD;
+        /// store how many photons per HPD
+        std::vector<int> m_photonsInHPD;
+
         // vector with the two side histograms (up/down , A/C side)
         std::vector<AIDA::IHistogram2D*> m_sideHistos;
         std::vector<AIDA::IHistogram2D*> m_quarterHistos;

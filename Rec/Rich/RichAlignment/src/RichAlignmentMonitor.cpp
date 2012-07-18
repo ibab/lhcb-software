@@ -32,7 +32,8 @@ DECLARE_ALGORITHM_FACTORY( AlignmentMonitor )
       m_richPartProp      ( NULL ),
       m_ckAngle           ( NULL ),
       m_isoTrack          ( NULL ),
-      m_plotAllHPDs       ( false )
+      m_plotAllHPDs       ( false     ),
+      m_photonsInHPD      ( 220000, 0 )
 {
   // Maximum number of tracks
   declareProperty( "MaxRichRecTracks",     m_maxUsedTracks = 200 );
@@ -43,6 +44,7 @@ DECLARE_ALGORITHM_FACTORY( AlignmentMonitor )
   declareProperty( "Radiator",             m_radTemp = 2 ); // default is Rich2
   declareProperty( "HistoOutputLevel",     m_histoOutputLevel = 0 );
   declareProperty( "HPDList",              m_HPDList );
+  declareProperty( "PhotonLimitPerHPD",    m_photonLimitPerHPD = 100 );
   declareProperty( "VetoedHPDs",           m_hpdVetoList );
 }
 
@@ -224,7 +226,7 @@ StatusCode AlignmentMonitor::execute()
 
   // Iterate over segments
   for ( LHCb::RichRecSegments::const_iterator iSeg = richSegments()->begin();
-        iSeg != richSegments()->end(); ++iSeg ) 
+        iSeg != richSegments()->end(); ++iSeg )
   {
     LHCb::RichRecSegment* segment = *iSeg;
 
@@ -245,7 +247,7 @@ StatusCode AlignmentMonitor::execute()
                                         "momentum", "Momentum of seleceted tracks /GeV", 0.0, 150.0 );
 
     double thetaExpTrue(0.0), thetaExpected(0.0);
-    if ( m_useMCTruth ) 
+    if ( m_useMCTruth )
     {
       // Get true beta from true particle type
       const Rich::ParticleIDType mcType = m_richRecMCTruth->mcParticleType( segment );
@@ -300,7 +302,7 @@ StatusCode AlignmentMonitor::execute()
 
       double delThetaTrue(0.0);
       bool trueParent( false );
-      if ( m_useMCTruth ) 
+      if ( m_useMCTruth )
       {
         delThetaTrue = thetaRec - thetaExpTrue;
         trueParent = ( NULL != m_richRecMCTruth->trueCherenkovPhoton( photon ) );
@@ -311,12 +313,12 @@ StatusCode AlignmentMonitor::execute()
       if ( m_histoOutputLevel > 0 )
         richHisto1D(HID("Un_Amb"))->fill( static_cast<int>(unAmbiguousPhoton) );
 
-      if ( m_useMCTruth && trueParent && !hpdIsVetoed ) 
+      if ( m_useMCTruth && trueParent && !hpdIsVetoed )
       {
         richHisto1D( HID("deltaThetaTrueAll"), "Ch angle error MC ALL",
                      -m_deltaThetaHistoRange, m_deltaThetaHistoRange, nBins1D() )->fill(delThetaTrue);
 
-        if ( unAmbiguousPhoton ) 
+        if ( unAmbiguousPhoton )
         {
           richHisto1D( HID("deltaThetaTrueUnamb"), "Ch angle error MC Unambiguous",
                        -m_deltaThetaHistoRange, m_deltaThetaHistoRange, nBins1D() )->fill(delThetaTrue);
@@ -330,7 +332,7 @@ StatusCode AlignmentMonitor::execute()
         }
       }
 
-      if ( !hpdIsVetoed ) 
+      if ( !hpdIsVetoed )
       {
         if ( !unAmbiguousPhoton )
         {
@@ -349,7 +351,7 @@ StatusCode AlignmentMonitor::execute()
           richHisto1D( HID("sphMirR1"),"Sph Mirror Numbers Rich1",-0.5,3.5,4)->fill(sphMirNum);
           richHisto1D( HID("fltMirR1"),"Flat Mirror Numbers Rich1",-0.5,15.5,16)->fill(flatMirNum);
           richHisto2D( HID("sphMirReflR1"), "Spherical Mirror Refl point Rich1",
-                       -700, 700, 100, -800, 800, 100 ) 
+                       -700, 700, 100, -800, 800, 100 )
             -> fill(gPhoton.sphMirReflectionPoint().x(),gPhoton.sphMirReflectionPoint().y());
           richHisto2D(HID("flatMirReflR1"), "Flat Mirror Refl point Rich1",
                       -700, 700, 100, -1000, 1000, 100 )
@@ -428,23 +430,23 @@ StatusCode AlignmentMonitor::execute()
         if ( allowMirrorCombi )
         {
           h_id << thisCombiNr.str();
-          richHisto2D( HID(h_id.str(),rad), title.str(), 
+          richHisto2D( HID(h_id.str(),rad), title.str(),
                        0.0, 2*Gaudi::Units::pi, 20,
                        -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 50 )
             ->fill( phiRec, delTheta );
 
           if ( m_histoOutputLevel > 3 && isolated )
-            richHisto2D( HID(h_id.str()+"Iso",rad), title.str()+" Iso", 
+            richHisto2D( HID(h_id.str()+"Iso",rad), title.str()+" Iso",
                          0.0, 2*Gaudi::Units::pi, 20,
                          -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 50 )
-              ->fill( phiRec, delTheta ); 
-          
-          if ( m_useMCTruth ) 
+              ->fill( phiRec, delTheta );
+
+          if ( m_useMCTruth )
           {
             // use MC estimate for cherenkov angle
             h_id << "MC";
             title << " MC";
-            richHisto2D( HID(h_id.str(),rad), title.str(), 
+            richHisto2D( HID(h_id.str(),rad), title.str(),
                          0.0, 2*Gaudi::Units::pi, 20,
                          -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 50 )
               ->fill(phiRec, delThetaTrue);
@@ -453,7 +455,7 @@ StatusCode AlignmentMonitor::execute()
             {
               h_id << "TruP";
               title << " TrueP";
-              richHisto2D( HID(h_id.str(),rad), title.str(), 
+              richHisto2D( HID(h_id.str(),rad), title.str(),
                            0.0, 2*Gaudi::Units::pi, 20,
                            -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 50 )
                 ->fill(phiRec, delThetaTrue);
@@ -470,14 +472,14 @@ StatusCode AlignmentMonitor::execute()
           {
             std::ostringstream hpd_id;
             hpd_id << "HPD_" << hpd;
-            richHisto2D( HID("HPDs/"+hpd_id.str()), hpd_id.str(), 
+            richHisto2D( HID("HPDs/"+hpd_id.str()), hpd_id.str(),
                          0.0, 2*Gaudi::Units::pi, 20,
                          -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 50 )
               ->fill(phiRec, delTheta);
           }
         }
 
-        if ( produceNTuples() )
+        if ( produceNTuples() && (m_photonsInHPD[humID] < m_photonLimitPerHPD) )
         {
           Tuple myTuple = nTuple( "RichAlign", "Rich Alignment" );
           myTuple->column( "thetaRec"  , thetaRec   );
@@ -489,6 +491,7 @@ StatusCode AlignmentMonitor::execute()
           myTuple->column( "quarter"   , quarter    );
           myTuple->column( "momentum"  , std::sqrt(segment->trackSegment().bestMomentum().Mag2())/Gaudi::Units::GeV );
           myTuple->write();
+          m_photonsInHPD[humID]++;
         }
 
       }
@@ -503,7 +506,7 @@ StatusCode AlignmentMonitor::execute()
 //=============================================================================
 StatusCode AlignmentMonitor::finalize()
 {
-  if ( m_useMCTruth ) 
+  if ( m_useMCTruth )
   {
     info() << "Number of pions:" << m_pTypes[Rich::Pion] << "; Kaons:"
            << m_pTypes[Rich::Kaon] << ";";

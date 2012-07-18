@@ -4,6 +4,10 @@
 ! Purpose     : Algorithms and scripts related to RICH alignment
 !-----------------------------------------------------------------------------
 
+! 2012-07-13 - Antonis Papanestis
+ - Limit the number of photons per HPD when producing NTuples. 
+   Number of photons is a property set by default to 10,000
+
 ! 2012-07-13 - Chris Jones
  - Add a HPD veto list to AlignmentMonitor
 
