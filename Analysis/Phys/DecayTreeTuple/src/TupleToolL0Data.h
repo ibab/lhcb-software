@@ -18,25 +18,34 @@
  *  @author Olivier Deschamps
  *  @date   2011-06-08
  */
-class TupleToolL0Data : public TupleToolBase, virtual public IEventTupleTool {
+class TupleToolL0Data : public TupleToolBase, 
+                        virtual public IEventTupleTool 
+{
+
 public: 
+
   /// Standard constructor
   TupleToolL0Data( const std::string& type, 
                    const std::string& name,
-                   const IInterface* parent);
+                   const IInterface* parent );
 
   virtual ~TupleToolL0Data( ); ///< Destructor
   virtual StatusCode fill(Tuples::Tuple& );
   virtual StatusCode initialize();
-protected:
 
 private:
-  std::string rename(std::string name);
+
+  std::string rename(const std::string& name);
+
+private:
+
   std::vector<std::string> m_list;
   IL0DUFromRawTool* m_l0;
   IL0DUConfigProvider* m_l0conf;
   IL0DUEmulatorTool* m_l0emu;
   bool m_scale;
   std::vector<std::string> m_tcks;
+
 };
+
 #endif // TUPLETOOLL0DATA_H
