@@ -42,17 +42,17 @@ DECLARE_ALGORITHM_FACTORY( ParticleFlow4Jets )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-ParticleFlow4Jets::ParticleFlow4Jets( const std::string& name,
-				      ISvcLocator* pSvcLocator)
-: GaudiTupleAlg ( name , pSvcLocator )
-  , m_trSel ( 0 )
-  , m_ttExpectation ( 0 )
-  , m_clust2TrLocationECAL ( LHCb::CaloAlgUtils::CaloIdLocation("ClusterMatch", context()) )
-  , m_clust2TrLocationHCAL ( "Rec/Calo/HcalClusterMatch" )
-  , m_p2s ( 0 )
-  , m_filterGhost ( 0 )
-  , m_protoPF ( "Rec/ProtoP/PF" )
-  , m_calohypoPF ( "Rec/Calo/Hadrons" )
+  ParticleFlow4Jets::ParticleFlow4Jets( const std::string& name,
+					ISvcLocator* pSvcLocator)
+    : GaudiTupleAlg ( name , pSvcLocator )
+    , m_trSel ( 0 )
+    , m_ttExpectation ( 0 )
+    , m_clust2TrLocationECAL ( LHCb::CaloAlgUtils::CaloIdLocation("ClusterMatch", context()) )
+    , m_clust2TrLocationHCAL ( "Rec/Calo/HcalClusterMatch" )
+    , m_p2s ( 0 )
+    , m_filterGhost ( 0 )
+    , m_protoPF ( "Rec/ProtoP/PF" )
+    , m_calohypoPF ( "Rec/Calo/Hadrons" )
 { 
   // Default options are equivalent to StdNoPIDsPions+StdNoPIDsDownPions+StdLoosePhotonAll
   declareProperty( "PFOutputLocation"          ,  m_PFOutputLocation  =  "Phys/PFParticles/Particles"    
@@ -289,20 +289,39 @@ StatusCode ParticleFlow4Jets::execute() {
   ClusterID2EMap       HCALCluster2CovMap;
   // Eventually store the V0 daughters track keys
   if(m_particleContainers.count("V0") > 0.5){
-    for( unsigned int i = 0 ; i < m_particleContainers["V0"].size(); i++){
-      BOOST_FOREACH(const LHCb::Particle* v0, *m_particleContainers["V0"][i] ){
-        LHCb::Particle::ConstVector 	daughtersV0 = v0->daughtersVector();
-        for(unsigned i = 0; i<daughtersV0.size(); i++)
-          if(daughtersV0.at(i) != NULL)
-            if(daughtersV0.at(i)->proto() != NULL)
-              m_trackKeyToBan[daughtersV0.at(i)->proto()->track()->key()]=daughtersV0.at(i)->proto()->track();
-        LHCb::Particle* PFV0 = v0->clone();
-        relate2Vertex( PFV0 , *table );
-        PFParticles->insert( PFV0 );
+
+    LHCb::Particle::ConstVector sortV0s;
+    for( unsigned int i = 0 ; i < m_particleContainers["V0"].size(); i++)
+      BOOST_FOREACH(const LHCb::Particle* v0, *m_particleContainers["V0"][i] )
+	sortV0s.push_back(v0);
+
+
+    std::sort( sortV0s.begin(), sortV0s.end(),sortChi2PerDoF() );
+
+
+    BOOST_FOREACH(const LHCb::Particle* v0, sortV0s){
+      LHCb::Particle::ConstVector 	daughtersV0 = v0->daughtersVector();
+      bool dauOverLap = false;
+	
+      for(unsigned i = 0; i<daughtersV0.size(); i++)
+	if(daughtersV0.at(i) != NULL)
+	  if(daughtersV0.at(i)->proto() != NULL)
+	    if (m_trackKeyToBan.count(daughtersV0.at(i)->proto()->track()->key())>0.5){
+	      dauOverLap = true;
+	      break;
+	    }	
+      if(!dauOverLap){
+	LHCb::Particle* PFV0 = v0->clone();
+	relate2Vertex( PFV0 , *table );
+	PFParticles->insert( PFV0 );
+	for(unsigned i = 0; i<daughtersV0.size(); i++)
+	  if(daughtersV0.at(i) != NULL)
+	    if(daughtersV0.at(i)->proto() != NULL)
+	      m_trackKeyToBan[daughtersV0.at(i)->proto()->track()->key()]=daughtersV0.at(i)->proto()->track();
       }
     }
   }
-
+  
 
   verbose()<<"Start charged Loop..."<<endreq;
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~ The main loop for charged components  ~~~~~~~~~~~~~~~~~~~~~~
@@ -369,19 +388,19 @@ StatusCode ParticleFlow4Jets::execute() {
 	  // In any case, save the link to the particle if it exist
 	  verbose()<<"tag1"<<endreq;
 	  if (theParticle && m_neutralRecovery){ 
-	  verbose()<<"tag12"<<endreq;
+	    verbose()<<"tag12"<<endreq;
 	    verbose()<<cRange.front().to()->seed().all()<<" "<<ECALCluster2MomentaMap.count(cRange.front().to()->seed().all())<<endreq;
-	      ECALCluster2MomentaMap[cRange.front().to()->seed().all()].push_back(theParticle->p());
-	      ECALCluster2IDMap[cRange.front().to()->seed().all()].push_back(theParticle->particleID ().abspid());
-	      ECALCluster2CaloMap[cRange.front().to()->seed().all()] = cRange.front().to()->e();
-	      ECALCluster2NSatMap[cRange.front().to()->seed().all()] = numberOfSaturatedCells( cRange.front().to() , m_ecal );
-	      ECALCluster2CovMap[cRange.front().to()->seed().all()]= cRange.front().to()->position().covariance ()(2,2)/cRange.front().to()->e();
-	  verbose()<<"tag13"<<endreq;
+	    ECALCluster2MomentaMap[cRange.front().to()->seed().all()].push_back(theParticle->p());
+	    ECALCluster2IDMap[cRange.front().to()->seed().all()].push_back(theParticle->particleID ().abspid());
+	    ECALCluster2CaloMap[cRange.front().to()->seed().all()] = cRange.front().to()->e();
+	    ECALCluster2NSatMap[cRange.front().to()->seed().all()] = numberOfSaturatedCells( cRange.front().to() , m_ecal );
+	    ECALCluster2CovMap[cRange.front().to()->seed().all()]= cRange.front().to()->position().covariance ()(2,2)/cRange.front().to()->e();
+	    verbose()<<"tag13"<<endreq;
 	  }
         }
       }
  
-	  verbose()<<""<<endreq;
+      verbose()<<""<<endreq;
       if(m_useHCAL ){
         // Get the calorimeter clusters associated to the track
         LHCb::Calo2Track::IClusTrTable2D::InverseType::Range cRange2 =  m_tableTrHCAL->inverse()->relations ( track ) ;
@@ -405,14 +424,14 @@ StatusCode ParticleFlow4Jets::execute() {
 	    verbose()<<cRange2.front().to()<<" tag1H"<<endreq;
 	    // In any case, save the link to the particle if it exist
 	    if (theParticle && m_neutralRecovery){
-	  verbose()<<"tag12H"<<endreq;
-	  verbose()<<cRange2.front().to()<<" "<<cRange2.front().to()->seed()<<" "<<cRange2.front().to()->seed().all()<<" H "<<HCALCluster2MomentaMap.count(cRange2.front().to()->seed().all())<<endreq;
+	      verbose()<<"tag12H"<<endreq;
+	      verbose()<<cRange2.front().to()<<" "<<cRange2.front().to()->seed()<<" "<<cRange2.front().to()->seed().all()<<" H "<<HCALCluster2MomentaMap.count(cRange2.front().to()->seed().all())<<endreq;
 	      HCALCluster2MomentaMap[cRange2.front().to()->seed().all()].push_back(theParticle->p());
 	      HCALCluster2IDMap[cRange2.front().to()->seed().all()].push_back(theParticle->particleID ().abspid());
 	      HCALCluster2CaloMap[cRange2.front().to()->seed().all()] = cRange2.front().to()->e();
 	      HCALCluster2NSatMap[cRange2.front().to()->seed().all()] = numberOfSaturatedCells( cRange2.front().to() , m_hcal );
 	      HCALCluster2CovMap[cRange2.front().to()->seed().all()]= cRange2.front().to()->position().covariance ()(2,2)/cRange2.front().to()->e();
-	  verbose()<<"tag13H"<<endreq;
+	      verbose()<<"tag13H"<<endreq;
 	    }
 	  }
         }
@@ -439,7 +458,7 @@ StatusCode ParticleFlow4Jets::execute() {
           }   
         }
       }
-    if (theParticle == NULL)delete(theParticle);
+      if (theParticle == NULL)delete(theParticle);
     }
   }
 
@@ -518,12 +537,12 @@ StatusCode ParticleFlow4Jets::execute() {
         std::pair< double , int > tmpPair;
         LHCb::Calo2Track::IClusTrTable2D::DirectType::Range tRange = m_tableTrECAL->relations( hypoClusters[0].target() );
         if (tRange.size()>0){
-          if (tRange.front().to()->type() == LHCb::Track::Ttrack && tRange.front().weight()< m_Chi2ECALCutTT ){
-            tmpPair.first  = TrackMatchTT ;
-            tmpPair.second = tRange.front().to() ->key() ;
-            BannedECALClusters[hypoClusters[0].target()->seed().all()] = tmpPair ;
-            continue;
-          }
+	if (tRange.front().to()->type() == LHCb::Track::Ttrack && tRange.front().weight()< m_Chi2ECALCutTT ){
+	tmpPair.first  = TrackMatchTT ;
+	tmpPair.second = tRange.front().to() ->key() ;
+	BannedECALClusters[hypoClusters[0].target()->seed().all()] = tmpPair ;
+	continue;
+	}
         }
         }*/
       std::pair< double , int > tmpPair;
@@ -580,13 +599,13 @@ StatusCode ParticleFlow4Jets::execute() {
           std::pair< double , int > tmpPair;
           LHCb::Calo2Track::IClusTrTable2D::DirectType::Range tRange = m_tableTrECAL->relations( hypoClusters[0].target() );
           if (tRange.size()>0){
-            if (tRange.front().to()->type() == LHCb::Track::Ttrack && tRange.front().weight()< m_Chi2ECALCutTT ){
-              tmpPair.first  = TrackMatchTT ;
-              tmpPair.second = tRange.front().to() ->key() ;
-              BannedECALClusters[hypoClusters[0].target()->seed().all()] = tmpPair ;
-              skip = true;
-              continue;
-            }
+	  if (tRange.front().to()->type() == LHCb::Track::Ttrack && tRange.front().weight()< m_Chi2ECALCutTT ){
+	  tmpPair.first  = TrackMatchTT ;
+	  tmpPair.second = tRange.front().to() ->key() ;
+	  BannedECALClusters[hypoClusters[0].target()->seed().all()] = tmpPair ;
+	  skip = true;
+	  continue;
+	  }
           }
           }*/
 
@@ -1017,25 +1036,25 @@ StatusCode ParticleFlow4Jets::loadDatas() {
 // Clone distance calculation
 //=============================================================================
 double ParticleFlow4Jets::kullbeckLieblerDist( const LHCb::State& c1,
-                                                   const LHCb::State& c2) const
+					       const LHCb::State& c2) const
 {
-   const Gaudi::TrackVector diffVec = c1.stateVector() - c2.stateVector();
-   const Gaudi::TrackSymMatrix diffCov   = c1.covariance()  - c2.covariance();
-   Gaudi::TrackSymMatrix invCov1 = c1.covariance();
-   Gaudi::TrackSymMatrix invCov2 = c2.covariance();
-   TrackUnitsConverters::convertToG3( invCov1 );
-   invCov1.Invert();
-   TrackUnitsConverters::convertToG4( invCov1 );
-   TrackUnitsConverters::convertToG3( invCov2 );
-   invCov2.Invert();
-   TrackUnitsConverters::convertToG4( invCov2 );
+  const Gaudi::TrackVector diffVec = c1.stateVector() - c2.stateVector();
+  const Gaudi::TrackSymMatrix diffCov   = c1.covariance()  - c2.covariance();
+  Gaudi::TrackSymMatrix invCov1 = c1.covariance();
+  Gaudi::TrackSymMatrix invCov2 = c2.covariance();
+  TrackUnitsConverters::convertToG3( invCov1 );
+  invCov1.Invert();
+  TrackUnitsConverters::convertToG4( invCov1 );
+  TrackUnitsConverters::convertToG3( invCov2 );
+  invCov2.Invert();
+  TrackUnitsConverters::convertToG4( invCov2 );
  
-   const Gaudi::TrackSymMatrix invDiff =invCov2  - invCov1;
-   const Gaudi::TrackSymMatrix invSum = invCov2  + invCov1;
-   const Gaudi::TrackMatrix diff = diffCov * invDiff;
+  const Gaudi::TrackSymMatrix invDiff =invCov2  - invCov1;
+  const Gaudi::TrackSymMatrix invSum = invCov2  + invCov1;
+  const Gaudi::TrackMatrix diff = diffCov * invDiff;
  
-   // trace
-   return Gaudi::Math::trace(diff) + Similarity(invSum,diffVec);
+  // trace
+  return Gaudi::Math::trace(diff) + Similarity(invSum,diffVec);
 }
 
 //=============================================================================

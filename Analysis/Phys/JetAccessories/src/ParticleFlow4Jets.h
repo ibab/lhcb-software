@@ -189,4 +189,19 @@ private:
 
 
 };
+
+
+
+
+class sortChi2PerDoF {
+ public:
+  inline bool operator() (const LHCb::Particle* obj1 ,
+			  const LHCb::Particle* obj2) { 
+    return obj1->endVertex()->chi2PerDoF()  < obj2->endVertex()->chi2PerDoF();      
+  }
+}; 
+
+
+
+
 #endif // PARTICLEFLOW4JETS_H
