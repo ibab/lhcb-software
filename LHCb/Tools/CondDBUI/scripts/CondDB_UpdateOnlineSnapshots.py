@@ -73,7 +73,8 @@ def _make_snapshots(since, until, digit_number):
 
     standard_file_name = "ONLINE-%s.db"%fdate
     standard_file_path = os.path.join(db_path, standard_file_name)
-    new_file_name = standard_file_name + '~'
+    currentDateTime = datetime.today().strftime('%Y-%m-%d_%H:%M:%S')
+    new_file_name = standard_file_name + '_tmp-' + currentDateTime + '~'
     new_file_path = os.path.join(db_path, new_file_name)
 
     command_line = ("CondDBAdmin_MakeSnapshot.py --options %s/options/SQLDDDB-Oracle.py "
