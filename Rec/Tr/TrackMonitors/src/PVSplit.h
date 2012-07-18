@@ -18,14 +18,17 @@ class DeVelo;
  *  write split vertices to TES.
  *
  *  For each vertex in m_inputVerticesLocation, the following is executed.
+ *  0) The track container is randomly suffled according to option
  *  1) The track container is split into two parts according to split method:
- *     a) Random - randomly split into two halves with equal number of tracks
+ *     a) Middle - split into two halves with equal number of tracks
  *        if total number of tracks is even. Otherwise, (if total number of
  *        tracks is odd), one of the split containers (randomly chosen) has
  *        one track more.
  *     b) VeloHalf - a track is put in first (second) container if number of
  *        hit left (right) sensors is larger. If number of left and right hits
  *        are the same, container is randomly chosen.
+ *     c) MiddlePerVeloHalf - split into two nearly equal parts each having
+ *        nearly equal number of left and right tracks
  *  2) The two track containers are fitted with 
  *     PVOfflineTool::reconstructSinglePVFromTracks().
  *  3) Fitted vertices are written to a TES location. Each split vertex is
@@ -57,20 +60,26 @@ public:
 
 private:
   enum SplitMethod { Unknown = 0,
-                     Random,
-                     VeloHalf
+                     Middle,
+                     VeloHalf,
+                     MiddlePerVeloHalf,
     };
 
+  void clearSplitTracks();
   void randomShuffleTracks();
   void splitTracksByMiddle();
   void splitTracksByVeloHalf();
+  void splitTracksByMiddlePerVeloHalf();
 
-  void countVeloLhcbIDs(const LHCb::Track* track, int& left, int& right);
+  int randomMiddle(unsigned int n);
+  void countVeloLhcbIDs(const LHCb::Track* track, int& left, int& right) const;
+  bool isLeftTrack(const LHCb::Track* track);
 
   void debugVertex(const LHCb::RecVertex* vx) const;
 
   std::string m_inputVerticesLocation;  ///< Location of input vertices
   std::string m_outputVerticesLocation; ///< Location of split vertices
+  bool m_randomShuffle; ///< Whether to shuffle tracks first
   std::string m_splitMethodStr; ///< How to split track container (see enum SplitMethod for possible values)
   
   SplitMethod m_splitMethod;
