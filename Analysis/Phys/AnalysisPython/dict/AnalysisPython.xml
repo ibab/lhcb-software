@@ -31,9 +31,9 @@
   <class name = "Analysis::Models::Needham"         />
   <class name = "Analysis::Models::CrystalBallDS"   />
   <class name = "Analysis::Models::GramCharlierA"   />
-  <class name = "Analysis::Models::PolyPositive"    />
   <class name = "Analysis::Models::Voigt"           />
   <class name = "Analysis::Models::LASS23L"         />
+  <class name = "Analysis::Models::PolyPositive"    />
   
 </lcgdict> 
 

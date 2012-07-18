@@ -809,110 +809,136 @@ Double_t Analysis::Models::PhaseSpaceRight::evaluate() const
 }
 // ============================================================================
 
+
 // ============================================================================
-// linear polinomial
+//  linear polinomial
 // ============================================================================
-Analysis::Models::PolyPositive::PolyPositive 
+Analysis::Models::PolyPositive::PolyPositive
 ( const char*          name      , 
   const char*          title     ,
   RooAbsReal&          x         ,
-  RooAbsReal&          alpha1    , 
+  RooAbsReal&          phi1      , 
   const double         xmin      , 
   const double         xmax      ) 
-  : RooAbsPdf  ( name , title ) 
+  : RooAbsPdf ( name , title ) 
 //
   , m_x        ( "x"       , "Observable"   , this , x ) 
-  , m_alphas   ( "alphas"  , "Coefficients" , this     )
+  , m_phis     ( "phi"     , "Coefficients" , this     )
 //
   , m_iterator ( 0 ) 
-    //
-  , m_pos      ( 1 , xmin , xmax )           
+//
+  , m_positive ( 1 , xmin , xmax ) 
 {
-  //
-  m_alphas.add ( alpha1 ) ;
-  m_iterator = m_alphas.createIterator() ;
-  //
+  m_phis.add ( phi1 ) ;
+  m_iterator = m_phis.createIterator() ;
 }
 // ============================================================================
 //  quadric polinomial
 // ============================================================================
-Analysis::Models::PolyPositive::PolyPositive 
+Analysis::Models::PolyPositive::PolyPositive
 ( const char*          name      , 
   const char*          title     ,
   RooAbsReal&          x         ,
-  RooAbsReal&          alpha1    , 
-  RooAbsReal&          alpha2    , 
-  const bool           roots     ,
+  RooAbsReal&          phi1      , 
+  RooAbsReal&          phi2      , 
   const double         xmin      , 
   const double         xmax      ) 
   : RooAbsPdf ( name , title ) 
 //
   , m_x        ( "x"       , "Observable"   , this , x ) 
-  , m_alphas   ( "alphas"  , "Coefficients" , this     )
+  , m_phis     ( "phi"     , "Coefficients" , this     )
 //
   , m_iterator ( 0 ) 
 //
-  , m_pos      ( 2 , roots ? 2 : 0 , xmin , xmax  ) 
+  , m_positive ( 2 , xmin , xmax ) 
 {
-  m_alphas.add ( alpha1 ) ;
-  m_alphas.add ( alpha2 ) ;
-  m_iterator = m_alphas.createIterator() ;
+  m_phis.add ( phi1 ) ;
+  m_phis.add ( phi2 ) ;
+  m_iterator = m_phis.createIterator() ;
 }
 // ============================================================================
-//  qubic polinomial
+//  cubic polinomial
 // ============================================================================
-Analysis::Models::PolyPositive::PolyPositive 
+Analysis::Models::PolyPositive::PolyPositive
 ( const char*          name      , 
   const char*          title     ,
   RooAbsReal&          x         ,
-  RooAbsReal&          alpha1    , 
-  RooAbsReal&          alpha2    , 
-  RooAbsReal&          alpha3    , 
-  const unsigned short roots     ,   // roots ? 
+  RooAbsReal&          phi1      , 
+  RooAbsReal&          phi2      , 
+  RooAbsReal&          phi3      , 
   const double         xmin      , 
   const double         xmax      ) 
- : RooAbsPdf ( name , title ) 
+  : RooAbsPdf ( name , title ) 
 //
   , m_x        ( "x"       , "Observable"   , this , x ) 
-  , m_alphas   ( "alphas"  , "Coefficients" , this     )
+  , m_phis     ( "phi"     , "Coefficients" , this     )
 //
   , m_iterator ( 0 ) 
 //
-  , m_pos      ( 3 , roots , xmin , xmax ) 
+  , m_positive ( 3 , xmin , xmax ) 
 {
-  m_alphas.add ( alpha1 ) ;
-  m_alphas.add ( alpha2 ) ;
-  m_alphas.add ( alpha3 ) ;
-  m_iterator = m_alphas.createIterator() ;
+  m_phis.add ( phi1 ) ;
+  m_phis.add ( phi2 ) ;
+  m_phis.add ( phi3 ) ;
+  m_iterator = m_phis.createIterator() ;
 }
 // ============================================================================
 //  quartic polinomial
 // ============================================================================
-Analysis::Models::PolyPositive::PolyPositive 
+Analysis::Models::PolyPositive::PolyPositive
 ( const char*          name      , 
   const char*          title     ,
   RooAbsReal&          x         ,
-  RooAbsReal&          alpha1    , 
-  RooAbsReal&          alpha2    , 
-  RooAbsReal&          alpha3    , 
-  RooAbsReal&          alpha4    , 
-  const unsigned short roots     ,   // roots ?
+  RooAbsReal&          phi1      , 
+  RooAbsReal&          phi2      , 
+  RooAbsReal&          phi3      , 
+  RooAbsReal&          phi4      , 
   const double         xmin      , 
   const double         xmax      ) 
   : RooAbsPdf ( name , title ) 
 //
   , m_x        ( "x"       , "Observable"   , this , x ) 
-  , m_alphas   ( "alphas"  , "Coefficients" , this     )
+  , m_phis     ( "phi"     , "Coefficients" , this     )
 //
   , m_iterator ( 0 ) 
 //
-  , m_pos      ( 4 , roots , xmin , xmax ) 
+  , m_positive ( 4 , xmin , xmax ) 
 {
-  m_alphas.add ( alpha1 ) ;
-  m_alphas.add ( alpha2 ) ;
-  m_alphas.add ( alpha3 ) ;
-  m_alphas.add ( alpha4 ) ;
-  m_iterator = m_alphas.createIterator() ;
+  m_phis.add ( phi1 ) ;
+  m_phis.add ( phi2 ) ;
+  m_phis.add ( phi3 ) ;
+  m_phis.add ( phi4 ) ;
+  m_iterator = m_phis.createIterator() ;
+}
+// ============================================================================
+//  quintic polinomial
+// ============================================================================
+Analysis::Models::PolyPositive::PolyPositive
+( const char*          name      , 
+  const char*          title     ,
+  RooAbsReal&          x         ,
+  RooAbsReal&          phi1      , 
+  RooAbsReal&          phi2      , 
+  RooAbsReal&          phi3      , 
+  RooAbsReal&          phi4      , 
+  RooAbsReal&          phi5      , 
+  const double         xmin      , 
+  const double         xmax      ) 
+  : RooAbsPdf ( name , title ) 
+//
+  , m_x        ( "x"       , "Observable"   , this , x ) 
+  , m_phis     ( "phi"     , "Coefficients" , this     )
+//
+  , m_iterator ( 0 ) 
+//
+  , m_positive ( 5 , xmin , xmax ) 
+{
+  m_phis.add ( phi1 ) ;
+  m_phis.add ( phi2 ) ;
+  m_phis.add ( phi3 ) ;
+  m_phis.add ( phi4 ) ;
+  m_phis.add ( phi5 ) ;
+  m_iterator = m_phis.createIterator() ;
 }
 // ============================================================================
 // generic polinomial
@@ -921,31 +947,29 @@ Analysis::Models::PolyPositive::PolyPositive
 ( const char*          name      , 
   const char*          title     ,
   RooAbsReal&          x         ,
-  const RooArgList&    alphas    , 
-  const unsigned short roots     ,   // roots ?
+  const RooArgList&    phis      , 
   const double         xmin      , 
   const double         xmax      ) 
   : RooAbsPdf ( name , title ) 
-//
   , m_x        ( "x"       , "Observable"   , this , x ) 
-  , m_alphas   ( "alphas"  , "Coefficients" , this     )
+  , m_phis     ( "phi"     , "Coefficients" , this     )
 //
   , m_iterator ( 0 ) 
 //
-  , m_pos      ( alphas.getSize() , roots , xmin , xmax ) 
+  , m_positive ( phis.getSize() , xmin , xmax ) 
 {
   //
-  TIterator* tmp  = alphas.createIterator() ;
+  TIterator* tmp  = phis.createIterator() ;
   RooAbsArg* coef = 0 ;
   while ( ( coef = (RooAbsArg*) tmp->Next() ) )
   {
     RooAbsReal* r = dynamic_cast<RooAbsReal*> ( coef ) ;
     if ( 0 == r ) { continue ; }
-    m_alphas.add ( *coef ) ;
+    m_phis.add ( *coef ) ;
   }
   delete tmp ;
   //
-  m_iterator = m_alphas.createIterator() ;
+  m_iterator = m_phis.createIterator() ;
 }
 // ============================================================================
 // copy constructor
@@ -955,14 +979,14 @@ Analysis::Models::PolyPositive::PolyPositive
   const char*                            name  ) 
   : RooAbsPdf ( right , name ) 
 //
-  , m_x        ( "x"      , this , right.m_x      ) 
-  , m_alphas   ( "alphas" , this , right.m_alphas ) 
+  , m_x        ( "x"      , this , right.m_x     ) 
+  , m_phis     ( "phis"   , this , right.m_phis  ) 
 //
   , m_iterator ( 0 ) 
 //
-  , m_pos      ( right.m_pos ) 
+  , m_positive ( right.m_positive ) 
 {
-  m_iterator = m_alphas.createIterator () ;
+  m_iterator = m_phis.createIterator () ;
 }
 // ============================================================================
 // destructor 
@@ -982,21 +1006,38 @@ Double_t Analysis::Models::PolyPositive::evaluate() const
   //
   m_iterator->Reset() ;
   //
-  RooAbsArg*       alpha = 0 ;
-  const RooArgSet* nset  = m_alphas.nset() ;
-  unsigned int i = 0 ;
-  while ( ( alpha = (RooAbsArg*) m_iterator->Next() ) )
+  RooAbsArg*       phi   = 0 ;
+  const RooArgSet* nset  = m_phis.nset() ;
+  //
+  std::vector<double> sin2phi ;
+  //
+  while ( ( phi = (RooAbsArg*) m_iterator->Next() ) )
   {
-    const RooAbsReal* r = dynamic_cast<RooAbsReal*> ( alpha ) ;
+    const RooAbsReal* r = dynamic_cast<RooAbsReal*> ( phi ) ;
     if ( 0 == r ) { continue ; }
     //
-    m_pos.setAlpha ( i , r->getVal( nset ) ) ; ++i ;
+    const double phi_i   = r->getVal ( nset ) ;
+    //
+    const double sinphi  =  std::sin ( phi_i ) ;
+    //
+    const double sinphi2 = sinphi * sinphi ;
+    //
+    sin2phi.push_back (     sinphi2 ) ;
+    //
   }
   //
-  return m_pos ( m_x ) ; 
+  double psin2 = 1 ;
+  for ( std::size_t i = 0 ; i < sin2phi.size() ; ++i ) 
+  {
+    const double s2 = sin2phi[i] ;
+    m_positive.setPar ( i , psin2 * ( 1 - s2 ) ) ;
+    psin2 *= s2 ;  
+  }
+  m_positive.setPar ( sin2phi.size() , psin2 ) ;
+  //
+  return m_positive ( m_x ) ; 
 }
 // ============================================================================
-
 
 // ============================================================================
 //         Gram-Charlier type A 

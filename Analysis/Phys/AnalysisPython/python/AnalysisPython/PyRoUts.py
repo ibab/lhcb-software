@@ -631,7 +631,7 @@ def _h1_find_X ( self             ,
     ##
     if hasattr ( v , 'value' ) : v = v.value()
     ##
-    mn , mx  = self.minmax()
+    mn , mx  = self.xminmax()
     ##
     if v < mn.value() :
         return hist.xmin() if forward else hist.xmax ()  
@@ -1837,9 +1837,9 @@ def _h_minmax_ ( self ) :
     """
     return self.minv() , self.maxv() 
 
-ROOT.TH1. minv    = _h_minv_
-ROOT.TH1. maxv    = _h_maxv_
-ROOT.TH1. minmax  = _h_minmax_
+ROOT.TH1 . minv    = _h_minv_
+ROOT.TH1 . maxv    = _h_maxv_
+ROOT.TH1 . minmax  = _h_minmax_
 
 # ============================================================================
 ## get the minimum valeu for X-axis 
@@ -3477,6 +3477,84 @@ def ve_adjust ( ve , mn = 0 , mx = 1.0 ) :
     if ve.value() > mx : ve.setValue ( mx )
     #
     return ve
+
+# =============================================================================
+## represent 1D-histo as Bernstein polynomial
+def _h1_bernstein_ ( h1 , N , interpolate = True ) :
+    """
+    Represent histo as Bernstein polynomial
+    
+    >>> h = ... # the historgam
+    >>> b = h.bernstein ( 5 )
+    
+    """
+    mn,mx = h1.xminmax ()
+    #
+    ## N = min ( N ,  len ( h1 ) - 1 ) 
+    b  = cpp.Gaudi.Math.Bernstein ( N , mn , mx )
+    #
+    for i in range ( 0 , N + 1 ) :
+
+        if   i == 0   :
+        
+            x = mn 
+            v = h1 [ 1       ].value()
+
+        elif i == N   :
+            
+            x = mx 
+            v = h1 [ len(h1) ].value()
+            
+        else :
+            
+            x = mn + ( mx - mn ) * float( i ) / float ( N )
+            v = h1 ( x , interpolate = interpolate ).value()
+            
+        b.setPar ( i , v )
+
+    #
+    return b 
+
+# =============================================================================
+## represent 1D-histo as POSITIVE Bernstein polynomial
+def _h1_positive_ ( h1 , N , interpolate = True ) :
+    """
+    Represent histo as Positive Bernstein polynomial
+    
+    >>> h = ... # the historgam
+    >>> b = h.positive ( 5 )
+    
+    """
+    mn,mx = h1.xminmax ()
+    b = cpp.Gaudi.Math.Positive ( N , mn , mx )
+    #
+    for i in range ( 0 , N + 1 ) :
+
+        if   i == 0   :
+            
+            x = mn 
+            v = h1 [ 1       ].value()
+
+        elif i == N   :
+            
+            x = mx 
+            v = h1 [ len(h1) ].value()
+            
+        else :
+            
+            x = mn + ( mx - mn ) * float( i ) / float ( N )
+            v = h1 ( x , interpolate = interpolate ).value()
+            
+        b.setPar ( i , abs ( v ) )
+
+    #
+    return b 
+
+for t in ( ROOT.TH1D , ROOT.TH1F ) :
+    t.bernstein  = _h1_bernstein_
+    t.positive   = _h1_positive_
+    
+# =============================================================================
 
 
 # =============================================================================

@@ -644,99 +644,6 @@ namespace Analysis
       // ======================================================================
     } ;
     // ========================================================================
-    /** @class PolyPositive
-     *  Non-negative polynomial: 
-     *  the polinomial that  has no roots
-     *  for the specified interval of observable
-     *  for description of gaussian with the tail
-     *  @see Gaudi::Math::PositiveN 
-     *  @date 2011-05-25
-     */
-    class GAUDI_API PolyPositive : public RooAbsPdf 
-    {
-      // ======================================================================
-    public :
-      // ======================================================================
-      ClassDef(Analysis::Models::PolyPositive, 1) ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// linear polinomial
-      PolyPositive 
-      ( const char*          name      , 
-        const char*          title     ,
-        RooAbsReal&          x         ,
-        RooAbsReal&          alpha1    , 
-        const double         xmin      , 
-        const double         xmax      ) ;
-      /// quadric
-      PolyPositive 
-      ( const char*          name      , 
-        const char*          title     ,
-        RooAbsReal&          x         ,
-        RooAbsReal&          alpha1    , 
-        RooAbsReal&          alpha2    , 
-        const bool           roots     ,  // allow roots ?
-        const double         xmin      , 
-        const double         xmax      ) ;
-      /// qubic 
-      PolyPositive 
-      ( const char*          name      , 
-        const char*          title     ,
-        RooAbsReal&          x         ,
-        RooAbsReal&          alpha1    , 
-        RooAbsReal&          alpha2    , 
-        RooAbsReal&          alpha3    , 
-        const unsigned short N         ,  // roots ?
-        const double         xmin      , 
-        const double         xmax      ) ;
-      /// quartic
-      PolyPositive 
-      ( const char*          name      , 
-        const char*          title     ,
-        RooAbsReal&          x         ,
-        RooAbsReal&          alpha1    , 
-        RooAbsReal&          alpha2    , 
-        RooAbsReal&          alpha3    , 
-        RooAbsReal&          alpha4    , 
-        const unsigned short N         ,  // roots ?
-        const double         xmin      , 
-        const double         xmax      ) ;
-      /// general 
-      PolyPositive 
-      ( const char*          name      , 
-        const char*          title     ,
-        RooAbsReal&          x         ,
-        const RooArgList&    coeffs    ,
-        const unsigned short N         ,  // roots ?
-        const double         xmin      , 
-        const double         xmax      ) ;
-      /// copy 
-      PolyPositive 
-      ( const PolyPositive&  right     , 
-        const char*          name = 0  ) ;
-      /// destructor 
-      virtual ~PolyPositive() ;
-      /// clone 
-      virtual  PolyPositive* clone ( const char* name ) const ; 
-      // ======================================================================
-    protected :
-      // ======================================================================
-      RooRealProxy m_x      ;
-      RooListProxy m_alphas ;
-      // ======================================================================
-      TIterator* m_iterator;  //! do not persist
-      // ======================================================================
-      // the actual evaluation of function 
-      Double_t evaluate() const ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the actual function 
-      mutable Gaudi::Math::PositiveN m_pos ;                    // the function 
-      // ======================================================================
-    } ;
-    // ========================================================================
     /** @class GramCharlierA
      *  The peak with Gram-Charlier type A parameterization
      *  @see Gaudi::Math::GramCharlierA 
@@ -837,6 +744,12 @@ namespace Analysis
       // ======================================================================      
     } ;  
     // ========================================================================
+    /** @class Voigt
+     *  "Voigt"-function
+     *  @see Gaudi::Math::Voigt
+     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @date 2011-12-05
+     */
     class GAUDI_API Voigt : public RooAbsPdf 
     {
       // ======================================================================
@@ -876,7 +789,106 @@ namespace Analysis
       /// the actual function 
       mutable Gaudi::Math::Voigt m_voigt ;                      // the function 
       // ======================================================================      
-    };    
+    };
+    // ========================================================================
+    /** @class PolyPositive
+     *  PolyPositive polynomial
+     *  @see Gaudi::Math::Positive
+     *  @author Vanya BELYAEV  Ivan.Belyaev@itep.ru
+     *  @date 2011-05-25
+     */
+    class GAUDI_API PolyPositive: public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::PolyPositive, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// linear 
+      PolyPositive
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         ,
+        RooAbsReal&          phi1      , 
+        const double         xmin      , 
+        const double         xmax      ) ;
+      /// quadric
+      PolyPositive
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         ,
+        RooAbsReal&          phi1      , 
+        RooAbsReal&          phi2      , 
+        const double         xmin      , 
+        const double         xmax      ) ;
+      /// cubic 
+      PolyPositive
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         ,
+        RooAbsReal&          phi1      , 
+        RooAbsReal&          phi2      , 
+        RooAbsReal&          phi3      , 
+        const double         xmin      , 
+        const double         xmax      ) ;
+      /// quartic
+      PolyPositive
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         ,
+        RooAbsReal&          phi1      , 
+        RooAbsReal&          phi2      , 
+        RooAbsReal&          phi3      , 
+        RooAbsReal&          phi4      , 
+        const double         xmin      , 
+        const double         xmax      ) ;
+      /// quintic 
+      PolyPositive
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         ,
+        RooAbsReal&          phi1      , 
+        RooAbsReal&          phi2      , 
+        RooAbsReal&          phi3      , 
+        RooAbsReal&          phi4      , 
+        RooAbsReal&          phi5      , 
+        const double         xmin      , 
+        const double         xmax      ) ;
+      /// general 
+      PolyPositive
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         ,
+        const RooArgList&    coeffs    ,
+        const double         xmin      , 
+        const double         xmax      ) ;
+      /// copy
+      PolyPositive
+      ( const PolyPositive&     right     , 
+        const char*          name = 0  ) ;
+      /// destructor 
+      virtual ~PolyPositive() ;
+      /// clone 
+      virtual  PolyPositive* clone ( const char* name ) const ; 
+      // ======================================================================
+    protected :
+      // ======================================================================
+      RooRealProxy m_x    ;
+      RooListProxy m_phis ;
+      // ======================================================================
+      TIterator* m_iterator;  //! do not persist
+      // ======================================================================
+      // the actual evaluation of function 
+      Double_t evaluate() const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::Positive m_positive ;               // the function 
+      // ======================================================================
+    } ;
     // ========================================================================
   } //                                        end of namespace Analysis::Models
   // ==========================================================================

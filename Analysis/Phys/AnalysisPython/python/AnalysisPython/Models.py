@@ -47,7 +47,7 @@ def _tf1_ ( self , *args ) :
     wo  = _WO_ ( self )
     _wrappers_ [ key ] = wo
     #
-    return  ROOT.TF1( funID() , wo , *args )
+    return  ROOT.TF1 ( funID() , wo , *args )
 
 # =============================================================================
 ## get the regular complex value for amplitude 
@@ -67,11 +67,8 @@ Gaudi = cpp.Gaudi
 for model in ( Gaudi.Math.Chebyshev              ,
                Gaudi.Math.Legendre               ,
                Gaudi.Math.Hermite                ,
-               Gaudi.Math.Positive1              ,
-               Gaudi.Math.Positive2              ,
-               Gaudi.Math.PositiveN              ,
-               Gaudi.Math.PositiveN1             ,
-               Gaudi.Math.PositiveN2             ,
+               Gaudi.Math.Bernstein              ,
+               Gaudi.Math.Positive               ,
                Gaudi.Math.BifurcatedGauss        ,
                Gaudi.Math.Bukin                  ,
                Gaudi.Math.Novosibirsk            ,
