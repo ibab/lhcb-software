@@ -168,8 +168,8 @@ void HLTFileEqualizer::Analyze()
       farm = nod->m_name.substr(0, 6);
       nod->m_state = 1;
       Actions[farm].push_back(std::make_pair(nod->m_name,1));
+      n_ena++;
     }
-    n_ena++;
   }
   fprintf(outf,"Analyzer: Second round (within +/- 5 sigma) of analysis Average number of files per node: %f +/- %f\n",av_files,rms);
   fprintf(outf,"%d Nodes enabled; %d Nodes disabled\n",n_ena,n_dis);
