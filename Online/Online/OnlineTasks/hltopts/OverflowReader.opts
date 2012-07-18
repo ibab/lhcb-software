@@ -12,6 +12,7 @@ ApplicationMgr.HistogramPersistency  = "NONE";
 Runable.Buffer                       = "Events";
 Runable.DeleteFiles                  =  true;
 Runable.Directory                    = "/localdisk/overflow";
+Runable.AllowedRuns                  = @OnlineEnv.DeferredRuns;
 //
 // MEP manager setup:
 MEPManager.PartitionID               = @OnlineEnv.PartitionID;
