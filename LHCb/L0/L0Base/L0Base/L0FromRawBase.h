@@ -26,6 +26,7 @@ protected:
      Scan the list of possible location and select the first existing one.
    */
   StatusCode selectRawEventLocation(std::string &location);
+  std::vector<std::string> rawEventLocations(){return m_rawEventLocations;};
 
 /** If algorithm should write the processor data on TES
  */

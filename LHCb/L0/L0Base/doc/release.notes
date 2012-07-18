@@ -4,6 +4,9 @@
 ! Purpose     : Package containing base classes for L0 components
 !-----------------------------------------------------------------------------
 
+! 2012-07-18 - Olivier Deschamps
+ - L0FromRawBase : new method rawEventLocations  returns the vector of possible locations
+
 !========================= L0Base v2r0 2011-12-14 =========================
 ! 2011-11-14 - Julien Cogan
  - L0FromRawBase : add possibility to use rootIInTES to search for raw event 
