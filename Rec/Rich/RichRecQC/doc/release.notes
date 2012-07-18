@@ -4,6 +4,11 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2012-07-18 - Chris Jones
+ - RawDataSize :-
+  + Add a plot showing the average number of header words per L1 board
+  + Fill seperate L1 board data size distribution plots by default
+
 ! 2012-07-15 - Chris Jones
  - Initialise default HPD count map in RawDataSize using allPDRichSmartIDs()
    not just activePDRichSmartIDs()

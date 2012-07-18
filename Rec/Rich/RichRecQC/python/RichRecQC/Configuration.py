@@ -350,10 +350,13 @@ class RichRecQCConf(RichConfigurableUser):
             
         if "L1SizeMonitoring" in monitors :
 
+            detailedPlots = self.getProp("Histograms") == "Expert"
+
             # Data Sizes - all events
             from Configurables import Rich__DAQ__RawDataSize
             dataSize = self.createMonitor(Rich__DAQ__RawDataSize,"RichRawDataSize")
-            dataSize.FillDetailedPlots = self.getProp("Histograms") == "Expert"
+            dataSize.FillDetailedHPDPlots        = detailedPlots
+            dataSize.FillDetailedL1IngressPlots  = detailedPlots
             rawSeq.Members += [dataSize]
 
             # Data size plots, L0 unbiased events
@@ -362,7 +365,8 @@ class RichRecQCConf(RichConfigurableUser):
                 lSeq = self.newSeq(rawSeq,"RichRawDataSizeL0Seq")
                 lSeq.ReturnOK = True
                 dataSizeL0 = self.createMonitor(Rich__DAQ__RawDataSize,"RichRawDataSizeL0")
-                dataSizeL0.FillDetailedPlots = self.getProp("Histograms") == "Expert"
+                dataSizeL0.FillDetailedHPDPlots        = detailedPlots
+                dataSizeL0.FillDetailedL1IngressPlots  = detailedPlots
                 lSeq.Members = self.l0Filters() + [ dataSizeL0 ]
 
         if "DBConsistencyCheck" in monitors :

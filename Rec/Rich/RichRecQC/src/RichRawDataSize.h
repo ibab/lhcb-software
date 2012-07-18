@@ -90,8 +90,14 @@ namespace Rich
       ///< The TAE location(s) to monitor
       std::vector<std::string> m_taeEvents;
 
-      /// Flag to turn on filling of the individual HPD/L1 plots
-      bool m_detailedPlots;
+      /// Flag to turn on filling of the individual L1 plots
+      bool m_detailedL1Plots;
+
+      /// Flag to turn on filling of the individual L1 Ingress plots
+      bool m_detailedL1IngressPlots;
+
+      /// Flag to turn on filling of the individual HPD plots
+      bool m_detailedHPDPlots;
 
       /// Flag to turn on the writing of the results to a text file
       bool m_writeTextFile;

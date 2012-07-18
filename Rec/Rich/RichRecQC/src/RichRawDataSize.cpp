@@ -33,8 +33,10 @@ RawDataSize::RawDataSize( const std::string& name,
     m_taeEvents        ( 1, "" )
 {
   declareProperty( "RawEventLocations", m_taeEvents );
-  declareProperty( "FillDetailedPlots", m_detailedPlots = false );
-  declareProperty( "WriteTextFile",     m_writeTextFile = false );
+  declareProperty( "FillDetailedL1Plots",        m_detailedL1Plots        = true  );
+  declareProperty( "FillDetailedL1IngressPlots", m_detailedL1IngressPlots = false );
+  declareProperty( "FillDetailedHPDPlots",       m_detailedHPDPlots       = false );
+  declareProperty( "WriteTextFile",              m_writeTextFile          = false );
   setProperty( "HistoPrint", false );
 }
 
@@ -64,6 +66,11 @@ StatusCode RawDataSize::prebookHistograms()
 {
   const unsigned int nL1sMax = m_RichSys->level1HardwareIDs().size();
   const unsigned int nHPDs   = m_RichSys->nPDs();
+
+  // # Headers per L1 board
+  richProfile1D( HID("L1s/HeadersVL1CopyNumber"),
+                 "# Headers (32bit words) V L1 Copy Number",
+                 -0.5, nL1sMax - 0.5, nL1sMax );
 
   // Size per L1 board
   richProfile1D( HID("L1s/SizeVL1CopyNumber"),
@@ -159,7 +166,8 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
 
       // Number words for this L1 board
       // Start with 1 word per HPD ingress header
-      unsigned int nL1Words( ingressMap.size() );
+      unsigned int nL1HeaderWords = ingressMap.size();
+      unsigned int nL1Words       = nL1HeaderWords;
 
       for ( Rich::DAQ::IngressMap::const_iterator iIngressMap = ingressMap.begin();
             iIngressMap != ingressMap.end(); ++iIngressMap )
@@ -181,15 +189,17 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
           const Rich::DAQ::HPDInfo::Footer & hpdFooter = hpdInfo.footer();
 
           // header+footer words for this HPD
-          unsigned int nHPDwords = ( hpdHeader.nHeaderWords() +
-                                     hpdFooter.nFooterWords() );
+          const unsigned int nHPDHeaderwords = ( hpdHeader.nHeaderWords() +
+                                                 hpdFooter.nFooterWords() );
+          unsigned int nHPDwords = nHPDHeaderwords;
 
           // count data words only for valid HPD data blocks
           const bool hpdOK = !hpdHeader.inhibit() && hpdID.isValid();
           if ( hpdOK ) nHPDwords += hpdHeader.nDataWords();
 
           // count words per L1 board
-          nL1Words += nHPDwords;
+          nL1Words       += nHPDwords;
+          nL1HeaderWords += nHPDHeaderwords;
 
           // count words per ingress
           nIngressWords += nHPDwords;
@@ -202,7 +212,9 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
         // fill ingress plot
         richProfile1D( HID("L1s/SizeVL1Ingress") )
           -> fill ( 10*l1CopyN.data() + ingressID.data(), nIngressWords );
-        if ( m_detailedPlots )
+
+        // Fill detailed plots
+        if ( UNLIKELY(m_detailedL1IngressPlots) )
         {
           const Rich::DAQ::Level1LogicalID l1LogID = m_RichSys->level1LogicalID(l1HardID);
           const Rich::DetectorType rich            = m_RichSys->richDetector(l1HardID);
@@ -217,8 +229,10 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
 
       } // loop over ingresses
 
-      richProfile1D( HID("L1s/SizeVL1CopyNumber") ) -> fill ( l1CopyN.data(), nL1Words );
-      if ( m_detailedPlots )
+      // fill L1 plots
+      richProfile1D( HID("L1s/SizeVL1CopyNumber")    ) -> fill ( l1CopyN.data(), nL1Words );
+      richProfile1D( HID("L1s/HeadersVL1CopyNumber") ) -> fill ( l1CopyN.data(), nL1HeaderWords );
+      if ( m_detailedL1Plots )
       {
         const Rich::DAQ::Level1LogicalID l1LogID = m_RichSys->level1LogicalID(l1HardID);
         const Rich::DetectorType rich            = m_RichSys->richDetector(l1HardID);
@@ -254,7 +268,7 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
           const Rich::DAQ::HPDCopyNumber copyN = m_RichSys->copyNumber(iHPD->first);
           // fill plots
           richProfile1D(HID("hpds/SizeVHPDCopyNumber"))->fill(copyN.data(),iHPD->second);
-          if ( m_detailedPlots )
+          if ( UNLIKELY(m_detailedHPDPlots) )
           {
             const Rich::DAQ::HPDHardwareID hpdHardID = m_RichSys->hardwareID(iHPD->first);
             const Rich::DAQ::Level0ID l0ID           = m_RichSys->level0ID(iHPD->first);
