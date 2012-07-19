@@ -138,31 +138,34 @@ StatusCode LSAdaptPV3DFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
 
       pvTrack->weight = getTukeyWeight(pvTrack->chi2, nbIter);
 
-      if (  pvTrack->weight > m_minTrackWeight ) ntrin++;
+      if (  pvTrack->weight > m_minTrackWeight ) {
+	ntrin++;
 
-      double invs = 1.0;
-      if(pvTrack->err2d0<m_myZero) 
-      {
-        invs = (2.0 / m_myZero) * pvTrack->weight;
-      }
-      else invs = (2.0 / pvTrack->err2d0) * pvTrack->weight;
-
-      double vd0Std[3];
-      vd0Std[0] = ipVector.x();
-      vd0Std[1] = ipVector.y();
-      vd0Std[2] = ipVector.z();
-      for(int k = 0; k < 3; k++) {
-        double vd0 = 0.;
-        for (int l = 0; l < 3; l++) {
-          double delta_kl = (k == l) ? 1.0 : 0.0;
-          double val = delta_kl - unitVectStd[k] * unitVectStd[l];
-          vd0 += vd0Std[l] * val * invs;
-          if(l <= k) {
-            hess(k,l) += val * invs;
-          }
+        double invs = 1.0;
+        if(pvTrack->err2d0<m_myZero) 
+        {
+          invs = (2.0 / m_myZero) * pvTrack->weight;
         }
-        d0vec[k] += vd0;
-      }
+        else invs = (2.0 / pvTrack->err2d0) * pvTrack->weight;
+  
+        double vd0Std[3];
+        vd0Std[0] = ipVector.x();
+        vd0Std[1] = ipVector.y();
+        vd0Std[2] = ipVector.z();
+        for(int k = 0; k < 3; k++) {
+          double vd0 = 0.;
+          for (int l = 0; l < 3; l++) {
+            double delta_kl = (k == l) ? 1.0 : 0.0;
+            double val = delta_kl - unitVectStd[k] * unitVectStd[l];
+            vd0 += vd0Std[l] * val * invs;
+            if(l <= k) {
+              hess(k,l) += val * invs;
+            }
+          }
+          d0vec[k] += vd0;
+        }
+
+      } // if (  pvTrack->weight > m_minTrackWeight )
 
     }
 
@@ -174,7 +177,29 @@ StatusCode LSAdaptPV3DFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
     int fail;
     hess.Inverse(fail);
     if (0 != fail) {
-      warning() << "Error inverting hessian matrix" << endmsg;
+      if(msgLevel(MSG::DEBUG)) {
+
+        debug() << "Error inverting hessian matrix" << endmsg;
+
+        // typically 2 tracks (clones) left with identical slopes
+        // dump all tracks used in hessian calculation
+        int dntrin=0;
+        for(PVTracks::iterator iFitTr = m_pvTracks.begin(); iFitTr != m_pvTracks.end(); iFitTr++) {
+          if (  iFitTr->weight > m_minTrackWeight ) {
+            dntrin++;
+            info() << format( "chi2 d0 w %12.6e %12.6e %12.6e xyz %12.6e %12.6e %12.6e tx ty %12.6e %12.6e",
+                               iFitTr->chi2, iFitTr->d0, iFitTr->weight,
+                               iFitTr->refTrack->firstState().x(),
+                               iFitTr->refTrack->firstState().y(),
+                               iFitTr->refTrack->firstState().z(),
+                               iFitTr->refTrack->firstState().tx(),
+                               iFitTr->refTrack->firstState().ty()) << endmsg;
+          }
+        }
+        debug() << "nr of track in hessian failure: " << dntrin++ << endmsg;
+
+      }
+
       return StatusCode::FAILURE;
     } else {
       hess.InvertFast();

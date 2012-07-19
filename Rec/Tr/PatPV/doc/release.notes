@@ -5,6 +5,11 @@
 !-----------------------------------------------------------------------------
 
 
+! 2012-07-19 - Mariusz Witek
+ - technical modification to gain a few % of speed in LSAdaptPV3DFitter.
+ - downgrade warning to debug when hessian inversion fails 
+   in LSAdaptPV3DFitter.   
+
 ! 2012-07-13 - Mariusz Witek
  - return StatusCode from PVOfflineRecalculate->RecalculateVertex to allow
    users to decide what to do in case of failure.
