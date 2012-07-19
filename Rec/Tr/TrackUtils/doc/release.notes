@@ -4,6 +4,10 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-07-19 - Paul Seyfert
+ - Keep LHCb::Track::NCandCommonHits on DSTs for ghost probability computation
+   in DaVinci
+
 ! 2012-07-06 - Wouter Hulsbergen
 - Loosened cuts in TrackV0Finder to make it much more efficient for Ks
 from B. Minimized use of extrapolator.

@@ -48,7 +48,6 @@ StatusCode TrackEraseExtraInfo::execute(){
     (*iterT)->eraseInfo(LHCb::Track::PatQuality);
     (*iterT)->eraseInfo(LHCb::Track::Cand1stQPat);
     (*iterT)->eraseInfo(LHCb::Track::Cand2ndQPat);
-    (*iterT)->eraseInfo(LHCb::Track::NCandCommonHits);
     (*iterT)->eraseInfo(LHCb::Track::Cand1stChi2Mat);
     (*iterT)->eraseInfo(LHCb::Track::Cand2ndChi2Mat); 
     (*iterT)->eraseInfo(LHCb::Track::MatchChi2);
