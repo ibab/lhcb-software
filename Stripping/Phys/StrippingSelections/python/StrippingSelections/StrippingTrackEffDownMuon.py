@@ -184,7 +184,8 @@ def makeMyMuons(name, protoParticlesMaker):
      Make Particles out of the muon ProtoParticles
    """
    particleMaker =  BestPIDParticleMaker(name+"ParticleMaker" , Particle = "muon")
-   particleMaker.addTool(ProtoParticleMUONFilter(Selection = ["RequiresDet='MUON' IsMuonLoose=True"]),name="muon")
+   particleMaker.addTool(ProtoParticleMUONFilter,name="muon")
+   particleMaker.muon.Selection = ["RequiresDet='MUON' IsMuonLoose=True"]
    particleMaker.Particles = [ "muon" ]
    particleMaker.Input = "Rec/ProtoP/"+name+"ProtoPMaker/ProtoParticles"
    #particleMaker.OutputLevel = 0

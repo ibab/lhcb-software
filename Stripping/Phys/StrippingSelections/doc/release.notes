@@ -3,14 +3,20 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
-! 2012-07-13 - Michel De Cian
- - Replaced "VertexFitters.update( { "" : "OfflineVertexFitter"} )" with "ParticleCombiners.update( { "" : "OfflineVertexFitter"} )" in InflatonStripping2MuMu
 
+! 2012-07-19 - Chris Jones
+ - Fix a small configuration issue in StrippingTrackEffDownMuon
+
+! 2012-07-13 - Michel De Cian
+ - Replaced "VertexFitters.update( { "" : "OfflineVertexFitter"} )" with 
+            "ParticleCombiners.update( { "" : "OfflineVertexFitter"} )" 
+   in InflatonStripping2MuMu
 
 !========================= StrippingSelections v3r14 2012-06-27 =========================
 
 ! 2012-07-12 - Mika Vesterinen
- - StrippingCharmFromBSemi.py - Added possibility for pi0 mass constraint. Added names to all of the algorithms/configurables.
+ - StrippingCharmFromBSemi.py - Added possibility for pi0 mass constraint. 
+   Added names to all of the algorithms/configurables.
 
 ! 2012-07-11 - Lucio Anderlini
  - StrippingXibc.py
@@ -18,10 +24,12 @@
    preventing DaVinci crash with python error "name 'LHCb' is not defined".
 
 ! 2012-07-11 - Ricardo Vazquez Gomez
- - change VertexFitter to ParticleCombiners in the Beauty2XGamma Stripping following savanah bug 31438
+ - change VertexFitter to ParticleCombiners in the Beauty2XGamma Stripping 
+   following savanah bug 31438
 
 ! 2012-07-10 - Mika Vesterinen
- - fix duplication of some D0 lines in StrippingCharmFromBSemi. Merge many D filters into single functions.
+ - fix duplication of some D0 lines in StrippingCharmFromBSemi. 
+   Merge many D filters into single functions.
 
 ! 2012-06-27 - Chris Jones
  - Do not 'addTool' with the unsafe () operator
