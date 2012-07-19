@@ -8,6 +8,7 @@ Purpose: LHCb reconstruction program
   . Loosened cuts in TrackV0Finder to make it much more efficient for Ks from B.
     (TrackUtils, RecConf)
   . Add plots giving CK theta resolution per PD (RichRecQC)
+  . Add RawDataSize plots (RichRecQC)
 
 - Changes to tests
   . Change brunel.brunel2010magdown timeout to 2400 seconds
