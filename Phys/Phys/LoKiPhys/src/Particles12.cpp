@@ -275,7 +275,7 @@ const LHCb::MuonPID* LoKi::Particles::IsMuon::muonPID
   LHCb::ProtoParticle::ExtraInfo::const_iterator ifind = 
     pp->extraInfo().find ( LHCb::ProtoParticle::MuonPIDStatus );
   //
-  if ( p->extraInfo().end () == ifind ) { return 0 ; }            // RETURN
+  if ( pp->extraInfo().end () == ifind ) { return 0 ; }            // RETURN
   //
   m_pid.setStatus ( static_cast<unsigned int> ( ifind->second ) ) ;
   //

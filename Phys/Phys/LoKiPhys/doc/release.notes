@@ -5,6 +5,10 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2012-07-19 - Chris Jones
+ - Fixn a bug in LoKi::Particles::IsMuon::muonPID which could result in a 
+   random uninitialised value of the Status Word being used.
+
 !========================= LoKiPhys v10r11 2012-06-28 =========================
 
 ! 2012-06-16 - Vanya Belyaev
