@@ -208,7 +208,7 @@ void PVSplit::splitTracksByMiddlePerVeloHalf() {
   clearSplitTracks();
 
   std::vector<unsigned int> lrIndices[2];
-  for (int i = 0; i < m_tracks.size(); i++) {
+  for (unsigned int i = 0; i < m_tracks.size(); i++) {
     int h = isLeftTrack(m_tracks[i])?0:1;
     lrIndices[h].push_back(i);
   }
