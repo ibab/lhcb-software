@@ -188,6 +188,10 @@ XMLSummarySvc::finalize()
   log << MSG::INFO << "filling counters..." << endmsg;
   fillcounters().ignore();
   log << MSG::INFO << "counters filled OK" << endmsg;
+  
+  //finally add memory usage
+  fillUsage().ignore();
+  
   printXML(MSG::DEBUG).ignore();
   writeXML(MSG::INFO).ignore();
   
@@ -341,7 +345,7 @@ void XMLSummarySvc::handle( const Incident& incident )
                         double(addevents));
   }
   
-  fillUsage();
+  fillUsage().ignore();
   m_handled++;
   
   //never write at begin event!
