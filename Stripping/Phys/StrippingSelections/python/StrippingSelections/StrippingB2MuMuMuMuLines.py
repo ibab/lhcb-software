@@ -115,7 +115,7 @@ def makeDefault(name,inputSel) :
     Detached4mu.DecayDescriptor = "B_s0 -> mu+ mu- mu+ mu-"
     # Set the OfflineVertexFitter to keep the 4 tracks and not the J/Psi Kstar:
     Detached4mu.addTool( OfflineVertexFitter )
-    Detached4mu.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+    Detached4mu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     Detached4mu.OfflineVertexFitter.useResonanceVertex = False
     Detached4mu.ReFitPVs = True
     Detached4mu.DaughtersCuts = { "mu+" : "(TRCHI2DOF < 2.5 ) "\
@@ -145,7 +145,7 @@ def makeD2MuMuMuMu(name,inputSel) :
 
     D2MuMuMuMu.DecayDescriptor = "D0 -> mu+ mu- mu+ mu-"
     D2MuMuMuMu.addTool( OfflineVertexFitter )
-    D2MuMuMuMu.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+    D2MuMuMuMu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
 
     D2MuMuMuMu.DaughtersCuts = { "mu+" : "(TRCHI2DOF < 3.0 ) "\
                                   " & (MIPCHI2DV(PRIMARY)> 4.)"\

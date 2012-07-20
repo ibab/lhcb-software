@@ -207,7 +207,7 @@ def makeDefault(name) :
     Bs2MuMuNoMuID.DecayDescriptor = "B_s0 -> mu+ mu-"
     # Set the OfflineVertexFitter to keep the 4 tracks and not the J/Psi Kstar:
     Bs2MuMuNoMuID.addTool( OfflineVertexFitter )
-    Bs2MuMuNoMuID.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+    Bs2MuMuNoMuID.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     Bs2MuMuNoMuID.OfflineVertexFitter.useResonanceVertex = False
     Bs2MuMuNoMuID.ReFitPVs = True
     Bs2MuMuNoMuID.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 4 )"\
@@ -248,7 +248,7 @@ def makeBs2mmWide(name) :
     Bs2MuMuWideMass = CombineParticles("Combine"+name)
     Bs2MuMuWideMass.DecayDescriptor = "B_s0 -> mu+ mu-"
     Bs2MuMuWideMass.addTool( OfflineVertexFitter )
-    Bs2MuMuWideMass.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+    Bs2MuMuWideMass.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     Bs2MuMuWideMass.OfflineVertexFitter.useResonanceVertex = False
     Bs2MuMuWideMass.ReFitPVs = True
     Bs2MuMuWideMass.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 4 )" }
@@ -289,7 +289,7 @@ def makeLoose(name, MuIPChi2, MuTrChi2, BIPChi2, BFDChi2 ) :
     Bs2MuMuNoMuIDLoose.DecayDescriptor = "B_s0 -> mu+ mu-"
     # Set the OfflineVertexFitter to keep the 4 tracks and not the J/Psi Kstar:
     Bs2MuMuNoMuIDLoose.addTool( OfflineVertexFitter )
-    Bs2MuMuNoMuIDLoose.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+    Bs2MuMuNoMuIDLoose.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     Bs2MuMuNoMuIDLoose.OfflineVertexFitter.useResonanceVertex = False
     Bs2MuMuNoMuIDLoose.ReFitPVs = True
     Bs2MuMuNoMuIDLoose.DaughtersCuts = { "mu+" : "(TRCHI2DOF < %(MuTrChi2)s ) "\
@@ -332,7 +332,7 @@ def makeBu(name) :
     PreselBu2JPsiKCommon = CombineParticles("PreselBu2JPsiKCommon")
     PreselBu2JPsiKCommon.DecayDescriptor =  " [B+ -> J/psi(1S) K+]cc ";
     PreselBu2JPsiKCommon.addTool( OfflineVertexFitter )
-    PreselBu2JPsiKCommon.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+    PreselBu2JPsiKCommon.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     PreselBu2JPsiKCommon.OfflineVertexFitter.useResonanceVertex = False
     PreselBu2JPsiKCommon.ReFitPVs = True
     PreselBu2JPsiKCommon.DaughtersCuts = { "K+" : "(ISLONG) & (TRCHI2DOF < 5 ) &(MIPCHI2DV(PRIMARY)>25)& (PT>250*MeV) "}
@@ -376,7 +376,7 @@ def makeBs(name) :
     PreselBs2JPsiPhiCommon = CombineParticles("PreselBs2JPsiPhiCommon")
     PreselBs2JPsiPhiCommon.DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)"
     PreselBs2JPsiPhiCommon.addTool( OfflineVertexFitter )
-    PreselBs2JPsiPhiCommon.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+    PreselBs2JPsiPhiCommon.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     PreselBs2JPsiPhiCommon.OfflineVertexFitter.useResonanceVertex = False
     PreselBs2JPsiPhiCommon.ReFitPVs = True
     PreselBs2JPsiPhiCommon.DaughtersCuts = {}
@@ -428,7 +428,7 @@ def makeBd(name) :
     PreselBd2JPsiKstCommon = CombineParticles("PreselBd2JPsiKstCommon")
     PreselBd2JPsiKstCommon.DecayDescriptor = "[B0 -> J/psi(1S) K*(892)0]cc"
     PreselBd2JPsiKstCommon.addTool( OfflineVertexFitter )
-    PreselBd2JPsiKstCommon.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+    PreselBd2JPsiKstCommon.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     PreselBd2JPsiKstCommon.OfflineVertexFitter.useResonanceVertex = False
     PreselBd2JPsiKstCommon.ReFitPVs = True
     PreselBd2JPsiKstCommon.DaughtersCuts = {}
@@ -458,7 +458,7 @@ def makeDetachedJPsi(name) :
     DetachedJPsi.DecayDescriptor = "J/psi(1S) -> mu+ mu-"
     # Set the OfflineVertexFitter to keep the 4 tracks and not the J/Psi Kstar:
     DetachedJPsi.addTool( OfflineVertexFitter )
-    DetachedJPsi.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+    DetachedJPsi.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     DetachedJPsi.OfflineVertexFitter.useResonanceVertex = False
     DetachedJPsi.ReFitPVs = True
     DetachedJPsi.DaughtersCuts = { "mu+" : "(TRCHI2DOF < 4 ) "\

@@ -216,7 +216,7 @@ def makeB2X(name,decay,inputs,config,vertex=True):
     if not vertex:
         b2x = b2x.configurable(name+'B2MuMuXVertexFitter')
         b2x.addTool(OfflineVertexFitter)
-        b2x.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+        b2x.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
         b2x.OfflineVertexFitter.useResonanceVertex = False
     return Selection(name,Algorithm=b2x,RequiredSelections=inputs)
 
@@ -236,7 +236,7 @@ def makeY2X(name,decay,inputs,config,vertex=True):
     if not vertex:
         y2x = y2x.configurable(name+'B2MuMuXVertexFitter')
         y2x.addTool(OfflineVertexFitter)
-        y2x.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+        y2x.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
         y2x.OfflineVertexFitter.useResonanceVertex = False
     return Selection(name,Algorithm=y2x,RequiredSelections=inputs)
 
@@ -257,7 +257,7 @@ def makeJ2X(name,decay,inputs,config,vertex=True):
     if not vertex:
         j2x = j2x.configurable(name+'B2MuMuXVertexFitter')
         j2x.addTool(OfflineVertexFitter)
-        j2x.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+        j2x.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
         j2x.OfflineVertexFitter.useResonanceVertex = False
     return Selection(name,Algorithm=j2x,RequiredSelections=inputs)
 

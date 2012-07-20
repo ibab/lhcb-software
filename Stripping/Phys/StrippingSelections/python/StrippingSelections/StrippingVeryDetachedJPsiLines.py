@@ -88,7 +88,7 @@ def makeDefault(name) :
     Detached2mu = CombineParticles("Combine"+name)
     Detached2mu.DecayDescriptor = "J/psi(1S) -> mu+ mu-"
     Detached2mu.addTool( OfflineVertexFitter )
-    Detached2mu.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+    Detached2mu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     Detached2mu.OfflineVertexFitter.useResonanceVertex = False
     Detached2mu.ReFitPVs = True
     Detached2mu.DaughtersCuts = { "mu+" : "(TRCHI2DOF < 4 ) "\

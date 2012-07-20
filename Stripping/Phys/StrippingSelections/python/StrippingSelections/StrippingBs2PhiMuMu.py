@@ -153,7 +153,7 @@ def makeBs2XMuMu(name,
     #        _Bs.ReFitPVs = True
     # Set the OfflineVertexFitter to keep the 4 tracks
     _Bs.addTool( OfflineVertexFitter )
-    _Bs.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+    _Bs.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     _Bs.OfflineVertexFitter.useResonanceVertex = False
     return Selection(name, 
                      Algorithm = _Bs,
