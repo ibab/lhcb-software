@@ -15,4 +15,6 @@ preprocessor = normalizeExamples + \
     LineSkipper(["INFO Opened magnetic field file"]) + \
     LineSkipper(["INFO Connecting to database"]) + \
     LineSkipper(["INFO Disconnect from database after being idle"]) + \
+    LineSkipper(["INFO Memory has changed from"]) + \
+    LineSkipper(["INFO Memory change after pool release"]) + \
     LineSkipper(["INFO  'CnvServices':"])

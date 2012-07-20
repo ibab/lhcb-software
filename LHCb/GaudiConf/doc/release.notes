@@ -3,6 +3,10 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2012-07-20 - Marco Cattaneo
+ - Add QMTest exclusions to avoid test failures when LbAppInit prints changes
+   in memory use
+
 !========================= GaudiConf v16r0 2012-06-25 =========================
 ! 2012-06-24 - Olivier Deschamps
  - DstConf : add CaloHypo->MC linkers to the writer list
