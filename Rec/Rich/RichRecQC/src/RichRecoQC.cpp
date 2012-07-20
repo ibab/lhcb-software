@@ -667,12 +667,15 @@ RecoQC::FitResult RecoQC::fit( TH1D * hist,
 
   // Various hardcoded parameters. Could maybe become JOs ...
   typedef std::vector<double> VD;
-  const VD preFitDelta   = list_of(0.01)(0.00105)(0.0025);
-  const VD initPreFitRes = list_of(0.01)(0.0015)(0.0007);
-  const VD maxRes        = list_of(0.01)(0.004)(0.002);
-  const double maxErrorForOK = 1e-3;
+  const VD preFitDelta   = list_of(0.010)(0.00105)(0.0025);
+  const VD initPreFitRes = list_of(0.010)(0.0015)(0.0007);
+  const VD minRes        = list_of(0.005)(0.0008)(0.0004);
+  const VD maxRes        = list_of(0.010)(0.0050)(0.0030);
+  const VD maxShift      = list_of(0.005)(0.0010)(0.0005);
+  const double maxMeanErrorForOK = 1e-3;
+  const double maxResErrorForOK  = 5e-4;
   const unsigned int nPolFull = 3;
-  const unsigned int minHistEntries = 5000;
+  const unsigned int minHistEntries = 3000;
 
   // The final fit result to return
   FitResult res;
@@ -732,8 +735,12 @@ RecoQC::FitResult RecoQC::fit( TH1D * hist,
         lastFitF = fFitF;
 
         // Fit OK ?
-        const bool fitOK = ( fFitF->GetParError(1)  < maxErrorForOK &&
-                             fFitF->GetParameter(2) < maxRes[rad]   );
+        const bool fitOK = 
+          ( fabs(fFitF->GetParameter(1)) < maxShift[rad]     &&
+            fFitF->GetParameter(2)       < maxRes[rad]       &&
+            fFitF->GetParameter(2)       > minRes[rad]       &&
+            fFitF->GetParError(1)        < maxMeanErrorForOK &&
+            fFitF->GetParError(2)        < maxResErrorForOK  );
         if ( fitOK )
         {
           res.OK         = true;
