@@ -356,6 +356,7 @@ class Brunel(LHCbConfigurableUser):
         recInit.addTool( MemoryTool(), name = "BrunelMemory" )
         recInit.BrunelMemory.HistoTopDir = "Brunel/"
         recInit.BrunelMemory.HistoDir    = "MemoryTool"
+        if not recInit.isPropertySet( "MemoryPurgeLimit" ): recInit.MemoryPurgeLimit = 2000 * 1000 # 2GB
 
         # count events
         from Configurables import EventCountHisto
