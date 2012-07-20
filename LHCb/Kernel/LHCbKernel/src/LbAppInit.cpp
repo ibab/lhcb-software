@@ -10,6 +10,11 @@
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiAlg/IGenericTool.h"
+#include "GaudiKernel/Memory.h"
+
+#ifndef GOD_NOALLOC
+#include "Kernel/MemoryPoolAllocatorReleaser.h"
+#endif
 
 // local
 #include "Kernel/LbAppInit.h"
@@ -36,13 +41,18 @@ LbAppInit::LbAppInit( const std::string& name,
     m_eventMax(0),
     m_appName(""),
     m_appVersion("")
+  , m_lastMem(0)
 {
   declareProperty( "SkipFactor",      m_skipFactor = 0     );
   declareProperty( "SingleSeed",      m_singleSeed = false );
   declareProperty( "PreloadGeometry", m_preload    = false );
   declareProperty( "PrintFreq",       m_printFreq  = 1     );
   declareProperty( "PrintEventTime",  m_printTime  = false );
-  declareProperty( "EvtCounter", m_evtCounterName = "EvtCounter" );
+  declareProperty( "EvtCounter",      m_evtCounterName = "EvtCounter" );
+  declareProperty( "Increment",       m_increment = 100,
+                   "Number of events to measure memory");
+  declareProperty( "MemoryPurgeLimit",m_memPurgeLimit = 3400 * 1000, // 3.4GB
+                   "The memory threshold at which to trigger a purge of the boost pools");
 }
 //=============================================================================
 // Destructor
@@ -111,7 +121,34 @@ StatusCode LbAppInit::initialize() {
 //=============================================================================
 StatusCode LbAppInit::execute() {
 
-  if(msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
+  if(msgLevel(MSG::DEBUG)) debug() << "==> LbAppInit()::execute" << endmsg;
+
+  const unsigned long      nev = eventCounter();
+  const unsigned long long mem = System::virtualMemory();
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "event " << nev << " memory: " << mem << " KB" << endmsg ;
+
+  if ( 0 == m_lastMem )
+  {
+    m_lastMem = mem;
+  }
+  else if ( UNLIKELY( 0 == nev%m_increment && m_increment > 0 ) )
+  {
+    if ( UNLIKELY( m_lastMem != mem ) )
+    {
+      const long long memDiff = (long long)(mem-m_lastMem);
+      info() << "Memory has changed from " << m_lastMem << " to " << mem << " KB"
+             << " (" << memDiff << "KB, " << 100.*memDiff/m_lastMem << "%)"
+             << " in last " << m_increment << " events" << endmsg ;
+      if ( mem > m_memPurgeLimit )
+      {
+        info() << "Memory exceeds limit " << m_memPurgeLimit
+               << " KB -> Purging pools" << endmsg;
+        releaseMemoryPools();
+      }
+    }
+    m_lastMem = mem;
+  }
 
   return StatusCode::SUCCESS;
 }
@@ -120,6 +157,8 @@ StatusCode LbAppInit::execute() {
 //  Finalize
 //=============================================================================
 StatusCode LbAppInit::finalize() {
+
+  releaseMemoryPools();
 
   always()
     << "=================================================================="
@@ -255,3 +294,31 @@ const std::vector<LHCb::CondDBNameTagPair> LbAppInit::condDBTags() {
 long LbAppInit::eventCounter() const {
   return m_evtCounter->getEventCounter();
 }
+
+//=============================================================================
+// Release unused memory in Boost memory pools
+//=============================================================================
+void LbAppInit::releaseMemoryPools() const
+{
+#ifndef GOD_NOALLOC
+
+  const unsigned long long vmem_b = System::virtualMemory();
+
+  if (msgLevel(MSG::DEBUG)) {
+    LHCb::MemoryPoolAllocatorReleaser::releaseMemory(debug());
+  } else {
+    LHCb::MemoryPoolAllocatorReleaser::releaseMemory();
+  }
+
+  const unsigned long long vmem_a = System::virtualMemory();
+
+  if ( vmem_b != vmem_a )
+  {
+    info() << "Memory change after pool release = "
+           << (long long)(vmem_a-vmem_b) << " KB" << endmsg;
+  }
+
+#endif
+}
+
+//=============================================================================

@@ -4,6 +4,14 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2012-07-20 - Marco Cattaneo
+ - In LbAppInit, implement the same checks on memory usage as in DaVinciInit:
+   . Print memory increment every "Increment" events if it has changed.
+     Default every 100 events
+   . Shrink Boost memory pools if memory usage exceeds "MemoryPurgeLimit".
+     Default 3.4GB 
+   . Shrink Boost memory pools at finalize 
+
 ! 2012-07-16 - Marco Clemencic
  - Added mechanism to collect the list of classes using a memory pool allocator
    and their "release_pool" static methods.

@@ -93,8 +93,11 @@ protected:
    */
   inline bool okToPrint() const
   {
-    return ( m_printFreq > 0 && 0 == (m_evtCounter->getEventCounter()-1)%m_printFreq );
+    return ( m_printFreq > 0 && 0 == (eventCounter()-1)%m_printFreq );
   }
+
+private:
+  void releaseMemoryPools() const; ///< Release memory pools
 
 private:
 
@@ -125,6 +128,10 @@ private:
   int  m_eventMax;     ///< Number of events requested (ApplicationMgr.EvtMax)
   std::string   m_appName;      ///< Application Name
   std::string   m_appVersion;   ///< Application Version
+
+  unsigned long long m_increment; ///< Number of events to measure memory on
+  unsigned long long m_lastMem;   ///< Last memory usage
+  unsigned long long m_memPurgeLimit; ///< Memory limit to trigger a purge of the pools
   
 };
 
