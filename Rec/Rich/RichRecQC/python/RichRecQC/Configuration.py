@@ -595,8 +595,10 @@ class RichRecQCConf(RichConfigurableUser):
                 mon.EnablePerPDColPlots       = True
                 mon.EnablePerPDFittedResPlots = True
                 # If online, enable periodic histogram fitting
+                # Also have to enable the saving of individual HPD plots, so they get reset
                 if self.getProp("Histograms") == "Online" :
-                    mon.HistoFitFreq = 100
+                    mon.HistoFitFreq     = 100
+                    mon.EnablePerPDPlots = True
 
             # Histogram ranges
             ckRange = self.getProp("CKThetaResRange")
