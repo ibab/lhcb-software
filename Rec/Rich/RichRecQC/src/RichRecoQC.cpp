@@ -625,11 +625,11 @@ void RecoQC::fitResolutionHistos()
         if ( res.OK ) 
         {
           // Get the profile bin for this HPD and directly set the contents and error
-          const int bin = p->FindBin( copyN.data() );
-          p->SetBinContent( bin, res.resolution );
-          p->SetBinError  ( bin, res.reserror   );
-          p->SetBinEntries( bin, 1              );
-          //p->Fill( copyN.data(), res.resolution );
+          //const int bin = p->FindBin( copyN.data() );
+          //p->SetBinContent( bin, res.resolution );
+          //p->SetBinError  ( bin, res.reserror   );
+          //p->SetBinEntries( bin, 1              );
+          p->Fill( copyN.data(), res.resolution );
         }
       }
 
