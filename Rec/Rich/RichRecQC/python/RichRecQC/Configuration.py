@@ -585,10 +585,15 @@ class RichRecQCConf(RichConfigurableUser):
             # Make aerogel tile plots only for Long monitor
             if tkShortName == "Long" : mon.EnableAerogelTilePlots = True
 
-            # Enable PD and PD Col plots only for Long monitor
-            if tkShortName == "Long" :
+            # Expert Mode histos
+            if self.getProp("Histograms") == "Expert" :
                 mon.EnablePerPDPlots    = True
                 mon.EnablePerPDColPlots = True
+
+            # Enable plots only for Long monitors
+            if tkShortName == "Long" :
+                mon.EnablePerPDColPlots       = True
+                mon.EnablePerPDFittedResPlots = True
                 # If online, enable periodic histogram fitting
                 if self.getProp("Histograms") == "Online" :
                     mon.HistoFitFreq = 100
@@ -596,7 +601,8 @@ class RichRecQCConf(RichConfigurableUser):
             # Histogram ranges
             ckRange = self.getProp("CKThetaResRange")
             if len(ckRange) > 0 :
-                if len(ckRange) != 3 : raise RuntimeError("ERROR : CK Theta resolution must have 3 entries")
+                if len(ckRange) != 3 :
+                    raise RuntimeError("ERROR : CK Theta resolution must have 3 entries")
                 mon.CKResHistoRange = ckRange
         
             # Add to sequence

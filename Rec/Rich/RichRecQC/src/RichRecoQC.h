@@ -154,7 +154,7 @@ namespace Rich
         std::vector<unsigned int> m_maxRadSegs; ///< Maximum segments per radiator
 
         /// Histogram fitting event frequency
-        unsigned long long m_histFitFreq;
+        long long m_histFitFreq;
 
         /// Histogram ranges for CK resolution plots
         std::vector<double> m_ckResRange;
@@ -168,8 +168,14 @@ namespace Rich
         /// Enable per PD column resolution plots
         bool m_pdColResPlots;
 
+        /// Enable Fitted CK theta resolution plots per PD
+        bool m_fittedPDResPlots;
+
         /// Event count
         unsigned long long m_nEvts;
+
+        typedef Rich::HashMap<std::string,TH1D*> PDPlotMap;
+        PDPlotMap m_pdPlots; ///< PD resolution plots
 
       };
 

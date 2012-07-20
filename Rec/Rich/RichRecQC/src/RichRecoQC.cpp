@@ -63,6 +63,7 @@ RecoQC::RecoQC( const std::string& name,
 
   declareProperty( "EnablePerPDPlots",    m_pdResPlots    = false );
   declareProperty( "EnablePerPDColPlots", m_pdColResPlots = false );
+  declareProperty( "EnablePerPDFittedResPlots", m_fittedPDResPlots = false );
 
   declareProperty( "HistoFitFreq", m_histFitFreq = -1 );
 
@@ -220,27 +221,43 @@ StatusCode RecoQC::prebookHistograms()
         }
       }
 
-      // Resolution per HPD
-      if ( m_pdResPlots )
+      // Loop over PDs
+      for ( LHCb::RichSmartID::Vector::const_iterator iPD = hpds.begin();
+            iPD != hpds.end(); ++iPD )
       {
-        // Loop over PDs
-        for ( LHCb::RichSmartID::Vector::const_iterator iPD = hpds.begin();
-              iPD != hpds.end(); ++iPD )
+        if ( (*iPD).rich() != rich ) continue;
+        std::ostringstream title;
+        title << "Rec-Exp Cktheta | All photons | " << *iPD;
+        HID hID(pdResPlotID(*iPD),*rad);
+        if ( m_pdResPlots )
         {
-          if ( (*iPD).rich() != rich ) continue;
-          std::ostringstream title;
-          title << "Rec-Exp Cktheta | All photons | " << *iPD;
-          richHisto1D( HID(pdResPlotID(*iPD),*rad), title.str(),
-                       -m_ckResRange[*rad], m_ckResRange[*rad], nBins1D(),
-                       "delta(Cherenkov theta) / rad" );
+          TH1D * h =
+            Gaudi::Utils::Aida2ROOT::aida2root( richHisto1D( hID, title.str(),
+                                                             -m_ckResRange[*rad],
+                                                             m_ckResRange[*rad],
+                                                             nBins1D(),
+                                                             "delta(Cherenkov theta) / rad" ) );
+          if ( !h ) { return Error( "Failed to book histogram" ); }
+          m_pdPlots[hID] = h;
         }
+        else if ( m_fittedPDResPlots )
+        {
+          m_pdPlots[hID] = new TH1D( (name()+hID.fullid()).c_str(),
+                                     (name()+title.str()).c_str(),
+                                     nBins1D(),
+                                     -m_ckResRange[*rad],
+                                     m_ckResRange[*rad] );
+        }
+      }
 
+      if ( m_fittedPDResPlots )
+      {
         const unsigned int min = ( *rad == Rich::Rich2Gas ? nHPDsR1           : 0         );
         const unsigned int max = ( *rad == Rich::Rich2Gas ? nHPDsR1+nHPDsR2-1 : nHPDsR1-1 );
         richProfile1D( HID("ckResVPDCopyNum",*rad),
                        "CKtheta Resolution Versus PD Copy Number",
                        min-0.5, max+0.5, max-min+1,
-                       "PD Copy Number", "Fitted CK Theta Resolution / rad" );
+                       "PD Copy Number", "Cherenkov Theta Resolution / rad" );
       }
 
       // Resolutions per PD column
@@ -271,12 +288,8 @@ StatusCode RecoQC::prebookHistograms()
 // Main execution
 StatusCode RecoQC::execute()
 {
-
   // Event status
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
-
-  // Rich Histo ID
-  const Rich::HistoID hid;
 
   // Make sure all tracks and segments have been formed
   if ( trackCreator()->newTracks().isFailure() )
@@ -474,11 +487,12 @@ StatusCode RecoQC::execute()
       } // MC is available
 
       // Plots per PD
-      if ( m_pdResPlots )
+      if ( m_pdResPlots || m_fittedPDResPlots )
       {
         const LHCb::RichSmartID hpdID = photon->geomPhoton().smartID().pdID();
-        richHisto1D( HID(pdResPlotID(hpdID),rad) ) -> fill( deltaTheta );
+        m_pdPlots[HID(pdResPlotID(hpdID),rad)] -> Fill( deltaTheta );
       }
+
       // Plots per PD column
       if ( m_pdColResPlots )
       {
@@ -524,7 +538,7 @@ StatusCode RecoQC::execute()
   }
 
   // Fit resolution plots ?
-  if ( UNLIKELY ( m_pdResPlots && m_nEvts>0 && 
+  if ( UNLIKELY ( m_fittedPDResPlots && m_nEvts>0 &&
                   m_histFitFreq>0 && m_nEvts%m_histFitFreq == 0 ) )
   {
     fitResolutionHistos();
@@ -538,7 +552,7 @@ StatusCode RecoQC::finalize()
 {
 
   // Fit resolution plots ?
-  if ( m_pdResPlots ) { fitResolutionHistos(); }
+  if ( m_fittedPDResPlots ) fitResolutionHistos();
 
   if ( m_truePhotCount[Rich::Aerogel]  > 0 ||
        m_truePhotCount[Rich::Rich1Gas] > 0 ||
@@ -575,6 +589,14 @@ StatusCode RecoQC::finalize()
            << endmsg;
   }
 
+  // Clean up temporary histograms
+  if ( !m_pdResPlots )
+  {
+    for ( PDPlotMap::iterator iH = m_pdPlots.begin();
+          iH != m_pdPlots.end(); ++iH ) { delete iH->second; }
+  }
+  m_pdPlots.clear();  
+
   // Execute base class method
   return HistoAlgBase::finalize();
 }
@@ -609,20 +631,18 @@ void RecoQC::fitResolutionHistos()
       if ( rich != (*iPD).rich() ) continue;
 
       // Get the resolution plot for this HPD
-      TH1D * h(NULL);
-      try { h = Aida2ROOT::aida2root( richHisto1D(HID(pdResPlotID(*iPD),*rad)) ); }
-      catch ( const GaudiException& ) { }
+      TH1D * h = m_pdPlots[HID(pdResPlotID(*iPD),*rad)];
 
       // Fill the profile
-      if ( p ) 
-      {        
+      if ( p )
+      {
         // PD Copy Number
         const Rich::DAQ::HPDCopyNumber copyN = m_RichSys->copyNumber( *iPD );
 
         // fit the histogram
         const FitResult res = fit(h,*rad);
 
-        if ( res.OK ) 
+        if ( res.OK )
         {
           // Get the profile bin for this HPD and directly set the contents and error
           //const int bin = p->FindBin( copyN.data() );
@@ -648,7 +668,7 @@ RecoQC::FitResult RecoQC::fit( TH1D * hist,
   // Various hardcoded parameters. Could maybe become JOs ...
   typedef std::vector<double> VD;
   const VD preFitDelta   = list_of(0.01)(0.00105)(0.0025);
-  const VD initPreFitRes = list_of(0.01)(0.0015)(0.0007); 
+  const VD initPreFitRes = list_of(0.01)(0.0015)(0.0007);
   const VD maxRes        = list_of(0.01)(0.004)(0.002);
   const double maxErrorForOK = 1e-3;
   const unsigned int nPolFull = 3;
@@ -674,7 +694,7 @@ RecoQC::FitResult RecoQC::fit( TH1D * hist,
       // Pre fit
       const std::string preFitFType = "gaus";
       const std::string preFitName  = Rich::text(rad) + "PreFitF";
-      TF1 * preFitF = new TF1( preFitName.c_str(), preFitFType.c_str(), 
+      TF1 * preFitF = new TF1( preFitName.c_str(), preFitFType.c_str(),
                                xPeak-preFitDelta[rad], xPeak+preFitDelta[rad] );
       trash.push_back(preFitF);
       preFitF->SetParameter(1,0);
@@ -688,7 +708,8 @@ RecoQC::FitResult RecoQC::fit( TH1D * hist,
         std::ostringstream fFuncType, fitName;
         fFuncType << "gaus(0)+pol" << nPol << "(3)";
         fitName << rad + "FitF" << nPol;
-        TF1 * fFitF = new TF1( fitName.str().c_str(), fFuncType.str().c_str(),
+        TF1 * fFitF = new TF1( fitName.str().c_str(), 
+                               fFuncType.str().c_str(),
                                -m_ckResRange[rad], m_ckResRange[rad] );
         trash.push_back(fFitF);
 
