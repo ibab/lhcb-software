@@ -6,7 +6,7 @@
 ! -----------------------------------------------------------------------------
 
 ! 2012-07-19 - Chris Jones
- - Fixn a bug in LoKi::Particles::IsMuon::muonPID which could result in a 
+ - Fix a bug in LoKi::Particles::IsMuon::muonPID which could result in a 
    random uninitialised value of the Status Word being used.
 
 !========================= LoKiPhys v10r11 2012-06-28 =========================
