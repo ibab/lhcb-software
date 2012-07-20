@@ -30,14 +30,9 @@
 DaVinciInit::DaVinciInit( const std::string& name,
                           ISvcLocator* pSvcLocator)
   : LbAppInit    ( name , pSvcLocator ),
-    m_memoryTool ( NULL               ),
-    m_lastMem    ( 0                  )
+    m_memoryTool ( NULL               )
 {
   declareProperty("PrintEvent", m_print = false, "Print Event and Run Number");
-  declareProperty("Increment", m_increment = 100,
-                  "Number of events to measure memory. Aligned with PrintFreq in DaVinci");
-  declareProperty("MemoryPurgeLimit", m_memPurgeLimit = 3400 * 1000, // 3.4GB
-                  "The memory threshold at which to trigger a purge of the boost pools");
 }
 
 //=============================================================================
@@ -81,70 +76,7 @@ StatusCode DaVinciInit::execute()
     }
   }
 
-  ++counter("Events");
-
-  const unsigned long long nev = counter("Events").nEntries();
-  const unsigned long long mem = System::virtualMemory();
-  if ( msgLevel(MSG::DEBUG) )
-    debug() << nev << " memory: " << mem << " KB" << endmsg ;
-
-  if ( 0 == m_lastMem )
-  {
-    m_lastMem = mem;
-  }
-  else if ( UNLIKELY( 0 == nev%m_increment && m_increment > 0 ) )
-  {
-    if ( UNLIKELY( m_lastMem != mem ) )
-    {
-      const long long memDiff = (long long)(mem-m_lastMem);
-      info() << "Memory has changed from " << m_lastMem << " to " << mem << " KB"
-             << " (" << memDiff << "KB, " << 100.*memDiff/m_lastMem << "%)"
-             << " in last " << m_increment << " events" << endmsg ;
-      if ( mem > m_memPurgeLimit )
-      {
-        info() << "Memory exceeds limit " << m_memPurgeLimit
-               << " KB -> Purging pools" << endmsg;
-        releaseMemoryPools();
-      }
-    }
-    m_lastMem = mem;
-  }
-
   return sc;
-}
-
-//=============================================================================
-
-StatusCode DaVinciInit::finalize()
-{
-  releaseMemoryPools();
-  return LbAppInit::finalize();
-}
-
-//=============================================================================
-
-void DaVinciInit::releaseMemoryPools() const
-{
-#ifndef GOD_NOALLOC
-  using namespace LHCb;
-
-  const unsigned long long vmem_b = System::virtualMemory();
-
-  if (msgLevel(MSG::DEBUG)) {
-    LHCb::MemoryPoolAllocatorReleaser::releaseMemory(debug());
-  } else {
-    LHCb::MemoryPoolAllocatorReleaser::releaseMemory();
-  }
-
-  const unsigned long long vmem_a = System::virtualMemory();
-
-  if ( vmem_b != vmem_a )
-  {
-    info() << "Memory change after pool release = "
-           << (long long)(vmem_a-vmem_b) << " KB" << endmsg;
-  }
-
-#endif
 }
 
 //=============================================================================

@@ -3,9 +3,13 @@
 ! Responsible : Chris Jones
 !============================================================================
 
-    === requires Kernel/LHCbKernel > v13r11 and GaudiObjDesc > v11r14 ===
+! 2012-07-20 - Chris Jones
+ - Remove the memory check code from DaVinciInit. 
+   Now part of the LbAppInit base class.
+
 ! 2012-07-16 - Marco Clemencic
  - Use the new mechanism to release all the memory pools in one call.
+   Requires Kernel/LHCbKernel > v13r11 and GaudiObjDesc > v11r14
 
 !========================= DaVinciTools v23r1 2012-07-09 =========================
 

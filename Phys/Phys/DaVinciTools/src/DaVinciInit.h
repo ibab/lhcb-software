@@ -26,20 +26,11 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
-
-private:
-
-  /// Release memory pools
-  void releaseMemoryPools() const;
 
 private:
 
   IGenericTool* m_memoryTool;     ///< Pointer to (private) memory histogram tool
   bool m_print;                   ///< Print event and run
-  unsigned long long m_increment; ///< Number of events to measure memory on
-  unsigned long long m_lastMem;   ///< Last memory usage
-  unsigned long long m_memPurgeLimit; ///< Memory limit to trigger a purge of the pools
 
 };
 
