@@ -94,6 +94,7 @@ StatusCode Velo::VeloClusterMonitor::initialize() {
   char nCluTitle[100];
   sprintf( nCluTitle, "Number of VELO clusters per event (%s)", m_tae.c_str() );
   m_hNCluEvt = book1D( "# VELO clusters", nCluTitle, 0., 6000., 600 );
+  m_hNCluEvtZoom = book1D( "# VELO clusters (zoom)", nCluTitle, 0., 50., 50 );
   m_hCluSize = book1D( "Cluster size", "Number of strips per cluster",
                        -0.5, 5.5, 6 );
   m_hCluADC = book1D( "Cluster ADC value", "ADC value per cluster",
@@ -216,9 +217,11 @@ void Velo::VeloClusterMonitor::monitorClusters() {
   // ----------------------------
   unsigned int nclus = m_clusters -> size();
   counter( "# VeloClusters" ) += nclus;
-  if ( nclus > 0 )
+  if ( nclus > 0 ) {
     m_hNCluEvt->fill(nclus);
-
+    if ( nclus < 51 ) m_hNCluEvtZoom -> fill( nclus );
+  }
+  
   if ( m_highMultiplicityPlot )
     fillHighMultiplicity(nclus);
 

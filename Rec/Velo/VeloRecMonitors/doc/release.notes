@@ -4,6 +4,9 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2012-07-20 - Eduardo Rodrigues
+ - Added zoom histo for distribution of number of clusters
+
 !========================= VeloRecMonitors v2r19 2012-06-25 =========================
 ! 2012-06-12 - Marius Bjoernstad
  - Updated location for raw event

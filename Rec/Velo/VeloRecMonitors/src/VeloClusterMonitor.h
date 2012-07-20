@@ -65,6 +65,7 @@ namespace Velo
     
     // Histograms
     AIDA::IHistogram1D* m_hNCluEvt;
+    AIDA::IHistogram1D* m_hNCluEvtZoom;
     AIDA::IHistogram1D* m_hNClustersHM;
     AIDA::IHistogram1D* m_hCluSize;
     AIDA::IHistogram2D* m_hCluSizeSens;
