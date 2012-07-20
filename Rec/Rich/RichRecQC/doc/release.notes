@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2012-07-20 - Chris Jones
+ - Reduce the number of bins in the details data size plots
+
 ! 2012-07-18 - Chris Jones
  - RawDataSize :-
   + Add a plot showing the average number of header words per L1 board

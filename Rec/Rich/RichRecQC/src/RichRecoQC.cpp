@@ -240,7 +240,7 @@ StatusCode RecoQC::prebookHistograms()
         richProfile1D( HID("ckResVPDCopyNum",*rad),
                        "CKtheta Resolution Versus PD Copy Number",
                        min-0.5, max+0.5, max-min+1,
-                       "PD Copy Number", "Cherenkov Theta Resolution / rad" );
+                       "PD Copy Number", "Fitted CK Theta Resolution / rad" );
       }
 
       // Resolutions per PD column

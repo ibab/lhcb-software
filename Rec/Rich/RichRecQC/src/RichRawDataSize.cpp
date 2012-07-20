@@ -70,22 +70,30 @@ StatusCode RawDataSize::prebookHistograms()
   // # Headers per L1 board
   richProfile1D( HID("L1s/HeadersVL1CopyNumber"),
                  "# Headers (32bit words) V L1 Copy Number",
-                 -0.5, nL1sMax - 0.5, nL1sMax );
+                 -0.5, nL1sMax - 0.5, nL1sMax,
+		 "UKL1 Copy Number",
+		 "Average # 32 bit header words / event" );
 
   // Size per L1 board
   richProfile1D( HID("L1s/SizeVL1CopyNumber"),
                  "Average Size (32bit words) V L1 Copy Number",
-                 -0.5, nL1sMax - 0.5, nL1sMax );
+                 -0.5, nL1sMax - 0.5, nL1sMax,
+		 "UKL1 Copy Number",
+		 "Average # 32 bit data words / event" );
 
   // size per L1 ingress
   richProfile1D( HID("L1s/SizeVL1Ingress"),
                  "Average Size (32bit words) V (L1 Copy Number)*10 + L1 Ingress",
-                 -0.5, nL1sMax*10 - 0.5, nL1sMax*10 );
+                 -0.5, nL1sMax*10 - 0.5, nL1sMax*10,
+		 "(UKL1 Copy Number)*10 + L1 Ingress",
+		 "Average # 32 bit data words / event" );
 
   // size per HPD
   richProfile1D( HID("hpds/SizeVHPDCopyNumber"),
                  "Average Size (32bit words) V HPD Copy Number",
-                 -0.5, nHPDs - 0.5, nHPDs );
+                 -0.5, nHPDs - 0.5, nHPDs,
+		 "PD Copy Number",
+		 "Average # 32 bit data words / event" );
 
   return StatusCode::SUCCESS;
 }
@@ -224,7 +232,7 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
           title << "L1 Data Size (32bit words) | " << rich << " | HardwareID " << l1HardID 
                 << " LogicalID " << l1LogID
                 << " Ingress " << ingressID;
-          richHisto1D( ID.str(), title.str(), -0.5, 200.5, 201 ) -> fill ( nIngressWords );
+          richHisto1D( ID.str(), title.str(), -0.5, 199.5, 50 ) -> fill ( nIngressWords );
         }
 
       } // loop over ingresses
@@ -241,7 +249,7 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
            << "/L1-HardID" << l1HardID << "LogID" << l1LogID;
         title << "L1 Data Size (32bit words) | " << rich << " | HardwareID " << l1HardID 
               << " LogicalID " << l1LogID;
-        richHisto1D( ID.str(), title.str(), -0.5, 500.5, 501 ) -> fill ( nL1Words );
+        richHisto1D( ID.str(), title.str(), -0.5, 499.5, 50 ) -> fill ( nL1Words );
       }
 
       // Cross check with L1 size direct from raw bank
