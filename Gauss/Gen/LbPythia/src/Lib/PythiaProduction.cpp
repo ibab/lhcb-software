@@ -13,7 +13,6 @@
 
 // from Gaudi
 #include "GaudiKernel/System.h"
-#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "Kernel/IParticlePropertySvc.h"
 #include "Kernel/ParticleProperty.h"
 #include "GaudiKernel/SystemOfUnits.h"
@@ -42,7 +41,6 @@
  */
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( PythiaProduction );
 
 //=============================================================================
 // Standard constructor, initializes variables

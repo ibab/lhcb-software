@@ -4,10 +4,15 @@
 ! Purpose     : Package for Pythia 6 in Gauss
 !-----------------------------------------------------------------------------
 
+! 2012-07-20 - Gloria Corti
+ - Also remove the factory declaration that was in PythiaProduction itself, 
+   otherwise it will be found twice
+
 ! 2012-07-19 - Gloria Corti
- - Add factory declaration for PythiaProduction to force its loading since it
-   is in the linker library (it is specialized by other tools in other 
-   libraries). This is needed otherwise the class cannot be instanciated.
+ - Add factory declaration for PythiaProduction in component library to force 
+   its loading since the tool is in the linker library (it is specialized by
+   other tools in other libraries). This is needed otherwise the class cannot 
+   be instanciated as configurable.
 
 ! 2012-07-13 - Patrick Robbe
  - Fix ParticlePropertySvc name
