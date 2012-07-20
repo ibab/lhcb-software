@@ -671,7 +671,7 @@ RecoQC::FitResult RecoQC::fit( TH1D * hist,
   const VD initPreFitRes = list_of(0.010)(0.0015)(0.0007);
   const VD minRes        = list_of(0.005)(0.0008)(0.0004);
   const VD maxRes        = list_of(0.010)(0.0050)(0.0030);
-  const VD maxShift      = list_of(0.005)(0.0010)(0.0005);
+  const VD maxShift      = list_of(0.005)(0.0020)(0.0010);
   const double maxMeanErrorForOK = 1e-3;
   const double maxResErrorForOK  = 5e-4;
   const unsigned int nPolFull = 3;
