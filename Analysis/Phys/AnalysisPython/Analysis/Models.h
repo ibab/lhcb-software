@@ -890,6 +890,112 @@ namespace Analysis
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class ExpoPositive
+     *  exponential multiplied on positive polynomial
+     *  @see Gaudi::Math::Positive
+     *  @author Vanya BELYAEV  Ivan.Belyaev@itep.ru
+     *  @date 2011-05-25
+     */
+    class GAUDI_API ExpoPositive: public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::ExpoPositive, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// linear 
+      ExpoPositive
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         ,
+        RooAbsReal&          tau       , 
+        RooAbsReal&          phi1      , 
+        const double         xmin      , 
+        const double         xmax      ) ;
+      /// quadric
+      ExpoPositive
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         ,
+        RooAbsReal&          tau       , 
+        RooAbsReal&          phi1      , 
+        RooAbsReal&          phi2      , 
+        const double         xmin      , 
+        const double         xmax      ) ;
+      /// cubic 
+      ExpoPositive
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         ,
+        RooAbsReal&          tau       , 
+        RooAbsReal&          phi1      , 
+        RooAbsReal&          phi2      , 
+        RooAbsReal&          phi3      , 
+        const double         xmin      , 
+        const double         xmax      ) ;
+      /// quartic
+      ExpoPositive
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         ,
+        RooAbsReal&          tau       , 
+        RooAbsReal&          phi1      , 
+        RooAbsReal&          phi2      , 
+        RooAbsReal&          phi3      , 
+        RooAbsReal&          phi4      , 
+        const double         xmin      , 
+        const double         xmax      ) ;
+      /// quintic 
+      ExpoPositive
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         ,
+        RooAbsReal&          tau       , 
+        RooAbsReal&          phi1      , 
+        RooAbsReal&          phi2      , 
+        RooAbsReal&          phi3      , 
+        RooAbsReal&          phi4      , 
+        RooAbsReal&          phi5      , 
+        const double         xmin      , 
+        const double         xmax      ) ;
+      /// general 
+      ExpoPositive
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         ,
+        RooAbsReal&          tau       , 
+        const RooArgList&    coeffs    ,
+        const double         xmin      , 
+        const double         xmax      ) ;
+      /// copy
+      ExpoPositive
+      ( const ExpoPositive&     right     , 
+        const char*          name = 0  ) ;
+      /// destructor 
+      virtual ~ExpoPositive() ;
+      /// clone 
+      virtual  ExpoPositive* clone ( const char* name ) const ; 
+      // ======================================================================
+    protected :
+      // ======================================================================
+      RooRealProxy m_x    ;
+      RooRealProxy m_tau  ;
+      RooListProxy m_phis ;
+      // ======================================================================
+      TIterator* m_iterator;  //! do not persist
+      // ======================================================================
+      // the actual evaluation of function 
+      Double_t evaluate() const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::Positive m_positive ;               // the function 
+      // ======================================================================
+    } ;
+    // ========================================================================
   } //                                        end of namespace Analysis::Models
   // ==========================================================================
 } //                                                  end of namespace Analysis 

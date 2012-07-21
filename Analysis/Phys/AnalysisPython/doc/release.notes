@@ -5,6 +5,9 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2012-07-21 - Vanya Belyaev
+ - rewrite PolyPositive  
+
 ! 2012-07-18 - Vanya Belyaev
  - rewrite PolyPositive 
 

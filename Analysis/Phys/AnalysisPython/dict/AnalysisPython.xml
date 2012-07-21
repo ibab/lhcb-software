@@ -34,6 +34,7 @@
   <class name = "Analysis::Models::Voigt"           />
   <class name = "Analysis::Models::LASS23L"         />
   <class name = "Analysis::Models::PolyPositive"    />
+  <class name = "Analysis::Models::ExpoPositive"    />
   
 </lcgdict> 
 

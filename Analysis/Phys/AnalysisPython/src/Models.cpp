@@ -1004,38 +1004,272 @@ Analysis::Models::PolyPositive::clone( const char* name ) const
 Double_t Analysis::Models::PolyPositive::evaluate() const 
 {
   //
-  m_iterator->Reset() ;
+  m_iterator->Reset () ;
   //
   RooAbsArg*       phi   = 0 ;
   const RooArgSet* nset  = m_phis.nset() ;
   //
   std::vector<double> sin2phi ;
   //
+  unsigned short k = 0 ;
   while ( ( phi = (RooAbsArg*) m_iterator->Next() ) )
   {
     const RooAbsReal* r = dynamic_cast<RooAbsReal*> ( phi ) ;
     if ( 0 == r ) { continue ; }
     //
-    const double phi_i   = r->getVal ( nset ) ;
+    const double phi   = r->getVal ( nset ) ;
     //
-    const double sinphi  =  std::sin ( phi_i ) ;
+    m_positive.setPar ( k  , phi ) ;
     //
-    const double sinphi2 = sinphi * sinphi ;
-    //
-    sin2phi.push_back (     sinphi2 ) ;
-    //
+    ++k ;
   }
-  //
-  double psin2 = 1 ;
-  for ( std::size_t i = 0 ; i < sin2phi.size() ; ++i ) 
-  {
-    const double s2 = sin2phi[i] ;
-    m_positive.setPar ( i , psin2 * ( 1 - s2 ) ) ;
-    psin2 *= s2 ;  
-  }
-  m_positive.setPar ( sin2phi.size() , psin2 ) ;
   //
   return m_positive ( m_x ) ; 
+}
+// ============================================================================
+
+
+// ============================================================================
+//  linear polinomial
+// ============================================================================
+Analysis::Models::ExpoPositive::ExpoPositive
+( const char*          name      , 
+  const char*          title     ,
+  RooAbsReal&          x         ,
+  RooAbsReal&          tau       , 
+  RooAbsReal&          phi1      , 
+  const double         xmin      , 
+  const double         xmax      ) 
+  : RooAbsPdf ( name , title ) 
+//
+  , m_x        ( "x"       , "Observable"   , this , x   ) 
+  , m_tau      ( "tau"     , "Exponential"  , this , tau )
+  , m_phis     ( "phi"     , "Coefficients" , this )
+//
+  , m_iterator ( 0 ) 
+//
+  , m_positive ( 1 , xmin , xmax ) 
+{
+  m_phis.add ( phi1 ) ;
+  m_iterator = m_phis.createIterator() ;
+}
+// ============================================================================
+//  quadric polinomial
+// ============================================================================
+Analysis::Models::ExpoPositive::ExpoPositive
+( const char*          name      , 
+  const char*          title     ,
+  RooAbsReal&          x         ,
+  RooAbsReal&          tau       , 
+  RooAbsReal&          phi1      , 
+  RooAbsReal&          phi2      , 
+  const double         xmin      , 
+  const double         xmax      ) 
+  : RooAbsPdf ( name , title ) 
+//
+  , m_x        ( "x"       , "Observable"   , this , x   ) 
+  , m_tau      ( "tau"     , "Exponential"  , this , tau )
+  , m_phis     ( "phi"     , "Coefficients" , this )
+//
+  , m_iterator ( 0 ) 
+//
+  , m_positive ( 2 , xmin , xmax ) 
+{
+  m_phis.add ( phi1 ) ;
+  m_phis.add ( phi2 ) ;
+  m_iterator = m_phis.createIterator() ;
+}
+// ============================================================================
+//  cubic polinomial
+// ============================================================================
+Analysis::Models::ExpoPositive::ExpoPositive
+( const char*          name      , 
+  const char*          title     ,
+  RooAbsReal&          x         ,
+  RooAbsReal&          tau       , 
+  RooAbsReal&          phi1      , 
+  RooAbsReal&          phi2      , 
+  RooAbsReal&          phi3      , 
+  const double         xmin      , 
+  const double         xmax      ) 
+  : RooAbsPdf ( name , title ) 
+//
+  , m_x        ( "x"       , "Observable"   , this , x   ) 
+  , m_tau      ( "tau"     , "Exponential"  , this , tau )
+  , m_phis     ( "phi"     , "Coefficients" , this )
+//
+  , m_iterator ( 0 ) 
+//
+  , m_positive ( 3 , xmin , xmax ) 
+{
+  m_phis.add ( phi1 ) ;
+  m_phis.add ( phi2 ) ;
+  m_phis.add ( phi3 ) ;
+  m_iterator = m_phis.createIterator() ;
+}
+// ============================================================================
+//  quartic polinomial
+// ============================================================================
+Analysis::Models::ExpoPositive::ExpoPositive
+( const char*          name      , 
+  const char*          title     ,
+  RooAbsReal&          x         ,
+  RooAbsReal&          tau       , 
+  RooAbsReal&          phi1      , 
+  RooAbsReal&          phi2      , 
+  RooAbsReal&          phi3      , 
+  RooAbsReal&          phi4      , 
+  const double         xmin      , 
+  const double         xmax      ) 
+  : RooAbsPdf ( name , title ) 
+//
+  , m_x        ( "x"       , "Observable"   , this , x   ) 
+  , m_tau      ( "tau"     , "Exponential"  , this , tau )
+  , m_phis     ( "phi"     , "Coefficients" , this )
+//
+  , m_iterator ( 0 ) 
+//
+  , m_positive ( 4 , xmin , xmax ) 
+{
+  m_phis.add ( phi1 ) ;
+  m_phis.add ( phi2 ) ;
+  m_phis.add ( phi3 ) ;
+  m_phis.add ( phi4 ) ;
+  m_iterator = m_phis.createIterator() ;
+}
+// ============================================================================
+//  quintic polinomial
+// ============================================================================
+Analysis::Models::ExpoPositive::ExpoPositive
+( const char*          name      , 
+  const char*          title     ,
+  RooAbsReal&          x         ,
+  RooAbsReal&          tau       , 
+  RooAbsReal&          phi1      , 
+  RooAbsReal&          phi2      , 
+  RooAbsReal&          phi3      , 
+  RooAbsReal&          phi4      , 
+  RooAbsReal&          phi5      , 
+  const double         xmin      , 
+  const double         xmax      ) 
+  : RooAbsPdf ( name , title ) 
+//
+  , m_x        ( "x"       , "Observable"   , this , x   ) 
+  , m_tau      ( "tau"     , "Exponential"  , this , tau )
+  , m_phis     ( "phi"     , "Coefficients" , this )
+//
+  , m_iterator ( 0 ) 
+//
+  , m_positive ( 5 , xmin , xmax ) 
+{
+  m_phis.add ( phi1 ) ;
+  m_phis.add ( phi2 ) ;
+  m_phis.add ( phi3 ) ;
+  m_phis.add ( phi4 ) ;
+  m_phis.add ( phi5 ) ;
+  m_iterator = m_phis.createIterator() ;
+}
+// ============================================================================
+// generic polinomial
+// ============================================================================
+Analysis::Models::ExpoPositive::ExpoPositive
+( const char*          name      , 
+  const char*          title     ,
+  RooAbsReal&          x         ,
+  RooAbsReal&          tau       , 
+  const RooArgList&    phis      , 
+  const double         xmin      , 
+  const double         xmax      ) 
+  : RooAbsPdf ( name , title ) 
+  , m_x        ( "x"       , "Observable"   , this , x   ) 
+  , m_tau      ( "tau"     , "Exponential"  , this , tau )
+  , m_phis     ( "phi"     , "Coefficients" , this )
+//
+  , m_iterator ( 0 ) 
+//
+  , m_positive ( phis.getSize() , xmin , xmax ) 
+{
+  //
+  TIterator* tmp  = phis.createIterator() ;
+  RooAbsArg* coef = 0 ;
+  while ( ( coef = (RooAbsArg*) tmp->Next() ) )
+  {
+    RooAbsReal* r = dynamic_cast<RooAbsReal*> ( coef ) ;
+    if ( 0 == r ) { continue ; }
+    m_phis.add ( *coef ) ;
+  }
+  delete tmp ;
+  //
+  m_iterator = m_phis.createIterator() ;
+}
+// ============================================================================
+// copy constructor
+// ============================================================================
+Analysis::Models::ExpoPositive::ExpoPositive
+( const Analysis::Models::ExpoPositive&  right ,      
+  const char*                            name  ) 
+  : RooAbsPdf ( right , name ) 
+//
+  , m_x        ( "x"      , this , right.m_x    ) 
+  , m_tau      ( "tau"    , this , right.m_tau  )
+  , m_phis     ( "phis"   , this , right.m_phis ) 
+//
+  , m_iterator ( 0 ) 
+//
+  , m_positive ( right.m_positive ) 
+{
+  m_iterator = m_phis.createIterator () ;
+}
+// ============================================================================
+// destructor 
+// ============================================================================
+Analysis::Models::ExpoPositive::~ExpoPositive() { delete m_iterator ; }
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::ExpoPositive*
+Analysis::Models::ExpoPositive::clone( const char* name ) const 
+{ return new Analysis::Models::ExpoPositive(*this,name) ; }
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::ExpoPositive::evaluate() const 
+{
+  //
+  m_iterator->Reset () ;
+  //
+  RooAbsArg*       phi   = 0 ;
+  const RooArgSet* nset  = m_phis.nset() ;
+  //
+  std::vector<double> sin2phi ;
+  //
+  unsigned short k = 0 ;
+  while ( ( phi = (RooAbsArg*) m_iterator->Next() ) )
+  {
+    const RooAbsReal* r = dynamic_cast<RooAbsReal*> ( phi ) ;
+    if ( 0 == r ) { continue ; }
+    //
+    const double phi   = r->getVal ( nset ) ;
+    //
+    m_positive.setPar ( k  , phi ) ;
+    //
+    ++k ;
+  }
+  //
+  const double x = m_x  ;
+  const double t = m_tau ;
+  //
+  const double e = std::exp ( t * x ) ;
+  //
+  const double xmin = m_positive.xmin () ;
+  const double xmax = m_positive.xmax () ;
+  //
+  const double norm = 
+    ( 0 == t ) ? 
+    std::abs (              xmax       -             xmin             ) :
+    std::abs ( ( std::exp ( xmax * t ) - std::exp  ( xmin * t ) ) / t ) ;
+  //
+  return m_positive ( m_x ) * e / norm ; 
 }
 // ============================================================================
 
