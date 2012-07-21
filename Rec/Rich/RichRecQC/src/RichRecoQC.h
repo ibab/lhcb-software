@@ -174,7 +174,8 @@ namespace Rich
         /// Event count
         unsigned long long m_nEvts;
 
-        typedef Rich::HashMap<std::string,TH1D*> PDPlotMap;
+        typedef std::pair<Rich::RadiatorType,LHCb::RichSmartID> PDPlotKey;
+        typedef Rich::HashMap<PDPlotKey,TH1D*> PDPlotMap;
         PDPlotMap m_pdPlots; ///< PD resolution plots
 
       };

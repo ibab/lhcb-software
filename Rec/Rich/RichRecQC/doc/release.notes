@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2012-07-20 - Chris Jones
+ - Small CPU improvement to the previous changes
+
+! 2012-07-20 - Chris Jones
  - Reduce the number of bins in the details data size plots
  - Update RichRecoQC to remove the need to create the individual HPD
    resolution plots will filling the Fitted resolution versus HPD copy
