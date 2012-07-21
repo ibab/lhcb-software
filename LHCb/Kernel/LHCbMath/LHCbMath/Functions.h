@@ -360,12 +360,10 @@ namespace Gaudi
                  const double               xmin  =  0 ,
                  const double               xmax  =  1 ) ;            
       // ======================================================================
-      /// constructor from N+1 coefficients
+      /// constructor from N phases 
       Positive ( const std::vector<double>& pars       , 
                  const double               xmin  =  0 ,
                  const double               xmax  =  1 ) ;  
-      /// constructor for Bernstein polynomials 
-      Positive ( const Gaudi::Math::Bernstein& b ) ;
       // ======================================================================
     public:
       // ======================================================================
@@ -375,19 +373,16 @@ namespace Gaudi
     public:
       // ======================================================================
       /// get number of parameters 
-      std::size_t npars () const { return m_bernstein.npars () ; }  
-      /** set k-parameter
-       *  @attention coefficients are non-negative 
-       */
-      bool setPar       ( const unsigned short k , const double value ) 
-      { return m_bernstein.setPar ( k , std::abs (  value ) ) ; }
+      std::size_t npars () const { return m_phases.size() ; }  
+      /// set k-parameter
+      bool setPar       ( const unsigned short k , const double value ) ;
       /// set k-parameter
       bool setParameter ( const unsigned short k , const double value ) 
       { return setPar   ( k , value ) ; }
-      //// get the parameter value 
+      /// get the parameter value 
       double  par       ( const unsigned short k ) const 
-      { return m_bernstein.par ( k ) ; }
-      //// get the parameter value 
+      { return ( k < m_phases.size() ) ? m_phases [k] : 0.0 ; }
+      /// get the parameter value 
       double  parameter ( const unsigned short k ) const { return par ( k ) ; }
       /// get lower edge 
       double xmin () const { return m_bernstein.xmin () ; }
@@ -403,11 +398,24 @@ namespace Gaudi
       // ======================================================================
       /// get the integral between xmin and xmax  
       double integral () const { return m_bernstein.integral() ; }
+      /// get the underlying Bernstein polynomial 
+      const Gaudi::Math::Bernstein& bernstein() const { return m_bernstein ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// update bernstein coefficinects 
+      bool updateBernstein ( const unsigned short i = 0 ) ;
       // ======================================================================
     private:
       // ======================================================================
       /// the actual bernstein polynomial 
       Gaudi::Math::Bernstein m_bernstein ; // the actual bernstein polynomial 
+      /// the external parameters 
+      std::vector<double>    m_phases ;
+      /// the starting phases 
+      std::vector<double>    m_phi0   ;
+      /// sin^2 for parameters 
+      std::vector<double>    m_sin2   ;
       // ======================================================================
     } ;
     // ========================================================================

@@ -3467,8 +3467,6 @@ bool Gaudi::Math::Voigt::setSigma ( const double x )
   //
   return true ;
 }
-
-
 // ============================================================================
 /*  constructor from four masses and angular momenta 
  *  @param m1 the mass of the first  particle 
@@ -4487,8 +4485,20 @@ double Gaudi::Math::Bernstein::operator () ( const double x ) const
   return _casteljau_ ( beta.begin() , beta.end() , t0 , t1 ) ;
 }
 // ============================================================================
-
-
+namespace 
+{
+  // ==========================================================================
+  inline void _phi0_ ( std::vector<double>& phi0 ) 
+  {
+    const std::size_t N = phi0.size() ;
+    for ( std::size_t i = 0 ; i < N ; ++i ) 
+    {
+      const long double ni = N - i ;
+      phi0[i] = std::atan2 ( std::sqrt ( ni ) , 1.0L ) ;
+    }
+  }
+  // ==========================================================================
+}
 // ============================================================================
 // constructor from the order 
 // ============================================================================
@@ -4499,7 +4509,21 @@ Gaudi::Math::Positive::Positive
   : std::unary_function<double,double> () 
 //
   , m_bernstein ( N , xmin , xmax ) 
-{}
+  , m_phases    ( N , 0 ) 
+  , m_phi0      ( N , 0 ) 
+  , m_sin2      ( N , 0 ) 
+{
+  // 
+  _phi0_ ( m_phi0 ) ;
+  //
+  for ( unsigned short i = 0 ; i < N ; ++i ) 
+  {
+    const double s = std::sin ( m_phi0[i] ) ;
+    m_sin2 [ i ] = s * s ;
+  }
+  //
+  updateBernstein () ;
+}
 // ============================================================================
 // constructor from the order 
 // ============================================================================
@@ -4509,26 +4533,66 @@ Gaudi::Math::Positive::Positive
   const double               xmax ) 
   : std::unary_function<double,double> () 
 //
-  , m_bernstein ( pars , xmin , xmax )
+  , m_bernstein ( pars.size () , xmin , xmax )
+  , m_phases    ( pars             ) 
+  , m_phi0      ( pars.size () , 0 ) 
+  , m_sin2      ( pars.size () , 0 ) 
 {
-  // set all parameters to be non-negative 
-  for ( std::size_t k = 0 ; k < m_bernstein.npars() ; ++k ) 
-  { m_bernstein.setPar ( k , std::abs ( m_bernstein.par ( k ) ) ) ; }
   //
+  _phi0_ ( m_phi0 ) ;
+  // 
+  for ( unsigned int i =  0 ; i < m_phases.size() ; ++i ) 
+  {
+    const double s = std::sin ( m_phases[i]  + m_phi0 [ i ] ) ;
+    m_sin2 [ i ]   = s * s ;
+  }
+  //
+  updateBernstein () ;
 }
 // ============================================================================
-// constructor from Bernstein polynomials 
+// set k-parameter
 // ============================================================================
-Gaudi::Math::Positive::Positive
-( const Gaudi::Math::Bernstein& b ) 
-  : std::unary_function<double,double> () 
-//
-  , m_bernstein ( b  )
-{
-  // set all parameters to be non-negative 
-  for ( std::size_t k = 0 ; k < m_bernstein.npars() ; ++k ) 
-  { m_bernstein.setPar ( k , std::abs ( m_bernstein.par ( k ) ) ) ; }
+bool Gaudi::Math::Positive::setPar ( const unsigned short k , const double value ) 
+{ 
   //
+  if (  k >= m_phases.size() )         { return false ; } // FALSE 
+  //
+  if ( s_equal ( value , par ( k ) ) ) { return false ; }
+  //
+  const double s  = std::sin ( value + m_phi0[k] ) ;
+  const double s2 =  s * s ;
+  //
+  if ( s_equal ( s2 , m_sin2 [ k ] ) ) { return false ; }
+  //
+  m_phases [ k ] = value ;
+  m_sin2   [ k ] = s2    ;
+  //
+  return updateBernstein ( k ) ;  
+}
+// =============================================================================
+// update bernstein coefficients 
+// =============================================================================
+bool Gaudi::Math::Positive::updateBernstein ( const unsigned short k ) 
+{
+  // 
+  double psin2 = 1 ;
+  for ( unsigned int i = 0 ; i < k ; ++ i ) { psin2 *= m_sin2[i] ; }
+  //
+  bool update = false ;
+  const std::size_t np = npars() + 1 ;
+  for ( unsigned int i = k ; i < npars() ; ++i ) 
+  {
+    const double sin2 = m_sin2   [i] ;
+    const double cos2 = 1 - sin2     ;
+    bool up = m_bernstein.setPar ( i , psin2 * cos2 * np ) ;
+    update  = up || update ;
+    psin2  *= sin2 ;
+  }
+  //
+  const bool up = m_bernstein.setPar ( npars() , psin2 * np ) ;
+  update  = up || update ;  
+  //
+  return update ;
 }
 // ============================================================================
 // The END 
