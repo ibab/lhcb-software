@@ -45,160 +45,25 @@ public:
   virtual int sensitiveVolumeID(const Gaudi::XYZPoint& globalPos) const;
 
   /// Number of sensors
-  unsigned int numberSensors() const            {return m_vpSensors.size();}
+  unsigned int numberSensors() const       {return m_vpSensors.size();}
   /// Number of R type sensors
-  unsigned int numberRSensors() const           {return m_nRSensors;}
+  unsigned int numberRSensors() const      {return m_nRSensors;}
   /// Number of Phi type sensors
-  unsigned int numberPhiSensors() const         {return m_nPhiSensors;}
+  unsigned int numberPhiSensors() const    {return m_nPhiSensors;}
   /// Number of pile-up sensors
-  unsigned int numberPileUpSensors() const      {return m_nPileUpSensors;}
+  unsigned int numberPileUpSensors() const {return m_nPileUpSensors;}
 
   /// Sensor number for a point in the global frame
   const DeVLSensor* sensor(const Gaudi::XYZPoint& point) const;
   
-  /// Iterator pointing to the first sensor
-  std::vector<DeVLSensor*>::const_iterator sensorsBegin() const {
-    return m_vpSensors.begin();
+  const std::vector<DeVLSensor*>& sensors() {
+    return m_vpSensors;
   }
-  /// Iterator pointing to the last sensor
-  std::vector<DeVLSensor*>::const_iterator sensorsEnd() const {
-    return m_vpSensors.end();
+  const std::vector<DeVLRSensor*>& rSensors() {
+    return m_vpRSensors;
   }
-  /// Iterator pointing to the first sensor on the left side
-  std::vector<DeVLSensor*>::const_iterator leftSensorsBegin() const {
-    return m_vpLeftSensors.begin();
-  }
-  /// Iterator pointing to the last sensor on the left side
-  std::vector<DeVLSensor*>::const_iterator leftSensorsEnd() const {
-    return m_vpLeftSensors.end();
-  }
-  /// Iterator pointing to the first sensor on the right side
-  std::vector<DeVLSensor*>::const_iterator rightSensorsBegin() const {
-    return m_vpRightSensors.begin();
-  }
-  /// Iterator pointing to the last sensor on the right side
-  std::vector<DeVLSensor*>::const_iterator rightSensorsEnd() const {
-    return m_vpRightSensors.end();
-  }
-  /// Iterator pointing to the first non pile-up sensor
-  std::vector<DeVLSensor*>::const_iterator rPhiSensorsBegin() const {
-    return m_vpSensors.begin() + m_nPileUpSensors;
-  }
-  /// Iterator pointing to the last non pile-up sensor
-  std::vector<DeVLSensor*>::const_iterator rPhiSensorsEnd() const {
-    return m_vpSensors.end();
-  }
-  /// Iterator pointing to the first non-pile up sensor on the left side
-  std::vector<DeVLSensor*>::const_iterator leftRPhiSensorsBegin() const {
-    return m_vpLeftSensors.begin() + m_nLeftPUSensors;
-  }
-  /// Iterator pointing to the last non-pile up sensor on the left side
-  std::vector<DeVLSensor*>::const_iterator leftRPhiSensorsEnd() const {
-    return m_vpLeftSensors.end();
-  }
-  /// Iterator pointing to the first non-pile up sensor on the right side
-  std::vector<DeVLSensor*>::const_iterator rightRPhiSensorsBegin() const {
-    return m_vpRightSensors.begin() + m_nRightPUSensors;
-  }
-  /// Iterator pointing to the last non-pile up sensor on the right side
-  std::vector<DeVLSensor*>::const_iterator rightRPhiSensorsEnd() const {
-    return m_vpRightSensors.end();
-  }
-  /// Iterator pointing to the first R sensor
-  std::vector<DeVLRSensor*>::const_iterator rSensorsBegin() const {
-    return m_vpRSensors.begin();
-  }
-  /// Iterator pointing to the last R sensor
-  std::vector<DeVLRSensor*>::const_iterator rSensorsEnd() const {
-    return m_vpRSensors.end();
-  }
-  /// Iterator pointing to the first R sensor on the left side
-  std::vector<DeVLRSensor*>::const_iterator leftRSensorsBegin() const {
-    return m_vpLeftRSensors.begin();
-  }
-  /// Iterator pointing to the last R sensor on the left side
-  std::vector<DeVLRSensor*>::const_iterator leftRSensorsEnd() const {
-    return m_vpLeftRSensors.end();
-  }
-  /// Iterator pointing to the first R sensor on the right side
-  std::vector<DeVLRSensor*>::const_iterator rightRSensorsBegin() const {
-    return m_vpRightRSensors.begin();
-  }
-  /// Iterator pointing to the last R sensor on the right side
-  std::vector<DeVLRSensor*>::const_iterator rightRSensorsEnd() const {
-    return m_vpRightRSensors.end();
-  }
-  /// Iterator pointing to the first Phi sensor
-  std::vector<DeVLPhiSensor*>::const_iterator phiSensorsBegin() const {
-    return m_vpPhiSensors.begin();
-  }
-  /// Iterator pointing to the last Phi sensor
-  std::vector<DeVLPhiSensor*>::const_iterator phiSensorsEnd() const {
-    return m_vpPhiSensors.end();
-  }
-  /// Iterator pointing to the first Phi sensor on the left side
-  std::vector<DeVLPhiSensor*>::const_iterator leftPhiSensorsBegin() const {
-    return m_vpLeftPhiSensors.begin();
-  }
-  /// Iterator pointing to the last Phi sensor on the left side
-  std::vector<DeVLPhiSensor*>::const_iterator leftPhiSensorsEnd() const {
-    return m_vpLeftPhiSensors.end();
-  }
-  /// Iterator pointing to the first Phi sensor on the right side
-  std::vector<DeVLPhiSensor*>::const_iterator rightPhiSensorsBegin() const {
-    return m_vpRightPhiSensors.begin();
-  }
-  /// Iterator pointing to the last Phi sensor on the right side
-  std::vector<DeVLPhiSensor*>::const_iterator rightPhiSensorsEnd() const {
-    return m_vpRightPhiSensors.end();
-  }
-  /// Iterator pointing to the first pile-up sensor
-  std::vector<DeVLSensor*>::const_iterator pileUpSensorsBegin() const {
-    return m_vpSensors.begin();
-  }
-  /// Iterator pointing to the last pile-up sensor
-  std::vector<DeVLSensor*>::const_iterator pileUpSensorsEnd() const {
-    return m_vpSensors.begin() + m_nPileUpSensors - 1;
-  }
-  /// Iterator pointing to the first pile-up sensor on the left side
-  std::vector<DeVLSensor*>::const_iterator leftPileUpSensorsBegin() const {
-    return m_vpLeftSensors.begin();
-  }
-  /// Iterator pointing to the last pile-up sensor on the left side
-  std::vector<DeVLSensor*>::const_iterator leftPileUpSensorsEnd() const {
-    return m_vpLeftSensors.begin() + m_nLeftPUSensors - 1;
-  }
-  /// Iterator pointing to the first pile-up sensor on the right side
-  std::vector<DeVLSensor*>::const_iterator rightPileUpSensorsBegin() const {
-    return m_vpRightSensors.begin();
-  }
-  /// Iterator pointing to the last pile-up sensor on the right side
-  std::vector<DeVLSensor*>::const_iterator rightPileUpSensorsEnd() const {
-    return m_vpRightSensors.begin() + m_nRightPUSensors - 1;
-  }
-  /// Iterator pointing to the first pile-up sensor
-  std::vector<DeVLRSensor*>::const_iterator pileUpRSensorsBegin() const {
-    return m_vpPUSensors.begin();
-  }
-  /// Iterator pointing to the last pile-up sensor
-  std::vector<DeVLRSensor*>::const_iterator pileUpRSensorsEnd() const {
-    return m_vpPUSensors.end();
-  }
-  /// Iterator pointing to the first pile-up sensor on the left side
-  std::vector<DeVLRSensor*>::const_iterator leftPileUpRSensorsBegin() const {
-    return m_vpLeftPUSensors.begin();
-  }
-  /// Iterator pointing to the last pile-up sensor on the left side
-  std::vector<DeVLRSensor*>::const_iterator leftPileUpRSensorsEnd() const {
-    return m_vpLeftPUSensors.end();
-  }
-  /// Iterator pointing to the first pile-up sensor on the right side
-  std::vector<DeVLRSensor*>::const_iterator rightPileUpRSensorsBegin() const {
-    return m_vpRightPUSensors.begin();
-  }
-  /// Iterator pointing to the last pile-up sensor on the right side
-  std::vector<DeVLRSensor*>::const_iterator rightPileUpRSensorsEnd() const {
-    return m_vpRightPUSensors.end();
+  const std::vector<DeVLPhiSensor*>& phiSensors() {
+    return m_vpPhiSensors;
   }
 
   /// Return a trajectory (for track fit) from strip + offset
@@ -312,7 +177,7 @@ private:
   /// Number of right side pile-up sensors
   unsigned int m_nRightPUSensors;
 
-  /// Indices of R, Phi and pile-up sensors in list of all sensors sorted by z
+  /// Indices of sensors in list of all sensors sorted by z
   mutable std::vector<DeVLSensor*> m_sensors;
 
   /// Custom operator for sorting sensors by z position

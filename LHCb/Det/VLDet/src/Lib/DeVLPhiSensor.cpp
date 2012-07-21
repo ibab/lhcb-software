@@ -43,7 +43,12 @@ namespace VLDet {
 DeVLPhiSensor::DeVLPhiSensor(const std::string& name) : 
     DeVLSensor(name),
     m_zones(VLDet::deVLPhiSensorStaticPhiZones()),
-    m_strips(VLDet::deVLPhiSensorStaticPhiStrips()) {
+    m_strips(VLDet::deVLPhiSensorStaticPhiStrips()),
+    m_associatedRSensor(0),
+    m_otherSidePhiSensor(0),
+    m_otherSideRSensor(0),
+    m_nextPhiSensor(0),
+    m_previousPhiSensor(0) {
   
 }
 
@@ -89,6 +94,7 @@ StatusCode DeVLPhiSensor::initialize() {
   sc = initSensor();
   if (!sc.isSuccess()) {
     msg << MSG::ERROR << "Failed to initialise DeVLPhiSensor." << endmsg;
+    return sc;
   }
   /// Build up map of strips to routing lines.
   buildRoutingLineMap();
@@ -112,25 +118,25 @@ StatusCode DeVLPhiSensor::initSensor() {
 
   MsgStream msg(msgSvc(), "DeVLPhiSensor");
 
-  /// Number of zones
+  // Number of zones
   m_numberOfZones = param<int>("PhiNbZones");
-  /// Number of strips in each zone
+  // Number of strips in each zone
   std::vector<int> nbStrips = paramAsIntVect("PhiNbStrips");
-  /// Angular coverage in each zone
+  // Angular coverage in each zone
   std::vector<double> coverage = paramAsDoubleVect("PhiCoverage");
-  /// Min. and max. radius of each zone
+  // Min. and max. radius of each zone
   std::vector<double> rMinZone = paramAsDoubleVect("PhiMinRadius");
   std::vector<double> rMaxZone = paramAsDoubleVect("PhiMaxRadius");
-  /// Stereo angles of each zone
+  // Stereo angles of each zone
   std::vector<double> stereoAngles = paramAsDoubleVect("PhiStereoAngles");
-  /// Phi offset
+  // Phi offset
   m_phiOrigin = param<double>("PhiOrigin");
   m_phiOrigin -= Gaudi::Units::halfpi;
-  /// Resolution of the sensor
+  // Resolution of the sensor
   m_resolution.first = param<double>("PhiResGrad");
   m_resolution.second = param<double>("PhiResConst");
 
-  /// Check the size of the vectors retrieved from XML.
+  // Check the size of the vectors retrieved from XML.
   if (nbStrips.size()     != m_numberOfZones ||
       coverage.size()     != m_numberOfZones ||
       rMinZone.size()     != m_numberOfZones ||
@@ -141,28 +147,28 @@ StatusCode DeVLPhiSensor::initSensor() {
     return StatusCode::FAILURE;
   }
 
-  /// Count the total number of strips.
+  // Count the total number of strips.
   m_numberOfStrips = 0;
   for (unsigned int zone = 0; zone < m_numberOfZones; ++zone) {
     m_numberOfStrips += nbStrips[zone];
   }
     
-  /// Setup the zone parameters.
+  // Setup the zone parameters.
   m_zones.resize(m_numberOfZones);
   int stripIndex = 0;
   for (unsigned int zone = 0; zone < m_numberOfZones; ++zone) {
     m_zones[zone].firstStrip = stripIndex;
     m_zones[zone].nbStrips = nbStrips[zone];
     m_zones[zone].coverage = coverage[zone];
-    /// Calculate the phi pitch.
+    // Calculate the phi pitch.
     m_zones[zone].pitch = m_zones[zone].coverage / m_zones[zone].nbStrips;
-    /// Set the inner and outer radius of the zone.
+    // Set the inner and outer radius of the zone.
     m_zones[zone].rMin = rMinZone[zone];
     m_zones[zone].rMax = rMaxZone[zone];
-    /// Set the stereo angle.
+    // Set the stereo angle.
     m_zones[zone].tilt = stereoAngles[zone];
-    /// Calculate dist. to origin 
-    /// (defined by angle between extrapolated strip and phi)
+    // Calculate dist. to origin 
+    // (defined by angle between extrapolated strip and phi)
     m_zones[zone].distToOrigin = m_zones[zone].rMin * sin(stereoAngles[zone]);
     double phiInner = 0.;
     if (0 == zone) {
@@ -183,7 +189,7 @@ StatusCode DeVLPhiSensor::initSensor() {
     stripIndex += m_zones[zone].nbStrips;
   }
   
-  /// Setup the strip parameters.
+  // Setup the strip parameters.
   m_stripLimits.clear();
   m_strips.resize(m_numberOfStrips);
   stripIndex = 0;
@@ -193,14 +199,14 @@ StatusCode DeVLPhiSensor::initSensor() {
     for (unsigned int strip = 0; strip < m_zones[zone].nbStrips; ++strip) {
       const double r1 = m_zones[zone].rMin;
       const double r2 = m_zones[zone].rMax;
-      /// Determine the beginning and end points of the strip.
+      // Determine the beginning and end points of the strip.
       double x1 = r1 * cos(phiOfStrip(stripIndex, 0., r1));
       double y1 = r1 * sin(phiOfStrip(stripIndex, 0., r1));
       double x2 = r2 * cos(phiOfStrip(stripIndex, 0., r2));
       double y2 = r2 * sin(phiOfStrip(stripIndex, 0., r2)); 
       const double gradient = (y2 - y1) /  (x2 - x1);
       const double intercept = y2 - (gradient * x2);
-      /// Check if the end points are outside the bounding box.
+      // Check if the end points are outside the bounding box.
       if (y2 > boundingBoxY()) {
         y2 = boundingBoxY();
         // Determine the x coordinate.
@@ -215,7 +221,7 @@ StatusCode DeVLPhiSensor::initSensor() {
         // Determine the y coordinate.
         y2 = gradient * x2 + intercept;
       }
-      /// Calculate the length of the strip.
+      // Calculate the length of the strip.
       const double dx = x2 - x1;
       const double dy = y2 - y1;
       const double length = sqrt(dx * dx + dy * dy);
@@ -223,6 +229,12 @@ StatusCode DeVLPhiSensor::initSensor() {
       m_strips[stripIndex].gradient = gradient;
       m_strips[stripIndex].intercept = intercept;
       m_strips[stripIndex].length = length;
+      // Determine the constants for the ax + by + c = 0 parameterization.
+      m_strips[stripIndex].a = dy / length;
+      m_strips[stripIndex].b = -dx / length;
+      m_strips[stripIndex].c = (y1 * x2 - y2 * x1) / length;
+      m_strips[stripIndex].xs = 0.5 * (x1 + x2);
+      m_strips[stripIndex].ys = 0.5 * (y1 + y2);
       if (m_debug) {
         stripfile << stripIndex << "  " << x1 << "  " << y1 << "  "
                                         << x2 << "  " << y2 << "\n";

@@ -1,5 +1,5 @@
-#ifndef DEVELOLITE_RTYPE_H 
-#define DEVELOLITE_RTYPE_H 1
+#ifndef DEVL_RSENSOR_H 
+#define DEVL_RSENSOR_H 1
 
 #include "DeVLSensor.h"
 
@@ -85,6 +85,12 @@ public:
     }
     return zone;
   }
+  virtual unsigned int globalZoneOfStrip(const unsigned int strip) const {
+    unsigned int zone = zoneOfStrip(strip);
+    if (isDownstream()) zone = m_numberOfZones - 1 - zone;
+    return zone;
+  }
+
   /// Number of strips in a given zone
   virtual unsigned int stripsInZone(const unsigned int zone) const {
     return m_zones[zone].nbStrips;
@@ -221,13 +227,22 @@ public:
   const DeVLRSensor* otherSideRSensor() const {return m_otherSideRSensor;}
   /// Pointer to the Phi sensor on the other side of the Velo
   const DeVLPhiSensor* otherSidePhiSensor() const {return m_otherSidePhiSensor;}
+  /// Pointer to the R sensor on the next station
+  const DeVLRSensor* nextRSensor() const {return m_nextRSensor;}
+  /// Pointer to the R sensor on the previous station
+  const DeVLRSensor* previousRSensor() const {return m_previousRSensor;}
   
-  /// Set the associated Phi sensor. To be called by DeVL::initialize().
+  // These setter functions are called by DeVL::initialize()
+  /// Set the associated Phi sensor. 
   void setAssociatedPhiSensor(const DeVLPhiSensor* ps) {m_associatedPhiSensor = ps;}
-  /// Set the R sensor on the other side of the Velo. To be called by DeVL::initialize().
+  /// Set the R sensor on the other side of the Velo. 
   void setOtherSideRSensor(const DeVLRSensor* rs) {m_otherSideRSensor = rs;}
-  /// Set the Phi sensor on the other side of the Velo. To be called by DeVL::initialize().
+  /// Set the Phi sensor on the other side of the Velo. 
   void setOtherSidePhiSensor(const DeVLPhiSensor* ps) {m_otherSidePhiSensor = ps;}
+  /// Set the R sensor on the next station.
+  void setNextRSensor(const DeVLRSensor* rs) {m_nextRSensor = rs;}
+  /// Set the R sensor on the previous station.
+  void setPreviousRSensor(const DeVLRSensor* rs) {m_previousRSensor = rs;}
  
 private:
 
@@ -275,6 +290,10 @@ private:
   const DeVLRSensor* m_otherSideRSensor;
   /// Pointer to the Phi sensor on the other side of the Velo
   const DeVLPhiSensor* m_otherSidePhiSensor;
+  /// Pointer to the R sensor on the next station
+  const DeVLRSensor* m_nextRSensor;
+  /// Pointer to the R sensor on the previous station
+  const DeVLRSensor* m_previousRSensor;
 
   /// Output level for message service
   bool m_debug;

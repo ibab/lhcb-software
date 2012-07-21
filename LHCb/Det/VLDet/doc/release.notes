@@ -2,6 +2,9 @@
 ! Package     : VLDet
 !-------------------------------------------------------------------------
 
+! 2012-07-21 - Heinrich Schindler
+ - removed iterator member functions in DeVL, 
+   added functions needed for pattern recognition
 !========================= VLDet v1r0 2012-06-25 =========================
 ! 2012-06-05 - Heinrich Schindler
  - initial import, strip layout corresponding to Hamamatsu prototype 

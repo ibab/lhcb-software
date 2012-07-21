@@ -49,7 +49,12 @@ namespace VLDet {
 DeVLRSensor::DeVLRSensor(const std::string& name) : 
     DeVLSensor(name),
     m_zones(VLDet::deVLRSensorStaticRZones()),
-    m_strips(VLDet::deVLRSensorStaticRStrips()) {
+    m_strips(VLDet::deVLRSensorStaticRStrips()),
+    m_associatedPhiSensor(0),
+    m_otherSideRSensor(0),
+    m_otherSidePhiSensor(0),
+    m_nextRSensor(0),
+    m_previousRSensor(0) {
  
 }
 
@@ -95,6 +100,7 @@ StatusCode DeVLRSensor::initialize() {
   sc = initSensor();
   if (!sc.isSuccess()) {
     msg << MSG::ERROR << "Failed to initialise DeVLRSensor." << endmsg;
+    return sc;
   }
   /// Build up map of strips to routing lines.
   buildRoutingLineMap();

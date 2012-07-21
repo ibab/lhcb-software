@@ -108,7 +108,7 @@ StatusCode DeVL::initialize() {
       ++m_nRightSensors;
     }
     
-    // Check if sensor is R type, Phi type or pile-up
+    // Check if sensor is R type or Phi type
     if ((*it)->isR()) {
       m_vpRSensors.push_back(dynamic_cast<DeVLRSensor*>((*it)));
       ++m_nRSensors;
@@ -153,30 +153,81 @@ StatusCode DeVL::initialize() {
     }
   }
 
-  // Set the associated and other side sensor links.  
-  std::vector<DeVLRSensor*>::const_iterator itRS;
-  for (itRS = leftRSensorsBegin(); itRS != leftRSensorsEnd(); ++itRS) {
-    // Associated sensors on the left side
-    DeVLRSensor*   lRS = *itRS;
-    DeVLPhiSensor* lPS = const_cast<DeVLPhiSensor*>(phiSensor(lRS->sensorNumber() + 64));
-    lRS->setAssociatedPhiSensor(lPS);
-    if (lPS) lPS->setAssociatedRSensor(lRS);
-    // Associated sensors on the right side
-    DeVLRSensor*   rRS = const_cast<DeVLRSensor*>(rSensor(lRS->sensorNumber() + 1));
-    DeVLPhiSensor* rPS = const_cast<DeVLPhiSensor*>(phiSensor(lPS->sensorNumber() + 1));
-    if (rRS) rRS->setAssociatedPhiSensor(rPS);
-    if (rPS) rPS->setAssociatedRSensor(rRS);
-    // Other side sensor links
-    if (rRS) rRS->setOtherSideRSensor(lRS);
-    if (rRS) rRS->setOtherSidePhiSensor(lPS);
-    if (lRS) lRS->setOtherSideRSensor(rRS);
-    if (lRS) lRS->setOtherSidePhiSensor(rPS);
-    if (rPS) rPS->setOtherSidePhiSensor(lPS);
-    if (rPS) rPS->setOtherSideRSensor(lRS);
-    if (lPS) lPS->setOtherSidePhiSensor(rPS);
-    if (lPS) lPS->setOtherSideRSensor(rRS);
+  // Set the sensor links.
+  std::vector<DeVLRSensor*>::const_iterator itr;
+  for (itr = m_vpLeftRSensors.begin(); itr != m_vpLeftRSensors.end(); ++itr) {
+    DeVLRSensor* leftR = *itr;
+    // Phi sensor on the left side
+    DeVLPhiSensor* leftPhi = const_cast<DeVLPhiSensor*>(phiSensor(leftR->sensorNumber() + 64));
+    if (!leftPhi) {
+      msg << MSG::ERROR 
+          << "Sensor number " << leftR->sensorNumber() 
+          << " has no associated left side Phi sensor." << endmsg;
+      continue;
+    }
+    // Set the associated sensor on the left side.
+    leftR->setAssociatedPhiSensor(leftPhi);
+    leftPhi->setAssociatedRSensor(leftR);
+    // Set the associated sensors on the right side.
+    DeVLRSensor* rightR = const_cast<DeVLRSensor*>(rSensor(leftR->sensorNumber() + 1));
+    DeVLPhiSensor* rightPhi = const_cast<DeVLPhiSensor*>(phiSensor(leftPhi->sensorNumber() + 1));
+    if (!rightR) {
+      msg << MSG::ERROR 
+          << "Sensor number " << leftR->sensorNumber() 
+          << " has no associated right side R sensor." << endmsg;
+      continue;
+    }
+    if (!rightPhi) {
+      msg << MSG::ERROR 
+          << "Sensor number " << leftR->sensorNumber() 
+          << " has no associated right side Phi sensor." << endmsg;
+      continue;
+    }
+    rightR->setAssociatedPhiSensor(rightPhi);
+    rightPhi->setAssociatedRSensor(rightR);
+    // Set the other side sensor links.
+    rightR->setOtherSideRSensor(leftR);
+    rightR->setOtherSidePhiSensor(leftPhi);
+    leftR->setOtherSideRSensor(rightR);
+    leftR->setOtherSidePhiSensor(rightPhi);
+    rightPhi->setOtherSidePhiSensor(leftPhi);
+    rightPhi->setOtherSideRSensor(leftR);
+    leftPhi->setOtherSidePhiSensor(rightPhi);
+    leftPhi->setOtherSideRSensor(rightR);
+    // Set next R and phi sensors on the same side.
+    unsigned int nextSensorNumber = leftR->sensorNumber() + 2;
+    if (nextSensorNumber < m_nRSensors) {
+      if (rSensor(nextSensorNumber)) {
+        DeVLRSensor* next = const_cast<DeVLRSensor*>(rSensor(nextSensorNumber));
+        leftR->setNextRSensor(next);
+        next->setPreviousRSensor(leftR);
+      }
+    }
+    nextSensorNumber = rightR->sensorNumber() + 2;
+    if (nextSensorNumber < m_nRSensors) {
+      if (rSensor(nextSensorNumber)) {
+        DeVLRSensor* next = const_cast<DeVLRSensor*>(rSensor(nextSensorNumber));
+        rightR->setNextRSensor(next);
+        next->setPreviousRSensor(rightR);
+      }
+    }
+    nextSensorNumber = leftPhi->sensorNumber() + 2;
+    if (nextSensorNumber < 64 + m_nPhiSensors) {
+      if (phiSensor(nextSensorNumber)) {
+        DeVLPhiSensor* next = const_cast<DeVLPhiSensor*>(phiSensor(nextSensorNumber));
+        leftPhi->setNextPhiSensor(next);
+        next->setPreviousPhiSensor(leftPhi);
+      }
+    }
+    nextSensorNumber = rightPhi->sensorNumber() + 2;
+    if (nextSensorNumber < 64 + m_nPhiSensors) {
+      if (phiSensor(nextSensorNumber)) {
+        DeVLPhiSensor* next = const_cast<DeVLPhiSensor*>(phiSensor(nextSensorNumber));
+        rightPhi->setNextPhiSensor(next);
+        next->setPreviousPhiSensor(rightPhi);
+      }
+    }
   }
-
   if (m_debug) {
     msg << MSG::DEBUG 
         << "There are " << m_nSensors 
@@ -268,12 +319,12 @@ StatusCode DeVL::registerConditionCallBacks() {
   // Half box offsets
   if (m_nLeftSensors > 0) {
     updMgrSvc()->registerCondition(this,
-                                   (*leftSensorsBegin())->geometry(),
+                                   m_vpLeftSensors.front()->geometry(),
                                    &DeVL::updateLeftHalfBoxOffset);
   }
   if (m_nRightSensors > 0) {
     updMgrSvc()->registerCondition(this,
-                                   (*rightSensorsBegin())->geometry(),
+                                   m_vpRightSensors.front()->geometry(),
                                    &DeVL::updateRightHalfBoxOffset);
   }
   StatusCode sc = updMgrSvc()->update(this);
@@ -290,7 +341,7 @@ StatusCode DeVL::registerConditionCallBacks() {
 StatusCode DeVL::updateLeftHalfBoxOffset() {
 
   Gaudi::XYZPoint localZero(0., 0., 0.);
-  Gaudi::XYZPoint globalZero = (*leftSensorsBegin())->veloHalfBoxToGlobal(localZero);
+  Gaudi::XYZPoint globalZero = m_vpLeftSensors.front()->veloHalfBoxToGlobal(localZero);
   m_halfBoxOffsets[LeftHalf] = globalZero - localZero;
   return StatusCode::SUCCESS;
 
@@ -299,7 +350,7 @@ StatusCode DeVL::updateLeftHalfBoxOffset() {
 StatusCode DeVL::updateRightHalfBoxOffset() {
 
   Gaudi::XYZPoint localZero(0., 0., 0.);
-  Gaudi::XYZPoint globalZero = (*rightSensorsBegin())->veloHalfBoxToGlobal(localZero);
+  Gaudi::XYZPoint globalZero = m_vpRightSensors.front()->veloHalfBoxToGlobal(localZero);
   m_halfBoxOffsets[RightHalf] = globalZero - localZero;
   return StatusCode::SUCCESS;
 
