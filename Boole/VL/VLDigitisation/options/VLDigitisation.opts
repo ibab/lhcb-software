@@ -1,6 +1,3 @@
-VLClusterCreator.OutputLevel = 0;
-
-VLDigitCreator.OutputLevel = 0; 
 VLDigitCreator.HitLocations = {"MC/VL/Hits"};
 VLDigitCreator.InputContainerToLink = "MC/VL/Hits";
 VLDigitCreator.TimeOffsets = {0*ns};

@@ -112,10 +112,10 @@ StatusCode VLDigitCreator::initialize() {
     return sc;
   }
   // Estimate the number of R strips to add noise to.
-  std::vector<DeVLRSensor*>::const_iterator itr = m_det->rSensorsBegin();
-  const unsigned int nStripsR = (*itr)->numberOfStrips();
+  const DeVLRSensor* rSensor = m_det->rSensors().front();
+  const unsigned int nStripsR = rSensor->numberOfStrips();
   // Calculate the average strip noise.
-  double noiseR = m_StripNoiseTool->averageNoise((*itr)->sensorNumber());
+  double noiseR = m_StripNoiseTool->averageNoise(rSensor->sensorNumber());
   noiseR *= m_scaleNoise; 
   double noiseHitsR = 2. * erfcSafe(m_threshold / noiseR) * nStripsR;
   sc = m_poissonR.initialize(randSvc(), Rndm::Poisson(noiseHitsR));
@@ -124,9 +124,9 @@ StatusCode VLDigitCreator::initialize() {
     return sc;
   }
   // Estimate the number of Phi strips to add noise to.
-  std::vector<DeVLPhiSensor*>::const_iterator itp = m_det->phiSensorsBegin();
-  const unsigned int nStripsPhi = (*itp)->numberOfStrips();
-  double noisePhi = m_StripNoiseTool->averageNoise((*itp)->sensorNumber());
+  const DeVLPhiSensor* phiSensor = m_det->phiSensors().front();
+  const unsigned int nStripsPhi = phiSensor->numberOfStrips();
+  double noisePhi = m_StripNoiseTool->averageNoise(phiSensor->sensorNumber());
   noisePhi *= m_scaleNoise; 
   double noiseHitsPhi = 2. * erfcSafe(m_threshold / noisePhi) * nStripsPhi;
   sc = m_poissonPhi.initialize(randSvc(), Rndm::Poisson(noiseHitsPhi));
@@ -683,8 +683,9 @@ void VLDigitCreator::simulateNoise() {
     }
   }
   // Allocate noise to channels which don't have a hit.
-  std::vector<DeVLSensor*>::const_iterator its; 
-  for (its = m_det->rPhiSensorsBegin(); its != m_det->rPhiSensorsEnd(); ++its) {
+  const std::vector<DeVLSensor*>& sensors = m_det->sensors();
+  std::vector<DeVLSensor*>::const_iterator its;
+  for (its = sensors.begin(); its != sensors.end(); ++its) {
     const DeVLSensor* sens = *its;
     // Estimate the number of noise hits.
     int nNoiseHits = 0;

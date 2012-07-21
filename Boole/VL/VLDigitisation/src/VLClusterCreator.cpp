@@ -110,8 +110,9 @@ void VLClusterCreator::makeClusters() {
   // Sort the digits by sensor number.
   std::stable_sort(m_digits->begin(), m_digits->end(),
                    VLDataFunctor::LessBySensor<const MCVLDigit*>());
+  const std::vector<DeVLSensor*>& sensors = m_det->sensors();
   std::vector<DeVLSensor*>::const_iterator its; 
-  for (its = m_det->sensorsBegin(); its != m_det->sensorsEnd(); ++its) {
+  for (its = sensors.begin(); its != sensors.end(); ++its) {
     const unsigned int sensor = (*its)->sensorNumber();
     // Tag all channels as unused.
     m_used.clear();
@@ -336,7 +337,7 @@ void VLClusterCreator::linkClustersToHits() {
 void VLClusterCreator::linkClustersToParticles() {
 
   if (m_debug) debug() << " ==> linkClustersToParticles()" << endmsg;
-  const std::string location = m_clusterLocation + "2MCParticles";
+  const std::string location = m_clusterLocation;
   // Create a linker for associating clusters with MC particles.
   LinkerWithKey<MCParticle, VLCluster> linker(evtSvc(), msgSvc(), location);
   // TODO: merging of hits created by delta electrons with parent particle hit

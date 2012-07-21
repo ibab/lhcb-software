@@ -4,6 +4,10 @@
 ! Purpose     : Algorithms for VL Digitization
 !-----------------------------------------------------------------------------
 
+! 2012-07-21 - Heinrich Schindler
+ - minor updates in VLDigitCreator, VLClusterMonitor, 
+   bugfix in VLClusterCreator (truth association)
+
 !========================= VLDigitisation v1r0 2012-07-05 ====================
 ! 2012-06-14 - Heinrich Schindler
  - initial import

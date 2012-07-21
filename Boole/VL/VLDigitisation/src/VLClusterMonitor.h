@@ -35,6 +35,7 @@ private:
   double m_nTwoStrip;
   double m_nThreeStrip;
   double m_nFourStrip;
+  double m_nFiveStrip;
   int m_nEvents;
 
 };

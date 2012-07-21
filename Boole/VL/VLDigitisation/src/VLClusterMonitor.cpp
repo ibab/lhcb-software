@@ -26,6 +26,7 @@ VLClusterMonitor::VLClusterMonitor(const std::string& name,
     m_nTwoStrip(0.),
     m_nThreeStrip(0.),
     m_nFourStrip(0.),
+    m_nFiveStrip(0.),
     m_nEvents(0) {
 
   declareProperty("Detailed",  m_detailed = false);
@@ -79,6 +80,7 @@ StatusCode VLClusterMonitor::finalize() {
     m_nTwoStrip /= m_nEvents;
     m_nThreeStrip /= m_nEvents;
     m_nFourStrip /= m_nEvents;
+    m_nFiveStrip /= m_nEvents;
   }
   info() << "------------------------------------------------------" << endmsg;
   info() << "                    VLClusterMonitor                  " << endmsg;
@@ -101,6 +103,10 @@ StatusCode VLClusterMonitor::finalize() {
     info().precision(3);
     info() << "   4 strip clusters / event:     " << m_nFourStrip 
            << " (" << (m_nFourStrip / m_nClusters) * 100 << "%)"
+           << endmsg;
+    info().precision(3);
+    info() << "   5 strip clusters / event:     " << m_nFiveStrip 
+           << " (" << (m_nFiveStrip / m_nClusters) * 100 << "%)"
            << endmsg;
   } else {
     info() << " ==> No VLClusters found! " << endmsg;
@@ -129,6 +135,7 @@ void VLClusterMonitor::monitor() {
       case 2: m_nTwoStrip += 1.; break;
       case 3: m_nThreeStrip += 1.; break;
       case 4: m_nFourStrip += 1.; break;
+      case 5: m_nFiveStrip += 1.; break;
       default : break;
     }
     if (!m_detailed) continue;
