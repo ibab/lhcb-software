@@ -94,6 +94,9 @@ StatusCode VLRawBankDecoder::execute() {
   RawEvent* rawEvent = get<RawEvent>(m_rawEventLocation);
   // Get the VL raw banks.
   const std::vector<RawBank*>& banks = rawEvent->banks(RawBank::VL);
+  if (msgLevel(MSG::DEBUG)) {
+    debug() << "Retrieved " << banks.size() << " VL raw banks" << endmsg;
+  }
   std::vector<RawBank*>::const_iterator it;
   for (it = banks.begin(); it != banks.end(); ++it) {
     // Do the decoding.
@@ -139,6 +142,9 @@ void VLRawBankDecoder::decode(const RawBank* rb) {
   }
   // Check if the source ID corresponds to a valid sensor number.
   const unsigned int sensorNumber = static_cast<unsigned int>(rb->sourceID());
+  if (msgLevel(MSG::DEBUG)) {
+    debug() << "Decoding raw bank for sensor " << sensorNumber << endmsg;
+  }
   const DeVLSensor* sensor = m_det->sensor(sensorNumber);
   if (!sensor) {
     // Set ProcStat for this event to failed.
@@ -162,7 +168,9 @@ void VLRawBankDecoder::decode(const RawBank* rb) {
     return;
   }
   unsigned int nClusters = hw.nClusters();
-  m_clusters->reserve(m_clusters->size() + nClusters);
+  if (msgLevel(MSG::DEBUG)) {
+    debug() << nClusters << " clusters" << endmsg;
+  }
   const unsigned int offset = 1 + nClusters / 2 + nClusters % 2;
   VLDAQ::row adcrow = data[offset];
   // Keep track of the number of ADC words read.
@@ -174,6 +182,10 @@ void VLRawBankDecoder::decode(const RawBank* rb) {
     const unsigned int stripNumber = cw.channel();
     const double isp = cw.interStripPosition();
     const bool high = cw.highAdc();
+    if (msgLevel(MSG::DEBUG)) {
+      debug() << "Cluster " << i << ": strip " << stripNumber 
+              << ", inter-strip fraction " << isp << endmsg;
+    }
     // Set the channel ID.
     VLChannelID channelID(sensorNumber, stripNumber, VLChannelID::Null);
     if (sensor->isPhi()) {
@@ -185,7 +197,7 @@ void VLRawBankDecoder::decode(const RawBank* rb) {
     // Set the pseudo-size to 1 for now.
     VLLiteCluster liteCluster(channelID, isp, high);
     m_liteClusters->push_back(liteCluster);
-    if (!m_decodeToClusters) return;
+    if (!m_decodeToClusters) continue;
     std::vector<std::pair<int, unsigned int> > strips;
     // Get the ADC words.
     bool endCluster = false;

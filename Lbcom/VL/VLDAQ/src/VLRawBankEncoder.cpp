@@ -42,7 +42,8 @@ StatusCode VLRawBankEncoder::initialize() {
   m_det = getDet<DeVL>(DeVLLocation::Default);
   // Get a list of sensor numbers to identify empty sensors.
   std::vector<DeVLSensor*>::const_iterator it;
-  for (it = m_det->sensorsBegin(); it != m_det->sensorsEnd(); ++it) {
+  const std::vector<DeVLSensor*>& sensors = m_det->sensors();
+  for (it =sensors.begin(); it != sensors.end(); ++it) {
     m_sensorNumbers.push_back((*it)->sensorNumber());
   }
   std::sort(m_sensorNumbers.begin(), m_sensorNumbers.end());

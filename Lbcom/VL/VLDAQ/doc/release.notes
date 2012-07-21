@@ -3,6 +3,9 @@
 ! Package manager : H.Schindler
 !------------------------------------------------------------------------------
 
+! 2012-07-21 - Heinrich Schindler
+ - bugfix in VLRawBankDecoder
+
 !========================= VLDAQ v1r0 2012-06-25 =========================
 ! 2012-06-15 - Heinrich Schindler
  - initial import
