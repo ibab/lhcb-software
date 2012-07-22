@@ -172,6 +172,7 @@
         <enumval name = "FitTChi2"     value = "19" desc="Chi2 of the T station segment (from TrackFitResult)"/>
         <enumval name = "FitTNDoF"     value = "20" desc="NDoF of the T station segment chisq"/>
         <enumval name = "FitMatchChi2" value = "21" desc="Chi2 of the breakpoint between T and TT (from TrackFitResult)"/>
+	<enumval name = "FitFracUsedOTTimes" value = "25" desc="Fraction of OT hits for which drifttime is used in fit"/>
 	<enumval name = "TsaLikelihood" value = "32" desc ="Likelihood from tsa seeding"/> 
         <enumval name = "CloneDist"  value = "101" desc="Track is flagged as being a (rejected) clone of another track. Value is the KL clone distance"/>
         <enumval name = "DC06GhostProbability" value = "102" desc=" gives the NN ghost probability. OBSOLETE, may exist on DC06 DSTs and some 2007/09 files"/>

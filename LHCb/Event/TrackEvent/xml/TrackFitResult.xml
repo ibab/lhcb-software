@@ -11,7 +11,7 @@
       desc             = 'TrackFitResult holds transient information from the track fit'
       virtual          = 'TRUE' >
 
-      <import name='Measurement' soft='FORWARDONLY' />
+      <import name='Measurement' />
       <import name='Node' soft='FORWARDONLY' />
       <import name='LHCbID' soft='FORWARDONLY' />
       
@@ -153,6 +153,22 @@
         <code>
   return m_measurements.size();
         </code>
+      </method>
+
+      <method
+        type    = 'unsigned int'
+        name    = 'nMeasurements'
+        desc    = 'Retrieve the number of measurements of a certain type'
+        argList = 'const LHCb::Measurement::Type type'
+        const   = 'TRUE'>
+      </method>
+
+      <method
+        type    = 'unsigned int'
+        name    = 'nActiveMeasurements'
+        desc    = 'Retrieve the number of active measurements of a certain type'
+        argList = 'const LHCb::Measurement::Type type'
+        const   = 'TRUE'>
       </method>
 
       <method

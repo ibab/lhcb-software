@@ -202,3 +202,32 @@ unsigned int LHCb::TrackFitResult::nActiveMeasurements() const
 {
   return m_measurements.size() - nOutliers() ;
 }
+
+//=============================================================================
+// Count the number of measurement of a certain type
+//=============================================================================
+
+unsigned int LHCb::TrackFitResult::nMeasurements( const LHCb::Measurement::Type& type) const 
+{
+  unsigned int rc(0) ;
+  for( MeasurementContainer::const_iterator it = m_measurements.begin() ;
+       it != m_measurements.end() ; ++it ) 
+    if( (*it)->type() == type ) ++rc ;
+  return rc ;
+}
+
+//=============================================================================
+// Count the number of active measurement of a certain type
+//=============================================================================
+
+unsigned int LHCb::TrackFitResult::nActiveMeasurements( const LHCb::Measurement::Type& type ) const
+{
+  unsigned int rc(0) ;
+  for( NodeContainer::const_iterator inode = nodes().begin() ; 
+       inode != nodes().end() ; ++inode) 
+    if( (*inode)->type() == LHCb::Node::HitOnTrack &&
+	(*inode)->measurement().type() == type ) ++rc ;
+  return rc ;
+}
+
+
