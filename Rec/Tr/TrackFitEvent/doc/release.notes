@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2012-07-23 - Wouter Hulsbergen
+- added method to KalmanFitResult to compute number of active OTTimes and chi2 contribution of TT hits
+
 !========================= TrackFitEvent v5r16 2012-03-27 =========================
 ! 2012-03-22 - Wouter Hulsbergen
 - implemented faster method to invert transport matrix

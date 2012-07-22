@@ -2,6 +2,7 @@
 #define TRACKFITEVENT_KALMANFITRESULT_H
 
 #include "Event/TrackFitResult.h"
+#include "Event/Measurement.h"
 #include "Event/TrackTypes.h"
 #include "Event/ChiSquare.h"
 #include "GaudiKernel/Range.h"
@@ -120,6 +121,12 @@ namespace LHCb
       return chi2() - m_chi2VeloTTT - m_chi2Muon ;
     }
 
+    // return (chisq,dof) of the TT hits only. this is _not_ fast.
+    ChiSquare chi2TTHits() const ;
+
+    // return (chisq,dof) of the velo-T match without TT hits. this is _not_ fast.
+    ChiSquare chi2VeloTMatch() const ;
+    
     // set the error flag
     void setErrorFlag(unsigned short extrainfo ,unsigned short algnum , unsigned short errnum);
     
@@ -140,6 +147,9 @@ namespace LHCb
 
     // return fitnode range
     FitNodeRange fitNodes() ;
+
+    // the number of active hits (non-outlier) of a certain type
+    unsigned int nActiveOTTimes() const ;
 
   private:
     void computeChiSquares() const ;

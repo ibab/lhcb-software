@@ -1,5 +1,6 @@
 #include "Event/KalmanFitResult.h"
 #include "Event/FitNode.h"
+#include "Event/OTMeasurement.h"
 #include <boost/foreach.hpp>
 
 namespace LHCb
@@ -242,4 +243,82 @@ namespace LHCb
     end   = reinterpret_cast<iterator*>(&_end);
     return FitNodeRange(*begin,*end) ;
   }
+
+  unsigned int KalmanFitResult::nActiveOTTimes() const 
+  {
+    unsigned int rc(0) ;
+    for( NodeContainer::const_iterator inode = nodes().begin() ; 
+	 inode != nodes().end() ; ++inode) 
+      if( (*inode)->type() == LHCb::Node::HitOnTrack &&
+	  (*inode)->measurement().type() == LHCb::Measurement::OT ) {
+	const LHCb::OTMeasurement* otmeas = 
+	  static_cast< const LHCb::OTMeasurement* > (&(*inode)->measurement()) ;
+	if( otmeas->driftTimeStrategy() == LHCb::OTMeasurement::FitDistance ||
+	    otmeas->driftTimeStrategy() == LHCb::OTMeasurement::FitTime )
+	  ++rc ;
+      }
+    return rc ;
+  }
+
+  LHCb::ChiSquare KalmanFitResult::chi2VeloTMatch() const
+  {
+    LHCb::ChiSquare velo = chi2Velo() ;
+    LHCb::ChiSquare T    = chi2Downstream() ;
+    LHCb::ChiSquare tot  = chi2() - chi2TTHits() ;
+    return tot - T - velo ;
+  }
+  
+  LHCb::ChiSquare KalmanFitResult::chi2TTHits() const
+  {
+    LHCb::ChiSquare rc ;
+    ConstFitNodeRange fitnodes = fitNodes() ;
+    const LHCb::FitNode *lastnode(0), *firstnode(0) ;
+    for( ConstFitNodeRange::const_iterator inode = fitnodes.begin() ; 
+	 inode != fitnodes.end() ; ++inode)
+      if( (*inode)->type()==LHCb::Node::HitOnTrack &&
+	  (*inode)->measurement().type()==LHCb::Measurement::TT ) {
+	lastnode = (*inode) ;
+	if(firstnode==0) firstnode = (*inode) ;
+      }
+    if( firstnode ) {
+      LHCb::ChiSquare chi2WithOutTTHits ;
+      // first add the contributions untill the TT hits
+      if( lastnode->hasInfoUpstream( LHCb::FitNode::Backward) )
+	chi2WithOutTTHits += lastnode->prevNode(LHCb::FitNode::Backward)->totalChi2(LHCb::FitNode::Backward) ;
+      if( firstnode->hasInfoUpstream( LHCb::FitNode::Forward) )
+	chi2WithOutTTHits += firstnode->prevNode(LHCb::FitNode::Forward)->totalChi2(LHCb::FitNode::Forward) ;
+      
+      // now compute the contribution of the velo-T match, if there is any
+      if( lastnode->hasInfoUpstream( LHCb::FitNode::Backward) &&
+	  firstnode->hasInfoUpstream( LHCb::FitNode::Forward) ) {
+	// that means we need to take off the hits.
+	
+	// for now, let's do it the lazy way: make a clone, then flag
+	// all hits as outliers. the cloning is real slow .
+	KalmanFitResult* copy = static_cast<KalmanFitResult*>(this->clone()) ;
+	
+	// set all TT hits as ourliers
+	FitNodeRange fitnodes = copy->fitNodes() ;
+	LHCb::FitNode *copylastnode(0), *copyfirstnode(0) ;
+	for( FitNodeRange::iterator inode = fitnodes.begin() ; 
+	     inode != fitnodes.end() ; ++inode)
+	  if( (*inode)->type()==LHCb::Node::HitOnTrack &&
+	      (*inode)->measurement().type()==LHCb::Measurement::TT ) {
+	    (*inode)->deactivateMeasurement() ;
+	    copylastnode = (*inode) ;
+	    if(copyfirstnode==0) copyfirstnode = (*inode) ;
+	  }
+	LHCb::State stateA = copylastnode->predictedState(LHCb::FitNode::Forward) ;
+	LHCb::State stateB = copylastnode->predictedState(LHCb::FitNode::Backward) ;
+	Gaudi::SymMatrix5x5 weight = stateA.covariance()+stateB.covariance() ;
+	weight.InvertChol() ;
+	Gaudi::Vector5 res = stateA.stateVector() - stateB.stateVector() ;
+	chi2WithOutTTHits += LHCb::ChiSquare( ROOT::Math::Similarity(res,weight), 5 ) ;
+	delete copy ;
+      }
+      rc = chi2() - chi2WithOutTTHits ;
+    }
+    return rc ;
+  }
+  
 }
