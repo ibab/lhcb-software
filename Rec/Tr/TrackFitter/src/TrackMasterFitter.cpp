@@ -1,5 +1,3 @@
-
-
 #ifdef _WIN32
 #pragma warning ( disable : 4355 ) // This used in initializer list, needed for ToolHandles
 #endif
@@ -695,6 +693,7 @@ void TrackMasterFitter::fillExtraInfo(Track& track ) const
   track.eraseInfo( Track::FitTChi2 ) ;
   track.eraseInfo( Track::FitTNDoF ) ;
   track.eraseInfo( Track::FitMatchChi2 ) ;
+  track.eraseInfo( Track::FitFracUsedOTTimes ) ;
   
   const LHCb::KalmanFitResult* kalfit =
     static_cast<const LHCb::KalmanFitResult*>(track.fitResult()) ;
@@ -702,6 +701,9 @@ void TrackMasterFitter::fillExtraInfo(Track& track ) const
   if( track.hasT() ) {
     track.addInfo( Track::FitTChi2 , kalfit->chi2Downstream().chi2() ) ;
     track.addInfo( Track::FitTNDoF , kalfit->chi2Downstream().nDoF() ) ;
+    unsigned int nOTMeas = kalfit->nMeasurements( LHCb::Measurement::OT ) ;
+    if( nOTMeas > 0 )
+      track.addInfo( Track::FitFracUsedOTTimes, kalfit->nActiveOTTimes() / double( nOTMeas ) ) ;
   }
   
   if( track.hasVelo() ) {
