@@ -205,7 +205,7 @@ def SwimmingEventLoop(gaudi, nEvents):
                 print "Skipping the event but this is bad, check what you are doing!!"   
             __next__()
             continue
-        if mycands.size() == 0 : 
+        elif mycands.size() == 0 : 
             if DEBUGMODE :
                 print "Problem while processing event number",startingEvent+eventNumber
                 print "Container of offline candidates empty!" 
@@ -222,7 +222,7 @@ def SwimmingEventLoop(gaudi, nEvents):
                         print "No container of muDST candidates "+candloc+" found!" 
                         print "Skipping the event"
                     skipEvent = True
-                if mdstcands.size() == 0 :
+                elif mdstcands.size() == 0 :
                     if DEBUGMODE :
                         print "Incident while processing event number",startingEvent+eventNumber
                         print "Empty container of muDST candidates "+candloc+" found!" 

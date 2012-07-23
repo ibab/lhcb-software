@@ -5,6 +5,13 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+! 2012-07-23
+ - Changed a few lines in EventLoop.py to deal with NULL pointers due to
+	 event packing on DSTs from stripping 18 onwards
+ - Removed .__dev__. DST writers as they are now obosolete
+ - Removed "copyProtoParticles = True" option as this is also obsolete
+
+
 !========================= Swimming v2r7 2012-07-06 =========================
 ! 2012-07-06 - Nick Torr
  - Fixed bug that caused problems swimming the KShh stripping lines

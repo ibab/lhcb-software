@@ -324,7 +324,7 @@ def ConfigureDaVinci():
     sc = StrippingConf( Streams = [stream],
                         MaxCandidates       = 2000,
                         AcceptBadEvents     = False,
-                        BadEventSelection   = filterBadEvents )
+                        BadEventSelection   = filterBadEvents)
 
     # Define the node killer, and make sure to kill everything corresponding to
     # the stream which we want to swim
@@ -374,8 +374,8 @@ def ConfigureDaVinci():
     dstWriter = None
     print config.getProp('OutputType')
     if config.getProp('OutputType') == 'MDST':
-        from DSTWriters.__dev__.Configuration import MicroDSTWriter, microDSTStreamConf
-        from DSTWriters.__dev__.microdstelements import (CloneRecHeader,
+        from DSTWriters.Configuration import MicroDSTWriter, microDSTStreamConf
+        from DSTWriters.microdstelements import (CloneRecHeader,
                                                          CloneODIN,
                                                          ClonePVs,
                                                          CloneSwimmingReports,
@@ -403,7 +403,7 @@ def ConfigureDaVinci():
                              CloneODIN(),
                              ClonePVs(),
                              CloneSwimmingReports(),
-                             CloneParticleTrees(copyProtoParticles = True),
+                             CloneParticleTrees(),
                              ClonePVRelations("Particle2VertexRelations", True),
                              CloneTPRelations("P2TPRelations", True),
                              ReFitAndClonePVs(),
@@ -420,8 +420,8 @@ def ConfigureDaVinci():
                                    OutputFileSuffix   = prefix,
                                    SelectionSequences = [selectionSeq])
     elif config.getProp('OutputType') == 'DST':
-        from DSTWriters.__dev__.streamconf import OutputStreamConf
-        from DSTWriters.__dev__.Configuration import SelDSTWriter
+        from DSTWriters.streamconf import OutputStreamConf
+        from DSTWriters.Configuration import SelDSTWriter
 
         # Output
         inputData = AutomaticData(Location = config.getProp('OffCands') + "/Particles")
