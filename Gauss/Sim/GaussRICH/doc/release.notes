@@ -4,6 +4,15 @@
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
 
+!========================= GaussRICH v12r1 2012-07-23 ========================
+! 2012-07-23 - Gloria Corti
+ - Remove include of ParticleProperty related header since they are not needed
+   . src/RichAnalysis/RichG4HistoDefineTimer.cpp
+   . src/RichAnalysis/RichG4HistoDefineSet1.cpp
+   . src/RichAnalysis/RichG4HistoDefineSet2.cpp
+   . src/RichAnalysis/RichG4HistoDefineSet3.cpp
+   . src/RichAnalysis/RichG4HistoDefineSet4.cpp
+
 !========================= GaussRICH v12r0 2012-05-14 ========================
 ! 2012-05-08 - Gloria Corti
  - Move content of constructor of SensDet/RichSensDet and 
