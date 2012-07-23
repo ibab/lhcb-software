@@ -4,6 +4,7 @@
 ! Purpose     : Holds code for generaion of particle guns
 !-----------------------------------------------------------------------------
 
+!========================== LbPGuns v4r0 2012-07-23 ==========================
 ! 2012-07-23 - Patrick Robbe
  - Changes for the new particle property service
 
