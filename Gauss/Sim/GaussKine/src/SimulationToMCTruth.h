@@ -12,12 +12,12 @@
 // Forward declarations
 class IGiGaSvc ;
 class IGiGaKineCnvSvc ;
-class IParticlePropertySvc ;
 namespace HepMC {
   class GenParticle ;
   class GenVertex ;
 };
 namespace LHCb {
+  class IParticlePropertySvc ;
   class MCHeader ;
 };
 
@@ -73,7 +73,7 @@ private:
   LHCb::MCHeader    * m_mcHeader          ; ///< MCHeader container
 
   /// Reference to the particle property service
-  IParticlePropertySvc * m_ppSvc;
+  LHCb::IParticlePropertySvc * m_ppSvc;
 
   /// Set to hold keys of treated MCParticles when rebuilding decay tree
   std::set< LHCb::MCParticle::key_type >  m_treatedParticles ;

@@ -8,8 +8,6 @@
 #include "GaudiKernel/Vector3DTypes.h"
 #include "GaudiKernel/Transform4DTypes.h"
 #include "GaudiKernel/PhysicalConstants.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
 
 // from GiGa
 #include "GiGa/IGiGaSvc.h" 
@@ -18,6 +16,8 @@
 // from LHCb
 #include "Event/HepMCEvent.h"
 #include "Event/MCHeader.h"
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 
 // From Geant4
 #include "G4PrimaryVertex.hh"
@@ -77,14 +77,14 @@ StatusCode GenerationToSimulation::initialize() {
     // If requested by option, update Geant4 particle properties
     // from Gaudi/LHCb ParticlePropertySvc
     if ( m_updateG4ParticleProperties ) {
-      IParticlePropertySvc * ppSvc = 
-	svc< IParticlePropertySvc >( "Gaudi::ParticlePropertySvc" , true ) ;
+      LHCb::IParticlePropertySvc * ppSvc = 
+        svc< LHCb::IParticlePropertySvc >( "LHCb::ParticlePropertySvc", true );
 	
       G4ParticlePropertyTable* PPT = G4ParticlePropertyTable::GetParticlePropertyTable();
       G4ParticleTable * particleTable = G4ParticleTable::GetParticleTable() ;
       for ( int i = 0 ; i < particleTable -> size() ; ++i ) {
 	G4ParticleDefinition * PDef = particleTable -> GetParticle( i ) ;
-	ParticleProperty * pp = ppSvc -> findByStdHepID( PDef -> GetPDGEncoding() ) ;
+  const LHCb::ParticleProperty * pp = ppSvc->find( LHCb::ParticleID( PDef->GetPDGEncoding() ) ) ;
 	if ( 0 != pp ) {
 	  G4ParticlePropertyData * PPData = PPT -> GetParticleProperty( PDef ) ;
 	  PPData -> SetPDGMass( pp -> mass() ) ;

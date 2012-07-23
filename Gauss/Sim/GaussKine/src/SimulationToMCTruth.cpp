@@ -6,9 +6,10 @@
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/Vector3DTypes.h"
+// from LHCb
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 
 // from GiGa 
 #include "GiGa/IGiGaSvc.h"
@@ -80,10 +81,10 @@ StatusCode SimulationToMCTruth::initialize() {
   if( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm 
   
   debug() << "==> Initialize" << endmsg;
-  m_ppSvc = svc<IParticlePropertySvc> ( "Gaudi::ParticlePropertySvc", true );
+  m_ppSvc = svc<LHCb::IParticlePropertySvc> ( "LHCb::ParticlePropertySvc", true );
   
-  ParticleProperty * interm = m_ppSvc -> find( "Intermediate" ) ;
-  if ( 0 != interm ) m_intermediatePDG = interm -> pdgID() ;
+  const LHCb::ParticleProperty * interm = m_ppSvc -> find( "Intermediate" ) ;
+  if ( 0 != interm ) m_intermediatePDG = interm -> pdgID().pid() ;
 
   m_gigaSvc = svc<IGiGaSvc>( m_gigaSvcName ); // GiGa has to already exist!
 
@@ -262,7 +263,7 @@ void SimulationToMCTruth::convert( const HepMC::GenParticle * part ,
     mcpart -> setParticleID   ( LHCb::ParticleID( part->pdg_id() ) ) ;
     
     if ( m_checkUnknown ) {
-      if ( 0 == m_ppSvc -> findByStdHepID( part->pdg_id() ) ) 
+      if ( 0 == m_ppSvc -> find( LHCb::ParticleID( part->pdg_id() ) ) ) 
 	  warning() << "The particle with pdg_id " << part->pdg_id()
 		    << " is not known to LHCb. " 
 		    << "Mass is " << part -> generated_mass() << endreq ;
