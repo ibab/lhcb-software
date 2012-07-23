@@ -4,6 +4,7 @@
 ! Purpose     : Package for Pythia 6 in Gauss
 !-----------------------------------------------------------------------------
 
+!========================= LbPythia v12r0 2012-07-23 =========================
 ! 2012-07-23 - Patrick Robbe
  - Add interface to HEPEUP common block (ghepeup.F, Hepeup.cpp, Hepeup.h)
  - Move Beam tool to protected PythiaProduction section
