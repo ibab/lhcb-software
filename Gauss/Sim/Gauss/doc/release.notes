@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2012-07-23 - Gloria Corti
+ - Remove use of GaudiPartProp from Gauss() since all code has been migrated 
+   to the LHCb::ParticlePropertySvc
 
 ! 2012-07-11 - Paul Szczypka
   - Rewrite of python/Gauss/Configurable.py in order to more easily replace
