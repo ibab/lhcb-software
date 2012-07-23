@@ -6,6 +6,7 @@
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
 
+!=========================== Mint v1r4 2012-07-23 ============================
 ! 30-05-2012 - Patrick Robbe
  - Remove compilation warnings
 

@@ -3,7 +3,7 @@
 # Maintainer : Matt Coombes
 #============================================================================
 package           Mint
-version           v1r3
+version           v1r4
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -15,7 +15,7 @@ branches          cmt doc src Mint
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
 use         GaudiAlg          v*
-use 		ROOT              v*  LCG_Interfaces  -no_auto_imports
+use 	    ROOT              v*  LCG_Interfaces  -no_auto_imports
 
 #============================================================================
 # Include directories
