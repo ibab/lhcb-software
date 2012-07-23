@@ -10,10 +10,11 @@
 // ============================================================================
 // GaudiKernel
 // ============================================================================
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/ToolFactory.h"
+// LHCb 
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 // ============================================================================
 // GiGa 
 // ============================================================================
@@ -77,12 +78,12 @@ public:
 protected:
   // ==========================================================================  
   /// get the particle property for the given particle name 
-  const ParticleProperty* pp 
+  const LHCb::ParticleProperty* pp 
   ( const std::string&    n , 
-    IParticlePropertySvc* s ) const 
+    LHCb::IParticlePropertySvc* s ) const 
   {
     Assert ( 0 != s , "Invalid ParticleProperty Service") ;
-    const ParticleProperty* p = s->find ( n ) ;
+    const LHCb::ParticleProperty* p = s->find ( n ) ;
     Assert ( 0 != p , "No information is availale for '" + n + "'") ;
     return p ;
   }
@@ -109,8 +110,8 @@ private:
 void GiGaHiggsParticles::ConstructParticle () // construct the particles 
 {
   
-  IParticlePropertySvc* ppSvc = 
-    svc<IParticlePropertySvc> ("Gaudi::ParticlePropertySvc") ;
+  LHCb::IParticlePropertySvc* ppSvc = 
+    svc<LHCb::IParticlePropertySvc> ("LHCb::ParticlePropertySvc") ;
   
   Strings tmp = m_higgses ;
   {
@@ -118,7 +119,7 @@ void GiGaHiggsParticles::ConstructParticle () // construct the particles
     Strings::iterator it = std::find  ( tmp.begin() , tmp.end() , "H_10" ) ;
     if ( tmp.end() != it )
     {
-      const ParticleProperty* h10 = pp ( "H_10" , ppSvc ) ;
+      const LHCb::ParticleProperty* h10 = pp ( "H_10" , ppSvc ) ;
       G4H_10* h_10 = G4H_10::Create 
         ( h10 -> mass     () ,       
           h10 -> lifetime () * Gaudi::Units::c_light ) ;
@@ -130,7 +131,7 @@ void GiGaHiggsParticles::ConstructParticle () // construct the particles
     it = std::find  ( tmp.begin() , tmp.end() , "H_20" ) ;
     if ( tmp.end() != it )
     {
-      const ParticleProperty* h20 = pp ( "H_20" , ppSvc ) ;
+      const LHCb::ParticleProperty* h20 = pp ( "H_20" , ppSvc ) ;
       G4H_20* h_20 = G4H_20::Create 
         ( h20 -> mass     () ,       
           h20 -> lifetime () * Gaudi::Units::c_light ) ;
@@ -142,7 +143,7 @@ void GiGaHiggsParticles::ConstructParticle () // construct the particles
     it = std::find  ( tmp.begin() , tmp.end() , "H_30" ) ;
     if ( tmp.end() != it )
     {
-      const ParticleProperty* h30 = pp ( "H_30" , ppSvc ) ;
+      const LHCb::ParticleProperty* h30 = pp ( "H_30" , ppSvc ) ;
       G4H_30* h_30 = G4H_30::Create 
         ( h30 -> mass     () ,       
           h30 -> lifetime () * Gaudi::Units::c_light ) ;

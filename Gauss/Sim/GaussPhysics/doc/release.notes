@@ -4,6 +4,11 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
+!====================== GaussPhysics v9r0 2012-07-23 =========================
+! 2012-07-23 - Gloria Corti
+ - Adapt to LHCb::ParticlePropertySvc instead of the one from Gaudi
+   . src/GiGaHiggsParticles.cpp
+
 !====================== GaussPhysics v8r0 2012-05-14 =========================
 ! 2012-05-10 - Gloria Corti
  - Fix run time problem with finding of ParticlePropertySvc that in Gaudi
