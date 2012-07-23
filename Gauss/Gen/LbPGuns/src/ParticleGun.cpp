@@ -174,10 +174,10 @@ StatusCode ParticleGun::execute() {
 
   // Create temporary containers for this event
   LHCb::HepMCEvents* theEvents = new LHCb::HepMCEvents( );
-  LHCb::GenCollisions* theCollisions = new LHCb::GenCollisions( );\
-
-                                                                    // Working set of pointers
-                                                                    LHCb::GenCollision * theGenCollision( 0 ) ;
+  LHCb::GenCollisions* theCollisions = new LHCb::GenCollisions( );
+  
+  // Working set of pointers
+  LHCb::GenCollision * theGenCollision( 0 ) ;
   HepMC::GenEvent * theGenEvent( 0 ) ;
 
   Gaudi::LorentzVector theFourMomentum ;

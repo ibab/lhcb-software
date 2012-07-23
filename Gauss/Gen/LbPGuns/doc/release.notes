@@ -4,6 +4,9 @@
 ! Purpose     : Holds code for generaion of particle guns
 !-----------------------------------------------------------------------------
 
+! 2012-07-23 - Patrick Robbe
+ - Changes for the new particle property service
+
 !========================== LbPGuns v3r0 2012-05-14 ==========================
 ! 2012-05-10 - Gloria Corti
  - Fix run time problem with finding of ParticlePropertySvc that in Gaudi

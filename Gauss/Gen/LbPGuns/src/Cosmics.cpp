@@ -9,8 +9,8 @@
 
 // From Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 #include "GaudiKernel/SystemOfUnits.h" 
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/IRndmGenSvc.h"
@@ -83,8 +83,8 @@ StatusCode Cosmics::initialize() {
     return Error( "Cannot initialize flat generator" ) ;
 
   // Get the mass of the particle to be generated
-  IParticlePropertySvc* ppSvc =
-    svc< IParticlePropertySvc >( "Gaudi::ParticlePropertySvc" , true ) ;
+  LHCb::IParticlePropertySvc* ppSvc =
+    svc< LHCb::IParticlePropertySvc >( "LHCb::ParticlePropertySvc" , true ) ;
 
   // check momentum and angles
   if (
@@ -99,7 +99,7 @@ StatusCode Cosmics::initialize() {
   info() << "Particle type chosen randomly from :";
   PIDs::const_iterator icode ;
   for ( icode = m_pdgCodes.begin(); icode != m_pdgCodes.end(); ++icode ) {
-    ParticleProperty * particle = ppSvc->findByStdHepID( *icode );
+    const LHCb::ParticleProperty * particle = ppSvc->find( LHCb::ParticleID( *icode ) );
     m_masses.push_back( ( particle->mass() ) ) ;
     m_names.push_back( particle->particle() ) ;
     info() << " " << particle->particle() ;

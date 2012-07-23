@@ -9,8 +9,8 @@
 
 // From Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 
@@ -96,10 +96,11 @@ StatusCode MaterialEval::initialize() {
   if ( ! sc.isSuccess() ) 
     return Error( "Could not initialize random number generator" );
   
-  IParticlePropertySvc* ppSvc =  
-    svc< IParticlePropertySvc >( "Gaudi::ParticlePropertySvc" , true );
+  LHCb::IParticlePropertySvc* ppSvc =  
+    svc< LHCb::IParticlePropertySvc >( "LHCb::ParticlePropertySvc" , true );
 
-  ParticleProperty* particle = ppSvc -> findByStdHepID( m_pdgCode );
+  const LHCb::ParticleProperty* particle =
+    ppSvc -> find( LHCb::ParticleID( m_pdgCode ) );
   if ( !particle ) {
     error() << "Information not found for pdgID " << m_pdgCode << endmsg;
     return StatusCode::FAILURE;

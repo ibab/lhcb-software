@@ -8,8 +8,8 @@
 
 // From Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 #include "GaudiKernel/SystemOfUnits.h" 
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/IRndmGenSvc.h"
@@ -101,13 +101,13 @@ StatusCode BeamShape::initialize() {
     return Error( "Cannot initialize gaussian generator" ) ;
 
   // Get the mass of the particle to be generated
-  IParticlePropertySvc* ppSvc =
-    svc< IParticlePropertySvc >( "Gaudi::ParticlePropertySvc" , true ) ;
+  LHCb::IParticlePropertySvc* ppSvc =
+    svc< LHCb::IParticlePropertySvc >( "LHCb::ParticlePropertySvc" , true ) ;
 
   // setup particle information
-  m_mass = ppSvc->findByStdHepID(m_pdgCode)->mass();
+  m_mass = ppSvc->find(LHCb::ParticleID( m_pdgCode ) )->mass();
 
-  info() << "Particle type: " << ppSvc->findByStdHepID(m_pdgCode)->particle()
+  info() << "Particle type: " << ppSvc->find(LHCb::ParticleID( m_pdgCode ) )->particle()
          << endmsg ;
 
   // printout vertex information

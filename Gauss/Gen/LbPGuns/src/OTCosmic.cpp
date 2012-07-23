@@ -51,8 +51,8 @@
 
 // From Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/PhysicalConstants.h" 
 #include "GaudiKernel/IRndmGenSvc.h"
@@ -116,10 +116,10 @@ StatusCode OTCosmic::initialize() {
   m_bottransform = Gaudi::Transform3D(Gaudi::RotationX(M_PI/2),
 				      Gaudi::Transform3D::Vector(100*Gaudi::Units::cm,-300*Gaudi::Units::cm,600*Gaudi::Units::cm)) ;
 
-  IParticlePropertySvc* ppSvc = 
-    svc< IParticlePropertySvc >( "Gaudi::ParticlePropertySvc" , true ) ;
-  m_muplus  = ppSvc->findByStdHepID(  13 );
-  m_muminus = ppSvc->findByStdHepID( -13 );
+  LHCb::IParticlePropertySvc* ppSvc = 
+    svc< LHCb::IParticlePropertySvc >( "LHCb::ParticlePropertySvc" , true ) ;
+  m_muplus  = ppSvc->find( LHCb::ParticleID(  13 ) );
+  m_muminus = ppSvc->find( LHCb::ParticleID( -13 ) );
   release( ppSvc ) ;
   
   return StatusCode::SUCCESS;
@@ -192,7 +192,7 @@ void OTCosmic::generateParticle( Gaudi::LorentzVector & fourMomentum ,
   }    
 
   int charge = int(m_flatgenerator() * 2 - 1);//m_cosmicgun->GetMuonCharge();
-  pdgId = charge > 0 ? m_muplus->pdgID()  : m_muminus->pdgID() ;
+  pdgId = charge > 0 ? m_muplus->pid().pid()  : m_muminus->pid().pid() ;
 }
 
 

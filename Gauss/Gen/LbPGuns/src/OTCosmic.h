@@ -1,4 +1,3 @@
-// $Id: 
 #ifndef PARTICLEGUNS_OTCOSMIC_H
 #define PARTICLEGUNS_OTCOSMIC_H
 
@@ -12,7 +11,8 @@
 #include "LbPGuns/IParticleGunTool.h"
 
 class SolidBox ;
-class ParticleProperty ;
+namespace LHCb { class ParticleProperty ; }
+
 
 /** @class OTCosmic OTCosmic.h "OTCosmic.h"
  * The output will be stored in the transient event store so it can be
@@ -55,8 +55,8 @@ private:
   std::auto_ptr<SolidBox> m_scintsolid ;
   Gaudi::Transform3D m_toptransform ;
   Gaudi::Transform3D m_bottransform ;
-  const ParticleProperty* m_muplus  ;
-  const ParticleProperty* m_muminus ;
+  const LHCb::ParticleProperty* m_muplus  ;
+  const LHCb::ParticleProperty* m_muminus ;
 };
 
 #endif

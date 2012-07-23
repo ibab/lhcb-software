@@ -58,8 +58,9 @@ protected:
 
   /// Perpare the particle containers
   void prepareInteraction( LHCb::HepMCEvents * theEvents ,
-    LHCb::GenCollisions * theCollisions , HepMC::GenEvent * & theGenEvent ,
-    LHCb::GenCollision * & theGenCollision ) const ;
+                           LHCb::GenCollisions * theCollisions , 
+                           HepMC::GenEvent * & theGenEvent ,
+                           LHCb::GenCollision * & theGenCollision ) const ;
 
 private:
   int          m_eventType ; ///< Event type (set by options)

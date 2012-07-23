@@ -8,8 +8,8 @@
 
 // FromGaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/IRndmGenSvc.h" 
@@ -61,11 +61,12 @@ StatusCode MomentumRange::initialize() {
   
   // Get the mass of the particle to be generated
   //
-  IParticlePropertySvc* ppSvc = 
-    svc< IParticlePropertySvc >( "Gaudi::ParticlePropertySvc" , true ) ;
+  LHCb::IParticlePropertySvc* ppSvc = 
+    svc< LHCb::IParticlePropertySvc >( "LHCb::ParticlePropertySvc" , true ) ;
 
   // check momentum and angles
-  if ( ( m_minMom   > m_maxMom ) || ( m_minTheta > m_maxTheta ) || ( m_minPhi   > m_maxPhi ) )
+  if ( ( m_minMom   > m_maxMom ) || ( m_minTheta > m_maxTheta ) || 
+       ( m_minPhi   > m_maxPhi ) )
     return Error( "Incorrect values for momentum, theta or phi!" ) ;
   
   // setup particle information
@@ -74,7 +75,7 @@ StatusCode MomentumRange::initialize() {
   info() << "Particle type chosen randomly from :";
   PIDs::iterator icode ;
   for ( icode = m_pdgCodes.begin(); icode != m_pdgCodes.end(); ++icode ) {
-    ParticleProperty * particle = ppSvc->findByStdHepID( *icode );
+    const LHCb::ParticleProperty * particle = ppSvc->find( LHCb::ParticleID( *icode ) );
     m_masses.push_back( ( particle->mass() ) ) ;
     m_names.push_back( particle->particle() ) ;
     info() << " " << particle->particle() ;

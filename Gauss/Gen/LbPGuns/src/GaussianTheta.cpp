@@ -9,8 +9,8 @@
 
 // From Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/IRndmGenSvc.h"
@@ -69,10 +69,11 @@ StatusCode GaussianTheta::initialize( ) {
     return Error( "Cannot initialize Gaussian generator" ) ;
   
   // Get the mass of the particle to be generated
-  IParticlePropertySvc * ppSvc = 
-    svc< IParticlePropertySvc >( "Gaudi::ParticlePropertySvc" , true ) ;
+  LHCb::IParticlePropertySvc * ppSvc = 
+    svc< LHCb::IParticlePropertySvc >( "LHCb::ParticlePropertySvc" , true ) ;
  
-  ParticleProperty* particle = ppSvc->findByStdHepID(m_pdgCode); 
+  const LHCb::ParticleProperty* particle = 
+    ppSvc->find( LHCb::ParticleID( m_pdgCode ) ) ; 
   m_mass = particle->mass();
       
   release( ppSvc ) ;

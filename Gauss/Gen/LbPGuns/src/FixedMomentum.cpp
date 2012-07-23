@@ -8,8 +8,8 @@
 
 // FromGaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/IRndmGenSvc.h" 
 
@@ -57,8 +57,8 @@ StatusCode FixedMomentum::initialize() {
   
   // Get the mass of the particle to be generated
   //
-  IParticlePropertySvc* ppSvc = 
-    svc< IParticlePropertySvc >( "Gaudi::ParticlePropertySvc" , true ) ;
+  LHCb::IParticlePropertySvc* ppSvc = 
+    svc< LHCb::IParticlePropertySvc >( "LHCb::ParticlePropertySvc" , true ) ;
 
   // setup particle information
   m_masses.clear();
@@ -66,7 +66,8 @@ StatusCode FixedMomentum::initialize() {
   info() << "Particle type chosen randomly from :";
   PIDs::iterator icode ;
   for ( icode = m_pdgCodes.begin(); icode != m_pdgCodes.end(); ++icode ) {
-    ParticleProperty * particle = ppSvc->findByStdHepID( *icode );
+    const LHCb::ParticleProperty * particle = 
+      ppSvc->find( LHCb::ParticleID( *icode ) ) ;
     m_masses.push_back( ( particle->mass() ) ) ;
     m_names.push_back( particle->particle() ) ;
     info() << " " << particle->particle() ;
