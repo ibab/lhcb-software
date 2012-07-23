@@ -4,6 +4,7 @@
 ! Purpose     : "Interface" to Hijing 
 !-----------------------------------------------------------------------------
 
+!========================= LbHijing v7r0 2012-07-23 ==========================
 ! 2012-05-29 - Patrick Robbe  
  - HijingProduction: use new particle property service
 
