@@ -3,7 +3,6 @@
 #include "FullEventHiggsType.h"
 
 // from Gaudi
-#include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
@@ -11,8 +10,9 @@
 #include "HepMC/GenParticle.h"
 #include "HepMC/GenEvent.h"
 
+// from Kernel
 #include "Kernel/ParticleID.h"
-
+#include "Kernel/ParticleProperty.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : FullEventHiggsType
@@ -117,12 +117,12 @@ StatusCode FullEventHiggsType::initialize() {
             << endmsg;
 		return StatusCode::FAILURE;
 	}
-  m_ppSvc = svc<IParticlePropertySvc>("Gaudi::ParticlePropertySvc", true);
-  m_motherofb_pid = abs( m_ppSvc->find( m_motherofb_id )->pdgID() );
+  m_ppSvc = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc", true);
+  m_motherofb_pid = abs( ((m_ppSvc->find( m_motherofb_id ))->pdgID()).pid() );
   if( m_subb == "No" ){
-    m_b_pid = abs( m_ppSvc->find("b" )->pdgID() );
+    m_b_pid = abs( ((m_ppSvc->find("b" ))->pdgID()).pid() );
   } else {
-    m_b_pid = abs( m_ppSvc->find( m_subb )->pdgID() );
+    m_b_pid = abs( ((m_ppSvc->find( m_subb ))->pdgID()).pid() );
   }
 
 	return sc ;
@@ -151,7 +151,7 @@ bool FullEventHiggsType::IsLepton( const HepMC::GenParticle * p ) const {
   for ( std::vector< std::string >::const_iterator iPart = m_TypeLepton.begin();
               iPart != m_TypeLepton.end(); ++iPart ){
     std::string thepid = *iPart;
-    if ( abs(p->pdg_id()) == abs (m_ppSvc->find(thepid)->pdgID())) isalepton = true;
+    if ( abs(p->pdg_id()) == abs( ((m_ppSvc->find(thepid))->pdgID()).pid() ) ) isalepton = true;
   }
   if( isalepton == true ){
 		if ( ! m_leptonFromMother ) return true ;
@@ -164,7 +164,7 @@ bool FullEventHiggsType::IsLepton( const HepMC::GenParticle * p ) const {
               iPart != m_motheroflepton.end(); ++iPart )
         {
           std::string thepid = *iPart;
-          if(  abs( m_ppSvc->find(thepid)->pdgID() ) == abs( (*iter)->pdg_id() ) ) return true;
+          if(  abs( ((m_ppSvc->find(thepid))->pdgID()).pid() ) == abs( (*iter)->pdg_id() ) ) return true;
         }
 			}
 		}

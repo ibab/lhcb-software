@@ -10,8 +10,10 @@
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/Point4DTypes.h"
 #include "GaudiKernel/Transform4DTypes.h"
-#include "GaudiKernel/IParticlePropertySvc.h" 
-#include "GaudiKernel/ParticleProperty.h"
+
+// from LHCb
+#include "Kernel/IParticlePropertySvc.h" 
+#include "Kernel/ParticleProperty.h"
 
 // from HepMC
 #include "HepMC/GenParticle.h"
@@ -58,9 +60,9 @@ StatusCode BiasedBB::initialize() {
     m_deltaPhiCut = true;
   }
   if ( m_nStableChargedDaugthers > 0 ){
-    IParticlePropertySvc * ppSvc = 
-      svc< IParticlePropertySvc > ( "Gaudi::ParticlePropertySvc" ) ;
-    ParticleProperty * prop = ppSvc -> find( "pi+" ) ;
+    LHCb::IParticlePropertySvc * ppSvc = 
+      svc< LHCb::IParticlePropertySvc > ( "LHCb::ParticlePropertySvc" ) ;
+    const LHCb::ParticleProperty * prop = ppSvc -> find( "pi+" ) ;
     m_chargedPIDList.insert( prop->pythiaID ()  );
     prop = ppSvc -> find( "mu+" ) ;
     m_chargedPIDList.insert( prop->pythiaID ()  );

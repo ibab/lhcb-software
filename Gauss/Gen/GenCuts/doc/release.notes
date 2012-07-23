@@ -4,6 +4,14 @@
 ! Purpose     : cut tools for Gauss
 !-----------------------------------------------------------------------------
 
+!========================== GenCuts v3r0 2012-07-23 ========================== 
+! 2012-07-23 - Gloria Corti
+ - Changes to adapt to LHCb::ParticlePropertySvc
+   . FullEventHiggsType.{h,cpp}
+   . SelectedDaughterInLHCb.cpp
+   . ListOfDaughtersInLHCb.cpp
+   . BiasedBB.cpp
+
 ! 2012-07-12 - Aurelien Martens
  - Added a new class to allow to cut both on KS/Lambda's, the other daughters of a Hb and the Hb itself,
    mainly for BnoC decays
@@ -14,14 +22,14 @@
    DOCA of leptons and cut on product of leptons' pT.
 
 ! 2012-06-03 - Chris Thomas
-- DaughtersInLHCbAndCutsForDACP: generator-level cuts on:
+ - DaughtersInLHCbAndCutsForDACP: generator-level cuts on:
    . (Dst p, D0 pT) plane
    . (Dst p - D0 p, Dst pT - D0 pT) plane
    . D0 tau
    . D0 flight distance from origin vertex
    . D0 daughter p and pT
 
-!========================== GenCuts v1r5 2012-05-14 ========================== 
+!========================== GenCuts v2r0 2012-05-14 ========================== 
 ! 2012-05-10 - Gloria Corti
  - Fix run time problem with finding of ParticlePropertySvc that in Gaudi
    v23 is in the Gaudi:: namespace.

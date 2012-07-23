@@ -6,12 +6,12 @@
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
-#include "GaudiKernel/IParticlePropertySvc.h" 
-#include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
 // from Kernel
 #include "Kernel/ParticleID.h"
+#include "Kernel/IParticlePropertySvc.h" 
+#include "Kernel/ParticleProperty.h"
 
 // from HepMC
 #include "HepMC/GenParticle.h"
@@ -65,15 +65,15 @@ StatusCode SelectedDaughterInLHCb::initialize() {
   for ( std::vector< int >::iterator it = m_pidVector.begin() ;
         it != m_pidVector.end() ; ++it ) m_selectedDaughterPID.insert( *it ) ;
   
-  IParticlePropertySvc * ppSvc = 
-    svc< IParticlePropertySvc > ( "Gaudi::ParticlePropertySvc" ) ;
+  LHCb::IParticlePropertySvc * ppSvc = 
+    svc< LHCb::IParticlePropertySvc > ( "LHCb::ParticlePropertySvc" ) ;
   
   info() << "Cutting at generator level on stable daughters of " ;
   PIDs::const_iterator it ;
   
   for ( it = m_selectedDaughterPID.begin() ; 
         it != m_selectedDaughterPID.end() ; ++it ) {
-    ParticleProperty * prop = ppSvc -> findByStdHepID( *it ) ;
+    const LHCb::ParticleProperty* prop = ppSvc->find(LHCb::ParticleID( *it ));
     info() << prop -> particle() << " " ;
   }
   info() << endmsg ;
