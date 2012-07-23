@@ -4,6 +4,10 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+!========================= LbPythia8 v4r0 2012-07-23 =========================
+! 2012-07-23 - Gloria Corti
+ - Remove obsolete Pythia8_dll.cpp
+
 ! 2012-05-29 - Patrick Robbe
  - Use new ParticlePropertySvc
 
