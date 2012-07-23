@@ -3,7 +3,7 @@
 # Maintainer : Gloria Corti
 #============================================================================
 package           GaussAlgs
-version           v5r0
+version           v6r0
 
 # Structure, i.e. directories to process. 
 #============================================================================

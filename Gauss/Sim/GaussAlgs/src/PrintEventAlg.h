@@ -5,6 +5,10 @@
 // Include files
 #include "GaudiAlg/GaudiAlgorithm.h"
 
+namespace LHCb {
+  class IParticlePropertySvc;
+}
+
 /** @class PrintEventAlg.h 
  *
  *  Almost empty/primitive algorithm to print debugging info for
@@ -43,7 +47,7 @@ private:
   void printDecayTree(long depth, const std::string& prefix,
                       const LHCb::MCParticle*);
   
-  IParticlePropertySvc* m_ppSvc; ///<< Reference to particle property service
+  LHCb::IParticlePropertySvc* m_ppSvc; ///<< Reference to particle property service
 
 };
 #endif  // GaussAlgs_PrintEventAlg_H

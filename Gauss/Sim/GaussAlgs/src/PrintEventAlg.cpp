@@ -8,8 +8,10 @@
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
+
+// from LHCb
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 
 // from GiGa 
 #include "GiGa/IGiGaSvc.h"
@@ -63,7 +65,7 @@ StatusCode PrintEventAlg::initialize()
   StatusCode sc = GaudiAlgorithm::initialize () ;
   if( sc.isFailure() ) { return sc ; }
   
-  m_ppSvc = svc<IParticlePropertySvc> ( "Gaudi::ParticlePropertySvc", true );
+  m_ppSvc = svc<LHCb::IParticlePropertySvc> ( "LHCb::ParticlePropertySvc", true );
   return StatusCode::SUCCESS; 
 }
 
@@ -159,7 +161,7 @@ void PrintEventAlg::printDecayTree(long depth, const std::string& prefix,
                                    const LHCb::MCParticle* mother) {
 
   const SmartRefVector<LHCb::MCVertex>& decays = mother->endVertices();
-  ParticleProperty* p = m_ppSvc->findByStdHepID( mother->particleID().pid() );
+  const LHCb::ParticleProperty* p = m_ppSvc->find( mother->particleID() );
   
   std::string name;
   
