@@ -9,9 +9,9 @@
 #include "GiGa/GiGaTrackActionBase.h"
 // Gauss
 #include "GaussTools/MCTruthManager.h"
-// forward decalrations 
-//template <class TYPE> class GiGaFactory;
-class IParticlePropertySvc;
+namespace LHCb {
+  class IParticlePropertySvc;
+}
 
 /** @class GaussTrackActionHepMC GaussTrackActionHepMC.h
  *
@@ -88,7 +88,7 @@ private:
   int processID(const G4VProcess* creator );
 
   MCTruthManager*        m_mcMgr;
-  IParticlePropertySvc*  m_ppSvc;
+  LHCb::IParticlePropertySvc*  m_ppSvc;
   HepMC::FourVector      fourmomentum;
 
   std::vector<std::string> m_hadronicProcesses;  

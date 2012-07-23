@@ -8,8 +8,10 @@
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/PropertyMgr.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
+
+// from LHCb 
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 
 // G4
 #include "G4TrackingManager.hh"
@@ -107,7 +109,7 @@ StatusCode GaussTrackActionHepMC::initialize ()
   if( sc.isFailure() ) 
   { return Error("Could not initialize the base class!", sc ); }
 
-  m_ppSvc = svc<IParticlePropertySvc> ( "Gaudi::ParticlePropertySvc", true );
+  m_ppSvc = svc<LHCb::IParticlePropertySvc> ( "LHCb::ParticlePropertySvc", true );
 
   return Print("Iinitialized successfully" , 
                StatusCode::SUCCESS         , MSG::VERBOSE );
@@ -209,9 +211,10 @@ void GaussTrackActionHepMC::PostUserTrackingAction  ( const G4Track* track )
       } 
       if ( 0 == pdgID ) {
         // Last chance, use name of particle
-        ParticleProperty* pProp = m_ppSvc->find( track->GetDefinition()->GetParticleName() );
+        const LHCb::ParticleProperty* pProp = 
+          m_ppSvc->find( track->GetDefinition()->GetParticleName() );
         if( NULL != pProp ) {
-          pdgID = pProp->pdgID();
+          pdgID = pProp->pdgID().pid();
         } else {
           std::string message = "PDGEncoding does not exist, G4 name is ";
           message += track->GetDefinition()->GetParticleName();

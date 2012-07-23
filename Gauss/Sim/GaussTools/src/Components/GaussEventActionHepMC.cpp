@@ -5,8 +5,10 @@
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/PropertyMgr.h"
 #include "GaudiKernel/ISvcLocator.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
+
+// from LHCb
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 
 // local 
 #include "GaussEventActionHepMC.h"
@@ -48,7 +50,7 @@ StatusCode GaussEventActionHepMC::initialize()
   StatusCode sc = GiGaEventActionBase::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by base class
 
-  m_ppSvc = svc<IParticlePropertySvc> ( "Gaudi::ParticlePropertySvc", true );
+  m_ppSvc = svc<LHCb::IParticlePropertySvc> ( "LHCb::ParticlePropertySvc", true );
 
   return StatusCode::SUCCESS;
 
@@ -107,7 +109,7 @@ void GaussEventActionHepMC::EndOfEventAction( const G4Event* /* event */) {
 void GaussEventActionHepMC::DumpTree(HepMC::GenParticle* particle, 
                                      std::string offset) {
 
-  ParticleProperty* p = m_ppSvc->findByStdHepID( particle->pdg_id() );
+  const LHCb::ParticleProperty* p = m_ppSvc->find( LHCb::ParticleID(particle->pdg_id()) );
   
   std::string name;  
   if( !p ) {

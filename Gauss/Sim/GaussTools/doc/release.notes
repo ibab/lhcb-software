@@ -3,10 +3,18 @@
 ! Responsible	  : Gloria Corti, Silvia MIGLIORANZI
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
-!2012-06-04 - Sajan Easo 
+
+!======================== GaussTools v18r0 2012-07-23 ========================
+! 2012-07-23 - Gloria Corti
+ - Adapt code to use LHCb::ParticlePropertySvc instead of the one from Gaudi
+   . src/Components/GaussTrackActionHepMC.{h,cpp}
+   . src/Components/GaussEventActionHepMC.{h,cpp}
+
+! 2012-06-04 - Sajan Easo 
  -Added the activation of physics processes for Torch testbeam simulation in
-  in the cpp files of GaussTrackActionByEnergy,GaussTrackActionHepMC,GaussTrackActionByType,
-  GaussTrackActionByEnergyType and GaussPostTrackAction.
+  in the cpp files of GaussTrackActionByEnergy, GaussTrackActionHepMC, 
+  GaussTrackActionByType,GaussTrackActionByEnergyType and GaussPostTrackAction.
+
 !======================== GaussTools v17r0 2012-05-14 ========================
 ! 2012-05-09 - Gloria Corti
  - Fix run time problem with finding of ParticlePropertySvc that in Gaudi

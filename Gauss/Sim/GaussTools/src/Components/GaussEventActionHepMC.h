@@ -8,8 +8,9 @@
 #include "GaussTools/MCTruthManager.h"
 
 /// forward declarations
-class IParticlePropertySvc;
-//template <class TYPE> class GiGaFactory;
+namespace LHCb {
+  class IParticlePropertySvc;
+}
 
 /** @class GaussEventActionHepMC GaussEventActionHepMC.h
  *  
@@ -87,7 +88,7 @@ private:
   void DumpTree(HepMC::GenParticle*, std::string);
 
   MCTruthManager*        m_mcManager;
-  IParticlePropertySvc*  m_ppSvc;
+  LHCb::IParticlePropertySvc*  m_ppSvc;
   
 };
 
