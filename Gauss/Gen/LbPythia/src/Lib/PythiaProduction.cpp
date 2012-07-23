@@ -234,7 +234,8 @@ StatusCode PythiaProduction::initialize( ) {
     << endmsg;
 
   // Obtain beam tool
-  m_beamTool = tool< IBeamTool >( m_beamToolName , this ) ;
+  if ( 0 == m_beamTool ) 
+    m_beamTool = tool< IBeamTool >( m_beamToolName , this ) ;
 
   // Name of PYSLHA file to read
   if ( "empty" != m_slhaDecayFile ) {

@@ -113,6 +113,8 @@ protected:
   std::string m_particleDataOutput ;
   std::string m_particleDataInput  ;
   int         m_particleDataLevel  ;
+
+  IBeamTool * m_beamTool ;
   
 private:
   
@@ -128,8 +130,6 @@ private:
   // list of particles to be printed 
   std::vector<int> m_pdtlist ;
   int m_nEvents ; ///< Internal event counter
-  
-  IBeamTool * m_beamTool ;
 
   double m_widthLimit ; ///< Limit to consider a particle with no lifetime
   

@@ -4,6 +4,10 @@
 ! Purpose     : Package for Pythia 6 in Gauss
 !-----------------------------------------------------------------------------
 
+! 2012-07-23 - Patrick Robbe
+ - Add interface to HEPEUP common block (ghepeup.F, Hepeup.cpp, Hepeup.h)
+ - Move Beam tool to protected PythiaProduction section
+
 ! 2012-07-20 - Gloria Corti
  - Also remove the factory declaration that was in PythiaProduction itself, 
    otherwise it will be found twice
