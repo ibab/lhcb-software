@@ -5,6 +5,9 @@
 !               obtained with dedicated simulations
 !-----------------------------------------------------------------------------
 
+! 2012-07-23 - Patrick Robbe
+ - Fix for new particle property service
+
 !============================ LbMIB v6r0 2012-05-14 ==========================
 ! 2012-05-10 - Gloria Corti
  - Fix run time problem with finding of ParticlePropertySvc that in Gaudi

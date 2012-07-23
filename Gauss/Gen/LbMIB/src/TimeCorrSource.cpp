@@ -3,7 +3,8 @@
  
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
-#include "GaudiKernel/ParticleProperty.h"
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/IRndmGenSvc.h"
@@ -117,7 +118,7 @@ StatusCode TimeCorrSource::initialize() {
   if ( sc.isFailure( ) ) return sc ;
 
   // Get Particle property service
-  m_ppSvc = svc< IParticlePropertySvc >( "Gaudi::ParticlePropertySvc", true ) ;
+  m_ppSvc = svc< LHCb::IParticlePropertySvc >( "LHCb::ParticlePropertySvc", true ) ;
   
   // Check if particle source file is present
   if ( m_pSourceFile.empty() ) {
@@ -492,7 +493,7 @@ HepMC::FourVector TimeCorrSource::getMomentum(double ekin, int pid,
   double dz, dz2, px, py, pz, etot, ptot, mass;
 
   // Get particle mass
-  ParticleProperty* particle = m_ppSvc -> findByStdHepID( pid );
+  const LHCb::ParticleProperty* particle = m_ppSvc -> find( LHCb::ParticleID( pid ) );
   mass = particle -> mass();
 
   // Find total momentum.
@@ -528,10 +529,10 @@ HepMC::FourVector TimeCorrSource::getVertex(double ekin, int pid,
   double dz, dz2, mass, pMass;
 
   // Get particle mass
-  ParticleProperty* particle = m_ppSvc -> findByStdHepID( pid );
+  const LHCb::ParticleProperty* particle = m_ppSvc -> find( LHCb::ParticleID( pid ) );
   mass = particle -> mass();
   
-  ParticleProperty* proton = m_ppSvc -> findByStdHepID( 2212 );
+  const LHCb::ParticleProperty* proton = m_ppSvc -> find( LHCb::ParticleID( 2212 ) );
   pMass = proton -> mass();
 
   // Find dz. Need to make sure lack of precission causes no problems..

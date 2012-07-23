@@ -5,7 +5,7 @@
 // from Gaudi
 #include "GaudiAlg/GaudiHistoTool.h"
 #include "GaudiKernel/RndmGenerators.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
+#include "Kernel/IParticlePropertySvc.h"
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
 
@@ -137,7 +137,7 @@ private:
   AIDA::IHistogram1D* m_timeGen;
 
 
-  IParticlePropertySvc* m_ppSvc;   ///< Pointer to Particle Property Service
+  LHCb::IParticlePropertySvc* m_ppSvc;   ///< Pointer to Particle Property Service
 
 protected:
 

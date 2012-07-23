@@ -13,6 +13,7 @@ branches          cmt doc src options scripts
 #============================================================================
 use GaudiAlg       v*
 use GenEvent       v*      Event
+use PartProp       v*      Kernel    
 use MIBData        v* 
 
 # Component library building rule

@@ -3,7 +3,7 @@
  
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
-#include "GaudiKernel/ParticleProperty.h"
+#include "Kernel/ParticleProperty.h"
 #include "GaudiKernel/SystemOfUnits.h"
  
 // STL
