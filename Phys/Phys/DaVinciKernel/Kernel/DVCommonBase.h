@@ -159,15 +159,13 @@ public:
    */
   inline const LHCb::RecVertex::Range primaryVertices() const
   {
-    return ( this -> template exist<LHCb::RecVertex::Range>(m_PVLocation) ?
-             this -> template get<LHCb::RecVertex::Range>(m_PVLocation)   :
-             LHCb::RecVertex::Range()                                     );
+    return this -> template getIfExists<LHCb::RecVertex::Range>(m_PVLocation);
   }
-
+  
   /** Accessor for IDistanceCalculator tools by name/typename/nickname
    *  @see IDistanceCalculator
    *  @param name the tool name/typename/nickname
-   *  @return pointer to aquired tool
+   *  @return pointer to acquired tool
    */
   const IDistanceCalculator*
   distanceCalculator ( const std::string& name = "" ) const

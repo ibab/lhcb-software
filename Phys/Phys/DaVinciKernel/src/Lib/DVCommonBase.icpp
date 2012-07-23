@@ -90,30 +90,30 @@ DVCommonBase<PBASE>::DVCommonBase( const std::string& name,
                          m_p2PVInputLocations,
                          "Particle -> PV Relations Input Locations" );
 
-  this->declareProperty( "InputPrimaryVertices", 
+  this->declareProperty( "InputPrimaryVertices",
                          m_PVLocation = LHCb::RecVertexLocation::Primary );
 
   this->declareProperty( "UseP2PVRelations", m_useP2PV,
-                        "Use P->PV relations internally. Forced to true if re-fitting PVs. Otherwise disabled for single PV events. Default: true.");
+                         "Use P->PV relations internally. Forced to true if re-fitting PVs. Otherwise disabled for single PV events. Default: true.");
 
   this->declareProperty( "WriteP2PVRelations", m_writeP2PV,
-                        "Write out P->PV relations table to TES. Default: true");
+                         "Write out P->PV relations table to TES. Default: true");
 
   this->declareProperty( "ForceP2PVBuild", m_forceP2PVBuild,
-                        "Force construction of P->PV relations table. Default: false");
+                         "Force construction of P->PV relations table. Default: false");
 
   this->declareProperty( "IgnoreP2PVFromInputLocations", m_ignoreP2PVFromInputLocations );
-  
+
   this->declareProperty( "ReFitPVs", m_refitPVs, "Refit PV" );
 
   this->declareProperty( "CheckOverlapTool", m_checkOverlapName, "Name of Overlap Tool"  );
   //
-  this->declareProperty 
-    ( "VertexFitters", 
-      m_vertexFitNames, 
+  this->declareProperty
+    ( "VertexFitters",
+      m_vertexFitNames,
       "Names of vertex fitters" ) ;
   //
-  this->declareProperty 
+  this->declareProperty
     ( "ParticleFilters",
       m_filterNames,
       "Names of ParticleFilters" ) ;
@@ -123,14 +123,14 @@ DVCommonBase<PBASE>::DVCommonBase( const std::string& name,
       m_particleCombinerNames ,
       "Names of particle combiners, the basic tools for creation of composed particles" ) ;
   //
-  this->declareProperty  
+  this->declareProperty
     ( "ParticleReFitters",
       m_particleReFitterNames,
       "Names of particle refitters" ) ;
   //
-  this->declareProperty  
+  this->declareProperty
     ( "PVReFitters",
-      m_pvReFitterNames, 
+      m_pvReFitterNames,
       "Names of Primary Vertex refitters" ) ;
   //
   this->declareProperty
@@ -158,7 +158,7 @@ DVCommonBase<PBASE>::DVCommonBase( const std::string& name,
       m_distanceCalculatorNames ,
       "The mapping of nick/name/type for IDistanceCalculator tools" ) ;
   //
-  this->declareProperty( "PrimaryVertexRelator", 
+  this->declareProperty( "PrimaryVertexRelator",
                          m_pvRelatorName = DaVinci::DefaultTools::PVRelator );
   //
   this->declareProperty( "DecayDescriptor"   , m_decayDescriptor   = "",
@@ -542,18 +542,16 @@ StatusCode DVCommonBase<PBASE>::loadParticle2PVRelations()
   for( std::vector<std::string>::const_iterator iLoc = m_p2PVInputLocations.begin();
        iLoc != m_p2PVInputLocations.end(); ++iLoc )
   {
-    if ( this -> template exist<Particle2Vertex::Table>(*iLoc) )
+    const Particle2Vertex::Table * table = 
+      this -> template getIfExists<Particle2Vertex::Table>(*iLoc);
+    if ( table )
     {
       if ( this->msgLevel(MSG::DEBUG) )
       {
         this->debug() << "Reading table from " << (*iLoc) << endmsg ;
       }
-
-      const Particle2Vertex::Table * table =
-        this -> template get<Particle2Vertex::Table>(*iLoc);
       const Particle2Vertex::Table::Range& relations = table->relations();
       loadRelations( relations );
-
     }
     else
     {
@@ -561,7 +559,6 @@ StatusCode DVCommonBase<PBASE>::loadParticle2PVRelations()
              ( this->rootInTES().empty() ? "" :  (" under "+this->rootInTES() ) ),
              StatusCode::SUCCESS, 0).ignore() ;
     }
-
   }
 
   return StatusCode::SUCCESS ; // could be sc
@@ -606,22 +603,25 @@ StatusCode DVCommonBase<PBASE>::loadParticles()
   for( std::vector<std::string>::iterator iloc = m_inputLocations.begin();
        iloc != m_inputLocations.end(); ++iloc )
   {
-    // Retrieve the particles:
+    // input location
     const std::string location = (*iloc)+"/Particles";
-    if ( ! this -> template exist<LHCb::Particle::Range>(location) )
+
+    // Retrieve the particles:
+    LHCb::Particle::Range parts = 
+      this -> template getIfExists<LHCb::Particle::Range>(location);
+    if ( !parts )
     {
       Info ( "Non-existing location "+(*iloc) +
              ( this->rootInTES().empty() ?  "" : (" under " + this->rootInTES() ) ),
              StatusCode::SUCCESS, 0).ignore() ;
       continue ;
     }
-    LHCb::Particle::Range parts = this -> template get<LHCb::Particle::Range>(location);
-
+    
     // statistics:
     this->counter ( "# " + (*iloc) ) += parts.size() ;
 
     // Msg number of Particles retrieved
-    if (this->msgLevel(MSG::VERBOSE))
+    if ( this->msgLevel(MSG::VERBOSE) )
     {
       this->verbose() << "    Number of Particles retrieved from "
                       << location << " = " << parts.size() << endmsg;
