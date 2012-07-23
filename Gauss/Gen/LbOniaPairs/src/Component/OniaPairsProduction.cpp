@@ -5,7 +5,6 @@
 
 // from GaudiKernel
 #include "GaudiKernel/DeclareFactoryEntries.h"
-#include "GaudiKernel/ParticleProperty.h"
 
 // from Event
 #include "Event/GenCollision.h"

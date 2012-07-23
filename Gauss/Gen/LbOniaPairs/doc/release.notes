@@ -6,6 +6,10 @@
 ! Purpose     : Generator for onia pairs production 
 ! -----------------------------------------------------------------------------
 
+!======================== LbOniaPairs v1r2 2012-07-23 =========================
+! 2012-07-23 - Gloria Corti
+ - Remove include of ParticleProperty that is not needed
+
 !======================== LbOniaPairs v1r1 2012-05-14 =========================
 ! 2011-08-20 - Vanya Belyaev
 
