@@ -10,10 +10,11 @@
 #include    "GaudiKernel/ISvcLocator.h"
 #include    "GaudiKernel/IMessageSvc.h"
 #include    "GaudiKernel/IChronoStatSvc.h"
-//#include    "GaudiKernel/IObjManager.h"
 #include    "GaudiKernel/SvcFactory.h"
 #include    "GaudiKernel/MsgStream.h"
-#include    "GaudiKernel/ParticleProperty.h"
+
+// LHCb
+#include    "Kernel/ParticleProperty.h"
 
 // GiGa 
 #include    "GiGa/GiGaException.h"

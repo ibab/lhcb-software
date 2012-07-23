@@ -26,7 +26,9 @@
 #include   "G4RunManager.hh" 
 
 // forward declarations
-class     IParticlePropertySvc           ;
+namespace LHCb { 
+  class IParticlePropertySvc; 
+}
 class     IChronoStatSvc                 ;
 class     ISvcLocator                    ;
 class     IGiGaGeoSrc                    ;

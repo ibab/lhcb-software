@@ -6,6 +6,10 @@
 !               for G4 <-> Gaudi applications 
 !-----------------------------------------------------------------------------
 
+!========================== GiGa v19r9 2012-07-23 ============================
+! 2012-07-23 - Gloria Corti
+ - Adapt to LHCb::ParticlePropertySvc
+
 ! 2012-07-12 - Gloria Corti from Heinrich Schindler
  - Interface for GDML reader tool
 
