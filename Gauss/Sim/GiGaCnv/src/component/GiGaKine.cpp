@@ -18,7 +18,8 @@
 #include "GaudiKernel/SvcFactory.h" 
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/ISvcLocator.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
+/// from LHCb
+#include "Kernel/IParticlePropertySvc.h"
 /// from GiGa 
 #include "GiGaCnv/GiGaCnvSvcBase.h" 
 // local
@@ -40,7 +41,7 @@ GiGaKine::GiGaKine( const std::string&   ServiceName          ,
   : GiGaCnvSvcBase(                                  ServiceName          , 
                                                      ServiceLocator       , 
                                                      GiGaKine_StorageType )
-  , m_ppSvcName ("Gaudi::ParticlePropertySvc")
+  , m_ppSvcName ("LHCb::ParticlePropertySvc")
   , m_ppSvc     ( 0 )                
   ///
   , m_table     (   )
@@ -69,7 +70,7 @@ StatusCode GiGaKine::initialize()
   ///
   sc = svcLoc()->service( m_ppSvcName , m_ppSvc , true );
   if( sc.isFailure() ) 
-    { return Error("Could not locate ParticlePropertyService!", sc);}
+    { return Error("Could not locate LHCb::ParticlePropertyService!", sc);}
   if( 0 == ppSvc  ()  )
     { return Error("IParticlePropertySvc* points to NULL!");}
   ///

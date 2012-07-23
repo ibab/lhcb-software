@@ -18,7 +18,9 @@ template <class SERVICE>
 class SvcFactory; 
 ///
 class    IGiGaSvc; 
-class    IParticlePropertySvc; 
+namespace LHCb {
+  class    IParticlePropertySvc; 
+}
 class    IDataSelector;
 
 /** @class GiGaKine GiGaKine.h 
@@ -71,7 +73,7 @@ public:
   /** access to particle properties service 
    *  @return pointer to particle properties service 
    */
-  virtual IParticlePropertySvc* ppSvc () const { return m_ppSvc; }
+  virtual LHCb::IParticlePropertySvc* ppSvc () const { return m_ppSvc; }
 
   /** query the interface
    *  @param ID unique interface identifier 
@@ -86,7 +88,7 @@ private:
   /// name of particle property service
   std::string            m_ppSvcName ;
   /// pointer to particle property service 
-  IParticlePropertySvc*  m_ppSvc     ;
+  LHCb::IParticlePropertySvc*  m_ppSvc     ;
   /// reference table 
   GiGaKineRefTable       m_table     ;
 

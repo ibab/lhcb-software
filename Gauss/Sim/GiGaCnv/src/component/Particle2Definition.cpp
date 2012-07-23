@@ -21,8 +21,9 @@
 #include <vector>
 /// GaudiKernel
 #include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/ParticleProperty.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
+/// LHCb 
+#include "Kernel/ParticleProperty.h"
+#include "Kernel/IParticlePropertySvc.h"
 /// LHCbEvent 
 #include "Event/MCParticle.h"
 /// GiGa 
@@ -46,7 +47,7 @@
  *  @param Svc pointer to Particle Property Service 
  */ 
 // ============================================================================
-Particle2Definition::Particle2Definition( IParticlePropertySvc* Svc ) 
+Particle2Definition::Particle2Definition( LHCb::IParticlePropertySvc* Svc ) 
   : m_ppSvc( Svc )
 { if( 0 != ppSvc() ) { ppSvc()->addRef() ; } };
 // ============================================================================
@@ -101,7 +102,7 @@ Particle2Definition::operator()
   // find by name 
   if( 0 == pDef ) 
     { 
-      ParticleProperty* pProp = ppSvc()->findByStdHepID( StdHepID ) ;
+      const LHCb::ParticleProperty* pProp = ppSvc()->find( LHCb::ParticleID(StdHepID) ) ;
       if( 0 == pProp   )  { throw GiGaException( ErrMsg3 ) ; }
       pDef = table->FindParticle( pProp->particle() ) ;
       if( 0 == pDef ) { throw GiGaException( ErrMsg5 + pProp->particle() ); }

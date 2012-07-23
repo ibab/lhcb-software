@@ -50,7 +50,7 @@
  *  @param Svc pointer to particle property service 
  */
 // ============================================================================
-Particle2Particle::Particle2Particle( IParticlePropertySvc* Svc )
+Particle2Particle::Particle2Particle( LHCb::IParticlePropertySvc* Svc )
   : m_p2d( Svc )
 {};
 

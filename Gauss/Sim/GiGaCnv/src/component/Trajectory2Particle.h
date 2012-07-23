@@ -14,7 +14,9 @@
 /// STD & STL
 #include <functional>
 /// forward decalrations 
-class IParticlePropertySvc;
+namespace LHCb {
+  class IParticlePropertySvc;
+}
 class MCParticle;
 class GiGaTrajectory;
 
@@ -38,7 +40,7 @@ namespace GiGaCnvFunctors
     /** standard constructor
      *  @param  Svc   pointer to Particle Property Service 
      */
-    Trajectory2Particle( IParticlePropertySvc* Svc   );
+    Trajectory2Particle( LHCb::IParticlePropertySvc* Svc   );
     /// destructor 
     ~Trajectory2Particle();
     
@@ -62,7 +64,7 @@ namespace GiGaCnvFunctors
     /** accessor to Particle Property Service 
      *  @return pointer to Particle Property  Service 
      */
-    inline IParticlePropertySvc* ppSvc() const { return m_ppSvc ; }
+    inline LHCb::IParticlePropertySvc* ppSvc() const { return m_ppSvc ; }
     
   private: 
     
@@ -72,7 +74,7 @@ namespace GiGaCnvFunctors
     
   private:
     
-    IParticlePropertySvc*       m_ppSvc ; ///< particle property service
+    LHCb::IParticlePropertySvc*       m_ppSvc ; ///< particle property service
     
   };
 };

@@ -28,7 +28,9 @@ class IDataProviderSvc     ;
 class IMessageSvc          ; 
 class IChronoStatSvc       ; 
 class IToolSvc             ; 
-class IParticlePropertySvc ; 
+namespace LHCb {
+  class IParticlePropertySvc ;
+}
 class IGiGaSvc             ;   
 class IGiGaSetUpSvc        ;
 //
@@ -156,7 +158,7 @@ protected:
   /** accessor to Particle Properties  service
    *  @return pointer to Particle Properties   service 
    */
-  inline IParticlePropertySvc* ppSvc     () const 
+  inline LHCb::IParticlePropertySvc* ppSvc     () const 
   { return 0 != kineSvc() ? kineSvc()->ppSvc   () : 0 ; }
 
 

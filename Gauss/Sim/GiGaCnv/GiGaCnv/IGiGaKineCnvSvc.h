@@ -22,7 +22,9 @@
 /// forward declarations 
 class StatusCode; 
 class G4PrimaryVertex;
-class IParticlePropertySvc;
+namespace LHCb {
+  class IParticlePropertySvc;
+}
 class GiGaKineRefTable;
 
 /** @class IGiGaKineCnvSvc IGiGaKineCnvSvc.h GiGa/IGiGaKineCnvSvc.h
@@ -53,7 +55,7 @@ public:
   /** accessor to Particle Property Service
    *  @return pointer to Particle Property Service 
    */
-  virtual IParticlePropertySvc*  ppSvc() const  = 0 ;  
+  virtual LHCb::IParticlePropertySvc*  ppSvc() const  = 0 ;  
 
 protected :
   

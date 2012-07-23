@@ -24,8 +24,9 @@
 /// STD & STL 
 #include <functional>
 /// forward declarations 
-class IParticlePropertySvc;
-//class LHCb::MCParticle;
+namespace LHCb {
+  class IParticlePropertySvc;
+}
 class G4ParticleDefinition;
 
 /** @class Particle2Definition Particle2Definition.h 
@@ -44,7 +45,7 @@ public:
   /** Standard constructor
    *  @param Svc pointer to Particle Property Service 
    */ 
-  Particle2Definition( IParticlePropertySvc* Svc ); 
+  Particle2Definition( LHCb::IParticlePropertySvc* Svc ); 
   
   /// destructor 
   ~Particle2Definition(); 
@@ -67,11 +68,11 @@ protected:
   /** accessor to particle proeprty service 
    *  @return pointer to particle property service 
    */
-  inline IParticlePropertySvc* ppSvc() const { return m_ppSvc; }
+  inline LHCb::IParticlePropertySvc* ppSvc() const { return m_ppSvc; }
 
 private:
 
-  IParticlePropertySvc* m_ppSvc; ///< particle property service 
+  LHCb::IParticlePropertySvc* m_ppSvc; ///< particle property service 
 
 };
 

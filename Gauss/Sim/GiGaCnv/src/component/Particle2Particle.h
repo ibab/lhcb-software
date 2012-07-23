@@ -22,8 +22,9 @@
 /// GiGaCnv 
 #include "Particle2Definition.h"
 /// forward declarations 
-class IParticlePropertySvc;
-//class LHCb::MCParticle;
+namespace LHCb {
+  class IParticlePropertySvc;
+}
 class G4PrimaryParticle;
 
 /** @class Particle2Particle Particle2Particle.h 
@@ -43,7 +44,7 @@ public:
   /** standard constructor
    *  @param Svc pointer to particle property service 
    */
-  Particle2Particle( IParticlePropertySvc* Svc );
+  Particle2Particle( LHCb::IParticlePropertySvc* Svc );
   /// Destructor
   ~Particle2Particle( ); 
   

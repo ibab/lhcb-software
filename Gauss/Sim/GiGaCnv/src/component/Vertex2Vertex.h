@@ -17,7 +17,9 @@
 // local 
 #include "Particle2Particle.h"
 /// forward declarations 
-class IParticlePropertySvc;
+namespace LHCb {
+  class IParticlePropertySvc;
+}
 class MCVertex;
 class G4PrimaryVertex;
 class G4PrimaryParticle;
@@ -40,7 +42,7 @@ public:
   /** standard constructor
    *  @param Svc pointer to Particle Property Service 
    */
-  Vertex2Vertex( IParticlePropertySvc* Svc );
+  Vertex2Vertex( LHCb::IParticlePropertySvc* Svc );
   /// destructor 
   ~Vertex2Vertex();
   

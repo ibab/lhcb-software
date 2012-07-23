@@ -19,7 +19,9 @@
 
 class IGiGaSvc               ;
 class IGiGaSetUpSvc          ;
-class IParticlePropertySvc   ;
+namespace LHCb {
+  class IParticlePropertySvc   ;
+}
 class GiGaLeaf               ;
 //
 /** @class IGiGaCnvSvc IGiGaCnvSvc.h GiGa/IGiGaCnvSvc.h

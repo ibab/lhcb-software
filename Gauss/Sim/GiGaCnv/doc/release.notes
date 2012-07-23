@@ -4,6 +4,20 @@
 ! Purpose     : Hold converters between LHCb and Geant4
 !-----------------------------------------------------------------------------
 
+!========================= GiGaCnv v20r0 2012-07-23 ==========================
+! 2012-07-23 - Gloria Corti
+ - Modification to use LHCb::ParticlePropertySvc instead of the one from Gaudi
+   . src/component/GiGaCnvFunctors.h
+   . src/component/Particle2Particle.h
+   . src/component/GiGaKine.{h,cpp}
+   . src/component/Trajectory2Particle.{h,cpp}
+   . src/component/Vertex2Vertex.{h,cpp}
+   . src/component/Particle2Definition.{h,cpp}
+   . GiGaCnv/IGiGaCnvSvc.h
+   . GiGaCnv/GiGaCnvBase.h
+   . GiGaCnv/IGiGaKineCnvSvc.h
+   . GiGaCnv/GiGaCnvSvcBase.h
+
 ! 2012-07-12 - Gloria Corti from Heinrich Schindler and Matt Reid
  - Use of new GDMLReader tool to be able to read files from CAD -> GDML -> G4.
    This allows test of geometry at the simulation level

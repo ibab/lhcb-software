@@ -23,8 +23,10 @@
 #include "GaudiKernel/GaudiException.h"
 
 // Forward declarations
-class IDataProviderSvc     ; 
-class IParticlePropertySvc ; 
+class IDataProviderSvc     ;
+namespace LHCb { 
+  class IParticlePropertySvc ; 
+}
 class IMagneticFieldSvc    ; 
 class IChronoStatSvc       ; 
 class IToolSvc             ; 

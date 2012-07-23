@@ -19,8 +19,9 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IDataManagerSvc.h"
 #include "GaudiKernel/IRegistry.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/SmartIF.h"
+// LHCb
+#include "Kernel/IParticlePropertySvc.h"
 // Event
 #include "Event/MCVertex.h"
 #include "Event/MCParticle.h"

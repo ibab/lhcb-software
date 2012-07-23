@@ -7,11 +7,11 @@
 #include <vector>
 
 // from Gaudi
-#include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/ParticleProperty.h"
 
 // from LHCb 
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 #include "Event/MCParticle.h"
 #include "Event/HepMCEvent.h"
 
@@ -34,7 +34,7 @@
 // Standard constructor
 //=============================================================================
 GiGaCnvFunctors::Trajectory2Particle::Trajectory2Particle
-( IParticlePropertySvc* Svc )
+( LHCb::IParticlePropertySvc* Svc )
   : m_ppSvc ( Svc   )
 { if( 0 != ppSvc() ) { ppSvc()->addRef() ; } }
 
@@ -104,9 +104,9 @@ GiGaCnvFunctors::Trajectory2Particle::operator()
   // ions have zero as pdg encoding 
   int pdgID = pDef->GetPDGEncoding();
   if( 0 == pdgID ) {
-    ParticleProperty* pProp = ppSvc()->find( pDef->GetParticleName() );
+    const LHCb::ParticleProperty* pProp = ppSvc()->find( pDef->GetParticleName() );
     if( NULL != pProp ) {
-      pdgID = pProp->jetsetID();
+      pdgID = (pProp->pid()).pid();
     }
   }
   

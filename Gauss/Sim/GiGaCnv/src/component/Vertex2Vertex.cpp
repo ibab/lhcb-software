@@ -42,7 +42,7 @@
  *  @param Svc pointer to Particle Property Service 
  */
 // ============================================================================
-Vertex2Vertex::Vertex2Vertex( IParticlePropertySvc* Svc ) 
+Vertex2Vertex::Vertex2Vertex( LHCb::IParticlePropertySvc* Svc ) 
   : m_p2p ( Svc )
 {};
 
