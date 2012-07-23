@@ -3,7 +3,7 @@
 from Configurables import Gauss, Generation, Special, GenXiccProduction, XiccDaughtersInLHCb, ToolSvc
 
 GenXiccListOfCommands = [
-  "loggrade iusecurdir 1",
+  "loggrade iusecurdir 0",
   "vegasinf number 10000",
   "vegasinf nitmx 2",
   "vegasbin nvbin 100",

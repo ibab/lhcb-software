@@ -1,5 +1,13 @@
 ! Package     : Gen/LbGenXicc
 ! Responsible : F. Zhang
+!=============================================================================
+
+!========================= LbGenXicc v2r0 2012-07-23 =========================
+! 2012-07-23 - Gloria Corti
+ - Remove options in *.opts form that are obsolete
+ - Fix options GenXicc.py for production
+ - Modify options GenXibc.py to use LHCb::ParticlePropertySvc to modify values
+   for Gauss v42r1
 
 !========================= LbGenXicc v1r1 2012-04-02 =========================
 ! 2012-03-29 - Giacomo GRAZIANI
