@@ -65,22 +65,28 @@ StatusCode BestPVAlg2::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode BestPVAlg2::execute() {
+StatusCode BestPVAlg2::execute()
+{
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-  if (m_useTables) {
+  if (m_useTables) 
+  {
     this->tablesFromTables();
-  } else {
-    if (exist< LHCb::RecVertex::Range>(m_PVInputLocation) && 
-        !get<LHCb::RecVertex::Range>(m_PVInputLocation).empty()) {
+  }
+  else
+  {
+    if ( !getIfExists<LHCb::RecVertex::Range>(m_PVInputLocation).empty() ) 
+    {
       this->tables();
     }    
   }
 
   return StatusCode::SUCCESS;
 }
+
 //=============================================================================
+
 void BestPVAlg2::tables() const
 {
 
@@ -89,23 +95,23 @@ void BestPVAlg2::tables() const
 
   typedef DaVinci::Map::Particle2VertexBase P2PVMap;
 
-  std::vector<std::string>::const_iterator iLoc = m_particleInputLocations.begin();
-  std::vector<std::string>::const_iterator locEnd = m_particleInputLocations.end();
+  for ( std::vector<std::string>::const_iterator iLoc = m_particleInputLocations.begin(); 
+        iLoc != m_particleInputLocations.end(); ++iLoc ) 
+  {
+    
+    Particles particles = getIfExists<Particles>(*iLoc);
 
-  for ( ; iLoc != locEnd; ++iLoc) {
-
-    if ( exist< Particles >(*iLoc) &&  
-         ! get< Particles >(*iLoc).empty()) {
-
+    if ( !particles.empty() ) 
+    {
       P2PVMap* table = new P2PVMap();
       const std::string tableLoc = tableLocation(*iLoc);
       put( table, tableLoc );
 
-      Particles particles = get<Particles>(*iLoc);
       Vertices vertices = get<Vertices>(m_PVInputLocation);
 
-      for (Particles::const_iterator iPart = particles.begin();
-           iPart != particles.end(); ++ iPart) {
+      for ( Particles::const_iterator iPart = particles.begin();
+            iPart != particles.end(); ++iPart )
+      {
         const LHCb::VertexBase* vtx = 
           m_pvRelator->relatedPV(*iPart, 
                                  LHCb::VertexBase::ConstVector(vertices.begin(), 
@@ -157,8 +163,9 @@ void BestPVAlg2::tablesFromTables() const
                   << endmsg;
       }
   
-      for (Particles::const_iterator iPart = particles.begin();
-           iPart != particles.end(); ++iPart) {
+      for ( Particles::const_iterator iPart = particles.begin();
+            iPart != particles.end(); ++iPart ) 
+      {
 
         const Table::Range range = inputTable->relations(*iPart);
 
@@ -170,9 +177,10 @@ void BestPVAlg2::tablesFromTables() const
                                                 << vertices.size() 
                                                 << " related vertices" << endmsg;
 
-        const LHCb::VertexBase* vtx = m_pvRelator->relatedPV(*iPart, 
-                                                             LHCb::VertexBase::ConstVector(vertices.begin(), 
-                                                                                           vertices.end()));
+        const LHCb::VertexBase* vtx = 
+          m_pvRelator->relatedPV(*iPart, 
+                                 LHCb::VertexBase::ConstVector(vertices.begin(), 
+                                                               vertices.end()));
 
         table->insert(*iPart, vtx);
       }
@@ -206,13 +214,4 @@ void BestPVAlg2::checkTable(const DaVinci::Map::Particle2VertexBase* table,
   }
 }
 
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode BestPVAlg2::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
-}
 //=============================================================================

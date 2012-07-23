@@ -62,15 +62,15 @@ StatusCode FilterEventList::execute() {
   int run = -1;
   int ev = -1;
 
-  LHCb::ODIN* odin(0);
+  const LHCb::ODIN * odin = getIfExists<LHCb::ODIN>( LHCb::ODINLocation::Default );
 
-  if( exist<LHCb::ODIN>( LHCb::ODINLocation::Default ) )
+  if ( odin )
   {
-    odin = get<LHCb::ODIN>( LHCb::ODINLocation::Default );
     run = odin->runNumber();
     ev = odin->eventNumber();
     if (msgLevel(MSG::VERBOSE)) verbose() << "Event,run (" << ev << "," << run << ")" << endmsg;
   }
+
   if( run <0 || ev < 0)
   {
     Error("Can't get LHCb::ODINLocation::Default (" +

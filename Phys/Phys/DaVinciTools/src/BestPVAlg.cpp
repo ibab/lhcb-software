@@ -70,11 +70,14 @@ StatusCode BestPVAlg::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-  if (m_useTables) {
+  if (m_useTables)
+  {
     this->tablesFromTables();
-  } else {
-    if (exist< LHCb::RecVertex::Range>(m_PVInputLocation) && 
-        !get<LHCb::RecVertex::Range>(m_PVInputLocation).empty()) {
+  }
+  else 
+  {
+    if ( !getIfExists<LHCb::RecVertex::Range>(m_PVInputLocation).empty() )
+    {
       this->tables();
     }    
   }
@@ -88,29 +91,29 @@ void BestPVAlg::tables() const
   typedef LHCb::Particle::Range Particles;
   typedef LHCb::RecVertex::Range Vertices;
 
-  std::vector<std::string>::const_iterator iLoc = m_particleInputLocations.begin();
-  std::vector<std::string>::const_iterator locEnd = m_particleInputLocations.end();
+  for ( std::vector<std::string>::const_iterator iLoc = m_particleInputLocations.begin(); 
+        iLoc != m_particleInputLocations.end(); ++iLoc ) 
+  {
 
-  for ( ; iLoc != locEnd; ++iLoc) {
-
-    if ( exist< Particles >(*iLoc) &&  
-         ! get< Particles >(*iLoc).empty()) {
-
+    Particles particles = getIfExists<Particles>(*iLoc);
+    
+    if ( !particles.empty() )
+    {
       Particle2Vertex::Table* table = new Particle2Vertex::Table();
       const std::string tableLoc = tableLocation(*iLoc);
       put( table, tableLoc );
 
-      Particles particles = get<Particles>(*iLoc);
       Vertices vertices = get<Vertices>(m_PVInputLocation);
 
-      for (Particles::const_iterator iPart = particles.begin();
-           iPart != particles.end(); ++ iPart) {
+      for ( Particles::const_iterator iPart = particles.begin();
+            iPart != particles.end(); ++iPart ) 
+      {
         const LHCb::VertexBase* vtx = 
           m_pvRelator->relatedPV(*iPart, 
                                  LHCb::VertexBase::ConstVector(vertices.begin(), 
                                                                vertices.end()));
         table->relate(*iPart, vtx);
-
+        
       }
       checkTable(table, tableLoc);
     }
@@ -128,14 +131,14 @@ void BestPVAlg::tablesFromTables() const
   typedef Particle2Vertex::Table Table;
   typedef Particle2Vertex::Table::InvType InvTable;
  
-  std::vector<std::string>::const_iterator iLoc = m_P2PVInputLocations.begin();
-  std::vector<std::string>::const_iterator locEnd = m_P2PVInputLocations.end();
- 
-  for ( ; iLoc != locEnd ; ++iLoc) {
+  for ( std::vector<std::string>::const_iterator iLoc = m_P2PVInputLocations.begin(); 
+        iLoc != m_P2PVInputLocations.end(); ++iLoc )
+  {
 
     const Table* inputTable = i_get<Table>(*iLoc);
 
-    if (inputTable) {
+    if (inputTable) 
+    {
 
       Table* table = new Table();
       const std::string tableLoc = tableLocation(*iLoc);
@@ -149,14 +152,16 @@ void BestPVAlg::tablesFromTables() const
 
       Relations::getUniqueTo(invRange.begin(), invRange.end(), particles);
 
-      if ( msgLevel(MSG::VERBOSE) ) {
+      if ( msgLevel(MSG::VERBOSE) ) 
+      {
         verbose() << "tableFromTable found " 
                   << particles.size() << " Particles" 
                   << endmsg;
       }
   
-      for (Particles::const_iterator iPart = particles.begin();
-           iPart != particles.end(); ++iPart) {
+      for ( Particles::const_iterator iPart = particles.begin();
+            iPart != particles.end(); ++iPart ) 
+      {
 
         const Table::Range range = inputTable->relations(*iPart);
 
@@ -168,9 +173,10 @@ void BestPVAlg::tablesFromTables() const
                                                 << vertices.size() 
                                                 << " related vertices" << endmsg;
 
-        const LHCb::VertexBase* vtx = m_pvRelator->relatedPV(*iPart, 
-                                                             LHCb::VertexBase::ConstVector(vertices.begin(), 
-                                                                                           vertices.end()));
+        const LHCb::VertexBase* vtx = 
+          m_pvRelator->relatedPV(*iPart, 
+                                 LHCb::VertexBase::ConstVector(vertices.begin(), 
+                                                               vertices.end()));
 
         table->relate(*iPart, vtx);
       }
@@ -192,25 +198,19 @@ std::string BestPVAlg::tableLocation(const std::string& location) const
 void BestPVAlg::checkTable(const Particle2Vertex::Table* table,
                            const std::string& tableLoc) const
 {
-  
-  if (0!=table) {
-    if ( msgLevel(MSG::VERBOSE) ) {
+  if ( table ) 
+  {
+    if ( msgLevel(MSG::VERBOSE) ) 
+    {
       verbose() << "Storing relations table in " 
                 << tableLoc << endmsg;
       verbose() << "Table size " << table->relations().size() << endmsg;
     }
-  } else {
+  } 
+  else
+  {
     Error("No table created!",10).ignore();
   }
 }
 
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode BestPVAlg::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
-}
 //=============================================================================

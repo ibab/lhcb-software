@@ -101,16 +101,14 @@ Particle2Vertex::WTable* PVRelatorAlg::table() const
 
   Particle2Vertex::WTable* table = new Particle2Vertex::WTable();
 
-  if ( !exist< LHCb::Particle::Range>(m_particleInputLocation) ||
-       !exist< LHCb::RecVertex::Range>(m_PVInputLocation) ) return table;
+  Particles particles = getIfExists<Particles>(m_particleInputLocation);
+  Vertices vertices   = getIfExists<Vertices>(m_PVInputLocation);
 
-  Particles particles = get<Particles>(m_particleInputLocation);
-  Vertices vertices = get<Vertices>(m_PVInputLocation);
+  if ( particles.empty() || vertices.empty() ) return table;
 
-  if (particles.empty() || vertices.empty()) return table;
-
-  for (Particles::const_iterator iPart = particles.begin();
-       iPart != particles.end(); ++ iPart) {
+  for ( Particles::const_iterator iPart = particles.begin();
+        iPart != particles.end(); ++iPart ) 
+  {
     const RelTable bestPVTable =
       m_pvRelator->relatedPVs(*iPart,
                               LHCb::VertexBase::ConstVector(vertices.begin(),

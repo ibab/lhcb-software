@@ -40,17 +40,14 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
-
-  
 
   template <typename T>
   inline T* 
   i_get(const std::string& location) const
   {
-    return exist<T>(location) ? get<T>( location ) : 0 ;
+    return getIfExists<T>( location );
   }
 
   void tables() const;

@@ -96,15 +96,17 @@ bool ParticleVeto::foundOverlap(const LHCb::Particle* particle, std::vector<std:
   return false;
 }
 
-bool ParticleVeto::foundOverlap(const LHCb::Particle* particle, std::string container,int mode){
+bool ParticleVeto::foundOverlap(const LHCb::Particle* particle, std::string container,int mode)
+{
   if( NULL == particle)return false;
-  if( container != m_cont ){
+  if( container != m_cont )
+  {
     m_cont = container;
     if ( !exist<LHCb::Particle::Range>( m_cont )){
       counter("Container " + container + " not found")+=1;
       return false;
     }
-    m_parts= get<LHCb::Particle::Range> ( m_cont);
+    m_parts = get<LHCb::Particle::Range> ( m_cont);
   }
   int i1=container.find("Phys/");
   int i2=container.find("/Particles");

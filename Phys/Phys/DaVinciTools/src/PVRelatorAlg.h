@@ -94,7 +94,7 @@ private:
   inline T*
   i_get(const std::string& location) const
   {
-    return exist<T>(location) ? get<T>( location ) : 0 ;
+    return getIfExists<T>( location );
   }
 
   Particle2Vertex::WTable* table() const;

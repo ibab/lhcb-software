@@ -65,13 +65,9 @@ StatusCode AddExtraInfo::execute()
   {
     const std::string location = (*iLoc) + "/Particles";
 
-    if(!exist<LHCb::Particle::Range>(location) ) {
-      if (msgLevel(MSG::VERBOSE)) verbose()<<("No selection found in "+ location)<<endreq;
-      continue;
-    }
-
-    const Particle::Range parts = get<Particle::Range>( location );
-    if( parts.empty() ) {
+    const Particle::Range parts = getIfExists<Particle::Range>( location );
+    if( parts.empty() ) 
+    {
       if (msgLevel(MSG::VERBOSE)) verbose() << "No particles found at " << location << endreq;
       continue;
     }

@@ -101,13 +101,11 @@ bool StandardParticleProvider::fillParticleMap( const unsigned int pid ) const
   bool OK = false;
 
   // Find the Particles for this PID type
-  const LHCb::Particles * parts(NULL);
   PIDToTESMap::const_iterator iPartLoc = m_pidToTESMap.find(pid);
-  if ( iPartLoc != m_pidToTESMap.end() &&
-       exist<LHCb::Particles>(iPartLoc->second) )
-  {
-    parts = get<LHCb::Particles>(iPartLoc->second);
-  }
+  const LHCb::Particles * parts = 
+    ( iPartLoc != m_pidToTESMap.end() ?
+      getIfExists<LHCb::Particles>(evtSvc(),iPartLoc->second) :
+      NULL );
 
   // If found, fill the map
   if ( parts )

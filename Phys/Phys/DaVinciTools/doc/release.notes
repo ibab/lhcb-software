@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2012-07-23 - Chris Jones
+ - Use 'getIfExists' instead of seperate 'exists' and 'get' calls.
+
 ! 2012-07-20 - Chris Jones
  - Remove the memory check code from DaVinciInit. 
    Now part of the LbAppInit base class.

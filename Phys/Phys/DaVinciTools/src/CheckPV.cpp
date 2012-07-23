@@ -62,32 +62,38 @@ StatusCode CheckPV::initialize()
 //=============================================================================
 StatusCode CheckPV::execute() 
 {
-
-  if (msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
-
   int n = 0 ;
   bool ok = false ;
 
   if (msgLevel(MSG::VERBOSE)) verbose() << "Getting PV from " << m_PVContainer << endreq ;
-  if ( !exist<LHCb::RecVertices>(m_PVContainer)){
+
+  // load the PVs. NULL if not available.
+  const LHCb::RecVertices* PV = getIfExists<LHCb::RecVertices>(m_PVContainer);
+
+  if ( !PV )
+  {
     if (msgLevel(MSG::DEBUG)) debug() << m_PVContainer << " not found" << endmsg ;
-    ok = (m_minPV<=0) ; // Ok if no PV required
-  } else {
-    LHCb::RecVertices* PV = get<LHCb::RecVertices>(m_PVContainer);
-    if ( !PV ) 
-    {
-      return Error( "Could not find primary vertex location " + m_PVContainer );
-    }
-    n =  PV->size() ;
-    if (msgLevel(MSG::VERBOSE) || m_print ) verbose() << "There are " << n << " primary vertices." << endreq ;
-    counter("PVs")+=n;
+    ok = ( m_minPV <= 0 ) ; // Ok if no PV required
+  }
+  else 
+  {
+    // count PVs
+    n = PV->size() ;
+
+    if (msgLevel(MSG::VERBOSE) || m_print ) 
+      verbose() << "There are " << n << " primary vertices." << endreq ;
+    
+    counter("PVs") += n;
 
     ok = ( n >= m_minPV );      // more than m_minPV
-    if ( m_maxPV >= 0 ){              // some maximum?
+    if ( m_maxPV >= 0 )         // some maximum?
+    { 
       ok = (ok && ( n <= m_maxPV ));  // less than m_maxPV
     }
   }
-  counter("Events")+=ok;
+
+  counter("Events") += ok;
+
   if (msgLevel(MSG::DEBUG))
   {
     if (ok) debug() << "Event accepted because there are " << n << " primary vertices." << endreq ;

@@ -56,8 +56,8 @@ StatusCode DaVinciInit::initialize()
 
 StatusCode DaVinciInit::execute()
 {
-  const StatusCode sc = LbAppInit::execute(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by LbAppInit
+  const StatusCode sc = LbAppInit::execute(); 
+  if ( sc.isFailure() ) return sc; 
 
   // Plot the memory usage
   m_memoryTool->execute();
@@ -65,9 +65,9 @@ StatusCode DaVinciInit::execute()
   // Get the run and event number from the ODIN bank
   if ( m_print )
   {
-    if ( exist<LHCb::ODIN>(LHCb::ODINLocation::Default) )
+    const LHCb::ODIN * odin = getIfExists<LHCb::ODIN> ( LHCb::ODINLocation::Default );
+    if ( odin )
     {
-      const LHCb::ODIN * odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
       this->printEventRun( odin->eventNumber(), odin->runNumber() );
     }
     else
