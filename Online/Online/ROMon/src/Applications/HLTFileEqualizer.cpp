@@ -119,6 +119,8 @@ void HLTFileEqualizer::Analyze()
   int nnodes = 0;
   int tot_ena = 0;
   int tot_dis = 0;
+  int ROC_tot_ena = 0;
+  int ROC_tot_dis = 0;
   bool act = (m_DefStateInfo->getInt() == 1);
   fprintf(outf,"Analyzer: First round of analysis Average number of files per node: %f +/- %f\n",av_files,rms);
   for (myNodeMap::iterator nit=m_Nodes.begin();nit != m_Nodes.end();nit++)
@@ -174,10 +176,13 @@ void HLTFileEqualizer::Analyze()
     }
     if (nod->m_state == 0) tot_dis++;
     else tot_ena++;
+    if (nod->m_ROC_state == 'Y') ROC_tot_ena++;
+    else ROC_tot_dis++;
   }
   fprintf(outf,"Analyzer: Second round (within +/- 5 sigma) of analysis Average number of files per node: %f +/- %f\n",av_files,rms);
   fprintf(outf,"%d Nodes enabled; %d Nodes disabled\n",n_ena,n_dis);
   fprintf(outf,"Total %d Nodes enabled; Total %d Nodes disabled\n",tot_ena,tot_dis);
+  fprintf(outf,"From ROcollect: Total %d Nodes enabled; Total %d Nodes disabled\n",ROC_tot_ena,ROC_tot_dis);
   m_nnodes = 0;
   m_nfiles = 0;
   m_nfiles2 = 0;
