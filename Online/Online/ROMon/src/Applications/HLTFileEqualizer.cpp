@@ -117,6 +117,8 @@ void HLTFileEqualizer::Analyze()
   int nfiles = 0;
   long nfiles2 = 0;
   int nnodes = 0;
+  int tot_ena = 0;
+  int tot_dis = 0;
   bool act = (m_DefStateInfo->getInt() == 1);
   fprintf(outf,"Analyzer: First round of analysis Average number of files per node: %f +/- %f\n",av_files,rms);
   for (myNodeMap::iterator nit=m_Nodes.begin();nit != m_Nodes.end();nit++)
@@ -170,9 +172,12 @@ void HLTFileEqualizer::Analyze()
       Actions[farm].push_back(std::make_pair(nod->m_name,1));
       n_ena++;
     }
+    if (nod->m_state == 0) tot_dis++;
+    else tot_ena++;
   }
   fprintf(outf,"Analyzer: Second round (within +/- 5 sigma) of analysis Average number of files per node: %f +/- %f\n",av_files,rms);
   fprintf(outf,"%d Nodes enabled; %d Nodes disabled\n",n_ena,n_dis);
+  fprintf(outf,"Total %d Nodes enabled; Total %d Nodes disabled\n",tot_ena,tot_dis);
   m_nnodes = 0;
   m_nfiles = 0;
   m_nfiles2 = 0;
@@ -271,6 +276,7 @@ void DefHltInfoHandler::infoHandler()
         }
       }
       m_Equalizer->m_Nodes[nname]->m_nofiles = nfiles;
+      m_Equalizer->m_Nodes[nname]->m_ROC_state = (*i).overflowState;
 //      m_Equalizer->m_Nodes[nname]->m_state *= (*i).overflowState;
       m_Equalizer->m_nfiles += nfiles;
       m_Equalizer->m_nfiles2 += nfiles*nfiles;

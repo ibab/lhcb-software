@@ -29,12 +29,14 @@ class myNode
     std::string m_subfarm;
     int m_nofiles;
     int m_state;
+    char m_ROC_state;
     myNode(std::string n)
     {
       m_name = n;
       m_state = 1;
       m_nofiles = 0;
       m_subfarm = m_name.substr(0,6);
+      m_ROC_state = '?';
     };
 };
 class SFarm
