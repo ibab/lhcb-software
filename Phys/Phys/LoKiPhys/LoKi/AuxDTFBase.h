@@ -31,7 +31,7 @@
  */
 namespace LoKi
 {
-  // ==========================================================================
+  // =========================================================================
   /** @class AuxDTFBase LoKi/AuxDTFBase.h
    *  
    *  Helper base class to deal with DecayTreeFitter 
@@ -44,23 +44,50 @@ namespace LoKi
   class GAUDI_API AuxDTFBase : public virtual LoKi::AuxDesktopBase 
   {
   public:
-    // =========================================================================
+    // ========================================================================
+    /// the actual type to define the non-standard masses 
+    typedef std::map<std::string,double>                              MASSES  ;
+    /// the actual type to define the non-standard masses 
+    typedef std::map<LHCb::ParticleID,double>                         MASSES2 ;
+    // ========================================================================
+  public:
+    // ========================================================================
     /// constructor from the fitter 
     AuxDTFBase ( const IDecayTreeFit* fitter ) ;
     /// constructor from the fitter  
     AuxDTFBase ( const std::string&   fitter ) ;
     /// constructor from the fitter 
-    AuxDTFBase ( const std::vector<std::string>&      constraints , 
-                 const IDecayTreeFit*                 fitter = 0  ) ;
+    AuxDTFBase ( const std::vector<std::string>&      constraints         , 
+                 const MASSES&                        masses = MASSES ()  ,
+                 const IDecayTreeFit*                 fitter = 0          ) ;
     /// constructor from the fitter 
-    AuxDTFBase ( const std::vector<LHCb::ParticleID>& constraints , 
-                 const IDecayTreeFit*                 fitter = 0  ) ;
+    AuxDTFBase ( const std::vector<std::string>&      constraints         , 
+                 const MASSES2&                       masses              ,
+                 const IDecayTreeFit*                 fitter = 0          ) ;
     /// constructor from the fitter 
-    AuxDTFBase ( const std::vector<std::string>&      constraints , 
-                 const std::string&                   fitter      ) ;
+    AuxDTFBase ( const std::vector<LHCb::ParticleID>& constraints         , 
+                 const MASSES&                        masses = MASSES ()  ,
+                 const IDecayTreeFit*                 fitter = 0          ) ;
     /// constructor from the fitter 
-    AuxDTFBase ( const std::vector<LHCb::ParticleID>& constraints , 
-                 const std::string&                   fitter      ) ;
+    AuxDTFBase ( const std::vector<LHCb::ParticleID>& constraints         , 
+                 const MASSES2&                       masses              ,
+                 const IDecayTreeFit*                 fitter = 0          ) ;
+    /// constructor from the fitter 
+    AuxDTFBase ( const std::vector<std::string>&      constraints         ,
+                 const std::string&                   fitter              ,
+                 const MASSES&                        masses = MASSES ()  ) ;
+    /// constructor from the fitter 
+    AuxDTFBase ( const std::vector<std::string>&      constraints         , 
+                 const std::string&                   fitter              ,
+                 const MASSES2&                       masses              ) ;
+    /// constructor from the fitter 
+    AuxDTFBase ( const std::vector<LHCb::ParticleID>& constraints         , 
+                 const std::string&                   fitter              ,
+                 const MASSES&                        masses = MASSES ()  ) ;
+    /// constructor from the fitter 
+    AuxDTFBase ( const std::vector<LHCb::ParticleID>& constraints         , 
+                 const std::string&                   fitter              ,
+                 const MASSES2&                       masses              ) ;
     /// copy constructor 
     AuxDTFBase ( const AuxDTFBase& right ) ;
     /// virtual destructor
@@ -81,17 +108,23 @@ namespace LoKi
     const std::string& fitterName() const { return m_fitterName ; }
     /// get constraints 
     std::vector<std::string> constraints ()  const ;
+    /// get non-standard masses 
+    MASSES                   masses      ()  const ;
     // ========================================================================    
   protected :
     // ========================================================================
     /// set vector of constraints
     unsigned int setConstraint ( const std::vector<std::string>&      pids ) ;
-    /// set vector of constraints
+    /// set constraint
     unsigned int setConstraint ( const             std::string &      pids ) ;
     /// set vector of constraints
     unsigned int setConstraint ( const std::vector<LHCb::ParticleID>& pids ) ;
-    /// set vector of constraints
+    /// set constraints
     unsigned int setConstraint ( const             LHCb::ParticleID&  pids ) ;
+    /// set vector of constraints
+    unsigned int setConstraint ( const MASSES&  pids ) ;    
+    /// set vector of constraints
+    unsigned int setConstraint ( const MASSES2& pids ) ;
     // apply mass-constraints  
     void applyConstraints () const ;
     // ========================================================================    
@@ -103,11 +136,13 @@ namespace LoKi
   private:
     // ========================================================================
     /// the fitter name 
-    std::string                            m_fitterName ;    // the fitter name 
+    std::string                            m_fitterName  ; // the fitter name 
     /// the fitter itself 
-    mutable LoKi::Interface<IDecayTreeFit> m_fitter     ;   // the fiter itself 
+    mutable LoKi::Interface<IDecayTreeFit> m_fitter      ; // the fiter itself 
     /// the list of mass constraints 
-    std::vector<LHCb::ParticleID>          m_constraints ;  // mass-constarints
+    std::vector<LHCb::ParticleID>          m_constraints ; // mass-constarints
+    /// the list of mass constraints 
+    MASSES2                                m_masses      ; // mass-constraints
     // ========================================================================
   };
   // ==========================================================================

@@ -48,10 +48,15 @@ namespace LoKi
     class GAUDI_API DecayTreeFitterFun
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
       , public LoKi::AuxDTFBase 
-    {
+    { 
     public:
       // ======================================================================
-      /** constructor with the functor
+      /// non-standard masses 
+      typedef LoKi::AuxDTFBase::MASSES                                MASSES ;
+      // ======================================================================
+    public:
+      // ======================================================================
+     /** constructor with the functor
        *  @param fun    the functor to be evaluated 
        *  @param usePV  flag to use Primary Vertex in ReFit 
        *  @param fitter the fitter itself 
@@ -68,10 +73,11 @@ namespace LoKi
        *  @param fitter the fitter itself 
        */
       DecayTreeFitterFun
-      ( const LoKi::PhysTypes::Func&         fun           ,
-        const bool                           usePV         ,
-        const std::vector<std::string>&      constraints   ,
-        const IDecayTreeFit*                 fitter = 0    ) ;
+      ( const LoKi::PhysTypes::Func&         fun               ,
+        const bool                           usePV             ,
+        const std::vector<std::string>&      constraints       ,
+        const MASSES&                        masses = MASSES() , 
+        const IDecayTreeFit*                 fitter = 0        ) ;
       // ======================================================================
       /** constructor with the functor
        *  @param fun         the functor to be evaluated 
@@ -80,10 +86,11 @@ namespace LoKi
        *  @param fitter the fitter itself 
        */
       DecayTreeFitterFun
-      ( const LoKi::PhysTypes::Func&         fun           ,
-        const bool                           usePV         ,
-        const std::string&                   constraint    ,
-        const IDecayTreeFit*                 fitter = 0    ) ;
+      ( const LoKi::PhysTypes::Func&         fun               ,
+        const bool                           usePV             ,
+        const std::string&                   constraint        ,
+        const MASSES&                        masses = MASSES() , 
+        const IDecayTreeFit*                 fitter = 0        ) ;
       // ======================================================================
       /** constructor with the functor
        *  @param fun         the functor to be evaluated 
@@ -118,12 +125,13 @@ namespace LoKi
        *  @param fitter the fitter itself 
        */
       DecayTreeFitterFun
-      ( const LoKi::PhysTypes::Func&         fun           ,
-        const bool                           usePV         ,
-        const std::vector<std::string>&      constraints   ,
-        const double                         maxChi2DoF    , 
-        const double                         bad           , 
-        const IDecayTreeFit*                 fitter = 0    ) ;
+      ( const LoKi::PhysTypes::Func&         fun               ,
+        const bool                           usePV             ,
+        const std::vector<std::string>&      constraints       ,
+        const double                         maxChi2DoF        , 
+        const double                         bad               , 
+        const MASSES&                        masses = MASSES() , 
+        const IDecayTreeFit*                 fitter = 0        ) ;
       // ======================================================================
       /** constructor with the functor & chi2-cut 
        *  @param fun         the functor to be evaluated 
@@ -134,12 +142,13 @@ namespace LoKi
        *  @param fitter the fitter itself 
        */
       DecayTreeFitterFun
-      ( const LoKi::PhysTypes::Func&         fun           ,
-        const bool                           usePV         ,
-        const std::string&                   constraint    ,
-        const double                         maxChi2DoF    , 
-        const double                         bad           , 
-        const IDecayTreeFit*                 fitter = 0    ) ;
+      ( const LoKi::PhysTypes::Func&         fun               ,
+        const bool                           usePV             ,
+        const std::string&                   constraint        ,
+        const double                         maxChi2DoF        , 
+        const double                         bad               , 
+        const MASSES&                        masses = MASSES() , 
+        const IDecayTreeFit*                 fitter = 0        ) ;
       // ======================================================================
       /** constructor with the functor & chi2-cut 
        *  @param fun         the functor to be evaluated 
@@ -201,6 +210,11 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// non-standard masses 
+      typedef LoKi::AuxDTFBase::MASSES                                MASSES ;
+      // ======================================================================
+    public:
+      // ======================================================================
       /** constructor with the predicate 
        *  @param fun    the predicate to be evaluated 
        *  @param usePV  flag to use primary vertex in refit 
@@ -218,10 +232,11 @@ namespace LoKi
        *  @param fitter      the fitter 
        */
       DecayTreeFitterCut
-      ( const LoKi::PhysTypes::Cuts&         fun           ,
-        const bool                           usePV         ,
-        const std::vector<std::string>&      constraints   ,
-        const IDecayTreeFit*                 fitter = 0    ) ;
+      ( const LoKi::PhysTypes::Cuts&         fun               ,
+        const bool                           usePV             ,
+        const std::vector<std::string>&      constraints       ,
+        const MASSES&                        masses = MASSES() , 
+        const IDecayTreeFit*                 fitter = 0        ) ;
       // ======================================================================
       /** constructor with the predicate 
        *  @param fun         the predicate to be evaluated 
@@ -230,10 +245,11 @@ namespace LoKi
        *  @param fitter      the fitter 
        */
       DecayTreeFitterCut
-      ( const LoKi::PhysTypes::Cuts&         fun           ,
-        const bool                           usePV         ,
-        const std::string&                   constraint    ,
-        const IDecayTreeFit*                 fitter = 0    ) ;
+      ( const LoKi::PhysTypes::Cuts&         fun               ,
+        const bool                           usePV             ,
+        const std::string&                   constraint        ,
+        const MASSES&                        masses = MASSES() , 
+        const IDecayTreeFit*                 fitter = 0        ) ;
       // ======================================================================
       /** constructor with the predicate 
        *  @param fun         the predicate to be evaluated 
@@ -266,11 +282,12 @@ namespace LoKi
        *  @param fitter      the fitter 
        */
       DecayTreeFitterCut
-      ( const LoKi::PhysTypes::Cuts&         fun           ,
-        const bool                           usePV         ,
-        const std::vector<std::string>&      constraints   ,
-        const double                         maxChi2DoF    , 
-        const IDecayTreeFit*                 fitter = 0    ) ;
+      ( const LoKi::PhysTypes::Cuts&         fun               ,
+        const bool                           usePV             ,
+        const std::vector<std::string>&      constraints       ,
+        const double                         maxChi2DoF        , 
+        const MASSES&                        masses = MASSES() , 
+        const IDecayTreeFit*                 fitter = 0        ) ;
       // ======================================================================
       /** constructor with the predicate 
        *  @param fun         the predicate to be evaluated 
@@ -284,6 +301,7 @@ namespace LoKi
         const bool                           usePV         ,
         const std::string&                   constraint    ,
         const double                         maxChi2DoF    , 
+        const MASSES&                        masses = MASSES() , 
         const IDecayTreeFit*                 fitter = 0    ) ;
       // ======================================================================
       /** constructor with the predicate 
@@ -346,11 +364,17 @@ namespace LoKi
     {
       // ======================================================================
     public:
+      // ======================================================================
+      /// non-standard masses 
+      typedef LoKi::AuxDTFBase::MASSES                                MASSES ;
+      // ======================================================================
+    public:
       /// constructor from child selector & PV-flag & constraints 
       ChildCTau
       ( const LoKi::Child::Selector&     child            , 
         const bool                       usePV            , 
         const std::vector<std::string>&  constraints = std::vector<std::string>() , 
+        const MASSES&                    masses      = MASSES() , 
         const double                     chi2MaxDoF  = -1 , 
         const IDecayTreeFit*             fitter      =  0 ) ;
       /// constructor from child selector & PV-flag & constraints 
@@ -358,6 +382,7 @@ namespace LoKi
       ( const std::vector<unsigned int>& child            , 
         const bool                       usePV            , 
         const std::vector<std::string>&  constraints = std::vector<std::string>() , 
+        const MASSES&                    masses      = MASSES() , 
         const double                     chi2MaxDoF  = -1 , 
         const IDecayTreeFit*             fitter      =  0 ) ;        
       /// constructor from child selector & PV-flag & constraints 
@@ -365,6 +390,7 @@ namespace LoKi
       ( const unsigned int               child            , 
         const bool                       usePV            , 
         const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const MASSES&                    masses      = MASSES() , 
         const double                     chi2MaxDoF  = -1 , 
         const IDecayTreeFit*             fitter      =  0 ) ;        
       /// constructor from child selector & PV-flag & constraints 
@@ -372,6 +398,7 @@ namespace LoKi
       ( const std::string&               child            , 
         const bool                       usePV            , 
         const std::vector<std::string>&  constraints = std::vector<std::string>() , 
+        const MASSES&                    masses      = MASSES() , 
         const double                     chi2MaxDoF  = -1 , 
         const IDecayTreeFit*             fitter      =  0 ) ;        
       /// constructor from child selector & PV-flag & constraints 
@@ -379,6 +406,7 @@ namespace LoKi
       ( const Decays::iNode&             child            , 
         const bool                       usePV            , 
         const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const MASSES&                    masses      = MASSES() , 
         const double                     chi2MaxDoF  = -1 , 
         const IDecayTreeFit*             fitter      =  0 ) ;        
       /// constructor from child selector & PV-flag & constraints 
@@ -386,6 +414,7 @@ namespace LoKi
       ( const Decays::IDecay::iTree&     child            , 
         const bool                       usePV            , 
         const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const MASSES&                    masses      = MASSES() , 
         const double                     chi2MaxDoF  = -1 , 
         const IDecayTreeFit*             fitter      =  0 ) ;        
       /// constructor from child selector & PV-flag & constraints 
@@ -393,6 +422,7 @@ namespace LoKi
       ( const Decays::IDecay::Finder&    child            , 
         const bool                       usePV            , 
         const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const MASSES&                    masses      = MASSES() , 
         const double                     chi2MaxDoF  = -1 , 
         const IDecayTreeFit*             fitter      =  0 ) ;        
       /// constructor from child selector & PV-flag & constraints 
@@ -400,6 +430,7 @@ namespace LoKi
       ( const LoKi::PhysTypes::Cuts&     child            , 
         const bool                       usePV            , 
         const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const MASSES&                    masses      = MASSES() , 
         const double                     chi2MaxDoF  = -1 , 
         const IDecayTreeFit*             fitter      =  0 ) ;        
       /// MANDATORY: virtual descructor 
@@ -466,6 +497,7 @@ namespace LoKi
       ( const LoKi::Child::Selector&     child            , 
         const bool                       usePV            , 
         const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const MASSES&                    masses      = MASSES() , 
         const double                     chi2MaxDoF  = -1 , 
         const IDecayTreeFit*             fitter      =  0 ) ;        
       /// constructor from child selector & PV-flag & constraints 
@@ -473,6 +505,7 @@ namespace LoKi
       ( const std::vector<unsigned int>& child            , 
         const bool                       usePV            , 
         const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const MASSES&                    masses      = MASSES() , 
         const double                     chi2MaxDoF  = -1 , 
         const IDecayTreeFit*             fitter      =  0 ) ;        
       /// constructor from child selector & PV-flag & constraints 
@@ -480,6 +513,7 @@ namespace LoKi
       ( const unsigned int               child            , 
         const bool                       usePV            , 
         const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const MASSES&                    masses      = MASSES() , 
         const double                     chi2MaxDoF  = -1 , 
         const IDecayTreeFit*             fitter      =  0 ) ;        
       /// constructor from child selector & PV-flag & constraints 
@@ -487,6 +521,7 @@ namespace LoKi
       ( const std::string&               child            , 
         const bool                       usePV            , 
         const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const MASSES&                    masses      = MASSES() , 
         const double                     chi2MaxDoF  = -1 , 
         const IDecayTreeFit*             fitter      =  0 ) ;        
       /// constructor from child selector & PV-flag & constraints 
@@ -494,6 +529,7 @@ namespace LoKi
       ( const Decays::iNode&             child            , 
         const bool                       usePV            , 
         const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const MASSES&                    masses      = MASSES() , 
         const double                     chi2MaxDoF  = -1 , 
         const IDecayTreeFit*             fitter      =  0 ) ;        
       /// constructor from child selector & PV-flag & constraints 
@@ -501,6 +537,7 @@ namespace LoKi
       ( const Decays::IDecay::iTree&     child            , 
         const bool                       usePV            , 
         const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const MASSES&                    masses      = MASSES() , 
         const double                     chi2MaxDoF  = -1 , 
         const IDecayTreeFit*             fitter      =  0 ) ;        
       /// constructor from child selector & PV-flag & constraints 
@@ -508,6 +545,7 @@ namespace LoKi
       ( const Decays::IDecay::Finder&    child            , 
         const bool                       usePV            , 
         const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const MASSES&                    masses      = MASSES() , 
         const double                     chi2MaxDoF  = -1 , 
         const IDecayTreeFit*             fitter      =  0 ) ;        
       /// constructor from child selector & PV-flag & constraints 
@@ -515,6 +553,7 @@ namespace LoKi
       ( const LoKi::PhysTypes::Cuts&     child            , 
         const bool                       usePV            , 
         const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const MASSES&                    masses      = MASSES() , 
         const double                     chi2MaxDoF  = -1 , 
         const IDecayTreeFit*             fitter      =  0 ) ;        
       /// MANDATORY: virtual destructor 
@@ -555,6 +594,7 @@ namespace LoKi
       ( const LoKi::Child::Selector&     child            , 
         const bool                       usePV            , 
         const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const MASSES&                    masses      = MASSES() , 
         const double                     chi2MaxDoF  = -1 , 
         const IDecayTreeFit*             fitter      =  0 ) ;        
       /// constructor from child selector & PV-flag & constraints 
@@ -562,6 +602,7 @@ namespace LoKi
       ( const std::vector<unsigned int>& child            , 
         const bool                       usePV            , 
         const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const MASSES&                    masses      = MASSES() , 
         const double                     chi2MaxDoF  = -1 , 
         const IDecayTreeFit*             fitter      =  0 ) ;        
       /// constructor from child selector & PV-flag & constraints 
@@ -569,6 +610,7 @@ namespace LoKi
       ( const unsigned int               child            , 
         const bool                       usePV            , 
         const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const MASSES&                    masses      = MASSES() , 
         const double                     chi2MaxDoF  = -1 , 
         const IDecayTreeFit*             fitter      =  0 ) ;        
       /// constructor from child selector & PV-flag & constraints 
@@ -576,6 +618,7 @@ namespace LoKi
       ( const std::string&               child            , 
         const bool                       usePV            , 
         const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const MASSES&                    masses      = MASSES() , 
         const double                     chi2MaxDoF  = -1 , 
         const IDecayTreeFit*             fitter      =  0 ) ;        
       /// constructor from child selector & PV-flag & constraints 
@@ -583,6 +626,7 @@ namespace LoKi
       ( const Decays::iNode&             child            , 
         const bool                       usePV            ,
         const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const MASSES&                    masses      = MASSES() , 
         const double                     chi2MaxDoF  = -1 , 
         const IDecayTreeFit*             fitter      =  0 ) ;        
       /// constructor from child selector & PV-flag & constraints 
@@ -590,6 +634,7 @@ namespace LoKi
       ( const Decays::IDecay::iTree&     child            , 
         const bool                       usePV            , 
         const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const MASSES&                    masses      = MASSES() , 
         const double                     chi2MaxDoF  = -1 , 
         const IDecayTreeFit*             fitter      =  0 ) ;        
       /// constructor from child selector & PV-flag & constraints 
@@ -597,6 +642,7 @@ namespace LoKi
       ( const Decays::IDecay::Finder&    child            , 
         const bool                       usePV            , 
         const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const MASSES&                    masses      = MASSES() , 
         const double                     chi2MaxDoF  = -1 , 
         const IDecayTreeFit*             fitter      =  0 ) ;        
       /// constructor from child selector & PV-flag & constraints 
@@ -604,6 +650,7 @@ namespace LoKi
       ( const LoKi::PhysTypes::Cuts&     child            , 
         const bool                       usePV            , 
         const std::vector<std::string>&  constraints = std::vector<std::string>() ,
+        const MASSES&                    masses      = MASSES() , 
         const double                     chi2MaxDoF  = -1 , 
         const IDecayTreeFit*             fitter      =  0 ) ;        
       /// MANDATORY: virtual descructor 
@@ -638,11 +685,13 @@ namespace LoKi
       DecayTreeFitChi2 
       ( const bool                      usePV      , 
         const std::vector<std::string>& constraint = 
-        std::vector<std::string>()                 ) ;
+        std::vector<std::string>()                 ,
+        const MASSES&                    masses    = MASSES() ) ;
       /// constructor from PV-flag & constraints  
       DecayTreeFitChi2 
       ( const bool                      usePV      , 
-        const std::string&              constraint ) ;
+        const std::string&              constraint ,
+        const MASSES&                    masses    = MASSES() ) ;
       /// MANDATORY: virtual destructor
       virtual ~DecayTreeFitChi2 ();
       /// MANDATORY: clone method ("virtual constructor")
@@ -689,11 +738,13 @@ namespace LoKi
       DecayTreeFitNDoF
       ( const bool                      usePV      , 
         const std::vector<std::string>& constraint = 
-        std::vector<std::string>()                 ) ;
+        std::vector<std::string>()                 ,
+        const MASSES&                   masses    = MASSES() ) ;
       /// constructor from PV-flag & constraints  
       DecayTreeFitNDoF
       ( const bool                      usePV      , 
-        const std::string&              constraint ) ;
+        const std::string&              constraint ,
+        const MASSES&                   masses    = MASSES() ) ;
       /// MANDATORY: virtual destructor
       virtual ~DecayTreeFitNDoF ();
       /// MANDATORY: clone method ("virtual constructor")
@@ -727,11 +778,13 @@ namespace LoKi
       DecayTreeFitChi2NDoF
       ( const bool                      usePV      , 
         const std::vector<std::string>& constraint = 
-        std::vector<std::string>()                 ) ;
+        std::vector<std::string>()                 ,
+        const MASSES&                    masses    = MASSES() ) ;
       /// constructor from PV-flag & constraints  
       DecayTreeFitChi2NDoF
       ( const bool                      usePV      , 
-        const std::string&              constraint ) ;
+        const std::string&              constraint ,
+        const MASSES&                    masses    = MASSES() ) ;
       /// MANDATORY: virtual destructor
       virtual ~DecayTreeFitChi2NDoF ();
       /// MANDATORY: clone method ("virtual constructor")

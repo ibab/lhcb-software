@@ -5,6 +5,9 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2012-07-23 - Vanya Belyaev
+ - add possibility of mass constrains to non-standard mass(e.g. sideband) 
+ 
 ! 2012-07-19 - Chris Jones
  - Fix a bug in LoKi::Particles::IsMuon::muonPID which could result in a 
    random uninitialised value of the Status Word being used.
