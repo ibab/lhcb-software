@@ -3,6 +3,10 @@
 ! Responsible : Patrick ROBBE
 !=============================================================================
 
+!========================= LbBcVegPy v4r3 2012-07-23 =========================
+! 2012-07-23 - Gloria Corti
+ - Remove include of old ParticlePropertySvc that is not needed
+
 !========================= LbBcVegPy v4r2 2011-11-11 =========================
 ! 2011-10-20 - Patrick Robbe
  . src/Lib/Funtrans.cpp
