@@ -105,3 +105,12 @@ void AlpGenFunctions::AlFbkk( )
 {
   alfbkk_() ;
 }
+
+extern "C" {
+  void alsfin_() ;
+}
+
+void AlpGenFunctions::AlSfin( ) 
+{
+  alsfin_() ;
+}

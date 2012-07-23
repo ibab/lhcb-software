@@ -126,7 +126,7 @@ int main( int argc , char* argv[] )
   //  numbers. We need to explicitly pass this information to the 
   //  HEPEVT_Wrapper.
   
-  HepMC::HEPEVT_Wrapper::set_max_number_entries(4000);
+  HepMC::HEPEVT_Wrapper::set_max_number_entries(10000);
   HepMC::HEPEVT_Wrapper::set_sizeof_real(8);
     
   //........................................PYTHIA INITIALIZATIONS

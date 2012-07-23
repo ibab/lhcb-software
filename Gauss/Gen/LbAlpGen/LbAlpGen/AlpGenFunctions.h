@@ -22,5 +22,6 @@ public:
   static void AlEgen( ) ;
   static void AlFhis( ) ;
   static void AlFbkk( ) ;
+  static void AlSfin( ) ;
 } ;
 #endif

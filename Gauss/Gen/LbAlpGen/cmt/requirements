@@ -50,7 +50,6 @@ apply_pattern     linker_library    library=LbAlpGenLib
 apply_pattern     library_stamps    library=LbAlpGenLib
 apply_pattern     application_path 
 
-
 macro_prepend GENSER_linkopts " $(alpgen_linkopts) -latopyt "
 
 path_remove PATH "LbAlpGen"
@@ -60,7 +59,7 @@ path_append PATH ${LBALPGENROOT}/scripts
 # =============================================================================
 private           
 macro_append  AlpGenFragmlinkopts  $(Boost_linkopts_program_options)
-macro_append Boost_linkopts " $(Boost_linkopts_filesystem) $(Boost_linkopts_system) "
+macro_append  Boost_linkopts " $(Boost_linkopts_filesystem) $(Boost_linkopts_system) "
 macro_prepend LbAlpGen_linkopts " -Wl,--no-as-needed "
 
 macro_prepend fincludes $(ppcmd)"$(alpgen_author_dir) "

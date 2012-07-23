@@ -1,6 +1,6 @@
 *-- AUTHOR :    MICHELANGELO MANGANO
 C----------------------------------------------------------------------
-      SUBROUTINE UPVETO(IPVETO)
+      SUBROUTINE ALPGEN_UPVETO(IPVETO)
 C----------------------------------------------------------------------
 C     SUBROUTINE TO IMPLEMENT THE MLM JET MATCHING CRITERION
 C----------------------------------------------------------------------
@@ -16,7 +16,7 @@ C...GUP EVENT COMMON BLOCK
      &              SPINUP(MAXNUP)
 C...HEPEVT COMMONBLOCK.
       INTEGER NMXHEP,NEVHEP,NHEP,ISTHEP,IDHEP,JMOHEP,JDAHEP
-      PARAMETER (NMXHEP=4000)
+      PARAMETER (NMXHEP=10000)
       COMMON/HEPEVT/NEVHEP,NHEP,ISTHEP(NMXHEP),IDHEP(NMXHEP),
      &JMOHEP(2,NMXHEP),JDAHEP(2,NMXHEP),PHEP(5,NMXHEP),VHEP(4,NMXHEP)
       DOUBLE PRECISION PHEP,VHEP
@@ -49,7 +49,7 @@ C HEAVY QUARK MATCHING
       
 C DEBUGGING OPTIONS
       INTEGER IDBG
-      PARAMETER (IDBG=1)
+      PARAMETER (IDBG=0)
       DOUBLE PRECISION PTPART,PTJETS,ETAPART,ETAJETS
       INTEGER NMAX
       COMMON/MTCHDBG/PTPART(10),PTJETS(10),ETAPART(10),ETAJETS(10),NMAX
@@ -604,6 +604,7 @@ C UPDATE MAXIMUM NMBER OF ALLOWED ERRORS
       CALL ALSHER(I)
 C
       IST=0
+
 C     INPUT EVENT NUMBER, PROCESS TYPE, N PARTONS, SAMPLE'S AVERAGE
 C     WEIGHT AND QSCALE
       READ(NUNIT,2,END=500,ERR=501) NEV,IPROC,NPART,SWGTRES,SQ
@@ -659,6 +660,7 @@ c---  outgoing lines
  110  continue
 c     
       nup=npart
+
 c---  set up colour structure labels
       Do iup=1,nup
         if(icolup(1,iup).ne.0) icolup(1,iup)=icolup(1,iup)+500
@@ -985,14 +987,17 @@ c
 c     
 c     end of file
  500  ist=1
+CC PR LHCb set NUP to 0 to detect end of file
+      NUP = 0
 c     error reading file
  501  if(ist.eq.0) ist=2
 C     RESET CROSS-SECTION INFORMATION FOR END OF RUN AND FINALIZE
-      IF(IST.GT.0) THEN
-        CALL ALSFIN
-      ENDIF
-      close(Nunit)
-      close(NunitOut)
+CCC PR LHCB DO THIS IN C++ IN THE INTERFACE
+C      IF(IST.GT.0) THEN
+C        CALL ALSFIN
+C      ENDIF
+C      close(Nunit)
+C      close(NunitOut)
       END
 
 c-------------------------------------------------------------------
@@ -1202,7 +1207,7 @@ C          SIMPLE CALORIMETER SIMULATION.  ASSUME UNIFORM Y AND PHI
 C          BINS
 C...HEPEVT commonblock.
       INTEGER NMXHEP,NEVHEP,NHEP,ISTHEP,IDHEP,JMOHEP,JDAHEP
-      PARAMETER (NMXHEP=4000)
+      PARAMETER (NMXHEP=10000)
       COMMON/HEPEVT/NEVHEP,NHEP,ISTHEP(NMXHEP),IDHEP(NMXHEP),
      &JMOHEP(2,NMXHEP),JDAHEP(2,NMXHEP),PHEP(5,NMXHEP),VHEP(4,NMXHEP)
       DOUBLE PRECISION PHEP,VHEP
@@ -1360,7 +1365,7 @@ C-----------------------------------------------------------------------
       COMMON/SHVETO/IEND,INORAD(MAXNUP)
 C...HEPEVT commonblock.
       INTEGER NMXHEP,NEVHEP,NHEP,ISTHEP,IDHEP,JMOHEP,JDAHEP
-      PARAMETER (NMXHEP=4000)
+      PARAMETER (NMXHEP=10000)
       COMMON/HEPEVT/NEVHEP,NHEP,ISTHEP(NMXHEP),IDHEP(NMXHEP),
      &JMOHEP(2,NMXHEP),JDAHEP(2,NMXHEP),PHEP(5,NMXHEP),VHEP(4,NMXHEP)
       DOUBLE PRECISION PHEP,VHEP
@@ -1427,7 +1432,7 @@ C-----------------------------------------------------------------------
       COMMON/SHVETO/IEND,INORAD(MAXNUP)
 C...HEPEVT commonblock.
       INTEGER NMXHEP,NEVHEP,NHEP,ISTHEP,IDHEP,JMOHEP,JDAHEP
-      PARAMETER (NMXHEP=4000)
+      PARAMETER (NMXHEP=10000)
       COMMON/HEPEVT/NEVHEP,NHEP,ISTHEP(NMXHEP),IDHEP(NMXHEP),
      &JMOHEP(2,NMXHEP),JDAHEP(2,NMXHEP),PHEP(5,NMXHEP),VHEP(4,NMXHEP)
       DOUBLE PRECISION PHEP,VHEP
