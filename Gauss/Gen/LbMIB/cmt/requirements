@@ -3,7 +3,7 @@
 # Maintainer : Magnus Lieng, Gloria Corti
 #============================================================================
 package           LbMIB
-version           v6r0
+version           v7r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
