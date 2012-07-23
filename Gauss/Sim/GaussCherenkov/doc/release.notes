@@ -3,37 +3,57 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH Upgrade
 !----------------------------------------------------------------------------- 
-2012-06-01 - Sajan Easo
- -Added code for Torch Testbeam simulation and  analysis
+
+!======================== GaussCherenkov v2r1 2012-07-23 =====================
+! 2012-07-23 - Gloria Corti
+ - Remove include of files related to ParticlePropertySvc since they are not
+   needed
+   . src/CherenkovAnalysis/CherenkovG4HistoDefineSet2.cpp
+   . src/CherenkovAnalysis/CherenkovG4HistoDefineSet4.cpp
+   . src/CherenkovAnalysis/CherenkovG4HistoDefineSet5.cpp
+   . src/TorchTestBeamAnalysis/TorchTBG4DefineHistSet6.cpp
+
+! 2012-06-01 - Sajan Easo
+ - Added code for Torch Testbeam simulation and  analysis
+
 !======================== GaussCherenkov v2r0 2012-05-14 =====================
-2012-05-11 - Sajan Easo
- - Adaption for the recent  Gaudi v23. Moved parts of the constructor in CkvSensDet to its initialize method. 
-   Moved also parts of the constructor in CherenkovEventAction to its initialize method.  The initialize
+! 2012-05-11 - Sajan Easo
+ - Adaption for the recent  Gaudi v23. Moved parts of the constructor in 
+   CkvSensDet to its initialize method. 
+   Moved also parts of the constructor in CherenkovEventAction to its 
+   initialize method.  The initialize
    and finalize methods are installed in these two classes as well.
-2012-03-26 - Sajan Easo
+
+! 2012-03-26 - Sajan Easo
  - Added a some analysis histo modifications.
-!2012-01-27 - Sajan Easo
- Minor improvements to be to use different PMT photocathode types in RichPmtProperties.cpp and CkvG4GaussPathNames.h
-!2011-11-25 - Sajan Easo
--Adapting to recent RichDet and SmartID classes.
+
+! 2012-01-27 - Sajan Easo
+ - Minor improvements to be to use different PMT photocathode types in RichPmtProperties.cpp and CkvG4GaussPathNames.h
+
+! 2011-11-25 - Sajan Easo
+ - Adapting to recent RichDet and SmartID classes.
+
 !======================== GaussCherenkov v1r1p1 2011-10-17 ===================
 ! 2011-10-17 - Sajan Easo
  - Remove use of Gauss
 
 !========================= GaussCherenkov v1r1 2011-09-20 ====================
-!2011-08-22 - Sajan Easo
+! 2011-08-22 - Sajan Easo
  - Comment out the obsolete G4MultipleScattering.hh which caused compilation issues
 !========================= GaussCherenkov v1r0 2011-07-24 ====================
-!2011-06-15 -Sajan Easo
+! 2011-06-15 -Sajan Easo
  - Made the adaptations needed for the new Radiator number scheme setup in 
    GaussRICH 
 
-!2011-05-10 - Sajan Easo
+! 2011-05-10 - Sajan Easo
  - Adapted GetMCCkvInfoBase.cpp and .h to use the new base class configuration.
-!2011-05-10 - Sajan Easo
+
+! 2011-05-10 - Sajan Easo
  - Added more histograms for monitoring
-!2011-04-18 - Sajan Easo
+
+! 2011-04-18 - Sajan Easo
  - Added a few histograms on occupancy for monitoring.
+
 ! 2011-03-03 - Sajan EASO
  - First version 
  - Uses MAPMT as the photodetector
