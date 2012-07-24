@@ -2,7 +2,7 @@
 # Maintainer : Wouter Hulsbergen
 
 package           TrackFitter
-version           v4r7
+version           v4r8
 
 # Structure, i.e. directories to process. 
 #============================================================================
