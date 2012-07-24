@@ -4,7 +4,7 @@
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
+#include "Kernel/IParticlePropertySvc.h"
 
 // from Generators
 #include "MCInterfaces/IGenCutTool.h"
@@ -78,7 +78,7 @@ private:
   int m_motherofb_pid;
   int m_b_pid;
 
-  IParticlePropertySvc* m_ppSvc;
+  LHCb::IParticlePropertySvc* m_ppSvc;
   
 };
 #endif // GENCUTS_PythiaHiggsType_H

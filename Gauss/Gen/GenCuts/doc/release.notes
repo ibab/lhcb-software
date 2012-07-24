@@ -4,7 +4,11 @@
 ! Purpose     : cut tools for Gauss
 !-----------------------------------------------------------------------------
 
-!========================== GenCuts v3r0 2012-07-23 ========================== 
+!========================== GenCuts v3r0 2012-07-24 ========================== 
+! 2012-07-24 - Gloria Corti
+ - Changes for adapt to LHCb::ParticlePropertySvc that was leftover
+   . src/PythiaHiggsType.{h,cpp}
+
 ! 2012-07-23 - Gloria Corti
  - Changes to adapt to LHCb::ParticlePropertySvc
    . FullEventHiggsType.{h,cpp}
