@@ -5,6 +5,7 @@
 ! Package manager: Stefan Roiser
 !--------------------------------------------------------------------------------
 
+!========================= GaudiObjDesc v11r15 2012-07-24 =========================
    ======== requires Kernel/LHCbKernel > v13r11 ========
 ! 2012-07-16 - Marco Clemencic
  - Modified the generation of the code using boost pool allocators to add a
