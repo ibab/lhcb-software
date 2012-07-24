@@ -4,6 +4,7 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+!========================= RichDet v16r12 2012-07-24 =========================
 ! 2012-07-15 - Chris Jones
  - Add methods to DeRichSystem to return the number of PDs for each RICH
 
