@@ -4,6 +4,7 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+!========================= TrackMonitors v1r39 2012-07-24 =========================
 ! 2012-07-18 - Rosen Matev
  - Introduced separate options for random suffling and splitting method. New
    splitting method added - MiddlePerVeloHalf.
