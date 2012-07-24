@@ -3,6 +3,7 @@
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+!========================= CondDBUI v3r16 2012-07-24 =========================
 ! 2012-07-16 - Illya Shapoval
  - CondDB_UpdateOnlineSnapshots.py:
    an improvement to better isolate concurrent ONLINE update processes from each
