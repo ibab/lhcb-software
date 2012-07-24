@@ -48,7 +48,6 @@ public:
   virtual StatusCode initialize    () ;
   virtual StatusCode finalize      () ;
 
-
 protected:
 
   // confidence level evaluator
@@ -56,6 +55,7 @@ protected:
   // setters
 
 private:
+
   long m_Id;
   // Input PP container
   std::string                        m_input            ;
@@ -82,5 +82,7 @@ private:
   double m_minHcal;
   double m_maxPrs;
   double m_mas;
+
 };
+
 #endif // PHOTONMAKER_H

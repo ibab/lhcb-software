@@ -88,9 +88,10 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
 
   //------------ select electron input
   LHCb::Particle::Vector electrons;
-  if( m_eleinputs.empty() && exist<LHCb::ProtoParticles>( m_input ) ){
+  const LHCb::ProtoParticles * pps = getIfExists<LHCb::ProtoParticles>( m_input );
+  if ( m_eleinputs.empty() && pps )
+  {
     //============== Starting from protoparticles
-    const LHCb::ProtoParticles* pps = get<LHCb::ProtoParticles>( m_input );
     if (msgLevel(MSG::DEBUG))
       debug() << " Starting from " << pps->size() << " protoParticles " << endmsg;
     counter("Input protoP from "+m_input) += pps->size();
@@ -123,10 +124,14 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
       //
       electrons.push_back( electron );
     }
-  }else if( !m_eleinputs.empty() ){
+  }
+  else if( !m_eleinputs.empty() )
+  {
     unsigned int ninputs=0;
-    for(std::vector<std::string>::iterator in=m_eleinputs.begin();m_eleinputs.end()!=in;++in){
-      std::string eleinput=*in;
+    for(std::vector<std::string>::iterator in = m_eleinputs.begin(); 
+        m_eleinputs.end() != in; ++in ) 
+    {
+      const std::string& eleinput = *in;
       if( !exist<LHCb::Particle::Range>( eleinput ) ){
         Warning("Container " + eleinput + " undefined",StatusCode::SUCCESS).ignore();
         continue;
@@ -134,7 +139,9 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
       // Starting from electron particles
       LHCb::Particle::Range iElectrons = get<LHCb::Particle::Range>( eleinput );
       ninputs+=iElectrons.size();
-      for(LHCb::Particle::Range::iterator ip = iElectrons.begin(); iElectrons.end() != ip ; ++ip){
+      for(LHCb::Particle::Range::iterator ip = iElectrons.begin(); 
+          iElectrons.end() != ip ; ++ip ) 
+      {
         LHCb::Particle* pp = (LHCb::Particle*) *ip;
         if( pp->pt() < m_eptmin)continue;
         const double cl = ConfLevel( pp );
@@ -173,7 +180,9 @@ StatusCode DiElectronMaker::makeParticles (LHCb::Particle::Vector & dielectrons 
 
   //loop over electrons
   LHCb::Particle::Vector trash;
-  for( LHCb::Particles::iterator ip1 = electrons.begin() ; electrons.end() != ip1 ; ++ip1 ){
+  for( LHCb::Particles::iterator ip1 = electrons.begin(); 
+       electrons.end() != ip1 ; ++ip1 )
+  {
     LHCb::Particle* p1 = *ip1;
     double cl1 = ConfLevel(p1);
     double pid1= ePID(p1);

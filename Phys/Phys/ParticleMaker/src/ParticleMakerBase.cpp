@@ -117,9 +117,10 @@ StatusCode ParticleMakerBase::loadEventInput()
   for ( std::vector<std::string>::const_iterator iLoc = this->inputLocations().begin();
         iLoc != this->inputLocations().end(); ++iLoc )
   {
-    if ( exist<LHCb::ProtoParticle::Container>(*iLoc) )
+    const LHCb::ProtoParticle::Container* pp = 
+      getIfExists< LHCb::ProtoParticle::Container > ( *iLoc) ;
+    if ( pp )
     {
-      const LHCb::ProtoParticle::Container* pp = get< LHCb::ProtoParticle::Container > ( *iLoc) ;
       if (msgLevel(MSG::VERBOSE))
       {
         verbose() << "load " << pp->size() << " ProtoParticles from "
