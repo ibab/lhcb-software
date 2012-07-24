@@ -3,7 +3,7 @@
 # Maintainer : Olivier Callot
 #============================================================================
 package           FastVelo
-version           v1r10
+version           v1r11
 
 #============================================================================
 # Structure, i.e. directories to process. 
