@@ -3,6 +3,10 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+!========================= MuonID v9r4p1 2012-07-24 =========================
+! 2012-06-29 - LANGENBRUCH, Christoph
+ - fixed access out of array bounds
+
 !========================= MuonID v9r4 2012-03-27 =========================
 ! 2012-03-21 - J. Helder Lopes
  - Fix bug in method GetPbin. Throw an exception if pBins pointer is null.
