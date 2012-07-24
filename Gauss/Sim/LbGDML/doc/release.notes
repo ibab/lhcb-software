@@ -1,0 +1,31 @@
+!-----------------------------------------------------------------------------
+! Package     : Sim/GDMLG4Writer
+! Responsible : Gloria Corti
+! Purpose     : Interface to write GDML geometry
+!-----------------------------------------------------------------------------
+
+!=========================== GDMLG4Writer v2r0 ===============================
+! 2005-07-12 - Gloria CORTI
+ - Modify options to set $GDMLG4WRITEROPTS enviroment variable
+
+! 2005-07-08 - Gloria CORTI
+ - Modified to use interface package Sim/GDML.
+   Contains specialized GiGaRunAction to write a GDML file in Gauss containing 
+   all geometry used in a job called "GDMLRunAction". 
+   An example of the options necessary to activate it and to set properties
+   in provided in options: GDMLWriter.opts
+   Possible options are: 
+   "Output" to set the name of the file to be written (default = "LHCb.gdml")
+   "Schema" to set the GDML schema to be used
+
+!====================== GDMLG4Writer v1r200p0 ===============================
+! 2005-02-28 - Gloria Corti
+ - Modified to set GDML_home environment variable (used in the code). 
+   Follow same macro settings as for other interface packages and version
+   number.
+
+!====================== GDMG4Writer v1r0 ====================================
+! 2004-12-13 - Witek Pokorski
+ - First import of package.
+
+!============================================================================ 

@@ -1,0 +1,31 @@
+#============================================================================
+# Created    : 2012-01-19
+# Maintainer : Heinrich Schindler, Matt Reid, Gloria Corti
+#============================================================================
+package           LbGDML
+version           v1r0
+
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src
+
+
+# Used packages. 
+#============================================================================
+use  G4GDML       v*    Geant4
+use  GaussTools   v*    Sim
+use  GaudiAlg     v*
+
+# Component library building rule
+#============================================================================
+library          LbGDML    ../src/*.cpp 
+
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=LbGDML
+
+# special linking for genConf (see GaudiTools)
+#============================================================================
+private
+apply_pattern use_genconf_helper_lib pkg=GaussTools
+end_private

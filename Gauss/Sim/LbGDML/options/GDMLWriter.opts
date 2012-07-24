@@ -1,0 +1,17 @@
+#pragma print off
+
+/** @file 
+ * 
+ *  File with options to set up specific run action to write
+ *  geometry in GDML ( Geant4 geometry description language)
+ *
+ *  @author H.Schindler
+ *  @date 2012-07-12 
+ */
+
+#pragma print on
+
+GiGa.RunSeq.Members += { "GDMLRunAction"};
+// The following two lines have the default
+GiGa.RunSeq.GDMLRunAction.Schema = "$G4GDMLROOT/schema/gdml.xsd";
+GiGa.RunSeq.GDMLRunAction.Output = "LHCb.gdml";
