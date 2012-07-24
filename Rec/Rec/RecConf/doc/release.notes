@@ -4,6 +4,7 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+!========================= RecConf v2r7 2012-07-24 =========================
 ! 2012-07-06 - Wouter Hulsbergen
  - Adapt to change in TrackV0Finder
 

@@ -1,5 +1,5 @@
 package           RecConf
-version           v2r6
+version           v2r7
 
 branches cmt doc python
 
@@ -10,9 +10,9 @@ use LHCbKernel v* Kernel
 # LHCb reconstruction packages
 #=======================================================
 
-# Calorimeter                         # Maintainer
-use CaloMoniDst          v*    Calo # Olivier Deschamps
-use CaloPIDs             v*  	 Calo # Victor Egorychev, Vanya Belyaev
+# Calorimeter                     # Maintainer
+use CaloMoniDst          v*  Calo # Olivier Deschamps
+use CaloPIDs             v*  Calo # Victor Egorychev, Vanya Belyaev
 use CaloReco             v*  Calo # Olivier Deschamps
 
 # Det
@@ -21,74 +21,74 @@ use CaloReco             v*  Calo # Olivier Deschamps
 use MuonID               v*  Muon # Erica Polycarpo, Miriam Gandelman
 use MuonPIDChecker       v*  Muon # Erica Polycarpo, Miriam Gandelman
 use MuonTrackAlign       v*  Muon # Silvia Pozzi
-use MuonTrackMonitor     v*    Muon # Giacomo Graziani
-use MuonTrackRec         v*    Muon # Giacomo Graziani
+use MuonTrackMonitor     v*  Muon # Giacomo Graziani
+use MuonTrackRec         v*  Muon # Giacomo Graziani
 
 
 # Non sub-detector specific components
-use GlobalReco           v* Rec  # Chris Jones
+use GlobalReco           v*  Rec  # Chris Jones
 use LumiAlgs             v*  Rec  # Jaap Panman
-use RecAlgs              v*    Rec  # Marco Cattaneo
+use RecAlgs              v*  Rec  # Marco Cattaneo
 # Non sub-detector specific components upgrade related
-use RecoUpgrade          v*    Rec  # Victor Coco
-use RecoUpgradeMC        v*    Rec  # Victor Coco
+use RecoUpgrade          v*  Rec  # Victor Coco
+use RecoUpgradeMC        v*  Rec  # Victor Coco
 
 # Rich
-use RichGlobalPID        v*   Rich # Chris Jones
-use RichPIDMerge         v*    Rich # Chris Jones
-use RichRecAlgorithms    v*   Rich # Chris Jones
+use RichGlobalPID        v*  Rich # Chris Jones
+use RichPIDMerge         v*  Rich # Chris Jones
+use RichRecAlgorithms    v*  Rich # Chris Jones
 use RichRecMCAlgorithms  v*  Rich # Chris Jones
-use RichRecMCTools       v*   Rich # Chris Jones
-use RichRecMonitors      v*   Rich # Chris Jones
-use RichRecPhotonTools   v*    Rich # Chris Jones
-use RichRecQC            v*   Rich # Chris Jones
+use RichRecMCTools       v*  Rich # Chris Jones
+use RichRecMonitors      v*  Rich # Chris Jones
+use RichRecPhotonTools   v*  Rich # Chris Jones
+use RichRecQC            v*  Rich # Chris Jones
 use RichRecStereoTools   v*  Rich # Chris Jones
-use RichRecSys           v*   Rich # Chris Jones
-use RichRecTemplateRings v*    Rich # Sajan Easo
-use RichRecTools         v*   Rich # Chris Jones
-use RichRecTrackTools    v*   Rich # Chris Jones
-use RichENNRingFinder    v*    Rich # Chris Jones, Ulrich Kerzel
+use RichRecSys           v*  Rich # Chris Jones
+use RichRecTemplateRings v*  Rich # Sajan Easo
+use RichRecTools         v*  Rich # Chris Jones
+use RichRecTrackTools    v*  Rich # Chris Jones
+use RichENNRingFinder    v*  Rich # Chris Jones, Ulrich Kerzel
 use RichIFBAnalysis      v*  Rich # Ross Young, Chris Jones
-use RichHPDImageAnalysis v*    Rich # Thomas Blake, Chris Jones
+use RichHPDImageAnalysis v*  Rich # Thomas Blake, Chris Jones
 
 # Tf packages: Track Pattern Recognition
-use PatAlgorithms        v*    Tf   # Stephanie Hansmann-Menzemer
-use PatVelo              v*   Tf   # David Hutchcroft
-use PatVeloTT            v*   Tf   # Mariusz Witek
-use TrackMatching        v*   Tf   # Eduardo Rodrigues
-use TrackSys             v*   Tf   # Stephanie Hansmann-Menzemer 
-use TsaAlgorithms        v*   Tf   # Matt Needham
+use PatAlgorithms        v*  Tf   # Stephanie Hansmann-Menzemer
+use PatVelo              v*  Tf   # David Hutchcroft
+use PatVeloTT            v*  Tf   # Mariusz Witek
+use TrackMatching        v*  Tf   # Eduardo Rodrigues
+use TrackSys             v*  Tf   # Stephanie Hansmann-Menzemer 
+use TsaAlgorithms        v*  Tf   # Matt Needham
 
 # Tr packages: Track Fit & Pattern Reco Validation with MonteCarlo
-use PatChecker           v*    Tr   # Olivier Callot, David Hutchcroft
-use PatFitParams         v*    Tr   # Olivier Callot
-use TrackAssociators     v*    Tr   # Eduardo Rodrigues, Edwin Bos
-use TrackCheckers        v* Tr   # Eduardo Rodrigues
-use TrackExtrapolators   v*   Tr   # Eduardo Rodrigues
-use TrackFitEvent        v*    Tr   # Eduardo Rodrigues
-use TrackFitter          v*   Tr   # Eduardo Rodrigues
-use TrackIdealPR         v*   Tr   # Eduardo Rodrigues
-use TrackMCTools         v*   Tr   # Eduardo Rodrigues
-use TrackMonitors        v*   Tr   # Wouter Hulsbergen, Stephanie Menzemer
-use TrackProjectors      v*   Tr   # Wouter Hulsbergen
-use TrackTools           v*   Tr   # Eduardo Rodrigues
-use TrackUtils           v*   Tr   # Eduardo Rodrigues
+use PatChecker           v*  Tr   # Olivier Callot, David Hutchcroft
+use PatFitParams         v*  Tr   # Olivier Callot
+use TrackAssociators     v*  Tr   # Eduardo Rodrigues, Edwin Bos
+use TrackCheckers        v*  Tr   # Eduardo Rodrigues
+use TrackExtrapolators   v*  Tr   # Eduardo Rodrigues
+use TrackFitEvent        v*  Tr   # Eduardo Rodrigues
+use TrackFitter          v*  Tr   # Eduardo Rodrigues
+use TrackIdealPR         v*  Tr   # Eduardo Rodrigues
+use TrackMCTools         v*  Tr   # Eduardo Rodrigues
+use TrackMonitors        v*  Tr   # Wouter Hulsbergen, Stephanie Menzemer
+use TrackProjectors      v*  Tr   # Wouter Hulsbergen
+use TrackTools           v*  Tr   # Eduardo Rodrigues
+use TrackUtils           v*  Tr   # Eduardo Rodrigues
 
 # Tf packages: Track Pattern Recognition
-use TfTools              v*   Tf   # Stephanie Hansmann-Menzemer
+use TfTools              v*  Tf   # Stephanie Hansmann-Menzemer
 use TrackSeeding         v*  Tf   # Eduardo Rodrigues, Henk Jan Bulten
 
 # Primary Vertex Finder
-use PatPV                v*    Tr   # Mariusz Witek
+use PatPV                v*  Tr   # Mariusz Witek
 
 # Hlt monitoring
-use HltMonitors          v*    Hlt  # Roel Aaij
+use HltMonitors          v*  Hlt  # Roel Aaij
 
 # Muon
-use MuonTools            v*    Muon # Alessia Satta
+use MuonTools            v*  Muon # Alessia Satta
 
 # Velo
-use VeloRecMonitors      v*    Velo # Malcom John, Eduardo Rodrigues
+use VeloRecMonitors      v*  Velo # Malcom John, Eduardo Rodrigues
 
 # Setup Python Configurables
 apply_pattern install_python_modules
