@@ -8,142 +8,142 @@ branches doc cmt tests
 #===============================================================
 
 #                                         Maintainer
-use MCAssociators         v*    Associators # V. Gligorov
+use MCAssociators         v1r1    Associators # V. Gligorov
 
-use CaloDAQ               v*   Calo    # Olivier Deschamps
-use CaloInterfaces        v*    Calo    # Olivier Deschamps
-use CaloKernel            v*  Calo    # Olivier Deschamps
-use CaloUtils             v*    Calo    # Olivier Deschamps
+use CaloDAQ               v4r29   Calo    # Olivier Deschamps
+use CaloInterfaces        v8r4    Calo    # Olivier Deschamps
+use CaloKernel            v6r2p1  Calo    # Olivier Deschamps
+use CaloUtils             v9r4    Calo    # Olivier Deschamps
 
-use DAQSys                v*    DAQ     # Marco Cattaneo
-use DAQUtils              v*    DAQ     # Marco Cattaneo
-use MDF                   v*   DAQ     # Markus Frank
-use MDF_ROOT              v*    DAQ     # Markus Frank
-use Tell1Kernel           v* DAQ     # Tomasz Szumlak
+use DAQSys                v6r0    DAQ     # Marco Cattaneo
+use DAQUtils              v1r9    DAQ     # Marco Cattaneo
+use MDF                   v3r33   DAQ     # Markus Frank
+use MDF_ROOT              v1r7    DAQ     # Markus Frank
+use Tell1Kernel           v1r12p1 DAQ     # Tomasz Szumlak
 
 # Detector description
-use DetSys                v*   Det     # Marco Cattaneo
-use BcmDet                v*    Det     # Magnus Lieng
-use CaloDet               v*  Det     # Olivier Deschamps
-use CaloDetXmlCnv         v*    Det     # Olivier Deschamps
-use DDDB                  v*   Det     # Marco Cattaneo
-use DetCond               v*  Det     # Marco Clemencic
-use DetDesc               v*  Det     # Marco Clemencic
-use DetDescChecks         v*    Det     # Marco Clemencic, Ivan Belyaev
-use DetDescCnv            v*   Det     # Marco Clemencic
-use DetDescSvc            v*    Det     # Marco Clemencic
-use Magnet                v*    Det     # Marco Cattaneo
-use MuonDet               v*    Det     # Alessia Satta
-use OTDet                 v*    Det     # Alexandr Kozlinskiy
-use RichDet               v*  Det     # Chris Jones
-use STDet                 v*   Det     # J. van Tilburg
-use VeloDet               v* Det    # Mark Tobin, Kurt Rinnert
-use VeloPixDet            v*   Det     # Victor Coco
-use VLDet                 v*    Det     # Heinrich Schindler
+use DetSys                v17r1   Det     # Marco Cattaneo
+use BcmDet                v1r3    Det     # Magnus Lieng
+use CaloDet               v10r14  Det     # Olivier Deschamps
+use CaloDetXmlCnv         v3r2    Det     # Olivier Deschamps
+use DDDB                  v1r56   Det     # Marco Cattaneo
+use DetCond               v12r26  Det     # Marco Clemencic
+use DetDesc               v18r29  Det     # Marco Clemencic
+use DetDescChecks         v5r7    Det     # Marco Clemencic, Ivan Belyaev
+use DetDescCnv            v4r15   Det     # Marco Clemencic
+use DetDescSvc            v3r5    Det     # Marco Clemencic
+use Magnet                v7r5    Det     # Marco Cattaneo
+use MuonDet               v9r8    Det     # Alessia Satta
+use OTDet                 v8r7    Det     # Alexandr Kozlinskiy
+use RichDet               v16r12  Det     # Chris Jones
+use STDet                 v4r27   Det     # J. van Tilburg
+use VeloDet               v13r18p1 Det    # Mark Tobin, Kurt Rinnert
+use VeloPixDet            v1r10   Det     # Victor Coco
+use VLDet                 v1r1    Det     # Heinrich Schindler
 
 # Event data model
-use DAQEvent              v*    Event   # Marco Cattaneo, Markus Frank
-use EventSys              v*   Event   # Marco Cattaneo
-use DigiEvent             v*   Event   # Marco Cattaneo and sub-det experts
-use EventAssoc            v*    Event   #
-use EventBase             v*    Event   # Marco Cattaneo, Gloria Corti
-use EventPacker           v*   Event   # Olivier Callot
-use GenEvent              v*    Event   # Gloria Corti
-use HltEvent              v*  Event   # Jose Angel Hernando-Morata
-use L0Event               v*   Event   # Olivier Deschamps, Julien Cogan
-use LinkerEvent           v*    Event   # Olivier Callot
-use LinkerInstances       v*    Event   # Thomas Ruf
-use LumiEvent             v*    Event   # Jaap Panman
-use MCEvent               v*   Event   # Gloria Corti and sub-det experts
-use MicroDst              v*    Event   # ??
-use PackedEvent           v*   Event   # Marco Cattaneo, Olivier Callot
-use PhysEvent             v*  Event   # Patrick Koppenburg
-use RecEvent              v*   Event   # Marco Cattaneo and sub-det experts
-use RecreatePIDTools      v*    Event   # Chris Jones
-use SwimmingEvent         v*    Event   # Roel Aaij, Vava Gligorov
-use TrackEvent            v*   Event   # Wouter Hulsbergen
-use VeloEvent             v*  Event   # Tomasz Szumlak, Chris Parkes
+use DAQEvent              v9r10   Event   # Marco Cattaneo, Markus Frank
+use EventSys              v25r0   Event   # Marco Cattaneo
+use DigiEvent             v2r21   Event   # Marco Cattaneo and sub-det experts
+use EventAssoc            v5r1    Event   # 
+use EventBase             v3r0    Event   # Marco Cattaneo, Gloria Corti
+use EventPacker           v2r18   Event   # Olivier Callot
+use GenEvent              v6r3    Event   # Gloria Corti
+use HltEvent              v9r2p1  Event   # Jose Angel Hernando-Morata
+use L0Event               v19r6   Event   # Olivier Deschamps, Julien Cogan
+use LinkerEvent           v3r8    Event   # Olivier Callot
+use LinkerInstances       v3r5    Event   # Thomas Ruf
+use LumiEvent             v3r2    Event   # Jaap Panman
+use MCEvent               v2r22   Event   # Gloria Corti and sub-det experts
+use MicroDst              v1r0    Event   # ??
+use PackedEvent           v4r11   Event   # Marco Cattaneo, Olivier Callot
+use PhysEvent             v11r17  Event   # Patrick Koppenburg
+use RecEvent              v2r42   Event   # Marco Cattaneo and sub-det experts
+use RecreatePIDTools      v1r5    Event   # Chris Jones
+use SwimmingEvent         v1r2    Event   # Roel Aaij, Vava Gligorov
+use TrackEvent            v5r17   Event   # Wouter Hulsbergen
+use VeloEvent             v16r10  Event   # Tomasz Szumlak, Chris Parkes
 
 # LHCb  Examples
-use DetCondExample        v*  Ex      # Marco Clemencic
-use DetDescExample        v*  Ex      # Marco Clemencic
-use IOExample             v*    Ex      # Marco Cattaneo
+use DetCondExample        v11r11  Ex      # Marco Clemencic
+use DetDescExample        v7r7p1  Ex      # Marco Clemencic
+use IOExample             v4r6    Ex      # Marco Cattaneo
 
 # Packages without Hat, cannot have comment field.
 
 # Maintainer M.Cattaneo
-use GaudiConf             v*
+use GaudiConf             v16r1
 
 # Maintainer ??
-use GaudiConfUtils        v*
+use GaudiConfUtils        v1r0
 
 # Maintainer I.Shapoval
-use GaudiMTTools          v*
+use GaudiMTTools          v1r1
 
 # Maintainer S.Roiser
-use GaudiObjDesc          v*
+use GaudiObjDesc          v11r15
 
-#use GaudiPatches          v*
-#use HepMCBack             v*    Gen     # Obsolete, was for DC06
+#use GaudiPatches          v1r2
+#use HepMCBack             v1r1    Gen     # Obsolete, was for DC06
 
 # Kernel packages
-use HistoStrings          v*    Kernel  # Vanya Belyaev
-use HltInterfaces         v*    Kernel  # Patrick Koppenburg
-use KernelSys             v*   Kernel  # Marco Cattaneo
-use LHCbAlgs              v*   Kernel  # Marco Cattaneo
-use LHCbKernel            v*  Kernel  # Marco Cattaneo
-use LHCbMath              v*   Kernel  # Vanya Belyaev
-use MCInterfaces          v*   Kernel  # Marco Cattaneo et al.
-use PartProp              v*   Kernel  # Vanya Belyaev
-use Relations             v*  Kernel  # Ivan Belyaev
-use XMLSummaryBase        v*    Kernel  # Rob Lambert
-use XMLSummaryKernel      v*    Kernel  # Rob Lambert
+use HistoStrings          v1r3    Kernel  # Vanya Belyaev 
+use HltInterfaces         v4r6    Kernel  # Patrick Koppenburg
+use KernelSys             v12r1   Kernel  # Marco Cattaneo
+use LHCbAlgs              v2r50   Kernel  # Marco Cattaneo
+use LHCbKernel            v13r12  Kernel  # Marco Cattaneo
+use LHCbMath              v3r34   Kernel  # Vanya Belyaev
+use MCInterfaces          v1r15   Kernel  # Marco Cattaneo et al.
+use PartProp              v1r13   Kernel  # Vanya Belyaev 
+use Relations             v6r0p2  Kernel  # Ivan Belyaev
+use XMLSummaryBase        v1r2    Kernel  # Rob Lambert
+use XMLSummaryKernel      v1r7    Kernel  # Rob Lambert
 
-use L0Base                v*    L0      # Julien Cogan
-use L0Interfaces          v*    L0      # Olivier Deschamps
-use L0MuonKernel          v*    L0      # Julien Cogan
-use ProcessorKernel       v*    L0      # Julien Cogan
+use L0Base                v2r1    L0      # Julien Cogan
+use L0Interfaces          v2r1    L0      # Olivier Deschamps
+use L0MuonKernel          v9r7    L0      # Julien Cogan
+use ProcessorKernel       v7r0    L0      # Julien Cogan
 
-use MuonDAQ               v*   Muon    # Alessia Satta
-use MuonInterfaces        v*  Muon    # Alessia Satta
-use MuonKernel            v*    Muon    # Andrei Tsaregorodtsev
+use MuonDAQ               v4r14   Muon    # Alessia Satta
+use MuonInterfaces        v1r2p2  Muon    # Alessia Satta
+use MuonKernel            v4r0    Muon    # Andrei Tsaregorodtsev
 
-#use RootCnv               v*   Online  # (also in GAUDI and ONLINE projects)
+#use RootCnv               v1r13   Online  # (also in GAUDI and ONLINE projects)
 
-use OTDAQ                 v*   OT      # Wouter Hulsbergen
+use OTDAQ                 v7r13   OT      # Wouter Hulsbergen
 
-use LoKiCore              v*   Phys    # Ivan Belyaev
-use LoKiGen               v*   Phys    # Ivan Belyaev
-use LoKiHlt               v*   Phys    # Ivan Belyaev
-use LoKiMC                v*   Phys    # Ivan Belyaev
-use LoKiNumbers           v*   Phys    # Ivan Belyaev
+use LoKiCore              v11r9   Phys    # Ivan Belyaev
+use LoKiGen               v10r8   Phys    # Ivan Belyaev
+use LoKiHlt               v3r10   Phys    # Ivan Belyaev
+use LoKiMC                v10r6   Phys    # Ivan Belyaev
+use LoKiNumbers           v10r2   Phys    # Ivan Belyaev
 
-use RichKernel            v*   Rich    # Chris Jones
-use RichRecBase           v*   Rich    # Chris Jones
+use RichKernel            v7r49   Rich    # Chris Jones
+use RichRecBase           v4r13   Rich    # Chris Jones
 
-use SiDAQ                 v*  Si      # Matt Needham
+use SiDAQ                 v2r1p1  Si      # Matt Needham
 
-use SimComponents         v*   Sim     # Gloria Corti, Marco Cattaneo
+use SimComponents         v2r21   Sim     # Gloria Corti, Marco Cattaneo
 
-use STKernel              v*    ST      # Mark Tobin
-use STTELL1Event          v*   ST      # Matt Needham
+use STKernel              v2r8    ST      # Mark Tobin
+use STTELL1Event          v1r10   ST      # Matt Needham
 
-use PatKernel             v*  Tf      # Stephanie Hansmann-Menzemer
-use TfKernel              v*   Tf      # Stephanie Hansmann-Menzemer
-use TsaKernel             v*  Tf      # Matt Needham
+use PatKernel             v2r4p1  Tf      # Stephanie Hansmann-Menzemer
+use TfKernel              v2r22   Tf      # Stephanie Hansmann-Menzemer
+use TsaKernel             v3r6p1  Tf      # Matt Needham
 
-use CondDBEntityResolver  v*    Tools   # Marco Clemencic
-use CondDBUI              v*   Tools   # Marco Clemencic
-use FileStager            v*    Tools   # Roel Aaij
-use XmlTools              v*    Tools   # Marco Clemencic
+use CondDBEntityResolver  v5r3    Tools   # Marco Clemencic
+use CondDBUI              v3r16   Tools   # Marco Clemencic
+use FileStager            v1r8    Tools   # Roel Aaij
+use XmlTools              v6r6    Tools   # Marco Clemencic
 
-use TrackInterfaces       v*   Tr      # Matt Needham
-use TrackKernel           v*   Tr      # Wouter Hulsbergen
+use TrackInterfaces       v4r20   Tr      # Matt Needham
+use TrackKernel           v1r10   Tr      # Wouter Hulsbergen
 
 # Declare this as a container package
 apply_pattern container_package
 
-# Allow the generation of QMTest summary
+# Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
 
 # Allow the generation of QMTests
