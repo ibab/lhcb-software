@@ -5,6 +5,10 @@
 ! Purpose     : Stripping framework c++ component algorithms
 ! -----------------------------------------------------------------------------
 
+! 2012-07-24 - Chris Jones
+ - Use 'getIfExists' instead of seperate 'exists' and 'get' calls.
+ - Other minor clean ups.
+
 !========================= StrippingAlgs v1r8 2012-02-10 =========================
 ! 2012-02-08 - Anton Poluektov 
  - StrippingReport - fix bug with calculating retention for streams 
