@@ -5,6 +5,85 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+</PRE><H1><A NAME=v14r1>2012-07-25 RecSys v14r1</A></H1><PRE>
+This version uses Gaudi v23r3 and LHCb v35r1
+
+- Production release for 2012 data taking
+
+- Packages updated: Rec/RecConf v2r7, Rich/RichAlignment v1r7,
+    Rich/RichParticleSearch v1r10, Rich/RichRecQC v2r59, Tf/FastVelo v1r11,
+    Tf/PatAlgorithms v4r24, Tf/TrackSys v7r5, Tr/TrackFitEvent v5r17,
+    Tr/TrackFitter v4r8, Tr/TrackMonitors v1r39, Tr/TrackUtils v1r48,
+    Tr/PatPV v3r24, Velo/VeloRecMonitors v2r20
+
+- In RecConf v2r7
+  . Adapt to change in TrackV0Finder
+
+- In RichAlignment v1r7
+  . Limit the number of photons per HPD when producing NTuples.
+    Number of photons is a property set by default to 10,000
+  . Add a HPD veto list to AlignmentMonitor
+
+- In RichParticleSearch v1r10
+  . Small changes to code to analyse NTuples to produce Histograms more easily
+
+- In RichRecQC v2r59
+  . Update RichRecoQC to remove the need to create the individual HPD
+    resolution plots while filling the Fitted resolution versus HPD copy
+    number plots.
+  . RawDataSize :-
+    o Add a plot showing the average number of header words per L1 board
+    o Fill seperate L1 board data size distribution plots by default
+    o Initialise default HPD count map using allPDRichSmartIDs()
+      not just activePDRichSmartIDs()
+  . Add a plot giving the fitted CK theta resolution per PD
+  . Revert a small change to the histograms IDs used in HPDHitsMoni, as it
+    unintentionally made things complicated in the run-by-run calibration.
+
+- In FastVelo v1r11
+  . Fix problem with FastVeloFitLHCbIDs in case pattern reco is not running
+
+- In PatAlgorithms v4r24
+  . Add a flag to activate a workaround for certain problematic properties in
+    PatSeedingTool which get their values set wrong when being extracted from
+    a TCK because the precision to which the numerical values of these
+    properties is saved in the TCK is insufficient.
+
+- In TrackSys v7r5
+  . Make sure default instance of StateInitTool is not modified
+
+- In TrackFitEvent v5r17
+  . Added method to KalmanFitResult to compute number of active OTTimes and chi2
+    contribution of TT hits
+
+- In TrackFitter v4r8
+  . Fill new extra info field with fraction of used OT times.
+
+- In TrackMonitors v1r39
+  . Add PVSplit algorithm. It splits tracks belonging to found vertices,
+    fits them and writes split vertices to TES. Can be split randomly or by Velo
+    half. Algorithm is used for resolution studies needed for beam-gas imaging
+    (BGI) and beam-beam imaging methods for absolute luminosity calibration.
+    Also, added a configurable BGIRecoConf, which modifies reconstruction
+    sequences for BGI processing
+
+- In TrackUtils v1r48
+  . Keep LHCb::Track::NCandCommonHits on DSTs for ghost probability computation
+    in DaVinci
+  . Loosened cuts in TrackV0Finder to make it much more efficient for Ks from B.
+    Minimized use of extrapolator.
+
+- In PatPV v3r24
+  . Technical modification to gain a few % of speed in LSAdaptPV3DFitter.
+  . Downgrade warning to debug when hessian inversion fails in LSAdaptPV3DFitter.
+  . Return StatusCode from PVOfflineRecalculate->RecalculateVertex to allow
+    users to decide what to do in case of failure.
+  . Modification to make PVSeed3DTool faster. The whole 3D PV reconstruction time
+    (seed+fit) reduced by 35 %
+
+- In VeloRecMonitors v2r20
+  . Added zoom histo for distribution of number of clusters
+
 </PRE><H1><A NAME=v14r0>2012-06-26 RecSys v14r0</A></H1><PRE>
 This version uses Gaudi v23r3 and LHCb v35r0
 
