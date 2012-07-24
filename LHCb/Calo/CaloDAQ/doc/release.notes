@@ -4,6 +4,7 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+!========================= CaloDAQ v4r29 2012-07-24 =========================
 ! 2012-07-09 - Marco Cattaneo
  - Use new TES getIfExists function instead of separate exist and get calls
  - Fix UNINIT_CTOR defects
