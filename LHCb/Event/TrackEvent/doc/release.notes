@@ -4,8 +4,10 @@
 ! Purpose     : Package for the tracking event model classes
 !-------------------------------------------------------------------------------
 
+!========================= TrackEvent v5r17 2012-07-24 =========================
 ! 2012-07-22 - Wouter Hulsbergen
- - Added extra info field for fraction of used OT drifttimes. Added a few functions to TrackFitResult.
+ - Added extra info field for fraction of used OT drifttimes.
+   Added a few functions to TrackFitResult.
 
 !========================= TrackEvent v5r16 2012-03-26 =========================
 ! 2012-03-07 - Marco Cattaneo
