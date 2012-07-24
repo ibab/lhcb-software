@@ -81,12 +81,9 @@ public:
 
   /// Zone number for a given strip
   virtual unsigned int zoneOfStrip(const unsigned int strip) const = 0;
-  /// Global zone number for a strip (corrected for downstream facing R sensors)
-  virtual unsigned int globalZoneOfStrip(const unsigned int strip) {
-    unsigned int zone = zoneOfStrip(strip);
-    if (isR() && isDownstream()) zone = m_numberOfZones - 1 - zone;
-    return zone;
-  }
+  /// Global zone number for a strip
+  virtual unsigned int globalZoneOfStrip(const unsigned int strip) const = 0;
+
   /// Number of strips in a given zone
   virtual unsigned int stripsInZone(const unsigned int zone) const = 0;
   /// Minimum radius of the sensitive area of a zone
