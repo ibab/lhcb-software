@@ -14,7 +14,7 @@ This version uses Gaudi v23r3 and LHCb v35r1
     Rich/RichParticleSearch v1r10, Rich/RichRecQC v2r59, Tf/FastVelo v1r11,
     Tf/PatAlgorithms v4r24, Tf/TrackSys v7r5, Tr/TrackFitEvent v5r17,
     Tr/TrackFitter v4r8, Tr/TrackMonitors v1r39, Tr/TrackUtils v1r48,
-    Tr/PatPV v3r24, Velo/VeloRecMonitors v2r20
+    Tr/PatPV v3r24, Velo/VeloRecMonitors v2r20, Muon/MuonID v9r4p1
 
 - In RecConf v2r7
   . Adapt to change in TrackV0Finder
@@ -84,6 +84,9 @@ This version uses Gaudi v23r3 and LHCb v35r1
 - In VeloRecMonitors v2r20
   . Added zoom histo for distribution of number of clusters
 
+- In MuonID v9r4p1
+  . Fixed access out of array bounds
+  
 </PRE><H1><A NAME=v14r0>2012-06-26 RecSys v14r0</A></H1><PRE>
 This version uses Gaudi v23r3 and LHCb v35r0
 

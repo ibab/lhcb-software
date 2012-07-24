@@ -16,7 +16,7 @@ use CaloReco             v5r15   Calo # Olivier Deschamps
 use HltMonitors          v1r5    Hlt  # Roel Aaij
 
 # Muon
-use MuonID               v9r4    Muon # Erica Polycarpo, Miriam Gandelman
+use MuonID               v9r4p1  Muon # Erica Polycarpo, Miriam Gandelman
 use MuonPIDChecker       v5r3    Muon # Erica Polycarpo, Miriam Gandelman
 use MuonTools            v5r3    Muon # Alessia Satta
 use MuonTrackAlign       v1r8p1  Muon # Silvia Pozzi
