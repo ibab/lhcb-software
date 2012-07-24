@@ -12,5 +12,5 @@ inputLFNs = ['LFN:/lhcb/user/m/mcoombes/FourPiModelFit/BinningFile_D0.root',
 
 ModelBuilderExe = MintDir+"Users/Matt/ModelCreator/ModelBuilder"
 
-SubmitModelBuilder = MintDir+'Users/mcoombes/ModelBuilderSubmission/ModelSubmission.py'
+SubmitModelBuilder = MintDir+'Users/Matt/ModelBuilderSubmission/ModelSubmission.py'
 
