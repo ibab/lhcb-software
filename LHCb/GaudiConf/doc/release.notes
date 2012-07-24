@@ -3,6 +3,7 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+!========================= GaudiConf v16r1 2012-07-24 =========================
 ! 2012-07-20 - Marco Cattaneo
  - Add QMTest exclusions to avoid test failures when LbAppInit prints changes
    in memory use
