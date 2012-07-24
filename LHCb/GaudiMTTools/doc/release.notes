@@ -4,6 +4,7 @@
 ! Purpose     : The package for Gaudi multithreading tools and machinery
 !-----------------------------------------------------------------------------
 
+!========================= GaudiMTTools v1r1 2012-07-24 =========================
 ! 2012-07-13 - Marco Clemencic
  - Fixed compilation with Boost 1.50.
 
