@@ -4,7 +4,7 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
-
+!========================= PatPV v3r24 2012-07-24 =========================
 ! 2012-07-19 - Mariusz Witek
  - technical modification to gain a few % of speed in LSAdaptPV3DFitter.
  - downgrade warning to debug when hessian inversion fails 
