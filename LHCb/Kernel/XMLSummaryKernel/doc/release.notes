@@ -4,6 +4,7 @@
 ! Purpose     : Holds code for writing an XML-based summary in Gaudi
 !-----------------------------------------------------------------------------
 
+!========================= XMLSummaryKernel v1r7 2012-07-24 =========================
 ! 2012-07-20 - Rob Lambert
  - Add fillUsage in finalize to make sure the __final__ memory footprint is written.
 
