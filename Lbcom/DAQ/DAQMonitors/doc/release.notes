@@ -4,8 +4,9 @@
 ! Purpose     : Monitors for DAQ event objects
 !-----------------------------------------------------------------------------
 
+!========================= DAQMonitors v1r7 2012-07-24 =========================
 ! 2012-07-17 - Marco Clemencic
- - Added dependency on LHCbKenel, required by event model headers to use the new
+ - Added dependency on LHCbKernel, required by event model headers to use the new
    memory pool release mechanism.
 
 !========================= DAQMonitors v1r6 2012-06-25 =========================
