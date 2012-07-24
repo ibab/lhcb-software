@@ -4,6 +4,7 @@
 ! Purpose     : Various utilities for manipulating RawEvent
 !-----------------------------------------------------------------------------
 
+!========================= DAQUtils v1r9 2012-07-24 =========================
 ! 2012-07-06 - Marco Cattaneo
  - Use new TES getIfExists function instead of separate exist and get calls
  - Fix unprotected debugss
