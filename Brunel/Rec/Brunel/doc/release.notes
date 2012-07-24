@@ -11,8 +11,8 @@ Purpose: LHCb reconstruction program
   . New default tuning for 2012 data from tags cond-20120628, cond-20120710
   . Loosened cuts in TrackV0Finder to make it much more efficient for Ks from B.
     (TrackUtils, RecConf)
-  . Add plots giving CK theta resolution per PD (RichRecQC)
   . Add RawDataSize plots (RichRecQC)
+  . Add zoom histo for distribution of number of clusters (VeloRecMonitors)
 
 - Changes to tests
   . Change brunel.brunel2010magdown timeout to 2400 seconds
