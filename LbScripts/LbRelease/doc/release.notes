@@ -1,7 +1,11 @@
+2012-07-24  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* scripts/genXMLCatalog: added the option --no=user to the call to SetupProject
+
 2012-06-20 Ben Couturier <Ben.Couturier@cern.ch>
-	
+
 	* cmt/requirements: release of version v4r7p5. (Only a change in mode of
-	LbRelease/scripts/mkLHCbDirac_release.sh)	
+	LbRelease/scripts/mkLHCbDirac_release.sh)
 
 2012-06-06 Ben Couturier <Ben.Couturier@cern.ch>
 
