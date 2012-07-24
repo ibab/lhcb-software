@@ -89,13 +89,8 @@ StatusCode PVReFitterAlg::execute()
 {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-  if (!exist<LHCb::RecVertex::Range>(m_PVInputLocation) )
-  {
-    return StatusCode::SUCCESS;
-  }
-
   const LHCb::RecVertex::Range vertices =
-    get<LHCb::RecVertex::Range>(m_PVInputLocation);
+    getIfExists<LHCb::RecVertex::Range>(m_PVInputLocation);
 
   if (vertices.empty())
   {
@@ -119,17 +114,12 @@ void PVReFitterAlg::executeForLocation(const std::string& particleLocation,
                                        const LHCb::RecVertex::Range& vertices) const
 {
 
-  if (!exist<LHCb::Particle::Range>(particleLocation) )
-  {
-    return;
-  }
-
   const LHCb::Particle::Range particles =
-    get<LHCb::Particle::Range>(particleLocation);
+    getIfExists<LHCb::Particle::Range>(particleLocation);
 
-  if (particles.empty())
+  if ( particles.empty() ) 
   {
-    return;
+    return; 
   }
 
   std::string outputLocation = particleLocation;
