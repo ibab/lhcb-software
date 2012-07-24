@@ -4,6 +4,7 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+!========================= EventPacker v2r18 2012-07-24 =========================
 ! 2012-07-09 - Marco Cattaneo
  - Use new TES getIfExists function instead of separate exist and get calls
  - Fix trivial logic flaw in EventPacker.icpp (coverity defect 33355)
