@@ -3,8 +3,10 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+!========================= L0DU v10r22 2012-07-24 =========================
 ! 2012-07-18 - Olivier Deschamps
-  - adapt L0DUFromRaw(HLT1)Tool, L0DUBankMonitor & L0DUFastFilter to scan the possible rawEvent locations.
+  - adapt L0DUFromRaw(HLT1)Tool, L0DUBankMonitor & L0DUFastFilter to scan
+    the possible rawEvent locations.
 
 !========================= L0DU v10r21 2012-06-25 =========================
 ! 2012-06-21 - Julien Cogan
