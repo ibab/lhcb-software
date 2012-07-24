@@ -3,8 +3,10 @@
 ! Responsible : Matt Coombes
 ! Purpose     : Find exotic particles with the RICHes. Get Nobel price.
 !-----------------------------------------------------------------------------
+
+!========================= RichParticleSearch v1r10 2012-07-24 =========================
 ! 2012-06-26 - Matt Coombes
- - Small changes to code to analyes NTuples to produce Histograms easier
+ - Small changes to code to analyse NTuples to produce Histograms more easily
  
 !========================= RichParticleSearch v1r9 2012-06-25 =========================
 ! 2012-06-25 - Matt Coombes
