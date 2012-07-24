@@ -4,6 +4,7 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+!========================= LHCbKernel v13r12 2012-07-24 =========================
 ! 2012-07-20 - Marco Cattaneo
  - In LbAppInit, implement the same checks on memory usage as in DaVinciInit:
    . Print memory increment every "Increment" events if it has changed.
