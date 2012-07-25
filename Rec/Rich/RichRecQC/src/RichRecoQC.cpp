@@ -560,7 +560,7 @@ StatusCode RecoQC::finalize()
 {
 
   // Fit resolution plots ?
-  if ( m_fittedPDResPlots ) fitResolutionHistos();
+  if ( m_fittedPDResPlots ) { fitResolutionHistos(); }
 
   if ( m_truePhotCount[Rich::Aerogel]  > 0 ||
        m_truePhotCount[Rich::Rich1Gas] > 0 ||
@@ -578,18 +578,17 @@ StatusCode RecoQC::finalize()
     info() << "                 : " << m_maxBeta << " > beta > " << m_minBeta << endmsg;
 
     // loop over radiators
-    for ( int irad = 0; irad < Rich::NRadiatorTypes; ++irad )
+    for ( Rich::Radiators::const_iterator rad = Rich::radiators().begin();
+          rad != Rich::radiators().end(); ++rad )
     {
-      const Rich::RadiatorType rad = (Rich::RadiatorType)irad;
-
       // rad name
-      std::string radName = Rich::text(rad);
+      std::string radName = Rich::text(*rad);
       radName.resize(15,' ');
       // photon count
-      if ( m_truePhotCount[rad]>0 )
+      if ( m_truePhotCount[*rad]>0 )
       {
         info() << " " << radName << " Av. # CK photons = "
-               << occ(m_truePhotCount[rad],m_nSegs[rad]) << " photons/segment" << endmsg;
+               << occ(m_truePhotCount[*rad],m_nSegs[*rad]) << " photons/segment" << endmsg;
       }
     }
 

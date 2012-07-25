@@ -33,6 +33,9 @@
 // ROOT
 #include "TProfile.h"
 
+// boost
+#include "boost/assign/list_of.hpp"
+
 namespace Rich
 {
   namespace DAQ
@@ -101,6 +104,9 @@ namespace Rich
 
       /// Flag to turn on the writing of the results to a text file
       bool m_writeTextFile;
+
+      /// RawEvent locations
+      std::vector<std::string> m_rawEvLocs;
 
     };
 

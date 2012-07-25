@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2012-07-25 - Chris Jones
+ - Fix an issue in RawDataSize where the RawEvent object was not found, when
+   running from a DST where the RICH banks are saved as RICH/RawEvent.
+
 !========================= RichRecQC v2r59 2012-07-24 =========================
 ! 2012-07-20 - Chris Jones
  - Small CPU improvement to the previous changes

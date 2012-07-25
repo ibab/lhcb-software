@@ -25,18 +25,21 @@ DECLARE_ALGORITHM_FACTORY( RawDataSize )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-RawDataSize::RawDataSize( const std::string& name,
-                          ISvcLocator* pSvcLocator)
-  : HistoAlgBase       ( name , pSvcLocator ),
-    m_SmartIDDecoder   ( NULL  ),
-    m_RichSys          ( NULL  ),
-    m_taeEvents        ( 1, "" )
+  RawDataSize::RawDataSize( const std::string& name,
+                            ISvcLocator* pSvcLocator)
+    : HistoAlgBase       ( name , pSvcLocator ),
+      m_SmartIDDecoder   ( NULL  ),
+      m_RichSys          ( NULL  ),
+      m_taeEvents        ( 1, "" )
 {
   declareProperty( "RawEventLocations", m_taeEvents );
   declareProperty( "FillDetailedL1Plots",        m_detailedL1Plots        = true  );
   declareProperty( "FillDetailedL1IngressPlots", m_detailedL1IngressPlots = false );
   declareProperty( "FillDetailedHPDPlots",       m_detailedHPDPlots       = false );
   declareProperty( "WriteTextFile",              m_writeTextFile          = false );
+  declareProperty( "RawEventLocations", m_rawEvLocs = boost::assign::list_of
+                   ( LHCb::RawEventLocation::Rich    )
+                   ( LHCb::RawEventLocation::Default ) );
   setProperty( "HistoPrint", false );
 }
 
@@ -71,29 +74,29 @@ StatusCode RawDataSize::prebookHistograms()
   richProfile1D( HID("L1s/HeadersVL1CopyNumber"),
                  "# Headers (32bit words) V L1 Copy Number",
                  -0.5, nL1sMax - 0.5, nL1sMax,
-		 "UKL1 Copy Number",
-		 "Average # 32 bit header words / event" );
+                 "UKL1 Copy Number",
+                 "Average # 32 bit header words / event" );
 
   // Size per L1 board
   richProfile1D( HID("L1s/SizeVL1CopyNumber"),
                  "Average Size (32bit words) V L1 Copy Number",
                  -0.5, nL1sMax - 0.5, nL1sMax,
-		 "UKL1 Copy Number",
-		 "Average # 32 bit data words / event" );
+                 "UKL1 Copy Number",
+                 "Average # 32 bit data words / event" );
 
   // size per L1 ingress
   richProfile1D( HID("L1s/SizeVL1Ingress"),
                  "Average Size (32bit words) V (L1 Copy Number)*10 + L1 Ingress",
                  -0.5, nL1sMax*10 - 0.5, nL1sMax*10,
-		 "(UKL1 Copy Number)*10 + L1 Ingress",
-		 "Average # 32 bit data words / event" );
+                 "(UKL1 Copy Number)*10 + L1 Ingress",
+                 "Average # 32 bit data words / event" );
 
   // size per HPD
   richProfile1D( HID("hpds/SizeVHPDCopyNumber"),
                  "Average Size (32bit words) V HPD Copy Number",
                  -0.5, nHPDs - 0.5, nHPDs,
-		 "PD Copy Number",
-		 "Average # 32 bit data words / event" );
+                 "PD Copy Number",
+                 "Average # 32 bit data words / event" );
 
   return StatusCode::SUCCESS;
 }
@@ -134,16 +137,21 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
   // Map of words per L1 board
   Rich::Map<const Rich::DAQ::Level1HardwareID,unsigned int> l1SizeMap;
 
-  // full TES location for this raw event
-  const std::string reLoc = ( taeEvent.empty() ?
-                              LHCb::RawEventLocation::Default :
-                              taeEvent + "/" + LHCb::RawEventLocation::Default );
+  // Event prefix
+  const std::string prefixE = ( taeEvent.empty() ? "" : taeEvent + "/" );
 
-  // load the raw RICH data at this location
-  if ( exist<LHCb::RawEvent>(reLoc) )
+  // Try and load the RawEvent from the list of possible locations
+  LHCb::RawEvent * rawEvent = NULL;
+  for ( std::vector<std::string>::const_iterator iEvLoc = m_rawEvLocs.begin();
+        iEvLoc != m_rawEvLocs.end(); ++iEvLoc )
   {
-    LHCb::RawEvent * rawEvent = get<LHCb::RawEvent>(reLoc);
+    rawEvent = getIfExists<LHCb::RawEvent>( prefixE + *iEvLoc );
+    if ( rawEvent ) break;
+  }
 
+  // If raw event was found
+  if ( rawEvent )
+  {
     // Get the banks for the Rich
     const LHCb::RawBank::Vector & richBanks = rawEvent->banks( LHCb::RawBank::Rich );
 
@@ -227,9 +235,9 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
           const Rich::DAQ::Level1LogicalID l1LogID = m_RichSys->level1LogicalID(l1HardID);
           const Rich::DetectorType rich            = m_RichSys->richDetector(l1HardID);
           std::ostringstream ID, title;
-          ID << "L1s/" << rich 
+          ID << "L1s/" << rich
              << "/L1-HardID" << l1HardID << "LogID" << l1LogID << "Ingress" << ingressID;
-          title << "L1 Data Size (32bit words) | " << rich << " | HardwareID " << l1HardID 
+          title << "L1 Data Size (32bit words) | " << rich << " | HardwareID " << l1HardID
                 << " LogicalID " << l1LogID
                 << " Ingress " << ingressID;
           richHisto1D( ID.str(), title.str(), -0.5, 199.5, 50 ) -> fill ( nIngressWords );
@@ -247,7 +255,7 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
         std::ostringstream ID, title;
         ID << "L1s/" << rich
            << "/L1-HardID" << l1HardID << "LogID" << l1LogID;
-        title << "L1 Data Size (32bit words) | " << rich << " | HardwareID " << l1HardID 
+        title << "L1 Data Size (32bit words) | " << rich << " | HardwareID " << l1HardID
               << " LogicalID " << l1LogID;
         richHisto1D( ID.str(), title.str(), -0.5, 499.5, 50 ) -> fill ( nL1Words );
       }
