@@ -185,13 +185,13 @@ StatusCode DeFTLayer::finalize(){
 //=============================================================================
 // Function to determine which FT channels are traversed by a trajectory
 // determined by globalPointEntry and globalPointExit. Fills a vector of
-// pairs <FTChannelID, fraction>. The latter is the "signed distance to the
-// cell center normalized to the cell size" of the "middle of the trajectory
-// path in the relevant cell". 'fraction' varies between -0.5 and 0.5.
+// pairs <FTChannelID, energyFraction>. The latter is the fraction of the energy
+// of the MC particle deposited in the corresponding SiPM cell. A light sharing
+// model is used in the determination of the energyFractions.
 //=============================================================================
 StatusCode DeFTLayer::calculateHits(const Gaudi::XYZPoint& globalPointEntry,
                                     const Gaudi::XYZPoint& globalPointExit,
-				    VectFTPairs&           vectChanAndFrac) const
+				    VectFTPairs&           vectChanAndEnergyFractions) const
 {
   Gaudi::XYZPoint enP = this->geometry()->toLocal(globalPointEntry);
   Gaudi::XYZPoint exP = this->geometry()->toLocal(globalPointExit);
@@ -210,21 +210,23 @@ StatusCode DeFTLayer::calculateHits(const Gaudi::XYZPoint& globalPointEntry,
     return StatusCode::FAILURE;
   }
   
-  /// Clear the vector holding FT pairs
-  vectChanAndFrac.clear();
-  
   /// Make a check if both the entry and exit points are inside the active area.
   /// This will be done by determining the SiPM ID corresponding to the point
   /// and comparing with nSiPMPerQuarter.
 
-  /// Check if the entry or exit points are inside the beam hole: assume a square
-  if ( ((std::abs(enP.x()) < m_innerHoleRadius) && (std::abs(enP.y()) < m_innerHoleRadius)) || 
-       ((std::abs(exP.x()) < m_innerHoleRadius) && (std::abs(exP.y()) < m_innerHoleRadius)) ) {
+  /// Check if the entry or exit points are inside the beam hole: assume a circle
+  if ( (std::pow(enP.x(),2) + std::pow(enP.y(),2)) < std::pow(m_innerHoleRadius,2) || 
+       (std::pow(exP.x(),2) + std::pow(exP.y(),2)) < std::pow(m_innerHoleRadius,2) ) {
     debug() << "Aborting calculateHits(...) because entry or exit points are inside "
 	    << "the beam pipe hole (square)" << endmsg;
     return StatusCode::FAILURE;
   }
 
+  /// Create a vector of FT pairs which will hold <FTChannel, FractionalPosition>
+  /// This is the 'working' quantity. In the final step of the calculateHits method
+  /// we use it to create the final vectChanAndEnergyFractions
+  VectFTPairs vectChanAndFracPos;
+  
   ///////////////////////////////////////////////////////
   /// Get cell coordiantes of the entry and exit points
   ///////////////////////////////////////////////////////
@@ -274,7 +276,7 @@ StatusCode DeFTLayer::calculateHits(const Gaudi::XYZPoint& globalPointEntry,
 
     /// Create and push-back the pair (FTChannelID, fraction)
     channel = createChannel( hitLayer, quarter, enPSipmID, enPCellID );
-    vectChanAndFrac.push_back( std::make_pair(channel, frac) );
+    vectChanAndFracPos.push_back( std::make_pair(channel, frac) );
 
   } //end single cell
 
@@ -334,7 +336,7 @@ StatusCode DeFTLayer::calculateHits(const Gaudi::XYZPoint& globalPointEntry,
 
     /// Create and push-back the pair (FTChannelID, fraction)
     channel = createChannel( hitLayer, quarter, enPSipmID, enPCellID );
-    vectChanAndFrac.push_back( std::make_pair(channel, fracPosFirstCell) );
+    vectChanAndFracPos.push_back( std::make_pair(channel, fracPosFirstCell) );
     
     /// The middle cells
     double eps = 1.e-3; /// add this distance when determining the number of middle cells
@@ -349,7 +351,7 @@ StatusCode DeFTLayer::calculateHits(const Gaudi::XYZPoint& globalPointEntry,
 
       /// Create and push-back the pair (FTChannelID, fraction)
       channel = createChannel( hitLayer, quarter, midCellSipmID, midCellID );
-      vectChanAndFrac.push_back( std::make_pair(channel, midCellFraction) );
+      vectChanAndFracPos.push_back( std::make_pair(channel, midCellFraction) );
     }// end loop over mid cells
     
     /// The cell of the exit point
@@ -371,16 +373,16 @@ StatusCode DeFTLayer::calculateHits(const Gaudi::XYZPoint& globalPointEntry,
 
     /// Create and push-back the pair (FTChannelID, fraction)
     channel = createChannel( hitLayer, quarter, exPSipmID, exPCellID );
-    vectChanAndFrac.push_back( std::make_pair(channel, fracPosLastCell) );
+    vectChanAndFracPos.push_back( std::make_pair(channel, fracPosLastCell) );
   }//end more than 1 hit cells
   
   debug() << "Finished creating FTPairs\n" << endmsg;
   
   /// Prinout the vector of FT pairs
-  debug() << "Size of vector of FT pairs: " << vectChanAndFrac.size() << endmsg;
+  debug() << "Size of vector of FT pairs: " << vectChanAndFracPos.size() << endmsg;
   VectFTPairs::const_iterator itPair;
   DetectorSegment tmpDetSeg;
-  for (itPair = vectChanAndFrac.begin(); itPair != vectChanAndFrac.end(); ++itPair) {
+  for (itPair = vectChanAndFracPos.begin(); itPair != vectChanAndFracPos.end(); ++itPair) {
     debug() << itPair->first << ", FractPos: " << itPair->second << endmsg;
     /// Test the inverse function ///
     debug() << "Test of function cellUCoordinate(FTChannelID): "
@@ -395,8 +397,115 @@ StatusCode DeFTLayer::calculateHits(const Gaudi::XYZPoint& globalPointEntry,
     tmpDetSeg = createDetSegment( itPair->first, itPair->second );
   }
 
+  /// Call the light-sharing method using vectChanAndFracPos,
+  /// create the final vector of pairs <FTChannel, EnergyFractions>
+  vectChanAndEnergyFractions = this->createLightSharingChannels( vectChanAndFracPos );
+
   return StatusCode::SUCCESS;
 }
+
+//=============================================================================
+// Function dealing with the light sharing between neighbouring SiPM cells
+//=============================================================================
+VectFTPairs DeFTLayer::createLightSharingChannels(VectFTPairs& inputVectPairs) const
+{
+  VectFTPairs::const_iterator itPair;
+  // First determine the weighting of the energy deposits by taking into account
+  // the particle path length in the cells
+  double sumPathWeights = 0;
+  for (itPair = inputVectPairs.begin(); itPair != inputVectPairs.end(); ++itPair) {
+    sumPathWeights += (1 - 2.*std::abs(itPair->second));
+  }
+  std::vector<double> vectPathWeights;
+  for (itPair = inputVectPairs.begin(); itPair != inputVectPairs.end(); ++itPair) {
+    vectPathWeights.push_back( (1 - 2.*std::abs(itPair->second)) / sumPathWeights );
+  }
+  debug() << "Path weights: " << vectPathWeights << endmsg;
+
+  std::vector<LHCb::FTChannelID> vectChannels;
+  // append the channel before the first one with a direct deposit from the MC particle
+  // the sequence of channels in the vector can be both right -> left or the opposite
+  int sequenceRightToLeft = ( inputVectPairs.front().first.sipmCell() < inputVectPairs.back().first.sipmCell() );
+
+  if ( inputVectPairs.size() > 1 && sequenceRightToLeft ) {
+    vectChannels.push_back( this->nextChannelRight(inputVectPairs.front().first) );
+  }
+  else { vectChannels.push_back( this->nextChannelLeft(inputVectPairs.front().first) ); }
+
+  std::vector<double> lcrFractions; // vector holding the left/center/right fractions
+  std::vector< std::vector<double> > vectTriplets; // vector of the lcrFractions
+
+  for (itPair = inputVectPairs.begin(); itPair != inputVectPairs.end(); ++itPair) {
+    // append the FT channel
+    vectChannels.push_back( itPair->first );
+    // calculate the left/center/right sharing of each channel
+    this->lightSharing(itPair->second, lcrFractions);
+    debug() << "FractPos: " << itPair->second << " ; Sharing: " << lcrFractions << endmsg;
+    vectTriplets.push_back( lcrFractions );
+  }
+
+  // append the channel after the last one with a direct deposit from the MC particle
+  if ( inputVectPairs.size() > 1 && sequenceRightToLeft ) {
+    vectChannels.push_back( this->nextChannelLeft(inputVectPairs.back().first) );
+  }
+  else { vectChannels.push_back( this->nextChannelRight(inputVectPairs.back().first) ); }
+  
+  // calculate the overall fractions for each channel
+  std::vector<double> finalFractions( inputVectPairs.size()+2, 0. );
+
+  unsigned int ind;
+  for (ind=0; ind<vectTriplets.size(); ++ind) {
+    // here we also apply the particle path-length weighting
+    if ( inputVectPairs.size() > 1 && sequenceRightToLeft ) {
+      finalFractions.at(ind)   += vectTriplets[ind][2] * vectPathWeights[ind];
+      finalFractions.at(ind+1) += vectTriplets[ind][1] * vectPathWeights[ind];
+      finalFractions.at(ind+2) += vectTriplets[ind][0] * vectPathWeights[ind];
+    }
+    else {
+      finalFractions.at(ind)   += vectTriplets[ind][0] * vectPathWeights[ind];
+      finalFractions.at(ind+1) += vectTriplets[ind][1] * vectPathWeights[ind];
+      finalFractions.at(ind+2) += vectTriplets[ind][2] * vectPathWeights[ind];
+    }
+  }
+  debug() << "Final Fractions: " << finalFractions << endmsg;
+  debug() << "Final Channels: "  << vectChannels << endmsg;
+
+  debug() << "Size of vector of triplets / channels / finalFracts: " << vectTriplets.size()
+	  << " / " << vectChannels.size() << " / " << finalFractions.size() << endmsg;
+
+  // Create the final vector of FTPairs
+  // The second part of the pair is the MCP energy fraction for this channel
+
+  VectFTPairs outputVectPairs;
+  for (ind=0; ind<vectChannels.size(); ++ind) {
+    outputVectPairs.push_back( std::make_pair(vectChannels.at(ind), finalFractions.at(ind)) ); 
+  }
+  debug() << "Created vector of light-sharing FT pairs with size: " << outputVectPairs.size() << endmsg;
+
+  return outputVectPairs;
+}
+
+//=============================================================================
+// A linear light-sharing model. From the fractional position inside a cell
+// determine the energy fractions deposited in the left/central/right SiPM cells
+//=============================================================================
+void DeFTLayer::lightSharing( double position, std::vector<double>& fractions ) const {
+  fractions.clear();
+  double frLeft, frCenter, frRight;
+  if (position > 0) {
+    frLeft  =  0.68 * position + 0.16;
+    frRight = -0.32 * position + 0.16;
+  }
+  else {
+    frLeft  =  0.32 * position + 0.16;
+    frRight = -0.68 * position + 0.16;
+  }
+  frCenter = -0.36 * std::abs(position) + 0.68;
+  fractions.push_back( frLeft );
+  fractions.push_back( frCenter );
+  fractions.push_back( frRight );
+}
+
 
 //=============================================================================
 // Function encapsulating the creation of FTChannelIDs

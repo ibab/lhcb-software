@@ -113,8 +113,8 @@ public:
    *  straight line defined by:
    *  @param globalPointEntry Global entry point
    *  @param globalPointExit Global exit point
-   *  Fills a vector of 'FT pairs' (channel ID and fractional position
-   *  inside the relevant cell/channel) passed as an argument.
+   *  Fills a vector of 'FT pairs' (channel ID and fraction of the energy
+   *  deposited in it by the MC particle passed as an argument.
    *  @return Status of the execution
    */
   StatusCode calculateHits(const Gaudi::XYZPoint&  globalPointEntry,
@@ -259,6 +259,24 @@ private: // private member functions
    *  @return StatusCode: does the fibre trajectory cross the beam-pipe circle
    */
   StatusCode beamPipeYCoord(const double x0, const int ySign, double& yIntersect) const;
+
+  /** Function for light sharing between neighbouring SiPM cells.
+   *  This model uses straight lines for describing the fibre fractions
+   *  falling into a left, central and right SiPM cells.
+   *  @param vectChanAndFrac vector of FT pairs (FTChannels and the associated
+   *  fractional positions of the MC particle trajectory in this SiPM cell).
+   *  @return A new vector of FT pairs (created inside the function), where the
+   *  scalars associated with the FT channels indicate the fraction of the energy
+   *  of the MC hit in that channel.
+   */
+  VectFTPairs createLightSharingChannels(VectFTPairs& inputVectPairs) const;
+
+  /** Function to calculate the light sharing fractions in the left/central/right SiPM cells.
+   *  @param normalized position of the MC particle trajectory in the central cell.
+   *  @param fractions vector to be filled with the left/central/right energy fractions.
+   */
+  void lightSharing( double position, std::vector<double>& fractions ) const;
+
 
 private: // private data members
 

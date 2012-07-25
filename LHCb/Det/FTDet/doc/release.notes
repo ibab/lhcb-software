@@ -4,7 +4,18 @@
 ! Responsible : Plamen Hopchev
 !--------------------------------------------------------------------------
 
-
+! 2012-07-25 P. Hopchev
+   - Implement light sharing between neighbouring SiPM cells. For this
+     purpose added two private methods: lightSharing and createLightSharingChannels.
+     The former method implements the light sharing model (in this case it uses
+     straight lines between [-0.5, 0] and [0, 0.5]), and the latter deals with
+     the combination of the deposits in the neighbouring cells.
+   - IMPORTANT: the method 'calculateHits' still fills a vector of FT pairs
+     (FTChannelID + scalar), but the meaning of the scalar now is the MC particle
+     energy fraction deposited in that channel (before was the fractional position
+     of the energy deposit).
+   - When checking if an MC hit is inside a layer, in the method 'calculateHits'
+     we consider that the beam-pipe hole is a circle instead of a square. 
 
 ! 2012-06-19 P. Hopchev
   >>> Modifications addressing the suggestions received from the code review. For details see:
