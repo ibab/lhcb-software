@@ -87,8 +87,8 @@ ask for the contributor name.""")
                       help = "Skip the actual global tagging and the update of release notes."
                       )
 
-    parser.set_default("rel_notes", os.path.join(os.environ["SQLDDDBROOT"],
-                                                 "doc", "release_notes.xml"))
+    parser.set_default("rel_notes", os.path.normpath(os.path.join(os.environ["SQLITEDBPATH"],
+                                                                  "..", "doc", "release_notes.xml")))
     parser.set_default("message", None)
     parser.set_default("contributor", None)
     parser.set_default("datatypes", [])

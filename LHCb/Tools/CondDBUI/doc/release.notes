@@ -3,6 +3,12 @@
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+! 2012-07-24 - Illya Shapoval
+ - CondDBAdmin_Commit.py and CondDBAdmin_GlobalTag.py:
+   Switching the release_notes.xml location detection from using SQLDDDBROOT to
+   SQLITEDBPATH environment variable. This is needed to accommodate the Upgrade
+   CondDB use case.
+
 !========================= CondDBUI v3r16 2012-07-24 =========================
 ! 2012-07-16 - Illya Shapoval
  - CondDB_UpdateOnlineSnapshots.py:
