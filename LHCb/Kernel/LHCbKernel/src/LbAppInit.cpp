@@ -13,7 +13,7 @@
 #include "GaudiKernel/Memory.h"
 
 #ifndef GOD_NOALLOC
-#include "Kernel/MemoryPoolAllocatorReleaser.h"
+#include "GaudiObjDesc/MemoryPoolAllocatorReleaser.h"
 #endif
 
 // local
@@ -289,7 +289,7 @@ const std::vector<LHCb::CondDBNameTagPair> LbAppInit::condDBTags() {
 }
 
 //=============================================================================
-// Return number of the current event 
+// Return number of the current event
 //=============================================================================
 long LbAppInit::eventCounter() const {
   return m_evtCounter->getEventCounter();
@@ -305,9 +305,9 @@ void LbAppInit::releaseMemoryPools() const
   const unsigned long long vmem_b = System::virtualMemory();
 
   if (msgLevel(MSG::DEBUG)) {
-    LHCb::MemoryPoolAllocatorReleaser::releaseMemory(debug());
+    Gaudi::MemoryPoolAllocatorReleaser::releaseMemory(debug());
   } else {
-    LHCb::MemoryPoolAllocatorReleaser::releaseMemory();
+    Gaudi::MemoryPoolAllocatorReleaser::releaseMemory();
   }
 
   const unsigned long long vmem_a = System::virtualMemory();

@@ -741,10 +741,10 @@ class genClasses(genSrcUtils.genSrcUtils):
         if allocatorType in ['BOOST', 'BOOST2', 'DEBUG'] : # Boost allocator with or without check on delete
             s ="""
 #ifndef GOD_NOALLOC
-#include "Kernel/MemoryPoolAllocatorReleaser.h"
+#include "GaudiObjDesc/MemoryPoolAllocatorReleaser.h"
 namespace {
   // Register the class to the memory pool allocator releaser.
-  static LHCb::RegisterReleaseFunction<%(namespace)s::%(classname)s> __%(classname)s;
+  static Gaudi::RegisterReleaseFunction<%(namespace)s::%(classname)s> __%(classname)s;
 }
 #endif"""%data
 

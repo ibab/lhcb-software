@@ -14,7 +14,7 @@
 
 // enable debug output in BoostAllocatorReleaser
 #define DEBUG_MEMORY_POOL_ALLOCATOR_RELEASER
-#include "Kernel/MemoryPoolAllocatorReleaser.h"
+#include "GaudiObjDesc/MemoryPoolAllocatorReleaser.h"
 
 /// Dummy event model class to test the release method
 class EventModelClass {
@@ -48,17 +48,17 @@ BOOST_AUTO_TEST_CASE( test )
 {
 
   // Register the two event model classes
-  LHCb::RegisterReleaseFunction<EventModelClass> r1;
-  LHCb::RegisterReleaseFunction<AnotherClass>    r2;
+  Gaudi::RegisterReleaseFunction<EventModelClass> r1;
+  Gaudi::RegisterReleaseFunction<AnotherClass>    r2;
   // Register one of them again to check the correct handling of duplicates
-  LHCb::RegisterReleaseFunction<EventModelClass> r1b;
+  Gaudi::RegisterReleaseFunction<EventModelClass> r1b;
 
   // ensure that the counters are cleared
   EventModelClass::call_count = 0;
   AnotherClass::call_count = 0;
 
   // call the release_pool methods
-  LHCb::MemoryPoolAllocatorReleaser::releaseMemory();
+  Gaudi::MemoryPoolAllocatorReleaser::releaseMemory();
 
   // check that the counts are correct
   BOOST_CHECK_EQUAL(EventModelClass::call_count, 1);
@@ -67,7 +67,7 @@ BOOST_AUTO_TEST_CASE( test )
   MsgStream log(0, "test");
   // try once more, with logging
   log << MSG::INFO;
-  LHCb::MemoryPoolAllocatorReleaser::releaseMemory(log);
+  Gaudi::MemoryPoolAllocatorReleaser::releaseMemory(log);
 
   // check that the counts are correct
   BOOST_CHECK_EQUAL(EventModelClass::call_count, 2);

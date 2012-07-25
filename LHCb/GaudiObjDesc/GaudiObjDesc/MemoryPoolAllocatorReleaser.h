@@ -1,5 +1,5 @@
-#ifndef KERNEL_MEMORY_POOL_ALLOCATOR_RELEASER_H
-#define KERNEL_MEMORY_POOL_ALLOCATOR_RELEASER_H
+#ifndef GOD_MEMORY_POOL_ALLOCATOR_RELEASER_H
+#define GOD_MEMORY_POOL_ALLOCATOR_RELEASER_H
 
 #include <map>
 #include <string>
@@ -12,7 +12,7 @@
 
 class MsgStream;
 
-namespace LHCb {
+namespace Gaudi {
   /** Class used to collect the functions to call to free the memory used by Boost
    *  pool allocators.
    *
@@ -101,4 +101,4 @@ namespace LHCb {
 }
 
 
-#endif /* KERNEL_MEMORY_POOL_ALLOCATOR_RELEASER_H */
+#endif /* GOD_MEMORY_POOL_ALLOCATOR_RELEASER_H */

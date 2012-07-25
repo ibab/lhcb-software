@@ -24,7 +24,7 @@ pattern god_headers \
 
 use Python v* LCG_Interfaces
 use GaudiPolicy v*
-use LHCbKernel v* Kernel
+use GaudiKernel v*
 
 # Always switch off GaudiObjDesc custom allocators with debug or WIN32
 macro_append cppflags "" \
@@ -37,3 +37,15 @@ macro_append gccxmlopts "" \
 apply_pattern install_python_modules
 apply_pattern install_scripts
 
+# Create the linker library
+library GaudiObjDescLib *.cpp
+apply_pattern linker_library library=GaudiObjDescLib
+apply_pattern install_more_includes more=GaudiObjDesc
+
+private
+# Test for MemoryPoolAllocatorReleaser
+application test_allocatorReleaser -group=tests \
+                       ../tests/src/test_allocatorReleaser.cpp
+
+apply_pattern QMTest
+end_private

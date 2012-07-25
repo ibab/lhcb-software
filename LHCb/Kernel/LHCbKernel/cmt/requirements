@@ -12,8 +12,9 @@ use GaudiKernel     v*
 use Boost           v* LCG_Interfaces
 use ROOT            v* LCG_Interfaces
 
+use GaudiObjDesc v*
+
 private
-use GaudiObjDesc v* -no_auto_imports
 use GaudiAlg     v* -no_auto_imports
 end_private
 
@@ -61,14 +62,3 @@ macro_append Boost_linkopts " $(Boost_linkopts_system) "
 #============================================================================
 application RichSmartIDTest ../tests/RichSmartIDTest/*.cpp
 macro_append RichSmartIDTest_dependencies " LHCbKernel "
-
-private
-# Test for MemoryPoolAllocatorReleaser
-application test_allocatorReleaser -group=tests \
-                       ../tests/src/test_allocatorReleaser.cpp \
-                       ../src/MemoryPoolAllocatorReleaser.cpp
-# We do not want to pick up the copy in libLHCbKernel to avoid noise in the test
-macro_remove test_allocatorReleaser_use_linkopts '$(LHCbKernel_linkopts)'
-
-apply_pattern QMTest
-end_private

@@ -5,6 +5,14 @@
 ! Package manager: Stefan Roiser
 !--------------------------------------------------------------------------------
 
+! 2012-07-25 - Marco Clemencic
+ - Imported MemoryPoolAllocatorReleaser source and test from Kernel/LHCbKernel,
+   changing the namespace from LHCb to Gaudi.
+ - Added a linker library to host the function required by
+   MemoryPoolAllocatorReleaser.
+ - Renamed the directory 'test' to 'tests' to conform to the convention.
+ Note: Kernel/LHCbKernel is not required anymore.
+
 !========================= GaudiObjDesc v11r15 2012-07-24 =========================
    ======== requires Kernel/LHCbKernel > v13r11 ========
 ! 2012-07-16 - Marco Clemencic
