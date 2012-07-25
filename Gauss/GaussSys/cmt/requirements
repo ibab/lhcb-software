@@ -1,5 +1,5 @@
 package GaussSys
-version v42r0
+version v42r1
 
 branches cmt doc
 
@@ -8,58 +8,57 @@ branches cmt doc
 #==================================================================
 
 # Gauss application: the application is not built on Win32
-use Gauss               v42r0   Sim
+use Gauss               v42r1   Sim
 
 # Generator packages: Basic configuration
-use GenCuts             v2r0    Gen
-use GENSER              v10r0   Gen
-use EvtGen              v12r10  Gen
-use Mint                v1r3    Gen    # Additions to EvtGen
-use EvtGenExtras        v3r2    Gen
-use Generators          v12r0   Gen
-use LbPythia            v11r0   Gen
+use GenCuts             v3r0    Gen
+use GENSER              v10r1   Gen
+use EvtGen              v12r11  Gen
+use Mint                v1r4    Gen
+use EvtGenExtras        v3r3    Gen
+use Generators          v12r1   Gen
+use LbPythia            v12r0   Gen
 
 # Generators packages: extensions to Pythia6
-#use LbAlpGen             v1r0    Gen   # OFF for the moment
+use LbAlpGen             v2r0    Gen 
 use BcVegPy              v3r0    Gen
 use GenXicc              v1r1    Gen
-use LbBcVegPy            v4r2    Gen
-use LbGenXicc            v1r1    Gen
-use LbHidValley          v3r1    Gen
-use LbOniaPairs          v1r1    Gen
+use LbBcVegPy            v4r3    Gen
+use LbGenXicc            v2r0    Gen
+use LbHidValley          v3r2    Gen
+use LbOniaPairs          v1r2    Gen
 
 # Generators packages: alternative to Pythia6 for pp collisions
-use LbHerwig             v7r0    Gen
-use LbPythia8            v3r0    Gen
-use LbHerwigpp           v1r0    Gen
+use LbPythia8            v4r0    Gen
+#use LbHerwigpp           v1r0    Gen - temporarily off
 
 # Generators packages: alternative to Pythia6 for p-A collisions
-use   LbHijing          v6r2    Gen
+use   LbHijing          v7r0    Gen
 
 # Generators packages: LHCb sampling results for Machine Induced Background
-use   LbMIB             v6r0    Gen
+use   LbMIB             v7r0    Gen
 
 # Generators packages: LHCb particle gun generator
-use   LbPGuns           v3r0    Gen
+use   LbPGuns           v4r0    Gen
 
 # Simulation basic packages
-use GiGa        	v19r8p1	  Sim     
-use GiGaCnv     	v19r0	  Sim
+use GiGa        	v20r0	  Sim     
+use GiGaCnv     	v20r0	  Sim
 use SimSvc              v5r2      Sim
 use GiGaVisUI           v5r2      Sim
 use VisSvc              v5r7      Vis 
 use ClhepTools          v2r1p1    Tools
 
 # Simulation specialized packages
-use GaussKine           v5r0      Sim
-use GaussAlgs		v5r0      Sim
-use GaussTools          v17r0     Sim
-use GaussRICH		v12r0     Sim
+use GaussKine           v6r0      Sim
+use GaussAlgs		v6r0      Sim
+use GaussTools          v18r0     Sim
+use GaussRICH		v12r1     Sim
 use GaussTracker	v6r2p1	  Sim
 use GaussCalo		v9r4	  Sim
-use GaussPhysics	v8r0	  Sim
+use GaussPhysics	v9r0	  Sim
 use GaussUMC            v1r1      Sim
-use GaussCherenkov      v2r0      Sim
+use GaussCherenkov      v2r1      Sim
 
 # Monitoring packages
 use GaussMonitor	v6r9      Sim
@@ -68,14 +67,13 @@ use VeloGauss           v2r4      Velo
 use MuonMoniSim         v2r6      Muon
 use BcmMoniSim          v1r2      Bcm
 use BlsMoniSim          v1r1      Bls
-use VLMoniSim           v1r0      VL
+#use VLMoniSim           v1r0      VL
 
-# Packages for MC generator tuning
-#use GenTune             v*        Gen
+# Packages for MC generator tuning - off for now
+#use GenTune             v*        Gen  
 
 # GMDL
-#use GDML                v1r240p0  Sim
-#use GDMLG4Writer        v2r0      Sim
+#use LbGDML               v1r0      Sim
 
 # Visualization configuration
 use XmlVis              v1r14      Vis
