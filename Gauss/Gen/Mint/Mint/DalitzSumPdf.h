@@ -47,6 +47,12 @@ class DalitzSumPdf
   virtual double getVal(IDalitzEvent* evt);
   virtual double getVal_noPs(IDalitzEvent* evt);
   virtual double getVal_withPs(IDalitzEvent* evt);
+    
+    virtual DalitzHistoSet histoSet(){
+        DalitzHistoSet hset = _f1 * _dalitz_pdf_1.histoSet();
+        hset += (1.0-_f1)*_dalitz_pdf_2.histoSet();
+        return hset;
+    }
 
 };
 

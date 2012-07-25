@@ -364,6 +364,14 @@ DalitzHistoSet DalitzPdfBaseFastInteg::histoSet() const{
   cout << " dN = " << dN << endl;
   return (_faint.histoSet() * dN);
 }
+DalitzHistoSet DalitzPdfBaseFastInteg::histoSet(){
+    // non-const version to satisfy IDalitzPdf
+    double dN = numEvents();
+    if(0 == dN) dN=1;
+    cout << " dN = " << dN << endl;
+    return (_faint.histoSet() * dN);
+}
+
 void DalitzPdfBaseFastInteg::saveEachAmpsHistograms(const std::string& prefix) const{
   _faint.saveEachAmpsHistograms(prefix);
   return;

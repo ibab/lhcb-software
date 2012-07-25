@@ -145,7 +145,8 @@ class DalitzPdfBaseFastInteg
   bool saveIntegrator(const std::string& fname)const;
 
   bool makePlots(const std::string& filename) const;
-  DalitzHistoSet histoSet() const;
+  virtual DalitzHistoSet histoSet() const;
+  virtual DalitzHistoSet histoSet();
   void saveEachAmpsHistograms(const std::string& prefix) const;
   std::vector<DalitzHistoSet> GetEachAmpsHistograms();
 
