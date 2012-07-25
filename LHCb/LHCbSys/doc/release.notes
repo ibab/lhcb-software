@@ -31,7 +31,7 @@ Production version for 2012 data taking
 
 - In DDDB v1r56
   . Update database tags for latest global tags:
-    o LHCBCOND, 2011, 2012: cond-20120710
+    o LHCBCOND, 2011, 2012: cond-20120724
 
 - In DetCond v12r26
   . Fix bug https://savannah.cern.ch/bugs/?94454 (code duplication with Moore)
