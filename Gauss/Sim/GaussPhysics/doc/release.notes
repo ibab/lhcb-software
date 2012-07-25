@@ -4,6 +4,10 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
+! 2012-07-25 - Patrick Robbe
+ - Correct name for anti-xi_b+
+ - Correct spin of Xi_cc+ and anti-Xi_cc-
+
 !====================== GaussPhysics v9r0 2012-07-23 =========================
 ! 2012-07-23 - Gloria Corti
  - Adapt to LHCb::ParticlePropertySvc instead of the one from Gaudi

@@ -12,7 +12,7 @@ G4XibPlus * G4XibPlus::theInstance = 0 ;
 G4XibPlus * G4XibPlus::Definition()
 {
   if (theInstance !=0) return theInstance;
-  const G4String name = "xi_b+";//is it normal that it's lower case? 
+  const G4String name = "anti-xi_b+";//is it normal that it's lower case? 
   // search in particle table
   G4ParticleTable* pTable = G4ParticleTable::GetParticleTable();
   G4ParticleDefinition* anInstance = pTable->FindParticle(name);
@@ -34,7 +34,7 @@ G4XibPlus * G4XibPlus::Definition()
                                 0,              0,             0,
                                 "baryon", 0,  1, -5132,
                                 false,     1.36e-3*ns,          NULL,
-                                false, "xi_b+" );
+                                false, "anti-xi_b+" );
   }
   theInstance = reinterpret_cast<G4XibPlus*>(anInstance);
   return theInstance;
