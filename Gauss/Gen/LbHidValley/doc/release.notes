@@ -19,6 +19,11 @@
 !
 ! -----------------------------------------------------------------------------
 
+!========================= LbHidValley v3r2 2012-07-25 ========================
+! 2012-07-25 - Gloria Corti
+ - Insert dummy alpgen_veto for hidvalley executable
+   . src/Main/dummy.F
+
 !========================= LbHidValley v3r1 2012-04-02 ========================
 ! 2012-04-02 - Gloria Corti
  - Insert dummy genxicc_upinit and genxicc_upevnt for hidvalley executable
