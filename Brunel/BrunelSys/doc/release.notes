@@ -3,6 +3,41 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v43r1>2012-05-26 Brunel v43r1</A></H1><PRE>
+This version uses projects LCG 64, Gaudi v23r3, LHCb v35r1, Lbcom v13r1,
+ Rec v14r1 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+Production version for 2012 data taking
+
+- Persistency changes
+  . Added FitTrackUsedOTTimes and NCandCommonHits ExtraInfo to persistent track
+    (TrackEvent v5r17, TrackFitEvent v5r17, TrackFitter v4r8, TrackUtils v1r48)
+
+- New tuning
+  . Loosened cuts in TrackV0Finder to make it much more efficient for Ks from B.
+    (TrackUtils v1r49, RecConf v2r7)
+  . New default tuning for 2011 and 2012 data from CondDB tag cond-20120724
+    o New Rich front end numbers for data after June 2012 TS
+    o New HPD quantum efficiencies and average conditions predictions
+    o New baseline calo calibration and electron PID tuning
+  . Unused memory released from Boost memory pools whenever total VMEM exceeds
+    2GB (tested every 100 events) and before finalize
+    (GaudiObjDesc v11r15, LHCbKernel v13r12)
+  . Use new TES getIfExists function instead of separate exist and get calls
+    (CaloDAQ v4r29, DAQUtils v1r9, EventPacker v2r18)
+  . Speed improvements to primary vertex finder (PatPV v3r24)
+
+- New monitoring
+  . Add RawDataSize plots (RichRecQC v2r59)
+  . Add zoom histo for distribution of number of clusters (VeloRecMonitors)
+  . Print VMEM if it has changed in last 100 events (LHCbKernel v13r12)
+
+- Changes to tests
+  . Change brunel.brunel2010magdown timeout to 2400 seconds
+  . Disable Rich RawDataSize plots in brunel2012magdown and repro2012magdown
+    tests the number of histogram differs when reading from DST, making
+    comparison impossible
+
 </PRE><H1><A NAME=v43r0>2012-06-27 Brunel v43r0</A></H1><PRE>
 This version uses projects LCG 64, Gaudi v23r3, LHCb v35r0, Lbcom v13r0,
  Rec v14r0 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
