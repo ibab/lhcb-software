@@ -1093,6 +1093,13 @@ MINDELTAM2  = LoKi.Particles.MinDeltaM2
 MAXOVERLAP  = LoKi.Particles.MaxOverlap
 
 
+## @see LoKi::Cuts:::SUMINR2CONE 
+SUMINR2CONE  = LoKi.Particles.SumInR2Cone
+## @see LoKi::Cuts:::SUMINCONE 
+SUMCONE      = LoKi.Particles.SumInR2ConeWithSource
+
+
+
 # =============================================================================
 if '__main__' == __name__ :
 

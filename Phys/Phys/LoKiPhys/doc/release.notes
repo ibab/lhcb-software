@@ -5,6 +5,9 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2012-07-25 - Vanya Belyaev
+ - add "sum-in-cone" functors... 
+
 ! 2012-07-23 - Vanya Belyaev
  - add possibility of mass constrains to non-standard mass(e.g. sideband) 
  
