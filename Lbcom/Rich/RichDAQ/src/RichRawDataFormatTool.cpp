@@ -129,15 +129,15 @@ StatusCode RawDataFormatTool::initialize()
 
   // Initialise the RawEvent locations
   const bool usingDefaultLocation = m_rawEventLocations.empty();
-  if ( std::find( m_rawEventLocations.begin(), 
-                  m_rawEventLocations.end(), 
+  if ( std::find( m_rawEventLocations.begin(),
+                  m_rawEventLocations.end(),
                   LHCb::RawEventLocation::Default ) == m_rawEventLocations.end() )
   {
     // append the defaults to the search path
     m_rawEventLocations.push_back( LHCb::RawEventLocation::Rich    );
     m_rawEventLocations.push_back( LHCb::RawEventLocation::Default );
   }
-  if ( !usingDefaultLocation ) 
+  if ( !usingDefaultLocation )
   {
     info() << "Using " << m_rawEventLocations << " as search path for the RawEvent object"
            << endmsg;
@@ -1091,17 +1091,21 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
               {
 
                 // Check this HPD is connected to the expected L1 board
-                const Level1HardwareID db_L1ID = m_richSys->level1HardwareID(hpdBank->level0ID());
-                OK = ( !m_hpdL1check || L1ID == db_L1ID );
-                if ( !OK )
+                OK = true;                    // default to OK
+                if ( UNLIKELY(m_hpdL1check) ) // Do check ?
                 {
-                  std::ostringstream mess;
-                  mess << "HPD L0ID=" << hpdBank->level0ID() << " found in L1HardID=" << L1ID
-                       << " but database says it should be in L1HardID=" << db_L1ID
-                       << " -> rejected";
-                  Error( mess.str() ).ignore();
+                  const Level1HardwareID db_L1ID = m_richSys->level1HardwareID(hpdBank->level0ID());
+                  OK = ( L1ID == db_L1ID );
+                  if ( !OK )
+                  {
+                    std::ostringstream mess;
+                    mess << "HPD L0ID=" << hpdBank->level0ID() << " found in L1HardID=" << L1ID
+                         << " but database says it should be in L1HardID=" << db_L1ID
+                         << " -> rejected";
+                    Error( mess.str() ).ignore();
+                  }
                 }
-                else // only carry on if L1 info matches DB
+                if ( OK ) // only carry on if OK
                 {
 
                   // decode to smartIDs
@@ -1631,7 +1635,7 @@ RawDataFormatTool::decodeToSmartIDs( const RawEventLocations & taeLocations,
       // get bank
       LHCb::RawBank * bank = *iBank;
       // test bank is OK
-      if ( bank ) 
+      if ( bank )
       {
         // Decode this bank
         try
@@ -1690,8 +1694,8 @@ LHCb::RawEvent * RawDataFormatTool::rawEvent() const
   if (!raw)
   {
     std::string loc = "";
-    for ( std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); 
-          p != m_rawEventLocations.end(); ++p ) 
+    for ( std::vector<std::string>::const_iterator p = m_rawEventLocations.begin();
+          p != m_rawEventLocations.end(); ++p )
     {
       loc = m_currentTAE + (*p);
       if ( exist<LHCb::RawEvent>(loc) )
