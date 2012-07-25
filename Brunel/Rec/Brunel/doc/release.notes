@@ -3,6 +3,12 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v43r1>2012-05-26 Brunel v43r1</A></H1><PRE>
+This version uses projects LCG 64, Gaudi v23r3, LHCb v35r1, Lbcom v13r1,
+ Rec v14r1 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+Production version for 2012 data taking
+
 - Changes to configurable
   . Set MemoryPurgeLimit to 2GB. When memory use reaches this value, unused 
     memory will be released from Boost memory pools
@@ -16,6 +22,9 @@ Purpose: LHCb reconstruction program
 
 - Changes to tests
   . Change brunel.brunel2010magdown timeout to 2400 seconds
+  . Disable Rich RawDataSize plots in brunel2012magdown and repro2012magdown
+    tests the number of histogram differs when reading from DST, making
+    comparison impossible
 
 </PRE><H1><A NAME=v43r0>2012-06-27 Brunel v43r0</A></H1><PRE>
 This version uses projects LCG 64, Gaudi v23r3, LHCb v35r0, Lbcom v13r0,
