@@ -27,8 +27,6 @@ Purpose: LHCb Simulation program
  - Remove use of LbHerwig that is obsolete
  - Temporarily switch off the use of LbHerwigpp that requires new version of
    the LCG_GeneratorsInterfaces. It will be put back in the next version.
- - Introduce use of LbAlpGen v2r0 that is now working. It needs to be
-   commissioned  in production
  
 !========================= Gauss v42r1 2012-07-24 ============================
  - on branch v42b
@@ -173,18 +171,6 @@ Purpose: LHCb Simulation program
 
 ! 2012-05-27 - Patrick Robbe
  - Start migration to new ParticlePropertySvc
-
-!========================== LbAlpGen v2r0 2012-07-23 ==========================
-! 2012-07-23 - Patrick Robbe
- - Add AlpGenProduction Tool to perform in Gauss the generation of
-   fully hadronized events in one go.
-
-! 2012-07-10 - Stephane Tourneur
- - Add the condition njets>1 to execute the aleana function in zqqusr.F
-   (This fixes the bug of AlpGen crashing for Z+QQ + 0 or 1 jet)
-
-! 2011-10-14 - Gloria Corti
- - Use alpgen from LCG_GeneratorsInterfaces
 
 !========================= LbHidValley v3r2 2012-07-25 ========================
 ! 2012-07-25 - Gloria Corti

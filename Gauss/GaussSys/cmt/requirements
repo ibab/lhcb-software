@@ -20,7 +20,7 @@ use Generators          v12r1   Gen
 use LbPythia            v12r0   Gen
 
 # Generators packages: extensions to Pythia6
-use LbAlpGen             v2r0    Gen 
+#use LbAlpGen             v2r0    Gen - temp off, issue with nightly 64bits
 use BcVegPy              v3r0    Gen
 use GenXicc              v1r1    Gen
 use LbBcVegPy            v4r3    Gen
