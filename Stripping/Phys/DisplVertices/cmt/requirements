@@ -1,6 +1,6 @@
 # ============================================================================
 # Created    : 2008-11-08
-# Maintainer : Neal Gauvin 
+# Maintainer : Victor Coco
 # ============================================================================
 package           DisplVertices
 version           v7r9p1
@@ -14,19 +14,9 @@ branches          cmt src options doc dict Kernel
 # Used packages.
 # ============================================================================
 use DaVinciKernel       v* Phys
-
-use CaloDet             v* Det
+use LoKiPhys            v* Phys
+use LoKiTracks          v* Phys
 use VeloDet             v* Det
-use DetDesc             v* Det
-use HltEvent             v* Event
-
-use HltInterfaces      v*    Kernel
-
-# ============================================================================
-# Eventually set new environnment values
-# ============================================================================
-# set name value \ 
-#     name value
 
 # ============================================================================
 # Component library building rule
@@ -38,9 +28,7 @@ library     DisplVertices    ../src/*.cpp -import=AIDA
 # ============================================================================
 apply_pattern component_library library=DisplVertices
 
-
 apply_pattern install_more_includes more =Kernel
-
 
 # =============== LCG Dictionaries ============================================
 apply_pattern reflex_dictionary                                                     \
