@@ -13,7 +13,7 @@ HLTFileEqualizer::HLTFileEqualizer()
   m_nnodes = 0;
   m_nfiles = 0;
   m_nfiles2 = 0;
-  m_low = -5;
+  m_low = 0;
   m_high = 20;
   m_enabledFarm.clear();
   for (row='b';row<='e';row++)
