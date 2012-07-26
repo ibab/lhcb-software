@@ -328,7 +328,10 @@ void HLTFileEqualizer::Dump()
     myNode *nod = (*nit).second;
     if (cfarm != nod->m_subfarm)
     {
-      fprintf(outf,"\n%s",line.c_str());
+      if (cfarm.size()>2)
+      {
+        fprintf(outf,"\n%s",line.c_str());
+      }
       line = eline;
       line.replace(0,nod->m_subfarm.size(),nod->m_subfarm);
 //      fprintf(outf,"\n%s",nod->m_subfarm);
