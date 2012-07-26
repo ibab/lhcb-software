@@ -320,7 +320,7 @@ void HLTFileEqualizer::Dump()
 
   }
 //  fprintf(outf,"\n");
-  std::string cfarm;
+  std::string cfarm="";
   std::string eline(256,' ');
   std::string line=eline;
   for (myNodeMap::iterator nit=m_Nodes.begin();nit != m_Nodes.end();nit++)
