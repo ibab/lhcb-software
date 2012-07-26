@@ -340,6 +340,7 @@ void HLTFileEqualizer::Dump()
     sprintf(nfil,"%4d",nod->m_nofiles);
     line.replace(10+(indx-1)*5,4,nfil);
   }
+  fprintf(outf,"\n%s\n",line.c_str());
   fflush(outf);
 };
 
