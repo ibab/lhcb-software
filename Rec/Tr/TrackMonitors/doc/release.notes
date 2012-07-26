@@ -4,6 +4,11 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-07-26 - Wouter Hulsbergen
+ - Introduced IP chi2 in TrackV0Monitor after loosening it in
+   TrackV0Finder. This should take care that online monitoring will
+   not suddenly see much dirtier Ks list.
+
 !========================= TrackMonitors v1r39 2012-07-24 =========================
 ! 2012-07-18 - Rosen Matev
  - Introduced separate options for random suffling and splitting method. New
