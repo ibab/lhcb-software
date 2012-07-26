@@ -157,7 +157,7 @@ void HLTFileEqualizer::Analyze()
     myNode *nod = (*nit).second;
     if (nod->m_nofiles > av_files+m_high)
     {
-      if (nod->m_state == 1)
+      if (nod->m_ROC_state == 'Y')
       {
         std::string farm;
         farm = nod->m_name.substr(0,6);
