@@ -7,6 +7,7 @@ sg.! $Id: release.notes,v 1.23 2010-04-30 14:42:02 jpalac Exp $
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+!========================= JetAccessories v1r6p1 2012-07-26 =========================
 
 ! 2012-07-18 - Cédric Potterat
  - Correct the double counting V0's
