@@ -292,8 +292,8 @@ void DefHltInfoHandler::infoHandler()
       nit = m_Equalizer->m_Nodes.find(nname);
       if (nit != m_Equalizer->m_Nodes.end())
       {
-        myNode* nod;
-        nod = (*nit).second;
+//        myNode* nod;
+//        nod = (*nit).second;
         m_Equalizer->m_Nodes.erase(nit);
       }
     }
@@ -302,13 +302,61 @@ void DefHltInfoHandler::infoHandler()
   return;
 }
 
+
+
+
+void HLTFileEqualizer::Dump()
+{
+  fprintf(outf,"Dump of File Distribution at ");
+  {
+    time_t rawtime;
+    time(&rawtime);
+    fprintf(outf,"%s\n",asctime(localtime(&rawtime)));
+  }
+  fprintf(outf,"          ");
+  for (int i=1;i<=32;i++)
+  {
+    fprintf(outf," %02i  ",i);
+
+  }
+//  fprintf(outf,"\n");
+  std::string cfarm;
+  std::string eline(256,' ');
+  std::string line=eline;
+  for (myNodeMap::iterator nit=m_Nodes.begin();nit != m_Nodes.end();nit++)
+  {
+    myNode *nod = (*nit).second;
+    if (cfarm != nod->m_subfarm)
+    {
+      fprintf(outf,"\n%s",line.c_str());
+      line = eline;
+      line.replace(0,nod->m_subfarm.size(),nod->m_subfarm);
+//      fprintf(outf,"\n%s",nod->m_subfarm);
+      cfarm = nod->m_subfarm;
+    }
+    int indx;
+    sscanf(nod->m_name.substr(5,2).c_str(),"%d",&indx);
+    char nfil[10];
+    sprintf(nfil,"%4d",nod->m_nofiles);
+    line.replace(10+indx*5,4,nfil);
+  }
+  fflush(outf);
+};
+
+
+
+
+
+
 class ExitCommand : public DimCommand
 {
 public:
   myNodeMap *m_nodemap;
-  ExitCommand(const char *name, char *format, myNodeMap *nodm):  DimCommand(name, format)
+  HLTFileEqualizer *m_equl;
+  ExitCommand(const char *name, char *format, myNodeMap *nodm,HLTFileEqualizer *elz):  DimCommand(name, format)
   {
     m_nodemap = nodm;
+    m_equl = elz;
   }
   void ableAll(int StateValue)
   {
@@ -388,8 +436,30 @@ public:
         ::sleep(5);
         ::exit(0);
       }
+      case 3:
+      {
+        this->m_equl->Dump();
+        break;
+      }
 
     }
+  }
+};
+
+LHCb1RunStatus::LHCb1RunStatus(char *name, int nolink,HLTFileEqualizer *e) : DimInfo(name,nolink)
+{
+  m_nolink = nolink;
+  m_equalizer = e;
+};
+
+void LHCb1RunStatus::infoHandler()
+{
+#define ALLOCATING 1
+  int data;
+  data = getInt();
+  if (data == ALLOCATING)
+  {
+    m_equalizer->Dump();
   }
 };
 
@@ -419,7 +489,7 @@ int main(int argc, char **argv)
   }
   DimInfo *defstate=new DimInfo("RunInfo/LHCb/DeferHLT",m_DefState);
   elz.m_DefStateInfo = defstate;
-  ExitCommand EnableandExit("HLTFileEqualizer/EnableAndExit",(char*)"I",&elz.m_AllNodes);
+  ExitCommand EnableandExit("HLTFileEqualizer/EnableAndExit",(char*)"I",&elz.m_AllNodes,&elz);
   fflush(outf);
   while (1)
   {
@@ -428,3 +498,5 @@ int main(int argc, char **argv)
   }
   return 0;
 }
+
+

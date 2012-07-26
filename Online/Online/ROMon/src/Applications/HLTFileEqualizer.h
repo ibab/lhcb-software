@@ -66,6 +66,7 @@ class HLTFileEqualizer
     std::set<std::string> m_enabledFarm;
     HLTFileEqualizer();
     void Analyze();
+    void Dump();
 };
 
 class DefHltInfoHandler : public DimInfoHandler
@@ -79,4 +80,12 @@ class DefHltInfoHandler : public DimInfoHandler
     void infoHandler();
 };
 
+class LHCb1RunStatus : public DimInfo
+{
+  public:
+    HLTFileEqualizer *m_equalizer;
+    int m_nolink;
+    LHCb1RunStatus(char *name, int nolink,HLTFileEqualizer *e);
+    void infoHandler();
+};
 #endif /* HLTFILEEQUALIZER_H_ */
