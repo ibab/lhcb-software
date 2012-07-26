@@ -494,6 +494,7 @@ int main(int argc, char **argv)
   DimInfo *defstate=new DimInfo("RunInfo/LHCb/DeferHLT",m_DefState);
   elz.m_DefStateInfo = defstate;
   ExitCommand EnableandExit("HLTFileEqualizer/EnableAndExit",(char*)"I",&elz.m_AllNodes,&elz);
+  LHCb1RunStatus LHCb1runstatus((char*)"RunInfo/LHCb1/RunStatus",-1,&elz);
   fflush(outf);
   while (1)
   {
