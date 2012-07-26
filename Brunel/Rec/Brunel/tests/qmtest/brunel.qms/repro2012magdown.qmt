@@ -5,7 +5,7 @@
   <argument name="args"><set>
     <text>$APPCONFIGOPTS/Brunel/MonitorExpress.py</text>
     <text>--option</text>
-    <text>from Brunel.Configuration import *; Brunel().Monitors=["SC","FPE"]; Brunel().DataType="2012"; Brunel().InputType="DST"; from GaudiConf.IOHelper import IOHelper; IOHelper().inputFiles(["brunel2012magdown-200ev.dst"]); from Configurables import RichRecQCConf; RichRecQCConf(Brunel().richMoniConfName).removeMonitor("L1SizeMonitoring")</text>
+    <text>from Brunel.Configuration import *; Brunel().Monitors=["SC","FPE"]; Brunel().DataType="2012"; Brunel().InputType="DST"; from GaudiConf.IOHelper import IOHelper; IOHelper().inputFiles(["brunel2012magdown-200ev.dst"])</text>
   </set></argument>
   <argument name="reference"><text>../refs/brunel2012magdown.ref</text></argument>
   <argument name="validator"><text>
