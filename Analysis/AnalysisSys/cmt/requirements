@@ -1,5 +1,5 @@
 package AnalysisSys
-version v10r0
+version v10r1
 
 branches doc cmt
 
@@ -13,7 +13,7 @@ use  FlavourTagging             v12r9p1  Phys   # Marc Grabalosa
 
 use  DaVinciMonitors            v1r19p1  Phys   # Patrick Koppenburg
 use  RichPIDQC                  v1r7     Rich   # Chris Jones
-use  KaliCalo                   v4r12p2  Phys   # Vanya Belyaev
+use  KaliCalo                   v4r13    Phys   # Vanya Belyaev
 
 ####################################################################
 
@@ -28,8 +28,8 @@ use  MCStandardParticles        v1r3     Phys   # Juan Palacios
 use  FlavourTaggingChecker      v6r11    Phys   # Marc Grabalosa
 use  ParticleMakerChecker       v1r5     Phys   # Chris Jones
 use  DisplVerticesMC            v1r4p1   Phys   # Victor Coco
-use  DecayTreeTuple             v3r24    Phys   # Rob Lambert
-use  JetAccessories		v1r6     Phys   # Victor Coco, Cedric Potterat
+use  DecayTreeTuple             v3r24p1  Phys   # Rob Lambert
+use  JetAccessories		v1r6p1   Phys   # Victor Coco, Cedric Potterat
 use  JetAccessoriesMC		v1r4	 Phys   # Victor Coco, Cedric Potterat
 
 ####################################################################
@@ -38,7 +38,7 @@ use  HltSelChecker              v12r1p1  Hlt    # Patrick Koppenburg
 
 ####################################################################
 
-use  AnalysisPython             v2r14    Phys
+use  AnalysisPython             v2r15    Phys
 use  PyAna                      v1r3     Analysis
 
 ####################################################################

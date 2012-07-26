@@ -3,6 +3,12 @@ Package     : AnalysisSys
 Package Coordinator : Chris Jones
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v10r1>2012-07-26 Analysis v10r1 </A></H1><PRE>
+
+New Production release, built against Phys v16r1.
+
+Updated Packages : AnalysisPython, DecayTreeTuple, JetAccessories, KaliCalo
+
 </PRE><H1><A NAME=v10r0>2012-07-09 Analysis v10r0 </A></H1><PRE>
 
 New development release
