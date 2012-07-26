@@ -5,6 +5,10 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2012-07-26 - Pieter David
+ - Add cleaned up algorithms (ported from Hlt2). Drafts of strippingselections files
+   are in fragment/ to allow testing without breaking the current code.
+
 !========================= DisplVertices v7r9p1 2012-07-09 =========================
 
 ! 2012-07-02 - Chris Jones
