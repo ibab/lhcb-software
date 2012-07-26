@@ -3,8 +3,10 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+!========================= DaVinciTools v23r2 2012-07-26 =========================
+
 ! 2012-07-23 - Chris Jones
- - Use 'getIfExists' instead of seperate 'exists' and 'get' calls.
+ - Use 'getIfExists' instead of separate 'exists' and 'get' calls.
 
 ! 2012-07-20 - Chris Jones
  - Remove the memory check code from DaVinciInit. 
