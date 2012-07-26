@@ -338,7 +338,7 @@ void HLTFileEqualizer::Dump()
     sscanf(nod->m_name.substr(6,2).c_str(),"%d",&indx);
     char nfil[10];
     sprintf(nfil,"%4d",nod->m_nofiles);
-    line.replace(10+(indx-1)*5,4,nfil);
+    line.replace(9+(indx-1)*5,4,nfil);
   }
   fprintf(outf,"\n%s\n",line.c_str());
   fflush(outf);
