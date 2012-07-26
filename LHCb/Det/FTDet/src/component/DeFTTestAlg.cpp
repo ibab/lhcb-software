@@ -118,7 +118,7 @@ StatusCode DeFTTestAlg::execute() {
       if ( pLayer != 0 ) {
         std::vector< std::pair<LHCb::FTChannelID, double> > vectChanAndFrac;
         debug() << "Test of function calculateHits:\n" << endmsg;
-        pLayer->calculateHits((*aHit)->entry(), (*aHit)->exit(), vectChanAndFrac);
+        pLayer->calculateHits(*aHit, vectChanAndFrac);
         debug() << "Size of the vector of FT pairs after the call of"
                 << "function calculateHits: " << vectChanAndFrac.size() << endmsg;
       }

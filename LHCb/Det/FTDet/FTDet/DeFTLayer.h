@@ -10,6 +10,9 @@
 #include "Kernel/FTChannelID.h"
 #include "Kernel/DetectorSegment.h" // Geom. representation of the FT cell/channel
 
+// from Event
+#include "Event/MCHit.h"
+
 /** @class DeFTLayer DeFTLayer.h "FTDet/DeFTLayer.h"
  *
  *  This is the detector element class of the Fibre Tracker (FT) layer.
@@ -25,35 +28,35 @@
  *  an observer sitting at (0,0,0), i.e. "Left" is the positive x direction.
  *
  *  @verbatim
-                                                                     ^ Y
-                   Quarter 3                 Quarter 2               |
-                                                                     |
-SiPM ID: | nSiPM-1  <-----------  0 # 0  ----------->  nSiPM-1 |     |
-         |-----------------------------------------------------|     |
-         |  |  |  |  |  |  |  |  |  #  |  |  |  |  |  |  |  |  |     |
-         |  |  |  |  |  |  |  |  |  #  |  |  |  |  |  |  |  |  |     |
-         |  |  |  |  |  |  |  |  |  #  |  |  |  |  |  |  |  |  |     |
-         |  |  |  |  |  |  |  |  |  #  |  |  |  |  |  |  |  |  |     |
-         |  |  |  |  |  |  |  |  |  #  |  |  |  |  |  |  |  |  |     |
-         |  |  |  |  |  |  |  |  |  #  |  |  |  |  |  |  |  |  |     |
-         |  |  |  |  |  |  |  |  |__#__|  |  |  |  |  |  |  |  |     |
-         |  |  |  |  |  |  |  |  |     |  |  |  |  |  |  |  |  |     |
-         |=======================|     |=======================|     |
-         |  |  |  |  |  |  |  |  |_____|  |  |  |  |  |  |  |  |     |
-         |  |  |  |  |  |  |  |  |  #  |  |  |  |  |  |  |  |  |     |
-         |  |  |  |  |  |  |  |  |  #  |  |  |  |  |  |  |  |  |     |
-         |  |  |  |  |  |  |  |  |  #  |  |  |  |  |  |  |  |  |     |
-         |  |  |  |  |  |  |  |  |  #  |  |  |  |  |  |  |  |  |     |
-         |  |  |  |  |  |  |  |  |  #  |  |  |  |  |  |  |  |  |     |
-         |  |  |  |  |  |  |  |  |  #  |  |  |  |  |  |  |  |  |     |
-         |  |  |  |  |  |  |  |  |  #  |  |  |  |  |  |  |  |  |     |
-         |-----------------------------------------------------|     |
-SiPM ID: | nSiPM-1  <-----------  0 # 0  ----------->  nSiPM-1 |     |
-                                                                     |
-                   Quarter 1                 Quarter 0               |
-                                                                     |
-   <------------------------------------------------------------------
-   X
+ ^ Y
+ Quarter 3                 Quarter 2               |
+ |
+ SiPM ID: | nSiPM-1  <-----------  0 # 0  ----------->  nSiPM-1 |     |
+ |-----------------------------------------------------|     |
+ |  |  |  |  |  |  |  |  |  #  |  |  |  |  |  |  |  |  |     |
+ |  |  |  |  |  |  |  |  |  #  |  |  |  |  |  |  |  |  |     |
+ |  |  |  |  |  |  |  |  |  #  |  |  |  |  |  |  |  |  |     |
+ |  |  |  |  |  |  |  |  |  #  |  |  |  |  |  |  |  |  |     |
+ |  |  |  |  |  |  |  |  |  #  |  |  |  |  |  |  |  |  |     |
+ |  |  |  |  |  |  |  |  |  #  |  |  |  |  |  |  |  |  |     |
+ |  |  |  |  |  |  |  |  |__#__|  |  |  |  |  |  |  |  |     |
+ |  |  |  |  |  |  |  |  |     |  |  |  |  |  |  |  |  |     |
+ |=======================|     |=======================|     |
+ |  |  |  |  |  |  |  |  |_____|  |  |  |  |  |  |  |  |     |
+ |  |  |  |  |  |  |  |  |  #  |  |  |  |  |  |  |  |  |     |
+ |  |  |  |  |  |  |  |  |  #  |  |  |  |  |  |  |  |  |     |
+ |  |  |  |  |  |  |  |  |  #  |  |  |  |  |  |  |  |  |     |
+ |  |  |  |  |  |  |  |  |  #  |  |  |  |  |  |  |  |  |     |
+ |  |  |  |  |  |  |  |  |  #  |  |  |  |  |  |  |  |  |     |
+ |  |  |  |  |  |  |  |  |  #  |  |  |  |  |  |  |  |  |     |
+ |  |  |  |  |  |  |  |  |  #  |  |  |  |  |  |  |  |  |     |
+ |-----------------------------------------------------|     |
+ SiPM ID: | nSiPM-1  <-----------  0 # 0  ----------->  nSiPM-1 |     |
+ |
+ Quarter 1                 Quarter 0               |
+ |
+ <------------------------------------------------------------------
+ X
 
  *  @endverbatim
  *
@@ -71,6 +74,7 @@ SiPM ID: | nSiPM-1  <-----------  0 # 0  ----------->  nSiPM-1 |     |
  *  Consequently, the 'net' cellID can have values in [0, 127].
  * 
  *  @author Plamen Hopchev
+ *  @author Eric Cogneras
  *  @date   2012-04-25
  */
 
@@ -117,9 +121,20 @@ public:
    *  deposited in it by the MC particle passed as an argument.
    *  @return Status of the execution
    */
-  StatusCode calculateHits(const Gaudi::XYZPoint&  globalPointEntry,
-                           const Gaudi::XYZPoint&  globalPointExit,
-                           VectFTPairs&            vectChanAndFrac) const;
+  StatusCode calculateHits(const LHCb::MCHit*  fthit,
+                           VectFTPairs&         vectChanAndFrac) const;
+
+
+  /** This function returns the fibre lengh and relative position of the hit 
+   *  in the fibre according to the Hit position.
+   *  @param globalPointEntry Global entry point
+   *  @param globalPointExit Global exit point
+   *  @param fibre lengh for the mean y-value of the hit (from entry to exit point)
+   *  @param relative position of the hit in the fibre wrt the SiPm position
+   */
+  StatusCode hitPositionInFibre(const LHCb::MCHit*  fthit,
+                                double& meanfibrefullLengh,
+                                double& fibreLenghFrac)const;
 
   /// Get the layer ID
   unsigned int layerID() const { return m_layerID; }
@@ -235,9 +250,9 @@ private: // private member functions
    *  @return FTChannelID
    */
   LHCb::FTChannelID createChannel(unsigned int hitLayer,
-				  int          quarter,
-				  unsigned int sipmID,
-				  unsigned int grossCellID) const;
+                                  int          quarter,
+                                  unsigned int sipmID,
+                                  unsigned int grossCellID) const;
 
   /** Determine the XYZ crossing point of a straight line determined by
    *  @param gpEntry Global entry point
@@ -260,6 +275,17 @@ private: // private member functions
    */
   StatusCode beamPipeYCoord(const double x0, const int ySign, double& yIntersect) const;
 
+  /** Function to determine the y coordinate of the crossing point between
+   *  the beam-pipe hole (circle) and the fibres. Purely geometrical function.
+   *  @param X coordinate
+   *  @param Y coordinate
+   *  @param yIntersect y-coordinate of the crossing point (set by the function)
+   *  @return StatusCode: does the fibre trajectory cross the beam-pipe circle
+   */
+  StatusCode beamPipeYCoord(const double xcoord,
+                            const double ycoord,
+                            double& yIntersect) const;
+
   /** Function for light sharing between neighbouring SiPM cells.
    *  This model uses straight lines for describing the fibre fractions
    *  falling into a left, central and right SiPM cells.
@@ -277,6 +303,14 @@ private: // private member functions
    */
   void lightSharing( double position, std::vector<double>& fractions ) const;
 
+  /** FibreLengh function determines the full lengh of the fibre as a function of its location 
+   *  to take the beam-pipe hole (circle) into account, but also the stereo angle.
+   *  @param lpEntry Lobal entry point
+   *  @param lpEntry Lobal entry point
+   *  @return fibre lengh 
+   */
+  double FibreLengh(const Gaudi::XYZPoint&  lpEntry,
+                    const Gaudi::XYZPoint&  lpExit) const;
 
 private: // private data members
 

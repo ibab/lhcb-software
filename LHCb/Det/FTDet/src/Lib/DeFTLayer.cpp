@@ -22,6 +22,7 @@
  *  Implementation of class : DeFTLayer
  *
  *  @author Plamen Hopchev
+ *  @author Eric Cogneras
  *  @date   2012-04-25
  */
 
@@ -153,7 +154,12 @@ StatusCode DeFTLayer::initialize(){
           << "\n\tN of SiPM per quarter: " << m_nSipmPerQuarter
           << "\n\tOuter edge width X: " << m_gapXLayerOuterEdge
           << "\n\tLayer min X: " << m_layerMinX
-          << "\n\tLayer max X: " << m_layerMaxX << endmsg;
+          << "\n\tLayer max X: " << m_layerMaxX 
+          << "\n\tLayer min Y: " << m_layerMinY
+          << "\n\tLayer max Y: " << m_layerMaxY 
+          << "\n\tLayer min Z: " << m_layerMinZ
+          << "\n\tLayer max Z: " << m_layerMaxZ
+          << endmsg;
 
   ///fill in the vectors holding the SiPM x origin and step in each quarter
   double xOrigin, xStep;
@@ -189,24 +195,24 @@ StatusCode DeFTLayer::finalize(){
 // of the MC particle deposited in the corresponding SiPM cell. A light sharing
 // model is used in the determination of the energyFractions.
 //=============================================================================
-StatusCode DeFTLayer::calculateHits(const Gaudi::XYZPoint& globalPointEntry,
-                                    const Gaudi::XYZPoint& globalPointExit,
-				    VectFTPairs&           vectChanAndEnergyFractions) const
+StatusCode DeFTLayer::calculateHits(const LHCb::MCHit*  fthit,
+                                    VectFTPairs&         vectChanAndEnergy) const
 {
-  Gaudi::XYZPoint enP = this->geometry()->toLocal(globalPointEntry);
-  Gaudi::XYZPoint exP = this->geometry()->toLocal(globalPointExit);
+
+  Gaudi::XYZPoint enP = this->geometry()->toLocal(fthit->entry());
+  Gaudi::XYZPoint exP = this->geometry()->toLocal(fthit->exit());
   
-  debug() << "Entry Point in Global / Local: " << globalPointEntry << enP << endmsg;
-  debug() << "Exit  Point in Global / Local: " << globalPointExit  << exP << endmsg;
+  debug() << "Entry Point in Global / Local: " << fthit->entry() << enP << endmsg;
+  debug() << "Exit  Point in Global / Local: " << fthit->entry()  << exP << endmsg;
 
   unsigned int hitLayer = this->layerID();
   debug() << "LayerID = " << hitLayer
           << ", Stereo angle = " << this->angle() << endmsg;
 
   /// Make a check if the entry and exit points are in the same z plane
-  if ( std::abs(globalPointEntry.z() - globalPointExit.z()) < 1.e-2 ) {
+  if ( std::abs(fthit->entry().z() - fthit->exit().z()) < 1.e-2 ) {
     debug() << "Aborting calculateHits(...) because z-distance "
-	    << "between entry and exit points is less than 10 micron." << endmsg;
+            << "between entry and exit points is less than 10 micron." << endmsg;
     return StatusCode::FAILURE;
   }
   
@@ -218,17 +224,17 @@ StatusCode DeFTLayer::calculateHits(const Gaudi::XYZPoint& globalPointEntry,
   if ( (std::pow(enP.x(),2) + std::pow(enP.y(),2)) < std::pow(m_innerHoleRadius,2) || 
        (std::pow(exP.x(),2) + std::pow(exP.y(),2)) < std::pow(m_innerHoleRadius,2) ) {
     debug() << "Aborting calculateHits(...) because entry or exit points are inside "
-	    << "the beam pipe hole (square)" << endmsg;
+            << "the beam pipe hole (circle)" << endmsg;
     return StatusCode::FAILURE;
   }
 
   /// Create a vector of FT pairs which will hold <FTChannel, FractionalPosition>
   /// This is the 'working' quantity. In the final step of the calculateHits method
-  /// we use it to create the final vectChanAndEnergyFractions
+  /// we use it to create the final vectChanAndEnergy
   VectFTPairs vectChanAndFracPos;
   
   ///////////////////////////////////////////////////////
-  /// Get cell coordiantes of the entry and exit points
+  /// Get cell coordinates of the entry and exit points
   ///////////////////////////////////////////////////////
 
   /// extrapolate points along the fibre to y=0
@@ -244,7 +250,7 @@ StatusCode DeFTLayer::calculateHits(const Gaudi::XYZPoint& globalPointEntry,
 
   if ( enPQuarter != exPQuarter ) {
     debug() << "Aborting calculateHits(...) because entry "
-	    << "and exit points are in different quarters!" << endmsg;
+            << "and exit points are in different quarters!" << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -259,7 +265,7 @@ StatusCode DeFTLayer::calculateHits(const Gaudi::XYZPoint& globalPointEntry,
 
   if ( (enPSipmID > m_nSipmPerQuarter) || (exPSipmID > m_nSipmPerQuarter) ) {
     debug() << "Aborting calculateHits(...) because entry "
-	    << "or exit points are outside acceptance (we get too large sipmID)" << endmsg;
+            << "or exit points are outside acceptance (we get too large sipmID)" << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -284,7 +290,7 @@ StatusCode DeFTLayer::calculateHits(const Gaudi::XYZPoint& globalPointEntry,
   else {
     debug() << "Entry and Exit points are in different cells!" << endmsg;
     /// The procedure is to determine the crossing point between the particle
-    /// trajectory and the planes seprating the adjacent cells. First we determine
+    /// trajectory and the planes separating the adjacent cells. First we determine
     /// the u-coordinate of the cell border between the first and second cells
     /// and between the last and last-but-once cells. Then we determine the crossing
     /// points. The hits in the middle cells will have fractional position equal
@@ -300,7 +306,7 @@ StatusCode DeFTLayer::calculateHits(const Gaudi::XYZPoint& globalPointEntry,
     enPDistToSeparEdge = enPU - enPCellSeparEdge;
 
     debug() << "Entry point: uDir / cellSeparEdge / distToSeparEdge: "
-	    << uDir << ", " << enPCellSeparEdge << ", " << enPDistToSeparEdge << endmsg;
+            << uDir << ", " << enPCellSeparEdge << ", " << enPDistToSeparEdge << endmsg;
 
     /// Cell edge next to the exit point
     double exPCellSeparEdge, exPDistToSeparEdge;
@@ -308,7 +314,7 @@ StatusCode DeFTLayer::calculateHits(const Gaudi::XYZPoint& globalPointEntry,
     exPDistToSeparEdge = exPU - exPCellSeparEdge;
 
     debug() << "Exit point: uDir / cellSeparEdge / distToSeparEdge: "
-	    << uDir << ", " << exPCellSeparEdge << ", " << exPDistToSeparEdge << endmsg;
+            << uDir << ", " << exPCellSeparEdge << ", " << exPDistToSeparEdge << endmsg;
 
     //////////////////////////////////////////////////////////////////
     /// Calculate the fractional position of the particle path center inside
@@ -320,11 +326,11 @@ StatusCode DeFTLayer::calculateHits(const Gaudi::XYZPoint& globalPointEntry,
 
     /// The cell of the entry point
     double fracPosFirstCell = 999.;
-    sc = cellCrossingPoint( enPCellSeparEdge, globalPointEntry, globalPointExit, pIntersect );
+    sc = cellCrossingPoint( enPCellSeparEdge, fthit->entry(), fthit->exit(), pIntersect );
     // in case of a problem --> directly exit the function
     if ( sc.isFailure() ) {
       debug() << "Aborting calculateHits(...), because of unsuccessful "
-	      << "call to cellCrossingPoint(EntryPoint)" << endmsg;
+              << "call to cellCrossingPoint(EntryPoint)" << endmsg;
       return sc;
     }
     
@@ -357,11 +363,11 @@ StatusCode DeFTLayer::calculateHits(const Gaudi::XYZPoint& globalPointEntry,
     /// The cell of the exit point
 
     double fracPosLastCell = 999.;
-    sc = cellCrossingPoint( exPCellSeparEdge, globalPointEntry, globalPointExit, pIntersect );
+    sc = cellCrossingPoint( exPCellSeparEdge, fthit->entry() , fthit->exit(), pIntersect );
     // in case of a problem --> directly exit the function
     if ( sc.isFailure() ) {
       debug() << "Aborting calculateHits(...), because of unsuccessful "
-	      << "call to cellCrossingPoint(ExitPoint)" << endmsg;
+              << "call to cellCrossingPoint(ExitPoint)" << endmsg;
       return sc;
     }
 
@@ -378,7 +384,7 @@ StatusCode DeFTLayer::calculateHits(const Gaudi::XYZPoint& globalPointEntry,
   
   debug() << "Finished creating FTPairs\n" << endmsg;
   
-  /// Prinout the vector of FT pairs
+  /// Printout the vector of FT pairs
   debug() << "Size of vector of FT pairs: " << vectChanAndFracPos.size() << endmsg;
   VectFTPairs::const_iterator itPair;
   DetectorSegment tmpDetSeg;
@@ -386,12 +392,12 @@ StatusCode DeFTLayer::calculateHits(const Gaudi::XYZPoint& globalPointEntry,
     debug() << itPair->first << ", FractPos: " << itPair->second << endmsg;
     /// Test the inverse function ///
     debug() << "Test of function cellUCoordinate(FTChannelID): "
-	    << cellUCoordinate(itPair->first) << endmsg;
+            << cellUCoordinate(itPair->first) << endmsg;
     /// Test of functions nextChannelLeft/Right
     debug() << "Test of function nextChannelLeft:"
-	    << this->nextChannelLeft( itPair->first ) << endmsg;
+            << this->nextChannelLeft( itPair->first ) << endmsg;
     debug() << "Test of function nextChannelRight:"
-	    << this->nextChannelRight( itPair->first ) << endmsg;
+            << this->nextChannelRight( itPair->first ) << endmsg;
     /// Test the function FTChannel+Fraction --> DetSegment
     debug() << "Test of function createDetSegment(FTChannelID, fracPos)" << endmsg;
     tmpDetSeg = createDetSegment( itPair->first, itPair->second );
@@ -399,10 +405,43 @@ StatusCode DeFTLayer::calculateHits(const Gaudi::XYZPoint& globalPointEntry,
 
   /// Call the light-sharing method using vectChanAndFracPos,
   /// create the final vector of pairs <FTChannel, EnergyFractions>
-  vectChanAndEnergyFractions = this->createLightSharingChannels( vectChanAndFracPos );
+  vectChanAndEnergy = this->createLightSharingChannels( vectChanAndFracPos );
+
+  // Finally, to return the energy deposited in each channel by the hit, each energy fraction
+  // is multiplied by the energy
+  for (VectFTPairs::iterator itPair = vectChanAndEnergy.begin(); itPair != vectChanAndEnergy.end(); ++itPair) {
+    itPair->second *= fthit->energy();
+  }
 
   return StatusCode::SUCCESS;
 }
+
+
+//=============================================================================
+// This function determines the fibre lengh and relative position of the hit 
+// in the fibre according to the Hit position.
+// These returned value can be used to determine the attenuation coefficient to be applied
+// on the deposited energy to take into acocunt the light attenuation 
+// through the fibre.
+//=============================================================================
+StatusCode DeFTLayer::hitPositionInFibre(const LHCb::MCHit*  fthit,
+                                         double& meanfibrefullLengh,
+                                         double& fibreLenghFrac) const
+{
+  Gaudi::XYZPoint enP = this->geometry()->toLocal( fthit->entry() );
+  Gaudi::XYZPoint exP = this->geometry()->toLocal( fthit->exit() );
+  meanfibrefullLengh = FibreLengh(enP,exP);
+  fibreLenghFrac= (enP.y()+exP.y())/2;
+  // Fractional lengh is relative to the SiPM position which is on the top
+  // for y>0 & on the bottom for y<0
+  if(fibreLenghFrac > 0) 
+    fibreLenghFrac = (m_layerMaxY - fibreLenghFrac)/(cos(m_angle)*meanfibrefullLengh);
+  else
+    fibreLenghFrac = (fibreLenghFrac - m_layerMinY)/(cos(m_angle)*meanfibrefullLengh);
+
+  return StatusCode::SUCCESS;
+}
+
 
 //=============================================================================
 // Function dealing with the light sharing between neighbouring SiPM cells
@@ -471,7 +510,7 @@ VectFTPairs DeFTLayer::createLightSharingChannels(VectFTPairs& inputVectPairs) c
   debug() << "Final Channels: "  << vectChannels << endmsg;
 
   debug() << "Size of vector of triplets / channels / finalFracts: " << vectTriplets.size()
-	  << " / " << vectChannels.size() << " / " << finalFractions.size() << endmsg;
+          << " / " << vectChannels.size() << " / " << finalFractions.size() << endmsg;
 
   // Create the final vector of FTPairs
   // The second part of the pair is the MCP energy fraction for this channel
@@ -511,9 +550,9 @@ void DeFTLayer::lightSharing( double position, std::vector<double>& fractions ) 
 // Function encapsulating the creation of FTChannelIDs
 //=============================================================================
 FTChannelID DeFTLayer::createChannel(unsigned int hitLayer,
-				     int          quarter,
-				     unsigned int sipmID,
-				     unsigned int grossCellID) const
+                                     int          quarter,
+                                     unsigned int sipmID,
+                                     unsigned int grossCellID) const
 {
   FTChannelID channel;
   // Convert the grossCellID to netCellID
@@ -522,7 +561,7 @@ FTChannelID DeFTLayer::createChannel(unsigned int hitLayer,
   /// Create and push_back the corresponding FT pair
   if ( netCellID > (m_sipmNChannels-1) ) {
     debug() << "Gross cellID " << grossCellID << " corresponds to insensitive cell."
-	    << " Creating invalid FT channel (the signature is: layerID=15)." << endmsg;
+            << " Creating invalid FT channel (the signature is: layerID=15)." << endmsg;
     channel = FTChannelID( 15, 0, 0, 0 );
   }
   else {
@@ -558,7 +597,7 @@ double DeFTLayer::cellUCoordinate(const FTChannelID& channel) const {
   // check if it is a valid channel or one that corresponds to non-sensitive cell
   if ( channel.layer() == 15u ) {
     debug() << "Function cellUCoordinate: cannot determine uCoord for "
-	    << " non-valid channel " << channel << endmsg;
+            << " non-valid channel " << channel << endmsg;
     uCoord = 99999.;
   }
   else {
@@ -599,13 +638,13 @@ void DeFTLayer::cellIDCoordinates( const double  uCoord,
 	sipmID = (unsigned int) ((uCoord - m_sipmOriginX[quarter]) / m_sipmStepX[quarter]);
 	double sipmREdgeU = m_sipmOriginX[quarter] + (sipmID + !(quarter%2)) * m_sipmStepX[quarter];
   debug() << "quarter, sipmID, sipmREdgeU = "
-	  << quarter << ", "<< sipmID << ", " << sipmREdgeU << endmsg;
+          << quarter << ", "<< sipmID << ", " << sipmREdgeU << endmsg;
   
   /// Get cellID inside the SiPM
   double distSipmREdge = uCoord - sipmREdgeU;
   if ( distSipmREdge < 0 ) {
     error() << "In function cellIDCoordinates: got negative distance between "
-	    << " the hit and the sipmEdge. Must be non-negative!)" << endmsg;
+            << " the hit and the sipmEdge. Must be non-negative!)" << endmsg;
   }
   double cellREdgeU;
   
@@ -623,7 +662,7 @@ void DeFTLayer::cellIDCoordinates( const double  uCoord,
     double distActiveArea = uCoord - (sipmREdgeU + m_sipmEdgeSizeX);
     if ( distActiveArea < 0 ) {
       error() << "In function cellIDCoordinates: got negative distance between "
-	      << " the hit and the first sensitive cell. Must be non-negative!)" << endmsg;
+              << " the hit and the first sensitive cell. Must be non-negative!)" << endmsg;
     }
     cellID = (unsigned int) (1 + distActiveArea/m_cellSizeX); // >= 1 by construction
     cellREdgeU = (sipmREdgeU + m_sipmEdgeSizeX) + (cellID-1)*m_cellSizeX;
@@ -634,11 +673,11 @@ void DeFTLayer::cellIDCoordinates( const double  uCoord,
   fracDistCellCenter = (uCoord - (cellREdgeU + m_cellSizeX/2)) / m_cellSizeX;
 
   debug() << "\n\tdistSipmREdge: " << distSipmREdge 
-	  << "\n\tGross cellID: " << cellID
-	  << "\n\tcellREdgeU: " << cellREdgeU
-	  << ", distToCellREdge = " << uCoord - cellREdgeU
-	  << ", distToCellCenter = " << uCoord - (cellREdgeU + m_cellSizeX/2)
-	  << "\n\tfracDistCellCenter: " << fracDistCellCenter << endmsg;
+          << "\n\tGross cellID: " << cellID
+          << "\n\tcellREdgeU: " << cellREdgeU
+          << ", distToCellREdge = " << uCoord - cellREdgeU
+          << ", distToCellCenter = " << uCoord - (cellREdgeU + m_cellSizeX/2)
+          << "\n\tfracDistCellCenter: " << fracDistCellCenter << endmsg;
 }
 
 //=============================================================================
@@ -662,7 +701,7 @@ StatusCode DeFTLayer::cellCrossingPoint(const double cellEdgeU,
   Gaudi::XYZPoint gp2(cellEdgeU, 0., cellZMin+2*m_layerHalfSizeZ);
   Gaudi::XYZPoint gp3(cellXAtVertBorder, cellYAtVertBorder, cellZMin);
   debug() << "P1, P2, P3:\n\t" << gp1 << "\n\t"
-	  << gp2 << "\n\t" << gp3 << endmsg;
+          << gp2 << "\n\t" << gp3 << endmsg;
   
   /// Create the plane, the particle trajectory and their intersection
   Gaudi::Plane3D cellBorderPlane(gp1, gp2, gp3);
@@ -675,10 +714,10 @@ StatusCode DeFTLayer::cellCrossingPoint(const double cellEdgeU,
   bool sc = Gaudi::Math::intersection( partTraj, cellBorderPlane, pIntersect, paramIntersect );
 
   debug() << "Intersection P, param, line(param):"
-	  << sc << " : " << pIntersect << ", " << paramIntersect << endmsg;
+          << sc << " : " << pIntersect << ", " << paramIntersect << endmsg;
   
   debug() << "Position(p=0), Position(p=xx): " << partTraj.position(0.)
-	  << partTraj(paramIntersect) << endmsg;
+          << partTraj(paramIntersect) << endmsg;
 
   return StatusCode(sc);
 }
@@ -753,6 +792,74 @@ StatusCode DeFTLayer::beamPipeYCoord(const double x0, const int ySign, double& y
   }
   return sc;
 }
+
+//=============================================================================
+// Function to determine the y coordinate of the crossing point between
+// the beam-pipe hole (circle) and the fibres. The procedure is to express
+// the fibre trajectory as x = x0 + m_tanAngle * y and solve the circle
+// equation x**2 + y**2 = R**2 to determine the y coords of the crossing points.
+// For y>0 (y<0) we are interested only in the positive (negative) solution.
+// x0 is the x-coord@y=0 (i.e. the u-coordinate). The returned status code
+// signifies if there is at least one crossing point.
+//=============================================================================
+StatusCode DeFTLayer::beamPipeYCoord(const double xcoord,
+                                     const double ycoord,
+                                     double& yIntersect) const {
+  StatusCode sc;
+  /// Solve the quadratic equation
+  double x0 = xAtYEq0(xcoord, ycoord);
+  int ySign = 0;
+  if(ycoord > 0) ySign = 1;
+  if(ycoord < 0) ySign = -1;
+
+  double a = 1 + pow(m_tanAngle,2);
+  double b = 2 * x0 * m_tanAngle;
+  double c = pow(x0,2) - pow(m_innerHoleRadius,2);
+  double D  = pow(b,2) - 4*a*c;
+  if ( D < 0 ) {
+    /// No real solutions ==> no crossing points
+    debug() << "In function beamPipeYCoord: no crossing points found" << endmsg;
+    sc = StatusCode::FAILURE;
+  }
+  else {
+    /// We have 2 solutions (can be degenerate)
+    /// For ySign=1 (ySign=-1) will return the positive (negative) solution
+    yIntersect = (-b + ySign*sqrt(D)) / (2*a);
+    sc = StatusCode::SUCCESS;
+    debug() << "y-coordinate of beam-pipe crossing point: " << yIntersect << endmsg;
+  }
+  return sc;
+}
+
+//=============================================================================
+// Function to determine lengh of the fibre as a function of its location 
+// to take into account the hole in the middle of the layer
+// BEWARE : This hole is considered here as being a square.
+//=============================================================================
+double DeFTLayer::FibreLengh(const Gaudi::XYZPoint&  lpEntry,
+                             const Gaudi::XYZPoint&  lpExit) const{
+  // the lengh of the fibre is simply set as the Y half size of the layer, 
+  // taking into account the stereo angle
+  double fibreL = (m_layerHalfSizeY)/cos(m_angle);
+
+
+  
+  // y coordinate of the crossing point between fibre and beam hole
+  double YFibreXHole = 0;
+
+
+  //
+  double MeanPointX = (lpExit.x() - lpEntry.x())/2;
+  double MeanPointY = (lpExit.y() - lpEntry.y())/2;
+  // checks if entry point of hit is on a fibre shorten by beam hole
+  if(beamPipeYCoord(MeanPointX,MeanPointY, YFibreXHole)){
+    fibreL = (m_layerHalfSizeY - std::abs(YFibreXHole))/cos(m_angle);
+    
+  }
+ 
+  return fibreL;
+}
+
 
 //=============================================================================
 // Get the FTChannelID of the cell located on the left of a given cell (left/right assume

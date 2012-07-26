@@ -20,6 +20,7 @@ use   GSL          v*   LCG_Interfaces
 use   GaudiAlg     v*
 use   GaudiKernel  v*
 use   MCEvent      v*    Event
+use   FTEvent      v*    Event
 
 #==========================================================================
 # Header files to be made visible to the whole project
