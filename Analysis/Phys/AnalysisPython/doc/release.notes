@@ -5,6 +5,8 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+!========================= AnalysisPython v2r15 2012-07-26 =========================
+
 ! 2012-07-21 - Vanya Belyaev
  - rewrite PolyPositive  
 
@@ -15,9 +17,7 @@
  - toHepDATA 
 
 ! 2012-07-12 - Vanya Belyaev
-
  - add transpose operation for 2D-histos 
-
 
 !========================= AnalysisPython v2r14 2012-06-28 =========================
 
