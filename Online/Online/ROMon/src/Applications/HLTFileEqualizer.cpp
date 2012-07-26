@@ -335,7 +335,7 @@ void HLTFileEqualizer::Dump()
       cfarm = nod->m_subfarm;
     }
     int indx;
-    sscanf(nod->m_name.substr(5,2).c_str(),"%d",&indx);
+    sscanf(nod->m_name.substr(6,2).c_str(),"%d",&indx);
     char nfil[10];
     sprintf(nfil,"%4d",nod->m_nofiles);
     line.replace(10+indx*5,4,nfil);
