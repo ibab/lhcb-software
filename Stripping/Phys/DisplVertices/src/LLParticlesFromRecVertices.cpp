@@ -36,9 +36,6 @@ LLParticlesFromRecVertices::LLParticlesFromRecVertices( const std::string& name,
 
   , m_p2s(NULL)
 
-  , m_FirstPVMaxRho(1.5*Gaudi::Units::mm)
-  , m_FirstPVMaxZ(150.0*Gaudi::Units::mm) // should accept a PV as soon as there is one
-
   , m_chargedProto(NULL)
 
   , m_RHO( LoKi::Constant<const LHCb::VertexBase*,double>(0.0) )
@@ -53,6 +50,18 @@ LLParticlesFromRecVertices::LLParticlesFromRecVertices( const std::string& name,
                  , "Input RecVertex containers" );
 
   // PV selection
+  declareProperty("FirstPVMaxRho"
+                 , m_FirstPVMaxRho = 0.3*Gaudi::Units::mm
+                 , "Maximal rho position of the \"most upstream\" PV" );
+
+  declareProperty("FirstPVMinZ"
+                 , m_FirstPVMinZ = -150.0*Gaudi::Units::mm
+                 , "Minimal z position of the \"most upstream\" PV" );
+
+  declareProperty("FirstPVMaxZ"
+                 , m_FirstPVMinZ = -150.0*Gaudi::Units::mm
+                 , "Minimal z position of the \"most upstream\" PV" );
+
   declareProperty("FirstPVMinNumTracks"
                  , m_FirstPVNumTracks = 10
                  , "Minimal number of tracks required in the \"most upstream\" PV" );
@@ -293,7 +302,7 @@ StatusCode LLParticlesFromRecVertices::initialize() {
       ;
 
   m_UPPVZ = LoKi::select<const LHCb::RecVertex*>(
-         ( VZ < m_FirstPVMaxZ )
+         ( VZ < m_FirstPVMaxZ ) && ( VZ > m_FirstPVMinZ )
       && RV_TrHAS(TrBACKWARD) && RV_TrHAS(! TrBACKWARD)
       && ( RV_TrNUM(TrALL) >= m_FirstPVNumTracks )
     ) >> LoKi::min_value<const LHCb::RecVertex*>( m_Z );

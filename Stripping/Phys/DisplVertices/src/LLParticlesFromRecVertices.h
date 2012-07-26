@@ -65,8 +65,9 @@ private:
 
   unsigned int m_FirstPVNumTracks;        ///< Allow Velo-only daughters
   // More cut values for the most upstream PV (hard-coded)
-  const double m_FirstPVMaxRho;
-  const double m_FirstPVMaxZ;
+  double m_FirstPVMaxRho;
+  double m_FirstPVMinZ;
+  double m_FirstPVMaxZ;
 
   bool m_useVeloTracks;                   ///< Maximum track Chi2 for long daughter tracks
   bool m_verticesFromVeloOnly;            ///< Hlt (Velo-only) or Stripping (Rec/Track/Best) vertexing

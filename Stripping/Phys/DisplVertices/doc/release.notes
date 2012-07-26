@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2012-07-26 - Pieter David
+ - Add configurable cuts on "most upstream PV" z position (min&max Z, max RHO)
+
+! 2012-07-26 - Pieter David
  - Add cleaned up algorithms (ported from Hlt2). Drafts of strippingselections files
    are in fragment/ to allow testing without breaking the current code.
 
