@@ -3,6 +3,8 @@
 ! Responsible : Chris Jones, Olivier Deschamps
 !==============================================================================
 
+!========================= ParticleMaker v6r5 2012-07-26 =========================
+
 ! 2012-07-24 - Chris Jones
  - Use 'getIfExists' instead of seperate 'exists' and 'get' calls.
 
