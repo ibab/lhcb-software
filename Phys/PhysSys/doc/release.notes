@@ -3,6 +3,37 @@ Package             : PhysSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v16r1>2012-07-26 Phys v16r1 </A></H1><PRE>
+Production release, based on Rec v14r1, LHCb v35r1
+
+- Packages updated : DaVinciInterfaces, DaVinciKernel, DaVinciTools,
+                     DecayTreeFitter, LoKiFitters, LoKiPhys,
+                     ParticleMaker, VertexFit
+
+In DaVinciInterfaces :
+ . IDecayTreeFit: Add one more option to constrain mass to 
+                  something else than PDG mass
+
+In DaVinciTools :
+ . Use 'getIfExists' instead of separate 'exists' and 'get' calls.
+ . Remove the memory check code from DaVinciInit. 
+   Now part of the LbAppInit base class.
+ . Use the new mechanism to release all the memory pools in one call.
+
+In DecayTreeFitter :
+ . Revive functionality to fit with missing particles
+ . Add option to constrain mass to something else than PDG mass
+
+In LoKiFitters :
+ . LoKi::DecayTreeFit : Add options to constrain mass to something 
+                        else than the PDG mass
+
+In LoKiPhys :
+ . Add "sum-in-cone" functors. 
+ . Add possibility of mass constrains to non-standard mass(e.g. sideband) 
+ . Fix a bug in LoKi::Particles::IsMuon::muonPID which could result in a 
+   random uninitialised value of the Status Word being used.
+
 </PRE><H1><A NAME=v16r0>2012-07-09 Phys v16r0 </A></H1><PRE>
 Development release with major changes to DaVinci base classes,
 to minimise the number of private tools, and thus memory usage.
