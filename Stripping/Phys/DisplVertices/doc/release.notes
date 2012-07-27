@@ -4,6 +4,7 @@
 ! Purpose     : Stripping and Offline algorithms and tools for the selection
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
+!========================= DisplVertices v7r10 2012-07-27 =========================
 
 ! 2012-07-26 - Pieter David
  - Add configurable cuts on "most upstream PV" z position (min&max Z, max RHO)
