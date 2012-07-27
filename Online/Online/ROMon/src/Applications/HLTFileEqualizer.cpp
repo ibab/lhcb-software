@@ -232,6 +232,7 @@ void HLTFileEqualizer::Analyze()
     sprintf(nfile,"%d|",nod->m_nofiles);
     servdat += nfile;
   }
+  servdat += '\0';
   m_NodeList->updateService((void*)servdat.c_str(),servdat.size());
   dim_unlock();
 }
