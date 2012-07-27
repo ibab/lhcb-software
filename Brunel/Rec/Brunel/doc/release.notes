@@ -6,6 +6,7 @@ Purpose: LHCb reconstruction program
 - Changes to references to reflect changes since v43r1
   . Fix an issue in RawDataSize where RawEvent object was not found when
     reprocessing from DST (RichRecQC)
+  . Introduced IP chi2 cut in TrackV0Monitor (TrackMonitors)
 
 </PRE><H1><A NAME=v43r1>2012-05-26 Brunel v43r1</A></H1><PRE>
 This version uses projects LCG 64, Gaudi v23r3, LHCb v35r1, Lbcom v13r1,
