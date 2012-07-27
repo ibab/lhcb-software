@@ -838,26 +838,19 @@ StatusCode DeFTLayer::beamPipeYCoord(const double xcoord,
 //=============================================================================
 double DeFTLayer::FibreLengh(const Gaudi::XYZPoint&  lpEntry,
                              const Gaudi::XYZPoint&  lpExit) const{
-  // the lengh of the fibre is simply set as the Y half size of the layer, 
-  // taking into account the stereo angle
-  double fibreL = (m_layerHalfSizeY)/cos(m_angle);
 
-
-  
-  // y coordinate of the crossing point between fibre and beam hole
+  // define y coordinate of the crossing point between fibre and beam hole
   double YFibreXHole = 0;
 
-
-  //
-  double MeanPointX = (lpExit.x() - lpEntry.x())/2;
-  double MeanPointY = (lpExit.y() - lpEntry.y())/2;
+  //To check whether the hit fires fibres shorten by beam hole, the mean position of the hit is taken
+  double MeanPointX = (lpExit.x() + lpEntry.x())/2.;
+  double MeanPointY = (lpExit.y() + lpEntry.y())/2.;
   // checks if entry point of hit is on a fibre shorten by beam hole
-  if(beamPipeYCoord(MeanPointX,MeanPointY, YFibreXHole)){
-    fibreL = (m_layerHalfSizeY - std::abs(YFibreXHole))/cos(m_angle);
-    
-  }
- 
-  return fibreL;
+  beamPipeYCoord(MeanPointX,MeanPointY, YFibreXHole);
+  
+  
+  // return the lengh of the fibre taking into account the stereo angle
+  return (m_layerHalfSizeY - std::abs(YFibreXHole))/cos(m_angle);
 }
 
 
