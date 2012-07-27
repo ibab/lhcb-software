@@ -12,6 +12,7 @@ Trying to import module StrippingArchive.PreStripping18
 Trying to import module StrippingArchive.Stripping18
 Trying to import module StrippingArchive.Stripping19
 Trying to import module StrippingArchive.Stripping19b
+Trying to import module StrippingArchive.Stripping19c
 =============================================
 Stripping17 :
 =============================================
@@ -29,6 +30,7 @@ Trying to import module StrippingArchive.PreStripping18
 Trying to import module StrippingArchive.Stripping18
 Trying to import module StrippingArchive.Stripping19
 Trying to import module StrippingArchive.Stripping19b
+Trying to import module StrippingArchive.Stripping19c
 B2threebody: 445 channels
 Hadron_Z02TauTauProng
 Hadron_Z02TauTauProng_SameSign
@@ -135,6 +137,7 @@ Trying to import module StrippingArchive.PreStripping18
 Trying to import module StrippingArchive.Stripping18
 Trying to import module StrippingArchive.Stripping19
 Trying to import module StrippingArchive.Stripping19b
+Trying to import module StrippingArchive.Stripping19c
 {'kLAMBDADAUGHTERS': {'P_MIN': '3000*MeV', 'PIDK_MIN': '0', 'PT_MIN': '300*MeV'}, 'MASS_WINDOW': {'KST': '150*MeV', 'PHI': '15*MeV', 'OMEGA': '30*MeV', 'RHO': '250*MeV'}, 'BPVVDCHI2_MIN': 81, 'ASUMPT_MIN': '1500*MeV', 'VCHI2DOF_MAX': 9, 'piLAMBDADAUGHTERS': {'P_MIN': '3000*MeV', 'PIDK_MAX': '2', 'PT_MIN': '300*MeV'}, 'pLAMBDADAUGHTERS': {'P_MIN': '10000*MeV', 'PIDp_MIN': '5', 'PT_MIN': '1200*MeV'}, 'DAUGHTERS': {'P_MIN': '3000*MeV', 'PT_MIN': '500*MeV'}}
 # Register line: StrippingDiMuonAndGammaForCharmAssociative
 # Register line: StrippingDoubleDiMuonForCharmAssociative
@@ -153,17 +156,50 @@ B2threebody: 445 channels
 # WARNING: lineHlt1L0Any uses plain Gaudi configurable Hlt1L0AnyORL. Consider using Selection instead!
 Creating CharmToBeSwum stream with 14 lines
 Creating Bhadron stream with 205 lines
-Creating Semileptonic stream with 25 lines
+Creating Semileptonic stream with 24 lines
 Creating BhadronCompleteEvent stream with 48 lines
 Creating Leptonic stream with 48 lines
 Creating PID stream with 15 lines
-Creating Dimuon stream with 106 lines
-Creating Calibration stream with 15 lines
+Creating Dimuon stream with 107 lines
+Creating Calibration stream with 19 lines
 Creating Radiative stream with 36 lines
 Creating Charm stream with 209 lines
 Creating EW stream with 72 lines
 Creating MiniBias stream with 2 lines
 Creating CharmCompleteEvent stream with 74 lines
+=============================================
+Stripping19c :
+=============================================
+Trying to import module StrippingArchive.Stripping13
+StrippingArchive.Stripping13  cannot be loaded with this version of DaVinci
+Trying to import module StrippingArchive.Stripping14
+StrippingArchive.Stripping14  cannot be loaded with this version of DaVinci
+Trying to import module StrippingArchive.Stripping15
+StrippingArchive.Stripping15  cannot be loaded with this version of DaVinci
+Trying to import module StrippingArchive.Stripping16
+StrippingArchive.Stripping16  cannot be loaded with this version of DaVinci
+Trying to import module StrippingArchive.Stripping17
+Trying to import module StrippingArchive.Stripping17b
+Trying to import module StrippingArchive.PreStripping18
+Trying to import module StrippingArchive.Stripping18
+Trying to import module StrippingArchive.Stripping19
+Trying to import module StrippingArchive.Stripping19b
+Trying to import module StrippingArchive.Stripping19c
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "/afs/cern.ch/user/p/poluekt/cmtuser/DaVinci_v32r0/InstallArea/x86_64-slc5-gcc43-opt/python/StrippingArchive/Utils.py", line 219, in buildStreams
+    scdb = _sConf(stripping)
+  File "/afs/cern.ch/lhcb/software/releases/STRIPPING/STRIPPING_v6r0/InstallArea/x86_64-slc5-gcc43-opt/python/StrippingSettings/Utils.py", line 22, in strippingConfiguration
+    return shelve.open( dbase(stripping), 'r' )
+  File "/afs/cern.ch/sw/lcg/external/Python/2.6.5p2/x86_64-slc5-gcc43-opt/lib/python2.6/shelve.py", line 239, in open
+    return DbfilenameShelf(filename, flag, protocol, writeback)
+  File "/afs/cern.ch/sw/lcg/external/Python/2.6.5p2/x86_64-slc5-gcc43-opt/lib/python2.6/shelve.py", line 223, in __init__
+    Shelf.__init__(self, anydbm.open(filename, flag), protocol, writeback)
+  File "/afs/cern.ch/sw/lcg/external/Python/2.6.5p2/x86_64-slc5-gcc43-opt/lib/python2.6/anydbm.py", line 77, in open
+    raise error, "need 'c' or 'n' flag to open new db"
+anydbm.error: need 'c' or 'n' flag to open new db
+----------FAILED----------
+Stripping19c failed 256
 =============================================
 Stripping18b :
 =============================================
@@ -181,6 +217,7 @@ Trying to import module StrippingArchive.PreStripping18
 Trying to import module StrippingArchive.Stripping18
 Trying to import module StrippingArchive.Stripping19
 Trying to import module StrippingArchive.Stripping19b
+Trying to import module StrippingArchive.Stripping19c
 B2threebody: 445 channels
 {'kLAMBDADAUGHTERS': {'P_MIN': '3000*MeV', 'PIDK_MIN': '0', 'PT_MIN': '300*MeV'}, 'MASS_WINDOW': {'KST': '150*MeV', 'PHI': '15*MeV', 'OMEGA': '30*MeV', 'RHO': '250*MeV'}, 'BPVVDCHI2_MIN': 81, 'ASUMPT_MIN': '1500*MeV', 'VCHI2DOF_MAX': 9, 'piLAMBDADAUGHTERS': {'P_MIN': '3000*MeV', 'PIDK_MAX': '5', 'PT_MIN': '300*MeV'}, 'pLAMBDADAUGHTERS': {'P_MIN': '10000*MeV', 'PIDp_MIN': '5', 'PT_MIN': '1200*MeV'}, 'DAUGHTERS': {'P_MIN': '3000*MeV', 'PT_MIN': '300*MeV'}}
 # WARNING: new configuration: Preambulo        : ['chi2vx = VFASPF(VCHI2) ', 'from GaudiKernel.PhysicalConstants import c_light', 'ctau   = BPVLTIME ( 9 ) * c_light ', "psi             = ADAMASS ( 'J/psi(1S)' ) < 150 * MeV", "psi_prime       = ADAMASS (   'psi(2S)' ) < 150 * MeV", "psi_tight       =  ADMASS ( 'J/psi(1S)' ) < 100 * MeV ", "psi_prime_tight =  ADMASS (   'psi(2S)' ) < 100 * MeV ", 'dimuon_heavy    = M > 4.8 * GeV ', 'dimuon_tight    = psi_tight | psi_prime_tight | dimuon_heavy ']
@@ -233,6 +270,7 @@ Trying to import module StrippingArchive.PreStripping18
 Trying to import module StrippingArchive.Stripping18
 Trying to import module StrippingArchive.Stripping19
 Trying to import module StrippingArchive.Stripping19b
+Trying to import module StrippingArchive.Stripping19c
 B2threebody: 445 channels
 {'kLAMBDADAUGHTERS': {'P_MIN': '3000*MeV', 'PIDK_MIN': '0', 'PT_MIN': '300*MeV'}, 'MASS_WINDOW': {'KST': '150*MeV', 'PHI': '15*MeV', 'OMEGA': '30*MeV', 'RHO': '250*MeV'}, 'BPVVDCHI2_MIN': 81, 'ASUMPT_MIN': '1500*MeV', 'VCHI2DOF_MAX': 9, 'piLAMBDADAUGHTERS': {'P_MIN': '3000*MeV', 'PIDK_MAX': '5', 'PT_MIN': '300*MeV'}, 'pLAMBDADAUGHTERS': {'P_MIN': '10000*MeV', 'PIDp_MIN': '5', 'PT_MIN': '1200*MeV'}, 'DAUGHTERS': {'P_MIN': '3000*MeV', 'PT_MIN': '300*MeV'}}
 # WARNING: new configuration: Preambulo        : ['chi2vx = VFASPF(VCHI2) ', 'from GaudiKernel.PhysicalConstants import c_light', 'ctau   = BPVLTIME ( 9 ) * c_light ', "psi             = ADAMASS ( 'J/psi(1S)' ) < 150 * MeV", "psi_prime       = ADAMASS (   'psi(2S)' ) < 150 * MeV", "psi_tight       =  ADMASS ( 'J/psi(1S)' ) < 100 * MeV ", "psi_prime_tight =  ADMASS (   'psi(2S)' ) < 100 * MeV ", 'dimuon_heavy    = M > 4.8 * GeV ', 'dimuon_tight    = psi_tight | psi_prime_tight | dimuon_heavy ']
@@ -286,6 +324,7 @@ Trying to import module StrippingArchive.PreStripping18
 Trying to import module StrippingArchive.Stripping18
 Trying to import module StrippingArchive.Stripping19
 Trying to import module StrippingArchive.Stripping19b
+Trying to import module StrippingArchive.Stripping19c
 B2threebody: 445 channels
 {'kLAMBDADAUGHTERS': {'P_MIN': '3000*MeV', 'PIDK_MIN': '0', 'PT_MIN': '300*MeV'}, 'MASS_WINDOW': {'KST': '150*MeV', 'PHI': '15*MeV', 'OMEGA': '30*MeV', 'RHO': '250*MeV'}, 'BPVVDCHI2_MIN': 81, 'ASUMPT_MIN': '1500*MeV', 'VCHI2DOF_MAX': 9, 'piLAMBDADAUGHTERS': {'P_MIN': '3000*MeV', 'PIDK_MAX': '5', 'PT_MIN': '300*MeV'}, 'pLAMBDADAUGHTERS': {'P_MIN': '10000*MeV', 'PIDp_MIN': '5', 'PT_MIN': '1200*MeV'}, 'DAUGHTERS': {'P_MIN': '3000*MeV', 'PT_MIN': '500*MeV'}}
 # WARNING: new configuration: Preambulo        : ['chi2vx = VFASPF(VCHI2) ', 'from GaudiKernel.PhysicalConstants import c_light', 'ctau   = BPVLTIME ( 9 ) * c_light ', "psi             = ADAMASS ( 'J/psi(1S)' ) < 150 * MeV", "psi_prime       = ADAMASS (   'psi(2S)' ) < 150 * MeV", "psi_tight       =  ADMASS ( 'J/psi(1S)' ) < 100 * MeV ", "psi_prime_tight =  ADMASS (   'psi(2S)' ) < 100 * MeV ", 'dimuon_heavy    = M > 4.8 * GeV ', 'dimuon_tight    = psi_tight | psi_prime_tight | dimuon_heavy ']
@@ -343,6 +382,7 @@ Trying to import module StrippingArchive.PreStripping18
 Trying to import module StrippingArchive.Stripping18
 Trying to import module StrippingArchive.Stripping19
 Trying to import module StrippingArchive.Stripping19b
+Trying to import module StrippingArchive.Stripping19c
 Hadron_Z02TauTauProng
 {'pP_MIN': '10000*MeV', 'BPVDIRA_MIN': 0.0, 'ASUMPT_MIN': '1000*MeV', 'MASS_WINDOW': {'KST': '150*MeV', 'PHI': '15*MeV', 'OMEGA': '30*MeV', 'RHO': '250*MeV'}, 'BPVVDCHI2_MIN': 16, 'AMAXDOCA_MAX': '0.5*mm', 'LAMBDADAUGHTERS': {'P_MIN': '2500*MeV', 'PT_MIN': '300*MeV'}, 'VCHI2DOF_MAX': 16, 'DAUGHTERS': {'P_MIN': '2000*MeV', 'PT_MIN': '100*MeV'}}
 self.name BetaSPsi2SMuMu
@@ -432,6 +472,7 @@ Trying to import module StrippingArchive.PreStripping18
 Trying to import module StrippingArchive.Stripping18
 Trying to import module StrippingArchive.Stripping19
 Trying to import module StrippingArchive.Stripping19b
+Trying to import module StrippingArchive.Stripping19c
 B2threebody: 445 channels
 {'kLAMBDADAUGHTERS': {'P_MIN': '3000*MeV', 'PIDK_MIN': '0', 'PT_MIN': '300*MeV'}, 'MASS_WINDOW': {'KST': '150*MeV', 'PHI': '15*MeV', 'OMEGA': '30*MeV', 'RHO': '250*MeV'}, 'BPVVDCHI2_MIN': 81, 'ASUMPT_MIN': '1500*MeV', 'VCHI2DOF_MAX': 9, 'piLAMBDADAUGHTERS': {'P_MIN': '3000*MeV', 'PIDK_MAX': '5', 'PT_MIN': '300*MeV'}, 'pLAMBDADAUGHTERS': {'P_MIN': '10000*MeV', 'PIDp_MIN': '5', 'PT_MIN': '1200*MeV'}, 'DAUGHTERS': {'P_MIN': '3000*MeV', 'PT_MIN': '500*MeV'}}
 # WARNING: new configuration: Preambulo        : ['chi2vx = VFASPF(VCHI2) ', 'from GaudiKernel.PhysicalConstants import c_light', 'ctau   = BPVLTIME ( 9 ) * c_light ', "psi             = ADAMASS ( 'J/psi(1S)' ) < 150 * MeV", "psi_prime       = ADAMASS (   'psi(2S)' ) < 150 * MeV", "psi_tight       =  ADMASS ( 'J/psi(1S)' ) < 100 * MeV ", "psi_prime_tight =  ADMASS (   'psi(2S)' ) < 100 * MeV ", 'dimuon_heavy    = M > 4.8 * GeV ', 'dimuon_tight    = psi_tight | psi_prime_tight | dimuon_heavy ']
@@ -489,6 +530,7 @@ Trying to import module StrippingArchive.PreStripping18
 Trying to import module StrippingArchive.Stripping18
 Trying to import module StrippingArchive.Stripping19
 Trying to import module StrippingArchive.Stripping19b
+Trying to import module StrippingArchive.Stripping19c
 B2threebody: 445 channels
 # WARNING: new configuration: Preambulo        : ['chi2vx = VFASPF(VCHI2) ', 'from GaudiKernel.PhysicalConstants import c_light', 'ctau   = BPVLTIME ( 9 ) * c_light ', "psi             = ADAMASS ( 'J/psi(1S)' ) < 150 * MeV", "psi_prime       = ADAMASS (   'psi(2S)' ) < 150 * MeV", "psi_tight       =  ADMASS ( 'J/psi(1S)' ) < 100 * MeV ", "psi_prime_tight =  ADMASS (   'psi(2S)' ) < 100 * MeV ", 'dimuon_heavy    = M > 4.8 * GeV ', 'dimuon_tight    = psi_tight | psi_prime_tight | dimuon_heavy ']
 # Register line: StrippingDiMuonAndGammaForCharmAssociative
