@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-07-27 - Anton Poluektov 
+ - Fix remaining entries of VertexFitters property of CombineParticles. 
+
 ! 2012-07-19 - Chris Jones
  - Fix a small configuration issue in StrippingTrackEffDownMuon
 

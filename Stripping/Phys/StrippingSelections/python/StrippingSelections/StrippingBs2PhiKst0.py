@@ -241,7 +241,8 @@ def makeBs2PhiKst(name,
        _Bs.ReFitPVs = True
 
        _Bs.addTool( OfflineVertexFitter )
-       _Bs.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+#       _Bs.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+       _Bs.ParticleCombiners.update( { "" : "OfflineVertexFitter"} ) # Fix for DaVinci v32r0 by A.Poluektov
        _Bs.OfflineVertexFitter.useResonanceVertex = False
 
 

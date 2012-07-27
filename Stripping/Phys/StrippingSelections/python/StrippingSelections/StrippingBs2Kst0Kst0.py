@@ -289,7 +289,8 @@ def makeBs2KstKst(name,
        _Bs.ReFitPVs = True
 
        _Bs.addTool( OfflineVertexFitter )
-       _Bs.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+#       _Bs.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+       _Bs.ParticleCombiners.update( { "" : "OfflineVertexFitter"} ) # Fix for DaVinci v32r0 by A.Poluektov
        _Bs.OfflineVertexFitter.useResonanceVertex = False
 
 
@@ -328,7 +329,8 @@ def makeBs2KstKstSameCharge(name,
        _Bs.ReFitPVs = True
 
        _Bs.addTool( OfflineVertexFitter )
-       _Bs.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+#       _Bs.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+       _Bs.ParticleCombiners.update( { "" : "OfflineVertexFitter"} ) # Fix for DaVinci v32r0 by A.Poluektov
        _Bs.OfflineVertexFitter.useResonanceVertex = False
 
 
@@ -368,7 +370,8 @@ def makeBd2JPsiKst(name,
        _Bd.ReFitPVs = True
 
        _Bd.addTool( OfflineVertexFitter )
-       _Bd.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+#       _Bd.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+       _Bd.ParticleCombiners.update( { "" : "OfflineVertexFitter"} ) # Fix for DaVinci v32r0 by A.Poluektov
        _Bd.OfflineVertexFitter.useResonanceVertex = False
 
        
