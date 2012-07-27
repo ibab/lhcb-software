@@ -4,6 +4,9 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2012-07-27 - Anton Poluektov 
+ - Check that public tools have default configuration. Print warning if not. 
+
 !========================== StrippingConf v4r5 2012-04-27 ====================
 
 ! 2012-04-15 - Anton Poluektov 

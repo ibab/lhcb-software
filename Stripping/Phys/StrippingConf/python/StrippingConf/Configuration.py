@@ -48,6 +48,9 @@ class StrippingConf ( object ) :
 	self.checkAppendedLines()
 	self.checkUniqueOutputLocations()
 
+	from Gaudi.Configuration import appendPostConfigAction
+	appendPostConfigAction ( defaultToolConfigCheck )
+
     def checkAppendedLines (self) : 
         """
         Check if all declared lines are appended to streams
@@ -307,6 +310,28 @@ def __enroll__ ( self       ,   ## the object
 
     return line
 
+def defaultToolConfigCheck () : 
+    from Gaudi.Configuration import allConfigurables
+    
+    log.info('Checking if public tools have default configuration')
+
+    for conf in allConfigurables.values() : 
+        if conf.name().find('ToolSvc.')>=0 : 
+            difference = []
+            if isinstance(type(conf).__slots__,dict) : 
+	        for k,v in type(conf).__slots__.iteritems() : 
+                    if hasattr(conf, k) : 
+                        val = getattr(conf,k)
+			if val not in allConfigurables.values() : 
+			    if v != val : 
+				difference.append( (k, v, val ) )
+            if len(difference) > 0 : 
+                log.warning( 'tool %s has non-default configuration! Attributes that differ:' % conf.name() )
+		for d in difference : 
+		    log.warning( '    %s = %s (default = %s)' % ( d[0], str(d[2]), str(d[1]) ) )
+
+
 for conf in [ StrippingAlg, StrippingStream, StrippingConf] :
     if conf :
         conf.__str__ = __enroll__ 
+
