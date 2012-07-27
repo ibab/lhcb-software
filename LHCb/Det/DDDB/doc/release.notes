@@ -4,6 +4,11 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+! 2012-07-27 - Illya Shapoval
+ - Update database tags for latest global tags:
+   . DDDB, 2011: dddb-20120727
+   . DQFLAGS, 2011, 2012: dq-20120727
+
 !========================= DDDB v1r56 2012-07-24 =========================
 ! 2012-07-24 - Illya Shapoval
  - Update database tags for latest global tags:
