@@ -228,9 +228,8 @@ void HLTFileEqualizer::Analyze()
   for (myNodeMap::iterator nit=m_AllNodes.begin();nit != m_AllNodes.end();nit++)
   {
     myNode *nod = (*nit).second;
-    m_servdat += nod->m_name+" ";
-    char nfile[16];
-    sprintf(nfile,"%d|",nod->m_nofiles);
+    char nfile[32];
+    sprintf(nfile,"%s %d|",nod->m_name.c_str(),nod->m_nofiles);
     m_servdat += nfile;
   }
   m_servdat += '\0';
@@ -240,9 +239,8 @@ void HLTFileEqualizer::Analyze()
   for (myNodeMap::iterator nit=m_Nodes.begin();nit != m_Nodes.end();nit++)
   {
     myNode *nod = (*nit).second;
-    m_servdatDiff += nod->m_name+" ";
-    char nfile[16];
-    sprintf(nfile,"%d|",nod->m_nofiles);
+    char nfile[32];
+    sprintf(nfile,"%s %d|",nod->m_name.c_str(),nod->m_nofiles);
     m_servdatDiff += nfile;
   }
   m_servdatDiff += '\0';
@@ -315,6 +313,7 @@ void DefHltInfoHandler::infoHandler()
     }
     else
     {
+      m_Equalizer->m_AllNodes[nname]->m_nofiles = nfiles;
       nit = m_Equalizer->m_Nodes.find(nname);
       if (nit != m_Equalizer->m_Nodes.end())
       {
