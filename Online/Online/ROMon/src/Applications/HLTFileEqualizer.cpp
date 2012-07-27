@@ -357,7 +357,7 @@ void HLTFileEqualizer::Dump()
     {
       if (cfarm.size()>2)
       {
-        fprintf(outf,"\n%s",line.substr(0,line.find_last_not_of(" ")).c_str());
+        fprintf(outf,"\n%s",line.substr(0,line.find_last_not_of(" ")+1).c_str());
       }
       line = eline;
       line.replace(0,nod->m_subfarm.size(),nod->m_subfarm);
