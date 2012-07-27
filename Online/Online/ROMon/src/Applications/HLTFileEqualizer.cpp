@@ -246,7 +246,7 @@ void HLTFileEqualizer::Analyze()
     m_servdatDiff += nfile;
   }
   m_servdatDiff += '\0';
-  m_NodeListDiff->setData((void*)m_servdat.c_str(),m_servdatDiff.size());
+  m_NodeListDiff->setData((void*)m_servdatDiff.c_str(),m_servdatDiff.size());
   m_NodeListDiff->updateService();
   dim_unlock();
 }
