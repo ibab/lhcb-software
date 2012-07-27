@@ -1,8 +1,23 @@
 !-----------------------------------------------------------------------------
 ! Package     : PARAM/Geant4Files
-! Responsible : Gloria CORTI, Silvia MIGLIORANZI
+! Responsible : Gloria CORTI, Nigel Watson, Silvia MIGLIORANZI
 ! Purpose     : Hold link to Geant4 data files
 !-----------------------------------------------------------------------------
+
+!======================== Geant4Files v95r0 2012-07-27 =======================
+! 2012-07-27 - Nigel Watson
+ - Revised symbolic links for Geant 9.5 as below:
+
+   . G4EMLOW(6.19->6.23)
+   . G4NDL(3.14->4.0)
+   . PhotonEvaporation(2.1->2.2)
+   . RadioactiveDecay(3.3->3.4)
+   . G4NEUTRONXS (1.0->1.1)
+   . G4PII (1.2->1.3)
+   . RealSurface1.0
+   . No changes for G4ABLA, RealSurface., 
+ - Add data file
+   . G4ELASTIC1.1
 
 !======================== Geant4Files v94r0 2011-07-27 =======================
 ! 2011-07-27 - Gloria CORTI
