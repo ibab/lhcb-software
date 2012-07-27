@@ -191,7 +191,7 @@ void PVReFitterAlg::executeForLocation(const std::string& particleLocation,
     }
   }
 
-  if (msgLevel(MSG::VERBOSE))
+  if ( msgLevel(MSG::VERBOSE) )
   {
     // check output.
     if (exist<LHCb::RecVertex::Container>(vertexOutputLocation) )

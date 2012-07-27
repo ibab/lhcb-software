@@ -2,10 +2,22 @@
 #ifndef OFFLINEVERTEXFITTER_H
 #define OFFLINEVERTEXFITTER_H 1
 
-// Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "Kernel/IVertexFit.h"            // Interface
+#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/PhysicalConstants.h"
+
+// Event model
+#include "Event/Vertex.h"
+#include "Event/Particle.h"
+
+#include "Kernel/IVertexFit.h"
+#include "Kernel/IParticleTransporter.h"
+#include "Kernel/IParticleStuffer.h"
+
+// from LHCb
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 
 using namespace LHCb;
 
@@ -178,7 +190,6 @@ private:
   void addToOutgoingParticles( LHCb::Vertex&, const LHCb::Particle::ConstVector& ) const ; // add to vertex particles
   void addToOutgoingParticles( LHCb::Vertex&, const LHCb::Particle* ) const ; // add to vertex particles
 
-
 private:
 
   int m_photonID; ///< Photon particle ID
@@ -200,4 +211,81 @@ private:
   std::string m_transporterName;
 
 };
+
+//==================================================================
+//  method to determine if a particle is a resonance
+//==================================================================
+inline bool OfflineVertexFitter::isResonance(const LHCb::Particle* part) const
+{
+  const LHCb::ParticleProperty *  partProp = m_ppSvc->find(part->particleID());
+  return partProp->lifetime() < 1.e-6*Gaudi::Units::nanosecond ;
+}
+
+//==================================================================
+//  method to determine if a particle is a merged pi0
+//==================================================================
+inline bool OfflineVertexFitter::isMergedPi0(const LHCb::Particle* part) const
+{
+  return ( part->isBasicParticle() && part->particleID().pid() == m_pi0ID );
+}
+
+//==================================================================
+//  method to determine if a particle has a reconstructed vertex
+//==================================================================
+inline bool OfflineVertexFitter::isVertexed(const LHCb::Particle* part) const
+{
+  const int nflying = countTraj(part);
+  return ( nflying >= 2 );
+}
+
+//=============================================================================
+//add To particle Daughters
+//=============================================================================
+inline void
+OfflineVertexFitter::addToDaughters( LHCb::Particle& P,
+                                     const LHCb::Particle::ConstVector& Parts) const
+{
+  for ( Particle::ConstVector::const_iterator iterP = Parts.begin();
+        iterP != Parts.end(); ++iterP )
+  {
+    P.addToDaughters(*iterP);
+    if ( msgLevel(MSG::VERBOSE) )
+    {
+      verbose() << "Added a  " << (*iterP)->particleID().pid() << " to particle. Size now "
+                << P.daughters().size() << endmsg ;
+    }
+  }
+  return ;
+}
+
+//=============================================================================
+//add To vertex outgoing particles
+//=============================================================================
+inline void
+OfflineVertexFitter::addToOutgoingParticles( LHCb::Vertex& V,
+                                             const LHCb::Particle::ConstVector& Parts )
+  const
+{
+  for ( Particle::ConstVector::const_iterator iterP = Parts.begin();
+        iterP != Parts.end(); ++iterP )
+  {
+    addToOutgoingParticles(V,*iterP);
+  }
+}
+//=============================================================================
+//add To vertex outgoing particles
+//=============================================================================
+inline void
+OfflineVertexFitter::addToOutgoingParticles( LHCb::Vertex& V,
+                                             const LHCb::Particle* P ) const
+{
+  V.addToOutgoingParticles(P);
+  if ( msgLevel(MSG::VERBOSE ))
+  {
+    verbose() << "Added a  " << P->particleID().pid() << " to vertex. Size now "
+              << V.outgoingParticles().size() << endmsg ;
+  }
+}
+
+
 #endif // OFFLINEVERTEXFITTER_H
