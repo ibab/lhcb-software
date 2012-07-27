@@ -155,8 +155,9 @@ namespace {
 StatusCode TrackPV2HalfAlignMonitor::execute()
 { 
   ulonglong evTimeGps(0) ;     
-  if ( exist<LHCb::ODIN>( LHCb::ODINLocation::Default )){
-    LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
+
+  LHCb::ODIN* odin = getIfExists<LHCb::ODIN> ( LHCb::ODINLocation::Default );
+  if ( NULL != odin ){
     evTimeGps= odin->gpsTime();
   } else {
     Warning("No ODIN Header",StatusCode::SUCCESS,0).ignore();

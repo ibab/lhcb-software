@@ -104,12 +104,12 @@ StatusCode TrackDiMuonMonitor::execute()
 { 
   setHistoTopDir("Track/") ;
 
-  // Get the Tracks. Very ugly: take care this doesn't crash if muonID
-  // is not running.
-  if( !exist<LHCb::Tracks>( m_trackInputLocation ) ) 
+  // Get the Tracks
+  const LHCb::Tracks* muontracks = getIfExists<LHCb::Tracks>( m_trackInputLocation );
+
+  // Very ugly: take care this doesn't crash if muonID is not running.
+  if( NULL == muontracks ) 
     return Warning("No muon tracks at given location",StatusCode::SUCCESS,0) ;
-  
-  const LHCb::Tracks* muontracks = get<LHCb::Tracks>( m_trackInputLocation );
 
   // Sort them by charge, make some cuts
   typedef std::vector<const LHCb::Track*> TrackContainer ;

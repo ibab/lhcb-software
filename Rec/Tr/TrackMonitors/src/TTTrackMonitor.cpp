@@ -51,7 +51,7 @@ TrackMonitorBase( name , pSvcLocator ){
 //=============================================================================
 // Destructor
 //=============================================================================
-TTTrackMonitor::~TTTrackMonitor() {}; 
+TTTrackMonitor::~TTTrackMonitor() {}
 
 StatusCode TTTrackMonitor::initialize()
 {
@@ -112,7 +112,7 @@ StatusCode TTTrackMonitor::execute()
   }
 
   return StatusCode::SUCCESS;
-};
+}
 
 namespace
 {

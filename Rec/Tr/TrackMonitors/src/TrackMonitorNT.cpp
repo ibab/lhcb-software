@@ -85,7 +85,7 @@ TrackMonitorNT::TrackMonitorNT(const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-TrackMonitorNT::~TrackMonitorNT() {}; 
+TrackMonitorNT::~TrackMonitorNT() {}
 
 //=============================================================================
 // Initialization. Check parameters
@@ -114,18 +114,17 @@ StatusCode TrackMonitorNT::initialize()
 
    
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Execute
 //=============================================================================
 StatusCode TrackMonitorNT::execute()
 {
-  
   // get the input data
-  if (!exist<LHCb::Tracks>(m_tracksInContainer))
+  LHCb::Tracks* tracks = getIfExists<LHCb::Tracks>(m_tracksInContainer);
+  if ( NULL == tracks )
     return Warning( m_tracksInContainer+" not found", StatusCode::SUCCESS, 0);
-  LHCb::Tracks* tracks = get<LHCb::Tracks>(m_tracksInContainer);
 
   std::map<std::string, unsigned int> tMap;
   std::string type = "";
@@ -155,7 +154,7 @@ StatusCode TrackMonitorNT::execute()
   } // iterS
 
   return StatusCode::SUCCESS;
-};
+}
 
 
 void TrackMonitorNT::fillNtuple(const LHCb::Track* aTrack,

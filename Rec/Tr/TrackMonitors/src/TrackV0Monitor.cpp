@@ -141,9 +141,11 @@ StatusCode TrackV0Monitor::execute()
 { 
   setHistoTopDir("Track/") ;
   
-  if (!exist<LHCb::TwoProngVertices>(  m_v0Location )) 
+  const LHCb::TwoProngVertices* v0container = 
+    getIfExists<LHCb::TwoProngVertices>(  m_v0Location ) ;
+  if ( NULL == v0container ) 
     return Warning( m_v0Location+" not found", StatusCode::SUCCESS, 0) ;
-  const LHCb::TwoProngVertices* v0container = get<LHCb::TwoProngVertices>(  m_v0Location ) ;
+
   plot(v0container->size(),"v0multiplicity","v0multiplicity",-0.5,20.5,21) ;
   
   // Get the PVs, to compute the IP chi2

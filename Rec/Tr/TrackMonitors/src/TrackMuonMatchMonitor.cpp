@@ -104,14 +104,12 @@ StatusCode TrackMuonMatchMonitor::execute() {
   LHCb::Track::Range tTracks = get<LHCb::Track::Range>( m_tTracksLocation );
   if (tTracks.size()==0)   return StatusCode::SUCCESS;
   
-  const LHCb::MuonCoords* coords = NULL;
-  
-  if ( ! exist<LHCb::MuonCoords>("Raw/Muon/Coords")) {
+  const LHCb::MuonCoords* coords = getIfExists<LHCb::MuonCoords>("Raw/Muon/Coords");
+  if( NULL == coords ) {
     if(msgLevel(MSG::DEBUG)) debug()<<" Container Raw/Muon/Coords doesn't exist"<<endmsg;
     return StatusCode::SUCCESS;
   }
-  coords = get<LHCb::MuonCoords>("Raw/Muon/Coords");
-  if( coords == NULL || coords->size() == 0 ) {
+  if( coords->size() == 0 ) {
     if(msgLevel(MSG::DEBUG)) debug() << " No hits retrieved , skip event" << endmsg;
     return StatusCode::SUCCESS;    
   }

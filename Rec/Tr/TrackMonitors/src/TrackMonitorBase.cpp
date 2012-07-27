@@ -44,7 +44,7 @@ StatusCode TrackMonitorBase::initialize()
   m_pIMF = svc<IMagneticFieldSvc>( "MagneticFieldSvc",true );
 
   return StatusCode::SUCCESS;
-};
+}
 
 std::string TrackMonitorBase::histoDirName(const LHCb::Track& track) const
 {

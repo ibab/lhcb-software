@@ -78,7 +78,7 @@ TrackTimingMonitor::TrackTimingMonitor(const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-TrackTimingMonitor::~TrackTimingMonitor() {}; 
+TrackTimingMonitor::~TrackTimingMonitor() {}
 
 //=============================================================================
 // Initialization. Check parameters
@@ -98,7 +98,7 @@ StatusCode TrackTimingMonitor::initialize()
 
    
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Execute
@@ -137,40 +137,39 @@ StatusCode TrackTimingMonitor::execute()
   if (tm !=-1)
     theTuple->column( "TimingTrackMatching", m_timerTool->lastTime(tm));
 
-  LHCb::Tracks* tracks;
-
-  if ( exist<LHCb::Tracks>(LHCb::TrackLocation::RZVelo ) ) {
-    tracks = get<LHCb::Tracks>( LHCb::TrackLocation::RZVelo );
+  LHCb::Tracks* tracks = NULL;
+  tracks = getIfExists<LHCb::Tracks>( LHCb::TrackLocation::RZVelo );
+  if ( NULL != tracks ) {
     theTuple->column( "NbVeloRZTracks", tracks->size());
   }
 
-  if ( exist<LHCb::Tracks>(LHCb::TrackLocation::Velo ) ) {
-    tracks = get<LHCb::Tracks>( LHCb::TrackLocation::Velo );
+  tracks = getIfExists<LHCb::Tracks>( LHCb::TrackLocation::Velo );
+  if ( NULL != tracks ) {
     theTuple->column( "NbVelo3DTracks", tracks->size());
   }
 
-  if ( exist<LHCb::Tracks>(LHCb::TrackLocation::Forward ) ) {
-    tracks = get<LHCb::Tracks>( LHCb::TrackLocation::Forward );
+  tracks = getIfExists<LHCb::Tracks>( LHCb::TrackLocation::Forward );
+  if ( NULL != tracks ) {
     theTuple->column( "NbForwardTracks", tracks->size());
   }
 
-  if ( exist<LHCb::Tracks>(LHCb::TrackLocation::Seed ) ) {
-    tracks = get<LHCb::Tracks>( LHCb::TrackLocation::Seed );
+  tracks = getIfExists<LHCb::Tracks>( LHCb::TrackLocation::Seed );
+  if ( NULL != tracks ) {
     theTuple->column( "NbSeedTracks", tracks->size());
   }
   
-  if ( exist<LHCb::Tracks>(LHCb::TrackLocation::Downstream ) ) {
-    tracks = get<LHCb::Tracks>( LHCb::TrackLocation::Downstream );
+  tracks = getIfExists<LHCb::Tracks>( LHCb::TrackLocation::Downstream );
+  if ( NULL != tracks ) {
     theTuple->column( "NbDownstreamTracks", tracks->size());
   }
 
-  if ( exist<LHCb::Tracks>(LHCb::TrackLocation::VeloTT ) ) {
-    tracks = get<LHCb::Tracks>( LHCb::TrackLocation::VeloTT );
+  tracks = getIfExists<LHCb::Tracks>( LHCb::TrackLocation::VeloTT );
+  if ( NULL != tracks ) {
     theTuple->column( "NbVeloTTTracks", tracks->size());
   } 
 
-  if ( exist<LHCb::Tracks>(LHCb::TrackLocation::Match ) ) {
-    tracks = get<LHCb::Tracks>( LHCb::TrackLocation::Match );
+  tracks = getIfExists<LHCb::Tracks>( LHCb::TrackLocation::Match );
+  if ( NULL != tracks ) {
     theTuple->column( "NbMatchTracks", tracks->size());
   }
 

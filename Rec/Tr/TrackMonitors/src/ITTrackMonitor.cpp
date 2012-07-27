@@ -52,7 +52,7 @@ TrackMonitorBase( name , pSvcLocator ){
 //=============================================================================
 // Destructor
 //=============================================================================
-ITTrackMonitor::~ITTrackMonitor() {}; 
+ITTrackMonitor::~ITTrackMonitor() {}
 
 StatusCode ITTrackMonitor::initialize()
 {
@@ -115,7 +115,7 @@ StatusCode ITTrackMonitor::execute()
   }
 
   return StatusCode::SUCCESS;
-};
+}
 
 
 void ITTrackMonitor::fillHistograms(const LHCb::Track& track, 

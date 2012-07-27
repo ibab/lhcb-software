@@ -4,6 +4,10 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-07-27 - Marco Cattaneo
+ - Replace separate exist<>() + get<>() calls with getIfExists
+ - Fix trivial icc remarks
+
 ! 2012-07-26 - Wouter Hulsbergen
  - Introduced IP chi2 in TrackV0Monitor after loosening it in
    TrackV0Finder. This should take care that online monitoring will

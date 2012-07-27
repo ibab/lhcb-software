@@ -45,7 +45,7 @@ PVResMonitor::PVResMonitor(const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-PVResMonitor::~PVResMonitor() {};
+PVResMonitor::~PVResMonitor() {}
 
 //=============================================================================
 // Initialization
@@ -72,7 +72,7 @@ StatusCode PVResMonitor::initialize() {
   m_nPartVtx  = 0;
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -251,7 +251,7 @@ StatusCode PVResMonitor::execute() {
   }
 
   return StatusCode::SUCCESS;
-};
+}
 
 
 //=============================================================================

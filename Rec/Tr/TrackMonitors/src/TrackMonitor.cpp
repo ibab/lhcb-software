@@ -56,7 +56,7 @@ TrackMonitor::TrackMonitor(const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-TrackMonitor::~TrackMonitor() {}; 
+TrackMonitor::~TrackMonitor() {}
 
 StatusCode TrackMonitor::initialize()
 {
@@ -108,7 +108,7 @@ StatusCode TrackMonitor::execute()
   } // iterS
   
   return StatusCode::SUCCESS;
-};
+}
 
 void TrackMonitor::findRefStates(const LHCb::Track& track,
                                  const LHCb::State*& firstMeasurementState,
@@ -368,11 +368,9 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
     } // iterInfo
 
     
-    if (exist<LHCb::RecVertices>(LHCb::RecVertexLocation::Primary)) {
-   
-      const LHCb::RecVertices* pvcontainer = 
-        get<LHCb::RecVertices>(LHCb::RecVertexLocation::Primary) ;
-      
+    const LHCb::RecVertices* pvcontainer = 
+      getIfExists<LHCb::RecVertices>(LHCb::RecVertexLocation::Primary) ;
+    if ( NULL != pvcontainer ) {
       for( LHCb::RecVertices::const_iterator ipv = pvcontainer->begin() ;
            ipv != pvcontainer->end(); ++ipv ) {
 	
@@ -395,11 +393,6 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
 	
       }
     }
-
-
-
-
-
   }
    
   LHCb::HitPattern hitpattern( track.lhcbIDs()) ;
