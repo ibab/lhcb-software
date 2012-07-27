@@ -63,6 +63,7 @@ class HLTFileEqualizer
     int m_low;
     int m_high;
     DimInfo *m_DefStateInfo;
+    DimService *m_NodeList;
     std::set<std::string> m_enabledFarm;
     HLTFileEqualizer();
     void Analyze();
@@ -85,7 +86,9 @@ class LHCb1RunStatus : public DimInfo
   public:
     HLTFileEqualizer *m_equalizer;
     int m_nolink;
+    int m_state;
     LHCb1RunStatus(char *name, int nolink,HLTFileEqualizer *e);
     void infoHandler();
 };
+
 #endif /* HLTFILEEQUALIZER_H_ */

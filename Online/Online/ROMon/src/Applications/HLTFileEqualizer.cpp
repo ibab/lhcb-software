@@ -16,6 +16,7 @@ HLTFileEqualizer::HLTFileEqualizer()
   m_low = 0;
   m_high = 20;
   m_enabledFarm.clear();
+  m_NodeList = 0;
   for (row='b';row<='e';row++)
   {
     for (int rack=1;rack<=11;rack++)
@@ -222,6 +223,16 @@ void HLTFileEqualizer::Analyze()
   }
   fprintf(outf,"==================\n");
   fflush(outf);
+  std::string servdat;
+  for (myNodeMap::iterator nit=m_AllNodes.begin();nit != m_AllNodes.end();nit++)
+  {
+    myNode *nod = (*nit).second;
+    servdat += nod->m_name+" ";
+    char nfile[16];
+    sprintf(nfile,"%d|",nod->m_nofiles);
+    servdat += nfile;
+  }
+  m_NodeList->updateService((void*)servdat.c_str(),servdat.size());
   dim_unlock();
 }
 
@@ -458,13 +469,14 @@ LHCb1RunStatus::LHCb1RunStatus(char *name, int nolink,HLTFileEqualizer *e) : Dim
 
 void LHCb1RunStatus::infoHandler()
 {
-#define ALLOCATING 1
+#define READY 1
   int data;
   data = getInt();
-  if (data == ALLOCATING)
+  if ((m_state == 0) && (data == READY))
   {
     m_equalizer->Dump();
   }
+  m_state = data;
 };
 
 int main(int argc, char **argv)
@@ -495,6 +507,8 @@ int main(int argc, char **argv)
   elz.m_DefStateInfo = defstate;
   ExitCommand EnableandExit("HLTFileEqualizer/EnableAndExit",(char*)"I",&elz.m_AllNodes,&elz);
   LHCb1RunStatus LHCb1runstatus((char*)"RunInfo/LHCb1/RunStatus",-1,&elz);
+  DimService *m_NodeService = new DimService("HLTFileEqualizer/NodeList", "C",0,0);
+  elz.m_NodeList = m_NodeService;
   fflush(outf);
   while (1)
   {
