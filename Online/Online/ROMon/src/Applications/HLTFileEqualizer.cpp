@@ -223,17 +223,30 @@ void HLTFileEqualizer::Analyze()
   }
   fprintf(outf,"==================\n");
   fflush(outf);
-  std::string servdat;
+  m_servdat.erase();
   for (myNodeMap::iterator nit=m_AllNodes.begin();nit != m_AllNodes.end();nit++)
   {
     myNode *nod = (*nit).second;
-    servdat += nod->m_name+" ";
+    m_servdat += nod->m_name+" ";
     char nfile[16];
     sprintf(nfile,"%d|",nod->m_nofiles);
-    servdat += nfile;
+    m_servdat += nfile;
   }
-  servdat += '\0';
-  m_NodeList->updateService((void*)servdat.c_str(),servdat.size());
+  m_servdat += '\0';
+  m_NodeList->setData((void*)m_servdat.c_str(),m_servdat.size());
+  m_NodeList->updateService();
+  m_servdatDiff.erase();
+  for (myNodeMap::iterator nit=m_Nodes.begin();nit != m_Nodes.end();nit++)
+  {
+    myNode *nod = (*nit).second;
+    m_servdatDiff += nod->m_name+" ";
+    char nfile[16];
+    sprintf(nfile,"%d|",nod->m_nofiles);
+    m_servdatDiff += nfile;
+  }
+  m_servdatDiff += '\0';
+  m_NodeListDiff->setData((void*)m_servdat.c_str(),m_servdatDiff.size());
+  m_NodeListDiff->updateService();
   dim_unlock();
 }
 
@@ -333,7 +346,7 @@ void HLTFileEqualizer::Dump()
   }
 //  fprintf(outf,"\n");
   std::string cfarm="";
-  std::string eline(256,' ');
+  std::string eline(148,' ');
   std::string line=eline;
   for (myNodeMap::iterator nit=m_Nodes.begin();nit != m_Nodes.end();nit++)
   {
@@ -508,8 +521,9 @@ int main(int argc, char **argv)
   elz.m_DefStateInfo = defstate;
   ExitCommand EnableandExit("HLTFileEqualizer/EnableAndExit",(char*)"I",&elz.m_AllNodes,&elz);
   LHCb1RunStatus LHCb1runstatus((char*)"RunInfo/LHCb1/RunStatus",-1,&elz);
-  DimService *m_NodeService = new DimService("HLTFileEqualizer/NodeList", "C",0,0);
-  elz.m_NodeList = m_NodeService;
+  DimService *m_NodeService = new DimService("HLTFileEqualizer/NodeList", "C",(void*)"\0",1);
+  DimService *m_NodeServiceDiff = new DimService("HLTFileEqualizer/NodeListDiff", "C",(void*)"\0",1);
+  elz.m_NodeListDiff = m_NodeServiceDiff;
   fflush(outf);
   while (1)
   {

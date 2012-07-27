@@ -64,6 +64,9 @@ class HLTFileEqualizer
     int m_high;
     DimInfo *m_DefStateInfo;
     DimService *m_NodeList;
+    DimService *m_NodeListDiff;
+    std::string m_servdat;
+    std::string m_servdatDiff;
     std::set<std::string> m_enabledFarm;
     HLTFileEqualizer();
     void Analyze();
