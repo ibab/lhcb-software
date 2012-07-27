@@ -3,6 +3,16 @@ Package     : StrippingSys
 Package Coordinator : Jibo He, Anton Poluektov
 Purpose     : LHCb stripping packages
 
+!========================= StrippingSys v6r1 2012-07-27 =========================
+
+! 2012-07-27 - Anton Poluektov 
+  Release for Stripping19c. 
+  - StrippingSelections
+     * Fixes for setting VertexFitters property of CombineParticles instead of ParticleCombiners. 
+     * Fix a small configuration issue in StrippingTrackEffDownMuon
+  - StrippingConf - Print warning if public tool has non-default configuration
+  - StrippingSettings, StrippingArchive for Stripping19c
+
 !======================= StrippingSys v6r0 2012-07-09 =========================
 
 ! 2012-07-09 - Chris Jones
