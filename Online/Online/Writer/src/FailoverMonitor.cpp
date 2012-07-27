@@ -13,7 +13,7 @@
 #include "Writer/Connection.h"
 #include "Writer/Utils.h"
 
-#define MODFAILOVER 0
+#define MODFAILOVER 1
 #define NUM_NAME_RETRIES 10
 
 using namespace LHCb;

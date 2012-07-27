@@ -228,8 +228,7 @@ void MDFWriterNet::constructNet()
 	declareProperty("FileExtension", m_fileExtension = "raw");
 	declareProperty("StreamID", m_streamID = "NONE");
 	declareProperty("RunFileTimeoutSeconds", m_runFileTimeoutSeconds = 10);
-	declareProperty("RunFileTimeoutSecondsLHCb1", m_runFileTimeoutSecondsLHCb1
-			= 300);
+	declareProperty("RunFileTimeoutSecondsLHCb1", m_runFileTimeoutSecondsLHCb1 = 300);
 	declareProperty("MaxQueueSizeBytes", m_maxQueueSizeBytes = 1073741824);
 	declareProperty("EnableMD5", m_enableMD5 = false);
 	declareProperty("UpdatePeriod", m_UpdatePeriod = 2); //0 is no update
@@ -241,7 +240,7 @@ void MDFWriterNet::constructNet()
  */
 StatusCode MDFWriterNet::initialize(void)
 {
-	*m_log << MSG::INFO << " Writer " << getpid() << " Initializing." << endmsg;
+	*m_log << MSG::INFO << "Writer " << getpid() << " Initializing." << endmsg;
 
 	if (m_enableMD5)
 		*m_log << MSG::INFO << "MD5 sum on-the-fly computing enabled."
@@ -571,7 +570,7 @@ void MDFWriterNet::closeFile(File *currFile)
 
 	//////////////////
 	//Printing to check if the close command is queued
-	*m_log << MSG::INFO << WHERE << "Close command queued" << endmsg;
+	*m_log << MSG::INFO << WHERE << "Close command queued for file: " << currFile->getFileName() << endmsg;
 	//////////////////
 
 	if (currFile->getTrgEvents(trgEvents, MAX_TRIGGER_TYPES) != 0)
@@ -602,7 +601,7 @@ void MDFWriterNet::closeFile(File *currFile)
 			statEvents
 	);
 
-	*m_log << MSG::INFO << " Command: " << header.cmd << " " << "Filename: "
+	*m_log << MSG::INFO << WHERE << " Command: " << header.cmd << " " << "Filename: "
 			<< header.file_name << " " << "RunNumber: " << header.run_no << " "
 			<< "Seq Nr: " << header.data.chunk_data.seq_num << " " << "Size: "
 			<< header.data.stop_data.size << " " << "Adler32: "
@@ -712,7 +711,7 @@ void MDFWriterNet::closeFile(File *currFile)
 void MDFWriterNet::handle(const Incident& inc)
 {
 	*m_log << MSG::INFO << "Got incident:" << inc.source() << " of type "
-			<< inc.type() << endmsg;
+			<< inc.type() << "for Writer " << getpid() << endmsg;
 	if (inc.type() == "DAQ_CANCEL" /*||  inc.type() == "DAQ_ERROR"*/)
 	{
 		this->stopRetrying();
@@ -916,7 +915,7 @@ StatusCode MDFWriterNet::writeBuffer(void * const /*fd*/, const void *data,
 							> m_runFileTimeoutSeconds) {
 				// This file hasn't been written to in a loong time. Close it.
 				*m_log << MSG::INFO << WHERE
-						<< "Closing a file that did not get events for a long time now."
+						<< "Closing a file that did not get events for a long time now: " << tmpFile->getFileName()
 						<< endmsg;
 				File *toDelete = tmpFile;
 				closeFile(tmpFile);

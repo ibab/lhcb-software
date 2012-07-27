@@ -104,7 +104,7 @@ void Connection::connect() {
  */
 void Connection::closeConnection()
 {
-  *m_log << MSG::INFO << WHERE << " Closing connection with platypus."
+  *m_log << MSG::INFO << WHERE << " Closing connection with llamas."
          << endmsg;
 
   m_sendThread->stopAfterFinish();  /*Stop after all messages are sent.*/
@@ -299,7 +299,11 @@ void Connection::sendCommand(struct cmd_header *header, void *data)
       return;
   }
   if(newHeader != NULL) {
+	  if(header->cmd == CMD_CLOSE_FILE)
+		  l_log << MSG::INFO << WHERE << "Begin: enqueue stop command for file: " << header->file_name << endmsg;
       m_mmObj.enqueueCommand(newHeader);
+      if(header->cmd == CMD_CLOSE_FILE)
+    	  l_log << MSG::INFO << WHERE << "End: enqueue stop command for file: " << header->file_name << endmsg;
       if(failureCnt >= 30) {
           l_log << MSG::WARNING << "Event written after " << failureCnt << " second(s)." << endmsg;
       }

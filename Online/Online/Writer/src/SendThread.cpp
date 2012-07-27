@@ -131,7 +131,7 @@ int SendThread::processSends(void)
     ret = bif->nbSend(m_log);
     if(ret == totalSize) {
     	if ( cmd_to_send->cmd == CMD_CLOSE_FILE)
-    		 *m_log << MSG::INFO << "CLOSE CMD Send was successful" << endmsg;
+    		 *m_log << MSG::INFO << "CLOSE CMD Send was successful for file: " << cmd_to_send->file_name << endmsg;
 
 //      dbg_CountAgain=0;
 
@@ -153,6 +153,7 @@ int SendThread::processSends(void)
       }
     } else if(ret == BIF::AGAIN) {
           //*m_log << MSG::INFO << "send returned AGAIN: " << ++dbg_CountAgain  << endmsg;
+    	*m_log << MSG::INFO << "send returned: AGAIN: " << endmsg;
           nanosleep(&iSleep, NULL);
           if(iSleep.tv_sec < 1) {
               if(iSleep.tv_nsec >= 900000000) {
@@ -167,13 +168,17 @@ int SendThread::processSends(void)
       else {
           // *m_log << MSG::INFO << "send:  " << ret  << endmsg;
           // Unknown Error
-          //*m_log << MSG::INFO << "send returned:  " << ret << endmsg;
+          *m_log << MSG::INFO << "send returned:  " << ret << endmsg;
       }
   } while( (m_stopUrgently == false && m_stopAfterFinish == false) ||
-      (m_stopAfterFinish == true && cmd_to_send != NULL));
+      (m_stopUrgently == false && m_stopAfterFinish == true && cmd_to_send != NULL));
 
   if(bif)
     delete bif;
+  if(cmd_to_send != NULL)
+	  *m_log << MSG::INFO <<  WHERE << "m_stopUrgently = " << m_stopUrgently << " , m_stopAfterFinish = " << m_stopAfterFinish << " for filename = " << cmd_to_send->file_name << " :Exiting processSends()" << endmsg;
+  else
+	  *m_log << MSG::INFO <<  WHERE << "m_stopUrgently = " << m_stopUrgently << " , m_stopAfterFinish = " << m_stopAfterFinish << " , cmd_to_send is NULL, Exiting processSends()" << endmsg;
   return 0;
 }
 
