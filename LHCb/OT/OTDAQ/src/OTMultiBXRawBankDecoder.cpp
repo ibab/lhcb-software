@@ -239,24 +239,23 @@ StatusCode OTMultiBXRawBankDecoder::decodeAll() const
 {
   StatusCode sc = StatusCode::SUCCESS ;
   for( std::vector<std::string>::const_iterator ilocation = m_rawEventLocations.begin() ;
-       ilocation != m_rawEventLocations.end() && sc.isSuccess(); ++ilocation) 
-    if( !exist<LHCb::RawEvent>(*ilocation) ) {
-      // check if the raw event exists atthis location. issue a warning otherwise
+       ilocation != m_rawEventLocations.end() && sc.isSuccess(); ++ilocation) {
+    // Get the raw event if it exists at this location. Issue a warning otherwise
+    const LHCb::RawEvent* event = NULL;
+    event = getIfExists<LHCb::RawEvent>(evtSvc(),*ilocation);
+    if( NULL == event ) {
       Warning(std::string("No raw event buffer at location ") + *ilocation,
 	      StatusCode::SUCCESS,0).ignore() ;
     } else {
-      // get the raw event
-      const LHCb::RawEvent* event = get<LHCb::RawEvent>(*ilocation);
-
       // from the name of the location, get the time offset
       double eventoffset(0) ;
       size_t pos(0) ;
       if(       (pos= ilocation->find("Prev") ) != std::string::npos) {
-	int index = atoi( &((*ilocation)[pos+4]) ) ;
-	eventoffset = index * -25*Gaudi::Units::ns ;
+        int index = atoi( &((*ilocation)[pos+4]) ) ;
+        eventoffset = index * -25*Gaudi::Units::ns ;
       } else if( (pos= ilocation->find("Next") ) != std::string::npos) {
-	int index = atoi( &((*ilocation)[pos+4]) ) ;
-	eventoffset = index * 25*Gaudi::Units::ns ;
+        int index = atoi( &((*ilocation)[pos+4]) ) ;
+        eventoffset = index * 25*Gaudi::Units::ns ;
       }
       debug() << *ilocation << " ----> time offset = " << eventoffset << endmsg ;
       
@@ -264,39 +263,40 @@ StatusCode OTMultiBXRawBankDecoder::decodeAll() const
       sc = m_decoder->decodeGolHeaders( *event ) ;
       if( sc.isSuccess() ) {
 	// then get the hits
-	LHCb::OTLiteTimeContainer ottimes ;
-	sc = m_decoder->decode(ottimes) ;
-	if( sc.isSuccess() ) {
-	  // we could optimize this by asking for the hits per module,
-	  // but that's not worth it right now.
-	  for( LHCb::OTLiteTimeContainer::const_iterator ihit = ottimes.begin() ;
-	       ihit != ottimes.end(); ++ihit ) {
-	    // create a new hit, adjusting for the offset
-	    LHCb::OTLiteTime newhit( ihit->channel(), eventoffset + ihit->calibratedTime() ) ;
-	    // find the module
-	    LocalHelpers::ModuleHitData& module = m_hitdata->module( ihit->channel() ) ;
-	    // check that this hit is not yet there. if 'select earliest
-	    // is set', we replace the previous hit if the new hit is
-	    // earlier. if not, we allow hits with different time to
-	    // co-exist.
-	    LHCb::OTLiteTimeContainer::iterator jhit = module.begin() ;
-	    if( m_selectEarliestHit ) {
-	      for( ; jhit != module.end() && 
-		     newhit.channel().straw() != jhit->channel().straw() ; ++jhit) {}
-	      if( jhit != module.end() &&
-		  jhit->calibratedTime() > newhit.calibratedTime() )
-		*jhit = newhit ;
-	    } else {
-	      for( ; jhit != module.end() && 
-		     !(newhit.channel().straw() == jhit->channel().straw() &&
-		       std::abs( jhit->calibratedTime() - newhit.calibratedTime() )<1) ; ++jhit){}
-	    }
-	    if( jhit == module.end() )
-	      module.push_back( newhit ) ;
-	  }
-	}
+        LHCb::OTLiteTimeContainer ottimes ;
+        sc = m_decoder->decode(ottimes) ;
+        if( sc.isSuccess() ) {
+          // we could optimize this by asking for the hits per module,
+          // but that's not worth it right now.
+          for( LHCb::OTLiteTimeContainer::const_iterator ihit = ottimes.begin() ;
+               ihit != ottimes.end(); ++ihit ) {
+            // create a new hit, adjusting for the offset
+            LHCb::OTLiteTime newhit( ihit->channel(), eventoffset + ihit->calibratedTime() ) ;
+            // find the module
+            LocalHelpers::ModuleHitData& module = m_hitdata->module( ihit->channel() ) ;
+            // check that this hit is not yet there. if 'select earliest
+            // is set', we replace the previous hit if the new hit is
+            // earlier. if not, we allow hits with different time to
+            // co-exist.
+            LHCb::OTLiteTimeContainer::iterator jhit = module.begin() ;
+            if( m_selectEarliestHit ) {
+              for( ; jhit != module.end() && 
+                     newhit.channel().straw() != jhit->channel().straw() ; ++jhit) {}
+              if( jhit != module.end() &&
+                  jhit->calibratedTime() > newhit.calibratedTime() )
+                *jhit = newhit ;
+            } else {
+              for( ; jhit != module.end() && 
+                     !(newhit.channel().straw() == jhit->channel().straw() &&
+                       std::abs( jhit->calibratedTime() - newhit.calibratedTime() )<1) ; ++jhit){}
+            }
+            if( jhit == module.end() )
+              module.push_back( newhit ) ;
+          }
+        }
       }
     }
+  }
   m_hitdata->setIsDecoded( true ) ;
   return sc ;
 }

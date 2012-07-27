@@ -41,6 +41,11 @@ DECLARE_ALGORITHM_FACTORY( OTFillEventFromOTTime )
 OTFillEventFromOTTime::OTFillEventFromOTTime( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
+  , m_time(NULL)
+  , dataContainer(NULL)
+  , goldatacontainer(NULL)
+  , finalBuf(NULL)
+  , aBank(NULL)
   //Fixed Numbers of Banks and of Gols
   , numberOfBanks(48)
   , numberOfGols(9)

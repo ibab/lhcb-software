@@ -589,10 +589,8 @@ StatusCode OTRawBankDecoder::decodeGolHeaders() const
   // Retrieve the RawEvent:
   LHCb::RawEvent* raw = NULL;
   for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
-    if (exist<LHCb::RawEvent>(*p)){
-      raw = get<LHCb::RawEvent>(*p);
-      break;
-    }
+    raw = getIfExists<LHCb::RawEvent>(evtSvc(),*p);
+    if (NULL != raw) break;
   }
 
   if( raw == NULL ) {
@@ -652,10 +650,8 @@ StatusCode OTRawBankDecoder::decode( OTDAQ::RawEvent& otrawevent ) const
   // Retrieve the RawEvent:
   LHCb::RawEvent* event = NULL;
   for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
-    if (exist<LHCb::RawEvent>(*p)){
-      event = get<LHCb::RawEvent>(*p);
-      break;
-    }
+    event = getIfExists<LHCb::RawEvent>(evtSvc(),*p);
+    if( NULL != event ) break;
   }
 
   if( event == NULL ) return Error("Failed to find raw data");

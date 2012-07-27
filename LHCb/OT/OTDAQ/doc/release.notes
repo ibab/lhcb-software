@@ -3,6 +3,10 @@
 ! Package manager : A.Kozlinskiy
 !------------------------------------------------------------------------------
 
+! 2012-07-27 - Marco Cattaneo
+ - Replace separate exist<>() + get<>() calls with getIfExists
+ - Fix more UNINIT_CTOR defects
+
 !========================= OTDAQ v7r13 2012-06-25 =========================
 ! 2012-06-13 - Marco Cattaneo
  - Fix unprotected debug

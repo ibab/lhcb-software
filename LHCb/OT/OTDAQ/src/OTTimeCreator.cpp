@@ -33,6 +33,7 @@ DECLARE_ALGORITHM_FACTORY( OTTimeCreator )
 //=============================================================================
 OTTimeCreator::OTTimeCreator(const std::string& name, ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
+    m_tracker(NULL),
     m_decoder("OTRawBankDecoder")
 {
   declareProperty( "OutputLocation", m_timeLocation = OTTimeLocation::Default );
