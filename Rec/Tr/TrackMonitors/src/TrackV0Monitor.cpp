@@ -97,7 +97,7 @@ StatusCode TrackV0Monitor::initialize()
 StatusCode TrackV0Monitor::finalize()
 {
   m_vertexer.release().ignore() ;
-  return GaudiHistoAlg::initialize() ;
+  return GaudiHistoAlg::finalize() ;
 }
   
 void TrackV0Monitor::process( const LHCb::TwoProngVertex& vertex, 
