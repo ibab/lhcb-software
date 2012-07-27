@@ -17,6 +17,7 @@ HLTFileEqualizer::HLTFileEqualizer()
   m_high = 20;
   m_enabledFarm.clear();
   m_NodeList = 0;
+  m_NodeListDiff = 0;
   for (row='b';row<='e';row++)
   {
     for (int rack=1;rack<=11;rack++)
@@ -522,6 +523,7 @@ int main(int argc, char **argv)
   ExitCommand EnableandExit("HLTFileEqualizer/EnableAndExit",(char*)"I",&elz.m_AllNodes,&elz);
   LHCb1RunStatus LHCb1runstatus((char*)"RunInfo/LHCb1/RunStatus",-1,&elz);
   DimService *m_NodeService = new DimService("HLTFileEqualizer/NodeList", "C",(void*)"\0",1);
+  elz.m_NodeList= m_NodeService;
   DimService *m_NodeServiceDiff = new DimService("HLTFileEqualizer/NodeListDiff", "C",(void*)"\0",1);
   elz.m_NodeListDiff = m_NodeServiceDiff;
   fflush(outf);
