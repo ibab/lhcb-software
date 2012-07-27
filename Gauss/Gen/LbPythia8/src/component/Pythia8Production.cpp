@@ -224,7 +224,7 @@ StatusCode Pythia8Production::initializeGenerator( ) {
   m_beamTool->getMeanBeams( pBeam1 , pBeam2 ) ;  
   // retrieve Gaudi particle property service
   LHCb::IParticlePropertySvc* ppSvc( 0 ) ;
-  try { ppSvc = svc< LHCb::IParticlePropertySvc > ( "Gaudi::ParticlePropertySvc" , 
+  try { ppSvc = svc< LHCb::IParticlePropertySvc > ( "LHCb::ParticlePropertySvc" , 
                                               true ) ; }
   catch ( const GaudiException & exc ) {
     Exception( "Cannot open ParticlePropertySvc to fill EvtGen" , exc ) ;
