@@ -347,8 +347,9 @@ void HLTFileEqualizer::Dump()
   }
 //  fprintf(outf,"\n");
   std::string cfarm="";
-  std::string eline(256,'\0');
+  std::string eline(256,' ');
   std::string line=eline;
+//  int maxidx = -1;
   for (myNodeMap::iterator nit=m_Nodes.begin();nit != m_Nodes.end();nit++)
   {
     myNode *nod = (*nit).second;
@@ -356,7 +357,7 @@ void HLTFileEqualizer::Dump()
     {
       if (cfarm.size()>2)
       {
-        fprintf(outf,"\n%s",line.c_str());
+        fprintf(outf,"\n%s",line.substr(0,line.find_last_not_of(" ")).c_str());
       }
       line = eline;
       line.replace(0,nod->m_subfarm.size(),nod->m_subfarm);
