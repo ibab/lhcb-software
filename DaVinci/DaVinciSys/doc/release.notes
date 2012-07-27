@@ -3,6 +3,19 @@ Package             : DaVinciSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v32r1>2012-07-27 DaVinci v32r1</A></H1><PRE>
+
+New production release. For Stripping 19c.
+
+Executive Summary :-
+
+- Decay Tree Fitters
+ . Add options to constrain mass to something else than the PDG mass
+
+- LoKi
+ . Fix a bug in LoKi::Particles::IsMuon::muonPID which could result in a 
+   random uninitialised value of the Status Word being used.
+
 </PRE><H1><A NAME=v32r0>2012-07-09 DaVinci v32r0</A></H1><PRE>
 
 New development release. To test major changes to core DaVinci
