@@ -161,7 +161,6 @@ int MCFTDigitCreator::deposit2ADC(const LHCb::MCFTDeposit* ftdeposit)
 {
   /// Compute energy sum
   // TODO :
-  // - attenuation of the signal along the fibre
   // - add noise 
   double energySum = 0;
   std::vector<std::pair <LHCb::MCHit*,double> >::const_iterator vecIter= ftdeposit->mcHitVec().begin();

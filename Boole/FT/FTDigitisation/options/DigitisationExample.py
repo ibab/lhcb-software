@@ -22,17 +22,19 @@ Datasetname="Bs_mumu_v4_nu20"
 
 EventSelector().Input = ["DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/o/ogruenbe/"+Datasetname+".sim?svcClass=default' TYP='POOL_ROOTTREE' OPT='READ'"]
 Boole().DatasetName = Datasetname+"_EC"
-
+#Boole().OutputLevel = DEBUG
 Boole().DetectorDigi = {'VELO':[], 'MUON':[], 'RICH':[], 'TT':[], 'IT':[], 'L0':[], 'CALO':[], 'OT':[]}
 Boole().LinkSequence = ['FT' ]
 Boole().DetectorMoni = {'VELO':[], 'MUON':[], 'RICH':[], 'TT':[], 'IT':[], 'L0':[], 'CALO':[], 'OT':[],'MC':[]}
 Boole().Outputs = []
+
 
 myAlgDeposit = MCFTDepositCreator()
 #myAlgDeposit.OutputLevel = DEBUG
 
 
 myAlgDigit = MCFTDigitCreator()
+myAlgDigit.SiPMGain = 5
 #myAlgDigit.OutputLevel = DEBUG
 
 

@@ -76,7 +76,7 @@ StatusCode MCFTDigitMonitor::execute() {
     
     plot2D(EnergySum, mcDigit->adcCount(), "DigADCCountvsEnergy",
            "ADC count vs deposited energy [Channel level]; Deposited energy [MeV]; ADC count" ,
-           0. , 5. , 0 , 20);
+           0. , 5. ,100, 0. , 20., 20);
   }
 
   return StatusCode::SUCCESS;

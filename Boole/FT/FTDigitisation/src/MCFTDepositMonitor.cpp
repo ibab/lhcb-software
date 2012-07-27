@@ -31,9 +31,9 @@ DECLARE_ALGORITHM_FACTORY( MCFTDepositMonitor )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-MCFTDepositMonitor::MCFTDepositMonitor( const std::string& name,
-                                        ISvcLocator* pSvcLocator)
-  : GaudiHistoAlg ( name , pSvcLocator )
+  MCFTDepositMonitor::MCFTDepositMonitor( const std::string& name,
+                                          ISvcLocator* pSvcLocator)
+    : GaudiHistoAlg ( name , pSvcLocator )
 {
   declareProperty("HitLocation" , m_hitLocation = LHCb::MCHitLocation::FT, "Path to  MCHits");
   declareProperty("DepositLocation" , m_depositLocation =  LHCb::MCFTDepositLocation::Default, "Path to MCFTDeposits");
@@ -77,17 +77,54 @@ StatusCode MCFTDepositMonitor::execute() {
     //pointer to the Hit
     MCHit* ftHit = *iterHit;
 
-    plot(ftHit->energy(),"DepEnergyPerHit", "Energy deposited [Hit level]; Energy [MeV];Number of hits" , 0 , 10 );  
+    plot(ftHit->energy(),"CheckEnergyPerHit", "Energy deposited [Hit level]; Energy [MeV];Number of hits" , 0 , 10 );  
 
     // ( call of calculateHits method) 
     const DeFTLayer* pL = m_deFT->findLayer(ftHit->midPoint());
-    FTDoublePairs vectCF;
+    FTDoublePairs energyDistribution;
+    
+    double fibrelengh =0 ;
+    double fibrelenghfraction = 0;
+
     if (pL) {
-      pL->calculateHits(ftHit->entry(), ftHit->exit(), vectCF);
+      if(pL->calculateHits(ftHit, energyDistribution)){
+        
+
+        plot(pL->angle()*180/M_PI,"CheckStereoAngle","Stereo Angle; Stereo Angle [#degree];" ,-10 , 10);
+        plot(pL->layerInnerHoleRadius(),"CheckHoleRadius","Hole Radius ; Hole Radius  [mm];" ,50 , 150);
+        plot(pL->layerMaxY(),"CheckLayerHalfSizeY","Layer Half Size Y ; Layer Half Size Y  [mm];" ,3000 , 3100);
+
+        if(pL->hitPositionInFibre(ftHit, fibrelengh,fibrelenghfraction)){
+        
+          plot(fibrelengh,"CheckFibreLengh","FibreLengh; Sci. Fibre Lengh [mm]; Nber of Events" ,2900 ,3100);
+          plot(fibrelenghfraction,"CheckFibreFraction","FibreFraction; Sci. Fibre Fraction ; Nber of Events" ,0 ,1);
+    
+          // Attenuation :
+          double AttLengh = 3300;
+          double AttFactor = 0.5 * ( 1 + exp( (-2.) * fibrelengh * (1 - fibrelenghfraction) / AttLengh))
+            / exp(  fibrelengh * fibrelenghfraction  /AttLengh)
+            ;
+          plot(AttFactor,"CheckAttFactor","AttFactorDistrib; Attenuation factor ; Nber of Events" ,0 ,1);
+        
+        }
+      
+ 
+    
+        plot(energyDistribution.size(),"CheckNbChannel", 
+             "Number of fired channels per Hit; Number of fired channels; Number of hits" , 
+             0 , 100);
+      
+        FTDoublePairs::const_iterator vecIter;
+        for(vecIter = energyDistribution.begin(); vecIter != energyDistribution.end(); ++vecIter){
+          // checks layer is physical layer
+          if ( vecIter->first.layer() < 15 ) {
+            plot(vecIter->second,"CheckEnergyPerCell","CheckEnergyPerCell; Energy in Cell ; Nber of Channels" ,0. ,10);
+          }
+          
+        }
+      }
+    
     }
-    plot(vectCF.size(),"DepNbChannel", 
-         "Number of fired channels per Hit; Number of fired channels; Number of hits" , 
-         0 , 100);
   }
   
   // retrieve FTDeposits
@@ -101,12 +138,23 @@ StatusCode MCFTDepositMonitor::execute() {
 
     std::vector<std::pair<LHCb::MCHit*,double> >::const_iterator energyPerHit = (*iterDeposit)->mcHitVec().begin();
     
-    for(;energyPerHit != (*iterDeposit)->mcHitVec().end(); ++energyPerHit)
+    for(;energyPerHit != (*iterDeposit)->mcHitVec().end(); ++energyPerHit){
+      
       plot(energyPerHit->second,
            "DepEnergyPerChannel",
            "Energy deposited [Channel level];Energy [MeV];Number of SiPM channels", 
+           0, 100);
+      plot(energyPerHit->second,
+           "DepEnergyPerChannelZoom",
+           "Energy deposited [Channel level];Energy [MeV];Number of SiPM channels", 
            0, 10);
-
+      plot(energyPerHit->second,
+           "DepEnergyPerChannelBigZoom",
+           "Attenuation correction factor[Channel level]; Attenuation correction factor;Number of SiPM channels", 
+           //"Energy deposited [Channel level];Energy [MeV];Number of SiPM channels", 
+           0, 1);
+    }
+    
   }
 
 

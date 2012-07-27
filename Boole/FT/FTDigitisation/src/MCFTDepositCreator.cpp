@@ -1,15 +1,17 @@
-//-----------------------------------------------------------------------------
-// Implementation file for class : MCFTDepositCreator
-//
-// 2012-04-04 : COGNERAS Eric
-//-----------------------------------------------------------------------------
+/** @file MCFTDepositCreator.cpp
+ *
+ *  Implementation of class : MCFTDepositCreator
+ *
+ *  @author COGNERAS Eric
+ *  @date   2012-06-05
+ */
+
 // Include files
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
-// from Event
-#include "Event/MCHit.h"
+
 
 // FTDet
 #include "FTDet/DeFTDetector.h"
@@ -37,9 +39,11 @@ MCFTDepositCreator::MCFTDepositCreator( const std::string& name,
 {
   declareProperty("InputLocation" , m_inputLocation = LHCb::MCHitLocation::FT, "Path to input MCHits");
   declareProperty("OutputLocation" , m_outputLocation =  LHCb::MCFTDepositLocation::Default, "Path to output MCDeposits");
+  declareProperty("FibreAttenuationLengh" , m_attenuationLengh = 3300 , 
+                  "Distance along the fibre to divide the light amplitude by a factor e");
 }
 //=============================================================================
-// Destructor
+// Destructo
 //=============================================================================
 MCFTDepositCreator::~MCFTDepositCreator() {}
 
@@ -114,51 +118,55 @@ StatusCode MCFTDepositCreator::execute() {
 
 
 
-    // Get the list of fired FTChannel from the (x,y,z) position of the hit, with, for each FTChannel, 
-    // the relative distance to the middle of the cell of the barycentre of the (entry point, endpoint) system : 
-    // ( call of calculateHits method) 
+    // Get the list of fired FTChannel from the (x,y,z) position of the hit, with, 
+    // for each FTChannel, the relative distance to the middle of the cell of the barycentre 
+    // of the (entry point, endpoint) system : 
+    // ( call of calculateHits method from DeFTLayer) 
     const DeFTLayer* pL = m_deFT->findLayer(ftHit->midPoint());
-    FTDoublePairs vectCF;
+    FTDoublePairs ChannelEnergy;
+    double fibrelengh = 0;
+    double fibrelenghfraction = 0;
+   
     if (pL) {
-      pL->calculateHits(ftHit->entry(), ftHit->exit(), vectCF);
-    }
 
-    if ( msgLevel( MSG::DEBUG) ) {
-      debug() << "--- Hit index: " << ftHit->index() << ", size of vector of channels: "
-              << vectCF.size() << endmsg;
-    }
+      if(pL->calculateHits(ftHit, ChannelEnergy)){
+        
+        pL->hitPositionInFibre(ftHit, fibrelengh,fibrelenghfraction);
+      
     
-    //plot(vectCF.size(),"DepNbChannel", 
-    //     "Number of fired channels per Hit; Number of fired channels; Number of hits" , 
-    //     0 , 100);
- 
-    // Definition of the FTDoublePairs whose double-value corresponds to the energy fraction deposited in the FTChannel
-    FTDoublePairs vectCE;
 
-    // test if position fraction to energy fraction conversion succeeded. 
-    // If true, create/update the energy deposited in FTChannels
-    if(relativeXFractionToEnergyFraction(vectCF,vectCE)){
-      FTDoublePairs::const_iterator vecIter;
-      for(vecIter = vectCE.begin(); vecIter != vectCE.end(); ++vecIter){
-        if ( msgLevel( MSG::DEBUG) ){
-          debug()  << "FTChannel = " << vecIter->first << " EnergyHitFraction = " << vecIter->second << endmsg;
+        if ( msgLevel( MSG::DEBUG) ) {
+          debug() << "--- Hit index: " << ftHit->index() << ", size of vector of channels: "
+                  << ChannelEnergy.size() << endmsg;
         }
-        //plot((double)vecIter->first, "DepFiredChannel","Fired Channel; ChannelID" , 0. , 1000000., 10000);
-        //plot(ftHit->energy()*vecIter->second,
-        //     "DepEnergyPerChannel",
-        //     "Energy deposited [Channel level];Energy [MeV];Number of SiPM channels", 
-        //     0, 10);
-        // if reference to the channelID already exists, just add (hit energy * energy fraction)
-        if( depositCont->object(vecIter->first) != 0 ){
-          (depositCont->object(vecIter->first))->addMCHit(ftHit,ftHit->energy()*vecIter->second);
+
+        // Apply attenuation factor on the deposited energy according to the light-path along the fibre
+        ApplyAttenuationAlongFibre(fibrelengh,fibrelenghfraction,ChannelEnergy);
+
+        // Fill MCFTDeposit
+        FTDoublePairs::const_iterator vecIter;
+        for(vecIter = ChannelEnergy.begin(); vecIter != ChannelEnergy.end(); ++vecIter){
+          double EnergyInSiPM = vecIter->second;
+
+          if ( msgLevel( MSG::DEBUG) ){
+            debug()  << "FTChannel=" << vecIter->first << " EnergyHitFraction="<< EnergyInSiPM << endmsg;
+          }
+        
+
+          // if reference to the channelID already exists, just add DepositedEnergy
+          if( depositCont->object(vecIter->first) != 0 ){
+            (depositCont->object(vecIter->first))->addMCHit(ftHit,EnergyInSiPM);
+          }
+          // else, create a new fired channel but ignore fake cells, i.e. not readout, i.e. layer 15
+          else if ( vecIter->first.layer() < 15 ) {
+            MCFTDeposit *energyDeposit = new MCFTDeposit(vecIter->first,ftHit,EnergyInSiPM);
+            depositCont->insert(energyDeposit,vecIter->first);
+          }
         }
-        // else, create a new fired channel but ignore fake cells, i.e. not readout, i.e. layer 15
-        else if ( vecIter->first.layer() < 15 ) {
-          MCFTDeposit *energyDeposit = new MCFTDeposit(vecIter->first,ftHit,ftHit->energy()*vecIter->second);
-          depositCont->insert(energyDeposit,vecIter->first);
-        }
-      }
-    } // end if(relativeXFractionToEnergyFraction(...
+      }// end if(pL->calculateHit)
+      
+    }// end if(pL)
+    
   }
 
   return StatusCode::SUCCESS;
@@ -173,28 +181,24 @@ StatusCode MCFTDepositCreator::finalize() {
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
-//=============================================================================
-// relativeXFractionToEnergyFraction : this function converts ouput from 
-// DeFTLayer::calculateHits method [relative distance to the FTChannel midpoint 
-// of the barycentre of the (hit entry point, hit end point) system, in each FTChannel] 
-// in the energy fraction deposited in each FTChannel
-//=============================================================================
-StatusCode MCFTDepositCreator::relativeXFractionToEnergyFraction(const FTDoublePairs& positionPair, FTDoublePairs& energyPair) {
-  double positionSum = positionPair.size();
 
-  for(FTDoublePairs::const_iterator vecIter = positionPair.begin(); vecIter != positionPair.end(); ++vecIter){
-    positionSum -= 2*std::abs(vecIter->second);
-  }
-  for(FTDoublePairs::const_iterator vecIter = positionPair.begin(); vecIter != positionPair.end(); ++vecIter){
-    if ( msgLevel( MSG::DEBUG) ) {
-      debug()  << "FTChannel = " << vecIter->first << " RelativeXFraction = " << vecIter->second
-               << " CellFraction = " << 1-2*std::abs(vecIter->second)
-               << " positionSum=" << positionSum
-               << endmsg;
-    }
-    energyPair.push_back(std::make_pair(vecIter->first,((1-2*std::abs(vecIter->second))/positionSum)));
-  }
 
-  // test on the vector size. Is there something more reliable ???
-  return (energyPair.size() == positionPair.size());
+//=============================================================================
+//:ApplyAttenuationAlongFibre : this function simulates the attenuation of the 
+// light through the fibre appling a correction factor on the deposited energy.
+// This correction is based on the lengh of the fibre and the relative position
+// of the hit wrt the SiPM position.
+//
+//=============================================================================
+StatusCode MCFTDepositCreator::ApplyAttenuationAlongFibre(const double fibrelengh, 
+                                                          const double fibrefraction, 
+                                                          FTDoublePairs& fibreenergy){
+  for(FTDoublePairs::iterator i = fibreenergy.begin(); i != fibreenergy.end(); ++i){
+    double AttCoeff = 0.5 * ( 1 + exp( (-2.) * fibrelengh * (1 - fibrefraction) / m_attenuationLengh))
+      / exp(  fibrelengh * fibrefraction / m_attenuationLengh);
+    i->second *= AttCoeff;
+  }
+  return StatusCode::SUCCESS;
 }
+
+

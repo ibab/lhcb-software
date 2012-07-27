@@ -72,8 +72,11 @@ StatusCode FTClusterMonitor::execute() {
     plot(cluster->size(),"ClusSize", "Cluster Size; Cluster Size" , 0 , 100);
     // draw cluster total adc charge
     plot(cluster->charge(),"ClusCharge","Cluster Charge; Cluster Charge" , 0 , 100);
+    plot(cluster->charge(),"ClusChargeZoom","Cluster Charge (Zoom); Cluster Charge" , 0. , 16., 16);
 
-
+   plot2D(cluster->size(), cluster->charge(), "ClusChargevsSize",
+           "Cluster Charge vs. Cluster Size; Cluster Charge [ADC counts]; Cluster size [Nb of Channels]" ,
+           0. , 16. ,16, 0. , 100., 100);
 
   }
 

@@ -4,9 +4,6 @@
  *  with the total energy deposited in each of them, and store it in the 
  *  transient data store.
  *
- *  TO DO :
- *  - include signal attenuation along the fibre as a function of the z-position of the Hit
- *  - light sharing between adjacent fibres
  *
  *  @author COGNERAS Eric
  *  @date   2012-06-05
@@ -18,6 +15,9 @@
 // Include files
 /// from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
+
+// from Event
+#include "Event/MCHit.h"
 
 // LHCbKernel
 #include "Kernel/FTChannelID.h"
@@ -41,21 +41,34 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
+  /** This function apply attenuation factor according to the path of the light through the fibre.
+      @param fibrelengh : full lengh of the fibre
+      @param fibrefraction : relative position of the hit in the fibre wrt the SiPM position
+      @param fibreenergy : energy deposited in the fibre, where the attenuation facor is applied
+      @return true if successful
+  */
+  StatusCode ApplyAttenuationAlongFibre(const double fibrelengh, 
+                                        const double fibrefraction, 
+                                        FTDoublePairs& fibreenergy);
 
-protected:
+  /** This function apply attenuation factor according to the path of the light through the fibre.
+      @param fibrelengh : full lengh of the fibre
+      @param fibrefraction : relative position of the hit in the fibre wrt the SiPM position
+      @param fibreenergy : energy deposited in the fibre, where the attenuation facor is applied
+      @return true if successful
+  */
+  StatusCode ApplyAttenuationAlongFibre(const FTDoublePairs& fibrelengh, 
+                                        const FTDoublePairs& fibrefraction, 
+                                        FTDoublePairs& fibreenergy);
+  
 
 private:
 
   std::string m_inputLocation;  ///< FT MCHits Location
   std::string m_outputLocation; ///< FT energy deposit Location
-  
+  double m_attenuationLengh; ///< Attenuation lengh of the light along the fibre
+
   DeFTDetector* m_deFT; ///< pointer to FT detector description
-  
-
-
-
-  /// Conversion from relative X-position Fraction To Energy Fraction
-  StatusCode relativeXFractionToEnergyFraction(const FTDoublePairs& positionPair, FTDoublePairs& energyPair);
   
 };
 #endif // MCFTDEPOSITCREATOR_H
