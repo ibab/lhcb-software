@@ -48,7 +48,7 @@ class SFarm
 class DefHltInfoHandler;
 typedef std::map<std::string,myNode*> myNodeMap;
 typedef std::map<std::string,std::list<std::pair<std::string,int> > > myActionMap; //list of nodes per subfarm to execute an action on.
-
+typedef std::set<std::string> NodeSet;
 class HLTFileEqualizer
 {
   public:
@@ -67,7 +67,8 @@ class HLTFileEqualizer
     DimService *m_NodeListDiff;
     std::string m_servdat;
     std::string m_servdatDiff;
-    std::set<std::string> m_enabledFarm;
+    NodeSet m_enabledFarm;
+    NodeSet m_recvNodes;
     HLTFileEqualizer();
     void Analyze();
     void Dump();

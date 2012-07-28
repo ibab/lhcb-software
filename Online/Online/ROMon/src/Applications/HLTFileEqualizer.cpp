@@ -236,9 +236,12 @@ void HLTFileEqualizer::Analyze()
   m_NodeList->setData((void*)m_servdat.c_str(),m_servdat.size());
   m_NodeList->updateService();
   m_servdatDiff.erase();
-  for (myNodeMap::iterator nit=m_Nodes.begin();nit != m_Nodes.end();nit++)
+  for (NodeSet::iterator nit=m_recvNodes.begin();nit != m_recvNodes.end();nit++)
   {
-    myNode *nod = (*nit).second;
+    std::string nname;
+    nname = *nit;
+    myNodeMap::iterator nodeit = m_AllNodes.find(nname);
+    myNode *nod = (*nodeit).second;
     char nfile[32];
     sprintf(nfile,"%s %d|",nod->m_name.c_str(),nod->m_nofiles);
     m_servdatDiff += nfile;
@@ -246,6 +249,7 @@ void HLTFileEqualizer::Analyze()
   m_servdatDiff += '\0';
   m_NodeListDiff->setData((void*)m_servdatDiff.c_str(),m_servdatDiff.size());
   m_NodeListDiff->updateService();
+  m_recvNodes.clear();
   dim_unlock();
 }
 
@@ -272,6 +276,7 @@ void DefHltInfoHandler::infoHandler()
     nname = (*i).name;
     myNodeMap::iterator nit;
     myNodeMap::iterator anit;
+    m_Equalizer->m_recvNodes.insert(nname);
     anit = m_Equalizer->m_AllNodes.find(nname);
     if (anit == m_Equalizer->m_AllNodes.end())
     {
@@ -396,21 +401,9 @@ public:
   for (nit = m_nodemap->begin();nit != m_nodemap->end();nit++)
   {
     Actions[(*nit).second->m_subfarm].push_back(std::make_pair((*nit).first,StateValue));
-//      std::string svcname;
-//      std::string node = (*nit).first;
-//      toUpperCase(node);
-//      svcname = node+"_MEPRx_01/setOverflow";
-////      DimClient::sendCommand(svcname.c_str(), (*i).second);
-//      char cmd[1024];
-//      sprintf(cmd,"dim_send_command.exe %s %d -dns %s -s -i&",svcname.c_str(),1,(*nit).second->m_subfarm.c_str());
-//      ::system(cmd);
   }
   for (fit = Actions.begin();fit!=Actions.end();fit++)
   {
-//      if (!m_enabledFarm.empty() && (m_enabledFarm.find((*fit).first) == m_enabledFarm.end()))
-//      {
-//        continue;
-//      }
     std::list<std::pair<std::string,int> >::iterator i;
     std::string sf_mesg = "";
     std::string endisSvc;
@@ -433,8 +426,6 @@ public:
     DimClient::sendCommandNB(endisSvc.c_str(),(void*)(sf_mesg.c_str()),sf_mesg.size());
 //    printf("message to Subfarm %s:\n%s\n",(*fit).first.c_str(),sf_mesg.c_str());
   }
-//  ::sleep(5);
-//  ::exit(0);
 }
 
   void enableAll()
