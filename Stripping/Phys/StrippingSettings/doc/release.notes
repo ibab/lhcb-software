@@ -3,7 +3,10 @@
 ! Responsible : Stripping coordinators
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
-!========================= StrippingSettings v2r15 2012-07-27 =========================
+!========================= StrippingSettings v2r15 2012-07-28 =========================
+
+! 2012-07-28 - Anton Poluektov 
+ - Add dbase/stripping19c forgotten in the previous commit 
 
 ! 2012-07-27 - Anton Poluektov 
  - Stripping19c configuration. 
