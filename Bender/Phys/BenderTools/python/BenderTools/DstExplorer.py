@@ -220,8 +220,10 @@ def configure ( options , arguments ) :
         ## try to use the latest available tags:
         #
         from Configurables import CondDB    
-        CondDB ( UseLatestTags = [ options.DataType ] )
-        logger.info('Use latest tags for %s' % options.DataType )
+        ## CondDB ( UseLatestTags = [ options.DataType ] )
+        ## logger.info('Use latest tags for %s' % options.DataType )
+        CondDB( LatestGlobalTagByDataType = options.DataType ) 
+        logger.info('Use latest global tag for data type %s' % options.DataType )
         import os 
         if options.UseOracle and os.environ.has_key('LHCBGRIDSYSROOT') :
             if os.environ.has_key('LHCBGRIDCONFIGROOT') :

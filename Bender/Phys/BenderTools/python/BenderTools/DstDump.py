@@ -159,14 +159,21 @@ if '__main__' == __name__ :
         DataOnDemandSvc   ( Dump = False , OutputLevel = 6 )
         msg.setFatal += [ 'DataOnDemandSvc' ] 
         
-    msg.setFatal += ['RootCnvSvc'          ,
-                     'IOManagerSvc'        ,
-                     'RootHistSvc'         ,
-                     'LHCb::RawDataCnvSvc' ]
+    msg.setFatal += [ 'RootCnvSvc'          ,
+                      'IOManagerSvc'        ,
+                      'RootHistSvc'         ,
+                      'LHCb::RawDataCnvSvc' ]
     
     if options.Simulation : from Bender.MainMC   import *
     else                  : from Bender.Main     import *
-    
+
+
+
+    root = options.RootInTES
+    ## guess a bit about structure 
+    ##if not options.RootInTES :
+    ##    if hasInFile ( arguments , 'EW.DST' ) :
+            
     #
     ## instantiate the application manager
     #
@@ -197,10 +204,10 @@ if '__main__' == __name__ :
         ##
         iEvent += 1
         #
-        nodes = evtSvc.nodes ( node      = options.RootInTES ,
-                               forceload = True              )
+        nodes = evtSvc.nodes ( node      = root ,
+                               forceload = True )
         if not nodes :
-            logger.warning ( "No nodes are selected for Root:'%s'" % options.RootInTES )
+            logger.warning ( "No nodes are selected for Root:'%s'" % root  )
 
         nodes = set ( nodes ) 
         links = set ()

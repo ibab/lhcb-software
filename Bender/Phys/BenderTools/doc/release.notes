@@ -5,6 +5,15 @@
 ! Purpose     : colelctoon of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! 2012-07-29 - Vanya Belyaev
+ - for all scripts :
+
+      CondDB ( UseLatestTags = [ ... ] )
+
+   replaced by  (many thanks to Il'ya Shapoval) 
+
+      CondDB( LatestGlobalTagByDataType = ... ) 
+
 ! 2012-07-18 - Vanya Belyaev
  - improve TisTos 
 
