@@ -13,4 +13,9 @@ if stdout.find(expected_string) == -1:
     causes.append('missing string')
     result['GaudiTest.expected_string'] = result.Quote(expected_string)
 </text></argument>
+  <argument name="unsupported_platforms"><set>
+		<text>i686.*</text>
+		<text>win.*</text>
+		<text>slc4_ia32.*</text>
+  </set></argument>
 </extension>
