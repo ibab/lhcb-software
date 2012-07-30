@@ -22,40 +22,4 @@ private
 document obj2doth FTEventObj2Doth ../xml/*.xml
 document obj2dict FTEventObj2Dict ../xml/*.xml
 
-public
-#library          FTEvent         ../src/*.cpp
-#library          FTEventDict     ../dict/*.cpp
-
-#============================================================================
-# define library link options
-#============================================================================
-#apply_pattern component_library library=FTEventDict
-#apply_pattern linker_library	library=FTEvent
-#macro_append FTEvent_linkopts  "" WIN32 "/include:_FTEvent_loadRef" 
-
-private
 use GaudiObjDesc v*
-
-
-
-##package FT/FTEvent
-
-##version v1r1
-
-##branches Event cmt src
-
-##include_path none
-
-##use GSL                 v*    LCG_Interfaces
-##use GaudiKernel         v*
-##use GaudiAlg   v*
-##use LHCbKernel              v*    Kernel
-##use MCEvent v* Event
-
-
-##apply_pattern install_more_includes more=Event
-
-
-### ================= component library ====================
-##library FTEvent ../src/*.cpp 
-##apply_pattern component_library library=FTEvent

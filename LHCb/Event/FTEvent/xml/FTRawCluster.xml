@@ -34,9 +34,9 @@
 
       <attribute type='bitfield' name='rawCluster' desc='raw Cluster'               setMeth="FALSE" getMeth="FALSE">
         <bitfield name='channelID' length='20' desc='channelID'                     setMeth="FALSE" getMeth="FALSE"/>
-        <bitfield name='fraction'  length='3' desc='Interpolation as 1/8th'         setMeth="FALSE" getMeth="FALSE"/>
+        <bitfield name='fraction'  length='2' desc='Interpolation as 1/8th'         setMeth="FALSE" getMeth="FALSE"/>
         <bitfield name='size'      length='4' desc='number of cells in the cluster' setMeth="FALSE" getMeth="TRUE"/>
-        <bitfield name='charge'    length='5' desc='scaled ADC sum'                 setMeth="FALSE" getMeth="TRUE"/>
+        <bitfield name='charge'    length='6' desc='scaled ADC sum'                 setMeth="FALSE" getMeth="TRUE"/>
       </attribute>
 
       <constructor desc    = "Constructor" 
@@ -66,7 +66,7 @@
               access = "PUBLIC"
               desc   = "returns the fraction of channel"
               const  = "TRUE">
-        <code> return 0.125 * ( ( m_rawCluster &amp; fractionMask ) &gt;&gt; fractionBits ); </code>
+        <code> return 0.25 * ( ( m_rawCluster &amp; fractionMask ) &gt;&gt; fractionBits ); </code>
       </method>
 
     </class>
