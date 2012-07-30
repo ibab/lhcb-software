@@ -3,6 +3,7 @@
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+!========================= CondDBUI v3r17 2012-07-30 =========================
 ! 2012-07-24 - Illya Shapoval
  - CondDBAdmin_Commit.py and CondDBAdmin_GlobalTag.py:
    Switching the release_notes.xml location detection from using SQLDDDBROOT to
