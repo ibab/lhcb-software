@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : FT/FTDigitisation
+! Responsible : Eric Cogneras
+! Purpose     : Digitize the FT hits
+!-----------------------------------------------------------------------------
+
+! 2012-07-30 - Olivier Callot
+ - From Eric's version, I cleaned-up a bit the code.
+ - Implement proper computation of number of photo-electrons

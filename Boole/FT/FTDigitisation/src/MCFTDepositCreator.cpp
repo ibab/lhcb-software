@@ -11,8 +11,6 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
-
-
 // FTDet
 #include "FTDet/DeFTDetector.h"
 
@@ -37,9 +35,9 @@ MCFTDepositCreator::MCFTDepositCreator( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-  declareProperty("InputLocation" , m_inputLocation = LHCb::MCHitLocation::FT, "Path to input MCHits");
-  declareProperty("OutputLocation" , m_outputLocation =  LHCb::MCFTDepositLocation::Default, "Path to output MCDeposits");
-  declareProperty("FibreAttenuationLengh" , m_attenuationLengh = 3300 , 
+  declareProperty("InputLocation" ,  m_inputLocation  = LHCb::MCHitLocation::FT, "Path to input MCHits");
+  declareProperty("OutputLocation" , m_outputLocation = LHCb::MCFTDepositLocation::Default, "Path to output MCDeposits");
+  declareProperty("AttenuationLength" , m_attenuationLength = 3300 * Gaudi::Units::mm, 
                   "Distance along the fibre to divide the light amplitude by a factor e");
 }
 //=============================================================================
@@ -61,12 +59,8 @@ StatusCode MCFTDepositCreator::initialize() {
     debug() << ": OutputLocation is " <<m_outputLocation << endmsg;
   }
   
-  /// Retrieve and initialize DeFT
+  /// Retrieve and initialize DeFT (no test: exception in case of failure)
   m_deFT = getDet<DeFTDetector>( DeFTDetectorLocation::Default );
-  if (m_deFT) { debug() << "Successfully retrieved DeFT" << endmsg; }
-  else { error() << "Error getting DeFT" << endmsg; }
-
-
   return StatusCode::SUCCESS;
 }
 
@@ -81,7 +75,7 @@ StatusCode MCFTDepositCreator::execute() {
 
   // retrieve Hits
   const MCHits* mcHitsCont = get<MCHits>(m_inputLocation);
-  debug() <<"mcHitsCont->size() : " << mcHitsCont->size()<< endmsg;
+  debug() << "mcHitsCont->size() : " << mcHitsCont->size()<< endmsg;
 
   // define deposits container
   MCFTDeposits *depositCont = new MCFTDeposits();
@@ -89,18 +83,13 @@ StatusCode MCFTDepositCreator::execute() {
   // register MCSTDeposits in the transient data store
   put(depositCont, m_outputLocation );
 
-  // loop over MChits
-  int debugloopCounter =0; // to be removed once code validated
+  for ( MCHits::const_iterator iterHit = mcHitsCont->begin(); iterHit!=mcHitsCont->end();++iterHit){
 
-  MCHits::const_iterator iterHit = mcHitsCont->begin();
-  for (; iterHit!=mcHitsCont->end();++iterHit){
-
-    //pointer to the Hit
-    MCHit* ftHit = *iterHit;
+    MCHit* ftHit = *iterHit;     //pointer to the Hit
 
     // DEBUG printing
     if ( msgLevel( MSG::DEBUG) ) {
-      debug() <<"debugloopCounter="<<debugloopCounter<< " XYZ=[" << ftHit->entry() << "][" << ftHit->midPoint()
+      debug() << " XYZ=[" << ftHit->entry() << "][" << ftHit->midPoint()
               << "][" << ftHit->exit ()<< "]\tE="<< ftHit->energy()
               << "\ttime="<< ftHit->time()<< "\tP="<<ftHit->p()
               << endmsg;
@@ -113,10 +102,6 @@ StatusCode MCFTDepositCreator::execute() {
                  << endmsg; 
       }
     }
-    ++debugloopCounter;
-
-
-
 
     // Get the list of fired FTChannel from the (x,y,z) position of the hit, with, 
     // for each FTChannel, the relative distance to the middle of the cell of the barycentre 
@@ -124,16 +109,14 @@ StatusCode MCFTDepositCreator::execute() {
     // ( call of calculateHits method from DeFTLayer) 
     const DeFTLayer* pL = m_deFT->findLayer(ftHit->midPoint());
     FTDoublePairs ChannelEnergy;
-    double fibrelengh = 0;
-    double fibrelenghfraction = 0;
+    double fibreLength = 0;
+    double fibreLengthfraction = 0;
    
-    if (pL) {
+    if ( pL) {
 
-      if(pL->calculateHits(ftHit, ChannelEnergy)){
+      if( pL->calculateHits( ftHit, ChannelEnergy)){
         
-        pL->hitPositionInFibre(ftHit, fibrelengh,fibrelenghfraction);
-      
-    
+        pL->hitPositionInFibre(ftHit, fibreLength, fibreLengthfraction );    
 
         if ( msgLevel( MSG::DEBUG) ) {
           debug() << "--- Hit index: " << ftHit->index() << ", size of vector of channels: "
@@ -141,11 +124,11 @@ StatusCode MCFTDepositCreator::execute() {
         }
 
         // Apply attenuation factor on the deposited energy according to the light-path along the fibre
-        ApplyAttenuationAlongFibre(fibrelengh,fibrelenghfraction,ChannelEnergy);
+        applyAttenuationAlongFibre( fibreLength, fibreLengthfraction, ChannelEnergy );
 
         // Fill MCFTDeposit
         FTDoublePairs::const_iterator vecIter;
-        for(vecIter = ChannelEnergy.begin(); vecIter != ChannelEnergy.end(); ++vecIter){
+        for( vecIter = ChannelEnergy.begin(); vecIter != ChannelEnergy.end(); ++vecIter){
           double EnergyInSiPM = vecIter->second;
 
           if ( msgLevel( MSG::DEBUG) ){
@@ -156,9 +139,8 @@ StatusCode MCFTDepositCreator::execute() {
           // if reference to the channelID already exists, just add DepositedEnergy
           if( depositCont->object(vecIter->first) != 0 ){
             (depositCont->object(vecIter->first))->addMCHit(ftHit,EnergyInSiPM);
-          }
-          // else, create a new fired channel but ignore fake cells, i.e. not readout, i.e. layer 15
-          else if ( vecIter->first.layer() < 15 ) {
+          } else if ( vecIter->first.layer() < 15 ) {
+            // else, create a new fired channel but ignore fake cells, i.e. not readout, i.e. layer 15
             MCFTDeposit *energyDeposit = new MCFTDeposit(vecIter->first,ftHit,EnergyInSiPM);
             depositCont->insert(energyDeposit,vecIter->first);
           }
@@ -180,25 +162,21 @@ StatusCode MCFTDepositCreator::finalize() {
   debug() << "==> Finalize" << endmsg;
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
-
-
-
 //=============================================================================
 //:ApplyAttenuationAlongFibre : this function simulates the attenuation of the 
 // light through the fibre appling a correction factor on the deposited energy.
 // This correction is based on the lengh of the fibre and the relative position
 // of the hit wrt the SiPM position.
-//
+// Attenuation: Half the light is direct, half after reflection (assumes 100% reflection efficiency)
 //=============================================================================
-StatusCode MCFTDepositCreator::ApplyAttenuationAlongFibre(const double fibrelengh, 
-                                                          const double fibrefraction, 
-                                                          FTDoublePairs& fibreenergy){
-  for(FTDoublePairs::iterator i = fibreenergy.begin(); i != fibreenergy.end(); ++i){
-    double AttCoeff = 0.5 * ( 1 + exp( (-2.) * fibrelengh * (1 - fibrefraction) / m_attenuationLengh))
-      / exp(  fibrelengh * fibrefraction / m_attenuationLengh);
-    i->second *= AttCoeff;
+void MCFTDepositCreator::applyAttenuationAlongFibre( const double fibreLength, 
+                                                     const double fibreFraction, 
+                                                     FTDoublePairs& fibreEnergy){
+  double attenuation = fibreLength / m_attenuationLength;
+  double attCoeff = .5 * ( exp( - attenuation * fibreFraction ) + exp( - attenuation * ( 2 - fibreFraction )));
+  for( FTDoublePairs::iterator i = fibreEnergy.begin(); i != fibreEnergy.end(); ++i){
+    i->second *= attCoeff;
   }
-  return StatusCode::SUCCESS;
 }
 
 

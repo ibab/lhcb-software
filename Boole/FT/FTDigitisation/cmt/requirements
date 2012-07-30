@@ -2,16 +2,16 @@ package FT/FTDigitisation
 
 version v1r0
 
-branches cmt src options
+branches cmt src options doc
 
 include_path none
 
 use GSL                 v*    LCG_Interfaces
 use GaudiKernel         v*
 use GaudiAlg            v*
-use FTDet               v*   Det
-use FTEvent               v*    Event
-use LinkerEvent        v*    Event
+use FTDet               v*    Det
+use FTEvent             v*    Event
+use LinkerEvent         v*    Event
 use MCEvent             v*    Event
 
 

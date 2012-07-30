@@ -31,11 +31,10 @@ MCFTDigitCreator::MCFTDigitCreator( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-  declareProperty("InputLocation" , m_inputLocation = LHCb::MCFTDepositLocation::Default, "Path to input MCDeposits");
-  declareProperty("OutputLocation" , m_outputLocation = LHCb::MCFTDigitLocation::Default, "Path to output MCDigits");
-  declareProperty("MeanPhotoElectronPerMeV",m_meanPhotoElectronPerMeV=20,"Poisson Law Exp. Value for photoelectron production");
-  declareProperty("SiPMGain",m_sipmGain = 1,"Gain of SiPM");
-
+  declareProperty("InputLocation" ,       m_inputLocation        = LHCb::MCFTDepositLocation::Default );
+  declareProperty("OutputLocation" ,      m_outputLocation       = LHCb::MCFTDigitLocation::Default   );
+  declareProperty("PhotoElectronsPerMeV", m_photoElectronsPerMeV = 200. );
+  declareProperty("SiPMGain",             m_sipmGain             =   1. );
 }
 //=============================================================================
 // Destructor
@@ -54,14 +53,6 @@ StatusCode MCFTDigitCreator::initialize() {
     debug() << ": OutputLocation is " <<m_outputLocation << endmsg;
   }
   
-  // Random Service definition : call Poisson distribution
-  StatusCode sc3 = m_pePoissonDist.initialize(randSvc(), 
-                                              Rndm::Poisson(m_meanPhotoElectronPerMeV));
-  if(!sc3){
-    error() << "Random number init failure" << endmsg;
-    return sc3;
-  }
-
   return StatusCode::SUCCESS;
 }
 
@@ -98,9 +89,9 @@ StatusCode MCFTDigitCreator::execute() {
     double EnergySum = 0;
     for(;vecIter != mcDeposit->mcHitVec().end(); ++vecIter){
       if ( msgLevel( MSG::DEBUG) ) {
-        debug() <<" aHit->midPoint().x()="<<vecIter->first->midPoint().x()<< " \tE= " <<vecIter->second
-                << " \tfrom PDGId= " <<vecIter->first->mcParticle()->particleID()
-                << endmsg;
+        debug() << format( " aHit->midPoint().x()=%10.3f E=%10.3f from MCParticle %5d",
+                           vecIter->first->midPoint().x(), vecIter->second, 
+                           vecIter->first->mcParticle()->key() ) << endmsg;
       }
       mcParticleMap[vecIter->first->mcParticle()] += vecIter->second;
       EnergySum += vecIter->second;
@@ -108,28 +99,11 @@ StatusCode MCFTDigitCreator::execute() {
 
     // Define & store digit
     // The deposited energy to ADC conversion is made by the deposit2ADC method
-
-    MCFTDigit *mcDigit = new MCFTDigit(mcDeposit->channelID(),deposit2ADC(mcDeposit),mcParticleMap);
-    digitCont->insert(mcDigit);
-  }
-
-
-
-  // TEST : print Digit content before sorting
-  for (MCFTDigits::const_iterator iterDigit = digitCont->begin(); iterDigit!=digitCont->end();++iterDigit){
-    MCFTDigit* mcDigit = *iterDigit;
-    if ( msgLevel( MSG::DEBUG) ) {
-      debug() <<"Channel ="<<mcDigit->channelID()<< " : " <<"\t ADC ="<<mcDigit->adcCount() << endmsg;
-      if(iterDigit > digitCont->begin()){
-        debug() <<"Previous Channel " << (mcDigit-1)->channelID()<<" is "
-                << (((mcDigit-1)->channelID() < mcDigit->channelID()) ? "lower" : "greater")
-                <<" than current channel "<< mcDigit->channelID()<< endmsg;
-        debug() <<"and  " 
-                << (((*(mcDigit-1)) < *mcDigit) ? "lower" : "greater")
-                << endmsg;
-      }
+    int adc = deposit2ADC(mcDeposit);
+    if ( 0 < adc ) {
+      MCFTDigit *mcDigit = new MCFTDigit(mcDeposit->channelID(), adc, mcParticleMap );
+      digitCont->insert(mcDigit);
     }
-    
   }
 
   // Digits are sorted according to there ChannelID to prepare the clusterisation stage
@@ -137,9 +111,9 @@ StatusCode MCFTDigitCreator::execute() {
   std::stable_sort( digitCont->begin(), digitCont->end(), LHCb::FTSortingFunctor::LessByChannel<MCFTDigit*>());
 
   // TEST : print Digit content after sorting
-  for (MCFTDigits::const_iterator iterDigit = digitCont->begin(); iterDigit!=digitCont->end();++iterDigit){
-    MCFTDigit* mcDigit = *iterDigit;
-    if ( msgLevel( MSG::DEBUG) ) {
+  if ( msgLevel( MSG::DEBUG) ) {
+    for (MCFTDigits::const_iterator iterDigit = digitCont->begin(); iterDigit!=digitCont->end();++iterDigit){
+      MCFTDigit* mcDigit = *iterDigit;
       debug() <<"Channel ="<<mcDigit->channelID()<< " : " 
               <<"\t ADC ="<<mcDigit->adcCount() << endmsg;
     } 
@@ -169,13 +143,18 @@ int MCFTDigitCreator::deposit2ADC(const LHCb::MCFTDeposit* ftdeposit)
   }
 
   // Convert energy sum in adc count
-  // First implementation for pe to ADC according to poisson Law
-  int randPE = m_pePoissonDist();
-  int adcCount = int(randPE * energySum * m_sipmGain);
+  // Compute the expected number of photoelectron, draw a poisson with that mean, and convert to ADC counts
+
+  double averagePhotoElectrons = energySum * m_photoElectronsPerMeV;
+  Rndm::Numbers poisson;
+  poisson.initialize(randSvc(), Rndm::Poisson( averagePhotoElectrons ) );
+  int photoElectrons = poisson();
+  int adcCount = int( photoElectrons * m_sipmGain );
+  
   if( msgLevel( MSG::DEBUG) ){
-    debug() <<format("deposit2ADC() : energySum=%5f; randPE=%4i; Gain=%4i; adcCount = %4i",energySum,randPE,m_sipmGain,adcCount)
+    debug() <<format("deposit2ADC() : energySum=%8.3f averagePE=%8.2f realPE %4i Gain=%8.3f adcCount = %4i",
+                     energySum, averagePhotoElectrons, photoElectrons, m_sipmGain, adcCount)
             << endmsg;
   }
-
   return adcCount;
 }

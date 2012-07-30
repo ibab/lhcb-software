@@ -34,12 +34,11 @@ DECLARE_ALGORITHM_FACTORY( FTClusterCreator )
                                       ISvcLocator* pSvcLocator)
     : GaudiAlgorithm ( name , pSvcLocator )
 {
-  declareProperty("InputLocation" , m_inputLocation = LHCb::MCFTDigitLocation::Default, "Path to input MCDigits");
-  declareProperty("OutputLocation" , m_outputLocation =  LHCb::FTClusterLocation::Default, "Path to output Clusters");
-  declareProperty("ADCThreshold" , m_adcThreshold = 1 , "Minimal ADC Count to be added in cluster");
-  declareProperty("ClusterMaxWidth" , m_clusterMaxWidth= 8 , "Maximal allowed width for clusters");
+  declareProperty("InputLocation" ,    m_inputLocation    = LHCb::MCFTDigitLocation::Default, "Path to input MCDigits");
+  declareProperty("OutputLocation" ,   m_outputLocation   = LHCb::FTClusterLocation::Default, "Path to output Clusters");
+  declareProperty("ADCThreshold" ,     m_adcThreshold     = 1 , "Minimal ADC Count to be added in cluster");
+  declareProperty("ClusterMaxWidth" ,  m_clusterMaxWidth  = 8 , "Maximal allowed width for clusters");
   declareProperty("ClusterMinCharge" , m_clusterMinCharge = 2 , "Minimal charge to keep cluster");
-  declareProperty("ClusterMaxCharge" , m_clusterMaxCharge = 8 , "Maximal charge to keep cluster");
 }
 //=============================================================================
 // Destructor
@@ -161,8 +160,8 @@ StatusCode FTClusterCreator::execute() {
       meanPosition =(*seedDigitIter)->channelID() + meanPosition/totalCharge;
 
 
-      // Checks that total ADC charge of the cluster is within the defined range
-      if((totalCharge > m_clusterMinCharge)&&(totalCharge < m_clusterMaxCharge)){
+      // Checks that total ADC charge of the cluster is over threshold
+      if( totalCharge > m_clusterMinCharge ) {
         
         // Define Cluster(channelID, fraction, width, charge)  and save it
         int meanChanPosition = std::floor(meanPosition);
@@ -178,9 +177,9 @@ StatusCode FTClusterCreator::execute() {
         for(std::map<const LHCb::MCParticle*,double>::iterator i = mcContributionMap.begin(); i != mcContributionMap.end(); ++i){
           myLink.link(newCluster, (i->first), (i->second)/totalEnergyFromMC ) ;
           if ( msgLevel( MSG::DEBUG) ) {
-            debug() << "SHOULD CREATE LINKER WITH : ClusterChannel=" << newCluster->channelID()
-                    << " MCIndex="<<i->first->index()
-                    <<" EnergyFraction=" << (i->second)/totalEnergyFromMC
+            debug() << "Linked ClusterChannel=" << newCluster->channelID()
+                    << " to MCIndex="<<i->first->index()
+                    << " with EnergyFraction=" << (i->second)/totalEnergyFromMC
                     << endmsg;
           }
         }

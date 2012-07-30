@@ -42,10 +42,6 @@ private:
   unsigned int m_clusterMaxWidth;   ///< Maximal Width for clusters
 
   unsigned int m_clusterMinCharge;   ///<Minimal total ADC to store the cluster
-  unsigned int m_clusterMaxCharge;   ///<Maximal total ADC to store the cluster
-
-
-
 };
 #endif // FTCLUSTERCREATOR_H
 

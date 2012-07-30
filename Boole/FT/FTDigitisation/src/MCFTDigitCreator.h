@@ -47,10 +47,8 @@ private:
   std::string m_inputLocation;///< FT energy deposit Location
   std::string m_outputLocation;///< FT digit Location
 
-  int m_meanPhotoElectronPerMeV; ///< mean number of photoelectrons produced per deposited MeV
-  int m_sipmGain; ///< SiPM gain
+  double m_photoElectronsPerMeV; ///< mean number of photoelectrons produced per deposited MeV
+  double m_sipmGain; ///< SiPM gain
 
-  Rndm::Numbers m_pePoissonDist; ///< random number of photoelectrons
-  
 };
 #endif // MCFTDIGITCREATOR_H

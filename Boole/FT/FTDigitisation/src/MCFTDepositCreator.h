@@ -45,30 +45,17 @@ public:
       @param fibrelengh : full lengh of the fibre
       @param fibrefraction : relative position of the hit in the fibre wrt the SiPM position
       @param fibreenergy : energy deposited in the fibre, where the attenuation facor is applied
-      @return true if successful
   */
-  StatusCode ApplyAttenuationAlongFibre(const double fibrelengh, 
-                                        const double fibrefraction, 
-                                        FTDoublePairs& fibreenergy);
-
-  /** This function apply attenuation factor according to the path of the light through the fibre.
-      @param fibrelengh : full lengh of the fibre
-      @param fibrefraction : relative position of the hit in the fibre wrt the SiPM position
-      @param fibreenergy : energy deposited in the fibre, where the attenuation facor is applied
-      @return true if successful
-  */
-  StatusCode ApplyAttenuationAlongFibre(const FTDoublePairs& fibrelengh, 
-                                        const FTDoublePairs& fibrefraction, 
-                                        FTDoublePairs& fibreenergy);
-  
+  void applyAttenuationAlongFibre(const double fibrelengh, 
+                                  const double fibrefraction, 
+                                  FTDoublePairs& fibreenergy);
 
 private:
 
-  std::string m_inputLocation;  ///< FT MCHits Location
-  std::string m_outputLocation; ///< FT energy deposit Location
-  double m_attenuationLengh; ///< Attenuation lengh of the light along the fibre
+  std::string m_inputLocation;     ///< FT MCHits Location
+  std::string m_outputLocation;    ///< FT energy deposit Location
+  double      m_attenuationLength; ///< Attenuation lengh of the light along the fibre
 
-  DeFTDetector* m_deFT; ///< pointer to FT detector description
-  
+  DeFTDetector* m_deFT; ///< pointer to FT detector description  
 };
 #endif // MCFTDEPOSITCREATOR_H
