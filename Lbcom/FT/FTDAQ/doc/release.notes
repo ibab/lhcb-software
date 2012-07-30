@@ -4,6 +4,10 @@
 ! Purpose     : Code/Decode the FT raw data
 !-----------------------------------------------------------------------------
 
+! 2012-07-30 - Olivier Callot
+ - Change the number of bits for fraction, form 3 to 2.
+ - Adjust the coding code accordingly: Use this number correcty for coding too.
+
 ! 2012-06-12 - Olivier Callot
  - Re-implementation of the coder, using Kurt Rinnert's suggestion,
    with a 3 dimension array.
