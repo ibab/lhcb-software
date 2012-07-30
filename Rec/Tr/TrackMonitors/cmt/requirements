@@ -3,7 +3,7 @@
 # Maintainer : Wouter Hulsbergen
 #============================================================================
 package           TrackMonitors
-version           v1r39
+version           v1r40
 
 #============================================================================
 # Structure, i.e. directories to process. 
