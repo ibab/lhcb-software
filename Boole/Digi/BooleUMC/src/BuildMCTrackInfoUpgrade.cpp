@@ -6,21 +6,25 @@
 #include "Event/MCParticle.h"
 #include "Event/MCHit.h"
 #include "Event/VeloCluster.h"
+#include "Event/VLCluster.h"
 #include "Event/VeloPixCluster.h"
 #include "Event/STCluster.h"
 #include "Event/OTTime.h" /// Needed for path of table
 #include "Event/MCOTTime.h"
+#include "Event/FTCluster.h"
 
 #include "Linker/LinkedTo.h"
 #include "Event/MCProperty.h"
 
 // Det
 #include "VeloDet/DeVelo.h"
+#include "VLDet/DeVL.h"
 #include "VeloPixDet/DeVeloPix.h"
 #include "STDet/DeSTDetector.h"
 #include "OTDet/DeOTStation.h"
 #include "OTDet/DeOTDetector.h"
 #include "OTDet/DeOTLayer.h"
+#include "FTDet/DeFTDetector.h"
 
 // local
 #include "BuildMCTrackInfoUpgrade.h"
@@ -41,15 +45,18 @@ BuildMCTrackInfoUpgrade::BuildMCTrackInfoUpgrade( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
   , m_velo(0)
+  , m_vlDet(0)
   , m_veloPix(0)
   , m_ttDet(0)
   , m_itDet(0)
   , m_otDet(0)
 {
-  declareProperty( "WithPixel", m_withPixel = false );
-  declareProperty( "WithIT",    m_withIT    = true  );
-  declareProperty( "WithOT",    m_withOT    = true  );
-  declareProperty( "WithFT",    m_withFT    = false );
+  declareProperty( "WithVelo",  m_withVelo  = false );
+  declareProperty( "WithVP",    m_withVP    = false );
+  declareProperty( "WithVL",    m_withVL    = false );
+  declareProperty( "WithIT",    m_withIT    = false );
+  declareProperty( "WithOT",    m_withOT    = false );
+  declareProperty( "WithFT",    m_withFT    = true  );
 }
 //=============================================================================
 // Destructor
@@ -65,19 +72,28 @@ StatusCode BuildMCTrackInfoUpgrade::initialize() {
 
   if(msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
 
-  if( m_withPixel ) {
-    m_veloPix = getDet<DeVeloPix>( DeVeloPixLocation::Default );
-  } else {
-    m_velo  = getDet<DeVelo>( DeVeloLocation::Default );
+  if ( !(m_withVelo||m_withVP||m_withVL) ) {
+    error() << "At least one of Velo, VL or VP is needed !" << endmsg;
+    return StatusCode::FAILURE;
   }
+  if ( (m_withVelo&&m_withVL) || (m_withVelo&&m_withVP) || (m_withVL&&m_withVP) ) {
+    error() << "Only one of Velo, VP and VL allowed !" << endmsg;
+    return StatusCode::FAILURE;
+  }  
+
+  if ( m_withVP ) m_veloPix = getDet<DeVeloPix>( DeVeloPixLocation::Default );
+  if ( m_withVL   ) m_vlDet = getDet<DeVL>( DeVLLocation::Default );
+  if ( m_withVelo ) m_velo  = getDet<DeVelo>( DeVeloLocation::Default );
   m_ttDet = getDet<DeSTDetector>(DeSTDetLocation::TT );  
   if ( m_withIT ) m_itDet = getDet<DeSTDetector>(DeSTDetLocation::IT );
   if ( m_withOT ) m_otDet = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
+  if ( m_withFT ) m_ftDet = getDet<DeFTDetector>(DeFTDetectorLocation::Default );
 
   if(msgLevel(MSG::DEBUG)) {
     debug() << "Number of TT layers " << m_ttDet->layers().size() << endmsg;
     if ( m_withIT ) debug() << "Number of IT layers " << m_itDet->layers().size() << endmsg;
     if ( m_withOT ) debug() << "Number of OT layers " << m_otDet->layers().size() << endmsg;
+    if ( m_withFT ) debug() << "Number of FT layers " << m_ftDet->layers().size() << endmsg;
   }
   
   return StatusCode::SUCCESS;
@@ -117,7 +133,7 @@ StatusCode BuildMCTrackInfoUpgrade::execute() {
   LHCb::MCParticle* part;
   unsigned int MCNum;
   
-  if ( !m_withPixel ) {    //== particle-> VeloDigit links
+  if ( m_withVelo ) {    //== particle-> VeloDigit links
     LHCb::VeloClusters* veloClus = get<LHCb::VeloClusters>( LHCb::VeloClusterLocation::Default);
     LinkedTo<LHCb::MCParticle, LHCb::VeloCluster> veloLink( eventSvc(), msgSvc(), 
                                                             LHCb::VeloClusterLocation::Default );
@@ -147,7 +163,37 @@ StatusCode BuildMCTrackInfoUpgrade::execute() {
         part = veloLink.next() ;
       }
     }
-  } else {
+  } else if ( m_withVL ) {    //== particle-> VLDigit links
+    LHCb::VLClusters* vlClus = get<LHCb::VLClusters>( LHCb::VLClusterLocation::Default);
+    LinkedTo<LHCb::MCParticle, LHCb::VLCluster> vlLink( eventSvc(), msgSvc(), 
+                                                        LHCb::VLClusterLocation::Default );
+    if( vlLink.notFound() ) return StatusCode::FAILURE;
+  
+    for ( LHCb::VLClusters::const_iterator vIt = vlClus->begin() ;
+        vlClus->end() != vIt ; vIt++ ) {
+      int sensor = (*vIt)->channelID().sensor();
+      const DeVLSensor* sens = m_vlDet->sensor(sensor);
+      part = vlLink.first( *vIt );
+      while ( NULL != part ) {
+        if ( mcParts == part->parent() ) {  //== PArticle from the current spill. key is ALWAYS <= highestKey !
+          MCNum = part->key();
+          if ( sensor != lastVelo[MCNum] ) {  // Count only once per sensor a given MCParticle
+            lastVelo[MCNum] = sensor;
+            if ( sens->isR() ) {
+              veloR[MCNum]++;
+              if(isVerbose)
+                verbose() << "MC " << MCNum << " VL R sensor " << sensor << " nbR " << veloR[MCNum] << endmsg;
+            } else if ( sens->isPhi() ) {
+              veloPhi[MCNum]++;
+              if(isVerbose)
+                verbose() << "MC " << MCNum << " VL Phi sensor " << sensor << " nbPhi " << veloPhi[MCNum] << endmsg;
+            }
+          }
+        }
+        part = vlLink.next() ;
+      }
+    }
+  } else if ( m_withVP ) {
     LHCb::VeloPixClusters* veloPixClus = get<LHCb::VeloPixClusters>( LHCb::VeloPixClusterLocation::VeloPixClusterLocation);
     LinkedTo<LHCb::MCParticle, LHCb::VeloPixCluster> veloPixLink( eventSvc(), msgSvc(),
                                                                   LHCb::VeloPixClusterLocation::VeloPixClusterLocation );
@@ -242,7 +288,27 @@ StatusCode BuildMCTrackInfoUpgrade::execute() {
     }
   }
 
-  if ( m_withFT ) {  //=== Fibre Tracker ,to be done...
+  if ( m_withFT ) {  //=== Fibre Tracker
+    const LHCb::FTClusters* ftClus = get<LHCb::FTClusters>(LHCb::FTClusterLocation::Default);
+    LinkedTo<LHCb::MCParticle> ftLink( eventSvc(), msgSvc(), LHCb::FTClusterLocation::Default );
+    if( ftLink.notFound() ) return StatusCode::FAILURE;
+    
+    
+    for ( LHCb::FTClusters::const_iterator cIt = ftClus->begin(); ftClus->end() != cIt ; cIt++ ) {
+      // FT has just layers, from 0 to 11. Create station = layer/4 + 2 to be in the range 2-4
+      int sta   = (*cIt)->channelID().layer()/4 + 2;
+      int lay   = (*cIt)->channelID().layer() %4;     
+      bool isX  = (0==lay) || (3==lay);
+      part = ftLink.first( (*cIt)->channelID() );
+      while ( NULL != part ) {
+        if ( mcParts == part->parent() ) {
+          MCNum = part->key();
+          updateBit( station[MCNum], sta, isX );
+          if(isVerbose) verbose() << "MC " << MCNum << " FT Sta " << sta << " lay " << lay << endmsg;
+        }
+        part = ftLink.next() ;
+      }
+    }
   }  
 
   //=====================================================================
@@ -256,17 +322,15 @@ StatusCode BuildMCTrackInfoUpgrade::execute() {
         mcParts->end() != itP; itP++ ) {
     MCNum = (*itP)->key();    
     int mask = station[MCNum];    
-    if ( m_withPixel ) {
+    if ( m_withVP ) {
       if (  2 < veloPix[MCNum] ) mask |= MCTrackInfo::maskHasVelo;
       if ( 15 < veloPix[MCNum] ) veloPix[MCNum]   = 15;
-
       mask |= (veloPix[MCNum]  <<MCTrackInfo::multVeloR );
     } else {
       if (  2 < veloR[MCNum]   ) mask |= MCTrackInfo::maskVeloR;
       if (  2 < veloPhi[MCNum] ) mask |= MCTrackInfo::maskVeloPhi;
       if ( 15 < veloR[MCNum]   ) veloR[MCNum]   = 15;
       if ( 15 < veloPhi[MCNum] ) veloPhi[MCNum] = 15;
-      
       mask |= (veloR[MCNum]  <<MCTrackInfo::multVeloR );
       mask |= (veloPhi[MCNum]<<MCTrackInfo::multVeloPhi );
     }
@@ -293,7 +357,7 @@ StatusCode BuildMCTrackInfoUpgrade::execute() {
 void BuildMCTrackInfoUpgrade::computeAcceptance ( std::vector<int>& station ) {
 
   const bool isDebug = msgLevel(MSG::DEBUG);
-  if ( m_withPixel ) {
+  if ( m_withVP ) {
     std::vector<int> nVeloPix( station.size(), 0 );
     LHCb::MCHits* veloHits = get<LHCb::MCHits>( LHCb::MCHitLocation::VeloPix);
     for ( LHCb::MCHits::const_iterator vHit = veloHits->begin();
@@ -305,7 +369,7 @@ void BuildMCTrackInfoUpgrade::computeAcceptance ( std::vector<int>& station ) {
     for ( unsigned int MCNum = 0; station.size() > MCNum; MCNum++ ){
       if ( 2 < nVeloPix[MCNum] ) station[MCNum] |= MCTrackInfo::maskAccVelo;
     }
-  } else {
+  } else if ( m_withVelo ) {
     std::vector<int> nVeloR( station.size(), 0 );
     std::vector<int> nVeloP( station.size(), 0 );
     
@@ -316,6 +380,23 @@ void BuildMCTrackInfoUpgrade::computeAcceptance ( std::vector<int>& station ) {
       if ( station.size() <= MCNum ) continue;
       int staNr = (*vHit)->sensDetID();
       const DeVeloSensor* sens=m_velo->sensor(staNr);   
+      if ( sens->isR() ) {
+        nVeloR[MCNum]++;
+      } else {
+        nVeloP[MCNum]++;
+      }
+    }
+  } else {
+    std::vector<int> nVeloR( station.size(), 0 );
+    std::vector<int> nVeloP( station.size(), 0 );
+    
+    LHCb::MCHits* vlHits = get<LHCb::MCHits>( LHCb::MCHitLocation::VL );
+    for ( LHCb::MCHits::const_iterator vHit = vlHits->begin();
+          vlHits->end() != vHit; vHit++ ) {
+      unsigned int MCNum = (*vHit)->mcParticle()->key();
+      if ( station.size() <= MCNum ) continue;
+      int staNr = (*vHit)->sensDetID();
+      const DeVLSensor* sens = m_vlDet->sensor(staNr);   
       if ( sens->isR() ) {
         nVeloR[MCNum]++;
       } else {

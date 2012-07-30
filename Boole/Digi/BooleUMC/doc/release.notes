@@ -4,6 +4,10 @@
 ! Purpose     : Upgrade Monte Carlo additions needed to run Boole
 !-----------------------------------------------------------------------------
 
+! 2012-07-30 - Olivier Callot
+ - Modify BuildMCTrackInfoUpgrade to use VL (Velo light)
+ - FT is implemented in BuildMCTrackInfoUpgrade
+
 ! 2012-04-02 - Olivier Callot
  - New algorithm BuildMCTrackInfoUpgrade to support several different layout.
    It has options withPixel, withIT, withOT, withFT (not implemented yet)

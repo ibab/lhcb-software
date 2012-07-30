@@ -11,7 +11,8 @@
 class DeVelo;
 class DeVeloPix;
 class DeSTDetector;
-class DeOTStation;
+class DeOTDetector;
+class DeFTDetector;
 
 /** @class BuildMCTrackInfoUpgrade BuildMCTrackInfoUpgrade.h
  *  Build the Reconstructable MCProperty table.
@@ -76,12 +77,15 @@ protected:
   };
 
 private:
-  bool m_withPixel;
+  bool m_withVelo;
+  bool m_withVL;
+  bool m_withVP;
   bool m_withIT;
   bool m_withOT;
   bool m_withFT;
 
   DeVelo*       m_velo;
+  DeVL*         m_vlDet;
   DeVeloPix*    m_veloPix;
 
   DeSTDetector* m_ttDet;
@@ -89,5 +93,6 @@ private:
 
   // OT Detector information
   DeOTDetector* m_otDet;
+  DeFTDetector* m_ftDet;
 };
 #endif // BUILDMCTRACKINFOUPGRADE_H

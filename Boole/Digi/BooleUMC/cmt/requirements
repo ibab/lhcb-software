@@ -3,7 +3,7 @@
 # Maintainer : Tomasz Skwarnicki
 #============================================================================
 package           BooleUMC
-version           v1r3
+version           v1r4
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -21,15 +21,18 @@ use GaudiAlg            v*
 use GaudiGSL            v*
 use STDet               v*    Det
 use VeloDet             v*    Det
+use VLDet               v*    Det
 use VeloPixDet          v*    Det
 use OTDet               v*    Det
+use FTDet               v*    Det
 use LinkerEvent         v*    Event
 use DigiEvent           v*    Event
 use MCEvent             v*    Event
+use FTEvent             v*    Event
+
 use MCInterfaces        v*    Kernel
 use LHCbMath            v*    Kernel
 use STKernel            v*    ST
-
 include_path      none
 #============================================================================
 # Component library building rule
