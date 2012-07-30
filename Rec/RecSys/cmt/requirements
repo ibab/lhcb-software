@@ -1,5 +1,5 @@
 package RecSys
-version           v14r1
+version           v14r1p1
 
 branches cmt doc tests
 
@@ -49,7 +49,7 @@ use RichRecMCAlgorithms  v1r3p3  Rich # Chris Jones
 use RichRecMCTools       v2r29   Rich # Chris Jones
 use RichRecMonitors      v2r33   Rich # Chris Jones
 use RichRecPhotonTools   v1r9    Rich # Chris Jones
-use RichRecQC            v2r59   Rich # Chris Jones
+use RichRecQC            v2r60   Rich # Chris Jones
 use RichRecStereoTools   v1r8p1  Rich # Chris Jones
 use RichRecSys           v4r6    Rich # Chris Jones
 use RichRecTemplateRings v1r5    Rich # Sajan Easo
@@ -78,7 +78,7 @@ use TrackFitEvent        v5r17   Tr   # Eduardo Rodrigues
 use TrackFitter          v4r8    Tr   # Wouter Hulsbergen
 use TrackIdealPR         v2r19   Tr   # Eduardo Rodrigues
 use TrackMCTools         v3r1    Tr   # Eduardo Rodrigues
-use TrackMonitors        v1r39   Tr   # Wouter Hulsbergen, Stephanie Menzemer
+use TrackMonitors        v1r40   Tr   # Wouter Hulsbergen, Stephanie Menzemer
 use TrackProjectors      v2r31   Tr   # Wouter Hulsbergen
 use TrackTools           v4r15   Tr   # Wouter Hulsbergen
 use TrackUtils           v1r48   Tr   # Eduardo Rodrigues
