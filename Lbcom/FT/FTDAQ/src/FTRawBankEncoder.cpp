@@ -89,7 +89,7 @@ StatusCode FTRawBankEncoder::execute() {
       if ( 0 ==m_sipmData[bankNumber][sipmNumber].size() ) {
         m_sipmData[bankNumber][sipmNumber].push_back( sipmNumber << FTRawBank::sipmShift );
       }
-      int frac = int( (*itC)->fraction() * (FTRawBank::FractionMaximum+1) );
+      int frac = int( (*itC)->fraction() * (FTRawBank::fractionMaximum+1) );
       int cell = id.sipmCell();
       int cSize = (*itC)->size();
       int charg = (*itC)->charge() / 4; // one MIP should be around 16 -> coded as 2.
