@@ -3,12 +3,19 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v43r1p1>2012-07-31 Brunel v43r1p1</A></H1><PRE>
+This version uses projects LCG 64, Gaudi v23r3, LHCb v35r1p1, Lbcom v13r1p1,
+ Rec v14r1p1 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+Production version for 2012 data taking
+
 - Changes to references to reflect changes since v43r1
   . Fix an issue in RawDataSize where RawEvent object was not found when
-    reprocessing from DST (RichRecQC)
-  . Introduced IP chi2 cut in TrackV0Monitor (TrackMonitors)
+    reprocessing from DST (RichRecQC v2r60)
+  . Introduced IP chi2 cut in TrackV0Monitor (TrackMonitors v1r40)
+  . Update default DDDB tags (DDDB v1r57)
 
-</PRE><H1><A NAME=v43r1>2012-05-26 Brunel v43r1</A></H1><PRE>
+</PRE><H1><A NAME=v43r1>2012-07-26 Brunel v43r1</A></H1><PRE>
 This version uses projects LCG 64, Gaudi v23r3, LHCb v35r1, Lbcom v13r1,
  Rec v14r1 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
 
