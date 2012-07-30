@@ -273,7 +273,7 @@ void VLDigitMonitor::monitor() {
         const unsigned int zone = sens->zoneOfStrip(strip);
         const DeVLPhiSensor* phiSens = dynamic_cast<const DeVLPhiSensor*>(sens);
         const double radius = phiSens->rMin(zone);
-        const double phi = phiSens->globalPhi(strip, 0., radius);
+        const double phi = phiSens->phiOfStrip(strip, 0., radius);
         if (0 == zone) {
           plot2D(sensorZ, phi / degree, "phiz0",
                  "MCVLDigit Phi position vs. Z (cm), Zone 0",
