@@ -3,6 +3,10 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+ - Changes to references to follow changes in underlying packages
+   . Adapt boole-2011-latestdb.ref to new global tags "dddb-20120727" and
+     "sim-20120726-vc-md100" (updates Velo R sensor cross-talk simulation) 
+
 </PRE><H1><A NAME=v25r0>2012-07-06 Boole v25r0</A></H1><PRE>
 This version uses projects LCGCMT 64, Gaudi v23r3, LHCb v35r0, Lbcom v13r0
  and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
