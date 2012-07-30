@@ -5,6 +5,32 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v35r1p1>2012-07-31 LHCbSys v35r1p1</A></H1><PRE>
+This version uses Gaudi v23r3 and LCG_64
+Production version for 2012 data taking
+
+- Packages modified: Det/DDDB v1r57, GaudiObjDesc v11r14, OT/OTDAQ v7r14,
+    Tools/CondDBUI v7r14
+
+- In DDDB v1r57
+  . Update database tags for latest global tags:
+    o LHCBCOND, 2011, 2012: cond-20120730
+    o DDDB, 2011: dddb-20120727
+    o DQFLAGS, 2011, 2012: dq-20120727
+
+- In GaudiObjDesc v11r14
+  . Revert to v11r14 (was v11r15 in LHCB v35r1) to disable use of ordered_malloc
+    and ordered_free, since the latter gives a huge CPU penalty.
+
+- In OTDAQ v7r14
+  . Replace separate exist<>() + get<>() calls with getIfExists
+  . Fix more UNINIT_CTOR defects
+
+- In CondDBUI v3r17
+  . CondDBAdmin_Commit.py and CondDBAdmin_GlobalTag.py:
+    Switching the release_notes.xml location detection from using SQLDDDBROOT to
+    SQLITEDBPATH environment variable. This is needed to accommodate the Upgrade
+    CondDB use case.
 
 </PRE><H1><A NAME=v35r1>2012-07-25 LHCbSys v35r1</A></H1><PRE>
 This version uses Gaudi v23r3 and LCG_64

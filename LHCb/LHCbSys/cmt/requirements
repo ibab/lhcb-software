@@ -1,5 +1,5 @@
 package LHCbSys
-version           v35r1
+version           v35r1p1
 
 branches doc cmt tests
 
@@ -26,7 +26,7 @@ use DetSys                v17r1   Det     # Marco Cattaneo
 use BcmDet                v1r3    Det     # Magnus Lieng
 use CaloDet               v10r14  Det     # Olivier Deschamps
 use CaloDetXmlCnv         v3r2    Det     # Olivier Deschamps
-use DDDB                  v1r56   Det     # Marco Cattaneo
+use DDDB                  v1r57   Det     # Marco Cattaneo
 use DetCond               v12r26  Det     # Marco Clemencic
 use DetDesc               v18r29  Det     # Marco Clemencic
 use DetDescChecks         v5r7    Det     # Marco Clemencic, Ivan Belyaev
@@ -81,7 +81,7 @@ use GaudiConfUtils        v1r0
 use GaudiMTTools          v1r1
 
 # Maintainer S.Roiser
-use GaudiObjDesc          v11r15
+use GaudiObjDesc          v11r14
 
 #use GaudiPatches          v1r2
 #use HepMCBack             v1r1    Gen     # Obsolete, was for DC06
@@ -110,7 +110,7 @@ use MuonKernel            v4r0    Muon    # Andrei Tsaregorodtsev
 
 #use RootCnv               v1r13   Online  # (also in GAUDI and ONLINE projects)
 
-use OTDAQ                 v7r13   OT      # Wouter Hulsbergen
+use OTDAQ                 v7r14   OT      # Wouter Hulsbergen
 
 use LoKiCore              v11r9   Phys    # Ivan Belyaev
 use LoKiGen               v10r8   Phys    # Ivan Belyaev
@@ -133,7 +133,7 @@ use TfKernel              v2r22   Tf      # Stephanie Hansmann-Menzemer
 use TsaKernel             v3r6p1  Tf      # Matt Needham
 
 use CondDBEntityResolver  v5r3    Tools   # Marco Clemencic
-use CondDBUI              v3r16   Tools   # Marco Clemencic
+use CondDBUI              v3r17   Tools   # Marco Clemencic
 use FileStager            v1r8    Tools   # Roel Aaij
 use XmlTools              v6r6    Tools   # Marco Clemencic
 
