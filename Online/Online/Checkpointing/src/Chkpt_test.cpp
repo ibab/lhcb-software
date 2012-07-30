@@ -89,7 +89,6 @@ int test_thread_checkpoint(int flag) {
       if ( (rc=::pthread_join(main_pid,&val)) < 0 ) {
 	mtcp_output(MTCP_FATAL,"Error JOIN main thread: %s rc=%d\n",::strerror(errno),rc);
       }
-      int rc;
       FILE* fd = ::fopen("/proc/self/maps","r");
       char* buff = 0, *p, *ptr;
       size_t len=0;

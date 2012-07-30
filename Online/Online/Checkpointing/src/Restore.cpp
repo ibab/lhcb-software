@@ -30,10 +30,9 @@ DefineMarker(MEMMAP_END_MARKER,   "mmap");
 
 DefineMarker(LIBS_BEGIN_MARKER,   "LIBS");
 DefineMarker(LIBS_END_MARKER,     "libs");
-DefineMarker(LIBRARY_BEGIN_MARKER,"XLIB");
-DefineMarker(LIBRARY_END_MARKER,  "xlib");
-
-
+// These 2 MUST be defined in Save.cpp!
+//DefineMarker(LIBRARY_BEGIN_MARKER,"XLIB");
+//DefineMarker(LIBRARY_END_MARKER,  "xlib");
 
 /// Print content to stack saved in context
 STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_print_stack(const char* comment) {

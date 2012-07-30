@@ -22,9 +22,9 @@ DefineMarker(FILE_BEGIN_MARKER,   "FILE");
 DefineMarker(FILE_END_MARKER,     "file");
 DefineMarker(LIBS_BEGIN_MARKER,   "LIBS");
 DefineMarker(LIBS_END_MARKER,     "libs");
+#endif
 DefineMarker(LIBRARY_BEGIN_MARKER,"XLIB");
 DefineMarker(LIBRARY_END_MARKER,  "xlib");
-#endif
 
 /// Write single library content to file identified by fileno fd_out
 STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_library_fwrite(int fd, const Area* a)    {
