@@ -1,5 +1,5 @@
 package           LbcomSys
-version           v13r1
+version           v13r1p1
 
 branches doc cmt tests
 
@@ -36,7 +36,7 @@ use OTMonitor         v3r3p1   OT        # Wouter Hulsbergen
 
 # Rich
 use RichAlgorithms    v1r4     Rich      # Chris Jones
-use RichDAQ           v3r37    Rich      # Chris Jones
+use RichDAQ           v3r38    Rich      # Chris Jones
 use RichMCMonitors    v1r9     Rich      # Chris Jones
 use RichMCTools       v3r17    Rich      # Chris Jones
 use RichTools         v2r40    Rich      # Chris Jones
