@@ -3,6 +3,39 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v43r1p1>2012-07-31 Brunel v43r1p1</A></H1><PRE>
+This version uses projects LCG 64, Gaudi v23r3, LHCb v35r1p1, Lbcom v13r1p1,
+ Rec v14r1p1 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+Production version for 2012 data taking
+
+- New tuning
+  . Revert to using standard Boost memory pools for TES objects, since ordered
+    pools introduced in Brunel v43r1 were causing huge penalty in CPU time
+    (several seconds per event when clearing TES at the end of the event)
+    (Now using GaudiObjDesc v11r14 instead of v11r15)
+  . Minor CPU performance improvements:
+    o Replace separate TES exist<>() + get<>() calls with getIfExists
+      (OTDAQ v7r4, TrackMonitors v1r40)
+    o Do not perform level1HardwareID DB update if associated check is disabled
+      (RichDAQ v3r38)
+  . New default DDDB tags (DDDB v1r57):
+    o LHCBCOND, 2011, 2012: cond-20120730
+      (new Rich DAQ mappings, for data taken after 2012-07-30 15:00)
+    o DDDB, 2011: dddb-20120727
+      (updates magnet-20120405 (beampipe supports), velo-20120120 (R sensor M2
+       routing lines) and ot-20111214 (connection pieces for T2+T2) were not
+       propagated to a 2011 global tag)
+
+- Bug fixes
+  . Fix an issue in Rich RawDataSize monitoring where RawEvent object was not
+    found when reprocessing from DST (RichRecQC v2r60)
+
+- Monitoring changes
+  . Introduced IP chi2 cut in TrackV0Monitor after loosening it in TrackV0Finder
+    in Brunel v43r1. This should take care that online monitoring will not
+    suddenly see much dirtier Ks list (TrackMonitors v1r40)
+
 </PRE><H1><A NAME=v43r1>2012-05-26 Brunel v43r1</A></H1><PRE>
 This version uses projects LCG 64, Gaudi v23r3, LHCb v35r1, Lbcom v13r1,
  Rec v14r1 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
