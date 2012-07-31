@@ -17,8 +17,6 @@ use   PrKernel       v*    Pr
 use   RecEvent       v*    Event
 use   DAQEvent       v*    Event
 use   FTDet          v*    Det
-use   FTDAQ          v*    FT
-
 include_path      none
 #============================================================================
 # Component library building rule
