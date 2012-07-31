@@ -32,6 +32,7 @@ use DetDesc               v18r29  Det     # Marco Clemencic
 use DetDescChecks         v5r7    Det     # Marco Clemencic, Ivan Belyaev
 use DetDescCnv            v4r15   Det     # Marco Clemencic
 use DetDescSvc            v3r5    Det     # Marco Clemencic
+use FTDet                 v1r0    Det     # Olivier Callot
 use Magnet                v7r5    Det     # Marco Cattaneo
 use MuonDet               v9r8    Det     # Alessia Satta
 use OTDet                 v8r7    Det     # Alexandr Kozlinskiy
