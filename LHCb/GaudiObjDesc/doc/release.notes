@@ -5,6 +5,13 @@
 ! Package manager: Stefan Roiser
 !--------------------------------------------------------------------------------
 
+! 2012-07-31 - Marco Clemencic
+ - Modified the class generation to use the 'unordered' malloc and free in the
+   default allocators.
+ - The ordered_malloc and ordered_free (with their companion release_memory) can
+   be enabled with the attribute allocator="ORDERED" in the <class> tag of the
+   XML description.
+
 ! 2012-07-25 - Marco Clemencic
  - Imported MemoryPoolAllocatorReleaser source and test from Kernel/LHCbKernel,
    changing the namespace from LHCb to Gaudi.

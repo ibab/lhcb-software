@@ -28,15 +28,15 @@
         version           CDATA                            #IMPLIED
         location          CDATA                            #IMPLIED
         namespace         CDATA                            #IMPLIED
-        stdVectorTypeDef  (TRUE | FALSE)                   "FALSE"  
-        keyedContTypeDef  (TRUE | FALSE)                   "FALSE"  
+        stdVectorTypeDef  (TRUE | FALSE)                   "FALSE"
+        keyedContTypeDef  (TRUE | FALSE)                   "FALSE"
         contObjectTypeDef (TRUE | FALSE)                   "FALSE"
-        serializers       (TRUE | FALSE)                   "TRUE"    
+        serializers       (TRUE | FALSE)                   "TRUE"
         virtual           (TRUE | FALSE)                   "TRUE"
-        allocator         (DEFAULT | NO | BOOST | BOOST2 | DEBUG )  "DEFAULT"    
+        allocator         (DEFAULT | NO | BOOST | BOOST2 | DEBUG | ORDERED)  "DEFAULT"
         defaultconstructor (TRUE | FALSE)                  "TRUE"
         defaultdestructor  (TRUE | FALSE)                  "TRUE">
-       
+
 <!ELEMENT desc (#PCDATA)>
 <!ATTLIST desc
         xml:space        (default | preserve)              #FIXED "preserve"
@@ -78,7 +78,7 @@
         desc             CDATA                             #REQUIRED
 >
 <!ELEMENT typedef EMPTY>
-<!ATTLIST typedef 
+<!ATTLIST typedef
         desc             CDATA                             #REQUIRED
         type             CDATA                             #REQUIRED
         def              CDATA                             #REQUIRED
@@ -139,7 +139,7 @@
         compression      (TRUE | FALSE)                   "TRUE"
         setMeth          (TRUE | FALSE)                   "TRUE"
         getMeth          (TRUE | FALSE)                   "TRUE"
-        transient        (TRUE | FALSE)                   "FALSE"    
+        transient        (TRUE | FALSE)                   "FALSE"
         nonconstaccessor (TRUE | FALSE)                   "FALSE"
 >
 <!ELEMENT relation EMPTY>

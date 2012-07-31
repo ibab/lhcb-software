@@ -578,27 +578,20 @@ class genClasses(genSrcUtils.genSrcUtils):
             s += 'inline std::ostream& operator<< (std::ostream& str, const %s& obj)' % ( godClass['attrs']['name'])
             s += '\n{\n  return obj.fillStream(str);\n}\n'
         return s
+
 #--------------------------------------------------------------------------------
-    def genAllocatorOperators(self, godClass,allocatorType):
-        s = ''
-        if allocatorType == "FROMXML":
-            allocatorType = godClass['attrs']['allocator']
-
-        if allocatorType == 'DEFAULT' :
-            # set the default allocator type
-            allocatorType = 'BOOST'
-
-        data = {}
-        data['classname'] = godClass['attrs']['name']
-
-        if allocatorType == 'BOOST': # Boost allocator with check on delete
-            s ="""
+    def _genAllocBoost(self, classname):
+        """
+        Generate codo to use Boost allocator with check on delete.
+        """
+        data = {'classname': classname}
+        s = """
 #ifndef GOD_NOALLOC
   /// operator new
   static void* operator new ( size_t size )
   {
     return ( sizeof(%(classname)s) == size ?
-             boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::ordered_malloc() :
+             boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::malloc() :
              ::operator new(size) );
   }
 
@@ -614,7 +607,7 @@ class genClasses(genSrcUtils.genSrcUtils):
   static void operator delete ( void* p )
   {
     boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::is_from(p) ?
-    boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::ordered_free(p) :
+    boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::free(p) :
     ::operator delete(p);
   }
 
@@ -624,23 +617,22 @@ class genClasses(genSrcUtils.genSrcUtils):
   {
     ::operator delete (p, pObj);
   }
+#endif""" % data
+        self.include.append("GaudiKernel/boost_allocator.h")
+        return s
 
-  /// release memory pool
-  static bool release_pool ()
-  {
-    return boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::release_memory();
-  }
-#endif"""%data
-            self.include.append("GaudiKernel/boost_allocator.h")
-
-        elif allocatorType == 'BOOST2': # Boost allocator without check on delete
-            s ="""
+    def _genAllocBoostNoCheck(self, classname):
+        """
+        Generate codo to use Boost allocator _without_ check on delete.
+        """
+        data = {'classname': classname}
+        s = """
 #ifndef GOD_NOALLOC
   /// operator new
   static void* operator new ( size_t size )
   {
     return ( sizeof(%(classname)s) == size ?
-             boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::ordered_malloc() :
+             boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::malloc() :
              ::operator new(size) );
   }
 
@@ -655,7 +647,7 @@ class genClasses(genSrcUtils.genSrcUtils):
   /// operator delete
   static void operator delete ( void* p )
   {
-    boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::ordered_free(p);
+    boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::free(p);
   }
 
   /// placement operator delete
@@ -664,23 +656,22 @@ class genClasses(genSrcUtils.genSrcUtils):
   {
     ::operator delete (p, pObj);
   }
+#endif""" % data
+        self.include.append("GaudiKernel/boost_allocator.h")
+        return s
 
-  /// release memory pool
-  static bool release_pool ()
-  {
-    return boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::release_memory();
-  }
-#endif"""%data
-            self.include.append("GaudiKernel/boost_allocator.h")
-
-        elif allocatorType == 'DEBUG': # Boost allocator with check on delete and debug print-out
-            s = """
+    def _genAllocBoostDebug(self, classname):
+        """
+        Generate codo to use Boost allocator with check on delete and debug print-outs.
+        """
+        data = {'classname': classname}
+        s = """
 #ifndef GOD_NOALLOC
   /// operator new
   static void* operator new ( size_t size )
   {
     void *ptr = sizeof(%(classname)s) == size ?
-      boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::ordered_malloc() :
+      boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::malloc() :
       ::operator new(size);
     std::cout << "%(classname)s::new() -> " << ptr << std::endl;
     return ( ptr );
@@ -702,7 +693,7 @@ class genClasses(genSrcUtils.genSrcUtils):
               << boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::is_from(p)
               << std::endl;
     boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::is_from(p) ?
-    boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::ordered_free(p) :
+    boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::free(p) :
     ::operator delete(p);
   }
 
@@ -713,18 +704,73 @@ class genClasses(genSrcUtils.genSrcUtils):
     std::cout << "%(classname)s::delete(" << p << "," << pObj << ")" << std::endl;
     ::operator delete (p, pObj);
   }
+#endif""" % data
+        self.include.append("GaudiKernel/boost_allocator.h")
+        self.addInclude('iostream', 1)
+        return s
+
+    def _genAllocBoostOrdered(self, classname):
+        """
+        Generate codo to use Boost allocator with 'ordered_' malloc and free, so
+        that we can call release_memory on the pool (we also add a simple static
+        method to call it).
+        """
+        data = {'classname': classname}
+        s = """
+#ifndef GOD_NOALLOC
+  /// operator new
+  static void* operator new ( size_t size )
+  {
+    return ( sizeof(%(classname)s) == size ?
+             boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::ordered_malloc() :
+             ::operator new(size) );
+  }
+
+  /// placement operator new
+  /// it is needed by libstdc++ 3.2.3 (e.g. in std::vector)
+  /// it is not needed in libstdc++ >= 3.4
+  static void* operator new ( size_t size, void* pObj )
+  {
+    return ::operator new (size,pObj);
+  }
+
+  /// operator delete
+  static void operator delete ( void* p )
+  {
+    boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::is_from(p) ?
+    boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::ordered_free(p) :
+    ::operator delete(p);
+  }
+
+  /// placement operator delete
+  /// not sure if really needed, but it does not harm
+  static void operator delete ( void* p, void* pObj )
+  {
+    ::operator delete (p, pObj);
+  }
 
   /// release memory pool
   static bool release_pool ()
   {
-    std::cout << "%(classname)s::release_pool()" << std::endl;
     return boost::singleton_pool<%(classname)s, sizeof(%(classname)s)>::release_memory();
   }
-#endif"""%data
-            self.include.append("GaudiKernel/boost_allocator.h")
-            self.addInclude('iostream',1)
-
+#endif""" % data
+        self.include.append("GaudiKernel/boost_allocator.h")
         return s
+
+    def genAllocatorOperators(self, godClass, allocatorType):
+        if allocatorType == "FROMXML":
+            allocatorType = godClass['attrs']['allocator']
+
+        # choose the appropriate generator method, using a dummy one if not found
+        gen = {'BOOST':    self._genAllocBoost,
+               'BOOST2':   self._genAllocBoostNoCheck,
+               'DEBUG':    self._genAllocBoostDebug,
+               'ORDERED':  self._genAllocBoostOrdered,
+               'DEFAULT':  self._genAllocBoost, # default allocator type is Boost
+               }.get(allocatorType, lambda _: "")
+        return gen(godClass['attrs']['name'])
+
     def genAllocatorReleaser(self, godClass, allocatorType):
         s = ''
         if allocatorType == "FROMXML":
@@ -738,7 +784,7 @@ class genClasses(genSrcUtils.genSrcUtils):
         data['classname'] = godClass['attrs']['name']
         data['namespace'] = godClass['attrs']['namespace']
 
-        if allocatorType in ['BOOST', 'BOOST2', 'DEBUG'] : # Boost allocator with or without check on delete
+        if allocatorType in ('ORDERED') : # Boost allocator with or without check on delete
             s ="""
 #ifndef GOD_NOALLOC
 #include "GaudiObjDesc/MemoryPoolAllocatorReleaser.h"
