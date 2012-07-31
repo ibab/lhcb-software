@@ -23,6 +23,10 @@ use MuonTrackAlign       v1r8p1  Muon # Silvia Pozzi
 use MuonTrackMonitor     v2r6    Muon # Giacomo Graziani
 use MuonTrackRec         v3r6p1  Muon # Giacomo Graziani
 
+# Pr packages: Track Pattern Recognition for upgrade detectors
+use PrAlgorithms         v1r0    Pr   # Olivier Callot
+use PrKernel             v1r0    Pr   # Olivier Callot
+use PrMCTools            v1r0    Pr   # Olivier Callot
 
 # Non sub-detector specific components
 use ChargedProtoANNPID   v1r7    Rec  # Chris Jones
