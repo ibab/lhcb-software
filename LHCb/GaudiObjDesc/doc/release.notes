@@ -11,6 +11,9 @@
  - The ordered_malloc and ordered_free (with their companion release_memory) can
    be enabled with the attribute allocator="ORDERED" in the <class> tag of the
    XML description.
+ - Added a test submodule to GaudiObjDesc (using nosetests) with some tests in
+   preparation of the consolidation of the Python code.
+ - Fixed a minor bug in some obsolete code.
 
 ! 2012-07-25 - Marco Clemencic
  - Imported MemoryPoolAllocatorReleaser source and test from Kernel/LHCbKernel,

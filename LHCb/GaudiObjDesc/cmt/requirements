@@ -23,6 +23,8 @@ pattern god_headers \
    macro_append install_more_includes_dependencies " <package>Obj2Doth "
 
 use Python v* LCG_Interfaces
+# pytools is needed for lxml and nosetests
+use pytools v* LCG_Interfaces
 use GaudiPolicy v*
 use GaudiKernel v*
 

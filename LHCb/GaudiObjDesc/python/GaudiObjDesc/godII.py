@@ -169,7 +169,7 @@ Produce c++ source files and dictionary files from xml descriptions
 
         if depricatedOutput:
             if   gen == 'src' : self.srcOutput = depricatedOutput
-            elif gen == 'dct' : self.dctOutput = depricatedOutput
+            elif gen == 'dct' : self.dictOutput = depricatedOutput
 
         if not self.xmlDBFile :
             self.xmlDBFile = self.godRoot + 'xml_files' + os.sep + 'GODsClassDB.xml'
