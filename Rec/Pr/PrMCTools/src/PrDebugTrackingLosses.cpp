@@ -5,12 +5,6 @@
 #include "Event/Track.h"
 #include "Event/MCParticle.h"
 #include "Event/MCTrackInfo.h"
-#include "Event/VeloCluster.h"
-#include "Event/VeloPixCluster.h"
-#include "Event/STCluster.h"
-#include "Event/OTTime.h"
-#include "Event/CaloDigit.h"
-#include "Event/FTCluster.h"
 #include "Linker/LinkedFrom.h"
 #include "Linker/LinkedTo.h"
 #include "Event/ProcStatus.h"
@@ -131,15 +125,17 @@ StatusCode PrDebugTrackingLosses::execute() {
     
     if ( m_forward && hasVelo ) {
       LinkedFrom<LHCb::Track,LHCb::MCParticle> forwardLinker( evtSvc(), msgSvc(), LHCb::TrackLocation::Forward );
-      if ( forwardLinker.first(part) == NULL && !m_clone && !m_ghost ) {
-        info() << "Missed Forward (Velo " << veloTr->key() <<") for MCParticle " << part->key() << " ";
-        printMCParticle( part );
-        if ( m_saveList ) {
-          std::vector<int> ref;
-          ref.push_back( m_eventNumber );
-          ref.push_back( veloTr->key() );
-          ref.push_back( part->key() );
-          m_badGuys.push_back( ref );
+      if ( forwardLinker.first(part) == NULL ) {
+        if ( !m_clone && !m_ghost ) {
+          info() << "Missed Forward (Velo " << veloTr->key() <<") for MCParticle " << part->key() << " ";
+          printMCParticle( part );
+          if ( m_saveList ) {
+            std::vector<int> ref;
+            ref.push_back( m_eventNumber );
+            ref.push_back( veloTr->key() );
+            ref.push_back( part->key() );
+            m_badGuys.push_back( ref );
+          }
         }
       } else if ( m_clone && forwardLinker.next( ) != NULL ) {
         info() << "Forward clone (Velo " << veloTr->key() <<") for MCParticle " << part->key() << " ";
@@ -150,15 +146,17 @@ StatusCode PrDebugTrackingLosses::execute() {
 
     if ( m_seed ) {
       LinkedFrom<LHCb::Track,LHCb::MCParticle> seedLinker( evtSvc(), msgSvc(), LHCb::TrackLocation::Seed );
-      if ( seedLinker.first(part) == NULL && !m_clone && !m_ghost ) {
-        info() << "Missed Seed for MCParticle " << part->key() << " ";
-        printMCParticle( part );
-        if ( m_saveList ) {
-          std::vector<int> ref;
-          ref.push_back( m_eventNumber );
-          ref.push_back( 0 );
-          ref.push_back( part->key() );
-          m_badGuys.push_back( ref );
+      if ( seedLinker.first(part) == NULL ) {
+        if ( !m_clone && !m_ghost ) {
+          info() << "Missed Seed for MCParticle " << part->key() << " ";
+          printMCParticle( part );
+          if ( m_saveList ) {
+            std::vector<int> ref;
+            ref.push_back( m_eventNumber );
+            ref.push_back( 0 );
+            ref.push_back( part->key() );
+            m_badGuys.push_back( ref );
+          }
         }
       } else if ( m_clone && seedLinker.next( ) != NULL ) {
         info() << "Seed clone for MCParticle " << part->key() << " ";
@@ -169,13 +167,8 @@ StatusCode PrDebugTrackingLosses::execute() {
     
 
   if ( m_ghost ) {
-    LinkedTo<LHCb::MCParticle>     vTrLink( evtSvc(), msgSvc(), veloTrack );
-    LinkedTo<LHCb::MCParticle>       vLink( evtSvc(), msgSvc(), LHCb::VeloClusterLocation::Default );
-    //LinkedTo<LHCb::MCParticle>      pxLink( evtSvc(), msgSvc(), LHCb::VeloPixClusterLocation::VeloPixClusterLocation );
-    LinkedTo<LHCb::MCParticle>      ttLink( evtSvc(), msgSvc(), LHCb::STClusterLocation::TTClusters);
-    //LinkedTo<LHCb::MCParticle>      itLink( evtSvc(), msgSvc(), LHCb::STClusterLocation::ITClusters);
-    //LinkedTo<LHCb::MCParticle>      otLink( evtSvc(), msgSvc(), LHCb::OTTimeLocation::Default);
-    LinkedTo<LHCb::MCParticle>      ftLink( evtSvc(), msgSvc(), LHCb::FTClusterLocation::Default);
+    LinkedTo<LHCb::MCParticle> vTrLink( evtSvc(), msgSvc(), veloTrack );
+    LinkedTo<LHCb::MCParticle>  idLink( evtSvc(), msgSvc(), "Pr/LHCbID" );
 
     std::string   location = LHCb::TrackLocation::Forward;
     if ( m_velo || m_veloPix ) location = veloTrack;
@@ -209,74 +202,36 @@ StatusCode PrDebugTrackingLosses::execute() {
           if ( (*itId).isVelo() ) {
             LHCb::VeloChannelID idV = (*itId).veloID();
             info() << format( "   Velo Sensor %3d Strip %4d    ", idV.sensor(), idV.strip() );
-            LHCb::MCParticle* part = vLink.first( idV );
-            while ( 0 != part ) {
-              info() << " " << part->key();
-              listKeys[part] += 1;
-              part = vLink.next();
-            }
-            info() << endmsg;
-            /*
+          } else if ( (*itId).isVL() ) {
+            LHCb::VLChannelID idV = (*itId).vlID();
+            info() << format( "   Velo Sensor %3d Strip %4d    ", idV.sensor(), idV.strip() );
           } else if ( (*itId).isVeloPix() ) {
             LHCb::VeloPixChannelID idV = (*itId).velopixID();
             info() << format( "   Velo Sensor %3d chip%3d pixel %4d ", idV.sensor(), idV.chip(), idV.pixel() );
-            LHCb::MCParticle* part = pxLink.first( idV );
-            while ( 0 != part ) {
-              info() << " " << part->key();
-              listKeys[part] += 1;
-              part = vLink.next();
-            }
-            info() << endmsg;
-            */
           } else if ( (*itId).isTT() ) {
             LHCb::STChannelID stID = (*itId).stID();
             info() << format( "    TT St%2d La%2d Se%2d Str%4d    ",
                               stID.station(), stID.layer(), stID.sector(), stID.strip() );
-            LHCb::MCParticle* part = ttLink.first( stID );
-            while ( 0 != part ) {
-              info() << " " << part->key();
-              listKeys[part] += 1;
-              part = ttLink.next();
-            }
-            info() << endmsg;
-            /*
           } else if ( (*itId).isIT() ) {
             LHCb::STChannelID stID = (*itId).stID();
             info() << format( "    IT St%2d La%2d Se%2d Str%4d    ",
                               stID.station(), stID.layer(), stID.sector(), stID.strip() );
-            LHCb::MCParticle* part = itLink.first( stID );
-            while ( 0 != part ) {
-              info() << " " << part->key();
-              listKeys[part] += 1;
-              part = itLink.next();
-            }
-            info() << endmsg;
-            */
           } else if ( (*itId).isFT() ) {
             LHCb::FTChannelID ftID = (*itId).ftID();
             info() << format( "    FT St%2d La%2d Pm%2d Cel%4d    ",
                               ftID.layer()/4, ftID.layer()&3, ftID.sipmId(), ftID.sipmCell() );
-            LHCb::MCParticle* part = ftLink.first( ftID );
-            while ( 0 != part ) {
-              info() << " " << part->key();
-              listKeys[part] += 1;
-              part = ftLink.next();
-            }
-            info() << endmsg;
-            /*
           } else if ( (*itId).isOT() ) {
             LHCb::OTChannelID otID = (*itId).otID();
             info() << format( "    OT St%2d La%2d mo%2d Str%4d    ",
                               otID.station(), otID.layer(), otID.module(), otID.straw() );
-            LHCb::MCParticle* part = otLink.first( otID );
-            while ( 0 != part ) {
-              info() << " " << part->key();
-              listKeys[part] += 1;
-              part = otLink.next();
-            }
-            info() << endmsg;
-            */
           }
+          LHCb::MCParticle* part = idLink.first( (*itId).lhcbID() );
+          while ( 0 != part ) {
+            info() << " " << part->key();
+            listKeys[part] += 1;
+            part = idLink.next();
+          }
+          info() << endmsg;
         }
         for ( std::map<LHCb::MCParticle*,int>::iterator itM = listKeys.begin(); listKeys.end() != itM; ++itM ) {
           printMCParticle( (*itM).first );  

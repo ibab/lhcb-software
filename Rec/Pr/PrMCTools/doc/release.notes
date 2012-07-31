@@ -4,6 +4,12 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2012-07-31 - Olivier Callot
+ - Adapt for VL also. New algorithm PrCheatedVElo t ocerate Velo tracks from truth
+
+! 2012-07-06 - Olivier Callot
+ - Protect the search for clones: Linker should always be called first.
+
 ! 2012-06-25 - Olivier Callot
  - Adapt PrDebugTrackingLosses to debug seeeding too.
 

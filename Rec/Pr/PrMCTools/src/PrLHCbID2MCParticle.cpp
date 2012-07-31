@@ -7,6 +7,7 @@
 
 // includes from DigiEvent
 #include "Event/VeloCluster.h"
+#include "Event/VLCluster.h"
 #include "Event/VeloPixCluster.h"
 #include "Event/STCluster.h"
 #include "Event/OTTime.h"
@@ -78,6 +79,34 @@ StatusCode PrLHCbID2MCParticle::execute() {
     }
   }
 
+  //== Velo Light for upgrade
+
+  if ( exist<LHCb::VLClusters>(LHCb::VLClusterLocation::Default) ) {    
+    LinkedTo<LHCb::MCParticle> vlLink( evtSvc(), msgSvc(), LHCb::VLClusterLocation::Default );
+    m_detectorLink = &vlLink;    
+    LHCb::VLClusters* clusters = get<LHCb::VLClusters>(LHCb::VLClusterLocation::Default);
+    LHCb::VLClusters::const_iterator iClus;
+    for(iClus = clusters->begin(); iClus != clusters->end(); ++iClus) {
+      LHCb::LHCbID myId = LHCb::LHCbID( (*iClus)->channelID() );
+      int id            = myId.vlID();
+      linkAll( myId, id );
+    }
+  }
+
+  //== Velo Pixel
+
+  if ( exist<LHCb::VeloPixClusters>(LHCb::VeloPixClusterLocation::VeloPixClusterLocation ) ) {
+    LinkedTo<LHCb::MCParticle> veloPixLink( evtSvc(), msgSvc(), LHCb::VeloPixClusterLocation::VeloPixClusterLocation );
+    m_detectorLink = &veloPixLink;
+    LHCb::VeloPixClusters* clusters = get<LHCb::VeloPixClusters>(LHCb::VeloPixClusterLocation::VeloPixClusterLocation );
+    LHCb::VeloPixClusters::const_iterator iClus;
+    for(iClus = clusters->begin(); iClus != clusters->end(); ++iClus) {
+      LHCb::LHCbID myId = (*iClus)->lCluster().channelID();
+      int id            = myId.velopixID();
+      linkAll( myId, id );
+    }
+  }
+
   //== TT
 
   if ( exist<LHCb::STCluster::Container>(LHCb::STClusterLocation::TTClusters) ) {
@@ -122,20 +151,6 @@ StatusCode PrLHCbID2MCParticle::execute() {
     }
   }
   */
-  //== Velo Pixel
-
-  if ( exist<LHCb::VeloPixClusters>(LHCb::VeloPixClusterLocation::VeloPixClusterLocation ) ) {
-    LinkedTo<LHCb::MCParticle> veloPixLink( evtSvc(), msgSvc(), LHCb::VeloPixClusterLocation::VeloPixClusterLocation );
-    m_detectorLink = &veloPixLink;
-    LHCb::VeloPixClusters* clusters = get<LHCb::VeloPixClusters>(LHCb::VeloPixClusterLocation::VeloPixClusterLocation );
-    LHCb::VeloPixClusters::const_iterator iClus;
-    for(iClus = clusters->begin(); iClus != clusters->end(); ++iClus) {
-      LHCb::LHCbID myId = (*iClus)->lCluster().channelID();
-      int id            = myId.velopixID();
-      linkAll( myId, id );
-    }
-  }
-
   //== FT
   LinkedTo<LHCb::MCParticle> ftLink( evtSvc(), msgSvc(),LHCb::FTClusterLocation::Default );
   if ( !ftLink.notFound() ) {
