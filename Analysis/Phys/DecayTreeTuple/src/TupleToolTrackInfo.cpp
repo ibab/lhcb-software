@@ -68,7 +68,6 @@ StatusCode TupleToolTrackInfo::fill( const LHCb::Particle*
     test &= tuple->column( prefix+"_TRACK_PCHI2", track->probChi2() );
     if(isVerbose())
     {
-
       if ( track->info(LHCb::Track::FitVeloNDoF,0) >0)
       {
         test &= tuple->column( prefix+"_TRACK_VeloCHI2NDOF",
@@ -111,6 +110,11 @@ StatusCode TupleToolTrackInfo::fill( const LHCb::Particle*
     }
     //veloIDs.push_back( 0 );
     test &= tuple->column( prefix+"_VELO_UTID", veloUTID );
+    const LHCb::State* uState = track->stateAt( LHCb::State::FirstMeasurement );
+    test &= tuple->column( prefix+"_TRACK_FirstMeasurementX",uState->x());
+    test &= tuple->column( prefix+"_TRACK_FirstMeasurementY",uState->y());
+    test &= tuple->column( prefix+"_TRACK_FirstMeasurementZ",uState->z());
+    
   }
 
   //}

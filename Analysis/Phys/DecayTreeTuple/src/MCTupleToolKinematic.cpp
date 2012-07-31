@@ -73,7 +73,6 @@ StatusCode MCTupleToolKinematic::fill( const LHCb::MCParticle*
 
   if (msgLevel(MSG::DEBUG)) debug() << "MCTupleToolKinematic::fill " << head << endmsg ;
 
-  int mcPid = 0;
   double mcTau = -1;
   double mcPT = 0;
 
@@ -85,7 +84,6 @@ StatusCode MCTupleToolKinematic::fill( const LHCb::MCParticle*
   // pointer is ready, prepare the values:
   if( mcp )
   {
-    mcPid = mcp->particleID().pid();
     trueP = mcp->momentum();
     mcPT  = mcp->pt();
     if (msgLevel(MSG::VERBOSE)) verbose() << "      " << trueP << endmsg ;
@@ -106,7 +104,9 @@ StatusCode MCTupleToolKinematic::fill( const LHCb::MCParticle*
         mcTau = trueP.M() * dist.Dot( trueP.Vect() ) / trueP.Vect().mag2();
         mcTau /= Gaudi::Units::c_light;  // nanoseconds
         hasOsc = mcp->hasOscillated() ;
-        if (msgLevel(MSG::DEBUG)) debug() << head << " " << mcPid << " time " << mcTau << " oscil" << hasOsc << endmsg ;
+        if (msgLevel(MSG::DEBUG)) {
+          debug() << head << " " << mcp->particleID().pid() << " time " << mcTau << " oscil" << hasOsc << endmsg ;
+        }
       }
     }
   }
@@ -133,7 +133,9 @@ StatusCode MCTupleToolKinematic::fill( const LHCb::MCParticle*
   if( m_storePT )
   {
     test &= tuple->column( prefix + "_TRUETAU", mcTau );
-    test &= tuple->column( prefix + "_OSCIL", hasOsc );
+    if ( isVerbose() ){
+      test &= tuple->column( prefix + "_OSCIL", hasOsc );
+    }
   }
   //}
 

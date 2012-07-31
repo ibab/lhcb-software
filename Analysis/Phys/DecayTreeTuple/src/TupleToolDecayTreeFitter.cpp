@@ -203,7 +203,7 @@ StatusCode TupleToolDecayTreeFitter::fillDecay(const DecayTreeFitter::Fitter& fi
 
   test &= insert( prefix+"_status", fitter.status(), tMap );
   test &= insert( prefix+"_nDOF", fitter.nDof(), tMap  );
-  test &= insert( prefix+"_chi2_B", fitter.chiSquare(), tMap  );
+  test &= insert( prefix+"_chi2", fitter.chiSquare(), tMap  );
   test &= insert( prefix+"_nIter", fitter.nIter(), tMap  );
 
   return StatusCode(test);

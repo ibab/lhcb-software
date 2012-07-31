@@ -22,7 +22,7 @@ using namespace LHCb ;
 //=============================================================================
 DecayTreeTupleBase::DecayTreeTupleBase( const std::string& name,
                                         ISvcLocator* pSvcLocator)
-  : DVAlgorithm ( name , pSvcLocator )
+  : DaVinciTupleAlgorithm ( name , pSvcLocator )
   , m_dkFinder  ( NULL               )
 {
   declareProperty( "Branches", m_decayMap, "Branches with other tools" );
@@ -43,7 +43,7 @@ DecayTreeTupleBase::~DecayTreeTupleBase() {}
 //=============================================================================
 StatusCode DecayTreeTupleBase::initialize()
 {
-  const StatusCode sc = DVAlgorithm::initialize();
+  const StatusCode sc = DaVinciTupleAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
 
   if (msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
@@ -78,7 +78,7 @@ StatusCode DecayTreeTupleBase::finalize()
     //(*di)->release();
   }
 
-  return DVAlgorithm::finalize();
+  return DaVinciTupleAlgorithm::finalize();
 }
 //=============================================================================
 //=============================================================================

@@ -4,7 +4,7 @@
 
 // Include files
 // from DaVinci, this is a specialized GaudiAlgorithm
-#include "Kernel/DVAlgorithm.h"
+#include "Kernel/DaVinciTupleAlgorithm.h"
 #include "OnePart.h"
 #include "TupleToolDecay.h"
 #include "Kernel/IEventTupleTool.h"
@@ -22,7 +22,7 @@
  * \author Patrick Koppenburg based on Jérémie Borels DecayTreeTuple
  * \date 2009-01-20
  */
-class DecayTreeTupleBase : public DVAlgorithm  
+class DecayTreeTupleBase : public DaVinciTupleAlgorithm  
 {
 
  public:
