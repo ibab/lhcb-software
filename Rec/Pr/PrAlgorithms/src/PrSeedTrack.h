@@ -72,7 +72,7 @@ public:
   float chi2( PrHit* hit )     const { float d = distance( hit ); return d * d * hit->w(); }
 
   float deltaY( PrHit* hit )   const {
-    if ( 0 == hit->dxDy() ) return 0.;
+    if ( hit->isX() ) return 0.;
     return distance( hit ) / hit->dxDy();
   }
 

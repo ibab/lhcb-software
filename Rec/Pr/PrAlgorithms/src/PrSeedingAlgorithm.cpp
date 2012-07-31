@@ -128,7 +128,7 @@ StatusCode PrSeedingAlgorithm::execute() {
     }
   }
   m_trackCandidates.clear();
-
+  /*
   for ( unsigned int zone = 0; 2 > zone; ++zone ) {
 
     findQuadruplets( zone );
@@ -137,7 +137,7 @@ StatusCode PrSeedingAlgorithm::execute() {
 
     tracksFromPairs( zone );
   }
-
+  */
   makeLHCbTracks( result );
 
   return StatusCode::SUCCESS;

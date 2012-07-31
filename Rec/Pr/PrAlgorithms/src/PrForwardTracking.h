@@ -10,7 +10,7 @@
 #include "PrKernel/IPrDebugTool.h"
 #include "PrKernel/PrHitManager.h"
 
-#include "PrForwardTool.h"
+#include "IPrForwardTool.h"
 
 /** @class PrForwardTracking PrForwardTracking.h
  *  Main algorithm fo rthe Forward tracking of the upgrade
@@ -37,7 +37,8 @@ private:
   std::string    m_hitManagerName;
   std::string    m_forwardToolName;
   PrHitManager*  m_hitManager;
-  PrForwardTool* m_forwardTool;
+  IPrForwardTool* m_forwardTool;
+  float          m_deltaQuality;
 
   //== Debugging controls
   std::string    m_debugToolName;

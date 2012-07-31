@@ -53,32 +53,35 @@ public:
   unsigned int zone() const { return m_zone; }
      
   /// Parameters of the trajectory in the T stations
-  void setParameters( float ax, float bx, float cx, float dx, float ay, float by ) {
+  void setParameters( float ax, float bx, float cx, float dx, float ay, float by, float cy ) {
     m_ax = ax;
     m_bx = bx;
     m_cx = cx;
     m_dx = dx;
     m_ay = ay;
     m_by = by;
+    m_cy = cy;
   }
   
   void updateParameters( float dax, float dbx, float dcx,
-                         float ddx=0., float day=0., float dby= 0.  ) {
+                         float ddx=0., float day=0., float dby= 0., float dcy = 0. ) {
     m_ax += dax;
     m_bx += dbx;
     m_cx += dcx;
     m_dx += ddx;
     m_ay += day;
     m_by += dby;
+    m_cy += dcy;
   }
 
   float x( float z )         const { float dz = z-m_zRef; return m_ax + dz*( m_bx + dz*( m_cx + dz*m_dx ) ); }
   float xSlope( float z )    const { float dz = z-m_zRef; return m_bx + dz*( 2 * m_cx + 3 * dz * m_dx ); }
-  float y( float z )         const { return m_ay + (z-m_zRef) *  m_by; }
-  float ySlope( )            const { return m_by; }  
+  float y( float z )         const { float dz = z-m_zRef; return m_ay + dz*( m_by + dz * m_cy); } 
+  float ySlope( float z )    const { float dz = z-m_zRef; return m_by + dz* 2. * m_cy; }  
   float xStraight( float z ) const { return m_ax + (z-m_zRef) * m_bx; }
 
-  float yOnTrack( PrHit* hit ) const { return hit->yOnTrack( m_ay -m_zRef * m_by, m_by ); }
+  float yOnTrack( PrHit* hit ) const { float sly =  ySlope( hit->z() ); 
+    return hit->yOnTrack( y(hit->z()) - sly * hit->z(), sly ); }
 
   float distance( PrHit* hit ) const { 
     float yTra = yOnTrack( hit );
@@ -88,7 +91,7 @@ public:
   float chi2( PrHit* hit )     const { float d = distance( hit ); return d * d * hit->w(); }
 
   float deltaY( PrHit* hit )   const {
-    if ( 0 == hit->dxDy() ) return 0.;
+    if ( hit->isX() ) return 0.;
     return distance( hit ) / hit->dxDy();
   }
 
@@ -105,6 +108,29 @@ public:
 
   void setMeanDy( float meanDy )      { m_meanDy = meanDy; }
   float meanDy()                const { return m_meanDy; }
+
+  void setHitsUnused() {
+    for ( PrHits::iterator itH = m_hits.begin(); m_hits.end() != itH; ++itH ) {
+      (*itH)->setUsed(false);
+    }
+  }
+
+  int nStereoHits() {
+    int n = 0;
+    for ( PrHits::iterator itH = m_hits.begin(); m_hits.end() != itH; ++itH ) {
+      if ( !(*itH)->isX() ) ++n;
+    }
+    return n;
+  }
+
+  void setQuality( float q )       { m_quality = q; }
+  float quality()            const { return m_quality; }
+
+  struct LowerByQuality {
+    bool operator() (const PrForwardTrack lhs, const PrForwardTrack rhs ) const { return lhs.quality() < rhs.quality(); }
+  };
+  
+
 protected:
 
 private:
@@ -127,6 +153,7 @@ private:
     m_cx = 0.;
     m_dx = 0.;
     m_by = m_ty;
+    m_cy = 0.;
     m_ay = m_y0 + (m_zRef-m_z0) * m_by;
 
     m_chi2 = 0.;
@@ -134,6 +161,7 @@ private:
     m_zone = 0;
     m_dXCoord = 0.;
     m_meanDy  = 0.;
+    m_quality = 0.;
   }
   
   const LHCb::Track* m_track;
@@ -158,11 +186,13 @@ private:
   float m_dx;
   float m_ay;
   float m_by;
+  float m_cy;
 
   float m_chi2;
   int   m_nDoF;
   float m_dXCoord;
   float m_meanDy;
+  float m_quality;
 };
 
 typedef std::vector<PrForwardTrack> PrForwardTracks;

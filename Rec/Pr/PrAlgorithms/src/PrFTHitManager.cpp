@@ -71,7 +71,7 @@ void PrFTHitManager::decodeData ( ) {
         oldLayer = 1000;
       }
     }
-    float fraction = (*itC).fraction();
+    float fraction = (*itC).fraction() + 0.125;   // Truncated to 4 bits = 0.25. Add half of it
     LHCb::FTChannelID id = (*itC).channelID();
     DetectorSegment seg = myLayer->createDetSegment( id, fraction );
 
@@ -79,8 +79,7 @@ void PrFTHitManager::decodeData ( ) {
     int zone = ( (*itC).channelID().quarter() > 1 ) ? 1 : 0;
     int code = 2*lay + zone;
     PrHit* aHit = newHitInZone( code );
-    float errX = 0.1;
-    if ( 4 < (*itC).size() ) errX = 0.2;
+    float errX = 0.05 + .03 * (*itC).size();
     aHit->setHit( LHCb::LHCbID( (*itC).channelID() ), (*itC).size(), (*itC).charge(), seg, errX , zone, lay );
     debug() << " .. hit " << (*itC).channelID() << " zone " << zone << " x " << seg.x(0.) << endmsg;
   }

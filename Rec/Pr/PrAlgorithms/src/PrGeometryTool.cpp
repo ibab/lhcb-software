@@ -25,10 +25,11 @@ PrGeometryTool::PrGeometryTool( const std::string& type,
   : GaudiTool ( type, name , parent )
 {
   declareInterface<PrGeometryTool>(this);
-  declareProperty( "ZReference"      , m_zReference    = 8520. * Gaudi::Units::mm );
-  declareProperty( "ZMagnetParams"   , m_zMagnetParams    );
+  declareProperty( "zReference"      , m_zReference    = 8520. * Gaudi::Units::mm );
+  declareProperty( "zMagnetParams"   , m_zMagnetParams    );
   declareProperty( "xParams"         , m_xParams          );
-  declareProperty( "yParams"         , m_yParams          );
+  declareProperty( "byParams"        , m_byParams         );
+  declareProperty( "cyParams"        , m_cyParams         );
   declareProperty( "momentumParams"  , m_momentumParams   );
   declareProperty( "covarianceValues", m_covarianceValues );
 }
@@ -48,27 +49,24 @@ StatusCode PrGeometryTool::initialize ( ) {
   m_magFieldSvc = svc<ILHCbMagnetSvc>( "MagneticFieldSvc", true );
 
   if ( m_zMagnetParams.size() == 0 ) {
-    m_zMagnetParams.push_back( 5208.05  );
-    m_zMagnetParams.push_back(  318.502 );
-    m_zMagnetParams.push_back(-1223.87  );
-    m_zMagnetParams.push_back(    9.80117e-06);
-    m_zMagnetParams.push_back( -304.272);
+    m_zMagnetParams.push_back(  5211.26  );
+    m_zMagnetParams.push_back(   448.027 );
+    m_zMagnetParams.push_back( -1170.42  );
+    m_zMagnetParams.push_back(  -529.514 );
   }
   if ( m_xParams.size() == 0 ) {
-    m_xParams.push_back( 17.5815  );
-    m_xParams.push_back( -5.94803 );
+    m_xParams.push_back( -18.2925  );
+    m_xParams.push_back(   5.62397 );
   }
-  if ( m_yParams.size() == 0 ) {
-    m_yParams.push_back( -979.0    );
-    m_yParams.push_back( -0.684947 );
-  }
+  if ( m_byParams.size() == 0. ) m_byParams.push_back( -1.54 );
+  if ( m_cyParams.size() == 0. ) m_cyParams.push_back( -5.37e-05 );
   if ( m_momentumParams.size() == 0 ) {
-    m_momentumParams.push_back(  1.21174  );
-    m_momentumParams.push_back(  0.634127 );
-    m_momentumParams.push_back( -0.242116 );
-    m_momentumParams.push_back(  0.412728 );
-    m_momentumParams.push_back(  2.82916  );
-    m_momentumParams.push_back(-20.6599   );
+    m_momentumParams.push_back(  1.2585  );
+    m_momentumParams.push_back( -32.0535 );
+    m_momentumParams.push_back( 52342.4 );
+    m_momentumParams.push_back( -18.5486 );
+    m_momentumParams.push_back(  0.67387  );
+    m_momentumParams.push_back(  0.74933  );
   }
   if ( m_covarianceValues.size() == 0 ) {
     m_covarianceValues.push_back( 4.0   ); // ErrX = 2mm 
@@ -87,17 +85,12 @@ float PrGeometryTool::xAtReferencePlane( PrForwardTrack& track, PrHit* hit ) {
   float zHit    = hit->z();
   float yHit    = track.yFromVelo( zHit );
   float xHit    = hit->x(yHit);
-  float zMag    = zMagnet( track ) + m_zMagnetParams[3] * xHit * xHit;
+  float dSlope  = ( track.xFromVelo(zHit) - xHit ) / ( zHit - m_zMagnetParams[0]);
+  float zMag    = zMagnet( track ) + m_zMagnetParams[1] * dSlope * dSlope;
   float xMag    = track.xFromVelo( zMag );
-
-  float slopeT  = ( xHit - xMag ) / ( zHit - zMag );
-  float dSlope  = slopeT - track.slX();
-  float dSl2    = dSlope * dSlope;
-  zMag          = zMag + m_zMagnetParams[1] * dSl2;
   float dz      = 1.e-3 * ( zHit - m_zReference );
   float dxCoef  = dz * dz * ( m_xParams[0] + dz * m_xParams[1] );
   xHit          = xHit - dxCoef * dSlope ;
-  xMag          = track.xFromVelo( zMag );
   float x       = xMag + ( m_zReference - zMag ) * ( xHit - xMag ) / ( zHit - zMag );
   hit->setCoord( x );
   return x;
@@ -107,25 +100,47 @@ float PrGeometryTool::xAtReferencePlane( PrForwardTrack& track, PrHit* hit ) {
 //  Set the parameters of the track, from the (average) x at reference
 //=========================================================================
 void PrGeometryTool::setTrackParameters ( PrForwardTrack& track, float xAtRef ) {
-  float zMag    = zMagnet( track ) + m_zMagnetParams[3] * xAtRef * xAtRef;
+  float dSlope  = ( track.xFromVelo(m_zReference) - xAtRef ) / ( m_zReference - m_zMagnetParams[0]);
+  float zMag    = zMagnet( track ) + m_zMagnetParams[1] * dSlope * dSlope;
   float xMag    = track.xFromVelo( zMag );
-
   float slopeT  = ( xAtRef - xMag ) / ( m_zReference - zMag );
-  float dSlope  = slopeT - track.slX();
-  float dSl2    = dSlope * dSlope;
-  zMag          = zMag + m_zMagnetParams[1] * dSl2;
-  xMag          = track.xFromVelo( zMag );
-  slopeT        = ( xAtRef - xMag ) / ( m_zReference - zMag );
-  dSlope        = slopeT - track.slX();
-  dSl2          = dSlope * dSlope;
-  float dyCoef  = dSl2 * track.slY();
+  dSlope        = track.slX() - slopeT;
+  float dyCoef  = dSlope * dSlope * track.slY();
   
   track.setParameters( xAtRef,
                        slopeT, 
                        1.e-6 * m_xParams[0] * dSlope, 
                        1.e-9 * m_xParams[1] * dSlope,
-                       track.yFromVelo( m_zReference ) + dyCoef * m_yParams[0],
-                       track.slY() + dyCoef * m_yParams[1] );
+                       track.yFromVelo( m_zReference ),
+                       track.slY() + dyCoef * m_byParams[0],
+                       dyCoef * m_cyParams[0] );
+}
+//=========================================================================
+//  Set the parameters of the track, using the hits on the track
+//=========================================================================
+void PrGeometryTool::setTrackParameters ( PrForwardTrack& track ) {
+  if ( track.hits().size() == 0 ) return;
+  
+  float xAtRef = 0.;
+  for ( PrHits::iterator itH = track.hits().begin(); track.hits().end() != itH; ++itH ) {
+    xAtRef += xAtReferencePlane( track, *itH );
+  }
+  xAtRef /= track.hits().size();
+  setTrackParameters( track, xAtRef );
+  float s0 = 0.;
+  float sd = 0.;
+  for ( PrHits::iterator itH = track.hits().begin(); track.hits().end() != itH; ++itH ) {
+    if ( fabs( (*itH)->dxDy() ) > 0.001 ) {
+      float d = -track.deltaY( *itH ) * m_zReference / (*itH)->z();
+      float w = (*itH)->w();
+      s0   += w;
+      sd   += w * d;
+    }
+  }
+  if ( s0 > 0 ) {
+    float dy = sd/s0;
+    track.updateParameters( 0., 0., 0., 0., dy );
+  }
 }
 //=========================================================================
 //  Returns an approximation of the Z at centre of magnet
@@ -133,7 +148,7 @@ void PrGeometryTool::setTrackParameters ( PrForwardTrack& track, float xAtRef ) 
 float PrGeometryTool::zMagnet ( const PrForwardTrack& track ) {
   float zMagnet    = ( m_zMagnetParams[0] +
                        m_zMagnetParams[2] * track.slX2() +
-                       m_zMagnetParams[4] * track.slY2() );
+                       m_zMagnetParams[3] * track.slY2() );
   return zMagnet;
 }
 
@@ -169,8 +184,7 @@ float PrGeometryTool::qOverP ( const PrSeedTrack& track) {
     float bx2  = bx * bx;
     //== Compute the slopes before the magnet: Assume the track comes from (0,0,0) and
     //== crosses the T station part at zMagnet
-    float zMagnet = ( m_zMagnetParams[0] +
-                      m_zMagnetParams[3] * track.x( m_zReference ) );
+    float zMagnet = ( m_zMagnetParams[0] );
     float xMagnet = track.x( zMagnet );
     float yMagnet = track.y( zMagnet );
     float slXFront = xMagnet / zMagnet;
@@ -182,8 +196,7 @@ float PrGeometryTool::qOverP ( const PrSeedTrack& track) {
     zMagnet = ( m_zMagnetParams[0] +
                 m_zMagnetParams[1] * dSlope * dSlope +
                 m_zMagnetParams[2] * slX2 +
-                m_zMagnetParams[3] * track.x( m_zReference ) +
-                m_zMagnetParams[4] * slY2 );
+                m_zMagnetParams[3] * slY2 );
     xMagnet = track.x( zMagnet );
     yMagnet = track.y( zMagnet );
     slXFront = xMagnet / zMagnet;

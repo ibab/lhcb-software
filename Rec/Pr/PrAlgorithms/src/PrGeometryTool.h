@@ -35,11 +35,13 @@ public:
 
   void  setTrackParameters( PrForwardTrack& track, float xAtRef ); ///< Compute the track parameters for a given x
 
+  void  setTrackParameters( PrForwardTrack& track ); ///< Compute the track parameters using hits on track
+
   float qOverP( const PrForwardTrack& track );       ///< Momentum estimate for long tracks
 
   float qOverP( const PrSeedTrack& track );          ///< Momentum estimate for seed
 
-  float zMagnet( const PrForwardTrack& track );      ///< Initial value for teh z at centre of magnet
+  float zMagnet( const PrForwardTrack& track );      ///< Initial value for the z at centre of magnet
 
   float zReference() const { return m_zReference; }  ///< fixed z for all parameterizations
 
@@ -51,7 +53,8 @@ private:
   ILHCbMagnetSvc*    m_magFieldSvc;
   std::vector<float> m_zMagnetParams;
   std::vector<float> m_xParams;
-  std::vector<float> m_yParams;
+  std::vector<float> m_byParams;
+  std::vector<float> m_cyParams;
   std::vector<float> m_momentumParams;
   std::vector<float> m_covarianceValues;
 

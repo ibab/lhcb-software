@@ -28,6 +28,7 @@ PrForwardTracking::PrForwardTracking( const std::string& name,
   declareProperty( "OutputName",         m_outputName      = LHCb::TrackLocation::Forward );
   declareProperty( "HitManagerName",     m_hitManagerName  = "PrFTHitManager" );
   declareProperty( "ForwardToolName",    m_forwardToolName = "PrForwardTool" );
+  declareProperty( "DeltaQuality",       m_deltaQuality    = 3.              );
   // Parameters for debugging
   declareProperty( "DebugToolName"     , m_debugToolName  = ""        );
   declareProperty( "WantedKey"         , m_wantedKey      = -100      );
@@ -51,7 +52,7 @@ StatusCode PrForwardTracking::initialize() {
   m_hitManager = tool<PrHitManager>( m_hitManagerName );
   m_hitManager->buildGeometry();
   
-  m_forwardTool = tool<PrForwardTool>( m_forwardToolName );
+  m_forwardTool = tool<IPrForwardTool>( m_forwardToolName );
 
   m_debugTool   = 0;
   if ( "" != m_debugToolName ) {
@@ -120,6 +121,47 @@ StatusCode PrForwardTracking::execute() {
   if ( m_doTiming ) {
     m_timerTool->stop( m_timeExtend );
     m_timerTool->start( m_timeFinal );
+  }
+
+  for ( LHCb::Tracks::iterator itT1 = result->begin(); result->end() != itT1; ++itT1 ) {
+    for ( LHCb::Tracks::iterator itT2 = itT1+1; result->end() != itT2; ++itT2 ) {
+      std::vector<LHCb::LHCbID>::const_iterator itID1 = (*itT1)->lhcbIDs().begin();
+      std::vector<LHCb::LHCbID>::const_iterator itID2 = (*itT2)->lhcbIDs().begin();
+      while( !(*itID1).isFT() ) ++itID1;
+      while( !(*itID2).isFT() ) ++itID2;
+      int nCommon = 0;
+      int n1 = (*itT1)->lhcbIDs().end() - itID1;
+      int n2 = (*itT2)->lhcbIDs().end() - itID2;
+      while( itID1 != (*itT1)->lhcbIDs().end() &&
+             itID2 != (*itT2)->lhcbIDs().end() ){
+        if ( (*itID1) == (*itID2) ) {
+          ++nCommon;
+          ++itID1;
+          ++itID2;
+        } else if ( (*itID1) < (*itID2) ) {
+          ++itID1;
+        } else {
+          ++itID2;
+        }
+      }      
+      if ( nCommon > .4 * (n1 + n2 ) ) {
+        float q1 = (*itT1)->info( LHCb::Track::PatQuality, 0. );
+        float q2 = (*itT2)->info( LHCb::Track::PatQuality, 0. );
+        debug() << (*itT1)->key() << " (q=" << q1 << ") and " 
+                << (*itT2)->key() << " (q=" << q2 << ") share " 
+                << nCommon << " FT hits" << endmsg;
+        if ( q1 + m_deltaQuality < q2 ) {
+          debug() << "Erase " << (*itT2)->key() << endmsg;
+          result->erase( itT2 );
+          itT2 = itT1;
+        } else if ( q2 + m_deltaQuality < q1 ) {
+          debug() << "Erase " << (*itT1)->key() << endmsg;
+          result->erase( itT1 );
+          itT1 = result->begin();
+          itT2 = itT1;
+        }   
+      }
+    }
   }
 
   if ( m_doTiming ) {

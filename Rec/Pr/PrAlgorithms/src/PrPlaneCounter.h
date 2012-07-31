@@ -41,6 +41,7 @@ public:
 
   /// remove a hit
   int removeHit( const PrHit* hit ) {
+    if ( hit->isUsed() ) return m_nbDifferent;
     if ( 0 == --m_planeList[hit->planeCode()] ) --m_nbDifferent;
     return m_nbDifferent;
   }
