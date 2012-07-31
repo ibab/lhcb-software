@@ -17,6 +17,9 @@ use CaloTools         v6r4     Calo      # Olivier Deschamps
 # DAQ
 use DAQMonitors       v1r7     DAQ       # Olivier Deschamps
 
+# Fibre tracker
+use FTDAQ             v1r0     FT        # Olivier Callot
+
 # HLT
 use HltDAQ            v2r15    Hlt       # Tomasz Skwarnicki
 
