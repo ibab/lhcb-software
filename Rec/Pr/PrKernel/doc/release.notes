@@ -4,6 +4,9 @@
 ! Purpose     : Basic tools for Pattern for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2012-07-31 - Olivier Callot
+ - new method isX() to the PrHit.
+
 ! 2012-06-25 - Olivier Callot
  - rename PrHitLayer to PrHitZone as this is a better description of its purpose.
 

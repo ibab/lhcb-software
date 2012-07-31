@@ -43,6 +43,7 @@ public:
     m_zone       = zone;
     m_planeCode  = planeCode;
     m_isUsed     = false;
+    m_isX        = fabs( x(1.)-x(0.) ) < 0.001;
   }
   
   LHCb::LHCbID id()     const { return m_id;     }
@@ -59,6 +60,7 @@ public:
   bool  isUsed()        const { return m_isUsed; }
   float yOnTrack( float y0, float dyDz ) { return m_segment.yOnTrack( y0, dyDz ); }
   float dxDy()          const { return x(1.)-x(0.); }
+  bool  isX()           const { return m_isX; }
 
   void setCoord( float c )   { m_coord = c;     }
   void setUsed( bool flag )  { m_isUsed = flag; }
@@ -83,6 +85,7 @@ private:
   int    m_zone;
   int    m_planeCode;
   bool   m_isUsed;
+  bool   m_isX;
 };
 
 typedef std::vector<PrHit*> PrHits;
