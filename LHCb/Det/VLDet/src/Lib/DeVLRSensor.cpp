@@ -606,7 +606,6 @@ StatusCode DeVLRSensor::updateStripCache() {
     Gaudi::XYZPoint gp = localToGlobal(lp);
     gden += dphi / gp.rho();
     // Store the results.
-    m_stripsCache[strip].halfboxR = num / hbden;
     m_stripsCache[strip].globalR  = num / gden;
   }
   return StatusCode::SUCCESS;
@@ -652,43 +651,10 @@ StatusCode DeVLRSensor::updateZoneCache() {
         m_zonesCache[zone].globalPhiLimits.second -= 2 * Gaudi::Units::pi;
       }
     }
-    // Determine the phi ranges of the zone in the Velo half box frame.
-    std::pair<Gaudi::XYZPoint, Gaudi::XYZPoint> halfBoxLimitsMin
-      (globalToVeloHalfBox(globalLimitsMin.first), globalToVeloHalfBox(globalLimitsMin.second));
-    std::pair<Gaudi::XYZPoint, Gaudi::XYZPoint> halfBoxLimitsMax
-      (globalToVeloHalfBox(globalLimitsMax.first), globalToVeloHalfBox(globalLimitsMax.second));
-    std::pair<Gaudi::XYZPoint, Gaudi::XYZPoint> halfBoxLimitsMid
-      (globalToVeloHalfBox(globalLimitsMid.first), globalToVeloHalfBox(globalLimitsMid.second));
-    phiLimits.clear();
-    phiLimits.push_back(halfBoxLimitsMin.first.phi()); 
-    phiLimits.push_back(halfBoxLimitsMin.second.phi());
-    phiLimits.push_back(halfBoxLimitsMax.first.phi()); 
-    phiLimits.push_back(halfBoxLimitsMax.second.phi());
-    phiLimits.push_back(halfBoxLimitsMid.first.phi()); 
-    phiLimits.push_back(halfBoxLimitsMid.second.phi());
-    // Map to [0,2pi] for right hand side sensors.
-    if (isRight()) {
-      for (unsigned int i = 0; i < phiLimits.size(); ++i) {
-        if (phiLimits[i] < 0) phiLimits[i] += 2 * Gaudi::Units::pi;
-      }
-    }
-    m_zonesCache[zone].halfboxPhiLimits.first  = *std::min_element(phiLimits.begin(), phiLimits.end());
-    m_zonesCache[zone].halfboxPhiLimits.second = *std::max_element(phiLimits.begin(), phiLimits.end());
-    // Map back to [-pi,pi]
-    if (isRight()) {
-      if (m_zonesCache[zone].halfboxPhiLimits.first  > Gaudi::Units::pi) {
-        m_zonesCache[zone].halfboxPhiLimits.first  -= 2 * Gaudi::Units::pi;
-      }
-      if (m_zonesCache[zone].halfboxPhiLimits.second > Gaudi::Units::pi) {
-        m_zonesCache[zone].halfboxPhiLimits.second -= 2 * Gaudi::Units::pi;
-      }
-    }
 
     // R limits are the radii of the outer strip + local pitch / 2 and the inner strip - local pitch / 2
     m_zonesCache[zone].globalRLimits.first   = globalROfStrip(minStrip)  - rPitch(minStrip) / 2.;
     m_zonesCache[zone].globalRLimits.second  = globalROfStrip(maxStrip)  + rPitch(maxStrip) / 2.;
-    m_zonesCache[zone].halfboxRLimits.first  = halfboxROfStrip(minStrip) - rPitch(minStrip) / 2.;
-    m_zonesCache[zone].halfboxRLimits.second = halfboxROfStrip(maxStrip) + rPitch(maxStrip) / 2.;
   }
   return StatusCode::SUCCESS;
   

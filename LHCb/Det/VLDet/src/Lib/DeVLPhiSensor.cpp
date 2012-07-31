@@ -66,7 +66,7 @@ const CLID& DeVLPhiSensor::clID() const {
 // ============================================================================
 StatusCode DeVLPhiSensor::initialize() {
 
-  /// Set the output level.
+  // Set the output level.
   PropertyMgr* pmgr = new PropertyMgr();
   int outputLevel = 0;
   pmgr->declareProperty("OutputLevel", outputLevel);
@@ -84,24 +84,24 @@ StatusCode DeVLPhiSensor::initialize() {
   if (m_verbose) m_debug = true;
   MsgStream msg(msgSvc(), "DeVLPhiSensor");
 
-  /// Initialise the base class.
+  // Initialise the base class.
   sc = DeVLSensor::initialize();
   if (!sc.isSuccess()) {
     msg << MSG::ERROR << "Failed to initialise DeVLSensor." << endmsg;
     return sc;
   }
-  /// Initialise the sensor from the XML.
+  // Initialise the sensor from the XML.
   sc = initSensor();
   if (!sc.isSuccess()) {
     msg << MSG::ERROR << "Failed to initialise DeVLPhiSensor." << endmsg;
     return sc;
   }
-  /// Build up map of strips to routing lines.
+  // Build up map of strips to routing lines.
   buildRoutingLineMap();
-  /// Register geometry conditions, update strip cache.
+  // Register geometry conditions, update strip cache.
   updMgrSvc()->registerCondition(this, this->m_geometry,
                                  &DeVLPhiSensor::updateGeometryCache);
-  /// First update
+  // First update
   sc = updMgrSvc()->update(this);
   if (!sc.isSuccess()) {
     msg << MSG::ERROR << "Failed to update geometry cache." << endmsg;
@@ -229,12 +229,6 @@ StatusCode DeVLPhiSensor::initSensor() {
       m_strips[stripIndex].gradient = gradient;
       m_strips[stripIndex].intercept = intercept;
       m_strips[stripIndex].length = length;
-      // Determine the constants for the ax + by + c = 0 parameterization.
-      m_strips[stripIndex].a = dy / length;
-      m_strips[stripIndex].b = -dx / length;
-      m_strips[stripIndex].c = (y1 * x2 - y2 * x1) / length;
-      m_strips[stripIndex].xs = 0.5 * (x1 + x2);
-      m_strips[stripIndex].ys = 0.5 * (y1 + y2);
       if (m_debug) {
         stripfile << stripIndex << "  " << x1 << "  " << y1 << "  "
                                         << x2 << "  " << y2 << "\n";
@@ -385,19 +379,19 @@ StatusCode DeVLPhiSensor::residual(const Gaudi::XYZPoint& point,
                                    double &residual,
                                    double &chi2) const {
 
-  /// Transform to local frame.
+  // Transform to local frame.
   Gaudi::XYZPoint localPoint = this->geometry()->toLocal(point);
-  /// Check boundaries.
+  // Check boundaries.
   StatusCode sc = isInActiveArea(localPoint);
   if (!sc.isSuccess()) return sc;
 
-  /// Get start/end co-ordinates of channel's strip.
+  // Get start/end co-ordinates of channel's strip.
   const unsigned int strip = channel.strip();
   std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint> stripLimits = localStripLimits(strip);
   Gaudi::XYZPoint stripBegin = stripLimits.first;
   Gaudi::XYZPoint stripEnd   = stripLimits.second;
 
-  /// Add offset.
+  // Add offset.
   Gaudi::XYZPoint nextStripBegin, nextStripEnd;
   if (interStripFraction > 0.) {
     stripLimits = localStripLimits(strip + 1);
@@ -427,7 +421,7 @@ StatusCode DeVLPhiSensor::residual(const Gaudi::XYZPoint& point,
 
   residual = sqrt(pow(xNear - x, 2) + pow(yNear - y, 2));
 
-  // Work out how to calculate the sign!
+  // Work out how to calculate the sign.
   Gaudi::XYZPoint localNear(xNear, yNear, 0.);
   Gaudi::XYZPoint globalNear = DeVLSensor::localToGlobal(localNear);
   if (point.phi() < globalNear.phi()) residual *= -1.;
@@ -554,41 +548,27 @@ StatusCode DeVLPhiSensor::updateStripCache() {
   for (unsigned int zone = 0; zone < m_numberOfZones; ++zone) {
     unsigned int firstStrip = m_zones[zone].firstStrip;
     std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint> limits = localStripLimits(firstStrip);
-    double r0 = (limits.first.rho() + limits.second.rho()) / 2.0;
-    double d0 = m_zones[zone].distToOrigin;
-    if (!isDownstream()) d0 = -d0;
-    m_zonesCache[zone].idealDistToOrigin = d0;
-    m_zonesCache[zone].idealOffsetAtR0 = asin(d0 / r0);;
-
     Gaudi::XYZPoint begin = localToGlobal(limits.first);
     Gaudi::XYZPoint end   = localToGlobal(limits.second);
-    r0 = (begin.rho() + end.rho()) / 2.0;
+    const double r0 = (begin.rho() + end.rho()) / 2.0;
     Gaudi::XYZVector dx = end - begin;
     Gaudi::XYZPoint center = begin + 0.5 * dx;
-    d0 = r0 * sin(center.phi() - dx.phi());
+    const double d0 = r0 * sin(center.phi() - dx.phi());
     m_zonesCache[zone].globalDistToOrigin = d0;
     m_zonesCache[zone].globalOffsetAtR0 = asin(d0 / r0);
 
-    begin = localToVeloHalfBox(limits.first);
-    end   = localToVeloHalfBox(limits.second);
-    r0 = (begin.rho() + end.rho()) / 2.0;
-    dx = end - begin;
-    center = begin + 0.5 * dx;
-    d0 = r0 * sin(center.phi() - dx.phi());
-    m_zonesCache[zone].halfboxDistToOrigin = d0;
-    m_zonesCache[zone].halfboxOffsetAtR0 = asin(d0/r0);
-
     for (unsigned int i = 0; i < m_zones[zone].nbStrips; ++i) {
       const unsigned int strip = firstStrip + i;
-      const double phi0 = phiOfStrip(strip, 0., r0);
-      const double x = r0 * cos(phi0);
-      const double y = r0 * sin(phi0);
-      Gaudi::XYZPoint lp(x, y, 0.);
-      m_stripsCache[strip].idealPhi = localPhiToGlobal(lp.phi());
-      Gaudi::XYZPoint gp = localToGlobal(lp);
-      m_stripsCache[strip].globalPhi = gp.phi();
-      Gaudi::XYZPoint hbp = localToVeloHalfBox(lp);
-      m_stripsCache[strip].halfboxPhi = hbp.phi();
+      begin = m_geometry->toGlobal(m_stripLimits[strip].first);
+      end = m_geometry->toGlobal(m_stripLimits[strip].second);
+      const double dx = begin.x() - end.x();
+      const double dy = begin.y() - end.y();
+      const double d = sqrt(dx * dx + dy * dy);
+      m_stripsCache[strip].c = (begin.y() * end.x() - end.y() * begin.x()) / d;
+      m_stripsCache[strip].a = -dy / d;
+      m_stripsCache[strip].b =  dx / d;
+      m_stripsCache[strip].xs = 0.5 * (begin.x() + end.x());
+      m_stripsCache[strip].ys = 0.5 * (begin.y() + end.y());
     }
   }
   return StatusCode::SUCCESS;
@@ -602,13 +582,12 @@ StatusCode DeVLPhiSensor::updateZoneCache() {
     const unsigned int maxStrip = minStrip + m_zones[zone].nbStrips - 1;
     const unsigned int midStrip = (minStrip + maxStrip) / 2;
 
-    // Determine the ranges of the zones in global frame.
+    // Determine the ranges of the zones in the global frame.
     std::pair<Gaudi::XYZPoint, Gaudi::XYZPoint> globalLimitsMin = globalStripLimits(minStrip);
     std::pair<Gaudi::XYZPoint, Gaudi::XYZPoint> globalLimitsMax = globalStripLimits(maxStrip);
     std::pair<Gaudi::XYZPoint, Gaudi::XYZPoint> globalLimitsMid = globalStripLimits(midStrip);
     
     std::vector<double> rLimits;
-    rLimits.clear();
     rLimits.push_back(globalLimitsMin.first.rho()); 
     rLimits.push_back(globalLimitsMin.second.rho());
     rLimits.push_back(globalLimitsMax.first.rho()); 
@@ -619,12 +598,11 @@ StatusCode DeVLPhiSensor::updateZoneCache() {
     m_zonesCache[zone].globalRLimits.second = *std::max_element(rLimits.begin(), rLimits.end());
 
     std::vector<double> phiLimits;
-    phiLimits.clear();
     phiLimits.push_back(globalLimitsMin.first.phi()); 
     phiLimits.push_back(globalLimitsMin.second.phi());
     phiLimits.push_back(globalLimitsMax.first.phi()); 
     phiLimits.push_back(globalLimitsMax.second.phi());
-    // Map to [0,2pi] for right hand side sensors.
+    // Map to [0, 2pi] for right hand side sensors.
     if (isRight()) {
       for (unsigned int i = 0; i < phiLimits.size(); ++i) {
         if (phiLimits[i] < 0) phiLimits[i] += 2 * Gaudi::Units::pi;
@@ -642,55 +620,10 @@ StatusCode DeVLPhiSensor::updateZoneCache() {
       }
     }
 
-    // Determine the ranges of the zones in the Velo half box frame.
-    std::pair<Gaudi::XYZPoint, Gaudi::XYZPoint> halfBoxLimitsMin
-      (globalToVeloHalfBox(globalLimitsMin.first),
-       globalToVeloHalfBox(globalLimitsMin.second));
-    std::pair<Gaudi::XYZPoint, Gaudi::XYZPoint> halfBoxLimitsMax
-      (globalToVeloHalfBox(globalLimitsMax.first),
-       globalToVeloHalfBox(globalLimitsMax.second));
-    std::pair<Gaudi::XYZPoint, Gaudi::XYZPoint> halfBoxLimitsMid
-      (globalToVeloHalfBox(globalLimitsMid.first),
-       globalToVeloHalfBox(globalLimitsMid.second));
-    rLimits.clear();
-    rLimits.push_back(halfBoxLimitsMin.first.rho()); 
-    rLimits.push_back(halfBoxLimitsMin.second.rho());
-    rLimits.push_back(halfBoxLimitsMax.first.rho()); 
-    rLimits.push_back(halfBoxLimitsMax.second.rho());
-    rLimits.push_back(halfBoxLimitsMid.first.rho()); 
-    rLimits.push_back(halfBoxLimitsMid.second.rho());
-    m_zonesCache[zone].halfboxRLimits.first  = *std::min_element(rLimits.begin(), rLimits.end());
-    m_zonesCache[zone].halfboxRLimits.second = *std::max_element(rLimits.begin(), rLimits.end());
-
-    phiLimits.clear();
-    phiLimits.push_back(halfBoxLimitsMin.first.phi()); 
-    phiLimits.push_back(halfBoxLimitsMin.second.phi());
-    phiLimits.push_back(halfBoxLimitsMax.first.phi()); 
-    phiLimits.push_back(halfBoxLimitsMax.second.phi());
-    // Map to [0,2pi] for right hand side sensors
-    if (isRight()) {
-      for (unsigned int i = 0; i < phiLimits.size(); ++i) {
-        if (phiLimits[i] < 0) phiLimits[i] += 2 * Gaudi::Units::pi;
-      }
-    }
-    m_zonesCache[zone].halfboxPhiLimits.first  = *std::min_element(phiLimits.begin(), phiLimits.end());
-    m_zonesCache[zone].halfboxPhiLimits.second = *std::max_element(phiLimits.begin(), phiLimits.end());
-    // Map back to [-pi,pi]
-    if (isRight()) {
-      if (m_zonesCache[zone].halfboxPhiLimits.first  > Gaudi::Units::pi) {
-        m_zonesCache[zone].halfboxPhiLimits.first  -= 2 * Gaudi::Units::pi;
-      }
-      if (m_zonesCache[zone].halfboxPhiLimits.second > Gaudi::Units::pi) {
-        m_zonesCache[zone].halfboxPhiLimits.second -= 2 * Gaudi::Units::pi;
-      }
-    }
-
     // Extend the phi ranges by half a strip pitch
     const double pitch = fabs(phiPitch(minStrip));
     m_zonesCache[zone].globalPhiLimits.first   -= pitch / 2.;
     m_zonesCache[zone].globalPhiLimits.second  += pitch / 2.;
-    m_zonesCache[zone].halfboxPhiLimits.first  -= pitch / 2.;
-    m_zonesCache[zone].halfboxPhiLimits.second += pitch / 2.;
   }
   return StatusCode::SUCCESS;
   

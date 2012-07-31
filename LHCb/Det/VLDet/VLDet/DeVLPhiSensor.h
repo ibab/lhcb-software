@@ -28,8 +28,6 @@ namespace VLDet {
     double gradient;
     double intercept;
     double length;
-    double a, b, c;
-    double xs, ys;
   };
   
 }
@@ -109,8 +107,6 @@ public:
     return m_strips[strip].length;
   }
 
-  // =================================================================
-  
   /// Zone number for a given local radius
   unsigned int zoneOfRadius(const double radius) const {
     unsigned int zone = 0;
@@ -123,109 +119,21 @@ public:
     return zone;
   }  
 
-  // =================================================================
-
   /// Phi range [-pi,pi] of a given zone in the global frame.
   virtual const std::pair<double,double>& globalPhiRange(unsigned int zone) const {
     return m_zonesCache[zone].globalPhiLimits;
-  }
-  /// Phi range [-pi,pi] of a given zone in the halfbox frame.
-  virtual const std::pair<double,double>& halfboxPhiRange(unsigned int zone) const {
-    return m_zonesCache[zone].halfboxPhiLimits;
   }
   /// R range of a given zone in the global frame.
   virtual const std::pair<double,double>& globalRRange(unsigned int zone) const {
     return m_zonesCache[zone].globalRLimits;
   }
-  /// R range of a given zone in the halfbox frame.
-  virtual const std::pair<double,double>& halfboxRRange(unsigned int zone) const {
-    return m_zonesCache[zone].halfboxRLimits;
-  }
   
-  // =================================================================
-
-  /// Phi at strip centre in the global frame
-  virtual double globalPhiOfStrip(unsigned int strip) const {
-    return m_stripsCache[strip].globalPhi;
-  }
-  /// Phi at strip centre in the halfbox frame
-  virtual double halfboxPhiOfStrip(unsigned int strip) const {
-    return m_stripsCache[strip].halfboxPhi;
-  }
-  /// Phi at strip centre with ideal alignment
-  virtual double idealPhiOfStrip(unsigned int strip) const {
-    return m_stripsCache[strip].idealPhi;
-  }
-
-  /// Phi for a given inter strip fraction and strip in the global frame
-  virtual double globalPhiOfStrip(unsigned int strip, double fraction) const {
-    double phi = m_stripsCache[strip].globalPhi + 
-                 fraction * globalPhiPitch(strip);
-    if (phi < -Gaudi::Units::pi) phi += 2 * Gaudi::Units::pi;
-    if (phi >  Gaudi::Units::pi) phi -= 2 * Gaudi::Units::pi;
-    return phi; 
-  }
-  /// Phi for a given inter strip fraction and strip in the halfbox frame
-  virtual double halfboxPhiOfStrip(unsigned int strip, double fraction) const {
-    double phi = m_stripsCache[strip].halfboxPhi + 
-                 fraction * globalPhiPitch(strip);
-    if (phi < -Gaudi::Units::pi) phi += 2 * Gaudi::Units::pi;
-    if (phi >  Gaudi::Units::pi) phi -= 2 * Gaudi::Units::pi;
-    return phi; 
-  }
-  /// Phi for a given inter strip fraction and strip in the ideal frame
-  virtual double idealPhiOfStrip(unsigned int strip, double fraction) const {
-    double phi = m_stripsCache[strip].idealPhi + 
-                 fraction * globalPhiPitch(strip);
-    if (phi < -Gaudi::Units::pi) phi += 2 * Gaudi::Units::pi;
-    if (phi >  Gaudi::Units::pi) phi -= 2 * Gaudi::Units::pi;
-    return phi; 
-  }
-
   /// Phi at a given radius in the local frame
   virtual double phiOfStrip(unsigned int strip, double fraction, const double radius) const {
     const unsigned int zone = zoneOfStrip(strip);
     const double effectiveStrip = fraction + strip - m_zones[zone].firstStrip;
     return effectiveStrip * m_zones[zone].pitch + phiOffset(radius); 
   }
-  /// Phi at a given radius in the global frame
-  virtual double globalPhi(unsigned int strip, double fraction, double radius) const {
-    const unsigned int zone = zoneOfStrip(strip);
-    const double c0 = m_zonesCache[zone].globalOffsetAtR0;
-    const double d0 = m_zonesCache[zone].globalDistToOrigin;
-    const double offset = safePhiOffset(c0, d0, radius);
-    double phi = globalPhiOfStrip(strip) + 
-                 fraction * globalPhiPitch(strip) + offset;
-    if (phi < -Gaudi::Units::pi) phi += 2 * Gaudi::Units::pi;
-    if (phi >  Gaudi::Units::pi) phi -= 2 * Gaudi::Units::pi;
-    return phi; 
-  }
-  /// Phi at a given radius in the halfbox frame
-  virtual double halfboxPhi(unsigned int strip, double fraction, double radius) const {
-    const unsigned int zone = zoneOfStrip(strip);
-    const double c0 = m_zonesCache[zone].halfboxOffsetAtR0;
-    const double d0 = m_zonesCache[zone].halfboxDistToOrigin;
-    const double offset = safePhiOffset(c0, d0, radius);
-    double phi = halfboxPhiOfStrip(strip) + 
-                 fraction * globalPhiPitch(strip) + offset;
-    if (phi < -Gaudi::Units::pi) phi += 2 * Gaudi::Units::pi;
-    if (phi >  Gaudi::Units::pi) phi -= 2 * Gaudi::Units::pi;
-    return phi; 
-  }
-  /// Phi at a given radius in the ideal frame
-  virtual double idealPhi(unsigned int strip, double fraction, double radius) const {
-    const unsigned int zone = zoneOfStrip(strip);
-    const double c0 = m_zonesCache[zone].idealOffsetAtR0;
-    const double d0 = m_zonesCache[zone].idealDistToOrigin;
-    const double offset = safePhiOffset(c0, d0, radius);
-    double phi = idealPhiOfStrip(strip) + 
-                 fraction * globalPhiPitch(strip) + offset;
-    if (phi < -Gaudi::Units::pi) phi += 2 * Gaudi::Units::pi;
-    if (phi >  Gaudi::Units::pi) phi -= 2 * Gaudi::Units::pi;
-    return phi; 
-  }
-
-  // =================================================================
 
   /// Phi pitch in radians for a given strip
   virtual double phiPitchOfStrip(unsigned int strip) const {
@@ -246,24 +154,10 @@ public:
     return isDownstream() ? -phiPitch(radius) : phiPitch(radius);
   }
   
-  // =================================================================
-
-  /// Get the global frame phi offset at a given radius in a given zone 
+  /// Phi offset in the global frame at a given radius in a given zone 
   virtual double globalPhiOffset(unsigned int zone, double radius) const {
     const double c0 = m_zonesCache[zone].globalOffsetAtR0;
     const double d0 = m_zonesCache[zone].globalDistToOrigin;
-    return safePhiOffset(c0, d0, radius);
-  }
-  /// Get the halfbox frame phi offset at a given radius in a given zone 
-  virtual double halfboxPhiOffset(unsigned int zone, double radius) const {
-    const double c0 = m_zonesCache[zone].halfboxOffsetAtR0;
-    const double d0 = m_zonesCache[zone].halfboxDistToOrigin;
-    return safePhiOffset(c0, d0, radius);
-  }
-  /// Get the ideal frame phi offset at a given radius in a given zone 
-  virtual double idealPhiOffset(unsigned int zone, double radius) const {
-    const double c0 = m_zonesCache[zone].idealOffsetAtR0;
-    const double d0 = m_zonesCache[zone].idealDistToOrigin;
     return safePhiOffset(c0, d0, radius);
   }
   
@@ -276,17 +170,7 @@ public:
   virtual double globalDistToOrigin(unsigned int zone) const {
     return m_zonesCache[zone].globalDistToOrigin;
   }
-  /// Phi distance to origin in the halfbox frame
-  virtual double halfboxDistToOrigin(unsigned int zone) const {
-    return m_zonesCache[zone].halfboxDistToOrigin;
-  }
-  /// Phi distance to origin in the ideal frame
-  virtual double idealDistToOrigin(unsigned int zone) const {
-    return m_zonesCache[zone].idealDistToOrigin;
-  }
   
-  // =================================================================
-
   /// Calculate the angle of the strip wrt to the x axis in the local frame
   virtual double angleOfStrip(unsigned int strip, double fraction = 0.) const {
     const unsigned int zone = zoneOfStrip(strip);
@@ -297,14 +181,15 @@ public:
     const unsigned int zone = zoneOfStrip(strip);
     return m_zones[zone].tilt;
   }
+  /// Parameterization of a strip in the global frame
   void lineParameters(const unsigned int strip, 
                       double& a, double& b, double& c,
                       double& xs, double& ys) const {
-    a = m_strips[strip].a;
-    b = m_strips[strip].b;
-    c = m_strips[strip].c;
-    xs = m_strips[strip].xs;
-    ys = m_strips[strip].ys;
+    a = m_stripsCache[strip].a;
+    b = m_stripsCache[strip].b;
+    c = m_stripsCache[strip].c;
+    xs = m_stripsCache[strip].xs;
+    ys = m_stripsCache[strip].ys;
   }
 
   /// Pointer to associated R sensor on the same module
@@ -335,12 +220,11 @@ private:
 
   /// Initialisation from XML
   StatusCode initSensor();
-  /// Calculate the global and half box phi values 
-  /// for the strip centres when the alignment changes.
+  /// Calculate the strip limits and parameters in the global frame
   StatusCode updateStripCache();
-  /// Calculate the zone limits in the global and halfbox frame.
+  /// Calculate the zone limits in the global frame
   StatusCode updateZoneCache();
-  /// Update the geometry cache when the alignment changes.
+  /// Update the geometry cache when the alignment changes
   StatusCode updateGeometryCache();
   /// Build up map of strip to routing line conversions
   void buildRoutingLineMap();
@@ -364,23 +248,16 @@ private:
   std::pair<double, double> m_resolution;
 
   struct phiZoneCache {
-    double idealDistToOrigin;
-    double halfboxDistToOrigin;
     double globalDistToOrigin;
-    double idealOffsetAtR0;
-    double halfboxOffsetAtR0;
     double globalOffsetAtR0;
-    std::pair<double, double> halfboxPhiLimits;
     std::pair<double, double> globalPhiLimits;
-    std::pair<double, double> halfboxRLimits;
     std::pair<double, double> globalRLimits;
   };
   std::vector<phiZoneCache> m_zonesCache;
 
   struct phiStripCache {
-    double idealPhi;
-    double halfboxPhi;
-    double globalPhi;
+    double a, b, c;
+    double xs, ys;
   };
   std::vector<phiStripCache> m_stripsCache;
  

@@ -2,6 +2,10 @@
 ! Package     : VLDet
 !-------------------------------------------------------------------------
 
+! 2012-07-31 - Heinrich Schindler
+ - phi strip line parameters in global frame
+   removed halfbox frame functions
+
 !========================= VLDet v1r1 2012-07-24 =========================
 ! 2012-07-21 - Heinrich Schindler
  - removed iterator member functions in DeVL, 

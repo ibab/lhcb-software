@@ -110,8 +110,6 @@ public:
   /// Length of a given strip
   virtual double stripLength(const unsigned int strip) const;
 
-  // =================================================================
-
   /// Zone number for a given local phi and radius
   unsigned int zoneOfPhiAndR(const double phi, const double r) const {
     unsigned int zone = 0;
@@ -133,27 +131,15 @@ public:
     return zone;    
   }
 
-  // =================================================================
-  
   /// Phi range [-pi,pi] of a given zone in the global frame.
   virtual const std::pair<double,double>& globalPhiRange(unsigned int zone) const {
     return m_zonesCache[zone].globalPhiLimits;
-  }
-  /// Phi range [-pi,pi] of a given zone in the halfbox frame.
-  virtual const std::pair<double,double>& halfboxPhiRange(unsigned int zone) const {
-    return m_zonesCache[zone].halfboxPhiLimits;
   }
   /// R range of a given zone in the global frame.
   virtual const std::pair<double,double>& globalRRange(unsigned int zone) const {
     return m_zonesCache[zone].globalRLimits; 
   }
-  /// R range of a given zone in the halfbox frame.
-  virtual const std::pair<double,double>& halfboxRRange(unsigned int zone) const {
-    return m_zonesCache[zone].halfboxRLimits; 
-  }
   
-  // =================================================================
-
   /// Radius of the centre of a strip in the local frame
   virtual double rOfStrip(const unsigned int strip) const {
     return m_strips[strip].r;
@@ -162,10 +148,6 @@ public:
   virtual double globalROfStrip(unsigned int strip) const { 
     return m_stripsCache[strip].globalR;
   }  
-  /// Radius of the centre of the strip in the halfbox frame
-  virtual double halfboxROfStrip(unsigned int strip) const {
-    return m_stripsCache[strip].halfboxR;
-  }
   /// Radius of a strip + interstrip fraction * pitch in the local frame
   virtual double rOfStrip(unsigned int strip, double fraction) const {
     return m_strips[strip].r + fraction * rPitch(strip);
@@ -174,18 +156,11 @@ public:
   virtual double globalROfStrip(unsigned int strip, double fraction) const {
     return m_stripsCache[strip].globalR + fraction * rPitch(strip);
   }
-  /// Radius of the centre of strip plus interstrip fraction * pitch in the halfbox frame
-  virtual double halfboxROfStrip(unsigned int strip, double fraction) const {
-    return m_stripsCache[strip].halfboxR + fraction * rPitch(strip);
-  }
   
-  // =================================================================
-
   /// Local pitch at a given strip
   virtual double rPitch(unsigned int strip) const {
     return m_strips[strip].pitch;
   }
-
   /// Local pitch at a given radius 
   virtual double rPitchOfRadius(double radius) const {
     double pitch = m_innerPitch;
@@ -195,8 +170,6 @@ public:
     return pitch; 
   }
 
-  // =================================================================
-  
   /// Minimum phi in a zone assuming the radius is not known
   // TODO: undefined!
   virtual double phiMinZone(unsigned int zone) const {return m_zones[zone].phiMin;}
@@ -267,15 +240,12 @@ private:
   std::pair<double, double> m_resolution;
 
   struct rZoneCache {
-    std::pair<double, double> halfboxPhiLimits;
     std::pair<double, double> globalPhiLimits;
-    std::pair<double, double> halfboxRLimits;
     std::pair<double, double> globalRLimits;
   };
   std::vector<rZoneCache> m_zonesCache;
 
   struct rStripCache {
-    double halfboxR;
     double globalR;
   };
   std::vector<rStripCache> m_stripsCache;
