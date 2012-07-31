@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2012-07-31 - Paul Seyfert
+ - TrackNNGhostId: Create debug() messages only when output level requires it,
+   also using UNLIKELY macro
+
 !========================= TrackTools v4r15 2012-05-02 =========================
 ! 2012-04-18 - Wouter Hulsbergen
   - StateInitTool: set velo momentum the way it used to be done in TrackPrepareVelo.

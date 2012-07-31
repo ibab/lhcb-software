@@ -117,7 +117,7 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const{
 
   bool isDebug   = msgLevel(MSG::DEBUG);
   double retval = 0;
-  if ( isDebug ) debug() << "==> Execute" << endmsg;
+  if ( UNLIKELY( isDebug ) ) debug() << "==> Execute" << endmsg;
 
   int veloHits = 0, ttHits=0,itHits=0,otHits=0;  
   const std::vector<LHCb::LHCbID> ids = aTrack.lhcbIDs();
@@ -214,21 +214,22 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const{
        && -60 != (*m_inputVec)[3] ){
       // retrive the classifier responses            
       retval = m_readerLong->GetMvaValue( *m_inputVec );
+    } else {
+      if( UNLIKELY( isDebug ) ) debug()<<"warning: extra info of track not propetly filled ....  "<<endmsg;
     }
-    else  if( isDebug ) debug()<<"warning: extra info of track not propetly filled ....  "<<endmsg;
   }//end evaluate long track
   
-  if( isDebug )
-    for(unsigned int i=0;i<m_inputVec->size();i++)  debug()<<"input variable [ "<<i<<" ] :"<<(*m_inputVec)[i]<<endmsg;
-  
-  if ( isDebug ) debug() << "direct NN output is: "<<retval<<endmsg;
 
   //normalize the output to the interval [0,1]
   if(retval<-1) retval=-1;
   if(retval>1) retval=1;
   retval = -0.5*double(retval-1.);
   
-  if ( isDebug ) debug() << "normlized NN output is: "<<retval<<endmsg;
+  if( UNLIKELY ( isDebug ) ) {
+    for(unsigned int i=0;i<m_inputVec->size();i++)  debug()<<"input variable [ "<<i<<" ] :"<<(*m_inputVec)[i]<<endmsg;
+    debug() << "direct NN output is: "<<retval<<endmsg;
+    debug() << "normlized NN output is: "<<retval<<endmsg;
+  } 
 
   aTrack.setGhostProbability(retval);
 
