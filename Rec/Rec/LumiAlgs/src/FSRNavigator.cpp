@@ -91,9 +91,24 @@ void FSRNavigator::explore(IRegistry* pObj, std::string tag, std::vector< std::s
         if ( msgLevel(MSG::VERBOSE) ) verbose() << "Found some leaves, moving to iterate over " << leaves.size() << endmsg;
         for ( Leaves::const_iterator iLeaf=leaves.begin(); iLeaf != leaves.end(); iLeaf++ )   
         {
+          
+          if (!(*iLeaf) )
+          {
+            if ( msgLevel(MSG::VERBOSE) ) verbose() << "Leaf is Null " << endmsg;
+            continue;
+          }
+          
+          
           // it is important to redefine leafRoot->registry() way back from the identifier 
           std::string leafId = (*iLeaf)->identifier();
           SmartDataPtr<DataObject> leafRoot(m_fileRecordSvc, leafId);
+          if (!(leafRoot) )
+          {
+            if ( msgLevel(MSG::VERBOSE) ) verbose() << "LeafRoot is Null " << endmsg;
+            continue;
+          }
+          
+          
           explore(leafRoot->registry(), tag, addresses);
         }
       }
