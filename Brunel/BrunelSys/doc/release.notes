@@ -21,7 +21,8 @@ Production version for 2012 data taking
       (RichDAQ v3r38)
   . New default DDDB tags (DDDB v1r57):
     o LHCBCOND, 2011, 2012: cond-20120730
-      (new Rich DAQ mappings, for data taken after 2012-07-30 15:00)
+      (updates rich2-20120730 (new HPD numbers for data after 2012-07-30 15:00)
+       and ehcal-20120725 (Ecal+Hcal calibration update for 2012))
     o DDDB, 2011: dddb-20120727
       (updates magnet-20120405 (beampipe supports), velo-20120120 (R sensor M2
        routing lines) and ot-20111214 (connection pieces for T2+T2) were not
