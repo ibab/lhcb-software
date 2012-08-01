@@ -9,21 +9,17 @@
 // 2012-01-31 : Chris Jones
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( EmptyEventNodeCleaner )
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 EmptyEventNodeCleaner::EmptyEventNodeCleaner( const std::string& name,
-                                              ISvcLocator* pSvcLocator)
+                                              ISvcLocator* pSvcLocator )
   : GaudiAlgorithm ( name , pSvcLocator ),
-    m_dataSvc(0)
+    m_dataSvc      ( NULL               )
 {
   declareProperty( "InputStream", m_inputStream = "/Event" );
   declareProperty( "DataService", m_dataSvcName = "EventDataSvc" );
 }
-
 
 //=============================================================================
 // Destructor
@@ -33,19 +29,17 @@ EmptyEventNodeCleaner::~EmptyEventNodeCleaner() {}
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode EmptyEventNodeCleaner::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+StatusCode EmptyEventNodeCleaner::initialize()
+{
+  const StatusCode sc = GaudiAlgorithm::initialize();
+  if ( sc.isFailure() ) return sc;
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
-  
   // get the File Records service
-  m_dataSvc = svc<IDataProviderSvc>(m_dataSvcName, true);
-  
-  if(m_dataSvc) return StatusCode::SUCCESS;
-  return Error("Couldn't get requested DataSvc",StatusCode::FAILURE);
-  
+  m_dataSvc = svc<IDataProviderSvc>( m_dataSvcName, true );
+
+  return sc;
 }
+
 //=============================================================================
 // Main execution
 //=============================================================================
@@ -68,7 +62,7 @@ void EmptyEventNodeCleaner::cleanNodes( DataObject * obj,
                                         unsigned int nRecCount )
 {
   // protect against infinite recursion
-  if ( ++nRecCount > 99999 ) 
+  if ( ++nRecCount > 99999 )
   {
     Error( "Maximum recursion limit reached...." ).ignore();
     return;
@@ -90,7 +84,7 @@ void EmptyEventNodeCleaner::cleanNodes( DataObject * obj,
         const std::string & id = (*iL)->identifier();
         DataObject* tmp(NULL);
         sc = m_dataSvc->findObject( id, tmp );
-        if ( sc && tmp ) 
+        if ( sc && tmp )
         {
           if ( CLID_DataObject == tmp->clID() )
           {
@@ -107,10 +101,15 @@ void EmptyEventNodeCleaner::cleanNodes( DataObject * obj,
       if ( msgLevel(MSG::DEBUG) )
         debug() << "Removing node " << location << endmsg;
       sc = m_dataSvc->unlinkObject(location);
-      //sc = m_dataSvc->unregisterObject(obj);
-      //delete obj;
     }
 
   }
 
 }
+
+//=============================================================================
+
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( EmptyEventNodeCleaner )
+
+//=============================================================================

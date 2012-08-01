@@ -26,8 +26,9 @@ public:
 
   virtual ~FSRCleaner( ); ///< Destructor
 
-  virtual StatusCode execute   () {return StatusCode::SUCCESS;};    ///< Algorithm execution, do nothing
-  virtual StatusCode finalize   ();    ///< Real algorithm execution in finalize
+  virtual StatusCode execute() { return StatusCode::SUCCESS; } ///< Algorithm execution, do nothing
+  virtual StatusCode finalize();    ///< Real algorithm execution in finalize
 
 };
+
 #endif // FSRCleaner_H

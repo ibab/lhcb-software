@@ -4,6 +4,9 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2012-08-01 - Chris Jones
+ - Some minor clean ups of the last FSR related changes
+
 ! 2012-08-01 - Rob Lambert
  - Modify EmptyEventNodeCleaner to have a configurable EventDataSvc
  - Add FSRCleaner derived from the new EmptyEventNodeCleaner to use after FSR merging
