@@ -65,6 +65,8 @@ Produce c++ source files and dictionary files from xml descriptions
                    BOOST2     always use Boost singleton pool with a check on
                               delete (slower)
                    DEBUG      same as BOOST2 plus debug print-outs on std::cout
+                   ORDERED    use 'ordered_' malloc and free instead of plain ones
+                              and generate the static method to release the memory
                    DEFAULT    alias for BOOST
 
   xml-source(s):
@@ -135,7 +137,7 @@ Produce c++ source files and dictionary files from xml descriptions
                     error = 1
                 else:
                     self.allocatorType = a.upper()
-                    if not self.allocatorType in ("FROMXML","NO","BOOST","BOOST2","DEBUG","DEFAULT"):
+                    if not self.allocatorType in ("FROMXML","NO","BOOST","BOOST2","DEBUG","ORDERED","DEFAULT"):
                         print '%s: ERROR: Allocator type \'%s\' unknown' % (self.argv0,a)
                         error = 1
             if o in ('-l'):
