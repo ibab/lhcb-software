@@ -59,11 +59,12 @@ default_config = { 'D02Kpi_DaugPtMin': 800.,
 	'Phi2KK_PIDK':5.,
 	'Phi2KK_DaugP':0.,
 	'Phi2KK_DaugTrkChi2':5.,
+	'Phi2KK_DaugTrkGHP':0.05,
 	'Phi2KK_VFASPFVCHI2':10.,
-	'Phi2KK_CombAM':1050.,
+	'Phi2KK_ADAMASS':30.,
 	'Phi2KK_ADOCACHI2CUT':30.,
 	'Phi2KK_MIPCHI2':9.,
-	'Phi2KK_Prescale':0.2,
+	'Phi2KK_Prescale':1.,
 	'Phi2KK_Postscale':1.,
 		
 	'Jpsi2MM_DaugPtMin':0.,
@@ -76,7 +77,7 @@ default_config = { 'D02Kpi_DaugPtMin': 800.,
 	'Jpsi2MM_Postscale':1.,
 
 	'HLT':"HLT_PASS_RE('Hlt1MBNoBiasDecision')",
-#	'HLT':"HLT_PASS_RE('Hlt1*.*')",
+	#'HLT':"HLT_PASS_RE('Hlt1*.*')",
            
 }
 class TriggerValidationConf(LineBuilder) :
@@ -135,7 +136,8 @@ class TriggerValidationConf(LineBuilder) :
 				'Phi2KK_DaugP',
 				'Phi2KK_DaugTrkChi2',
 				'Phi2KK_VFASPFVCHI2',
-				'Phi2KK_CombAM',
+				'Phi2KK_ADAMASS',
+				'Phi2KK_DaugTrkGHP',
 				'Phi2KK_ADOCACHI2CUT',
 				'Phi2KK_Prescale',
 				'Phi2KK_Postscale',
@@ -295,10 +297,10 @@ def makePhi2KK(name, config) :
 	
         _Kcuts1  = "~ISMUON & (PT > %(Phi2KK_DaugPtMin)s* MeV)" % locals()['config']
         _KcutsPIDK  = " & (PIDK > %(Phi2KK_PIDK)s)" % locals()['config']
-        _Kcuts2  = " & (P > %(Phi2KK_DaugP)s* MeV) & (TRCHI2DOF < %(Phi2KK_DaugTrkChi2)s) & (MIPCHI2DV(PRIMARY)> %(Phi2KK_MIPCHI2)s)" % locals()['config']
+        _Kcuts2  = " & (P > %(Phi2KK_DaugP)s* MeV) & (TRCHI2DOF < %(Phi2KK_DaugTrkChi2)s) & (MIPCHI2DV(PRIMARY)> %(Phi2KK_MIPCHI2)s) & (TRGHOSTPROB < %(Phi2KK_DaugTrkGHP)s)" % locals()['config']
         _dauCuts = _Kcuts1 + _KcutsPIDK + _Kcuts2
 	_motherCuts = "(P > %(Phi2KK_PtMin)s) & (VFASPF(VCHI2) < %(Phi2KK_VFASPFVCHI2)s)" % locals()['config']
-	_combCuts = "(AM < %(Phi2KK_CombAM)s* MeV) & (ADOCACHI2CUT(%(Phi2KK_ADOCACHI2CUT)s, ''))" % locals()['config']
+	_combCuts = "(ADAMASS('phi(1020)') < %(Phi2KK_ADAMASS)s*MeV) & (ADOCACHI2CUT(%(Phi2KK_ADOCACHI2CUT)s, ''))" % locals()['config']
         _Phi = CombineParticles( DecayDescriptor = 'phi(1020) -> K+ K-',
                                 MotherCut = _motherCuts,
                                 CombinationCut = _combCuts,

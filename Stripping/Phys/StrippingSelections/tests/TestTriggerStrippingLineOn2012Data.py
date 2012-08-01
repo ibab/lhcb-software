@@ -21,6 +21,7 @@ stream = StrippingStream("Test")
 from StrippingSelections.StrippingForTriggerValidation import TriggerValidationConf
 from StrippingSelections.StrippingForTriggerValidation import default_config as config_default
 
+
 TriggerValidationBuilder = TriggerValidationConf( name="TriggerValidation", config=config_default )
 stream.appendLines( TriggerValidationBuilder.lines() )
 
