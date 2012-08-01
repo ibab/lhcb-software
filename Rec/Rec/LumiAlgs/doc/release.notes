@@ -4,6 +4,8 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+!========================= LumiAlgs v7r8 2012-08-01 =========================
+
 ! 2012-08-01 - Rob Lambert
  - Add FSRCleaner to the merge sequence, see bug #96471.
  - Requires additional FSRCleaner class in LHCbAlgs r143690
