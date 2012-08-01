@@ -4,6 +4,8 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!========================= LHCbAlgs v2r51 2012-08-01 =========================
+
 ! 2012-08-01 - Chris Jones
  - Some minor clean ups of the last FSR related changes
 
