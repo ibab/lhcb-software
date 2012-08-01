@@ -1,181 +1,192 @@
-import xparser, getopt, sys, os
+import xparser, sys, os
 import tools
 import genPackage, genClasses, genClassDicts, genNamespaces, genAssocDicts
 
-#================================================================================
-class godII:
-#--------------------------------------------------------------------------------
-    def __init__(self,args):
-        self.fullCommand = (' ').join(args)
+from optparse import OptionParser, OptionGroup
+import logging
+
+def envOption(value, variable, option):
+    """
+    Helper function to treat the special value 'env' for some options.
+
+    If the value of the option is 'env', return the value of the environment
+    variable, otherwise return the value.
+    In case the environment variable is not set, raises a KeyError exception
+    initialized with (variable, option) as arguments.
+
+    >>> os.environ['OPTVALUE'] = 'option value'
+    >>> envOption('value a', 'OPTVALUE', '-o')
+    'value a'
+    >>> envOption('env', 'OPTVALUE', '-o')
+    'option value'
+    >>> del os.environ['OPTVALUE']
+    >>> envOption('env', 'OPTVALUE', '-o')
+    Traceback (most recent call last):
+        ...
+    KeyError: ('OPTVALUE', '-o')
+    """
+    if value == 'env':
+        if variable in os.environ:
+            return os.environ[variable]
+        else:
+            raise KeyError(variable, option)
+    return value
+
+class godII(object):
+    """
+    Class implementing the script logic of the GaudiObjDesc tool.
+    """
+    def __init__(self, args=None):
+        """
+        Initialize the script.
+
+        Note that for backward compatibility the list of arguments is the full
+        content of sys.argv (which is not what optparse expects).
+        """
+        # FIXME: backward compatibility, to be removed
+        if 'GAUDIOBJDESCROOT' not in os.environ:
+            print >>sys.stderr, "Environment variable GAUDIOBJDESCROOT not defined."
+            sys.exit(1)
+
+        self._parser = None # to make pylint happy
+        self._setupOptParser()
+        # FIXME: backward compatibility, sys.args[0] should not be in args
+        if args:
+            self._parser.prog = args[0]
+            args = args[1:]
+        self.opts, self.args = self._parser.parse_args(args)
+        self._log = logging.getLogger(self._parser.get_prog_name())
+
+        # check options
+        if self.opts.dtd == '':
+            self._parser.error("invalid value for option -t (--dtd)")
+
+        if self.opts.namespace == '':
+            self._parser.error("invalid value for option -n (--namespace)")
+
+        # fix options
+        if self.opts.classdb is None:
+            self.opts.classdb = os.path.join(self.opts.root, 'xml_files', 'GODsClassDB.xml')
+
+        ####
+        # Backward compatibility
+        ####
+        self.fullCommand = ' '.join([self._parser.get_prog_name()] + args)
         self.tools = tools.tools()
-        self.version = 'v8r0'
-        self.xmlSources = []
-        self.xmlDBFile = ''
-        self.xmlDBFileExtra = []
-        self.srcOutput = os.curdir
-        self.dictOutput = os.curdir
-        self.argv0 = args[0]
-        self.godRoot = ''
-        self.gClasses = 1
-        self.gClassDicts = 1
-        self.gNamespaces = 1
-        self.gAssocDicts = 1
-        self.allocatorType = 'FROMXML'
-        self.default_namespace = 'LHCb'
-        self.dtdPath = os.environ.get("GODDTDPATH")
-        self.parseArgs(args[1:])
-#--------------------------------------------------------------------------------
-    def usage(self):
-        print """
-%s %s
+        self.version = self._parser.version
+        self.xmlSources = self.args
+        self.xmlDBFileExtra = self.opts.info_file
+        self.argv0 = self._parser.get_prog_name()
+        self.godRoot = self.opts.root
+        # if self.opts.generate is not set (None), all the options are selected
+        self.gClasses = self.opts.generate in ('src', None)
+        self.gClassDicts = self.opts.generate in ('dct', None)
+        self.gNamespaces = self.opts.generate in ('src', None)
+        self.gAssocDicts = self.opts.generate in ('dct', None)
+        self.allocatorType = self.opts.allocator
+        self.default_namespace = self.opts.namespace
+        self.dtdPath = self.opts.dtd
+        try:
+            self.xmlDBFile = envOption(self.opts.classdb, 'GODXMLDB', '-x')
+            self.srcOutput = envOption(self.opts.src_output, 'GODDOTHOUT', '-s')
+            self.dictOutput = envOption(self.opts.dict_output, 'GODDICTOUT', '-d')
+        except KeyError, x:
+            msg = 'Option "{1} env" used without environment variable {0} declared'.format(*x.args)
+            self._parser.error(msg)
 
-Usage: %s [options] xml-source(s)
-Produce c++ source files and dictionary files from xml descriptions
+        # FIXME: backward compatibility, to remove
+        # ensure that self.godRoot ends with '/'
+        if not self.godRoot.endswith(os.sep):
+            self.godRoot += os.sep
 
-  options:
-  -h             display this help and exit
-  -v             display version information and exit
-  -g src|dct     produce only sources ('src') or only dictionaries ('dct')
-  -i             add additional file-package-information from './AddImports.txt'
-  -s <path>|env  define possible output destination of source code
-                   -s <path>   use path
-                   -s env      use environment-variable 'GODDOTHOUT'
-                    default    use local directory
-  -d <path>|env  define possible output destination dictionary code
-                   -d <path>   use path
-                   -d env      use environment-variable 'GODDICTOUT'
-                    default    use local directory
-  -x <path>|env  define location of 'GODsClassDB.xml' which contains a
-                 dictionary of classes and their corresponding include files
-                   -x <path>   use path
-                   -x env      use environment-variable 'GODXMLDB'
-                    default    use '$(GAUDIOBJDESCROOT)/xml_files/GODsClassDB.xml'
-  -r <path>      define the root path to the GOD tools
-                   -r <path>   use path
-                   default     use environment variable $GAUDIOBJDESCROOT
-  -n <namespace> define the default namespace to use if not given in XML
-                   -n <namespace> use given namespace
-                   default        use namespace LHCb
-  -t <path to dtd> path to the DTD file (gdd.dtd)
-  --allocator=<type>
-                 chose the type of allocator to use. Allowed values are:
-                   FROMXML    use what is specified in the XML (default)
-                   NO         never overload operators "new" and "delete"
-                   BOOST      always use Boost singleton pool
-                   BOOST2     always use Boost singleton pool with a check on
-                              delete (slower)
-                   DEBUG      same as BOOST2 plus debug print-outs on std::cout
-                   ORDERED    use 'ordered_' malloc and free instead of plain ones
-                              and generate the static method to release the memory
-                   DEFAULT    alias for BOOST
+        # deprecated options
+        if self.opts.deprecated_o:
+            self._log.warning('deprecated option -o, use -s or -d instead')
+            if self.opts.generate == 'src':
+                self.srcOutput = self.opts.deprecated_o
+            elif self.opts.generate == 'dct':
+                self.dictOutput = self.opts.deprecated_o
+        if self.opts.deprecated_l:
+            self._log.warning('deprecated option -l, ignored')
 
-  xml-source(s):
-  can be either one or more directories where all xml files will be parsed
-  or one or more xml-files which must have the extension .xml
-  """ % (self.argv0, self.version, self.argv0)
-#--------------------------------------------------------------------------------
-    def parseArgs(self,args):
-        try: opts,args = getopt.getopt(args, 'hvg:o:i:s:d:x:r:l:n:t:',['allocator='])
-        except getopt.GetoptError, (e):
-            print '%s: ERROR: %s' % (self.argv0, e.msg)
-            self.usage()
-            sys.exit(1)
-        error = 0
-        gen = ''
-        depricatedOutput = ''
-        for o, a in opts :
-            if o in ('-h'):
-                self.usage()
-                sys.exit(0)
-            if o in ('-v'):
-                print self.version
-                sys.exit(0)
-            if o in ('-g'):
-                if a == 'src':
-                    gen = a
-                    self.gClasses      = 1
-                    self.gNamespaces   = 1
-                    self.gAssocDicts   = 0
-                    self.gClassDicts   = 0
-                elif a == 'dct':
-                    gen = a
-                    self.gClasses      = 0
-                    self.gNamespaces   = 0
-                    self.gAssocDicts   = 1
-                    self.gClassDicts   = 1
-                else:
-                    print '%s: ERROR: value %s is not allowed in combination with -g' % (self.argv0, a)
-                    error = 1
-            if o in ('-o'):
-                depricatedOutput = a
-                print '%s: INFO: Option -o depricated. Use -s or -d instead' % self.argv0
-            if o in ('-i'):
-                self.xmlDBFileExtra.append(a)
-            if o in ('-s'):
-                if a != 'env' : self.srcOutput = a
-                elif os.environ.has_key('GODDOTHOUT') : self.srcOutput = os.environ['GODDOTHOUT']
-                else:
-                    print '%s: ERROR: Option "-s env" used without environment variable GODDOTHOUT declared'
-                    error = 1
-            if o in ('-d'):
-                if a != 'env' : self.dictOutput = a
-                elif os.environ.has_key('GODDICTOUT') : self.dictOutput = os.environ['GODDICTOUT']
-                else:
-                    print '%s: ERROR: Option "-d env" used without environment variable GODDICTOUT declared'
-                    error = 1
-            if o in ('-x'):
-                if a != 'env' : self.xmlDBFile = a
-                elif os.environ.has_key('GODXMLDB') : self.xmlDBFile = os.environ['GODXMLDB']
-                else:
-                    print '%s: ERROR: Option -x used without path or environment variable GODXMLDB' % self.argv0
-                    error = 1
-            if o in ('-r'):
-                self.godRoot = a + os.sep
-            if o in ('--allocator'):
-                if len(a) == 0:
-                    print '%s: ERROR: Option %s used without parameter' % (self.argv0,o)
-                    error = 1
-                else:
-                    self.allocatorType = a.upper()
-                    if not self.allocatorType in ("FROMXML","NO","BOOST","BOOST2","DEBUG","ORDERED","DEFAULT"):
-                        print '%s: ERROR: Allocator type \'%s\' unknown' % (self.argv0,a)
-                        error = 1
-            if o in ('-l'):
-                print '%s: INFO: Option -l depricated and not used anymore' % (self.argv0)
-            if o in ('-n'):
-                if len(a) == 0:
-                    print '%s: ERROR Option %s used without parameter' % (self.argv0,o)
-                    error = 1
-                else:
-                    self.default_namespace = a
-            if o in ('-t'):
-                if len(a) == 0:
-                    print '%s: ERROR Option %s used without parameter' % (self.argv0,o)
-                    error = 1
-                else:
-                    self.dtdPath = a
+    def _setupOptParser(self):
+        p = OptionParser(usage="%prog [options] xml_source(s)",
+                         version="v11r16",
+                         description="Produce c++ source files and dictionary "
+                         "files from xml descriptions.",
+                         epilog="'xml_source(s)' can be either one or more "
+                         "directories where all xml files will be parsed or "
+                         "one or more xml-files which must have the extension "
+                         ".xml")
+        p.remove_option('--version')
+        p.add_option('-v', '--version', action='version',
+                     help='show version and exit')
+        p.add_option("-g", "--generate", action="store", type="choice",
+                     metavar='WHAT',
+                     choices=('src', 'dct'),
+                     help="produce only sources ('src') or only dictionaries ('dct')")
+        p.add_option("-i", "--info-file", action="append",
+                     help="add additional file-package-information from './AddImports.txt'")
+        p.add_option('-s', '--src-output', action='store', metavar="DIR",
+                     help='define possible output destination of source code. '
+                     'Use the special value "env" to use the content of the environment '
+                     'variable GODDOTHOUT. [default: %default]')
+        p.add_option('-d', '--dict-output', action='store', metavar="DIR",
+                     help='define possible output destination of source code. '
+                     'Use the special value "env" to use the content of the environment '
+                     'variable GODDICTOUT. [default: %default]')
+        p.add_option('-x', '--classdb', action='store', metavar="CLASSDB",
+                     help='define location of "GODsClassDB.xml", which contains a '
+                     'dictionary of classes and their corresponding include files. '
+                     'Use the special value "env" to use the content of the environment '
+                     'variable GODXMLDB. [default: ${GAUDIOBJDESCROOT}/xml_files/GODsClassDB.xml]')
+        p.add_option('-r', '--root', action='store',
+                     metavar='ROOT_DIR',
+                     help='define the root path to the GOD tools. '
+                     '[default: ${GAUDIOBJDESCROOT}]')
+        p.add_option('-n', '--namespace', action='store',
+                     help='define the default namespace to use if not given in XML. '
+                     '[default: %default]')
+        p.add_option('-t', '--dtd', action='store',
+                     help='path to the DTD file (gdd.dtd). '
+                     '[default: use the value of GODDTDPATH if defined, or find it in the '
+                     'same directory as the xml file]')
+        p.add_option('--allocator', action='store', type='choice',
+                     choices=('FROMXML', 'NO', 'BOOST', 'BOOST2', 'DEBUG', 'ORDERED', 'DEFAULT'),
+                     help='chose the type of allocator to use. Allowed values are: '
+                     'FROMXML (use what is specified in the XML, default), '
+                     'NO (never overload operators "new" and "delete"),'
+                     'BOOST (always use Boost singleton pool), '
+                     'BOOST2 (always use Boost singleton pool with a check on delete, slower), '
+                     'DEBUG (same as BOOST2 plus debug print-outs on std::cout), '
+                     'ORDERED (use "ordered_" malloc and free instead of plain ones '
+                     'and generate the static method to release the memory),'
+                     'DEFAULT (alias for BOOST)')
 
-        self.xmlSources = args
+        deprecated = OptionGroup(p, "Deprecated Options",
+                                 "These options are deprecated and will be removed "
+                                 "in a future version.")
+        deprecated.add_option('-l', action='store',
+                              dest='deprecated_l', metavar="IGNORED_VALUE",
+                              help='ignored')
+        deprecated.add_option('-o', action='store',
+                              dest='deprecated_o', metavar="OUTPUT_DIR",
+                              help='output directory, use -s or -d instead')
 
-        if error:
-            self.usage()
-            sys.exit(1)
+        p.add_option_group(deprecated)
 
-        if not self.godRoot:
-            try:
-                self.godRoot = os.environ['GAUDIOBJDESCROOT'] + os.sep
-            except KeyError:
-                print '%s: ERROR: Environment variable GAUDIOBJDESCROOT not set' % self.argv0
-                self.usage()
-                sys.exit(1)
+        root = os.environ['GAUDIOBJDESCROOT']
+        p.set_defaults(info_file=[],
+                       src_output=os.curdir,
+                       dict_output=os.curdir,
+                       classdb=None,
+                       root=root,
+                       namespace='LHCb',
+                       allocator='FROMXML',
+                       dtd=os.environ.get("GODDTDPATH")
+                       )
+        self._parser = p
 
-        if depricatedOutput:
-            if   gen == 'src' : self.srcOutput = depricatedOutput
-            elif gen == 'dct' : self.dictOutput = depricatedOutput
-
-        if not self.xmlDBFile :
-            self.xmlDBFile = self.godRoot + 'xml_files' + os.sep + 'GODsClassDB.xml'
-#--------------------------------------------------------------------------------
     def findLongestName(self,godPackage):
         lname = 0
         if self.gAssocDicts and godPackage.has_key('assoc') :
@@ -187,7 +198,7 @@ Produce c++ source files and dictionary files from xml descriptions
         if self.gNamespaces and godPackage.has_key('namespace') :
             lname = max(lname, self.tools.getLongestName(godPackage['namespace'])+2)
         return lname
-#--------------------------------------------------------------------------------
+
     def doit(self):
 
         #print 'GODII %s' % self.version
@@ -257,7 +268,7 @@ Produce c++ source files and dictionary files from xml descriptions
                     print '  - Done'
 
             print '- Done '
-#================================================================================
+
 if __name__ == '__main__':
     g = godII(sys.argv)
     g.doit()
