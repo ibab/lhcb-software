@@ -17,10 +17,13 @@ DECLARE_ALGORITHM_FACTORY( EmptyEventNodeCleaner )
 //=============================================================================
 EmptyEventNodeCleaner::EmptyEventNodeCleaner( const std::string& name,
                                               ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ),
+    m_dataSvc(0)
 {
   declareProperty( "InputStream", m_inputStream = "/Event" );
+  declareProperty( "DataService", m_dataSvcName = "EventDataSvc" );
 }
+
 
 //=============================================================================
 // Destructor
@@ -28,12 +31,28 @@ EmptyEventNodeCleaner::EmptyEventNodeCleaner( const std::string& name,
 EmptyEventNodeCleaner::~EmptyEventNodeCleaner() {}
 
 //=============================================================================
+// Initialization
+//=============================================================================
+StatusCode EmptyEventNodeCleaner::initialize() {
+  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
+  
+  // get the File Records service
+  m_dataSvc = svc<IDataProviderSvc>(m_dataSvcName, true);
+  
+  if(m_dataSvc) return StatusCode::SUCCESS;
+  return Error("Couldn't get requested DataSvc",StatusCode::FAILURE);
+  
+}
+//=============================================================================
 // Main execution
 //=============================================================================
 StatusCode EmptyEventNodeCleaner::execute()
 {
   // Try and load the root DataObject for the configured stream
-  SmartDataPtr<DataObject> root( eventSvc(), m_inputStream );
+  SmartDataPtr<DataObject> root( m_dataSvc, m_inputStream );
 
   // if found, recursively clean
   if ( root ) cleanNodes( root, m_inputStream );
@@ -55,7 +74,7 @@ void EmptyEventNodeCleaner::cleanNodes( DataObject * obj,
     return;
   }
 
-  SmartIF<IDataManagerSvc> mgr( eventSvc() );
+  SmartIF<IDataManagerSvc> mgr( m_dataSvc );
   typedef std::vector<IRegistry*> Leaves;
   Leaves leaves;
 
@@ -70,7 +89,7 @@ void EmptyEventNodeCleaner::cleanNodes( DataObject * obj,
       {
         const std::string & id = (*iL)->identifier();
         DataObject* tmp(NULL);
-        sc = eventSvc()->findObject( id, tmp );
+        sc = m_dataSvc->findObject( id, tmp );
         if ( sc && tmp ) 
         {
           if ( CLID_DataObject == tmp->clID() )
@@ -87,8 +106,8 @@ void EmptyEventNodeCleaner::cleanNodes( DataObject * obj,
     {
       if ( msgLevel(MSG::DEBUG) )
         debug() << "Removing node " << location << endmsg;
-      sc = eventSvc()->unlinkObject(location);
-      //sc = eventSvc()->unregisterObject(obj);
+      sc = m_dataSvc->unlinkObject(location);
+      //sc = m_dataSvc->unregisterObject(obj);
       //delete obj;
     }
 

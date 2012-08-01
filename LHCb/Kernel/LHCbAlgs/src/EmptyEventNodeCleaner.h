@@ -25,17 +25,19 @@ public:
 
   virtual ~EmptyEventNodeCleaner( ); ///< Destructor
 
+  virtual StatusCode initialize ();    ///< Init
   virtual StatusCode execute   ();    ///< Algorithm execution
 
-private:
+protected:
 
   void cleanNodes( DataObject * obj,
                    const std::string & location,
                    unsigned int nRecCount = 0 );
 
-private:
-
+  
   std::string m_inputStream; ///< Input stream root
+  std::string m_dataSvcName; ///< name of the data service
+  IDataProviderSvc* m_dataSvc; ///< The data service itself
 
 };
 #endif // EMPTYEVENTNODECLEANER_H
