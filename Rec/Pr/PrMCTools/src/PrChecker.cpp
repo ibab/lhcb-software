@@ -8,6 +8,7 @@
 
 #include "Event/MCTrackInfo.h"
 #include "Event/MCParticle.h"
+#include "Event/MCVertex.h"
 #include "Event/MCProperty.h"
 // local
 #include "PrChecker.h"
@@ -94,6 +95,8 @@ StatusCode PrChecker::initialize() {
   m_allCounters.push_back( m_tTrack );
   m_allCounters.push_back( m_best  );
 
+  m_counters.resize(20);
+
   return StatusCode::SUCCESS;
 }
 
@@ -108,7 +111,15 @@ StatusCode PrChecker::execute() {
         m_allCounters.end() != itC; ++itC ) {
     (*itC)->initEvent();
   }
-
+  LHCb::MCVertices* mcVert = get<LHCb::MCVertices>(LHCb::MCVertexLocation::Default );
+  unsigned int nPrim = 0;
+  for ( LHCb::MCVertices::iterator itV = mcVert->begin(); mcVert->end() != itV; ++itV ) {
+    if ( (*itV)->isPrimary() ) ++nPrim;
+  }
+  if ( nPrim >= m_counters.size() ) nPrim = m_counters.size()-1;
+  m_counters[nPrim].nEvt++;
+  m_counters[nPrim].total += m_forward->nbTrack();
+  m_counters[nPrim].ghost += m_forward->nbGhost();
 
   LHCb::MCParticles* mcParts = get<LHCb::MCParticles>( LHCb::MCParticleLocation::Default );
 
@@ -204,8 +215,17 @@ StatusCode PrChecker::execute() {
     flags.push_back( isLong && fromB );
     flags.push_back( isLong && fromB && over5 );
 
-    m_forward->count( part, flags, ids );
+    int ok = m_forward->count( part, flags, ids );
     m_best->count( part, flags, ids );
+
+    if ( isLong ) {
+      m_counters[nPrim].nLong++;
+      if ( 0 <= ok ) m_counters[nPrim].okLong++;
+      if ( over5 ) {
+        m_counters[nPrim].nLong5++;
+        if ( 0 <= ok )  m_counters[nPrim].okLong5++;
+      }
+    }
 
     flags.clear();
     flags.push_back( trackInfo.hasT( part ) );
@@ -231,7 +251,29 @@ StatusCode PrChecker::finalize() {
         m_allCounters.end() != itC; ++itC ) {
     (*itC)->printStatistics();
   }
-
+  for ( std::vector<EffCounter>::iterator itE = m_counters.begin(); m_counters.end() != itE; ++itE ) {
+    if ( (*itE).total > 0 ) {
+      float nTr = float( (*itE).total );
+      float nGh = float( (*itE).ghost );
+      float nl  = float( (*itE).nLong ) + 1.e-6;
+      float okl = float( (*itE).okLong );
+      float n5  = float( (*itE).nLong5 ) + 1.e-6;
+      float ok5 = float( (*itE).okLong5 );
+      
+      float ghostRate = 100. * nGh / nTr;
+      float effLong   = 100. * okl / nl;
+      float effLong5  = 100. * ok5 / n5;
+      float errGhost  = 100. * sqrt( nGh * (nTr-nGh) / nTr ) / nTr;
+      float errEff = 100.* sqrt( okl * (nl-okl) / nl ) / nl;
+      if ( (*itE).nLong == (*itE).okLong ) errEff = 100. / nl;
+      float errEff5 = 100. * sqrt( ok5 * (n5-ok5) / n5 ) / n5;
+      if ( (*itE).nLong5 == (*itE).okLong5 ) errEff5 = 100. / n5;
+      info() << format( "NPrimary %2d  nEvt%6d  ghost rate %6.2f +- %6.2f   effLong %6.2f +-%6.2f  effLong5 %6.2f +- %6.2f",
+                        itE - m_counters.begin(), (*itE).nEvt,
+                        ghostRate, errGhost, effLong, errEff, effLong5, errEff5 )
+             << endmsg;
+    }
+  }
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 

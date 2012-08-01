@@ -4,6 +4,9 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2012-08-01 - Olivier Callot
+ - fix a compilation warning. Measure the forward performance versus PV multiplicity
+
 ! 2012-07-31 - Olivier Callot
  - Adapt for VL also. New algorithm PrCheatedVElo t ocerate Velo tracks from truth
 

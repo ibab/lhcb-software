@@ -51,6 +51,8 @@ public:
 
   void printStatistics();
 
+  int  nbTrack() const { return m_nbTrack; }
+  int  nbGhost() const { return m_nbGhost; }
 protected:
 
 private:

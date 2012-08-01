@@ -95,7 +95,6 @@ StatusCode PrCheatedVelo::execute() {
     fitY.solve();
     
     LHCb::State vState;
-    double z = StateParameters::ZEndT;
     vState.setLocation( LHCb::State::ClosestToBeam );
     vState.setState( fitX.param(0), fitY.param(0), m_zVelo, fitX.param(1), fitY.param(1), 0. );
     vTr->addToStates( vState );
