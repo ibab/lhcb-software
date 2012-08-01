@@ -10,12 +10,12 @@
   <argument name="unsupported_platforms">
     <set>
       <!-- 
-   	Disable this test for all platforms except gcc46, which is the compiler used at the pit!
+   	Disable this test for all platforms except gcc46, which is the compiler used at the pit
 	M.Frank
         -->
       <text>win.*</text>
-      <text>*.gcc43.*</text>
-      <text>*.icc11.*</text>
+      <text>gcc43.*</text>
+      <text>icc11.*</text>
     </set>
   </argument>
   <argument name="reference"><text>../refs/go_evt_tmo.ref</text></argument>
