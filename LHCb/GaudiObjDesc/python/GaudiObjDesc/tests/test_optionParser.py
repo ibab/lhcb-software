@@ -32,7 +32,6 @@ class OptionsTestBase(CmdLineTestBase):
     args = []
 
     _defaults = {'fullCommand': lambda self, value: value == ' '.join([self.prog] + self.args),
-                 'version': 'v8r0',
                  'xmlSources': [],
                  'xmlDBFile': lambda self, value: value == os.path.join(os.environ.get("GAUDIOBJDESCROOT"), 'xml_files', 'GODsClassDB.xml'),
                  'xmlDBFileExtra': [],
