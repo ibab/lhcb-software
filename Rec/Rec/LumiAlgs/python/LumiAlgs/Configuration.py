@@ -20,6 +20,7 @@ from Gaudi.Configuration  import *
 import GaudiKernel.ProcessJobOptions
 from Configurables import LHCbConfigurableUser 
 from Configurables import LumiMergeFSR
+from Configurables import FSRCleaner
     
 # -------------------------------------------------------------------------------------------
 
@@ -236,6 +237,8 @@ class LumiAlgsConf(LHCbConfigurableUser):
         # Input data type - should not be a raw type
         seqMembers=[]
         seqMembers.append( LumiMergeFSR('MergeFSR'))
+        #remove empty FSR directories, save the 7GB memory usage!
+        seqMembers.append( FSRCleaner())
 
         return seqMembers
     
@@ -263,7 +266,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
             
             # Create sub-sequences according to BXTypes
             sequence.Members += self.fillFSR()
-
+            
             # add other method LumiSummaries - deprecated 
             if self.getProp('UseLumiLow'): 
                 sequence.Members += self.fillLowLumiFSR()

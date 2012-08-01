@@ -8,7 +8,7 @@ from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 
 from Configurables import GaudiSequencer as Sequence
-from Configurables import LumiMergeFSR, LHCbApp
+from Configurables import LumiMergeFSR, LHCbApp, FSRCleaner
 from Configurables import EventAccounting
 
 import GaudiKernel.ProcessJobOptions
@@ -74,6 +74,7 @@ class LumiMergeFSRConf(LHCbConfigurableUser):
     seqMembers.append( EventAccounting('EventAccount', OutputLevel = INFO ) )
     # merge FSRs
     seqMembers.append( LumiMergeFSR('MergeFSR'))
+    seqMembers.append( FSRCleaner()) #clean empty FSR directories
     sequence.Members = seqMembers
     sequence.MeasureTime = True
     sequence.ModeOR = False
