@@ -1,7 +1,7 @@
 """
 Test command line parsing.
 """
-from ..godII import godII
+from ..godII import godII # IGNORE:F0401
 
 import os
 
