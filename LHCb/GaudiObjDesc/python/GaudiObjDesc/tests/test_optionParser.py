@@ -39,7 +39,7 @@ class OptionsTestBase(CmdLineTestBase):
                  'srcOutput': os.curdir,
                  'dictOutput': os.curdir,
                  'argv0': lambda self, value: value == self.prog,
-                 'godRoot': lambda self, value: os.path.normpath(value) == os.path.normpath(os.environ.get("GAUDIOBJDESCROOT")),
+                 'godRoot': lambda self, value: value == (os.environ.get("GAUDIOBJDESCROOT")+'/'),
                  'gClasses': True,
                  'gClassDicts': True,
                  'gNamespaces': True,
@@ -65,7 +65,7 @@ class OptionsTestBase(CmdLineTestBase):
         value = self.get(key)
         expected = self.getExpected(key)
         if type(expected) is bool:
-            assert bool(value) is expected
+            assert bool(value) is expected, "found %r, expected %r" % (bool(value), expected)
         elif hasattr(expected, '__call__'):
             assert expected(self, value), value
         else:
@@ -81,9 +81,9 @@ class OptionsTestBase(CmdLineTestBase):
             yield self.check, k
 
 class ExitCodeTestBase(CmdLineTestBase):
-    expected_code = 0
+    expected_code = (0,)
     def test_exit_code(self):
-        assert self.exit is not None and self.exit.code == self.expected_code, "wrong exit code %s, expected %s" % (self.exit, self.expected_code)
+        assert self.exit is not None and self.exit.code in self.expected_code, "wrong exit code %s, expected %s" % (self.exit, self.expected_code)
 
 class TestNoOpts(OptionsTestBase):
     pass
@@ -98,7 +98,7 @@ class Test_gen_dict(OptionsTestBase):
 
 class Test_gen_stuff(ExitCodeTestBase):
     args = ['-g', 'stuff']
-    expected_code = 1
+    expected_code = (1, 2)
 
 class Test_version(ExitCodeTestBase):
     args = ['-v']
@@ -108,7 +108,7 @@ class Test_help(ExitCodeTestBase):
 
 class TestBadOpt(ExitCodeTestBase):
     args = ['--bad-option']
-    expected_code = 1
+    expected_code = (1, 2)
 
 class Test_DBFileExtra(OptionsTestBase):
     args = ['-i', 'file1', '-i', 'file2']
@@ -128,7 +128,7 @@ class Test_srcOutput_env(OptionsTestBase):
 
 class Test_srcOutput_no_env(ExitCodeTestBase):
     args = ['-s', 'env']
-    expected_code = 1
+    expected_code = (1, 2)
     @classmethod
     def setup_all(cls):
         try:
@@ -152,7 +152,7 @@ class Test_dictOutput_env(OptionsTestBase):
 
 class Test_dictOutput_no_env(ExitCodeTestBase):
     args = ['-d', 'env']
-    expected_code = 1
+    expected_code = (1, 2)
     @classmethod
     def setup_all(cls):
         try:
@@ -172,7 +172,7 @@ class Test_deprecated_dictOutput(OptionsTestBase):
                 'dictOutput': 'some_destination'}
 
 class Test_missing_GAUDIOBJDESCROOT(ExitCodeTestBase):
-    expected_code = 1
+    expected_code = (1, 2)
     @classmethod
     def setup_all(cls):
         root = os.environ['GAUDIOBJDESCROOT']
@@ -185,7 +185,7 @@ class Test_missing_GAUDIOBJDESCROOT(ExitCodeTestBase):
 
 class Test_godRoot(OptionsTestBase):
     args = ['-r', 'some/path/location']
-    expected = {'godRoot': lambda self, value: os.path.normpath(value) == os.path.normpath('some/path/location'),
+    expected = {'godRoot': lambda self, value: value == 'some/path/location/',
                 'xmlDBFile': 'some/path/location/xml_files/GODsClassDB.xml'}
 
 class Test_xmlDBFile(OptionsTestBase):
@@ -202,7 +202,7 @@ class Test_xmlDBFile_env(OptionsTestBase):
 
 class Test_xmlDBFile_no_env(ExitCodeTestBase):
     args = ['-x', 'env']
-    expected_code = 1
+    expected_code = (1, 2)
     @classmethod
     def setup_all(cls):
         try:
@@ -217,12 +217,12 @@ class Test_allocator(OptionsTestBase):
 
 class Test_allocator_unknown(ExitCodeTestBase):
     args = ['--allocator', 'unknown']
-    expected_code = 1
+    expected_code = (1, 2)
 
 class Test_allocator_missing(ExitCodeTestBase):
     # FIXME: the code reached by this test is not needed
     args = ['--allocator', '']
-    expected_code = 1
+    expected_code = (1, 2)
 
 class Test_ignored_opt_l(OptionsTestBase):
     args = ['-l', 'value']
@@ -234,7 +234,7 @@ class Test_namespace(OptionsTestBase):
 class Test_namespace_missing(ExitCodeTestBase):
     # FIXME: the code reached by this test is not needed
     args = ['-n', '']
-    expected_code = 1
+    expected_code = (1, 2)
 
 class Test_dtdPath(OptionsTestBase):
     args = ['-t', 'path/to/gdd.dtd']
@@ -243,4 +243,4 @@ class Test_dtdPath(OptionsTestBase):
 class Test_dtdPath_missing(ExitCodeTestBase):
     # FIXME: the code reached by this test is not needed
     args = ['-t', '']
-    expected_code = 1
+    expected_code = (1, 2)

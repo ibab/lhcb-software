@@ -4,6 +4,7 @@
 <argument name="args"><set>
 <text>-m</text>
 <text>nose.core</text>
+<text>--with-doctest</text>
 <text>-v</text>
 <text>../../python</text>
 </set></argument>
