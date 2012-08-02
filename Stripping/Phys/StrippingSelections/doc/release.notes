@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-08-02 - Fred Blanc
+ - StrippingB2CharmlessQuasi2Body.py
+ - added HLT1 TOS requirement and tighten cuts to reduce retention rate
+
 ! 2012-08-02 - Marcin Kucharczyk
  - change scalling in StrippingHighPtJets
 
