@@ -28,7 +28,7 @@ confdict = {
     ,  'Min2ndJetPtCut'   : 0.0
     ,  'JetMultCut'       : 1
     ,  'MaxRPVCut'        : 0.5
-    ,  'scale'            : 0.1
+    ,  'scale'            : 0.5
  }
 
 class HighPtJetsLinesConf(LineBuilder) :
