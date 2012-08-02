@@ -12,9 +12,9 @@
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-  FSRCleaner::FSRCleaner( const std::string& name,
-                          ISvcLocator* pSvcLocator)
-    : EmptyEventNodeCleaner( name , pSvcLocator )
+FSRCleaner::FSRCleaner( const std::string& name,
+                        ISvcLocator* pSvcLocator )
+  : EmptyEventNodeCleaner( name , pSvcLocator )
 {
   // Set sensible FSR defaults
   setProperty( "InputStream", "/FileRecords" );
@@ -35,8 +35,7 @@ StatusCode FSRCleaner::finalize()
   const StatusCode sc = EmptyEventNodeCleaner::execute();
 
   // return, try to avoid shortcutting the usual finalize
-  return ( GaudiAlgorithm::finalize() && sc );
-
+  return ( EmptyEventNodeCleaner::finalize() && sc );
 }
 
 //=============================================================================
