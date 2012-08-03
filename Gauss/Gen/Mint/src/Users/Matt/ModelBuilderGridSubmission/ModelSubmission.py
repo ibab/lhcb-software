@@ -160,9 +160,15 @@ class ModelFinderJob:
             outputdir = sj.outputdir
             readChi2 = ReadChi2(outputdir+'Chi2.txt')
             chi2 = readChi2.Chi2()
-            f.writeline(outputdir+'Model'+str(sj.id())+'.txt '+str(chi2)+'\n')
+            f.writeline(outputdir+'Model'+str(sj.id)+'.txt '+str(chi2)+'\n')
         f.close()
     
+    def ReadChi2(self,inputFile):
+        f = open(inputFile)
+        chi2 = f.read()
+        f.close()
+        return chi2
+
     def WaitTillfinished(self):
          jobrunning = True
          while jobrunning:
