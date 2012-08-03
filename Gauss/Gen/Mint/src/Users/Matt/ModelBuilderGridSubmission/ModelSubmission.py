@@ -158,8 +158,8 @@ class ModelFinderJob:
         f = open(outfileName,'w')
         for sj in j.subjobs:
             outputdir = sj.outputdir
-            readChi2 = ReadChi2(outputdir+'Chi2.txt')
-            chi2 = readChi2.Chi2()
+            readChi2 = self.ReadChi2(outputdir+'Chi2.txt')
+            chi2 = readChi2
             f.writeline(outputdir+'Model'+str(sj.id)+'.txt '+str(chi2)+'\n')
         f.close()
     
