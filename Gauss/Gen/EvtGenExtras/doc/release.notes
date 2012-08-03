@@ -4,6 +4,10 @@
 ! Purpose     : Repository of EvtGen models with external linkages
 !-----------------------------------------------------------------------------
 
+! 2012-08-03 - Nikolai Nikitin
+ - Optimization of the maximum matrix element calculation for Bq -> 4 leptons and ff calculations 
+   for the Bs -> f0(980) transitions.
+
 !======================= EvtGenExtras v3r3 2012-07-13 ========================
 ! 2012-07-11 - Aurelien Martens
  - remove spin checking for EvtFlatSqDalitz

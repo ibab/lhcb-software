@@ -240,8 +240,8 @@ void EvtbTosllMSFF::getScalarFF(EvtId parent, EvtId daught,
      int    eq_num[]={   10,    10,    10};
      double M_P2=5.366*5.366;   // GeV^2 for B_s^0 - meson
 
-     fp = equation9_10(ff0[0], M_P2, t, sigma1[0], sigma2[0], eq_num[0]);
-     f0 = equation9_10(ff0[1], M_P2, t, sigma1[1], sigma2[1], eq_num[1]);
+     fp = 0.0 - equation9_10(ff0[0], M_P2, t, sigma1[0], sigma2[0], eq_num[0]);
+     f0 = 0.0 - equation9_10(ff0[1], M_P2, t, sigma1[1], sigma2[1], eq_num[1]);
      ft = equation9_10(ff0[2], M_P2, t, sigma1[2], sigma2[2], eq_num[2]);
 
      models_counter=models_counter+1;

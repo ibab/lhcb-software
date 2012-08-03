@@ -308,17 +308,19 @@ void EvtbsToLLLLHyperCPAmp::CalcAmp(EvtParticle *parent, EvtAmp& amp,
           for(i3=0;i3<2;i3++){
             leptonicspin[3] = i3;
 
-            EvtVector4C VL2L1, AL4L3;
-            EvtVector4C VL2L1second, AL4L3second; 
+            EvtComplex SL2L1, PL4L3;
+            EvtComplex SL2L1second, PL4L3second; 
             
-            VL2L1 = EvtLeptonVCurrent(lep1Minus->spParent(i2),lep1Plus->spParent(i1));
-            AL4L3 = EvtLeptonACurrent(lep2Minus->spParent(i4),lep2Plus->spParent(i3));
+            SL2L1 = EvtLeptonSCurrent(lep1Minus->spParent(i2),lep1Plus->spParent(i1));
+            PL4L3 = EvtLeptonPCurrent(lep2Minus->spParent(i4),lep2Plus->spParent(i3));
 
-            VL2L1second = EvtLeptonVCurrent(lep2Minus->spParent(i2),lep1Plus->spParent(i1));
-            AL4L3second = EvtLeptonACurrent(lep1Minus->spParent(i4),lep2Plus->spParent(i3));
+            SL2L1second = EvtLeptonSCurrent(lep2Minus->spParent(i2),lep1Plus->spParent(i1));
+            PL4L3second = EvtLeptonPCurrent(lep1Minus->spParent(i4),lep2Plus->spParent(i3));
 
-            amp.vertex(leptonicspin,Cl*Cl*CB*fb*(mS*mS-mP*mP)*(VL2L1*AL4L3/((q2 - MS*MS)*(k2 - MP*MP))+
-              VL2L1second*AL4L3second/((q2second - MS*MS)*(k2second - MP*MP)))/(4.0*Fc*Fc));
+            amp.vertex(leptonicspin,Cl*Cl*CB*fb*(
+              SL2L1*PL4L3*(q2-k2)/((q2 - MS*MS)*(k2 - MP*MP)) -
+              SL2L1second*PL4L3second*(q2second-k2second)/((q2second - MS*MS)*(k2second - MP*MP))
+                                                )/(4.0*Fc*Fc));
           }
         }
       }
@@ -398,17 +400,19 @@ void EvtbsToLLLLHyperCPAmp::CalcAmp(EvtParticle *parent, EvtAmp& amp,
           for(i3=1;i3<0;i3--){
             leptonicspin[3] = i3;
 
-            EvtVector4C VL2L1, AL4L3;
-            EvtVector4C VL2L1second, AL4L3second;
+            EvtComplex SL2L1, PL4L3;
+            EvtComplex SL2L1second, PL4L3second;
 
-            VL2L1 = EvtLeptonVCurrent(lep1Minus->spParent(i2),lep1Plus->spParent(i1));
-            AL4L3 = EvtLeptonACurrent(lep2Minus->spParent(i4),lep2Plus->spParent(i3));
+            SL2L1 = EvtLeptonSCurrent(lep1Minus->spParent(i2),lep1Plus->spParent(i1));
+            PL4L3 = EvtLeptonPCurrent(lep2Minus->spParent(i4),lep2Plus->spParent(i3));
 
-            VL2L1second = EvtLeptonVCurrent(lep2Minus->spParent(i2),lep1Plus->spParent(i1));
-            AL4L3second = EvtLeptonACurrent(lep1Minus->spParent(i4),lep2Plus->spParent(i3));
+            SL2L1second = EvtLeptonSCurrent(lep2Minus->spParent(i2),lep1Plus->spParent(i1));
+            PL4L3second = EvtLeptonPCurrent(lep1Minus->spParent(i4),lep2Plus->spParent(i3));
 
-            amp.vertex(leptonicspin,Cl*Cl*CB*fb*(mS*mS-mP*mP)*(VL2L1*AL4L3/((q2 - MS*MS)*(k2 - MP*MP))+
-               VL2L1second*AL4L3second/((q2second - MS*MS)*(k2second - MP*MP)))/(4.0*Fc*Fc));
+            amp.vertex(leptonicspin,Cl*Cl*CB*fb*(
+               SL2L1*PL4L3*(q2-k2)/((q2 - MS*MS)*(k2 - MP*MP)) -
+               SL2L1second*PL4L3second*(q2second-k2second)/((q2second - MS*MS)*(k2second - MP*MP))
+                                                )/(4.0*Fc*Fc));
           }
         }
       }
@@ -491,6 +495,25 @@ double EvtbsToLLLLHyperCPAmp::CalcMaxProb(
                                      double mD31LL, double mD31RR
                                   ){
 
+  if(Fc == 0.0){
+     report(ERROR,"EvtGen") 
+            << "\n\n The function EvtbsToLLLLHyperCPAmp::CalcMaxProb"
+            << "\n Error in the Fc setting!"
+            << "\n       Fc = " << Fc 
+            << "\n   mD32LL = " << mD32LL
+            << "\n   mD32RR = " << mD32RR
+            << "\n   mD23LL = " << mD23LL
+            << "\n   mD23RR = " << mD23RR
+            << "\n   mD31LL = " << mD31LL
+            << "\n   mD31RR = " << mD31RR
+            << "\n   mD13LL = " << mD13LL
+            << "\n   mD13RR = " << mD13RR
+            << "\n   parnum = " << parnum << std::endl; 
+ 
+     ::abort();
+  }
+  
+
   double Cl = 0.0;                           // LPL and LSL - vertexes
   if(Fc != 0.0){
      Cl =  mLiiLR*mLiiLR/(sqrt(2)*Fc);
@@ -553,8 +576,9 @@ double EvtbsToLLLLHyperCPAmp::CalcMaxProb(
   double ml = EvtPDL::getMeanMass(l1num);   // leptonic mass
 
 
-  // We find the maximum amplitude probability 
-  double maxfoundprob = Cl*Cl*CB*fb*fabs(mS*mS-mP*mP)*10000000.0/(4.0*Fc*Fc*mS*gammaS*mP*gammaP);
+  // We find the maximum amplitude probability
+  double maxfoundprob = Cl*Cl*CB*fb*fabs(mS*mS+mP*mP+M1*M1)*10000000.0/
+                                          (4.0*Fc*Fc*mS*gammaS*mP*gammaP);
 
   if(maxfoundprob<=0.0){
      report(ERROR,"EvtGen") 
