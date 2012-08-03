@@ -148,6 +148,9 @@ class ModelFinderJob:
     #    j.do_auto_resubmit = True
         self.j.submit()
         
+    def TestJob(self,jobNum):
+        self.j = jobs(jobNum)
+        
     def JobID(self):
         return self.j.id
     def Job(self):
@@ -160,7 +163,7 @@ class ModelFinderJob:
             outputdir = sj.outputdir
             readChi2 = self.ReadChi2(outputdir+'Chi2.txt')
             chi2 = readChi2
-            f.writeline(outputdir+'Model'+str(sj.id)+'.txt '+str(chi2)+'\n')
+            f.write(outputdir+'Model'+str(sj.id)+'.txt '+str(chi2)+'\n')
         f.close()
     
     def ReadChi2(self,inputFile):
@@ -193,7 +196,7 @@ class ModelFinderJob:
 
 
 def RunModelFinder(MintDir,UserArea,inputLFNs,modelTextFile,ModelBuilderExe,max_iterations):
-    useModelCreator = True
+    useModelCreator = False
     for i in range (0,max_iterations):
         print i 
         if (i == 0):
@@ -223,7 +226,10 @@ def RunModelFinder(MintDir,UserArea,inputLFNs,modelTextFile,ModelBuilderExe,max_
             os.system('rm -r '+directory)
             os .system("mkdir "+directory)
         
-        os.system("mv FourPiModel*.txt "+directory+"/.") 
+        if  ( os.path.exists("modelbuilder.txt") ):
+            os.system("mv modelbuilder.txt "+directory+"/.") # move output log to it directory
+        os.system("mv FourPiModel*.txt "+directory+"/.") # move output log to it directory
+
         os.system("ls "+directory+"/FourPiModel*.txt > InputModels.txt") 
     
         
