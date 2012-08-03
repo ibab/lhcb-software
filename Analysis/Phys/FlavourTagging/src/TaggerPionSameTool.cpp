@@ -38,11 +38,11 @@ TaggerPionSameTool::TaggerPionSameTool( const std::string& type,
   declareProperty( "PionSame_distPhi_cut", m_distPhi_cut_pS= 0.005 );
   declareProperty( "PionSame_PIDNoK_cut", m_PionSame_PIDNoK_cut = 4.3);
   declareProperty( "PionSame_PIDNoP_cut", m_PionSame_PIDNoP_cut = 14.0);
-  // 1fb-1 paper tuning  (temporary)
-  declareProperty( "PionSame_P0_Cal",  m_P0_Cal_pionS   = 0.407 ); 
-  declareProperty( "PionSame_P1_Cal",  m_P1_Cal_pionS   = 0.76 ); 
-  declareProperty( "PionSame_P2_Cal",  m_P2_Cal_pionS   = -2.2 ); 
-  declareProperty( "PionSame_Eta_Cal", m_Eta_Cal_pionS  = 0.374 );
+  // 1fb-1 paper tuning
+  declareProperty( "PionSame_P0_Cal",  m_P0_Cal_pionS   = 0.388 ); 
+  declareProperty( "PionSame_P1_Cal",  m_P1_Cal_pionS   = 0.88 ); 
+  declareProperty( "PionSame_P2_Cal",  m_P2_Cal_pionS   = -2.06 ); 
+  declareProperty( "PionSame_Eta_Cal", m_Eta_Cal_pionS  = 0.361 );
  
   declareProperty( "PionSame_AverageOmega",   m_AverageOmega   = 0.40 );
   declareProperty( "PionSame_ProbMin",     m_PionProbMin   = 0.56);

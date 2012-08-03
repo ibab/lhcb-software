@@ -5,6 +5,9 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2012-08-03 - Stefania Vecchi
+ - updated FINAL SSpi calibration Strip17
+
 !========================= FlavourTagging v12r9p1 2012-07-09 =========================
 
 ! 2012-07-01 - Marc Grabalosa
@@ -19,7 +22,7 @@
  - Fixed compilation problem on ICC.
 
 ! 2012-06-06 - Stefania Vecchi
- - OS and SSpi and SSK calibration Strip17
+ - OS and SSpi (temporary) and SSK calibration Strip17
 
 !========================= FlavourTagging v12r8 2012-02-09 =========================
 
