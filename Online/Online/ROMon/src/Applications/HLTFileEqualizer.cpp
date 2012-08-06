@@ -236,6 +236,7 @@ void HLTFileEqualizer::Analyze()
   m_NodeList->setData((void*)m_servdat.c_str(),m_servdat.size());
   m_NodeList->updateService();
   m_servdatDiff.erase();
+  m_servdatNodesRunsFiles.erase();
   for (NodeSet::iterator nit=m_recvNodes.begin();nit != m_recvNodes.end();nit++)
   {
     std::string nname;
@@ -245,10 +246,24 @@ void HLTFileEqualizer::Analyze()
     char nfile[32];
     sprintf(nfile,"%s %d|",nod->m_name.c_str(),nod->m_nofiles);
     m_servdatDiff += nfile;
+    if (nod->m_nofiles >0)
+    {
+      m_servdatNodesRunsFiles += nod->m_name+" ";
+      RunMap::iterator k;
+      for (k = nod->m_runmap.begin();k!=nod->m_runmap.end();k++)
+      {
+        sprintf(nfile,"%d/%d,",(*k).first,(*k).second);
+        m_servdatNodesRunsFiles += nfile;
+      }
+      m_servdatNodesRunsFiles += "|";
+    }
   }
+  m_servdatNodesRunsFiles += '\0';
   m_servdatDiff += '\0';
   m_NodeListDiff->setData((void*)m_servdatDiff.c_str(),m_servdatDiff.size());
   m_NodeListDiff->updateService();
+  m_NodesRunsFiles->setData((void*)m_servdatNodesRunsFiles.c_str(),m_servdatNodesRunsFiles.size());
+  m_NodesRunsFiles->updateService();
   m_recvNodes.clear();
   dim_unlock();
 }
@@ -278,16 +293,23 @@ void DefHltInfoHandler::infoHandler()
     myNodeMap::iterator anit;
     m_Equalizer->m_recvNodes.insert(nname);
     anit = m_Equalizer->m_AllNodes.find(nname);
+    myNode* nod;
     if (anit == m_Equalizer->m_AllNodes.end())
     {
-      myNode* nod = new myNode(nname);
+      nod = new myNode(nname);
       m_Equalizer->m_AllNodes.insert(std::make_pair(nname,nod));
     }
+    else
+    {
+      nod = (*anit).second;
+    }
+    nod->m_runmap.clear();
 //    fprintf(outf,"%s: ",(*i).name);
     int nfiles=0;
     for (_R::const_iterator j = runs.begin();j!= runs.end();j=runs.next(j))
     {
       nfiles += (*j).second;
+      nod->m_runmap[(*j).first] = (*j).second;
     }
 //    fprintf(outf,"%d Files\n",nfiles);
     if (nfiles>0)
@@ -517,6 +539,8 @@ int main(int argc, char **argv)
   elz.m_NodeList= m_NodeService;
   DimService *m_NodeServiceDiff = new DimService("HLTFileEqualizer/NodeListDiff", "C",(void*)"\0",1);
   elz.m_NodeListDiff = m_NodeServiceDiff;
+  DimService *m_NodesRunsFiles= new DimService("HLTFileEqualizer/NodesRunsFiles", "C",(void*)"\0",1);
+  elz.m_NodesRunsFiles = m_NodesRunsFiles;
   fflush(outf);
   while (1)
   {

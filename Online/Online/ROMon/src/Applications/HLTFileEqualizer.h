@@ -21,7 +21,7 @@ using namespace std;
 typedef ROMon::DeferredHLTSubfarmStats _S;
 typedef _S::Nodes               _N;
 typedef _S::Node::Runs          _R;
-
+typedef std::map<int,int> RunMap;
 class myNode
 {
   public:
@@ -30,6 +30,7 @@ class myNode
     int m_nofiles;
     int m_state;
     char m_ROC_state;
+    RunMap m_runmap;
     myNode(std::string n)
     {
       m_name = n;
@@ -37,6 +38,7 @@ class myNode
       m_nofiles = 0;
       m_subfarm = m_name.substr(0,6);
       m_ROC_state = '?';
+      m_runmap.clear();
     };
 };
 class SFarm
@@ -65,8 +67,10 @@ class HLTFileEqualizer
     DimInfo *m_DefStateInfo;
     DimService *m_NodeList;
     DimService *m_NodeListDiff;
+    DimService *m_NodesRunsFiles;
     std::string m_servdat;
     std::string m_servdatDiff;
+    std::string m_servdatNodesRunsFiles;
     NodeSet m_enabledFarm;
     NodeSet m_recvNodes;
     HLTFileEqualizer();
