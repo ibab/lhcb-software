@@ -111,7 +111,7 @@ StatusCode PrTrackAssociator::execute() {
       for( std::vector<LHCb::LHCbID>::const_iterator iId = tr->lhcbIDs().begin();
            tr->lhcbIDs().end() != iId; ++iId ) {
 
-        if( (*iId).isVelo() || (*iId).isVeloPix() ) {
+        if( (*iId).isVelo() || (*iId).isVeloPix() || (*iId).isVL() ) {
           ++nMeas;
           m_total.nVelo += 1.;       // Count number of Velo hits
           LHCb::MCParticle* part = idLinker.first( (*iId).lhcbID() );
