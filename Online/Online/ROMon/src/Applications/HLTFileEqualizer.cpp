@@ -257,6 +257,12 @@ void HLTFileEqualizer::Analyze()
       }
       m_servdatNodesRunsFiles += "|";
     }
+    else
+    {
+      m_servdatNodesRunsFiles += nod->m_name+" ";
+      sprintf(nfile,"%d/%d,",0,0);
+      m_servdatNodesRunsFiles += nfile+'|';
+    }
   }
   m_servdatNodesRunsFiles += '\0';
   m_servdatDiff += '\0';
