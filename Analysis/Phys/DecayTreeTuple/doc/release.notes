@@ -1,8 +1,11 @@
-!----------------------------------------------------------------------------
+----------------------------------------------------------------------------
 ! Package     : Phys/DecayTreeTuple
 ! Responsible : Rob Lambert, Patrick Koppenburg & The WGs
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
+
+! 2012-0806 - Patrick Koppenburg
+ - src/TupleToolTriggerBase: complain when trailing Decision is missing.
 
 ! 2012-07-31 - Patrick Koppenburg
  Backward incompatible changes (i.e. some variables will change)

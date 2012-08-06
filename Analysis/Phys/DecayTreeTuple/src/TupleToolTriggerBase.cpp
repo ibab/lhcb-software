@@ -148,17 +148,21 @@ bool TupleToolTriggerBase::compileMyList(const std::vector<std::string>& list)
     {
       m_l0.push_back(*s);
     }
-    if( boost::regex_match( *s, hlt1 ) )
+    else if( boost::regex_match( *s, hlt1 ) )
     {
       m_hlt1.push_back(*s);
     }
-    if( boost::regex_match( *s,  hlt2 ) )
+    else if( boost::regex_match( *s,  hlt2 ) )
     {
       m_hlt2.push_back(*s);
     }
-    if( boost::regex_match( *s,  strip ) )
+    else if( boost::regex_match( *s,  strip ) )
     {
       m_stripping.push_back(*s);
+    }
+    else {
+      error() << "List member ``" << *s 
+              << "'' does not seem to match any known pattern. Have you forgotten the trailing `Decision'?" << endmsg ;
     }
   }
 
