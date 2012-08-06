@@ -386,10 +386,10 @@ class B2XMuMuConf(LineBuilder) :
 
     def __Kshort__(self, conf):
         """
-        Filter kshort from StdVeryLooseKshort
+        Filter kshort from StdLooseKshort
         """  
-        _ksdd = AutomaticData(Location = 'Phys/StdVeryLooseKsDD/Particles')
-        _ksll = AutomaticData(Location = 'Phys/StdVeryLooseKsLL/Particles')
+        _ksdd = AutomaticData(Location = 'Phys/StdLooseKsDD/Particles')
+        _ksll = AutomaticData(Location = 'Phys/StdLooseKsLL/Particles')
         _filter_ksdd = FilterDesktop(Code = self.__KsCuts__(conf))
         _filter_ksll = FilterDesktop(Code = self.__KsCuts__(conf))        
         _selksdd = Selection("Selection_"+self.name+"_Ksdd",
@@ -416,10 +416,10 @@ class B2XMuMuConf(LineBuilder) :
 
     def __Lambda__(self, conf):
         """
-        Filter Lambda from StdLooseLambda and StdVeryLooseLambda
+        Filter Lambda from StdLooseLambda and StdLooseLambda
         """  
         _lambdadd = AutomaticData(Location = 'Phys/StdLooseLambdaDD/Particles')
-        _lambdall = AutomaticData(Location = 'Phys/StdVeryLooseLambdaLL/Particles')
+        _lambdall = AutomaticData(Location = 'Phys/StdLooseLambdaLL/Particles')
         _filter_lambdadd = FilterDesktop(Code = self.__LambdaCuts__(conf))
         _filter_lambdall = FilterDesktop(Code = self.__LambdaCuts__(conf))        
         _sellambdadd = Selection("Selection_"+self.name+"_Lambdadd",
