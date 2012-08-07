@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-08-07 - Patrick Koppenburg
+ - python/StrippingSelections/StrippingMiniBias.py : Fix bug
+	 https://savannah.cern.ch/bugs/index.php?96584 (L0Any rate)
+
 ! 2012-08-07 - Anton Poluektov 
  - Add new test sample, tests/data/Reco13c_Run124134.py
    and the corresponding sample test script, tests/TestMyStrippingLineOn2012Data_Reco13c.py
