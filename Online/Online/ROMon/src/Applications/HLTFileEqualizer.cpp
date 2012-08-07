@@ -14,7 +14,7 @@ HLTFileEqualizer::HLTFileEqualizer()
   m_nnodes = 0;
   m_nfiles = 0;
   m_nfiles2 = 0;
-  m_low = 0;
+  m_low = 10;
   m_high = 20;
   m_enabledFarm.clear();
   m_NodeList = 0;
@@ -72,6 +72,10 @@ void HLTFileEqualizer::Analyze()
   for (myNodeMap::iterator nit=m_Nodes.begin();nit != m_Nodes.end();nit++)
   {
     myNode *nod = (*nit).second;
+    if (nod->m_excl)
+    {
+      continue;
+    }
     m_nfiles += nod->m_nofiles;
     m_nfiles2 += nod->m_nofiles*nod->m_nofiles;
     m_nnodes++;
@@ -257,7 +261,14 @@ void HLTFileEqualizer::Analyze()
     m_servdatDiff += nfile;
     if (nod->m_nofiles >0)
     {
-      m_servdatNodesRunsFiles += nod->m_name+" ";
+      if (nod->m_ROC_state == 'Y')
+      {
+        m_servdatNodesRunsFiles += nod->m_name+" 1 ";
+      }
+      else
+      {
+        m_servdatNodesRunsFiles += nod->m_name+" 0 ";
+      }
       RunMap::iterator k;
       for (k = nod->m_runmap.begin();k!=nod->m_runmap.end();k++)
       {
@@ -268,10 +279,14 @@ void HLTFileEqualizer::Analyze()
     }
     else
     {
-      m_servdatNodesRunsFiles += nod->m_name+" ";
-      sprintf(nfile,"%d/%d,",0,0);
-      m_servdatNodesRunsFiles += nfile;
-      m_servdatNodesRunsFiles+='|';
+      if (nod->m_ROC_state == 'Y')
+      {
+        m_servdatNodesRunsFiles += nod->m_name+" 1 0/0,|";
+      }
+      else
+      {
+        m_servdatNodesRunsFiles += nod->m_name+" 0 0/0,|";
+      }
     }
   }
   m_servdatNodesRunsFiles += '\0';
