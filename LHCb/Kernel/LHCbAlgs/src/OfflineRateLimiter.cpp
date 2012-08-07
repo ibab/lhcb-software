@@ -98,7 +98,7 @@ bool OfflineRateLimiter::handleTCK() {
   unsigned int newTCK = m_tckReader->getTCK() ;
   if (m_tck == newTCK ) return false ;
   
-  if (UNLIKELY( msgLevel(MSG::DEBUG) )) debug() << " changed TCK from " 
+  if (UNLIKELY( msgLevel(MSG::DEBUG) )) debug() << " changed TCK from " << std::hex 
                                                 << m_tck << " to " <<  newTCK << endmsg;
   m_tck = newTCK ;
   return true ;
