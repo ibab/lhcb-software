@@ -84,11 +84,11 @@ StatusCode OfflineRateLimiter::initialize() {
       m_rate = 0; 
     }
   }
-  info() << "Will attempt to reduce events from " << m_hltLimiter 
-         << " to a rate of " << m_rate << " Hz" << endmsg;
+  updateRate() ;
   
   return StatusCode::SUCCESS;
-}//=============================================================================
+}
+//=============================================================================
 // Not an Incident
 //=============================================================================
 bool OfflineRateLimiter::handleTCK() { 
