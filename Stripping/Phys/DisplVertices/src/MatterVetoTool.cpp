@@ -42,7 +42,6 @@ public:
   StatusCode initialize() ;
   StatusCode finalize() { return GaudiTool::finalize ();};
   bool isInMatter( const  Gaudi::XYZPoint &point ) const ;
-  void useEnlargedMatterVeto() {m_useEnlargedMatterVeto = true;}
 
 protected:
   // ========================================================================
@@ -50,13 +49,13 @@ protected:
   MatterVetoTool 
   ( const std::string& type   , ///< tool type ??? 
     const std::string& name   , ///< tool name 
-    const IInterface*  parent,
-    bool enlargedMatterVeto=false ) 
+    const IInterface*  parent ) 
     : GaudiTool ( type, name , parent )
-    , m_useEnlargedMatterVeto(enlargedMatterVeto)
   {
     //
     declareInterface<IMatterVeto>(this);
+    //
+    declareProperty("UseEnlargedMatterVeto", m_useEnlargedMatterVeto=false);
     //
     //this->registering();
     //this->InitialiseGeoInfo();
