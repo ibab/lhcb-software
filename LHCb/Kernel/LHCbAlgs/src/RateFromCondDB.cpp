@@ -37,6 +37,7 @@ RateFromCondDB::RateFromCondDB( const std::string& type,
 // Initialize
 //=============================================================================
 bool RateFromCondDB::initializeCondDB(){
+  if (UNLIKELY( msgLevel(MSG::DEBUG))) debug() << "Looking for " << m_condition << endmsg;
   if (this->existDet<Condition>(m_condition)) {
       // Register condition and read parameters values
     registerCondition(m_condition,
@@ -66,7 +67,7 @@ StatusCode RateFromCondDB::i_updateConditions() {
   if (UNLIKELY( msgLevel(MSG::DEBUG))) debug() << "callback" << endmsg;
   if (!m_condTrigger) Exception("NULL m_condTrigger in i_updateConditions()");
   if (!m_condTrigger->exists(m_lineRate)){
-    err() << "Conditions "<< m_condition << " does not contain " << m_lineRate << endmsg;
+    err() << "Conditions " << m_condition << " does not contain " << m_lineRate << endmsg;
     err() << "Fix your options!" << endmsg;
     return StatusCode::FAILURE ;
   }

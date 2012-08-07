@@ -15,7 +15,7 @@
  *
  * @verbatim
  * OfflineRateLimiter().HltLimiter = "Hlt1L0AnyRateLimitedPostScaler"
- * OfflineRateLimiter().Rate = 1.
+ * OfflineRateLimiter().Rate = 1. # Hz
  * @endverbatim
  *
  * Will reduce the rate of Hlt1L0AnyRateLimited to 1 Hz
@@ -24,7 +24,8 @@
  *
  * @verbatim
  * OfflineRateLimiter().UseCondition = True  
- * bla bla
+ * OfflineRateLimiter().HltLimiter = "Hlt1MBNoBiasODINFilter"
+ * Offlineratelimiter().Prescaler = "Hlt1MBNoBiasPreScaler"
  * @endverbatim
  *
  * This will first try the conditions database and if not found will go to the Hlt1MBNoBiasODINFilter
@@ -39,7 +40,7 @@ public:
 
   virtual ~OfflineRateLimiter( ); ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
+  //  virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
@@ -51,6 +52,7 @@ private:
   void updatePrescaleFromTCK();   ///< Check if TCK has changed, update prescale
   void updateRateFromCondDB();    ///< Check if CondDB has changed
   void updateRate();              ///< Redo all calculations
+  StatusCode initializeOnFirstEvent() ; ///< wait for event 1 to initialize
 
   IRateFromTCK* m_tckReader ;     ///< Property Config Service
   std::string m_hltLimiter ;      ///< Line wrt to which one wants to scale
@@ -62,5 +64,6 @@ private:
   std::string m_prescaler;        ///< Name of prescaler, if any
   double m_storedRate ;           ///< Rate stored in TCK or CondDB
   double m_storedPrescale ;       ///< Prescale stored in TCK
+  bool m_initialized ;            ///< has been initialized
 };
 #endif // OFFLINERATELIMITER_H

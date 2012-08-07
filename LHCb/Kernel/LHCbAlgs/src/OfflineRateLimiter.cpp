@@ -24,6 +24,7 @@ OfflineRateLimiter::OfflineRateLimiter( const std::string& name,
   , m_condTriggerTool(0)
   , m_storedRate(0.)
   , m_storedPrescale(1.)
+  , m_initialized(false)
 {
   declareProperty("HltLimiter",m_hltLimiter = "Hlt1MBNoBiasODINFilter",
                   "Reference Hlt rate limiter");
@@ -40,11 +41,11 @@ OfflineRateLimiter::~OfflineRateLimiter() {}
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode OfflineRateLimiter::initialize() {
-  StatusCode sc = OfflineDeterministicPrescaler::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by OfflineDeterministicPrescaler
-
+StatusCode OfflineRateLimiter::initializeOnFirstEvent() {
+  StatusCode sc = StatusCode::SUCCESS ;
+  if (m_initialized) return sc;
   if (UNLIKELY( msgLevel(MSG::DEBUG) )) debug() << "==> Initialize" << endmsg;
+  m_initialized = true ;
   if ( m_rate<0) Exception("Negative Rate requested");
   if ( m_useCondDB ){
     m_condTriggerTool = tool<RateFromCondDB>("RateFromCondDB",this);
@@ -59,14 +60,14 @@ StatusCode OfflineRateLimiter::initialize() {
           sc =  m_tckReader->runUpdate();
           if (!sc) {
             warning() << "Failed to update condDB for RateFromTCK. Will assume there is no preccale." << endmsg ;
-            m_tckReader->finalize();
+            release ( m_tckReader );
             m_tckReader = 0;
           }
         }
       } else if (m_fallback) {
         info() << "Failed to get rate from condition database. This is normal for <2012." << endmsg ;
         info() << "Fill fallback on TCK" << endmsg ;
-        m_condTriggerTool->finalize();
+        release(m_condTriggerTool);
         m_useCondDB = false ;
       } else{
         Exception("Failed to get rate from condition database and no fallback") ;
@@ -167,7 +168,7 @@ void OfflineRateLimiter::updateRateFromCondDB() {
 StatusCode OfflineRateLimiter::execute() {
 
   //  somewhere here get rate
-
+  if (!initializeOnFirstEvent()) return StatusCode::FAILURE;
   if (UNLIKELY( msgLevel(MSG::DEBUG) )) debug() << "==> Execute "  << endmsg;
   if (m_useCondDB) updateRateFromCondDB() ;                  // Try via CondDB
   else updateRateFromTCK();
