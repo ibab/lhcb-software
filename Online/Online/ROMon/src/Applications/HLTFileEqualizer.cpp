@@ -1,6 +1,7 @@
 #include "HLTFileEqualizer.h"
 #include <math.h>
 #include <time.h>
+#include "ROMon/Utilities.h"
 
 static FILE *outf;
 HLTFileEqualizer::HLTFileEqualizer()
@@ -43,13 +44,13 @@ HLTFileEqualizer::HLTFileEqualizer()
 }
 namespace
 {
-  inline void toLowerCase(std::string &s)
-  {
-    for (unsigned int i=0;i<s.size();i++)
-    {
-      s[i] = tolower(s[i]);
-    }
-  }
+//  inline void toLowerCase(std::string &s)
+//  {
+//    for (unsigned int i=0;i<s.size();i++)
+//    {
+//      s[i] = tolower(s[i]);
+//    }
+//  }
   inline void toUpperCase(std::string &s)
   {
     for (unsigned int i=0;i<s.size();i++)
@@ -128,7 +129,11 @@ void HLTFileEqualizer::Analyze()
   for (myNodeMap::iterator nit=m_Nodes.begin();nit != m_Nodes.end();nit++)
   {
     myNode *nod = (*nit).second;
-    if ((nod->m_nofiles > av_files+5.0*rms) || (nod->m_nofiles <av_files-5.0*rms))
+    if ((nod->m_nofiles > av_files+2.0*rms) || (nod->m_nofiles <av_files-2.0*rms))
+    {
+      continue;
+    }
+    if (nod->m_excl)
     {
       continue;
     }
@@ -157,6 +162,10 @@ void HLTFileEqualizer::Analyze()
   for (myNodeMap::iterator nit=m_Nodes.begin();nit != m_Nodes.end();nit++)
   {
     myNode *nod = (*nit).second;
+    if (nod->m_excl)
+    {
+      continue;
+    }
     if (nod->m_nofiles > av_files+m_high)
     {
       if (nod->m_ROC_state == 'Y')
@@ -296,6 +305,7 @@ void DefHltInfoHandler::infoHandler()
     const _R& runs = (*i).runs;
     std::string nname;
     nname = (*i).name;
+    toLowerCase(nname);
     myNodeMap::iterator nit;
     myNodeMap::iterator anit;
     m_Equalizer->m_recvNodes.insert(nname);
@@ -310,6 +320,8 @@ void DefHltInfoHandler::infoHandler()
     {
       nod = (*anit).second;
     }
+    NodeSet::iterator en = m_Equalizer->m_exclNodes.find(nod->m_name);
+    nod->m_excl = (en != m_Equalizer->m_exclNodes.end());
     nod->m_runmap.clear();
 //    fprintf(outf,"%s: ",(*i).name);
     int nfiles=0;
@@ -400,8 +412,16 @@ void HLTFileEqualizer::Dump()
     int indx;
     sscanf(nod->m_name.substr(6,2).c_str(),"%d",&indx);
     char nfil[10];
-    sprintf(nfil,"%4d",nod->m_nofiles);
-    line.replace(9+(indx-1)*5,4,nfil);
+    if (nod->m_ROC_state == 'Y')
+    {
+      sprintf(nfil,"%4d",nod->m_nofiles);
+      line.replace(9+(indx-1)*5,4,nfil);
+    }
+    else
+    {
+      sprintf(nfil,"%4d*",nod->m_nofiles);
+      line.replace(9+(indx-1)*5,5,nfil);
+    }
   }
   fprintf(outf,"\n%s\n",line.c_str());
   fflush(outf);
@@ -514,6 +534,27 @@ void LHCb1RunStatus::infoHandler()
   m_state = data;
 };
 
+ExclInfo::ExclInfo(char *name, NodeSet *nodeset) : DimInfo(name,(char*) "\0")
+{
+  this->m_exclNodes = nodeset;
+}
+
+void ExclInfo::infoHandler()
+{
+  char *input;
+  input = getString();
+  dyn_string *nlist = Strsplit(input,"\0");
+  m_exclNodes->clear();
+  for (size_t i=0;i<nlist->size();i++)
+  {
+    if (nlist->at(i).size()>0)
+    {
+      toLowerCase(nlist->at(i));
+      m_exclNodes->insert(nlist->at(i));
+    }
+  }
+}
+
 int main(int argc, char **argv)
 {
   outf = fopen("/group/online/HLTFileEqualizer.log","a+");
@@ -538,6 +579,7 @@ int main(int argc, char **argv)
     elz.m_low = low;
     elz.m_high = high;
   }
+  ExclInfo exclInfo((char*)"HLT/ExcludedNodes",&elz.m_exclNodes);
   DimInfo *defstate=new DimInfo("RunInfo/LHCb/DeferHLT",m_DefState);
   elz.m_DefStateInfo = defstate;
   ExitCommand EnableandExit("HLTFileEqualizer/EnableAndExit",(char*)"I",&elz.m_AllNodes,&elz);

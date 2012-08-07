@@ -31,6 +31,7 @@ class myNode
     int m_state;
     char m_ROC_state;
     RunMap m_runmap;
+    bool m_excl;
     myNode(std::string n)
     {
       m_name = n;
@@ -39,6 +40,7 @@ class myNode
       m_subfarm = m_name.substr(0,6);
       m_ROC_state = '?';
       m_runmap.clear();
+      m_excl = false;
     };
 };
 class SFarm
@@ -73,6 +75,7 @@ class HLTFileEqualizer
     std::string m_servdatNodesRunsFiles;
     NodeSet m_enabledFarm;
     NodeSet m_recvNodes;
+    NodeSet m_exclNodes;
     HLTFileEqualizer();
     void Analyze();
     void Dump();
@@ -96,6 +99,14 @@ class LHCb1RunStatus : public DimInfo
     int m_nolink;
     int m_state;
     LHCb1RunStatus(char *name, int nolink,HLTFileEqualizer *e);
+    void infoHandler();
+};
+
+class ExclInfo : public DimInfo
+{
+  public:
+    NodeSet *m_exclNodes;
+    ExclInfo(char *name, NodeSet *nodeset);
     void infoHandler();
 };
 
