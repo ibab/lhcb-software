@@ -9,7 +9,7 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-static const InterfaceID IID_IRateFromTCK ( "IRateFromTCK", 1, 0 );
+static const InterfaceID IID_IRateFromTCK ( "IRateFromTCK", 2, 0 );
 
 /** @class IRateFromTCK IRateFromTCK.h Kernel/IRateFromTCK.h
  *  
@@ -26,6 +26,10 @@ public:
   virtual unsigned int getTCK() const = 0;                            ///< retrieve TCK 
   /// Get rate of rate limiting algorithm given its instance name (See TCKsh)
   virtual double rateFromTCK(std::string instanceName) const = 0;  
+  /// Get prescale of prescaler algorithm given its instance name (See TCKsh)
+  virtual double prescaleFromTCK(std::string instanceName) const = 0;  
+  /// Update
+  virtual StatusCode runUpdate() = 0;  
 
 protected:
 

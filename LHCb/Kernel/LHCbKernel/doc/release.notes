@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2012-08-07 - Patrick Koppenburg
+ - Expand IRateFromTCK.h to deal with prescales. See https://savannah.cern.ch/bugs/?94262
+
 ! 2012-07-25 - Marco Clemencic
  - Moved MemoryPoolAllocatorReleaser source and test to GaudiObjDesc, changing
    the namespace to Gaudi.
