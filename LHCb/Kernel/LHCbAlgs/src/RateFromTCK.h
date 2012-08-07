@@ -35,11 +35,22 @@ public:
     return   m_triggerTCK;
   };                            ///< retrieve TCK
   /// Get rate of rate limiting algorithm given its instance name (See TCKsh)
-  double rateFromTCK(std::string instanceName) const ;
+  double rateFromTCK(std::string instanceName) const{
+    return parameterFromTCK(instanceName,"Code","RATE(");
+  } ;
+  /// Get prescale of algorithm given its instance name (See TCKsh)
+  double prescaleFromTCK(std::string instanceName) const{
+    return parameterFromTCK(instanceName,"AcceptFraction","");
+  } ;
+
+  StatusCode runUpdate() ;
 
 protected:
 
 private:
+  /// Get prescale of algorithm given its instance name (See TCKsh)
+  double parameterFromTCK(std::string instanceName, std::string code, std::string sub) const ;
+
   StatusCode i_cacheTriggerData();              ///< Function extracting data from Condition
 
   mutable IPropertyConfigSvc * m_propertyConfigSvc;

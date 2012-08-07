@@ -46,8 +46,11 @@ public:
 protected:
 
 private:
-  void handleTCK();               ///< Check if TCK has changed
-  void handleCondDB();            ///< Check if CondDB has changed
+  bool handleTCK();               ///< Check if TCK has changed
+  void updateRateFromTCK();       ///< Check if TCK has changed, update rate
+  void updatePrescaleFromTCK();   ///< Check if TCK has changed, update prescale
+  void updateRateFromCondDB();    ///< Check if CondDB has changed
+  void updateRate();              ///< Redo all calculations
 
   IRateFromTCK* m_tckReader ;     ///< Property Config Service
   std::string m_hltLimiter ;      ///< Line wrt to which one wants to scale
@@ -56,5 +59,8 @@ private:
   bool m_useCondDB ;              ///< Use Condition DB
   RateFromCondDB* m_condTriggerTool ; ///< Rate from CondDB
   bool m_fallback;                ///< Fallback to TCK if rate is zero (for instance in 2011 data)
+  std::string m_prescaler;        ///< Name of prescaler, if any
+  double m_storedRate ;           ///< Rate stored in TCK or CondDB
+  double m_storedPrescale ;       ///< Prescale stored in TCK
 };
 #endif // OFFLINERATELIMITER_H

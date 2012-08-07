@@ -12,6 +12,7 @@
 #include "Kernel/IPropertyConfigSvc.h"
 #include "Kernel/TCK.h"
 #include "GaudiKernel/SmartDataPtr.h"
+#include "Kernel/IRateFromTCK.h"
 static const InterfaceID IID_RateFromCondDB ( "RateFromCondDB", 1, 0 ); // needed as there's no interface
 /** @class RateFromCondDB RateFromCondDB.h
  *  
@@ -54,5 +55,6 @@ private:
   double m_rate;                                ///< rate in condDB
   std::string m_condition ;                     ///< ConditionName
   std::string m_lineRate ;                      ///< Line Rate name in CondDB
+  double m_unit ;                               ///< Unit for rate
 };
 #endif // RATEFROMTCK_H

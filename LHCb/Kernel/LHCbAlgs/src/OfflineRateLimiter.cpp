@@ -1,6 +1,7 @@
 // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
+#include <iomanip>
 
 // local
 #include "OfflineRateLimiter.h"
@@ -20,13 +21,16 @@ OfflineRateLimiter::OfflineRateLimiter( const std::string& name,
   : OfflineDeterministicPrescaler ( name , pSvcLocator )
   , m_tckReader(0)
   , m_tck(0)
-  ,  m_condTriggerTool(0)
+  , m_condTriggerTool(0)
+  , m_storedRate(0.)
+  , m_storedPrescale(1.)
 {
   declareProperty("HltLimiter",m_hltLimiter = "Hlt1MBNoBiasODINFilter",
                   "Reference Hlt rate limiter");
-  declareProperty("Rate",m_rate = 1.,"Rate to achieve [Hz]");
+  declareProperty("Rate",m_rate = 0.,"Rate to achieve [Hz]");
   declareProperty("UseCondition", m_useCondDB = false);
-  declareProperty("FallBack", m_fallback = false);
+  declareProperty("FallBack", m_fallback = true);
+  declareProperty("Prescaler", m_prescaler = "Hlt1MBNoBiasPreScaler","Name of Prescaler");
 }
 //=============================================================================
 // Destructor
@@ -40,13 +44,26 @@ StatusCode OfflineRateLimiter::initialize() {
   StatusCode sc = OfflineDeterministicPrescaler::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by OfflineDeterministicPrescaler
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
+  if (UNLIKELY( msgLevel(MSG::DEBUG) )) debug() << "==> Initialize" << endmsg;
   if ( m_rate<0) Exception("Negative Rate requested");
   if ( m_useCondDB ){
     m_condTriggerTool = tool<RateFromCondDB>("RateFromCondDB",this);
-    if (!m_condTriggerTool) return StatusCode::FAILURE;
-    if (!m_condTriggerTool->initializeCondDB()){
-      if (m_fallback) {
+    if (!m_condTriggerTool) {
+        warning() << "Failed to initialise RateFromCondDB. This is expected on MC." << endmsg ;
+        m_useCondDB = false ;
+    } else {
+      if (m_condTriggerTool->initializeCondDB()){
+        if ( ""!= m_prescaler){
+          
+          m_tckReader = tool<IRateFromTCK>("RateFromTCK",this); // make it private
+          sc =  m_tckReader->runUpdate();
+          if (!sc) {
+            warning() << "Failed to update condDB for RateFromTCK. Will assume there is no preccale." << endmsg ;
+            m_tckReader->finalize();
+            m_tckReader = 0;
+          }
+        }
+      } else if (m_fallback) {
         info() << "Failed to get rate from condition database. This is normal for <2012." << endmsg ;
         info() << "Fill fallback on TCK" << endmsg ;
         m_condTriggerTool->finalize();
@@ -60,64 +77,87 @@ StatusCode OfflineRateLimiter::initialize() {
   if ( !m_useCondDB || m_fallback ){
     m_tckReader = tool<IRateFromTCK>("RateFromTCK",this); // make it private
     if (!m_tckReader) return StatusCode::FAILURE;
+    sc =  m_tckReader->runUpdate();
+    if (!sc) {
+      warning() << "Failed to update condDB for RateFromTCK. This is OK on MC. Setting rate ot 0." << endmsg ;
+      m_useCondDB = false ;
+      m_rate = 0; 
+    }
   }
   info() << "Will attempt to reduce events from " << m_hltLimiter 
          << " to a rate of " << m_rate << " Hz" << endmsg;
   
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
+}//=============================================================================
 // Not an Incident
 //=============================================================================
-void OfflineRateLimiter::handleTCK() { 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> handleTCK "  << endmsg;
+bool OfflineRateLimiter::handleTCK() { 
+  if (UNLIKELY( msgLevel(MSG::DEBUG) )) debug() << "==> handleTCK "  << endmsg;
   if (0==m_tckReader) Exception("TCK Reader is NULL in handleTCK");
   unsigned int newTCK = m_tckReader->getTCK() ;
-  if (m_tck == newTCK ) return ;
+  if (m_tck == newTCK ) return false ;
   
-  if ( msgLevel(MSG::DEBUG) ) debug() << " changed TCK from " << m_tck << " to " <<  newTCK << endmsg;
-  boost::uint32_t savedAcc = m_acc;
+  if (UNLIKELY( msgLevel(MSG::DEBUG) )) debug() << " changed TCK from " 
+                                                << m_tck << " to " <<  newTCK << endmsg;
   m_tck = newTCK ;
+  return true ;
+}
+//=============================================================================
+// 
+//=============================================================================
+void OfflineRateLimiter::updateRate(){
+  double triggerRate = (m_storedRate*m_storedPrescale);
+  double newacc = (triggerRate>0)?m_rate/triggerRate:0. ;
+  if (UNLIKELY( msgLevel(MSG::DEBUG))) debug() << "==> updateRate " << newacc << endmsg;  
+  if ( m_accFrac != newacc ){    
+    info() << "Rate is now " << m_storedRate 
+           << " Hz and precale " << m_storedPrescale << " (=" << triggerRate << " Hz)"
+           << " -> Need to reduce by factor " << newacc
+           << " to reach target "  << m_rate << " Hz." << endmsg ;
+    m_accFrac = newacc ;
+    update(); // update in baseclass
+  }
+}
+//=============================================================================
+// 
+//=============================================================================
+void OfflineRateLimiter::updateRateFromTCK(){
+  if (!handleTCK()) return ;
   double randomRate = m_tckReader->rateFromTCK(m_hltLimiter) ;
-  if ( randomRate > 0) {
-    m_accFrac = m_rate/randomRate ;
-  } else {
-    warning() << "Rate of " << m_hltLimiter << " in TCK " 
-              << m_tck << " is " 
-              << randomRate << endmsg ;
-    m_accFrac = 0 ;
+  if ( randomRate <= 0) {
+    warning() << "Rate of " << m_hltLimiter << " in TCK " << std::hex << m_tck << " is " 
+              << randomRate << " Hz" << endmsg ;
   }
-  update();
-  if (msgLevel(MSG::DEBUG) || (savedAcc!=m_acc )) {
-    info() << "Rate of " << m_hltLimiter << " in TCK " 
-           << m_tck << " is " 
-           << randomRate
-           << " Hz -> Need to reduce by factor " << m_accFrac << endmsg ;
-  }
+  m_storedRate = randomRate ;
+  updateRate();
   return ;
 }
 //=============================================================================
+// 
+//=============================================================================
+void OfflineRateLimiter::updatePrescaleFromTCK(){
+  if (!handleTCK()) return ;
+  double prescale = m_tckReader->prescaleFromTCK(m_prescaler) ;
+  if (  prescale <= 0) {
+    warning() << "Prescale of " << m_prescaler << " in TCK " << std::hex << m_tck << " is " 
+              << prescale << endmsg ;
+  }
+  m_storedPrescale = prescale ;
+  updateRate();
+}
+//=============================================================================
 // Not an Incident
 //=============================================================================
-void OfflineRateLimiter::handleCondDB() { 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> handleCondDB "  << endmsg;
-  if (0==m_condTriggerTool) Exception("CondDB Reader is NULL in handleCondDB");
+void OfflineRateLimiter::updateRateFromCondDB() { 
+  if (UNLIKELY( msgLevel(MSG::DEBUG) )) debug() << "==> updateRateFromCondDB "  << endmsg;
+  if (0==m_condTriggerTool) Exception("CondDB Reader is NULL in updateRateFromCondDB");
   
-  boost::uint32_t savedAcc = m_acc;
   double randomRate = m_condTriggerTool->getRate() ;
   if ( randomRate > 0) {
-    m_accFrac = m_rate/randomRate ;
-    update();
-  } else {
-    warning() << "Rate of Line is" << randomRate << endmsg ;
-    if ( m_tckReader ) handleTCK() ;
-  }
-  if (msgLevel(MSG::DEBUG) || (savedAcc!=m_acc )) {
-    info() << "Rate of Line is " 
-           << randomRate
-           << " Hz -> Need to reduce by factor " << m_accFrac << endmsg ;
-  }
+    m_storedRate = randomRate ;
+    if ( m_tckReader ) updatePrescaleFromTCK() ;
+    else updateRate();
+  } 
   return ;
 }
 
@@ -128,9 +168,9 @@ StatusCode OfflineRateLimiter::execute() {
 
   //  somewhere here get rate
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute "  << endmsg;
-  if (m_useCondDB) handleCondDB() ;    // Try via CondDB
-  else handleTCK() ;                   // Try via TCK
+  if (UNLIKELY( msgLevel(MSG::DEBUG) )) debug() << "==> Execute "  << endmsg;
+  if (m_useCondDB) updateRateFromCondDB() ;                  // Try via CondDB
+  else updateRateFromTCK();
   bool acc = accept();
   setFilterPassed(acc);
   *m_counter += acc;
@@ -143,7 +183,7 @@ StatusCode OfflineRateLimiter::execute() {
 //=============================================================================
 StatusCode OfflineRateLimiter::finalize() {
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
+  if (UNLIKELY( msgLevel(MSG::DEBUG) )) debug() << "==> Finalize" << endmsg;
 
   return OfflineDeterministicPrescaler::finalize();  // must be called after all other actions
 }

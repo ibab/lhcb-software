@@ -5,6 +5,7 @@
 
 // local
 #include "RateFromCondDB.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RateFromCondDB
@@ -29,6 +30,7 @@ RateFromCondDB::RateFromCondDB( const std::string& type,
 
   declareProperty("Condition", m_condition = "Conditions/Online/LHCb/RunInfo/NoBiasSettings","Name of Condition");
   declareProperty("LineRate", m_lineRate = "NoBiasRate","Name of Line Rate");
+  declareProperty("Unit", m_unit = 1000., "Unit of rate in CondDB (default: kHz)");
   
 }
 //=============================================================================
@@ -39,12 +41,12 @@ bool RateFromCondDB::initializeCondDB(){
       // Register condition and read parameters values
     registerCondition(m_condition,
                       m_condTrigger, &RateFromCondDB::i_updateConditions);   
-    if (msgLevel(MSG::DEBUG)) debug() << m_condition << " found" << endmsg;
+    if (UNLIKELY( msgLevel(MSG::DEBUG))) debug() << m_condition << " found" << endmsg;
   } else {
     warning() << m_condition << " Not found. I suggest you try to get it from TCK." << endmsg;
     return false ;    
   }
-  if (msgLevel(MSG::DEBUG)) debug() << "Got condition: " << m_condition << endmsg;  
+  if (UNLIKELY( msgLevel(MSG::DEBUG))) debug() << "Got condition: " << m_condition << endmsg;  
   StatusCode sc = runUpdate() ;  // initial update of DB
   if (!sc) Exception("runUpdate failed");
   return true;
@@ -54,22 +56,23 @@ bool RateFromCondDB::initializeCondDB(){
 //=============================================================================
 double RateFromCondDB::getRate() const {
   // get rate from CondDB
-  if (msgLevel(MSG::DEBUG)) debug() << "==> rate from CondDB: " << m_rate << endmsg;
+  if (UNLIKELY( msgLevel(MSG::DEBUG))) debug() << "==> rate from CondDB: " << m_rate << " Hz" << endmsg;
   return m_rate;
 }
 //=========================================================================
 //  Extract data from Trigger
 //=========================================================================
 StatusCode RateFromCondDB::i_updateConditions() {
-  if (msgLevel(MSG::DEBUG)) debug() << "callback" << endmsg;
+  if (UNLIKELY( msgLevel(MSG::DEBUG))) debug() << "callback" << endmsg;
   if (!m_condTrigger) Exception("NULL m_condTrigger in i_updateConditions()");
   if (!m_condTrigger->exists(m_lineRate)){
     err() << "Conditions "<< m_condition << " does not contain " << m_lineRate << endmsg;
     err() << "Fix your options!" << endmsg;
     return StatusCode::FAILURE ;
   }
-  m_rate = (double) m_condTrigger->param<double>(m_lineRate);
-  if (msgLevel(MSG::DEBUG)) debug() << "Updated " << m_lineRate << " to " << m_rate << endmsg ;
+  m_rate = (double) m_condTrigger->param<double>(m_lineRate)*m_unit;
+  
+  if (UNLIKELY( msgLevel(MSG::DEBUG))) debug() << "Updated " << m_lineRate << " to " << m_rate << endmsg ;
   return StatusCode::SUCCESS;
 }
 

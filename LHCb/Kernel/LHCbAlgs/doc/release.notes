@@ -4,6 +4,11 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2012-08-07 - Patrick Koppenburg
+ - src/RateFromCondDB, src/OfflineRateLimiter, src/RateFromTCK:
+   . Allow to deal with rates and prescales to fix https://savannah.cern.ch/bugs/?94262
+   . Requires LHCb/LHCbKernel r143843
+
 ! 2012-08-02 - Chris Jones
  - Call EmptyEventNodeCleaner::finalize() not GaudiAlgorithm::finalize() in
    FSRCleaner::finalize()
