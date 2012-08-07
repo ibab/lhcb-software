@@ -570,7 +570,7 @@ void MDFWriterNet::closeFile(File *currFile)
 
 	//////////////////
 	//Printing to check if the close command is queued
-	*m_log << MSG::INFO << WHERE << "Close command queued for file: " << currFile->getFileName() << endmsg;
+	*m_log << MSG::INFO << WHERE << "Close command queued for file: " << currFile->getFileName()->c_str() << endmsg;
 	//////////////////
 
 	if (currFile->getTrgEvents(trgEvents, MAX_TRIGGER_TYPES) != 0)
@@ -915,7 +915,7 @@ StatusCode MDFWriterNet::writeBuffer(void * const /*fd*/, const void *data,
 							> m_runFileTimeoutSeconds) {
 				// This file hasn't been written to in a loong time. Close it.
 				*m_log << MSG::INFO << WHERE
-						<< "Closing a file that did not get events for a long time now: " << tmpFile->getFileName()
+						<< "Closing a file that did not get events for a long time now: " << tmpFile->getFileName()->c_str()
 						<< endmsg;
 				File *toDelete = tmpFile;
 				closeFile(tmpFile);
@@ -1076,6 +1076,7 @@ StatusCode MDFWriterNet::writeBuffer(void * const /*fd*/, const void *data,
 	if (totalBytesWritten > (m_maxFileSizeMB << 20) || (m_maxEventInFile != 0
 			&& m_maxEventInFile <= m_currFile->getEvents()))
 	{
+		*m_log << MSG::INFO << WHERE << "Max file size reached; closing file: " << m_currFile->getFileName()->c_str() << endmsg;
 		closeFile(m_currFile);
 		m_openFiles.removeFile(m_currFile);
 		delete (m_currFile);

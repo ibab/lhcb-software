@@ -88,7 +88,7 @@ void SendThread::stop(void) {
     *m_log << MSG::ERROR << "Could not stop send thread " << errno << endmsg;
     return;
   }
-  *m_log << MSG::INFO << " Writer " << getpid()
+  *m_log << MSG::INFO << "Writer " << getpid()
          << " Send thread stopped." << endmsg;
 }
 
@@ -153,7 +153,7 @@ int SendThread::processSends(void)
       }
     } else if(ret == BIF::AGAIN) {
           //*m_log << MSG::INFO << "send returned AGAIN: " << ++dbg_CountAgain  << endmsg;
-    	*m_log << MSG::INFO << "send returned: AGAIN: " << endmsg;
+//    	*m_log << MSG::INFO << "send returned: AGAIN: " << endmsg;
           nanosleep(&iSleep, NULL);
           if(iSleep.tv_sec < 1) {
               if(iSleep.tv_nsec >= 900000000) {
@@ -166,10 +166,8 @@ int SendThread::processSends(void)
           continue; // try to send again
       }
       else {
-          // *m_log << MSG::INFO << "send:  " << ret  << endmsg;
-          // Unknown Error
-          *m_log << MSG::INFO << "send returned:  " << ret << endmsg;
-      }
+//          *m_log << MSG::INFO << "send returned:  " << ret << endmsg;
+      	}
   } while( (m_stopUrgently == false && m_stopAfterFinish == false) ||
       (m_stopUrgently == false && m_stopAfterFinish == true && cmd_to_send != NULL));
 
