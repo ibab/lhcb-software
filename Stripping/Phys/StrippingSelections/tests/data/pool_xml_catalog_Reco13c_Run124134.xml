@@ -1,0 +1,3436 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!-- Edited By PoolXMLCatalog.py -->
+<!DOCTYPE POOLFILECATALOG SYSTEM "InMemory">
+<POOLFILECATALOG>
+
+
+  <File ID="DE4535BB-64DA-E111-88DA-0026B94D1AD5">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009451_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009451_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="AEFB8A36-74DD-E111-9D43-00266CFAE764">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0003/00019146_00032468_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0003/00019146_00032468_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="10883DBE-71DA-E111-884F-00266CF9B884">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009633_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009633_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="3CA3B646-6FDA-E111-90B5-0024E86E8CFE">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009558_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009558_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="EE921162-61DA-E111-8692-00A0D1EE95FC">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009435_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009435_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="98B610E1-60DA-E111-9EBF-848F69FD29D0">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009403_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009403_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="30409C00-62DA-E111-8412-848F69FD28AD">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009421_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009421_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="F29EB7DE-60DA-E111-97C0-180373FF8446">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009424_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009424_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="906B98B0-93DA-E111-97EA-00266CFAE464">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011272_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011272_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="D497B42F-6FDA-E111-9780-00A0D1EEDFEC">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009562_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009562_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="9A172994-5FDA-E111-BC63-00266CFAE748">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009410_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009410_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="1C6313DE-62DA-E111-8E5E-0024E8769BA1">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009458_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009458_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="001862CA-61DA-E111-BFEF-0024E876998C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009436_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009436_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="20135718-63DA-E111-A8CA-008CFA00317C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009460_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009460_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="127FC873-8DDA-E111-A799-848F69FD3EC9">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011305_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011305_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="F2F0AAAD-6FDA-E111-A840-00A0D1EE8D6C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009583_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009583_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="E2B097E1-62DA-E111-AC10-0024E8768224">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009440_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009440_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="DE3DE2C7-94DA-E111-BA3A-0024E8767D6C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011274_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011274_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="940FB49A-63DA-E111-A270-848F69FD29BB">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009456_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009456_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="042071C6-63DA-E111-8FEE-848F69FD288F">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009462_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009462_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="F413716D-6FDA-E111-94CA-848F69FD2484">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009574_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009574_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="A03044C1-6BDA-E111-9AB5-0024E876A807">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009548_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009548_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="C6DD89DE-94DA-E111-AA69-0026B94E27FD">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011265_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011265_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="D6CE2A45-96DA-E111-806F-0024E876A862">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011279_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011279_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="DAE5FB51-6BDA-E111-87B7-00266CFAE318">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009537_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009537_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="C69B719A-6ADA-E111-8CF8-848F69FD287A">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009544_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009544_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="3C277817-72DA-E111-AEAB-00A0D1EEDCEC">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009615_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009615_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="70B708C5-6FDA-E111-AE13-008CFA002020">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009563_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009563_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="26724D65-6FDA-E111-A263-848F69FD4E8C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009588_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009588_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="5A78743B-65DA-E111-B0C4-00266CFAEA74">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009442_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009442_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="6407966C-60DA-E111-A530-848F69FD4598">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009425_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009425_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="54837DED-95DA-E111-A796-848F69FD294C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011297_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011297_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="6CBDA92B-70DA-E111-A42F-00266CFADF38">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009593_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009593_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="26FE0B1E-62DA-E111-81D7-00A0D1EE8C70">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009430_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009430_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="AECC4A76-6FDA-E111-BB7D-0024E87699DA">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009587_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009587_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="7EF49784-62DA-E111-B820-00266CF24E74">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009432_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009432_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="CEA667A0-8DDA-E111-BA09-008CFA000F5C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011306_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011306_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="06317EF7-71DA-E111-A6D9-00266CF279F8">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009630_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009630_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="20405E97-91DA-E111-A36B-848F69FD2904">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011243_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011243_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="6CA0CF6D-93DA-E111-97C5-0024E876820A">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011254_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011254_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="1C5A6665-91DA-E111-8EA6-008CFA002FF4">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011239_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011239_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="024B0913-6ADA-E111-A9D2-848F69FD28AD">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009526_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009526_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="A2077667-8DDA-E111-B8D0-00A0D1EEF364">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011230_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011230_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="92A584DF-5FDA-E111-BC0E-0026B94D1B16">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009389_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009389_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="3462348B-64DA-E111-A05E-00A0D1EEE654">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009477_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009477_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="9EAA9E43-67DA-E111-BBED-0024E876A821">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009503_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009503_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="E23E820C-92DA-E111-9645-00266CFABAF0">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011249_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011249_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="18A74A39-5EDA-E111-8BDD-0024E8769B12">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009373_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009373_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="784FBD92-70DA-E111-BB85-00266CF9AD20">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009599_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009599_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="DC3A9DDE-5EDA-E111-8E59-008CFA0005F4">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009398_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009398_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="80162415-63DA-E111-AFD2-848F69FD292E">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009453_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009453_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="8A120B3A-6ADA-E111-A213-00A0D1EEF328">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009528_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009528_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="EEF039B4-8DDA-E111-A8EE-008CFA008C04">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011300_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011300_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="CAF2BBBB-6CDA-E111-B047-00266CF9B59C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009547_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009547_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="524F4DBC-73DA-E111-A0B5-0024E8769B39">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009634_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009634_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="6A13329E-62DA-E111-B979-00A0D1EE8AF0">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009455_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009455_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="FC2D7603-71DA-E111-9A1D-00266CFAE458">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009564_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009564_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="023E623E-66DA-E111-8CA9-00A0D1EEF5B4">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009468_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009468_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="06DD45A0-6EDA-E111-9D09-0024E876A7ED">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009568_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009568_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="30A53B7B-92DA-E111-BEFD-00266CFAE764">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011247_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011247_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="5E1AC054-64DA-E111-952F-848F69FD295B">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009479_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009479_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="C4BE1840-93DA-E111-8BEF-848F69FD4553">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011270_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011270_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="E2733C1B-71DA-E111-A858-00266CF25590">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009580_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009580_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="4CCCAB71-8EDA-E111-96DD-00266CFAE518">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011307_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011307_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="18B5E3E8-93DA-E111-9B5F-00266CF9B1C4">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011256_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011256_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="CA28B2EC-5FDA-E111-9A92-00266CF2679C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009420_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009420_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="CC409003-65DA-E111-9EE9-008CFA002EE0">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009493_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009493_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="409D5804-6CDA-E111-93C9-00266CF9B5D0">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009546_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009546_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="8CF98521-60DA-E111-B006-848F69FD298E">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009406_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009406_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="DE4D794A-66DA-E111-BDAE-00266CF9BCAC">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009508_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009508_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="86865DCD-91DA-E111-B0DF-848F69FD2817">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011242_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011242_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="FA9E2A4B-92DA-E111-9A15-0024E876997F">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011248_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011248_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="9A05582F-6BDA-E111-A633-0024E87663E1">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009523_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009523_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="4253A97B-64DA-E111-AD20-848F69FD4EB6">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009487_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009487_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="180ECFD0-62DA-E111-B284-00266CFAE69C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009439_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009439_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="D881CB97-5CDA-E111-85EA-008CFA00317C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009360_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009360_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="76168908-60DA-E111-8D04-008CFA002020">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009343_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009343_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="FCBA9053-8DDA-E111-B399-00266CF24E74">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011303_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011303_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="F6A32507-62DA-E111-B27E-00266CFAE8C4">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009364_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009364_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="6A2175F2-71DA-E111-9582-00A0D1EE8C70">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009610_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009610_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="3C239669-6FDA-E111-8960-00A0D1EEF69C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009567_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009567_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="DA998258-6BDA-E111-B236-0026B94E2824">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009515_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009515_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="3ED3E08B-69DA-E111-BE59-0026B94D1B09">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009527_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009527_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="78456276-60DA-E111-AD0D-00A0D1EE965C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009402_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009402_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="64DF22F7-61DA-E111-8895-848F69FD28C2">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009426_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009426_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="5CF15B57-91DA-E111-8D85-008CFA0079C4">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011240_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011240_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="B099A14F-66DA-E111-8FA0-848F69FD29DF">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009501_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009501_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="565475DA-6ADA-E111-B0F9-00266CF275E0">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009518_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009518_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="5A7D24FF-5FDA-E111-ABA0-00266CFAE6B0">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009374_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009374_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="66ADBB62-65DA-E111-8897-00266CF24EEC">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009491_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009491_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="7A0370D9-70DA-E111-A060-0026B94D1AAE">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009592_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009592_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="9877F717-5FDA-E111-8530-00266CFADFCC">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009375_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009375_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="C0F24D40-6ADA-E111-8F44-848F69FD2997">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009535_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009535_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="3A6C3C93-62DA-E111-8D41-0024E86E8DA7">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009416_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009416_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="72B70007-66DA-E111-8B05-0024E86E8D80">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009489_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009489_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="8AFE4966-63DA-E111-8200-00A0D1EEF364">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009444_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009444_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="7CC200BB-6FDA-E111-9F5D-00266CF24E74">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009556_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009556_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="44DB8E7D-66DA-E111-9761-00266CF24E74">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009506_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009506_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="BCB8D6F6-95DA-E111-9371-0024E8768D34">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011278_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011278_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="288DFC5A-62DA-E111-B7A5-848F69FD455F">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009454_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009454_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="64A28919-61DA-E111-A7E1-00266CFAE1A8">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009431_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009431_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="2AF0FD24-91DA-E111-9ACA-848F69FD4EFB">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011238_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011238_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="A2996631-5FDA-E111-80A7-848F69FD4DCC">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009400_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009400_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="4CE7BBD1-71DA-E111-9D66-00A0D1EE27B0">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009626_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009626_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="8E3AEC61-62DA-E111-8909-00A0D1EEE654">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009344_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009344_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="DC13A7CF-62DA-E111-80BC-00266CF897A0">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009449_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009449_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="8EA01351-72DA-E111-8076-008CFA002020">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009629_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009629_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="00E76880-62DA-E111-80D6-848F69FD2907">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009446_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009446_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="662943CA-5EDA-E111-A9DD-848F69FD29E2">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009376_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009376_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="DAA7CF24-71DA-E111-B46C-008CFA002434">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009624_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009624_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="14CA8795-5FDA-E111-84BD-848F69FD2823">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009388_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009388_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="C86CDA35-61DA-E111-BB81-180373FF8D6A">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009383_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009383_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="5654FC0A-95DA-E111-8ED1-008CFA001F78">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011286_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011286_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="503CCC7C-71DA-E111-A0EA-00266CF9ABCC">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009571_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009571_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="86B974A0-60DA-E111-8EEE-00266CF9B59C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009382_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009382_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="DE9EB7D9-60DA-E111-886D-848F69FD2925">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009357_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009357_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="BCBF0F82-8EDA-E111-B526-00266CF9B86C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011294_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011294_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="AEFFE0BF-70DA-E111-AB27-00266CF25C20">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009596_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009596_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="8EBB99B7-60DA-E111-9438-848F69FD2892">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009422_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009422_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="8C1D0EA3-91DA-E111-B003-008CFA001F78">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011235_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011235_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="5018E82D-91DA-E111-AF8F-00266CF9C244">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011237_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011237_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="DE1844F5-61DA-E111-9A74-00266CF25218">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009438_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009438_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="C897DEE8-60DA-E111-BCEF-00A0D1EE9274">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009356_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009356_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="1AD555C9-92DA-E111-8C7E-848F69FD2826">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011263_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011263_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="AEB3061C-95DA-E111-91A6-848F69FD4EB6">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011281_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011281_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="FADB1C25-93DA-E111-9995-848F69FD46E8">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011269_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011269_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="ECE05693-5DDA-E111-8DF7-848F69FD4E8C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009348_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009348_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="1A956CA2-60DA-E111-8590-00A0D1EEE5CC">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009411_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009411_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="7EAA7031-95DA-E111-9063-00266CF9BCC4">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011261_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011261_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="5ABB5768-99DA-E111-AB09-848F69FD4568">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011283_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011283_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="54962136-6EDA-E111-97B8-00266CFAE24C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009584_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009584_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="E609B994-95DA-E111-9223-848F69FD4C9A">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011282_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011282_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="2891DDD9-71DA-E111-8E68-00A0D1EE8D7C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009622_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009622_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="36EC8EE0-5FDA-E111-871D-00266CF97FF4">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009413_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009413_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="5868355D-94DA-E111-8AF5-848F69FD287A">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011259_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011259_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="F050483D-71DA-E111-916E-848F69FD45A4">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009589_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009589_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="92B4C8F5-5FDA-E111-BD33-00266CFAE8C4">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009393_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009393_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="76FC0B7C-D6DC-E111-B040-848F69FD2961">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0002/00019146_00025820_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0002/00019146_00025820_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="3062ABDD-62DA-E111-838D-00266CFADF38">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009409_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009409_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="9A13691B-60DA-E111-9DE4-008CFA008D0C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009408_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009408_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="28F98DD8-69DA-E111-AD1B-848F69FD3E2A">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009541_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009541_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="EC18D977-91DA-E111-A56D-848F69FD2910">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011252_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011252_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="5ABBFDCC-61DA-E111-9C9A-00266CFADF54">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009397_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009397_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="62C16745-67DA-E111-80D6-0026B94D1AFC">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009490_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009490_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="68B6300F-61DA-E111-B301-0026B94D1B30">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009407_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009407_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="92230836-71DA-E111-85BB-00266CF9C018">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009613_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009613_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="3A25EFBD-62DA-E111-8DED-00A0D1EEF364">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009418_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009418_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="7680A588-6DDA-E111-B317-00266CFAE854">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009560_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009560_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="5A925B53-6FDA-E111-B13A-00266CFAE144">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009585_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009585_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="28DA33DC-70DA-E111-AE55-0026B94D1AAE">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009555_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009555_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="DE716A14-96DA-E111-8A09-848F69FD4E14">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011301_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011301_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="32452576-70DA-E111-BCB6-848F69FD283E">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009606_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009606_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="E042422F-62DA-E111-9030-848F69FD2889">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009441_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009441_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="66C76EFB-63DA-E111-B44A-848F69FD4ED1">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009478_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009478_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="EC212199-60DA-E111-A543-0026B94E2817">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009390_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009390_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="E02C93B9-6ADA-E111-A26F-848F69FD3E2A">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009553_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009553_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="689C8688-6ADA-E111-9E80-848F69FD45CB">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009545_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009545_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="505E1B70-5DDA-E111-B8AF-00266CF25218">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009367_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009367_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="0A907401-96DA-E111-A5C0-00266CF258D8">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011296_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011296_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="A8655D34-6BDA-E111-BD27-00266CF9C210">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009549_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009549_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="6A140A42-95DA-E111-929C-848F69FD2520">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011251_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011251_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="F6742827-6EDA-E111-8E21-00266CF24EEC">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009569_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009569_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="003B8495-6ADA-E111-B6CD-00A0D1EEF328">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009536_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009536_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="34BEF344-71DA-E111-AB71-00A0D1EE9238">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009575_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009575_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="907B7459-5EDA-E111-8007-0024E87682B3">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009347_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009347_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="72FF2B2C-64DA-E111-ABF4-848F69FD28FE">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009482_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009482_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="6C3FDF67-72DA-E111-AC95-848F69FD455F">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009616_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009616_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="B263D804-5EDA-E111-940F-008CFA00148C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009387_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009387_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="3EE61A6E-67DA-E111-BAF1-848F69FD3EC9">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011895_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011895_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="245D062A-95DA-E111-906C-848F69FD45A7">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011293_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011293_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="3A7A0940-67DA-E111-AD3C-00266CFAE074">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009488_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009488_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="321B3541-74DA-E111-9B7F-848F69FD289B">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009598_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009598_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="2A5B0FED-6FDA-E111-9280-00A0D1EE8EE0">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009590_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009590_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="FAED1134-91DA-E111-A923-00266CF9ABA8">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011234_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011234_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="36CB7C4F-60DA-E111-8DC5-848F69FD43A0">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009380_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009380_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="BEE8C599-6DDA-E111-A96B-0026B94E284B">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009559_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009559_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="8A23B76A-63DA-E111-9097-0024E86E8CF1">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009463_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009463_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="C099B177-5FDA-E111-8B2B-00266CF9B90C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009396_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009396_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="C470357E-5EDA-E111-B819-00A0D1EEE68C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009392_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009392_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="32DA5057-0EDC-E111-BD1E-848F69FD4409">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0002/00019146_00025002_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0002/00019146_00025002_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="6C6D9D32-66DA-E111-9DCC-00266CF9BE6C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009509_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009509_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="4C5A7549-5FDA-E111-A29D-0024E8769B94">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009355_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009355_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="CA95CE39-61DA-E111-BB83-00A0D1EE965C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009417_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009417_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="BA236DEC-6EDA-E111-B024-848F69FD4568">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009570_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009570_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="E0A8CD49-6ADA-E111-986A-00266CF9BCC4">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009538_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009538_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="343EDBB2-69DA-E111-8DF0-00266CF9C244">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009524_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009524_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="4E701468-70DA-E111-859E-00266CFADF54">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009607_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009607_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="1A7CE303-65DA-E111-BCF9-848F69FD28AD">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009494_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009494_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="B8947F24-65DA-E111-BDFB-848F69FD4C76">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009473_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009473_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="56D719C2-92DA-E111-9DEF-848F69FD2955">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011241_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011241_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="327BCD0E-5EDA-E111-825C-008CFA002FA4">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009378_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009378_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="CCB2514D-6ADA-E111-8D57-008CFA001D7C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009542_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009542_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="4C4423E3-6EDA-E111-B93E-0024E87681FD">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009561_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009561_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="780C373A-74DA-E111-A640-00266CF9B184">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009625_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009625_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="FCEE434D-66DA-E111-96A9-848F69FD2484">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009510_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009510_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="02DCCB5C-5EDA-E111-A016-00266CF9C0AC">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009361_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009361_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="E62943E8-6FDA-E111-81F5-848F69FD501E">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009597_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009597_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="AA1970FE-96DA-E111-B953-00266CF9C22C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011290_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011290_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="CC45DCF5-71DA-E111-880D-00266CFAEBA0">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009618_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009618_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="2636B337-69DA-E111-9869-0026B94D1B16">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009513_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009513_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="A01B28CD-72DA-E111-9884-00266CF897A0">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009576_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009576_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="625676DD-5DDA-E111-A191-00266CF9BCAC">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009381_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009381_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="7C46B501-6EDA-E111-ACBE-848F69FD284D">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009565_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009565_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="E6230F57-72DA-E111-9439-008CFA00148C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00010364_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00010364_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="00BD7707-60DA-E111-AAF7-00A0D1EE9644">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009414_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009414_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="E0831527-60DA-E111-A803-848F69FD28C8">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009384_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009384_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="CA96DE88-60DA-E111-946A-848F69FD455F">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009428_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009428_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="9868287C-92DA-E111-BD81-180373FF8446">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011266_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011266_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="3606F00B-91DA-E111-BDB7-00266CF9ABA8">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011244_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011244_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="44E633E2-60DA-E111-9107-848F69FD2919">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009412_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009412_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="3E7F3CCE-6ADA-E111-8297-00266CFAE8C4">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009511_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009511_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="889F1943-72DA-E111-9B1B-0024E8769B94">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009612_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009612_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="CA247785-92DA-E111-A83D-00266CF25DF8">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011268_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011268_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="00EE8D93-64DA-E111-B5AD-848F69FD2952">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009457_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009457_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="1CC1D8E9-6FDA-E111-87EE-00A0D1EE8EE0">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009600_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009600_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="4EBC90C9-6EDA-E111-B768-0024E87663E1">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009578_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009578_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="DA64D7BB-65DA-E111-9A4C-00266CFAE6E0">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009497_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009497_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="08520AD8-64DA-E111-A19F-848F69FD4553">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009362_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009362_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="4A6090D8-6ADA-E111-9F9F-00266CF25590">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009512_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009512_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="4C241FCA-6ADA-E111-B5C6-0024E87699B3">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009552_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009552_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="CAB1C791-71DA-E111-91DB-008CFA000744">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009619_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009619_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="34CA6E42-65DA-E111-B94C-008CFA008F50">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009484_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009484_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="9CD3321A-94DA-E111-8F18-0024E876997F">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011280_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011280_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="52ACFB04-70DA-E111-8350-848F69FD2892">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009603_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009603_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="CAEE4C4C-95DA-E111-AB3A-848F69FD3E2A">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011275_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011275_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="DC4C40CE-91DA-E111-840C-0024E8769B87">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011233_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011233_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="8A2408B5-67DA-E111-84A6-0024E8768C98">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009495_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009495_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="A45F1360-8EDA-E111-B41E-848F69FD4667">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011304_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011304_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="B070A1FF-70DA-E111-BC16-00266CFADEC0">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009581_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009581_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="00D6E8B8-8DDA-E111-A801-0024E8766408">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011302_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011302_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="AA794640-6ADA-E111-979A-180373FF8446">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009533_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009533_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="6036860B-6ADA-E111-B7BC-00266CFAE740">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009514_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009514_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="9EB72C73-92DA-E111-9F62-848F69FD2931">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011258_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011258_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="F66393F6-94DA-E111-9288-848F69FD2904">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011309_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011309_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="EC9CD33E-92DA-E111-9004-0026B94E2858">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011246_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011246_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="8628DC38-8DDA-E111-ACB0-848F69FD294F">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011231_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011231_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="E03C2167-6ADA-E111-A12F-848F69FD28AA">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009550_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009550_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="6A50BA44-6ADA-E111-B2C7-00A0D1EEF69C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009539_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009539_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="EA3333D6-6FDA-E111-9CBC-848F69FD2910">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009594_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009594_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="BE29D710-95DA-E111-BDBC-00A0D1EEFF18">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011287_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011287_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="9C11FD5B-5EDA-E111-B16F-00A0D1EEF69C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009346_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009346_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="96D3511B-70DA-E111-8343-00266CF9AB88">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009595_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009595_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="C8BB74FB-70DA-E111-8F68-848F69FD299D">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009617_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009617_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="D22CFD07-75DA-E111-A686-0024E8766393">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00010360_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00010360_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="1262B1D8-70DA-E111-ABD8-0024E86E8D3F">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009614_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009614_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="A4C22E9C-6ADA-E111-A04D-008CFA001D7C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009525_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009525_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="667356FB-70DA-E111-98E3-008CFA00206C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009554_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009554_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="F0BDAF83-60DA-E111-89F9-008CFA001444">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009371_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009371_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="5CA8CB66-92DA-E111-8CFC-848F69FD2907">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011245_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011245_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="BAFF034D-64DA-E111-A875-00A0D1EE25D0">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009465_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009465_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="88EF374E-71DA-E111-8BFA-00266CFAE4A0">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009611_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009611_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="14155078-6EDA-E111-9CE8-0024E87681F0">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009577_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009577_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="8AA1F939-6ADA-E111-BDDB-00266CFAE748">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009543_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009543_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="30C9B071-5DDA-E111-A005-00266CF9C1EC">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009363_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009363_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="BCD2B778-96DA-E111-8DC1-008CFA001EE4">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011298_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011298_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="1A845285-67DA-E111-B1A8-00A0D1EE9238">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009499_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009499_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="80D868BD-5EDA-E111-9688-0024E876636C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009365_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009365_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="1C21D666-95DA-E111-B5F1-848F69FD45A7">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011277_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011277_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="906BCBF4-71DA-E111-BDCC-0024E876824B">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009628_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009628_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="D2D30B9E-8DDA-E111-98D8-848F69FD4ED1">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011295_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011295_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="FE8CA65C-63DA-E111-81D0-848F69FD299D">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009461_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009461_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="58406C77-70DA-E111-948C-008CFA0004B0">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009572_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009572_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="BEE8362D-69DA-E111-8C00-848F69FD4ED1">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009529_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009529_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="A2636CC0-91DA-E111-AAAA-0024E87699CD">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011262_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011262_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="3A3721F2-71DA-E111-A8D9-00A0D1EE2BBC">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009631_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009631_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="4EBE9311-95DA-E111-8BC6-848F69FD4EB6">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011273_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011273_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="1C2173C0-5DDA-E111-A46A-00A0D1EEAAF4">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009372_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009372_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="8214BD90-71DA-E111-A5DB-848F69FD4EFB">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009623_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009623_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="0ED9FB82-5EDA-E111-9B31-848F69FD4EDD">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009379_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009379_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="E401D29C-6ADA-E111-B3BF-848F69FD2904">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00012546_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00012546_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="BA4817BD-65DA-E111-BE94-00266CFAE6E0">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009467_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009467_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="EAC83422-60DA-E111-B1DA-848F69FD2823">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009405_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009405_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="1CE0808F-71DA-E111-B958-0026B94E2858">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009601_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009601_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="A0E78323-6DDA-E111-9E7D-0024E87699E7">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009516_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009516_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="4E13D911-64DA-E111-8A6B-0024E87680CD">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009429_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009429_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="FC45F621-97DA-E111-AA84-0024E87663D4">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011292_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011292_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="AA670831-92DA-E111-ACD3-00A0D1EEAAA0">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011255_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011255_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="E4CAF1F4-92DA-E111-B65E-848F69FD483E">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011253_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011253_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="367BA128-5DDA-E111-9CDC-00266CFAE2F0">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009351_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009351_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="9C43A9ED-61DA-E111-83AF-848F69FD4DCC">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009443_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009443_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="A44D74E5-64DA-E111-8D91-00A0D1EE9644">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009470_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009470_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="905CA137-72DA-E111-941D-00266CF9B254">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009632_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009632_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="5A4C19C2-6FDA-E111-AAB8-848F69FD2520">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009566_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009566_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="06E04974-CEDB-E111-B889-0024E8768C7E">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0002/00019146_00022045_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0002/00019146_00022045_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="F07EFEF5-60DA-E111-91EF-0026B94D1AC8">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009427_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009427_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="A2914860-6FDA-E111-BE66-008CFA008C04">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009573_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009573_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="16916826-61DA-E111-9736-0024E87680F4">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009419_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009419_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="E2EA6048-94DA-E111-9552-848F69FD29DF">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011271_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011271_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="E2CE4AB0-5EDA-E111-9124-00266CF9B1C4">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009377_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009377_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="56AC0D45-8DDA-E111-ABFC-848F69FD4667">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011288_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011288_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="9616E2A7-60DA-E111-8B8E-0024E8769B46">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009423_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009423_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="AA246091-5EDA-E111-A8E5-00A0D1EE8E78">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009352_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009352_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="3E766D7A-64DA-E111-9029-00A0D1EEA838">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009464_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009464_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="3216CC61-5DDA-E111-84C1-848F69FD501B">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009341_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009341_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="7AFCBC9A-64DA-E111-9345-848F69FD290A">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009486_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009486_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="0A8BEAFD-6EDA-E111-812E-00266CFAE20C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009586_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009586_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="42077B4E-61DA-E111-9BCB-0024E87680E7">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009415_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009415_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="90C6DE76-5EDA-E111-9689-008CFA001F1C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009394_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009394_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="96A84052-8EDA-E111-B9F3-00266CFAE318">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011299_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011299_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="D4B4BE4D-6BDA-E111-B3AC-00266CFAE740">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009551_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009551_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="72B2F0E6-95DA-E111-A1BB-008CFA008D4C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011276_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011276_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="36469C6E-65DA-E111-B57C-00266CFAED7C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009475_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009475_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="AABE28E8-72DA-E111-8017-0026B94D1AFC">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00010362_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00010362_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="F6809F34-65DA-E111-A96C-0024E8768C09">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009472_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009472_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="74F7253B-66DA-E111-9043-0024E87680DA">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009504_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009504_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="E4A86822-93DA-E111-ADF7-848F69FD2823">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011267_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011267_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="D4F0A5C6-60DA-E111-A86F-0024E87663FB">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009369_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009369_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="4AC63227-64DA-E111-9C2E-848F69FD4586">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009474_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009474_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="DEB285B0-70DA-E111-A510-00266CFAE6A4">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009604_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009604_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="1849F81D-6BDA-E111-A30A-848F69FD3E2A">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009531_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009531_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="7CCF372E-72DA-E111-B1A5-0024E86E8D32">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009621_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009621_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="6E0C7E33-75DA-E111-B5EB-00266CFAE890">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00010363_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00010363_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="90AF2326-95DA-E111-A8FF-848F69FD5027">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011285_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011285_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="1024B6A4-DFDA-E111-B799-0024E876820A">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00017180_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00017180_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="9C3BE32C-6EDA-E111-AB16-00266CF25218">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009557_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009557_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="522FAAA5-66DA-E111-A3DE-00266CF9B684">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009500_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009500_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="581D1AE8-6ADA-E111-A81B-848F69FD2484">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009530_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009530_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="78C8789C-69DA-E111-91CA-0024E87680A6">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009522_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009522_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="7650DBCD-C9DD-E111-80A7-0024E8767CEA">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0003/00019146_00033426_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0003/00019146_00033426_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="E40F9332-60DA-E111-B58E-00266CF9AEFC">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009399_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009399_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="E409AF8D-62DA-E111-A2F2-848F69FD4E14">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009452_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009452_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="D6525104-64DA-E111-B671-008CFA007CE0">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009469_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009469_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="72C6B32E-5EDA-E111-A553-848F69FD4FB5">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009350_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009350_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="FCCCEFF3-62DA-E111-BA8E-848F69FD3D0D">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009445_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009445_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="425F23B1-71DA-E111-8C61-008CFA0014EC">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009620_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009620_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="C032AD7C-8EDA-E111-8EED-00266CF9BEF8">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011291_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011291_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="06B43827-64DA-E111-9A19-0026B94E2824">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009437_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009437_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="98695DE4-5DDA-E111-8E92-008CFA0016A4">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009386_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009386_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="FACC8256-97DA-E111-9218-00266CF9B970">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011284_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011284_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="F80E274C-95DA-E111-97A4-848F69FD4C76">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011289_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011289_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="48468B02-5DDA-E111-B0CD-0026B94D1AC8">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009349_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009349_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="EC4B6899-5DDA-E111-AF03-848F69FD43A0">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009370_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009370_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="3066F816-65DA-E111-A69A-00A0D1EE9424">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009492_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009492_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="DC84B787-6FDA-E111-9C09-00A0D1EE8ECC">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009579_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009579_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="D454779F-70DA-E111-BBE8-008CFA000280">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009609_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009609_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="C8EA39DA-70DA-E111-A0AF-0026B94D1AAE">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009591_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009591_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="14F89128-6CDA-E111-80EC-0024E87699CD">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009534_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009534_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="E6BF7577-63DA-E111-8238-00266CF9BEB4">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009448_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009448_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="385BDE6D-5DDA-E111-9B79-00266CF25218">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009342_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009342_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="C8376C77-DBDA-E111-A8BC-848F69FD4508">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00017135_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00017135_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="DC83515F-68DA-E111-89D1-00266CFAE304">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009507_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009507_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="BA6B8BCC-5FDA-E111-8760-848F69FD29D6">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009401_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009401_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="D204E813-65DA-E111-A967-00266CF24ED4">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009466_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009466_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="1490EBB4-66DA-E111-901C-00266CF9B04C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009505_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009505_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="9E49BB8E-60DA-E111-A9AE-00266CFADF38">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009359_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009359_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="A2281A50-71DA-E111-938A-0024E87663EE">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009582_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009582_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="0A804E58-8EDA-E111-9339-848F69FD287A">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011308_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011308_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="94A35D2A-64DA-E111-90F1-0024E8768D27">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009480_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009480_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="18A22F62-73DA-E111-81D3-00266CF253C4">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00010361_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00010361_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="FCFCC16E-68DA-E111-9437-00A0D1EEE300">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009502_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009502_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="90D43305-63DA-E111-A94A-00266CF271E8">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009433_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009433_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="2EB8226E-70DA-E111-AEBB-00A0D1EEE68C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009605_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009605_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="307099C0-6FDA-E111-8FF8-848F69FD4E8C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009602_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009602_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="58F995CB-5CDA-E111-95DC-00266CF25920">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009366_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009366_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="98E3EDAD-6BDA-E111-830D-00A0D1EE8F40">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009540_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009540_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="BEB65662-5FDA-E111-AA14-848F69FD4592">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009391_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009391_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="38D06200-5EDA-E111-8D95-00266CF9B8CC">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009354_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009354_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="FABC705C-5EDA-E111-AA02-00266CFAE6D8">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009358_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009358_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="7CE32263-66DA-E111-A1D4-848F69FD3048">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009496_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009496_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="DC2ECA1D-5EDA-E111-8688-00266CFAE20C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009353_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009353_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="C2DBE75D-95DA-E111-81E0-00266CF279F8">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011264_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011264_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="46EA24CE-69DA-E111-8F1F-00266CF9ABA8">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009532_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009532_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="3A800BA9-69DA-E111-9689-0024E87687FF">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009521_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009521_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="46774C94-62DA-E111-8EE9-00266CF24EEC">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009450_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009450_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="B87B748B-5EDA-E111-A7F5-00266CFAE818">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009345_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009345_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="A2AE2601-65DA-E111-BD29-008CFA002FF4">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009471_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009471_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="E475B73E-92DA-E111-86B4-848F69FD46E8">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011250_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011250_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="02E75D8C-69DA-E111-9BD3-00266CFAE368">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009517_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009517_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="9E453D7E-70DA-E111-AA7F-00266CFAE468">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009608_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009608_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="AA75E51E-73DA-E111-839A-00A0D1EE8DA4">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00010359_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00010359_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="9A2CAF39-74DA-E111-9553-00266CFAE7AC">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00010365_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00010365_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="DAEB23A2-8DDA-E111-80F3-848F69FD297F">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011236_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011236_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="584D2341-60DA-E111-AAA0-008CFA0016A4">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009368_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009368_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="AA12B35F-72DA-E111-8932-00266CFADEC0">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009627_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009627_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="68CF21EF-94DA-E111-9BF6-848F69FD25BC">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011260_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0001/00019146_00011260_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="50562994-65DA-E111-877A-00A0D1EE9424">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009483_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009483_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="80A13CD9-64DA-E111-B3EA-00266CF9BE6C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009476_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009476_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="A6B56757-0CDC-E111-912F-848F69FD453B">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0002/00019146_00024957_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0002/00019146_00024957_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="1034471B-69DA-E111-AC19-00266CFAE78C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009520_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009520_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="A827D5DD-64DA-E111-8E88-00266CFADF54">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009485_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009485_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="F638269D-63DA-E111-9F73-00266CF25DC4">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009447_1.full.dst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00019146/0000/00019146_00009447_1.full.dst"/>
+     </logical>
+   </File>
+
+</POOLFILECATALOG>

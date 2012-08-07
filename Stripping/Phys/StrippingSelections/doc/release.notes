@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-08-07 - Anton Poluektov 
+ - Add new test sample, tests/data/Reco13c_Run124134.py
+   and the corresponding sample test script, tests/TestMyStrippingLineOn2012Data_Reco13c.py
+
 ! 2012-08-02 - Fred Blanc
  - StrippingB2CharmlessQuasi2Body.py
  - added HLT1 TOS requirement and tighten cuts to reduce retention rate
@@ -143,7 +147,7 @@
   - StrippingLFVLines.py: updated the B2eMu and B2ee lines, corrected a typo in 
     B2pMu line, added new line Bu2KJPsiee for the Bs->ee and Bs->emu analyses.  
 
-! 2012-06-22 Olivier Deschamps for Régis Lefèvre
+! 2012-06-22 Olivier Deschamps for R??gis Lef??vre
 	- update B2HHPi0.py & D02KPiPi0.py
 
 ! 2012-06-22 - Murilo Rangel
