@@ -27,7 +27,7 @@ confdict = {
     ,  'TrkChi2Cut'       : 3.0
     ,  'PrtMomCut'        : 2.0
     ,  'PrtPtCut'         : 0.6
-    ,  'PrtIPSCut'        : 3.5
+    ,  'PrtIPSCut'        : 2.5
     ,  'DZSVPVCut'        : 1.0
     ,  'SumMomSVCut'      : 3.0
     ,  'VtxChi2Cut'       : 20.0

@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-08-08 - Marcin Kucharczyk
+ - improve tuning in StrippingInclbJets line
+
 ! 2012-08-07 - Patrick Koppenburg
  - python/StrippingSelections/StrippingMiniBias.py : Fix bug
 	 https://savannah.cern.ch/bugs/index.php?96584 (L0Any rate)
