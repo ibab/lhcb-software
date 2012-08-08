@@ -2,6 +2,7 @@
 #include <math.h>
 #include <time.h>
 #include "ROMon/Utilities.h"
+//#include "ROMon/ROMon.h"
 
 static FILE *outf;
 HLTFileEqualizer::HLTFileEqualizer()
@@ -295,6 +296,11 @@ void HLTFileEqualizer::Analyze()
   m_NodeListDiff->updateService();
   m_NodesRunsFiles->setData((void*)m_servdatNodesRunsFiles.c_str(),m_servdatNodesRunsFiles.size());
   m_NodesRunsFiles->updateService();
+  float stat[2];
+  stat[0] = av_files;
+  stat[1] = rms;
+  m_StatServ->setData(stat,sizeof(stat));
+  m_StatServ->updateService();
   m_recvNodes.clear();
   dim_unlock();
 }
@@ -605,6 +611,11 @@ int main(int argc, char **argv)
   elz.m_NodeListDiff = m_NodeServiceDiff;
   DimService *m_NodesRunsFiles= new DimService("HLTFileEqualizer/NodesRunsFiles", "C",(void*)"\0",1);
   elz.m_NodesRunsFiles = m_NodesRunsFiles;
+  float stat[2];
+  stat[0] = -1.0;
+  stat[1] = 0.0;
+  DimService *m_Statistics = new DimService("HLTFileEqualizer/Statistics", "F",stat,sizeof(stat));
+  elz.m_StatServ = m_Statistics;
   fflush(outf);
   while (1)
   {

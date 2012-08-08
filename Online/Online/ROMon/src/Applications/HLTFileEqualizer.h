@@ -70,6 +70,7 @@ class HLTFileEqualizer
     DimService *m_NodeList;
     DimService *m_NodeListDiff;
     DimService *m_NodesRunsFiles;
+    DimService *m_StatServ;
     std::string m_servdat;
     std::string m_servdatDiff;
     std::string m_servdatNodesRunsFiles;
