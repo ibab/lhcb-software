@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2012-08-08 - Patrick Koppenburg
+ - src/TupleToolDecaytreeFitter : do not store original PV if refitted version is already included.
+   bug #89749: TupleToolDecayTreeFitter stores the chain wrt best PV twice when PV is refitted
+
 ! 2012-0806 - Patrick Koppenburg
  - src/TupleToolTriggerBase: complain when trailing Decision is missing.
 

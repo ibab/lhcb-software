@@ -176,6 +176,12 @@ public:
   ///  origin vertex
   std::vector<const LHCb::VertexBase*> originVertex( const  LHCb::Particle*,
                                                      const LHCb::Particle* ) const; 
+
+  /// same PV?
+  bool samePV(const LHCb::VertexBase*, const LHCb::VertexBase*) const ;
+  /// sort tracks into a set
+  std::set<const LHCb::Track*> sortedTracks(const LHCb::VertexBase*) const ;
+  
   
   std::string m_pvLocation ; ///<  PV location to be used. If empty, take context-dependent default
 
@@ -194,6 +200,7 @@ public:
   ISubstitutePID::SubstitutionMap  m_map  ; // mapping : { 'decay-component' : "new-pid" }
   /// Substitute Tool
   ISubstitutePID* m_substitute  ; // tool
+  bool m_storeAnyway ;///< Store PV even if a refitted version is already the best PV (i.e store twice)
 
  };
 #endif // TUPLETOOLDECAYTREEFITTER_H

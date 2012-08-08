@@ -50,6 +50,8 @@ DECLARE_TOOL_FACTORY( TupleToolDecayTreeFitter )
                   "Do a refit constraining to Origin Vertex (could be PV)");
   declareProperty("MaxPV", m_maxPV = 10  , "Maximal number of PVs considered");
   declareProperty( "Substitutions" ,m_map, "PID-substitutions :  { ' decay-component' : 'new-pid' }" ) ;
+  declareProperty( "StoreRefittedPVsTwice" ,m_storeAnyway = false, 
+                   "Store PV even if a refitted version is already the best PV (i.e store twice)" ) ;
   declareInterface<IParticleTupleTool>(this);
 }
 
@@ -319,6 +321,40 @@ StatusCode TupleToolDecayTreeFitter::fillTuple(const TupleMap& tMap, Tuples::Tup
   return StatusCode(test);
 }
 //=============================================================================
+// Sort Tracks
+//=============================================================================
+std::set<const LHCb::Track*> TupleToolDecayTreeFitter::sortedTracks(const LHCb::VertexBase* vb) const 
+{
+  const LHCb::RecVertex* pv = dynamic_cast<const LHCb::RecVertex*>(vb);
+  if (!pv) Exception("Failed to cast PV");
+  std::set<const LHCb::Track*> st ;
+  for ( SmartRefVector < LHCb::Track >::const_iterator i = pv->tracks().begin(); i!=pv->tracks().end() ;++i) 
+    st.insert(*i);
+  return st ;
+}
+
+//=============================================================================
+// Compare PVs, check that one PV's traks is a subset of the other 
+//=============================================================================
+bool TupleToolDecayTreeFitter::samePV(const LHCb::VertexBase* vb1, const LHCb::VertexBase* vb2) const 
+{
+  if ( !(vb1->isPrimary()) || !(vb2->isPrimary()) ) {
+    Warning("Non PV VertexBase is being used as PV",1,StatusCode::SUCCESS);
+    return false ;
+  }
+  
+  std::set<const LHCb::Track*> st1 = sortedTracks(vb1);
+  std::set<const LHCb::Track*> st2 = sortedTracks(vb2);
+          
+  bool inc = std::includes(st1.begin(),st1.end(),st2.begin(),st2.end());
+  if ( UNLIKELY(MSG::VERBOSE)){
+    verbose() << "PV 2 of size " << st2.size() << " is ";
+    if (!inc) verbose() << "not ";
+    verbose() << "included in PV 1 of size " << st1.size() << endmsg ;
+  }
+  return inc;
+}
+//=============================================================================
 // get origin vertex
 //=============================================================================
 std::vector<const VertexBase*>
@@ -339,7 +375,7 @@ TupleToolDecayTreeFitter::originVertex( const Particle* mother, const Particle* 
     /// @todo : keep only the related ones
     for (LHCb::RecVertex::Range::const_iterator pv = m_dva->primaryVertices().begin() ;
          pv!=m_dva->primaryVertices().end() ; ++pv){
-      if ( *pv != bpv ) {
+      if ( m_storeAnyway || !samePV(*pv,bpv) ) {
         oriVx.push_back(*pv);
         if (UNLIKELY(MSG::VERBOSE)) verbose() << "Pushed back  pv " << *pv << " from "
                                               << (*pv)->parent()->registry()->identifier() << " at "
