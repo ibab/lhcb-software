@@ -18,7 +18,7 @@ FSRCleaner::FSRCleaner( const std::string& name,
 {
   // Set sensible FSR defaults
   setProperty( "InputStream", "/FileRecords" );
-  setProperty( "DataService", "EventDataSvc" );
+  setProperty( "DataService", "FileRecordDataSvc" );
 }
 
 //=============================================================================
