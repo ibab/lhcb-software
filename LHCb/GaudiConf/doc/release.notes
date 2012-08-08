@@ -3,6 +3,10 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2012-08-08 - Marco Clemencic
+ - Removed a useless call to the pattern 'install_scripts' (there is no script
+   in this package).
+
 !========================= GaudiConf v16r1 2012-07-24 =========================
 ! 2012-07-20 - Marco Cattaneo
  - Add QMTest exclusions to avoid test failures when LbAppInit prints changes
