@@ -4,6 +4,10 @@
 ! Purpose     : 
 !------------------------------------------------------------------------------
 
+! 2012-08-08 - Marco Clemencic
+ - Minor change the #ifdef for the compatibility with XercesC 3 (use Xerces
+   macro instead of the one set by LCGCMT).
+
 !========================= L0MuonKernel v9r7 2012-05-02 =========================
 ! 2012-04-24 - Julien Cogan
  - Manage Look Up Table for pt computation :

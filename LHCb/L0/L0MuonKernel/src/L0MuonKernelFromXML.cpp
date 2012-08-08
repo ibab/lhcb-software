@@ -5,18 +5,18 @@
 
 static const std::string XMLL0MuonTrigger =  "L0MuonTrigger";
 
-// L0Muon::Unit* L0Muon::L0MuonKernelFromXML(std::string xmlFileName){  
-void L0Muon::L0MuonKernelFromXML(std::string xmlFileName, bool emulator){  
+// L0Muon::Unit* L0Muon::L0MuonKernelFromXML(std::string xmlFileName){
+void L0Muon::L0MuonKernelFromXML(std::string xmlFileName, bool emulator){
 
   DOMDocument*  doc;      //The DOM document
   DOMElement*   root;     //The root element
-#ifdef XERCESC_GE_31
+#if _XERCES_VERSION >= 30000
   DOMLSParser*   parser;  //The XML parser
 #else
   DOMBuilder*   parser;   //The XML parser
 #endif
   XMLCh*        xmlStr;   //The XML String ...
-  DOMNodeList*  li;       //The DOM list of nodes 
+  DOMNodeList*  li;       //The DOM list of nodes
   DOMNode*     child;
 
 
@@ -34,8 +34,8 @@ void L0Muon::L0MuonKernelFromXML(std::string xmlFileName, bool emulator){
 
   // Instantiate the DOM parser.
   static const XMLCh gLS[] = { chLatin_L, chLatin_S, chNull };
-  DOMImplementation *impl = DOMImplementationRegistry::getDOMImplementation(gLS);  
-#ifdef XERCESC_GE_31
+  DOMImplementation *impl = DOMImplementationRegistry::getDOMImplementation(gLS);
+#if _XERCES_VERSION >= 30000
   parser = ((DOMImplementationLS*)impl)->
     createLSParser(DOMImplementationLS::MODE_SYNCHRONOUS, 0);
   if (parser->getDomConfig()->canSetParameter(XMLUni::fgDOMNamespaces, doNamespaces))
@@ -58,7 +58,7 @@ void L0Muon::L0MuonKernelFromXML(std::string xmlFileName, bool emulator){
   // Parse the document and get the root element
   doc  = parser->parseURI(xmlFileName.c_str());
   root = doc->getDocumentElement();
- 
+
   // Get the RegisterFactory node
   //-----------------------------
   xmlStr = XMLString::transcode("RegisterFactory");
@@ -73,7 +73,7 @@ void L0Muon::L0MuonKernelFromXML(std::string xmlFileName, bool emulator){
   if( li->getLength() > 1 ){
     std::cout << "<L0Muon::L0MuonKernelFromXML>  li->getLength() = " << li->getLength() << std::endl;
     std::cout << "<L0Muon::L0MuonKernelFromXML>  RegisterFactory : too many nodes found ... exiting" << std::endl;
-    exit(-1);    
+    exit(-1);
   }  // Decode the node
   child = li->item(0);
   L0Muon::RegisterFactory* rfactory = L0Muon::RegisterFactory::instance();
@@ -91,11 +91,11 @@ void L0Muon::L0MuonKernelFromXML(std::string xmlFileName, bool emulator){
       std::cout << "<L0Muon::L0MuonKernelFromXML>  li->getLength() = " << li->getLength() << std::endl;
       std::cout << "<L0Muon::L0MuonKernelFromXML>  UnitFactory : no node found ... exiting" << std::endl;
       exit(-1);
-    }  
+    }
     if( li->getLength() > 1 ){
       std::cout << "<L0Muon::L0MuonKernelFromXML>  li->getLength() = " << li->getLength() << std::endl;
       std::cout << "<L0Muon::L0MuonKernelFromXML>  UnitFactory : too many nodes found ... exiting" << std::endl;
-      exit(-1);    
+      exit(-1);
     }
     // Decode the node
     child = li->item(0);
