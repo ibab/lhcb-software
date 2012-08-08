@@ -4,6 +4,9 @@
 ! Purpose     : Create local copies of files from the grid at runtime.
 !-----------------------------------------------------------------------------
 
+! 2012-08-08 - Marco Clemencic
+ - Added python/FileStager/__init__.py.
+
 !========================= FileStager v1r8 2012-06-25 =========================
 ! 2012-03-28 - Roel Aaij
  - Support '+' in filenames

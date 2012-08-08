@@ -4,6 +4,9 @@
 ! Purpose: Demonstrate how to write and read back event data
 !-------------------------------------------------------------------------------
 
+! 2012-08-08 - Marco Clemencic
+ - Added python/IOExample/__init__.py.
+
 !========================= IOExample v4r6 2012-03-28 =========================
 ! 2012-03-28 - Marco Cattaneo
  - Adapt references to latest DstConf change

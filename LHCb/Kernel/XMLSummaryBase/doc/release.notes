@@ -4,6 +4,9 @@
 ! Purpose     : Holds the bare minumum code for manipulating XML
 !-----------------------------------------------------------------------------
 
+! 2012-08-08 - Marco Clemencic
+ - Added python/XMLSummaryBase/__init__.py.
+
 !======================== XmlSummaryBase v1r2 2010-09-27 =====================
 ! 2010-09-21 - Rob Lambert
  - Changes to allow the summary class to be imported using imp

@@ -4,6 +4,9 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+! 2012-08-08 - Marco Clemencic
+ - Added python/DDDB/__init__.py.
+
 !========================= DDDB v1r57 2012-07-30 =========================
 ! 2012-07-30 - Marco Cattaneo
  - Update database tags for latest global tags:
