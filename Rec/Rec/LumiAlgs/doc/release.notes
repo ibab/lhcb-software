@@ -4,6 +4,9 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2012-08-08 - Rob Lambert
+ - Add tests for new merging sensitive to file size and Vmem.
+
 !========================= LumiAlgs v7r8 2012-08-02 =========================
 
 ! 2012-08-02 - Chris Jones
