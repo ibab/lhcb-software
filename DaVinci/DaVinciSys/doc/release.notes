@@ -3,6 +3,11 @@ Package             : DaVinciSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v32r1p2>2012-08-08 DaVinci v32r1p2</A></H1><PRE>
+
+Patch release on top of DaVinci v32r1p1. 
+More fixes to Kernel/LHCbAlgs for FSRs.
+
 </PRE><H1><A NAME=v32r1p1>2012-08-01 DaVinci v32r1p1</A></H1><PRE>
 
 Patch release on top of DaVinci v32r1. Fixes to Kernel/LHCbAlgs
