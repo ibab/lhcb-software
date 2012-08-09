@@ -121,7 +121,7 @@ StatusCode ChargedProtoANNPIDTupleTool::fill( const LHCb::ProtoParticle * proto,
   for ( ; inputS != m_variablesS.end() && inputI != m_variablesI.end(); ++inputS, ++inputI )
   {
     // get the variable and fill ntuple
-    sc = sc && tuple->column( *inputS, getInput(proto,*inputI) );
+    sc = sc && tuple->column( *inputS, (float)getInput(proto,*inputI) );
   }
 
   // MC variables

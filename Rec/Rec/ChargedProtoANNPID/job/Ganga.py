@@ -1,24 +1,32 @@
 
-j = Job( application = DaVinci( version = 'v29r2' ) )
+for polarity in ["MagUp","MagDown"]:
 
-j.name = 'MC-ANNPID'
+    reco="Reco13d"
+    strp="Stripping19b"
 
-# Main options
-j.application.optsfile = [ File('options.py') ]
+    j = Job( application = DaVinci( version = 'v32r1p1' ) )
+    j.name = "MC2012-ANNPID-"+polarity+"-"+reco+"-"+strp
 
-j.splitter = DiracSplitter ( filesPerJob = 75, maxFiles = 999999 )
+    datapath = "/MC/DEV/Beam4000GeV-MayJune2012-"+polarity+"-Nu2.5-EmNoCuts/Sim06a/Trig0x0097003dFlagged/"+reco+"/"+strp+"NoPrescalingFlagged/10000000/ALLSTREAMS.DST"
 
-rootfiles = [ 'ProtoPIDANN.tuples.root' ]
+    # Main options
+    j.application.optsfile = [ File('options.py') ]
 
-j.outputsandbox = rootfiles 
+    j.splitter = SplitByFiles ( filesPerJob = 3, maxFiles = 999999 )
 
-j.merger = SmartMerger( files        = rootfiles,
-                        ignorefailed = True,
-                        overwrite    = True )
+    rootfiles = [ 'ProtoPIDANN.tuples.root' ]
 
-j.do_auto_resubmit = True
+    j.outputsandbox = rootfiles
 
-j.backend = Dirac()
+    j.inputdata = BKQuery(path=datapath).getDataset()
 
-print "Submitting job", j.name
-j.submit()
+    # j.merger = SmartMerger( files        = rootfiles,
+    #                        ignorefailed = True,
+    #                        overwrite    = True )
+
+    j.do_auto_resubmit = True
+    
+    j.backend = Dirac()
+
+    print "Submitting job", j.name
+    j.submit()

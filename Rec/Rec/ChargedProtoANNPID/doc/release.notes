@@ -4,6 +4,10 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+! 2012-08-09 - Chris Jones
+ - Explicitly caste variables to float when filling the training tuple
+ - Improvements to the training job scripts
+
 !========================= ChargedProtoANNPID v1r7 2012-06-25 =========================
 ! 2012-06-18 - Chris Jones
  - Make default network tuning for 2010, 2011 and 2012 "MC11aTuneV3"
