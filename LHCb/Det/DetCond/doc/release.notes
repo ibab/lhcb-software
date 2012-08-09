@@ -4,6 +4,9 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2012-08-09 - Marco Clemencic
+ - Workaround for bug #96673.
+
 ! 2012-08-08 - Marco Clemencic
  - Added python/DetCond/__init__.py.
 
