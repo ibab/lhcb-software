@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2012-08-08 - Patrick Koppenburg
+ - src/TupleToolDecaytreeFitter : remove warning about the bug that was just fixed.
+
+! 2012-08-08 - Patrick Koppenburg
  - src/TupleToolDecaytreeFitter : do not store original PV if refitted version is already included.
    bug #89749: TupleToolDecayTreeFitter stores the chain wrt best PV twice when PV is refitted
 

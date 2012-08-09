@@ -386,9 +386,6 @@ TupleToolDecayTreeFitter::originVertex( const Particle* mother, const Particle* 
         break ;
       }
     }
-    Warning("Filled all PVs, including unrelated ones and maybe duplicates. "
-            "Fix once https://savannah.cern.ch/task/?19817 and #89749 are done",
-            1,StatusCode::SUCCESS).ignore();
   } else {
     const SmartRefVector< LHCb::Particle >& dau = mother->daughters ();
     if( dau.empty() ) return oriVx ;
