@@ -21,7 +21,7 @@
 using namespace LHCb;
 
 /// Initialise the condition for an empty MM with no commands to send.
-/// The condition (plus lock) is used synchronise access to the MM map
+/// The condition (plus lock) is used to synchronise access to the MM map
 /// between the sender and the MDFWriter threads.
 pthread_mutex_t MM::m_emptyLock;
 pthread_cond_t MM::m_emptyCondition;

@@ -202,8 +202,6 @@ int FailoverMonitor::getAddressList(std::list<NodeState*> &nodeStates)
 	  {
 	  NodeState *nState = new NodeState();
 
-	  *m_log << MSG::INFO << WHERE << "Index " << numstorenodeIPs << " Store node IP: " << *storenodeIP << endmsg;
-
 //	  inet_aton(storenodeIP, (in_addr *)(&(nState->state.n_ipaddr)));
 	  nState->state.n_ipaddr = *storenodeIP;
 	  nState->state.n_id = numstorenodeIPs;
@@ -281,9 +279,7 @@ void FailoverMonitor::start(void)
   if(ret != 0) {
     throw std::runtime_error("Could not start the failover service thread.");
   }
-  *m_log << MSG::INFO << WHERE
-         << " Failover thread started."
-         << endmsg;
+  *m_log << MSG::INFO << WHERE << " Failover thread started." << endmsg;
 }
 
 void FailoverMonitor::listenForUpdates(void)
@@ -321,10 +317,7 @@ void FailoverMonitor::listenForUpdates(void)
           die = 1;
         break;
       }
-      *m_log << MSG::INFO << WHERE
-             << "Received update for node: " << IP(nstate.n_ipaddr)
-             << " Identifier is: " << nstate.n_id
-             << endmsg;
+      *m_log << MSG::INFO << WHERE << "Received update for node: " << IP(nstate.n_ipaddr) << " Identifier is: " << nstate.n_id << endmsg;
       update(&fmsg, &nstate);
     }
     if(die)

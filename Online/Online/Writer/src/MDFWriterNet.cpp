@@ -373,7 +373,7 @@ StatusCode MDFWriterNet::initialize(void)
  */
 StatusCode MDFWriterNet::finalize(void)
 {
-	*m_log << MSG::INFO << " Writer " << getpid() << " Finalizing." << endmsg;
+	*m_log << MSG::INFO << "Writer " << getpid() << " Finalizing." << endmsg;
 
 	m_CleanUpStop = true;
 	m_StopRetry = true;
@@ -711,7 +711,7 @@ void MDFWriterNet::closeFile(File *currFile)
 void MDFWriterNet::handle(const Incident& inc)
 {
 	*m_log << MSG::INFO << "Got incident:" << inc.source() << " of type "
-			<< inc.type() << "for Writer " << getpid() << endmsg;
+			<< inc.type() << " for Writer " << getpid() << endmsg;
 	if (inc.type() == "DAQ_CANCEL" /*||  inc.type() == "DAQ_ERROR"*/)
 	{
 		this->stopRetrying();

@@ -104,8 +104,7 @@ void Connection::connect() {
  */
 void Connection::closeConnection()
 {
-  *m_log << MSG::INFO << WHERE << " Closing connection with llamas."
-         << endmsg;
+  *m_log << MSG::INFO << WHERE << " Closing connection with llamas." << endmsg;
 
   m_sendThread->stopAfterFinish();  /*Stop after all messages are sent.*/
   m_ackThread->stopAfterFinish();  /*Stop after all acks have been received.*/
@@ -120,9 +119,7 @@ void Connection::closeConnection()
   int ret;
   int retry = 5;
   while((ret = m_mmObj.getQueueLength()) > 0 && retry-- > 0) {
-    *m_log << MSG::INFO << WHERE << "Waiting for queue length to be zero. "
-           << "Queue size is: " << ret
-           << endmsg;
+    *m_log << MSG::INFO << WHERE << "Waiting for queue length to be zero. Queue size is: " << ret << endmsg;
     for (std::map<unsigned int, MMQueue*>::iterator queueIter = (m_mmObj.m_runMap).begin(); queueIter != (m_mmObj.m_runMap).end(); queueIter++)
     {
     	*m_log << MSG::INFO << WHERE << "Run number: " << queueIter->first << " Queue Length: " << (queueIter->second)->getQueueLength() << endmsg;

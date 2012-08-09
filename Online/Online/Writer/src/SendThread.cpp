@@ -88,8 +88,7 @@ void SendThread::stop(void) {
     *m_log << MSG::ERROR << "Could not stop send thread " << errno << endmsg;
     return;
   }
-  *m_log << MSG::INFO << "Writer " << getpid()
-         << " Send thread stopped." << endmsg;
+  *m_log << MSG::INFO << "Writer " << getpid() << " Send thread stopped." << endmsg;
 }
 
 /** Processes elements from the send queue.
@@ -131,7 +130,7 @@ int SendThread::processSends(void)
     ret = bif->nbSend(m_log);
     if(ret == totalSize) {
     	if ( cmd_to_send->cmd == CMD_CLOSE_FILE)
-    		 *m_log << MSG::INFO << "CLOSE CMD Send was successful for file: " << cmd_to_send->file_name << endmsg;
+    		 *m_log << MSG::INFO << WHERE << "CLOSE CMD Send was successful for file: " << cmd_to_send->file_name << endmsg;
 
 //      dbg_CountAgain=0;
 
