@@ -3,6 +3,10 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2012-08-09 - Marco Cattaneo
+ - In DigiConf, made writing of Trig/L0/Calo to MCParticle links optional, since
+   these objects are no longer created by default from Boole v25r0 
+
 ! 2012-08-08 - Marco Clemencic
  - Removed a useless call to the pattern 'install_scripts' (there is no script
    in this package).
