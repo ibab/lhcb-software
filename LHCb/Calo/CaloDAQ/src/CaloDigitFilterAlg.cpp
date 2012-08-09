@@ -24,7 +24,7 @@ CaloDigitFilterAlg::CaloDigitFilterAlg( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator ), m_filter(0)
 {
   declareProperty("EcalFilter" ,m_ecal = 0x3); // 1 = Mask , 2=Offset , 3 = both, 0 = none
-  declareProperty("HcalFiltert",m_hcal = 0x3); // 1 = Mask , 2=Offset , 3 = both, 0 = none
+  declareProperty("HcalFilter",m_hcal = 0x3); // 1 = Mask , 2=Offset , 3 = both, 0 = none
   declareProperty("PrsFilter"  ,m_prs  = 0x3); // 1 = Mask , 2=Offset , 3 = both, 0 = none
   declareProperty("SpdFilter"  ,m_spd  = 0x1); // 1 = Mask , 2=Offset , 3 = both, 0 = none
 }

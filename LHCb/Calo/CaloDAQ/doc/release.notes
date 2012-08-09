@@ -4,6 +4,11 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+
+! 2012-08-09 - Olivier Deschamps
+  - CaloBankHandler.opts : remove bank conversion - just decode Xcal digits and produce ProcStatus from ReadoutStatus
+  - fix typo in CaloDigitFilterAlg properties
+
 !========================= CaloDAQ v4r29 2012-07-24 =========================
 ! 2012-07-09 - Marco Cattaneo
  - Use new TES getIfExists function instead of separate exist and get calls

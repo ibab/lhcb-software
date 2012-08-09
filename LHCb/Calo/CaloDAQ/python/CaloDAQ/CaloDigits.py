@@ -76,7 +76,8 @@ def caloDigits ( context        ,
                 t.OutputType = 'Adc'
                 _log.warning( 'Change OutputType for %s from %s to %'
                               % ( t.getFullName() , t , t.OutputType ) )
-            
+
+               
             
     ## combine them into sequence  
     alg = GaudiSequencer (
