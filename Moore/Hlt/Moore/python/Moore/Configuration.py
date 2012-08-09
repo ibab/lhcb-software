@@ -52,6 +52,7 @@ class Moore(LHCbConfigurableUser):
         , 'SkipDisabledL0Channels' : False # add Hlt1L0xxx even for disabled L0 channels 
         , "L0"         :       False # run L0
         , "ReplaceL0BanksWithEmulated" : False # rerun L0
+        , "RunL0Emulator" : False # run L0 emulator for simulation mc production  
         , "CheckOdin"  :       True  # use TCK from ODIN
         , "InitialTCK" :'0x00012009'  # which configuration to use during initialize
         , "prefetchConfigDir" :'MOORE_v8r8'  # which configurations to prefetch.
@@ -435,6 +436,12 @@ class Moore(LHCbConfigurableUser):
         if ( self.getProp("ReplaceL0BanksWithEmulated") and not self.getProp("L0") ):
             log.warning("You asked to replace L0 banks with emulation. Will set L0 = True")
             self.setProp("L0",True)
+        if ( self.getProp("RunL0Emulator") and not self.getProp("L0") ):
+            log.warning("You asked to run the L0 emulator. Will set L0 = True")
+            self.setProp("L0",True)    
+        if ( self.getProp("ReplaceL0BanksWithEmulated") and self.getProp("RunL0Emulator") ):
+            raise TypeError('ReplaceL0BanksWithEmulated is not compatible with RunL0Emulator')
+                     
         if ( self.getProp("L0") ):
             l0seq = GaudiSequencer("seqL0")
             ApplicationMgr().TopAlg += [ l0seq ]
@@ -447,8 +454,14 @@ class Moore(LHCbConfigurableUser):
 
             L0Conf().setProp( "TCK", L0TCK )
             L0Conf().setProp( "L0Sequencer", l0seq )
-            self.setOtherProps( L0Conf(), [ "ReplaceL0BanksWithEmulated" , "DataType" ] )
-            log.info("Will rerun L0")
+            if ( self.getProp("ReplaceL0BanksWithEmulated") ):
+                self.setOtherProps( L0Conf(), [ "ReplaceL0BanksWithEmulated" , "DataType" ] )
+                log.info("Will rerun L0")
+            if ( self.getProp("RunL0Emulator") ):
+                self.setOtherProps( L0Conf(), [ "SimulateL0" , "DataType" ] )
+                log.info("Will run L0 emulator")
+
+
 
     def _config_with_hltconf(self):
         hltConf = HltConf()
