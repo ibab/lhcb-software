@@ -1,25 +1,26 @@
-# --> Including file '/build/cattanem/LHCb_HEAD/Rec/LumiAlgs/job/LumiFsrMerger.py'
-# <-- End of file '/build/cattanem/LHCb_HEAD/Rec/LumiAlgs/job/LumiFsrMerger.py'
+# --> Including file '/tmp/rlambert/Rec_HEAD/Rec/LumiAlgs/job/LumiFsrMerger.py'
+# <-- End of file '/tmp/rlambert/Rec_HEAD/Rec/LumiAlgs/job/LumiFsrMerger.py'
 # applying configuration of LHCbApp
 # /***** User LHCbApp/LHCbApp ************************************************************************
-# |-Persistency = None
-# |-DDDBtag     = ''
-# |-DataType    = '2009'
-# |-TimeStamp   = False
-# |-SkipEvents  = 0
-# |-OutputLevel = 3
-# |-EvtMax      = -1
-# |-CondDBtag   = 'head-20100826'  (default: '')
-# |-DQFLAGStag  = ''
-# |-XMLSummary  = 'summary.xml'  (default: None)
-# |-Simulation  = False
-# |-Monitors    = []  (default: [])
+# |-Persistency   = None
+# |-DataType      = '2012'
+# |-DDDBtag       = ''
+# |-SkipEvents    = 0
+# |-XMLSummary    = 'summary.xml'  (default: None)
+# |-OutputLevel   = 3
+# |-EvtMax        = -1
+# |-CondDBtag     = 'head-20111111'  (default: '')
+# |-DQFLAGStag    = ''
+# |-Monitors      = []  (default: [])
+# |-TimeStamp     = False
+# |-Simulation    = False
+# |-IgnoreDQFlags = True
 # \----- (End of User LHCbApp/LHCbApp) ---------------------------------------------------------------
 # applying configuration of DDDBConf
-# WARNING: Using default tag head-20101206 for partition DDDB
-# WARNING: Using default tag tt-20110126 for partition DQFLAGS
+# WARNING: Using default tag head-20120413 for partition DDDB
+# WARNING: Using default tag dq-20120727 for partition DQFLAGS
 # /***** User DDDBConf/DDDBConf **********************************************************************
-# |-DataType   = '2009'
+# |-DataType   = '2012'
 # |-DbRoot     = 'conddb:/lhcb.xml'
 # |-Simulation = False
 # \----- (End of User DDDBConf/DDDBConf) -------------------------------------------------------------
@@ -27,7 +28,7 @@
 # /***** User LumiMergeFSRConf/LumiMergeFSRConf ******************************************************
 # |-Persistency   = None
 # |-outputFile    = 'mergeout.dst'  (default: '')
-# |-LumiSequencer = <GaudiSequencer/LumiMergeSeq at 0x971fd20>  (default: None)
+# |-LumiSequencer = <GaudiSequencer/LumiMergeSeq at 0x7179810>  (default: None)
 # |-InputType     = 'DST'
 # \----- (End of User LumiMergeFSRConf/LumiMergeFSRConf) ---------------------------------------------
 # applying configuration of XMLSummary
@@ -38,36 +39,44 @@
 # --> Including file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
 # <-- End of file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
 # /***** User CondDB/CondDB **************************************************************************
+# |-Upgrade                   = False
+# |-DBSnapshotDirectory       = '/group/online/hlt/conditions'
+# |-SQLiteLocalCopiesDir      = ''
+# |-Online                    = False
+# |-LogFile                   = ''
+# |-EnableRunChangeHandler    = False
+# |-Tags                      = {}  (default: {})
+# |-LatestLocalTagsByDataType = []  (default: [])
+# |-AllLocalTagsByDataType    = []  (default: [])
+# |-PartitionName             = 'LHCb'
 # |-PartitionConnectionString = {}  (default: {})
 # |-LocalTags                 = {}  (default: {})
 # |-IgnoreHeartBeat           = False
-# |-Tags                      = {}  (default: {})
 # |-Overrides                 = []  (default: [])
-# |-DisableLFC                = False
 # |-Simulation                = False
-# |-SQLiteLocalCopiesDir      = ''
-# |-HeartBeatCondition        = '/Conditions/Online/LHCb/Tick'
-# |-Online                    = False
 # |-QueryGranularity          = 0
 # |-UseOracle                 = False
-# |-LogFile                   = ''
+# |-LatestGlobalTagByDataType = ''
+# |-UseDBSnapshot             = False
+# |-DisableLFC                = False
+# |-HeartBeatCondition        = '/Conditions/Online/LHCb/Tick'
 # |-UseLatestTags             = []  (default: [])
 # |-OverwriteSQLiteLocalCopy  = False
 # \----- (End of User CondDB/CondDB) -----------------------------------------------------------------
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.77 $
-                                          running on lxbuild163.cern.ch on Mon Sep  5 10:59:01 2011
+                                                   Welcome to ApplicationMgr (GaudiCoreSvc v1r2)
+                                          running on lxplus428.cern.ch on Thu Aug  9 10:48:38 2012
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
 DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 CounterSummarySvc    INFO Wrote xml file summary.xml
-LumiMergeSeq         INFO Member list: EventAccounting/EventAccount, LumiMergeFSR/MergeFSR
+LumiMergeSeq         INFO Member list: EventAccounting/EventAccount, LumiMergeFSR/MergeFSR, FSRCleaner
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.84 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.90 times the speed of a 2.8 GHz Xeon.
 MergeFSR             INFO Primary  BXType BeamCrossing
 MergeFSR             INFO Subtract BXType Beam1
 MergeFSR             INFO Subtract BXType Beam2
@@ -97,19 +106,19 @@ FSROutputStream...   INFO Events output: 1
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.84 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.90 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO LumiMergeSeq                  |     0.005 |     0.005 |    0.004       0.0 |    2000 |     0.010 |
-ToolSvc.Sequenc...   INFO   EventAccount                |     0.003 |     0.002 |    0.001       0.0 |    2000 |     0.004 |
-ToolSvc.Sequenc...   INFO   MergeFSR                    |     0.001 |     0.001 |    0.001       0.0 |    2000 |     0.003 |
+ToolSvc.Sequenc...   INFO LumiMergeSeq                  |     0.005 |     0.006 |    0.005       0.2 |    2000 |     0.012 |
+ToolSvc.Sequenc...   INFO   EventAccount                |     0.001 |     0.002 |    0.001       0.1 |    2000 |     0.004 |
+ToolSvc.Sequenc...   INFO   MergeFSR                    |     0.002 |     0.001 |    0.001       0.1 |    2000 |     0.003 |
+ToolSvc.Sequenc...   INFO   FSRCleaner                  |     0.001 |     0.001 |    0.001       0.1 |    2000 |     0.003 |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
 CounterSummarySvc    INFO filling counters...
 CounterSummarySvc    INFO counters filled OK
 CounterSummarySvc    INFO Wrote xml file summary.xml
-FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
-RootCnvSvc           INFO Disconnected data IO:80F7B06F-18D2-DF11-92B1-003048D2BD0C[testFSRout0.dst]
-RootCnvSvc           INFO Disconnected data IO:AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517[testFSRout.dst]
-RootCnvSvc           INFO Disconnected data IO:E4271623-16D2-DF11-ACBF-003048D2BD0C[mergeout.dst]
+RootCnvSvc           INFO Disconnected data IO:80F7B06F-18D2-DF11-92B1-003048D2BD0C [testFSRout0.dst]
+RootCnvSvc           INFO Disconnected data IO:AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517 [testFSRout.dst]
+RootCnvSvc           INFO Disconnected data IO:E4271623-16D2-DF11-ACBF-003048D2BD0C [mergeout.dst]
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

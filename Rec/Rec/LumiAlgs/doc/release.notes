@@ -4,6 +4,9 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2012-08-09 - Rob Lambert
+ - Fix older lumi8merger test reference file
+
 ! 2012-08-08 - Rob Lambert
  - Add tests for new merging sensitive to file size and Vmem.
 
