@@ -33,6 +33,8 @@ class MBMStat
     {
       produced = 0;
       seen = 0;
+      p_rate = 0.0;
+      s_rate = 0.0;
     };
     MBMStat(const MBMStat & c): name(c.name),produced(c.produced),seen(c.seen),p_rate(c.p_rate),s_rate(c.s_rate)
     {
@@ -42,7 +44,7 @@ class MBMStat
       double delta = dtime;
       if (produced >= p.produced)
       {
-        p_rate = float(produced-p.produced)/delta;
+        p_rate = 1000.0*float(produced-p.produced)/delta;
       }
       else
       {
@@ -50,7 +52,7 @@ class MBMStat
       }
       if (seen >=p.seen)
       {
-        s_rate = float(seen-p.seen)/delta;
+        s_rate = 1000.0*float(seen-p.seen)/delta;
       }
       else
       {
