@@ -324,7 +324,7 @@ void HLTFileEqualizer::Analyze()
     nod->Events.calcRate(nod->Events_prev,dtime);
     nod->Overflow.calcRate(nod->Overflow_prev,dtime);
     nod->Send.calcRate(nod->Send_prev,dtime);
-    sprintf(Line,"%s %s/%d/%d/%f/%f,%s/%d/%d/%f/%f,%s/%d/%d/%f/%f|",nod->m_name.c_str(),
+    sprintf(Line,"%s %s/%d/%d/%5.1g/%5.1g,%s/%d/%d/%5.1g/%5.1g,%s/%d/%d/%5.1g/%5.1g|",nod->m_name.c_str(),
         nod->Events.name.c_str(),nod->Events.produced,nod->Events.seen,nod->Events.p_rate,nod->Events.s_rate,
         nod->Overflow.name.c_str(),nod->Overflow.produced,nod->Overflow.seen,nod->Overflow.p_rate,nod->Overflow.s_rate,
         nod->Send.name.c_str(),nod->Send.produced,nod->Send.seen,nod->Send.p_rate,nod->Send.s_rate);
