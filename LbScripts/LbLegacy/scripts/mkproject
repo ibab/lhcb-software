@@ -40,7 +40,7 @@ class MakeProjectException(Exception): pass
 script_version = '110301'
 script_name = 'mkproject'
 python_version = sys.version_info[:3]
-core_factor = 1.5
+core_factor = 2
 fixed_links = False
 
 day = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
