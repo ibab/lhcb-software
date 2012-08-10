@@ -4,11 +4,15 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+! 2012-08-10 - Chris Jones
+ - Update the default tuning for 2012 and 2011 to MC12TuneV1, trained on a
+   preliminary sample of 2012 B inclusive MC processed with Reco13d.
+
 ! 2012-08-09 - Chris Jones
  - Explicitly caste variables to float when filling the training tuple
  - Improvements to the training job scripts
 
-!========================= ChargedProtoANNPID v1r7 2012-06-25 =========================
+!========================= ChargedProtoANNPID v1r7 2012-06-25 =================
 ! 2012-06-18 - Chris Jones
  - Make default network tuning for 2010, 2011 and 2012 "MC11aTuneV3"
 
