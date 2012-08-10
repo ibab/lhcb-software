@@ -13,15 +13,26 @@
 #include <set>
 #include "dim/dic.hxx"
 #include "dim/dis.hxx"
+#define MBM_IMPLEMENTATION
+#include "ROMon/ROMon.h"
 #include "ROMon/CPUMon.h"
 #include "stdio.h"
 #include "time.h"
 using namespace ROMon;
 using namespace std;
-typedef ROMon::DeferredHLTSubfarmStats _S;
-typedef _S::Nodes               _N;
-typedef _S::Node::Runs          _R;
 typedef std::map<int,int> RunMap;
+class MBMStat
+{
+  public:
+    std::string name;
+    int produced;
+    int seen;
+    MBMStat()
+    {
+      produced = 0;
+      seen = 0;
+    };
+};
 class myNode
 {
   public:
@@ -32,6 +43,9 @@ class myNode
     char m_ROC_state;
     RunMap m_runmap;
     bool m_excl;
+    MBMStat Events;
+    MBMStat Overflow;
+    MBMStat Send;
     myNode(std::string n)
     {
       m_name = n;
@@ -50,6 +64,7 @@ class SFarm
 
 };
 class DefHltInfoHandler;
+class MBMInfoHandler;
 typedef std::map<std::string,myNode*> myNodeMap;
 typedef std::map<std::string,std::list<std::pair<std::string,int> > > myActionMap; //list of nodes per subfarm to execute an action on.
 typedef std::set<std::string> NodeSet;
@@ -61,6 +76,7 @@ class HLTFileEqualizer
     myNodeMap m_AllNodes;
     std::map<std::string,DimUpdatedInfo*> m_infoMap;
     DefHltInfoHandler *m_InfoHandler;
+    MBMInfoHandler *m_MBMInfoHandler;
     int m_nnodes;
     int m_nfiles;
     long m_nfiles2;
@@ -71,22 +87,27 @@ class HLTFileEqualizer
     DimService *m_NodeListDiff;
     DimService *m_NodesRunsFiles;
     DimService *m_StatServ;
+    DimService *m_NodesBuffersEvents;
     std::string m_servdat;
     std::string m_servdatDiff;
     std::string m_servdatNodesRunsFiles;
+    std::string m_servdatNodesBuffersEvents;
     NodeSet m_enabledFarm;
     NodeSet m_recvNodes;
+    NodeSet m_BufferrecvNodes;
     NodeSet m_exclNodes;
     HLTFileEqualizer();
     void Analyze();
     void Dump();
 };
+typedef ROMon::DeferredHLTSubfarmStats _DHLTSF;
+typedef ROMon::Nodeset _MBMSF;
 
 class DefHltInfoHandler : public DimInfoHandler
 {
   public:
     SFarm *m_subfarm;
-    _S *m_sfstatus;
+    _DHLTSF *m_sfstatus;
     int m_bufsiz;
     HLTFileEqualizer *m_Equalizer;
     DefHltInfoHandler(HLTFileEqualizer *e);
@@ -110,5 +131,17 @@ class ExclInfo : public DimInfo
     ExclInfo(char *name, NodeSet *nodeset);
     void infoHandler();
 };
+
+class MBMInfoHandler : public DimInfoHandler
+{
+  public:
+//    SFarm *m_subfarm;
+    _MBMSF *m_sfstatus;
+    int m_bufsiz;
+    HLTFileEqualizer *m_Equalizer;
+    MBMInfoHandler(HLTFileEqualizer *e);
+    void infoHandler();
+};
+
 
 #endif /* HLTFILEEQUALIZER_H_ */

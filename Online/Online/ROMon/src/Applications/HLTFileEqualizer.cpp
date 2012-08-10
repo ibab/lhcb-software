@@ -2,13 +2,14 @@
 #include <math.h>
 #include <time.h>
 #include "ROMon/Utilities.h"
-//#include "ROMon/ROMon.h"
 
 static FILE *outf;
+static bool inhibit_act;
 HLTFileEqualizer::HLTFileEqualizer()
 {
   DimUpdatedInfo *sfinfo;
   m_InfoHandler = new DefHltInfoHandler(this);
+  m_MBMInfoHandler = new MBMInfoHandler(this);
   static int NoLink=-1;
   char sf[128];
   char row;
@@ -29,6 +30,10 @@ HLTFileEqualizer::HLTFileEqualizer()
       sfinfo = new DimUpdatedInfo(sf,(void*)&NoLink,sizeof(int),m_InfoHandler);
       m_infoMap.insert(std::make_pair(std::string(sf),sfinfo));
       fprintf(outf,"%s\n",sf);
+      sprintf(sf,"/RO/hlt%c%02d/ROpublish",row,rack);
+      sfinfo = new DimUpdatedInfo(sf,(void*)&NoLink,sizeof(int),m_MBMInfoHandler);
+      m_infoMap.insert(std::make_pair(std::string(sf),sfinfo));
+      fprintf(outf,"%s\n",sf);
     }
   }
   row = 'f';
@@ -37,6 +42,10 @@ HLTFileEqualizer::HLTFileEqualizer()
     if (rack==5) continue;
     sprintf(sf,"/RO/hlt%c%02d/ROpublish/HLTDefer",row,rack);
     sfinfo = new DimUpdatedInfo(sf,(void*)&NoLink,sizeof(int),m_InfoHandler);
+    m_infoMap.insert(std::make_pair(std::string(sf),sfinfo));
+    fprintf(outf,"%s\n",sf);
+    sprintf(sf,"/RO/hlt%c%02d/ROpublish",row,rack);
+    sfinfo = new DimUpdatedInfo(sf,(void*)&NoLink,sizeof(int),m_MBMInfoHandler);
     m_infoMap.insert(std::make_pair(std::string(sf),sfinfo));
     fprintf(outf,"%s\n",sf);
   }
@@ -202,7 +211,7 @@ void HLTFileEqualizer::Analyze()
   m_nnodes = 0;
   m_nfiles = 0;
   m_nfiles2 = 0;
-  if (act)
+  if (act && !inhibit_act)
   {
     myActionMap::iterator fit;
     for (fit = Actions.begin(); fit != Actions.end(); fit++)
@@ -302,6 +311,25 @@ void HLTFileEqualizer::Analyze()
   m_StatServ->setData(stat,sizeof(stat));
   m_StatServ->updateService();
   m_recvNodes.clear();
+
+  m_servdatNodesBuffersEvents.erase();
+  for (NodeSet::iterator nit=m_BufferrecvNodes.begin();nit != m_BufferrecvNodes.end();nit++)
+  {
+    std::string nname;
+    nname = *nit;
+    myNodeMap::iterator nodeit = m_AllNodes.find(nname);
+    myNode *nod = (*nodeit).second;
+    char Line[1024];
+    sprintf(Line,"%s %s/%d/%d,%s/%d/%d,%s/%d/%d|",nod->m_name.c_str(),nod->Events.name.c_str(),nod->Events.produced,nod->Events.seen,
+        nod->Overflow.name.c_str(),nod->Overflow.produced,nod->Overflow.seen,
+        nod->Send.name.c_str(),nod->Send.produced,nod->Send.seen);
+    m_servdatNodesBuffersEvents += Line;
+  }
+  m_servdatNodesBuffersEvents += '\0';
+
+  m_NodesBuffersEvents->setData((void*)m_servdatNodesBuffersEvents.c_str(),m_servdatNodesBuffersEvents.size());
+  m_NodesBuffersEvents->updateService();
+  m_BufferrecvNodes.clear();
   dim_unlock();
 }
 
@@ -310,15 +338,79 @@ DefHltInfoHandler::DefHltInfoHandler(HLTFileEqualizer *e)
   m_Equalizer = e;
 //      m_subfarm = sf;
 }
-void DefHltInfoHandler::infoHandler()
+
+MBMInfoHandler::MBMInfoHandler(HLTFileEqualizer *e)
+{
+  m_Equalizer = e;
+}
+using namespace ROMon;
+typedef Nodeset::Nodes               Nodes;
+typedef Node::Buffers                Buffers;
+
+void MBMInfoHandler::infoHandler()
 {
   int siz;
 //  int status;
   siz = this->itsService->getSize();
 //      gettimeofday()
   if (siz == sizeof(int)) return;
-  m_sfstatus = (_S*)this->itsService->getData();
-  const _S* stats = m_sfstatus;
+  m_sfstatus = (_MBMSF *)itsService->getData();
+  const _MBMSF *ns = m_sfstatus;
+  Nodes::const_iterator n;
+    for (n=ns->nodes.begin();n!=ns->nodes.end(); n=ns->nodes.next(n))
+    {
+      std::string nname = (*n).name;
+      m_Equalizer->m_BufferrecvNodes.insert(nname);
+      myNodeMap::iterator anit;
+      anit = m_Equalizer->m_AllNodes.find(nname);
+      myNode* nod;
+      if (anit == m_Equalizer->m_AllNodes.end())
+      {
+        nod = new myNode(nname);
+        m_Equalizer->m_AllNodes.insert(std::make_pair(nname,nod));
+      }
+      else
+      {
+        nod = (*anit).second;
+      }
+      const Buffers& buffs = *(*n).buffers();
+      for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))
+      {
+        const Buffers::value_type::Control& c = (*ib).ctrl;
+        std::string bnam = (*ib).name;
+        if (bnam == std::string("Events"))
+        {
+          nod->Events.name = bnam;
+          nod->Events.produced = c.tot_produced;
+          nod->Events.seen  = c.tot_seen;
+        }
+        else if (bnam == std::string("Overflow"))
+        {
+          nod->Overflow.name = bnam;
+          nod->Overflow.produced = c.tot_produced;
+          nod->Overflow.seen  = c.tot_seen;
+        }
+        else if (bnam == std::string("Send"))
+        {
+          nod->Send.name = bnam;
+          nod->Send.produced = c.tot_produced;
+          nod->Send.seen  = c.tot_seen;
+        }
+      }
+    }
+}
+
+void DefHltInfoHandler::infoHandler()
+{
+  typedef _DHLTSF::Nodes               _N;
+  typedef _DHLTSF::Node::Runs          _R;
+  int siz;
+//  int status;
+  siz = this->itsService->getSize();
+//      gettimeofday()
+  if (siz == sizeof(int)) return;
+  m_sfstatus = (_DHLTSF*)this->itsService->getData();
+  const _DHLTSF* stats = m_sfstatus;
   const _N& nodes = *(stats->nodes());
 //      _N::const_iterator i;
   for (_N::const_iterator i = nodes.begin();i!= nodes.end();i=nodes.next(i))
@@ -578,7 +670,16 @@ void ExclInfo::infoHandler()
 
 int main(int argc, char **argv)
 {
-  outf = fopen("/group/online/HLTFileEqualizer.log","a+");
+  char *ofile = getenv("HLTEQ_LOGF");
+  if (ofile == 0)
+  {
+    outf = fopen("/group/online/HLTFileEqualizer.log","a+");
+  }
+  else
+  {
+    outf = fopen(ofile,"a+");
+
+  }
   fprintf(outf,"HLTFileEqualizer starting at...");
   {
     time_t rawtime;
@@ -587,7 +688,17 @@ int main(int argc, char **argv)
   }
 
   DimClient::setDnsNode("ecs03");
-  DimServer::setDnsNode("ecs03");
+  char *disact=getenv("HLTEQ_INHIBIT_ACT");
+  inhibit_act = (disact != 0);
+  char *dns = getenv("HLTEQ_DNSNODE");
+  if (dns == 0)
+  {
+    DimServer::setDnsNode("ecs03");
+  }
+  else
+  {
+    DimServer::setDnsNode(dns);
+  }
   HLTFileEqualizer elz;
   int m_DefState = -1;
   DimServer::start("HLTFileEqualizer");
@@ -611,6 +722,8 @@ int main(int argc, char **argv)
   elz.m_NodeListDiff = m_NodeServiceDiff;
   DimService *m_NodesRunsFiles= new DimService("HLTFileEqualizer/NodesRunsFiles", "C",(void*)"\0",1);
   elz.m_NodesRunsFiles = m_NodesRunsFiles;
+  DimService *m_NodesBuffersEvents = new DimService("HLTFileEqualizer/NodesBuffersEvents", "C",(void*)"\0",1);
+  elz.m_NodesBuffersEvents = m_NodesBuffersEvents;
   float stat[2];
   stat[0] = -1.0;
   stat[1] = 0.0;
