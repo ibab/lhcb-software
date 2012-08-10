@@ -320,9 +320,14 @@ void HLTFileEqualizer::Analyze()
     myNodeMap::iterator nodeit = m_AllNodes.find(nname);
     myNode *nod = (*nodeit).second;
     char Line[1024];
-    sprintf(Line,"%s %s/%d/%d,%s/%d/%d,%s/%d/%d|",nod->m_name.c_str(),nod->Events.name.c_str(),nod->Events.produced,nod->Events.seen,
-        nod->Overflow.name.c_str(),nod->Overflow.produced,nod->Overflow.seen,
-        nod->Send.name.c_str(),nod->Send.produced,nod->Send.seen);
+    long dtime = nod->ReadTime-nod->ReadTime_prev;
+    nod->Events.calcRate(nod->Events_prev,dtime);
+    nod->Overflow.calcRate(nod->Overflow_prev,dtime);
+    nod->Send.calcRate(nod->Send_prev,dtime);
+    sprintf(Line,"%s %s/%d/%d/%f/%f,%s/%d/%d/%f/%f,%s/%d/%d/%f/%f|",nod->m_name.c_str(),
+        nod->Events.name.c_str(),nod->Events.produced,nod->Events.seen,nod->Events.p_rate,nod->Events.s_rate,
+        nod->Overflow.name.c_str(),nod->Overflow.produced,nod->Overflow.seen,nod->Overflow.p_rate,nod->Overflow.s_rate,
+        nod->Send.name.c_str(),nod->Send.produced,nod->Send.seen,nod->Send.p_rate,nod->Send.s_rate);
     m_servdatNodesBuffersEvents += Line;
   }
   m_servdatNodesBuffersEvents += '\0';
@@ -373,6 +378,10 @@ void MBMInfoHandler::infoHandler()
       {
         nod = (*anit).second;
       }
+      nod->ReadTime_prev = nod->ReadTime;
+      nod->ReadTime = (*n).time;
+      nod->ReadTime *= 1000;
+      nod->ReadTime += (*n).millitm;
       const Buffers& buffs = *(*n).buffers();
       for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))
       {
@@ -380,18 +389,21 @@ void MBMInfoHandler::infoHandler()
         std::string bnam = (*ib).name;
         if (bnam == std::string("Events"))
         {
+          nod->Events_prev = nod->Events;
           nod->Events.name = bnam;
           nod->Events.produced = c.tot_produced;
           nod->Events.seen  = c.tot_seen;
         }
         else if (bnam == std::string("Overflow"))
         {
+          nod->Overflow_prev = nod->Overflow;
           nod->Overflow.name = bnam;
           nod->Overflow.produced = c.tot_produced;
           nod->Overflow.seen  = c.tot_seen;
         }
         else if (bnam == std::string("Send"))
         {
+          nod->Send_prev = nod->Send;
           nod->Send.name = bnam;
           nod->Send.produced = c.tot_produced;
           nod->Send.seen  = c.tot_seen;

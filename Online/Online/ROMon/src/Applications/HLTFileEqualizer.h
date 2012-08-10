@@ -27,11 +27,36 @@ class MBMStat
     std::string name;
     int produced;
     int seen;
+    float p_rate;
+    float s_rate;
     MBMStat()
     {
       produced = 0;
       seen = 0;
     };
+    MBMStat(const MBMStat & c): name(c.name),produced(c.produced),seen(c.seen),p_rate(c.p_rate),s_rate(c.s_rate)
+    {
+    };
+    void calcRate(MBMStat &p,long dtime)
+    {
+      double delta = dtime;
+      if (produced >= p.produced)
+      {
+        p_rate = float(produced-p.produced)/delta;
+      }
+      else
+      {
+        p_rate = 0.0;
+      }
+      if (seen >=p.seen)
+      {
+        s_rate = float(seen-p.seen)/delta;
+      }
+      else
+      {
+        s_rate = 0.0;
+      }
+    }
 };
 class myNode
 {
@@ -46,6 +71,11 @@ class myNode
     MBMStat Events;
     MBMStat Overflow;
     MBMStat Send;
+    MBMStat Events_prev;
+    MBMStat Overflow_prev;
+    MBMStat Send_prev;
+    long ReadTime;
+    long ReadTime_prev;
     myNode(std::string n)
     {
       m_name = n;
