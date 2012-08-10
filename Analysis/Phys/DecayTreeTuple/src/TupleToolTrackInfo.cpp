@@ -120,8 +120,8 @@ StatusCode TupleToolTrackInfo::fill( const LHCb::Particle*
   //}
   test &= tuple->column( prefix+"_TRACK_MatchCHI2", track->info(LHCb::Track::FitMatchChi2,-1) );
   double ghostProbability = -1.0;
-  if (track->ghostProbability() != 0)
-    ghostProbability = track->ghostProbability();
+  //  if (track->ghostProbability() != 0)
+  ghostProbability = track->ghostProbability();
 
   test &= tuple->column( prefix+"_TRACK_GhostProb",ghostProbability);
   test &= tuple->column( prefix+"_TRACK_CloneDist", track->info(LHCb::Track::CloneDist, -1.) );
