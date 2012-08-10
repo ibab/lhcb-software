@@ -329,6 +329,10 @@ void HLTFileEqualizer::Analyze()
         nod->Overflow.name.c_str(),nod->Overflow.produced,nod->Overflow.seen,nod->Overflow.p_rate,nod->Overflow.s_rate,
         nod->Send.name.c_str(),nod->Send.produced,nod->Send.seen,nod->Send.p_rate,nod->Send.s_rate);
     m_servdatNodesBuffersEvents += Line;
+    nod->ReadTime_prev = nod->ReadTime;
+    nod->Events_prev = nod->Events;
+    nod->Overflow_prev = nod->Overflow;
+    nod->Send_prev = nod->Send;
   }
   m_servdatNodesBuffersEvents += '\0';
 
@@ -378,7 +382,7 @@ void MBMInfoHandler::infoHandler()
       {
         nod = (*anit).second;
       }
-      nod->ReadTime_prev = nod->ReadTime;
+//      nod->ReadTime_prev = nod->ReadTime;
       nod->ReadTime = (*n).time;
       nod->ReadTime *= 1000;
       nod->ReadTime += (*n).millitm;
@@ -389,21 +393,21 @@ void MBMInfoHandler::infoHandler()
         std::string bnam = (*ib).name;
         if (bnam == std::string("Events"))
         {
-          nod->Events_prev = nod->Events;
+//          nod->Events_prev = nod->Events;
           nod->Events.name = bnam;
           nod->Events.produced = c.tot_produced;
           nod->Events.seen  = c.tot_seen;
         }
         else if (bnam == std::string("Overflow"))
         {
-          nod->Overflow_prev = nod->Overflow;
+//          nod->Overflow_prev = nod->Overflow;
           nod->Overflow.name = bnam;
           nod->Overflow.produced = c.tot_produced;
           nod->Overflow.seen  = c.tot_seen;
         }
         else if (bnam == std::string("Send"))
         {
-          nod->Send_prev = nod->Send;
+//          nod->Send_prev = nod->Send;
           nod->Send.name = bnam;
           nod->Send.produced = c.tot_produced;
           nod->Send.seen  = c.tot_seen;
