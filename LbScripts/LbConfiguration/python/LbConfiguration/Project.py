@@ -123,7 +123,7 @@ class ProjectConf(ProjectBaseConf):
         """ default constructor """
         super(ProjectConf, self).__init__(projectname)
         self._cmtextratags = []
-        self._fullsize = 5000000
+        self._fullsize = 15000000
         self._steeringpackage = projectname + "Sys"
         self._afsvolumename = self.NAME()
         self._afsvolumeroot = "lhcb"
@@ -435,33 +435,33 @@ del _pn#IGNORE:W0631
 # Alignment
 Alignment.setApplicationPackage("Alignment/Escher")#IGNORE:E0602
 Alignment.setAFSVolumeName("ALIGN")#IGNORE:E0602
-Alignment.setFullSize(800000)#IGNORE:E0602
+Alignment.setFullSize(15000000)#IGNORE:E0602
 
 # Analysis
 Analysis.setAFSVolumeName("ANALY")#IGNORE:E0602
-Analysis.setFullSize(2000000)#IGNORE:E0602
+Analysis.setFullSize(15000000)#IGNORE:E0602
 
 # Bender
 Bender.setApplicationPackage("Phys/Bender")#IGNORE:E0602
-Bender.setFullSize(500000)#IGNORE:E0602
+Bender.setFullSize(15000000)#IGNORE:E0602
 Bender.setBaseName("DAVINCI")#IGNORE:E0602
 
 # Boole
 Boole.setApplicationPackage("Digi/Boole")#IGNORE:E0602
-Boole.setFullSize(1500000)#IGNORE:E0602
+Boole.setFullSize(15000000)#IGNORE:E0602
 
 # Brunel
 Brunel.setApplicationPackage("Rec/Brunel")#IGNORE:E0602
-Brunel.setFullSize(700000)#IGNORE:E0602
+Brunel.setFullSize(15000000)#IGNORE:E0602
 
 # Curie
-Curie.setFullSize(50000)#IGNORE:E0602
+Curie.setFullSize(15000000)#IGNORE:E0602
 Curie.disableHasBinary()#IGNORE:E0602
 
 # DaVinci
 DaVinci.setApplicationPackage("Phys/DaVinci")#IGNORE:E0602
 DaVinci.setAFSVolumeName("DAV")#IGNORE:E0602
-DaVinci.setFullSize(800000)#IGNORE:E0602
+DaVinci.setFullSize(15000000)#IGNORE:E0602
 
 # Dirac
 Dirac.disableSetenvAlias()#IGNORE:E0602
@@ -471,7 +471,7 @@ Dirac.setFullSize(500000)#IGNORE:E0602
 
 # LHCbDirac
 LHCbDirac.disableSetenvAlias()#IGNORE:E0602
-LHCbDirac.setFullSize(500000)#IGNORE:E0602
+LHCbDirac.setFullSize(15000000)#IGNORE:E0602
 LHCbDirac.setAFSVolumeName("LBDIRAC")#IGNORE:E0602
 LHCbDirac.setLCGTarBallName("LCGGrid")#IGNORE:E0602
 
@@ -481,7 +481,7 @@ Erasmus.setAFSVolumeName("ERASM")#IGNORE:E0602
 
 # Euler
 Euler.setApplicationPackage("Trig/Euler")#IGNORE:E0602
-Euler.setFullSize(6000)#IGNORE:E0602
+Euler.setFullSize(15000000)#IGNORE:E0602
 
 #Feicim
 Feicim.setApplicationPackage("Feicim")#IGNORE:E0602
@@ -496,13 +496,13 @@ if os.environ.has_key("GAUDISOFT") :
     Gaudi.setReleaseArea(os.environ["GAUDISOFT"])#IGNORE:E0602
 Gaudi.setAFSVolumeRoot("Gaudi") #IGNORE:E0602
 Gaudi.setAFSLibrarianGroup("gaudi") #IGNORE:E0602
-Gaudi.setFullSize(3000000)#IGNORE:E0602
+Gaudi.setFullSize(15000000)#IGNORE:E0602
 Gaudi.setBaseName("LCGCMT")#IGNORE:E0602
 Gaudi.setLCGTarBallName("LCGCMT")#IGNORE:E0602
 
 #Gauss
 Gauss.setApplicationPackage("Sim/Gauss") #IGNORE:E0602
-Gauss.setFullSize(700000) #IGNORE:E0602
+Gauss.setFullSize(15000000) #IGNORE:E0602
 Gauss.addExtraExe("Hijing", ["Hijing"] ) #IGNORE:E0602
 Gauss.addExtraExe("Herwig", ["Herwig"] ) #IGNORE:E0602
 Gauss.addExtraExe("BcVegPy", ["BcVegPy"] ) #IGNORE:E0602
@@ -511,66 +511,66 @@ Gauss.addExtraExe("AlpGen", ["AlpGen"] ) #IGNORE:E0602
 
 # Geant4
 Geant4.setAFSVolumeName("G4")#IGNORE:E0602
-Geant4.setFullSize(2000000)#IGNORE:E0602
+Geant4.setFullSize(15000000)#IGNORE:E0602
 Geant4.setBaseName("GAUDI")#IGNORE:E0602
 
 # Hlt
-Hlt.setFullSize(2500000)#IGNORE:E0602
+Hlt.setFullSize(15000000)#IGNORE:E0602
 
 # Integration
-Integration.setFullSize(2500000)#IGNORE:E0602
+Integration.setFullSize(15000000)#IGNORE:E0602
 Integration.setAFSVolumeName("INTEG")#IGNORE:E0602
 
 
 # Lbcom
-Lbcom.setFullSize(1500000)#IGNORE:E0602
+Lbcom.setFullSize(15000000)#IGNORE:E0602
 
 # LbScripts
 LbScripts.setAFSVolumeName("LB")#IGNORE:E0602
-LbScripts.setFullSize(20000)#IGNORE:E0602
+LbScripts.setFullSize(15000000)#IGNORE:E0602
 LbScripts.disableHasBinary()#IGNORE:E0602
 
 # LHCb
 LHCb.setApplicationPackage("Ex")#IGNORE:E0602
-LHCb.setFullSize(6000000)#IGNORE:E0602
+LHCb.setFullSize(15000000)#IGNORE:E0602
 LHCb.setBaseName("GAUDI")#IGNORE:E0602
 
 
 # LHCbGrid
-LHCbGrid.setFullSize(100000)#IGNORE:E0602
+LHCbGrid.setFullSize(15000000)#IGNORE:E0602
 LHCbGrid.setLCGTarBallName("LCGGrid")#IGNORE:E0602
 # Moore
 Moore.setApplicationPackage("Hlt/Moore")#IGNORE:E0602
-Moore.setFullSize(700000)#IGNORE:E0602
+Moore.setFullSize(15000000)#IGNORE:E0602
 
 # Online
-Online.setFullSize(1500000)#IGNORE:E0602
+Online.setFullSize(15000000)#IGNORE:E0602
 
 # Orwell
 Orwell.setApplicationPackage("Calib/Orwell")#IGNORE:E0602
-Orwell.setFullSize(50000)#IGNORE:E0602
+Orwell.setFullSize(15000000)#IGNORE:E0602
 
 # Panoptes
 Panoptes.setApplicationPackage("Rich/Panoptes")#IGNORE:E0602
-Panoptes.setFullSize(50000)#IGNORE:E0602
+Panoptes.setFullSize(15000000)#IGNORE:E0602
 
 # Panoramix
 Panoramix.setApplicationPackage("Vis/Panoramix")#IGNORE:E0602
 Panoramix.setAFSVolumeName("PANORA") #IGNORE:E0602
-Panoramix.setFullSize(1000000)#IGNORE:E0602
+Panoramix.setFullSize(15000000)#IGNORE:E0602
 
 # Phys
-Phys.setFullSize(2000000)#IGNORE:E0602
+Phys.setFullSize(15000000)#IGNORE:E0602
 
 # Rec
-Rec.setFullSize(6000000)#IGNORE:E0602
+Rec.setFullSize(15000000)#IGNORE:E0602
 
 # Stripping
-Stripping.setFullSize(6000000)#IGNORE:E0602
+Stripping.setFullSize(15000000)#IGNORE:E0602
 Stripping.setAFSVolumeName("STRIP")#IGNORE:E0602
 
 # VanDerMeer
-VanDerMeer.setFullSize(50000)#IGNORE:E0602
+VanDerMeer.setFullSize(15000000)#IGNORE:E0602
 VanDerMeer.setAFSVolumeName("VDM")#IGNORE:E0602
 
 # VetraTB

@@ -1,3 +1,7 @@
+2012-08-10 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* python/LbConfiguration/Project.py: Set all defaults volume sizes to 15GB
+
 2012-06-25 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v7r1
