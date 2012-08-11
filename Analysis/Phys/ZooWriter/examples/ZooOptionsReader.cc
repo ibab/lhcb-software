@@ -48,7 +48,7 @@ int main(int argc, char** argv)
     //tuple files it is possible to read in more than one file, e.g. from
     //splitted sub-jobs
     if (2 > argc) {
-	std::cout << "USAGE ./ZooOptionsReader <filenames>" << std::endl;
+	std::cout << "USAGE " << argv[0] << " <filenames>" << std::endl;
 	return 1;
     }
     for (int i = 1; i < argc; ++i) {
@@ -74,6 +74,8 @@ int main(int argc, char** argv)
 	if (!tree) {
 	    std::cerr << "File " << argv[i] <<
 		" does not appear to contian options, ignoring this file." << std::endl;
+    // well if there's no tree, then don't try to read it: continue to the next file
+    continue;
 	}
 	std::cout << "File " << argv[i] <<
 	    " appears to contain old-style options, dumping." << std::endl;

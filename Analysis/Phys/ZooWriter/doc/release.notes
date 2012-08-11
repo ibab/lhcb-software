@@ -4,6 +4,9 @@
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
 
+! 2012-08-11 - Paul Seyfert
+ - bugfix in backward compatibility in ZooOptionsReader
+
 ! 2012-06-19 - Paul Seyfert
  - don't ask for ghost classification of trackless basic particles (i.e.
    photons)
