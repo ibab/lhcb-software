@@ -6,7 +6,8 @@ __author__ = "Marco Clemencic <Marco.Clemencic@cern.ch>"
 from Gaudi.Configuration import *
 from Configurables import ( CondDBEntityResolver,
                             XmlCnvSvc,
-                            XmlParserSvc, CondDB )
+                            XmlParserSvc )
+from DetCond.Configuration import CondDB
 from datetime import datetime, timedelta
 
 __all__ = ["DDDBConf"]
