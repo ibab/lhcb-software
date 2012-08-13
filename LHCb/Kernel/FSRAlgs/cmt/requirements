@@ -1,9 +1,9 @@
 #============================================================================
-# Created    : 2009-01-19
-# Maintainer : Jaap Panman
+# Created    : 2012-01-19
+# Maintainer : Jaap Panman, Rob Lambert
 #============================================================================
-package           LumiAlgs
-version           v7r8
+package           FSRAlgs
+version           v1r0
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -39,7 +39,7 @@ include_path      none
 #============================================================================
 # Component library building rule
 #============================================================================
-library          LumiAlgs    ../src/*.cpp
+library          FSRAlgs    ../src/*.cpp
 
 macro_append Boost_linkopts " $(Boost_linkopts_iostreams) "
 
@@ -51,7 +51,7 @@ apply_pattern    component_library library=LumiAlgs
 #============================================================================
 # Setup Python Configurables
 #============================================================================
-macro_append LumiAlgsGenConfUser_dependencies LumiAlgsConfDbMerge
+macro_append FSRAlgsGenConfUser_dependencies FSRAlgsConfDbMerge
 apply_pattern install_python_modules
 
 #QM tests
