@@ -4,7 +4,7 @@
   <argument name="args"><set><text>../../options/merge-small-files-test.py</text></set></argument>
   <arguement name="timeout"><integer>3600</integer></arguement>
   <argument name="validator"><text>
-myname="lumialgs.lumi9mergesmallfiles"
+myname="fsralgs.mergesmallfiles"
 import re
 retstr=""
 ########################################

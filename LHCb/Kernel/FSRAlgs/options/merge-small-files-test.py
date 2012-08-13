@@ -34,22 +34,19 @@ from Configurables import XMLSummarySvc
 XMLSummarySvc("CounterSummarySvc").UpdateFreq=1
 
 ##############################
-#Run the merger
+#Run the merger, this bit should soon be made a configurable,
+# or automatic through either LHCbApp or some other Merger()
 ##############################
 
 from Configurables import GaudiSequencer
-from Configurables import LumiAlgsConf
 LumiSeq=GaudiSequencer("LumiSeq")
-LumiAlgsConf().LumiSequencer=LumiSeq
-LumiAlgsConf().MergeFSR=True
-LumiAlgsConf().InputType="MDST"
+from Configurables import FSRCleaner, LumiMergeFSR, EventAccounting
+LumiSeq.Members=[EventAccounting("EventAccount"),LumiMergeFSR("MergeFSR"),FSRCleaner()]
 ApplicationMgr().TopAlg+=[LumiSeq]
 
 ##############################################
 #Debug printout, lists all cleaned directories
 ##############################################
 
-
-from Configurables import FSRCleaner
 FSRCleaner().OutputLevel=DEBUG
 #FSRCleaner().Enable=False

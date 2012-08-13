@@ -12,5 +12,3 @@ __author__  = "Jaap Panman, Rob lambert"
 from Gaudi.Configuration  import *
 import GaudiKernel.ProcessJobOptions
 from Configurables import LHCbConfigurableUser 
-from Configurables import LumiMergeFSR
-from Configurables import FSRCleaner

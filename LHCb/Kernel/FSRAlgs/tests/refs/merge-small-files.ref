@@ -1,5 +1,4 @@
-# |-MergeFSR          = True  (default: False)
-LumiSeq              INFO OR Member list: EventAccounting/EventAccount, LumiMergeFSR/MergeFSR, FSRCleaner
+LumiSeq              INFO Member list: EventAccounting/EventAccount, LumiMergeFSR/MergeFSR, FSRCleaner
 MergeFSR             INFO Primary  BXType BeamCrossing
 MergeFSR             INFO Subtract BXType Beam1
 MergeFSR             INFO Subtract BXType Beam2

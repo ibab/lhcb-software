@@ -11,4 +11,7 @@
  - Removal of tests which should stay in Rec/LumiAlgs 
  - Removal of python modules which should stay in Rec/LumiAlgs
  - Creation of includes directory for interfaces
-
+ - move test directory
+ - remove jobs directory
+ - Tested in Brunel with the new Rec/LumiAlgs, and all works fine. 
+ - Needs a nightly test to check packaging.
