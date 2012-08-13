@@ -9,4 +9,6 @@
  - Removal of algorithms which belong only in Rec/LumiAlgs. remainder is:
    . DumpFSR, PropagateFSR, LumiMergeFSR, EventAccounting and the FSRNavigator
  - Removal of tests which should stay in Rec/LumiAlgs 
+ - Removal of python modules which should stay in Rec/LumiAlgs
+ - Creation of includes directory for interfaces
 

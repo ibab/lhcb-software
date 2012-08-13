@@ -8,7 +8,7 @@
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/IOpaqueAddress.h"
 
-#include "IFSRNavigator.h"            // Interface
+#include "FSRAlgs/IFSRNavigator.h"            // Interface
 
 /** @class FSRNavigator FSRNavigator.h
  *   
