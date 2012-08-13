@@ -4,6 +4,10 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+! 2012-08-13 - Chris Jones
+ - Replace "from DetCond.Configuration import CondDB" with
+           "from Configurables import CondDB"
+
 ! 2012-08-08 - Marco Clemencic
  - Added python/DDDB/__init__.py.
 
