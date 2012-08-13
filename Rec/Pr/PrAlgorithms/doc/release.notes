@@ -4,6 +4,9 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+! 2012-08-13 - Olivier Callot
+ - Better ghost rejection by fixing some bugs in stereo processing
+
 ! 2012-07-31 - Olivier Callot
  - Many improvements. Interface for IPrForwardTool. second implementation (worse)
 

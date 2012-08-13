@@ -83,6 +83,13 @@ void PrFTHitManager::decodeData ( ) {
     aHit->setHit( LHCb::LHCbID( (*itC).channelID() ), (*itC).size(), (*itC).charge(), seg, errX , zone, lay );
     debug() << " .. hit " << (*itC).channelID() << " zone " << zone << " x " << seg.x(0.) << endmsg;
   }
+  /*
+  //== Remove a bilayer.
+  zone(0 ) ->hits().clear();
+  zone(1  )->hits().clear();
+  zone(2  )->hits().clear();
+  zone(3  )->hits().clear();
+  */
   for ( unsigned int lay = 0; nbZones() > lay ; ++lay ) {
     std::sort( zone(lay)->hits().begin(), zone(lay)->hits().end(), PrHit::LowerByCoord() );
   }

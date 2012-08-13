@@ -34,17 +34,17 @@ public:
 
   void selectXCandidates( PrForwardTrack& track );
 
+  void fastLinearFit( PrForwardTrack& track );
+
   bool fitXProjection( PrForwardTrack& track );
 
-  bool addHitsOnEmptyXLayers( PrForwardTrack& track );
+  bool addHitsOnEmptyXLayers( PrForwardTrack& track, bool refit = true );
 
   void collectStereoHits( PrForwardTrack& track );
 
   bool fitStereoHits( PrForwardTrack& track );
   
   void makeLHCbTracks ( LHCb::Tracks* result );
-
-  void fastLinearFit( PrForwardTrack& track );
 
 protected:
 
@@ -57,16 +57,22 @@ private:
   float           m_maxXWindow;
   float           m_maxXWindowSlope;
   float           m_maxXGap;
+  float           m_maxChi2LinearFit;
   float           m_maxChi2XProjection;
-  float           m_maxChi2ToAddExtraXHits;
   float           m_maxChi2PerDoF;
   float           m_maxDxForY;
-  unsigned int    m_minStereoHits;
+  float           m_minYGap;
+  float           m_tolYMag;
+  float           m_tolYMagSlope;
+  float           m_maxYChi2AtMagnet;
+  unsigned int    m_minTotalHits;
+  float           m_maxChi2StereoLinear;
   float           m_maxChi2Stereo;
   float           m_maxQuality;
   float           m_deltaQuality;
   float           m_yQualityWeight;
   unsigned int    m_nbXPlanes;
+  unsigned int    m_minStereoHits;
 
   PrHitManager*   m_hitManager;
   PrGeometryTool* m_geoTool;

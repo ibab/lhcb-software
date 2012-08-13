@@ -79,6 +79,7 @@ public:
   float y( float z )         const { float dz = z-m_zRef; return m_ay + dz*( m_by + dz * m_cy); } 
   float ySlope( float z )    const { float dz = z-m_zRef; return m_by + dz* 2. * m_cy; }  
   float xStraight( float z ) const { return m_ax + (z-m_zRef) * m_bx; }
+  float yStraight( float z ) const { return m_ay + (z-m_zRef) * m_by; }
 
   float yOnTrack( PrHit* hit ) const { float sly =  ySlope( hit->z() ); 
     return hit->yOnTrack( y(hit->z()) - sly * hit->z(), sly ); }
@@ -123,13 +124,17 @@ public:
     return n;
   }
 
-  void setQuality( float q )       { m_quality = q; }
-  float quality()            const { return m_quality; }
+  void  setQuality( float q )       { m_quality = q; }
+  float quality()             const { return m_quality; }
 
   struct LowerByQuality {
     bool operator() (const PrForwardTrack lhs, const PrForwardTrack rhs ) const { return lhs.quality() < rhs.quality(); }
   };
   
+  float cy() const { return m_cy; }
+
+  void  setChi2AtMagnet( float chi2 )       { m_chi2AtMagnet = chi2; }
+  float chi2AtMagnet()                const { return m_chi2AtMagnet; }
 
 protected:
 
@@ -193,6 +198,7 @@ private:
   float m_dXCoord;
   float m_meanDy;
   float m_quality;
+  float m_chi2AtMagnet;
 };
 
 typedef std::vector<PrForwardTrack> PrForwardTracks;

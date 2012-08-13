@@ -56,8 +56,11 @@ public:
   //=========================================================================
   void printTrack( const PrForwardTrack& track ) {
     if ( 0 < track.nDoF() ) {
-      info() << format( "   Track nDoF %3d   chi2/nDoF %7.3f  dXCoord %7.3f dy%7.2f quality %8.3f",
-                        track.nDoF(), track.chi2PerDoF(), track.dXCoord(), track.meanDy(), track.quality() ) 
+      float dx = track.x( 8500.) - track.xFromVelo( 8500. );
+      
+      info() << format( "   Track nDoF %3d   chi2/nDoF %7.3f  dXCoord %7.3f dy%7.2f quality %6.3f cy%8.3f dx%8.2f Chi2YMag %7.3f",
+                        track.nDoF(), track.chi2PerDoF(), track.dXCoord(), track.meanDy(), track.quality(),
+                        1.e6 * track.cy(), dx, track.chi2AtMagnet() ) 
              << endmsg;
     } else {
       info() << "   Track" << endmsg;
