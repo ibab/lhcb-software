@@ -131,6 +131,7 @@ class HLTFileEqualizer
     HLTFileEqualizer();
     void Analyze();
     void Dump();
+    void BufferDump();
 };
 typedef ROMon::DeferredHLTSubfarmStats _DHLTSF;
 typedef ROMon::Nodeset _MBMSF;

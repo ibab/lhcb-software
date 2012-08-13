@@ -338,10 +338,53 @@ void HLTFileEqualizer::Analyze()
 
   m_NodesBuffersEvents->setData((void*)m_servdatNodesBuffersEvents.c_str(),m_servdatNodesBuffersEvents.size());
   m_NodesBuffersEvents->updateService();
+  BufferDump();
   m_BufferrecvNodes.clear();
   dim_unlock();
 }
+void HLTFileEqualizer::BufferDump()
+{
+  fprintf(outf,"Dump of Events Buffer Distribution at ");
+  {
+    time_t rawtime;
+    time(&rawtime);
+    fprintf(outf,"%s\n",asctime(localtime(&rawtime)));
+  }
+  fprintf(outf,"          ");
+  for (int i=1;i<=32;i++)
+  {
+    fprintf(outf,"  %02i  ",i);
 
+  }
+  std::string cfarm="";
+  std::string eline(256,' ');
+  std::string line=eline;
+  for (NodeSet::iterator nit=m_BufferrecvNodes.begin();nit != m_BufferrecvNodes.end();nit++)
+  {
+    std::string nname;
+    nname = *nit;
+    myNodeMap::iterator nodeit = m_AllNodes.find(nname);
+    myNode *nod = (*nodeit).second;
+    if (cfarm != nod->m_subfarm)
+    {
+      if (cfarm.size()>2)
+      {
+        fprintf(outf,"\n%s",line.substr(0,line.find_last_not_of(" ")+1).c_str());
+      }
+      line = eline;
+      line.replace(0,nod->m_subfarm.size(),nod->m_subfarm);
+//      fprintf(outf,"\n%s",nod->m_subfarm);
+      cfarm = nod->m_subfarm;
+    }
+    int indx;
+    sscanf(nod->m_name.substr(6,2).c_str(),"%d",&indx);
+    char nfil[10];
+    sprintf(nfil,"%4.3f",nod->Events.p_rate);
+    line.replace(9+(indx-1)*6,5,nfil);
+  }
+  fprintf(outf,"\n%s\n",line.c_str());
+  fflush(outf);
+}
 DefHltInfoHandler::DefHltInfoHandler(HLTFileEqualizer *e)
 {
   m_Equalizer = e;
