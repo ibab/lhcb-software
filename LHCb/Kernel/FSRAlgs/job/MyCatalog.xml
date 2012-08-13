@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!-- Edited By POOL -->
+<!DOCTYPE POOLFILECATALOG SYSTEM "InMemory">
+<POOLFILECATALOG>
+
+  <File ID="b3190bc2-5651-11df-8bb8-00074305d05b">
+     <physical>
+       <pfn filetype="MDF" name="root:castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/71185/071185_0000000029.raw?svcClass=lhcbraw&amp;castorVersion=2"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/71185/071185_0000000029.raw"/>
+     </logical>
+   </File>
+
+
+  <File ID="a43d2a40-e606-11de-bfa2-00188b8565c8">
+     <physical>
+       <pfn filetype="MDF" name="root:castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/LHCb/COLLISION09/63688/063688_0000000001.raw?svcClass=lhcbraw&amp;castorVersion=2"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2009/RAW/FULL/LHCb/COLLISION09/63688/063688_0000000001.raw"/>
+     </logical>
+   </File>
+
+  <File ID="EA29D570-41FC-DE11-947F-001E4F3DA517">
+    <physical>
+      <pfn filetype="MDF" name="file://testout.mdf"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517">
+    <physical>
+      <pfn filetype="ROOT_All" name="testFSRout.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+</POOLFILECATALOG>
