@@ -12,10 +12,10 @@
 #include "Event/TimeSpanFSR.h"
 #include "Event/LumiIntegral.h"
 #include "Event/LumiCounters.h"
+#include "FSRAlgs/IFSRNavigator.h"
 // local
 #include "GetIntegratedLuminosity.h"
 #include "LumiIntegrator.h"
-#include "FSRNavigator.h"
 // CondDB
 #include "DetDesc/Condition.h"
 #include "GaudiKernel/IDetDataSvc.h"

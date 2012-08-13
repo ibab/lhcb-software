@@ -4,6 +4,10 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2012-08-13 - Rob Lambert
+ - Split this package up into Kernel/FSRAlgs and Rec/LumiAlgs, see task #33139
+ - Requires new LHCbSys which includes Kernel/FSRAlgs!
+
 ! 2012-08-09 - Rob Lambert
  - Fix older lumi8merger test reference file
 

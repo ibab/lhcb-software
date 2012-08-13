@@ -18,7 +18,7 @@
 // local
 #include "LumiIntegrateFSR.h"
 #include "LumiIntegrator.h"
-#include "FSRNavigator.h"
+#include "FSRAlgs/IFSRNavigator.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : LumiIntegrateFSR
