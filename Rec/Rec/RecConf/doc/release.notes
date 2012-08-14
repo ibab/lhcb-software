@@ -4,6 +4,9 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+! 2012-08-14 - Chris Jones
+ - GlobalReco PROTO checks need to run in Check sequence if MC is enabled.
+
 !========================= RecConf v2r7 2012-07-24 =========================
 ! 2012-07-06 - Wouter Hulsbergen
  - Adapt to change in TrackV0Finder
