@@ -2,7 +2,7 @@
 {
 
   // load the file
-  TFile * f = new TFile("/usera/jonesc/protoparticles.tuples.root");
+  TFile * f = new TFile("/afs/cern.ch/user/s/seaso/public/Rich/Upgrade/RichLumi/NtupleTest/protoparticles.tuples.root");
 
   TTree * tree = (TTree*)gDirectory->Get("ChargedProtoTuple/protoPtuple");
 
