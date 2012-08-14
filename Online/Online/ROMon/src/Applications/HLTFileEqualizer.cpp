@@ -432,7 +432,13 @@ void MBMInfoHandler::infoHandler()
       {
         nod = (*anit).second;
       }
-//      nod->ReadTime_prev = nod->ReadTime;
+      if (nod->ReadTime_prev == 0)
+      {
+        nod->ReadTime_prev = nod->ReadTime;
+        nod->Events_prev = nod->Events;
+        nod->Overflow_prev = nod->Overflow;
+        nod->Send_prev = nod->Send;
+      }
       nod->ReadTime = (*n).time;
       nod->ReadTime *= 1000;
       nod->ReadTime += (*n).millitm;
