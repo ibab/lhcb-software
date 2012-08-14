@@ -383,6 +383,13 @@ void HLTFileEqualizer::BufferDump()
     line.replace(9+(indx-1)*6,5,nfil);
   }
   fprintf(outf,"\n%s\n",line.c_str());
+  fprintf(outf,"          ");
+  for (int i=1;i<=32;i++)
+  {
+    fprintf(outf,"  %02i  ",i);
+
+  }
+  fprintf(outf,"\n");
   fflush(outf);
 }
 DefHltInfoHandler::DefHltInfoHandler(HLTFileEqualizer *e)
