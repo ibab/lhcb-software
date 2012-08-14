@@ -78,7 +78,7 @@ public:
   std::vector<OnlineHistoOnPage*>& onlineHistos() { return m_onlineHistosOnPage; }
   
   //== Simple display of pages built by AddDimHistos
-  void simpleDisplay (  TCanvas* editorCanvas );
+  void simpleDisplay (  TCanvas* editorCanvas, OMAlib* analysisLib );
   
   //== Prepare the list of histogram to access
   void prepareAccess( OnlineHistDB* histDB, std::string& partition );

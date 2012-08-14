@@ -4,6 +4,9 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2012-08-14 - Olivier Callot
+ - Fix a bug (crash) when displaying alarm plots with associated pattern.
+
 !=============================== 2012-06-22 v3r5 =============================
 ! 2012-04-26 - Olivier Callot
  - When creating a page, put more row than columns by default.

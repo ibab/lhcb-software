@@ -304,9 +304,11 @@ void DisplayHistogram::draw( TCanvas * editorCanvas , double xlow , double ylow 
   if ( !m_isOverlap ) pad->SetName( m_identifier.c_str() );
 
   std::string sopt("");
-  if ( 0 != m_onlineHist && ! m_isDummy ) {
+  if ( 0 != m_onlineHist && ! m_isDummy && NULL != analysisLib ) {
     if ( hasOption("DRAWPATTERN", &sopt) && false == m_isOverlap) {
 
+      std::cout << "root from analysis " << analysisLib->refRoot() << std::endl;
+      std::cout << "task " << m_onlineHist->task() << std::endl;
       std::string drawPatternFile = analysisLib->refRoot() + "/" + m_onlineHist->task() + "/" + sopt;
 
       TFile rootFile( drawPatternFile.c_str() );

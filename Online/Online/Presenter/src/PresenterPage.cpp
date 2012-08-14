@@ -806,7 +806,7 @@ void PresenterPage::resetOffsetHistograms ( ) {
 //=========================================================================
 //  Simple display, with automatic n x m layout
 //=========================================================================
-void PresenterPage::simpleDisplay (  TCanvas* editorCanvas ) {
+void PresenterPage::simpleDisplay (  TCanvas* editorCanvas,  OMAlib* analysisLib ) {
   int nbPlots = 0;
   if ( m_analysis.empty() ) {
     for ( std::vector<TaskHistos>::iterator itT = m_tasks.begin(); m_tasks.end() != itT; ++itT ) {
@@ -860,7 +860,7 @@ void PresenterPage::simpleDisplay (  TCanvas* editorCanvas ) {
         yLow = 0.95 * yLow;
         yHig = 0.95 * yHig;
       }
-      (*itH).displayHisto->draw( editorCanvas, xLow, yLow, xHig, yHig, NULL, false, NULL );
+      (*itH).displayHisto->draw( editorCanvas, xLow, yLow, xHig, yHig, analysisLib, false, NULL );
       (*itH).displayHisto->setDisplayOptions();
       col += 1;
       if ( nCol == col ) {

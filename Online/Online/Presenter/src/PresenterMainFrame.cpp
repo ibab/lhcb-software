@@ -3686,7 +3686,7 @@ void PresenterMainFrame::displaySimpleHistos ( ) {
   editorCanvas->cd();
   
   m_presenterPage.drawBanner( header, bannerText );
-  m_presenterPage.simpleDisplay( editorCanvas );
+  m_presenterPage.simpleDisplay( editorCanvas, m_analysisLib );
   m_loadingPage = false;
   if ( m_reAccess ) reAccessPage();
 }
