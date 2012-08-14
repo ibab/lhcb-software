@@ -671,7 +671,10 @@ class Brunel(LHCbConfigurableUser):
             if "PROTO" in checkSeq :
                 from Configurables import GaudiSequencer
                 self.setOtherProps(GlobalRecoChecks(),["OutputType"])
-                GlobalRecoChecks().Sequencer = GaudiSequencer("CheckPROTOSeq")
+                exSeq = GaudiSequencer("ExpertProtoMoni")
+                GaudiSequencer("CheckPROTOSeq").Members += [exSeq]
+                GlobalRecoChecks().Sequencer = exSeq
+                
 
     def _isReprocessing(self, inputType):
         return inputType in [ "XDST", "DST", "SDST" ]

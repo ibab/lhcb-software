@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2012-08-14 - Chris Jones
+ - If MC Checking is enabled, run the expert Proto monitors in the 
+   check sequence
+
 - Changes to references to reflect changes since v43r1p2
   . Remove conversion of Calo raw banks from 'packed' to '0-suppressed'
     (CaloDAQ)
