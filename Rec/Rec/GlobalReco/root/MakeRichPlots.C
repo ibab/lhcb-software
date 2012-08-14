@@ -32,8 +32,8 @@
     cC << *iC;
 
     // DLL>0
-    tree->Draw( ("(RichDLLk>"+cC.str()+"?100:0):TrackP>>kIDEff").c_str(), realK && trackSel, "prof" );
-    tree->Draw( ("(RichDLLk>"+cC.str()+"?100:0):TrackP>>piMisIDEff").c_str(), realPi && trackSel, "prof" );
+    tree->Draw( ("(RichDLLk>"+cC.str()+"?100:0):TrackP>>kIDEff").c_str(), detOK && realK && trackSel, "prof" );
+    tree->Draw( ("(RichDLLk>"+cC.str()+"?100:0):TrackP>>piMisIDEff").c_str(), detOK && realPi && trackSel, "prof" );
 
     kIDEff->SetTitle( ("DLLk>"+cC.str()).c_str() );
     kIDEff->Draw();
