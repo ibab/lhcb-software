@@ -60,6 +60,7 @@ bool GlobalPID::passTrackSelection() const
 {
   // Get the MC type
   const PIDType mcType = getMcType();
+  
 
   // skip particles without MC
   if ( mcType == NoMCInfo || mcType == UnknownParticle ) return false;
@@ -99,11 +100,6 @@ void GlobalPID::makeCurve(const Long64_t nTracks)
     nb = fChain->GetEntry(jentry);
     nbytes += nb;
     //------------------------------------------------------------------------------
-
-    // temp fix up
-    TrackNumDof = (Int_t)_TrackNumDof;
-    TrackType = (Int_t)_TrackType;
-    TrackHistory = (Int_t)_TrackHistory;
 
     // pid det selection
     if ( !passBasicPIDDet()    ) continue;
@@ -628,9 +624,9 @@ void GlobalPID::Init(TTree *tree)
   fChain->SetBranchAddress("TrackP", &TrackP, &b_TrackP);
   fChain->SetBranchAddress("TrackPt", &TrackPt, &b_TrackPt);
   fChain->SetBranchAddress("TrackChi2PerDof", &TrackChi2PerDof, &b_TrackChi2PerDof);
-  fChain->SetBranchAddress("TrackNumDof", &_TrackNumDof, &b_TrackNumDof);
-  fChain->SetBranchAddress("TrackType", &_TrackType, &b_TrackType);
-  fChain->SetBranchAddress("TrackHistory", &_TrackHistory, &b_TrackHistory);
+  fChain->SetBranchAddress("TrackNumDof", &TrackNumDof, &b_TrackNumDof);
+  fChain->SetBranchAddress("TrackType", &TrackType, &b_TrackType);
+  fChain->SetBranchAddress("TrackHistory", &TrackHistory, &b_TrackHistory);
   fChain->SetBranchAddress("RichDLLe", &RichDLLe, &b_RichDLLe);
   fChain->SetBranchAddress("RichDLLmu", &RichDLLmu, &b_RichDLLmu);
   fChain->SetBranchAddress("RichDLLpi", &RichDLLpi, &b_RichDLLpi);

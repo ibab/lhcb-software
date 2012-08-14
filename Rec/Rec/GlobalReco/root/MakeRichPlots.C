@@ -2,55 +2,49 @@
 {
 
   // load the file
-  TFile * f = new TFile("gpid-1000evts.root");
+  TFile * f = new TFile("/usera/jonesc/protoparticles.tuples.root");
 
   TTree * tree = (TTree*)gDirectory->Get("ChargedProtoTuple/protoPtuple");
 
   TCut detOK = "RichUsedAero==1 || RichUsedR1Gas==1 || RichUsedR2Gas==1";
 
-  TCut trackSel = "TrackType == 3 && TrackP > 2000 && TrackP < 100000";
+  TCut trackSel = "TrackType == 3 && TrackP > 10000 && TrackP < 100000";
 
-  TCut realK = "fabs(MCParticleType) == 321";
-  TCut fakeK = "fabs(MCParticleType) != 321";
+  TCut kaonDllCut = "RichDLLk>0";
 
-  TCut realE = "fabs(MCParticleType) == 11";
-  TCut fakeE = "fabs(MCParticleType) != 11";
+  TCut realK  = "abs(MCParticleType) == 321";
+  TCut fakeK  = "abs(MCParticleType) != 321";
 
-  new TCanvas();
-  tree->Draw( "7*(tanh(RichDLLk/40)-tanh(RichDLLpi/50))", trackSel && detOK && realK );
+  TCut realPi = "abs(MCParticleType) == 11";
+  TCut fakePi = "abs(MCParticleType) != 11";
 
-  new TCanvas();
-  tree->Draw( "7*(tanh(RichDLLk/40)-tanh(RichDLLpi/50))", trackSel && detOK && fakeK );
+  TCanvas * c = new TCanvas();
 
-  new TCanvas();
-  tree->Draw( "RichDLLk-RichDLLpi", trackSel && detOK && realK );
+  std::vector<double> cuts;
+  cuts.push_back(-5);
+  cuts.push_back(0);
+  cuts.push_back(5);
 
-  new TCanvas();
-  tree->Draw( "RichDLLk-RichDLLpi", trackSel && detOK && fakeK );
+  for ( std::vector<double>::const_iterator iC = cuts.begin();
+        iC != cuts.end(); ++iC )
+  {
+    std::ostringstream cC; 
+    cC << *iC;
 
-  //new TCanvas();
-  //tree->Draw( "tanh((RichDLLk-RichDLLpi)/100)", trackSel && detOK && realK );
+    // DLL>0
+    tree->Draw( ("(RichDLLk>"+cC.str()+"?100:0):TrackP>>kIDEff").c_str(), realK && trackSel, "prof" );
+    tree->Draw( ("(RichDLLk>"+cC.str()+"?100:0):TrackP>>piMisIDEff").c_str(), realPi && trackSel, "prof" );
 
-  //new TCanvas();
-  //tree->Draw( "tanh((RichDLLk-RichDLLpi)/100)", trackSel && detOK && fakeK );
+    kIDEff->SetTitle( ("DLLk>"+cC.str()).c_str() );
+    kIDEff->Draw();
+    kIDEff->SetMarkerColor(kRed);
+    kIDEff->SetLineColor(kRed);
 
-  //new TCanvas();
-  //tree->Draw( "RichDLLmu-RichDLLpi", trackSel && detOK );
+    piMisIDEff->Draw("SAME");
+    piMisIDEff->SetMarkerColor(kBlue);
+    piMisIDEff->SetLineColor(kBlue);
 
-  //new TCanvas();
-  //tree->Draw( "7*(tanh(RichDLLmu/10)-tanh(RichDLLpi/10))", trackSel && detOK );
-
-  //new TCanvas();
-  //tree->Draw( "RichDLLe-RichDLLpi", trackSel && detOK );
-
-  //new TCanvas();
-  //tree->Draw( "RichDLLe-RichDLLpi", trackSel && detOK && fakeE );
-
-  //new TCanvas();
-  //tree->Draw( "7*(tanh(RichDLLe/40)-tanh(RichDLLpi/40))", trackSel && detOK );
-
-  //new TCanvas();
-  //tree->Draw( "7*(tanh(RichDLLe/40)-tanh(RichDLLpi/40))", trackSel && detOK && fakeE );
-
+    c->SaveAs( ("KaonID-DLL"+cC.str()+".png").c_str() );
+  }
 
 }

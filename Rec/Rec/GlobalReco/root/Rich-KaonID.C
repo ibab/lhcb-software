@@ -1,5 +1,8 @@
 
 {
+  const Long64_t nTracks = 9999999;
+  const std::string dataFile = "/usera/jonesc/protoparticles.tuples.root";
+
   gROOT->ProcessLine(".L GlobalPID.C+");
   const double GeV(1000);
 

@@ -2,9 +2,8 @@
 {
   const Long64_t nTracks = 10000;
 
-  // DC06
-  //const std::string dataFile = "/Users/chris/LHCb/RootFiles/DC06/DC06.protoparticles.tuples.root";
+  const std::string dataFile = "/usera/jonesc/protoparticles.tuples.root";
 
-  gROOT->ProcessLine(".x CompareTwoFiles-KaonID.C");
- 
+  //gROOT->ProcessLine(".x Rich-KaonID-CompareFiles.C");
+  gROOT->ProcessLine(".x Rich-KaonID.C");
 }
