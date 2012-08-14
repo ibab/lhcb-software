@@ -6,7 +6,7 @@
 
   TTree * tree = (TTree*)gDirectory->Get("ChargedProtoTuple/protoPtuple");
 
-  TCut detOK = "RichUsedAero==1 || RichUsedR1Gas==1 || RichUsedR2Gas==1";
+  TCut detOK = "RichUsedAero || RichUsedR1Gas || RichUsedR2Gas";
 
   TCut trackSel = "TrackType == 3 && TrackP > 10000 && TrackP < 100000";
 
