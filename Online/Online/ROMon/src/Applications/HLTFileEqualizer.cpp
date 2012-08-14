@@ -382,7 +382,7 @@ void HLTFileEqualizer::BufferDump()
     sprintf(nfil,"%4.3f",nod->Events.p_rate);
     line.replace(9+(indx-1)*6,5,nfil);
   }
-  fprintf(outf,"\n%s\n",line.c_str());
+  fprintf(outf,"\n%s",line.c_str());
   fprintf(outf,"          ");
   for (int i=1;i<=32;i++)
   {
