@@ -87,6 +87,8 @@ class myNode
       m_ROC_state = '?';
       m_runmap.clear();
       m_excl = false;
+      ReadTime_prev = 0;
+      ReadTime = 0;
     };
 };
 class SFarm
