@@ -14,7 +14,7 @@ class PrLineFitter {
 public: 
   /// Standard constructor
   PrLineFitter( float z ) {
-    m_z0 = z; 
+    m_z0  = z; 
     m_s0  = 0.;
     m_sz  = 0.;
     m_sz2 = 0.;

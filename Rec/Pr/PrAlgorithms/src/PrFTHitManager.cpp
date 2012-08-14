@@ -83,7 +83,7 @@ void PrFTHitManager::decodeData ( ) {
     aHit->setHit( LHCb::LHCbID( (*itC).channelID() ), (*itC).size(), (*itC).charge(), seg, errX , zone, lay );
     debug() << " .. hit " << (*itC).channelID() << " zone " << zone << " x " << seg.x(0.) << endmsg;
   }
-  /*
+  /*  
   //== Remove a bilayer.
   zone(0 ) ->hits().clear();
   zone(1  )->hits().clear();

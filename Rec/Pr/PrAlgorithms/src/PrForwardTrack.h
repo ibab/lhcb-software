@@ -131,8 +131,6 @@ public:
     bool operator() (const PrForwardTrack lhs, const PrForwardTrack rhs ) const { return lhs.quality() < rhs.quality(); }
   };
   
-  float cy() const { return m_cy; }
-
   void  setChi2AtMagnet( float chi2 )       { m_chi2AtMagnet = chi2; }
   float chi2AtMagnet()                const { return m_chi2AtMagnet; }
 

@@ -60,7 +60,6 @@ private:
   float           m_maxChi2LinearFit;
   float           m_maxChi2XProjection;
   float           m_maxChi2PerDoF;
-  float           m_maxDxForY;
   float           m_minYGap;
   float           m_tolYMag;
   float           m_tolYMagSlope;

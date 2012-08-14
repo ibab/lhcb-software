@@ -124,7 +124,14 @@ StatusCode PrForwardTracking::execute() {
   }
 
   for ( LHCb::Tracks::iterator itT1 = result->begin(); result->end() != itT1; ++itT1 ) {
+    LHCb::State* state1 = (*itT1)->stateAt( LHCb::State::AtT );
     for ( LHCb::Tracks::iterator itT2 = itT1+1; result->end() != itT2; ++itT2 ) {
+      LHCb::State* state2 = (*itT2)->stateAt( LHCb::State::AtT );
+      double dx = state1->x() - state2->x();
+      if ( fabs(dx) > 50. ) continue;
+      double dy = state1->y() - state2->y();
+      if ( fabs(dy) > 100. ) continue;
+      
       std::vector<LHCb::LHCbID>::const_iterator itID1 = (*itT1)->lhcbIDs().begin();
       std::vector<LHCb::LHCbID>::const_iterator itID2 = (*itT2)->lhcbIDs().begin();
       while( !(*itID1).isFT() ) ++itID1;
