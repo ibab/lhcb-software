@@ -1,7 +1,7 @@
 
 __author__ = ['Phillip Urquijo, Alessandra Borgia']
 __date__ = '08/05/2010'
-__version__ = '$Revision: 1.4 $'
+__version__ = '$Revision: 1.5 $'
 
 '''
 B->Xu mu nu exclusive reconstruction in Xu=rho/K/K*+ channels
@@ -69,6 +69,7 @@ Last modification $Date: 2012-January-27 $
 """
 
 confdict= {
+    "GEC_nLongTrk"        : 250.  , #adimensional
     #Muons
     "MuonTRCHI2"          : 4.    ,#adimensional
     "MuonP"               : 3000. ,#MeV
@@ -157,7 +158,8 @@ class B2XuMuNuBuilder(LineBuilder):
     """
     
     __configuration_keys__ = [
-        "MuonTRCHI2"          
+        "GEC_nLongTrk"
+        ,"MuonTRCHI2"          
         ,"MuonP"               
         ,"MuonPT"              
         ,"MuonPIDK"            
@@ -227,6 +229,9 @@ class B2XuMuNuBuilder(LineBuilder):
         from PhysSelPython.Wrappers import Selection, DataOnDemand
         self._stdLooseKsLL = DataOnDemand("Phys/StdLooseKsLL/Particles")
 
+        self.GECs = { "Code":"( recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %(GEC_nLongTrk)s )" % config,
+                      "Preambulo": ["from LoKiTracks.decorators import *"]}
+        
         self._muonSel=None
         self._muonFilter()
 
@@ -288,48 +293,57 @@ class B2XuMuNuBuilder(LineBuilder):
     def _K_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
         return StrippingLine(self._name+'Bs2KLine', prescale = 0.5,
+                             FILTER=self.GECs,
                              algos = [ self._Bs2KMuNu()])
     
     def _KSS_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
         return StrippingLine(self._name+'Bs2KSSLine', prescale = 0.25,
+                             FILTER=self.GECs,
                              algos = [ self._Bs2KMuNuSS()])
     ######Rho Line######
 
     def _Rho_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
         return StrippingLine(self._name+'Bu2RhoLine', prescale = 1.0,
+                             FILTER=self.GECs,
                              algos = [ self._Bu2RhoMuNu()])
     def _RhoWS_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
         return StrippingLine(self._name+'Bu2RhoWSLine', prescale = 1.0,
+                             FILTER=self.GECs,
                              algos = [ self._Bu2RhoMuNuWS()])
     def _RhoSB_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
         return StrippingLine(self._name+'Bu2RhoSBLine', prescale = 0.5,
+                             FILTER=self.GECs,
                              algos = [ self._Bu2RhoMuNuSB()])
 
     ######KshortMajoranaLine######
     def _KshMajoranaSSMu_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
         return StrippingLine(self._name+'Bu2KshSSMuLine', prescale = 1.0,
+                             FILTER=self.GECs,
                              algos = [ self._Bu2KshSSMuNu()])
     
     def _KshMajoranaOSMu_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
         return StrippingLine(self._name+'Bu2KshOSMuLine', prescale = 1.0,
+                             FILTER=self.GECs,
                              algos = [ self._Bu2KshOSMuNu()])
 
     ######K*LL Line######
     def _KstarLL_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
         return StrippingLine(self._name+'Bs2KstarLLLine', prescale = 1.0,
+                             FILTER=self.GECs,
                              algos = [ self._Bs2KstarLLMuNu()])
     
     
     def _KstarLLSS_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
         return StrippingLine(self._name+'Bs2KstarLLSSLine', prescale = 1.0,
+                             FILTER=self.GECs,
                              algos = [ self._Bs2KstarLLMuNuSS()])
 
     ######--######
