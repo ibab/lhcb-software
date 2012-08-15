@@ -4,6 +4,11 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2012-08-15 - Chris Jones
+ - Update ROOT scripts
+ - Add an option to the GlobalRecoChecks Configurable to control the output
+   ROOT tuple file locations.
+
 !========================= GlobalReco v6r42 2012-05-02 =========================
 ! 2012-04-30 - Chris Jones
  - Change default track chi^2 cut from 0->10 to 0->5, to reflect tracking 

@@ -135,6 +135,8 @@ class GlobalRecoChecks(LHCbConfigurableUser):
                  ,"OutputLevel" : INFO    # The printout level to use
                  ,"Context":    "Offline" # The context within which to run
                  ,"AddANNPIDInfo" : True
+                 ,"ProtoTupleName" : "protoparticles.tuples.root"
+                 ,"ANNTupleName"   : "ProtoPIDANN.tuples.root"
                   }
 
     ## Apply the configuration to the given sequence
@@ -159,7 +161,7 @@ class GlobalRecoChecks(LHCbConfigurableUser):
         protoSeq.Members += [protoChecker]
 
         # The output ntuple ROOT file
-        NTupleSvc().Output += ["PROTOTUPLE DATAFILE='protoparticles.tuples.root' TYP='ROOT' OPT='NEW'"]
+        NTupleSvc().Output += ["PROTOTUPLE DATAFILE='"+self.getProp("ProtoTupleName")+"' TYP='ROOT' OPT='NEW'"]
 
         # ANN training ntuple
         if self.getProp("AddANNPIDInfo") :
@@ -169,7 +171,7 @@ class GlobalRecoChecks(LHCbConfigurableUser):
             annTuple.addTool( ANNGlobalPID__ChargedProtoANNPIDTupleTool, name = "Tuple" )
             annTuple.Tuple.NTupleLUN = "ANNPIDTUPLE"
             protoSeq.Members += [annTuple]
-            NTupleSvc().Output += ["ANNPIDTUPLE DATAFILE='ProtoPIDANN.tuples.root' TYP='ROOT' OPT='NEW'"]
+            NTupleSvc().Output += ["ANNPIDTUPLE DATAFILE='"+self.getProp("ANNTupleName")+"' TYP='ROOT' OPT='NEW'"]
             if self.isPropertySet("OutputLevel"):
                 annTuple.OutputLevel = self.getProp("OutputLevel")
 
