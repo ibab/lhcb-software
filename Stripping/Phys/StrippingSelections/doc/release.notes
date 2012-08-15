@@ -4,6 +4,17 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-08-15 - Mika Vesterinen
+ - Changes to B2DMuNuX module: 
+ - D0->K3Pi: tighter mass window, dropped Hlt2 muon TOS requirement, tighter kaon PID, tighter pT sum cut
+ - D0->KPi: remove prescale and include DCS. Remove dedicated DCS line
+ - Add D* versions of D0->Kpi,KK,pipi and K3pi
+ - Add D0->3Kpi and D0->2K2Pi
+ - Tighter phi mass window in Ds->PhiPi
+ - Tighter doca cut for pKpi combination.
+ - Loose GEC on all except D0->hh lines.
+
+
 ! 2012-08-14 - Mika Vesterinen
  - Added loose global event cut to all lines in the B2XuMuNu (V_ub) module.
  - Minor updates tests/TestSemileptonicsOnRealData.py	
