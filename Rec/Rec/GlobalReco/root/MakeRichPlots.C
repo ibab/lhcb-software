@@ -42,6 +42,7 @@
 
     kIDEff->SetTitle( ( "DLLk>"+cC.str() + " | " + trackSelS ).c_str() );
     kIDEff->GetXaxis()->SetTitle( "Momentum / MeV/c" );
+    kIDEff->GetYaxis()->SetTitle( "Efficiency / %" );
     kIDEff->Draw();
     kIDEff->SetMarkerColor(kRed);
     kIDEff->SetLineColor(kRed);
