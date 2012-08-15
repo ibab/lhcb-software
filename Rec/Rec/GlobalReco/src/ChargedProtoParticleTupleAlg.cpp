@@ -114,6 +114,7 @@ StatusCode ChargedProtoParticleTupleAlg::execute()
     sc = sc && tuple->column( "RichAbovePiThres", tmpRPID.pionHypoAboveThres() );
     sc = sc && tuple->column( "RichAboveKaThres", tmpRPID.kaonHypoAboveThres() );
     sc = sc && tuple->column( "RichAbovePrThres", tmpRPID.protonHypoAboveThres() );
+    sc = sc && tuple->column( "RichBestPID",      (int)tmpRPID.bestParticleID() );
 
     // muon
     static LHCb::MuonPID tmpMPID;
