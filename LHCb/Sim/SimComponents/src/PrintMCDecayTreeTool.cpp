@@ -73,6 +73,7 @@ StatusCode PrintMCDecayTreeTool::initialize( void ){
     pos=m_information.find( ' ', oldpos );
     std::string tok(m_information, oldpos, pos-oldpos);
     if( tok=="Name" )       m_keys.push_back(Name);
+    else if( tok=="PID" )   m_keys.push_back(PID);
     else if( tok=="E" )     m_keys.push_back(E);
     else if( tok=="M" )     m_keys.push_back(M);
     else if( tok=="P" )     m_keys.push_back(P);
@@ -157,6 +158,7 @@ void PrintMCDecayTreeTool::printHeader( MsgStream& log )
   for( i = m_keys.begin(); i!= m_keys.end(); i++ )
     switch( *i ) {
     case Name:      log << std::setw(m_treeWidth) << "Name";   break;
+    case PID:       log << std::setw(m_fWidth) << "PID";         break;
     case E:         log << std::setw(m_fWidth) << "E";         break;
     case M:         log << std::setw(m_fWidth) << "M";         break;
     case P:         log << std::setw(m_fWidth) << "P";         break;
@@ -178,6 +180,7 @@ void PrintMCDecayTreeTool::printHeader( MsgStream& log )
   for( i = m_keys.begin(); i!= m_keys.end(); i++ )
     switch( *i ) {
     case Name:      log << std::setw(m_treeWidth) << " ";      break;
+    case PID:       log << std::setw(m_fWidth)    << " ";       break;
     case E:         log << std::setw(m_fWidth) << m_energyUnitName;       break;
     case M:         log << std::setw(m_fWidth) << m_energyUnitName;       break;
     case P:         log << std::setw(m_fWidth) << m_energyUnitName;       break;
@@ -226,10 +229,13 @@ void PrintMCDecayTreeTool::printInfo( const std::string &prefix,
         }
       }
       break;
+    case PID:
+      log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
+          << part->particleID().pid() ;
+      break;
     case E:
       log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
           << part->momentum().e()/m_energyUnit;
-      break;
     case M:
       log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
           << part->momentum().M()/m_energyUnit;

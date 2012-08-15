@@ -5,6 +5,9 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+! 2012-08-15 - Patrick Koppenburg
+ - PrintMCDEcayTreeTool: Add PID field (optional)
+
 !========================= SimComponents v2r21 2011-09-06 =========================
 ! 2011-09-05 - Patrick Spradlin
  - MCDecayFinder:  Demoted some unnecessary warning messages to debug messages.

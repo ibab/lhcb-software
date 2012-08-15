@@ -56,7 +56,7 @@ public:
 
 private:
 
-  enum InfoKeys { Name, E, M, P, Pt, Px, Py, Pz, Vx, Vy, Vz,
+  enum InfoKeys { Name, PID, E, M, P, Pt, Px, Py, Pz, Vx, Vy, Vz,
                   theta, phi, eta, idcl };
 
   void printHeader( MsgStream &log );
