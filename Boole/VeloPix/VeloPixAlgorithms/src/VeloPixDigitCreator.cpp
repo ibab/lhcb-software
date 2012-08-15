@@ -37,7 +37,8 @@ DECLARE_ALGORITHM_FACTORY(VeloPixDigitCreator);
 //=============================================================================
 VeloPixDigitCreator::VeloPixDigitCreator(const std::string& name, 
                                          ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm(name, pSvcLocator)
+  : GaudiTupleAlg(name, pSvcLocator)    // for algorithm with histograms (setHistoTopDir, plot, plot2D)
+//  : GaudiAlgorithm(name, pSvcLocator)   // for an ordinary algorithm
 {
   declareProperty("InputLocation", m_inputLocation = 
                   "MC/VeloPix/Digits");
@@ -63,6 +64,7 @@ StatusCode VeloPixDigitCreator::initialize() {
   m_isDebug = msgLevel(MSG::DEBUG);
   m_isVerbose = msgLevel(MSG::VERBOSE);
   if(m_isDebug) debug() << "==> Initialise" << endmsg;
+  setHistoTopDir("VeloPix/");
   return StatusCode::SUCCESS;
 };
 
@@ -109,19 +111,34 @@ StatusCode VeloPixDigitCreator::execute() {
 //============================================================================
 void VeloPixDigitCreator::createDigits(const MCVeloPixDigits* digitsMC, 
                                        LHCb::VeloPixDigits* digitsCont)
-{
+{ // printf("VeloPixDigitCreator::createDigits() =>\n");
   MCVeloPixDigits::const_iterator iterMC = digitsMC->begin();
-  for(; iterMC != digitsMC->end(); ++iterMC) {
+  for(; iterMC != digitsMC->end(); ++iterMC) {                                   // for every MC hit
     const SmartRefVector<MCVeloPixDeposit> depositsCont =
                                            (*iterMC)->mcDeposit();
-    double totCharge = std::accumulate(depositsCont.begin(),
-                                       depositsCont.end(), 0.0,
+    double totCharge = std::accumulate(depositsCont.begin(),                     // sum up the charge of all the deposits
+                                       depositsCont.end(), 0.0,                  // simulated for this MC hit
            VeloPixDataFunctor::Accumulate_Charge<const MCVeloPixDeposit*>());
+
+    const VeloPixChannelID aChan = (*iterMC)->channelID();                       // print the channel ID
+    // printf(" %9.1f e [%02d:%c, %02d:%03dx%03d]\n", totCharge,                    // and the total change accumulated on this pixel
+    //        aChan.station(), aChan.sidepos()?'R':'L',
+    //        aChan.chip(), aChan.pixel_lp(), aChan.pixel_hp() );
+
+    int Station = aChan.station()+1; if(aChan.sidepos()) Station = (-Station);
+    int Chip    = aChan.chip();
+
+    if(totCharge>=500.0)
+      plot2D( Station, Chip, "HitsPerChip", "VeloPixDigitCreator: number of hits/chip (all events)",
+             -24.0, 24.0, 0.0, 12.0, 49, 12);
+
+    plot(totCharge, "ChargePerPixel", "VeloPixDigitCreator: charge/pixel [e]", 250.0, 25000.0, 99);
+
     if(totCharge > 0.0 ) {
       int tot = int( ceil(totCharge) );
-      int timeStamp = 0; // temporary assumption
+      int timeStamp = 0; // temporary assumption                                 // for now time-stamp=0
       LHCb::VeloPixDigit* newDigit =
-                          new LHCb::VeloPixDigit(tot,timeStamp);
+                          new LHCb::VeloPixDigit(tot,timeStamp);                 // store total charge and time-stamp
       digitsCont->insert(newDigit,(*iterMC)->channelID());
     }
   }

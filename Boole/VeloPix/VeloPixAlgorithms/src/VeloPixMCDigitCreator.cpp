@@ -100,23 +100,31 @@ StatusCode VeloPixMCDigitCreator::execute() {
 // Create MCVeloPixDigits
 //============================================================================
 void VeloPixMCDigitCreator::createMCDigits(
-                            const MCVeloPixDeposits* depositCont, 
-                            LHCb::MCVeloPixDigits* digitsCont)
+                            const MCVeloPixDeposits* depositCont,  // list of deposits is sorted accord. to channel id
+                            LHCb::MCVeloPixDigits* digitsCont)     // otherwise the collection method would not work
 {
-  // Collect all deposits on 1 pixel
+  // printf("VeloPixMCDigitCreator::createMCDigits(): %d deposits\n", depositCont->size());
+  // Collect all deposits that belong to the same pixel
   MCVeloPixDeposits::const_iterator iterDep = depositCont->begin();
   MCVeloPixDeposits::const_iterator jterDep = iterDep;
-  while(iterDep != depositCont->end()) {
-    SmartRefVector<MCVeloPixDeposit> depositVector;
+  while(iterDep != depositCont->end()) {                   // loop over ionization charge deposits
+    int Count=0;
+    SmartRefVector<MCVeloPixDeposit> depositVector;        // temporary storage
     do {
-      depositVector.push_back(*jterDep);      
-      ++jterDep;
-    } while ((jterDep != depositCont->end()) && 
-             (keepAdding(*iterDep,*jterDep) == true));
+      depositVector.push_back(*jterDep);                   // keep adding to the temporary storage
+      ++jterDep; Count++;
+    } while ((jterDep != depositCont->end()) &&            // as long
+             (keepAdding(*iterDep,*jterDep) == true));     // as same channel ID (= same pixel)
     MCVeloPixDigit* newDigit = new MCVeloPixDigit();
     newDigit->setMcDeposit(depositVector);
-    const VeloPixChannelID aChan = (*iterDep)->channelID();
-    digitsCont->insert(newDigit,aChan);
+    const VeloPixChannelID aChan = (*iterDep)->channelID(); // channel id for this group
+
+    // printf(" [%02d:%c, %02d:%03dx%03d]",                    // print channel ID
+    //        aChan.station(), aChan.sidepos()?'R':'L',
+    //        aChan.chip(), aChan.pixel_lp(), aChan.pixel_hp() );
+    // printf(" => %d deposits\n", Count);                     // and how many deposits for this pixel
+
+    digitsCont->insert(newDigit,aChan);                     // add this group with its channel id
     iterDep = jterDep;
   }
 }
@@ -128,7 +136,7 @@ void VeloPixMCDigitCreator::createMCDigits(
 bool VeloPixMCDigitCreator::keepAdding(const MCVeloPixDeposit* firstDep,
                                        const MCVeloPixDeposit* secondDep) const
 {
-  return (firstDep->channelID() == secondDep->channelID());
+  return (firstDep->channelID() == secondDep->channelID()); // return true if same channel ID (same pixel)
 }
 
 //============================================================================

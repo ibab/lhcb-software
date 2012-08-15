@@ -5,7 +5,8 @@
 // from STL
 #include <string>
 // from Gaudi
-#include "GaudiAlg/GaudiAlgorithm.h"
+// #include "GaudiAlg/GaudiAlgorithm.h"  // for an ordinary algorithm
+#include "GaudiAlg/GaudiTupleAlg.h"    // for algorithm with histograms (setHistoTopDir, plot, plot2D)
 // Event
 #include "LHCbMath/LHCbMath.h"
 
@@ -16,7 +17,8 @@
  *  @date   2009/10/20
  */
 
-class VeloPixDigitCreator : public GaudiAlgorithm {
+// class VeloPixDigitCreator : public GaudiAlgorithm {  // for an ordinary algorithm
+class VeloPixDigitCreator : public GaudiTupleAlg {    // for algorithm with histograms (setHistoTopDir, plot, plot2D)
 public:
   /// Standard constructor
   VeloPixDigitCreator(const std::string& name,ISvcLocator* pSvcLocator);

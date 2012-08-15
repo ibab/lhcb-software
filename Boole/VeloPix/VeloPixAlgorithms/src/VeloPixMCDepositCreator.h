@@ -5,7 +5,8 @@
 // from STL
 #include <string>
 // from Gaudi
-#include "GaudiAlg/GaudiAlgorithm.h"
+// #include "GaudiAlg/GaudiAlgorithm.h"
+#include "GaudiAlg/GaudiTupleAlg.h"
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/Point3DTypes.h"
 // GSL
@@ -24,7 +25,8 @@ class ISiDepositedCharge;
  *  @date   20/09/09
  */
 
-class VeloPixMCDepositCreator : public GaudiAlgorithm {
+// class VeloPixMCDepositCreator : public GaudiAlgorithm {
+class VeloPixMCDepositCreator : public GaudiTupleAlg {
 public:
   /// Standard constructor
   VeloPixMCDepositCreator(const std::string& name,ISvcLocator* pSvcLocator);

@@ -120,7 +120,8 @@ StatusCode VeloPixDigitsCreator::initialize() {
 StatusCode VeloPixDigitsCreator::execute() {
   
   debug() << "==> Execute" << endmsg;
-    
+  // printf("VeloPixDigitsCreator::execute() =>\n");
+
   // ================================
   // add Previous (or Next) bunch crossing hits (min.bias) to the buffer with prev. bunch crossing info
   // ================================
@@ -257,8 +258,8 @@ StatusCode VeloPixDigitsCreator::execute() {
     
     
     // skip hits if below the threshold
-    if( thisCharge < m_Qthresh )continue;
-    
+    if( thisCharge < m_Qthresh ) continue;
+
     // calculate start time if not done already 
     if( thisStartTime == 1.0E6 ){
       thisStartTime = m_peakTime * m_Qthresh / thisCharge;
@@ -273,6 +274,12 @@ StatusCode VeloPixDigitsCreator::execute() {
 
     // electrons -> ToT  convertion
     int tot = convertToTDC(nonLinearModel(thisCharge));
+
+    const VeloPixChannelID aChan = thisHit.channelID();
+    // printf(" %9.1f e => %2d [%02d:%c, %02d:%03dx%03d]\n", thisCharge, tot,
+    //        aChan.station(), aChan.sidepos()?'R':'L',
+    //        aChan.chip(), aChan.pixel_lp(), aChan.pixel_hp() );
+
     LHCb::VeloPixDigit* newDigit =
       new LHCb::VeloPixDigit(tot,int(timeWalk)); 
     digitizedCont->insert(newDigit,thisHit.channelID());
@@ -311,6 +318,12 @@ StatusCode VeloPixDigitsCreator::execute() {
 
       // electrons -> ToT  convertion
       int tot = convertToTDC(nonLinearModel(thisCharge));
+
+      const VeloPixChannelID aChan = thisHit.channelID();
+      // printf(" %9.1f e => %2d [%02d:%c%c, %02d:%03dx%03d]\n", thisCharge, tot,
+      //       aChan.station(), aChan.zpos()?'B':'F', aChan.sidepos()?'R':'L',
+      //       aChan.chip(), aChan.pixel_lp(), aChan.pixel_hp() ); 
+
       LHCb::VeloPixDigit* newDigit =
         new LHCb::VeloPixDigit(tot,int(timeWalk)); 
       digitizedCont->insert(newDigit,thisHit.channelID());

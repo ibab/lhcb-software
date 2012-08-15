@@ -5,7 +5,8 @@
 // from STL
 #include <string>
 // from Gaudi
-#include "GaudiAlg/GaudiAlgorithm.h"
+// #include "GaudiAlg/GaudiAlgorithm.h"  // for an ordinary algorithm
+#include "GaudiAlg/GaudiTupleAlg.h"    // for algorithm with histograms (setHistoTopDir, plot, plot2D)
 // GSL
 #include "gsl/gsl_sf_erf.h"
 #include "gsl/gsl_math.h"
@@ -28,7 +29,8 @@
  *  @date   2009/11/12
  */
 
-class VeloPixClusterCreator : public GaudiAlgorithm {
+// class VeloPixClusterCreator : public GaudiAlgorithm {
+class VeloPixClusterCreator : public GaudiTupleAlg {
 public:
   /// Standard constructor
   VeloPixClusterCreator(const std::string& name,ISvcLocator* pSvcLocator);

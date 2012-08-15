@@ -3,7 +3,13 @@
 ! Responsible : Tomasz Skwarnicki, Marcin Kucharczyk
 !--------------------------------------------------------------------------
 
-!========================= VeloPixAlgorithms v2r1 2011-04-11 =========================
+
+!======================== VeloPixAlgorithms v2r2 2012-08-14 ===================
+! 2012-08-14 - Pawel Jalocha
+ - added debug prints (now inactive) and histograms to study the simulation results
+ - drop tiny (below 0.001e) ionization deposits for speedup
+
+!========================= VeloPixAlgorithms v2r1 2011-04-11 =============
 ! 2011-03-17 -Wenbin Qian
 - make cluster id == litecluster id
 
