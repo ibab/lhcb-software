@@ -278,8 +278,8 @@ private:
             continue;
           prims.push_back(*i);
         }
-        if( skipResonnance )
-          filterResonnances( prims );
+        if( skipResonance )
+          filterResonances( prims );
         if( testDaughters(prims) ) {
           previous_result = (const LHCb::MCParticle *)1;
           return true;
@@ -316,7 +316,7 @@ private:
 
     void setElipsis( void ) { elipsis = true; }
     bool getElipsis( void ) { return elipsis; }
-    void setResonnance( void ) { skipResonnance = true; }
+    void setResonance( void ) { skipResonance = true; }
     void conjugate( void );
     std::string describe( void );
   private:
@@ -324,13 +324,13 @@ private:
                         LHCb::MCParticle::ConstVector *collect=NULL,
               std::vector<std::pair<const LHCb::MCParticle*,LHCb::MCParticle::ConstVector >
                          > *subTree=NULL );
-    void addNonResonnantDaughters( std::list<const LHCb::MCParticle*> &parts,
-                                   const LHCb::MCParticle *part );
-    void filterResonnances( std::list<const LHCb::MCParticle*> &parts );
+    void addNonResonantDaughters( std::list<const LHCb::MCParticle*> &parts,
+                                  const LHCb::MCParticle *part );
+    void filterResonances( std::list<const LHCb::MCParticle*> &parts );
 
     ParticleMatcher *mother;
     std::vector<Descriptor *> daughters; // wildcard mother at the end!
-    bool skipResonnance;
+    bool skipResonance;
     bool elipsis;
     double m_resThreshold;
     LHCb::IParticlePropertySvc *m_ppSvc;

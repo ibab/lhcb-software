@@ -276,12 +276,12 @@ void MCDecayFinder::decaySubTrees(
 
 MCDecayFinder::Descriptor::Descriptor( LHCb::IParticlePropertySvc *ppSvc,
                                        double rThre)
-  : mother(0), daughters(0), skipResonnance(false),
+  : mother(0), daughters(0), skipResonance(false),
     elipsis(false), m_resThreshold(rThre), m_ppSvc(ppSvc), alternate(0)
 {}
 
 MCDecayFinder::Descriptor::Descriptor( Descriptor &copy )
-  : mother(0), daughters(0), skipResonnance(false),
+  : mother(0), daughters(0), skipResonance(false),
     elipsis(false), m_resThreshold(0), m_ppSvc(0), alternate(0)
 {
   if( copy.mother )
@@ -290,7 +290,7 @@ MCDecayFinder::Descriptor::Descriptor( Descriptor &copy )
   for( d=copy.daughters.begin(); d!=copy.daughters.end(); d++ ) {
     daughters.push_back(new Descriptor(**d));
   }
-  skipResonnance = copy.skipResonnance;
+  skipResonance = copy.skipResonance;
   elipsis  = copy.elipsis;
   m_resThreshold = copy.m_resThreshold;
   m_ppSvc = copy.m_ppSvc;
@@ -299,7 +299,7 @@ MCDecayFinder::Descriptor::Descriptor( Descriptor &copy )
 MCDecayFinder::Descriptor::Descriptor( ParticleMatcher *m,
                                        LHCb::IParticlePropertySvc *ppSvc,
                                        double rThre)
-  : mother(m), daughters(0), skipResonnance(false),
+  : mother(m), daughters(0), skipResonance(false),
     elipsis(false), m_resThreshold(rThre), m_ppSvc(ppSvc), alternate(0)
 {}
 
@@ -324,7 +324,7 @@ std::string MCDecayFinder::Descriptor::describe( void )
   else
     result += "pp";
   if( !daughters.empty() ) {
-    if( skipResonnance )
+    if( skipResonance )
       result += " => ";
     else
       result += " -> ";
@@ -372,8 +372,8 @@ bool MCDecayFinder::Descriptor::test( const LHCb::MCParticle *part,
           parts.push_back(*idau);
         }
       }
-      if( skipResonnance )
-        filterResonnances( parts );
+      if( skipResonance )
+        filterResonances( parts );
       
       if( subtrees ) {
         std::vector<std::pair<const LHCb::MCParticle*,
@@ -452,7 +452,7 @@ void MCDecayFinder::Descriptor::addDaughter( Descriptor *daughter )
   daughters.insert( d, daughter );
 }
 
-void MCDecayFinder::Descriptor::addNonResonnantDaughters(
+void MCDecayFinder::Descriptor::addNonResonantDaughters(
                                                          std::list<const LHCb::MCParticle*> &parts,
                                                          const LHCb::MCParticle *part )
 {
@@ -468,22 +468,25 @@ void MCDecayFinder::Descriptor::addNonResonnantDaughters(
       if(! *idau) break;
       
       const LHCb::ParticleProperty *pp = m_ppSvc->find( (*idau)->particleID() );
+      //      std::cout << "addNonResonantDaughters " << (*idau)->particleID() << " " << pp << std::endl ;
+      
       if(!pp)
       {
-        throw DescriptorError(std::string("Unknown particle '")+"'");
-        //warning() << "Particle property not obtainable for " << (*idau)->particleID() << endmsg;
-        continue;
+        // throw DescriptorError(std::string("Unknown particle '")+"'");
+        std::cout << "MCDecayFinder::Descriptor::addNonResonantDaughters WARNING Particle property not obtainable for " 
+                  << (*idau)->particleID() << std::endl ;
+        break;
       }
       
       if( pp->lifetime() >= m_resThreshold )
         parts.push_front(*idau);
       else
-        addNonResonnantDaughters( parts, *idau );
+        addNonResonantDaughters( parts, *idau );
     }
   }
 }
 
-void MCDecayFinder::Descriptor::filterResonnances( std::list<const LHCb::MCParticle*>
+void MCDecayFinder::Descriptor::filterResonances( std::list<const LHCb::MCParticle*>
                                                    &parts )
 {
   std::list<const LHCb::MCParticle*>::iterator pi;
@@ -491,11 +494,13 @@ void MCDecayFinder::Descriptor::filterResonnances( std::list<const LHCb::MCParti
   for( pi=parts.begin(); m_ppSvc && pi!=parts.end(); pi = npi )
   {
     const LHCb::ParticleProperty *pp = m_ppSvc->find( (*pi)->particleID() );
+    // std::cout << "filterResonances " << (*pi)->particleID() << " " << pp << std::endl ;
     if(!pp)
     {
-      throw DescriptorError(std::string("Unknown particle '")+"'");
-      //warning() << "Particle property not obtainable for " << (*idau)->particleID() << endmsg;
-      continue;
+      //      throw DescriptorError(std::string("Unknown particle '")+"'");
+      std::cout << "MCDecayFinder::Descriptor::filterResonances WARNING Particle property not obtainable for " 
+                << (*pi)->particleID() << std::endl ;
+      break;
     }
     
     if( pp->lifetime() < m_resThreshold )
@@ -504,7 +509,7 @@ void MCDecayFinder::Descriptor::filterResonnances( std::list<const LHCb::MCParti
       npi = pi;
       npi++;
       parts.erase(pi);
-      addNonResonnantDaughters( parts, part ); // Daughters are prepended.
+      addNonResonantDaughters( parts, part ); // Daughters are prepended.
     }
     else
       npi = ++pi;
@@ -891,18 +896,18 @@ void MCDecayFinder::ParticleMatcher::conjugateID( void )
 int MCDecayFinder::ParticleMatcher::conjugatedID( int id )
 {
   if(m_ppSvc)
+  {
+    const LHCb::ParticleProperty * pp=m_ppSvc->find(LHCb::ParticleID(id));
+    if(pp)
     {
-      const LHCb::ParticleProperty * pp=m_ppSvc->find(LHCb::ParticleID(id));
-      if(pp)
-	{
-	  const LHCb::ParticleProperty *anti=pp->antiParticle();
-	  if(anti) return anti->pid().pid();
-	  else return id; //assume it has no antiparticle
-	  
-	}
-    throw DescriptorError("A particle was not known in the prop service");
+      const LHCb::ParticleProperty *anti=pp->antiParticle();
+      if(anti) return anti->pid().pid();
+      else return id; //assume it has no antiparticle
       
     }
+    throw DescriptorError("A particle was not known in the prop service");
+    
+  }
   //else warning() << "Particle property service not defined, guessing conjugate ID" << endmsg;
       
   int cc_id = -id;

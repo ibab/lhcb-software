@@ -865,7 +865,7 @@ break;
 case 70:
 {{ yyval.desc = yyvsp[0].desc; Descriptor *a = yyvsp[0].desc;
                                       while( a ) {
-                                        a->setResonnance();
+                                        a->setResonance();
                                         a->setElipsis();
                                         a = a->getAlternate();
                                       }
@@ -906,7 +906,7 @@ case 72:
                                           ParticleMatcher *mother;
                                           if(a->getAlternate()) mother=new ParticleMatcher(**m);
                                           else mother = *m;
-                                          d->setMother( mother ); d->setResonnance();
+                                          d->setMother( mother ); d->setResonance();
                                         }
                                         a = a->getAlternate();
                                       }
@@ -979,7 +979,7 @@ case 77:
                                           ParticleMatcher *mother;
                                           if(a->getAlternate()) mother=new ParticleMatcher(**m);
                                           else mother = *m;
-                                          d->setMother( mother ); d->setResonnance();
+                                          d->setMother( mother ); d->setResonance();
                                         }
                                         a = a->getAlternate();
                                       }
