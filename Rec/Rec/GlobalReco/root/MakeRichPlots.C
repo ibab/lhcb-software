@@ -6,7 +6,7 @@
 
   TTree * tree = (TTree*)gDirectory->Get("ChargedProtoTuple/protoPtuple");
 
-  TCut detOK = "RichUsedAero == 1 || RichUsedR1Gas == 1 || RichUsedR2Gas == 1";
+  TCut detOK = "RichUsedAero || RichUsedR1Gas || RichUsedR2Gas";
 
   TCut trackSel = "TrackType == 3 && TrackP > 10000 && TrackP < 100000 && TrackPt > 1000 ";
 
@@ -16,14 +16,16 @@
   TCut realPi = "abs(MCParticleType) == 211";
   TCut fakePi = "abs(MCParticleType) != 211";
 
-  TCut kAboveThres  = "RichAboveKaThres == 1";
-  TCut piAboveThres = "RichAbovePiThres == 1";
+  TCut kAboveThres  = "RichAboveKaThres";
+  TCut piAboveThres = "RichAbovePiThres";
 
   TCanvas * c = new TCanvas( "RICH", "RICH", 1400, 1000 );
 
   std::vector<double> cuts;
   cuts.push_back(-5);
+  cuts.push_back(-2.5);
   cuts.push_back(0);
+  cuts.push_back(2.5);
   cuts.push_back(5);
 
   for ( std::vector<double>::const_iterator iC = cuts.begin();
