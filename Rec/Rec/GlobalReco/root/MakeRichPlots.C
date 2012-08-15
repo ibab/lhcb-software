@@ -8,7 +8,7 @@
 
   TCut detOK = "RichUsedAero || RichUsedR1Gas || RichUsedR2Gas";
 
-  const std::string trackSelS = "TrackType == 3 && TrackP > 10000 && TrackP < 100000 && TrackPt > 500 && TrackChi2PerDof < 2";
+  const std::string trackSelS = "TrackType == 3 && TrackP > 10000 && TrackP < 100000 && TrackPt > 1000 && TrackChi2PerDof < 2";
   TCut trackSel = trackSelS.c_str();
 
   TCut realPr = "abs(MCParticleType) == 2212";
@@ -40,7 +40,7 @@
     tree->Draw( ("(RichDLLk>"+cC.str()+"?100:0):TrackP>>piMisIDEff").c_str(), 
                 detOK && realPi && trackSel && piAboveThres, "prof" );
 
-    kIDEff->SetTitle( ( "DLLk>"+cC.str() + " | " + trackSelS ).c_str() );
+    kIDEff->SetTitle( ( "DLLk>"+cC.str() + " && " + trackSelS ).c_str() );
     kIDEff->GetXaxis()->SetTitle( "Momentum / MeV/c" );
     kIDEff->GetYaxis()->SetTitle( "Efficiency / %" );
     kIDEff->Draw();
@@ -67,7 +67,7 @@
     tree->Draw( ("(RichDLLp>"+cC.str()+"?100:0):TrackP>>piMisIDEff").c_str(), 
                 detOK && realPi && trackSel && piAboveThres, "prof" );
 
-    prIDEff->SetTitle( ( "DLLp>"+cC.str() + " | " + trackSelS ).c_str() );
+    prIDEff->SetTitle( ( "DLLp>"+cC.str() + " && " + trackSelS ).c_str() );
     prIDEff->GetXaxis()->SetTitle( "Momentum / MeV/c" );
     prIDEff->GetYaxis()->SetTitle( "Efficiency / %" );
     prIDEff->Draw();
