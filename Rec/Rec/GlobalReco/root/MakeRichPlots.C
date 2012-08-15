@@ -8,7 +8,8 @@
 
   TCut detOK = "RichUsedAero || RichUsedR1Gas || RichUsedR2Gas";
 
-  TCut trackSel = "TrackType == 3 && TrackP > 10000 && TrackP < 100000 && TrackPt > 1000 ";
+  const std::string trackSelS = "TrackType == 3 && TrackP > 10000 && TrackP < 100000 && TrackPt > 500";
+  TCut trackSel = trackSelS.c_str();
 
   TCut realK  = "abs(MCParticleType) == 321";
   TCut fakeK  = "abs(MCParticleType) != 321";
@@ -39,7 +40,7 @@
     tree->Draw( ("(RichDLLk>"+cC.str()+"?100:0):TrackP>>piMisIDEff").c_str(), 
                 detOK && realPi && trackSel && piAboveThres, "prof" );
 
-    kIDEff->SetTitle( ("DLLk>"+cC.str()).c_str() );
+    kIDEff->SetTitle( ( "DLLk>"+cC.str() + " | " + trackSelS ).c_str() );
     kIDEff->Draw();
     kIDEff->SetMarkerColor(kRed);
     kIDEff->SetLineColor(kRed);
