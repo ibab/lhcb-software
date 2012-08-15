@@ -41,6 +41,7 @@
                 detOK && realPi && trackSel && piAboveThres, "prof" );
 
     kIDEff->SetTitle( ( "DLLk>"+cC.str() + " | " + trackSelS ).c_str() );
+    kIDEff->GetXaxis()->SetTitle( "Momentum / MeV/c" );
     kIDEff->Draw();
     kIDEff->SetMarkerColor(kRed);
     kIDEff->SetLineColor(kRed);
