@@ -8,7 +8,7 @@
 
   TCut detOK = "RichUsedAero || RichUsedR1Gas || RichUsedR2Gas";
 
-  const std::string trackSelS = "TrackType == 3 && TrackP > 10000 && TrackP < 100000 && TrackPt > 500";
+  const std::string trackSelS = "TrackType == 3 && TrackP > 10000 && TrackP < 100000 && TrackPt > 500 && TrackChi2PerDof < 2";
   TCut trackSel = trackSelS.c_str();
 
   TCut realPr = "abs(MCParticleType) == 2212";

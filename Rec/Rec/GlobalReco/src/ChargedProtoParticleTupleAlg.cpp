@@ -96,6 +96,9 @@ StatusCode ChargedProtoParticleTupleAlg::execute()
     sc = sc && tuple->column( "TrackNumDof",     track->nDoF() );
     sc = sc && tuple->column( "TrackType",       track->type() );
     sc = sc && tuple->column( "TrackHistory",    track->history() );
+    sc = sc && tuple->column( "TrackGhostProb",  track->ghostProbability() );
+    sc = sc && tuple->column( "TrackLikelihood", track->likelihood() );
+    sc = sc && tuple->column( "TrackCloneDist",  track->info(LHCb::Track::CloneDist,-999) );
 
     // rich
     static LHCb::RichPID tmpRPID;

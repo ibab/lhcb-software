@@ -8,6 +8,7 @@
  - Update ROOT scripts
  - Add an option to the GlobalRecoChecks Configurable to control the output
    ROOT tuple file locations.
+ - Add some additional tracking variables to ChargedProtoParticleTupleAlg
 
 !========================= GlobalReco v6r42 2012-05-02 =========================
 ! 2012-04-30 - Chris Jones
