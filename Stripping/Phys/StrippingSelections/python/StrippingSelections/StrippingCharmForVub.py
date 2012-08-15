@@ -2,7 +2,7 @@
 '''
 The format of this stripping line is borrowed very heavily from the StrippingDstarD02KMuNu
 line, by Grant McGregor.
-Stripping of three channels: D*->D0(PiMuNu)pi, D+->K*0(K+pi-)MuNu and D+->Rho(pi+pi-)MuNu for the determination of Vub.
+Stripping of four channels: D*->D0(KMuNu)pi, D*->D0(PiMuNu)pi, D+->K*0(K+pi-)MuNu and D+->Rho(pi+pi-)MuNu for the determination of Vub.
 '''
 
 __author__ = ['Patrick Owen']
@@ -14,31 +14,30 @@ __all__ = ('CharmForVubConf',
 	   'makeKaonsFromB',
 	   'makePions',
 	   'makeKstar',
-           'makeDplus2KstarMuNu',
-           'makeDplus2RhoMuNu',
-           'makeBtoDplusKstarMuNu',
-           'makeBtoDplusRhoMuNu',
-           'makeD02PiMuNu',
+           'makeDplus2VMuNu',
+           'makeBtoDplusVMuNu',
+           'makeD02HMuNu',
            'makeBtoD',
-           'makeDstarD02PiMuNu')
+           'makeDstarD02HMuNu')
 
 from Gaudi.Configuration import *
+from Configurables import SubstitutePID
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdLooseMuons, StdLooseKaons, StdAllLoosePions, StdLoosePions
 
-default_config = {'TRACK_Chi2' : 3.,
+default_config = {
     'TRACK_MINIPCHI2' : 6,
     'KAON_PIDK' : 3.,
     'KAON_MinPT' : 600.,
     'Kstar_MinPT' : 600.,
-    'Kstar_MassMax' : 1020.,
-    'Kstar_MassMin' : 770.,
+    'Kstar_MassMax' : 1040.,
+    'Kstar_MassMin' : 750.,
     'Rho_MinPT' : 600.,
-    'Rho_MassMax' : 990,
-    'Rho_MassMin' : 550.,
+    'Rho_MassMax' : 1020,
+    'Rho_MassMin' : 530.,
     'MUON_MinPT' : 800.,
     'MUON_PIDmu' : 0,
     'PION_MinPT' : 600.,
@@ -46,7 +45,6 @@ default_config = {'TRACK_Chi2' : 3.,
     'PION_PIDK' : 0,
     'PAIR_SumPTMin' : 2800.,
     'D_MassMax' : 1950.,
-    'D_DIRA' : 0.9994,
     'D_DOCA' : 0.07,
     'D_MinP' : 20000.,
     'D0_FD'  :  4.0,
@@ -63,12 +61,11 @@ default_config = {'TRACK_Chi2' : 3.,
     'Dstar_DOCA' : 0.4,
     'Dstar_VtxChi2' : 9.,
     'Dstar_DeltaMass' : 200.,
-    'HLT_FILTER' : "(HLT_PASS_RE('Hlt2CharmSemilepD02HMuNu_.*Decision') | HLT_PASS_RE('Hlt2Topo.*Decision'))",
-    'HLT_FILTER_PiMuNu' : "HLT_PASS_RE('Hlt2CharmSemilepD02HMuNu_.*Decision')",
+    'HLT_FILTER_VMuNu' : "(HLT_PASS_RE('Hlt2CharmSemilepD02HMuNu_.*Decision') | HLT_PASS_RE('Hlt2Topo.*Decision'))",
+    'HLT_FILTER_HMuNu' : "(HLT_PASS_RE('Hlt2CharmSemilepD02HMuNu_.*Decision') | HLT_PASS_RE('Hlt2CharmHadD02HHXDst_.*Decision'))",
     #Pre and postscale
-    'PrescaledKstarLinePrescale' : 1.0,
-    'PrescaledRhoLinePrescale' : 1.0,
-    'PrescaledPiLinePrescale' : 1.0
+    'PrescaledVLinePrescale' : 1.0,
+    'PrescaledHLinePrescale' : 1.0
                               }
 
 
@@ -76,30 +73,29 @@ default_name = "CharmForVub"
 
 class CharmForVubConf(LineBuilder) :
     """
-    Builder of pre-scaled D*->D0(PiMuNu)pi, B->(D+->K*0(K+pi-)MuNu)+(3)track and B->(D+->Rho(pi+pi-)MuNu+(3)track stripping Selection and StrippingLine.
+    Builder of pre-scaled D*->D0(HMuNu)pi, B->(D+->K*0(K+pi-)MuNu)+(3)track and B->(D+->Rho(pi+pi-)MuNu+(3)track stripping Selection and StrippingLine.
 
     Exports as instance data members:
     selKaons                   : Kaons for D+->K*0(K+pi-)MuNu
-    selMuons                   : Muons for D*->D0(PiMuNu)pi, D+->K*0(K+pi-)MuNu and D+->Rho(pi+pi-)MuNu
+    selMuons                   : Muons for D*->D0(HMuNu)pi, D+->K*0(K+pi-)MuNu and D+->Rho(pi+pi-)MuNu
     selPions                   : Hard pions from D0/D+ 
     selSlowPions               : Soft pions from D*+
     selKstar                   : K*0 for D+->K*0MuNu
     selRho                     : Rho0 for D+->RhoMuNu
     selDplus2KstarMuNu         : D+->K*Mu+Nu  selection object
     selDplus2RhoMuNu           : D+->RhoMu+Nu  selection object
-    selD02PiMuNu               : D0->PiMu+Nu  selection object
-    selDstarD02PiMuNu          : D*+->D0(PiMuNu)pi+ selection object
+    selD02HMuNu               : D0->PiMu+Nu  selection object
+    selDstarD02HMuNu          : D*+->D0(HMuNu)pi+ selection object
     selBtoDplus2RhoMuNu        : B->(D+->RhoMu+Nu)+tracks  selection object
-    selBtoDplusD02PiMuNu       : B->(D+->D+->K*Mu+Nu)+tracks selection object
-    prescaled_KstarMuNu        : StrippingLine made out of selBtoDplusKstarMuNu
-    prescaled_RhoMuNu          : StrippingLine made out of selBtoDplusRhoMuNu 
-    prescaled_PiMuNu           : StrippingLine made out of selDstarD02PiMuNu 
+    selBtoDplusD02HMuNu       : B->(D+->D+->K*Mu+Nu)+tracks selection object
+    prescaled_KstarMuNu        : StrippingLine made out of selBtoDplusVMuNu
+    prescaled_HMuNu           : StrippingLine made out of selDstarD02HMuNu 
     lines                      : List of lines
 
     Exports as class data member:
     CharmForVub.__configuration_keys__ : List of required configuration parameters.
     """
-    __configuration_keys__ = ('TRACK_Chi2',
+    __configuration_keys__ = (
                               'TRACK_MINIPCHI2',
                               'KAON_PIDK',
                               'KAON_MinPT',
@@ -116,7 +112,6 @@ class CharmForVubConf(LineBuilder) :
                               'PION_PIDK',
                               'PAIR_SumPTMin',
 			      'D_MassMax',
-                              'D_DIRA',
 			      'D_DOCA',
 			      'D_MinP',
 			      'D0_FD',
@@ -133,11 +128,10 @@ class CharmForVubConf(LineBuilder) :
 			      'Dstar_DOCA',
 			      'Dstar_VtxChi2',
 			      'Dstar_DeltaMass',
-                              'HLT_FILTER',
-                              'HLT_FILTER_PiMuNu',
-                              'PrescaledKstarLinePrescale',
-                              'PrescaledRhoLinePrescale',
-                              'PrescaledPiLinePrescale'
+                              'HLT_FILTER_VMuNu',
+                              'HLT_FILTER_HMuNu',
+                              'PrescaledVLinePrescale',
+                              'PrescaledHLinePrescale'
                               )
 
     def __init__(self, name, config) :
@@ -147,7 +141,6 @@ class CharmForVubConf(LineBuilder) :
         prescaled_name = name+'Prescaled'
 
         self.selMuons = makeMuons( 'MuonsFor'+prescaled_name, 
-                                     TRACK_Chi2 = config['TRACK_Chi2'],
 				     MUON_MinPT = config['MUON_MinPT'],
                                      MUON_PIDmu = config['MUON_PIDmu'])
 
@@ -155,14 +148,17 @@ class CharmForVubConf(LineBuilder) :
                                      muonSel = self.selMuons, 
                                      TRACK_MINIPCHI2 = config['TRACK_MINIPCHI2'])
 
-        self.selKaonsFromB = makeKaonsFromB( 'KaonsFromBFor'+prescaled_name, 
-				     TRACK_MINIPCHI2 = config['TRACK_MINIPCHI2'],
-                                     TRACK_Chi2 = config['TRACK_Chi2'],
+
+
+        self.selKaons = makeKaons( 'KaonsFor'+prescaled_name, 
 				     KAON_PIDK = config['KAON_PIDK'], 
 				     KAON_MinPT = config['KAON_MinPT'])
 
+        self.selKaonsFromB = makeKaonsFromB( 'KaonsFromBFor'+prescaled_name,
+                                     kaonSel = self.selKaons,
+                                     TRACK_MINIPCHI2 = config['TRACK_MINIPCHI2'])
+
         self.selPions = makePions( 'PionsFor'+prescaled_name, 
-                                     TRACK_Chi2 = config['TRACK_Chi2'],
 				     PION_PIDmu = config['PION_PIDmu'],
                                      PION_PIDK = config['PION_PIDK'],
                                      PION_MinPT = config['PION_MinPT'])
@@ -172,8 +168,14 @@ class CharmForVubConf(LineBuilder) :
                                      TRACK_MINIPCHI2 = config['TRACK_MINIPCHI2'])
 
         self.selSlowPions = makeSlowPions( 'SlowPionsFor'+prescaled_name, 
-                                     TRACK_Chi2 = config['TRACK_Chi2'],
 				     PION_PIDmu = config['PION_PIDmu'])
+
+
+        self.selRho = makeRho( 'RhoFor'+prescaled_name, 
+                                     pionFromBSel = self.selPionsFromB,
+				     Rho_MinPT = config['Rho_MinPT'],
+				     Rho_MassMax = config['Rho_MassMax'],
+				     Rho_MassMin = config['Rho_MassMin'])
 
         self.selKstar = makeKstar( 'KstarFor'+prescaled_name, 
                                      pionFromBSel = self.selPionsFromB,
@@ -182,19 +184,14 @@ class CharmForVubConf(LineBuilder) :
 				     Kstar_MassMax = config['Kstar_MassMax'],
 				     Kstar_MassMin = config['Kstar_MassMin'])
 
-        self.selRho = makeRho( 'RhoFor'+prescaled_name, 
-                                     pionFromBSel = self.selPionsFromB,
-				     Rho_MinPT = config['Rho_MinPT'],
-				     Rho_MassMax = config['Rho_MassMax'],
-				     Rho_MassMin = config['Rho_MassMin'])
 
 
-        self.selDplus2KstarMuNu = makeDplus2KstarMuNu('Dplus2KstarMuNuFor'+prescaled_name,  
+        self.selDplus2VMuNu = makeDplus2VMuNu('Dplus2VMuNuFor'+prescaled_name,  
                                             muonFromBSel = self.selMuonsFromB, 
+                                            RhoSel = self.selRho,
                                             KstarSel = self.selKstar,
 					    PAIR_SumPTMin = config['PAIR_SumPTMin'],
                                             D_MassMax = config['D_MassMax'],
-                                            D_DIRA = config['D_DIRA'],
                                             D_DOCA = config['D_DOCA'],
                                             D_MinP = config['D_MinP'],
 					    Dplus_FD = config['Dplus_FD'],
@@ -203,42 +200,22 @@ class CharmForVubConf(LineBuilder) :
                                             D_BPVVDZ = config['D_BPVVDZ'],
                                             D_VtxChi2 = config['D_VtxChi2'])
 
-        self.selDplus2RhoMuNu = makeDplus2RhoMuNu('Dplus2RhoMuNuFor'+prescaled_name,  
-                                            muonFromBSel = self.selMuonsFromB, 
-                                            RhoSel = self.selRho,
-					    PAIR_SumPTMin = config['PAIR_SumPTMin'],
-                                            D_MassMax = config['D_MassMax'],
-                                            D_DIRA = config['D_DIRA'],
-                                            D_DOCA = config['D_DOCA'],
-                                            D_MinP = config['D_MinP'],
-					    Dplus_FD = config['Dplus_FD'],
-					    D_MCORR_MIN = config['D_MCORR_MIN'],
-					    D_MCORR_MAX = config['D_MCORR_MAX'],
-                                            D_BPVVDZ = config['D_BPVVDZ'],
-                                            D_VtxChi2 = config['D_VtxChi2'])
-
-        self.selBtoDplusRhoMuNu = makeBtoDplusRhoMuNu('BtoDplusRhoMuNu'+prescaled_name,  
-                                            Dplus2RhoMuNuSel = self.selDplus2RhoMuNu, 
+        self.selBtoDplusVMuNu = makeBtoDplusVMuNu('BtoDplusVMuNu'+prescaled_name,  
+                                            Dplus2VMuNuSel = self.selDplus2VMuNu, 
                                             PionsFromBSel = self.selPionsFromB,
                                             BtoD_DeltaMass_MIN = config['BtoD_DeltaMass_MIN'],
                                             BtoD_DeltaMass_MAX = config['BtoD_DeltaMass_MAX'],
                                             B_DIRA = config['B_DIRA'],
                                             B_FDCHI2 = config['B_FDCHI2'])
 
-        self.selBtoDplusKstarMuNu = makeBtoDplusKstarMuNu('BtoDplusKstarMuNu'+prescaled_name,  
-                                            Dplus2KstarMuNuSel = self.selDplus2KstarMuNu,
-                                            PionsFromBSel = self.selPionsFromB,
-                                            BtoD_DeltaMass_MIN = config['BtoD_DeltaMass_MIN'],
-                                            BtoD_DeltaMass_MAX = config['BtoD_DeltaMass_MAX'],
-                                            B_DIRA = config['B_DIRA'],
-                                            B_FDCHI2 = config['B_FDCHI2'])
 
-        self.selD02PiMuNu = makeD02PiMuNu('D0PiMuNuFor'+prescaled_name,  
+
+        self.selD02HMuNu = makeD02HMuNu('D0HMuNuFor'+prescaled_name,  
                                             muonSel = self.selMuons, 
                                             pionSel = self.selPions,
+                                            kaonSel = self.selKaons,
 					    PAIR_SumPTMin = config['PAIR_SumPTMin'],
                                             D_MassMax = config['D_MassMax'],
-                                            D_DIRA = config['D_DIRA'],
                                             D_DOCA = config['D_DOCA'],
                                             D_MinP = config['D_MinP'],
                                             D0_FD = config['D0_FD'],
@@ -247,8 +224,8 @@ class CharmForVubConf(LineBuilder) :
                                             D_BPVVDZ = config['D_BPVVDZ'],
                                             D_VtxChi2 = config['D_VtxChi2'])
 
-        self.selDstarD02PiMuNu = makeDstarD02PiMuNu('DstarD0PiMuNuFor'+prescaled_name,  
-                                            D02PiMuNuSel = self.selD02PiMuNu,
+        self.selDstarD02HMuNu = makeDstarD02HMuNu('DstarD0HMuNuFor'+prescaled_name,  
+                                            D02HMuNuSel = self.selD02HMuNu,
 					    slowPionSel = self.selSlowPions,
                                             Dstar_MassMin = config['Dstar_MassMin'],
                                             Dstar_DOCA = config['Dstar_DOCA'],
@@ -257,34 +234,27 @@ class CharmForVubConf(LineBuilder) :
 
 
 
-        self.prescaled_lineRhoMuNu = StrippingLine(prescaled_name+"RhoMuNuLine",
-		prescale = config['PrescaledRhoLinePrescale'],
-                HLT=config['HLT_FILTER'],
-                selection = self.selBtoDplusRhoMuNu
+        self.prescaled_lineVMuNu = StrippingLine(prescaled_name+"VMuNuLine",
+		prescale = config['PrescaledVLinePrescale'],
+                HLT=config['HLT_FILTER_VMuNu'],
+                selection = self.selBtoDplusVMuNu
 		)
-        self.prescaled_lineKstarMuNu = StrippingLine(prescaled_name+"KstarMuNuLine",
-		prescale = config['PrescaledKstarLinePrescale'],
-                HLT=config['HLT_FILTER'],
-                selection = self.selBtoDplusKstarMuNu
-		)
-        self.prescaled_linePiMuNu = StrippingLine(prescaled_name+"PiMuNuLine",
-                prescale = config['PrescaledPiLinePrescale'],
-                HLT=config['HLT_FILTER_PiMuNu'],
-                selection = self.selDstarD02PiMuNu
+        self.prescaled_lineHMuNu = StrippingLine(prescaled_name+"HMuNuLine",
+                prescale = config['PrescaledHLinePrescale'],
+                HLT=config['HLT_FILTER_HMuNu'],
+                selection = self.selDstarD02HMuNu
                 )
-        self.registerLine(self.prescaled_lineRhoMuNu)
-        self.registerLine(self.prescaled_lineKstarMuNu)
-        self.registerLine(self.prescaled_linePiMuNu)
+        self.registerLine(self.prescaled_lineVMuNu)
+        self.registerLine(self.prescaled_lineHMuNu)
 
 
 def makeMuons(name, 
-              TRACK_Chi2, 
               MUON_MinPT,
               MUON_PIDmu) :
     """
     Create muons for all channels
     """
-    _code = " ( 'mu+'  == ABSID ) & ISMUON & (TRCHI2DOF < %(TRACK_Chi2)s ) &  (PT > %(MUON_MinPT)s *MeV) & (PIDmu > %(MUON_PIDmu)s )" % locals()
+    _code = " ( 'mu+'  == ABSID ) & ISMUON & (PT > %(MUON_MinPT)s *MeV) & (PIDmu > %(MUON_PIDmu)s )" % locals()
     _muonFilter = FilterDesktop (Code = _code ) 
     return Selection (name,
 	              Algorithm = _muonFilter,
@@ -303,30 +273,39 @@ def makeMuonsFromB(name,
 		      RequiredSelections = [muonSel]) 
 
 
-def makeKaonsFromB(name,
-          TRACK_MINIPCHI2,
-          TRACK_Chi2, 
+def makeKaons(name,
 	  KAON_PIDK,
 	  KAON_MinPT) :
     """
     Create kaons for Dplus->K*MuNu
     """
-    _code = " ( 'K+'  == ABSID ) & (TRCHI2DOF < %(TRACK_Chi2)s ) &  "\
-    "( %(KAON_PIDK)s < PIDK - PIDpi) & (PT > %(KAON_MinPT)s *MeV) & (MIPCHI2DV(PRIMARY) > %(TRACK_MINIPCHI2)s )" % locals()
+    _code = " ( 'K+'  == ABSID ) &  "\
+    "( %(KAON_PIDK)s < PIDK - PIDpi) & (PT > %(KAON_MinPT)s *MeV)" % locals()
     _kaonFilter = FilterDesktop (Code = _code ) 
     return Selection (name,
 	              Algorithm = _kaonFilter,
 		      RequiredSelections = [StdLooseKaons]) 
 
+def makeKaonsFromB(name,
+          kaonSel, 
+          TRACK_MINIPCHI2) :
+    """
+    Create hard kaons for all channels
+    """
+    _code = "(MIPCHI2DV(PRIMARY) > %(TRACK_MINIPCHI2)s )" % locals()
+    _kaonFromBFilter = FilterDesktop (Code = _code ) 
+    return Selection (name,
+	              Algorithm = _kaonFromBFilter,
+		      RequiredSelections = [kaonSel]) 
+
 def makePions(name, 
-          TRACK_Chi2, 
 	  PION_PIDmu,
           PION_PIDK,
           PION_MinPT) :
     """
     Create hard pions for all channels
     """
-    _code = "(TRCHI2DOF < %(TRACK_Chi2)s ) & (PT > %(PION_MinPT)s ) & (PIDK < %(PION_PIDK)s ) & ( %(PION_PIDmu)s < PIDpi - PIDmu) " % locals()
+    _code = "(PT > %(PION_MinPT)s ) & (PIDK < %(PION_PIDK)s ) & ( %(PION_PIDmu)s < PIDpi - PIDmu) " % locals()
     _pionFilter = FilterDesktop (Code = _code ) 
     return Selection (name,
 	              Algorithm = _pionFilter,
@@ -345,16 +324,37 @@ def makePionsFromB(name,
 		      RequiredSelections = [pionSel]) 
 
 def makeSlowPions(name, 
-          TRACK_Chi2, 
 	  PION_PIDmu) :
     """
     Create soft pions for D*->D0 pi
     """
-    _code = "(TRCHI2DOF < %(TRACK_Chi2)s ) & ( %(PION_PIDmu)s < PIDpi - PIDmu) " % locals()
+    _code = "( %(PION_PIDmu)s < PIDpi - PIDmu) " % locals()
     _slowPionFilter = FilterDesktop (Code = _code ) 
     return Selection (name,
 	              Algorithm = _slowPionFilter,
 		      RequiredSelections = [StdAllLoosePions]) 
+
+
+
+def makeRho(name,
+                   pionFromBSel,
+		   Rho_MinPT,
+		   Rho_MassMax,
+		   Rho_MassMin) :
+    """
+    Create and return a Rho selection object.
+    """
+    _combinationCuts = "(AM < %(Rho_MassMax)s *MeV) "\
+        "& (AM > %(Rho_MassMin)s *MeV) " % locals()
+    _motherCuts = "(PT > %(Rho_MinPT)s *MeV) " % locals()
+    _Rho = CombineParticles( DecayDescriptor = "[rho(770)0 -> pi- pi+]cc",
+                            MotherCut = _motherCuts,
+                            CombinationCut = _combinationCuts)
+
+    return Selection (name,
+                      Algorithm = _Rho,
+                      RequiredSelections = [pionFromBSel])
+
 
 def makeKstar(name,
                    pionFromBSel,
@@ -376,31 +376,12 @@ def makeKstar(name,
                       Algorithm = _Kstar,
                       RequiredSelections = [kaonFromBSel,pionFromBSel])
 
-def makeRho(name,
-                   pionFromBSel,
-		   Rho_MinPT,
-		   Rho_MassMax,
-		   Rho_MassMin) :
-    """
-    Create and return a Rho selection object.
-    """
-    _combinationCuts = "(AM < %(Rho_MassMax)s *MeV) "\
-        "& (AM > %(Rho_MassMin)s *MeV) " % locals()
-    _motherCuts = "(PT > %(Rho_MinPT)s *MeV) " % locals()
-    _Rho = CombineParticles( DecayDescriptor = "[rho(770)0 -> pi- pi+]cc",
-                            MotherCut = _motherCuts,
-                            CombinationCut = _combinationCuts)
-
-    return Selection (name,
-                      Algorithm = _Rho,
-                      RequiredSelections = [pionFromBSel])
-
-def makeDplus2KstarMuNu(name,
+def makeDplus2VMuNu(name,
                    muonFromBSel,
+                   RhoSel,
 		   KstarSel,
 		   PAIR_SumPTMin,
 		   D_MassMax,
-                   D_DIRA,
 		   D_DOCA,
 		   D_MinP,
 		   Dplus_FD,
@@ -409,7 +390,7 @@ def makeDplus2KstarMuNu(name,
 		   D_BPVVDZ,
 		   D_VtxChi2) :
     """
-    Create and return a D+ -> K*MuNu selection object.
+    Create and return a D+ -> VMuNu selection object.
     """
     _combinationCuts = "(AM < %(D_MassMax)s *MeV) "\
     "& ((APT1+APT2) > %(PAIR_SumPTMin)s *MeV) "\
@@ -419,16 +400,18 @@ def makeDplus2KstarMuNu(name,
     "& (in_range(%(D_MCORR_MIN)s *MeV ,BPVCORRM,%(D_MCORR_MAX)s *MeV)) "\
     "& (BPVVDZ > %(D_BPVVDZ)s *mm) "\
     "& (VFASPF(VCHI2/VDOF)<%(D_VtxChi2)s) " % locals()
-    _Dplus2KstarMuNu = CombineParticles( DecayDescriptor = "[D+ -> mu+ K*(892)0]cc",
+    _Dplus2VMuNu = CombineParticles( DecayDescriptors = [
+                                         "[D+ -> mu+ K*(892)0]cc",
+                                         "[D+ -> mu+ rho(770)0]cc"],
                             MotherCut = _motherCuts,
 			    CombinationCut = _combinationCuts )
 
     return Selection (name,
-                      Algorithm = _Dplus2KstarMuNu,
-                      RequiredSelections = [muonFromBSel, KstarSel])
+                      Algorithm = _Dplus2VMuNu,
+                      RequiredSelections = [muonFromBSel, KstarSel, RhoSel])
 
-def makeBtoDplusKstarMuNu(name,
-                   Dplus2KstarMuNuSel,
+def makeBtoDplusVMuNu(name,
+                   Dplus2VMuNuSel,
 		   PionsFromBSel,
                    BtoD_DeltaMass_MIN,
                    BtoD_DeltaMass_MAX,
@@ -447,70 +430,16 @@ def makeBtoDplusKstarMuNu(name,
                             MotherCut = _motherCuts)
     return Selection (name,
                       Algorithm = _BtoDplus2KstarMuNu,
-                      RequiredSelections = [Dplus2KstarMuNuSel, PionsFromBSel])
-
-def makeDplus2RhoMuNu(name,
-                   muonFromBSel,
-		   RhoSel,
-		   PAIR_SumPTMin,
-		   D_MassMax,
-                   D_DIRA,
-		   D_DOCA,
-		   D_MinP,
-		   D_MCORR_MIN,
-		   D_MCORR_MAX,
-		   D_BPVVDZ,
-		   Dplus_FD,
-		   D_VtxChi2) :
-    """
-    Create and return a B->(D+ -> RhoMuNu) + (3) track selection object.
-    """
-    _combinationCuts = "(AM < %(D_MassMax)s *MeV) "\
-    "& ((APT1+APT2) > %(PAIR_SumPTMin)s *MeV) "\
-    "& (AMAXDOCA('') < %(D_DOCA)s *mm )" % locals()
-    _motherCuts = "(P > %(D_MinP)s *MeV)  "\
-    "& (BPVVD > %(Dplus_FD)s *mm) "\
-    "& (in_range(%(D_MCORR_MIN)s *MeV ,BPVCORRM,%(D_MCORR_MAX)s *MeV)) "\
-    "& (BPVVDZ > %(D_BPVVDZ)s *mm) "\
-    "& (VFASPF(VCHI2/VDOF)<%(D_VtxChi2)s)  " % locals()
-    _Dplus2RhoMuNu = CombineParticles( DecayDescriptor = "[D+ -> mu+ rho(770)0]cc",
-                            MotherCut = _motherCuts,
-			    CombinationCut = _combinationCuts )
-
-    return Selection (name,
-                      Algorithm = _Dplus2RhoMuNu,
-                      RequiredSelections = [muonFromBSel, RhoSel])
-
-def makeBtoDplusRhoMuNu(name,
-                   Dplus2RhoMuNuSel,
-		   PionsFromBSel,
-                   BtoD_DeltaMass_MIN,
-                   BtoD_DeltaMass_MAX,
-                   B_DIRA,
-                   B_FDCHI2)  :
-    """
-    Create and return a B->(D+ -> KstarMuNu) + (3) track selection object.
-    """
-    _motherCuts = "(in_range(%(BtoD_DeltaMass_MIN)s *MeV ,( M - CHILD(M,1) ),%(BtoD_DeltaMass_MAX)s *MeV)) "\
-                  " & (BPVDIRA > %(B_DIRA)s)"\
-                  " & (BPVVDCHI2 > %(B_FDCHI2)s)" % locals()  
-    _BtoDplusRhoMuNu = CombineParticles( DecayDescriptors = [
-                                         " [B0 -> D+ pi-]cc" ,
-					 " [B0 -> D+ pi- pi+ pi-]cc"
-					 ],					 
-                            MotherCut = _motherCuts)
-    return Selection (name,
-                      Algorithm = _BtoDplusRhoMuNu,
-                      RequiredSelections = [Dplus2RhoMuNuSel, PionsFromBSel])
+                      RequiredSelections = [Dplus2VMuNuSel, PionsFromBSel])
 
 
 
-def makeD02PiMuNu(name,
+def makeD02HMuNu(name,
                    muonSel,
 		   pionSel,
+                   kaonSel,
 		   PAIR_SumPTMin,
 		   D_MassMax,
-                   D_DIRA,
 		   D_DOCA,
 		   D_MinP,
 		   D0_FD,
@@ -519,40 +448,43 @@ def makeD02PiMuNu(name,
 		   D_BPVVDZ,
 		   D_VtxChi2) :
     """
-    Create and return a D0 -> PiMuNu selection object.
+    Create and return a D0 -> HMuNu selection object.
     """
     _combinationCuts = "(AM < %(D_MassMax)s *MeV) "\
     "& ((APT1+APT2) > %(PAIR_SumPTMin)s *MeV) "\
     "& (AMAXDOCA('') < %(D_DOCA)s *mm )" % locals()
     _motherCuts = "(P > %(D_MinP)s *MeV)  "\
     "& (BPVVD > %(D0_FD)s *mm) "\
-    "& (BPVDIRA > %(D_DIRA)s) "\
     "& (in_range(%(D_MCORR_MIN)s *MeV ,BPVCORRM,%(D_MCORR_MAX)s *MeV)) "\
     "& (BPVVDZ > %(D_BPVVDZ)s *mm) "\
     "& (VFASPF(VCHI2/VDOF)<%(D_VtxChi2)s) " % locals()
-    _D02PiMuNu = CombineParticles( DecayDescriptor = "[D0 -> mu+ pi-]cc",
+    _D02HMuNu = CombineParticles( DecayDescriptors = ["[D0 -> mu+ pi-]cc",
+                                                      "[D0 -> mu+ pi+]cc",
+                                                      "[D0 -> mu+ K+]cc",
+                                                      "[D0 -> mu+ K-]cc"
+                                                     ],
                             MotherCut = _motherCuts,
 			    CombinationCut = _combinationCuts )
 
     return Selection (name,
-                      Algorithm = _D02PiMuNu,
-                      RequiredSelections = [muonSel, pionSel])
+                      Algorithm = _D02HMuNu,
+                      RequiredSelections = [muonSel, pionSel, kaonSel])
 
-def makeDstarD02PiMuNu(name,
-                   D02PiMuNuSel,
+def makeDstarD02HMuNu(name,
+                   D02HMuNuSel,
 		   slowPionSel,
 		   Dstar_MassMin,
 		   Dstar_DOCA,
 		   Dstar_VtxChi2,
 		   Dstar_DeltaMass)  :
     """
-    Create and return a D* -> pi D0(PiMuNu) selection object.
+    Create and return a D* -> pi D0(HMuNu) selection object.
     """
     _combinationCuts = "(AM > %(Dstar_MassMin)s *MeV) "\
     "& (AMAXDOCA('') < %(Dstar_DOCA)s *mm)" % locals()
     _motherCuts = " (VFASPF(VCHI2/VDOF)< %(Dstar_VtxChi2)s ) & ( ( M - CHILD(M,1) ) < %(Dstar_DeltaMass)s *MeV )  " % locals()
 
-    _DstarD02PiMuNu = CombineParticles( DecayDescriptors = [
+    _DstarD02HMuNu = CombineParticles( DecayDescriptors = [
                                          " [D*(2010)+ -> D0 pi+]cc" ,
 					 " [D*(2010)- -> D0 pi-]cc"
 					 ],					 
@@ -560,7 +492,7 @@ def makeDstarD02PiMuNu(name,
 			    CombinationCut = _combinationCuts )
 
     return Selection (name,
-                      Algorithm = _DstarD02PiMuNu,
-                      RequiredSelections = [D02PiMuNuSel, slowPionSel])
+                      Algorithm = _DstarD02HMuNu,
+                      RequiredSelections = [D02HMuNuSel, slowPionSel])
 
 
