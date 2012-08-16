@@ -363,7 +363,7 @@ private: // data
 
   TTree          *fChain;   //!pointer to the analyzed TTree or TChain
   Int_t           fCurrent; //!current Tree number in a TChain
-  TFile *         m_file;
+  TFile          *m_file;
 
   // Declaration of leaf types
   Double_t        TrackP;
