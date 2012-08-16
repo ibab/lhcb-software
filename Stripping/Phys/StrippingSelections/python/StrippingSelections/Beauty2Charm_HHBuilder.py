@@ -53,6 +53,9 @@ class HHBuilder(object):
         self.kk_pid = [filterPID('X2KKPID',self.kk,config_pid)]
         self.hh_ws_pid = [filterPID('X2HHWSPID',self.hh_ws,config_pid)]
         self.ph_pid = [filterPID('X2PHPID',self.ph,config_pid)]
+        self.rho0_pid = [filterPID('RHO02PiPiPID',self.rho0,config_pid)]
+        self.kstar0_pid = [filterPID('Kstar02KPiPID',self.kstar0,config_pid)]
+        self.phi_pid = [filterPID('PHI2KKPID',self.phi,config_pid)]
 
     def _makeX2HH(self,name,decays,amass,config,inputs):
         ''' Makes all X -> HH selections with charged tracks only.'''

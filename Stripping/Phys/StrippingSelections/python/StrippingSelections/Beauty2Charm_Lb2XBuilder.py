@@ -95,6 +95,8 @@ class Lb2XBuilder(object):
         self._makeLb2LcDst()
         # X -> Lc Lc (+WS)
         self._makeX2LcLc()
+        # Lb -> Lc 5pi
+        self._makeLb2Lc5Pi()
 
     def _makeLb2LcH(self):
         '''Make RS and WS Lb -> Lc H (H=pi,K) + cc.'''
@@ -217,15 +219,24 @@ class Lb2XBuilder(object):
         self.lines.append(ProtoLine(ws,0.1))
 
     def _makeX2LcLc(self):
+        config = deepcopy(self.config)
+        config['AM_MIN' ] = '4800*MeV'                
         decays = {'X2LcLc': ["[B0 -> Lambda_c+ Lambda_c~-]cc"]}
         inputs = {'X2LcLc': self.lc_pid}
-        rs = makeB2XSels(decays,'',inputs,self.config)
+        rs = makeB2XSels(decays,'',inputs,config)
         self.lines.append(ProtoLine(rs,1.0))
         decays = {'X2LcLcWS': ["[B0 -> Lambda_c+ Lambda_c+]cc"]}
         inputs = {'X2LcLcWS': self.lc_pid}
-        ws = makeB2XSels(decays,'',inputs,self.config)
+        ws = makeB2XSels(decays,'',inputs,config)
         self.lines.append(ProtoLine(ws,0.1))
 
+    def _makeLb2Lc5Pi(self):        
+        decays = {'Lb2Lc5Pi':
+                  ["[Lambda_b0 -> Lambda_c+ a_1(1260)- rho(770)0]cc"]}
+        inputs = {'Lb2Lc5Pi': self.lc_pid + self.hhh.pipipi + self.hh.pipi_pid}
+        lb2lc5pi = makeB2XSels(decays,'Lc2PKPiPID',inputs,self.config)
+        self.lines.append(ProtoLine(lb2lc5pi,1.0))
+        
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
 

@@ -71,7 +71,9 @@ class DBuilder(object):
         ds_cf = "((NINTREE(ID=='K-')==1) & (NINTREE(ID=='K+')==1))"
         self.kpi_pid = [filterSelection('D2KPIPID',oneK,self.hh_pid)]
         self.k3pi = [filterSelection('D2K3PI',oneK,self.hhhh)]
-        self.k3pi_pid = [filterPID('D2K3PIPID',self.k3pi,config_pid)]        
+        self.k3pi_pid = [filterPID('D2K3PIPID',self.k3pi,config_pid)]
+        self.d0_cf_pid = [MergedSelection('D0CFPID',
+                                          RequiredSelections=self.kpi_pid+self.k3pi_pid)]
         self.pi0kpi_merged = [filterSelection('D2Pi0KPi_Merged',oneK,
                                               self.pi0hh_merged)]
         self.pi0kpi_resolved = [filterSelection('D2Pi0KPi_Resolved',oneK,
@@ -309,7 +311,10 @@ class DstarBuilder(object):
         self.pions = pions
         self.pi0 = pi0
         self.config = config
-        self.d0pi = self._makeDstar2D0pi()
+        self.d0pi = self._makeDstar2D0pi('',self.d.hh)
+        self.d0pi_k3pi = self._makeDstar2D0pi('D2K3Pi',self.d.k3pi)
+        self.d0pi_kshh_ll = self._makeDstar2D0pi('D2KSHHLL',self.d.kshh_ll)
+        self.d0pi_kshh_dd = self._makeDstar2D0pi('D2KSHHDD',self.d.kshh_dd)
         self.d0pi_pid = [filterPID('Dstar2D0PiPID',self.d0pi,config_pid,2)]
         self.d0pi0_merged = self._makeDstar02D0Pi0('Merged')
         self.d0pi0_resolved = self._makeDstar02D0Pi0('Resolved')
@@ -330,11 +335,11 @@ class DstarBuilder(object):
         return [Selection(name+'2D0PiBeauty2Charm',Algorithm=cp,
                           RequiredSelections=inputs)]
         
-    def _makeDstar2D0pi(self):
+    def _makeDstar2D0pi(self,name,d2x):
         '''Makes D*+ -> D0 pi+ + c.c.'''
         massCut = "(ADAMASS('D*(2010)+') < %(MASS_WINDOW)s) " % self.config
         decays=["D*(2010)+ -> pi+ D0","D*(2010)- -> pi- D0"]
-        return self._makeHc2Dpi('Dstar',massCut,decays,self.d.hh+[self.pions])
+        return self._makeHc2Dpi('Dstar'+name,massCut,decays,d2x+[self.pions])
 
     def _makeDstar24602D0pi(self):
         '''Makes D*2(2460)+- -> D0 pi+-'''
