@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2012-08-16 - P. Koppenburg
+  - TrackNNGhostID :Initialise all pointers in constructor
+
 ! 2012-08-16 - Johannes Albrecht
  - TrackNNGhostID + TMVA weight file: add tuning for MC2012, 
    only for long tracks, add switch to chose tuning.

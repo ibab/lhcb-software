@@ -53,7 +53,18 @@ DECLARE_TOOL_FACTORY( TrackNNGhostId )
 TrackNNGhostId::TrackNNGhostId( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : GaudiTool ( type, name , parent ),
+  m_otdecoder(0),
+  m_readerVelo(0),
+  m_readerUpstream(0),
+  m_readerDownstream(0),
+  m_readerTtrack(0),
+  m_readerLong(0),
+  m_readerLong12(0),
+  m_ttExpectation(0),
+  m_itExpectation(0),
+  m_otExpectation(0),
+  m_veloExpectation(0)
 {
   declareInterface<ITrackManipulator>(this);
   declareProperty("IsMC2012Tuning",m_tuningMC12=true);
@@ -71,6 +82,11 @@ StatusCode TrackNNGhostId::initialize() {
   if (sc.isFailure()){
     return Error("Failed to initialize", sc);
   }
+  m_veloExpectation = tool<IVeloExpectation>("VeloExpectation");
+  m_ttExpectation = tool<IHitExpectation>("TTHitExpectation");
+  m_itExpectation = tool<IHitExpectation>("ITHitExpectation");
+  m_otExpectation = tool<IHitExpectation>("OTHitExpectation");
+
 
   /**
    *   initialize input variable names as used for training
@@ -111,15 +127,32 @@ StatusCode TrackNNGhostId::initialize() {
 
   //long tracks
   m_inNames.clear();
-  m_inNames.push_back( "track_probChi2" );
-  m_inNames.push_back( "track_fitMatchChi2" );
-  m_inNames.push_back( "track_ttHits" );
-  m_inNames.push_back( "track_nCandCommonHits" );
-  m_inNames.push_back( "nVeloHits+nTTHits+nITHits+nOTHits" );
-  m_inNames.push_back( "track_veloHits" );
-  m_inNames.push_back( "track_itHits" );
-  m_inNames.push_back( "track_otHits" );
-  m_readerLong = new ReadMLP_fittedLong( m_inNames );
+
+
+  // MC09 tuning
+  ///m_inNames.push_back( "track_probChi2" );
+  ///m_inNames.push_back( "track_fitMatchChi2" );
+  ///m_inNames.push_back( "track_ttHits" );
+  ///m_inNames.push_back( "track_nCandCommonHits" );
+  ///m_inNames.push_back( "nVeloHits+nTTHits+nITHits+nOTHits" );
+  ///m_inNames.push_back( "track_veloHits" );
+  ///m_inNames.push_back( "track_itHits" );
+  ///m_inNames.push_back( "track_otHits" );
+  ///m_readerLong = new ReadMLP_fittedLong( m_inNames );
+
+  // first studies on MC11
+  ///m_inNames.push_back("track_Chi2Dof");
+  ///m_inNames.push_back( "track_MatchChi2");
+  ///m_inNames.push_back( "Vchi");
+  ///m_inNames.push_back( "Tchi");
+  ///m_inNames.push_back( "(observedV-expectedV)");
+  ///m_inNames.push_back( "(observedIT-expectedIT)");
+  ///m_inNames.push_back( "(observedTT-expectedTT)");
+  ///m_inNames.push_back( "(observedOT-expectedOT)");
+  ///m_inNames.push_back( "OTbaddrifttime");
+  ///m_inNames.push_back( "eta");
+  ///m_inNames.push_back( "pt" );
+  ///m_readerLong = new ReadBDT( m_inNames );
 
   //MC2012 tuning for long tracks
   m_inNames.clear();
@@ -256,20 +289,23 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const{
   if( !m_tuningMC12 && aTrack.checkType(LHCb::Track::Long) ){
     if ( UNLIKELY( isDebug ) ) debug()<<"run mc09 tuning"<<endmsg;
     
+    aTrack.setGhostProbability(-888.);
     m_inputVec->clear();
-    m_inputVec->reserve(8);
-    m_inputVec->push_back( aTrack.probChi2() );
-    m_inputVec->push_back( aTrack.info(LHCb::Track::FitMatchChi2,-60) );
-    m_inputVec->push_back( ttHits);
-    m_inputVec->push_back( aTrack.info(LHCb::Track::NCandCommonHits,-60));
-    m_inputVec->push_back( nHitMult);
-    m_inputVec->push_back( veloHits);
-    m_inputVec->push_back( itHits);
-    m_inputVec->push_back( otHits);
-    if(-60 != (*m_inputVec)[1]
-       && -60 != (*m_inputVec)[3] ){
-      // retrive the classifier responses            
-      retval = m_readerLong->GetMvaValue( *m_inputVec );
+    ///m_inputVec->reserve(8);
+    ///m_inputVec->push_back( aTrack.probChi2() );
+    ///m_inputVec->push_back( aTrack.info(LHCb::Track::FitMatchChi2,-60) );
+    ///m_inputVec->push_back( ttHits);
+    ///m_inputVec->push_back( aTrack.info(LHCb::Track::NCandCommonHits,-60));
+    ///m_inputVec->push_back( nHitMult);
+    ///m_inputVec->push_back( veloHits);
+    ///m_inputVec->push_back( itHits);
+    ///m_inputVec->push_back( otHits);
+    ///if(-60 != (*m_inputVec)[1]
+    ///   && -60 != (*m_inputVec)[3] )
+    ///  // retrive the classifier responses            
+    if (!aTrack.hasInfo(21)) {
+      aTrack.setGhostProbability(-999.);
+      return Warning("Input variable 21 missing",StatusCode::SUCCESS, 1);
       if ( UNLIKELY( isDebug ) ) debug()<<"MC09:  NN output:  "<<retval<<endmsg;
     } else {
       if( UNLIKELY( isDebug ) ) debug()<<"warning: extra info of track not propetly filled ....  "<<endmsg;
@@ -549,13 +585,5 @@ StatusCode TrackNNGhostId::finalize()
 {
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
 
-  delete m_readerVelo;
-  delete m_readerUpstream;
-  delete m_readerDownstream;
-  delete m_readerTtrack;
-  delete m_readerLong;
-  delete m_readerLong12;
-  delete m_inputVec;
-  
   return GaudiTool::finalize();  // must be called after all other actions
 }
