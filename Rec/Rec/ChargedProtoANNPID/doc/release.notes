@@ -4,6 +4,9 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+! 2012-08-16 - Chris Jones
+ - Remove various GEC variables, as they cannot be reliabled used from uDSTs.
+
 !========================= ChargedProtoANNPID v1r8 2012-08-16 =========================
 
 ! 2012-08-10 - Chris Jones
