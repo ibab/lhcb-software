@@ -1,5 +1,5 @@
 package           RecConf
-version           v2r7
+version           v2r8
 
 branches cmt doc python
 
