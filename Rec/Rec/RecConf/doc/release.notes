@@ -4,6 +4,13 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+! 2012-08-16 - Chris Jones
+ - Add a temporary hack to the PROTO sequence, to rerun the tracking ghost 
+   probability with the new settings after the ANN variables have been
+   computed. This is temporary for Reco13e/Reco14, as there has not been
+   time to retune the ANN variables with the new ghost prob, so they must run
+   with the old value first. 
+
 ! 2012-08-14 - Chris Jones
  - GlobalReco PROTO checks need to run in Check sequence if MC is enabled.
 
