@@ -89,7 +89,10 @@ public: // classes
   public:
     Configuration()
       : minIDeff(0),maxIDeff(100),minMisIDeff(0),maxMisIDeff(100),
-        minP(2000), maxP(100000), minPt(500), maxPt(100000), minCut(-15), maxCut(15),
+        minP(2000), maxP(100000), minPt(500), maxPt(100000), 
+        minGhostProb(0), maxGhostProb(0.9),
+        minTrackLikelihood(-40), maxTrackLikelihood(999),
+        minCut(-15), maxCut(15),
         mustHaveAerogel(false),mustHaveR1Gas(false),mustHaveR2Gas(false),mustHaveAnyRICH(false),
         mustHaveECAL(false),mustHaveHCAL(false),mustHavePRS(false),mustHaveBREM(false),
         mustHaveECALorPRS(false),
@@ -116,7 +119,10 @@ public: // classes
     { }
   public:
     double minIDeff,maxIDeff,minMisIDeff,maxMisIDeff;
-    double minP, maxP, minPt, maxPt, minCut, maxCut;
+    double minP, maxP, minPt, maxPt;
+    double minGhostProb, maxGhostProb;
+    double minTrackLikelihood, maxTrackLikelihood;
+    double minCut, maxCut;
     bool mustHaveAerogel,mustHaveR1Gas,mustHaveR2Gas,mustHaveAnyRICH;
     bool mustHaveECAL,mustHaveHCAL,mustHavePRS,mustHaveBREM,mustHaveECALorPRS;
     bool mustHaveMUON,mustHaveECALorPRSorRICH;

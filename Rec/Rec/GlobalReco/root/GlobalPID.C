@@ -72,6 +72,12 @@ bool GlobalPID::passTrackSelection() const
   if ( TrackP  > config.maxP  || TrackP  < config.minP  ||
        TrackPt > config.maxPt || TrackPt < config.minPt ) return false;
 
+  // track quality cuts
+  if ( TrackGhostProb  > config.maxGhostProb       || 
+       TrackGhostProb  < config.minGhostProb       ||
+       TrackLikelihood > config.maxTrackLikelihood ||
+       TrackLikelihood < config.minTrackLikelihood ) return false;
+
   return true;
 }
 
