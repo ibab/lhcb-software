@@ -13,37 +13,37 @@ StrippingSelections file containing the line builder instance.
 
 from GaudiKernel.SystemOfUnits import *
 
-
-## Micro-DST, Grant McGregor
-## Modified from Strippinb13b
-## Test:  Yes
-DstarD02KMuNu = { 
-    'BUILDERTYPE' : 'DstarD02KMuNuConf',
-    'CONFIG'      : {
-    'TRACK_Chi2'             :     3.,
-    'KAON_PIDK'              :     5.,
-    'KAON_MinPT'             :   600.,
-    'MUON_MinPT'             :   800.,
-    'PION_PIDmu'             :    -1.,
-    'PAIR_SumPTMin'          :  2800.,
-    'D0_MassMax'             :  1950.,
-    'D0_DOCA'                :     0.07,
-    'D0_MinP'                : 20000.,
-    'D0_FD'                  :     4.0,
-    'D0_MCORR_MIN'           :  1400.,
-    'D0_MCORR_MAX'           :  2700.,
-    'D0_BPVVDZ'              :     0.,
-    'D0_VtxChi2'             :     9.,
-    'Dstar_MassMin'          :   800.,
-    'Dstar_DOCA'             :     0.4,
-    'Dstar_VtxChi2'          :     9.,
-    'Dstar_DeltaMass'        :   200.,
-    'PrescaledLinePrescale'  :     1.0,
-    'PrescaledLinePostscale' :     1.0
-    },
-    'WGs' : [ 'Charm' ],
-    'STREAMS' : [ 'Charm' ]
-    }
+# Removed in Stripping20 since redundant w.r.t. CharmForVub
+### Micro-DST, Grant McGregor
+### Modified from Strippinb13b
+### Test:  Yes
+#DstarD02KMuNu = { 
+#    'BUILDERTYPE' : 'DstarD02KMuNuConf',
+#    'CONFIG'      : {
+#    'TRACK_Chi2'             :     3.,
+#    'KAON_PIDK'              :     5.,
+#    'KAON_MinPT'             :   600.,
+#    'MUON_MinPT'             :   800.,
+#    'PION_PIDmu'             :    -1.,
+#    'PAIR_SumPTMin'          :  2800.,
+#    'D0_MassMax'             :  1950.,
+#    'D0_DOCA'                :     0.07,
+#    'D0_MinP'                : 20000.,
+#    'D0_FD'                  :     4.0,
+#    'D0_MCORR_MIN'           :  1400.,
+#    'D0_MCORR_MAX'           :  2700.,
+#    'D0_BPVVDZ'              :     0.,
+#    'D0_VtxChi2'             :     9.,
+#    'Dstar_MassMin'          :   800.,
+#    'Dstar_DOCA'             :     0.4,
+#    'Dstar_VtxChi2'          :     9.,
+#    'Dstar_DeltaMass'        :   200.,
+#    'PrescaledLinePrescale'  :     1.0,
+#    'PrescaledLinePostscale' :     1.0
+#    },
+#    'WGs' : [ 'Charm' ],
+#    'STREAMS' : [ 'Charm' ]
+#    }
 
 
 ## Micro-DST, Vanya BELYAEV
@@ -1049,16 +1049,16 @@ JpsiMuMuforD0MuMu = {
 # New in S17b.
 CharmForVub = {
     'BUILDERTYPE' : 'CharmForVubConf',
-    'CONFIG'     :  {'TRACK_Chi2' : 3.,
+    'CONFIG'     :  {
     'TRACK_MINIPCHI2' : 6,
     'KAON_PIDK' : 3.,
     'KAON_MinPT' : 600.,
     'Kstar_MinPT' : 600.,
-    'Kstar_MassMax' : 1020.,
-    'Kstar_MassMin' : 770.,
+    'Kstar_MassMax' : 1040.,
+    'Kstar_MassMin' : 750.,
     'Rho_MinPT' : 600.,
-    'Rho_MassMax' : 990,
-    'Rho_MassMin' : 550.,
+    'Rho_MassMax' : 1020,
+    'Rho_MassMin' : 530.,
     'MUON_MinPT' : 800.,
     'MUON_PIDmu' : 0,
     'PION_MinPT' : 600.,
@@ -1066,7 +1066,6 @@ CharmForVub = {
     'PION_PIDK' : 0,
     'PAIR_SumPTMin' : 2800.,
     'D_MassMax' : 1950.,
-    'D_DIRA' : 0.9994,
     'D_DOCA' : 0.07,
     'D_MinP' : 20000.,
     'D0_FD'  :  4.0,
@@ -1083,12 +1082,11 @@ CharmForVub = {
     'Dstar_DOCA' : 0.4,
     'Dstar_VtxChi2' : 9.,
     'Dstar_DeltaMass' : 200.,
-    'HLT_FILTER' : "(HLT_PASS_RE('Hlt2CharmSemilepD02HMuNu_.*Decision') | HLT_PASS_RE('Hlt2Topo.*Decision'))",
-    'HLT_FILTER_PiMuNu' : "HLT_PASS_RE('Hlt2CharmSemilepD02HMuNu_.*Decision')",
+    'HLT_FILTER_VMuNu' : "(HLT_PASS_RE('Hlt2CharmSemilepD02HMuNu_.*Decision') | HLT_PASS_RE('Hlt2Topo.*Decision'))",
+    'HLT_FILTER_HMuNu' : "(HLT_PASS_RE('Hlt2CharmSemilepD02HMuNu_.*Decision') | HLT_PASS_RE('Hlt2CharmHadD02HHXDst_.*Decision'))",
     #Pre and postscale
-    'PrescaledKstarLinePrescale' : 1.0,
-    'PrescaledRhoLinePrescale' : 1.0,
-    'PrescaledPiLinePrescale' : 1.0},
+    'PrescaledVLinePrescale' : 1.0,
+    'PrescaledHLinePrescale' : 1.0},
   'WGs' : [ 'Charm' ],
   'STREAMS' : [ 'Charm']
 }
