@@ -4,6 +4,8 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+!========================= ChargedProtoANNPID v1r8 2012-08-16 =========================
+
 ! 2012-08-10 - Chris Jones
  - Update the default tuning for 2012 and 2011 to MC12TuneV1, trained on a
    preliminary sample of 2012 B inclusive MC processed with Reco13d.
