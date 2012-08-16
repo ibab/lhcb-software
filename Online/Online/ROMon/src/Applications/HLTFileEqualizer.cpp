@@ -545,6 +545,7 @@ void DefHltInfoHandler::infoHandler()
     else
     {
       m_Equalizer->m_AllNodes[nname]->m_nofiles = nfiles;
+      m_Equalizer->m_AllNodes[nname]->m_ROC_state = (*i).overflowState;
       nit = m_Equalizer->m_Nodes.find(nname);
       if (nit != m_Equalizer->m_Nodes.end())
       {
