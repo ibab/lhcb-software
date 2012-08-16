@@ -359,143 +359,151 @@ private: // data
   Int_t           fCurrent; //!current Tree number in a TChain
   TFile *         m_file;
 
-   // Declaration of leaf types
-   Double_t        TrackP;
-   Double_t        TrackPt;
-   Double_t        TrackChi2PerDof;
-   Int_t           TrackNumDof;
-   Int_t           TrackType;
-   Int_t           TrackHistory;
-   Double_t        RichDLLe;
-   Double_t        RichDLLmu;
-   Double_t        RichDLLpi;
-   Double_t        RichDLLk;
-   Double_t        RichDLLp;
-   Double_t        RichDLLbt;
-   Bool_t          RichUsedAero;
-   Bool_t          RichUsedR1Gas;
-   Bool_t          RichUsedR2Gas;
-   Bool_t          RichAboveElThres;
-   Bool_t          RichAboveMuThres;
-   Bool_t          RichAbovePiThres;
-   Bool_t          RichAboveKaThres;
-   Bool_t          RichAbovePrThres;
-   Double_t        MuonBkgLL;
-   Double_t        MuonMuLL;
-   Double_t        MuonNShared;
-   Bool_t          MuonIsLooseMuon;
-   Bool_t          MuonIsMuon;
-   Double_t        MuonInAcc;
-   Double_t        InAccSpd;
-   Double_t        InAccPrs;
-   Double_t        InAccEcal;
-   Double_t        InAccHcal;
-   Double_t        InAccBrem;
-   Double_t        CaloTrMatch;
-   Double_t        CaloElectronMatch;
-   Double_t        CaloBremMatch;
-   Double_t        CaloChargedSpd;
-   Double_t        CaloChargedPrs;
-   Double_t        CaloChargedEcal;
-   Double_t        CaloSpdE;
-   Double_t        CaloPrsE;
-   Double_t        CaloEcalChi2;
-   Double_t        CaloClusChi2;
-   Double_t        CaloBremChi2;
-   Double_t        CaloEcalE;
-   Double_t        CaloHcalE;
-   Double_t        CaloTrajectoryL;
-   Double_t        EcalPIDe;
-   Double_t        HcalPIDe;
-   Double_t        PrsPIDe;
-   Double_t        BremPIDe;
-   Double_t        EcalPIDmu;
-   Double_t        HcalPIDmu;
-   Double_t        CombDLLe;
-   Double_t        CombDLLmu;
-   Double_t        CombDLLpi;
-   Double_t        CombDLLk;
-   Double_t        CombDLLp;
-   Double_t        ProbNNe;
-   Double_t        ProbNNmu;
-   Double_t        ProbNNpi;
-   Double_t        ProbNNk;
-   Double_t        ProbNNp;
-   Double_t        ProbNNghost;
-   Double_t        VeloCharge;
-   Int_t           MCParticleType;
-   Double_t        MCParticleP;
-   Double_t        MCParticlePt;
-   Double_t        MCVirtualMass;
+  // Declaration of leaf types
+  Double_t        TrackP;
+  Double_t        TrackPt;
+  Double_t        TrackChi2PerDof;
+  Int_t           TrackNumDof;
+  Int_t           TrackType;
+  Int_t           TrackHistory;
+  Double_t        TrackGhostProb;
+  Double_t        TrackLikelihood;
+  Double_t        TrackCloneDist;
+  Double_t        RichDLLe;
+  Double_t        RichDLLmu;
+  Double_t        RichDLLpi;
+  Double_t        RichDLLk;
+  Double_t        RichDLLp;
+  Double_t        RichDLLbt;
+  Bool_t          RichUsedAero;
+  Bool_t          RichUsedR1Gas;
+  Bool_t          RichUsedR2Gas;
+  Bool_t          RichAboveElThres;
+  Bool_t          RichAboveMuThres;
+  Bool_t          RichAbovePiThres;
+  Bool_t          RichAboveKaThres;
+  Bool_t          RichAbovePrThres;
+  Int_t           RichBestPID;
+  Double_t        MuonBkgLL;
+  Double_t        MuonMuLL;
+  Double_t        MuonNShared;
+  Bool_t          MuonIsLooseMuon;
+  Bool_t          MuonIsMuon;
+  Double_t        MuonInAcc;
+  Double_t        InAccSpd;
+  Double_t        InAccPrs;
+  Double_t        InAccEcal;
+  Double_t        InAccHcal;
+  Double_t        InAccBrem;
+  Double_t        CaloTrMatch;
+  Double_t        CaloElectronMatch;
+  Double_t        CaloBremMatch;
+  Double_t        CaloChargedSpd;
+  Double_t        CaloChargedPrs;
+  Double_t        CaloChargedEcal;
+  Double_t        CaloSpdE;
+  Double_t        CaloPrsE;
+  Double_t        CaloEcalChi2;
+  Double_t        CaloClusChi2;
+  Double_t        CaloBremChi2;
+  Double_t        CaloEcalE;
+  Double_t        CaloHcalE;
+  Double_t        CaloTrajectoryL;
+  Double_t        EcalPIDe;
+  Double_t        HcalPIDe;
+  Double_t        PrsPIDe;
+  Double_t        BremPIDe;
+  Double_t        EcalPIDmu;
+  Double_t        HcalPIDmu;
+  Double_t        CombDLLe;
+  Double_t        CombDLLmu;
+  Double_t        CombDLLpi;
+  Double_t        CombDLLk;
+  Double_t        CombDLLp;
+  Double_t        ProbNNe;
+  Double_t        ProbNNmu;
+  Double_t        ProbNNpi;
+  Double_t        ProbNNk;
+  Double_t        ProbNNp;
+  Double_t        ProbNNghost;
+  Double_t        VeloCharge;
+  Int_t           MCParticleType;
+  Double_t        MCParticleP;
+  Double_t        MCParticlePt;
+  Double_t        MCVirtualMass;
 
-   // List of branches
-   TBranch        *b_TrackP;   //!
-   TBranch        *b_TrackPt;   //!
-   TBranch        *b_TrackChi2PerDof;   //!
-   TBranch        *b_TrackNumDof;   //!
-   TBranch        *b_TrackType;   //!
-   TBranch        *b_TrackHistory;   //!
-   TBranch        *b_RichDLLe;   //!
-   TBranch        *b_RichDLLmu;   //!
-   TBranch        *b_RichDLLpi;   //!
-   TBranch        *b_RichDLLk;   //!
-   TBranch        *b_RichDLLp;   //!
-   TBranch        *b_RichDLLbt;   //!
-   TBranch        *b_RichUsedAero;   //!
-   TBranch        *b_RichUsedR1Gas;   //!
-   TBranch        *b_RichUsedR2Gas;   //!
-   TBranch        *b_RichAboveElThres;   //!
-   TBranch        *b_RichAboveMuThres;   //!
-   TBranch        *b_RichAbovePiThres;   //!
-   TBranch        *b_RichAboveKaThres;   //!
-   TBranch        *b_RichAbovePrThres;   //!
-   TBranch        *b_MuonBkgLL;   //!
-   TBranch        *b_MuonMuLL;   //!
-   TBranch        *b_MuonNShared;   //!
-   TBranch        *b_MuonIsLooseMuon;   //!
-   TBranch        *b_MuonIsMuon;   //!
-   TBranch        *b_MuonInAcc;   //!
-   TBranch        *b_InAccSpd;   //!
-   TBranch        *b_InAccPrs;   //!
-   TBranch        *b_InAccEcal;   //!
-   TBranch        *b_InAccHcal;   //!
-   TBranch        *b_InAccBrem;   //!
-   TBranch        *b_CaloTrMatch;   //!
-   TBranch        *b_CaloElectronMatch;   //!
-   TBranch        *b_CaloBremMatch;   //!
-   TBranch        *b_CaloChargedSpd;   //!
-   TBranch        *b_CaloChargedPrs;   //!
-   TBranch        *b_CaloChargedEcal;   //!
-   TBranch        *b_CaloSpdE;   //!
-   TBranch        *b_CaloPrsE;   //!
-   TBranch        *b_CaloEcalChi2;   //!
-   TBranch        *b_CaloClusChi2;   //!
-   TBranch        *b_CaloBremChi2;   //!
-   TBranch        *b_CaloEcalE;   //!
-   TBranch        *b_CaloHcalE;   //!
-   TBranch        *b_CaloTrajectoryL;   //!
-   TBranch        *b_EcalPIDe;   //!
-   TBranch        *b_HcalPIDe;   //!
-   TBranch        *b_PrsPIDe;   //!
-   TBranch        *b_BremPIDe;   //!
-   TBranch        *b_EcalPIDmu;   //!
-   TBranch        *b_HcalPIDmu;   //!
-   TBranch        *b_CombDLLe;   //!
-   TBranch        *b_CombDLLmu;   //!
-   TBranch        *b_CombDLLpi;   //!
-   TBranch        *b_CombDLLk;   //!
-   TBranch        *b_CombDLLp;   //!
-   TBranch        *b_ProbNNe;   //!
-   TBranch        *b_ProbNNmu;   //!
-   TBranch        *b_ProbNNpi;   //!
-   TBranch        *b_ProbNNk;   //!
-   TBranch        *b_ProbNNp;   //!
-   TBranch        *b_ProbNNghost;   //!
-   TBranch        *b_VeloCharge;   //!
-   TBranch        *b_MCParticleType;   //!
-   TBranch        *b_MCParticleP;   //!
-   TBranch        *b_MCParticlePt;   //!
-   TBranch        *b_MCVirtualMass;   //!
+  // List of branches
+  TBranch        *b_TrackP;   //!
+  TBranch        *b_TrackPt;   //!
+  TBranch        *b_TrackChi2PerDof;   //!
+  TBranch        *b_TrackNumDof;   //!
+  TBranch        *b_TrackType;   //!
+  TBranch        *b_TrackHistory;   //!
+  TBranch        *b_TrackGhostProb;   //!
+  TBranch        *b_TrackLikelihood;   //!
+  TBranch        *b_TrackCloneDist;   //!
+  TBranch        *b_RichDLLe;   //!
+  TBranch        *b_RichDLLmu;   //!
+  TBranch        *b_RichDLLpi;   //!
+  TBranch        *b_RichDLLk;   //!
+  TBranch        *b_RichDLLp;   //!
+  TBranch        *b_RichDLLbt;   //!
+  TBranch        *b_RichUsedAero;   //!
+  TBranch        *b_RichUsedR1Gas;   //!
+  TBranch        *b_RichUsedR2Gas;   //!
+  TBranch        *b_RichAboveElThres;   //!
+  TBranch        *b_RichAboveMuThres;   //!
+  TBranch        *b_RichAbovePiThres;   //!
+  TBranch        *b_RichAboveKaThres;   //!
+  TBranch        *b_RichAbovePrThres;   //!
+  TBranch        *b_RichBestPID;   //!
+  TBranch        *b_MuonBkgLL;   //!
+  TBranch        *b_MuonMuLL;   //!
+  TBranch        *b_MuonNShared;   //!
+  TBranch        *b_MuonIsLooseMuon;   //!
+  TBranch        *b_MuonIsMuon;   //!
+  TBranch        *b_MuonInAcc;   //!
+  TBranch        *b_InAccSpd;   //!
+  TBranch        *b_InAccPrs;   //!
+  TBranch        *b_InAccEcal;   //!
+  TBranch        *b_InAccHcal;   //!
+  TBranch        *b_InAccBrem;   //!
+  TBranch        *b_CaloTrMatch;   //!
+  TBranch        *b_CaloElectronMatch;   //!
+  TBranch        *b_CaloBremMatch;   //!
+  TBranch        *b_CaloChargedSpd;   //!
+  TBranch        *b_CaloChargedPrs;   //!
+  TBranch        *b_CaloChargedEcal;   //!
+  TBranch        *b_CaloSpdE;   //!
+  TBranch        *b_CaloPrsE;   //!
+  TBranch        *b_CaloEcalChi2;   //!
+  TBranch        *b_CaloClusChi2;   //!
+  TBranch        *b_CaloBremChi2;   //!
+  TBranch        *b_CaloEcalE;   //!
+  TBranch        *b_CaloHcalE;   //!
+  TBranch        *b_CaloTrajectoryL;   //!
+  TBranch        *b_EcalPIDe;   //!
+  TBranch        *b_HcalPIDe;   //!
+  TBranch        *b_PrsPIDe;   //!
+  TBranch        *b_BremPIDe;   //!
+  TBranch        *b_EcalPIDmu;   //!
+  TBranch        *b_HcalPIDmu;   //!
+  TBranch        *b_CombDLLe;   //!
+  TBranch        *b_CombDLLmu;   //!
+  TBranch        *b_CombDLLpi;   //!
+  TBranch        *b_CombDLLk;   //!
+  TBranch        *b_CombDLLp;   //!
+  TBranch        *b_ProbNNe;   //!
+  TBranch        *b_ProbNNmu;   //!
+  TBranch        *b_ProbNNpi;   //!
+  TBranch        *b_ProbNNk;   //!
+  TBranch        *b_ProbNNp;   //!
+  TBranch        *b_ProbNNghost;   //!
+  TBranch        *b_VeloCharge;   //!
+  TBranch        *b_MCParticleType;   //!
+  TBranch        *b_MCParticleP;   //!
+  TBranch        *b_MCParticlePt;   //!
+  TBranch        *b_MCVirtualMass;   //!
 
 };
 

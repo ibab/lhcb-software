@@ -8,7 +8,10 @@
 
   TCut detOK = "RichUsedAero || RichUsedR1Gas || RichUsedR2Gas";
 
-  const std::string trackSelS = "TrackType == 3 && TrackP > 10000 && TrackP < 100000 && TrackPt > 1000 && TrackChi2PerDof < 2";
+  std::string trackSelS = "TrackType==3 && TrackP>10000 && TrackP<100000 && TrackPt>1000 && TrackChi2PerDof<2";
+  trackSelS += " && TrackGhostProb<0.75"; // add ghost prob cut
+  trackSelS += " && TrackLikelihood>-40"; // Likelihood
+  //trackSelS += " && (TrackCloneDist>5000 || TrackCloneDist<0)"; // clone distance
   TCut trackSel = trackSelS.c_str();
 
   TCut realPr = "abs(MCParticleType) == 2212";
