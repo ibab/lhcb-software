@@ -4,6 +4,7 @@ import os
 modelTextFile = "Models.txt" # output models to this text file
 #Chi2TextFile = "Chi2.txt"
 max_iterations  = 5
+start_iteration = 0
 
 
 MintDir = "/afs/cern.ch/work/m/mcoombes/cmtuser/Gen/Mint/src/"
@@ -18,7 +19,7 @@ inputLFNs = ['LFN:/lhcb/user/m/mcoombes/FourPiModelFit/BinningFile_D0.root',
 ModelBuilderExe = MintDir+"Users/Matt/ModelCreator/ModelBuilder"
 
 #Keep as this directory. Points to where the submission script is
-SubmitModelBuilder = MintDir+'Users/Matt/ModelBuilderGridSubmission/ModelSubmission.py'
+SubmitModelBuilder = MintDir+'Users/Matt/ModelBuilderGridSubmission/ModelSubmission_simple.py'
 
 
 print "Before submitting make sure you have compiled ampFit with DaVinci v29r2 in order to get the correct ROOT version"
