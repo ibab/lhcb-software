@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2012-08-16 - Johannes Albrecht
+ - TrackNNGhostID + TMVA weight file: add tuning for MC2012, 
+   only for long tracks, add switch to chose tuning.
+
 ! 2012-07-31 - Paul Seyfert
  - TrackNNGhostId: Create debug() messages only when output level requires it,
    also using UNLIKELY macro

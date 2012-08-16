@@ -10,6 +10,9 @@
 
 #include "TrackInterfaces/ITrackManipulator.h"            // Interface
 
+class IHitExpectation;
+class IVeloExpectation;
+
 
 /** @class TrackNNGhostId TrackNNGhostId.h
  *  
@@ -42,7 +45,8 @@ public:
 protected:
 
 private:
-	IOTRawBankDecoder* m_otdecoder;
+
+  IOTRawBankDecoder* m_otdecoder;
   std::vector<std::string> m_inNames;
   std::vector<double>* m_inputVec;
 
@@ -51,6 +55,15 @@ private:
   IClassifierReader* m_readerDownstream;
   IClassifierReader* m_readerTtrack;
   IClassifierReader* m_readerLong;
+  IClassifierReader* m_readerLong12;
+
+  IHitExpectation* m_ttExpectation;
+  IHitExpectation* m_itExpectation;
+  IHitExpectation* m_otExpectation;
+  IVeloExpectation* m_veloExpectation;
+
+  bool m_tuningMC12;
+  std::vector<double> m_transformationMap;
   
 };
 #endif // TRACKNNGHOSTID_H
