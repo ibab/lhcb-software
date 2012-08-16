@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-08-16 - Albert Puig
+ - Added possibility to specify mass ranges for HHH combinations in Beauty2XGamma.
+ - Added combination cuts to HHH to lower timing.
+ - New default cuts for B -> K1 gamma.
+
 ! 2012-08-15 - Mika Vesterinen
  - Changes to B2DMuNuX module: 
  - D0->K3Pi: tighter mass window, dropped Hlt2 muon TOS requirement, tighter kaon PID, tighter pT sum cut
@@ -13,7 +18,6 @@
  - Tighter phi mass window in Ds->PhiPi
  - Tighter doca cut for pKpi combination.
  - Loose GEC on all except D0->hh lines.
-
 
 ! 2012-08-14 - Mika Vesterinen
  - Added loose global event cut to all lines in the B2XuMuNu (V_ub) module.

@@ -27,13 +27,18 @@ class HHHBuilder(object):
         self.k1 = self._makeK1()
 
     def _massWindow(self,which,name):
-        return "ADAMASS('%s') < %s" % (name,self.config['MASS_WINDOW'][which])
+        massCut = self.config['MASS_WINDOW'][which]
+        if isinstance(massCut, (list, tuple)) and len(massCut) == 2: # We have a range
+          return 'in_range(%s, MM, %s)' % tuple(massCut)
+        else:
+          return "ADAMASS('%s') < %s" % (name, massCut)
 
     def _makeX2HHH(self,name,decays,amass,config,inputs,pi0=False):
         ''' Makes all X -> HHH selections involving neutrals.'''
         comboCuts = [LoKiCuts(['ASUMPT'],config).code(),amass,hasTopoChild()]
+        comboCuts.append(LoKiCuts(['AMAXDOCA'],config).code())
         comboCuts = LoKiCuts.combine(comboCuts)
-        momCuts = LoKiCuts(['VCHI2DOF','BPVVDCHI2'],config).code()
+        momCuts = LoKiCuts(['VCHI2DOF','BPVVDCHI2','PT','MIPCHI2DV'],config).code()
         cp = CombineParticles(CombinationCut=comboCuts,MotherCut=momCuts,DecayDescriptors=decays)
         if pi0:
             cp = cp.configurable(name+'Beauty2XGammaCombiner')
@@ -80,7 +85,7 @@ class HHHBuilder(object):
 
     def _makeK1(self):
         '''Makes the K1+ -> K+ pi+ pi- +cc '''
-        k1 = self._makeX2HHH('K1_2Kpipi',['[K_1(1270)+ -> K+ pi- pi+]cc'],'(AM<1800*MeV)',self.config,[self.pions,self.kaons])
+        k1 = self._makeX2HHH('K1_2Kpipi',['[K_1(1270)+ -> K+ pi- pi+]cc'],'(AM<2500*MeV)',self.config,[self.pions,self.kaons],False)
         mass = self._massWindow('K1','K_1(1270)+').replace('ADAMASS','ADMASS')
         return [filterSelection('K1_2Kpipi',mass,[k1])]
 
