@@ -320,8 +320,11 @@ def RecoTracking(exclude=[]):
          
       ## ghost probability using a Neural Net
       if "GhostProbability" in extraInfos :
-         from Configurables import TrackAddNNGhostId
-         GaudiSequencer("TrackAddExtraInfoSeq").Members += [ TrackAddNNGhostId() ]
+         from Configurables import TrackAddNNGhostId, TrackNNGhostId
+         nn = TrackAddNNGhostId()
+         nn.addTool( TrackNNGhostId, name='TrackNNGhostId' )
+         nn.TrackNNGhostId.IsMC2012Tuning = False
+         GaudiSequencer("TrackAddExtraInfoSeq").Members += [ nn ]
          
    track.DetectorList += ["EraseExtraInformation"]
    from Configurables import TrackEraseExtraInfo

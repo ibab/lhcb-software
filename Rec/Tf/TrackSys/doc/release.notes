@@ -4,6 +4,10 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2012-08-16 - Chris Jones
+ - Update the ghost probability options to explicitly run the old tuning 
+   by default.
+
 !========================= TrackSys v7r5 2012-07-24 =========================
 ! 2012-07-06 - Wouter Hulsbergen
  - Make sure default instance of StateInitTool is not modified
