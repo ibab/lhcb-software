@@ -1,5 +1,5 @@
 // $Id: TrackNNGhostId.h,v 1.3 2009-10-23 12:20:26 albrecht Exp $
-#ifndef TRACKNNGHOSTID_H 
+#ifndef TRACKNNGHOSTID_H
 #define TRACKNNGHOSTID_H 1
 
 // Include files
@@ -8,27 +8,31 @@
 
 #include "OTDAQ/IOTRawBankDecoder.h"
 
-#include "TrackInterfaces/ITrackManipulator.h"            // Interface
+#include "TrackInterfaces/ITrackManipulator.h"     
+
+// For interpolator
+#include "RichDet/Rich1DTabFunc.h"
 
 class IHitExpectation;
 class IVeloExpectation;
 
 
 /** @class TrackNNGhostId TrackNNGhostId.h
- *  
+ *
  *
  *  @author Johannes Albrecht
  *  @date   2009-10-06
- *   
- *  Tool to calculate a track quality variable 
+ *
+ *  Tool to calculate a track quality variable
  *  using a trained (TMVA) netork
  *
  */
-class TrackNNGhostId : public GaudiTool, 
+class TrackNNGhostId : public GaudiTool,
                        virtual public ITrackManipulator {
-public: 
+public:
+
   /// Standard constructor
-  TrackNNGhostId( const std::string& type, 
+  TrackNNGhostId( const std::string& type,
                   const std::string& name,
                   const IInterface* parent);
 
@@ -38,11 +42,7 @@ public:
 
   StatusCode finalize();
 
-
   StatusCode execute(LHCb::Track& aTrack) const;
-
-
-protected:
 
 private:
 
@@ -63,7 +63,8 @@ private:
   IVeloExpectation* m_veloExpectation;
 
   bool m_tuningMC12;
-  std::vector<double> m_transformationMap;
-  
+
+  const Rich::TabulatedFunction1D* m_FlattenLookupTable;
+
 };
 #endif // TRACKNNGHOSTID_H

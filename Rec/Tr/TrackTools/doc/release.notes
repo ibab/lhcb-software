@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2012-08-16 - Chris Jones
+ - Add an iterpolator to TrackNNGhostId to provide a smooth flattening function.
+
 ! 2012-08-16 - P. Koppenburg
   - TrackNNGhostID :Initialise all pointers in constructor
 

@@ -39,6 +39,9 @@ use   OTDAQ           v*     OT
 
 use   MuonInterfaces  v*     Muon
 
+# For interpolator
+use   RichDet         v*     Det
+
 # Component library building rule
 #============================================================================
 library          TrackTools    ../src/*.cpp 
