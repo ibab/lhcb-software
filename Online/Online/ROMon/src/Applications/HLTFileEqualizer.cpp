@@ -805,7 +805,7 @@ int main(int argc, char **argv)
   fflush(outf);
   while (1)
   {
-    sleep (60);
+    sleep (30);
     elz.Analyze();
   }
   return 0;
