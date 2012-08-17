@@ -81,11 +81,9 @@ StatusCode RecSummaryAlg::execute()
   put( summary, m_summaryLoc );
 
   // can we add tracking info ?
-  if ( exist<LHCb::Tracks>(m_trackLoc) )
+  const LHCb::Tracks * tracks = getIfExists<LHCb::Tracks>(m_trackLoc);
+  if ( tracks )
   {
-
-    // Load the reconstructed tracks
-    const LHCb::Tracks * tracks = get<LHCb::Tracks>(m_trackLoc);
 
     // Save total number of tracks
     summary->addInfo( LHCb::RecSummary::nTracks, tracks->size() );
@@ -147,11 +145,9 @@ StatusCode RecSummaryAlg::execute()
   addSizeSummary<LHCb::Tracks>( summary, LHCb::RecSummary::nMuonTracks, m_muonTracksLoc );
 
   // Muon Coords
-  if ( exist<LHCb::MuonCoords>(m_muonCoordsLoc) )
+  const LHCb::MuonCoords * coords = getIfExists<LHCb::MuonCoords>(m_muonCoordsLoc);
+  if ( coords )
   {
-
-    // Load the Muon Coords
-    const LHCb::MuonCoords * coords = get<LHCb::MuonCoords>(m_muonCoordsLoc);
 
     // Count by stations
     std::map<int,unsigned int> mCount;

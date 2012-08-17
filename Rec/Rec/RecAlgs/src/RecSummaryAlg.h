@@ -56,14 +56,9 @@ private:
                        const LHCb::RecSummary::DataTypes id,
                        const std::string& location ) const
   {
-    if ( exist<CLASS>(location) )
-    {
-      summary->addInfo( id, (int)(get<CLASS>(location))->size() );
-    }
-    else
-    {
-      Warning( "No data at '" + location + "'" ).ignore();
-    }
+    const CLASS * data = getIfExists<CLASS>(location);
+    if ( data ) { summary->addInfo( id, (int)data->size() );           }
+    else        { Warning( "No data at '" + location + "'" ).ignore(); }
   }
 
 private:
