@@ -321,9 +321,9 @@ void HLTFileEqualizer::Analyze()
     myNode *nod = (*nodeit).second;
     char Line[1024];
     long dtime = nod->ReadTime-nod->ReadTime_prev;
-    nod->ProcPerf.name = "Moore";
-    nod->ProcPerf.produced = nod->Events.produced-nod->Overflow.produced;
-    nod->ProcPerf.seen = nod->Events.seen-nod->Overflow.seen;
+    nod->ProcPerf.name = "Input";
+    nod->ProcPerf.produced = nod->Events.produced+nod->Overflow.produced;
+    nod->ProcPerf.seen = nod->Events.seen+nod->Overflow.seen;
     nod->Events.calcRate(nod->Events_prev,dtime);
     nod->Overflow.calcRate(nod->Overflow_prev,dtime);
     nod->Send.calcRate(nod->Send_prev,dtime);
@@ -446,8 +446,8 @@ void MBMInfoHandler::infoHandler()
         nod->Events_prev = nod->Events;
         nod->Overflow_prev = nod->Overflow;
         nod->Send_prev = nod->Send;
-        nod->ProcPerf.produced = nod->Events.produced-nod->Overflow.produced;
-        nod->ProcPerf.seen = nod->Events.seen-nod->Overflow.seen;
+        nod->ProcPerf.produced = nod->Events.produced+nod->Overflow.produced;
+        nod->ProcPerf.seen = nod->Events.seen+nod->Overflow.seen;
       }
       nod->ReadTime = (*n).time;
       nod->ReadTime *= 1000;
