@@ -4,6 +4,13 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2012-08-17 - Kurt Rinnert
+ - added PU only average occupancy histogram. This allows to display these
+   separately online and put different alarms on them. In fact the PU has to
+   be taken out of the overall sensor average histogram to make it work with 
+   the alarms in the online monitoring (online is running an older version as
+   of now). So we probably need another histogram with only VELO.
+
 !========================= VeloRecMonitors v2r20 2012-07-24 =========================
 ! 2012-07-20 - Eduardo Rodrigues
  - Added zoom histo for distribution of number of clusters
