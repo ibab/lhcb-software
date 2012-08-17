@@ -144,25 +144,25 @@ def makeTau2PhiMu(name):
 
     makePhi = CombineParticles(name+"makePhi")
     makePhi.DecayDescriptor =  "phi(1020) -> K+ K-"
-    makePhi.DaughtersCuts = {"K+": "(ISLONG) & (TRCHI2DOF < 4 ) & ( BPVIPCHI2 () >  9 ) "\
+    makePhi.DaughtersCuts = {"K+": "(ISLONG) & (TRCHI2DOF < 2 ) & ( BPVIPCHI2 () >  9 ) "\
                                  "& (PT>300*MeV) & (PIDK > 5)"}
     
     _kaons = DataOnDemand(Location='Phys/StdLooseKaons/Particles')
     
     makePhi.CombinationCut =  "(ADAMASS('phi(1020)')<10*MeV)"
-    makePhi.MotherCut = " (MIPCHI2DV(PRIMARY)> 25.)"
+    makePhi.MotherCut = " ( VFASPF(VCHI2) < 10 ) & (MIPCHI2DV(PRIMARY)> 25.)"
     
     SelPhi = Selection( name+"SelPhi",                       Algorithm= makePhi,
                         RequiredSelections=[_kaons] )
 
 
-    Tau2PhiMu.DaughtersCuts = { "mu+" : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 4  ) & ( BPVIPCHI2 () >  9 ) " }
+    Tau2PhiMu.DaughtersCuts = { "mu+" : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 2  ) & ( BPVIPCHI2 () >  9 ) " }
     Tau2PhiMu.CombinationCut = "(ADAMASS('tau+')<150*MeV)"
 
     Tau2PhiMu.MotherCut = """
-            ( VFASPF(VCHI2) < 15 ) &
-            ( (BPVLTIME ( 225 ) * c_light)   > 100 * micrometer ) &
-            ( BPVIPCHI2() < 225 )
+            ( VFASPF(VCHI2) < 10 ) &
+            ( (BPVLTIME () * c_light)   > 200 * micrometer ) &
+            ( BPVIPCHI2() < 100 )
             """ 
                              
     _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
@@ -182,14 +182,15 @@ def makeTau2eMuMu(name):
     from Configurables import OfflineVertexFitter
     Tau2eMuMu = CombineParticles("Comine"+name)
     Tau2eMuMu.DecayDescriptors = [" [ tau+ -> e+ mu+ mu- ]cc"," [ tau+ -> mu+ mu+ e- ]cc"]
-    Tau2eMuMu.DaughtersCuts = { "mu+" : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 4  ) & ( BPVIPCHI2 () >  9 ) " ,
-                                "e+" : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 4  ) & ( BPVIPCHI2 () >  9 ) " }
+    Tau2eMuMu.DaughtersCuts = { "mu+" : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 3  ) & ( BPVIPCHI2 () >  9 ) " ,
+                                "e+" : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 3  ) & ( BPVIPCHI2 () >  9 ) "\
+                                "& (PIDe > 2) " }
     Tau2eMuMu.CombinationCut = "(ADAMASS('tau+')<200*MeV)"
 
     Tau2eMuMu.MotherCut = """
             ( VFASPF(VCHI2) < 15 ) &
-            ( (BPVLTIME ( 225 ) * c_light)   > 100 * micrometer ) &
-            ( BPVIPCHI2() < 225 )
+            ( (BPVLTIME () * c_light)   > 100 * micrometer ) &
+            ( BPVIPCHI2() < 100 )
             """ 
                              
     _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
@@ -217,8 +218,8 @@ def makeB2eMu(name):
     Bs2eMu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     Bs2eMu.OfflineVertexFitter.useResonanceVertex = False
     #Bs2eMu.ReFitPVs = True
-    Bs2eMu.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 4 )",
-                             "e+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 4 )"}
+    Bs2eMu.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 3 )",
+                             "e+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 3 )"}
 
     Bs2eMu.CombinationCut = "(ADAMASS('B_s0')<1200*MeV)"\
                             "& (AMAXDOCA('')<0.3*mm)"
@@ -254,7 +255,7 @@ def makeB2ee(name):
     Bs2ee.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     Bs2ee.OfflineVertexFitter.useResonanceVertex = False
     #Bs2ee.ReFitPVs = True
-    Bs2ee.DaughtersCuts = { "e+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 4 )"}
+    Bs2ee.DaughtersCuts = { "e+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 3 )"}
 
     Bs2ee.CombinationCut = "(ADAMASS('B_s0')<1200*MeV)"\
                             "& (AMAXDOCA('')<0.3*mm)"
@@ -290,10 +291,10 @@ def makeB2heMu(name):
     Bs2heMu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     Bs2heMu.OfflineVertexFitter.useResonanceVertex = False
     #Bs2heMu.ReFitPVs = True
-    Bs2heMu.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)>25.)&(TRCHI2DOF<4)",
-                              "e+" : "(MIPCHI2DV(PRIMARY)>25.)&(TRCHI2DOF<4)",
-                              "pi+" : "(MIPCHI2DV(PRIMARY)>25.)&(TRCHI2DOF<4)",
-                              "K+" : "(MIPCHI2DV(PRIMARY)>25.)&(TRCHI2DOF<4)"}
+    Bs2heMu.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)>25.)&(TRCHI2DOF<3)",
+                              "e+" : "(MIPCHI2DV(PRIMARY)>25.)&(TRCHI2DOF<3)",
+                              "pi+" : "(MIPCHI2DV(PRIMARY)>25.)&(TRCHI2DOF<3)",
+                              "K+" : "(MIPCHI2DV(PRIMARY)>25.)&(TRCHI2DOF<3)"}
 
     Bs2heMu.CombinationCut = "(ADAMASS('B+')<600*MeV)"\
                             "& (AMAXDOCA('')<0.3*mm)"
@@ -330,10 +331,10 @@ def makeB2pMu(name):
     #Bs2pMu.VertexFitters.update( { "" : "OfflineVertexFitter"} )
     #Bs2pMu.OfflineVertexFitter.useResonanceVertex = False
     #Bs2pMu.ReFitPVs = True
-    Bs2pMu.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 4 )",
-                             "p+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 4 )"}
+    Bs2pMu.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 3 )",
+                             "p+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 3 )& (PIDp>5)"}
 
-    Bs2pMu.CombinationCut = "(ADAMASS('B_s0')<600*MeV)"\
+    Bs2pMu.CombinationCut = "(ADAMASS('B_s0')<300*MeV)"\
                             "& (AMAXDOCA('')<0.3*mm)"
     
     Bs2pMu.MotherCut = "(VFASPF(VCHI2/VDOF)<9) "\
@@ -399,7 +400,7 @@ def makeDetachedJPsi(name) :
     DetachedJPsi.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     DetachedJPsi.OfflineVertexFitter.useResonanceVertex = False
     DetachedJPsi.ReFitPVs = True
-    DetachedJPsi.DaughtersCuts = { "e+" : "(TRCHI2DOF < 4 ) "\
+    DetachedJPsi.DaughtersCuts = { "e+" : "(TRCHI2DOF < 3 ) "\
                                    "& (MIPCHI2DV(PRIMARY)> 25.) "\
                                    "& (PIDe > 2) "}
                                  
