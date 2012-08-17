@@ -108,6 +108,10 @@ LLParticlesFromRecVertices::LLParticlesFromRecVertices( const std::string& name,
                  , m_computeMatterVeto = false
                  , "Add InMatterVeto flag to the created particles" );
 
+  declareProperty("ApplyMatterVeto"
+                 , m_applyMatterVeto = false
+                 , "Reject candidates inside matter veto" );
+
   // output location for Velo protoparticles
   declareProperty("VeloProtoParticlesLocation"
                  , m_VeloProtoPLocation = "Hlt2/" + this->name() + "/VeloProtoP"
@@ -487,6 +491,7 @@ const LHCb::Particle* LLParticlesFromRecVertices::RecVertex2Particle( const LHCb
   if ( ( motherMomentum.M() > m_LLPMinMass )
     && ( ( fractTracksWithHitBeforeVertex =  1.*numDaugTracksWithHitsBefore/(m_selectedDaughters.size()+m_selectedVeloDaughters.size()) ) < m_LLPMaxFractTrWithUpstream )
     && ( maxDaugE/motherMomentum.E() < m_LLPMaxFractEFromOne )
+    && ( ! ( m_applyMatterVeto && m_materialVeto->isInMatter(rv->position()) ) )
     ) { // passes all cuts, make the composite
     if (m_debug) { debug() << "==> Constructing the particle to put on the TES" << endmsg; }
 

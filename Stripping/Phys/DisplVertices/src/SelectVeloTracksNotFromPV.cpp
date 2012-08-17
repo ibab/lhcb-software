@@ -38,14 +38,13 @@ SelectVeloTracksNotFromPV::SelectVeloTracksNotFromPV( const std::string& name , 
   declareProperty( "Inputs"
                  , m_TracksLocations
                  , "Input track locations" ) ;
-  m_TracksLocations.push_back("Hlt2/Track/Velo");
 
   declareProperty( "Output"
                  , m_WithIPTrackLocation = "Hlt2/VeloWithIP/Track"
                  , "Output track location" );
 
   declareProperty( "PVLocation"
-                 , m_PVLocation = "Hlt/Vertex/PV3D"
+                 , m_PVLocation = LHCb::RecVertexLocation::Primary
                  , "Primary Vertex location" );
 
   declareProperty( "RejectSplashEvents"

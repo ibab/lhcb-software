@@ -90,6 +90,7 @@ private:
 
 
   bool m_computeMatterVeto;               ///< Add InMatterVeto flag to the created particles
+  bool m_applyMatterVeto;                 ///< Reject recvertices inside material region
   const IMatterVeto* m_materialVeto;
 
   std::string m_chargedProtoLocation;
