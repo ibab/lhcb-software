@@ -91,18 +91,20 @@ def makeDefault(name) :
     Detached2mu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     Detached2mu.OfflineVertexFitter.useResonanceVertex = False
     Detached2mu.ReFitPVs = True
-    Detached2mu.DaughtersCuts = { "mu+" : "(TRCHI2DOF < 4 ) "\
+    Detached2mu.DaughtersCuts = { "mu+" : "(TRCHI2DOF < 2 ) "\
                                   " & (MIPCHI2DV(PRIMARY)> 100)"\
-                                  "& (PT > 0.7) "}
+                                  "& (PT > 700*MeV) "}
                                  
     Detached2mu.CombinationCut = " (AMAXDOCA('')<0.1*mm)"
     #"(ADAMASS('B_s0')<1000*MeV) "\
-    Detached2mu.MotherCut = "(VFASPF(VCHI2/VDOF)<15) "\
+    Detached2mu.MotherCut = "(VFASPF(VCHI2/VDOF)<10) "\
                             "& (M>1500)"\
                             "& (BPVDIRA > 0) "\
                             "& (BPVVDCHI2>625)"\
-                            "& (BPVVD>50)"
+                            "& (BPVVD>50)"\
+                            "& (PT>2000*MeV)"
 
+    
            
     
 
