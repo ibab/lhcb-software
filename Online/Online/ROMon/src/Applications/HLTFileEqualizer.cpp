@@ -321,18 +321,26 @@ void HLTFileEqualizer::Analyze()
     myNode *nod = (*nodeit).second;
     char Line[1024];
     long dtime = nod->ReadTime-nod->ReadTime_prev;
+    nod->ProcPerf.name = "Moore";
+    nod->ProcPerf.produced = nod->Events.produced-nod->Overflow.produced;
+    nod->ProcPerf.seen = nod->Events.seen-nod->Overflow.seen;
     nod->Events.calcRate(nod->Events_prev,dtime);
     nod->Overflow.calcRate(nod->Overflow_prev,dtime);
     nod->Send.calcRate(nod->Send_prev,dtime);
-    sprintf(Line,"%s %s/%d/%d/%0.4f/%0.4f,%s/%d/%d/%0.4f/%0.4f,%s/%d/%d/%0.4f/%0.4f|",nod->m_name.c_str(),
+    nod->ProcPerf.calcRate(nod->ProcPerf_prev,dtime);
+    sprintf(Line,"%s %s/%d/%d/%0.4f/%0.4f,%s/%d/%d/%0.4f/%0.4f,%s/%d/%d/%0.4f/%0.4f,%s/%d/%d/%0.4f/%0.4f|",
+        nod->m_name.c_str(),
         nod->Events.name.c_str(),nod->Events.produced,nod->Events.seen,nod->Events.p_rate,nod->Events.s_rate,
         nod->Overflow.name.c_str(),nod->Overflow.produced,nod->Overflow.seen,nod->Overflow.p_rate,nod->Overflow.s_rate,
-        nod->Send.name.c_str(),nod->Send.produced,nod->Send.seen,nod->Send.p_rate,nod->Send.s_rate);
+        nod->Send.name.c_str(),nod->Send.produced,nod->Send.seen,nod->Send.p_rate,nod->Send.s_rate,
+        nod->ProcPerf.name.c_str(),nod->ProcPerf.produced,nod->ProcPerf.seen,nod->ProcPerf.p_rate,nod->ProcPerf.s_rate
+        );
     m_servdatNodesBuffersEvents += Line;
     nod->ReadTime_prev = nod->ReadTime;
     nod->Events_prev = nod->Events;
     nod->Overflow_prev = nod->Overflow;
     nod->Send_prev = nod->Send;
+    nod->ProcPerf_prev = nod->ProcPerf;
   }
   m_servdatNodesBuffersEvents += '\0';
 
@@ -438,6 +446,8 @@ void MBMInfoHandler::infoHandler()
         nod->Events_prev = nod->Events;
         nod->Overflow_prev = nod->Overflow;
         nod->Send_prev = nod->Send;
+        nod->ProcPerf.produced = nod->Events.produced-nod->Overflow.produced;
+        nod->ProcPerf.seen = nod->Events.seen-nod->Overflow.seen;
       }
       nod->ReadTime = (*n).time;
       nod->ReadTime *= 1000;

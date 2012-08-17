@@ -73,11 +73,14 @@ class myNode
     MBMStat Events;
     MBMStat Overflow;
     MBMStat Send;
+    MBMStat ProcPerf;
     MBMStat Events_prev;
     MBMStat Overflow_prev;
     MBMStat Send_prev;
+    MBMStat ProcPerf_prev;
     long ReadTime;
     long ReadTime_prev;
+    float m_nodePerformance;
     myNode(std::string n)
     {
       m_name = n;
@@ -89,6 +92,7 @@ class myNode
       m_excl = false;
       ReadTime_prev = 0;
       ReadTime = 0;
+      m_nodePerformance = 0.0;
     };
 };
 class SFarm
