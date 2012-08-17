@@ -452,6 +452,8 @@ void ROFarmMonitor::update( )   {
           if ( defNodes.end() != std::find( defNodes.begin(), defNodes.end(), (*n).name ) ) isDef   = true;
           if ( monNodes.end() != std::find( monNodes.begin(), monNodes.end(), (*n).name ) ) isMoni  = true;
           if ( recNodes.end() != std::find( recNodes.begin(), recNodes.end(), (*n).name ) ) isReco  = true;
+          if ( isDef ) isHlt = false;
+          
           if ( !isHlt && !isCalib && !isDef && !isMoni && ! isReco ) continue;
           if ( 1 < m_print ) std::cout << "Part " << (*itP)->name << " node " << (*n).name << std::endl;
 

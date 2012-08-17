@@ -4,6 +4,10 @@
 ! Purpose     : Monitor the tasks in the online farm
 !-----------------------------------------------------------------------------
 
+! 2012-08-17 - Olivier Callot
+ - Fix a problem with the new deferred handling: A node in Deferred is removed 
+   from the HLT list.
+
 !============================== 2012-06-22 v2r10 ==============================
 ! 2012-06-22 - Olivier Callot
  - Adaptation to the deferred processing. Counters of deferred rate, and 
