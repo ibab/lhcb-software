@@ -21,7 +21,7 @@ from Configurables import LoKi__VoidFilter
 #from StandardParticles import StdNoPIDsPions, StdNoPIDsKaons, StdNoPIDsProtons
 from StandardParticles import StdLooseResolvedPi0,StdLooseMergedPi0
 from StandardParticles import StdAllNoPIDsPions, StdAllNoPIDsKaons, \
-     StdAllNoPIDsProtons
+     StdAllNoPIDsProtons, StdNoPIDsUpPions
 from Beauty2Charm_DBuilder import *
 from Beauty2Charm_HHBuilder import *
 from Beauty2Charm_HHHBuilder import *
@@ -145,6 +145,7 @@ class Beauty2CharmConf(LineBuilder):
         LineBuilder.__init__(self, moduleName, config)
 
         # pre-filter inputs
+        uppions = filterInputs('PiUP',[StdNoPIDsUpPions],config['ALL'])
         pions = filterInputs('Pi',[StdAllNoPIDsPions],config['ALL'])
         kaons = filterInputs('K',[StdAllNoPIDsKaons],config['ALL'])
         protons = filterInputs('P',[StdAllNoPIDsProtons],config['ALL'])
@@ -170,7 +171,7 @@ class Beauty2CharmConf(LineBuilder):
         topoProtons = topoInputs('P',[protons])
         
         # make D->X, etc. inputs
-        d = DBuilder(pions,ks,pi0,config['D2X'],config['PID'])
+        d = DBuilder(pions,ks,pi0,uppions,config['D2X'],config['PID'])
         dst = DstarBuilder(d,pions,pi0,config['Dstar'],config['PID'])
 
         # X -> hh

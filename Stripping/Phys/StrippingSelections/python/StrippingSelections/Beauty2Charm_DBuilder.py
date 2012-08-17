@@ -43,10 +43,11 @@ def subPIDSels(decays,prefix,suffix,min,max,inputs):
 class DBuilder(object):
     '''Produces all D mesons for the Beauty2Charm module.'''
 
-    def __init__(self,pions,ks,pi0,config,config_pid):
+    def __init__(self,pions,ks,pi0,uppions,config,config_pid):
         self.pions = pions
         self.ks    = ks
         self.pi0   = pi0
+        self.uppions = uppions
         self.config = config
         self.hh = self._makeD2hh()
         self.hhh = self._makeD2hhh()
@@ -59,6 +60,19 @@ class DBuilder(object):
         self.pi0hh_resolved = self._makeD2Pi0hh("Resolved") 
         self.pi0hhh_merged = self._makeD2Pi0hhh("Merged")
         self.pi0hhh_resolved = self._makeD2Pi0hhh("Resolved")
+        # UP tracks in D
+        self.hh_up = self._makeD2hh(True)
+        self.hhh_up = self._makeD2hhh(True)
+        self.hhhh_up = self._makeD2hhhh(True)
+        self.ksh_ll_up  = self._makeD2KSh("LL",True)
+        self.ksh_dd_up  = self._makeD2KSh("DD",True)
+        self.kshh_ll_up  = self._makeD2KShh("LL",True)
+        self.kshh_dd_up  = self._makeD2KShh("DD",True)
+        self.pi0hh_merged_up = self._makeD2Pi0hh("Merged",True)
+        self.pi0hh_resolved_up = self._makeD2Pi0hh("Resolved",True)
+        self.pi0hhh_merged_up = self._makeD2Pi0hhh("Merged",True)
+        self.pi0hhh_resolved_up = self._makeD2Pi0hhh("Resolved",True)
+                                                                                 
         # PID filtered selections
         self.hh_pid = [filterPID('D2HHPID',self.hh,config_pid)]
         self.hhh_pid = [filterPID('D2HHHPID',self.hhh,config_pid)]
@@ -99,8 +113,12 @@ class DBuilder(object):
         self.pi0hh_resolved_ws = self._makeD2Pi0hhWS('Resolved')
         self.hhhh_ws = self._makeD2hhhhWS()
 
-    def _makeD2X(self,name,decays,wm,config,extrainputs=[]):
+    def _makeD2X(self,name,decays,wm,up,config,extrainputs=[]):
         ''' Makes all D -> X selections.'''
+        if up:
+            wm += '& (ANUM(ISUP)==1)'
+            extrainputs += [self.uppions]
+            name += 'UP' 
         comboCuts = [LoKiCuts(['ASUMPT'],config).code(),wm,hasTopoChild()]
         comboCuts.append(LoKiCuts(['AMAXDOCA'],config).code())
         comboCuts = LoKiCuts.combine(comboCuts)
@@ -129,60 +147,85 @@ class DBuilder(object):
         return ('%s*%s'%(d_min,units),'%s*%s'%(d_max,units),
                 '%s*%s'%(ds_min,units),'%s*%s'%(ds_max,units))
 
-    def _makeD2hh(self):
+    def _makeD2hh(self,up=False):
         '''Makes D->hh'''
         min,max  = self._massWindow('D0')
         decays = [['pi+','pi-'],['pi+','K-'],['K+','pi-'],['K+','K-']]
         wm = awmFunctor(decays,min,max)
-        protoD2hh = self._makeD2X('D2HH',['D0 -> pi+ pi-'],wm,self.config)
-        return [subPIDSels(decays,'D2HH','',min,max,[protoD2hh])]
+        protoD2hh = self._makeD2X('D2HH',['D0 -> pi+ pi-'],wm,up,self.config)
+        name = 'D2HH'
+        if up: name += 'UP'
+        return [subPIDSels(decays,name,'',min,max,[protoD2hh])]
 
-    def _makeD2hhWS(self):
+    def _makeD2hhWS(self,up=False):
         '''Makes D->hh WS'''
+        tag = ''
+        if up: tag = 'UP'
         min,max  = self._massWindow('D0')
         decays = [['pi+','pi+'],['pi+','K+'],['K+','pi+'],['K+','K+']]
         wm = awmFunctor(decays,min,max)
-        psel = self._makeD2X('D2HHWSPlus',['D0 -> pi+ pi+'],wm,self.config)
-        psel = subPIDSels(decays,'D2HHWSPlus','',min,max,[psel])
-        msel = self._makeD2X('D2HHWSMinus',['D0 -> pi- pi-'],wm,self.config)
-        msel = subPIDSels(getCCs(decays),'D2HHWSMinus','',min,max,[msel])
-        return [MergedSelection('D2HHWSBeauty2Charm',
+        psel = self._makeD2X('D2HHWSPlus',['D0 -> pi+ pi+'],wm,up,self.config)
+        psel = subPIDSels(decays,'D2HHWSPlus'+tag,'',min,max,[psel])
+        msel = self._makeD2X('D2HHWSMinus',['D0 -> pi- pi-'],wm,up,self.config)
+        msel = subPIDSels(getCCs(decays),'D2HHWSMinus'+tag,'',min,max,[msel])
+        return [MergedSelection('D2HHWSBeauty2Charm'+tag,
                                 RequiredSelections=[psel,msel])]
 
-    def _makeD2hhh(self):
+    def _makeD2hhh(self,up=False):
         '''Makes D->hhh'''
+        tag = ''
+        if up: tag = 'UP'        
         min,max = self._massWindow('D+')
         decays = [['pi+','pi+','pi-'],['pi+','pi+','K-'],
                   ['K+','pi+','pi-'],['K+','pi+','K-'],
                   ['pi+','K+','pi-'],['pi+','K+','K-'],
                   ['K+','K+','pi-']]
         wm = awmFunctor(decays,min,max)
-        protoDp2hhh = self._makeD2X('D+2HHH',['D+ -> pi+ pi+ pi-'],wm,
+        protoDp2hhh = self._makeD2X('D+2HHH',['D+ -> pi+ pi+ pi-'],wm,up,
                                     self.config)
-        psels = subPIDSels(decays,'D+2HHH','',min,max,[protoDp2hhh])
-        protoDm2hhh = self._makeD2X('D-2HHH',['D- -> pi- pi- pi+'],wm,
+        psels = subPIDSels(decays,'D+2HHH'+tag,'',min,max,[protoDp2hhh])
+        protoDm2hhh = self._makeD2X('D-2HHH',['D- -> pi- pi- pi+'],wm,up,
                                     self.config)
-        msels = subPIDSels(getCCs(decays),'D-2HHH','',min,max,[protoDm2hhh])
-        return [MergedSelection('D2HHHBeauty2Charm',
+        msels = subPIDSels(getCCs(decays),'D-2HHH'+tag,'',min,max,[protoDm2hhh])
+        return [MergedSelection('D2HHHBeauty2Charm'+tag,RequiredSelections=[psels,msels])]
+
+    def _makeD2hhhUP(self):
+        '''Makes D->hhh with 1 UP pion'''
+        min,max = self._massWindow('D+')
+        decays = [['pi+','pi+','pi-'],['pi+','pi+','K-'],
+                  ['K+','pi+','pi-'],['K+','pi+','K-'],
+                  ['pi+','K+','pi-'],['pi+','K+','K-'],
+                  ['K+','K+','pi-']]
+        wm = awmFunctor(decays,min,max)
+        wm = wm + '& (ANUM(ISUP)==1)'
+        protoDp2hhh = self._makeD2X('D+2HHHUP',['D+ -> pi+ pi+ pi-'],wm,
+                                    self.config,[self.uppions])
+        psels = subPIDSels(decays,'D+2HHHUP','',min,max,[protoDp2hhh])
+        protoDm2hhh = self._makeD2X('D-2HHHUP',['D- -> pi- pi- pi+'],wm,
+                                    self.config,[self.uppions])
+        msels = subPIDSels(getCCs(decays),'D-2HHHUP','',min,max,[protoDm2hhh])
+        return [MergedSelection('D2HHHUPBeauty2Charm',
                                 RequiredSelections=[psels,msels])]
-        
-    def _makeD2KSh(self,which):
+                                                                                
+    def _makeD2KSh(self,which,up=False):
         '''Makes D->Ksh'''
+        tag = ''
+        if up: tag = 'UP'        
         min,max  = self._massWindow('D+')
         decays = [['KS0','pi+'],['KS0','K+']]
         wm = awmFunctor(decays,min,max)
         config = deepcopy(self.config)    
         config.pop('AMAXDOCA_MAX')
         protoDp2Ksh = self._makeD2X('D+2KsH_'+which,['D+ -> KS0 pi+'],
-                                    wm,config,self.ks[which])
-        psels = subPIDSels(decays,'D+2KsH',which,min,max,[protoDp2Ksh])
+                                    wm,up,config,self.ks[which])
+        psels = subPIDSels(decays,'D+2KsH'+tag,which,min,max,[protoDp2Ksh])
         protoDm2Ksh = self._makeD2X('D-2KsH_'+which,['D- -> KS0 pi-'],
-                                    wm,config,self.ks[which])
-        msels = subPIDSels(getCCs(decays),'D-2KsH',which,min,max,[protoDm2Ksh])
-        return [MergedSelection('D2KsHBeauty2Charm_%s'%which,
+                                    wm,up,config,self.ks[which])
+        msels = subPIDSels(getCCs(decays),'D-2KsH'+tag,which,min,max,[protoDm2Ksh])
+        return [MergedSelection('D2KsHBeauty2Charm_%s%s'%(which,tag),
                                 RequiredSelections=[psels,msels])]
    
-    def _makeD2KShh(self,which):
+    def _makeD2KShh(self,which,up=False):
         '''Makes D->Kshh'''
         min,max = self._massWindow('D0')
         decays = [['KS0','pi+','pi-'],['KS0','pi+','K-'],
@@ -192,11 +235,15 @@ class DBuilder(object):
         config.pop('AMAXDOCA_MAX')
         config['ADOCA(2,3)_MAX'] = self.config['AMAXDOCA_MAX']
         protoD2Kshh = self._makeD2X('D2KSHH'+which,['D0 -> KS0 pi+ pi-'],
-                                    wm,config,self.ks[which])
-        return [subPIDSels(decays,'D2KsHH',which,min,max,[protoD2Kshh])]
+                                    wm,up,config,self.ks[which])
+        name = 'D2KsHH'
+        if up: name += 'UP'
+        return [subPIDSels(decays,name,which,min,max,[protoD2Kshh])]
 
-    def _makeD2KShhWS(self,which):
+    def _makeD2KShhWS(self,which,up=False):
         '''Makes D->Kshh WS'''
+        tag = ''
+        if up: tag = 'UP'
         min,max = self._massWindow('D0')
         decays = [['KS0','pi+','pi+'],['KS0','pi+','K+'],
                   ['KS0','K+','pi+'],['KS0','K+','K+']]
@@ -205,17 +252,19 @@ class DBuilder(object):
         config.pop('AMAXDOCA_MAX')
         config['ADOCA(2,3)_MAX'] = self.config['AMAXDOCA_MAX']
         protoPlus = self._makeD2X('D2KSHHWSPlus'+which,['D0 -> KS0 pi+ pi+'],
-                                  wm,config,self.ks[which])
-        psels = subPIDSels(decays,'D2KSHHWSPlus',which,min,max,[protoPlus])
+                                  wm,up,config,self.ks[which])
+        psels = subPIDSels(decays,'D2KSHHWSPlus'+tag,which,min,max,[protoPlus])
         protoMinus = self._makeD2X('D2KSHHWSMinus'+which,['D0 -> KS0 pi- pi-'],
-                                   wm,config,self.ks[which])
-        msels = subPIDSels(getCCs(decays),'D2KSHHWSMinus',which,min,max,
+                                   wm,up,config,self.ks[which])
+        msels = subPIDSels(getCCs(decays),'D2KSHHWSMinus'+tag,which,min,max,
                            [protoMinus])
-        return [MergedSelection('D2KsHHWSBeauty2Charm_%s'%which,
+        return [MergedSelection('D2KsHHWSBeauty2Charm_%s%s'%(which,tag),
                                 RequiredSelections=[psels,msels])]
   
-    def _makeD2Pi0hhh(self,which):
-        '''Makes D->Pi0hhh'''        
+    def _makeD2Pi0hhh(self,which,up=False):
+        '''Makes D->Pi0hhh'''
+        tag = ''
+        if up: tag = 'UP'
         min,max = self._massWindow('D+')
         decays = [['pi0','pi+','pi+','pi-'],['pi0','pi+','pi+','K-'],
                   ['pi0','K+','pi+','pi-'],['pi0','K+','pi+','K-'],
@@ -229,17 +278,17 @@ class DBuilder(object):
         config['ADOCA(3,4)_MAX'] = self.config['AMAXDOCA_MAX']
         protoDp2pi0hhh = self._makeD2X('D+2Pi0HHH_'+which,
                                        ['D+ -> pi0 pi+ pi+ pi-'],
-                                       wm,config,self.pi0[which])
-        psels = subPIDSels(decays,'D+2Pi0HHH',which,min,max,[protoDp2pi0hhh])
+                                       wm,up,config,self.pi0[which])
+        psels = subPIDSels(decays,'D+2Pi0HHH'+tag,which,min,max,[protoDp2pi0hhh])
         protoDm2pi0hhh = self._makeD2X('D-2Pi0HHH_'+which,
                                        ['D- -> pi0 pi- pi- pi+'],
-                                       wm,config,self.pi0[which])
-        msels = subPIDSels(getCCs(decays),'D-2Pi0HHH',which,min,max,
+                                       wm,up,config,self.pi0[which])
+        msels = subPIDSels(getCCs(decays),'D-2Pi0HHH'+tag,which,min,max,
                           [protoDm2pi0hhh])
-        return [MergedSelection('D2Pi0HHHBeauty2Charm_%s'%which,
+        return [MergedSelection('D2Pi0HHHBeauty2Charm_%s%s'%(which,tag),
                                 RequiredSelections=[psels,msels])]
     
-    def _makeD2Pi0hh(self,which):
+    def _makeD2Pi0hh(self,which,up=False):
         '''Makes D->Pi0hh'''
         min,max = self._massWindow('D0')
         decays = [['pi0','pi+','pi-'],['pi0','pi+','K-'],
@@ -249,11 +298,15 @@ class DBuilder(object):
         config.pop('AMAXDOCA_MAX')
         config['ADOCA(2,3)_MAX'] = self.config['AMAXDOCA_MAX']
         protoD2pi0hh = self._makeD2X('D2Pi0HH_'+which,['D0 -> pi0 pi+ pi-'],
-                                     wm,config,self.pi0[which])
-        return [subPIDSels(decays,'D2Pi0HH',which,min,max,[protoD2pi0hh])]
+                                     wm,up,config,self.pi0[which])
+        name = 'D2Pi0HH'
+        if up: name += 'UP'
+        return [subPIDSels(decays,name,which,min,max,[protoD2pi0hh])]
 
-    def _makeD2Pi0hhWS(self,which):
+    def _makeD2Pi0hhWS(self,which,up=False):
         '''Makes D->Pi0hh WS'''
+        tag = ''
+        if up: tag = 'UP'
         min,max = self._massWindow('D0')
         decays = [['pi0','pi+','pi+'],['pi0','pi+','K+'],
                   ['pi0','K+','pi+'],['pi0','K+','K+']]
@@ -262,15 +315,15 @@ class DBuilder(object):
         config.pop('AMAXDOCA_MAX')
         config['ADOCA(2,3)_MAX'] = self.config['AMAXDOCA_MAX']
         psel = self._makeD2X('D2Pi0HHWSPlus'+which,['D0 -> pi0 pi+ pi+'],wm,
-                             config,self.pi0[which])
-        psel = subPIDSels(decays,'D2Pi0HHWSPlus',which,min,max,[psel])
+                             up,config,self.pi0[which])
+        psel = subPIDSels(decays,'D2Pi0HHWSPlus'+tag,which,min,max,[psel])
         msel = self._makeD2X('D2Pi0HHWSMinus'+which,['D0 -> pi0 pi- pi-'],wm,
-                             config,self.pi0[which])
-        msel = subPIDSels(getCCs(decays),'D2Pi0HHWSMinus',which,min,max,[msel])
-        return [MergedSelection('D2Pi0HHWSBeauty2Charm'+which,
+                             up,config,self.pi0[which])
+        msel = subPIDSels(getCCs(decays),'D2Pi0HHWSMinus'+tag,which,min,max,[msel])
+        return [MergedSelection('D2Pi0HHWSBeauty2Charm'+which+tag,
                                 RequiredSelections=[psel,msel])]
     
-    def _makeD2hhhh(self):
+    def _makeD2hhhh(self,up=False):
         '''Makes D->hhhh'''
         min,max = self._massWindow('D0')
         decays = [['pi+','pi+','pi-','pi-'],
@@ -280,11 +333,15 @@ class DBuilder(object):
                   ['pi+','K+','K-','pi-'],['pi+','K+','pi-','K-']]
         wm = awmFunctor(decays,min,max)
         protoD2hhhh = self._makeD2X('D2HHHH',['D0 -> pi+ pi+ pi- pi-'],wm,
-                                    self.config)
-        return [subPIDSels(decays,'D2HHHH','',min,max,[protoD2hhhh])]
+                                    up,self.config)
+        name = 'D2HHHH'
+        if up: name += 'UP'
+        return [subPIDSels(decays,name,'',min,max,[protoD2hhhh])]
 
-    def _makeD2hhhhWS(self):
+    def _makeD2hhhhWS(self,up=False):
         '''Makes D->hhhh WS'''
+        tag = ''
+        if up: tag = 'UP'
         min,max = self._massWindow('D0')
         decays = [['pi+','pi+','pi+','pi+'],
                   ['pi+','pi+','K+','pi+'],['pi+','pi+','pi+','K+'],
@@ -292,13 +349,13 @@ class DBuilder(object):
                   ['K+','pi+','K+','pi+'],['K+','pi+','pi+','K+'],
                   ['pi+','K+','K+','pi+'],['pi+','K+','pi+','K+']]
         wm = awmFunctor(decays,min,max)
-        psel = self._makeD2X('D2HHHHWSPlus',['D0 -> pi+ pi+ pi+ pi+'],wm,
+        psel = self._makeD2X('D2HHHHWSPlus',['D0 -> pi+ pi+ pi+ pi+'],wm,up,
                              self.config)
-        psel = subPIDSels(decays,'D2HHHHWSPlus','',min,max,[psel])
-        msel = self._makeD2X('D2HHHHWSMinus',['D0 -> pi- pi- pi- pi-'],wm,
+        psel = subPIDSels(decays,'D2HHHHWSPlus'+tag,'',min,max,[psel])
+        msel = self._makeD2X('D2HHHHWSMinus',['D0 -> pi- pi- pi- pi-'],wm,up,
                              self.config)
-        msel = subPIDSels(getCCs(decays),'D2HHHHWSMinus','',min,max,[msel])
-        return [MergedSelection('D2HHHHWSBeauty2Charm',
+        msel = subPIDSels(getCCs(decays),'D2HHHHWSMinus'+tag,'',min,max,[msel])
+        return [MergedSelection('D2HHHHWSBeauty2Charm'+tag,
                                 RequiredSelections=[psel,msel])]
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#

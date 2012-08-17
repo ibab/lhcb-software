@@ -132,4 +132,47 @@ def makeB2XSels(decays,xtag,inputs,config,useIP=True,resVert=True):
         sels.append(sel)
     return sels
 
+def makeB2DstarX(sel,uppions,config):
+    # change B to something that doesn't fly
+    sub = SubstitutePID('SubPID'+sel.name(),
+                        Code="DECTREE('Beauty -> Charm ...')")
+    sub.MaxChi2PerDoF = -666
+    sub.Substitutions = {'Beauty -> Charm ...' : 'J/psi(1S)'}
+    subsel = Selection(sel.name()+'Sel',Algorithm=sub,
+                       RequiredSelections=[sel])
+    filter = "INTREE(ID=='J/psi(1S)')"
+    subsel = filterSelection(name,filter,[subsel])
+    # Delta M cut on D* (preambulo is below)
+    dmcut = '((ISD1 & ((MD1PI-MD1) < 180)) | (ISD2 & ((MD2PI-MD2) < 180)))'
+    # add UP track
+    combConfig = {'AMAXDOCA_MAX' : '0.5*mm'}
+    comboCuts = [LoKiCuts(['AMAXDOCA'],combConfig).code(),dmcut] 
+    comboCuts = LoKiCuts.combine(comboCuts)
+    momCuts = LoKiCuts(['VCHI2DOF','BPVVDCHI2','BPVDIRA'],config).code()
+    did = "((ABSID=='D+')|(ABSID=='D0'))"
+    preambulo = ['PXPI = ACHILD(PX,2)',
+                 'PYPI = ACHILD(PY,2)',
+                 'PZPI = ACHILD(PZ,2)',
+                 'EPI  = ACHILD(E,2)',
+                 'ISD1 = ACHILD(CHILD(%s,1),1)' % did,
+                 'PXD1 = ACHILD(CHILD(PX,1),1)',
+                 'PYD1 = ACHILD(CHILD(PY,1),1)',
+                 'PZD1 = ACHILD(CHILD(PZ,1),1)',
+                 'ED1  = ACHILD(CHILD(E,1),1)',
+                 'MD1  = ACHILD(CHILD(M,1),1)',
+                 'MD1PI = sqrt((EPI+ED1)**2 - (PXPI+PXD1)**2 - (PYPI+PYD1)**2 - (PZPI+PZD1)**2)',
+                 'ISD2 = ACHILD(CHILD(%s,2),1)' % did,
+                 'PXD2 = ACHILD(CHILD(PX,2),1)',
+                 'PYD2 = ACHILD(CHILD(PY,2),1)',
+                 'PZD2 = ACHILD(CHILD(PZ,2),1)',
+                 'ED2  = ACHILD(CHILD(E,2),1)',
+                 'MD2  = ACHILD(CHILD(M,2),1)',
+                 'MD2PI = sqrt((EPI+ED2)**2 - (PXPI+PXD2)**2 - (PYPI+PYD2)**2 - (PZPI+PZD2)**2)',
+                 ]                 
+    cp = CombineParticles(CombinationCut=comboCuts,MotherCut=momCuts,
+                          Preambulo=preambulo,
+                          DecayDescriptor='[B+ -> J/psi(1S) pi+]cc')
+    return Selection('ProtoDstarUP'+sel.name(),Algorithm=cp,
+                     RequiredSelections=uppions+[subsel])
+                                                 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
