@@ -17,7 +17,6 @@ confdict_LowMult = {
     'LowMultPrescale'           : 1.0
     , 'LowMultWSPrescale'       : 0.1
     , 'LowMultHHIncPrescale'    : 0.1
-    , 'LowMultPrescaleHalf'     : 0.5
     , 'LowMultPrescale_ps'      : 0.005
     , 'LowMultNoFilterPrescale' : 0.1
     , 'LowMultPostscale'        : 1.0
@@ -34,30 +33,26 @@ confdict_LowMult = {
     , 'D2KPi_ADAMASSmax'    : 80.0 * MeV
     , 'D2KPi_ADOCAmax'      : 0.5 * mm
     , 'D2KPi_APmin'         : 10000.0 * MeV
-    , 'D2KPi_SSumPTmin'     : 200.0 * MeV
     , 'D2KPi_VtxChi2DoFmax' : 15.0
     # D+- -> KPiPi
     , 'D2KPiPi_APTmin'        : 0.0 * MeV
     , 'D2KPiPi_ADAMASSmax'    : 80.0 * MeV
     , 'D2KPiPi_ADOCAmax'      : 0.5 * mm
     , 'D2KPiPi_APmin'         : 10000.0 * MeV
-    , 'D2KPiPi_SSumPTmin'     : 300.0 * MeV
     , 'D2KPiPi_VtxChi2DoFmax' : 15.0
     # D0 -> K3Pi
     , 'D2K3Pi_APTmin'        : 0.0 * MeV
     , 'D2K3Pi_ADAMASSmax'    : 80.0 * MeV
     , 'D2K3Pi_ADOCAmax'      : 0.7 * mm
     , 'D2K3Pi_APmin'         : 10000.0 * MeV
-    , 'D2K3Pi_SSumPTmin'     : 400.0 * MeV
     , 'D2K3Pi_VtxChi2DoFmax' : 15.0
     # 'ChiC' -> HH (H = K, Pi)
     , 'ChiC2HH_APTmin'        : 0.0 * MeV
     , 'ChiC2HH_APTmax'        : 5000.0 * MeV
-    , 'ChiC2HH_AMmin'         : 3300.0 * MeV
-    , 'ChiC2HH_AMmax'         : 3600.0 * MeV
+    , 'ChiC2HH_AMmin'         : 2850.0 * MeV
+    , 'ChiC2HH_AMmax'         : 4500.0 * MeV
     , 'ChiC2HH_ADOCAmax'      : 0.5 * mm
     , 'ChiC2HH_APmin'         : 10000.0 * MeV
-    , 'ChiC2HH_SSumPTmin'     : 200.0 * MeV
     , 'ChiC2HH_VtxChi2DoFmax' : 15.0
     # 'ChiC' -> PP
     , 'ChiC2PP_APTmin'        : 0.0 * MeV
@@ -66,17 +61,14 @@ confdict_LowMult = {
     , 'ChiC2PP_AMmax'         : 3650.0 * MeV
     , 'ChiC2PP_ADOCAmax'      : 0.5 * mm
     , 'ChiC2PP_APmin'         : 10000.0 * MeV
-    , 'ChiC2PP_SSumPTmin'     : 200.0 * MeV
     , 'ChiC2PP_VtxChi2DoFmax' : 15.0
     # 'ChiC' -> HHHH (H = K, Pi)
     , 'ChiC2HHHH_APTmin'        : 0.0 * MeV
     , 'ChiC2HHHH_APTmax'        : 5000.0 * MeV
     , 'ChiC2HHHH_AMmin'         : 2850.0 * MeV
-    , 'ChiC2HHHH_AMmid'         : 3650.0 * MeV
     , 'ChiC2HHHH_AMmax'         : 4500.0 * MeV
     , 'ChiC2HHHH_ADOCAmax'      : 0.7 * mm
     , 'ChiC2HHHH_APmin'         : 10000.0 * MeV
-    , 'ChiC2HHHH_SSumPTmin'     : 400.0 * MeV
     , 'ChiC2HHHH_VtxChi2DoFmax' : 15.0
     }
 
@@ -87,7 +79,6 @@ class LowMultConf(LineBuilder) :
     __configuration_keys__ = ('LowMultPrescale'
                               , 'LowMultWSPrescale'
                               , 'LowMultHHIncPrescale'
-                              , 'LowMultPrescaleHalf'
                               , 'LowMultPrescale_ps'
                               , 'LowMultNoFilterPrescale'
                               , 'LowMultPostscale'
@@ -104,21 +95,18 @@ class LowMultConf(LineBuilder) :
                               , 'D2KPi_ADAMASSmax'
                               , 'D2KPi_ADOCAmax'
                               , 'D2KPi_APmin'
-                              , 'D2KPi_SSumPTmin'
                               , 'D2KPi_VtxChi2DoFmax'
                               # D+- -> KPiPi
                               , 'D2KPiPi_APTmin'
                               , 'D2KPiPi_ADAMASSmax'
                               , 'D2KPiPi_ADOCAmax'
                               , 'D2KPiPi_APmin'
-                              , 'D2KPiPi_SSumPTmin'
                               , 'D2KPiPi_VtxChi2DoFmax'
                               # D0 -> K3Pi
                               , 'D2K3Pi_APTmin'
                               , 'D2K3Pi_ADAMASSmax'
                               , 'D2K3Pi_ADOCAmax'
                               , 'D2K3Pi_APmin'
-                              , 'D2K3Pi_SSumPTmin'
                               , 'D2K3Pi_VtxChi2DoFmax'
                               # 'ChiC' -> HH (H = K, Pi)
                               , 'ChiC2HH_APTmin'
@@ -127,7 +115,6 @@ class LowMultConf(LineBuilder) :
                               , 'ChiC2HH_AMmax'
                               , 'ChiC2HH_ADOCAmax'
                               , 'ChiC2HH_APmin'
-                              , 'ChiC2HH_SSumPTmin'
                               , 'ChiC2HH_VtxChi2DoFmax'
                               # 'ChiC' -> PP
                               , 'ChiC2PP_APTmin'
@@ -136,17 +123,14 @@ class LowMultConf(LineBuilder) :
                               , 'ChiC2PP_AMmax'
                               , 'ChiC2PP_ADOCAmax'
                               , 'ChiC2PP_APmin'
-                              , 'ChiC2PP_SSumPTmin'
                               , 'ChiC2PP_VtxChi2DoFmax'
                               # 'ChiC' -> HHHH
                               , 'ChiC2HHHH_APTmin'
                               , 'ChiC2HHHH_APTmax'
                               , 'ChiC2HHHH_AMmin'
-                              , 'ChiC2HHHH_AMmid'
                               , 'ChiC2HHHH_AMmax'
                               , 'ChiC2HHHH_ADOCAmax'
                               , 'ChiC2HHHH_APmin'
-                              , 'ChiC2HHHH_SSumPTmin'
                               , 'ChiC2HHHH_VtxChi2DoFmax'
                               )
 
@@ -157,7 +141,9 @@ class LowMultConf(LineBuilder) :
 
         #MUON
 
-        ExclusiveMuonGEC = {'Code' : "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) > 0) & (recSummaryTrack( LHCb.RecSummary.nBackTracks, TrBACKWARD)<1) & (recSummary(LHCb.RecSummary.nTracks , 'Rec/Track/Best') <  6)",
+        ExclusiveMuonGEC = {'Code' : "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) > 0) & " \
+                            "(recSummaryTrack(LHCb.RecSummary.nBackTracks, TrBACKWARD) < 1) & " \
+                            "(recSummary(LHCb.RecSummary.nTracks, 'Rec/Track/Best') < 6)",
                             'Preambulo' : ["from LoKiTracks.decorators import *"]}
        
         self.LowMultMuon_line = StrippingLine(self._myname+"MuonLine",
@@ -179,8 +165,9 @@ class LowMultConf(LineBuilder) :
         
         self.registerLine(self.LowMultMuon_lineps)
         
-        ExclusiveDiMuonGEC = {'Code' : "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) > 0) & (recSummaryTrack( LHCb.RecSummary.nBackTracks, TrBACKWARD)<1)",
-                            'Preambulo' : ["from LoKiTracks.decorators import *"]}
+        ExclusiveDiMuonGEC = {'Code' : "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) > 0) & " \
+                              "(recSummaryTrack(LHCb.RecSummary.nBackTracks, TrBACKWARD) < 1)",
+                              'Preambulo' : ["from LoKiTracks.decorators import *"]}
 
         self.LowMultPP2PPMuMu_line = StrippingLine(self._myname+"PP2PPMuMuLine",
                                                    prescale = config['LowMultPrescale'],
@@ -203,7 +190,8 @@ class LowMultConf(LineBuilder) :
 
         #ELECTRON
 
-        ExclusiveElectronGEC = {'Code' : "(recSummaryTrack( LHCb.RecSummary.nBackTracks, TrBACKWARD)<1) &   ( recSummary(LHCb.RecSummary.nTracks , 'Rec/Track/Best'  ) <  6 ) ",
+        ExclusiveElectronGEC = {'Code' : "(recSummaryTrack(LHCb.RecSummary.nBackTracks, TrBACKWARD) < 1) & " \
+                                "(recSummary(LHCb.RecSummary.nTracks, 'Rec/Track/Best') < 6)",
                                 'Preambulo' : ["from LoKiTracks.decorators import *"]}                               
          
         self.LowMultElectron_line = StrippingLine(self._myname+"ElectronLine",
@@ -237,7 +225,9 @@ class LowMultConf(LineBuilder) :
         
         #HADRON
 
-        ExclusiveHadronGEC = {'Code' : "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) > 1) & (recSummaryTrack( LHCb.RecSummary.nBackTracks, TrBACKWARD)<1) &   ( CONTAINS ( 'Rec/Track/Best'  ) <  6 ) ",
+        ExclusiveHadronGEC = {'Code' : "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) > 1) & " \
+                              "(recSummaryTrack(LHCb.RecSummary.nBackTracks, TrBACKWARD) < 1) & " \
+                              "(CONTAINS('Rec/Track/Best') < 6) ",
                               'Preambulo' : ["from LoKiTracks.decorators import *"]}
         
         self.LowMultHadron_line = StrippingLine(self._myname+"HadronLine",
@@ -348,7 +338,6 @@ class LowMultConf(LineBuilder) :
                                   D2KPi_ADAMASSmax = config['D2KPi_ADAMASSmax'],
                                   D2KPi_ADOCAmax = config['D2KPi_ADOCAmax'],
                                   D2KPi_APmin = config['D2KPi_APmin'],
-                                  D2KPi_SSumPTmin = config['D2KPi_SSumPTmin'],
                                   D2KPi_VtxChi2DoFmax = config['D2KPi_VtxChi2DoFmax']
                                   )
 
@@ -361,7 +350,6 @@ class LowMultConf(LineBuilder) :
                                       D2KPiPi_ADAMASSmax = config['D2KPiPi_ADAMASSmax'],
                                       D2KPiPi_ADOCAmax = config['D2KPiPi_ADOCAmax'],
                                       D2KPiPi_APmin = config['D2KPiPi_APmin'],
-                                      D2KPiPi_SSumPTmin = config['D2KPiPi_SSumPTmin'],
                                       D2KPiPi_VtxChi2DoFmax = config['D2KPiPi_VtxChi2DoFmax']
                                       )
 
@@ -373,7 +361,6 @@ class LowMultConf(LineBuilder) :
                                     D2K3Pi_ADAMASSmax = config['D2K3Pi_ADAMASSmax'],
                                     D2K3Pi_ADOCAmax = config['D2K3Pi_ADOCAmax'],
                                     D2K3Pi_APmin = config['D2K3Pi_APmin'],
-                                    D2K3Pi_SSumPTmin = config['D2K3Pi_SSumPTmin'],
                                     D2K3Pi_VtxChi2DoFmax = config['D2K3Pi_VtxChi2DoFmax']
                                     )
 
@@ -388,7 +375,6 @@ class LowMultConf(LineBuilder) :
                                       ChiC2HH_AMmax = config['ChiC2HH_AMmax'],
                                       ChiC2HH_ADOCAmax = config['ChiC2HH_ADOCAmax'],
                                       ChiC2HH_APmin = config['ChiC2HH_APmin'],
-                                      ChiC2HH_SSumPTmin = config['ChiC2HH_SSumPTmin'],
                                       ChiC2HH_VtxChi2DoFmax = config['ChiC2HH_VtxChi2DoFmax']
                                       )
 
@@ -401,43 +387,24 @@ class LowMultConf(LineBuilder) :
                                       ChiC2PP_AMmax = config['ChiC2PP_AMmax'],
                                       ChiC2PP_ADOCAmax = config['ChiC2PP_ADOCAmax'],
                                       ChiC2PP_APmin = config['ChiC2PP_APmin'],
-                                      ChiC2PP_SSumPTmin = config['ChiC2PP_SSumPTmin'],
                                       ChiC2PP_VtxChi2DoFmax = config['ChiC2PP_VtxChi2DoFmax']
                                       )
 
-        self.selChiC2HHHHMain = makeChiC2HHHH("selChiC2HHHHMain",
-                                              decayDesc = [ "[chi_c1(1P) -> K+ K+ pi- pi-]cc",
-                                                            "chi_c1(1P) -> K+ K- pi+ pi-",
-                                                            "chi_c1(1P) -> K+ K+ K- K-",
-                                                            "chi_c1(1P) -> pi+ pi+ pi- pi-" ],
-                                              kaons = self.selKaons,
-                                              pions = self.selPions,
-                                              ChiC2HHHH_APTmin = config['ChiC2HHHH_APTmin'],
-                                              ChiC2HHHH_APTmax = config['ChiC2HHHH_APTmax'],
-                                              ChiC2HHHH_AMmin = config['ChiC2HHHH_AMmin'], #minimum mass
-                                              ChiC2HHHH_AMmax = config['ChiC2HHHH_AMmid'], #midpoint mass
-                                              ChiC2HHHH_ADOCAmax = config['ChiC2HHHH_ADOCAmax'],
-                                              ChiC2HHHH_APmin = config['ChiC2HHHH_APmin'],
-                                              ChiC2HHHH_SSumPTmin = config['ChiC2HHHH_SSumPTmin'],
-                                              ChiC2HHHH_VtxChi2DoFmax = config['ChiC2HHHH_VtxChi2DoFmax']
-                                              )                      
-
-        self.selChiC2HHHHUpper = makeChiC2HHHH("selChiC2HHHHUpper",
-                                               decayDesc = [ "[chi_c1(1P) -> K+ K+ pi- pi-]cc",
-                                                             "chi_c1(1P) -> K+ K- pi+ pi-",
-                                                             "chi_c1(1P) -> K+ K+ K- K-",
-                                                             "chi_c1(1P) -> pi+ pi+ pi- pi-" ],
-                                               kaons = self.selKaons,
-                                               pions = self.selPions,
-                                               ChiC2HHHH_APTmin = config['ChiC2HHHH_APTmin'],
-                                               ChiC2HHHH_APTmax = config['ChiC2HHHH_APTmax'],
-                                               ChiC2HHHH_AMmin = config['ChiC2HHHH_AMmid'], #midpoint mass
-                                               ChiC2HHHH_AMmax = config['ChiC2HHHH_AMmax'], #maximum mass
-                                               ChiC2HHHH_ADOCAmax = config['ChiC2HHHH_ADOCAmax'],
-                                               ChiC2HHHH_APmin = config['ChiC2HHHH_APmin'],
-                                               ChiC2HHHH_SSumPTmin = config['ChiC2HHHH_SSumPTmin'],
-                                               ChiC2HHHH_VtxChi2DoFmax = config['ChiC2HHHH_VtxChi2DoFmax']
-                                               )                      
+        self.selChiC2HHHH = makeChiC2HHHH("selChiC2HHHH",
+                                          decayDesc = [ "[chi_c1(1P) -> K+ K+ pi- pi-]cc",
+                                                        "chi_c1(1P) -> K+ K- pi+ pi-",
+                                                        "chi_c1(1P) -> K+ K+ K- K-",
+                                                        "chi_c1(1P) -> pi+ pi+ pi- pi-" ],
+                                          kaons = self.selKaons,
+                                          pions = self.selPions,
+                                          ChiC2HHHH_APTmin = config['ChiC2HHHH_APTmin'],
+                                          ChiC2HHHH_APTmax = config['ChiC2HHHH_APTmax'],
+                                          ChiC2HHHH_AMmin = config['ChiC2HHHH_AMmin'],
+                                          ChiC2HHHH_AMmax = config['ChiC2HHHH_AMmax'],
+                                          ChiC2HHHH_ADOCAmax = config['ChiC2HHHH_ADOCAmax'],
+                                          ChiC2HHHH_APmin = config['ChiC2HHHH_APmin'],
+                                          ChiC2HHHH_VtxChi2DoFmax = config['ChiC2HHHH_VtxChi2DoFmax']
+                                          )                      
 
         self.selDD = makeDD("selDD",
                             decayDesc = [ "[psi(3770) -> D0 D0]cc",
@@ -470,7 +437,6 @@ class LowMultConf(LineBuilder) :
                                     D2KPi_ADAMASSmax = config['D2KPi_ADAMASSmax'],
                                     D2KPi_ADOCAmax = config['D2KPi_ADOCAmax'],
                                     D2KPi_APmin = config['D2KPi_APmin'],
-                                    D2KPi_SSumPTmin = config['D2KPi_SSumPTmin'],
                                     D2KPi_VtxChi2DoFmax = config['D2KPi_VtxChi2DoFmax']
                                     )
 
@@ -482,7 +448,6 @@ class LowMultConf(LineBuilder) :
                                         D2KPiPi_ADAMASSmax = config['D2KPiPi_ADAMASSmax'],
                                         D2KPiPi_ADOCAmax = config['D2KPiPi_ADOCAmax'],
                                         D2KPiPi_APmin = config['D2KPiPi_APmin'],
-                                        D2KPiPi_SSumPTmin = config['D2KPiPi_SSumPTmin'],
                                         D2KPiPi_VtxChi2DoFmax = config['D2KPiPi_VtxChi2DoFmax']
                                         )
 
@@ -496,7 +461,6 @@ class LowMultConf(LineBuilder) :
                                       D2K3Pi_ADAMASSmax = config['D2K3Pi_ADAMASSmax'],
                                       D2K3Pi_ADOCAmax = config['D2K3Pi_ADOCAmax'],
                                       D2K3Pi_APmin = config['D2K3Pi_APmin'],
-                                      D2K3Pi_SSumPTmin = config['D2K3Pi_SSumPTmin'],
                                       D2K3Pi_VtxChi2DoFmax = config['D2K3Pi_VtxChi2DoFmax']
                                       )
 
@@ -511,7 +475,6 @@ class LowMultConf(LineBuilder) :
                                         ChiC2HH_AMmax = config['ChiC2HH_AMmax'],
                                         ChiC2HH_ADOCAmax = config['ChiC2HH_ADOCAmax'],
                                         ChiC2HH_APmin = config['ChiC2HH_APmin'],
-                                        ChiC2HH_SSumPTmin = config['ChiC2HH_SSumPTmin'],
                                         ChiC2HH_VtxChi2DoFmax = config['ChiC2HH_VtxChi2DoFmax']
                                         )
 
@@ -524,7 +487,6 @@ class LowMultConf(LineBuilder) :
                                         ChiC2PP_AMmax = config['ChiC2PP_AMmax'],
                                         ChiC2PP_ADOCAmax = config['ChiC2PP_ADOCAmax'],
                                         ChiC2PP_APmin = config['ChiC2PP_APmin'],
-                                        ChiC2PP_SSumPTmin = config['ChiC2PP_SSumPTmin'],
                                         ChiC2PP_VtxChi2DoFmax = config['ChiC2PP_VtxChi2DoFmax']
                                         )
 
@@ -544,7 +506,6 @@ class LowMultConf(LineBuilder) :
                                             ChiC2HHHH_AMmax = config['ChiC2HHHH_AMmax'],
                                             ChiC2HHHH_ADOCAmax = config['ChiC2HHHH_ADOCAmax'],
                                             ChiC2HHHH_APmin = config['ChiC2HHHH_APmin'],
-                                            ChiC2HHHH_SSumPTmin = config['ChiC2HHHH_SSumPTmin'],
                                             ChiC2HHHH_VtxChi2DoFmax = config['ChiC2HHHH_VtxChi2DoFmax']
                                             ) 
         
@@ -563,7 +524,7 @@ class LowMultConf(LineBuilder) :
         self.registerLine(self.LowMultCEP_D2KPi_line)
 
         self.LowMultCEP_D2KPiPi_line = StrippingLine(self._myname + "CEP_D2KPiPi_line",
-                                                     prescale = config['LowMultPrescaleHalf'],
+                                                     prescale = config['LowMultPrescale'],
                                                      postscale = config['LowMultPostscale'],
                                                      checkPV = False,
                                                      FILTER = CEPFilterTracks,
@@ -593,7 +554,7 @@ class LowMultConf(LineBuilder) :
         self.registerLine(self.LowMultCEP_ChiC2HH_line)
 
         self.LowMultCEP_ChiC2PP_line = StrippingLine(self._myname + "CEP_ChiC2PP_line",
-                                                     prescale = config['LowMultPrescaleHalf'],
+                                                     prescale = config['LowMultPrescale'],
                                                      postscale = config['LowMultPostscale'],
                                                      checkPV = False,
                                                      FILTER = CEPFilterTracksChiC2HH,
@@ -602,26 +563,16 @@ class LowMultConf(LineBuilder) :
                                                      )
         self.registerLine(self.LowMultCEP_ChiC2PP_line)
 
-        self.LowMultCEP_ChiC2HHHHMain_line = StrippingLine(self._myname + "CEP_ChiC2HHHHMain_line",
+        self.LowMultCEP_ChiC2HHHH_line = StrippingLine(self._myname + "CEP_ChiC2HHHH_line",
                                                            prescale = config['LowMultPrescale'],
                                                            postscale = config['LowMultPostscale'],
                                                            checkPV = False,
                                                            FILTER = CEPFilterTracksChiC2HHHH,
                                                            HLT = CEPHLTReq,
-                                                           algos = [ self.selChiC2HHHHMain ]
+                                                           algos = [ self.selChiC2HHHH ]
                                                            )
-        self.registerLine(self.LowMultCEP_ChiC2HHHHMain_line)
+        self.registerLine(self.LowMultCEP_ChiC2HHHH_line)
         
-        self.LowMultCEP_ChiC2HHHHUpper_line = StrippingLine(self._myname + "CEP_ChiC2HHHHUpper_line",
-                                                            prescale = config['LowMultWSPrescale'], #prescale factor of 10 for the high-mass range
-                                                            postscale = config['LowMultPostscale'],
-                                                            checkPV = False,
-                                                            FILTER = CEPFilterTracksChiC2HHHH,
-                                                            HLT = CEPHLTReq,
-                                                            algos = [ self.selChiC2HHHHUpper ]
-                                                            )
-        self.registerLine(self.LowMultCEP_ChiC2HHHHUpper_line)
-
         self.LowMultCEP_DD_line = StrippingLine(self._myname + "CEP_DD_line",
                                                 prescale = config['LowMultPrescale'],
                                                 postscale = config['LowMultPostscale'],
@@ -779,11 +730,10 @@ def makeD2KPi(name,
               D2KPi_ADAMASSmax,
               D2KPi_ADOCAmax,
               D2KPi_APmin,
-              D2KPi_SSumPTmin,
               D2KPi_VtxChi2DoFmax
               ) :
     D2KPi_Comb_cut   = "(APT > %(D2KPi_APTmin)s) & (ADAMASS('D0') < %(D2KPi_ADAMASSmax)s) & (ADOCAMAX('LoKi::DistanceCalculator') < %(D2KPi_ADOCAmax)s) & " \
-                       "(AP > %(D2KPi_APmin)s) & (ACHILD(PT, 1) + ACHILD(PT, 2) > %(D2KPi_SSumPTmin)s)" % locals()
+                       "(AP > %(D2KPi_APmin)s)" % locals()
     D2KPi_Mother_cut = "(VFASPF(VCHI2PDOF) < %(D2KPi_VtxChi2DoFmax)s)" % locals()
 
     CombineD2KPi = CombineParticles( DecayDescriptors = decayDesc
@@ -806,12 +756,11 @@ def makeD2KPiPi(name,
                 D2KPiPi_ADAMASSmax,
                 D2KPiPi_ADOCAmax,
                 D2KPiPi_APmin,
-                D2KPiPi_SSumPTmin,
                 D2KPiPi_VtxChi2DoFmax
                 ) :
 
     D2KPiPi_Comb_cut   = "(APT > %(D2KPiPi_APTmin)s) & (ADAMASS('D+') < %(D2KPiPi_ADAMASSmax)s) & (ADOCAMAX('LoKi::DistanceCalculator') < %(D2KPiPi_ADOCAmax)s) & " \
-                         "(AP > %(D2KPiPi_APmin)s) & (ACHILD(PT, 1) + ACHILD(PT, 2) + ACHILD(PT, 3) > %(D2KPiPi_SSumPTmin)s)" % locals()
+                         "(AP > %(D2KPiPi_APmin)s)" % locals()
     D2KPiPi_Mother_cut = "(VFASPF(VCHI2PDOF) < %(D2KPiPi_VtxChi2DoFmax)s)" % locals()
     
     CombineD2KPiPi = CombineParticles( DecayDescriptors = decayDesc
@@ -835,12 +784,11 @@ def makeD2K3Pi(name,
                D2K3Pi_ADAMASSmax,
                D2K3Pi_ADOCAmax,
                D2K3Pi_APmin,
-               D2K3Pi_SSumPTmin,
                D2K3Pi_VtxChi2DoFmax                   
                ) :
 
     D2K3Pi_Comb_cut   = "(APT > %(D2K3Pi_APTmin)s) & (ADAMASS('D0') < %(D2K3Pi_ADAMASSmax)s) & (ADOCAMAX('LoKi::DistanceCalculator') < %(D2K3Pi_ADOCAmax)s) & " \
-                        "(AP > %(D2K3Pi_APmin)s) & (ACHILD(PT, 1) + ACHILD(PT, 2) + ACHILD(PT, 3) + ACHILD(PT, 4) > %(D2K3Pi_SSumPTmin)s)" % locals()
+                        "(AP > %(D2K3Pi_APmin)s)" % locals()
     D2K3Pi_Mother_cut = "(VFASPF(VCHI2PDOF) < %(D2K3Pi_VtxChi2DoFmax)s)" % locals()
     
     CombineD2K3Pi = CombineParticles( DecayDescriptors = decayDesc
@@ -866,13 +814,11 @@ def makeChiC2HH(name,
                 ChiC2HH_AMmax,
                 ChiC2HH_ADOCAmax,
                 ChiC2HH_APmin,
-                ChiC2HH_SSumPTmin,
                 ChiC2HH_VtxChi2DoFmax
                 ) :
 
     ChiC2HH_Comb_cut   = "(APT > %(ChiC2HH_APTmin)s) & (APT < %(ChiC2HH_APTmax)s) & (AM > %(ChiC2HH_AMmin)s) & (AM < %(ChiC2HH_AMmax)s) & " \
-                         "(ADOCAMAX('LoKi::DistanceCalculator') < %(ChiC2HH_ADOCAmax)s) & " \
-                         "(AP > %(ChiC2HH_APmin)s) & (ACHILD(PT, 1) + ACHILD(PT, 2) > %(ChiC2HH_SSumPTmin)s)" % locals()
+                         "(ADOCAMAX('LoKi::DistanceCalculator') < %(ChiC2HH_ADOCAmax)s) & (AP > %(ChiC2HH_APmin)s)" % locals()
     ChiC2HH_Mother_cut = "(VFASPF(VCHI2PDOF) < %(ChiC2HH_VtxChi2DoFmax)s)" % locals()
 
     CombineChiC2HH = CombineParticles( DecayDescriptors = decayDesc
@@ -897,13 +843,11 @@ def makeChiC2PP(name,
                 ChiC2PP_AMmax,
                 ChiC2PP_ADOCAmax,
                 ChiC2PP_APmin,
-                ChiC2PP_SSumPTmin,
                 ChiC2PP_VtxChi2DoFmax
                 ) :
 
     ChiC2PP_Comb_cut   = "(APT > %(ChiC2PP_APTmin)s) & (APT < %(ChiC2PP_APTmax)s) & (AM > %(ChiC2PP_AMmin)s) & (AM < %(ChiC2PP_AMmax)s) & " \
-                         "(ADOCAMAX('LoKi::DistanceCalculator') < %(ChiC2PP_ADOCAmax)s) & " \
-                         "(AP > %(ChiC2PP_APmin)s) & (ACHILD(PT, 1) + ACHILD(PT, 2) > %(ChiC2PP_SSumPTmin)s)" % locals()
+                         "(ADOCAMAX('LoKi::DistanceCalculator') < %(ChiC2PP_ADOCAmax)s) & (AP > %(ChiC2PP_APmin)s)" % locals()
     ChiC2PP_Mother_cut = "(VFASPF(VCHI2PDOF) < %(ChiC2PP_VtxChi2DoFmax)s)" % locals()
 
     CombineChiC2PP = CombineParticles( DecayDescriptors = decayDesc
@@ -929,13 +873,11 @@ def makeChiC2HHHH(name,
                   ChiC2HHHH_AMmax,
                   ChiC2HHHH_ADOCAmax,
                   ChiC2HHHH_APmin,
-                  ChiC2HHHH_SSumPTmin,
                   ChiC2HHHH_VtxChi2DoFmax                      
                   ) :
 
     ChiC2HHHH_Comb_cut   = "(APT > %(ChiC2HHHH_APTmin)s) & (APT < %(ChiC2HHHH_APTmax)s) & (AM > %(ChiC2HHHH_AMmin)s) & (AM < %(ChiC2HHHH_AMmax)s) & " \
-                           "(ADOCAMAX('LoKi::DistanceCalculator') < %(ChiC2HHHH_ADOCAmax)s) & " \
-                           "(AP > %(ChiC2HHHH_APmin)s) & (ACHILD(PT, 1) + ACHILD(PT, 2) + ACHILD(PT, 3) + ACHILD(PT, 4) > %(ChiC2HHHH_SSumPTmin)s)" % locals()
+                           "(ADOCAMAX('LoKi::DistanceCalculator') < %(ChiC2HHHH_ADOCAmax)s) & (AP > %(ChiC2HHHH_APmin)s)" % locals()
     ChiC2HHHH_Mother_cut = "(VFASPF(VCHI2PDOF) < %(ChiC2HHHH_VtxChi2DoFmax)s)" % locals()
     CombineChiC2HHHH = CombineParticles( DecayDescriptors = decayDesc
                                          , CombinationCut = ChiC2HHHH_Comb_cut
@@ -985,5 +927,4 @@ def makeKK(name,
     return Selection(name,
                      Algorithm = CombineKK,
                      RequiredSelections = [kaonsForKK])
-
 
