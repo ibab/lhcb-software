@@ -92,7 +92,7 @@ class Bs2MuMuLinesConf(LineBuilder) :
         'DefaultLinePostscale'   : 1,
         'Bs2mmWideLinePrescale'  : 1,
         'Bs2mmWideLinePostscale'  : 1,
-        'LooseLinePrescale'      : 0.02,
+        'LooseLinePrescale'      : 0.,
         'LooseLinePostscale'     : 1,
         'BuPrescale'    : 1,
         'BuPostscale'   : 1,
