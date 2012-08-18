@@ -1,3 +1,4 @@
+
 #Stripping Lines for Low Multiplicity Processes.
 #Electroweak Group (Convenor: Tara Shears)
 #Adaptation of lines (to use line builders) originally designed by Dermot Moran by Will Barter
@@ -17,6 +18,7 @@ confdict_LowMult = {
     'LowMultPrescale'           : 1.0
     , 'LowMultWSPrescale'       : 0.1
     , 'LowMultHHIncPrescale'    : 0.1
+    , 'LowMultLMRPrescale'      : 0.2
     , 'LowMultPrescale_ps'      : 0.005
     , 'LowMultNoFilterPrescale' : 0.1
     , 'LowMultPostscale'        : 1.0
@@ -70,6 +72,14 @@ confdict_LowMult = {
     , 'ChiC2HHHH_ADOCAmax'      : 0.7 * mm
     , 'ChiC2HHHH_APmin'         : 10000.0 * MeV
     , 'ChiC2HHHH_VtxChi2DoFmax' : 15.0
+    # Low-mass resonance -> HH (H = K, Pi)
+    , 'LMR2HH_APTmin'        : 500.0 * MeV
+    , 'LMR2HH_APTmax'        : 1500.0 * MeV
+    , 'LMR2HH_AMmin'         : 450.0 * MeV
+    , 'LMR2HH_AMmax'         : 1500.0 * MeV
+    , 'LMR2HH_ADOCAmax'      : 0.1 * mm
+    , 'LMR2HH_APmin'         : 15000.0 * MeV
+    , 'LMR2HH_VtxChi2DoFmax' : 3.0
     }
 
 default_name = "LowMult"
@@ -79,6 +89,7 @@ class LowMultConf(LineBuilder) :
     __configuration_keys__ = ('LowMultPrescale'
                               , 'LowMultWSPrescale'
                               , 'LowMultHHIncPrescale'
+                              , 'LowMultLMRPrescale'
                               , 'LowMultPrescale_ps'
                               , 'LowMultNoFilterPrescale'
                               , 'LowMultPostscale'
@@ -132,6 +143,14 @@ class LowMultConf(LineBuilder) :
                               , 'ChiC2HHHH_ADOCAmax'
                               , 'ChiC2HHHH_APmin'
                               , 'ChiC2HHHH_VtxChi2DoFmax'
+                              # Low-mass resonance -> HH (H = K, Pi)
+                              , 'LMR2HH_APTmin'
+                              , 'LMR2HH_APTmax'
+                              , 'LMR2HH_AMmin'
+                              , 'LMR2HH_AMmax'
+                              , 'LMR2HH_ADOCAmax'
+                              , 'LMR2HH_APmin'
+                              , 'LMR2HH_VtxChi2DoFmax'
                               )
 
     def __init__(self, name, config) :
@@ -425,6 +444,21 @@ class LowMultConf(LineBuilder) :
                             kaonsForKK = self.selKaonsForKK
                             )
         
+        self.selLMR2HH = makeLMR2HH("selLMR2HH",
+                                    decayDesc = [ "phi(1020)  -> K+ K-",
+                                                  "[phi(1020) -> K+ pi-]cc",
+                                                  "phi(1020)  -> pi+ pi-" ],
+                                    kaons = self.selKaons,
+                                    pions = self.selPions,
+                                    LMR2HH_APTmin = config['LMR2HH_APTmin'],
+                                    LMR2HH_APTmax = config['LMR2HH_APTmax'],
+                                    LMR2HH_AMmin = config['LMR2HH_AMmin'],
+                                    LMR2HH_AMmax = config['LMR2HH_AMmax'],
+                                    LMR2HH_ADOCAmax = config['LMR2HH_ADOCAmax'],
+                                    LMR2HH_APmin = config['LMR2HH_APmin'],
+                                    LMR2HH_VtxChi2DoFmax = config['LMR2HH_VtxChi2DoFmax']
+                                    )
+
         #
         #=== Wrong-sign lines ===#
         #
@@ -592,6 +626,16 @@ class LowMultConf(LineBuilder) :
                                                 algos = [ self.selKK ]
                                                 )
         self.registerLine(self.LowMultCEP_KK_line)
+
+        self.LowMultCEP_LMR2HH_line = StrippingLine(self._myname + "CEP_LMR2HH_line",
+                                                    prescale = config['LowMultLMRPrescale'],
+                                                    postscale = config['LowMultPostscale'],
+                                                    checkPV = False,
+                                                    FILTER = CEPFilterTracksChiC2HHHH,
+                                                    HLT = CEPHLTReq,
+                                                    algos = [ self.selLMR2HH ]
+                                                    )
+        self.registerLine(self.LowMultCEP_LMR2HH_line)
 
         self.LowMultCEP_D2KPiWS_line = StrippingLine(self._myname + "CEP_D2KPiWS_line",
                                                      prescale = config['LowMultWSPrescale'],
@@ -928,3 +972,32 @@ def makeKK(name,
                      Algorithm = CombineKK,
                      RequiredSelections = [kaonsForKK])
 
+#
+#=== Low-mass resonance -> HH ===#
+#
+
+def makeLMR2HH(name,
+               decayDesc,
+               kaons,
+               pions,
+               LMR2HH_APTmin,
+               LMR2HH_APTmax,
+               LMR2HH_AMmin,
+               LMR2HH_AMmax,
+               LMR2HH_ADOCAmax,
+               LMR2HH_APmin,
+               LMR2HH_VtxChi2DoFmax
+               ) :
+
+    LMR2HH_Comb_cut   = "(APT > %(LMR2HH_APTmin)s) & (APT < %(LMR2HH_APTmax)s) & (AM > %(LMR2HH_AMmin)s) & (AM < %(LMR2HH_AMmax)s) & " \
+                        "(ADOCAMAX('LoKi::DistanceCalculator') < %(LMR2HH_ADOCAmax)s) & (AP > %(LMR2HH_APmin)s)" % locals()
+    LMR2HH_Mother_cut = "(VFASPF(VCHI2PDOF) < %(LMR2HH_VtxChi2DoFmax)s)" % locals()
+    
+    CombineLMR2HH = CombineParticles( DecayDescriptors = decayDesc
+                                      , CombinationCut = LMR2HH_Comb_cut
+                                      , MotherCut = LMR2HH_Mother_cut
+                                      )
+    
+    return Selection(name,
+                     Algorithm = CombineLMR2HH,
+                     RequiredSelections = [kaons, pions])
