@@ -31,6 +31,7 @@ public:
   StatusCode testeExecute();
   StatusCode start();
   StatusCode stop();
+  StatusCode restart();
 
 
 

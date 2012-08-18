@@ -307,7 +307,10 @@ StatusCode UpdateAndReset::stop() {
   m_stopdone = true;
   return StatusCode::SUCCESS;
 }
-
+StatusCode UpdateAndReset::restart()
+{
+  return StatusCode::SUCCESS;
+}
 StatusCode UpdateAndReset::finalize() {
 //------------------------------------------------------------------------------
   MsgStream msg(msgSvc(), name());
