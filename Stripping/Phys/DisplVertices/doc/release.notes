@@ -5,6 +5,9 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2012-08-19 - Pieter David
+ - Added MinSumPT to new algorithm + fixed a copy-paste bug
+
 ! 2012-08-17 - Pieter David
  - Minor changes to new algorithm to make configuration in the stripping framework easier
 

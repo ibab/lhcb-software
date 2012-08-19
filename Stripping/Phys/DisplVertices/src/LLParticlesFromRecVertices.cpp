@@ -59,8 +59,8 @@ LLParticlesFromRecVertices::LLParticlesFromRecVertices( const std::string& name,
                  , "Minimal z position of the \"most upstream\" PV" );
 
   declareProperty("FirstPVMaxZ"
-                 , m_FirstPVMinZ = -150.0*Gaudi::Units::mm
-                 , "Minimal z position of the \"most upstream\" PV" );
+                 , m_FirstPVMaxZ = 150.0*Gaudi::Units::mm
+                 , "Maximal z position of the \"most upstream\" PV" );
 
   declareProperty("FirstPVMinNumTracks"
                  , m_FirstPVNumTracks = 10
@@ -87,6 +87,10 @@ LLParticlesFromRecVertices::LLParticlesFromRecVertices( const std::string& name,
   declareProperty("MinMass"
                  , m_LLPMinMass = 0.0
                  , "Minimal reconstructed mass of the LLP" );
+
+  declareProperty("MinSumPT"
+                 , m_LLPMinSumPT = 0.0*Gaudi::Units::GeV
+                 , "Minimal sum-PT of the LLP" );
 
   declareProperty("MinRho"
                  , m_LLPMinR = 0.3*Gaudi::Units::mm
@@ -129,6 +133,7 @@ int LLParticlesFromRecVertices::SigmaZ = 54;
 int LLParticlesFromRecVertices::FractDaughterTracksWithUpstreamHit = 55;
 int LLParticlesFromRecVertices::MaxFractEnergyInSingleTrack = 56;
 int LLParticlesFromRecVertices::InMatterVeto = 51;
+int LLParticlesFromRecVertices::SumPT = 57;
 
 //=============================================================================
 // Destructor
@@ -240,6 +245,7 @@ namespace {
                                , int numLongDaugs
                                , int numVeloDaugs
                                , const Gaudi::LorentzVector& momentum
+                               , double motherSumPT
                                , const int& numDaugsWithHitBefore
                                , const double& maxDaugE )
   {
@@ -247,6 +253,7 @@ namespace {
         << "\nwith " << numLongDaugs << " long and " << numVeloDaugs << " Velo-only daughters"
         << "\nTotal momentum : " << momentum
         << "\nMass           : " << momentum.M()
+        << "\nSumPT          : " << motherSumPT
         << "\n# daugHitUp    : " << numDaugsWithHitBefore
         << "\nMaxFractE      : " << maxDaugE/momentum.E()
         << endmsg;
@@ -258,7 +265,8 @@ namespace {
           << " - SigmaRHO  : " << llp->info(LLParticlesFromRecVertices::SigmaRho, -1.0)                             << "\n"
           << " - SigmaZ    : " << llp->info(LLParticlesFromRecVertices::SigmaZ, -1.0)                               << "\n"
           << " - FracUpHit : " << llp->info(LLParticlesFromRecVertices::FractDaughterTracksWithUpstreamHit, -1.0)   << "\n"
-          << " - MaxFractE : " << llp->info(LLParticlesFromRecVertices::MaxFractEnergyInSingleTrack, -1.0)          << "\n";
+          << " - MaxFractE : " << llp->info(LLParticlesFromRecVertices::MaxFractEnergyInSingleTrack, -1.0)          << "\n"
+          << " - SumPT     : " << llp->info(LLParticlesFromRecVertices::SumPT, -1.0)                                << "\n";
     if ( matterVeto ) {
       out << " - InMatter  : " << llp->info(LLParticlesFromRecVertices::InMatterVeto, -1.0)                         << "\n";
     }
@@ -406,6 +414,7 @@ const LHCb::Particle* LLParticlesFromRecVertices::RecVertex2Particle( const LHCb
   if (m_debug) { debug() << "==> Making LLParticle out of RecVertex" << endmsg; }
 
   Gaudi::LorentzVector motherMomentum;
+  double motherSumPT = 0;
 
   // daughters with long tracks
   m_selectedDaughters.clear();
@@ -456,6 +465,7 @@ const LHCb::Particle* LLParticlesFromRecVertices::RecVertex2Particle( const LHCb
       if ( daug->proto()->track()->chi2PerDoF() < m_chi2NonVeloOnly ) {
         if (m_verbose) { verbose() << "Pass track chi2 cut, adding to LLP. Momentum: " << daug->momentum() << endmsg; }
         motherMomentum += daug->momentum();
+        motherSumPT += daug->momentum().Pt();
         m_selectedDaughters.push_back(daug);
 
         // update cuts
@@ -475,6 +485,7 @@ const LHCb::Particle* LLParticlesFromRecVertices::RecVertex2Particle( const LHCb
         if ( m_useVeloTracks  ) {
           if (m_verbose) { verbose() << "Adding to LLP with momentum: " << daugTrackMomentum << endmsg; }
           motherMomentum += daugTrackMomentum;
+          motherSumPT += daug->momentum().Pt();
         } else {
           if (m_verbose) { verbose() << "Momentum: " << daugTrackMomentum << ". Adding without momentum" << endmsg; }
         }
@@ -485,10 +496,11 @@ const LHCb::Particle* LLParticlesFromRecVertices::RecVertex2Particle( const LHCb
     }
   }
 
-  if (m_debug) { printLLPCandidateSummary(debug(), m_selectedDaughters.size(), m_selectedVeloDaughters.size(), motherMomentum, numDaugTracksWithHitsBefore, maxDaugE ); }
+  if (m_debug) { printLLPCandidateSummary(debug(), m_selectedDaughters.size(), m_selectedVeloDaughters.size(), motherMomentum, motherSumPT, numDaugTracksWithHitsBefore, maxDaugE ); }
 
   LHCb::Particle* prey = NULL;
   if ( ( motherMomentum.M() > m_LLPMinMass )
+    && ( motherSumPT > m_LLPMinSumPT )
     && ( ( fractTracksWithHitBeforeVertex =  1.*numDaugTracksWithHitsBefore/(m_selectedDaughters.size()+m_selectedVeloDaughters.size()) ) < m_LLPMaxFractTrWithUpstream )
     && ( maxDaugE/motherMomentum.E() < m_LLPMaxFractEFromOne )
     && ( ! ( m_applyMatterVeto && m_materialVeto->isInMatter(rv->position()) ) )
@@ -520,6 +532,7 @@ const LHCb::Particle* LLParticlesFromRecVertices::RecVertex2Particle( const LHCb
     prey->addInfo(LLParticlesFromRecVertices::SigmaZ, sqrt( rv->covMatrix()(2,2) ) );
     prey->addInfo(LLParticlesFromRecVertices::FractDaughterTracksWithUpstreamHit, fractTracksWithHitBeforeVertex);
     prey->addInfo(LLParticlesFromRecVertices::MaxFractEnergyInSingleTrack, maxDaugE/motherMomentum.E());
+    prey->addInfo(LLParticlesFromRecVertices::SumPT, motherSumPT);
     if ( m_computeMatterVeto ) { prey->addInfo(LLParticlesFromRecVertices::InMatterVeto, m_materialVeto->isInMatter(preyVtx->position()) ); }
     if (m_verbose) { printSelectedLLP( verbose(), prey, m_computeMatterVeto ); }
 

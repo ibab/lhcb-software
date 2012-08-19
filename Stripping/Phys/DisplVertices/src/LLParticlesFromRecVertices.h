@@ -42,6 +42,7 @@ public:
   static int FractDaughterTracksWithUpstreamHit;
   static int MaxFractEnergyInSingleTrack;
   static int InMatterVeto;
+  static int SumPT;
 
 private:
   /// Turn a RecVertex into a Particle
@@ -78,6 +79,7 @@ private:
   LHCb::ParticleID m_LLPID;               ///< LLP ParticleID
 
   double m_LLPMinMass;                    ///< Minimal reconstructed mass of the LLP
+  double m_LLPMinSumPT;                   ///< Minimal sum-PT of the LLP
 
   double m_LLPMinR;                       ///< Minimal LLP RHO distance to the beam line
   double m_LLPMaxR;                       ///< Maximal LLP RHO distance to the beam line
