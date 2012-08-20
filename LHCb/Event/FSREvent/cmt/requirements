@@ -1,14 +1,12 @@
-# $Id: requirements,v 1.16 2009-06-05 05:36:34 cattanem Exp $
-# Created    : 17/08/2005
-# Maintainer : Marco Cattaneo
+# Created    : 20/08/2012
+# Maintainer : Rob Lambert, Jaap Panman
 #
-package           EventBase
-version           v3r0
+package           FSREvent
+version           v1r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc xml Event
-
 
 # Used packages. 
 #============================================================================
@@ -23,7 +21,3 @@ end_private
 apply_pattern god_headers files=../xml/*.xml 
 apply_pattern install_more_includes more=Event
 apply_pattern god_dictionary files=../xml/*.xml 
-
-# Hack for Gaudi v21r1 to link dictionary on windows
-private
-set EXPORT_ALL_SYMBOLS "yes" GAUDI_V21 "" GAUDI_V22 "" G21_HIDE_SYMBOLS ""
