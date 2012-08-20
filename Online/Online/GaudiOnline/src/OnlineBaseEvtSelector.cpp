@@ -54,6 +54,7 @@ OnlineBaseEvtSelector::OnlineBaseEvtSelector(const string& nam, ISvcLocator* svc
   // Note: This is purely dummy! 
   // Only present for backwards compatibility with offline
   declareProperty("PrintFreq",m_printFreq = 100000);
+  m_isCancelled = false;
 }
 
 // IInterface::queryInterface
@@ -92,8 +93,9 @@ StatusCode OnlineBaseEvtSelector::initialize()    {
     }
     break;
   }
-  m_evtCount = 0;
-  m_reqCount = 0;
+  m_isCancelled = false;
+  m_evtCount    = 0;
+  m_reqCount    = 0;
   declareInfo("EventsIn",m_evtCount=0,"Event received counter");
   declareInfo("EventsReq",m_reqCount=0,"Event request counter");
   return status;
@@ -109,6 +111,7 @@ StatusCode OnlineBaseEvtSelector::start()    {
   // Need to subscribe in start; otherwise callbacks come too early
   incidentSvc()->addListener(this,"DAQ_CANCEL");
   incidentSvc()->addListener(this,"DAQ_TIMEOUT");
+  m_isCancelled = false;
   return status;
 }
 
@@ -137,6 +140,7 @@ StatusCode OnlineBaseEvtSelector::finalize()    {
 void OnlineBaseEvtSelector::handle(const Incident& inc)    {
   info("Got incident:"+inc.source()+" of type "+inc.type());
   if ( inc.type() == "DAQ_CANCEL" )  {
+    m_isCancelled = true;
     if ( m_allowSuspend ) lib_rtl_unlock(m_suspendLock);
   }
   else if ( inc.type() == "DAQ_TIMEOUT" )  {

@@ -348,13 +348,21 @@ StatusCode MBMContext::convertMEP(const MBM::EventDesc& e)  {
 StatusCode MBMContext::receiveEvent()  {
   m_banks.clear();
   if ( m_consumer )  {
+    int org_retry = m_onlineSel->m_maxRetry;
     int max_retry = m_onlineSel->m_maxRetry;
     Retry:
     try  {
+      // If the job options is -1, we loop forever
+      if ( org_retry < 0 ) max_retry = 9999999;
       if ( m_events.empty() ) {
 	m_sel->increaseReqCount();
 	m_needFree = false;
-	if ( m_consumer->getEvent() != MBM_NORMAL )  {
+	if ( m_onlineSel->isCancelled() ) {
+	  // In case we got cancelled, just return error and 
+	  // let upper layers handle the problem
+	  return StatusCode::FAILURE;
+	}
+	else if ( m_consumer->getEvent() != MBM_NORMAL )  {
 	  return StatusCode::FAILURE;
 	}
       }
@@ -379,21 +387,38 @@ StatusCode MBMContext::receiveEvent()  {
     }
     catch(const exception& e)  {
       string err = e.what();
-      m_sel->error("Failed to read next event:"+err);
+      m_sel->info("Failed to read next event:"+err);
       // We only allow for a max of max_retry consecutive bad entries from MBM
       // Otherwise things are bad!
       if ( max_retry-- > 0 )  {
-	if (err.substr(0,9)  == "Bad magic" ||
-            err.substr(0,7)  == "Bad MEP"   ||
-	    err.substr(0,12) == "Unknown Bank" ) {
-	  freeEvent();
+	if ( m_onlineSel->isCancelled() ) {
+	  // In case we got cancelled, just return error and 
+	  // let upper layers handle the problem
+	  releaseEvent();
+	  return StatusCode::FAILURE;
+	}
+	else if (err.find("Error decoding raw banks")!= string::npos ||
+		 err.find("Bad magic pattern")       != string::npos ||
+		 err.find("Bad MEP")                 != string::npos ||
+		 err.find("Unknown Bank")            != string::npos ||
+		 err.find("Error in multi raw")      != string::npos ||
+		 err.find("MEP event error")         != string::npos ||
+		 err.find("MEP fragment error")      != string::npos ||
+		 err.find("MEP multi fragment error")!= string::npos) {
+	  m_sel->info("Continue processing despite error.");
+	  releaseEvent();
 	  goto Retry;
 	}
       }
+      m_sel->error("Failed to read next event:"+err);
       m_sel->error("Maximum number of retries exceeded. Giving up...");
       ::exit(EILSEQ);
     }
     catch(...)  {
+      if ( m_onlineSel->isCancelled() ) {
+	releaseEvent();
+	return StatusCode::FAILURE;
+      }
       m_sel->error("Failed to read next event - Unknown exception.");
       ::exit(EILSEQ);
     }

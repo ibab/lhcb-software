@@ -195,24 +195,27 @@ namespace LHCb  {
     OnlineBaseEvtSelector(const std::string& name, ISvcLocator* svcloc);
 
     /// Standard destructor
-    virtual ~OnlineBaseEvtSelector()         {                    }
+    virtual ~OnlineBaseEvtSelector()         {                        }
 
     /// Access to current event context (if available)
-    const OnlineContext* eventContext() const{  return m_context; }
+    const OnlineContext* eventContext() const{  return m_context;     }
     /// Increase event request counter
-    void increaseReqCount()    const         {  m_reqCount++;     }
+    void increaseReqCount()    const         {  m_reqCount++;         }
     /// Increase event receive counter
-    void increaseEvtCount()    const         {  m_evtCount++;     }
+    void increaseEvtCount()    const         {  m_evtCount++;         }
     /// Flag to indicate that event decoding is required
-    bool mustDecode() const                  {  return m_decode;  }
+    bool mustDecode() const                  {  return m_decode;      }
     /// Set flag to indicate that event decoding is required
-    void setDecode(bool value)               {  m_decode = value; }
+    void setDecode(bool value)               {  m_decode = value;     }
     /// Number of active requests required by the job options
-    int numReq() const                       {  return m_nreqs;   }
+    int numReq() const                       {  return m_nreqs;       }
     /// Access requests given by the job option data
-    const MBM::Requirement& req(int i) const {  return m_Reqs[i]; }
+    const MBM::Requirement& req(int i) const {  return m_Reqs[i];     }
     /// Access to input source
-    const std::string& input() const         {  return m_input;   }
+    const std::string& input() const         {  return m_input;       }
+    /// Accessor to the cancellation flag
+    bool isCancelled()  const                {  return m_isCancelled; }
+
   protected:
     /// Lock handle to suspend/resume operations
     lib_rtl_event_t               m_suspendLock;
@@ -240,6 +243,8 @@ namespace LHCb  {
     mutable int                   m_reqCount;
     /// Flag indicating if event selector is suspended and waiting for an event
     mutable bool                  m_isWaiting;
+    /// Flag to indicate if DAQ_CANCEL incident arrived
+    mutable bool                  m_isCancelled;
     /// Local context of current event held
     mutable const OnlineContext*  m_context;
   };
