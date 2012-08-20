@@ -6,8 +6,8 @@ Exported symbols (use python help!):
 '''
 
 __author__ = ['Michel De Cian']
-__date__ = '29/09/2011'
-__version__ = '$Revision: 1.0 $'
+__date__ = '18/08/2012'
+__version__ = '$Revision: 1.1 $'
 
 __all__ = ('StrippingInflaton2MuMuConf',
            'makeLong',
@@ -46,7 +46,9 @@ class StrippingInflaton2MuMuConf(LineBuilder) :
                               'Bs2InflatonPhiPrescale', 
                               'Bs2InflatonPhiPostscale', 
                               'Bd2InflatonKstPrescale', 
-                              'Bd2InflatonKstPostscale'
+                              'Bd2InflatonKstPostscale',
+                              'Bd2InflatonRhoPrescale', 
+                              'Bd2InflatonRhoPostscale'
                               )
     
     #### This is the dictionary of all tunable cuts ########
@@ -60,7 +62,9 @@ class StrippingInflaton2MuMuConf(LineBuilder) :
         'Bs2InflatonPhiPrescale' : 1, 
         'Bs2InflatonPhiPostscale' : 1, 
         'Bd2InflatonKstPrescale' : 1, 
-        'Bd2InflatonKstPostscale' : 1
+        'Bd2InflatonKstPostscale' : 1,
+        'Bd2InflatonRhoPrescale' : 1, 
+        'Bd2InflatonRhoPostscale' : 1
         }                
     
     
@@ -77,10 +81,13 @@ class StrippingInflaton2MuMuConf(LineBuilder) :
         self.selLongLoose = makeLong(default_name+"_longLoose", 16, 5)
         self.selLongTight = makeLong(default_name+"_longTight", 625, 90)
         self.selDownstream = makeDownstream(default_name+"_downstream")
+        self.selRho = makeRho(default_name+"_rho")
+
         
         self.selBu2InflatonK = makeBu2InflatonK(default_name+"_Bu2InflatonKBuilder", self.selLongLoose)
         self.selBs2InflatonPhi = makeBs2InflatonPhi(default_name+"_Bs2InflatonPhiBuilder", self.selLongLoose)
         self.selBd2InflatonKst = makeBd2InflatonKst(default_name+"_Bd2InflatonKstBuilder", self.selLongLoose)
+        self.selBd2InflatonRho = makeBd2InflatonRho(default_name+"_Bd2InflatonRhoBuilder", self.selLongLoose, self.selRho)
 
 
 
@@ -113,12 +120,19 @@ class StrippingInflaton2MuMuConf(LineBuilder) :
                                               postscale = config['Bd2InflatonKstPostscale'],
                                               algos = [ self.selBd2InflatonKst ]
                                               )
+        
+        self.Bd2InflatonRhoLine = StrippingLine(default_name+"_Bd2InflatonRho", 
+                                              prescale = config['Bd2InflatonRhoPrescale'],
+                                              postscale = config['Bd2InflatonRhoPostscale'],
+                                              algos = [ self.selBd2InflatonRho ]
+                                              )
 
       
         self.registerLine( self.longLine )
         self.registerLine( self.Bu2InflatonKLine )
         self.registerLine( self.Bs2InflatonPhiLine )
         self.registerLine( self.Bd2InflatonKstLine )
+        self.registerLine( self.Bd2InflatonRhoLine )
         #self.registerLine( self.downstreamLine )
         
 
@@ -135,7 +149,7 @@ def makeLong(name, vertexDistChi2, vertexDist) :
     Detached2mu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     Detached2mu.OfflineVertexFitter.useResonanceVertex = False
     Detached2mu.ReFitPVs = True
-    Detached2mu.DaughtersCuts = { "mu+" : "(TRCHI2DOF < 4 ) "\
+    Detached2mu.DaughtersCuts = { "mu+" : "(TRCHI2DOF < 3 ) "\
                                   " & (MIPCHI2DV(PRIMARY)> 100)"\
                                   " & (PIDmu > -4)" \
                                   "& (PT > 125*MeV) "}
@@ -195,6 +209,26 @@ def makeDownstream(name) :
                       RequiredSelections = [ _stdLooseDownMuons ])
 
 
+def makeRho(name):
+    """
+    Selection to reconstruct detached rho(770)0 -> pi+ pi-
+    """
+    RhoPiPi = CombineParticles("RhoPiPi"+name)
+    RhoPiPi.DecayDescriptor = 'rho(770)0 -> pi+ pi-'
+    RhoPiPi.DaughtersCuts = { "pi+" : "(TRCHI2DOF < 3 )", "pi-" : "(TRCHI2DOF < 3 )" }
+    RhoPiPi.MotherCut = "(VFASPF(VCHI2/VDOF)<25) "\
+                        "& (M > 600)" \
+                        "& (M < 1000)" \
+                        "& (MIPCHI2DV(PRIMARY)> 2.25)"
+
+    _stdLoosePions = DataOnDemand(Location = "Phys/StdLoosePions/Particles")
+
+    return Selection(name,
+                     Algorithm = RhoPiPi,
+                     RequiredSelections = [ _stdLoosePions ])
+
+
+
 
 def makeBu2InflatonK(name, SelInflatonLong) :
     """
@@ -214,7 +248,7 @@ def makeBu2InflatonK(name, SelInflatonLong) :
     Bu2InflatonK.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     Bu2InflatonK.OfflineVertexFitter.useResonanceVertex = False
     Bu2InflatonK.ReFitPVs = True
-    Bu2InflatonK.DaughtersCuts = { "K+" : "(ISLONG) & (TRCHI2DOF < 5 ) &(MIPCHI2DV(PRIMARY)>25)& (PT>250*MeV) "}
+    Bu2InflatonK.DaughtersCuts = { "K+" : "(ISLONG) & (TRCHI2DOF < 3 ) &(MIPCHI2DV(PRIMARY)>25)& (PT>250*MeV) "}
     Bu2InflatonK.CombinationCut = "(ADAMASS('B+') < 500*MeV)"
     Bu2InflatonK.MotherCut = "(BPVIPCHI2()< 50)& (VFASPF(VCHI2)<100)& (D2DVVDDOT(1) > 0.3*mm)"
 
@@ -283,4 +317,32 @@ def makeBd2InflatonKst(name, SelInflatonLong) :
     return Selection( "Sel"+name,
                       Algorithm = Bd2InflatonKst,
                       RequiredSelections=[SelInflatonLong, _kstar] )
+
+
+def makeBd2InflatonRho(name, SelInflatonLong, SelRho) :
+    """
+    detached Bd -> Inflaton rho selection.
+
+    Arguments:
+    name        : name of the Selection.
+    """
+
+    
+    from Configurables import OfflineVertexFitter
+   
+    
+    Bd2InflatonRho = CombineParticles("Combine"+name)
+    Bd2InflatonRho.DecayDescriptor = "B0 -> KS0 rho(770)0"
+    Bd2InflatonRho.addTool( OfflineVertexFitter )
+    #Bd2InflatonRho.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+    Bd2InflatonRho.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
+    Bd2InflatonRho.OfflineVertexFitter.useResonanceVertex = False
+    Bd2InflatonRho.ReFitPVs = True
+    Bd2InflatonRho.DaughtersCuts = { "rho(770)0" : "MIPCHI2DV(PRIMARY)> 25."}
+    Bd2InflatonRho.CombinationCut = "(ADAMASS('B0') < 500*MeV)"
+    Bd2InflatonRho.MotherCut = "(BPVIPCHI2()< 50) & (VFASPF(VCHI2)<100)& (D2DVVDDOT(1) > 0.3*mm)"
+
+    return Selection( "Sel"+name,
+                      Algorithm = Bd2InflatonRho,
+                      RequiredSelections=[SelInflatonLong, SelRho] )
 
