@@ -104,7 +104,7 @@ void Connection::connect() {
  */
 void Connection::closeConnection()
 {
-  *m_log << MSG::INFO << WHERE << " Closing connection with llamas." << endmsg;
+  *m_log << MSG::INFO << WHERE << " Closing connection with axolotls." << endmsg;
 
   m_sendThread->stopAfterFinish();  /*Stop after all messages are sent.*/
   m_ackThread->stopAfterFinish();  /*Stop after all acks have been received.*/
@@ -204,9 +204,7 @@ int Connection::failover(int currThread)
       connect();
       break;
     } catch(std::exception &ex) {
-      *m_log << MSG::WARNING << WHERE
-             << ex.what()
-             << endmsg;
+      *m_log << MSG::WARNING << WHERE  << ex.what() << endmsg;
     }
     sleep(1);
   }

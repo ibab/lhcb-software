@@ -710,7 +710,7 @@ void MDFWriterNet::closeFile(File *currFile)
  */
 void MDFWriterNet::handle(const Incident& inc)
 {
-	*m_log << MSG::INFO << "Got incident:" << inc.source() << " of type "
+	*m_log << MSG::INFO << "Got incident: " << inc.source() << " of type "
 			<< inc.type() << " for Writer " << getpid() << endmsg;
 	if (inc.type() == "DAQ_CANCEL" /*||  inc.type() == "DAQ_ERROR"*/)
 	{

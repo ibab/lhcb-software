@@ -173,9 +173,9 @@ int SendThread::processSends(void)
   if(bif)
     delete bif;
   if(cmd_to_send != NULL)
-	  *m_log << MSG::INFO <<  WHERE << "m_stopUrgently = " << m_stopUrgently << " , m_stopAfterFinish = " << m_stopAfterFinish << " for filename = " << cmd_to_send->file_name << " :Exiting processSends()" << endmsg;
+	  *m_log << MSG::INFO <<  WHERE << " m_stopUrgently = " << m_stopUrgently << " , m_stopAfterFinish = " << m_stopAfterFinish << " for filename = " << cmd_to_send->file_name << " :Exiting processSends()" << endmsg;
   else
-	  *m_log << MSG::INFO <<  WHERE << "m_stopUrgently = " << m_stopUrgently << " , m_stopAfterFinish = " << m_stopAfterFinish << " , cmd_to_send is NULL, Exiting processSends()" << endmsg;
+	  *m_log << MSG::INFO <<  WHERE << " m_stopUrgently = " << m_stopUrgently << " , m_stopAfterFinish = " << m_stopAfterFinish << " , cmd_to_send is NULL, Exiting processSends()" << endmsg;
   return 0;
 }
 

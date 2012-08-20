@@ -383,34 +383,40 @@ struct cmd_header* MM::moveSendPointer(void)
 	tSpec.tv_nsec = 0;
 	tSpec.tv_sec = time(NULL) + LOCK_TIMEOUT;
 
-	pthread_mutex_lock(&m_mapLock);
-
-	if(m_runMap.size() != 0)
+	while(1)
 	{
-		if (m_runMap.size() == 1)
-			m_runMapIter = m_runMap.begin();
-		old_runMapIter = m_runMapIter;
-		do
-		{
-			retCmd = ((*m_runMapIter).second)->moveSendPointer();
-			++m_runMapIter;
-			if (m_runMapIter == m_runMap.end())
-				m_runMapIter = m_runMap.begin();
-		} while ((retCmd == NULL) && (m_runMapIter != old_runMapIter));
+		pthread_mutex_lock(&m_mapLock);
 
-		if (retCmd != NULL)
+		if(m_runMap.size() != 0)
 		{
-			pthread_mutex_unlock(&m_mapLock);
-			return retCmd;
+			if (m_runMap.size() == 1)
+				m_runMapIter = m_runMap.begin();
+			old_runMapIter = m_runMapIter;
+			do
+			{
+				retCmd = ((*m_runMapIter).second)->moveSendPointer();
+				++m_runMapIter;
+				if (m_runMapIter == m_runMap.end())
+					m_runMapIter = m_runMap.begin();
+			} while ((retCmd == NULL) && (m_runMapIter != old_runMapIter));
+
+			if (retCmd != NULL)
+			{
+				pthread_mutex_unlock(&m_mapLock);
+				return retCmd;
+			}
 		}
-	}
 		pthread_mutex_unlock(&m_mapLock);
 		pthread_mutex_lock(&(MM::m_emptyLock));
 
-		pthread_cond_timedwait(&(MM::m_emptyCondition), &(MM::m_emptyLock), &tSpec);
-
+		if(pthread_cond_timedwait(&(MM::m_emptyCondition), &(MM::m_emptyLock), &tSpec) != 0)
+		{
+			// Timed out and no CMDs have been added to any queue. Exit
+			pthread_mutex_unlock(&(MM::m_emptyLock));
+			return NULL;
+		}
 		pthread_mutex_unlock(&(MM::m_emptyLock));
-		return NULL;
+	}
 }
 
 /**
