@@ -6,8 +6,8 @@ Exported symbols (use python help!):
 '''
 
 __author__ = ['Johannes Albrecht']
-__date__ = '13/01/2012'
-__version__ = '$Revision: 1.0 $'
+__date__ = '20/08/2012'
+__version__ = '$Revision: 1.1 $'
 
 __all__ = ('LFVLinesConf',
            'config_default',
@@ -39,10 +39,12 @@ class LFVLinesConf(LineBuilder) :
                                   'TauPrescale',
                                   'Tau2MuMuePrescale',
                                   'B2eMuPrescale',
-                                  'B2eePrescale',                                  
+                                  'B2eePrescale', 
                                   'B2heMuPrescale',
                                   'B2pMuPrescale',
                                   'Bu2KJPsieePrescale',
+                                  'B2TauMuPrescale',
+                                  'B2hTauMuPrescale',
                                   )
     
     #### This is the dictionary of all tunable cuts ########
@@ -55,6 +57,8 @@ class LFVLinesConf(LineBuilder) :
         'B2heMuPrescale'      :1,
         'B2pMuPrescale'       :1,
         'Bu2KJPsieePrescale'  :1,
+        'B2TauMuPrescale'       :1,
+        'B2hTauMuPrescale'      :1,
         }                
     
     
@@ -71,6 +75,8 @@ class LFVLinesConf(LineBuilder) :
         hemu_name=name+'B2heMu'
         pmu_name=name+'B2pMu'
         bu_name=name+'Bu2KJPsiee'
+        taumu_name=name+'B2TauMu'
+        htaumu_name=name+'B2hTauMu'
 
         self.selTau2PhiMu = makeTau2PhiMu(tau_name)
         self.selTau2eMuMu = makeTau2eMuMu(mme_name)
@@ -79,6 +85,8 @@ class LFVLinesConf(LineBuilder) :
         self.selB2heMu = makeB2heMu(hemu_name)
         self.selB2pMu = makeB2pMu(pmu_name)
         self.selBu = makeBu(bu_name)
+        self.selB2TauMu = makeB2TauMu(taumu_name)
+        self.selB2hTauMu = makeB2hTauMu(htaumu_name)
                 
         self.tau2PhiMuLine = StrippingLine(tau_name+"Line",
                                      prescale = config['TauPrescale'],
@@ -97,6 +105,11 @@ class LFVLinesConf(LineBuilder) :
                                      postscale = config['Postscale'],
                                      algos = [ self.selB2eMu ]
                                      )
+        #self.b2TauMuLine = StrippingLine(taumu_name+"Line",
+        #                             prescale = config['B2TauMuPrescale'],
+        #                             postscale = config['Postscale'],
+        #                             algos = [ self.selB2TauMu ]
+        #                             )
 
         self.b2eeLine = StrippingLine(ee_name+"Line",
                                      prescale = config['B2eePrescale'],
@@ -104,7 +117,13 @@ class LFVLinesConf(LineBuilder) :
                                      algos = [ self.selB2ee ]
                                        )
 
-        self.b2heMuLine = StrippingLine(hemu_name+"Line",
+        #self.b2hTauMuLine = StrippingLine(htaumu_name+"Line",
+        #                             prescale = config['B2hTauMuPrescale'],
+        #                             postscale = config['Postscale'],
+        #                             algos = [ self.selB2hTauMu ]
+        #                             )
+        
+	self.b2heMuLine = StrippingLine(hemu_name+"Line",
                                      prescale = config['B2heMuPrescale'],
                                      postscale = config['Postscale'],
                                      algos = [ self.selB2heMu ]
@@ -130,6 +149,8 @@ class LFVLinesConf(LineBuilder) :
         self.registerLine(self.b2heMuLine)
         self.registerLine(self.b2pMuLine)
         self.registerLine(self.buLine)        
+        #self.registerLine(self.b2TauMuLine)
+        #self.registerLine(self.b2hTauMuLine)
 
 def makeTau2PhiMu(name):
     """
@@ -202,6 +223,41 @@ def makeTau2eMuMu(name):
 
 
 
+def makeB2TauMu(name):
+    """
+    Please contact Johannes Albrecht if you think of prescaling this line!
+    
+    Arguments:
+    name        : name of the Selection.
+    """
+    
+    from Configurables import OfflineVertexFitter
+    Bs2TauMu = CombineParticles("Combine"+name)
+    Bs2TauMu.DecayDescriptor = "[B_s0 -> tau+ mu-]cc"
+    # Set the OfflineVertexFitter to keep the 4 tracks and not the J/Psi Kstar:
+    Bs2TauMu.addTool( OfflineVertexFitter )
+    Bs2TauMu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
+    Bs2TauMu.OfflineVertexFitter.useResonanceVertex = False
+    #Bs2TauMu.ReFitPVs = True
+    Bs2TauMu.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 3 )"}
+
+    Bs2TauMu.CombinationCut = "(ADAMASS('B_s0')<1200*MeV)"\
+                            "& (AMAXDOCA('')<0.3*mm)"
+
+    Bs2TauMu.MotherCut = "(VFASPF(VCHI2/VDOF)<9) "\
+                              "& (ADMASS('B_s0') < 1200*MeV )"\
+                              "& (BPVDIRA > 0) "\
+                              "& (BPVVDCHI2> 225)"\
+                              "& (BPVIPCHI2()< 25) "
+
+    _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
+    _stdLooseTaus= DataOnDemand(Location = "Phys/StdLooseTaus/Particles")
+
+    return Selection (name,
+                      Algorithm = Bs2TauMu,
+                      RequiredSelections = [ _stdLooseMuons,_stdLooseTaus])
+
+
 def makeB2eMu(name):
     """
     Please contact Johannes Albrecht if you think of prescaling this line!
@@ -272,6 +328,47 @@ def makeB2ee(name):
                       Algorithm = Bs2ee,
                       RequiredSelections = [ _stdLooseElectrons])
 
+
+
+
+def makeB2hTauMu(name):
+    """
+    Please contact Johannes Albrecht if you think of prescaling this line!
+    
+    Arguments:
+    name        : name of the Selection.
+    """
+    
+    from Configurables import OfflineVertexFitter
+    Bs2hTauMu = CombineParticles("Combine"+name)
+    Bs2hTauMu.DecayDescriptors = ["[B+ -> K+ tau+ mu-]cc","[B+ -> K+ tau- mu+]cc",
+                                "[B+ -> pi+ tau+ mu-]cc","[B+ -> pi+ tau- mu+]cc" ]
+    Bs2hTauMu.addTool( OfflineVertexFitter )
+    Bs2hTauMu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
+    Bs2hTauMu.OfflineVertexFitter.useResonanceVertex = False
+    #Bs2hTauMu.ReFitPVs = True
+    Bs2hTauMu.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)>25.)&(TRCHI2DOF<4)",
+                              "pi+" : "(MIPCHI2DV(PRIMARY)>25.)&(TRCHI2DOF<4)",
+                              "K+" : "(MIPCHI2DV(PRIMARY)>25.)&(TRCHI2DOF<4)"}
+
+    Bs2hTauMu.CombinationCut = "(ADAMASS('B+')<600*MeV)"\
+                            "& (AMAXDOCA('')<0.3*mm)"
+
+    Bs2hTauMu.MotherCut = "(VFASPF(VCHI2/VDOF)<9) "\
+                              "& (ADMASS('B_s0') < 600*MeV )"\
+                              "& (BPVDIRA > 0) "\
+                              "& (BPVVDCHI2> 225)"\
+                              "& (BPVIPCHI2()< 25) "
+
+    _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
+    _stdLooseTaus= DataOnDemand(Location = "Phys/StdLooseTaus/Particles")
+    _stdLoosePions= DataOnDemand(Location = "Phys/StdLoosePions/Particles")
+    _stdLooseKaons= DataOnDemand(Location = "Phys/StdLooseKaons/Particles")
+
+    return Selection (name,
+                      Algorithm = Bs2hTauMu,
+                      RequiredSelections = [ _stdLooseMuons,_stdLooseTaus,
+                                             _stdLoosePions, _stdLooseKaons ])
 
 
 
