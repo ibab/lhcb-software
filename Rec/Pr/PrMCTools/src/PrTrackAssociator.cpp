@@ -95,7 +95,6 @@ StatusCode PrTrackAssociator::execute() {
     LHCb::Tracks* tracks = get<LHCb::Tracks> ( *itS );
 
     // Create the Linker table from Track to MCParticle
-    // Linker table is stored in "Link/" + m_linkerOutTable
     // Sorted by decreasing weight, so first retrieved has highest weight
     LinkerWithKey<LHCb::MCParticle,LHCb::Track> myLinker( evtSvc(), msgSvc(), *itS );
 
@@ -145,16 +144,15 @@ StatusCode PrTrackAssociator::execute() {
           ( 2 < m_total.nT    ) ) {
         for ( std::vector<TruthCounter>::iterator it1 = m_truthCounters.begin();
               m_truthCounters.end() != it1; ++it1 ) {
-          if ( (*it1).nT < m_fractionOK * m_total.nT ) continue;  // not match in T
+          if ( (*it1).nT == 0 ) continue;
           const LHCb::MCVertex* vOrigin = (*it1).particle->originVertex();
-          while( 0 != vOrigin ) {
+          if ( 0 != vOrigin ) {
             const LHCb::MCParticle* mother = vOrigin->mother();
-            if( 0 == mother ) break;  // end of ancestors
+            if( 0 == mother ) continue; // no ancestor;
             for ( std::vector<TruthCounter>::iterator it2 = m_truthCounters.begin();
                   m_truthCounters.end() != it2; ++it2 ) {
-              if( (*it2).nVelo < m_fractionOK * m_total.nVelo ) continue;  // not matching in Velo
-
               if( mother == (*it2).particle ) {
+                if ( (*it2).nVelo == 0 ) continue;
 
                 debug() << "  *** Particle " << (*it1).particle->key()
                         << "[" << (*it1).particle->particleID().pid()
@@ -162,12 +160,16 @@ StatusCode PrTrackAssociator::execute() {
                         << " is daughter of " << (*it2).particle->key()
                         << "[" << (*it2).particle->particleID().pid()
                         << "] (" << (*it2).nVelo << "," << (*it2).nTT << "," << (*it2).nT << ")"
+                       << " type " << vOrigin->type()
                         << ". Merge hits to tag both." << endreq;
 
                 //== Daughter hits are added to mother.
                 (*it2).nVelo += (*it1).nVelo;
                 (*it2).nTT   += (*it1).nTT;
                 (*it2).nT    += (*it1).nT;
+                if ( (*it2).nVelo > m_total.nVelo ) (*it2).nVelo = m_total.nVelo;
+                if ( (*it2).nTT   > m_total.nTT   ) (*it2).nTT   = m_total.nTT;
+                if ( (*it2).nT    > m_total.nT    ) (*it2).nT    = m_total.nT;
 
                 //== Mother hits overwrite Daughter hits
                 (*it1).nVelo = (*it2).nVelo;
@@ -175,8 +177,6 @@ StatusCode PrTrackAssociator::execute() {
                 (*it1).nT    = (*it2).nT;
               }
             }
-            // Go one step into the past of family line, so find grandmother
-            vOrigin = mother->originVertex();
           }
         }
       }

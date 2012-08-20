@@ -111,19 +111,29 @@ StatusCode PrChecker::execute() {
         m_allCounters.end() != itC; ++itC ) {
     (*itC)->initEvent();
   }
+
+  LHCb::MCParticles* mcParts = get<LHCb::MCParticles>( LHCb::MCParticleLocation::Default );
+
+  MCTrackInfo trackInfo( evtSvc(), msgSvc() );
+
   LHCb::MCVertices* mcVert = get<LHCb::MCVertices>(LHCb::MCVertexLocation::Default );
   unsigned int nPrim = 0;
   for ( LHCb::MCVertices::iterator itV = mcVert->begin(); mcVert->end() != itV; ++itV ) {
-    if ( (*itV)->isPrimary() ) ++nPrim;
+    if ( (*itV)->isPrimary() ) {
+      int nbVisible = 0;
+      for ( LHCb::MCParticles::iterator itP = mcParts->begin();
+            mcParts->end() != itP; ++itP ) {
+        if ( (*itP)->primaryVertex() == *itV ) {
+          if ( trackInfo.hasVelo( *itP ) ) nbVisible++;
+        }
+      }
+      if ( nbVisible > 4 ) ++nPrim;
+    }
   }
   if ( nPrim >= m_counters.size() ) nPrim = m_counters.size()-1;
   m_counters[nPrim].nEvt++;
   m_counters[nPrim].total += m_forward->nbTrack();
   m_counters[nPrim].ghost += m_forward->nbGhost();
-
-  LHCb::MCParticles* mcParts = get<LHCb::MCParticles>( LHCb::MCParticleLocation::Default );
-
-  MCTrackInfo trackInfo( evtSvc(), msgSvc() );
 
   //== Build a table (vector of vectors) of ids per MCParticle, indexed by MCParticle key.
   AllLinks<LHCb::MCParticle> allIds( evtSvc(), msgSvc(), "Pr/LHCbID" );
@@ -274,6 +284,21 @@ StatusCode PrChecker::finalize() {
              << endmsg;
     }
   }
+  /*
+  info() <<  "       ";
+  for ( int kk = 0 ; 12 > kk ; ++kk ) info() << format( " %7d", kk );
+  info() << endmsg;
+
+  for ( float mu = 1. ; 6. > mu ; mu += 0.5 ) {
+    float poisson = exp( -mu );
+    info() << format( "mu %5.1f ", mu );
+    for ( int kk = 0 ; 12 > kk ; ++kk ) {
+      if ( 0 < kk ) poisson = poisson * mu / float(kk);
+      info() << format( " %7.3f", poisson );
+    }
+    info() << endmsg;
+  }
+  */
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 

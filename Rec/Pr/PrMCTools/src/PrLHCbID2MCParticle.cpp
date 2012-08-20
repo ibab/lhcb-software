@@ -152,16 +152,18 @@ StatusCode PrLHCbID2MCParticle::execute() {
   }
   */
   //== FT
-  LinkedTo<LHCb::MCParticle> ftLink( evtSvc(), msgSvc(),LHCb::FTClusterLocation::Default );
-  if ( !ftLink.notFound() ) {
-    m_detectorLink = &ftLink;
-    typedef FastClusterContainer<LHCb::FTRawCluster,int> FTRawClusters;
-    FTRawClusters* clus = get<FTRawClusters>( LHCb::FTRawClusterLocation::Default );
-    FTRawClusters::const_iterator iClus;
-    for(iClus = clus->begin(); iClus != clus->end(); ++iClus) {
-      LHCb::LHCbID myId = LHCb::LHCbID( (*iClus).channelID() );
-      int id            = myId.ftID();
-      linkAll( myId, id );
+  if ( exist<FastClusterContainer<LHCb::FTRawCluster,int> >(LHCb::FTRawClusterLocation::Default) ) {
+    LinkedTo<LHCb::MCParticle> ftLink( evtSvc(), msgSvc(),LHCb::FTClusterLocation::Default );
+    if ( !ftLink.notFound() ) {
+      m_detectorLink = &ftLink;
+      typedef FastClusterContainer<LHCb::FTRawCluster,int> FTRawClusters;
+      FTRawClusters* clus = get<FTRawClusters>( LHCb::FTRawClusterLocation::Default );
+      FTRawClusters::const_iterator iClus;
+      for(iClus = clus->begin(); iClus != clus->end(); ++iClus) {
+        LHCb::LHCbID myId = LHCb::LHCbID( (*iClus).channelID() );
+        int id            = myId.ftID();
+        linkAll( myId, id );
+      }
     }
   }
   return StatusCode::SUCCESS;

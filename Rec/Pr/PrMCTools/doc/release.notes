@@ -4,6 +4,15 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2012-08-20 - Olivier Callot
+ - Test the existence of the FT container in PrLHCbID2MCParticle
+
+! 2012-08-06 - Olivier Callot
+ - In PrTrackAssociator, revisit the mother-daughter association: The decay can be
+   inside the Velo or inside the T stations. The requirement is direct daughter, 
+   and mother has some Velo hits, daughter some T hits.
+   The ghost rate is then reduced by ~0.5%...
+
 ! 2012-08-01 - Olivier Callot
  - fix a compilation warning. Measure the forward performance versus PV multiplicity
 
