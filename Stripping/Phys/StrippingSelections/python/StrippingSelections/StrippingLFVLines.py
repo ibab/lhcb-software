@@ -85,8 +85,8 @@ class LFVLinesConf(LineBuilder) :
         self.selB2heMu = makeB2heMu(hemu_name)
         self.selB2pMu = makeB2pMu(pmu_name)
         self.selBu = makeBu(bu_name)
-        self.selB2TauMu = makeB2TauMu(taumu_name)
-        self.selB2hTauMu = makeB2hTauMu(htaumu_name)
+        #self.selB2TauMu = makeB2TauMu(taumu_name)
+        #self.selB2hTauMu = makeB2hTauMu(htaumu_name)
                 
         self.tau2PhiMuLine = StrippingLine(tau_name+"Line",
                                      prescale = config['TauPrescale'],
