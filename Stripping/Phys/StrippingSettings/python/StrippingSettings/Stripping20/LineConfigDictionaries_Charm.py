@@ -219,11 +219,11 @@ D2hhCompleteEvent = {
            'UntaggedCFLinePostscale': 1.0,
            'UntaggedSCSLinePrescale': 0.01,
            'UntaggedSCSLinePostscale': 1.0,
-           'TaggedRSLinePrescale': 0.01,
+           'TaggedRSLinePrescale': 0.03,
            'TaggedRSLinePostscale': 1.,
-           'TaggedWSLinePrescale': 0.01,
+           'TaggedWSLinePrescale': 1.0,
            'TaggedWSLinePostscale': 1.,
-           'TaggedSCSLinePrescale': 0.01,
+           'TaggedSCSLinePrescale': 0.03,
            'TaggedSCSLinePostscale': 1.,
            'TaggedRSSSLinePrescale': 0.01,
            'TaggedRSSSLinePostscale': 1.,
@@ -476,9 +476,9 @@ D2hhhControl = {
     'D2HHHIncMinMassPosFit'     : 1100.,
     'D2HHHIncMaxMassPosFit'     : 2070.,
     'MaxTracksInEvent'          :  500,
-    'D2KKPLinePrescale'         :    0.01,
+    'D2KKPLinePrescale'         :    0.03,
     'D2KKPLinePostscale'        :    1.0 ,
-    'D2KPPLinePrescale'         :    0.01,
+    'D2KPPLinePrescale'         :    0.03,
     'D2KPPLinePostscale'        :    1.0,
     'D2PPPLinePrescale'         :    0.0,
     'D2PPPLinePostscale'        :    0.0,
@@ -1342,8 +1342,8 @@ D02KPiGeoForXSec = {
     , 'Dstar_VCHI2VDOF_MAX' : 100.0
     , 'Dstar_MDiff_MAX'     : 155.0 * MeV
     , 'HltFilter'          : "HLT_PASS_RE('Hlt1MB.*')"
-    , 'PrescaleD02HH'             :   1.0
-    , 'PrescaleDstar2D0Pi_D02HH'  :   1.0
+    , 'PrescaleD02HH'             :   0.1
+    , 'PrescaleDstar2D0Pi_D02HH'  :   0.1
     , 'PostscaleD02HH'            :   1.0
     , 'PostscaleDstar2D0Pi_D02HH' :   1.0
     },
@@ -1368,8 +1368,8 @@ Dstar2D0Pi_D02KPiForXSec = {
     , 'Dstar_VCHI2VDOF_MAX'       : 100.0
     , 'Dstar_MDiff_MAX'           : 155.0 * MeV
     , 'HltFilter'          : "HLT_PASS_RE('Hlt1MB.*')"
-    , 'PrescaleD02HH'             :   1.0
-    , 'PrescaleDstar2D0Pi_D02HH'  :   1.0
+    , 'PrescaleD02HH'             :   0.1
+    , 'PrescaleDstar2D0Pi_D02HH'  :   0.1
     , 'PostscaleD02HH'            :   1.0
     , 'PostscaleDstar2D0Pi_D02HH' :   1.0
     },
@@ -1457,8 +1457,8 @@ D2HHHForXSec = {
     , 'D_BPVDIRA_MIN' : 0.9999
     , 'D_BPVVDCHI2_MIN' : 60.0
     , 'HltFilter'          : "HLT_PASS_RE('Hlt1MB.*')"
-    , 'PrescaleD2KPP' : 1.0
-    , 'PrescaleD2KKP' : 1.0
+    , 'PrescaleD2KPP' : 0.1
+    , 'PrescaleD2KKP' : 0.1
     , 'PrescaleD2KKK' : 1.0
     , 'PrescaleD2PPP' : 1.0
     , 'PrescaleD2KPPDCS' : 1.0
@@ -1488,8 +1488,8 @@ D02HHForXSec = {
      , 'Dstar_MDiff_MAX'           : 155.0*MeV
      , 'Dstar_VCHI2VDOF_MAX'       : 100.0
      , 'HltFilter'          : "HLT_PASS_RE('Hlt1MB.*')"
-     , 'PrescaleD02HH'             :   1.0
-     , 'PrescaleDstar2D0Pi_D02HH'  :   1.0
+     , 'PrescaleD02HH'             :   0.1
+     , 'PrescaleDstar2D0Pi_D02HH'  :   0.1
      , 'PostscaleD02HH'            :   1.0
      , 'PostscaleDstar2D0Pi_D02HH' :   1.0
     },
