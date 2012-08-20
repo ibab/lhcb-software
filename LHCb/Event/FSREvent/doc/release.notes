@@ -1,0 +1,83 @@
+!---------------------------------------------------------------------------
+! Package     : Event/EventBase
+! Responsible : Marco Cattaneo, Gloria Corti
+! Purpose     : LHCb Event model
+!---------------------------------------------------------------------------
+
+!========================= EventBase v3r0 2012-03-26 =========================
+! 2012-03-22 - Marco Cattaneo
+ - Remove ProcessHeader::m_randomSeeds since they are not used anywhere and
+   causes portability problems with persistency of vector<long>
+
+!========================== EventBase v2r5p1 2009-06-05 ====================
+! 2009-06-05 - Marco Cattaneo
+ - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows 
+
+!========================== EventBase v2r5 2008-03-04 ======================
+! 2008-02-27 - Chris Jones
+ - Add missing STL includes
+
+!========================== EventBase v2r4 2007-06-07 ======================
+! 2007-06-07 - Marco Cattaneo
+ - Adapt requirements to new GaudiObjDesc v10r0 patterns
+
+!========================== EventBase v2r3 2007-05-14 ======================
+! 2007-05-14 - Marco Cattaneo
+ - Add condDBTags() member to ProcessHeader
+
+!========================== EventBase v2r2 2007-04-19 ======================
+! 2007-04-19 - Chris Jones
+ - Add complete copy constructor for ProcessHeader. 
+   NB : Please remember to update this constructor if the data members of 
+   the class are ever extended in the future.
+
+!========================== EventBase v2r1 2007-02-26 ======================
+! 2007-02-26 - Marco Cattaneo
+ - Add ProcessHeaderLocation::MC. Now all header locations are defined here,
+   to be used if necessary by the derived classes
+
+!========================== EventBase v2r0p1 2007-02-02 ====================
+! 2007-02-02 - Marco Cattaneo
+ - Remove unneccessary rootmap for dictionary
+
+!========================== EventBase v2r0 2006-12-14 =====================
+! 2006-12-06 - Florence RANJARD
+ - replace include_dirs with apply_pattern install_more_includes
+
+!======================== EventBase v1r2 2006-05-09 ========================
+! 2006-05-09 - Marco Cattaneo
+ - Add Boost dependency, needed for Boost allocators in event model
+
+!======================== EventBase v1r1 2006-02-14 ========================
+! 2006-02-14 - Marco Cattaneo
+ - In ProcessHeader, random number seeds are std::vector<long int> to please
+   IRndmEngine interface
+
+! 2006-02-09 - Marco Cattaneo
+ - Add default locations for Digi and Rec to ProcessHeader
+
+! 2006-01-31 - Marco Cattaneo
+ - Add IntLink class, maps between two ints, from Jose Hernando
+
+! 2005-12-12 - Marco Cattaneo
+ - Remove EventHeader.xml, to be replaced by MCHeader and/or RecHeader
+ - Add run number to ProcessHeader
+
+!======================== EventBase v1r0 2005-11-28 ========================
+! 2005-11-28 - Marco Cattaneo
+ - Remove EventBase_load.cpp and link library generation, as object factories
+   are no longer needed with Reflex, and classes are implemented in .h files
+
+! 2005-11-25 - Marco Cattaneo
+ - Remove LHCbTypdefs.h, should be picked up from LHCbDefinitions package
+
+! 2005-11-15 - Gloria CORTI
+ - Change package name to EventBase in *.xml, for GOD Reflex dict generation
+
+! 2005-09-06 - P. Koppenburg
+ - Split package Event/Event into Event/MCEvent and Event/EventBase because 
+ 	 . Packages called Foo/Foo cause problems in cvs
+   . Everything was depending on it which is not that nice since it contains
+     MCParticle for instance
+
+!============================================================================
