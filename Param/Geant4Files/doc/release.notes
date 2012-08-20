@@ -4,9 +4,12 @@
 ! Purpose     : Hold link to Geant4 data files
 !-----------------------------------------------------------------------------
 
-!======================== Geant4Files v95r0 2012-07-27 =======================
-! 2012-07-27 - Nigel Watson
- - Revised symbolic links for Geant 9.5 as below:
+!======================== Geant4Files v95r0 2012-08-20 =======================
+
+! 2012-08-20 - Nigel Watson
+ - Revised symbolic links in data, consistent with requirements:
+
+! 2012-087-27 - Nigel Watson
 
    . G4EMLOW(6.19->6.23)
    . G4NDL(3.14->4.0)
@@ -15,7 +18,7 @@
    . G4NEUTRONXS (1.0->1.1)
    . G4PII (1.2->1.3)
    . RealSurface1.0
-   . No changes for G4ABLA, RealSurface., 
+   . No changes for G4ABLA (3.0), RealSurface (1.0).  
  - Add data file
    . G4ELASTIC1.1
 
