@@ -108,7 +108,26 @@ PromptCharm = {
     'Ds&PsiPrescale'         : 1.0 
     },
     'WGs' : [ 'Charm' ],
-    'STREAMS' : [ 'Charm' ]
+    'STREAMS' : {
+      'Charm' : [    
+        'StrippingD02HHForPromptCharm',
+        'StrippingDstarForPromptCharm',
+        'StrippingDsForPromptCharm',
+        'StrippingDForPromptCharm',
+        'StrippingLambdaCForPromptCharm',
+        'StrippingSigmaCForPromptCharm',
+        'StrippingLambdaCstarForPromptCharm',
+        'StrippingDiMuonAndCharmForPromptCharm',
+        'StrippingChiAndCharmForPromptCharm',
+        'StrippingDsPsiForPromptCharm',
+        'StrippingCharmAndWForPromptCharm',
+        'StrippingDiMuonAndWForPromptCharm',
+        'StrippingChiAndWForPromptCharm'
+        ],
+      'CharmCompleteEvent' : [
+        'StrippingDiCharmForPromptCharm'
+        ]
+      }
     }
 
 ## D0 -> h+h- (tagged & untagged).
