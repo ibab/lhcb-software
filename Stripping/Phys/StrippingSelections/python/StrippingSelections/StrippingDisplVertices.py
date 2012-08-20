@@ -1,418 +1,517 @@
-
 """
-Module for the selection of events with displaced vertices.
-
-The selection of displaced vertices is achieved in 3 steps :
-      - Reconstruction of all vertices with >= 4 tracks
-        with PatPV3D, with optimized cuts for smaller vertices
-        than PV's.
-      - RecVertices2Particles loops on all reconstructed vertices.
-        The one with lowest z (upstream) is not considered
-        Vertices with at least one backward track are not considered.
-        Vertices close to the beam line removed.
-        To allow for kinematical cuts, association is done between the Velo
-        tracks participating to the vertex and the best Particles
-        (from Rec/Track/Best) with best PID.
-        Vertices that are found to be close to the detector material
-        could be possibly eliminated.
-      - DisplVertices : basic cuts on the selected candidates
-        2 kinds of cuts are applied to the set of displaced vertices :
-           >=1 prey passing thighter cuts
-               --> when hunting single long-lived particles
-               --> Achieved in SingleDisplVtx
-           >=2 preys passing looser cuts
-               --> when looking for 2 particles, coming from a mother one.
-               --> Achieved in DoubleDisplVtx
-
+Configuration for the Exotic Displaced Vertex Stripping lines
 """
 
-__author__ = ['Neal Gauvin', 'Victor Coco']
-__date__ = '21/02/2011'
-__version__ = '$Revision: 3.0 $'
+__author__ = ['Neal Gauvin', 'Victor Coco', "Veerle Heijne", "Pieter David"]
+__date__   = '17/07/2012'
 
+__all__ = ( 'DisplVerticesLinesConf' )
 
 from Gaudi.Configuration import *
-from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
-from PhysSelPython.Wrappers import Selection
-from StrippingConf.StrippingLine import StrippingLine
+from GaudiKernel import SystemOfUnits as units
+from LHCbKernel.Configuration import DEBUG, VERBOSE
+
+from PhysSelPython.Wrappers import AutomaticData, Selection
+from StrippingConf.StrippingLine import StrippingLine, bindMembers
 from StrippingUtils.Utils import LineBuilder
 
-from GaudiKernel.SystemOfUnits import *
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 
+from StrippingSelections.DisplVertices_Utils import SelectionPatPV3DWrapper
 
+# constants
+LLPLHCbName = "~chi_10"
 
+config = {
+        ## Velo tracks filter
+          "FilterVelo"              : { "Apply"                : True
+                                      , "MinIP"                : 0.1*units.mm
+                                      , "MinIPChi2"            : -1.0
+                                      , "MinNumTracks"         : 4
+                                      , "PVLocation"           : "Rec/Vertex/Primary" ## TODO check if this makes sense
+                                      , "RejectSplashEvents"   : False
+                                      , "RemoveBackwardTracks" : True
+                                      }
 
-__all__ = ('DisplVerticeLinesConf',
-           'PatPV3DWrapper',
-           'confdict')
+        #==========        SELECTION CUT VALUES         ==========#
 
-confdict = {
-    'NCands':{
-       'SinglePS': 1 ,
-       'JPsiHLT': 1 ,
-       'MinBias': 1 ,
-       'SingleDown': 1 ,
-       'Double':2,
-       'SingleHighMass':1,
-       'SingleHighFD':1,
-       'SingleMedium':1
-    },
-    'RCutMethod' : 'FromBeamSpot',
-    'MinR':{
-       'PreselVelo':     0.4*mm ,
-       'SinglePS': 0.4*mm ,
-       'JPsiHLT': 0.7*mm ,
-       'MinBias': 0.7*mm ,
-       'SingleDown': 3.0*mm ,
-       'Double': 1.0*mm ,
-       'SingleHighMass': 1.5*mm , 
-       'SingleHighFD': 5.*mm,
-       'SingleMedium': 3.2*mm
-    },
-    'MinMass':{
-       'PreselVelo': 3.*GeV , 
-       'SinglePS': 3.*GeV ,  
-       'JPsiHLT': 5.5*GeV , 
-       'MinBias': 5.5*GeV , 
-       'SingleDown': 4.5*GeV,
-       'Double': 6.*GeV , 
-       'SingleHighMass':  15.*GeV,
-       'SingleHighFD': 7.*GeV,
-       'SingleMedium': 10.*GeV
-    },
-    'MinMass2':{
-       'Double': 7.*GeV 
-    },
-    'MinSumPt':{
-       'PreselVelo': 3.*GeV , 
-       'SinglePS': 3.*GeV , 
-       'JPsiHLT': 3.*GeV , 
-       'MinBias': 3.*GeV , 
-       'SingleDown': 3.*GeV,
-       'Double': 3.*GeV , 
-       'SingleHighMass':  3.*GeV,
-       'SingleHighFD': 3.*GeV,
-       'SingleMedium': 3.*GeV
-    },
-    'NTracks':{
-       'PreselVelo':     4,
-       'SinglePS': 4 ,
-       'JPsiHLT': 6 ,
-       'MinBias': 4 ,
-       'SingleDown': 4 ,
-       'Double':6 ,
-       'SingleHighMass': 6,
-       'SingleHighFD': 7,
-       'SingleMedium': 6
-    },
-    'MinZ':{   
-       'SingleDown': 150.*mm  ,
-    },
-    'MaterialVeto':{
-       'PreselVelo': 5,
-       'SinglePS': 0 ,
-       'JPsiHLT': 0 ,
-       'MinBias': 0 ,
-       'SingleDown': 0 ,
-       'Double': 5 ,
-       'SingleHighMass':5,
-       'SingleHighFD':5,
-       'SingleMedium': 5
-    },
-    'prescale':{
-       'SinglePS': 0.005 ,
-       'JPsiHLT': 1. ,
-       'MinBias': 1. ,
-       'SingleDown': 1. ,
-       'Double': 1. ,
-       'SingleHighMass':1.,
-       'SingleHighFD':1.,
-       'SingleMedium': 1.
-    },
-    'HLT':{
-       'SinglePS': '' ,
-       'SingleDown': '' ,
-       'Double': '' ,
-       'SingleHighMass':'',
-       'SingleHighFD':"",
-       'SingleMedium':'',
-       'JPsiHLT':"HLT_PASS_RE('Hlt2DiMuonJPsiDecision')",
-       'MinBias':"HLT_PASS_RE('Hlt1MBNoBiasDecision')",
-       'SingleHLTPS':"HLT_PASS_RE('Hlt2DisplVertices(Single|SingleMV)PostScaledDecision')",
-       'DoubleHLTPS':"HLT_PASS_RE('Hlt2DisplVerticesDoublePostScaledDecision')"
-    }
- }
+        ## Velo reconstruction
+        , "RV2PWithVelo"            : { "MinRho"               :  0.4*units.mm
+                                      , "MinMass"              :  4.0*units.GeV
+                                      , "MinSumPT"             :  3.0*units.GeV
+                                      , "MinNumTracks"         :  4
+                                      , "ApplyMatterVeto"      : False
+                                      , "MaxFractE1Track"      :  0.9
+                                      , "MaxFractTrwHitBefore" :  0.49
+                                      ## Reco only
+                                      , "MaxChi2NonVeloOnly"   : 5.0
+                                      , "UseVeloTracks"        : False
+                                      , "ComputeMatterVeto"    : True
+                                      , "FirstPVMaxRho"        : 0.3*units.mm
+                                      , "FirstPVMinZ"          : -300.0*units.mm
+                                      , "FirstPVMaxZ"          : 500.0*units.mm
+                                      , "FirstPVMinNumTracks"  : 10
+                                      }
+        ## Single LLP line
+        , "SingleSelection"         : { "PreScale"             :  1.0
+                                                                 #       HighMass,         Medium,         HighFD
+                                      , "MinRho"               : [  0.7*units.mm ,  2.5*units.mm ,  4.*units.mm  ]
+                                      , "MinMass"              : [ 9.5*units.GeV,  7.5*units.GeV,  5.5*units.GeV ]
+                                      , "MinSumPT"             :  3.0*units.GeV
+                                      , "MinNumTracks"         : [  7            ,  6            ,  6             ]
+                                      , "ApplyMatterVeto"      : True
+                                      , "MaxFractE1Track"      :  0.9
+                                      , "MaxFractTrwHitBefore" :  0.49
+                                      }
+        # prescaled
+        , "SinglePSSelection"       : { "PreScale"             :  1.0
+                                      , "MinRho"               :  0.4*units.mm
+                                      , "MinMass"              :  3.0*units.GeV
+                                      , "MinSumPT"             :  0.0*units.GeV
+                                      , "MinNumTracks"         :  4
+                                      , "ApplyMatterVeto"      : False
+                                      , "MaxFractE1Track"      :  0.9
+                                      , "MaxFractTrwHitBefore" :  0.49
+                                      }
 
-from SelPy.utils import (UniquelyNamedObject,
-                         ClonableObject,
-                         SelectionBase)
+        ## Double LLP line
+        , "DoubleSelection"         : { "PreScale"             :  1.0
+                                      , "MinRho"               :  0.7*units.mm
+                                      , "MinMass"              :  4.5*units.GeV
+                                      , "MinSumPT"             :  0.0*units.GeV
+                                      , "MinNumTracks"         :  4
+                                      , "ApplyMatterVeto"      : False
+                                      , "MaxFractE1Track"      :  0.9
+                                      , "MaxFractTrwHitBefore" :  0.49
+                                      ## Double only
+                                      , "MinHighestMass"       : 5.5*units.GeV
+                                      , "ApplyMatterVetoOne"   : True
+                                      }
 
-from PhysSelPython.Wrappers import checkName
+        ## Downstream reconstruction
+        , "RV2PDown"                : { "MinRho"               :  3.0*units.mm
+                                      , "MinMass"              :  4.5*units.GeV
+                                      , "MinSumPT"             :  3.0*units.GeV
+                                      , "MinNumTracks"         :  4
+                                      , "ApplyMatterVeto"      : False
+                                      , "MaxFractE1Track"      :  0.9
+                                      , "MaxFractTrwHitBefore" :  0.49
+                                      ## Reco only
+                                      , "MaxChi2NonVeloOnly"   : 5.0
+                                      , "UseVeloTracks"        : False
+                                      , "ComputeMatterVeto"    : False
+                                      , "FirstPVMaxRho"        : 0.3*units.mm
+                                      , "FirstPVMinZ"          : -300.0*units.mm
+                                      , "FirstPVMaxZ"          : 500.0*units.mm
+                                      , "FirstPVMinNumTracks"  : 10
+                                      }
+        , "SingleDownSelection"     : { "PreScale"             :  1.0
+                                      , "MinRho"               :  3.0*units.mm
+                                      , "MinMass"              :  4.0*units.GeV
+                                      , "MinSumPT"             :  0.0*units.GeV
+                                      , "MinNumTracks"         :  4
+                                      , "ApplyMatterVeto"      : False
+                                      , "MaxFractE1Track"      :  0.9
+                                      , "MaxFractTrwHitBefore" :  0.49
+                                      # Down only
+                                      , "MinZ"                 :  150.*units.mm
+                                      }
 
-class PatPV3DWrapper(UniquelyNamedObject,
-                                            ClonableObject,
-                                            SelectionBase) :
+        #========== Other lines for efficiency studies ==========#
+        , "HLTPS"             : { "PreScale"             :  1.0 }
+        , "HltEffCharmHLTSelection"  : { "PreScale"             :  1.0
+                                      , "MinRho"               :  0.4*units.mm
+                                      , "MinMass"              :  5.5*units.GeV
+                                      , "MinSumPT"             :  3.0*units.GeV
+                                      , "MinNumTracks"         :  5
+                                      , "ApplyMatterVeto"      : False
+                                      , "MaxFractE1Track"      :  0.9
+                                      , "MaxFractTrwHitBefore" :  0.49
+                                      }
 
-    def __init__(self,
-                 name,
-                 Algorithm,
-                 Output,
-                 RequiredSelection = []):
-    
-        checkName(name)
-        UniquelyNamedObject.__init__(self, name)
-        ClonableObject.__init__(self, locals())
-        
-        alg= Algorithm.clone(name,OutputVerticesName=Output)
-        SelectionBase.__init__(self,
-                               algorithm = alg,
-                               outputLocation = Output,
-                               requiredSelections = RequiredSelection )
+        #==========     HLT filters for all lines      ==========#
+        , "HLT"                     : { "CharmHLT"     : "HLT_PASS('Hlt2CharmHadD02HH_D02KPiDecision')"
+                                      , "HLTPS" : "HLT_PASS_RE('Hlt2DisplVertices(Single|SingleLoose|Double)PSDecision')"
+                                      }
+        }
 
-## class CopyDownstreamTracksWrapper(UniquelyNamedObject,
-##                                             ClonableObject,
-##                                             SelectionBase) :
-
-##     def __init__(self,
-##                  name,
-##                  Algorithm,
-##                  Output):
-    
-##         checkName(name)
-##         UniquelyNamedObject.__init__(self, name)
-##         ClonableObject.__init__(self, locals())
-        
-##         alg= Algorithm.clone(name,=Output)
-##         SelectionBase.__init__(self,
-##                                algorithm = alg,
-##                                outputLocation = Output,
-##                                requiredSelections = RequiredSelection )
-        
-
-
-class DisplVerticeLinesConf(LineBuilder) :
+class DisplVerticesLinesConf(LineBuilder):
     """
-    """
+    Configuration for the Exotic Displaced Vertex Stripping lines
 
+    The selection is achieved in 3 steps :
+        - (optional) tracks not originating from a PV are selected,
+          through a minimum IP cut
+        - vertex reconstruction (PatPV3D with settings for low-multiplicity vertices)
+        - LLParticlesFromRecVertices creates particles out of these vertices, applying some common cuts already (to keep timing low)
+        - Each line applies cuts optimised for a different part of phasespace.
+          "Single" lines add a FilterDesktop and "Double" lines a CombineParticles algorithm
+    """
     __configuration_keys__ = (
-            'NCands'
-            ,'RCutMethod'
-            ,'MinR'
-            ,'MinMass'
-            ,'MinMass2'
-            ,'MinSumPt'
-            ,'NTracks'
-            ,'MinZ'
-            ,'MaterialVeto'
-            ,'prescale'
-            ,'HLT'
-        )
+              "FilterVelo"
+            , "RV2PWithVelo"
+            , "SingleSelection"
+            , "SinglePSSelection"
+            , "DoubleSelection"
+            , "RV2PDown"
+            , "SingleDownSelection"
+            , "HLTPS"
+            , "HltEffCharmHLTSelection"
+            , "HLT"
+            )
 
-    __confdict__={}
-        
+    def validatedGetProps(self, selName, propsToSet):
+        """
+        Get the __configuration_keys__[selName] dictionary, checking it contains all propsToSet
+        """
+        settings = self.configurationParameter(selName)
+        for p in propsToSet:
+            if not p in settings:
+                print "Missing configuration parameter for %s : %s" % ( selName, p )
+            assert p in settings
+        return settings
+    def validatedSetProps(self, selName, propsToSet, conf, ignoreIfMissing=False):
+        """
+        Helper method to validate (all propsToSet MUST be in __configuration_keys__[selName])
+        and set all properties propNames of configurable conf
+        """
+        settings = self.validatedGetProps(selName, propsToSet)
+        for p in propsToSet:
+            if not ignoreIfMissing:
+                setattr( conf, p, settings[p] )
 
-    def __init__(self, name, config) :
-        LineBuilder.__init__(self, name, config)
-        self.__confdict__= config
-        self.name = name
-        '''
-        Velo vertex reconstruction function  _dvVeloReco() is common to all lines using velo vertex
-        Downstream vertex reconstruction function  _dvDownReco() is common to all lines using downstream vertex
-        '''
+    veloWithIPCuts = [ "MinIP", "MinIPChi2", "MinNumTracks", "PVLocation", "RejectSplashEvents", "RemoveBackwardTracks" ]
+    singleCuts = [ "MinNumTracks", "MinRho", "MinMass", "MinSumPT", "ApplyMatterVeto", "MaxFractE1Track", "MaxFractTrwHitBefore" ]
+    downCuts = [ "MinZ" ]
+    doubleResonanceCuts = [ "MinHighestMass", "ApplyMatterVetoOne" ]
+    recoCuts = [ "MaxChi2NonVeloOnly", "UseVeloTracks", "ComputeMatterVeto", "FirstPVMaxRho", "FirstPVMinZ", "FirstPVMaxZ", "FirstPVMinNumTracks" ]
 
-        self.dvVeloReco = self._dvVeloReco(name)
-        self.VeloDVPreselection = self._veloDVPreselection(name)
-        self.DownstreamTracks =  self._dvDownstreamTrackSelection(name)
-        self.dvDownReco = self._dvDownstreamReco(name)
-        self.DownDVPreselection = self._downstreamDVPreselection(name)
-        
-        self.singlePSLine = self._makeDVLine('SinglePS', name,  hlt = self.__confdict__['HLT']['SinglePS'])
-        self.downstreamLine = self._makeDVDownLine('SingleDown', name, hlt = self.__confdict__['HLT']['SingleDown'])
-        self.singleHighMassLine = self._makeDVLine('SingleHighMass', name , hlt = self.__confdict__['HLT']['SingleHighMass'])
-        self.singleHighFDLine = self._makeDVLine('SingleHighFD', name, hlt = self.__confdict__['HLT']['SingleHighFD'])
-        self.singleMediumLine = self._makeDVLine('SingleMedium', name, hlt = self.__confdict__['HLT']['SingleMedium'])
-        self.doubleLine = self._makeDVLine('Double', name, hlt = self.__confdict__['HLT']['Double'])
-        self.doubleHLTPSLine =  self._makeDVLineFromTrigger('DoubleHLTPS', name, hlt = self.__confdict__['HLT']['DoubleHLTPS'])
-        self.singleHLTPSLine =  self._makeDVLineFromTrigger('SingleHLTPS', name, hlt = self.__confdict__['HLT']['SingleHLTPS'])
-        self.JPsiHLTLine =  self._makeDVLine('JPsiHLT', name, hlt = self.__confdict__['HLT']['JPsiHLT'])
-        self.MinBias =  self._makeDVLine('MinBias', name, hlt = self.__confdict__['HLT']['MinBias'])
-        
-        self.registerLine(self.downstreamLine)
-        self.registerLine(self.singlePSLine)
-        self.registerLine(self.singleHighMassLine)
-        self.registerLine(self.singleMediumLine)
-        self.registerLine(self.singleHighFDLine)
-        self.registerLine(self.doubleLine)
-        self.registerLine(self.doubleHLTPSLine)
-        self.registerLine(self.singleHLTPSLine)
-        self.registerLine(self.JPsiHLTLine)
-        self.registerLine(self.MinBias)
-        
-        self.Lines = []
+    llpSelectionPreambulo = [ "from LoKiPhys.decorators import *"
+                            , "from LoKiTracks.decorators import *"
+                            , "INMATTER                           = ( INFO( 51, -1000.0 ) > 0.5 )"
+                            , "ENDVERTEXRHO                       =   INFO( 52, -1000.0 )"
+                            #, "VSIGMARHO                          =   INFO( 53, -1000.0 )"
+                            #, "VSIGMAZ                            =   INFO( 54, -1000.0 )"
+                            , "FRACTDAUGHTERTRACKSWITHUPSTREAMHIT =   INFO( 55, -1000.0 )"
+                            , "MAXFRACTENERGYINSINGLETRACK        =   INFO( 56, -1000.0 )"
+                            , "SUMPT                              =   INFO( 57, -1000.0 )"
+                            ]
 
-       
-    def _dvVeloReco( self,  name ):
-        from Configurables import PatPV3D,PVOfflineTool,PVSeed3DTool,LSAdaptPV3DFitter
-        _veloVertices = PatPV3D(name+'DV3DAlg')
-        _veloVertices.OutputVerticesName = 'Rec/'+name+'DV3D/RecVertices'
-        _veloVertices.addTool(PVOfflineTool)
-        _veloVertices.PVOfflineTool.InputTracks = ["Rec/Track/Best"]
-        _veloVertices.PVOfflineTool.PVsChi2Separation = 0
-        _veloVertices.PVOfflineTool.PVsChi2SeparationLowMult = 0
-        _veloVertices.PVOfflineTool.PVSeedingName = "PVSeed3DTool"
-        _veloVertices.PVOfflineTool.addTool(PVSeed3DTool)
-        _veloVertices.PVOfflineTool.PVSeed3DTool.MinCloseTracks = 3
-        _veloVertices.PVOfflineTool.addTool( LSAdaptPV3DFitter )
-        _veloVertices.PVOfflineTool.PVFitterName = "LSAdaptPV3DFitter"
-        _veloVertices.PVOfflineTool.LSAdaptPV3DFitter.maxIP2PV = 2*mm
-        _veloVertices.PVOfflineTool.LSAdaptPV3DFitter.MinTracks = 4
-        return PatPV3DWrapper(name+ 'DV3D',_veloVertices,'Rec/'+name+'DV3D/RecVertices')
-## return Selection( name+ 'DV3D',
-##                           Algorithm = _veloVertices,
-##                           Extension="RecVertices",
-##                           OutputBranch="Rec",
-##                           InputDataSetter=None)
+    def getLLPSelection(self, cutValues):
+        selCuts        = [ "~ISBASIC" ]
+        selCutsConf    = { "MinMass"              : "MM > {cutVal}"
+                         , "MinSumPT"             : "SUMPT > {cutVal}"
+                         , "MinNumTracks"         : "NDAUGS >= {cutVal}"
+                         , "MinRho"               : "ENDVERTEXRHO > {cutVal}"
+                         , "MaxFractTrwHitBefore" : "FRACTDAUGHTERTRACKSWITHUPSTREAMHIT < {cutVal}"
+                         , "MaxFractE1Track"      : "MAXFRACTENERGYINSINGLETRACK < {cutVal}"
+                         }
+        if cutValues["ApplyMatterVeto"]:
+            selCuts.insert(1, "~INMATTER")
+        if "MinZ" in cutValues:
+            selCutsConf["MinZ"] = "VFASPF(VZ) > {cutVal}"
 
-    def _dvDownstreamTrackSelection( self,  name ):
-        from Configurables import CopyDownstreamTracks
-        _CopyDownstream = CopyDownstreamTracks( name+ "DownstreamTrCpy" )
-        _CopyDownstream.Inputs = ["Rec/Track/Best"]
-        _CopyDownstream.Output = 'Rec/'+name+'DownstreamTr/Tracks'
-        #return PatPV3DWrapper(name+ 'DownstreamTr',_CopyDownstream,'Rec/'+name+'DownstreamTr/Tracks')
-        return Selection( name+ 'DownstreamTr',
-                          Algorithm = _CopyDownstream,
-                          Extension="Tracks",
-                          OutputBranch="Rec",
-                          InputDataSetter=None)
-        
-    def _dvDownstreamReco( self,  name ):
-        from Configurables import PatPV3D,PVOfflineTool,PVSeed3DTool,LSAdaptPVFitter
-        _downVertices = PatPV3D(name+'DownDV3DAlg')
-        _downVertices.OutputVerticesName = 'Rec/'+name+'DownDV3D/RecVertices'
-        _downVertices.addTool(PVOfflineTool)
-        _downVertices.PVOfflineTool.addTool( LSAdaptPVFitter )
-        _downVertices.PVOfflineTool.InputTracks = ['Rec/'+name+'DownstreamTr/Tracks']
-        _downVertices.PVOfflineTool.RequireVelo = False
-        _downVertices.PVOfflineTool.PVsChi2Separation = 0
-        _downVertices.PVOfflineTool.PVsChi2SeparationLowMult = 0
-        _downVertices.PVOfflineTool.addTool(PVSeed3DTool )
-        _downVertices.PVOfflineTool.PVSeedingName = "PVSeed3DTool"
-        _downVertices.PVOfflineTool.PVSeed3DTool.MinCloseTracks = 4
-        _downVertices.PVOfflineTool.PVSeed3DTool.TrackPairMaxDistance = 2*mm
-        _downVertices.PVOfflineTool.PVSeed3DTool.zMaxSpread = 20*mm
-        _downVertices.PVOfflineTool.addTool( LSAdaptPVFitter )
-        _downVertices.PVOfflineTool.PVFitterName = "LSAdaptPVFitter"
-        _downVertices.PVOfflineTool.LSAdaptPVFitter.MinTracks = 4
-        _downVertices.PVOfflineTool.LSAdaptPVFitter.maxChi2 = 400.0
-        _downVertices.PVOfflineTool.LSAdaptPVFitter.maxDeltaZ = 0.0005 *mm
-        _downVertices.PVOfflineTool.LSAdaptPVFitter.maxDeltaChi2NDoF =  0.002
-        _downVertices.PVOfflineTool.LSAdaptPVFitter.acceptTrack = 0.000000001
-        _downVertices.PVOfflineTool.LSAdaptPVFitter.trackMaxChi2 = 9
-        _downVertices.PVOfflineTool.LSAdaptPVFitter.trackMaxChi2Remove = 64
-        
-        return PatPV3DWrapper(name+'DownDV3D',_downVertices,'Rec/'+name+'DownDV3D/RecVertices',[ self.DownstreamTracks ])
-##         return Selection( name+ 'DownDV3D',
-##                           Algorithm = _downVertices,
-##                           RequiredSelections = [ self.DownstreamTracks ],
-##                           Extension="RecVertices",
-##                           OutputBranch="Rec",
-##                           InputDataSetter=None)
+        # Loop over cuts, remember which are complicated
+        specificCuts = []
+        for cut, funct in selCutsConf.iteritems():
+            if hasattr(cutValues[cut], "__iter__"):
+                specificCuts.append(cut)
+            else:
+                selCuts.append(funct.format(cutVal=cutValues[cut]))
+        # concatenate AND
+        commonCutsCode = "\n & ".join( "( %s )" % cutFunct for cutFunct in selCuts )
+        if len(specificCuts) > 0:
+            # Sanity check on "merged selection cut values"
+            nPaths = len(cutValues[specificCuts[0]])
+            for specCut in specificCuts[1:]:
+                assert len(cutValues[specCut]) == nPaths
+            # Construct and concatenate (AND) the merged selection paths
+            specificCutsCodes = [ "( %s )" % " & ".join( "( %s )" % selCutsConf[cut].format(cutVal=cutValues[cut][i]) for cut in specificCuts ) for i in xrange(nPaths) ]
+            # Return the total LoKi functor
+            return "%s \n & ( %s )" % ( commonCutsCode, "\n   | ".join(specificCutsCodes) )
+        else:
+            return commonCutsCode
+
+    def getResonanceSelection(self, cutValues):
+        combCuts = [ "AHASCHILD( MM > %(MinHighestMass)s )"
+                   ]
+        if cutValues["ApplyMatterVetoOne"]:
+            combCuts.insert(0, "AHASCHILD( ~INMATTER )")
+
+        combCode = "\n & ".join( "( %s )" % ( cut % cutValues ) for cut in combCuts )
+
+        motherCode = "ALL"
+
+        return combCode, motherCode
+
+    def __init__( self, name, config ):
+        LineBuilder.__init__( self, name, config )
+
+        #######################################################################
+        ###                                                                 ###
+        ###     VELO BASED VERTEXING SEQUENCE                               ###
+        ###                                                                 ###
+        #######################################################################
+
+        bestTracks = AutomaticData("Rec/Track/Best")
+
+        withVeloTracksForVertexing = bestTracks
+        if self.configurationParameter("FilterVelo")["Apply"]:
+            from GaudiConfUtils.ConfigurableGenerators import SelectVeloTracksNotFromPV
+
+            veloWithIP = SelectVeloTracksNotFromPV()
+            self.validatedSetProps( "FilterVelo", DisplVerticesLinesConf.veloWithIPCuts, veloWithIP )
+
+            withVeloTracksForVertexing = Selection( "%sVeloFilteredTracks" % self.name()
+                                           , RequiredSelections = [ bestTracks ]
+                                           , Algorithm = veloWithIP
+                                           )
+
+        # Displaced Vertex reconstruction with best tracks (dominated by those with a Velo segment)
+        from Configurables import PatPV3D, PVOfflineTool, PVSeed3DTool, LSAdaptPV3DFitter, LSAdaptPVFitter
+
+        withVeloVertexFinder = PVOfflineTool( "%sWithVeloVertexFinder" % self.name()
+                                 , PVsChi2Separation = 0
+                                 , PVsChi2SeparationLowMult = 0
+                                 , PVSeedingName   = "PVSeed3DTool"
+                                 , PVFitterName    = "LSAdaptPV3DFitter"
+                                 )
+        withVeloVertexFinder.addTool(PVSeed3DTool)
+        withVeloVertexFinder.PVSeed3DTool.MinCloseTracks       = 3
+
+        withVeloVertexFinder.addTool(LSAdaptPV3DFitter)
+        withVeloVertexFinder.LSAdaptPV3DFitter.maxIP2PV        = 2.0*units.mm
+        withVeloVertexFinder.LSAdaptPV3DFitter.MinTracks       = 4
+
+        withVeloVertexAlg = PatPV3D( "%sWithVeloVertexAlg" )
+        withVeloVertexAlg.addTool( withVeloVertexFinder, name="PVOfflineTool" )
+
+        withVeloVertexing = SelectionPatPV3DWrapper( "%sWithVeloVertexing" % self.name()
+                              , withVeloVertexAlg
+                              , RequiredSelections = [ withVeloTracksForVertexing ]
+                              )
+
+        # Make Particles out of the RecVertices
+        from GaudiConfUtils.ConfigurableGenerators import LLParticlesFromRecVertices
+
+        rv2pWithVelo = LLParticlesFromRecVertices(
+                           VerticesFromVeloOnly = False
+                         , WriteP2PVRelations   = False
+                         , ForceP2PVBuild       = False
+                         )
+        self.validatedSetProps( "RV2PWithVelo", DisplVerticesLinesConf.recoCuts + DisplVerticesLinesConf.singleCuts, rv2pWithVelo )
+
+        withVeloCandidates = Selection( "%sWithVeloCandidates" % self.name()
+                               , RequiredSelections = [ withVeloVertexing ]
+                               , Algorithm          = rv2pWithVelo
+                               , InputDataSetter    = "RecVertexLocations"
+                               )
+
+        #######################################################################
+        ###                                                                 ###
+        ###     DOWNSTREAM VERTEXING SEQUENCE                               ###
+        ###                                                                 ###
+        #######################################################################
+
+        from GaudiConfUtils.ConfigurableGenerators import CopyDownstreamTracks
+
+        downTracks = Selection( "%sDownstreamTracks" % self.name()
+                       , RequiredSelections = [ bestTracks ]
+                       , Algorithm          = CopyDownstreamTracks()
+                       )
+
+        # Displaced Vertex reconstruction from downstream tracks
+        downVertexFinder = PVOfflineTool( "%sDownVertexFinder" % self.name()
+                                        , RequireVelo     = False
+                                        , PVsChi2Separation = 0
+                                        , PVsChi2SeparationLowMult = 0
+                                        , PVSeedingName   = "PVSeed3DTool"
+                                        , PVFitterName    = "LSAdaptPVFitter"
+                                        )
+        downVertexFinder.addTool(PVSeed3DTool)
+        downVertexFinder.PVSeed3DTool.TrackPairMaxDistance = 2.0*units.mm
+        downVertexFinder.PVSeed3DTool.zMaxSpread           = 20.0*units.mm
+        downVertexFinder.PVSeed3DTool.MinCloseTracks       = 4
+        downVertexFinder.addTool(LSAdaptPVFitter)
+        downVertexFinder.LSAdaptPVFitter.MinTracks          = 4
+        downVertexFinder.LSAdaptPVFitter.maxChi2            = 400.0
+        downVertexFinder.LSAdaptPVFitter.maxDeltaZ          = 0.0005 *units.mm
+        downVertexFinder.LSAdaptPVFitter.maxDeltaChi2NDoF   = 0.002
+        downVertexFinder.LSAdaptPVFitter.acceptTrack        = 0.000000001
+        downVertexFinder.LSAdaptPVFitter.trackMaxChi2       = 9
+        downVertexFinder.LSAdaptPVFitter.trackMaxChi2Remove = 64
+
+        downVertexAlg = PatPV3D( "%sDownVertexAlg" % self.name() )
+        downVertexAlg.addTool(downVertexFinder, name="PVOfflineTool")
+
+        downVertexing = SelectionPatPV3DWrapper( "%sDownVertexing" % self.name()
+                          , downVertexAlg
+                          , RequiredSelections = [ downTracks ]
+                          )
+
+        # Make Particles out of the RecVertices
+        rv2pDown = LLParticlesFromRecVertices(
+                       VerticesFromVeloOnly = False
+                     , WriteP2PVRelations   = False
+                     , ForceP2PVBuild       = False
+                     , OutputLevel          = VERBOSE
+                     )
+        self.validatedSetProps( "RV2PDown", DisplVerticesLinesConf.recoCuts + DisplVerticesLinesConf.singleCuts, rv2pDown )
+
+        downCandidates = Selection( "%sDownCandidates" % self.name()
+                           , RequiredSelections = [ downVertexing ]
+                           , Algorithm          = rv2pDown
+                           , InputDataSetter    = "RecVertexLocations"
+                           )
+
+        #######################################################################
+        ###                                                                 ###
+        ###     LINE DEFINITIONS                                            ###
+        ###                                                                 ###
+        #######################################################################
+
+        ##============================== Single ===================================##
+
+        singleLineNames = [ p.split("Single")[1].split("Selection")[0]
+                                for p in self.configKeys()
+                                    if p.startswith("Single")
+                                    and p.endswith("Selection")
+                          ]
+
+        for lAcroName in singleLineNames:
+            lShortName = "Single%s" % lAcroName             # SingleMedium
+            lSelName   = "%sSelection" % lShortName         # SingleMediumSelection
+            lLineName  = "%s%s" % (self.name(), lShortName) # DisplVerticesSingleMedium
+
+            # Choose between Velo-based and downstream vertexing input
+            candidates = withVeloCandidates
+            code = None
+            if "Down" in lAcroName:
+                candidates = downCandidates
+                code = self.getLLPSelection( self.validatedGetProps(lSelName, DisplVerticesLinesConf.singleCuts + DisplVerticesLinesConf.downCuts) )
+            else:
+                code = self.getLLPSelection( self.validatedGetProps(lSelName, DisplVerticesLinesConf.singleCuts) )
+
+            lineFilter = FilterDesktop(
+                             DecayDescriptor    = LLPLHCbName
+                           , Preambulo          = DisplVerticesLinesConf.llpSelectionPreambulo
+                           , Code               = code
+                           , WriteP2PVRelations = False
+                           , ForceP2PVBuild     = False
+                           #, OutputLevel        = VERBOSE
+                           )
+
+            lineSel = Selection( "".join(( self.name(), lSelName ))
+                        , RequiredSelections = [ candidates ]
+                        , Algorithm          = lineFilter
+                        )
+
+            line = StrippingLine(lLineName
+                     , prescale  = self.validatedGetProps(lSelName, ["PreScale"])["PreScale"]
+                     , selection = lineSel
+                     ## , FILTER    = { "Preambulo" : [ "nVeloTracks   = RECSUMMARY(13,  0)"
+                     ##                               , "nVeloClusters = RECSUMMARY(30, -1)"
+                     ##                               , "from LoKiCore.functions import *" ]
+                     ##               , "Code"      : "monitor( 1.*nVeloTracks/nVeloClusters , Gaudi.Histo1DDef('Number of Velo Tracks / Clusters', 0., 1., 100) , 'NumVeloTracksPerCluster' ) < 0.2" }
+                     )
+            if lShortName in self.configurationParameter("HLT"):
+                line.HLT = self.configurationParameter("HLT")[lShortName]
+
+            self.registerLine(line)
+
+        ##============================== Double ===================================##
+
+        doubleLineNames = [ p.split("Double")[1].split("Selection")[0]
+                                for p in self.configKeys()
+                                    if p.startswith("Double")
+                                    and p.endswith("Selection")
+                          ]
+        for lAcroName in doubleLineNames:
+            lShortName = "Double%s" % lAcroName
+            lSelName   = "%sSelection" % lShortName
+            lLineName  = "%s%s" % (self.name(), lShortName)
+
+            combinationCut, motherCut = self.getResonanceSelection( self.validatedGetProps(lSelName, DisplVerticesLinesConf.doubleResonanceCuts) )
+            lineFilter = CombineParticles(
+                             DecayDescriptor    = "H_10 -> %s %s" % (LLPLHCbName, LLPLHCbName)
+                           , Preambulo          = DisplVerticesLinesConf.llpSelectionPreambulo
+                           , DaughtersCuts      = { LLPLHCbName : self.getLLPSelection( self.validatedGetProps(lSelName, DisplVerticesLinesConf.singleCuts) ) }
+                           , CombinationCut     = combinationCut
+                           , MotherCut          = motherCut
+                           , WriteP2PVRelations = False
+                           , ForceP2PVBuild     = False
+                           #, OutputLevel        = VERBOSE
+                           )
+            lineSel = Selection( "".join(( self.name(), lSelName ))
+                        , RequiredSelections = [ withVeloCandidates ]
+                        , Algorithm          = lineFilter
+                        )
+            line = StrippingLine(lLineName
+                     , prescale  = self.validatedGetProps(lSelName, ["PreScale"])["PreScale"]
+                     , selection = lineSel
+                     )
+            if lShortName in self.configurationParameter("HLT"):
+                line.HLT = self.configurationParameter("HLT")[lShortName]
+
+            self.registerLine(line)
+
+        ##============================== HLT PS ===================================##
+
+        hltPSLineNames = [ p.split("HLTPS")[0]
+                               for p in self.configKeys()
+                                   if p.endswith("HLTPS")
+                         ]
+        for lAcroName in hltPSLineNames:
+            lShortName = "%sHLTPS" % lAcroName
+            lLineName  = "%s%s" % (self.name(), lShortName) # DisplVerticesSingleMedium
+
+            line = StrippingLine(lLineName
+                     , prescale  = self.validatedGetProps(lShortName, ["PreScale"])["PreScale"]
+                     # these lines MUST have an HLT filter
+                     , HLT       = self.validatedGetProps("HLT", [lShortName])[lShortName]
+                     , selection = withVeloCandidates
+                     )
+
+            self.registerLine(line)
+
+        ##============================== OTHER  ===================================##
+
+        hltEffLineNames = [ p.split("HltEff")[1].split("Selection")[0]
+                                for p in self.configKeys()
+                                    if p.startswith("HltEff")
+                                    and p.endswith("Selection")
+                          ]
+        for lShortName in hltEffLineNames:
+            lSelName  = "HltEff%sSelection" % lShortName
+            lLineName = "%s%s" % (self.name(), lShortName)
+
+            # HltEff lines are single, Velo-vertexing based lines
+            lineFilter = FilterDesktop(
+                             DecayDescriptor    = LLPLHCbName
+                           , Preambulo          = DisplVerticesLinesConf.llpSelectionPreambulo
+                           , Code               = self.getLLPSelection( self.validatedGetProps(lSelName, DisplVerticesLinesConf.singleCuts) )
+                           , WriteP2PVRelations = False
+                           , ForceP2PVBuild     = False
+                           #, OutputLevel        = VERBOSE
+                           )
+
+            lineSel = Selection( "".join(( self.name(), lSelName ))
+                        , RequiredSelections = [ withVeloCandidates ]
+                        , Algorithm          = lineFilter
+                        )
+
+            line = StrippingLine(lLineName
+                     , prescale  = self.validatedGetProps(lSelName, ["PreScale"])["PreScale"]
+                     # these lines MUST have an HLT filter
+                     , HLT       = self.configurationParameter("HLT")[lShortName]
+                     , selection = lineSel
+                     )
+
+            self.registerLine(line)
 
 
-
-    def _veloDVPreselection(self , name ):
-        from Configurables import RecVertices2Particles
-        _makeVeloVerticesCand  = RecVertices2Particles("Presel"+name+"Alg")
-        _makeVeloVerticesCand.RCutMethod = self.__confdict__['RCutMethod']
-        _makeVeloVerticesCand.PreyMinMass =self. __confdict__['MinMass']['PreselVelo']
-        _makeVeloVerticesCand.PreyMinSumpt = self.__confdict__['MinSumPt']['PreselVelo']
-        _makeVeloVerticesCand.RMin =self.__confdict__['MinR']['PreselVelo']
-        _makeVeloVerticesCand.NbTracks = self.__confdict__['NTracks']['PreselVelo']
-        _makeVeloVerticesCand.RemVtxFromDet = self.__confdict__['MaterialVeto']['PreselVelo']
-        _makeVeloVerticesCand.UsePartFromTES = False
-        _makeVeloVerticesCand.TrackMaxChi2oNDOF = 5.
-        return Selection( "Presel"+name ,
-                          Algorithm = _makeVeloVerticesCand,
-                          RequiredSelections = [self.dvVeloReco],
-                          InputDataSetter='RecVerticesLocation' )
-
-    def _downstreamDVPreselection(self , name ):
-        from Configurables import RecVertices2Particles
-        _makeDownVerticesCand  = RecVertices2Particles("PreselDown"+name+"Alg")
-        _makeDownVerticesCand.RCutMethod = self.__confdict__['RCutMethod']
-        _makeDownVerticesCand.PreyMinMass =self. __confdict__['MinMass']['PreselVelo']
-        _makeDownVerticesCand.PreyMinSumpt = self.__confdict__['MinSumPt']['PreselVelo']
-        _makeDownVerticesCand.RMin =self.__confdict__['MinR']['PreselVelo']
-        _makeDownVerticesCand.NbTracks = self.__confdict__['NTracks']['PreselVelo']
-        _makeDownVerticesCand.RemVtxFromDet = self.__confdict__['MaterialVeto']['PreselVelo']
-        _makeDownVerticesCand.UsePartFromTES = False
-        return Selection( "PreselDown"+name ,
-                          Algorithm = _makeDownVerticesCand,
-                          RequiredSelections = [self.dvDownReco],
-                          InputDataSetter='RecVerticesLocation' )
-
-
-    def _makeDVSelection(self , lineName , name ):
-        from Configurables import DisplVertices
-        selectionAlg = DisplVertices('Sel'+lineName+name+'Alg')
-        selectionAlg.MinNBCands = self.__confdict__['NCands'][lineName]
-        selectionAlg.RCutMethod = self.__confdict__['RCutMethod']
-        selectionAlg.RMin = self.__confdict__['MinR'][lineName]
-        selectionAlg.PreyMinMass = self.__confdict__['MinMass'][lineName]
-        selectionAlg.PreyMinSumpt = self.__confdict__['MinSumPt'][lineName]
-        if self.__confdict__['MinMass2'].has_key(lineName):
-            selectionAlg.PreyMinMass2 =  self.__confdict__['MinMass2'][lineName]
-        selectionAlg.NbTracks = self.__confdict__['NTracks'][lineName]
-        #selectionAlg.SaveTuple = True
-        selectionAlg.RemVtxFromDet = self.__confdict__['MaterialVeto'][lineName]
-        return Selection ( "Sel" + lineName + name  , Algorithm = selectionAlg , RequiredSelections = [ self.VeloDVPreselection ] )
-    
-    def _makeEmptySelection(self , lineName , name ):
-        return Selection ( "Sel" + lineName + name  , Algorithm = FilterDesktop( Code = "ALL" ) , RequiredSelections = [ self.VeloDVPreselection ] )
-
-    def _makeDVDownSelection(self , lineName , name ):
-        from Configurables import DisplVertices
-        selectionAlg = DisplVertices('Sel'+lineName+name+'Alg')
-        selectionAlg.MinNBCands = self.__confdict__['NCands'][lineName]
-        selectionAlg.RCutMethod = self.__confdict__['RCutMethod']
-        selectionAlg.RMin = self.__confdict__['MinR'][lineName]
-        selectionAlg.PreyMinMass = self.__confdict__['MinMass'][lineName]
-        selectionAlg.PreyMinSumpt = self.__confdict__['MinSumPt'][lineName]
-        selectionAlg.NbTracks = self.__confdict__['NTracks'][lineName]
-        selectionAlg.MinZ = self.__confdict__['MinZ'][lineName]
-        selectionAlg.RemVtxFromDet = self.__confdict__['MaterialVeto'][lineName]
-        return Selection ( "Sel" + lineName + name  , Algorithm = selectionAlg , RequiredSelections = [ self.DownDVPreselection ] )
-
-    def _makeDVLine(self,lineName,name,hlt = ""):
-        if hlt == "":
-            return StrippingLine( lineName+name ,
-                                  prescale = self.__confdict__['prescale'][lineName] ,
-                                  selection = self._makeDVSelection(lineName,name))
-        else :
-            return StrippingLine( lineName+name ,
-                                  prescale = self.__confdict__['prescale'][lineName] ,
-                                  HLT = hlt,
-                                  selection = self._makeDVSelection(lineName,name))
-
-    
-    def _makeDVLineFromTrigger(self,lineName,name,hlt):
-        return StrippingLine( lineName+name ,
-                              prescale = 1. ,
-                              HLT = hlt,
-                              selection = self._makeEmptySelection(lineName,name))
-    
-    
-    def _makeDVDownLine(self,lineName,name,hlt = "" ):
-        if hlt == "" :
-            return StrippingLine( lineName+name ,
-                                  prescale = self.__confdict__['prescale'][lineName] ,
-                                  selection = self._makeDVDownSelection(lineName,name))
-        else :
-            return StrippingLine( lineName+name ,
-                                  prescale = self.__confdict__['prescale'][lineName] ,
-                                  HLT = hlt,
-                                  selection = self._makeDVDownSelection(lineName,name))
-
-
-
+        ### set PropertiesPrint for all algorithms
+        ## for l in self.lines():
+        ##     for alg in l._members:
+        ##         alg.PropertiesPrint = True
 
