@@ -147,12 +147,12 @@ def makeD2MuMuMuMu(name,inputSel) :
     D2MuMuMuMu.addTool( OfflineVertexFitter )
     D2MuMuMuMu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
 
-    D2MuMuMuMu.DaughtersCuts = { "mu+" : "(TRCHI2DOF < 3.0 ) "\
+    D2MuMuMuMu.DaughtersCuts = { "mu+" : "(TRCHI2DOF < 2.0 ) "\
                                   " & (MIPCHI2DV(PRIMARY)> 4.)"\
                                   " & (P> 3000.*MeV)"}
 
     D2MuMuMuMu.CombinationCut =  "(ADAMASS('D0')<300*MeV) "\
-                                 "& (AMAXDOCA('')<0.4*mm) "
+                                 "& (AMAXDOCA('')<0.2*mm) "
 
  
     D2MuMuMuMu.MotherCut = "(VFASPF(VCHI2/VDOF)<12.) "\
