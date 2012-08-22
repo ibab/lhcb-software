@@ -4,7 +4,7 @@
 # S.Bifani
 #
 # Z02MuMu signal:     StdAllLooseMuons,  pT>15GeV & MM>40GeV
-# Z02MuMu efficiency: StdAllNoPIDsMuons, pT>15GeV & MM>40GeV
+
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import CombineParticles
@@ -60,23 +60,9 @@ class Z02MuMuConf( LineBuilder ) :
         self.registerLine( self.line_Z02MuMu )
 
 
-        # Z02MuMu efficiency
+       
 
-        self.sel_Z02MuMuNoPIDs = makeCombination( self._myname + 'Z02MuMuNoPIDs',
-                                                  StdAllNoPIDsMuons,
-                                                  _pT,
-                                                  _MMmin
-                                                  )
-
-        self.line_Z02MuMuNoPIDs = StrippingLine( self._myname + 'NoPIDsLine',
-                                                 prescale  = config[ 'Z02MuMu_Prescale' ],
-                                                 postscale = config[ 'Z02MuMu_Postscale' ],
-                                                 checkPV   = False,
-                                                 selection = self.sel_Z02MuMuNoPIDs
-                                                 )
-
-        self.registerLine( self.line_Z02MuMuNoPIDs )
-
+      
 
 def makeCombination( name, _input, _daughters, _mother ) :
 

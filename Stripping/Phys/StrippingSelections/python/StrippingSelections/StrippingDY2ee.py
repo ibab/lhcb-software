@@ -3,15 +3,15 @@
 #
 # S.Bifani and D.Ward
 #
-# DY2ee3 (10-20GeV): StdTightElectrons     & pT>2GeV & PIDe>1
-# DY2ee4 (20-40GeV): StdAllNoPIDsElectrons & pT>5GeV & PRS>50Mev & E_ECal/P>0.1 & E_HCal/P<0.05
+# DY2ee3 (10-20GeV): StdAllNoPIDsElectrons & pT>3GeV & p>10GeV & PRS>50Mev & E_ECal/P>0.1 & E_HCal/P<0.05
+# DY2ee4 (20-40GeV): StdAllNoPIDsElectrons & pT>5GeV & p>10GeV & PRS>50Mev & E_ECal/P>0.1 & E_HCal/P<0.05
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdTightElectrons, StdAllNoPIDsElectrons
+from StandardParticles import  StdAllNoPIDsElectrons
 
 confdict_DY2ee = { 'DY2eeLine3Prescale' : 1.0,
                    'DY2eeLine4Prescale' : 1.0,
@@ -24,8 +24,10 @@ confdict_DY2ee = { 'DY2eeLine3Prescale' : 1.0,
                    'PrsCalMin' : 50.,
                    'ECalMin'   :  0.1,
                    'HCalMax'   :  0.05,
-                   'pT3'        : 2.,
-                   'pT4'        : 5.
+                   'pT3'        : 3.,
+                   'pT4'        : 5.,
+                   'p3'        : 10.,
+                   'p4'        : 10.
                    }
 
 default_name = 'DY2ee'
@@ -44,7 +46,9 @@ class DY2eeConf(LineBuilder) :
                                'ECalMin',
                                'HCalMax',
                                'pT3',
-                               'pT4'
+                               'pT4',
+                               'p3',
+                               'p4'
                                )
     
     def __init__( self, name, config ) :
@@ -56,8 +60,8 @@ class DY2eeConf(LineBuilder) :
 
         # Define the cuts
 
-        _cut3 = '((PT>%(pT3)s*GeV) & (PIDe>%(ePID)s))'%config
-        _cut4 = '((PT>%(pT4)s*GeV) & (PPINFO(LHCb.ProtoParticle.CaloPrsE,0)>%(PrsCalMin)s) & (PPINFO(LHCb.ProtoParticle.CaloEcalE,0)>P*%(ECalMin)s) & (PPINFO(LHCb.ProtoParticle.CaloHcalE,99999)<P*%(HCalMax)s))'%config
+        _cut3 = '(P>%(p3)s*GeV) &((PT>%(pT3)s*GeV) & (PPINFO(LHCb.ProtoParticle.CaloPrsE,0)>%(PrsCalMin)s) & (PPINFO(LHCb.ProtoParticle.CaloEcalE,0)>P*%(ECalMin)s) & (PPINFO(LHCb.ProtoParticle.CaloHcalE,99999)<P*%(HCalMax)s))'%config
+        _cut4 = '(P>%(p4)s*GeV) &((PT>%(pT4)s*GeV) & (PPINFO(LHCb.ProtoParticle.CaloPrsE,0)>%(PrsCalMin)s) & (PPINFO(LHCb.ProtoParticle.CaloEcalE,0)>P*%(ECalMin)s) & (PPINFO(LHCb.ProtoParticle.CaloHcalE,99999)<P*%(HCalMax)s))'%config
 
         _DY3MassCut = '(MM>%(DY3MinMass)s*GeV) & (MM<%(DY3MaxMass)s*GeV)'%config
         _DY4MassCut = '(MM>%(DY4MinMass)s*GeV) & (MM<%(DY4MaxMass)s*GeV)'%config
@@ -66,7 +70,7 @@ class DY2eeConf(LineBuilder) :
         # DY2ee3
 
         self.sel_DY2ee3 = makeCombination( self._myname + 'DY2ee3', 
-                                           StdTightElectrons,
+                                           StdAllNoPIDsElectrons,
                                            _cut3,
                                            _DY3MassCut
                                            )

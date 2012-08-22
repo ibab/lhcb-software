@@ -5,7 +5,7 @@
 #
 # WMu signal:           StdAllLooseMuons,  pT>20GeV
 # WMu control:          StdAllLooseMuons,  pT>15GeV                    (10% PRESCALE)
-# WMu background:       StdAllNoPIDsMuons, pT>5GeV  &  Hlt1MBNoBias Dec (RATE LIMITED)
+# WMu background:       StdAllNoPIDsMuons, pT>5GeV  &  Hlt1MBNoBias Dec (RATE LIMITED, 20% PRESCALE)
 # SingleMuon control:   StdAllLooseMuons,  pT>10GeV &  Hlt2SingleMuonHighPT Dec     (1% PRESCALE)
 # SingleMuon control:   StdAllLooseMuons,  pT>4.8GeV & Hlt2SingleMuonLowPT Dec      (20% PRESCALE)
 
@@ -18,6 +18,7 @@ from StandardParticles import StdAllLooseMuons, StdAllNoPIDsMuons
 
 confdict_WMu = { 'WMu_Prescale'    : 1.0,
                  'WMuLow_Prescale' : 0.1,
+                 'STNB_Prescale' : 0.2,
                  'WMu_Postscale'   : 1.0,
                  'SingMuon10_Prescale' : 0.01,
                  'SingMuon48_Prescale'  :0.2,
@@ -34,6 +35,7 @@ class WMuConf( LineBuilder ) :
 
     __configuration_keys__ = ( 'WMu_Prescale',
                                'WMuLow_Prescale',
+                               'STNB_Prescale',
                                'WMu_Postscale',
                                'SingMuon10_Prescale',
                                'SingMuon48_Prescale', 
@@ -142,7 +144,7 @@ class WMuConf( LineBuilder ) :
                                                  )  
 
         self.line_SingleTrackNoBias = StrippingLine( self._myname + 'SingleTrackNoBiasLine',
-                                                     prescale  = config[ 'WMu_Prescale' ],
+                                                     prescale  = config[ 'STNB_Prescale' ],
                                                      postscale = config[ 'WMu_Postscale' ],
                                                      checkPV   = False,
                                                      HLT       = "HLT_PASS( 'Hlt1MBNoBiasDecision' )",
