@@ -251,7 +251,7 @@ def makeB2TauMu(name):
                               "& (BPVIPCHI2()< 25) "
 
     _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
-    _stdLooseDetachedTaus= DataOnDemand(Location = "Phys/StdLooseDetachedTau/Particles")
+    _stdLooseDetachedTaus= DataOnDemand(Location = "Phys/StdLooseDetachedTau3pi/Particles")
 
     return Selection (name,
                       Algorithm = Bs2TauMu,
@@ -361,7 +361,7 @@ def makeB2hTauMu(name):
                               "& (BPVIPCHI2()< 25) "
 
     _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
-    _stdLooseDetachedTaus= DataOnDemand(Location = "Phys/StdLooseDetachedTau/Particles")
+    _stdLooseDetachedTaus= DataOnDemand(Location = "Phys/StdLooseDetachedTau3pi/Particles")
     _stdLoosePions= DataOnDemand(Location = "Phys/StdLoosePions/Particles")
     _stdLooseKaons= DataOnDemand(Location = "Phys/StdLooseKaons/Particles")
 
