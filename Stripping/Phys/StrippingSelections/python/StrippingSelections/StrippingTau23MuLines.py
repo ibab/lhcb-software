@@ -278,13 +278,14 @@ def makeTau2pmm(name):
     """
     
     Tau2PMuMu = CombineParticles("Comine"+name)
-    Tau2PMuMu.DecayDescriptors = [" [ tau+ -> p+ mu+ mu- ]cc"," [ tau+ -> p~- mu+ mu+ ]cc"]
+    Tau2PMuMu.DecayDescriptors = [" [ tau+ -> p+ mu+ mu- ]cc"," [ tau+ -> p~- mu+ mu+ ]cc",
+                                  " [ Lambda_c+ -> p+ mu+ mu- ]cc"," [ Lambda_c+ -> p~- mu+ mu+ ]cc" ]
     Tau2PMuMu.DaughtersCuts = { "mu+" : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 3  ) & ( BPVIPCHI2 () >  9 ) "\
                                   "& ( PIDmu > -5 ) & ( (PIDmu - PIDK) > 0 )",
                                   "p+" :  " ( PT > 300 * MeV ) & ( TRCHI2DOF < 3  ) & ( BPVIPCHI2 () >  9 ) "\
                                   "& (PIDp>10)"}
 
-    Tau2PMuMu.CombinationCut = "(ADAMASS('tau+')<200*MeV)"
+    Tau2PMuMu.CombinationCut = "( (ADAMASS('tau+')<150*MeV) | (ADAMASS('Lambda_c+')<150*MeV) )"
 
     Tau2PMuMu.MotherCut = """
             ( VFASPF(VCHI2) < 15 ) &
