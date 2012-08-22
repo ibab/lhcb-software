@@ -119,8 +119,6 @@ int SendThread::processSends(void)
       totalSize = sizeof(struct cmd_header);
       if(cmd_to_send->cmd == CMD_WRITE_CHUNK)
         totalSize += cmd_to_send->data.chunk_data.size;
-      if(cmd_to_send->cmd == CMD_CLOSE_FILE)	// For debugging and expert logging
-    	  *m_log << MSG::INFO <<  WHERE << "Close command for file: " << cmd_to_send->file_name << endmsg;
       ptr = (char *)cmd_to_send;
       bif = new BIF(m_sockFd, ptr, totalSize);
     }
@@ -130,7 +128,7 @@ int SendThread::processSends(void)
     ret = bif->nbSend(m_log);
     if(ret == totalSize) {
     	if ( cmd_to_send->cmd == CMD_CLOSE_FILE)
-    		 *m_log << MSG::INFO << WHERE << "CLOSE CMD Send was successful for file: " << cmd_to_send->file_name << endmsg;
+    		 *m_log << MSG::INFO << WHERE << "CLOSE CMD sent for file: " << cmd_to_send->file_name << endmsg;
 
 //      dbg_CountAgain=0;
 
@@ -172,10 +170,6 @@ int SendThread::processSends(void)
 
   if(bif)
     delete bif;
-  if(cmd_to_send != NULL)
-	  *m_log << MSG::INFO <<  WHERE << " m_stopUrgently = " << m_stopUrgently << " , m_stopAfterFinish = " << m_stopAfterFinish << " for filename = " << cmd_to_send->file_name << " :Exiting processSends()" << endmsg;
-  else
-	  *m_log << MSG::INFO <<  WHERE << " m_stopUrgently = " << m_stopUrgently << " , m_stopAfterFinish = " << m_stopAfterFinish << " , cmd_to_send is NULL, Exiting processSends()" << endmsg;
   return 0;
 }
 

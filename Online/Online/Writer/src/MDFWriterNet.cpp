@@ -488,8 +488,6 @@ StatusCode MDFWriterNet::finalize(void)
 std::string MDFWriterNet::createNewFile(unsigned int runNumber)
 {
 	// override this if the m_rpcObj looks different
-	*m_log << MSG::INFO << "createNewFile: " << m_streamID << "runNumber: "
-			<< runNumber << endmsg;
 	std::string identifier(getenv("UTGID"));
 	return m_rpcObj->createNewFile(runNumber, m_streamID, identifier);
 }
@@ -499,7 +497,6 @@ std::string MDFWriterNet::createNewFile(unsigned int runNumber)
  */
 File* MDFWriterNet::createAndOpenFile(unsigned int runNumber)
 {
-	*m_log << MSG::INFO << "createAndOpenFile start" << endmsg;
 	File *currFile = 0;
 	struct cmd_header header;
 	memset(&header, 0, sizeof(struct cmd_header));
@@ -507,10 +504,10 @@ File* MDFWriterNet::createAndOpenFile(unsigned int runNumber)
 	/* trying to get an 'official'file name from the RunDatabase
 	 * If there is any kinf of error generate one locally
 	 */
-	*m_log << MSG::INFO << "Getting a new file name for run " << runNumber
-			<< " ..." << endmsg;
+//	*m_log << MSG::INFO << "Getting a new file name from RunDatabase for run: " << runNumber
+//			<< " ..." << endmsg;
 	std::string f = this->createNewFile(runNumber);
-	*m_log << MSG::INFO << "new filename: " << f << endmsg;
+	*m_log << MSG::INFO << "New filename from RunDatabase: " << f << endmsg;
 	currFile = new File(f, runNumber, m_streamID, m_enableMD5);
 
 	if (currFile == NULL)
@@ -552,7 +549,6 @@ File* MDFWriterNet::createAndOpenFile(unsigned int runNumber)
 		free(msg);
 		msg = NULL;
 	}
-	*m_log << MSG::INFO << "createAndOpenFile end" << endmsg;
 	return currFile;
 }
 
@@ -570,7 +566,7 @@ void MDFWriterNet::closeFile(File *currFile)
 
 	//////////////////
 	//Printing to check if the close command is queued
-	*m_log << MSG::INFO << WHERE << "Close command queued for file: " << currFile->getFileName()->c_str() << endmsg;
+	//*m_log << MSG::INFO << WHERE << "Close command queued for file: " << currFile->getFileName()->c_str() << endmsg;
 	//////////////////
 
 	if (currFile->getTrgEvents(trgEvents, MAX_TRIGGER_TYPES) != 0)
@@ -604,7 +600,7 @@ void MDFWriterNet::closeFile(File *currFile)
 	*m_log << MSG::INFO << WHERE << " Command: " << header.cmd << " " << "Filename: "
 			<< header.file_name << " " << "RunNumber: " << header.run_no << " "
 			<< "Seq Nr: " << header.data.chunk_data.seq_num << " " << "Size: "
-			<< header.data.stop_data.size << " " << "Adler32: "
+			<< header.data.stop_data.size << " " /*<< "Adler32: "
 			<< pdu.adler32_sum << " " << "MD5: " << pdu.md5_sum << " "
 			<< "Events: " << pdu.events << " " << "Phys:  " << pdu.physStat
 			<< " " << "Trg0 : " << pdu.trgEvents[0] << " " << "Trg1 : "
@@ -625,7 +621,7 @@ void MDFWriterNet::closeFile(File *currFile)
 			<< pdu.statEvents[LOWLUMI] << " " << "MIDLUMI : "
 			<< pdu.statEvents[MIDLUMI] << " " << "HLT1IN : "
 			<< pdu.statEvents[HLT1IN] << " " << "HLT1EX : "
-			<< pdu.statEvents[HLT1EX] << " " << "Command size is: "
+			<< pdu.statEvents[HLT1EX] << " " */<< "Command size is: "
 			<< sizeof(header) + sizeof(pdu) << endmsg;
 
 	m_srvConnection->sendCommand(&header, &pdu);
@@ -701,7 +697,7 @@ void MDFWriterNet::closeFile(File *currFile)
 		msg = NULL;
 		stats_msg = NULL;
 	}
-	*m_log << MSG::INFO << WHERE << endmsg;
+//	*m_log << MSG::INFO << WHERE << endmsg;
 }
 
 /* Implements a method from the incident listener
@@ -759,12 +755,6 @@ StatusCode MDFWriterNet::writeBuffer(void * const /*fd*/, const void *data,
 	 *((MDFHeader*)data)->subHeader().H1->m_runNumber = myRun;
 	 */
 
-	if (pthread_mutex_lock(&m_SyncFileList))
-	{
-		*m_log << MSG::ERROR << WHERE << " Locking mutex" << endmsg;
-		return StatusCode::FAILURE;
-	}
-
 	if (len < 10)
 	{
 		*m_log << MSG::FATAL << WHERE
@@ -775,10 +765,11 @@ StatusCode MDFWriterNet::writeBuffer(void * const /*fd*/, const void *data,
 
 	//  static int nbLate=0;
 	unsigned int runNumber = getRunNumber(mHeader, len);
-	if ((int) runNumber == -1)
+//		if ((int) runNumber == -1 )
+	if ((int) runNumber <= 0 )
 	{
 		*m_log << MSG::FATAL << WHERE
-				<< "Event with runnumber == -1 received. Not forwarding."
+				<< "Event with runnumber < 0 received. Not forwarding."
 				<< endmsg;
 		return StatusCode::SUCCESS;
 	}
@@ -794,6 +785,13 @@ StatusCode MDFWriterNet::writeBuffer(void * const /*fd*/, const void *data,
 		m_currentRunNumber = runNumber;
 		//      m_discardCurrentRun = false;
 		m_TotEvts = 0;
+	}
+
+
+	if (pthread_mutex_lock(&m_SyncFileList))
+	{
+		*m_log << MSG::ERROR << WHERE << " Locking mutex" << endmsg;
+		return StatusCode::FAILURE;
 	}
 
 	if (m_currFile == NULL || runNumber != m_currFile->getRunNumber())
@@ -962,6 +960,12 @@ StatusCode MDFWriterNet::writeBuffer(void * const /*fd*/, const void *data,
 	}
 	else
 	{
+		if (pthread_mutex_unlock(&m_SyncFileList))
+		{
+			*m_log << MSG::ERROR << WHERE << " Unlocking mutex"
+					<< endmsg;
+			return StatusCode::FAILURE;
+		}
 		return StatusCode::SUCCESS;
 	}
 
@@ -1411,7 +1415,6 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
 {
 	struct cmd_stop_pdu *pdu = (struct cmd_stop_pdu *) ((char*) cmd
 			+ sizeof(struct cmd_header));
-	*m_log << MSG::INFO << WHERE << " notifyClose start" << endmsg;
 
 	unsigned int i = 0;
 
@@ -1537,7 +1540,7 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
 			*m_log << MSG::ERROR << " Exception: " << e.what() << endmsg;
 		}
 		*m_log << MSG::INFO << "Confirmed file " << cmd->file_name
-				<< "RunNumber: " << cmd->run_no << " " << "Adler32: "
+				<< " RunNumber: " << cmd->run_no << " " /*<< "Adler32: "
 				<< pdu->adler32_sum << " " << "MD5: " << pdu->md5_sum << " "
 				<< "Seq Nr: " << cmd->data.stop_data.seq_num << " " << "Size: "
 				<< cmd->data.stop_data.size << " " << "Events: " << pdu->events
@@ -1560,11 +1563,9 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
 				<< pdu->statEvents[LOWLUMI] << " " << "MIDLUMI : "
 				<< pdu->statEvents[MIDLUMI] << " " << "HLT1IN : "
 				<< pdu->statEvents[HLT1IN] << " " << "HLT1EX : "
-				<< pdu->statEvents[HLT1EX] << " " << endmsg;
+				<< pdu->statEvents[HLT1EX] << " " */<< endmsg;
 		break;
 	}
-
-	*m_log << MSG::INFO << WHERE << " notifyClose end" << endmsg;
 }
 
 /** A notify listener callback, which is executed  when an error occurs.
