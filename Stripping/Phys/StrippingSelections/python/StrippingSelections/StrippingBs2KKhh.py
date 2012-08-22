@@ -8,8 +8,8 @@ phi mass
 '''
 
 __author__ = ['Sean Benson']
-__date__ = '14/03/2011'
-__version__ = '1.0'
+__date__ = '21/08/2012'
+__version__ = '2.0'
 
 __all__ = ( 'BsPhiRhoConf',
             'mkDiTrackList',
@@ -19,13 +19,14 @@ __all__ = ( 'BsPhiRhoConf',
 config_params = {'PRPrescale'     : 1.,
                  'PRResMinPT'     : 900.,
                  'PRResMinP'      : 1.,
+                 'PRResMinMass'   : 0.,
                  'PRResMaxMass'   : 4000.,
                  'PRResVtxChiDOF' : 9.,
                  'PRBMinM'        : 5000.,
                  'PRBMaxM'        : 5600.,
                  'PRPhiWindow'    : 25.,
                  'PRBVtxChi2DOF'  : 9.,
-		 'PRIPCHI2' : 25}
+		 'PRIPCHI2' : 15}
 
 
 from Gaudi.Configuration import *
@@ -45,6 +46,7 @@ class BsPhiRhoConf(LineBuilder) :
     __configuration_keys__ = ( 'PRPrescale',
                                'PRResMinPT',
                                'PRResMinP',
+                               'PRResMinMass',
                                'PRResMaxMass',
                                'PRResVtxChiDOF',
                                'PRBMinM',
@@ -57,7 +59,7 @@ class BsPhiRhoConf(LineBuilder) :
 	self.name = name
         LineBuilder.__init__(self, name, config)
 
-        _trkFilter = FilterDesktop(Code = "(TRCHI2DOF < 4) & (MIPCHI2DV(PRIMARY) > 16)")
+        _trkFilter = FilterDesktop(Code = "(PT>500.*MeV) & (TRCHI2DOF < 3.5) & (MIPCHI2DV(PRIMARY) > 16)")
         
 	self.TrackListhh = Selection( 'TrackList' + self.name,
                                     Algorithm = _trkFilter,
@@ -67,6 +69,7 @@ class BsPhiRhoConf(LineBuilder) :
                                             trkList=self.TrackListhh,
                                             MinPTCut = config['PRResMinPT'],
                                             MinPCut = config['PRResMinP'],
+                                            MinMassCut = config['PRResMinMass'],
                                             MaxMassCut = config['PRResMaxMass'],
                                             VtxChi2DOFCut = config['PRResVtxChiDOF'] )
 
@@ -94,13 +97,14 @@ def mkDiTrackList( name,
                      trkList,
                      MinPTCut,
                      MinPCut,
+                     MinMassCut,
                      MaxMassCut,
                      VtxChi2DOFCut ) :
     """
     Di-track selection
     """
-    _diTrackPreVertexCuts = "(APT> %(MinPTCut)s *MeV) & (AP> %(MinPCut)s *GeV) & (AM< %(MaxMassCut)s *MeV)" % locals()
-    _diTrackPostVertexCuts = "(MIPCHI2DV(PRIMARY) > 10)"
+    _diTrackPreVertexCuts = "(APT> %(MinPTCut)s *MeV) & (AP> %(MinPCut)s *GeV) & in_range( %(MinMassCut)s ,AM, %(MaxMassCut)s )" % locals()
+    _diTrackPostVertexCuts = "(MIPCHI2DV(PRIMARY) > 16)"
     
     _combineDiTrack = CombineParticles( DecayDescriptor="rho(770)0 -> pi+ pi-",
 					CombinationCut = _diTrackPreVertexCuts,

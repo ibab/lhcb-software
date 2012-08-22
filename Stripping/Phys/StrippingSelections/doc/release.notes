@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-08-22 - Sean Benson
+ - Updates to StrippingBs2PhiPhi, StrippingBs2Q2B, StrippingB2FourKHigh & StrippingBs2KKhh to reduce retention
+
 ! 2012-08-22 - Mika Vesterinen
  - Add tests/TestCharmFromBSemi.py
  - Minor updates to tests/TestSemileptonicsOnRealData.py

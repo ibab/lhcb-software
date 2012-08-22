@@ -13,8 +13,9 @@ Exports the following stripping lines as instance data members:
 Both lines are build by the function _Bs2PhiPhi_X_Line, which accepts the name and the mass range flag (wide=True/False) as parameter.
 '''
 
-__author__  = [ 'Sebastian Schleich' ]
-__date__    = '2011/02/23'
+__author__  = [ 'Sean Benson' ]
+__date__    = '2012/08/21'
+__version__    = '2.0'
 
 
 '''
@@ -28,22 +29,21 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 
 import StandardParticles
-if hasattr(StandardParticles, "StdAllLooseKaons"):
-  from StandardParticles import StdAllLooseKaons as MyLooseKaons
-  #print "importing StdAllLooseKaons as MyLooseKaons"
-else:
-  from StandardParticles import StdLooseKaons as MyLooseKaons
-  #print "importing StdLooseKaons as MyLooseKaons"
+from StandardParticles import StdLooseKaons as MyLooseKaons
+#if hasattr(StandardParticles, "StdAllLooseKaons"):
+#  from StandardParticles import StdAllLooseKaons as MyLooseKaons
+#else:
+#  from StandardParticles import StdLooseKaons as MyLooseKaons
 
 config_params = {
-                  'KaonPT'              : 450      # MeV/c
+                  'KaonPT'              : 500      # MeV/c
                 , 'KaonIPCHI2'          : 3.5      # adimensional
                 , 'PhiPT'               : 0        # MeV/c
                 , 'PhiPTsq'             : 2.0      # GeV*GeV/cc
-                , 'PhiVertexCHI2pDOF'   : 25       # adimensional
+                , 'PhiVertexCHI2pDOF'   : 12       # adimensional
                 , 'PhiMassWindow'       : 25       # MeV/cc
                 , 'PhiMassMax'          : 1090     # MeV/cc
-                , 'BsVertexCHI2pDOF'    : 25       # adimensional
+                , 'BsVertexCHI2pDOF'    : 12       # adimensional
                 , 'BsMassWindow'        : 300      # MeV/cc
                 , 'WidePrescale'        : 0.05     # adimensional
 }

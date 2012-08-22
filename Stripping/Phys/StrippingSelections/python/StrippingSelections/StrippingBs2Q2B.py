@@ -9,8 +9,8 @@ removed.
 '''
 
 __author__ = ['Sean Benson']
-__date__ = '22/07/2011'
-__version__ = '1.1'
+__date__ = '21/08/2012'
+__version__ = '2.0'
 
 __all__ = ( 'Bs2Q2Body4piConf',
             'mkDiTrackList',
@@ -19,12 +19,13 @@ __all__ = ( 'Bs2Q2Body4piConf',
 config_params = {'Q2BPrescale'     : 1.,
                  'Q2BResMinPT'     : 900.,
                  'Q2BResMinP'      : 1.,
+                 'Q2BResMinMass'   : 0.,
                  'Q2BResMaxMass'   : 1100.,
                  'Q2BResVtxChiDOF' : 9.,
                  'Q2BBMinM'        : 4500.,
                  'Q2BBMaxM'        : 5700.,
                  'Q2BBVtxChi2DOF'  : 9.,
-                 'Q2BIPCHI2' : 25}
+                 'Q2BIPCHI2' : 15}
 
 
 from Gaudi.Configuration import *
@@ -44,6 +45,7 @@ class Bs2Q2Body4piConf(LineBuilder) :
     __configuration_keys__ = ( 'Q2BPrescale',
                                'Q2BResMinPT',
                                'Q2BResMinP',
+                               'Q2BResMinMass',
                                'Q2BResMaxMass',
                                'Q2BResVtxChiDOF',
                                'Q2BBMinM',
@@ -55,7 +57,7 @@ class Bs2Q2Body4piConf(LineBuilder) :
 	self.name = name
         LineBuilder.__init__(self, name, config)
 
-        _trkFilter = FilterDesktop(Code = "(TRCHI2DOF < 4) & (MIPCHI2DV(PRIMARY) > 16)")
+        _trkFilter = FilterDesktop(Code = "(PT>500.*MeV) & (TRCHI2DOF < 4) & (MIPCHI2DV(PRIMARY) > 16)")
         self.TrackList = Selection( 'TrackList' + self.name,
                                     Algorithm = _trkFilter,
                                     RequiredSelections = [StdNoPIDsPions])
@@ -64,6 +66,7 @@ class Bs2Q2Body4piConf(LineBuilder) :
                                             trkList=self.TrackList,
                                             MinPTCut = config['Q2BResMinPT'],
                                             MinPCut = config['Q2BResMinP'],
+                                            MinMassCut = config['Q2BResMinMass'],
                                             MaxMassCut = config['Q2BResMaxMass'],
                                             VtxChi2DOFCut = config['Q2BResVtxChiDOF'] )
 
@@ -85,12 +88,13 @@ def mkDiTrackList( name,
                      trkList,
                      MinPTCut,
                      MinPCut,
+                     MinMassCut,
                      MaxMassCut,
                      VtxChi2DOFCut ) :
     """
     Di-track selection
     """
-    _diTrackPreVertexCuts = "(APT> %(MinPTCut)s *MeV) & (AP> %(MinPCut)s *GeV) & (AM< %(MaxMassCut)s *MeV)" % locals()
+    _diTrackPreVertexCuts = "(APT> %(MinPTCut)s *MeV) & (AP> %(MinPCut)s *GeV) & in_range( %(MinMassCut)s ,AM, %(MaxMassCut)s )" % locals()
     _diTrackPostVertexCuts = "(VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s)" % locals()
     
     _combineDiTrack = CombineParticles( DecayDescriptor="rho(770)0 -> pi+ pi-",
