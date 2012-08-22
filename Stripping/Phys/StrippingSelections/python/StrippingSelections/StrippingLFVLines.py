@@ -73,7 +73,7 @@ class LFVLinesConf(LineBuilder) :
         emu_name=name+'B2eMu'
         ee_name=name+'B2ee'
         hemu_name=name+'B2heMu'
-        pmu_name=name+'B2pMu'
+        pmu_name=name+'B2hMu'
         bu_name=name+'Bu2KJPsiee'
         taumu_name=name+'B2TauMu'
         htaumu_name=name+'B2hTauMu'
@@ -233,7 +233,7 @@ def makeB2TauMu(name):
     
     from Configurables import OfflineVertexFitter
     Bs2TauMu = CombineParticles("Combine"+name)
-    Bs2TauMu.DecayDescriptor = "[B_s0 -> tau+ mu-]cc"
+    Bs2TauMu.DecayDescriptors = ["[B_s0 -> tau+ mu-]cc","[B_s0 -> tau+ mu+]cc"]
     # Set the OfflineVertexFitter to keep the 4 tracks and not the J/Psi Kstar:
     Bs2TauMu.addTool( OfflineVertexFitter )
     Bs2TauMu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
@@ -251,7 +251,7 @@ def makeB2TauMu(name):
                               "& (BPVIPCHI2()< 25) "
 
     _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
-    _stdLooseDetachedTaus= DataOnDemand(Location = "Phys/StdLooseDetachedTau3pi/Particles")
+    _stdLooseDetachedTaus= DataOnDemand(Location = "Phys/StdLooseDetachedTau/Particles")
 
     return Selection (name,
                       Algorithm = Bs2TauMu,
@@ -268,7 +268,7 @@ def makeB2eMu(name):
     
     from Configurables import OfflineVertexFitter
     Bs2eMu = CombineParticles("Combine"+name)
-    Bs2eMu.DecayDescriptor = "[B_s0 -> e+ mu-]cc"
+    Bs2eMu.DecayDescriptors = ["[B_s0 -> e+ mu-]cc","[B_s0 -> e+ mu+]cc"]
     # Set the OfflineVertexFitter to keep the 4 tracks and not the J/Psi Kstar:
     Bs2eMu.addTool( OfflineVertexFitter )
     Bs2eMu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
@@ -305,8 +305,7 @@ def makeB2ee(name):
     
     from Configurables import OfflineVertexFitter
     Bs2ee = CombineParticles("Combine"+name)
-    Bs2ee.DecayDescriptor = "B_s0 -> e+ e-"
-    # Set the OfflineVertexFitter to keep the 4 tracks and not the J/Psi Kstar:
+    Bs2ee.DecayDescriptors = ["B_s0 -> e+ e-","[B_s0 -> e+ e+]cc"]
     Bs2ee.addTool( OfflineVertexFitter )
     Bs2ee.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     Bs2ee.OfflineVertexFitter.useResonanceVertex = False
@@ -341,15 +340,17 @@ def makeB2hTauMu(name):
     
     from Configurables import OfflineVertexFitter
     Bs2hTauMu = CombineParticles("Combine"+name)
-    Bs2hTauMu.DecayDescriptors = ["[B+ -> K+ tau+ mu-]cc","[B+ -> K+ tau- mu+]cc",
-                                "[B+ -> pi+ tau+ mu-]cc","[B+ -> pi+ tau- mu+]cc" ]
+    Bs2hTauMu.DecayDescriptors = ["[B+ -> K+ tau+ mu-]cc","[B+ -> K- tau+ mu+]cc",
+                                  "[B+ -> pi+ tau+ mu-]cc","[B+ -> pi- tau+ mu+]cc",
+                                  "[B+ -> p+ tau+ mu-]cc","[B- -> p+ tau- mu-]cc" ]
     Bs2hTauMu.addTool( OfflineVertexFitter )
     Bs2hTauMu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     Bs2hTauMu.OfflineVertexFitter.useResonanceVertex = False
     #Bs2hTauMu.ReFitPVs = True
-    Bs2hTauMu.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)>25.)&(TRCHI2DOF<4)",
-                              "pi+" : "(MIPCHI2DV(PRIMARY)>25.)&(TRCHI2DOF<4)",
-                              "K+" : "(MIPCHI2DV(PRIMARY)>25.)&(TRCHI2DOF<4)"}
+    Bs2hTauMu.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)>25.)&(TRCHI2DOF<3)",
+                              "pi+" : "(MIPCHI2DV(PRIMARY)>25.)&(TRCHI2DOF<2)",
+                              "K+" : "(MIPCHI2DV(PRIMARY)>25.)&(TRCHI2DOF<3)&(PIDK>5)",
+                              "p+" : "(MIPCHI2DV(PRIMARY)>25.)&(TRCHI2DOF<3)&(PIDp>5)"}
 
     Bs2hTauMu.CombinationCut = "(ADAMASS('B+')<600*MeV)"\
                             "& (AMAXDOCA('')<0.3*mm)"
@@ -361,14 +362,18 @@ def makeB2hTauMu(name):
                               "& (BPVIPCHI2()< 25) "
 
     _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
-    _stdLooseDetachedTaus= DataOnDemand(Location = "Phys/StdLooseDetachedTau3pi/Particles")
-    _stdLoosePions= DataOnDemand(Location = "Phys/StdLoosePions/Particles")
-    _stdLooseKaons= DataOnDemand(Location = "Phys/StdLooseKaons/Particles")
+    _stdLooseDetachedTaus= DataOnDemand(Location = "Phys/StdLooseDetachedTau/Particles")
+    _stdNoPIDsPions= DataOnDemand(Location = "Phys/StdNoPIDsPions/Particles")
+    _stdNoPIDsKaons= DataOnDemand(Location = "Phys/StdNoPIDsKaons/Particles")
+    _stdNoPIDsProtons= DataOnDemand(Location = "Phys/StdNoPIDsProtons/Particles")
+    
 
     return Selection (name,
                       Algorithm = Bs2hTauMu,
                       RequiredSelections = [ _stdLooseMuons,_stdLooseTaus,
-                                             _stdLoosePions, _stdLooseKaons ])
+                                             _stdNoPIDsPions, _stdNoPIDsKaons,
+                                             _stdNoPIDsProtons ])
+                      
 
 
 
@@ -382,16 +387,18 @@ def makeB2heMu(name):
     
     from Configurables import OfflineVertexFitter
     Bs2heMu = CombineParticles("Combine"+name)
-    Bs2heMu.DecayDescriptors = ["[B+ -> K+ e+ mu-]cc","[B+ -> K+ e- mu+]cc",
-                                "[B+ -> pi+ e+ mu-]cc","[B+ -> pi+ e- mu+]cc" ]
+    Bs2heMu.DecayDescriptors = ["[B+ -> K+ e+ mu-]cc","[B+ -> K- e+ mu+]cc",
+                                "[B+ -> pi+ e+ mu-]cc","[B+ -> pi- e+ mu+]cc" ,
+                                "[B+ -> p+ e+ mu-]cc","[B- -> p+ e- mu-]cc"]
     Bs2heMu.addTool( OfflineVertexFitter )
     Bs2heMu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     Bs2heMu.OfflineVertexFitter.useResonanceVertex = False
     #Bs2heMu.ReFitPVs = True
     Bs2heMu.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)>25.)&(TRCHI2DOF<3)",
-                              "e+" : "(MIPCHI2DV(PRIMARY)>25.)&(TRCHI2DOF<3)",
-                              "pi+" : "(MIPCHI2DV(PRIMARY)>25.)&(TRCHI2DOF<3)",
-                              "K+" : "(MIPCHI2DV(PRIMARY)>25.)&(TRCHI2DOF<3)"}
+                              "e+" : "(MIPCHI2DV(PRIMARY)>25.)&(TRCHI2DOF<3) & (PIDe > 2)",
+                              "pi+" : "(MIPCHI2DV(PRIMARY)>25.)&(TRCHI2DOF<2)",
+                              "p+" : "(MIPCHI2DV(PRIMARY)>25.)&(TRCHI2DOF<3)&(PIDp>5)",
+                              "K+" : "(MIPCHI2DV(PRIMARY)>25.)&(TRCHI2DOF<3)&(PIDK>5)"}
 
     Bs2heMu.CombinationCut = "(ADAMASS('B+')<600*MeV)"\
                             "& (AMAXDOCA('')<0.3*mm)"
@@ -404,13 +411,15 @@ def makeB2heMu(name):
 
     _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
     _stdLooseElectrons= DataOnDemand(Location = "Phys/StdLooseElectrons/Particles")
-    _stdLoosePions= DataOnDemand(Location = "Phys/StdLoosePions/Particles")
-    _stdLooseKaons= DataOnDemand(Location = "Phys/StdLooseKaons/Particles")
-
+    _stdNoPIDsPions= DataOnDemand(Location = "Phys/StdNoPIDsPions/Particles")
+    _stdNoPIDsKaons= DataOnDemand(Location = "Phys/StdNoPIDsKaons/Particles")
+    _stdNoPIDsProtons= DataOnDemand(Location = "Phys/StdNoPIDsProtons/Particles")
+    
     return Selection (name,
                       Algorithm = Bs2heMu,
                       RequiredSelections = [ _stdLooseMuons,_stdLooseElectrons,
-                                             _stdLoosePions, _stdLooseKaons ])
+                                             _stdNoPIDsPions, _stdNoPIDsKaons,
+                                             _stdNoPIDsProtons ])
 
 
 def makeB2pMu(name):
@@ -423,16 +432,20 @@ def makeB2pMu(name):
     
     from Configurables import OfflineVertexFitter
     Bs2pMu = CombineParticles("Combine"+name)
-    Bs2pMu.DecayDescriptor = "[B_s0 -> p+ mu-]cc"
+    Bs2pMu.DecayDescriptors = [ "[B_s0 -> p+ mu-]cc","[B_s0 -> p+ mu+]cc",
+                                "[B_s0 -> pi+ mu-]cc","[B_s0 -> pi+ mu+]cc",
+                                "[B_s0 -> K+ mu-]cc","[B_s0 -> K+ mu+]cc"]
     #Bs2pMu.addTool( OfflineVertexFitter )
     #Bs2pMu.VertexFitters.update( { "" : "OfflineVertexFitter"} )
     #Bs2pMu.OfflineVertexFitter.useResonanceVertex = False
     #Bs2pMu.ReFitPVs = True
     Bs2pMu.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 3 )",
+                             "pi+" : "(MIPCHI2DV(PRIMARY)>36.)&(TRCHI2DOF<2)",
+                             "K+" : "(MIPCHI2DV(PRIMARY)>25.)&(TRCHI2DOF<3) & (PIDK>5)",
                              "p+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 3 )& (PIDp>5)"}
 
     Bs2pMu.CombinationCut = "(ADAMASS('B_s0')<300*MeV)"\
-                            "& (AMAXDOCA('')<0.3*mm)"
+                            "& (AMAXDOCA('')<0.1*mm)"
     
     Bs2pMu.MotherCut = "(VFASPF(VCHI2/VDOF)<9) "\
                        "& (ADMASS('B_s0') < 600*MeV )"\
@@ -441,11 +454,16 @@ def makeB2pMu(name):
                        "& (BPVIPCHI2()< 25) "
 
     _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
-    _stdLooseProtons= DataOnDemand(Location = "Phys/StdLooseProtons/Particles")
+    _stdNoPIDsPions= DataOnDemand(Location = "Phys/StdNoPIDsPions/Particles")
+    _stdNoPIDsKaons= DataOnDemand(Location = "Phys/StdNoPIDsKaons/Particles")
+    _stdNoPIDsProtons= DataOnDemand(Location = "Phys/StdNoPIDsProtons/Particles")
+    
+
 
     return Selection (name,
                       Algorithm = Bs2pMu,
-                      RequiredSelections = [ _stdLooseMuons,_stdLooseProtons])
+                      RequiredSelections = [ _stdLooseMuons,_stdNoPIDsPions,
+                                             _stdNoPIDsKaons,_stdNoPIDsProtons ])
 
 
 def makeBu(name) :
