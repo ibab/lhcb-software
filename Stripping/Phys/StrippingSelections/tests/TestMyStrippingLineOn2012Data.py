@@ -18,11 +18,14 @@ from StrippingConf.StrippingStream import StrippingStream
 stream = StrippingStream("Test")
 
 # Append your line
-from StrippingSelections.StrippingDiMuonForXsection import DiMuonForXsectionConf
-from StrippingSelections.StrippingDiMuonForXsection import config_default
+#from StrippingSelections.StrippingDiMuonForXsection import DiMuonForXsectionConf
+#from StrippingSelections.StrippingDiMuonForXsection import config_default
+#DiMuonBuilder = DiMuonForXsectionConf( name="DiMuonForXsection", config=config_default )
+#stream.appendLines( DiMuonBuilder.lines() )
 
-DiMuonBuilder = DiMuonForXsectionConf( name="DiMuonForXsection", config=config_default )
-stream.appendLines( DiMuonBuilder.lines() )
+from StrippingSelections import StrippingCharmFromBSemi
+confCharmFromBSemi = StrippingCharmFromBSemi.CharmFromBSemiAllLinesConf("CharmFromBSemi", StrippingCharmFromBSemi.confdict)
+stream.appendLines( confCharmFromBSemi.lines() )
 
 
 # Standard configuration of Stripping, do NOT change them
@@ -46,11 +49,11 @@ from Configurables import AlgorithmCorrelationsAlg
 ac = AlgorithmCorrelationsAlg(Algorithms = sc.selections())
 
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
-DaVinci().EvtMax = 100000
+DaVinci().EvtMax = 20000
 DaVinci().PrintFreq = 2000
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )
-DaVinci().appendToMainSequence( [ ac ] )
+#DaVinci().appendToMainSequence( [ ac ] )
 DaVinci().DataType  = "2012"
 DaVinci().InputType = "SDST"
 

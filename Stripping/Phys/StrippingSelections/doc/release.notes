@@ -4,6 +4,23 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-08-22 - Mika Vesterinen
+ - Add tests/TestCharmFromBSemi.py
+ - Minor updates to tests/TestSemileptonicsOnRealData.py
+ - Updates to CharmFromBSemi.py: 
+   - Remove 2K2Pi and 3KPi lines (now in full DST for mass measurement). 
+   - Add slot in confdict for B mass cut. Loose and tight versions.
+   - Add DZ cut between Ks and D in KsHH. 
+   - looser Ks pT and mass cuts. 
+   - Different pT cuts for pi0 in single and double tagged hhpi0. 
+   - Add PTSUM slots in confdict.
+   - D->KsKKPi line for mass measurement.
+ - Updates to B2DMuNuX.py
+    - use muonhighPT consistently in D0->hh (single and double tags)
+    - use the looser muon again for phipi.
+    - add D->KKK line for mass measurement.
+ 
+
 ! 2012-08-22 - Pieter David
  - Re-commit final tuning of displaced vertex lines
 

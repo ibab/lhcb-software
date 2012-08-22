@@ -2,15 +2,11 @@
 Module for constructing B semileptonic inclusive channels:
 B->D0XMuNu, D+XMuNu, Ds+XMuNu, Lc+XMuNu with
 D0->Kpi, D0->KK, D0->pipi, D+->Kpipi, KKPi, Ds+ -> KKPi and Lc+->PKPi, Ds->(Phi->KK)Pi
-
-Also added for 17b (but now moved to charm muDST stream):
-D0 -> KsHH, D0 -> HHPi0
-D+ -> KsH, D+ -> HMuMu
-Lc+ -> L0 H, Lc+ -> pHH
+D+->KKK (for mass measurement)
 """
 __author__ = ['Liming Zhang, Alessandra Borgia']
 __date__ = '23/07/2010'
-__version__ = '$Revision: 1.8 $'
+__version__ = '$Revision: 1.9 $'
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles, OfflineVertexFitter
@@ -221,6 +217,10 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                          RequiredSelections = [self.selKaon, self.selPion])
         
         ################ D+/Ds+ -> HHH SELECTIONS ##########################
+
+        self.selD2KKK = Selection( "D2KKKfor" + name,
+                                   Algorithm = self._D2HHHFilter(['[D+ -> K- K+ K+]cc']),
+                                   RequiredSelections = [self.selKaonTight] )
         
         self.seldp2kpipi = Selection( "Dp2KPiPifor" + name,
                                       Algorithm = self._Dp2KPiPiFilter(),
@@ -263,20 +263,9 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                         DZ = config['DZLoose']
                                         )
         
-        #self.selb2D0MuXKpiDCS = makeb2DMuX('b2D0MuXKpiDCS' + name,
-        #                                   DecayDescriptors = [ '[B+ -> D0 mu+]cc' ],
-        #                                   MuSel = self.selmuonhighPT, 
-        #                                   DSel = self.seld02kpi,
-        #                                   BVCHI2DOF = config['BVCHI2DOF'],
-        #                                   BDIRA = config['BDIRA'],
-        #                                   DZ = config['DZLoose']
-        #                                   )
-        ## no need for D* version of DCS Kpi since have both combinations in the normal Kpi,
-        ## without prescale
-        
         self.selb2D0MuXKK = makeb2DMuX('b2D0MuXKK' + name,
                                        DecayDescriptors = [ '[B- -> D0 mu-]cc', '[B+ -> D0 mu+]cc' ],
-                                       MuSel = self.selmuon, 
+                                       MuSel = self.selmuonhighPT, 
                                        DSel = self.seld02kk,
                                        BVCHI2DOF = config['BVCHI2DOF'],
                                        BDIRA = config['BDIRA'],
@@ -294,7 +283,7 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         
         self.selb2D0MuXpipi = makeb2DMuX('b2D0MuXpipi' + name,
                                          DecayDescriptors = [ '[B- -> D0 mu-]cc', '[B+ -> D0 mu+]cc' ],
-                                         MuSel = self.selmuon, 
+                                         MuSel = self.selmuonhighPT, 
                                          DSel = self.seld02pipi,
                                          BVCHI2DOF = config['BVCHI2DOF'],
                                          BDIRA = config['BDIRA'],
@@ -345,8 +334,6 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                          BDIRA = config['BDIRA'],
                                          DZ = config['DZ']
                                          )        
-
-        
         
         self.selb2DpMuX = makeb2DMuX('b2DpMuX' + name,
                                      DecayDescriptors = [ '[B0 -> D- mu+]cc', '[B0 -> D- mu-]cc' ],
@@ -375,9 +362,18 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                      DZ = config['DZ']
                                      )         
         
+        self.selb2DMuXKKK = makeb2DMuX('b2DMuXKKK' + name,
+                                       DecayDescriptors = [ '[B0 -> D- mu+]cc', '[B0 -> D- mu-]cc' ],
+                                       MuSel = self.selmuonhighPT, 
+                                       DSel = self.selD2KKK,
+                                       BVCHI2DOF = config['BVCHI2DOF'],
+                                       BDIRA = config['BDIRA'],
+                                       DZ = config['DZ']
+                                       )
+        
         self.selb2DsMuXPhiPi = makeb2DMuX('b2DsMuXPhiPi' + name,
                                           DecayDescriptors = [ '[B0 -> D- mu+]cc', '[B0 -> D- mu-]cc' ],
-                                          MuSel = self.selmuonhighPT, 
+                                          MuSel = self.selmuon, 
                                           DSel = self.selds2phipi,
                                           BVCHI2DOF = config['BVCHI2DOF'],
                                           BDIRA = config['BDIRA'],
@@ -411,6 +407,7 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         ######## Lines for time integrated A_SL #########
         self.b2DpMuXLine = StrippingLine('b2DpMuX' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2DpMuX)
         self.b2DsMuXLine = StrippingLine('b2DsMuX' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2DsMuX)
+        self.b2DMuXKKKLine = StrippingLine('b2DMuXKKK' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2DMuXKKK)
         self.b2DsMuXPhiPiLine = StrippingLine('b2DsMuXPhiPi' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2DsMuXPhiPi)
         self.b2DsPi_PhiPi_fakesLine = StrippingLine('b2DsPi_PhiPi_fakes' + name + 'Line'
                                                     , HLT     = "HLT_PASS_RE('Hlt2IncPhi.*Decision')"
@@ -434,6 +431,7 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         self.registerLine(self.b2D0MuXLine)        
         #self.registerLine(self.b2D0MuXKpiDCSLine)        
         self.registerLine(self.b2DpMuXLine)
+        self.registerLine(self.b2DMuXKKKLine)
         self.registerLine(self.b2DsMuXLine)
         self.registerLine(self.b2LcMuXLine)
 
@@ -570,6 +568,16 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                     CombinationCut = _combinationCut,
                                     MotherCut = _motherCut)                             
         return _ds2kkpi
+    
+    def _D2HHHFilter( self,_decayDescriptors ):
+        _combinationCut = "(DAMASS('D_s+') < %(DsAMassWin)s *MeV) & (DAMASS('D+')> -%(DsAMassWin)s *MeV) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > 1800.*MeV) & (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
+        _motherCut = "(SUMTREE( PT,  ISBASIC )>1800.*MeV) &(DMASS('D_s+') < %(DsMassWin)s *MeV) & (DMASS('D+') > -%(DsMassWin)s *MeV)"\
+                     "& (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
+                     "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s)"  % self.__confdict__
+        D2HHH = CombineParticles( DecayDescriptors = _decayDescriptors,
+                                     CombinationCut = _combinationCut,
+                                     MotherCut = _motherCut)                             
+        return D2HHH
 
     
     def _Lc2PKPiFilter( self ):
