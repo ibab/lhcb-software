@@ -146,8 +146,8 @@ confdict = {
     #
     # Selection of basic particles 
     #
-    'GoodMuons'        : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 5  ) & ( BPVIPCHI2 () >  9 ) " ,
-    'GoodMuonsForBc' : " ( BPVIPCHI2 () >  9 ) " ,
+    'GoodMuons'        : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 2  ) & ( BPVIPCHI2 () >  9 ) " ,
+    'GoodMuonsForBc' : " ( BPVIPCHI2 () >  9 ) & ( TRCHI2DOF < 2  )" ,
     'TightMuons'   : " ( PT > 1.9 * GeV ) & ( BPVIPCHI2 () > 25 ) " ,
     #
     # Trigger 
@@ -449,7 +449,7 @@ class StrippingTriMuonsConf(LineBuilder) :
             """ , ## wide mass-combination + PT-cuts 
             ##
             MotherCut       = """
-            ( chi2vx < 20 ) &
+            ( chi2vx < 15 ) &
             ( ctau   > 100 * micrometer ) &
             ( BPVIPCHI2() < 225 )
             """ 
@@ -499,7 +499,7 @@ class StrippingTriMuonsConf(LineBuilder) :
             ( l1S < AM ) & AHASCHILD( PT > 1.0 * GeV ) & ( dm1 | dm2 )
             """,
             ##
-            MotherCut       = " ( chi2vx < 25 ) & ( ctauBc > 20 * micrometer ) " 
+            MotherCut       = " ( chi2vx < 15 ) & ( ctauBc > 20 * micrometer ) " 
             )
         
         ## make selections
