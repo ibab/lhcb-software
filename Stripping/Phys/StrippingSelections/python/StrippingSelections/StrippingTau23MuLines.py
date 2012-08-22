@@ -73,7 +73,7 @@ class Tau23MuLinesConf(LineBuilder) :
         
 
         self.selTau23Mu = makeTau23Mu(tau_name)
-        self.selDs23PiTIS = makeDs23PiTIS(self,ds23PiTIS_name)
+        #self.selDs23PiTIS = makeDs23PiTIS(self,ds23PiTIS_name)
         self.selDs23Pi = makeDs23Pi(ds23Pi_name)
         self.selDs2PhiPi = makeDs2PhiPi(ds2PhiPi_name)
         self.selTau25Mu = makeTau25Mu(tau25_name)
@@ -86,11 +86,11 @@ class Tau23MuLinesConf(LineBuilder) :
                                      algos = [ self.selTau23Mu ]
                                      )
         
-        self.ds23PiTISLine = StrippingLine(ds23PiTIS_name+"Line",
-                                      prescale = config['Ds23PiTISPrescale'],
-                                      postscale = config['TauPostscale'],
-                                      algos = [ self.selDs23PiTIS ]
-                                      )
+        #self.ds23PiTISLine = StrippingLine(ds23PiTIS_name+"Line",
+        #                              prescale = config['Ds23PiTISPrescale'],
+        #                              postscale = config['TauPostscale'],
+        #                              algos = [ self.selDs23PiTIS ]
+        #                              )
 
         self.ds23PiLine = StrippingLine(ds23Pi_name+"Line",
                                       prescale = config['Ds23PiPrescale'],
@@ -117,7 +117,7 @@ class Tau23MuLinesConf(LineBuilder) :
                                            )
         
         self.registerLine(self.tau23MuLine)
-        self.registerLine(self.ds23PiTISLine)
+        #self.registerLine(self.ds23PiTISLine)
         self.registerLine(self.ds23PiLine)
         self.registerLine(self.ds2PhiPiLine)
         self.registerLine(self.tau25MuLine)

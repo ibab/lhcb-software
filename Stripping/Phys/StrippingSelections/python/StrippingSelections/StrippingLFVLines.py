@@ -18,6 +18,7 @@ __all__ = ('LFVLinesConf',
            'makeB2hemu'
            'makeB2pMu',
            'makeBu',
+           'makeB2hTauMu'
            )
 
 from Gaudi.Configuration import *
@@ -86,7 +87,7 @@ class LFVLinesConf(LineBuilder) :
         self.selB2pMu = makeB2pMu(pmu_name)
         self.selBu = makeBu(bu_name)
         #self.selB2TauMu = makeB2TauMu(taumu_name)
-        #self.selB2hTauMu = makeB2hTauMu(htaumu_name)
+        self.selB2hTauMu = makeB2hTauMu(htaumu_name)
                 
         self.tau2PhiMuLine = StrippingLine(tau_name+"Line",
                                      prescale = config['TauPrescale'],
@@ -117,11 +118,11 @@ class LFVLinesConf(LineBuilder) :
                                      algos = [ self.selB2ee ]
                                        )
 
-        #self.b2hTauMuLine = StrippingLine(htaumu_name+"Line",
-        #                             prescale = config['B2hTauMuPrescale'],
-        #                             postscale = config['Postscale'],
-        #                             algos = [ self.selB2hTauMu ]
-        #                             )
+        self.b2hTauMuLine = StrippingLine(htaumu_name+"Line",
+                                     prescale = config['B2hTauMuPrescale'],
+                                     postscale = config['Postscale'],
+                                     algos = [ self.selB2hTauMu ]
+                                     )
         
 	self.b2heMuLine = StrippingLine(hemu_name+"Line",
                                      prescale = config['B2heMuPrescale'],
@@ -150,7 +151,7 @@ class LFVLinesConf(LineBuilder) :
         self.registerLine(self.b2pMuLine)
         self.registerLine(self.buLine)        
         #self.registerLine(self.b2TauMuLine)
-        #self.registerLine(self.b2hTauMuLine)
+        self.registerLine(self.b2hTauMuLine)
 
 def makeTau2PhiMu(name):
     """
@@ -251,7 +252,7 @@ def makeB2TauMu(name):
                               "& (BPVIPCHI2()< 25) "
 
     _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
-    _stdLooseDetachedTaus= DataOnDemand(Location = "Phys/StdLooseDetachedTau/Particles")
+    _stdLooseDetachedTaus= DataOnDemand(Location = "Phys/StdLooseDetachedTau3pi/Particles")
 
     return Selection (name,
                       Algorithm = Bs2TauMu,
@@ -362,7 +363,7 @@ def makeB2hTauMu(name):
                               "& (BPVIPCHI2()< 25) "
 
     _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
-    _stdLooseDetachedTaus= DataOnDemand(Location = "Phys/StdLooseDetachedTau/Particles")
+    _stdLooseDetachedTaus= DataOnDemand(Location = "Phys/StdLooseDetachedTau3pi/Particles")
     _stdNoPIDsPions= DataOnDemand(Location = "Phys/StdNoPIDsPions/Particles")
     _stdNoPIDsKaons= DataOnDemand(Location = "Phys/StdNoPIDsKaons/Particles")
     _stdNoPIDsProtons= DataOnDemand(Location = "Phys/StdNoPIDsProtons/Particles")
@@ -370,7 +371,7 @@ def makeB2hTauMu(name):
 
     return Selection (name,
                       Algorithm = Bs2hTauMu,
-                      RequiredSelections = [ _stdLooseMuons,_stdLooseTaus,
+                      RequiredSelections = [ _stdLooseMuons,_stdLooseDetachedTaus,
                                              _stdNoPIDsPions, _stdNoPIDsKaons,
                                              _stdNoPIDsProtons ])
                       
