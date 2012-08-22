@@ -5,6 +5,7 @@ Provides class Bu2KShConf, which constructs the Selections and StrippingLines
 given a configuration dictionary.
 Exported symbols (use python help!):
    - Bu2KShConf
+This is freely inspired for Hb2Charged2Body and B2KShh packages...
 """
 
 __author__ = ['Aurelien Martens']
@@ -19,11 +20,7 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from Beauty2Charm_LoKiCuts import LoKiCuts
 
-from StandardParticles import StdLoosePions as Pions
-from StandardParticles import StdLooseKaons as Kaons
-
-#from StandardParticles import StdNoPIDsPions as Pions
-#from StandardParticles import StdNoPIDsKaons as Kaons
+from StandardParticles import StdNoPIDsPions as Pions
 
 default_config = {'Trk_Chi2'                : 3.0,
                   'KS_DD_MassWindow'        : 30.0,
@@ -71,8 +68,10 @@ class Bu2KShConf(LineBuilder) :
     Exports as instance data members:
     selKS2DD               : KS -> Down Down Selection object
     selKS2LL               : KS -> Long Long Selection object
-    selBu2KSDDh            : Bu -> KS(DD) h+ Selection object
-    selBu2KSLLh            : Bu -> KS(LL) h+ Selection object
+    selBu2KSPiDD            : Bu -> KS(DD) pi+ Selection object
+    selBu2KSPiLL            : Bu -> KS(LL) pi+ Selection object
+    selBu2KSKDD            : Bu -> KS(DD) K+ Selection object
+    selBu2KSKLL            : Bu -> KS(LL) K+ Selection object 
     dd_line                : StrippingLine made out of selB2KSDDhh
     ll_line                : StrippingLine made out of selBu2KSLLh
     lines                  : List of lines, [dd_line, ll_line]
@@ -118,39 +117,40 @@ class Bu2KShConf(LineBuilder) :
 
         dd_name = name+'DD'
         ll_name = name+'LL'
+        Bu2KSPiDDName = dd_name.replace("Bu2KSh","Bu2KSPi")
+        Bu2KSPiLLName = ll_name.replace("Bu2KSh","Bu2KSPi")
+        Bu2KSKDDName = dd_name.replace("Bu2KSh","Bu2KSK")
+        Bu2KSKLLName = ll_name.replace("Bu2KSh","Bu2KSK")
 
         GECCode = {'Code' : "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %s)" % config['GEC_MaxTracks'],
                    'Preambulo' : ["from LoKiTracks.decorators import *"]}
 
         self.pions = Pions
-        self.kaons = Kaons
 
-        self.hadrons = MergedSelection("HadronsFor" + name,
-                                       RequiredSelections = [ self.pions, self.kaons ] )
-        
         self.makeKS2DD( 'KSfor'+dd_name, config )
         self.makeKS2LL( 'KSfor'+ll_name, config )
 
         self.makeH( 'Hfor'+name, config )
 
-        self.makeBu2KSDDh( dd_name, config )
-        self.makeBu2KSLLh( ll_name, config )
+        self.Bu2KSPiDD = self.makeBu2KSDDh( Bu2KSPiDDName, config )
+        self.Bu2KSPiLL = self.makeBu2KSLLh( Bu2KSPiLLName, config )
 
-        self.dd_line = StrippingLine(dd_name+"Line",
-                                     prescale = config['Prescale'],
-                                     postscale = config['Postscale'],
-                                     selection = self.selBu2KSDDh,
-                                     FILTER = GECCode
-                                     )
-        self.ll_line = StrippingLine(ll_name+"Line",
-                                     prescale = config['Prescale'],
-                                     postscale = config['Postscale'],
-                                     selection =  self.selBu2KSLLh,
-                                     FILTER = GECCode
-                                     )
+        self.Bu2KSPiDDLine = StrippingLine(Bu2KSPiDDName+"Line",
+                                           prescale = config['Prescale'],
+                                           postscale = config['Postscale'],
+                                           selection = self.Bu2KSPiDD,
+                                           FILTER = GECCode
+                                           )
+        
+        self.Bu2KSPiLLLine = StrippingLine(Bu2KSPiLLName+"Line",
+                                           prescale = config['Prescale'],
+                                           postscale = config['Postscale'],
+                                           selection =  self.Bu2KSPiLL,
+                                           FILTER = GECCode
+                                           )
 
-        self.registerLine(self.ll_line)
-        self.registerLine(self.dd_line)
+        self.registerLine(self.Bu2KSPiDDLine)
+        self.registerLine(self.Bu2KSPiLLLine)
 
     def makeKS2DD( self, name, config ) :
         # define all the cuts
@@ -200,11 +200,11 @@ class Bu2KShConf(LineBuilder) :
         _filterH = FilterDesktop( Code = _allCuts )
 
         # make and store the selection object
-        self.selH = Selection( name, Algorithm = _filterH, RequiredSelections = [self.hadrons] )
+        self.selH = Selection( name, Algorithm = _filterH, RequiredSelections = [self.pions] )
 
     def makeBu2KSDDh( self, name, config ) :
         """
-        Create and store a B -> KS(DD) h+ h- Selection object.
+        Create and store a B -> KS(DD) h+ Selection object.
         Arguments:
         name             : name of the Selection.
         config           : config dictionary
@@ -227,13 +227,12 @@ class Bu2KShConf(LineBuilder) :
         _motherCuts = _pCut+'&'+_vtxChi2Cut+'&'+_diraCut+'&'+_ipChi2Cut+'&'+_fdCut+'&'+_fdChi2Cut
 
         _B = CombineParticles()
-        _B.DecayDescriptors = [ "B+ -> pi+ KS0", "B- -> pi- KS0", \
-                                "B+ -> K+  KS0", "B- -> K-  KS0" ]
-        _B.DaughtersCuts = { "K+" : "TRCHI2DOF<%s"% config['Trk_Chi2'], "pi+" : "TRCHI2DOF<%s"% config['Trk_Chi2'] }
+        _B.DecayDescriptors = [ "B+ -> pi+ KS0", "B- -> pi- KS0" ]
+        _B.DaughtersCuts = { "pi+" : "TRCHI2DOF<%s"% config['Trk_Chi2'] }
         _B.CombinationCut = _combCuts
         _B.MotherCut = _motherCuts
 
-        self.selBu2KSDDh = Selection (name, Algorithm = _B, RequiredSelections = [ self.selKS2DD, self.selH ])
+        return Selection (name, Algorithm = _B, RequiredSelections = [ self.selKS2DD, self.selH ])
 
     def makeBu2KSLLh( self, name, config ) :
         """
@@ -261,13 +260,11 @@ class Bu2KShConf(LineBuilder) :
 
         _B = CombineParticles()
 
-        _B.DecayDescriptors = [ "B+ -> pi+ KS0", "B- -> pi- KS0", \
-                                "B+ -> K+  KS0", "B- -> K-  KS0" ]
+        _B.DecayDescriptors = [ "B+ -> pi+ KS0", "B- -> pi- KS0" ]
 
-        _B.DaughtersCuts = { "K+" : "TRCHI2DOF<%s"% config['Trk_Chi2'], "pi+" : "TRCHI2DOF<%s"% config['Trk_Chi2'] }
+        _B.DaughtersCuts = { "pi+" : "TRCHI2DOF<%s"% config['Trk_Chi2'] }
         
         _B.CombinationCut = _combCuts
         _B.MotherCut = _motherCuts
 
-        self.selBu2KSLLh = Selection (name, Algorithm = _B, RequiredSelections = [ self.selKS2LL, self.selH ])
-
+        return Selection (name, Algorithm = _B, RequiredSelections = [ self.selKS2LL, self.selH ])

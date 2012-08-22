@@ -3,6 +3,10 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
+
+! 2012-08-22 - Aurelien Martens
+- Update StrippingBu2KSh.py (to not explicitely build KSK anymore, pions are now NoPID pions)
+
 ! 2012-08-22 - Neus Lopez March
 - Update StrippingB2Psi2SXMuMu.py and StrippingB2Psi2SX.py to satisfy requirements.
 ! 2012-08-22 - Anton Poluektov 
