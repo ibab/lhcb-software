@@ -187,17 +187,9 @@ class RecSysConf(LHCbConfigurableUser):
 
         # PROTO
         if "PROTO" in recoSeq:
-            protoSeq = GaudiSequencer("ProtoSeq")
-            GaudiSequencer("RecoPROTOSeq").Members += [protoSeq]
             self.setOtherProps(GlobalRecoConf(),["DataType","SpecialData",
                                                  "Context","OutputLevel"])
-            GlobalRecoConf().RecoSequencer = protoSeq
-            # hack - Rerun Tracking Ghost prob with new settings
-            from Configurables import TrackAddNNGhostId, TrackNNGhostId
-            nn = TrackAddNNGhostId("TrackAddNewNNGhostId")
-            nn.addTool( TrackNNGhostId, name = 'TrackNNGhostId' )
-            nn.TrackNNGhostId.IsMC2012Tuning = True
-            GaudiSequencer("RecoPROTOSeq").Members += [nn]
+            GlobalRecoConf().RecoSequencer = GaudiSequencer("RecoPROTOSeq")
             
 
         # SUMMARY
