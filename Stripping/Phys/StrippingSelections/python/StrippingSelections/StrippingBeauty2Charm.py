@@ -33,7 +33,14 @@ from Beauty2Charm_LTUnbiased import *
 
 # Default configuration dictionary
 config = {
-    "ALL" : { # Cuts made on all charged input particles in all lines
+    "ALL" : { # Cuts made on all charged input particles in all lines (excpt. upstream)
+    'TRCHI2DOF_MAX' : 3,
+    'PT_MIN'        : '100*MeV',
+    'P_MIN'         : '1000*MeV',
+    'MIPCHI2DV_MIN' : 4, 
+    'TRGHP_MAX'     : 0.4
+    },
+    "UPSTREAM" : { # Cuts made on all upstream particles
     'TRCHI2DOF_MAX' : 4,
     'PT_MIN'        : '100*MeV',
     'P_MIN'         : '1000*MeV',
@@ -137,7 +144,7 @@ config = {
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
 class Beauty2CharmConf(LineBuilder):
-    __configuration_keys__ = ('ALL','KS0','Pi0','D2X','B2X','Dstar','HH','HHH',
+    __configuration_keys__ = ('ALL','UPSTREAM','KS0','Pi0','D2X','B2X','Dstar','HH','HHH',
                               'PID','Prescales','GECNTrkMax')
  
     def __init__(self, moduleName, config) :
@@ -145,7 +152,7 @@ class Beauty2CharmConf(LineBuilder):
         LineBuilder.__init__(self, moduleName, config)
 
         # pre-filter inputs
-        uppions = filterInputs('PiUP',[StdNoPIDsUpPions],config['ALL'])
+        uppions = filterInputs('PiUP',[StdNoPIDsUpPions],config['UPSTREAM'])
         pions = filterInputs('Pi',[StdAllNoPIDsPions],config['ALL'])
         kaons = filterInputs('K',[StdAllNoPIDsKaons],config['ALL'])
         protons = filterInputs('P',[StdAllNoPIDsProtons],config['ALL'])
