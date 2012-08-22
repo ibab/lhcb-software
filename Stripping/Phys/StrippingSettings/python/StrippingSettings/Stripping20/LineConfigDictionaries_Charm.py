@@ -566,64 +566,6 @@ D2XMuMu = {
     'D02PiPiMuMuLinePostscale'  : 1,
     'D02KPiMuMuLinePrescale'   : 1 ,
     'D02KPiMuMuLinePostscale'  : 1,
-    'D02KKPiPiLinePrescale'     :    0,
-    'D02KKPiPiLinePostscale'    :    0,
-    'D02K3PiLinePrescale'       :    0,
-    'D02K3PiLinePostscale'      :    0,
-    'D2K2PiLinePrescale'        :    0,
-    'D2K2PiLinePostscale'       :    0,
-    'D22KPiLinePrescale'        :    0,
-    'D22KPiLinePostscale'       :    1
-  } ,
-  'WGs' : [ 'Charm' ],
-  'STREAMS' : [ 'CharmCompleteEvent' ]
-  }
-## Micro-DST, Ibid
-## New in Stripping15
-D2XMuMuMicro = {
-    'BUILDERTYPE' : 'D2XMuMuConf',
-    'CONFIG' : {
-    'MuonP'         : 3000. ,    #MeV
-    'MuonPT'        : 500.  ,    #MeV
-    'MuonMINIPCHI2' : 6  ,    #adimensional
-    'MuonTRCHI2'    : 8     ,    #adimensional
-    'PionP'         : 2000. ,    #MeV
-    'PionPT'        : 300.  ,    #MeV
-    'PionMINIPCHI2' : 6     ,    #adimensional
-    'PionTRCHI2'    : 8  ,    #adminensional
-    'KaonP'         : 2000. ,    #MeV
-    'KaonPT'        : 300.  ,    #MeV
-    'KaonPIDK'      : -1.   ,    #adimensional
-    'KaonMINIPCHI2' : 6     ,    #adimensional
-    'KaonTRCHI2'    : 8     ,    #adimensional
-    'MINIPCHI2_CS_hhmumu' : 6. , #adimensional
-    'PT_CS_hhmumu' : 400 , #MeV
-    'DimuonMass'                :  250.,        # MeV
-    'DVCHI2DOF'                 :    5.,        # adimensional
-    'DMAXDOCA'                  :  0.15,        # mm
-    'DdauMAXIPCHI2'             :   20.,        # adimensinal
-    'DFDCHI2'                   :    9.,        # adimensional
-    'DDIRA'                     :    0.9999,    # adimensional
-    'DIPCHI2'                   :   30.,        # adimensional
-    'DMassWin'                  :  200.,        # MeV, mass window
-    'DMassWin_CS_hhmumu'        :  100.,        # MeV, mass window
-    'DMassLow'                  : 1763.,        # MeV, low-mass veto
-    'D2PiMuMuOSLinePrescale'    :    0,
-    'D2PiMuMuOSLinePostscale'   :    0,
-    'D2PiMuMuSSLinePrescale'    :    0,
-    'D2PiMuMuSSLinePostscale'   :    0,
-    'D2KMuMuOSLinePrescale'     :    0,
-    'D2KMuMuOSLinePostscale'    :    0,
-    'D2KMuMuSSLinePrescale'     :    0,
-    'D2KMuMuSSLinePostscale'    :    0,
-    'D2PiPiPiCalLinePrescale'   :    0,
-    'D2PiPiPiCalLinePostscale'  :    0,
-    'D02KKMuMuLinePrescale'     :    0,
-    'D02KKMuMuLinePostscale'    :    0,
-    'D02PiPiMuMuLinePrescale'   : 0 ,
-    'D02PiPiMuMuLinePostscale'  : 0,
-    'D02KPiMuMuLinePrescale'   :    0,
-    'D02KPiMuMuLinePostscale'  :    0,
     'D02KKPiPiLinePrescale'     :    0.01,
     'D02KKPiPiLinePostscale'    :    1,
     'D02K3PiLinePrescale'       :    0.01,
@@ -632,10 +574,10 @@ D2XMuMuMicro = {
     'D2K2PiLinePostscale'       :    1,
     'D22KPiLinePrescale'        :    0.01,
     'D22KPiLinePostscale'       :    1
- } ,
-    'WGs' : [ 'Charm' ],
-    'STREAMS' : [ 'Charm' ]
-    }
+  } ,
+  'WGs' : [ 'Charm' ],
+  'STREAMS' : [ 'Charm' ]
+  }
 
 ## Walter Bonivento and Francesco Dettori
 ## Modified from Strippinb13b
@@ -874,10 +816,11 @@ DstarD2KShh = {
     'LongTrackGEC'          :  150        ## Global event cut on number of long tracks
     ,'KSLLCutDIRA'          :    0.9997   ## unitless
     ,'KSDDCutDIRA'          :    0.99995  ## unitless
-    ,'KSLLCutMass'          :   11.4      ## in MeV
-    ,'KSDDCutMass'          :   24.9      ## in MeV
+    ,'KSLLCutMass'          :   20.0      ## in MeV -- Mat changed from 11.4 to 20.0 in S20
+    ,'KSDDCutMass'          :   40.0      ## in MeV -- Mat changed from 24.9 to 40.0 in S20
     ,'KSLLCutFDChi2'        :  100        ## unitless
     ,'KSDDCutFDChi2'        :  100        ## unitless
+    ,'KSCutZFDFromD'        :   10.0      ## in mm -- Mat added in S20
     ,'trackFromDCutP'       : 1500.0      ## in MeV
     ,'trackFromDCutPIDe'    :   10.0      ## unitless -- note that this means (DLLe - DLLx) < 10 for x=K,pi
     ,'trackFromDCutPIDp'    :   15.0      ## unitless -- note that this means (DLLp - DLLx) < 15 for x=K,pi
@@ -886,29 +829,29 @@ DstarD2KShh = {
     ,'pionFromDCutTRCHI2DOF':    4.0      ## unitless
     ,'kaonFromDCutTRCHI2DOF':    5.0      ## unitless
     ,'DCutDIRA'             :    0.0      ## unitless -- remove "backwards-going" D0
-    ,'DCutTau'              :    0.3      ## ps
+    ,'DCutTau'              :    0.2      ## ps -- Mat changed from 0.3 to 0.2 in S20
     ,'DCutVtxChi2_KK'       :   21.0      ## unitless
     ,'DCutVtxChi2_KP'       :   15.0      ## unitless
     ,'DCutVtxChi2_PP'       :   13.0      ## unitless
     ,'preFitDCutPT'         : 1500.0      ## in MeV
     ,'preFitDMassCut_LL'    :  130        ## in MeV
     ,'preFitDMassCut_DD'    :  270        ## in MeV
-    ,'wideDMassCut_KKLL'    :   57.2      ## in MeV
-    ,'wideDMassCut_KPLL'    :   92.0      ## in MeV
-    ,'wideDMassCut_PPLL'    :  110.0      ## in MeV
-    ,'wideDMassCut_KKDD'    :   72.0      ## in MeV
-    ,'wideDMassCut_KPDD'    :  120.0      ## in MeV
-    ,'wideDMassCut_PPDD'    :  140.0      ## in MeV
+    ,'wideDMassCut_KKLL'    :   70.0      ## in MeV -- Mat changed from  57.2 to  70.0 in S20
+    ,'wideDMassCut_KPLL'    :  105.0      ## in MeV -- Mat changed from  92.0 to 105.0 in S20
+    ,'wideDMassCut_PPLL'    :  120.0      ## in MeV -- Mat changed from 110.0 to 120.0 in S20
+    ,'wideDMassCut_KKDD'    :   85.0      ## in MeV -- Mat changed from  72.0 to  85.0 in S20
+    ,'wideDMassCut_KPDD'    :  130.0      ## in MeV -- Mat changed from 120.0 to 130.0 in S20
+    ,'wideDMassCut_PPDD'    :  150.0      ## in MeV -- Mat changed from 140.0 to 150.0 in S20
     ,'preFitDstarMassCut'   :  200.0      ## in MeV; make sure it's well above the largest D mass window
-    ,'wideDMCutLower'       :   -2.0      ## in MeV: allow negative tail made by CombineParticles
-    ,'wideDMCutUpper'       :   15.0      ## in MeV
+    ,'wideDMCutLower'       :  -10.0      ## in MeV: allow negative tail made by CombineParticles -- Mat changed from -2.0 to -10.0 in S20
+    ,'wideDMCutUpper'       :   15.0      ## in MeV -- Mat changed from 15.0 to 25.0 in S20
     ,'DstarCutPT_KK'        : 2200.0      ## in MeV
     ,'DstarCutPT_KP'        : 2200.0      ## in MeV
     ,'DstarCutPT_PP'        : 2200.0      ## in MeV
     ,'DstarCutChi2NDOF_KK'  :   60.0      ## unitless
     ,'DstarCutChi2NDOF_KP'  :   20.0      ## unitless
     ,'DstarCutChi2NDOF_PP'  :   20.0      ## unitless
-    ,'SoftPionCutPIDe'      :    5.0      ## unitless
+    ,'SoftPionCutPIDe'      :    2.0      ## unitless -- Mat changed from 5.0 to 2.0 in S20
     ,'KKLLPrescale'         :    1.0
     ,'KKLLPostscale'        :    1.0
     ,'KPLLPrescale'         :    1.0
@@ -937,10 +880,11 @@ DstarD2KShhCompleteEvent = {
     'LongTrackGEC'          :  150        ## Global event cut on number of long tracks
     ,'KSLLCutDIRA'          :    0.9997   ## unitless
     ,'KSDDCutDIRA'          :    0.99995  ## unitless
-    ,'KSLLCutMass'          :   11.4      ## in MeV
-    ,'KSDDCutMass'          :   24.9      ## in MeV
+    ,'KSLLCutMass'          :   20.0      ## in MeV -- Mat changed from 11.4 to 20.0 in S20
+    ,'KSDDCutMass'          :   40.0      ## in MeV -- Mat changed from 24.9 to 40.0 in S20
     ,'KSLLCutFDChi2'        :  100        ## unitless
     ,'KSDDCutFDChi2'        :  100        ## unitless
+    ,'KSCutZFDFromD'        :   10.0      ## in mm -- Mat added in S20
     ,'trackFromDCutP'       : 1500.0      ## in MeV
     ,'trackFromDCutPIDe'    :   10.0      ## unitless -- note that this means (DLLe - DLLx) < 10 for x=K,pi
     ,'trackFromDCutPIDp'    :   15.0      ## unitless -- note that this means (DLLp - DLLx) < 15 for x=K,pi
@@ -949,29 +893,29 @@ DstarD2KShhCompleteEvent = {
     ,'pionFromDCutTRCHI2DOF':    4.0      ## unitless
     ,'kaonFromDCutTRCHI2DOF':    5.0      ## unitless
     ,'DCutDIRA'             :    0.0      ## unitless -- remove "backwards-going" D0
-    ,'DCutTau'              :    0.3      ## ps
+    ,'DCutTau'              :    0.2      ## ps -- Mat changed from 0.3 to 0.2 in S20
     ,'DCutVtxChi2_KK'       :   21.0      ## unitless
     ,'DCutVtxChi2_KP'       :   15.0      ## unitless
     ,'DCutVtxChi2_PP'       :   13.0      ## unitless
     ,'preFitDCutPT'         : 1500.0      ## in MeV
     ,'preFitDMassCut_LL'    :  130        ## in MeV
     ,'preFitDMassCut_DD'    :  270        ## in MeV
-    ,'wideDMassCut_KKLL'    :   57.2      ## in MeV
-    ,'wideDMassCut_KPLL'    :   92.0      ## in MeV
-    ,'wideDMassCut_PPLL'    :  110.0      ## in MeV
-    ,'wideDMassCut_KKDD'    :   72.0      ## in MeV
-    ,'wideDMassCut_KPDD'    :  120.0      ## in MeV
-    ,'wideDMassCut_PPDD'    :  140.0      ## in MeV
+    ,'wideDMassCut_KKLL'    :   57.2      ## in MeV -- Caution: tighter than CharmToBeSwum cut from S20
+    ,'wideDMassCut_KPLL'    :   92.0      ## in MeV -- Caution:	tighter	than CharmToBeSwum cut from S20
+    ,'wideDMassCut_PPLL'    :  110.0      ## in MeV -- Caution:	tighter	than CharmToBeSwum cut from S20
+    ,'wideDMassCut_KKDD'    :   72.0      ## in MeV -- Caution:	tighter	than CharmToBeSwum cut from S20
+    ,'wideDMassCut_KPDD'    :  120.0      ## in MeV -- Caution:	tighter	than CharmToBeSwum cut from S20
+    ,'wideDMassCut_PPDD'    :  140.0      ## in MeV -- Caution:	tighter	than CharmToBeSwum cut from S20
     ,'preFitDstarMassCut'   :  200.0      ## in MeV; make sure it's well above the largest D mass window
-    ,'wideDMCutLower'       :   -2.0      ## in MeV: allow negative tail made by CombineParticles
-    ,'wideDMCutUpper'       :   15.0      ## in MeV
+    ,'wideDMCutLower'       :  -10.0      ## in MeV: allow negative tail made by CombineParticles -- Mat changed from -2.0 to -10.0 in S20
+    ,'wideDMCutUpper'       :   15.0      ## in MeV -- Caution: tighter than CharmToBeSwum cut from S20
     ,'DstarCutPT_KK'        : 2200.0      ## in MeV
     ,'DstarCutPT_KP'        : 2200.0      ## in MeV
     ,'DstarCutPT_PP'        : 2200.0      ## in MeV
     ,'DstarCutChi2NDOF_KK'  :   60.0      ## unitless
     ,'DstarCutChi2NDOF_KP'  :   20.0      ## unitless
     ,'DstarCutChi2NDOF_PP'  :   20.0      ## unitless
-    ,'SoftPionCutPIDe'      :    5.0      ## unitless
+    ,'SoftPionCutPIDe'      :    2.0      ## unitless -- Mat changed from 5.0 to 2.0 in S20
     ,'KKLLPrescale'         :    1.0
     ,'KKLLPostscale'        :    1.0
     ,'KPLLPrescale'         :    0.025
