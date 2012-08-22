@@ -8,6 +8,9 @@
 !               reconstruction algorithm for beam tracks
 !-----------------------------------------------------------------------------
 
+! 2012-08-22 - Michel De Cian
+ - Modified MuonHitDecode to cope with the new raw locations, per default only the central location is now looked for. Number of prev/next locations to look for is now a configurable option.
+
 !========================= MuonTrackRec v3r6p1 2011-12-15 =========================
 ! 2011-11-23 - Marco Cattaneo
  - Fix gcc46 warnings

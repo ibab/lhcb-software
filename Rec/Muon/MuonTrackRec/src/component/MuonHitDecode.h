@@ -9,6 +9,22 @@
 class IMuonRawBuffer;
 class DeMuonDetector;
 
+
+/** @class MuonHitDecode MuonHitDecode.h 
+ *    
+ *  Parameters:
+ *  - NumberRawLocations: Number of raw locations to look for data (default = 1). 
+ *  Values larger than one will result in looking for data in Prev# / Next#
+ *  
+ *  
+ *
+ */
+
+
+
+
+
+
 class MuonHitDecode : public GaudiTool, virtual public IMuonHitDecode , virtual public IIncidentListener{
 public: 
   MuonHitDecode( const std::string& type, 
@@ -90,5 +106,7 @@ private:
   std::vector<MuonLogHit*> m_fakehits;
   bool m_hitsDecoded;
   std::string nullstring;
+  int m_TAENum;
+  
 };
 #endif // LIB_MUONHITDECODE_H

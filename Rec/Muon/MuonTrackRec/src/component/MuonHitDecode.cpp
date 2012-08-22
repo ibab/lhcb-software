@@ -22,6 +22,7 @@ MuonHitDecode::MuonHitDecode( const std::string& type,
   : GaudiTool ( type, name , parent ), m_hitsDecoded(false)
 {
   declareInterface<IMuonHitDecode>(this);
+  declareProperty( "NumberRawLocations", m_TAENum = 1 );
 }
 
 MuonHitDecode::~MuonHitDecode() {
@@ -65,6 +66,7 @@ StatusCode MuonHitDecode::initialize() {
   m_hits.clear(); m_hits.reserve(5000);
 
   incSvc()->addListener( this, IncidentType::EndEvent );
+
   return StatusCode::SUCCESS;
 }
 
@@ -77,17 +79,33 @@ StatusCode MuonHitDecode::decodeRawData() {
   std::vector<std::pair<LHCb::MuonTileID,unsigned int> >  tileAndTDC;
   std::vector<std::pair<LHCb::MuonTileID,unsigned int> >::iterator it;
   
-  int TAENum=7;
+  
   MuonLogHit* newhit=NULL;
   // run MuonRawBuffer on all avilable BXs
-  for(int i=-TAENum;i<=TAENum;i++){
-    if (!exist<LHCb::RawEvent>(locBX(i) + LHCb::RawEventLocation::Default))
-      continue;
+
+  bool validLocation = false;
+  
+  // -- Loop over locations. m_TAEN is the number of locations, so the counter has to be smaller by one.
+  for(int i=-m_TAENum+1;i<=m_TAENum-1;i++){
+
+
     debug()<<"Looking at BX: "<<i<<" "<<locBX(i)<<endmsg;
 
     // get tiles from the raw buffer
-    LHCb::RawEvent* raw = get<LHCb::RawEvent>
-      (locBX(i)+LHCb::RawEventLocation::Default);
+    LHCb::RawEvent* raw = NULL;
+
+    
+    // -- Check raw locations and load raw event. Second option is for backward compatibility
+    if (exist<LHCb::RawEvent>(locBX(i) + LHCb::RawEventLocation::Muon)){
+      raw = get<LHCb::RawEvent>(locBX(i)+LHCb::RawEventLocation::Muon);
+      validLocation = true;
+    }
+    if (exist<LHCb::RawEvent>(locBX(i) + LHCb::RawEventLocation::Default)){
+      raw = get<LHCb::RawEvent>(locBX(i)+LHCb::RawEventLocation::Default);
+      validLocation = true;
+    }
+    
+    if(!raw) continue;
     
     sc = m_recTool->getTileAndTDC(raw,tileAndTDC,locBX(i)); 
     if (!sc) return sc;
@@ -106,6 +124,12 @@ StatusCode MuonHitDecode::decodeRawData() {
     tileAndTDC.clear();
     m_recTool->forceReset();
   }
+
+  if(!validLocation) error() << "No valid raw data found in: " << LHCb::RawEventLocation::Muon 
+                             << " and " << LHCb::RawEventLocation::Default 
+                             << " and corresponding Prev/Next locations" << endmsg;
+  
+
   debug()<<"Size of tilesAndTDC container is: "<<m_tilesAndTDC.size()<<endmsg;
 
   // create list of MuonLogHit objects
