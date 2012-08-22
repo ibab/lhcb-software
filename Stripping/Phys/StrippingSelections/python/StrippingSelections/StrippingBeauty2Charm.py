@@ -22,9 +22,6 @@ from Configurables import LoKi__VoidFilter
 from StandardParticles import StdLooseResolvedPi0,StdLooseMergedPi0
 from StandardParticles import StdAllNoPIDsPions, StdAllNoPIDsKaons, \
      StdAllNoPIDsProtons, StdNoPIDsUpPions
-
-from StandardParticles import StdLooseMuons
-
 from Beauty2Charm_DBuilder import *
 from Beauty2Charm_HHBuilder import *
 from Beauty2Charm_HHHBuilder import *
@@ -36,15 +33,8 @@ from Beauty2Charm_LTUnbiased import *
 
 # Default configuration dictionary
 config = {
-    "ALL" : { # Cuts made on all charged input particles in all lines (expt. upstream)
-    'TRCHI2DOF_MAX' : 3,
-    'PT_MIN'        : '100*MeV',
-    'P_MIN'         : '1000*MeV',
-    'MIPCHI2DV_MIN' : 4, 
-    'TRGHP_MAX'     : 0.4
-    },
-    "UPSTREAM" : { # Cuts made on all upstream particles
-    'TRCHI2DOF_MAX' : 3,
+    "ALL" : { # Cuts made on all charged input particles in all lines
+    'TRCHI2DOF_MAX' : 4,
     'PT_MIN'        : '100*MeV',
     'P_MIN'         : '1000*MeV',
     'MIPCHI2DV_MIN' : 4
@@ -147,7 +137,7 @@ config = {
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
 class Beauty2CharmConf(LineBuilder):
-    __configuration_keys__ = ('ALL','UPSTREAM','KS0','Pi0','D2X','B2X','Dstar','HH','HHH',
+    __configuration_keys__ = ('ALL','KS0','Pi0','D2X','B2X','Dstar','HH','HHH',
                               'PID','Prescales','GECNTrkMax')
  
     def __init__(self, moduleName, config) :
@@ -155,7 +145,7 @@ class Beauty2CharmConf(LineBuilder):
         LineBuilder.__init__(self, moduleName, config)
 
         # pre-filter inputs
-        uppions = filterInputs('PiUP',[StdNoPIDsUpPions],config['UPSTREAM'])
+        uppions = filterInputs('PiUP',[StdNoPIDsUpPions],config['ALL'])
         pions = filterInputs('Pi',[StdAllNoPIDsPions],config['ALL'])
         kaons = filterInputs('K',[StdAllNoPIDsKaons],config['ALL'])
         protons = filterInputs('P',[StdAllNoPIDsProtons],config['ALL'])
@@ -174,16 +164,14 @@ class Beauty2CharmConf(LineBuilder):
                                              [pi0_resolved])
         pi0_fromB = {'Merged':[pi0_fromB_merged],
                      'Resolved':[pi0_fromB_resolved]}
-        muons = filterInputs('MU',[StdLooseMuons],config['ALL']) # make muons (for D -> phi mu nu)
         
         # pre-filter hard inputs (these could have been used in HLT2)
         topoPions = topoInputs('Pi',[pions])
         topoKaons = topoInputs('K',[kaons])
         topoProtons = topoInputs('P',[protons])
         
-
         # make D->X, etc. inputs
-        d   = DBuilder(pions,kaons,ks,pi0,uppions,muons,config['D2X'],config['PID'])
+        d = DBuilder(pions,ks,pi0,uppions,config['D2X'],config['PID'])
         dst = DstarBuilder(d,pions,pi0,config['Dstar'],config['PID'])
 
         # X -> hh
@@ -210,6 +198,12 @@ class Beauty2CharmConf(LineBuilder):
         ltub = LTUnbiasedBuilder(d,config['B2X'])
         self._makeLines(ltub.lines,config)
 
+        # UP D* lines
+        for line in b2dx.lines:
+            for sel in line.selections:
+                dstar_sel = makeB2DstarX(sel,uppions,config['B2X'])
+                self._makeLine(ProtoLine([dstar_sel],line.pre),config)
+
         # Double Topo line
         from Configurables import DoubleTopoTool as DT
         code = "ACCEPT('DoubleTopoTool/DoubleTopoLine_DT')"
@@ -221,7 +215,7 @@ class Beauty2CharmConf(LineBuilder):
         hlt = "HLT_PASS_RE('Hlt2Topo.*Decision')"
         sline = StrippingLine('DoubleTopoLine',1.0,selection=sel,HLT=hlt)
         self.registerLine(sline)
-
+        
 
     def _makeLine(self,protoLine,config):
         tag = 'B2CBBDTBeauty2CharmFilter'

@@ -6,6 +6,7 @@ from GaudiConfUtils.ConfigurableGenerators import CombineParticles
 from PhysSelPython.Wrappers import DataOnDemand, Selection, MergedSelection
 from Beauty2Charm_LoKiCuts import LoKiCuts
 from Configurables import OfflineVertexFitter
+from Configurables import SubstitutePID
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
@@ -31,7 +32,7 @@ def filterSelection(name,code,inputs):
 def filterInputs(tag,inputs,config):
     '''Filter input particles.'''
     code = LoKiCuts(['TRCHI2DOF','PT','P','MIPCHI2DV','MM','CHILDCL1',
-                     'CHILDCL2','PIDK','PIDp','BPVVDRHO','BPVVDZ','DOCAMAX', 'TRGHP'],
+                     'CHILDCL2','PIDK','PIDp','BPVVDRHO','BPVVDZ','DOCAMAX'],
                     config).code()
     return filterSelection(tag+'Inputs',code,inputs)
 
@@ -138,30 +139,34 @@ def makeB2DstarX(sel,uppions,config):
                         Code="DECTREE('Beauty -> Charm ...')")
     sub.MaxChi2PerDoF = -666
     sub.Substitutions = {'Beauty -> Charm ...' : 'J/psi(1S)'}
-    subsel = Selection(sel.name()+'Sel',Algorithm=sub,
+    subsel = Selection(sel.name()+'DstarUPSel',Algorithm=sub,
                        RequiredSelections=[sel])
     filter = "INTREE(ID=='J/psi(1S)')"
-    subsel = filterSelection(name,filter,[subsel])
+    subsel = filterSelection(sel.name()+'DstarUPFilter',filter,[subsel])
     # Delta M cut on D* (preambulo is below)
-    dmcut = '((ISD1 & ((MD1PI-MD1) < 180)) | (ISD2 & ((MD2PI-MD2) < 180)))'
+    #dmcut = '((ISD1 & ((MD1PI-MD1) < 180)) | (ISD2 & ((MD2PI-MD2) < 180)))'
+    #dmcut = '((MD1PI-MD1) < 180) | ((MD2PI-MD2) < 180)'
+    dmcut = "((((IDD1==421)|(IDD1==411)) & ((MD1PI-MD1) < 180)) | (((IDD2==421)|(IDD2==411)) & ((MD2PI-MD2) < 180)))" 
     # add UP track
     combConfig = {'AMAXDOCA_MAX' : '0.5*mm'}
     comboCuts = [LoKiCuts(['AMAXDOCA'],combConfig).code(),dmcut] 
     comboCuts = LoKiCuts.combine(comboCuts)
     momCuts = LoKiCuts(['VCHI2DOF','BPVVDCHI2','BPVDIRA'],config).code()
-    did = "((ABSID=='D+')|(ABSID=='D0'))"
+    #did = "((ABSID=='D+')|(ABSID=='D0'))"
     preambulo = ['PXPI = ACHILD(PX,2)',
                  'PYPI = ACHILD(PY,2)',
                  'PZPI = ACHILD(PZ,2)',
                  'EPI  = ACHILD(E,2)',
-                 'ISD1 = ACHILD(CHILD(%s,1),1)' % did,
+                 'IDD1 = ACHILD(CHILD(ABSID,1),1)',
+                 #'ISD1 = ACHILD(CHILD(%s,1),1)' % did,
                  'PXD1 = ACHILD(CHILD(PX,1),1)',
                  'PYD1 = ACHILD(CHILD(PY,1),1)',
                  'PZD1 = ACHILD(CHILD(PZ,1),1)',
                  'ED1  = ACHILD(CHILD(E,1),1)',
                  'MD1  = ACHILD(CHILD(M,1),1)',
                  'MD1PI = sqrt((EPI+ED1)**2 - (PXPI+PXD1)**2 - (PYPI+PYD1)**2 - (PZPI+PZD1)**2)',
-                 'ISD2 = ACHILD(CHILD(%s,2),1)' % did,
+                 #'ISD2 = ACHILD(CHILD(%s,2),1)' % did,
+                 'IDD2 = ACHILD(CHILD(ABSID,2),1)',
                  'PXD2 = ACHILD(CHILD(PX,2),1)',
                  'PYD2 = ACHILD(CHILD(PY,2),1)',
                  'PZD2 = ACHILD(CHILD(PZ,2),1)',
@@ -172,7 +177,7 @@ def makeB2DstarX(sel,uppions,config):
     cp = CombineParticles(CombinationCut=comboCuts,MotherCut=momCuts,
                           Preambulo=preambulo,
                           DecayDescriptor='[B+ -> J/psi(1S) pi+]cc')
-    return Selection('ProtoDstarUP'+sel.name(),Algorithm=cp,
-                     RequiredSelections=uppions+[subsel])
+    return Selection('DstarUP'+sel.name(),Algorithm=cp,
+                     RequiredSelections=[uppions]+[subsel])
                                                  
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
