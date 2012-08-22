@@ -37,12 +37,12 @@ config = {
 
         ## Velo reconstruction
         , "RV2PWithVelo"            : { "MinRho"               :  0.4*units.mm
-                                      , "MinMass"              :  4.0*units.GeV
-                                      , "MinSumPT"             :  3.0*units.GeV
+                                      , "MinMass"              :  3.0*units.GeV
+                                      , "MinSumPT"             :  0.0*units.GeV
                                       , "MinNumTracks"         :  4
-                                      , "ApplyMatterVeto"      : False
-                                      , "MaxFractE1Track"      :  0.9
-                                      , "MaxFractTrwHitBefore" :  0.49
+                                      , "MaxFractE1Track"      :  10.
+                                      , "MaxFractTrwHitBefore" :  10.
+                                      , "ApplyMatterVeto"      :  False
                                       ## Reco only
                                       , "MaxChi2NonVeloOnly"   : 5.0
                                       , "UseVeloTracks"        : False
@@ -55,47 +55,47 @@ config = {
         ## Single LLP line
         , "SingleSelection"         : { "PreScale"             :  1.0
                                                                  #       HighMass,         Medium,         HighFD
-                                      , "MinRho"               : [  0.7*units.mm ,  2.5*units.mm ,  4.*units.mm  ]
-                                      , "MinMass"              : [ 9.5*units.GeV,  7.5*units.GeV,  5.5*units.GeV ]
+                                      , "MinRho"               : [  1.0*units.mm ,  2.*units.mm ,  4.*units.mm  ]
+                                      , "MinMass"              : [ 8.*units.GeV,  6.5*units.GeV,  4.5*units.GeV ]
                                       , "MinSumPT"             :  3.0*units.GeV
-                                      , "MinNumTracks"         : [  7            ,  6            ,  6             ]
+                                      , "MinNumTracks"         : [  8            ,  7            ,  6             ]
                                       , "ApplyMatterVeto"      : True
-                                      , "MaxFractE1Track"      :  0.9
+                                      , "MaxFractE1Track"      :  0.8
                                       , "MaxFractTrwHitBefore" :  0.49
                                       }
         # prescaled
         , "SinglePSSelection"       : { "PreScale"             :  0.005
-                                      , "MinRho"               :  0.4*units.mm
+                                      , "MinRho"               :  0.5*units.mm
                                       , "MinMass"              :  3.0*units.GeV
                                       , "MinSumPT"             :  0.0*units.GeV
                                       , "MinNumTracks"         :  4
-                                      , "ApplyMatterVeto"      : False
-                                      , "MaxFractE1Track"      :  0.9
-                                      , "MaxFractTrwHitBefore" :  0.49
+                                      , "ApplyMatterVeto"      :  False
+                                      , "MaxFractE1Track"      :  10.
+                                      , "MaxFractTrwHitBefore" :  10.
                                       }
 
         ## Double LLP line
         , "DoubleSelection"         : { "PreScale"             :  1.0
-                                      , "MinRho"               :  0.7*units.mm
-                                      , "MinMass"              :  4.5*units.GeV
-                                      , "MinSumPT"             :  0.0*units.GeV
-                                      , "MinNumTracks"         :  4
-                                      , "ApplyMatterVeto"      : False
-                                      , "MaxFractE1Track"      :  0.9
+                                      , "MinRho"               :  0.6*units.mm
+                                      , "MinMass"              :  3.0*units.GeV
+                                      , "MinSumPT"             :  3.0*units.GeV
+                                      , "MinNumTracks"         :  6
+                                      , "ApplyMatterVeto"      :  False
+                                      , "MaxFractE1Track"      :  0.8
                                       , "MaxFractTrwHitBefore" :  0.49
                                       ## Double only
-                                      , "MinHighestMass"       : 5.5*units.GeV
+                                      , "MinHighestMass"       : 3.0*units.GeV
                                       , "ApplyMatterVetoOne"   : True
                                       }
 
         ## Downstream reconstruction
-        , "RV2PDown"                : { "MinRho"               :  3.0*units.mm
-                                      , "MinMass"              :  4.5*units.GeV
-                                      , "MinSumPT"             :  3.0*units.GeV
+        , "RV2PDown"                : { "MinRho"               :  2.0*units.mm
+                                      , "MinMass"              :  3.0*units.GeV
+                                      , "MinSumPT"             :  0.0*units.GeV
                                       , "MinNumTracks"         :  4
-                                      , "ApplyMatterVeto"      : False
-                                      , "MaxFractE1Track"      :  0.9
-                                      , "MaxFractTrwHitBefore" :  0.49
+                                      , "MaxFractE1Track"      :  10.
+                                      , "MaxFractTrwHitBefore" :  10.
+                                      , "ApplyMatterVeto"      :  False
                                       ## Reco only
                                       , "MaxChi2NonVeloOnly"   : 5.0
                                       , "UseVeloTracks"        : False
@@ -106,27 +106,27 @@ config = {
                                       , "FirstPVMinNumTracks"  : 10
                                       }
         , "SingleDownSelection"     : { "PreScale"             :  1.0
-                                      , "MinRho"               :  3.0*units.mm
-                                      , "MinMass"              :  4.0*units.GeV
+                                      , "MinRho"               :  2.0*units.mm
+                                      , "MinMass"              :  3.0*units.GeV
                                       , "MinSumPT"             :  0.0*units.GeV
                                       , "MinNumTracks"         :  4
                                       , "ApplyMatterVeto"      : False
-                                      , "MaxFractE1Track"      :  0.9
-                                      , "MaxFractTrwHitBefore" :  0.49
+                                      , "MaxFractE1Track"      :  10.
+                                      , "MaxFractTrwHitBefore" :  10.
                                       # Down only
-                                      , "MinZ"                 :  150.*units.mm
+                                      , "MinZ"                 :  170.*units.mm
                                       }
 
         #========== Other lines for efficiency studies ==========#
         , "HLTPS"             : { "PreScale"             :  1.0 }
         , "HltEffCharmHLTSelection"  : { "PreScale"             :  1.0
-                                      , "MinRho"               :  0.4*units.mm
+                                      , "MinRho"               :  0.6*units.mm
                                       , "MinMass"              :  5.5*units.GeV
                                       , "MinSumPT"             :  3.0*units.GeV
-                                      , "MinNumTracks"         :  5
+                                      , "MinNumTracks"         :  6
                                       , "ApplyMatterVeto"      : False
-                                      , "MaxFractE1Track"      :  0.9
-                                      , "MaxFractTrwHitBefore" :  0.49
+                                      , "MaxFractE1Track"      :  10.
+                                      , "MaxFractTrwHitBefore" :  10.
                                       }
 
         #==========     HLT filters for all lines      ==========#
@@ -354,7 +354,7 @@ class DisplVerticesLinesConf(LineBuilder):
                        VerticesFromVeloOnly = False
                      , WriteP2PVRelations   = False
                      , ForceP2PVBuild       = False
-                     , OutputLevel          = VERBOSE
+                     #, OutputLevel          = VERBOSE
                      )
         self.validatedSetProps( "RV2PDown", DisplVerticesLinesConf.recoCuts + DisplVerticesLinesConf.singleCuts, rv2pDown )
 
