@@ -22,7 +22,8 @@ __all__ = ('Bs2MuMuLinesConf',
            'makeLoose',
            'makeBu',
            'makeBs',
-           'makeBd'
+           'makeBd',
+           'makeSS'
 #           'makeDetachedJPsi',
 #           'makeDetachedJPsiLoose',
 #           'makePromptJPsi'
@@ -67,45 +68,32 @@ class Bs2MuMuLinesConf(LineBuilder) :
                               'BIPChi2_loose',
                               'BFDChi2_loose',
                               'DefaultLinePrescale',
-                              'DefaultLinePostscale',
+                              'DefaultPostscale',
                               'Bs2mmWideLinePrescale',
-                              'Bs2mmWideLinePostscale',
                               'LooseLinePrescale',
-                              'LooseLinePostscale',
                               'BuPrescale',
-                              'BuPostscale',
                               'BsPrescale',
-                              'BsPostscale',
                               'BdPrescale',
-                              'BdPostscale',
                               'JPsiLinePrescale',
-                              'JPsiLinePostscale',
                               'JPsiLooseLinePrescale',
-                              'JPsiLooseLinePostscale',
                               'JPsiPromptLinePrescale',
-                              'JPsiPromptLinePostscale'
+                              'SSPrescale'             
+                              
                               )
     
     #### This is the dictionary of all tunable cuts ########
     config_default={
         'DefaultLinePrescale'    : 1,
-        'DefaultLinePostscale'   : 1,
+        'DefaultPostscale'   : 1,
         'Bs2mmWideLinePrescale'  : 1,
-        'Bs2mmWideLinePostscale'  : 1,
         'LooseLinePrescale'      : 0.,
-        'LooseLinePostscale'     : 1,
         'BuPrescale'    : 1,
-        'BuPostscale'   : 1,
         'BsPrescale'    : 1,
-        'BsPostscale'   : 1,
         'BdPrescale'    : 1,
-        'BdPostscale'   : 1,
         'JPsiLinePrescale'       : 1,
-        'JPsiLinePostscale'      : 1,
         'JPsiLooseLinePrescale'  : 0.1,
-        'JPsiLooseLinePostscale' : 1,
         'JPsiPromptLinePrescale' : 0.005,
-        'JPsiPromptLinePostscale': 1,
+        'SSPrescale'             : 1 ,
         
         'MuIPChi2_loose'        :  9,
         'MuTrChi2_loose'        : 10,
@@ -129,6 +117,7 @@ class Bs2MuMuLinesConf(LineBuilder) :
         bu_name=name+'Bu2JPsiK'
         bs_name=name+'Bs2JPsiPhi'
         bd_name=name+'Bd2JPsiKst'
+        ss_name = name+'SS'
 
         self.selDefault = makeDefault(default_name)
 
@@ -147,39 +136,47 @@ class Bs2MuMuLinesConf(LineBuilder) :
 
         self.selBd = makeBd(bd_name)
 
+        self.selSS = makeSS(ss_name)
+
         self.defaultLine = StrippingLine(default_name+"Line",
                                             prescale = config['DefaultLinePrescale'],
-                                            postscale = config['DefaultLinePostscale'],
+                                            postscale = config['DefaultPostscale'],
                                             algos = [ self.selDefault ]
                                             )
         
         self.wideLine = StrippingLine(wide_name+"Line",
                                       prescale = config['Bs2mmWideLinePrescale'],
-                                      postscale = config['Bs2mmWideLinePostscale'],
+                                      postscale = config['DefaultPostscale'],
                                       algos = [ self.selWide ]
                                       )
         
         self.looseLine = StrippingLine(loose_name+"Line",
                                             prescale = config['LooseLinePrescale'],
-                                            postscale = config['LooseLinePostscale'],
+                                            postscale = config['DefaultPostscale'],
                                             algos = [ self.selLoose ]
                                             )
 
         self.buLine = StrippingLine(bu_name+"Line",
                                     prescale = config['BuPrescale'],
-                                    postscale = config['BuPostscale'],
+                                    postscale = config['DefaultPostscale'],
                                     algos = [ self.selBu ]
                                     )
 
         self.bsLine = StrippingLine(bs_name+"Line",
                                     prescale = config['BsPrescale'],
-                                    postscale = config['BsPostscale'],
+                                    postscale = config['DefaultPostscale'],
                                     algos = [ self.selBs ]
                                     )
 
         self.bdLine = StrippingLine(bd_name+"Line",
                                     prescale = config['BdPrescale'],
-                                    postscale = config['BdPostscale'],
+                                    postscale = config['DefaultPostscale'],
+                                    algos = [ self.selBd ]
+                                    )
+
+        self.ssLine = StrippingLine(ss_name+"Line",
+                                    prescale = config['SSPrescale'],
+                                    postscale = config['DefaultPostscale'],
                                     algos = [ self.selBd ]
                                     )
 
@@ -190,7 +187,7 @@ class Bs2MuMuLinesConf(LineBuilder) :
         self.registerLine(self.buLine)
         self.registerLine(self.bsLine)
         self.registerLine(self.bdLine)
-
+        self.registerLine(self.ssLine)
 
 def makeDefault(name) :
     """
@@ -210,7 +207,7 @@ def makeDefault(name) :
     Bs2MuMuNoMuID.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     Bs2MuMuNoMuID.OfflineVertexFitter.useResonanceVertex = False
     Bs2MuMuNoMuID.ReFitPVs = True
-    Bs2MuMuNoMuID.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 4 )"\
+    Bs2MuMuNoMuID.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 3 )"\
                                     " & (0.5<PPINFO(LHCb.ProtoParticle.InAccMuon,-1))"\
                                     " & (PT < 40*GeV)"\
                                     " & (P < 500*GeV)"}
@@ -251,7 +248,7 @@ def makeBs2mmWide(name) :
     Bs2MuMuWideMass.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     Bs2MuMuWideMass.OfflineVertexFitter.useResonanceVertex = False
     Bs2MuMuWideMass.ReFitPVs = True
-    Bs2MuMuWideMass.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 4 )" }
+    Bs2MuMuWideMass.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 3 )" }
     Bs2MuMuWideMass.CombinationCut = "(ADAMASS('B_s0')<1200*MeV)"\
                                      "& (AMAXDOCA('')<0.3*mm)"
 
@@ -267,6 +264,40 @@ def makeBs2mmWide(name) :
                       Algorithm = Bs2MuMuWideMass,
                       RequiredSelections = [ _stdLooseMuons])
 
+
+def makeSS(name) :
+    """
+    Bs2mumu selection object (tighter selection a la roadmap)
+    with muon Id and same sign muons 
+    starts from Phys/StdLooseMuons
+
+    Please contact Johannes Albrecht if you think of prescaling this line!
+    
+    Arguments:
+    name        : name of the Selection.
+    """
+    from Configurables import OfflineVertexFitter
+    Bs2MuMuSS = CombineParticles("Combine"+name)
+    Bs2MuMuSS.DecayDescriptor = "[B_s0 -> mu+ mu+]cc"
+    Bs2MuMuSS.addTool( OfflineVertexFitter )
+    Bs2MuMuSS.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
+    Bs2MuMuSS.OfflineVertexFitter.useResonanceVertex = False
+    Bs2MuMuSS.ReFitPVs = True
+    Bs2MuMuSS.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 3 )" }
+    Bs2MuMuSS.CombinationCut = "(ADAMASS('B_s0')<200*MeV)"\
+                                     "& (AMAXDOCA('')<0.3*mm)"
+
+    Bs2MuMuSS.MotherCut = "(VFASPF(VCHI2/VDOF)<9) "\
+                                "& (ADMASS('B_s0') < 200*MeV )"\
+                                "& (BPVDIRA > 0) "\
+                                "& (BPVVDCHI2> 225)"\
+                                "& (BPVIPCHI2()< 25) "
+    
+    _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
+
+    return Selection (name,
+                      Algorithm = Bs2MuMuSS,
+                      RequiredSelections = [ _stdLooseMuons])
 
 
 def makeLoose(name, MuIPChi2, MuTrChi2, BIPChi2, BFDChi2 ) :
@@ -335,7 +366,7 @@ def makeBu(name) :
     PreselBu2JPsiKCommon.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     PreselBu2JPsiKCommon.OfflineVertexFitter.useResonanceVertex = False
     PreselBu2JPsiKCommon.ReFitPVs = True
-    PreselBu2JPsiKCommon.DaughtersCuts = { "K+" : "(ISLONG) & (TRCHI2DOF < 5 ) &(MIPCHI2DV(PRIMARY)>25)& (PT>250*MeV) "}
+    PreselBu2JPsiKCommon.DaughtersCuts = { "K+" : "(ISLONG) & (TRCHI2DOF < 3 ) &(MIPCHI2DV(PRIMARY)>25)& (PT>250*MeV) "}
     PreselBu2JPsiKCommon.CombinationCut = "(ADAMASS('B+') < 500*MeV)"
     PreselBu2JPsiKCommon.MotherCut = "(BPVIPCHI2()< 25)& (VFASPF(VCHI2)<45) "
 
@@ -364,7 +395,7 @@ def makeBs(name) :
 
     makePhi = CombineParticles("makePhi")
     makePhi.DecayDescriptor =  "phi(1020) -> K+ K-"
-    makePhi.DaughtersCuts = {"K+": "(ISLONG) & (TRCHI2DOF < 5 ) & (MIPCHI2DV(PRIMARY)> 4.) & (PT>250*MeV)"}
+    makePhi.DaughtersCuts = {"K+": "(ISLONG) & (TRCHI2DOF < 3 ) & (MIPCHI2DV(PRIMARY)> 4.) & (PT>250*MeV)"}
     
     _kaons = DataOnDemand(Location='Phys/StdNoPIDsKaons/Particles')
 
@@ -411,8 +442,8 @@ def makeBd(name) :
     makeKstar = CombineParticles("makeKstar")
 
     makeKstar.DecayDescriptor =  "[K*(892)0 -> K+ pi-]cc"
-    makeKstar.DaughtersCuts = {"K+": "(ISLONG) & (TRCHI2DOF < 5 ) & (MIPCHI2DV(PRIMARY)> 4.)& (PT>250*MeV)",
-                               "pi-":"(ISLONG) & (TRCHI2DOF < 5 ) & (MIPCHI2DV(PRIMARY)> 4.)& (PT>250*MeV)"}
+    makeKstar.DaughtersCuts = {"K+": "(ISLONG) & (TRCHI2DOF < 3 ) & (MIPCHI2DV(PRIMARY)> 4.)& (PT>250*MeV)",
+                               "pi-":"(ISLONG) & (TRCHI2DOF < 3 ) & (MIPCHI2DV(PRIMARY)> 4.)& (PT>250*MeV)"}
     makeKstar.CombinationCut =  "(ADAMASS('K*(892)0')<2000*MeV)"#huge, to allow to study JPsi K1 etc
     makeKstar.MotherCut = " (MIPCHI2DV(PRIMARY)> 25.)"
 
@@ -461,7 +492,7 @@ def makeDetachedJPsi(name) :
     DetachedJPsi.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     DetachedJPsi.OfflineVertexFitter.useResonanceVertex = False
     DetachedJPsi.ReFitPVs = True
-    DetachedJPsi.DaughtersCuts = { "mu+" : "(TRCHI2DOF < 4 ) "\
+    DetachedJPsi.DaughtersCuts = { "mu+" : "(TRCHI2DOF < 3 ) "\
                                     "& (MIPCHI2DV(PRIMARY)> 25.)"}
                                  
     DetachedJPsi.CombinationCut = "(ADAMASS('J/psi(1S)')<100*MeV) "\
