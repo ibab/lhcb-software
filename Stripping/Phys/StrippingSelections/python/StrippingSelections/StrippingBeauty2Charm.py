@@ -22,6 +22,9 @@ from Configurables import LoKi__VoidFilter
 from StandardParticles import StdLooseResolvedPi0,StdLooseMergedPi0
 from StandardParticles import StdAllNoPIDsPions, StdAllNoPIDsKaons, \
      StdAllNoPIDsProtons, StdNoPIDsUpPions
+
+from StandardParticles import StdLooseMuons
+
 from Beauty2Charm_DBuilder import *
 from Beauty2Charm_HHBuilder import *
 from Beauty2Charm_HHHBuilder import *
@@ -171,14 +174,16 @@ class Beauty2CharmConf(LineBuilder):
                                              [pi0_resolved])
         pi0_fromB = {'Merged':[pi0_fromB_merged],
                      'Resolved':[pi0_fromB_resolved]}
+        muons = filterInputs('MU',[StdLooseMuons],config['ALL']) # make muons (for D -> phi mu nu)
         
         # pre-filter hard inputs (these could have been used in HLT2)
         topoPions = topoInputs('Pi',[pions])
         topoKaons = topoInputs('K',[kaons])
         topoProtons = topoInputs('P',[protons])
         
+
         # make D->X, etc. inputs
-        d = DBuilder(pions,ks,pi0,uppions,config['D2X'],config['PID'])
+        d   = DBuilder(pions,kaons,ks,pi0,uppions,muons,config['D2X'],config['PID'])
         dst = DstarBuilder(d,pions,pi0,config['Dstar'],config['PID'])
 
         # X -> hh
@@ -216,7 +221,7 @@ class Beauty2CharmConf(LineBuilder):
         hlt = "HLT_PASS_RE('Hlt2Topo.*Decision')"
         sline = StrippingLine('DoubleTopoLine',1.0,selection=sel,HLT=hlt)
         self.registerLine(sline)
-        
+
 
     def _makeLine(self,protoLine,config):
         tag = 'B2CBBDTBeauty2CharmFilter'

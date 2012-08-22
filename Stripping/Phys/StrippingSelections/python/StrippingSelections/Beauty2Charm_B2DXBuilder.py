@@ -37,6 +37,9 @@ class B2DXBuilder(object):
         self._makeB02D0KS('D2HH',self.d.hh,'DD') # B0  -> D0(HH)  KS
         self._makeB02D0KS('D2HH',self.d.hh,'LL') # B0  -> D0(HH)  KS
         self._makeB2D0HH('D2HH',self.d.hh) # B+- -> D0(HH) H+- H0
+        
+        # B0 -> D(mu nu) H
+        self._makeB02DH('D2PhiMu',self.d.phimu)
         # B -> D+-(HHH) X
         self._makeB02DH('D2HHH',self.d.hhh) # B0  -> D+-(HHH) H-+   (+WS)
         self._makeB02DH('D2HHHUP',self.d.hhh_up) # B0  -> D+-(HHH) H-+   (+WS)
@@ -611,4 +614,5 @@ class B2DXBuilder(object):
         self.lines.append(ProtoLine(b2dstdstks_rs,1.0))
         self.lines.append(ProtoLine(b2dstdstks_ws,0.1))
     
+
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#

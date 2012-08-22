@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-08-22 - Sam Hall
+ - Update of Beauty2Charm Line to include D2PhiMuNu.
+
 ! 2012-08-22 - Will Barter
  - Update StrippingZ02MuMu.py to remove high rate NoPIDs line (other lines already present can be used for same physics)
  - Update StippingDY2ee.py and StrippingWMu.py to retune high rate lines.

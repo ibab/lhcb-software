@@ -43,12 +43,15 @@ def subPIDSels(decays,prefix,suffix,min,max,inputs):
 class DBuilder(object):
     '''Produces all D mesons for the Beauty2Charm module.'''
 
-    def __init__(self,pions,ks,pi0,uppions,config,config_pid):
+    def __init__(self,pions,kaons,ks,pi0,uppions,muons,config,config_pid):
         self.pions = pions
+        self.kaons = kaons
         self.ks    = ks
         self.pi0   = pi0
         self.uppions = uppions
+        self.muons = muons
         self.config = config
+        self.config_pid = config_pid
         self.hh = self._makeD2hh()
         self.hhh = self._makeD2hhh()
         self.hhhh = self._makeD2hhhh()
@@ -72,7 +75,8 @@ class DBuilder(object):
         self.pi0hh_resolved_up = self._makeD2Pi0hh("Resolved",True)
         self.pi0hhh_merged_up = self._makeD2Pi0hhh("Merged",True)
         self.pi0hhh_resolved_up = self._makeD2Pi0hhh("Resolved",True)
-                                                                                 
+        
+
         # PID filtered selections
         self.hh_pid = [filterPID('D2HHPID',self.hh,config_pid)]
         self.hhh_pid = [filterPID('D2HHHPID',self.hhh,config_pid)]
@@ -113,6 +117,9 @@ class DBuilder(object):
         self.pi0hh_resolved_ws = self._makeD2Pi0hhWS('Resolved')
         self.hhhh_ws = self._makeD2hhhhWS()
 
+        # phi mu nu
+        self.phimu = self._makeD2PhiMuNu() 
+
     def _makeD2X(self,name,decays,wm,up,config,extrainputs=[]):
         ''' Makes all D -> X selections.'''
         if up:
@@ -133,6 +140,9 @@ class DBuilder(object):
         if which is 'D0':
             min = 1864.84 - dm # D0 - dm
             max = 1864.84 + dm # D0 + dm
+        elif which is 'D2PhiMu':
+            min = 1019.46 + 105.67 # phi + mu
+            max = 1968.49 + dm     # Ds + dm
         else:
             min = 1869.62 - dm # D+ - dm
             max = 1968.49 + dm # Ds+ + dm
@@ -358,6 +368,40 @@ class DBuilder(object):
         return [MergedSelection('D2HHHHWSBeauty2Charm'+tag,
                                 RequiredSelections=[psel,msel])]
 
+    def _makeD2PhiMuNu(self,up=False):
+        '''makes Ds->phi mu nu'''
+        min,max = self._massWindow('D2PhiMu')
+        mWindow = '150*MeV'
+        decays  = [['phi(1020)','mu+']]
+        wm      = awmFunctor(decays,min,max)
+        # Make a kk from kaons (the only method that uses self.kaons)
+        comboCuts = [LoKiCuts(['ASUMPT'],self.config).code()]
+        comboCuts.append( '(AM < 5.2*GeV)' )
+        comboCuts.append( hasTopoChild() )
+        comboCuts.append( LoKiCuts(['AMAXDOCA'],self.config).code() )
+        comboCuts = LoKiCuts.combine(comboCuts)
+        momCuts   = LoKiCuts(['VCHI2DOF','BPVVDCHI2','BPVDIRA'],self.config).code()
+        cp = CombineParticles(CombinationCut=comboCuts,MotherCut=momCuts,
+                                    DecayDescriptors=['phi(1020) -> K+ K-'])
+        kk = Selection('X2KK'+'Beauty2Charm',Algorithm=cp,
+                                    RequiredSelections=[self.kaons])
+        # Filter on kk mass to get phi and then PID to get phi_pid
+        mass = "ADMASS('phi(1020)') < %s" %mWindow 
+        phi = filterSelection('PHI4D2PHIMU',mass,[kk])
+        phi_pid = filterPID('PHIPID4D2PHIMU',[phi],self.config_pid)
+        # Construct the D -> phi mu (+ and -)
+        protoD2PhiMuNuPlus  = self._makeD2X('D2PhiMuNuPlus', ['D+ -> phi(1020) mu+'],
+                                    wm,up,self.config,[self.muons,phi_pid])
+        protoD2PhiMuNuMinus = self._makeD2X('D2PhiMuNuMinus',['D- -> phi(1020) mu-'],
+                                    wm,up,self.config,[self.muons,phi_pid])
+        psel = subPIDSels(decays,        'D2PhiMuNuPlus', '',min,max,[protoD2PhiMuNuPlus])
+        msel = subPIDSels(getCCs(decays),'D2PhiMuNuMinus','',min,max,[protoD2PhiMuNuMinus])
+        return [MergedSelection('D2PhiMuNuBeauty2Charm',
+                                    RequiredSelections=[psel,msel])]
+
+
+
+
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
 class DstarBuilder(object):
@@ -426,5 +470,6 @@ class DstarBuilder(object):
     def _makeDstar02D0Pi0(self,pi0):
         decays = ["D*(2007)0 -> D0 pi0"]
         return [self._makeDstar02D0X0('Pi0_'+pi0,decays,self.pi0[pi0])]
+
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
