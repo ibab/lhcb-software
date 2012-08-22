@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-08-22 - Anton Poluektov 
+ - Add thack ghost probability cut to Beauty2Charm selections. 
+
 ! 2012-08-20 - Michel De Cian
  - Added a B->RhoInflaton line to "StrippingInflaton2MuMuLine.py"
 

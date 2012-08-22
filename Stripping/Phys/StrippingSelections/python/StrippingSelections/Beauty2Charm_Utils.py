@@ -31,7 +31,7 @@ def filterSelection(name,code,inputs):
 def filterInputs(tag,inputs,config):
     '''Filter input particles.'''
     code = LoKiCuts(['TRCHI2DOF','PT','P','MIPCHI2DV','MM','CHILDCL1',
-                     'CHILDCL2','PIDK','PIDp','BPVVDRHO','BPVVDZ','DOCAMAX'],
+                     'CHILDCL2','PIDK','PIDp','BPVVDRHO','BPVVDZ','DOCAMAX', 'TRGHP'],
                     config).code()
     return filterSelection(tag+'Inputs',code,inputs)
 
