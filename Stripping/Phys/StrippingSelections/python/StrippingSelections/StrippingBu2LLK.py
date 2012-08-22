@@ -42,11 +42,7 @@ class Bu2LLKConf(LineBuilder) :
     mmKLine = None
     eeKLine = None
     eeKLine2 = None
-    mmKsLine = None
-    eeKsLine = None
-    eeKsLine2 = None
     meKLine = None
-    meKsLine = None
     
     __configuration_keys__ = ( # now just define keys. Default values are fixed later
         'BFlightCHI2'        
