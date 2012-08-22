@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2012-08-22  - Konstantinos A. Petridis
+ - Modified StrippingB2MuMuMuMuLines.py: Moved DetachedDiMuon Line of B2MuMuX to B2MuMuMuMu
+   and renamed as B2TwoDetachedDimuonsLine
+ - Modified StrippingB2MuMuX.py: Commented out all lines! Thus currently obsolete
+
 ! 2012-08-22 - Sam Hall
  - Update of Beauty2Charm Line DBuilder. 
 

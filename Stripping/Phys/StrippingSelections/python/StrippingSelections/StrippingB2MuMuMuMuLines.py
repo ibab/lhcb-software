@@ -1,12 +1,14 @@
 '''
-Module for construction of B-->MuMuMuMu and D-->MuMuMuMu stripping selections and lines
+Module for construction of B-->MuMuMuMu and D-->MuMuMuMu stripping selections and
+B-->KS0(mumu)KS0(mumu) (DetachedDimuons) stripping selections and
+and lines
 
 
 Exported symbols (use python help!):
      - ..
 '''
 
-__author__ = ['Diego Martinez Santos','Johannes Albrecht']
+__author__ = ['Diego Martinez Santos','Johannes Albrecht','Konstantinos A. Petridis']
 __date__ = '20/10/2010'
 __version__ = '$Revision: 1.0 $'
 
@@ -19,6 +21,7 @@ from Configurables import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
+from Beauty2Charm_LoKiCuts import LoKiCuts
 #from StrippingSelections.Utils import checkConfig
 
 class B2MuMuMuMuLinesConf(LineBuilder) :
@@ -50,7 +53,11 @@ class B2MuMuMuMuLinesConf(LineBuilder) :
     __configuration_keys__ = ('B2MuMuMuMuLinePrescale',
                               'B2MuMuMuMuLinePostscale',
                               'D2MuMuMuMuLinePrescale',
-                              'D2MuMuMuMuLinePostscale'
+                              'D2MuMuMuMuLinePostscale',
+                              'B2TwoDetachedDimuonLinePrescale',
+                              'B2TwoDetachedDimuonLinePostscale',
+                              'DetachedDiMuons',
+                              'B2DetachedDiMuons'
                               )
     
     #### This is the dictionary of all tunable cuts ########
@@ -58,7 +65,24 @@ class B2MuMuMuMuLinesConf(LineBuilder) :
         'B2MuMuMuMuLinePrescale'    : 1,
         'B2MuMuMuMuLinePostscale'   : 1,
         'D2MuMuMuMuLinePrescale'    : 1,
-        'D2MuMuMuMuLinePostscale'   : 1
+        'D2MuMuMuMuLinePostscale'   : 1,
+        'B2TwoDetachedDimuonLinePrescale'  : 1,
+        'B2TwoDetachedDimuonLinePostscale' : 1,
+        'DetachedDiMuons': {
+            'AMAXDOCA_MAX'  : '0.5*mm',
+            'ASUMPT_MIN'    : '1000*MeV',
+            'VCHI2DOF_MAX'  : 16,
+            'BPVVDCHI2_MIN' : 16,
+            },
+        'B2DetachedDiMuons': {
+            'SUMPT_MIN'        : '2000*MeV',
+            'VCHI2DOF_MAX'     : 6,
+            'BPVIPCHI2_MAX'    : 16,
+            'BPVVDCHI2_MIN'    : 50,
+            'BPVDIRA_MIN'      : 0.0,
+            'MASS_MIN'         : {'B':'4600*MeV'},
+            'MASS_MAX'         : {'B':'6000*MeV'}
+            }
         }                
     
     
@@ -76,6 +100,9 @@ class B2MuMuMuMuLinesConf(LineBuilder) :
         D_name='D2MuMuMuMu'
 	Dst_name = 'Dstar2D2MuMuMuMu'
 	Dimuon_name = 'Dimuon'
+        DetachedDimuons_name = 'DetachedDimuons'
+        B2DetachedDimuons_name = 'B2DetachedDimuons'
+
         self.inPions = DataOnDemand(Location = "Phys/StdLoosePions/Particles")
         self.inMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
 
@@ -85,7 +112,13 @@ class B2MuMuMuMuLinesConf(LineBuilder) :
         self.selD2MuMuMuMu = makeD2MuMuMuMu(D_name,
 						inputSel = [ self.inMuons ])
 
-
+        self.inDetachedDimuons=makeDetachedDimuons(DetachedDimuons_name,
+                                                   config['DetachedDiMuons'],
+                                                   inputSel=[self.inMuons])
+        self.selB2TwoDetachedDimuons = makeB2TwoDetachedDimuons(B2DetachedDimuons_name,
+                                                                config['B2DetachedDiMuons'],
+                                                                inputSel=[self.inDetachedDimuons ])
+        
 
         self.defaultLine = StrippingLine(default_name+"Line",
                                             prescale = config['B2MuMuMuMuLinePrescale'],
@@ -99,11 +132,17 @@ class B2MuMuMuMuLinesConf(LineBuilder) :
                                             algos = [ self.selD2MuMuMuMu ]
                                             )
         
-      
+        self.B2TwoDetachedDimuonsLine = StrippingLine(B2DetachedDimuons_name+"Line",
+                                                      prescale = config['B2TwoDetachedDimuonLinePrescale'],
+                                                      postscale = config['B2TwoDetachedDimuonLinePostscale'],
+                                                      algos = [ self.selB2TwoDetachedDimuons ]
+                                                      )
+
         self.registerLine( self.defaultLine )
 
         self.registerLine( self.D2MuMuMuMuLine )
 
+        self.registerLine( self.B2TwoDetachedDimuonsLine )
 
 def makeDefault(name,inputSel) :
     """
@@ -163,3 +202,39 @@ def makeD2MuMuMuMu(name,inputSel) :
                       Algorithm = D2MuMuMuMu,
                       RequiredSelections = inputSel)
 
+def makeDetachedDimuons(name,config,inputSel):
+    """
+    KS0->mumu selection
+    """
+    comboCuts = LoKiCuts(['ASUMPT','AMAXDOCA'],config).code()
+    momCuts   = LoKiCuts(['VCHI2DOF','BPVVDCHI2'],config).code()
+    KS2MuMu = CombineParticles("Combine"+name)
+    KS2MuMu.DecayDescriptor='KS0 -> mu+ mu-'
+    KS2MuMu.CombinationCut=comboCuts
+    KS2MuMu.MotherCut=momCuts
+
+    return  Selection(name,
+                      Algorithm=KS2MuMu,
+                      RequiredSelections = inputSel)
+
+
+def makeB2TwoDetachedDimuons(name,config,inputSel) :
+    """
+    B --> KS0 KS0 --> 4mu selection
+    """
+    # define cuts on B object
+    wm = ['in_range(%s,AM,%s)' % (config['MASS_MIN']['B'],
+                                  config['MASS_MAX']['B'])]
+    wm = '('+('|'.join(wm))+')'
+    comboCuts = [LoKiCuts(['SUMPT'],config).code(),wm]
+    comboCuts = LoKiCuts.combine(comboCuts)
+    momCuts = LoKiCuts(['VCHI2DOF','BPVVDCHI2','BPVIPCHI2','BPVDIRA'], 
+                       config).code()
+    B2KSKS = CombineParticles("Combine"+name)
+    B2KSKS.DecayDescriptor = 'B0 -> KS0 KS0'
+    B2KSKS.CombinationCut = comboCuts
+    B2KSKS.MotherCut = momCuts
+        
+    return Selection(name,
+                     Algorithm = B2KSKS,
+                     RequiredSelections = inputSel)

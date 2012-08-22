@@ -1,5 +1,8 @@
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 '''
+As of 20-08-2012 the DiMu+V related
+lines have been removed
+
 As of 25-06-2012 the mumugamma related
 lines have been removed
 
@@ -347,27 +350,30 @@ class B2MuMuXConf(LineBuilder):
         #self._makeLine(y2mumug,config)
 
 
-        # B to Mu Mu Mu Mu
-        b24mu = makeB2X('B2MuMuMuMu',['B0 -> KS0 KS0'],[dimuons_fly_onePid],
+        # B to Mu Mu Mu Mu (Two Detached Pairs)
+        b24mu = makeB2X('B2TwoDetachedDiMuons',['B0 -> KS0 KS0'],[dimuons_fly_onePid],
                         config['B2X4BODY'])
-        self._makeLine(b24mu,config)
+        #self._makeLine(b24mu,config)
         
         # B to V0 MuMu
         #rho
         b2rhomumu = makeB2X('B2RhoMuMu_B2MuMuX',['B0 -> KS0 rho(770)0' ],
                             [dimuons_fly_loose,rhos],
                             config['B2X4BODY'])
-        self._makeLine(b2rhomumu,config)
+        # removed for stripping above and including 20
+        #self._makeLine(b2rhomumu,config)
+
         #kst
         b2kstmumu = makeB2X('B2KstMuMu_B2MuMuX',['[B0 -> KS0 K*(892)0]cc' ],
                             [dimuons_fly_loose,ksts],
                             config['B2X4BODY'])
-        self._makeLine(b2kstmumu,config)
+        #self._makeLine(b2kstmumu,config)
         #phi
         b2phimumu = makeB2X('B2PhiMuMu_B2MuMuX',['B0 -> KS0 phi(1020)' ],
                             [dimuons_fly_loose,phis],
                             config['B2X4BODY'])
-        self._makeLine(b2phimumu,config)
+        # removed for stripping above and including 20
+        #self._makeLine(b2phimumu,config)
 
 
         # SS stripping lines
@@ -382,17 +388,22 @@ class B2MuMuXConf(LineBuilder):
         b2rhomumu_ss = makeB2X('B2RhoMuMu_B2MuMuX_ss',['B0 -> KS0 rho(770)0' ],
                                [dimuons_fly_loose_ss,rhos],
                                config['B2X4BODY'])
-        self._makeLine(b2rhomumu_ss,config)
+        # removed for stripping above and including 20
+        #self._makeLine(b2rhomumu_ss,config)
+
         # kst ss
         b2kstmumu_ss = makeB2X('B2KstMuMu_B2MuMuX_ss',['[B0 -> KS0 K*(892)0]cc' ],
                             [dimuons_fly_loose_ss,ksts],
                            config['B2X4BODY'])
-        self._makeLine(b2kstmumu_ss,config)
+        # removed for stripping above and including 20
+        #self._makeLine(b2kstmumu_ss,config)
+
         # phi ss
         b2phimumu_ss = makeB2X('B2PhiMuMu_B2MuMuX_ss',['B0 -> KS0 phi(1020)' ],
                             [dimuons_fly_loose_ss,phis],
                            config['B2X4BODY'])
-        self._makeLine(b2phimumu_ss,config)
+        # removed for stripping above and including 20
+        #self._makeLine(b2phimumu_ss,config)
         
         # Corrected mass stripping lines
         # B to Mu Mu Gamma
